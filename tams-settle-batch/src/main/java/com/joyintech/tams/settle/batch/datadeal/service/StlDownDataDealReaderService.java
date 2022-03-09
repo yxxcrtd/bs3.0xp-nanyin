@@ -302,6 +302,9 @@ public class StlDownDataDealReaderService {
     					if (StringUtil.isNotEmpty(szdZqbd.getLtlx()) &&
 								(StringUtil.equals(szdZqbd.getLtlx(), "0")
 								|| StringUtil.equals(szdZqbd.getLtlx(), "N")
+								//GNS-880:上交所配股上市流通ltlx是1 modify by fuyongsheng 20220216 start
+								|| StringUtil.equals(szdZqbd.getLtlx(), "1")
+								//GNS-880:上交所配股上市流通ltlx是1 modify by fuyongsheng 20220216 end
 								)) {
 	    					String key = settleDataRulePartitionDto.getFinprodType() + settleDataRulePartitionDto.getTableName() + 
 	    							settleDataRulePartitionDto.getDataFile() + szdZqbd.getZqzh();

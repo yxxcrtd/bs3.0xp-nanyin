@@ -9,6 +9,7 @@ import com.joyintech.service.trade.exchangetransmatch.dao.ExchangeTransMatchMapp
 import com.joyintech.service.trade.exchangetransmatch.dto.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -109,6 +110,23 @@ public class ExchangeTransMatchService extends BaseService {
 
         map.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
         map.put("TRADE_PLACE_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
+
+        // GNS-956:特殊场景不加日期条件查询指令 modify by fuyongsheng 20220224 start
+        String ps = String.valueOf(map.get("ps"));
+        String finprodType = String.valueOf(map.get("finprodType1"));
+        if(com.joyintech.framework.util.StringUtil.equals(DictCodeList.交易方向_行权_回售.getValue(),ps)
+                || (com.joyintech.framework.util.StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue(), finprodType)
+                && com.joyintech.framework.util.StringUtil.equals(DictCodeList.交易方向_申购.getValue(), ps)
+        )
+                || (com.joyintech.framework.util.StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue(), finprodType)
+                && com.joyintech.framework.util.StringUtil.equals(DictCodeList.交易方向_申购.getValue(), ps)
+        )
+                || com.joyintech.framework.util.StringUtil.equals(DictCodeListExt3.交易方向_配债.getValue(), ps)
+                || com.joyintech.framework.util.StringUtil.equals(DictCodeListExt2.交易方向_配股.getValue(), ps)
+        ){
+            map.put("dealDate", null);
+        }
+        // GNS-956:特殊场景不加日期条件查询指令 modify by fuyongsheng 20220224 end
 
         return super.queryForPage(page, length, () -> exchangeTransMatchMapper.findEntrustPage(map));
     }

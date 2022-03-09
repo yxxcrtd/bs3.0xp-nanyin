@@ -575,7 +575,10 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
         BigDecimal mIntAmt = ArithmeticUtil.multiply(ArithmeticUtil.multiply(finTradeProduct.getmPrinAmt(), finTradeProduct.getIntRate()),
                 ArithmeticUtil.divide(new BigDecimal(DateUtil.getBetweenDayNumber(finTradeProduct.getVpayDate(), finTradeProduct.getMpayDate())), 365, 14));
         finTradeProduct.setmIntAmt(mIntAmt);
-        finTradeProduct.setmTradeAmt(finTradeProduct.getmPrinAmt().add(finTradeProduct.getmIntAmt()));
+        //GNS-835:使用ArithmeticUtil计算,防止null值 modify by fuyongsheng 20220210 start
+        // finTradeProduct.setmTradeAmt(finTradeProduct.getmPrinAmt().add(finTradeProduct.getmIntAmt()));
+        finTradeProduct.setmTradeAmt(ArithmeticUtil.doAdd(finTradeProduct.getmPrinAmt(),finTradeProduct.getmIntAmt()));
+        //GNS-835:使用ArithmeticUtil计算,防止null值 modify by fuyongsheng 20220210 end
 //        finTradeProduct.setmIntAmt(settleTransData.getmIntAmt());
 //        finTradeProduct.setmPrinAmt(settleTransData.getmPrinAmt());
         finTradeProduct.setTradeMarket(trdProductDeal.getTradeMarket());

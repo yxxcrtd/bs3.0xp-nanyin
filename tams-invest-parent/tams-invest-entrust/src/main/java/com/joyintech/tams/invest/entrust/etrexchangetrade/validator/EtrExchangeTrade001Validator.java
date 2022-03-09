@@ -459,7 +459,7 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 				param.put("tradePlat",dto.getTradePlat());
 				List<WflEtrEntrust>  list = etrExchangeTrade001Service.selectWflEntrust(param);
 				if (list.size()>0){
-					errorList.add(new ValidMessage(getMessage("ETR_ERROR_0061")));
+					errorList.add(new ValidMessage(getMessage("ETR_ERROR_0061_2")));
 				}
 
 				// 同一股东只允许下达一次同一只新股申购指令
@@ -506,7 +506,7 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 				param.put("secAcctId",dto.getSecAcctId());
 				param.put("ps",dto.getPs());
 				param.put("cDate",DateUtil.getSysDate());
-				param.put("portfolioId",dto.getPortfolioId());
+//				param.put("portfolioId",dto.getPortfolioId());
 				param.put("finprodType2",dto.getFinprodType2());
 				param.put("entrustType",dto.getEntrustType());
 				param.put("entrustId",dto.getEntrustId());
@@ -518,7 +518,11 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 					equtity = entrusts.get(0).getEntrustNum();
 				}
 				if (etrExchangeTrade001Service.getFinProductQutoInfo(param).size()>0&&dto.getEntrustNum().add(equtity).compareTo(entrustNum)>0) {
-					errorList.add(new ValidMessage("entrustNum", getMessage("ETR_ERROR_0060",DictCodeListExt3.交易方向_配债.getValue())));
+					String tempMsg = DictCodeListExt2.交易方向_配股.getCodeName();
+					if (DictCodeListExt3.交易方向_配债.getValue().equals(dto.getPs())) {
+						tempMsg = DictCodeListExt3.交易方向_配债.getCodeName();
+					}
+					errorList.add(new ValidMessage("entrustNum", getMessage("ETR_ERROR_0060_2", tempMsg)));
 				}
 			}
 			

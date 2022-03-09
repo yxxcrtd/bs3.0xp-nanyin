@@ -139,6 +139,19 @@ public class ExchangeTransMatchShares1Service extends ExchangeTransMatchSharesCo
         if(StringUtil.equals(entrustDto.getEntrustClass(),DictCodeListExt3.投资指令类型_多组合单资产指令.getValue())) {
             trdProductDeal.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
         }
+
+        // GNS-878:配股生成产品交易表的交易日期应该是清算日期 modify by fuyongsheng 20220217 start
+        // GNS-862:配股的价格 modify by fuyongsheng 20220218 start
+        if(DictCodeListExt2.交易方向_配股.getValue().equals(dealDto.getPs())){
+            trdProductDeal.setTradeDate(dealDto.getSettleDate());
+            trdProductDeal.setUnitCprice(entrustDto.getPrice());
+            trdProductDeal.setCpriceAmt(ArithmeticUtil.multiply(entrustDto.getMarchQty(),trdProductDeal.getUnitCprice()));
+            trdProductDeal.setUnitFprice(entrustDto.getPrice());
+            trdProductDeal.setFpriceAmt(ArithmeticUtil.multiply(entrustDto.getMarchQty(),trdProductDeal.getUnitFprice()));
+            trdProductDeal.setTradeAmt(ArithmeticUtil.subtract(trdProductDeal.getFpriceAmt(),entrustDto.getMarchFeeAmtPay()));
+        }
+        // GNS-862:配股的价格 modify by fuyongsheng 20220218 end
+        // GNS-878:配股生成产品交易表的交易日期应该是清算日期 modify by fuyongsheng 20220217 end
         return trdProductDeal;
     }
 }

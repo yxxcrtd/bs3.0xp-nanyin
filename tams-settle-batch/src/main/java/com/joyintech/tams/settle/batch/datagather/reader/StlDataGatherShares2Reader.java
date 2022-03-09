@@ -1,28 +1,23 @@
 package com.joyintech.tams.settle.batch.datagather.reader;
 
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
-import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.SettleBatchPara;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListStl;
 import com.joyintech.tams.settle.batch.datadeal.service.StlDownDataDealService;
 import com.joyintech.tams.settle.batch.datagather.dto.InvestTradeReaderDto;
-import com.joyintech.tams.settle.batch.datagather.dto.SettleDelDealDetailDto;
 import com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto;
 import com.joyintech.tams.settle.batch.datagather.service.StlDataGatherService;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 分红和送转股票交易数据处理
- * 
+ *
  * @author chenzhuo
  * @date 2020/7/20
  * @see StlDataGatherShares2Reader
@@ -64,10 +59,13 @@ public class StlDataGatherShares2Reader extends StlDataGatherReader {
         setSearchParam(searchParam);
         // 除权交易
         searchParam.put("dealDate", execInfo.getExecuteDate());
-        List<SettleDelDealDetailDto> settleDelDealDetailDtoList = stlDataGatherService.selectSettleDelDealDetail(searchParam);
-        investTradeReaderDto.setSettleTransDataDelDtoList(settleDelDealDetailDtoList);
 
-        //现金分红和送转
+        // GNS-932:除权交易不从SHARE_BONUS_REG读取数据 modify by fuyongsheng 20220224 start
+//        List<SettleDelDealDetailDto> settleDelDealDetailDtoList = stlDataGatherService.selectSettleDelDealDetail(searchParam);
+//        investTradeReaderDto.setSettleTransDataDelDtoList(settleDelDealDetailDtoList);
+        // GNS-932:除权交易不从SHARE_BONUS_REG读取数据 modify by fuyongsheng 20220224 end
+
+        //现金分红和送转和除权登记
         List<SettleTransDataDto> settleTransDataDtos = stlDataGatherMapper.selectCashBonusSettleTransData(searchParam);
         investTradeReaderDto.setSettleTransDataList(settleTransDataDtos);
 
@@ -82,10 +80,7 @@ public class StlDataGatherShares2Reader extends StlDataGatherReader {
     protected void setSearchParam(Map<String, Object> searchParam) {
         // 交易方向列表
         searchParam.put("psList",
-            Arrays.asList(DictCodeList.交易方向_现金分红.getValue(), DictCodeList.交易方向_红利再投.getValue()
-            //GZYHTZJY-1017:增加申购确认方向 modify by fuyongsheng 20220104 start
-            , DictCodeList.交易方向_申购确认.getValue()));
-        //GZYHTZJY-1017:增加申购确认方向 modify by fuyongsheng 20220104 end
+                Arrays.asList(DictCodeList.交易方向_现金分红.getValue(), DictCodeList.交易方向_红利再投.getValue()));
     }
 
     @Override

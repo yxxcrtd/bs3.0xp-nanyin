@@ -131,7 +131,9 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
             String ps = (String)map.get("ps");
             if(StringUtil.equals(ps,DictCodeListExt3.交易方向_正回购.getValue())
             || StringUtil.equals(ps,DictCodeListExt3.交易方向_逆回购.getValue()) ) {
-                map.put("ps",DictCodeList.交易方向_买入.getValue());
+                // GNS-959:交易方向不必特殊处理 modify by fuyongsheng 20220227 start
+                //map.put("ps",DictCodeList.交易方向_买入.getValue());
+                // GNS-959:交易方向不必特殊处理 modify by fuyongsheng 20220227 end
                 map.put("finprodType2",StringUtil.equals(ps,DictCodeListExt3.交易方向_正回购.getValue())?DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue():DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
             }
 

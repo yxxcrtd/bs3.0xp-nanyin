@@ -76,7 +76,11 @@ public class StlDownDataDealDeleteReader extends BaseReader<StlDownDataDealDelet
 	        	}
 	        }*/
 			secTypeList = Arrays.asList(DictCodeListExt1.证券品种_债券.getValue(),DictCodeListExt1.证券品种_基金.getValue(),DictCodeListExt1.证券品种_股票.getValue(),DictCodeListExt1.证券品种_回购.getValue());
-			otherBusinessTypeList = Arrays.asList(DictCodeListExt3.金融产品其他代码类型_配债代码.getValue());
+			otherBusinessTypeList = Arrays.asList(DictCodeListExt3.金融产品其他代码类型_配债代码.getValue()
+					// GNS-853:重复跑批，删除配股数据 modify by fuyongsheng 20220214 start
+					,DictCodeListExt3.金融产品其他代码类型_配股代码.getValue()
+					// GNS-853:重复跑批，删除配股数据 modify by fuyongsheng 20220214 end
+			);
 			// GZYHTZJY-1136:删除上市流通数据 modify fuyongsheng 20220115 start
 			xgsgBusinessTypeList = Arrays.asList(DictCodeListExt3.金融产品其他代码类型_新股申购代码.getValue(), DictCodeListExt3.金融产品其他代码类型_上市流通代码.getValue());
 			// GZYHTZJY-1136:删除上市流通数据 modify fuyongsheng 20220115 end

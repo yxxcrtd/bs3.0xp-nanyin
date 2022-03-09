@@ -7,6 +7,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.*;
 
+import com.alibaba.fastjson.JSON;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
@@ -267,7 +268,7 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
                     // 指令信息处理
                     this.buildPositionBaseData(trdTempDto, infContractDetailfile);
                     // 临时交易及其他数据处理
-                    this.trdRepo(trdTempDto, infContractDetailfile);
+                    this.trdRepo(trdTempDto, infContractDetailfile,infContractDetailfile.getPs());
                     logger.info("【成交数据预清算dto拼装-回购结束】tradePreClearing entrustId: {}, seqno: {}",
                         infContractDetailfile.getEntrustId(), infContractDetailfile.getSeqno());
                 }
@@ -287,7 +288,7 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
                         infContractDetailfile.getEntrustId(), infContractDetailfile.getSeqno());
                 }
                 else if (DictCodeListExt3.交易方向_到期续做.getValue().equals(infContractDetailfile.getPs())){
-                    logger.info("【成交数据预清算dto拼装-协议回购开始】tradePreClearing entrustId: {}, seqno: {}",
+                    logger.info("【成交数据预清算dto拼装-协议回购-到期续作开始】tradePreClearing entrustId: {}, seqno: {}",
                             infContractDetailfile.getEntrustId(), infContractDetailfile.getSeqno());
 
                     trdTempDto = new TrdTempDto();
@@ -295,7 +296,7 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
                     this.buildPositionBaseData(trdTempDto, infContractDetailfile);
                     // 临时交易及其他数据处理
                     this.trdRepoPeriodT56(trdTempDto, infContractDetailfile, false);
-                    logger.info("【成交数据预清算dto拼装-协议回购结束】tradePreClearing entrustId: {}, seqno: {}",
+                    logger.info("【成交数据预清算dto拼装-协议回购-到期续作结束】tradePreClearing entrustId: {}, seqno: {}",
                             infContractDetailfile.getEntrustId(), infContractDetailfile.getSeqno());
                 }
                 else if (DictCodeListExt2.平安资产类型_股票.getValue().equals(type8)) {
@@ -327,6 +328,8 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
                         infContractDetailfile.getEntrustId(), infContractDetailfile.getSeqno());
                 }
                 if (trdTempDto != null) {
+                    logger.debug("【成交数据预清算数据】trdTempDto: {}, infContractDetailfile: {}", JSON.toJSONString(trdTempDto),
+                            JSON.toJSONString(infContractDetailfile));
                     // 手工交收判断 add by yufei 20201022 start
                     if(StringUtil.isNotEmpty(infContractDetailfile.getSettleDay())
                             && StringUtil.isNotEmpty(infContractDetailfile.getBusiType())){
@@ -1242,7 +1245,7 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
      * @see
      * @since 1.0
      */
-    public void trdRepo(TrdTempDto dto,InfContractDetailfile infContractDetailfile) {
+    public void trdRepo(TrdTempDto dto,InfContractDetailfile infContractDetailfile,String ps) {
         // 金融产品临时交易Entity
         // 关联系统交易编号
         dto.setfTradeId(infContractDetailfile.getDealNo());
@@ -1305,9 +1308,15 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
         }else if(DictCodeList.回购拆借方向_正回购.getValue().equals(infContractDetailfile.getPs())){
             dto.setTgBusiType(DictCodeListExt1.平安业务类型_正回购.getValue());
         }
-        if(dto.getFinprodId() == null){
+        logger.debug("[到期续作成交数据特殊处理开始],finProductId:{}, ps:{}", dto.getFinprodId(), ps);
+        if(dto.getFinprodId() == null
+                // GNS-955:到期续作登录finProdId有误 modify by fuyongsheng 20220224 start
+                || DictCodeListExt3.交易方向_到期续做.getValue().equals(ps)
+            // GNS-955:到期续作登录finProdId有误 modify by fuyongsheng 20220224 end
+        ){
             dto.setFinprodId(infContractDetailfile.getDealNo());
         }
+        logger.debug("[到期续作成交数据特殊处理结束],finProductId:{}, ps:{}", dto.getFinprodId(), ps);
         dto.setBranch(0L);
         TrdProductTempDeal trdProductTempDeal = new TrdProductTempDeal();
         BeanUtil.copyPropertiesIgnoreNull(trdProductTempDeal, dto);
@@ -1393,7 +1402,16 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
         // 利率类型
         finTradeProduct.setIntType(DictCodeList.利率类型_固定利率.getValue());
         // 固定利率
-        finTradeProduct.setIntRate(ArithmeticUtil.divide(infContractDetailfile.getUnitCprice(),new BigDecimal(100),8));
+        // GNS-940:协议回购finTradeProduct的intRate回购利率登录有误,应取指令里的price modify by fuyongsheng start
+        // finTradeProduct.setIntRate(ArithmeticUtil.divide(infContractDetailfile.getUnitCprice(),new BigDecimal(100),8));
+        if(DictCodeList.回购类型_质押式协议回购.getValue().equals(assetType1)){
+            if(dto.getPositionBaseData() != null && dto.getPositionBaseData().getEtrEntrust() != null){
+                finTradeProduct.setIntRate(dto.getPositionBaseData().getEtrEntrust().getPrice());
+            }
+        }else{
+            finTradeProduct.setIntRate(ArithmeticUtil.divide(infContractDetailfile.getUnitCprice(),new BigDecimal(100),8));
+        }
+        // GNS-940:协议回购finTradeProduct的intRate回购利率登录有误,应取指令里
         // 计息基础
         finTradeProduct.setBasis(DictCodeList.计息基础_A_365.getValue());
         // 交易场所
@@ -1553,7 +1571,7 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
             // modify by etliu 20220117 end
 
             // 生成首期信息
-            this.trdRepo(dto,infContractDetailfile);
+            this.trdRepo(dto,infContractDetailfile, infContractDetailfile.getPs());
             dto.setPs(DictCodeListExt3.交易方向_到期续做.getValue());
             infContractDetailfile.setPs(DictCodeListExt3.交易方向_到期续做.getValue());
             // 还原原首期编号
@@ -1568,7 +1586,10 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
             BeanUtil.copyPropertiesIgnoreNull(trdProductTempDealB,dto.getTrdProductTempDeal());
             // 交易编号
             BussinessCodeParameter param = new BussinessCodeParameter();
-            param.setCommonBusinessType(DictCodeListExt3.共通业务类型_协议回购到期购回指令);
+            // GNS-955:业务类型赋值错误 modify by fuyongsheng 20220227 start
+            // param.setCommonBusinessType(DictCodeList.共通业务类型_协议回购到期购回指令);
+            param.setCommonBusinessType(DictCodeList.共通业务类型_正回购录入);
+            // GNS-955:业务类型赋值错误 modify by fuyongsheng 20220227 end
             if (!isManualSettle) {
                 trdProductTempDealB.setTradeId(autoPeriodCommonService.buildBussinessCode(param));
             }
@@ -1619,7 +1640,7 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
                     // 当前成交编号作为首期交易编号生成新的首期信息
                     infContractDetailfile.setvTradeId(infContractDetailfile.getDealNo());
                     // 生成首期信息
-                    this.trdRepo(dto,infContractDetailfile);
+                    this.trdRepo(dto,infContractDetailfile,DictCodeListExt3.交易方向_到期续做.getValue());
                     dto.setPs(DictCodeListExt3.交易方向_到期续做.getValue());
                     infContractDetailfile.setPs(DictCodeListExt3.交易方向_到期续做.getValue());
                     // 还原原首期编号
@@ -1633,7 +1654,7 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
                     // 当前成交编号作为首期交易编号生成新的首期信息
                     infContractDetailfile.setvTradeId(infContractDetailfile.getDealNo());
                     // 生成首期信息
-                    this.trdRepo(dto,infContractDetailfile);
+                    this.trdRepo(dto,infContractDetailfile,DictCodeListExt3.交易方向_到期续做.getValue());
                     dto.setPs(DictCodeListExt3.交易方向_到期续做.getValue());
                     infContractDetailfile.setPs(DictCodeListExt3.交易方向_到期续做.getValue());
                     // 还原原首期编号
@@ -1643,7 +1664,10 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
                     BeanUtil.copyPropertiesIgnoreNull(trdProductTempDealB,dto.getTrdProductTempDeal());
                     // 交易编号
                     BussinessCodeParameter param = new BussinessCodeParameter();
-                    param.setCommonBusinessType(DictCodeListExt3.共通业务类型_协议回购到期购回指令);
+                    // GNS-955:业务类型赋值错误 modify by fuyongsheng 20220227 start
+                    // param.setCommonBusinessType(DictCodeList.共通业务类型_协议回购到期购回指令);
+                    param.setCommonBusinessType(DictCodeList.共通业务类型_逆回购录入);
+                    // GNS-955:业务类型赋值错误 modify by fuyongsheng 20220227 end
                     if (!isManualSettle) {
                         trdProductTempDealB.setTradeId(autoPeriodCommonService.buildBussinessCode(param));
                     }
@@ -1717,20 +1741,6 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
         BussinessCodeParameter param = new BussinessCodeParameter();
         // 交割日
         dto.setSettleDate(infContractDetailfile.getTradeDate());
-        if(DictCodeListExt3.交易方向_提前购回.getValue().equals(infContractDetailfile.getPs())){
-            param.setCommonBusinessType(DictCodeListExt3.共通业务类型_协议回购提前购回指令);
-        } else if(DictCodeListExt3.交易方向_到期购回.getValue().equals(infContractDetailfile.getPs())){
-            param.setCommonBusinessType(DictCodeListExt3.共通业务类型_协议回购到期购回指令);
-        } else if(DictCodeListExt3.交易方向_到期续做.getValue().equals(infContractDetailfile.getPs())){
-            param.setCommonBusinessType(DictCodeListExt3.共通业务类型_协议回购到期续做指令);
-        } else if(DictCodeListExt3.交易方向_解除质押.getValue().equals(infContractDetailfile.getPs())){
-            param.setCommonBusinessType(DictCodeListExt3.共通业务类型_协议回购解除质押指令);
-        } else if(DictCodeListExt3.交易方向_中途换券.getValue().equals(infContractDetailfile.getPs())){
-            param.setCommonBusinessType(DictCodeListExt3.共通业务类型_协议回购中途换券指令);
-        }
-        if (StringUtil.isBlank(dto.getTradeId())) {
-            dto.setTradeId(autoPeriodCommonService.buildBussinessCode(param));
-        }
         // 交易方向
         dto.setPs(infContractDetailfile.getPs());
         // 全价总额
@@ -1758,6 +1768,27 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
             dto.setTgBusiType(DictCodeListExt1.平安业务类型_正回购.getValue());
         }else {
             dto.setTgBusiType(DictCodeListExt1.平安业务类型_逆回购.getValue());
+        }
+        // GNS-955:修改采番业务类型 modify by fuyongsheng 20220224 start
+        if(DictCodeListExt1.平安业务类型_逆回购.getValue().equals(dto.getTgBusiType())){
+            param.setCommonBusinessType(DictCodeList.共通业务类型_逆回购录入);
+        }else {
+            param.setCommonBusinessType(DictCodeList.共通业务类型_正回购录入);
+        }
+//        if(DictCodeListExt3.交易方向_提前购回.getValue().equals(infContractDetailfile.getPs())){
+//            param.setCommonBusinessType(DictCodeList.共通业务类型_协议回购提前购回指令);
+//        } else if(DictCodeListExt3.交易方向_到期购回.getValue().equals(infContractDetailfile.getPs())){
+//            param.setCommonBusinessType(DictCodeList.共通业务类型_协议回购到期购回指令);
+//        } else if(DictCodeListExt3.交易方向_到期续做.getValue().equals(infContractDetailfile.getPs())){
+//            param.setCommonBusinessType(DictCodeList.共通业务类型_协议回购到期续做指令);
+//        } else if(DictCodeListExt3.交易方向_解除质押.getValue().equals(infContractDetailfile.getPs())){
+//            param.setCommonBusinessType(DictCodeList.共通业务类型_协议回购解除质押指令);
+//        } else if(DictCodeListExt3.交易方向_中途换券.getValue().equals(infContractDetailfile.getPs())){
+//            param.setCommonBusinessType(DictCodeList.共通业务类型_协议回购中途换券指令);
+//        }
+        // GNS-955:修改采番业务类型 modify by fuyongsheng 20220224 end
+        if (StringUtil.isBlank(dto.getTradeId())) {
+            dto.setTradeId(autoPeriodCommonService.buildBussinessCode(param));
         }
 
         if(dto.getFinprodId() == null){
@@ -2392,6 +2423,12 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
             if (StringUtil.equals(DictCodeListExt3.交易方向_中途换券.getValue(), trdTempDto.getPs())) {
                 settleInfo.setbPledgeId(entrustMsgbyMQMapper.selectPledgeId(infContractDetailfile.getvTradeId()));
             }
+            // GNS-955:提前购回的到期结算金额应是提前购回指令的到期结算金额，不是首期里的 modify by fuyongsheng 20220227 start
+            if(StringUtil.equals(DictCodeListExt3.交易方向_提前购回.getValue(), trdTempDto.getPs())){
+                EtrEntrustAdd etrEntrustAdd = entrustMsgbyMQMapper.queryEtrEntrustAdd(infContractDetailfile.getEntrustId());
+                settleInfo.setmTradeAmt(etrEntrustAdd.getmTradeAmt());
+            }
+            // GNS-955:提前购回的到期结算金额应是提前购回指令的到期结算金额，
         }
         // modify by etliu 20220114 end
         trdManualSettleInfoMapper.insertSelective(settleInfo);

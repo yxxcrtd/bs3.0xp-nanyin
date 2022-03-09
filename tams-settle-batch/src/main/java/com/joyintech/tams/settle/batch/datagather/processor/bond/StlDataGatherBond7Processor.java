@@ -134,7 +134,11 @@ public class StlDataGatherBond7Processor extends BaseProcessor<NeedOperateEntity
                         settleTransTgMapping.setTradeId(totalTradeId);
                         settleTransTgMapping.setTradeIdTg(totalTradeId);
                         settleTransTgMapping.setTgDataStatus("02");
-                        settleTransTgMapping.setDealDate(settleTransData.getDealDate());
+                        // modify by etliu 20220222 start
+                        // 广农商二阶段 GNS-931:【广农商场内清算】上/深交所 基金存续期重复跑批，生成数据有误
+//                        settleTransTgMapping.setDealDate(settleTransData.getDealDate());
+                        settleTransTgMapping.setDealDate(getBatchExecuteInfo().getExecuteDate());
+                        // modify by etliu 20220222 end
                         settleTransTgMappingList.add(settleTransTgMapping);
 
                         //组合交易
@@ -175,6 +179,11 @@ public class StlDataGatherBond7Processor extends BaseProcessor<NeedOperateEntity
                         //重新
                         List<PtlSecPositionFlow> positionFlows = ptlSecPositionFlowMap.get(ptlSecPosition.getFinprodId() + "," + ptlSecPosition.getSecAcctId() + "," + ptlSecPosition.getInvAim());
                         for (PtlSecPositionFlow positionFlow : positionFlows){
+                            // GNS-932:判断是否同一组合 modify by fuyongsheng 20220225 start
+                            if(!ptlSecPosition.getPortfolioId().equals(positionFlow.getPortfolioId())){
+                                continue;
+                            }
+                            // GNS-932:判断是否同一组合 modify by fuyongsheng 20220225 end
                             //只需要处理指令、组合持仓 组合持仓流水PTL_SEC_POSITION_FLOW
                             PtlSecPositionFlow ptlSecPositionFlowFrozen = new PtlSecPositionFlow();
                             //流水号

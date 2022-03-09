@@ -1,5 +1,6 @@
 package com.joyintech.tams.exchange.service.trade.processor;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
 import com.joyintech.framework.rabbitmq.annotation.MessageSender;
@@ -77,7 +78,7 @@ public class MessageSenderService {
     @MessageSender(exchange = "exchange.fanout.exchange.manualSettleTrade", routingKey = "exchange.manualSettleTrade.use")
     public SimpleRabbitMessage pushTradeToMQForFixedIncome(Trade trade, Instruction instruction, EntrustInterface entrust) {
         logger.info("pushTradeToMQForFixedIncome() called with parameters => 【trade = {}】, 【instruction = {}】, 【entrust = {}】",
-                trade, instruction, entrust);
+                JSON.toJSONString(trade), JSON.toJSONString(instruction), JSON.toJSONString(entrust));
 
         if (Objects.isNull(trade)
                 || StringUtil.isEmpty(trade.getId())
@@ -200,7 +201,11 @@ public class MessageSenderService {
         // 上交所固定收益平台债券
         if (DictCodeList.交易平台_固定收益平台.getValue().equals(tradePlat)
                 && InvestmentAssetType.isBond(assetType)
-                && BusinessFlag.FIXED_INCOME.value.equals(bsFlag)) {
+                // GNS-952:更换判断固定收益平台方法 modify by fuyongsheng 20220224 start
+                // && BusinessFlag.FIXED_INCOME.value.equals(bsFlag)
+                && IntegratedEntrustUtils.isFixedIncome(trade.getEntrustProp())
+            // GNS-952:更换判断固定收益平台方法 modify by fuyongsheng 20220224 end
+        ) {
             // 上海固收
             if (EntrustBs.BUY.value.equals(entrustBs)) {
                 return BusinessType.FIXED_INCOME_BUY.value;
@@ -223,7 +228,10 @@ public class MessageSenderService {
         if (EntrustProp.SH_REPURCHASE_TRADE.value.equals(entrustProp)
                 || EntrustProp.SH_REPURCHASE_TRADE_CONFIRM.value.equals(entrustProp)
                 || EntrustProp.SH_REPURCHASE_TRADE_REFUSE.value.equals(entrustProp)) {
-            busiType = EntrustBs.SELL.value.equals(entrustBs) ?
+            // GNS-940:正回购是买 modify by fuyongsheng 20220222 start
+            // busiType = EntrustBs.SELL.value.equals(entrustBs) ?
+            busiType = EntrustBs.BUY.value.equals(entrustBs) ?
+                    // GNS-940:正回购是买 modify by fuyongsheng 20220222 end
                     BusinessType.SH_SELL_PROTOCOL_BACK_BEGIN.value :
                     BusinessType.SH_ANTI_PROTOCOL_BACK_BEGIN.value;
         }
@@ -231,7 +239,10 @@ public class MessageSenderService {
         else if (EntrustProp.SH_REPURCHASE_RENEWAL.value.equals(entrustProp)
                 || EntrustProp.SH_REPURCHASE_RENEWAL_CONFIRM.value.equals(entrustProp)
                 || EntrustProp.SH_REPURCHASE_RENEWAL_REFUSE.value.equals(entrustProp)) {
-            busiType = EntrustBs.SELL.value.equals(entrustBs) ?
+            // GNS-940:正回购是买 modify by fuyongsheng 20220222 start
+            // busiType = EntrustBs.SELL.value.equals(entrustBs) ?
+            busiType = EntrustBs.BUY.value.equals(entrustBs) ?
+                    // GNS-940:正回购是买 modify by fuyongsheng 20220222 end
                     BusinessType.SH_SELL_PROTOCOL_BACK_RENEWAL.value :
                     BusinessType.SH_ANTI_PROTOCOL_BACK_RENEWAL.value;
         }
@@ -239,21 +250,43 @@ public class MessageSenderService {
         else if (EntrustProp.SH_REPURCHASE_EXCHANGE.value.equals(entrustProp)
                 || EntrustProp.SH_REPURCHASE_EXCHANGE_CONFIRM.value.equals(entrustProp)
                 || EntrustProp.SH_REPURCHASE_EXCHANGE_REFUSE.value.equals(entrustProp)) {
-            busiType = EntrustBs.SELL.value.equals(entrustBs) ?
+            // GNS-940:正回购是买 modify by fuyongsheng 20220222 start
+            // busiType = EntrustBs.SELL.value.equals(entrustBs) ?
+            busiType = EntrustBs.BUY.value.equals(entrustBs) ?
+                    // GNS-940:正回购是买 modify by fuyongsheng 20220222 end
                     BusinessType.SH_SELL_PROTOCOL_BACK_EXCHANGE.value :
                     BusinessType.SH_ANTI_PROTOCOL_BACK_EXCHANGE.value;
         }
+        // GNS-954:上交所协议回购到期购回 modify by fuyongsheng 20220224 start
+        // 到期购回
+        else if(EntrustProp.SH_REPURCHASE_EXPIRE.value.equals(entrustProp)){
+            busiType = EntrustBs.BUY.value.equals(entrustBs) ?
+                    BusinessType.SH_SELL_PROTOCOL_BACK_BUYBACK.value :
+                    BusinessType.SH_ANTI_PROTOCOL_BACK_BUYBACK.value;
+        }
+        // GNS-954:上交所协议回购到期购回 modify by fuyongsheng 20220224 end
         // 解除质押
         else if (EntrustProp.SH_REPURCHASE_RELEASE.value.equals(entrustProp)
                 || EntrustProp.SH_REPURCHASE_RELEASE_CONFIRM.value.equals(entrustProp)
                 || EntrustProp.SH_REPURCHASE_RELEASE_REFUSE.value.equals(entrustProp)) {
-            busiType = EntrustBs.SELL.value.equals(entrustBs) ?
+            // GNS-940:正回购是买 modify by fuyongsheng 20220222 start
+            // busiType = EntrustBs.SELL.value.equals(entrustBs) ?
+            busiType = EntrustBs.BUY.value.equals(entrustBs) ?
+                    // GNS-940:正回购是买 modify by fuyongsheng 20220222 end
                     BusinessType.SH_SELL_PROTOCOL_BACK_RELEASE.value :
                     BusinessType.SH_ANTI_PROTOCOL_BACK_RELEASE.value;
         }
         // 提前购回
-        else if (EntrustProp.SH_REPURCHASE_TERMINATE.value.equals(entrustProp)) {
-            busiType = EntrustBs.SELL.value.equals(entrustBs) ?
+        else if (EntrustProp.SH_REPURCHASE_TERMINATE.value.equals(entrustProp)
+                // GNS-955:增加提前购回判断条件 modify by fuyongsheng 20220224 start
+                || EntrustProp.SH_REPURCHASE_TERMINATE_CONFIRM.value.equals(entrustProp)
+                || EntrustProp.SH_REPURCHASE_TERMINATE_REFUSE.value.equals(entrustProp)
+            // GNS-955:增加提前购回判断条件 modify by fuyongsheng 20220224 end
+        ) {
+            // GNS-940:正回购是买 modify by fuyongsheng 20220222 start
+            // busiType = EntrustBs.SELL.value.equals(entrustBs) ?
+            busiType = EntrustBs.BUY.value.equals(entrustBs) ?
+                    // GNS-940:正回购是买 modify by fuyongsheng 20220222 end
                     BusinessType.SH_SELL_PROTOCOL_BACK_TERMINATE.value :
                     BusinessType.SH_ANTI_PROTOCOL_BACK_TERMINATE.value;
         }
@@ -261,18 +294,31 @@ public class MessageSenderService {
         // 深圳协议回购
         // 初始交易
         else if (EntrustProp.SZ_REPURCHASE_BEGIN.value.equals(entrustProp)) {
-            busiType = EntrustBs.SELL.value.equals(entrustBs) ?
+            // GNS-940:正回购是买 modify by fuyongsheng 20220222 start
+            // busiType = EntrustBs.SELL.value.equals(entrustBs) ?
+            busiType = EntrustBs.BUY.value.equals(entrustBs) ?
+                    // GNS-940:正回购是买 modify by fuyongsheng 20220222 end
                     BusinessType.SZ_SELL_PROTOCOL_BACK_BEGIN.value :
                     BusinessType.SZ_ANTI_PROTOCOL_BACK_BEGIN.value;
         }
         // 提前购回&到期购回
         else if (EntrustProp.SZ_REPURCHASE_BUYBACK.value.equals(entrustProp)) {
-            if (trade.getTradingDay().equals(((IntegratedEntrust) entrust).getBackDate())) {
-                busiType = EntrustBs.SELL.value.equals(entrustBs) ?
+            // modify by etliu 20220226 start
+            // 广农商二阶段 GNS-953:【广农商场内清算】深交所协议回购 正/逆回购首期，手工交收-日终清结算后，头寸更新有误
+//            if (trade.getTradingDay().equals(((IntegratedEntrust) entrust).getBackDate())) {
+            if (StringUtil.equals("T95", instruction.getPs())) {
+                // modify by etliu 20220226 end
+                // GNS-940:正回购是买 modify by fuyongsheng 20220222 start
+                // busiType = EntrustBs.SELL.value.equals(entrustBs) ?
+                busiType = EntrustBs.BUY.value.equals(entrustBs) ?
+                        // GNS-940:正回购是买 modify by fuyongsheng 20220222 end
                         BusinessType.SZ_SELL_PROTOCOL_BACK_BUYBACK.value :
                         BusinessType.SZ_ANTI_PROTOCOL_BACK_BUYBACK.value;
             } else {
-                busiType = EntrustBs.SELL.value.equals(entrustBs) ?
+                // GNS-940:正回购是买 modify by fuyongsheng 20220222 start
+                // busiType = EntrustBs.SELL.value.equals(entrustBs) ?
+                busiType = EntrustBs.BUY.value.equals(entrustBs) ?
+                        // GNS-940:正回购是买 modify by fuyongsheng 20220222 end
                         BusinessType.SZ_SELL_PROTOCOL_BACK_TERMINATE.value :
                         BusinessType.SZ_ANTI_PROTOCOL_BACK_TERMINATE.value;
             }
@@ -280,7 +326,10 @@ public class MessageSenderService {
         }
         // 到期续作
         else if (EntrustProp.SZ_REPURCHASE_RENEWAL.value.equals(entrustProp)) {
-            busiType = EntrustBs.SELL.value.equals(entrustBs) ?
+            // GNS-940:正回购是买 modify by fuyongsheng 20220222 start
+            // busiType = EntrustBs.SELL.value.equals(entrustBs) ?
+            busiType = EntrustBs.BUY.value.equals(entrustBs) ?
+                    // GNS-940:正回购是买 modify by fuyongsheng 20220222 end
                     BusinessType.SZ_SELL_PROTOCOL_BACK_RENEWAL.value :
                     BusinessType.SZ_ANTI_PROTOCOL_BACK_RENEWAL.value;
         }

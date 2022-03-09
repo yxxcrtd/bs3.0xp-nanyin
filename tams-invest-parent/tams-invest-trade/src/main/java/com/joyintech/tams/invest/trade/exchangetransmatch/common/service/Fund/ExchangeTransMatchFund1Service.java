@@ -51,7 +51,8 @@ public class ExchangeTransMatchFund1Service extends BaseService {
                 entity.setPtlTrade(this.generatePtlTrade(dto,entrustDtoTmp,Arrays.asList((TrdProductDealDto)entity.getTrdProductDeal())));
                 entity.setStlPayOrdersList(this.generateStlPayOrdersList(dto,Arrays.asList((TrdProductDealDto)entity.getTrdProductDeal())));
         		entity.setTrdTradeFeeDetailList(this.genTrdTradeFeeDetailList(dto,commonEntrustDto,entity.getTrdProductDeal()));
-                baseTradeProductDealDtoList.add(entity);
+                entity.setPaTrdProductDeal(this.genPaTrdProductDeal(dto, commonEntrustDto, entity.getTrdProductDeal()));
+        		baseTradeProductDealDtoList.add(entity);
             }
         }
         else {
@@ -61,7 +62,11 @@ public class ExchangeTransMatchFund1Service extends BaseService {
             entity.setPtlTrade(this.generatePtlTrade(dto,commonEntrustDto,Arrays.asList((TrdProductDealDto)entity.getTrdProductDeal())));
             entity.setStlPayOrdersList(this.generateStlPayOrdersList(dto,Arrays.asList((TrdProductDealDto)entity.getTrdProductDeal())));
         	entity.setTrdTradeFeeDetailList(this.genTrdTradeFeeDetailList(dto,commonEntrustDto,entity.getTrdProductDeal()));
-		
+            // GNS-965:登录PaTrdProductDeal表 modify by fuyongsheng 20220225 start
+            //生成金融产品交易扩展
+            entity.setPaTrdProductDeal(this.genPaTrdProductDeal(dto, commonEntrustDto, entity.getTrdProductDeal()));
+            // GNS-965:登录PaTrdProductDeal表 modify by fuyongsheng 20220225 end
+
             baseTradeProductDealDtoList.add(entity);
         }
 
@@ -528,5 +533,15 @@ public class ExchangeTransMatchFund1Service extends BaseService {
             feeAmtPay = ArithmeticUtil.doAdd(feeAmtPay, settleTransDataDto.getCommissionAmt());
         }
         return feeAmtPay;
+    }
+
+    /**
+     * 金融产品交易附属表
+     */
+    private PaTrdProductDeal genPaTrdProductDeal(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto, TrdProductDeal trdProductDeal) {
+        PaTrdProductDeal paTrdProductDeal = new PaTrdProductDeal();
+        BeanUtil.copyPropertiesIgnoreNull(paTrdProductDeal, trdProductDeal);
+        paTrdProductDeal.setPaBussType(trdProductDeal.getBusiType());
+        return paTrdProductDeal;
     }
 }

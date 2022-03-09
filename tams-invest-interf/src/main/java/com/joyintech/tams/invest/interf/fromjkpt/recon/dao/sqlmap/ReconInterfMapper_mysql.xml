@@ -706,13 +706,7 @@
             CCY,
             TRADE_MARKET,
             PS,
-            NULL TRADE_ID,
             SEC_ACCT_ID,
-            NULL SETTLEMEN_TYPE,
-            NULL PRICE,
-            NULL UNIT,
-            NULL FULL_PRICE,
-            NULL HGDQR,
             MARKET_ID,
             FINPROD_ID,
             FINPROD_TYPE,
@@ -925,7 +919,38 @@
             <!--到期续作对账单有两笔,一笔到期,一笔新开,两个price不一致-->
             <!--PRICE-->
         UNION ALL
-        <!--金证直接按照明细接入-->
+        <!--金证直接按照委托编号接入-->
+        <!--金证直接按照委托编号接入-->
+        SELECT
+        CUSTOMER_ID,
+        INSTRUCTION_ID,
+        ACCOUT,
+        SEAT_NUMBER,
+        TRADE_DATE,
+        CCY,
+        TRADE_MARKET,
+        PS,
+        SEC_ACCT_ID,
+        MARKET_ID,
+        FINPROD_ID,
+        FINPROD_TYPE,
+        'H01' REPO_TYPE,
+        SUM(TRADE_NUM) TRADE_NUM,
+        SUM(TRADE_AMT) TRADE_AMT,
+        SUM(INT_AMT) INT_AMT,
+        SUM(HAPPEN_AMT) HAPPEN_AMT,
+        SUM(HGDQJE) HGDQJE,
+        SUM(STAMP_FEE) STAMP_FEE,
+        SUM(JSF_AMT) JSF_AMT ,
+        SUM(GHF_AMT) GHF_AMT,
+        SUM(ZGF_AMT) ZGF_AMT,
+        SUM(SETTLE_FEE) SETTLE_FEE,
+        SUM(TRADE_FEE) TRADE_FEE,
+        SUM(COMMISSION_AMT) COMMISSION_AMT,
+        SUM(OTHER_FEEAMT) OTHER_FEEAMT,
+        SUM(TOTAL_TEEAMT) TOTAL_TEEAMT
+        FROM
+        (
         SELECT
             T4.CUSTOMER_ID,
             WTBH INSTRUCTION_ID,
@@ -997,7 +1022,6 @@
                 WHEN ZYDM = '债券回购购回收取'  then 'F03'
                 ELSE NULL
             END FINPROD_TYPE,
-            'H01' REPO_TYPE,
             <!--CASE WHEN SJSF > 0 THEN abs(CJSL) * -1 ELSE abs(CJSL) END AS TRADE_NUM,-->
             CJSL AS TRADE_NUM,
             <!--CASE WHEN SJSF > 0 THEN abs(QJCJJE) ELSE abs(QJCJJE) * -1 END AS TRADE_AMT,-->
@@ -1071,6 +1095,20 @@
             <if test="execDate != null">
                 AND T1.JYRQ = #{execDate,jdbcType=VARCHAR}
             </if>
+        )temp
+        GROUP BY
+        CUSTOMER_ID,
+        INSTRUCTION_ID,
+        ACCOUT,
+        SEAT_NUMBER,
+        TRADE_DATE,
+        CCY,
+        TRADE_MARKET,
+        PS,
+        MARKET_ID,
+        FINPROD_ID,
+        FINPROD_TYPE,
+        SEC_ACCT_ID
     </select>
 
     <sql id="detailesql2">

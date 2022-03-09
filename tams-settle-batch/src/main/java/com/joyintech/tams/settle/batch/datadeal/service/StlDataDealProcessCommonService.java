@@ -137,7 +137,7 @@ public class StlDataDealProcessCommonService {
 		if (StringUtil.equals(StlDataDealProcessConstant.SJSMX_JYFS_03, jsfs)) {
 			return DictCodeList.交易平台_竞价撮合平台.getValue();
 		}
-		return null;
+		return DictCodeList.交易平台_竞价撮合平台.getValue();
 	}
 	
 	// 交收方式取得

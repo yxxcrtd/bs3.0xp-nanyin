@@ -58,6 +58,14 @@ public class InvestDealRevokeReader extends BaseReader<DealRevokeParamDto> {
                 List<String> portfolioIdList=null;
                 List<String> bondTotalTradeIdList = investDealRevokeService.selectTotalTradeIdForBond(tradeDate, portfolioIdList);
                 Map<String,String> bondTotcalTradeIdMap = investDealRevokeService.getTotalTradeIdPsMap(bondTotalTradeIdList);
+                // modify by etliu 20220222 start
+                // 广农商二阶段 GNS-890:【广农商场内清算】场内债券存续期交易重复跑批时，未对原交易数据进行撤销操作
+                for (String totalTradeId: bondTotalTradeIdList) {
+                    if (!bondTotcalTradeIdMap.containsKey(totalTradeId)) {
+                        bondTotcalTradeIdMap.put(totalTradeId, totalTradeId);
+                    }
+                }
+                // modify by etliu 20220222 end
                 revokeParamDtos.add(new DealRevokeParamDto(DictCodeListExt1.证券品种_债券.getValue(), tradeDate, portfolioIdList,null, bondTotalTradeIdList,null,bondTotcalTradeIdMap));
 //            }
 //            else if(StringUtil.equals(DictCodeListExt1.证券品种_回购.getValue(), key)) {
@@ -67,6 +75,14 @@ public class InvestDealRevokeReader extends BaseReader<DealRevokeParamDto> {
                 List<String> repoTotalTradeIdList = investDealRevokeService.selectTotalTradeIdForRepo(tradeDate, portfolioIdList);
                 Map<String,String> repoTradeIdMap = investDealRevokeService.getTradeIdPsMap(tradeIdList);
                 Map<String,String> repoTotcalTradeIdMap = investDealRevokeService.getRepoTradeIdPsMap(repoTotalTradeIdList);
+                // modify by etliu 20220222 start
+                // 广农商二阶段 GNS-890:【广农商场内清算】场内债券存续期交易重复跑批时，未对原交易数据进行撤销操作
+                for (String totalTradeId: repoTotalTradeIdList) {
+                    if (!repoTotcalTradeIdMap.containsKey(totalTradeId)) {
+                        repoTotcalTradeIdMap.put(totalTradeId, totalTradeId);
+                    }
+                }
+                // modify by etliu 20220222 end
                 revokeParamDtos.add(new DealRevokeParamDto(DictCodeListExt1.证券品种_回购.getValue(), tradeDate, portfolioIdList, tradeIdList, repoTotalTradeIdList,repoTradeIdMap,repoTotcalTradeIdMap));
 //            }
 //            else if(StringUtil.equals(DictCodeListExt1.证券品种_股票.getValue(), key)) {
@@ -76,6 +92,14 @@ public class InvestDealRevokeReader extends BaseReader<DealRevokeParamDto> {
                 List<String> sharesTotalTradeIdList = investDealRevokeService.selectTotalTradeIdForShares(tradeDate, portfolioIdList);
                 Map<String,String> sharesTradeIdMap = investDealRevokeService.getTradeIdPsMap(sharesTradeIdList);
                 Map<String,String> sharesTotcalTradeIdMap = investDealRevokeService.getTotalTradeIdPsMap(sharesTotalTradeIdList);
+                // modify by etliu 20220222 start
+                // 广农商二阶段 GNS-890:【广农商场内清算】场内债券存续期交易重复跑批时，未对原交易数据进行撤销操作
+                for (String totalTradeId: sharesTotalTradeIdList) {
+                    if (!sharesTotcalTradeIdMap.containsKey(totalTradeId)) {
+                        sharesTotcalTradeIdMap.put(totalTradeId, totalTradeId);
+                    }
+                }
+                // modify by etliu 20220222 end
                 revokeParamDtos.add(new DealRevokeParamDto(DictCodeListExt1.证券品种_股票.getValue(), tradeDate, portfolioIdList, sharesTradeIdList, sharesTotalTradeIdList,sharesTradeIdMap,sharesTotcalTradeIdMap));
 //            }
 //            else if(StringUtil.equals(DictCodeListExt1.证券品种_基金.getValue(), key)) {
@@ -85,6 +109,14 @@ public class InvestDealRevokeReader extends BaseReader<DealRevokeParamDto> {
                 List<String> fundTotalTradeIdList = investDealRevokeService.selectTotalTradeIdForFund(tradeDate, portfolioIdList);
                 Map<String,String> fundTradeIdMap = investDealRevokeService.getTradeIdPsMap(fundTradeIdList);
                 Map<String,String> fundTotalTradeIdMap = investDealRevokeService.getTotalTradeIdPsMap(fundTotalTradeIdList);
+                // modify by etliu 20220222 start
+                // 广农商二阶段 GNS-890:【广农商场内清算】场内债券存续期交易重复跑批时，未对原交易数据进行撤销操作
+                for (String totalTradeId: fundTotalTradeIdList) {
+                    if (!fundTotalTradeIdMap.containsKey(totalTradeId)) {
+                        fundTotalTradeIdMap.put(totalTradeId, totalTradeId);
+                    }
+                }
+                // modify by etliu 20220222 end
                 revokeParamDtos.add(new DealRevokeParamDto(DictCodeListExt1.证券品种_基金.getValue(), tradeDate, portfolioIdList, fundTradeIdList, fundTotalTradeIdList,fundTradeIdMap,fundTotalTradeIdMap));
             //}
         return revokeParamDtos;

@@ -74,7 +74,10 @@
                 A1.CON_AMT conAmt,
                 A1.R_FINPROD_ID rFinMarketId,
                 E1.FINPROD_ID  rFinprodId,
-                A.F_CJBH fCjbh
+                A.F_CJBH fCjbh,
+                <!--GNS-878:增加busitype,手动成交匹配需要 modify by fuyongsheng 20220217 start-->
+                A.BUSI_TYPE
+                <!--GNS-878:增加busitype,手动成交匹配需要 modify by fuyongsheng 20220217 end-->
         from SETTLE_TRANS_DATA_TOTAL A
         LEFT JOIN SETTLE_TRANS_DATA_TOTAL_STATUS B
             ON A.SEQ_ID = B.SEQ_NO
@@ -293,6 +296,11 @@
                 </if>
 
             </if>
+            <!--GNS-847:竞价回购增加期限品种查询条件 modify by fuyongsheng 20220215 start-->
+            <if test="termType !=null and termType!='' and repoType!=null and repoType!='' and repoType == 'H02'.toString()">
+                AND A1.FINPROD_ID = #{termType}
+            </if>
+            <!--GNS-847:竞价回购增加期限品种查询条件 modify by fuyongsheng 20220215 end-->
     </select>
 
     <select id="getFinprodId" resultType="com.joyintech.framework.select.SelectOptionDto">
@@ -525,7 +533,13 @@
         END finprodId,
         C.PS ps,
         A.MARCH_AMT_EN tradeAmt,
-        A.MARCH_QTY_EN tradeNum,
+        <!--GNS-892:回购需特殊处理 modify by fuyongsheng 20220227 start-->
+        <!--A.MARCH_QTY_EN tradeNum,-->
+        CASE
+        WHEN C.SEC_TYPE = #{SEC_TYPE_09} THEN A.MARCH_AMT_EN
+        ELSE A.MARCH_QTY_EN
+        END tradeNum,
+        <!--GNS-892:回购需特殊处理 modify by fuyongsheng 20220227 end-->
         CASE
             WHEN C.SEC_TYPE = #{SEC_TYPE_09} THEN C.UNIT_CPRICE
         ELSE

@@ -1,20 +1,20 @@
 package com.joyintech.tams.settle.batch.autoreconciliation.service;
 
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.constant.DictCodeListStl;
+import com.joyintech.tams.constant.*;
+import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
-import com.joyintech.tams.settle.batch.autoreconciliation.dao.AutoReconciliationMapper;
 import com.joyintech.tams.invest.common.reconciliation.dto.DayEndAccountDaichuliDto;
 import com.joyintech.tams.invest.common.reconciliation.service.ReconciliationCommonService;
-import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import com.joyintech.tams.settle.batch.autoreconciliation.dao.AutoReconciliationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 自动对账批处理
@@ -75,6 +75,8 @@ public class AutoReconciliationService {
         param.put("PS_T08", DictCodeList.交易方向_还本.getValue());
         param.put("PS_T09", DictCodeList.交易方向_收息.getValue());
         param.put("PS_T49", DictCodeListExt1.交易方向_债转股.getValue());
+        param.put("PS_T46", DictCodeListExt2.交易方向_配股.getValue());
+        param.put("PS_T97", DictCodeListExt3.交易方向_配债.getValue());
         // add by fuyongsheng 20211208 没有对账单的自动批处理(step2)功能开发 end
         param.put("prodType2_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         param.put("prodType2_F10", DictCodeListExt1.金融产品类型_投管用_股票.getValue());

@@ -99,7 +99,8 @@
             {field:'conPrice', visible:false},
             {field:'conAmt', visible:false},
             {field:'rFinMarketId', visible:false},
-            {field:'rFinprodId', visible:false}
+            {field:'rFinprodId', visible:false},
+            {field:'busiType', visible:false}
         ]
 
     });
@@ -281,6 +282,9 @@
                 object.secAccount = item.secAcctId;
                 object.repoType = item.repoType;
                 object.remainNum = item.remainNum;
+                // GNS-847:增加期限品种条件 modify by fuyongsheng 20220215 start
+                object.termType = item.termType;
+                // GNS-847:增加期限品种条件 modify by fuyongsheng 20220215 end
                 if(entrustDataTable.table) {
                     entrustDataTable.clear();
                 }

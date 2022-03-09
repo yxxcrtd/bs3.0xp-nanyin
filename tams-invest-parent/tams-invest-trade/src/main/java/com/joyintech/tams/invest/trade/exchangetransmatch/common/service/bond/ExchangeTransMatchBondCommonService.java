@@ -2,18 +2,21 @@ package com.joyintech.tams.invest.trade.exchangetransmatch.common.service.bond;
 
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.common.TrdProductDealDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
+import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
+import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonDto;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonEntrustDetailDto;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonEntrustDto;
@@ -42,6 +45,9 @@ public class ExchangeTransMatchBondCommonService extends BaseService {
 
     @Autowired
     private TrdBondInvestTrade002Service trdBondInvestTrade002Service;
+
+    @Autowired
+    private BasePtlSecPositionInfoService basePtlSecPositionInfoService;
 
     @Value("${application.micorservice.contextPath.commonService:http://commonService}")
     private String commonServiceName;
@@ -243,7 +249,7 @@ public class ExchangeTransMatchBondCommonService extends BaseService {
         // 投资组合代码
         dealTotal.setPortfolioId(entrustDto.getPortfolioId());
         // 备注
-        dealTotal.setRemark(entrustDto.getRemark());
+        dealTotal.setRemark("数据清算自动处理");
         // 投管业务类型
 //        dealTotal.setTgBusiType(trdProductDealDto.getTgBusiType());
         // 利率
@@ -385,7 +391,7 @@ public class ExchangeTransMatchBondCommonService extends BaseService {
         // 登记托管机构
         trdProductDeal.setRegistOrg(DictCodeList.登记托管机构_中债_中国证券登记结算有限责任公司.getValue());
         // 备注
-        trdProductDeal.setRemark(null);
+        trdProductDeal.setRemark("数据清算自动处理");
         // 撤销说明
         trdProductDeal.setCancelRemark(null);
         // 销售代码
@@ -819,4 +825,160 @@ public class ExchangeTransMatchBondCommonService extends BaseService {
     public TrdDealTotalAdd selectTotleDealByTotleId(String tradeId){
         return exchangeTransMatchCommonMapper.queryTotalAddByTradeId(tradeId);
     }
+
+
+    // GNS-929:处理质押券出入库头寸 modify by fuyongsheng 20220225 start
+    /**
+     * 处理质押券出入库头寸流水
+     */
+    public void handlePositionOfZyQ(FinProductTradeDto finProductTradeDto){
+        if(CollectionUtils.isEmpty(finProductTradeDto.getBaseTradeProductDealDtos())){
+            return;
+        }
+        TrdProductDeal trdProductDeal = finProductTradeDto.getBaseTradeProductDealDtos().get(0).getTrdProductDeal();
+        TrdProductDealAdd trdProductDealAdd = finProductTradeDto.getBaseTradeProductDealDtos().get(0).getTrdProductDealAdd();
+        String portfolioId = trdProductDealAdd.getPortfolioId();
+        String secAcctId = trdProductDeal.getSecManageAcctId();
+        Date tradeDate = trdProductDeal.getTradeDate();
+        String finprodId = trdProductDeal.getFinprodId();
+        String tradeId = trdProductDeal.getTradeId();
+        BigDecimal shareAmt = trdProductDeal.getShareAmt();
+        BigDecimal tradeAmt = trdProductDeal.getTradeAmt();
+        //更新持仓头寸
+        if(DictCodeListExt3.交易方向_质押券入库.getValue().equals(trdProductDeal.getPs())) {
+            //1.指令持仓流水（标准券）：正流水
+            EtrPositionHoldDto etrPositionHoldDto = new EtrPositionHoldDto();
+            List<EtrSecPositionFlowDto> etrSecPositionFlows = new ArrayList<>();// 持仓流水
+            EtrSecPositionFlowDto etrSecPositionFlowDtoUnit = new EtrSecPositionFlowDto();// 组合持仓流水DTO
+            /********************** 持仓流水DTO构造 *************************************/
+            etrSecPositionFlowDtoUnit.setSeqno(IDGenerator.generate());
+            etrSecPositionFlowDtoUnit.setPortfolioId(portfolioId);// 组合代码
+            etrSecPositionFlowDtoUnit.setSecAcctId(secAcctId);// 证券账户
+            etrSecPositionFlowDtoUnit.setFinprodId("XN_PRODID999");// 金融产品代码
+            etrSecPositionFlowDtoUnit.setBranch(new Long(0));// 分支序号
+            etrSecPositionFlowDtoUnit.setInvAim("999999");
+            etrSecPositionFlowDtoUnit.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());// 持仓类型
+            etrSecPositionFlowDtoUnit.setCdate(tradeDate);// 日期
+            etrSecPositionFlowDtoUnit.setCcy(DictCodeList.币种_人民币_CNY.getValue());// 币种
+            etrSecPositionFlowDtoUnit.setAmount(trdProductDeal.getTradeAmt());// 已经乘了折算率
+            etrSecPositionFlowDtoUnit.setpFinprodId(null);// 母金融产品代码
+            etrSecPositionFlowDtoUnit.setTradeId(tradeId);// 指令编号
+
+            etrSecPositionFlows.add(etrSecPositionFlowDtoUnit);
+            etrPositionHoldDto.setPtlSecPositionFlows(etrSecPositionFlows);
+            etrPositionHoldDto.setDealEtr(true);
+            EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
+
+            //2.交易持仓流水（质押）：正流水
+            List<PtlSecPositionFlowDto> ptlSecPositionFlows = new ArrayList<>();
+
+            PtlSecPositionFlowDto ptlSecPositionFlowDtoUnit = new PtlSecPositionFlowDto();// 组合持仓流水DTO
+            /********************** 持仓流水DTO构造 *************************************/
+            ptlSecPositionFlowDtoUnit.setSeqno(IDGenerator.generate());
+            ptlSecPositionFlowDtoUnit.setPortfolioId(portfolioId);// 组合代码
+            ptlSecPositionFlowDtoUnit.setSecAcctId(secAcctId);// 证券账户
+            ptlSecPositionFlowDtoUnit.setFinprodId(finprodId);// 金融产品代码
+            ptlSecPositionFlowDtoUnit.setBranch(new Long(0));// 分支序号
+            ptlSecPositionFlowDtoUnit.setInvAim("999999");
+            ptlSecPositionFlowDtoUnit.setHodingType(DictCodeList.持仓类型_质押.getValue());// 持仓类型
+            ptlSecPositionFlowDtoUnit.setCdate(tradeDate);// 日期
+            ptlSecPositionFlowDtoUnit.setCcy(DictCodeList.币种_人民币_CNY.getValue());// 币种
+            ptlSecPositionFlowDtoUnit.setAmount(shareAmt);// 数量
+            ptlSecPositionFlowDtoUnit.setpFinprodId(null);// 母金融产品代码
+            ptlSecPositionFlowDtoUnit.setTradeId(tradeId);// 指令编号
+
+            ptlSecPositionFlows.add(ptlSecPositionFlowDtoUnit);
+
+            //3.交易持仓流水（标准券）：正流水
+            PtlSecPositionFlowDto ptlSecPositionFlowDtoUnit2 = new PtlSecPositionFlowDto();// 组合持仓流水DTO
+            /********************** 持仓流水DTO构造 *************************************/
+            ptlSecPositionFlowDtoUnit2.setSeqno(IDGenerator.generate());
+            ptlSecPositionFlowDtoUnit2.setPortfolioId(portfolioId);// 组合代码
+            ptlSecPositionFlowDtoUnit2.setSecAcctId(secAcctId);// 证券账户
+            ptlSecPositionFlowDtoUnit2.setFinprodId("XN_PRODID999");// 金融产品代码
+            ptlSecPositionFlowDtoUnit2.setBranch(new Long(0));// 分支序号
+            ptlSecPositionFlowDtoUnit2.setInvAim("999999");
+            ptlSecPositionFlowDtoUnit2.setHodingType(DictCodeList.持仓类型_实际.getValue());// 持仓类型
+            ptlSecPositionFlowDtoUnit2.setCdate(tradeDate);// 日期
+            ptlSecPositionFlowDtoUnit2.setCcy(DictCodeList.币种_人民币_CNY.getValue());// 币种
+            ptlSecPositionFlowDtoUnit2.setAmount(tradeAmt);// 已经乘了当日折算率
+            ptlSecPositionFlowDtoUnit2.setpFinprodId(null);// 母金融产品代码
+            ptlSecPositionFlowDtoUnit2.setTradeId(tradeId);// 指令编号
+
+            ptlSecPositionFlows.add(ptlSecPositionFlowDtoUnit2);
+
+            // 插入持仓流水
+            for (PtlSecPositionFlowDto ptlSecPositionFlow : ptlSecPositionFlows) {
+                basePtlSecPositionInfoService.inertSecPositionFlow(ptlSecPositionFlow);
+            }
+        } else if(DictCodeListExt3.交易方向_质押券出库.getValue().equals(trdProductDeal.getPs())) {
+            //0.指令持仓流水（可用）：正流水   add by lijie2 20201028
+            EtrPositionHoldDto etrPositionHoldDto = new EtrPositionHoldDto();
+            List<EtrSecPositionFlowDto> etrSecPositionFlows = new ArrayList<>();// 持仓流水
+            EtrSecPositionFlowDto etrSecPositionFlowDtoUnit = new EtrSecPositionFlowDto();// 指令持仓流水DTO
+            /********************** 指令持仓流水DTO构造 *************************************/
+            etrSecPositionFlowDtoUnit.setSeqno(IDGenerator.generate());
+            etrSecPositionFlowDtoUnit.setPortfolioId(portfolioId);// 组合代码
+            etrSecPositionFlowDtoUnit.setSecAcctId(secAcctId);// 证券账户
+            etrSecPositionFlowDtoUnit.setFinprodId(finprodId);// 金融产品代码
+            etrSecPositionFlowDtoUnit.setBranch(new Long(0));// 分支序号
+            etrSecPositionFlowDtoUnit.setInvAim("999999");
+            etrSecPositionFlowDtoUnit.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());// 持仓类型
+            etrSecPositionFlowDtoUnit.setCdate(tradeDate);// 日期
+            etrSecPositionFlowDtoUnit.setCcy(DictCodeList.币种_人民币_CNY.getValue());// 币种
+            etrSecPositionFlowDtoUnit.setAmount(shareAmt);// 数量
+            etrSecPositionFlowDtoUnit.setpFinprodId(null);// 母金融产品代码
+            etrSecPositionFlowDtoUnit.setTradeId(tradeId);// 指令编号
+            // 插入指令持仓流水
+            etrSecPositionFlows.add(etrSecPositionFlowDtoUnit);
+            etrPositionHoldDto.setPtlSecPositionFlows(etrSecPositionFlows);
+            etrPositionHoldDto.setDealEtr(true);
+            EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
+
+
+            //1.交易持仓流水（质押）：负流水
+            List<PtlSecPositionFlowDto> ptlSecPositionFlows = new ArrayList<>();
+
+            PtlSecPositionFlowDto ptlSecPositionFlowDtoUnit = new PtlSecPositionFlowDto();// 组合持仓流水DTO
+            /********************** 持仓流水DTO构造 *************************************/
+            ptlSecPositionFlowDtoUnit.setSeqno(IDGenerator.generate());
+            ptlSecPositionFlowDtoUnit.setPortfolioId(portfolioId);// 组合代码
+            ptlSecPositionFlowDtoUnit.setSecAcctId(secAcctId);// 证券账户
+            ptlSecPositionFlowDtoUnit.setFinprodId(finprodId);// 金融产品代码
+            ptlSecPositionFlowDtoUnit.setBranch(new Long(0));// 分支序号
+            ptlSecPositionFlowDtoUnit.setInvAim("999999");
+            ptlSecPositionFlowDtoUnit.setHodingType(DictCodeList.持仓类型_质押.getValue());// 持仓类型
+            ptlSecPositionFlowDtoUnit.setCdate(tradeDate);// 日期
+            ptlSecPositionFlowDtoUnit.setCcy(DictCodeList.币种_人民币_CNY.getValue());// 币种
+            ptlSecPositionFlowDtoUnit.setAmount(shareAmt.multiply(new BigDecimal(-1)));// 数量
+            ptlSecPositionFlowDtoUnit.setpFinprodId(null);// 母金融产品代码
+            ptlSecPositionFlowDtoUnit.setTradeId(tradeId);// 指令编号
+
+            ptlSecPositionFlows.add(ptlSecPositionFlowDtoUnit);
+
+            //2.交易持仓流水（标准券）：负流水
+            PtlSecPositionFlowDto ptlSecPositionFlowDtoUnit2 = new PtlSecPositionFlowDto();// 组合持仓流水DTO
+            /********************** 持仓流水DTO构造 *************************************/
+            ptlSecPositionFlowDtoUnit2.setSeqno(IDGenerator.generate());
+            ptlSecPositionFlowDtoUnit2.setPortfolioId(portfolioId);// 组合代码
+            ptlSecPositionFlowDtoUnit2.setSecAcctId(secAcctId);// 证券账户
+            ptlSecPositionFlowDtoUnit2.setFinprodId("XN_PRODID999");// 金融产品代码
+            ptlSecPositionFlowDtoUnit2.setBranch(new Long(0));// 分支序号
+            ptlSecPositionFlowDtoUnit2.setInvAim("999999");
+            ptlSecPositionFlowDtoUnit2.setHodingType(DictCodeList.持仓类型_实际.getValue());// 持仓类型
+            ptlSecPositionFlowDtoUnit2.setCdate(tradeDate);// 日期
+            ptlSecPositionFlowDtoUnit2.setCcy(DictCodeList.币种_人民币_CNY.getValue());// 币种
+            ptlSecPositionFlowDtoUnit2.setAmount(tradeAmt.multiply(new BigDecimal(-1)));// 数量
+            ptlSecPositionFlowDtoUnit2.setpFinprodId(null);// 母金融产品代码
+            ptlSecPositionFlowDtoUnit2.setTradeId(tradeId);// 指令编号
+
+            ptlSecPositionFlows.add(ptlSecPositionFlowDtoUnit2);
+
+            // 插入持仓流水
+            for (PtlSecPositionFlowDto ptlSecPositionFlow : ptlSecPositionFlows) {
+                basePtlSecPositionInfoService.inertSecPositionFlow(ptlSecPositionFlow);
+            }
+        }
+    }
+    // GNS-929:处理质押券出入库头寸 modify by fuyongsheng 20220225 end
 }

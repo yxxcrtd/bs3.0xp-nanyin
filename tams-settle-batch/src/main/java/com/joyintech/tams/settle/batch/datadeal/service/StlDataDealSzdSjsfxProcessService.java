@@ -14,6 +14,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListStl;
 import com.joyintech.tams.settle.batch.datadeal.constant.StlDataDealProcessConstant;
+import com.joyintech.tams.settle.batch.datadeal.dao.StlDownDataDealMapper;
 import com.joyintech.tams.settle.batch.datadeal.dto.StlDownDataDealOperatorDto;
 import com.joyintech.tams.settle.batch.datadeal.dto.StlDownDataDealWriteDto;
 import com.joyintech.tams.settle.batch.datadeal.dto.step2.StlDownDataDealWriteBaseDto;
@@ -46,6 +47,10 @@ public class StlDataDealSzdSjsfxProcessService {
 
     @Autowired(required = false)
     private StlDownDataDealService stlDownDataDealService;
+
+    @Autowired
+    protected StlDownDataDealMapper stlDownDataDealMapper;
+
 
     // 生成数据清算批处理step2 processor的结果Dto(深中登SJSFX)
     public StlDownDataDealWriteDto generatorStlDownDataDealSzdSjsfxWriteDto(StlDownDataDealOperatorDto stlDownDataDealOperatorDto) throws ParseException {
@@ -80,10 +85,6 @@ public class StlDataDealSzdSjsfxProcessService {
         List<String> assetList = settleCommonService.getAllAssetInfo(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         return secTypeCommonDeal(stlDownDataDealOperatorDto, map, ((szdSjsfx, settleTransData, settleTransDataAdd) -> {
             String finprodId = DictCodeListExt1.金融产品类型_投管用_债券.getValue() + GlobalConstant.UNDER_LINE + szdSjsfx.getFxzqdm() + ".SZ";
-            if(!assetList.contains(finprodId)) {
-                // 不是债券类资产时，忽略
-                return false;
-            }
             // 金融产品代码
             settleTransData.setFinprodId(finprodId);
             // 金融产品类型(投管分类)
@@ -154,6 +155,17 @@ public class StlDataDealSzdSjsfxProcessService {
             if(DictCodeList.交易方向_申购.getValue().equals(settleTransData.getPs())){
                 settleTransData.setSettleSpeed(2L);
             }
+            // GNS-908:申购和申购确认需要通过申报代码查询资产代码 modify by fuyongsheng 20220218 start
+            if(DictCodeList.交易方向_申购确认.getValue().equals(settleTransData.getPs())
+                    || DictCodeList.交易方向_申购.getValue().equals(settleTransData.getPs())){
+                settleTransData.setFinprodId(stlDownDataDealMapper.getLastFinproductIdByApprovalNo(szdSjsfx.getFxzqdm()));
+            }
+            if(!assetList.contains(settleTransData.getFinprodId())) {
+                // 不是债券类资产时，忽略
+                return false;
+            }
+            // GNS
+            // GNS-908:申购和申购确认需要通过申报代码查询资产代码 modify by fuyongsheng 20220218 end
             // GZYHTZJY-986:申购和申购确认,赋值竞价平台 fuyongsheng modify 20211230 start
             // 交易平台
             settleTransData.setTradePlat(DictCodeList.交易平台_竞价撮合平台.getValue());
@@ -174,10 +186,6 @@ public class StlDataDealSzdSjsfxProcessService {
 
         return secTypeCommonDeal(stlDownDataDealOperatorDto, map, ((szdSjsfx, settleTransData, settleTransDataAdd) -> {
             String finprodId = DictCodeListExt1.金融产品类型_投管用_股票.getValue() + GlobalConstant.UNDER_LINE + szdSjsfx.getFxzqdm() + ".SZ";
-            if(!assetList.contains(finprodId)) {
-                // 不是债券类资产时，忽略
-                return false;
-            }
             // 金融产品代码
             settleTransData.setFinprodId(finprodId);
             // 金融产品类型(投管分类)
@@ -214,7 +222,17 @@ public class StlDataDealSzdSjsfxProcessService {
             if (StringUtil.equals(settleTransData.getPs(), DictCodeListExt2.交易方向_新股中签.getValue())){
             	settleTransData.setFpriceAmt(abs(szdSjsfx.getFxzjje()));
             }
-            
+            // GNS-908:申购和申购确认需要通过申报代码查询资产代码 modify by fuyongsheng 20220218 start
+            if(DictCodeList.交易方向_申购确认.getValue().equals(settleTransData.getPs())
+                    || DictCodeList.交易方向_申购.getValue().equals(settleTransData.getPs())){
+                settleTransData.setFinprodId(stlDownDataDealMapper.getLastFinproductIdByApprovalNo(szdSjsfx.getFxzqdm()));
+            }
+            if(!assetList.contains(settleTransData.getFinprodId())) {
+                // 不是债券类资产时，忽略
+                return false;
+            }
+            // GNS
+            // GNS-908:申购和申购确认需要通过申报代码查询资产代码 modify by fuyongsheng 20220218 end
             return true;
         }));
     }

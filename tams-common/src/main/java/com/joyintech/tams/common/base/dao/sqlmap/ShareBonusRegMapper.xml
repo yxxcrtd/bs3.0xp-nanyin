@@ -5,7 +5,7 @@
         <id column="REG_DATE" property="regDate" jdbcType="DATE" />
         <result column="DEL_DATE" property="delDate" jdbcType="DATE" />
         <result column="DEVIDENT_DATE" property="devidentDate" jdbcType="DATE" />
-        <result column="REDSHARE_LISTING_DATE" property="redshareListingDate" jdbcType="DATE" />
+        <result column="REDSHARE_LISTING_DATE" property="redShareListingDate" jdbcType="DATE" />
         <result column="PER_DEVIDENT_AMT" property="perDevidentAmt" jdbcType="DECIMAL" />
         <result column="PER_DEVIDENT_CASH" property="perDevidentCash" jdbcType="DECIMAL" />
         <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
@@ -27,7 +27,10 @@
 
 
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ShareBonusReg" >
-        insert into MST_SHARE_BONUS_NOTICE
+        <!--GNS-864:修改插入表 modify by fuyongsheng 20220215 start-->
+        <!--insert into MST_SHARE_BONUS_NOTICE-->
+        insert into SHARE_BONUS_REG
+        <!--GNS-864:修改插入表 modify by fuyongsheng 20220215 end-->
         <trim prefix="(" suffix=")" suffixOverrides="," >
             <if test="sharesId != null" >
                 SHARES_ID,
@@ -44,7 +47,10 @@
             <if test="devidentDate != null" >
                 DEVIDENT_DATE,
             </if>
-            <if test="redshareListingDate != null" >
+            <!--GNS-864:修改错误拼写 modify by fuyongsheng 20220216 start -->
+            <!--<if test="redshareListingDate != null" > -->
+            <if test="redShareListingDate != null" >
+                <!--GNS-864:修改错误拼写 modify by fuyongsheng 20220216 end -->
                 REDSHARE_LISTING_DATE,
             </if>
             <if test="perDevidentAmt != null" >
@@ -85,8 +91,8 @@
             <if test="devidentDate != null" >
                 #{devidentDate,jdbcType=DATE},
             </if>
-            <if test="redshareListingDate != null" >
-                #{redshareListingDate,jdbcType=DATE},
+            <if test="redShareListingDate != null" >
+                #{redShareListingDate,jdbcType=DATE},
             </if>
             <if test="perDevidentAmt != null" >
                 #{perDevidentAmt,jdbcType=DECIMAL},

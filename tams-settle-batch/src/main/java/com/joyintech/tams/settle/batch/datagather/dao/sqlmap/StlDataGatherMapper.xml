@@ -249,6 +249,7 @@
 		T2.FINPROD_ID ,
 		T2.VDATE ,
 		T2.MDATE,
+		T2.M_PRIN_AMT,
 		<include refid="settleTransDataSql"></include>
 		<!--首期-->
 		INNER JOIN
@@ -256,8 +257,10 @@
 		<!--AND std.TRADE_DATE = stdsq.TRADE_DATE-->
 		AND std.VDATE = stdsq.TRADE_DATE
 		AND std.APPLY_TRADE_ID = stdsq.CJBH
-		INNER JOIN SETTLE_TRANS_TG_MAPPING M
-		ON M.TRADE_ID = std.TRADE_ID
+		<!--GNS-889:使用首期成交编号 modify by fuyongsheng 20220219 start-->
+		<!--SETTLE_TRANS_TG_MAPPING M ON M.TRADE_ID = std.TRADE_ID-->
+		SETTLE_TRANS_TG_MAPPING M ON M.TRADE_ID = stdsq.TRADE_ID
+		<!--GNS-889:使用首期成交编号 modify by fuyongsheng 20220219 end-->
 		INNER JOIN TRD_PRODUCT_DEAL T1
 		ON M.TRADE_ID_TG = T1.TRADE_ID
 		<!-- ON T1.F_TRADE_ID = std.CJBH
@@ -320,6 +323,7 @@
 		T2.FINPROD_ID ,
 		T2.VDATE ,
 		T2.MDATE,
+		T2.M_PRIN_AMT,
 		<include refid="settleTransDataSql"></include>
 		LEFT JOIN SETTLE_TRANS_DATA_STATUS stds
 		ON std.TRADE_ID = stds.TRADE_ID
@@ -383,6 +387,7 @@
 		SELECT
 		NVL(NVL(te.INSTRUCTION_ID, teh.INSTRUCTION_ID), NVL(tie.INSTRUCTION_ID, tieh.INSTRUCTION_ID)) ORDER_ID,
 		case when ptl.PROFIT_TYPE = '01' then 'FVTPL' else 'AC' end as invAim,ee.ENTRUST_ID,
+		stdta.REPO_TYPE,
 		<!--<include refid="settleTransDataSql"></include>-->
 		<include refid="settleTransDataTotalSql"></include>
 		LEFT JOIN SETTLE_TRANS_DATA_TOTAL_STATUS stdts ON std.SEQ_ID = stdts.SEQ_NO
@@ -421,7 +426,7 @@
 			<!--(te.BROKER_ENTRUST_ID IS NOT NULL OR teh.BROKER_ENTRUST_ID IS NOT NULL OR tie.BROKER_ENTRUST_ID IS NOT NULL OR tieh.BROKER_ENTRUST_ID IS NOT NULL)-->
 			(stdts.MATCH_STATUS != '2' OR stdts.MATCH_STATUS IS NULL)
 			<if test="dealDate != null">
-				std.DEAL_DATE = #{dealDate,jdbcType=DATE}
+				AND std.DEAL_DATE = #{dealDate,jdbcType=DATE}
 			</if>
 			<if test="finprodIdList != null and finprodIdList.size() > 0">
 				<foreach collection="finprodIdList" item="finprodId" open="AND std.FINPROD_ID IN (" close=")" separator=",">
@@ -578,7 +583,7 @@
 		MFBN.UNIT_BONUS_UNIT_VALUE as unitBonusUnitValue, /*基金分红公告.单位分红净值*/
 		(MFBN.UNIT_BONUS_UNIT_VALUE * PSP.AMOUNT) as bonusAmt, /*分红金额  基金分红公告.单位分红净值*组合持仓.数量*/
 		(SELECT BONUS_MODE FROM( SELECT * FROM PORTFOLIO_FUND_BONUS_MODE PFBM ORDER BY PFBM.SET_DATE DESC) a
-		WHERE a.FINPROD_ID = MFBN.FUND_ID
+		WHERE a.FINPROD_ID = concat('F06_', MFBN.FUND_ID)
 		AND a.PORTFOLIO_ID = PSP.PORTFOLIO_ID
 		AND a.SET_DATE&lt;= MFBN.REG_DATE
 		AND rownum = 1) AS bonusMode,/*组合基金分红方式.分红方式 */
@@ -594,8 +599,14 @@
 		ON PFBM.FINPROD_ID = MFBN.FUND_ID
 		AND PFBM.PORTFOLIO_ID = PSP.PORTFOLIO_ID
 		AND PFBM.SET_DATE &lt;= MFBN.REG_DATE
+		<!--GNS-923:只有非货币基金才生成除权交易 modify by fuyongsheng 20220221 start-->
+		LEFT JOIN fin_product_type fpt ON PSP.FINPROD_ID=fpt.FINPROD_ID
+		<!--GNS-923:只有非货币基金才生成除权交易 modify by fuyongsheng 20220221 end-->
 		<where>
 			PSP.HODING_TYPE = '03'
+			<!--GNS-923:只有非货币基金才生成除权交易 modify by fuyongsheng 20220221 start-->
+			AND fpt.TYPE_10 != '24'
+			<!--GNS-923:只有非货币基金才生成除权交易 modify by fuyongsheng 20220221 end-->
 			<if test="dealDate != null">
 				AND MFBN.REG_DATE = #{dealDate,jdbcType=DATE}
 			</if>
@@ -610,7 +621,12 @@
 
 	<select id="selectSettleDelDealDetail" parameterType="java.util.Map"
 			resultType="com.joyintech.tams.settle.batch.datagather.dto.SettleDelDealDetailDto">
-		SELECT fp.FINPROD_ID finprodId,
+		SELECT
+		fp.FINPROD_ID finprodId,
+		<!--GNS-909:增加查询字段 modify by fuyongsheng 20220218 start-->
+		fp.FINPROD_TYPE2,
+		fp.CCY,
+		<!--GNS-909:增加查询字段 modify by fuyongsheng 20220218 end-->
 		fp.TRADE_MARKET tradeMarket,
 		sbr.SHARES_ID ,
 		sbr.REG_DATE regDate,
@@ -642,6 +658,7 @@
 	<select id="selectCashBonusSettleTransData" parameterType="java.util.Map"
 			resultType="com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto">
 		SELECT
+		std.TRADE_ID,
 		std.DEAL_DATE ,
 		std.FINPROD_ID ,
 		std.BUSI_TYPE ,
@@ -665,7 +682,10 @@
 		psp.AMOUNT ,
 		psp.CDATE regDate
 		FROM SETTLE_TRANS_DATA std
-		LEFT JOIN ptl_sec_position psp
+		<!--GNS-909:查询持仓需用innerJOIN modify by fuyongsheng 20220218 start-->
+		<!--LEFT JOIN ptl_sec_position psp-->
+		INNER JOIN ptl_sec_position psp
+		<!--GNS-909:查询持仓需用innerJOIN modify by fuyongsheng 20220218 end-->
 		ON psp.FINPROD_ID = std.FINPROD_ID
 		AND psp.SEC_ACCT_ID = std.SEC_ACCT_ID
 		AND psp.CDATE = std.TRADE_DATE
@@ -673,6 +693,60 @@
 		<where>
 			std.FINPROD_TYPE2 = 'F10'
 			AND std.DEAL_DATE = #{dealDate,jdbcType=DATE}
+			AND (std.TRADE_MARKET = '04' or (std.TRADE_MARKET = '03' and std.PS = 'T11'))
+			<if test="portfolioIdList != null and portfolioIdList.size() > 0">
+				<foreach collection="portfolioIdList" item="portfolioId" open="AND std.PORTFOLIO_ID IN (" close=")" separator=",">
+					#{portfolioId,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="psList != null and psList.size() > 0">
+				<foreach collection="psList" item="ps" open="AND std.PS IN (" close=")" separator=",">
+					#{ps,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</where>
+		UNION ALL
+		SELECT
+		std.TRADE_ID,
+		std.DEAL_DATE ,
+		std.FINPROD_ID ,
+		std.BUSI_TYPE ,
+		std.PS ,
+		std.TRADE_MARKET ,
+		std.FINPROD_TYPE ,
+		std.FINPROD_TYPE2 ,
+		std.TRADE_DATE ,
+		std.SETTLE_DATE ,
+		std.SEC_ACCT_ID ,
+		std.ACCT_NO ,
+		std.CCY ,
+		std.UNIT_CPRICE ,
+		std.UNIT_INT ,
+		std.PRIN_AMT ,
+		std.INT_AMT ,
+		std.FPRICE_AMT ,
+		std.TRADE_AMT ,
+		std.SHARE_AMT ,
+		psp.PORTFOLIO_ID,
+		psp.AMOUNT ,
+		psp.CDATE regDate
+		FROM SETTLE_TRANS_DATA std
+		INNER JOIN SHARE_BONUS_REG sbr
+		ON concat('F10_', sbr.SHARES_ID) = std.FINPROD_ID
+		AND sbr.SEC_ACCT_ID = std.SEC_ACCT_ID
+		<!--GNS-909:查询持仓需用innerJOIN modify by fuyongsheng 20220218 start-->
+		<!--LEFT JOIN ptl_sec_position psp-->
+		INNER JOIN ptl_sec_position psp
+		<!--GNS-909:查询持仓需用innerJOIN modify by fuyongsheng 20220218 end-->
+		ON psp.FINPROD_ID = std.FINPROD_ID
+		AND psp.SEC_ACCT_ID = std.SEC_ACCT_ID
+		AND psp.CDATE = sbr.REG_DATE
+		AND psp.HODING_TYPE = '03'
+		<where>
+			std.FINPROD_TYPE2 = 'F10'
+			AND std.DEAL_DATE = #{dealDate,jdbcType=DATE}
+			AND std.TRADE_MARKET = '03'
+			AND std.PS = 'T12'
 			<if test="portfolioIdList != null and portfolioIdList.size() > 0">
 				<foreach collection="portfolioIdList" item="portfolioId" open="AND std.PORTFOLIO_ID IN (" close=")" separator=",">
 					#{portfolioId,jdbcType=VARCHAR}
@@ -782,11 +856,18 @@
 		SELECT
 		T1.ENTRUST_ID,
 		T1.FINPROD_ID,
+		<!-- add by etlliu 20220220 start -->
+		<!-- GNS-833:【广农商场内清算】协议回购-上交所中途换券和解除质押，匹配结果不对 -->
+		T1.FINPROD_TYPE2,
+		<!-- add by etlliu 20220220 end -->
 		T1.PS,
 		T1.ENTRUST_DATE,
 		T2.SEC_ACCT_ID,
 		T2.DEAL_CUR_ACCT,
-		T2.TRADE_ID,
+		<!--GNS-946:关联交易表查询首期成交编号 modify by fuyongsheng 20220223 start-->
+		<!--T2.TRADE_ID,-->
+		trd.F_TRADE_ID TRADE_ID,
+		<!--GNS-946:关联交易表查询首期成交编号 modify by fuyongsheng 20220223 end-->
 		T2.VDATE,
 		T2.VPAY_DATE,
 		T1.TRADE_PLAT,
@@ -797,6 +878,10 @@
 		ETR_ENTRUST T1
 		LEFT JOIN ETR_ENTRUST_ADD T2 ON
 		T2.ENTRUST_ID = T1.ENTRUST_ID
+		<!--GNS-946:关联交易表查询首期成交编号 modify by fuyongsheng 20220223 start-->
+		LEFT JOIN TRD_PRODUCT_DEAL trd ON
+		T2.TRADE_ID = trd.TRADE_ID
+		<!--GNS-946:关联交易表查询首期成交编号 modify by fuyongsheng 20220223 end-->
 		LEFT JOIN SETTLE_TRANS_DATA_TOTAL_MATCH T3 ON T1.ENTRUST_ID = T3.ENTRUNST_TRADE_ID
 		WHERE
 			ENTRUST_DATE = #{entrustDate,jdbcType=DATE}
@@ -849,6 +934,9 @@
 		ON fp.FINPROD_ID = std.FINPROD_ID
 		INNER JOIN TRD_PRODUCT_DEAL trd
 		ON trd.PS = #{PS_T04}
+		<!--GNS-912:增加金融产品代码 modify by fuyongsheng 20220218 start-->
+		AND trd.FINPROD_ID = std.FINPROD_ID
+		<!--GNS-912:增加金融产品代码 modify by fuyongsheng 20220218 end-->
 		AND trd.TRADE_DATE &lt; std.DEAL_DATE
 		AND trd.SEAT_ID = std.SEAT_NUMBER
 		AND trd.SEC_MANAGE_ACCT_ID = std.SEC_ACCT_ID
@@ -933,41 +1021,97 @@
 		std.FRAGMENTARY_FUNDS,/*零碎份额资金*/
 		std.TRADE_AMT,/*交易金额*/
 		std.BUSI_TYPE,/*业务类型*/
-		psp.PORTFOLIO_ID, /*组合代码*/
-		psp.AMOUNT shareAmt, /*数量*/
-		psp.CDATE regDate, /*权益登记日*/
-		(SELECT TOTLE_TRADE_ID FROM (SELECT t1.TOTLE_TRADE_ID FROM	TRD_FIN_PRODUCT_DEAL_TOTAL t1
-		WHERE t1.FINPROD_ID=std.FINPROD_ID AND t1.BUSI_TYPE='TRD14'
-		AND t1.PS='T13' AND t1.REG_DATE &lt;= #{dealDate,jdbcType=DATE} ORDER BY t1.REG_DATE desc) a limit 1) bTradeId /*前置交易编号*/
+		decode(fpt.TYPE_10,'24','Y','N') isHuobi/*是否货币基金*/
 		FROM SETTLE_TRANS_DATA std
-		left join FIN_PRODUCT fp on std.FINPROD_ID = fp.FINPROD_ID
 		LEFT JOIN fin_product_type fpt ON fp.FINPROD_ID=fpt.FINPROD_ID
-		INNER JOIN PTL_SEC_POSITION psp
-		ON psp.FINPROD_ID=std.FINPROD_ID
-		AND psp.SEC_ACCT_ID=std.SEC_ACCT_ID
-		AND psp.HODING_TYPE='03'
-		AND psp.CDATE = (
-		CASE WHEN fpt.TYPE_10='24' THEN(
-		SELECT t1.REG_DATE FROM MST_FUND_BONUS_NOTICE t1 LEFT JOIN FIN_PRODUCT t2
-		ON t1.FUND_ID=t2.FINPROD_MARKET_ID AND t2.FINPROD_ID=std.FINPROD_ID
-		)
-		ELSE(SELECT REG_DATE FROM (SELECT t1.REG_DATE FROM	TRD_FIN_PRODUCT_DEAL_TOTAL t1
-		WHERE t1.FINPROD_ID=std.FINPROD_ID AND t1.BUSI_TYPE='TRD14'
-		AND t1.PS='T13' AND t1.REG_DATE &lt;= #{dealDate,jdbcType=DATE} ORDER BY t1.REG_DATE desc)b limit 1)
-		END
-		)
 		<where>
 			std.DEAL_DATE = #{dealDate,jdbcType=DATE}
 			AND std.FINPROD_TYPE2 = 'F06'
-			<if test="portfolioIdList != null and portfolioIdList.size() > 0">
-				<foreach collection="portfolioIdList" item="portfolioId" open="AND psp.PORTFOLIO_ID IN (" close=")" separator=",">
-					#{portfolioId,jdbcType=VARCHAR}
-				</foreach>
-			</if>
 			<foreach collection="psList" item="ps" open="AND std.PS IN (" close=")" separator=",">
 				#{ps,jdbcType=VARCHAR}
 			</foreach>
 		</where>
+	</select>
+
+	<select id="selectFundSettleTransData1" parameterType="com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto"
+			resultType="com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto">
+		select
+			#{tradeId} tradeId,
+			/*std.CJBH CJBH,*/
+			#{dealDate} dealDate,/*执行日期*/
+			#{finprodId} finprodId,/*金融产品代码*/
+			#{ps} ps,/*交易方向*/
+			#{tradeMarket} tradeMarket,/*交易场所*/
+			#{finprodType} finprodType,/*金融产品类型（估值核算）*/
+			#{finprodType2} finprodType2,/*金融产品类型（投管分类）*/
+			#{tradeDate} tradeDate,/*交易日期*/
+			#{settleDate} settleDate,/*交割日期*/
+			#{secAcctId} secAcctId,/*证券账户*/
+			#{acctNo} acctNo,/*资金账户*/
+			#{ccy} ccy,/*交易币种*/
+			#{unitCprice} unitCprice,/*单位净价*/
+			#{prinAmt} prinAmt,/*交易本金*/
+			#{intAmt} intAmt,/*利息总额*/
+			#{fpriceAmt} fpriceAmt,/*全价总额*/
+			#{fragmentaryFunds} fragmentaryFunds,/*零碎份额资金*/
+			#{tradeAmt} tradeAmt,/*交易金额*/
+			#{busiType} busiType,/*业务类型*/
+			psp.PORTFOLIO_ID, /*组合代码*/
+			psp.AMOUNT shareAmt, /*数量*/
+			psp.CDATE regDate, /*权益登记日*/
+			mfbn.DEL_DATE exDevidentDate /*除权除息日*/
+		from PTL_SEC_POSITION psp
+				 LEFT JOIN FIN_PRODUCT fp on fp.FINPROD_ID = psp.FINPROD_ID
+				 left join MST_FUND_BONUS_NOTICE mfbn on mfbn.FUND_ID = fp.FINPROD_MARKET_ID
+		where psp.FINPROD_ID=#{finprodId}
+		  AND psp.SEC_ACCT_ID=#{secAcctId}
+		  AND psp.HODING_TYPE='03'
+		  AND psp.CDATE = mfbn.REG_DATE
+	</select>
+
+	<select id="selectFundSettleTransData2" parameterType="com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto"
+			resultType="com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto">
+		select * from (
+			  select
+				  #{tradeId} tradeId,
+				  /*std.CJBH CJBH,*/
+				  #{dealDate} dealDate,/*执行日期*/
+				  #{finprodId} finprodId,/*金融产品代码*/
+				  #{ps} ps,/*交易方向*/
+				  #{tradeMarket} tradeMarket,/*交易场所*/
+				  #{finprodType} finprodType,/*金融产品类型（估值核算）*/
+				  #{finprodType2} finprodType2,/*金融产品类型（投管分类）*/
+				  #{tradeDate} tradeDate,/*交易日期*/
+				  #{settleDate} settleDate,/*交割日期*/
+				  #{secAcctId} secAcctId,/*证券账户*/
+				  #{acctNo} acctNo,/*资金账户*/
+				  #{ccy} ccy,/*交易币种*/
+				  #{unitCprice} unitCprice,/*单位净价*/
+				  #{prinAmt} prinAmt,/*交易本金*/
+				  #{intAmt} intAmt,/*利息总额*/
+				  #{fpriceAmt} fpriceAmt,/*全价总额*/
+				  #{fragmentaryFunds} fragmentaryFunds,/*零碎份额资金*/
+				  #{tradeAmt} tradeAmt,/*交易金额*/
+				  #{busiType} busiType,/*业务类型*/
+				  psp.AMOUNT shareAmt, /*数量*/
+				  psp.CDATE regDate, /*权益登记日*/
+				  psp.PORTFOLIO_ID,
+				  tfpd.TOTLE_TRADE_ID bTradeId, /*前置交易编号*/
+				  tfpd.EX_DEVIDENT_DATE,
+				  /*组合代码*/
+				  (row_number()over(partition by psp.PORTFOLIO_ID order by psp.CDATE DESC))RANK
+			  from PTL_SEC_POSITION psp
+					   LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL tfpd
+						 on tfpd.FINPROD_ID = psp.FINPROD_ID
+						 and tfpd.BUSI_TYPE='TRD14'
+						 AND tfpd.PS='T13'
+						 AND tfpd.REG_DATE &lt;= #{dealDate,jdbcType=DATE}
+			  where psp.FINPROD_ID=#{finprodId}
+				AND psp.SEC_ACCT_ID=#{secAcctId}
+				AND psp.HODING_TYPE='03'
+				AND psp.CDATE = tfpd.REG_DATE
+			  order by tfpd.REG_DATE)
+		where RANK = 1
 	</select>
 
 	<select id="selectCqTotleTradeId" resultType="string">
@@ -993,16 +1137,17 @@
 		delete from PA_TRD_PRODUCT_DEAL where TRADE_ID=#{tradeId}
 	</delete>
 	<delete id="deleteCqPtlTrade">
-		delete from ptl_trade where TRADE_ID=#{tradeId}
+		<!--GNS-864:delete from ptl_trade where TRADE_ID=#{tradeId}-->
+		delete from ptl_trade where BUSI_NO=#{tradeId}
 	</delete>
 	<delete id="deleteCqTrdFinProductDealTotal">
-		delete from TRD_FIN_PRODUCT_DEAL_TOTAL where TRADE_ID=#{totleTradeId}
+		delete from TRD_FIN_PRODUCT_DEAL_TOTAL where TOTLE_TRADE_ID=#{totleTradeId}
 	</delete>
 	<delete id="deleteCqTrdProductDeal">
-		delete from TRD_FIN_PRODUCT_DEAL_TOTAL where TRADE_ID=#{totleTradeId}
+		delete from Trd_Product_Deal where TOTLE_TRADE_ID=#{totleTradeId}
 	</delete>
 	<delete id="deleteCqPaTrdFinProductDealTotal">
-		delete from PA_TRD_FIN_PRODUCT_DEAL_TOTAL where TRADE_ID=#{totleTradeId}
+		delete from PA_TRD_FIN_PRODUCT_DEAL_TOTAL where TOTLE_TRADE_ID=#{totleTradeId}
 	</delete>
 	<delete id="deleteCqTrdDealTotalAdd" parameterType="java.lang.String" >
 		delete from TRD_DEAL_TOTAL_ADD
@@ -1011,7 +1156,12 @@
 
 	<select id="selectCqBtradeId" resultType="string">
 		SELECT TOTLE_TRADE_ID
-		FROM (SELECT t1.REG_DATE
+		FROM (
+			SELECT
+			<!--GNS-885:修改选择字段 modify by fuyongsheng 20220216 start-->
+			t1.TOTLE_TRADE_ID
+			<!--t1.REG_DATE-->
+			<!--GNS-885:修改选择字段 modify by fuyongsheng 20220216 end-->
 			  FROM TRD_FIN_PRODUCT_DEAL_TOTAL t1
 			  WHERE t1.FINPROD_ID = #{finprodId}
 				and t1.SEC_MANAGE_ACCT_ID = #{secAcctId}
@@ -1106,7 +1256,10 @@
 					#{currData.finprodId,jdbcType=VARCHAR}
 				</foreach>
 			</if>
-			AND T1.DECLARED_END_DATE &lt;= #{dealDate,jdbcType=DATE}
+			AND CASE
+			WHEN T1.OTH_TYPE = '05' THEN T1.DECLARED_START_DATE
+			WHEN T1.OTH_TYPE = '06' THEN T1.DECLARED_END_DATE
+			END &lt;= #{dealDate,jdbcType=DATE}
 		</where>
 		order by T1.FINPROD_ID, T1.DECLARED_START_DATE desc
 	</select>

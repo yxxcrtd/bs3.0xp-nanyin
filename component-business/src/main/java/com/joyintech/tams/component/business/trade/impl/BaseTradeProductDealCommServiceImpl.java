@@ -731,6 +731,10 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
             inputDto.setPortfolioId(baseTradeProductDealDto.getTrdProductDealAdd().getPortfolioId());
             inputDto.setBonusMode(baseTradeProductDealDto.getTrdProductDealAdd().getPayType());
             inputDto.setSecAmount(baseTradeProductDealDto.getSecAmount());
+            // GNS-949:增加是否工作流数据标识 modify by fuyongsheng 20220227 start
+            inputDto.setNotWorkflow(finProductTradeDto.isNotWorkflow());
+            baseTradeProductDealDto.setNotWorkflow(finProductTradeDto.isNotWorkflow());
+            // GNS-949:增加是否工作流数据标识 modify by fuyongsheng 20220227 end
             if (StringUtil.isNotEmpty(finProductTradeDto.getAssetType2())) {
             	inputDto.setAssetType2(finProductTradeDto.getAssetType2());
             }
@@ -750,12 +754,27 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
                 for (PtlSecPositionFlowDto dto : ptlSecPositionFlowDtoss){
                     // 债券  申购确认  持仓类型为冻结
                     if (StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())
-                            && StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getPs(), DictCodeList.交易方向_申购确认.getValue())) {
+                            && (StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getPs(), DictCodeList.交易方向_申购确认.getValue())
+                            // GNS-879: 配债生成的持仓类型是上市前冻结 modify by fuyongsheng 20220217 start
+                            || StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getPs(), DictCodeListExt3.交易方向_配债.getValue()))
+                            // GNS-879: 配债生成的持仓类型是上市前冻结 modify by fuyongsheng 20220217 start
+                    ) {
                        dto.setHodingType(DictCodeListExt3.持仓类型_场内上市前冻结.getValue());
                     }
-                    // 股票存续期  申购确认  持仓类型为冻结
+                    // 股票存续期  申购确认、配股  持仓类型为冻结
                     if (StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_股票.getValue())
-                            && StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getPs(), DictCodeList.交易方向_申购确认.getValue())) {
+                            && (StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getPs(), DictCodeList.交易方向_申购确认.getValue())
+                            // GNS-878: 配股生成的持仓类型是上市前冻结 modify by fuyongsheng 20220217 start
+                            || StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getPs(), DictCodeListExt2.交易方向_配股.getValue())
+                            // GNS-878: 配股生成的持仓类型是上市前冻结 modify by fuyongsheng 20220217 start
+                            ||
+                            // GNS-932:上交所的红利再投需生成上市前冻结持仓 modify by fuyongsheng 20220225 start
+                            (StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getPs(), DictCodeList.交易方向_红利再投.getValue())
+                                    && DictCodeListExt1.交易场所_上海证券交易所.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getTradeMarket())
+                            )
+                            // GNS-932:上交所的红利再投需生成上市前冻结持仓 modify by fuyongsheng 20220225 end
+                    )
+                    ) {
                         dto.setHodingType(DictCodeListExt3.持仓类型_场内上市前冻结.getValue());
                     }
                     if (DictCodeListExt1.交易场所_银行间.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getTradeMarket())
@@ -785,6 +804,9 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
                 cashInputDto.setAssetType2(finProductTradeDto.getAssetType2());
                 cashInputDto.setStlPayOrders(baseTradeProductDealDto.getStlPayOrdersList());
                 cashInputDto.setIeFlag(finProductTradeDto.getIeFlag());
+                // GNS-949:增加是否工作流数据标识 modify by fuyongsheng 20220227 start
+                cashInputDto.setNotWorkflow(finProductTradeDto.isNotWorkflow());
+                // GNS-949:增加是否工作流数据标识 modify by fuyongsheng 20220227 end
                 if (是否处理持仓) {
                     List<PtlCashPositionFlowDto> resultList = assetPositionsCashCommServiceImpl.cashDeal(cashInputDto);
 //                    if (持仓类型 == DictCodeList.持仓类型_可用

@@ -465,7 +465,10 @@ public class StlDataDealProcessConstant {
 
 	// 证券变动-变动类型-00K
 	public static final String BDLX_00K = "00K";
-	
+
+	// 证券变动-变动类型-00J
+	public static final String BDLX_00J = "00J";
+
 	// SJSJG-业务类别-PGQZ 配股配债权证到帐
 	public static final String YWLB_PGQZ = "PGQZ";
 

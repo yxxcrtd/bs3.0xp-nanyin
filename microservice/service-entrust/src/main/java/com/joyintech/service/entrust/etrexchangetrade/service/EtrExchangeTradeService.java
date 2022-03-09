@@ -866,6 +866,7 @@ public class EtrExchangeTradeService extends BaseService{
         pageParam.put("PS_T49", DictCodeListExt3.交易方向_债转股.getValue());
         pageParam.put("PS_T97", DictCodeListExt3.交易方向_配债.getValue());
         pageParam.put("PS_T04", DictCodeList.交易方向_申购.getValue());
+        pageParam.put("PS_01", DictCodeList.出入库方向_入库.getValue());
         pageParam.put("LIBRARY_DIRECTION_01", DictCodeListExt3.交易方向_质押券入库.getValue());
         pageParam.put("TRADE_PLACE_03", BussinessDictCodeList.交易场所_深圳证券交易所.getValue());
         pageParam.put("TRADE_PLACE_04", BussinessDictCodeList.交易场所_上海证券交易所.getValue());

@@ -346,7 +346,7 @@
 			ssrd.PS,
 			ssrd.TRADE_DATE,
 			ssrd.SEC_ACCT_ID,
-			ssrd.CHECK_RESULT,
+			ssr.CHECK_RESULT,
 			ssrd.SEAT_NUMBER,
 			ssrd.COMMISSION_AMT,
 			ssrd.JSF_AMT,
@@ -425,9 +425,9 @@
 			    std.SEAT_NUMBER
 		) entrust ON ssrd.INSTRUCTION_ID = entrust.APPLY_TRADE_ID AND ssrd.SEAT_NUMBER = entrust.SEAT_NUMBER AND ssrd.TRADE_DATE = entrust.TRADE_DATE
 		INNER JOIN
-			MST_SALE_DEPARTMENT msd ON ssrd.CUSTOMER_ID = msd.BROKER_ID AND (std.SEAT_NUMBER = msd.SH_SEATNO OR std.SEAT_NUMBER = msd.SZ_SEATNO)
+			MST_SALE_DEPARTMENT msd ON ssrd.CUSTOMER_ID = msd.BROKER_ID AND (entrust.SEAT_NUMBER = msd.SH_SEATNO OR entrust.SEAT_NUMBER = msd.SZ_SEATNO)
 		WHERE
-			(ssrd.CHECK_RESULT IS NULL OR ssrd.CHECK_RESULT = #{CHECK_RESULT_0})
+			(ssr.CHECK_RESULT IS NULL OR ssr.CHECK_RESULT = #{CHECK_RESULT_0})
 			AND ssrd.TRADE_DATE = TO_DATE(#{batchDate},'YYYY-MM-DD')
 			AND EXISTS (SELECT 1 FROM STL_SEC_RECON_PARA ssrp WHERE ssrd.CUSTOMER_ID = ssrp.CUSTOMER_ID)
 	</select>
@@ -493,11 +493,11 @@
 				  	AND std.DEAL_DATE = TO_DATE(#{batchDate},'YYYY-MM-DD')
 				    AND (stda.REPO_TYPE IS NULL OR stda.REPO_TYPE != #{TARGET_BACK_TYPE_H01})
 				  	AND (
-						std.PS NOT IN (#{PS_T68},#{PS_T69},#{PS_T94},#{PS_T04},#{PS_T05},#{PS_T11},#{PS_T12},#{PS_T49})
+						std.PS NOT IN (#{PS_T68},#{PS_T69},#{PS_T94},#{PS_T04},#{PS_T05},#{PS_T11},#{PS_T12},#{PS_T49},#{PS_T46},#{PS_T97})
 						AND (
-						    (std.FINPROD_TYPE2 = #{prodType2_F01} AND std.PS NOT IN (#{PS_T39},#{PS_T07},#{PS_T08},#{PS_T09},#{PS_T49}))
+						    (std.FINPROD_TYPE2 = #{prodType2_F01} AND std.PS NOT IN (#{PS_T39},#{PS_T07},#{PS_T08},#{PS_T09},#{PS_T49},#{PS_T97}))
 				  	    	OR ((std.FINPROD_TYPE2 = #{prodType2_F02} OR std.FINPROD_TYPE2 = #{prodType2_F03}) AND std.PS NOT IN (#{PS_T07},#{PS_T49}))
-							OR ((std.FINPROD_TYPE2 = #{prodType2_F06} OR std.FINPROD_TYPE2 = #{prodType2_F10}) AND std.PS NOT IN (#{PS_T04},#{PS_T05},#{PS_T11},#{PS_T12},#{PS_T49}))
+							OR ((std.FINPROD_TYPE2 = #{prodType2_F06} OR std.FINPROD_TYPE2 = #{prodType2_F10}) AND std.PS NOT IN (#{PS_T04},#{PS_T05},#{PS_T11},#{PS_T12},#{PS_T49},#{PS_T46}))
 						)
 					)
 					AND NOT EXISTS (SELECT 1 FROM STL_SEC_RECON_DETAIL detail WHERE detail.TRADE_ID = std.TRADE_ID)
@@ -723,6 +723,8 @@
 				AND EXISTS (SELECT 1 FROM STL_SEC_RECON_PARA ssrp WHERE msd.BROKER_ID = ssrp.CUSTOMER_ID)
 			GROUP BY
 				std.APPLY_TRADE_ID,
+				std.FINPROD_ID,
+				stds.CHECK_RESULT,
 				std.FINPROD_TYPE2,
 				std.TRADE_MARKET,
 				std.DEAL_DATE,

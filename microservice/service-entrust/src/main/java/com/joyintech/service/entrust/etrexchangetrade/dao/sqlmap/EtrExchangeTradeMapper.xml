@@ -325,52 +325,93 @@
         ON
         TEMP.FINPROD_ID = FP.FINPROD_ID
         <!-- 债券行情 -->
+        <!-- modify by etliu 20220228 start -->
+        <!-- 广农商二阶段 GNS-916：【广农商场内清算】场内交易指令页面 股票买入下单后右侧持仓TAB不应出现多条数据 -->
+        <!--LEFT JOIN
+            MST_BOND_VALUATION_INFO MBVI
+        ON
+            FP.FINPROD_MARKET_ID = MBVI.SEC_ID
+        AND MBVI.VALUE_DATE <![CDATA[<=]]> #{sysDate}
+        AND MBVI.VALUE_SOURCE = #{VALUATION_SOURCE_CSD}
+        LEFT JOIN
+            (SELECT MAX(M.VALUE_DATE) VALUE_DATE,
+                M.SEC_ID,
+                M.VALUE_SOURCE
+            FROM MST_BOND_VALUATION_INFO M
+            WHERE M.VALUE_DATE <![CDATA[<=]]> #{sysDate}
+            AND M.VALUE_SOURCE = #{VALUATION_SOURCE_CSD}
+            GROUP BY M.SEC_ID,M.VALUE_SOURCE) MBVI2
+        ON MBVI.SEC_ID = MBVI2.SEC_ID
+        AND MBVI.VALUE_SOURCE = MBVI2.VALUE_SOURCE
+        AND MBVI.VALUE_DATE = MBVI2.VALUE_DATE-->
+        LEFT JOIN
+        (SELECT MAX(M.VALUE_DATE) VALUE_DATE,
+        M.SEC_ID
+        FROM MST_BOND_VALUATION_INFO M
+        WHERE M.VALUE_DATE <![CDATA[<=]]> #{sysDate}
+        AND M.VALUE_SOURCE = #{VALUATION_SOURCE_CSD}
+        GROUP BY M.SEC_ID) MBVI2
+        ON FP.FINPROD_MARKET_ID = MBVI2.SEC_ID
         LEFT JOIN
         MST_BOND_VALUATION_INFO MBVI
         ON
         FP.FINPROD_MARKET_ID = MBVI.SEC_ID
-        AND MBVI.VALUE_DATE <![CDATA[<=]]> #{sysDate}
-        AND MBVI.VALUE_SOURCE = #{VALUATION_SOURCE_CSD}
-        LEFT JOIN
-        (SELECT MAX(M.VALUE_DATE) VALUE_DATE,
-        M.SEC_ID,
-        M.VALUE_SOURCE
-        FROM MST_BOND_VALUATION_INFO M
-        WHERE M.VALUE_DATE <![CDATA[<=]]> #{sysDate}
-        AND M.VALUE_SOURCE = #{VALUATION_SOURCE_CSD}
-        GROUP BY M.SEC_ID,M.VALUE_SOURCE) MBVI2
-        ON MBVI.SEC_ID = MBVI2.SEC_ID
-        AND MBVI.VALUE_SOURCE = MBVI2.VALUE_SOURCE
         AND MBVI.VALUE_DATE = MBVI2.VALUE_DATE
         <!-- 基金行情 -->
-        LEFT JOIN
-        MST_FUND_MARKET_INFO MFMI
+        <!--LEFT JOIN
+            MST_FUND_MARKET_INFO MFMI
         ON
-        FP.FINPROD_MARKET_ID = MFMI.FUND_CODE
+            FP.FINPROD_MARKET_ID = MFMI.FUND_CODE
         AND MFMI.VALUE_DATE <![CDATA[<=]]> #{sysDate}
+        LEFT JOIN
+            (SELECT MAX(MF.VALUE_DATE) VALUE_DATE,
+                     MF.FUND_CODE
+            FROM MST_FUND_MARKET_INFO MF
+            WHERE MF.VALUE_DATE <![CDATA[<=]]> #{sysDate}
+            GROUP BY  MF.FUND_CODE) MFMI2
+        ON MFMI.FUND_CODE = MFMI2.FUND_CODE
+        AND MFMI.VALUE_DATE = MFMI2.VALUE_DATE-->
         LEFT JOIN
         (SELECT MAX(MF.VALUE_DATE) VALUE_DATE,
         MF.FUND_CODE
         FROM MST_FUND_MARKET_INFO MF
         WHERE MF.VALUE_DATE <![CDATA[<=]]> #{sysDate}
         GROUP BY  MF.FUND_CODE) MFMI2
-        ON MFMI.FUND_CODE = MFMI2.FUND_CODE
+        ON FP.FINPROD_MARKET_ID = MFMI2.FUND_CODE
+        LEFT JOIN
+        MST_FUND_MARKET_INFO MFMI
+        ON
+        FP.FINPROD_MARKET_ID = MFMI.FUND_CODE
         AND MFMI.VALUE_DATE = MFMI2.VALUE_DATE
         <!-- 股票行情 -->
-        LEFT JOIN
-        MST_SHARE_PRICE MSP
+        <!--LEFT JOIN
+            MST_SHARE_PRICE MSP
         ON
-        FP.FINPROD_MARKET_ID = MSP.SHARES_ID
+            FP.FINPROD_MARKET_ID = MSP.SHARES_ID
         AND MSP.DEAL_DATE <![CDATA[<=]]> #{sysDate}
+        LEFT JOIN
+            (SELECT MAX(MSP.DEAL_DATE) DEAL_DATE,
+                    MSP.SHARES_ID
+            FROM MST_SHARE_PRICE MSP
+            WHERE MSP.SHARES_ID = MSP.SHARES_ID
+            AND MSP.DEAL_DATE <![CDATA[<=]]> #{sysDate}
+            GROUP BY MSP.SHARES_ID) MSP2
+        ON MSP.SHARES_ID = MSP2.SHARES_ID
+        AND  MSP.DEAL_DATE = MSP2.DEAL_DATE-->
         LEFT JOIN
         (SELECT MAX(MSP.DEAL_DATE) DEAL_DATE,
         MSP.SHARES_ID
         FROM MST_SHARE_PRICE MSP
-        WHERE MSP.SHARES_ID = MSP.SHARES_ID
-        AND MSP.DEAL_DATE <![CDATA[<=]]> #{sysDate}
+        WHERE
+        MSP.DEAL_DATE <![CDATA[<=]]> #{sysDate}
         GROUP BY MSP.SHARES_ID) MSP2
-        ON MSP.SHARES_ID = MSP2.SHARES_ID
-        AND  MSP.DEAL_DATE = MSP2.DEAL_DATE
+        ON FP.FINPROD_MARKET_ID = MSP2.SHARES_ID
+        LEFT JOIN
+        MST_SHARE_PRICE MSP
+        ON
+        FP.FINPROD_MARKET_ID = MSP.SHARES_ID
+        AND MSP.DEAL_DATE = MSP2.DEAL_DATE
+        <!-- modify by etliu 20220228 end -->
         LEFT JOIN
         (
         SELECT

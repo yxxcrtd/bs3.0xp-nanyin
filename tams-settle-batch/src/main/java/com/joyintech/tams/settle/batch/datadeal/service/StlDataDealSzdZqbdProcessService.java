@@ -1,6 +1,7 @@
 package com.joyintech.tams.settle.batch.datadeal.service;
 
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
@@ -73,13 +74,20 @@ public class StlDataDealSzdZqbdProcessService {
         			}
         			else if(
                             (StringUtil.equals(szdZqbd.getZqlb(), StlDataDealProcessConstant.ZQLB_PT)
-                                && StringUtil.equals(szdZqbd.getLtlx(),StlDataDealProcessConstant.LTLX_N)
-                                && StringUtil.equals(szdZqbd.getBdlx(), StlDataDealProcessConstant.BDLB_00G))
+                                    && StringUtil.equals(szdZqbd.getLtlx(),StlDataDealProcessConstant.LTLX_N)
+                                    && StringUtil.equals(szdZqbd.getBdlx(), StlDataDealProcessConstant.BDLB_00G)
+                            )
                             ||
                             (StringUtil.equals(szdZqbd.getZqlb(), StlDataDealProcessConstant.ZQLB_PT)
-                                && !StringUtil.equals(szdZqbd.getLtlx(),StlDataDealProcessConstant.LTLX_N)
-                                && StringUtil.equals(szdZqbd.getQylb(),StlDataDealProcessConstant.QYLB_P)
-                                && StringUtil.equals(szdZqbd.getBdlx(), StlDataDealProcessConstant.BDLB_00G))
+                                    && !StringUtil.equals(szdZqbd.getLtlx(),StlDataDealProcessConstant.LTLX_N)
+                                    && StringUtil.equals(szdZqbd.getQylb(),StlDataDealProcessConstant.QYLB_P)
+                                    && StringUtil.equals(szdZqbd.getBdlx(), StlDataDealProcessConstant.BDLB_00G)
+                            )
+                            ||
+                            (StringUtil.equals(szdZqbd.getZqlb(), StlDataDealProcessConstant.ZQLB_PT)
+                                    && StringUtil.equals(szdZqbd.getQylb(),StlDataDealProcessConstant.QYLB_S)
+                                    && StringUtil.equals(szdZqbd.getBdlx(), StlDataDealProcessConstant.BDLB_00G)
+                            )
                     ){
                         gpSsltList.add(szdZqbd);
                     }
@@ -107,8 +115,11 @@ public class StlDataDealSzdZqbdProcessService {
         	if (stlDownDataDealOperatorDto != null && stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto() != null &&
            			stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getZqbdList() != null && 
            			stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getZqbdList().size() > 0) {
-	        	List<FinProductQuto> finProductQutoList = generatorBondFinProductQutoList(stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getZqbdList(), map, stlDownDataDealOperatorDto);
+                // GNS-888: modify by fuyongsheng 20220218 start
+                // 上市流通list
                 List<SzdZqbd> zqSsltList = new ArrayList<>();
+                // 配债list
+                List<SzdZqbd> zqPzList = new ArrayList<>();
 	        	for (SzdZqbd szdZqbd : stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getZqbdList()) {
                     if(
                         (StringUtil.equals(szdZqbd.getZqlb(), StlDataDealProcessConstant.ZQLB_PT)
@@ -123,8 +134,12 @@ public class StlDataDealSzdZqbdProcessService {
                         )
                     ){
                         zqSsltList.add(szdZqbd);
+                    }else{
+                        zqPzList.add(szdZqbd);
                     }
                 }
+                List<FinProductQuto> finProductQutoList = generatorBondFinProductQutoList(zqPzList, map, stlDownDataDealOperatorDto);
+                // GNS-888: modify by fuyongsheng 20220218 end
 	        	List<FinProductQuto> circulateFinProductQutoList = generatorBondCirculateFinProductQutoList(zqSsltList, map, stlDownDataDealOperatorDto);
                 finProductQutoList.addAll(circulateFinProductQutoList);
                 stlDownDataDealWriteDto.setFinProductQutoList(finProductQutoList);
@@ -194,14 +209,20 @@ public class StlDataDealSzdZqbdProcessService {
             settleTransData.setBusiType(DictCodeList.业务类型_股票交易.getValue());
 
             // 送股
-            if(StringUtil.equals(szdZqbd.getZqlb(), StlDataDealProcessConstant.ZQLB_PT)
-                    && StringUtil.equals(szdZqbd.getQylb(), StlDataDealProcessConstant.QYLB_S)
-                    && StringUtil.equals(szdZqbd.getBdlx(), StlDataDealProcessConstant.BDLB_00G)) {
-                // 交易方向
-                settleTransData.setPs(DictCodeListStl.交易方向_送股.getValue());
-                // 业务场景明细分类
-                settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_股票_送股.getValue());
-            }
+            // GNS-932:送股转上市流通了,这里不入了 modify by fuyongsheng 20220224 start
+//            if(StringUtil.equals(szdZqbd.getZqlb(), StlDataDealProcessConstant.ZQLB_PT)
+//                    && StringUtil.equals(szdZqbd.getQylb(), StlDataDealProcessConstant.QYLB_S)
+//                    && StringUtil.equals(szdZqbd.getBdlx(), StlDataDealProcessConstant.BDLB_00G)) {
+//                // 交易方向
+//                // GNS-883:交易方向应为红利再投 modify by fuyongsheng 20220216 start
+//                // settleTransData.setPs(DictCodeListStl.交易方向_送股.getValue());
+//                settleTransData.setPs(DictCodeList.交易方向_红利再投.getValue());
+//                // GNS-883:交易方向应为红利再投 modify by fuyongsheng 20220216 end
+//                // 业务场景明细分类
+////                settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_股票_送股.getValue());
+//                settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_股票_分红_红利再投.getValue());
+//            }
+            // GNS-932:送股转上市流通了,这里不入了 modify by fuyongsheng 20220224 end
             // 配股确认
             if((StringUtil.equals(szdZqbd.getZqlb(), StlDataDealProcessConstant.ZQLB_PT) || StringUtil.equals(szdZqbd.getZqlb(), StlDataDealProcessConstant.ZQLB_XL))
                     && StringUtil.equals(szdZqbd.getQylb(), StlDataDealProcessConstant.QYLB_P)
@@ -214,11 +235,23 @@ public class StlDataDealSzdZqbdProcessService {
             // 送股-除权登记
             if(StringUtil.equals(szdZqbd.getZqlb(), StlDataDealProcessConstant.ZQLB_PT)
                     && StringUtil.equals(szdZqbd.getQylb(), StlDataDealProcessConstant.QYLB_S)
-                    && StringUtil.equals(szdZqbd.getBdlx(), StlDataDealProcessConstant.BDLX_00K)) {
+                    // GNS-864: bdlx应是00J modify by fuyongsheng 20220214 start
+                    // && StringUtil.equals(szdZqbd.getBdlx(), StlDataDealProcessConstant.BDLX_00K)
+                    && (StringUtil.equals(szdZqbd.getBdlx(), StlDataDealProcessConstant.BDLX_00K) ||
+                    StringUtil.equals(szdZqbd.getBdlx(), StlDataDealProcessConstant.BDLX_00J))
+                // GNS-864: bdlx应是00J modify by fuyongsheng 20220214 end
+            ) {
                 // 交易方向
-                settleTransData.setPs(DictCodeList.交易方向_除权登记.getValue());
+                // GNS-932:交易方向登成红利再投 modify by fuyongsheng 20220224 start
+                // settleTransData.setPs(DictCodeList.交易方向_除权登记.getValue());
+                settleTransData.setPs(DictCodeList.交易方向_红利再投.getValue());
                 // 业务场景明细分类
-                settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_股票_分红_除权登记.getValue());
+                // settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_股票_分红_除权登记.getValue());
+                settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_股票_送股.getValue());
+                String calendarId = CacheUtil.getSysParam(StlDataDealProcessConstant.STL_DOWNDATA_DEAL_SHJYS_CALID);
+                // 交割日(取变量.交割日的下一工作日)
+                settleTransData.setSettleDate(stlDataDealProcessCommonService.getNextWorkDay(settleTransData.getSettleDate(), calendarId));
+                // GNS-932:交易方向登成红利再投 modify by fuyongsheng 20220224 end
             }
             return true;
         });
@@ -271,7 +304,7 @@ public class StlDataDealSzdZqbdProcessService {
             // 交易币种
             settleTransData.setCcy(DictCodeList.币种_人民币_CNY.getValue());
             // 交易份额
-            settleTransData.setShareAmt(new BigDecimal(szdZqbd.getBdsl()));
+            settleTransData.setShareAmt(new BigDecimal(szdZqbd.getBdsl()).abs());
             // 交易场所
             settleTransData.setTradeMarket(DictCodeList.交易流通场所_上海证券交易所.getValue());
             // 交易市场
@@ -373,6 +406,9 @@ public class StlDataDealSzdZqbdProcessService {
 				finProductQuto.setFinprodId(finprodIdList.get(0));
 				finProductQuto.setOthType(DictCodeListExt3.金融产品其他代码类型_配股代码.getValue());
 				finProductQuto.setCdate(DateUtil.parse(szdZqbd.getBdrq()));
+                // GNS-853: 登录股东代码 modify by fuyongsheng 20220216 start
+                finProductQuto.setBondId(szdZqbd.getZqzh());
+                // GNS-853: 登录股东代码 modify by fuyongsheng 20220216 end
 				finProductQuto.setQuto(new BigDecimal(szdZqbd.getBdsl()));
 	            list.add(finProductQuto);
 			}
@@ -407,7 +443,8 @@ public class StlDataDealSzdZqbdProcessService {
             String approvalNo = szdZqbd.getZqdm();
             List<String> finprodIdList = new ArrayList<>();
             List<FinProduct> finProducts = stlDownDataDealMapper.getFinproductByFinProdMarketId(szdZqbd.getZqdm() + ".SH");
-            if(CollectionUtils.isNotEmpty(finProducts) && finProducts.get(0).getFinprodType2().equals(stlDownDataDealOperatorDto.getFinprodType())){
+            if(CollectionUtils.isNotEmpty(finProducts) && DictCodeListExt1.证券品种_债券.getValue().equals(stlDownDataDealOperatorDto.getFinprodType())
+                    && DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(finProducts.get(0).getFinprodType2())){
                 finprodIdList.add(finProducts.get(0).getFinprodId());
             }else{
                 finprodIdList = stlDownDataDealMapper.getFinproductIdByApprovalNo(DictCodeListExt3.金融产品其他代码类型_配债代码.getValue(), approvalNo);
@@ -447,18 +484,30 @@ public class StlDataDealSzdZqbdProcessService {
             // 送股-除权登记
             if(StringUtil.equals(szdZqbd.getZqlb(), StlDataDealProcessConstant.ZQLB_PT)
                     && StringUtil.equals(szdZqbd.getQylb(), StlDataDealProcessConstant.QYLB_S)
-                    && StringUtil.equals(szdZqbd.getBdlx(), StlDataDealProcessConstant.BDLX_00K)) {
+                    && (StringUtil.equals(szdZqbd.getBdlx(), StlDataDealProcessConstant.BDLX_00K)
+                    // GNS-864: 兼容bdlx为00J modify by fuyongsheng 20220215 start
+                    || StringUtil.equals(szdZqbd.getBdlx(), StlDataDealProcessConstant.BDLX_00J))) {
+                // GNS-864: 兼容bdlx为00J modify by fuyongsheng 20220215 end
                 ShareBonusReg shareBonusReg = new ShareBonusReg();
-                shareBonusReg.setSharesId(szdZqbd.getZqzh() + ".SH");
+                // GNS-864: 修改sharesId赋值 modify by fuyongsheng 20220216 start
+                // shareBonusReg.setSharesId(szdZqbd.getZqzh() + ".SH");
+                shareBonusReg.setSharesId(szdZqbd.getZqdm() + ".SH");
+                // GNS-864: 修改sharesId赋值 modify by fuyongsheng 20220216 end
                 shareBonusReg.setSecAcctId(accountInfoDtolist.get(0).getSecAcctId());
                 try {
-                    shareBonusReg.setRegDate(DateUtil.parseDate(szdZqbd.getBdrq(),DateUtil.DEFAULT_DATE_FORMAT_EN));
+                    // GNS-864:日期格式解析错误 modify by fuyongsheng 20220216 start
+                    // shareBonusReg.setRegDate(DateUtil.parseDate(szdZqbd.getBdrq(),DateUtil.DEFAULT_DATE_FORMAT_EN));
+                    shareBonusReg.setRegDate(DateUtil.parseDate(szdZqbd.getBdrq(),DateUtil.DEFAULT_OTHER_FORMAT));
+                    // GNS-864:日期格式解析错误 modify by fuyongsheng 20220216 end
                     shareBonusReg.setDelDate(DateUtil.addDay(shareBonusReg.getRegDate(), 1));
                     shareBonusReg.setRedShareListingDate(DateUtil.addDay(shareBonusReg.getRegDate(), 2));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                shareBonusReg.setPerDevidentAmt(new BigDecimal(szdZqbd.getBdsl()));
+                // GNS-864:取绝对值 modify by fuyongsheng 20220216 start
+                // shareBonusReg.setPerDevidentAmt(new BigDecimal(szdZqbd.getBdsl()));
+                shareBonusReg.setPerDevidentAmt(new BigDecimal(szdZqbd.getBdsl()).abs());
+                // GNS-864:取绝对值 modify by fuyongsheng 20220216 end
                 list.add(shareBonusReg);
             }
         }
@@ -506,7 +555,10 @@ public class StlDataDealSzdZqbdProcessService {
                 finProductQuto.setFinprodId(finprodIdList.get(0));
                 finProductQuto.setOthType(DictCodeListExt3.金融产品其他代码类型_上市流通代码.getValue());
                 finProductQuto.setCdate(DateUtil.parse(szdZqbd.getBdrq()));
-                finProductQuto.setQuto(new BigDecimal(szdZqbd.getBdsl()));
+                // GNS-880:取绝对值 modify by fuyongsheng 20220216 start
+                // finProductQuto.setQuto(new BigDecimal(szdZqbd.getBdsl()));
+                finProductQuto.setQuto(new BigDecimal(szdZqbd.getBdsl()).abs());
+                // GNS-880:取绝对值 modify by fuyongsheng 20220216 end
                 list.add(finProductQuto);
             }
         }

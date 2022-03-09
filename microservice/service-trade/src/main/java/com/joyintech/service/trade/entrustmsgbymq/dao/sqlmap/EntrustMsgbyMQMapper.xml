@@ -65,6 +65,14 @@
 	    FROM  ETR_ENTRUST A
 	    WHERE A.ENTRUST_ID = #{entrustId}
    </select>
+
+	<select id="queryEtrEntrustAdd" resultType="com.joyintech.tams.common.base.entity.EtrEntrustAdd">
+		select
+		<include refid="com.joyintech.tams.common.base.dao.EtrEntrustAddMapper.Base_Column_List" />
+		from ETR_ENTRUST_ADD
+		WHERE ENTRUST_ID = #{entrustId}
+	</select>
+
      <select id="queryTargetType" resultType="java.lang.String">
 		select eea.target_type as targetType /*目标类型*/
           from ETR_ENTRUST_ADD eea

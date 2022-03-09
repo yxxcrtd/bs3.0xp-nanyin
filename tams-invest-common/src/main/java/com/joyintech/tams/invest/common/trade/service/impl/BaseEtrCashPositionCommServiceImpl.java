@@ -92,6 +92,11 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
         etrPositionHoldDto.setPtlSecPositionFlows(etrSecPositionFlows);
         etrPositionHoldDto.setNeedNegative(needNegative);
         Map<String, Object> vDateNato;
+        // 2、资产二级类型
+        if(StringUtil.isEmpty(finProductTradeDto.getAssetType2())){
+            finProductTradeDto.setAssetType2(baseAssetCashPositionCommMapper.selectFundType(
+                    finProductTradeDto.getTrdProductDeal().getFinprodId()));
+        }
         String profitType = null;
         if (StringUtil.equals(finprodType, DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue())) {
             vDateNato = baseAssetCashPositionCommMapper.selectVDateNato(finProductTradeDto.getTrdProductDeal().getFinprodId());
@@ -103,7 +108,11 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
 
         if (StringUtil.equals(finprodType, DictCodeListExt1.金融产品类型_投管用_债券.getValue())
                 && !(StringUtil.equals(finProductTradeDto.getTrdProductDeal().getPs(), DictCodeList.交易方向_申购确认.getValue())
-                || StringUtil.equals(finProductTradeDto.getTrdProductDeal().getPs(), DictCodeListExt3.交易方向_债转股.getValue()))
+                || StringUtil.equals(finProductTradeDto.getTrdProductDeal().getPs(), DictCodeListExt3.交易方向_债转股.getValue())
+                // GNS-929:质押券出入库无需更新cash流水 modify by fuyongsheng 20220226 start
+                || StringUtil.equals(finProductTradeDto.getTrdProductDeal().getPs(), DictCodeListExt3.交易方向_质押券入库.getValue())
+                || StringUtil.equals(finProductTradeDto.getTrdProductDeal().getPs(), DictCodeListExt3.交易方向_质押券出库.getValue()))
+                // GNS-929:质押券出入库无需更新cash流水 modify by fuyongsheng 20220226 end
                 // add by jiangpeng on 20210416 start
                 // ZGBSS-1148 【债券借贷存续期】：到期交易中有“是否现金交割”的功能没有按照预期实现。
                 && !StringUtil.equals(DictCodeList.是否_是.getValue(), finProductTradeDto.getIsSLDeal())
