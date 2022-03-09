@@ -416,16 +416,17 @@
         if (!calflag) {
             calflag = query("input[name=calculateField]:checked").val();
         }
+        if(!query("#tradeAmt").val()) {
+            return;
+        }
         var object = {};
-        var param = $.serializeToObject('#searchForm');
-        object.bussCombDistribtList = param.bussCombDistribtList;
         object.calflag = calflag;
         object.finvdate = query("#finvdate").val();
         object.finmdate = query("#finmdate").val();
         object.finprodId = query("#finprodIdhid").val();
         object.tradeMarketMode = SHARES_TRADE_MARKET_02;
         object.matureYield = $("#matureYield").val();
-        object.ps = ps;
+        object.ps = query("#ps").val();
         object.priceModel = $("#priceModel").val();
         object.settleSpeed = $("#settleSpeed").val();
         object.tradeMarket = $("#tradeMarket").val();
@@ -438,7 +439,8 @@
         if (query('#matureYield').val()) {
             object.matureYield = query('#matureYieldShow').val() / 100;
         }
-        if (object.bussCombDistribtList != null) {
+        object.entrustNum = query("#tradeAmt").val() * 10000;
+        /*if (object.bussCombDistribtList != null) {
             if (object.bussCombDistribtList.length > 0) {
                 var entrustNum = 0.0;
                 for (var index in object.bussCombDistribtList) {
@@ -452,7 +454,7 @@
             } else {
                 object.entrustNum = 10000;
             }
-        }
+        }*/
         Joyin.ajaxJson(basePath + "cfets/etrib/CfetsEtrIbBondinfo003/calData", object, function (result) {
             if (result && result.data) {
                 var data = result.data.data;
@@ -567,7 +569,6 @@
         var finprodId = null;
         var counterId = null;
         var tradeMarket = query('#tradeMarket').val();
-        var ps = null;
         var param = {};
 
         var tradeAmt = Number(0)
@@ -588,11 +589,9 @@
                 item.entrustIntegrateNum = item.entrustIntegrateNum * 10000;
                 temp.entrustIntegrateNum = item.entrustIntegrateNum;
             }
-
             finprodId = temp.finprodId;
             tradeMarket = temp.tradeMarket;
             temp.entrustId = item.entrustId;
-            ps = temp.ps;
             temp.invAim = item.invAim;
             temp.businessModel = item.businessModel;
             temp.elementId = 'CfetsEtribBondInfo003_btn_submit';
@@ -604,7 +603,7 @@
         param.finprodAbbr = query("#finprodAbbr").val();
         param.tradeMarket = tradeMarket;
         param.invManagerId = query('#invManagerId').val();
-        param.ps = ps;
+        param.ps = query("#ps").val();
         param.ccy = query('#ccy').val();
         param.etrInvestBondInfoDtos = objects;
         param.bussCombDistribtList = object.bussCombDistribtList;
@@ -657,7 +656,6 @@
             async: false,
             data: JSON.stringify(obj.param),
             success: function (result) {
-                console.log(result);
                 if(result.code === '200') {
                     if(result.data && result.data.errorList && result.data.errorList.length > 0) {
                         $.each(result.data.errorList,function (index,item) {
