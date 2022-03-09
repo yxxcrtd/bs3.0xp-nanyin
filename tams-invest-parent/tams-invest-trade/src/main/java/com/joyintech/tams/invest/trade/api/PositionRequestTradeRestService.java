@@ -16,6 +16,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.position.service.CommonPositionEngineService;
@@ -70,7 +71,6 @@ public class PositionRequestTradeRestService {
         }else if(DictCodeListExt1.交易流程状态_有效.getValue().equals(finProductTradeDto.getWorkflowStatus())){
             Map<String, Object> resultMap = new HashMap<>();
             for (BaseTradeProductDealDto entity:finProductTradeDto.getBaseTradeProductDealDtos()) {
-                TrdFinProductDealTotal dealTotal = entity.getTrdFinProductDealTotal();
                 this.sendPositionHttpRequest(entity);
             }
             PositionHttpRequest.send(resultMap);
@@ -357,44 +357,44 @@ public class PositionRequestTradeRestService {
         List<StlPayOrdersDto> stlPayOrdersList = entity.getStlPayOrdersList();
         resultMap.put("interfaceType", INTERF_TYPE_BOND002);
         // 业务类型
-        resultMap.put("busiType", busiType);
+        resultMap.put("busiType", DictCodeListExt3.头寸业务类型_债券存续期交易.getValue());
         // 业务动作
-        resultMap.put("busiAct", DictCodeListExt3.业务动作_成交回报.getValue());
-        resultMap.put("ps", entity.getPs());
-        String deliveryType = commonPositionEngineService.getDeliveryType(entity.getFinprodId());
-        resultMap.put("settleSpeed", parseSettleSpreed(deliveryType));
+        resultMap.put("busiAct", DictCodeListExt3.业务动作_成交匹配.getValue());
+        resultMap.put("ps", trdProductDeal.getPs());
+        String deliveryType = commonPositionEngineService.getDeliveryType(trdProductDeal.getFinprodId());
+        resultMap.put("settleSpeed", this.parseSettleSpreed(deliveryType));
         resultMap.put("bidResult", 是否_否.getValue());
         resultMap.put("purchModle", null);
-        resultMap.put("tradePlace", entity.getTradeMarket());
-        resultMap.put("sharesTradePlatform", this.getSharesTradePlatform(entity));
+        resultMap.put("tradePlace", trdProductDeal.getTradeMarket());
+        resultMap.put("sharesTradePlatform", null);
         resultMap.put("deliveryType", deliveryType);
         resultMap.put("decisionAct", DictCodeListExt3.系统动作_新建.getValue());
         resultMap.put("systemAct", DictCodeListExt3.系统动作_新建.getValue());
         resultMap.put("workFlowId", null);
-        resultMap.put("cdate", entity.getTradeDate());
-        resultMap.put("ccy", entity.getCcy());
-        resultMap.put("finprodId", entity.getFinprodId());
+        resultMap.put("cdate", trdProductDeal.getTradeDate());
+        resultMap.put("ccy", trdProductDeal.getCcy());
+        resultMap.put("finprodId", trdProductDeal.getFinprodId());
         resultMap.put("bTotalTradeId", null);
 
         List<Map<String, Object>> ptlList = new ArrayList<>();
-        for (PortfolioCalculateDto dto:list) {
-            Map<String, Object> pltMap = new HashMap<>();
-            pltMap.put("portfolioId", dto.getPortfolioId());
-            pltMap.put("tradeId", entity.getTradeId());
-            pltMap.put("etrId", entity.getEntrustId());
-            pltMap.put("ordEntrustId", null);
-            pltMap.put("etrSecAmount", dto.getEtrSecAmount());
-            pltMap.put("ordId", entity.getOrderId());
-            pltMap.put("ordSecAmount", dto.getOrdSecAmount());
-            pltMap.put("cashAcctId", dto.getCashAcctId());
-            pltMap.put("secAcctId", entity.getSecAcctId());
-            pltMap.put("secAmount", dto.getSecAmount());
-            pltMap.put("cashAmount", dto.getCashAmount());
-            pltMap.put("invAim", entity.getInvAim());
-            pltMap.put("integrateSecAmount", null);
-            pltMap.put("ownSecAmount", dto.getOwnSecAmount());
-            ptlList.add(pltMap);
+        Map<String, Object> pltMap = new HashMap<>();
+        pltMap.put("portfolioId", trdProductDeal.getPortfolioId());
+        pltMap.put("tradeId", trdProductDeal.getTradeId());
+        pltMap.put("etrId", null);
+        pltMap.put("ordEntrustId", null);
+        pltMap.put("etrSecAmount", null);
+        pltMap.put("ordId", null);
+        pltMap.put("ordSecAmount", null);
+        if(!CollectionUtils.isEmpty(stlPayOrdersList)){
+            pltMap.put("cashAcctId", stlPayOrdersList.get(0).getMyAcctNo());
         }
+        pltMap.put("secAcctId", trdProductDealTotal.getSecManageAcctId());
+        pltMap.put("secAmount", trdProductDeal.getShareAmt());
+        pltMap.put("cashAmount", trdProductDeal.getTradeAmt());
+        pltMap.put("invAim", trdProductDeal.getInvAim());
+        pltMap.put("integrateSecAmount", null);
+        pltMap.put("ownSecAmount", null);
+        ptlList.add(pltMap);
         resultMap.put("ptlList", ptlList);
     }
 
@@ -405,6 +405,72 @@ public class PositionRequestTradeRestService {
      * @param resultMap
      */
     private void bond003(BaseTradeProductDealDto entity, Map<String, Object> resultMap) {
+        TrdFinProductDealTotal trdProductDealTotal = entity.getTrdFinProductDealTotal();
+        TrdProductDeal trdProductDeal = entity.getTrdProductDeal();
+        TrdProductDealAdd trdProductDealAdd = entity.getTrdProductDealAdd();
+        List<StlPayOrdersDto> stlPayOrdersList = entity.getStlPayOrdersList();
+        resultMap.put("interfaceType", INTERF_TYPE_BOND003);
+        resultMap.put("busiType", DictCodeListExt3.头寸业务类型_债券存续期交易.getValue());
+        // 业务动作
+        resultMap.put("busiAct", DictCodeListExt3.业务动作_成交匹配.getValue());
+        resultMap.put("ps", trdProductDeal.getPs());
+        String deliveryType = commonPositionEngineService.getDeliveryType(trdProductDeal.getFinprodId());
+        resultMap.put("settleSpeed", parseSettleSpreed(deliveryType));
+        resultMap.put("purchModle", null);
+        resultMap.put("tradePlace", trdProductDeal.getTradeMarket());
+        resultMap.put("sharesTradePlatform", null);
+        resultMap.put("deliveryType", deliveryType);
+        resultMap.put("decisionAct", DictCodeListExt3.系统动作_新建.getValue());
+        resultMap.put("systemAct", DictCodeListExt3.系统动作_新建.getValue());
+        resultMap.put("workFlowId", null);
+        resultMap.put("cdate", trdProductDeal.getTradeDate());
+        resultMap.put("ccy", trdProductDeal.getCcy());
+        resultMap.put("bTotalTradeId", null);
 
+        List<Map<String, Object>> ptlCashList = new ArrayList<>(4);
+        List<Map<String, Object>> bondSecList = new ArrayList<>(4);
+        Map<String, Object> ptlCash = new HashMap<>(8);
+        ptlCash.put("portfolioId", trdProductDeal.getPortfolioId());
+        if(!CollectionUtils.isEmpty(stlPayOrdersList)){
+            ptlCash.put("cashAcctId", stlPayOrdersList.get(0).getMyAcctNo());
+        }
+        ptlCash.put("tradeId", trdProductDeal.getTradeId());
+        ptlCash.put("etrId", null);
+        ptlCash.put("cashAmount", trdProductDeal.getTradeAmt());
+        ptlCash.put("etrSecAmount", null);
+        ptlCash.put("ordId", null);
+        ptlCash.put("ordSecAmount", null);
+        ptlCashList.add(ptlCash);
+
+        Map<String, Object> bondSec = new HashMap<>();
+        bondSec.put("portfolioId", trdProductDeal.getPortfolioId());
+        bondSec.put("finprodId", trdProductDeal.getFinprodId());
+        bondSec.put("secAcctId", trdProductDealTotal.getSecManageAcctId());
+        bondSec.put("tradeId", trdProductDeal.getTradeId());
+        bondSec.put("etrId", null);
+        bondSec.put("integrateSecAmount", null);
+        bondSec.put("ownSecAmount", null);
+        bondSec.put("secAmount", trdProductDeal.getShareAmt());
+        bondSecList.add(bondSec);
+        resultMap.put("ptlCashList", ptlCashList);
+        resultMap.put("bondSecList", bondSecList);
+    }
+
+    /**
+     * 解析清算速度
+     * <p>
+     * 清算速度	见数据字典：清算速度
+     * "IF 变量.结算方式 = 数据字典.DELIVERY_TYPE.净额结算 THEN 数据字典.清算速度.T+1
+     * ELSE 数据字典.清算速度.T+0
+     *
+     * @param deliveryType 封装集合
+     * @return 清算速度
+     */
+    private String parseSettleSpreed(String deliveryType) {
+        String settleSpreed = BussinessDictCodeList.清算速度_T加0.getValue();
+        if (DictCodeListExt3.结算方式_头寸引擎_净额结算.getValue().equals(deliveryType)) {
+            settleSpreed = BussinessDictCodeList.清算速度_T加1.getValue();
+        }
+        return settleSpreed;
     }
 }
