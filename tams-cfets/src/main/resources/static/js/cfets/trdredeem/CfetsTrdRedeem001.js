@@ -69,7 +69,7 @@
        if (data) {
           query("#finprodMarketId").val(data.id);
           query("#finprodIdhid").val(data.object.finprodId);
-          query("#ccy").val(data.object.ccy);
+          query("#ccy").val(data.object.ccy).trigger('change').trigger('blur');
           query("#theoreticalExerciseDate").val(data.object.exerciseDate);
           query("#actSetteDate").val(data.object.actExerciseDate);
           query("#finprodAbbr").val(data.text);
