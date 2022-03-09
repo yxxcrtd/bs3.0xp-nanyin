@@ -262,6 +262,8 @@
                 obj.avaNumOld = JoyinMath.doMul(obj.avaNumOld, 10000);
                 obj.ourEntNum = JoyinMath.doMul(obj.ourEntNum, 10000);
                 obj.lendinEntNum = JoyinMath.doMul(obj.lendinEntNum, 10000);
+                obj.matureYield = obj.matureYield / 100
+                obj.exerYield = obj.exerYield / 100
             });
 
         }
@@ -279,7 +281,11 @@
      */
     var saveOrSubmitAction = function (operatorType) {
         var object = getSubmitParam(operatorType);
-        Joyin.confirm("是否确认提交?",
+        var msg = "是否确认提交?";
+        if("save" === operatorType ) {
+            msg = "是否确认保存?";
+        }
+        Joyin.confirm(msg,
             function () {
                 //保存 走流程
                 if (operatorType === 'save') {
@@ -555,7 +561,7 @@
         if (calculateField === '01') {
             if(ps === 'T01') {
                 $("input[name='calculateField'][value='03']").attr('disabled', true);
-                $("input[name='calculateField'][value='02']").attr('disabled', true);
+                //$("input[name='calculateField'][value='02']").attr('disabled', true);
                 layui.form.render('radio');
             }
             el("#CfetsBondDealQuotedPrice004_unitCprice").attr('disabled', false);
@@ -594,7 +600,7 @@
                     el("#CfetsBondDealQuotedPrice004_matureYield").attr("disabled", true);
                     el("#CfetsBondDealQuotedPrice004_exerYield").attr("disabled", true);
                 }
-                if (calculateField === calcTypeYield && ps !== 'T01') {
+                if (calculateField === calcTypeYield ) {//&& ps !== 'T01'
                     el("#CfetsBondDealQuotedPrice004_unitCprice").attr("disabled", true);
                     el("#CfetsBondDealQuotedPrice004_matureYield").attr("disabled", false);
                     el("#CfetsBondDealQuotedPrice004_exerYield").attr("disabled", true);

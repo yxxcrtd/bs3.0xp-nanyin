@@ -22,6 +22,7 @@ import com.joyintech.calculation.shell.YieldByPriceCalculator;
 import com.joyintech.calculation.shell.param.*;
 import com.joyintech.calculation.util.BasicUtil;
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.exception.BusinessException;
@@ -38,9 +39,12 @@ import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDisp
 import com.joyintech.system.base.dao.SysWflBusinessListMapper;
 import com.joyintech.system.base.entity.SysWflBusinessList;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
+import com.joyintech.tams.business.common.exception.PositionException;
+import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
+import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.cfets.etrib.bond.dao.CfetsEtrIbBondinfo002Mapper;
 import com.joyintech.tams.cfets.etrib.bond.dto.*;
 import com.joyintech.tams.common.base.dao.*;
@@ -78,6 +82,7 @@ import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -383,7 +388,18 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
             }
             //发送头寸
             entity.setSoftSkipMode("Y");
-            sendPositionMethod(entity,isSubmit);
+            try {
+                sendPositionMethod(entity, isSubmit);
+            }catch (Exception e) {
+                Message message = PositionUtil.ajaxErrorReturn(e);
+                //BaseMap bm = (BaseMap) message.getData();
+                //String code = (String) bm.get("code");
+                //String messageStr = JsonUtils.json2Object((String) bm.get("message").toString(), String.class);
+                //if (StringUtil.equals(PositionHttpRequest.CODE_BUSI_YK, code)) {
+                    WorkFlowUtil.showMessage(message.getMessage(), MessageType.错误消息);
+                //}
+                throw new PositionException(message.getMessage());
+            }
         }
     }
 
