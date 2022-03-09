@@ -302,6 +302,7 @@ public class JoyinbusinessCommonController extends BaseController {
     public List<SelectOptionDto> queryMySideTraderOrCountTrader(@RequestParam Map<String, Object> params) {
         CfetsSearchInfoRequest item = new CfetsSearchInfoRequest();
         String dealType = (String) params.get("dealType");//查询类型
+        String counterId_Sel = (String) params.get("counterId_Sel");//交易对手方
         String counterId = (String) params.get("counterId");//交易对手方
         String mySide = (String) params.get("mySide");//本方
         String initValue = (String) params.get("initValue");//关键字
@@ -310,6 +311,8 @@ public class JoyinbusinessCommonController extends BaseController {
         }
         if (StringUtil.isNotEmpty(counterId)) {
             item.setPartyId(counterId);
+        } else if (StringUtil.isNotEmpty(counterId_Sel)) {
+            item.setPartyId(counterId_Sel);
         } else if (StringUtil.isNotEmpty(mySide)) {
             item.setPartyId(mySide);
         }

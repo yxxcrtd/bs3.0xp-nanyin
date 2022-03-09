@@ -29,6 +29,7 @@ import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +38,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 现券买卖(对话)
@@ -98,6 +96,16 @@ public class IbuQuoteRepo003Controller extends BaseController {
         model.addAttribute("ps", cfetsRepoDealQuotedPrice001Dto.getPs());
         //分配方式
         model.addAttribute("distribution", cfetsRepoDealQuotedPrice001Dto.getDistribution());
+        // 对手方是否可编辑
+        String isEdit = DictCodeList.是否_是.getValue();
+        List<String> entrustIdList = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(cfetsRepoDealQuotedPrice001Dto.getPtlAllocationList())) {
+            cfetsRepoDealQuotedPrice001Dto.getPtlAllocationList().forEach(item -> entrustIdList.add(item.getEntrustId()));
+        }
+        if (cfetsRepoQuotedPrice004Service.getIsExistCounterId(entrustIdList) > 0) {
+            isEdit = DictCodeList.是否_否.getValue();
+        }
+        model.addAttribute("isEdit", isEdit);
         return super.init(model);
     }
 

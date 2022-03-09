@@ -323,6 +323,9 @@
      * 页面初始化
      */
     var init = function () {
+        if (isEdit === 'N') {
+            $("#counterId").attr('disabled', 'disabled');
+        }
         initChangeEvent();
         initClickEvent();
     }

@@ -2098,8 +2098,12 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         str += StringUtil.isEmpty(counterTrader) ? "-" : counterTrader;
         if (StringUtil.isNotEmpty(dto.getTradeAmt())) {
             DecimalFormat df = new DecimalFormat("#,##0.00");
-            str += "交易金额:" + df.format(com.joyintech.framework.util.ArithmeticUtil.round(dto.getTradeAmt(), 2, RoundingMode.HALF_UP)) + "元";
+            str += "交易金额:" + df.format(ArithmeticUtil.round(dto.getTradeAmt(), 2, RoundingMode.HALF_UP)) + "元";
         }
         return str;
+    }
+
+    public int getIsExistCounterId(List<String> entrustIdList){
+        return cfetsIbuQuoteRepo004Mapper.getIsExistCounterId(entrustIdList);
     }
 }

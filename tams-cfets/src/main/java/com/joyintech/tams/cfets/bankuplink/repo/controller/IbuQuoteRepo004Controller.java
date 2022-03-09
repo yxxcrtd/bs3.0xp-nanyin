@@ -115,6 +115,17 @@ public class IbuQuoteRepo004Controller extends BaseController {
         model.addAttribute("EXPORT_SHOW", CacheUtil.getSysParam("EXPORT_SHOW"));
         model.addAttribute("ps", cfetsRepoDealRegisterQuoteDto.getPs());
         model.addAttribute("quoteStyle", cfetsRepoDealRegisterQuoteDto.getQuoteStyle());
+        // 对手方是否可编辑
+        String isEdit = DictCodeList.是否_是.getValue();
+        List<String> entrustIdList = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(cfetsRepoDealRegisterQuoteDto.getPtlAllocations())) {
+            cfetsRepoDealRegisterQuoteDto.getPtlAllocations().forEach(item -> entrustIdList.add(item.getEntrustId()));
+        }
+        if (StringUtil.equals(cfetsRepoDealRegisterQuoteDto.getQuoteStyle(), "05")
+                || cfetsRepoQuotedPrice004Service.getIsExistCounterId(entrustIdList) > 0) {
+            isEdit = DictCodeList.是否_否.getValue();
+        }
+        model.addAttribute("isEdit", isEdit);
         //卖空模式
         model.addAttribute(GlobalConstant.ENTITY, cfetsRepoDealRegisterQuoteDto);
         return super.init(model);

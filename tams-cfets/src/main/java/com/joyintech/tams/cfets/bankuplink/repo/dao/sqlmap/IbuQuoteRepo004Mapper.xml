@@ -16,4 +16,15 @@
         where MCP.COUNTER_ID = #{counterId}
     </select>
 
+    <select id="getIsExistCounterId" resultType="java.lang.Integer">
+        select count(*)  from ETR_ENTRUST
+        where COUNTER_ID is not null
+        <if test="entrustIdList != null and entrustIdList.size() > 0">
+            AND ENTRUST_ID in
+            <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
 </mapper>

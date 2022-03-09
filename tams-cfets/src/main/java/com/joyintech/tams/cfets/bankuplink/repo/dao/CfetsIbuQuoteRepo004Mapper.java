@@ -3,6 +3,8 @@ package com.joyintech.tams.cfets.bankuplink.repo.dao;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * 本币交易-质押式回购交易 Mapper
  *
@@ -14,4 +16,6 @@ public interface CfetsIbuQuoteRepo004Mapper {
     String findTraderByPartyId(@Param("partyId") String partyId);
 
     String findTraderByCounterId(@Param("counterId") String counterId);
+
+    int getIsExistCounterId(@Param("entrustIdList") List<String> entrustIdList);
 }

@@ -379,6 +379,9 @@
             $("#counterIdCCP_div").hide();
             $("#counterId_div").show();
         }
+        if (isEdit === 'N') {
+            $("#counterId").attr('disabled', 'disabled');
+        }
         initChangeEvent();
         initClickEvent();
     }
