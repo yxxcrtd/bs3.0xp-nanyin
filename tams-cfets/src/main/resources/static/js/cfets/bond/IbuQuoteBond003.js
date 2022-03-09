@@ -511,7 +511,9 @@
          * 提交按钮按下处理
          */
         $('#IbuQuoteBond003_btn_submit').click(function(){
-             saveOrSubmitAction('submit');
+             if(paramCheck()) {
+                 saveOrSubmitAction('submit');
+             }
         });
         /**
          * 添加按钮按下处理
@@ -541,7 +543,16 @@
             autoAllocation();
         })
     });
-
+    /**
+     * 参数校验
+     */
+    var paramCheck = function () {
+        if(!$('#CfetsBondDealQuotedPrice005_avaNum').val()||!$('#CfetsBondDealQuotedPrice005_mySideTrader').val()){
+            Joyin.error("有*必填项未填写,请填写完整")
+            return false;
+        }
+        return true;
+    }
     /**
      * 计算金额相关
      */
