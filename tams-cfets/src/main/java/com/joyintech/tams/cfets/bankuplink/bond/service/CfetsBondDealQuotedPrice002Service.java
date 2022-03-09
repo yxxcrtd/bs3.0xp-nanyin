@@ -1205,6 +1205,9 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
     
 	@Override
     public void doUpdate(CfetsBondDealDialogueQuoteDto entity){
+        if ("save".equals(entity.getOperatorType())) {
+            return;
+        }
         Map<String,Object> map = new HashMap<>();
         if (!StringUtil.equals("revoke", entity.getOperatorType()) && !StringUtil.equals("delete", entity.getOperatorType())) {
             // add by etliu 20210309 银行间上下行多组合 start

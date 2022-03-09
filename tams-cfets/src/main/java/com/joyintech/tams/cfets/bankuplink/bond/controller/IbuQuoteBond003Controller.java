@@ -717,8 +717,7 @@ public class IbuQuoteBond003Controller extends BaseController {
         ProcessParameter<CfetsBondDealRequestQuoteDto> processParameter = new ProcessParameter<CfetsBondDealRequestQuoteDto>();
         WorkFlowParameter<CfetsBondDealRequestQuoteDto> params = cfetsBondDealQuotedPrice003Service.getWorkFlowParameter(cfetsBondDealRequestQuoteDto);
         params.setPageId("IbuQuoteBond003");
-        //params.setElementId(cfetsBondDealRequestQuoteDto.getElementId());
-        params.setElementId("IbuQuoteBond003_btn_submit");
+        params.setElementId(cfetsBondDealRequestQuoteDto.getElementId());
         params.setBusinessType(DictCodeListExt3.共通业务类型_本币业务交易_请求.getValue());
         params.setBusinessCode(cfetsBondDealRequestQuoteDto.getQuoteId());
         cfetsBondDealRequestQuoteDto.setQuoteType(DictCodeListExt3.报价系统区分类型_现券请求报价.getValue());
