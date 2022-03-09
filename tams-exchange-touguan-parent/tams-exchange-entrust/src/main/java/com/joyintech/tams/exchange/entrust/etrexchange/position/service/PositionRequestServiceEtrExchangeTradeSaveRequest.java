@@ -1,19 +1,25 @@
 package com.joyintech.tams.exchange.entrust.etrexchange.position.service;
 
-import static com.joyintech.tams.constant.DictCodeList.交易方向_申购;
-import static com.joyintech.tams.constant.DictCodeList.是否_否;
-import static com.joyintech.tams.constant.DictCodeListExt2.申购方式_网上申购;
-import static com.joyintech.tams.constant.DictCodeListExt3.业务动作_投资指令;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.*;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
+import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.business.common.service.PositionHttpRequest;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeOperateRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePortfolioRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.FinProductOthCodeDto;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
+import com.joyintech.tams.exchange.entrust.etrexchange.position.bean.PositionRequestBaseBean;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.position.service.CommonPositionEngineService;
+import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.TrdMoreConvrateDto;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -21,35 +27,24 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
-import com.joyintech.framework.security.SecurityUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.business.common.service.PositionHttpRequest;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeOperateRequest;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePortfolioRequest;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
-import com.joyintech.tams.exchange.entrust.etrexchange.position.bean.PositionRequestBaseBean;
-import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
-import com.joyintech.tams.invest.common.position.service.CommonPositionEngineService;
-import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.TrdMoreConvrateDto;
+import java.math.BigDecimal;
+import java.util.*;
+
+import static com.joyintech.tams.constant.DictCodeList.交易方向_申购;
+import static com.joyintech.tams.constant.DictCodeList.是否_否;
+import static com.joyintech.tams.constant.DictCodeListExt2.交易方向_配股;
+import static com.joyintech.tams.constant.DictCodeListExt2.申购方式_网上申购;
+import static com.joyintech.tams.constant.DictCodeListExt3.*;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.*;
 
 @Service
 public class PositionRequestServiceEtrExchangeTradeSaveRequest {
 
+    public static final String STANDAR_SEC_ID = "XN_PRODID999";
     /**
      * 日志对象
      */
     private final Logger log = LoggerFactory.getLogger(this.getClass());
-
-    public static final String STANDAR_SEC_ID = "XN_PRODID999";
     @Autowired
     private CommonPositionEngineService commonPositionEngineService;
     @Autowired
@@ -67,11 +62,11 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
         resultMap.put("systemAct", systemAct);
         this.setCommonField(entity, resultMap);//设置公共字段，个性化的需要在具体接口中覆盖
         String finprodType = entity.getFinprodType2();
-        if(DictCodeListExt1.金融产品类型_投管用_债券.equals(finprodType)) {
-        	String type6 = commonPositionEngineService.getType6(entity.getFinprodId());
-        	if (DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue().equals(type6)) {
-        		finprodType += "-" + type6;
-        	}
+        if (DictCodeListExt1.金融产品类型_投管用_债券.equals(finprodType)) {
+            String type6 = commonPositionEngineService.getType6(entity.getFinprodId());
+            if (DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue().equals(type6)) {
+                finprodType += "-" + type6;
+            }
         }
         String interType = commonPositionEngineService.getPositionInterType(POSITION_TYPE_ETR, POSITION_ETR_PAGE, finprodType, entity.getPs(), entity.getOptType(), entity.getClass().getName());
         log.info("匹配头寸接口：[{}]", interType);
@@ -88,7 +83,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
         } else {
             log.warn("未匹配到头寸接口");
             //TODO 根据条件判断调用其他接口
-        	return ;
+            return;
         }
         PositionHttpRequest.send(resultMap);
     }
@@ -99,7 +94,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
      * @param entity
      */
     public void sendDelete(EtrExchangeTradeSaveRequest entity) {
-        log.info("sendDelete() called with parameters => 【entity = {}】",JsonUtils.object2Json(entity));
+        log.info("sendDelete() called with parameters => 【entity = {}】", JsonUtils.object2Json(entity));
         String busiType = commonPositionEngineService.getPositionBusiType(entity.getFinprodType2(), entity.getPs(), entity.getAssetType2());
         PositionHttpRequest.doDeleteByWorkFlowId(entity.getWorkflowId(), POSITION_TYPE_ETR, busiType, entity.getPs());
     }
@@ -110,7 +105,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
      * @param entity
      */
     public void sendRevoke(EtrExchangeTradeOperateRequest entity) {
-        log.info("sendRevoke() called with parameters => 【entity = {}】",JsonUtils.object2Json(entity));
+        log.info("sendRevoke() called with parameters => 【entity = {}】", JsonUtils.object2Json(entity));
         String busiType = commonPositionEngineService.getPositionBusiType(entity.getFinprodType2(), entity.getPs(), null);
         PositionHttpRequest.dorevoke(entity.getEntrustId(), POSITION_TYPE_TRD, busiType, entity.getPs());
     }
@@ -121,7 +116,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
      * @param entity
      */
     public void sendClose(EtrExchangeTradeOperateRequest entity) {
-        log.info("sendClose() called with parameters => 【entity = {}】",JsonUtils.object2Json(entity));
+        log.info("sendClose() called with parameters => 【entity = {}】", JsonUtils.object2Json(entity));
         String busiType = commonPositionEngineService.getPositionBusiType(entity.getFinprodType2(), entity.getPs(), null);
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("userId", SecurityUtil.getLoginUser().getUserName());
@@ -249,6 +244,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
                 List<Map<String, Object>> applyBondSecList = new ArrayList<>(portfolioListSize);
                 for (EtrExchangeTradePortfolioRequest item : entity.getPortfolioList()) {
                     bean = new PositionRequestBaseBean(item);
+                    bean.setFinprodId(this.getOthCode(ps, entity.getFinprodId()));
                     bean.setSecAmount(commonPositionEngineService.getSecAmountByBondUnit(item.getEntrustNum()));
                     bean.setCashAmount(null);
 
@@ -386,12 +382,12 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
 
             String ps = entity.getPs();
             // 组合配股/新股申购数据集	ptlRoList
-            if (DictCodeListExt2.交易方向_配股.getValue().equals(ps) || 交易方向_申购.getValue().equals(ps)) {
+            if (交易方向_配股.getValue().equals(ps) || 交易方向_申购.getValue().equals(ps)) {
                 List<Map<String, Object>> ptlRoList = new ArrayList<>(portfolioListSize);
                 for (EtrExchangeTradePortfolioRequest item : entity.getPortfolioList()) {
                     bean = new PositionRequestBaseBean(item);
                     // 配股/申购代码
-                    bean.setFinprodId(item.getStockId());
+                    bean.setFinprodId(this.getOthCode(ps, entity.getFinprodId()));
 
                     Map<String, Object> map = BeanUtil.object2Map(bean);
                     map.put(ORD_ENTRUST_ID, null);
@@ -400,6 +396,32 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
                 resultMap.put(PTL_RO_LIST, ptlRoList);
             }
         }
+    }
+
+    /**
+     * 获取申购、配股配债等代码
+     *
+     * @param ps        交易方向
+     * @param finprodId 金融产品代码
+     * @return 申购等代码
+     */
+    private String getOthCode(String ps, String finprodId) {
+        List<String> othTypeList = Lists.newArrayList();
+        if (交易方向_配股.getValue().equals(ps)) {
+            othTypeList.add(金融产品其他代码类型_配股代码.getValue());
+        } else if (交易方向_申购.getValue().equals(ps)) {
+            othTypeList.add(金融产品其他代码类型_新股申购代码.getValue());
+        } else if (交易方向_配债.getValue().equals(ps)) {
+            othTypeList.add(金融产品其他代码类型_配债代码.getValue());
+        }
+        ImmutableMap<String, Object> map = ImmutableMap.of("othTypeList", othTypeList, "finprodId", finprodId);
+
+        List<FinProductOthCodeDto> codeDtos = etrExchangeTradeCommon001Service.getFinprodOthCodeInfo(map);
+
+        if (CollectionUtils.isNotEmpty(codeDtos)) {
+            return codeDtos.get(0).getOthCode();
+        }
+        return finprodId;
     }
 
     /**
