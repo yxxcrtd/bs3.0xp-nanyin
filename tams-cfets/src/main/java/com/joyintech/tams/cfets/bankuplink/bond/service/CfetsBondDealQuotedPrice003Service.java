@@ -222,7 +222,17 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
                     }
                 });
             }else{
-                errorList.add(new ValidMessage("请添加对手方信息"));
+                List<String> counterIdList=entity.getCounterIdList();
+                if(CollectionUtils.isNotEmpty(counterIdList)){
+                    counterIdList.forEach(item ->{
+                        String trader = cfetsRepoQuotedPrice004Service.findTraderByPartyId(item);
+                        if (!StringUtil.isNotEmpty(trader)) {
+                            errorList.add(new ValidMessage("选择的对手方未与系统中交易对手关联，请先去关联"));
+                        }
+                    });
+                }else{
+                    errorList.add(new ValidMessage("请添加对手方信息"));
+                }
             }
         }
         /*if(StringUtil.equals(sellPara,"02")){

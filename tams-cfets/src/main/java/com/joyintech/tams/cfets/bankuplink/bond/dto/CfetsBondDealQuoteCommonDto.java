@@ -211,7 +211,7 @@ public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEn
     @ApiModelProperty(name="tradeStatus",value="报价状态")
     private String tradeStatus;
 
-
+    private List<String> counterIdList;
 
     public String getQuoteId() {
         return quoteId;
@@ -733,6 +733,12 @@ public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEn
         this.totleTradeId = totleTradeId;
     }
 
+    public List<String> getCounterIdList() {
+        return counterIdList;
+    }
 
+    public void setCounterIdList(List<String> counterIdList) {
+        this.counterIdList = counterIdList;
+    }
 }
 

@@ -214,14 +214,14 @@
         var object = $.serializeToObject('#submitForm', true);
         var orgList = table.getAllRows();
         if(orgList != null && orgList.length>0){
-            var orgInfoList = [];
+           // var orgInfoList = [];
             var orgIdList = [];
             for(var i = 0 ;i<orgList.length; i++){
                 var org = orgList[i];
-                orgInfoList.push(org);
+               // orgInfoList.push(org);
                 orgIdList.push(org.counterId);
             }
-            object.counterInfoList = orgInfoList;
+          //  object.counterInfoList = orgInfoList;
             object.counterIdList = orgIdList;
         }
         object.isDzh = 'Y';
@@ -230,15 +230,15 @@
         object.shareAmt = JoyinMath.doMul(object.avaNum, 10000);
         if(object.cfetsBondDealDialogueQuoteDtoList){
             object.cfetsBondDealRequestQuoteDtoList = object.cfetsBondDealDialogueQuoteDtoList;
-            var ptlAllocations=object.cfetsBondDealDialogueQuoteDtoList;
-             object.ptlAllocatios= ptlAllocations;
-             if(object.ptlAllocatios) {
-                    $.each(object.ptlAllocatios, function (index, obj) {
-                         obj.shareAmt = JoyinMath.doMul(obj.avaNum, 10000);
-                         obj.avaNum = JoyinMath.doMul(obj.entrustAvaNum, 10000);
-                         obj.avaNumOld = JoyinMath.doMul(obj.entrustAvaNum, 10000);
-                    });
+             var ptlAllocations=[];
+             for ( var i = 0; i <object.cfetsBondDealRequestQuoteDtoList.length; i++){
+                  var ptlAllocation=JSON.parse(JSON.stringify(object.cfetsBondDealRequestQuoteDtoList[i]));
+                  ptlAllocation.shareAmt = JoyinMath.doMul(ptlAllocation.avaNum, 10000);
+                  ptlAllocation.avaNum = JoyinMath.doMul(ptlAllocation.entrustAvaNum, 10000);
+                  ptlAllocation.avaNumOld = JoyinMath.doMul(ptlAllocation.entrustAvaNum, 10000);
+                  ptlAllocations.push(ptlAllocation);
              }
+             object.ptlAllocatios= ptlAllocations;
         }
           Joyin.confirm("是否确认提交?",
             function () {
@@ -597,7 +597,7 @@
     }
     //撤回按钮不应该在待办及审批环节出现
     if(busWorkflowId){
-        $("#CfetsBondDealQuotedPrice005_btn_revokeBtn").hide();
+        $("#IbuQuoteBond003_btn_revokeBtn").hide();
     }
 
     window.CfetsBondDealQuotedPrice005 = {
