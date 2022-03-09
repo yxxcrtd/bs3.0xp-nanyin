@@ -2525,13 +2525,13 @@ public class InvestmentsInfoService {
 			//表五计算用 资产支持专项计划 - 上季
 			investmentBusinessDetailsDto.setValueBlast02((BigDecimal) map.get("VALUEBLAST02"));
 
-			//同级合计数据
-			valueA = valueA.add(null!=investmentBusinessDetailsDto.getValueA()?investmentBusinessDetailsDto.getValueA():BigDecimal.ZERO);
-			valueB = valueB.add(null!=investmentBusinessDetailsDto.getValueB()?investmentBusinessDetailsDto.getValueB():BigDecimal.ZERO);
-			valueALast = valueALast.add(null!=investmentBusinessDetailsDto.getValueALast()?investmentBusinessDetailsDto.getValueALast():BigDecimal.ZERO);
-			valueBLast = valueBLast.add(null!=investmentBusinessDetailsDto.getValueBLast()?investmentBusinessDetailsDto.getValueBLast():BigDecimal.ZERO);
-			valueB01 = valueB01.add(null!=investmentBusinessDetailsDto.getValueB01()?investmentBusinessDetailsDto.getValueB01():BigDecimal.ZERO);
-			valueBlast01 = valueBlast01.add(null!=investmentBusinessDetailsDto.getValueBlast01()?investmentBusinessDetailsDto.getValueBlast01():BigDecimal.ZERO);
+			//同级合计数据  F01和F06的合计数据需要分开
+			valueA = valueA.add(null!=investmentBusinessDetailsDto.getValueA()&&investmentBusinessDetailsDto.getPropertycode().contains("F06")?investmentBusinessDetailsDto.getValueA():BigDecimal.ZERO);
+			valueB = valueB.add(null!=investmentBusinessDetailsDto.getValueB()&&investmentBusinessDetailsDto.getPropertycode().contains("F01")?investmentBusinessDetailsDto.getValueB():BigDecimal.ZERO);
+			valueALast = valueALast.add(null!=investmentBusinessDetailsDto.getValueALast()&&investmentBusinessDetailsDto.getPropertycode().contains("F06")?investmentBusinessDetailsDto.getValueALast():BigDecimal.ZERO);
+			valueBLast = valueBLast.add(null!=investmentBusinessDetailsDto.getValueBLast()&&investmentBusinessDetailsDto.getPropertycode().contains("F01")?investmentBusinessDetailsDto.getValueBLast():BigDecimal.ZERO);
+			valueB01 = valueB01.add(null!=investmentBusinessDetailsDto.getValueB01()&&investmentBusinessDetailsDto.getPropertycode().contains("F01")?investmentBusinessDetailsDto.getValueB01():BigDecimal.ZERO);
+			valueBlast01 = valueBlast01.add(null!=investmentBusinessDetailsDto.getValueBlast01()&&investmentBusinessDetailsDto.getPropertycode().contains("F01")?investmentBusinessDetailsDto.getValueBlast01():BigDecimal.ZERO);
 
 
 			InvestmentBusinessDetailsList.add(investmentBusinessDetailsDto);
