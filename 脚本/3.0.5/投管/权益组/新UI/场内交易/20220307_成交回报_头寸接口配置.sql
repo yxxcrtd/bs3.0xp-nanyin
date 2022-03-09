@@ -12,9 +12,9 @@ VALUES ('TRD_TRADE_REPORT', 'F01-B14', 'T02', '17', 'TRD', 'com.joyintech.servic
 
 /*基金接口*/
 INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE, ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, REMARK, ENABLE) 
-VALUES ('TRD_TRADE_REPORT', 'F06', 'T01', '17', 'TRD', 'com.joyintech.service.trade.entrustmsgbymq.dto.TrdTempDto', 'Fund001', 'system', null, sysdate, 'system', sysdate, '场内基金接口-成交回报-买入', 'Y');
+VALUES ('TRD_TRADE_REPORT', 'F06', 'T01', '17', 'TRD', 'com.joyintech.service.trade.entrustmsgbymq.dto.TrdTempDto', 'Fund002', 'system', null, sysdate, 'system', sysdate, '场内基金接口-成交回报-买入', 'Y');
 INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE, ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, REMARK, ENABLE) 
-VALUES ('TRD_TRADE_REPORT', 'F06', 'T02', '17', 'TRD', 'com.joyintech.service.trade.entrustmsgbymq.dto.TrdTempDto', 'Fund001', 'system', null, sysdate, 'system', sysdate, '场内基金接口-成交回报-卖出', 'Y');
+VALUES ('TRD_TRADE_REPORT', 'F06', 'T02', '17', 'TRD', 'com.joyintech.service.trade.entrustmsgbymq.dto.TrdTempDto', 'Fund002', 'system', null, sysdate, 'system', sysdate, '场内基金接口-成交回报-卖出', 'Y');
 
 /*股票接口*/
 INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE, ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, REMARK, ENABLE) 

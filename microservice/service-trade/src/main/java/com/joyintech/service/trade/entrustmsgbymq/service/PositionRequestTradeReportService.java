@@ -6,6 +6,7 @@ import com.joyintech.service.trade.entrustmsgbymq.dto.TrdMoreConvrate;
 import com.joyintech.service.trade.entrustmsgbymq.dto.TrdTempDto;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;
+import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
@@ -43,6 +44,9 @@ public class PositionRequestTradeReportService {
     @Autowired
     private EtrEntrustAddMapper etrEntrustAddMapper;
 
+    @Autowired
+    private EtrEntrustMapper etrEntrustMapper;
+
     @Autowired(required = false)
     @Qualifier("simpleRestTemplate")
     protected JoyinRestTemplate simpleRestTemplate;
@@ -73,8 +77,8 @@ public class PositionRequestTradeReportService {
             this.bond003(trdTempDto, resultMap);
         } else if (INTERF_TYPE_REPO003.equals(interType)) {
             this.repo003(trdTempDto, resultMap);
-        } else if (INTERF_TYPE_FUND001.equals(interType)) {
-            this.fund001(trdTempDto, resultMap);
+        } else if (INTERF_TYPE_FUND002.equals(interType)) {
+            this.fund002(trdTempDto, resultMap);
         } else if (INTERF_TYPE_STOCK001.equals(interType)) {
             this.stock001(trdTempDto, resultMap);
         }
@@ -89,8 +93,10 @@ public class PositionRequestTradeReportService {
      */
     private void bond002(TrdTempDto entity, Map<String, Object> resultMap) {
         resultMap.put("interfaceType", INTERF_TYPE_BOND002);
-        String busiType = commonPositionEngineService.getPositionBusiType(entity.getFinprodType2(), entity.getPs(),
-                entity.getAssetType());
+        EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(entity.getEntrustId());
+        EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(entity.getEntrustId());
+        String busiType = commonPositionEngineService.getPositionBusiType(etrEntrust.getFinprodType2(), etrEntrust.getPs(),
+                etrEntrustAdd.getAssetType1());
         // 业务类型
         resultMap.put("busiType", busiType);
         // 业务动作
@@ -145,8 +151,10 @@ public class PositionRequestTradeReportService {
      */
     private void bond003(TrdTempDto entity, Map<String, Object> resultMap) {
         resultMap.put("interfaceType", INTERF_TYPE_BOND003);
-        String busiType = commonPositionEngineService.getPositionBusiType(entity.getFinprodType2(), entity.getPs(),
-                entity.getAssetType());
+        EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(entity.getEntrustId());
+        EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(entity.getEntrustId());
+        String busiType = commonPositionEngineService.getPositionBusiType(etrEntrust.getFinprodType2(), etrEntrust.getPs(),
+                etrEntrustAdd.getAssetType1());
         resultMap.put("busiType", busiType);
         // 业务动作
         resultMap.put("busiAct", DictCodeListExt3.业务动作_成交回报.getValue());
@@ -204,8 +212,10 @@ public class PositionRequestTradeReportService {
      */
     private void repo003(TrdTempDto entity, Map<String, Object> resultMap) {
         resultMap.put("interfaceType", INTERF_TYPE_REPO003);
-        String busiType = commonPositionEngineService.getPositionBusiType(entity.getFinprodType2(), entity.getPs(),
-                entity.getAssetType());
+        EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(entity.getEntrustId());
+        EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(entity.getEntrustId());
+        String busiType = commonPositionEngineService.getPositionBusiType(etrEntrust.getFinprodType2(), etrEntrust.getPs(),
+                etrEntrustAdd.getAssetType1());
         resultMap.put("busiType", busiType);
         // 业务动作
         resultMap.put("busiAct", DictCodeListExt3.业务动作_成交回报.getValue());
@@ -268,10 +278,12 @@ public class PositionRequestTradeReportService {
      * @param entity
      * @param resultMap
      */
-    private void fund001(TrdTempDto entity, Map<String, Object> resultMap) {
-        resultMap.put("interfaceType", INTERF_TYPE_FUND001);
-        String busiType = commonPositionEngineService.getPositionBusiType(entity.getFinprodType2(), entity.getPs(),
-                entity.getAssetType());
+    private void fund002(TrdTempDto entity, Map<String, Object> resultMap) {
+        resultMap.put("interfaceType", INTERF_TYPE_FUND002);
+        EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(entity.getEntrustId());
+        EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(entity.getEntrustId());
+        String busiType = commonPositionEngineService.getPositionBusiType(etrEntrust.getFinprodType2(), etrEntrust.getPs(),
+                etrEntrustAdd.getAssetType1());
         resultMap.put("busiType", busiType);
         // 业务动作
         resultMap.put("busiAct", DictCodeListExt3.业务动作_成交回报.getValue());
@@ -320,8 +332,10 @@ public class PositionRequestTradeReportService {
      */
     private void stock001(TrdTempDto entity, Map<String, Object> resultMap) {
         resultMap.put("interfaceType", INTERF_TYPE_STOCK001);
-        String busiType = commonPositionEngineService.getPositionBusiType(entity.getFinprodType2(), entity.getPs(),
-                entity.getAssetType());
+        EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(entity.getEntrustId());
+        EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(entity.getEntrustId());
+        String busiType = commonPositionEngineService.getPositionBusiType(etrEntrust.getFinprodType2(), etrEntrust.getPs(),
+                etrEntrustAdd.getAssetType1());
         resultMap.put("busiType", busiType);
         // 业务动作
         resultMap.put("busiAct", DictCodeListExt3.业务动作_成交回报.getValue());
