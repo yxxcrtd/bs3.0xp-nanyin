@@ -53,9 +53,7 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
 
     @Autowired
     private TrdCommonBaseService trdCommonBaseService;
-
-    public static final String OPT_TYPE_NEW = "new";
-
+  
     public static final String TRADE_PLAT = "TRANS_MATCH";
 
     /**
@@ -79,7 +77,7 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
             }
             String interType =
                     commonPositionEngineService.getPositionInterType(PositionConstant.POSITION_TYPE_TRD, TRADE_PLAT, finprodType, entity.getTrdProductDeal().getPs(),
-                            OPT_TYPE_NEW, entity.getClass().getName());
+                            DictCodeListExt3.业务动作_成交匹配.getValue(), entity.getClass().getName());
             if (PositionConstant.INTERF_TYPE_BOND002.equals(interType)) {
                 this.bond002(entity, resultMap);
             } else if (PositionConstant.INTERF_TYPE_BOND003.equals(interType)) {
