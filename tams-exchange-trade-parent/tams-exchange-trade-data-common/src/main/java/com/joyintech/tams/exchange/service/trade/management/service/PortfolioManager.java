@@ -5,6 +5,7 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
+import com.google.common.collect.Maps;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -291,6 +292,17 @@ public class PortfolioManager extends BaseService {
      * 组合计算
      */
     public ResultBean queryPortfolioCalculate(OrderPlaceBean bean) {
+        return queryPortfolioCalculate(bean, true);
+    }
+
+    /**
+     * 组合计算
+     *
+     * @param bean     下单对象
+     * @param infoFlag 是否查询组合信息
+     * @return 组合计算结果
+     */
+    public ResultBean queryPortfolioCalculate(OrderPlaceBean bean, boolean infoFlag) {
         log.info("queryPortfolioCalculate() called with parameters => 【bean = {}】", bean);
         // 获取指令
         String instructionId = bean.getInstructionId();
@@ -323,19 +335,21 @@ public class PortfolioManager extends BaseService {
             }
         }
 
-        // - 查询组合信息
-        PortfolioInfoRequest portfolioInfoRequest = new PortfolioInfoRequest();
-        List<String> portfolios = instructionDetails.stream().map(InstructionDetail::getPortfolioId).collect(Collectors.toList());
-        portfolioInfoRequest.setPortfolioId(ArrayUtil.join(portfolios.toArray(), StrUtil.COMMA));
-        portfolioInfoRequest.setFinprodId(instruction.getFinprodId());
-        portfolioInfoRequest.setSecAcctId(instruction.getSecAcctId());
-        portfolioInfoRequest.setAcctNo(instruction.getAcctNo());
-        portfolioInfoRequest.setTradeMarket(instruction.getTradeMarket());
-        portfolioInfoRequest.setVdate(DateUtil.platDateFromCache());
+        Map<String, PortfolioInfoResponse> portfolioInfoResponseMap = Maps.newHashMap();
+        if (infoFlag) {
+            // - 查询组合信息
+            PortfolioInfoRequest portfolioInfoRequest = new PortfolioInfoRequest();
+            List<String> portfolios = instructionDetails.stream().map(InstructionDetail::getPortfolioId).collect(Collectors.toList());
+            portfolioInfoRequest.setPortfolioId(ArrayUtil.join(portfolios.toArray(), StrUtil.COMMA));
+            portfolioInfoRequest.setFinprodId(instruction.getFinprodId());
+            portfolioInfoRequest.setSecAcctId(instruction.getSecAcctId());
+            portfolioInfoRequest.setAcctNo(instruction.getAcctNo());
+            portfolioInfoRequest.setTradeMarket(instruction.getTradeMarket());
+            portfolioInfoRequest.setVdate(DateUtil.platDateFromCache());
 
-        ResultBean portfolioInfoResult = this.queryPortfolioInfo(portfolioInfoRequest);
-        Map<String, PortfolioInfoResponse> portfolioInfoResponseMap = (Map<String, PortfolioInfoResponse>) portfolioInfoResult.getData();
-
+            ResultBean portfolioInfoResult = this.queryPortfolioInfo(portfolioInfoRequest);
+            portfolioInfoResponseMap.putAll((Map<String, PortfolioInfoResponse>) portfolioInfoResult.getData());
+        }
 
         // 计算结果列表
         List<PortfolioCalculateResponse> list = new ArrayList<>(8);

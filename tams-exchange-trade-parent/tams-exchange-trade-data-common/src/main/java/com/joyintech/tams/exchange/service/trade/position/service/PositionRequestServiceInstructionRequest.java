@@ -1,28 +1,5 @@
 package com.joyintech.tams.exchange.service.trade.position.service;
 
-import static com.joyintech.tams.constant.DictCodeList.交易平台_竞价撮合平台;
-import static com.joyintech.tams.constant.DictCodeList.是否_否;
-import static com.joyintech.tams.constant.DictCodeListExt3.交易单位_份;
-import static com.joyintech.tams.constant.DictCodeListExt3.交易单位_张;
-import static com.joyintech.tams.constant.DictCodeListExt3.交易方向_债转股;
-import static com.joyintech.tams.constant.DictCodeListExt3.交易方向_质押券入库;
-import static com.joyintech.tams.constant.DictCodeListExt3.交易方向_质押券出库;
-import static com.joyintech.tams.constant.DictCodeListExt3.交易方向_配债;
-import static com.joyintech.tams.exchange.common.constant.joyin.DictCodeList.交易方向_申购;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.*;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.joyintech.framework.util.BeanUtil;
@@ -44,6 +21,19 @@ import com.joyintech.tams.exchange.datacommon.db.service.InstructionPledgeServic
 import com.joyintech.tams.exchange.service.trade.management.service.PortfolioManager;
 import com.joyintech.tams.exchange.service.trade.position.bean.PositionRequestBaseBean;
 import com.joyintech.tams.invest.common.position.service.CommonPositionEngineService;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.*;
+
+import static com.joyintech.tams.constant.DictCodeList.交易平台_竞价撮合平台;
+import static com.joyintech.tams.constant.DictCodeList.是否_否;
+import static com.joyintech.tams.constant.DictCodeListExt3.*;
+import static com.joyintech.tams.exchange.common.constant.joyin.DictCodeList.交易方向_申购;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.*;
 
 @Service
 public class PositionRequestServiceInstructionRequest {
@@ -65,11 +55,11 @@ public class PositionRequestServiceInstructionRequest {
         resultMap.put("systemAct", systemAct);
         this.setCommonField(entity, resultMap);//设置公共字段，个性化的需要在具体接口中覆盖
         String finprodType = entity.getFinprodType2();
-        if(DictCodeListExt1.金融产品类型_投管用_债券.equals(finprodType)) {
-        	String type6 = commonPositionEngineService.getType6(entity.getFinprodId());
-        	if (DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue().equals(type6)) {
-        		finprodType += "-" + type6;
-        	}
+        if (DictCodeListExt1.金融产品类型_投管用_债券.equals(finprodType)) {
+            String type6 = commonPositionEngineService.getType6(entity.getFinprodId());
+            if (DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue().equals(type6)) {
+                finprodType += "-" + type6;
+            }
         }
         if (DictCodeList.回购类型_质押式协议回购.getValue().equals(entity.getAssetType())
                 || (DictCodeList.回购类型_质押式竞价回购.getValue().equals(entity.getAssetType()))) {
@@ -88,8 +78,8 @@ public class PositionRequestServiceInstructionRequest {
             this.repo002(entity, resultMap);
         } else if (INTERF_TYPE_STOCK001.equals(interType)) {
             this.stock001(entity, resultMap);
-        }else {
-        	return ;
+        } else {
+            return;
         }
         PositionHttpRequest.send(resultMap);
     }
@@ -601,7 +591,7 @@ public class PositionRequestServiceInstructionRequest {
         orderPlaceBean.setFullPrice(entity.getFullPrice());
 
         // 调用组合计算接口，得出各组合分配到的数量金额
-        ResultBean resultBean = portfolioManager.queryPortfolioCalculate(orderPlaceBean);
+        ResultBean resultBean = portfolioManager.queryPortfolioCalculate(orderPlaceBean, false);
         if (resultBean.getErrorCode() == 0) {
             return (List<PortfolioCalculateResponse>) resultBean.getData();
         }
