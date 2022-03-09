@@ -228,4 +228,28 @@ public class InvestTradeWriteDto extends NeedToWriteEntity {
     public void setPtlSecPositionFlowList(List<PtlSecPositionFlow> ptlSecPositionFlowList) {
         this.ptlSecPositionFlowList = ptlSecPositionFlowList;
     }
+
+    //add by wujie on 20220301 start remark:调用估值交易入账参数对象
+    private String busiType;
+
+    private  List<AllTradeCommonInputDto> listInputDto;
+
+    public List<AllTradeCommonInputDto> getListInputDto() {
+        return listInputDto;
+    }
+
+    public void setListInputDto(List<AllTradeCommonInputDto> listInputDto) {
+        this.listInputDto = listInputDto;
+    }
+
+    public String getBusiType() {
+        return busiType;
+    }
+
+    public void setBusiType(String busiType) {
+        this.busiType = busiType;
+    }
+
+
+    //add by wujie on 20220301 end remark:调用估值交易入账参数对象
 }
