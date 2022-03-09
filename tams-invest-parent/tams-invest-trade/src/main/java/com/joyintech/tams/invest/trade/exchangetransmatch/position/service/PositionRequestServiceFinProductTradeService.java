@@ -62,11 +62,11 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
      * BaseTradeProductDealDto请求对象使用
      * @param finProductTradeDto
      */
-    public void sendFinProductTradeDto(FinProductTradeDto finProductTradeDto, String decisionAct, String systemAct) {
+    public void sendFinProductTradeDto(FinProductTradeDto finProductTradeDto) {
         for (BaseTradeProductDealDto entity:finProductTradeDto.getBaseTradeProductDealDtos()) {
             Map<String, Object> resultMap = new HashMap<>();
-            resultMap.put("decisionAct", decisionAct);
-            resultMap.put("systemAct", systemAct);
+            resultMap.put("decisionAct", DictCodeListExt3.系统动作_新建.getValue());
+            resultMap.put("systemAct", DictCodeListExt3.系统动作_新建.getValue());
             this.setCommonField(entity, resultMap);//设置公共字段，个性化的需要在具体接口中覆盖
             String type6 = commonPositionEngineService.getType6(entity.getTrdProductDeal().getFinprodId());
             String finprodType = entity.getTrdProductDeal().getFinprodType2();

@@ -705,13 +705,7 @@ public class ExchangeTransMatchCommonService extends BaseService {
         }
         // modify by etliu 20220110 end
         //增加调用头寸引擎代码start
-        String decisionAct = DictCodeListExt3.系统动作_新建.getValue();
-        String systemAct = DictCodeListExt3.系统动作_新建.getValue();
-        //        if (StringUtil.equals(exchangeTransMatchCommonDto.getOptType(), ENTRUST_RECORD_MODIFY)) {
-        //            systemAct = DictCodeListExt3.系统动作_修改.getValue();
-        //        }
-//        item.setOptType(ENTRUST_RECORD_NEW);
-        positionRequestService.sendFinProductTradeDto(finProductTradeDto,decisionAct,systemAct);
+        positionRequestService.sendFinProductTradeDto(finProductTradeDto);
         //增加调用头寸引擎代码end
         logger.debug("处理业务交易表---结束,交易编号:"+tradeId);
         return tradeId;
