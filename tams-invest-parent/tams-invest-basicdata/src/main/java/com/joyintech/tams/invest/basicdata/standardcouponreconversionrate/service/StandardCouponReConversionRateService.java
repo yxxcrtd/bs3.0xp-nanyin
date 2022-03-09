@@ -85,6 +85,22 @@ public class StandardCouponReConversionRateService extends CommonExportService<S
 
 
     /**
+     * 双击查看详细信息查询 修改页面信息查询
+     *
+     * @param
+     *
+     * @return MstSaleDepartmentDto
+     * @see
+     * @since 1.0
+     */
+    public List<StandardCouponReConversionRateDto> getList(StandardCouponReConversionRateDto dto) {
+        return restTemplate.postForList(
+                ServiceApplication.BASICDATA_SERVICE_NAME + "/StandardCouponReConversionRate/getList", dto,
+                StandardCouponReConversionRateDto.class);
+    }
+
+
+    /**
      * 导出查询
      */
     @Override

@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 public class StandardCouponReConversionRateValidator implements BeanValidator {
@@ -26,6 +27,26 @@ public class StandardCouponReConversionRateValidator implements BeanValidator {
     public List<ValidMessage> valid(Object o) {
         StandardCouponReConversionRateDto dto = (StandardCouponReConversionRateDto) o;
         List<ValidMessage> resultList = new ArrayList<ValidMessage> ();
+        if (StringUtil.equals(dto.getOperateType(), "new")){
+            StandardCouponReConversionRateDto vo = new StandardCouponReConversionRateDto();
+            vo.setBrokerId(dto.getBrokerId());
+            if(Objects.isNull(dto.getAccountType())||"".equals(dto.getAccountType())){
+                vo.setFinprodId("system");
+                List<StandardCouponReConversionRateDto> list = standardCouponReConversionRateService.getList(dto);
+                if(!list.isEmpty()&&list.size()>0){
+                    resultList.add(new ValidMessage(this.getMessage("已存在同一券商不同模式的数据，请维护相同模式的数据", dto.getTandardRate ())));
+                    return resultList;
+                }
+            }
+            if(Objects.isNull(dto.getFinprodId())||"".equals(dto.getFinprodId())){
+                vo.setAccountType("system");
+                List<StandardCouponReConversionRateDto> list = standardCouponReConversionRateService.getList(dto);
+                if(!list.isEmpty()&&list.size()>0){
+                    resultList.add(new ValidMessage(this.getMessage("已存在同一券商不同模式的数据，请维护相同模式的数据", dto.getTandardRate ())));
+                    return resultList;
+                }
+            }
+        }
         if(StringUtil.equals(dto.getOperateType(), "edit")){
             if(StringUtil.isNotEmpty(dto.getStartDate())){
                 String platDate = DateUtil.format(DateUtil.platDateFromCache());
