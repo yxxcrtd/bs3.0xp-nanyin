@@ -149,7 +149,6 @@ public class PositionRequestTradeRestService {
             Map<String,Object> param = Maps.newHashMap();
             param.put("fTradeId",dealEntity.getfTradeId());
             PositionRequestBaseBean bean = new PositionRequestBaseBean();
-//                // 组合数据集
             List<Map<String, Object>> ptlList = new ArrayList<>();
             bean.setPortfolioId(dealAddEntity.getPortfolioId());
             // 业务编号
