@@ -66,10 +66,12 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
         resultMap.put("decisionAct", decisionAct);
         resultMap.put("systemAct", systemAct);
         this.setCommonField(entity, resultMap);//设置公共字段，个性化的需要在具体接口中覆盖
-        String type6 = commonPositionEngineService.getType6(entity.getFinprodId());
         String finprodType = entity.getFinprodType2();
-        if (DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue().equals(type6)) {
-            finprodType += "-" + type6;
+        if(DictCodeListExt1.金融产品类型_投管用_债券.equals(finprodType)) {
+        	String type6 = commonPositionEngineService.getType6(entity.getFinprodId());
+        	if (DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue().equals(type6)) {
+        		finprodType += "-" + type6;
+        	}
         }
         String interType = commonPositionEngineService.getPositionInterType(POSITION_TYPE_ETR, POSITION_ETR_PAGE, finprodType, entity.getPs(), entity.getOptType(), entity.getClass().getName());
         log.info("匹配头寸接口：[{}]", interType);

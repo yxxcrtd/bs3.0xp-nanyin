@@ -64,10 +64,12 @@ public class PositionRequestServiceInstructionRequest {
         resultMap.put("decisionAct", decisionAct);
         resultMap.put("systemAct", systemAct);
         this.setCommonField(entity, resultMap);//设置公共字段，个性化的需要在具体接口中覆盖
-        String type6 = commonPositionEngineService.getType6(entity.getFinprodId());
         String finprodType = entity.getFinprodType2();
-        if (DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue().equals(type6)) {
-            finprodType += "-" + type6;
+        if(DictCodeListExt1.金融产品类型_投管用_债券.equals(finprodType)) {
+        	String type6 = commonPositionEngineService.getType6(entity.getFinprodId());
+        	if (DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue().equals(type6)) {
+        		finprodType += "-" + type6;
+        	}
         }
         if (DictCodeList.回购类型_质押式协议回购.getValue().equals(entity.getAssetType())
                 || (DictCodeList.回购类型_质押式竞价回购.getValue().equals(entity.getAssetType()))) {
@@ -552,7 +554,7 @@ public class PositionRequestServiceInstructionRequest {
         resultMap.put("userId", entity.getTradeId());
         resultMap.put("totalTradeId", entity.getEntrustId());
         resultMap.put("balanceCheck", balanceCheck);
-        resultMap.put("flowStatus", DictCodeListExt3.流程节点_审批生效.getValue());
+        resultMap.put("flowStatus", DictCodeListExt3.流程节点_流程提交.getValue());
         resultMap.put("modelType", DictCodeListExt1.子系统代码_交易.getValue());
 
         //设置头寸业务类型
