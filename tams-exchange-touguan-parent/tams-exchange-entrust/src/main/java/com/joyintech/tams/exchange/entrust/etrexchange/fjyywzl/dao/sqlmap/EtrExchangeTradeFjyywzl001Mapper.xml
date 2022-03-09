@@ -134,6 +134,9 @@
         where pci.ACCT_TYPE = 'A07')TEMP2 ON SSAI.TRD_ACCT_ID = TEMP2.ACCT_NO
         LEFT JOIN (SELECT BROKER_ID,
         FINPROD_ID,
+        <!-- modify by etliu 20220308  标准券再折算率涉及头寸调整 start -->
+        ACCT_NO,
+        <!-- modify by etliu 20220308  标准券再折算率涉及头寸调整 end -->
         START_DATE,
         END_DATE,
         MORE_CONVRATE
@@ -143,9 +146,15 @@
         to_date(START_DATE,'yyyy-MM-dd') <![CDATA[<=]]> #{date}
         AND to_date(END_DATE,'yyyy-MM-dd') <![CDATA[>=]]> #{date}
         ) SBMCI
-        ON TEMP2.CUSTOMER_ID = SBMCI.BROKER_ID AND TEMP.FINPROD_ID = SBMCI.FINPROD_ID
+        <!-- modify by etliu 20220308  标准券再折算率涉及头寸调整 start -->
+        <!-- ON TEMP2.CUSTOMER_ID = SBMCI.BROKER_ID AND TEMP.FINPROD_ID = SBMCI.FINPROD_ID-->
+        ON TEMP2.CUSTOMER_ID = SBMCI.BROKER_ID AND (TEMP.FINPROD_ID = SBMCI.FINPROD_ID or SSAI.TRD_ACCT_ID = SBMCI.ACCT_NO)
+        <!-- modify by etliu 20220308  标准券再折算率涉及头寸调整 end -->
         LEFT JOIN (SELECT BROKER_ID,
         FINPROD_ID,
+        <!-- modify by etliu 20220308 标准券再折算率涉及头寸调整 start -->
+        ACCT_NO,
+        <!-- modify by etliu 20220308 标准券再折算率涉及头寸调整 end -->
         START_DATE,
         END_DATE,
         MORE_CONVRATE
@@ -154,9 +163,15 @@
         END_DATE IS NULL AND
         to_date(START_DATE,'yyyy-MM-dd') <![CDATA[<=]]> #{date}
         ) SBMCI2
-        ON TEMP2.CUSTOMER_ID = SBMCI2.BROKER_ID AND TEMP.FINPROD_ID = SBMCI2.FINPROD_ID
+        <!-- modify by etliu 20220308  标准券再折算率涉及头寸调整 start -->
+        <!--ON TEMP2.CUSTOMER_ID = SBMCI2.BROKER_ID AND TEMP.FINPROD_ID = SBMCI2.FINPROD_ID-->
+        ON TEMP2.CUSTOMER_ID = SBMCI2.BROKER_ID AND (TEMP.FINPROD_ID = SBMCI2.FINPROD_ID or SSAI.TRD_ACCT_ID = SBMCI2.ACCT_NO)
+        <!-- modify by etliu 20220308  标准券再折算率涉及头寸调整 end -->
         LEFT JOIN (SELECT BROKER_ID,
         FINPROD_ID,
+        <!-- modify by etliu 20220308  标准券再折算率涉及头寸调整 start -->
+        ACCT_NO,
+        <!-- modify by etliu 20220308  标准券再折算率涉及头寸调整 end -->
         START_DATE,
         END_DATE,
         MORE_CONVRATE
@@ -166,9 +181,15 @@
         to_date(START_DATE,'yyyy-MM-dd') <![CDATA[<=]]> #{date}
         AND to_date(END_DATE,'yyyy-MM-dd') <![CDATA[>=]]> #{date}
         ) SBMCICP
-        ON 'BROKER' = SBMCICP.FINPROD_ID AND TEMP2.CUSTOMER_ID = SBMCICP.BROKER_ID
+        <!-- modify by etliu 20220308  标准券再折算率涉及头寸调整 start -->
+        <!-- ON 'BROKER' = SBMCICP.FINPROD_ID AND TEMP2.CUSTOMER_ID = SBMCICP.BROKER_ID-->
+        ON ('BROKER' = SBMCICP.FINPROD_ID or 'BROKER' = SBMCICP.ACCT_NO) AND TEMP2.CUSTOMER_ID = SBMCICP.BROKER_ID
+        <!-- modify by etliu 20220308  标准券再折算率涉及头寸调整 end -->
         LEFT JOIN (SELECT BROKER_ID,
         FINPROD_ID,
+        <!-- modify by etliu 20220308  标准券再折算率涉及头寸调整 start -->
+        ACCT_NO,
+        <!-- modify by etliu 20220308  标准券再折算率涉及头寸调整 end -->
         START_DATE,
         END_DATE,
         MORE_CONVRATE
@@ -177,7 +198,10 @@
         END_DATE IS NULL AND
         to_date(START_DATE,'yyyy-MM-dd') <![CDATA[<=]]> #{date}
         ) SBMCICP2
-        ON 'BROKER' = SBMCICP2.FINPROD_ID AND TEMP2.CUSTOMER_ID = SBMCICP2.BROKER_ID
+        <!-- modify by etliu 20220308  标准券再折算率涉及头寸调整 start -->
+        <!--ON 'BROKER' = SBMCICP2.FINPROD_ID AND TEMP2.CUSTOMER_ID = SBMCICP2.BROKER_ID-->
+        ON ('BROKER' = SBMCICP2.FINPROD_ID or 'BROKER' = SBMCICP2.ACCT_NO) AND TEMP2.CUSTOMER_ID = SBMCICP2.BROKER_ID
+        <!-- modify by etliu 20220308  标准券再折算率涉及头寸调整 end -->
         INNER JOIN
         FIN_STDSEC_CONVERSE_RADIO FSCR
         ON
@@ -233,7 +257,7 @@
             WHERE
                 t1.FINPROD_TYPE2 = 'F01'
                 and t1.CASH_TYPE in ('02', '03')
-                and t1.MDATE &lt;= #{batchDate,jdbcType=DATE}
+                and t1.MDATE &lt;= #{date,jdbcType=DATE}
             group by t1.FINPROD_ID, t1.BRANCH
         ) mzData
         on TSFD.FINPROD_ID = mzData.FINPROD_ID and TSFD.BRANCH = mzData.BRANCH
@@ -250,7 +274,7 @@
         AND TEMP.FINPROD_ID = STD_SEC.FINPROD_ID
         AND TEMP.BRANCH = STD_SEC.BRANCH
         WHERE
-        FP.TRADE_MARKET IN (#{TRADE_PLACE_03}, #{TRADE_PLACE_04})
+            FP.TRADE_MARKET IN (#{TRADE_PLACE_03}, #{TRADE_PLACE_04})
         AND TEMP.AMOUNT > 0
         <if test="tradeMarket != null and tradeMarket !=''">
             AND FP.TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR}

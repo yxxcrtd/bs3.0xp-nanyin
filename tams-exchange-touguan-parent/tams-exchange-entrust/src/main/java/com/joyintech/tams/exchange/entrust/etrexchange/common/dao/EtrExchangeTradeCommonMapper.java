@@ -64,7 +64,9 @@ public interface EtrExchangeTradeCommonMapper {
      * @see
      * @since 1.0
      */
-    List<EtrExchangeTradePositionsCommonResponse> findZqzyPositionsPage(Map<String, Object> pageParam);
+	// modify by etliu 债券质押持仓查询只有非交易业务指令使用，代码删除 20220308 start
+//    List<EtrExchangeTradePositionsCommonResponse> findZqzyPositionsPage(Map<String, Object> pageParam);
+	// modify by etliu 债券质押持仓查询只有非交易业务指令使用，代码删除 20220308 end
     /**
      * 查询证券代码联想框文本框
      *

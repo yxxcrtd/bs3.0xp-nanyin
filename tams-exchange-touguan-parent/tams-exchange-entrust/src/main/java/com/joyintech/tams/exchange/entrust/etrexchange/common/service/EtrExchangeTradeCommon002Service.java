@@ -130,66 +130,68 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 		return null;
 	}
 
-	/**
-	 * 分页查询债券质押持仓信息
-	 * 
-	 * @param request
-	 *            查询参数
-	 * @return 分页结果
-	 * @see
-	 * @since 1.0
-	 */
-	public Page<EtrExchangeTradePositionsCommonResponse> findZqzyPositionsPage(EtrExchangeTradePositionsCommonRequest request) {
-		try {
-			Map<String, Object> pageParam = BeanUtil.object2Map(request);
-			String userId = SecurityUtil.getLoginUser().getUserName();
-			if (StringUtils.isNotEmpty(userId)) {
-				logger.info("请求用户【{}】", "userId = " + userId);
-				pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
-				pageParam.put("POSITION_TYPE_03", BussinessDictCodeList.持仓类型_实际.getValue());
-				pageParam.put("POSITION_TYPE_04", BussinessDictCodeList.持仓类型_质押.getValue());
-				pageParam.put("POSITION_TYPE_05", BussinessDictCodeList.持仓类型_融入.getValue());
-				pageParam.put("POSITION_TYPE_06", BussinessDictCodeList.持仓类型_融出.getValue());
-				pageParam.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
-				pageParam.put("FINPROD_TYPE_TG_F06", DictCodeListExt1.金融产品类型_投管用_基金.getValue());
-				pageParam.put("FINPROD_TYPE_TG_F10", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
-				pageParam.put("PS_T01", BussinessDictCodeList.交易方向_买入.getValue());
-				pageParam.put("PS_T02", BussinessDictCodeList.交易方向_卖出.getValue());
-				pageParam.put("PS_T03", BussinessDictCodeList.交易方向_行权回售.getValue());
-				pageParam.put("PS_T05", BussinessDictCodeList.交易方向_申购确认.getValue());
-				pageParam.put("PS_T19", BussinessDictCodeList.交易方向_赎回确认.getValue());
-				pageParam.put("PS_T46", DictCodeListExt2.交易方向_配股.getValue());
-				pageParam.put("PS_T48", DictCodeListExt2.交易方向_新股中签.getValue());
-				pageParam.put("PS_T49", DictCodeListExt3.交易方向_债转股.getValue());
-				pageParam.put("PS_T97", DictCodeListExt3.交易方向_配债.getValue());
-				pageParam.put("PS_T04", DictCodeList.交易方向_申购.getValue());
-				pageParam.put("LIBRARY_DIRECTION_01", DictCodeListExt3.交易方向_质押券入库.getValue());
-				pageParam.put("TRADE_PLACE_03", BussinessDictCodeList.交易场所_深圳证券交易所.getValue());
-				pageParam.put("TRADE_PLACE_04", BussinessDictCodeList.交易场所_上海证券交易所.getValue());
-				pageParam.put("MORE_CONVRATE", 0.9);
-				if(StringUtil.isNotEmpty(pageParam.get("date"))) {
-					pageParam.put("date", DateUtil.parse((String) pageParam.get("date")));
-				}
-				else {
-					pageParam.put("date", iPlatformDate.getSysDate());
-				}
-				if(StringUtil.isNotEmpty((String)pageParam.get("finprodMarketIds"))){
-					pageParam.put("finprodMarketIds",StringUtil.splitToList(GlobalConstant.COMMA, pageParam.get("finprodMarketIds").toString()));
-				}else{
-					pageParam.put("finprodMarketIds", null);
-				}
-				Page<EtrExchangeTradePositionsCommonResponse> result = super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(),
-						() -> etrExchangeTradeCommonMapper.findZqzyPositionsPage(pageParam));
-				return result;
-//				return restTemplate.postForPage(
-//						ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/findZqzyPositionsPage", param,
-//						EtrExchangeTrade002Dto.class);
-			}
-		} catch (Exception ex) {
-			logger.info(ex.getMessage());
-		}
-		return null;
-	}
+	// modify by etliu 债券质押持仓查询只有非交易业务指令使用，代码删除 20220308 start
+//	/**
+//	 * 分页查询债券质押持仓信息
+//	 *
+//	 * @param request
+//	 *            查询参数
+//	 * @return 分页结果
+//	 * @see
+//	 * @since 1.0
+//	 */
+//	public Page<EtrExchangeTradePositionsCommonResponse> findZqzyPositionsPage(EtrExchangeTradePositionsCommonRequest request) {
+//		try {
+//			Map<String, Object> pageParam = BeanUtil.object2Map(request);
+//			String userId = SecurityUtil.getLoginUser().getUserName();
+//			if (StringUtils.isNotEmpty(userId)) {
+//				logger.info("请求用户【{}】", "userId = " + userId);
+//				pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
+//				pageParam.put("POSITION_TYPE_03", BussinessDictCodeList.持仓类型_实际.getValue());
+//				pageParam.put("POSITION_TYPE_04", BussinessDictCodeList.持仓类型_质押.getValue());
+//				pageParam.put("POSITION_TYPE_05", BussinessDictCodeList.持仓类型_融入.getValue());
+//				pageParam.put("POSITION_TYPE_06", BussinessDictCodeList.持仓类型_融出.getValue());
+//				pageParam.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+//				pageParam.put("FINPROD_TYPE_TG_F06", DictCodeListExt1.金融产品类型_投管用_基金.getValue());
+//				pageParam.put("FINPROD_TYPE_TG_F10", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
+//				pageParam.put("PS_T01", BussinessDictCodeList.交易方向_买入.getValue());
+//				pageParam.put("PS_T02", BussinessDictCodeList.交易方向_卖出.getValue());
+//				pageParam.put("PS_T03", BussinessDictCodeList.交易方向_行权回售.getValue());
+//				pageParam.put("PS_T05", BussinessDictCodeList.交易方向_申购确认.getValue());
+//				pageParam.put("PS_T19", BussinessDictCodeList.交易方向_赎回确认.getValue());
+//				pageParam.put("PS_T46", DictCodeListExt2.交易方向_配股.getValue());
+//				pageParam.put("PS_T48", DictCodeListExt2.交易方向_新股中签.getValue());
+//				pageParam.put("PS_T49", DictCodeListExt3.交易方向_债转股.getValue());
+//				pageParam.put("PS_T97", DictCodeListExt3.交易方向_配债.getValue());
+//				pageParam.put("PS_T04", DictCodeList.交易方向_申购.getValue());
+//				pageParam.put("LIBRARY_DIRECTION_01", DictCodeListExt3.交易方向_质押券入库.getValue());
+//				pageParam.put("TRADE_PLACE_03", BussinessDictCodeList.交易场所_深圳证券交易所.getValue());
+//				pageParam.put("TRADE_PLACE_04", BussinessDictCodeList.交易场所_上海证券交易所.getValue());
+//				pageParam.put("MORE_CONVRATE", 0.9);
+//				if(StringUtil.isNotEmpty(pageParam.get("date"))) {
+//					pageParam.put("date", DateUtil.parse((String) pageParam.get("date")));
+//				}
+//				else {
+//					pageParam.put("date", iPlatformDate.getSysDate());
+//				}
+//				if(StringUtil.isNotEmpty((String)pageParam.get("finprodMarketIds"))){
+//					pageParam.put("finprodMarketIds",StringUtil.splitToList(GlobalConstant.COMMA, pageParam.get("finprodMarketIds").toString()));
+//				}else{
+//					pageParam.put("finprodMarketIds", null);
+//				}
+//				Page<EtrExchangeTradePositionsCommonResponse> result = super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(),
+//						() -> etrExchangeTradeCommonMapper.findZqzyPositionsPage(pageParam));
+//				return result;
+////				return restTemplate.postForPage(
+////						ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/findZqzyPositionsPage", param,
+////						EtrExchangeTrade002Dto.class);
+//			}
+//		} catch (Exception ex) {
+//			logger.info(ex.getMessage());
+//		}
+//		return null;
+//	}
+	// modify by etliu 债券质押持仓查询只有非交易业务指令使用，代码删除 20220308 end
 
     /**
      * 查询证券代码联想框文本框

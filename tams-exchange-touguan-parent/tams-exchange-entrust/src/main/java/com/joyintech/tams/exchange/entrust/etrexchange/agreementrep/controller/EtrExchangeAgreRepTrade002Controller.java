@@ -696,19 +696,21 @@ public class EtrExchangeAgreRepTrade002Controller extends BaseController {
         }
     }
 
-    /**
-     * 查询债券质押持仓
-     *
-     * @return
-     * @see
-     * @since 1.0
-     */
-    @ApiOperation(value = "查询债券质押持仓", notes = "查询债券质押持仓")
-    @ResponseBody
-    @PostMapping("findZqzyPositionsPage")
-    public Message<Page<EtrExchangeTradePositionsCommonResponse>> findZqzyPositionsPage(@RequestBody EtrExchangeTradePositionsCommonRequest request){
-        return new Message<Page<EtrExchangeTradePositionsCommonResponse>>().success().setData(etrExchangeTradeCommon002Service.findZqzyPositionsPage(request));
-    }
+    // modify by etliu 债券质押持仓查询只有非交易业务指令使用，代码删除 20220308 start
+//    /**
+//     * 查询债券质押持仓
+//     *
+//     * @return
+//     * @see
+//     * @since 1.0
+//     */
+//    @ApiOperation(value = "查询债券质押持仓", notes = "查询债券质押持仓")
+//    @ResponseBody
+//    @PostMapping("findZqzyPositionsPage")
+//    public Message<Page<EtrExchangeTradePositionsCommonResponse>> findZqzyPositionsPage(@RequestBody EtrExchangeTradePositionsCommonRequest request){
+//        return new Message<Page<EtrExchangeTradePositionsCommonResponse>>().success().setData(etrExchangeTradeCommon002Service.findZqzyPositionsPage(request));
+//    }
+    // modify by etliu 债券质押持仓查询只有非交易业务指令使用，代码删除 20220308 end
 
     /**
      * 查询证券代码联想框文本框
