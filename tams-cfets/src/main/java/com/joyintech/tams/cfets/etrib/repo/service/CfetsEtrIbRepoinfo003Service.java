@@ -446,9 +446,9 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
                     doInsertFlow(dto);
                 }
                 //发送头寸
-                sendPositionMethod(entity, StringUtil.equals(entity.getSystemAct(), DictCodeListExt3.系统动作_新建.getValue()) ? true : false, null);
+                this.sendPositionMethod(entity, StringUtil.equals(entity.getSystemAct(), DictCodeListExt3.系统动作_新建.getValue()) ? true : false, null);
             }
-            olePositionDeal(entity);
+            this.olePositionDeal(entity);
         }
     }
 
@@ -796,9 +796,6 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
             if (StringUtil.isEmpty(dto.getTradePlat())) {
                 etrEntrust.setTradePlat(DictCodeList.交易平台_固定收益平台.getValue());
             }
-            if (iPlatformDate != null) {
-                etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
-            }
             if (StringUtil.isNotEmpty(etrEntrust.getPrice())) {
                 etrEntrust.setPrice(etrEntrust.getPrice().divide(new BigDecimal(100)));
             }
@@ -874,8 +871,8 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
      * @date 2022/2/24 9:46
      */
     private void olePositionDeal(CfetsEtribRepoInfo003Dto entity) {
-        if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
-
+        if (DictCodeListExt1.回购方向_逆回购.getValue().equals(entity.getPs())
+                && StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
             List<EntrustCommonDto> entrustCommonDtos = this.getEtrExecuteEntity(entity);
             for (EntrustCommonDto entrustCommonDto : entrustCommonDtos) {
                 baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);

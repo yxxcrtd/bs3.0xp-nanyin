@@ -625,7 +625,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
                 settFeeamtTotal = ArithmeticUtil.doAdd(settFeeamtTotal, ptlAllocatio.getSettFeeAmt());
                 // 组合分配中交易金额要小于等于（剩余指令额度-已成功发出的未收到外汇交易中心成功反馈报价和流程中的报价-流程中交易登记额度）
                 // 已实现: 剩余指令额度 = 指令额度-生效的交易登记额度-流程中交易登记额度-已成功发出的未收到外汇交易中心成功反馈报价和流程中的报价
-                CfetsRepoDealEntrustOrderDto dto = cfetsIbuQuoteRepoMapper.findEtrLastNumByEtrId(ptlAllocatio.getEntrustId());
+                CfetsRepoDealEntrustOrderDto dto = cfetsIbuQuoteRepoMapper.findEtrLastNumByEtrId(ptlAllocatio.getEntrustId(), entity.getQuoteId());
                 if (cfetsRepoQuotedPrice004Service.ACompareToB(ptlAllocatio.getTradeAmt(), dto.getAvaNum(), 12) > 0) {
                     errorList.add(new ValidMessage("组合分配中交易金额要小于等于[" + ptlAllocatio.getEntrustId() + "]剩余的指令额度"));
                     break;

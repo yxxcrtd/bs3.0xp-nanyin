@@ -1,10 +1,7 @@
 package com.joyintech.tams.invest.common.trade.service.impl;
 
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
@@ -13,6 +10,7 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.CommonResult;
 import com.joyintech.tams.invest.common.component.business.common.dto.PortfolioCashPositionsFlowInputDto;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.PtlPositionHoldDto;
@@ -241,7 +239,8 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
 
     @Override
     public CommonResult entrustStartExecute(EntrustCommonDto entrustCommonDto) {
-        if (entrustCommonDto != null) {
+        if (entrustCommonDto != null
+                && StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
             // 处理结果
             EtrPositionHoldDto etrPositionHoldDto = new EtrPositionHoldDto();
             // 持仓流水
@@ -322,12 +321,12 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
             else if(DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue().equals(finprodType)){
                 EtrNetCashPositionDealService.deal计划类EntrustStart(entrustCommonDto, etrPositionHoldDto);
             }
+            // add by etliu 20210421 权益类资产相关代码合并 end
             // 数据是否已入新头寸
             if(StringUtil.isNotEmpty(entrustCommonDto.getIsExistNew())) {
                 etrPositionHoldDto.getPtlCashPositionFlows().forEach(item->item.setIsExistNew(entrustCommonDto.getIsExistNew()));
                 etrPositionHoldDto.getPtlSecPositionFlows().forEach(item->item.setIsExistNew(entrustCommonDto.getIsExistNew()));
             }
-            // add by etliu 20210421 权益类资产相关代码合并 end
             EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
         }
         return new CommonResult(CommonResult.SUCCED, "处理完成");

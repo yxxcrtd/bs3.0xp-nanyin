@@ -20,6 +20,7 @@ import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.service.trade.buyoutrepo.service.TrdOutRightRepoTradeService;
 import com.joyintech.system.base.dao.SysWflBusinessListMapper;
 import com.joyintech.system.base.entity.SysWflBusinessList;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
@@ -52,16 +53,27 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
+import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
+import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
+import com.joyintech.tams.invest.common.dto.PtlPositionHoldDto;
+import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.trade.entrust.EtrFinishStatusDto;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
-import com.joyintech.tams.invest.common.trade.dto.PreTrdCommonDto;
+import com.joyintech.tams.invest.common.trade.service.BussRepoSecService;
 import com.joyintech.tams.invest.common.trade.service.PreTrdCommonBaseService;
+import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.invest.trade.lend.dto.FinTradeProductDto;
 import com.joyintech.tams.invest.trade.pretrdrepotrade.dto.PreTrdRepoTrade002Dto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -75,6 +87,8 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService.getSeqNo;
 
 /**
  * 质押回购报价(登记)
@@ -180,6 +194,24 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
 
     @Autowired
     private PreTrdCommonBaseService preTrdCommonBaseService;
+
+    @Autowired
+    private TrdOutRightRepoTradeService trdOutRightRepoTradeService;
+
+    @Autowired
+    private BussRepoSecService bussRepoSecService;
+
+    /**
+     * 组合可用持仓和实际持仓查询更新组件接口
+     */
+    @Autowired
+    private BasePtlSecPositionInfoService basePtlSecPositionInfoServiceImpl;
+
+    /**
+     * 组合可用现金和实际现金查询更新组件
+     */
+    @Autowired
+    private BasePtlCashPositionInfoService basePtlCashPositionInfoServiceImpl;
     /**
      * 利率保留位数
      */
@@ -270,7 +302,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                 settFeeamtTotal = ArithmeticUtil.doAdd(settFeeamtTotal, ptlAllocatio.getSettFeeAmt());
                 //组合分配中交易金额要小于等于（剩余指令额度-已成功发出的未收到外汇交易中心成功反馈报价和流程中的报价-流程中交易登记额度）
                 // 已实现: 剩余指令额度 = 指令额度-生效的交易登记额度-流程中交易登记额度-已成功发出的未收到外汇交易中心成功反馈报价和流程中的报价
-                CfetsRepoDealEntrustOrderDto dto = cfetsIbuQuoteRepoMapper.findEtrLastNumByEtrId(ptlAllocatio.getEntrustId());
+                CfetsRepoDealEntrustOrderDto dto = cfetsIbuQuoteRepoMapper.findEtrLastNumByEtrId(ptlAllocatio.getEntrustId(), entity.getTotleTradeId());
                 if (ACompareToB(ptlAllocatio.getTradeAmt(), dto.getAvaNum(), 12) > 0) {
                     errorList.add(new ValidMessage("组合分配中交易金额要小于等于[" + ptlAllocatio.getEntrustId() + "]剩余的指令额度"));
                     break;
@@ -368,6 +400,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             if (StringUtil.equals(repo_pledge_model, "02") && StringUtil.equals(entity.getPs(), DictCodeListExt3.交易方向_正回购.getValue())) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("entrustIdList", entrustIdList);
+                map.put("workflowId", entity.getWorkflowId());
                 // 将质押券拆分到指令维度
                 List<RegFinPledge> list = this.dealWithPledgeList(entity.getRepoEntrustPledgeDtos(), entrustIdList, null, null, null);
                 List<RepoEntrustPledgeDto> pledgeDtos = cfetsIbuQuoteRepoMapper.findEtrPrinByEtrIds(map);
@@ -597,7 +630,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         if (!StringUtil.equals("revoke", entity.getOperatorType()) && !StringUtil.equals("delete", entity.getOperatorType())) {
             // 先删除流程中数据
             this.deleteBussFlowData(entity.getWorkflowId());
-            CfetsRepoDealDbDto cfetsRepoDealDbDto = prepareEntity(entity, StringUtil.equals(entity.getOperatorType(), "revoke") ? OperationType.REVOKE : OperationType.NEW);
+            CfetsRepoDealDbDto cfetsRepoDealDbDto = this.prepareEntity(entity, StringUtil.equals(entity.getOperatorType(), "revoke") ? OperationType.REVOKE : OperationType.NEW);
             //登录业务流程
             insertWfl(cfetsRepoDealDbDto);
             String confirmOk = RequestUtil.getParam("confirmOk");
@@ -683,7 +716,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
 
     @Override
     public void doBack(CfetsRepoDealRegisterQuoteDto entity) {
-        if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+        if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
             //插入旧头寸
             AllTradeCommonUtil.deletePosition(null, entity.getTotleTradeId());
         }
@@ -1854,14 +1887,163 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
      */
     private void oldPositionDeal(CfetsRepoDealDbDto cfetsRepoDealDbDto, boolean navigate) {
         if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
-            //处理组合及指令头寸
-            PreTrdRepoTrade002Dto input = this.prepareEntityPre(cfetsRepoDealDbDto);
-            PreTrdCommonDto preTrdCommonDto = new PreTrdCommonDto();
-            preTrdCommonDto.setTrdProductDealPreList(input.getTrdProductDealPreList());
-            preTrdCommonDto.setTrdProductDealAddPreList(input.getTrdProductDealAddPreList());
-            preTrdCommonDto.setIsExistNew(DictCodeList.是否_是.getValue());
-            preTrdCommonBaseService.excutePosition(preTrdCommonDto, navigate);
+            //处理组质押品的组合持仓流水
+            this.ptlSecPositionFlowLogic(cfetsRepoDealDbDto, navigate);
         }
+    }
+
+    /**
+     * 写入质押品的组合持仓流水
+     *
+     * @param input    画面参数Dto
+     * @param isNegate 是否冲销
+     */
+    private boolean ptlSecPositionFlowLogic(CfetsRepoDealDbDto input, boolean isNegate) {
+        List<PtlSecPositionFlowDto> lstPtlSecPositionFlowDto = new ArrayList<>();
+        // 处理结果
+        EtrPositionHoldDto etrPositionHoldDto = new EtrPositionHoldDto();
+        // 持仓流水
+        List<EtrSecPositionFlowDto> etrSecPositionFlows = new ArrayList<>();
+        // 现金流水
+        List<EtrCashPositionFlowDto> etrCashPositionFlows = new ArrayList<>();
+        etrPositionHoldDto.setPtlCashPositionFlows(etrCashPositionFlows);
+        etrPositionHoldDto.setPtlSecPositionFlows(etrSecPositionFlows);
+        etrPositionHoldDto.setDealEtr(true);
+        // 冲销时（撤销）
+        if (isNegate) {
+            for (RegFinProductDeal deal : input.getRegFinProductDeals()) {
+                trdOutRightRepoTradeService.updatePledgeBondForRevoke(deal.getTradeId(), DictCodeList.持仓类型_质押.getValue(), false);
+            }
+        } else {
+            // List<组合持仓流水DTO>(若上记的List<回购质押品DTO>为空，则此为空，反之循环构造DTO)
+            // 通过上记输出的List<输出的质押品DTO>，循环该List构造组合持仓流水DTO
+            if (!StringUtil.isEmptyList(input.getRegFinPledges())
+                    && DictCodeList.回购拆借方向_正回购.getValue().equals(input.getRegFinProductDealTotal().getPs())) {
+                for (RegFinProductDeal deal : input.getRegFinProductDeals()) {
+                    // 可质押券信息（含投资目的）
+                    Map<String, List<PledgeBondInfoDto>> avaMap = this.selectAvaPledgeWithInvAim(deal)
+                            .stream().collect(JoyinCollectors.groupingBy(x -> x.getFinprodId()));
+                    avaMap.entrySet().stream().forEach(entry -> {
+                        Collections.sort(entry.getValue(), (o1, o2) -> o1.getInvAimSort().compareTo(o2.getInvAimSort()));
+                    });
+                    PtlSecPositionFlowDto resultDto;
+                    for (RegFinPledge pledgeBond : input.getRegFinPledges()) {
+                        if (!StringUtil.equals(pledgeBond.getTradeId(), deal.getTradeId())) {
+                            continue;
+                        }
+                        // 待分配投资目的的质押券面总额
+                        BigDecimal pledgePrin = pledgeBond.getPledgeNumber();
+                        List<PledgeBondInfoDto> pledgeBondInfoDtos = avaMap.get(pledgeBond.getPledgeFinprodId());
+                        if (!StringUtil.isEmptyList(pledgeBondInfoDtos)) {
+                            for (PledgeBondInfoDto avaBond : pledgeBondInfoDtos) {
+                                resultDto = new PtlSecPositionFlowDto();
+
+                                // 当前投资目的可分配券面总额
+                                BigDecimal avaPrin = avaBond.getAvaPledgePrin();
+                                // 当前投资目的决定分配的券面总额
+                                BigDecimal prin = pledgePrin.compareTo(avaPrin) > 0 ? avaPrin : pledgePrin;
+
+                                // 组合代码 = 画面.组合代码
+                                resultDto.setPortfolioId(deal.getPortfolioId());
+                                // 证券管理账户/通道代码 = nvl（nvl（金融产品交易Entity.证券托管账户，金融产品交易Entity.通道代码），999999）
+                                resultDto.setSecAcctId(StringUtil.isEmpty(deal.getSecManageAcctId()) ? "999999" : deal.getSecManageAcctId());
+                                // 金融产品代码 = 输出质押品DTO.金融产品代码
+                                resultDto.setFinprodId(pledgeBond.getPledgeFinprodId());
+                                // 分支序号 = 系统固定参数，默认为0
+                                resultDto.setBranch(Long.parseLong(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
+                                // 持仓类型
+                                resultDto.setHodingType(DictCodeList.持仓类型_质押.getValue());
+                                // 日期 = 金融产品交易Entity.交易日
+                                resultDto.setCdate(deal.getTradeDate());
+                                // 数量 = 输出质押品DTO.质押数量
+                                resultDto.setAmount(ArithmeticUtil.divide(prin, new BigDecimal("100"), 4));
+                                // 币种 = 金融产品交易Entity.币种
+                                resultDto.setCcy(deal.getCcy());
+                                // 交易编号 = 金融产品交易Entity.交易编号
+                                resultDto.setTradeId(deal.getTradeId());
+                                // 投资目的 = 按“摊余成本类-公允价值变动计入其他综合收益-公允价值变动计入当期损益”的顺序依次冻结，削减对应投资目的债券可用持仓
+                                resultDto.setInvAim(StringUtil.isEmpty(avaBond.getInvAim()) ? "999999" : avaBond.getInvAim());
+                                if (avaPrin.compareTo(BigDecimal.ZERO) > 0) {
+                                    lstPtlSecPositionFlowDto.add(resultDto);
+                                    EtrSecPositionFlowDto etrSecPositionFlowDto = this.etrSecPositionFlowLogic(resultDto, false, pledgeBond.getEntrustId());
+                                    etrSecPositionFlows.add(etrSecPositionFlowDto);
+                                }
+                                // 分配完毕后,停止可质押券信息（含投资目的）的循环
+                                pledgePrin = pledgePrin.subtract(prin);
+                                if (pledgePrin.compareTo(BigDecimal.ZERO) <= 0) {
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        // 指令持仓更新
+        EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
+        if (StringUtil.isEmptyList(lstPtlSecPositionFlowDto)) {
+            return true;
+        } else {
+            PtlPositionHoldDto ptlPositionHoldDto = new PtlPositionHoldDto();
+            ptlPositionHoldDto.setPtlSecPositionFlows(lstPtlSecPositionFlowDto);
+            if (ptlPositionHoldDto != null) {
+                if (ptlPositionHoldDto.getPtlSecPositionFlows() != null
+                        && !ptlPositionHoldDto.getPtlSecPositionFlows().isEmpty()) {
+                    for (PtlSecPositionFlowDto ptlSecPositionFlow : ptlPositionHoldDto.getPtlSecPositionFlows()) {
+                        basePtlSecPositionInfoServiceImpl.inertSecPositionFlow(ptlSecPositionFlow);
+                    }
+                }
+                if (ptlPositionHoldDto.getPtlCashPositionFlows() != null
+                        && !ptlPositionHoldDto.getPtlCashPositionFlows().isEmpty()) {
+                    for (PtlCashPositionFlowDto ptlCashPositionFlow : ptlPositionHoldDto.getPtlCashPositionFlows()) {
+                        basePtlCashPositionInfoServiceImpl.insertCashPositionFlow(ptlCashPositionFlow);
+                    }
+                }
+            }
+            return true;
+        }
+    }
+
+    /**
+     * 根据画面条件检索可质押券信息（含投资目的）
+     *
+     * @param input 画面参数
+     * @return List<PledgeBondInfoDto>
+     */
+    public List<PledgeBondInfoDto> selectAvaPledgeWithInvAim(RegFinProductDeal input) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("portfolioId", input.getPortfolioId());
+        param.put("ps", input.getPs());
+        param.put("isWithInvAim", true);
+        param.put("INV_AIM_AC", DictCodeListExt1.投资目的_摊余成本类.getValue());
+        param.put("INV_AIM_FVOCI", DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue());
+        param.put("INV_AIM_FVTPL", DictCodeListExt1.投资目的_公允价值变动计入当期损益.getValue());
+        param.put("secAcctId", input.getSecManageAcctId());
+        return bussRepoSecService.selectAvaPledgeBondDetailList(param);
+    }
+
+    private EtrSecPositionFlowDto etrSecPositionFlowLogic(PtlSecPositionFlowDto ptlSecPositionFlowDto,boolean flag,String entrustId) {
+        EtrSecPositionFlowDto etrSecPositionFlowDto = new EtrSecPositionFlowDto();
+
+        BeanUtil.copyPropertiesIgnoreNull(etrSecPositionFlowDto, ptlSecPositionFlowDto);
+
+        etrSecPositionFlowDto.setSeqno(IDGenerator.generate());
+        // 金融产品代码 = 输出质押品DTO.金融产品代码
+        // 分支序号 = 系统固定参数，默认为0
+        etrSecPositionFlowDto.setBranch(Long.parseLong(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
+        // 持仓类型
+        etrSecPositionFlowDto.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
+        // 数量 = 输出质押品DTO.质押数量
+        BigDecimal amt = BigDecimal.ZERO;
+        if (flag) { // 委托开始减少,委托关闭增加
+            amt = ptlSecPositionFlowDto.getAmount().negate();
+        } else {
+            amt = ptlSecPositionFlowDto.getAmount();
+        }
+        etrSecPositionFlowDto.setAmount(amt);
+        // 交易编号 = 金融产品交易Entity.交易编号
+        etrSecPositionFlowDto.setTradeId(entrustId);
+        return etrSecPositionFlowDto;
     }
 
     /**
@@ -1892,7 +2074,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
 
 
     @Override
-    public String generateTitle(CfetsRepoDealRegisterQuoteDto dto,OperationType type) {
+    public String generateTitle(CfetsRepoDealRegisterQuoteDto dto, OperationType type) {
         String counterTrader = null;
         if (StringUtil.isNotEmpty(dto.getCounterTrader())
                 && StringUtil.equals(CacheUtil.getSysParam("EXPORT_SHOW"), "01")) {

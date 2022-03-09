@@ -1349,6 +1349,9 @@
                             #{item}
                         </foreach>
                     </if>
+                    <if test="workflowId != null and workflowId != '' ">
+                        AND wrfp.WORKFLOW_ID != #{workflowId}
+                    </if>
                 </where>
                  union all
                  select rfp.ENTRUST_ID, rfp.PLEDGE_FINPROD_ID FINPROD_ID, -1*rfp.PLEDGE_NUMBER
@@ -1384,6 +1387,9 @@
                                       and rfpdt.TRADE_STATUS = '01'
                 ) rfpd on rfpd.ENTRUST_ID = ee.ENTRUST_ID
                  left join WFL_REG_FIN_PRODUCT_DEAL wrfpd on wrfpd.ENTRUST_ID = ee.ENTRUST_ID
+                    <if test="totleTradeId != null and totleTradeId != ''">
+                         and wrfpd.TOTLE_TRADE_ID != #{totleTradeId}
+                    </if>
                  left join (
                     select t.FPRICE_AMT ENTRUST_AMT, t.ENTRUST_ID
                     from IBU_QUOTE_ETR_RE t
@@ -1391,6 +1397,9 @@
                     where IQC.SEND_STATUS = '01'
                 ) IBQER on rfpd.ENTRUST_ID = ee.ENTRUST_ID
                  left join WFL_IBU_QUOTE_ETR_RE wiqer on wiqer.ENTRUST_ID = ee.ENTRUST_ID
+                    <if test="totleTradeId != null and totleTradeId != ''">
+                        and wiqer.QUOTE_ID != #{totleTradeId}
+                    </if>
                  where ee.ENTRUST_ID = #{etrId}
              ) T
             LEFT JOIN IBU_PORTFOLIO_ACCT_RELA IPAR
