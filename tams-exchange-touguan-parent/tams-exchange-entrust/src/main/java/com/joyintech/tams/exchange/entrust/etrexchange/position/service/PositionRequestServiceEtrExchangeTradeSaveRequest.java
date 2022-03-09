@@ -325,7 +325,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
                 // 标准券代码
                 map.put(STANDARD_SEC_ID, STANDAR_SEC_ID);
                 // 标准券总额  指令.准券总额
-                map.put(STANDARD_SEC_AMOUNT, entity.getStandardBondVolume());
+                map.put(STANDARD_SEC_AMOUNT, entity.getEntrustNum().multiply(BigDecimal.valueOf(100)));
                 // 再折算率	reConversionRate "调用【再折算率查询】参数：资金账户 = 指令资金账户
                 ImmutableMap<String, Object> param = ImmutableMap.of("acctNo", entity.getAcctNo());
                 TrdMoreConvrateDto moreConvrate = etrExchangeTradeCommon001Service.getMoreConvrate(param);

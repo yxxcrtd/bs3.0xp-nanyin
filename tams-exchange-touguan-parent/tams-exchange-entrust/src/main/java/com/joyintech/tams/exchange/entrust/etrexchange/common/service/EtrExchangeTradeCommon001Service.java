@@ -950,6 +950,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 //            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/buildEtrFlow", dto,
 //            BaseEtrInvestInfoDto.class);
 		BaseEtrInvestInfoDto entity = buildMultiEtrFlow(dto);
+		dto.setAssetType2(entity.getEtrEntrustAdd().getAssetType1());
 		// 设置指令创建来源
 		entity.getEtrEntrustAdd().setEntrustCreateSource(DictCodeListExt3.指令创建来源_场内实时.getValue());
 		entity.getEtrEntrust().setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());
