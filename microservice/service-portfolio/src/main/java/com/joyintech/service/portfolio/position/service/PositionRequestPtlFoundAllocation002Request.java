@@ -1,0 +1,131 @@
+package com.joyintech.service.portfolio.position.service;
+
+import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.service.portfolio.position.constant.PositionConstant;
+import com.joyintech.service.portfolio.ptlfundallocation.dto.PtlFundAllocationDto;
+import com.joyintech.tams.business.common.service.PositionHttpRequest;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
+
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.*;
+
+@Service
+public class PositionRequestPtlFoundAllocation002Request {
+
+
+    /**
+     * PtlFundAllocationDto请求对象使用
+     *
+     * @param entity
+     */
+    public void sendEtrExchangeTradeSaveRequest(PtlFundAllocationDto entity, String decisionAct, String systemAct) {
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("decisionAct", decisionAct);
+        resultMap.put("systemAct", systemAct);
+        this.setCommonField(entity, resultMap);
+
+        PositionHttpRequest.send(resultMap);
+    }
+
+
+
+    /**
+     * 撤销时使用---撤销指令-共通接口
+     *
+     * @param entity
+     */
+    public void sendRevoke(PtlFundAllocationDto entity) {
+        String busiType = null;
+        if(Objects.equals(entity.getPayType(),DictCodeListExt1.指令类型_银证转账_银转证.getValue())){
+            busiType = DictCodeListExt3.头寸业务类型_银证转账.getValue();
+        } else {
+            busiType = DictCodeListExt3.头寸业务类型_证银转账.getValue();
+        }
+        String ps = null;
+        if(Objects.equals(entity.getPayType(),DictCodeListExt1.指令类型_银证转账_银转证.getValue())){
+            ps = DictCodeListExt3.交易方向_银证转账.getValue();
+        } else {
+            ps = DictCodeListExt3.交易方向_证银转账.getValue();
+        }
+        PositionHttpRequest.dorevoke(entity.getTradeId(), POSITION_TYPE_ETR, busiType, ps);
+    }
+
+    /**
+     * 设置公共字段
+     *
+     * @param entity    实例对象
+     * @param resultMap 封装集合
+     */
+    private void setCommonField(PtlFundAllocationDto entity, Map<String, Object> resultMap) {
+
+        String balanceCheck = "Y";
+        if (StringUtil.isNotEmpty(entity.getSoftSkipMode()) && StringUtil.equals(entity.getSoftSkipMode(), "Y")) {
+            balanceCheck = "N";
+        }
+        resultMap.put("userId", SecurityUtil.getLoginUser().getUserName());
+        resultMap.put("totalTradeId", entity.getTradeId());
+        resultMap.put("balanceCheck", balanceCheck);
+        if(!Objects.equals(entity.getOperateType(),"submit")){
+            resultMap.put("flowStatus", DictCodeListExt3.流程节点_流程提交.getValue());
+        } else {
+            resultMap.put("flowStatus", DictCodeListExt3.流程节点_审批生效.getValue());
+        }
+        resultMap.put("modelType", DictCodeListExt1.子系统代码_委托.getValue());
+
+        //业务类型
+        if(Objects.equals(entity.getPayType(),DictCodeListExt1.指令类型_银证转账_银转证.getValue())){
+            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_银证转账.getValue());
+        } else {
+            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_证银转账.getValue());
+        }
+        //业务动作
+        resultMap.put("busiAct", DictCodeListExt3.业务动作_资金划拨新建.getValue());
+        //交易方向
+        if(Objects.equals(entity.getPayType(),DictCodeListExt1.指令类型_银证转账_银转证.getValue())){
+            resultMap.put(PS, DictCodeListExt3.交易方向_银证转账.getValue());
+        } else {
+            resultMap.put(PS, DictCodeListExt3.交易方向_证银转账.getValue());
+        }
+        // 币种
+        if (StringUtils.isNotEmpty(entity.getCcy())) {
+            resultMap.put(CCY, entity.getCcy());
+        } else {
+            resultMap.put(CCY, DictCodeList.币种_人民币_CNY.getValue());
+        }
+        resultMap.put("bTotalTradeId", null);
+        resultMap.put("workFlowId", entity.getWorkflowId());
+        // 日期
+        resultMap.put("cdate", DateUtil.format(entity.getSettleDate()));
+        resultMap.put(INTERFACE_TYPE, PositionConstant.INTERF_TYPE_TRANSFER_001);
+
+        //设置转账详情列表
+        List<Map<String, Object>> ptlTrusteeshipList = new ArrayList<>();
+        Map<String, Object> map = new HashMap<>();
+        map.put("portfolioId",entity.getPortfolioId());
+        map.put("tradeId",entity.getTradeId());
+        map.put("cashAcctId",entity.getMyAcctNo());
+        map.put("cashAmount",entity.getSettleAmt());
+        ptlTrusteeshipList.add(map);
+        resultMap.put("ptlTrusteeshipList", ptlTrusteeshipList);
+        //设置收款账户列表
+
+        List<Map<String, Object>> ptlSecuritiesList = new ArrayList<>();
+        Map<String, Object> maps = new HashMap<>();
+        maps.put("portfolioId",entity.getPortfolioId());
+        maps.put("tradeId",entity.getTradeId());
+        maps.put("cashAcctId",entity.getCounterAcctNo());
+        maps.put("cashAmount",entity.getSettleAmt());
+        ptlSecuritiesList.add(maps);
+        resultMap.put("ptlSecuritiesList", ptlSecuritiesList);
+    }
+
+
+
+}

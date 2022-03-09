@@ -1725,6 +1725,9 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     头寸业务类型_红股上市(DictCode.头寸业务类型, "29", "红股上市"),
     头寸业务类型_基金交易(DictCode.头寸业务类型, "30", "基金交易"),
     头寸业务类型_基金存续期(DictCode.头寸业务类型, "31", "基金存续期"),
+    头寸业务类型_银证转账(DictCode.头寸业务类型, "32", "银证转账"),
+    头寸业务类型_证银转账(DictCode.头寸业务类型, "33", "证银转账"),
+
     /**
      * 头寸业务动作
      */
@@ -1749,6 +1752,8 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     业务动作_交收回溯(DictCode.业务动作,"20","交收回溯"),
     业务动作_待交收(DictCode.业务动作,"22","待交收"),
     业务动作_成交匹配(DictCode.业务动作,"19","成交匹配"),
+    业务动作_资金划拨新建(DictCode.业务动作,"29","资金划拨新建"),
+    业务动作_资金划拨撤回(DictCode.业务动作,"30","资金划拨撤回"),
 
 
     资产类型_现金账户持仓(DictCode.头寸资产类型, "C_01", "现金账户持仓"),
@@ -1811,6 +1816,10 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     资产类型_融入券卖空待购回持仓(DictCode.头寸资产类型,"S_003","融入券卖空待购回持仓"),
     资产类型_汇总可用现金(DictCode.头寸资产类型,"S_004","汇总可用现金"),
     资产类型_交易汇总可用持仓(DictCode.头寸资产类型,"S_005","交易汇总可用持仓"),
+
+    //头寸交易方向
+    交易方向_银证转账(DictCode.交易方向,"HK01","银证转账"),
+    交易方向_证银转账(DictCode.交易方向,"HK02","证银转账"),
 
     //共通业务类型-固收类资产交易
     共通业务类型_固收类资产交易(DictCode.共通业务类型,"TRD85","固收类资产交易"),
