@@ -598,6 +598,7 @@ public class PositionRequestServiceInstructionRequest {
         orderPlaceBean.setEntrustPrice(entity.getEntrustPrice());
         orderPlaceBean.setEntrustVolume(entity.getEntrustNum());
         orderPlaceBean.setInstructionId(entity.getEntrustId());
+        orderPlaceBean.setFullPrice(entity.getFullPrice());
 
         // 调用组合计算接口，得出各组合分配到的数量金额
         ResultBean resultBean = portfolioManager.queryPortfolioCalculate(orderPlaceBean);

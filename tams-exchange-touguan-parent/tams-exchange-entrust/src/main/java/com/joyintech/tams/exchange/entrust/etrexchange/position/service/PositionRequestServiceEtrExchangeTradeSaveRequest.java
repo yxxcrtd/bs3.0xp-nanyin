@@ -164,8 +164,8 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
                 Map<String, Object> map = BeanUtil.object2Map(bean);
                 map.put(ORD_ENTRUST_ID, null);
                 map.put(INV_AIM, entity.getInvAim());
-                map.put(INTEGRATE_SEC_AMOUNT, null);
-                map.put(OWN_SEC_AMOUNT, null);
+                map.put(INTEGRATE_SEC_AMOUNT, 0);
+                map.put(OWN_SEC_AMOUNT, item.getFprice().multiply(item.getEntrustNum()));
                 ptlList.add(map);
             }
             resultMap.put(PTL_LIST, ptlList);
@@ -237,7 +237,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
 
                 Map<String, Object> map = BeanUtil.object2Map(bean);
                 //融入券券面总额
-                map.put(INTEGRATE_SEC_AMOUNT, null);
+                map.put(INTEGRATE_SEC_AMOUNT, 0);
                 //本方券券面总额
                 map.put(OWN_SEC_AMOUNT, null);
                 bondSecList.add(map);
