@@ -58,7 +58,7 @@ public class PositionRequestTradeRestService {
 
     public static final String OPT_TYPE_NEW = "new";
 
-    public static final String TRADE_PLAT = "STL_DATA_GATHER";
+    public static final String TRADE_PLAT = "TRANS_MATCH";
 
     /**
      * 发送交易Rest头寸请求
