@@ -313,7 +313,11 @@ public class PositionRequestTradeRestService {
         resultMap.put("busiType", DictCodeListExt3.头寸业务类型_质押式回购到期.getValue());
         // 业务动作
         resultMap.put("busiAct", DictCodeListExt3.业务动作_成交匹配.getValue());
-        resultMap.put("ps", trdProductDeal.getPs());
+        if(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(trdProductDeal.getFinprodType2())){
+            resultMap.put("ps", DictCodeListExt3.交易方向_正回购.getValue());
+        }else if(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(trdProductDeal.getFinprodType2())){
+            resultMap.put("ps", DictCodeListExt3.交易方向_逆回购.getValue());
+        }
         resultMap.put("tradePlace", trdProductDeal.getTradeMarket());
         resultMap.put("settleSpeed", null);
         resultMap.put("sharesTradePlatform", null);
