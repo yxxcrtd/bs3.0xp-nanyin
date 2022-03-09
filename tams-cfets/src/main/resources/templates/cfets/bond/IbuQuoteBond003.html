@@ -34,6 +34,7 @@
             <input type="hidden" name="ccy"  th:value="${entity?.ccy}" />
             <input type="hidden" name="quoteOperatorType" th:value="${entity?.quoteOperatorType}" />
             <input type="hidden" name="settleSpreedCode" th:value="${entity?.settleSpreedCode}" />
+            <input type="hidden" name="finprodAbbr" th:value="${entity?.finprodAbbr}" />
             <input type="hidden" id="CfetsBondDealQuotedPrice005_hidden_entrustAmt" name="entrustAmt" th:value="${entity?.entrustNum}" />
             <div class="pro-module-wrapper pro-module-base" th:title="#{CfetsBondDealQuotedPrice003.baseinfo}">
                 <input type="hidden" name="workflowId" th:value="${entity?.workflowId}" />
@@ -146,7 +147,7 @@
                             <div class="form-inline-wrap">
                                 <label class="layui-form-label form-label-wrap" data-th-text="#{CfetsBondDealQuotedPrice003.bond}" >债券</label>
                                 <div class="layui-input-inline input-inline buss-inline-wrap" style="width: 30%!important;display: inline-block;">
-                                    <select required th:disabled="${isRevert } eq ${YES_OR_NO_Y}" type="text" id="CfetsBondDealQuotedPrice005_finprodName" name="finprodAbbr"
+                                    <select required th:disabled="${isRevert } eq ${YES_OR_NO_Y}" type="text" id="CfetsBondDealQuotedPrice005_finprodName" name="finprodName"
                                             class="layui-input form-input input-select" allowClear="true"
                                             placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
                                             data-th-data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/queryFinprodIdPage}"
