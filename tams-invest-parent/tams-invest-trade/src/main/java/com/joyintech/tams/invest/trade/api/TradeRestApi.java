@@ -6,6 +6,7 @@ import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.common.base.entity.StlPayOrders;
+import com.joyintech.tams.common.base.entity.TrdFinProductDealTotal;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.component.business.trade.BaseTradeProductDealCommService;
 import com.joyintech.tams.constant.DictCodeList;
@@ -67,10 +68,7 @@ public class TradeRestApi {
     private ValuationInterfService valuationInterfService;
 
     @Autowired
-    private CommonPositionEngineService commonPositionEngineService;
-
-    @Autowired
-    private BaseAssetCashPositionCommMapper baseAssetCashPositionCommMapper;
+    private PositionRequestTradeRestService positionRequestTradeRestService;
 
     @PostMapping("execute")
     @Transactional
@@ -125,20 +123,8 @@ public class TradeRestApi {
                 
                 result = baseTradeProductDealCommService.execute(finProductTradeDto);
 
-                // 撤销批处理调用新头寸 add by fuyongsheng 20220308 start
-                if(DictCodeListExt1.交易流程状态_撤销.getValue().equals(finProductTradeDto.getWorkflowStatus())
-                        && CollectionUtils.isNotEmpty(finProductTradeDto.getBaseTradeProductDealDtos())){
-                    for (BaseTradeProductDealDto entity:finProductTradeDto.getBaseTradeProductDealDtos()) {
-                        TrdProductDeal deal = entity.getTrdProductDeal();
-                        // 资产二级类型
-                        assetType2 = StringUtil.isNotEmpty(finProductTradeDto.getAssetType2()) ?
-                                finProductTradeDto.getAssetType2() : baseAssetCashPositionCommMapper.selectFundType(deal.getFinprodId());
-                        String busiType = commonPositionEngineService.getPositionBusiType(deal.getFinprodType2(),
-                                deal.getPs(), assetType2);
-                        PositionHttpRequest.dorevoke(deal.getTradeId(), PositionConstant.POSITION_TYPE_TRD, busiType, deal.getPs());
-                    }
-                }
-                // 撤销批处理调用新头寸 add by fuyongsheng 20220308 end
+                // 发送新头寸接口数据
+                positionRequestTradeRestService.sendTradeRestPositionRequest(finProductTradeDto);
 
                 // 结算数据下行都是单产品单组合，不会有母组合的，该逻辑去掉                
 //                for (BaseTradeProductDealDto baseTradeProductDealDto : baseTradeProductDealDtos) {
