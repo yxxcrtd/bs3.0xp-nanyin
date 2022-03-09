@@ -114,8 +114,8 @@ public class PositionRequestTradeRestService {
         if (DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue().equals(type6)) {
             finprodType += "-" + type6;
         }
-        String interType = commonPositionEngineService.getPositionInterType(PositionConstant.POSITION_TYPE_TRD, TRADE_PLAT, finprodType, entity.getTrdProductDeal().getPs(),
-                OPT_TYPE_NEW, entity.getClass().getName());
+        String interType = commonPositionEngineService.getPositionInterType(PositionConstant.POSITION_TYPE_TRD, TRADE_PLAT,
+                finprodType, entity.getTrdProductDeal().getPs(), DictCodeListExt3.业务动作_成交匹配.getValue(), entity.getClass().getName());
         if (PositionConstant.INTERF_TYPE_FUND001.equals(interType)) {
             this.fund001(entity, resultMap);
         } else if (PositionConstant.INTERF_TYPE_STOCK001.equals(interType)) {
@@ -329,7 +329,7 @@ public class PositionRequestTradeRestService {
         List<StlPayOrdersDto> stlPayOrdersList = entity.getStlPayOrdersList();
         resultMap.put("interfaceType", INTERF_TYPE_REPO003);
         // 业务类型
-        resultMap.put("busiType", DictCodeListExt3.头寸业务类型_债券存续期交易.getValue());
+        resultMap.put("busiType", DictCodeListExt3.头寸业务类型_质押式回购到期.getValue());
         // 业务动作
         resultMap.put("busiAct", DictCodeListExt3.业务动作_成交匹配.getValue());
         resultMap.put("ps", trdProductDeal.getPs());
@@ -369,7 +369,51 @@ public class PositionRequestTradeRestService {
      * @param resultMap
      */
     private void bond002(BaseTradeProductDealDto entity, Map<String, Object> resultMap) {
+        TrdFinProductDealTotal trdProductDealTotal = entity.getTrdFinProductDealTotal();
+        TrdProductDeal trdProductDeal = entity.getTrdProductDeal();
+        TrdProductDealAdd trdProductDealAdd = entity.getTrdProductDealAdd();
+        List<StlPayOrdersDto> stlPayOrdersList = entity.getStlPayOrdersList();
+        resultMap.put("interfaceType", INTERF_TYPE_BOND002);
+        // 业务类型
+        resultMap.put("busiType", busiType);
+        // 业务动作
+        resultMap.put("busiAct", DictCodeListExt3.业务动作_成交回报.getValue());
+        resultMap.put("ps", entity.getPs());
+        String deliveryType = commonPositionEngineService.getDeliveryType(entity.getFinprodId());
+        resultMap.put("settleSpeed", parseSettleSpreed(deliveryType));
+        resultMap.put("bidResult", 是否_否.getValue());
+        resultMap.put("purchModle", null);
+        resultMap.put("tradePlace", entity.getTradeMarket());
+        resultMap.put("sharesTradePlatform", this.getSharesTradePlatform(entity));
+        resultMap.put("deliveryType", deliveryType);
+        resultMap.put("decisionAct", DictCodeListExt3.系统动作_新建.getValue());
+        resultMap.put("systemAct", DictCodeListExt3.系统动作_新建.getValue());
+        resultMap.put("workFlowId", null);
+        resultMap.put("cdate", entity.getTradeDate());
+        resultMap.put("ccy", entity.getCcy());
+        resultMap.put("finprodId", entity.getFinprodId());
+        resultMap.put("bTotalTradeId", null);
 
+        List<Map<String, Object>> ptlList = new ArrayList<>();
+        for (PortfolioCalculateDto dto:list) {
+            Map<String, Object> pltMap = new HashMap<>();
+            pltMap.put("portfolioId", dto.getPortfolioId());
+            pltMap.put("tradeId", entity.getTradeId());
+            pltMap.put("etrId", entity.getEntrustId());
+            pltMap.put("ordEntrustId", null);
+            pltMap.put("etrSecAmount", dto.getEtrSecAmount());
+            pltMap.put("ordId", entity.getOrderId());
+            pltMap.put("ordSecAmount", dto.getOrdSecAmount());
+            pltMap.put("cashAcctId", dto.getCashAcctId());
+            pltMap.put("secAcctId", entity.getSecAcctId());
+            pltMap.put("secAmount", dto.getSecAmount());
+            pltMap.put("cashAmount", dto.getCashAmount());
+            pltMap.put("invAim", entity.getInvAim());
+            pltMap.put("integrateSecAmount", null);
+            pltMap.put("ownSecAmount", dto.getOwnSecAmount());
+            ptlList.add(pltMap);
+        }
+        resultMap.put("ptlList", ptlList);
     }
 
     /**
