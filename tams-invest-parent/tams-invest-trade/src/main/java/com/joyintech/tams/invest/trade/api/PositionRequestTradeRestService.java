@@ -7,6 +7,7 @@ import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.common.base.entity.TrdFinProductDealTotal;
@@ -16,9 +17,11 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
+import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.position.service.CommonPositionEngineService;
 import com.joyintech.tams.invest.common.trade.dao.BaseAssetCashPositionCommMapper;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
+import com.joyintech.tams.invest.common.trade.dto.PortfolioCalculateDto;
 import com.joyintech.tams.invest.common.trade.dto.PortfolioCalculateDto;
 import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.trade.exchangetransmatch.position.bean.PositionRequestBaseBean;
@@ -33,6 +36,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import static com.joyintech.tams.constant.DictCodeList.是否_否;
+
+import java.util.*;
+
 import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.*;
 
 @Service
@@ -70,13 +76,7 @@ public class PositionRequestTradeRestService {
             Map<String, Object> resultMap = new HashMap<>();
             for (BaseTradeProductDealDto entity:finProductTradeDto.getBaseTradeProductDealDtos()) {
                 TrdFinProductDealTotal dealTotal = entity.getTrdFinProductDealTotal();
-                if(null != dealTotal && DictCodeList.共通业务类型_债券类资产存续期.getValue().equals(dealTotal.getBusiType())){
-
-                }else if(null != dealTotal && DictCodeList.共通业务类型_质押式回购存续期.getValue().equals(dealTotal.getBusiType())){
-
-                }else if(null != dealTotal){
-                    this.sendPositionHttpRequest(entity);
-                }
+                this.sendPositionHttpRequest(entity);
             }
             PositionHttpRequest.send(resultMap);
         }
@@ -116,6 +116,12 @@ public class PositionRequestTradeRestService {
             this.fund001(entity, resultMap);
         } else if (PositionConstant.INTERF_TYPE_STOCK001.equals(interType)) {
             this.stock001(entity, resultMap);
+        }else if (PositionConstant.INTERF_TYPE_REPO003.equals(interType)) {
+            this.repo003(entity, resultMap);
+        }else if (PositionConstant.INTERF_TYPE_BOND002.equals(interType)) {
+            this.bond002(entity, resultMap);
+        }else if (PositionConstant.INTERF_TYPE_BOND003.equals(interType)) {
+            this.bond003(entity, resultMap);
         }
         PositionHttpRequest.send(resultMap);
     }
@@ -304,5 +310,71 @@ public class PositionRequestTradeRestService {
         }
         // 前次交易编号
         resultMap.put(B_TOTAL_TRADE_ID, null);
+    }
+
+    /**
+     * 质押式通用回购
+     *
+     * @param entity
+     * @param resultMap
+     */
+    private void repo003(BaseTradeProductDealDto entity, Map<String, Object> resultMap) {
+        TrdFinProductDealTotal trdProductDealTotal = entity.getTrdFinProductDealTotal();
+        TrdProductDeal trdProductDeal = entity.getTrdProductDeal();
+        TrdProductDealAdd trdProductDealAdd = entity.getTrdProductDealAdd();
+        List<StlPayOrdersDto> stlPayOrdersList = entity.getStlPayOrdersList();
+        resultMap.put("interfaceType", INTERF_TYPE_REPO003);
+        // 业务类型
+        resultMap.put("busiType", DictCodeListExt3.头寸业务类型_债券存续期交易.getValue());
+        // 业务动作
+        resultMap.put("busiAct", DictCodeListExt3.业务动作_成交匹配.getValue());
+        resultMap.put("ps", trdProductDeal.getPs());
+        resultMap.put("tradePlace", trdProductDeal.getTradeMarket());
+        resultMap.put("settleSpeed", null);
+        resultMap.put("sharesTradePlatform", null);
+        resultMap.put("deliveryType", null);
+        resultMap.put("decisionAct", DictCodeListExt3.系统动作_新建.getValue());
+        resultMap.put("systemAct", DictCodeListExt3.系统动作_新建.getValue());
+        resultMap.put("workFlowId", null);
+        resultMap.put("cdate", trdProductDeal.getTradeDate());
+        resultMap.put("ccy", trdProductDeal.getCcy());
+        resultMap.put("totalTradeId", null);
+        resultMap.put("bTotalTradeId", null);
+
+        List<Map<String, Object>> ptlList = new ArrayList<>(4);
+
+        Map<String, Object> plt = new HashMap<>(8);
+        plt.put("portfolioId", trdProductDealAdd.getPortfolioId());
+        if(!CollectionUtils.isEmpty(stlPayOrdersList)){
+            plt.put("cashAcctId", stlPayOrdersList.get(0).getMyAcctNo());
+        }
+        plt.put("secAcctId", trdProductDealTotal.getSecManageAcctId());
+        plt.put("tradeId", trdProductDeal.getTradeId());
+        plt.put("etrId", null);
+        plt.put("ordEntrustId", null);
+        plt.put("standardSecAmount", null);
+        plt.put("cashAmount", trdProductDeal.getTradeAmt());
+        ptlList.add(plt);
+        resultMap.put("ptlList", ptlList);
+    }
+
+    /**
+     * 场内现券
+     *
+     * @param entity
+     * @param resultMap
+     */
+    private void bond002(BaseTradeProductDealDto entity, Map<String, Object> resultMap) {
+
+    }
+
+    /**
+     * 可转债
+     *
+     * @param entity
+     * @param resultMap
+     */
+    private void bond003(BaseTradeProductDealDto entity, Map<String, Object> resultMap) {
+
     }
 }
