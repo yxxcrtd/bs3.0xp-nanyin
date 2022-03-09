@@ -47,8 +47,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import com.joyintech.framework.util.JsonUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -75,6 +78,11 @@ import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.TrdMoreConvrateDto
 @Service
 public class PositionRequestServiceEtrExchangeTradeSaveRequest {
 
+    /**
+     * 日志对象
+     */
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
+
     public static final String STANDAR_SEC_ID = "XN_PRODID999";
     @Autowired
     private CommonPositionEngineService commonPositionEngineService;
@@ -87,6 +95,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
      * @param entity
      */
     public void sendEtrExchangeTradeSaveRequest(EtrExchangeTradeSaveRequest entity, String decisionAct, String systemAct) {
+        log.info("sendEtrExchangeTradeSaveRequest() called with parameters => 【entity = {}】, 【decisionAct = {}】, 【systemAct = {}】", JsonUtils.object2Json(entity), decisionAct, systemAct);
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("decisionAct", decisionAct);
         resultMap.put("systemAct", systemAct);
@@ -97,6 +106,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
             finprodType += "-" + type6;
         }
         String interType = commonPositionEngineService.getPositionInterType(POSITION_TYPE_ETR, POSITION_ETR_PAGE, finprodType, entity.getPs(), entity.getOptType(), entity.getClass().getName());
+        log.info("匹配头寸接口：[{}]", interType);
         if (INTERF_TYPE_BOND002.equals(interType)) {
             this.bond002(entity, resultMap);
         } else if (INTERF_TYPE_BOND003.equals(interType)) {
@@ -108,6 +118,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
         } else if (INTERF_TYPE_STOCK001.equals(interType)) {
             this.stock001(entity, resultMap);
         } else {
+            log.warn("未匹配到头寸接口");
             //TODO 根据条件判断调用其他接口
         	return ;
         }
@@ -120,6 +131,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
      * @param entity
      */
     public void sendDelete(EtrExchangeTradeSaveRequest entity) {
+        log.info("sendDelete() called with parameters => 【entity = {}】",JsonUtils.object2Json(entity));
         String busiType = commonPositionEngineService.getPositionBusiType(entity.getFinprodType2(), entity.getPs(), entity.getAssetType2());
         PositionHttpRequest.doDeleteByWorkFlowId(entity.getWorkflowId(), POSITION_TYPE_ETR, busiType, entity.getPs());
     }
@@ -130,6 +142,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
      * @param entity
      */
     public void sendRevoke(EtrExchangeTradeOperateRequest entity) {
+        log.info("sendRevoke() called with parameters => 【entity = {}】",JsonUtils.object2Json(entity));
         String busiType = commonPositionEngineService.getPositionBusiType(entity.getFinprodType2(), entity.getPs(), null);
         PositionHttpRequest.dorevoke(entity.getEntrustId(), POSITION_TYPE_TRD, busiType, entity.getPs());
     }
@@ -140,6 +153,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
      * @param entity
      */
     public void sendClose(EtrExchangeTradeOperateRequest entity) {
+        log.info("sendClose() called with parameters => 【entity = {}】",JsonUtils.object2Json(entity));
         String busiType = commonPositionEngineService.getPositionBusiType(entity.getFinprodType2(), entity.getPs(), null);
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("userId", SecurityUtil.getLoginUser().getUserName());

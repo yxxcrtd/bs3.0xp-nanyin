@@ -13,6 +13,8 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.position.dao.InterfPositionConfigMapper;
 import com.joyintech.tams.invest.common.position.dto.InterfPositionConfigDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +31,7 @@ import static com.joyintech.tams.constant.DictCodeListExt3.交易单位_张;
 @Service
 public class CommonPositionEngineService {
 
+    private static final Logger log = LoggerFactory.getLogger(CommonPositionEngineService.class);
     private static final Map<String, InterfPositionConfigDto> CONFIG_MAP = new ConcurrentHashMap<String, InterfPositionConfigDto>();
 
     /**
@@ -135,6 +138,7 @@ public class CommonPositionEngineService {
      * @return
      */
     public String getPositionInterType(String positionType, String tradePlat, String finprodType, String ps, String busiAct, String entity) {
+        log.info("getPositionInterType() called with parameters => 【positionType = {}】, 【tradePlat = {}】, 【finprodType = {}】, 【ps = {}】, 【busiAct = {}】, 【entity = {}】",positionType, tradePlat, finprodType, ps, busiAct, entity);
         String key = positionType + tradePlat + finprodType + ps + busiAct + entity;
         InterfPositionConfigDto interfPositionConfigDto = CONFIG_MAP.get(key);
         if (interfPositionConfigDto == null || cacheInvalid(interfPositionConfigDto.getUpdateTime())) {
