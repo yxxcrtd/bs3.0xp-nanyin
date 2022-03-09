@@ -1547,6 +1547,9 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         //融入券卖空待购回持仓
         BigDecimal rrqmkdghSAmt=BigDecimal.ZERO;
         for(CfetsBussCombDistribtDto item:bussCombDistribtList){
+            if(Objects.isNull(item.getEntrustNum())) {
+                item.setEntrustNum(BigDecimal.ZERO);
+            }
             CfetsEtribBondInfo003Dto dd=new CfetsEtribBondInfo003Dto();
             BeanUtil.copyPropertiesIgnoreNull(dd,dto);
             dd.setPortfolioId(item.getPortfolioId());
@@ -1591,7 +1594,8 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                     }
                 }else if(StringUtil.equals(cfetsDto.getPs(),DictCodeList.交易方向_卖出.getValue())){
                     //查询系统本方券可用持仓
-                    BigDecimal ownSecAmount=bfqtrkyccAmt;
+                    BigDecimal ownSecAmount = bfqtrkyccAmt;
+
                     if(ownSecAmount.compareTo(item.getEntrustNum())>0){
                         dd.setEntrustOwnNum(item.getEntrustNum());
                         dd.setEntrustIntegrateNum(BigDecimal.ZERO);

@@ -633,6 +633,20 @@
             Joyin.error("请先完成风险试算")
             return false;
         }
+        var calculateField = query("input[name=calculateField]:checked").val();
+        debugger
+        if(calculateField && calculateField === 'price' && !query("#priceShow").val()) {
+            Joyin.error("净价不能为空")
+            return false;
+        }
+        if(calculateField && calculateField === 'matureYield' && !query("#matureYieldShow").val()) {
+            Joyin.error("到期收益率不能为空")
+            return false;
+        }
+        if(calculateField && calculateField === 'exerYield' && !query("#exerYieldShow").val()) {
+            Joyin.error("行权收益率不能为空")
+            return false;
+        }
         //组合也需要校验
         var checkFlag = true;
         var object = $.serializeToObject('#searchForm');
@@ -656,7 +670,8 @@
             async: false,
             data: JSON.stringify(obj.param),
             success: function (result) {
-                if(result.code === '200') {
+                console.log(result);
+                if(result.code === '000') {
                     if(result.data && result.data.errorList && result.data.errorList.length > 0) {
                         $.each(result.data.errorList,function (index,item) {
                             errorMsg = errorMsg + item.message + "<br\>";
@@ -706,9 +721,8 @@
     //绑定风险是算
     $('#CfetsEtrIbBondinfo003_btn_riskcal').click(function () {
         var object = $.serializeToObject('#searchForm');
-        var param = JSON.parse(JSON.stringify(object))
+        var param = JSON.parse(JSON.stringify(object));
         Joyin.ajaxJson(basePath + 'cfets/etrib/cfetsEtrIbBondinfo/doRiskcal', param, function (data) {
-            console.log(data);
             if(data.data.data.riskTrialSpan) {
                 $("#riskTrialSpan").html("&nbsp;&nbsp;" + data.data.data.riskTrialSpan);
             }
