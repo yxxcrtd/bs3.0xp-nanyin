@@ -248,14 +248,14 @@ VALUES ('TRD_PAGE', 'F10', 'T04', '18', 'TRD',
 INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE,
                                                            ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME,
                                                            UPDATE_USER, UPDATE_TIME, REMARK, ENABLE)
-VALUES ('ETR_PAGE', 'F07', '03', 'new', 'ETR',
+VALUES ('ETR_PAGE', 'F02', '03', 'new', 'ETR',
         'com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest', 'REPO003', 'system',
         null, sysdate, 'system', sysdate, '新建场内通用回购正回购指令', 'Y');
 
 INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE,
                                                            ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME,
                                                            UPDATE_USER, UPDATE_TIME, REMARK, ENABLE)
-VALUES ('ETR_PAGE', 'F07', '04', 'new', 'ETR',
+VALUES ('ETR_PAGE', 'F02', '04', 'new', 'ETR',
         'com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest', 'REPO003', 'system',
         null, sysdate, 'system', sysdate, '新建场内通用回购逆回购指令', 'Y');
 
@@ -276,14 +276,14 @@ VALUES ('ETR_PAGE', 'F01', 'T69', 'new', 'ETR',
 INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE,
                                                            ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME,
                                                            UPDATE_USER, UPDATE_TIME, REMARK, ENABLE)
-VALUES ('ETR_PAGE', 'F07', '03', 'modify', 'ETR',
+VALUES ('ETR_PAGE', 'F02', '03', 'modify', 'ETR',
         'com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest', 'REPO003', 'system',
         null, sysdate, 'system', sysdate, '修改场内通用回购正回购指令', 'Y');
 
 INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE,
                                                            ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME,
                                                            UPDATE_USER, UPDATE_TIME, REMARK, ENABLE)
-VALUES ('ETR_PAGE', 'F07', '04', 'modify', 'ETR',
+VALUES ('ETR_PAGE', 'F02', '04', 'modify', 'ETR',
         'com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest', 'REPO003', 'system',
         null, sysdate, 'system', sysdate, '修改场内通用回购逆回购指令', 'Y');
 
