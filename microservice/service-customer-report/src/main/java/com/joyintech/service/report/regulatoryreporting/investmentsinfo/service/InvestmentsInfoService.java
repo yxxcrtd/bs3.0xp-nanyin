@@ -2479,6 +2479,17 @@ public class InvestmentsInfoService {
 		Set<String> codeSet = new HashSet<>(Arrays.asList(keyCodes.split("\\|")));
 
 		List<InvestmentBusinessDetailsDto> InvestmentBusinessDetailsList = new ArrayList<InvestmentBusinessDetailsDto>();
+
+
+		InvestmentBusinessDetailsDto sumDto = new InvestmentBusinessDetailsDto();
+		sumDto.setPropertycode("sum");
+		BigDecimal valueA = BigDecimal.ZERO;
+		BigDecimal valueB = BigDecimal.ZERO;
+		BigDecimal valueALast = BigDecimal.ZERO;
+		BigDecimal valueBLast = BigDecimal.ZERO;
+		BigDecimal valueB01 = BigDecimal.ZERO;
+		BigDecimal valueBlast01 = BigDecimal.ZERO;
+
 		//遍历查询出来的月报数据信息
 		for (Map<String,Object> map: ListMap) {
 			InvestmentBusinessDetailsDto investmentBusinessDetailsDto = new InvestmentBusinessDetailsDto();
@@ -2514,6 +2525,15 @@ public class InvestmentsInfoService {
 			//表五计算用 资产支持专项计划 - 上季
 			investmentBusinessDetailsDto.setValueBlast02((BigDecimal) map.get("VALUEBLAST02"));
 
+			//同级合计数据
+			valueA = valueA.add(null!=investmentBusinessDetailsDto.getValueA()?investmentBusinessDetailsDto.getValueA():BigDecimal.ZERO);
+			valueB = valueB.add(null!=investmentBusinessDetailsDto.getValueB()?investmentBusinessDetailsDto.getValueB():BigDecimal.ZERO);
+			valueALast = valueALast.add(null!=investmentBusinessDetailsDto.getValueALast()?investmentBusinessDetailsDto.getValueALast():BigDecimal.ZERO);
+			valueBLast = valueBLast.add(null!=investmentBusinessDetailsDto.getValueBLast()?investmentBusinessDetailsDto.getValueBLast():BigDecimal.ZERO);
+			valueB01 = valueB01.add(null!=investmentBusinessDetailsDto.getValueB01()?investmentBusinessDetailsDto.getValueB01():BigDecimal.ZERO);
+			valueBlast01 = valueBlast01.add(null!=investmentBusinessDetailsDto.getValueBlast01()?investmentBusinessDetailsDto.getValueBlast01():BigDecimal.ZERO);
+
+
 			InvestmentBusinessDetailsList.add(investmentBusinessDetailsDto);
 		}
 		//将没有数据的分类进行初始化
@@ -2525,6 +2545,15 @@ public class InvestmentsInfoService {
 		}
 		//附表银保监局	城商行 字段
 
+		//合计数据添加
+		sumDto.setValueA(valueA);
+		sumDto.setValueB(valueB);
+		sumDto.setValueALast(valueALast);
+		sumDto.setValueBLast(valueBLast);
+		sumDto.setValueB01(valueB01);
+		sumDto.setValueBlast01(valueBlast01);
+		InvestmentBusinessDetailsList.add(sumDto);
+		//附表的机构编码及银监编号
 		InvestmentBusinessDetailsDto detailsDto = investmentBusinessDetailsMapper.queryOrgName();
 		InvestmentBusinessDetailsList.add(detailsDto);
 
@@ -2810,10 +2839,10 @@ public class InvestmentsInfoService {
 		paraMap.put("endDate",endDate);
 		paraMap.put("modetype", "40");
 
-		paraMap.put("INDUSTRY1", CacheUtil.getSysParam("SEC_END_DAYS_SWITCH").split(";")[0]);
-		paraMap.put("INDUSTRY2", CacheUtil.getSysParam("SEC_END_DAYS_SWITCH").split(";")[1]);
-		paraMap.put("INDUSTRY3", CacheUtil.getSysParam("SEC_END_DAYS_SWITCH").split(";")[2]);
-		paraMap.put("INDUSTRY4", CacheUtil.getSysParam("SEC_END_DAYS_SWITCH").split(";")[3]);
+		paraMap.put("INDUSTRY1", CacheUtil.getSysParam("SVR_EXCESS_PRODUCTION_CAPACITY").split(";")[0]);
+		paraMap.put("INDUSTRY2", CacheUtil.getSysParam("SVR_EXCESS_PRODUCTION_CAPACITY").split(";")[1]);
+		paraMap.put("INDUSTRY3", CacheUtil.getSysParam("SVR_EXCESS_PRODUCTION_CAPACITY").split(";")[2]);
+		paraMap.put("INDUSTRY4", CacheUtil.getSysParam("SVR_EXCESS_PRODUCTION_CAPACITY").split(";")[3]);
 
 
 		InvestmentBusinessDetailsDto investmentBusinessDetailsDto40= investmentBusinessDetailsMapper.queryBottomInfoAmountByModeType(paraMap);

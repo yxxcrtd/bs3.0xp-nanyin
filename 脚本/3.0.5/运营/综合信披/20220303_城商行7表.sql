@@ -6,6 +6,6 @@ comment on column mst_customer_info_add.IS_SHAREHOLDER_RELATED
   is '是否股东及其关联方';
 DELETE FROM SYS_PARA WHERE PARA_CODE IN ('SVR_LOCAL_AREA','SVR_EXCESS_PRODUCTION_CAPACITY');
 insert into SYS_PARA (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, UPDATE_FLG)
-values ('SVR', 'SVR_LOCAL_AREA', '05', '02', '01,02,03,04,05', '本地地区(用来筛选异地业务)', 'system', null, SYSDATE, 'system', SYSDATE, null, '01');
+values ('SVR', 'SVR_LOCAL_AREA', '320000', NULL, '省/市地区编号', '本地地区(用来筛选异地业务)', 'system', null, SYSDATE, 'system', SYSDATE, null, '01');
 insert into SYS_PARA (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, UPDATE_FLG)
-values ('SVR', 'SVR_EXCESS_PRODUCTION_CAPACITY', '05', '02', '01,02,03,04,05', '产能过剩行业', 'system', null, SYSDATE, 'system', SYSDATE, null, '01');
+values ('SVR', 'SVR_EXCESS_PRODUCTION_CAPACITY', '01,02;T01,T02;01,02;01,02', null, null, '产能过剩行业,有且必须以3个;分割 四个位置依序代表一级二级三级四级行业类型,多个同级,分割.可为空', 'system', null, SYSDATE, 'system', SYSDATE, null, '01');
