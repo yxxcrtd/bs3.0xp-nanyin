@@ -519,7 +519,7 @@ public class PbcPrdCashRaiseSubService001 extends CommonExportService<PbcProdRai
 //	    		template="PbcReport_PbcRaisProd_Oth";
 	    	}
             // add by zcw  TISHKS-244 新人行代码关联不上老人行表。改为老人行代码
-            param.put("pbcProdId", dto.getValue().getPbcProdId());
+//            param.put("pbcProdId", dto.getValue().getPbcProdId());
 	    	List<PbcInitProdRaisingSubVo> listDetailSheet1 = pbcProdRaiseSubMapper.searchListDetailSheet1(param);
 	    	if (!CollectionUtils.isEmpty(listDetailSheet1)) {
 	            for (PbcInitProdRaisingSubVo detailVo1 : listDetailSheet1) {
