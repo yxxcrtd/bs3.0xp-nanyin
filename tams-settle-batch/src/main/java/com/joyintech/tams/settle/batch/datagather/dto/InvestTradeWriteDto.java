@@ -2,6 +2,7 @@ package com.joyintech.tams.settle.batch.datagather.dto;
 
 import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 
 import java.util.ArrayList;
 import java.util.List;
