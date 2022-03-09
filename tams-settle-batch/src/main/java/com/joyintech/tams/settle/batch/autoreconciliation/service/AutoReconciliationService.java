@@ -2,11 +2,11 @@ package com.joyintech.tams.settle.batch.autoreconciliation.service;
 
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.constant.*;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.reconciliation.dto.DayEndAccountDaichuliDto;
 import com.joyintech.tams.invest.common.reconciliation.service.ReconciliationCommonService;
 import com.joyintech.tams.settle.batch.autoreconciliation.dao.AutoReconciliationMapper;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
