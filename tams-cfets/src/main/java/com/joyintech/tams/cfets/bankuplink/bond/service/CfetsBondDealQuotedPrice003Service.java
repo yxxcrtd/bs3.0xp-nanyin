@@ -139,10 +139,14 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
     @Override
     public String generateTitle(CfetsBondDealRequestQuoteDto entity, OperationType type) {
         DecimalFormat df = new DecimalFormat("###,###.00");
+        String avaNumStr="--";
+        if(StringUtil.isNotEmpty(entity.getAvaNum())){
+            avaNumStr=df.format(entity.getAvaNum());
+        }
         return  "报价日期(" + DateUtil.format(entity.getSettleDate())+")-"+
                 "资产简称(" + entity.getFinprodAbbr()  + ")-"+
                 "报价操作("+  entity.getQuoteOperatorType() +")-" +
-                "券面总额("+ df.format(entity.getAvaNum())+"万元)";
+                "券面总额("+ avaNumStr +"万元)";
     }
 
     public AjaxResult checkNotEmpty(CfetsBondDealQuoteCommonDto entity) {
