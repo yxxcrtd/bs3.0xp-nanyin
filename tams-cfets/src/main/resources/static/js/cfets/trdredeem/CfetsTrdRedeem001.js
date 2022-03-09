@@ -93,7 +93,11 @@
         var object = $.serializeToObject('#searchForm');
         object.operatorType = operatorType;
         object.pageId = "CfetsTrdRedeem001";
-        Joyin.confirm("是否确认提交?",
+        var confirmMessage="是否确认提交?";
+        if (operatorType === 'save') {
+            confirmMessage="是否确认保存?";
+        }
+        Joyin.confirm(confirmMessage,
             function () {
                 //保存 走流程
                 if (operatorType === 'save') {
