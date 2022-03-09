@@ -9,44 +9,7 @@ import static com.joyintech.tams.constant.DictCodeListExt3.交易方向_质押�
 import static com.joyintech.tams.constant.DictCodeListExt3.交易方向_质押券出库;
 import static com.joyintech.tams.constant.DictCodeListExt3.交易方向_配债;
 import static com.joyintech.tams.exchange.common.constant.joyin.DictCodeList.交易方向_申购;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.APPLY_BOND_SEC_LIST;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.BID_RESULT;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.BUSI_ACT;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.BUSI_TYPE;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.B_TOTAL_TRADE_ID;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.CCY;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.DELIVERY_TYPE;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.ETFREDEMPTION_METHOD;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.FINPROD_ID;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.INTEGRATE_SEC_AMOUNT;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.INTERFACE_TYPE;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.INTERF_TYPE_BOND002;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.INTERF_TYPE_BOND003;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.INTERF_TYPE_FUND001;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.INTERF_TYPE_REPO001;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.INTERF_TYPE_REPO002;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.INTERF_TYPE_STOCK001;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.INV_AIM;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.ORD_ENTRUST_ID;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.OWN_SEC_AMOUNT;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.POSITION_TYPE_TRD;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.POSITION_TRD_PAGE;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.PS;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.PTL_CASH_LIST;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.PTL_LIST;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.PTL_RO_LIST;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.PTL_SEC_LIST;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.PURCH_MODLE;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.SAME_DAY_TURN;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.SETTLE_SPEED;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.SHARES_SEC_LIST;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.SHARES_TRADE_PLATFORM;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.STANDARD_SEC_AMOUNT;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.STANDARD_SEC_ID;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.STANDAR_SEC_ID;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.TOTAL_TRADE_ID;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.TRADE_PLACE;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.WORK_FLOW_ID;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -115,10 +78,10 @@ public class PositionRequestServiceInstructionRequest {
             this.bond002(entity, resultMap);
         } else if (INTERF_TYPE_BOND003.equals(interType)) {
             this.bond003(entity, resultMap);
-        } else if (INTERF_TYPE_FUND001.equals(interType)) {
-            this.fund001(entity, resultMap);
-        } else if (INTERF_TYPE_REPO001.equals(interType)) {
-            this.repo001(entity, resultMap);
+        } else if (INTERF_TYPE_FUND002.equals(interType)) {
+            this.fund002(entity, resultMap);
+        } else if (INTERF_TYPE_REPO003.equals(interType)) {
+            this.repo003(entity, resultMap);
         } else if (INTERF_TYPE_REPO002.equals(interType)) {
             this.repo002(entity, resultMap);
         } else if (INTERF_TYPE_STOCK001.equals(interType)) {
@@ -250,13 +213,13 @@ public class PositionRequestServiceInstructionRequest {
     }
 
     /**
-     * 基金-下单    fund001
+     * 基金-下单    fund002
      *
      * @param entity
      * @param resultMap
      */
-    private void fund001(PositionInstructionRequest entity, Map<String, Object> resultMap) {
-        resultMap.put(INTERFACE_TYPE, INTERF_TYPE_FUND001);
+    private void fund002(PositionInstructionRequest entity, Map<String, Object> resultMap) {
+        resultMap.put(INTERFACE_TYPE, INTERF_TYPE_FUND002);
         // 清算速度
         resultMap.put(SETTLE_SPEED, null);
         // 结算方式
@@ -293,13 +256,13 @@ public class PositionRequestServiceInstructionRequest {
     }
 
     /**
-     * 质押式通用回购-下单    repo001
+     * 质押式通用回购-下单    repo003
      *
      * @param entity    下单对象
      * @param resultMap 参数集合
      */
-    private void repo001(PositionInstructionRequest entity, Map<String, Object> resultMap) {
-        resultMap.put(INTERFACE_TYPE, INTERF_TYPE_REPO001);
+    private void repo003(PositionInstructionRequest entity, Map<String, Object> resultMap) {
+        resultMap.put(INTERFACE_TYPE, INTERF_TYPE_REPO003);
         resultMap.put(SETTLE_SPEED, null);
         resultMap.put(SHARES_TRADE_PLATFORM, null);
         resultMap.put(DELIVERY_TYPE, null);

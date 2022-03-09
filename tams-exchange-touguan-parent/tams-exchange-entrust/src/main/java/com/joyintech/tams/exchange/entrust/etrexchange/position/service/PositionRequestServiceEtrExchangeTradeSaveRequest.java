@@ -265,7 +265,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
      * @param resultMap
      */
     private void fund002(EtrExchangeTradeSaveRequest entity, Map<String, Object> resultMap) {
-        resultMap.put(INTERFACE_TYPE, INTERF_TYPE_FUND001);
+        resultMap.put(INTERFACE_TYPE, INTERF_TYPE_FUND002);
         // 业务动作
         resultMap.put(BUSI_ACT, 业务动作_投资指令.getValue());
         resultMap.put(SETTLE_SPEED, null);
@@ -303,7 +303,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
      * @param resultMap
      */
     private void repo003(EtrExchangeTradeSaveRequest entity, Map<String, Object> resultMap) {
-        resultMap.put(INTERFACE_TYPE, INTERF_TYPE_REPO001);
+        resultMap.put(INTERFACE_TYPE, INTERF_TYPE_REPO003);
         resultMap.put(BUSI_ACT, 业务动作_投资指令.getValue());
         resultMap.put(SETTLE_SPEED, null);
         resultMap.put(DELIVERY_TYPE, null);
