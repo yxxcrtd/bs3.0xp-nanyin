@@ -139,7 +139,7 @@
         data: entity_BussCombDistribtList || [{}],
         cols: cols,
         page: false,
-        addbtn: true,
+        addbtn: (repo_pledge_model == '02' && $("#ps").val() == '03') ? false : true,
         addToLast: true,
         searchOnInit: true,
         checkbox: false,
@@ -482,7 +482,7 @@
 
     function paramCheck() {
         var object = $.serializeToObject('#searchForm');
-        if (!object.entrustAmt || !object.settleSpreed || !object.priceModel || !object.price || !object.repoTerm || !object.termType || !object.counterId) {
+        if (!object.entrustAmt || !object.settleSpreed || !object.priceModel || !object.price || !object.repoTerm || !object.termType) {
             Joyin.error("有*必填项未填写,请填写完整")
             return false;
         }
@@ -550,11 +550,22 @@
     $("#repoTerm").blur(function () {
         var repoTerm = $("#repoTerm").val();
         if (!repoTerm) return;
+        if(Number(repoTerm) < 1 || Number(repoTerm) > 365) {
+            Joyin.error("回购期限只能在1~365之间");
+            $("#repoTerm").val("");
+        }
         Joyin.ajax(basePath + 'cfets/etrib/cfetsEtrIbRepoinfo/getTermTypeByRepoTerm?repoTerm=' + repoTerm, {}, function (data) {
             if(data.data) {
                 $("#termType").textSelect('setValue', data.data.data);
             }
         });
+    })
+    $("#price").change(function () {
+        var price = $("#price").val();
+        if(price && Number(price) <= 0) {
+            Joyin.error("回购利率需大于0");
+            $("#price").val("");
+        }
     })
 
 }());
