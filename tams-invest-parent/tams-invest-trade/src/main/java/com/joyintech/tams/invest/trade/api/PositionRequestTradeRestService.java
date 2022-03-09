@@ -110,6 +110,10 @@ public class PositionRequestTradeRestService {
         resultMap.put("systemAct", DictCodeListExt3.系统动作_新建.getValue());
         this.setCommonField(entity, resultMap);
         String finprodType = entity.getTrdProductDeal().getFinprodType2();
+        String type6 = commonPositionEngineService.getType6(entity.getTrdProductDeal().getFinprodId());
+        if (DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue().equals(type6)) {
+            finprodType += "-" + type6;
+        }
         String interType = commonPositionEngineService.getPositionInterType(PositionConstant.POSITION_TYPE_TRD, TRADE_PLAT, finprodType, entity.getTrdProductDeal().getPs(),
                 OPT_TYPE_NEW, entity.getClass().getName());
         if (PositionConstant.INTERF_TYPE_FUND001.equals(interType)) {
