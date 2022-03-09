@@ -806,13 +806,13 @@ public class IbuComponentReceiveService extends BaseService{
             });
             dto.setCfetsBondDealDialogueQuoteDtoList(cfetsBondDealRequestQuoteDtoList);
             if (StringUtil.equals(ibuQuoteBondDto.getTradeStatus(), BussinessDictCodeList.银行间上行报价状态_已撤回.getValue())) {
-                PositionHttpRequest.send(cfetsQuotedCommonService.prepareDialoguePosition(dto, DictCodeListExt3.流程节点_审批生效.getValue(),DictCodeListExt3.系统动作_撤回.getValue(),DictCodeListExt3.系统动作_撤回.getValue()));
+                PositionHttpRequest.send(cfetsQuotedCommonService.prepareDialoguePosition(dto, DictCodeListExt3.流程节点_审批生效.getValue(),DictCodeListExt3.系统动作_撤回.getValue(),DictCodeListExt3.系统动作_撤回.getValue(),null));
                 return true;
             } else if (StringUtil.equals(ibuQuoteBondDto.getTradeStatus(),
                     BussinessDictCodeList.银行间上行报价状态_已终止.getValue())
                     || StringUtil.equals(ibuQuoteBondDto.getTradeStatus(),
                     BussinessDictCodeList.银行间上行报价状态_已过期.getValue())) {
-                PositionHttpRequest.send(cfetsQuotedCommonService.prepareDialoguePosition(dto, DictCodeListExt3.流程节点_审批生效.getValue(),DictCodeListExt3.系统动作_关闭.getValue(),DictCodeListExt3.系统动作_关闭.getValue()));
+                PositionHttpRequest.send(cfetsQuotedCommonService.prepareDialoguePosition(dto, DictCodeListExt3.流程节点_审批生效.getValue(),DictCodeListExt3.系统动作_关闭.getValue(),DictCodeListExt3.系统动作_关闭.getValue(),null));
                 return true;
             }
         }

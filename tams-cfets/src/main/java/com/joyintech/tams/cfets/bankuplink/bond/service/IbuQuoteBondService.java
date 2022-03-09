@@ -1174,7 +1174,7 @@ public class IbuQuoteBondService extends BaseService {
             BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealDialogueQuoteDto,bondQuoteInfoDto);
             cfetsBondDealQuotedPriceService.sendBondDialogueQuoteRevoke(cfetsBondDealDialogueQuoteDto);
             //处理头寸
-            cfetsBondDealQuotedPrice002Service.sendPosition(cfetsBondDealQuotedPrice002Service.handpositionByQuoteId(bondQuoteInfoDto.getQuoteId()),DictCodeListExt3.流程节点_审批生效.getValue(),DictCodeListExt3.系统动作_撤回.getValue(),DictCodeListExt3.系统动作_撤回.getValue());
+            cfetsBondDealQuotedPrice002Service.sendPosition(cfetsBondDealQuotedPrice002Service.handpositionByQuoteId(bondQuoteInfoDto.getQuoteId()),DictCodeListExt3.流程节点_审批生效.getValue(),DictCodeListExt3.系统动作_撤回.getValue(),DictCodeListExt3.系统动作_撤回.getValue(),null);
             /*return restTemplate.postForObject(ServiceApplication.BANKUPLINK_SERVICE_NAME
                             + "/CfetsBondDealQuotedPrice/sendBondDialogueQuoteRevoke",
                     bondQuoteInfoDto, boolean.class);*/
@@ -1222,7 +1222,7 @@ public class IbuQuoteBondService extends BaseService {
                 cfetsBondDealQuotedPriceService.doInsetOrUpdateForPtlPositionHold(cfetsBondDealDialogueQuoteDto);//头寸处理
             }
             //处理头寸
-            cfetsBondDealQuotedPrice002Service.sendPosition(cfetsBondDealQuotedPrice002Service.handpositionByQuoteId(bondQuoteInfoDto.getQuoteId()),DictCodeListExt3.流程节点_流程提交.getValue(),DictCodeListExt3.系统动作_退回.getValue(),DictCodeListExt3.系统动作_退回.getValue());
+            cfetsBondDealQuotedPrice002Service.sendPosition(cfetsBondDealQuotedPrice002Service.handpositionByQuoteId(bondQuoteInfoDto.getQuoteId()),DictCodeListExt3.流程节点_流程提交.getValue(),DictCodeListExt3.系统动作_退回.getValue(),DictCodeListExt3.系统动作_退回.getValue(),null);
             return true;
             //return cfetsBondDealQuotedPriceService.bondDialogueQuoteRestore(cfetsBondDealDialogueQuoteDto);
             /*return restTemplate.postForObject(ServiceApplication.BANKUPLINK_SERVICE_NAME
