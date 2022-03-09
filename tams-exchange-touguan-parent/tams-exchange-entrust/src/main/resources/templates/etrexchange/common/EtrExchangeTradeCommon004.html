@@ -209,7 +209,7 @@
                             <div class="layui-input-inline input-inline">
                                 <div style="width: 73%">
                                     <select required type="text" id="secId_jj" name="secId" class="layui-input form-input input-select" placeholder="请输入内容" th:initValue="${entity?.stockId}"
-                                            parentIds="acctTradeMarket_jj" data-th-placeholder="#{SysCommon.placeholder}" data-th-data-url="@{'/invest/entrust/etrexchangetrade/EtrExchangeTrade001/getFinprodMarketInfo?tradePlat='+${SHARES_TRADE_PLATFORM_02}+'&expireSettleDate='+${iPlatformDate}}" formatoption=false></select>
+                                            parentIds="acctTradeMarket_jj" data-th-placeholder="#{SysCommon.placeholder}" data-th-data-url="@{'/etrexchange/common/EtrExchangeTradeCommon004/getFinprodMarketInfo?tradePlat='+${SHARES_TRADE_PLATFORM_02}+'&expireSettleDate='+${iPlatformDate}+'&entrustBussType='+${entity?.entrustBussType}}" formatoption=false></select>
                                 </div>
                                 <div style="width: 20%;">
                                     <a id="EtrExchangeTrade001JJ_btn_search" class="layui-btn layui-btn-sm form-input-text">查看</a>
@@ -272,11 +272,9 @@
                                 <input type="radio" lay-filter="calculateField" name="calculateField_jj" th:text="#{EtrExchangeTradeCommon004.price}" value="01"  checked="checked">
                             </label>
                             <div class="layui-input-inline input-inline">
-                                <button type="button" class="decrease-button">-</button>
                                 <input  type="text" id="price_jj" name="price" placeholder="请输入内容" data-pattern="" data-fixtype="2" data-textrange='3' class="layui-input form-input text-number price"
                                        data-th-value="${entity?.price}" required="required" autocomplete="off" maxlength=9>
                                 <span class="input-right-show priceTitle">元</span>
-                                <button type="button" class="increase-button">+</button>
                                 <!--add by chenjiaixng 20210907 债券净价交易添加偏离度展示 start-->
 <!--                                <label class="label-deviation-degree" id="deviationDegree"></label>-->
                                 <!--add by chenjiaixng 20210907 债券净价交易添加偏离度展示 end-->

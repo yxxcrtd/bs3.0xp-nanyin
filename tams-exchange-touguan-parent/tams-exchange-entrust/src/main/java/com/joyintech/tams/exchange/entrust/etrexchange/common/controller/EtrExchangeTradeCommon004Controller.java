@@ -14,6 +14,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
@@ -143,7 +144,7 @@ public class EtrExchangeTradeCommon004Controller extends BaseController{
                     workflowId);
             //add by chenjiaxing 流程中不显示资产名称 start
             String[] secIds = StringUtil.split(entity.getFinprodId(),"_");
-            if(secIds.length == 2 && StringUtil.isEmpty(entity.getStockId())){
+            if(secIds.length == 2 && (StringUtil.isEmpty(entity.getStockId())||entity.getStockId().contains("_"))){
                 entity.setStockId(secIds[1]);
             }
 
@@ -713,6 +714,12 @@ public class EtrExchangeTradeCommon004Controller extends BaseController{
         initPageParams.put("WINDTYPEONE_B15", DictCodeList.WIND一级分类_含债券一级分类等_可交换债.getValue());
     }
 
+    @ResponseBody
+    @RequestMapping("/getFinprodMarketInfo")
+    public Page<SelectOptionDto> getFinprodMarketInfo(){
+        return etrExchangeTrade001CommonService.getFinprodMarketInfo(RequestUtil.getPageParam());
+    }
+
     public List<MinPirceDto> getInterfSysMinPriceAll(@RequestBody Map<String, Object> param) {
         List<MinPirceDto> minPirceList = etrExchangeTrade001CommonService.getInterfSysMinPriceAll(param);
         return minPirceList;
@@ -977,6 +984,7 @@ public class EtrExchangeTradeCommon004Controller extends BaseController{
     public EtrExchangeTradeSaveRequest buildDtoFromTodoSubmit(@RequestBody EtrExchangeTradeSaveRequest dto) {
           return  etrExchangeTrade001CommonService.buildDtoFromTodoSubmit(dto);
     }
+
 
 
 

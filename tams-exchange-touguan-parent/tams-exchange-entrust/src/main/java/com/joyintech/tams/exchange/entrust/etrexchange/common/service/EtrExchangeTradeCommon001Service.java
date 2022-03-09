@@ -46,6 +46,7 @@ import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDispatcherService;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
+import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
@@ -55,6 +56,7 @@ import com.joyintech.tams.component.business.common.dto.FinStockInfoDto;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dto.EtrExchangePosiInfoRequestDto;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.FinProductOthCodeDto;
@@ -68,6 +70,7 @@ import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPosition
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
+import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
@@ -100,6 +103,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -5976,6 +5980,192 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			dto=etrExchangeTrade001Dto;
 		}
 		return dto;
+	}
+
+	/**
+	 * 场内指令，头寸信息
+	 * @return
+	 */
+	public List<BaseMap> queryPositionInfo(EtrExchangePosiInfoRequestDto requestDto) {
+		// 卖空模式
+		String sellFlag = CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED");
+
+		// 条件非空校验
+		posiInfoCheckCondition(requestDto);
+
+		if (requestDto.getPortfolioIdList() == null || requestDto.getPortfolioIdList().size() == 0){
+			return nullData(sellFlag);
+		}
+
+		// 从原投管系统取
+		BigDecimal cashT = BigDecimal.ZERO; // 指令t日可用
+		BigDecimal realCash = BigDecimal.ZERO; // 账户现金
+		List<String> list = requestDto.getPortfolioIdList();
+		if (list != null) {
+			for (String portfolioId : list){
+				BaseMap paramMap = BaseMap.newMap()
+						.put("finprodId", requestDto.getFinprodId())
+						.put("portfolioId", portfolioId)
+						.put("ccy", DictCodeList.币种_人民币_CNY.getValue())
+						.put("vdate", requestDto.getCdate())
+						.put("calId", "03") // 银行间
+						;
+				Map<String, Object> mapRst = etrCommonService.getProAvailableCash(paramMap);
+				if (mapRst != null){ // 指令t日可用，指令t1日可用
+					cashT = ArithmeticUtil.doAdd(cashT, BaseMap.newMap(mapRst).getBigDecimal("cashT"));
+				}
+				PtlCashPositionFlowDto positionQueryDto = new PtlCashPositionFlowDto();
+				positionQueryDto.setPortfolioId(portfolioId);
+				positionQueryDto.setCcy(DictCodeList.币种_人民币_CNY.getValue());
+				positionQueryDto.setCdate(iPlatformDate.getSysDate());
+				// 实际现金（账户现金）
+				realCash = ArithmeticUtil.doAdd(realCash, basePtlCashPositionInfoService.queryUsableCashPosition(positionQueryDto));
+			}
+		}
+
+		BaseMap bm = BaseMap.newMap()
+				.put("S_001", DictCodeListExt3.资产类型_指令汇总可用持仓.getValue())
+				.put("S_003", DictCodeListExt3.资产类型_融入券卖空待购回持仓.getValue())
+				.put("S_004", DictCodeListExt3.资产类型_汇总可用现金.getValue())
+				.put("A_004", DictCodeListExt3.资产类型_债券本方券可用持仓.getValue())
+				.put("A_005", DictCodeListExt3.资产类型_债券融入券可用持仓.getValue())
+				.put("C_01", DictCodeListExt3.资产类型_现金账户持仓.getValue())
+				.put("portfolioIdList", requestDto.getPortfolioIdList())
+				.put("cdate", requestDto.getCdate())
+				.put("finprodId", requestDto.getFinprodId())
+				.put("acctId", requestDto.getAcctId());
+		// 查询头寸信息
+		Map map = etrExchangeTradeCommonMapper.queryPositionInfo(bm);
+
+		return assemble(map, cashT, realCash);
+	}
+
+	private void posiInfoCheckCondition(EtrExchangePosiInfoRequestDto requestDto) {
+		if (requestDto == null){
+			throw new RuntimeException("入参不空！");
+		}
+
+		if (StringUtil.isEmpty(requestDto.getCdate())){
+			requestDto.setCdate(iPlatformDate.getSysDateStr());
+		}
+	}
+
+	private List<BaseMap> nullData(String flag) {
+		List<BaseMap> resp = new ArrayList<>();
+
+		/*组合资金可用*/
+		resp.add(BaseMap.newMap()
+				.put("field", "porUsableCash")
+				.put("name", "组合资金可用（元）")
+				.put("type", "xj")
+				.put("amount", "--"));
+
+		/*账户资金可用*/
+		resp.add(BaseMap.newMap()
+				.put("field", "acctNoUsableCash")
+				.put("name", "账户资金可用（元）")
+				.put("type", "xj")
+				.put("amount", "--"));
+		/*账户资金可取*/
+		resp.add(BaseMap.newMap()
+				.put("field", "acctNoCanCash")
+				.put("name", "账户资金可取（元）")
+				.put("type", "xj")
+				.put("amount", "--"));
+		/*可用数量*/
+		resp.add(BaseMap.newMap()
+				.put("field", "usableAmount")
+				.put("name", "可用数量（股）")
+				.put("type", "cc")
+				.put("amount", "--"));
+		/*持仓数量*/
+		resp.add(BaseMap.newMap()
+				.put("field", "usableSec")
+				.put("name", "可用数量（股）")
+				.put("type", "cc")
+				.put("amount", "--"));
+
+
+		return resp;
+	}
+	private List<BaseMap> assemble(Map map, BigDecimal cashT, BigDecimal realCash) {
+		String porUsableCash="porUsableCash",acctNoUsableCash="acctNoUsableCash",acctNoCanCash="acctNoCanCash",usableAmount="usableAmount",usableSec="usableSec";
+		if (map == null) {
+			map = new HashMap();
+			map.put(porUsableCash, "0");
+			map.put(acctNoUsableCash, "0");
+			map.put(acctNoCanCash, "0");
+			map.put(usableAmount, "0");
+			map.put(usableSec, "0");
+		}
+		// 初始化返回集合
+		List<BaseMap> resp = new ArrayList<>();
+		BaseMap bm = BaseMap.newMap(map);
+		/**
+		 * 若老投管现金存在需累计
+		 */
+		if (cashT != null){
+			bm.put(porUsableCash, cashT);
+		}
+		if (realCash != null){
+			bm.put(acctNoUsableCash, realCash);
+		}
+		if (realCash != null){
+			bm.put(acctNoCanCash, realCash);
+		}
+
+		/*组合资金可用*/
+		resp.add(BaseMap.newMap()
+				.put("field",porUsableCash)
+				.put("name", "组合资金可用（元）")
+				.put("type", "xj")
+				.put("amount", bm.get(porUsableCash)));
+
+		/*账户资金可用*/
+		resp.add(BaseMap.newMap()
+				.put("field", acctNoUsableCash)
+				.put("name", "账户资金可用（元）")
+				.put("type", "xj")
+				.put("amount", bm.get(acctNoUsableCash)));
+		/*账户资金可取*/
+		resp.add(BaseMap.newMap()
+				.put("field",acctNoCanCash)
+				.put("name", "账户资金可取（元）")
+				.put("type", "xj")
+				.put("amount", bm.get(acctNoUsableCash)));
+		/*可用数量*/
+		resp.add(BaseMap.newMap()
+				.put("field", "usableSec")
+				.put("name", "可用数量（股）")
+				.put("type", "cc")
+				.put("amount",bm.get(usableSec)));
+		/*持仓数量*/
+		resp.add(BaseMap.newMap()
+				.put("field", "usableSec")
+				.put("name", "可用数量（股）")
+				.put("type", "cc")
+				.put("amount", bm.get(usableSec)));
+
+		return resp;
+	}
+	private String addToStr(BigDecimal a, BigDecimal b){
+		if (a == null && b== null){
+			return "--";
+		}
+		return decimalToStr(ArithmeticUtil.doAdd(a,b),"0.00");
+	}
+	/**
+	 * 返回前端格式保留小数位
+	 * @param b
+	 * @param pattern
+	 * @return
+	 */
+	private String decimalToStr(BigDecimal b, String pattern){
+		if (b == null){
+			return "--";
+		}
+		DecimalFormat df1 = new DecimalFormat(pattern);
+		return df1.format(b);
 	}
 
 

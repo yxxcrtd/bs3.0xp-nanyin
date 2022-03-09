@@ -29,6 +29,7 @@ import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
 import com.joyintech.tams.component.business.common.dto.FinStockInfoDto;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dto.EtrExchangePosiInfoRequestDto;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
@@ -898,7 +899,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	@ApiOperation(value = "保存提交check", notes = "保存提交check")
 	@PostMapping("checkSaveError")
 	@ResponseBody
-	public Message<AjaxResult> checkSaveError(@RequestBody @Validated({ ValidateGroupEdit.class }) EtrExchangeTradeSaveRequest dto, BindingResult br)
+	public Message<AjaxResult> checkSaveError(@RequestBody  EtrExchangeTradeSaveRequest dto, BindingResult br)
 			throws Exception {
 		if (br.hasErrors()) {
 			int i=0;
@@ -1615,6 +1616,12 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 			return new Message<FinProductQuto>().fail().setData(null);
 		}
 	}
-
+	@ApiOperation(value = "头寸信息查询", notes = "头寸信息查询")
+	@PostMapping("/queryPositionInfo")
+	@ResponseBody
+	public Message<List<BaseMap>> queryPositionInfo(@RequestBody EtrExchangePosiInfoRequestDto requestDto) {
+		List<BaseMap> m = etrExchangeTrade001CommonService.queryPositionInfo(requestDto);
+		return new Message<List<BaseMap>>().success().setData(m);
+	}
 }
 	

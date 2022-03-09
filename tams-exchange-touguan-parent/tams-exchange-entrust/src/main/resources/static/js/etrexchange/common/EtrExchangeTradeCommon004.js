@@ -843,9 +843,9 @@
         }
         // 证券代码选择后联动【行情信息】
         if(currentTab == 'jj') {
-            if(parent.EtrExchangeTradeJjHq){
-                parent.EtrExchangeTradeJjHq.showFiveLevel();
-            }
+            // if(parent.EtrExchangeTradeJjHq){
+            //     parent.EtrExchangeTradeJjHq.showFiveLevel();
+            // }
             if(secId) {
                 var object = $("#secIdObjRelative_" + currentTab).val();
                 if(object) {
@@ -853,18 +853,18 @@
                     type9 = object.assetType1;
                     if(object.othCodeType && (object.othCodeType == FINPROD_OTH_CODE_TYPE_06 || object.othCodeType == FINPROD_OTH_CODE_TYPE_05)){
                         secId = object.marketId;
-                        if(parent.EtrExchangeTradeJjHq) {
-                            parent.EtrExchangeTradeJjHq.hideFiveLevel();
-                        }
+                        // if(parent.EtrExchangeTradeJjHq) {
+                        //     parent.EtrExchangeTradeJjHq.hideFiveLevel();
+                        // }
                     }
                     if(secId) {
-                        if(parent.EtrExchangeTradeJjHq) {
-                            if (useInterfQuoteFlag) {
-                                parent.EtrExchangeTradeJjHq.queryJJHQXXByWS(secId, object.finprodName, object.finprodType2);
-                            } else {
-                                parent.EtrExchangeTradeJjHq.queryJJHQXX(secId, object.finprodName, object.finprodType2);
-                            }
-                        }
+                        // if(parent.EtrExchangeTradeJjHq) {
+                        //     if (useInterfQuoteFlag) {
+                        //         parent.EtrExchangeTradeJjHq.queryJJHQXXByWS(secId, object.finprodName, object.finprodType2);
+                        //     } else {
+                        //         parent.EtrExchangeTradeJjHq.queryJJHQXX(secId, object.finprodName, object.finprodType2);
+                        //     }
+                        // }
                         /*if(ps == PS_T68 || ps == PS_T69){
                         	linkToConverseRatio();
                         }else if(ps == PS_T03){
@@ -875,9 +875,9 @@
                         	linkToBondSubscribe();
                         }   */
                     }else {
-                        if(parent.EtrExchangeTradeJjHq) {
-                            parent.EtrExchangeTradeJjHq.updateLevel2();
-                        }
+                        // if(parent.EtrExchangeTradeJjHq) {
+                        //     parent.EtrExchangeTradeJjHq.updateLevel2();
+                        // }
                     }
                 }
             }
@@ -1278,6 +1278,7 @@
      */
     var getSecIdSelectObjectData = function(secId) {
         var tradePlat = SHARES_TRADE_PLATFORM_02;
+        var entrustBussType=$("#entrustBussType_" + currentTab).val();
         var tradePlat_05 = null;
         if(currentTab == 'dz') {
             tradePlat = SHARES_TRADE_PLATFORM_04;
@@ -1286,12 +1287,14 @@
             tradePlat = SHARES_TRADE_PLATFORM_03;
         }
         var result = {};
-        var param = {secId:secId, tradePlat:tradePlat,tradePlat_05:tradePlat_05};
-        Joyin.ajaxSync(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeTrade001/getFinprodMarketInfo', param, function(page) {
+        var param = {secId:secId, entrustBussType:entrustBussType,tradePlat:"tradePlat",tradePlat_05:tradePlat_05};
+        Joyin.ajaxSync(basePath + 'etrexchange/common/EtrExchangeTradeCommon004/getFinprodMarketInfo', param, function(page) {
             if(page && page.root && page.root.length > 0) {
                 result = page.root[0].object || {};
+
             }
         });
+
         return result;
     };
     /**

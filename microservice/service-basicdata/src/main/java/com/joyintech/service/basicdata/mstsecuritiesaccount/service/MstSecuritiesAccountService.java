@@ -394,6 +394,15 @@ public class MstSecuritiesAccountService extends BaseService<MstSecuritiesAccoun
             map.put("tradePlat", DictCodeList.交易平台_竞价撮合平台.getValue());
             map.remove("SHARES_TRADE_PLATFORM_02");
         }
+        String entrustBussType=StringUtil.isNotEmpty(map.get("entrustBussType"))?map.get("entrustBussType").toString():"";
+        if(StringUtil.isNotEmpty(entrustBussType)&&
+                (DictCodeListExt3.上农商_指令业务类型_债券回售指令.getValue().equals(entrustBussType)
+                || DictCodeListExt3.上农商_指令业务类型_配债指令.getValue().equals(entrustBussType)
+                || DictCodeListExt3.上农商_指令业务类型_可转债申购指令.getValue().equals(entrustBussType)
+                || DictCodeListExt3.上农商_指令业务类型_标准券出入库指令.getValue().equals(entrustBussType)
+                || DictCodeListExt3.上农商_指令业务类型_债转股指令.getValue().equals(entrustBussType))){
+            map.put("tradePlat", "");
+        }
         Map pageMode = (Map) map.get("pageMode");
         if(pageMode != null) { // 设置导出条数
             if(pageMode.get("pageNo")!=null){
