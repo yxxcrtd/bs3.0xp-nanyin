@@ -1647,10 +1647,10 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             BaseMap paramMap = BaseMap.newMap()
                     .put("finprodId", cfetsDto.getFinprodId())
                     .put("portfolioId", item.getPortfolioId())
-                    .put("ccy", fp.getCcy())
-                    .put("vdate", cfetsDto.getEtrDate())
-                    .put("calId", "03") // 银行间
-                    ;
+                    .put("ccy", fp != null ? fp.getCcy() : null)
+                    .put("vdate", DateUtil.format(cfetsDto.getEtrDate()))
+                    .put("calId", "03"); // 银行间
+
             Map<String, Object> mapRst = etrCommonService.getProAvailableCash(paramMap);
             if (mapRst != null){ // 指令t日可用，指令t1日可用
                 cashT = ArithmeticUtil.doAdd(cashT, BaseMap.newMap(mapRst).getBigDecimal("cashT"));

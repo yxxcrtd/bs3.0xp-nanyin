@@ -426,10 +426,14 @@
         var restEntrustIntegrateNum = query("#entrustIntegrateNum").val() == null ? 0 : query("#entrustIntegrateNum").val();
         query("#entrustIntegrateNum").val(JoyinMath.doDiv(restEntrustIntegrateNum, 10000, 2)).trigger("change");
         businessId = query('#businessId').val();
-        query("#matureYieldShow").val(JoyinMath.doMul(query("#matureYieldShow").val(),100,4));
-        query("#exerYieldShow").val(JoyinMath.doMul(query("#exerYieldShow").val(),100,4));
-        query("#matureYield").val(query("#matureYield").val() * 100);
-        query("#exerYield").val(query("#exerYield").val() * 100);
+       /* if(query("#matureYield").val()) {
+            query("#matureYieldShow").val(JoyinMath.doMul(query("#matureYieldShow").val(), 100, 4));
+            query("#matureYield").val(query("#matureYield").val() * 100);
+        }
+        if(query("#exerYield").val()) {
+            query("#exerYieldShow").val(JoyinMath.doMul(query("#exerYieldShow").val(),100,4));
+            query("#exerYield").val(query("#exerYield").val() * 100);
+        }*/
 
         var riskLists = entity_RiskTrialRetList || [];
         if (riskLists.length > 0) {
@@ -464,11 +468,21 @@
         object.etrDate = $("#etrDate").val();
         object.price = $("#price").val();
         object.unitFprice = $("#unitFprice").val();
-        if (query('#exerYield').val()) {
-            object.exerYield = query('#exerYield').val() / 100;
+        if (query('#exerYield').val() || query('#exerYieldShow').val()) {
+            if(query('#exerYieldShow').val()) {
+                object.exerYield = query('#exerYieldShow').val() / 100;
+            }
+            if(query('#exerYield').val() && Number(query('#exerYield').val())) {
+                object.exerYield = query('#exerYield').val() / 100;
+            }
         }
-        if (query('#matureYield').val()) {
-            object.matureYield = query('#matureYield').val() / 100;
+        if (query('#matureYield').val() || query('#matureYieldShow').val()) {
+            if(query('#matureYieldShow').val()) {
+                object.matureYield = query('#matureYieldShow').val() / 100;
+            }
+            if(query('#matureYield').val() && Number(query('#matureYield').val())) {
+                object.matureYield = query('#matureYield').val() / 100;
+            }
         }
         object.entrustNum = query("#tradeAmt").val() * 10000;
         /*if (object.bussCombDistribtList != null) {
@@ -575,12 +589,23 @@
         object.mdate = object.etrDate;
         object.entrustDate = object.vdate > object.finvdate.split(' ')[0] ? object.vdate : object.finvdate.split(' ')[0];
         //提交获取计算方式单选框的值
+        debugger;
         object.calculateField = query("input[name=calculateField]:checked").val();
-        if (query('#exerYield').val()) {
-            object.exerYield = query('#exerYield').val() / 100;
+        if (query('#exerYield').val() || query('#exerYieldShow').val()) {
+            if(query('#exerYieldShow').val()) {
+                object.exerYield = query('#exerYieldShow').val() / 100;
+            }
+            if(query('#exerYield').val() && Number(query('#exerYield').val())) {
+                object.exerYield = query('#exerYield').val() / 100;
+            }
         }
-        if (query('#matureYield').val()) {
-            object.matureYield = query('#matureYield').val() / 100;
+        if (query('#matureYield').val() || query('#matureYieldShow').val()) {
+            if(query('#matureYieldShow').val()) {
+                object.matureYield = query('#matureYieldShow').val() / 100;
+            }
+            if(query('#matureYield').val() && Number(query('#matureYield').val())) {
+                object.matureYield = query('#matureYield').val() / 100;
+            }
         }
         if (query('#tradeAmt').val()) {
             object.tradeAmt = query('#tradeAmt').val() * 10000;
@@ -630,9 +655,9 @@
         }
         param = JSON.parse(JSON.stringify(object));
         // param.entrustNum = object.tradeAmt;
-        param.finprodId = finprodId;
+        //param.finprodId = finprodId;
         param.finprodAbbr = query("#finprodAbbr").val();
-        param.tradeMarket = tradeMarket;
+       //param.tradeMarket = tradeMarket;
         param.invManagerId = query('#invManagerId').val();
         param.ps = query("#ps").val();
         param.ccy = query('#ccy').val();
@@ -644,6 +669,7 @@
         param.elementId = 'CfetsEtrIbBondinfo003_btn_submit';
         res.param = param;
         res.objects = objects;
+        console.log(res);
         return res;
     }
 
@@ -762,7 +788,34 @@
     $('#CfetsEtrIbBondinfo003_btn_riskcal').click(function () {
         var object = $.serializeToObject('#searchForm');
         var param = JSON.parse(JSON.stringify(object));
-        Joyin.ajaxJson(basePath + 'cfets/etrib/cfetsEtrIbBondinfo/doRiskcal', param, function (data) {
+        $.ajax({
+            type: "POST",
+            url: basePath + 'cfets/etrib/cfetsEtrIbBondinfo/doRiskcal',
+            dataType: "json",
+            contentType: "application/json",
+            async: false,
+            data: JSON.stringify(param),
+            success: function (result) {
+                if(result.code === '000') {
+                    var data = result.data.data;
+                    if(data.riskTrialSpan) {
+                        $("#riskTrialSpan").html("&nbsp;&nbsp;" + data.riskTrialSpan);
+                    }
+                    entity_RiskTrialRetList = data.riskcalReturnList;
+                    if(entity_RiskTrialRetList) {
+                        $.each(entity_RiskTrialRetList, function (index, item) {
+                            item.conclusion = data.riskTrialSpan;
+                        })
+                    }
+                    tableRisk.clear();
+                    tableRisk.addRow(entity_RiskTrialRetList);
+                    setRiskFlag(0);
+                }else if(result.message){
+                    Joyin.error(result.message);
+                }
+            }
+        });
+        /*Joyin.ajaxJson(basePath + 'cfets/etrib/cfetsEtrIbBondinfo/doRiskcal', param, function (data) {
             if(data.data.data.riskTrialSpan) {
                 $("#riskTrialSpan").html("&nbsp;&nbsp;" + data.data.data.riskTrialSpan);
             }
@@ -775,7 +828,7 @@
             tableRisk.clear();
             tableRisk.addRow(entity_RiskTrialRetList);
             setRiskFlag(0);
-        });
+        },false);*/
     });
 
     query("#finprodName").change(function () {
@@ -817,7 +870,7 @@
         }
 
     })
-    query("#tradeAmt").blur(function () {
+    query("#tradeAmt").change(function () {
         var tradeAmt = query("#tradeAmt").val();
         if(tradeAmt && Number(tradeAmt) <= 0) {
             Joyin.error("券面总额必须大于0");
@@ -831,7 +884,7 @@
             setRiskFlag(1);
         }
     })
-    query("#entrustIntegrateNum").blur(function () {
+    query("#entrustIntegrateNum").change(function () {
         var tradeAmt = query("#tradeAmt").val();
         var entrustIntegrateNum = query("#entrustIntegrateNum").val();
         if (tradeAmt && entrustIntegrateNum) {
@@ -860,21 +913,22 @@
         setRiskFlag(1);
     })
 
-    query('#matureYieldShow').blur(function () {
+    query('#matureYieldShow').change(function () {
+        debugger;
         if(query('#matureYieldShow').val()) {
             setRiskFlag(1);
             query('#matureYield').val(query('#matureYieldShow').val());
             calData('matureYield');
         }
     })
-    query('#exerYieldShow').blur(function () {
+    query('#exerYieldShow').change(function () {
         if(query('#exerYieldShow').val()) {
             setRiskFlag(1);
             query('#exerYield').val(query('#exerYieldShow').val());
             calData('exerYield');
         }
     })
-    query('#priceShow').blur(function () {
+    query('#priceShow').change(function () {
         setRiskFlag(1);
         query('#price').val(query('#priceShow').val());
         if (ps != 'T03') {

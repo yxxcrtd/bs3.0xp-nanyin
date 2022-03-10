@@ -81,7 +81,7 @@
             INNER JOIN
                 SETTLE_TRANS_DATA std ON detail.TRADE_ID = std.TRADE_ID
             GROUP BY
-                detail.SEQ_NO
+                detail.SEQ_NO,
                 std.FINPROD_TYPE2
             )settle ON ssr.SEQ_NO = settle.SEQ_NO
         LEFT JOIN

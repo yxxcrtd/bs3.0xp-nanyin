@@ -3,7 +3,7 @@
 <mapper namespace="com.joyintech.service.bankuplink.common.dao.CfetsQuotedCommonMapper">
 
 	<select id="queryMySideTraderList" resultType="com.joyintech.framework.select.SelectOptionDto">
-		SELECT MST_CFETS_CUSTOMER_TRADER.TRADER_ID   id,
+		SELECT distinct MST_CFETS_CUSTOMER_TRADER.TRADER_ID   id,
        MST_CFETS_CUSTOMER_TRADER.TRADER_NAME text,
        MST_CFETS_CUSTOMER_TRADER.MPARTY_ID   parentId
   FROM (SELECT MST_CFETS_CUSTOMER_TRADER.TRADER_ID,
