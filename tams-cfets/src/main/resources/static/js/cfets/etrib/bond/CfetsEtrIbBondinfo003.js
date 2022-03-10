@@ -327,6 +327,12 @@
                 data.entrustOwnNum = value;
                 table.renderRow(data.LAY_TABLE_INDEX, data);
             }
+            if(field == 'entrustIntegrateNum') {
+                if(value) {
+                    data.entrustOwnNum = JoyinMath.doMinus(data.entrustNum,value,2);
+                    table.renderRow(data.LAY_TABLE_INDEX, data);
+                }
+            }
         }
     });
     var colsRiskTrialRet = [
@@ -675,7 +681,7 @@
             Joyin.error("有*必填项未填写,请填写完整")
             return false;
         }
-        if (!query("#priceShow") || !query("#matureYieldShow") || !query("#exerYieldShow")) {
+        if (ps !=='T03' && (!query("#priceShow") || !query("#matureYieldShow") || !query("#settleSpeed") || !query("#exerYieldShow"))) {
             Joyin.error("有*必填项未填写,请填写完整")
             return false;
         }
@@ -684,11 +690,11 @@
             Joyin.error("净价不能为空")
             return false;
         }
-        if(calculateField && calculateField === 'matureYield' && !query("#matureYieldShow").val()) {
+        if(ps !=='T03' && (calculateField && calculateField === 'matureYield' && !query("#matureYieldShow").val())) {
             Joyin.error("到期收益率不能为空")
             return false;
         }
-        if(calculateField && calculateField === 'exerYield' && !query("#exerYieldShow").val()) {
+        if(ps !=='T03' && (calculateField && calculateField === 'exerYield' && !query("#exerYieldShow").val())) {
             Joyin.error("行权收益率不能为空")
             return false;
         }
@@ -784,7 +790,12 @@
     $('#CfetsEtrIbBondinfo003_btn_riskcal').click(function () {
         var object = $.serializeToObject('#searchForm');
         var param = JSON.parse(JSON.stringify(object));
-        if(!param.tradeAmt || !param.settleSpeed || !param.matureYield || !param.priceModel || !param.finprodName) {
+
+        if(!param.tradeAmt  || !param.priceModel || !param.finprodName) {
+            Joyin.error("请填写完整在进行风险试算");
+            return;
+        }
+        if((!param.settleSpeed || !param.matureYield) && ps !=='T03') {
             Joyin.error("请填写完整在进行风险试算");
             return;
         }
@@ -852,6 +863,14 @@
                 layui.form.render('radio');
             }
             setRiskFlag(1);
+            if (ps == 'T03') {//这里需要增加获取逻辑
+                Joyin.ajax(basePath + 'cfets/etrib/cfetsEtrIbBondinfo/queryCfetsBussCombDisList/'+data.object.finprodId,{},function (result) {
+                    console.log(result);
+                    if(result.data && result.data[0].entrustNum) {
+                        query("#tradeAmt").val(JoyinMath.doDiv(result.data[0].entrustNum,1,2));
+                    }
+                },false)
+            }
         }
         calAmountData();
         if (ps == 'T02' || ps == 'T03') {
@@ -869,6 +888,7 @@
                 table.renderRow(item.LAY_TABLE_INDEX, item);
             })
         }
+
 
     })
     query("#tradeAmt").change(function () {
