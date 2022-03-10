@@ -548,7 +548,7 @@ public class PositionRequestServiceInstructionRequest {
         resultMap.put("modelType", DictCodeListExt1.子系统代码_交易.getValue());
 
         //设置头寸业务类型
-        String busiType = commonPositionEngineService.getPositionBusiType(entity.getFinprodType2(), entity.getPs(), entity.getAssetType());
+        String busiType = commonPositionEngineService.getPositionBusiType(entity.getFinprodType2(), entity.getPs(), entity.getAssetType1());
         resultMap.put(BUSI_TYPE, busiType);
 
         resultMap.put(DELIVERY_TYPE, null);
