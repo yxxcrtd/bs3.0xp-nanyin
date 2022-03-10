@@ -3,6 +3,7 @@ package com.joyintech.tams.exchange.entrust.etrexchange.position.bean;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePortfolioRequest;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * @author swwan
@@ -63,7 +64,12 @@ public class PositionRequestBaseBean {
         this.tradeId = null;
         this.etrId = request.getEntrustId();
         this.secAmount = request.getEntrustNum();
-        this.cashAmount = request.getEntrustAmt();
+        BigDecimal entrustAmt = request.getEntrustAmt();
+        if (Objects.isNull(entrustAmt) || BigDecimal.ZERO.compareTo(entrustAmt) != -1) {
+            this.cashAmount = this.secAmount.multiply(request.getEntrustPrice());
+        } else {
+            this.cashAmount = entrustAmt;
+        }
     }
 
     public String getPortfolioId() {
