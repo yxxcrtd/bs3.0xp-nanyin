@@ -5,12 +5,12 @@ import com.google.common.collect.Lists;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.exchange.common.bean.OrderPlaceBean;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
-import com.joyintech.tams.exchange.common.constant.joyin.BussinessDictCodeList;
 import com.joyintech.tams.exchange.common.constant.joyin.DictCodeList;
 import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt1;
 import com.joyintech.tams.exchange.common.db.domain.Instruction;
@@ -23,13 +23,14 @@ import com.joyintech.tams.exchange.service.trade.position.bean.PositionRequestBa
 import com.joyintech.tams.invest.common.position.service.CommonPositionEngineService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.*;
 
-import static com.joyintech.tams.constant.DictCodeList.交易平台_竞价撮合平台;
 import static com.joyintech.tams.constant.DictCodeList.是否_否;
 import static com.joyintech.tams.constant.DictCodeListExt3.*;
 import static com.joyintech.tams.exchange.common.constant.joyin.DictCodeList.交易方向_申购;
@@ -38,6 +39,10 @@ import static com.joyintech.tams.invest.common.position.constant.PositionCommonC
 @Service
 public class PositionRequestServiceInstructionRequest {
 
+    /**
+     * 日志对象
+     */
+    private static final Logger log = LoggerFactory.getLogger(PositionRequestServiceInstructionRequest.class);
     @Autowired
     private CommonPositionEngineService commonPositionEngineService;
     @Autowired
@@ -49,6 +54,7 @@ public class PositionRequestServiceInstructionRequest {
      * Instruction 请求对象使用
      */
     public void sendRequest(PositionInstructionRequest entity, String busiAct, String decisionAct, String systemAct) {
+        log.info("sendRequest() called with parameters => 【entity = {}】, 【busiAct = {}】, 【decisionAct = {}】, 【systemAct = {}】", JsonUtils.object2Json(entity), busiAct, decisionAct, systemAct);
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put(BUSI_ACT, busiAct);
         resultMap.put("decisionAct", decisionAct);
@@ -258,8 +264,7 @@ public class PositionRequestServiceInstructionRequest {
         resultMap.put(SETTLE_SPEED, null);
         resultMap.put(SHARES_TRADE_PLATFORM, null);
         resultMap.put(DELIVERY_TYPE, null);
-        // TODO 汇总交易编号 uuid和header一样?
-        resultMap.put(TOTAL_TRADE_ID, null);
+        resultMap.put(TOTAL_TRADE_ID, entity.getEntrustId());
 
         // 调用组合计算接口，获取分配信息
         List<PortfolioCalculateResponse> calculates = getCalculateList(entity);
@@ -510,14 +515,7 @@ public class PositionRequestServiceInstructionRequest {
      * @return 清算速度
      */
     private String parseSettleSpreed(Map<String, Object> resultMap) {
-        String deliveryType = (String) resultMap.get(DELIVERY_TYPE);
-        String settleSpreed = BussinessDictCodeList.清算速度_T加1.getValue();
-        if (DictCodeListExt3.结算方式_头寸引擎_净额结算.getValue().equals(deliveryType)) {
-            settleSpreed = BussinessDictCodeList.清算速度_T加1.getValue();
-        } else if ((DictCodeListExt3.结算方式_头寸引擎_RTGS.getValue()).equals(deliveryType)) {
-            settleSpreed = BussinessDictCodeList.清算速度_T加0.getValue();
-        }
-        return settleSpreed;
+        return commonPositionEngineService.parseSettleSpreed((String) resultMap.get(DELIVERY_TYPE));
     }
 
     /**
@@ -548,7 +546,7 @@ public class PositionRequestServiceInstructionRequest {
         resultMap.put("modelType", DictCodeListExt1.子系统代码_交易.getValue());
 
         //设置头寸业务类型
-        String busiType = commonPositionEngineService.getPositionBusiType(entity.getFinprodType2(), entity.getPs(), entity.getAssetType());
+        String busiType = commonPositionEngineService.getPositionBusiType(entity.getFinprodType2(), entity.getPs(), entity.getAssetType1());
         resultMap.put(BUSI_TYPE, busiType);
 
         resultMap.put(DELIVERY_TYPE, null);
@@ -556,12 +554,8 @@ public class PositionRequestServiceInstructionRequest {
         resultMap.put(PS, entity.getPs());
         // 交易场所	见数据字典：交易场所
         resultMap.put(TRADE_PLACE, entity.getTradeMarket());
-        // 交易平台	见数据字典：交易平台
-        if (StringUtils.isEmpty(entity.getTradePlat())) {
-            resultMap.put(SHARES_TRADE_PLATFORM, 交易平台_竞价撮合平台);
-        } else {
-            resultMap.put(SHARES_TRADE_PLATFORM, entity.getTradePlat());
-        }
+        // 交易平台
+        resultMap.put(SHARES_TRADE_PLATFORM, commonPositionEngineService.getSharesTradePlatform(entity.getTradePlat(), entity.getPs(), entity.getDealMode()));
         // 流程编号	指令的工作流ID
         resultMap.put(WORK_FLOW_ID, null);
         // 日期
@@ -616,19 +610,5 @@ public class PositionRequestServiceInstructionRequest {
             secAmount = entrustNum.multiply(BigDecimal.valueOf(1000L));
         }
         return secAmount;
-    }
-
-    /**
-     * 设置交易平台参数
-     *
-     * @param entity    指令信息
-     * @param resultMap 参数集合
-     */
-    private void handleSharesTradePlatform(Instruction entity, Map<String, Object> resultMap) {
-        // IF（下单.交易平台 = 大宗交易平台 or 综合协议平台） and 交易方向 = 买入、卖出  and 交易类型 = 意向申报、定价申报、点击成交申报、成交申报、盘后定向申报
-        //  THEN 数据字典.交易系统.大宗交易
-        // else 数据字典.交易系统.竞价交易 end if
-
-        resultMap.put(SHARES_TRADE_PLATFORM, null);
     }
 }

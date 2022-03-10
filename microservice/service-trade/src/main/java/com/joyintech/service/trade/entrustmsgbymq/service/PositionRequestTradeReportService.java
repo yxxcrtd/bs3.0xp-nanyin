@@ -2,6 +2,8 @@ package com.joyintech.service.trade.entrustmsgbymq.service;
 
 import com.alibaba.fastjson.JSON;
 import com.joyintech.framework.JoyinRestTemplate;
+import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.trade.entrustmsgbymq.dto.TrdMoreConvrate;
 import com.joyintech.service.trade.entrustmsgbymq.dto.TrdTempDto;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
@@ -10,6 +12,7 @@ import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -62,6 +65,7 @@ public class PositionRequestTradeReportService {
     public void sendTradeReportPositionRequest(TrdTempDto trdTempDto) {
         logger.debug("【发送成交回报头寸请求】trdTempDto: {}", JSON.toJSONString(trdTempDto));
         Map<String, Object> resultMap = new HashMap<>();
+        setCommonField(trdTempDto, resultMap);
         String finprodType = trdTempDto.getFinprodType2();
         String ps = trdTempDto.getPs();
         String type6 = commonPositionEngineService.getType6(trdTempDto.getFinprodId());
@@ -447,5 +451,19 @@ public class PositionRequestTradeReportService {
         }else {
             return DictCodeList.交易平台_竞价撮合平台.getValue();
         }
+    }
+
+    /**
+     * 设置公共字段
+     *
+     * @param entity    实例对象
+     * @param resultMap 封装集合
+     */
+    private void setCommonField(TrdTempDto entity, Map<String, Object> resultMap) {
+        resultMap.put("userId", SecurityUtil.getLoginUser().getUserName());
+        resultMap.put("totalTradeId", entity.getTradeId());
+        resultMap.put("balanceCheck", "Y");
+        resultMap.put("flowStatus", DictCodeListExt3.流程节点_审批生效.getValue());
+        resultMap.put("modelType", DictCodeListExt1.子系统代码_交易.getValue());
     }
 }

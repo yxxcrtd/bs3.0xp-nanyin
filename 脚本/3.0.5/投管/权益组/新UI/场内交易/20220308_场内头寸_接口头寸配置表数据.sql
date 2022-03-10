@@ -304,56 +304,56 @@ VALUES ('ETR_PAGE', 'F01', 'T69', 'modify', 'ETR',
 INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE,
                                                            ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME,
                                                            UPDATE_USER, UPDATE_TIME, REMARK, ENABLE)
-VALUES ('TRD_PAGE', 'F07-H02', '03', '16', 'TRD',
+VALUES ('TRD_PAGE', 'F02', '03', '16', 'TRD',
         'com.joyintech.tams.exchange.common.request.PositionInstructionRequest', 'REPO003', 'system',
         null, sysdate, 'system', sysdate, '新建场内通用回购正回购报单', 'Y');
 
 INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE,
                                                            ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME,
                                                            UPDATE_USER, UPDATE_TIME, REMARK, ENABLE)
-VALUES ('TRD_PAGE', 'F07-H02', '04', '16', 'TRD',
+VALUES ('TRD_PAGE', 'F03', '04', '16', 'TRD',
         'com.joyintech.tams.exchange.common.request.PositionInstructionRequest', 'REPO003', 'system',
         null, sysdate, 'system', sysdate, '新建场内通用回购逆回购报单', 'Y');
 
 INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE,
                                                            ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME,
                                                            UPDATE_USER, UPDATE_TIME, REMARK, ENABLE)
-VALUES ('TRD_PAGE', 'F07-H02', 'T68', '16', 'TRD',
+VALUES ('TRD_PAGE', 'F01', 'T68', '16', 'TRD',
         'com.joyintech.tams.exchange.common.request.PositionInstructionRequest', 'REPO003', 'system',
         null, sysdate, 'system', sysdate, '新建场内通用回购入库报单', 'Y');
 
 INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE,
                                                            ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME,
                                                            UPDATE_USER, UPDATE_TIME, REMARK, ENABLE)
-VALUES ('TRD_PAGE', 'F07-H02', 'T69', '16', 'TRD',
+VALUES ('TRD_PAGE', 'F01', 'T69', '16', 'TRD',
         'com.joyintech.tams.exchange.common.request.PositionInstructionRequest', 'REPO003', 'system',
         null, sysdate, 'system', sysdate, '新建场内通用回购出库报单', 'Y');
 
 INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE,
                                                            ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME,
                                                            UPDATE_USER, UPDATE_TIME, REMARK, ENABLE)
-VALUES ('TRD_PAGE', 'F07-H02', '03', '18', 'TRD',
+VALUES ('TRD_PAGE', 'F02', '03', '18', 'TRD',
         'com.joyintech.tams.exchange.common.request.PositionInstructionRequest', 'REPO003', 'system',
         null, sysdate, 'system', sysdate, '撤销场内通用回购正回购报单', 'Y');
 
 INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE,
                                                            ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME,
                                                            UPDATE_USER, UPDATE_TIME, REMARK, ENABLE)
-VALUES ('TRD_PAGE', 'F07-H02', '04', '18', 'TRD',
+VALUES ('TRD_PAGE', 'F03', '04', '18', 'TRD',
         'com.joyintech.tams.exchange.common.request.PositionInstructionRequest', 'REPO003', 'system',
         null, sysdate, 'system', sysdate, '撤销场内通用回购逆回购报单', 'Y');
 
 INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE,
                                                            ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME,
                                                            UPDATE_USER, UPDATE_TIME, REMARK, ENABLE)
-VALUES ('TRD_PAGE', 'F07-H02', 'T68', '18', 'TRD',
+VALUES ('TRD_PAGE', 'F01', 'T68', '18', 'TRD',
         'com.joyintech.tams.exchange.common.request.PositionInstructionRequest', 'REPO003', 'system',
         null, sysdate, 'system', sysdate, '撤销场内通用回购入库报单', 'Y');
 
 INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE,
                                                            ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME,
                                                            UPDATE_USER, UPDATE_TIME, REMARK, ENABLE)
-VALUES ('TRD_PAGE', 'F07-H02', 'T69', '18', 'TRD',
+VALUES ('TRD_PAGE', 'F01', 'T69', '18', 'TRD',
         'com.joyintech.tams.exchange.common.request.PositionInstructionRequest', 'REPO003', 'system',
         null, sysdate, 'system', sysdate, '撤销场内竞价回购出库报单', 'Y');
 

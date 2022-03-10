@@ -30,8 +30,8 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.*;
 
-import static com.joyintech.tams.constant.DictCodeList.交易方向_申购;
 import static com.joyintech.tams.constant.DictCodeList.是否_否;
+import static com.joyintech.tams.constant.DictCodeList.*;
 import static com.joyintech.tams.constant.DictCodeListExt2.交易方向_配股;
 import static com.joyintech.tams.constant.DictCodeListExt2.申购方式_网上申购;
 import static com.joyintech.tams.constant.DictCodeListExt3.*;
@@ -448,8 +448,8 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
         resultMap.put(PS, entity.getPs());
         // 交易场所	见数据字典：交易场所
         resultMap.put(TRADE_PLACE, entity.getTradeMarket());
-        // 交易平台	见数据字典：交易平台
-        resultMap.put(SHARES_TRADE_PLATFORM, entity.getTradePlat());
+        // 交易平台
+        resultMap.put(SHARES_TRADE_PLATFORM, commonPositionEngineService.getSharesTradePlatform(entity.getTradePlat(), entity.getPs(), entity.getDeclaType()));
         // 流程编号	指令的工作流ID
         resultMap.put(WORK_FLOW_ID, entity.getWorkflowId());
         // 日期
