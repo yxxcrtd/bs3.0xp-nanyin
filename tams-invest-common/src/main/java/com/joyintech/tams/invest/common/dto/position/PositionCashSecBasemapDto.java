@@ -1,4 +1,4 @@
-package com.joyintech.tams.business.common.dto;
+package com.joyintech.tams.invest.common.dto.position;
 
 import com.joyintech.tams.business.common.pojo.BaseMap;
 

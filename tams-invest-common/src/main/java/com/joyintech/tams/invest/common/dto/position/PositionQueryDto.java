@@ -1,14 +1,11 @@
-package com.joyintech.tams.business.common.dto;
-
-import java.math.BigDecimal;
-import java.util.Date;
+package com.joyintech.tams.invest.common.dto.position;
 
 /**
  * 组合数据集
  */
-public class PositionQueryAmountDto {
+public class PositionQueryDto {
 
-    private String portfolioId; // 组合代码
+    private String systemAct; // 组合代码
 
     private String acctId ; // 资金账号
 
@@ -19,20 +16,24 @@ public class PositionQueryAmountDto {
     private String finprodId ; // 查询资产时必传
 
     private String dateType; // 处理速度
+
+    private String positionType;
     
     private String flowType; // etr 指令 trd 交易
 
     private String ps; //查询资金时必传
+    /**
+     * 币种
+     */
+    private String ccy;
 
-    private BigDecimal amount; //金额
 
-
-    public String getPortfolioId() {
-        return portfolioId;
+    public String getSystemAct() {
+        return systemAct;
     }
 
-    public void setPortfolioId(String portfolioId) {
-        this.portfolioId = portfolioId;
+    public void setSystemAct(String systemAct) {
+        this.systemAct = systemAct;
     }
 
     public String getAcctId() {
@@ -91,11 +92,19 @@ public class PositionQueryAmountDto {
         this.ps = ps;
     }
 
-    public BigDecimal getAmount() {
-        return amount;
+    public String getCcy() {
+        return ccy;
     }
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
+    public void setCcy(String ccy) {
+        this.ccy = ccy;
+    }
+
+    public String getPositionType() {
+        return positionType;
+    }
+
+    public void setPositionType(String positionType) {
+        this.positionType = positionType;
     }
 }

@@ -1,7 +1,4 @@
-package com.joyintech.tams.business.common.dto;
-
-import java.math.BigDecimal;
-import java.util.Date;
+package com.joyintech.tams.invest.common.dto.position;
 
 /**
  * 组合数据集
