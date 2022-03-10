@@ -125,6 +125,7 @@
             width: 100,
             title: '业务模式',
             sortable: true,
+            edit: true,
             editOption: {
                 type: 'select',
                 id: "businessModel",
@@ -138,6 +139,7 @@
             width: 100,
             title: '价格模式',
             sortable: false,
+            edit: true,
             editOption: {
                 type: 'select',
                 id: "priceModel",
@@ -176,31 +178,7 @@
             addbtn: false,
             checkbox: false,
             height: 200,
-            cols: colsReg,
-            editCell: function (value, data, field, cell, column) {
-                if ('shareAmt' === field) {//修改时同步修改
-                    el("#shareAmt").val(JoyinMath.doDiv(value,1,2));
-                    calcAmt();
-                    autoAllocation();
-                }
-                if(ps === 'T03' && field === 'settFeeAmt') {
-                    el("#settFeeAmt").val(JoyinMath.doDiv(value,1,2));
-                }
-            },
-            beforeEditCell: function (preVal, field, rowData) {
-                if (field === "avaNum") {
-                    tempAvaNum = preVal.replace(/\,/g, '');
-                }
-                if (field === 'businessModel' || field === 'priceModel') {
-                    return false;
-                }
-                if(ps === 'T03') {
-                    if (field === 'shareAmt') {
-                        return false;
-                    }
-                }
-                return true;
-            }
+            cols: colsReg
     });
 
 
