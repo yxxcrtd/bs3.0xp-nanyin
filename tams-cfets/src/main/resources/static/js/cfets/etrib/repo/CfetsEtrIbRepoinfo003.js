@@ -4,6 +4,8 @@
     var initFlag = false;
     var cluflag;
     var businessId;
+    var riskFlag = 0;
+
 
     /**
      * 画星星
@@ -50,7 +52,7 @@
     }
 
     var cols = [
-        {field:'operation', width:20, title: 'SysCommon.operation', sortable:false, type: 'action', buttons: ['delt']},
+
         {
             /* 组合代码 */
             field: 'portfolioId',
@@ -133,7 +135,13 @@
             sortable: false,
             type: 'number',
             digit: 2
-        }
+        } , {
+            field: 'entrustId',
+            title: '指令Id',
+            width: 200,
+            visible: false
+        },
+        {field:'operation', width:20, title: 'SysCommon.operation',fixed:"right", sortable:false, type: 'action', buttons: ['delt']}
     ]
     var table = $("#etrInvestRepoInfoDtos").joyintable({
         data: entity_BussCombDistribtList || [{}],
@@ -157,6 +165,7 @@
          beforeEditCell: function (preVal, field, rowData) {
             return true;
         }, editCell: function (value, data, field, cell, column) {
+            setRiskFlag(1);
             if (field == 'entrustAmt') {
                 var amt = 0;
                 var allRow = table.getAllRows();
@@ -185,14 +194,39 @@
                 param.portfolioIdList = arr;
                 Joyin.ajaxJson(basePath + 'cfets/etrib/cfetsEtrIbBondinfo/queryPositionInfo', param, function (result) {
                     if(result.data) {
-                        data.availableCashT = result.data[0].amount;
-                        data.availableCashT1 = result.data[1].amount;
-                        data.accountCash = result.data[2].amount;
+                        $.each(result.data,function (index,item) {
+                            if(item.field == 'T0KYXJ') {//T日可用现金（元）
+                                if ("--" == item.amount) {
+                                    data.availableCashT = 0;
+                                } else {
+                                    data.availableCashT = item.amount;
+                                }
+                            }
+                            if(item.field == 'T1KYXJ') {//T1日可用现金（元）
+                                if ("--" == item.amount) {
+                                    data.availableCashT1 = 0;
+                                } else {
+                                    data.availableCashT1 = item.amount;
+                                }
+                            }
+                            if(item.field == 'ZHXJ') {//账户现金
+                                if ("--" == item.amount) {
+                                    data.accountCash = 0;
+                                } else {
+                                    data.accountCash = item.amount;
+                                }
+                            }
+                        })
                         table.renderRow(data.LAY_TABLE_INDEX, data);
                     }
 
                 });
-                // table.renderRow(data.LAY_TABLE_INDEX, data);
+                if(!data.entrustId) {
+                    Joyin.ajaxSync(basePath + 'cfets/etrib/CfetsEtrIbBondinfo003/getEntrustId',{},function (result) {
+                        data.entrustId = result.data;
+                        table.renderRow(data.LAY_TABLE_INDEX, data);
+                    })
+                }
                 if(repo_pledge_model == '01' || repo_pledge_model == '03') {
                     var param = {};
                     param.portfolioId = value;
@@ -419,7 +453,6 @@
                         return (data * 100).toFixed(2);
                     }
                 }
-
                 // 登记托管机构
                 , {
                     field: 'registOrgStr',
@@ -451,6 +484,7 @@
                         }
                     })
                 }
+                setRiskFlag(1);
                 return true;
             }
         });
@@ -479,26 +513,40 @@
         res.param = param;
         return res;
     }
-
+    function setRiskFlag(flag) {
+        riskFlag = flag;
+    }
     function paramCheck() {
         var object = $.serializeToObject('#searchForm');
         if (!object.entrustAmt || !object.settleSpreed || !object.priceModel || !object.price || !object.repoTerm || !object.termType) {
             Joyin.error("有*必填项未填写,请填写完整")
             return false;
         }
-        if(!riskResultResponse) {
+        if(riskFlag === 1) {
             Joyin.error("请先完成风险试算")
             return false;
         }
         var obj = getSubmitParam("submit");
         var errorMsg = "";
-        Joyin.ajaxJson(basePath + 'cfets/etrib/cfetsEtrIbRepoinfo/checkSaveError', obj.param, function (result) {
-            if(result.data && result.data.errorList && result.data.errorList.length > 0) {
-                $.each(result.data.errorList,function (index,item) {
-                    errorMsg = errorMsg + item.message + "<br\>";
-                })
+        $.ajax({
+            type: "POST",
+            url: basePath + 'cfets/etrib/cfetsEtrIbRepoinfo/checkSaveError',
+            dataType: "json",
+            contentType: "application/json",
+            async: false,
+            data: JSON.stringify(obj.param),
+            success: function (result) {
+                if(result.code === '000') {
+                    if(result.data && result.data.errorList && result.data.errorList.length > 0) {
+                        $.each(result.data.errorList,function (index,item) {
+                            errorMsg = errorMsg + item.message + "<br\>";
+                        })
+                    }
+                }else {
+                    errorMsg = result.message;
+                }
             }
-        },false)
+        });
         if(errorMsg && errorMsg.length > 0) {
             Joyin.error(errorMsg);
             return false;
@@ -533,7 +581,37 @@
     $('#CfetsEtrIbRepoinfo003_btn_riskcal').click(function () {
         var object = $.serializeToObject('#searchForm');
         var param = JSON.parse(JSON.stringify(object))
-        Joyin.ajaxJson(basePath + 'cfets/etrib/cfetsEtrIbRepoinfo/doRiskcal', param, function (data) {
+        $.ajax({
+            type: "POST",
+            url: basePath + 'cfets/etrib/cfetsEtrIbRepoinfo/doRiskcal',
+            dataType: "json",
+            contentType: "application/json",
+            async: false,
+            data: JSON.stringify(param),
+            success: function (result) {
+                if(result.code === '000') {
+                    var data = result.data.data;
+                    if(data.riskTrialSpan) {
+                        $("#riskTrialSpan").html("&nbsp;&nbsp;" + data.riskTrialSpan);
+                    }
+                    riskResultResponse = data;;
+                    entity_RiskTrialRetList = data.riskcalReturnList;
+                    if(entity_RiskTrialRetList) {
+                        $.each(entity_RiskTrialRetList, function (index, item) {
+                            item.conclusion = data.riskTrialSpan;
+                        })
+                    }
+                    tableRisk.clear();
+                    tableRisk.addRow(entity_RiskTrialRetList);
+                    //setRiskFlag(0);
+                }else if(result.message){
+                    Joyin.error(result.message);
+                }
+                setRiskFlag(0);//软控先
+            }
+        });
+
+  /*      Joyin.ajaxJson(basePath + 'cfets/etrib/cfetsEtrIbRepoinfo/doRiskcal', param, function (data) {
             if(data.data.data) {
                 $("#riskTrialSpan").html("&nbsp;&nbsp;" + data.data.data.riskTrialSpan);
                 riskResultResponse = data.data.data;
@@ -541,7 +619,7 @@
                 tableRisk.clear();
                 tableRisk.addRow(data.data.data.riskcalReturnList);
             }
-        });
+        });*/
     });
     if(entity_riskTrialSpan) {
         $("#riskTrialSpan").html("&nbsp;&nbsp;" + entity_riskTrialSpan);
@@ -559,6 +637,7 @@
                 $("#termType").textSelect('setValue', data.data.data);
             }
         });
+        setRiskFlag(1);
     })
     $("#price").change(function () {
         var price = $("#price").val();
@@ -566,6 +645,7 @@
             Joyin.error("回购利率需大于0");
             $("#price").val("");
         }
+        setRiskFlag(1);
     })
 
 }());

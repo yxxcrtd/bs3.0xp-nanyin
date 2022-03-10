@@ -24,7 +24,6 @@
     }
 
     var colsCombDistribt = [
-        {field:'operation', width:20, title: 'SysCommon.operation', sortable:false, type: 'action', buttons: ['delt']},
         {
             /* 组合代码 */
             field: 'portfolioId',
@@ -163,7 +162,9 @@
             title: '指令Id',
             width: 200,
             visible: false
-        }
+        },
+        {field:'operation', width:20, title: 'SysCommon.operation',fixed:"right" ,sortable:false, type: 'action', buttons: ['delt']}
+
     ]
 
     var table = query("#bussCombDistribtTable").joyintable({
@@ -183,6 +184,8 @@
                 }else {
                     Joyin.error("至少要保留一个组合");
                 }
+                setRiskFlag(1);
+
             });
         },
         beforeEditCell: function(preVal, field, rowData) {
@@ -192,7 +195,12 @@
             return true;
         },
         editCell: function (value, data, field, cell, column) {
+            setRiskFlag(1);
             if (field == 'portfolioId') {
+                if(!value) {
+                    Joyin.error("组合不能为空");
+                    return;
+                }
                 var allRow = table.getAllRows();
                 var exist = 0;
                 $.each(allRow,function (index,item) {
@@ -485,21 +493,6 @@
             }
         }
         object.entrustNum = query("#tradeAmt").val() * 10000;
-        /*if (object.bussCombDistribtList != null) {
-            if (object.bussCombDistribtList.length > 0) {
-                var entrustNum = 0.0;
-                for (var index in object.bussCombDistribtList) {
-                    var item = object.bussCombDistribtList[index];
-                    if (item.entrustNum == null || item.entrustNum == "") {
-                    } else {
-                        entrustNum += parseFloat(item.entrustNum) * 10000;
-                    }
-                }
-                object.entrustNum = String(entrustNum);
-            } else {
-                object.entrustNum = 10000;
-            }
-        }*/
         Joyin.ajaxJson(basePath + "cfets/etrib/CfetsEtrIbBondinfo003/calData", object, function (result) {
             if (result && result.data) {
                 var data = result.data.data;
@@ -589,7 +582,7 @@
         object.mdate = object.etrDate;
         object.entrustDate = object.vdate > object.finvdate.split(' ')[0] ? object.vdate : object.finvdate.split(' ')[0];
         //提交获取计算方式单选框的值
-        debugger;
+
         object.calculateField = query("input[name=calculateField]:checked").val();
         if (query('#exerYield').val() || query('#exerYieldShow').val()) {
             if(query('#exerYieldShow').val()) {
@@ -682,12 +675,8 @@
             Joyin.error("有*必填项未填写,请填写完整")
             return false;
         }
-        if (!query("#priceShow") && !query("#matureYieldShow") && !query("#exerYieldShow")) {
+        if (!query("#priceShow") || !query("#matureYieldShow") || !query("#exerYieldShow")) {
             Joyin.error("有*必填项未填写,请填写完整")
-            return false;
-        }
-        if (riskFlag !== 0) {
-            Joyin.error("请先完成风险试算")
             return false;
         }
         var calculateField = query("input[name=calculateField]:checked").val();
@@ -718,6 +707,10 @@
             }
 
         }
+        if(entrustNumAll <= 0) {
+            Joyin.error("组合分配券面总额需要大于0！")
+            return false;
+        }
         if (!checkFlag) {
             Joyin.error("请填写完整组合信息")
             return false;
@@ -726,7 +719,10 @@
             Joyin.error("券面总额与组合分配处的券面总额不一致")
             return false;
         }
-
+        if (riskFlag !== 0) {
+            Joyin.error("请先完成风险试算")
+            return false;
+        }
         var obj = getSubmitParam("submit");
         var errorMsg = "";
         $.ajax({
@@ -788,6 +784,10 @@
     $('#CfetsEtrIbBondinfo003_btn_riskcal').click(function () {
         var object = $.serializeToObject('#searchForm');
         var param = JSON.parse(JSON.stringify(object));
+        if(!param.tradeAmt || !param.settleSpeed || !param.matureYield || !param.priceModel || !param.finprodName) {
+            Joyin.error("请填写完整在进行风险试算");
+            return;
+        }
         $.ajax({
             type: "POST",
             url: basePath + 'cfets/etrib/cfetsEtrIbBondinfo/doRiskcal',
@@ -809,10 +809,11 @@
                     }
                     tableRisk.clear();
                     tableRisk.addRow(entity_RiskTrialRetList);
-                    setRiskFlag(0);
+                    //setRiskFlag(0);
                 }else if(result.message){
                     Joyin.error(result.message);
                 }
+                setRiskFlag(0);//软控先
             }
         });
         /*Joyin.ajaxJson(basePath + 'cfets/etrib/cfetsEtrIbBondinfo/doRiskcal', param, function (data) {
@@ -874,7 +875,7 @@
         var tradeAmt = query("#tradeAmt").val();
         if(tradeAmt && Number(tradeAmt) <= 0) {
             Joyin.error("券面总额必须大于0");
-            query("#tradeAmt").val("1.00");
+            query("#tradeAmt").val("");
             return;
         }
         if(tradeAmt) {
@@ -914,7 +915,6 @@
     })
 
     query('#matureYieldShow').change(function () {
-        debugger;
         if(query('#matureYieldShow').val()) {
             setRiskFlag(1);
             query('#matureYield').val(query('#matureYieldShow').val());
