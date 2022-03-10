@@ -257,6 +257,7 @@
 		<!--AND std.TRADE_DATE = stdsq.TRADE_DATE-->
 		AND std.VDATE = stdsq.TRADE_DATE
 		AND std.APPLY_TRADE_ID = stdsq.CJBH
+		INNER JOIN
 		<!--GNS-889:使用首期成交编号 modify by fuyongsheng 20220219 start-->
 		<!--SETTLE_TRANS_TG_MAPPING M ON M.TRADE_ID = std.TRADE_ID-->
 		SETTLE_TRANS_TG_MAPPING M ON M.TRADE_ID = stdsq.TRADE_ID
@@ -1023,7 +1024,7 @@
 		std.BUSI_TYPE,/*业务类型*/
 		decode(fpt.TYPE_10,'24','Y','N') isHuobi/*是否货币基金*/
 		FROM SETTLE_TRANS_DATA std
-		LEFT JOIN fin_product_type fpt ON fp.FINPROD_ID=fpt.FINPROD_ID
+		LEFT JOIN fin_product_type fpt ON std.FINPROD_ID=fpt.FINPROD_ID
 		<where>
 			std.DEAL_DATE = #{dealDate,jdbcType=DATE}
 			AND std.FINPROD_TYPE2 = 'F06'
