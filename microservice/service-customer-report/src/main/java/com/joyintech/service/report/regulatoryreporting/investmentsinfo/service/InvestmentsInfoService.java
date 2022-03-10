@@ -232,8 +232,8 @@ public class InvestmentsInfoService {
 		tablePorpertyMap_2.put("t2_cur55_amt", "ASSETAMT1_5_16_a");
 		tablePorpertyMap_2.put("t2_last55_amt", "ASSETAMT1_5_16_a");
 		// 同G06-II 1.5.16 其他非标准化债权类投资穿透后期末余额-1.5.16.a 场内股票质押回购穿透后余额+1.5.7 委托债权穿透后余额  add by leipeng
-		tablePorpertyMap_2.put("t2_cur57_amtfq", "ASSETAMT1_5_16-AMT1_5_16_a+ASSETAMT1_5_7");
-		tablePorpertyMap_2.put("t2_last57_amtfq", "ASSETAMT1_5_16-AMT1_5_16_a+ASSETAMT1_5_7");
+		tablePorpertyMap_2.put("t2_cur57_amtfq", "ASSETAMT1_5_16+ASSETAMT1_5_7-AMT1_5_16_a");
+		tablePorpertyMap_2.put("t2_last57_amtfq", "ASSETAMT1_5_16+ASSETAMT1_5_7-AMT1_5_16_a");
 		// 同G06-II 1.5.16 其他非标准化债权类投资穿透后期末余额-1.5.16.a 场内股票质押回购穿透后余额+1.5.7 委托债权穿透后余额  add by leipeng
 
 		tablePorpertyMap_2.put("t2_cur58_amt", "ASSETAMT1_6_5");
@@ -2612,7 +2612,7 @@ public class InvestmentsInfoService {
 			valueBLast = valueBLast.add(null!=investmentBusinessDetailsDto.getValueBLast()&&investmentBusinessDetailsDto.getPropertycode().contains("F01")?investmentBusinessDetailsDto.getValueBLast():BigDecimal.ZERO);
 			valueB01 = valueB01.add(null!=investmentBusinessDetailsDto.getValueB01()&&investmentBusinessDetailsDto.getPropertycode().contains("F01")?investmentBusinessDetailsDto.getValueB01():BigDecimal.ZERO);
 			valueBlast01 = valueBlast01.add(null!=investmentBusinessDetailsDto.getValueBlast01()&&investmentBusinessDetailsDto.getPropertycode().contains("F01")?investmentBusinessDetailsDto.getValueBlast01():BigDecimal.ZERO);
-
+			divideBillion(investmentBusinessDetailsDto);
 
 			InvestmentBusinessDetailsList.add(investmentBusinessDetailsDto);
 		}
@@ -2745,8 +2745,62 @@ public class InvestmentsInfoService {
 		if (detail.getLasttotleBalance() != null) { // 表三总计上季末余额
 			detail.setLasttotleBalance(detail.getLasttotleBalance().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
 		}
+
+		//表五计算用 投资余额 -穿透前
+		detail.setValueA(divideTenThousand(detail.getValueA()));
+		//表五计算用 投资余额 -穿透后
+		detail.setValueB(divideTenThousand(detail.getValueB()));
+		//表五计算用 投资余额 -上季 -穿透前
+		detail.setValueALast(divideTenThousand(detail.getValueALast()));
+		//表五计算用 投资余额 -上季 -穿透后
+		detail.setValueBLast(divideTenThousand(detail.getValueBLast()));
+		//表五计算用 平均杠杆率 -穿透前
+		detail.setAvgRate1(multiplyHundred(detail.getAvgRate1()));
+		//表五计算用 平均杠杆率 -穿透后
+		detail.setAvgRate2(multiplyHundred(detail.getAvgRate2()));
+		//表五计算用 平均杠杆率 -穿透前 - 上季
+		detail.setAvgRate1Last(multiplyHundred(detail.getAvgRate1Last()));
+		//表五计算用 平均杠杆率 -穿透后 - 上季
+		detail.setAvgRate2Last(multiplyHundred(detail.getAvgRate2Last()));
+		//表五计算用 杠杆倍数最高值 -本机
+		detail.setHeaverTimes1(multiplyHundred(detail.getHeaverTimes1()));
+		//表五计算用 杠杆倍数最高值 -上季
+		detail.setHeaverTimes2(multiplyHundred(detail.getHeaverTimes2()));
+		//表五计算用 信贷资产支持证券
+		detail.setValueB01(divideTenThousand(detail.getValueB01()));
+		//表五计算用 信贷资产支持证券 - 上季
+		detail.setValueBlast01(divideTenThousand(detail.getValueBlast01()));
+		//表五计算用 资产支持专项计划
+		detail.setValueB02(divideTenThousand(detail.getValueB02()));
+		//表五计算用 资产支持专项计划 - 上季
+		detail.setValueBlast02(divideTenThousand(detail.getValueBlast02()));
+
 		return detail;
 	}
+
+	public static BigDecimal divideTenThousand(BigDecimal num){
+    	BigDecimal beo = null;
+		BigDecimal billion = new BigDecimal(10000);
+		if(null!=num){
+			beo = num.divide(billion, 2, BigDecimal.ROUND_HALF_UP);
+		}
+    	return beo;
+	}
+
+	/***
+	 * 表5的结构化
+	 * @param num
+	 * @return
+	 */
+	public static BigDecimal multiplyHundred(BigDecimal num){
+		BigDecimal beo = null;
+
+		if(null!=num){
+			beo = num.multiply(BigDecimal.ONE).setScale(2, BigDecimal.ROUND_HALF_UP);
+		}
+		return beo;
+	}
+
     public InvestmentBusinessCounterDetailsDto divideBillionOfCounter(InvestmentBusinessCounterDetailsDto detail) {
         BigDecimal billion = new BigDecimal(10000);
         if(detail.getXtSessionendNum()!=null){

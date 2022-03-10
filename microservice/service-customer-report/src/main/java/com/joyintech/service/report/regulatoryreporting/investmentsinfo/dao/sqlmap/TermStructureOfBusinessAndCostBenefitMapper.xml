@@ -5142,12 +5142,12 @@ with cj as(
 			and cmap.ASSETTYPE2 in ('1704','1106','2401','1303','2403','2402','2499')
 		</if>
 		<if test="industryType != null  and industryType.equals('YH')">
-			and (mst.industry3 = '03' or  mst.industry4 in ('01','02','03','04')) and info.asset_type2 in ('1102','1112')
+			and (mst.industry3 = '03' or  mst.industry4 in ('01','02','03','04','07')) and info.asset_type2 in ('1102','1112')
 		</if>
 		<if test="industryType != null  and industryType.equals('BX')">
-            and (mst.industry3 not in ('03')　or mst.industry3 is null)
-			and (mst.industry4 not in ('01','02','03','04','07') or mst.industry4 is null)
-			and cmap.ASSETTYPE2 not in ('1701','1703','1704','1106','2401','1303','2403','2402','2499',1706)
+			and (mst.industry3 not in ('03')　or mst.industry3 is null or (mst.industry3 = '03' and info.asset_type2 NOT in ('1102','1112')))
+			and (mst.industry4 not in ('01','02','03','04','07') or mst.industry4 is null or (mst.industry4 in ('01','02','03','04','07') and info.asset_type2 NOT in ('1102','1112')))
+			and cmap.ASSETTYPE2 not in ('1701','1703','1704','1106','2401','1303','2403','2402','2499','1706')
 		</if>
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -5194,9 +5194,10 @@ with cj as(
 			and (mst.industry3 = '03' or  mst.industry4 in ('01','02','03','04')) and info.asset_type2 in ('1102','1112')
 		</if>
 		<if test="industryType != null  and industryType.equals('BX')">
-			and (mst.industry3 not in ('03')　or mst.industry3 is null)
-			and (mst.industry4 not in ('01','02','03','04','07') or mst.industry4 is null)
+			and (mst.industry3 not in ('03')　or mst.industry3 is null or (mst.industry3 = '03' and info.asset_type2 NOT in ('1102','1112')))
+			and (mst.industry4 not in ('01','02','03','04','07') or mst.industry4 is null or (mst.industry4 in ('01','02','03','04','07') and info.asset_type2 NOT in ('1102','1112')))
 			and cmap.ASSETTYPE2 not in ('1701','1703','1704','1106','2401','1303','2403','2402','2499','1706')
+
 		</if>
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -5246,9 +5247,9 @@ with cj as(
 			and  info.manage_type='01'
 		</if>
 		<if test="industryType != null  and industryType.equals('BX')">
-			and (mst.industry3 not in ('03')　or mst.industry3 is null)
-			and (mst.industry4 not in ('01','02','03','04','07') or mst.industry4 is null)
-			and cmap.ASSETTYPE2 not in ('1701','1703','1704','1106','2401','1303','2403','2402','2499',1706)
+			and (mst.industry3 not in ('03')　or mst.industry3 is null or (mst.industry3 = '03' and info.asset_type2 NOT in ('1102','1112')))
+			and (mst.industry4 not in ('01','02','03','04','07') or mst.industry4 is null or (mst.industry4 in ('01','02','03','04','07') and info.asset_type2 NOT in ('1102','1112')))
+			and cmap.ASSETTYPE2 not in ('1701','1703','1704','1106','2401','1303','2403','2402','2499','1706')
 			and  info.manage_type='01'
 		</if>
 		<if test="org != null  and org!=''">
@@ -5296,9 +5297,10 @@ with cj as(
 			and (mst.industry3 = '03' or  mst.industry4 in ('01','02','03','04')) and info.asset_type2 in ('1102','1112')
 		</if>
 		<if test="industryType != null  and industryType.equals('BX')">
-			and (mst.industry3 not in ('03')　or mst.industry3 is null)
-			and (mst.industry4 not in ('01','02','03','04','07') or mst.industry4 is null)
-			and cmap.ASSETTYPE2 not in ('1701','1703','1704','1106','2401','1303','2403','2402','2499',1706)
+			and (mst.industry3 not in ('03')　or mst.industry3 is null or (mst.industry3 = '03' and info.asset_type2 NOT in ('1102','1112')))
+			and (mst.industry4 not in ('01','02','03','04','07') or mst.industry4 is null or (mst.industry4 in ('01','02','03','04','07') and info.asset_type2 NOT in ('1102','1112')))
+			and cmap.ASSETTYPE2 not in ('1701','1703','1704','1106','2401','1303','2403','2402','2499','1706')
+
 		</if>
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
