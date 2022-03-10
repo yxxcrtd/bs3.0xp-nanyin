@@ -25,8 +25,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.joyintech.tams.constant.DictCodeListExt3.交易单位_份;
-import static com.joyintech.tams.constant.DictCodeListExt3.交易单位_张;
+import static com.joyintech.tams.constant.DictCodeList.*;
+import static com.joyintech.tams.constant.DictCodeListExt3.*;
 
 @Service
 public class CommonPositionEngineService {
@@ -138,7 +138,7 @@ public class CommonPositionEngineService {
      * @return
      */
     public String getPositionInterType(String positionType, String tradePlat, String finprodType, String ps, String busiAct, String entity) {
-        log.info("getPositionInterType() called with parameters => 【positionType = {}】, 【tradePlat = {}】, 【finprodType = {}】, 【ps = {}】, 【busiAct = {}】, 【entity = {}】",positionType, tradePlat, finprodType, ps, busiAct, entity);
+        log.info("getPositionInterType() called with parameters => 【positionType = {}】, 【tradePlat = {}】, 【finprodType = {}】, 【ps = {}】, 【busiAct = {}】, 【entity = {}】", positionType, tradePlat, finprodType, ps, busiAct, entity);
         String key = positionType + tradePlat + finprodType + ps + busiAct + entity;
         InterfPositionConfigDto interfPositionConfigDto = CONFIG_MAP.get(key);
         if (interfPositionConfigDto == null || cacheInvalid(interfPositionConfigDto.getUpdateTime())) {
@@ -161,6 +161,44 @@ public class CommonPositionEngineService {
             return configDto.getInterfType();
         }
         return null;
+    }
+
+    /**
+     * 获取交易系统SharesTradePlatform 【02 竞价交易；04 大宗交易】
+     *
+     * @param tradePlace 交易平台
+     * @param ps         交易方向
+     * @param declaType  申报类型
+     * @return 交易系统
+     */
+    public String getSharesTradePlatform(String tradePlace, String ps, String declaType) {
+        if (isSharesTradePlatform(tradePlace, ps, declaType)) {
+            return 交易平台_大宗交易平台.getValue();
+        }
+        return 交易平台_竞价撮合平台.getValue();
+    }
+
+    private boolean isSharesTradePlatform(String tradePlace, String ps, String declaType) {
+        return isBulkTradePlace(tradePlace) && isBulkPs(ps) && isBulkDeclaType(declaType);
+    }
+
+    private boolean isBulkTradePlace(String tradePlace) {
+        return 交易平台_大宗交易平台.getValue().equals(tradePlace) || 交易平台_综合协议交易平台.getValue().equals(tradePlace);
+    }
+
+    private boolean isBulkPs(String ps) {
+        return 交易方向_买入.getValue().equals(ps) || 交易方向_卖出.getValue().equals(ps);
+    }
+
+    private boolean isBulkDeclaType(String declaType) {
+        return 申报类型_不指定.getValue().equals(declaType)
+                || 申报类型_意向申报.getValue().equals(declaType)
+                || 申报类型_定价申报.getValue().equals(declaType)
+                || 申报类型_点击成交申报.getValue().equals(declaType)
+                || 申报类型_成交申报.getValue().equals(declaType)
+                || 申报类型_收盘价固定价格申报.getValue().equals(declaType)
+                || 申报类型_日均价固定价格申报.getValue().equals(declaType)
+                ;
     }
 
     /**

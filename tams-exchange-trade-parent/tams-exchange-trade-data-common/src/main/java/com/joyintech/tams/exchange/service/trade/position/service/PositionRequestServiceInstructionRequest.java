@@ -557,12 +557,8 @@ public class PositionRequestServiceInstructionRequest {
         resultMap.put(PS, entity.getPs());
         // 交易场所	见数据字典：交易场所
         resultMap.put(TRADE_PLACE, entity.getTradeMarket());
-        // 交易平台	见数据字典：交易平台
-        if (StringUtils.isEmpty(entity.getTradePlat())) {
-            resultMap.put(SHARES_TRADE_PLATFORM, 交易平台_竞价撮合平台);
-        } else {
-            resultMap.put(SHARES_TRADE_PLATFORM, entity.getTradePlat());
-        }
+        // 交易平台
+        resultMap.put(SHARES_TRADE_PLATFORM, commonPositionEngineService.getSharesTradePlatform(entity.getTradePlat(), entity.getPs(), entity.getDealMode()));
         // 流程编号	指令的工作流ID
         resultMap.put(WORK_FLOW_ID, null);
         // 日期
