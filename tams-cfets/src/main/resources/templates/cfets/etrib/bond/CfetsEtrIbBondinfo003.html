@@ -49,11 +49,11 @@
             <input type="hidden" id="tradeMarketMode" name="tradeMarketMode" th:value="${entity?.tradeMarketMode}">
             <input type="hidden" id="tradeMarket" name="tradeMarket" th:value="${entity?.tradeMarket}" />
             <input type="hidden" id="calendarId" name="calendarId" th:value="${entity?.calendarId}">
-            <input type="hidden" id="finvdate" name="finvdate">
-            <input type="hidden" id="finmdate" name="finmdate">
+            <input type="hidden" id="finvdate" name="finvdate" th:value="${entity?.finvdate}">
+            <input type="hidden" id="finmdate" name="finmdate" th:value="${entity?.finmdate}">
             <input type="hidden" id="secAcctId" name="secAcctId" th:value="${entity?.secAcctId}">
-            <input type="hidden" id="isRight" name="isRight">
-            <input type="hidden" id="profitType" name="profitType">
+            <input type="hidden" id="isRight" name="isRight" >
+            <input type="hidden" id="profitType" name="profitType" th:value="${entity?.profitType}">
             <input type="hidden" id="systemAct" name="systemAct" th:value="${entity?.systemAct}">
             <input type="hidden" id="price" name="price" th:value="${entity?.price}">
             <input type="hidden" id="matureYield" name="matureYield" th:value="${entity?.matureYield}">

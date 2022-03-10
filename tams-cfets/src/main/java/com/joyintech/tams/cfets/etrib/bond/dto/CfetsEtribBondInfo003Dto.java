@@ -415,6 +415,8 @@ public class CfetsEtribBondInfo003Dto extends EtrEntrust implements ProcessEntit
     @ApiModelProperty(name="transmitTime",value="指令下达时间",example="11")
     private Date transmitTime;
 
+    private String isRight;
+
     public String getOperateType() {
         return operateType;
     }
@@ -680,5 +682,13 @@ public class CfetsEtribBondInfo003Dto extends EtrEntrust implements ProcessEntit
 
     public void setSystemAct(String systemAct) {
         this.systemAct = systemAct;
+    }
+
+    public String getIsRight() {
+        return isRight;
+    }
+
+    public void setIsRight(String isRight) {
+        this.isRight = isRight;
     }
 }

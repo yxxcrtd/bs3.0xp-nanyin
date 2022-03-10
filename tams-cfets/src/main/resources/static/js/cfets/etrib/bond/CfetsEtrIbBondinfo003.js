@@ -655,9 +655,9 @@
         }
         param = JSON.parse(JSON.stringify(object));
         // param.entrustNum = object.tradeAmt;
-        param.finprodId = finprodId;
+        //param.finprodId = finprodId;
         param.finprodAbbr = query("#finprodAbbr").val();
-        param.tradeMarket = tradeMarket;
+       //param.tradeMarket = tradeMarket;
         param.invManagerId = query('#invManagerId').val();
         param.ps = query("#ps").val();
         param.ccy = query('#ccy').val();
@@ -870,7 +870,7 @@
         }
 
     })
-    query("#tradeAmt").blur(function () {
+    query("#tradeAmt").change(function () {
         var tradeAmt = query("#tradeAmt").val();
         if(tradeAmt && Number(tradeAmt) <= 0) {
             Joyin.error("券面总额必须大于0");
@@ -884,7 +884,7 @@
             setRiskFlag(1);
         }
     })
-    query("#entrustIntegrateNum").blur(function () {
+    query("#entrustIntegrateNum").change(function () {
         var tradeAmt = query("#tradeAmt").val();
         var entrustIntegrateNum = query("#entrustIntegrateNum").val();
         if (tradeAmt && entrustIntegrateNum) {
@@ -913,21 +913,22 @@
         setRiskFlag(1);
     })
 
-    query('#matureYieldShow').blur(function () {
+    query('#matureYieldShow').change(function () {
+        debugger;
         if(query('#matureYieldShow').val()) {
             setRiskFlag(1);
             query('#matureYield').val(query('#matureYieldShow').val());
             calData('matureYield');
         }
     })
-    query('#exerYieldShow').blur(function () {
+    query('#exerYieldShow').change(function () {
         if(query('#exerYieldShow').val()) {
             setRiskFlag(1);
             query('#exerYield').val(query('#exerYieldShow').val());
             calData('exerYield');
         }
     })
-    query('#priceShow').blur(function () {
+    query('#priceShow').change(function () {
         setRiskFlag(1);
         query('#price').val(query('#priceShow').val());
         if (ps != 'T03') {
