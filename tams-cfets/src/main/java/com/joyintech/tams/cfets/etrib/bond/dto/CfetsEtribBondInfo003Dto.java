@@ -417,6 +417,8 @@ public class CfetsEtribBondInfo003Dto extends EtrEntrust implements ProcessEntit
 
     private String isRight;
 
+    private String profitType;/*收益方式*/
+
     public String getOperateType() {
         return operateType;
     }
@@ -690,5 +692,13 @@ public class CfetsEtribBondInfo003Dto extends EtrEntrust implements ProcessEntit
 
     public void setIsRight(String isRight) {
         this.isRight = isRight;
+    }
+
+    public String getProfitType() {
+        return profitType;
+    }
+
+    public void setProfitType(String profitType) {
+        this.profitType = profitType;
     }
 }
