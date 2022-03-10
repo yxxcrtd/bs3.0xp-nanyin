@@ -4,7 +4,10 @@ import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.common.base.entity.StlPayOrders;
+import com.joyintech.tams.common.base.entity.TrdFinProductDealTotal;
+import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.component.business.trade.BaseTradeProductDealCommService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -16,9 +19,13 @@ import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.dto.common.TrdCommDto;
+import com.joyintech.tams.invest.common.position.service.CommonPositionEngineService;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
+import com.joyintech.tams.invest.common.trade.dao.BaseAssetCashPositionCommMapper;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
+import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonRevokeDto;
 import com.joyintech.tams.invest.common.valuationinterf.ValuationInterfService;
+import com.joyintech.tams.invest.trade.exchangetransmatch.position.constant.PositionConstant;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,7 +68,10 @@ public class TradeRestApi {
     @Autowired
     private ValuationInterfService valuationInterfService;
 
-    private static final List<String> 正回购_逆回购 = Arrays.asList(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue(),
+	@Autowired
+    private PositionRequestTradeRestService positionRequestTradeRestService;    
+
+	private static final List<String> 正回购_逆回购 = Arrays.asList(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue(),
             DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
 
     @PostMapping("execute")
@@ -73,7 +83,7 @@ public class TradeRestApi {
             List<String> tradeIdList = param.getTradeIdList();
             List<String> totalTradeIdList = param.getTotalTradeIdList();
             String workflowStatus = param.getStatus();
-            String busiType = param.getBusiType();
+            // String busiType = param.getBusiType();
             String assetType2 = param.getAssetType2();
             
             if (StringUtil.isNotEmpty(workflowStatus)
@@ -146,7 +156,10 @@ public class TradeRestApi {
                 }
                 
                 result = baseTradeProductDealCommService.execute(finProductTradeDto);
-                
+
+                // 发送新头寸接口数据
+                positionRequestTradeRestService.sendTradeRestPositionRequest(finProductTradeDto);
+
                 // 结算数据下行都是单产品单组合，不会有母组合的，该逻辑去掉                
 //                for (BaseTradeProductDealDto baseTradeProductDealDto : baseTradeProductDealDtos) {
 //                    String portfolioId = baseTradeProductDealDto.getTrdProductDealAdd().getPortfolioId();

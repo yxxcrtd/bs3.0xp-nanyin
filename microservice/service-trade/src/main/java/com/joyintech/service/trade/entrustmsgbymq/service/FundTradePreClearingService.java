@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.service.trade.entrustmsgbymq.dto.TrdTempDto;
 import org.codehaus.plexus.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -127,7 +128,7 @@ public class FundTradePreClearingService extends BaseService<InfContractDetailfi
     @Autowired
     private EtrEntrustMapper etrEntrustMapper;
     
-    public void trdFund(InfContractDetailfile infContractDetailfile) throws Exception {
+    public void trdFund(TrdTempDto trdTempDto, InfContractDetailfile infContractDetailfile) throws Exception {
 		// 金融产品临时交易表Entity
 		TrdProductTempDeal trdProductTempDeal = new TrdProductTempDeal();
 		BeanUtil.copyPropertiesIgnoreNull(trdProductTempDeal, infContractDetailfile);
@@ -322,6 +323,18 @@ public class FundTradePreClearingService extends BaseService<InfContractDetailfi
 		this.insertFundPosition(baseTradeProductDealDto);
 		// 3.调用基础组件.【投资委托组件.完成委托】，写入委托完成状况信息(投资委托场合才执行此步)
 		this.finishEntrust(baseTradeProductDealDto, false);
+		// 调用新头寸接口 add by fuyongsheng 20220307 start
+		BeanUtil.copyPropertiesIgnoreNull(trdTempDto, infContractDetailfile);
+		// 关联系统交易编号
+		trdTempDto.setfTradeId(infContractDetailfile.getDealNo());
+		trdTempDto.setTradeId(trdProductTempDeal.getTradeId());
+		// 金融产品类型 = 基金
+		trdTempDto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_基金.getValue());
+		// 交割日
+		trdTempDto.setSettleDate(infContractDetailfile.getTradeDate());
+		trdTempDto.setTrdProductTempDeal(trdProductTempDeal);
+		trdTempDto.setTrdProductTempDealAdd(trdProductTempDealAdd);
+		// 调用新头寸接口 add by fuyongsheng 20220307 end
 	}
 
 	/**

@@ -16,6 +16,7 @@ import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.service.portfolio.position.service.PositionRequestPtlFoundAllocation002Request;
 import com.joyintech.service.portfolio.ptlfundallocation.dao.PtlFundAllocationMapper;
 import com.joyintech.service.portfolio.ptlfundallocation.dto.PtlFundAllocation001Dto;
 import com.joyintech.service.portfolio.ptlfundallocation.dto.PtlFundAllocationDto;
@@ -23,6 +24,7 @@ import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.component.base.core.BaseGetBussinessId;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
@@ -37,16 +39,14 @@ import com.joyintech.tams.invest.common.service.MapperDelegateService;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
+import com.joyintech.workflow.engine.constant.OperationType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 资金划拨管理
@@ -135,6 +135,9 @@ public class PtlFundAllocationService extends BaseService<PtlFundAllocationDto> 
     private InvestInterfCommService investInterfCommService;
     @Autowired(required = false)
     private FinProductMapper finProductMapper;
+
+    @Autowired
+    private PositionRequestPtlFoundAllocation002Request positionRequestService;
     /**
      * 获取账号
      *
@@ -392,6 +395,9 @@ public class PtlFundAllocationService extends BaseService<PtlFundAllocationDto> 
 				// 调用投管接口 add by chenxiaoqiu 20190210 end
 			}
 		}
+        String decisionAct = DictCodeListExt3.系统动作_新建.getValue();
+        String systemAct = DictCodeListExt3.系统动作_新建.getValue();
+        positionRequestService.sendEtrExchangeTradeSaveRequest(entity,decisionAct,systemAct);
         return 1;
     }
 
@@ -643,6 +649,11 @@ public class PtlFundAllocationService extends BaseService<PtlFundAllocationDto> 
         investInterfCommService.doInvestInterf(investInterfCommDto);
         // 调用投管接口 add by chenxiaoqiu 20190205 end
         // 调用估值接口 end
+
+
+        //撤销 头寸
+        positionRequestService.sendRevoke(entity);
+
         return 1;
     }
 
@@ -723,6 +734,14 @@ public class PtlFundAllocationService extends BaseService<PtlFundAllocationDto> 
             bussCommonMapperDelegateService.insert(PtlCashPositionFlowMapper.class, flow1);
         }
         deal持仓流程(entity, false);
+        String decisionAct = DictCodeListExt3.系统动作_新建.getValue();
+        String systemAct = DictCodeListExt3.系统动作_新建.getValue();
+        if (StringUtil.equals(entity.getOperateType(), OperationType.MODIFY)) {
+            decisionAct = DictCodeListExt3.系统动作_修改.getValue();
+            systemAct = DictCodeListExt3.系统动作_修改.getValue();
+        }
+        entity.setSoftSkipMode("Y");
+        positionRequestService.sendEtrExchangeTradeSaveRequest(entity,decisionAct,systemAct);
         return "Success";
     }
     

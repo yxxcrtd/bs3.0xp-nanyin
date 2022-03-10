@@ -5,6 +5,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.service.trade.manualsettle.dto.ManualSettleDto;
 import com.joyintech.service.trade.manualsettle.dto.ManualSettleFlowDto;
 import com.joyintech.service.trade.manualsettle.service.ManualSettleService;
+import com.joyintech.service.trade.manualsettle.service.PositionRequestManualSettleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,9 @@ public class ManualSettleController {
     @Autowired
     private ManualSettleService manualSettleService;
 
+    @Autowired
+    private PositionRequestManualSettleService positionRequestService;
+
     @PostMapping("findPage/{page}/{length}")
     public Page<ManualSettleDto> selectAll(@RequestBody Map<String, Object> param,
                                                  @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
@@ -42,6 +46,7 @@ public class ManualSettleController {
     @PostMapping("settleCash")
     public void settleCash(@RequestBody ManualSettleDto dto) throws IllegalAccessException, InvocationTargetException {
         manualSettleService.settleCash(dto);
+        positionRequestService.sendRequest(dto);
     }
 
     @Transactional

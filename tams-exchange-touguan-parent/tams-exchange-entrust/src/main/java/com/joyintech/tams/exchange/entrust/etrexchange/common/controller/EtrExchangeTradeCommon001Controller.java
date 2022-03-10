@@ -10,6 +10,33 @@
 
 package com.joyintech.tams.exchange.entrust.etrexchange.common.controller;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.util.CollectionUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
@@ -19,19 +46,48 @@ import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.framework.util.*;
-import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
+import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.common.base.entity.FinExercisePlan;
 import com.joyintech.tams.common.base.entity.FinProductQuto;
 import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
 import com.joyintech.tams.component.business.common.dto.FinStockInfoDto;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
-import com.joyintech.tams.constant.*;
-import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dto.EtrExchangePosiInfoRequestDto;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.*;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.AvailableEtrSecPositionRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.CalcDeviationDegreeRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.CalcPriceAndYieldRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.CalcPriceAndYieldResponse;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangePosiInfoRequestDto;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeCommonRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePortfolioRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeQuotationHqResponse;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.FinProductQutoRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.FinprodMarketInfoRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.MinNumStepRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.MinPriceRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.PsOptionsRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.PtlCashPositionFlowRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.PtlSecAcctInfoRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.SelectOptionRequestDto;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.StdsecConverseRatioRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.TrdOthPriceRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -43,24 +99,9 @@ import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.TrdOthCodeInfoDto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.util.CollectionUtils;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 交易所指令交易（债券股票回购基金场内指令交易）
@@ -1147,7 +1188,15 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 						+ "-" + "业务类型" + "(" + dto.getBusinessTypeName() + ")-"
 						+ "平台日" + "(" + DateUtil.format(iPlatformDate.getSysDate()) + ")");
 				processParameter.setWorkFlowParameter(params);
-				msg = etrExchangeTrade001CommonService.start(processParameter, dto);
+//				msg = etrExchangeTrade001CommonService.start(processParameter, dto);
+				try {
+		        	msg = etrExchangeTrade001CommonService.start(processParameter, dto);
+		            AjaxResult m =new AjaxResult(msg);
+		            return new Message<AjaxResult>().success().setData(m);
+		        }catch (Exception e) {
+		            logger.error("场内交易指令新建失败",e);
+		            return PositionUtil.ajaxErrorReturn(e);
+		        }
 			}
 			//多组合指令
 			else {
@@ -1205,9 +1254,17 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 						+ "-" + "业务类型" + "(" + dto.getBusinessTypeName() + ")-"
 						+ "平台日" + "(" + DateUtil.format(iPlatformDate.getSysDate()) + ")");
 				processParameter.setWorkFlowParameter(params);
-				msg = etrExchangeTrade001CommonService.start(processParameter, etrExchangeTrade001DtoList.toArray(new EtrExchangeTradeSaveRequest[etrExchangeTrade001DtoList.size()]));
+//				msg = etrExchangeTrade001CommonService.start(processParameter, etrExchangeTrade001DtoList.toArray(new EtrExchangeTradeSaveRequest[etrExchangeTrade001DtoList.size()]));
+				try {
+					msg = etrExchangeTrade001CommonService.start(processParameter, etrExchangeTrade001DtoList.toArray(new EtrExchangeTradeSaveRequest[etrExchangeTrade001DtoList.size()]));
+		            AjaxResult m =new AjaxResult(msg);
+		            return new Message<AjaxResult>().success().setData(m);
+		        }catch (Exception e) {
+		            logger.error("场内交易多组合指令新建失败",e);
+		            return PositionUtil.ajaxErrorReturn(e);
+		        }
 			}
-			return new Message<AjaxResult>().success().setData(new AjaxResult(msg));
+//			return new Message<AjaxResult>().success().setData(new AjaxResult(msg));
 		}catch (Exception e){
 			e.printStackTrace();
 			return new Message<AjaxResult>().fail().setData(new AjaxResult("保存失败"));

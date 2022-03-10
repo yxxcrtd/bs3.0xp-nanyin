@@ -324,7 +324,11 @@ public class IntegratedEntrust extends BaseEntity implements Serializable, Entru
     private String invManagerId;
     @ApiModelProperty(name = "ps", value = "交易方向", hidden = true)
     private String ps;
-    @ApiModelProperty(name = "busiTypeTg", value = "投管业务类型")
+
+	@ApiModelProperty(name="softSkipMode",value="软控是否继续？Y：继续",example="Y")
+    private String softSkipMode;
+
+	@ApiModelProperty(name = "busiTypeTg", value = "投管业务类型")
     private String busiTypeTg;
     @ApiModelProperty(name = "extend1", value = "扩展信息1")
     private String extend1;
@@ -338,6 +342,14 @@ public class IntegratedEntrust extends BaseEntity implements Serializable, Entru
 
     @ApiModelProperty(name = "entrustClass", value = "委托指令类别：01-单组合，02-多组合")
     private String entrustClass;
+
+	public String getSoftSkipMode() {
+		return softSkipMode;
+	}
+
+	public void setSoftSkipMode(String softSkipMode) {
+		this.softSkipMode = softSkipMode;
+	} 
 
     public boolean isNoCancelEntrust() {
         return noCancelEntrust;
