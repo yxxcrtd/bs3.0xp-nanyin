@@ -54,6 +54,8 @@
         <result column="RELEASE_STATUS" property="releaseStatus" jdbcType="VARCHAR" />
         <result column="IS_MANUAL_RELEASE" property="isManualRelease" jdbcType="VARCHAR" />
         <result column="R_FINPROD_ID" property="rFinprodId" jdbcType="VARCHAR" />
+        <result column="OUR_SHARE_AMT" property="ourShareAmt" jdbcType="DECIMAL" />
+        <result column="LENDIN_SHARE_AMT" property="lendinShareAmt" jdbcType="DECIMAL" />
     </resultMap>
     <sql id="Base_Column_List" >
         TRADE_ID TRADE_ID, PORTFOLIO_ID PORTFOLIO_ID, CUSTOM_CASH_TYPE CUSTOM_CASH_TYPE, 
@@ -70,7 +72,7 @@
         TERMINATE_RATE TERMINATE_RATE, PENALTY_INTAMT PENALTY_INTAMT, IS_CASHSET IS_CASHSET, 
         CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
         UPDATE_TIME UPDATE_TIME, RELEASE_STATUS RELEASE_STATUS, IS_MANUAL_RELEASE IS_MANUAL_RELEASE, 
-        R_FINPROD_ID R_FINPROD_ID
+        R_FINPROD_ID R_FINPROD_ID,OUR_SHARE_AMT OUR_SHARE_AMT,LENDIN_SHARE_AMT LENDIN_SHARE_AMT
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -110,7 +112,7 @@
             PENALTY_INTAMT, IS_CASHSET, CREATE_USER, 
             CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
             UPDATE_TIME, RELEASE_STATUS, IS_MANUAL_RELEASE, 
-            R_FINPROD_ID)
+            R_FINPROD_ID,OUR_SHARE_AMT,LENDIN_SHARE_AMT)
         values (#{tradeId,jdbcType=VARCHAR}, #{portfolioId,jdbcType=VARCHAR}, #{customCashType,jdbcType=VARCHAR}, 
             #{genType,jdbcType=VARCHAR}, #{purCfmDate,jdbcType=DATE}, #{redCfmDate,jdbcType=DATE}, 
             #{regDate,jdbcType=DATE}, #{regDateAmt,jdbcType=DECIMAL}, #{bonusCfmDate,jdbcType=DATE}, 
@@ -128,7 +130,7 @@
             #{penaltyIntamt,jdbcType=DECIMAL}, #{isCashset,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
             #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
             #{updateTime,jdbcType=TIMESTAMP}, #{releaseStatus,jdbcType=VARCHAR}, #{isManualRelease,jdbcType=VARCHAR}, 
-            #{rFinprodId,jdbcType=VARCHAR})
+            #{rFinprodId,jdbcType=VARCHAR},#{ourShareAmt,jdbcType=DECIMAL}, #{lendinShareAmt,jdbcType=DECIMAL})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.TrdProductTempDealAdd" >
         insert into TRD_PRODUCT_TEMP_DEAL_ADD
@@ -289,6 +291,12 @@
             <if test="rFinprodId != null" >
                 R_FINPROD_ID,
             </if>
+            <if test="ourShareAmt != null" >
+                OUR_SHARE_AMT,
+            </if>
+            <if test="lendinShareAmt != null" >
+                LENDIN_SHARE_AMT,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="tradeId != null" >
@@ -447,6 +455,12 @@
             <if test="rFinprodId != null" >
                 #{rFinprodId,jdbcType=VARCHAR},
             </if>
+            <if test="ourShareAmt != null" >
+                #{ourShareAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinShareAmt != null" >
+                #{lendinShareAmt,jdbcType=DECIMAL},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.TrdProductTempDealAdd" >
@@ -457,7 +471,7 @@
         DIF_PAY_AMT, DIF_PAY_CCY, DIF_PS, PURCH_MODLE, PURCH_TYPE, PURCH_DATE, PUR_PAY_DATE, 
         DEPOSIT_AMT, FIRST_UNIT_CPRICE3, EXP_CON_VALUE, PREB, PREC, SPO_SHARE_NUM, DEVIATION, 
         ASSET_RECOMMAND_ORG, TERMINATE_RATE, PENALTY_INTAMT, IS_CASHSET, CREATE_USER, CREATE_DEPT, 
-        CREATE_TIME, UPDATE_USER, UPDATE_TIME, RELEASE_STATUS, IS_MANUAL_RELEASE, R_FINPROD_ID
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME, RELEASE_STATUS, IS_MANUAL_RELEASE, R_FINPROD_ID,OUR_SHARE_AMT,LENDIN_SHARE_AMT
         )
         select TRADE_ID, PORTFOLIO_ID, CUSTOM_CASH_TYPE, GEN_TYPE, 
             PUR_CFM_DATE, RED_CFM_DATE, REG_DATE, REG_DATE_AMT, BONUS_CFM_DATE, ENTRUST_ID, PAY_TYPE, 
@@ -466,7 +480,8 @@
             DIF_PAY_AMT, DIF_PAY_CCY, DIF_PS, PURCH_MODLE, PURCH_TYPE, PURCH_DATE, PUR_PAY_DATE, 
             DEPOSIT_AMT, FIRST_UNIT_CPRICE3, EXP_CON_VALUE, PREB, PREC, SPO_SHARE_NUM, DEVIATION, 
             ASSET_RECOMMAND_ORG, TERMINATE_RATE, PENALTY_INTAMT, IS_CASHSET, CREATE_USER, CREATE_DEPT, 
-            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, RELEASE_STATUS, IS_MANUAL_RELEASE, R_FINPROD_ID
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+            RELEASE_STATUS, IS_MANUAL_RELEASE, R_FINPROD_ID,OUR_SHARE_AMT,LENDIN_SHARE_AMT
             
              from TRD_PRODUCT_TEMP_DEAL_ADD
              where 1 = 1 and TRADE_ID = #{tradeId,jdbcType=VARCHAR}
@@ -618,6 +633,12 @@
             <if test="rFinprodId != null" >
                 R_FINPROD_ID = #{rFinprodId,jdbcType=VARCHAR},
             </if>
+            <if test="ourShareAmt != null" >
+                OUR_SHARE_AMT = #{ourShareAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinShareAmt != null" >
+                LENDIN_SHARE_AMT = #{lendinShareAmt,jdbcType=DECIMAL},
+            </if>
         </set>
         where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
     </update>
@@ -670,7 +691,9 @@
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             RELEASE_STATUS = #{releaseStatus,jdbcType=VARCHAR},
             IS_MANUAL_RELEASE = #{isManualRelease,jdbcType=VARCHAR},
-            R_FINPROD_ID = #{rFinprodId,jdbcType=VARCHAR}
+            R_FINPROD_ID = #{rFinprodId,jdbcType=VARCHAR},
+            OUR_SHARE_AMT = #{ourShareAmt,jdbcType=DECIMAL},
+            LENDIN_SHARE_AMT = #{lendinShareAmt,jdbcType=DECIMAL}
         where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
     </update>
 </mapper>
