@@ -566,7 +566,7 @@
 
 		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
 
-		AND (INFO.ASSET_TYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1211','1212','1213')
+		AND (INFO.ASSET_TYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1211','1212','1213')
 		OR (INFO.ASSET_TYPE2 ='1299' and INFO.IN_ASSET_TYPE is not null AND INFO.IN_ASSET_TYPE NOT IN ('01','02'))
 		OR (INFO.ASSET_TYPE2 ='1299' AND INFO.IN_ASSET_TYPE is null))
 		AND mst.INDUSTRY　is not null
@@ -594,7 +594,7 @@
 
 		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
 
-		AND (INFO.ASSET_TYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1211','1212','1213')
+		AND (INFO.ASSET_TYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1211','1212','1213')
 		OR (INFO.ASSET_TYPE2 ='1299' and INFO.IN_ASSET_TYPE is not null AND INFO.IN_ASSET_TYPE NOT IN ('01','02'))
 		OR (INFO.ASSET_TYPE2 ='1299' AND INFO.IN_ASSET_TYPE is null))
 		AND mst.INDUSTRY IS NOT NULL
@@ -831,7 +831,7 @@
 		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
 		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
 		AND mst.province IS NOT NULL
-		AND INFO.ASSET_TYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299','1211','1212','1213')
+		AND INFO.ASSET_TYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299','1211','1212','1213')
 		<if test="rule != null  and rule.equals('local')">
 			<if test="provinces!=null and provinces.size>0">
 				and  mst.PROVINCE in
@@ -882,7 +882,7 @@
 		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
 		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
 		AND mst.province IS NOT NULL
-		AND INFO.ASSET_TYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299','1211','1212','1213')
+		AND INFO.ASSET_TYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299','1211','1212','1213')
 		<if test="rule != null  and rule.equals('local')">
 			<if test="provinces!=null and provinces.size>0">
 				and  mst.PROVINCE in

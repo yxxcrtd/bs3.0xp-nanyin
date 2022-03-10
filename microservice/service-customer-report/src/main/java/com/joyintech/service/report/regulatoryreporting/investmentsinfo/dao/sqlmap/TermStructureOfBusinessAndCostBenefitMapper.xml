@@ -2617,7 +2617,7 @@ with cj as(
 		left join chb_asset_info info
 		on cmap.asset_code=info.asset_code
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
-		and  cmap.ASSETTYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+		and  cmap.ASSETTYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -2631,7 +2631,7 @@ with cj as(
 			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
 		</if>
          where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
-		and  cmap.ASSETTYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+		and  cmap.ASSETTYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -3172,7 +3172,7 @@ with cj as(
 		left join chb_asset_info info
 		on cmap.asset_code=info.asset_code
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
-		and  cmap.ASSETTYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+		and  cmap.ASSETTYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
 		and cmap.ASSETVALUE_A!=0
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -3191,7 +3191,7 @@ with cj as(
 		and scmap.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
 		and cmap.prod_id=scmap.prod_id
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
-		and  cmap.ASSETTYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+		and  cmap.ASSETTYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
 		and cmap.ASSETVALUE_A!=0
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -3757,7 +3757,7 @@ with cj as(
 		left join chb_asset_info info
 		on cmap.asset_code=info.asset_code
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
-		and  cmap.ASSETTYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+		and  cmap.ASSETTYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
 		and cmap.ASSETVALUE_A!=0
 		<if test="org != null  and org!=''">
 		and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -3777,7 +3777,7 @@ with cj as(
 		and cmap.prod_id=lastcmap.prod_id
 		and lastcmap.ENDDATE=#{lastEndDate,jdbcType=DATE}
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
-		and  cmap.ASSETTYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+		and  cmap.ASSETTYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
 		and cmap.ASSETVALUE_A!=0　
 		<if test="org != null  and org!=''">
 		　and di.institution_code=#{org, jdbcType=VARCHAR}
