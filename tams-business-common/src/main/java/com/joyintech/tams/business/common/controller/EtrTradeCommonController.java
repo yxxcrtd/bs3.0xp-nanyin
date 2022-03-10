@@ -43,6 +43,7 @@ public class EtrTradeCommonController extends BaseController {
      * @see
      **/
     @PostMapping("queryPositionInfo")
+    @ResponseBody
     public List<BaseMap> queryPositionInfo(@RequestBody PositionCashSecRequest requestDto){
         return etrTradeCommonervice.queryPositionInfo(requestDto);
     }
@@ -56,6 +57,7 @@ public class EtrTradeCommonController extends BaseController {
      * @see
      **/
     @PostMapping("queryPositionInfoSingle")
+    @ResponseBody
     public List<BaseMap> queryPositionInfoSingle(@RequestBody PositionCashSecRequest requestDto){
         return etrTradeCommonervice.queryPositionInfo(requestDto);
     }
