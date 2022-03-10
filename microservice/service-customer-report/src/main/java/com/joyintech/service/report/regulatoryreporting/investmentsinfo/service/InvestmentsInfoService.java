@@ -2938,6 +2938,11 @@ public class InvestmentsInfoService {
 		InvestmentBusinessDetailsDto investmentBusinessDetailsDto44= investmentBusinessDetailsMapper.queryBottomInfoAmountByModeType(paraMap);
 		paraMap.put("modetype", "45");
 		InvestmentBusinessDetailsDto investmentBusinessDetailsDto45= investmentBusinessDetailsMapper.queryBottomInfoAmountByModeType(paraMap);
+
+		paraMap.remove("INDUSTRY1");
+		paraMap.remove("INDUSTRY2");
+		paraMap.remove("INDUSTRY3");
+		paraMap.remove("INDUSTRY4");
 		investmentBusinessDetailsDtoList.add(investmentBusinessDetailsDto40);
 		investmentBusinessDetailsDtoList.add(investmentBusinessDetailsDto41);
 		investmentBusinessDetailsDtoList.add(investmentBusinessDetailsDto42);
@@ -2995,7 +3000,6 @@ public class InvestmentsInfoService {
 		paraMap.put("startDate", startDate);
 		paraMap.put("lastStartDate", lastDate);
 		paraMap.put("rule",(String) pageParam.get("rule"));
-		paraMap.put("provinces", StringUtil.splitToList(GlobalConstant.SEMICOLON,CacheUtil.getSysParam("SVR_LOCAL_AFFIRM_RULE").toString()));
 
 		List<OverallInfoDto> overallInfoDtoList = overallInfoMapper.queryBottomTable3AddInfoList(paraMap);
 		// Map<行业分类:产品形式, 余额>
