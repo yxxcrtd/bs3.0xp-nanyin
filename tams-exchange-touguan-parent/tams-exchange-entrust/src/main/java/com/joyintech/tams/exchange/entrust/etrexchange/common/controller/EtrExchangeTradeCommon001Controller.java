@@ -21,8 +21,10 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.business.common.dto.PositionCashSecRequest;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
+import com.joyintech.tams.business.common.service.EtrTradeCommonervice;
 import com.joyintech.tams.common.base.entity.FinExercisePlan;
 import com.joyintech.tams.common.base.entity.FinProductQuto;
 import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
@@ -108,7 +110,8 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	private String wsUrl;
 	@Autowired
 	private EtrExchangeTradeCommonMapper etrExchangeTradeCommonMapper;
-
+	@Autowired
+	private  EtrTradeCommonervice etrTradeCommonervice;
 
 	/**
 	 * 由于交易平台不同，设置不同交易平台对应的委托方向
@@ -1619,9 +1622,9 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	@ApiOperation(value = "头寸信息查询", notes = "头寸信息查询")
 	@PostMapping("/queryPositionInfo")
 	@ResponseBody
-	public Message<List<BaseMap>> queryPositionInfo(@RequestBody EtrExchangePosiInfoRequestDto requestDto) {
-		List<BaseMap> m = etrExchangeTrade001CommonService.queryPositionInfo(requestDto);
-		return new Message<List<BaseMap>>().success().setData(m);
+	public List<BaseMap> queryPositionInfo(@RequestBody PositionCashSecRequest requestDto) {
+		List<BaseMap> m = etrTradeCommonervice.queryPositionInfo(requestDto);
+		return m;
 	}
 }
 	
