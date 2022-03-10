@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.invest.common.service.EtrTradeCommonervice;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -151,7 +152,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	@Autowired
 	private EtrExchangeTradeCommonMapper etrExchangeTradeCommonMapper;
 	@Autowired
-	private  EtrTradeCommonervice etrTradeCommonervice;
+	private EtrTradeCommonervice etrTradeCommonervice;
 
 	/**
 	 * 由于交易平台不同，设置不同交易平台对应的委托方向
@@ -1679,7 +1680,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	@PostMapping("/queryPositionInfo")
 	@ResponseBody
 	public List<BaseMap> queryPositionInfo(@RequestBody PositionCashSecRequest requestDto) {
-		List<BaseMap> m = etrTradeCommonervice.queryPositionInfo(requestDto);
+		List<BaseMap> m = null;//etrTradeCommonervice.queryPositionInfo(requestDto);
 		return m;
 	}
 }

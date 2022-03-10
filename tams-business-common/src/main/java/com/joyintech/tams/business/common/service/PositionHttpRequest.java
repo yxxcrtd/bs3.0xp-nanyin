@@ -307,7 +307,7 @@ public class PositionHttpRequest {
      * @param param
      * @return
      */
-    static String queryPosition(Object param) {
+    public static String queryPosition(Object param) {
         String returnStr="";
         try {
             returnStr=httpPostRequest(positionUrl + "/position/endpoint/queryPosition", param);
