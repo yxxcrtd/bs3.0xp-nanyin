@@ -44,6 +44,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import static com.joyintech.tams.exchange.common.constant.EntrustStatus.*;
+
 @Component
 public class TradeMsgProcessor {
     private static final Logger logger = LoggerFactory.getLogger(TradeMsgProcessor.class);
@@ -641,7 +643,7 @@ public class TradeMsgProcessor {
                 entrustCancelProcessor.unFrozenOrder(order, entrustDb.getFrozenVolume(), entrustDb.getFrozenBalance());
             }
             splitOrderHelper.unFrozenSplitOrder(entrustDb.getEntrustProp(), entrustDb.getRemark(), entrustDb.getFrozenVolume(), entrustDb.getFrozenBalance());
-            entrustDb.setEntrustStatus(EntrustStatus.INVALID.value);
+            entrustDb.setEntrustStatus(INVALID.value);
             entrustDb.setErrorMsg(ErrorMsgUtils.subErrorMsg(entrust.getErrorMsg()));
             entrustDb.setCancelVolume(entrustDb.getEntrustVolume());
             FuturesInstrument futuresInstrument = futuresInstrumentService.queryByInnerCode(entrustDb.getStockCode());
@@ -700,9 +702,9 @@ public class TradeMsgProcessor {
                     }
                 }
                 if (Objects.nonNull(dbCancelEntrust)) {
-                	if (entrust.getEntrustStatus() >= dbEntrust.getEntrustStatus()) {
-                		this.processPosition(entrust);
-                	}
+                    if (entrust.getEntrustStatus() >= dbEntrust.getEntrustStatus()) {
+                        this.processPosition(entrust);
+                    }
                     entrustCancelProcessor.processCancelEntrustByOrigEntrust(entrust, dbEntrust, dbCancelEntrust);
                 } else {
                     processRtnEntrust(entrust, dbEntrust);
@@ -720,8 +722,8 @@ public class TradeMsgProcessor {
         if (!Strings.isNullOrEmpty(entrust.getReportNo())) {
             dbEntrust.setReportNo(entrust.getReportNo());
         }
-        if (entrust.getEntrustStatus() == EntrustStatus.INVALID.value
-                || entrust.getEntrustStatus() == EntrustStatus.CANCELED.value
+        if (entrust.getEntrustStatus() == INVALID.value
+                || entrust.getEntrustStatus() == CANCELED.value
                 || entrust.getEntrustStatus() == EntrustStatus.SYSTEM_INVALID.value) {
             handleEntrustInvalid(entrust, dbEntrust);
         }
@@ -736,40 +738,51 @@ public class TradeMsgProcessor {
             logger.info("terminal return entrustStatus < dbEntrustStatus {}", dbEntrust.getId());
         }
     }
-    
+
     /**
      * 处理头寸
+     *
      * @param entrust
      */
     private void processPosition(EntrustInterface entrust) {
-    	
-    	Instruction instruction = instructionService.findById(entrust.getInstructionId());
+        if (EntrustType.CANCEL.value.equals(entrust.getEntrustType())) {
+            logger.info("不处理头寸：entrust entrustType is cancel");
+            return;
+        }
+
+        Instruction instruction = instructionService.findById(entrust.getInstructionId());
 //    	PositionInstructionRequest instructionClone = (PositionInstructionRequest)instruction.cloneInstruction();
-    	PositionInstructionRequest instructionClone = new PositionInstructionRequest();
-    	BeanUtil.copyProperties(instruction, instructionClone);
-    	instructionClone.setSoftSkipMode("Y");
-    	instructionClone.setEntrustNo(entrust.getOrigEntrustId());
-    	instructionClone.setEntrustAmt(entrust.getEntrustPrice().multiply(BigDecimal.valueOf(entrust.getEntrustVolume())));
-    	instructionClone.setEntrustNum(entrust.getEntrustVolume());
-    	instructionClone.setEntrustPrice(entrust.getEntrustPrice());
-    	//下单生成委托，调用头寸引擎---start
-        if (!(entrust.getEntrustStatus() == EntrustStatus.INVALID.value
-                || entrust.getEntrustStatus() == EntrustStatus.CANCELED.value
-                || entrust.getEntrustStatus() == EntrustStatus.SYSTEM_INVALID.value)) {
-        	positionRequestServiceInstructionRequest.sendRequest(instructionClone,DictCodeListExt3.业务动作_交易下单.getValue(),DictCodeListExt3.系统动作_新建.getValue(),DictCodeListExt3.系统动作_新建.getValue());
+        PositionInstructionRequest instructionClone = new PositionInstructionRequest();
+        BeanUtil.copyProperties(instruction, instructionClone);
+        instructionClone.setSoftSkipMode("Y");
+        //委托编号
+        instructionClone.setEntrustNo(entrust.getId());
+        instructionClone.setEntrustAmt(entrust.getEntrustPrice().multiply(BigDecimal.valueOf(entrust.getEntrustVolume())));
+        instructionClone.setEntrustNum(entrust.getEntrustVolume());
+        instructionClone.setEntrustPrice(entrust.getEntrustPrice());
+
+        int entrustStatus = entrust.getEntrustStatus();
+        //下单生成委托，调用头寸引擎---start
+        if (!(entrustStatus == INVALID.value
+                || entrustStatus == CANCELED.value
+                || entrustStatus == PART_TRADED_CANCELED.value
+                || entrustStatus == SYSTEM_INVALID.value)) {
+            positionRequestServiceInstructionRequest.sendRequest(instructionClone, DictCodeListExt3.业务动作_交易下单.getValue(), DictCodeListExt3.系统动作_新建.getValue(), DictCodeListExt3.系统动作_新建.getValue());
         }
-      //下单生成委托，调用头寸引擎---end
-      //撤销委托，调用头寸引擎---start
-        if (entrust.getEntrustStatus() == EntrustStatus.CANCELED.value) {
-        	positionRequestServiceInstructionRequest.sendRequest(instructionClone,DictCodeListExt3.业务动作_撤委托.getValue(),DictCodeListExt3.系统动作_新建.getValue(),DictCodeListExt3.系统动作_新建.getValue());
+        //下单生成委托，调用头寸引擎---end
+        //撤销委托，调用头寸引擎---start
+        if (entrustStatus == CANCELED.value ||
+                entrustStatus == PART_TRADED_CANCELED.value) {
+            positionRequestServiceInstructionRequest.sendRequest(instructionClone, DictCodeListExt3.业务动作_撤委托.getValue(), DictCodeListExt3.系统动作_新建.getValue(), DictCodeListExt3.系统动作_新建.getValue());
         }
-      //撤销委托，调用头寸引擎---end
+        //撤销委托，调用头寸引擎---end
     }
 
     private void handleEntrustInvalid(EntrustInterface entrust, EntrustInterface dbEntrust) {
         //不同业务的废单可能有些只有废单委托，没有废单成交，自己模拟成交
         if (!dbEntrust.getEntrustType().equals(EntrustType.CANCEL.value) &&
-                entrust.getEntrustStatus() == EntrustStatus.INVALID.value && dbEntrust.getEntrustStatus() != EntrustStatus.INVALID.value) {
+                entrust.getEntrustStatus() == INVALID.value &&
+                dbEntrust.getEntrustStatus() != INVALID.value) {
             Date now = new Date(System.currentTimeMillis());
             Trade tradeRecord = new Trade();
             tradeRecord.setBrokerEntrustId(dbEntrust.getId());
@@ -936,7 +949,7 @@ public class TradeMsgProcessor {
         } else {
             //复核拒绝
             entrust.setErrorMsg(approveReason);
-            if (entrust.getEntrustStatus() != EntrustStatus.CANCELED.value) {
+            if (entrust.getEntrustStatus() != CANCELED.value) {
                 entrust.setEntrustStatus(EntrustStatus.NOT_APPROVAL.value);
             }
             // 设置撤销数量供风险释放使用
