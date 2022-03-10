@@ -269,10 +269,10 @@ public class PositionRequestTradeRestService {
             balanceCheck = "N";
         }
         resultMap.put("userId", SecurityUtil.getLoginUser().getUserName());
-        resultMap.put("totalTradeId", entity.getEntrustId());
+        resultMap.put("totalTradeId", entity.getTrdProductDeal().getTradeId());
         resultMap.put("balanceCheck", balanceCheck);
-        resultMap.put("flowStatus", DictCodeListExt3.流程节点_流程提交.getValue());
-        resultMap.put("modelType", DictCodeListExt1.子系统代码_委托.getValue());
+        resultMap.put("flowStatus", DictCodeListExt3.流程节点_审批生效.getValue());
+        resultMap.put("modelType", DictCodeListExt1.子系统代码_交易.getValue());
         //设置头寸业务类型
         String busiType = commonPositionEngineService.getPositionBusiType(entity.getTrdProductDeal().getFinprodType2(), entity.getTrdProductDeal().getPs(), entity.getAssetType2());
         resultMap.put("busiType", busiType);
