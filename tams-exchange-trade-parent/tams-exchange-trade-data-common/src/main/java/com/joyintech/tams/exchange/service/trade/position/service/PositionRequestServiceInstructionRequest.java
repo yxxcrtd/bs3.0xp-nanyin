@@ -266,8 +266,7 @@ public class PositionRequestServiceInstructionRequest {
         resultMap.put(SETTLE_SPEED, null);
         resultMap.put(SHARES_TRADE_PLATFORM, null);
         resultMap.put(DELIVERY_TYPE, null);
-        // TODO 汇总交易编号 uuid和header一样?
-        resultMap.put(TOTAL_TRADE_ID, null);
+        resultMap.put(TOTAL_TRADE_ID, entity.getEntrustId());
 
         // 调用组合计算接口，获取分配信息
         List<PortfolioCalculateResponse> calculates = getCalculateList(entity);
