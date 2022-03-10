@@ -3,7 +3,7 @@ server:
 agent:
   servers: 127.0.0.1:9190
   name: kcbp
-  type: kcbp #mock #ufx #KDGateway #ufx #kcbp
+  type: mock #mock #ufx #KDGateway #ufx #kcbp
   query:
     interval: 1000
     count: 2
@@ -27,7 +27,7 @@ trade:
 
 log:
   path: /home/tams/logs/terminal
-  level: INFO
+  level: debug
 
 netty:
   port: 9190
@@ -50,7 +50,7 @@ netty:
 
 # kcbp config
 kcbp:
-  active: true
+  active: false
   keep:
     fixRate: 30000 #kcbp终端维持连接频率
   # 上报本机信息
@@ -98,51 +98,6 @@ jsd:
 
 ctp:
   active: false
-
----
-spring:
-  profiles: gaoyu
-  datasource:
-    url: jdbc:oracle:thin:@//211.152.51.188:1521/wind
-    username: yitihua1_0710
-    password: yitihua1_0710
-    maxTotal: 50
-    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
-base:
-  datasource:
-    url: jdbc:oracle:thin:@//211.152.51.188:1521/wind
-    username: yitihua1_0710
-    password: yitihua1_0710
-    maxTotal: 50
-    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
-eureka:
-  client:
-    enabled: false
-log:
-  path: /home/tams/logs/terminal
-  level: INFO
----
-spring:
-  profiles: joyin-216
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.90.217:1521/orcl
-    username: tams217
-    password: tams217
-    maxTotal: 50
-    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
-base:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.90.217:1521/orcl
-    username: tams217
-    password: tams217
-    maxTotal: 50
-    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
-eureka:
-  client:
-    enabled: false #是否启用eureka客户端，如果启用，则需要有eureka服务器，默认为true
-log:
-  path: /home/tams/logs/terminal
-  level: INFO
 ---
 spring:
   profiles: joyin-210
@@ -162,6 +117,3 @@ base:
 eureka:
   client:
     enabled: false #是否启用eureka客户端，如果启用，则需要有eureka服务器，默认为true
-log:
-  path: /home/tams/logs/terminal
-  level: INFO
