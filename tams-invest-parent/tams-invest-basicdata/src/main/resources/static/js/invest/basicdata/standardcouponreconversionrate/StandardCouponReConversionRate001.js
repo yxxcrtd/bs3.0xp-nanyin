@@ -30,7 +30,7 @@ $(function() {
         cols:[{field:'brokerId',width:200,  title: '券商',visible:false}
             ,{field:'seqNo',width:200,  title: '序列号',visible:false}
             ,{field:'brokerName',width:200,  title: '券商'}
-                       ,{field:'accountType',width:200,  title: '资金账户',visible:false}
+                       ,{field:'accountType',width:200,  title: '资金账号',visible:false}
                         ,{field:'accountTypeStr',width:200,  title: '资金账户'}
             ,{field:'finprodId',width:200,  title: '资产代码',visible:false}
             /**修改资产代码 排序 liuzilong 2021-11-09**/

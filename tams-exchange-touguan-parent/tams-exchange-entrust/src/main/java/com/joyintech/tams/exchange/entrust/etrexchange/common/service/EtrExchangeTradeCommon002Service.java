@@ -11,6 +11,7 @@
 package com.joyintech.tams.exchange.entrust.etrexchange.common.service;
 
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
@@ -21,10 +22,7 @@ import com.joyintech.service.entrust.etrexchangetrade.dto.EtrExchangeTrade002Dto
 import com.joyintech.tams.business.common.dao.JoyinbusinessCommonMapper;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.pojo.BaseMap;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.*;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -263,6 +261,23 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 			param.put("finprodMarketIds",StringUtil.splitToList(GlobalConstant.COMMA, param.get("finprodMarketIds").toString()));
 		}else{
 			param.put("finprodMarketIds", null);
+		}
+		//申报类型 - 模糊查询
+		if(StringUtils.isNotEmpty((String)param.get("search"))){
+			List<String> declaTypeList = new ArrayList<>();
+			List<? extends DataDictItem> list = SysDataUtil.getDataDictItem(DictCode.申报类型.getValue());
+			if(!list.isEmpty()&&list.size()>0){
+				for (DataDictItem t:
+						list) {
+					String typeValue = t.getItemValue();
+					if(typeValue.indexOf((String)param.get("search"))!=-1){
+						declaTypeList.add(t.getItemCode());
+					}
+				}
+				param.put("declaTypeList", declaTypeList);
+			}
+		} else {
+			param.put("declaTypeList", null);
 		}
 		return super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(), () -> etrExchangeTradeCommonMapper.selectEtrExchange(param));
 //		return restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectEtrExchange",

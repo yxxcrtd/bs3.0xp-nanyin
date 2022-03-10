@@ -8,6 +8,7 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.invest.basicdata.standardcouponreconversionrate.dto.StandardCouponReConversionRateDto;
 import com.joyintech.tams.invest.basicdata.standardcouponreconversionrate.service.StandardCouponReConversionRateService;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.codehaus.plexus.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,7 +31,7 @@ public class StandardCouponReConversionRateValidator implements BeanValidator {
         if (StringUtil.equals(dto.getOperateType(), "new")){
             StandardCouponReConversionRateDto vo = new StandardCouponReConversionRateDto();
             vo.setBrokerId(dto.getBrokerId());
-            if(Objects.isNull(dto.getAccountType())||"".equals(dto.getAccountType())){
+            if(StringUtils.isNotEmpty(vo.getFinprodId())&&StringUtils.isEmpty(vo.getAccountType())){
                 vo.setFinprodId("system");
                 List<StandardCouponReConversionRateDto> list = standardCouponReConversionRateService.getList(dto);
                 if(!list.isEmpty()&&list.size()>0){
@@ -38,7 +39,7 @@ public class StandardCouponReConversionRateValidator implements BeanValidator {
                     return resultList;
                 }
             }
-            if(Objects.isNull(dto.getFinprodId())||"".equals(dto.getFinprodId())){
+            if(StringUtils.isEmpty(vo.getFinprodId())&&StringUtils.isNotEmpty(vo.getAccountType())){
                 vo.setAccountType("system");
                 List<StandardCouponReConversionRateDto> list = standardCouponReConversionRateService.getList(dto);
                 if(!list.isEmpty()&&list.size()>0){
@@ -46,6 +47,10 @@ public class StandardCouponReConversionRateValidator implements BeanValidator {
                     return resultList;
                 }
             }
+        }
+        if(StringUtils.isEmpty(dto.getFinprodId())&&StringUtils.isEmpty(dto.getAccountType())){
+            resultList.add(new ValidMessage(this.getMessage("资产代码、资金账户不可都为空", dto.getTandardRate ())));
+            return resultList;
         }
         if(StringUtil.equals(dto.getOperateType(), "edit")){
             if(StringUtil.isNotEmpty(dto.getStartDate())){

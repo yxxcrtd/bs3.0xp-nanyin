@@ -1582,6 +1582,11 @@
             T1.finprodAbbr|| '|' ||T1.assetType|| '|' || sdl4.ITEM_VALUE|| '|' || T1.dealCurAcctName|| '|' || T1.finprodMarketId|| '|' || T1.SEC_ACCT_NAME
             like '%' || #{search} || '%'
             )
+            <if test="declaTypeList != null and declaTypeList.size()>0">
+                <foreach collection="declaTypeList" open="or T1.DECLATYPE in(" close=")" separator="," item="item">
+                    #{item}
+                </foreach>
+            </if>
             <if test="search_isNumberFlag != null and search_isNumberFlag == true">
                 or (T1.implementPercent*100 = #{search})
                 or (T1.dealPercent*100 = #{search})
@@ -1606,7 +1611,8 @@
                 or (M.positionsAmt = #{search})
                 or (M.price = #{search})
                 OR (M.PRICE*M.ptlPositionsNum-M.positionsAmt =#{search})
-                OR ((M.PRICE*M.ptlPositionsNum-M.positionsAmt)/(M.PRICE*M.ptlPositionsNum) =#{search})
+                OR ((M.PRICE*M.ptlPositionsNum-M.positionsAmt)/
+                    nvl(decode(M.PRICE*M.ptlPositionsNum,0,1,M.PRICE*M.ptlPositionsNum),1)=#{search})
             </if>
         </if>
     </sql>
