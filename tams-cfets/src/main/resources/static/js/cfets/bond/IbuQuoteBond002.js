@@ -530,6 +530,8 @@
                     $('#CfetsBondDealQuotedPrice004_intAmt').val(result.data.intAmt).trigger('blur');
                     $('#CfetsBondDealQuotedPrice004_fpriceAmt').val(result.data.fpriceAmt).trigger('blur');
                     $('#CfetsBondDealQuotedPrice004_parValueAmt').val(result.data.parValueAmt).trigger('blur');
+                    $('#dealFeeAmt').val(result.data.dealFeeAmt).trigger('blur');
+                    $('#settFeeAmt').val(result.data.settFeeAmt).trigger('blur');
                     entrustIdChangeFlag = false;
                 }
             })
