@@ -990,7 +990,10 @@ FROM TRD_PRODUCT_DEAL A
 	<!--add by fuyongsheng 20220308 start-->
     <select id="getTrdProductTempDeals" resultType="com.joyintech.tams.common.base.entity.TrdProductTempDeal" >
         select
-        <include refid="com.joyintech.tams.common.base.dao.TrdProductTempDealMapper.Base_Column_List" />
+            A.TRADE_ID,
+            A.FINPROD_ID,
+            A.FINPROD_TYPE2,
+            A.PS
         FROM
         TRD_PRODUCT_TEMP_DEAL A,
         TRD_PRODUCT_TEMP_DEAL_ADD B,
@@ -1009,7 +1012,10 @@ FROM TRD_PRODUCT_DEAL A
         </if>
         UNION
         SELECT
-        <include refid="com.joyintech.tams.common.base.dao.TrdProductTempDealMapper.Base_Column_List" />
+            A.TRADE_ID,
+            A.FINPROD_ID,
+            A.FINPROD_TYPE2,
+            A.PS
         FROM
         TRD_PRODUCT_TEMP_DEAL A,
         TRD_PRODUCT_TEMP_DEAL_ADD B
