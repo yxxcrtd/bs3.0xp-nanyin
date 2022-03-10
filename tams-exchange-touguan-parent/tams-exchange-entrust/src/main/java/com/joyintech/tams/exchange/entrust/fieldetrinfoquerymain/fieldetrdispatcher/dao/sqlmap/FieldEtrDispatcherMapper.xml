@@ -463,6 +463,7 @@
     <select id="getEtrDispatcherInfo"
             resultType="com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrdispatcher.dto.FieldEtrDispatcherInfoResponse">
         SELECT
+            DISTINCT
             #{busiTypePosition} busiTypePosition,
             to_char(ete.entrust_date,'yyyy-MM-dd') entrustDate,
             ete.portfolio_id portfolioId,
@@ -474,12 +475,23 @@
             ete.ps ps,
             DECODE(eted.SETTLE_SPREED,0,'01',1,'02','2','03') settleSpeed,
             ete.price_model priceModel,
-            ssai.sec_acct_name secAcctId,
+            c1.acctName secAcctId,
             ete.ccy ccy,
             ete.entrust_num/100 shareNum,
             eted.our_ent_num/100 entrustOwnNum,
             eted.lendin_ent_num integrateSecAmount,
-            ete.price unitPrice,
+            <!--ete.price unitPrice,-->
+            round(
+                decode(
+                    btm.OUTPUT_VALUE_1,
+                    '02',
+                    decode( eted.CALCULATE_FIELD, 'price', ete.PRICE, 'exerYield', eted.EXER_YIELD * 100, 'matureYield', eted.MATURE_YIELD * 100 ),
+                    '03',
+                    ete.PRICE,
+                    NVL( ete.PRICE * 100, 0.00 )
+                ),
+                4
+            ) unitPrice,
             eted.full_price allPrice,
             eted.mature_yield*100 matureYield,
             eted.exer_yield*100 exerYield,
@@ -494,7 +506,8 @@
             decode(
             eted.ASSET_TYPE,
             'F01',
-            NVL( ete.ENTRUST_NUM * 100, 0 ),
+            <!--NVL( ete.ENTRUST_NUM * 100, 0 ),-->
+            NVL( ete.ENTRUST_NUM * ete.PRICE, 0 ),
             'F10',
             NVL( ete.ENTRUST_NUM * 100, 0 ),
             NVL( ete.ENTRUST_AMT, ete.ENTRUST_NUM )
@@ -542,6 +555,7 @@
             fp.Is_Right isRight
         FROM ETR_ENTRUST ete
         INNER JOIN ETR_ENTRUST_ADD eted ON ete.entrust_id = eted.entrust_id
+        LEFT JOIN FIN_PRODUCT_TYPE_CONFIG btm ON ( ete.FINPROD_TYPE2 = btm.INPUT_VALUE_2 OR btm.INPUT_VALUE_2 IS NULL )
         LEFT JOIN FIN_PRODUCT_CONVERTIBLE FPC ON ete.FINPROD_ID = FPC.FINPROD_ID
         LEFT JOIN FIN_PRODUCT T5 ON FPC.CON_FINPROD_ID = T5.FINPROD_ID
         LEFT JOIN PTL_PORTFOLIO pp ON ete.portfolio_id = pp.portfolio_id
@@ -551,7 +565,8 @@
         LEFT JOIN PTL_SEC_STOCK pss ON pss.pledge_stock_id = eted.pledge_stock_id AND ete.portfolio_id = pss.portfolio_id
         LEFT JOIN MST_CUSTOMER_INFO mci ON mci.CUSTOMER_ID = eted.main_consignee AND mci.IS_SALER = #{YESORNO_YES, jdbcType = VARCHAR}
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON eted.SEC_ACCT_ID = ssai.SEC_ACCT_ID
-        LEFT JOIN etr_pledge ee ON ete.entrust_id = ee.entrust_id /** 委托指令回购质押品 **/ 
+        LEFT JOIN ( SELECT DISTINCT ACCT_NO acctNo1, BUSI_ACCT_NO busiAcctNo1, CCY ccy, ACCT_NAME acctName FROM STL_CAPACCT_INFO ) c1 ON ssai.TRD_ACCT_ID = c1.acctNo1
+        LEFT JOIN etr_pledge ee ON ete.entrust_id = ee.entrust_id /** 委托指令回购质押品 **/
         LEFT JOIN ETR_ENTRUST oete ON  oete.entrust_id = eted.TRADE_ID
         LEFT JOIN etr_pledge oee ON oete.entrust_id = oee.entrust_id   
         LEFT JOIN FIN_PRODUCT T6 ON oete.FINPROD_ID = T6.FINPROD_ID
@@ -562,6 +577,7 @@
         union all
 
         SELECT
+        DISTINCT
         #{busiTypePosition} busiTypePosition,
         to_char(ete.entrust_date,'yyyy-MM-dd') entrustDate,
         ete.portfolio_id portfolioId,
@@ -573,12 +589,24 @@
         ete.ps ps,
         DECODE(eted.SETTLE_SPREED,0,'01',1,'02','2','03') settleSpeed,
         ete.price_model priceModel,
-        ssai.sec_acct_name secAcctId,
+        c1.acctName secAcctId,
         ete.ccy ccy,
         ete.entrust_num/100 shareNum,
         eted.our_ent_num/100 entrustOwnNum,
         eted.lendin_ent_num integrateSecAmount,
-        ete.price unitPrice,
+        <!--ete.price unitPrice,-->
+        <!--ete.price unitPrice,-->
+        round(
+            decode(
+                btm.OUTPUT_VALUE_1,
+                '02',
+                decode( eted.CALCULATE_FIELD, 'price', ete.PRICE, 'exerYield', eted.EXER_YIELD * 100, 'matureYield', eted.MATURE_YIELD * 100 ),
+                '03',
+                ete.PRICE,
+                NVL( ete.PRICE * 100, 0.00 )
+            ),
+            4
+        ) unitPrice,
         eted.full_price allPrice,
         eted.mature_yield*100 matureYield,
         eted.exer_yield*100 exerYield,
@@ -593,7 +621,8 @@
         decode(
         eted.ASSET_TYPE,
         'F01',
-        NVL( ete.ENTRUST_NUM * 100, 0 ),
+        <!--NVL( ete.ENTRUST_NUM * 100, 0 ),-->
+        NVL( ete.ENTRUST_NUM * ete.PRICE, 0 ),
         'F10',
         NVL( ete.ENTRUST_NUM * 100, 0 ),
         NVL( ete.ENTRUST_AMT, ete.ENTRUST_NUM )
@@ -641,6 +670,7 @@
         fp.Is_Right isRight
         FROM WFL_ETR_ENTRUST ete
         INNER JOIN WFL_ETR_ENTRUST_ADD eted ON ete.entrust_id = eted.entrust_id
+        LEFT JOIN FIN_PRODUCT_TYPE_CONFIG btm ON ( ete.FINPROD_TYPE2 = btm.INPUT_VALUE_2 OR btm.INPUT_VALUE_2 IS NULL )
         LEFT JOIN FIN_PRODUCT_CONVERTIBLE FPC ON ete.FINPROD_ID = FPC.FINPROD_ID
         LEFT JOIN FIN_PRODUCT T5 ON FPC.CON_FINPROD_ID = T5.FINPROD_ID
         LEFT JOIN PTL_PORTFOLIO pp ON ete.portfolio_id = pp.portfolio_id
@@ -650,7 +680,8 @@
         LEFT JOIN PTL_SEC_STOCK pss ON pss.pledge_stock_id = eted.pledge_stock_id AND ete.portfolio_id = pss.portfolio_id
         LEFT JOIN MST_CUSTOMER_INFO mci ON mci.CUSTOMER_ID = eted.main_consignee AND mci.IS_SALER = #{YESORNO_YES, jdbcType = VARCHAR}
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON eted.SEC_ACCT_ID = ssai.SEC_ACCT_ID
-        LEFT JOIN wfl_etr_pledge ee ON ete.entrust_id = ee.entrust_id /** 委托指令回购质押品 **/ 
+        LEFT JOIN ( SELECT DISTINCT ACCT_NO acctNo1, BUSI_ACCT_NO busiAcctNo1, CCY ccy, ACCT_NAME acctName FROM STL_CAPACCT_INFO ) c1 ON ssai.TRD_ACCT_ID = c1.acctNo1
+        LEFT JOIN wfl_etr_pledge ee ON ete.entrust_id = ee.entrust_id /** 委托指令回购质押品 **/
         LEFT JOIN ETR_ENTRUST oete ON  oete.entrust_id = eted.TRADE_ID
         LEFT JOIN etr_pledge oee ON oete.entrust_id = oee.entrust_id   
         LEFT JOIN FIN_PRODUCT T6 ON oete.FINPROD_ID = T6.FINPROD_ID

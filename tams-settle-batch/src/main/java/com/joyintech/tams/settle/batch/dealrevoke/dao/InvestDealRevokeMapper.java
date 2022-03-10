@@ -183,6 +183,15 @@ public interface InvestDealRevokeMapper {
 
     void deleteZyTrdStasecFlowDetails(@Param("tradeIds") List<String> tradeIds);
 
+	// add by fuyongsheng 20220308 start
+    /**
+     * 查询日间成交交易
+     * @param param
+     * @return
+     */
+    List<TrdProductTempDeal> getTrdProductTempDeals(Map<String, Object> param);
+    // add by fuyongsheng 20220308 end
+
     // modify by etliu 20220227 start
     // 广农商二阶段 GNS-963:【广农商场内清算】协议回购上交所存续期（解除质押、到期购回、到期续做、提前购回）指令提交后，指令持仓更新不对
     void deleteDayFinTradeProduct(Map<String, Object> param);

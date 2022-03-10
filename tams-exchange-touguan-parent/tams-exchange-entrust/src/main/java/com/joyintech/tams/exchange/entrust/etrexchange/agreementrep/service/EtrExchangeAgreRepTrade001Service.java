@@ -11,8 +11,30 @@
 package com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.service;
 
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
+import org.springframework.validation.BindingResult;
+
 import com.joyintech.background.component.common.pack.common.security.User;
-import com.joyintech.background.component.order.exchange.business.dto.*;
+import com.joyintech.background.component.order.exchange.business.dto.AgreRepAdvBuyDto;
+import com.joyintech.background.component.order.exchange.business.dto.AgreRepExpireDto;
+import com.joyintech.background.component.order.exchange.business.dto.AgreRepExpireUnBuyDto;
+import com.joyintech.background.component.order.exchange.business.dto.AgreRepFristIssueDto;
+import com.joyintech.background.component.order.exchange.business.dto.AgreRepHwayChgSecDto;
+import com.joyintech.background.component.order.exchange.business.dto.AgreRepOpenSecDto;
 import com.joyintech.background.component.order.exchange.common.dto.EtrBaseDto;
 import com.joyintech.background.component.order.exchange.common.dto.EtrParameterDto;
 import com.joyintech.background.component.order.exchange.common.dto.EtrSinglePortfolioDto;
@@ -23,15 +45,28 @@ import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.*;
+import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.ReflectUtil;
+import com.joyintech.framework.util.SpringContextUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDispatcherService;
-import com.joyintech.system.base.entity.SysUser;
+import com.joyintech.system.base.dao.SysWflBusinessListMapper;
+import com.joyintech.system.base.entity.SysWflBusinessList;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.dao.FinDealPledgeMapper;
 import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
-import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.common.base.entity.EtrDistribute;
+import com.joyintech.tams.common.base.entity.EtrEntrust;
+import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
+import com.joyintech.tams.common.base.entity.EtrPledge;
+import com.joyintech.tams.common.base.entity.FinDealPledge;
+import com.joyintech.tams.common.base.entity.FinDealPledgeKey;
+import com.joyintech.tams.common.base.entity.FinTradeProduct;
+import com.joyintech.tams.common.base.entity.FinTradeProductKey;
 import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.common.service.DateCalService;
@@ -40,9 +75,9 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dao.EtrExchangeAgreRepTradeMapper;
-import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dto.*;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePositionsCommonRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dto.EtrExchangeAgreRepTrade001Dto;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.SelectOptionRequestDto;
+import com.joyintech.tams.exchange.entrust.etrexchange.position.service.PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -57,17 +92,6 @@ import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.service.BaseProcessService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.validation.BindingResult;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.math.BigDecimal;
-import java.util.*;
 
 
 /**
@@ -140,6 +164,12 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
 
     @Autowired
     private CommonPositionService commonPositionService;
+    
+    @Autowired
+	private PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest positionRequestService;
+    
+    @Autowired
+    private SysWflBusinessListMapper sysWflBusinessListMapper;
 
     @Autowired
     private TrdCommonBaseService trdCommonBaseService;
@@ -1973,6 +2003,18 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
         } catch (Exception e) {
             e.printStackTrace();
         }
+        //增加调用头寸引擎代码start
+        String optType = ENTRUST_RECORD_NEW;
+		if (null != entity.getEntrustId() && null != etrEntrustMapper.selectByPrimaryKey(entity.getEntrustId())) {
+			optType = ENTRUST_RECORD_MODIFY;
+		}
+  		String decisionAct = DictCodeListExt3.系统动作_新建.getValue();
+  		String systemAct = DictCodeListExt3.系统动作_新建.getValue();
+  		if (StringUtil.equals(optType, ENTRUST_RECORD_MODIFY)) {
+          	systemAct = DictCodeListExt3.系统动作_修改.getValue();
+        }
+  		positionRequestService.send(entity,decisionAct,systemAct);
+  		//增加调用头寸引擎代码end
     }
 
     @Override
@@ -1984,11 +2026,32 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
                 e.printStackTrace();
             }
         }
+        //增加调用头寸引擎代码start
+        String optType = ENTRUST_RECORD_NEW;
+		if (null != entity.getEntrustId() && null != etrEntrustMapper.selectByPrimaryKey(entity.getEntrustId())) {
+			optType = ENTRUST_RECORD_MODIFY;
+		}
+		String decisionAct = DictCodeListExt3.系统动作_新建.getValue();
+		String systemAct = DictCodeListExt3.系统动作_新建.getValue();
+        SysWflBusinessList sysBus=sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());
+        if(null!=sysBus && StringUtil.equals(sysBus.getProcessState(),DictCodeList.流程状态_已退回.getValue())){
+        	decisionAct = DictCodeListExt3.系统动作_修改.getValue();
+        }
+        if (StringUtil.equals(optType, ENTRUST_RECORD_MODIFY)) {
+        	systemAct = DictCodeListExt3.系统动作_修改.getValue();
+        }
+        entity.setSoftSkipMode("Y");
+        positionRequestService.send(entity,decisionAct,systemAct);
+        //增加调用头寸引擎代码end
     }
 
     @Override
     public void doDelete(String workflowId) {
         doDeleteWflEntity(workflowId);
+        //增加调用头寸引擎代码start
+        EtrExchangeAgreRepTrade001Dto entity = getBussinessEntityByWorkflowId(workflowId);
+  		positionRequestService.sendDelete(entity);
+  		//增加调用头寸引擎代码end
     }
 
     @Override

@@ -1,15 +1,30 @@
 package com.joyintech.tams.settle.batch.dealrevoke.service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.common.base.entity.EtrCashPosition;
 import com.joyintech.tams.common.base.entity.EtrSecPosition;
 import com.joyintech.tams.common.base.entity.PtlCashPosition;
 import com.joyintech.tams.common.base.entity.PtlSecPosition;
+import com.joyintech.tams.common.base.entity.TrdProductTempDeal;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -18,18 +33,11 @@ import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionI
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
+import com.joyintech.tams.invest.common.position.service.CommonPositionEngineService;
+import com.joyintech.tams.invest.common.trade.dao.BaseAssetCashPositionCommMapper;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
-import com.joyintech.tams.settle.batch.datadeal.constant.StlDataDealProcessConstant;
 import com.joyintech.tams.settle.batch.datadeal.service.StlDataDealProcessCommonService;
 import com.joyintech.tams.settle.batch.dealrevoke.dao.InvestDealRevokeMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
-import java.util.*;
 
 /**
  * @author 何阳阳
@@ -59,10 +67,12 @@ public class InvestDealRevokeService {
 
     @Autowired
     private InvestDealRevokeMapper investDealRevokeMapper;
-
+    
     @Autowired
-    private StlDataDealProcessCommonService stlDataDealProcessCommonService;
+    private BaseAssetCashPositionCommMapper baseAssetCashPositionCommMapper;
 
+	@Autowired
+    private CommonPositionEngineService commonPositionEngineService;
     @Autowired
     private BasePtlSecPositionInfoService basePtlSecPositionInfoService;
 
@@ -342,6 +352,19 @@ public class InvestDealRevokeService {
                 investDealRevokeMapper.updateEtrSecPosition(item);
             }
         });
+
+        // 撤销日间成交交易调用新头寸接口 add by fuyongsheng 20220308 start
+        // 查询日间成交交易
+        List<TrdProductTempDeal> trdProductTempDeals = investDealRevokeMapper.getTrdProductTempDeals(param);
+        if(!CollectionUtils.isEmpty(trdProductTempDeals)){
+            for(TrdProductTempDeal deal : trdProductTempDeals){
+                // 资产二级类型
+                String assetType2 = baseAssetCashPositionCommMapper.selectFundType(deal.getFinprodId());
+                busiType = commonPositionEngineService.getPositionBusiType(deal.getFinprodType2(), deal.getPs(), assetType2);
+                PositionHttpRequest.dorevoke(deal.getTradeId(), "TRD", busiType, deal.getPs());
+            }
+        }
+        // 撤销日间成交交易调用新头寸接口 add by fuyongsheng 20220308 end
     }
 
     public void updateEtrStatusByTrdId(List<String> tradeIdList, List<String> totalTradeIdList) {

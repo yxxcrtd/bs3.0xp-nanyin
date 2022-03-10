@@ -53,6 +53,7 @@ public class StandardCouponReConversionRate002Controller extends BaseController 
                 DictCode.柜台接口类型,DictCode.是或否});
         List<SelectOptionDto> brokerIds = new ArrayList<SelectOptionDto> ();
         List<SelectOptionDto> finprodIdList = new ArrayList<SelectOptionDto> ();
+        List<SelectOptionDto> accountTypeList = new ArrayList<SelectOptionDto>();
         try {
             brokerIds = getMstCustomerInfo();
             model.addAttribute("brokerIds", JsonUtils.objectArray2Json(brokerIds.toArray()));
@@ -60,22 +61,28 @@ public class StandardCouponReConversionRate002Controller extends BaseController 
             finprodIdList = getFinprodIdInfo();
             model.addAttribute("finprodIdList", JsonUtils.objectArray2Json(finprodIdList.toArray()));
 
+            accountTypeList = getPtlSecAcctInfo();
+            model.addAttribute("accountTypeList", JsonUtils.objectArray2Json(accountTypeList.toArray()));
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         String brokerId = getParam("brokerId");
         String finprodId = getParam("finprodId");
+        String accountType = getParam("accountType");
         String startDate = getParam("startDate");
         String workflowId = getParam("workflowId");
         StandardCouponReConversionRateDto entity = new StandardCouponReConversionRateDto();
         // 不来自于代办
-        if (WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(brokerId) && StringUtil.isNotEmpty(finprodId) && StringUtil.isNotEmpty(startDate)) {
+        if (WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(brokerId) && StringUtil.isNotEmpty(startDate) &&
+                (StringUtil.isNotEmpty(finprodId) || StringUtil.isNotEmpty(accountType))) {
             // 根据主键获取业务实体
             StandardCouponReConversionRateDto dto = new StandardCouponReConversionRateDto();
             dto.setBrokerId (brokerId);
             dto.setFinprodId(finprodId);
             dto.setStartDate(startDate);
+            dto.setAccountType(accountType);
             entity = standardCouponReConversionRateService.selectByPrimaryKey(dto);
             entity.setTandardRate(entity.getMoreConvrate().toString());
             model.addAttribute("entity", entity);

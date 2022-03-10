@@ -1,12 +1,83 @@
 package com.joyintech.tams.invest.trade.exchangetransmatch.common.service;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.util.*;
-import com.joyintech.tams.common.base.dao.*;
-import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;
+import com.joyintech.tams.common.base.dao.FinDealPledgeMapper;
+import com.joyintech.tams.common.base.dao.FinPledgeDisplaceDetailMapper;
+import com.joyintech.tams.common.base.dao.FinPledgeDisplaceMapper;
+import com.joyintech.tams.common.base.dao.FinPledgeDisplaceResultMapper;
+import com.joyintech.tams.common.base.dao.FinProductTypeMapper;
+import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
+import com.joyintech.tams.common.base.dao.PaTrdFinProductDealTotalMapper;
+import com.joyintech.tams.common.base.dao.PaTrdProductDealMapper;
+import com.joyintech.tams.common.base.dao.PtlTradeMapper;
+import com.joyintech.tams.common.base.dao.SettleDataTotalPledgeMatchMapper;
+import com.joyintech.tams.common.base.dao.SettleTransDataTotalAddMapper;
+import com.joyintech.tams.common.base.dao.SettleTransDataTotalMapper;
+import com.joyintech.tams.common.base.dao.SettleTransDataTotalMatchMapper;
+import com.joyintech.tams.common.base.dao.SettleTransDataTotalStatusMapper;
+import com.joyintech.tams.common.base.dao.SettleTransTgMappingMapper;
+import com.joyintech.tams.common.base.dao.StlPayOrdersMapper;
+import com.joyintech.tams.common.base.dao.TrdDealTotalAddMapper;
+import com.joyintech.tams.common.base.dao.TrdFinProductBarterMapper;
+import com.joyintech.tams.common.base.dao.TrdFinProductBarterTotalMapper;
+import com.joyintech.tams.common.base.dao.TrdFinProductDealTotalMapper;
+import com.joyintech.tams.common.base.dao.TrdProductDealAddMapper;
+import com.joyintech.tams.common.base.dao.TrdProductDealMapper;
+import com.joyintech.tams.common.base.dao.TrdStasecFlowDetailMapper;
+import com.joyintech.tams.common.base.dao.TrdStasecFlowMapper;
+import com.joyintech.tams.common.base.dao.TrdTradeFeeDetailMapper;
+import com.joyintech.tams.common.base.dao.TrdTradeFeeTotalMapper;
+import com.joyintech.tams.common.base.entity.FinDealPledge;
+import com.joyintech.tams.common.base.entity.FinPledgeDisplace;
+import com.joyintech.tams.common.base.entity.FinPledgeDisplaceDetail;
+import com.joyintech.tams.common.base.entity.FinPledgeDisplaceResult;
+import com.joyintech.tams.common.base.entity.FinProductType;
+import com.joyintech.tams.common.base.entity.FinTradeProduct;
+import com.joyintech.tams.common.base.entity.PtlTrade;
+import com.joyintech.tams.common.base.entity.SettleDataTotalPledgeMatch;
+import com.joyintech.tams.common.base.entity.SettleTransData;
+import com.joyintech.tams.common.base.entity.SettleTransDataTotal;
+import com.joyintech.tams.common.base.entity.SettleTransDataTotalMatch;
+import com.joyintech.tams.common.base.entity.SettleTransDataTotalPledge;
+import com.joyintech.tams.common.base.entity.SettleTransDataTotalStatus;
+import com.joyintech.tams.common.base.entity.SettleTransTgMapping;
+import com.joyintech.tams.common.base.entity.SettleTransTgMappingKey;
+import com.joyintech.tams.common.base.entity.TrdFinProductBarter;
+import com.joyintech.tams.common.base.entity.TrdFinProductBarterTotal;
+import com.joyintech.tams.common.base.entity.TrdProductDeal;
+import com.joyintech.tams.common.base.entity.TrdStasecFlow;
+import com.joyintech.tams.common.base.entity.TrdStasecFlowDetail;
+import com.joyintech.tams.common.base.entity.TrdTradeFeeDetail;
+import com.joyintech.tams.common.base.entity.TrdTradeFeeTotal;
 import com.joyintech.tams.component.business.trade.BaseTradeProductDealCommService;
-import com.joyintech.tams.constant.*;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.DictCodeListStl;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
@@ -18,22 +89,23 @@ import com.joyintech.tams.invest.trade.api.PositionUpdateParam;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.dao.ExchangeTransMatchCommonMapper;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.dto.ExchangeTransMatchBaseTradeDto;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.Fund.ExchangeTransMatchFund1Service;
-import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.bond.*;
-import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.repo.*;
+import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.bond.ExchangeTransMatchBond1Service;
+import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.bond.ExchangeTransMatchBond2Service;
+import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.bond.ExchangeTransMatchBond3Service;
+import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.bond.ExchangeTransMatchBond4Service;
+import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.bond.ExchangeTransMatchBond5Service;
+import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.bond.ExchangeTransMatchBond6Service;
+import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.bond.ExchangeTransMatchBondCommonService;
+import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.repo.ExchangeTransMatchRepo1Service;
+import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.repo.ExchangeTransMatchRepo2Service;
+import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.repo.ExchangeTransMatchRepo3Service;
+import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.repo.ExchangeTransMatchRepo4Service;
+import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.repo.ExchangeTransMatchRepo5Service;
+import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.repo.ExchangeTransMatchRepoCommonService;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.shares.ExchangeTransMatchShares1Service;
+import com.joyintech.tams.invest.trade.exchangetransmatch.position.service.PositionRequestServiceFinProductTradeService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
-import com.joyintech.tools.collectors.JoyinCollectors;
 import com.joyintech.workflow.engine.constant.OperationType;
-import org.apache.commons.collections4.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 场内成交管理共通service
@@ -148,6 +220,11 @@ public class ExchangeTransMatchCommonService extends BaseService {
     private FinProductTypeMapper finProductTypeMapper;
     @Autowired
     private FinDealPledgeMapper finDealPledgeMapper;
+
+    @Autowired
+    private PositionRequestServiceFinProductTradeService positionRequestService;
+
+    public static final String ENTRUST_RECORD_NEW = "new";
 
     // modify by etliu 20220110 start
     // GZYHTZJY-1032: 协议回购的头寸处理，需要走PTL_POSITION_FLOW_CFG配置
@@ -736,7 +813,9 @@ public class ExchangeTransMatchCommonService extends BaseService {
             baseTradeProductDealCommService.execute(finProductTradeDto);
         }
         // modify by etliu 20220110 end
-
+        //增加调用头寸引擎代码start
+        positionRequestService.sendFinProductTradeDto(finProductTradeDto);
+        //增加调用头寸引擎代码end
         logger.debug("处理业务交易表---结束,交易编号:"+tradeId);
         return tradeId;
     }
@@ -952,7 +1031,10 @@ public class ExchangeTransMatchCommonService extends BaseService {
             revokeFinPledge(exchangeTransMatchCommonRevokeDtoList, dto);
             // 撤销清算匹配数据
             revokeSettleMatchData(exchangeTransMatchCommonRevokeDtoList, dto);
+            // 头寸撤销
+//            positionRequestService.sendRevoke(exchangeTransMatchCommonRevokeDtoList);
         }
+
         logger.debug("取消成交匹配---结束");
     }
 

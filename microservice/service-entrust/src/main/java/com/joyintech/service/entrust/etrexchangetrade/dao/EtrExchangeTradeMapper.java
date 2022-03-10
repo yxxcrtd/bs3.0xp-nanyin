@@ -353,4 +353,5 @@ public interface EtrExchangeTradeMapper {
 	 */
 	public String selectMultiSecAcctId(Map<String,Object> paraMap);
 	EtrExchangeTradeMulti001Dto selectMultDetail(Map<String,Object> map);
+
 }

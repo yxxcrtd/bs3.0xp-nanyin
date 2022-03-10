@@ -159,7 +159,7 @@ public class PtlFundAllocation002Service extends CommonExportService<PtlFundAllo
     public void doUpdate(PtlFundAllocationDto entity){
         if(bussCommonMapperDelegateService != null){
             restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAllocation/doDelete", entity.getOrderId(), Integer.class);
-            doInsert(entity, OperationType.NEW);
+            doInsert(entity, OperationType.MODIFY);
         }
     }
 
