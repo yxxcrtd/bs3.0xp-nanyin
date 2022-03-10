@@ -5393,6 +5393,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	}
 
 	public BaseEtrInvestInfoDto buildMultiEtrFlow(EtrExchangeTradeSaveRequest dto) {
+
 		dto.setSecAcctId(dto.getPortfolioList().get(0).getSecAcctId());
 		BaseEtrInvestInfoDto baseEtrInvestInfoDto = this.buildEtrFlow(dto);
 

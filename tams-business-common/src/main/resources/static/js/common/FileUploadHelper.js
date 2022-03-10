@@ -27,11 +27,11 @@ var correctData;
                     }
                     var label=SHARES_TRADE_PLATFORM_04==currentTab?JoyinUtil.getLabel("EtrExchangeTradeImport.dzImport"):SHARES_TRADE_PLATFORM_03==currentTab?JoyinUtil.getLabel("EtrExchangeTradeImport.gsImport"):JoyinUtil.getLabel("EtrExchangeTradeImport.jjImport");
                     Joyin.dialog(label,
-                        JoyinUtil.getRealPath("/invest/entrust/etrexchangetrade/EtrExchangeImport/init"),
+                        JoyinUtil.getRealPath("/etrexchange/common/EtrExchangeTradeCommonImport/init"),
                         "98%", "95%", {currentTab:currentTab},
                         function(){
-                            // EtrExchangeTrade003.myrefresh();
-                        });
+                        // EtrExchangeTrade003.myrefresh();
+                    });
                 });
             },1000);
         });

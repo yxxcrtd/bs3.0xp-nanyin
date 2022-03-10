@@ -700,4 +700,14 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
     public void setFromEtrExchange(String fromEtrExchange) {
         this.fromEtrExchange = fromEtrExchange;
     }
+
+    public List<EtrExchangeTradeSaveRequest> selectedItem;
+
+    public List<EtrExchangeTradeSaveRequest> getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(List<EtrExchangeTradeSaveRequest> selectedItem) {
+        this.selectedItem = selectedItem;
+    }
 }
