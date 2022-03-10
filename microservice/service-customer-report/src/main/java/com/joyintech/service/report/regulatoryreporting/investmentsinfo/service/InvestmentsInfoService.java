@@ -2919,24 +2919,31 @@ public class InvestmentsInfoService {
 		paraMap.put("endDate",endDate);
 		paraMap.put("modetype", "40");
 
-		paraMap.put("INDUSTRY1", CacheUtil.getSysParam("SVR_EXCESS_PRODUCTION_CAPACITY").split(";")[0]);
-		paraMap.put("INDUSTRY2", CacheUtil.getSysParam("SVR_EXCESS_PRODUCTION_CAPACITY").split(";")[1]);
-		paraMap.put("INDUSTRY3", CacheUtil.getSysParam("SVR_EXCESS_PRODUCTION_CAPACITY").split(";")[2]);
-		paraMap.put("INDUSTRY4", CacheUtil.getSysParam("SVR_EXCESS_PRODUCTION_CAPACITY").split(";")[3]);
+		String[] deCode = CacheUtil.getSysParam("SVR_EXCESS_PRODUCTION_CAPACITY").split(";");
+
+		paraMap.put("INDUSTRY1", deCode.length>=1?deCode[0]:"");
+		paraMap.put("INDUSTRY2", deCode.length>=2?deCode[1]:"");
+		paraMap.put("INDUSTRY3", deCode.length>=3?deCode[2]:"");
+		paraMap.put("INDUSTRY4", deCode.length>=4?deCode[3]:"");
 
 
 		InvestmentBusinessDetailsDto investmentBusinessDetailsDto40= investmentBusinessDetailsMapper.queryBottomInfoAmountByModeType(paraMap);
 		paraMap.put("modetype", "41");
 		InvestmentBusinessDetailsDto investmentBusinessDetailsDto41= investmentBusinessDetailsMapper.queryBottomInfoAmountByModeType(paraMap);
+		paraMap.put("modetype", "42");
+		InvestmentBusinessDetailsDto investmentBusinessDetailsDto42= investmentBusinessDetailsMapper.queryBottomInfoAmountByModeType(paraMap);
 		paraMap.put("modetype", "43");
 		InvestmentBusinessDetailsDto investmentBusinessDetailsDto43= investmentBusinessDetailsMapper.queryBottomInfoAmountByModeType(paraMap);
-		paraMap.put("provinces", StringUtil.splitToList(GlobalConstant.SEMICOLON,CacheUtil.getSysParam("SVR_LOCAL_AFFIRM_RULE").toString()));
 		paraMap.put("modetype", "44");
 		InvestmentBusinessDetailsDto investmentBusinessDetailsDto44= investmentBusinessDetailsMapper.queryBottomInfoAmountByModeType(paraMap);
+		paraMap.put("modetype", "45");
+		InvestmentBusinessDetailsDto investmentBusinessDetailsDto45= investmentBusinessDetailsMapper.queryBottomInfoAmountByModeType(paraMap);
 		investmentBusinessDetailsDtoList.add(investmentBusinessDetailsDto40);
 		investmentBusinessDetailsDtoList.add(investmentBusinessDetailsDto41);
+		investmentBusinessDetailsDtoList.add(investmentBusinessDetailsDto42);
 		investmentBusinessDetailsDtoList.add(investmentBusinessDetailsDto43);
 		investmentBusinessDetailsDtoList.add(investmentBusinessDetailsDto44);
+		investmentBusinessDetailsDtoList.add(investmentBusinessDetailsDto45);
 		for(InvestmentBusinessDetailsDto it:investmentBusinessDetailsDtoList){
 			it.setTotleBalance(addAllMoney(it.getSessionendNum(),it.getNonsStandardAmount(),it.getIndInvestmentAmount(),it.getOtherAmount()));
 			it.setLasttotleBalance(addAllMoney(it.getLastSessionendNum(),it.getLastNonsStandardAmount(),it.getLastIndInvestmentAmount(),it.getLastOtherAmount()));
