@@ -263,24 +263,6 @@ public class CommonPositionEngineService {
     }
 
     /**
-     * 判断是否是头寸引擎的大宗交易
-     *
-     * @param tradePlat 交易平台
-     * @param dealMode  申报类型
-     * @param ps        交易方向
-     * @return 是否是头寸引擎的大宗交易
-     */
-    public boolean isBulk(String tradePlat, String dealMode, String ps) {
-        boolean isBuyOrSell = 交易方向_买入.getValue().equals(ps) || 交易方向_卖出.getValue().equals(ps);
-        boolean isBulkPlat = 交易平台_大宗交易平台.getValue().equals(tradePlat) || 交易平台_综合协议交易平台.getValue().equals(tradePlat);
-        boolean isBulkTrade = 申报类型_不指定.getValue().equals(dealMode) || 申报类型_意向申报.getValue().equals(dealMode)
-                || 申报类型_定价申报.getValue().equals(dealMode) || 申报类型_点击成交申报.getValue().equals(dealMode)
-                || 申报类型_成交申报.getValue().equals(dealMode) || 申报类型_收盘价固定价格申报.getValue().equals(dealMode)
-                || 申报类型_日均价固定价格申报.getValue().equals(dealMode);
-        return isBuyOrSell && isBulkPlat && isBulkTrade;
-    }
-
-    /**
      * 判断缓存是否过期
      *
      * @param date
