@@ -1,15 +1,7 @@
 package com.joyintech.tams.report.submitmaintenance.equityinfo.service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -700,7 +692,7 @@ public class EquityInfoDistinctService {
 
 	@SuppressWarnings({ "rawtypes" })
 	public List<EquityInfoRegist001Dto> getEquInfoSubListYbs(List<String> keys){
-		List<EquityInfoRegist001Dto> resultList = new ArrayList<EquityInfoRegist001Dto>();
+		List<EquityInfoRegist001Dto> resultList = new LinkedList<>();
 //		int maxDataCountOneTime =(null == reportSelectOrDeleteCountForShenFen ? 100:Integer.parseInt(reportSelectOrDeleteCountForShenFen));
 //        int dataCount = 0;
 //     if(equityList!=null){
