@@ -319,7 +319,6 @@
             width: 100,
             title: '业务模式',
             sortable: true,
-            edit: true,
             editOption: {
                 type: 'select',
                 id: "businessModel",
@@ -333,7 +332,6 @@
             width: 100,
             title: '价格模式',
             sortable: false,
-            edit: true,
             editOption: {
                 type: 'select',
                 id: "priceModel",
@@ -532,6 +530,8 @@
                     $('#CfetsBondDealQuotedPrice004_intAmt').val(result.data.intAmt).trigger('blur');
                     $('#CfetsBondDealQuotedPrice004_fpriceAmt').val(result.data.fpriceAmt).trigger('blur');
                     $('#CfetsBondDealQuotedPrice004_parValueAmt').val(result.data.parValueAmt).trigger('blur');
+                    $('#dealFeeAmt').val(result.data.dealFeeAmt).trigger('blur');
+                    $('#settFeeAmt').val(result.data.settFeeAmt).trigger('blur');
                     entrustIdChangeFlag = false;
                 }
             })
@@ -551,6 +551,25 @@
      */
     var initPage = function(){
         calcAmt();
+        var calculateField = $("[name=calculateField" + "]:radio").next(".layui-form-radioed").prev("input").val();
+        if(calculateField === calcTypeUnitCprice){
+            $('#CfetsBondDealQuotedPrice004_unitCprice').attr('disabled', false);
+            $('#CfetsBondDealQuotedPrice004_matureYield').attr('disabled', true);
+            $('#CfetsBondDealQuotedPrice004_exerYield').attr('disabled', true);
+            layui.form.render();
+        }
+        if(calculateField === calcTypeYield){
+            $('#CfetsBondDealQuotedPrice004_unitCprice').attr('disabled', true);
+            $('#CfetsBondDealQuotedPrice004_matureYield').attr('disabled', false);
+            $('#CfetsBondDealQuotedPrice004_exerYield').attr('disabled', true);
+            layui.form.render();
+        }
+        if(calculateField === calcTypeExecYield){
+            $('#CfetsBondDealQuotedPrice004_unitCprice').attr('disabled', true);
+            $('#CfetsBondDealQuotedPrice004_matureYield').attr('disabled', true);
+            $('#CfetsBondDealQuotedPrice004_exerYield').attr('disabled', false);
+            layui.form.render();
+        }
         var quotaPageModel = $('#CfetsBondDealQuotedPrice004_hidden_quotaPageModel').val();
         if(quotaPageModel && quotaPageModel == 'dialogueResponse'){
             //$('#CfetsBondDealQuotedPrice004_portfolioName').attr('disabled', true);
@@ -644,6 +663,7 @@
     $(function () {
         // 初始化页面
         initPage();
+
         // 委托代码
         var entrustId = $('#CfetsBondDealQuotedPrice004_hidden_entrustId').val();
         if (entrustId && entrustId != ''){
@@ -862,11 +882,6 @@
             calcAmt('03');
         });*/
 
-        var calculateFieldChange = function(init) {
-            var calculateField = $("[name=calculateField" + "]:radio").next(".layui-form-radioed").prev("input").val();
-            calcAmt(calculateField);
-        }
-
         layui.use(['form'], function() {
             // 绑定计算模式的点击事件
             var form = layui.form;
@@ -923,6 +938,28 @@
             autoAllocation();
         })
     });
+    var calculateFieldChange = function(init) {
+        var calculateField = $("[name=calculateField" + "]:radio").next(".layui-form-radioed").prev("input").val();
+        if(calculateField === calcTypeUnitCprice){
+            $('#CfetsBondDealQuotedPrice004_unitCprice').attr('disabled', false);
+            $('#CfetsBondDealQuotedPrice004_matureYield').attr('disabled', true);
+            $('#CfetsBondDealQuotedPrice004_exerYield').attr('disabled', true);
+            layui.form.render();
+        }
+        if(calculateField === calcTypeYield){
+            $('#CfetsBondDealQuotedPrice004_unitCprice').attr('disabled', true);
+            $('#CfetsBondDealQuotedPrice004_matureYield').attr('disabled', false);
+            $('#CfetsBondDealQuotedPrice004_exerYield').attr('disabled', true);
+            layui.form.render();
+        }
+        if(calculateField === calcTypeExecYield){
+            $('#CfetsBondDealQuotedPrice004_unitCprice').attr('disabled', true);
+            $('#CfetsBondDealQuotedPrice004_matureYield').attr('disabled', true);
+            $('#CfetsBondDealQuotedPrice004_exerYield').attr('disabled', false);
+            layui.form.render();
+        }
+        calcAmt(calculateField);
+    }
     /**
      * 参数校验
      */
@@ -962,10 +999,10 @@
         param.settFeeAmt = object.settFeeAmt;
         param.fpriceAmt = object.fpriceAmt;
         param.price = object.price;
-        if(calcField === calcTypeYield && $("#CfetsBondDealQuotedPrice004_matureYield").val()) {
+        if($("#CfetsBondDealQuotedPrice004_matureYield").val()) {
           param.matureYield = $("#CfetsBondDealQuotedPrice004_matureYield").val() / 100;
         }
-        if(calcField === calcTypeExecYield && $("#CfetsBondDealQuotedPrice004_exerYield").val()) {
+        if($("#CfetsBondDealQuotedPrice004_exerYield").val()) {
             param.exerYield = $("#CfetsBondDealQuotedPrice004_exerYield").val() / 100;
         }
         param.cpriceAmt = object.cpriceAmt;

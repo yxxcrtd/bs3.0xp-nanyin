@@ -125,7 +125,6 @@
             width: 100,
             title: '业务模式',
             sortable: true,
-            edit: true,
             editOption: {
                 type: 'select',
                 id: "businessModel",
@@ -139,7 +138,6 @@
             width: 100,
             title: '价格模式',
             sortable: false,
-            edit: true,
             editOption: {
                 type: 'select',
                 id: "priceModel",
