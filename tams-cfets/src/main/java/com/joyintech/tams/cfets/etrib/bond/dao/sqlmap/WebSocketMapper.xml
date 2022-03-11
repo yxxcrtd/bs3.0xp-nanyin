@@ -116,4 +116,24 @@
         </choose>
 
     </update>
+
+    <update id="deleteFlows" parameterType="Map" >
+        <choose>
+            <when test="tableName == 'ETR_CASH_POSITION_FLOW_RULE' ">
+                DELETE FROM ETR_CASH_POSITION_FLOW_RULE WHERE SEQNO = #{SEQNO}
+            </when>
+            <when test="tableName == 'ETR_SEC_POSITION_FLOW_RULE' ">
+                DELETE FROM ETR_SEC_POSITION_FLOW_RULE WHERE SEQNO = #{SEQNO}
+            </when>
+            <when test="tableName == 'PTL_CASH_POSITION_FLOW_RULE' ">
+                DELETE FROM PTL_CASH_POSITION_FLOW_RULE WHERE SEQNO = #{SEQNO}
+            </when>
+            <when test="tableName == 'PTL_SEC_POSITION_FLOW_RULE' ">
+                DELETE FROM PTL_SEC_POSITION_FLOW_RULE WHERE SEQNO = #{SEQNO}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </update>
+    
 </mapper>
