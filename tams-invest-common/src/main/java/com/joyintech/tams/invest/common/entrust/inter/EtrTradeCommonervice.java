@@ -84,12 +84,12 @@ public class EtrTradeCommonervice extends BaseService {
                 if(StringUtil.isEmpty(dto.getCdate())){
                     dto.setCdate(iPlatformDate.getSysDateStr());
                 }
-                List<Map<String,Object>> acctNoList=etrTrdCommonMapper.getPtlAcctInfo(dto.getPortfolioId());
+                List<String> acctNoList=etrTrdCommonMapper.getPtlAcctInfo(dto.getPortfolioId());
                 if(!CollectionUtils.isEmpty(acctNoList)){
-                    for(Map<String,Object> tempMap:acctNoList){
+                    for(String acctNo:acctNoList){
                         PositionCashSecDto cashSecDto = new PositionCashSecDto();
                         BeanUtil.copyPropertiesIgnoreNull(cashSecDto, dto); //复制资产信息
-                        cashSecDto.setAcctId(tempMap.get("acctNo").toString());
+                        cashSecDto.setAcctId(acctNo);
                         sumPortfolioAcctNoList.add(cashSecDto);
                     }
                 }
@@ -197,12 +197,12 @@ public class EtrTradeCommonervice extends BaseService {
                 //查询组合下所有现金账户
 
                 List<PositionCashSecDto> sumPortfolioAcctNoList = new ArrayList<>();
-                List<Map<String, Object>> acctNoList = etrTrdCommonMapper.getPtlAcctInfo(dto.getPortfolioId());
+                List<String> acctNoList = etrTrdCommonMapper.getPtlAcctInfo(dto.getPortfolioId());
                 if (!CollectionUtils.isEmpty(acctNoList)) {
-                    for (Map<String, Object> tempMap : acctNoList) {
+                    for (String acctNo : acctNoList) {
                         PositionCashSecDto cashSecDto = new PositionCashSecDto();
                         BeanUtil.copyPropertiesIgnoreNull(cashSecDto, dto); //复制资产信息
-                        cashSecDto.setAcctId(tempMap.get("acctNo").toString());
+                        cashSecDto.setAcctId(acctNo);
                         sumPortfolioAcctNoList.add(cashSecDto);
                     }
                 }
