@@ -552,9 +552,18 @@
         param.settFeeAmt = object.settFeeAmt;
         if (object.cfetsBondDealDialogueQuoteDtoList) {
             $.each(object.cfetsBondDealDialogueQuoteDtoList, function (index, obj) {
-                obj.shareAmt = JoyinMath.doMul(obj.avaNum, 10000);
-                obj.avaNum = JoyinMath.doMul(obj.entrustAvaNum, 10000);
-                obj.avaNumOld = JoyinMath.doMul(obj.entrustAvaNum, 10000);
+                if(obj.avaNum){
+                    obj.shareAmt = JoyinMath.doMul(obj.avaNum, 10000);
+                }else{
+                    obj.shareAmt = 0;
+                }
+                if(obj.entrustAvaNum){
+                    obj.avaNum = JoyinMath.doMul(obj.entrustAvaNum, 10000);
+                    obj.avaNumOld = JoyinMath.doMul(obj.entrustAvaNum, 10000);
+                }else{
+                   obj.avaNum = 0;
+                   obj.avaNumOld = 0;
+                }
             });
         }
         param.ptlAllocations = object.cfetsBondDealDialogueQuoteDtoList;

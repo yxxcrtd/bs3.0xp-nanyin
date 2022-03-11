@@ -1191,6 +1191,7 @@
      * 委托金额更时联动计算委托数量
      */
     var entrustAmtChange = function() {
+        alert("进入");
         calcEntrustNumAndAmt();
         linkTableEntrustNumAmt();
     };
@@ -1288,7 +1289,7 @@
             tradePlat = SHARES_TRADE_PLATFORM_03;
         }
         var result = {};
-        var param = {secId:secId, entrustBussType:entrustBussType,tradePlat:"tradePlat",tradePlat_05:tradePlat_05};
+        var param = {secId:secId, entrustBussType:entrustBussType,tradePlat:tradePlat,tradePlat_05:tradePlat_05};
         Joyin.ajaxSync(basePath + 'etrexchange/common/EtrExchangeTradeCommon004/getFinprodMarketInfo', param, function(page) {
             if(page && page.root && page.root.length > 0) {
                 result = page.root[0].object || {};

@@ -40,7 +40,8 @@
             decode(
                 ETR_ENTRUST_ADD.ASSET_TYPE,
                 'F01',
-                NVL( ETR_ENTRUST.ENTRUST_NUM * 100, 0 ),
+                <!--NVL( ETR_ENTRUST.ENTRUST_NUM * 100, 0 ),-->
+                NVL( ETR_ENTRUST.ENTRUST_NUM * ETR_ENTRUST.PRICE, 0 ),
                 'F10',
                 NVL( ETR_ENTRUST.ENTRUST_NUM * 100, 0 ),
                 NVL( ETR_ENTRUST.ENTRUST_AMT, ETR_ENTRUST.ENTRUST_NUM )
@@ -72,7 +73,7 @@
     to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi') transmitTimeSer,
     ETR_ENTRUST.PRICE_MODEL priceModel,
     <!--     修改页面显示 资金账户：TRD_ACCT_ID ->账户名称：SEC_ACCT_NAME -->
-    ssai.SEC_ACCT_NAME trdAcctId,
+    c1.acctName trdAcctId,
     ETR_ENTRUST.ENTRUST_NUM entrustNum,
     ETR_ENTRUST_ADD.CALCULATE_FIELD calculateField
     FROM (SELECT * FROM ETR_ENTRUST  ORDER BY ENTRUST_DATE DESC) ETR_ENTRUST
@@ -123,6 +124,7 @@
         ON
         ETR_ENTRUST.ENTRUST_ID = T5.ENTRUST_ID
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON ETR_ENTRUST_ADD.SEC_ACCT_ID = ssai.SEC_ACCT_ID
+        LEFT JOIN ( SELECT DISTINCT ACCT_NO acctNo1, BUSI_ACCT_NO busiAcctNo1, CCY ccy, ACCT_NAME acctName FROM STL_CAPACCT_INFO ) c1 ON ssai.TRD_ACCT_ID = c1.acctNo1
         LEFT JOIN SYS_USER su1 ON ETR_ENTRUST.INV_MANAGER_ID = su1.USER_NAME
         LEFT JOIN FIN_PRODUCT_TYPE_CONFIG btm ON (ETR_ENTRUST.FINPROD_TYPE2 = btm.INPUT_VALUE_2 OR  btm.INPUT_VALUE_2 is null) 
             AND (ETR_ENTRUST.Ps = btm.INPUT_VALUE_3 OR  btm.INPUT_VALUE_3 is null) 
@@ -193,7 +195,7 @@
             AND PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
         </if>
         <if test="trdAcctId != null and trdAcctId!='' ">
-            AND ssai.TRD_ACCT_ID = #{trdAcctId}
+            AND c1.acctName = #{trdAcctId}
         </if>
         <if test="trdAcctName != null and trdAcctName!='' ">
             AND ssai.SEC_ACCT_NAME = #{trdAcctName}
@@ -234,7 +236,8 @@
             decode(
                 WFL_ETR_ENTRUST_ADD.ASSET_TYPE,
                 'F01',
-                NVL( WFL_ETR_ENTRUST.ENTRUST_NUM * 100, 0 ),
+                <!--NVL( WFL_ETR_ENTRUST.ENTRUST_NUM * 100, 0 ),-->
+                NVL( WFL_ETR_ENTRUST.ENTRUST_NUM * WFL_ETR_ENTRUST.PRICE, 0 ),
                 'F10',
                 NVL( WFL_ETR_ENTRUST.ENTRUST_NUM * 100, 0 ),
                 NVL( WFL_ETR_ENTRUST.ENTRUST_AMT, WFL_ETR_ENTRUST.ENTRUST_NUM )
@@ -265,7 +268,7 @@
         NULL transmitTime,
         NULL transmitTimeSer,
         WFL_ETR_ENTRUST.PRICE_MODEL priceModel,
-        ssai.SEC_ACCT_NAME trdAcctId,
+        c1.acctName trdAcctId,
         WFL_ETR_ENTRUST.ENTRUST_NUM entrustNum,
         WFL_ETR_ENTRUST_ADD.CALCULATE_FIELD calculateField
         FROM (SELECT * FROM WFL_ETR_ENTRUST  ORDER BY ENTRUST_DATE DESC) WFL_ETR_ENTRUST
@@ -319,6 +322,7 @@
         ON
         WFL_ETR_ENTRUST.ENTRUST_ID = T5.ENTRUST_ID
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON WFL_ETR_ENTRUST_ADD.SEC_ACCT_ID = ssai.SEC_ACCT_ID
+        LEFT JOIN ( SELECT DISTINCT ACCT_NO acctNo1, BUSI_ACCT_NO busiAcctNo1, CCY ccy, ACCT_NAME acctName FROM STL_CAPACCT_INFO ) c1 ON ssai.TRD_ACCT_ID = c1.acctNo1
         LEFT JOIN SYS_USER su1 ON WFL_ETR_ENTRUST.INV_MANAGER_ID = su1.USER_NAME
         <where>
             AND WFL_ETR_ENTRUST.ENTRUST_STATUS IN(#{entrustInwfl})
@@ -386,7 +390,7 @@
                 AND PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
             </if>
             <if test="trdAcctId != null and trdAcctId!='' ">
-                AND ssai.TRD_ACCT_ID = #{trdAcctId}
+                AND c1.acctName = #{trdAcctId}
             </if>
         </where>
         ) t

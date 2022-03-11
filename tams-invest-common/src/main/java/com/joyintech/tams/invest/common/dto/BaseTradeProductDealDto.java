@@ -654,7 +654,18 @@ public class BaseTradeProductDealDto {
     public void setIsSLDeal(String isSLDeal) {
         this.isSLDeal = isSLDeal;
     }
+/**
+     * 是否软硬控
+     */
+    private String softSkipMode;
 
+    public String getSoftSkipMode() {
+        return softSkipMode;
+    }
+
+    public void setSoftSkipMode(String softSkipMode) {
+        this.softSkipMode = softSkipMode;
+    }
     public String getIsExistNew() {
         return isExistNew;
     }

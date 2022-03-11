@@ -1,4 +1,4 @@
-package com.joyintech.tams.exchange.util;
+package com.joyintech.tams.exchange.common.utils;
 
 
 import cn.hutool.core.util.StrUtil;

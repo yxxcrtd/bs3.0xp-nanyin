@@ -15,6 +15,7 @@ import com.joyintech.tams.invest.common.dto.TrdStaSecInfoDto;
 import com.joyintech.tams.invest.common.dto.mock.trade.MockTradeInfoDto;
 import com.joyintech.tams.invest.common.dto.mock.trade.MockTrdProductDealDto;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
+import com.joyintech.tams.invest.common.trade.dto.OrderInfoDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -370,4 +371,33 @@ public interface TrdCommonBaseMapper {
      */
     String selectHgsqFinprodId(Map<String, Object> paraMap);
     // modify by etliu 20220110 end
+
+
+    /**
+     * 查询指令详情信息
+     * @param entrustId
+     * @return
+     */
+    List<EtrEntrustDetail> selectEtrEntrustDetailByEntrustId(String entrustId);
+
+    /**
+     * 查询关联交易编号
+     * @param tradeId
+     * @return
+     */
+    String selectFTradeId(String tradeId);
+
+    /**
+     * 查询下单对应的委托编号信息
+     * @param dealNo
+     * @return
+     */
+    InfContractDetailfile selectInfContractDetailfile(String dealNo);
+
+    /**
+     * 查询下单信息
+     * @param dealNo
+     * @return
+     */
+    OrderInfoDto selectOrderInfo(String dealNo);
 }

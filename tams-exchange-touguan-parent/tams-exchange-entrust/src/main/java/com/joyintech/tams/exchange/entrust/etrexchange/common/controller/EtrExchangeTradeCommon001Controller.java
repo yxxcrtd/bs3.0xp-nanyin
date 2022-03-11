@@ -20,16 +20,15 @@ import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
-import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
+import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.common.base.entity.FinExercisePlan;
 import com.joyintech.tams.common.base.entity.FinProductQuto;
 import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
 import com.joyintech.tams.component.business.common.dto.FinStockInfoDto;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.*;
-import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dto.EtrExchangePosiInfoRequestDto;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
@@ -37,6 +36,8 @@ import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.common.dto.position.PositionCashSecRequest;
+import com.joyintech.tams.invest.common.entrust.inter.EtrTradeCommonervice;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.MinPirceDto;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.TrdOthCodeInfoDto;
@@ -108,7 +109,8 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	private String wsUrl;
 	@Autowired
 	private EtrExchangeTradeCommonMapper etrExchangeTradeCommonMapper;
-
+	@Autowired
+	private EtrTradeCommonervice etrTradeCommonervice;
 
 	/**
 	 * 由于交易平台不同，设置不同交易平台对应的委托方向
@@ -1147,7 +1149,15 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 						+ "-" + "业务类型" + "(" + dto.getBusinessTypeName() + ")-"
 						+ "平台日" + "(" + DateUtil.format(iPlatformDate.getSysDate()) + ")");
 				processParameter.setWorkFlowParameter(params);
-				msg = etrExchangeTrade001CommonService.start(processParameter, dto);
+//				msg = etrExchangeTrade001CommonService.start(processParameter, dto);
+				try {
+		        	msg = etrExchangeTrade001CommonService.start(processParameter, dto);
+		            AjaxResult m =new AjaxResult(msg);
+		            return new Message<AjaxResult>().success().setData(m);
+		        }catch (Exception e) {
+		            logger.error("场内交易指令新建失败",e);
+		            return PositionUtil.ajaxErrorReturn(e);
+		        }
 			}
 			//多组合指令
 			else {
@@ -1205,9 +1215,17 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 						+ "-" + "业务类型" + "(" + dto.getBusinessTypeName() + ")-"
 						+ "平台日" + "(" + DateUtil.format(iPlatformDate.getSysDate()) + ")");
 				processParameter.setWorkFlowParameter(params);
-				msg = etrExchangeTrade001CommonService.start(processParameter, etrExchangeTrade001DtoList.toArray(new EtrExchangeTradeSaveRequest[etrExchangeTrade001DtoList.size()]));
+//				msg = etrExchangeTrade001CommonService.start(processParameter, etrExchangeTrade001DtoList.toArray(new EtrExchangeTradeSaveRequest[etrExchangeTrade001DtoList.size()]));
+				try {
+					msg = etrExchangeTrade001CommonService.start(processParameter, etrExchangeTrade001DtoList.toArray(new EtrExchangeTradeSaveRequest[etrExchangeTrade001DtoList.size()]));
+		            AjaxResult m =new AjaxResult(msg);
+		            return new Message<AjaxResult>().success().setData(m);
+		        }catch (Exception e) {
+		            logger.error("场内交易多组合指令新建失败",e);
+		            return PositionUtil.ajaxErrorReturn(e);
+		        }
 			}
-			return new Message<AjaxResult>().success().setData(new AjaxResult(msg));
+//			return new Message<AjaxResult>().success().setData(new AjaxResult(msg));
 		}catch (Exception e){
 			e.printStackTrace();
 			return new Message<AjaxResult>().fail().setData(new AjaxResult("保存失败"));
@@ -1619,9 +1637,9 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	@ApiOperation(value = "头寸信息查询", notes = "头寸信息查询")
 	@PostMapping("/queryPositionInfo")
 	@ResponseBody
-	public Message<List<BaseMap>> queryPositionInfo(@RequestBody EtrExchangePosiInfoRequestDto requestDto) {
-		List<BaseMap> m = etrExchangeTrade001CommonService.queryPositionInfo(requestDto);
-		return new Message<List<BaseMap>>().success().setData(m);
+	public List<BaseMap> queryPositionInfo(@RequestBody PositionCashSecRequest requestDto) {
+		List<BaseMap> m = etrTradeCommonervice.queryPositionInfo(requestDto);
+		return m;
 	}
 }
 	

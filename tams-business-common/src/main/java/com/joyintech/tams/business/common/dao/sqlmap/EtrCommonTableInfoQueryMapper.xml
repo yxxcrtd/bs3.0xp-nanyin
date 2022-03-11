@@ -58,19 +58,25 @@
     </resultMap>
 
     <select id="queryAllWorkFlowInfoList" resultMap="queryAllWorkFlowInfoListMap">
-        select rownum as seqNo,
-                su.real_name as hiUser,
-                T2.TASK_DEF_KEY_ as nodeId,
-                T2.NAME_ as nodeName,
-                to_char(NVL(T2.END_TIME_, T2.CLAIM_TIME_),'hh24:mi:ss') as operTime,
-                NVL(T2.END_TIME_, T2.CLAIM_TIME_) as operDate,
-                d1.ITEM_VALUE as tradeStatus,
-                T3.FULL_MSG_ as opinions,
-                case when T1.ACTION_TYPE='new' then '新建' when ACTION_TYPE='modify' then '修改' else '删除' end as operType,
-                case when T1.COMPLETE_FLG='Y' then '已完成' else '未完成' end as operStatus
+        SELECT
+        ROWNUM AS seqNo,
+        M.*
+        FROM
+        (
+        SELECT
+        su.real_name as hiUser,
+        T2.TASK_DEF_KEY_ as nodeId,
+        T2.NAME_ as nodeName,
+        to_char(NVL(T2.END_TIME_, T2.CLAIM_TIME_),'hh24:mi:ss') as operTime,
+        NVL(T2.END_TIME_, T2.CLAIM_TIME_) as operDate,
+        d1.ITEM_VALUE as tradeStatus,
+        T3.FULL_MSG_ as opinions,
+        case when T1.ACTION_TYPE='new' then '新建' when ACTION_TYPE='modify' then '修改' else '删除' end as operType,
+        case when T1.COMPLETE_FLG='Y' then '已完成' else '未完成' end as operStatus
         from SYS_WFL_BUSINESS_LIST T1
         left join ACT_HI_TASKINST T2 on T1.workflow_id=T2.PROC_INST_ID_
-        left join ACT_HI_COMMENT T3 ON T3.TASK_ID_ = T2.ID_ AND T3.PROC_INST_ID_ = T2.PROC_INST_ID_ AND T3.USER_ID_ = T2.ASSIGNEE_
+        left join ACT_HI_COMMENT T3 ON T3.TASK_ID_ = T2.ID_ AND T3.PROC_INST_ID_ = T2.PROC_INST_ID_ AND T3.USER_ID_ =
+        T2.ASSIGNEE_
         left join SYS_DATADICT_LIST d1 on T1.PROCESS_STATE=d1.ITEM_CODE and d1.DICT_CODE='PROCESS_STATE'
         left join sys_user su on T2.ASSIGNEE_=su.user_name
         where 1=1
@@ -85,7 +91,8 @@
                 AND T1.TRADE_ID= #{busiCode,jdbcType=VARCHAR}
             </otherwise>
         </choose>
-        order by NVL(T2.END_TIME_, T2.CLAIM_TIME_) asc
+        order by NVL(T2.END_TIME_, T2.CLAIM_TIME_) desc
+        ) M
     </select>
 
     <select id="queryTotalEntrustIdList" resultType="java.lang.String">

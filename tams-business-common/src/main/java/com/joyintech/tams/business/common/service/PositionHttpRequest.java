@@ -302,4 +302,23 @@ public class PositionHttpRequest {
     private static String batchClosePrivate(Object param) {
         return httpPostRequest(positionUrl + "/position/endpoint/batchClose", param);
     }
+    /**
+     * 从头寸引擎查询现金持仓余额
+     * @param param
+     * @return
+     */
+    public static String queryPosition(Object param) {
+        String returnStr="";
+        try {
+            returnStr=httpPostRequest(positionUrl + "/position/endpoint/queryPosition", param);
+        }catch (Exception e){
+
+        }
+        return returnStr;
+
+    }
+
+
+
+
 }

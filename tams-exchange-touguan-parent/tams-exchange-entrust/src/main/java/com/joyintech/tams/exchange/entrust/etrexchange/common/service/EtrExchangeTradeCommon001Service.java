@@ -10,11 +10,57 @@
 
 package com.joyintech.tams.exchange.entrust.etrexchange.common.service;
 
+import static com.joyintech.tams.invest.common.asset.service.BondAssetCalcService.isNotFomartSec;
+import static com.joyintech.tams.invest.common.asset.service.BondAssetCalcService.toLocalDate;
+import static com.joyintech.tams.invest.common.asset.service.BondAssetCalcService.toSecInfoModel;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.ReflectionUtils;
+import org.springframework.validation.BindingResult;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.joyintech.background.component.common.pack.common.security.User;
-import com.joyintech.background.component.order.exchange.business.dto.*;
+import com.joyintech.background.component.order.exchange.business.dto.EtrBlockTradeBondDto;
+import com.joyintech.background.component.order.exchange.business.dto.EtrBlockTradeFundDto;
+import com.joyintech.background.component.order.exchange.business.dto.EtrBlockTradePledgeRepoDto;
+import com.joyintech.background.component.order.exchange.business.dto.EtrBlockTradeStockDto;
+import com.joyintech.background.component.order.exchange.business.dto.EtrBondBiddingDto;
+import com.joyintech.background.component.order.exchange.business.dto.EtrBondFxdIncmPlatSHDto;
+import com.joyintech.background.component.order.exchange.business.dto.EtrBondRepoBiddingDto;
+import com.joyintech.background.component.order.exchange.business.dto.EtrBondRepurchaseDto;
+import com.joyintech.background.component.order.exchange.business.dto.EtrBondRightDto;
+import com.joyintech.background.component.order.exchange.business.dto.EtrBondToStockDto;
+import com.joyintech.background.component.order.exchange.business.dto.EtrConvBondApplyDto;
+import com.joyintech.background.component.order.exchange.business.dto.EtrFundBiddingDto;
+import com.joyintech.background.component.order.exchange.business.dto.EtrStandardBondInOutDto;
+import com.joyintech.background.component.order.exchange.business.dto.EtrStockBiddingDto;
+import com.joyintech.background.component.order.exchange.business.dto.EtrStockNewDto;
+import com.joyintech.background.component.order.exchange.business.dto.EtrStockRightDto;
 import com.joyintech.background.component.order.exchange.common.constant.UnitEnum;
 import com.joyintech.background.component.order.exchange.common.dto.EtrBaseDto;
 import com.joyintech.background.component.order.exchange.common.dto.EtrParameterDto;
@@ -25,12 +71,24 @@ import com.joyintech.calculation.CalculatorFactory;
 import com.joyintech.calculation.bonds.PaperIrReset;
 import com.joyintech.calculation.bonds.SecIntSchedule;
 import com.joyintech.calculation.bonds.SecPrinSchedule;
-import com.joyintech.calculation.bonds.constant.*;
+import com.joyintech.calculation.bonds.constant.Basis;
+import com.joyintech.calculation.bonds.constant.CurrIntCalMethod;
+import com.joyintech.calculation.bonds.constant.DiscountScheme;
+import com.joyintech.calculation.bonds.constant.FlowCashScheme;
+import com.joyintech.calculation.bonds.constant.IntRateType;
+import com.joyintech.calculation.bonds.constant.NextIntCalMethod;
+import com.joyintech.calculation.bonds.constant.Variety;
 import com.joyintech.calculation.shell.AccurIntCalculator;
 import com.joyintech.calculation.shell.AccurIntForSecheduleCalculator;
 import com.joyintech.calculation.shell.PriceByYieldCalculator;
 import com.joyintech.calculation.shell.YieldByPriceCalculator;
-import com.joyintech.calculation.shell.param.*;
+import com.joyintech.calculation.shell.param.AccurIntCalInParameter;
+import com.joyintech.calculation.shell.param.AccurIntCalOutParameter;
+import com.joyintech.calculation.shell.param.PriceYieldInParameter;
+import com.joyintech.calculation.shell.param.PriceYieldOutParameter;
+import com.joyintech.calculation.shell.param.SecInfoModel;
+import com.joyintech.calculation.shell.param.YieldPriceInParameter;
+import com.joyintech.calculation.shell.param.YieldPriceOutParameter;
 import com.joyintech.calculation.util.BasicUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
@@ -42,27 +100,71 @@ import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.framework.util.*;
+import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.ExcelUtil;
+import com.joyintech.framework.util.FileNameUtil;
+import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.ReflectUtil;
+import com.joyintech.framework.util.SpringContextUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDispatcherService;
+import com.joyintech.system.base.dao.SysWflBusinessListMapper;
+import com.joyintech.system.base.entity.SysWflBusinessList;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
-import com.joyintech.tams.common.base.dao.*;
-import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.common.base.dao.EtrEntrustDetailMapper;
+import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
+import com.joyintech.tams.common.base.dao.FinProductAddMapper;
+import com.joyintech.tams.common.base.dao.FinProductConvertibleMapper;
+import com.joyintech.tams.common.base.dao.FinProductMapper;
+import com.joyintech.tams.common.base.dao.FinProductTypeMapper;
+import com.joyintech.tams.common.base.entity.EtrDistribute;
+import com.joyintech.tams.common.base.entity.EtrEntrust;
+import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
+import com.joyintech.tams.common.base.entity.EtrEntrustDetail;
+import com.joyintech.tams.common.base.entity.FinCashCalcRule;
+import com.joyintech.tams.common.base.entity.FinExercisePlan;
+import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.common.base.entity.FinProductAdd;
+import com.joyintech.tams.common.base.entity.FinProductConvertible;
+import com.joyintech.tams.common.base.entity.FinProductQuto;
+import com.joyintech.tams.common.base.entity.FinProductType;
+import com.joyintech.tams.common.base.entity.FinProductTypeKey;
+import com.joyintech.tams.common.base.entity.WflEtrEntrust;
 import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
 import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
 import com.joyintech.tams.component.business.common.dto.FinStockInfoDto;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
-import com.joyintech.tams.constant.*;
-import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dto.EtrExchangePosiInfoRequestDto;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.*;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.CalcDeviationDegreeRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangePosiInfoRequestDto;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeCommonRiskcalDto;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeDzImportCommonDto;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeGsImportCommonDto;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeOperateRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePortfolioRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeQuotationHqResponse;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.FinProductOthCodeDto;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.PsOptionsRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.SelectOptionRequestDto;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.SubEqutityDto;
 import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeQuotationRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeQuotationResponse;
+import com.joyintech.tams.exchange.entrust.etrexchange.position.service.PositionRequestServiceEtrExchangeTradeSaveRequest;
 import com.joyintech.tams.invest.common.asset.dto.AssetGenerateEntry;
 import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
 import com.joyintech.tams.invest.common.asset.util.AssetCommonUtil;
@@ -84,7 +186,12 @@ import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommSer
 import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
-import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.*;
+import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTradeQuotation001Dto;
+import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.MinPirceDto;
+import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.MinTrdUnitLimitDto;
+import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.TrdMoreConvrateDto;
+import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.TrdOthCodeInfoDto;
+import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.TrdTimeConfigDto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -92,27 +199,6 @@ import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.validation.BindingResult;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import static com.joyintech.tams.invest.common.asset.service.BondAssetCalcService.*;
 
 /**
  * 交易所指令交易（债券股票回购基金场内指令交易）
@@ -179,6 +265,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 */
 	@Autowired(required = false)
 	private BusiAutoEtrDispService busiAutoEtrDispService;
+	
+	@Autowired
+	private PositionRequestServiceEtrExchangeTradeSaveRequest positionRequestService;
 
 	public static final String ENTRUST_RECORD_MODIFY = "modify";
 
@@ -206,13 +295,16 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	@Autowired
 	private BaseGetBusinessId bussGetBussinessIdService;
 
+	@Autowired
+    private SysWflBusinessListMapper sysWflBusinessListMapper;
+	@Autowired
+	private BasePtlCashPositionInfoService basePtlCashPositionInfoService;
+
 	// modify by etliu 20220303 start
 	// 质押式回购出入库计算时，原公式：标准券数量=质押数量*标准折算率，改成：标准券数量=质押数量*标准折算率*面值/100  ---需求张琼
 	@Autowired
 	private TrdCommonBaseService trdCommonBaseService;
 	// modify by etliu 20220303 end
-	@Autowired
-	private BasePtlCashPositionInfoService basePtlCashPositionInfoService;
 
 	/**
 	 * {@inheritDoc}
@@ -712,6 +804,19 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			catch (Exception e) {
 				e.printStackTrace();
 			}
+			//增加调用头寸引擎代码start
+			String decisionAct = DictCodeListExt3.系统动作_新建.getValue();
+			String systemAct = DictCodeListExt3.系统动作_新建.getValue();
+            SysWflBusinessList sysBus=sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());
+            if(null!=sysBus && StringUtil.equals(sysBus.getProcessState(),DictCodeList.流程状态_已退回.getValue())){
+            	decisionAct = DictCodeListExt3.系统动作_修改.getValue();
+            }
+            if (StringUtil.equals(entity.getOptType(), ENTRUST_RECORD_MODIFY)) {
+            	systemAct = DictCodeListExt3.系统动作_修改.getValue();
+            }
+            entity.setSoftSkipMode("Y");
+            positionRequestService.sendEtrExchangeTradeSaveRequest(entity,decisionAct,systemAct);
+          //增加调用头寸引擎代码end
 		}
 	}
 
@@ -813,11 +918,23 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		doInsertFlow(entity);
 		//插入和修改时，指令持仓流水 、现金流水处理,支持多组合
 		doInsetOrUpdateForEtrPositionHoldMulti(entity);
+		//增加调用头寸引擎代码start
+		String decisionAct = DictCodeListExt3.系统动作_新建.getValue();
+		String systemAct = DictCodeListExt3.系统动作_新建.getValue();
+		if (StringUtil.equals(entity.getOptType(), ENTRUST_RECORD_MODIFY)) {
+        	systemAct = DictCodeListExt3.系统动作_修改.getValue();
+        }
+		positionRequestService.sendEtrExchangeTradeSaveRequest(entity,decisionAct,systemAct);
+		//增加调用头寸引擎代码end
 	}
 
 	@Override
 	public void doDelete(String workflowId) {
 		doDeleteFlow(workflowId);
+		//增加调用头寸引擎代码start
+		EtrExchangeTradeSaveRequest entity = getBussinessEntityByWorkflowId(workflowId);
+		positionRequestService.sendDelete(entity);
+		//增加调用头寸引擎代码end
 	}
 
 	private void doDeleteFlow(String workflowId) {
@@ -833,6 +950,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 //            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/buildEtrFlow", dto,
 //            BaseEtrInvestInfoDto.class);
 		BaseEtrInvestInfoDto entity = buildMultiEtrFlow(dto);
+		dto.setAssetType2(entity.getEtrEntrustAdd().getAssetType1());
 		// 设置指令创建来源
 		entity.getEtrEntrustAdd().setEntrustCreateSource(DictCodeListExt3.指令创建来源_场内实时.getValue());
 		entity.getEtrEntrust().setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());
@@ -1899,6 +2017,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		if (baseEtrCashPositionCommService != null
 				&& DictCodeList.委托状态_已接收.getValue().equals(entity.getEntrustStatus())) {
 			baseEtrCashPositionCommService.entrustCloseExecute(entity.getEntrustId());
+			positionRequestService.sendClose(entity);
 		}
 		//处理履历
 		updateCfetsOprHis(entity.getEntrustId(),"close");
@@ -1920,6 +2039,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		if (baseEtrCashPositionCommService != null && (DictCodeList.委托状态_待接收.getValue().equals(entity.getEntrustStatus())
 				||DictCodeListExt3.委托状态_待分发.getValue().equals(entity.getEntrustStatus()))) {
 			baseEtrCashPositionCommService.entrustCloseExecute(entity.getEntrustId());
+			positionRequestService.sendRevoke(entity);
 		}
 		//处理履历
 		updateCfetsOprHis(entity.getEntrustId(),"revoke");
@@ -2842,13 +2962,13 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	private String getTradePlat(String currentTab, String tradeMarket) {
 		String tradePlat = DictCodeList.交易平台_竞价撮合平台.getValue();
 		if (StringUtils.isNotEmpty(currentTab)) {
-			if ((currentTab.equals("dz") || currentTab.equals(DictCodeList.交易平台_大宗交易平台.getValue()))
+			if (("dz".equals(currentTab) || currentTab.equals(DictCodeList.交易平台_大宗交易平台.getValue()))
 					&& DictCodeListExt1.交易场所_深圳证券交易所.getValue().equals(tradeMarket)) {
 				tradePlat = DictCodeList.交易平台_综合协议交易平台.getValue();
-			} else if ((currentTab.equals("dz") || currentTab.equals(DictCodeList.交易平台_大宗交易平台.getValue()))
+			} else if (("dz".equals(currentTab) || currentTab.equals(DictCodeList.交易平台_大宗交易平台.getValue()))
 					&& DictCodeListExt1.交易场所_上海证券交易所.getValue().equals(tradeMarket)) {
 				tradePlat = DictCodeList.交易平台_大宗交易平台.getValue();
-			} else if (currentTab.equals("gd") || currentTab.equals(DictCodeList.交易平台_固定收益平台.getValue())) {
+			} else if ("gd".equals(currentTab) || currentTab.equals(DictCodeList.交易平台_固定收益平台.getValue())) {
 				tradePlat = DictCodeList.交易平台_固定收益平台.getValue();
 			}
 		}
@@ -2910,7 +3030,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		for(Function<T, String> func:chkFunc){
 			String addMsg=func.apply(t);
 			etrCommonService.spliceMessage(confirmMsg, addMsg);
-			if(!StringUtil.isEmpty(addMsg))break;
+			if(!StringUtil.isEmpty(addMsg)) {
+				break;
+			}
 		};
 		if(StringUtil.isEmpty(confirmMsg)&&null!=callback){
 			callback.accept(t);
@@ -2942,7 +3064,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			},obj-> {
 				return etrCommonService.checkIsBlank(DateUtil.format(dzImportDto.getMdate()), "EtrExchangeTrade001.mdate", lineNo);
 			},obj-> {
-				return etrCommonService.checkIsPlateDate(DateUtil.format(dzImportDto.getVdate()), DateUtil.format(dzImportDto.getMdate()), lineNo);
+				return EtrCommonService.checkIsPlateDate(DateUtil.format(dzImportDto.getVdate()), DateUtil.format(dzImportDto.getMdate()), lineNo);
 			});
 			// 组合为空与组合是否存在
 			checkElement(dzImportDto,promptMsg,null,obj-> {
@@ -2963,8 +3085,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			if(secAcctInfoList!=null&&secAcctInfoList.size()>0&&secAcctInfoList.get(0)!=null){
 				if(!StringUtil.isNotEmpty(dzImportDto.getSecAcctId())){
 					List<LinkedHashMap<String,Object>> secAcctInfoMapList = (ArrayList) secAcctInfoList.get(0).getObject();
-					if(secAcctInfoMapList.get(0)!=null)
+					if(secAcctInfoMapList.get(0)!=null) {
 						dzImportDto.setSecAcctId((String) secAcctInfoMapList.get(0).get("secAcctId"));
+					}
 				}
 			}
 			// 资产代码为空与资产是否存在(债券，基金，股票)
@@ -5984,191 +6107,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		return dto;
 	}
 
-	/**
-	 * 场内指令，头寸信息
-	 * @return
-	 */
-	public List<BaseMap> queryPositionInfo(EtrExchangePosiInfoRequestDto requestDto) {
-		// 卖空模式
-		String sellFlag = CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED");
 
-		// 条件非空校验
-		posiInfoCheckCondition(requestDto);
-
-		if (requestDto.getPortfolioIdList() == null || requestDto.getPortfolioIdList().size() == 0){
-			return nullData(sellFlag);
-		}
-
-		// 从原投管系统取
-		BigDecimal cashT = BigDecimal.ZERO; // 指令t日可用
-		BigDecimal realCash = BigDecimal.ZERO; // 账户现金
-		List<String> list = requestDto.getPortfolioIdList();
-		if (list != null) {
-			for (String portfolioId : list){
-				BaseMap paramMap = BaseMap.newMap()
-						.put("finprodId", requestDto.getFinprodId())
-						.put("portfolioId", portfolioId)
-						.put("ccy", DictCodeList.币种_人民币_CNY.getValue())
-						.put("vdate", requestDto.getCdate())
-						.put("calId", "03") // 银行间
-						;
-				Map<String, Object> mapRst = etrCommonService.getProAvailableCash(paramMap);
-				if (mapRst != null){ // 指令t日可用，指令t1日可用
-					cashT = ArithmeticUtil.doAdd(cashT, BaseMap.newMap(mapRst).getBigDecimal("cashT"));
-				}
-				PtlCashPositionFlowDto positionQueryDto = new PtlCashPositionFlowDto();
-				positionQueryDto.setPortfolioId(portfolioId);
-				positionQueryDto.setCcy(DictCodeList.币种_人民币_CNY.getValue());
-				positionQueryDto.setCdate(iPlatformDate.getSysDate());
-				// 实际现金（账户现金）
-				realCash = ArithmeticUtil.doAdd(realCash, basePtlCashPositionInfoService.queryUsableCashPosition(positionQueryDto));
-			}
-		}
-
-		BaseMap bm = BaseMap.newMap()
-				.put("S_001", DictCodeListExt3.资产类型_指令汇总可用持仓.getValue())
-				.put("S_003", DictCodeListExt3.资产类型_融入券卖空待购回持仓.getValue())
-				.put("S_004", DictCodeListExt3.资产类型_汇总可用现金.getValue())
-				.put("A_004", DictCodeListExt3.资产类型_债券本方券可用持仓.getValue())
-				.put("A_005", DictCodeListExt3.资产类型_债券融入券可用持仓.getValue())
-				.put("C_01", DictCodeListExt3.资产类型_现金账户持仓.getValue())
-				.put("portfolioIdList", requestDto.getPortfolioIdList())
-				.put("cdate", requestDto.getCdate())
-				.put("finprodId", requestDto.getFinprodId())
-				.put("acctId", requestDto.getAcctId());
-		// 查询头寸信息
-		Map map = etrExchangeTradeCommonMapper.queryPositionInfo(bm);
-
-		return assemble(map, cashT, realCash);
-	}
-
-	private void posiInfoCheckCondition(EtrExchangePosiInfoRequestDto requestDto) {
-		if (requestDto == null){
-			throw new RuntimeException("入参不空！");
-		}
-
-		if (StringUtil.isEmpty(requestDto.getCdate())){
-			requestDto.setCdate(iPlatformDate.getSysDateStr());
-		}
-	}
-
-	private List<BaseMap> nullData(String flag) {
-		List<BaseMap> resp = new ArrayList<>();
-
-		/*组合资金可用*/
-		resp.add(BaseMap.newMap()
-				.put("field", "porUsableCash")
-				.put("name", "组合资金可用（元）")
-				.put("type", "xj")
-				.put("amount", "--"));
-
-		/*账户资金可用*/
-		resp.add(BaseMap.newMap()
-				.put("field", "acctNoUsableCash")
-				.put("name", "账户资金可用（元）")
-				.put("type", "xj")
-				.put("amount", "--"));
-		/*账户资金可取*/
-		resp.add(BaseMap.newMap()
-				.put("field", "acctNoCanCash")
-				.put("name", "账户资金可取（元）")
-				.put("type", "xj")
-				.put("amount", "--"));
-		/*可用数量*/
-		resp.add(BaseMap.newMap()
-				.put("field", "usableAmount")
-				.put("name", "可用数量（股）")
-				.put("type", "cc")
-				.put("amount", "--"));
-		/*持仓数量*/
-		resp.add(BaseMap.newMap()
-				.put("field", "usableSec")
-				.put("name", "可用数量（股）")
-				.put("type", "cc")
-				.put("amount", "--"));
-
-
-		return resp;
-	}
-	private List<BaseMap> assemble(Map map, BigDecimal cashT, BigDecimal realCash) {
-		String porUsableCash="porUsableCash",acctNoUsableCash="acctNoUsableCash",acctNoCanCash="acctNoCanCash",usableAmount="usableAmount",usableSec="usableSec";
-		if (map == null) {
-			map = new HashMap();
-			map.put(porUsableCash, "0");
-			map.put(acctNoUsableCash, "0");
-			map.put(acctNoCanCash, "0");
-			map.put(usableAmount, "0");
-			map.put(usableSec, "0");
-		}
-		// 初始化返回集合
-		List<BaseMap> resp = new ArrayList<>();
-		BaseMap bm = BaseMap.newMap(map);
-		/**
-		 * 若老投管现金存在需累计
-		 */
-		if (cashT != null){
-			bm.put(porUsableCash, cashT);
-		}
-		if (realCash != null){
-			bm.put(acctNoUsableCash, realCash);
-		}
-		if (realCash != null){
-			bm.put(acctNoCanCash, realCash);
-		}
-
-		/*组合资金可用*/
-		resp.add(BaseMap.newMap()
-				.put("field",porUsableCash)
-				.put("name", "组合资金可用（元）")
-				.put("type", "xj")
-				.put("amount", bm.get(porUsableCash)));
-
-		/*账户资金可用*/
-		resp.add(BaseMap.newMap()
-				.put("field", acctNoUsableCash)
-				.put("name", "账户资金可用（元）")
-				.put("type", "xj")
-				.put("amount", bm.get(acctNoUsableCash)));
-		/*账户资金可取*/
-		resp.add(BaseMap.newMap()
-				.put("field",acctNoCanCash)
-				.put("name", "账户资金可取（元）")
-				.put("type", "xj")
-				.put("amount", bm.get(acctNoUsableCash)));
-		/*可用数量*/
-		resp.add(BaseMap.newMap()
-				.put("field", "usableSec")
-				.put("name", "可用数量（股）")
-				.put("type", "cc")
-				.put("amount",bm.get(usableSec)==null?0:bm.get(usableSec)));
-		/*持仓数量*/
-		resp.add(BaseMap.newMap()
-				.put("field", "usableSec")
-				.put("name", "可用数量（股）")
-				.put("type", "cc")
-				.put("amount", bm.get(usableSec)==null?0:bm.get(usableSec)));
-
-		return resp;
-	}
-	private String addToStr(BigDecimal a, BigDecimal b){
-		if (a == null && b== null){
-			return "--";
-		}
-		return decimalToStr(ArithmeticUtil.doAdd(a,b),"0.00");
-	}
-	/**
-	 * 返回前端格式保留小数位
-	 * @param b
-	 * @param pattern
-	 * @return
-	 */
-	private String decimalToStr(BigDecimal b, String pattern){
-		if (b == null){
-			return "--";
-		}
-		DecimalFormat df1 = new DecimalFormat(pattern);
-		return df1.format(b);
-	}
 
 
 

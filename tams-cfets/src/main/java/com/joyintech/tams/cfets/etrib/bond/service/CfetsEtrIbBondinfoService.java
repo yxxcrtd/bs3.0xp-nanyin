@@ -1903,7 +1903,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
 
             }
             if(StringUtil.isNotEmpty(allDto.getEntrustOwnNum()) && StringUtil.isNotEmpty(allDto.getEntrustIntegrateNum())
-               &&  StringUtil.isNotEmpty(allDto.getTradeAmt())
+               &&  StringUtil.isNotEmpty(allDto.getTradeAmt()) && !allDto.getPs().equals("T03")
             ){
                 if(allDto.getTradeAmt().compareTo(ArithmeticUtil.doAdd(allDto.getEntrustOwnNum(),allDto.getEntrustIntegrateNum()))!=0){
                     messages.add(new ValidMessage("基本信息中券面总额必须等于基本信息中本方券券面总额和卖空购回券面总额之和。"));

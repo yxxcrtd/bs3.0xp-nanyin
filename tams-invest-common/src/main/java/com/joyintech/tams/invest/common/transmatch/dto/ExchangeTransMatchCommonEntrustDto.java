@@ -172,4 +172,31 @@ public class ExchangeTransMatchCommonEntrustDto extends EtrEntrust {
     public void setEntrustDetailDtoList(List<ExchangeTransMatchCommonEntrustDetailDto> entrustDetailDtoList) {
         this.entrustDetailDtoList = entrustDetailDtoList;
     }
+
+
+    /**
+     * 软硬控标识
+     */
+    private String softSkipMode;
+
+    public String getSoftSkipMode() {
+        return softSkipMode;
+    }
+
+    public void setSoftSkipMode(String softSkipMode) {
+        this.softSkipMode = softSkipMode;
+    }
+
+    /**
+     * 操作类型
+     */
+    private String optType;
+
+    public String getOptType() {
+        return optType;
+    }
+
+    public void setOptType(String optType) {
+        this.optType = optType;
+    }
 }

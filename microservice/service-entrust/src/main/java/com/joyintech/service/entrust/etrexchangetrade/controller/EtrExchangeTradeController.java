@@ -620,4 +620,5 @@ public class EtrExchangeTradeController {
     public void selectMultDetail(@RequestBody Map<String,Object> map){
         etrExchangeTradeService.selectMultDetail(map);
     }
+
 }

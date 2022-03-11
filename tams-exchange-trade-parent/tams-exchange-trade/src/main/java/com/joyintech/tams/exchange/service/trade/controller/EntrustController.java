@@ -16,7 +16,7 @@ import com.joyintech.tams.exchange.common.request.EntrustQueryRequest;
 import com.joyintech.tams.exchange.common.request.PageEntrustInfoRequest;
 import com.joyintech.tams.exchange.datacommon.db.service.InstructionService;
 import com.joyintech.tams.exchange.service.trade.management.service.EntrustManagement;
-import com.joyintech.tams.exchange.util.EntrustPropUtils;
+import com.joyintech.tams.exchange.common.utils.EntrustPropUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;

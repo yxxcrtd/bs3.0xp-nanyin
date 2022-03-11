@@ -44,6 +44,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 银证转账新建
@@ -137,6 +138,7 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
 //                    ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAllocation/doComplete", entity,
 //                    Integer.class);
 //        }
+        int i =0;
         for(PtlFundAllocation001Dto ptlFundAllocation001Dto :entity.getPtlFundAllocation001Dtos()){
             PtlFundAllocation002Dto ptlFundAllocationDto = new PtlFundAllocation002Dto();
             BeanUtil.copyPropertiesIgnoreNull(ptlFundAllocationDto, entity);
@@ -158,6 +160,10 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
                     ptlFundAllocationDto.setBussTrdTransferOrder(bussTrdTransferOrderDtos);
                 }
             }
+            if(Objects.isNull(entity.getBussTrdTransferOrder().get(i))){
+                ptlFundAllocationDto = this.setDots(entity.getBussTrdTransferOrder().get(i) , ptlFundAllocationDto,i);
+            }
+            i++;
             ptlFundAllocationDto.setTradeId(null);
             ptlFundAllocationDto.setOrderId(ptlFundAllocationDto.getBussTrdTransferOrder().get(0).getOrderId());
             simpleRestTemplate.postForObject(
@@ -198,6 +204,10 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
             PtlFundAllocation001Dto detailDto = entity.getPtlFundAllocation001Dtos().get(i);
             PtlFundAllocation002Dto dto = new PtlFundAllocation002Dto();
             this.setEntityy(detailDto,entity, dto, i);
+            dto.setOperateType(entity.getOperateType());
+            if(Objects.isNull(entity.getBussTrdTransferOrder().get(i))){
+                dto = this.setDots(entity.getBussTrdTransferOrder().get(i) , dto, i);
+            }
             restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAllocation/doInsertAction", dto,
                     String.class);
 //            if (bussCommonMapperDelegateService != null && dto.getPtlCashPositionFlow() != null
@@ -249,8 +259,20 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
             simpleRestTemplate.postForObject(
                     ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAllocation/doDelete", orderId,
                     Integer.class);
-            doInsert(entity, OperationType.NEW);
+            doInsert(entity, OperationType.MODIFY);
         }
+    }
+
+    public PtlFundAllocation002Dto setDots(BussTrdTransferOrderDto entity ,PtlFundAllocation002Dto dto,int i){
+        dto.setPayType(entity.getPayType());
+        dto.setCcy(entity.getCcy());
+        dto.setWorkflowId(entity.getWorkflowId());
+        dto.setSettleDate(entity.getSettleDate());
+        dto.setPortfolioId(entity.getPortfolioId());
+        dto.setSettleAmt(entity.getSettleAmt());
+        dto.setMyAcctNo(entity.getPayAcctNo());
+        dto.setCounterAcctNo(entity.getRecAcctNo());
+        return dto;
     }
     /**
      * 实体类的合成

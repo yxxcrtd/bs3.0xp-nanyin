@@ -522,9 +522,9 @@ public class MockTradeClient implements ITradeRequest {
                     || EntrustProp.PS.value.equals(entrust.getEntrustProp()))
                     && Market.SZSE.value.equals(entrust.getMarket())) && !EntrustProp.HS.value.equals(entrust.getEntrustProp())) {
                 logger.info("回报即成交业务,不可撤单");
-                entrust.setEntrustStatus(EntrustStatus.REPORTED.value);
-                entrust.setErrorCode(ErrorCode.REQ_PARAMETER_ERROR.value);
-                entrust.setErrorMsg("该类业务不可撤单");
+                cancelEntrustBean.setEntrustStatus(EntrustStatus.REPORTED.value);
+                cancelEntrustBean.setErrorCode(ErrorCode.REQ_PARAMETER_ERROR.value);
+                cancelEntrustBean.setErrorMsg("该类业务不可撤单");
                 mockTradeResponse.resCancelEntrust(cancelEntrustBean);
                 return;
             }
