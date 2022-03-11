@@ -31,6 +31,10 @@ public class PositionSocketService {
     }
 
     public void insertOrUpdateForFlows(List list, String tableName) {
+        if (list != null && !list.isEmpty()){
+            Map param = (Map) list.get(0);
+            webSocketMapper.deleteFlows(param);
+        }
         for (Object obj : list){
             BaseMap each = BaseMap.newMap((Map) obj);
             if (each != null) {

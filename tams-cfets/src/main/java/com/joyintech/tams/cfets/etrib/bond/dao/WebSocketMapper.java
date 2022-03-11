@@ -15,4 +15,6 @@ public interface WebSocketMapper {
     void update(Map<String, Object> map);
 
     void insertFlows(Map<String, Object> map);
+
+    void deleteFlows(Map<String, Object> map);
 }
