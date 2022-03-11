@@ -26,7 +26,7 @@ import java.util.Map;
 public interface EtrTrdCommonMapper {
 
 
-    List<Map<String,Object>> getPtlAcctInfo(String portfolioId);
+    List<String> getPtlAcctInfo(String portfolioId);
     /**
      * 交易日历的节假日取得
      *
