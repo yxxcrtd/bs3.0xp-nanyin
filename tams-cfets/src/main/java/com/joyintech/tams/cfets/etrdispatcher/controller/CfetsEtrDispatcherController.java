@@ -36,8 +36,10 @@ import com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTraderListRe
 import com.joyintech.tams.cfets.etrdispatcher.service.CfetsEtrDispatcherService;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.compress.utils.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +58,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -423,7 +426,12 @@ public class CfetsEtrDispatcherController extends BaseController {
                                                        @RequestBody CommonSearchInfoRequest dto) {
         try{
             Map<String,Object> resultData = cfetsEtrDispatcherService.getReadonlyFormEtrInfo(pageCode,dtCode,spcdCode,dto);
-            if (resultData.isEmpty()){
+            SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.投管业务类型, null);
+            List<String> list = Lists.newArrayList();
+            if (StringUtil.isNotEmpty(selectDto) && !CollectionUtils.isEmpty(selectDto.getOptions())){
+                list = selectDto.getOptions().stream().map(item->item.getId()).collect(Collectors.toList());
+            }
+            if (!CollectionUtils.isEmpty(list) && list.contains(dto.getBusiTypePosition())){
                 resultData = cfetsEtrDispatcherService.getReadonlyFormEtrInfoExc(pageCode,dtCode,spcdCode,dto);
             }
             return new Message<Map<String,Object>>().success().setData(resultData);
