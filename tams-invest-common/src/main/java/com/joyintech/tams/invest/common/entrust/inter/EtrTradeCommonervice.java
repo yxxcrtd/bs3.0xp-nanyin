@@ -33,6 +33,8 @@ import java.util.*;
 @Service("etrTradeCommonervice")
 public class EtrTradeCommonervice extends BaseService {
 
+    public static final String FLOW_TYPE_ETR = "etr";
+    public static final String FLOW_TYPE_TRD = "trd";
 
     @Autowired(required = false)
     private BasePtlCashPositionInfoService basePtlCashPositionInfoService;
@@ -72,7 +74,7 @@ public class EtrTradeCommonervice extends BaseService {
         BigDecimal realSec = BigDecimal.ZERO; // 持仓数量
         List<PositionCashSecDto> list = requestDto.getPtlList();
         String flowType= requestDto.getFlowType();
-        flowType=StringUtil.equals("etr",flowType)?"01":"02";
+        flowType=StringUtil.equals(FLOW_TYPE_ETR,flowType)?"01":"02";
 
         if (list != null) {
             //查询组合下所有现金账户
