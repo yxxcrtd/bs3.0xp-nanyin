@@ -117,7 +117,7 @@
 
     </update>
 
-    <select id="deleteFlows" parameterType="Map" resultType="int">
+    <update id="deleteFlows" parameterType="Map" >
         <choose>
             <when test="tableName == 'ETR_CASH_POSITION_FLOW_RULE' ">
                 DELETE FROM ETR_CASH_POSITION_FLOW_RULE WHERE SEQNO = #{SEQNO}
@@ -134,6 +134,6 @@
             <otherwise>
             </otherwise>
         </choose>
-    </select>
+    </update>
     
 </mapper>
