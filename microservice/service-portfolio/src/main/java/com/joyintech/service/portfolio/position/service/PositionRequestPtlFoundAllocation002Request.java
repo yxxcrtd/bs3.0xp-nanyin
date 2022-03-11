@@ -77,7 +77,7 @@ public class PositionRequestPtlFoundAllocation002Request {
         } else {
             resultMap.put("flowStatus", DictCodeListExt3.流程节点_审批生效.getValue());
         }
-        resultMap.put("modelType", DictCodeListExt1.子系统代码_委托.getValue());
+        resultMap.put("modelType", DictCodeListExt1.子系统代码_交易.getValue());
 
         //业务类型
         if(Objects.equals(entity.getPayType(),DictCodeListExt1.指令类型_银证转账_银转证.getValue())){
