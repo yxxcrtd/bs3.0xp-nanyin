@@ -661,6 +661,13 @@ public class CfetsEtrDispatcherService extends BaseService{
                 () -> cfetsEtrDispatcherMapper.getEtrDispatcherExeListInfo(pageParam));
     }
 
+    public Page<CfetsEtrDispatcherExeListInfoResponse> getEtrDispatcherExeListInfoByExe(CommonSearchInfoRequest dto) {
+        Map<String,Object> pageParam = BeanUtil.object2Map(dto);
+        pageParam.put("instructionId",dto.getEntrustId());
+        return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
+                () -> cfetsEtrDispatcherMapper.queryEntrust2Touguan(pageParam));
+    }
+
     /**
      * 指令成交明细查询
      *
@@ -706,6 +713,13 @@ public class CfetsEtrDispatcherService extends BaseService{
             }
         }
         return  page;
+    }
+
+    public Page<CfetsEtrDispatcherDealListInfoResponse> getEtrDispatcherDealListInfoByExe(CommonSearchInfoRequest dto) {
+        Map<String,Object> pageParam = BeanUtil.object2Map(dto);
+        pageParam.put("instructionId",dto.getEntrustId());
+        return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
+                () -> cfetsEtrDispatcherMapper.queryTrade2Touguan(pageParam));
     }
 
     /**

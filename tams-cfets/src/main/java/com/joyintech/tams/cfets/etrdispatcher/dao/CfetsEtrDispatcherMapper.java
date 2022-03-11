@@ -177,4 +177,7 @@ public interface CfetsEtrDispatcherMapper {
      */
     CfetsEtrDispatcherInfoExcResponse getEtrDispatcherExcInfo(Map<String, Object> pageParam);
 
+    List<CfetsEtrDispatcherDealListInfoResponse> queryTrade2Touguan(Map<String, Object> pageParam);
+
+    List<CfetsEtrDispatcherExeListInfoResponse> queryEntrust2Touguan(Map<String, Object> pageParam);
 }

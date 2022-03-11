@@ -42,6 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -154,6 +155,9 @@ public class CfetsEtrDispatcherController extends BaseController {
             throws Exception {
         try {
             Page<CfetsEtrDispatcherExeListInfoResponse> returnDto = cfetsEtrDispatcherService.getEtrDispatcherExeListInfo(dto);
+            if (returnDto.getTotal() == 0 && CollectionUtils.isEmpty(returnDto.getRoot())){
+                returnDto = cfetsEtrDispatcherService.getEtrDispatcherExeListInfoByExe(dto);
+            }
             return new Message<Page<CfetsEtrDispatcherExeListInfoResponse>>().success().setData(returnDto);
         } catch (Exception e) {
             logger.error("查询指令管理分页数据异常", e);
@@ -177,6 +181,9 @@ public class CfetsEtrDispatcherController extends BaseController {
             throws Exception {
         try {
             Page<CfetsEtrDispatcherDealListInfoResponse> returnDto = cfetsEtrDispatcherService.getEtrDispatcherDealListInfo(dto);
+            if (returnDto.getTotal() == 0 && CollectionUtils.isEmpty(returnDto.getRoot())){
+                returnDto = cfetsEtrDispatcherService.getEtrDispatcherDealListInfoByExe(dto);
+            }
             return new Message<Page<CfetsEtrDispatcherDealListInfoResponse>>().success().setData(returnDto);
         } catch (Exception e) {
             logger.error("查询指令成交异常", e);
