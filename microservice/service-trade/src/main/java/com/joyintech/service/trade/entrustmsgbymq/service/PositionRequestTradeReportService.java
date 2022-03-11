@@ -86,7 +86,11 @@ public class PositionRequestTradeReportService {
         } else if (INTERF_TYPE_STOCK001.equals(interType)) {
             this.stock001(trdTempDto, resultMap);
         }
-        PositionHttpRequest.send(resultMap);
+        if(StringUtil.isNotEmpty(resultMap.get(INTERFACE_TYPE))){
+            PositionHttpRequest.send(resultMap);
+        }else{
+            logger.debug("[未找到对应的接口配置]");
+        }
     }
 
     /**

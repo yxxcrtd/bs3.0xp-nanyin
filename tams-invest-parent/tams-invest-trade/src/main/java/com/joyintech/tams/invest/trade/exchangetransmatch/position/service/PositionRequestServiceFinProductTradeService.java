@@ -24,10 +24,13 @@ import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.common.trade.dto.PortfolioCalculateDto;
 import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonRevokeDto;
+import com.joyintech.tams.invest.trade.api.PositionRequestTradeRestService;
 import com.joyintech.tams.invest.trade.exchangetransmatch.position.bean.PositionRequestBaseBean;
 import com.joyintech.tams.invest.trade.exchangetransmatch.position.bean.TrdMoreConvrateDto;
 import com.joyintech.tams.invest.trade.exchangetransmatch.position.constant.PositionConstant;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
@@ -39,6 +42,7 @@ import static com.joyintech.tams.invest.common.position.constant.PositionCommonC
 
 @Service
 public class PositionRequestServiceFinProductTradeService extends BaseService {
+    private static final Logger logger = LoggerFactory.getLogger(PositionRequestServiceFinProductTradeService.class);
 
     public static final String STANDAR_SEC_ID = "XN_PRODID999";
 
@@ -91,7 +95,11 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
             } else if (PositionConstant.INTERF_TYPE_STOCK001.equals(interType)) {
                 this.stock001(entity, resultMap);
             }
-            PositionHttpRequest.send(resultMap);
+            if(StringUtil.isNotEmpty(resultMap.get(INTERFACE_TYPE))){
+                PositionHttpRequest.send(resultMap);
+            }else{
+                logger.debug("[未找到对应的接口配置]");
+            }
         }
     }
 
