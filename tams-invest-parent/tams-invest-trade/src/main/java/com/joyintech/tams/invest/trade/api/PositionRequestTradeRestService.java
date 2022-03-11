@@ -268,7 +268,7 @@ public class PositionRequestTradeRestService {
         if (StringUtil.isNotEmpty(entity.getSoftSkipMode()) && StringUtil.equals(entity.getSoftSkipMode(), "Y")) {
             balanceCheck = "N";
         }
-        resultMap.put("userId", SecurityUtil.getLoginUser().getUserName());
+        resultMap.put("userId", SecurityUtil.getLoginUser() != null ? SecurityUtil.getLoginUser().getUserName() : "system");
         resultMap.put("totalTradeId", entity.getTrdProductDeal().getTradeId());
         resultMap.put("balanceCheck", balanceCheck);
         resultMap.put("flowStatus", DictCodeListExt3.流程节点_审批生效.getValue());
