@@ -122,7 +122,11 @@ public class PositionRequestTradeRestService {
         }else if (PositionConstant.INTERF_TYPE_BOND003.equals(interType)) {
             this.bond003(entity, resultMap);
         }
-        PositionHttpRequest.send(resultMap);
+        if(StringUtil.isNotEmpty(resultMap.get(INTERFACE_TYPE))){
+            PositionHttpRequest.send(resultMap);
+        }else{
+            logger.debug("[未找到对应的接口配置]");
+        }
     }
 
     /**
