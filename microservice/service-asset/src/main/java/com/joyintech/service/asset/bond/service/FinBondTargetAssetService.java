@@ -866,6 +866,8 @@ public class FinBondTargetAssetService extends BaseService<FinBondTargetAssetDto
                 }
                 finBondTargetAssetDto.setFinProductConvertible(finProductConvertible);
             }
+        } else {
+            return new FinBondTargetAssetDto();
         }
         return finBondTargetAssetDto;
     }
