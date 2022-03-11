@@ -897,32 +897,6 @@ public class InvestmentsInfoService {
 				}
 		    }
 
-			//新增减法操作  add by leipeng 20220304
-			if(tablePorpertyMap_2.get(key).contains("-")){
-				String[] valueDList = tablePorpertyMap_2.get(key).split("\\-");
-				int lengthD = valueDList.length;
-				// 本季末数额
-				if (key.contains("cur")) {
-					for (int i = 0; i < length; i ++) {
-						money = money.subtract(queryMoney(currMap, valueDList[i]));
-					}
-					// 上季末数额
-				} else if (key.contains("last")) {
-					for (int i = 0; i < length; i ++) {
-						money = money.subtract(queryMoney(lastMap, valueDList[i]));
-					}
-				} else if (key.contains("_zq")) {
-					for (int i = 0; i < length; i ++) {
-						money = money.subtract(queryMoney(currMap, valueDList[i]));
-					}
-				}else if (key.contains("_lzq")) {
-					for (int i = 0; i < length; i ++) {
-						money = money.subtract(queryMoney(lastMap, valueDList[i]));
-					}
-				}
-			}
-			//新增减法操作  add by leipeng 20220304
-
 			resultMap.put(key, money);
 		}
 
@@ -2692,7 +2666,19 @@ public class InvestmentsInfoService {
 	 * @throws  
 	 */  
     private BigDecimal queryMoney(Map<String, BigDecimal> map, String key) {
-		return map.get(key) == null ? BigDecimal.ZERO : map.get(key);
+		BigDecimal dec = BigDecimal.ZERO;
+		//计算方法改造.要求减法一定放在最后面
+		String[] values = key.split("\\-");
+		if(values.length>1){
+			dec = map.get(values[0]) == null ? BigDecimal.ZERO : map.get(values[0]);
+			for(int i = 1; i< values.length;i++){
+				dec = dec.subtract(map.get(values[i]) == null ? BigDecimal.ZERO : map.get(values[i]));
+			}
+		}else{
+			dec = map.get(key) == null ? BigDecimal.ZERO : map.get(key);
+		}
+
+		return dec;
 	}
 	
 	public InvestmentBusinessDetailsDto divideBillion(InvestmentBusinessDetailsDto detail) {
