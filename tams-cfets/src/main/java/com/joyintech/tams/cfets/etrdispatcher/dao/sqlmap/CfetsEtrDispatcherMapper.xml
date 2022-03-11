@@ -1448,7 +1448,7 @@
         to_char(eted.MPAY_DATE,'yyyy-MM-dd') mpayDate,
         eted.M_INT_AMT mIntAmt,
         eted.M_TRADE_AMT mTradeAmt,
-        nvl(ee.Pledge_Ratio * 100,fscr.SCALE)  pledgeRatio, /** 折算率 **/
+        nvl(fscr.SCALE, nvl(ee.Pledge_Ratio,0)) * 100 pledgeRatio, /** 折算率 **/
         ee.PLEDGE_NUMBER pledgeNumber,
         ee.PLEDGE_NUMBER * ee.Pledge_Face_Value pledStrdPrinAmt,
         eted.TRADE_ID tradeId,
@@ -1457,7 +1457,7 @@
         oee.PLEDGE_NUMBER * oee.Pledge_Face_Value oldPledStrdPrinAmt,
         T6.finprod_market_id oldFinprodMarketId,
         eted.DEAL_MODE dealMode,  /** 申报类型 **/
-        nvl(ee.PLEDGE_NUMBER * ee.PLEDGE_RATIO , ete.ENTRUST_NUM) pledgeStandardNumber, /** 标准券额度 **/
+        nvl(ee.PLEDGE_NUMBER * nvl(fscr.SCALE,ee.PLEDGE_RATIO), ete.ENTRUST_NUM) pledgeStandardNumber, /** 标准券额度 **/
         fp.Is_Right isRight,sci.ACCT_NAME trdAcctId
         FROM ETR_ENTRUST ete
         INNER JOIN ETR_ENTRUST_ADD eted ON ete.entrust_id = eted.entrust_id
