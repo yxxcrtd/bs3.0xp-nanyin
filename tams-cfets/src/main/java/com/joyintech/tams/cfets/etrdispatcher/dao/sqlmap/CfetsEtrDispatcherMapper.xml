@@ -1457,7 +1457,7 @@
         oee.PLEDGE_NUMBER * oee.Pledge_Face_Value oldPledStrdPrinAmt,
         T6.finprod_market_id oldFinprodMarketId,
         eted.DEAL_MODE dealMode,  /** 申报类型 **/
-        nvl(ee.PLEDGE_NUMBER * nvl(fscr.SCALE,ee.PLEDGE_RATIO), ete.ENTRUST_NUM) pledgeStandardNumber, /** 标准券额度 **/
+        nvl(nvl(fscr.SCALE * ete.ENTRUST_NUM,ee.PLEDGE_NUMBER * ee.PLEDGE_RATIO), ete.ENTRUST_NUM) pledgeStandardNumber, /** 标准券额度 **/
         fp.Is_Right isRight,sci.ACCT_NAME trdAcctId
         FROM ETR_ENTRUST ete
         INNER JOIN ETR_ENTRUST_ADD eted ON ete.entrust_id = eted.entrust_id
