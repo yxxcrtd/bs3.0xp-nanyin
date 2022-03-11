@@ -314,7 +314,7 @@ public class EtrTradeCommonervice extends BaseService {
         /*持仓数量*/
         resp.add(BaseMap.newMap()
                 .put("field", "usableSec")
-                .put("name", "可用数量（股）")
+                .put("name", "持仓数量（股）")
                 .put("type", "cc")
                 .put("amount", "--"));
 
@@ -376,14 +376,14 @@ public class EtrTradeCommonervice extends BaseService {
                 .put("amount", bm.get(acctNoUsableCash)));
         /*可用数量*/
         resp.add(BaseMap.newMap()
-                .put("field", "usableSec")
+                .put("field", "usableAmount")
                 .put("name", "可用数量（股）")
                 .put("type", "cc")
-                .put("amount",bm.get(usableSec)==null?0:bm.get(usableSec)));
+                .put("amount",bm.get(usableAmount)==null?0:bm.get(usableAmount)));
         /*持仓数量*/
         resp.add(BaseMap.newMap()
                 .put("field", "usableSec")
-                .put("name", "可用数量（股）")
+                .put("name", "持仓数量（股）")
                 .put("type", "cc")
                 .put("amount", bm.get(usableSec)==null?0:bm.get(usableSec)));
 
