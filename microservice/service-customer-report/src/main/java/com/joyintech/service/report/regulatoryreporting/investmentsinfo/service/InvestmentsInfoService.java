@@ -88,6 +88,7 @@ public class InvestmentsInfoService {
 	
 	// 存储值相同的单元格对应情况
 	private static Map<String, String> sameValueMap = new HashMap<String, String>();
+	private static Map<String, String> table8ValueMap = new HashMap<String, String>();
 	static {
 		tablePorpertyMap_1.put("t1_cur12_amt", "ASSETAMT1_1_6+ASSETAMT1_2_3+ASSETAMT1_3_3+ASSETAMT1_4_14+ASSETAMT1_5_17+ASSETAMT1_6_5+ASSETAMT1_7_8+ASSETAMT1_8_11+ASSETAMT1_9_4+ASSETAMT1_10_7+ASSETAMT1_11_7+ASSETAMT1_12_9+ASSETAMT1_14_8");
 		tablePorpertyMap_1.put("t1_last12_amt",  "ASSETAMT1_1_6+ASSETAMT1_2_3+ASSETAMT1_3_3+ASSETAMT1_4_14+ASSETAMT1_5_17+ASSETAMT1_6_5+ASSETAMT1_7_8+ASSETAMT1_8_11+ASSETAMT1_9_4+ASSETAMT1_10_7+ASSETAMT1_11_7+ASSETAMT1_12_9+ASSETAMT1_14_8");
@@ -566,6 +567,47 @@ public class InvestmentsInfoService {
 		sameValueMap.put("t6_cur31_amt", "t1_cur14_amt");
 		// 表六D34 = 表一F14
 		sameValueMap.put("t6_last31_amt", "t1_last14_amt");
+
+
+
+
+
+		// 表六C32 = 表一E12
+		table8ValueMap.put("t1_cur17_amt", "t8_cur17_amt");
+		table8ValueMap.put("t1_last17_amt", "t8_last17_amt");
+		table8ValueMap.put("t1_cur12_amt", "t8_cur12_amt");
+		table8ValueMap.put("t1_last12_amt", "t8_last12_amt");
+		table8ValueMap.put("t1_cur13_amt", "t8_cur13_amt");
+		table8ValueMap.put("t1_last13_amt", "t8_last13_amt");
+		table8ValueMap.put("t2_cur21_amt", "t8_cur21_amt");
+		table8ValueMap.put("t2_last21_amt", "t8_last21_amt");
+		table8ValueMap.put("t2_cur31_amt", "t8_cur31_amt");
+		table8ValueMap.put("t2_last31_amt", "t8_last31_amt");
+		table8ValueMap.put("t8_cur01_amt", "t8_cur01_amt");
+		table8ValueMap.put("t8_last01_amt", "t8_last01_amt");
+		table8ValueMap.put("t8_cur02_amt", "t8_cur02_amt");
+		table8ValueMap.put("t8_last02_amt", "t8_last02_amt");
+		table8ValueMap.put("t2_cur40_amt", "t8_cur40_amt");
+		table8ValueMap.put("t2_last40_amt", "t8_last40_amt");
+		table8ValueMap.put("t8_cur03_amt", "t8_cur03_amt");
+		table8ValueMap.put("t8_last03_amt", "t8_last03_amt");
+		table8ValueMap.put("t2_cur58_amt", "t8_cur58_amt");
+		table8ValueMap.put("t2_last58_amt", "t8_last58_amt");
+
+		table8ValueMap.put("t6_cur24_amt", "t8_cur24_amt");
+		table8ValueMap.put("t6_last24_amt", "t8_last24_amt");
+		table8ValueMap.put("t6_cur23_amt", "t8_cur23_amt");
+		table8ValueMap.put("t6_last23_amt", "t8_last23_amt");
+		table8ValueMap.put("thamt1_1_11", "t8_thamt1_1_11");
+		table8ValueMap.put("t3_40_amt", "t8_40_amt");
+		table8ValueMap.put("t3_44_amt", "t8_44_amt");
+		table8ValueMap.put("t3_45_amt", "t8_45_amt");
+		table8ValueMap.put("t4_amt2_10", "t8_amt2_10");
+		table8ValueMap.put("t4_amt1_10", "t8_amt1_10");
+
+
+
+
 	}
 
 	/**  
@@ -599,6 +641,13 @@ public class InvestmentsInfoService {
 			}
 			data.put(detail.getPropertycode(), divideBillion(detail));
 		}
+
+		/***附表8保留一位小数特殊处理*/
+		for(Map.Entry<String,String> dto : table8ValueMap.entrySet()){
+			data.put(dto.getValue(),divideBillionEx((InvestmentBusinessDetailsDto)data.get(dto.getKey())));
+		}
+
+
 		//登录机构
 		InvestmentBusinessDetailsDto reportDto=new InvestmentBusinessDetailsDto();
 		reportDto.setPropertycode("report");
@@ -2586,8 +2635,6 @@ public class InvestmentsInfoService {
 			valueBLast = valueBLast.add(null!=investmentBusinessDetailsDto.getValueBLast()&&investmentBusinessDetailsDto.getPropertycode().contains("F01")?investmentBusinessDetailsDto.getValueBLast():BigDecimal.ZERO);
 			valueB01 = valueB01.add(null!=investmentBusinessDetailsDto.getValueB01()&&investmentBusinessDetailsDto.getPropertycode().contains("F01")?investmentBusinessDetailsDto.getValueB01():BigDecimal.ZERO);
 			valueBlast01 = valueBlast01.add(null!=investmentBusinessDetailsDto.getValueBlast01()&&investmentBusinessDetailsDto.getPropertycode().contains("F01")?investmentBusinessDetailsDto.getValueBlast01():BigDecimal.ZERO);
-			divideBillion(investmentBusinessDetailsDto);
-
 			InvestmentBusinessDetailsList.add(investmentBusinessDetailsDto);
 		}
 		//将没有数据的分类进行初始化
@@ -2763,14 +2810,69 @@ public class InvestmentsInfoService {
 
 		return detail;
 	}
-
 	public static BigDecimal divideTenThousand(BigDecimal num){
     	BigDecimal beo = null;
-		BigDecimal billion = new BigDecimal(10000);
+		BigDecimal billion = new BigDecimal("10000");
 		if(null!=num){
 			beo = num.divide(billion, 2, BigDecimal.ROUND_HALF_UP);
 		}
     	return beo;
+	}
+
+
+
+	public InvestmentBusinessDetailsDto divideBillionEx(InvestmentBusinessDetailsDto detail) {
+		BigDecimal billion = BigDecimal.ONE;
+		if(detail.getSessionendNum()!=null)//期末余额
+			detail.setSessionendNum(detail.getSessionendNum().divide(billion, 1, BigDecimal.ROUND_HALF_UP));
+		if(detail.getLastSessionendNum()!=null)//期末余额（穿透后）
+			detail.setLastSessionendNum(detail.getLastSessionendNum().divide(billion, 1, BigDecimal.ROUND_HALF_UP));
+		if(detail.getNonperformingAssetNum()!=null)//本期银行收益
+			detail.setNonperformingAssetNum(detail.getNonperformingAssetNum().divide(billion, 1, BigDecimal.ROUND_HALF_UP));
+		if(detail.getLastNonperformingAssetNum()!=null)//本期客户收益
+			detail.setLastNonperformingAssetNum(detail.getLastNonperformingAssetNum().divide(billion, 1, BigDecimal.ROUND_HALF_UP));
+		if(detail.getTqeAmount()!=null)//本期募集金额
+			detail.setTqeAmount(detail.getTqeAmount().divide(billion, 1, BigDecimal.ROUND_HALF_UP));
+		if(detail.getTlqeAmount()!=null)//本期总募集金额
+			detail.setTlqeAmount(detail.getTlqeAmount().divide(billion, 1, BigDecimal.ROUND_HALF_UP));
+		if (detail.getNonsStandardAmount() != null) { // 非标准化债权类投资本季末数额
+			detail.setNonsStandardAmount(detail.getNonsStandardAmount().divide(billion, 1, BigDecimal.ROUND_HALF_UP));
+		}
+		if (detail.getLastNonsStandardAmount() != null) { // 非标准化债权类投资上季末数额
+			detail.setLastNonsStandardAmount(detail.getLastNonsStandardAmount().divide(billion, 1, BigDecimal.ROUND_HALF_UP));
+		}
+		if (detail.getIndInvestmentAmount() != null) { // 产业投资基金上季末数额
+			detail.setIndInvestmentAmount(detail.getIndInvestmentAmount().divide(billion, 1, BigDecimal.ROUND_HALF_UP));
+		}
+		if (detail.getLastIndInvestmentAmount() != null) { // 产业投资基金上季末数额
+			detail.setLastIndInvestmentAmount(detail.getLastIndInvestmentAmount().divide(billion, 1, BigDecimal.ROUND_HALF_UP));
+		}
+		if (detail.getOtherAmount() != null) { // 其他本季末数额
+			detail.setOtherAmount(detail.getOtherAmount().divide(billion, 1, BigDecimal.ROUND_HALF_UP));
+		}
+		if (detail.getLastOtherAmount() != null) { // 其他上季末数额
+			detail.setLastOtherAmount(detail.getLastOtherAmount().divide(billion, 1, BigDecimal.ROUND_HALF_UP));
+		}
+		if (detail.getSessionendBalance() != null) { // 表四本季末数额余额
+			detail.setSessionendBalance(detail.getSessionendBalance().divide(billion, 1, BigDecimal.ROUND_HALF_UP));
+		}
+		if (detail.getSessionendYield() != null) { // 表四 本季末平均年化收益水平 收益率
+			detail.setSessionendYield(detail.getSessionendYield().multiply(new BigDecimal(100)).setScale(1, BigDecimal.ROUND_HALF_UP));
+		}
+		if (detail.getLastSessionendBalance() != null) { // 表四上季末数额余额
+			detail.setLastSessionendBalance(detail.getLastSessionendBalance().divide(billion, 1, BigDecimal.ROUND_HALF_UP));
+		}
+		if (detail.getLastSessionendYield() != null) { // 表四 上季末平均年化收益水平 收益率
+			detail.setLastSessionendYield(detail.getLastSessionendYield().multiply(new BigDecimal(100)).setScale(1, BigDecimal.ROUND_HALF_UP));
+		}
+		if (detail.getTotleBalance() != null) { // 表三总计本季末余额
+			detail.setTotleBalance(detail.getTotleBalance().divide(billion, 1, BigDecimal.ROUND_HALF_UP));
+		}
+		if (detail.getLasttotleBalance() != null) { // 表三总计上季末余额
+			detail.setLasttotleBalance(detail.getLasttotleBalance().divide(billion, 1, BigDecimal.ROUND_HALF_UP));
+		}
+
+		return detail;
 	}
 
 	/***
