@@ -1191,7 +1191,6 @@
      * 委托金额更时联动计算委托数量
      */
     var entrustAmtChange = function() {
-        alert("进入");
         calcEntrustNumAndAmt();
         linkTableEntrustNumAmt();
     };
@@ -1794,10 +1793,10 @@
             // TISHKS-137:计算偏离度 fuyongsheng 20211109 edit end
             paramObj.unitCprice = price;
             Joyin.ajax(JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade003/calcDeviationDegree'), paramObj, function (data) {
-                //$("#deviationDegree").text(data);
+                $("#deviationDegree").text(data);
             });
         } else {
-            //$("#deviationDegree").text("");
+            $("#deviationDegree").text("");
         }
     }
     //add by chenjiaixng 20210907 债券净价交易添加偏离度展示 end
@@ -3465,6 +3464,7 @@
         for(var i=0;i<array.length;i++) {
             dateTable.renderRow(i,array[i])
         };
+        dateTable.reload();
     }
 
     /**
@@ -3821,10 +3821,10 @@
         $("#finprodType2_jj,#finprodType2_dz,#finprodType2_gd").change(function() {
             finprodType2Change();
             //add by chenjiaxing 债券竞价交易添加偏离度 20210907 start
-            // if($("#finprodType2_" + currentTab).val() == FINPROD_TYPE_TG_F01 && currentTab == 'jj'){
-            //     document.getElementById('deviationDegree').innerHTML = "<span style='color: red'>"+
-            //         '0.0000%' +"</span>";
-            // }
+            if($("#finprodType2_" + currentTab).val() == FINPROD_TYPE_TG_F01 && currentTab == 'jj'){
+                document.getElementById('deviationDegree').innerHTML = "<span style='color: red'>"+
+                    '0.0000%' +"</span>";
+            }
             //add by chenjiaxing 债券竞价交易添加偏离度 20210907 end
         });
         // 资金账户
@@ -3887,7 +3887,7 @@
             calcPriceAndYield();
             //();
             if(currentTab == 'jj' && $("#price_jj").val()){
-                //calDeviationDegree();
+                calDeviationDegree();
             }
         });
         // 委托方向变更时
