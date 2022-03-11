@@ -80,7 +80,9 @@
     to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi:ss') transmitTime,
     to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi') transmitTimeSer,
     ETR_ENTRUST_ADD.CALCULATE_FIELD calculateField
-    FROM (SELECT * FROM ETR_ENTRUST  where ps in ('T01','T02','T03','03','04') ORDER BY ENTRUST_DATE DESC) ETR_ENTRUST
+    FROM (SELECT * FROM ETR_ENTRUST  where ps in ('T01','T02','T03','03','04') and trade_market in ('01','02')
+        and finprod_type2 in ('F01','F02','F03')
+        ORDER BY ENTRUST_DATE DESC) ETR_ENTRUST
     LEFT JOIN
     PTL_PORTFOLIO
     ON
@@ -318,7 +320,8 @@
         NULL transmitTime,
         NULL transmitTimeSer,
         WFL_ETR_ENTRUST_ADD.CAL_MODE calculateField
-        FROM (SELECT * FROM WFL_ETR_ENTRUST where ps in ('T01','T02','T03','03','04')  ORDER BY ENTRUST_DATE DESC) WFL_ETR_ENTRUST
+        FROM (SELECT * FROM WFL_ETR_ENTRUST where ps in ('T01','T02','T03','03','04')  and trade_market in ('01','02')
+        and finprod_type2 in ('F01','F02','F03') ORDER BY ENTRUST_DATE DESC) WFL_ETR_ENTRUST
         LEFT JOIN
         PTL_PORTFOLIO
         ON
