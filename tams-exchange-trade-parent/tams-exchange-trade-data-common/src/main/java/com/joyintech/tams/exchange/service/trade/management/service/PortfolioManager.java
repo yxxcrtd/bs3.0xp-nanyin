@@ -1,7 +1,6 @@
 package com.joyintech.tams.exchange.service.trade.management.service;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
@@ -9,6 +8,7 @@ import com.google.common.collect.Maps;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.exchange.common.bean.MinTrdUnitLimit;
 import com.joyintech.tams.exchange.common.bean.OrderPlaceBean;
@@ -30,7 +30,10 @@ import com.joyintech.tams.exchange.common.response.PortfolioInfoResponse;
 import com.joyintech.tams.exchange.common.utils.*;
 import com.joyintech.tams.exchange.datacommon.db.service.InstructionDetailService;
 import com.joyintech.tams.exchange.datacommon.db.service.InstructionService;
-import com.joyintech.tams.exchange.datacommon.db.service.InstrumentService;
+import com.joyintech.tams.invest.common.dto.position.PositionCashSecDto;
+import com.joyintech.tams.invest.common.dto.position.PositionCashSecRequest;
+import com.joyintech.tams.invest.common.dto.position.PositionCashSecSingleResp;
+import com.joyintech.tams.invest.common.entrust.inter.EtrTradeCommonervice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +45,8 @@ import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.joyintech.tams.exchange.common.constant.joyin.BussinessDictCodeList.币种_人民币;
+
 /**
  * 组合信息Service
  *
@@ -51,13 +56,16 @@ import java.util.stream.Collectors;
 @Service
 public class PortfolioManager extends BaseService {
 
+    public static final String AMOUNT = "amount";
     private static final Logger log = LoggerFactory.getLogger(PortfolioManager.class);
-
     /**
      * 是否单体服务
      */
     @Value("${application.micorservice.contextPath.single:false}")
     private boolean isSingle;
+
+    @Autowired
+    private EtrTradeCommonervice etrTradeCommonervice;
 
     @Autowired
     private InstructionService instructionService;
@@ -66,10 +74,42 @@ public class PortfolioManager extends BaseService {
     private InstructionDetailService instructionDetailService;
 
     @Autowired
-    private InstrumentService instrumentService;
-
-    @Autowired
     private QuoteTickService quoteTickService;
+
+    public List<BaseMap> queryPortfolioInfo(PositionCashSecRequest bean) {
+        bean.setFlowType(EtrTradeCommonervice.FLOW_TYPE_TRD);
+        return etrTradeCommonervice.queryPositionInfo(bean);
+    }
+
+    private List<PositionCashSecSingleResp> queryPortfolioInfoByTg(List<InstructionDetail> instructionDetails, Instruction instruction) {
+        List<PositionCashSecDto> positionCashSecDtos = new ArrayList<>(instructionDetails.size());
+        PositionCashSecDto dto;
+        // 组装组合信息查询请求对象
+        for (InstructionDetail detail : instructionDetails) {
+            dto = new PositionCashSecDto();
+
+            dto.setPortfolioId(detail.getPortfolioId());
+            dto.setAcctId(instruction.getBusiAcctNo());
+            dto.setPs(instruction.getPs());
+            dto.setTradeMarket(instruction.getTradeMarket());
+            dto.setSecAcctId(instruction.getSecAcctId());
+            dto.setFinprodId(instruction.getFinprodId());
+            dto.setCcy(币种_人民币.getValue());
+            dto.setCdate(DateUtil.getSysDate());
+            dto.setDateType(null);
+
+            positionCashSecDtos.add(dto);
+        }
+
+        PositionCashSecRequest request = new PositionCashSecRequest();
+        request.setFlowType(EtrTradeCommonervice.FLOW_TYPE_TRD);
+        request.setPtlList(positionCashSecDtos);
+
+        List<PositionCashSecSingleResp> resps = etrTradeCommonervice.queryPositionInfoSingle(request);
+        log.debug("查询头寸信息：request = [], response = []", JSONUtil.toJsonStr(request), JSONUtil.toJsonStr(resps));
+
+        return resps;
+    }
 
     /**
      * 查询组合信息
@@ -337,18 +377,36 @@ public class PortfolioManager extends BaseService {
 
         Map<String, PortfolioInfoResponse> portfolioInfoResponseMap = Maps.newHashMap();
         if (infoFlag) {
-            // - 查询组合信息
-            PortfolioInfoRequest portfolioInfoRequest = new PortfolioInfoRequest();
-            List<String> portfolios = instructionDetails.stream().map(InstructionDetail::getPortfolioId).collect(Collectors.toList());
-            portfolioInfoRequest.setPortfolioId(ArrayUtil.join(portfolios.toArray(), StrUtil.COMMA));
-            portfolioInfoRequest.setFinprodId(instruction.getFinprodId());
-            portfolioInfoRequest.setSecAcctId(instruction.getSecAcctId());
-            portfolioInfoRequest.setAcctNo(instruction.getAcctNo());
-            portfolioInfoRequest.setTradeMarket(instruction.getTradeMarket());
-            portfolioInfoRequest.setVdate(DateUtil.platDateFromCache());
+            // modify by swwan 调用投管计算头寸方法 start
+            List<PositionCashSecSingleResp> positionCashSecSingleResps = this.queryPortfolioInfoByTg(instructionDetails, instruction);
+            PortfolioInfoResponse infoResponse;
+            for (PositionCashSecSingleResp item : positionCashSecSingleResps) {
+                List<BaseMap> baseMapList = item.getBaseMapList();
 
-            ResultBean portfolioInfoResult = this.queryPortfolioInfo(portfolioInfoRequest);
-            portfolioInfoResponseMap.putAll((Map<String, PortfolioInfoResponse>) portfolioInfoResult.getData());
+                infoResponse = new PortfolioInfoResponse();
+                infoResponse.setPortfolioId(item.getPortfolioId());
+                infoResponse.setProAvailablePositionT0((BigDecimal) baseMapList.get(3).get(AMOUNT));
+                infoResponse.setProAvailablePositionT1(null);
+                infoResponse.setProAvailableCashT0((BigDecimal) baseMapList.get(0).get(AMOUNT));
+                infoResponse.setProAvailableCashT1(null);
+                infoResponse.setSecManageAvailableCashT0((BigDecimal) baseMapList.get(1).get(AMOUNT));
+                infoResponse.setSecManageAvailableCashT1(null);
+
+                portfolioInfoResponseMap.put(infoResponse.getPortfolioId(), infoResponse);
+            }
+//            // - 查询组合信息
+//            PortfolioInfoRequest portfolioInfoRequest = new PortfolioInfoRequest();
+//            List<String> portfolios = instructionDetails.stream().map(InstructionDetail::getPortfolioId).collect(Collectors.toList());
+//            portfolioInfoRequest.setPortfolioId(ArrayUtil.join(portfolios.toArray(), StrUtil.COMMA));
+//            portfolioInfoRequest.setFinprodId(instruction.getFinprodId());
+//            portfolioInfoRequest.setSecAcctId(instruction.getSecAcctId());
+//            portfolioInfoRequest.setAcctNo(instruction.getAcctNo());
+//            portfolioInfoRequest.setTradeMarket(instruction.getTradeMarket());
+//            portfolioInfoRequest.setVdate(DateUtil.platDateFromCache());
+//
+//            ResultBean portfolioInfoResult = this.queryPortfolioInfo(portfolioInfoRequest);
+//            portfolioInfoResponseMap.putAll((Map<String, PortfolioInfoResponse>) portfolioInfoResult.getData());
+            // modify by swwan 调用投管计算头寸方法 end
         }
 
         // 计算结果列表
