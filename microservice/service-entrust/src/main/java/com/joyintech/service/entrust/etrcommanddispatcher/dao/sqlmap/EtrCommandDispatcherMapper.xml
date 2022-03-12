@@ -119,7 +119,11 @@
 		  ELSE ''
 		  END pledgeeType,
 		F.DERIVATIVE_BS_DIR derivativeBsDir,
-		F.DERIVATIVE_OC_FLAG derivativeOcFlag
+		F.DERIVATIVE_OC_FLAG derivativeOcFlag,
+		A.ENTRUST_CLASS,
+		btm.OUTPUT_VALUE_1 busiTypeTg,
+		A.BUSINESS_MODEL,
+		A.ENTRUST_TYPE entrustBussType
 		FROM ETR_ENTRUST A
 		LEFT JOIN PTL_PORTFOLIO B ON A.PORTFOLIO_ID=B.PORTFOLIO_ID
 		LEFT JOIN FIN_PRODUCT C ON A.FINPROD_ID=C.FINPROD_ID
@@ -135,6 +139,10 @@
 		LEFT JOIN FIN_PRODUCT_CONVERTIBLE T4 ON A.FINPROD_ID = T4.FINPROD_ID
 		LEFT JOIN FIN_PRODUCT T5 ON T4.CON_FINPROD_ID = T5.FINPROD_ID
 		LEFT JOIN MST_COUNTER_PARTY T6 ON A.COUNTER_ID = T6.COUNTER_ID
+		LEFT JOIN FIN_PRODUCT_TYPE_CONFIG btm
+		ON ( A.FINPROD_TYPE2 = btm.INPUT_VALUE_2 OR  btm.INPUT_VALUE_2 IS NULL)
+		AND ( A.Ps = btm.INPUT_VALUE_3 OR  btm.INPUT_VALUE_3 IS NULL)
+		AND ( A.TRADE_PLAT = btm.INPUT_VALUE_1 OR  btm.INPUT_VALUE_1 IS NULL)
 		LEFT JOIN (
 		     select 
 		          entrust_id,
@@ -186,6 +194,17 @@
 	    WHERE A.ENTRUST_ID = #{entrustId}
    </select>
 
+	<select id="selectEtrDetailList" resultType="com.joyintech.service.entrust.etrcommanddispatcher.dto.EtrEntrustDetailDto">
+		SELECT
+		A.*,B.PORTFOLIO_NAME
+		FROM ETR_ENTRUST_DETAIL A
+		LEFT JOIN PTL_PORTFOLIO B ON A.PORTFOLIO_ID=B.PORTFOLIO_ID
+		WHERE
+		A.ENTRUST_ID in
+		<foreach collection="entrustId.split(',')" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
 
 
 </mapper>

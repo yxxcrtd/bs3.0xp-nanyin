@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.background.component.common.pack.common.util.StringUtil;
+import com.joyintech.service.entrust.etrcommanddispatcher.dto.EtrEntrustDetailDto;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import org.slf4j.Logger;
@@ -71,6 +72,7 @@ public class EtrCommandDispatcherService extends BaseService<EtrCommandDispatche
 			}
     		dto.setEtr_entrust_list(selectList);
     		dto.setEtr_pledge_list(this.selectPledgeList(selectList));
+		    dto.setEtr_entrust_detail_list(selectEtrDetailList(param));
     		if(selectList!=null && !selectList.isEmpty()) {
     			dto.setAMOUNT(selectList.size());
         		dto.setPageCount(1);
@@ -126,5 +128,16 @@ public class EtrCommandDispatcherService extends BaseService<EtrCommandDispatche
 			logger.info("应答报文【{}】","errorCode:" + (Integer) result.get("errorCode") + ";errorMsg:" + (String) result.get("errorMsg"));
 			System.out.println(result);
 		}
+	}
+	/**
+	 * 委托指令明细列表查询
+	 * <功能详细描述>
+	 * @param param
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	public List<EtrEntrustDetailDto> selectEtrDetailList(Map<String, Object> param){
+		return etrTradeSysInterfMapper.selectEtrDetailList(param);
 	}
 }

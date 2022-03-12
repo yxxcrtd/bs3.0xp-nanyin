@@ -13,6 +13,7 @@ package com.joyintech.service.entrust.etrcommanddispatcher.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.service.entrust.etrcommanddispatcher.dto.EtrEntrustDetailDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -42,6 +43,8 @@ public interface EtrCommandDispatcherMapper {
     
     
     List<EtrTradePledgeDto> queryEtrPledgeListByEtrId(@Param("entrustId") String entrustId);
+
+    List<EtrEntrustDetailDto> selectEtrDetailList(Map<String, Object> param);
 
 
    
