@@ -755,7 +755,7 @@ public class TradeMsgProcessor {
         Instruction instruction = instructionService.findById(entrust.getInstructionId());
         PositionInstructionRequest instructionClone = new PositionInstructionRequest();
         BeanUtil.copyProperties(instruction, instructionClone);
-        instructionClone.setSoftSkipMode(DictCodeList.是否_是.getValue());
+        instructionClone.setSoftSkipMode(DictCodeList.是否_否.getValue());
         //委托编号
         instructionClone.setEntrustNo(entrust.getId());
         instructionClone.setEntrustAmt(entrust.getEntrustPrice().multiply(BigDecimal.valueOf(entrust.getEntrustVolume())));
