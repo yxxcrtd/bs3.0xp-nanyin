@@ -397,6 +397,7 @@ public class PtlFundAllocationService extends BaseService<PtlFundAllocationDto> 
 		}
         String decisionAct = DictCodeListExt3.系统动作_新建.getValue();
         String systemAct = DictCodeListExt3.系统动作_新建.getValue();
+        entity.setSoftSkipMode("Y");
         positionRequestService.sendEtrExchangeTradeSaveRequest(entity,decisionAct,systemAct);
         return 1;
     }
