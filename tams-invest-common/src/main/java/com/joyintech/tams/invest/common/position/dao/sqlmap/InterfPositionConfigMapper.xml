@@ -24,6 +24,7 @@
 	<select id="searchInterfPositionConfigByWhere" resultMap="InterfPositionConfigResult" parameterType="com.joyintech.tams.invest.common.position.dto.InterfPositionConfigDto">
 		select POSITION_TYPE,TRADE_PLAT,FINPROD_TYPE,PS,BUSI_ACT,ENTITY,INTERF_TYPE from INTERF_POSITION_CONFIG 
 			<where>
+				ENABLE = 'Y'
 				<if test="positionType != null  and positionType != ''"> and POSITION_TYPE=#{positionType,jdbcType=VARCHAR} </if>
 				<if test="tradePlat != null  and tradePlat != ''"> and TRADE_PLAT=#{tradePlat,jdbcType=VARCHAR} </if>
 				<if test="finprodType != null  and finprodType != ''"> and FINPROD_TYPE=#{finprodType,jdbcType=VARCHAR} </if>

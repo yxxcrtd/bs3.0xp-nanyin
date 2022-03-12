@@ -141,7 +141,7 @@ public class CommonPositionEngineService {
         log.info("getPositionInterType() called with parameters => 【positionType = {}】, 【tradePlat = {}】, 【finprodType = {}】, 【ps = {}】, 【busiAct = {}】, 【entity = {}】", positionType, tradePlat, finprodType, ps, busiAct, entity);
         String key = positionType + tradePlat + finprodType + ps + busiAct + entity;
         InterfPositionConfigDto interfPositionConfigDto = CONFIG_MAP.get(key);
-        if (interfPositionConfigDto == null || cacheInvalid(interfPositionConfigDto.getUpdateTime())) {
+        if (interfPositionConfigDto==null || cacheInvalid(interfPositionConfigDto.getUpdateTime())) {
             InterfPositionConfigDto where = new InterfPositionConfigDto();
             where.setPositionType(positionType);
             where.setTradePlat(tradePlat);
@@ -154,6 +154,8 @@ public class CommonPositionEngineService {
                 InterfPositionConfigDto dto = list.get(0);
                 dto.setUpdateTime(new Date());
                 CONFIG_MAP.put(key, dto);
+            }else{
+            	CONFIG_MAP.remove(key);
             }
         }
         InterfPositionConfigDto configDto = CONFIG_MAP.get(key);
