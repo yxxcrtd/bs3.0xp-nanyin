@@ -418,8 +418,8 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
      * @return
      */
     @ResponseBody
-    @RequestMapping("/getFinprodMarketInfo")
-    public Page<SelectOptionDto> getFinprodMarketInfo(){
+    @RequestMapping("/getFinprodMarketInfoWfl")
+    public Page<SelectOptionDto> getFinprodMarketInfoWfl(){
         return etrExchangeTradeCommon001Service.getFinprodMarketInfo(RequestUtil.getPageParam());
     }
 

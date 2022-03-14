@@ -420,6 +420,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 		initPageParams.put("BOARD_BD04", DictCodeList.上市板_创业板.getValue());
 		initPageParams.put("pageRedisFlag", CacheUtil.getSysParam("pageRedisFlag"));
 		initPageParams.put("IS_RISKMATH_SOFTCONTROL", CacheUtil.getSysParam("IS_RISKMATH_SOFTCONTROL"));
+		initPageParams.put("ETR_CHECK_POS_SWITCH",CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_POS_SWITCH));
 		// 大宗平台
 		List<SelectOptionDto> ps_dz = selectDto.getOptions().stream().filter(option -> {
 			return StringUtil.equals(option.getId(), DictCodeList.交易方向_买入.getValue())

@@ -3333,6 +3333,8 @@
             },
             {field:'entrustNum', title: 'EtrExchangeTrade001.entrustNum', sortField:'entrustNum',width : 200,type:'number',edit : true},
             {field:'entrustAmt', title: 'EtrExchangeTrade001.entrustAmt', sortField:'entrustAmt',width : 200,type:'number',edit : true},
+            {field:'accAvailableCash', title: '可用现金(元)',width : 200,type:'number',edit : false},
+            {field:'accAvailablePos', title: '可用持仓', width : 200,type:'number',edit : false},
             {field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['delt']}
         ],
         beforeEditCell:function (preVal, field, rowData){

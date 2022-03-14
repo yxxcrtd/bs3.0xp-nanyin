@@ -175,6 +175,7 @@ public class InterfRiskRdsController {
             }
         }
         catch (Exception e) {
+            e.printStackTrace();
             logger.info("==========交易或委托类转换接口 Exception==========\r\n {}", e.getMessage());
             return null;
         }
