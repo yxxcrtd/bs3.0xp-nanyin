@@ -197,7 +197,7 @@ public class BaseTradeFeeCommServiceImpl implements BaseTradeFeeCommService {
      */
     private TrdTradeFeeDetail feeMathMethod(String feeType,MstCommissionSetDto retFeeDetailDto,BasicTradeFeeInputDto inputDto){
     	TrdTradeFeeDetail feeCofigDetail=new TrdTradeFeeDetail();
-    	BigDecimal singleFee=BigDecimal.ZERO;
+    	BigDecimal singleFee=null;
     	//费用计算
 		if(BussinessDictCodeList.计费类型_固定金额.getValue().equals(retFeeDetailDto.getChargeType())){
 			singleFee=retFeeDetailDto.getChargeValue();
