@@ -1637,9 +1637,9 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	@ApiOperation(value = "头寸信息查询", notes = "头寸信息查询")
 	@PostMapping("/queryPositionInfo")
 	@ResponseBody
-	public List<BaseMap> queryPositionInfo(@RequestBody PositionCashSecRequest requestDto) {
+	public Message<List<BaseMap>> queryPositionInfo(@RequestBody PositionCashSecRequest requestDto) {
 		List<BaseMap> m = etrTradeCommonervice.queryPositionInfo(requestDto);
-		return m;
+		return new Message<List<BaseMap>>().success().setData(m);
 	}
 }
 	
