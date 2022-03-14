@@ -34,6 +34,7 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -122,6 +123,7 @@ public class PtlFundAllocation002Service extends CommonExportService<PtlFundAllo
     @Override
     public void doComplete(PtlFundAllocationDto entity, OperationType type) {
         entity.setActPortfolioId(entity.getPortfolioId());
+        entity.setPositionType(entity.getOperateType());
         entity.setPortfolioId(AllTradeCommonUtil.exchangePortfolio(entity.getPortfolioId()));
         PtlFundAllocationDto dto = this.setEntity(entity, type);
         dto.setOperateType(type.toString());
@@ -149,6 +151,9 @@ public class PtlFundAllocation002Service extends CommonExportService<PtlFundAllo
     @Override
     public void doInsert(PtlFundAllocationDto entity, OperationType type) {
         entity.setActPortfolioId(entity.getPortfolioId());
+        if(StringUtils.isEmpty(entity.getPositionType())){
+            entity.setPositionType(type.toString());
+        }
         entity.setPortfolioId(AllTradeCommonUtil.exchangePortfolio(entity.getPortfolioId()));
         this.setEntity(entity, type);
         restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAllocation/doInsertAction", entity,
@@ -159,7 +164,8 @@ public class PtlFundAllocation002Service extends CommonExportService<PtlFundAllo
     public void doUpdate(PtlFundAllocationDto entity){
         if(bussCommonMapperDelegateService != null){
             restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAllocation/doDelete", entity.getOrderId(), Integer.class);
-            doInsert(entity, OperationType.MODIFY);
+            entity.setPositionType("update");
+            doInsert(entity, OperationType.NEW);
         }
     }
 

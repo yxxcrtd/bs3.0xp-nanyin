@@ -735,11 +735,13 @@ public class PtlFundAllocationService extends BaseService<PtlFundAllocationDto> 
             bussCommonMapperDelegateService.insert(PtlCashPositionFlowMapper.class, flow1);
         }
         deal持仓流程(entity, false);
+        if(StringUtil.equals(entity.getPositionType(), "save")){
+            return "Success";
+        }
         String decisionAct = DictCodeListExt3.系统动作_新建.getValue();
         String systemAct = DictCodeListExt3.系统动作_新建.getValue();
-        if (StringUtil.equals(entity.getOperateType(), OperationType.MODIFY)) {
+        if (StringUtil.equals(entity.getPositionType(), "update")) {
             decisionAct = DictCodeListExt3.系统动作_修改.getValue();
-            systemAct = DictCodeListExt3.系统动作_修改.getValue();
         }
         entity.setSoftSkipMode("Y");
         positionRequestService.sendEtrExchangeTradeSaveRequest(entity,decisionAct,systemAct);

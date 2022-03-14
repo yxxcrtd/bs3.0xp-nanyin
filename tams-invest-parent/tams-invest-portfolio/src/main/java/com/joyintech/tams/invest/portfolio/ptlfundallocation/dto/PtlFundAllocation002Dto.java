@@ -107,6 +107,16 @@ public class PtlFundAllocation002Dto extends StlPayOrders implements ITableRow,P
     @ApiModelProperty(name="softSkipMode",value="软控是否继续？Y：继续",example="Y")
     private String softSkipMode;
 
+    private String positionType;
+
+    public String getPositionType() {
+        return positionType;
+    }
+
+    public void setPositionType(String positionType) {
+        this.positionType = positionType;
+    }
+
     public String getSoftSkipMode() {
         return softSkipMode;
     }

@@ -39,6 +39,7 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -145,6 +146,7 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
             ptlFundAllocationDto.setPortfolioId(ptlFundAllocation001Dto.getPortfolioId());
             ptlFundAllocationDto.setActPortfolioId(ptlFundAllocation001Dto.getPortfolioId());
             ptlFundAllocationDto.setSettleAmt(ptlFundAllocation001Dto.getSettleAmt());
+            ptlFundAllocationDto.setPositionType("submit");
             if (StringUtil.isEmpty(entity.getMyAcctNo())){
                 ptlFundAllocationDto.setMyAcctNo(ptlFundAllocation001Dto.getAcctNo());
                 ptlFundAllocationDto.setCounterAcctNo(entity.getCounterAcctNo());
@@ -160,7 +162,7 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
                     ptlFundAllocationDto.setBussTrdTransferOrder(bussTrdTransferOrderDtos);
                 }
             }
-            if(Objects.isNull(entity.getBussTrdTransferOrder().get(i))){
+            if(!Objects.isNull(entity.getBussTrdTransferOrder().get(i))){
                 ptlFundAllocationDto = this.setDots(entity.getBussTrdTransferOrder().get(i) , ptlFundAllocationDto,i);
             }
             i++;
@@ -203,9 +205,12 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
         for (int i = 0; i < entity.getPtlFundAllocation001Dtos().size(); i++) {
             PtlFundAllocation001Dto detailDto = entity.getPtlFundAllocation001Dtos().get(i);
             PtlFundAllocation002Dto dto = new PtlFundAllocation002Dto();
+            if(StringUtils.isEmpty(dto.getPositionType())){
+                dto.setPositionType(type.toString());
+            }
             this.setEntityy(detailDto,entity, dto, i);
             dto.setOperateType(entity.getOperateType());
-            if(Objects.isNull(entity.getBussTrdTransferOrder().get(i))){
+            if(!Objects.isNull(entity.getBussTrdTransferOrder().get(i))){
                 dto = this.setDots(entity.getBussTrdTransferOrder().get(i) , dto, i);
             }
             restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAllocation/doInsertAction", dto,
@@ -259,7 +264,8 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
             simpleRestTemplate.postForObject(
                     ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAllocation/doDelete", orderId,
                     Integer.class);
-            doInsert(entity, OperationType.MODIFY);
+            entity.setPositionType("update");
+            doInsert(entity, OperationType.NEW);
         }
     }
 
