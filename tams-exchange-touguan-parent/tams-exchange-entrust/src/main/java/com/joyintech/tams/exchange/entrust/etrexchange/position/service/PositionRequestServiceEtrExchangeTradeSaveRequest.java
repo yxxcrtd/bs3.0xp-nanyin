@@ -30,8 +30,8 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.*;
 
+import static com.joyintech.tams.constant.DictCodeList.交易方向_申购;
 import static com.joyintech.tams.constant.DictCodeList.是否_否;
-import static com.joyintech.tams.constant.DictCodeList.*;
 import static com.joyintech.tams.constant.DictCodeListExt2.交易方向_配股;
 import static com.joyintech.tams.constant.DictCodeListExt2.申购方式_网上申购;
 import static com.joyintech.tams.constant.DictCodeListExt3.*;
@@ -153,14 +153,15 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
             for (EtrExchangeTradePortfolioRequest item : entity.getPortfolioList()) {
                 bean = new PositionRequestBaseBean(item);
                 bean.setFinprodId(null);
-                bean.setCashAmount(item.getFprice().multiply(item.getEntrustNum()));
+                BigDecimal fprice = Objects.isNull(entity.getFprice()) ? new BigDecimal(0) : entity.getFprice();
+                bean.setCashAmount(fprice.multiply(item.getEntrustNum()));
                 bean.setSecAmount(commonPositionEngineService.getSecAmountByBondUnit(item.getEntrustNum()));
 
                 Map<String, Object> map = BeanUtil.object2Map(bean);
                 map.put(ORD_ENTRUST_ID, null);
                 map.put(INV_AIM, entity.getInvAim());
                 map.put(INTEGRATE_SEC_AMOUNT, 0);
-                map.put(OWN_SEC_AMOUNT, item.getFprice().multiply(item.getEntrustNum()));
+                map.put(OWN_SEC_AMOUNT, fprice.multiply(item.getEntrustNum()));
                 ptlList.add(map);
             }
             resultMap.put(PTL_LIST, ptlList);
@@ -195,7 +196,8 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
                 bean.setFinprodId(null);
                 bean.setSecAcctId(null);
                 if (BussinessDictCodeList.交易方向_买入.getValue().equals(ps) || BussinessDictCodeList.交易方向_卖出.getValue().equals(ps)) {
-                    bean.setCashAmount(item.getFprice().multiply(item.getEntrustNum()));
+                    BigDecimal fprice = Objects.isNull(entity.getFprice()) ? new BigDecimal(0) : entity.getFprice();
+                    bean.setCashAmount(fprice.multiply(item.getEntrustNum()));
                 } else if (交易方向_申购.getValue().equals(ps)) {
                     // 系统参数.预估中签比例*指令金额
 //                    bean.setCashAmount(item.getEntrustAmt().multiply(CacheUtil.getSysParam(BussinessConstant.PREDICT_WIN_PERCENT)));
