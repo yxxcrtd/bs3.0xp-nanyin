@@ -10,6 +10,7 @@ import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.dto.SvrAjaxResult;
 import com.joyintech.tams.report.common.util.ExcelUtil;
 import com.joyintech.tams.systemtools.dto.CommonAjaxResult;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -121,8 +122,8 @@ public class SvrPerProDeclareInfo001Service extends CommonExportService<SvrPerPr
     public AjaxResult checkConfirmMsgForImportData(String fileName)  {
         Map<String,Object> param = new HashMap<String,Object>();
         param.put("dataList", ExcelUtil.getDataList(fileName));
-//        param.put("orgCode", CommonUtil.getOrgCode());
-//        param.put("deptCode", CommonUtil.getDeptCode());
+        param.put("orgCode", CommonUtil.getOrgCode());
+        param.put("deptCode", CommonUtil.getDeptCode());
         return restTemplate.postForObject(
                 SvrServiceApplication.CHB3_SERVICE_NAME + "/SvrPerProDeclareInfo/checkConfirmMsgForImportData",
                 param, CommonAjaxResult.class);

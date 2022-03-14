@@ -7,6 +7,7 @@ import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.service.chb.basicdata.perprodeclareinfo.service.SvrPerProDeclareInfoMService;
 import com.joyintech.tams.basicdata.perprodeclareinfo.dto.SvrPerProDeclareInfo001Dto;
+import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -102,5 +103,35 @@ public class SvrPerProDeclareInfoController{
     @PostMapping("deleteList")
     public void deleteList(@RequestBody Map<String, Object> param){
         svrPerProDeclareInfoMService.deleteList(param);
+    }
+
+    /**
+     * 导入数据前检查
+     * @param param
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    @PostMapping("checkConfirmMsgForImportData")
+    public AjaxResult checkConfirmMsgForImportData(@RequestBody Map<String, Object> param)  {
+        List<List<String>> dataList = (List<List<String>>) param.get("dataList");
+        String orgCode=param.get("orgCode")==null?null:param.get("orgCode").toString();
+        String deptCode=param.get("deptCode")==null?null:param.get("deptCode").toString();
+        return svrPerProDeclareInfoMService.checkConfirmMsgForImportData(dataList);
+    }
+
+    /**
+     * 导入数据文件
+     *
+     * @param param 导入的文件名
+     * @return 导入结果，包含验证内容，如果验证失败，返回message
+     */
+    @PostMapping("importData")
+    public List<ExcelValidDto> importData(@RequestBody Map<String, Object> param) {
+        List<List<String>> dataList = (List<List<String>>) param.get("dataList");
+        List<List<String>> tempList = (List<List<String>>) param.get("tempList");
+        String userName=param.get("userName")==null?null:param.get("userName").toString();
+//        String orgCode=param.get("orgCode")==null?null:param.get("orgCode").toString();
+        String deptCode=param.get("deptCode")==null?null:param.get("deptCode").toString();
+        return svrPerProDeclareInfoMService.importData(dataList,tempList,userName,deptCode);
     }
 }
