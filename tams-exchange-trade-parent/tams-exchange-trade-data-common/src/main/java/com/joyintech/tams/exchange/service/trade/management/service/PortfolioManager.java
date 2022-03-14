@@ -89,7 +89,7 @@ public class PortfolioManager extends BaseService {
             dto = new PositionCashSecDto();
 
             dto.setPortfolioId(detail.getPortfolioId());
-            dto.setAcctId(instruction.getBusiAcctNo());
+            dto.setAcctId(instruction.getAcctNo());
             dto.setPs(instruction.getPs());
             dto.setTradeMarket(instruction.getTradeMarket());
             dto.setSecAcctId(instruction.getSecAcctId());
