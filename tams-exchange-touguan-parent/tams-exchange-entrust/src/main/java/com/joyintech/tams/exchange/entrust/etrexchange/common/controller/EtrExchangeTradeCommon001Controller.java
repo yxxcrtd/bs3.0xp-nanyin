@@ -1199,7 +1199,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 					AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy("EtrExchangeTradeMulti001", etrExchangeTrade001DtoList,
 							BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue());
 					if (null != ar) {
-						return new Message<AjaxResult>().success().setData(ar);
+						//return new Message<AjaxResult>().success().setData(ar);
 					}
 					EntrustRdsCommonAop.riskListToChildren(dto.getRiskTrialRetDto(), etrExchangeTrade001DtoList,
 							(etrExchangeTrade001Dto, list) -> etrExchangeTrade001Dto.setRiskTrialRetDto(list));
