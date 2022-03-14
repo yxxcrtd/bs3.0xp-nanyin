@@ -33,6 +33,11 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.dto.position.PositionCashSecData;
+import com.joyintech.tams.invest.common.dto.position.PositionCashSecDto;
+import com.joyintech.tams.invest.common.entrust.inter.EtrTradeCommonervice;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -305,6 +310,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	@Autowired
 	private TrdCommonBaseService trdCommonBaseService;
 	// modify by etliu 20220303 end
+	@Autowired
+	private EtrTradeCommonervice etrTradeCommonervice;
 
 	/**
 	 * {@inheritDoc}
@@ -1160,6 +1167,30 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		param.put("sysDate", DateUtil.format(sysDate));
 		return (BigDecimal) etrCommonService.getProAvailableCash(param).get("cashT");
 	}
+	/**
+	 * 查询组合对应账户的可用现金信息
+	 *
+	 * @param param
+	 * @return 可用现金
+	 * @author dubaojun
+	 */
+	public BigDecimal selectAccAvailableCashNew(Map<String, Object> param) {
+		BigDecimal canCash = BigDecimal.ZERO; // 现金可用
+		PositionCashSecDto dto=BeanUtil.mapToObject(param,PositionCashSecDto.class);
+		PositionCashSecData data = etrTradeCommonervice.querySingleCash(dto);
+		if (data != null && data.getCashT() != null) {
+			canCash = canCash.add(data.getCashT());
+		}
+		List<PositionCashSecDto> sumAcctNoList = new ArrayList<>();
+		sumAcctNoList.add(dto);
+		BigDecimal newCashAmount = etrTradeCommonervice.queryPosition(sumAcctNoList, "etr", BussinessDictCodeList.持仓类型_可用.getValue());
+		if (newCashAmount != null) {
+			canCash = canCash.add(newCashAmount);
+		}
+		return canCash;
+	}
+
+
 
 	/**
 	 * 查询债券对应的最新面值

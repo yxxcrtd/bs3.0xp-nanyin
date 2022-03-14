@@ -112,6 +112,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	@Autowired
 	private EtrTradeCommonervice etrTradeCommonervice;
 
+
 	/**
 	 * 由于交易平台不同，设置不同交易平台对应的委托方向
 	 *
@@ -822,7 +823,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	public Message<String>  selectAccAvailableCash(@RequestBody PtlCashPositionFlowRequest dto){
 		try{
 			Map<String, Object> param = BeanUtil.object2Map(dto);
-			BigDecimal accAvailableCash = etrExchangeTrade001CommonService.selectAccAvailableCash(param);
+			BigDecimal accAvailableCash = etrExchangeTrade001CommonService.selectAccAvailableCashNew(param);
 			if(accAvailableCash == null) {
 				accAvailableCash= BigDecimal.ZERO;
 			}
