@@ -22,6 +22,8 @@ public interface TrdProductDealMapper {
     int updateByPrimaryKeySelective(TrdProductDeal record);
 
     int updateByPrimaryKey(TrdProductDeal record);
+
+    int updateByTotleTradeId(TrdProductDeal record);
     
     List<TrdProductDeal> selectByTrade(TrdProductDeal deal);
     /**

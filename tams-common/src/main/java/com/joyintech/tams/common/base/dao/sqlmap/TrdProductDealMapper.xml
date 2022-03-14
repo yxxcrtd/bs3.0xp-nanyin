@@ -989,7 +989,15 @@
             CANCEL_DATE = #{cancelDate,jdbcType=DATE}
         where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
     </update>
-    
+
+    <update id="updateByTotleTradeId" parameterType="com.joyintech.tams.common.base.entity.TrdProductDeal">
+        update TRD_PRODUCT_DEAL
+        set IS_CANCEL = #{isCancel,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where TOTLE_TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+    </update>
+
     <select id="selectByTrade" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.TrdProductDeal" >
         select
         DEAL.TRADE_ID

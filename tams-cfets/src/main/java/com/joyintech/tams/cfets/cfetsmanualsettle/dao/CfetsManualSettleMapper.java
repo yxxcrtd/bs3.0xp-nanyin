@@ -59,12 +59,28 @@ public interface CfetsManualSettleMapper {
     List<PortIntFenPeiInfoDto> findPortIntFenPeiInfoList(Map<String, Object> pageParam);
 
     /**
+     * 组合分配信息List(临时交易表查询)
+     *
+     * @param pageParam 参数
+     * @return List<PortIntFenPeiInfoDto>
+     */
+    List<PortIntFenPeiInfoDto> findTempPortIntFenPeiInfoList(Map<String, Object> pageParam);
+
+    /**
      * 成交确认明细查询
      *
      * @param tradeId 参数
      * @return List<CfetsManualSettleDealInfo>
      */
     List<CfetsManualSettleDealInfo> getDealDetailsByTradeId(@Param("tradeId") String tradeId);
+
+    /**
+     * 成交确认明细查询(临时表查询)
+     *
+     * @param tradeId 参数
+     * @return List<CfetsManualSettleDealInfo>
+     */
+    List<CfetsManualSettleDealInfo> getTempDealDetailsByTradeId(@Param("tradeId") String tradeId);
 
     /**
      * 查询证券账户
@@ -102,6 +118,13 @@ public interface CfetsManualSettleMapper {
      * @return
      */
     List<PortSettleinfoDto> queryPortSettleinfo(Map<String, Object> pageParam);
+
+    /**
+     * 查询待修改记录(临时表)
+     * @param pageParam
+     * @return
+     */
+    List<PortSettleinfoDto> queryTempPortSettleinfo(Map<String, Object> pageParam);
 
     /**
      * 查询金融产品交易附属表数据
