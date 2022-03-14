@@ -1,12 +1,13 @@
 package com.joyintech.tams.settle.batch.dealrevoke.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;
+import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.trade.dao.TrdCommonBaseMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,11 +21,6 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
-import com.joyintech.tams.common.base.entity.EtrCashPosition;
-import com.joyintech.tams.common.base.entity.EtrSecPosition;
-import com.joyintech.tams.common.base.entity.PtlCashPosition;
-import com.joyintech.tams.common.base.entity.PtlSecPosition;
-import com.joyintech.tams.common.base.entity.TrdProductTempDeal;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -67,12 +63,13 @@ public class InvestDealRevokeService {
 
     @Autowired
     private InvestDealRevokeMapper investDealRevokeMapper;
-    
-    @Autowired
-    private BaseAssetCashPositionCommMapper baseAssetCashPositionCommMapper;
 
 	@Autowired
     private CommonPositionEngineService commonPositionEngineService;
+
+    @Autowired
+    private TrdCommonBaseMapper trdCommonBaseMapper;
+
     @Autowired
     private BasePtlSecPositionInfoService basePtlSecPositionInfoService;
 
@@ -357,12 +354,34 @@ public class InvestDealRevokeService {
         // 查询日间成交交易
         List<TrdProductTempDeal> trdProductTempDeals = investDealRevokeMapper.getTrdProductTempDeals(param);
         if(!CollectionUtils.isEmpty(trdProductTempDeals)){
-            for(TrdProductTempDeal deal : trdProductTempDeals){
-                // 资产二级类型
-                String assetType2 = baseAssetCashPositionCommMapper.selectFundType(deal.getFinprodId());
-                busiType = commonPositionEngineService.getPositionBusiType(deal.getFinprodType2(), deal.getPs(), assetType2);
-                PositionHttpRequest.dorevoke(deal.getTradeId(), "TRD", busiType, deal.getPs());
+            Map<String, Object> batchRevoke = new HashMap<>();
+            List<Map<String, Object>> dataList = new ArrayList<>();
+            // 交易编号去重
+            List<TrdProductTempDeal> distinctDeals = trdProductTempDeals
+                    .stream()
+                    .collect(Collectors.collectingAndThen(Collectors.toCollection(
+                            () -> new TreeSet<>(Comparator.comparing(TrdProductTempDeal::getTradeId))), ArrayList::new));
+            for(TrdProductTempDeal deal : distinctDeals){
+                Map<String, Object> data = new HashMap<>();
+                // 查询下单对应的委托编号信息
+                InfContractDetailfile infContractDetailfile = trdCommonBaseMapper.selectInfContractDetailfile(deal.getfTradeId());
+                if(null != infContractDetailfile){
+                    EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(infContractDetailfile.getEntrustId());
+                    EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(infContractDetailfile.getEntrustId());
+                    data.put("busiType", commonPositionEngineService.getPositionBusiType(etrEntrust.getFinprodType2(), etrEntrust.getPs(),
+                            etrEntrustAdd.getAssetType1()));
+                }
+                data.put("ps", deal.getPs());
+                data.put("closeId", deal.getTradeId());
+                data.put("systemAct", DictCodeListExt3.系统动作_新建.getValue());
+                data.put("busiAct", DictCodeListExt3.业务动作_成交匹配.getValue());
+                dataList.add(data);
             }
+            batchRevoke.put("data", dataList);
+            batchRevoke.put("userId", "SYSTEM");
+            batchRevoke.put("totalTradeId",IDGenerator.generate());
+            batchRevoke.put("modelType",DictCodeListExt1.子系统代码_交易.getValue());
+            PositionHttpRequest.batchClose(batchRevoke);
         }
         // 撤销日间成交交易调用新头寸接口 add by fuyongsheng 20220308 end
     }
