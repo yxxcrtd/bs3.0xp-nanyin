@@ -152,7 +152,7 @@ public class PtlFundAllocation002Service extends CommonExportService<PtlFundAllo
     public void doInsert(PtlFundAllocationDto entity, OperationType type) {
         entity.setActPortfolioId(entity.getPortfolioId());
         if(StringUtils.isEmpty(entity.getPositionType())){
-            entity.setPositionType(type.toString());
+            entity.setPositionType("save");
         }
         entity.setPortfolioId(AllTradeCommonUtil.exchangePortfolio(entity.getPortfolioId()));
         this.setEntity(entity, type);

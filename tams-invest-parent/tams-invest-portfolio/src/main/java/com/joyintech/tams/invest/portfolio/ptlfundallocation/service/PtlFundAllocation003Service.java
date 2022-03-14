@@ -206,7 +206,7 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
             PtlFundAllocation001Dto detailDto = entity.getPtlFundAllocation001Dtos().get(i);
             PtlFundAllocation002Dto dto = new PtlFundAllocation002Dto();
             if(StringUtils.isEmpty(dto.getPositionType())){
-                dto.setPositionType(type.toString());
+                dto.setPositionType("save");
             }
             this.setEntityy(detailDto,entity, dto, i);
             dto.setOperateType(entity.getOperateType());
