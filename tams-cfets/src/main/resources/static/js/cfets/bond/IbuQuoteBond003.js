@@ -518,6 +518,9 @@
         $("#btn_autoAllocation").click(function () {
             autoAllocation();
         })
+        $('#CfetsBondDealQuotedPrice005_avaNum').on('change',function(){
+           calcAmt();
+        });
     });
     /**
      * 参数校验
@@ -529,6 +532,44 @@
         }
         return true;
     }
+    /**
+     * 计算金额相关
+     */
+    var calcAmt = function(calculateField){
+        var finprodId = $('#CfetsBondDealQuotedPrice005_hidden_finprodId').val();
+        if(!finprodId){
+            return;
+        }
+        var object = $.serializeToObject('#submitForm', true);
+        // 区分画面打开模式
+        var quotaPageModel = $('#CfetsBondDealQuotedPrice005_hidden_quotaPageModel').val();
+        // 做市报价回复
+        if (quotaPageModel && quotaPageModel == 'marketResponse' ){
+            if (!object.responseAmt){
+                return;
+            }
+            object.avaNum = new BigNumber(object.responseAmt).multipliedBy(new BigNumber(10000));
+        }else{
+            if (!object.avaNum){
+                return;
+            }
+            object.avaNum = new BigNumber(object.avaNum).multipliedBy(new BigNumber(10000))
+        }
+         var param = {};
+         param.finprodId = finprodId;
+         param.shareAmt =object.avaNum;
+         param.settleDate = object.settleDate;
+         param.price = object.price;
+         param.fpriceAmt = object.fpriceAmt;
+         param.ps = object.ps;
+         param.secManageAcctId = object.secManageAcctId;
+        Joyin.ajaxJson(basePath + 'cfets/bankuplink/bond/IbuQuoteBond/calculation', param, function(result){
+            if (result.data){
+                $('#dealFeeAmt').val(result.data.dealFeeAmt).trigger('blur');
+                $('#settFeeAmt').val(result.data.settFeeAmt).trigger('blur');
+            }
+        })
+    };
     /**
      * 计算金额相关
      */
