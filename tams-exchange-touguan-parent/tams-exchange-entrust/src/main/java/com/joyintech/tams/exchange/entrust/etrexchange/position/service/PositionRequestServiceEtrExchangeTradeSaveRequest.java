@@ -2,11 +2,9 @@ package com.joyintech.tams.exchange.entrust.etrexchange.position.service;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.joyintech.framework.security.SecurityUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -120,13 +118,20 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
         String busiType = commonPositionEngineService.getPositionBusiType(entity.getFinprodType2(), entity.getPs(), null);
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("userId", SecurityUtil.getLoginUser().getUserName());
-        resultMap.put("totalTradeId", entity.getWorkflowId());
+        // 关闭指令时，无流程ID，故生成UUID传入
+        resultMap.put("totalTradeId", IDGenerator.generate(32));
         resultMap.put("modelType", POSITION_TYPE_ETR);
-        resultMap.put("busiType", busiType);
-        resultMap.put("ps", entity.getPs());
-        resultMap.put("decisionAct", DictCodeListExt3.系统动作_关闭.getValue());
-        resultMap.put("systemAct", DictCodeListExt3.系统动作_关闭.getValue());
-        resultMap.put("closeId", entity.getEntrustId());
+
+        List<Map<String, Object>> list = Lists.newArrayList();
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("busiType", busiType);
+        map.put(PS, entity.getPs());
+        map.put(BUSI_ACT, DictCodeListExt3.系统动作_关闭.getValue());
+        map.put("systemAct", DictCodeListExt3.系统动作_关闭.getValue());
+        map.put("closeId", entity.getEntrustId());
+        list.add(map);
+        resultMap.put("data", list);
+
         PositionHttpRequest.batchClose(resultMap);
     }
 
