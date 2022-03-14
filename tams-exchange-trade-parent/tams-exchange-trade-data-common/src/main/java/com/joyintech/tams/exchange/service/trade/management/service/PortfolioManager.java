@@ -106,7 +106,7 @@ public class PortfolioManager extends BaseService {
         request.setPtlList(positionCashSecDtos);
 
         List<PositionCashSecSingleResp> resps = etrTradeCommonervice.queryPositionInfoSingle(request);
-        log.debug("查询头寸信息：request = [], response = []", JSONUtil.toJsonStr(request), JSONUtil.toJsonStr(resps));
+        log.debug("查询头寸信息：request = [{}], response = [{}]", JSONUtil.toJsonStr(request), JSONUtil.toJsonStr(resps));
 
         return resps;
     }
