@@ -385,7 +385,9 @@
             if(fristSettleDate && term && tradeMarket){
                 Joyin.ajaxSync(basePath +   'invest/entrust/etragrereptrade/EtrAgreRepTrade001/addDate', param, function(obj) {
                     $("#expireSettleDate").val(obj.expireSettleDate).trigger('change');
-                    $("#mdate").val(obj.mdate);
+                    // ZGTFCP-809:结束日期无需更改 modify by fuyongsheng 20220314 start
+                    // $("#mdate").val(obj.mdate);
+                    // ZGTFCP-809:结束日期无需更改 modify by fuyongsheng 20220314 end
                 });
             }
 
@@ -1646,7 +1648,10 @@
             //object.pageModel = pageModel;
 
             var riskdata = getriskdata(object);
-            if(BaseRiskMathComm && (object.ps == '03' || object.ps == '04' || object.ps == 'T56')) {
+            // ZGTFCP-809:增加首期交易方向 modify by fuyongsheng 20220314 start
+            // if(BaseRiskMathComm && (object.ps == '03' || object.ps == '04' || object.ps == 'T56')) {
+            if(BaseRiskMathComm && (object.ps == 'T92' || object.ps == '03' || object.ps == '04' || object.ps == 'T56')) {
+            // ZGTFCP-809:增加首期交易方向 modify by fuyongsheng 20220314 end
                 s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
                 if(!s && s != ''){
                     return;
