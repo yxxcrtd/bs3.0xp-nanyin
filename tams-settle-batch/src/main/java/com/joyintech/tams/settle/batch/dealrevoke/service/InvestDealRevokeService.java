@@ -73,6 +73,12 @@ public class InvestDealRevokeService {
     @Autowired
     private BasePtlSecPositionInfoService basePtlSecPositionInfoService;
 
+    @Autowired
+    private EtrEntrustMapper etrEntrustMapper;
+
+    @Autowired
+    private EtrEntrustAddMapper etrEntrustAddMapper;
+
 
     private Map<String, Object> createCommonParam(Date tradeDate, List<String> portfolioIdList) {
         Map<String, Object> param = new HashMap<>();
