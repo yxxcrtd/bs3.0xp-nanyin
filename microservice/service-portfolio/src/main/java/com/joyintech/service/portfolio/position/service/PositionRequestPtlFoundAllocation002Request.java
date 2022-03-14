@@ -44,7 +44,8 @@ public class PositionRequestPtlFoundAllocation002Request {
     public void sendDelete(PtlFundAllocationDto entity) {
         String busiType = null;
         String ps = null;
-        if(Objects.equals(entity.getPayType(),DictCodeListExt1.指令类型_银证转账_银转证.getValue())){
+        if(Objects.equals(entity.getPayType(),DictCodeListExt1.指令类型_银证转账_银转证.getValue())
+                ||Objects.equals(entity.getPayType(),"01")){
             busiType = DictCodeListExt3.头寸业务类型_银证转账.getValue();
             ps = DictCodeListExt3.交易方向_银证转账.getValue();
         } else {
@@ -62,7 +63,8 @@ public class PositionRequestPtlFoundAllocation002Request {
     public void sendRevoke(PtlFundAllocationDto entity) {
         String busiType = null;
         String ps = null;
-        if(Objects.equals(entity.getPayType(),DictCodeListExt1.指令类型_银证转账_银转证.getValue())){
+        if(Objects.equals(entity.getPayType(),DictCodeListExt1.指令类型_银证转账_银转证.getValue())
+                ||Objects.equals(entity.getPayType(),"01")){
             busiType = DictCodeListExt3.头寸业务类型_银证转账.getValue();
             ps = DictCodeListExt3.交易方向_银证转账.getValue();
         } else {
@@ -95,7 +97,8 @@ public class PositionRequestPtlFoundAllocation002Request {
         resultMap.put("modelType", DictCodeListExt1.子系统代码_交易.getValue());
 
         //业务类型 交易方向
-        if(Objects.equals(entity.getPayType(),DictCodeListExt1.指令类型_银证转账_银转证.getValue())){
+        if(Objects.equals(entity.getPayType(),DictCodeListExt1.指令类型_银证转账_银转证.getValue())
+        ||Objects.equals(entity.getPayType(),"01")){
             resultMap.put("busiType", DictCodeListExt3.头寸业务类型_银证转账.getValue());
             resultMap.put(PS, DictCodeListExt3.交易方向_银证转账.getValue());
         } else {
