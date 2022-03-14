@@ -35,10 +35,10 @@ INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSI
 VALUES ('ETR_PAGE', 'F01-B14', 'T97', 'new', 'ETR', 'com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest', 'Bond003', 'system', null, sysdate, 'system', sysdate, '场内指令可转债接口-配债新建', 'Y');
 INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE, ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, REMARK, ENABLE) 
 VALUES ('ETR_PAGE', 'F01-B14', 'T97', 'modify', 'ETR', 'com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest', 'Bond003', 'system', null, sysdate, 'system', sysdate, '场内指令可转债接口-配债修改', 'Y');
-INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE, ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, REMARK, ENABLE) 
+/**INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE, ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, REMARK, ENABLE)
 VALUES ('ETR_PAGE', 'F01-B14', 'T49', 'new', 'ETR', 'com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest', 'Bond003', 'system', null, sysdate, 'system', sysdate, '场内指令可转债接口-债转股新建', 'Y');
 INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE, ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, REMARK, ENABLE) 
-VALUES ('ETR_PAGE', 'F01-B14', 'T49', 'modify', 'ETR', 'com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest', 'Bond003', 'system', null, sysdate, 'system', sysdate, '场内指令可转债接口-债转股修改', 'Y');
+VALUES ('ETR_PAGE', 'F01-B14', 'T49', 'modify', 'ETR', 'com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest', 'Bond003', 'system', null, sysdate, 'system', sysdate, '场内指令可转债接口-债转股修改', 'Y');*/
 
 /*场内交易现券接口-下单*/
 INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE, ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, REMARK, ENABLE) 
@@ -62,8 +62,10 @@ INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSI
 VALUES ('TRD_PAGE', 'F01-B14', 'T02', '16', 'TRD', 'com.joyintech.tams.exchange.common.request.PositionInstructionRequest', 'Bond003', 'system', null, sysdate, 'system', sysdate, '场内交易可转债接口-卖出下单', 'Y');
 INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE, ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, REMARK, ENABLE) 
 VALUES ('TRD_PAGE', 'F01-B14', 'T03', '16', 'TRD', 'com.joyintech.tams.exchange.common.request.PositionInstructionRequest', 'Bond003', 'system', null, sysdate, 'system', sysdate, '场内交易可转债接口-回售下单', 'Y');
-INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE, ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, REMARK, ENABLE) 
-VALUES ('TRD_PAGE', 'F01-B14', 'T04', '16', 'TRD', 'com.joyintech.tams.exchange.common.request.PositionInstructionRequest', 'Bond003', 'system', null, sysdate, 'system', sysdate, '场内交易可转债接口-申购下单', 'Y');
+/*INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE, ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, REMARK, ENABLE)
+VALUES ('TRD_PAGE', 'F01-B14', 'T04', '16', 'TRD', 'com.joyintech.tams.exchange.common.request.PositionInstructionRequest', 'Bond003', 'system', null, sysdate, 'system', sysdate, '场内交易可转债接口-申购下单', 'Y');*/
+INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE, ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, REMARK, ENABLE)
+VALUES ('TRD_PAGE', 'F01-B14', 'T97', '16', 'TRD', 'com.joyintech.tams.exchange.common.request.PositionInstructionRequest', 'Bond003', 'system', null, sysdate, 'system', sysdate, '场内交易可转债接口-配债下单', 'Y');
 /*场内交易可转债接口-撤委托*/
 INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE, ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, REMARK, ENABLE) 
 VALUES ('TRD_PAGE', 'F01-B14', 'T01', '18', 'TRD', 'com.joyintech.tams.exchange.common.request.PositionInstructionRequest', 'Bond003', 'system', null, sysdate, 'system', sysdate, '场内交易可转债接口-买入撤委托', 'Y');
@@ -203,14 +205,14 @@ VALUES ('TRD_PAGE', 'F10', 'T02', '16', 'TRD',
         'com.joyintech.tams.exchange.common.request.PositionInstructionRequest', 'Stock001', 'system',
         null, sysdate, 'system', sysdate, '新建场内股票卖出报单', 'Y');
 
-/*INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE,
+INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE,
                                                            ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME,
                                                            UPDATE_USER, UPDATE_TIME, REMARK, ENABLE)
 VALUES ('TRD_PAGE', 'F10', 'T46', '16', 'TRD',
         'com.joyintech.tams.exchange.common.request.PositionInstructionRequest', 'Stock001', 'system',
         null, sysdate, 'system', sysdate, '新建场内股票配股报单', 'Y');
 
-INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE,
+/*INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE,
                                                            ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME,
                                                            UPDATE_USER, UPDATE_TIME, REMARK, ENABLE)
 VALUES ('TRD_PAGE', 'F10', 'T04', '16', 'TRD',
@@ -230,14 +232,14 @@ INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSI
 VALUES ('TRD_PAGE', 'F10', 'T02', '18', 'TRD',
         'com.joyintech.tams.exchange.common.request.PositionInstructionRequest', 'Stock001', 'system',
         null, sysdate, 'system', sysdate, '撤销场内股票卖出报单', 'Y');
-/*INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE,
+INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE,
                                                            ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME,
                                                            UPDATE_USER, UPDATE_TIME, REMARK, ENABLE)
 VALUES ('TRD_PAGE', 'F10', 'T46', '18', 'TRD',
         'com.joyintech.tams.exchange.common.request.PositionInstructionRequest', 'Stock001', 'system',
         null, sysdate, 'system', sysdate, '撤销场内股票配股报单', 'Y');
 
-INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE,
+/*INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE,
                                                            ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME,
                                                            UPDATE_USER, UPDATE_TIME, REMARK, ENABLE)
 VALUES ('TRD_PAGE', 'F10', 'T04', '18', 'TRD',
