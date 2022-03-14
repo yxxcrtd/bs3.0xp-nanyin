@@ -94,13 +94,13 @@ public class CommonPositionEngineService {
         if (Objects.isNull(entrustNum)) {
             return secAmount;
         }
-        String bondTradedUnit = CacheUtil.getSysParam("bond_traded_unit");
-        if (交易单位_张.getValue().equals(bondTradedUnit)) {
-            secAmount = entrustNum.multiply(BigDecimal.valueOf(100L));
-        } else if (交易单位_份.getValue().equals(bondTradedUnit)) {
-            secAmount = entrustNum.multiply(BigDecimal.valueOf(1000L));
-        }
-        return secAmount;
+//        String bondTradedUnit = CacheUtil.getSysParam("bond_traded_unit");
+//        if (交易单位_张.getValue().equals(bondTradedUnit)) {
+//            secAmount = entrustNum.multiply(BigDecimal.valueOf(100L));
+//        } else if (交易单位_份.getValue().equals(bondTradedUnit)) {
+//            secAmount = entrustNum.multiply(BigDecimal.valueOf(1000L));
+//        }
+        return entrustNum.multiply(BigDecimal.valueOf(100L));
     }
 
     /**
