@@ -62,8 +62,10 @@ INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSI
 VALUES ('TRD_PAGE', 'F01-B14', 'T02', '16', 'TRD', 'com.joyintech.tams.exchange.common.request.PositionInstructionRequest', 'Bond003', 'system', null, sysdate, 'system', sysdate, '场内交易可转债接口-卖出下单', 'Y');
 INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE, ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, REMARK, ENABLE) 
 VALUES ('TRD_PAGE', 'F01-B14', 'T03', '16', 'TRD', 'com.joyintech.tams.exchange.common.request.PositionInstructionRequest', 'Bond003', 'system', null, sysdate, 'system', sysdate, '场内交易可转债接口-回售下单', 'Y');
-INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE, ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, REMARK, ENABLE) 
-VALUES ('TRD_PAGE', 'F01-B14', 'T04', '16', 'TRD', 'com.joyintech.tams.exchange.common.request.PositionInstructionRequest', 'Bond003', 'system', null, sysdate, 'system', sysdate, '场内交易可转债接口-申购下单', 'Y');
+/*INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE, ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, REMARK, ENABLE)
+VALUES ('TRD_PAGE', 'F01-B14', 'T04', '16', 'TRD', 'com.joyintech.tams.exchange.common.request.PositionInstructionRequest', 'Bond003', 'system', null, sysdate, 'system', sysdate, '场内交易可转债接口-申购下单', 'Y');*/
+INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE, ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, REMARK, ENABLE)
+VALUES ('TRD_PAGE', 'F01-B14', 'T97', '16', 'TRD', 'com.joyintech.tams.exchange.common.request.PositionInstructionRequest', 'Bond003', 'system', null, sysdate, 'system', sysdate, '场内交易可转债接口-配债下单', 'Y');
 /*场内交易可转债接口-撤委托*/
 INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE, ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, REMARK, ENABLE) 
 VALUES ('TRD_PAGE', 'F01-B14', 'T01', '18', 'TRD', 'com.joyintech.tams.exchange.common.request.PositionInstructionRequest', 'Bond003', 'system', null, sysdate, 'system', sysdate, '场内交易可转债接口-买入撤委托', 'Y');
