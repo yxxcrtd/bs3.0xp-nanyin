@@ -2031,7 +2031,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             infRiskRdsDto.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
             //将到期收益率除以100 
             Object obj = CommonUtil.findValue(dataMap, "yield");
-            if (obj != null && !StringUtil.isEmpty((String)obj)) {
+            if (obj != null &&  StringUtil.isNotEmpty(obj)) {
                 infRiskRdsDto.setYieldEndRate(ArithmeticUtil.divide(new BigDecimal(obj.toString()),new BigDecimal(100),4));//到期收益率
             }
             

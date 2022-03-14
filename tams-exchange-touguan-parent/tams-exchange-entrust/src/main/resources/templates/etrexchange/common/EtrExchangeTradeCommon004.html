@@ -606,22 +606,29 @@
                     </div>
                 </div>
                 <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
+                    <label class="layui-form-label " data-th-text="#{EtrInvestBondInfo001.entrustDate}">指令日期</label>
+                    <div class="layui-input-inline input-inline">
+                        <input required class="layui-input form-input input-dateSelect" id="vdate_dz" name="entrustDate" placeholder="请选择时间"
+                               data-th-value='${iPlatformDate}' disabled="disabled">
+                    </div>
+                </div>
+              <!--  <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
                     <label class="layui-form-label " data-th-text="#{EtrExchangeTrade001.vdate}">开始日期</label>
                     <div class="layui-input-inline input-inline">
                         <input required class="layui-input form-input input-dateSelect" id="vdate_dz" name="vdate" placeholder="请选择时间"
                                data-th-value='${iPlatformDate}' disabled="disabled">
                     </div>
-                </div>
+                </div>-->
             </div>
-            <div class="layui-form-item">
-                <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
-                    <label class="layui-form-label " data-th-text="#{EtrExchangeTrade001.mdate}">结束日期</label>
-                    <div class="layui-input-inline input-inline">
-                        <input required class="layui-input form-input input-dateSelect" id="mdate_dz" name="mdate" placeholder="请选择时间"
-                               data-th-value='${iPlatformDate}' disabled="disabled">
-                    </div>
-                </div>
-            </div>
+            <!-- <div class="layui-form-item">
+                  <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
+                     <label class="layui-form-label " data-th-text="#{EtrExchangeTrade001.mdate}">结束日期</label>
+                     <div class="layui-input-inline input-inline">
+                         <input required class="layui-input form-input input-dateSelect" id="mdate_dz" name="mdate" placeholder="请选择时间"
+                                data-th-value='${iPlatformDate}' disabled="disabled">
+                     </div>
+                 </div>
+            </div>-->
         </form>
     </div>
     <!-- 固定收益 -->
