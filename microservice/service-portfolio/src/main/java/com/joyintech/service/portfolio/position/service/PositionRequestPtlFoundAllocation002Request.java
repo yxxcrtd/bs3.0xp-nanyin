@@ -37,7 +37,25 @@ public class PositionRequestPtlFoundAllocation002Request {
 
 
     /**
-     * 撤销时使用---撤销指令-共通接口
+     * doDelete时使用---作废-共通接口
+     *
+     * @param entity
+     */
+    public void sendDelete(PtlFundAllocationDto entity) {
+        String busiType = null;
+        String ps = null;
+        if(Objects.equals(entity.getPayType(),DictCodeListExt1.指令类型_银证转账_银转证.getValue())){
+            busiType = DictCodeListExt3.头寸业务类型_银证转账.getValue();
+            ps = DictCodeListExt3.交易方向_银证转账.getValue();
+        } else {
+            busiType = DictCodeListExt3.头寸业务类型_证银转账.getValue();
+            ps = DictCodeListExt3.交易方向_证银转账.getValue();
+        }
+        PositionHttpRequest.doDeleteByWorkFlowId(entity.getWorkflowId(), POSITION_TYPE_TRD, busiType, ps);
+    }
+
+    /**
+     * 撤销时使用---撤销-共通接口
      *
      * @param entity
      */
@@ -92,7 +110,11 @@ public class PositionRequestPtlFoundAllocation002Request {
         } else {
             resultMap.put(CCY, DictCodeList.币种_人民币_CNY.getValue());
         }
-        resultMap.put("bTotalTradeId", null);
+        if(StringUtil.equals(entity.getPositionType(), "update")){
+            resultMap.put("bTotalTradeId", entity.getTradeId());
+        } else {
+            resultMap.put("bTotalTradeId", null);
+        }
         resultMap.put("workFlowId", entity.getWorkflowId());
         // 日期
         resultMap.put("cdate", DateUtil.format(entity.getSettleDate()));

@@ -661,11 +661,12 @@ public class PtlFundAllocationService extends BaseService<PtlFundAllocationDto> 
     /**
      * 删除现金流水表的流水
      *
-     * @param orderId 划款指令编号
+     * @param entity 划款指令编号
      * @return
      */
-    public int doDelete(String orderId) {
-        return ptlFundAllocationMapper.deleteFlowByOrderId(orderId, DictCodeList.持仓类型_可用.getValue());
+    public int doDelete(PtlFundAllocationDto entity) {
+        positionRequestService.sendDelete(entity);
+        return ptlFundAllocationMapper.deleteFlowByOrderId(entity.getOrderId(), DictCodeList.持仓类型_可用.getValue());
     }
 
     public String doInsert(PtlFundAllocationDto entity) {

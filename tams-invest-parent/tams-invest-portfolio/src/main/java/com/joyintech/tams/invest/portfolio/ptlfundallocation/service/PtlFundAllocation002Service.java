@@ -144,7 +144,7 @@ public class PtlFundAllocation002Service extends CommonExportService<PtlFundAllo
     public void doDelete(String workflowId) {
         PtlFundAllocationDto entity = this.getBussinessEntityByWorkflowId(workflowId);
         if (StringUtil.isNotEmpty(entity.getOrderId())) {
-            restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAllocation/doDelete", entity.getOrderId(), Integer.class);
+            restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAllocation/doDelete", entity, String.class);
         }
     }
 
@@ -163,7 +163,7 @@ public class PtlFundAllocation002Service extends CommonExportService<PtlFundAllo
     @Override
     public void doUpdate(PtlFundAllocationDto entity){
         if(bussCommonMapperDelegateService != null){
-            restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAllocation/doDelete", entity.getOrderId(), Integer.class);
+            restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAllocation/doDelete", entity, String.class);
             entity.setPositionType("update");
             doInsert(entity, OperationType.NEW);
         }
