@@ -239,8 +239,9 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
             etrCashPositionFlowDto.setOrderId(finProductTradeDto.getTrdProductDeal().getTradeId());
             // 添加现金流水到目标dto
             etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
-
-            if (StringUtil.isNotEmpty(entrustId)) {
+            // 新业务
+            if (StringUtil.isNotEmpty(entrustId)
+                    && !StringUtil.equals(finProductTradeDto.getIsExistNew(), DictCodeList.是否_是.getValue())) {
                 // 有委托时，冲销委托时影响的质押券信息，重新以交易的质押券来影响持仓
                 if(!etrPositionHoldDto.isNeedNegative()) {
                     etrPositionHoldDto.getPtlSecPositionFlows().addAll(EtrCommonCashPositionDealService.findNegateSecFlowByEntrustId(entrustId, finProductTradeDto.getTrdProductDeal().getTradeId()));
@@ -282,6 +283,11 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
                 etrSecPositionFlowDto.setAmount(交易券面总额);
                 etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
             }
+        }
+        if (StringUtil.equals(finProductTradeDto.getIsExistNew(), DictCodeList.是否_是.getValue())) {
+            // 写入指令持仓流水-质押式回购
+            etrSecPositionFlowDto.setAmount(交易券面总额);
+            etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
         }
     }
 
@@ -427,7 +433,9 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
                 } else {
                     // 原始交易编号
                     String orginTradeId = finProductTradeDto.getTrdProductDeal().getTradeId();
-                    orginTradeId = orginTradeId.substring(0, orginTradeId.lastIndexOf("R"));
+                    if(orginTradeId.lastIndexOf("R")>0) {
+                        orginTradeId = orginTradeId.substring(0, orginTradeId.lastIndexOf("R"));
+                    }
                     // 撤销时,查找原始交易指令持仓流水,用于冲销
                     etrSecPositionFlowDtos = EtrCommonCashPositionDealService.selectAllPositionByTotle(orginTradeId);
                 }
