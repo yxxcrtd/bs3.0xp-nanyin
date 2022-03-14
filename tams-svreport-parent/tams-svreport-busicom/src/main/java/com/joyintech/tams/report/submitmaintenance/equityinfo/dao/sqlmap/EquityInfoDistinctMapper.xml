@@ -87,10 +87,11 @@
    	    inner join chb_equ_hold th
      	on th.INDENTIFY_MARK=T1.INDENTIFY_MARK
     	and nvl(th.ORG_INDENTIFY_MARK,'0')=nvl(T1.ORG_INDENTIFY_MARK,'0')
-    	left join CHB_SUBMIT_STATUS t2
-    	on  t1.SUMIT_SEQ = t2.SEQNO
-    	<where>
-    		  (t2.SUBMIT_FEEDBACK_STATUS = '03' or T1.ORG_INDENTIFY_MARK is not null)
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+
+		<where>
+    		  (T1.SUBMIT_FEEDBACK_STATUS = '03' or T1.ORG_INDENTIFY_MARK is not null)
+			/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
     		 <!-- <if test="keys !=null and keys.size()>0">
 		        AND t1.REGIST_BANK_CODE
 		            ||'_'||t1.IDENTIFY_NUMBER
@@ -155,10 +156,11 @@
 			T1.CREATE_USER AS createUser,
 			T1.ORG_CODE AS orgCode
        	from chb_equ_sub T1
-    	left join CHB_SUBMIT_STATUS t2
-    	on  t1.SUMIT_SEQ = t2.SEQNO
-    	where
-    		  (t2.SUBMIT_FEEDBACK_STATUS = '03' or T1.ORG_INDENTIFY_MARK is not null)
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		where
+    		  (T1.SUBMIT_FEEDBACK_STATUS = '03' or T1.ORG_INDENTIFY_MARK is not null)
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+
 			   <if test="list !=null and list.size() == 1">
 			        AND T1.REGIST_BANK_CODE
 			            ||'_'||T1.IDENTIFY_NUMBER
@@ -218,10 +220,10 @@
 										   ||'_'||t1.INSTITUTION_IDENTIFY_TYPE
 										   ||'_'||t1.OTHER_IDENTIFY_NAME order by t1.update_time desc) rank
        	from chb_view_equ_sub T1
-    	inner join CHB_SUBMIT_STATUS t2
-    	on  t1.SUMIT_SEQ = t2.SEQNO
-    	<where>
-    		 t2.SUBMIT_FEEDBACK_STATUS = '03'
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		<where>
+			T1.SUBMIT_FEEDBACK_STATUS = '03'
+			/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 		        AND t1.REGIST_BANK_CODE
 		            ||'_'||t1.IDENTIFY_NUMBER
 		            ||'_'||t1.HOLDER_NAME
@@ -268,14 +270,14 @@
        		SUBMIT_DEADLINE           as submitDeadline,
       	 	STATUS                    as status,
        		t1.UPDATE_TIME           as updateTime,
-       		t2.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		T1.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
        		row_number() OVER(partition by t1.INDENTIFY_MARK order by t1.update_time desc) rank
        	from chb_view_equ_sub t1
-    	inner join CHB_SUBMIT_STATUS t2
-    	on  t1.SUMIT_SEQ = t2.SEQNO
     	<where>
-    		 t2.SUBMIT_FEEDBACK_STATUS = '03'
-   			and t1.INDENTIFY_MARK=#{indentifyMark,jdbcType=VARCHAR}
+			T1.SUBMIT_FEEDBACK_STATUS = '03'
+			/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+			and t1.INDENTIFY_MARK=#{indentifyMark,jdbcType=VARCHAR}
    			and t1.REGIST_BANK_CODE=#{bankCode,jdbcType=VARCHAR}
 		</where>
 	</select>
@@ -328,10 +330,8 @@
 			 	AND STATUS !='D'
 			 	/*未报送*/
 		        AND NOT EXISTS( SELECT 1 FROM CHB_EQU_SUB T
-		                        INNER JOIN CHB_SUBMIT_STATUS T2
-							    ON  T.SUMIT_SEQ = T2.SEQNO
-							    AND T2.SUBMIT_FEEDBACK_STATUS = '03'
-			    			    WHERE HOLD.INDENTIFY_MARK = T.INDENTIFY_MARK
+				 /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+			    			    WHERE HOLD.INDENTIFY_MARK = T.INDENTIFY_MARK  AND T.SUBMIT_FEEDBACK_STATUS = '03'
 		                      )
 			 </where>
 			 
@@ -378,12 +378,12 @@
                      AND HOLD.INDENTIFY_MARK = HOLDCHECK.INDENTIFY_MARK)
             AND NOT EXISTS (SELECT 1
 							FROM CHB_EQU_SUB SUB
-							INNER JOIN CHB_SUBMIT_STATUS T2
-							ON  SUB.SUMIT_SEQ = T2.SEQNO
-							AND T2.SUBMIT_FEEDBACK_STATUS = '03'
-							WHERE (HOLDCHECK.MERGER_INDENTIFY_MARK = SUB.INDENTIFY_MARK
-							OR HOLDCHECK.MERGER_INDENTIFY_MARK    = SUB.ORG_INDENTIFY_MARK))
-		       <if test="keys !=null and keys.size()==1">
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		WHERE (HOLDCHECK.MERGER_INDENTIFY_MARK = SUB.INDENTIFY_MARK
+							OR HOLDCHECK.MERGER_INDENTIFY_MARK    = SUB.ORG_INDENTIFY_MARK)
+							AND SUB.SUBMIT_FEEDBACK_STATUS = '03')
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		<if test="keys !=null and keys.size()==1">
 		        AND HOLDCHECK.REGIST_BANK_CODE
 		            ||'_'||HOLDCHECK.IDENTIFY_NUMBER
 		            ||'_'||HOLDCHECK.HOLDER_NAME

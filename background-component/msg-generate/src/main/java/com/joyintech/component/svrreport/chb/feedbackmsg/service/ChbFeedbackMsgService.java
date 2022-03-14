@@ -422,6 +422,9 @@ public class ChbFeedbackMsgService {
                 chbFeedbackMsgComponentMapper.updateChbEquDetSubmitStatus(status);
             } else if (DictCodeList.报表名称_投资者身份信息登记.getValue().equals(submitType)
                     || DictCodeList.报表名称_投资者持有信息登记.getValue().equals(submitType)) {
+                /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+                status.setFlag(submitType);
+                /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
                 // 更新中债三期反馈状态表
                 chbFeedbackMsgComponentMapper.updateChbSubmitStatus(status);
             } else {
@@ -1127,6 +1130,9 @@ public class ChbFeedbackMsgService {
                         equdeterros.add(status);
                     } else if (DictCodeList.报表名称_投资者身份信息登记.getValue().equals(submitType)
                             || DictCodeList.报表名称_投资者持有信息登记.getValue().equals(submitType)) {
+                        /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+                        status.setFlag(submitType);
+                        /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
                         submiterrors.add(status);
                     } else {
                         submitTwoerrors.add(status);
@@ -1151,6 +1157,11 @@ public class ChbFeedbackMsgService {
                         equdetinfos.add(status);
                     } else if (DictCodeList.报表名称_投资者身份信息登记.getValue().equals(submitType)
                             || DictCodeList.报表名称_投资者持有信息登记.getValue().equals(submitType)) {
+                        /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+
+                        status.setFlag(submitType);
+                        /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+
                         submitinfos.add(status);
                     } else {
                         // 中债一、二期的反馈结果

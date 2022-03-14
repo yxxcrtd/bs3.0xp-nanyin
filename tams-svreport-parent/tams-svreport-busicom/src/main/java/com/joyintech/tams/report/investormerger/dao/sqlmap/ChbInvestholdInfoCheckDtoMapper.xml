@@ -858,10 +858,13 @@
 	)
 	t where not exists (
 	select 1 FROM CHB_INVESTHOLD_INFO_SUB SUB
-	INNER JOIN CHB_SUBMIT_STATUS CSS
+			/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+	/*INNER JOIN CHB_SUBMIT_STATUS CSS
 	ON SUB.SUMIT_SEQ = CSS.SEQNO
-	AND CSS.SUBMIT_FEEDBACK_STATUS = '03'
+	AND CSS.SUBMIT_FEEDBACK_STATUS = '03'*/
 	WHERE 1=1
+	AND SUB.SUBMIT_FEEDBACK_STATUS = '03'
+			/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 	AND SUB.REGIST_BANK_CODE =t.REGIST_BANK_CODE
 	and SUB.INDENTIFY_MARK = t.INDENTIFY_MARK
 	and SUB.CCY = t.CCY
@@ -1286,12 +1289,14 @@
 	SELECT 
 	   COUNT(1) 
 	FROM CHB_INVESTHOLD_INFO_SUB SUB
-    
-    INNER JOIN CHB_SUBMIT_STATUS CSS
+    		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+/*    INNER JOIN CHB_SUBMIT_STATUS CSS
     ON SUB.SUMIT_SEQ = CSS.SEQNO
-    AND CSS.SUBMIT_FEEDBACK_STATUS = '03'
-     
+    AND CSS.SUBMIT_FEEDBACK_STATUS = '03'*/
+
     WHERE 1=1
+    AND SUB.SUBMIT_FEEDBACK_STATUS = '03'
+    		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 	AND SUB.REGIST_BANK_CODE =#{registBankCode,jdbcType=VARCHAR}
     and SUB.INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR}
     and SUB.CCY =  #{ccy,jdbcType=VARCHAR}
@@ -1367,13 +1372,16 @@
      on tmp. REGIST_BANK_CODE =infocheck.REGIST_BANK_CODE and tmp.INDENTIFY_MARK =infocheck.INDENTIFY_MARK
      where 1=1 and not exists (
      	select 1 from CHB_INVESTHOLD_INFO_SUB sub
-     			 inner join CHB_SUBMIT_STATUS css
-    		ON sub.SUMIT_SEQ = css.SEQNO  AND css.SUBMIT_FEEDBACK_STATUS = '03'
+     			/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+     			/* inner join CHB_SUBMIT_STATUS css
+    		ON sub.SUMIT_SEQ = css.SEQNO  AND css.SUBMIT_FEEDBACK_STATUS = '03'*/
      		 where tmp.REGIST_BANK_CODE =sub.REGIST_BANK_CODE
      		   and tmp.INDENTIFY_MARK=sub.INDENTIFY_MARK 
      		   and tmp.CCY=sub.CCY 
      		   and tmp.HOLD_DATE=sub.HOLD_DATE
      		   and tmp .PRODID =sub.PRODID
+     		   AND sub.SUBMIT_FEEDBACK_STATUS = '03'
+                /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
      )
     </select>
     
@@ -1411,14 +1419,17 @@
      on tmp. REGIST_BANK_CODE =infocheck.REGIST_BANK_CODE and tmp.INDENTIFY_MARK =infocheck.INDENTIFY_MARK
      where 1=1 and not exists (
      	select 1 from CHB_INVESTHOLD_INFO_SUB sub
-     			 inner join CHB_SUBMIT_STATUS css
-    		ON sub.SUMIT_SEQ = css.SEQNO  AND css.SUBMIT_FEEDBACK_STATUS = '03'
+        /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+        /* inner join CHB_SUBMIT_STATUS css
+    		ON sub.SUMIT_SEQ = css.SEQNO  AND css.SUBMIT_FEEDBACK_STATUS = '03'*/
      		 where tmp.REGIST_BANK_CODE =sub.REGIST_BANK_CODE
      		   and tmp.INDENTIFY_MARK=sub.INDENTIFY_MARK 
      		   and tmp.CCY=sub.CCY 
      		   and tmp.HOLD_DATE=sub.HOLD_DATE
      		   and tmp .PRODID =sub.PRODID
-     )
+                 AND sub.SUBMIT_FEEDBACK_STATUS = '03'
+        /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+        )
   </select>
 
     <select id="selectNeedDealDtoList" resultMap="BaseResultMap" parameterType="java.util.List"  >
