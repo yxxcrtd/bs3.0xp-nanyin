@@ -661,11 +661,12 @@ public class PtlFundAllocationService extends BaseService<PtlFundAllocationDto> 
     /**
      * 删除现金流水表的流水
      *
-     * @param orderId 划款指令编号
+     * @param entity 划款指令编号
      * @return
      */
-    public int doDelete(String orderId) {
-        return ptlFundAllocationMapper.deleteFlowByOrderId(orderId, DictCodeList.持仓类型_可用.getValue());
+    public int doDelete(PtlFundAllocationDto entity) {
+        positionRequestService.sendDelete(entity);
+        return ptlFundAllocationMapper.deleteFlowByOrderId(entity.getOrderId(), DictCodeList.持仓类型_可用.getValue());
     }
 
     public String doInsert(PtlFundAllocationDto entity) {
@@ -735,11 +736,13 @@ public class PtlFundAllocationService extends BaseService<PtlFundAllocationDto> 
             bussCommonMapperDelegateService.insert(PtlCashPositionFlowMapper.class, flow1);
         }
         deal持仓流程(entity, false);
+        if(StringUtil.equals(entity.getPositionType(), "save")){
+            return "Success";
+        }
         String decisionAct = DictCodeListExt3.系统动作_新建.getValue();
         String systemAct = DictCodeListExt3.系统动作_新建.getValue();
-        if (StringUtil.equals(entity.getOperateType(), OperationType.MODIFY)) {
+        if (StringUtil.equals(entity.getPositionType(), "update")) {
             decisionAct = DictCodeListExt3.系统动作_修改.getValue();
-            systemAct = DictCodeListExt3.系统动作_修改.getValue();
         }
         entity.setSoftSkipMode("Y");
         positionRequestService.sendEtrExchangeTradeSaveRequest(entity,decisionAct,systemAct);

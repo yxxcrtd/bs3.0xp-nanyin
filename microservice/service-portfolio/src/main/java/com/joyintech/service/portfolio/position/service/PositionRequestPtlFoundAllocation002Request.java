@@ -37,24 +37,39 @@ public class PositionRequestPtlFoundAllocation002Request {
 
 
     /**
-     * 撤销时使用---撤销指令-共通接口
+     * doDelete时使用---作废-共通接口
+     *
+     * @param entity
+     */
+    public void sendDelete(PtlFundAllocationDto entity) {
+        String busiType = null;
+        String ps = null;
+        if(Objects.equals(entity.getPayType(),DictCodeListExt1.指令类型_银证转账_银转证.getValue())){
+            busiType = DictCodeListExt3.头寸业务类型_银证转账.getValue();
+            ps = DictCodeListExt3.交易方向_银证转账.getValue();
+        } else {
+            busiType = DictCodeListExt3.头寸业务类型_证银转账.getValue();
+            ps = DictCodeListExt3.交易方向_证银转账.getValue();
+        }
+        PositionHttpRequest.doDeleteByWorkFlowId(entity.getWorkflowId(), POSITION_TYPE_TRD, busiType, ps);
+    }
+
+    /**
+     * 撤销时使用---撤销-共通接口
      *
      * @param entity
      */
     public void sendRevoke(PtlFundAllocationDto entity) {
         String busiType = null;
-        if(Objects.equals(entity.getPayType(),DictCodeListExt1.指令类型_银证转账_银转证.getValue())){
-            busiType = DictCodeListExt3.头寸业务类型_银证转账.getValue();
-        } else {
-            busiType = DictCodeListExt3.头寸业务类型_证银转账.getValue();
-        }
         String ps = null;
         if(Objects.equals(entity.getPayType(),DictCodeListExt1.指令类型_银证转账_银转证.getValue())){
+            busiType = DictCodeListExt3.头寸业务类型_银证转账.getValue();
             ps = DictCodeListExt3.交易方向_银证转账.getValue();
         } else {
+            busiType = DictCodeListExt3.头寸业务类型_证银转账.getValue();
             ps = DictCodeListExt3.交易方向_证银转账.getValue();
         }
-        PositionHttpRequest.dorevoke(entity.getTradeId(), POSITION_TYPE_ETR, busiType, ps);
+        PositionHttpRequest.dorevoke(entity.getTradeId(), POSITION_TYPE_TRD, busiType, ps);
     }
 
     /**
@@ -72,34 +87,34 @@ public class PositionRequestPtlFoundAllocation002Request {
         resultMap.put("userId", SecurityUtil.getLoginUser().getUserName());
         resultMap.put("totalTradeId", entity.getTradeId());
         resultMap.put("balanceCheck", balanceCheck);
-        if(!Objects.equals(entity.getOperateType(),"submit")){
+        if(!Objects.equals(entity.getPositionType(),"submit")){
             resultMap.put("flowStatus", DictCodeListExt3.流程节点_流程提交.getValue());
         } else {
             resultMap.put("flowStatus", DictCodeListExt3.流程节点_审批生效.getValue());
         }
         resultMap.put("modelType", DictCodeListExt1.子系统代码_交易.getValue());
 
-        //业务类型
+        //业务类型 交易方向
         if(Objects.equals(entity.getPayType(),DictCodeListExt1.指令类型_银证转账_银转证.getValue())){
             resultMap.put("busiType", DictCodeListExt3.头寸业务类型_银证转账.getValue());
+            resultMap.put(PS, DictCodeListExt3.交易方向_银证转账.getValue());
         } else {
             resultMap.put("busiType", DictCodeListExt3.头寸业务类型_证银转账.getValue());
+            resultMap.put(PS, DictCodeListExt3.交易方向_证银转账.getValue());
         }
         //业务动作
         resultMap.put("busiAct", DictCodeListExt3.业务动作_资金划拨新建.getValue());
-        //交易方向
-        if(Objects.equals(entity.getPayType(),DictCodeListExt1.指令类型_银证转账_银转证.getValue())){
-            resultMap.put(PS, DictCodeListExt3.交易方向_银证转账.getValue());
-        } else {
-            resultMap.put(PS, DictCodeListExt3.交易方向_证银转账.getValue());
-        }
         // 币种
         if (StringUtils.isNotEmpty(entity.getCcy())) {
             resultMap.put(CCY, entity.getCcy());
         } else {
             resultMap.put(CCY, DictCodeList.币种_人民币_CNY.getValue());
         }
-        resultMap.put("bTotalTradeId", null);
+        if(StringUtil.equals(entity.getPositionType(), "update")){
+            resultMap.put("bTotalTradeId", entity.getTradeId());
+        } else {
+            resultMap.put("bTotalTradeId", null);
+        }
         resultMap.put("workFlowId", entity.getWorkflowId());
         // 日期
         resultMap.put("cdate", DateUtil.format(entity.getSettleDate()));

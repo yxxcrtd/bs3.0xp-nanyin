@@ -1754,6 +1754,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     业务动作_成交匹配(DictCode.业务动作,"19","成交匹配"),
     业务动作_资金划拨新建(DictCode.业务动作,"29","资金划拨新建"),
     业务动作_资金划拨撤回(DictCode.业务动作,"30","资金划拨撤回"),
+    业务动作_缴款(DictCode.业务动作,"27","缴款"),
 
 
     资产类型_现金账户持仓(DictCode.头寸资产类型, "C_01", "现金账户持仓"),

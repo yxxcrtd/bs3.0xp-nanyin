@@ -111,6 +111,8 @@ public class EtrExchangeTradeCommon002Controller extends BaseController{
         }
         List<SelectOptionDto> optionsGradeResult = selectDto1.getOptions();
         initPageParams.put("PS_ETR", JsonUtils.objectArray2Json(optionsGradeResult.toArray()));
+        initPageParams.put("ETR_CHECK_POS_SWITCH",CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_POS_SWITCH));
+
         /*add by chenjiaxing 更改交易方向枚举值 end*/
         return new Message<Map<String, Object>>(initPageParams).success();
     }

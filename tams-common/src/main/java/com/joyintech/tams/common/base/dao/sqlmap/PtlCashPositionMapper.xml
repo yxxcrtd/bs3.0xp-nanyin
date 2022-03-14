@@ -54,7 +54,6 @@
             CDATE, CCY, AMOUNT, 
             CHL_FINPROD_ID, CREATE_USER, CREATE_DEPT, 
             CREATE_TIME, UPDATE_USER, UPDATE_TIME,IS_EXIST_NEW)
-            )
         values (#{portfolioId,jdbcType=VARCHAR}, #{acctId,jdbcType=VARCHAR}, #{hodingType,jdbcType=VARCHAR}, 
             #{cdate,jdbcType=DATE}, #{ccy,jdbcType=VARCHAR}, #{amount,jdbcType=DECIMAL}, 
             #{chlFinprodId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 

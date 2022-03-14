@@ -443,7 +443,7 @@ public class EtrTradeCommonervice extends BaseService {
      * @param ptList
      * @return
      */
-    private  BigDecimal queryPosition(List<PositionCashSecDto> ptList,String flowType,String positionType) {
+    public  BigDecimal queryPosition(List<PositionCashSecDto> ptList,String flowType,String positionType) {
         Map<String, Object> map=new HashMap<>();
         BigDecimal sumAmount=null;
         map.put("ptList",buildPosition(ptList,flowType,positionType));

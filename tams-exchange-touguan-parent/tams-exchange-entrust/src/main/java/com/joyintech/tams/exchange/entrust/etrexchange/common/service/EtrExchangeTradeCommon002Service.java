@@ -26,6 +26,9 @@ import com.joyintech.tams.constant.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.*;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.entrust.dao.EtrTrdCommonMapper;
+import com.joyintech.tams.invest.common.entrust.inter.EtrTradeCommonervice;
+import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections.CollectionUtils;
@@ -57,6 +60,8 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 	private EtrExchangeTradeCommonMapper etrExchangeTradeCommonMapper;
 	@Autowired
 	private JoyinbusinessCommonMapper joyinbusinessCommonMapper;
+	@Autowired
+	private EtrTradeCommonervice etrTradeCommonervice;
     /**
      * 分页查询产品持仓信息
      * <功能详细描述>
@@ -109,6 +114,9 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 				if(!StringUtil.isEmptyList(result.getRoot())){
 					// 计算浮动盈亏
 					for(EtrExchangeTradePositionsCommonResponse entity : result.getRoot()){
+						//可用数量
+						//etrTradeCommonervice.queryPositionInfo()
+						//持仓数量
 						// 最新净价*组合持仓.数量 - 持仓成本 as 浮动盈亏
 						BigDecimal floatFd = ArithmeticUtil.multiply(entity.getPrice(),entity.getPtlPositionsNum());
 						floatFd = ArithmeticUtil.subtract(floatFd,entity.getPositionsAmt());

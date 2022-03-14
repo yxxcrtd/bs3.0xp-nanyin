@@ -2,11 +2,9 @@ package com.joyintech.tams.exchange.entrust.etrexchange.position.service;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.joyintech.framework.security.SecurityUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -30,8 +28,8 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.*;
 
+import static com.joyintech.tams.constant.DictCodeList.交易方向_申购;
 import static com.joyintech.tams.constant.DictCodeList.是否_否;
-import static com.joyintech.tams.constant.DictCodeList.*;
 import static com.joyintech.tams.constant.DictCodeListExt2.交易方向_配股;
 import static com.joyintech.tams.constant.DictCodeListExt2.申购方式_网上申购;
 import static com.joyintech.tams.constant.DictCodeListExt3.*;
@@ -120,13 +118,20 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
         String busiType = commonPositionEngineService.getPositionBusiType(entity.getFinprodType2(), entity.getPs(), null);
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("userId", SecurityUtil.getLoginUser().getUserName());
-        resultMap.put("totalTradeId", entity.getWorkflowId());
+        // 关闭指令时，无流程ID，故生成UUID传入
+        resultMap.put("totalTradeId", IDGenerator.generate(32));
         resultMap.put("modelType", POSITION_TYPE_ETR);
-        resultMap.put("busiType", busiType);
-        resultMap.put("ps", entity.getPs());
-        resultMap.put("decisionAct", DictCodeListExt3.系统动作_关闭.getValue());
-        resultMap.put("systemAct", DictCodeListExt3.系统动作_关闭.getValue());
-        resultMap.put("closeId", entity.getEntrustId());
+
+        List<Map<String, Object>> list = Lists.newArrayList();
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("busiType", busiType);
+        map.put(PS, entity.getPs());
+        map.put(BUSI_ACT, DictCodeListExt3.系统动作_关闭.getValue());
+        map.put("systemAct", DictCodeListExt3.系统动作_关闭.getValue());
+        map.put("closeId", entity.getEntrustId());
+        list.add(map);
+        resultMap.put("data", list);
+
         PositionHttpRequest.batchClose(resultMap);
     }
 
@@ -153,14 +158,15 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
             for (EtrExchangeTradePortfolioRequest item : entity.getPortfolioList()) {
                 bean = new PositionRequestBaseBean(item);
                 bean.setFinprodId(null);
-                bean.setCashAmount(item.getFprice().multiply(item.getEntrustNum()));
+                BigDecimal fprice = Objects.isNull(entity.getFprice()) ? new BigDecimal(0) : entity.getFprice();
+                bean.setCashAmount(fprice.multiply(item.getEntrustNum()));
                 bean.setSecAmount(commonPositionEngineService.getSecAmountByBondUnit(item.getEntrustNum()));
 
                 Map<String, Object> map = BeanUtil.object2Map(bean);
                 map.put(ORD_ENTRUST_ID, null);
                 map.put(INV_AIM, entity.getInvAim());
                 map.put(INTEGRATE_SEC_AMOUNT, 0);
-                map.put(OWN_SEC_AMOUNT, item.getFprice().multiply(item.getEntrustNum()));
+                map.put(OWN_SEC_AMOUNT, fprice.multiply(item.getEntrustNum()));
                 ptlList.add(map);
             }
             resultMap.put(PTL_LIST, ptlList);
@@ -195,7 +201,8 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
                 bean.setFinprodId(null);
                 bean.setSecAcctId(null);
                 if (BussinessDictCodeList.交易方向_买入.getValue().equals(ps) || BussinessDictCodeList.交易方向_卖出.getValue().equals(ps)) {
-                    bean.setCashAmount(item.getFprice().multiply(item.getEntrustNum()));
+                    BigDecimal fprice = Objects.isNull(entity.getFprice()) ? new BigDecimal(0) : entity.getFprice();
+                    bean.setCashAmount(fprice.multiply(item.getEntrustNum()));
                 } else if (交易方向_申购.getValue().equals(ps)) {
                     // 系统参数.预估中签比例*指令金额
 //                    bean.setCashAmount(item.getEntrustAmt().multiply(CacheUtil.getSysParam(BussinessConstant.PREDICT_WIN_PERCENT)));

@@ -280,6 +280,9 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                     ){
                         unitCprice = ArithmeticUtil.divide(totalFpriceamt, totalShareAmt, 8);
                         dealTotal.setUnitCprice(unitCprice);
+                        // ZGTFCP-917:对页面成交价格进行赋值 modify by fuyongsheng 20220314 start
+                        dealTotal.setUnitFprice(unitCprice);
+                        // ZGTFCP-917:对页面成交价格进行赋值 modify by fuyongsheng 20220314 end
                         dealTotal.setCpriceAmt(totalFpriceamt);
                         prinAmt=totalFpriceamt;
                     }else  if(StringUtil.equals(settleTransDataDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_基金.getValue())
