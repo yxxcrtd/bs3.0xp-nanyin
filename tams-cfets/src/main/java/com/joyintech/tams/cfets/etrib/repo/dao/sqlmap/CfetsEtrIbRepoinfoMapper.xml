@@ -1180,10 +1180,24 @@
         from FIN_PRODUCT fp
         left join FIN_PRODUCT_ADD fpa on fpa.FINPROD_ID = fp.FINPROD_ID
         left join FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID = fp.FINPROD_ID
-        left join MST_BOND_CREDIT_RATING mRating
-            on fp.ISSUER = mRating.O_CODE and mRating.O_TYPE = '01' and mRating.GRADE_DATE  <![CDATA[<=]]> to_date(#{plateDate}, 'yyyy-MM-dd')
-        left join MST_BOND_CREDIT_RATING sRating
-            on fp.FINPROD_ID = sRating.O_CODE and sRating.O_TYPE = '02' and sRating.GRADE_DATE  <![CDATA[<=]]> to_date(#{plateDate}, 'yyyy-MM-dd')
+         left join (select GRADE_RESULT,
+                           O_CODE,
+                           GRADE_DATE,
+                           O_TYPE,
+                           row_number() over (partition by O_CODE order by GRADE_DATE desc) num
+                    from MST_BOND_CREDIT_RATING
+                    where O_TYPE = '01'
+                      and GRADE_DATE <![CDATA[<=]]> to_date(#{plateDate}, 'yyyy-MM-dd')) mRating
+                   on fp.ISSUER = mRating.O_CODE and mRating.num = '1'
+         left join (select GRADE_RESULT,
+                           O_CODE,
+                           GRADE_DATE,
+                           O_TYPE,
+                           row_number() over (partition by O_CODE order by GRADE_DATE desc) num
+                    from MST_BOND_CREDIT_RATING
+                    where O_TYPE = '02'
+                      and GRADE_DATE <![CDATA[<=]]> to_date(#{plateDate}, 'yyyy-MM-dd')) sRating
+                   on fp.ISSUER = sRating.O_CODE and sRating.num = '1'
         where FINPROD_TYPE2 = 'F01' and fp.FINPROD_ID = #{finprodId}
     </select>
 
