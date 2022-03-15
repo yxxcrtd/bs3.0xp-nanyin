@@ -62,8 +62,8 @@ public class PositionRequestBaseBean {
         this.etrId = instruction.getEntrustId();
         this.cashAcctId = instruction.getAcctNo();
         this.secAcctId = instruction.getSecAcctId();
-        this.cashAmount = null;
-        this.secAmount = null;
+        this.cashAmount = BigDecimal.ZERO;
+        this.secAmount = BigDecimal.ZERO;
     }
 
     public String getPortfolioId() {
@@ -120,6 +120,10 @@ public class PositionRequestBaseBean {
 
     public void setSecAmount(BigDecimal secAmount) {
         this.secAmount = secAmount;
+    }
+
+    public void setSecAmount(Long secAmount) {
+        this.secAmount = BigDecimal.valueOf(secAmount);
     }
 
     public BigDecimal getCashAmount() {

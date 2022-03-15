@@ -1,6 +1,5 @@
 package com.joyintech.tams.invest.common.position.service;
 
-import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.FinProductAddMapper;
 import com.joyintech.tams.common.base.dao.FinProductTypeMapper;
@@ -84,6 +83,10 @@ public class CommonPositionEngineService {
         return settleSpreed;
     }
 
+    public BigDecimal getSecAmountByBondUnit(Long entrustNum) {
+        return this.getSecAmountByBondUnit(BigDecimal.valueOf(entrustNum));
+    }
+
     /**
      * 根据指令单位是张还是手来处理交易金额
      * 债券使用
@@ -143,7 +146,7 @@ public class CommonPositionEngineService {
         log.info("getPositionInterType() called with parameters => 【positionType = {}】, 【tradePlat = {}】, 【finprodType = {}】, 【ps = {}】, 【busiAct = {}】, 【entity = {}】", positionType, tradePlat, finprodType, ps, busiAct, entity);
         String key = positionType + tradePlat + finprodType + ps + busiAct + entity;
         InterfPositionConfigDto interfPositionConfigDto = CONFIG_MAP.get(key);
-        if (interfPositionConfigDto==null || cacheInvalid(interfPositionConfigDto.getUpdateTime())) {
+        if (interfPositionConfigDto == null || cacheInvalid(interfPositionConfigDto.getUpdateTime())) {
             InterfPositionConfigDto where = new InterfPositionConfigDto();
             where.setPositionType(positionType);
             where.setTradePlat(tradePlat);
@@ -156,8 +159,8 @@ public class CommonPositionEngineService {
                 InterfPositionConfigDto dto = list.get(0);
                 dto.setUpdateTime(new Date());
                 CONFIG_MAP.put(key, dto);
-            }else{
-            	CONFIG_MAP.remove(key);
+            } else {
+                CONFIG_MAP.remove(key);
             }
         }
         InterfPositionConfigDto configDto = CONFIG_MAP.get(key);
@@ -180,6 +183,14 @@ public class CommonPositionEngineService {
             return 交易平台_大宗交易平台.getValue();
         }
         return 交易平台_竞价撮合平台.getValue();
+    }
+
+    public BigDecimal multiplyWithOneHundred(Long value) {
+        return multiplyWithOneHundred(BigDecimal.valueOf(value));
+    }
+
+    public BigDecimal multiplyWithOneHundred(BigDecimal value) {
+        return BigDecimal.valueOf(100L).multiply(value);
     }
 
     private boolean isSharesTradePlatform(String tradePlace, String ps, String declaType) {
@@ -213,7 +224,7 @@ public class CommonPositionEngineService {
      * @return
      */
     public String getPositionBusiType(String finprodType2, String ps, String assetType2) {
-        log.debug("getPositionBusiType() called with parameters => 【finprodType2 = {}】, 【ps = {}】, 【assetType2 = {}】",finprodType2, ps, assetType2);
+        log.debug("getPositionBusiType() called with parameters => 【finprodType2 = {}】, 【ps = {}】, 【assetType2 = {}】", finprodType2, ps, assetType2);
         String busiType = "";
         if (DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(finprodType2)) {
             if (BussinessDictCodeList.交易方向_行权回售.getValue().equals(ps)) {
@@ -250,9 +261,9 @@ public class CommonPositionEngineService {
         }
         if ((DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(finprodType2) || DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(finprodType2))
                 && DictCodeList.回购类型_质押式协议回购.getValue().equals(assetType2)) {
-        	if (DictCodeListExt3.交易方向_首期.getValue().equals(ps) 
-            		|| DictCodeListExt3.交易方向_正回购.getValue().equals(ps) 
-            		|| DictCodeListExt3.交易方向_逆回购.getValue().equals(ps) ) {
+            if (DictCodeListExt3.交易方向_首期.getValue().equals(ps)
+                    || DictCodeListExt3.交易方向_正回购.getValue().equals(ps)
+                    || DictCodeListExt3.交易方向_逆回购.getValue().equals(ps)) {
                 busiType = DictCodeListExt3.头寸业务类型_协议回购首期.getValue();
             } else if (DictCodeListExt3.交易方向_提前购回.getValue().equals(ps)) {
                 busiType = DictCodeListExt3.头寸业务类型_协议回购提前购回.getValue();
