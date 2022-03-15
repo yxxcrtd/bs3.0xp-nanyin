@@ -133,6 +133,21 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 	@Override
 	public void doComplete(EtrExchangeTrade001Dto entity, OperationType arg1) {
 		// TODO Auto-generated method stub
+		Map<String,Object> map = new HashMap<>();
+		// 新增交易对手席位
+		if (StringUtil.isNotEmpty(entity.getCounterId()) && StringUtil.isNotEmpty(entity.getSeatId())){
+			map.put("counterId",entity.getCounterId());
+			map.put("counterSeatId",entity.getSeatId());
+			restTemplate.postForObject(ServiceApplication.BASICDATA_SERVICE_NAME + "/InterfSysTrdConfig/insertCounterSeatId", map,
+					Object.class);
+		}
+		// 新增交易对手交易员
+		if (StringUtil.isNotEmpty(entity.getCounterId()) && StringUtil.isNotEmpty(entity.getCounterTrader())){
+			map.put("counterId",entity.getCounterId());
+			map.put("counterTraderId",entity.getCounterTrader());
+			restTemplate.postForObject(ServiceApplication.BASICDATA_SERVICE_NAME + "/InterfSysTrdConfig/insertCounterTraderId", map,
+					Object.class);
+		}
 		restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/doComplete", entity,
 				Integer.class);
 		doDeleteFlow(entity.getWorkflowId());
@@ -236,21 +251,6 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 	@Override
 	public void doInsert(EtrExchangeTrade001Dto entity,OperationType type){
 		// nothing to do just for aspect
-		Map<String,Object> map = new HashMap<>();
-		// 新增交易对手席位
-		if (StringUtil.isNotEmpty(entity.getCounterId()) && StringUtil.isNotEmpty(entity.getSeatId())){
-			map.put("counterId",entity.getCounterId());
-			map.put("counterSeatId",entity.getSeatId());
-			restTemplate.postForObject(ServiceApplication.BASICDATA_SERVICE_NAME + "/InterfSysTrdConfig/insertCounterSeatId", map,
-					Object.class);
-		}
-		// 新增交易对手交易员
-		if (StringUtil.isNotEmpty(entity.getCounterId()) && StringUtil.isNotEmpty(entity.getCounterTrader())){
-			map.put("counterId",entity.getCounterId());
-			map.put("counterTraderId",entity.getCounterTrader());
-			restTemplate.postForObject(ServiceApplication.BASICDATA_SERVICE_NAME + "/InterfSysTrdConfig/insertCounterTraderId", map,
-					Object.class);
-		}
 		if ("save".equals(entity.getOperateType())) {
 			return;
 		}
