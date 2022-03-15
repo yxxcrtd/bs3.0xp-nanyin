@@ -116,7 +116,7 @@ public class Rsk101Service extends Rsk001Service {
                     // modify by etliu 20210831 end
                     rollbackStackToRedis(rlsData, rlsList);
                     response.setBodyField(RSKSTATUS, rsp.getBodyField(RSKSTATUS));
-                    //doException(response, res.getBodyField(EVENT_ID) + "委托超限，所有委托回滚", null);
+                    doException(response, res.getBodyField(EVENT_ID) + "委托超限，所有委托回滚", null);
                     break;
                 }
                 else {
