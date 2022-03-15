@@ -176,7 +176,7 @@
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
             <if test="isExistNew != null" >
-                #{updateTime,jdbcType=TIMESTAMP},
+                #{isExistNew,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
