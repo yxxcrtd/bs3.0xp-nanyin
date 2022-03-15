@@ -167,7 +167,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
                 map.put(ORD_ENTRUST_ID, null);
                 map.put(INV_AIM, entity.getInvAim());
                 map.put(INTEGRATE_SEC_AMOUNT, 0);
-                map.put(OWN_SEC_AMOUNT, fprice.multiply(item.getEntrustNum()));
+                map.put(OWN_SEC_AMOUNT, bean.getSecAmount());
                 ptlList.add(map);
             }
             resultMap.put(PTL_LIST, ptlList);
