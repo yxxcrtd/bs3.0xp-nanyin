@@ -256,7 +256,9 @@
             A.TG_DATA_STATUS = #{tgDataStatus}
             AND D.SEQ_NO = #{seqNo}
             AND D.ENTRUNST_TRADE_ID = #{entrunstId}
-            AND D.MATCH_CLASS = #{matchClass}
+            <if test="matchClass != null and matchClass !=''">
+                AND D.MATCH_CLASS = #{matchClass}
+            </if>
             UNION
             select
             'Y'   isTotalDeal,
