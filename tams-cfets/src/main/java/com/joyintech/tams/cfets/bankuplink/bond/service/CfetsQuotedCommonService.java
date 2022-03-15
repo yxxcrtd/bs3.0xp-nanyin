@@ -855,6 +855,15 @@ public class CfetsQuotedCommonService extends BaseService {
         return cfetsIbuQuoteBondMapper.getWflShareAmtByEntrustId(entrustId);
     }
 
+    /**
+     * 获取指令流程中占用的券面总额
+     * @param entrustId
+     * @return
+     */
+    public BigDecimal getWflShareAmtByEntrustId(String entrustId,String workFlowId){
+        return cfetsIbuQuoteBondMapper.getWflShareAmtByEntrustIdAndWorkFlowId(entrustId,workFlowId);
+    }
+
     public  AjaxResult reclasCheck(CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto){
         AjaxResult ajaxResult = new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<>();

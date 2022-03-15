@@ -52,6 +52,13 @@ public interface CfetsManualSettleMapper {
     CfetsManualSettleInfoRespond findManualSettleInfo(Map<String, Object> pageParam);
 
     /**
+     * 交收流水列表分页查询(临时表)
+     *
+     * @param pageParam 参数
+     * @return CfetsManualSettleInfoRespond
+     */
+    CfetsManualSettleInfoRespond findTempManualSettleInfo(Map<String, Object> pageParam);
+    /**
      * 组合分配信息List
      *
      * @param pageParam 参数

@@ -9,19 +9,21 @@ public class PositionCashSecDto {
 
     private String acctId ; // 资金账号
 
-    private String secAcctId  ; // 证券管理账户/通道代码 查询持仓时必传
+    private String secAcctId  ; // 证券管理账户查询持仓时必传
 
     private String cdate  ; // 日期
 
-    private String finprodId ; // 查询持仓时必传
+    private String finprodId ; // 资产代码 查询持仓时必传
 
     private String dateType; // 处理速度
     
-    private String ps; //查询资金时必传
+    private String ps; //委托方向 查询资金时必传
 
-    private String tradeMarket; //交易场所
+    private String tradeMarket; //交易场所 查询资金时必传
 
     private String ccy; //币种
+
+    private String holdingType;//持仓类型
 
 
     public String getPortfolioId() {
@@ -95,5 +97,14 @@ public class PositionCashSecDto {
 
     public void setCcy(String ccy) {
         this.ccy = ccy;
+    }
+
+
+    public String getHoldingType() {
+        return holdingType;
+    }
+
+    public void setHoldingType(String holdingType) {
+        this.holdingType = holdingType;
     }
 }

@@ -89,10 +89,10 @@ public class PositionRequestPtlFoundAllocation002Request {
         resultMap.put("userId", SecurityUtil.getLoginUser().getUserName());
         resultMap.put("totalTradeId", entity.getTradeId());
         resultMap.put("balanceCheck", balanceCheck);
-        if(!Objects.equals(entity.getPositionType(),"submit")){
-            resultMap.put("flowStatus", DictCodeListExt3.流程节点_流程提交.getValue());
-        } else {
+        if(Objects.equals(entity.getPositionType(),"commit")){
             resultMap.put("flowStatus", DictCodeListExt3.流程节点_审批生效.getValue());
+        } else {
+            resultMap.put("flowStatus", DictCodeListExt3.流程节点_流程提交.getValue());
         }
         resultMap.put("modelType", DictCodeListExt1.子系统代码_交易.getValue());
 

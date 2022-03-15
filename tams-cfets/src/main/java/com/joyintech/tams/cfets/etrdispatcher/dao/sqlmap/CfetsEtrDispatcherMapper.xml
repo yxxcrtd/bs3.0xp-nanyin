@@ -765,6 +765,7 @@
 
     <select id="getEtrDispatcherInfo"
             resultType="com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherInfoResponse">
+    select T.* from(
         SELECT
             to_char(ete.entrust_date,'yyyy-MM-dd') entrustDate,
             CASE
@@ -927,7 +928,8 @@
         LEFT JOIN ETR_TARGET T4 ON ete.ENTRUST_ID = T4.ENTRUST_ID
         LEFT JOIN FIN_PRODUCT T5 ON T4.TARGET_FINPROD_ID = T5.FINPROD_ID
         LEFT JOIN MST_CALENDAR_INFO mci2 ON mci2.CALENDAR_ID  = ete.CALENDAR_ID
-        WHERE ete.entrust_id = #{entrustId}
+        WHERE ete.entrust_id = #{entrustId}) T
+        where rownum &lt;=1
     </select>
 
     <sql id="etrDispatcherDealListInfo">

@@ -177,6 +177,10 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
     @Override
     public void doDelete(String workflowId) {
         PtlFundAllocation002Dto entity = this.getBussinessEntityByWorkflowId(workflowId);
+        entity.setPositionType(entity.getOperateType());
+        if(StringUtil.isEmpty(entity.getOrderId())&&entity.getBussTrdTransferOrder()!=null&&entity.getBussTrdTransferOrder().size()>0){
+            entity.setOrderId(entity.getBussTrdTransferOrder().get(0).getOrderId());
+        }
         if (StringUtil.isNotEmpty(entity.getOrderId())) {
             simpleRestTemplate.postForObject(
                     ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAllocation/doDelete", entity,

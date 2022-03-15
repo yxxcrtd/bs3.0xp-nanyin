@@ -115,9 +115,8 @@ public class PositionRequestServiceInstructionRequest {
                 finprodType += "-" + type6;
             }
         }
-        if (DictCodeList.回购类型_质押式协议回购.getValue().equals(entity.getAssetType())
-                || (DictCodeList.回购类型_质押式竞价回购.getValue().equals(entity.getAssetType()))) {
-            finprodType += "-" + entity.getAssetType();
+        if (DictCodeList.回购类型_质押式协议回购.getValue().equals(entity.getAssetType1())) {
+            finprodType = entity.getAssetType() + "-" + entity.getAssetType1();
         }
         String interType = commonPositionEngineService.getPositionInterType(POSITION_TYPE_TRD, POSITION_TRD_PAGE, finprodType, entity.getPs(), busiAct, entity.getClass().getName());
         if (INTERF_TYPE_BOND002.equals(interType)) {
@@ -162,15 +161,16 @@ public class PositionRequestServiceInstructionRequest {
             List<Map<String, Object>> ptlList = new ArrayList<>(calculateSize);
             for (PortfolioCalculateResponse item : calculates) {
                 bean = new PositionRequestBaseBean(entity);
-                bean.setSecAmount(getSecAmountByBondUnit(BigDecimal.valueOf(item.getEntrustNum())));
+                BigDecimal secAmount = commonPositionEngineService.getSecAmountByBondUnit(item.getEntrustNum());
+                bean.setSecAmount(secAmount);
                 bean.setCashAmount(item.getEntrustAmt());
 
                 Map<String, Object> map = BeanUtil.object2Map(bean);
                 // 下单委托编号
                 map.put(ORD_ENTRUST_ID, entity.getEntrustNo());
                 map.put(INV_AIM, entity.getInvAim());
-                map.put(INTEGRATE_SEC_AMOUNT, null);
-                map.put(OWN_SEC_AMOUNT, bean.getSecAmount());
+                map.put(INTEGRATE_SEC_AMOUNT, BigDecimal.ZERO);
+                map.put(OWN_SEC_AMOUNT, secAmount);
                 ptlList.add(map);
             }
             resultMap.put(PTL_LIST, ptlList);
@@ -231,13 +231,14 @@ public class PositionRequestServiceInstructionRequest {
             for (PortfolioCalculateResponse item : calculates) {
                 bean = new PositionRequestBaseBean(entity);
                 bean.setPortfolioId(item.getPortfolioId());
-                bean.setSecAmount(getSecAmountByBondUnit(BigDecimal.valueOf(item.getEntrustNum())));
+                BigDecimal secAmount = commonPositionEngineService.getSecAmountByBondUnit(item.getEntrustNum());
+                bean.setSecAmount(secAmount);
 
                 Map<String, Object> map = BeanUtil.object2Map(bean);
                 //融入券券面总额
-                map.put(INTEGRATE_SEC_AMOUNT, null);
+                map.put(INTEGRATE_SEC_AMOUNT, BigDecimal.ZERO);
                 //本方券券面总额
-                map.put(OWN_SEC_AMOUNT, bean.getSecAmount());
+                map.put(OWN_SEC_AMOUNT, secAmount);
                 bondSecList.add(map);
             }
             resultMap.put("bondSecList", bondSecList);
@@ -249,7 +250,8 @@ public class PositionRequestServiceInstructionRequest {
                     bean = new PositionRequestBaseBean(entity);
                     bean.setPortfolioId(item.getPortfolioId());
                     bean.setFinprodId(entity.getConShareId());
-                    bean.setSecAmount(getSecAmountByBondUnit(BigDecimal.valueOf(item.getEntrustNum())));
+                    BigDecimal secAmount = commonPositionEngineService.getSecAmountByBondUnit(item.getEntrustNum());
+                    bean.setSecAmount(secAmount);
                     Map<String, Object> map = BeanUtil.object2Map(bean);
                     applyBondSecList.add(map);
                 }
@@ -330,7 +332,7 @@ public class PositionRequestServiceInstructionRequest {
                 bean.setTradeId(entity.getEntrustNo());
                 bean.setEtrId(null);
                 bean.setCashAmount(item.getEntrustAmt());
-                bean.setSecAmount(null);
+                bean.setSecAmount(BigDecimal.ZERO);
 
                 Map<String, Object> map = BeanUtil.object2Map(bean);
                 // 下单委托编号
@@ -358,15 +360,16 @@ public class PositionRequestServiceInstructionRequest {
                     bean.setPortfolioId(item.getPortfolioId());
                     bean.setFinprodId(entity.getFinprodId());
                     bean.setEtrId(null);
-                    bean.setCashAmount(null);
+                    bean.setCashAmount(BigDecimal.ZERO);
                     // 券面总额 下单数量*100
-                    bean.setSecAmount(BigDecimal.valueOf(item.getEntrustNum() * 100L));
+                    BigDecimal secAmount = commonPositionEngineService.multiplyWithOneHundred(item.getEntrustNum());
+                    bean.setSecAmount(secAmount);
 
                     Map<String, Object> map = BeanUtil.object2Map(bean);
                     //融入券券面总额
-                    map.put(INTEGRATE_SEC_AMOUNT, null);
+                    map.put(INTEGRATE_SEC_AMOUNT, BigDecimal.ZERO);
                     //本方券券面总额 指令对应组合.指令数量*100
-                    map.put(OWN_SEC_AMOUNT, bean.getSecAmount());
+                    map.put(OWN_SEC_AMOUNT, secAmount);
 
                     list.add(map);
                 }
@@ -399,11 +402,11 @@ public class PositionRequestServiceInstructionRequest {
             List<Map<String, Object>> list = new ArrayList<>(1);
             bean = new PositionRequestBaseBean(entity);
             bean.setEtrId(null);
-            bean.setSecAmount(null);
+            bean.setSecAmount(BigDecimal.ZERO);
 
             Map<String, Object> map = BeanUtil.object2Map(bean);
             list.add(map);
-            resultMap.put("ptlCashList", list);
+            resultMap.put(PTL_CASH_LIST, list);
         }
 
         // 轧差组合现金数据集
@@ -412,13 +415,13 @@ public class PositionRequestServiceInstructionRequest {
             bean = new PositionRequestBaseBean(entity);
             bean.setTradeId(entity.getEntrustNo());
             bean.setEtrId(entity.getEntrustId());
-            bean.setSecAmount(null);
+            bean.setSecAmount(BigDecimal.ZERO);
             // 交易金额 TODO
             // "IF 回购类型 = 正回购 THEN 指令.到期续作金额 - 指令.首期的到期结算金额
             // IF 回购类型 = 逆回购  and 成交编号找不到对应的首期 THEN 指令.到期续作金额
             // IF 回购类型 = 逆回购  and 成交编号找到对应的首期 THEN  指令.到期续作金额 - 指令.首期的到期结算金额"
             if (DictCodeListExt3.交易方向_正回购.getValue().equals(resultMap.get("ps"))) {
-                bean.setCashAmount(null);
+                bean.setCashAmount(BigDecimal.ZERO);
             } else if (DictCodeListExt3.交易方向_逆回购.getValue().equals(resultMap.get("ps"))) {
                 // 成交编号
             }
@@ -429,7 +432,7 @@ public class PositionRequestServiceInstructionRequest {
         }
 
         // 质押券数据集	ptlSecList
-        if (DictCodeListExt3.交易方向_解除质押.getValue().equals(ps)) {
+        if (DictCodeListExt3.交易方向_正回购.getValue().equals(ps)) {
             List<Map<String, Object>> list = new ArrayList<>(4);
             // 查询质押券集合
             List<InstructionPledge> instructionPledges = instructionPledgeService.queryInstructionPledgesByInstructionId(entity.getEntrustId());
@@ -441,13 +444,14 @@ public class PositionRequestServiceInstructionRequest {
                 bean.setSecAcctId(entity.getSecAcctId());
                 bean.setTradeId(entity.getEntrustId());
                 bean.setEtrId(null);
-                bean.setSecAmount(BigDecimal.valueOf(100L).multiply(item.getPledgeNumber()));
+                BigDecimal secAmount = commonPositionEngineService.multiplyWithOneHundred(item.getPledgeNumber());
+                bean.setSecAmount(secAmount);
 
                 Map<String, Object> map = BeanUtil.object2Map(bean);
                 //融入券券面总额
-                map.put("integrateSecAmount", null);
-                //本方券券面总额 指令.质押券数量*100
-                map.put("ownSecAmount", BigDecimal.valueOf(100L).multiply(item.getPledgeNumber()));
+                map.put(INTEGRATE_SEC_AMOUNT, null);
+                //本方券券面总额 指令.质押券数量*100 乘以一百
+                map.put(OWN_SEC_AMOUNT, secAmount);
 
                 list.add(map);
             }
@@ -467,8 +471,9 @@ public class PositionRequestServiceInstructionRequest {
                 bean.setSecAcctId(entity.getSecAcctId());
                 bean.setTradeId(entity.getEntrustId());
                 bean.setEtrId(entity.getEntrustNo());
+                BigDecimal secAmount = commonPositionEngineService.multiplyWithOneHundred(item.getPledgeNumber());
                 if (DictCodeListExt3.交易方向_解除质押.getValue().equals(ps)) {
-                    bean.setSecAmount(BigDecimal.valueOf(100L).multiply(item.getPledgeNumber()));
+                    bean.setSecAmount(secAmount);
                 } else {
                     // 下单到期续作对应首期的成交回报.质押券数量. 到期续作利用首期成交编号找首期的质押券
                     bean.setSecAmount(item.getOldPledgeNumber());
@@ -476,12 +481,12 @@ public class PositionRequestServiceInstructionRequest {
 
                 Map<String, Object> map = BeanUtil.object2Map(bean);
                 //融入券券面总额
-                map.put("integrateSecAmount", null);
+                map.put(INTEGRATE_SEC_AMOUNT, null);
                 //本方券券面总额 指令.质押券数量*100
                 if (DictCodeListExt3.交易方向_解除质押.getValue().equals(ps)) {
-                    map.put("ownSecAmount", BigDecimal.valueOf(100L).multiply(item.getPledgeNumber()));
+                    map.put(OWN_SEC_AMOUNT, secAmount);
                 } else {
-                    map.put("ownSecAmount", item.getOldPledgeNumber());
+                    map.put(OWN_SEC_AMOUNT, item.getOldPledgeNumber());
                     // 下单到期续作对应首期的成交回报.质押券数量. 到期续作利用首期成交编号找首期的质押券
                     bean.setSecAmount(item.getOldPledgeNumber());
                 }
@@ -514,8 +519,8 @@ public class PositionRequestServiceInstructionRequest {
             for (PortfolioCalculateResponse item : calculates) {
                 bean = new PositionRequestBaseBean(entity);
                 bean.setPortfolioId(item.getPortfolioId());
-                bean.setTradeId(entity.getEntrustId());
-                bean.setEtrId(null);
+                bean.setTradeId(entity.getEntrustNo());
+                bean.setEtrId(entity.getEntrustId());
                 bean.setCashAmount(item.getEntrustAmt());
                 bean.setSecAmount(BigDecimal.valueOf(item.getEntrustNum()));
 
@@ -538,7 +543,7 @@ public class PositionRequestServiceInstructionRequest {
                     // 配股/申购代码
                     bean.setFinprodId(entity.getConShareId());
                     bean.setCashAmount(item.getEntrustAmt());
-                    bean.setSecAmount(BigDecimal.valueOf(item.getEntrustNum()));
+                    bean.setSecAmount(item.getEntrustNum());
 
                     Map<String, Object> map = BeanUtil.object2Map(bean);
                     // 下单委托编号

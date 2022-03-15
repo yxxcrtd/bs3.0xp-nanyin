@@ -1,5 +1,6 @@
 package com.joyintech.tams.exchange.service.trade.processor.business.bond;
 
+import com.joyintech.tams.exchange.common.bean.MinPrice;
 import com.joyintech.tams.exchange.common.bean.MinTrdUnitLimit;
 import com.joyintech.tams.exchange.common.cache.QuoteTickService;
 import com.joyintech.tams.exchange.common.constant.*;
@@ -62,10 +63,11 @@ public class BondHelper {
         if (!EntrustUtils.isNoTrade(orderInterface.getEntrustProp())) {
             if (EntrustUtils.isFullPrice(instrument, orderInterface.getAssetType(), orderInterface.getEntrustProp(), orderInterface.getIsFullPrice())) {
                 isFullPrice = true;
-                if (Double.compare(instrument.getPriceStep().doubleValue(), 0.0) > 0
-                        && TradeUtils.divideAndRemainder(fullPrice, instrument.getPriceStep()).compareTo(BigDecimal.ZERO) != 0) {
+                MinPrice minPrice = instrumentService.getMinPrice(tradePlat, instrument.getMarket(), instrument);
+                if (Double.compare(minPrice.getMinPrice().doubleValue(), 0.0) > 0
+                        && TradeUtils.divideAndRemainder(fullPrice, minPrice.getMinPrice()).compareTo(BigDecimal.ZERO) != 0) {
                     orderInterface.setErrorCode(ErrorCode.INNER_RISK_ERROR.value());
-                    orderInterface.setErrorMsg("委托全价价格不满足最小价差：" + instrument.getPriceStep().doubleValue());
+                    orderInterface.setErrorMsg("委托全价价格不满足最小价差：" + minPrice.getMinPrice().doubleValue());
                     return false;
                 }
                 orderInterface.setIsFullPrice(FullPriceConst.FULL_PRICE.value);

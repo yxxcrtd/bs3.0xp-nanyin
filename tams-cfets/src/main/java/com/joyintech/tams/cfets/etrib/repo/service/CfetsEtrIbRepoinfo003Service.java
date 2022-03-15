@@ -517,15 +517,14 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
                 Message message = PositionUtil.ajaxErrorReturn(e);
                 BaseMap bm = (BaseMap) message.getData();
                 String code = (String) bm.get("code");
-                String messageStr = JsonUtils.json2Object((String) bm.get("message").toString(), String.class);
-                if (StringUtil.isEmpty(confirmOk)
-                        && StringUtil.equals(PositionHttpRequest.CODE_BUSI_RK, code)) {
-                    WorkFlowUtil.showMessage(messageStr, MessageType.确认消息);
+                StringBuffer messageStr = (StringBuffer) bm.get("message");
+                if (StringUtil.isEmpty(confirmOk) && StringUtil.equals(PositionHttpRequest.CODE_BUSI_RK, code)) {
+                    WorkFlowUtil.showMessage(messageStr.toString(), MessageType.确认消息);
                 }
                 if (StringUtil.equals(PositionHttpRequest.CODE_BUSI_YK, code)) {
-                    WorkFlowUtil.showMessage(messageStr, MessageType.错误消息);
+                    WorkFlowUtil.showMessage(messageStr.toString(), MessageType.错误消息);
                 }
-                throw new PositionException(messageStr);
+                throw new PositionException(messageStr.toString());
             }
         }
     }
@@ -688,9 +687,9 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
 	}
 
     public CfetsEtribRepoInfo003Dto packageEquity(CfetsEtribRepoInfo003Dto RepoInfoDto,List<CfetsEtribRepoInfo003Dto> dataList) {
-        if(Objects.nonNull(RepoInfoDto.getPrice())) {
+     /*   if(Objects.nonNull(RepoInfoDto.getPrice())) {
             RepoInfoDto.setPrice(RepoInfoDto.getPrice().multiply(new BigDecimal(100)));//前端提交已经修改过此值  改回来
-        }
+        }*/
         //风险
         CfetsEtribdoRiskcalResponse riskDto = RepoInfoDto.getCfetsEtribdoRiskcalResponse();
         List<RiskTrialRetDto> riskTrialRetDto=new ArrayList<>();

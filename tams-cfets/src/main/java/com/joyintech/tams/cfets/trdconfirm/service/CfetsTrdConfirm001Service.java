@@ -545,7 +545,7 @@ public class CfetsTrdConfirm001Service extends BaseService{
             }
             finProductTradeDto.setBaseTradeProductDealDtos(Arrays.asList(baseTradeProductDealDto));
             //处理指令完成情况
-            List<String> finishList=baseTradeCommExecute(finProductTradeDto,"repo");
+            List<String> finishList = baseTradeCommExecute(finProductTradeDto, "repo");
             if(!StringUtil.isEmptyList(finishList)){
                 finishEtrList.addAll(finishList);
             }
@@ -558,7 +558,7 @@ public class CfetsTrdConfirm001Service extends BaseService{
                     String acctId = EtrCommonCashPositionDealService.select组合托管户(trdProductDeal.getPortfolioId(), trdProductDeal.getCcy(), DictCodeListExt1.资金账户类型_产品托管户.getValue());
                     finProductTradeDtoTemp.getBaseTradeProductDealDtos().get(0).getStlPayOrdersList().get(0).setMyAcctNo(acctId);
                 }
-                baseTradeProductDealCommService.execute(finProductTradeDtoTemp);
+                baseTradeProductDealCommService.insertPosition(finProductTradeDtoTemp);
             }
 
         }

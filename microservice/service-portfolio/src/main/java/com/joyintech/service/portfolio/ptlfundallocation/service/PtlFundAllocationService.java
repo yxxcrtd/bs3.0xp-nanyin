@@ -398,6 +398,7 @@ public class PtlFundAllocationService extends BaseService<PtlFundAllocationDto> 
         String decisionAct = DictCodeListExt3.系统动作_新建.getValue();
         String systemAct = DictCodeListExt3.系统动作_新建.getValue();
         entity.setSoftSkipMode("Y");
+        entity.setPositionType("commit");
         positionRequestService.sendEtrExchangeTradeSaveRequest(entity,decisionAct,systemAct);
         return 1;
     }
@@ -665,7 +666,9 @@ public class PtlFundAllocationService extends BaseService<PtlFundAllocationDto> 
      * @return
      */
     public int doDelete(PtlFundAllocationDto entity) {
-        positionRequestService.sendDelete(entity);
+        if(!StringUtil.equals("save", entity.getPositionType())){
+            positionRequestService.sendDelete(entity);
+        }
         return ptlFundAllocationMapper.deleteFlowByOrderId(entity.getOrderId(), DictCodeList.持仓类型_可用.getValue());
     }
 

@@ -695,7 +695,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                             || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_回溯.getValue())
                             || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收失败.getValue())) &&
                             StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
-                        this.insertOldRepoPosition(cfetsManualSettleInsertDto, entity.getButtonType(), entity.getSettleAmt(), true);
+                        this.insertOldRepoPosition(cfetsManualSettleInsertDto, entity.getButtonType(), entity.getSettleAmt(),entity.getFinprodType2(), true);
                     }
                 }
             }
@@ -721,7 +721,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                             || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_回溯.getValue())
                             || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收失败.getValue())) &&
                             StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
-                        this.insertOldRepoPosition(cfetsManualSettleInsertDto, entity.getButtonType(), entity.getSettleAmt(), true);
+                        this.insertOldRepoPosition(cfetsManualSettleInsertDto, entity.getButtonType(), entity.getSettleAmt(),entity.getFinprodType2(), true);
                     }
                 }
             }
@@ -770,16 +770,17 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                                 || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_回溯.getValue())
                                 || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收失败.getValue())) &&
                                 StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
-                            this.insertOldRepoPosition(cfetsManualSettleInsertDto, entity.getButtonType(), entity.getSettleAmt(), false);
+                            this.insertOldRepoPosition(cfetsManualSettleInsertDto, entity.getButtonType(), entity.getSettleAmt(),entity.getFinprodType2(), false);
                         }
                         sendRepoPositionMethod(cfetsManualSettleInsertDto,entity.getButtonType());
                     }
                 }
                 // 质押券库自动入库
-               /* if(StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收.getValue())) {
+                if (StringUtil.equals(entity.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())
+                        && StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收.getValue())) {
                     cfetsEtrIbRepoAutoRKService.autoInLibrary(SecurityUtil.getLoginUser().getUserName(),
-                            cfetsManualSettleInsertDto.getTrdBankManualSettleInfo().getFinprodId(), portfolioIds,entity.getFinprodType2(),entity.getPs());
-                }*/
+                            cfetsManualSettleInsertDto.getTrdBankManualSettleInfo().getFinprodId(), portfolioIds, entity.getFinprodType2(), entity.getPs());
+                }
                 //交收失败后，自动撤销原交易、交易登记、行权登记数据，关闭对应指令
                 if(StringUtil.equals(entity.getButtonType(),DictCodeListExt3.交收操作类型_交收失败.getValue())) {
                     CfetsTrdBondInvestTradeDto revokeEntity = this.getTrdBondInvestTradeDto(entity.getTradeId());
@@ -1092,8 +1093,6 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
             baseTradeProductDealDto.setStlPayOrdersList(stlPayOrders);
             finProductTradeDto.setBaseTradeProductDealDtos(Arrays.asList(baseTradeProductDealDto));
             finProductTradeDto.setIsExistNew(DictCodeList.是否_是.getValue());
-            // 调用业务组件.【金融产品交易共通.交易产品接口】, insert
-            // 调用业务组件.【金融产品交易共通.交易产品接口】,写入[实际]的组合持仓流水及现金流水
             baseTradeProductDealCommServiceImpl.insertPosition(finProductTradeDto);
         }
     }
@@ -1105,12 +1104,20 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
      * @param cfetsManualSettleRequest
      * @param buttonType
      * @param tradeAmt
+     * @param finprodType2 资产类型
      * @param isFlowStart 是否流程发起
      */
-    public void insertOldRepoPosition(CfetsManualSettleInsertDto cfetsManualSettleRequest, String buttonType, BigDecimal tradeAmt, boolean isFlowStart) {
+    public void insertOldRepoPosition(CfetsManualSettleInsertDto cfetsManualSettleRequest,
+                                      String buttonType, BigDecimal tradeAmt, String finprodType2, boolean isFlowStart) {
         //设置登记时的成交编号
         List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId());
-        if (StringUtil.equals(buttonType, DictCodeListExt3.交收操作类型_交收失败.getValue())) {
+        // 正回购 交收失败 指令质押券可用持仓增加 组合质押券质押持仓减少
+        // 正回购到期 交收 指令质押券可用持仓增加 组合质押券质押持仓减少
+        if (StringUtil.equals(finprodType2, DictCodeListExt1.金融产品类型_债券质押式正回购.getValue())
+                && ((StringUtil.equals(buttonType, DictCodeListExt3.交收操作类型_交收失败.getValue())
+                && StringUtil.equals(cfetsManualSettleRequest.getPs(), DictCodeList.交易方向_买入.getValue()))
+                || (StringUtil.equals(buttonType, DictCodeListExt3.交收操作类型_交收.getValue())
+                && StringUtil.equals(cfetsManualSettleRequest.getPs(), DictCodeList.交易方向_到期.getValue())))) {
             this.settleFailPosition(listTemp);
             return;
         }
@@ -1213,15 +1220,16 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
     private void settleFailPosition(List<CfetsManualSettleDealInfo> listTemp) {
         // 标记委托编号,避免重复操作
         List<String> entrustIdList = new ArrayList<>();
+        List<String> tradeIdList = new ArrayList<>();
         for (CfetsManualSettleDealInfo deal : listTemp) {
-            if (entrustIdList.contains(deal.getEntrustId())) {
+            if (!entrustIdList.contains(deal.getEntrustId())) {
                 cfetsRepoQuotedPrice004Service.revokeEtrSecPosition(deal.getEntrustId());
                 entrustIdList.add(deal.getEntrustId());
+                tradeIdList.add(deal.getFinprodId());
             }
         }
-        List<String> tradeIdList = cfetsIbuQuoteRepo004Mapper.selectOldTradeId(entrustIdList);
         tradeIdList.forEach(tradeId ->
-                trdOutRightRepoTradeService.updatePledgeBondForRevoke(tradeId, DictCodeList.持仓类型_质押.getValue(), false)
+                trdOutRightRepoTradeService.updatePledgeBondForRevoke(tradeId, DictCodeList.持仓类型_质押.getValue(), true)
         );
     }
 }

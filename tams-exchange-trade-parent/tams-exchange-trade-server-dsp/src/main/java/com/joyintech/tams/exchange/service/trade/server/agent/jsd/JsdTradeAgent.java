@@ -119,6 +119,7 @@ public class JsdTradeAgent extends TradeAgentDsp {
                 tradeAgentManager.addAccounts(this, accountId);
                 tradeAgentManager.addAgentLoginStatus(accountId, true);
                 accountManager.addAccounts(account);
+                addTradeRequest(accountId, this);
                 addAccount(accountId, account);
                 setStatus(account.getId(), AccountLoginStatus.LOGGED);
 

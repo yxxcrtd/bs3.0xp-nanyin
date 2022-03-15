@@ -1,10 +1,10 @@
 package com.joyintech.tams.invest.common.position.service;
 
-import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.FinProductAddMapper;
 import com.joyintech.tams.common.base.dao.FinProductTypeMapper;
 import com.joyintech.tams.common.base.entity.FinProductAdd;
+import com.joyintech.tams.common.base.entity.FinProductType;
 import com.joyintech.tams.common.base.entity.FinProductTypeKey;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -83,6 +83,10 @@ public class CommonPositionEngineService {
         return settleSpreed;
     }
 
+    public BigDecimal getSecAmountByBondUnit(Long entrustNum) {
+        return this.getSecAmountByBondUnit(BigDecimal.valueOf(entrustNum));
+    }
+
     /**
      * 根据指令单位是张还是手来处理交易金额
      * 债券使用
@@ -113,8 +117,9 @@ public class CommonPositionEngineService {
         FinProductTypeKey key = new FinProductTypeKey();
         key.setFinprodId(finprodId);
         key.setBranch((long) 0);
-        String type6 = finProductTypeMapper.selectByPrimaryKey(key).getType6();
-        return type6;
+        // String type6 = finProductTypeMapper.selectByPrimaryKey(key).getType6();
+        FinProductType finProductType = finProductTypeMapper.selectByPrimaryKey(key);
+        return finProductType != null ? finProductType.getType6() : StringUtil.EMPTY;
     }
 
     /**
@@ -141,7 +146,7 @@ public class CommonPositionEngineService {
         log.info("getPositionInterType() called with parameters => 【positionType = {}】, 【tradePlat = {}】, 【finprodType = {}】, 【ps = {}】, 【busiAct = {}】, 【entity = {}】", positionType, tradePlat, finprodType, ps, busiAct, entity);
         String key = positionType + tradePlat + finprodType + ps + busiAct + entity;
         InterfPositionConfigDto interfPositionConfigDto = CONFIG_MAP.get(key);
-        if (interfPositionConfigDto==null || cacheInvalid(interfPositionConfigDto.getUpdateTime())) {
+        if (interfPositionConfigDto == null || cacheInvalid(interfPositionConfigDto.getUpdateTime())) {
             InterfPositionConfigDto where = new InterfPositionConfigDto();
             where.setPositionType(positionType);
             where.setTradePlat(tradePlat);
@@ -154,8 +159,8 @@ public class CommonPositionEngineService {
                 InterfPositionConfigDto dto = list.get(0);
                 dto.setUpdateTime(new Date());
                 CONFIG_MAP.put(key, dto);
-            }else{
-            	CONFIG_MAP.remove(key);
+            } else {
+                CONFIG_MAP.remove(key);
             }
         }
         InterfPositionConfigDto configDto = CONFIG_MAP.get(key);
@@ -178,6 +183,17 @@ public class CommonPositionEngineService {
             return 交易平台_大宗交易平台.getValue();
         }
         return 交易平台_竞价撮合平台.getValue();
+    }
+
+    public BigDecimal multiplyWithOneHundred(Long value) {
+        return multiplyWithOneHundred(BigDecimal.valueOf(value));
+    }
+
+    public BigDecimal multiplyWithOneHundred(BigDecimal value) {
+        if (Objects.isNull(value)) {
+            return BigDecimal.ZERO;
+        }
+        return BigDecimal.valueOf(100L).multiply(value);
     }
 
     private boolean isSharesTradePlatform(String tradePlace, String ps, String declaType) {
@@ -206,13 +222,14 @@ public class CommonPositionEngineService {
     /**
      * 获取头寸业务类型--日间使用
      *
-     * @param FinprodType
+     * @param finprodType2
      * @param ps
      * @return
      */
-    public String getPositionBusiType(String FinprodType2, String ps, String assetType2) {
+    public String getPositionBusiType(String finprodType2, String ps, String assetType2) {
+        log.debug("getPositionBusiType() called with parameters => 【finprodType2 = {}】, 【ps = {}】, 【assetType2 = {}】", finprodType2, ps, assetType2);
         String busiType = "";
-        if (DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(FinprodType2)) {
+        if (DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(finprodType2)) {
             if (BussinessDictCodeList.交易方向_行权回售.getValue().equals(ps)) {
                 busiType = DictCodeListExt3.头寸业务类型_债券行权交易.getValue();
             } else if (BussinessDictCodeList.交易方向_买入.getValue().equals(ps) || BussinessDictCodeList.交易方向_卖出.getValue().equals(ps)) {
@@ -229,7 +246,7 @@ public class CommonPositionEngineService {
                 busiType = DictCodeListExt3.头寸业务类型_通用回购债券出库.getValue();
             }
         }
-        if (DictCodeListExt1.金融产品类型_投管用_股票.getValue().equals(FinprodType2)) {
+        if (DictCodeListExt1.金融产品类型_投管用_股票.getValue().equals(finprodType2)) {
             if (DictCodeList.交易方向_申购.getValue().equals(ps)) {
                 busiType = DictCodeListExt3.头寸业务类型_网上申购.getValue();
             } else if (BussinessDictCodeList.交易方向_买入.getValue().equals(ps) || BussinessDictCodeList.交易方向_卖出.getValue().equals(ps)) {
@@ -238,16 +255,18 @@ public class CommonPositionEngineService {
                 busiType = DictCodeListExt3.头寸业务类型_配股.getValue();
             }
         }
-        if (DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(FinprodType2)) {
+        if (DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(finprodType2)) {
             busiType = DictCodeListExt3.头寸业务类型_基金交易.getValue();
         }
-        if ((DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(FinprodType2) || DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(FinprodType2))
+        if ((DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(finprodType2) || DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(finprodType2))
                 && DictCodeList.回购类型_质押式竞价回购.getValue().equals(assetType2)) {
             busiType = DictCodeListExt3.头寸业务类型_通用回购首期.getValue();
         }
-        if ((DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(FinprodType2) || DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(FinprodType2))
+        if ((DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(finprodType2) || DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(finprodType2))
                 && DictCodeList.回购类型_质押式协议回购.getValue().equals(assetType2)) {
-            if (DictCodeListExt3.交易方向_首期.getValue().equals(ps)) {
+            if (DictCodeListExt3.交易方向_首期.getValue().equals(ps)
+                    || DictCodeListExt3.交易方向_正回购.getValue().equals(ps)
+                    || DictCodeListExt3.交易方向_逆回购.getValue().equals(ps)) {
                 busiType = DictCodeListExt3.头寸业务类型_协议回购首期.getValue();
             } else if (DictCodeListExt3.交易方向_提前购回.getValue().equals(ps)) {
                 busiType = DictCodeListExt3.头寸业务类型_协议回购提前购回.getValue();

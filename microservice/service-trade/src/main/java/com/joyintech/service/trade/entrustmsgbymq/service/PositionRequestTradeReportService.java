@@ -2,6 +2,7 @@ package com.joyintech.service.trade.entrustmsgbymq.service;
 
 import com.alibaba.fastjson.JSON;
 import com.joyintech.framework.JoyinRestTemplate;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.trade.entrustmsgbymq.dto.TrdMoreConvrate;
@@ -72,6 +73,13 @@ public class PositionRequestTradeReportService {
         if (DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue().equals(type6)) {
             finprodType += "-" + type6;
         }
+        EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(trdTempDto.getEntrustId());
+        if(etrEntrustAdd != null){
+            if (DictCodeList.回购类型_质押式协议回购.getValue().equals(etrEntrustAdd.getAssetType1())
+                    || (DictCodeList.回购类型_质押式竞价回购.getValue().equals(etrEntrustAdd.getAssetType1()))) {
+                finprodType += "-" + etrEntrustAdd.getAssetType1();
+            }
+        }
         logger.debug("【成交回报查询头寸接口参数】finprodType:{},ps:{}", finprodType, ps);
         String interType = commonPositionEngineService.getPositionInterType(POSITION_TYPE_TRD, TRADE_PLAT, finprodType, ps, DictCodeListExt3.业务动作_成交回报.getValue(), trdTempDto.getClass().getName());
         logger.debug("【成交回报查询头寸接口结果】interType:{}", interType);
@@ -89,7 +97,7 @@ public class PositionRequestTradeReportService {
         if(StringUtil.isNotEmpty(resultMap.get(INTERFACE_TYPE))){
             PositionHttpRequest.send(resultMap);
         }else{
-            logger.debug("[未找到对应的接口配置]");
+            logger.debug("[成交回报未找到对应的接口配置]");
         }
     }
 
@@ -464,9 +472,10 @@ public class PositionRequestTradeReportService {
      * @param resultMap 封装集合
      */
     private void setCommonField(TrdTempDto entity, Map<String, Object> resultMap) {
-        resultMap.put("userId", SecurityUtil.getLoginUser().getUserName());
+        resultMap.put("userId", LoginUserUtil.getUserName());
         resultMap.put("totalTradeId", entity.getTradeId());
-        resultMap.put("balanceCheck", "Y");
+        // resultMap.put("balanceCheck", "Y");
+        resultMap.put("balanceCheck", "N");
         resultMap.put("flowStatus", DictCodeListExt3.流程节点_审批生效.getValue());
         resultMap.put("modelType", DictCodeListExt1.子系统代码_交易.getValue());
     }

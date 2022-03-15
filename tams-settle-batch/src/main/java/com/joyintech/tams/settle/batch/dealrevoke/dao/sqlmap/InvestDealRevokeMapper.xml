@@ -993,7 +993,8 @@ FROM TRD_PRODUCT_DEAL A
             A.TRADE_ID,
             A.FINPROD_ID,
             A.FINPROD_TYPE2,
-            A.PS
+            A.PS,
+            A.F_TRADE_ID
         FROM
         TRD_PRODUCT_TEMP_DEAL A,
         TRD_PRODUCT_TEMP_DEAL_ADD B,
@@ -1015,7 +1016,8 @@ FROM TRD_PRODUCT_DEAL A
             A.TRADE_ID,
             A.FINPROD_ID,
             A.FINPROD_TYPE2,
-            A.PS
+            A.PS,
+            A.F_TRADE_ID
         FROM
         TRD_PRODUCT_TEMP_DEAL A,
         TRD_PRODUCT_TEMP_DEAL_ADD B

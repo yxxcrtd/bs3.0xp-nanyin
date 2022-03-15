@@ -308,12 +308,13 @@ public class PositionHttpRequest {
      * @return
      */
     public static String queryPosition(Object param) {
+        logger.info("发送头寸查询报文:"+JsonUtils.object2Json(param));
         String returnStr="";
         try {
             returnStr=httpPostRequest(positionUrl + "/position/endpoint/queryPosition", param);
         }catch (Exception e){
-
         }
+        logger.info("头寸查询返回报文:positionUrl="+positionUrl+"--结果="+returnStr);
         return returnStr;
 
     }

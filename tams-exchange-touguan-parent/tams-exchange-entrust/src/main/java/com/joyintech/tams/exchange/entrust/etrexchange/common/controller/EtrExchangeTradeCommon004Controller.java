@@ -19,20 +19,23 @@ import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
+import com.joyintech.tams.component.business.common.service.BasRiskMathCommService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.exchange.entrust.common.aop.ExchangeEntrustRdsCommonAop;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePortfolioRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommonValidatorService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.MinPirceDto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
@@ -99,8 +102,15 @@ public class EtrExchangeTradeCommon004Controller extends BaseController{
 
     @Value("${quote.ws.url}")
     private String wsUrl;
+
     @Autowired
     private EtrExchangeTradeCommonMapper etrExchangeTradeCommonMapper;
+
+    @Autowired
+    private BasRiskMathCommService basRiskMathCommService;
+
+    @Autowired
+    private EtrExchangeTradeCommonValidatorService etrExchangeTradeCommonValidatorService;
 
     @Override
     public String init(Model model) {
@@ -147,7 +157,11 @@ public class EtrExchangeTradeCommon004Controller extends BaseController{
             if(secIds.length == 2 && (StringUtil.isEmpty(entity.getStockId()))){
                 entity.setStockId(secIds[1]);
             }
-
+            if (StringUtil.isNotEmpty(entity.getRiskTrialRetDto())){
+                model.addAttribute("entity_RiskTrialRetList", entity.getRiskTrialRetDto());
+            }else{
+                model.addAttribute("entity_RiskTrialRetList", basRiskMathCommService.select(entity.getEntrustId()));
+            }
             //add by chenjiaxing 流程中不显示资产名称 end
             model.addAttribute(GlobalConstant.ENTITY, entity);
             model.addAttribute("workflowId", workflowId);
@@ -222,7 +236,7 @@ public class EtrExchangeTradeCommon004Controller extends BaseController{
     }
     /**
      * 设置投资目的
-     * @param Model model
+     * @param  model
      */
     private void setInvAimSelectOption(Model model) {
         SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.投资目的, null);
@@ -741,7 +755,6 @@ public class EtrExchangeTradeCommon004Controller extends BaseController{
      * 保存按钮点击时的check
      *
      * @param  dto
-     * @param  br
      * @return check结果
      * @see
      * @since 1.0
@@ -797,14 +810,15 @@ public class EtrExchangeTradeCommon004Controller extends BaseController{
      * 单组合保存按钮点击时的check
      *
      * @param  dto
-     * @param  br
      * @return check结果
      * @see
      * @since 1.0
      */
     public AjaxResult check(EtrExchangeTradeSaveRequest dto, BindingResult result)
             throws Exception {
-        AjaxResult ajax= etrExchangeTrade001CommonService.check(dto, result);
+        AjaxResult ajax= new AjaxResult();
+        List<ValidMessage> validList = etrExchangeTradeCommonValidatorService.valid(dto);
+        ajax.setErrorList(validList);
         if(ajax!=null){
             return ajax;
         }
@@ -903,7 +917,7 @@ public class EtrExchangeTradeCommon004Controller extends BaseController{
                     //债转股需要走批量接口
                     String infCode = BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue();
                     dto.setFromEtrExchange("Y");//场内指令
-                    AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(dto, infCode, finprodType2);
+                    AjaxResult ar = ExchangeEntrustRdsCommonAop.doPreOccupy(dto, infCode, finprodType2);
                     if (StringUtil.isNotEmpty(ar)) {
                         return ar;
                     }
@@ -956,12 +970,12 @@ public class EtrExchangeTradeCommon004Controller extends BaseController{
                 // ----------预占功能 start----------
                 if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
                     // add by zhangrui1 start
-                    AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy("EtrExchangeTradeMulti001", etrExchangeTrade001DtoList,
+                    AjaxResult ar = ExchangeEntrustRdsCommonAop.doListPreOccupy("EtrExchangeTradeMulti001", etrExchangeTrade001DtoList,
                             BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue());
                     if (null != ar) {
                         return ar;
                     }
-                    EntrustRdsCommonAop.riskListToChildren(dto.getRiskTrialRetDto(), etrExchangeTrade001DtoList,
+                    ExchangeEntrustRdsCommonAop.riskListToChildren(dto.getRiskTrialRetDto(), etrExchangeTrade001DtoList,
                             (etrExchangeTrade001Dto, list) -> etrExchangeTrade001Dto.setRiskTrialRetDto(list));
                 }
                 // ----------预占功能 end----------
@@ -984,10 +998,7 @@ public class EtrExchangeTradeCommon004Controller extends BaseController{
     /**
      * 保存/提交
      *
-     * @param dto
-     *            dto
-     * @param br
-     *            br
+     * @param dto dto
      * @return 结果
      * @throws Exception
      *             异常
