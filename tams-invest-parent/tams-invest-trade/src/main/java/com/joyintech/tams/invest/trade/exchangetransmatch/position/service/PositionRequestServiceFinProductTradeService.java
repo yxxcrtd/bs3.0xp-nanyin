@@ -374,6 +374,16 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
         resultMap.put(SETTLE_SPEED, null);
         // 结算方式
         resultMap.put(DELIVERY_TYPE, null);
+        // ZGTFCP-1042: add by fuyongsheng 20220315 start
+        // 回购首期特殊处理,需传正回购/逆回购
+        if(DictCodeList.交易方向_买入.getValue().equals(entity.getTrdProductDeal().getPs())){
+            if(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(entity.getTrdProductDeal().getFinprodType2())){
+                resultMap.put("ps", DictCodeListExt3.交易方向_正回购.getValue());
+            }else if(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(entity.getTrdProductDeal().getFinprodType2())){
+                resultMap.put("ps", DictCodeListExt3.交易方向_逆回购.getValue());
+            }
+        }
+        // ZGTFCP-1042: add by fuyongsheng 20220315 end
         TrdProductDeal dealEntity = entity.getTrdProductDeal();
         if (StringUtil.isNotEmpty(dealEntity)) {
             String ps = dealEntity.getPs();
