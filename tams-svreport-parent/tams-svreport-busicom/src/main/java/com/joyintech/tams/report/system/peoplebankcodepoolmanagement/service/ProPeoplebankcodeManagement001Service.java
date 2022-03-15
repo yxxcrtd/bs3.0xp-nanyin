@@ -3,6 +3,7 @@ package com.joyintech.tams.report.system.peoplebankcodepoolmanagement.service;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import com.joyintech.tams.common.svreport.chb.util.ToolsUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -181,6 +182,19 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 				for(ProPeoplebankcodeManagement001Dto dto : entities){
 					if(dto.getPbcCode().length()>15){
 						webResult.setMessage("人行产品代码长度不得大于15");
+						webResult.setMessageType(MessageType.错误消息);
+						webResult.setStatuCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+						return webResult;
+					}
+
+					//校验内部产品代码在产品基本信息表中是否存在
+					ProPeoplebankcodeManagement001Dto record = new ProPeoplebankcodeManagement001Dto();
+					record.setInsideProdId(dto.getInsideProdId());
+					record.setCodeType(dto.getCodeType());
+					record.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
+					ProPeoplebankcodeManagement001Dto proDto = peoplebankcodeManagement001DtoMapper.selectByPrimaryKey(record);
+					if (proDto == null) {
+						webResult.setMessage("内部产品代码"+dto.getInsideProdId()+"在产品基本信息表中不存在");
 						webResult.setMessageType(MessageType.错误消息);
 						webResult.setStatuCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
 						return webResult;
