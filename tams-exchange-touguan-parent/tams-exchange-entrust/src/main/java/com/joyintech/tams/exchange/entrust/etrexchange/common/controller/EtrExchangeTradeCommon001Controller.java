@@ -36,6 +36,7 @@ import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.common.dto.position.PositionCashSecDto;
 import com.joyintech.tams.invest.common.dto.position.PositionCashSecRequest;
 import com.joyintech.tams.invest.common.entrust.inter.EtrTradeCommonervice;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
@@ -785,6 +786,30 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 		}
 	}
 
+//	/**
+//	 * 查询资产对应组合的可用持仓信息
+//	 *
+//	 * @param dto
+//	 * @return 可用持仓
+//	 * @author dubaojun
+//	 */
+//	@ApiOperation(value = "查询资产对应组合的可用持仓信息", notes = "查询资产对应组合的可用持仓信息")
+//	@ResponseBody
+//	@PostMapping("/selectAvailableNum")
+//	public Message<String> selectAvailableNum(@RequestBody AvailableEtrSecPositionRequest dto){
+//		try{
+//			Map<String, Object> param = BeanUtil.object2Map(dto);
+//			BigDecimal availableNum = etrExchangeTrade001CommonService.selectAvailableNum(param);
+//			if(availableNum == null) {
+//				availableNum= BigDecimal.ZERO;
+//			}
+//			String availableNumStr=availableNum.setScale(2,RoundingMode.HALF_UP).toString();
+//			return new Message<>(availableNumStr);
+//		} catch (Exception e) {
+//			logger.error("查询功能异常", e);
+//			return new Message<String>().fail().setMessage("查询异常");
+//		}
+//	}
 	/**
 	 * 查询资产对应组合的可用持仓信息
 	 *
@@ -795,10 +820,10 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	@ApiOperation(value = "查询资产对应组合的可用持仓信息", notes = "查询资产对应组合的可用持仓信息")
 	@ResponseBody
 	@PostMapping("/selectAvailableNum")
-	public Message<String> selectAvailableNum(@RequestBody AvailableEtrSecPositionRequest dto){
+	public Message<String> selectAvailableNum(@RequestBody PositionCashSecDto dto){
 		try{
-			Map<String, Object> param = BeanUtil.object2Map(dto);
-			BigDecimal availableNum = etrExchangeTrade001CommonService.selectAvailableNum(param);
+			dto.setHoldingType(BussinessDictCodeList.持仓类型_可用.getValue());
+			BigDecimal availableNum = etrTradeCommonervice.selectAvailableNum(dto);
 			if(availableNum == null) {
 				availableNum= BigDecimal.ZERO;
 			}
@@ -820,10 +845,9 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	@ApiOperation(value = "查询组合对应账户的可用现金信息", notes = "查询组合对应账户的可用现金信息")
 	@ResponseBody
 	@PostMapping("/selectAccAvailableCash")
-	public Message<String>  selectAccAvailableCash(@RequestBody PtlCashPositionFlowRequest dto){
+	public Message<String>  selectAccAvailableCash(@RequestBody PositionCashSecDto dto){
 		try{
-			Map<String, Object> param = BeanUtil.object2Map(dto);
-			BigDecimal accAvailableCash = etrExchangeTrade001CommonService.selectAccAvailableCashNew(param);
+			BigDecimal accAvailableCash = etrTradeCommonervice.selectAccAvailableCash(dto);
 			if(accAvailableCash == null) {
 				accAvailableCash= BigDecimal.ZERO;
 			}

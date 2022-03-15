@@ -26,6 +26,7 @@ import com.joyintech.tams.constant.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.*;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.dto.position.PositionCashSecDto;
 import com.joyintech.tams.invest.common.entrust.dao.EtrTrdCommonMapper;
 import com.joyintech.tams.invest.common.entrust.inter.EtrTradeCommonervice;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
@@ -115,8 +116,15 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 					// 计算浮动盈亏
 					for(EtrExchangeTradePositionsCommonResponse entity : result.getRoot()){
 						//可用数量
-						//etrTradeCommonervice.queryPositionInfo()
+						PositionCashSecDto secDto=new PositionCashSecDto();
+						BeanUtil.copyPropertiesIgnoreNull(secDto,entity);
+						secDto.setHoldingType(BussinessDictCodeList.持仓类型_可用.getValue());
+						BigDecimal sellNum=etrTradeCommonervice.selectAvailableNum(secDto);
+						entity.setSellNum(sellNum);
 						//持仓数量
+						secDto.setHoldingType(BussinessDictCodeList.持仓类型_实际.getValue());
+						BigDecimal positionsNum=etrTradeCommonervice.selectAvailableNum(secDto);
+						entity.setPositionsNum(positionsNum);
 						// 最新净价*组合持仓.数量 - 持仓成本 as 浮动盈亏
 						BigDecimal floatFd = ArithmeticUtil.multiply(entity.getPrice(),entity.getPtlPositionsNum());
 						floatFd = ArithmeticUtil.subtract(floatFd,entity.getPositionsAmt());
