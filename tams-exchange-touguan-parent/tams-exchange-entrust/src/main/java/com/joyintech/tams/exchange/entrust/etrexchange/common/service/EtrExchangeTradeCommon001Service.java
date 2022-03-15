@@ -147,6 +147,7 @@ import com.joyintech.tams.common.base.entity.FinProductQuto;
 import com.joyintech.tams.common.base.entity.FinProductType;
 import com.joyintech.tams.common.base.entity.FinProductTypeKey;
 import com.joyintech.tams.common.base.entity.WflEtrEntrust;
+import com.joyintech.tams.component.base.core.impl.dao.MstWorkflowCommonServiceMapperImpl;
 import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
 import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
 import com.joyintech.tams.component.business.common.dto.FinStockInfoDto;
@@ -157,6 +158,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dto.EtrExchangeAgreRepTrade001Dto;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.CalcDeviationDegreeRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangePosiInfoRequestDto;
@@ -316,6 +318,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	// modify by etliu 20220303 end
 	@Autowired
 	private EtrTradeCommonervice etrTradeCommonervice;
+	
+	@Autowired
+    private MstWorkflowCommonServiceMapperImpl mstWorkflowCommonServiceMapperImpl;
 
 	/**
 	 * {@inheritDoc}
@@ -958,9 +963,13 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	public void doDelete(String workflowId) {
 		doDeleteFlow(workflowId);
 		//增加调用头寸引擎代码start
-		EtrExchangeTradeSaveRequest entity = getBussinessEntityByWorkflowId(workflowId);
-		positionRequestService.sendDelete(entity);
-		//增加调用头寸引擎代码end
+        ProcessMark processMark = mstWorkflowCommonServiceMapperImpl.getBusinessInfo(workflowId);
+        if (StringUtil.isNotEmpty(processMark)
+                && StringUtil.equals(processMark.getStatus(), DictCodeList.数据状态_修改中.getValue())) {
+        	EtrExchangeTradeSaveRequest entity = getBussinessEntityByWorkflowId(workflowId);
+    		positionRequestService.sendDelete(entity);
+        }
+  		//增加调用头寸引擎代码end
 	}
 
 	private void doDeleteFlow(String workflowId) {
@@ -2067,10 +2076,10 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		if (baseEtrCashPositionCommService != null
 				&& DictCodeList.委托状态_已接收.getValue().equals(entity.getEntrustStatus())) {
 			baseEtrCashPositionCommService.entrustCloseExecute(entity.getEntrustId());
-			positionRequestService.sendClose(entity);
 		}
 		//处理履历
 		updateCfetsOprHis(entity.getEntrustId(),"close");
+		positionRequestService.sendClose(entity);
 	}
 
 	/**
@@ -2089,7 +2098,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		if (baseEtrCashPositionCommService != null && (DictCodeList.委托状态_待接收.getValue().equals(entity.getEntrustStatus())
 				||DictCodeListExt3.委托状态_待分发.getValue().equals(entity.getEntrustStatus()))) {
 			baseEtrCashPositionCommService.entrustCloseExecute(entity.getEntrustId());
-			positionRequestService.sendRevoke(entity);
+//			positionRequestService.sendRevoke(entity);
 		}
 		//处理履历
 		updateCfetsOprHis(entity.getEntrustId(),"revoke");

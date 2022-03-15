@@ -56,6 +56,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDispatcherService;
 import com.joyintech.system.base.dao.SysWflBusinessListMapper;
 import com.joyintech.system.base.entity.SysWflBusinessList;
+import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.dao.FinDealPledgeMapper;
 import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
@@ -67,6 +68,7 @@ import com.joyintech.tams.common.base.entity.FinDealPledge;
 import com.joyintech.tams.common.base.entity.FinDealPledgeKey;
 import com.joyintech.tams.common.base.entity.FinTradeProduct;
 import com.joyintech.tams.common.base.entity.FinTradeProductKey;
+import com.joyintech.tams.component.base.core.impl.dao.MstWorkflowCommonServiceMapperImpl;
 import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.common.service.DateCalService;
@@ -143,6 +145,9 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
 
     @Autowired
     private BaseEtrCashPositionCommService baseEtrCashPositionCommService;
+    
+    @Autowired
+    private MstWorkflowCommonServiceMapperImpl mstWorkflowCommonServiceMapperImpl;
 
     /**
      * 指令分发接口
@@ -2049,8 +2054,12 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
     public void doDelete(String workflowId) {
         doDeleteWflEntity(workflowId);
         //增加调用头寸引擎代码start
-        EtrExchangeAgreRepTrade001Dto entity = getBussinessEntityByWorkflowId(workflowId);
-  		positionRequestService.sendDelete(entity);
+        ProcessMark processMark = mstWorkflowCommonServiceMapperImpl.getBusinessInfo(workflowId);
+        if (StringUtil.isNotEmpty(processMark)
+                && StringUtil.equals(processMark.getStatus(), DictCodeList.数据状态_修改中.getValue())) {
+        	EtrExchangeAgreRepTrade001Dto entity = getBussinessEntityByWorkflowId(workflowId);
+      		positionRequestService.sendDelete(entity);
+        }
   		//增加调用头寸引擎代码end
     }
 

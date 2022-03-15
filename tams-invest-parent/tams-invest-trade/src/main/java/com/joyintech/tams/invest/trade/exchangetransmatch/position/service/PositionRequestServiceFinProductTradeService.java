@@ -65,6 +65,7 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
      * @param finProductTradeDto
      */
     public void sendFinProductTradeDto(FinProductTradeDto finProductTradeDto) {
+        logger.debug("【发送成交匹配头寸请求】finProductTradeDto:{}", JSON.toJSONString(finProductTradeDto));
         for (BaseTradeProductDealDto entity:finProductTradeDto.getBaseTradeProductDealDtos()) {
             Map<String, Object> resultMap = new HashMap<>();
             resultMap.put("decisionAct", DictCodeListExt3.系统动作_新建.getValue());
@@ -98,7 +99,7 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
             if(StringUtil.isNotEmpty(resultMap.get(INTERFACE_TYPE))){
                 PositionHttpRequest.send(resultMap);
             }else{
-                logger.debug("[未找到对应的接口配置]");
+                logger.debug("[成交匹配未找到对应的接口配置]");
             }
         }
     }
@@ -366,12 +367,23 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
      * @param resultMap
      */
     private void repo001(BaseTradeProductDealDto entity, Map<String, Object> resultMap) {
-        resultMap.put(INTERFACE_TYPE, PositionConstant.INTERF_TYPE_REPO001);
+        // resultMap.put(INTERFACE_TYPE, PositionConstant.INTERF_TYPE_REPO001);
+        resultMap.put(INTERFACE_TYPE, PositionConstant.INTERF_TYPE_REPO003);
         // 业务动作
         resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_成交匹配.getValue());
         resultMap.put(SETTLE_SPEED, null);
         // 结算方式
         resultMap.put(DELIVERY_TYPE, null);
+        // ZGTFCP-1042: add by fuyongsheng 20220315 start
+        // 回购首期特殊处理,需传正回购/逆回购
+        if(DictCodeList.交易方向_买入.getValue().equals(entity.getTrdProductDeal().getPs())){
+            if(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(entity.getTrdProductDeal().getFinprodType2())){
+                resultMap.put("ps", DictCodeListExt3.交易方向_正回购.getValue());
+            }else if(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(entity.getTrdProductDeal().getFinprodType2())){
+                resultMap.put("ps", DictCodeListExt3.交易方向_逆回购.getValue());
+            }
+        }
+        // ZGTFCP-1042: add by fuyongsheng 20220315 end
         TrdProductDeal dealEntity = entity.getTrdProductDeal();
         if (StringUtil.isNotEmpty(dealEntity)) {
             String ps = dealEntity.getPs();
@@ -513,7 +525,8 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
                     resultMap.put("ptlOffsetCashList", list);
                 }
                 // 质押券数据集	ptlSecList
-                if (DictCodeListExt3.交易方向_解除质押.getValue().equals(ps)) {
+                // if (DictCodeListExt3.交易方向_解除质押.getValue().equals(ps)) {
+                if (!DictCodeListExt3.交易方向_正回购.getValue().equals(ps)) {
                     List<Map<String, Object>> list = new ArrayList<>();
                     for (PortfolioCalculateDto item : portfolioCalculateDtoList) {
                         bean = new PositionRequestBaseBean();
@@ -654,7 +667,8 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
             balanceCheck = "N";
         }
         resultMap.put("userId", SecurityUtil.getLoginUser() != null ? SecurityUtil.getLoginUser().getUserName() : "system");
-        resultMap.put("totalTradeId", entity.getEntrustId());
+        // resultMap.put("totalTradeId", entity.getEntrustId());
+        resultMap.put("totalTradeId", entity.getTrdProductDeal().getTradeId());
         resultMap.put("balanceCheck", balanceCheck);
         resultMap.put("flowStatus", DictCodeListExt3.流程节点_流程提交.getValue());
         resultMap.put("modelType", DictCodeListExt1.子系统代码_委托.getValue());

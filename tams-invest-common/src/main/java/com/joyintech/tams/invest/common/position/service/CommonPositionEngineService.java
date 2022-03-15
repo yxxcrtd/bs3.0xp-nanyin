@@ -5,6 +5,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.FinProductAddMapper;
 import com.joyintech.tams.common.base.dao.FinProductTypeMapper;
 import com.joyintech.tams.common.base.entity.FinProductAdd;
+import com.joyintech.tams.common.base.entity.FinProductType;
 import com.joyintech.tams.common.base.entity.FinProductTypeKey;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -113,8 +114,9 @@ public class CommonPositionEngineService {
         FinProductTypeKey key = new FinProductTypeKey();
         key.setFinprodId(finprodId);
         key.setBranch((long) 0);
-        String type6 = finProductTypeMapper.selectByPrimaryKey(key).getType6();
-        return type6;
+        // String type6 = finProductTypeMapper.selectByPrimaryKey(key).getType6();
+        FinProductType finProductType = finProductTypeMapper.selectByPrimaryKey(key);
+        return finProductType != null ? finProductType.getType6() : StringUtil.EMPTY;
     }
 
     /**
@@ -248,7 +250,9 @@ public class CommonPositionEngineService {
         }
         if ((DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(finprodType2) || DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(finprodType2))
                 && DictCodeList.回购类型_质押式协议回购.getValue().equals(assetType2)) {
-            if (DictCodeListExt3.交易方向_首期.getValue().equals(ps)) {
+        	if (DictCodeListExt3.交易方向_首期.getValue().equals(ps) 
+            		|| DictCodeListExt3.交易方向_正回购.getValue().equals(ps) 
+            		|| DictCodeListExt3.交易方向_逆回购.getValue().equals(ps) ) {
                 busiType = DictCodeListExt3.头寸业务类型_协议回购首期.getValue();
             } else if (DictCodeListExt3.交易方向_提前购回.getValue().equals(ps)) {
                 busiType = DictCodeListExt3.头寸业务类型_协议回购提前购回.getValue();

@@ -109,7 +109,7 @@ VALUES ('ETR_PAGE', 'F06', 'T02', 'modify', 'ETR',
 INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE,
                                                            ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME,
                                                            UPDATE_USER, UPDATE_TIME, REMARK, ENABLE)
-VALUES ('TRD_PAGE', 'F06', 'T01', 'new', 'TRD',
+VALUES ('TRD_PAGE', 'F06', 'T01', '16', 'TRD',
         'com.joyintech.tams.exchange.common.request.PositionInstructionRequest', 'Fund002', 'system',
         null, sysdate, 'system', sysdate, '新建场内基金买入报单', 'Y');
 

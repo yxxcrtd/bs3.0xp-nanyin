@@ -11,6 +11,7 @@
 package com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.service;
 
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.SecurityUtil;
@@ -24,6 +25,7 @@ import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoque
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.FieldEtrInfoQueryListResponse;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.TradeQueryBean;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.*;
@@ -126,6 +128,23 @@ public class FieldEtrInfoQueryService extends BaseService{
         int year = c.get(Calendar.YEAR);
         pageParam.put("year",year);
 
+        //价格模式
+        if(StringUtils.isNotEmpty((String)pageParam.get("search"))){
+            List<String> declaTypeList = new ArrayList<>();
+            List<? extends DataDictItem> list = SysDataUtil.getDataDictItem(DictCode.价格模式.getValue());
+            if(!list.isEmpty()&&list.size()>0){
+                for (DataDictItem t:
+                        list) {
+                    String typeValue = t.getItemValue();
+                    if(typeValue.indexOf((String)pageParam.get("search"))!=-1){
+                        declaTypeList.add(t.getItemCode());
+                    }
+                }
+                pageParam.put("declaTypeList", declaTypeList);
+            }
+        } else {
+            pageParam.put("declaTypeList", null);
+        }
         //根据组合权限表添加检索权限
         Page<FieldEtrInfoQueryListResponse> pageLimit = new Page<FieldEtrInfoQueryListResponse>();
         if(StringUtil.isNotEmpty(SecurityUtil.getLoginUser())) {

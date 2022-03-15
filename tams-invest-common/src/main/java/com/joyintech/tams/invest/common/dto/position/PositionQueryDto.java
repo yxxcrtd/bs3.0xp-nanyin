@@ -11,7 +11,6 @@ public class PositionQueryDto {
 
     private String secAcctId  ; // 证券管理账户/通道代码 查询资产时必传
 
-    private String cdate  ; // 日期
 
     private String finprodId ; // 查询资产时必传
 
@@ -52,13 +51,6 @@ public class PositionQueryDto {
         this.secAcctId = secAcctId;
     }
 
-    public String getCdate() {
-        return cdate;
-    }
-
-    public void setCdate(String cdate) {
-        this.cdate = cdate;
-    }
 
     public String getFinprodId() {
         return finprodId;

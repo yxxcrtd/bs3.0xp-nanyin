@@ -365,6 +365,9 @@ public class CfetsManualSettleQueryService extends BaseService{
             }
             if (StringUtil.equals(spcdCodeTemp, "04")) {
                 CfetsManualSettleInfoRespond cfetsManualSettleInfoRespond = cfetsManualSettleMapper.findManualSettleInfo(pageParam);
+                if(Objects.nonNull(cfetsManualSettleInfoRespond)) {
+                    cfetsManualSettleInfoRespond = cfetsManualSettleMapper.findTempManualSettleInfo(pageParam);
+                }
                 resultData.put(dtCode + "_data", cfetsManualSettleInfoRespond);
                 resultData.put(dtCode + "_data1", cfetsManualSettleInfoRespond);
             } else {
