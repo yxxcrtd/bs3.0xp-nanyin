@@ -428,7 +428,7 @@ public class PositionRequestServiceInstructionRequest {
         }
 
         // 质押券数据集	ptlSecList
-        if (DictCodeListExt3.交易方向_解除质押.getValue().equals(ps)) {
+        if (DictCodeListExt3.交易方向_正回购.getValue().equals(ps)) {
             List<Map<String, Object>> list = new ArrayList<>(4);
             // 查询质押券集合
             List<InstructionPledge> instructionPledges = instructionPledgeService.queryInstructionPledgesByInstructionId(entity.getEntrustId());
@@ -513,8 +513,8 @@ public class PositionRequestServiceInstructionRequest {
             for (PortfolioCalculateResponse item : calculates) {
                 bean = new PositionRequestBaseBean(entity);
                 bean.setPortfolioId(item.getPortfolioId());
-                bean.setTradeId(entity.getEntrustId());
-                bean.setEtrId(null);
+                bean.setTradeId(entity.getEntrustNo());
+                bean.setEtrId(entity.getEntrustId());
                 bean.setCashAmount(item.getEntrustAmt());
                 bean.setSecAmount(BigDecimal.valueOf(item.getEntrustNum()));
 

@@ -118,6 +118,11 @@ public class CfetsEtribBondInfo003Dto extends EtrEntrust implements ProcessEntit
     private String assetType;
 
     /**
+     * 资产4级分类
+     */
+    private String assetType11;
+
+    /**
      * 文件上传dto
      */
     private List<SysUploadFileInfo> fileArray;
@@ -700,5 +705,13 @@ public class CfetsEtribBondInfo003Dto extends EtrEntrust implements ProcessEntit
 
     public void setProfitType(String profitType) {
         this.profitType = profitType;
+    }
+
+    public String getAssetType11() {
+        return assetType11;
+    }
+
+    public void setAssetType11(String assetType11) {
+        this.assetType11 = assetType11;
     }
 }

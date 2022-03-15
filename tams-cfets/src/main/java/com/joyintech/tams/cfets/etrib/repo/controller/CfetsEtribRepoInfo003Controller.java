@@ -83,6 +83,9 @@ public class CfetsEtribRepoInfo003Controller extends BaseController {
         // 代办中过来
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
             entity = cfetsEtrIbRepoinfo003Service.getBussinessEntityByWorkflowId(workflowId);
+            if(Objects.nonNull(entity.getPrice())) {
+                entity.setPrice(entity.getPrice().multiply(new BigDecimal("100")));
+            }
             model.addAttribute(GlobalConstant.ENTITY, entity);
             model.addAttribute("workflowId", workflowId);
             model.addAttribute("person_entity", JsonUtils.object2Json(entity.getEtrInvestPersonInfo()));

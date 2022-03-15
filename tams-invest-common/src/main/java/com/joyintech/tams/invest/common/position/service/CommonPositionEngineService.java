@@ -5,6 +5,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.FinProductAddMapper;
 import com.joyintech.tams.common.base.dao.FinProductTypeMapper;
 import com.joyintech.tams.common.base.entity.FinProductAdd;
+import com.joyintech.tams.common.base.entity.FinProductType;
 import com.joyintech.tams.common.base.entity.FinProductTypeKey;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -113,8 +114,9 @@ public class CommonPositionEngineService {
         FinProductTypeKey key = new FinProductTypeKey();
         key.setFinprodId(finprodId);
         key.setBranch((long) 0);
-        String type6 = finProductTypeMapper.selectByPrimaryKey(key).getType6();
-        return type6;
+        // String type6 = finProductTypeMapper.selectByPrimaryKey(key).getType6();
+        FinProductType finProductType = finProductTypeMapper.selectByPrimaryKey(key);
+        return finProductType != null ? finProductType.getType6() : StringUtil.EMPTY;
     }
 
     /**

@@ -298,7 +298,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
             List<Map<String, Object>> ptlList = new ArrayList<>(portfolioListSize);
             for (EtrExchangeTradePortfolioRequest item : entity.getPortfolioList()) {
                 bean = new PositionRequestBaseBean(item);
-                bean.setSecAmount(commonPositionEngineService.getSecAmountByBondUnit(item.getEntrustNum()));
+                bean.setSecAmount(item.getEntrustNum());
                 bean.setCashAmount(item.getEntrustAmt());
 
                 Map<String, Object> map = BeanUtil.object2Map(bean);
