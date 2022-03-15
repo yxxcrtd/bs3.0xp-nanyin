@@ -152,7 +152,7 @@
                                 <select type="text" id="counterId" name="counterId"
                                         class="layui-input form-input input-select"
                                         th:placeholder="#{SysCommon.placeholder}" placeholder="请输入内容"
-                                        th:data-url="@{/cfets/etrib/cfetsEtrIbRepoinfo/queryMySideListOfPage?dealType=01}" allowClear="true"
+                                        th:data-url="@{/common/joyinbusinessCommon/queryMySideListForSelect?dealType=01}" allowClear="true"
                                         formatoption="true"
                                         th:initValue="${entity?.counterId}"></select>
                             </div>
@@ -196,8 +196,7 @@
 				        <i class="iconfont icon-arrow-down pro-down-icon"></i>
 				    </h3>
 				    <div>
-				        <table class="layui-table" id="pledgeBondTotalListDetailed"
-				               name="pledgeBondTotalListDetailed"></table>
+				        <table class="layui-table" id="pledgeBondTotalListDetailed" name="pledgeBondTotalListDetailed"></table>
 				    </div>
 				 </div>
 			</div>

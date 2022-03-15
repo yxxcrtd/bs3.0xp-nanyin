@@ -198,6 +198,12 @@ public class CfetsEtribRepoInfo003Dto extends EtrEntrust implements ProcessEntit
     private String systemAct;
 
     /**
+     * 质押券折算总额(元)
+     */
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal totalAmount;
+
+    /**
      * 投资人员信息DTO
      */
     @ApiModelProperty(hidden = true)
@@ -506,4 +512,13 @@ public class CfetsEtribRepoInfo003Dto extends EtrEntrust implements ProcessEntit
     public void setAvaPledgePrin(BigDecimal avaPledgePrin) {
         this.avaPledgePrin = avaPledgePrin;
     }
+
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(BigDecimal totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
 }

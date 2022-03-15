@@ -1521,7 +1521,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         if(StringUtil.isNotEmpty(cfetsDto.getFinprodId())) {
             fp = cfetsetrIbBondinfoMapper.findAssetInfo(cfetsDto.getFinprodId());
         }
-        CfetsEtribBondInfo003Dto dto=new CfetsEtribBondInfo003Dto();
+        CfetsEtribBondInfo003Dto dto = new CfetsEtribBondInfo003Dto();
         BeanUtil.copyPropertiesIgnoreNull(dto,cfetsDto);
         if(StringUtil.isNotEmpty(fp)){
             dto.setTradeMarket(fp.getTradeMarket());
@@ -1540,7 +1540,8 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         dto.setSettleSpeed(cfetsDto.getSettleSpeed());
         dto.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
         dto.setElementId(cfetsDto.getElementId());
-        List<CfetsBussCombDistribtDto> bussCombDistribtList =dto.getBussCombDistribtList();
+        dto.setAssetType11(cfetsDto.getAssetType11());
+        List<CfetsBussCombDistribtDto> bussCombDistribtList = dto.getBussCombDistribtList();
         List<CfetsEtribBondInfo003Dto> etrInvestBondInfoDtosList=new ArrayList<>();
         //本方券券面总额
         BigDecimal bfqtrkyccSAmt=BigDecimal.ZERO;

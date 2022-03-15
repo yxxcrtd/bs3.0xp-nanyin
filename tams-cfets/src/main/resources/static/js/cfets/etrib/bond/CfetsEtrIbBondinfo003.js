@@ -768,9 +768,9 @@
         var res = getSubmitParam(operateType)
         if(res.param) {
             if (operateType === "save") {
-                WorkFlow.doSaveList(basePath + 'cfets/etrib/CfetsEtrIbBondinfoController/save', res.param, "CfetsEtrIbBondinfo003_btn_save", "CfetsEtrIbBondinfo003");
+                WorkFlow.doSaveList(basePath + 'cfets/etrib/cfetsEtrIbBondinfo/save', res.param, "CfetsEtrIbBondinfo003_btn_save", "CfetsEtrIbBondinfo003");
             } else {
-                WorkFlow.doSubmitList(basePath + 'cfets/etrib/CfetsEtrIbBondinfoController/save', res.param, "CfetsEtrIbBondinfo003_btn_submit", "CfetsEtrIbBondinfo003");
+                WorkFlow.doSubmitList(basePath + 'cfets/etrib/cfetsEtrIbBondinfo/save', res.param, "CfetsEtrIbBondinfo003_btn_submit", "CfetsEtrIbBondinfo003");
             }
         }
     }
@@ -855,12 +855,30 @@
             query("#calendarId").val(data.object.calendarId);
             query("#tradeMarket").val(data.object.tradeMarket);
             query("#finprodAbbr").val(data.text);
-            if ("Y" == data.object.isRight) {
-                $("input[name='calculateField'][value='exerYield']").attr('disabled', false);
-                layui.form.render('radio');
-            } else {
+            query("#assetType11").val(data.object.assetType11);
+            if(data.object.assetType11 == '127' || data.object.assetType11 == '128') {
+                $("input[name='calculateField'][value='matureYield']").attr('disabled', true);
                 $("input[name='calculateField'][value='exerYield']").attr('disabled', true);
+                query("#matureYieldShow").attr("disabled", true);
+                query("#exerYieldShow").attr("disabled", true);
+                query("#priceShow").attr("disabled", false);
+                query("#calculateField_price").prop('checked', true);
                 layui.form.render('radio');
+            }else {
+                $("input[name='calculateField'][value='matureYield']").attr('disabled', false);
+                $("input[name='calculateField'][value='exerYield']").attr('disabled', false);
+                query("#matureYieldShow").attr("disabled", false);
+                query("#exerYieldShow").attr("disabled", true);
+                query("#priceShow").attr("disabled", true);
+                query("#calculateField_matureYield").prop('checked', true);
+                layui.form.render('radio');
+                if ("Y" == data.object.isRight) {
+                    $("input[name='calculateField'][value='exerYield']").attr('disabled', false);
+                    layui.form.render('radio');
+                } else {
+                    $("input[name='calculateField'][value='exerYield']").attr('disabled', true);
+                    layui.form.render('radio');
+                }
             }
             setRiskFlag(1);
             if (ps == 'T03') {//这里需要增加获取逻辑
@@ -966,6 +984,19 @@
         query("#priceModel").attr("disabled", true);
         layui.form.render();
     }
+    if(ps == 'T01' || ps == 'T02') {
+        var assetType11 = query("#assetType11").val();
+        if(assetType11 && (assetType11 == '127' || assetType11 == '128')) {
+            $("input[name='calculateField'][value='matureYield']").attr('disabled', true);
+            $("input[name='calculateField'][value='exerYield']").attr('disabled', true);
+            query("#matureYieldShow").attr("disabled", true);
+            query("#exerYieldShow").attr("disabled", true);
+            query("#priceShow").attr("disabled", false);
+            query("#calculateField_price").prop('checked', true);
+            layui.form.render('radio');
+        }
+    }
+
     //非卖空模式
     if (SHORT_SELLING_SUPPORTED && SHORT_SELLING_SUPPORTED != '02') {
         query("#entrustOwnNumDiv").hide();
