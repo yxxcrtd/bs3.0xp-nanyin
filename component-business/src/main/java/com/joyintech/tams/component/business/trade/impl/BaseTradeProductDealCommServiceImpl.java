@@ -744,7 +744,7 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
 			inputDto.setTrdProductDealAdd(baseTradeProductDealDto.getTrdProductDealAdd());
 
             if (是否处理持仓) {
-                List<PtlSecPositionFlowDto> ptlSecPositionFlowDtoss = assetPositionsCashCommServiceImpl.positionDeal(inputDto);
+                List<PtlSecPositionFlowDto> ptlSecPositionFlowDtoss = assetPositionsCashCommServiceImpl.positionDeal(inputDto);//组合持仓
                 if (持仓类型 == DictCodeList.持仓类型_实际 && ptlSecPositionFlowDtoss != null && !ptlSecPositionFlowDtoss.isEmpty()) {
                     //交易所品种头寸改造相关内容
                     addJiaoyisuoChuliForSec(ptlSecPositionFlowDtoss, inputDto);
@@ -808,7 +808,7 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
                 cashInputDto.setNotWorkflow(finProductTradeDto.isNotWorkflow());
                 // GNS-949:增加是否工作流数据标识 modify by fuyongsheng 20220227 end
                 if (是否处理持仓) {
-                    List<PtlCashPositionFlowDto> resultList = assetPositionsCashCommServiceImpl.cashDeal(cashInputDto);
+                    List<PtlCashPositionFlowDto> resultList = assetPositionsCashCommServiceImpl.cashDeal(cashInputDto);//现金处理详细
 //                    if (持仓类型 == DictCodeList.持仓类型_可用
 //                            && AllTradeCommonUtil.自动生成反向交易(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2(),
 //                            baseTradeProductDealDto.getTrdProductDeal().getPs(), baseTradeProductDealDto.getTrdProductDeal().getCounterId())) {
@@ -829,6 +829,7 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
                 }
                 baseTradeProductDealDto.setAssetType2(finProductTradeDto.getAssetType2());
                 baseTradeProductDealDto.setIsExistNew(finProductTradeDto.getIsExistNew());
+                //指令现金持仓共同处理
                 baseEtrCashPositionCommService.executeEtrCashPosition(baseTradeProductDealDto, 持仓类型, needNegative,finProductTradeDto.getIeFlag(),finProductTradeDto.getIsOverdueDeal());
 
 //                if (!DictCodeListExt1.交易流程状态_撤销.getValue().equals(finProductTradeDto.getWorkflowStatus()) && AllTradeCommonUtil.自动生成反向交易(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2(),

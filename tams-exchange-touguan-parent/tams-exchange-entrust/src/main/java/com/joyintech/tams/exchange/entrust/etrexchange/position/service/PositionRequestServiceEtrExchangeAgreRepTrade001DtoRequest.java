@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.JsonUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +31,8 @@ import com.joyintech.tams.invest.common.position.service.CommonPositionEngineSer
 @Service
 public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest {
 
+    private static final Logger log = LoggerFactory.getLogger(PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest.class);
+
     @Autowired
     private CommonPositionEngineService commonPositionEngineService;
 
@@ -37,6 +42,7 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest {
      * @param entity
      */
     public void send(EtrExchangeAgreRepTrade001Dto entity, String decisionAct, String systemAct) {
+        log.debug("send() called with parameters => 【entity = {}】, 【decisionAct = {}】, 【systemAct = {}】",JsonUtils.object2Json(entity), decisionAct, systemAct);
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("decisionAct", decisionAct);
         resultMap.put("systemAct", systemAct);
@@ -52,6 +58,7 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest {
      * @param entity
      */
     public void sendDelete(EtrExchangeAgreRepTrade001Dto entity) {
+        log.debug("sendDelete() called with parameters => 【entity = {}】", JsonUtils.object2Json(entity));
         String busiType = commonPositionEngineService.getPositionBusiType(entity.getFinprodType2(), entity.getPs(), entity.getAssetType2());
         PositionHttpRequest.doDeleteByWorkFlowId(entity.getWorkflowId(), PositionConstant.POSITION_TYPE_ETR, busiType, entity.getPs());
     }
@@ -62,8 +69,9 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest {
      * @param entity
      */
     public void sendRevoke(EtrExchangeAgreRepTrade003Dto entity) {
-        String busiType = commonPositionEngineService.getPositionBusiType(entity.getFinprodType2(), entity.getPs(), null);
-        PositionHttpRequest.dorevoke(entity.getEntrustId(), PositionConstant.POSITION_TYPE_TRD, busiType, entity.getPs());
+        return;
+//        String busiType = commonPositionEngineService.getPositionBusiType(entity.getFinprodType2(), entity.getPs(), null);
+//        PositionHttpRequest.dorevoke(entity.getEntrustId(), PositionConstant.POSITION_TYPE_TRD, busiType, entity.getPs());
     }
 
     /**
@@ -72,6 +80,7 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest {
      * @param entity
      */
     public void sendClose(EtrExchangeAgreRepTrade003Dto entity) {
+        log.debug("sendClose() called with parameters => 【entity = {}】", JsonUtils.object2Json(entity));
         String busiType = commonPositionEngineService.getPositionBusiType(entity.getFinprodType2(), entity.getPs(), null);
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("userId", SecurityUtil.getLoginUser().getUserName());

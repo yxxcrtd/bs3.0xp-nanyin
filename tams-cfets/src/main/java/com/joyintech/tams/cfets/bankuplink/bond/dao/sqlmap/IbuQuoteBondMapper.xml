@@ -1723,6 +1723,16 @@
         FROM
             REG_TRADE_FEE_TOTAL WHERE TRADE_ID  = #{totleTradeId}
     </select>
+
+    <select id="listWflRegTradeFeeTotal" resultType="com.joyintech.tams.common.base.entity.WflRegTradeFeeTotal">
+        SELECT
+            TRADE_ID TRADE_ID,
+            FEE_TYPE FEE_TYPE,
+            IS_PAY_WITH_TRADE IS_PAY_WITH_TRADE,
+            FEE_AMT FEE_AMT
+        FROM
+            WFL_REG_TRADE_FEE_TOTAL WHERE TRADE_ID  = #{totleTradeId}
+    </select>
     <select id="listRegFinProductDeal" resultType="com.joyintech.tams.common.base.entity.RegFinProductDeal">
         SELECT
             TRADE_ID TRADE_ID,
@@ -1784,6 +1794,68 @@
         FROM
             REG_FIN_PRODUCT_DEAL WHERE TOTLE_TRADE_ID  = #{totleTradeId}
     </select>
+
+    <select id="listWflRegFinProductDeal" resultType="com.joyintech.tams.common.base.entity.WflRegFinProductDeal">
+        SELECT
+            TRADE_ID TRADE_ID,
+            BUSI_TYPE BUSI_TYPE,
+            ENTRUST_ID ENTRUST_ID,
+            PORTFOLIO_ID PORTFOLIO_ID,
+            FINPROD_ID FINPROD_ID,
+            FINPROD_TYPE FINPROD_TYPE,
+            FINPROD_TYPE2 FINPROD_TYPE2,
+            BRANCH BRANCH,
+            MARKET_ID MARKET_ID,
+            PS PS,
+            TRADE_DATE TRADE_DATE,
+            OU_PARTY_ID OU_PARTY_ID,
+            OU_TRADER_ID OU_TRADER_ID,
+            COUNTER_ID COUNTER_ID,
+            COUNTER_TRADER COUNTER_TRADER,
+            CCY CCY,
+            SETTLE_SPEED SETTLE_SPEED,
+            SETTLE_DATE SETTLE_DATE,
+            UNIT_CPRICE UNIT_CPRICE,
+            YIELD YIELD,
+            EXER_YIELD EXER_YIELD,
+            UNIT_INT UNIT_INT,
+            UNIT_FPRICE UNIT_FPRICE,
+            PAR_VALUE PAR_VALUE,
+            CPRICE_AMT CPRICE_AMT,
+            INT_AMT INT_AMT,
+            FPRICE_AMT FPRICE_AMT,
+            SHARE_AMT SHARE_AMT,
+            DELIVERY_TYPE DELIVERY_TYPE,
+            M_DELIVERY_TYPE M_DELIVERY_TYPE,
+            TRADE_AMT TRADE_AMT,
+            CLEAR_TYPE CLEAR_TYPE,
+            SEC_MANAGE_ACCT_ID SEC_MANAGE_ACCT_ID,
+            ACCT_ID ACCT_ID,
+            INV_AIM INV_AIM,
+            TRADE_MARKET TRADE_MARKET,
+            TRADE_MARKET_MODE TRADE_MARKET_MODE,
+            RATE RATE,
+            REPO_TERM REPO_TERM,
+            TERM_TYPE TERM_TYPE,
+            FACE_VALUE FACE_VALUE,
+            DIS_FACE_VALUE DIS_FACE_VALUE,
+            REPO_TYPE REPO_TYPE,
+            V_SETTLE_DATE V_SETTLE_DATE,
+            M_SETTLE_DATE M_SETTLE_DATE,
+            ACT_REPO_TERM ACT_REPO_TERM,
+            M_INT_AMT M_INT_AMT,
+            M_TRADE_AMT M_TRADE_AMT,
+            TG_BUSI_TYPE TG_BUSI_TYPE,
+            TRADE_STATUS TRADE_STATUS,
+            P_TRADE_ID P_TRADE_ID,
+            IS_CANCEL IS_CANCEL,
+            IS_OUT_TRADE IS_OUT_TRADE,
+            F_TRADE_ID F_TRADE_ID,
+            TOTLE_TRADE_ID TOTLE_TRADE_ID,
+            REMARK REMARK
+        FROM
+            WFL_REG_FIN_PRODUCT_DEAL WHERE TOTLE_TRADE_ID  = #{totleTradeId}
+    </select>
     <select id="listRegFinProductDealAdd" resultType="com.joyintech.tams.common.base.entity.RegFinProductDealAdd">
         SELECT
             TRADE_ID TRADE_ID,
@@ -1799,6 +1871,22 @@
         FROM
             REG_FIN_PRODUCT_DEAL_ADD where exists (select 1 from REG_FIN_PRODUCT_DEAL where REG_FIN_PRODUCT_DEAL_ADD.TRADE_ID = REG_FIN_PRODUCT_DEAL.TRADE_ID and TOTLE_TRADE_ID  = #{totleTradeId})
     </select>
+
+    <select id="listWflRegFinProductDealAdd" resultType="com.joyintech.tams.common.base.entity.WflRegFinProductDealAdd">
+        SELECT
+            TRADE_ID TRADE_ID,
+            ACT_SETTE_DATE ACT_SETTE_DATE,
+            OUR_SHARE_AMT OUR_SHARE_AMT,
+            LENDIN_SHARE_AMT LENDIN_SHARE_AMT,
+            OUR_CPRICE_AMT OUR_CPRICE_AMT,
+            LENDIN_CPRICE_AMT LENDIN_CPRICE_AMT,
+            OUR_FPRICE_AMT OUR_FPRICE_AMT,
+            LENDIN_FPRICE_AMT LENDIN_FPRICE_AMT,
+            OUR_INT_AMT OUR_INT_AMT,
+            LENDIN_INT_AMT LENDIN_INT_AMT
+        FROM
+            WFL_REG_FIN_PRODUCT_DEAL_ADD where exists (select 1 from WFL_REG_FIN_PRODUCT_DEAL where WFL_REG_FIN_PRODUCT_DEAL_ADD.TRADE_ID = WFL_REG_FIN_PRODUCT_DEAL.TRADE_ID and TOTLE_TRADE_ID  = #{totleTradeId})
+    </select>
     <select id="listRegTradeFee" resultType="com.joyintech.tams.common.base.entity.RegTradeFee">
             SELECT
                 TRADE_ID TRADE_ID,
@@ -1808,6 +1896,39 @@
             FROM
                 REG_TRADE_FEE where exists (select 1 from REG_FIN_PRODUCT_DEAL where REG_FIN_PRODUCT_DEAL.TRADE_ID = REG_TRADE_FEE.TRADE_ID and TOTLE_TRADE_ID  = #{totleTradeId})
     </select>
+    <select id="listWflRegTradeFee" resultType="com.joyintech.tams.common.base.entity.WflRegTradeFee">
+            SELECT
+                TRADE_ID TRADE_ID,
+                FEE_TYPE FEE_TYPE,
+                IS_PAY_WITH_TRADE IS_PAY_WITH_TRADE,
+                FEE_AMT FEE_AMT
+            FROM
+                WFL_REG_TRADE_FEE where exists (select 1 from WFL_REG_FIN_PRODUCT_DEAL where WFL_REG_FIN_PRODUCT_DEAL.TRADE_ID = WFL_REG_TRADE_FEE.TRADE_ID and TOTLE_TRADE_ID  = #{totleTradeId})
+    </select>
+
+    <select id="listWflRegFinPledge" resultType="com.joyintech.tams.common.base.entity.WflRegFinPledge">
+        SELECT
+           trade_id,
+           entrust_id,
+           portfolio_id,
+           pledge_finprod_id,
+           pledge_face_value,
+           pledge_number,
+           pledge_ratio,
+           create_user,
+           create_dept,
+           create_time,
+           update_user,
+           update_time
+        FROM
+            WFL_REG_FIN_PLEDGE
+        where exists (
+            select 1
+            from WFL_REG_FIN_PRODUCT_DEAL
+            where WFL_REG_FIN_PLEDGE.TRADE_ID = WFL_REG_FIN_PRODUCT_DEAL.TRADE_ID and TOTLE_TRADE_ID  = #{totleTradeId})
+            or WFL_REG_FIN_PLEDGE.TRADE_ID = #{totleTradeId}/*逆回购时该字段为汇总编号*/
+    </select>
+
     <!--登记初始化 生效 撤销-->
     <select id="getCfetsBondDealQuoteCommonDto" resultType="com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealQuoteCommonDto">
         SELECT

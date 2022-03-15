@@ -1061,6 +1061,9 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
                     finProductTradeDto.setBussRepoSec(bussRepoSecService.selectBussRepoSec(initSearchParam));
                 }
                 cfetsTrdBondInvestTrade002Service.baseTradeCommExecute(finProductTradeDto);
+                if(StringUtil.equals(entity.getPs(),DictCodeList.回购拆借方向_逆回购.getValue())) {
+                    baseTradeProductDealCommService.execute(finProductTradeDto);
+                }
             }
 //        // 撤销委托/回购交易时，删除回购质押品信息
             if(StringUtil.isNotEmpty(entity.getBussRepoSec())){

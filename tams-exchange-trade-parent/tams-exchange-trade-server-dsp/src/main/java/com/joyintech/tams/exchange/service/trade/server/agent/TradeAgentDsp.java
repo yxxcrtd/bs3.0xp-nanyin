@@ -493,7 +493,8 @@ public abstract class TradeAgentDsp implements TradeAgent {
     public void compareReissueEntrust(String accountId, Map<String, EntrustInterface> entrustInterfaceMap, TradeAgent tradeAgent) {
         if (!reissueEntrustBeanMap.isEmpty()) {
             Map<String, ReissueEntrustBean> reissueEntrustBeanAccountMap = this.reissueEntrustBeanMap.get(accountId);
-            logger.info("开始比对委托信息 accountId {} entrustInterfaceMapByBroker {} reissueEntrustBeanMapCache {} reissueEntrustBeanAccountMap {}", accountId, entrustInterfaceMap.size(), reissueEntrustBeanMap.size(), reissueEntrustBeanAccountMap.size());
+            logger.info("开始比对委托信息 accountId {} entrustInterfaceMapByBroker {} reissueEntrustBeanMapCache {} reissueEntrustBeanAccountMap {}",
+                    accountId, entrustInterfaceMap.size(), reissueEntrustBeanMap.size(), reissueEntrustBeanAccountMap.size());
             reissueEntrustBeanAccountMap.forEach((s, reissueEntrustBean) -> {
                 if (!reissueEntrustBean.isBulk()) {
                     Entrust entrust = (Entrust) entrustInterfaceMap.get(s);
@@ -578,7 +579,8 @@ public abstract class TradeAgentDsp implements TradeAgent {
         boolean reissueEntrustSuccess = status == AccountLoginStatus.ENTRUST_REISSUING_SUCCESS.value;
         tradeAgent.setTradeStatus(accountId, AccountLoginStatus.TRADE_REISSUING);
         Map<String, ReissueTradeBean> reissueTradeBeanAccountMap = this.reissueTradeBeanMap.get(accountId);
-        logger.info("开始比对成交信息 accountId {} tradeListByBroker {} reissueTradeBeanMapCache {} reissueTradeBeanAccountMap {}", accountId, tradeList.size(), reissueTradeBeanMap.size(), reissueTradeBeanAccountMap.size());
+        logger.info("开始比对成交信息 accountId {} tradeListByBroker {} reissueTradeBeanMapCache {} reissueTradeBeanAccountMap {}",
+                accountId, tradeList.size(), reissueTradeBeanMap.size(), reissueTradeBeanAccountMap.size());
         tradeList.forEach(trade -> {
             ReissueTradeBean reissueTradeBean = reissueTradeBeanAccountMap.get(trade.getBrokerTradeId());
             if (Objects.isNull(reissueTradeBean)) {

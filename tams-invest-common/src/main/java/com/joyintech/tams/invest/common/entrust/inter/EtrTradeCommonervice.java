@@ -505,24 +505,6 @@ public class EtrTradeCommonervice extends BaseService {
         if (StringUtil.isNotEmpty(param.get("acctId"))){
             dto.setAcctId((String)param.get("acctId"));
         }
-        if (StringUtil.isNotEmpty(param.get("finprodId"))){
-            FinProduct finProduct = finProductMapper.selectByPrimaryKey((String)param.get("finprodId"));
-            List<String> holidayList = new ArrayList<>();
-            if (Objects.nonNull(finProduct)) {
-                holidayList = getDealCalendarHoliday(sysdate,DateUtil.addDay(sysdate, 15),finProduct.getCalendarId());
-            }
-            Date tradeDay = calculationTradingDay(DateUtil.parse(DateUtil.format(sysdate).toString()), 1, holidayList, "1");
-            param.put("sysDateT1", DateUtil.format(tradeDay));
-        }else {
-            String calId = (String)param.get("calId");
-            Date vdate = DateUtil.parse((String)param.get("vdate"));
-            if(StringUtil.isNotEmpty(calId)&&vdate!=null){
-                List<String> holidayList = getDealCalendarHoliday(DateUtil.parse(DateUtil.format(vdate)),DateUtil.addDay(DateUtil.parse(DateUtil.format(vdate)), 15),calId);
-                Date tradeDay = calculationTradingDay(DateUtil.parse(DateUtil.format(vdate)), 1, holidayList, "1");
-                param.put("sysDateT1",DateUtil.format(tradeDay));
-            }
-        }
-
         dto.setCdate(sysdate);
         List<String> acctTypeList = new ArrayList<>();
         acctTypeList.add(DictCodeListExt1.资金账户类型_产品托管户.getValue());
@@ -565,38 +547,6 @@ public class EtrTradeCommonervice extends BaseService {
                 //cashT = ArithmeticUtil.doAdd(cashT, cashT2);
             }
             result.put("cashT", cashT);// 组合T日可用
-
-            if (StringUtil.isNotEmpty(param.get("sysDateT1"))) {
-                PtlCashPositionFlowDto dto2 = new PtlCashPositionFlowDto();
-                Date sysdateT1 = DateUtil.parse((String)param.get("sysDateT1"));
-                dto2.setCdate(sysdateT1);
-                acctTypeList.clear();
-                acctTypeList.add(DictCodeListExt1.资金账户类型_券商资金账户.getValue());
-                acctTypeList.add(DictCodeListExt1.资金账户类型_产品托管户.getValue());
-                dto2.setAcctType(acctTypeList);
-                dto2.setPortfolioId((String)param.get("portfolioId"));
-                dto2.setCcy((String)param.get("ccy"));
-                BigDecimal cashT1 = baseEtrCashPositionCommService.qryCommandAvailableCash(dto2);
-                if (StringUtil.isNotEmpty(param.get("chlFinprodId"))) {
-                    FinProductAdd finProductAdd = finProductAddMapper.selectByPrimaryKey((String)param.get("chlFinprodId"));
-                    result.put("payType", "02");
-                    if (finProductAdd != null) {
-                        result.put("payType", finProductAdd.getPayType());
-                    }
-                    dto2.setAcctType(null);
-                    //组合T日可用现金不加通道可用现金
-                    dto2.setChlFinprodId((String)param.get("chlFinprodId"));
-                    BigDecimal cashT2 = baseEtrCashPositionCommService.qryCommandAvailableCash(dto2);
-                    result.put("cashT21", cashT2 == null ? BigDecimal.ZERO : cashT2);// 通道T+1可用
-                }
-                result.put("cashT1", cashT1 == null ? result.get("cashT") : cashT1);// 组合T+1日可用
-
-                acctTypeList.clear();
-                acctTypeList.add(DictCodeListExt1.资金账户类型_产品托管户.getValue());
-                BigDecimal cashTT1 = baseEtrCashPositionCommService.qryCommandAvailableCash(dto2);//组合托管户T+1可用
-                result.put("cashTT1", cashTT1 == null ? BigDecimal.ZERO : cashTT1);// 组合托管户T+1可用
-
-            }
         }
 
         return result;
@@ -656,6 +606,42 @@ public class EtrTradeCommonervice extends BaseService {
             }
         }
         return afterAdjustDate;
+    }
+    //可用现金头寸
+    public BigDecimal selectAccAvailableCash(PositionCashSecDto dto){
+        BigDecimal cashT = BigDecimal.ZERO; // 指令t日可用
+        String calId = StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())?DictCodeList.交易日历_上海交易所日历.getValue():DictCodeList.交易日历_深圳交易所日历.getValue();
+        BaseMap paramMap = BaseMap.newMap()
+                .put("finprodId", dto.getFinprodId())
+                .put("portfolioId", dto.getPortfolioId())
+                .put("ccy", DictCodeList.币种_人民币_CNY.getValue())
+                .put("vdate", dto.getCdate())
+                .put("calId", calId)
+                .put("acctId",dto.getAcctId())
+                ;
+        Map<String, Object> mapRst =getProAvailableCashExchange(paramMap);
+        if (mapRst != null){ // 指令t日可用，指令t1日可用
+            cashT = ArithmeticUtil.doAdd(cashT, BaseMap.newMap(mapRst).getBigDecimal("cashT"));
+        }
+        //头寸引擎
+        List<PositionCashSecDto> sumAcctNoList = new ArrayList<>();
+        sumAcctNoList.add(dto);
+        BigDecimal newCashAmount = queryPosition(sumAcctNoList, "etr", BussinessDictCodeList.持仓类型_可用.getValue());
+        if (newCashAmount != null) {
+            cashT = cashT.add(newCashAmount);
+        }
+        return cashT;
+    }
+
+    //持仓
+    public BigDecimal selectAvailableNum(PositionCashSecDto dto){
+        BigDecimal canSec = BigDecimal.ZERO; // 可用持仓
+        List<PositionCashSecDto> secList=new ArrayList<>();
+        BigDecimal newSecAmount=queryPosition(secList,"03", dto.getHoldingType());
+        if(newSecAmount!=null){
+            canSec=canSec.add(newSecAmount);
+        }
+        return canSec;
     }
 
 

@@ -27,4 +27,41 @@
         </if>
     </select>
 
+    <select id="selectEtrSecPositionFlow" resultMap="com.joyintech.tams.common.base.dao.EtrSecPositionFlowMapper.BaseResultMap">
+        SELECT
+        <include refid="com.joyintech.tams.common.base.dao.EtrSecPositionFlowMapper.Base_Column_List"></include>
+        FROM
+        ETR_SEC_POSITION_FLOW
+        WHERE
+        TRADE_ID = #{bizCode}
+        AND TRADE_ID != FINPROD_ID
+        AND HODING_TYPE IN (#{POSITION_TYPE_ROLLIN}, #{POSITION_TYPE_ROLLOUT})
+    </select>
+
+    <update id="updatePosition" parameterType="com.joyintech.tams.common.base.entity.EtrSecPosition" >
+		update ETR_SEC_POSITION
+		set AMOUNT = AMOUNT - #{amount,jdbcType=DECIMAL}
+		where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+		  and SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR}
+		  and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+		  and BRANCH = #{branch,jdbcType=DECIMAL}
+		  and INV_AIM = #{invAim,jdbcType=VARCHAR}
+		  and HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
+		  and CDATE = #{cdate,jdbcType=DATE}
+	</update>
+
+    <select id="selectOldTradeId" resultType="java.lang.String">
+        select distinct regDeal.TRADE_ID
+        from REG_FIN_PRODUCT_DEAL regDeal
+        <where>
+            regDeal.IS_CANCEL = 'N' and regDeal.TRADE_STATUS != '03'
+            <if test="entrustIdList!=null and entrustIdList.size()>0">
+                and regDeal.ENTRUST_ID in
+                <foreach collection="entrustIdList" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
 </mapper>
