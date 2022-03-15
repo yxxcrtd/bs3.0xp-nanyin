@@ -1015,9 +1015,20 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 			dto.setBusinessTypeName(SysDataUtil.getNameFromDataDict(DictCode.共通业务类型, businessType));
 			if (StringUtil.equals("save", dto.getOperateType())) {  //保存没有check和任何限制
 				if(!CollectionUtils.isEmpty(dto.getPortfolioList())){
-					Map<String,List<EtrExchangeTradePortfolioRequest>> groupMap= dto.getPortfolioList().stream().collect(
-							Collectors.groupingBy(item->item.getAcctNo()));			//如果分组Map，key的数量>1,说明是多组合指令，key的数量=1,则为系列户指令
-					if(groupMap.keySet().size() == 1 && dto.getPortfolioList().size()>1) {
+					boolean flag=false;
+					for(EtrExchangeTradePortfolioRequest temp:dto.getPortfolioList()){
+						if(!StringUtil.isNotEmpty(temp.getAcctNo())){
+							flag=true;
+							break;
+						}
+					}
+					Map<String,List<EtrExchangeTradePortfolioRequest>> groupMap=null;
+					if(!flag){
+						groupMap= dto.getPortfolioList().stream().collect(
+								Collectors.groupingBy(item->item.getAcctNo()));
+					}
+							//如果分组Map，key的数量>1,说明是多组合指令，key的数量=1,则为系列户指令
+					if(groupMap!=null&&groupMap.keySet().size() == 1 && dto.getPortfolioList().size()>1) {
 						//业务编号生成规则参数
 						if (!StringUtil.isNotEmpty(dto.getEntrustId())) {
 							BussinessCodeParameter param = etrExchangeTrade001CommonService.genBussinessCodeParameter(dto);
