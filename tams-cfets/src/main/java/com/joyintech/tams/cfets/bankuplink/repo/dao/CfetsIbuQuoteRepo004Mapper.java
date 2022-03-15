@@ -1,9 +1,13 @@
 package com.joyintech.tams.cfets.bankuplink.repo.dao;
 
+import com.joyintech.tams.common.base.entity.EtrSecPosition;
+import com.joyintech.tams.common.base.entity.EtrSecPositionFlow;
+import com.joyintech.tams.common.base.entity.PtlSecPositionFlow;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 本币交易-质押式回购交易 Mapper
@@ -18,4 +22,10 @@ public interface CfetsIbuQuoteRepo004Mapper {
     String findTraderByCounterId(@Param("counterId") String counterId);
 
     int getIsExistCounterId(@Param("entrustIdList") List<String> entrustIdList);
+
+    List<EtrSecPositionFlow> selectEtrSecPositionFlow(Map<String,Object> param);
+
+    int updatePosition(EtrSecPosition etrSecPosition);
+
+    List<String> selectOldTradeId(@Param("entrustIdList") List<String> entrustIdList);
 }

@@ -73,6 +73,7 @@ import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.common.trade.service.PreTrdCommonBaseService;
+import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.invest.common.util.ValItemValueGenUtil;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.interf.service.InterfComponentService;
@@ -547,6 +548,17 @@ public class CfetsTrdConfirm001Service extends BaseService{
             List<String> finishList=baseTradeCommExecute(finProductTradeDto,"repo");
             if(!StringUtil.isEmptyList(finishList)){
                 finishEtrList.addAll(finishList);
+            }
+            if (StringUtil.equals(entity.getPs(), DictCodeList.回购拆借方向_逆回购.getValue())) {
+                FinProductTradeDto finProductTradeDtoTemp = new FinProductTradeDto();
+                BeanUtil.copyPropertiesIgnoreNull(finProductTradeDtoTemp, finProductTradeDto);
+                finProductTradeDtoTemp.setAssetType2(DictCodeList.回购类型_质押式回购.getValue());
+                finProductTradeDtoTemp.setIsExistNew(DictCodeList.是否_是.getValue());
+                if (StringUtil.isEmpty(finProductTradeDtoTemp.getBaseTradeProductDealDtos().get(0).getStlPayOrdersList().get(0).getMyAcctNo())) {
+                    String acctId = EtrCommonCashPositionDealService.select组合托管户(trdProductDeal.getPortfolioId(), trdProductDeal.getCcy(), DictCodeListExt1.资金账户类型_产品托管户.getValue());
+                    finProductTradeDtoTemp.getBaseTradeProductDealDtos().get(0).getStlPayOrdersList().get(0).setMyAcctNo(acctId);
+                }
+                baseTradeProductDealCommService.execute(finProductTradeDtoTemp);
             }
 
         }

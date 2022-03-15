@@ -1,10 +1,7 @@
 package com.joyintech.tams.cfets.bankuplink.bond.dao;
 
 import com.joyintech.tams.cfets.bankuplink.bond.dto.*;
-import com.joyintech.tams.common.base.entity.RegFinProductDeal;
-import com.joyintech.tams.common.base.entity.RegFinProductDealAdd;
-import com.joyintech.tams.common.base.entity.RegTradeFee;
-import com.joyintech.tams.common.base.entity.RegTradeFeeTotal;
+import com.joyintech.tams.common.base.entity.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -64,11 +61,21 @@ public interface CfetsIbuQuoteBondMapper {
 
     List<RegTradeFeeTotal> listRegTradeFeeTotal(@Param("totleTradeId") String totleTradeId);
 
+    List<WflRegTradeFeeTotal> listWflRegTradeFeeTotal(@Param("totleTradeId") String totleTradeId);
+
     List<RegFinProductDeal> listRegFinProductDeal(@Param("totleTradeId") String totleTradeId);
+
+    List<WflRegFinProductDeal> listWflRegFinProductDeal(@Param("totleTradeId") String totleTradeId);
 
     List<RegFinProductDealAdd> listRegFinProductDealAdd(@Param("totleTradeId") String totleTradeId);
 
+    List<WflRegFinProductDealAdd> listWflRegFinProductDealAdd(@Param("totleTradeId") String totleTradeId);
+
     List<RegTradeFee> listRegTradeFee(@Param("totleTradeId") String totleTradeId);
+
+    List<WflRegTradeFee> listWflRegTradeFee(@Param("totleTradeId") String totleTradeId);
+
+    List<WflRegFinPledge> listWflRegFinPledge(@Param("totleTradeId") String totleTradeId);
 
     CfetsBondDealQuoteCommonDto getCfetsBondDealQuoteCommonDto(@Param("quoteId") String quoteId);
 

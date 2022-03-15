@@ -9,6 +9,7 @@ import com.joyintech.tams.common.base.entity.TrdBankManualSettleInfo;
 import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
 import com.joyintech.tams.common.base.entity.User;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
+import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -73,6 +74,22 @@ public interface CfetsManualSettleMapper {
      * @return List<CfetsManualSettleDealInfo>
      */
     List<CfetsManualSettleDealInfo> getDealDetailsByTradeId(@Param("tradeId") String tradeId);
+
+    /**
+     * 划款指令查询
+     *
+     * @param tradeId 参数
+     * @return List<StlPayOrdersDto>
+     */
+    List<StlPayOrdersDto> getStlPayOrdersByTradeId(@Param("tradeId") String tradeId);
+
+    /**
+     * 成交确认明细查询
+     *
+     * @param tradeId 参数
+     * @return String
+     */
+    String qryEntrustId(@Param("tradeId") String tradeId);
 
     /**
      * 成交确认明细查询(临时表查询)

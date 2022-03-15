@@ -2016,7 +2016,7 @@
                     MCCI2.PARTY_ABBR       ouPartyName,
                     case when RFPDT.QUOTE_TYPE = '05' then SDL.ITEM_VALUE else MSCP.COUNTER_NAME end     cpPartyName,
                     MSCP.PARTY_ID          partyId,
-                    NVL(SUA.IBU_TRADER, SU.REAL_NAME) ouTraderName,
+                    NVL(SU.REAL_NAME,SUA.IBU_TRADER) ouTraderName,
                     case when MCCT.TRADER_NAME is not null then MCCT.TRADER_NAME
                       else RFPDT.COUNTER_TRADER  end  cpTraderName,
                     RFPDT.SETTLE_SPEED     settleSpeed/*清算速度*/,
@@ -2087,7 +2087,7 @@
                 MCCI2.PARTY_ABBR       ouPartyName,
                 case when RFPDT.QUOTE_TYPE = '05' then SDL.ITEM_VALUE else MSCP.COUNTER_NAME end     cpPartyName,
                 MSCP.PARTY_ID          partyId,
-                NVL(SUA.IBU_TRADER, SU.REAL_NAME) ouTraderName,
+                NVL(SU.REAL_NAME,SUA.IBU_TRADER) ouTraderName,
                 case when MCCT.TRADER_NAME is not null then MCCT.TRADER_NAME
                     else RFPDT.COUNTER_TRADER  end  cpTraderName,
                 RFPDT.SETTLE_SPEED     settleSpeed/*清算速度*/,

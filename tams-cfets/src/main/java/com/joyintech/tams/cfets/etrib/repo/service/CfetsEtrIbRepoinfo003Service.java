@@ -871,7 +871,7 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
      * @date 2022/2/24 9:46
      */
     private void olePositionDeal(CfetsEtribRepoInfo003Dto entity) {
-        if (DictCodeListExt1.回购方向_逆回购.getValue().equals(entity.getPs())
+        if (DictCodeList.回购拆借方向_逆回购.getValue().equals(entity.getPs())
                 && StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
             List<EntrustCommonDto> entrustCommonDtos = this.getEtrExecuteEntity(entity);
             for (EntrustCommonDto entrustCommonDto : entrustCommonDtos) {
