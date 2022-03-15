@@ -657,7 +657,8 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
             balanceCheck = "N";
         }
         resultMap.put("userId", SecurityUtil.getLoginUser() != null ? SecurityUtil.getLoginUser().getUserName() : "system");
-        resultMap.put("totalTradeId", entity.getEntrustId());
+        // resultMap.put("totalTradeId", entity.getEntrustId());
+        resultMap.put("totalTradeId", entity.getTrdProductDeal().getTradeId());
         resultMap.put("balanceCheck", balanceCheck);
         resultMap.put("flowStatus", DictCodeListExt3.流程节点_流程提交.getValue());
         resultMap.put("modelType", DictCodeListExt1.子系统代码_委托.getValue());
