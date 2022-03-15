@@ -248,7 +248,9 @@ public class CommonPositionEngineService {
         }
         if ((DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(finprodType2) || DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(finprodType2))
                 && DictCodeList.回购类型_质押式协议回购.getValue().equals(assetType2)) {
-            if (DictCodeListExt3.交易方向_首期.getValue().equals(ps)) {
+        	if (DictCodeListExt3.交易方向_首期.getValue().equals(ps) 
+            		|| DictCodeListExt3.交易方向_正回购.getValue().equals(ps) 
+            		|| DictCodeListExt3.交易方向_逆回购.getValue().equals(ps) ) {
                 busiType = DictCodeListExt3.头寸业务类型_协议回购首期.getValue();
             } else if (DictCodeListExt3.交易方向_提前购回.getValue().equals(ps)) {
                 busiType = DictCodeListExt3.头寸业务类型_协议回购提前购回.getValue();
