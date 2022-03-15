@@ -102,9 +102,11 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
      * @param entity
      */
     public void sendRevoke(EtrExchangeTradeOperateRequest entity) {
-        log.info("sendRevoke() called with parameters => 【entity = {}】", JsonUtils.object2Json(entity));
-        String busiType = commonPositionEngineService.getPositionBusiType(entity.getFinprodType2(), entity.getPs(), null);
-        PositionHttpRequest.dorevoke(entity.getEntrustId(), POSITION_TYPE_TRD, busiType, entity.getPs());
+        // 撤回不调用头寸
+        return;
+//        log.info("sendRevoke() called with parameters => 【entity = {}】", JsonUtils.object2Json(entity));
+//        String busiType = commonPositionEngineService.getPositionBusiType(entity.getFinprodType2(), entity.getPs(), null);
+//        PositionHttpRequest.dorevoke(entity.getEntrustId(), POSITION_TYPE_TRD, busiType, entity.getPs());
     }
 
     /**
