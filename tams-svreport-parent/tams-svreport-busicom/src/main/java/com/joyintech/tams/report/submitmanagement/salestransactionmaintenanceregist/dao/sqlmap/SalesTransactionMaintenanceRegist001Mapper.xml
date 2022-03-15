@@ -30,10 +30,6 @@
 		a.UPDATE_TIME
 		FROM
 		CHB_SALER_STL_DEAL_SUB a
-		LEFT JOIN
-		CHB_SUBMIT_STATUS status
-		ON
-		a.SUMIT_SEQ = status.seqno
 		where 1=1
 			<if test="submitFeedbackStatus != null and submitFeedbackStatus != ''">
 				and a.SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus}
@@ -348,10 +344,6 @@
 		sub.UPDATE_TIME
 		FROM
 		CHB_SALER_STL_DEAL_SUB sub
-		LEFT JOIN
-		CHB_SUBMIT_STATUS status
-		ON
-		a.SUMIT_SEQ = status.seqno
     	<where>
 		   	<if test="registList!=null and registList.size()!=0">
 			 	<foreach collection="registList" item="regist" open=" (" close=")" separator=") or (">
@@ -379,9 +371,9 @@
 		</where>
 	</select>
 
-    <update id="updateSubmitStatusToOk" parameterType="java.util.List">
+    <!--<update id="updateSubmitStatusToOk" parameterType="java.util.List">
         update CHB_SUBMIT_STATUS subStatus
-        <set> 
+        <set>
             subStatus.SUBMIT_FEEDBACK_STATUS = '03'
         </set>
         <where>
@@ -389,7 +381,7 @@
                 subStatus.SEQNO = #{item,jdbcType=VARCHAR}
             </foreach>
         </where>
-    </update>
+    </update>-->
 
 	<select id= "isNotSubmitP" resultType="java.lang.Integer">
     SELECT count(1)
@@ -427,10 +419,6 @@
 		a.UPDATE_TIME
 		FROM
 		CHB_SALER_STL_DEAL_SUB a
-		LEFT JOIN
-		CHB_SUBMIT_STATUS status
-		ON
-		a.SUMIT_SEQ = status.seqno
 		where 1=1
 		<if test="submitFeedbackStatus != null and submitFeedbackStatus != ''">
 			and a.SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus}
