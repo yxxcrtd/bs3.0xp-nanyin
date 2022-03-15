@@ -1298,13 +1298,15 @@ public class TrdCommonBaseService extends BaseService {
                     ratio = ArithmeticUtil.divide(etrEntrustDetail.getEntrustAmt(), etrEntrust.getEntrustAmt(), 8, RoundingMode.HALF_UP);
                 }
                 // 券面总额
-                portfolioDto.setSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt(), ratio));
+                portfolioDto.setSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt(), new BigDecimal(100), ratio));
                 // 本方券面总额
                 portfolioDto.setOwnSecAmount(portfolioDto.getSecAmount());
                 // 交易金额
                 portfolioDto.setCashAmount(ArithmeticUtil.multiply(infContractDetailfile.getTradeAmt(), ratio));
                 // 下单券面总额
                 portfolioDto.setOrdSecAmount(ArithmeticUtil.multiply(orderInfoDto.getEntrustVolume(), new BigDecimal(100), ratio));
+                // 标准券券面总额
+                portfolioDto.setStandardSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt(), new BigDecimal(100), ratio));
                 portfolioDtos.add(portfolioDto);
             }
         }else{ // 单组合指令
@@ -1322,11 +1324,13 @@ public class TrdCommonBaseService extends BaseService {
             // 下单券面总额
             portfolioDto.setOrdSecAmount(ArithmeticUtil.multiply(orderInfoDto.getEntrustVolume(), new BigDecimal(100)));
             // 券面总额
-            portfolioDto.setSecAmount(infContractDetailfile.getShareAmt());
+            portfolioDto.setSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt(), new BigDecimal(100)));
             // 本方券面总额
-            portfolioDto.setOwnSecAmount(infContractDetailfile.getShareAmt());
+            portfolioDto.setOwnSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt(), new BigDecimal(100)));
             // 交易金额
             portfolioDto.setCashAmount(infContractDetailfile.getTradeAmt());
+            // 标准券券面总额
+            portfolioDto.setStandardSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt(), new BigDecimal(100)));
             portfolioDtos.add(portfolioDto);
         }
         return portfolioDtos;

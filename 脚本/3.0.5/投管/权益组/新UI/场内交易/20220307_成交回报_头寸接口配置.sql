@@ -28,6 +28,6 @@ VALUES ('TRD_TRADE_REPORT', 'F01', 'T68', '17', 'TRD', 'com.joyintech.service.tr
 INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE, ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, REMARK, ENABLE) 
 VALUES ('TRD_TRADE_REPORT', 'F01', 'T69', '17', 'TRD', 'com.joyintech.service.trade.entrustmsgbymq.dto.TrdTempDto', 'REPO003', 'system', null, sysdate, 'system', sysdate, '场内质押式通用回购接口-成交回报-出库', 'Y');
 INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE, ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, REMARK, ENABLE) 
-VALUES ('TRD_TRADE_REPORT', 'F02', '03', '17', 'TRD', 'com.joyintech.service.trade.entrustmsgbymq.dto.TrdTempDto', 'REPO003', 'system', null, sysdate, 'system', sysdate, '场内质押式通用回购接口-成交回报-首期', 'Y');
+VALUES ('TRD_TRADE_REPORT', 'F02-H02', '03', '17', 'TRD', 'com.joyintech.service.trade.entrustmsgbymq.dto.TrdTempDto', 'REPO003', 'system', null, sysdate, 'system', sysdate, '场内质押式通用回购接口-正回购-成交回报-首期', 'Y');
 INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE, ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, REMARK, ENABLE) 
-VALUES ('TRD_TRADE_REPORT', 'F03', '04', '17', 'TRD', 'com.joyintech.service.trade.entrustmsgbymq.dto.TrdTempDto', 'REPO003', 'system', null, sysdate, 'system', sysdate, '场内质押式通用回购接口-成交回报-首期', 'Y');
+VALUES ('TRD_TRADE_REPORT', 'F03-H02', '04', '17', 'TRD', 'com.joyintech.service.trade.entrustmsgbymq.dto.TrdTempDto', 'REPO003', 'system', null, sysdate, 'system', sysdate, '场内质押式通用回购接口-逆回购-成交回报-首期', 'Y');

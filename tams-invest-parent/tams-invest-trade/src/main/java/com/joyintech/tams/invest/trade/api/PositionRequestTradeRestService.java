@@ -57,6 +57,8 @@ public class PositionRequestTradeRestService {
 
     public static final String TRADE_PLAT = "TRANS_MATCH";
 
+    public static final String STANDAR_SEC_ID = "XN_PRODID999";
+
     /**
      * 发送交易Rest头寸请求
      * @param finProductTradeDto
@@ -345,7 +347,8 @@ public class PositionRequestTradeRestService {
         plt.put("tradeId", trdProductDeal.getTradeId());
         plt.put("etrId", null);
         plt.put("ordEntrustId", null);
-        plt.put("standardSecAmount", null);
+        plt.put("standardSecId", STANDAR_SEC_ID);
+        plt.put("standardSecAmount", trdProductDeal.getPrinAmt());
         plt.put("cashAmount", trdProductDeal.getTradeAmt());
         ptlList.add(plt);
         resultMap.put("ptlList", ptlList);

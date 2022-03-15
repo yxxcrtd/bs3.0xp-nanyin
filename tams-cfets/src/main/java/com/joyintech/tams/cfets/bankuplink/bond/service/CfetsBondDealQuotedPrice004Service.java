@@ -281,10 +281,10 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                 if(ptlAllocatio.getAvaNum().compareTo(ptlAllocatio.getShareAmt())<0){
                     errorList.add(new ValidMessage("登记指令剩余额度不能小于券面总额！"));
                 }
-                if(null!=ptlAllocatio.getShareAmt()){
-                    BigDecimal wflShareAmtByEntrustId = cfetsQuotedCommonService.getWflShareAmtByEntrustId(ptlAllocatio.getEntrustId());
-                    if(null!=wflShareAmtByEntrustId&&wflShareAmtByEntrustId.compareTo(BigDecimal.ZERO)>0&&ArithmeticUtil.doAdd(ptlAllocatio.getShareAmt(),wflShareAmtByEntrustId).compareTo(ptlAllocatio.getAvaNum())>0){
-                        errorList.add(new ValidMessage(StringUtil.join("组合分配券面总额不能超过指令剩余额度!流程中占用额度:",wflShareAmtByEntrustId.toString(),"元,指令代码:",ptlAllocatio.getEntrustId())));
+                if(null != ptlAllocatio.getShareAmt()) {
+                    BigDecimal wflShareAmt = cfetsQuotedCommonService.getWflShareAmtByEntrustId(ptlAllocatio.getEntrustId(),entity.getWorkflowId());
+                    if(null != wflShareAmt && wflShareAmt.compareTo(BigDecimal.ZERO) > 0 && ArithmeticUtil.doAdd(ptlAllocatio.getShareAmt(),wflShareAmt).compareTo(ptlAllocatio.getAvaNum()) > 0){
+                        errorList.add(new ValidMessage(StringUtil.join("组合分配券面总额不能超过指令剩余额度!流程中占用额度:",wflShareAmt.toString(),"元,指令代码:",ptlAllocatio.getEntrustId())));
                     }
                 }
                 shareAmtTotal = ArithmeticUtil.doAdd(shareAmtTotal,ptlAllocatio.getShareAmt());
