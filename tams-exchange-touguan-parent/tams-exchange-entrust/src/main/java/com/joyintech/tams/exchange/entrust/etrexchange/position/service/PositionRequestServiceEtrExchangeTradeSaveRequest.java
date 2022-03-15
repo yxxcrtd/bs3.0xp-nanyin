@@ -239,7 +239,8 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
             List<Map<String, Object>> bondSecList = new ArrayList<>(portfolioListSize);
             for (EtrExchangeTradePortfolioRequest item : entity.getPortfolioList()) {
                 bean = new PositionRequestBaseBean(item);
-                bean.setSecAmount(commonPositionEngineService.getSecAmountByBondUnit(item.getEntrustNum()));
+                BigDecimal secAmount = commonPositionEngineService.getSecAmountByBondUnit(item.getEntrustNum());
+                bean.setSecAmount(secAmount);
                 bean.setCashAmount(BigDecimal.ZERO);
 
                 Map<String, Object> map = BeanUtil.object2Map(bean);
@@ -247,7 +248,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
                 map.put(INTEGRATE_SEC_AMOUNT, 0);
                 //本方券券面总额
                 if (交易方向_行权_回售.getValue().equals(ps)) {
-                    map.put(OWN_SEC_AMOUNT, bean.getSecAmount());
+                    map.put(OWN_SEC_AMOUNT, secAmount);
                 } else {
                     map.put(OWN_SEC_AMOUNT, 0);
                 }
@@ -356,11 +357,12 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
                     bean = new PositionRequestBaseBean(item);
                     // 券面总额 指令.指令数量*100
                     bean.setCashAmount(null);
-                    bean.setSecAmount(bean.getSecAmount().multiply(BigDecimal.valueOf(100)));
+                    BigDecimal secAmount = bean.getSecAmount().multiply(BigDecimal.valueOf(100));
+                    bean.setSecAmount(secAmount);
 
                     Map<String, Object> map = BeanUtil.object2Map(bean);
                     map.put(INTEGRATE_SEC_AMOUNT, 0);
-                    map.put(OWN_SEC_AMOUNT, bean.getSecAmount());
+                    map.put(OWN_SEC_AMOUNT, secAmount);
 
                     ptlSecList.add(map);
                 }
