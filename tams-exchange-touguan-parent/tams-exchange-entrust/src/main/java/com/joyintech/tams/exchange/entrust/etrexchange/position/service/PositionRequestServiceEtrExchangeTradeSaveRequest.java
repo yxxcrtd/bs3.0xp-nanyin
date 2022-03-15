@@ -471,6 +471,10 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
             resultMap.put(CCY, DictCodeList.币种_人民币_CNY.getValue());
         }
         // 前次交易编号
-        resultMap.put(B_TOTAL_TRADE_ID, null);
+        if (数据状态_修改中.getValue().equals(entity.getStatus())) {
+            resultMap.put(B_TOTAL_TRADE_ID, entity.getEntrustId());
+        } else {
+            resultMap.put(B_TOTAL_TRADE_ID, null);
+        }
     }
 }
