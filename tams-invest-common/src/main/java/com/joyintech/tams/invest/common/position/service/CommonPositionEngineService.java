@@ -190,6 +190,9 @@ public class CommonPositionEngineService {
     }
 
     public BigDecimal multiplyWithOneHundred(BigDecimal value) {
+        if (Objects.isNull(value)) {
+            return BigDecimal.ZERO;
+        }
         return BigDecimal.valueOf(100L).multiply(value);
     }
 
