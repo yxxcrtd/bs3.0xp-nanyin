@@ -513,8 +513,8 @@ public class PositionRequestServiceInstructionRequest {
             for (PortfolioCalculateResponse item : calculates) {
                 bean = new PositionRequestBaseBean(entity);
                 bean.setPortfolioId(item.getPortfolioId());
-                bean.setTradeId(entity.getEntrustId());
-                bean.setEtrId(null);
+                bean.setTradeId(entity.getEntrustNo());
+                bean.setEtrId(entity.getEntrustId());
                 bean.setCashAmount(item.getEntrustAmt());
                 bean.setSecAmount(BigDecimal.valueOf(item.getEntrustNum()));
 
