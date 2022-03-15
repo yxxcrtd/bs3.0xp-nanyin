@@ -444,6 +444,11 @@
                     OR replace(TO_CHAR(t.entrustDate,'yyyy-MM-dd'),'-','/')=#{search}
                     OR replace(TO_CHAR(t.entrustDate,'yyyy-MM-dd'),'-','/')=#{year}||'/'||#{search}
                     OR t.transmitTimeSer = #{search}
+                    <if test="declaTypeList != null and declaTypeList.size()>0">
+                        <foreach collection="declaTypeList" open="or t.priceModel in(" close=")" separator="," item="item">
+                            #{item}
+                        </foreach>
+                    </if>
                 )
         </if>
             AND t.tradeMarket in ('03','04','12')
