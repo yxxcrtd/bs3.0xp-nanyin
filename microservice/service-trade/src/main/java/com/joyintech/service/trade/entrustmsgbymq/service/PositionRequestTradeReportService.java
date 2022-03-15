@@ -474,7 +474,8 @@ public class PositionRequestTradeReportService {
     private void setCommonField(TrdTempDto entity, Map<String, Object> resultMap) {
         resultMap.put("userId", LoginUserUtil.getUserName());
         resultMap.put("totalTradeId", entity.getTradeId());
-        resultMap.put("balanceCheck", "Y");
+        // resultMap.put("balanceCheck", "Y");
+        resultMap.put("balanceCheck", "N");
         resultMap.put("flowStatus", DictCodeListExt3.流程节点_审批生效.getValue());
         resultMap.put("modelType", DictCodeListExt1.子系统代码_交易.getValue());
     }
