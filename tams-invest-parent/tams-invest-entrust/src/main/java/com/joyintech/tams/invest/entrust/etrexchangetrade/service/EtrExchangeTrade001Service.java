@@ -1280,6 +1280,7 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 		// rs == 0 entrustNum等于0 例如：entrustNum = 0.00
 		// rs == 1 entrustNum大于0 例如：entrustNum = 10.00
 		if (StringUtil.equals(targetType, DictCodeListExt3.目标类型_数量.getValue())) {
+			entrustPrice = StringUtil.isNotEmpty(entrustPrice)?entrustPrice.setScale(2,RoundingMode.HALF_UP):null;
 			entrustAmt = ArithmeticUtil.multiply(entrustNum, entrustPrice);
 			if(StringUtils.equals(DictCodeListExt3.交易方向_质押券入库.getValue(), ps) ||
 					StringUtils.equals(DictCodeListExt3.交易方向_质押券出库.getValue(), ps)){

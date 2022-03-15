@@ -145,7 +145,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
         resultMap.put(BUSI_ACT, 业务动作_投资指令.getValue());
         resultMap.put(DELIVERY_TYPE, commonPositionEngineService.getDeliveryType(entity.getFinprodId()));
         resultMap.put(SETTLE_SPEED, commonPositionEngineService.parseSettleSpreed((String) resultMap.get(DELIVERY_TYPE)));
-        resultMap.put(BID_RESULT, 是否_否.getValue());
+        resultMap.put(BID_RESULT, DictCodeList.是否_否.getValue());
         resultMap.put(PURCH_MODLE, null);
         resultMap.put(FINPROD_ID, entity.getFinprodId());
 
@@ -279,7 +279,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
         resultMap.put(SETTLE_SPEED, null);
         resultMap.put(DELIVERY_TYPE, null);
         // 当日回转
-        resultMap.put(SAME_DAY_TURN, 是否_否.getValue());
+        resultMap.put(SAME_DAY_TURN, DictCodeList.是否_否.getValue());
         // ETF申赎方式
         resultMap.put(ETFREDEMPTION_METHOD, null);
 
@@ -471,7 +471,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
             resultMap.put(CCY, DictCodeList.币种_人民币_CNY.getValue());
         }
         // 前次交易编号
-        if (数据状态_修改中.getValue().equals(entity.getStatus())) {
+        if (DictCodeList.数据状态_修改中.getValue().equals(entity.getStatus())) {
             resultMap.put(B_TOTAL_TRADE_ID, entity.getEntrustId());
         } else {
             resultMap.put(B_TOTAL_TRADE_ID, null);

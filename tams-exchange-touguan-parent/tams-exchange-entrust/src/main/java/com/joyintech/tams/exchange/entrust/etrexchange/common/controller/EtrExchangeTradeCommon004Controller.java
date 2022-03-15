@@ -22,6 +22,7 @@ import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
+import com.joyintech.tams.component.business.common.service.BasRiskMathCommService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
@@ -102,6 +103,9 @@ public class EtrExchangeTradeCommon004Controller extends BaseController{
     @Autowired
     private EtrExchangeTradeCommonMapper etrExchangeTradeCommonMapper;
 
+    @Autowired
+    private BasRiskMathCommService basRiskMathCommService;
+
     @Override
     public String init(Model model) {
         this.setSelectOptionToModel(model, DictCode.交易方向, DictCode.交易场所, DictCode.目标类型, DictCode.申报类型, DictCode.业务模式);
@@ -147,7 +151,11 @@ public class EtrExchangeTradeCommon004Controller extends BaseController{
             if(secIds.length == 2 && (StringUtil.isEmpty(entity.getStockId()))){
                 entity.setStockId(secIds[1]);
             }
-
+            if (StringUtil.isNotEmpty(entity.getRiskTrialRetDto())){
+                model.addAttribute("entity_RiskTrialRetList", entity.getRiskTrialRetDto());
+            }else{
+                model.addAttribute("entity_RiskTrialRetList", basRiskMathCommService.select(entity.getEntrustId()));
+            }
             //add by chenjiaxing 流程中不显示资产名称 end
             model.addAttribute(GlobalConstant.ENTITY, entity);
             model.addAttribute("workflowId", workflowId);

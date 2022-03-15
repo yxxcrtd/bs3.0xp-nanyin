@@ -3178,7 +3178,11 @@
             setCurrentTab(currentTab);
             var riskLists = entity_RiskTrialRetList || [];
             if (riskLists.length > 0) {
-                $("#riskTrialSpan").html("&nbsp;&nbsp;" + riskLists[0].conclusion);
+                if (riskLists[0].conclusion){
+                   $("#riskTrialSpan").html("&nbsp;&nbsp;" + riskLists[0].conclusion);
+                }else{
+                   $("#riskTrialSpan").html("&nbsp;&nbsp;" + "试算通过");
+                }
                 setRiskFlag(0);
             }
         }
