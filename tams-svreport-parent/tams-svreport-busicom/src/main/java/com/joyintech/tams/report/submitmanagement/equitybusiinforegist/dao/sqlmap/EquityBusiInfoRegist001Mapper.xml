@@ -374,9 +374,9 @@
 		</where>
 	</update>
 
-	/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 
 	<update id="updateChbEquSubSubmitStatus" parameterType="java.util.List">
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 		begin
 		<foreach collection="list" item="item" index="index" open="" close=";" separator=";">
 			update CHB_EQU_SUB
@@ -388,8 +388,8 @@
 			where SUMIT_SEQ = #{item.seqno,jdbcType=VARCHAR}
 		</foreach>
 		end;
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 	</update>
-	/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 
 
 
