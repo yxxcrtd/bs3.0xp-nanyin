@@ -273,6 +273,7 @@
         if($("input:radio[name=calculateField]:checked").val()) {
             object.calculateField = $("input:radio[name=calculateField]:checked").val();
         }
+        object.workflowId = workflowId;
         return object;
     }
 

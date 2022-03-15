@@ -2225,6 +2225,30 @@ SELECT
                 WFL_IBU_QUOTE_ETR_RE where ENTRUST_ID = #{entrustId})
     </select>
 
+    <!--获取指令流程中占用券面总额，不包含当前流程-->
+    <select id="getWflShareAmtByEntrustIdAndWorkFlowId" resultType="java.math.BigDecimal">
+        SELECT
+            SUM(SHARE_AMT) SHARE_AMT
+        FROM
+            (
+                SELECT
+                    SHARE_AMT*100 SHARE_AMT
+                FROM
+                    WFL_REG_FIN_PRODUCT_DEAL where ENTRUST_ID = #{entrustId}
+                    <if test="workFlowId !=null and workFlowId !=''">
+                        AND WORKFLOW_ID != #{workFlowId}
+                    </if>
+                UNION ALL
+                SELECT
+                    SHARE_AMT*100 SHARE_AMT
+                FROM
+                    WFL_IBU_QUOTE_ETR_RE where ENTRUST_ID = #{entrustId}
+                    <if test="workFlowId !=null and workFlowId !=''">
+                        AND WORKFLOW_ID != #{workFlowId}
+                    </if>
+        )
+    </select>
+
     <select id="getTradeStatus" resultType="java.lang.String">
         SELECT TRADE_STATUS FROM  IBU_QUOTE_BOND_DET WHERE  QUOTE_ID = #{quoteId} AND CP_PARTY_ID = #{cpPartyId}
     </select>
