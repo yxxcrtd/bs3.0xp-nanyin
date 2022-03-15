@@ -2,6 +2,7 @@ package com.joyintech.service.trade.entrustmsgbymq.service;
 
 import com.alibaba.fastjson.JSON;
 import com.joyintech.framework.JoyinRestTemplate;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.trade.entrustmsgbymq.dto.TrdMoreConvrate;
@@ -464,7 +465,7 @@ public class PositionRequestTradeReportService {
      * @param resultMap 封装集合
      */
     private void setCommonField(TrdTempDto entity, Map<String, Object> resultMap) {
-        resultMap.put("userId", SecurityUtil.getLoginUser().getUserName());
+        resultMap.put("userId", LoginUserUtil.getUserName());
         resultMap.put("totalTradeId", entity.getTradeId());
         resultMap.put("balanceCheck", "Y");
         resultMap.put("flowStatus", DictCodeListExt3.流程节点_审批生效.getValue());
