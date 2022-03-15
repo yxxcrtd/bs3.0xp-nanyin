@@ -2067,10 +2067,10 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		if (baseEtrCashPositionCommService != null
 				&& DictCodeList.委托状态_已接收.getValue().equals(entity.getEntrustStatus())) {
 			baseEtrCashPositionCommService.entrustCloseExecute(entity.getEntrustId());
-			positionRequestService.sendClose(entity);
 		}
 		//处理履历
 		updateCfetsOprHis(entity.getEntrustId(),"close");
+		positionRequestService.sendClose(entity);
 	}
 
 	/**
@@ -2089,7 +2089,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		if (baseEtrCashPositionCommService != null && (DictCodeList.委托状态_待接收.getValue().equals(entity.getEntrustStatus())
 				||DictCodeListExt3.委托状态_待分发.getValue().equals(entity.getEntrustStatus()))) {
 			baseEtrCashPositionCommService.entrustCloseExecute(entity.getEntrustId());
-			positionRequestService.sendRevoke(entity);
+//			positionRequestService.sendRevoke(entity);
 		}
 		//处理履历
 		updateCfetsOprHis(entity.getEntrustId(),"revoke");
