@@ -815,9 +815,11 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			catch (Exception e) {
 				e.printStackTrace();
 			}
-			//增加调用头寸引擎代码start
-			String decisionAct = 系统动作_新建.getValue();
-			String systemAct = 系统动作_新建.getValue();
+			//保存不需要处理头寸
+			if(!StringUtil.equals(entity.getOperateType(),"save")) {
+				//增加调用头寸引擎代码start
+				String decisionAct = 系统动作_新建.getValue();
+				String systemAct = 系统动作_新建.getValue();
 //            SysWflBusinessList sysBus=sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());
 //            if(null!=sysBus && StringUtil.equals(sysBus.getProcessState(),DictCodeList.流程状态_已退回.getValue())){
 //			systemAct = DictCodeListExt3.系统动作_修改.getValue();
@@ -825,15 +827,16 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 //			if (StringUtil.equals(entity.getOptType(), ENTRUST_RECORD_MODIFY)) {
 //			decisionAct = DictCodeListExt3.系统动作_修改.getValue();
 //			}
-			if (委托状态_已撤回.getValue().equals(entity.getEntrustStatus())) {
-				systemAct = 系统动作_修改.getValue();
+				if (委托状态_已撤回.getValue().equals(entity.getEntrustStatus())) {
+					systemAct = 系统动作_修改.getValue();
+				}
+				if (数据状态_修改中.getValue().equals(entity.getStatus())) {
+					decisionAct = 系统动作_修改.getValue();
+				}
+				entity.setSoftSkipMode("Y");
+				positionRequestService.sendEtrExchangeTradeSaveRequest(entity, decisionAct, systemAct);
+				//增加调用头寸引擎代码end
 			}
-			if (数据状态_修改中.getValue().equals(entity.getStatus())) {
-				decisionAct = 系统动作_修改.getValue();
-			}
-            entity.setSoftSkipMode("Y");
-            positionRequestService.sendEtrExchangeTradeSaveRequest(entity,decisionAct,systemAct);
-          //增加调用头寸引擎代码end
 		}
 	}
 
