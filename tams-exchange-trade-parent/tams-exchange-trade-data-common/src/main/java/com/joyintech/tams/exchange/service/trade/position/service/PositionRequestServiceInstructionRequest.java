@@ -115,9 +115,8 @@ public class PositionRequestServiceInstructionRequest {
                 finprodType += "-" + type6;
             }
         }
-        if (DictCodeList.回购类型_质押式协议回购.getValue().equals(entity.getAssetType())
-                || (DictCodeList.回购类型_质押式竞价回购.getValue().equals(entity.getAssetType()))) {
-            finprodType += "-" + entity.getAssetType();
+        if (DictCodeList.回购类型_质押式协议回购.getValue().equals(entity.getAssetType1())) {
+            finprodType = entity.getAssetType() + "-" + entity.getAssetType1();
         }
         String interType = commonPositionEngineService.getPositionInterType(POSITION_TYPE_TRD, POSITION_TRD_PAGE, finprodType, entity.getPs(), busiAct, entity.getClass().getName());
         if (INTERF_TYPE_BOND002.equals(interType)) {
