@@ -471,16 +471,15 @@ public class EtrTradeCommonervice extends BaseService {
                 PositionQueryDto dto = new PositionQueryDto();
                 dto.setSystemAct(temp.getPortfolioId());
                 dto.setAcctId(temp.getAcctId());
-                dto.setCdate(temp.getCdate());
                 dto.setCcy(temp.getCcy());
                 dto.setFlowType(flowType);
                 dto.setPositionType(positionType);
-                //现金
-                if (StringUtil.equals(flowType, "01") || StringUtil.equals(flowType, "02")) {
+                //现金 01 指令现金 02 指令持仓 03 交易现金 04 交易持仓
+                if (StringUtil.equals(flowType, "01") || StringUtil.equals(flowType, "03")) {
                     dto.setPs(temp.getPs());
                 }
                 //持仓
-                if (StringUtil.equals(flowType, "03") || StringUtil.equals(flowType, "04")) {
+                if ((StringUtil.equals(flowType, "02") || StringUtil.equals(flowType, "04"))&&StringUtil.isNotEmpty(positionType)) {
                     dto.setSecAcctId(temp.getSecAcctId());
                     dto.setFinprodId(temp.getFinprodId());
                 }
@@ -626,7 +625,7 @@ public class EtrTradeCommonervice extends BaseService {
         //头寸引擎
         List<PositionCashSecDto> sumAcctNoList = new ArrayList<>();
         sumAcctNoList.add(dto);
-        BigDecimal newCashAmount = queryPosition(sumAcctNoList, "etr", BussinessDictCodeList.持仓类型_可用.getValue());
+        BigDecimal newCashAmount = queryPosition(sumAcctNoList, "01", BussinessDictCodeList.持仓类型_可用.getValue());
         if (newCashAmount != null) {
             cashT = cashT.add(newCashAmount);
         }
@@ -635,9 +634,13 @@ public class EtrTradeCommonervice extends BaseService {
 
     //持仓
     public BigDecimal selectAvailableNum(PositionCashSecDto dto){
+        if (StringUtil.isEmpty(dto.getCcy())) {
+            dto.setCcy(DictCodeList.币种_人民币_CNY.getValue());
+        }
         BigDecimal canSec = BigDecimal.ZERO; // 可用持仓
         List<PositionCashSecDto> secList=new ArrayList<>();
-        BigDecimal newSecAmount=queryPosition(secList,"03", dto.getHoldingType());
+        secList.add(dto);
+        BigDecimal newSecAmount=queryPosition(secList,"02", dto.getHoldingType());
         if(newSecAmount!=null){
             canSec=canSec.add(newSecAmount);
         }
