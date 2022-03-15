@@ -119,7 +119,7 @@ public class JoyinbusinessCommonService extends BaseService {
         }
         String userId = SecurityUtil.getLoginUser().getUserName();
         if (StringUtils.isNotEmpty(userId)) {
-            param.put("userId", "y2");//SecurityUtil.getLoginUser().getUserName());
+            param.put("userId", SecurityUtil.getLoginUser().getUserName());
             return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.selectPortfolioIdList(param));
         }else{
             return null;
