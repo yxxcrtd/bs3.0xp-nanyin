@@ -3152,10 +3152,12 @@ public class InvestmentsInfoService {
 		for (OverallInfoDto overallInfoDto : overallInfoDtoList) {
 			String porperty =overallInfoDto.getPropertyCode();
 			boolean isExist=false;
-		    for(InvestmentBusinessDetailsDto item:investmentBusinessDetailsDtoList){
-		    	if(porperty.equals(item.getPropertycode())){
-					isExist=true;
-					break;
+		    if(StringUtil.isNotEmpty(porperty)){
+				for(InvestmentBusinessDetailsDto item:investmentBusinessDetailsDtoList){
+					if(porperty.equals(item.getPropertycode())){
+						isExist=true;
+						break;
+					}
 				}
 			}
 		    if(!isExist){
