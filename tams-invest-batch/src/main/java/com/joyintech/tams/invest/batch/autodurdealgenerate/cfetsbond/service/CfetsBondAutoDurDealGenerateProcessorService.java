@@ -18,7 +18,18 @@ import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
-import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.common.base.entity.PaTrdFinProductDealTotal;
+import com.joyintech.tams.common.base.entity.PtlTrade;
+import com.joyintech.tams.common.base.entity.RegFinProductDeal;
+import com.joyintech.tams.common.base.entity.RegFinProductDealTotal;
+import com.joyintech.tams.common.base.entity.StlPayOrders;
+import com.joyintech.tams.common.base.entity.TrdDealTotalAdd;
+import com.joyintech.tams.common.base.entity.TrdFinProductDealTotal;
+import com.joyintech.tams.common.base.entity.TrdProductDeal;
+import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
+import com.joyintech.tams.common.base.entity.WflStlPayOrders;
+import com.joyintech.tams.common.base.entity.WflTrdProductDeal;
+import com.joyintech.tams.common.base.entity.WflTrdProductDealAdd;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
@@ -38,13 +49,19 @@ import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
 import com.joyintech.tams.invest.common.dto.period.trdbondduration.TrdBondDurDbInertDto;
 import com.joyintech.tams.invest.common.dto.period.trdbondduration.TrdBondDurationDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * processor相关业务处理
@@ -116,28 +133,41 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
         List<RegFinProductDealTotal> regFinProductDealTotalList = cfetsBondAutoDurDealGenerateMapper.findShData(paramMap);
 
         List<TrdBondDurationDto> trdBondDurationDtoInsertList = new ArrayList<TrdBondDurationDto>();
-        for(TrdBondDurationDto trdBondDurationDto: tradeDataList){
+        for (TrdBondDurationDto trdBondDurationDto : tradeDataList) {
             //重新查询单条记录数据
             paramMap.put("finprodId", trdBondDurationDto.getFinprodId());
-            paramMap.put("finprodMarketId",trdBondDurationDto.getFinprodMarketId());
+            paramMap.put("finprodMarketId", trdBondDurationDto.getFinprodMarketId());
             //调整后的计算结束日
             paramMap.put("mDate", trdBondDurationDto.getMDate());
             paramMap.put("vDate", trdBondDurationDto.getVDate());
             paramMap.put("secAcctId", trdBondDurationDto.getSecManageAcctId());
             paramMap.put("adjustMDate", DateUtil.parse(trdBondDurationDto.getMDate()));
             TrdBondDurationDto pendingTradeData = cfetsBondAutoDurDealGenerateMapper.findEffectiveData(paramMap);
+
             //paramMap.put("busiCode", trdBondDurationDto.getBusiCode());
             paramMap.put("yield", pendingTradeData.getYield());
             List<FinAssetIntInfo> finAssetIntInfos = cfetsBondAutoDurDealGenerateMapper.findAssetIntInfo(paramMap);
+
             // 实收本息总额: 设置为 全价总额 理论本息总额
             pendingTradeData.setTradeAmt(pendingTradeData.getFpriceAmt());
             BussinessCodeParameter parameter = new BussinessCodeParameter();
             parameter.setCommonBusinessType(DictCodeList.共通业务类型_资产存续期交易);
             pendingTradeData.setBusiCode(autoPeriodCommonService.buildBussinessCode(parameter));
             pendingTradeData.setFinAssetIntInfoList(finAssetIntInfos);
-             // 构造将要登录的业务流程表数据
-             genDataForInsertDto(pendingTradeData);
-             trdBondDurationDtoInsertList.add(pendingTradeData);
+            // 构造将要登录的业务流程表数据
+            genDataForInsertDto(pendingTradeData);
+            //业务模式
+            String invAim = cfetsBondAutoDurDealGenerateMapper.findInvAimData(paramMap);
+            if (StringUtil.isNotEmpty(invAim)) {
+                if (pendingTradeData.getTrdBondDurDbInertDto() != null &&
+                        CollectionUtils.isNotEmpty(pendingTradeData.getTrdBondDurDbInertDto().getTrdProductDealList())) {
+                    pendingTradeData.getTrdBondDurDbInertDto().getTrdProductDealList().stream().forEach(x ->{
+                        x.setInvAim(invAim);
+                    });
+                }
+
+            }
+            trdBondDurationDtoInsertList.add(pendingTradeData);
         }
 
         for(RegFinProductDealTotal regFinProductDealTotal : regFinProductDealTotalList) {

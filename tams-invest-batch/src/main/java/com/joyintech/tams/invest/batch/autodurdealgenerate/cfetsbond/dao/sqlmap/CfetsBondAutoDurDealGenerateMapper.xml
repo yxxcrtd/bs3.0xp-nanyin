@@ -664,6 +664,33 @@
 	   AND R.FINPROD_ID = #{finprodId}
     </select>
 
+    <select id="findInvAimData" resultType="java.lang.String">
+        SELECT * FROM (
+            SELECT T1.INV_AIM FROM  PTL_SEC_POSITION T1
+            WHERE T1.FINPROD_ID = #{finprodId} /*and 持仓类型 = 数据字典缓存.持仓类型.实际*/
+
+            AND T1.HODING_TYPE IN ( '03', '05', '06', '11' ) /*and 组合持仓.日期 = 平台日*/
+
+            AND t1.CDATE &lt; TO_DATE(#{mDate}, 'YYYY-MM-DD')
+            AND T1.SEC_ACCT_ID = #{secAcctId}
+            AND T1.AMOUNT > 0
+            AND NOT EXISTS (
+            SELECT
+            1
+            FROM
+            PTL_SEC_POSITION tpsp
+            WHERE
+            tpsp.HODING_TYPE = T1.HODING_TYPE
+            AND tpsp.PORTFOLIO_ID = T1.PORTFOLIO_ID
+            AND tpsp.SEC_ACCT_ID = T1.SEC_ACCT_ID
+            AND tpsp.FINPROD_ID = T1.FINPROD_ID
+            AND tpsp.CDATE > T1.CDATE
+            AND tpsp.CDATE &lt; TO_DATE(#{mDate}, 'YYYY-MM-DD')
+                )
+            ORDER BY T1.CDATE DESC)
+        where rownum=1
+    </select>
+
 
     <select id="findRepoEffectiveData" resultType="com.joyintech.tams.invest.common.dto.period.trdrepoduration.TrdRepoDurationDto">
             SELECT
