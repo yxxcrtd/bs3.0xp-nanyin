@@ -1,5 +1,6 @@
 /**
  * 场外指令分发
+ *
  * @author sjj
  * @version 1.0 2021年10月26日
  * @see CfetsEtrDispatcherController
@@ -74,7 +75,7 @@ public class CfetsEtrDispatcherController extends BaseController {
     @ApiOperation(value = "查询页面初始化参数", notes = "查询页面初始化参数")
     @PostMapping("/getPageParams")
     @ResponseBody
-    public Message<Map<String, Object>> getPageParams(){
+    public Message<Map<String, Object>> getPageParams() {
         Map<String, Object> initPageParams = new HashMap<>();
         //数据字典初始化数据
         initPageParams.put("PINAN_ASSET_TYPE", this.getSelectDataFromDataDic(DictCode.平安资产类型, null));
@@ -164,7 +165,7 @@ public class CfetsEtrDispatcherController extends BaseController {
             throws Exception {
         try {
             Page<CfetsEtrDispatcherExeListInfoResponse> returnDto = cfetsEtrDispatcherService.getEtrDispatcherExeListInfo(dto);
-            if (returnDto.getTotal() == 0 && CollectionUtils.isEmpty(returnDto.getRoot())){
+            if (returnDto.getTotal() == 0 && CollectionUtils.isEmpty(returnDto.getRoot())) {
                 returnDto = cfetsEtrDispatcherService.getEtrDispatcherExeListInfoByExe(dto);
             }
             return new Message<Page<CfetsEtrDispatcherExeListInfoResponse>>().success().setData(returnDto);
@@ -190,7 +191,7 @@ public class CfetsEtrDispatcherController extends BaseController {
             throws Exception {
         try {
             Page<CfetsEtrDispatcherDealListInfoResponse> returnDto = cfetsEtrDispatcherService.getEtrDispatcherDealListInfo(dto);
-            if (returnDto.getTotal() == 0 && CollectionUtils.isEmpty(returnDto.getRoot())){
+            if (returnDto.getTotal() == 0 && CollectionUtils.isEmpty(returnDto.getRoot())) {
                 returnDto = cfetsEtrDispatcherService.getEtrDispatcherDealListInfoByExe(dto);
             }
             return new Message<Page<CfetsEtrDispatcherDealListInfoResponse>>().success().setData(returnDto);
@@ -225,7 +226,7 @@ public class CfetsEtrDispatcherController extends BaseController {
     public Message<AjaxResult> submit(@RequestBody CfetsEtrDispatcherAutoRequest cfetsDto, BindingResult br)
             throws Exception {
         //提交check
-        String returnMsg= cfetsEtrDispatcherService.checkSave(cfetsDto, br);
+        String returnMsg = cfetsEtrDispatcherService.checkSave(cfetsDto, br);
         if (StringUtil.isNotBlank(returnMsg)) {
             return new Message<AjaxResult>().fail().setMessage(returnMsg);
         }
@@ -336,8 +337,7 @@ public class CfetsEtrDispatcherController extends BaseController {
             AjaxResult ajaxResult = cfetsEtrDispatcherService.doRefuseEntrustCheck(pageParam, br);
             if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
                 return new Message<AjaxResult>().fail().setMessage(ajaxResult.getMessage());
-            }
-            else{
+            } else {
                 //退回指令
                 ajaxResult = cfetsEtrDispatcherService.refuseEntrust(pageParam);
 
@@ -365,8 +365,8 @@ public class CfetsEtrDispatcherController extends BaseController {
         try {
             List<CfetsEtrDispatcherTraderAuthListResponse> list = cfetsEtrDispatcherService.getTraderAuthList();
             return new Message<List<CfetsEtrDispatcherTraderAuthListResponse>>().success().setData(list);
-        }catch (Exception e) {
-            logger.error("查询分发权限配置交易员数据异常",e);
+        } catch (Exception e) {
+            logger.error("查询分发权限配置交易员数据异常", e);
             return new Message<List<CfetsEtrDispatcherTraderAuthListResponse>>().fail().setMessage("查询指令列表分页数据异常");
         }
     }
@@ -389,9 +389,9 @@ public class CfetsEtrDispatcherController extends BaseController {
         AjaxResult ajaxResult = new AjaxResult();
         List<CfetsEtrDispatcherTraderAuthListResponse> dtoList = dto.getDtoList();
         //提交check，软控
-        if(StringUtil.equals(dto.getIsConfirmFlag(), DictCodeList.是否_否.getValue())){
+        if (StringUtil.equals(dto.getIsConfirmFlag(), DictCodeList.是否_否.getValue())) {
             ajaxResult = cfetsEtrDispatcherService.checkSaveTraderAuthList(dtoList);
-            if(StringUtil.isNotBlank(ajaxResult.getMessage())){
+            if (StringUtil.isNotBlank(ajaxResult.getMessage())) {
                 return new Message<AjaxResult>().success().setData(ajaxResult);
             }
         }
@@ -400,16 +400,16 @@ public class CfetsEtrDispatcherController extends BaseController {
         ajaxResult = cfetsEtrDispatcherService.doSaveTraderAuthList(dtoList);
         if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
             return new Message<AjaxResult>().fail().setMessage("分发权限设置失败");
-        }else{
+        } else {
             return new Message<AjaxResult>().success().setMessage("分发权限配置成功");
         }
     }
 
-    @GetMapping(value="/getEtrTraderList")
+    @GetMapping(value = "/getEtrTraderList")
     @ResponseBody
     @ApiOperation(value = "交易员列表模糊查询", notes = "交易员列表模糊查询")
     public Message<List<CfetsEtrDispatcherTraderListRequest>> getEtrTraderList() {
-        Map<String,Object> param = RequestUtil.getParameters(getRequest());
+        Map<String, Object> param = RequestUtil.getParameters(getRequest());
         List<CfetsEtrDispatcherTraderListRequest> list = cfetsEtrDispatcherService.getEtrTraderList(param);
         return new Message<List<CfetsEtrDispatcherTraderListRequest>>().success().setData(list);
     }
@@ -418,7 +418,7 @@ public class CfetsEtrDispatcherController extends BaseController {
     @ResponseBody
     @ApiOperation(value = "交易员与工作量列表查询", notes = "交易员与工作量列表查询")
     public Message<List<CfetsEtrDispatcherTraderListRequest>> getEtrTraderAndWorkloadList() {
-        Map<String,Object> param = RequestUtil.getParameters(getRequest());
+        Map<String, Object> param = RequestUtil.getParameters(getRequest());
         List<CfetsEtrDispatcherTraderListRequest> list = cfetsEtrDispatcherService.getEtrTraderAndWorkloadList(param);
         return new Message<List<CfetsEtrDispatcherTraderListRequest>>().success().setData(list);
     }
@@ -426,24 +426,24 @@ public class CfetsEtrDispatcherController extends BaseController {
     @ResponseBody
     @PostMapping("/getReadonlyFormEtrInfo/{pageCode}/{dtCode}/{spcdCode}")
     @ApiOperation(value = "只读表单设置及数据查询_指令详情", notes = "只读表单设置及数据查询_指令详情")
-    public Message<Map<String,Object>> getReadonlyFormEtrInfo(@PathVariable("pageCode") String pageCode,
-                                                       @PathVariable("dtCode") String dtCode,
-                                                       @PathVariable("spcdCode") String spcdCode,
-                                                       @RequestBody CommonSearchInfoRequest dto) {
-        try{
-            Map<String,Object> resultData = cfetsEtrDispatcherService.getReadonlyFormEtrInfo(pageCode,dtCode,spcdCode,dto);
+    public Message<Map<String, Object>> getReadonlyFormEtrInfo(@PathVariable("pageCode") String pageCode,
+                                                               @PathVariable("dtCode") String dtCode,
+                                                               @PathVariable("spcdCode") String spcdCode,
+                                                               @RequestBody CommonSearchInfoRequest dto) {
+        try {
+            Map<String, Object> resultData = cfetsEtrDispatcherService.getReadonlyFormEtrInfo(pageCode, dtCode, spcdCode, dto);
             SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.投管业务类型, null);
             List<String> list = Lists.newArrayList();
-            if (StringUtil.isNotEmpty(selectDto) && !CollectionUtils.isEmpty(selectDto.getOptions())){
-                list = selectDto.getOptions().stream().map(item->item.getId()).collect(Collectors.toList());
+            if (StringUtil.isNotEmpty(selectDto) && !CollectionUtils.isEmpty(selectDto.getOptions())) {
+                list = selectDto.getOptions().stream().map(item -> item.getId()).collect(Collectors.toList());
             }
-            if (!CollectionUtils.isEmpty(list) && list.contains(dto.getBusiTypePosition())){
-                resultData = cfetsEtrDispatcherService.getReadonlyFormEtrInfoExc(pageCode,dtCode,spcdCode,dto);
+            if (!CollectionUtils.isEmpty(list) && list.contains(dto.getBusiTypePosition())) {
+                resultData = cfetsEtrDispatcherService.getReadonlyFormEtrInfoExc(pageCode, dtCode, spcdCode, dto);
             }
-            return new Message<Map<String,Object>>().success().setData(resultData);
+            return new Message<Map<String, Object>>().success().setData(resultData);
         } catch (Exception e) {
             logger.error("查询指令信息明细分页数据异常", e);
-            return new Message<Map<String,Object>>().fail().setMessage("查询指令信息明细异常");
+            return new Message<Map<String, Object>>().fail().setMessage("查询指令信息明细异常");
         }
     }
 }

@@ -377,7 +377,7 @@ public class PortfolioManager extends BaseService {
 
         Map<String, PortfolioInfoResponse> portfolioInfoResponseMap = Maps.newHashMap();
         if (infoFlag) {
-            // modify by swwan 调用投管计算头寸方法 start
+            // modify by swwan 调用投管查询头寸方法 start
             List<PositionCashSecSingleResp> positionCashSecSingleResps = this.queryPortfolioInfoByTg(instructionDetails, instruction);
             PortfolioInfoResponse infoResponse;
             for (PositionCashSecSingleResp item : positionCashSecSingleResps) {
@@ -406,7 +406,7 @@ public class PortfolioManager extends BaseService {
 //
 //            ResultBean portfolioInfoResult = this.queryPortfolioInfo(portfolioInfoRequest);
 //            portfolioInfoResponseMap.putAll((Map<String, PortfolioInfoResponse>) portfolioInfoResult.getData());
-            // modify by swwan 调用投管计算头寸方法 end
+            // modify by swwan 调用投管查询头寸方法 end
         }
 
         // 计算结果列表
@@ -492,11 +492,13 @@ public class PortfolioManager extends BaseService {
             calculateResponse.setAcctNo(instruction.getAcctName());
 
             // - 计算组合委托额度
-            disRate = detail.getDisRate();
+            disRate = isVolume ? (detail.getEntrustNum().divide(BigDecimal.valueOf(instruction.getEntrustNum()), 8, RoundingMode.HALF_UP)) : (detail.getEntrustAmt().divide(instruction.getEntrustAmt(), 8, RoundingMode.HALF_UP));
             // 数量
             if (TradeUtils.bigThanZero(orderVolume) && TradeUtils.bigThanZero(disRate)) {
                 // 根据比例计算委托数量
-                entrustVolume = NumberUtil.mul(orderVolume, disRate);
+                entrustVolume = isVolume ?
+                        ((orderVolume.multiply(detail.getEntrustNum())).divide(BigDecimal.valueOf(instruction.getEntrustNum()), 8, RoundingMode.HALF_UP)) :
+                        ((orderVolume.multiply(detail.getEntrustAmt())).divide(instruction.getEntrustAmt(), 8, RoundingMode.HALF_UP));
                 if (TradeUtils.lessThan(entrustVolume, minStep)) {
                     // 小于最小交易单位时的处理，置为0
                     entrustVolume = BigDecimal.ZERO;
@@ -538,8 +540,9 @@ public class PortfolioManager extends BaseService {
 
         if (isVolume && DictCodeListExt3.交易方向_债转股.getValue().equals(instruction.getPs())) {
             long bondPaperValue = 100L;
+            long totalConNum = list.get(0).getInstructionLeftNum() * bondPaperValue / list.get(0).getEntrustPrice().longValue();
             for (PortfolioCalculateResponse response : list) {
-                response.setConNum(response.getInstructionLeftNum() * bondPaperValue / response.getEntrustPrice().longValue());
+                response.setConNum(totalConNum * response.getEntrustNum() / instruction.getEntrustNum());
             }
         }
 
