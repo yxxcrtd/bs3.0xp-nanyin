@@ -42,4 +42,8 @@
         delete from ETR_ENTRUST_ADD_BACKUP
         where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
     </delete>
+    <delete id="deleteDetailByPrimaryKey" parameterType="java.lang.String" >
+        delete from ETR_ENTRUST_DETAIL_BACKUP
+        where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+    </delete>
 </mapper>

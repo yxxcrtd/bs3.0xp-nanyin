@@ -170,8 +170,10 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
 
     @Autowired
     private EtrDistributeInterfTmpMapper etrDistributeInterfTmpMapper;
-    /**
-     * 委托操作相关校验 <一句话功能简述> <功能详细描述>
+
+    @Autowired
+    private EtrEntrustDetailBackUpMapper etrEntrustDetailBackUpMapper;
+    /* 委托操作相关校验 <一句话功能简述> <功能详细描述>
      *
      * @return
      * @see
@@ -1344,6 +1346,38 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
         
         // 指令流程表入库
         return newDelegateFlow(dto);
+    }
+    /**
+     * 撤回或退回再启动流程时转移至废弃备份表
+     * 流程表数据入库
+     * @param dto
+     * @return
+     */
+    public void inserBackuptWithQuery(BaseEtrInvestInfoDto dto){
+        EtrEntrust etr = etrEntrustMapper.selectByPrimaryKey(dto.getEtrEntrust().getEntrustId());
+        if(etr != null){
+            /**
+             * 此处，流程启动时，检查指令有效表，发现有数据，正常情况为已退回或已撤回状态的数据，转移至备份表
+             */
+            // 有效数据转移
+            // 转移至废弃表
+            etrEntrustBackupMapper.deleteByPrimaryKey(dto.getEtrEntrust().getEntrustId());
+            etrEntrustBackupMapper.deleteAddByPrimaryKey(dto.getEtrEntrust().getEntrustId());
+            etrEntrustBackupMapper.deleteDetailByPrimaryKey(dto.getEtrEntrust().getEntrustId());
+            etrEntrustBackupMapper.insertFromQuery(dto.getEtrEntrust().getEntrustId());
+            etrEntrustBackupMapper.insertAddFromQuery(dto.getEtrEntrust().getEntrustId());
+            List<EtrEntrustDetail> list=etrEntrustDetailMapper.selectList(dto.getEtrEntrust().getEntrustId());
+            if(!CollectionUtils.isEmpty(list)){
+                for(EtrEntrustDetail etrEntrustDetail:list){
+                    EtrEntrustDetailBackUp etrEntrustDetailBackUp = new EtrEntrustDetailBackUp();
+                    BeanUtil.copyPropertiesIgnoreNull(etrEntrustDetailBackUp,etrEntrustDetail);
+                    etrEntrustDetailBackUpMapper.insert(etrEntrustDetailBackUp);
+                }
+            }
+            etrEntrustMapper.deleteByPrimaryKey(dto.getEtrEntrust().getEntrustId());
+            etrEntrustAddMapper.deleteByPrimaryKey(dto.getEtrEntrustAdd().getEntrustId());
+            etrEntrustDetailMapper.deleteByEntrustId(dto.getEtrEntrustAdd().getEntrustId());
+        }
     }
 }
 
