@@ -683,19 +683,23 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
         //插入银行间手工交收相关表
         for (CfetsManualSettleInsertDto cfetsManualSettleInsertDto : insertDtoLists) {
             //发送头寸
-            if (StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收.getValue())
+            if ((StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收.getValue())
                     || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_回溯.getValue())
                     || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收失败.getValue())
-                    || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收修改.getValue())) {
+                    || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收修改.getValue())) &&
+                    StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
 
                 if (StringUtil.equals(entity.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
+                    //插入旧头寸
+                    BigDecimal settleAmt = cfetsManualSettleInsertDto.getListTrdBnakSetDetails().stream().map(TrdBankManualSetDetail::getSettleAmt).reduce(BigDecimal.ZERO, BigDecimal::add);
+                    this.insertOldPosition(cfetsManualSettleInsertDto, entity.getButtonType(), settleAmt, true);
                 } else {
                     //对回购数据进行处理
                     if ((StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收.getValue())
                             || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_回溯.getValue())
                             || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收失败.getValue())) &&
                             StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
-                        this.insertOldRepoPosition(cfetsManualSettleInsertDto, entity.getButtonType(), entity.getSettleAmt(),entity.getFinprodType2(), true);
+                        this.insertOldRepoPosition(cfetsManualSettleInsertDto, entity.getButtonType(), entity.getSettleAmt(), entity.getFinprodType2(), true);
                     }
                 }
             }
@@ -709,19 +713,23 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
         //插入银行间手工交收相关表
         for (CfetsManualSettleInsertDto cfetsManualSettleInsertDto : insertDtoLists) {
             //发送头寸
-            if (StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收.getValue())
+            if ((StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收.getValue())
                     || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_回溯.getValue())
                     || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收失败.getValue())
-                    || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收修改.getValue())) {
+                    || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收修改.getValue())) &&
+                    StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
 
                 if (StringUtil.equals(entity.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
+                    //插入旧头寸
+                    BigDecimal settleAmt = cfetsManualSettleInsertDto.getListTrdBnakSetDetails().stream().map(TrdBankManualSetDetail::getSettleAmt).reduce(BigDecimal.ZERO, BigDecimal::add);
+                    this.insertOldPosition(cfetsManualSettleInsertDto, entity.getButtonType(), settleAmt, true);
                 } else {
                     //对回购数据进行处理
                     if ((StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收.getValue())
                             || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_回溯.getValue())
                             || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收失败.getValue())) &&
                             StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
-                        this.insertOldRepoPosition(cfetsManualSettleInsertDto, entity.getButtonType(), entity.getSettleAmt(),entity.getFinprodType2(), true);
+                        this.insertOldRepoPosition(cfetsManualSettleInsertDto, entity.getButtonType(), entity.getSettleAmt(), entity.getFinprodType2(), true);
                     }
                 }
             }
