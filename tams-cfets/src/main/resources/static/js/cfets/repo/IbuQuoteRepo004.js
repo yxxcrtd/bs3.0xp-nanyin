@@ -1,4 +1,36 @@
 (function () {
+    /**
+     * 画星星
+     */
+    var star = function() {
+        // 加红星星
+        // 查找label
+        var _findPrevLabel = function(element, level) {
+            var $el = element.prev();
+            if (!$el.is('label') && level > 0) {
+                $el = $el.find('label');
+                if ($el.length === 0) {
+                    return _findPrevLabel(element.parent(), level - 1);
+                }
+            }
+            return $el;
+        };
+
+        // 非查看模式
+        if (typeof pageModel !== 'undefined'
+            && (pageModel === PAGE_MODEL_EDIT || pageModel === PAGE_MODEL_NEW)) {
+            $('.must').each(function() {
+                $(this).remove();
+            })
+            $('*[required]').each(function() {
+                var $el = $(this);
+                var $target = _findPrevLabel($el, 3);
+                if ($target.find('> .must').length === 0) {
+                    $target.append($('<i class="must">*</i>'));
+                }
+            });
+        }
+    }
     function query(ele) {
         return $("#IbuQuoteRepo004_bodydiv " + ele);
     }
@@ -148,7 +180,7 @@
         , {
             field: 'price',
             width: 100,
-            title: '回购利率(%)',
+            title: '指令回购利率(%)',
             sortable: false,
             type: 'number',
             digit: 4
@@ -304,9 +336,9 @@
         page: false,
         editCell: function (value, data, field, cell, column) {
             if (field === "tradeAmt" ) {
-                var tradeAmt;
+                var tradeAmt = 0;
                 for (var i = 0; i < table.getAllRows.length; i++) {
-                    tradeAmt = JoyinMath.doAdd(table.getAllRows[i].tradeAmt, tradeAmt);
+                    tradeAmt = JoyinMath.doAdd(table.getAllRows()[i].tradeAmt, tradeAmt);
                 }
                 $("#tradeAmt").val(tradeAmt).change();//交易金额
             }
@@ -366,16 +398,26 @@
      */
     var init = function () {
         if (EXPORT_SHOW === '01') {
+            $("#select_counterTrader").attr('required',true);
+            $("#input_counterTrader").attr('required',false);
+            $("#mySide").attr('required',true);
             $("#select_counterTrader_div").show();
             $("#input_counterTrader_div").hide();
         } else {
+            $("#select_counterTrader").attr('required',false);
+            $("#select_counterTrader").attr('required',false);
+            $("#mySide").attr('required',false);
             $("#select_counterTrader_div").hide();
             $("#input_counterTrader_div").show();
         }
         if (quoteStyle === '05') {
+            $("#counterId").attr('required',false);
+            $("#counterIdCCP").attr('required',true);
             $("#counterIdCCP_div").show();
             $("#counterId_div").hide();
         } else {
+            $("#counterId").attr('required',true);
+            $("#counterIdCCP").attr('required',false);
             $("#counterIdCCP_div").hide();
             $("#counterId_div").show();
         }
@@ -384,6 +426,7 @@
         }
         initChangeEvent();
         initClickEvent();
+        star();
     }
     /**
      * 初始化change事件

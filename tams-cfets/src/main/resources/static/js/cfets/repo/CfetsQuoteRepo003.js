@@ -1,4 +1,36 @@
 (function () {
+    /**
+     * 画星星
+     */
+    var star = function() {
+        // 加红星星
+        // 查找label
+        var _findPrevLabel = function(element, level) {
+            var $el = element.prev();
+            if (!$el.is('label') && level > 0) {
+                $el = $el.find('label');
+                if ($el.length === 0) {
+                    return _findPrevLabel(element.parent(), level - 1);
+                }
+            }
+            return $el;
+        };
+
+        // 非查看模式
+        if (typeof pageModel !== 'undefined'
+            && (pageModel === PAGE_MODEL_EDIT || pageModel === PAGE_MODEL_NEW)) {
+            $('.must').each(function() {
+                $(this).remove();
+            })
+            $('*[required]').each(function() {
+                var $el = $(this);
+                var $target = _findPrevLabel($el, 3);
+                if ($target.find('> .must').length === 0) {
+                    $target.append($('<i class="must">*</i>'));
+                }
+            });
+        }
+    }
     function query(ele) {
         return $("#CfetsQuoteRepo003_bodydiv " + ele);
     }
@@ -148,7 +180,7 @@
         , {
             field: 'price',
             width: 100,
-            title: '回购利率(%)',
+            title: '指令回购利率(%)',
             sortable: false,
             type: 'number',
             digit: 4
@@ -286,9 +318,9 @@
         page:false,
         editCell: function (value, data, field, cell, column) {
             if (field === "tradeAmt" ) {
-                var tradeAmt;
+                var tradeAmt = 0;
                 for (var i = 0; i < table.getAllRows.length; i++) {
-                    tradeAmt = JoyinMath.doAdd(table.getAllRows[i].tradeAmt, tradeAmt);
+                    tradeAmt = JoyinMath.doAdd(table.getAllRows()[i].tradeAmt, tradeAmt);
                 }
                 $("#tradeAmt").val(tradeAmt).change();//交易金额
             }
@@ -328,6 +360,7 @@
         }
         initChangeEvent();
         initClickEvent();
+        star();
     }
 
     /**
