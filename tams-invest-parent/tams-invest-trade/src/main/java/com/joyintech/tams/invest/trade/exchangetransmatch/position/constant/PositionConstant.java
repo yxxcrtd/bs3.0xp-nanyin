@@ -53,6 +53,11 @@ public final class PositionConstant {
     public static final String INTERF_TYPE_FUND001 = "Fund001";
 
     /**
+     * 基金--封闭式基金
+     */
+    public static final String INTERF_TYPE_FUND002 = "Fund002";
+
+    /**
      * 质押式双边回购--竞价回购
      */
     public static final String INTERF_TYPE_REPO001 = "REPO001";

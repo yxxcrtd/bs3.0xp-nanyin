@@ -85,8 +85,8 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
                 this.bond002(entity, resultMap);
             } else if (PositionConstant.INTERF_TYPE_BOND003.equals(interType)) {
                 this.bond003(entity, resultMap);
-            } else if (PositionConstant.INTERF_TYPE_FUND001.equals(interType)) {
-                this.fund001(entity, resultMap);
+            } else if (PositionConstant.INTERF_TYPE_FUND002.equals(interType)) {
+                this.fund002(entity, resultMap);
             } else if (PositionConstant.INTERF_TYPE_REPO003.equals(interType)) {
                 this.repo003(entity, resultMap);
             } else if (PositionConstant.INTERF_TYPE_REPO002.equals(interType)) {
@@ -294,8 +294,8 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
      * @param entity
      * @param resultMap
      */
-    private void fund001(BaseTradeProductDealDto entity, Map<String, Object> resultMap) {
-        resultMap.put(INTERFACE_TYPE, PositionConstant.INTERF_TYPE_FUND001);
+    private void fund002(BaseTradeProductDealDto entity, Map<String, Object> resultMap) {
+        resultMap.put(INTERFACE_TYPE, INTERF_TYPE_FUND002);
         // 业务动作
         resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_成交匹配.getValue());
         resultMap.put(SETTLE_SPEED, null);
