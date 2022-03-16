@@ -3484,13 +3484,13 @@
         {
             /* 指标名称*/
             field: 'kriName',
-            width: 100,
+            width: 200,
             title: 'BaseRiskMathComm.indName',
             sortable: false
         }
         , {/*指标类型*/
             field: 'kriTypeCn',
-            width: 50,
+            width: 100,
             title: 'BaseRiskMathComm.indType',
             sortable: false
         }
@@ -3576,6 +3576,11 @@
             Joyin.error("请先完成风险试算")
             return false;
         }
+        if ($('#riskTrialSpan').text() && $('#riskTrialSpan').text().trim() == '试算不通过') {
+            Joyin.error("风险试算未通过")
+            return false;
+        }
+
         var checkFlag = true;
         var object = getSearchParams();
         //组合也需要校验
