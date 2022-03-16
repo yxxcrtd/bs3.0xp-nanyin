@@ -44,11 +44,7 @@ import com.joyintech.tams.cfets.etrdispatcher.dto.*;
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtribRepoInfo003Dto;
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsPledgeBondInfoDto;
 import com.joyintech.tams.cfets.etrib.repo.service.CfetsEtrIbRepoinfoService;
-import com.joyintech.tams.common.base.dao.AutoDispenseRightMapper;
-import com.joyintech.tams.common.base.dao.EtrAutoDispenseRuleDetailMapper;
-import com.joyintech.tams.common.base.dao.EtrAutoDispenseRuleMapper;
-import com.joyintech.tams.common.base.dao.EtrDistributeMapper;
-import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
+import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.AutoDispenseRight;
 import com.joyintech.tams.common.base.entity.EtrAutoDispenseRule;
 import com.joyintech.tams.common.base.entity.EtrAutoDispenseRuleDetail;
@@ -143,6 +139,9 @@ public class CfetsEtrDispatcherService extends BaseService {
      */
     @Autowired
     private EtrDistributeMapper etrDistributeMapper;
+
+    @Autowired
+    private PtlPortfolioMapper ptlPortfolioMapper;
 
     /**
      * 工作流CommonServicemapper
@@ -586,6 +585,11 @@ public class CfetsEtrDispatcherService extends BaseService {
             cfetsResponseDto = cfetsEtrDispatcherMapper.getEtrDispatcherInfo(pageParam);
             //一级市场投标增加投标标位List
             if (cfetsResponseDto != null) {
+                //组装组合名称
+                if (StringUtil.isNotEmpty(cfetsResponseDto.getPortfolioId())) {
+                    String portfolioNameByIds = getPortfolioNameByIds(cfetsResponseDto.getPortfolioId());
+                    cfetsResponseDto.setPortfolioName(portfolioNameByIds);
+                }
                 if (StringUtil.equals(dto.getBusiTypePosition(), DictCodeListExt3.头寸业务类型_债券一级投标.getValue())) {
                     cfetsResponseDto.setBidPriceList(mapper.selectBidPriceByKey(pageParam));
                     cfetsResponseDto.setEtrBidDate(cfetsResponseDto.getEntrustDate());
@@ -1350,7 +1354,13 @@ public class CfetsEtrDispatcherService extends BaseService {
         if (StringUtil.isBlank(dto.getEntrustId()) || entrustIdList.size() > 1) {
             return new CfetsEtrDispatcherInfoOtcResponse();
         } else {
-            return cfetsEtrDispatcherMapper.getEtrDispatcherOtc(pageParam);
+            CfetsEtrDispatcherInfoOtcResponse etrDispatcherOtc = cfetsEtrDispatcherMapper.getEtrDispatcherOtc(pageParam);
+            if (!Objects.isNull(etrDispatcherOtc) && StringUtil.isNotEmpty(etrDispatcherOtc.getPortfolioId())) {
+                //组装组合名称
+                String portfolioNameByIds = getPortfolioNameByIds(etrDispatcherOtc.getPortfolioId());
+                etrDispatcherOtc.setPortfolioName(portfolioNameByIds);
+            }
+            return etrDispatcherOtc;
         }
     }
 
@@ -1448,6 +1458,10 @@ public class CfetsEtrDispatcherService extends BaseService {
             fieldResponseDto = cfetsEtrDispatcherMapper.getEtrDispatcherExcInfo(pageParam);
             //一级市场投标增加投标标位List
             if (fieldResponseDto != null) {
+                if (StringUtil.isNotEmpty(fieldResponseDto.getPortfolioId())) {
+                    String portfolioNameByIds = getPortfolioNameByIds(fieldResponseDto.getPortfolioId());
+                    fieldResponseDto.setPortfolioName(portfolioNameByIds);
+                }
                 if (StringUtil.equals(dto.getBusiTypePosition(), DictCodeListExt3.头寸业务类型_债券一级投标.getValue())) {
                     fieldResponseDto.setBidPriceList(mapper.selectBidPriceByKey(pageParam));
                     fieldResponseDto.setEtrBidDate(fieldResponseDto.getEntrustDate());
@@ -1491,5 +1505,20 @@ public class CfetsEtrDispatcherService extends BaseService {
             }
             return fieldResponseDto;
         }
+    }
+
+    /**
+     * 获取组合名称
+     *
+     * @param portfolioId
+     * @return
+     */
+    private String getPortfolioNameByIds(String portfolioId) {
+        List<String> portfolioIds = StringUtil.splitToList(portfolioId, ",");
+        List<PtlPortfolio> ptlPortfolios = ptlPortfolioMapper.selectPortfolioByIds(portfolioIds);
+        if (!CollectionUtils.isEmpty(ptlPortfolios)) {
+            return ptlPortfolios.stream().map(r -> r.getPortfolioId()).collect(Collectors.joining(","));
+        }
+        return "";
     }
 }
