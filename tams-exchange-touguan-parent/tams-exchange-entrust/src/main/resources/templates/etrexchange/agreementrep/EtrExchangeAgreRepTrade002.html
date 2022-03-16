@@ -475,16 +475,16 @@
                     <label class="layui-form-label" style="width: 150px;" data-th-text="#{EtrExchangeAgreRepTrade001.trader}">本方交易员</label>
                     <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
                         <input type="text" id="trader" name="trader" maxlength="6" class="layui-input form-input input-lenovoselect" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
-                               data-th-data-url="@{/etrexchange/agreementrep/EtrExchangeAgreRepTrade001/selectTraderWfl}" data-idfield="code" data-keyfield="code" formatOption="false"
-                               data-parentIds="homeTrader" data-th-value="${entity?.trader}" data-th-data-effectivefieldsalias='|{"code":"#{EtrExchangeAgreRepTrade001.traders}"}|'>
+                               data-th-data-url="@{/etrexchange/agreementrep/EtrExchangeAgreRepTrade002/selectTraderWfl}" data-idfield="code" data-keyfield="code" formatOption="false"
+                               data-parentIds="homeTrader" data-th-value="${entity?.trader}" data-th-data-effectivefieldsalias='|{"code":"本方交易员"}|'>
                     </div>
                 </div>
                 <div class="form-inline-wrap" style="width: 50%; padding-top:6px;" id="counterTrader_div">
                     <label class="layui-form-label" style="width: 150px;">对手方交易员</label>
                     <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
                         <input type="text" id="counterTrader" name="counterTrader" maxlength="6" class="layui-input form-input input-lenovoselect" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
-                               data-th-data-url="@{/etrexchange/agreementrep/EtrExchangeAgreRepTrade001/selectCounterTraderWfl}" data-idfield="code" data-keyfield="code" formatOption="false"
-                               data-parentids="counterId" data-th-value="${entity?.counterTrader}" data-th-data-effectivefieldsalias='|{"code":"#{EtrExchangeAgreRepTrade001.counterTrader}"}|'>
+                               data-th-data-url="@{/etrexchange/agreementrep/EtrExchangeAgreRepTrade002/selectCounterTraderWfl}" data-idfield="code" data-keyfield="code" formatOption="false"
+                               data-parentids="counterId" data-th-value="${entity?.counterTrader}" data-th-data-effectivefieldsalias='|{"code":"对手方交易员"}|'>
                     </div>
                 </div>
                 <div class="form-inline-wrap" style="width: 50%; padding-top:6px;" id="tradeId_div">

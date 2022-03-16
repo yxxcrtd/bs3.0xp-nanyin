@@ -26,6 +26,9 @@
             <if test="search != null and !search.equals('')">
                 t.COUNTER_TRADER like concat('%',concat(#{search},'%'))
             </if>
+            <if test="param != null and !param.equals('')">
+                t.COUNTER_TRADER like concat('%',concat(#{param},'%'))
+            </if>
             and t.COUNTER_TRADER is not null
         </where>
     </select>
@@ -47,6 +50,9 @@
         <where>
             <if test="search != null and !search.equals('')">
                 t.TRADER like concat('%',concat(#{search},'%'))
+            </if>
+            <if test="param != null and !param.equals('')">
+                t.TRADER like concat('%',concat(#{param},'%'))
             </if>
             and t.TRADER is not null
         </where>
