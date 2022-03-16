@@ -30,6 +30,6 @@ public interface PtlPortfolioMapper {
 
 	List<Map<String,Object>> getRiskInfoByPortfolioId(Map<String,Object> param);
 
-    List<PtlPortfolio> selectPortfolioByIds(List<String> portfolioIds);
+    List<PtlPortfolio> selectPortfolioByIds(@Param("portfolioIds") List<String> portfolioIds);
 
 }
