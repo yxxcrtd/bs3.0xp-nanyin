@@ -14,6 +14,7 @@ import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.cfets.etrib.bond.dto.*;
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.common.base.entity.PtlPortfolio;
+import com.joyintech.tams.common.base.entity.SppiImportData;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -138,5 +139,12 @@ public interface CfetsEtrIbBondinfoMapper {
      * @return
      */
     public String findInvAimInEtr(Map pageParam);
+
+    /**
+     * 判断是否做过sppi
+     * @param pageParam
+     * @return
+     */
+    SppiImportData queryAssetIsSppiTest(Map pageParam);
 
 }

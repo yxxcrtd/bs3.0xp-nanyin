@@ -129,7 +129,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
         Map<String, Object> map = Maps.newHashMap();
         map.put("busiType", busiType);
         map.put(PS, entity.getPs());
-        map.put(BUSI_ACT, DictCodeListExt3.系统动作_关闭.getValue());
+        map.put(BUSI_ACT, DictCodeListExt3.业务动作_指令手动关闭.getValue());
         map.put("systemAct", DictCodeListExt3.系统动作_关闭.getValue());
         map.put("closeId", entity.getEntrustId());
         list.add(map);

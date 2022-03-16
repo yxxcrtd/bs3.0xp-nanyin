@@ -445,18 +445,19 @@ public class EtrTradeCommonervice extends BaseService {
      */
     public  BigDecimal queryPosition(List<PositionCashSecDto> ptList,String flowType,String positionType) {
         Map<String, Object> map=new HashMap<>();
-        BigDecimal sumAmount=null;
+        BigDecimal sumAmount=BigDecimal.ZERO;
         map.put("ptlList",buildPosition(ptList,flowType,positionType));
-        try {
-                String msg= PositionHttpRequest.queryPosition(map);
-                Map message = JsonUtils.json2Object(msg, Map.class);
-                if (message != null&&StringUtil.equals("success", message.get("code"))) {
-                    List<PositionQueryAmountDto> list=JsonUtils.json2List(message.get("data").toString(),PositionQueryAmountDto.class);
-                    sumAmount=list.stream().map(PositionQueryAmountDto::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
-                }
-            } catch (IOException e) {
-
-         }
+//        try {
+//                String msg= PositionHttpRequest.queryPosition(map);
+//                Map message = JsonUtils.json2Object(msg, Map.class);
+//                if (message != null&&StringUtil.equals("success", message.get("code"))) {
+//                    List<Map> list=JsonUtils.json2List(message.get("data").toString(),Map.class);
+//                    for(Map tempMap:list){
+//                        sumAmount=sumAmount.add(new BigDecimal(tempMap.get("AMOUNT").toString()));
+//                    }
+//                }
+//            } catch (IOException e) {
+//         }
         return sumAmount;
     }
     /**

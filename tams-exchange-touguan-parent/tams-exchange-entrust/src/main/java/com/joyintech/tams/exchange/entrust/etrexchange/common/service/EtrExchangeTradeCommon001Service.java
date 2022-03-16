@@ -328,6 +328,21 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	@Override
 	public void doComplete(EtrExchangeTradeSaveRequest dto, OperationType arg1) {
 		// TODO Auto-generated method stub
+		Map<String,Object> map = new HashMap<>();
+		// 新增交易对手席位
+		if (StringUtil.isNotEmpty(dto.getCounterId()) && StringUtil.isNotEmpty(dto.getSeatId())){
+			map.put("counterId",dto.getCounterId());
+			map.put("counterSeatId",dto.getSeatId());
+			restTemplate.postForObject(ServiceApplication.BASICDATA_SERVICE_NAME + "/InterfSysTrdConfig/insertCounterSeatId", map,
+					Object.class);
+		}
+		// 新增交易对手交易员
+		if (StringUtil.isNotEmpty(dto.getCounterId()) && StringUtil.isNotEmpty(dto.getCounterTrader())){
+			map.put("counterId",dto.getCounterId());
+			map.put("counterTraderId",dto.getCounterTrader());
+			restTemplate.postForObject(ServiceApplication.BASICDATA_SERVICE_NAME + "/InterfSysTrdConfig/insertCounterTraderId", map,
+					Object.class);
+		}
 //		restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/doComplete", entity,
 //				Integer.class);
 		BaseEtrInvestInfoDto entity = new BaseEtrInvestInfoDto();
@@ -922,21 +937,6 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	@Override
 	public void doInsert(EtrExchangeTradeSaveRequest entity,OperationType type){
 		// nothing to do just for aspect
-		Map<String,Object> map = new HashMap<>();
-		// 新增交易对手席位
-		if (StringUtil.isNotEmpty(entity.getCounterId()) && StringUtil.isNotEmpty(entity.getSeatId())){
-			map.put("counterId",entity.getCounterId());
-			map.put("counterSeatId",entity.getSeatId());
-			restTemplate.postForObject(ServiceApplication.BASICDATA_SERVICE_NAME + "/InterfSysTrdConfig/insertCounterSeatId", map,
-					Object.class);
-		}
-		// 新增交易对手交易员
-		if (StringUtil.isNotEmpty(entity.getCounterId()) && StringUtil.isNotEmpty(entity.getCounterTrader())){
-			map.put("counterId",entity.getCounterId());
-			map.put("counterTraderId",entity.getCounterTrader());
-			restTemplate.postForObject(ServiceApplication.BASICDATA_SERVICE_NAME + "/InterfSysTrdConfig/insertCounterTraderId", map,
-					Object.class);
-		}
 		if ("save".equals(entity.getOperateType())) {
 			return;
 		}
@@ -5153,8 +5153,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 				}else {
 					selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
 						return StringUtil.equals(option.getId(), DictCodeList.交易方向_买入.getValue())
-								|| StringUtil.equals(option.getId(), DictCodeList.交易方向_卖出.getValue())
-								|| StringUtil.equals(option.getId(), DictCodeList.交易方向_申购.getValue());
+								|| StringUtil.equals(option.getId(), DictCodeList.交易方向_卖出.getValue());
+	//							|| StringUtil.equals(option.getId(), DictCodeList.交易方向_申购.getValue());
 					}).collect(Collectors.toList());
 				}
 
