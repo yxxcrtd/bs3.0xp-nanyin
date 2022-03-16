@@ -816,11 +816,10 @@ public class EtrExchangeTradeCommon004Controller extends BaseController{
      */
     public AjaxResult check(EtrExchangeTradeSaveRequest dto, BindingResult result)
             throws Exception {
-        AjaxResult ajax= new AjaxResult();
+        AjaxResult ajax= etrExchangeTrade001CommonService.checkSave(dto,result);
         List<ValidMessage> validList = etrExchangeTradeCommonValidatorService.valid(dto);
-        ajax.setErrorList(validList);
-        if(ajax!=null){
-            return ajax;
+        if (!CollectionUtils.isEmpty(validList)){
+            ajax.setErrorList(validList);
         }
         return commonCheck(result, dto.getOperateType());
     }
