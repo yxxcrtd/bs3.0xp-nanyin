@@ -3328,7 +3328,7 @@
             },
             {field:'acctNo', title: 'EtrExchangeTrade001.acctNo', width : 200,sortable:false,edit : true,
                 editOption: {
-                    type: 'select', multiple: false, searchable: true, showField: 'id',
+                    type: 'select', multiple: false, searchable: true, showField: 'text',
                     url: JoyinUtil.getRealPath("/etrexchange/common/EtrExchangeTradeCommon004/getPtlSecAcctInfo"),
                     postData:function () {
                         return {portfolioId:curPortfolioId,tradeMarket: $("#tradeMarket_"+currentTab).val()};

@@ -228,6 +228,10 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
         }
         // 指令编号
         map.put("etrId", trdProductDealAdd.getEntrustId());
+        // 券面总额
+        map.put("secAmount", dealEntity.getShareAmt());
+        // 本方券券面总额
+        map.put("ownSecAmount", dealEntity.getShareAmt());
         // 交易金额
         map.put("cashAmount", dealEntity.getTradeAmt());
         // 下单编号
@@ -266,7 +270,7 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
         bean.setSecAmount(ArithmeticUtil.multiply(dealEntity.getShareAmt(), new BigDecimal(100)));
         Map<String, Object> bondSecMap = BeanUtil.object2Map(bean);
         //融入券券面总额
-        bondSecMap.put(INTEGRATE_SEC_AMOUNT, null);
+        bondSecMap.put(INTEGRATE_SEC_AMOUNT, BigDecimal.ZERO);
         //本方券券面总额
         bondSecMap.put(OWN_SEC_AMOUNT, ArithmeticUtil.multiply(dealEntity.getShareAmt(), new BigDecimal(100)));
         bondSecList.add(bondSecMap);
@@ -422,7 +426,7 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
             bean.setSecAmount(dealEntity.getShareAmt());
             Map<String, Object> ptlSecMap = BeanUtil.object2Map(bean);
             //融入券券面总额
-            ptlSecMap.put(INTEGRATE_SEC_AMOUNT, null);
+            ptlSecMap.put(INTEGRATE_SEC_AMOUNT, BigDecimal.ZERO);
             //本方券券面总额 指令对应组合.指令数量*100
             ptlSecMap.put(OWN_SEC_AMOUNT, dealEntity.getShareAmt());
             ptlSecList.add(ptlSecMap);
@@ -517,7 +521,7 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
             bean.setSecAmount(dealEntity.getShareAmt());
             Map<String, Object> map = BeanUtil.object2Map(bean);
             //融入券券面总额
-            map.put(INTEGRATE_SEC_AMOUNT, null);
+            map.put(INTEGRATE_SEC_AMOUNT, BigDecimal.ZERO);
             //本方券券面总额 指令.质押券数量*100
             map.put(OWN_SEC_AMOUNT, dealEntity.getShareAmt());
             list.add(map);
@@ -535,7 +539,7 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
             bean.setSecAmount(dealEntity.getShareAmt());
             Map<String, Object> map = BeanUtil.object2Map(bean);
             //融入券券面总额
-            map.put(INTEGRATE_SEC_AMOUNT, null);
+            map.put(INTEGRATE_SEC_AMOUNT, BigDecimal.ZERO);
             //本方券券面总额 指令.质押券数量*100
             map.put(OWN_SEC_AMOUNT, dealEntity.getShareAmt());
             list.add(map);
