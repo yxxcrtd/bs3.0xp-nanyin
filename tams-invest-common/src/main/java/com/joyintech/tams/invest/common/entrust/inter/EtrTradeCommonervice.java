@@ -446,7 +446,7 @@ public class EtrTradeCommonervice extends BaseService {
     public  BigDecimal queryPosition(List<PositionCashSecDto> ptList,String flowType,String positionType) {
         Map<String, Object> map=new HashMap<>();
         BigDecimal sumAmount=null;
-        map.put("ptList",buildPosition(ptList,flowType,positionType));
+        map.put("ptlList",buildPosition(ptList,flowType,positionType));
         try {
                 String msg= PositionHttpRequest.queryPosition(map);
                 Map message = JsonUtils.json2Object(msg, Map.class);
@@ -469,14 +469,13 @@ public class EtrTradeCommonervice extends BaseService {
             List<PositionQueryDto> list = new ArrayList<>();
             for (PositionCashSecDto temp : ptlList) {
                 PositionQueryDto dto = new PositionQueryDto();
-                dto.setSystemAct(temp.getPortfolioId());
-                dto.setAcctId(temp.getAcctId());
+                dto.setPortfolioId(temp.getPortfolioId());
                 dto.setCcy(temp.getCcy());
                 dto.setFlowType(flowType);
                 dto.setPositionType(positionType);
                 //现金 01 指令现金 02 指令持仓 03 交易现金 04 交易持仓
                 if (StringUtil.equals(flowType, "01") || StringUtil.equals(flowType, "03")) {
-                    dto.setPs(temp.getPs());
+                    dto.setCashAcctId(temp.getAcctId());
                 }
                 //持仓
                 if ((StringUtil.equals(flowType, "02") || StringUtil.equals(flowType, "04"))&&StringUtil.isNotEmpty(positionType)) {

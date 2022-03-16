@@ -932,9 +932,6 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	@ResponseBody
 	public Message<AjaxResult> checkSaveError(@RequestBody  EtrExchangeTradeSaveRequest dto, BindingResult br)
 			throws Exception {
-		if (br.hasErrors()) {
-			int i=0;
-		}
 		AjaxResult ajax=null;
 		try {
 			if("dbclick".equals(dto.getOptType())){
@@ -989,11 +986,9 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	 * @see
 	 * @since 1.0
 	 */
-	public AjaxResult check(@RequestBody @Validated EtrExchangeTradeSaveRequest dto, BindingResult br)
+	public AjaxResult check(@RequestBody  EtrExchangeTradeSaveRequest dto, BindingResult br)
 			throws Exception {
-		AjaxResult ajax= new AjaxResult();
-		List<ValidMessage> validList = etrExchangeTradeCommonValidatorService.valid(dto);
-		ajax.setErrorList(validList);
+		AjaxResult ajax= etrExchangeTrade001CommonService.checkSave(dto,br);
 		return ajax;
 	}
 	/**
@@ -1680,8 +1675,12 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	@PostMapping("/queryPositionInfo")
 	@ResponseBody
 	public Message<List<BaseMap>> queryPositionInfo(@RequestBody PositionCashSecRequest requestDto) {
-		List<BaseMap> m = etrTradeCommonervice.queryPositionInfo(requestDto);
-		return new Message<List<BaseMap>>().success().setData(m);
+		try {
+			List<BaseMap> m = etrTradeCommonervice.queryPositionInfo(requestDto);
+			return new Message<List<BaseMap>>().success().setData(m);
+		} catch (Exception e) {
+			return new Message<List<BaseMap>>().fail().setMessage("查询失败");
+		}
 	}
 }
 	
