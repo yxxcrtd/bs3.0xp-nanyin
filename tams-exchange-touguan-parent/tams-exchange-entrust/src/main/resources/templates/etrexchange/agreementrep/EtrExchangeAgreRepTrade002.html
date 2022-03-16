@@ -383,7 +383,7 @@
                 </div>
 
                 <div class="form-inline-wrap" style="width: 50%; padding-top:6px;" id="repSecNum_div">
-                    <label class="layui-form-label" style="width: 150px;" data-th-text="#{EtrExchangeAgreRepTrade001.repSecNum}">质押数量</label>
+                    <label class="layui-form-label" style="width: 150px;" >质押数量</label>
                     <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
                         <input required type="text" id="repSecNum" name="repSecNum" placeholder="请输入内容" data-pattern="" data-fixtype="2" data-textrange='0' class="layui-input form-input text-number"
                                data-th-value="${entity?.repSecNum}"  autocomplete="off" maxlength=9>
@@ -480,7 +480,7 @@
                     </div>
                 </div>
                 <div class="form-inline-wrap" style="width: 50%; padding-top:6px;" id="counterTrader_div">
-                    <label class="layui-form-label" style="width: 150px;" data-th-text="#{EtrExchangeAgreRepTrade001.counterTrader}">对手交易员</label>
+                    <label class="layui-form-label" style="width: 150px;">对手方交易员</label>
                     <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
                         <input type="text" id="counterTrader" name="counterTrader" maxlength="6" class="layui-input form-input input-lenovoselect" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
                                data-th-data-url="@{/etrexchange/agreementrep/EtrExchangeAgreRepTrade001/selectCounterTraderWfl}" data-idfield="code" data-keyfield="code" formatOption="false"

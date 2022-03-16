@@ -246,9 +246,9 @@ public class EtrExchangeAgreRepTrade002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/selectTraderWfl")
-    public List<SelectOptionDto> selectTraderWfl() {
+    public List<SuggestDto> selectTraderWfl() {
         Map<String, Object> pageParam = RequestUtil.getPageParam();
-        return etrExchangeAgreRepTrade001Service.selectTrader(pageParam);
+        return etrExchangeAgreRepTrade001Service.selectTraderWfl(pageParam);
     }
 
     /**
@@ -271,9 +271,9 @@ public class EtrExchangeAgreRepTrade002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/selectCounterTraderWfl")
-    public List<SelectOptionDto> selectCounterTraderWfl() {
+    public List<SuggestDto> selectCounterTraderWfl() {
         Map<String, Object> pageParam = RequestUtil.getPageParam();
-        return etrExchangeAgreRepTrade001Service.selectCounterTrader(pageParam);
+        return etrExchangeAgreRepTrade001Service.selectCounterTraderWfl(pageParam);
     }
     /**
      * 获取到期结算日

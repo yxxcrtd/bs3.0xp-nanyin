@@ -289,6 +289,10 @@
                 AND T.COUNTER_NAME = #{counterIdName,
                 jdbcType=VARCHAR}
             </if>
+            <if test="search != null and search != ''">
+                AND (T.COUNTER_ID like concat('%',concat(#{search,jdbcType=VARCHAR},'%'))
+                OR T.COUNTER_NAME like concat('%',concat(#{search,jdbcType=VARCHAR},'%')))
+            </if>
         </where>
     </select>
     <select id="selectCounterSeatId" resultType="java.util.Map">
