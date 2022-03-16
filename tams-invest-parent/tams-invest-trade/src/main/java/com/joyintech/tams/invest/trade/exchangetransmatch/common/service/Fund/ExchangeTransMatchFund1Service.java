@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -297,10 +298,17 @@ public class ExchangeTransMatchFund1Service extends BaseService {
         trdProductDeal.setFeeAmtPay(entrustDto.getMarchFeeAmtPay());
         // ∑成交数据明细.交易份额
         trdProductDeal.setShareAmt(entrustDto.getMarchQty());
-        // ∑成交数据明细.交易金额
-        trdProductDeal.setTradeAmt(entrustDto.getMarchAmt());
         // 全价总额
         trdProductDeal.setFpriceAmt(entrustDto.getMarchAmt());
+        // ∑成交数据明细.交易金额
+        // ZGTFCP-1094:股票需要根据交易方向加减费用 modify by fuyongsheng 20220316 start
+        // trdProductDeal.setTradeAmt(entrustDto.getMarchAmt());
+        if(DictCodeList.交易方向_买入.getValue().equals(settleTransData.getPs())){
+            trdProductDeal.setTradeAmt(ArithmeticUtil.doAdd(trdProductDeal.getFpriceAmt(),trdProductDeal.getFeeAmtPay()).setScale(2, RoundingMode.HALF_UP));
+        }else{
+            trdProductDeal.setTradeAmt(ArithmeticUtil.subtract(trdProductDeal.getFpriceAmt(),trdProductDeal.getFeeAmtPay()).setScale(2, RoundingMode.HALF_UP));
+        }
+        // ZGTFCP-1094:股票需要根据交易方向加减费用 modify by fuyongsheng 20220316 end
         // 未随交易支付费用
         trdProductDeal.setFeeAmtUnpay(entrustDto.getMarchFeeAmtUnPay());
         // 总交易费用
