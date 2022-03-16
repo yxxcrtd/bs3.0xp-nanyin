@@ -265,7 +265,7 @@
 
     <select id="selectPortfolioByIds" resultMap="BaseResultMap">
         select * from PTL_PORTFOLIO where PORTFOLIO_ID in
-        <foreach item="item" collection="portList" index="index" open="(" separator="," close=")">
+        <foreach item="item" collection="portfolioIds" index="index" open="(" separator="," close=")">
             #{portfolioIds}
         </foreach>
     </select>
