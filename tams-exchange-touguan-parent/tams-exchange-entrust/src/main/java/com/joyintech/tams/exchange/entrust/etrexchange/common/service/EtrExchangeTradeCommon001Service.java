@@ -4654,6 +4654,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		String finprodType2 = (String) param.get("finprodType2");
 		String tradeMarket = (String) param.get("tradeMarket");
 		BigDecimal minNum = new BigDecimal(1);
+		if (finprodType2.equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue())){
+			minNum = new BigDecimal(100);
+		}
 		MinTrdUnitLimitDto minTrdUnitLimitDto = getInterfSysMinTrdUnit(finprodId, currentTab, tradeMarket, finprodType2, ps);
 		if(null != minTrdUnitLimitDto && null != minTrdUnitLimitDto.getMinStep()){
 			minNum = minTrdUnitLimitDto.getMinStep();
