@@ -36,6 +36,7 @@ import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.MinPirceDto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
@@ -160,7 +161,12 @@ public class EtrExchangeTradeCommon004Controller extends BaseController{
             if (StringUtil.isNotEmpty(entity.getRiskTrialRetDto())){
                 model.addAttribute("entity_RiskTrialRetList", entity.getRiskTrialRetDto());
             }else{
-                model.addAttribute("entity_RiskTrialRetList", basRiskMathCommService.select(entity.getEntrustId()));
+                String entrustIdWfl = entity.getEntrustId();
+                if (StringUtil.equals(entity.getPs(),DictCodeListExt1.交易方向_债转股.getValue())){
+                    entrustIdWfl = entrustIdWfl+DictCodeList.交易方向_卖出.getValue();
+                }
+                List<RiskTrialRetDto> riskTrialRetList = basRiskMathCommService.select(entrustIdWfl);
+                model.addAttribute("entity_RiskTrialRetList", riskTrialRetList);
             }
             //add by chenjiaxing 流程中不显示资产名称 end
             model.addAttribute(GlobalConstant.ENTITY, entity);
