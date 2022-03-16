@@ -2027,6 +2027,10 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
 
     @Override
     public void doUpdate(EtrExchangeAgreRepTrade001Dto entity) {
+        if ("save".equals(entity.getOperateType())) {
+            return;
+        }
+
         if (!StringUtil.equals("save", entity.getOperateType()) && !StringUtil.equals("revoke", entity.getOperateType()) && !StringUtil.equals("delete", entity.getOperateType())) {
             try {
                 doInsertWflEntity(entity);

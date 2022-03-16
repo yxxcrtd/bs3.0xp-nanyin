@@ -553,19 +553,34 @@
         </form>
     </div>
 
+    <div id="riskTrialRet_div" class="pro-module-wrap">
+        <div class="pro-module">
+            <h3 class="pro-module-title pro-item-wrap">
+                <span class="title-des">风险试算</span>（必填）
+                <i class="iconfont icon-arrow-down pro-down-icon"></i>
+            </h3>
+            <div class="pro-module-item">
+                <div class="riskclu"><span id="riskTrialSpan"></span></div>
+                <div id="riskTrialRet">
+                    <table class="layui-table" id="riskTrialRetTable"
+                           name="riskTrialRetDto"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="pro-module-wrapper pro-module-block" id="EtrAgreRepTrade001_btn_div" style="display: none;">
         <div class="layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11" style="margin: 15px;">
             <div class="text-center">
                 <a id="EtrAgreRepTrade001_btn_riskcal" class="layui-btn layui-btn-sm" data-th-text="#{EtrExchangeAgreRepTrade001.riskcal}">风险试算</a>
                 <a id="EtrAgreRepTrade001_btn_save" class="layui-btn layui-btn-sm btn-save" data-th-text="#{SysCommon.save}">保存</a>
                 <a id="EtrAgreRepTrade001_btn_submit" class="layui-btn layui-btn-sm  btn-submit" data-th-text="#{SysCommon.submit}">提交</a>
-                <a id="EtrAgreRepTrade001_btn_reset" class="layui-btn layui-btn-sm  btn-reset" data-th-text="#{SysCommon.reset}">重置</a>
             </div>
         </div>
     </div>
-    <div id="baseRiskMathComm" class="page-component" style="display: none;"  th:data-path="@{/component/common/BaseRiskMathComm/init}"
+    <!--<div id="baseRiskMathComm" class="page-component" style="display: none;"  th:data-path="@{/component/common/BaseRiskMathComm/init}"
          th:data-params="|{workflowId: '${workflowId}',entityName:'riskTrialRetDto',tradeId:'${entrustId}'}|">
-    </div>
+    </div>-->
 </div>
 <div layout:fragment="script">
     <script th:inline="javascript" type="text/javascript">
@@ -642,6 +657,8 @@
         var UNIT_01 =  /*[[${UNIT_01}]]*/'';
         var UNIT_04 = /*[[${UNIT_04}]]*/'';
         var entityStr = /*[[${entityStr}]]*/'';
+        var entity_RiskTrialRetList = eval(/*[[${entity_RiskTrialRetList}]]*/'');
+        var riskTrialSpan = /*[[${riskTrialSpan}]]*/'';
     </script>
     <script data-th-src="@{/js/etrexchange/agreementrep/EtrExchangeAgreRepTrade002.js}" type="text/javascript"></script>
 </div>

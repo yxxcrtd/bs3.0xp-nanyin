@@ -7,6 +7,7 @@
     //试算结果
     var riskResultdata;
     var cluflag = true;
+    var riskFlag = 1;
 
     /**
      * 返回表单数据
@@ -22,6 +23,10 @@
         var yield = $("#yield").val();
         object.yield = yield;
         //根据指令方向设置质押式回购的金融产品类型
+
+        object.mdate = object.vdate;
+        object.entrustDate = object.vdate;
+
         return object;
     };
 
@@ -1596,6 +1601,100 @@
             }
             return riskdata;
         }
+
+        var colsRiskTrialRet = [
+            {
+                /* 指标名称*/
+                field: 'kriName',
+                width: 200,
+                title: 'BaseRiskMathComm.indName',
+                sortable: false
+            }
+            , {/*指标类型*/
+                field: 'kriTypeCn',
+                width: 100,
+                title: 'BaseRiskMathComm.indType',
+                sortable: false
+            }
+            , {
+                /*组合名称*/
+                field: 'portfolioName',
+                width: 150,
+                title: 'BaseRiskMathComm.portfolioName',
+                sortable: false
+            }
+            , {
+                /*预警阈值*/
+                field: 'warningLine',
+                width: 150,
+                title: 'BaseRiskMathComm.wthreshold',
+                sortable: false
+            }
+            , {
+                /*审批线*/
+                field: 'approveLine',
+                width: 150,
+                title: 'BaseRiskMathComm.approveold',
+                sortable: false
+            }
+            , {
+                /*当前实际值*/
+                field: 'kriValue',
+                width: 200,
+                title: 'BaseRiskMathComm.currValue',
+                sortable: false
+            }
+            , {
+                /*原值*/
+                field: 'oldValue',
+                width: 200,
+                title: 'BaseRiskMathComm.preValue',
+                sortable: false
+            }
+            , {
+                /*趋势*/
+                field: 'kriTrend',
+                width: 200,
+                title: 'BaseRiskMathComm.kriTrend',
+                sortable: false
+            }
+            , {
+                field: 'kriStatusCn', title: 'BaseRiskMathComm.currStatus', sortable: false,
+                render: function (data, type, row, meta) {
+                    if (row.kriStatus == 0) {
+                        return "<span>正常</span>";
+                    }
+                    if (row.kriStatus == 1) {
+                        return "<span style='color:orange'>预警</span>";
+                    }
+                    if (row.kriStatus == 2) {
+                        return "<span style='color:#F7580D'>审批</span>";
+                    }
+                    if (row.kriStatus == 3) {
+                        return "<span style='color:#F71A0D'>违规</span>";
+                    }
+                    if (row.kriStatus == 4) {
+                        return "<span style='color:#951F1F'>异常</span>";
+                    }
+                    return row.kriStatus;
+                }
+            }
+        ]
+
+        var tableRisk = $("#riskTrialRetTable").joyintable({
+            data: entity_RiskTrialRetList || [],
+            cols: colsRiskTrialRet,
+            page: true,
+            addToLast: true,
+            searchOnInit: true,
+            checkbox: false,
+            height: 290
+        });
+
+        function setRiskFlag(flag) {
+            riskFlag = flag;
+        }
+
         /**
          * 风险试算
          * @param url
@@ -1604,21 +1703,50 @@
          * @returns
          */
         function doRiskcal() {
+            debugger
             var object = getSearchParams();
             if(object) {
                 // 交易所协议回购 指令环节，只有正回购、逆回购、到期续做等交易方向参与风险试算
-                if(BaseRiskMathComm && (object.ps == '03' || object.ps == '04' || object.ps == 'T56')) {
-                    var riskdata = getriskdata(object);
-                    var riskInterfUrl = getRiskInterfUrl();
-                    object.fromEtrExchange = "Y";
-                    object.busiPs = object.repPs;
-                    object.assetType2 = "H01";
-                    if(riskdata && riskInterfUrl) {
-                        window.BaseRiskMathComm.initBaseRiskMathRedis(riskInterfUrl, object,riskdata,riskMathRedisCallback);
+                var busiType = $("#ps").val();
+                if((busiType == 'T92' || busiType == 'T56')) {
+                    // var riskdata = getriskdata(object);
+                    // var riskInterfUrl = getRiskInterfUrl();
+                    // object.fromEtrExchange = "Y";
+                    // object.busiPs = object.repPs;
+                    // object.assetType2 = "H01";
+                    // if(riskdata && riskInterfUrl) {
+                    //     window.BaseRiskMathComm.initBaseRiskMathRedis(riskInterfUrl, object,riskdata,riskMathRedisCallback);
+                    // }
+                    var riskParams = JSON.parse(JSON.stringify(object))
+                    if (busiType == "T92") {
+                        riskParams.ps = $("#repPs").val();
                     }
+                    riskParams.assetType2 = "H01";
+                    if ($("#repPs").val() == "03") {
+                        riskParams.finprodType2 = 'F02';
+                    } else {
+                        riskParams.finprodType2 = 'F03';
+                    }
+                    riskParams.finprodId = $("#repSecId").val();
+                    riskParams.repoAmt = $("#tradeAmt").val();
+                    riskParams.entrustDate = $("#vdate").val();
+                    riskParams.vdate = $("#vdate").val();
+                    riskParams.mdate = $("#vdate").val();
+
+                    Joyin.ajaxJson(basePath + '/etrexchange/agreementrep/etrExchangeAgreRepTradeRiskCal/doRiskcal', riskParams, function (data) {
+                        $("#riskTrialSpan").html("&nbsp;&nbsp;" + data.data.data.riskTrialSpan);
+                        entity_RiskTrialRetList = data.data.data.riskcalReturnList;
+                        $.each(entity_RiskTrialRetList, function (index, item) {
+                            item.conclusion = data.data.data.riskTrialSpan;
+                        })
+                        tableRisk.clear();
+                        tableRisk.addRow(entity_RiskTrialRetList);
+                        setRiskFlag(0);
+                    });
+                } else {
+                    setRiskFlag(0);
                 }
             }
-
         }
 
         function riskMathRedisCallback(object,cluflag) {
@@ -1647,44 +1775,63 @@
             object.operateType = operateType;
             //object.pageModel = pageModel;
 
-            var riskdata = getriskdata(object);
-            // ZGTFCP-809:增加首期交易方向 modify by fuyongsheng 20220314 start
-            // if(BaseRiskMathComm && (object.ps == '03' || object.ps == '04' || object.ps == 'T56')) {
-            if(BaseRiskMathComm && (object.ps == 'T92' || object.ps == '03' || object.ps == '04' || object.ps == 'T56')) {
-            // ZGTFCP-809:增加首期交易方向 modify by fuyongsheng 20220314 end
-                s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
-                if(!s && s != ''){
-                    return;
-                }
-                if (window.BaseRiskMathComm.isCalcConditionChanged(riskdata)){
-                    return;
-                }
-            }
-            //验证
+            object.riskTrialRetDto = entity_RiskTrialRetList;
+            object.riskTrialSpan = $('#riskTrialSpan').text();
+
+            if (object.operateType === 'save') {
+                Joyin.confirm("请确认是否要保存？",function() {
+                    WorkFlow.doSaveList(basePath+'/etrexchange/agreementrep/EtrExchangeAgreRepTrade001/save',object,"EtrAgreRepTrade001_btn_save",null,function() {
+                        return;
+                    })
+                });
+            } else {
+                // var riskdata = getriskdata(object);
+                // // ZGTFCP-809:增加首期交易方向 modify by fuyongsheng 20220314 start
+                // // if(BaseRiskMathComm && (object.ps == '03' || object.ps == '04' || object.ps == 'T56')) {
+                // if(BaseRiskMathComm && (object.ps == 'T92' || object.ps == '03' || object.ps == '04' || object.ps == 'T56')) {
+                //     // ZGTFCP-809:增加首期交易方向 modify by fuyongsheng 20220314 end
+                //     s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+                //     if(!s && s != ''){
+                //         return;
+                //     }
+                //     if (window.BaseRiskMathComm.isCalcConditionChanged(riskdata)){
+                //         return;
+                //     }
+                // }
+                //验证
 //        if(!checkDbClickData(object)){
 //            return;
 //        }
-            //TODO 风险和授信
+
+                if (!entity_RiskTrialRetList || riskFlag !== 0) {
+                    Joyin.error("请先完成风险试算")
+                    return false;
+                }
+                if ($('#riskTrialSpan').text() && $('#riskTrialSpan').text().trim() == '试算不通过') {
+                    Joyin.error("风险试算未通过")
+                    return false;
+                }
+
+                //TODO 风险和授信
 //        Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
-            Joyin.ajaxJson(basePath + '/invest/entrust/etragrereptrade/EtrAgreRepTrade001/check',object,
-                function(result) {
-                    Joyin.confirm(result.data,function() {
-                        if (object.operateType === 'save') {
-                            WorkFlow.doSaveList(basePath+'/invest/entrust/etragrereptrade/EtrAgreRepTrade001/save',object,"EtrAgreRepTrade001_btn_save",null,function() {
+                Joyin.ajaxJson(basePath + '/etrexchange/agreementrep/EtrExchangeAgreRepTrade001/checkSaveError',object,
+                    function(result) {
+                        Joyin.confirm(result.data,function() {
+                            if (object.operateType === 'save') {
+                                WorkFlow.doSaveList(basePath+'/etrexchange/agreementrep/EtrExchangeAgreRepTrade001/save',object,"EtrAgreRepTrade001_btn_save",null,function() {
 
-                                doReset(true);
-                                JoyinUtil.disableButton("EtrAgreRepTrade001_btn_save", false);
-                            })
-                        }else {
-                            WorkFlow.doSubmitList(basePath+'/invest/entrust/etragrereptrade/EtrAgreRepTrade001/save',object,"EtrAgreRepTrade001_btn_submit",null,function() {
-                                doReset(true);
-                                JoyinUtil.disableButton("EtrAgreRepTrade001_btn_submit", false);
-                            })
-                        }
+                                    doReset(true);
+                                    JoyinUtil.disableButton("EtrAgreRepTrade001_btn_save", false);
+                                })
+                            }else {
+                                WorkFlow.doSubmitList(basePath+'/etrexchange/agreementrep/EtrExchangeAgreRepTrade001/save',object,"EtrAgreRepTrade001_btn_submit",null,function() {
+                                    doReset(true);
+                                    JoyinUtil.disableButton("EtrAgreRepTrade001_btn_submit", false);
+                                })
+                            }
+                        });
                     });
-                });
-//        })
-
+            }
         }
         /***行情相关方法 add by chaowei end*/
 
@@ -1717,6 +1864,11 @@
                     $("#EtrAgreRepTrade001_btn_div").show();
                 }else{
                     $("#psList").val('03,04');
+                }
+
+                if (riskTrialSpan) {
+                    setRiskFlag(0);
+                    $("#riskTrialSpan").html(riskTrialSpan);
                 }
             }
 

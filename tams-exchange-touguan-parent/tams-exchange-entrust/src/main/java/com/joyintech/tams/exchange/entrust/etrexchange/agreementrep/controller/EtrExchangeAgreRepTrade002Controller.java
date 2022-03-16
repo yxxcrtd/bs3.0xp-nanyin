@@ -17,6 +17,7 @@ import com.joyintech.tams.business.common.dto.PageMode;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.common.base.entity.EtrDistribute;
+import com.joyintech.tams.component.business.common.service.BasRiskMathCommService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dto.*;
@@ -31,6 +32,7 @@ import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.riskinfrds.util.EntrustCompleteUtil;
+import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
@@ -93,6 +95,9 @@ public class EtrExchangeAgreRepTrade002Controller extends BaseController {
     @Autowired
     private EtrCommonService etrCommonService;
 
+    @Autowired
+    private BasRiskMathCommService basRiskMathCommService;
+
     /**
      * 业务编号组件
      */
@@ -133,6 +138,15 @@ public class EtrExchangeAgreRepTrade002Controller extends BaseController {
                     workflowId);
             model.addAttribute(GlobalConstant.ENTITY, entity);
             model.addAttribute("workflowId", workflowId);
+            model.addAttribute("riskTrialSpan", entity.getRiskTrialSpan());
+
+            if (StringUtil.isNotEmpty(entity.getRiskTrialRetDto())){
+                model.addAttribute("entity_RiskTrialRetList", entity.getRiskTrialRetDto());
+            } else {
+                String entrustIdWfl = entity.getEntrustId();
+                List<RiskTrialRetDto> riskTrialRetList = basRiskMathCommService.select(entrustIdWfl);
+                model.addAttribute("entity_RiskTrialRetList", riskTrialRetList);
+            }
         }
         else if(StringUtil.isNotEmpty(entrustId)){
             entity = etrExchangeAgreRepTrade001Service.getEntrustInfoByEntrustId(RequestUtil.getPageParam());
