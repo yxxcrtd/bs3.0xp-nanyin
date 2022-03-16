@@ -78,7 +78,13 @@ public class CfetsEtrDispatcherController extends BaseController {
         Map<String, Object> initPageParams = new HashMap<>();
         //数据字典初始化数据
         initPageParams.put("PINAN_ASSET_TYPE", this.getSelectDataFromDataDic(DictCode.平安资产类型, null));
-        initPageParams.put("BUSI_TYPE_POSITION", this.getSelectDataFromDataDic(DictCode.头寸业务类型, null));
+        SelectDto busiTypePosition = this.getSelectDataFromDataDic(DictCode.头寸业务类型, null);
+        SelectDto busiTypeTg = this.getSelectDataFromDataDic(DictCode.投管业务类型, null);
+        List<SelectOptionDto> selectOptionDtoList = new ArrayList<>();
+        selectOptionDtoList.addAll(busiTypePosition.getOptions());
+        selectOptionDtoList.addAll(busiTypeTg.getOptions());
+        busiTypePosition.setOptions(selectOptionDtoList);
+        initPageParams.put("BUSI_TYPE_POSITION",busiTypePosition);
         initPageParams.put("TRADE_MARKET", this.getSelectDataFromDataDic(DictCode.交易场所, null));
         initPageParams.put("CCY", this.getSelectDataFromDataDic(DictCode.币种, null));
         initPageParams.put("ACCOUNT_SPEED", this.getSelectDataFromDataDic(DictCode.清算速度, null));

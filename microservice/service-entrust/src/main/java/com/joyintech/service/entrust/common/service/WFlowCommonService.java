@@ -153,4 +153,8 @@ public class WFlowCommonService {
         }
     }
 
+    public static void inserBackuptWithQuery(BaseEtrInvestInfoDto dto){
+        baseEtrInvestInfoServiceImpl.inserBackuptWithQuery(dto);
+    }
+
 }
