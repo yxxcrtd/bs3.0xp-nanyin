@@ -29,11 +29,14 @@ import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.business.common.util.PositionUtil;
+import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
 import com.joyintech.tams.cfets.etrib.bond.dao.CfetsEtrIbBondinfo002Mapper;
 import com.joyintech.tams.cfets.etrib.bond.dao.CfetsEtrIbBondinfoMapper;
 import com.joyintech.tams.cfets.etrib.bond.dto.*;
 import com.joyintech.tams.cfets.etrib.socket.BondSocketClient;
+import com.joyintech.tams.cfets.position.service.PositionInfoService;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
+import com.joyintech.tams.common.base.dao.SppiImportDataMapper;
 import com.joyintech.tams.common.base.dao.WflEtrEntrustAddMapper;
 import com.joyintech.tams.common.base.dao.WflEtrEntrustMapper;
 import com.joyintech.tams.common.base.entity.*;
@@ -141,6 +144,14 @@ public class CfetsEtrIbBondinfoService extends BaseService{
     private EtrInvestBondInfoService etrInvestBondInfoService;
     @Autowired(required = false)
     private BaseEtrCashPositionCommService baseEtrCashPositionCommService;
+    @Autowired
+    private CfetsIbuQuoteBondMapper cfetsIbuQuoteBondMapper;
+
+    @Autowired
+    private PositionInfoService positionInfoService;
+
+    @Autowired
+    private SppiImportDataMapper sppiImportDataMapper;
     /**
      * 持仓信息查询
      *
@@ -1949,6 +1960,45 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 }*/
             }
         }
+       //SPPI测试
+        if(StringUtil.isNotEmpty(allDto.getPs()) && StringUtil.isNotEmpty(allDto.getFinprodId())
+                || StringUtil.equals(allDto.getPs(),DictCodeList.交易方向_买入.getValue())){
+            //判断是否进行了SPPI测试
+            Map<String, Object> paramsppi =new HashMap<>();
+            paramsppi.put("finprodId",allDto.getFinprodId());
+            SppiImportData sppiDto=cfetsetrIbBondinfoMapper.queryAssetIsSppiTest(paramsppi);
+            if(StringUtil.isNotEmpty(sppiDto)){
+                if(StringUtil.isNotEmpty(sppiDto.getIsSppiPass()) && StringUtil.equals(sppiDto.getIsSppiPass(),"2")){
+                    //判断该资产未来是否有行权计划
+                    Map<String,Object> param = new HashMap<>();
+                    param.put("finprodId",allDto.getFinprodId());
+                    param.put("sysDate",DateUtil.platDateFromCache());
+                    if(cfetsIbuQuoteBondMapper.countBondHasEexrPlan(param)>0){
+                        for(CfetsBussCombDistribtDto item:dtoList){
+                            if(StringUtil.isNotEmpty(item.getBusinessModel()) && StringUtil.equals(item.getBusinessModel(),DictCodeListExt3.业务模式_收取合同约定的现金流.getValue())){
+                                SppiImportData sppiImportData = sppiImportDataMapper.selectByPrimaryKey(allDto.getFinprodId());
+                                if(null!=sppiImportData&&StringUtil.isNotEmpty(sppiImportData.getBidPriceCon())){
+                                    String[] split = sppiImportData.getBidPriceCon().split(",");
+                                    if(allDto.getPrice().compareTo(new BigDecimal(split[1]))<=0){
+                                        BaseMap baseMap = positionInfoService.queryTrdPosition(Arrays.asList(item.getPortfolioId()), DateUtil.format(allDto.getEtrDate()), allDto.getFinprodId());
+                                        //
+                                        if(null!=baseMap&&baseMap.containsKey("ZCTRKYCC")&&((BigDecimal)baseMap.get("ZCTRKYCC")).compareTo(BigDecimal.ZERO)>0){
+                                            messages.add(new ValidMessage(StringUtil.join("交易净价不满足使权不重大的购入条件:",new BigDecimal(split[1]),"业务模式由收取合同现金流调整为出售,请资产重分类!")));
+                                        }else{
+                                            messages.add(new ValidMessage(StringUtil.join("交易净价不满足使权不重大的购入条件:",new BigDecimal(split[1]),"业务模式由收取合同现金流调整为出售!")));
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }else{
+                messages.add(new ValidMessage("当前资产未进行SPPI测试，无法进行买入指令提交/保存。"));
+            }
+        }
+
         if(messages.size()>0) {
             AjaxResult errorRs = new AjaxResult();
             errorRs.setErrorList(messages);
@@ -2528,6 +2578,19 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             invAim = cfetsetrIbBondinfoMapper.findInvAimInEtr(param);
         }
         return invAim;
+    }
+    /**
+     * 查询资产是否进行了SPPI测试
+     * @return
+     */
+    public SppiImportData queryAssetIsSppiTest(String secId) {
+        if(!StringUtil.isNotEmpty(secId)){
+            return null;
+        }
+        Map<String, Object> param =new HashMap<>();
+        param.put("finprodId",secId);
+        //param.put("platDate",DateUtil.platDateFromCache());
+        return cfetsetrIbBondinfoMapper.queryAssetIsSppiTest(param);
     }
 
 }
