@@ -104,6 +104,13 @@ public class TradeUtils {
         return bigThan(value, BigDecimal.ZERO);
     }
 
+    public static boolean isZero(BigDecimal value) {
+        if (Objects.isNull(value)) {
+            return true;
+        }
+        return BigDecimal.ZERO.compareTo(value) == 0;
+    }
+
     public static boolean lessThan(BigDecimal d, BigDecimal decimal) {
         if (Objects.nonNull(d) && Objects.nonNull(decimal)) {
             return d.compareTo(decimal) < 0;

@@ -649,16 +649,21 @@ public class PortfolioManager extends BaseService {
 
         // 构造返回列表
         List<PortfolioInstructionContextDto> resultList = new ArrayList<>();
-        // 调整后的价格
-        BigDecimal adjustedPrice = bean.getEntrustPrice();
-        result.setPrice(adjustedPrice);
 
         // 获取买卖方向
         String entrustBs = EntrustBsProp.getEntrustBs(instruction.getPs());
         // 获取委托属性
-        String entrustProp = EntrustPropUtils.getEntrustProp(instruction, bean.getEntrustProp());
+//        String entrustProp = EntrustPropUtils.getEntrustProp(instruction, bean.getEntrustProp());
         // 获取委托价格
         BigDecimal entrustPrice = bean.getEntrustPrice();
+        // 调整后的价格
+        BigDecimal adjustedPrice = entrustPrice;
+        // 市价订单
+        // 如果是市价指令+限价订单时，委托价格不为0
+        if (EntrustUtils.isMarketPrice(instruction) && TradeUtils.isZero(entrustPrice)) {
+            adjustedPrice = this.getMarketPrice(tick, entrustBs);
+        }
+        result.setPrice(adjustedPrice);
 
         // 过滤公平相关指令
         // 1. 同交易员 2. 同证券编码 3. 同交易方向
@@ -730,17 +735,14 @@ public class PortfolioManager extends BaseService {
             }
 
             // 提示：“委托价格必须优于所有指令价格”
-            if (adjustedPrice.compareTo(bean.getEntrustPrice()) != 0) {
+            if (adjustedPrice.compareTo(entrustPrice) != 0) {
                 result.setInfoLevel("2");
                 result.setInfoDetails("委托价格必须优于所有指令价格");
                 result.setPrice(adjustedPrice);
             }
         } else {
             // 02时，剔除该指令并继续时
-            BigDecimal orderPrice = isZeroPriceMarketInstruction(instruction) ? this.getMarketPrice(tick, entrustBs) : bean.getEntrustPrice();
-            adjustedPrice = orderPrice;
-            result.setPrice(adjustedPrice);
-
+            BigDecimal orderPrice = adjustedPrice;
             if (EntrustBs.isBuy(entrustBs)) {
                 // 买入，过滤价格小于指令价格的指令
                 tempList = tempList.stream().filter(item -> orderPrice.compareTo(item.getEntrustPrice()) >= 0).collect(Collectors.toList());
