@@ -32,6 +32,7 @@ import com.joyintech.tams.cfets.etrib.bond.service.CfetsEtrIbBondinfo002Service;
 import com.joyintech.tams.cfets.etrib.bond.service.CfetsEtrIbBondinfoService;
 import com.joyintech.tams.cfets.etrib.bond.service.CfetsEtribBondInfo003Service;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
+import com.joyintech.tams.common.base.entity.SppiImportData;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.component.business.riskrds.controller.InterfRiskRdsController;
@@ -570,6 +571,18 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         } catch (Exception e) {
             logger.error("查询指令买入时查询业务模式异常", e);
             return new Message<String>().fail().setMessage("查询异常");
+        }
+    }
+    @ApiOperation(value = "查询资产是否进行了SPPI测试", notes = "查询资产是否进行了SPPI测试")
+    @PostMapping("/queryAssetIsSppiTest/{secId:.+}")
+    @ResponseBody
+    public Message<SppiImportData> queryAssetIsSppiTest(@PathVariable String secId) {
+        try {
+            SppiImportData data = cfetsEtrIbBondinfoService.queryAssetIsSppiTest(secId);
+            return new Message<SppiImportData>().success().setData(data);
+        } catch (Exception e) {
+            logger.error("查询该资产是否进行了SPPI测试异常", e);
+            return new Message<SppiImportData>().fail().setMessage("查询异常");
         }
     }
 }
