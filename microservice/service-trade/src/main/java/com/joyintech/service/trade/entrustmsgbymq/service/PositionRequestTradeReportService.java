@@ -148,7 +148,10 @@ public class PositionRequestTradeReportService {
             pltMap.put("ordId", entity.getOrderId());
             pltMap.put("ordSecAmount", dto.getOrdSecAmount());
             pltMap.put("cashAcctId", dto.getCashAcctId());
-            pltMap.put("secAcctId", entity.getSecAcctId());
+            // ZGTFCP-1126:证券管理账户赋值 modify by fuyongsheng 20220316 start
+            // pltMap.put("secAcctId", entity.getSecAcctId());
+            pltMap.put("secAcctId", dto.getSecAcctId());
+            // ZGTFCP-1126:证券管理账户赋值 modify by fuyongsheng 20220316 end
             pltMap.put("secAmount", dto.getSecAmount());
             pltMap.put("cashAmount", dto.getCashAmount());
             pltMap.put("invAim", entity.getInvAim());

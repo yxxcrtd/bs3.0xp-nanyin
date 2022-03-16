@@ -88,7 +88,7 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest {
         resultMap.put("modelType", PositionConstant.POSITION_TYPE_ETR);
         resultMap.put("busiType", busiType);
         resultMap.put("ps", entity.getPs());
-        resultMap.put("decisionAct", DictCodeListExt3.系统动作_关闭.getValue());
+        resultMap.put("busiAct", DictCodeListExt3.业务动作_指令手动关闭.getValue());
         resultMap.put("systemAct", DictCodeListExt3.系统动作_关闭.getValue());
         resultMap.put("closeId", entity.getEntrustId());
         PositionHttpRequest.batchClose(resultMap);

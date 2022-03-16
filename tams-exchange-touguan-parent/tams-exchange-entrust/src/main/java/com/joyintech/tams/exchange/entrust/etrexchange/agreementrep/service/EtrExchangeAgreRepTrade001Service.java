@@ -21,6 +21,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeCommonRiskcalDto;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePortfolioRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -2306,5 +2309,38 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
             });
         }
         return resultList;
+    }
+
+    /**
+     *风险试算时，后台数据转换
+     * @return
+     */
+    public  Map<String, Object> doRiskcalPackageEquity(EtrExchangeAgreRepTrade001Dto dto) {
+        Map<String, Object> dataMap = BeanUtil.object2Map(dto);
+        dataMap.put("repPs", dto.getRepPs());
+        dataMap.put("redoType", dto.getRedoType());
+        dataMap.put("assetType2", dto.getAssetType2());
+        dataMap.put("busiPs", dto.getBusiPs());
+        dataMap.put("counterId", dto.getCounterId());
+        dataMap.put("expireSettleAmt", dto.getExpireSettleAmt());
+        dataMap.put("expireSettleDate", dto.getExpireSettleDate());
+        dataMap.put("finprodId", dto.getFinprodId());
+        dataMap.put("fristSettleDate", dto.getFristSettleDate());
+        dataMap.put("fromEtrExchange", "Y");
+        dataMap.put("intAmt", dto.getIntAmt());
+        dataMap.put("vdate", dto.getVdate());
+        dataMap.put("mdate", dto.getMdate());
+        dataMap.put("portfolioId", dto.getPortfolioId());
+        dataMap.put("printAmt", dto.getPrintAmt());
+        dataMap.put("ps", dto.getPs());
+        dataMap.put("repSecId", dto.getRepSecId());
+        dataMap.put("repSecNum", dto.getRepSecNum());
+        dataMap.put("secAcctId", dto.getSecAcctId());
+        dataMap.put("term", dto.getTerm());
+        dataMap.put("tradeAmt", dto.getTradeAmt());
+        dataMap.put("tradeMarket", dto.getTradeMarket());
+        dataMap.put("yield", dto.getYield());
+
+        return dataMap;
     }
 }

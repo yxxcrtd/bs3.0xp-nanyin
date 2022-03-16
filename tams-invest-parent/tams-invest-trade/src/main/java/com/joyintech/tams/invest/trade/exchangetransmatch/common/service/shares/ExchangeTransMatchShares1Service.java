@@ -98,7 +98,17 @@ public class ExchangeTransMatchShares1Service extends ExchangeTransMatchSharesCo
         // 随交易支付费用
         trdProductDeal.setFeeAmtPay(entrustDto.getMarchFeeAmtPay());
         // 交易金额
-        trdProductDeal.setTradeAmt(ArithmeticUtil.subtract(entrustDto.getMarchAmt(), entrustDto.getMarchFeeAmtPay()));
+        // ZGTFCP-1094:股票需要根据交易方向加减费用 modify by fuyongsheng 20220316 start
+        // trdProductDeal.setTradeAmt(ArithmeticUtil.subtract(entrustDto.getMarchAmt(), entrustDto.getMarchFeeAmtPay()));
+        if(DictCodeList.交易方向_买入.getValue().equals(dealDto.getPs())
+                || DictCodeList.交易方向_申购.getValue().equals(dealDto.getPs())
+                || DictCodeListExt2.交易方向_增发.getValue().equals(dealDto.getPs())
+                || DictCodeListExt2.交易方向_配股.getValue().equals(dealDto.getPs())){
+            trdProductDeal.setTradeAmt(ArithmeticUtil.doAdd(entrustDto.getMarchAmt(), entrustDto.getMarchFeeAmtPay()));
+        }else{
+            trdProductDeal.setTradeAmt(ArithmeticUtil.subtract(entrustDto.getMarchAmt(), entrustDto.getMarchFeeAmtPay()));
+        }
+        // ZGTFCP-1094:股票需要根据交易方向加减费用 modify by fuyongsheng 20220316 end
         // 未随交易支付费用
         trdProductDeal.setFeeAmtUnpay(entrustDto.getMarchFeeAmtUnPay());
         // 总交易费用

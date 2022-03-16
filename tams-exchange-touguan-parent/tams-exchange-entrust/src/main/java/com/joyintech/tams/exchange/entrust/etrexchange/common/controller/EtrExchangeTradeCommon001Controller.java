@@ -11,6 +11,7 @@
 package com.joyintech.tams.exchange.entrust.etrexchange.common.controller;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
@@ -58,8 +59,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
@@ -989,7 +990,76 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	public AjaxResult check(@RequestBody  EtrExchangeTradeSaveRequest dto, BindingResult br)
 			throws Exception {
 		AjaxResult ajax= etrExchangeTrade001CommonService.checkSave(dto,br);
-		return ajax;
+		List<ValidMessage> validList = etrExchangeTradeCommonValidatorService.valid(dto);
+		if (!CollectionUtils.isEmpty(validList)){
+			ajax.setErrorList(validList);
+		}
+		if (ajax != null && !StringUtil.isEmptyList(ajax.getErrorList()) && !StringUtil.equals(dto.getOperateType(),"save")) {
+			return ajax;
+		}
+
+		String confirmMsg = "";
+		if (DictCodeList.交易方向_申购.getValue().equals(dto.getPs()) && DictCodeListExt1.金融产品类型_投管用_股票.getValue().equals(dto.getFinprodType2())) {
+			Map<String, Object> paramMap = new HashMap<String, Object>();
+			paramMap.put("finprodId", dto.getFinprodId());//金融产品代码
+			List<String> othTypeList = new ArrayList<String>();
+			othTypeList.add(DictCodeListExt3.金融产品其他代码类型_新股申购代码.getValue());
+			paramMap.put("othTypeList", othTypeList);
+			Map<String, Object> paramMap1 = new HashMap<String, Object>();
+			paramMap1.put("finprodId", dto.getFinprodId());//金融产品代码
+			paramMap1.put("secAcctId",dto.getSecAcctId());
+			paramMap1.put("cDate",DateUtil.getSysDate());
+			paramMap1.put("portfolioId",dto.getPortfolioId());
+			String othType = DictCodeListExt3.金融产品其他代码类型_新股申购代码.getValue();              //业务类型
+			List<FinProductOthCodeDto> codeDtos = etrExchangeTrade001CommonService.getFinprodOthCodeInfo(paramMap);
+			if (codeDtos.size() > 0) {
+				othType = codeDtos.get(0).getOthType();
+				paramMap1.put("othType", othType);
+			}
+			List<FinProductQuto> qutos = etrExchangeTrade001CommonService.getFinProductQutoInfo(paramMap1);
+			if (qutos.size() == 0) {
+				confirmMsg = "当前资产无申购额度，是否继续？";
+			}
+		}
+
+		//配股配债权益数量软check
+		if (DictCodeListExt2.交易方向_配股.getValue().equals(dto.getPs())||DictCodeListExt3.交易方向_配债.getValue().equals(dto.getPs())) {
+			Map<String, Object> param = new HashMap<String, Object>();
+			Map<String, Object> paramMap = new HashMap<String, Object>();
+			paramMap.put("finprodId", dto.getFinprodId());//金融产品代码
+			List<String> othTypeList = new ArrayList<String>();
+			String othType = "";
+			//业务类型
+			if(DictCodeListExt2.交易方向_配股.getValue().equals(dto.getPs())){
+				othTypeList.add(DictCodeListExt3.金融产品其他代码类型_配股代码.getValue());
+				othType=DictCodeListExt3.金融产品其他代码类型_配股代码.getValue();
+
+			}
+			if(DictCodeListExt3.交易方向_配债.getValue().equals(dto.getPs())){
+				othTypeList.add(DictCodeListExt3.金融产品其他代码类型_配债代码.getValue());
+			}
+			paramMap.put("othTypeList", othTypeList);
+			Map<String, Object> paramMap1 = new HashMap<String, Object>();
+			paramMap1.put("finprodId", dto.getFinprodId());//金融产品代码
+			paramMap1.put("secAcctId",dto.getSecAcctId());
+			paramMap1.put("cDate",DateUtil.getSysDate());
+//            paramMap1.put("portfolioId",dto.getPortfolioId());
+			List<FinProductOthCodeDto> codeDtos = etrExchangeTrade001CommonService.getFinprodOthCodeInfo(paramMap);
+			if (codeDtos.size() > 0) {
+				othType = codeDtos.get(0).getOthType();
+				paramMap1.put("othType", othType);
+			}
+			List<FinProductQuto> qutos = etrExchangeTrade001CommonService.getFinProductQutoInfo(paramMap1);
+			if (qutos.size() == 0) {
+				confirmMsg = "当前资产无配股/配债额度，是否继续？";
+			}
+		}
+		AjaxResult ajaxResult = new AjaxResult();
+		if (StringUtil.isNotEmpty(confirmMsg)) {
+			ajaxResult.setMessageType(MessageType.确认消息);
+			ajaxResult.setData(confirmMsg);
+		}
+		return ajaxResult;
 	}
 	/**
 	 * 保存/提交

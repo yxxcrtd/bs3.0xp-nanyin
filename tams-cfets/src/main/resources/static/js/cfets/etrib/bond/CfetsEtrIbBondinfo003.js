@@ -799,6 +799,37 @@
             Joyin.error("请填写完整在进行风险试算");
             return;
         }
+        if(param.tradeAmt) {
+            param.tradeAmt = param.tradeAmt * 10000;
+        }
+        if(param.entrustOwnNum) {
+            param.entrustOwnNum = param.entrustOwnNum * 10000;
+        }
+        if(param.entrustIntegrateNum) {
+            param.entrustIntegrateNum = param.entrustIntegrateNum * 10000;
+        }
+        if(param.matureYieldShow) {
+            param.matureYield = param.matureYield / 100;
+        }
+        if(param.exerYield) {
+            param.exerYield = param.exerYield / 100;
+        }
+        if(param.bussCombDistribtList) {
+            $.each(param.bussCombDistribtList,function (index,item) {
+                if(item.entrustNum) {
+                    item.entrustNum = item.entrustNum * 10000;
+                }
+                if(item.entrustOwnNum) {
+                    item.entrustOwnNum = item.entrustOwnNum * 10000;
+                }
+                if(item.entrustIntegrateNum) {
+                    item.entrustIntegrateNum = item.entrustIntegrateNum * 10000;
+                }
+            })
+        }
+        if(param.riskTrialRetDto) {
+            param.riskTrialRetDto = null;
+        }
         $.ajax({
             type: "POST",
             url: basePath + 'cfets/etrib/cfetsEtrIbBondinfo/doRiskcal',

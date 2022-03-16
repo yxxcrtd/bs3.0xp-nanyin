@@ -377,7 +377,7 @@ public class PortfolioManager extends BaseService {
 
         Map<String, PortfolioInfoResponse> portfolioInfoResponseMap = Maps.newHashMap();
         if (infoFlag) {
-            // modify by swwan 调用投管计算头寸方法 start
+            // modify by swwan 调用投管查询头寸方法 start
             List<PositionCashSecSingleResp> positionCashSecSingleResps = this.queryPortfolioInfoByTg(instructionDetails, instruction);
             PortfolioInfoResponse infoResponse;
             for (PositionCashSecSingleResp item : positionCashSecSingleResps) {
@@ -406,7 +406,7 @@ public class PortfolioManager extends BaseService {
 //
 //            ResultBean portfolioInfoResult = this.queryPortfolioInfo(portfolioInfoRequest);
 //            portfolioInfoResponseMap.putAll((Map<String, PortfolioInfoResponse>) portfolioInfoResult.getData());
-            // modify by swwan 调用投管计算头寸方法 end
+            // modify by swwan 调用投管查询头寸方法 end
         }
 
         // 计算结果列表
@@ -492,11 +492,13 @@ public class PortfolioManager extends BaseService {
             calculateResponse.setAcctNo(instruction.getAcctName());
 
             // - 计算组合委托额度
-            disRate = detail.getDisRate();
+            disRate = isVolume ? (detail.getEntrustNum().divide(BigDecimal.valueOf(instruction.getEntrustNum()), 8, RoundingMode.HALF_UP)) : (detail.getEntrustAmt().divide(instruction.getEntrustAmt(), 8, RoundingMode.HALF_UP));
             // 数量
             if (TradeUtils.bigThanZero(orderVolume) && TradeUtils.bigThanZero(disRate)) {
                 // 根据比例计算委托数量
-                entrustVolume = NumberUtil.mul(orderVolume, disRate);
+                entrustVolume = isVolume ?
+                        ((orderVolume.multiply(detail.getEntrustNum())).divide(BigDecimal.valueOf(instruction.getEntrustNum()), 8, RoundingMode.HALF_UP)) :
+                        ((orderVolume.multiply(detail.getEntrustAmt())).divide(instruction.getEntrustAmt(), 8, RoundingMode.HALF_UP));
                 if (TradeUtils.lessThan(entrustVolume, minStep)) {
                     // 小于最小交易单位时的处理，置为0
                     entrustVolume = BigDecimal.ZERO;
@@ -538,8 +540,9 @@ public class PortfolioManager extends BaseService {
 
         if (isVolume && DictCodeListExt3.交易方向_债转股.getValue().equals(instruction.getPs())) {
             long bondPaperValue = 100L;
+            long totalConNum = list.get(0).getInstructionLeftNum() * bondPaperValue / list.get(0).getEntrustPrice().longValue();
             for (PortfolioCalculateResponse response : list) {
-                response.setConNum(response.getInstructionLeftNum() * bondPaperValue / response.getEntrustPrice().longValue());
+                response.setConNum(totalConNum * response.getEntrustNum() / instruction.getEntrustNum());
             }
         }
 
@@ -642,23 +645,23 @@ public class PortfolioManager extends BaseService {
         // 跌停价
         BigDecimal lowerLimitPrice = TradeUtils.getBigDecimal(tick.getLowerLimitPrice(), 4);
 
-        // 特殊处理 质押式回购交易，将委托价格设置为100
-        if (EntrustUtils.isPledgeRepurchase(instruction)) {
-            bean.setEntrustPrice(BigDecimal.valueOf(100L));
-        }
-
         // 构造返回列表
         List<PortfolioInstructionContextDto> resultList = new ArrayList<>();
-        // 调整后的价格
-        BigDecimal adjustedPrice = bean.getEntrustPrice();
-        result.setPrice(adjustedPrice);
 
         // 获取买卖方向
         String entrustBs = EntrustBsProp.getEntrustBs(instruction.getPs());
         // 获取委托属性
-        String entrustProp = EntrustPropUtils.getEntrustProp(instruction, bean.getEntrustProp());
+//        String entrustProp = EntrustPropUtils.getEntrustProp(instruction, bean.getEntrustProp());
         // 获取委托价格
         BigDecimal entrustPrice = bean.getEntrustPrice();
+        // 调整后的价格
+        BigDecimal adjustedPrice = entrustPrice;
+        // 市价订单
+        // 如果是市价指令+限价订单时，委托价格不为0
+        if (EntrustUtils.isMarketPrice(instruction) && TradeUtils.isZero(entrustPrice)) {
+            adjustedPrice = this.getMarketPrice(tick, entrustBs);
+        }
+        result.setPrice(adjustedPrice);
 
         // 过滤公平相关指令
         // 1. 同交易员 2. 同证券编码 3. 同交易方向
@@ -673,17 +676,19 @@ public class PortfolioManager extends BaseService {
         log.debug("初步过滤出公平相关指令：{}", JSONUtil.toJsonStr(questList));
 
         // questList 是从内存拿出的数据，不能直接使用
-        List<Instruction> tempList = new ArrayList<>(questList);
+        List<Instruction> tempList = new ArrayList<>(questList.size());
+        Instruction tempIns = null;
+        for (Instruction ins : questList) {
+            tempIns = new Instruction();
+            BeanUtil.copyProperties(ins, tempIns);
+            tempList.add(tempIns);
+        }
 
         // 委托价格为0的指令（市价指令），将涨跌停价填充到委托价格
         for (Instruction ins : tempList) {
-            if (EntrustUtils.isMarketPrice(ins) && BigDecimal.ZERO.compareTo(ins.getEntrustPrice()) == 0) {
-                if (EntrustBs.BUY.value.equals(entrustBs)) {
-                    ins.setEntrustPrice(TradeUtils.getBigDecimal(tick.getUpperLimitPrice(), 4));
-                } else {
-                    ins.setEntrustPrice(TradeUtils.getBigDecimal(tick.getLowerLimitPrice(), 4));
-                }
-                log.debug("将涨跌停价填充到委托价格为0的指令（市价指令）：{}", JSONUtil.toJsonStr(tempList));
+            if (isZeroPriceMarketInstruction(ins)) {
+                ins.setEntrustPrice(this.getMarketPrice(tick, entrustBs));
+                log.debug("将涨跌停价[{}]填充到委托价格为0的市价指令[{}]", ins.getEntrustPrice(), ins.getEntrustId());
             }
         }
 
@@ -728,22 +733,28 @@ public class PortfolioManager extends BaseService {
             }
 
             // 提示：“委托价格必须优于所有指令价格”
-            if (adjustedPrice.compareTo(bean.getEntrustPrice()) != 0) {
+            if (adjustedPrice.compareTo(entrustPrice) != 0) {
                 result.setInfoLevel("2");
                 result.setInfoDetails("委托价格必须优于所有指令价格");
                 result.setPrice(adjustedPrice);
             }
         } else {
             // 02时，剔除该指令并继续时
+            BigDecimal orderPrice = adjustedPrice;
             if (EntrustBs.isBuy(entrustBs)) {
                 // 买入，过滤价格小于指令价格的指令
-                tempList = tempList.stream().filter(item -> entrustPrice.compareTo(item.getEntrustPrice()) >= 0).collect(Collectors.toList());
+                tempList = tempList.stream().filter(item -> orderPrice.compareTo(item.getEntrustPrice()) >= 0).collect(Collectors.toList());
             } else {
                 // 卖出，过滤价格大于指令价格的指令
-                tempList = tempList.stream().filter(item -> entrustPrice.compareTo(item.getEntrustPrice()) <= 0).collect(Collectors.toList());
+                tempList = tempList.stream().filter(item -> orderPrice.compareTo(item.getEntrustPrice()) <= 0).collect(Collectors.toList());
+            }
+
+            // 系统参数“委托价格不优于指令价格时的处理模式”为2.剔除该指令并继续时，
+            // 若委托价格选择市价，则限价指令数量调整为0，并不参与数量分配；
+            if (EntrustUtils.isMarketPriceByEntrustProp(bean.getEntrustProp())) {
+                tempList = tempList.stream().filter(EntrustUtils::isMarketPrice).collect(Collectors.toList());
             }
         }
-
         /*
             a)计算每条指令剩余数量：
                 数量指令，指令剩余数量即为实际指令剩余数量；
@@ -804,11 +815,21 @@ public class PortfolioManager extends BaseService {
         // 计算总委托数量和总委托金额
         long sumEntrustVolume = getTotalEntrustVolume(resultList);
         result.setTotalEntrustVolume(sumEntrustVolume);
-        result.setTotalEntrustAmt(result.getPrice().multiply(BigDecimal.valueOf(sumEntrustVolume)));
+        // 特殊处理 质押式回购交易，委托金额=委托数量*100
+        if (EntrustUtils.isPledgeRepurchase(instruction)) {
+            result.setTotalEntrustAmt(BigDecimal.valueOf(100L).multiply(BigDecimal.valueOf(sumEntrustVolume)));
+        } else {
+            result.setTotalEntrustAmt(result.getPrice().multiply(BigDecimal.valueOf(sumEntrustVolume)));
+        }
         // 首次调用，特殊处理
         if (bean.getEntrustVolume() == 0L) {
             result.setTotalEntrustVolume(result.getTotalLeftVolume());
-            result.setTotalEntrustAmt(result.getPrice().multiply(BigDecimal.valueOf(result.getTotalLeftVolume())));
+            // 特殊处理 质押式回购交易，委托金额=委托数量*100
+            if (EntrustUtils.isPledgeRepurchase(instruction)) {
+                result.setTotalEntrustAmt(BigDecimal.valueOf(100L).multiply(BigDecimal.valueOf(result.getTotalLeftVolume())));
+            } else {
+                result.setTotalEntrustAmt(result.getPrice().multiply(BigDecimal.valueOf(result.getTotalLeftVolume())));
+            }
         }
         for (PortfolioInstructionContextDto context : resultList) {
             // 分配到指令的委托数量比例，借用转股价格字段
@@ -817,6 +838,18 @@ public class PortfolioManager extends BaseService {
         log.debug("公平委托相关指令: {}", JsonUtils.getJsonFromObject(resultList));
 
         return resultList;
+    }
+
+    private boolean isZeroPriceMarketInstruction(Instruction instruction) {
+        return EntrustUtils.isMarketPrice(instruction) && BigDecimal.ZERO.compareTo(instruction.getEntrustPrice()) == 0;
+    }
+
+    private BigDecimal getMarketPrice(QuoteProto.TickBean tick, String entrustBs) {
+        if (EntrustBs.isBuy(entrustBs)) {
+            return TradeUtils.getBigDecimal(tick.getUpperLimitPrice(), 4);
+        } else {
+            return TradeUtils.getBigDecimal(tick.getLowerLimitPrice(), 4);
+        }
     }
 
     /**

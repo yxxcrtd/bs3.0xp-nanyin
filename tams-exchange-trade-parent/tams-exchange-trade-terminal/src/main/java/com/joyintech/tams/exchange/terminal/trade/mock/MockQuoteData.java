@@ -141,7 +141,7 @@ public class MockQuoteData {
             buy.setStockCode(stockCode);
             buy.setStockName(stockCode);
             buy.setFullPrice(101.00);
-            buy.setExpireIncomeRate(0.012);
+            buy.setExpireIncomeRate(0.12);
             buy.setEntrustBs(EntrustBs.BUY.value);
             integratedQuotes.add(buy);
 
@@ -150,12 +150,12 @@ public class MockQuoteData {
             sell.setMarket(Market.SHSE.value);
             sell.setQuoteType(QuoteType.FIXED_INCOME_QUOTE.value);
             sell.setEntrustPrice(100.00);
-            sell.setEntrustVolume(100000);
-            buy.setContractId((contractIds[0] + 2) + "");
+            sell.setEntrustVolume(200000);
+            sell.setContractId((contractIds[0] + 2) + "");
             sell.setStockCode(stockCode);
             sell.setStockName(stockCode);
             sell.setFullPrice(102.00);
-            sell.setExpireIncomeRate(0.021);
+            sell.setExpireIncomeRate(0.21);
             sell.setEntrustBs(EntrustBs.SELL.value);
             integratedQuotes.add(sell);
 
@@ -168,17 +168,18 @@ public class MockQuoteData {
             integratedQuote.setQuoteType(QuoteType.FIXED_INCOME_QUOTE.value);
             integratedQuote.setEntrustPrice(100.00);
             integratedQuote.setContractId((contractIds[i - 1] + i) + "");
+            integratedQuote.setEntrustVolume(300000);
             if (i == 1) {
                 integratedQuote.setStockCode("010107.SH");
                 integratedQuote.setStockName("21国债⑺");
                 integratedQuote.setFullPrice(101.00);
-                integratedQuote.setExpireIncomeRate(0.012);
+                integratedQuote.setExpireIncomeRate(0.12);
                 integratedQuote.setEntrustBs(EntrustBs.BUY.value);
             } else {
                 integratedQuote.setStockCode("101102.SH");
                 integratedQuote.setStockName("国债1102");
                 integratedQuote.setFullPrice(102.00);
-                integratedQuote.setExpireIncomeRate(0.021);
+                integratedQuote.setExpireIncomeRate(0.21);
                 integratedQuote.setEntrustBs(EntrustBs.SELL.value);
             }
             integratedQuotes.add(integratedQuote);

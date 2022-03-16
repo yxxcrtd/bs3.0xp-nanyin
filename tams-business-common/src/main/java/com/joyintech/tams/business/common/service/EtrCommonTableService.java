@@ -11,6 +11,8 @@ import com.joyintech.tams.business.common.dto.CommonSearchQueryWorkflowResponse;
 import com.joyintech.tams.business.common.dto.CommonSearchRskInfoResponse;
 import com.joyintech.tams.business.common.dto.CommonSearchOperateListRequest;
 import com.joyintech.tams.business.common.dto.CommonSearchInfoOperateListResponse;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,10 +48,14 @@ public class EtrCommonTableService extends BaseService {
         if (!DictCodeListExt3.头寸业务类型_质押式回购首期.getValue().equals(busiTypePosition)) {
             pageParam.put("NOT_NULL_FLAG", "Y");
         }
-
         if(StringUtil.isBlank(dto.getEntrustId()) || entrustIdList.size() > 1){
             return new Page<CommonSearchRskInfoResponse>();
         }else{
+            String entrustId = dto.getEntrustId();
+            if (StringUtil.equals(dto.getPs(), DictCodeListExt1.交易方向_债转股.getValue())){
+                entrustId = entrustId+ DictCodeList.交易方向_卖出.getValue();
+                pageParam.put("entrustId",entrustId);
+            }
             return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
                     () -> etrCommonTableInfoQueryMapper.getCommonSearchTabRskInfo(pageParam));
         }

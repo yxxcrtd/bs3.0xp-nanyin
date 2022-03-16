@@ -16,7 +16,7 @@
     ETR_ENTRUST.ENTRUST_ID entrustId,
     ETR_ENTRUST.INV_MANAGER_ID invManagerId,
     su1.real_name invManagerName,
-    ETR_ENTRUST.PORTFOLIO_ID portfolioId,
+    CASE WHEN det.PORTFOLIO_ID IS NULL THEN ETR_ENTRUST.PORTFOLIO_ID ELSE det.PORTFOLIO_ID END AS portfolioId,
     PTL_PORTFOLIO.PORTFOLIO_NAME portfolioName,
     CASE WHEN ETR_ENTRUST_ADD.ASSET_TYPE = 'F01' AND fpt.TYPE_9 = '01' THEN 'F21' ELSE  ETR_ENTRUST_ADD.ASSET_TYPE END  AS finprodType2,
     CASE
@@ -59,6 +59,7 @@
     case when ETR_ENTRUST_ADD.ASSET_TYPE = 'F01' AND ETR_ENTRUST.ENTRUST_NUM != 0
     then (CASE WHEN ETR_ENTRUST.ENTRUST_NUM != '0' THEN trunc(nvl(NVL(T7.FINISH_AMT, 0)+ NVL(T5.ENT_FINISH_AMT*100, 0),0)/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100  ELSE 0 END )
     when ETR_ENTRUST_ADD.ASSET_TYPE = 'F01' AND ETR_ENTRUST.ENTRUST_NUM = 0 then 0
+    when ETR_ENTRUST_ADD.ASSET_TYPE = 'F17' then trunc(nvl(NVL(T7.FINISH_AMT, 0)+ NVL(T5.ENT_FINISH_AMT*100, 0),0)/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100
     when ETR_ENTRUST.ENTRUST_AMT = 0  then 0
     else trunc(nvl(nvl(T7.FINISH_AMT, 0) + nvl(T5.ENT_FINISH_AMT, 0), 0) / ETR_ENTRUST.ENTRUST_AMT,4) * 100 end  as exeProgress,
 
@@ -176,7 +177,7 @@
         ON C2B.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON ETR_ENTRUST_ADD.SEC_ACCT_ID = ssai.SEC_ACCT_ID
         LEFT JOIN SYS_USER su1 ON ETR_ENTRUST.INV_MANAGER_ID = su1.USER_NAME
-        LEFT JOIN (select INPUT_VALUE_1 as Finprod_Type_Tg,INPUT_VALUE_2 as ps,OUTPUT_VALUE_1 as busi_type from FIN_PRODUCT_TYPE_CONFIG where CONFIG_TYPE='BUSI_TYPE_MAPPING') btm ON ETR_ENTRUST_ADD.ASSET_TYPE = btm.Finprod_Type_Tg AND ETR_ENTRUST.Ps = btm.ps
+        LEFT JOIN (select INPUT_VALUE_1 as Finprod_Type_Tg,INPUT_VALUE_2 as ps,OUTPUT_VALUE_1 as busi_type from FIN_PRODUCT_TYPE_CONFIG where CONFIG_TYPE='BUSI_TYPE_MAPPING') btm ON ETR_ENTRUST_ADD.ASSET_TYPE = btm.Finprod_Type_Tg AND (ETR_ENTRUST.Ps = btm.ps or btm.ps is null)
         LEFT JOIN FIN_PRODUCT_TYPE_CONFIG btm1 ON  ( ETR_ENTRUST.FINPROD_TYPE2 = btm1.INPUT_VALUE_2 OR  btm1.INPUT_VALUE_2 IS NULL)
                                                AND ( ETR_ENTRUST.Ps = btm1.INPUT_VALUE_3 OR  btm1.INPUT_VALUE_3 IS NULL)
                                                AND ( ETR_ENTRUST.TRADE_PLAT = btm1.INPUT_VALUE_1 OR  btm1.INPUT_VALUE_1 IS NULL)
@@ -184,6 +185,7 @@
         left join (select ENTRUST_ID,sum(nvl(FINISH_AMT,0)) as FINISH_AMT from ETR_FINISH_STATUS where ENTRUST_ID != TRADE_ID group by ENTRUST_ID) ETR_FINISH_STATUS_A
         on ETR_FINISH_STATUS_A.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
         LEFT JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID  = ETR_ENTRUST.FINPROD_ID
+        LEFT JOIN (SELECT ENTRUST_ID, wm_concat(PORTFOLIO_ID) PORTFOLIO_ID from ETR_ENTRUST_DETAIL GROUP BY ENTRUST_ID) det on det.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
         <where>
         AND ETR_ENTRUST.ENTRUST_STATUS IN(#{entrustAwait},#{entrustDistribute},#{entrustReceive},#{entrustUntread},#{entrustClose},#{entrustReturn},#{entrustRecall})
         <if test="entrustStatusList != null and entrustStatusList.size() > 0">
@@ -275,7 +277,8 @@
     ETR_ENTRUST.ENTRUST_ID entrustId,
     ETR_ENTRUST.INV_MANAGER_ID invManagerId,
     su2.real_name invManagerName,
-    ETR_ENTRUST.PORTFOLIO_ID portfolioId,
+    CASE WHEN det.PORTFOLIO_ID IS NULL THEN ETR_ENTRUST.PORTFOLIO_ID ELSE det.PORTFOLIO_ID END AS portfolioId,
+
     PTL_PORTFOLIO.PORTFOLIO_NAME portfolioName,
     CASE WHEN ETR_ENTRUST_ADD.ASSET_TYPE = 'F01' AND fpt.TYPE_9 = '01' THEN 'F21' ELSE  ETR_ENTRUST_ADD.ASSET_TYPE END AS finprodType2,
     ETR_ENTRUST.FINPROD_ID finprodMarketId,
@@ -311,6 +314,7 @@
     case when ETR_ENTRUST_ADD.ASSET_TYPE = 'F01' AND ETR_ENTRUST.ENTRUST_NUM != 0
     then trunc(nvl(NVL(T7.FINISH_AMT, 0)+ NVL(T5.ENT_FINISH_AMT*100, 0),0)/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100
     when ETR_ENTRUST_ADD.ASSET_TYPE = 'F01' AND ETR_ENTRUST.ENTRUST_NUM = 0 then 0
+    when ETR_ENTRUST_ADD.ASSET_TYPE = 'F17' then trunc(nvl(NVL(T7.FINISH_AMT, 0)+ NVL(T5.ENT_FINISH_AMT*100, 0),0)/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100
     when ETR_ENTRUST.ENTRUST_AMT = 0  then 0
     else trunc(nvl(nvl(T7.FINISH_AMT, 0) + nvl(T5.ENT_FINISH_AMT, 0), 0) / ETR_ENTRUST.ENTRUST_AMT,4) * 100 end  as exeProgress,
 
@@ -424,7 +428,7 @@
     ON C2B.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
     LEFT JOIN STL_SEC_ACCT_INFO ssai ON ETR_ENTRUST_ADD.SEC_ACCT_ID = ssai.SEC_ACCT_ID
     LEFT JOIN SYS_USER su2 ON ETR_ENTRUST.INV_MANAGER_ID = su2.USER_NAME
-    LEFT JOIN (select INPUT_VALUE_1 as Finprod_Type_Tg,INPUT_VALUE_2 as ps,OUTPUT_VALUE_1 as busi_type from FIN_PRODUCT_TYPE_CONFIG where CONFIG_TYPE='BUSI_TYPE_MAPPING') btm ON ETR_ENTRUST.FINPROD_TYPE2 = btm.Finprod_Type_Tg AND ETR_ENTRUST.Ps = btm.ps
+    LEFT JOIN (select INPUT_VALUE_1 as Finprod_Type_Tg,INPUT_VALUE_2 as ps,OUTPUT_VALUE_1 as busi_type from FIN_PRODUCT_TYPE_CONFIG where CONFIG_TYPE='BUSI_TYPE_MAPPING') btm ON ETR_ENTRUST_ADD.ASSET_TYPE = btm.Finprod_Type_Tg AND (ETR_ENTRUST.Ps = btm.ps or btm.ps is null)
     LEFT JOIN FIN_PRODUCT_TYPE_CONFIG btm1 ON  ( ETR_ENTRUST.FINPROD_TYPE2 = btm1.INPUT_VALUE_2 OR  btm1.INPUT_VALUE_2 IS NULL)
                                            AND ( ETR_ENTRUST.Ps = btm1.INPUT_VALUE_3 OR  btm1.INPUT_VALUE_3 IS NULL)
                                            AND ( ETR_ENTRUST.TRADE_PLAT = btm1.INPUT_VALUE_1 OR  btm1.INPUT_VALUE_1 IS NULL)
@@ -432,6 +436,7 @@
     left join (select ENTRUST_ID,sum(nvl(FINISH_AMT,0)) as FINISH_AMT from ETR_FINISH_STATUS where ENTRUST_ID != TRADE_ID group by ENTRUST_ID) ETR_FINISH_STATUS_A
     on ETR_FINISH_STATUS_A.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
     LEFT JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID  = ETR_ENTRUST.FINPROD_ID
+    LEFT JOIN (SELECT ENTRUST_ID, wm_concat(PORTFOLIO_ID) PORTFOLIO_ID from ETR_ENTRUST_DETAIL GROUP BY ENTRUST_ID) det on det.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
     <where>
         AND ETR_ENTRUST.FINPROD_TYPE2 = 'F36'
         AND ETR_ENTRUST.ENTRUST_STATUS IN(#{entrustAwait},#{entrustDistribute},#{entrustReceive},#{entrustUntread},#{entrustClose},#{entrustReturn},#{entrustRecall})
@@ -669,7 +674,7 @@
             fpa.TRM_FUND_ABBR trmFundAbbr,
             to_char( eted.VDATE, 'yyyy-MM-dd' ) vDate,
             to_char( eted.MDATE , 'yyyy-MM-dd' ) mDate,
-            ete.portfolio_id portfolioId,
+            CASE WHEN det.PORTFOLIO_ID IS NULL THEN ete.PORTFOLIO_ID ELSE det.PORTFOLIO_ID END AS portfolioId,
             pp.portfolio_name portfolioName,
             fp.finprod_market_id finprodMarketId,
             fp.finprod_abbr finprodAbbr,
@@ -703,6 +708,7 @@
                  LEFT JOIN MST_CALENDAR_INFO mci2 ON mci2.CALENDAR_ID  = ete.CALENDAR_ID
                  LEFT JOIN STL_SEC_ACCT_INFO ssai ON eted.SEC_ACCT_ID = ssai.SEC_ACCT_ID
                  LEFT JOIN FIN_PRODUCT_ADD fpa ON ete.finprod_id = fpa.finprod_id
+                 LEFT JOIN (SELECT ENTRUST_ID, wm_concat(PORTFOLIO_ID) PORTFOLIO_ID from ETR_ENTRUST_DETAIL GROUP BY ENTRUST_ID) det on det.ENTRUST_ID = ete.ENTRUST_ID
         WHERE ete.entrust_id = #{entrustId}
 
         union
@@ -726,7 +732,7 @@
             fpa.TRM_FUND_ABBR trmFundAbbr,
             to_char( eted.VDATE, 'yyyy-MM-dd' ) vDate,
             to_char( eted.MDATE , 'yyyy-MM-dd' ) mDate,
-            ete.portfolio_id portfolioId,
+            CASE WHEN det.PORTFOLIO_ID IS NULL THEN ete.PORTFOLIO_ID ELSE det.PORTFOLIO_ID END AS portfolioId,
             pp.portfolio_name portfolioName,
             fp.finprod_market_id finprodMarketId,
             fp.finprod_abbr finprodAbbr,
@@ -760,6 +766,7 @@
                  LEFT JOIN MST_CALENDAR_INFO mci2 ON mci2.CALENDAR_ID  = ete.CALENDAR_ID
                  LEFT JOIN STL_SEC_ACCT_INFO ssai ON eted.SEC_ACCT_ID = ssai.SEC_ACCT_ID
                  LEFT JOIN FIN_PRODUCT_ADD fpa ON ete.finprod_id = fpa.finprod_id
+                 LEFT JOIN (SELECT ENTRUST_ID, wm_concat(PORTFOLIO_ID) PORTFOLIO_ID from WFL_ETR_ENTRUST_DETAIL GROUP BY ENTRUST_ID) det on det.ENTRUST_ID = ete.ENTRUST_ID
         WHERE ete.entrust_id = #{entrustId}
     </select>
 
@@ -782,7 +789,7 @@
             to_char( eted.MDATE , 'yyyy-MM-dd' ) mDate,
             eted.MIN_AMT minAmt,
             eted.ASSET_TYPE1 paBussType,
-            ete.portfolio_id portfolioId,
+            CASE WHEN det.PORTFOLIO_ID IS NULL THEN ete.PORTFOLIO_ID ELSE det.PORTFOLIO_ID END AS portfolioId,
             pp.portfolio_name portfolioName,
             ete.inv_aim busiModel,
             fp.finprod_market_id finprodMarketId,
@@ -845,6 +852,7 @@
         LEFT JOIN ETR_TARGET T4 ON ete.ENTRUST_ID = T4.ENTRUST_ID
         LEFT JOIN FIN_PRODUCT T5 ON T4.TARGET_FINPROD_ID = T5.FINPROD_ID
         LEFT JOIN MST_CALENDAR_INFO mci2 ON mci2.CALENDAR_ID  = ete.CALENDAR_ID
+        LEFT JOIN ( SELECT ENTRUST_ID, wm_concat ( PORTFOLIO_ID ) PORTFOLIO_ID FROM ETR_ENTRUST_DETAIL GROUP BY ENTRUST_ID ) det ON det.ENTRUST_ID = ete.ENTRUST_ID
         WHERE ete.entrust_id = #{entrustId}
 
         union
@@ -865,7 +873,7 @@
         to_char( eted.MDATE , 'yyyy-MM-dd' ) mDate,
         eted.MIN_AMT minAmt,
         eted.ASSET_TYPE1 paBussType,
-        ete.portfolio_id portfolioId,
+        CASE WHEN det.PORTFOLIO_ID IS NULL THEN ete.PORTFOLIO_ID ELSE det.PORTFOLIO_ID END AS portfolioId,
         pp.portfolio_name portfolioName,
         ete.inv_aim busiModel,
         fp.finprod_market_id finprodMarketId,
@@ -928,6 +936,7 @@
         LEFT JOIN ETR_TARGET T4 ON ete.ENTRUST_ID = T4.ENTRUST_ID
         LEFT JOIN FIN_PRODUCT T5 ON T4.TARGET_FINPROD_ID = T5.FINPROD_ID
         LEFT JOIN MST_CALENDAR_INFO mci2 ON mci2.CALENDAR_ID  = ete.CALENDAR_ID
+        LEFT JOIN ( SELECT ENTRUST_ID, wm_concat ( PORTFOLIO_ID ) PORTFOLIO_ID FROM WFL_ETR_ENTRUST_DETAIL GROUP BY ENTRUST_ID ) det ON det.ENTRUST_ID = ete.ENTRUST_ID
         WHERE ete.entrust_id = #{entrustId}) T
         where rownum &lt;=1
     </select>
@@ -1388,7 +1397,7 @@
         SELECT
         #{busiTypePosition} busiTypePosition,
         to_char(ete.entrust_date,'yyyy-MM-dd') entrustDate,
-        ete.portfolio_id portfolioId,
+        CASE WHEN det.PORTFOLIO_ID IS NULL THEN ete.PORTFOLIO_ID ELSE det.PORTFOLIO_ID END AS portfolioId,
         pp.portfolio_name portfolioName,
         ete.inv_aim busiModel,
         fp.finprod_market_id finprodMarketId,
@@ -1478,6 +1487,7 @@
         LEFT JOIN etr_pledge oee ON oete.entrust_id = oee.entrust_id
         LEFT JOIN FIN_PRODUCT T6 ON oete.FINPROD_ID = T6.FINPROD_ID
         LEFT JOIN FIN_STDSEC_CONVERSE_RADIO fscr ON ete.FINPROD_ID = fscr.FINPROD_ID
+        LEFT JOIN ( SELECT ENTRUST_ID, wm_concat ( PORTFOLIO_ID ) PORTFOLIO_ID FROM ETR_ENTRUST_DETAIL GROUP BY ENTRUST_ID ) det ON det.ENTRUST_ID = ete.ENTRUST_ID
         WHERE ete.entrust_id = #{entrustId}
           AND ( fscr.VDATE  = ( select max(VDATE) from FIN_STDSEC_CONVERSE_RADIO fscr1
           where fscr1.FINPROD_ID= fscr.FINPROD_ID and fscr1.BRANCH = fscr.BRANCH and fscr1.VDATE &lt;= to_date(#{sysDateStr},'yyyy-mm-dd'))  OR fscr.VDATE IS NULL )
@@ -1486,7 +1496,7 @@
         SELECT
         #{busiTypePosition} busiTypePosition,
         to_char(ete.entrust_date,'yyyy-MM-dd') entrustDate,
-        ete.portfolio_id portfolioId,
+        CASE WHEN det.PORTFOLIO_ID IS NULL THEN ete.PORTFOLIO_ID ELSE det.PORTFOLIO_ID END AS portfolioId,
         pp.portfolio_name portfolioName,
         ete.inv_aim busiModel,
         fp.finprod_market_id finprodMarketId,
@@ -1576,6 +1586,7 @@
         LEFT JOIN etr_pledge oee ON oete.entrust_id = oee.entrust_id
         LEFT JOIN FIN_PRODUCT T6 ON oete.FINPROD_ID = T6.FINPROD_ID
         LEFT JOIN FIN_STDSEC_CONVERSE_RADIO fscr ON ete.FINPROD_ID = fscr.FINPROD_ID
+        LEFT JOIN ( SELECT ENTRUST_ID, wm_concat ( PORTFOLIO_ID ) PORTFOLIO_ID FROM WFL_ETR_ENTRUST_DETAIL GROUP BY ENTRUST_ID ) det ON det.ENTRUST_ID = ete.ENTRUST_ID
         WHERE ete.entrust_id = #{entrustId}
           AND (fscr.VDATE  = ( select max(VDATE) from FIN_STDSEC_CONVERSE_RADIO fscr1
         where fscr1.FINPROD_ID= fscr.FINPROD_ID and fscr1.BRANCH = fscr.BRANCH and fscr1.VDATE &lt;= to_date(#{sysDateStr},'yyyy-mm-dd')) OR fscr.VDATE IS NULL )

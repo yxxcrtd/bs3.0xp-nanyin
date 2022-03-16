@@ -37,6 +37,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.joyintech.service.entrust.common.service.WFlowCommonService;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.position.PositionCashSecData;
 import com.joyintech.tams.invest.common.dto.position.PositionCashSecDto;
@@ -940,6 +941,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		if ("save".equals(entity.getOperateType())) {
 			return;
 		}
+		//退回的移到备份表
+		doInsertBackupQuery(entity);
+
 		doInsertFlow(entity);
 		//插入和修改时，指令持仓流水 、现金流水处理,支持多组合
 		doInsetOrUpdateForEtrPositionHoldMulti(entity);
@@ -4650,6 +4654,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		String finprodType2 = (String) param.get("finprodType2");
 		String tradeMarket = (String) param.get("tradeMarket");
 		BigDecimal minNum = new BigDecimal(1);
+		if (finprodType2.equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue())){
+			minNum = new BigDecimal(100);
+		}
 		MinTrdUnitLimitDto minTrdUnitLimitDto = getInterfSysMinTrdUnit(finprodId, currentTab, tradeMarket, finprodType2, ps);
 		if(null != minTrdUnitLimitDto && null != minTrdUnitLimitDto.getMinStep()){
 			minNum = minTrdUnitLimitDto.getMinStep();
@@ -5153,8 +5160,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 				}else {
 					selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
 						return StringUtil.equals(option.getId(), DictCodeList.交易方向_买入.getValue())
-								|| StringUtil.equals(option.getId(), DictCodeList.交易方向_卖出.getValue())
-								|| StringUtil.equals(option.getId(), DictCodeList.交易方向_申购.getValue());
+								|| StringUtil.equals(option.getId(), DictCodeList.交易方向_卖出.getValue());
+	//							|| StringUtil.equals(option.getId(), DictCodeList.交易方向_申购.getValue());
 					}).collect(Collectors.toList());
 				}
 
@@ -5949,6 +5956,11 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			dto=etrExchangeTrade001Dto;
 		}
 		return dto;
+	}
+
+	private void doInsertBackupQuery(EtrExchangeTradeSaveRequest dto) {
+		BaseEtrInvestInfoDto entity = buildMultiEtrFlow(dto);
+		WFlowCommonService.inserBackuptWithQuery(entity);
 	}
 
 

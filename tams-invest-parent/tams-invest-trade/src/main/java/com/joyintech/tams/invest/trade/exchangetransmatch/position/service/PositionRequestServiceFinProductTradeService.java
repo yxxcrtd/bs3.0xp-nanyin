@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.security.SecurityUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.dao.StlSecAcctInfoMapper;
@@ -19,6 +16,7 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
+import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.position.service.CommonPositionEngineService;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.common.trade.dto.PortfolioCalculateDto;
@@ -87,10 +85,10 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
                 this.bond002(entity, resultMap);
             } else if (PositionConstant.INTERF_TYPE_BOND003.equals(interType)) {
                 this.bond003(entity, resultMap);
-            } else if (PositionConstant.INTERF_TYPE_FUND001.equals(interType)) {
-                this.fund001(entity, resultMap);
+            } else if (PositionConstant.INTERF_TYPE_FUND002.equals(interType)) {
+                this.fund002(entity, resultMap);
             } else if (PositionConstant.INTERF_TYPE_REPO003.equals(interType)) {
-                this.repo001(entity, resultMap);
+                this.repo003(entity, resultMap);
             } else if (PositionConstant.INTERF_TYPE_REPO002.equals(interType)) {
                 this.repo002(entity, resultMap);
             } else if (PositionConstant.INTERF_TYPE_STOCK001.equals(interType)) {
@@ -127,45 +125,44 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
         resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_成交匹配.getValue());
         resultMap.put(BID_RESULT, 是否_否.getValue());
         resultMap.put(PURCH_MODLE, null);
+
         TrdProductDeal dealEntity = entity.getTrdProductDeal();
-        if (StringUtil.isNotEmpty(dealEntity)){
-            resultMap.put(FINPROD_ID, dealEntity.getFinprodId());
-            String deliveryType = commonPositionEngineService.getDeliveryType(dealEntity.getFinprodId());
-            resultMap.put(SETTLE_SPEED, commonPositionEngineService.parseSettleSpreed((String) resultMap.get(DELIVERY_TYPE)));
-            resultMap.put(TRADE_PLACE, dealEntity.getTradeMarket());
-            resultMap.put(SHARES_TRADE_PLATFORM, dealEntity.getTradePlat());
-            resultMap.put(DELIVERY_TYPE, deliveryType);
-            resultMap.put(WORK_FLOW_ID, dealEntity.getWorkflowId());
-            resultMap.put("cdate", DateUtil.format(dealEntity.getTradeDate()));
-            resultMap.put(FINPROD_ID, dealEntity.getFinprodId());
-            resultMap.put(B_TOTAL_TRADE_ID, null);
-            Map<String,Object> param = Maps.newHashMap();
-            param.put("fTradeId",dealEntity.getfTradeId());
-            List<PortfolioCalculateDto> portfolioCalculateDtoList =  trdCommonBaseService.queryPortfolioCalculate(param);
-            if (CollectionUtils.isNotEmpty(portfolioCalculateDtoList)) {
-                List<Map<String, Object>> ptlList = new ArrayList<>();
-                for (PortfolioCalculateDto portfolioCalculateDto : portfolioCalculateDtoList) {
-                    Map<String, Object> pltMap = new HashMap<>();
-                    pltMap.put("portfolioId", portfolioCalculateDto.getPortfolioId());
-                    pltMap.put("tradeId", dealEntity.getTradeId());
-                    pltMap.put("etrId", entity.getEntrustId());
-                    pltMap.put("etrSecAmount", portfolioCalculateDto.getEtrSecAmount());
-                    pltMap.put("ordId", portfolioCalculateDto.getOrderId());
-                    pltMap.put("ordSecAmount", portfolioCalculateDto.getOrdSecAmount());
-//                    pltMap.put("cashAcctId", getCashAcctId(entity.getTrdProductDeal().getSecManageAcctId()));
-//                    pltMap.put("secAcctId", entity.getTrdProductDeal().getSecManageAcctId());
-                    pltMap.put("cashAcctId", portfolioCalculateDto.getCashAcctId());
-                    pltMap.put("secAcctId", portfolioCalculateDto.getSecAcctId());
-                    pltMap.put("secAmount", portfolioCalculateDto.getSecAmount());
-                    pltMap.put("cashAmount", portfolioCalculateDto.getCashAmount());
-                    pltMap.put("invAim", dealEntity.getInvAim());
-                    pltMap.put("integrateSecAmount", portfolioCalculateDto.getIntegrateSecAmount());
-                    pltMap.put("ownSecAmount", portfolioCalculateDto.getOwnSecAmount());
-                    ptlList.add(pltMap);
-                }
-                resultMap.put("ptlList", ptlList);
-            }
+        TrdProductDealAdd trdProductDealAdd = entity.getTrdProductDealAdd();
+        List<StlPayOrdersDto> stlPayOrdersList = entity.getStlPayOrdersList();
+
+        resultMap.put(FINPROD_ID, dealEntity.getFinprodId());
+        String deliveryType = commonPositionEngineService.getDeliveryType(dealEntity.getFinprodId());
+        resultMap.put(SETTLE_SPEED, commonPositionEngineService.parseSettleSpreed((String) resultMap.get(DELIVERY_TYPE)));
+        resultMap.put(TRADE_PLACE, dealEntity.getTradeMarket());
+        resultMap.put(SHARES_TRADE_PLATFORM, dealEntity.getTradePlat());
+        resultMap.put(DELIVERY_TYPE, deliveryType);
+        resultMap.put(WORK_FLOW_ID, dealEntity.getWorkflowId());
+        resultMap.put("cdate", DateUtil.format(dealEntity.getTradeDate()));
+        resultMap.put(FINPROD_ID, dealEntity.getFinprodId());
+        resultMap.put(B_TOTAL_TRADE_ID, null);
+
+        List<Map<String, Object>> ptlList = new ArrayList<>();
+        Map<String, Object> pltMap = new HashMap<>();
+        pltMap.put("portfolioId", trdProductDealAdd.getPortfolioId());
+        pltMap.put("tradeId", dealEntity.getTradeId());
+        pltMap.put("etrId", trdProductDealAdd.getEntrustId());
+        EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(trdProductDealAdd.getEntrustId());
+        if(etrEntrust != null){
+            pltMap.put("etrSecAmount", ArithmeticUtil.multiply(etrEntrust.getEntrustNum(), new BigDecimal(100)));
         }
+        pltMap.put("ordId", null);
+        pltMap.put("ordSecAmount", null);
+        if(CollectionUtils.isNotEmpty(stlPayOrdersList)){
+            pltMap.put("cashAcctId", stlPayOrdersList.get(0).getMyAcctNo());
+        }
+        pltMap.put("secAcctId", dealEntity.getSecManageAcctId());
+        pltMap.put("secAmount", ArithmeticUtil.multiply(dealEntity.getShareAmt(), new BigDecimal(100)));
+        pltMap.put("cashAmount", dealEntity.getTradeAmt());
+        pltMap.put("invAim", dealEntity.getInvAim());
+        pltMap.put("integrateSecAmount", null);
+        pltMap.put("ownSecAmount", ArithmeticUtil.multiply(dealEntity.getShareAmt(), new BigDecimal(100)));
+        ptlList.add(pltMap);
+        resultMap.put("ptlList", ptlList);
     }
 
     /**
@@ -198,95 +195,100 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
         resultMap.put(INTERFACE_TYPE, PositionConstant.INTERF_TYPE_BOND003);
         // 业务动作
         resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_成交匹配.getValue());
+
         TrdProductDeal dealEntity = entity.getTrdProductDeal();
-        if (StringUtil.isNotEmpty(dealEntity)){
-            String ps = dealEntity.getPs();
-            resultMap.put(SETTLE_SPEED, commonPositionEngineService.parseSettleSpreed((String) resultMap.get(DELIVERY_TYPE)));
-            // 申购方式	见数据字典：申购方式
-            if (DictCodeList.交易方向_申购.getValue().equals(dealEntity.getPs())) {
-                resultMap.put(PURCH_MODLE, DictCodeListExt2.申购方式_网上申购.getValue());
-            }
-            resultMap.put(DELIVERY_TYPE, commonPositionEngineService.getDeliveryType(dealEntity.getFinprodId()));
-            Map<String,Object> param = Maps.newHashMap();
-            param.put("fTradeId",dealEntity.getfTradeId());
-            List<PortfolioCalculateDto> portfolioCalculateDtoList =  trdCommonBaseService.queryPortfolioCalculate(param);
-            if (CollectionUtils.isNotEmpty(portfolioCalculateDtoList)) {
-                PositionRequestBaseBean bean;
-                // 组合现金数据集
-                List<Map<String, Object>> ptlCashList = new ArrayList<>();
-                for (PortfolioCalculateDto item : portfolioCalculateDtoList) {
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("portfolioId", item.getPortfolioId());
-                    // 业务编号
-                    map.put("tradeId", dealEntity.getTradeId());
-                    // 资金账号
-                    map.put("cashAcctId", dealEntity.getSecManageAcctId());
-                    // 指令编号
-                    map.put("etrId", dealEntity.getEntrustId());
-                    // 交易金额
-                    map.put("cashAmount", item.getCashAmount());
-                    // 指令券面总额
-                    map.put("etrSecAmount", item.getEtrSecAmount());
-                    // 下单编号
-                    map.put("ordId", item.getOrderId());
-                    // 下单券面总额
-                    map.put("ordSecAmount", item.getOrdSecAmount());
-                    ptlCashList.add(map);
-                }
-                resultMap.put("ptlCashList", ptlCashList);
+        TrdProductDealAdd trdProductDealAdd = entity.getTrdProductDealAdd();
+        List<StlPayOrdersDto> stlPayOrdersList = entity.getStlPayOrdersList();
+        // 金融产品实物交易表
+        List<TrdFinProductBarter> trdFinProductBarters = entity.getTrdFinProductBarterList();
 
-                if (DictCodeListExt3.交易方向_债转股.getValue().equals(ps)) {
-                    // 股票持仓数据集
-                    List<Map<String, Object>> sharesSecList = new ArrayList<>();
-                    for (PortfolioCalculateDto item : portfolioCalculateDtoList) {
-                        bean = new PositionRequestBaseBean();
-                        bean.setPortfolioId(item.getPortfolioId());
-                        bean.setFinprodId(dealEntity.getFinprodId());
-                        bean.setSecAcctId(item.getSecAcctId());
-                        bean.setTradeId(dealEntity.getTradeId());
-                        bean.setEtrId(entity.getEntrustId());
-                        bean.setSecAmount(item.getSecAmount());
-                        Map<String, Object> map = BeanUtil.object2Map(bean);
-                        sharesSecList.add(map);
-                    }
-                    resultMap.put(SHARES_SEC_LIST, sharesSecList);
-                }
+        String ps = dealEntity.getPs();
+        resultMap.put(SETTLE_SPEED, commonPositionEngineService.parseSettleSpreed((String) resultMap.get(DELIVERY_TYPE)));
+        // 申购方式	见数据字典：申购方式
+        if (DictCodeList.交易方向_申购.getValue().equals(dealEntity.getPs())) {
+            resultMap.put(PURCH_MODLE, DictCodeListExt2.申购方式_网上申购.getValue());
+        }
+        resultMap.put(DELIVERY_TYPE, commonPositionEngineService.getDeliveryType(dealEntity.getFinprodId()));
+        PositionRequestBaseBean bean;
 
-                // 可转债数据集
-                List<Map<String, Object>> bondSecList = new ArrayList<>();
-                for (PortfolioCalculateDto item : portfolioCalculateDtoList) {
-                    bean = new PositionRequestBaseBean();
-                    bean.setPortfolioId(item.getPortfolioId());
-                    bean.setFinprodId(dealEntity.getFinprodId());
-                    bean.setSecAcctId(item.getSecAcctId());
-                    bean.setTradeId(dealEntity.getTradeId());
-                    bean.setEtrId(entity.getEntrustId());
-                    bean.setSecAmount(item.getSecAmount());
-                    Map<String, Object> map = BeanUtil.object2Map(bean);
-                    //融入券券面总额
-                    map.put(INTEGRATE_SEC_AMOUNT, item.getIntegrateSecAmount());
-                    //本方券券面总额
-                    map.put(OWN_SEC_AMOUNT, item.getOwnSecAmount());
-                    bondSecList.add(map);
-                }
-                resultMap.put("bondSecList", bondSecList);
-                if (DictCodeListExt3.交易方向_配债.getValue().equals(ps) || DictCodeList.交易方向_申购.getValue().equals(ps)) {
-                    // 配债申购数据集
-                    List<Map<String, Object>> applyBondSecList = new ArrayList<>();
-                    for (PortfolioCalculateDto item : portfolioCalculateDtoList) {
-                        bean = new PositionRequestBaseBean();
-                        bean.setPortfolioId(item.getPortfolioId());
-                        bean.setFinprodId(dealEntity.getFinprodId());
-                        bean.setSecAcctId(item.getSecAcctId());
-                        bean.setTradeId(dealEntity.getTradeId());
-                        bean.setEtrId(entity.getEntrustId());
-                        bean.setSecAmount(item.getSecAmount());
-                        Map<String, Object> map = BeanUtil.object2Map(bean);
-                        applyBondSecList.add(map);
-                    }
-                    resultMap.put("applyBondSecList", applyBondSecList);
-                }
+        // 组合现金数据集
+        List<Map<String, Object>> ptlCashList = new ArrayList<>();
+        Map<String, Object> map = new HashMap<>();
+        map.put("portfolioId", trdProductDealAdd.getPortfolioId());
+        // 业务编号
+        map.put("tradeId", dealEntity.getTradeId());
+        // 资金账号
+        if(CollectionUtils.isNotEmpty(stlPayOrdersList)){
+            map.put("cashAcctId", stlPayOrdersList.get(0).getMyAcctNo());
+        }
+        EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(trdProductDealAdd.getEntrustId());
+        // 指令券面总额
+        if(etrEntrust != null){
+            map.put("etrSecAmount", ArithmeticUtil.multiply(etrEntrust.getEntrustNum(), new BigDecimal(100)));
+        }
+        // 指令编号
+        map.put("etrId", trdProductDealAdd.getEntrustId());
+        // 券面总额
+        map.put("secAmount", dealEntity.getShareAmt());
+        // 本方券券面总额
+        map.put("ownSecAmount", dealEntity.getShareAmt());
+        // 交易金额
+        map.put("cashAmount", dealEntity.getTradeAmt());
+        // 下单编号
+        map.put("ordId", null);
+        // 下单券面总额
+        map.put("ordSecAmount", null);
+        ptlCashList.add(map);
+        resultMap.put("ptlCashList", ptlCashList);
+
+        if (DictCodeListExt3.交易方向_债转股.getValue().equals(ps)) {
+            if(CollectionUtils.isNotEmpty(trdFinProductBarters)){
+                // 金融产品实物交易表
+                TrdFinProductBarter trdFinProductBarter = trdFinProductBarters.get(0);
+                // 股票持仓数据集
+                List<Map<String, Object>> sharesSecList = new ArrayList<>();
+                bean = new PositionRequestBaseBean();
+                bean.setPortfolioId(trdProductDealAdd.getPortfolioId());
+                bean.setFinprodId(trdFinProductBarter.getFinprodId());
+                bean.setSecAcctId(dealEntity.getSecManageAcctId());
+                bean.setTradeId(dealEntity.getTradeId());
+                bean.setEtrId(trdProductDealAdd.getEntrustId());
+                bean.setSecAmount(trdFinProductBarter.getShareAmt());
+                sharesSecList.add(BeanUtil.object2Map(bean));
+                resultMap.put(SHARES_SEC_LIST, sharesSecList);
             }
+        }
+
+        // 可转债数据集
+        List<Map<String, Object>> bondSecList = new ArrayList<>();
+        bean = new PositionRequestBaseBean();
+        bean.setPortfolioId(trdProductDealAdd.getPortfolioId());
+        bean.setFinprodId(dealEntity.getFinprodId());
+        bean.setSecAcctId(dealEntity.getSecManageAcctId());
+        bean.setTradeId(dealEntity.getTradeId());
+        bean.setEtrId(trdProductDealAdd.getEntrustId());
+        bean.setSecAmount(ArithmeticUtil.multiply(dealEntity.getShareAmt(), new BigDecimal(100)));
+        Map<String, Object> bondSecMap = BeanUtil.object2Map(bean);
+        //融入券券面总额
+        bondSecMap.put(INTEGRATE_SEC_AMOUNT, BigDecimal.ZERO);
+        //本方券券面总额
+        bondSecMap.put(OWN_SEC_AMOUNT, ArithmeticUtil.multiply(dealEntity.getShareAmt(), new BigDecimal(100)));
+        bondSecList.add(bondSecMap);
+        resultMap.put("bondSecList", bondSecList);
+        if (DictCodeListExt3.交易方向_配债.getValue().equals(ps)
+                || DictCodeList.交易方向_申购.getValue().equals(ps)
+                || DictCodeList.交易方向_申购确认.getValue().equals(ps)) {
+            // 配债申购数据集
+            List<Map<String, Object>> applyBondSecList = new ArrayList<>();
+            bean = new PositionRequestBaseBean();
+            bean.setPortfolioId(trdProductDealAdd.getPortfolioId());
+            bean.setFinprodId(dealEntity.getFinprodId());
+            bean.setSecAcctId(dealEntity.getSecManageAcctId());
+            bean.setTradeId(dealEntity.getTradeId());
+            bean.setEtrId(trdProductDealAdd.getEntrustId());
+            bean.setSecAmount(ArithmeticUtil.multiply(dealEntity.getShareAmt(), new BigDecimal(100)));
+            applyBondSecList.add(BeanUtil.object2Map(bean));
+            resultMap.put("applyBondSecList", applyBondSecList);
         }
     }
 
@@ -296,8 +298,8 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
      * @param entity
      * @param resultMap
      */
-    private void fund001(BaseTradeProductDealDto entity, Map<String, Object> resultMap) {
-        resultMap.put(INTERFACE_TYPE, PositionConstant.INTERF_TYPE_FUND001);
+    private void fund002(BaseTradeProductDealDto entity, Map<String, Object> resultMap) {
+        resultMap.put(INTERFACE_TYPE, INTERF_TYPE_FUND002);
         // 业务动作
         resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_成交匹配.getValue());
         resultMap.put(SETTLE_SPEED, null);
@@ -307,57 +309,44 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
         resultMap.put(SAME_DAY_TURN, 是否_否.getValue());
         // ETF申赎方式
         resultMap.put(ETFREDEMPTION_METHOD, null);
+
         TrdProductDeal dealEntity = entity.getTrdProductDeal();
-        if (StringUtil.isNotEmpty(dealEntity)) {
-            Map<String,Object> param = Maps.newHashMap();
-            param.put("fTradeId",dealEntity.getfTradeId());
-            List<PortfolioCalculateDto> portfolioCalculateDtoList =  trdCommonBaseService.queryPortfolioCalculate(param);
-            if (CollectionUtils.isNotEmpty(portfolioCalculateDtoList)) {
-                PositionRequestBaseBean bean;
-                // 组合数据集
-                List<Map<String, Object>> ptlList = new ArrayList<>();
-                for (PortfolioCalculateDto item : portfolioCalculateDtoList) {
-                    bean = new PositionRequestBaseBean();
-                    bean.setPortfolioId(item.getPortfolioId());
-                    // 业务编号
-                    bean.setTradeId(dealEntity.getTradeId());
-                    bean.setEtrId(entity.getEntrustId());
-                    bean.setFinprodId(dealEntity.getFinprodId());
-                    bean.setCashAcctId(item.getCashAcctId());
-                    bean.setSecAcctId(item.getSecAcctId());
-                    bean.setSecAmount(item.getSecAmount());
-                    bean.setCashAmount(item.getCashAmount());
-                    // "IF 指令.指令单位 = 手 THEN 指令.指令数量*10000
-                    //IF 指令.指令单位 = 份 THEN 指令.指令数量"
-                    Map<String, Object> map = BeanUtil.object2Map(bean);
-                    // 下单委托编号	ordEntrustId
-                    map.put(ORD_ENTRUST_ID,null);
-                    // 指令份额	etrSecAmount
-                    map.put("etrSecAmount",item.getEtrSecAmount());
-                    // 下单编号	ordId
-                    map.put("ordId",item.getOrderId());
-                    // 下单份额	ordSecAmount
-                    map.put("ordSecAmount",item.getOrdSecAmount());
-                    ptlList.add(map);
-                }
-                resultMap.put("ptlList", ptlList);
-                // 组合附属数据集
-                List<Map<String, Object>> ptlSubList = new ArrayList<>();
-                for (PortfolioCalculateDto item : portfolioCalculateDtoList) {
-                    bean = new PositionRequestBaseBean();
-                    bean.setPortfolioId(item.getPortfolioId());
-                    bean.setFinprodId(dealEntity.getFinprodId());
-                    // 业务编号
-                    bean.setTradeId(dealEntity.getTradeId());
-                    bean.setEtrId(entity.getEntrustId());
-                    bean.setSecAcctId(item.getSecAcctId());
-                    bean.setSecAmount(item.getSecAmount());
-                    Map<String, Object> map = BeanUtil.object2Map(bean);
-                    ptlSubList.add(map);
-                }
-                resultMap.put("ptlSubList", ptlSubList);
-            }
+        TrdProductDealAdd trdProductDealAdd = entity.getTrdProductDealAdd();
+        List<StlPayOrdersDto> stlPayOrdersList = entity.getStlPayOrdersList();
+
+        // 组合数据集
+        List<Map<String, Object>> ptlList = new ArrayList<>();
+        PositionRequestBaseBean bean = new PositionRequestBaseBean();
+        bean.setPortfolioId(trdProductDealAdd.getPortfolioId());
+        // 业务编号
+        bean.setTradeId(dealEntity.getTradeId());
+        // 指令编号
+        bean.setEtrId(trdProductDealAdd.getEntrustId());
+        bean.setFinprodId(dealEntity.getFinprodId());
+        // 资金账户
+        if(CollectionUtils.isNotEmpty(stlPayOrdersList)){
+            bean.setCashAcctId(stlPayOrdersList.get(0).getMyAcctNo());
         }
+        // 证券管理账户
+        bean.setSecAcctId(dealEntity.getSecManageAcctId());
+        bean.setSecAmount(dealEntity.getShareAmt());
+        bean.setCashAmount(dealEntity.getTradeAmt());
+        // "IF 指令.指令单位 = 手 THEN 指令.指令数量*10000
+        //IF 指令.指令单位 = 份 THEN 指令.指令数量"
+        Map<String, Object> map = BeanUtil.object2Map(bean);
+        // 下单委托编号	ordEntrustId
+        map.put(ORD_ENTRUST_ID, null);
+        // 指令份额	etrSecAmount
+        EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(trdProductDealAdd.getEntrustId());
+        if(etrEntrust != null){
+            map.put("etrSecAmount", etrEntrust.getEntrustNum());
+        }
+        // 下单编号	ordId
+        map.put("ordId", null);
+        // 下单份额	ordSecAmount
+        map.put("ordSecAmount", null);
+        ptlList.add(map);
+        resultMap.put("ptlList", ptlList);
     }
 
     /**
@@ -366,8 +355,7 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
      * @param entity
      * @param resultMap
      */
-    private void repo001(BaseTradeProductDealDto entity, Map<String, Object> resultMap) {
-        // resultMap.put(INTERFACE_TYPE, PositionConstant.INTERF_TYPE_REPO001);
+    private void repo003(BaseTradeProductDealDto entity, Map<String, Object> resultMap) {
         resultMap.put(INTERFACE_TYPE, PositionConstant.INTERF_TYPE_REPO003);
         // 业务动作
         resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_成交匹配.getValue());
@@ -385,63 +373,64 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
         }
         // ZGTFCP-1042: add by fuyongsheng 20220315 end
         TrdProductDeal dealEntity = entity.getTrdProductDeal();
-        if (StringUtil.isNotEmpty(dealEntity)) {
-            String ps = dealEntity.getPs();
-            Map<String,Object> param = Maps.newHashMap();
-            param.put("fTradeId",dealEntity.getfTradeId());
-            List<PortfolioCalculateDto> portfolioCalculateDtoList =  trdCommonBaseService.queryPortfolioCalculate(param);
-            if (CollectionUtils.isNotEmpty(portfolioCalculateDtoList)) {
-                PositionRequestBaseBean bean;
-                // 组合数据集
-                List<Map<String, Object>> ptlList = new ArrayList<>();
-                for (PortfolioCalculateDto item : portfolioCalculateDtoList) {
-                    bean = new PositionRequestBaseBean();
-                    bean.setPortfolioId(item.getPortfolioId());
-                    bean.setFinprodId(dealEntity.getFinprodId());
-                    bean.setSecAcctId(item.getSecAcctId());
-                    bean.setCashAcctId(item.getCashAcctId());
-                    bean.setTradeId(dealEntity.getTradeId());
-                    bean.setEtrId(entity.getEntrustId());
-                    bean.setCashAmount(item.getCashAmount());
-                    Map<String, Object> map = BeanUtil.object2Map(bean);
-                    //下单委托编号
-                    map.put(ORD_ENTRUST_ID, null);
-                    // 标准券代码
-                    map.put(STANDARD_SEC_ID, STANDAR_SEC_ID);
-                    // 标准券总额
-                    map.put(STANDARD_SEC_AMOUNT, item.getStandardSecAmount());
-                    // 再折算率	reConversionRate "调用【再折算率查询】参数：资金账户 = 指令资金账户
-                    Map<String, Object> paramMap = Maps.newHashMap();
-                    paramMap.put("acctNo", item.getCashAcctId());
-                    TrdMoreConvrateDto moreConvrate = this.getMoreConvrate(paramMap);
-                    if (StringUtil.isNotEmpty(moreConvrate)) {
-                        map.put("reConversionRate", moreConvrate.getMoreConvrate());
-                    }
-                    ptlList.add(map);
-                }
-                resultMap.put(PTL_LIST, ptlList);
-                // 质押券数据集	ptlSecList
-                if (DictCodeListExt3.交易方向_质押券入库.getValue().equals(ps) || DictCodeListExt3.交易方向_质押券出库.getValue().equals(ps)) {
-                    List<Map<String, Object>> ptlSecList = new ArrayList<>();
-                    for (PortfolioCalculateDto item : portfolioCalculateDtoList) {
-                        bean = new PositionRequestBaseBean();
-                        bean.setPortfolioId(item.getPortfolioId());
-                        bean.setFinprodId(dealEntity.getFinprodId());
-//                        bean.setSecAcctId(dealEntity.getSecManageAcctId());
-                        bean.setSecAcctId(item.getSecAcctId());
-                        bean.setTradeId(dealEntity.getTradeId());
-                        bean.setEtrId(entity.getEntrustId());
-                        bean.setSecAmount(item.getSecAmount());
-                        Map<String, Object> map = BeanUtil.object2Map(bean);
-                        //融入券券面总额
-                        map.put(INTEGRATE_SEC_AMOUNT, item.getIntegrateSecAmount());
-                        //本方券券面总额 指令对应组合.指令数量*100
-                        map.put(OWN_SEC_AMOUNT, item.getOwnSecAmount());
-                        ptlSecList.add(map);
-                    }
-                    resultMap.put(PTL_SEC_LIST, ptlSecList);
+        TrdProductDealAdd trdProductDealAdd = entity.getTrdProductDealAdd();
+        List<StlPayOrdersDto> stlPayOrdersList = entity.getStlPayOrdersList();
+
+        String ps = dealEntity.getPs();
+        PositionRequestBaseBean bean;
+        // 组合数据集
+        List<Map<String, Object>> ptlList = new ArrayList<>();
+        bean = new PositionRequestBaseBean();
+        bean.setPortfolioId(trdProductDealAdd.getPortfolioId());
+        bean.setFinprodId(dealEntity.getFinprodId());
+        // 证券管理账户
+        bean.setSecAcctId(dealEntity.getSecManageAcctId());
+        // 资金账户
+        if(CollectionUtils.isNotEmpty(stlPayOrdersList)){
+            bean.setCashAcctId(stlPayOrdersList.get(0).getMyAcctNo());
+        }
+        bean.setTradeId(dealEntity.getTradeId());
+        bean.setEtrId(trdProductDealAdd.getEntrustId());
+        bean.setCashAmount(dealEntity.getTradeAmt());
+
+        Map<String, Object> map = BeanUtil.object2Map(bean);
+        //下单委托编号
+        map.put(ORD_ENTRUST_ID, null);
+        // 标准券代码
+        map.put(STANDARD_SEC_ID, STANDAR_SEC_ID);
+        // 标准券总额
+        map.put(STANDARD_SEC_AMOUNT, dealEntity.getShareAmt());
+
+        if (DictCodeListExt3.交易方向_质押券入库.getValue().equals(ps) || DictCodeListExt3.交易方向_质押券出库.getValue().equals(ps)) {
+            if(CollectionUtils.isNotEmpty(stlPayOrdersList)){
+                // 再折算率	reConversionRate "调用【再折算率查询】参数：资金账户 = 指令资金账户
+                Map<String, Object> paramMap = Maps.newHashMap();
+                paramMap.put("acctNo", stlPayOrdersList.get(0).getMyAcctNo());
+                TrdMoreConvrateDto moreConvrate = this.getMoreConvrate(paramMap);
+                if (StringUtil.isNotEmpty(moreConvrate)) {
+                    map.put("reConversionRate", moreConvrate.getMoreConvrate());
                 }
             }
+        }
+        ptlList.add(map);
+        resultMap.put(PTL_LIST, ptlList);
+        // 质押券数据集	ptlSecList
+        if (DictCodeListExt3.交易方向_质押券入库.getValue().equals(ps) || DictCodeListExt3.交易方向_质押券出库.getValue().equals(ps)) {
+            List<Map<String, Object>> ptlSecList = new ArrayList<>();
+            bean = new PositionRequestBaseBean();
+            bean.setPortfolioId(trdProductDealAdd.getPortfolioId());
+            bean.setFinprodId(dealEntity.getFinprodId());
+            bean.setSecAcctId(dealEntity.getSecManageAcctId());
+            bean.setTradeId(dealEntity.getTradeId());
+            bean.setEtrId(entity.getEntrustId());
+            bean.setSecAmount(dealEntity.getShareAmt());
+            Map<String, Object> ptlSecMap = BeanUtil.object2Map(bean);
+            //融入券券面总额
+            ptlSecMap.put(INTEGRATE_SEC_AMOUNT, BigDecimal.ZERO);
+            //本方券券面总额 指令对应组合.指令数量*100
+            ptlSecMap.put(OWN_SEC_AMOUNT, dealEntity.getShareAmt());
+            ptlSecList.add(ptlSecMap);
+            resultMap.put(PTL_SEC_LIST, ptlSecList);
         }
     }
 
@@ -481,94 +470,80 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
         // 交易平台
 //        resultMap.put("tradePlace", null);
         TrdProductDeal dealEntity = entity.getTrdProductDeal();
-        if (StringUtil.isNotEmpty(dealEntity)){
-            String ps = dealEntity.getPs();
-            resultMap.put("ps", dealEntity.getPs());
-            Map<String,Object> param = Maps.newHashMap();
-            param.put("fTradeId",dealEntity.getfTradeId());
-            List<PortfolioCalculateDto> portfolioCalculateDtoList =  trdCommonBaseService.queryPortfolioCalculate(param);
-            if (CollectionUtils.isNotEmpty(portfolioCalculateDtoList)) {
-                PositionRequestBaseBean bean;
-                // 首期组合现金数据集
-                if (DictCodeListExt3.交易方向_正回购.getValue().equals(ps)
-                        || DictCodeListExt3.交易方向_首期.getValue().equals(ps)
-                        || DictCodeListExt3.交易方向_提前购回.getValue().equals(ps)
-                        || (DictCodeListExt3.交易方向_到期购回.getValue().equals(ps))) {
-                    List<Map<String, Object>> list = new ArrayList<>();
-                    for (PortfolioCalculateDto item : portfolioCalculateDtoList) {
-                        bean = new PositionRequestBaseBean();
-                        bean.setPortfolioId(item.getPortfolioId());
-//                    bean.setCashAcctId(getCashAcctId(dealEntity.getSecManageAcctId()));
-                        bean.setCashAcctId(bean.getCashAcctId());
-                        bean.setTradeId(dealEntity.getTradeId());
-                        bean.setEtrId(entity.getEntrustId());
-                        bean.setCashAmount(item.getCashAmount());
-                        Map<String, Object> map = BeanUtil.object2Map(bean);
-                        list.add(map);
-                    }
-                    resultMap.put("ptlCashList", list);
-                }
-                // 轧差组合现金数据集
-                if (DictCodeListExt3.交易方向_到期续做.getValue().equals(ps)) {
-                    List<Map<String, Object>> list = new ArrayList<>();
-                    for (PortfolioCalculateDto item : portfolioCalculateDtoList) {
-                        bean = new PositionRequestBaseBean();
-                        bean.setPortfolioId(item.getPortfolioId());
-//                    bean.setCashAcctId(getCashAcctId(dealEntity.getSecManageAcctId()));
-                        bean.setCashAcctId(item.getCashAcctId());
-                        bean.setTradeId(dealEntity.getTradeId());
-                        bean.setEtrId(entity.getEntrustId());
-                        bean.setCashAmount(item.getCashAmount());
-                        Map<String, Object> map = BeanUtil.object2Map(bean);
-                        list.add(map);
-                    }
-                    resultMap.put("ptlOffsetCashList", list);
-                }
-                // 质押券数据集	ptlSecList
-                // if (DictCodeListExt3.交易方向_解除质押.getValue().equals(ps)) {
-                if (!DictCodeListExt3.交易方向_正回购.getValue().equals(ps)) {
-                    List<Map<String, Object>> list = new ArrayList<>();
-                    for (PortfolioCalculateDto item : portfolioCalculateDtoList) {
-                        bean = new PositionRequestBaseBean();
-                        bean.setPortfolioId(item.getPortfolioId());
-                        bean.setFinprodId(dealEntity.getFinprodId());
-//                    bean.setSecAcctId(dealEntity.getSecManageAcctId());
-                        bean.setSecAcctId(item.getSecAcctId());
-                        bean.setTradeId(dealEntity.getTradeId());
-                        bean.setEtrId(entity.getEntrustId());
-                        bean.setSecAmount(item.getSecAmount());
-                        Map<String, Object> map = BeanUtil.object2Map(bean);
-                        //融入券券面总额
-                        map.put(INTEGRATE_SEC_AMOUNT, item.getIntegrateSecAmount());
-                        //本方券券面总额 指令.质押券数量*100
-                        map.put(OWN_SEC_AMOUNT, item.getOwnSecAmount());
+        TrdProductDealAdd trdProductDealAdd = entity.getTrdProductDealAdd();
+        List<StlPayOrdersDto> stlPayOrdersList = entity.getStlPayOrdersList();
 
-                        list.add(map);
-                    }
-                    resultMap.put("ptlSecList", list);
-                }
-                // 解除质押券数据集	ptlRelieveSecList
-                if (DictCodeListExt3.交易方向_解除质押.getValue().equals(ps) || DictCodeListExt3.交易方向_到期续做.getValue().equals(ps)) {
-                    List<Map<String, Object>> list = new ArrayList<>();
-                    for (PortfolioCalculateDto item : portfolioCalculateDtoList) {
-                        bean = new PositionRequestBaseBean();
-                        bean.setPortfolioId(item.getPortfolioId());
-                        bean.setFinprodId(dealEntity.getFinprodId());
-//                    bean.setSecAcctId(dealEntity.getSecManageAcctId());
-                        bean.setSecAcctId(item.getSecAcctId());
-                        bean.setTradeId(dealEntity.getTradeId());
-                        bean.setEtrId(entity.getEntrustId());
-                        bean.setSecAmount(item.getSecAmount());
-                        Map<String, Object> map = BeanUtil.object2Map(bean);
-                        //融入券券面总额
-                        map.put(INTEGRATE_SEC_AMOUNT, item.getIntegrateSecAmount());
-                        //本方券券面总额 指令.质押券数量*100
-                        map.put(OWN_SEC_AMOUNT, item.getOwnSecAmount());
-                        list.add(map);
-                    }
-                    resultMap.put("ptlRelieveSecList", list);
-                }
+        String ps = dealEntity.getPs();
+        resultMap.put("ps", dealEntity.getPs());
+        PositionRequestBaseBean bean;
+        // 首期组合现金数据集
+        if (DictCodeListExt3.交易方向_正回购.getValue().equals(ps)
+                || DictCodeListExt3.交易方向_首期.getValue().equals(ps)
+                || DictCodeListExt3.交易方向_提前购回.getValue().equals(ps)
+                || (DictCodeListExt3.交易方向_到期购回.getValue().equals(ps))) {
+            List<Map<String, Object>> list = new ArrayList<>();
+            bean = new PositionRequestBaseBean();
+            bean.setPortfolioId(trdProductDealAdd.getPortfolioId());
+            if(CollectionUtils.isNotEmpty(stlPayOrdersList)){
+                bean.setCashAcctId(stlPayOrdersList.get(0).getMyAcctNo());
             }
+            bean.setTradeId(dealEntity.getTradeId());
+            bean.setEtrId(trdProductDealAdd.getEntrustId());
+            bean.setCashAmount(dealEntity.getTradeAmt());
+            list.add(BeanUtil.object2Map(bean));
+            resultMap.put("ptlCashList", list);
+        }
+        // 轧差组合现金数据集
+        if (DictCodeListExt3.交易方向_到期续做.getValue().equals(ps)) {
+            List<Map<String, Object>> list = new ArrayList<>();
+            bean = new PositionRequestBaseBean();
+            bean.setPortfolioId(trdProductDealAdd.getPortfolioId());
+            if(CollectionUtils.isNotEmpty(stlPayOrdersList)){
+                bean.setCashAcctId(stlPayOrdersList.get(0).getMyAcctNo());
+            }
+            bean.setTradeId(dealEntity.getTradeId());
+            bean.setEtrId(trdProductDealAdd.getEntrustId());
+            bean.setCashAmount(dealEntity.getTradeAmt());
+            list.add(BeanUtil.object2Map(bean));
+            resultMap.put("ptlOffsetCashList", list);
+        }
+        // 质押券数据集	ptlSecList
+        // if (DictCodeListExt3.交易方向_解除质押.getValue().equals(ps)) {
+        if (!DictCodeListExt3.交易方向_正回购.getValue().equals(ps)) {
+            List<Map<String, Object>> list = new ArrayList<>();
+            bean = new PositionRequestBaseBean();
+            bean.setPortfolioId(trdProductDealAdd.getPortfolioId());
+            bean.setFinprodId(dealEntity.getFinprodId());
+//                    bean.setSecAcctId(dealEntity.getSecManageAcctId());
+            bean.setSecAcctId(dealEntity.getSecManageAcctId());
+            bean.setTradeId(dealEntity.getTradeId());
+            bean.setEtrId(entity.getEntrustId());
+            bean.setSecAmount(dealEntity.getShareAmt());
+            Map<String, Object> map = BeanUtil.object2Map(bean);
+            //融入券券面总额
+            map.put(INTEGRATE_SEC_AMOUNT, BigDecimal.ZERO);
+            //本方券券面总额 指令.质押券数量*100
+            map.put(OWN_SEC_AMOUNT, dealEntity.getShareAmt());
+            list.add(map);
+            resultMap.put("ptlSecList", list);
+        }
+        // 解除质押券数据集	ptlRelieveSecList
+        if (DictCodeListExt3.交易方向_解除质押.getValue().equals(ps) || DictCodeListExt3.交易方向_到期续做.getValue().equals(ps)) {
+            List<Map<String, Object>> list = new ArrayList<>();
+            bean = new PositionRequestBaseBean();
+            bean.setPortfolioId(trdProductDealAdd.getPortfolioId());
+            bean.setFinprodId(dealEntity.getFinprodId());
+            bean.setSecAcctId(dealEntity.getSecManageAcctId());
+            bean.setTradeId(dealEntity.getTradeId());
+            bean.setEtrId(trdProductDealAdd.getEntrustId());
+            bean.setSecAmount(dealEntity.getShareAmt());
+            Map<String, Object> map = BeanUtil.object2Map(bean);
+            //融入券券面总额
+            map.put(INTEGRATE_SEC_AMOUNT, BigDecimal.ZERO);
+            //本方券券面总额 指令.质押券数量*100
+            map.put(OWN_SEC_AMOUNT, dealEntity.getShareAmt());
+            list.add(map);
+            resultMap.put("ptlRelieveSecList", list);
         }
     }
 
@@ -586,64 +561,66 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
         resultMap.put(SETTLE_SPEED, null);
         // 结算方式
         resultMap.put(DELIVERY_TYPE, null);
-        TrdProductDeal dealEntity = entity.getTrdProductDeal();
-        if (StringUtil.isNotEmpty(dealEntity)) {
-            String ps = dealEntity.getPs();
-            Map<String,Object> param = Maps.newHashMap();
-            param.put("fTradeId",dealEntity.getfTradeId());
-            List<PortfolioCalculateDto> portfolioCalculateDtoList =  trdCommonBaseService.queryPortfolioCalculate(param);
-            if (CollectionUtils.isNotEmpty(portfolioCalculateDtoList)) {
-                PositionRequestBaseBean bean;
-                // 组合数据集
-                List<Map<String, Object>> ptlList = new ArrayList<>();
-                for (PortfolioCalculateDto item : portfolioCalculateDtoList) {
-                    bean = new PositionRequestBaseBean();
-                    bean.setPortfolioId(item.getPortfolioId());
-                    bean.setFinprodId(dealEntity.getFinprodId());
-                    bean.setTradeId(dealEntity.getTradeId());
-                    bean.setEtrId(entity.getEntrustId());
-//                    bean.setSecAcctId(dealEntity.getSecManageAcctId());
-                    bean.setSecAcctId(item.getSecAcctId());
-                    bean.setSecAmount(dealEntity.getPrinAmt());
-//                    bean.setCashAcctId(getCashAcctId(dealEntity.getSecManageAcctId()));
-                    bean.setCashAcctId(item.getCashAcctId());
-                    bean.setCashAmount(item.getCashAmount());
-                    Map<String, Object> map = BeanUtil.object2Map(bean);
-                    map.put("etrSecAmount",item.getEtrSecAmount());
-                    map.put("ordId",item.getOrderId());
-                    map.put("ordSecAmount",item.getOrdSecAmount());
-                    map.put(ORD_ENTRUST_ID,null);
-                    ptlList.add(map);
-                }
-                resultMap.put(PTL_LIST, ptlList);
 
-                // 组合配股/新股申购数据集	ptlRoList
-                if (DictCodeListExt2.交易方向_配股.getValue().equals(ps) || DictCodeList.交易方向_申购.getValue().equals(ps)) {
-                    List<Map<String, Object>> ptlRoList = new ArrayList<>();
-                    for (PortfolioCalculateDto item : portfolioCalculateDtoList) {
-                        bean = new PositionRequestBaseBean();
-                        bean.setPortfolioId(item.getPortfolioId());
-                        bean.setFinprodId(dealEntity.getFinprodId());
-                        bean.setTradeId(dealEntity.getTradeId());
-                        bean.setEtrId(entity.getEntrustId());
-//                        bean.setSecAcctId(dealEntity.getSecManageAcctId());
-                        bean.setSecAcctId(item.getSecAcctId());
-                        bean.setSecAmount(item.getSecAmount());
-//                        bean.setCashAcctId(getCashAcctId(dealEntity.getSecManageAcctId()));
-                        bean.setCashAcctId(item.getCashAcctId());
-                        // 配股/申购代码
-                        bean.setFinprodId(getStockId(dealEntity.getEntrustId()));
-                        bean.setCashAmount(item.getCashAmount());
-                        Map<String, Object> map = BeanUtil.object2Map(bean);
-                        map.put("etrSecAmount",item.getEtrSecAmount());
-                        map.put("ordId",item.getOrderId());
-                        map.put("ordSecAmount",item.getOrdSecAmount());
-                        map.put(ORD_ENTRUST_ID,null);
-                        ptlRoList.add(map);
-                    }
-                    resultMap.put(PTL_RO_LIST, ptlRoList);
-                }
+        TrdProductDeal dealEntity = entity.getTrdProductDeal();
+        TrdProductDealAdd trdProductDealAdd = entity.getTrdProductDealAdd();
+        List<StlPayOrdersDto> stlPayOrdersList = entity.getStlPayOrdersList();
+
+        String ps = dealEntity.getPs();
+
+        PositionRequestBaseBean bean;
+        // 组合数据集
+        List<Map<String, Object>> ptlList = new ArrayList<>();
+        bean = new PositionRequestBaseBean();
+        bean.setPortfolioId(trdProductDealAdd.getPortfolioId());
+        bean.setFinprodId(dealEntity.getFinprodId());
+        bean.setTradeId(dealEntity.getTradeId());
+        bean.setEtrId(trdProductDealAdd.getEntrustId());
+        bean.setSecAcctId(dealEntity.getSecManageAcctId());
+        bean.setSecAmount(dealEntity.getShareAmt());
+        if(CollectionUtils.isNotEmpty(stlPayOrdersList)){
+            bean.setCashAcctId(stlPayOrdersList.get(0).getMyAcctNo());
+        }
+        bean.setCashAmount(dealEntity.getTradeAmt());
+        Map<String, Object> map = BeanUtil.object2Map(bean);
+        // 指令份额	etrSecAmount
+        EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(trdProductDealAdd.getEntrustId());
+        if(etrEntrust != null){
+            map.put("etrSecAmount", etrEntrust.getEntrustNum());
+        }
+        map.put("ordId", null);
+        map.put("ordSecAmount", null);
+        map.put(ORD_ENTRUST_ID,null);
+        ptlList.add(map);
+        resultMap.put(PTL_LIST, ptlList);
+
+        // 组合配股/新股申购数据集	ptlRoList
+        if (DictCodeListExt2.交易方向_配股.getValue().equals(ps) || DictCodeList.交易方向_申购.getValue().equals(ps)) {
+            List<Map<String, Object>> ptlRoList = new ArrayList<>();
+            bean = new PositionRequestBaseBean();
+            bean.setPortfolioId(trdProductDealAdd.getPortfolioId());
+            bean.setFinprodId(dealEntity.getFinprodId());
+            bean.setTradeId(dealEntity.getTradeId());
+            bean.setEtrId(trdProductDealAdd.getEntrustId());
+            bean.setSecAcctId(dealEntity.getSecManageAcctId());
+            bean.setSecAmount(dealEntity.getShareAmt());
+            if(CollectionUtils.isNotEmpty(stlPayOrdersList)){
+                bean.setCashAcctId(stlPayOrdersList.get(0).getMyAcctNo());
             }
+            // 配股/申购代码
+            if(etrEntrust != null){
+                bean.setFinprodId(etrEntrust.getStockId());
+            }
+            bean.setCashAmount(dealEntity.getTradeAmt());
+            Map<String, Object> ptlRoMap = BeanUtil.object2Map(bean);
+            if(etrEntrust != null){
+                map.put("etrSecAmount", etrEntrust.getEntrustNum());
+            }
+            ptlRoMap.put("ordId", null);
+            ptlRoMap.put("ordSecAmount", null);
+            ptlRoMap.put(ORD_ENTRUST_ID,null);
+            ptlRoList.add(ptlRoMap);
+            resultMap.put(PTL_RO_LIST, ptlRoList);
         }
     }
 
@@ -662,24 +639,16 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
      * @param resultMap 封装集合
      */
     private void setCommonField(BaseTradeProductDealDto entity, Map<String, Object> resultMap) {
-        String balanceCheck = "Y";
-        if (StringUtil.isNotEmpty(entity.getSoftSkipMode()) && StringUtil.equals(entity.getSoftSkipMode(), "Y")) {
-            balanceCheck = "N";
-        }
         resultMap.put("userId", SecurityUtil.getLoginUser() != null ? SecurityUtil.getLoginUser().getUserName() : "system");
         // resultMap.put("totalTradeId", entity.getEntrustId());
         resultMap.put("totalTradeId", entity.getTrdProductDeal().getTradeId());
-        resultMap.put("balanceCheck", balanceCheck);
-        resultMap.put("flowStatus", DictCodeListExt3.流程节点_流程提交.getValue());
-        resultMap.put("modelType", DictCodeListExt1.子系统代码_委托.getValue());
+        resultMap.put("balanceCheck", "N");
+        resultMap.put("flowStatus", DictCodeListExt3.流程节点_审批生效.getValue());
+        resultMap.put("modelType", DictCodeListExt1.子系统代码_交易.getValue());
         //设置头寸业务类型
         String busiType = commonPositionEngineService.getPositionBusiType(entity.getTrdProductDeal().getFinprodType2(), entity.getTrdProductDeal().getPs(), entity.getAssetType2());
         resultMap.put("busiType", busiType);
 
-        // 结算方式	见数据字典：结算方式
-        // 调用【共通:结算方式判断】 返回.结算方式
-//        String deliveryType = commonPositionEngineService.getDeliveryType(entity.getTrdProductDeal().getFinprodId());
-//        resultMap.put("deliveryType", deliveryType);
         // 交易方向
         resultMap.put(PS, entity.getTrdProductDeal().getPs());
         // 交易场所	见数据字典：交易场所
