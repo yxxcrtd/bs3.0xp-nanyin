@@ -16,7 +16,7 @@
     ETR_ENTRUST.ENTRUST_ID entrustId,
     ETR_ENTRUST.INV_MANAGER_ID invManagerId,
     su1.real_name invManagerName,
-    ETR_ENTRUST.PORTFOLIO_ID portfolioId,
+    CASE WHEN dpt.PORTFOLIO_ID IS NULL THEN ETR_ENTRUST.PORTFOLIO_ID ELSE dpt.PORTFOLIO_ID END AS portfolioId,
     PTL_PORTFOLIO.PORTFOLIO_NAME portfolioName,
     CASE WHEN ETR_ENTRUST_ADD.ASSET_TYPE = 'F01' AND fpt.TYPE_9 = '01' THEN 'F21' ELSE  ETR_ENTRUST_ADD.ASSET_TYPE END  AS finprodType2,
     CASE
@@ -184,6 +184,7 @@
         left join (select ENTRUST_ID,sum(nvl(FINISH_AMT,0)) as FINISH_AMT from ETR_FINISH_STATUS where ENTRUST_ID != TRADE_ID group by ENTRUST_ID) ETR_FINISH_STATUS_A
         on ETR_FINISH_STATUS_A.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
         LEFT JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID  = ETR_ENTRUST.FINPROD_ID
+        LEFT JOIN (SELECT ENTRUST_ID, wm_concat(PORTFOLIO_ID) PORTFOLIO_ID from ETR_ENTRUST_DETAIL GROUP BY ENTRUST_ID) det on det.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
         <where>
         AND ETR_ENTRUST.ENTRUST_STATUS IN(#{entrustAwait},#{entrustDistribute},#{entrustReceive},#{entrustUntread},#{entrustClose},#{entrustReturn},#{entrustRecall})
         <if test="entrustStatusList != null and entrustStatusList.size() > 0">
@@ -275,7 +276,8 @@
     ETR_ENTRUST.ENTRUST_ID entrustId,
     ETR_ENTRUST.INV_MANAGER_ID invManagerId,
     su2.real_name invManagerName,
-    ETR_ENTRUST.PORTFOLIO_ID portfolioId,
+    CASE WHEN dpt.PORTFOLIO_ID IS NULL THEN ETR_ENTRUST.PORTFOLIO_ID ELSE dpt.PORTFOLIO_ID END AS portfolioId,
+
     PTL_PORTFOLIO.PORTFOLIO_NAME portfolioName,
     CASE WHEN ETR_ENTRUST_ADD.ASSET_TYPE = 'F01' AND fpt.TYPE_9 = '01' THEN 'F21' ELSE  ETR_ENTRUST_ADD.ASSET_TYPE END AS finprodType2,
     ETR_ENTRUST.FINPROD_ID finprodMarketId,
@@ -432,6 +434,7 @@
     left join (select ENTRUST_ID,sum(nvl(FINISH_AMT,0)) as FINISH_AMT from ETR_FINISH_STATUS where ENTRUST_ID != TRADE_ID group by ENTRUST_ID) ETR_FINISH_STATUS_A
     on ETR_FINISH_STATUS_A.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
     LEFT JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID  = ETR_ENTRUST.FINPROD_ID
+    LEFT JOIN (SELECT ENTRUST_ID, wm_concat(PORTFOLIO_ID) PORTFOLIO_ID from ETR_ENTRUST_DETAIL GROUP BY ENTRUST_ID) det on det.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
     <where>
         AND ETR_ENTRUST.FINPROD_TYPE2 = 'F36'
         AND ETR_ENTRUST.ENTRUST_STATUS IN(#{entrustAwait},#{entrustDistribute},#{entrustReceive},#{entrustUntread},#{entrustClose},#{entrustReturn},#{entrustRecall})
