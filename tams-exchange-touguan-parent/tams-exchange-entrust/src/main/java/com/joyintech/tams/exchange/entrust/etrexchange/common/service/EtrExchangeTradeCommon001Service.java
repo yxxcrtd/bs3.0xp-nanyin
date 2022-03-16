@@ -515,7 +515,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			etrBondFxdIncmPlatSHDto.setCalMode(dto.getCalculateField());// 计算方式
 			etrBondFxdIncmPlatSHDto.setFinprodType2(dto.getFinprodType2());// 金融产品类型（投管）
 			etrBondFxdIncmPlatSHDto.setAssetType(DictCodeList.平安资产类型_债券.getValue());// 资产大类
-			etrBondFxdIncmPlatSHDto.setSettleSpreed(Long.parseLong(dto.getSettleSpeed()));//清算速度
+			if (StringUtil.isNotBlank(dto.getSettleSpeed())) {
+				etrBondFxdIncmPlatSHDto.setSettleSpreed(Long.parseLong(dto.getSettleSpeed()));//清算速度
+			}
 		}
 
 		// 债券回售指令
