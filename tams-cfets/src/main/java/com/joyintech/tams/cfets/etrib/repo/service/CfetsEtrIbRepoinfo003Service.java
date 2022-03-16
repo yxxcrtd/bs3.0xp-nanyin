@@ -448,7 +448,7 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
             } else {
                 oprHisReq.setOperType(DictCodeListExt3.操作类型_修改.getValue());
             }
-            oprHisReq.setBusiDes(dto.getRemark());
+            oprHisReq.setBusiDes(entity.getRemark());
             joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);
         }
     }
