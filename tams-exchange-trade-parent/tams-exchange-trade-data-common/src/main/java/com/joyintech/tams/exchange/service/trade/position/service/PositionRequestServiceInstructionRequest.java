@@ -163,7 +163,8 @@ public class PositionRequestServiceInstructionRequest {
                 bean = new PositionRequestBaseBean(entity);
                 BigDecimal secAmount = commonPositionEngineService.getSecAmountByBondUnit(item.getEntrustNum());
                 bean.setSecAmount(secAmount);
-                bean.setCashAmount(item.getEntrustAmt());
+                BigDecimal fullPrice = Objects.isNull(entity.getFullPrice()) ? BigDecimal.ZERO : entity.getFullPrice();
+                bean.setCashAmount(fullPrice.multiply(BigDecimal.valueOf(item.getEntrustNum())));
 
                 Map<String, Object> map = BeanUtil.object2Map(bean);
                 // 下单委托编号
