@@ -12,6 +12,7 @@ package com.joyintech.tams.exchange.entrust.etrexchange.agreementbond.service;
 
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.FinProductAddMapper;
@@ -62,7 +63,7 @@ public class EtrExchangeTradeGd002Service extends BaseService<EtrExchangeTradeJj
         List<EtrExchangeFixedIncomeResponse> list = new ArrayList<EtrExchangeFixedIncomeResponse>();
 		Map<String, Object> map = BeanUtil.object2Map(request);
 		String secId= (String)map.get("secId");
-        String param = "?quote_type=5&stockId="+secId;
+        String param = "?quote_type=5&stock_code="+secId;
         Map quoteMap = restTemplate.getForObject(ServiceApplication.EXCHANGE_SERVICE_NAME + queryIntegratedQuote + param, Map.class);
         if(quoteMap != null && quoteMap.get("data") !=null) {
             List<Map<String, Object>> quoteList = (List<Map<String, Object>>) quoteMap.get("data");
@@ -88,16 +89,19 @@ public class EtrExchangeTradeGd002Service extends BaseService<EtrExchangeTradeJj
                     }
                     //价格（净价） / 回购利率
                     if(tmp.get("entrustPrice") !=null) {
-                        dto.setnPrice(new BigDecimal((Double)tmp.get("entrustPrice")));
+//                        dto.setnPrice(new BigDecimal((Double)tmp.get("entrustPrice")));
+                        dto.setnPrice(ArithmeticUtil.round(new BigDecimal((Double)tmp.get("entrustPrice")),4,null));
                     }
                     //全价
                     if(tmp.get("fullPrice") !=null) {
-                        dto.setfPrice(new BigDecimal((Double)tmp.get("fullPrice")));
+//                        dto.setfPrice(new BigDecimal((Double)tmp.get("fullPrice")));
+                        dto.setfPrice(ArithmeticUtil.round(new BigDecimal((Double)tmp.get("fullPrice")),4,null));
                     }
 
                     //收益率
                     if(tmp.get("expireIncomeRate") !=null) {
-                        dto.setYield(new BigDecimal((Double)tmp.get("expireIncomeRate")));
+//                        dto.setYield(new BigDecimal((Double)tmp.get("expireIncomeRate")));
+                        dto.setYield(ArithmeticUtil.round(new BigDecimal((Double)tmp.get("expireIncomeRate")),4,null));
                     }
 
                     //订单编号
