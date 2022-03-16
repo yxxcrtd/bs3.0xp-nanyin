@@ -605,6 +605,14 @@ public class EntrustUtils {
         return InstructionPriceMode.MARKET.value.equals(instruction.getPriceMode());
     }
 
+    public static boolean isMarketPriceByPriceMode(String priceMode) {
+        return InstructionPriceMode.MARKET.value.equals(priceMode);
+    }
+
+    public static boolean isMarketPriceByEntrustProp(String entrustProp) {
+        return EntrustProp.isMarketPrice(entrustProp);
+    }
+
     // 判断是否为需要进行自成交检测的业务
     public static boolean isSelfTradeTyper(String entrustProp) {
         return EntrustProp.NORMAL.value.equals(entrustProp)

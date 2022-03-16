@@ -77,11 +77,11 @@ public class Instruction implements Serializable, KeyMethodInterface<String>, Cl
     @Size(max = 50)
     private String ccy = "";
 
-    @ApiModelProperty(required = false, name = "busiAcctNo", value = "资金账号")
+    @ApiModelProperty(required = false, name = "busiAcctNo", value = "资金账户代码")
     @Size(max = 30)
     private String busiAcctNo = "";
 
-    @ApiModelProperty(required = false, name = "acctName", value = "户名")
+    @ApiModelProperty(required = false, name = "acctName", value = "资金账户名称")
     @Size(max = 200)
     private String acctName = "";
 

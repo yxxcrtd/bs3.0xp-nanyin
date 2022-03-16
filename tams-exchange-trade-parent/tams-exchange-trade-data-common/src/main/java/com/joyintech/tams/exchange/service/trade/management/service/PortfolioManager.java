@@ -673,17 +673,19 @@ public class PortfolioManager extends BaseService {
         log.debug("初步过滤出公平相关指令：{}", JSONUtil.toJsonStr(questList));
 
         // questList 是从内存拿出的数据，不能直接使用
-        List<Instruction> tempList = new ArrayList<>(questList);
+        List<Instruction> tempList = new ArrayList<>(questList.size());
+        Instruction tempIns = null;
+        for (Instruction ins : questList) {
+            tempIns = new Instruction();
+            BeanUtil.copyProperties(ins, tempIns);
+            tempList.add(tempIns);
+        }
 
         // 委托价格为0的指令（市价指令），将涨跌停价填充到委托价格
         for (Instruction ins : tempList) {
-            if (EntrustUtils.isMarketPrice(ins) && BigDecimal.ZERO.compareTo(ins.getEntrustPrice()) == 0) {
-                if (EntrustBs.BUY.value.equals(entrustBs)) {
-                    ins.setEntrustPrice(TradeUtils.getBigDecimal(tick.getUpperLimitPrice(), 4));
-                } else {
-                    ins.setEntrustPrice(TradeUtils.getBigDecimal(tick.getLowerLimitPrice(), 4));
-                }
-                log.debug("将涨跌停价填充到委托价格为0的指令（市价指令）：{}", JSONUtil.toJsonStr(tempList));
+            if (isZeroPriceMarketInstruction(ins)) {
+                ins.setEntrustPrice(this.getMarketPrice(tick, entrustBs));
+                log.debug("将涨跌停价[{}]填充到委托价格为0的市价指令[{}]", ins.getEntrustPrice(), ins.getEntrustId());
             }
         }
 
@@ -735,15 +737,24 @@ public class PortfolioManager extends BaseService {
             }
         } else {
             // 02时，剔除该指令并继续时
+            BigDecimal orderPrice = isZeroPriceMarketInstruction(instruction) ? this.getMarketPrice(tick, entrustBs) : bean.getEntrustPrice();
+            adjustedPrice = orderPrice;
+            result.setPrice(adjustedPrice);
+
             if (EntrustBs.isBuy(entrustBs)) {
                 // 买入，过滤价格小于指令价格的指令
-                tempList = tempList.stream().filter(item -> entrustPrice.compareTo(item.getEntrustPrice()) >= 0).collect(Collectors.toList());
+                tempList = tempList.stream().filter(item -> orderPrice.compareTo(item.getEntrustPrice()) >= 0).collect(Collectors.toList());
             } else {
                 // 卖出，过滤价格大于指令价格的指令
-                tempList = tempList.stream().filter(item -> entrustPrice.compareTo(item.getEntrustPrice()) <= 0).collect(Collectors.toList());
+                tempList = tempList.stream().filter(item -> orderPrice.compareTo(item.getEntrustPrice()) <= 0).collect(Collectors.toList());
+            }
+
+            // 系统参数“委托价格不优于指令价格时的处理模式”为2.剔除该指令并继续时，
+            // 若委托价格选择市价，则限价指令数量调整为0，并不参与数量分配；
+            if (EntrustUtils.isMarketPriceByEntrustProp(bean.getEntrustProp())) {
+                tempList = tempList.stream().filter(EntrustUtils::isMarketPrice).collect(Collectors.toList());
             }
         }
-
         /*
             a)计算每条指令剩余数量：
                 数量指令，指令剩余数量即为实际指令剩余数量；
@@ -817,6 +828,18 @@ public class PortfolioManager extends BaseService {
         log.debug("公平委托相关指令: {}", JsonUtils.getJsonFromObject(resultList));
 
         return resultList;
+    }
+
+    private boolean isZeroPriceMarketInstruction(Instruction instruction) {
+        return EntrustUtils.isMarketPrice(instruction) && BigDecimal.ZERO.compareTo(instruction.getEntrustPrice()) == 0;
+    }
+
+    private BigDecimal getMarketPrice(QuoteProto.TickBean tick, String entrustBs) {
+        if (EntrustBs.isBuy(entrustBs)) {
+            return TradeUtils.getBigDecimal(tick.getUpperLimitPrice(), 4);
+        } else {
+            return TradeUtils.getBigDecimal(tick.getLowerLimitPrice(), 4);
+        }
     }
 
     /**
