@@ -5153,8 +5153,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 				}else {
 					selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
 						return StringUtil.equals(option.getId(), DictCodeList.交易方向_买入.getValue())
-								|| StringUtil.equals(option.getId(), DictCodeList.交易方向_卖出.getValue())
-								|| StringUtil.equals(option.getId(), DictCodeList.交易方向_申购.getValue());
+								|| StringUtil.equals(option.getId(), DictCodeList.交易方向_卖出.getValue());
+	//							|| StringUtil.equals(option.getId(), DictCodeList.交易方向_申购.getValue());
 					}).collect(Collectors.toList());
 				}
 
