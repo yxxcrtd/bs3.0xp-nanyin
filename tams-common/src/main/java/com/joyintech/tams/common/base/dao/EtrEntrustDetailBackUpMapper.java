@@ -1,6 +1,7 @@
 package com.joyintech.tams.common.base.dao;
 
 import com.joyintech.tams.common.base.entity.EtrEntrustDetailBackUp;
+import com.joyintech.tams.common.base.entity.EtrEntrustDetailBackUpKey;
 import com.joyintech.tams.common.base.entity.EtrEntrustDetailKey;
 import org.springframework.stereotype.Repository;
 
@@ -8,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface EtrEntrustDetailBackUpMapper {
-    int deleteByPrimaryKey(EtrEntrustDetailKey key);
+    int deleteByPrimaryKey(EtrEntrustDetailBackUpKey key);
 
     int insert(EtrEntrustDetailBackUp record);
 
@@ -16,7 +17,7 @@ public interface EtrEntrustDetailBackUpMapper {
 
     int insertBasicByBasicInfo(EtrEntrustDetailBackUp record);
 
-    EtrEntrustDetailBackUp selectByPrimaryKey(EtrEntrustDetailKey key);
+    EtrEntrustDetailBackUp selectByPrimaryKey(EtrEntrustDetailBackUpKey key);
 
     int updateByPrimaryKeySelective(EtrEntrustDetailBackUp record);
 

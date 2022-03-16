@@ -29,14 +29,14 @@
         <include refid="com.joyintech.tams.common.base.dao.EtrEntrustDetailBackUpMapper.Base_Column_List" />
         from ETR_ENTRUST_DETAIL_BACKUP
     </sql>
-    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.EtrEntrustDetailKey" >
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.EtrEntrustDetailBackUpKey" >
         select 
         <include refid="com.joyintech.tams.common.base.dao.EtrEntrustDetailBackUpMapper.Base_Column_List" />
         from ETR_ENTRUST_DETAIL_BACKUP
         where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
           and PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
     </select>
-    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.EtrEntrustDetailKey" >
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.EtrEntrustDetailBackUpKey" >
         delete from ETR_ENTRUST_DETAIL_BACKUP
         where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
           and PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
