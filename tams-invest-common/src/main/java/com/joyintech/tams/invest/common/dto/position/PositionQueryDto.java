@@ -5,43 +5,26 @@ package com.joyintech.tams.invest.common.dto.position;
  */
 public class PositionQueryDto {
 
-    private String systemAct; // 组合代码
+    private String portfolioId; // 组合代码
 
-    private String acctId ; // 资金账号
+    private String cashAcctId ; // 资金账号
 
     private String secAcctId  ; // 证券管理账户/通道代码 查询资产时必传
 
 
     private String finprodId ; // 查询资产时必传
 
-    private String dateType; // 处理速度
+    private String dateType="0"; // 处理速度
 
     private String positionType;
     
-    private String flowType; // etr 指令 trd 交易
-
-    private String ps; //查询资金时必传
+    private String flowType; // 01 指令现金 02 指令持仓 03 交易现金 04 交易持仓
     /**
      * 币种
      */
     private String ccy;
 
 
-    public String getSystemAct() {
-        return systemAct;
-    }
-
-    public void setSystemAct(String systemAct) {
-        this.systemAct = systemAct;
-    }
-
-    public String getAcctId() {
-        return acctId;
-    }
-
-    public void setAcctId(String acctId) {
-        this.acctId = acctId;
-    }
 
     public String getSecAcctId() {
         return secAcctId;
@@ -76,12 +59,20 @@ public class PositionQueryDto {
         this.flowType = flowType;
     }
 
-    public String getPs() {
-        return ps;
+    public String getPortfolioId() {
+        return portfolioId;
     }
 
-    public void setPs(String ps) {
-        this.ps = ps;
+    public void setPortfolioId(String portfolioId) {
+        this.portfolioId = portfolioId;
+    }
+
+    public String getCashAcctId() {
+        return cashAcctId;
+    }
+
+    public void setCashAcctId(String cashAcctId) {
+        this.cashAcctId = cashAcctId;
     }
 
     public String getCcy() {

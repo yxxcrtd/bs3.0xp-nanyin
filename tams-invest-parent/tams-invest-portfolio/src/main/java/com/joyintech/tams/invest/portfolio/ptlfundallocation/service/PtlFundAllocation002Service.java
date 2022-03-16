@@ -167,6 +167,8 @@ public class PtlFundAllocation002Service extends CommonExportService<PtlFundAllo
             restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAllocation/doDelete", entity, String.class);
             if(!StringUtil.equals("save", entity.getOperateType())){
                 entity.setPositionType("update");
+            } else{
+               entity.setPositionType(entity.getOperateType());
             }
             doInsert(entity, OperationType.NEW);
         }

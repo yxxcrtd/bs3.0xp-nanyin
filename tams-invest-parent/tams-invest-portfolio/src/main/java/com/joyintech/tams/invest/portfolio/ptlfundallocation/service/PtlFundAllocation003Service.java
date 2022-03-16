@@ -265,9 +265,10 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
             orderId = entity.getBussTrdTransferOrder().get(0).getOrderId();
         }
         if(bussCommonMapperDelegateService != null){
+            entity.setOrderId(orderId);
             simpleRestTemplate.postForObject(
-                    ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAllocation/doDelete", orderId,
-                    Integer.class);
+                    ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAllocation/doDelete", entity,
+                    String.class);
             entity.setPositionType("update");
             doInsert(entity, OperationType.NEW);
         }

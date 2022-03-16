@@ -23,7 +23,7 @@ public class PositionQueryAmountDto {
 
     private String ps; //查询资金时必传
 
-    private BigDecimal amount; //金额
+    private Integer amount; //金额
 
 
     public String getPortfolioId() {
@@ -90,11 +90,11 @@ public class PositionQueryAmountDto {
         this.ps = ps;
     }
 
-    public BigDecimal getAmount() {
+    public Integer getAmount() {
         return amount;
     }
 
-    public void setAmount(BigDecimal amount) {
+    public void setAmount(Integer amount) {
         this.amount = amount;
     }
 }

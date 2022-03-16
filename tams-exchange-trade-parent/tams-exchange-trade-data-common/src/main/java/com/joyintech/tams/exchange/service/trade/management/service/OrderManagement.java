@@ -93,6 +93,7 @@ public class OrderManagement extends BaseService {
         	instructionClone.setEntrustAmt(orderPlaceBean.getEntrustPrice().multiply(BigDecimal.valueOf(orderPlaceBean.getEntrustVolume())));
         	instructionClone.setEntrustNum(orderPlaceBean.getEntrustVolume());
         	instructionClone.setEntrustPrice(orderPlaceBean.getEntrustPrice());
+        	instructionClone.setFullPrice(orderPlaceBean.getFullPrice());
         	positionRequestServiceInstructionRequest.sendRequest(instructionClone,DictCodeListExt3.业务动作_交易下单.getValue(),DictCodeListExt3.系统动作_检查.getValue(),DictCodeListExt3.系统动作_新建.getValue());
         }catch (Exception e) {
             logger.warn("场内交易下单头寸检测异常",e);

@@ -360,34 +360,60 @@ public class InvestDealRevokeService {
         // 查询日间成交交易
         List<TrdProductTempDeal> trdProductTempDeals = investDealRevokeMapper.getTrdProductTempDeals(param);
         if(!CollectionUtils.isEmpty(trdProductTempDeals)){
+            // 日间成交撤销
             Map<String, Object> batchRevoke = new HashMap<>();
+            // 日间下单撤销
+            Map<String, Object> orderBatchRevoke = new HashMap<>();
+
+            // 日间成交撤销数据列表
             List<Map<String, Object>> dataList = new ArrayList<>();
+            // 日间下单撤销数据列表
+            List<Map<String, Object>> orderDataList = new ArrayList<>();
             // 交易编号去重
             List<TrdProductTempDeal> distinctDeals = trdProductTempDeals
                     .stream()
                     .collect(Collectors.collectingAndThen(Collectors.toCollection(
                             () -> new TreeSet<>(Comparator.comparing(TrdProductTempDeal::getTradeId))), ArrayList::new));
             for(TrdProductTempDeal deal : distinctDeals){
+                // 日间成交撤销数据
                 Map<String, Object> data = new HashMap<>();
-                // 查询下单对应的委托编号信息
+                // 日间下单撤销数据
+                Map<String, Object> orderData = new HashMap<>();
+
+                // 查询下单明细数据
                 InfContractDetailfile infContractDetailfile = trdCommonBaseMapper.selectInfContractDetailfile(deal.getfTradeId());
-                if(null != infContractDetailfile){
-                    EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(infContractDetailfile.getEntrustId());
-                    EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(infContractDetailfile.getEntrustId());
-                    data.put("busiType", commonPositionEngineService.getPositionBusiType(etrEntrust.getFinprodType2(), etrEntrust.getPs(),
-                            etrEntrustAdd.getAssetType1()));
-                }
+
+                EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(infContractDetailfile.getEntrustId());
+                EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(infContractDetailfile.getEntrustId());
+
+                data.put("busiType", commonPositionEngineService.getPositionBusiType(etrEntrust.getFinprodType2(), etrEntrust.getPs(),
+                        etrEntrustAdd.getAssetType1()));
                 data.put("ps", deal.getPs());
                 data.put("closeId", deal.getTradeId());
                 data.put("systemAct", DictCodeListExt3.系统动作_新建.getValue());
                 data.put("busiAct", DictCodeListExt3.业务动作_成交匹配.getValue());
                 dataList.add(data);
+
+                orderData.put("busiType", commonPositionEngineService.getPositionBusiType(etrEntrust.getFinprodType2(), etrEntrust.getPs(),
+                        etrEntrustAdd.getAssetType1()));
+                orderData.put("ps", deal.getPs());
+                orderData.put("closeId", infContractDetailfile.getOrderId());
+                orderData.put("systemAct", DictCodeListExt3.系统动作_新建.getValue());
+                orderData.put("busiAct", DictCodeListExt3.业务动作_成交匹配.getValue());
+                orderDataList.add(orderData);
             }
             batchRevoke.put("data", dataList);
             batchRevoke.put("userId", "SYSTEM");
             batchRevoke.put("totalTradeId",IDGenerator.generate());
             batchRevoke.put("modelType",DictCodeListExt1.子系统代码_交易.getValue());
             PositionHttpRequest.batchClose(batchRevoke);
+
+
+            orderBatchRevoke.put("data", orderDataList);
+            orderBatchRevoke.put("userId", "SYSTEM");
+            orderBatchRevoke.put("totalTradeId",IDGenerator.generate());
+            orderBatchRevoke.put("modelType",DictCodeListExt1.子系统代码_交易.getValue());
+            PositionHttpRequest.batchClose(orderBatchRevoke);
         }
         // 撤销日间成交交易调用新头寸接口 add by fuyongsheng 20220308 end
     }
