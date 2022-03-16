@@ -33,7 +33,7 @@ import java.util.Map;
 
 /**
  * 交易所指令交易（债券股票回购基金场内指令交易）
- * 
+ *
  * @author meifaxin
  * @version 1.0 2021年12月20日
  * @see EtrExchangeTradeGd002Service
@@ -42,9 +42,9 @@ import java.util.Map;
 @Service
 public class EtrExchangeTradeGd002Service extends BaseService<EtrExchangeTradeJjSaveRequest> {
 
-	public static String queryIntegratedQuote = "/joyin/entrust/integrated/quote";
-	
-	public static String queryIntegratedTick = "/joyin/quote/tick";
+    public static String queryIntegratedQuote = "/joyin/entrust/integrated/quote";
+
+    public static String queryIntegratedTick = "/joyin/quote/tick";
 
     @Autowired
     FinProductConvertibleMapper finProductConvertibleMapper;
@@ -52,60 +52,64 @@ public class EtrExchangeTradeGd002Service extends BaseService<EtrExchangeTradeJj
     @Autowired
     FinProductAddMapper finProductAddMapper;
 
-	@Autowired
-	FinProductMapper finProductMapper;
+    @Autowired
+    FinProductMapper finProductMapper;
 
 
-
-	/** 查询固定收益行情数据 **/
-	public Page<EtrExchangeFixedIncomeResponse> findFixedIncomePage(EtrExchangeTradeQuotationRequest request) {
+    /**
+     * 查询固定收益行情数据
+     **/
+    public Page<EtrExchangeFixedIncomeResponse> findFixedIncomePage(EtrExchangeTradeQuotationRequest request) {
         Page<EtrExchangeFixedIncomeResponse> page = new Page<EtrExchangeFixedIncomeResponse>();
         List<EtrExchangeFixedIncomeResponse> list = new ArrayList<EtrExchangeFixedIncomeResponse>();
-		Map<String, Object> map = BeanUtil.object2Map(request);
-		String secId= (String)map.get("secId");
-        String param = "?quote_type=5&stock_code="+secId;
+        Map<String, Object> map = BeanUtil.object2Map(request);
+        String secId = (String) map.get("secId");
+        String param = "?quote_type=5";
+        if (StringUtil.isNotEmpty(secId)) {
+            param += "&stock_code=" + secId;
+        }
         Map quoteMap = restTemplate.getForObject(ServiceApplication.EXCHANGE_SERVICE_NAME + queryIntegratedQuote + param, Map.class);
-        if(quoteMap != null && quoteMap.get("data") !=null) {
+        if (quoteMap != null && quoteMap.get("data") != null) {
             List<Map<String, Object>> quoteList = (List<Map<String, Object>>) quoteMap.get("data");
-            if(!StringUtil.isEmptyList(quoteList)) {
+            if (!StringUtil.isEmptyList(quoteList)) {
                 quoteList.forEach(tmp -> {
-                    EtrExchangeFixedIncomeResponse dto =new EtrExchangeFixedIncomeResponse();
-                    dto.setSecId((String)tmp.get("stockCode"));
-                    dto.setSecName((String)tmp.get("stockName"));
-                    dto.setMarket((String)tmp.get("market"));
+                    EtrExchangeFixedIncomeResponse dto = new EtrExchangeFixedIncomeResponse();
+                    dto.setSecId((String) tmp.get("stockCode"));
+                    dto.setSecName((String) tmp.get("stockName"));
+                    dto.setMarket((String) tmp.get("market"));
                     //行情类型
                     //买卖方向
                     //买入
-                    if(StringUtil.equals((String)tmp.get("entrustBs"),"1")) {
+                    if (StringUtil.equals((String) tmp.get("entrustBs"), "1")) {
                         dto.setEntrustPs(DictCodeList.交易方向_买入.getValue());
-                    } else if(StringUtil.equals((String)tmp.get("entrustBs"),"2")) {
+                    } else if (StringUtil.equals((String) tmp.get("entrustBs"), "2")) {
                         //卖出
                         //定价申报
                         dto.setEntrustPs(DictCodeList.交易方向_卖出.getValue());
                     }
                     //数量
-                    if(tmp.get("entrustVolume") !=null) {
-                        dto.setEntrustNum(new BigDecimal((Integer)tmp.get("entrustVolume")));
+                    if (tmp.get("entrustVolume") != null) {
+                        dto.setEntrustNum(new BigDecimal((Integer) tmp.get("entrustVolume")));
                     }
                     //价格（净价） / 回购利率
-                    if(tmp.get("entrustPrice") !=null) {
+                    if (tmp.get("entrustPrice") != null) {
 //                        dto.setnPrice(new BigDecimal((Double)tmp.get("entrustPrice")));
-                        dto.setnPrice(ArithmeticUtil.round(new BigDecimal((Double)tmp.get("entrustPrice")),4,null));
+                        dto.setnPrice(ArithmeticUtil.round(new BigDecimal((Double) tmp.get("entrustPrice")), 4, null));
                     }
                     //全价
-                    if(tmp.get("fullPrice") !=null) {
+                    if (tmp.get("fullPrice") != null) {
 //                        dto.setfPrice(new BigDecimal((Double)tmp.get("fullPrice")));
-                        dto.setfPrice(ArithmeticUtil.round(new BigDecimal((Double)tmp.get("fullPrice")),4,null));
+                        dto.setfPrice(ArithmeticUtil.round(new BigDecimal((Double) tmp.get("fullPrice")), 4, null));
                     }
 
                     //收益率
-                    if(tmp.get("expireIncomeRate") !=null) {
+                    if (tmp.get("expireIncomeRate") != null) {
 //                        dto.setYield(new BigDecimal((Double)tmp.get("expireIncomeRate")));
-                        dto.setYield(ArithmeticUtil.round(new BigDecimal((Double)tmp.get("expireIncomeRate")),4,null));
+                        dto.setYield(ArithmeticUtil.round(new BigDecimal((Double) tmp.get("expireIncomeRate")), 4, null));
                     }
 
                     //订单编号
-                    dto.setOrderId((String)tmp.get("contractId"));
+                    dto.setOrderId((String) tmp.get("contractId"));
 
                     list.add(dto);
                 });
@@ -113,12 +117,7 @@ public class EtrExchangeTradeGd002Service extends BaseService<EtrExchangeTradeJj
         }
         page.setRoot(list);
         return page;
-	}
-
-
-
-
-
+    }
 
 
 }
