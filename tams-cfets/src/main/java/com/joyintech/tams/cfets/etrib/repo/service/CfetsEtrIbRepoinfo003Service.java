@@ -386,17 +386,6 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
             entity.setEtrPledgeList(getEtrPledgeListByBussRepoSecDto(dto.getBussRepoSec(),dto.getEntrustId()));
             baseEtrInvestInfoService.updateDelegate(entity);
         }
-
-        //更新操作记录日志
-        CfetsOprHisInfoRequest oprHisReq=new CfetsOprHisInfoRequest();
-        oprHisReq.setEntrustId(dto.getEntrustId());
-        if(StringUtil.equals(type.name(), "NEW")){
-            oprHisReq.setOperType(DictCodeListExt3.操作类型_新建.getValue());
-        }else{
-            oprHisReq.setOperType(DictCodeListExt3.操作类型_修改.getValue());
-        }
-        oprHisReq.setBusiDes(dto.getRemark());
-        joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);
         //add by tanxuan on 20200514 指令分发推送信息到交易系统
         if (DictCodeList.是否_是.getValue().equals(isPushMsg)) {
             Map<String, Object> param = new HashMap<>();
@@ -449,6 +438,18 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
                 this.sendPositionMethod(entity, StringUtil.equals(entity.getSystemAct(), DictCodeListExt3.系统动作_新建.getValue()) ? true : false, null);
             }
             this.olePositionDeal(entity);
+        }
+        for (CfetsEtribRepoInfo003Dto dto : entity.getEtrInvestRepoInfoDtos()) {
+            //更新操作记录日志
+            CfetsOprHisInfoRequest oprHisReq = new CfetsOprHisInfoRequest();
+            oprHisReq.setEntrustId(dto.getEntrustId());
+            if (StringUtil.equals(operateType.name(), "NEW")) {
+                oprHisReq.setOperType(DictCodeListExt3.操作类型_新建.getValue());
+            } else {
+                oprHisReq.setOperType(DictCodeListExt3.操作类型_修改.getValue());
+            }
+            oprHisReq.setBusiDes(dto.getRemark());
+            joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);
         }
     }
 

@@ -322,6 +322,18 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
         }
         //无附件上传，删除
        // doInsertMethod(entity, entity.getOperateType());
+        for (CfetsEtribBondInfo003Dto dto : entity.getEtrInvestBondInfoDtos()) {
+            //更新操作记录日志
+            CfetsOprHisInfoRequest oprHisReq = new CfetsOprHisInfoRequest();
+            oprHisReq.setEntrustId(dto.getEntrustId());
+            if (StringUtil.equals(type.name(), "NEW")) {
+                oprHisReq.setOperType(DictCodeListExt3.操作类型_新建.getValue());
+            } else {
+                oprHisReq.setOperType(DictCodeListExt3.操作类型_修改.getValue());
+            }
+            oprHisReq.setBusiDes(entity.getRemark());
+            joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);
+        }
     }
 
     @Override
@@ -1523,16 +1535,6 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
             param.put("entrustId", dto.getEntrustId());
             etrCommandDispatcherService.pushCommandMsg(param);
         }
-        //更新操作记录日志
-        CfetsOprHisInfoRequest oprHisReq=new CfetsOprHisInfoRequest();
-        oprHisReq.setEntrustId(dto.getEntrustId());
-        if(StringUtil.equals(operationType, "NEW")){
-            oprHisReq.setOperType(DictCodeListExt3.操作类型_新建.getValue());
-        }else{
-            oprHisReq.setOperType(DictCodeListExt3.操作类型_修改.getValue());
-        }
-        oprHisReq.setBusiDes(dto.getRemark());
-        joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);
 
     }
 
