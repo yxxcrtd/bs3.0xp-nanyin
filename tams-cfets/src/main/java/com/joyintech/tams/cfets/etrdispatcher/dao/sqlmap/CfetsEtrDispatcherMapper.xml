@@ -221,7 +221,7 @@
             AND fpt.TYPE_9  = #{TYPE_9}
         </if>
         <if test="busiTypePosition != null and busiTypePosition!='' ">
-            AND btm.busi_type  = #{busiTypePosition}
+            AND (btm.busi_type = #{busiTypePosition} OR btm1.OUTPUT_VALUE_1 = #{busiTypePosition})
         </if>
         <if test="finprodMarketIdList != null and finprodMarketIdList.size()>0">
             AND FIN_PRODUCT.FINPROD_MARKET_ID IN(
@@ -473,7 +473,7 @@
             AND fpt.TYPE_9  = #{TYPE_9}
         </if>
         <if test="busiTypePosition!= null and busiTypePosition!='' ">
-            AND btm.busi_type = #{busiTypePosition}
+            AND (btm.busi_type = #{busiTypePosition} OR btm1.OUTPUT_VALUE_1 = #{busiTypePosition})
         </if>
         <if test="finprodMarketIdList != null and finprodMarketIdList.size()>0">
             AND FIN_PRODUCT.FINPROD_MARKET_ID IN(
