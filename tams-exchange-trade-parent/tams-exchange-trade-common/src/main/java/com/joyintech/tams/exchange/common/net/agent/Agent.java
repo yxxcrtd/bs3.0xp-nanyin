@@ -32,7 +32,11 @@ public abstract class Agent {
     }
 
     public long generateReqId() {
-        return requestID.incrementAndGet();
+        long requestId = requestID.incrementAndGet();
+        if (requestId < 1000000000) {
+            return requestId;
+        }
+        return requestID.getAndSet(1);
     }
 
     public Channel getChannel() {
@@ -73,6 +77,9 @@ public abstract class Agent {
         }
     }
 
+    /**
+     * 交易端同步
+     */
     public Object syncWrite(FunctionCode functionCode, Object object) throws Exception {
         return syncWrite(functionCode, object, 0, 10000);
     }
@@ -107,11 +114,17 @@ public abstract class Agent {
         return asyncWrite(functionCode, generateReqId(), 0, object);
     }
 
+    /**
+     * 终端异步请求
+     */
+    public ChannelFuture asyncWrite(FunctionCode functionCode, long requestId, Object object) {
+        return asyncWrite(functionCode, requestId, 0, object);
+    }
+
     public void asyncWrite(ProtocolMessage message) {
         channel.writeAndFlush(message);
         logger.debug("asyncWrite: functionCode:{} reqId:{} data:{}", message.getFc(), message.getReqId(), JsonUtils.getJsonFromObject(message.getBody()));
     }
-
 
     public void handleMessage(ProtocolMessage message) {
         try {

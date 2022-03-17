@@ -173,7 +173,7 @@ public class EtrTradeCommonervice extends BaseService {
             }
 
         }
-        return assemble(portfolioCash,canCash,realCash,canSec,realSec);
+        return assemble(portfolioCash,canCash,realCash,canSec,realSec,requestDto);
     }
 
     /**
@@ -290,7 +290,7 @@ public class EtrTradeCommonervice extends BaseService {
                 }
                 PositionCashSecSingleResp resp = new PositionCashSecSingleResp();
                 resp.setPortfolioId(dto.getPortfolioId());
-                List<BaseMap> baseMapList = assemble(portfolioCash, canCash, realCash, canSec, realSec);
+                List<BaseMap> baseMapList = assemble(portfolioCash, canCash, realCash, canSec, realSec,requestDto);
                 resp.setBaseMapList(baseMapList);
                 respList.add(resp);
             }
@@ -329,20 +329,20 @@ public class EtrTradeCommonervice extends BaseService {
         /*可用数量*/
         resp.add(BaseMap.newMap()
                 .put("field", "usableAmount")
-                .put("name", "可用数量（股）")
+                .put("name", "可用数量（张）")
                 .put("type", "cc")
                 .put("amount", "--"));
         /*持仓数量*/
         resp.add(BaseMap.newMap()
                 .put("field", "usableSec")
-                .put("name", "持仓数量（股）")
+                .put("name", "持仓数量（张）")
                 .put("type", "cc")
                 .put("amount", "--"));
 
 
         return resp;
     }
-    private List<BaseMap> assemble(BigDecimal portfolioCash, BigDecimal canCash,BigDecimal realCash,BigDecimal canSec, BigDecimal realSec) {
+    private List<BaseMap> assemble(BigDecimal portfolioCash, BigDecimal canCash,BigDecimal realCash,BigDecimal canSec, BigDecimal realSec,PositionCashSecRequest requestDto) {
         String porUsableCash="porUsableCash",acctNoUsableCash="acctNoUsableCash",acctNoCanCash="acctNoCanCash",usableAmount="usableAmount",usableSec="usableSec";
         // 初始化返回集合
         List<BaseMap> resp = new ArrayList<>();
@@ -395,16 +395,27 @@ public class EtrTradeCommonervice extends BaseService {
                 .put("name", "账户资金可取（元）")
                 .put("type", "xj")
                 .put("amount", bm.get(acctNoUsableCash)));
+        String unit="张";
+        if(StringUtil.isNotEmpty(requestDto.getPtlList().get(0).getFinprodType2())){
+            String finprodType2=requestDto.getPtlList().get(0).getFinprodType2();
+            if(StringUtil.equals(finprodType2,DictCodeListExt1.金融产品类型_投管用_债券.getValue()) ) {
+                unit="张";
+            }else if(StringUtil.equals(finprodType2,DictCodeListExt1.金融产品类型_投管用_股票.getValue()) ) {
+                unit="股";
+            }else if(StringUtil.equals(finprodType2,DictCodeListExt1.金融产品类型_投管用_基金.getValue()) ) {
+                unit="份";
+            }
+        }
         /*可用数量*/
         resp.add(BaseMap.newMap()
                 .put("field", "usableAmount")
-                .put("name", "可用数量（股）")
+                .put("name", "可用数量（"+unit+"）")
                 .put("type", "cc")
                 .put("amount",bm.get(usableAmount)==null?0:bm.get(usableAmount)));
         /*持仓数量*/
         resp.add(BaseMap.newMap()
                 .put("field", "usableSec")
-                .put("name", "持仓数量（股）")
+                .put("name", "持仓数量（"+unit+"）")
                 .put("type", "cc")
                 .put("amount", bm.get(usableSec)==null?0:bm.get(usableSec)));
 
@@ -712,22 +723,26 @@ public class EtrTradeCommonervice extends BaseService {
                         holdingType=DictCodeListExt3.资产类型_债券本方券非净额结算可用持仓.getValue();
                 }
             } else if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue()) ) {
-            }else if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue()) ) {
-                FinProductAdd finProductAdd = finProductAddMapper.selectByPrimaryKey(dto.getFinprodId());
-                if(finProductAdd!=null){
-                    if (StringUtil.equals(finProductAdd.getTrmFundType(), DictCodeListExt2.交易所基金类型_ETF.getValue())) {
-
-                    }else if (StringUtil.equals(finProductAdd.getTrmFundType(), DictCodeListExt2.交易所基金类型_LOF.getValue())) {
-
-                    }else if (StringUtil.equals(finProductAdd.getTrmFundType(), DictCodeListExt2.交易所基金类型_封闭式基金.getValue())) {
-
-                    }else if (StringUtil.equals(finProductAdd.getTrmFundType(), DictCodeListExt2.交易所基金类型_实时申赎货币基金.getValue())) {
-
+                if (StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.估值交易市场_上交所.getValue())) {
+                    holdingType=DictCodeListExt3.资产类型_股票上交所可用持仓.getValue();
+                }else  if (StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.估值交易市场_深交所.getValue())) {
+                    if (StringUtil.equals(dto.getTradePlat(), DictCodeList.交易平台_竞价撮合平台.getValue())) {
+                        holdingType=DictCodeListExt3.资产类型_股票深交所竞价可用持仓.getValue();
+                    }else if (StringUtil.equals(dto.getTradePlat(), DictCodeList.交易平台_大宗交易平台.getValue())) {
+                        holdingType=DictCodeListExt3.资产类型_股票深交所大宗可用持仓.getValue();
                     }
                 }
-
+            }else if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue()) ) {
+                if (StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.估值交易市场_上交所.getValue())) {
+                    holdingType=DictCodeListExt3.资产类型_封闭式基金上交所可用持仓.getValue();
+                }else  if (StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.估值交易市场_深交所.getValue())) {
+                    if (StringUtil.equals(dto.getTradePlat(), DictCodeList.交易平台_竞价撮合平台.getValue())) {
+                        holdingType=DictCodeListExt3.资产类型_封闭式基金深交所竞价可用持仓.getValue();
+                    }else if (StringUtil.equals(dto.getTradePlat(), DictCodeList.交易平台_大宗交易平台.getValue())) {
+                        holdingType=DictCodeListExt3.资产类型_封闭式基金深交所大宗可用持仓.getValue();
+                    }
+                }
             }
-
             dto.setHoldingType(holdingType);
         }
 
