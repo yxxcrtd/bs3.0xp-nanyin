@@ -3870,6 +3870,7 @@
             if(setPageItemsFlag){
                 return;
             }
+            entrustNumChange();
             entrustPriceChange();
         });
         // 目标类型

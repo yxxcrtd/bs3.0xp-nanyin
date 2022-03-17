@@ -466,8 +466,10 @@
             DISTINCT
             #{busiTypePosition} busiTypePosition,
             to_char(ete.entrust_date,'yyyy-MM-dd') entrustDate,
-            ete.portfolio_id portfolioId,
-            pp.portfolio_name portfolioName,
+            <!--ete.portfolio_id portfolioId,
+            pp.portfolio_name portfolioName,-->
+            decode(ete.ENTRUST_CLASS , '01',ete.PORTFOLIO_ID , '02', '',ete.PORTFOLIO_ID ) portfolioId,
+            decode(ete.ENTRUST_CLASS , '01',pp.PORTFOLIO_NAME  , '02', '',pp.PORTFOLIO_NAME ) portfolioName,
             ete.inv_aim busiModel,
             fp.finprod_market_id finprodMarketId,
             fp.finprod_abbr finprodAbbr,
@@ -480,18 +482,18 @@
             ete.entrust_num/100 shareNum,
             eted.our_ent_num/100 entrustOwnNum,
             eted.lendin_ent_num integrateSecAmount,
-            <!--ete.price unitPrice,-->
-            round(
-                decode(
-                    btm.OUTPUT_VALUE_1,
-                    '02',
-                    decode( eted.CALCULATE_FIELD, 'price', ete.PRICE, 'exerYield', eted.EXER_YIELD * 100, 'matureYield', eted.MATURE_YIELD * 100 ),
-                    '03',
-                    ete.PRICE,
-                    NVL( ete.PRICE * 100, 0.00 )
-                ),
-                4
-            ) unitPrice,
+            ete.price unitPrice,
+        <!--round(
+            decode(
+                btm.OUTPUT_VALUE_1,
+                '02',
+                decode( eted.CALCULATE_FIELD, 'price', ete.PRICE, 'exerYield', eted.EXER_YIELD * 100, 'matureYield', eted.MATURE_YIELD * 100 ),
+                '03',
+                ete.PRICE,
+                NVL( ete.PRICE * 100, 0.00 )
+            ),
+            4
+        ) unitPrice,-->
             eted.full_price allPrice,
             eted.mature_yield*100 matureYield,
             eted.exer_yield*100 exerYield,
@@ -529,7 +531,7 @@
             eted.TRADER trader,
             ete.COUNTER_TRADER counterTrader,
             FPC.CON_SHARE_ID conId,
-            T5.FINPROD_NAME conName,
+            fp.FINPROD_NAME conName,
             eted.EXP_CON_VALUE expConValue, 
             eted.EXP_CON_NUM expConNum,
             eted.PREB preb,
@@ -549,7 +551,7 @@
             oee.Pledge_Ratio * 100 oldPledgeRatio, /** 折算率 **/
             oee.PLEDGE_NUMBER oldPledgeNumber,
             oee.PLEDGE_NUMBER * oee.Pledge_Face_Value oldPledStrdPrinAmt,
-            T6.finprod_market_id oldFinprodMarketId,
+            fp.finprod_market_id oldFinprodMarketId,
             eted.DEAL_MODE dealMode,  /** 申报类型 **/
             nvl(ee.PLEDGE_NUMBER * ee.PLEDGE_RATIO, ete.entrust_num) pledgeStandardNumber, /** 标准券额度 **/
             fp.Is_Right isRight
@@ -557,7 +559,7 @@
         INNER JOIN ETR_ENTRUST_ADD eted ON ete.entrust_id = eted.entrust_id
         LEFT JOIN FIN_PRODUCT_TYPE_CONFIG btm ON ( ete.FINPROD_TYPE2 = btm.INPUT_VALUE_2 OR btm.INPUT_VALUE_2 IS NULL )
         LEFT JOIN FIN_PRODUCT_CONVERTIBLE FPC ON ete.FINPROD_ID = FPC.FINPROD_ID
-        LEFT JOIN FIN_PRODUCT T5 ON FPC.CON_FINPROD_ID = T5.FINPROD_ID
+        <!--LEFT JOIN FIN_PRODUCT T5 ON FPC.CON_FINPROD_ID = T5.FINPROD_ID-->
         LEFT JOIN PTL_PORTFOLIO pp ON ete.portfolio_id = pp.portfolio_id
         LEFT JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = ete.FINPROD_ID
         LEFT JOIN FIN_PRODUCT fp ON ete.finprod_id = fp.finprod_id
@@ -567,9 +569,9 @@
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON eted.SEC_ACCT_ID = ssai.SEC_ACCT_ID
         LEFT JOIN ( SELECT DISTINCT ACCT_NO acctNo1, BUSI_ACCT_NO busiAcctNo1, CCY ccy, ACCT_NAME acctName FROM STL_CAPACCT_INFO ) c1 ON ssai.TRD_ACCT_ID = c1.acctNo1
         LEFT JOIN etr_pledge ee ON ete.entrust_id = ee.entrust_id /** 委托指令回购质押品 **/
-        LEFT JOIN ETR_ENTRUST oete ON  oete.entrust_id = eted.TRADE_ID
-        LEFT JOIN etr_pledge oee ON oete.entrust_id = oee.entrust_id   
-        LEFT JOIN FIN_PRODUCT T6 ON oete.FINPROD_ID = T6.FINPROD_ID
+        <!--LEFT JOIN ETR_ENTRUST oete ON  oete.entrust_id = eted.TRADE_ID-->
+        LEFT JOIN etr_pledge oee ON ete.entrust_id = oee.entrust_id
+        <!--LEFT JOIN FIN_PRODUCT T6 ON oete.FINPROD_ID = T6.FINPROD_ID-->
         LEFT JOIN SYS_USER su on ete.INV_MANAGER_ID = su.USER_NAME
         left join MST_COUNTER_PARTY mcp on ete.COUNTER_ID = mcp.COUNTER_ID
         WHERE ete.entrust_id = #{entrustId}
@@ -580,8 +582,10 @@
         DISTINCT
         #{busiTypePosition} busiTypePosition,
         to_char(ete.entrust_date,'yyyy-MM-dd') entrustDate,
-        ete.portfolio_id portfolioId,
-        pp.portfolio_name portfolioName,
+        <!--ete.portfolio_id portfolioId,
+        pp.portfolio_name portfolioName,-->
+        decode(ete.ENTRUST_CLASS , '01',ete.PORTFOLIO_ID , '02', '',ete.PORTFOLIO_ID ) portfolioId,
+        decode(ete.ENTRUST_CLASS , '01',pp.PORTFOLIO_NAME  , '02', '',pp.PORTFOLIO_NAME  )portfolioName,
         ete.inv_aim busiModel,
         fp.finprod_market_id finprodMarketId,
         fp.finprod_abbr finprodAbbr,
@@ -594,8 +598,8 @@
         ete.entrust_num/100 shareNum,
         eted.our_ent_num/100 entrustOwnNum,
         eted.lendin_ent_num integrateSecAmount,
-        <!--ete.price unitPrice,-->
-        <!--ete.price unitPrice,-->
+        ete.price unitPrice,
+        <!--ete.price unitPrice,
         round(
             decode(
                 btm.OUTPUT_VALUE_1,
@@ -606,7 +610,7 @@
                 NVL( ete.PRICE * 100, 0.00 )
             ),
             4
-        ) unitPrice,
+        ) unitPrice,-->
         eted.full_price allPrice,
         eted.mature_yield*100 matureYield,
         eted.exer_yield*100 exerYield,
@@ -644,7 +648,7 @@
         eted.TRADER trader,
         ete.COUNTER_TRADER counterTrader,
         FPC.CON_SHARE_ID conId,
-        T5.FINPROD_NAME conName,
+        fp.FINPROD_NAME conName,
         eted.EXP_CON_VALUE expConValue, 
         eted.EXP_CON_NUM expConNum,
         eted.PREB preb,
@@ -664,7 +668,7 @@
         oee.Pledge_Ratio * 100 oldPledgeRatio, /** 折算率 **/
         oee.PLEDGE_NUMBER oldPledgeNumber,
         oee.PLEDGE_NUMBER * oee.Pledge_Face_Value oldPledStrdPrinAmt,
-        T6.finprod_market_id oldFinprodMarketId,
+        fp.finprod_market_id oldFinprodMarketId,
         eted.DEAL_MODE dealMode,  /** 申报类型 **/
         nvl(ee.PLEDGE_NUMBER * ee.PLEDGE_RATIO, ete.entrust_num) pledgeStandardNumber, /** 标准券额度 **/
         fp.Is_Right isRight
@@ -672,7 +676,7 @@
         INNER JOIN WFL_ETR_ENTRUST_ADD eted ON ete.entrust_id = eted.entrust_id
         LEFT JOIN FIN_PRODUCT_TYPE_CONFIG btm ON ( ete.FINPROD_TYPE2 = btm.INPUT_VALUE_2 OR btm.INPUT_VALUE_2 IS NULL )
         LEFT JOIN FIN_PRODUCT_CONVERTIBLE FPC ON ete.FINPROD_ID = FPC.FINPROD_ID
-        LEFT JOIN FIN_PRODUCT T5 ON FPC.CON_FINPROD_ID = T5.FINPROD_ID
+<!--         LEFT JOIN FIN_PRODUCT T5 ON FPC.CON_FINPROD_ID = T5.FINPROD_ID-->
         LEFT JOIN PTL_PORTFOLIO pp ON ete.portfolio_id = pp.portfolio_id
         LEFT JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = ete.FINPROD_ID
         LEFT JOIN FIN_PRODUCT fp ON ete.finprod_id = fp.finprod_id
@@ -682,9 +686,9 @@
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON eted.SEC_ACCT_ID = ssai.SEC_ACCT_ID
         LEFT JOIN ( SELECT DISTINCT ACCT_NO acctNo1, BUSI_ACCT_NO busiAcctNo1, CCY ccy, ACCT_NAME acctName FROM STL_CAPACCT_INFO ) c1 ON ssai.TRD_ACCT_ID = c1.acctNo1
         LEFT JOIN wfl_etr_pledge ee ON ete.entrust_id = ee.entrust_id /** 委托指令回购质押品 **/
-        LEFT JOIN ETR_ENTRUST oete ON  oete.entrust_id = eted.TRADE_ID
-        LEFT JOIN etr_pledge oee ON oete.entrust_id = oee.entrust_id   
-        LEFT JOIN FIN_PRODUCT T6 ON oete.FINPROD_ID = T6.FINPROD_ID
+<!--        LEFT JOIN ETR_ENTRUST oete ON  oete.entrust_id = eted.TRADE_ID-->
+        LEFT JOIN etr_pledge oee ON ete.entrust_id = oee.entrust_id
+<!--         LEFT JOIN FIN_PRODUCT T6 ON oete.FINPROD_ID = T6.FINPROD_ID-->
         LEFT JOIN SYS_USER su on ete.INV_MANAGER_ID = su.USER_NAME
         left join MST_COUNTER_PARTY mcp on ete.COUNTER_ID = mcp.COUNTER_ID
         WHERE ete.entrust_id = #{entrustId}
