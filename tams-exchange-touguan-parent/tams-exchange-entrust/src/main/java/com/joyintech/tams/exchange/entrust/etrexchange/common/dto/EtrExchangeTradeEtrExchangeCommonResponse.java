@@ -286,7 +286,7 @@ public class EtrExchangeTradeEtrExchangeCommonResponse {
      * @since 1.0
      */
     public BigDecimal getImplementPercentAge(){
-        if(StringUtil.isNotEmpty(dealPercent)){
+        if(StringUtil.isNotEmpty(implementPercent)){
             return implementPercent.multiply(new BigDecimal(100));
         }else{
             return new BigDecimal(0);
