@@ -118,11 +118,9 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 						//可用数量
 						PositionCashSecDto secDto=new PositionCashSecDto();
 						BeanUtil.copyPropertiesIgnoreNull(secDto,entity);
-						secDto.setHoldingType(BussinessDictCodeList.持仓类型_可用.getValue());
 						BigDecimal sellNum=etrTradeCommonervice.selectAvailableNum(secDto);
 						entity.setSellNum(sellNum);
 						//持仓数量
-						secDto.setHoldingType(BussinessDictCodeList.持仓类型_实际.getValue());
 						BigDecimal positionsNum=etrTradeCommonervice.selectAvailableNum(secDto);
 						entity.setPositionsNum(positionsNum);
 						// 最新净价*组合持仓.数量 - 持仓成本 as 浮动盈亏
