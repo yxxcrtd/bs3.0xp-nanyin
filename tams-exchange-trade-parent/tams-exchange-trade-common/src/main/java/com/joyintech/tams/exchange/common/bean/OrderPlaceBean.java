@@ -50,6 +50,9 @@ public class OrderPlaceBean implements Serializable {
     @ApiModelProperty(required = false, name = "fullPrice", value = "全价价格", example = "2.34")
     private BigDecimal fullPrice;
 
+    @ApiModelProperty(required = false, name = "yield", value = "收益率", example = "2.34")
+    private BigDecimal yield;
+
     @ApiModelProperty(required = false, name = "batchInfo", value = "批量下单信息")
     private BatchInfo batchInfo;
 
@@ -158,6 +161,14 @@ public class OrderPlaceBean implements Serializable {
         this.fullPrice = fullPrice;
     }
 
+    public BigDecimal getYield() {
+        return yield;
+    }
+
+    public void setYield(BigDecimal yield) {
+        this.yield = yield;
+    }
+
     public String getEntrustProp() {
         return entrustProp;
     }
@@ -213,6 +224,7 @@ public class OrderPlaceBean implements Serializable {
                 ", entrustBs='" + entrustBs + '\'' +
                 ", entrustVolume=" + entrustVolume +
                 ", entrustPrice=" + entrustPrice +
+                ", yield=" + yield +
                 ", fullPrice=" + fullPrice +
                 ", batchInfo=" + batchInfo +
                 ", offsetFlag='" + offsetFlag + '\'' +
