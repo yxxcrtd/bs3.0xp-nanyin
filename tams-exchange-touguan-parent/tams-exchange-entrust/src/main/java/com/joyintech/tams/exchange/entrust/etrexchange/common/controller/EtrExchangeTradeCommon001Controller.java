@@ -424,8 +424,10 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 		}
 		initPageParams.put("etrExchange_HqArea_refresh_period", etrExchange_HqArea_refresh_period);
 		initPageParams.put("BOARD_BD04", DictCodeList.上市板_创业板.getValue());
+		initPageParams.put("riskMathSwitch", CacheUtil.getSysParam("risk_math_switch"));
 		initPageParams.put("pageRedisFlag", CacheUtil.getSysParam("pageRedisFlag"));
 		initPageParams.put("IS_RISKMATH_SOFTCONTROL", CacheUtil.getSysParam("IS_RISKMATH_SOFTCONTROL"));
+
 		initPageParams.put("ETR_CHECK_POS_SWITCH",CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_POS_SWITCH));
 		// 大宗平台
 		List<SelectOptionDto> ps_dz = selectDto.getOptions().stream().filter(option -> {
@@ -826,7 +828,6 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	@PostMapping("/selectAvailableNum")
 	public Message<String> selectAvailableNum(@RequestBody PositionCashSecDto dto){
 		try{
-			dto.setHoldingType(BussinessDictCodeList.持仓类型_可用.getValue());
 			BigDecimal availableNum = etrTradeCommonervice.selectAvailableNum(dto);
 			if(availableNum == null) {
 				availableNum= BigDecimal.ZERO;
@@ -1052,6 +1053,14 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 			List<FinProductQuto> qutos = etrExchangeTrade001CommonService.getFinProductQutoInfo(paramMap1);
 			if (qutos.size() == 0) {
 				confirmMsg = "当前资产无配股/配债额度，是否继续？";
+			}else{
+				if(dto.getEntrustNum().compareTo(qutos.get(0).getQuto())==1){
+					List<ValidMessage> validListEnt = new ArrayList<>();
+					validListEnt.add(new ValidMessage("ps", "指令数量超过配股额度"));
+					AjaxResult ajaxResultEnt = new AjaxResult();
+					ajaxResultEnt.setErrorList(validListEnt);
+					return ajaxResultEnt;
+				}
 			}
 		}
 		AjaxResult ajaxResult = new AjaxResult();
@@ -1105,6 +1114,28 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 							String code = bussGetBussinessIdService != null ? bussGetBussinessIdService.buildBussinessCode(param) : IDGenerator.generate();
 							dto.setEntrustId(code);
 						}
+						if (StringUtil.isNotEmpty(dto.isDoRkRedisFlag()) && dto.isDoRkRedisFlag()) {
+							// ----------add by zhangrui1 20200703 预占功能 start----------
+							if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
+								String finprodType2 = "";
+								if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
+									finprodType2 = DictCodeList.平安资产类型_债券.getValue();
+								} else if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
+									finprodType2 = DictCodeList.平安资产类型_基金.getValue();
+								} else if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {
+									finprodType2 = DictCodeListExt2.平安资产类型_股票.getValue();
+								} else if ((dto.getPs().equals(DictCodeListExt3.交易方向_正回购.getValue()) || dto.getPs().equals(DictCodeListExt3.交易方向_逆回购.getValue()))) {
+									finprodType2 = DictCodeList.平安资产类型_质押式回购.getValue();
+								}
+								//债转股需要走批量接口
+								String infCode = BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue();
+								dto.setFromEtrExchange("Y");//场内指令
+								AjaxResult ar = ExchangeEntrustRdsCommonAop.doPreOccupy(dto, infCode, finprodType2);
+								if (StringUtil.isNotEmpty(ar)) {
+									return new Message<AjaxResult>().success().setData(ar);
+								}
+							}
+						}
 						ProcessParameter<EtrExchangeTradeSaveRequest> processParameter = new ProcessParameter<EtrExchangeTradeSaveRequest>();
 						WorkFlowParameter<EtrExchangeTradeSaveRequest> params = new WorkFlowParameter<EtrExchangeTradeSaveRequest>();
 						params.setPageId(dto.getPageId());
@@ -1148,6 +1179,20 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 							etrExchangeTrade001Dto.setPortfolioList(portfolioList);
 
 							etrExchangeTrade001DtoList.add(etrExchangeTrade001Dto);
+						}
+						if (StringUtil.isNotEmpty(dto.isDoRkRedisFlag()) && dto.isDoRkRedisFlag()) {
+							// ----------预占功能 start----------
+							if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
+								// add by zhangrui1 start
+								AjaxResult ar = ExchangeEntrustRdsCommonAop.doListPreOccupy("EtrExchangeTradeMulti001", etrExchangeTrade001DtoList,
+										BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue());
+								if (null != ar) {
+									//return new Message<AjaxResult>().success().setData(ar);
+								}
+								ExchangeEntrustRdsCommonAop.riskListToChildren(dto.getRiskTrialRetDto(), etrExchangeTrade001DtoList,
+										(etrExchangeTrade001Dto, list) -> etrExchangeTrade001Dto.setRiskTrialRetDto(list));
+							}
+							// ----------预占功能 end----------
 						}
 						ProcessParameter<EtrExchangeTradeSaveRequest> processParameter = new ProcessParameter<EtrExchangeTradeSaveRequest>();
 						WorkFlowParameter<EtrExchangeTradeSaveRequest> params = etrExchangeTrade001CommonService.getWorkFlowParameter(dto);
@@ -1749,6 +1794,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 			List<BaseMap> m = etrTradeCommonervice.queryPositionInfo(requestDto);
 			return new Message<List<BaseMap>>().success().setData(m);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return new Message<List<BaseMap>>().fail().setMessage("查询失败");
 		}
 	}

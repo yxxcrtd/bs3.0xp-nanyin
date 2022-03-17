@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.trade.entrustmsgbymq.dto.TrdMoreConvrate;
 import com.joyintech.service.trade.entrustmsgbymq.dto.TrdTempDto;
@@ -27,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 import static com.joyintech.tams.constant.DictCodeList.是否_否;
@@ -89,6 +91,8 @@ public class PositionRequestTradeReportService {
             this.bond003(trdTempDto, resultMap);
         } else if (INTERF_TYPE_REPO003.equals(interType)) {
             this.repo003(trdTempDto, resultMap);
+        } else if (INTERF_TYPE_REPO002.equals(interType)) {
+            this.repo002(trdTempDto, resultMap);
         } else if (INTERF_TYPE_FUND002.equals(interType)) {
             this.fund002(trdTempDto, resultMap);
         } else if (INTERF_TYPE_STOCK001.equals(interType)) {
@@ -218,7 +222,7 @@ public class PositionRequestTradeReportService {
             bondSec.put("secAcctId", dto.getSecAcctId());
             bondSec.put("tradeId", entity.getTradeId());
             bondSec.put("etrId", entity.getEntrustId());
-            bondSec.put("integrateSecAmount", null);
+            bondSec.put("integrateSecAmount", dto.getIntegrateSecAmount());
             bondSec.put("ownSecAmount", dto.getOwnSecAmount());
             bondSec.put("secAmount", dto.getSecAmount());
             bondSecList.add(bondSec);
@@ -294,6 +298,117 @@ public class PositionRequestTradeReportService {
         resultMap.put("ptlList", ptlList);
         resultMap.put("ptlSecList", ptlSecList);
     }
+
+    // ZGTFCP-1041:新增成交回报协议回购 add by fuyongsheng 20220317 start
+    /**
+     * 质押式协议回购
+     *
+     * @param entity
+     * @param resultMap
+     */
+    private void repo002(TrdTempDto entity, Map<String, Object> resultMap) {
+        resultMap.put("interfaceType", INTERF_TYPE_REPO002);
+        EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(entity.getEntrustId());
+        EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(entity.getEntrustId());
+        String busiType = commonPositionEngineService.getPositionBusiType(etrEntrust.getFinprodType2(), etrEntrust.getPs(),
+                etrEntrustAdd.getAssetType1());
+        resultMap.put("busiType", busiType);
+        // 业务动作
+        resultMap.put("busiAct", DictCodeListExt3.业务动作_成交回报.getValue());
+        resultMap.put("ps", entity.getPs());
+        resultMap.put("tradePlace", entity.getTradeMarket());
+        resultMap.put("settleSpeed", null);
+        resultMap.put("sharesTradePlatform", null);
+        resultMap.put("deliveryType", null);
+        resultMap.put("decisionAct", DictCodeListExt3.系统动作_新建.getValue());
+        resultMap.put("systemAct", DictCodeListExt3.系统动作_新建.getValue());
+        resultMap.put("workFlowId", null);
+        resultMap.put("cdate", entity.getTradeDate());
+        resultMap.put("ccy", entity.getCcy());
+        // resultMap.put("totalTradeId", null);
+        resultMap.put("bTotalTradeId", null);
+
+        Map<String,Object> paraMap = new HashMap<>();
+        paraMap.put("fTradeId", entity.getfTradeId());
+        List<PortfolioCalculateDto> list = trdCommonBaseService.queryPortfolioCalculate(paraMap);
+        // 首期组合现金数据集
+        List<Map<String, Object>> ptlCashList = new ArrayList<>();
+        // 轧差组合现金数据集
+        List<Map<String, Object>> ptlOffsetCashList = new ArrayList<>();
+        // 质押券数据集
+        List<Map<String, Object>> ptlSecList = new ArrayList<>();
+        // 解除质押券数据集
+        List<Map<String, Object>> ptlRelieveSecList = new ArrayList<>();
+        for (PortfolioCalculateDto dto : list){
+            if(DictCodeListExt3.交易方向_正回购.getValue().equals(entity.getPs())
+                    || DictCodeListExt3.交易方向_逆回购.getValue().equals(entity.getPs())
+                    || DictCodeListExt3.交易方向_提前购回.getValue().equals(entity.getPs())
+                    || DictCodeListExt3.交易方向_到期购回.getValue().equals(entity.getPs())
+            ){
+                Map<String, Object> ptlCash = new HashMap<>();
+                ptlCash.put("portfolioId", dto.getPortfolioId());
+                ptlCash.put("cashAcctId", dto.getCashAcctId());
+                ptlCash.put("tradeId", entity.getTradeId());
+                ptlCash.put("etrId", entity.getOrderId());
+                ptlCash.put("cashAmount", dto.getCashAmount());
+                ptlCashList.add(ptlCash);
+            }
+            if(DictCodeListExt3.交易方向_到期续做.getValue().equals(entity.getPs())){
+                Map<String, Object> ptlOffsetCash = new HashMap<>();
+                ptlOffsetCash.put("portfolioId", dto.getPortfolioId());
+                ptlOffsetCash.put("cashAcctId", dto.getCashAcctId());
+                ptlOffsetCash.put("tradeId", entity.getTradeId());
+                ptlOffsetCash.put("etrId", entity.getEntrustId());
+
+                ptlOffsetCash.put("finprodId", entity.getFinprodId());
+                ptlOffsetCash.put("secAcctId", dto.getSecAcctId());
+                ptlOffsetCash.put("ownSecAmount", dto.getOwnSecAmount());
+                ptlOffsetCash.put("secAmount", dto.getSecAmount());
+                ptlOffsetCashList.add(ptlOffsetCash);
+            }
+            if(DictCodeListExt3.交易方向_正回购.getValue().equals(entity.getPs())){
+                Map<String, Object> ptlSec = new HashMap<>();
+                ptlSec.put("portfolioId", dto.getPortfolioId());
+                ptlSec.put("finprodId", entity.getFinprodId());
+                ptlSec.put("secAcctId", dto.getSecAcctId());
+                ptlSec.put("tradeId", entity.getTradeId());
+                ptlSec.put("etrId", entity.getEntrustId());
+                // 融入券券面总额
+                ptlSec.put("integrateSecAmount", dto.getIntegrateSecAmount());
+                // 本方券券面总额
+                ptlSec.put("ownSecAmount", ArithmeticUtil.multiply(entity.getFinDealPledge().getPledgeNumber(), new BigDecimal(100)));
+                // 券面总额
+                ptlSec.put("secAmount", ArithmeticUtil.multiply(entity.getFinDealPledge().getPledgeNumber(), new BigDecimal(100)));
+                ptlSecList.add(ptlSec);
+            }
+            if(DictCodeListExt3.交易方向_解除质押.getValue().equals(entity.getPs())
+                    || DictCodeListExt3.交易方向_到期续做.getValue().equals(entity.getPs())){
+                Map<String, Object> ptlRelieveSec = new HashMap<>();
+                ptlRelieveSec.put("portfolioId", dto.getPortfolioId());
+                ptlRelieveSec.put("finprodId", entity.getFinprodId());
+                ptlRelieveSec.put("secAcctId", dto.getSecAcctId());
+                ptlRelieveSec.put("tradeId", entity.getTradeId());
+                ptlRelieveSec.put("etrId", entity.getEntrustId());
+                // 融入券券面总额
+                ptlRelieveSec.put("integrateSecAmount", dto.getIntegrateSecAmount());
+                if(DictCodeListExt3.交易方向_解除质押.getValue().equals(entity.getPs())){
+                    // 本方券券面总额
+                    ptlRelieveSec.put("ownSecAmount", ArithmeticUtil.multiply(dto.getOwnSecAmount(), new BigDecimal(100)));
+                    // 券面总额
+                    ptlRelieveSec.put("secAmount", ArithmeticUtil.multiply(dto.getOwnSecAmount(), new BigDecimal(100)));
+                }else{
+                    ptlRelieveSec.put("ownSecAmount", entity.getPositionBaseData().getFinDealPledge().getPledgeNumber());
+                    ptlRelieveSec.put("secAmount", entity.getPositionBaseData().getFinDealPledge().getPledgeNumber());
+                }
+                ptlRelieveSecList.add(ptlRelieveSec);
+            }
+        }
+        resultMap.put("ptlCashList", ptlCashList);
+        resultMap.put("ptlOffsetCashList", ptlOffsetCashList);
+        resultMap.put("ptlSecList", ptlSecList);
+        resultMap.put("ptlRelieveSecList", ptlRelieveSecList);
+    }
+    // ZGTFCP-1041:新增成交回报协议回购 add by fuyongsheng 20220317 end
 
     /**
      * 基金-指令

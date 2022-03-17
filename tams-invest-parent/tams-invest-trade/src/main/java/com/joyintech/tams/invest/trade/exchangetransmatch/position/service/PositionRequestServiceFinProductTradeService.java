@@ -6,6 +6,7 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
+import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.dao.StlSecAcctInfoMapper;
 import com.joyintech.tams.common.base.entity.*;
@@ -54,7 +55,7 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
     private EtrEntrustMapper etrEntrustMapper;
 
     @Autowired
-    private TrdCommonBaseService trdCommonBaseService;
+    private EtrEntrustAddMapper etrEntrustAddMapper;
   
     public static final String TRADE_PLAT = "TRANS_MATCH";
 
@@ -74,10 +75,19 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
             if (DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue().equals(type6)) {
                 finprodType += "-" + type6;
             }
-            if (DictCodeList.回购类型_质押式协议回购.getValue().equals(entity.getAssetType2())
-                    || (DictCodeList.回购类型_质押式竞价回购.getValue().equals(entity.getAssetType2()))) {
-                finprodType += "-" + entity.getAssetType2();
+            // ZGTFCP-1164:修改判断协议回购方法 modify by fuyongsheng 20220317 start
+//            if (DictCodeList.回购类型_质押式协议回购.getValue().equals(entity.getAssetType2())
+//                    || (DictCodeList.回购类型_质押式竞价回购.getValue().equals(entity.getAssetType2()))) {
+//                finprodType += "-" + entity.getAssetType2();
+//            }
+            EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(entity.getTrdProductDealAdd().getEntrustId());
+            if(etrEntrustAdd != null){
+                if (DictCodeList.回购类型_质押式协议回购.getValue().equals(etrEntrustAdd.getAssetType1())
+                        || (DictCodeList.回购类型_质押式竞价回购.getValue().equals(etrEntrustAdd.getAssetType1()))) {
+                    finprodType += "-" + etrEntrustAdd.getAssetType1();
+                }
             }
+            // ZGTFCP-1164:修改判断协议回购方法 modify by fuyongsheng 20220317 end
             String interType =
                     commonPositionEngineService.getPositionInterType(PositionConstant.POSITION_TYPE_TRD, TRADE_PLAT, finprodType, entity.getTrdProductDeal().getPs(),
                             DictCodeListExt3.业务动作_成交匹配.getValue(), entity.getClass().getName());
@@ -159,7 +169,7 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
         pltMap.put("secAmount", ArithmeticUtil.multiply(dealEntity.getShareAmt(), new BigDecimal(100)));
         pltMap.put("cashAmount", dealEntity.getTradeAmt());
         pltMap.put("invAim", dealEntity.getInvAim());
-        pltMap.put("integrateSecAmount", null);
+        pltMap.put("integrateSecAmount", BigDecimal.ZERO);
         pltMap.put("ownSecAmount", ArithmeticUtil.multiply(dealEntity.getShareAmt(), new BigDecimal(100)));
         ptlList.add(pltMap);
         resultMap.put("ptlList", ptlList);
@@ -474,11 +484,21 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
         List<StlPayOrdersDto> stlPayOrdersList = entity.getStlPayOrdersList();
 
         String ps = dealEntity.getPs();
-        resultMap.put("ps", dealEntity.getPs());
+         // resultMap.put("ps", dealEntity.getPs());
+        // ZGTFCP-1042: add by fuyongsheng 20220315 start
+        // 回购首期特殊处理,需传正回购/逆回购
+        if(DictCodeList.交易方向_买入.getValue().equals(entity.getTrdProductDeal().getPs())){
+            if(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(entity.getTrdProductDeal().getFinprodType2())){
+                resultMap.put("ps", DictCodeListExt3.交易方向_正回购.getValue());
+            }else if(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(entity.getTrdProductDeal().getFinprodType2())){
+                resultMap.put("ps", DictCodeListExt3.交易方向_逆回购.getValue());
+            }
+        }
+        // ZGTFCP-1042: add by fuyongsheng 20220315 end
         PositionRequestBaseBean bean;
         // 首期组合现金数据集
         if (DictCodeListExt3.交易方向_正回购.getValue().equals(ps)
-                || DictCodeListExt3.交易方向_首期.getValue().equals(ps)
+                || DictCodeList.交易方向_买入.getValue().equals(ps)
                 || DictCodeListExt3.交易方向_提前购回.getValue().equals(ps)
                 || (DictCodeListExt3.交易方向_到期购回.getValue().equals(ps))) {
             List<Map<String, Object>> list = new ArrayList<>();
@@ -509,7 +529,7 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
         }
         // 质押券数据集	ptlSecList
         // if (DictCodeListExt3.交易方向_解除质押.getValue().equals(ps)) {
-        if (!DictCodeListExt3.交易方向_正回购.getValue().equals(ps)) {
+        if (DictCodeListExt3.交易方向_正回购.getValue().equals(ps)) {
             List<Map<String, Object>> list = new ArrayList<>();
             bean = new PositionRequestBaseBean();
             bean.setPortfolioId(trdProductDealAdd.getPortfolioId());
@@ -645,8 +665,12 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
         resultMap.put("balanceCheck", "N");
         resultMap.put("flowStatus", DictCodeListExt3.流程节点_审批生效.getValue());
         resultMap.put("modelType", DictCodeListExt1.子系统代码_交易.getValue());
+
+        EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(entity.getTrdProductDealAdd().getEntrustId());
+        EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(entity.getTrdProductDealAdd().getEntrustId());
         //设置头寸业务类型
-        String busiType = commonPositionEngineService.getPositionBusiType(entity.getTrdProductDeal().getFinprodType2(), entity.getTrdProductDeal().getPs(), entity.getAssetType2());
+        String busiType = commonPositionEngineService.getPositionBusiType(etrEntrust.getFinprodType2(), etrEntrust.getPs(),
+                etrEntrustAdd.getAssetType1());
         resultMap.put("busiType", busiType);
 
         // 交易方向

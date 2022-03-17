@@ -141,6 +141,9 @@ public class Order implements Serializable, Cloneable, OrderInterface, KeyMethod
     @JsonSerialize(using = DoubleSerializerUtils.class)
     private BigDecimal fullPrice;//全价价格
 
+    @ApiModelProperty(name = "expireYearRate", value = "收益率")
+    private BigDecimal expireYearRate;
+
     @ApiModelProperty(name = "entrustBalance", value = "委托金额")
     @NotNull
     @Digits(integer = 20, fraction = 4)
@@ -261,6 +264,7 @@ public class Order implements Serializable, Cloneable, OrderInterface, KeyMethod
         this.frozenBalance = new BigDecimal("0.00");
         this.tradedBalance = new BigDecimal("0.00");
         this.tradedPrice = new BigDecimal("0.00");
+        this.expireYearRate = new BigDecimal("0.00");
     }
 
     public String getPs() {
@@ -479,6 +483,14 @@ public class Order implements Serializable, Cloneable, OrderInterface, KeyMethod
 
     public void setFullPrice(BigDecimal fullPrice) {
         this.fullPrice = fullPrice;
+    }
+
+    public BigDecimal getExpireYearRate() {
+        return expireYearRate;
+    }
+
+    public void setExpireYearRate(BigDecimal expireYearRate) {
+        this.expireYearRate = expireYearRate;
     }
 
     public BigDecimal getEntrustBalance() {
@@ -745,6 +757,7 @@ public class Order implements Serializable, Cloneable, OrderInterface, KeyMethod
             newOrder.setStockCode(orderPlaceBean.getStockCode());
             newOrder.setOrderVolume(orderPlaceBean.getEntrustVolume());
             newOrder.setOrderPrice(orderPlaceBean.getEntrustPrice());
+            newOrder.setExpireYearRate(orderPlaceBean.getYield());
             newOrder.setOffsetFlag(orderPlaceBean.getOffsetFlag());
             newOrder.setHedgeFlag(orderPlaceBean.getHedgeFlag());
             newOrder.setFullPrice(orderPlaceBean.getFullPrice() == null ? new BigDecimal("0.00") : orderPlaceBean.getFullPrice());

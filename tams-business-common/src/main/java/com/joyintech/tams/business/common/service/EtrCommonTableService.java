@@ -45,7 +45,7 @@ public class EtrCommonTableService extends BaseService {
         List<String> entrustIdList = StringUtil.splitToList(",",(String)pageParam.get("entrustId"));
         String  busiTypePosition = (String)pageParam.get("busiTypePosition");
         //质押式回购的风险试算信息处理
-        if (!DictCodeListExt3.头寸业务类型_质押式回购首期.getValue().equals(busiTypePosition)) {
+        if (!DictCodeListExt3.头寸业务类型_质押式回购首期.getValue().equals(busiTypePosition) && !DictCodeListExt3.头寸业务类型_债券一级投标.getValue().equals(busiTypePosition) ) {
             pageParam.put("NOT_NULL_FLAG", "Y");
         }
         if(StringUtil.isBlank(dto.getEntrustId()) || entrustIdList.size() > 1){

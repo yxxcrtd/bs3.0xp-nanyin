@@ -1324,7 +1324,11 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
             dto.setTgBusiType(DictCodeListExt1.平安业务类型_正回购.getValue());
         }
         logger.debug("[到期续作成交数据特殊处理开始],finProductId:{}, ps:{}", dto.getFinprodId(), ps);
-        if(dto.getFinprodId() == null
+        if(
+                // ZGTFCP-1143:修改判空逻辑 modify by fuyongsheng 20220317 start
+                // dto.getFinprodId() == null
+                StringUtil.isEmpty(dto.getFinprodId())
+                // ZGTFCP-1143:修改判空逻辑 modify by fuyongsheng 20220317 end
                 // GNS-955:到期续作登录finProdId有误 modify by fuyongsheng 20220224 start
                 || DictCodeListExt3.交易方向_到期续做.getValue().equals(ps)
             // GNS-955:到期续作登录finProdId有误 modify by fuyongsheng 20220224 end

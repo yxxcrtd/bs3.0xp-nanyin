@@ -10,6 +10,8 @@
  
 package com.joyintech.tams.invest.common.entrust.dao;
 
+import com.joyintech.tams.common.base.entity.PtlCapacctInfo;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -26,7 +28,7 @@ import java.util.Map;
 public interface EtrTrdCommonMapper {
 
 
-    List<String> getPtlAcctInfo(String portfolioId);
+    List<PtlCapacctInfo> getPtlAcctInfo(@Param("portfolioId") String portfolioId,@Param("acctTypeList")  List<String> acctTypeList);
     /**
      * 交易日历的节假日取得
      *

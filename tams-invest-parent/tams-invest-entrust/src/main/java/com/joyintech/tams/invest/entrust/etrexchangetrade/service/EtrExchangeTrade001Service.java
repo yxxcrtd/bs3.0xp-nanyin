@@ -1293,7 +1293,7 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 					}
 					entrustAmt = entrustAmt.multiply(百元券面).divide(BigDecimal.valueOf(100));
 					// modify by etliu 20220303 end
-					entrustAmt = new BigDecimal(entrustAmt.intValue());
+//					entrustAmt = new BigDecimal(entrustAmt.intValue());
 				}
 			}
 		}/* else {

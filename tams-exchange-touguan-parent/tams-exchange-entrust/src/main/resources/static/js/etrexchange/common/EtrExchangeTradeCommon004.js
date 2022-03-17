@@ -1,3 +1,4 @@
+//@ sourceURL=EtrExchangeTradeCommon004.js
 /**
  * 行情和交易信息
  */
@@ -748,7 +749,29 @@
                 //return parent.EtrExchangeTradeJjHq.getJJMktPrice("#latestPrice_jj");
                 return jJHQXX.latest;
             }
-        } else if (currentTab == "gd") {
+        } else if (currentTab == "dz") {
+            var secId=$("#secId_" + currentTab).val();
+            var secName=$("#secName_" + currentTab).val();
+            var finprodType2 = $("#finprodType2_" + currentTab).val();
+            var jJHQXX=queryJJHQXX(secId,secName,finprodType2);
+
+            var ps = $("#ps_" + currentTab).val();
+            if (finprodType2 == FINPROD_TYPE_TG_F06 || finprodType2 == FINPROD_TYPE_TG_F10) {
+                if (ps == PS_T01) {
+                    //return parent.EtrExchangeTradeJjHq.getJJMktPrice("#limitUp_jj");
+                    return jJHQXX.ceiling.toFixed(2);
+                } else if (ps == PS_T02) {
+                    //return parent.EtrExchangeTradeJjHq.getJJMktPrice("#limitDown_jj");
+                    return jJHQXX.ceiling.toFixed(2);
+                }else {
+                    //return parent.EtrExchangeTradeJjHq.getJJMktPrice("#latestPrice_jj");
+                    return jJHQXX.ceiling.toFixed(2);
+                }
+            } else {
+                //return parent.EtrExchangeTradeJjHq.getJJMktPrice("#latestPrice_jj");
+                return jJHQXX.ceiling.toFixed(2);
+            }
+        }else if (currentTab == "gd") {
             return $("#price_gd").get(0).value;
         }
         return '';
@@ -3148,6 +3171,9 @@
                 $("#acctNo_div_"+currentTab).show();
                 $("#dateTableDiv").hide();
             }
+            if(finprodType2 == FINPROD_TYPE_TG_F06){
+                $("#priceModel_div_"+currentTab).show();
+            }
 
 
             initFlag = true;
@@ -3572,7 +3598,9 @@
         riskFlag = flag;
     }
     function paramCheck() {
-        if (!entity_RiskTrialRetList || riskFlag !== 0) {
+        var ps =  $("#ps_" + currentTab).val();
+
+        if ((ps !== PS_T68 && ps !== PS_T69) && (!entity_RiskTrialRetList || riskFlag !== 0)) {
             Joyin.error("请先完成风险试算")
             return false;
         }
@@ -3584,7 +3612,6 @@
         var checkFlag = true;
         var object = getSearchParams();
         //组合也需要校验
-        var ps =  $("#ps_" + currentTab).val();
         if (!(ps==PS_T04||ps==PS_T46||ps==PS_T97)) { //单组合 新股申购、配股、配债、可转债信用申购
            if(object.portfolioList.length==0) {
                Joyin.error("请分配组合")

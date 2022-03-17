@@ -296,7 +296,7 @@ public class CfetsTrdConfirmService extends BaseService{
                         }else{
                             CfetsTrdRepoTrade003Dto entity=packageRepoEquity(item,DictCodeListExt1.生成方式_画面录入.getValue());
                             //成交确认提交方法
-                            cfetsTrdConfirm001Service.doCompleteRepoMethod(entity,OperationType.NEW);
+                            cfetsTrdConfirm001Service.doCompleteRepoMethod(entity, OperationType.NEW, true);
                         }
 
                     }catch (Exception e) {
@@ -2407,7 +2407,7 @@ public class CfetsTrdConfirmService extends BaseService{
                 }
                 entity.setOprType(DictCodeListExt3.操作类型_手工匹配确认.getValue());
                 //成交确认提交方法
-                cfetsTrdConfirm001Service.doCompleteRepoMethod(entity,OperationType.NEW);
+                cfetsTrdConfirm001Service.doCompleteRepoMethod(entity,OperationType.NEW,false);
             }
         }catch (Exception e) {
             //若插入数据异常，提示错误信息
@@ -2636,7 +2636,7 @@ public class CfetsTrdConfirmService extends BaseService{
                     entity.setCfetsTrdConfirmMatchDto(matchDto);
                     entity.setOprType(DictCodeListExt3.操作类型_自动匹配确认.getValue());
                     //成交确认提交方法
-                    cfetsTrdConfirm001Service.doCompleteRepoMethod(entity,OperationType.NEW);
+                    cfetsTrdConfirm001Service.doCompleteRepoMethod(entity,OperationType.NEW,false);
                 }
             }catch (Exception e) {
                 //若插入数据异常，提示错误信息

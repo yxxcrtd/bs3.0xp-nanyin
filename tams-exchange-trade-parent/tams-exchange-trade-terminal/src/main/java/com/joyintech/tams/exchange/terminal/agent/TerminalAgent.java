@@ -424,7 +424,8 @@ public class TerminalAgent extends Agent implements ITerminalMsgHandler, ITermin
 
     @Override
     public void onTrade(Trade trade) {
-        logger.info("terminalAgent onTrade {}", JsonUtils.getJsonFromObject(trade));
+        logger.info("terminalAgent onTrade，{}-{}，{}", trade.getBrokerEntrustId(), trade.getBrokerTradeId(),
+                JsonUtils.getJsonFromObject(trade));
         asyncWrite(FunctionCode.NOTIFY_TRADE, trade);
     }
 

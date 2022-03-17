@@ -176,6 +176,8 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
         initPageParams.put("ENTRUST_RECORD_MODIFY", ENTRUST_RECORD_MODIFY);
         initPageParams.put("TRADE_MARKET_04", DictCodeList.交易流通场所_深圳证券交易所.getValue());
 
+        initPageParams.put("risk_math_switch", CacheUtil.getSysParam("risk_math_switch"));
+        initPageParams.put("IS_RISKMATH_SOFTCONTROL ", CacheUtil.getSysParam("IS_RISKMATH_SOFTCONTROL "));
 
         return new Message<Map<String, Object>>(initPageParams).success();
     }

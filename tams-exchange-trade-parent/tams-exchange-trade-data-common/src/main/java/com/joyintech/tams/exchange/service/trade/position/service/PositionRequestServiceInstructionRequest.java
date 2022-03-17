@@ -331,7 +331,7 @@ public class PositionRequestServiceInstructionRequest {
                 bean.setPortfolioId(item.getPortfolioId());
                 bean.setFinprodId(null);
                 bean.setTradeId(entity.getEntrustNo());
-                bean.setEtrId(null);
+                bean.setEtrId(entity.getEntrustId());
                 bean.setCashAmount(item.getEntrustAmt());
                 bean.setSecAmount(BigDecimal.ZERO);
 

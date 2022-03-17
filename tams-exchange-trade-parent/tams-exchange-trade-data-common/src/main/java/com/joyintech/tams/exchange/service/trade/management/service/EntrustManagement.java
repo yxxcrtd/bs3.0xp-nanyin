@@ -22,7 +22,6 @@ import com.joyintech.tams.exchange.common.request.PageEntrustInfoRequest;
 import com.joyintech.tams.exchange.common.utils.EntrustUtils;
 import com.joyintech.tams.exchange.common.utils.StockCodeUtils;
 import com.joyintech.tams.exchange.datacommon.db.service.*;
-import com.joyintech.tams.exchange.service.trade.processor.TradeHelper;
 import com.joyintech.tams.exchange.service.trade.processor.msg.MsgReceiverManager;
 import com.joyintech.tams.exchange.service.trade.processor.msg.MsgType;
 import com.joyintech.tams.exchange.service.trade.processor.msg.TradeMsgReceiver;
@@ -51,9 +50,6 @@ public class EntrustManagement extends BaseService {
     private IntegratedEntrustService integratedEntrustService;
 
     @Autowired
-    private TradeHelper tradeHelper;
-
-    @Autowired
     private TerminalHelper terminalHelper;
 
     @Autowired
@@ -69,15 +65,11 @@ public class EntrustManagement extends BaseService {
     private RevokeManagement revokeManagement;
 
     @Autowired
-    private InvestmentManagement investmentManagement;
-
-    @Autowired
     private IntegratedEntrustHistoryService integratedEntrustHistoryService;
 
     @Autowired
     private TrdExchangeWorkflowService trdExchangeWorkflowService;
-    @Autowired
-    private CommonManagement commonManagement;
+
     /**
      * 是否单体服务
      */
@@ -92,17 +84,18 @@ public class EntrustManagement extends BaseService {
      * 根据userId查询Entrust中数据
      */
     public ResultBean queryEntrust(String userId, String instructionId, String accountId, String orderId) {
-        List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);//组合权限查询
+        // modify by swwan ZGTFCP-606 只要是交易员下单操作过的都应该能查到 start
+        /*List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);//组合权限查询
         if (Objects.isNull(ptlAuthList) || ptlAuthList.size() == 0) {
             if (!Strings.isNullOrEmpty(instructionId)) {
                 return new ResultBean(ErrorCode.SUCCESS, new OrderAndEntrustQryResult(new ArrayList<>(), new ArrayList<>()));
             }
             return new ResultBean(ErrorCode.SUCCESS, new ArrayList());
-        }
+        }*/
         // 查询具体订单下的委托
         if (!Strings.isNullOrEmpty(orderId)) {
             List<Entrust> entrustList = entrustService.queryEntrustByOrderId(orderId);
-            entrustList = entrustList.stream().filter(entrust -> !EntrustType.CANCEL.value.equals(entrust.getEntrustType()) && ptlAuthList.contains(entrust.getPortfolioId()))
+            entrustList = entrustList.stream().filter(entrust -> !EntrustType.CANCEL.value.equals(entrust.getEntrustType()) /*&& ptlAuthList.contains(entrust.getPortfolioId())*/)
                     .sorted((o1, o2) -> DateUtil.compareDate(o2.getCreateTime(), o1.getCreateTime()))
                     .collect(Collectors.toList());
             List<Entrust> entrusts = fillEntrustPrice(entrustList);
@@ -111,12 +104,12 @@ public class EntrustManagement extends BaseService {
         // 查询指令下的订单和委托
         if (!Strings.isNullOrEmpty(instructionId)) {
             List<Entrust> entrustList = entrustService.queryEntrustByInstructionId(instructionId);
-            entrustList = entrustList.stream().filter(entrust -> !EntrustType.CANCEL.value.equals(entrust.getEntrustType()) && ptlAuthList.contains(entrust.getPortfolioId()))
+            entrustList = entrustList.stream().filter(entrust -> !EntrustType.CANCEL.value.equals(entrust.getEntrustType())/* && ptlAuthList.contains(entrust.getPortfolioId())*/)
                     .sorted((o1, o2) -> DateUtil.compareDate(o2.getCreateTime(), o1.getCreateTime()))
                     .collect(Collectors.toList());
             setFutureEntrustStockCode(entrustList);
             List<Order> orderListByInstructionId = orderService.queryOrderByInstructionId(instructionId);
-            List<Order> orderListWithOutFair = orderListByInstructionId.stream().filter(order -> !BusinessFlag.FAIR.value.equals(order.getBusinessFlag()) && ptlAuthList.contains(order.getPortfolioId()))
+            List<Order> orderListWithOutFair = orderListByInstructionId.stream().filter(order -> !BusinessFlag.FAIR.value.equals(order.getBusinessFlag()) /*&& ptlAuthList.contains(order.getPortfolioId())*/)
                     .sorted((o1, o2) -> DateUtil.compareDate(o2.getCreateTime(), o1.getCreateTime()))
                     .collect(Collectors.toList());
             setFutureOrderStockCode(orderListWithOutFair);
@@ -127,20 +120,21 @@ public class EntrustManagement extends BaseService {
         List<Entrust> entrustList = entrustService.queryByUserId(userId);
         List<Order> orderList = orderService.queryOrder(userId);
         if (!Strings.isNullOrEmpty(accountId)) {
-            entrustList = entrustList.stream().filter(entrust -> accountId.equals(entrust.getAccountId()) && !EntrustType.CANCEL.value.equals(entrust.getEntrustType()) && ptlAuthList.contains(entrust.getPortfolioId()))
+            entrustList = entrustList.stream().filter(entrust -> accountId.equals(entrust.getAccountId()) && !EntrustType.CANCEL.value.equals(entrust.getEntrustType()) /*&& ptlAuthList.contains(entrust.getPortfolioId())*/)
                     .sorted((o1, o2) -> DateUtil.compareDate(o2.getCreateTime(), o1.getCreateTime()))
                     .collect(Collectors.toList());
-            orderList = orderList.stream().filter(order -> !BusinessFlag.FAIR.value.equals(order.getBusinessFlag()) && accountId.equals(order.getAccountId()) && ptlAuthList.contains(order.getPortfolioId()))
+            orderList = orderList.stream().filter(order -> !BusinessFlag.FAIR.value.equals(order.getBusinessFlag()) && accountId.equals(order.getAccountId()) /*&& ptlAuthList.contains(order.getPortfolioId())*/)
                     .sorted((o1, o2) -> DateUtil.compareDate(o2.getCreateTime(), o1.getCreateTime()))
                     .collect(Collectors.toList());
         } else {
-            entrustList = entrustList.stream().filter(entrust -> !EntrustType.CANCEL.value.equals(entrust.getEntrustType()) && ptlAuthList.contains(entrust.getPortfolioId()))
+            entrustList = entrustList.stream().filter(entrust -> !EntrustType.CANCEL.value.equals(entrust.getEntrustType())/* && ptlAuthList.contains(entrust.getPortfolioId())*/)
                     .sorted((o1, o2) -> DateUtil.compareDate(o2.getCreateTime(), o1.getCreateTime()))
                     .collect(Collectors.toList());
-            orderList = orderList.stream().filter(order -> !BusinessFlag.FAIR.value.equals(order.getBusinessFlag()) && ptlAuthList.contains(order.getPortfolioId()))
+            orderList = orderList.stream().filter(order -> !BusinessFlag.FAIR.value.equals(order.getBusinessFlag())/* && ptlAuthList.contains(order.getPortfolioId())*/)
                     .sorted((o1, o2) -> DateUtil.compareDate(o2.getCreateTime(), o1.getCreateTime()))
                     .collect(Collectors.toList());
         }
+        // modify by swwan ZGTFCP-606 只要是交易员下单操作过的都应该能查到 end
         setFutureEntrustStockCode(entrustList);
         setFutureOrderStockCode(orderList);
         List<Entrust> entrusts = fillEntrustPrice(entrustList);
@@ -181,34 +175,36 @@ public class EntrustManagement extends BaseService {
      */
 
     public ResultBean queryIntegratedEntrust(String userId, String instructionId, String accountId, String orderId) {
-        List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);//组合权限查询
+        // modify by swwan ZGTFCP-606 只要是交易员下单操作过的都应该能查到 start
+        /*List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);//组合权限查询
         if (Objects.isNull(ptlAuthList) || ptlAuthList.size() == 0) {
             return new ResultBean(ErrorCode.SUCCESS, new ArrayList());
-        }
+        }*/
         if (!Strings.isNullOrEmpty(orderId)) {
             List<IntegratedEntrust> entrustList = integratedEntrustService.queryIntegratedEntrustByOrderId(orderId);
-            entrustList = entrustList.stream().filter(entrust -> !EntrustType.CANCEL.value.equals(entrust.getEntrustType()) && ptlAuthList.contains(entrust.getPortfolioId()))
+            entrustList = entrustList.stream().filter(entrust -> !EntrustType.CANCEL.value.equals(entrust.getEntrustType())/* && ptlAuthList.contains(entrust.getPortfolioId())*/)
                     .sorted((o1, o2) -> DateUtil.compareDate(o2.getCreateTime(), o1.getCreateTime()))
                     .collect(Collectors.toList());
             return new ResultBean(ErrorCode.SUCCESS, entrustList);
         }
         if (!Strings.isNullOrEmpty(instructionId)) {
             List<IntegratedEntrust> entrustList = integratedEntrustService.queryIntegratedEntrustByInstructionId(instructionId);
-            entrustList = entrustList.stream().filter(entrust -> !EntrustType.CANCEL.value.equals(entrust.getEntrustType()) && ptlAuthList.contains(entrust.getPortfolioId()))
+            entrustList = entrustList.stream().filter(entrust -> !EntrustType.CANCEL.value.equals(entrust.getEntrustType())/* && ptlAuthList.contains(entrust.getPortfolioId())*/)
                     .sorted((o1, o2) -> DateUtil.compareDate(o2.getCreateTime(), o1.getCreateTime()))
                     .collect(Collectors.toList());
             return new ResultBean(ErrorCode.SUCCESS, entrustList);
         }
         List<IntegratedEntrust> entrustList = integratedEntrustService.queryByUserId(userId);
         if (!Strings.isNullOrEmpty(accountId)) {
-            entrustList = entrustList.stream().filter(entrust -> accountId == entrust.getAccountId() && !EntrustType.CANCEL.value.equals(entrust.getEntrustType()) && ptlAuthList.contains(entrust.getPortfolioId()))
+            entrustList = entrustList.stream().filter(entrust -> accountId == entrust.getAccountId() && !EntrustType.CANCEL.value.equals(entrust.getEntrustType()) /*&& ptlAuthList.contains(entrust.getPortfolioId())*/)
                     .sorted((o1, o2) -> DateUtil.compareDate(o2.getCreateTime(), o1.getCreateTime()))
                     .collect(Collectors.toList());
         } else {
-            entrustList = entrustList.stream().filter(entrust -> !EntrustType.CANCEL.value.equals(entrust.getEntrustType()) && ptlAuthList.contains(entrust.getPortfolioId()))
+            entrustList = entrustList.stream().filter(entrust -> !EntrustType.CANCEL.value.equals(entrust.getEntrustType())/* && ptlAuthList.contains(entrust.getPortfolioId())*/)
                     .sorted((o1, o2) -> DateUtil.compareDate(o2.getCreateTime(), o1.getCreateTime()))
                     .collect(Collectors.toList());
         }
+        // modify by swwan ZGTFCP-606 只要是交易员下单操作过的都应该能查到 end
         return new ResultBean(ErrorCode.SUCCESS, entrustList);
     }
 
@@ -476,7 +472,9 @@ public class EntrustManagement extends BaseService {
 //    }
 
     public Message<PageInfo<EntrustQueryBean>> queryIntegratedEntrustForPage(PageEntrustInfoRequest request) {
-        String userId = request.getUserId();
+        // modify by swwan ZGTFCP-606 只要是交易员下单操作过的都应该能查到 start
+        List<String> ptlAuthList = null;
+        /*String userId = request.getUserId();
         String portfolioId = request.getPortfolioId();
         //组合权限查询
         List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);
@@ -487,7 +485,8 @@ public class EntrustManagement extends BaseService {
         if (!Strings.isNullOrEmpty(portfolioId) && !ptlAuthList.contains(portfolioId)) {
             logger.info("用户：{}没有{}的组合权限", userId, portfolioId);
             return new Message<PageInfo<EntrustQueryBean>>(new PageInfo());
-        }
+        }*/
+        // modify by swwan ZGTFCP-606 只要是交易员下单操作过的都应该能查到 end
         Integer historyType = request.getHistoryType();
         if (historyType == PresentOrHistoryQryType.PRESENT.value) {
             PageInfo<EntrustQueryBean> entrustForPage = integratedEntrustService.queryAllForPage(request, ptlAuthList);
@@ -501,7 +500,9 @@ public class EntrustManagement extends BaseService {
 
     @Deprecated
     public ResultBean queryIntegratedEntrustForPage(int pageNum, int pageSize, int historyType, String userId, String startDay, String endDay, String accountId, String portfolioId, String market, String stockCode, String entrustProp, int entrustStatus) {
-        List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);//组合权限查询
+        // modify by swwan ZGTFCP-606 只要是交易员下单操作过的都应该能查到 start
+        List<String> ptlAuthList = null;
+        /*List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);//组合权限查询
         if (Objects.isNull(ptlAuthList) || ptlAuthList.size() == 0) {
             logger.info("用户：{}没有组合权限", userId);
             return new ResultBean(ErrorCode.SUCCESS, new PageInfo());
@@ -509,7 +510,8 @@ public class EntrustManagement extends BaseService {
         if (!Strings.isNullOrEmpty(portfolioId) && !ptlAuthList.contains(portfolioId)) {
             logger.info("用户：{}没有{}的组合权限", userId, portfolioId);
             return new ResultBean(ErrorCode.SUCCESS, new PageInfo());
-        }
+        }*/
+        // modify by swwan ZGTFCP-606 只要是交易员下单操作过的都应该能查到 end
         if (historyType == PresentOrHistoryQryType.PRESENT.value) {
             PageInfo<IntegratedEntrust> integratedEntrustPageInfo = integratedEntrustService.queryAllForPage(pageNum, pageSize, accountId, portfolioId, market, stockCode, entrustProp, entrustStatus, ptlAuthList);
             return new ResultBean(ErrorCode.SUCCESS, integratedEntrustPageInfo);
@@ -525,7 +527,9 @@ public class EntrustManagement extends BaseService {
         String userId = request.getUserId();
         String portfolioId = request.getPortfolioId();
         request.getPageMode().setPageSize(99999);
-        //组合权限查询
+        // modify by swwan ZGTFCP-606 只要是交易员下单操作过的都应该能查到 start
+        List<String> ptlAuthList = null;
+        /*//组合权限查询
         List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);
         if (Objects.isNull(ptlAuthList) || ptlAuthList.size() == 0) {
             logger.info("用户：{}没有组合权限", userId);
@@ -534,7 +538,8 @@ public class EntrustManagement extends BaseService {
         if (!Strings.isNullOrEmpty(portfolioId) && !ptlAuthList.contains(portfolioId)) {
             logger.info("用户：{}没有{}的组合权限", userId, portfolioId);
             return new Message<PageInfo<EntrustQueryBean>>(new PageInfo());
-        }
+        }*/
+        // modify by swwan ZGTFCP-606 只要是交易员下单操作过的都应该能查到 end
         Integer historyType = request.getHistoryType();
         if (historyType == PresentOrHistoryQryType.PRESENT.value) {
             PageInfo<EntrustQueryBean> entrustForPage = integratedEntrustService.queryAllEntrustForPage(request, ptlAuthList);
@@ -549,7 +554,9 @@ public class EntrustManagement extends BaseService {
 
     @Deprecated
     public ResultBean queryAllEntrustForPage(int pageNum, int pageSize, int historyType, String userId, String startDay, String endDay, String accountId, String portfolioId, String market, String stockCode, String entrustProp, int entrustStatus) {
-        List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);//组合权限查询
+        // modify by swwan ZGTFCP-606 只要是交易员下单操作过的都应该能查到 start
+        List<String> ptlAuthList = null;
+        /*List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);//组合权限查询
         if (Objects.isNull(ptlAuthList) || ptlAuthList.size() == 0) {
             logger.info("用户：{}没有组合权限", userId);
             return new ResultBean(ErrorCode.SUCCESS, new PageInfo());
@@ -557,7 +564,8 @@ public class EntrustManagement extends BaseService {
         if (!Strings.isNullOrEmpty(portfolioId) && !ptlAuthList.contains(portfolioId)) {
             logger.info("用户：{}没有{}的组合权限", userId, portfolioId);
             return new ResultBean(ErrorCode.SUCCESS, new PageInfo());
-        }
+        }*/
+        // modify by swwan ZGTFCP-606 只要是交易员下单操作过的都应该能查到 end
         if (historyType == PresentOrHistoryQryType.PRESENT.value) {
             PageInfo<IntegratedEntrust> integratedEntrustPageInfo = integratedEntrustService.queryAllEntrustForPage(pageNum, pageSize, userId, accountId, portfolioId, market, stockCode, entrustProp, entrustStatus, ptlAuthList);
             return new ResultBean(ErrorCode.SUCCESS, integratedEntrustPageInfo);
@@ -570,12 +578,15 @@ public class EntrustManagement extends BaseService {
     }
 
     public ResultBean queryEntrustByStatus(String userId, String entrustStatus) {
-        List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);//组合权限查询
+        // modify by swwan ZGTFCP-606 只要是交易员下单操作过的都应该能查到 start
+        List<String> ptlAuthList = null;
+        /*List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);//组合权限查询
         if (Objects.isNull(ptlAuthList) || ptlAuthList.size() == 0) {
             logger.info("用户：{}没有组合权限", userId);
             return new ResultBean(ErrorCode.SUCCESS, new ArrayList());
         }
-        logger.debug("根据委托状态查询委托, 用户id: {}, 委托状态: {}", userId, entrustStatus);
+        logger.debug("根据委托状态查询委托, 用户id: {}, 委托状态: {}", userId, entrustStatus);*/
+        // modify by swwan ZGTFCP-606 只要是交易员下单操作过的都应该能查到 end
         List<IntegratedEntrust> integratedEntrustList = integratedEntrustService.queryIntegratedEntrustByStatus(userId, entrustStatus, ptlAuthList);
         List<Entrust> entrustList = entrustService.queryEntrustByStatus(userId, entrustStatus, ptlAuthList);
         List<EntrustInterface> list = new ArrayList<>();

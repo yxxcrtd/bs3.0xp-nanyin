@@ -24,6 +24,8 @@ public class PositionQueryDto {
      */
     private String ccy;
 
+    private Integer AMOUNT;
+
 
 
     public String getSecAcctId() {
@@ -89,5 +91,14 @@ public class PositionQueryDto {
 
     public void setPositionType(String positionType) {
         this.positionType = positionType;
+    }
+
+
+    public Integer getAMOUNT() {
+        return AMOUNT;
+    }
+
+    public void setAMOUNT(Integer AMOUNT) {
+        this.AMOUNT = AMOUNT;
     }
 }
