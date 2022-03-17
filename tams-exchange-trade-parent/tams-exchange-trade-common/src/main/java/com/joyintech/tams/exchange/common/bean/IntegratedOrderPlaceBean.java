@@ -233,6 +233,9 @@ public class IntegratedOrderPlaceBean implements Serializable {
 
     @ApiModelProperty(required = true, name = "operateUser", value = "操作人员ID 执行撤销异常委托操作人员ID")
     private String operateUser;
+    
+    @ApiModelProperty(name="softSkipMode",value="软控是否继续？Y：继续",example="Y")
+    private String softSkipMode;
 
     public boolean isNoCancelEntrust() {
         return noCancelEntrust;
@@ -262,7 +265,15 @@ public class IntegratedOrderPlaceBean implements Serializable {
         this.id = id == null ? null : id.trim();
     }
 
-    public String getParentOrderId() {
+    public String getSoftSkipMode() {
+		return softSkipMode;
+	}
+
+	public void setSoftSkipMode(String softSkipMode) {
+		this.softSkipMode = softSkipMode;
+	}
+
+	public String getParentOrderId() {
         return parentOrderId;
     }
 
