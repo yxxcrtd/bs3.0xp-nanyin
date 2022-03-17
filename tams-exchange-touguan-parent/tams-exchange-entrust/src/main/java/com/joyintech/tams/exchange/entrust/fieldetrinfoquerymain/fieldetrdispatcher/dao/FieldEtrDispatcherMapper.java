@@ -83,7 +83,7 @@ public interface FieldEtrDispatcherMapper {
      * @see
      * @since 1.0
      */
-    FieldEtrDispatcherInfoResponse getEtrDispatcherInfo(Map<String, Object> pageParam);
+    List<FieldEtrDispatcherInfoResponse> getEtrDispatcherInfo(Map<String, Object> pageParam);
 
     /**
      * 交易员列表模糊查询

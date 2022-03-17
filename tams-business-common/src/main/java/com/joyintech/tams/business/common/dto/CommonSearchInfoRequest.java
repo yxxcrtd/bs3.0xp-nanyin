@@ -50,6 +50,12 @@ public class CommonSearchInfoRequest {
     @ApiModelProperty(name = "assetType11", value = "资产四级分类", example = "字符串1")
     private String assetType11;
 
+    @ApiModelProperty(name = "finprodId", value = "产品编码", example = "字符串1")
+    private String finprodId;
+
+    @ApiModelProperty(name = "ccy", value = "币种", example = "字符串1")
+    private String ccy;
+
     public String getTradeMarket() {
         return tradeMarket;
     }
@@ -144,6 +150,22 @@ public class CommonSearchInfoRequest {
 
     public void setAssetType11(String assetType11) {
         this.assetType11 = assetType11;
+    }
+
+    public String getFinprodId() {
+        return finprodId;
+    }
+
+    public void setFinprodId(String finprodId) {
+        this.finprodId = finprodId;
+    }
+
+    public String getCcy() {
+        return ccy;
+    }
+
+    public void setCcy(String ccy) {
+        this.ccy = ccy;
     }
 }
 

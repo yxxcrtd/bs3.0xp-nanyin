@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -310,7 +311,10 @@ public class FieldEtrDispatcherService extends BaseService{
         if(StringUtil.isBlank(dto.getEntrustId()) || entrustIdList.size() > 1){
             return new FieldEtrDispatcherInfoResponse();
         }else {
-            fieldResponseDto = fieldEtrDispatcherMapper.getEtrDispatcherInfo(pageParam);
+            List<FieldEtrDispatcherInfoResponse> list = fieldEtrDispatcherMapper.getEtrDispatcherInfo(pageParam);
+            if(!CollectionUtils.isEmpty(list)){
+                fieldResponseDto = list.get(0);
+            }
             //一级市场投标增加投标标位List
             if (fieldResponseDto != null) {
                 if (StringUtil.equals(dto.getBusiTypePosition(), DictCodeListExt3.头寸业务类型_债券一级投标.getValue())) {

@@ -94,7 +94,8 @@
             title: 'CfetsEtribBondInfo003.proAvailableCash',
             sortable: false,
             type: 'number',
-            digit: 2
+            digit: 2,
+            visible: ps !== 'T03' ? true:false
         }
         , {
             field: 'proAvailableCash1',
@@ -102,7 +103,8 @@
             title: 'CfetsEtribBondInfo003.proAvailableCash1',
             sortable: false,
             type: 'number',
-            digit: 2
+            digit: 2,
+            visible: ps !== 'T03' ? true:false
         }
         , {
             field: 'secAcctAvailableCash',
@@ -111,6 +113,7 @@
             sortable: false,
             type: 'number',
             digit: 2,
+            visible: ps !== 'T03' ? true:false
         }
         , {
             field: 'porAvailableSec',
