@@ -3,12 +3,7 @@ package com.joyintech.tams.cfets.cfetsmanualsettle.service;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.security.SecurityUtil;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.service.trade.buyoutrepo.service.TrdOutRightRepoTradeService;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.dto.PositionRulePtlData;
@@ -17,11 +12,7 @@ import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.cfets.bankuplink.repo.dao.CfetsIbuQuoteRepo004Mapper;
 import com.joyintech.tams.cfets.bankuplink.repo.service.CfetsRepoQuotedPrice004Service;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dao.CfetsManualSettleMapper;
-import com.joyintech.tams.cfets.cfetsmanualsettle.dto.CfetsManualSettleDealInfo;
-import com.joyintech.tams.cfets.cfetsmanualsettle.dto.CfetsManualSettleDto;
-import com.joyintech.tams.cfets.cfetsmanualsettle.dto.CfetsManualSettleInsertDto;
-import com.joyintech.tams.cfets.cfetsmanualsettle.dto.CfetsManualSettlePositionDto;
-import com.joyintech.tams.cfets.cfetsmanualsettle.dto.CfetsManualSettleRequest;
+import com.joyintech.tams.cfets.cfetsmanualsettle.dto.*;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbClosePosEtrRequest;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbClosePositionRequest;
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoPosPortfolioCashRequest;
@@ -32,21 +23,8 @@ import com.joyintech.tams.cfets.trdquery.dao.CfetsTrdQueryMapper;
 import com.joyintech.tams.cfets.trdquery.dto.CfetsPledgeInfoResponse;
 import com.joyintech.tams.cfets.trdquery.dto.CfetsTrdBondInvestTradeDto;
 import com.joyintech.tams.cfets.trdquery.service.CfetsTrdBondInvestTrade002Service;
-import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
-import com.joyintech.tams.common.base.dao.TrdBankManualSetDetailMapper;
-import com.joyintech.tams.common.base.dao.TrdBankManualSettleFlowMapper;
-import com.joyintech.tams.common.base.dao.TrdFinProductDealTotalMapper;
-import com.joyintech.tams.common.base.dao.TrdProductTempDealTotalMapper;
-import com.joyintech.tams.common.base.dao.TrdTradeFeeTotalMapper;
-import com.joyintech.tams.common.base.entity.EtrEntrust;
-import com.joyintech.tams.common.base.entity.TrdBankManualSetDetail;
-import com.joyintech.tams.common.base.entity.TrdBankManualSettleFlow;
-import com.joyintech.tams.common.base.entity.TrdBankManualSettleInfo;
-import com.joyintech.tams.common.base.entity.TrdFinProductDealTotal;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
-import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
-import com.joyintech.tams.common.base.entity.TrdTradeFeeTotal;
-import com.joyintech.tams.common.base.entity.TrdTradeFeeTotalKey;
+import com.joyintech.tams.common.base.dao.*;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.trade.impl.BaseTradeProductDealCommServiceImpl;
 import com.joyintech.tams.constant.DictCodeList;
@@ -64,6 +42,7 @@ import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.tams.invest.common.riskinfrds.util.EntrustCompleteUtil;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
+import com.joyintech.tams.invest.common.trade.dao.BaseAssetCashPositionCommMapper;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
@@ -78,14 +57,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -157,6 +129,9 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
     private TrdFinProductDealTotalMapper trdFinProductDealTotalMapper;
     @Autowired
     private TrdProductTempDealTotalMapper trdProductTempDealTotalMapper;
+
+    @Autowired
+    BaseAssetCashPositionCommMapper baseAssetCashPositionCommMapper;
 
 
     /**
@@ -1139,6 +1114,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
         listTemp = listTemp.stream().sorted((x, y) -> y.getTradeAmt().compareTo(x.getTradeAmt())).collect(Collectors.toList());
         BigDecimal orderAmt = stlPayOrdersDto.getSettleAmt();
         int index = 0;
+        List<String> orderIds = new ArrayList<>();
         for (CfetsManualSettleDealInfo item : listTemp) {
             index++;
             FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
@@ -1191,6 +1167,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                 }
                 orderAmt = ArithmeticUtil.subtract(orderAmt, settleAmt);
                 stlPayOrder.setSettleAmt(settleAmt);
+                orderIds.add(cfetsManualSettleMapper.selectRegTradeIdBytradeId(item.getTradeId()));
                 stlPayOrders.add(stlPayOrder);
             } else {
                 stlPayOrders = cfetsManualSettleMapper.getStlPayOrdersByTradeId(item.getTradeId());
@@ -1215,6 +1192,9 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
             // 调用业务组件.【金融产品交易共通.交易产品接口】, insert
             // 调用业务组件.【金融产品交易共通.交易产品接口】,写入[实际]的组合持仓流水及现金流水
             baseTradeProductDealCommServiceImpl.insertPosition(finProductTradeDto);
+        }
+        if (CollectionUtils.isNotEmpty(orderIds)) {
+            baseAssetCashPositionCommMapper.deleteCashPositionByOrderIds(orderIds);
         }
     }
 

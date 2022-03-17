@@ -11,11 +11,8 @@
 package com.joyintech.tams.cfets.trdconfirm.service;
 
 import com.google.common.collect.Lists;
-import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
@@ -24,13 +21,13 @@ import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.cfets.bankuplink.repo.service.CfetsRepoQuotedPrice004Service;
+import com.joyintech.tams.cfets.cfetsmanualsettle.dao.CfetsManualSettleMapper;
 import com.joyintech.tams.cfets.etrib.bond.dao.CfetsEtrIbBondinfoMapper;
 import com.joyintech.tams.cfets.etrib.bond.dto.*;
 import com.joyintech.tams.cfets.etrib.bond.service.CfetsEtribBondInfo003Service;
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoPosPortfolioCashRequest;
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoPosPortfolioSecRequest;
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoPositionRequest;
-import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtribRepoInfo003Dto;
 import com.joyintech.tams.cfets.trdconfirm.dao.CfetsTrdConfirmMapper;
 import com.joyintech.tams.cfets.trdconfirm.dto.*;
 import com.joyintech.tams.common.base.dao.*;
@@ -40,11 +37,9 @@ import com.joyintech.tams.component.business.common.service.CommonBusinessServic
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
 import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
-import com.joyintech.tams.component.business.settle.dto.BussSettleOrderParameterDto;
 import com.joyintech.tams.component.business.trade.BaseTradeProductDealCommService;
 import com.joyintech.tams.component.business.trade.BussRepoSecService;
 import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
-import com.joyintech.tams.component.business.trade.dto.TrdInvestPersonInfo002Dto;
 import com.joyintech.tams.component.business.trade.impl.BaseTradeProductDealCommServiceImpl;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -63,41 +58,28 @@ import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.dto.common.BussRepoSecDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
-import com.joyintech.tams.invest.common.dto.common.PtlAllocationDto;
-import com.joyintech.tams.invest.common.dto.cstp.EtrEntrustExt;
-import com.joyintech.tams.invest.common.dto.cstp.InterfTradSecdealDto;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.common.dto.trade.entrust.EtrFinishStatusDto;
 import com.joyintech.tams.invest.common.service.InvestInterfCommService;
-import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.common.trade.service.PreTrdCommonBaseService;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
-import com.joyintech.tams.invest.common.util.ValItemValueGenUtil;
-import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.interf.service.InterfComponentService;
-import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
-import com.joyintech.tams.invest.trade.cstptrdmatchinfo.dto.TrdMatchInfoDto;
 import com.joyintech.tams.invest.trade.lend.dto.FinTradeProductDto;
 import com.joyintech.tams.invest.trade.trdrepotrade.dto.TrdRepoTrade002Dto;
-import com.joyintech.tams.invest.trade.trdrepotrade.dto.TrdRepoTrade003Dto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 /**
@@ -173,6 +155,9 @@ public class CfetsTrdConfirm001Service extends BaseService{
     private CfetsEtrIbBondinfoMapper cfetsEtrIbBondinfoMapper;
     @Autowired
     private EtrEntrustAddMapper etrEntrustAddMapper;
+
+    @Autowired
+    private CfetsManualSettleMapper cfetsManualSettleMapper;
     /**
      * 委托完成状况表Mapper
      */
@@ -526,9 +511,11 @@ public class CfetsTrdConfirm001Service extends BaseService{
             finProductTradeDto.setNeedSum(true);
             BaseTradeProductDealDto baseTradeProductDealDto = new BaseTradeProductDealDto();
             baseTradeProductDealDto.setTrdProductDeal(trdProductDeal);
+            TrdProductDealAdd dealAdd = new TrdProductDealAdd();
             entity.getTrdProductDealAdds().forEach(trdProductDealAdd -> {
                 if (trdProductDeal.getTradeId() != null
                         && trdProductDeal.getTradeId().equals(trdProductDealAdd.getTradeId())) {
+                    BeanUtil.copyPropertiesIgnoreNull(dealAdd, trdProductDealAdd);
                     baseTradeProductDealDto.setTrdProductDealAdd(trdProductDealAdd);
                 }
             });
@@ -554,10 +541,16 @@ public class CfetsTrdConfirm001Service extends BaseService{
                 BeanUtil.copyPropertiesIgnoreNull(finProductTradeDtoTemp, finProductTradeDto);
                 finProductTradeDtoTemp.setAssetType2(DictCodeList.回购类型_质押式回购.getValue());
                 finProductTradeDtoTemp.setIsExistNew(DictCodeList.是否_是.getValue());
-                if (StringUtil.isEmpty(finProductTradeDtoTemp.getBaseTradeProductDealDtos().get(0).getStlPayOrdersList().get(0).getMyAcctNo())) {
+                StlPayOrdersDto stlPayOrdersDto = new StlPayOrdersDto();
+                stlPayOrdersDto = finProductTradeDtoTemp.getBaseTradeProductDealDtos().get(0).getStlPayOrdersList().get(0);
+                if (StringUtil.isEmpty(stlPayOrdersDto.getMyAcctNo())) {
                     String acctId = EtrCommonCashPositionDealService.select组合托管户(trdProductDeal.getPortfolioId(), trdProductDeal.getCcy(), DictCodeListExt1.资金账户类型_产品托管户.getValue());
-                    finProductTradeDtoTemp.getBaseTradeProductDealDtos().get(0).getStlPayOrdersList().get(0).setMyAcctNo(acctId);
+                    stlPayOrdersDto.setMyAcctNo(acctId);
                 }
+                stlPayOrdersDto.setOrderId(cfetsManualSettleMapper.selectRegTradeId(entity.getRegIbuId(),dealAdd.getEntrustId()));
+                List<StlPayOrdersDto> stlPayOrdersDtos = new ArrayList<>();
+                stlPayOrdersDtos.add(stlPayOrdersDto);
+                finProductTradeDtoTemp.getBaseTradeProductDealDtos().get(0).setStlPayOrdersList(stlPayOrdersDtos);
                 baseTradeProductDealCommService.insertPosition(finProductTradeDtoTemp);
             }
 

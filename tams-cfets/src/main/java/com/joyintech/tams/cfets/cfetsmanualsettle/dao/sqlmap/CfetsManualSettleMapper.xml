@@ -797,6 +797,30 @@
         WHERE TPD.TOTLE_TRADE_ID = #{tradeId} AND TPD.TRADE_STATUS ='01'
     </select>
 
+    <select id="selectRegTradeId" resultType="java.lang.String">
+        SELECT regdeal.TRADE_ID
+        FROM REG_FIN_PRODUCT_DEAL regdeal
+                 LEFT JOIN REG_FIN_PRODUCT_DEAL_TOTAL regtotal
+                           ON regdeal.TOTLE_TRADE_ID = regtotal.TOTLE_TRADE_ID
+        WHERE regtotal.TOTLE_TRADE_ID = #{tradeId} and regdeal.ENTRUST_ID = #{entrustId}
+    </select>
+
+    <select id="selectRegTradeIdBytradeId" resultType="java.lang.String">
+        SELECT regdeal.TRADE_ID
+        FROM REG_FIN_PRODUCT_DEAL regdeal
+                 LEFT JOIN REG_FIN_PRODUCT_DEAL_TOTAL regtotal
+                           ON regdeal.TOTLE_TRADE_ID = regtotal.TOTLE_TRADE_ID
+                 LEFT JOIN TRDQUTO_MATCH_INFO matchinfo
+                           ON matchinfo.PRE_TRADE_ID = regtotal.TOTLE_TRADE_ID
+                 LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL total
+                           ON total.TOTLE_TRADE_ID = matchinfo.TRD_ID
+                 LEFT JOIN TRD_PRODUCT_DEAL deal
+                           ON deal.TOTLE_TRADE_ID = total.TOTLE_TRADE_ID
+                 INNER JOIN TRD_PRODUCT_DEAL_ADD dealadd
+                            ON dealadd.TRADE_ID = deal.TRADE_ID AND dealadd.ENTRUST_ID = regdeal.ENTRUST_ID
+        WHERE deal.TRADE_ID = #{tradeId}
+    </select>
+
     <select id="getTempDealDetailsByTradeId" parameterType="java.lang.String" resultType="com.joyintech.tams.cfets.cfetsmanualsettle.dto.CfetsManualSettleDealInfo">
         SELECT
             TPD.TRADE_ID TRADE_ID,
