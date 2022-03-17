@@ -158,9 +158,9 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
             PositionRequestBaseBean bean;
 
             List<Map<String, Object>> ptlList = new ArrayList<>(portfolioListSize);
+            fillAttributes(entity);
             for (EtrExchangeTradePortfolioRequest item : entity.getPortfolioList()) {
                 bean = new PositionRequestBaseBean(item);
-                bean.setFinprodId(null);
                 BigDecimal fprice = Objects.isNull(entity.getFprice()) ? new BigDecimal(0) : entity.getFprice();
                 bean.setCashAmount(fprice.multiply(item.getEntrustNum()));
                 BigDecimal secAmount = commonPositionEngineService.getSecAmountByBondUnit(item.getEntrustNum());
@@ -175,6 +175,13 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
                 ptlList.add(map);
             }
             resultMap.put(PTL_LIST, ptlList);
+        }
+    }
+
+    private void fillAttributes(EtrExchangeTradeSaveRequest entity) {
+        for (EtrExchangeTradePortfolioRequest item : entity.getPortfolioList()) {
+            item.setEntrustId(entity.getEntrustId());
+            item.setFinprodId(entity.getFinprodId());
         }
     }
 
@@ -198,7 +205,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
         if (CollectionUtils.isNotEmpty(entity.getPortfolioList())) {
             int portfolioListSize = entity.getPortfolioList().size();
             PositionRequestBaseBean bean;
-
+            fillAttributes(entity);
             // 组合现金数据集
             List<Map<String, Object>> ptlCashList = new ArrayList<>(portfolioListSize);
             for (EtrExchangeTradePortfolioRequest item : entity.getPortfolioList()) {
@@ -293,7 +300,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
         if (CollectionUtils.isNotEmpty(entity.getPortfolioList())) {
             int portfolioListSize = entity.getPortfolioList().size();
             PositionRequestBaseBean bean;
-
+            fillAttributes(entity);
             // 组合数据集
             List<Map<String, Object>> ptlList = new ArrayList<>(portfolioListSize);
             for (EtrExchangeTradePortfolioRequest item : entity.getPortfolioList()) {
@@ -326,7 +333,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
         if (CollectionUtils.isNotEmpty(entity.getPortfolioList())) {
             int portfolioListSize = entity.getPortfolioList().size();
             PositionRequestBaseBean bean;
-
+            fillAttributes(entity);
             // 组合数据集
             List<Map<String, Object>> ptlList = new ArrayList<>(portfolioListSize);
             for (EtrExchangeTradePortfolioRequest item : entity.getPortfolioList()) {
@@ -386,7 +393,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
         if (CollectionUtils.isNotEmpty(entity.getPortfolioList())) {
             int portfolioListSize = entity.getPortfolioList().size();
             PositionRequestBaseBean bean;
-
+            fillAttributes(entity);
             // 组合数据集
             List<Map<String, Object>> ptlList = new ArrayList<>(portfolioListSize);
             for (EtrExchangeTradePortfolioRequest item : entity.getPortfolioList()) {
