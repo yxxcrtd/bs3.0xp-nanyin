@@ -173,6 +173,14 @@ public interface CfetsManualSettleMapper {
     CfetsManualSettleInfoOtherListRespond findManualSettleInfoOther(Map<String, Object> pageParam);
 
     /**
+     * 一级市场投标交收流水列表分页查询
+     *
+     * @param pageParam 参数
+     * @return CfetsManualSettleInfoF32Respond
+     */
+    CfetsManualSettleInfoOtherListRespond findTempManualSettleInfoOther(Map<String, Object> pageParam);
+
+    /**
      * 根据用户名查找真实姓名
      * <功能详细描述>
      * @param userName
