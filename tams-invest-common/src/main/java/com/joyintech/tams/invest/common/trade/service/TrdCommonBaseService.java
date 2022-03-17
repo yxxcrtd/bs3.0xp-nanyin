@@ -1307,6 +1307,8 @@ public class TrdCommonBaseService extends BaseService {
                 portfolioDto.setOrdSecAmount(ArithmeticUtil.multiply(orderInfoDto.getEntrustVolume(), new BigDecimal(100), ratio));
                 // 标准券券面总额
                 portfolioDto.setStandardSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt(), new BigDecimal(100), ratio));
+                // 融入券券面总额
+                portfolioDto.setIntegrateSecAmount(BigDecimal.ZERO);
                 portfolioDtos.add(portfolioDto);
             }
         }else{ // 单组合指令
@@ -1331,6 +1333,8 @@ public class TrdCommonBaseService extends BaseService {
             portfolioDto.setCashAmount(infContractDetailfile.getTradeAmt());
             // 标准券券面总额
             portfolioDto.setStandardSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt(), new BigDecimal(100)));
+            // 融入券券面总额
+            portfolioDto.setIntegrateSecAmount(BigDecimal.ZERO);
             portfolioDtos.add(portfolioDto);
         }
         return portfolioDtos;

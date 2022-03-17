@@ -47,7 +47,7 @@ public class PortfolioCalculateDto {
     private BigDecimal ownSecAmount;
 
     /**
-     * 融入券全面总额
+     * 融入券券面总额
      */
     private BigDecimal integrateSecAmount;
 

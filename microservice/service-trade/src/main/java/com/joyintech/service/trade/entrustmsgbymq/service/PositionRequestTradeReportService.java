@@ -155,7 +155,7 @@ public class PositionRequestTradeReportService {
             pltMap.put("secAmount", dto.getSecAmount());
             pltMap.put("cashAmount", dto.getCashAmount());
             pltMap.put("invAim", entity.getInvAim());
-            pltMap.put("integrateSecAmount", null);
+            pltMap.put("integrateSecAmount", dto.getIntegrateSecAmount());
             pltMap.put("ownSecAmount", dto.getOwnSecAmount());
             ptlList.add(pltMap);
         }
@@ -206,6 +206,10 @@ public class PositionRequestTradeReportService {
             ptlCash.put("etrSecAmount", dto.getEtrSecAmount());
             ptlCash.put("ordId", entity.getOrderId());
             ptlCash.put("ordSecAmount", dto.getOrdSecAmount());
+            // ZGTFCP-947:增加secAmount,ownSecAmount赋值 modify by fuyongsheng 20220317 start
+            ptlCash.put("secAmount", dto.getSecAmount());
+            ptlCash.put("ownSecAmount", dto.getOwnSecAmount());
+            // ZGTFCP-947:增加secAmount,ownSecAmount赋值 modify by fuyongsheng 20220317 end
             ptlCashList.add(ptlCash);
 
             Map<String, Object> bondSec = new HashMap<>();
