@@ -149,7 +149,7 @@ public class PositionRequestTradeReportService {
             pltMap.put("etrId", entity.getEntrustId());
             pltMap.put("ordEntrustId", null);
             pltMap.put("etrSecAmount", dto.getEtrSecAmount());
-            pltMap.put("ordId", entity.getOrderId());
+            pltMap.put("ordId", dto.getOrderId());
             pltMap.put("ordSecAmount", dto.getOrdSecAmount());
             pltMap.put("cashAcctId", dto.getCashAcctId());
             // ZGTFCP-1126:证券管理账户赋值 modify by fuyongsheng 20220316 start
@@ -208,7 +208,7 @@ public class PositionRequestTradeReportService {
             ptlCash.put("etrId", entity.getEntrustId());
             ptlCash.put("cashAmount", dto.getCashAmount());
             ptlCash.put("etrSecAmount", dto.getEtrSecAmount());
-            ptlCash.put("ordId", entity.getOrderId());
+            ptlCash.put("ordId", dto.getOrderId());
             ptlCash.put("ordSecAmount", dto.getOrdSecAmount());
             // ZGTFCP-947:增加secAmount,ownSecAmount赋值 modify by fuyongsheng 20220317 start
             ptlCash.put("secAmount", dto.getSecAmount());
@@ -270,7 +270,7 @@ public class PositionRequestTradeReportService {
             plt.put("cashAcctId", dto.getCashAcctId());
             plt.put("secAcctId", dto.getSecAcctId());
             plt.put("tradeId", entity.getTradeId());
-            plt.put("etrId", entity.getOrderId());
+            plt.put("etrId", entity.getEntrustId());
             plt.put("ordEntrustId", null);
             plt.put("standardSecId", STANDAR_SEC_ID);
             plt.put("standardSecAmount", dto.getStandardSecAmount());
@@ -288,7 +288,7 @@ public class PositionRequestTradeReportService {
                 ptlSec.put("finprodId", entity.getFinprodId());
                 ptlSec.put("secAcctId", dto.getSecAcctId());
                 ptlSec.put("tradeId", entity.getTradeId());
-                ptlSec.put("etrId", entity.getOrderId());
+                ptlSec.put("etrId", entity.getEntrustId());
                 ptlSec.put("integrateSecAmount", dto.getIntegrateSecAmount());
                 ptlSec.put("ownSecAmount", dto.getOwnSecAmount());
                 ptlSec.put("secAmount", dto.getSecAmount());
@@ -349,7 +349,7 @@ public class PositionRequestTradeReportService {
                 ptlCash.put("portfolioId", dto.getPortfolioId());
                 ptlCash.put("cashAcctId", dto.getCashAcctId());
                 ptlCash.put("tradeId", entity.getTradeId());
-                ptlCash.put("etrId", entity.getOrderId());
+                ptlCash.put("etrId", entity.getEntrustId());
                 ptlCash.put("cashAmount", dto.getCashAmount());
                 ptlCashList.add(ptlCash);
             }
@@ -455,7 +455,7 @@ public class PositionRequestTradeReportService {
             plt.put("cashAmount", dto.getCashAmount());
             plt.put("ordEntrustId", null);
             plt.put("etrSecAmount", dto.getEtrSecAmount());
-            plt.put("ordId", entity.getOrderId());
+            plt.put("ordId", dto.getOrderId());
             plt.put("ordSecAmount", dto.getOrdSecAmount());
             ptlList.add(plt);
         }
@@ -500,7 +500,7 @@ public class PositionRequestTradeReportService {
             plt.put("tradeId", entity.getTradeId());
             plt.put("etrId", entity.getEntrustId());
             plt.put("etrSecAmount", dto.getEtrSecAmount());
-            plt.put("ordId", entity.getOrderId());
+            plt.put("ordId", dto.getOrderId());
             plt.put("ordSecAmount", dto.getOrdSecAmount());
             plt.put("ordEntrustId", null);
             plt.put("cashAcctId", dto.getCashAcctId());
@@ -517,7 +517,7 @@ public class PositionRequestTradeReportService {
                 ptlRo.put("tradeId", entity.getTradeId());
                 ptlRo.put("etrId", entity.getEntrustId());
                 ptlRo.put("etrSecAmount", dto.getEtrSecAmount());
-                ptlRo.put("ordId", entity.getOrderId());
+                ptlRo.put("ordId", dto.getOrderId());
                 ptlRo.put("ordSecAmount", dto.getOrdSecAmount());
                 ptlRo.put("ordEntrustId", null);
                 ptlRo.put("cashAcctId", dto.getCashAcctId());

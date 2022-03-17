@@ -365,6 +365,9 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
     public void buildPositionBaseData(TrdTempDto trdTempDto, InfContractDetailfile infContractDetailfile) {
         // 构造开始----------------------------------------------------------
         BeanUtil.copyPropertiesIgnoreNull(trdTempDto, infContractDetailfile);
+        // ZGTFCP-1242:将orderId赋值为空 modify by fuyongsheng 20220317 start
+        trdTempDto.setOrderId(null);
+        // ZGTFCP-1242:将orderId赋值为空 modify by fuyongsheng 20220317 end
         trdTempDto.setAssetType(DictCodeList.回购类型_质押式协议回购.getValue());
         trdTempDto.setData(infContractDetailfile);
         PositionBaseData positionBaseData = new PositionBaseData();
@@ -996,6 +999,9 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
         // 金融产品临时交易Entity
         // 构造开始----------------------------------------------------------
         BeanUtil.copyPropertiesIgnoreNull(dto, infContractDetailfile);
+        // ZGTFCP-1242:将orderId赋值为空 modify by fuyongsheng 20220317 start
+        dto.setOrderId(null);
+        // ZGTFCP-1242:将orderId赋值为空 modify by fuyongsheng 20220317 end
         // 关联系统交易编号
         dto.setfTradeId(infContractDetailfile.getDealNo());
         // 分支序号
@@ -1116,6 +1122,9 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
         // 金融产品临时交易Entity
         // 构造开始----------------------------------------------------------
         BeanUtil.copyPropertiesIgnoreNull(dto, infContractDetailfile);
+        // ZGTFCP-1242:将orderId赋值为空 modify by fuyongsheng 20220317 start
+        dto.setOrderId(null);
+        // ZGTFCP-1242:将orderId赋值为空 modify by fuyongsheng 20220317 end
         // 关联系统交易编号
         dto.setfTradeId(infContractDetailfile.getDealNo());
         // 分支序号
@@ -1950,6 +1959,9 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
         // 金融产品临时交易Entity
         // 构造开始----------------------------------------------------------
         BeanUtil.copyPropertiesIgnoreNull(dto, infContractDetailfile);
+        // ZGTFCP-1242:将orderId赋值为空 modify by fuyongsheng 20220317 start
+        dto.setOrderId(null);
+        // ZGTFCP-1242:将orderId赋值为空 modify by fuyongsheng 20220317 end
         // 关联系统交易编号
         dto.setfTradeId(infContractDetailfile.getDealNo());
         // 更改为 根据成交明细DTO.资金账户代码取证券账户信息里的证券账户代码
