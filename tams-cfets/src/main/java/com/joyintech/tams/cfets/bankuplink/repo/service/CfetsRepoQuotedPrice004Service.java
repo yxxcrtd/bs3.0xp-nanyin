@@ -48,6 +48,7 @@ import com.joyintech.tams.component.base.core.impl.dao.MstWorkflowCommonServiceM
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
+import com.joyintech.tams.component.business.trade.BaseTradeProductDealCommService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -57,9 +58,7 @@ import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPosition
 import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
-import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
-import com.joyintech.tams.invest.common.dto.PtlPositionHoldDto;
-import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
+import com.joyintech.tams.invest.common.dto.*;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
@@ -67,6 +66,8 @@ import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.trade.entrust.EtrFinishStatusDto;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
+import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
+import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.common.trade.service.BussRepoSecService;
 import com.joyintech.tams.invest.common.trade.service.PreTrdCommonBaseService;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
@@ -102,6 +103,9 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
 
     @Autowired
     private CfetsIbuQuoteRepo004Mapper cfetsIbuQuoteRepo004Mapper;
+
+    @Autowired(required = false)
+    private BaseTradeProductDealCommService baseTradeProductDealCommService;
 
     @Autowired(required = false)
     private BaseGetBusinessId baseGetBusinessId;
@@ -1807,9 +1811,9 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         param.put("POSITION_TYPE_05", DictCodeList.持仓类型_融入.getValue());
         param.put("TRADEPLACE03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
         param.put("TRADEPLACE04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
-//        if ("admin".equals(loginUserId)) {
-//            loginUserId = "li02";//TODO 测试写死登录用户 提交代码时修改
-//        }
+        if ("admin".equals(loginUserId)) {
+            loginUserId = "jp";//TODO 测试写死登录用户 提交代码时修改
+        }
         param.put("loginUserId", loginUserId);
         param.put("A_012", DictCodeListExt3.资产类型_质押式双边回购本方券已质押持仓.getValue());
         param.put("S_002", DictCodeListExt3.资产类型_可质押持仓.getValue());
@@ -1950,6 +1954,46 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
             //处理组质押品的组合持仓流水
             this.ptlSecPositionFlowLogic(cfetsRepoDealDbDto, navigate);
+            if(!navigate) {
+                for (RegFinProductDeal deal : cfetsRepoDealDbDto.getRegFinProductDeals()) {
+                    AllTradeCommonInputDto inputDto = new AllTradeCommonInputDto();
+                    FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
+                    finProductTradeDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+                    finProductTradeDto.setAssetType2(DictCodeList.回购类型_质押式回购.getValue());
+                    finProductTradeDto.setIsExistNew(DictCodeList.是否_是.getValue());
+                    BaseTradeProductDealDto baseTradeProductDealDto = new BaseTradeProductDealDto();
+                    TrdProductDeal trdProductDeal = new TrdProductDeal();
+                    BeanUtil.copyPropertiesIgnoreNull(trdProductDeal, deal);
+                    trdProductDeal.setPs(DictCodeList.交易方向_买入.getValue());
+                    trdProductDeal.setSettleDate(deal.getTradeDate());
+                    baseTradeProductDealDto.setTrdProductDeal(trdProductDeal);
+                    TrdProductDealAdd add = new TrdProductDealAdd();
+                    add.setPortfolioId(deal.getPortfolioId());
+                    add.setTradeId(deal.getTradeId());
+                    add.setPayType(DictCodeListExt1.平安划款类型_托管划款.getValue());
+                    baseTradeProductDealDto.setTrdProductDealAdd(add);
+                    //处理指令完成情况
+                    List<StlPayOrdersDto> stlPayOrders = new ArrayList<>();
+                    StlPayOrdersDto stlPayOrder = new StlPayOrdersDto();
+                    if (StringUtil.isEmpty(stlPayOrder.getMyAcctNo())) {
+                        String acctId = EtrCommonCashPositionDealService.select组合托管户(deal.getPortfolioId(), deal.getCcy(), DictCodeListExt1.资金账户类型_产品托管户.getValue());
+                        stlPayOrder.setMyAcctNo(acctId);
+                    }
+                    stlPayOrder.setOrderId(deal.getTradeId());
+                    stlPayOrder.setCcy(deal.getCcy());
+                    stlPayOrder.setSettleAmt(deal.getTradeAmt());
+                    stlPayOrder.setPayType(DictCodeListExt1.平安划款类型_托管划款.getValue());
+                    if (StringUtil.equals(DictCodeListExt3.交易方向_正回购.getValue(), deal.getPs())) {
+                        stlPayOrder.setPs(DictCodeListExt1.收支方向_收入.getValue());
+                    } else {
+                        stlPayOrder.setPs(DictCodeListExt1.收支方向_支出.getValue());
+                    }
+                    stlPayOrders.add(stlPayOrder);
+                    baseTradeProductDealDto.setStlPayOrdersList(stlPayOrders);
+                    finProductTradeDto.setBaseTradeProductDealDtos(Arrays.asList(baseTradeProductDealDto));
+                    baseTradeProductDealCommService.insertPosition(finProductTradeDto);
+                }
+            }
         }
     }
 

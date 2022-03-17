@@ -127,7 +127,7 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest {
             bean.setTradeId(entity.getEntrustId());
             bean.setEtrId(null);
             // 交易金额
-            bean.setCashAmount(entity.getPrintAmt());
+            bean.setCashAmount(entity.getTradeAmt());
             Map<String, Object> map = BeanUtil.object2Map(bean);
             list.add(map);
             resultMap.put("ptlCashList", list);

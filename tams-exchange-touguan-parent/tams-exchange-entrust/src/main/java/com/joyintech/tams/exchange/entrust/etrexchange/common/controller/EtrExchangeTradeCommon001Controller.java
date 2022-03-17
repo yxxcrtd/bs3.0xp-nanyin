@@ -424,8 +424,10 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 		}
 		initPageParams.put("etrExchange_HqArea_refresh_period", etrExchange_HqArea_refresh_period);
 		initPageParams.put("BOARD_BD04", DictCodeList.上市板_创业板.getValue());
+		initPageParams.put("riskMathSwitch", CacheUtil.getSysParam("risk_math_switch"));
 		initPageParams.put("pageRedisFlag", CacheUtil.getSysParam("pageRedisFlag"));
 		initPageParams.put("IS_RISKMATH_SOFTCONTROL", CacheUtil.getSysParam("IS_RISKMATH_SOFTCONTROL"));
+
 		initPageParams.put("ETR_CHECK_POS_SWITCH",CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_POS_SWITCH));
 		// 大宗平台
 		List<SelectOptionDto> ps_dz = selectDto.getOptions().stream().filter(option -> {
@@ -826,7 +828,6 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	@PostMapping("/selectAvailableNum")
 	public Message<String> selectAvailableNum(@RequestBody PositionCashSecDto dto){
 		try{
-			dto.setHoldingType(BussinessDictCodeList.持仓类型_可用.getValue());
 			BigDecimal availableNum = etrTradeCommonervice.selectAvailableNum(dto);
 			if(availableNum == null) {
 				availableNum= BigDecimal.ZERO;
@@ -1052,6 +1053,14 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 			List<FinProductQuto> qutos = etrExchangeTrade001CommonService.getFinProductQutoInfo(paramMap1);
 			if (qutos.size() == 0) {
 				confirmMsg = "当前资产无配股/配债额度，是否继续？";
+			}else{
+				if(dto.getEntrustNum().compareTo(qutos.get(0).getQuto())==1){
+					List<ValidMessage> validListEnt = new ArrayList<>();
+					validListEnt.add(new ValidMessage("ps", "指令数量超过配股额度"));
+					AjaxResult ajaxResultEnt = new AjaxResult();
+					ajaxResultEnt.setErrorList(validListEnt);
+					return ajaxResultEnt;
+				}
 			}
 		}
 		AjaxResult ajaxResult = new AjaxResult();
@@ -1785,6 +1794,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 			List<BaseMap> m = etrTradeCommonervice.queryPositionInfo(requestDto);
 			return new Message<List<BaseMap>>().success().setData(m);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return new Message<List<BaseMap>>().fail().setMessage("查询失败");
 		}
 	}

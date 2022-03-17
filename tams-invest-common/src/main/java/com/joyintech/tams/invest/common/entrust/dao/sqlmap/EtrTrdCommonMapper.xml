@@ -4,10 +4,13 @@
 
 
 
-    <select id="getPtlAcctInfo" resultType="String">
-        select t.ACCT_NO acctNo
+    <select id="getPtlAcctInfo" resultType="com.joyintech.tams.common.base.entity.PtlCapacctInfo">
+        select t.ACCT_NO,t.ACCT_TYPE
         from PTL_CAPACCT_INFO t
         where t.PORTFOLIO_ID = #{portfolioId}
+        <if test="acctTypeList != null and !acctTypeList.isEmpty() ">
+            <foreach collection="acctTypeList" open=" and ACCT_TYPE in (" close=")" item="item" separator=",">#{item}</foreach>
+        </if>
     </select>
 
     <select id="getDealCalendarHoliday" resultType="java.lang.String">
