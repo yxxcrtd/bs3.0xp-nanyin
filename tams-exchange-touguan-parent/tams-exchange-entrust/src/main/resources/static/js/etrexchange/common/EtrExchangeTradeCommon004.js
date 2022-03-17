@@ -3595,7 +3595,9 @@
         riskFlag = flag;
     }
     function paramCheck() {
-        if (!entity_RiskTrialRetList || riskFlag !== 0) {
+        var ps =  $("#ps_" + currentTab).val();
+
+        if ((ps !== PS_T68 && ps !== PS_T69) && (!entity_RiskTrialRetList || riskFlag !== 0)) {
             Joyin.error("请先完成风险试算")
             return false;
         }
@@ -3607,7 +3609,6 @@
         var checkFlag = true;
         var object = getSearchParams();
         //组合也需要校验
-        var ps =  $("#ps_" + currentTab).val();
         if (!(ps==PS_T04||ps==PS_T46||ps==PS_T97)) { //单组合 新股申购、配股、配债、可转债信用申购
            if(object.portfolioList.length==0) {
                Joyin.error("请分配组合")
