@@ -218,7 +218,7 @@ public class PositionRequestTradeReportService {
             bondSec.put("secAcctId", dto.getSecAcctId());
             bondSec.put("tradeId", entity.getTradeId());
             bondSec.put("etrId", entity.getEntrustId());
-            bondSec.put("integrateSecAmount", null);
+            bondSec.put("integrateSecAmount", dto.getIntegrateSecAmount());
             bondSec.put("ownSecAmount", dto.getOwnSecAmount());
             bondSec.put("secAmount", dto.getSecAmount());
             bondSecList.add(bondSec);
