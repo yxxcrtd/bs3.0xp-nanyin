@@ -1337,6 +1337,7 @@ public class TrdCommonBaseService extends BaseService {
             portfolioDto.setIntegrateSecAmount(BigDecimal.ZERO);
             portfolioDtos.add(portfolioDto);
         }
+        logger.debug("【组合计算分配结果】portfolioDtos: {}", JSON.toJSONString(portfolioDtos));
         return portfolioDtos;
     }
 }
