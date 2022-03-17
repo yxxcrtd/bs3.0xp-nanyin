@@ -325,7 +325,7 @@
                 function (result) {
                     Joyin.confirm(result.data, function () {
                         if (operateType === 'save') {
-                            WorkFlow.doSaveList(basePath + 'etrexchange/common/EtrExchangeTradeCommonImport/save', allDto, "EtrExchangeImport_btn_save",'EtrExchangeImport', function () {
+                            WorkFlow.doSaveList(basePath + 'etrexchange/common/EtrExchangeTradeCommonImport/save', allDto, "EtrExchangeImport_btn_save",'EtrExchangeImport', function (result2) {
                                 var index = parent.layer.getFrameIndex(window.name);
                                 parent.layer.close(index);
                             });
