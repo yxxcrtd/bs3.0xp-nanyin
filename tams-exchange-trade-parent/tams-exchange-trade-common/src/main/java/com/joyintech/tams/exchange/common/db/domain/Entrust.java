@@ -123,7 +123,7 @@ public class Entrust extends BaseEntity implements Serializable, EntrustInterfac
     private BigDecimal fullPrice;//全价价格
 
     @ApiModelProperty(name = "expireYearRate", value = "到期收益率")
-    @Digits(integer = 10, fraction = 4)
+//    @Digits(integer = 10, fraction = 4)
     @JsonSerialize(using = DoubleSerializerUtils.class)
     private BigDecimal expireYearRate;//到期收益率
 

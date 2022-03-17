@@ -62,6 +62,9 @@ public class EntrustHistory implements Serializable {
     @JsonSerialize(using = DoubleSerializerUtils.class)
     private BigDecimal tradedPrice;
 
+    @JsonSerialize(using = DoubleSerializerUtils.class)
+    private BigDecimal expireYearRate;//到期收益率
+
     private long cancelVolume;
 
     private String reportTime;
@@ -575,5 +578,29 @@ public class EntrustHistory implements Serializable {
 
     public void setCreateDateTime(String createDateTime) {
         this.createDateTime = createDateTime;
+    }
+
+    public BigDecimal getExpireYearRate() {
+        return expireYearRate;
+    }
+
+    public void setExpireYearRate(BigDecimal expireYearRate) {
+        this.expireYearRate = expireYearRate;
+    }
+
+    public BigDecimal getConNum() {
+        return conNum;
+    }
+
+    public void setConNum(BigDecimal conNum) {
+        this.conNum = conNum;
+    }
+
+    public String getEntrustClass() {
+        return entrustClass;
+    }
+
+    public void setEntrustClass(String entrustClass) {
+        this.entrustClass = entrustClass;
     }
 }
