@@ -252,7 +252,7 @@ public class PositionRequestTradeReportService {
         resultMap.put("workFlowId", null);
         resultMap.put("cdate", entity.getTradeDate());
         resultMap.put("ccy", entity.getCcy());
-        resultMap.put("totalTradeId", null);
+        // resultMap.put("totalTradeId", null);
         resultMap.put("bTotalTradeId", null);
 
         Map<String,Object> paraMap = new HashMap<>();
