@@ -166,6 +166,13 @@ public class EtrExchangeTradeCommon004Controller extends BaseController{
                     entrustIdWfl = entrustIdWfl+DictCodeList.交易方向_卖出.getValue();
                 }
                 List<RiskTrialRetDto> riskTrialRetList = basRiskMathCommService.select(entrustIdWfl);
+                boolean riskTrialFlag = true;
+                for (RiskTrialRetDto riskTrialRetDto:riskTrialRetList){
+                    if (riskTrialRetDto.getKriStatus().equals("3")  && riskTrialRetDto.getKriTrend().equals("向坏")){
+                        riskTrialFlag = false;
+                    }
+                }
+                model.addAttribute("riskTrialSpan", riskTrialFlag?"试算通过":"试算不通过");
                 model.addAttribute("entity_RiskTrialRetList", riskTrialRetList);
             }
             //add by chenjiaxing 流程中不显示资产名称 end

@@ -722,13 +722,13 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
         this.selectedItem = selectedItem;
     }
 
-    private boolean isDoRkRedisFlag;
+    private String isDoRkRedisFlag;
 
-    public boolean isDoRkRedisFlag() {
+    public String getIsDoRkRedisFlag() {
         return isDoRkRedisFlag;
     }
 
-    public void setDoRkRedisFlag(boolean doRkRedisFlag) {
-        isDoRkRedisFlag = doRkRedisFlag;
+    public void setIsDoRkRedisFlag(String isDoRkRedisFlag) {
+        this.isDoRkRedisFlag = isDoRkRedisFlag;
     }
 }
