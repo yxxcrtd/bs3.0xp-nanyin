@@ -1962,10 +1962,12 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                     finProductTradeDto.setAssetType2(DictCodeList.回购类型_质押式回购.getValue());
                     finProductTradeDto.setIsExistNew(DictCodeList.是否_是.getValue());
                     BaseTradeProductDealDto baseTradeProductDealDto = new BaseTradeProductDealDto();
+                    baseTradeProductDealDto.setEntrustId(deal.getEntrustId());
                     TrdProductDeal trdProductDeal = new TrdProductDeal();
                     BeanUtil.copyPropertiesIgnoreNull(trdProductDeal, deal);
                     trdProductDeal.setPs(DictCodeList.交易方向_买入.getValue());
                     trdProductDeal.setSettleDate(deal.getTradeDate());
+                    trdProductDeal.setPrinAmt(deal.getShareAmt());
                     baseTradeProductDealDto.setTrdProductDeal(trdProductDeal);
                     TrdProductDealAdd add = new TrdProductDealAdd();
                     add.setPortfolioId(deal.getPortfolioId());

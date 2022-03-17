@@ -647,7 +647,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
         //设置登记时的成交编号
         List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId());
         for (CfetsManualSettleDealInfo item : listTemp) {
-            AllTradeCommonUtil.deletePosition(item.getRemark(), item.getTradeId());
+            AllTradeCommonUtil.deletePosition(null, item.getTradeId());
         }
     }
 
@@ -748,7 +748,6 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                         this.sendPositionMethod(cfetsManualSettleInsertDto,entity.getButtonType());
                     }else {
                        //对回购数据进行处理
-                        sendRepoPositionMethod(cfetsManualSettleInsertDto,entity.getButtonType());
                         if ((StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收.getValue())
                                 || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_回溯.getValue())
                                 || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收失败.getValue())) &&
@@ -1092,6 +1091,10 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
      */
     public void insertOldRepoPosition(CfetsManualSettleInsertDto cfetsManualSettleRequest,
                                       String buttonType, BigDecimal tradeAmt, String finprodType2, boolean isFlowStart) {
+        TrdBankManualSettleInfo trdBankManualSettleInfo = cfetsManualSettleRequest.getTrdBankManualSettleInfo();
+        if (StringUtil.equals(trdBankManualSettleInfo.getBusiType(), DictCodeListExt3.头寸业务类型_质押式回购首期.getValue()) && isFlowStart) {
+            return;
+        }
         //设置登记时的成交编号
         List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId());
         // 正回购 交收失败 指令质押券可用持仓增加 组合质押券质押持仓减少
@@ -1104,7 +1107,6 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
             this.settleFailPosition(listTemp);
             return;
         }
-        TrdBankManualSettleInfo trdBankManualSettleInfo = cfetsManualSettleRequest.getTrdBankManualSettleInfo();
         StlPayOrdersDto stlPayOrdersDto = new StlPayOrdersDto();
         if (trdBankManualSettleInfo != null
                 && StringUtil.equals(trdBankManualSettleInfo.getBusiType(), DictCodeListExt3.头寸业务类型_质押式回购首期.getValue())) {
