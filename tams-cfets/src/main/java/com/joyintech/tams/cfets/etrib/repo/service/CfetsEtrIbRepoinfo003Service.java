@@ -261,9 +261,6 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
             if(dto.getRepoTerm()!=null){
                 etrEntrustAdd.setTermDays(dto.getRepoTerm().longValue());
             }
-            if(StringUtil.isNotEmpty(etrEntrust.getPrice())){
-            	etrEntrust.setPrice(etrEntrust.getPrice().divide(new BigDecimal(100)));
-            }
             List<EtrDistribute> etrDistributeList = new ArrayList<>();
 //            if (StringUtil.isNotEmpty(dto.getEtrInvestPersonInfo().getTrader())) {
 //
@@ -313,9 +310,6 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
 //            BeanUtil.copyProperties(etrEntrust, dto.getEtrInvestPersonInfo());
             etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
             etrEntrust.setEntrustAmt(dto.getEntrustAmt());
-            if(StringUtil.isNotEmpty(etrEntrust.getPrice())){
-                etrEntrust.setPrice(etrEntrust.getPrice().divide(new BigDecimal(100)));
-            }
             //做交易录单时交易日历丢失 交易日历默认银行间 add by libaisong 2021-03-01 start
             etrEntrust.setCalendarId("03");
             //做交易录单时交易日历丢失 交易日历默认银行间 add by libaisong 2021-03-01 end
@@ -626,9 +620,6 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
             etrEntrust.setInvManagerId(dto.getInvManagerId());
             etrEntrust.setTradeMarket(dto.getTradeMarket());
             etrEntrust.setTradePlat(dto.getTradePlat());
-            if(StringUtil.isNotEmpty(etrEntrust.getPrice())){
-            	etrEntrust.setPrice(etrEntrust.getPrice().divide(new BigDecimal(100)));
-            }
             BeanUtil.copyProperties(etrEntrustAdd, dto);
             etrEntrustAdd.setAssetType(DictCodeList.平安资产类型_质押式回购.getValue());
             etrEntrustAdd.setVdate(dto.getVdate());
@@ -688,9 +679,6 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
 	}
 
     public CfetsEtribRepoInfo003Dto packageEquity(CfetsEtribRepoInfo003Dto RepoInfoDto,List<CfetsEtribRepoInfo003Dto> dataList) {
-     /*   if(Objects.nonNull(RepoInfoDto.getPrice())) {
-            RepoInfoDto.setPrice(RepoInfoDto.getPrice().multiply(new BigDecimal(100)));//前端提交已经修改过此值  改回来
-        }*/
         //风险
         CfetsEtribdoRiskcalResponse riskDto = RepoInfoDto.getCfetsEtribdoRiskcalResponse();
         List<RiskTrialRetDto> riskTrialRetDto=new ArrayList<>();
@@ -795,9 +783,6 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
             etrEntrust.setTradeMarket(DictCodeListExt1.交易场所_银行间.getValue());
             if (StringUtil.isEmpty(dto.getTradePlat())) {
                 etrEntrust.setTradePlat(DictCodeList.交易平台_固定收益平台.getValue());
-            }
-            if (StringUtil.isNotEmpty(etrEntrust.getPrice())) {
-                etrEntrust.setPrice(etrEntrust.getPrice().divide(new BigDecimal(100)));
             }
             etrEntrustAdd.setEntrustId(dto.getEntrustId());
             if (StringUtil.equals(dto.getSettleSpreed(), DictCodeList.清算速度_T_0.getValue())) {
