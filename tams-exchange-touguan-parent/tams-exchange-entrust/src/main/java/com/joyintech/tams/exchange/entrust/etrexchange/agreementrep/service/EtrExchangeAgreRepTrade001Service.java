@@ -21,6 +21,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeCommonRiskcalDto;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePortfolioRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -216,6 +220,25 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
     }
 
     /**
+     * 对手方交易员联想文本框初始化。
+     *
+     * @param map 检索参数
+     * @return 联想文本框
+     */
+    public List<SuggestDto> selectCounterTraderWfl(Map<String, Object> map) {
+        List<SuggestDto> resultList = new ArrayList<>();
+
+        List<SelectOptionDto> tempList = etrExchangeAgreRepTradeMapper.selectCounterTrader(map);
+        tempList.forEach(item ->{
+            SuggestDto dto = new SuggestDto();
+            dto.setCode(item.getId());
+            dto.setObject(item);
+            resultList.add(dto);
+        });
+        return resultList;
+    }
+
+    /**
      * 本方交易员联想文本框初始化。
      *
      * @param map 检索参数
@@ -225,6 +248,26 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
         List<SelectOptionDto> suggestDtos = etrExchangeAgreRepTradeMapper.selectTrader(map);
         return suggestDtos;
     }
+
+    /**
+     * 本方交易员联想文本框初始化。
+     *
+     * @param map 检索参数
+     * @return 联想文本框
+     */
+    public List<SuggestDto> selectTraderWfl(Map<String, Object> map) {
+        List<SuggestDto> resultList = new ArrayList<>();
+
+        List<SelectOptionDto> tempList = etrExchangeAgreRepTradeMapper.selectTrader(map);
+        tempList.forEach(item ->{
+            SuggestDto dto = new SuggestDto();
+            dto.setCode(item.getId());
+            dto.setObject(item);
+            resultList.add(dto);
+        });
+        return resultList;
+    }
+
     /**
      * 查询原成交信息
      *
@@ -2024,6 +2067,10 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
 
     @Override
     public void doUpdate(EtrExchangeAgreRepTrade001Dto entity) {
+        if ("save".equals(entity.getOperateType())) {
+            return;
+        }
+
         if (!StringUtil.equals("save", entity.getOperateType()) && !StringUtil.equals("revoke", entity.getOperateType()) && !StringUtil.equals("delete", entity.getOperateType())) {
             try {
                 doInsertWflEntity(entity);
@@ -2306,5 +2353,38 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
             });
         }
         return resultList;
+    }
+
+    /**
+     *风险试算时，后台数据转换
+     * @return
+     */
+    public  Map<String, Object> doRiskcalPackageEquity(EtrExchangeAgreRepTrade001Dto dto) {
+        Map<String, Object> dataMap = BeanUtil.object2Map(dto);
+        dataMap.put("repPs", dto.getRepPs());
+        dataMap.put("redoType", dto.getRedoType());
+        dataMap.put("assetType2", dto.getAssetType2());
+        dataMap.put("busiPs", dto.getBusiPs());
+        dataMap.put("counterId", dto.getCounterId());
+        dataMap.put("expireSettleAmt", dto.getExpireSettleAmt());
+        dataMap.put("expireSettleDate", dto.getExpireSettleDate());
+        dataMap.put("finprodId", dto.getFinprodId());
+        dataMap.put("fristSettleDate", dto.getFristSettleDate());
+        dataMap.put("fromEtrExchange", "Y");
+        dataMap.put("intAmt", dto.getIntAmt());
+        dataMap.put("vdate", dto.getVdate());
+        dataMap.put("mdate", dto.getMdate());
+        dataMap.put("portfolioId", dto.getPortfolioId());
+        dataMap.put("printAmt", dto.getPrintAmt());
+        dataMap.put("ps", dto.getPs());
+        dataMap.put("repSecId", dto.getRepSecId());
+        dataMap.put("repSecNum", dto.getRepSecNum());
+        dataMap.put("secAcctId", dto.getSecAcctId());
+        dataMap.put("term", dto.getTerm());
+        dataMap.put("tradeAmt", dto.getTradeAmt());
+        dataMap.put("tradeMarket", dto.getTradeMarket());
+        dataMap.put("yield", dto.getYield());
+
+        return dataMap;
     }
 }

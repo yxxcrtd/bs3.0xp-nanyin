@@ -1248,7 +1248,6 @@ public class TrdCommonBaseService extends BaseService {
     public List<PortfolioCalculateDto> queryPortfolioCalculate (Map<String,Object> paraMap) {
         logger.debug("【查询组合计算分配信息】paraMap: {}", JSON.toJSONString(paraMap));
         List<PortfolioCalculateDto> portfolioDtos = new ArrayList<>();
-        String entrustId = "";
         // 成交编号
         String dealNo = (String) paraMap.get("dealNo");
         // 关联交易编号
@@ -1273,7 +1272,7 @@ public class TrdCommonBaseService extends BaseService {
             return new ArrayList<>();
         }
         if(DictCodeListExt3.投资指令类型_多组合单资产指令.getValue().equals(etrEntrust.getEntrustClass())){ // 多组合指令
-            List<EtrEntrustDetail> etrEntrustDetails = trdCommonBaseMapper.selectEtrEntrustDetailByEntrustId(entrustId);
+            List<EtrEntrustDetail> etrEntrustDetails = trdCommonBaseMapper.selectEtrEntrustDetailByEntrustId(etrEntrust.getEntrustId());
             if(org.springframework.util.CollectionUtils.isEmpty(etrEntrustDetails)){
                 return new ArrayList<>();
             }
@@ -1307,6 +1306,8 @@ public class TrdCommonBaseService extends BaseService {
                 portfolioDto.setOrdSecAmount(ArithmeticUtil.multiply(orderInfoDto.getEntrustVolume(), new BigDecimal(100), ratio));
                 // 标准券券面总额
                 portfolioDto.setStandardSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt(), new BigDecimal(100), ratio));
+                // 融入券券面总额
+                portfolioDto.setIntegrateSecAmount(BigDecimal.ZERO);
                 portfolioDtos.add(portfolioDto);
             }
         }else{ // 单组合指令
@@ -1331,8 +1332,11 @@ public class TrdCommonBaseService extends BaseService {
             portfolioDto.setCashAmount(infContractDetailfile.getTradeAmt());
             // 标准券券面总额
             portfolioDto.setStandardSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt(), new BigDecimal(100)));
+            // 融入券券面总额
+            portfolioDto.setIntegrateSecAmount(BigDecimal.ZERO);
             portfolioDtos.add(portfolioDto);
         }
+        logger.debug("【组合计算分配结果】portfolioDtos: {}", JSON.toJSONString(portfolioDtos));
         return portfolioDtos;
     }
 }

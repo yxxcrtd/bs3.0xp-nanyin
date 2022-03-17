@@ -7,6 +7,7 @@ import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.tams.common.base.entity.FinTradeProduct;
 import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.validator.EtrExchangeAgreRepTradeValidator;
+import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.tams.invest.entrust.etragrereptrade.validator.EtrAgreRepTradeValidator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
@@ -15,6 +16,8 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
+
 @PageId("EtrExchangeAgreRepTrade001")
 @ValidLogic(targetClass = EtrExchangeAgreRepTradeValidator.class)
 public class EtrExchangeAgreRepTrade001Dto extends BaseEntity implements ProcessEntity{
@@ -112,6 +115,33 @@ public class EtrExchangeAgreRepTrade001Dto extends BaseEntity implements Process
 	private BigDecimal accAvailablePos;
 	@ApiModelProperty(name="softSkipMode",value="软控是否继续？Y：继续",example="Y")
 	private String softSkipMode;
+
+	/**
+	 * 风险试算结果
+	 */
+	private String riskTrialSpan;
+
+	/**
+	 * 风险试算实体类
+	 */
+	private List<RiskTrialRetDto> riskTrialRetDto;
+
+	public String getRiskTrialSpan() {
+		return riskTrialSpan;
+	}
+
+	public void setRiskTrialSpan(String riskTrialSpan) {
+		this.riskTrialSpan = riskTrialSpan;
+	}
+
+	public List<RiskTrialRetDto> getRiskTrialRetDto() {
+		return riskTrialRetDto;
+	}
+
+	public void setRiskTrialRetDto(List<RiskTrialRetDto> riskTrialRetDto) {
+		this.riskTrialRetDto = riskTrialRetDto;
+	}
+
 	public String getTradeId() {
 		return tradeId;
 	}

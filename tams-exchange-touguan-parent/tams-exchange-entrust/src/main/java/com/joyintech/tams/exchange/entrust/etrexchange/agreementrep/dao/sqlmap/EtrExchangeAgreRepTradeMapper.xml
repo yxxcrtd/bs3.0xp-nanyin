@@ -26,6 +26,10 @@
             <if test="search != null and !search.equals('')">
                 t.COUNTER_TRADER like concat('%',concat(#{search},'%'))
             </if>
+            <if test="param != null and !param.equals('')">
+                t.COUNTER_TRADER like concat('%',concat(#{param},'%'))
+            </if>
+            and t.COUNTER_TRADER is not null
         </where>
     </select>
     <!-- 检索本方交易员 -->
@@ -47,6 +51,10 @@
             <if test="search != null and !search.equals('')">
                 t.TRADER like concat('%',concat(#{search},'%'))
             </if>
+            <if test="param != null and !param.equals('')">
+                t.TRADER like concat('%',concat(#{param},'%'))
+            </if>
+            and t.TRADER is not null
         </where>
     </select>
     <!-- 查询原成交指令信息 -->

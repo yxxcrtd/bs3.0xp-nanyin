@@ -148,11 +148,14 @@ public class PositionRequestTradeReportService {
             pltMap.put("ordId", entity.getOrderId());
             pltMap.put("ordSecAmount", dto.getOrdSecAmount());
             pltMap.put("cashAcctId", dto.getCashAcctId());
-            pltMap.put("secAcctId", entity.getSecAcctId());
+            // ZGTFCP-1126:证券管理账户赋值 modify by fuyongsheng 20220316 start
+            // pltMap.put("secAcctId", entity.getSecAcctId());
+            pltMap.put("secAcctId", dto.getSecAcctId());
+            // ZGTFCP-1126:证券管理账户赋值 modify by fuyongsheng 20220316 end
             pltMap.put("secAmount", dto.getSecAmount());
             pltMap.put("cashAmount", dto.getCashAmount());
             pltMap.put("invAim", entity.getInvAim());
-            pltMap.put("integrateSecAmount", null);
+            pltMap.put("integrateSecAmount", dto.getIntegrateSecAmount());
             pltMap.put("ownSecAmount", dto.getOwnSecAmount());
             ptlList.add(pltMap);
         }
@@ -203,6 +206,10 @@ public class PositionRequestTradeReportService {
             ptlCash.put("etrSecAmount", dto.getEtrSecAmount());
             ptlCash.put("ordId", entity.getOrderId());
             ptlCash.put("ordSecAmount", dto.getOrdSecAmount());
+            // ZGTFCP-947:增加secAmount,ownSecAmount赋值 modify by fuyongsheng 20220317 start
+            ptlCash.put("secAmount", dto.getSecAmount());
+            ptlCash.put("ownSecAmount", dto.getOwnSecAmount());
+            // ZGTFCP-947:增加secAmount,ownSecAmount赋值 modify by fuyongsheng 20220317 end
             ptlCashList.add(ptlCash);
 
             Map<String, Object> bondSec = new HashMap<>();
@@ -245,7 +252,7 @@ public class PositionRequestTradeReportService {
         resultMap.put("workFlowId", null);
         resultMap.put("cdate", entity.getTradeDate());
         resultMap.put("ccy", entity.getCcy());
-        resultMap.put("totalTradeId", null);
+        // resultMap.put("totalTradeId", null);
         resultMap.put("bTotalTradeId", null);
 
         Map<String,Object> paraMap = new HashMap<>();

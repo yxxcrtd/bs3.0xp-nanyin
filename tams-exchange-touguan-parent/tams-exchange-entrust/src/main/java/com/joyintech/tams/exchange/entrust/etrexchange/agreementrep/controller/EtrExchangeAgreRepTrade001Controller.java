@@ -444,6 +444,22 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
     /**
      * 保存按钮点击时的check
      *
+     * @param  dto
+     * @return check结果
+     * @see
+     * @since 1.0
+     */
+    @ApiOperation(value = "保存提交check", notes = "保存提交check")
+    @PostMapping("checkSaveError")
+    @ResponseBody
+    public AjaxResult checkSaveError(@RequestBody  @Validated({ ValidateGroupEdit.class })  EtrExchangeAgreRepTrade001Dto dto, BindingResult result)
+            throws Exception {
+        return this.check(dto, result).getData();
+    }
+
+    /**
+     * 保存按钮点击时的check
+     *
      * @param dto dto
      * @param result BindingResult
      * @return check结果

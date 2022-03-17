@@ -1514,10 +1514,10 @@ public class CfetsEtrDispatcherService extends BaseService {
      * @return
      */
     private String getPortfolioNameByIds(String portfolioId) {
-        List<String> portfolioIds = StringUtil.splitToList(portfolioId, ",");
+        List<String> portfolioIds = StringUtil.splitToList(",", portfolioId);
         List<PtlPortfolio> ptlPortfolios = ptlPortfolioMapper.selectPortfolioByIds(portfolioIds);
         if (!CollectionUtils.isEmpty(ptlPortfolios)) {
-            return ptlPortfolios.stream().map(r -> r.getPortfolioId()).collect(Collectors.joining(","));
+            return ptlPortfolios.stream().map(r -> r.getPortfolioName()).collect(Collectors.joining(","));
         }
         return "";
     }
