@@ -69,15 +69,15 @@ public class EtrExchangeBlockTrade001ValidatorService implements EtrCommonValida
 		List<ValidMessage> errorList = new ArrayList<>();
 		EtrExchangeTradeSaveRequest dto = (EtrExchangeTradeSaveRequest) value;
 		if (dto.getOperateType().equals("save") || dto.getOperateType().equals("submit")) {
-			String isNonTradingTime = etrExchangeBlockTrade001Service.isNonTradingTime(dto);
-			if (StringUtil.isNotEmpty(isNonTradingTime) && StringUtil.equals(isNonTradingTime,"01")) {
-				errorList.add(new ValidMessage(this.getMessage("ETR_ERROR_00561")));
-				return errorList;
-			}
-			if (StringUtil.isNotEmpty(isNonTradingTime) && StringUtil.equals(isNonTradingTime,"02")) {
-				errorList.add(new ValidMessage(this.getMessage("ETR_ERROR_0056")));
-				return errorList;
-			}
+//			String isNonTradingTime = etrExchangeBlockTrade001Service.isNonTradingTime(dto);
+//			if (StringUtil.isNotEmpty(isNonTradingTime) && StringUtil.equals(isNonTradingTime,"01")) {
+//				errorList.add(new ValidMessage(this.getMessage("ETR_ERROR_00561")));
+//				return errorList;
+//			}
+//			if (StringUtil.isNotEmpty(isNonTradingTime) && StringUtil.equals(isNonTradingTime,"02")) {
+//				errorList.add(new ValidMessage(this.getMessage("ETR_ERROR_0056")));
+//				return errorList;
+//			}
 			if (!StringUtil.isNotEmpty(dto.getPortfolioId())) {
 				errorList.add(new ValidMessage("portfolioId", this.getMessage("ETR_ERROR_0015")));
 			}
