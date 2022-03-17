@@ -6,6 +6,7 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
+import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.dao.StlSecAcctInfoMapper;
 import com.joyintech.tams.common.base.entity.*;
@@ -54,7 +55,7 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
     private EtrEntrustMapper etrEntrustMapper;
 
     @Autowired
-    private TrdCommonBaseService trdCommonBaseService;
+    private EtrEntrustAddMapper etrEntrustAddMapper;
   
     public static final String TRADE_PLAT = "TRANS_MATCH";
 
@@ -74,10 +75,19 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
             if (DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue().equals(type6)) {
                 finprodType += "-" + type6;
             }
-            if (DictCodeList.回购类型_质押式协议回购.getValue().equals(entity.getAssetType2())
-                    || (DictCodeList.回购类型_质押式竞价回购.getValue().equals(entity.getAssetType2()))) {
-                finprodType += "-" + entity.getAssetType2();
+            // ZGTFCP-1164:修改判断协议回购方法 modify by fuyongsheng 20220317 start
+//            if (DictCodeList.回购类型_质押式协议回购.getValue().equals(entity.getAssetType2())
+//                    || (DictCodeList.回购类型_质押式竞价回购.getValue().equals(entity.getAssetType2()))) {
+//                finprodType += "-" + entity.getAssetType2();
+//            }
+            EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(entity.getTrdProductDealAdd().getEntrustId());
+            if(etrEntrustAdd != null){
+                if (DictCodeList.回购类型_质押式协议回购.getValue().equals(etrEntrustAdd.getAssetType1())
+                        || (DictCodeList.回购类型_质押式竞价回购.getValue().equals(etrEntrustAdd.getAssetType1()))) {
+                    finprodType += "-" + etrEntrustAdd.getAssetType1();
+                }
             }
+            // ZGTFCP-1164:修改判断协议回购方法 modify by fuyongsheng 20220317 end
             String interType =
                     commonPositionEngineService.getPositionInterType(PositionConstant.POSITION_TYPE_TRD, TRADE_PLAT, finprodType, entity.getTrdProductDeal().getPs(),
                             DictCodeListExt3.业务动作_成交匹配.getValue(), entity.getClass().getName());

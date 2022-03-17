@@ -275,7 +275,7 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 		}
 		param.put("search_isNumberFlag", BaseMap.isNumeric(request.getSearch()));
 		List<String> tradePlatList = new ArrayList<>();
-		if(request.getTradePlat().equals(DictCodeList.交易平台_大宗交易平台.getValue())){
+		if((DictCodeList.交易平台_大宗交易平台.getValue()).equals(request.getTradePlat())){
 			 tradePlatList.add(request.getTradePlat());
 			 tradePlatList.add(DictCodeList.交易平台_综合协议交易平台.getValue());
 		}else{
