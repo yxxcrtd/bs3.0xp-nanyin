@@ -17,13 +17,17 @@ public class PositionCashSecDto {
 
     private String dateType; // 处理速度
     
-    private String ps; //委托方向 查询资金时必传
+    private String ps; //委托方向
 
     private String tradeMarket; //交易场所 查询资金时必传
 
     private String ccy; //币种
 
     private String holdingType;//持仓类型
+
+    private String tradePlat; //交易平台 可用持仓必传
+
+    private String finprodType2; //资产类型投管 可用持仓必传
 
 
     public String getPortfolioId() {
@@ -106,5 +110,21 @@ public class PositionCashSecDto {
 
     public void setHoldingType(String holdingType) {
         this.holdingType = holdingType;
+    }
+
+    public String getTradePlat() {
+        return tradePlat;
+    }
+
+    public void setTradePlat(String tradePlat) {
+        this.tradePlat = tradePlat;
+    }
+
+    public String getFinprodType2() {
+        return finprodType2;
+    }
+
+    public void setFinprodType2(String finprodType2) {
+        this.finprodType2 = finprodType2;
     }
 }
