@@ -61,6 +61,7 @@ import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.common.dto.trade.entrust.EtrFinishStatusDto;
 import com.joyintech.tams.invest.common.service.InvestInterfCommService;
+import com.joyintech.tams.invest.common.trade.dao.BaseAssetCashPositionCommMapper;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.common.trade.service.PreTrdCommonBaseService;
@@ -199,6 +200,9 @@ public class CfetsTrdConfirm001Service extends BaseService{
     private JoyinbusinessCommonService joyinbusinessCommonService;
     // 交易份额小数保留位数
     private int decimalPlaces_4 = 4;
+
+    @Autowired
+    BaseAssetCashPositionCommMapper baseAssetCashPositionCommMapper;
 
 
     @Transactional(rollbackFor = Exception.class)
@@ -430,7 +434,7 @@ public class CfetsTrdConfirm001Service extends BaseService{
     }
     @Transactional(rollbackFor = Exception.class)
     @DTXTransaction
-    public void doCompleteRepoMethod(CfetsTrdRepoTrade003Dto entity, OperationType operationType) {
+    public void doCompleteRepoMethod(CfetsTrdRepoTrade003Dto entity, OperationType operationType,boolean isTrdConfirm) {
         List<String> finishEtrList=new ArrayList<>();
         TrdFinProductDealTotal trdFinProductDealTotal = new TrdFinProductDealTotal();
         BeanUtil.copyPropertiesIgnoreNull(trdFinProductDealTotal, entity);
@@ -495,7 +499,7 @@ public class CfetsTrdConfirm001Service extends BaseService{
             }
         }
 
-
+        List<String> orderIds = new ArrayList<>();
         // 金融产品交易信息DTO.金融产品交易Entity -> 金融产品交易业务流程表
         for (TrdProductDeal trdProductDeal : entity.getTrdProductDeals()) {
             // 7.8写入交易信息进交易报送信息表，为中债报送用
@@ -536,7 +540,7 @@ public class CfetsTrdConfirm001Service extends BaseService{
             if(!StringUtil.isEmptyList(finishList)){
                 finishEtrList.addAll(finishList);
             }
-            if (StringUtil.equals(entity.getPs(), DictCodeList.回购拆借方向_逆回购.getValue())) {
+            if (StringUtil.equals(entity.getPs(), DictCodeList.回购拆借方向_逆回购.getValue()) && isTrdConfirm) {
                 FinProductTradeDto finProductTradeDtoTemp = new FinProductTradeDto();
                 BeanUtil.copyPropertiesIgnoreNull(finProductTradeDtoTemp, finProductTradeDto);
                 finProductTradeDtoTemp.setAssetType2(DictCodeList.回购类型_质押式回购.getValue());
@@ -547,13 +551,20 @@ public class CfetsTrdConfirm001Service extends BaseService{
                     String acctId = EtrCommonCashPositionDealService.select组合托管户(trdProductDeal.getPortfolioId(), trdProductDeal.getCcy(), DictCodeListExt1.资金账户类型_产品托管户.getValue());
                     stlPayOrdersDto.setMyAcctNo(acctId);
                 }
-                stlPayOrdersDto.setOrderId(cfetsManualSettleMapper.selectRegTradeId(entity.getRegIbuId(),dealAdd.getEntrustId()));
+                orderIds.add(cfetsManualSettleMapper.selectRegTradeId(entity.getRegIbuId(),dealAdd.getEntrustId()));
+                if(StringUtil.isEmpty(stlPayOrdersDto.getOrderId())){
+                    stlPayOrdersDto.setOrderId(trdProductDeal.getTradeId());
+                }
                 List<StlPayOrdersDto> stlPayOrdersDtos = new ArrayList<>();
                 stlPayOrdersDtos.add(stlPayOrdersDto);
                 finProductTradeDtoTemp.getBaseTradeProductDealDtos().get(0).setStlPayOrdersList(stlPayOrdersDtos);
                 baseTradeProductDealCommService.insertPosition(finProductTradeDtoTemp);
             }
 
+        }
+        if (StringUtil.equals(entity.getPs(), DictCodeList.回购拆借方向_逆回购.getValue()) && isTrdConfirm) {
+            orderIds.add(entity.getRegIbuId());
+            baseAssetCashPositionCommMapper.deleteCashPositionByOrderIds(orderIds);
         }
        // 发送Murex接口处理
         this.sendMurex(entity, false);
