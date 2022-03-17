@@ -189,6 +189,46 @@ public class EtrExchangeBlockTrade001Controller extends BaseController{
 		}
 	}
 
+	/**
+	 * 查询交易行情信息
+	 * <一句话功能简述>
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	@ApiOperation(value="导出交易行情信息",notes = "导出交易行情信息")
+	@ResponseBody
+	@PostMapping("exportTradeQuotationsPage")
+	public void exportTradeQuotationsPage(@RequestBody EtrExchangeTradeExportCommonRequest requestDto, HttpServletResponse response){
+		// 导出
+		ExcelUitl.doExport(requestDto, response, "交易行情", () -> {
+			EtrExchangeTradeEtrExchangeCommonRequest dto = requestDto.getDto(EtrExchangeTradeEtrExchangeCommonRequest.class);
+            String secId = dto.getSecId();
+			List dataList = etrExchangeBlockTrade001Service.findTradeQuotationsPage(secId).getRoot();
+			return dataList;
+		});
+	}
+
+	/**
+	 * 查询盘后行情信息
+	 * <一句话功能简述>
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	@ApiOperation(value="导出盘后行情信息",notes = "导出盘后行情信息")
+	@ResponseBody
+	@PostMapping("exportAfterHoursPage")
+	public void exportAfterHoursPage(@RequestBody EtrExchangeTradeExportCommonRequest requestDto, HttpServletResponse response){
+	    // 导出
+		ExcelUitl.doExport(requestDto, response, "盘后行情", () -> {
+			EtrExchangeTradeEtrExchangeCommonRequest dto = requestDto.getDto(EtrExchangeTradeEtrExchangeCommonRequest.class);
+			String secId = dto.getSecId();
+			List dataList = etrExchangeBlockTrade001Service.findAfterHoursPage(secId).getRoot();
+			return dataList;
+		});
+	}
+
 
 	/**
 	 * 查询盘后行情信息
@@ -300,7 +340,6 @@ public class EtrExchangeBlockTrade001Controller extends BaseController{
 		ExcelUitl.doExport(requestDto, response, "指令列表", () -> {
 			EtrExchangeTradeEtrExchangeCommonRequest dto = requestDto.getDto(EtrExchangeTradeEtrExchangeCommonRequest.class);
 			List dataList = etrExchangeBlockTrade001Service.selectEtrExchange(dto).getRoot();
-			etrExchangeBlockTrade001Service.handExportTimes(dataList);
 			return dataList;
 		});
 	}
