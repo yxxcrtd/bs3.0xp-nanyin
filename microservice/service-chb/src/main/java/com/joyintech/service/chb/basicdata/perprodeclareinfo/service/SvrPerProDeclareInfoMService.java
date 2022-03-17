@@ -392,12 +392,14 @@ public class SvrPerProDeclareInfoMService extends CommonExportService<SvrPerProD
                 message.add("收益类型不能为空");
             }
             // 新老产品标记18
-//            if (CacheUtil.getSysParam("SVR_IS_SUBSIDIARY") != null && !CacheUtil.getSysParam("SVR_IS_SUBSIDIARY").equals("")){
-//                if (list.get(18) == null || list.get(18).trim().equals("")){
-//                    flag = false;
-//                    message.add("新老产品标记不能为空");
-//                }
-//            }
+            if (CacheUtil.getSysParam("SVR_IS_SUBSIDIARY") != null && !CacheUtil.getSysParam("SVR_IS_SUBSIDIARY").equals("")) {
+                if (!CacheUtil.getSysParam("SVR_IS_SUBSIDIARY").equals("01")) {
+                    if (list.get(18) == null || list.get(18).trim().equals("")) {
+                        flag = false;
+                        message.add("新老产品标记不能为空");
+                    }
+                }
+            }
             // 产品期限19
             if (list.get(19) == null || list.get(19).trim().equals("")){
                 flag = false;
