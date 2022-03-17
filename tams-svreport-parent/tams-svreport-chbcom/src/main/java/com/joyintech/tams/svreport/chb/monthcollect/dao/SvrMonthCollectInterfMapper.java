@@ -33,6 +33,8 @@ public interface SvrMonthCollectInterfMapper {
 	int deleteDetail(List<String> list);
     //删除report主表
 	int deleteReport(@Param("termid")String termid);
+	int insertMonthTemp(@Param("newList")List<ChbMonthCollect> newList);
+	int deleteAllMonthTemp();
     /**
      * 插入数据
      * @param sub

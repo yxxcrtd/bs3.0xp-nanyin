@@ -43,22 +43,32 @@
 		select
 		prdRegistCode, institutionCode, areaCode, holderType, ccy, sum(amount) balanceAmt, sum(qty) balanceShares, sum(cnyAmt) cnyAmt
 		FROM
-		(
-		<foreach collection="notChangeEquHoldList" index="index" item = "item" separator="UNION ALL">
-			select
-			#{item.prdRegistCode,jdbcType=VARCHAR} prdRegistCode,
-			#{item.institutionCode,jdbcType=VARCHAR} institutionCode,
-			#{item.areaCode,jdbcType=VARCHAR} areaCode,
-			#{item.holderType,jdbcType=VARCHAR} holderType,
-			#{item.ccy,jdbcType=VARCHAR} ccy,
-			#{item.amount,jdbcType=DECIMAL} amount,
-			#{item.qty,jdbcType=DECIMAL} qty,
-			#{item.cnyAmt,jdbcType=DECIMAL} cnyAmt
-			from dual
-		</foreach>
-		)
+		chb_month_count_tmp
 		GROUP BY prdRegistCode,institutionCode,areaCode,holderType,ccy
 	</select>
+
+	<insert id="insertMonthTemp">
+		insert into chb_month_count_tmp(prdRegistCode,institutionCode,areaCode,holderType,ccy,amount,qty,cnyAmt)
+		select A.*
+		from (
+		<foreach collection="newList" index="index" item = "item" separator="UNION ALL">
+			select
+			#{item.prdRegistCode,jdbcType=VARCHAR},
+			#{item.institutionCode,jdbcType=VARCHAR},
+			#{item.areaCode,jdbcType=VARCHAR},
+			#{item.holderType,jdbcType=VARCHAR},
+			#{item.ccy,jdbcType=VARCHAR},
+			#{item.amount,jdbcType=DECIMAL},
+			#{item.qty,jdbcType=DECIMAL},
+			#{item.cnyAmt,jdbcType=DECIMAL}
+			from dual
+		</foreach>
+		) A
+	</insert>
+
+	<delete id="deleteAllMonthTemp">
+		truncate table chb_month_count_tmp
+	</delete>
 
 	<select id="selectNotChangeEquHold" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
 		select prdRegistCode,institutionCode,areaCode,holderType,indentifyMark,ccy,amount,qty,cnyAmt
