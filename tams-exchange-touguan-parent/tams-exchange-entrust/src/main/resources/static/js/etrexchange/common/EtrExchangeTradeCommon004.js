@@ -3207,7 +3207,7 @@
                 if (riskLists[0].conclusion){
                    $("#riskTrialSpan").html("&nbsp;&nbsp;" + riskLists[0].conclusion);
                 }else{
-                   $("#riskTrialSpan").html("&nbsp;&nbsp;" + "试算通过");
+                   $("#riskTrialSpan").html("&nbsp;&nbsp;" + riskTrialSpan);
                 }
                 setRiskFlag(0);
             }
