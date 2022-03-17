@@ -2084,20 +2084,20 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 							etrCommonService.checkIsDate(rowData.get(12), "EtrExchangeTrade001.vdate", lineNo));
 					// 委托结束日日期非空
 					confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-							etrCommonService.checkIsBlank(rowData.get(13), "EtrExchangeTrade001.mdate", lineNo));
+							etrCommonService.checkIsBlank(rowData.get(12), "EtrExchangeTrade001.mdate", lineNo));
 					// 委托结束日日期格式check
 					confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-							etrCommonService.checkIsDate(rowData.get(13), "EtrExchangeTrade001.mdate", lineNo));
+							etrCommonService.checkIsDate(rowData.get(12), "EtrExchangeTrade001.mdate", lineNo));
 					/**** 委托开始日与终止日必须是平台日 ***/
 					if (StringUtil.isBlank(confirmMsg)) {
-						confirmMsg = etrCommonService.checkIsPlateDate(rowData.get(12), rowData.get(13),
+						confirmMsg = etrCommonService.checkIsPlateDate(rowData.get(12), rowData.get(12),
 								lineNo);
 					}
 					if (StringUtil.isBlank(confirmMsg)) {
 						// 委托开始日
 						unit.setVdate(DateUtil.parse(rowData.get(12)));
 						// 委托结束日
-						unit.setMdate(DateUtil.parse(rowData.get(13)));
+						unit.setMdate(DateUtil.parse(rowData.get(12)));
 					} else {
 						// 设置提示信息
 						promptMsg = confirmMsg;
