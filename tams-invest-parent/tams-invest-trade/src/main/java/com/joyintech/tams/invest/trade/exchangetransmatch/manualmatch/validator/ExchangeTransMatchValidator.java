@@ -29,14 +29,25 @@ public class ExchangeTransMatchValidator implements BeanValidator {
                 errorList.add(new ValidMessage("组成交数据的资产类型和委托或交易的资产类型不一致!"));
             }
 
-            if(!StringUtil.isEmptyList(dealDto.getEntrustList()) && dealDto.getEntrustList().size()>1
-            && (StringUtil.equals(dealDto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue()) || StringUtil.equals(dealDto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue()))
-            && StringUtil.equals(dealDto.getRepoType(),DictCodeList.回购类型_质押式协议回购.getValue())) {
-                errorList.add(new ValidMessage("协议回购时只能选择一条指令进行匹配!"));
+            // ZGTFCP-1133:增加协议回购匹配数量校验 modify by fuyongsheng 20220317 start
+//            if(!StringUtil.isEmptyList(dealDto.getEntrustList()) && dealDto.getEntrustList().size()>1
+//            && (StringUtil.equals(dealDto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue()) || StringUtil.equals(dealDto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue()))
+//            && StringUtil.equals(dealDto.getRepoType(),DictCodeList.回购类型_质押式协议回购.getValue())) {
+//                errorList.add(new ValidMessage("协议回购时只能选择一条指令进行匹配!"));
+//            }
+            if((StringUtil.equals(dealDto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue()) || StringUtil.equals(dealDto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue()))
+                    && StringUtil.equals(dealDto.getRepoType(),DictCodeList.回购类型_质押式协议回购.getValue())){
+                if(!StringUtil.isEmptyList(dealDto.getEntrustList()) && dealDto.getEntrustList().size()>1){
+                    errorList.add(new ValidMessage("协议回购时只能选择一条指令进行匹配!"));
+                }else if(!StringUtil.isEmptyList(dealDto.getEntrustList()) && dealDto.getEntrustList().size()==1){
+                    if(dealDto.getRemainNum().compareTo(dealDto.getEntrustList().get(0).getEntrustAmt())>0){
+                        errorList.add(new ValidMessage("不符合协议回购匹配规则!"));
+                    }
+                }
             }
+            // ZGTFCP-1133:增加协议回购匹配数量校验 modify by fuyongsheng 20220317 end
 
-
-                //比较基本信息
+            //比较基本信息
             String ps = dealDto.getPs();
             if(StringUtil.equals(dealDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
             && StringUtil.equals(dealDto.getPs(), DictCodeList.交易方向_买入.getValue())) {

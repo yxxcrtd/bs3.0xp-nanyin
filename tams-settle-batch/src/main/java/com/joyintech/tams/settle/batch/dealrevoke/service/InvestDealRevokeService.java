@@ -106,11 +106,10 @@ public class InvestDealRevokeService {
         busiTypeList.add(DictCodeListExt2.共通业务类型_可转债转股交易.getValue());
         param.put("busiTypeList", busiTypeList);
         // GZYHTZJY-1142: 对债券债转股交易进行撤销 fuyongsheng add end
-        param.put("busiTypeList", busiTypeList);
         //增加协议回购中途换券撤销、竞价回购的入库、出库
         param.put("tradeMarketList",Arrays.asList(DictCodeListExt1.交易场所_上海证券交易所.getValue(),DictCodeListExt1.交易场所_深圳证券交易所.getValue()));
-        param.put("psList", Arrays.asList(/*DictCodeList.交易方向_买入.getValue()
-                ,*/DictCodeList.交易方向_卖出.getValue(),DictCodeList.交易方向_行权_回售.getValue(),DictCodeList.交易方向_申购确认.getValue()
+        param.put("psList", Arrays.asList(DictCodeList.交易方向_买入.getValue()
+                ,DictCodeList.交易方向_卖出.getValue(),DictCodeList.交易方向_行权_回售.getValue(),DictCodeList.交易方向_申购确认.getValue()
                 ,DictCodeList.交易方向_申购.getValue(),DictCodeListExt3.交易方向_债转股.getValue(),DictCodeListExt3.交易方向_配债.getValue()
                 // ZGZGST-4219: 对债券存续期交易进行撤销 fuyongsheng add start
                 ,DictCodeList.交易方向_收息到账.getValue(),DictCodeList.交易方向_还本到账.getValue()

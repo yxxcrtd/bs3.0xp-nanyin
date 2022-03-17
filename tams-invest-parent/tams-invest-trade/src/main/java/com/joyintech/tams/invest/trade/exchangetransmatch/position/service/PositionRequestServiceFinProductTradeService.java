@@ -159,7 +159,7 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
         pltMap.put("secAmount", ArithmeticUtil.multiply(dealEntity.getShareAmt(), new BigDecimal(100)));
         pltMap.put("cashAmount", dealEntity.getTradeAmt());
         pltMap.put("invAim", dealEntity.getInvAim());
-        pltMap.put("integrateSecAmount", null);
+        pltMap.put("integrateSecAmount", BigDecimal.ZERO);
         pltMap.put("ownSecAmount", ArithmeticUtil.multiply(dealEntity.getShareAmt(), new BigDecimal(100)));
         ptlList.add(pltMap);
         resultMap.put("ptlList", ptlList);
