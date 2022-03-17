@@ -1052,6 +1052,14 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 			List<FinProductQuto> qutos = etrExchangeTrade001CommonService.getFinProductQutoInfo(paramMap1);
 			if (qutos.size() == 0) {
 				confirmMsg = "当前资产无配股/配债额度，是否继续？";
+			}else{
+				if(dto.getEntrustNum().compareTo(qutos.get(0).getQuto())==1){
+					List<ValidMessage> validListEnt = new ArrayList<>();
+					validListEnt.add(new ValidMessage("ps", "指令数量超过配股额度"));
+					AjaxResult ajaxResultEnt = new AjaxResult();
+					ajaxResultEnt.setErrorList(validListEnt);
+					return ajaxResultEnt;
+				}
 			}
 		}
 		AjaxResult ajaxResult = new AjaxResult();
