@@ -441,6 +441,7 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
             // 质押券代码
             agreRepFristIssueDto.setRepSecId(entity.getRepSecId());
             BeanUtil.copyPropertiesIgnoreNull(etrEntrust, agreRepFristIssueDto);
+            etrEntrust.setPs(entity.getBusiPs());
             BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd, agreRepFristIssueDto);
             if(StringUtil.isNotEmpty(agreRepFristIssueDto.getFinprodId())) {
             	BeanUtil.copyPropertiesIgnoreNull(etrPledge, agreRepFristIssueDto);
