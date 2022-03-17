@@ -1,3 +1,4 @@
+//@ sourceURL=EtrExchangeTradeCommon004.js
 /**
  * 行情和交易信息
  */
@@ -748,7 +749,29 @@
                 //return parent.EtrExchangeTradeJjHq.getJJMktPrice("#latestPrice_jj");
                 return jJHQXX.latest;
             }
-        } else if (currentTab == "gd") {
+        } else if (currentTab == "dz") {
+            var secId=$("#secId_" + currentTab).val();
+            var secName=$("#secName_" + currentTab).val();
+            var finprodType2 = $("#finprodType2_" + currentTab).val();
+            var jJHQXX=queryJJHQXX(secId,secName,finprodType2);
+
+            var ps = $("#ps_" + currentTab).val();
+            if (finprodType2 == FINPROD_TYPE_TG_F06 || finprodType2 == FINPROD_TYPE_TG_F10) {
+                if (ps == PS_T01) {
+                    //return parent.EtrExchangeTradeJjHq.getJJMktPrice("#limitUp_jj");
+                    return jJHQXX.ceiling.toFixed(2);
+                } else if (ps == PS_T02) {
+                    //return parent.EtrExchangeTradeJjHq.getJJMktPrice("#limitDown_jj");
+                    return jJHQXX.ceiling.toFixed(2);
+                }else {
+                    //return parent.EtrExchangeTradeJjHq.getJJMktPrice("#latestPrice_jj");
+                    return jJHQXX.ceiling.toFixed(2);
+                }
+            } else {
+                //return parent.EtrExchangeTradeJjHq.getJJMktPrice("#latestPrice_jj");
+                return jJHQXX.ceiling.toFixed(2);
+            }
+        }else if (currentTab == "gd") {
             return $("#price_gd").get(0).value;
         }
         return '';
