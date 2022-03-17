@@ -274,8 +274,10 @@
         left join SYS_DATADICT_LIST sdl4 on T1.priceModel=sdl4.ITEM_CODE and sdl4.DICT_CODE='PRICE_MODEL'
         LEFT JOIN SYS_DATADICT_LIST sdl5 ON T1.DECLATYPE=sdl5.ITEM_CODE AND sdl5.DICT_CODE='DECLA_TYPE'
         where 1=1
-        <if test="tradePlat != null and tradePlat != ''">
-            AND T1.TRADE_PLAT = #{tradePlat}
+        <if test="tradePlatList != null and tradePlatList.size()>0 ">
+            <foreach collection="tradePlatList" open="AND T1.TRADE_PLAT IN (" item="tradePlat" separator="," close=")">
+                #{tradePlat,jdbcType=VARCHAR}
+            </foreach>
         </if>
         <if test="portfolioIdList != null and portfolioIdList.size()>0">
             <foreach collection="portfolioIdList" open="AND T1.PORTFOLIOID IN (" item="portfolioId" separator="," close=")">

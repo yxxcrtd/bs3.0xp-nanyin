@@ -721,4 +721,14 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
     public void setSelectedItem(List<EtrExchangeTradeSaveRequest> selectedItem) {
         this.selectedItem = selectedItem;
     }
+
+    private boolean isDoRkRedisFlag;
+
+    public boolean isDoRkRedisFlag() {
+        return isDoRkRedisFlag;
+    }
+
+    public void setDoRkRedisFlag(boolean doRkRedisFlag) {
+        isDoRkRedisFlag = doRkRedisFlag;
+    }
 }
