@@ -439,6 +439,7 @@
                     OR t.remark like '%' || #{search} || '%'
                     OR t.secAcctId like '%' || #{search} || '%'
                     OR t.entrustAmt||'' = #{search}
+                    OR t.entrustNum||'' = #{search}
                     OR t.etrPrice||'' = #{search}
                     OR t.termDays||'' = #{search}
                     OR t.exeProgress||'' = #{search}

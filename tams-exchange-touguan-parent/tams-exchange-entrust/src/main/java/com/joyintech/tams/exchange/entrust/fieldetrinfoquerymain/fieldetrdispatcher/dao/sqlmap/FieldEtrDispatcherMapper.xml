@@ -471,8 +471,19 @@
             decode(ete.ENTRUST_CLASS , '01',ete.PORTFOLIO_ID , '02', '',ete.PORTFOLIO_ID ) portfolioId,
             decode(ete.ENTRUST_CLASS , '01',pp.PORTFOLIO_NAME  , '02', '',pp.PORTFOLIO_NAME ) portfolioName,
             ete.inv_aim busiModel,
-            fp.finprod_market_id finprodMarketId,
-            fp.finprod_abbr finprodAbbr,
+            <!--fp.finprod_market_id finprodMarketId,
+            fp.finprod_abbr finprodAbbr,-->
+            CASE
+            WHEN eted.ASSET_TYPE = 'F07'
+            AND ete.PS IN ( '03', '04', 'T56', 'T93', 'T94', 'T95', 'T96' ) THEN
+            ete.STOCK_ID ELSE ( CASE WHEN fp.FINPROD_MARKET_ID IS NOT NULL THEN fp.FINPROD_MARKET_ID ELSE eted.ASSET_TYPE_10 END )
+            END finprodMarketId,
+            CASE
+            WHEN eted.ASSET_TYPE = 'F07'
+            AND ete.PS IN ( '03', '04' )
+            AND ete.ENTRUST_TYPE NOT IN ( '17', '18', '19', '20', '21' ) THEN
+            ete.FINPROD_ID ELSE ( CASE WHEN fp.FINPROD_MARKET_ID IS NOT NULL THEN fp.FINPROD_ABBR ELSE OPT_TARGET_INFO.TARGET_NAME END )
+            END finprodAbbr,
             ete.trade_market tradeMarket,
             ete.ps ps,
             DECODE(eted.SETTLE_SPREED,0,'01',1,'02','2','03') settleSpeed,
@@ -574,6 +585,7 @@
         <!--LEFT JOIN FIN_PRODUCT T6 ON oete.FINPROD_ID = T6.FINPROD_ID-->
         LEFT JOIN SYS_USER su on ete.INV_MANAGER_ID = su.USER_NAME
         left join MST_COUNTER_PARTY mcp on ete.COUNTER_ID = mcp.COUNTER_ID
+        LEFT JOIN OPT_TARGET_INFO ON eted.ASSET_TYPE_10 = OPT_TARGET_INFO.TARGET_ID
         WHERE ete.entrust_id = #{entrustId}
 
         union all
@@ -587,8 +599,19 @@
         decode(ete.ENTRUST_CLASS , '01',ete.PORTFOLIO_ID , '02', '',ete.PORTFOLIO_ID ) portfolioId,
         decode(ete.ENTRUST_CLASS , '01',pp.PORTFOLIO_NAME  , '02', '',pp.PORTFOLIO_NAME  )portfolioName,
         ete.inv_aim busiModel,
-        fp.finprod_market_id finprodMarketId,
-        fp.finprod_abbr finprodAbbr,
+        <!--fp.finprod_market_id finprodMarketId,
+        fp.finprod_abbr finprodAbbr,-->
+        CASE
+        WHEN eted.ASSET_TYPE = 'F07'
+        AND ete.PS IN ( '03', '04', 'T56', 'T93', 'T94', 'T95', 'T96' ) THEN
+        ete.STOCK_ID ELSE ( CASE WHEN fp.FINPROD_MARKET_ID IS NOT NULL THEN fp.FINPROD_MARKET_ID ELSE eted.ASSET_TYPE_10 END )
+        END finprodMarketId,
+        CASE
+        WHEN eted.ASSET_TYPE = 'F07'
+        AND ete.PS IN ( '03', '04' )
+        AND ete.ENTRUST_TYPE NOT IN ( '17', '18', '19', '20', '21' ) THEN
+        ete.FINPROD_ID ELSE ( CASE WHEN fp.FINPROD_MARKET_ID IS NOT NULL THEN fp.FINPROD_ABBR ELSE OPT_TARGET_INFO.TARGET_NAME END )
+        END finprodAbbr,
         ete.trade_market tradeMarket,
         ete.ps ps,
         DECODE(eted.SETTLE_SPREED,0,'01',1,'02','2','03') settleSpeed,
@@ -691,6 +714,7 @@
 <!--         LEFT JOIN FIN_PRODUCT T6 ON oete.FINPROD_ID = T6.FINPROD_ID-->
         LEFT JOIN SYS_USER su on ete.INV_MANAGER_ID = su.USER_NAME
         left join MST_COUNTER_PARTY mcp on ete.COUNTER_ID = mcp.COUNTER_ID
+        LEFT JOIN OPT_TARGET_INFO ON eted.ASSET_TYPE_10 = OPT_TARGET_INFO.TARGET_ID
         WHERE ete.entrust_id = #{entrustId}
     </select>
 
