@@ -529,7 +529,7 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
         }
         // 质押券数据集	ptlSecList
         // if (DictCodeListExt3.交易方向_解除质押.getValue().equals(ps)) {
-        if (!DictCodeListExt3.交易方向_正回购.getValue().equals(ps)) {
+        if (DictCodeListExt3.交易方向_正回购.getValue().equals(ps)) {
             List<Map<String, Object>> list = new ArrayList<>();
             bean = new PositionRequestBaseBean();
             bean.setPortfolioId(trdProductDealAdd.getPortfolioId());
