@@ -1289,23 +1289,36 @@ public class TrdCommonBaseService extends BaseService {
                 BigDecimal ratio = new BigDecimal(1);
                 if(DictCodeListExt3.目标类型_数量.getValue().equals(etrEntrustDetail.getTargetType())){
                     // 指令券面总额
-                    portfolioDto.setEtrSecAmount(ArithmeticUtil.multiply(etrEntrustDetail.getEntrustNum(), new BigDecimal(100)));
+                    if(DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(etrEntrust.getFinprodType2())){
+                        portfolioDto.setEtrSecAmount(ArithmeticUtil.multiply(etrEntrustDetail.getEntrustNum(), new BigDecimal(100)));
+                    }else{
+                        portfolioDto.setEtrSecAmount(ArithmeticUtil.multiply(etrEntrustDetail.getEntrustNum()));
+                    }
                     ratio = ArithmeticUtil.divide(etrEntrustDetail.getEntrustNum(), etrEntrust.getEntrustNum(), 8, RoundingMode.HALF_UP);
                 }else{
                     // 指令券面总额
                     portfolioDto.setEtrSecAmount(etrEntrustDetail.getEntrustAmt());
                     ratio = ArithmeticUtil.divide(etrEntrustDetail.getEntrustAmt(), etrEntrust.getEntrustAmt(), 8, RoundingMode.HALF_UP);
                 }
-                // 券面总额
-                portfolioDto.setSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt(), new BigDecimal(100), ratio));
                 // 本方券面总额
                 portfolioDto.setOwnSecAmount(portfolioDto.getSecAmount());
                 // 交易金额
                 portfolioDto.setCashAmount(ArithmeticUtil.multiply(infContractDetailfile.getTradeAmt(), ratio));
-                // 下单券面总额
-                portfolioDto.setOrdSecAmount(ArithmeticUtil.multiply(orderInfoDto.getEntrustVolume(), new BigDecimal(100), ratio));
-                // 标准券券面总额
-                portfolioDto.setStandardSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt(), new BigDecimal(100), ratio));
+                if(DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(etrEntrust.getFinprodType2())){
+                    // 券面总额
+                    portfolioDto.setSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt(), new BigDecimal(100), ratio));
+                    // 下单券面总额
+                    portfolioDto.setOrdSecAmount(ArithmeticUtil.multiply(orderInfoDto.getEntrustVolume(), new BigDecimal(100), ratio));
+                    // 标准券券面总额
+                    portfolioDto.setStandardSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt(), new BigDecimal(100), ratio));
+                }else{
+                    // 券面总额
+                    portfolioDto.setSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt(), ratio));
+                    // 下单券面总额
+                    portfolioDto.setOrdSecAmount(ArithmeticUtil.multiply(orderInfoDto.getEntrustVolume(), ratio));
+                    // 标准券券面总额
+                    portfolioDto.setStandardSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt(), ratio));
+                }
                 // 融入券券面总额
                 portfolioDto.setIntegrateSecAmount(BigDecimal.ZERO);
                 portfolioDtos.add(portfolioDto);
@@ -1320,18 +1333,31 @@ public class TrdCommonBaseService extends BaseService {
             portfolioDto.setSecAcctId(orderInfoDto.getSecAcctId());
             // 下单编号
             portfolioDto.setOrderId(infContractDetailfile.getOrderId());
-            // 指令券面总额
-            portfolioDto.setEtrSecAmount(ArithmeticUtil.multiply(etrEntrust.getEntrustNum(), new BigDecimal(100)));
-            // 下单券面总额
-            portfolioDto.setOrdSecAmount(ArithmeticUtil.multiply(orderInfoDto.getEntrustVolume(), new BigDecimal(100)));
-            // 券面总额
-            portfolioDto.setSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt(), new BigDecimal(100)));
-            // 本方券面总额
-            portfolioDto.setOwnSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt(), new BigDecimal(100)));
             // 交易金额
             portfolioDto.setCashAmount(infContractDetailfile.getTradeAmt());
-            // 标准券券面总额
-            portfolioDto.setStandardSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt(), new BigDecimal(100)));
+            if(DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(etrEntrust.getFinprodType2())){
+                // 指令券面总额
+                portfolioDto.setEtrSecAmount(ArithmeticUtil.multiply(etrEntrust.getEntrustNum(), new BigDecimal(100)));
+                // 下单券面总额
+                portfolioDto.setOrdSecAmount(ArithmeticUtil.multiply(orderInfoDto.getEntrustVolume(), new BigDecimal(100)));
+                // 券面总额
+                portfolioDto.setSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt(), new BigDecimal(100)));
+                // 本方券面总额
+                portfolioDto.setOwnSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt(), new BigDecimal(100)));
+                // 标准券券面总额
+                portfolioDto.setStandardSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt(), new BigDecimal(100)));
+            }else{
+                // 指令券面总额
+                portfolioDto.setEtrSecAmount(ArithmeticUtil.multiply(etrEntrust.getEntrustNum()));
+                // 下单券面总额
+                portfolioDto.setOrdSecAmount(ArithmeticUtil.multiply(orderInfoDto.getEntrustVolume()));
+                // 券面总额
+                portfolioDto.setSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt()));
+                // 本方券面总额
+                portfolioDto.setOwnSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt()));
+                // 标准券券面总额
+                portfolioDto.setStandardSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt()));
+            }
             // 融入券券面总额
             portfolioDto.setIntegrateSecAmount(BigDecimal.ZERO);
             portfolioDtos.add(portfolioDto);
