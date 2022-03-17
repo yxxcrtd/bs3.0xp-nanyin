@@ -427,7 +427,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 		initPageParams.put("riskMathSwitch", CacheUtil.getSysParam("risk_math_switch"));
 		initPageParams.put("pageRedisFlag", CacheUtil.getSysParam("pageRedisFlag"));
 		initPageParams.put("IS_RISKMATH_SOFTCONTROL", CacheUtil.getSysParam("IS_RISKMATH_SOFTCONTROL"));
-
+		initPageParams.put("ETR_TRADE_TIME_SWITCH", CacheUtil.getSysParam("etr_trade_time_switch"));
 		initPageParams.put("ETR_CHECK_POS_SWITCH",CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_POS_SWITCH));
 		// 大宗平台
 		List<SelectOptionDto> ps_dz = selectDto.getOptions().stream().filter(option -> {
