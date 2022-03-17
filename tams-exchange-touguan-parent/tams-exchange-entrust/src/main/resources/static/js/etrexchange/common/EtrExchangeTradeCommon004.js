@@ -3171,6 +3171,9 @@
                 $("#acctNo_div_"+currentTab).show();
                 $("#dateTableDiv").hide();
             }
+            if(finprodType2 == FINPROD_TYPE_TG_F06){
+                $("#priceModel_div_"+currentTab).show();
+            }
 
 
             initFlag = true;
