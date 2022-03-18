@@ -1668,6 +1668,7 @@ var calculateField;
         paramObj.channelFee = null;
         paramObj.tradeAmtAndFee = null;
         paramObj.exchangeAmt = null;
+        paramObj.invAim = $("#businessModel").val();
         // add by wangguoxian 费用设置 20190808 end
         return paramObj;
     }

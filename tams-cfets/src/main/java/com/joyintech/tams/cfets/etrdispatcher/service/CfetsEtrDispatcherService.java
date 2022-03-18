@@ -1353,9 +1353,9 @@ public class CfetsEtrDispatcherService extends BaseService {
             if(!CollectionUtils.isEmpty(infoData.getBidPriceList())) {
                 for(EtrEntrustBidPrice bidPrice : infoData.getBidPriceList()) {
                     entrustNum = ArithmeticUtil.doAdd(bidPrice.getBidPrinAmt(),entrustNum);
-                    bidPrice.setBidPrinAmt(ArithmeticUtil.divide(bidPrice.getBidPrinAmt(),new BigDecimal("10000"),2));
+                    bidPrice.setBidPrinAmt(ArithmeticUtil.divide(bidPrice.getBidPrinAmt(),new BigDecimal("10000"),4));
                 }
-                infoData.setEntrustNum(ArithmeticUtil.divide(entrustNum,new BigDecimal("10000"),2));
+                infoData.setEntrustNum(ArithmeticUtil.divide(entrustNum,new BigDecimal("10000"),4));
             }
             Map<String,Object> param = new HashMap<>();
             param.put("portfolioId",dto.getPortfolioId());
