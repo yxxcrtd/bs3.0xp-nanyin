@@ -14,7 +14,7 @@
             <a id="InvestorsHoldInfoRegist001_btn_manual" class="layui-btn layui-btn-sm btn-default"><i class="iconfont icon-hand"></i>手工处理</a>
             <a id="InvestorsHoldInfoRegist001_btn_cancelManual" class="layui-btn layui-btn-sm btn-default">取消手工处理</a>
             <!-- <a id="InvestorsHoldInfoRegist001_btn_import" class="layui-btn layui-btn-sm btn-default btn-import">导入</a> -->
-<!--            <a id="InvestorsHoldInfoRegist001_btn_export" class="layui-btn layui-btn-sm btn-export btn-default">导出查询结果</a>-->
+            <!--            <a id="InvestorsHoldInfoRegist001_btn_export" class="layui-btn layui-btn-sm btn-export btn-default">导出查询结果</a>-->
             <a id="InvestorsHoldInfoRegist001_btn_chbexport" class="layui-btn layui-btn-sm btn-export btn-default">导出中债Excel</a>
             <a id="InvestorsHoldInfoRegist001_btn_exportDel" class="layui-btn layui-btn-sm btn-export btn-default">导出删除Excel</a>
         </div>
@@ -22,46 +22,9 @@
             <form class="layui-form" id="searchForm">
                 <div class="layui-form-item">
                     <div class="layui-inline layui-col-md4">
-                        <label class="layui-form-label form-lable">持有日期</label>
-                        <div class="layui-input-inline input-inline">
-                            <input type="text" id="holdDate" class="layui-input form-input input-dateRangeSelect"
-                                   data-th-value="|${holdDateStr} - ${holdDateStr}|"/>
-                        </div>
-                    </div>
-                    <div class="layui-inline layui-col-md4">
                         <label class="layui-form-label form-lable">报送截止日</label>
                         <div class="layui-input-inline input-inline">
                             <input id="submitDeadLine" type="text"  name="timeControl"  class="layui-input form-input timeControl input-dateRangeSelect" placeholder="请选择日期区间" />
-                        </div>
-                    </div>
-<!--                    <div class="layui-inline layui-col-md4">-->
-<!--                        <label class="layui-form-label form-lable">报送状态</label>-->
-<!--                        <div class="layui-input-inline input-inline">-->
-<!--                            <select id="sendStatus" name="sendStatus" class="input-select" data-th-data-result='${SUBMIT_STATUS}' data-th-initvalue="${submitStatus}" placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}" allowClear="true" multiple="multiple">-->
-<!--                            </select>-->
-<!--                        </div>-->
-<!--                    </div>-->
-                    <div class="layui-inline layui-col-md4">
-                        <label class="layui-form-label form-lable">报送日期</label>
-                        <div class="layui-input-inline input-inline">
-                            <input id="submitDate" type="text"  name="timeControl"  class="layui-input form-input timeControl input-dateRangeSelect" placeholder="请选择日期区间" />
-                        </div>
-                    </div>
-<!--                    <div class="layui-inline layui-col-md4">-->
-<!--                        <label class="layui-form-label form-lable">数据状态</label>-->
-<!--                        <div class="layui-input-inline input-inline">-->
-<!--                            <select id="status" class="input-select" data-th-data-result='${SUBMITTED_STATUS}' data-th-initvalue="${status}" placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}" allowClear="true" multiple="multiple">-->
-<!--                            </select>-->
-<!--                        </div>-->
-<!--                    </div>-->
-                    
-                </div>
-                <div class="layui-form-item">
-                    <div class="layui-inline layui-col-md4">
-                        <label class="layui-form-label form-lable">数据状态</label>
-                        <div class="layui-input-inline input-inline">
-                            <select id="status" class="input-select" data-th-data-result='${SUBMITTED_STATUS}' data-th-initvalue="${status}" placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}" allowClear="true" multiple="multiple">
-                            </select>
                         </div>
                     </div>
                     <div class="layui-inline layui-col-md4">
@@ -71,18 +34,29 @@
                             </select>
                         </div>
                     </div>
-<!--                	<div class="layui-inline layui-col-md4">-->
-<!--                        <label class="layui-form-label form-lable">数据日期</label>-->
-<!--                        <div class="layui-input-inline input-inline">-->
-<!--                            <input id="updateTime" type="text"  name="timeControl"  class="layui-input form-input timeControl input-dateRangeSelect" placeholder="请选择日期区间" />-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="layui-inline layui-col-md4">-->
-<!--                        <label class="layui-form-label form-lable">报送日期</label>-->
-<!--                        <div class="layui-input-inline input-inline">-->
-<!--                            <input id="submitDate" type="text"  name="timeControl"  class="layui-input form-input timeControl input-dateRangeSelect" placeholder="请选择日期区间" />-->
-<!--                        </div>-->
-<!--                    </div>-->
+                    <div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label form-lable">数据状态</label>
+                        <div class="layui-input-inline input-inline">
+                            <select id="status" class="input-select" data-th-data-result='${SUBMITTED_STATUS}' data-th-initvalue="${status}" placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}" allowClear="true" multiple="multiple">
+                            </select>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="layui-form-item">
+
+                	<div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label form-lable">数据日期</label>
+                        <div class="layui-input-inline input-inline">
+                            <input id="updateTime" type="text"  name="timeControl"  class="layui-input form-input timeControl input-dateRangeSelect" placeholder="请选择日期区间" />
+                        </div>
+                    </div>
+                    <div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label form-lable">报送日期</label>
+                        <div class="layui-input-inline input-inline">
+                            <input id="submitDate" type="text"  name="timeControl"  class="layui-input form-input timeControl input-dateRangeSelect" placeholder="请选择日期区间" />
+                        </div>
+                    </div>
                     <div class="layui-inline layui-col-md4">
                         <label class="layui-form-label form-lable">反馈状态</label>
                         <div class="layui-input-inline input-inline">
@@ -92,54 +66,34 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <div class="layui-inline layui-col-md4">
-                        <label class="layui-form-label form-lable">数据日期</label>
+
+                	<div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label form-lable">登记银行代码</label>
                         <div class="layui-input-inline input-inline">
-                            <input id="updateTime" type="text"  name="timeControl"  class="layui-input form-input timeControl input-dateRangeSelect" placeholder="请选择日期区间" />
+                            <input type="text" id="registBankCode" name="registBankCode" class="layui-input form-input" placeholder="请输入内容">
                         </div>
                     </div>
-                    <div class="layui-inline layui-col-md4">
-                        <label class="layui-form-label form-lable">产品登记编码</label>
-                        <div class="layui-input-inline input-inline">
-                            <select id="prdRegistCode" name="prdRegistCode" data-th-data-url='@{/svreport/system/proregistcodemanage/ProRegistCodeManage001/getRegCode}' data-th-data-formatoption=true data-th-data-parentids="orgCode" class="input-select" placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}" allowClear="true" multiple="multiple">
-                            </select>
-                        </div>
-                    </div>
-<!--                	<div class="layui-inline layui-col-md4">-->
-<!--                        <label class="layui-form-label form-lable">登记银行代码</label>-->
-<!--                        <div class="layui-input-inline input-inline">-->
-<!--                            <input type="text" id="registBankCode" name="registBankCode" class="layui-input form-input" placeholder="请输入内容">-->
-<!--                        </div>-->
-<!--                    </div>-->
                     <div class="layui-inline layui-col-md4">
                         <label class="layui-form-label form-lable">识别标识</label>
                         <div class="layui-input-inline input-inline">
                             <input type="text" id="indentifyMark" name="indentifyMark" class="layui-input form-input" placeholder="请输入内容">
                         </div>
                     </div>
-<!--             	<div class="layui-inline layui-col-md4">-->
-<!--                        <label class="layui-form-label form-lable">产品登记编码</label>-->
-<!--                        <div class="layui-input-inline input-inline">-->
-<!--                           <select id="prdRegistCode" name="prdRegistCode" data-th-data-url='@{/svreport/system/proregistcodemanage/ProRegistCodeManage001/getRegCode}' data-th-data-formatoption=true data-th-data-parentids="orgCode" class="input-select" placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}" allowClear="true" multiple="multiple">-->
-<!--                            </select>-->
-<!--                        </div>-->
-<!--                    </div>-->
+             	<div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label form-lable">产品登记编码</label>
+                        <div class="layui-input-inline input-inline">
+                           <select id="prdRegistCode" name="prdRegistCode" data-th-data-url='@{/svreport/system/proregistcodemanage/ProRegistCodeManage001/getRegCode}' data-th-data-formatoption=true data-th-data-parentids="orgCode" class="input-select" placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}" allowClear="true" multiple="multiple">
+                            </select>
+                        </div>
+                    </div>
                 </div>
              <div class="layui-form-item">
-                 <div class="layui-inline layui-col-md4">
-                     <label class="layui-form-label form-lable">登记银行代码</label>
-                     <div class="layui-input-inline input-inline">
-                         <input type="text" id="registBankCode" name="registBankCode" class="layui-input form-input" placeholder="请输入内容">
-                     </div>
-                 </div>
-
-<!--                    <div class="layui-inline layui-col-md4">-->
-<!--                        <label class="layui-form-label form-lable">持有日期</label>-->
-<!--                        <div class="layui-input-inline input-inline">-->
-<!--                            <input type="text" id="holdDate" class="layui-input form-input input-dateRangeSelect"-->
-<!--                                   data-th-value="|${holdDateStart} - ${holdDateEnd}|"/>-->
-<!--                        </div>-->
-<!--                    </div>-->
+                <div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label form-lable">持有日期</label>
+                        <div class="layui-input-inline input-inline">
+                            <input type="text" id="holdDate" class="layui-input form-input input-dateRangeSelect"/>
+                        </div>
+                    </div>
                    <div class="layui-inline layui-col-md4">
                         <label class="layui-form-label form-lable">机构代码</label>
                         <div class="layui-input-inline input-inline">
