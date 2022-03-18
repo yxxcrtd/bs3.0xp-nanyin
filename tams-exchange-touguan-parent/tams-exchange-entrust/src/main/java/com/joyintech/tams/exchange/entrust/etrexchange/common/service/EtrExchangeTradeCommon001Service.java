@@ -5255,9 +5255,6 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 				if(!StringUtil.isNotEmpty(item.getPortfolioId())){
 					messages.add("请输入组合名称。");
 				}
-//				if(!StringUtil.isNotEmpty(item.getEntrustNum())){
-//					messages.add("请输入券面总额。");
-//				}
 			}
 		}
 		if(!StringUtil.isNotEmpty(dto.getFinprodId())){
@@ -5280,12 +5277,16 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		BeanUtil.copyPropertiesIgnoreNull(d,dto);
 		List<Map> bussTrdTransfenpeiDto=new ArrayList<>();
 		for(EtrExchangeTradePortfolioRequest pt:dto.getPortfolioList()){
+			if(StringUtil.isNotEmpty(pt.getFinprodId())){
+				pt.setFinprodId(null);
+			}
 			if (StringUtil.isNotEmpty(pt.getPs()) && (pt.getPs().equals(DictCodeListExt2.交易方向_配股.getValue())
 			 || pt.getPs().equals(DictCodeListExt3.交易方向_配债.getValue()))){
 				pt.setFinprodId(dto.getFinprodId());
 			}
 			Map<String, Object> map = BeanUtil.object2Map(pt);
 			map.entrySet().removeIf(item->!StringUtil.isNotEmpty(item.getValue()));
+
 			bussTrdTransfenpeiDto.add(map);
 		}
 		d.setBussTrdTransfenpeiDto(bussTrdTransfenpeiDto);
