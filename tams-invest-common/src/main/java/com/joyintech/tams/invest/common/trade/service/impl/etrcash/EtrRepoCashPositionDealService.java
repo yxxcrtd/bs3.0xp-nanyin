@@ -126,7 +126,7 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
                 if (StringUtil.equals(ps, DictCodeList.交易方向_到期.getValue())) {
                     deal_银行间_逆回购到期(finProductTradeDto, 持仓类型, etrPositionHoldDto, stlPayOrdersDtos);
                 }
-                else if (StringUtil.isEmpty(entrustId)) {
+                else if (StringUtil.isEmpty(entrustId) || StringUtil.equals(finProductTradeDto.getIsExistNew(), DictCodeList.是否_是.getValue())) {
                     deal_银行间_逆回购(finProductTradeDto, 持仓类型, etrPositionHoldDto);
                 }
             }
@@ -319,7 +319,7 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
         String chlType = StringUtil.isEmpty(chlId) ? null : EtrCommonCashPositionDealService.queryChlType(chlId);
         // 交易提交
         if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) {
-            if (StringUtil.isEmpty(entrustId) || StringUtil.equals(finProductTradeDto, DictCodeList.是否_是.getValue())) { // 无委托
+            if (StringUtil.isEmpty(entrustId) || StringUtil.equals(finProductTradeDto.getIsExistNew(), DictCodeList.是否_是.getValue())) { // 无委托
                 // 现金流水dto处理 交割日减少(交易金额-交易券面总额*委托全价/债券面值）
                 etrCashPositionFlowDto.setAmount(交易日金额.negate());
                 // 设置账号
@@ -340,7 +340,7 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
                 
             }
         }
-        if (StringUtil.isEmpty(entrustId) || StringUtil.equals(finProductTradeDto, DictCodeList.是否_是.getValue())) {
+        if (StringUtil.isEmpty(entrustId) || StringUtil.equals(finProductTradeDto.getIsExistNew(), DictCodeList.是否_是.getValue())) {
             if (DictCodeList.持仓类型_实际.equals(持仓类型)){
                 etrSecPositionFlowDto.setAmount(交易日金额);
                 etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);

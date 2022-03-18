@@ -557,6 +557,7 @@ public class CfetsTrdConfirm001Service extends BaseService{
                 }
                 List<StlPayOrdersDto> stlPayOrdersDtos = new ArrayList<>();
                 stlPayOrdersDtos.add(stlPayOrdersDto);
+                finProductTradeDtoTemp.getBaseTradeProductDealDtos().get(0).setEntrustId(dealAdd.getEntrustId());
                 finProductTradeDtoTemp.getBaseTradeProductDealDtos().get(0).setStlPayOrdersList(stlPayOrdersDtos);
                 baseTradeProductDealCommService.insertPosition(finProductTradeDtoTemp);
             }
