@@ -421,14 +421,20 @@ public class InvestDealRevokeService {
             batchRevoke.put("userId", "SYSTEM");
             batchRevoke.put("totalTradeId",IDGenerator.generate());
             batchRevoke.put("modelType",DictCodeListExt1.子系统代码_交易.getValue());
-            PositionHttpRequest.batchClose(batchRevoke);
+            //ZGTFCP-1222:更换头寸批处理接口 modify by fuyongsheng  20220318 start
+            // PositionHttpRequest.batchClose(batchRevoke);
+            PositionHttpRequest.batchRevoke(batchRevoke);
+            //ZGTFCP-1222:更换头寸批处理接口 modify by fuyongsheng  20220318 end
 
 
             orderBatchRevoke.put("data", orderDataList);
             orderBatchRevoke.put("userId", "SYSTEM");
             orderBatchRevoke.put("totalTradeId",IDGenerator.generate());
             orderBatchRevoke.put("modelType",DictCodeListExt1.子系统代码_交易.getValue());
-            PositionHttpRequest.batchClose(orderBatchRevoke);
+            //ZGTFCP-1222:更换头寸批处理接口 modify by fuyongsheng  20220318 start
+            // PositionHttpRequest.batchClose(orderBatchRevoke);
+            PositionHttpRequest.batchRevoke(orderBatchRevoke);
+            //ZGTFCP-1222:更换头寸批处理接口 modify by fuyongsheng  20220318 end
         }
         // 撤销日间成交交易调用新头寸接口 add by fuyongsheng 20220308 end
     }

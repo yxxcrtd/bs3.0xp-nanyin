@@ -309,9 +309,39 @@ public class PositionHttpRequest {
             }
         }*/
     }
+
+    /**
+     * 头寸调用方法，需处理异常，可使用PositionUtil.ajaxErrorReturn解析异常
+     * 返回码 300|。。。  表示余额不足，需前端确认
+     * 返回码 410|。。。  表示通信息或网络超时
+     * 返回码 420|。。。  头寸引擎返回不成功，具体参考返回信息
+     * @param req
+     * @throws PositionException
+     */
+    public static void batchRevoke(Object req) throws PositionException{
+        //
+        logger.info("发送头寸报文:"+JsonUtils.object2Json(req));
+        //处理seqno
+        Map<String,Object> params  =JsonUtils.stringToMap(JsonUtils.object2Json(req));
+        Long seqno = (long) Arrays.deepHashCode(new Object[] { params.get("totalTradeId"), params.get("modelType"),new Date().getTime(),Thread.currentThread().getId() });
+        params.put("seqno",seqno);
+        String res = batchRevokePrivate(req);
+        Map msgMap = JsonUtils.json2Object(res, Map.class);
+        if(msgMap == null){
+            throw new PositionException("头寸返回数据为空！");
+        }else if(!StringUtil.equals("success", msgMap.get("code") + "")){
+            throw new PositionException(JsonUtils.object2Json(msgMap));
+        }
+    }
+
     private static String batchClosePrivate(Object param) {
         return httpPostRequest(positionUrl + "/position/endpoint/batchClose", param);
     }
+
+    private static String batchRevokePrivate(Object param) {
+        return httpPostRequest(positionUrl + "/position/endpoint/batchRevoke", param);
+    }
+
     /**
      * 从头寸引擎查询现金持仓余额
      * @param param
