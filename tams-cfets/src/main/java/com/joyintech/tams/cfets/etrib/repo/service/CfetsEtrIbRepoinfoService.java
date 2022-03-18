@@ -277,6 +277,7 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
         }else{
             pageParam.put("userId", userId);
         }
+        pageParam.put("loginUserId", userId);
         pageParam.put("A_012", DictCodeListExt3.资产类型_质押式双边回购本方券已质押持仓.getValue());
         pageParam.put("S_002", DictCodeListExt3.资产类型_可质押持仓.getValue());
         pageParam.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());
