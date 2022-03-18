@@ -292,7 +292,7 @@ public class PositionHttpRequest {
         Map<String,Object> params  =JsonUtils.stringToMap(JsonUtils.object2Json(req));
         Long seqno = (long) Arrays.deepHashCode(new Object[] { params.get("totalTradeId"), params.get("modelType"),new Date().getTime(),Thread.currentThread().getId() });
         params.put("seqno",seqno);
-        String res = batchClosePrivate(req);
+        String res = batchClosePrivate(params);
         Map msgMap = JsonUtils.json2Object(res, Map.class);
         if(msgMap == null){
             throw new PositionException("头寸返回数据为空！");
@@ -325,7 +325,7 @@ public class PositionHttpRequest {
         Map<String,Object> params  =JsonUtils.stringToMap(JsonUtils.object2Json(req));
         Long seqno = (long) Arrays.deepHashCode(new Object[] { params.get("totalTradeId"), params.get("modelType"),new Date().getTime(),Thread.currentThread().getId() });
         params.put("seqno",seqno);
-        String res = batchRevokePrivate(req);
+        String res = batchRevokePrivate(params);
         Map msgMap = JsonUtils.json2Object(res, Map.class);
         if(msgMap == null){
             throw new PositionException("头寸返回数据为空！");
