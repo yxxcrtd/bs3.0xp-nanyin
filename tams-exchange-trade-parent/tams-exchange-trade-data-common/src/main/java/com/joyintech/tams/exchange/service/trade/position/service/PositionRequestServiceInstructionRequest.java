@@ -54,6 +54,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import cn.hutool.core.util.NumberUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -203,8 +204,6 @@ public class PositionRequestServiceInstructionRequest {
                 bean = new PositionRequestBaseBean(entity);
                 bean.setPortfolioId(item.getPortfolioId());
                 bean.setFinprodId(null);
-                bean.setTradeId(entity.getEntrustNo());
-                bean.setEtrId(entity.getEntrustId());
                 bean.setCashAmount(item.getEntrustAmt());
 
                 Map<String, Object> map = BeanUtil.object2Map(bean);
@@ -331,8 +330,6 @@ public class PositionRequestServiceInstructionRequest {
                 bean = new PositionRequestBaseBean(entity);
                 bean.setPortfolioId(item.getPortfolioId());
                 bean.setFinprodId(null);
-                bean.setTradeId(entity.getEntrustNo());
-                bean.setEtrId(entity.getEntrustId());
                 bean.setCashAmount(item.getEntrustAmt());
                 bean.setSecAmount(BigDecimal.ZERO);
 
@@ -361,7 +358,6 @@ public class PositionRequestServiceInstructionRequest {
                     bean = new PositionRequestBaseBean(entity);
                     bean.setPortfolioId(item.getPortfolioId());
                     bean.setFinprodId(entity.getFinprodId());
-                    bean.setEtrId(null);
                     bean.setCashAmount(BigDecimal.ZERO);
                     // 券面总额 下单数量*100
                     BigDecimal secAmount = commonPositionEngineService.multiplyWithOneHundred(item.getEntrustNum());
@@ -403,7 +399,7 @@ public class PositionRequestServiceInstructionRequest {
                 || (DictCodeListExt3.交易方向_到期购回.getValue().equals(ps))) {
             List<Map<String, Object>> list = new ArrayList<>(1);
             bean = new PositionRequestBaseBean(entity);
-            bean.setEtrId(null);
+            bean.setCashAmount(NumberUtil.sub(entity.getmTradeAmt(), entity.getmIntAmt()));
             bean.setSecAmount(BigDecimal.ZERO);
 
             Map<String, Object> map = BeanUtil.object2Map(bean);
@@ -415,8 +411,6 @@ public class PositionRequestServiceInstructionRequest {
         if (DictCodeListExt3.交易方向_到期续做.getValue().equals(ps)) {
             List<Map<String, Object>> list = new ArrayList<>(1);
             bean = new PositionRequestBaseBean(entity);
-            bean.setTradeId(entity.getEntrustNo());
-            bean.setEtrId(entity.getEntrustId());
             bean.setSecAmount(BigDecimal.ZERO);
             // 交易金额 TODO
             // "IF 回购类型 = 正回购 THEN 指令.到期续作金额 - 指令.首期的到期结算金额
@@ -444,14 +438,14 @@ public class PositionRequestServiceInstructionRequest {
                 // 债券代码 指令.质押券的金融产品代码
                 bean.setFinprodId(item.getFinprodId());
                 bean.setSecAcctId(entity.getSecAcctId());
-                bean.setTradeId(entity.getEntrustId());
-                bean.setEtrId(null);
+                bean.setTradeId(entity.getEntrustNo());
+                bean.setEtrId(entity.getEntrustId());
                 BigDecimal secAmount = commonPositionEngineService.multiplyWithOneHundred(item.getPledgeNumber());
                 bean.setSecAmount(secAmount);
 
                 Map<String, Object> map = BeanUtil.object2Map(bean);
                 //融入券券面总额
-                map.put(INTEGRATE_SEC_AMOUNT, null);
+                map.put(INTEGRATE_SEC_AMOUNT, BigDecimal.ZERO);
                 //本方券券面总额 指令.质押券数量*100 乘以一百
                 map.put(OWN_SEC_AMOUNT, secAmount);
 
@@ -471,8 +465,8 @@ public class PositionRequestServiceInstructionRequest {
                 // 债券代码 指令.质押券的金融产品代码
                 bean.setFinprodId(item.getFinprodId());
                 bean.setSecAcctId(entity.getSecAcctId());
-                bean.setTradeId(entity.getEntrustId());
-                bean.setEtrId(entity.getEntrustNo());
+                bean.setTradeId(entity.getEntrustNo());
+                bean.setEtrId(entity.getEntrustId());
                 BigDecimal secAmount = commonPositionEngineService.multiplyWithOneHundred(item.getPledgeNumber());
                 if (DictCodeListExt3.交易方向_解除质押.getValue().equals(ps)) {
                     bean.setSecAmount(secAmount);
@@ -483,7 +477,7 @@ public class PositionRequestServiceInstructionRequest {
 
                 Map<String, Object> map = BeanUtil.object2Map(bean);
                 //融入券券面总额
-                map.put(INTEGRATE_SEC_AMOUNT, null);
+                map.put(INTEGRATE_SEC_AMOUNT, BigDecimal.ZERO);
                 //本方券券面总额 指令.质押券数量*100
                 if (DictCodeListExt3.交易方向_解除质押.getValue().equals(ps)) {
                     map.put(OWN_SEC_AMOUNT, secAmount);
@@ -521,8 +515,6 @@ public class PositionRequestServiceInstructionRequest {
             for (PortfolioCalculateResponse item : calculates) {
                 bean = new PositionRequestBaseBean(entity);
                 bean.setPortfolioId(item.getPortfolioId());
-                bean.setTradeId(entity.getEntrustNo());
-                bean.setEtrId(entity.getEntrustId());
                 bean.setCashAmount(item.getEntrustAmt());
                 bean.setSecAmount(BigDecimal.valueOf(item.getEntrustNum()));
 
@@ -540,8 +532,6 @@ public class PositionRequestServiceInstructionRequest {
                 for (PortfolioCalculateResponse item : calculates) {
                     bean = new PositionRequestBaseBean(entity);
                     bean.setPortfolioId(item.getPortfolioId());
-                    bean.setTradeId(entity.getEntrustId());
-                    bean.setEtrId(null);
                     // 配股/申购代码
                     bean.setFinprodId(entity.getConShareId());
                     bean.setCashAmount(item.getEntrustAmt());
