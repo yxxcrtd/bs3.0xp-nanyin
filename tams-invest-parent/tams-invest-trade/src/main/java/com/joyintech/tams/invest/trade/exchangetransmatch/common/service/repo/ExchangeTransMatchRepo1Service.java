@@ -260,7 +260,14 @@ public class ExchangeTransMatchRepo1Service extends ExchangeTransMatchRepoCommon
 			trdProductDeal.setFeeAmtPay(ArithmeticUtil.doAdd(dealDto.getJsfAmt(), dealDto.getGhfAmt(), dealDto.getZgfAmt(), dealDto.getSxfAmt(), dealDto.getSettleFee(), dealDto.getStampFee()));
 		}
 		// 交易金额
-		trdProductDeal.setTradeAmt(entrustDto.getMarchAmt());
+		// ZGTFCP-1263:需要根据回购类型进行费用加减 modify by fuyongsheng 20220318 start
+		// trdProductDeal.setTradeAmt(entrustDto.getMarchAmt());
+		if(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(dealDto.getFinprodType2())){
+			trdProductDeal.setTradeAmt(ArithmeticUtil.subtract(entrustDto.getMarchAmt(),trdProductDeal.getFeeAmtPay()));
+		}else{
+			trdProductDeal.setTradeAmt(ArithmeticUtil.doAdd(entrustDto.getMarchAmt(),trdProductDeal.getFeeAmtPay()));
+		}
+		// ZGTFCP-1263:需要根据回购类型进行费用加减 modify by fuyongsheng 20220318 end
 		// 未随交易支付费用
 		if(!StringUtil.equals(DictCodeList.是否_是.getValue(), dealDto.getIsPayWithTrade())) {
 			trdProductDeal.setFeeAmtUnpay(dealDto.getCommissionAmt());
@@ -271,8 +278,6 @@ public class ExchangeTransMatchRepo1Service extends ExchangeTransMatchRepoCommon
 		trdProductDeal.setPs(dealDto.getPs());
 		// 利息总额
 		trdProductDeal.setIntAmt(null);
-		// 全价总额
-		trdProductDeal.setFpriceAmt(null);
 		// 交易方向
 		trdProductDeal.setPs(DictCodeList.交易方向_买入.getValue());
 		// 投管业务类型

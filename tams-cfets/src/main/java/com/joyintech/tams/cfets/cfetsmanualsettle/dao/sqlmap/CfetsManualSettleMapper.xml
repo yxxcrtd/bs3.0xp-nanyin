@@ -448,6 +448,7 @@
                 OR T.secAcctId like '%' || #{search} || '%'
                 OR T.counterName like '%' || #{search} || '%'
                 OR T.finprodId like '%' || #{search} || '%'
+                OR t.tgBusiTypeStr like '%' || #{search} || '%'
                 )
         </if>
     </sql>

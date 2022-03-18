@@ -125,7 +125,7 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest {
             bean.setPortfolioId(entity.getPortfolioId());
             bean.setCashAcctId(entity.getAcctNo());
             bean.setTradeId(entity.getEntrustId());
-            bean.setEtrId(null);
+            bean.setEtrId(entity.getEntrustId());
             // 交易金额
             bean.setCashAmount(entity.getTradeAmt());
             Map<String, Object> map = BeanUtil.object2Map(bean);
@@ -140,7 +140,7 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest {
             bean.setPortfolioId(entity.getPortfolioId());
             bean.setCashAcctId(entity.getAcctNo());
             bean.setTradeId(entity.getEntrustId());
-            bean.setEtrId(null);
+            bean.setEtrId(entity.getEntrustId());
             bean.setCashAmount(entity.getNewPrintAmt().subtract(entity.getExpireSettleAmt()));
 
             Map<String, Object> map = BeanUtil.object2Map(bean);
@@ -156,7 +156,7 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest {
             bean.setFinprodId(entity.getFinprodId());
             bean.setSecAcctId(entity.getSecAcctId());
             bean.setTradeId(entity.getEntrustId());
-            bean.setEtrId(null);
+            bean.setEtrId(entity.getEntrustId());
             // 券面总额 指令.质押券数量*100
             bean.setSecAmount(entity.getRepSecNum().multiply(BigDecimal.valueOf(100L)));
 
@@ -178,7 +178,7 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest {
             bean.setFinprodId(entity.getFinprodId());
             bean.setSecAcctId(entity.getSecAcctId());
             bean.setTradeId(entity.getEntrustId());
-            bean.setEtrId(null);
+            bean.setEtrId(entity.getEntrustId());
             // 券面总额 指令.质押券数量*100
             bean.setSecAmount(entity.getRepSecNum().multiply(BigDecimal.valueOf(100L)));
 

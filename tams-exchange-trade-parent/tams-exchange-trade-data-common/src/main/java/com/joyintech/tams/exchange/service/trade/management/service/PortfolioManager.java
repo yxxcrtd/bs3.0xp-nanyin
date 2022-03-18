@@ -97,6 +97,8 @@ public class PortfolioManager extends BaseService {
             dto.setCcy(币种_人民币.getValue());
             dto.setCdate(DateUtil.getSysDate());
             dto.setDateType(null);
+            dto.setFinprodType2(instruction.getFinprodType2());
+            dto.setTradePlat(instruction.getTradePlat());
 
             positionCashSecDtos.add(dto);
         }
