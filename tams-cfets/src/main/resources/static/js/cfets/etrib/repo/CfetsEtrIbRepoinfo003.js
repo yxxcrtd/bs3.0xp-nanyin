@@ -610,7 +610,6 @@
 
     function saveOrSubmit(operateType) {
         var res = getSubmitParam(operateType)
-        debugger;
         // if(res.objects.length>0){
         //保存 走流程
         if (operateType === 'save') {

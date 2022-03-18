@@ -669,6 +669,7 @@
         param.pageModel = pageModel;
         param.riskTrialRetDto = entity_RiskTrialRetList;
         param.elementId = 'CfetsEtrIbBondinfo003_btn_submit';
+        param.isDzh = 'Y';
         res.param = param;
         res.objects = objects;
         console.log(res);
@@ -770,11 +771,26 @@
     function saveOrSubmit(operateType) {
         var res = getSubmitParam(operateType)
         if(res.param) {
-            if (operateType === "save") {
+            if (operateType === 'save') {
+                WorkFlow.doSaveList(basePath + 'cfets/etrib/cfetsEtrIbBondinfo/save', res.param, "CfetsEtrIbBondinfo003_btn_save", null,
+                    function () {
+                        var index = window.parent.layer.getFrameIndex(window.name);
+                        window.parent.layer.close(index);
+                    })
+            }
+            //提交 走流程
+            else if (operateType === 'submit') {
+                WorkFlow.doSubmitList(basePath + 'cfets/etrib/cfetsEtrIbBondinfo/save', res.param, "CfetsEtrIbBondinfo003_btn_submit", null,
+                    function () {
+                        var index = window.parent.layer.getFrameIndex(window.name);
+                        window.parent.layer.close(index);
+                    })
+            }
+         /*   if (operateType === "save") {
                 WorkFlow.doSaveList(basePath + 'cfets/etrib/cfetsEtrIbBondinfo/save', res.param, "CfetsEtrIbBondinfo003_btn_save", "CfetsEtrIbBondinfo003");
             } else {
                 WorkFlow.doSubmitList(basePath + 'cfets/etrib/cfetsEtrIbBondinfo/save', res.param, "CfetsEtrIbBondinfo003_btn_submit", "CfetsEtrIbBondinfo003");
-            }
+            }*/
         }
     }
 
