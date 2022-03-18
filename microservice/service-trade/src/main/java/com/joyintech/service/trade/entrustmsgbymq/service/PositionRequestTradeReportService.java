@@ -331,6 +331,12 @@ public class PositionRequestTradeReportService {
         Map<String,Object> paraMap = new HashMap<>();
         paraMap.put("fTradeId", entity.getfTradeId());
         List<PortfolioCalculateDto> list = trdCommonBaseService.queryPortfolioCalculate(paraMap);
+        // ZGTFCP-1246:协议回购需要传前次交易编号(下单的委托编号) modify by fuyongsheng 20220318 start
+        // 前次交易编号
+        if(!StringUtil.isEmptyList(list)){
+            resultMap.put("bTotalTradeId", list.get(0).getOrderId());
+        }
+        // ZGTFCP-1246:协议回购需要传前次交易编号(下单的委托编号) modify by fuyongsheng 20220318 end
         // 首期组合现金数据集
         List<Map<String, Object>> ptlCashList = new ArrayList<>();
         // 轧差组合现金数据集
