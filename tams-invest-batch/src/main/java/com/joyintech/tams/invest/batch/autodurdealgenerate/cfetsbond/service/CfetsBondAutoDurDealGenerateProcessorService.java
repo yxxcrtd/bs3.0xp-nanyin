@@ -419,12 +419,12 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
         stlPayOrders.setMyAcctNo(acctNo);
         stlPayOrders.setSettleDate(DateUtil.parse(DateUtil.format(batchDate)));
         stlPayOrders.setPs(DictCodeListExt1.收支方向_收入.getValue());
-        stlPayOrders.setSettleAmt(regFinProductDealTotal.getTradeAmt());
+        stlPayOrders.setSettleAmt(trdFinProductDealTotal.getTradeAmt());
         stlPayOrders.setCcy(regFinProductDealTotal.getCcy());
         stlPayOrders.setSettleStatus(DictCodeList.结算状态_已结算.getValue());
         stlPayOrders.setIsNeedSend(DictCodeListExt1.是否_是.getValue());
         stlPayOrders.setIsTotalTrade(DictCodeListExt1.是否_是.getValue());
-        stlPayOrders.setTradeId(regFinProductDealTotal.getTotleTradeId());
+        stlPayOrders.setTradeId(trdFinProductDealTotal.getTotleTradeId());
         stlPayOrders.setOrderStatus(DictCodeListExt1.指令状态_新建.getValue());
         stlPayOrdersList.add(stlPayOrders);
 
