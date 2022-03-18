@@ -1905,6 +1905,9 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
         }
         if (CommonUtil.isType(v.getAssetType(), DictCodeList.平安资产类型_买断式回购)
             || CommonUtil.isType(v.getAssetType(), DictCodeList.平安资产类型_质押式回购)) {
+            if (!StringUtil.isNotEmpty(infRiskRdsDto.getMdate())){
+                infRiskRdsDto.setMdate(DateUtil.parse(infRiskRdsDto.getEventDate()));
+            }
             long oneDay = DateUtil.getBetweenDayNumber(DateUtil.platDateFromCache(),
                 DateUtil.parse(infRiskRdsDto.getMdate()));
             infRiskRdsDto.setOneDay(oneDay);
