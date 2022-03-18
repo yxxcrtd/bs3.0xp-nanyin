@@ -632,6 +632,11 @@ public class TradeHelper {
         BatchInfo batchInfo = dto.getBatchInfo();
         if (Objects.nonNull(batchInfo)) {
             logger.info("开始批量交易下单...");
+
+            Map<String, Object> extend2 = new HashMap<>();
+            extend2.put("priceMode", batchInfo.getPriceMode());
+            order.setExtend2(JsonUtils.getJsonFromObject(extend2));
+
             order.setBusinessFlag(BusinessFlag.BATCH.value);
             if (batchInfo.getPriceMode() == BatchPriceMode.LAST_PRICE.value) {
                 order.setEntrustProp(Market.SHSE.value.equals(StockCodeUtils.getMarket(order.getStockCode())) ? BEST5_TO_LIMIT.value : COUNTERPARTY.value);

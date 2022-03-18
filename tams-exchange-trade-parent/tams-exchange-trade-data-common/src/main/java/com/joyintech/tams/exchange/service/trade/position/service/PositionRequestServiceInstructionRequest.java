@@ -431,18 +431,18 @@ public class PositionRequestServiceInstructionRequest {
 
         // 质押券数据集	ptlSecList
         if (DictCodeListExt3.交易方向_正回购.getValue().equals(ps)) {
-            List<Map<String, Object>> list = new ArrayList<>(4);
+            List<Map<String, Object>> list = new ArrayList<>(1);
             // 查询质押券集合
-            List<InstructionPledge> instructionPledges = instructionPledgeService.queryInstructionPledgesByInstructionId(entity.getEntrustId());
-            for (InstructionPledge item : instructionPledges) {
+            InstructionPledge instructionPledge = instructionPledgeService.queryInstructionPledgesByInstructionIdAndStockCode(entity.getEntrustId(), entity.getFinprodMarketId());
+            if (Objects.nonNull(instructionPledge)) {
                 bean = new PositionRequestBaseBean();
                 bean.setPortfolioId(entity.getPortfolioId());
                 // 债券代码 指令.质押券的金融产品代码
-                bean.setFinprodId(item.getFinprodId());
+                bean.setFinprodId(instructionPledge.getFinprodId());
                 bean.setSecAcctId(entity.getSecAcctId());
                 bean.setTradeId(entity.getEntrustNo());
                 bean.setEtrId(entity.getEntrustId());
-                BigDecimal secAmount = commonPositionEngineService.multiplyWithOneHundred(item.getPledgeNumber());
+                BigDecimal secAmount = commonPositionEngineService.multiplyWithOneHundred(instructionPledge.getPledgeNumber());
                 bean.setSecAmount(secAmount);
 
                 Map<String, Object> map = BeanUtil.object2Map(bean);
