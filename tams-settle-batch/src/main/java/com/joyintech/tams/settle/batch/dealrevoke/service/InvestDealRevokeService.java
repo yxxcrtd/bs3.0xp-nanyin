@@ -356,6 +356,16 @@ public class InvestDealRevokeService {
         });
 
         // 撤销日间成交交易调用新头寸接口 add by fuyongsheng 20220308 start
+        positionHttpRequestBatchClose(param);
+        // 撤销日间成交交易调用新头寸接口 add by fuyongsheng 20220308 end
+    }
+
+    /**
+     * 撤销日间成交交易调用新头寸接口
+     * @param param
+     */
+    private void positionHttpRequestBatchClose(Map<String, Object> param){
+        // 撤销日间成交交易调用新头寸接口 add by fuyongsheng 20220308 start
         // 查询日间成交交易
         List<TrdProductTempDeal> trdProductTempDeals = investDealRevokeMapper.getTrdProductTempDeals(param);
         if(!CollectionUtils.isEmpty(trdProductTempDeals)){
@@ -373,6 +383,7 @@ public class InvestDealRevokeService {
                     .stream()
                     .collect(Collectors.collectingAndThen(Collectors.toCollection(
                             () -> new TreeSet<>(Comparator.comparing(TrdProductTempDeal::getTradeId))), ArrayList::new));
+            Set<String> orderIdSet = new HashSet<>();
             for(TrdProductTempDeal deal : distinctDeals){
                 // 日间成交撤销数据
                 Map<String, Object> data = new HashMap<>();
@@ -393,13 +404,18 @@ public class InvestDealRevokeService {
                 data.put("busiAct", DictCodeListExt3.业务动作_成交匹配.getValue());
                 dataList.add(data);
 
-                orderData.put("busiType", commonPositionEngineService.getPositionBusiType(etrEntrust.getFinprodType2(), etrEntrust.getPs(),
-                        etrEntrustAdd.getAssetType1()));
-                orderData.put("ps", deal.getPs());
-                orderData.put("closeId", infContractDetailfile.getOrderId());
-                orderData.put("systemAct", DictCodeListExt3.系统动作_新建.getValue());
-                orderData.put("busiAct", DictCodeListExt3.业务动作_成交匹配.getValue());
-                orderDataList.add(orderData);
+                // ZGTFCP-1249:orderId防止重复 modify by fuyongsheng 20220318 start
+                if(!orderIdSet.contains(infContractDetailfile.getOrderId())){
+                    orderData.put("busiType", commonPositionEngineService.getPositionBusiType(etrEntrust.getFinprodType2(), etrEntrust.getPs(),
+                            etrEntrustAdd.getAssetType1()));
+                    orderData.put("ps", deal.getPs());
+                    orderData.put("closeId", infContractDetailfile.getOrderId());
+                    orderData.put("systemAct", DictCodeListExt3.系统动作_新建.getValue());
+                    orderData.put("busiAct", DictCodeListExt3.业务动作_成交匹配.getValue());
+                    orderDataList.add(orderData);
+                    orderIdSet.add(infContractDetailfile.getOrderId());
+                }
+                // ZGTFCP-1249:orderId防止重复 modify by fuyongsheng 20220318 end
             }
             batchRevoke.put("data", dataList);
             batchRevoke.put("userId", "SYSTEM");
