@@ -442,5 +442,19 @@ public class EtrExchangeBlockTrade001Controller extends BaseController{
 		}
 	}
 
+
+	@ApiOperation(value="查询是否全价报送",notes = "查询是否全价报送")
+	@ResponseBody
+	@PostMapping("getIsFullPrice")
+	public Message<String> getIsFullPrice(@RequestBody EtrExchangeTradeCommonRequest request){
+		try {
+			String finprodId = request.getFinprodId();
+			String isFullPrice = etrExchangeBlockTrade001Service.getIsFullPrice(finprodId);
+			return new Message<String>().success().setData(isFullPrice);
+		}catch (Exception e) {
+			logger.error("查询指令管理分页数据异常",e);
+			return new Message<String>().setMessage("查询交易行情信息数据异常");
+		}
+	}
 }
 	
