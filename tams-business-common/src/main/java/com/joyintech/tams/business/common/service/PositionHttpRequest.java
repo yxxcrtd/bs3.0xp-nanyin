@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
 //@PropertySource("classpath:config.properties")
@@ -45,8 +47,12 @@ public class PositionHttpRequest {
      */
     public static void send(Object req) throws PositionException{
         //
-        logger.info("发送头寸报文:"+JsonUtils.object2Json(req));
-        String res = sendPrivate(req);
+        //处理seqno
+        Map<String,Object> params  =JsonUtils.stringToMap(JsonUtils.object2Json(req));
+        Long seqno = (long) Arrays.deepHashCode(new Object[] { params.get("totalTradeId"), params.get("modelType"),new Date().getTime(),Thread.currentThread().getId() });
+        params.put("seqno",seqno);
+        logger.info("发送头寸报文:"+JsonUtils.object2Json(params));
+        String res = sendPrivate(params);
         logger.info("头寸返回数据:"+res);
         Map msgMap = JsonUtils.json2Object(res, Map.class);
         if(msgMap == null){
@@ -71,7 +77,7 @@ public class PositionHttpRequest {
                     throw new PositionException(CODE_BUSI_YK + "|" + JsonUtils.object2Json(msgMap));
                 }
             }else {
-                revokeCheck(msgMap, req);
+                revokeCheck(msgMap, params);
             }
         }
     }
@@ -99,82 +105,77 @@ public class PositionHttpRequest {
             logger.info("发送头寸报文:"+jsonStr);
             BaseMap reqMap = JsonUtils.json2Object(jsonStr, BaseMap.class);
             String errorMsg = message != null?message.get("message") + "":"头寸返回数据为空";
-            revoke(reqMap.getString("totalTradeId"), reqMap.getString("modelType"), errorMsg);
+            roll(reqMap.getString("seqno"), reqMap.getString("modelType"), errorMsg);
         }
     }
 
     /**
      * 正常撤回、退回
-     * @param totalId
      * @param modelType
      */
-    public static void sendRevoke(String totalId, String modelType,String interfaceType){
-        BaseMap bm = BaseMap.newMap()
-                .put("totalTradeId", totalId)
-                .put("modelType", modelType)
-                .put("userId", LoginUserUtil.getUserName())
-                .put("interfaceType", interfaceType);
-        logger.info("发送头寸报文:"+JsonUtils.object2Json(bm));
-        String msg = cancel(bm);
-        Map message = JsonUtils.json2Object(msg, Map.class);
-        if (message == null) {
-            throw new PositionException("头寸返回数据为空！");
-        }
-        if (!StringUtil.equals("success", message.get("code"))){
-            if(StringUtil.equals("FL0007", message.get("code"))){
-                throw new PositionException(CODE_BUSI_RK + "|" + message.get("message"));
-            }else {
-                throw new PositionException(message.get("message") + "");
-            }
-        }
-    }
+//    public static void sendRevoke(String totalId, String modelType,String interfaceType){
+//        BaseMap bm = BaseMap.newMap()
+//                .put("totalTradeId", totalId)
+//                .put("modelType", modelType)
+//                .put("userId", LoginUserUtil.getUserName())
+//                .put("interfaceType", interfaceType);
+//        logger.info("发送头寸报文:"+JsonUtils.object2Json(bm));
+//        String msg = cancel(bm);
+//        Map message = JsonUtils.json2Object(msg, Map.class);
+//        if (message == null) {
+//            throw new PositionException("头寸返回数据为空！");
+//        }
+//        if (!StringUtil.equals("success", message.get("code"))){
+//            if(StringUtil.equals("FL0007", message.get("code"))){
+//                throw new PositionException(CODE_BUSI_RK + "|" + message.get("message"));
+//            }else {
+//                throw new PositionException(message.get("message") + "");
+//            }
+//        }
+//    }
 
-    /**
-     * 异常冲正
-     * @param totalId
-     * @param modelType
-     * @param e
-     */
-    public static void revoke(String totalId, String modelType, Exception e){
-        BaseMap bm = BaseMap.newMap()
-                .put("totalTradeId", totalId)
-                .put("modelType", modelType)
-                .put("userId", LoginUserUtil.getUserName())
-                .put("interfaceType", "Bond001");
-        logger.info("发送头寸报文:"+JsonUtils.object2Json(bm));
-        cancel(bm);
-        throw new PositionException(e.getMessage());
-    }
+//    /**
+//     * 异常冲正
+//     */
+//    public static void revoke(String totalId, String modelType, Exception e){
+//        BaseMap bm = BaseMap.newMap()
+//                .put("totalTradeId", totalId)
+//                .put("modelType", modelType)
+//                .put("userId", LoginUserUtil.getUserName())
+//                .put("interfaceType", "Bond001");
+//        logger.info("发送头寸报文:"+JsonUtils.object2Json(bm));
+//        cancel(bm);
+//        throw new PositionException(e.getMessage());
+//    }
 
-    public static void revoke(String totalId, String modelType, String errorMsg){
+    public static void roll(String revokeId, String modelType, String errorMsg){
         BaseMap bm = BaseMap.newMap()
-                .put("totalTradeId", totalId)
+                .put("revokeId", revokeId)
                 .put("modelType", modelType)
-                .put("userId", LoginUserUtil.getUserName())
-                .put("interfaceType", "Bond001");
+                .put("userId", LoginUserUtil.getUserName());
         logger.info("发送头寸报文:"+JsonUtils.object2Json(bm));
         try {
-            cancel(bm);
+            roll(bm);
         } catch (Exception e) {
             errorMsg += "\n" + e.getMessage();
         }
         // 页面端根据异常信息返回前端
         throw new PositionException(errorMsg);
     }
-    public static void deleteMethod(String totalId, String modelType,String interfaceType) throws PositionException{
-        //
-        BaseMap bm = BaseMap.newMap()
-                .put("totalTradeId", totalId)
-                .put("modelType", modelType)
-                .put("userId", LoginUserUtil.getUserName())
-                .put("interfaceType", interfaceType);//"Bond001"
-        logger.info("发送头寸报文:"+JsonUtils.object2Json(bm));
-        String res = cancel(bm);
-        Map msgMap = JsonUtils.json2Object(res, Map.class);
-        if(msgMap == null){
-            throw new PositionException("头寸返回数据为空！");
-        }
-    }
+//    public static void deleteMethod(String totalId, String modelType,String interfaceType) throws PositionException{
+//        //
+//        BaseMap bm = BaseMap.newMap()
+//                .put("totalTradeId", totalId)
+//                .put("modelType", modelType)
+//                .put("userId", LoginUserUtil.getUserName())
+//                .put("interfaceType", interfaceType);//"Bond001"
+//        logger.info("发送头寸报文:"+JsonUtils.object2Json(bm));
+//        String res = cancel(bm);
+//        Map msgMap = JsonUtils.json2Object(res, Map.class);
+//        if(msgMap == null){
+//            throw new PositionException("头寸返回数据为空！");
+//        }
+//    }
     private static String sendPrivate(Object param) {
         return httpPostRequest(positionUrl + "/position/endpoint/updatePosition", param);
     }
@@ -196,6 +197,8 @@ public class PositionHttpRequest {
                 .put("ps", ps)
                 ;
         logger.info("发送头寸报文:"+JsonUtils.object2Json(bm));
+        Long seqno = (long) Arrays.deepHashCode(new Object[] { revokeId,modelType,new Date().getTime(),Thread.currentThread().getId() });
+        bm.put("seqno",seqno);
         String res = delete(bm);
         Map message = JsonUtils.json2Object(res, Map.class);
         if(message == null){
@@ -219,6 +222,9 @@ public class PositionHttpRequest {
                 .put("busiType", busiType)
                 .put("ps", ps)
                 ;
+//        Map<String,Object> params  =JsonUtils.stringToMap(JsonUtils.object2Json(req));
+        Long seqno = (long) Arrays.deepHashCode(new Object[] { revokeId,modelType,new Date().getTime(),Thread.currentThread().getId() });
+        bm.put("seqno",seqno);
         logger.info("发送头寸报文:"+JsonUtils.object2Json(bm));
         String res = revoke(bm);
         Map msgMap = JsonUtils.json2Object(res, Map.class);
@@ -248,8 +254,8 @@ public class PositionHttpRequest {
      * @param param
      * @return
      */
-    private static String cancel(Object param) {
-        return httpPostRequest(positionUrl + "/position/endpoint/cancel", param);
+    private static String roll(Object param) {
+        return httpPostRequest(positionUrl + "/position/endpoint/roll", param);
     }
     
     /**
@@ -282,6 +288,10 @@ public class PositionHttpRequest {
     public static void batchClose(Object req) throws PositionException{
         //
         logger.info("发送头寸报文:"+JsonUtils.object2Json(req));
+        //处理seqno
+        Map<String,Object> params  =JsonUtils.stringToMap(JsonUtils.object2Json(req));
+        Long seqno = (long) Arrays.deepHashCode(new Object[] { params.get("totalTradeId"), params.get("modelType"),new Date().getTime(),Thread.currentThread().getId() });
+        params.put("seqno",seqno);
         String res = batchClosePrivate(req);
         Map msgMap = JsonUtils.json2Object(res, Map.class);
         if(msgMap == null){
