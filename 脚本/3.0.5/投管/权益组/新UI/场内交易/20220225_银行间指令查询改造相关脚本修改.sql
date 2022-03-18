@@ -2,8 +2,9 @@
 UPDATE CFG_DATATABLE_SHOW SET COLNAME = '指令代码' WHERE PAGECODE = 'CfetsEtrInfoQuery' AND DTCODE = 'CfetsEtrInfoOperateList' AND SPCDCODE IN ( '999999' ) AND EFFERANGE = 0 AND RANGEID = 'COMM' AND STATUS = 1 AND COLCODE = 'entrustId';
 
 -- 修改 指令查询添加币种列
-delete from CFG_DATATABLE_SHOW where PAGECODE = 'FieldEtrInfoQuery' and DTCODE = 'FieldEtrInfoQueryList' and SPCDCODE = '999999' and COLCODE = 'ccyStr' and COLNAME = '币种' and RANGEID = 'COMM' and STATUS = '1'
-INSERT INTO CFG_DATATABLE_SHOW (PAGECODE,DTCODE,SPCDCODE,COLCODE,COLNAME,DICTCODE,SEQNO,DISPLAYED,FROZEN,SORT,MAXLEN,EXTENDCFG,EFFERANGE,RANGEID,STATUS,REMARK1,REMARK2,REMARK3,ISKEY) VALUES ('FieldEtrInfoQuery', 'FieldEtrInfoQueryList', '999999', 'ccyStr', '币种', 'ccy', '24', '1', '0', '1', '100', '{"colAlign": "left","supportSearch":"模糊"}', '1', 'admin', '1', '0', NULL, NULL, '0');
+
+delete from CFG_DATATABLE_SHOW WHERE PAGECODE = 'FieldEtrInfoQuery' AND DTCODE = 'FieldEtrInfoQueryList' AND SPCDCODE IN ( '999999' ) AND EFFERANGE = 0 AND RANGEID = 'COMM' AND STATUS = 1 and COLCODE = 'ccyStr';
+INSERT INTO CFG_DATATABLE_SHOW(PAGECODE,DTCODE,SPCDCODE,COLCODE,COLNAME,DICTCODE,SEQNO,DISPLAYED,FROZEN,SORT,MAXLEN,EXTENDCFG,EFFERANGE,RANGEID,STATUS,REMARK1,REMARK2,REMARK3,ISKEY) VALUES ('FieldEtrInfoQuery', 'FieldEtrInfoQueryList', '999999', 'ccyStr', '币种', NULL, '24', '1', '0', '1', '100', '{"colAlign": "left","supportSearch":"模糊"}', '0', 'COMM', '1', '0', NULL, NULL, '0');
 -- 指令查询详情 添加 资金账户
 INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, EXTENDCFG, STATUS, REMARK1, REMARK2, REMARK3) VALUES ('FieldEtrDispatcher', 'FieldEtrDispatcherInfo', 'EX004', 'secAcctId', '资金账户', NULL, '18', '{"colAlign": "left","dataType":"amount","precision":"4"}', '1', '0', NULL, NULL);
 
