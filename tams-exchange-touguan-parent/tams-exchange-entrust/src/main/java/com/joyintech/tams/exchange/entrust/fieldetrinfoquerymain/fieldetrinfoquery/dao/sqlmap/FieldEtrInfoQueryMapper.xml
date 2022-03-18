@@ -73,14 +73,36 @@
         termDays,
         round(decode(btm.OUTPUT_VALUE_1,#{busiTypePosition02},decode(ETR_ENTRUST_ADD.CALCULATE_FIELD,'price',ETR_ENTRUST.PRICE,'exerYield',ETR_ENTRUST_ADD.EXER_YIELD*100,'matureYield',ETR_ENTRUST_ADD.MATURE_YIELD*100),#{busiTypePosition03},ETR_ENTRUST.PRICE,NVL(ETR_ENTRUST.PRICE,
         0.00)),4) etrPrice,
-        DECODE(T5.ent_finish_amt,null,0,
-        round(NVL(T5.ent_finish_amt,0)*100/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100) exeProgress,
-        DECODE(T5.FINISH_AMT,null,0,
-        round(NVL(T5.FINISH_AMT,0)*100/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100) dealProgress,
-        NVL(T5.ent_finish_amt,0)/100 as execFinishAmt,
-        (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.ent_finish_amt,0)/100) as execRemainderAmt,
-        NVL(T5.FINISH_AMT,0)/100 as transFinishAmt,
-        (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.FINISH_AMT,0)/100) as transRemainderAmt,
+        CASE
+
+        WHEN ETR_ENTRUST_ADD.TARGET_TYPE = '01' THEN
+        ROUND( decode(nvl( T5.ORDER_FINISH_AMT, 0 ),0,0, nvl( T5.ORDER_FINISH_AMT, 0 )/ nvl( ETR_ENTRUST.ENTRUST_NUM, 1 )), 4 )*100 ELSE ROUND( nvl( T5.ORDER_FINISH_AMT, 0 ) / nvl( ETR_ENTRUST.ENTRUST_AMT, 1 ), 4 )*100
+        END AS exeProgress,
+        CASE
+
+        WHEN ETR_ENTRUST_ADD.TARGET_TYPE = '01' THEN
+        ROUND( decode(nvl( T5.ENT_FINISH_AMT, 0 ),0,0, nvl( T5.ENT_FINISH_AMT, 0 )/ nvl( ETR_ENTRUST.ENTRUST_NUM, 1 )), 4 )*100 ELSE ROUND( nvl( T5.ENT_FINISH_AMT, 0 ) / nvl( ETR_ENTRUST.ENTRUST_AMT, 1 ), 4 ) *100
+        END AS dealProgress,
+        CASE
+
+        WHEN etr_entrust_add.TARGET_TYPE = '01' THEN
+        ROUND( nvl( T5.ORDER_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( T5.ORDER_FINISH_AMT, 0 ), 4 )
+        END AS execFinishAmt,
+        CASE
+
+        WHEN etr_entrust_add.TARGET_TYPE = '01' THEN
+        ROUND( nvl( etr_entrust.ENTRUST_NUM, 0 ) - nvl( T5.ORDER_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( etr_entrust.ENTRUST_NUM, 0 ) - nvl( T5.ORDER_FINISH_AMT, 0 ), 4 )
+        END AS execRemainderAmt,
+        CASE
+
+        WHEN etr_entrust_add.TARGET_TYPE = '01' THEN
+        ROUND( nvl( T5.ENT_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( T5.ENT_FINISH_AMT, 0 ), 4 )
+        END AS transFinishAmt,
+        CASE
+
+        WHEN etr_entrust_add.TARGET_TYPE = '01' THEN
+        ROUND( nvl( etr_entrust.ENTRUST_NUM, 0 ) - nvl( T5.ENT_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( etr_entrust.ENTRUST_NUM, 0 ) - nvl( T5.ENT_FINISH_AMT, 0 ), 4 )
+        END AS transRemainderAmt,
         to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi:ss') transmitTime,
         to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi') transmitTimeSer,
         ETR_ENTRUST.PRICE_MODEL priceModel,
@@ -124,18 +146,7 @@
         LEFT JOIN (SELECT listagg(BID_PRICE, ',') within group (order by BID_PRICE) BID_PRICE,
         ENTRUST_ID as ENTRUST_ID FROM ETR_ENTRUST_BID_PRICE GROUP BY ENTRUST_ID) EEBP
         ON EEBP.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
-        LEFT JOIN
-        (
-        SELECT
-        ENTRUST_ID,
-        SUM(FINISH_AMT) as FINISH_AMT,SUM(Ent_Finish_Amt) as Ent_Finish_Amt
-        FROM
-        ETR_FINISH_STATUS
-        where ENTRUST_ID = TRADE_ID
-        GROUP BY
-        ENTRUST_ID) T5
-        ON
-        ETR_ENTRUST.ENTRUST_ID = T5.ENTRUST_ID
+        LEFT JOIN ETR_FINISH_STATUS T5 ON T5.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID AND ETR_ENTRUST.ENTRUST_ID = T5.TRADE_ID
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON ETR_ENTRUST_ADD.SEC_ACCT_ID = ssai.SEC_ACCT_ID
         LEFT JOIN ( SELECT DISTINCT ACCT_NO acctNo1, BUSI_ACCT_NO busiAcctNo1, CCY ccy, ACCT_NAME acctName FROM
         STL_CAPACCT_INFO ) c1 ON ssai.TRD_ACCT_ID = c1.acctNo1
@@ -287,14 +298,36 @@
         termDays,
         round(decode(btm.OUTPUT_VALUE_1,#{busiTypePosition02},decode(WFL_ETR_ENTRUST_ADD.CALCULATE_FIELD,'price',WFL_ETR_ENTRUST.PRICE,'exerYield',WFL_ETR_ENTRUST_ADD.EXER_YIELD*100,'matureYield',WFL_ETR_ENTRUST_ADD.MATURE_YIELD*100),#{busiTypePosition03},WFL_ETR_ENTRUST.PRICE,NVL(WFL_ETR_ENTRUST.PRICE,
         0.00)),4) etrPrice,
-        DECODE(T5.ent_finish_amt,null,0,
-        round(NVL(T5.ent_finish_amt,0)*100/(WFL_ETR_ENTRUST.ENTRUST_NUM*100),4)*100) exeProgress,
-        DECODE(T5.FINISH_AMT,null,0,
-        round(NVL(T5.FINISH_AMT,0)*100/(WFL_ETR_ENTRUST.ENTRUST_NUM*100),4)*100) dealProgress,
-        NVL(T5.ent_finish_amt,0)/100 as execFinishAmt,
-        (NVL(WFL_ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.ent_finish_amt,0)/100) as execRemainderAmt,
-        NVL(T5.FINISH_AMT,0)/100 as transFinishAmt,
-        (NVL(WFL_ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.FINISH_AMT,0)/100) as transRemainderAmt,
+        CASE
+
+        WHEN WFL_ETR_ENTRUST_ADD.TARGET_TYPE = '01' THEN
+        ROUND( decode(nvl( T5.ORDER_FINISH_AMT, 0 ), 0, 0,  nvl( T5.ORDER_FINISH_AMT, 0 )/ nvl( WFL_ETR_ENTRUST.ENTRUST_NUM, 1 )), 4 )*100 ELSE ROUND( nvl( T5.ORDER_FINISH_AMT, 0 ) / nvl( WFL_ETR_ENTRUST.ENTRUST_AMT, 1 ), 4 )*100
+        END AS exeProgress,
+        CASE
+
+        WHEN WFL_ETR_ENTRUST_ADD.TARGET_TYPE = '01' THEN
+        ROUND( decode(nvl( T5.ENT_FINISH_AMT, 0 ), 0, 0,  nvl( T5.ENT_FINISH_AMT, 0 )/ nvl( WFL_ETR_ENTRUST.ENTRUST_NUM, 1 )), 4 )*100 ELSE ROUND( nvl( T5.ENT_FINISH_AMT, 0 ) / nvl( WFL_ETR_ENTRUST.ENTRUST_AMT, 1 ), 4 )*100
+        END AS dealProgress,
+        CASE
+
+        WHEN WFL_ETR_ENTRUST_ADD.TARGET_TYPE = '01' THEN
+        ROUND( nvl( T5.ORDER_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( T5.ORDER_FINISH_AMT, 0 ), 4 )
+        END AS execFinishAmt,
+        CASE
+
+        WHEN WFL_ETR_ENTRUST_ADD.TARGET_TYPE = '01' THEN
+        ROUND( nvl( WFL_ETR_ENTRUST.ENTRUST_NUM, 0 ) - nvl( T5.ORDER_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( WFL_ETR_ENTRUST.ENTRUST_NUM, 0 ) - nvl( T5.ORDER_FINISH_AMT, 0 ), 4 )
+        END AS execRemainderAmt,
+        CASE
+
+        WHEN WFL_ETR_ENTRUST_ADD.TARGET_TYPE = '01' THEN
+        ROUND( nvl( T5.ENT_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( T5.ENT_FINISH_AMT, 0 ), 4 )
+        END AS transFinishAmt,
+        CASE
+
+        WHEN WFL_ETR_ENTRUST_ADD.TARGET_TYPE = '01' THEN
+        ROUND( nvl( WFL_ETR_ENTRUST.ENTRUST_NUM, 0 ) - nvl( T5.ENT_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( WFL_ETR_ENTRUST.ENTRUST_NUM, 0 ) - nvl( T5.ENT_FINISH_AMT, 0 ), 4 )
+        END AS transRemainderAmt,
         NULL transmitTime,
         NULL transmitTimeSer,
         WFL_ETR_ENTRUST.PRICE_MODEL priceModel,
@@ -341,18 +374,8 @@
         LEFT JOIN (SELECT listagg(BID_PRICE, ',') within group (order by BID_PRICE) BID_PRICE,
         ENTRUST_ID as ENTRUST_ID FROM ETR_ENTRUST_BID_PRICE GROUP BY ENTRUST_ID) EEBP
         ON EEBP.ENTRUST_ID = WFL_ETR_ENTRUST.ENTRUST_ID
-        LEFT JOIN
-        (
-        SELECT
-        ENTRUST_ID,
-        SUM(FINISH_AMT) as FINISH_AMT,SUM(Ent_Finish_Amt) as Ent_Finish_Amt
-        FROM
-        ETR_FINISH_STATUS
-        where ENTRUST_ID = TRADE_ID
-        GROUP BY
-        ENTRUST_ID) T5
-        ON
-        WFL_ETR_ENTRUST.ENTRUST_ID = T5.ENTRUST_ID
+        LEFT JOIN ETR_FINISH_STATUS T5 ON T5.ENTRUST_ID = WFL_ETR_ENTRUST.ENTRUST_ID
+        AND WFL_ETR_ENTRUST.ENTRUST_ID = T5.TRADE_ID
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON WFL_ETR_ENTRUST_ADD.SEC_ACCT_ID = ssai.SEC_ACCT_ID
         LEFT JOIN ( SELECT DISTINCT ACCT_NO acctNo1, BUSI_ACCT_NO busiAcctNo1, CCY ccy, ACCT_NAME acctName FROM
         STL_CAPACCT_INFO ) c1 ON ssai.TRD_ACCT_ID = c1.acctNo1
