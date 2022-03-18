@@ -481,12 +481,12 @@ public class StlDataDealSzdSjsmxProcessService {
                 settleTransData.setFinprodType(DictCodeListExt1.金融产品类型_债券质押式逆回购.getValue());
                 // GNS-889:查询首期的成交日期作为到期起息日 modify by fuyongsheng 20220220 start
                 // 起息日
-                // settleTransData.setVdate(DateUtil.parse(szdSjsmx.getMxqtrq()));
-                List<SettleTransData> sqSettleTransDatas = stlDownDataDealMapper.selectSqSettleTransDatas(
-                        settleTransData.getApplyTradeId(), settleTransData.getSeatNumber(), settleTransData.getSecAcctId());
-                if(CollectionUtils.isNotEmpty(sqSettleTransDatas)){
-                    settleTransData.setVdate(sqSettleTransDatas.get(0).getVdate());
-                }
+                settleTransData.setVdate(DateUtil.parse(szdSjsmx.getMxqtrq()));
+//                List<SettleTransData> sqSettleTransDatas = stlDownDataDealMapper.selectSqSettleTransDatas(
+//                        settleTransData.getApplyTradeId(), settleTransData.getSeatNumber(), settleTransData.getSecAcctId());
+//                if(CollectionUtils.isNotEmpty(sqSettleTransDatas)){
+//                    settleTransData.setVdate(sqSettleTransDatas.get(0).getVdate());
+//                }
                 // GNS-889:查询首期的成交日期作为到期起息日 modify by fuyongsheng 20220220 end
                 // 到期日
                 settleTransData.setMdate(DateUtil.parse(szdSjsmx.getMxcjrq()));

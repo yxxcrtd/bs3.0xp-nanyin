@@ -71,11 +71,9 @@ public class PositionRequestTradeRestService {
         if(DictCodeListExt1.交易流程状态_撤销.getValue().equals(finProductTradeDto.getWorkflowStatus())){
             this.revoke(finProductTradeDto);
         }else if(DictCodeListExt1.交易流程状态_有效.getValue().equals(finProductTradeDto.getWorkflowStatus())){
-            Map<String, Object> resultMap = new HashMap<>();
             for (BaseTradeProductDealDto entity:finProductTradeDto.getBaseTradeProductDealDtos()) {
                 this.sendPositionHttpRequest(entity);
             }
-            PositionHttpRequest.send(resultMap);
         }
 
     }
@@ -102,6 +100,7 @@ public class PositionRequestTradeRestService {
      * @param entity
      */
     public void sendPositionHttpRequest(BaseTradeProductDealDto entity) {
+        logger.debug("【发送存续期头寸请求】trdTempDto: {}", JSON.toJSONString(entity));
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("decisionAct", DictCodeListExt3.系统动作_新建.getValue());
         resultMap.put("systemAct", DictCodeListExt3.系统动作_新建.getValue());
@@ -111,8 +110,10 @@ public class PositionRequestTradeRestService {
         if (DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue().equals(type6)) {
             finprodType += "-" + type6;
         }
+        logger.debug("【存续期查询头寸接口参数】finprodType:{},ps:{}", finprodType, entity.getTrdProductDeal().getPs());
         String interType = commonPositionEngineService.getPositionInterType(PositionConstant.POSITION_TYPE_TRD, TRADE_PLAT,
                 finprodType, entity.getTrdProductDeal().getPs(), DictCodeListExt3.业务动作_成交匹配.getValue(), entity.getClass().getName());
+        logger.debug("【存续期查询头寸接口结果】interType:{}", interType);
         if (PositionConstant.INTERF_TYPE_FUND001.equals(interType)) {
             this.fund001(entity, resultMap);
         } else if (PositionConstant.INTERF_TYPE_STOCK001.equals(interType)) {
@@ -270,13 +271,9 @@ public class PositionRequestTradeRestService {
      * @param resultMap 封装集合
      */
     private void setCommonField(BaseTradeProductDealDto entity, Map<String, Object> resultMap) {
-        String balanceCheck = "Y";
-        if (StringUtil.isNotEmpty(entity.getSoftSkipMode()) && StringUtil.equals(entity.getSoftSkipMode(), "Y")) {
-            balanceCheck = "N";
-        }
         resultMap.put("userId", SecurityUtil.getLoginUser() != null ? SecurityUtil.getLoginUser().getUserName() : "system");
         resultMap.put("totalTradeId", entity.getTrdProductDeal().getTradeId());
-        resultMap.put("balanceCheck", balanceCheck);
+        resultMap.put("balanceCheck", "N");
         resultMap.put("flowStatus", DictCodeListExt3.流程节点_审批生效.getValue());
         resultMap.put("modelType", DictCodeListExt1.子系统代码_交易.getValue());
         //设置头寸业务类型
@@ -316,7 +313,7 @@ public class PositionRequestTradeRestService {
         List<StlPayOrdersDto> stlPayOrdersList = entity.getStlPayOrdersList();
         resultMap.put("interfaceType", INTERF_TYPE_REPO003);
         // 业务类型
-        resultMap.put("busiType", DictCodeListExt3.头寸业务类型_质押式回购到期.getValue());
+        resultMap.put("busiType", DictCodeListExt3.头寸业务类型_通用回购到期.getValue());
         // 业务动作
         resultMap.put("busiAct", DictCodeListExt3.业务动作_成交匹配.getValue());
         if(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(trdProductDeal.getFinprodType2())){
@@ -333,7 +330,6 @@ public class PositionRequestTradeRestService {
         resultMap.put("workFlowId", null);
         resultMap.put("cdate", trdProductDeal.getTradeDate());
         resultMap.put("ccy", trdProductDeal.getCcy());
-        resultMap.put("totalTradeId", null);
         resultMap.put("bTotalTradeId", null);
 
         List<Map<String, Object>> ptlList = new ArrayList<>(4);
