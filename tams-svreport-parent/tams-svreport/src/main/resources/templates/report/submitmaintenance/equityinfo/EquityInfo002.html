@@ -13,6 +13,14 @@
     <input hidden type="text" id="orgCode" data-th-value="${entity?.orgCode}" style="display:none;">
     <div class="layui-form-item">
       <div class="layui-inline layui-col-md6">
+        <label class="layui-form-label form-lable">登记银行代码</label>
+        <div class="layui-input-inline input-inline">
+          <input type="text" id="registBankCode"  class="layui-input form-input" data-th-value="${entity?.bankCode}?:${registBankCode}" disabled>
+        </div>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-inline layui-col-md6">
         <label class="layui-form-label form-lable">识别标识</label>
         <div class="layui-input-inline input-inline">
           <input type="text" id="indentifyMark" name="indentifyMark" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.indentifyMark}" required>
@@ -77,21 +85,15 @@
       <div class="layui-inline layui-col-md6">
         <label class="layui-form-label form-lable">个人证件类别</label>
         <div class="layui-input-inline input-inline">
-        
-        	<select id="personalIdentifyType" name="personalIdentifyType" class="layui-input form-input input-select" data-th-formatoption="false"
-                          placeholder="请输入内容" data-th-initValue="${entity?.personalIdentifyType}"  data-th-data-result='${PERSONAL_IDENTIFY_TYPE}' required>
-                        </select>
-        
-            </div>
+          <input type="text" id="personalIdentifyType" name="personalIdentifyType" class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-initValue="${entity?.personalIdentifyType}"  data-th-data-result='${PERSONAL_IDENTIFY_TYPE}' required>
+        </div>
       </div>
       </div>
       <div class="layui-form-item">
       <div class="layui-inline layui-col-md6">
         <label class="layui-form-label form-lable">机构证件类别</label>
         <div class="layui-input-inline input-inline">
-        <select id="institutionIdentifyType" name="institutionIdentifyType" class="layui-input form-input input-select" data-th-formatoption="false"
-                         placeholder="请输入内容"  data-th-initValue="${entity?.institutionIdentifyType}"  data-th-data-result='${INSTITUTION_IDENTIFY_TYPE}' required>
-                        </select>
+          <input type="text" id="institutionIdentifyType" name="institutionIdentifyType" class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-initValue="${entity?.institutionIdentifyType}"  data-th-data-result='${INSTITUTION_IDENTIFY_TYPE}' required>
           </div>
       </div>
       <div class="layui-inline layui-col-md6">
