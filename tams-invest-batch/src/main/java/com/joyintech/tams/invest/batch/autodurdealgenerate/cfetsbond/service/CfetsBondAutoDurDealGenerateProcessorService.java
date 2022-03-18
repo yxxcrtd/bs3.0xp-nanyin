@@ -302,6 +302,9 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
         BigDecimal intAmt = ArithmeticUtil.divide(ArithmeticUtil.multiply(regFinProductDealTotal.getFaceValue(),regFinProductDealTotal.getRedeemRate(),regFinProductDealTotal.getIntAmt()),new BigDecimal(100),2) ;
         //赎回金额计算：默认等于净价总额+应计利息总额；
         BigDecimal tradeAmt = ArithmeticUtil.doAdd(cpriceAmt,intAmt);
+        //乘赎回比例
+        BigDecimal shareAmt = ArithmeticUtil.multiply(regFinProductDealTotal.getShareAmt(),regFinProductDealTotal.getRedeemRate());
+
         BeanUtil.copyPropertiesIgnoreNull(trdFinProductDealTotal, regFinProductDealTotal);
         trdFinProductDealTotal.setTotleTradeId(busiCode);
         trdFinProductDealTotal.setBusiType(DictCodeList.共通业务类型_债券类资产存续期.getValue());
@@ -316,7 +319,7 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
       //  trdFinProductDealTotal.setMdate(DateUtil.parse(entity.getmDate()));
         //trdFinProductDealTotal.setSettleDate(DateUtil.parse(DateUtil.format(batchDate)));
         trdFinProductDealTotal.setSettleDate(regFinProductDealTotal.getActExerciseDate());
-        trdFinProductDealTotal.setShareAmt(regFinProductDealTotal.getShareAmt());
+        trdFinProductDealTotal.setShareAmt(shareAmt);
        // trdFinProductDealTotal.setPortfolioId(entity.getPortfolioId());
         trdFinProductDealTotal.setCpriceAmt(cpriceAmt);
         trdFinProductDealTotal.setPrinAmt(cpriceAmt);
@@ -367,7 +370,7 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
           //  trdProductDeal.setVdate(DateUtil.parse(entity.getvDate()));
            // trdProductDeal.setMdate(DateUtil.parse(entity.getmDate()));
             trdProductDeal.setCcy(regFinProductDealTotal.getCcy());
-            trdProductDeal.setShareAmt(regFinProductDeal.getShareAmt());
+            trdProductDeal.setShareAmt(ArithmeticUtil.multiply(regFinProductDeal.getShareAmt(),regFinProductDealTotal.getRedeemRate()));
             trdProductDeal.setIntAmt(regFinProductDeal.getIntAmt());
             trdProductDeal.setPrinAmt(regFinProductDeal.getCpriceAmt());
             trdProductDeal.setFpriceAmt(regFinProductDeal.getTradeAmt());
