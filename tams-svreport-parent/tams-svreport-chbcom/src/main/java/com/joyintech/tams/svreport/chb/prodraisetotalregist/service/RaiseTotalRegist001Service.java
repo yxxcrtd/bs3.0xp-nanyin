@@ -253,18 +253,18 @@ public class RaiseTotalRegist001Service extends SvrCommonExportService<RaiseTota
 		dealSearchParam(pageParam);
 		//无查询参数的情况
 		exportParam.config("/com/joyintech/tams/svreport/chb/prodraisetotalregist/conf/export_conf.xml")
-		.select(() -> raiseTotalRegist001Mapper.selectAllData(pageParam));
+		.select(() -> raiseTotalRegist001Mapper.selectAllDataForExport(pageParam));
 
 	}
     public List<RaiseTotalRegist001Dto> selectAllData(Map<String, Object> pageParam){
-        return raiseTotalRegist001Mapper.selectAllData(pageParam);
+        return raiseTotalRegist001Mapper.selectAllDataForExport(pageParam);
     }
     @Override
-    public com.joyintech.framework.grid.Page<RaiseTotalRegist001Dto> selectPageData(Map<String, Object> pageParam) {
+    public Page<RaiseTotalRegist001Dto> selectPageData(Map<String, Object> pageParam) {
         List<RaiseTotalRegist001Dto> data = restTemplate.postForList(
                     SvrServiceApplication.CHB_SERVICE_NAME + "/RaiseTotalRegist/selectAllData",pageParam,
                     RaiseTotalRegist001Dto.class);
-        com.joyintech.framework.grid.Page<RaiseTotalRegist001Dto> page = new com.joyintech.framework.grid.Page<RaiseTotalRegist001Dto>();
+        Page<RaiseTotalRegist001Dto> page = new Page<RaiseTotalRegist001Dto>();
         page.setRoot(data);
         //page.setTotal(data.size());
 		if(!CollectionUtils.isEmpty(page.getRoot())){
