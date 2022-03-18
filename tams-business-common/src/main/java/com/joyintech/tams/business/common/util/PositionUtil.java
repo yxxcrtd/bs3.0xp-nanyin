@@ -30,7 +30,7 @@ import java.util.Map;
 public class PositionUtil {
 
     private static Logger logger = LoggerFactory.getLogger(PositionUtil.class);
-    
+
     private static PtlPortfolioMapper ptlPortfolioMapper;
 
     private static CashPositionService cashPositionService;
@@ -75,46 +75,43 @@ public class PositionUtil {
                     // 头寸返回对象
                     BaseMap data = JsonUtils.json2Object(arr[1], BaseMap.class);
 
-                    // modify by etliu 20220316 start
-//                    StringBuffer strb = null;
-//                    Map responseMap_data = (Map) data.get("data");
-//                    if (responseMap_data != null){
-//                        strb = new StringBuffer("当前【\n");
-//                        List checkResults = (List) responseMap_data.get("checkResults");
-//                        if (checkResults != null) {
-//                            for (int i=0; i<checkResults.size();i++){
-//                                BaseMap flow = BaseMap.newMap((Map) checkResults.get(i));
-//                                BigDecimal CHECKBALANCE = flow.getBigDecimal("CHECKBALANCE");
-//                                String PORTFOLIO_ID = flow.getString("PORTFOLIO_ID");
-//                                String HODING_TYPE = flow.getString("HODING_TYPE");
-//                                PtlPortfolio obj = ptlPortfolioMapper.selectByPrimaryKey(PORTFOLIO_ID);
-//                                String portfolioName = "";
-//                                if (obj != null) {
-//                                    portfolioName = obj.getPortfolioName();
-//                                }else{
-//                                    portfolioName=PORTFOLIO_ID;
-//                                }
-//                                strb.append(PORTFOLIO_ID);
-//                                strb.append("(");
-//                                strb.append(portfolioName);
-//                                strb.append(")余额为");
+                    StringBuffer strb = null;
+                    Map responseMap_data = (Map) data.get("data");
+                    if (responseMap_data != null){
+                        strb = new StringBuffer("【\n");
+                        List checkResults = (List) responseMap_data.get("checkResults");
+                        if (checkResults != null) {
+                            for (int i=0; i<checkResults.size();i++){
+                                BaseMap flow = BaseMap.newMap((Map) checkResults.get(i));
+                                BigDecimal CHECKBALANCE = flow.getBigDecimal("CHECKBALANCE");
+                                String PORTFOLIO_ID = flow.getString("PORTFOLIO_ID");
+                                String HODING_TYPE = flow.getString("HODING_TYPE");
+                                PtlPortfolio obj = ptlPortfolioMapper.selectByPrimaryKey(PORTFOLIO_ID);
+                                String portfolioName = "";
+                                if (obj != null) {
+                                    portfolioName = obj.getPortfolioName();
+                                }else{
+                                    portfolioName=PORTFOLIO_ID;
+                                }
+                                strb.append(PORTFOLIO_ID);
+                                strb.append("(");
+                                strb.append(portfolioName);
+                                strb.append(")");
 //                                strb.append(CHECKBALANCE.toPlainString());
-//                                strb.append("元【");
-//                                strb.append(SysDataUtil.getNameFromDataDict(DictCode.头寸资产类型, HODING_TYPE));
-//                                if ((i+1) == checkResults.size()){
-//                                    strb.append("】不足\n");
-//                                }else{
-//                                    strb.append("】不足、\n");
-//                                }
-//                            }
-//                        }
-//                    }
-                    StringBuffer strb = new StringBuffer("");
-                    strb.append(data.get("message"));
-                    // modify by etliu 20220316 end
+                                strb.append("【");
+                                strb.append(SysDataUtil.getNameFromDataDict(DictCode.头寸资产类型, HODING_TYPE));
+                                strb.append("】余额不足，当前余额为：").append(CHECKBALANCE.toPlainString());
+                                if ((i+1) == checkResults.size()){
+                                    strb.append("\n");
+                                }else{
+                                    strb.append("；\n");
+                                }
+                            }
+                        }
+                    }
 
                     if (StringUtil.equals(PositionHttpRequest.CODE_BUSI_RK, arr[0])){
-                        strb.append("，请确认是否继续？");
+                        strb.append("】，请确认是否继续？");
                         /**
                          * 余额不足，软控确认
                          */
@@ -124,7 +121,7 @@ public class PositionUtil {
                                 .put("data", data);
                         return new Message().success().setData(bm);
                     }else {
-                        strb.append("");
+                        strb.append("】");
                         /**
                          * 余额不足，硬控提示
                          */
@@ -254,3 +251,4 @@ public class PositionUtil {
         PositionUtil.iPlatformDate = iPlatformDate;
     }
 }
+
