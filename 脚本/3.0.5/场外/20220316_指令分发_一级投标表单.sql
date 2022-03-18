@@ -37,12 +37,12 @@ INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME
 
 -- 投标券面总额汇总
 delete from CFG_READONLY_FORM_SHOW where PAGECODE='CfetsEtrDispatcher' and DTCODE='CfetsEtrDispatcherInfo' and SPCDCODE='01,A';
-INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, EXTENDCFG, STATUS, REMARK1, REMARK2, REMARK3) VALUES ('CfetsEtrDispatcher', 'CfetsEtrDispatcherInfo', '01,A', 'entrustNum', '投标券面总额汇总', null, 1, '{"colAlign": "left","dataType":"amount","precision":"2","unit":"wanYuan"}', 1, 0, null, null);
+INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, EXTENDCFG, STATUS, REMARK1, REMARK2, REMARK3) VALUES ('CfetsEtrDispatcher', 'CfetsEtrDispatcherInfo', '01,A', 'entrustNum', '投标券面总额汇总', null, 1, '{"colAlign": "left","dataType":"amount","precision":"4","unit":"wanYuan"}', 1, 0, null, null);
 
 -- 投标标位
 delete from CFG_DATATABLE_SHOW where PAGECODE='CfetsEtrDispatcher' and DTCODE='CfetsEtrDispatcherInfo' and SPCDCODE='01';
 INSERT INTO CFG_DATATABLE_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, ISKEY) VALUES ('CfetsEtrDispatcher', 'CfetsEtrDispatcherInfo', '01', 'bidPrice', '投标标位(%)', null, 9, 1, 0, 0, 100, '{"colAlign": "left","dataType":"amount","precision":"2"}', 0, 'COMM', 1, 0, null, null, 0);
-INSERT INTO CFG_DATATABLE_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, ISKEY) VALUES ('CfetsEtrDispatcher', 'CfetsEtrDispatcherInfo', '01', 'bidPrinAmt', '投标券面总额(万元)', null, 10, 1, 0, 0, 100, '{"colAlign": "left","dataType":"amount","precision":"2"}', 0, 'COMM', 1, 0, null, null, 0);
+INSERT INTO CFG_DATATABLE_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, ISKEY) VALUES ('CfetsEtrDispatcher', 'CfetsEtrDispatcherInfo', '01', 'bidPrinAmt', '投标券面总额(万元)', null, 10, 1, 0, 0, 100, '{"colAlign": "left","dataType":"amount","precision":"4"}', 0, 'COMM', 1, 0, null, null, 0);
 
 -- 指令投资人员信息
 delete from CFG_READONLY_FORM_SHOW where PAGECODE='CfetsEtrDispatcher' and DTCODE='CfetsEtrDispatcherInfo' and SPCDCODE='01,P';
