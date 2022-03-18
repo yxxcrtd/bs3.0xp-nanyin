@@ -374,6 +374,8 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
      */
     @Override
     public void doInsert(CfetsBondDealRegisterQuoteDto entity,OperationType type){
+        //履历表
+        updateCfetsOprHis(entity.getTotleTradeId(),type);
         if ("save".equals(entity.getOperatorType())) {
             return;
         }
@@ -473,8 +475,6 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         deleteBussFlowData(entity.getWorkflowId());
         //登录db
         insert(cfetsBondDealDbDto,operationType);
-        //履历表
-        updateCfetsOprHis(entity.getTotleTradeId(),operationType);
         //头寸
         try{
             if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {

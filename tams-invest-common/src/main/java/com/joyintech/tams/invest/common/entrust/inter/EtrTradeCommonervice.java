@@ -704,7 +704,8 @@ public class EtrTradeCommonervice extends BaseService {
                     //交易端接口没有tradePlat,通过ps区分
                     if (DictCodeListExt3.交易方向_债转股.getValue().equals(dto.getPs()) || DictCodeListExt3.交易方向_配债.getValue().equals(dto.getPs())
                             || DictCodeListExt3.交易方向_质押券入库.getValue().equals(dto.getPs()) || DictCodeListExt3.交易方向_质押券出库.getValue().equals(dto.getPs())
-                            ||  DictCodeList.交易方向_行权_回售.getValue().equals(dto.getPs())) {
+                            ||  DictCodeList.交易方向_行权_回售.getValue().equals(dto.getPs())||  DictCodeList.交易方向_申购.getValue().equals(dto.getPs())
+                            ) {
                         dto.setTradePlat(TempConstant.NO_TRADE_BUSINESS_ETR);
                     }
                     if(StringUtil.equals(DictCodeList.是否_是.getValue(),isNetSett)

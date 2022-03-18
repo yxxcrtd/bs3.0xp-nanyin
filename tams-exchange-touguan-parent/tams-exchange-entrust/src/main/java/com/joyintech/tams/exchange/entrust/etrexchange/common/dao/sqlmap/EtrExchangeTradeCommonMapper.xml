@@ -8,13 +8,18 @@
         T1.ENTRUST_ID entrustId
         ,T1.ENTRUST_STATUS entrustStatus,
         CASE
-        WHEN T2.TARGET_TYPE = '01' THEN
-        ROUND( nvl( T4.ORDER_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_NUM, 1 ), 4 ) ELSE ROUND( nvl( T4.ORDER_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_AMT, 1 ), 4 )
+        WHEN T2.TARGET_TYPE = '01' AND T1.ENTRUST_NUM!=0 THEN
+        ROUND( nvl( T4.ORDER_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_NUM, 1 ), 4 )
+        WHEN T2.TARGET_TYPE = '01' AND T1.ENTRUST_NUM=0 THEN 0
+        WHEN T2.TARGET_TYPE = '02' AND T1.ENTRUST_AMT=0 THEN 0
+        ELSE ROUND( nvl( T4.ORDER_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_AMT, 1 ), 4 )
         END AS implementPercent,
         CASE
-
-        WHEN T2.TARGET_TYPE = '01' THEN
-        ROUND( nvl( T4.ENT_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_NUM, 1 ), 4 ) ELSE ROUND( nvl( T4.ENT_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_AMT, 1 ), 4 )
+        WHEN T2.TARGET_TYPE = '01' AND T1.ENTRUST_NUM!=0 THEN
+        ROUND( nvl( T4.ENT_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_NUM, 1 ), 4 )
+        WHEN T2.TARGET_TYPE = '01' AND T1.ENTRUST_NUM=0 THEN 0
+        WHEN T2.TARGET_TYPE = '02' AND T1.ENTRUST_AMT=0 THEN 0
+        ELSE ROUND( nvl( T4.ENT_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_AMT, 1 ), 4 )
         END AS dealPercentAge,
         CASE
         WHEN T2.TARGET_TYPE = '01' THEN
@@ -154,12 +159,18 @@
         T1.ENTRUST_ID entrustId
         ,T1.ENTRUST_STATUS entrustStatus,
         CASE
-        WHEN T2.TARGET_TYPE = '01' THEN
-        ROUND( nvl( T4.ORDER_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_NUM, 1 ), 4 ) ELSE ROUND( nvl( T4.ORDER_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_AMT, 1 ), 4 )
+        WHEN T2.TARGET_TYPE = '01' AND T1.ENTRUST_NUM!=0 THEN
+        ROUND( nvl( T4.ORDER_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_NUM, 1 ), 4 )
+        WHEN T2.TARGET_TYPE = '01' AND T1.ENTRUST_NUM=0 THEN 0
+        WHEN T2.TARGET_TYPE = '02' AND T1.ENTRUST_AMT=0 THEN 0
+        ELSE ROUND( nvl( T4.ORDER_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_AMT, 1 ), 4 )
         END AS implementPercent,
         CASE
-        WHEN T2.TARGET_TYPE = '01' THEN
-        ROUND( nvl( T4.ENT_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_NUM, 1 ), 4 ) ELSE ROUND( nvl( T4.ENT_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_AMT, 1 ), 4 )
+        WHEN T2.TARGET_TYPE = '01' AND T1.ENTRUST_NUM!=0 THEN
+        ROUND( nvl( T4.ENT_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_NUM, 1 ), 4 )
+        WHEN T2.TARGET_TYPE = '01' AND T1.ENTRUST_NUM=0 THEN 0
+        WHEN T2.TARGET_TYPE = '02' AND T1.ENTRUST_AMT=0 THEN 0
+        ELSE ROUND( nvl( T4.ENT_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_AMT, 1 ), 4 )
         END AS dealPercentAge,
         CASE
         WHEN T2.TARGET_TYPE = '01' THEN
