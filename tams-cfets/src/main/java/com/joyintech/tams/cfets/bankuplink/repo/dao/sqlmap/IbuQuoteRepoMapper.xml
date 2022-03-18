@@ -676,7 +676,7 @@
             from (
                      select ep.ENTRUST_ID
                            ,ep.FINPROD_ID
-                           ,( ep.PLEDGE_NUMBER - wrfp.PLEDGE_NUMBER - rfp.PLEDGE_NUMBER) PLEDGE_NUMBER
+                           ,(nvl(ep.PLEDGE_NUMBER,0) - nvl(wrfp.PLEDGE_NUMBER,0) - nvl(rfp.PLEDGE_NUMBER,0)) PLEDGE_NUMBER
                            ,ep.PLEDGE_RATIO
                      from ETR_PLEDGE ep
                      left join WFL_REG_FIN_PLEDGE wrfp
@@ -1327,7 +1327,7 @@
    </select>
 
     <select id="findEtrPrinByEtrIds" resultType="com.joyintech.tams.cfets.bankuplink.repo.dto.RepoEntrustPledgeDto">
-        select ENTRUST_ID entrustId, FINPROD_ID finprodId, sum(PLEDGE_NUMBER*100) avaPledgePrin
+        select ENTRUST_ID entrustId, FINPROD_ID finprodId, sum(PLEDGE_NUMBER) avaPledgePrin
         from (
                  select ENTRUST_ID, FINPROD_ID, PLEDGE_NUMBER
                  from ETR_PLEDGE ep
