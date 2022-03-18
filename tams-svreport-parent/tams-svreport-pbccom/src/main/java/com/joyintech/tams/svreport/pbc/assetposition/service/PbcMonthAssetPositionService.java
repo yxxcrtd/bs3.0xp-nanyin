@@ -130,8 +130,10 @@ public class PbcMonthAssetPositionService  extends BaseService{
         // 登记插入列表
         List<PbcMonthAssetPositionDto> insertDataList = new ArrayList<PbcMonthAssetPositionDto>();
         List<PbcMonthAssetPositionDto> assetPositionList = generateAssetPositionBalanceData(reportEndDate,prodList,assetList);
+        List<PbcMonthAssetPositionDto> assetJZPositionList =generateJZAsset(reportEndDate,prodList,assetList);
         List<PbcMonthAssetPositionDto> varesultPositionList = genAssetPositionFormValution(reportEndDate,prodList,assetList,assetMap);
-        assetPositionList.addAll(varesultPositionList); 
+        assetPositionList.addAll(varesultPositionList);
+        assetPositionList.addAll(assetJZPositionList);
         //从费用头寸表获取数据 add by shaohuchen 20200309 start
         List<PbcMonthAssetPositionDto> prdfeePositionList = genPrdfeePositionData(reportEndDate,prodList,assetList,assetMap);
         if(prdfeePositionList !=null && !prdfeePositionList.isEmpty()){
@@ -193,21 +195,7 @@ public class PbcMonthAssetPositionService  extends BaseService{
     public List<PbcMonthAssetPositionDto> generateAssetPositionBalanceData(Date reportEndDate,List<String> prodList,
                                                                            List<String> assetList){
         List<PbcMonthAssetPositionDto> assetPositionList = new ArrayList<>();
-        List<PbcMonthAssetPositionDto> jzAssetPositionList = new ArrayList<>();
         List<String> subjectNoList = new ArrayList<String>();
-        //需要做特殊处理的减值的二级科目
-        List<String> fSubjectNoList = new ArrayList<String>();
-        fSubjectNoList.add(PbcAssetPositionConstants.JZ_SUBJECTNO_TWO_TYCBNZQ);
-        fSubjectNoList.add(PbcAssetPositionConstants.JZ_SUBJECTNO_TWO_TYCBNJHN);
-        fSubjectNoList.add(PbcAssetPositionConstants.JZ_SUBJECTNO_TWO_MRFSZC);
-        fSubjectNoList.add(PbcAssetPositionConstants.JZ_SUBJECTNO_TWO_CFTY);
-        fSubjectNoList.add(PbcAssetPositionConstants.JZ_SUBJECTNO_TWO_CHFTY);
-
-        //逾期科目
-        //加一个映射
-        List<ChbTypeMappingEx>  yqSubjectNoMappingList = chbTypeMappingExMapper
-                .selectByMappingcode(PbcAssetPositionConstants.MAPPINGCODE_YQSUBJECTNO);
-        List<String> yqSubjectNoList=yqSubjectNoMappingList.stream().map(ChbTypeMappingEx::getObjfield1).collect(Collectors.toList());
 
         // 查询已配置的科目号
         List<ChbTypeMappingEx>  subjectNoMappingList = chbTypeMappingExMapper
@@ -241,96 +229,6 @@ public class PbcMonthAssetPositionService  extends BaseService{
         // 如果有资产代码限制则取综合项，即配置科目号和资产代码同时过滤
         // 查询上游数据
         PbcMonthAssetPositionService pbcAssetPositionInterf =  SpringContextUtil.getBean(PbcMonthAssetPositionService.class);
-
-        //202112人行升级 需要特殊处理的减值
-        if (DictCodeList.是否_中债_是.getValue().equals(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SUB_SYSTEM))){
-            jzAssetPositionList = pbcAssetPositionInterf.queryJZBalanceByInterfdateBatchSubSystem(DateUtil.format(reportEndDate),
-                    prodList,assetList,fSubjectNoList,yqSubjectNoList);
-        } else if (DictCodeList.是否_中债_否.getValue().equals(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SUB_SYSTEM))){
-            jzAssetPositionList = pbcAssetPositionInterf.queryJZBalanceByInterfdateBatch(DateUtil.format(reportEndDate),
-                    prodList,assetList,fSubjectNoList,yqSubjectNoList);
-        } else {
-            logger.error("系统参数中：SVR_IS_SUB_SYSTEM配置错误！");
-        }
-        if (!CollectionUtils.isEmpty(jzAssetPositionList)){
-            for (PbcMonthAssetPositionDto assetPosition: jzAssetPositionList){
-                if(oCCyMap.containsKey(assetPosition.getAssetCode())){
-                    assetPosition.setCcy(assetPosition.getOccy());
-                    assetPosition.setAmt(assetPosition.getOamt());
-                }else{
-                    assetPosition.setCcy(assetPosition.getBccy());
-                    assetPosition.setAmt(assetPosition.getBamt());
-                }
-                assetPosition.setPositionType(PbcAssetPositionConstants.POSITION_TYPE_ZC);
-                if(DictCodeList.是否_中债_否.getValue().equals(assetPosition.getYqFlag())){
-                    //未逾期
-                    if(PbcAssetPositionConstants.JZ_SUBJECTNO_TWO_CFTY.equals(assetPosition.getAssetCode())){
-                        //h51000 存款 取上游系统“130209存放同业减值准备”科目余额非逾期资产
-                        assetPosition.setAssetType1(PbcAssetPositionConstants.PBC_ASSETTYPE1_P14);
-                        assetPosition.setAssetType2(PbcAssetPositionConstants.PBC_ASSETTYPE2_Z01);
-                        assetPosition.setAssetType3(PbcAssetPositionConstants.PBC_ASSETTYPE3_Z01);
-                    }
-                    if(PbcAssetPositionConstants.JZ_SUBJECTNO_TWO_MRFSZC.equals(assetPosition.getAssetCode())
-                            ||PbcAssetPositionConstants.JZ_SUBJECTNO_TWO_CHFTY.equals(assetPosition.getAssetCode())){
-                        //h55000	  回购和拆借	取上游系统“130207买入返售资产减值准备”+“130210拆放同业减值准备”科目余额非逾期资产
-                        assetPosition.setAssetType1(PbcAssetPositionConstants.PBC_ASSETTYPE1_P14);
-                        assetPosition.setAssetType2(PbcAssetPositionConstants.PBC_ASSETTYPE2_Z05);
-                        assetPosition.setAssetType3(PbcAssetPositionConstants.PBC_ASSETTYPE3_Z05);
-                    }
-
-                    if(PbcAssetPositionConstants.JZ_SUBJECTNO_TWO_TYCBNZQ.equals(assetPosition.getAssetCode())&&
-                            DictCodeListExt3.人行资产一级分类_债务证券.getValue().equals(assetPosition.getAssetType1())){
-                        //债务证券 上游系统三级科目为“130201摊余成本类债券减值准备”科目，且四级科目对应明细资产的人行资产一级分类为“债务证券”
-                        assetPosition.setAssetType1(PbcAssetPositionConstants.PBC_ASSETTYPE1_P14);
-                        assetPosition.setAssetType2(PbcAssetPositionConstants.PBC_ASSETTYPE2_Z03);
-                        assetPosition.setAssetType3(PbcAssetPositionConstants.PBC_ASSETTYPE3_Z03);
-                    }
-                    if((PbcAssetPositionConstants.JZ_SUBJECTNO_TWO_TYCBNZQ.equals(assetPosition.getAssetCode())||PbcAssetPositionConstants.JZ_SUBJECTNO_TWO_TYCBNJHN.equals(assetPosition.getAssetCode()))
-                            && DictCodeListExt3.人行资产二级分类_除回购或拆借外贷款.getValue().equals(assetPosition.getAssetType2()) ){
-                        //除回购和拆借外贷款
-                        //取上游系统三级科目为“130201摊余成本类债券减值准备”或“130203 摊余成本类计划类资产减值准备”科目，且四级科目对应明细资产的人行资产二级分类为“除回购和拆借外贷款”
-                        assetPosition.setAssetType1(PbcAssetPositionConstants.PBC_ASSETTYPE1_P14);
-                        assetPosition.setAssetType2(PbcAssetPositionConstants.PBC_ASSETTYPE2_Z04);
-                        assetPosition.setAssetType3(PbcAssetPositionConstants.PBC_ASSETTYPE3_Z04);
-                    }
-                    if(PbcAssetPositionConstants.JZ_SUBJECTNO_TWO_TYCBNJHN.equals(assetPosition.getAssetCode())&&
-                            DictCodeListExt3.人行资产一级分类_资产收益权.getValue().equals(assetPosition.getAssetType1())){
-                        //资产收益权
-                        //取上游系统三级科目为 “130203 摊余成本类计划类资产减值准备”科目，且四级科目对应明细资产的人行资产一级分类为“资产收益权”
-                        assetPosition.setAssetType1(PbcAssetPositionConstants.PBC_ASSETTYPE1_P14);
-                        assetPosition.setAssetType2(PbcAssetPositionConstants.PBC_ASSETTYPE2_Z06);
-                        assetPosition.setAssetType3(PbcAssetPositionConstants.PBC_ASSETTYPE3_Z06);
-                    }
-                    if(PbcAssetPositionConstants.JZ_SUBJECTNO_TWO_TYCBNJHN.equals(assetPosition.getAssetCode())&&
-                            DictCodeListExt3.人行资产一级分类_股权及特定目的载体份额.getValue().equals(assetPosition.getAssetType1())){
-                        //股权及特定目的载体份额
-                        //取上游系统三级科目为 “130203 摊余成本类计划类资产减值准备”科目，且四级科目对应明细资产的人行资产一级分类为“股权及特定目的载体份额”
-                        assetPosition.setAssetType1(PbcAssetPositionConstants.PBC_ASSETTYPE1_P14);
-                        assetPosition.setAssetType2(PbcAssetPositionConstants.PBC_ASSETTYPE2_Z07);
-                        assetPosition.setAssetType3(PbcAssetPositionConstants.PBC_ASSETTYPE3_Z07);
-                    }
-                }else{
-                    //逾期
-                    if(PbcAssetPositionConstants.JZ_SUBJECTNO_TWO_TYCBNZQ.equals(assetPosition.getAssetCode())
-                            ||PbcAssetPositionConstants.JZ_SUBJECTNO_TWO_TYCBNJHN.equals(assetPosition.getAssetCode())
-                            ||PbcAssetPositionConstants.JZ_SUBJECTNO_TWO_MRFSZC.equals(assetPosition.getAssetCode())
-                            ||PbcAssetPositionConstants.JZ_SUBJECTNO_TWO_CFTY.equals(assetPosition.getAssetCode())
-                            ||PbcAssetPositionConstants.JZ_SUBJECTNO_TWO_CHFTY.equals(assetPosition.getAssetCode())
-                    ){
-                        //应收账款
-                        //取上游系统二级科目为 “130203 摊余成本类计划类资产减值准备”、“130201 摊余成本类债券减值准备”科目、
-                        // “130207 买入返售资产减值准备”、“130209 存放同业减值准备”、“130210 拆放同业减值准备”科目，对应的所以三级科目且三级对应且四级科目对应明细资产的已逾期
-                        assetPosition.setAssetType1(PbcAssetPositionConstants.PBC_ASSETTYPE1_P14);
-                        assetPosition.setAssetType2(PbcAssetPositionConstants.PBC_ASSETTYPE2_Z09);
-                        assetPosition.setAssetType3(PbcAssetPositionConstants.PBC_ASSETTYPE3_Z09);
-                    }
-                }
-
-
-
-            }
-
-        }
 
         // 根据开关判断是否走中债表中取值还是走一体化上游表中取值
         if (DictCodeList.是否_中债_是.getValue().equals(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SUB_SYSTEM))){
@@ -427,8 +325,9 @@ public class PbcMonthAssetPositionService  extends BaseService{
                         assetPosition.setEndDays(BigDecimal.ZERO);
                     }
                     // 根据资产一级分类处理头寸类型,默认头寸类型为科目余额
-                    if (PbcAssetPositionConstants.PBC_ASSETTYPE1_P01.equals(assetPosition.getAssetType1())){
-                        // 现金直接统计为资产
+                    if (PbcAssetPositionConstants.PBC_ASSETTYPE1_P01.equals(assetPosition.getAssetType1())
+                    ||PbcAssetPositionConstants.PBC_ASSETTYPE1_P14.equals(assetPosition.getAssetType1())){
+                        // 现金 减值 直接统计为资产
                         assetPosition.setPositionType(PbcAssetPositionConstants.POSITION_TYPE_ZC);
                     } else if (PbcAssetPositionConstants.PBC_ASSETTYPE1_WFPLR.equals(mappingEx.getObjfield1())
                             || PbcAssetPositionConstants.PBC_ASSETTYPE1_ZBGJJ.equals(mappingEx.getObjfield1())
@@ -448,8 +347,77 @@ public class PbcMonthAssetPositionService  extends BaseService{
                 }
             }
         }
-        assetPositionList.addAll(jzAssetPositionList);
         return assetPositionList;
+    }
+
+
+    /**
+     * 功能:从资产基础指标中查询减值数据
+     * @since 1.1.0
+     * @version 1.1.0
+     * @author：zhengxiaolain 2022年3月16日
+     * @param prodList 产品代码
+     * @param reportEndDate 结束日期
+     * @return
+     * List<PbcMonthAssetPositionDto>
+     */
+    public List<PbcMonthAssetPositionDto> generateJZAsset(Date reportEndDate,List<String> prodList,List<String> assetList){
+        List<PbcMonthAssetPositionDto> jzAssetPositionList = new ArrayList<PbcMonthAssetPositionDto>();
+
+        PbcMonthAssetPositionService pbcAssetPositionInterf =  SpringContextUtil.getBean(PbcMonthAssetPositionService.class);
+
+        jzAssetPositionList=pbcAssetPositionInterf.queryJZByInterfdateBatch(DateUtil.format(reportEndDate),prodList);
+
+        //没有逾期数据
+        if (!CollectionUtils.isEmpty(jzAssetPositionList)) {
+            for (PbcMonthAssetPositionDto assetPosition : jzAssetPositionList) {
+                if(DictCodeList.是否_中债_是.getValue().equals(assetPosition.getIsRepmnm())){
+                    //回购和拆借 特殊字段标识为回购和拆借
+                    assetPosition.setAssetType1(PbcAssetPositionConstants.PBC_ASSETTYPE1_P14);
+                    assetPosition.setAssetType2(PbcAssetPositionConstants.PBC_ASSETTYPE2_Z05);
+                    assetPosition.setAssetType3(PbcAssetPositionConstants.PBC_ASSETTYPE3_Z05);
+                }else{
+                    //可转让存单 统计人行一级分类为“可转让存单”的资产在资产基础指标数据表中对应的减值科目的余额
+                    if(DictCodeListExt3.人行资产一级分类_可转让存单.getValue().equals(assetPosition.getAssetType1())){
+                        assetPosition.setAssetType1(PbcAssetPositionConstants.PBC_ASSETTYPE1_P14);
+                        assetPosition.setAssetType2(PbcAssetPositionConstants.PBC_ASSETTYPE2_Z02);
+                        assetPosition.setAssetType3(PbcAssetPositionConstants.PBC_ASSETTYPE3_Z02);
+                    }
+                    //债务证券 统计人行一级分类为“债务证券”的资产在资产基础指标数据表中对应的减值科目的余额
+                    if(DictCodeListExt3.人行资产一级分类_债务证券.getValue().equals(assetPosition.getAssetType1())){
+                        assetPosition.setAssetType1(PbcAssetPositionConstants.PBC_ASSETTYPE1_P14);
+                        assetPosition.setAssetType2(PbcAssetPositionConstants.PBC_ASSETTYPE2_Z03);
+                        assetPosition.setAssetType3(PbcAssetPositionConstants.PBC_ASSETTYPE3_Z03);
+                    }
+                    //除回购和拆借外贷款 统计人行二级分类为“除回购和拆借外贷款”的资产在资产基础指标数据表中对应的减值科目的余额
+                    if(DictCodeListExt3.人行资产二级分类_除回购或拆借外贷款.getValue().equals(assetPosition.getAssetType2())){
+                        assetPosition.setAssetType1(PbcAssetPositionConstants.PBC_ASSETTYPE1_P14);
+                        assetPosition.setAssetType2(PbcAssetPositionConstants.PBC_ASSETTYPE2_Z04);
+                        assetPosition.setAssetType3(PbcAssetPositionConstants.PBC_ASSETTYPE3_Z04);
+                    }
+                    //资产收益权 统计人行一级分类为“资产受益权”的资产在资产基础指标数据表中对应的减值科目的余额
+                    if(DictCodeListExt3.人行资产一级分类_资产收益权.getValue().equals(assetPosition.getAssetType1())){
+                        assetPosition.setAssetType1(PbcAssetPositionConstants.PBC_ASSETTYPE1_P14);
+                        assetPosition.setAssetType2(PbcAssetPositionConstants.PBC_ASSETTYPE2_Z06);
+                        assetPosition.setAssetType3(PbcAssetPositionConstants.PBC_ASSETTYPE3_Z06);
+                    }
+                    //股权及特定目的载体份额 统计人行一级分类为“股权及特定目的载体份额”的资产在资产基础指标数据表中对应的减值科目的余额
+                    if(DictCodeListExt3.人行资产一级分类_股权及特定目的载体份额.getValue().equals(assetPosition.getAssetType1())){
+                        assetPosition.setAssetType1(PbcAssetPositionConstants.PBC_ASSETTYPE1_P14);
+                        assetPosition.setAssetType2(PbcAssetPositionConstants.PBC_ASSETTYPE2_Z07);
+                        assetPosition.setAssetType3(PbcAssetPositionConstants.PBC_ASSETTYPE3_Z07);
+                    }
+                    //金融衍生品 统计人行一级分类为“金融衍生品”的资产在资产基础指标数据表中对应的减值科目的余额
+                    if(DictCodeListExt3.人行资产一级分类_金融衍生品.getValue().equals(assetPosition.getAssetType1())){
+                        assetPosition.setAssetType1(PbcAssetPositionConstants.PBC_ASSETTYPE1_P14);
+                        assetPosition.setAssetType2(PbcAssetPositionConstants.PBC_ASSETTYPE2_Z08);
+                        assetPosition.setAssetType3(PbcAssetPositionConstants.PBC_ASSETTYPE3_Z08);
+                    }
+                }
+            }
+        }
+
+        return jzAssetPositionList;
     }
 
     /**
@@ -457,7 +425,7 @@ public class PbcMonthAssetPositionService  extends BaseService{
      * @since 1.6.0
      * @version 1.6.0
      * @author：weiyuqiang 2019年3月11日
-     * @param interfDate 跑批日
+     * @param
      * @prodList 产品代码
      * @return 
      * List<ChbAssetInfo>
@@ -478,7 +446,7 @@ public class PbcMonthAssetPositionService  extends BaseService{
      * @since 1.6.0
      * @version 1.6.0
      * @author：weiyuqiang 2019年3月11日
-     * @param interfDate 跑批日
+     * @param
      * @prodList 产品代码
      * @return 
      * List<ChbAssetInfo>
@@ -507,16 +475,12 @@ public class PbcMonthAssetPositionService  extends BaseService{
     @Transactional(propagation=Propagation.REQUIRES_NEW)
     // 切换数据源
     @DataSource(DataSourceType.INTERF)
-    public List<PbcMonthAssetPositionDto> queryJZBalanceByInterfdateBatch(String reportEndDate,List<String> prodList,
-                                                                          List<String> assetList,List<String> subjectNoList,List<String> yqSubjectNoList){
+    public List<PbcMonthAssetPositionDto> queryJZByInterfdateBatch(String reportEndDate,List<String> prodList){
         List<PbcMonthAssetPositionDto> jzAssetPositionList = new ArrayList<PbcMonthAssetPositionDto>();
         Map<String,Object> param = new HashMap<String,Object>();
         param.put("reportEndDate", reportEndDate);
         param.put("prodList", prodList);
-        param.put("subjectNoList", subjectNoList);
-        param.put("assetList", assetList);
-        param.put("yqSubjectNoList", yqSubjectNoList);
-        template.select("com.joyintech.tams.svreport.pbc.assetposition.dao.PbcMonthAssetPositionMapper.selectJZBalanceByEndDateAndProd",
+        template.select("com.joyintech.tams.svreport.pbc.assetposition.dao.PbcMonthAssetPositionMapper.selectJZByEndDateAndProd",
                 param,new ResultHandler() {
                     @Override
                     public void handleResult(ResultContext resultContext) {
@@ -531,7 +495,7 @@ public class PbcMonthAssetPositionService  extends BaseService{
      * @since 1.7.0
      * @version 1.7.0
      * @author：weiyuqiang 2019年5月20日
-     * @param interfDate 跑批日
+     * @param
      * @prodList 产品代码
      * @return 
      * List<ChbAssetInfo>
@@ -554,6 +518,37 @@ public class PbcMonthAssetPositionService  extends BaseService{
         });
         return assetPositionList;
     }
+
+
+    /**
+     * 功能:从资产基础指标中查询减值数据
+     * @since 1.1.0
+     * @version 1.1.0
+     * @author：zhengxiaolian 2022年03月16日
+     * @param
+     * @prodList 产品代码
+     * @return
+     * List<PbcMonthAssetPositionDto>
+     */
+    @Transactional(propagation=Propagation.REQUIRES_NEW)
+    public List<PbcMonthAssetPositionDto> queryJZByInterfdateBatchSubSystem(String reportEndDate,List<String> prodList,
+                                                                                 List<String> assetList,List<String> subjectNoList){
+        List<PbcMonthAssetPositionDto> assetPositionList = new ArrayList<PbcMonthAssetPositionDto>();
+        Map<String,Object> param = new HashMap<String,Object>();
+        param.put("reportEndDate", reportEndDate);
+        param.put("prodList", prodList);
+        param.put("subjectNoList", subjectNoList);
+        param.put("assetList", assetList);
+        template.select("com.joyintech.tams.svreport.pbc.assetposition.dao.PbcMonthAssetPositionMapper.selectBalanceByEndDateAndProdSubSystem",
+                param,new ResultHandler() {
+                    @Override
+                    public void handleResult(ResultContext resultContext) {
+                        assetPositionList.add((PbcMonthAssetPositionDto) resultContext.getResultObject());
+                    }
+                });
+        return assetPositionList;
+    }
+
 
     @Transactional(propagation=Propagation.REQUIRES_NEW)
     public List<PbcMonthAssetPositionDto> queryJZBalanceByInterfdateBatchSubSystem(String reportEndDate,List<String> prodList,
@@ -633,6 +628,7 @@ public class PbcMonthAssetPositionService  extends BaseService{
         PbcMonthAssetPositionDto qmode=new PbcMonthAssetPositionDto();
         qmode.setBookdate(batchDate);
         qmode.setProdids(prodList);
+        qmode.setEnddate(batchDate);
         String isChlBtm = SvrDataUtil.getSysParam(SVReportGlobalConstant.PBC_IS_CHL_BTM);
         qmode.setIsChlBtm(isChlBtm);
 
@@ -650,15 +646,15 @@ public class PbcMonthAssetPositionService  extends BaseService{
         String getProductRatingOrderSqlByZt = null;
         // 如果是中债子系统取评级逻辑不变，如果不是，就调共通方法
 
-        Map<String, Object> productRatingOrderSqlMap = new HashMap<>();
-        // 先取债项，再取主体排序sql
-        productRatingOrderSqlMap.put("oType","02");
-        getProductRatingOrderSqlByZx = commonProductRatingService.getProductRatingOrderSql(productRatingOrderSqlMap);
-        productRatingOrderSqlMap.put("oType","01");
-        getProductRatingOrderSqlByZt = commonProductRatingService.getProductRatingOrderSql(productRatingOrderSqlMap);
-        qmode.setGetProductRatingOrderSqlByZx(getProductRatingOrderSqlByZx);
-        qmode.setGetProductRatingOrderSqlByZt(getProductRatingOrderSqlByZt);
-        qmode.setGradeDateEnd(DateUtil.format(batchDate,"yyyy-MM-dd"));
+//        Map<String, Object> productRatingOrderSqlMap = new HashMap<>();
+//        // 先取债项，再取主体排序sql
+//        productRatingOrderSqlMap.put("oType","02");
+//        getProductRatingOrderSqlByZx = commonProductRatingService.getProductRatingOrderSql(productRatingOrderSqlMap);
+//        productRatingOrderSqlMap.put("oType","01");
+//        getProductRatingOrderSqlByZt = commonProductRatingService.getProductRatingOrderSql(productRatingOrderSqlMap);
+//        qmode.setGetProductRatingOrderSqlByZx(getProductRatingOrderSqlByZx);
+//        qmode.setGetProductRatingOrderSqlByZt(getProductRatingOrderSqlByZt);
+//        qmode.setGradeDateEnd(DateUtil.format(batchDate,"yyyy-MM-dd"));
 
         // 无论通道是否穿透报送，通道剩余现金均需作为现金资产进行统计
         template.select("com.joyintech.tams.svreport.pbc.assetposition.dao.PbcMonthAssetPositionMapper.selectPositionFromValutionSubSystem",
@@ -726,7 +722,7 @@ public class PbcMonthAssetPositionService  extends BaseService{
      * @since 1.6.0
      * @version 1.6.0
      * @author：weiyuqiang 2019年3月13日
-     * @param list
+     * @param
      * @return 
      * List<PbcMonthAssetPositionDto>
      */
@@ -771,8 +767,7 @@ public class PbcMonthAssetPositionService  extends BaseService{
                 days=1; //开放式基金  统计为一个月以下
             /* add by  dongxiangyang  人行资产头寸改造 20210105  end*/
                 //添加判断逻辑.. 资产信息到期日2099-12-31全部是资管计划.直接设置为无固定期限
-            }else if ((singel.getMdate() == null && PbcAssetPositionConstants.PBC_ASSETTYPE1_P07.equals(singel.getAssetType1()))
-                    ||(null!=singel.getAssetMdate()&&singel.getAssetMdate().compareTo(DateUtil.parse("2099-12-31"))==0)){
+            }else if ((singel.getMdate() == null&& PbcAssetPositionConstants.PBC_ASSETTYPE1_P07.equals(singel.getAssetType1()))||(null!=singel.getAssetMdate()&&singel.getAssetMdate().compareTo(DateUtil.parse("2099-12-31"))==0)){
                 days=0;
             }else{
                 days=DateUtil.getBetweenDayNumber(reportEndDate, singel.getMdate());
@@ -1089,7 +1084,7 @@ public class PbcMonthAssetPositionService  extends BaseService{
      * @since 1.6.0
      * @version 1.6.0
      * @author：weiyuqiang 2019年3月11日
-     * @param interfDate 跑批日
+     * @param
      * @return 
      * List<AssetInfoDto>
      */

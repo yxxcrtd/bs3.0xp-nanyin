@@ -3,7 +3,6 @@ package com.joyintech.tams.report.system.peoplebankcodepoolmanagement.service;
 import java.util.*;
 import java.util.regex.Pattern;
 
-import com.joyintech.tams.common.svreport.chb.util.ToolsUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -176,15 +175,17 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 		String statusEffective = DictCodeListExt1.维护数据状态_有效.getValue();
 		if (!StringUtil.isEmptyList(dataList)) {
 			if (CollectionUtils.isNotEmpty(dataList)) {
-				List<String> data = new ArrayList<String>();
+				List<ProPeoplebankcodeManagement001Dto> data = new ArrayList<ProPeoplebankcodeManagement001Dto>();
 				List<ProPeoplebankcodeManagement001Dto> entities = convertToBean(dataList);
 
 				for(ProPeoplebankcodeManagement001Dto dto : entities){
-					if(dto.getPbcCode().length()>15){
-						webResult.setMessage("人行产品代码长度不得大于15");
-						webResult.setMessageType(MessageType.错误消息);
-						webResult.setStatuCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-						return webResult;
+					if(StringUtil.isNotEmpty(dto.getPbcCode())){
+						if(dto.getPbcCode().length()>15){
+							webResult.setMessage("人行产品代码长度不得大于15");
+							webResult.setMessageType(MessageType.错误消息);
+							webResult.setStatuCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+							return webResult;
+						}
 					}
 
 					//校验内部产品代码在产品基本信息表中是否存在
@@ -192,7 +193,7 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 					record.setInsideProdId(dto.getInsideProdId());
 					record.setCodeType(dto.getCodeType());
 					record.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
-					ProPeoplebankcodeManagement001Dto proDto = peoplebankcodeManagement001DtoMapper.selectByPrimaryKey(record);
+					ProPeoplebankcodeManagement001Dto proDto = peoplebankcodeManagement001DtoMapper.CheckProdExist(record);
 					if (proDto == null) {
 						webResult.setMessage("内部产品代码"+dto.getInsideProdId()+"在产品基本信息表中不存在");
 						webResult.setMessageType(MessageType.错误消息);
@@ -220,14 +221,14 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 				}
 				if (data != null && data.size() > 0) {
 					Map<String, List<ProPeoplebankcodeManagement001Dto>> equityInfo001Map = entities.stream()
-							.collect(JoyinCollectors.groupingBy(x -> x.getInsideProdId()));
+							.collect(JoyinCollectors.groupingBy(x -> x.getInsideProdId()+"|"+x.getCodeType()));
 					// Collections.sort(data, Comparator.comparing(EquityInfo001Dto::getExcelNum));
 					// 将序号放入list中
 					List<String> excelNumList = new ArrayList<String>();
 					List<Integer> excelNumIntList = new ArrayList<Integer>();
-					for (String string : data) {
+					for (ProPeoplebankcodeManagement001Dto dto : data) {
 						List<ProPeoplebankcodeManagement001Dto> listTemp = new ArrayList<>();
-						listTemp = equityInfo001Map.get(string);
+						listTemp = equityInfo001Map.get(dto.getInsideProdId()+"|"+dto.getCodeType());
 						// excelNumList.add(listTemp.get(0).getExcelNum());
 						excelNumIntList.add(Integer.valueOf(listTemp.get(0).getExcelNum()));
 					}
@@ -381,6 +382,13 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 						this.getMessage("REPORT_COMMON_FILE_E_0001", "文件内容")));
 				continue;
 			}
+			for (int j = i + 1; j < dataList.size(); j++) {
+				if (StringUtils.equals(dataList.get(i).get(2), dataList.get(j).get(2))) {
+					checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i),
+							"第" + (i + 1) + "行"+"人行代码与" + "第" + (j + 1) + "行人行代码相同！"));
+					//buffer.append("第" + (i + 1) + "行"+"产品代码与" + "第" + (j + 1) + "行产品代码相同！");
+				}
+			}
 			ProPeoplebankcodeManagement001Dto entity = new ProPeoplebankcodeManagement001Dto();
 			// 验证消息
 			List<String> message = new ArrayList<>();
@@ -416,6 +424,12 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 				message.add(error1);
 			} else {
 				entity.setPbcCode(list.get(2));
+				ProPeoplebankcodeManagement001Dto dto = peoplebankcodeManagement001DtoMapper.selectByPbcCode(list.get(2));
+				if (null!=dto){
+					if (!StringUtil.equals(entity.getInsideProdId(),dto.getInsideProdId())){
+						message.add("人行代码"+list.get(2)+"已被使用！");
+					}
+				}
 			}
 //			String error2 = checkCode(list.get(1), "内部产品代码", 50, true);
 //			if (StringUtil.isNotEmpty(error2)) {

@@ -185,13 +185,43 @@ $(function(){
         	}
         	var paramObj = getSearchParams();
         	paramObj.flag = '02';
-        	Joyin.confirm("请确认是否要手工处理符合查询条件的全部记录？", function() {
-        		layui.layer.open({type:3});
-                 Joyin.ajaxJson('doManul', paramObj, function() {
-                     table.load();
-                     layui.layer.closeAll();
-                 });
-             });
+        	// Joyin.confirm("请确认是否要手工处理符合查询条件的全部记录？", function() {
+        	// 	layui.layer.open({type:3});
+            //      Joyin.ajaxJson('doManul', paramObj, function() {
+            //          table.load();
+            //          layui.layer.closeAll();
+            //      });
+            //  });
+
+			Joyin.confirm("请确认是否要手工处理符合查询条件的全部记录？", function() {
+				layui.layer.open({type:3});
+				var param = getSearchParams();
+				param.flag = "0";
+				//针对daTa，判断贷款明细信息和资金信托明细信息是否存在
+				Joyin.ajaxJson(basePath + '/pbc/prdassetdebt/PbcPrdAssetDebtSub/searchNoDxAndXt',param, function (result) {
+					var mes;
+					if(result && result.length>0 ){
+						mes="资产池";
+						for (var i = 0; i < result.length; i++) {
+							mes+=","+result[i].pbcAccountId;
+						}
+						mes+="没有对应的贷款明细信息和资金信托明细信息，不会更新报送状态，是否确认数据进行手工处理？";
+						Joyin.confirm("请确认是否要手工处理符合查询条件的全部记录？", function() {
+							layui.layer.open({type:3});
+						     Joyin.ajaxJson('doManul', paramObj, function() {
+						         table.load();
+						         layui.layer.closeAll();
+						     });
+						 });
+					}else{
+						//页面添加滚动条
+						Joyin.ajaxJson('doManul', paramObj, function() {
+							table.load();
+						});
+					}
+				});
+			});
+
         }else{
         	for(var i=0;i<rows.length;i++){
               if (!(rows[i].sendStatus == '01'
@@ -204,11 +234,41 @@ $(function(){
         	paramObj.flag = '01';
         	paramObj.infoList = rows;
           Joyin.confirm("请确认是否要手工处理选中记录？", function() {
-        	  layui.layer.open({type:3});
-              Joyin.ajaxJson('doManul', paramObj, function() {
-                  table.load();
-                  layui.layer.closeAll();
-              });
+
+			  var datasExpArr = JSON.stringify(rows);
+			  var data = {
+				  datasExpArr: datasExpArr,
+				  flag: "1"
+			  };
+			  Joyin.ajaxJson(basePath + '/pbc/prdassetdebt/PbcPrdAssetDebtSub/searchNoDxAndXt',data, function (result) {
+				  var mes;
+				  if(result && result.length>0 ){
+					  mes="资产池";
+					  for (var i = 0; i < result.length; i++) {
+						  if(i == 0){
+							  mes+=result[i].pbcAccountId;
+						  }else{
+							  mes+=","+result[i].pbcAccountId;
+						  }
+
+					  }
+					  mes+="没有对应的贷款明细信息和资金信托明细信息，不会更新报送状态，是否确认数据进行手工处理？";
+					  Joyin.confirm(mes,function() {
+						  layui.layer.open({type:3});
+						  Joyin.ajaxJson('doManul', paramObj, function() {
+							  table.load();
+							  layui.layer.closeAll();
+						  });
+					  });
+				  }else{
+					  layui.layer.open({type:3});
+					  Joyin.ajaxJson('doManul', paramObj, function() {
+						  table.load();
+						  layui.layer.closeAll();
+					  });
+				  }
+			  });
+
           });
         }
         

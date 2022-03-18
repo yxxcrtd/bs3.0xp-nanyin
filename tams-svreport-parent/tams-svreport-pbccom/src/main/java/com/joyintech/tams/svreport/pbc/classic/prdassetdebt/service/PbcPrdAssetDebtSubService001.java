@@ -468,7 +468,7 @@ public class PbcPrdAssetDebtSubService001 extends CommonExportService<PbcMonthRe
     	}else{
     		//不选报表导出所有未报送的记录
     		dataList= searchByCondition(selectParam);
-//    		//针对全导出时，对于贷款内容和资金信托份额内容都为空时，删除该条记录
+    		//针对全导出时，对于贷款内容和资金信托份额内容都为空时，删除该条记录
 //			Iterator<PbcMonthReport> ii=dataList.iterator();
 //			while (ii.hasNext()){//判断集合内是否还有元素
 //				PbcMonthReport o=ii.next();//获取该元素

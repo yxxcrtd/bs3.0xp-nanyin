@@ -130,6 +130,7 @@ var QueryFunc=function(){
                 $("#svrBussRepPlacementInfoDto_targetType1").val('01').trigger("change");
                 $("#svrBussRepPlacementInfoDto_targetType1").prop('required', true);
                 $("#targetAmt").prop('required', true);
+                $("#svrBussRepPlacementInfoDto_targetAmt").attr("disabled",false);
                 // var parms={assetuuid:$("#assetUuid").val()}
                 // Joyin.ajaxJson(
                 //     basePath + "chb/assetinfodetail/AssetInfoDetail002/getValue",parms,
@@ -143,7 +144,8 @@ var QueryFunc=function(){
                 $("#issueAmt").attr("disabled",true);
                 $("#issueAmt").val('');
                 $("#svrBussRepPlacementInfoDto_targetType1").prop('required', false);
-                $("#targetAmt").prop('required', false);
+                $("#svrBussRepPlacementInfoDto_targetAmt").val('').trigger("change");
+                $("#svrBussRepPlacementInfoDto_targetAmt").attr("disabled",true);
             }
         }else if(obj["03"].indexOf(repAssetType)>=0){
             //债券类资产/理财直接融资工具/同业存单
@@ -270,9 +272,9 @@ var QueryFunc=function(){
                 //利息发布方式
                 $("#svrBussRepAssetCreditNonstdInfoDto_repIntpayRule").attr("disabled",false);
                 //还本付息情况
-              //  $("#svrBussRepAssetCreditNonstdInfoDto_repRepayCmt").attr("disabled",false);
+                //  $("#svrBussRepAssetCreditNonstdInfoDto_repRepayCmt").attr("disabled",false);
 
-               //浮动因子
+                //浮动因子
                 $("#svrBussRepAssetCreditNonstdInfoDto_floatFactor").attr("disabled",false);
                 //担保方式
                 $("#svrBussRepAssetCreditNonstdInfoDto_repGuaType").attr("disabled",false);
@@ -369,6 +371,12 @@ var QueryFunc=function(){
         }else if(obj["11"].indexOf(repAssetType)>=0){
             //QDII结构性票据类资产
         }else if(obj["12"].indexOf(repAssetType)>=0){
+            if (repAssetType !='1701'){
+                $("#svrBussRepAssetMngProdInfoDto_isPropertyTrust").val('').trigger("change");
+                $("#svrBussRepAssetMngProdInfoDto_isPropertyTrust_div").hide();
+            }else{
+                $("#svrBussRepAssetMngProdInfoDto_isPropertyTrust_div").show();
+            }
             //资产管理产品
             if(repAssetType=='1701'||repAssetType=='1703'||
                 repAssetType=='1704'||repAssetType=='1706'||repAssetType=='1702'){
@@ -489,8 +497,15 @@ var QueryFunc=function(){
      * 将当前子页面的数据赋值
      */
     var assetVal = function(){
-        // $("input[id$='_assetId']").val($('#assetCode').val());
+        $("input[id$='_assetId']").val($('#assetCode').val());
         $("input[id$='_assetName']").val($('#assetName').val());
+        var repAssetType = $('#assetType2').val();
+
+        if (repAssetType == '1503'){
+            $("#svrBussRepQDIIStructureInfoDto_contractName").val($('#assetName').val());
+        }else {
+            $("#svrBussRepQDIIStructureInfoDto_contractName").val('');
+        }
     }
 
     // 置空
