@@ -580,7 +580,6 @@
         obj.minPrice = 0.001;
         obj.multiple = 1000;
         obj.scale = 3;
-
         if(!minPriceWhole){
             return obj;
         }
@@ -3803,6 +3802,10 @@
             var secId = $("#secId_" + currentTab).val();
             var param = {};
             param.secId = secId;
+            var finprodType2 = $("#finprodType2_" + currentTab).val();
+            if(finprodType2 == FINPROD_TYPE_TG_F06){
+                $("#priceModel_div_"+currentTab).show();
+            }
             // if(secId){
             //     Joyin.ajaxSync(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeTrade001/IsBondAsset', param, function(result) {
             //         //1 返回1代表所选资产不是债券 不处理
