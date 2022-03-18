@@ -1,6 +1,7 @@
 package com.joyintech.tams.exchange.service.trade.processor.business.common;
 
 import com.google.common.base.Strings;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.exchange.common.constant.*;
 import com.joyintech.tams.exchange.common.db.domain.*;
 import com.joyintech.tams.exchange.common.utils.*;
@@ -91,12 +92,9 @@ public class TradeCallbackHelper {
                     Instruction instruction = instructionService.findById(entrust.getInstructionId());
                     transactionHelper.setInstructionBean(instruction);
 //                    bondHelper.handleTradePriceByFullPrice(tradeRecord, entrust.getIsFullPrice(), instruction);
-                    if (tradeRecord.getTradeType() == TradeType.NORMAL.value
-                            || tradeRecord.getTradeType() == TradeType.INVALID.value) {
+                    if (tradeRecord.getTradeType() == TradeType.NORMAL.value || tradeRecord.getTradeType() == TradeType.INVALID.value) {
                         processEntrustTrade(entrust, tradeRecord, now, instruction);
-                    } else if (tradeRecord.getTradeType() == TradeType.CANCEL.value
-                            || tradeRecord.getTradeType() == TradeType.INNER_CANCEL.value
-                            || tradeRecord.getTradeType() == TradeType.CANCEL_INVALID.value) {
+                    } else if (tradeRecord.getTradeType() == TradeType.CANCEL.value || tradeRecord.getTradeType() == TradeType.INNER_CANCEL.value || tradeRecord.getTradeType() == TradeType.CANCEL_INVALID.value) {
                         if (tradeRecord.isNoCancelEntrust()) {
                             List<IntegratedEntrust> cancelEntrustList = integratedEntrustService.queryCancelIntegratedEntrustByOrigEntrustIdAndAccount(entrust.getId(), entrust.getAccountId());
                             if (Objects.isNull(cancelEntrustList) || cancelEntrustList.size() == 0) {
@@ -146,12 +144,9 @@ public class TradeCallbackHelper {
                     Instruction instruction = instructionService.findById(entrust.getInstructionId());
                     transactionHelper.setInstructionBean(instruction);
 //                    bondHelper.handleTradePriceByFullPrice(tradeRecord, entrust.getIsFullPrice(), instruction);
-                    if (tradeRecord.getTradeType() == TradeType.NORMAL.value
-                            || tradeRecord.getTradeType() == TradeType.INVALID.value) {
+                    if (tradeRecord.getTradeType() == TradeType.NORMAL.value || tradeRecord.getTradeType() == TradeType.INVALID.value) {
                         processEntrustTrade(entrust, tradeRecord, now, instruction);
-                    } else if (tradeRecord.getTradeType() == TradeType.CANCEL.value
-                            || tradeRecord.getTradeType() == TradeType.INNER_CANCEL.value
-                            || tradeRecord.getTradeType() == TradeType.CANCEL_INVALID.value) {
+                    } else if (tradeRecord.getTradeType() == TradeType.CANCEL.value || tradeRecord.getTradeType() == TradeType.INNER_CANCEL.value || tradeRecord.getTradeType() == TradeType.CANCEL_INVALID.value) {
                         if (tradeRecord.isNoCancelEntrust()) {
                             List<Entrust> cancelEntrustList = entrustService.queryCancelEntrustByOrigEntrustIdAndAccount(entrust.getId(), entrust.getAccountId());
                             if (Objects.isNull(cancelEntrustList) || cancelEntrustList.size() == 0) {
@@ -189,8 +184,7 @@ public class TradeCallbackHelper {
     }
 
     public void processEntrustTrade(EntrustInterface entrust, Trade tradeRecord, Date now, Instruction instruction) {
-        logger.info("处理普通成交或者废单成交，TradeType：{}，entrust：{}，BrokerEntrustId：{}，BrokerTradeId：{}",
-                tradeRecord.getTradeType(), entrust.getId(), tradeRecord.getBrokerEntrustId(), tradeRecord.getBrokerTradeId());
+        logger.info("处理普通成交或者废单成交，TradeType：{}，entrust：{}，BrokerEntrustId：{}，BrokerTradeId：{}", tradeRecord.getTradeType(), entrust.getId(), tradeRecord.getBrokerEntrustId(), tradeRecord.getBrokerTradeId());
         entrust.setUpdateTime(now);
         if (tradeRecord.getTradeType() == TradeType.CANCEL_INVALID.value) {
             logger.info("processCancelByCancelTrade cancel invalid trade");
@@ -205,12 +199,11 @@ public class TradeCallbackHelper {
         tradeRecord.setTradingDay(entrust.getTradingDay());
         //质押入库的三条成交合约代码可能不一致，需要保留
         String market = entrust.getMarket();
-        if(Strings.isNullOrEmpty(market)){
+        if (Strings.isNullOrEmpty(market)) {
             market = StockCodeUtils.getMarket(entrust.getStockCode());
         }
         tradeRecord.setStockCode(StockCodeUtils.formatStockCode(tradeRecord.getStockCode(), market));
-        logger.info("=======InstructionId：{}，BrokerEntrustId：{}，BrokerTradeId：{}，Market：{}，StockCode：{}",
-                entrust.getInstructionId(), tradeRecord.getBrokerEntrustId(), tradeRecord.getBrokerTradeId(), market, tradeRecord.getStockCode());
+        logger.info("=======InstructionId：{}，BrokerEntrustId：{}，BrokerTradeId：{}，Market：{}，StockCode：{}", entrust.getInstructionId(), tradeRecord.getBrokerEntrustId(), tradeRecord.getBrokerTradeId(), market, tradeRecord.getStockCode());
         if (Strings.isNullOrEmpty(tradeRecord.getStockName())) {
             tradeRecord.setStockName(entrust.getStockName());
         }
@@ -236,6 +229,9 @@ public class TradeCallbackHelper {
         tradeRecord.setPs(instruction.getPs());
         tradeRecord.setBusiTypeTg(instruction.getBusiTypeTg());
         tradeRecord.setEntrustClass(instruction.getEntrustClass());
+        if (StringUtil.equals(InvestmentAssetType.BOND.value, tradeRecord.getFinprodType2()) && tradeRecord.getFullPrice() != null) {
+            tradeRecord.setClearBalance(tradeRecord.getFullPrice().multiply(BigDecimal.valueOf(tradeRecord.getTradedVolume())));
+        }
 
         //获取BusinessFlag
         if (IntegratedEntrustUtils.isIntegratedEntrust(tradeRecord.getEntrustProp())) {
@@ -254,8 +250,7 @@ public class TradeCallbackHelper {
         Order order = null;
         if (Objects.nonNull(entrust.getParentOrderId())) {
             order = orderService.findById(entrust.getParentOrderId());
-            if (Objects.nonNull(order))
-                transactionHelper.addOrder(order);
+            if (Objects.nonNull(order)) transactionHelper.addOrder(order);
         }
         //确保成交记录的成交金额、数量、价格在terminal端已经处理
         if (tradeRecord.getTradeType() == TradeType.NORMAL.value) {
@@ -269,11 +264,10 @@ public class TradeCallbackHelper {
             // 若指令全部完成，则更新指令状态为已完成
             updateInstructionStatus(instruction);
             // 是否需要手工交手
-            if(IntegratedEntrustUtils.isProtocolBack(tradeRecord.getEntrustProp())){//协议回购
+            if (IntegratedEntrustUtils.isProtocolBack(tradeRecord.getEntrustProp())) {//协议回购
                 messageSenderService.pushTradeToMQForFixedIncome(tradeRecord, instruction, entrust);
                 return;
-            }
-            else if (InvestmentAssetType.isBond(instruction.getAssetType()) && TradePlat.needSettleTrade(instruction.getTradePlat())) {
+            } else if (InvestmentAssetType.isBond(instruction.getAssetType()) && TradePlat.needSettleTrade(instruction.getTradePlat())) {
                 Instrument instrument = instrumentService.queryByInnerCode(entrust.getStockCode());
                 if (Objects.nonNull(instrument)) {
                     if (EntrustUtils.isSettleTrade(instrument.getTradePlat(), entrust.getEntrustProp())) {
@@ -295,10 +289,7 @@ public class TradeCallbackHelper {
 
     private void updateInstructionStatus(Instruction instruction) {
         if (Objects.nonNull(instruction)) {
-            if ((instruction.getEntrustLeftAmt().longValue() == (instruction.getEntrustNum())
-                    && instruction.getEntrustNum() > 0)
-                    || (instruction.getEntrustLeftAmt().doubleValue() == (instruction.getEntrustAmt().doubleValue())
-                    && instruction.getEntrustAmt().doubleValue() > 0))
+            if ((instruction.getEntrustLeftAmt().longValue() == (instruction.getEntrustNum()) && instruction.getEntrustNum() > 0) || (instruction.getEntrustLeftAmt().doubleValue() == (instruction.getEntrustAmt().doubleValue()) && instruction.getEntrustAmt().doubleValue() > 0))
                 instruction.setEntrustStatus(InstructionStatus.COMPLETE.value);
         }
     }
