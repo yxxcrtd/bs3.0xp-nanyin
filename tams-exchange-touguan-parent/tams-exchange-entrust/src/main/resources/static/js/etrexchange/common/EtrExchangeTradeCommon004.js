@@ -1019,16 +1019,14 @@
             ||(currentTab == 'dz' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_ZYSHG)
             ||(currentTab == 'gd' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_ZYSHG)){
             $("#invAim_div_" + currentTab).hide();
-        }
-        else{
+        } else{
             var ps = $("#ps_" + currentTab).val();
-            if(ps == PS_T68 || ps == PS_T69) {
+            if(ps == PS_T68 || ps == PS_T69 || (ps == PS_T04 && finprodType2 && finprodType2 == FINPROD_TYPE_TG_F01 )) {
                 $("#invAim_div_" + currentTab).hide();
             }
             else {
                 $("#invAim_div_" + currentTab).show();
             }
-
         }
         //add by chenjiaxing 股票与基金时投资目的字段不显示 end
     };
