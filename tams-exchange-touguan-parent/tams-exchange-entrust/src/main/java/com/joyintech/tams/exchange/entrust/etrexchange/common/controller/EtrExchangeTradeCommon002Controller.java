@@ -28,6 +28,7 @@ import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchang
 import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.*;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
+import com.joyintech.tams.invest.common.constant.TempConstant;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTrade002Dto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -112,7 +113,7 @@ public class EtrExchangeTradeCommon002Controller extends BaseController{
         List<SelectOptionDto> optionsGradeResult = selectDto1.getOptions();
         initPageParams.put("PS_ETR", JsonUtils.objectArray2Json(optionsGradeResult.toArray()));
         initPageParams.put("ETR_CHECK_POS_SWITCH",CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_POS_SWITCH));
-
+        initPageParams.put("noTradeBusiness", TempConstant.NO_TRADE_BUSINESS_ETR);
         /*add by chenjiaxing 更改交易方向枚举值 end*/
         return new Message<Map<String, Object>>(initPageParams).success();
     }

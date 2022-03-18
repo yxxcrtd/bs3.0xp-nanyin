@@ -273,11 +273,13 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 		}
 		param.put("search_isNumberFlag", BaseMap.isNumeric(request.getSearch()));
 		List<String> tradePlatList = new ArrayList<>();
-		if((DictCodeList.交易平台_大宗交易平台.getValue()).equals(request.getTradePlat())){
-			 tradePlatList.add(request.getTradePlat());
-			 tradePlatList.add(DictCodeList.交易平台_综合协议交易平台.getValue());
-		}else{
-			tradePlatList.add(request.getTradePlat());
+		if(StringUtil.isNotEmpty(request.getTradePlat())){
+			if((DictCodeList.交易平台_大宗交易平台.getValue()).equals(request.getTradePlat())){
+				tradePlatList.add(request.getTradePlat());
+				tradePlatList.add(DictCodeList.交易平台_综合协议交易平台.getValue());
+			}else{
+				tradePlatList.add(request.getTradePlat());
+			}
 		}
 		param.put("tradePlatList",tradePlatList);
 		if(StringUtil.isNotEmpty((String)param.get("finprodMarketIds"))){

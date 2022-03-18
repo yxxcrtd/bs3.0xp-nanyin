@@ -15,6 +15,7 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.constant.TempConstant;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.position.*;
 import com.joyintech.tams.invest.common.entrust.dao.EtrTrdCommonMapper;
@@ -700,16 +701,22 @@ public class EtrTradeCommonervice extends BaseService {
                 FinProductAdd finProductAdd=finProductAddMapper.selectByPrimaryKey(dto.getFinprodId());
                 if(finProductAdd!=null){
                     isNetSett=finProductAdd.getIsNetSett();
+                    //交易端接口没有tradePlat,通过ps区分
+                    if (DictCodeListExt3.交易方向_债转股.getValue().equals(dto.getPs()) || DictCodeListExt3.交易方向_配债.getValue().equals(dto.getPs())
+                            || DictCodeListExt3.交易方向_质押券入库.getValue().equals(dto.getPs()) || DictCodeListExt3.交易方向_质押券出库.getValue().equals(dto.getPs())
+                            ||  DictCodeList.交易方向_行权_回售.getValue().equals(dto.getPs())) {
+                        dto.setTradePlat(TempConstant.NO_TRADE_BUSINESS_ETR);
+                    }
                     if(StringUtil.equals(DictCodeList.是否_是.getValue(),isNetSett)
                             &&(StringUtil.equals(dto.getTradePlat(),DictCodeList.交易平台_竞价撮合平台.getValue())
                             ||StringUtil.equals(dto.getTradePlat(),DictCodeList.交易平台_固定收益平台.getValue())
                             ||StringUtil.equals(dto.getTradePlat(),DictCodeList.交易平台_大宗交易平台.getValue())
-                            ||StringUtil.equals(dto.getTradePlat(),DictCodeList.交易平台_非交易业务指令平台.getValue()))
+                            ||StringUtil.equals(dto.getTradePlat(), TempConstant.NO_TRADE_BUSINESS_ETR))
                             &&StringUtil.equals(DictCodeListExt1.估值交易市场_上交所.getValue(),dto.getTradeMarket())){
                         holdingType=DictCodeListExt3.资产类型_债券本方券上交所净额结算可用持仓.getValue();
                     }else if(StringUtil.equals(DictCodeList.是否_是.getValue(),isNetSett)
                             &&(StringUtil.equals(dto.getTradePlat(),DictCodeList.交易平台_竞价撮合平台.getValue())
-                            ||StringUtil.equals(dto.getTradePlat(),DictCodeList.交易平台_非交易业务指令平台.getValue()))
+                            ||StringUtil.equals(dto.getTradePlat(),TempConstant.NO_TRADE_BUSINESS_ETR))
                             &&StringUtil.equals(DictCodeListExt1.估值交易市场_深交所.getValue(),dto.getTradeMarket())){
                         holdingType=DictCodeListExt3.资产类型_债券本方券深交所净额结算竞价可用持仓.getValue();
                     }else if(StringUtil.equals(DictCodeList.是否_是.getValue(),isNetSett)
@@ -719,7 +726,7 @@ public class EtrTradeCommonervice extends BaseService {
                     }else if(StringUtil.equals(DictCodeList.是否_否.getValue(),isNetSett)
                             &&(StringUtil.equals(dto.getTradePlat(),DictCodeList.交易平台_固定收益平台.getValue())
                             ||StringUtil.equals(dto.getTradePlat(),DictCodeList.交易平台_大宗交易平台.getValue())
-                            ||StringUtil.equals(dto.getTradePlat(),DictCodeList.交易平台_非交易业务指令平台.getValue())))
+                            ||StringUtil.equals(dto.getTradePlat(),TempConstant.NO_TRADE_BUSINESS_ETR)))
                         holdingType=DictCodeListExt3.资产类型_债券本方券非净额结算可用持仓.getValue();
                 }
             } else if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue()) ) {
