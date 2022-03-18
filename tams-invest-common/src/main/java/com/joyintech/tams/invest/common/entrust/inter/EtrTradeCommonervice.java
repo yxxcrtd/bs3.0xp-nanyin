@@ -515,7 +515,7 @@ public class EtrTradeCommonervice extends BaseService {
                     dto.setCashAcctId(temp.getAcctId());
                 }
                 //持仓
-                if ((StringUtil.equals(flowType, "02") || StringUtil.equals(flowType, "04"))&&StringUtil.isNotEmpty(positionType)) {
+                if ((StringUtil.equals(flowType, "02") || StringUtil.equals(flowType, "04"))) {
                     dto.setSecAcctId(temp.getSecAcctId());
                     dto.setFinprodId(temp.getFinprodId());
                 }

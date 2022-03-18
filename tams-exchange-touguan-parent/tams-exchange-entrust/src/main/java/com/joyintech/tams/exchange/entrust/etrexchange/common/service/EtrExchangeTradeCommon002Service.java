@@ -110,6 +110,7 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 				}else{
 					param.put("finprodMarketIds", null);
 				}
+				param.put("A_001", DictCodeListExt3.资产类型_资产账户持仓.getValue());
 				// 浮动盈亏计算修改 modify by yufei 20200806 start
 				Page<EtrExchangeTradePositionsCommonResponse> result = super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> etrExchangeTradeCommonMapper.findPositionsPage(param));
 				if(!StringUtil.isEmptyList(result.getRoot())){
@@ -118,11 +119,12 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 						//可用数量
 						PositionCashSecDto secDto=new PositionCashSecDto();
 						BeanUtil.copyPropertiesIgnoreNull(secDto,entity);
+						secDto.setTradePlat(dto.getTradePlat());
 						BigDecimal sellNum=etrTradeCommonervice.selectAvailableNum(secDto);
 						entity.setSellNum(sellNum);
-						//持仓数量
-						BigDecimal positionsNum=etrTradeCommonervice.selectAvailableNum(secDto);
-						entity.setPositionsNum(positionsNum);
+						//持仓数量  从PTL_SEC_POSITION_RULE表查询
+//						BigDecimal positionsNum=etrTradeCommonervice.selectAvailableNum(secDto);
+//						entity.setPositionsNum(positionsNum);
 						// 最新净价*组合持仓.数量 - 持仓成本 as 浮动盈亏
 						BigDecimal floatFd = ArithmeticUtil.multiply(entity.getPrice(),entity.getPtlPositionsNum());
 						floatFd = ArithmeticUtil.subtract(floatFd,entity.getPositionsAmt());
