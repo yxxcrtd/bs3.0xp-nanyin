@@ -30,7 +30,7 @@
         ,{field:'prodInsId', title: 'SvrPerProDeclareInfo001.prodInsId', width:100}
         ,{field:'prodBrand', title: 'SvrPerProDeclareInfo001.prodBrand', width:100}
         ,{field:'prdSpecPropertyStr', title: '产品特殊属性',width:130}
-        ,{field:'prodStage', title: '产品期次', width:100,type:'number'}
+        ,{field:'prodStage', title: '产品期次', width:100}
         ,{field:'issuePartyId', title: '发行机构代码', width:100}
         ,{field:'approverName', title: '产品审批人姓名', width:130}
         ,{field:'approverId', title: '产品审批人身份证号', width:160}
@@ -53,7 +53,7 @@
         ,{field:'finanSerModelStr', title: '理财业务服务模式',width:130}
         ,{field:'operateModeStr', title: '产品运作模式',width:130}
         ,{field:'isShortTermStr', title: '是否设置最短持有期限',width:130}
-        ,{field:'shortTerm', title: '最短持有期限（天）',width:130,type:'number'}
+        ,{field:'shortTerm', title: '最短持有期限（天）',width:130}
         ,{field:'isFreeRedemStr', title: '最短持有期后是否自由赎回',width:130}
         ,{field:'cashManaCateStr', title: '是否现金管理类',width:130}
         ,{field:'cmmodeStr', title: '产品资产配置方式',width:130}

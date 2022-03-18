@@ -21,7 +21,7 @@
             <Cell order="17" name="募集方式">raiseTypeStr</Cell>
             <Cell order="18" name="收益类型">profitTypeStr</Cell>
             <Cell order="19" name="新老产品标记">isFhxgcpStr</Cell>
-            <Cell order="20" name="产品期限">termtype</Cell>
+            <Cell order="20" name="产品期限">termtypeStr</Cell>
             <Cell order="21" name="是否金融同业专属">excFinSectorStr</Cell>
             <Cell order="22" name="资金投向地区">investAraeStr</Cell>
             <Cell order="23" name="产品投资国家或地区">investCountryStr</Cell>

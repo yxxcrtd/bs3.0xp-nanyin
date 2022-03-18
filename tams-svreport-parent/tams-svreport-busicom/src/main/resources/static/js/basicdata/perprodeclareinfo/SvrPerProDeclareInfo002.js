@@ -283,7 +283,7 @@
             $("#creditMode").attr("disabled",true);
         }
         // 合作模式
-        var repContMode = $("#repContMode").val();
+        var repContMode = $("#contMode").val();
         if(repContMode == copModeSigRun || !repContMode){
             // 合作机构名称 当 合作模式 要素选择 独立运作 时，此要素不可填
             $("#cooperationName").val('').trigger('change');

@@ -39,7 +39,7 @@
                                 <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.prodName}">产品名称</label>
                                 <div class="layui-input-inline input-inline">
                                     <input type="text" name="prodName" id="prodName"
-                                           class="layui-input form-input" maxlength=200
+                                           class="layui-input form-input" maxlength="120"
                                            data-th-placeholder="#{SysCommon.placeholder}"
                                            data-th-value='${entity?.prodName}' required>
                                 </div>
@@ -49,7 +49,8 @@
                                 <div class="layui-input-inline input-inline">
                                     <input type="text" th:id="prodInsId" th:name="prodInsId"
                                            class="layui-input form-input"
-                                           data-th-value="${entity?.prodInsId}" data-textrange="0" maxlength="100"
+                                           data-th-placeholder="#{SysCommon.placeholder}"
+                                           data-th-value="${entity?.prodInsId}" data-textrange="0" maxlength="60"
                                            data-th-required="true" />
                                 </div>
                             </div>
@@ -57,7 +58,7 @@
                                 <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.prodBrand}">产品品牌</label>
                                 <div class="layui-input-inline input-inline">
                                     <input type="text" th:id="prodBrand" th:name="prodBrand"
-                                           maxlength="120"
+                                           maxlength="120" data-th-placeholder="#{SysCommon.placeholder}"
                                            data-th-value="${entity?.prodBrand}" class="layui-input form-input" />
                                 </div>
                             </div>
@@ -68,6 +69,7 @@
                                 <div class="layui-input-inline input-inline">
                                     <input type="text" th:id="prodStage" th:name="prodStage"
                                            class="layui-input form-input text-number"
+                                           data-th-placeholder="#{SysCommon.placeholder}"
                                            data-th-value="${entity?.prodStage}" data-textrange="0" maxlength="4"
                                            data-th-required="true" />
                                 </div>
@@ -88,8 +90,7 @@
                                             class="layui-input form-input input-select"
                                             data-th-placeholder="#{SysCommon.placeholder}"
                                             data-th-initValue='${entity?.profitType}'
-                                            data-th-data-result="${SVR_PROD_PROFIT_TYPE}"
-                                            childrenIds="operateMode" required>
+                                            data-th-data-result="${SVR_PROD_PROFIT_TYPE}" required>
                                     </select>
                                 </div>
                             </div>
@@ -104,7 +105,7 @@
                                            placeholder="请输入18位有效证件"  required/>
                                     <input type="text" th:id="approverName" th:name="approverName"
                                            class="layui-input form-input" style="width:30%;display:inline-block;"
-                                           data-th-value="${entity?.approverName}" maxlength="20"
+                                           data-th-value="${entity?.approverName}" maxlength="200"
                                            placeholder="请输入姓名" required/>
                                 </div>
                             </div>
@@ -116,7 +117,7 @@
                                            data-th-value="${entity?.designerId}" placeholder="请输入18位有效证件" required/>
                                     <input type="text" th:id= "designerName" th:name="designerName"
                                            class="layui-input form-input" style="width:30%;display:inline-block;"
-                                           data-th-value="${entity?.designerName}" maxlength="20"
+                                           data-th-value="${entity?.designerName}" maxlength="200"
                                            placeholder="请输入姓名" required/>
                                 </div>
                             </div>
@@ -139,7 +140,7 @@
                                 <div class="layui-input-inline input-inline">
                                     <input type="text" th:id="liaisonName" th:name="liaisonName"
                                            maxlength="32" class="layui-input form-input"
-                                           data-th-value="${entity?.liaisonName}" placeholder="请输入"  required/>
+                                           data-th-value="${entity?.liaisonName}" placeholder="请输入内容"  required/>
                                 </div>
                             </div>
                             <div class="form-inline-wrap">
@@ -147,7 +148,7 @@
                                 <div class="layui-input-inline input-inline">
                                     <input type="text" th:id="liaisonTel" th:name="liaisonTel"
                                            class="layui-input form-input" maxlength="30"
-                                           data-th-value="${entity?.liaisonTel}" placeholder="请输入"  required/>
+                                           data-th-value="${entity?.liaisonTel}" placeholder="请输入内容"  required/>
                                     <span id="liaisonTel_showRule"
                                        class="layui-btn layui-btn-sm form-input-text">规则</span>
                                 </div>
@@ -157,7 +158,7 @@
                                 <div class="layui-input-inline input-inline">
                                     <input type="text" th:id="liaisonMobile" th:name="liaisonMobile"
                                            class="layui-input form-input" maxlength="11"
-                                           data-th-value="${entity?.liaisonMobile}" placeholder="请输入"   required/>
+                                           data-th-value="${entity?.liaisonMobile}" placeholder="请输入内容"   required/>
                                 </div>
                             </div>
                         </div>
@@ -167,7 +168,7 @@
                                 <div class="layui-input-inline input-inline">
                                     <input type="text" th:id="liaisonEmail" th:name="liaisonEmail"
                                            class="layui-input form-input" maxlength="50"
-                                           data-th-value="${entity?.liaisonEmail}" placeholder="请输入" data-th-required="true" />
+                                           data-th-value="${entity?.liaisonEmail}" placeholder="请输入内容" data-th-required="true" />
                                 </div>
                             </div>
                             <div class="form-inline-wrap">
@@ -232,7 +233,7 @@
                                 <div class="layui-input-inline input-inline">
                                     <select th:id="operateMode" th:name="operateMode"
                                             class="layui-input form-input input-select"
-                                            data-th-data-result="${SVR_OPERATEMODE_DECLARE}" placeholder="请输入内容" parentIds="profitType"
+                                            data-th-data-result="${SVR_OPERATEMODE_DECLARE}" placeholder="请输入内容" required
                                             data-th-initValue="${entity?.operateMode}" data-th-placeholder="#{SysCommon.placeholder}">
                                     </select>
                                 </div>
@@ -273,7 +274,7 @@
                                 <div class="layui-input-inline input-inline">
                                     <input type="text" th:id="mname" th:name="mname"
                                            data-th-value="${entity?.mname}" maxlength=120
-                                           class="layui-input form-input" placeholder="请输入" />
+                                           class="layui-input form-input" placeholder="请输入内容" />
                                 </div>
                             </div>
                             <div class="form-inline-wrap">
@@ -303,8 +304,9 @@
                             <div class="form-inline-wrap">
                                 <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.yield}">业绩比较基准</label>
                                 <div class="layui-input-inline input-inline">
-                                    <input type="text" th:id="yield" th:name="yield" maxlength= 9 data-textrange = '5'
-                                           data-th-value="${entity?.yield}" class="layui-input form-input text-number"> <span
+                                    <input type="text" th:id="yield" th:name="yield" maxlength="8" data-textrange='5'
+                                           data-th-value="${entity?.yield}" class="layui-input form-input text-number" required
+                                           data-th-placeholder="#{SysCommon.placeholder}"><span
                                         class="input-right-show">%</span>
                                 </div>
                             </div>
@@ -339,7 +341,7 @@
                                            data-textrange="0" maxlength="5"
                                            onkeyup="this.value=this.value.replace(/\D/g,'')"
                                            onafterpaste="this.value=this.value.replace(/\D/g,'')"
-                                    />
+                                           placeholder="请输入内容"/>
                                 </div>
                             </div>
                             <div class="form-inline-wrap">
@@ -371,7 +373,7 @@
                                 <div class="layui-input-inline input-inline">
                                     <input type="text" th:id="saleAmtStr" th:name="saleAmtStr"
                                            data-th-value="${entity?.saleAmtStr}" maxlength=15
-                                           class="layui-input form-input text-number" placeholder="请输入" required/>
+                                           class="layui-input form-input text-number" placeholder="请输入内容" required/>
                                     <span class="input-right-show">元</span>
                                 </div>
                             </div>
@@ -379,9 +381,9 @@
                                 <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.saleFeeRate}">销售手续费率%</label>
                                 <div class="layui-input-inline input-inline">
                                     <input type="text" th:id="saleFeeRate" th:name="saleFeeRate"
-                                           data-textrange = '5' maxlength=9
+                                           data-textrange="5" maxlength="8"
                                            data-th-value="${entity?.saleFeeRate}"
-                                           class="layui-input form-input text-number" placeholder="请输入" required>
+                                           class="layui-input form-input text-number" placeholder="请输入内容" required>
                                     <span class="input-right-show">%</span>
                                 </div>
                             </div>
@@ -425,9 +427,9 @@
                                 <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.truFeeRate}">托管费率</label>
                                 <div class="layui-input-inline input-inline">
                                     <input type="text" th:id="truFeeRate" th:name="truFeeRate"
-                                           data-textrange = '5' maxlength=9
+                                           data-textrange="5" maxlength="9"
                                            data-th-value="${entity?.truFeeRate}"
-                                           class="layui-input form-input text-number" placeholder="请输入" required>
+                                           class="layui-input form-input text-number" placeholder="请输入内容" required>
                                     <span class="input-right-show">%</span>
                                 </div>
                             </div>
@@ -453,9 +455,9 @@
                                 <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.raiseAmtPlan}">计划募集金额</label>
                                 <div class="layui-input-inline input-inline">
                                     <input type="text" th:id="raiseAmtPlan" th:name="raiseAmtPlan"
-                                           data-textrange='2' data-fixtype='2'
+                                           data-textrange='2' data-fixtype='2' maxlength="15"
                                            data-th-value="${entity?.raiseAmtPlan}"
-                                           data-th-required="true"
+                                           data-th-required="true" placeholder="请输入内容"
                                            class="layui-input form-input text-number"> <span
                                         class="input-right-show">元</span>
                                 </div>
@@ -480,8 +482,8 @@
                                 <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.inDepCode}">境内托管机构代码</label>
                                 <div class="layui-input-inline input-inline">
                                     <input type="text" th:id="inDepCode" th:name="inDepCode"
-                                           data-th-value="${entity?.inDepCode}" maxlength=12
-                                           class="layui-input form-input" placeholder="请输入"
+                                           data-th-value="${entity?.inDepCode}" maxlength="12"
+                                           class="layui-input form-input" placeholder="请输入内容"
                                     >
                                 </div>
                             </div>
@@ -502,8 +504,8 @@
                                 <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.outDepName}">境外托管机构名称</label>
                                 <div class="layui-input-inline input-inline">
                                     <input type="text" th:id="outDepName" th:name="outDepName"
-                                           data-th-value="${entity?.outDepName}" maxlength=200
-                                           class="layui-input form-input" placeholder="请输入"
+                                           data-th-value="${entity?.outDepName}" maxlength="120"
+                                           class="layui-input form-input" placeholder="请输入内容"
                                     >
                                 </div>
                             </div>
@@ -552,9 +554,9 @@
                             <div class="form-inline-wrap">
                                 <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.investFeeRate}">投资管理费率</label>
                                 <div class="layui-input-inline input-inline">
-                                    <input type="text" th:id="investFeeRate" th:name="investFeeRate" data-textrange = '5'
-                                           data-th-value="${entity?.investFeeRate}" maxlength=9
-                                           class="layui-input form-input text-number" placeholder="请输入" required>
+                                    <input type="text" th:id="investFeeRate" th:name="investFeeRate" data-textrange="5"
+                                           data-th-value="${entity?.investFeeRate}" maxlength="8"
+                                           class="layui-input form-input text-number" placeholder="请输入内容" required>
                                     <span class="input-right-show">%</span>
                                 </div>
                             </div>
@@ -597,7 +599,7 @@
                                 <div class="layui-input-inline input-inline">
                                     <input type="text" th:id="cooperationName" th:name="cooperationName" maxlength=120
                                            class="layui-input form-input"
-                                           data-th-value="${entity?.cooperationName}" placeholder="请输入" >
+                                           data-th-value="${entity?.cooperationName}" placeholder="请输入内容" >
                                 </div>
                             </div>
                             <div class="form-inline-wrap">
@@ -633,9 +635,9 @@
                             <div class="form-inline-wrap">
                                 <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.invTypeRat}">投资资产种类及比例</label>
                                 <div class="layui-input-inline input-inline">
-								<textarea th:id="invTypeRat" th:name="invTypeRat" maxlength=300
-                                          data-th-text="${entity?.invTypeRat}"
-                                          class="layui-input form-input layui-textarea" placeholder="请输入"></textarea>
+								<textarea th:id="invTypeRat" th:name="invTypeRat" maxlength="300"
+                                          data-th-text="${entity?.invTypeRat}" data-th-required="true"
+                                          class="layui-input form-input layui-textarea" placeholder="请输入内容"></textarea>
                                     <span id="repInvTypeRat_showRule"
                                        class="layui-btn layui-btn-sm form-input-text">规则</span>
                                 </div>
@@ -677,7 +679,7 @@
                                 <div class="layui-input-inline input-inline">
 							    <textarea th:id="remark" th:name="remark"
                                           class="layui-input form-input layui-textarea"
-                                          placeholder="请输入" maxlength=256
+                                          placeholder="请输入内容" maxlength="256"
                                           data-th-text="${entity?.remark}"></textarea>
                                 </div>
                             </div>

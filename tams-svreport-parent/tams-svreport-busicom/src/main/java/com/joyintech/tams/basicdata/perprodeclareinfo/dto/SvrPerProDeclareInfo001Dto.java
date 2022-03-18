@@ -1723,7 +1723,18 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
     }
 
     public String getPrdSpecPropertyStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.产品特殊属性,this.prdSpecProperty);
+        if (this.getPrdSpecProperty()!=null && (!this.getPrdSpecProperty().equals("")) ){
+            String[] split = this.getPrdSpecProperty().split(",");
+            if (split.length > 1 ){
+                String prdSpecPropertyStr = "";
+                for (String str : split) {
+                    prdSpecPropertyStr += SysDataUtil.getNameFromDataDict(DictCode.产品特殊属性,str) + ",";
+                }
+                return prdSpecPropertyStr.substring(0,prdSpecPropertyStr.length()-1);
+            }
+            return SysDataUtil.getNameFromDataDict(DictCode.产品特殊属性,this.getPrdSpecProperty());
+        }
+        return this.getPrdSpecProperty();
     }
 
     /**
