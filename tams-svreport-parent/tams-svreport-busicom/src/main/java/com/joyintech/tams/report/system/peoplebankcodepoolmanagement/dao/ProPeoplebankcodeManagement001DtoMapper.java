@@ -66,6 +66,10 @@ public interface ProPeoplebankcodeManagement001DtoMapper {
      * @see
      * @since 1.0
      */
-    List<String> getProPeopleBankExcelList(@Param("list") List<ProPeoplebankcodeManagement001Dto> list,
+    List<ProPeoplebankcodeManagement001Dto> getProPeopleBankExcelList(@Param("list") List<ProPeoplebankcodeManagement001Dto> list,
                                                        @Param("statusEffective")String statusEffective);
+
+	ProPeoplebankcodeManagement001Dto selectByPbcCode(@Param("pbcCode")String pbcCode);
+
+	ProPeoplebankcodeManagement001Dto CheckProdExist(ProPeoplebankcodeManagement001Dto record);
 }

@@ -237,14 +237,29 @@
             t1.INSIDE_PROD_ID LIKE  CONCAT('%', CONCAT(#{search}, '%'))
           </if>                                                                                                                                                                                                                                   
   </select>
-   <select id="getProPeopleBankExcelList" resultType="string">
-    select 
-    INSIDE_PROD_ID
-    from PBC_PROD_ASSETPOOL_CODE
-    where
-	1=1
-	<foreach collection="list" item="bankCode" open="AND INSIDE_PROD_ID || '|' || CODE_TYPE IN (" close=")" separator=",">
-		 	#{bankCode.insideProdIdAndCodeType} 
-	</foreach>
-  </select>
+    <select id="getProPeopleBankExcelList" resultType="com.joyintech.tams.report.system.peoplebankcodepoolmanagement.dto.ProPeoplebankcodeManagement001Dto">
+        select
+        INSIDE_PROD_ID,
+        CODE_TYPE
+        from PBC_PROD_ASSETPOOL_CODE
+        where
+        1=1
+        <foreach collection="list" item="bankCode" open="AND CONCAT_WS('|', INSIDE_PROD_ID, CODE_TYPE) IN (" close=")" separator=",">
+            #{bankCode.insideProdIdAndCodeType}
+        </foreach>
+    </select>
+
+    <select id="selectByPbcCode" resultMap="BaseResultMap" parameterType="com.joyintech.tams.report.system.peoplebankcodepoolmanagement.dto.ProPeoplebankcodeManagement001Dto" >
+        select
+        <include refid="Base_Column_List" />
+        from PBC_PROD_ASSETPOOL_CODE
+        where PBC_CODE = #{pbcCode} AND STATUS !='D'
+    </select>
+
+    <select id="CheckProdExist" resultMap="BaseResultMap" parameterType="com.joyintech.tams.report.system.peoplebankcodepoolmanagement.dto.ProPeoplebankcodeManagement001Dto" >
+        select
+        PROD_ID INSIDE_PROD_ID
+        from CHB_PRD_BASEINFO
+        where PROD_ID = #{insideProdId} and status !='D'
+    </select>
 </mapper>
