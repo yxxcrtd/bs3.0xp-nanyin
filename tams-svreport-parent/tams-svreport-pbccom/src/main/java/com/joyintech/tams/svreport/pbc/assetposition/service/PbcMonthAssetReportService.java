@@ -14,8 +14,6 @@ import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.svreport.pbc.assetdebt.dao.*;
 import com.joyintech.tams.svreport.pbc.assetdebt.dto.*;
-import com.joyintech.tams.svreport.pbc.reportdetail.dto.PbcMonthReportDetailAsset;
-import com.joyintech.tams.svreport.pbc.reportdetail.service.PbcMonthReportDetailAssetUtil;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.ResultContext;
@@ -161,12 +159,6 @@ public class PbcMonthAssetReportService  extends BaseService{
 	@Autowired
     private SysInstRegBankCode001Mapper sysInstRegBankCode001Mapper;
 
-    @Autowired
-	private PbcMonthReportDetailAssetUtil pbcMonthReportDetailAssetUtil;
-
-    private List<PbcMonthReportDetailAsset> assetDetailList;
-
-
 	/*
 	 * 默认股权种类
 	 */
@@ -197,7 +189,6 @@ public class PbcMonthAssetReportService  extends BaseService{
      * void
      */
     public void generateMonthAssetReport(Date generateDate,List<String> prodList,boolean isEdit){
-        assetDetailList = new ArrayList<>();
         logger.debug("资产报表生成(2_1\2_4\2_5\3_3\4_1):----开始------" +  df.format(new Date()));
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(generateDate);
@@ -255,9 +246,6 @@ public class PbcMonthAssetReportService  extends BaseService{
         // 表2-4 资产收益权按基础资产投向分类统计表
 //        generateMonthAssetReportInCome(posAssetList,generateDate,assetMap,isEdit);
         generateMonthAssetReportInComeEx(posAssetList,generateDate,chbLoandMap,isEdit);
-        //为明细信息赋值对应的贷款属性
-        PbcMonthReportDetailAssetUtil.updateLoan(assetDetailList,chbLoandMap);
-
 
         // 表2-5 企业债券分行业、企业规模统计
         generateMonthReportCompanyBond(posAssetList,generateDate,assetMap,isEdit);
@@ -265,8 +253,6 @@ public class PbcMonthAssetReportService  extends BaseService{
 
         //表4-1 资管产品资产配置情况
         generateMonthReportAssetConfiguration(posAssetList,posProdList,generateDate, isEdit,PbcReportType.PBC_REPORT_4_1);
-
-        pbcMonthReportDetailAssetUtil.insertBatch(assetDetailList,generateDate);
 
         logger.debug("资产报表生成(2_1\2_4\2_5\3_3\4_1):----结束------" +  df.format(new Date()));
     }
@@ -504,146 +490,153 @@ public class PbcMonthAssetReportService  extends BaseService{
                 setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H23000_FJRQYZW, reportType, rateMap, source, null, massageMap);
             }
 
-            //h30000	三、银行资本补充工具合计	=“h31000优先股+h32000永续债（债性）+h33000永续债（股性）+h34000二级资本债”
-            if(DictCodeList.是否_是.getValue().equals(pos.getBankSecPrefer())){
-                //h31000	  其中：优先股	统计资产要素信息中 是否商业银行优先股=“是”的资产
-                setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H31000_QZYXG, reportType, rateMap, source, null, massageMap);
-                setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H30000_YHZBBCGJ, reportType, rateMap, source, null, massageMap);
+            if(!PbcMonthReportConstants.PBC_ASSETTYPE1_P14.equals(pos.getAssetType1())){
+                //3和4过滤减值
+                //要过滤应收账款和应付账款
+                if(!(PbcMonthReportConstants.PBC_ASSETTYPE1_P11.equals(pos.getAssetType1())||PbcMonthReportConstants.PBC_ASSETTYPE1_P12.equals(pos.getAssetType1()))){
+                    //h30000	三、银行资本补充工具合计	=“h31000优先股+h32000永续债（债性）+h33000永续债（股性）+h34000二级资本债”
+                    if(DictCodeList.是否_是.getValue().equals(pos.getBankSecPrefer())){
+                        //h31000	  其中：优先股	统计资产要素信息中 是否商业银行优先股=“是”的资产
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H31000_QZYXG, reportType, rateMap, source, null, massageMap);
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H30000_YHZBBCGJ, reportType, rateMap, source, null, massageMap);
+                    }
+
+                    if(DictCodeList.是否_是.getValue().equals(pos.getBankSecPerpetual())){
+                        if(DictCodeListExt3.债券性质_债性.getValue().equals(pos.getIsPerpetual())){
+                            //h32000	        永续债（债性）	统计资产要素信息中 是否商业银行永续债=“是”，且债券性质=“债性”的资产
+                            setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H32000_YXZZX, reportType, rateMap, source, null, massageMap);
+                            setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H30000_YHZBBCGJ, reportType, rateMap, source, null, massageMap);
+                        }
+                        if(DictCodeListExt3.债券性质_股性.getValue().equals(pos.getIsPerpetual())){
+                            //h33000 永续债（股性）	统计资产要素信息中 是否商业银行永续债=“是”，且债券性质=“股性”的资产
+                            setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H33000_YXZGX, reportType, rateMap, source, null, massageMap);
+                            setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H30000_YHZBBCGJ, reportType, rateMap, source, null, massageMap);
+                        }
+                    }
+
+                    if(DictCodeList.是否_是.getValue().equals(pos.getBankSecCapital())){
+                        //h34000	   二级资本债	统计资产要素信息中 是否商业银行二级资本债=“是”的资产
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H34000_EJZBZ, reportType, rateMap, source, null, massageMap);
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H30000_YHZBBCGJ, reportType, rateMap, source, null, massageMap);
+                    }
+                }
+
+                //h40000	四、债券逆回购和同业拆借 	=“h41000住户+h42000广义政府+h43000非金融企业+h44000银行业存款类机构
+                // +h45000银行业非存款类金融机构+h46000非银行业金融机构+h47000特定目的载体+h48000境外”
+                if(PbcMonthReportConstants.PBC_ASSETTYPE2_R01.equals(pos.getAssetType2())){
+                    if (PbcMonthReportConstants.PBC_ASSETTYPE3_L01.equals(pos.getAssetType3())) {
+                        //h41000	  住户	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“住户”　
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H41000_ZH, reportType, rateMap, source, null, massageMap);
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H40000_ZQNHGHTYCJ, reportType, rateMap, source, null, massageMap);
+                    }
+
+                    if (PbcMonthReportConstants.PBC_ASSETTYPE3_L02.equals(pos.getAssetType3())) {
+                        //h42000	　广义政府	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“广义政府”　
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H42000_GYZF, reportType, rateMap, source, null, massageMap);
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H40000_ZQNHGHTYCJ, reportType, rateMap, source, null, massageMap);
+                    }
+
+                    if (PbcMonthReportConstants.PBC_ASSETTYPE3_L03.equals(pos.getAssetType3())) {
+                        //h43000	　非金融企业  	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“非金融企业”　　
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H43000_FJRQY, reportType, rateMap, source, null, massageMap);
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H40000_ZQNHGHTYCJ, reportType, rateMap, source, null, massageMap);
+                    }
+
+                    if (PbcMonthReportConstants.PBC_ASSETTYPE3_L04.equals(pos.getAssetType3())) {
+                        //h44000	  银行业存款类金融机构	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“银行业存款类金融机构”　
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H44000_YHYCKLJRJG, reportType, rateMap, source, null, massageMap);
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H40000_ZQNHGHTYCJ, reportType, rateMap, source, null, massageMap);
+                    }
+
+                    if (PbcMonthReportConstants.PBC_ASSETTYPE3_L05.equals(pos.getAssetType3())) {
+                        //h45000	　银行业非存款类金融机构	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“银行业非存款类金融机构”　
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H45000_YHYFCKLJRJG, reportType, rateMap, source, null, massageMap);
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H40000_ZQNHGHTYCJ, reportType, rateMap, source, null, massageMap);
+                    }
+
+                    if (PbcMonthReportConstants.PBC_ASSETTYPE3_L06.equals(pos.getAssetType3())) {
+                        //h46000	　非银行业金融机构  	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“非银行业金融机构”　　
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H46000_FYHYJRJG, reportType, rateMap, source, null, massageMap);
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H40000_ZQNHGHTYCJ, reportType, rateMap, source, null, massageMap);
+                    }
+                    if(PbcMonthReportConstants.PBC_ASSETTYPE3_L07.equals(pos.getAssetType3())){
+                        //h46100	 其中：中央交易对手方	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“非银行业金融机构-中央交易对手”
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H46100_QZZYJYDSF, reportType, rateMap, source, null, massageMap);
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H46000_FYHYJRJG, reportType, rateMap, source, null, massageMap);
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H40000_ZQNHGHTYCJ, reportType, rateMap, source, null, massageMap);
+                    }
+                    //h47000	特定目的载体	=“h47100银行非保本理财+h47200信托公司资管产品+h47300证券公司及其子公司资管产品+h47400基金管理公司及其子公司专户
+                    // + h47500期货公司及其子公司资管产品+h47600保险资管产品+h47700金融资产投资公司资管产品+h47800公募基金+
+                    // h47900私募机构私募基金+h47a00其他特定目的载体”
+                    if(PbcMonthReportConstants.PBC_ASSETTYPE3_L08.equals(pos.getAssetType3())){
+                        //h47100	银行非保本理财	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“银行非保本理财”
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47100_YHFBBLC, reportType, rateMap, source, null, massageMap);
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47000_TDMDZT, reportType, rateMap, source, null, massageMap);
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H40000_ZQNHGHTYCJ, reportType, rateMap, source, null, massageMap);
+                    }
+                    if(PbcMonthReportConstants.PBC_ASSETTYPE3_L09.equals(pos.getAssetType3())){
+                        //h47200	信托公司资管产品	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“信托公司资管产品”
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47200_XTGSZGCP, reportType, rateMap, source, null, massageMap);
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47000_TDMDZT, reportType, rateMap, source, null, massageMap);
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H40000_ZQNHGHTYCJ, reportType, rateMap, source, null, massageMap);
+                    }
+                    if(PbcMonthReportConstants.PBC_ASSETTYPE3_L10.equals(pos.getAssetType3())){
+                        //h47300	证券公司及其子公司资管产品	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“证券公司及其子公司资管产品”
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47300_ZQGSJQZGS, reportType, rateMap, source, null, massageMap);
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47000_TDMDZT, reportType, rateMap, source, null, massageMap);
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H40000_ZQNHGHTYCJ, reportType, rateMap, source, null, massageMap);
+                    }
+                    if(PbcMonthReportConstants.PBC_ASSETTYPE3_L11.equals(pos.getAssetType3())){
+                        //h47400	基金管理公司及其子公司专户	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“基金管理公司及其子公司专户”
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47400_JJGLGSJQZGS, reportType, rateMap, source, null, massageMap);
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47000_TDMDZT, reportType, rateMap, source, null, massageMap);
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H40000_ZQNHGHTYCJ, reportType, rateMap, source, null, massageMap);
+                    }
+                    if(PbcMonthReportConstants.PBC_ASSETTYPE3_L12.equals(pos.getAssetType3())){
+                        //h47500	期货公司及其子公司资管产品	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“期货公司及其子公司资管产品”
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47500_QHGLGSJQZGS, reportType, rateMap, source, null, massageMap);
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47000_TDMDZT, reportType, rateMap, source, null, massageMap);
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H40000_ZQNHGHTYCJ, reportType, rateMap, source, null, massageMap);
+                    }
+                    if(PbcMonthReportConstants.PBC_ASSETTYPE3_L13.equals(pos.getAssetType3())){
+                        //h47600	保险资管产品	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“保险资管产品”
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47600_BXZGCP, reportType, rateMap, source, null, massageMap);
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47000_TDMDZT, reportType, rateMap, source, null, massageMap);
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H40000_ZQNHGHTYCJ, reportType, rateMap, source, null, massageMap);
+                    }
+                    if(PbcMonthReportConstants.PBC_ASSETTYPE3_L14.equals(pos.getAssetType3())){
+                        //h47700	金融资产投资公司资管产品	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“金融资产投资公司资管产品”
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47700_JRZCTZGSJQZGS, reportType, rateMap, source, null, massageMap);
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47000_TDMDZT, reportType, rateMap, source, null, massageMap);
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H40000_ZQNHGHTYCJ, reportType, rateMap, source, null, massageMap);
+                    }
+                    if(PbcMonthReportConstants.PBC_ASSETTYPE3_L15.equals(pos.getAssetType3())){
+                        //h47800	公募基金	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“公募基金”
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47800_GMJJ, reportType, rateMap, source, null, massageMap);
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47000_TDMDZT, reportType, rateMap, source, null, massageMap);
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H40000_ZQNHGHTYCJ, reportType, rateMap, source, null, massageMap);
+                    }
+                    if(PbcMonthReportConstants.PBC_ASSETTYPE3_L16.equals(pos.getAssetType3())){
+                        //h47900	私募机构私募基金	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“私募机构私募基金”
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47900_SMJGSMJJ, reportType, rateMap, source, null, massageMap);
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47000_TDMDZT, reportType, rateMap, source, null, massageMap);
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H40000_ZQNHGHTYCJ, reportType, rateMap, source, null, massageMap);
+                    }
+                    if(PbcMonthReportConstants.PBC_ASSETTYPE3_L99.equals(pos.getAssetType3())){
+                        //h47a00	其他特定目的载体	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“其他特定目的载体”
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47A00_QTTDMDZT, reportType, rateMap, source, null, massageMap);
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47000_TDMDZT, reportType, rateMap, source, null, massageMap);
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H40000_ZQNHGHTYCJ, reportType, rateMap, source, null, massageMap);
+                    }
+                    if(PbcMonthReportConstants.PBC_ASSETTYPE3_L98.equals(pos.getAssetType3())){
+                        //h48000	　境外	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“境外”
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H48000_JW, reportType, rateMap, source, null, massageMap);
+                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H40000_ZQNHGHTYCJ, reportType, rateMap, source, null, massageMap);
+                    }
+
+                }
             }
 
-            if(DictCodeList.是否_是.getValue().equals(pos.getBankSecPerpetual())){
-                if(DictCodeListExt3.债券性质_债性.getValue().equals(pos.getIsPerpetual())){
-                    //h32000	        永续债（债性）	统计资产要素信息中 是否商业银行永续债=“是”，且债券性质=“债性”的资产
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H32000_YXZZX, reportType, rateMap, source, null, massageMap);
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H30000_YHZBBCGJ, reportType, rateMap, source, null, massageMap);
-                }
-                if(DictCodeListExt3.债券性质_股性.getValue().equals(pos.getIsPerpetual())){
-                    //h33000 永续债（股性）	统计资产要素信息中 是否商业银行永续债=“是”，且债券性质=“股性”的资产
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H33000_YXZGX, reportType, rateMap, source, null, massageMap);
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H30000_YHZBBCGJ, reportType, rateMap, source, null, massageMap);
-                }
-            }
-
-            if(DictCodeList.是否_是.getValue().equals(pos.getBankSecCapital())){
-                //h34000	   二级资本债	统计资产要素信息中 是否商业银行二级资本债=“是”的资产
-                setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H34000_EJZBZ, reportType, rateMap, source, null, massageMap);
-                setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H30000_YHZBBCGJ, reportType, rateMap, source, null, massageMap);
-            }
-
-            //h40000	四、债券逆回购和同业拆借 	=“h41000住户+h42000广义政府+h43000非金融企业+h44000银行业存款类机构
-            // +h45000银行业非存款类金融机构+h46000非银行业金融机构+h47000特定目的载体+h48000境外”
-            if(PbcMonthReportConstants.PBC_ASSETTYPE2_R01.equals(pos.getAssetType2())){
-                if (PbcMonthReportConstants.PBC_ASSETTYPE3_L01.equals(pos.getAssetType3())) {
-                    //h41000	  住户	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“住户”　
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H41000_ZH, reportType, rateMap, source, null, massageMap);
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H40000_ZQNHGHTYCJ, reportType, rateMap, source, null, massageMap);
-                }
-
-                if (PbcMonthReportConstants.PBC_ASSETTYPE3_L02.equals(pos.getAssetType3())) {
-                    //h42000	　广义政府	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“广义政府”　
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H42000_GYZF, reportType, rateMap, source, null, massageMap);
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H40000_ZQNHGHTYCJ, reportType, rateMap, source, null, massageMap);
-                }
-
-                if (PbcMonthReportConstants.PBC_ASSETTYPE3_L03.equals(pos.getAssetType3())) {
-                    //h43000	　非金融企业  	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“非金融企业”　　
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H43000_FJRQY, reportType, rateMap, source, null, massageMap);
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H40000_ZQNHGHTYCJ, reportType, rateMap, source, null, massageMap);
-                }
-
-                if (PbcMonthReportConstants.PBC_ASSETTYPE3_L04.equals(pos.getAssetType3())) {
-                    //h44000	  银行业存款类金融机构	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“银行业存款类金融机构”　
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H44000_YHYCKLJRJG, reportType, rateMap, source, null, massageMap);
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H40000_ZQNHGHTYCJ, reportType, rateMap, source, null, massageMap);
-                }
-
-                if (PbcMonthReportConstants.PBC_ASSETTYPE3_L05.equals(pos.getAssetType3())) {
-                    //h45000	　银行业非存款类金融机构	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“银行业非存款类金融机构”　
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H45000_YHYFCKLJRJG, reportType, rateMap, source, null, massageMap);
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H40000_ZQNHGHTYCJ, reportType, rateMap, source, null, massageMap);
-                }
-
-                if (PbcMonthReportConstants.PBC_ASSETTYPE3_L06.equals(pos.getAssetType3())) {
-                    //h46000	　非银行业金融机构  	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“非银行业金融机构”　　
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H46000_FYHYJRJG, reportType, rateMap, source, null, massageMap);
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H40000_ZQNHGHTYCJ, reportType, rateMap, source, null, massageMap);
-                }
-                if(PbcMonthReportConstants.PBC_ASSETTYPE3_L07.equals(pos.getAssetType3())){
-                    //h46100	 其中：中央交易对手方	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“非银行业金融机构-中央交易对手”
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H46100_QZZYJYDSF, reportType, rateMap, source, null, massageMap);
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H46000_FYHYJRJG, reportType, rateMap, source, null, massageMap);
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H40000_ZQNHGHTYCJ, reportType, rateMap, source, null, massageMap);
-                }
-                //h47000	特定目的载体	=“h47100银行非保本理财+h47200信托公司资管产品+h47300证券公司及其子公司资管产品+h47400基金管理公司及其子公司专户
-                // + h47500期货公司及其子公司资管产品+h47600保险资管产品+h47700金融资产投资公司资管产品+h47800公募基金+
-                // h47900私募机构私募基金+h47a00其他特定目的载体”
-                if(PbcMonthReportConstants.PBC_ASSETTYPE3_L08.equals(pos.getAssetType3())){
-                    //h47100	银行非保本理财	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“银行非保本理财”
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47100_YHFBBLC, reportType, rateMap, source, null, massageMap);
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47000_TDMDZT, reportType, rateMap, source, null, massageMap);
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H40000_ZQNHGHTYCJ, reportType, rateMap, source, null, massageMap);
-                }
-                if(PbcMonthReportConstants.PBC_ASSETTYPE3_L09.equals(pos.getAssetType3())){
-                    //h47200	信托公司资管产品	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“信托公司资管产品”
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47200_XTGSZGCP, reportType, rateMap, source, null, massageMap);
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47000_TDMDZT, reportType, rateMap, source, null, massageMap);
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H40000_ZQNHGHTYCJ, reportType, rateMap, source, null, massageMap);
-                }
-                if(PbcMonthReportConstants.PBC_ASSETTYPE3_L10.equals(pos.getAssetType3())){
-                    //h47300	证券公司及其子公司资管产品	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“证券公司及其子公司资管产品”
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47300_ZQGSJQZGS, reportType, rateMap, source, null, massageMap);
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47000_TDMDZT, reportType, rateMap, source, null, massageMap);
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H40000_ZQNHGHTYCJ, reportType, rateMap, source, null, massageMap);
-                }
-                if(PbcMonthReportConstants.PBC_ASSETTYPE3_L11.equals(pos.getAssetType3())){
-                    //h47400	基金管理公司及其子公司专户	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“基金管理公司及其子公司专户”
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47400_JJGLGSJQZGS, reportType, rateMap, source, null, massageMap);
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47000_TDMDZT, reportType, rateMap, source, null, massageMap);
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H40000_ZQNHGHTYCJ, reportType, rateMap, source, null, massageMap);
-                }
-                if(PbcMonthReportConstants.PBC_ASSETTYPE3_L12.equals(pos.getAssetType3())){
-                    //h47500	期货公司及其子公司资管产品	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“期货公司及其子公司资管产品”
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47500_QHGLGSJQZGS, reportType, rateMap, source, null, massageMap);
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47000_TDMDZT, reportType, rateMap, source, null, massageMap);
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H40000_ZQNHGHTYCJ, reportType, rateMap, source, null, massageMap);
-                }
-                if(PbcMonthReportConstants.PBC_ASSETTYPE3_L13.equals(pos.getAssetType3())){
-                    //h47600	保险资管产品	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“保险资管产品”
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47600_BXZGCP, reportType, rateMap, source, null, massageMap);
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47000_TDMDZT, reportType, rateMap, source, null, massageMap);
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H40000_ZQNHGHTYCJ, reportType, rateMap, source, null, massageMap);
-                }
-                if(PbcMonthReportConstants.PBC_ASSETTYPE3_L14.equals(pos.getAssetType3())){
-                    //h47700	金融资产投资公司资管产品	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“金融资产投资公司资管产品”
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47700_JRZCTZGSJQZGS, reportType, rateMap, source, null, massageMap);
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47000_TDMDZT, reportType, rateMap, source, null, massageMap);
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H40000_ZQNHGHTYCJ, reportType, rateMap, source, null, massageMap);
-                }
-                if(PbcMonthReportConstants.PBC_ASSETTYPE3_L15.equals(pos.getAssetType3())){
-                    //h47800	公募基金	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“公募基金”
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47800_GMJJ, reportType, rateMap, source, null, massageMap);
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47000_TDMDZT, reportType, rateMap, source, null, massageMap);
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H40000_ZQNHGHTYCJ, reportType, rateMap, source, null, massageMap);
-                }
-                if(PbcMonthReportConstants.PBC_ASSETTYPE3_L16.equals(pos.getAssetType3())){
-                    //h47900	私募机构私募基金	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“私募机构私募基金”
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47900_SMJGSMJJ, reportType, rateMap, source, null, massageMap);
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47000_TDMDZT, reportType, rateMap, source, null, massageMap);
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H40000_ZQNHGHTYCJ, reportType, rateMap, source, null, massageMap);
-                }
-                if(PbcMonthReportConstants.PBC_ASSETTYPE3_L99.equals(pos.getAssetType3())){
-                    //h47a00	其他特定目的载体	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“其他特定目的载体”
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47A00_QTTDMDZT, reportType, rateMap, source, null, massageMap);
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H47000_TDMDZT, reportType, rateMap, source, null, massageMap);
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H40000_ZQNHGHTYCJ, reportType, rateMap, source, null, massageMap);
-                }
-                if(PbcMonthReportConstants.PBC_ASSETTYPE3_L98.equals(pos.getAssetType3())){
-                    //h48000	　境外	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“境外”
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H48000_JW, reportType, rateMap, source, null, massageMap);
-                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H40000_ZQNHGHTYCJ, reportType, rateMap, source, null, massageMap);
-                }
-
-            }
             //“存款”（h51000）+“可转让存单”（h52000）+“债务证券”（h53000）+“除回购和拆借外贷款”（h54000）+“回购和拆借”（h55000）
             // +“资产收益权”（h56000）+“股权及特定目的载体份额”（h57000）+“金融衍生品”（h58000）+“应收账款”（h59000）+“其他”（h5a000）
             if(PbcMonthReportConstants.PBC_ASSETTYPE3_Z01.equals(pos.getAssetType3())){
@@ -651,7 +644,11 @@ public class PbcMonthAssetReportService  extends BaseService{
                 setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H51000_CK, reportType, rateMap, source, null, massageMap);
                 setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H50000_ZCJZZB, reportType, rateMap, source, null, massageMap);
             }
-            //h52000	  可转让存单	置空
+            //h52000	  可转让存单
+            if(PbcMonthReportConstants.PBC_ASSETTYPE3_Z02.equals(pos.getAssetType3())){
+                setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H52000_KZRCD, reportType, rateMap, source, null, massageMap);
+                setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H50000_ZCJZZB, reportType, rateMap, source, null, massageMap);
+            }
             if(PbcMonthReportConstants.PBC_ASSETTYPE3_Z03.equals(pos.getAssetType3())){
                 //h53000	  债务证券	取上游系统二级科目为“130201摊余成本类债券减值准备”科目，
                 // 对应的所以三级科目且三级对应四级科目对应明细资产的人行资产一级分类为“债务证券”非逾期资产
@@ -688,7 +685,11 @@ public class PbcMonthAssetReportService  extends BaseService{
                 setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H57000_GQJTDMDDZTFE, reportType, rateMap, source, null, massageMap);
                 setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H50000_ZCJZZB, reportType, rateMap, source, null, massageMap);
             }
-            //h58000	  金融衍生品	置空
+            //h58000	  金融衍生品
+            if(PbcMonthReportConstants.PBC_ASSETTYPE3_Z08.equals(pos.getAssetType3())){
+                setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H58000_JRYSP, reportType, rateMap, source, null, massageMap);
+                setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H50000_ZCJZZB, reportType, rateMap, source, null, massageMap);
+            }
             if(PbcMonthReportConstants.PBC_ASSETTYPE3_Z09.equals(pos.getAssetType3())){
                 //h59000	  应收账款	取上游系统二级科目为 “130203 摊余成本类计划类资产减值准备”、“130201 摊余成本类债券减值准备”科目、“130207 买入返售资产减值准备”、“130209 存放同业减值准备”、“130210 拆放同业减值准备”科目，对应的所以三级科目且三级对应且四级科目对应明细资产的已逾期
                 //头寸的时候做过映射处理，这里直接取
@@ -700,7 +701,7 @@ public class PbcMonthAssetReportService  extends BaseService{
         //修改数据组装及入库公共方法
         buildSumValAndInster(result, null, pbcReport, !CollectionUtils.isEmpty(posAssetList),false,null,null,null);
         //循环分支机构的数据组装及入库
-        for (Map.Entry<String, Map<String, PbcMonthAssetPositionDto>> dtoMap : deptMap.entrySet()) {
+        for (Entry<String, Map<String, PbcMonthAssetPositionDto>> dtoMap : deptMap.entrySet()) {
             buildSumValAndInster(dtoMap.getValue(), dtoMap.getKey(), pbcReport, !CollectionUtils.isEmpty(posAssetList),false,null,null,null);
         }
     }
@@ -1155,7 +1156,11 @@ public class PbcMonthAssetReportService  extends BaseService{
                     //减值
                     setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_7K0000_ZCJZZB, reportType, rateMap, source, null, massageMap);
 
-                    setAssetDebtDetailValueSubtract(result.get(PbcReportProperycode.AMT_700000_ZCHJ),pos.getCcy(),pos.getAmt(),rateMap,(Date) massageMap.get("endDate"),source);
+                    //减值给正值的话要减去
+                    //setAssetDebtDetailValueSubtract(result.get(PbcReportProperycode.AMT_700000_ZCHJ),pos.getCcy(),pos.getAmt(),rateMap,(Date) massageMap.get("endDate"),source);
+
+                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_700000_ZCHJ, reportType, rateMap, source, null, massageMap);
+
                 }
                 // 700000 资产合计 = 现金 + 存款 + 可转让存单 + 债务证券
                 // + 贷款 + 资产收益权 + 股权及特定目的载体份额 + 金融衍生品 + 应收账款 + 黄金 + 非金融资产
@@ -4245,14 +4250,7 @@ public class PbcMonthAssetReportService  extends BaseService{
                 pbcReport.setSubmitDeadline(dateList.get(1));
             }
         }
-        
-        
-        // 插入数据，先删除明细表数据，再删除主表数据
-        //WFPLR倒剪数据处理
-        if(!StringUtil.isEmptyList(assetDetailList)){
-            assetDetailList.add(pbcMonthReportDetailAssetUtil.buildAssetDetailwfplr(PbcReportProperycode.AMT_823000_WFPLR,result.get(PbcReportProperycode.AMT_823000_WFPLR).getTotal(),generateDate));
 
-        }
 
         buildSumValAndInster(result, null, pbcReport, !CollectionUtils.isEmpty(posAssetList) ||
                 !CollectionUtils.isEmpty(posProdList) ||
@@ -4262,7 +4260,7 @@ public class PbcMonthAssetReportService  extends BaseService{
         
         if(!PbcReportType.PBC_REPORT_ONEPRD_ASSETDEBT.equals(reportType)){
 	    	//循环分支机构的数据组装及入库
-	        for (Map.Entry<String, Map<String, PbcReportAssetDebtDetailDto>> dtoMap : deptMap.entrySet()) {
+	        for (Entry<String, Map<String, PbcReportAssetDebtDetailDto>> dtoMap : deptMap.entrySet()) {
 	        	buildSumValAndInster(dtoMap.getValue(), dtoMap.getKey(), pbcReport,!CollectionUtils.isEmpty(posAssetList) ||
 		                !CollectionUtils.isEmpty(posProdList) ||
 		                DictCodeListExt2.报送数据状态_删除.getValue()
@@ -4364,7 +4362,7 @@ public class PbcMonthAssetReportService  extends BaseService{
         //返回所有的其他负债
         reback.put("ALL", result.get(PbcReportProperycode.AMT_815000_QTFZ).getTotal());
         
-        for (Map.Entry<String, Map<String, PbcReportAssetDebtDetailDto>> dtoMap : deptMap.entrySet()) {
+        for (Entry<String, Map<String, PbcReportAssetDebtDetailDto>> dtoMap : deptMap.entrySet()) {
             reback.put(dtoMap.getKey(), dtoMap.getValue().get(PbcReportProperycode.AMT_815000_QTFZ).getTotal());
 		}
         
@@ -4531,7 +4529,7 @@ public class PbcMonthAssetReportService  extends BaseService{
                     {
                         return StringUtil.splitToList(GlobalConstant.COMMA, p).get(0);
                         }, p->p,(key1,key2)->key2));
-            for(Map.Entry<String, String> entry : ccyAmountMap.entrySet()){
+            for(Entry<String, String> entry : ccyAmountMap.entrySet()){
             	if(DictCodeListExt1.币种_中债_人民币.getValue().equals(entry.getKey())){
             		continue;
             	}else{
@@ -4992,7 +4990,7 @@ public class PbcMonthAssetReportService  extends BaseService{
         // 插入数据，先删除明细表数据，再删除主表数据
         buildSumValAndInster(result, null, pbcReport, !CollectionUtils.isEmpty(posAssetList),false,null,null,null);
     	//循环分支机构的数据组装及入库
-        for (Map.Entry<String, Map<String, PbcReportCompanyDetailDto>> dtoMap : deptMap.entrySet()) {
+        for (Entry<String, Map<String, PbcReportCompanyDetailDto>> dtoMap : deptMap.entrySet()) {
         	buildSumValAndInster(dtoMap.getValue(), dtoMap.getKey(), pbcReport, !CollectionUtils.isEmpty(posAssetList),false,null,null,null);
 		}
         
@@ -5375,7 +5373,7 @@ public class PbcMonthAssetReportService  extends BaseService{
         
         buildSumValAndInster(result, null, pbcReport, !CollectionUtils.isEmpty(posAssetList),false,null,null,null);
     	//循环分支机构的数据组装及入库
-        for (Map.Entry<String, Map<String, PbcReportCompanyDetailDto>> dtoMap : deptMap.entrySet()) {
+        for (Entry<String, Map<String, PbcReportCompanyDetailDto>> dtoMap : deptMap.entrySet()) {
         	buildSumValAndInster(dtoMap.getValue(), dtoMap.getKey(), pbcReport, !CollectionUtils.isEmpty(posAssetList),false,null,null,null);
 		}
         
@@ -6200,7 +6198,7 @@ public class PbcMonthAssetReportService  extends BaseService{
       //修改数据组装及入库公共方法
     	buildSumValAndInster(result, null, pbcReport, !CollectionUtils.isEmpty(posAssetList),false,null,null,null);
     	//循环分支机构的数据组装及入库
-        for (Map.Entry<String, Map<String, PbcReportCompanyDetailDto>> dtoMap : deptMap.entrySet()) {
+        for (Entry<String, Map<String, PbcReportCompanyDetailDto>> dtoMap : deptMap.entrySet()) {
         	buildSumValAndInster(dtoMap.getValue(), dtoMap.getKey(), pbcReport, !CollectionUtils.isEmpty(posAssetList),false,null,null,null);
 		}
         /*if (pbcReport.isGen()){
@@ -7074,7 +7072,7 @@ public class PbcMonthAssetReportService  extends BaseService{
         //修改数据组装及入库公共方法
     	buildSumValAndInster(result, null, pbcReport, !CollectionUtils.isEmpty(posAssetList),false,null,null,null);
     	//循环分支机构的数据组装及入库
-        for (Map.Entry<String, Map<String, PbcReportCompanyDetailDto>> dtoMap : deptMap.entrySet()) {
+        for (Entry<String, Map<String, PbcReportCompanyDetailDto>> dtoMap : deptMap.entrySet()) {
         	buildSumValAndInster(dtoMap.getValue(), dtoMap.getKey(), pbcReport, !CollectionUtils.isEmpty(posAssetList),false,null,null,null);
 		}
         
@@ -7206,7 +7204,7 @@ public class PbcMonthAssetReportService  extends BaseService{
          //修改数据组装及入库公共方法
       	buildSumValAndInster(result, null, pbcReport, !CollectionUtils.isEmpty(posAssetList),false,null,null,null);
       	//循环分支机构的数据组装及入库
-          for (Map.Entry<String, Map<String, PbcReportAssetIncomeDetail>> dtoMap : deptMap.entrySet()) {
+          for (Entry<String, Map<String, PbcReportAssetIncomeDetail>> dtoMap : deptMap.entrySet()) {
           	buildSumValAndInster(dtoMap.getValue(), dtoMap.getKey(), pbcReport, !CollectionUtils.isEmpty(posAssetList),false,null,null,null);
   		}
          /*if (pbcReport.isGen()){
@@ -7367,7 +7365,7 @@ public class PbcMonthAssetReportService  extends BaseService{
          //修改数据组装及入库公共方法
      	buildSumValAndInster(result, null, pbcReport, !CollectionUtils.isEmpty(posAssetList),false,null,null,null);
      	//循环分支机构的数据组装及入库
-         for (Map.Entry<String, Map<String, PbcReportAssetIncomeDetail>> dtoMap : deptMap.entrySet()) {
+         for (Entry<String, Map<String, PbcReportAssetIncomeDetail>> dtoMap : deptMap.entrySet()) {
          	buildSumValAndInster(dtoMap.getValue(), dtoMap.getKey(), pbcReport, !CollectionUtils.isEmpty(posAssetList),false,null,null,null);
  		}
 
@@ -7529,7 +7527,7 @@ public class PbcMonthAssetReportService  extends BaseService{
         //修改数据组装及入库公共方法
     	buildSumValAndInster(result, null, pbcReport, !CollectionUtils.isEmpty(posAssetList),false,null,null,null);
     	//循环分支机构的数据组装及入库
-        for (Map.Entry<String, Map<String, PbcReportCompanyDetailDto>> dtoMap : deptMap.entrySet()) {
+        for (Entry<String, Map<String, PbcReportCompanyDetailDto>> dtoMap : deptMap.entrySet()) {
         	buildSumValAndInster(dtoMap.getValue(), dtoMap.getKey(), pbcReport, !CollectionUtils.isEmpty(posAssetList),false,null,null,null);
 		}
         
@@ -7644,19 +7642,21 @@ public class PbcMonthAssetReportService  extends BaseService{
                 PbcMonthAssetPositionDto it = iterator.next();
                 //新疆农信：人行月报表3-3 资管产品资产负债剩余期限统计模板除实收本金栏目数据正确外，其他数据均不对 modify by hpp 2020-12-02 start
                 if (cprodListMap.containsKey(it.getProdid())) {
-                    //新疆农信：人行月报表3-3 资管产品资产负债剩余期限统计模板除实收本金栏目数据正确外，其他数据均不对 modify by hpp 2020-12-02 end
-                    if (cprodListMap.containsKey(it.getProdid())) {
-                        //BigDecimal amt=it.getAmt();
+                    //BigDecimal amt=it.getAmt();
 //                    iterator.remove();
-                        for (PbcMonthAssetPositionDto single : cprodListMap.get(it.getProdid())) {
+                        //GZYY-431 这里去除母资管计划但是只补充了一条子资管计划,需要将所有的子资管计划都补上
+                        List<PbcMonthAssetPositionDto>cprodList=cprodListMap.get(it.getProdid());
+                        for (PbcMonthAssetPositionDto single : cprodList) {
                             //single.setAmt(amt);
                             if (single.getAssetCode().equals(it.getAssetCode())) {
                                 iterator.remove();
-                                iterator.add(convertBalanceToPrdPosition1(single, generateDate, it));
+                                for (PbcMonthAssetPositionDto dto : cprodList) {
+                                    iterator.add(convertBalanceToPrdPosition1(dto, generateDate, it));
+                                }
                                 break;
                             }
                         }
-                    }
+
                 }
             }
         }
@@ -7791,7 +7791,7 @@ public class PbcMonthAssetReportService  extends BaseService{
             buildSumValAndInster(result, null, pbcReport, (!CollectionUtils.isEmpty(posAssetList) ||
                     !CollectionUtils.isEmpty(posProdList)), false, null, null, null);
             //循环分支机构的数据组装及入库
-            for (Map.Entry<String, Map<String, PbcReportDebtTermDetail>> dtoMap : deptMap.entrySet()) {
+            for (Entry<String, Map<String, PbcReportDebtTermDetail>> dtoMap : deptMap.entrySet()) {
 
                 dtoMap.getValue().get(PbcReportProperycode.DEBT_G80000 + PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02).
                         setDebtInstrument(dtoMap.getValue().get(PbcReportProperycode.DEBT_G80000 + PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02).getDebtInstrument().add(qtfz.get(dtoMap.getKey())));
@@ -7990,7 +7990,7 @@ public class PbcMonthAssetReportService  extends BaseService{
             }
         }
         // 填报机构名称
-        pbcMonthReport.setReportOrgName(CommonUtil.selectBankCode());
+        pbcMonthReport.setReportOrgName(CommonUtil.selectBankCodeName());
         // 社会信用代码
        // pbcMonthReport.setSocialCreditCode(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_SOCIAL_CREDIT_CODE));
         // 金融机构编码
@@ -8287,9 +8287,7 @@ public class PbcMonthAssetReportService  extends BaseService{
         }else{
     	    return;
         }
-    	if(null!=line.getPropertycode()&&!PbcReportProperycode.AMT_B00000_ZJ.equals(line.getPropertycode())){
-            assetDetailList.add(PbcMonthReportDetailAssetUtil.buildAssetDetail2(pos,line,line.getPropertycode(),code2));
-        }
+
     }
     /**
      * 表2-4 行塞值
@@ -8429,9 +8427,7 @@ public class PbcMonthAssetReportService  extends BaseService{
     		}
     		//汇总数据计算
     		setAssetDebtDetailValue((PbcReportAssetDebtDetailDto)dto.get(code), pos.getCcy(), amt, rateMap, (Date) assetMap.get("endDate"),source);
-            if(PbcMonthReportDetailAssetUtil.isAssetDate(code)&&PbcReportType.PBC_REPORT_2_1.equals(rep_code)){
-                assetDetailList.add(PbcMonthReportDetailAssetUtil.buildAssetDetail(pos,dto.get(code),code,hxl));
-            }
+
     		if(null!=deptDto&&null!=deptDto.get(pos.getInstitutionCode())){
     			setAssetDebtDetailValue(((Map<String,PbcReportAssetDebtDetailDto>)deptDto.get(pos.getInstitutionCode())).get(code), pos.getCcy(), amt, rateMap, (Date) assetMap.get("endDate"),source);
         	}
@@ -8481,9 +8477,7 @@ public class PbcMonthAssetReportService  extends BaseService{
 
             //汇总数据计算
             setAssetConfigurationDetailValue(pos,(PbcReportAssetConfigurationDto)dto.get(code), rateMap,source);
-            if(PbcMonthReportDetailAssetUtil.isAssetDate3(code)&&PbcReportType.PBC_REPORT_4_1.equals(rep_code)){
-                assetDetailList.add(PbcMonthReportDetailAssetUtil.buildAssetDetail3(pos,dto.get(code),code,hxl));
-            }
+
             //部门数据计算
             if(null!=deptDto&&null!=deptDto.get(code)){
 
@@ -8568,10 +8562,6 @@ public class PbcMonthAssetReportService  extends BaseService{
     	
             setAssetDebtDetailValue((PbcReportAssetDebtDetailDto)dto.get(code), pos.getCcy(), 
             		amt, rateMap, (Date)assetMap.get("endDate"),source);
-
-            if(PbcMonthReportDetailAssetUtil.isAssetPrd(code)&&PbcReportType.PBC_REPORT_2_1.equals(rep_code)){
-                assetDetailList.add(PbcMonthReportDetailAssetUtil.buildAssetDetailPrd(pos,dto.get(code),code,amt));
-            }
 
     		if(null!=deptDto&&null!=deptDto.get(code)){
                 setAssetDebtDetailValue((PbcReportAssetDebtDetailDto)deptDto.get(code), pos.getCcy(), 
@@ -9040,7 +9030,6 @@ public class PbcMonthAssetReportService  extends BaseService{
 				line.setMediumCompanyAmt(cnyAmt);
 			}
 		}
-//        assetDetailList.add(PbcMonthReportDetailAssetUtil.buildAssetDetail(pos,line,line.getPropertycode()));
 
     }
     /**
@@ -9129,7 +9118,6 @@ public class PbcMonthAssetReportService  extends BaseService{
                     line.setSpecialShare(cnyAmt);
                 }
             }
-//            assetDetailList.add(PbcMonthReportDetailAssetUtil.buildAssetDetail(pos,line,line.getPropertycode()));
         } else if (PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02.equals(line.getGrouptype())
             && (PbcMonthReportConstants.POSITION_TYPE_FZ.equals(pos.getPositionType())
 	        		|| PbcMonthReportConstants.PBC_ASSETTYPE3_J03.equals(pos.getAssetType3())
@@ -9152,7 +9140,6 @@ public class PbcMonthAssetReportService  extends BaseService{
                     line.setDebtInstrument(cnyAmt);
                 }
             }
-//            assetDetailList.add(PbcMonthReportDetailAssetUtil.buildAssetDetail(pos,line,line.getPropertycode()));
         }
     }
     private  void setReportDebttermValueProd(PbcMonthPrdPostionDto pos,PbcReportDebtTermDetail line
@@ -9405,7 +9392,7 @@ public class PbcMonthAssetReportService  extends BaseService{
     public String[] getRegistCode(String orgCode){
        // String issuePartyId = CommonUtil.selectBankCode();
         String issuePartyId = CommonUtil.selectBankCode();
-        String  issuePartyName = CommonUtil.selectBankCode();
+        String  issuePartyName = CommonUtil.selectBankCodeName();
         // 发行机构代码取值
         if(null!=orgCode){
         	Map<String,Object> param = new HashMap<>();
