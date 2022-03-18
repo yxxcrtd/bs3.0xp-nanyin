@@ -99,6 +99,7 @@ public class EtrExchangeBlockTrade001Service extends BaseService<EtrExchangeBloc
 	@Autowired
 	private FinProductAddMapper finProductAddMappers;
 
+
 	/**
 	 * 查询大宗交易行情信息
 	 * @param secId
@@ -833,6 +834,15 @@ public class EtrExchangeBlockTrade001Service extends BaseService<EtrExchangeBloc
 					}
 				}
 			}
+		}
+		return null;
+	}
+
+
+	public String getIsFullPrice(String finprodId){
+		FinProductAdd finProductAdd = finProductAddMappers.selectByPrimaryKey(finprodId);
+		if (StringUtil.isNotEmpty(finProductAdd)){
+			return finProductAdd.getIsNetprice();
 		}
 		return null;
 	}

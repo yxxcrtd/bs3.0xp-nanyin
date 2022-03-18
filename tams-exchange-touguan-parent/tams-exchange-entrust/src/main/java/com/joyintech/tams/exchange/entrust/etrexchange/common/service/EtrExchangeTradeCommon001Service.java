@@ -5361,9 +5361,10 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		etrExchangeTrade001Dto.setAccAvailablePos(multiPtl001Dto.getAccAvailablePos());
 		//etrExchangeTrade001Dto.setEntrustPrice(multiPtl001Dto.getEntrustPrice());
 		etrExchangeTrade001Dto.setTargetType(dto.getTargetType());
-		etrExchangeTrade001Dto.setMdate(dto.getEntrustDate());
-		etrExchangeTrade001Dto.setVdate(dto.getEntrustDate());
+		etrExchangeTrade001Dto.setMdate(DateUtil.parse(DateUtil.format(dto.getEntrustDate(),DateUtil.DEFAULT_DATE_FORMAT_EN)));
+		etrExchangeTrade001Dto.setVdate(DateUtil.parse(DateUtil.format(dto.getEntrustDate(),DateUtil.DEFAULT_DATE_FORMAT_EN)));
 		etrExchangeTrade001Dto.setStockId(dto.getStockId());
+		etrExchangeTrade001Dto.setEntrustDate(DateUtil.parse(DateUtil.format(dto.getEntrustDate(),DateUtil.DEFAULT_DATE_FORMAT_EN)));
 		return etrExchangeTrade001Dto;
 	}
 
