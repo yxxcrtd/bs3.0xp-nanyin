@@ -3053,13 +3053,18 @@
   </select>
 
   <select id="selectOperateMode" resultType="string">
+    select b.operate_mode from pbc_prod_raising_sub r
+    inner join pbc_prd_baseinfo_sub b on r.pbc_prod_id = b.pbc_prod_id
+    LEFT JOIN(
     SELECT
-    b.operate_mode
+    inside_prod_id,
+    pbc_code
     FROM
-    pbc_prod_raising_sub   r,
-    pbc_prd_baseinfo_sub   b
+    pbc_prod_assetpool_code
     WHERE
-    r.pbc_prod_id = b.pbc_prod_id
-    AND r.pbc_prod_id = #{pbcProdId}
+    status='E'
+    AND code_type='01'
+    )t2 ON t2.inside_prod_id=b.PROD_ID
+    where  IFNULL(t2.pbc_code,b.PBC_PROD_ID)=#{pbcProdId}
   </select>
 </mapper>
