@@ -726,17 +726,18 @@ public class StlDataDealSzdJsmxProcessService {
 						BigDecimal bjje = new BigDecimal(szdJsmx.getCjsl()).abs();
 						// modify by etliu 20211225 end
 
+						// 到期金额
+						settleTransData.setmTradeAmt(new BigDecimal(szdJsmx.getQsje()).abs());
 						// 计算回购利息 fuyongsheng 20211215 add start
 						// 回购利息
-						BigDecimal hglx = ArithmeticUtil.multiply(ArithmeticUtil.multiply(bjje, settleTransData.getIntRate()),
-								ArithmeticUtil.divide(new BigDecimal(DateUtil.getBetweenDayNumber(settleTransData.getVpayDate(), settleTransData.getMpayDate())), 365, 14));
-						settleTransData.setmIntAmt(ArithmeticUtil.round(hglx, 2, RoundingMode.HALF_UP));
+//						BigDecimal hglx = ArithmeticUtil.multiply(ArithmeticUtil.multiply(bjje, settleTransData.getIntRate()),
+//								ArithmeticUtil.divide(new BigDecimal(DateUtil.getBetweenDayNumber(settleTransData.getVpayDate(), settleTransData.getMpayDate())), 365, 14));
+//						settleTransData.setmIntAmt(ArithmeticUtil.round(hglx, 2, RoundingMode.HALF_UP));
+						settleTransData.setmIntAmt(ArithmeticUtil.subtract(settleTransData.getmTradeAmt(), bjje));
 						settleTransData.setIntAmt(settleTransData.getmIntAmt());
 						// 计算回购利息 fuyongsheng 20211215 add end
 						// 交易本金
 						settleTransData.setPrinAmt(bjje);
-						// 到期金额
-						settleTransData.setmTradeAmt(bjje);
 						// 到期本金
 						// modify by etliu 20211225 start
 						// 光大反馈问题修复：产品的这种写法统一改下吧，精度缺失，会导致我们对不上资金余额；
