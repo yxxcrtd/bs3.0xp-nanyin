@@ -391,6 +391,7 @@ public class PositionRequestServiceInstructionRequest {
         // 协议回购不存在多组合，不需要循环多组合列表
         PositionRequestBaseBean bean;
         String ps = entity.getPs();
+        String firstRepoPs  = entity.getFirstRepoPs();
         // 首期组合现金数据集
         if (DictCodeListExt3.交易方向_正回购.getValue().equals(ps)
                 || DictCodeListExt3.交易方向_逆回购.getValue().equals(ps)
@@ -416,10 +417,11 @@ public class PositionRequestServiceInstructionRequest {
             // "IF 回购类型 = 正回购 THEN 指令.到期续作金额 - 指令.首期的到期结算金额
             // IF 回购类型 = 逆回购  and 成交编号找不到对应的首期 THEN 指令.到期续作金额
             // IF 回购类型 = 逆回购  and 成交编号找到对应的首期 THEN  指令.到期续作金额 - 指令.首期的到期结算金额"
-            if (DictCodeListExt3.交易方向_正回购.getValue().equals(resultMap.get("ps"))) {
-                bean.setCashAmount(BigDecimal.ZERO);
-            } else if (DictCodeListExt3.交易方向_逆回购.getValue().equals(resultMap.get("ps"))) {
+            if (DictCodeListExt3.交易方向_正回购.getValue().equals(firstRepoPs)) {
+                bean.setCashAmount(entity.getmTradeAmt());
+            } else if (DictCodeListExt3.交易方向_逆回购.getValue().equals(firstRepoPs)) {
                 // 成交编号
+                bean.setCashAmount(entity.getmTradeAmt());
             }
 
             Map<String, Object> map = BeanUtil.object2Map(bean);
