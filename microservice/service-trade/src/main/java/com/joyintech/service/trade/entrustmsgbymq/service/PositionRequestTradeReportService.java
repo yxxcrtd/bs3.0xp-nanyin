@@ -271,6 +271,14 @@ public class PositionRequestTradeReportService {
             plt.put("secAcctId", dto.getSecAcctId());
             plt.put("tradeId", entity.getTradeId());
             plt.put("etrId", entity.getEntrustId());
+            // ZGTFCP-1250:新增字段赋值 modify by fuyongsheng 20220318 start
+            plt.put("etrSecAmount", dto.getEtrSecAmount());
+            plt.put("ordId", dto.getOrderId());
+            plt.put("ordSecAmount", dto.getOrdSecAmount());
+            // ZGTFCP-1250:新增字段赋值 modify by fuyongsheng 20220318 end
+            // ZGTFCP-1303:需要增加finprodId字段 modify by fuyongsheng 20220318 start
+            plt.put("finprodId", entity.getFinprodId());
+            // ZGTFCP-1303:需要增加finprodId字段 modify by fuyongsheng 20220318 end
             plt.put("ordEntrustId", null);
             plt.put("standardSecId", STANDAR_SEC_ID);
             plt.put("standardSecAmount", dto.getStandardSecAmount());

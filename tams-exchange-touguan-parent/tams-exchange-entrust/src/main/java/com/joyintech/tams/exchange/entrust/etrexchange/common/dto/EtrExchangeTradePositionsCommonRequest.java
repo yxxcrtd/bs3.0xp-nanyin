@@ -60,6 +60,8 @@ public class EtrExchangeTradePositionsCommonRequest {
 
     @ApiModelProperty(name="finprodMarketIds",value="多个市场代码",example="A,B")
     private String finprodMarketIds;
+    @ApiModelProperty(name="tradePlat",value="交易平台",example="A")
+    private String tradePlat;
 
     @ApiModelProperty(name="从pageMode获取",value="从pageMode获取")
     public String getSort() {
@@ -156,5 +158,13 @@ public class EtrExchangeTradePositionsCommonRequest {
 
     public void setFinprodMarketIds(String finprodMarketIds) {
         this.finprodMarketIds = finprodMarketIds;
+    }
+
+    public String getTradePlat() {
+        return tradePlat;
+    }
+
+    public void setTradePlat(String tradePlat) {
+        this.tradePlat = tradePlat;
     }
 }
