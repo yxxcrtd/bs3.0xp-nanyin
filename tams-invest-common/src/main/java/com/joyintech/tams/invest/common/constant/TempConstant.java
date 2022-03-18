@@ -343,6 +343,10 @@ public class TempConstant {
      * add by yanya on 20210309
      */
     public static final String 债券行权交易="ValSecExecDeal";
+    /**
+     * 非交易业务
+     */
+    public static final String NO_TRADE_BUSINESS_ETR="noTradeBusinessEtr";
 
 }
 
