@@ -296,6 +296,9 @@
         STL_SEC_ACCT_INFO.SEC_ACCT_NAME secAcctIdStr ,
         ETR_SEC_STOCK.PLEDGE_STOCK_NAME PLEDGESTOCKNAME
         FROM ETR_ENTRUST_PLEDGE
+        <if test="loginUserId!=null and loginUserId!=''">
+            LEFT JOIN PTL_PORTFOLIO_AUTHORITY PPA ON ETR_ENTRUST_PLEDGE.PORTFOLIO_ID = PPA.PORTFOLIO_ID
+        </if>
         left join ETR_SEC_STOCK on ETR_SEC_STOCK.PLEDGE_STOCK_ID=ETR_ENTRUST_PLEDGE.PLEDGE_STOCK_ID
         LEFT JOIN (
         SELECT
@@ -394,6 +397,9 @@
         AND FIN_PRODUCT.VDATE <![CDATA[<=]]> to_date(#{sysDate},'yyyy-MM-dd')
         AND FIN_PRODUCT.MDATE <![CDATA[>=]]> to_date(#{sysDate},'yyyy-MM-dd')
         AND (mbmi.MARKET_AMT > 0 OR mbmi.MARKET_AMT IS NULL )
+        <if test="loginUserId!=null and loginUserId!=''">
+            AND PPA.USER_ID = #{loginUserId}
+        </if>
         <if test="portfolioIdList != null and portfolioIdList.size() > 0">
             AND ETR_ENTRUST_PLEDGE.PORTFOLIO_ID in
             <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
