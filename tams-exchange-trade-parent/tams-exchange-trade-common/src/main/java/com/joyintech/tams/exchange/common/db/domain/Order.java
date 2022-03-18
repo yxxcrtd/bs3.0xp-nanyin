@@ -2,8 +2,11 @@ package com.joyintech.tams.exchange.common.db.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.exchange.common.bean.OrderPlaceBean;
+import com.joyintech.tams.exchange.common.constant.BatchPriceMode;
 import com.joyintech.tams.exchange.common.utils.DoubleSerializerUtils;
+import com.joyintech.tams.exchange.common.utils.JsonUtils;
 import com.joyintech.tams.exchange.common.utils.TradeUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -15,6 +18,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Map;
 
 @ApiModel(value = "订单报文", description = "订单报文")
 public class Order implements Serializable, Cloneable, OrderInterface, KeyMethodInterface<String> {
@@ -731,6 +735,17 @@ public class Order implements Serializable, Cloneable, OrderInterface, KeyMethod
 
     public void setEntrustClass(String entrustClass) {
         this.entrustClass = entrustClass;
+    }
+
+    public String getPriceMode() {
+        if (StringUtil.isNotEmpty(extend2) && extend2.contains("priceMode")) {
+            Map map = JsonUtils.getObjectFromJson(extend2, Map.class);
+            Object priceMode = map.get("priceMode");
+            if (priceMode != null) {
+                return BatchPriceMode.getBatchPriceMode((int) map.get("priceMode"));
+            }
+        }
+        return "";
     }
 
     public static Order getTemplateOrder() {
