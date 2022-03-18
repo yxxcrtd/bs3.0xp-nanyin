@@ -309,6 +309,8 @@ public class KCBPTradeAgent extends TradeAgentDsp {
     @Override
     public void entrust(Entrust entrust) {
         logger.info("send entrust:{}", entrust.getId());
+        entrust.setLocalEntrustId(genLocalId());
+        entrustIdManager.setLocalEntrustIdMapping(entrust.getAccountId(), entrust.getLocalEntrustId(), entrust.getId());
         TerminalAgentInfo agentInfo = terminalAgentInfoService.selectOne(getTerminalName(), FunctionCode.REQ_ENTRUST.value);
         agentInfo.setAccountId(entrust.getAccountId());
         try {
@@ -360,6 +362,9 @@ public class KCBPTradeAgent extends TradeAgentDsp {
     @Override
     public void integratedEntrust(IntegratedEntrust entrust) {
         logger.info("send integratedEntrust:{}", entrust.getId());
+        entrust.setLocalEntrustId(genLocalId());
+        entrustIdManager.setLocalEntrustIdMapping(entrust.getAccountId(), entrust.getLocalEntrustId(), entrust.getId());
+
         Map<String, String> parameters = Maps.newHashMap();
         parameters.put("accountId", entrust.getAccountId());
         parameters.put("entrustProp", entrust.getEntrustProp());

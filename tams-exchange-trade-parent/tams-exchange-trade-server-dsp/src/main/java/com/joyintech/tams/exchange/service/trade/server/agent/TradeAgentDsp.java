@@ -22,6 +22,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class TradeAgentDsp implements TradeAgent {
     private static final Logger logger = LoggerFactory.getLogger(TradeAgent.class);
@@ -47,6 +48,9 @@ public abstract class TradeAgentDsp implements TradeAgent {
     protected TerminalAgentInfoService terminalAgentInfoService;
 
     private String terminalName;
+
+    private AtomicInteger localOffset = new AtomicInteger(0);
+    private static int timeZoneOffset = 0;
 
     /**
      * 记录账户对应的TradeAgent
@@ -74,6 +78,7 @@ public abstract class TradeAgentDsp implements TradeAgent {
         tradeListMapByBroker.remove(accountId);
     }
 
+    @Override
     public String getTerminalName() {
         return terminalName;
     }
@@ -107,6 +112,7 @@ public abstract class TradeAgentDsp implements TradeAgent {
         return status.getOrDefault(accountId, AccountLoginStatus.NOT_LOGGED.value);
     }
 
+    @Override
     public void setStatus(String accountId, AccountLoginStatus status) {
         logger.info("account {} status set to: {}", accountId, status.msg);
         this.status.put(accountId, status.value);
@@ -116,6 +122,7 @@ public abstract class TradeAgentDsp implements TradeAgent {
         this.status.put(accountId, status.value);
     }
 
+    @Override
     public Map<String, Account> getAccountMap() {
         return accountMap;
     }
@@ -130,6 +137,16 @@ public abstract class TradeAgentDsp implements TradeAgent {
 
     protected String getKey(String accountId, String type) {
         return accountId + "|" + type;
+    }
+
+    public String genLocalId() {
+        int tempOffSet = localOffset.incrementAndGet();
+        if (tempOffSet > 9999) {
+            tempOffSet = 0;
+            localOffset.set(0);
+        }
+        long beginMill = System.currentTimeMillis() / (1000 * 3600 * 24) * (1000 * 3600 * 24) - timeZoneOffset;
+        return String.format("%s%04d", (System.currentTimeMillis() - beginMill) / 1000, tempOffSet);
     }
 
     @Override
