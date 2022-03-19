@@ -293,6 +293,7 @@ public class PositionHttpRequest {
         Long seqno = (long) Arrays.deepHashCode(new Object[] { params.get("totalTradeId"), params.get("modelType"),new Date().getTime(),Thread.currentThread().getId() });
         params.put("seqno",seqno);
         String res = batchClosePrivate(params);
+        logger.info("头寸返回数据:"+res);
         Map msgMap = JsonUtils.json2Object(res, Map.class);
         if(msgMap == null){
             throw new PositionException("头寸返回数据为空！");
@@ -326,6 +327,7 @@ public class PositionHttpRequest {
         Long seqno = (long) Arrays.deepHashCode(new Object[] { params.get("totalTradeId"), params.get("modelType"),new Date().getTime(),Thread.currentThread().getId() });
         params.put("seqno",seqno);
         String res = batchRevokePrivate(params);
+        logger.info("batchRevoke头寸返回数据:"+res);
         Map msgMap = JsonUtils.json2Object(res, Map.class);
         if(msgMap == null){
             throw new PositionException("batchRevoke头寸返回数据为空！");
