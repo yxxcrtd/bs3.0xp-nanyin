@@ -438,8 +438,11 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             CfetsBondDealDbDto cfetsBondDealDbDto = prepareEntity(entity, type);
             //登录业务流程
             insertWfl(cfetsBondDealDbDto);
-            //处理老头寸
-            this.oldPositionDeal(cfetsBondDealDbDto, false);
+            if(StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
+                //处理老头寸
+                this.oldPositionDeal(cfetsBondDealDbDto, false);
+            }
+
 //            RegFinProductDealTotal regTotal=cfetsBondDealDbDto.getRegFinProductDealTotal();
 //            if (null!=regTotal && StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))
 //                    && (StringUtil.equals(regTotal.getPs(),DictCodeList.交易方向_买入.getValue()) || StringUtil.equals(regTotal.getPs(),DictCodeList.交易方向_卖出.getValue()))
@@ -474,10 +477,9 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
     private void oldPositionDeal(CfetsBondDealDbDto cfetsBondDealDbDto, boolean navigate) {
 
         if (navigate) {
-            for (RegFinProductDeal item : cfetsBondDealDbDto.getRegFinProductDeals()) {
-                // 根据交易编号，删除可用，质押，融入，融出，在途FLOW持仓
-                AllTradeCommonUtil.deletePosition(cfetsBondDealDbDto.getRemark(), item.getTradeId());
-            }
+            cfetsBondDealDbDto.getRegFinProductDeals().stream().forEach( item ->{
+                AllTradeCommonUtil.deleteRegPosition(item.getRemark() == null ? "登记撤销":item.getRemark(), item.getTradeId());
+            });
 
         } else {
             // 调用业务组件.【金融产品交易共通.交易产品接口】,写入[可用]的组合持仓流水及现金流水
@@ -526,6 +528,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             }
         }
 
+
     }
 
     @Override
@@ -558,8 +561,10 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
 //                preTrdCommonDto.setIsExistNew(DictCodeList.是否_是.getValue());
 //                preTrdCommonBaseService.excutePosition(preTrdCommonDto,false);
 //            }
-            //处理老头寸
-            this.oldPositionDeal(cfetsBondDealDbDto, false);
+            if(StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
+                //处理老头寸
+                this.oldPositionDeal(cfetsBondDealDbDto, false);
+            }
             ProcessMark newEntity;
             //头寸
             SysWflBusinessList sysWflBusinessList = sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());
@@ -606,19 +611,12 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         //头寸
         try {
             if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
-//                RegFinProductDealTotal regTotal=cfetsBondDealDbDto.getRegFinProductDealTotal();
-//                if (null!=regTotal && StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))
-//                        && (StringUtil.equals(regTotal.getPs(),DictCodeList.交易方向_买入.getValue()) || StringUtil.equals(regTotal.getPs(),DictCodeList.交易方向_卖出.getValue()))
-//                ){
-//                   //插入旧头寸
-//                   //处理组合及指令头寸
-//                   PreTrdBondInvestTrade002Dto entityPre=prepareEntityPre(cfetsBondDealDbDto);
-//                   PreTrdCommonDto preTrdCommonDto = new PreTrdCommonDto();
-//                   preTrdCommonDto.setTrdProductDealPreList(entityPre.getTrdProductDealPreList());
-//                   preTrdCommonDto.setTrdProductDealAddPreList(entityPre.getTrdProductDealAddPreList());
-//                   preTrdCommonDto.setIsExistNew(DictCodeList.是否_是.getValue());
-//                   preTrdCommonBaseService.excutePosition(preTrdCommonDto,true);
-//               }
+
+                if(StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
+                    //处理老头寸
+                    this.oldPositionDeal(cfetsBondDealDbDto, true);
+                }
+
                 //PositionHttpRequest.sendRevoke(cfetsBondDealDbDto.getRegFinProductDealTotal().getpTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
                 String busiType = StringUtil.EMPTY;
                 String ps = cfetsBondDealDbDto.getRegFinProductDealTotal().getPs();
@@ -689,6 +687,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         result.setRegFinProductDeals(deals);
         result.setRegFinProductDealAdds(dealAdds);
         result.setRegTradeFees(fees);
+        result.setRemark(entity.getRemark());
 
         return result;
     }
@@ -741,7 +740,9 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         //PositionHttpRequest.sendRevoke(entity.getTotleTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
         String ps = entity.getPs();
         if (StringUtil.isNotEmpty(ps) && StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))
-                && (StringUtil.equals(ps, DictCodeList.交易方向_买入.getValue()) || StringUtil.equals(ps, DictCodeList.交易方向_卖出.getValue()))
+                && (StringUtil.equals(ps, DictCodeList.交易方向_买入.getValue())
+                || StringUtil.equals(ps, DictCodeList.交易方向_卖出.getValue())
+                || StringUtil.equals(ps, DictCodeList.交易方向_行权_回售.getValue()))
         ) {
           /*  //插入旧头寸
             List<RegFinProductDeal> wflRegLists=cfetsIbuQuoteBondMapper.listWflRegFinProductDeal(entity.getTotleTradeId());
