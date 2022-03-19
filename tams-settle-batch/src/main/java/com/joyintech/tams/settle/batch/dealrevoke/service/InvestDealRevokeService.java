@@ -3,11 +3,14 @@ package com.joyintech.tams.settle.batch.dealrevoke.service;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.alibaba.fastjson.JSON;
 import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.trade.dao.TrdCommonBaseMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,6 +47,7 @@ import com.joyintech.tams.settle.batch.dealrevoke.dao.InvestDealRevokeMapper;
 @Service
 @Lazy
 public class InvestDealRevokeService {
+    private static final Logger logger = LoggerFactory.getLogger(InvestDealRevokeService.class);
 
     /**
      * 是否单体服务
@@ -423,6 +427,7 @@ public class InvestDealRevokeService {
             batchRevoke.put("modelType",DictCodeListExt1.子系统代码_交易.getValue());
             //ZGTFCP-1222:更换头寸批处理接口 modify by fuyongsheng  20220318 start
             // PositionHttpRequest.batchClose(batchRevoke);
+            logger.debug("【批量撤销日间交易数据】batchRevoke:{}", JSON.toJSONString(batchRevoke));
             PositionHttpRequest.batchRevoke(batchRevoke);
             //ZGTFCP-1222:更换头寸批处理接口 modify by fuyongsheng  20220318 end
 
@@ -433,6 +438,7 @@ public class InvestDealRevokeService {
             orderBatchRevoke.put("modelType",DictCodeListExt1.子系统代码_交易.getValue());
             //ZGTFCP-1222:更换头寸批处理接口 modify by fuyongsheng  20220318 start
             // PositionHttpRequest.batchClose(orderBatchRevoke);
+            logger.debug("【批量撤销日间下单数据】orderBatchRevoke:{}", JSON.toJSONString(orderBatchRevoke));
             PositionHttpRequest.batchRevoke(orderBatchRevoke);
             //ZGTFCP-1222:更换头寸批处理接口 modify by fuyongsheng  20220318 end
         }
