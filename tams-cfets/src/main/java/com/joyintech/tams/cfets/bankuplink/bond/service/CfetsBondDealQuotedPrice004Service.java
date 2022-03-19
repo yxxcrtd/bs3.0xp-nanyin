@@ -744,15 +744,15 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                 || StringUtil.equals(ps, DictCodeList.交易方向_卖出.getValue())
                 || StringUtil.equals(ps, DictCodeList.交易方向_行权_回售.getValue()))
         ) {
-          /*  //插入旧头寸
-            List<RegFinProductDeal> wflRegLists=cfetsIbuQuoteBondMapper.listWflRegFinProductDeal(entity.getTotleTradeId());
-            if(!StringUtil.isEmptyList(wflRegLists)){
-                wflRegLists.forEach(item -> {
-                    AllTradeCommonUtil.deletePosition(null, item.getTradeId());
-                });
-            }*/
+           // List<RegFinProductDeal> regFinProductDeals = cfetsIbuQuoteBondMapper.listRegFinProductDeal(entity.getTotleTradeId());
+            List<WflRegFinProductDeal> deals = cfetsIbuQuoteBondMapper.listWflRegFinProductDeal(entity.getTotleTradeId());
             //插入旧头寸
-            AllTradeCommonUtil.deletePosition(null, entity.getTotleTradeId());
+            if (CollectionUtils.isNotEmpty(deals)) {
+                deals.stream().forEach(deal -> {
+                    AllTradeCommonUtil.deleteRegPosition(null, deal.getTradeId());
+                });
+            }
+
 //            //插入旧头寸
 //            preTrdCommonBaseService.deletePosition(entity.getWorkflowId());
         }
