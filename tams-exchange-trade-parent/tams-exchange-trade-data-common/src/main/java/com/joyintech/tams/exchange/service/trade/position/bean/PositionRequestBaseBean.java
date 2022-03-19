@@ -30,6 +30,11 @@ public class PositionRequestBaseBean {
      * 指令编号
      */
     private String etrId;
+    
+    /**
+     * 下单编号
+     */
+    private String ordId;
 
     /**
      * 证券管理账户
@@ -59,6 +64,7 @@ public class PositionRequestBaseBean {
         this.portfolioId = instruction.getPortfolioId();
         this.finprodId = instruction.getFinprodId();
         this.tradeId = instruction.getEntrustNo();
+        this.ordId = instruction.getEntrustNo();
         this.etrId = instruction.getEntrustId();
         this.cashAcctId = instruction.getAcctNo();
         this.secAcctId = instruction.getSecAcctId();
@@ -133,4 +139,12 @@ public class PositionRequestBaseBean {
     public void setCashAmount(BigDecimal cashAmount) {
         this.cashAmount = cashAmount;
     }
+
+	public String getOrdId() {
+		return ordId;
+	}
+
+	public void setOrdId(String ordId) {
+		this.ordId = ordId;
+	}
 }

@@ -165,6 +165,10 @@ public class PositionCommonConstant {
      */
     public static final String ORD_ENTRUST_ID = "ordEntrustId";
     /**
+     * 下单编号
+     */
+    public static final String ORD_ID = "ordId";
+    /**
      * 标准券代码
      */
     public static final String STANDARD_SEC_ID = "standardSecId";
