@@ -3168,6 +3168,7 @@
                 $("#portfolioId_div_"+currentTab).show();
                 $("#acctNo_div_"+currentTab).show();
                 $("#dateTableDiv").hide();
+                $("#ps_"+currentTab).attr('disabled', 'disabled');
             }
             if(finprodType2 == FINPROD_TYPE_TG_F06){
                 $("#priceModel_div_"+currentTab).show();
