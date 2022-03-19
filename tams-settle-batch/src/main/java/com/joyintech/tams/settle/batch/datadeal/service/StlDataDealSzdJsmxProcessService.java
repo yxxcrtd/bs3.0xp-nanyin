@@ -514,6 +514,8 @@ public class StlDataDealSzdJsmxProcessService {
 			settleTransData.setSecType(stlDownDataDealOperatorDto.getFinprodType());
 			// 临时表流水号
 			settleTransData.setSeqNo(szdJsmx.getSeqno());
+			// 申请编号
+			settleTransData.setApplyTradeId(szdJsmx.getSqbh());
 			// 不同交易类型数据单独处理
 			// 竞价回购交易
 			if (StringUtil.equals(StlDataDealProcessConstant.YWLX_023, szdJsmx.getYwlx()) || StringUtil.equals(StlDataDealProcessConstant.YWLX_602, szdJsmx.getYwlx())) {
@@ -746,6 +748,8 @@ public class StlDataDealSzdJsmxProcessService {
 						// modify by etliu 20211225 end
 						// 单位净价
 						settleTransData.setUnitCprice(ArithmeticUtil.divide(new BigDecimal(szdJsmx.getJg2()), new BigDecimal(100), 8));
+						// 竞价回购到期不登录applyTradeId
+						settleTransData.setApplyTradeId(null);
 					}
 				}
 			}
@@ -1235,8 +1239,6 @@ public class StlDataDealSzdJsmxProcessService {
 //			}
 			// 执行日期
 			settleTransData.setDealDate(stlDownDataDealOperatorDto.getDealDate());
-			// 申请编号
-			settleTransData.setApplyTradeId(szdJsmx.getSqbh());
 			// 分支序号
 			settleTransData.setBranch(0L);
 
