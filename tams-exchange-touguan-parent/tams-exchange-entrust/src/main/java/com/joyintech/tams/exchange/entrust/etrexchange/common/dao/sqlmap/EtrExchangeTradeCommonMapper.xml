@@ -1450,21 +1450,34 @@
         <if test="search != null and search != ''">
             and (
             M.portfolioName|| '|' ||M.secName|| '|' ||M.acctNo|| '|' ||M.finprodType2|| '|' ||
-            M.portfolioId|| '|' ||M.finprodMarketId|| '|' ||sdl1.ITEM_VALUE|| '|' ||sdl2.ITEM_VALUE
+            M.portfolioId|| '|' ||M.finprodMarketId
+<!--             || '|' ||sdl1.ITEM_VALUE|| '|' ||sdl2.ITEM_VALUE-->
             || '|' ||M.dealCurAcctName|| '|' ||M.finprodName
             like '%' || #{search} || '%'
             )
             <if test="search_isNumberFlag != null and search_isNumberFlag == true">
-                or (M.positionsNum = #{search})
-                or (M.sellNum = #{search})
-                or (M.positionsAmt = #{search})
-                or (M.price = #{search})
-                OR (M.PRICE*M.ptlPositionsNum-M.positionsAmt =#{search})
+                or (round(M.positionsNum,2) = round(#{search},2))
+                or (round(M.sellNum,2) = round(#{search},2))
+                or (round(M.positionsAmt,2) = round(#{search},2))
+                or (round(M.price,2) = round(#{search},2))
+                OR (round(M.PRICE*M.ptlPositionsNum-M.positionsAmt ,2)=round(#{search},2))
                 OR ((M.PRICE*M.ptlPositionsNum-M.positionsAmt)/
-                    nvl(decode(M.PRICE*M.ptlPositionsNum,0,1,M.PRICE*M.ptlPositionsNum),1)=#{search})
+                    nvl(decode(M.PRICE*M.ptlPositionsNum,0,1,M.PRICE*M.ptlPositionsNum),1)
+                    <!--=#{search}-->
+                like '%' || #{search} || '%'
+                    )
             </if>
         </if>
     </sql>
+
+    <select id="IsSpeedTOneOrZero" resultType="java.lang.String">
+        SELECT
+            decode(fpa.TRADE_PLAT,'03', 'Y', 'N')
+        FROM
+            fin_product fp
+            LEFT JOIN FIN_PRODUCT_ADD fpa ON fp.FINPROD_ID = fpa.FINPROD_ID
+        where  fp.finprod_market_id = #{finprodId}
+    </select>
 
     <select id="selectCounterTraderId" resultType="java.util.Map">
         SELECT

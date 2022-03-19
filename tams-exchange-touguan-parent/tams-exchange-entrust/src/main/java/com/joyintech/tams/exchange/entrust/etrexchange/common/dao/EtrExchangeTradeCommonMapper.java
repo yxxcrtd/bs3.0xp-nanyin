@@ -103,6 +103,9 @@ public interface EtrExchangeTradeCommonMapper {
      */
     BigDecimal getCurSecAmt(Map<String, Object> param);
 
+
+	String IsSpeedTOneOrZero(Map<String, Object> map);
+
     /**
      * 查询债券利率重置信息
      *

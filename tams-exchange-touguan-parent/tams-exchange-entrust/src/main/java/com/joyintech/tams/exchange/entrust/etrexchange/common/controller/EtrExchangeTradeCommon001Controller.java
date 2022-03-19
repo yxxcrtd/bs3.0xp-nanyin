@@ -665,6 +665,28 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	}
 
 	/**
+	 * 判断资产清算速度
+	 *
+	 * @return List
+	 * @throws Exception Exception
+	 * @see
+	 * @since 1.0
+	 */
+	@ApiOperation(value = "清算速度", notes = "清算速度")
+	@ResponseBody
+	@PostMapping("/IsSpeedTOneOrZero")
+	public Message<String> IsSpeedTOneOrZero(@RequestBody Map<String, Object> map)
+	{
+		try{
+			String result = etrExchangeTrade001CommonService.IsSpeedTOneOrZero(map);
+			return new Message<String>().success().setData(result);
+		} catch(Exception e){
+			return new Message<String>().fail().setMessage("查询异常");
+		}
+
+	}
+
+	/**
 	 * 由于交易平台不同，设置不同交易平台对应的委托方向
 	 * @param psOptionsRequest psOptionsRequest
 	 */

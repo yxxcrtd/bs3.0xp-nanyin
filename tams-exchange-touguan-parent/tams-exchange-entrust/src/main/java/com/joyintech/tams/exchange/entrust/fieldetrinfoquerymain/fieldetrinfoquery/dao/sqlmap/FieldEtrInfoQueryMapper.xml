@@ -490,17 +490,18 @@
                 OR t.finprodAbbr like '%' || #{search} || '%'
                 OR t.remark like '%' || #{search} || '%'
                 OR t.secAcctId like '%' || #{search} || '%'
-                OR t.entrustAmt||'' = #{search}
-                OR t.entrustNum||'' = #{search}
-                OR t.etrPrice||'' = #{search}
-                OR t.termDays||'' = #{search}
-                OR t.exeProgress||'' = #{search}
-                OR t.dealProgress||'' = #{search}
+                OR round(t.entrustAmt,2)||'' = round(#{search},2)
+                OR round(t.entrustNum,4)||'' = round(#{search},4)
+                OR round(t.etrPrice,2)||'' = round(#{search},2)
+                OR round(t.termDays,2)||'' = round(#{search},2)
+                OR round(t.exeProgress,2)||'' = round(#{search},2)
+                OR round(t.dealProgress,2)||'' = round(#{search},2)
                 OR TO_CHAR(t.entrustDate,'yyyy-MM-dd') ||''= #{search}
                 OR TO_CHAR(t.entrustDate,'yyyy-MM-dd') ||''= #{year}||'-'||#{search}
                 OR replace(TO_CHAR(t.entrustDate,'yyyy-MM-dd'),'-','/')=#{search}
                 OR replace(TO_CHAR(t.entrustDate,'yyyy-MM-dd'),'-','/')=#{year}||'/'||#{search}
                 OR t.transmitTimeSer = #{search}
+                or t.transmitTime = #{search}
                 <if test="declaTypeList != null and declaTypeList.size()>0">
                     <foreach collection="declaTypeList" open="or t.priceModel in(" close=")" separator="," item="item">
                         #{item}

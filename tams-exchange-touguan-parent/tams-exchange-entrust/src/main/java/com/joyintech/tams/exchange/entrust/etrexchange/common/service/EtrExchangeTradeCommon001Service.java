@@ -5182,6 +5182,11 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		return selectOptionDtos;
 	}
 
+
+	public String IsSpeedTOneOrZero(Map<String, Object> map){
+		return etrExchangeTradeCommonMapper.IsSpeedTOneOrZero(map);
+	}
+
 	private  Map<String, Object> setPsExt(Map<String, Object> param){
 		Map<String, Object> map = new HashMap<String, Object>();
 		Date sysDate = DateUtil.platDateFromCache();
