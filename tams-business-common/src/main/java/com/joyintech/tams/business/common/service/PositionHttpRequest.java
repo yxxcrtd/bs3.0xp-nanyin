@@ -320,7 +320,7 @@ public class PositionHttpRequest {
      */
     public static void batchRevoke(Object req) throws PositionException{
         //
-        logger.info("发送头寸报文:"+JsonUtils.object2Json(req));
+        logger.info("batchRevoke发送头寸报文:"+JsonUtils.object2Json(req));
         //处理seqno
         Map<String,Object> params  =JsonUtils.stringToMap(JsonUtils.object2Json(req));
         Long seqno = (long) Arrays.deepHashCode(new Object[] { params.get("totalTradeId"), params.get("modelType"),new Date().getTime(),Thread.currentThread().getId() });
@@ -328,7 +328,7 @@ public class PositionHttpRequest {
         String res = batchRevokePrivate(params);
         Map msgMap = JsonUtils.json2Object(res, Map.class);
         if(msgMap == null){
-            throw new PositionException("头寸返回数据为空！");
+            throw new PositionException("batchRevoke头寸返回数据为空！");
         }else if(!StringUtil.equals("success", msgMap.get("code") + "")){
             throw new PositionException(JsonUtils.object2Json(msgMap));
         }
