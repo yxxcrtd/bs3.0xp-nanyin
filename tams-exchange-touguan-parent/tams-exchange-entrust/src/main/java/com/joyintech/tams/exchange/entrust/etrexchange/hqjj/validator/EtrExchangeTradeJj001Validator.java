@@ -74,7 +74,7 @@ public class EtrExchangeTradeJj001Validator implements EtrCommonValidator {
 //				errorList.add(new ValidMessage("stockId", "资产名称不可为空！"));
 //			}
 //		}
-		if (dto.getOperateType().equals("submit")) {
+		if (StringUtil.isNotEmpty(dto.getOperateType())&&dto.getOperateType().equals("submit")) {
 //			Boolean isNonTradingTime = etrExchangeTrade001Service.isNonTradingTime(dto);
 //			if (isNonTradingTime) {
 //				errorList.add(new ValidMessage(this.getMessage("ETR_ERROR_0056")));
