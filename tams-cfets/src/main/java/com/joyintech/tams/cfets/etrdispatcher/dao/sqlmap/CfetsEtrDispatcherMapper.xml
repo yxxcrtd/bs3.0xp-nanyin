@@ -1630,6 +1630,20 @@
         T1.USER_NAME = #{userName}
     </select>
 
+    <select id="getEtrBidInfo" resultType="com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTradeListResponse">
+        SELECT T9.ENTRUST_ID,
+        LISTAGG( T9.BID_PRICE * 100 || '%', ',') WITHIN GROUP (order by (T9.BID_PRICE * 100))  etrPrice,
+        CASE  WHEN T10.BID_ID IS NULL THEN '01'<!--待投标，待确认-->
+        WHEN T10.TRADE_ID IS NOT NULL THEN '05' <!--待投标，已完成-->
+        WHEN T10.IS_WIN IS NOT NULL THEN DECODE(T10.IS_WIN,'Y','04','N','03',T10.IS_WIN) <!--中标状态-->
+        ELSE '02'<!--已投标、已确认-->
+        END isWin
+        FROM ETR_ENTRUST_BID_PRICE T9
+        LEFT JOIN BID_ORDER_BID_PRICE T10  ON T10.ENTRUST_ID = T9.ENTRUST_ID AND T10.BID_PRICE = T9.BID_PRICE
+        where T9.ENTRUST_ID=#{entrustId,jdbcType=VARCHAR}
+        GROUP BY T9.ENTRUST_ID, T10.BID_ID, T10.IS_WIN,T10.TRADE_ID
+    </select>
+
     <select id="findAutoDetail" resultType="com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherAutoRequest">
         select
         listagg(ea.DISPENSE_PARA,',') WITHIN GROUP ( order by er.VDATE) distributeParameter,
