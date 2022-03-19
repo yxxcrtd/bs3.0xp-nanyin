@@ -744,4 +744,15 @@ public class EtrExchangeTradeEtrExchangeCommonResponse {
     public void setBusinessModel(String businessModel) {
         this.businessModel = businessModel;
     }
+
+    @ApiModelProperty(name="counterId",value="交易对手")
+    private String counterId;
+
+    public String getCounterId() {
+        return counterId;
+    }
+
+    public void setCounterId(String counterId) {
+        this.counterId = counterId;
+    }
 }
