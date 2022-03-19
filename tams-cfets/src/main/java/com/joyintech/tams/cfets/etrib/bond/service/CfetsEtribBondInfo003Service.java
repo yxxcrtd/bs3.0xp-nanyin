@@ -316,7 +316,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                 }
                 //发送头寸
                 //sendPositionMethod(entity,entity.getSubmitFlag());
-                sendPositionMethod(entity,StringUtil.equals(entity.getSystemAct(),DictCodeListExt3.系统动作_新建.getValue())?true:false);
+                sendPositionMethod(entity,StringUtil.equals(entity.getSystemAct(),DictCodeListExt3.系统动作_新建.getValue())?true:false,null);
 
             }
         }
@@ -341,6 +341,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
         if("save".equals(entity.getOperateType())){
             return;
         }
+        String confirmOk = RequestUtil.getParam("confirmOk");
         if (!StringUtil.equals("revoke", entity.getOperateType()) && !StringUtil.equals("delete", entity.getOperateType())) {
             boolean isSubmit = true;
             SysWflBusinessList sysBus=sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());
@@ -399,18 +400,21 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                 }
             }
             //发送头寸
-            entity.setSoftSkipMode("Y");
+            //entity.setSoftSkipMode("Y");
             try {
-                sendPositionMethod(entity, isSubmit);
+                sendPositionMethod(entity, isSubmit,confirmOk);
             }catch (Exception e) {
                 Message message = PositionUtil.ajaxErrorReturn(e);
-                //BaseMap bm = (BaseMap) message.getData();
-                //String code = (String) bm.get("code");
-                //String messageStr = JsonUtils.json2Object((String) bm.get("message").toString(), String.class);
-                //if (StringUtil.equals(PositionHttpRequest.CODE_BUSI_YK, code)) {
-                    WorkFlowUtil.showMessage(message.getMessage(), MessageType.错误消息);
-                //}
-                throw new PositionException(message.getMessage());
+                BaseMap bm = (BaseMap) message.getData();
+                String code = (String) bm.get("code");
+                StringBuffer messageStr = (StringBuffer) bm.get("message");
+                if (StringUtil.isEmpty(confirmOk) && StringUtil.equals(PositionHttpRequest.CODE_BUSI_RK, code)) {
+                    WorkFlowUtil.showMessage(messageStr.toString(), MessageType.确认消息);
+                }
+                if (StringUtil.equals(PositionHttpRequest.CODE_BUSI_YK, code)) {
+                    WorkFlowUtil.showMessage(messageStr.toString(), MessageType.错误消息);
+                }
+                throw new PositionException(messageStr.toString());
             }
         }
     }
@@ -1686,7 +1690,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
         }
         return result;
     }
-    private  void sendPositionMethod(CfetsEtribBondInfo003Dto entity,boolean isSubmit){
+    private  void sendPositionMethod(CfetsEtribBondInfo003Dto entity,boolean isSubmit,String confirmOk){
         List<CfetsEtrIbPosPortfolioRequest> ptlList=new ArrayList<>();
         for (CfetsEtribBondInfo003Dto dto : entity.getEtrInvestBondInfoDtos()) {
             //调用头寸
@@ -1730,8 +1734,10 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
         req.setFlowStatus(DictCodeListExt3.流程节点_流程提交.getValue());
         req.setModelType(DictCodeListExt1.子系统代码_委托.getValue());
         String balanceCheck="Y";
-        if(StringUtil.isNotEmpty(entity.getSoftSkipMode()) && StringUtil.equals(entity.getSoftSkipMode(),"Y")){
-            balanceCheck="N";
+        if ((StringUtil.isNotEmpty(entity.getSoftSkipMode())
+                && StringUtil.equals(entity.getSoftSkipMode(), DictCodeList.是否_是.getValue()))
+                || StringUtil.isNotEmpty(confirmOk)) {
+            balanceCheck = DictCodeList.是否_否.getValue();
         }
         req.setBalanceCheck(balanceCheck);
         req.setBusiType(DictCodeListExt3.头寸业务类型_现券交易.getValue());

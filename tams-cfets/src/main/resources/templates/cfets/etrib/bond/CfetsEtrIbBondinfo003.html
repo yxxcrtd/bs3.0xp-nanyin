@@ -62,12 +62,10 @@
             <input type="hidden" id="unitInt" name="unitInt" th:value="${entity?.unitInt}">
             <input type="hidden" id="finprodAbbr" name="finprodAbbr" th:value="${entity?.finprodAbbr}">
             <input type="hidden" id="assetType11" name="assetType11" th:value="${entity?.assetType11}">
+            <input type="hidden" id="softSkipMode" name="softSkipMode" th:value="${entity?.softSkipMode}">
 
-
-            <input type="text" id="entrustId" name="entrustId" disabled="disabled" style="display:none;"
-                   data-th-value="${entity?.entrustId}"/>
-            <input type="text" id="entrustStatus" name="entrustId" disabled="disabled" style="display:none;"
-                   data-th-value="${entity?.entrustStatus}"/>
+            <input type="text" id="entrustId" name="entrustId" disabled="disabled" style="display:none;"data-th-value="${entity?.entrustId}"/>
+            <input type="text" id="entrustStatus" name="entrustId" disabled="disabled" style="display:none;" data-th-value="${entity?.entrustStatus}"/>
              <input type="hidden" id="transmitTime" name="transmitTime" th:value="${#dates.format(entity?.transmitTime,'yyyy-MM-dd HH:mm:ss')}">
                 <div class="pro-module-wrapper pro-module-base" title="基本信息">
                 <div class="pro-module-wrap">
