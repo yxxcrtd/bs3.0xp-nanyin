@@ -1080,20 +1080,18 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
         if ((StringUtil.equals(buttonType, DictCodeListExt3.交收操作类型_交收失败.getValue())) &&
                 (StringUtil.equals(cfetsManualSettleRequest.getPs(), DictCodeList.交易方向_买入.getValue())
                         || StringUtil.equals(cfetsManualSettleRequest.getPs(), DictCodeList.交易方向_卖出.getValue())
-                        || StringUtil.equals(cfetsManualSettleRequest.getPs(), DictCodeList.交易方向_行权_回售.getValue()))
+                        || StringUtil.equals(cfetsManualSettleRequest.getPs(), DictCodeList.交易方向_行权_回售.getValue())
+                        || StringUtil.equals(cfetsManualSettleRequest.getPs(), DictCodeList.交易方向_到期.getValue()))
         ) {
 
             //交收失败 生效 处理 可用
-            if (isFlowStart) {
-                return;
-            }
             List<String> orderIds = new ArrayList<>();
             listTemp.stream().forEach(item -> {
                 orderIds.add(cfetsManualSettleMapper.selectRegTradeIdBytradeId(item.getTradeId()));
             });
             if (CollectionUtils.isNotEmpty(orderIds)) {
                 orderIds.stream().forEach( orderId ->{
-                    AllTradeCommonUtil.deletePosition(null, orderId);
+                    AllTradeCommonUtil.deleteRegPosition(null, orderId);
                 });
                 //baseAssetCashPositionCommMapper.deleteCashPositionByOrderIds(orderIds);
             }
@@ -1189,18 +1187,8 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
         if (StringUtil.equals(buttonType, DictCodeListExt3.交收操作类型_交收.getValue())) {
             if (CollectionUtils.isNotEmpty(orderIds)) {
                 orderIds.stream().forEach(orderId -> {
-                    List<PtlSecPositionFlow> flows = baseAssetCashPositionCommMapper.selectAllPosition(orderId);
-                    if (!flows.isEmpty()) {
-                        baseAssetCashPositionCommMapper.deletePositionByTradeId(orderId);
-                    }
-                    List<String> csahorderIds = new ArrayList<>();
-                    csahorderIds.add(orderId);
-                    List<PtlCashPositionFlow> cashFlows = baseAssetCashPositionCommMapper.selectAllCashPosition(csahorderIds);
-                    if (!cashFlows.isEmpty()) {
-                        baseAssetCashPositionCommMapper.deleteCashPositionByOrderId(orderId);
-                    }
+                    AllTradeCommonUtil.deleteRegPosition(null, orderId);
                 });
-                //baseAssetCashPositionCommMapper.deleteCashPositionByOrderIds(orderIds);
             }
         }
         if (StringUtil.equals(buttonType, DictCodeListExt3.交收操作类型_回溯.getValue())) {

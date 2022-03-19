@@ -1876,7 +1876,7 @@
         <result column="PARENT_ORDER_ID" property="parentOrderId" jdbcType="VARCHAR"/>
         <result column="ENTRUST_ID" property="entrustId" jdbcType="VARCHAR"/>
         <result column="ACCOUNT_ID" property="accountId" jdbcType="VARCHAR"/>
-        <result column="FINANCE_ACCOUNT" property="financeAccount" jdbcType="VARCHAR"/>
+        <result column="ACCOUNT_NAME" property="financeAccount" jdbcType="VARCHAR"/>
         <result column="ACCOUNT_NAME" property="accountName" jdbcType="VARCHAR"/>
         <result column="MARKET" property="market" jdbcType="VARCHAR"/>
         <result column="ASSET_TYPE" property="assetType" jdbcType="VARCHAR"/>
@@ -1916,7 +1916,7 @@
     <sql id="Query_Column_List">
         a.ID, a.INSTRUCTION_ID, a.PARENT_ORDER_ID, a.ENTRUST_ID, a.ACCOUNT_ID,
         <!--a.FINANCE_ACCOUNT-->
-        a.ACCOUNT_NAME AS financeAccount,
+        a.ACCOUNT_NAME,
         a.MARKET, a.ASSET_TYPE, a.STOCK_CODE, a.STOCK_NAME, a.BUSINESS_FLAG, a.ENTRUST_TYPE, a.ENTRUST_PROP,
         a.BS_FLAG, a.TRADE_TYPE, a.TRADED_BALANCE, a.TRADED_VOLUME, a.TRADED_PRICE, a.CLEAR_BALANCE,
         nvl(a.TRADE_TIME,0) AS tradeTime,
