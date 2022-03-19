@@ -353,19 +353,14 @@ public class CfetsEtrDispatcherService extends BaseService {
                         cfetsEtrDispatcherTradeListResponse.setPs(cfetsEtrDispatcherTradeListResponse.getBusiPs());
                     }
                 }
-//                if(StringUtil.equals(cfetsEtrDispatcherTradeListResponse.getFinprodType2(), DictCodeListExt2.平安资产类型_一级市场债.getValue())){
-////                    //债券一级投标交易方向的查询结果显示为空；
-//                    cfetsEtrDispatcherTradeListResponse.setPs(null);
-//                    CfetsEtrDispatcherTradeListResponse dto2= cfetsEtrDispatcherMapper.getEtrBidInfo(dto.getEntrustId());
-//                    if(StringUtil.isNotEmpty(dto2)){
-//                        //列表项中委托额度后增加字段 投标标位
-//                        cfetsEtrDispatcherTradeListResponse.setBidPrice(dto2.getBidPrice());
-//                        // 委托额度显示的是投标委托的投标券面总额汇总；
-//                        cfetsEtrDispatcherTradeListResponse.setEntrustAmt(dto2.getBidPrinAmt());
-//                        //设置投标日期
-//                        cfetsEtrDispatcherTradeListResponse.setBussBidDate(DateUtil.format(dto2.getBidDate()));
-//                    }
-//                }
+                if(StringUtil.equals(cfetsEtrDispatcherTradeListResponse.getFinprodType2(), BussinessDictCodeList.平安资产类型_一级投标债券.getValue())){
+                    cfetsEtrDispatcherTradeListResponse.setPs(null);
+                    CfetsEtrDispatcherTradeListResponse dto2 = cfetsEtrDispatcherMapper.getEtrBidInfo(cfetsEtrDispatcherTradeListResponse.getEntrustId());
+                    if(StringUtil.isNotEmpty(dto2)) {
+                        cfetsEtrDispatcherTradeListResponse.setIsWin(dto2.getIsWin());
+                        cfetsEtrDispatcherTradeListResponse.setEtrPrice(dto2.getEtrPrice());
+                    }
+                }
                 //TODO 清算速度
             }
         }
