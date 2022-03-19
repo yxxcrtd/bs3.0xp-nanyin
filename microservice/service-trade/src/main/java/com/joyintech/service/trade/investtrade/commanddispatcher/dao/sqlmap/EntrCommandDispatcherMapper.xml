@@ -68,10 +68,11 @@
 		  CASE WHEN A.FINPROD_TYPE2 ='F36' THEN A.ENTRUST_AMT ELSE DECODE(F.TARGET_TYPE, '02', A.ENTRUST_AMT, 0) END entrustAmt, /**委托额度*/
           CASE WHEN A.FINPROD_TYPE2 ='F36' THEN A.ENTRUST_NUM ELSE DECODE(F.TARGET_TYPE, '01',case when A.PS in ('T93', 'T94') THEN FDP.PLEDGE_NUMBER ELSE A.ENTRUST_NUM END, 0) END entrustNum, /**委托数量*/
 		  A.ENTRUST_STATUS entrustStatus,/**委托状态*/
-		  CASE WHEN A.PS IN ('03','04','T68','T69', 'T93', 'T94', 'T95', 'T96', 'T56')
-			THEN nvl(A.PRICE,FTP.INT_RATE)*100
-			ELSE A.PRICE END
-		  entrustPrice,/**委托单价*/
+			<!--CASE WHEN A.PS IN ('03','04','T68','T69', 'T93', 'T94', 'T95', 'T96', 'T56')
+			  THEN nvl(A.PRICE,FTP.INT_RATE)*100
+			  ELSE A.PRICE END
+			entrustPrice,/**委托单价*/ -->
+		  nvl(A.PRICE,FTP.INT_RATE) as entrustPrice,/**委托单价*/
 		  A.INV_AIM invAim,/**投资目的*/
 		  F.FULL_PRICE fullPrice,/**全价*/
 		  A.PRICE_MODEL   priceMode,/**限价模式 */
@@ -144,14 +145,14 @@
 			AND ( A.Ps = btm.INPUT_VALUE_3 OR  btm.INPUT_VALUE_3 IS NULL)
 			AND ( A.TRADE_PLAT = btm.INPUT_VALUE_1 OR  btm.INPUT_VALUE_1 IS NULL)
 		LEFT JOIN (
-		     select 
+		     select
 		          entrust_id,
-		          NVL(sum(finish_amt),0) finishamt 
-		     from etr_finish_status 
+		          NVL(sum(finish_amt),0) finishamt
+		     from etr_finish_status
 		     group by entrust_id
 		)FS ON FS.entrust_id = A.ENTRUST_ID
         <where>
-        	1=1 
+        	1=1
         	AND A.TRADE_MARKET in ('03','04','12')
         	<!-- add by etliu 20210203 可转债网下申购不发送交易端 start -->
         	and (F.PURCH_MODLE is null or F.PURCH_MODLE != '02')
