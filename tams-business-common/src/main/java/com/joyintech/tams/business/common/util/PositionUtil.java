@@ -161,8 +161,8 @@ public class PositionUtil {
                     logger.info("CDATE平台日期：" + CDATE);
                     logger.info("CDATE平台日期：" + DateUtil.format(CDATE));
                     if (StringUtil.equals(HODING_TYPE, DictCodeListExt3.资产类型_托管户可用资金.getValue())
-                            || StringUtil.equals(HODING_TYPE, DictCodeListExt3.资产类型_证券户可取资金.getValue())
-                            || StringUtil.equals(HODING_TYPE, DictCodeListExt3.资产类型_证券户可用资金.getValue())
+//                            || StringUtil.equals(HODING_TYPE, DictCodeListExt3.资产类型_证券户可取资金.getValue())
+//                            || StringUtil.equals(HODING_TYPE, DictCodeListExt3.资产类型_证券户可用资金.getValue())
                     ){
                         // 需要校验投管现金
                         // 校验仍不足时add

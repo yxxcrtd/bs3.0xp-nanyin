@@ -71,11 +71,11 @@ public class PositionHttpRequest {
             }else if(StringUtil.equals("CT0001", msgMap.get("code"))){
                 // 头寸引擎提示现金不足时需要再校验原投管现金
                 // 返回true，表示现金够，重新发送
-                boolean isEnough = PositionUtil.checkForFL0007(req, msgMap);
-                if (!isEnough){
+//                boolean isEnough = PositionUtil.checkForFL0007(req, msgMap);
+//                if (!isEnough){
                     // 确控时，加上原投管现金仍不足时提示前端
                     throw new PositionException(CODE_BUSI_YK + "|" + JsonUtils.object2Json(msgMap));
-                }
+//                }
             }else {
                 revokeCheck(msgMap, params);
             }
