@@ -1226,6 +1226,7 @@
         linkAvailableNum();
 
         var finprodType2 = $("#finprodType2_" + currentTab).val();
+
         if((currentTab == 'jj' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_F06)
             ||(currentTab == 'dz' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_F06)
             ||(currentTab == 'gd' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_F06)){
@@ -1242,7 +1243,7 @@
         }else {
             //质押券出入库不展示投资目的
             var ps = $("#ps_" + currentTab).val();
-            if(ps == PS_T68 || ps == PS_T69) {
+            if(ps == PS_T68 || ps == PS_T69|| ps == PS_T04) {
                 $("#invAim_div_" + currentTab).hide();
             }
             else {
