@@ -496,6 +496,8 @@ public class StlDataDealSzdSjsmxProcessService {
                 settleTransData.setMpayDate(DateUtil.parse(szdSjsmx.getMxjsrq()));
                 // 业务场景分类
                 settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_债券质押式竞价逆回购_到期.getValue());
+                // 竞价回购到期不登录applyTradeId
+                settleTransData.setApplyTradeId(null);
             }
         }
         else {
@@ -546,6 +548,8 @@ public class StlDataDealSzdSjsmxProcessService {
                 // GNS-893:使用公司工具类解析日期 modify by fuyongsheng 20220216 end
                 // 业务场景分类
                 settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_债券质押式竞价正回购_到期.getValue());
+                // 竞价回购到期不登录applyTradeId
+                settleTransData.setApplyTradeId(null);
             }
         }
         if(StringUtil.equals(ywlb, StlDataDealProcessConstant.SJSMX_YWLB_HGCS)) {

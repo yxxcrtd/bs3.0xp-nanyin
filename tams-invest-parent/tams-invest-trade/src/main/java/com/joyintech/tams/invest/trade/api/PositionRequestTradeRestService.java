@@ -107,7 +107,8 @@ public class PositionRequestTradeRestService {
         this.setCommonField(entity, resultMap);
         String finprodType = entity.getTrdProductDeal().getFinprodType2();
         String type6 = commonPositionEngineService.getType6(entity.getTrdProductDeal().getFinprodId());
-        if (DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue().equals(type6)) {
+        if (DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue().equals(type6)
+                && DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(finprodType)) {
             finprodType += "-" + type6;
         }
         logger.debug("【存续期查询头寸接口参数】finprodType:{},ps:{}", finprodType, entity.getTrdProductDeal().getPs());

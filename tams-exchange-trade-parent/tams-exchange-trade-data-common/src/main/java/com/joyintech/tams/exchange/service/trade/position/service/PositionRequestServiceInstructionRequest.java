@@ -27,6 +27,7 @@ import static com.joyintech.tams.invest.common.position.constant.PositionCommonC
 import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.INTERF_TYPE_STOCK001;
 import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.INV_AIM;
 import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.ORD_ENTRUST_ID;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.ORD_ID;
 import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.OWN_SEC_AMOUNT;
 import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.POSITION_TRD_PAGE;
 import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.POSITION_TYPE_TRD;
@@ -54,7 +55,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import cn.hutool.core.util.NumberUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -84,6 +84,8 @@ import com.joyintech.tams.exchange.datacommon.db.service.InstructionPledgeServic
 import com.joyintech.tams.exchange.service.trade.management.service.PortfolioManager;
 import com.joyintech.tams.exchange.service.trade.position.bean.PositionRequestBaseBean;
 import com.joyintech.tams.invest.common.position.service.CommonPositionEngineService;
+
+import cn.hutool.core.util.NumberUtil;
 
 @Service
 public class PositionRequestServiceInstructionRequest {
@@ -171,6 +173,8 @@ public class PositionRequestServiceInstructionRequest {
                 Map<String, Object> map = BeanUtil.object2Map(bean);
                 // 下单委托编号
                 map.put(ORD_ENTRUST_ID, entity.getEntrustNo());
+                // 下单编号，撤委托使用
+                map.put(ORD_ID, entity.getEntrustNo());
                 map.put(INV_AIM, entity.getInvAim());
                 map.put(INTEGRATE_SEC_AMOUNT, BigDecimal.ZERO);
                 map.put(OWN_SEC_AMOUNT, secAmount);

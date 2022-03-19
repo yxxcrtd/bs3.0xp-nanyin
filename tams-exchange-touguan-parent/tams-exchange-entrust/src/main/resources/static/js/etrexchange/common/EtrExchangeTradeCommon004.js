@@ -1226,6 +1226,7 @@
         linkAvailableNum();
 
         var finprodType2 = $("#finprodType2_" + currentTab).val();
+
         if((currentTab == 'jj' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_F06)
             ||(currentTab == 'dz' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_F06)
             ||(currentTab == 'gd' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_F06)){
@@ -1242,7 +1243,7 @@
         }else {
             //质押券出入库不展示投资目的
             var ps = $("#ps_" + currentTab).val();
-            if(ps == PS_T68 || ps == PS_T69) {
+            if(ps == PS_T68 || ps == PS_T69|| ps == PS_T04) {
                 $("#invAim_div_" + currentTab).hide();
             }
             else {
@@ -3167,6 +3168,7 @@
                 $("#portfolioId_div_"+currentTab).show();
                 $("#acctNo_div_"+currentTab).show();
                 $("#dateTableDiv").hide();
+                $("#ps_"+currentTab).attr('disabled', 'disabled');
             }
             if(finprodType2 == FINPROD_TYPE_TG_F06){
                 $("#priceModel_div_"+currentTab).show();
@@ -3507,6 +3509,27 @@
 
     var colsRiskTrialRet = [
         {
+            field: 'kriStatusCn', width: 100, title: 'BaseRiskMathComm.currStatus', sortable: false,
+            render: function (data, type, row, meta) {
+                if (row.kriStatus == 0) {
+                    return "<span>正常</span>";
+                }
+                if (row.kriStatus == 1) {
+                    return "<span style='color:orange'>预警</span>";
+                }
+                if (row.kriStatus == 2) {
+                    return "<span style='color:#F7580D'>审批</span>";
+                }
+                if (row.kriStatus == 3) {
+                    return "<span style='color:#F71A0D'>违规</span>";
+                }
+                if (row.kriStatus == 4) {
+                    return "<span style='color:#951F1F'>异常</span>";
+                }
+                return row.kriStatus;
+            }
+        }
+        , {
             /* 指标名称*/
             field: 'kriName',
             width: 200,
@@ -3560,27 +3583,6 @@
             width: 200,
             title: 'BaseRiskMathComm.kriTrend',
             sortable: false
-        }
-        , {
-            field: 'kriStatusCn', title: 'BaseRiskMathComm.currStatus', sortable: false,
-            render: function (data, type, row, meta) {
-                if (row.kriStatus == 0) {
-                    return "<span>正常</span>";
-                }
-                if (row.kriStatus == 1) {
-                    return "<span style='color:orange'>预警</span>";
-                }
-                if (row.kriStatus == 2) {
-                    return "<span style='color:#F7580D'>审批</span>";
-                }
-                if (row.kriStatus == 3) {
-                    return "<span style='color:#F71A0D'>违规</span>";
-                }
-                if (row.kriStatus == 4) {
-                    return "<span style='color:#951F1F'>异常</span>";
-                }
-                return row.kriStatus;
-            }
         }
     ]
 

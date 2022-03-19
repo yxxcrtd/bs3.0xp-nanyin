@@ -72,7 +72,8 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
             this.setCommonField(entity, resultMap);//设置公共字段，个性化的需要在具体接口中覆盖
             String type6 = commonPositionEngineService.getType6(entity.getTrdProductDeal().getFinprodId());
             String finprodType = entity.getTrdProductDeal().getFinprodType2();
-            if (DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue().equals(type6)) {
+            if (DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue().equals(type6)
+                    && DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(finprodType)) {
                 finprodType += "-" + type6;
             }
             // ZGTFCP-1164:修改判断协议回购方法 modify by fuyongsheng 20220317 start
