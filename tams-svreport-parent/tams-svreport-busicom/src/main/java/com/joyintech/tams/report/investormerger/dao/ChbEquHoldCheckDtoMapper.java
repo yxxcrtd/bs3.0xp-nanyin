@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.ChbEquTmp;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -57,11 +58,20 @@ public interface ChbEquHoldCheckDtoMapper {
 	
 	List<ChbEquHoldCheckDto> mergerData(@Param("keys")List<String> keys);
 	
-	void deleteEquityInfoBatch(@Param("keys")List<String> keys);
+	void deleteEquityInfoBatch(List<ChbEquTmp> list);
 	
-	void deleteEquitySubInfoBatch(@Param("keys")List<String> keys);
+	void deleteEquitySubInfoBatch(List<ChbEquTmp> list);
+
+	void deleteEquityInfoBatchTmp();
+
+	void deleteEquitySubBatchTmp();
+
+	void truncateEquityTmp();
+
+	// 性能优化
+	List<ChbEquHoldCheckDto> selectChekForRepairMax();
 	
-	List<ChbEquHoldCheckDto> selectChekForRepair(@Param("keys")List<String> keys);
+	List<ChbEquHoldCheckDto> selectChekForRepair(List<ChbEquTmp> list);
 	
 	/**
 	 * @Description 根据三要素查询身份信息
