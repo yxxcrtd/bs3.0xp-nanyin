@@ -21,10 +21,9 @@ update CFG_READONLY_FORM_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"a
 update CFG_READONLY_FORM_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"2"}' where PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and COLCODE = 'entrustNum' ;
 
 -- 新股申购、配股、可转债信用申购指令信息均为显示资金账户字段，期望显示资金账户
-
-	INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE,DTCODE,SPCDCODE,COLCODE,COLNAME,DICTCODE,SEQNO,EXTENDCFG,STATUS,REMARK1,REMARK2,REMARK3) VALUES ('FieldEtrDispatcher', 'FieldEtrDispatcherInfo', 'EX007', 'secAcctId', '资金账户', NULL, '22', '{"colAlign": "left"}', '1', '0', NULL, NULL);
-
-	INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE,DTCODE,SPCDCODE,COLCODE,COLNAME,DICTCODE,SEQNO,EXTENDCFG,STATUS,REMARK1,REMARK2,REMARK3) VALUES ('FieldEtrDispatcher', 'FieldEtrDispatcherInfo', 'EX008', 'secAcctId', '资金账户', NULL, '10', '{"colAlign": "left"}', '1', '0', NULL, NULL);
+INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE,DTCODE,SPCDCODE,COLCODE,COLNAME,DICTCODE,SEQNO,EXTENDCFG,STATUS,REMARK1,REMARK2,REMARK3) VALUES ('FieldEtrDispatcher', 'FieldEtrDispatcherInfo', 'EX009', 'secAcctId', '资金账户', NULL, '16', '{"colAlign": "left"}', '1', '0', NULL, NULL);
+INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE,DTCODE,SPCDCODE,COLCODE,COLNAME,DICTCODE,SEQNO,EXTENDCFG,STATUS,REMARK1,REMARK2,REMARK3) VALUES ('FieldEtrDispatcher', 'FieldEtrDispatcherInfo', 'EX007', 'secAcctId', '资金账户', NULL, '22', '{"colAlign": "left"}', '1', '0', NULL, NULL);
+INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE,DTCODE,SPCDCODE,COLCODE,COLNAME,DICTCODE,SEQNO,EXTENDCFG,STATUS,REMARK1,REMARK2,REMARK3) VALUES ('FieldEtrDispatcher', 'FieldEtrDispatcherInfo', 'EX008', 'secAcctId', '资金账户', NULL, '10', '{"colAlign": "left"}', '1', '0', NULL, NULL);
 
 
 -- 协议现券

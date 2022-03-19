@@ -15,6 +15,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -67,7 +68,7 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
     private String effectFlag;
 
     @ApiModelProperty(name="etrPrice",value="指令价格",example="99")
-    private BigDecimal etrPrice;
+    private String etrPrice;
 
     @ApiModelProperty(name="exeProgress",value="执行进度%",example="50%")
     private BigDecimal exeProgress;
@@ -104,6 +105,12 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
 
     @ApiModelProperty(name = "assetType11", value = "资产四级分类", example = "字符串1")
     private String assetType11;
+
+    @ApiModelProperty(name = "assetType11", value = "中标状态", example = "字符串1")
+    private String isWin;
+
+    @ApiModelProperty(name = "assetType11", value = "中标状态字典值", example = "字符串1")
+    private String isWinValue;
 
     /**
      * 获取 otherEntrustStatus
@@ -283,11 +290,11 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
                 SysDataUtil.getNameFromDataDict(DictCode.头寸业务类型, this.getBusiTypePosition());
     }
 
-    public BigDecimal getEtrPrice() {
+    public String getEtrPrice() {
         return etrPrice;
     }
 
-    public void setEtrPrice(BigDecimal etrPrice) {
+    public void setEtrPrice(String etrPrice) {
         this.etrPrice = etrPrice;
     }
 
@@ -361,5 +368,24 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
 
     public void setAssetType11(String assetType11) {
         this.assetType11 = assetType11;
+    }
+
+    public String getIsWin() {
+        return isWin;
+    }
+
+    public void setIsWin(String isWin) {
+        this.isWin = isWin;
+    }
+
+    public String getIsWinValue() {
+        if (!StringUtil.isEmpty(this.getIsWin())) {
+            return SysDataUtil.getNameFromDataDict(BussinessDictCode.中标状态, this.getIsWin());
+        }
+        return null;
+    }
+
+    public void setIsWinValue(String isWinValue) {
+        this.isWinValue = isWinValue;
     }
 }

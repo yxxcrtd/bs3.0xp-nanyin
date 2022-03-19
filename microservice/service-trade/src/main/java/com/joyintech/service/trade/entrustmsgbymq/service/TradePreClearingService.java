@@ -2427,7 +2427,12 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
         // COUNTER_ID	交易对手
         // 交易对手
         EtrEntrust etrEntrust = entrustMsgbyMQMapper.queryEtrEntrust(infContractDetailfile.getEntrustId());
-        settleInfo.setCounterId(etrEntrust.getCounterId());
+        // ZGTFCP-1366:判断指令交易对手是否为空 modify by fuyongsheng 20220319 start
+        // settleInfo.setCounterId(etrEntrust.getCounterId());
+        if(StringUtil.isNotEmpty(etrEntrust.getCounterId())){
+            settleInfo.setCounterId(etrEntrust.getCounterId());
+        }
+        // ZGTFCP-1366:判断指令交易对手是否为空 modify by fuyongsheng 20220319 end
         // modify by etliu 20220114 start
         // GZYHTZJY-1128: 【场内对账清结算1231】深交所协议回购首期，下单后“手工交收”页面查不到数据 【解决日期：2022-01-14】
 //        settleInfo.setPrin(trdTempDto.getPositionBaseData().getFinTradeProductDto().getPrin());

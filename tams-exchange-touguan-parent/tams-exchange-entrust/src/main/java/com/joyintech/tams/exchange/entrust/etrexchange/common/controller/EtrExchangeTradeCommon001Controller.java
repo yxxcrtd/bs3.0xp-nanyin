@@ -22,6 +22,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.PositionUtil;
@@ -59,6 +60,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -932,7 +934,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	@ApiOperation(value = "保存提交check", notes = "保存提交check")
 	@PostMapping("checkSaveError")
 	@ResponseBody
-	public Message<AjaxResult> checkSaveError(@RequestBody  EtrExchangeTradeSaveRequest dto, BindingResult br)
+	public Message<AjaxResult> checkSaveError(@RequestBody @Validated({ ValidateGroupEdit.class })  EtrExchangeTradeSaveRequest dto, BindingResult br)
 			throws Exception {
 		AjaxResult ajax=null;
 		try {

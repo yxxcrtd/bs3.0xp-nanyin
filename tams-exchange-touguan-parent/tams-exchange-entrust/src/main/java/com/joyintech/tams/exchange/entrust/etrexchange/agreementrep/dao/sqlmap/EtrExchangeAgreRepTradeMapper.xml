@@ -530,13 +530,13 @@
         '未购回'
         end as purStatus, /** 购回状态 **/
         case
-        when fin_trade_product.Mdate <![CDATA[<=]]> #{sysdate} then
+        when fin_trade_product.Mdate <![CDATA[<=]]> #{sysdate,jdbcType=DATE} then
         #{YES_OR_NO_Y}
         else
         #{YES_OR_NO_N}
         end as isExpire,
         CASE
-        WHEN fin_trade_product.Mdate <![CDATA[<=]]> #{sysdate} THEN
+        WHEN fin_trade_product.Mdate <![CDATA[<=]]> #{sysdate,jdbcType=DATE} THEN
         '是'
         ELSE
         '否'
@@ -562,10 +562,10 @@
         fin_trade_product.vpay_date fristSettleDate, /** 首次结算日 **/
         fin_trade_product.mpay_date expireSettleDate, /** 到期结算日 **/
         case
-        when fin_trade_product.mpay_date <![CDATA[<=]]> #{sysdate} then
+        when fin_trade_product.mpay_date <![CDATA[<=]]> #{sysdate,jdbcType=DATE} then
         0
         else
-        TO_NUMBER(fin_trade_product.mpay_date - #{sysdate})
+        TO_NUMBER(fin_trade_product.mpay_date - #{sysdate,jdbcType=DATE})
         end as remainDays, /** 剩余日期 **/
         fin_trade_product.act_cap_days occupyDays, /** 实际占款天数 **/
         fin_trade_product.m_int_amt mIntAmt, /** 回购利息 **/
@@ -617,8 +617,9 @@
         LEFT JOIN ETR_ENTRUST ee ON trd_product_deal_add.ENTRUST_ID = ee.ENTRUST_ID
         LEFT JOIN ETR_ENTRUST_ADD eea ON ee.ENTRUST_ID = eea.ENTRUST_ID
         LEFT JOIN mst_counter_party mcp ON ee.counter_id = mcp.counter_id
-        where fin_trade_product.branch = '0'
+        where fin_trade_product.branch = 0
         AND fin_trade_product.trade_market IN ('03', '04')
+        AND trd_product_deal_2.trade_status = '01' and trd_product_deal_2.is_cancel = 'N'
         <if test="tradeId != null and tradeId !=''">
             AND fin_trade_product.finprod_id = #{tradeId,jdbcType=VARCHAR}
         </if>

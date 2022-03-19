@@ -59,8 +59,9 @@ public class BondHelper {
             return false;
         }
         boolean isFullPrice = false;
-        // 申报类不需要check最小价差和涨跌停
-        if (!EntrustUtils.isNoTrade(orderInterface.getEntrustProp())) {
+        // 申报类不需要check最小价差和涨跌停,
+        // 质押券出入库不需要check最小价差和涨跌停 by lifangpeng 20220319
+        if (!EntrustUtils.isNoTrade(orderInterface.getEntrustProp()) && !EntrustProp.ZYCRK.getValue().equals(orderInterface.getEntrustProp())) {
             MinPrice minPrice = instrumentService.getMinPrice(tradePlat, instrument.getMarket(), instrument);
             if (EntrustUtils.isFullPrice(instrument, orderInterface.getAssetType(), orderInterface.getEntrustProp(), orderInterface.getIsFullPrice())) {
                 isFullPrice = true;

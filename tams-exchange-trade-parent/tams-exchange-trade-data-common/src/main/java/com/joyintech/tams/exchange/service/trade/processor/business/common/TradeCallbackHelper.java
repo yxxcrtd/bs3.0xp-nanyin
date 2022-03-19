@@ -1,7 +1,6 @@
 package com.joyintech.tams.exchange.service.trade.processor.business.common;
 
 import com.google.common.base.Strings;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.exchange.common.constant.*;
 import com.joyintech.tams.exchange.common.db.domain.*;
 import com.joyintech.tams.exchange.common.utils.*;
@@ -229,7 +228,8 @@ public class TradeCallbackHelper {
         tradeRecord.setPs(instruction.getPs());
         tradeRecord.setBusiTypeTg(instruction.getBusiTypeTg());
         tradeRecord.setEntrustClass(instruction.getEntrustClass());
-        if (StringUtil.equals(InvestmentAssetType.BOND.value, tradeRecord.getFinprodType2()) && tradeRecord.getFullPrice() != null) {
+        if (InvestmentAssetType.isBond(tradeRecord.getFinprodType2()) && tradeRecord.getFullPrice() != null) {
+            //成交全价金额
             tradeRecord.setClearBalance(tradeRecord.getFullPrice().multiply(BigDecimal.valueOf(tradeRecord.getTradedVolume())));
         }
 

@@ -168,7 +168,8 @@ public class EtrExchangeTradeCommon004Controller extends BaseController{
                 List<RiskTrialRetDto> riskTrialRetList = basRiskMathCommService.select(entrustIdWfl);
                 boolean riskTrialFlag = true;
                 for (RiskTrialRetDto riskTrialRetDto:riskTrialRetList){
-                    if (riskTrialRetDto.getKriStatus().equals("3")  && riskTrialRetDto.getKriTrend().equals("向坏")){
+                    if ((StringUtil.isNotEmpty(riskTrialRetDto.getKriStatus()) && riskTrialRetDto.getKriStatus().equals("3"))
+                            && (StringUtil.isNotEmpty(riskTrialRetDto.getKriTrend()) && riskTrialRetDto.getKriTrend().equals("向坏"))){
                         riskTrialFlag = false;
                     }
                 }

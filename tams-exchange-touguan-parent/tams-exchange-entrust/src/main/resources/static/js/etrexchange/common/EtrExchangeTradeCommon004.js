@@ -1226,6 +1226,7 @@
         linkAvailableNum();
 
         var finprodType2 = $("#finprodType2_" + currentTab).val();
+
         if((currentTab == 'jj' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_F06)
             ||(currentTab == 'dz' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_F06)
             ||(currentTab == 'gd' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_F06)){
@@ -1242,7 +1243,7 @@
         }else {
             //质押券出入库不展示投资目的
             var ps = $("#ps_" + currentTab).val();
-            if(ps == PS_T68 || ps == PS_T69) {
+            if(ps == PS_T68 || ps == PS_T69|| ps == PS_T04) {
                 $("#invAim_div_" + currentTab).hide();
             }
             else {
@@ -3354,7 +3355,9 @@
                     type: 'select', multiple: false, searchable: true, showField: 'text',
                     url: JoyinUtil.getRealPath("/etrexchange/common/EtrExchangeTradeCommon004/getPtlSecAcctInfo"),
                     postData:function () {
-                        return {portfolioId:curPortfolioId,tradeMarket: $("#tradeMarket_"+currentTab).val()};
+                        return {
+                            // portfolioId:curPortfolioId,tradeMarket: $("#tradeMarket_"+currentTab).val()
+                        };
                     }
                 }
             },
@@ -3597,11 +3600,11 @@
     function paramCheck() {
         var ps =  $("#ps_" + currentTab).val();
 
-        if (("02" === isRiskMathSoftcontrol && "Y" === pageRedisFlag) && (ps !== PS_T68 && ps !== PS_T69) && (!entity_RiskTrialRetList || riskFlag !== 0)) {
+        if ("Y" === pageRedisFlag && (ps !== PS_T68 && ps !== PS_T69) && (!entity_RiskTrialRetList || riskFlag !== 0)) {
             Joyin.error("请先完成风险试算")
             return false;
         }
-        if ($('#riskTrialSpan').text() && $('#riskTrialSpan').text().trim() == '试算不通过') {
+        if ("02" === isRiskMathSoftcontrol && $('#riskTrialSpan').text() && $('#riskTrialSpan').text().trim() == '试算不通过') {
             Joyin.error("风险试算未通过")
             return false;
         }
