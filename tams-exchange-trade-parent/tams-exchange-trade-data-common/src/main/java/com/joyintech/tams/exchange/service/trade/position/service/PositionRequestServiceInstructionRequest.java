@@ -587,7 +587,7 @@ public class PositionRequestServiceInstructionRequest {
             balanceCheck = "N";
         }
         resultMap.put("userId", entity.getTradeId());
-        resultMap.put("totalTradeId", entity.getEntrustId());
+        resultMap.put("totalTradeId", entity.getEntrustNo());
         resultMap.put("balanceCheck", balanceCheck);
         resultMap.put("flowStatus", DictCodeListExt3.流程节点_流程提交.getValue());
         resultMap.put("modelType", DictCodeListExt1.子系统代码_交易.getValue());
