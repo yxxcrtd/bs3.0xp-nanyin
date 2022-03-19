@@ -3597,11 +3597,11 @@
     function paramCheck() {
         var ps =  $("#ps_" + currentTab).val();
 
-        if ((ps !== PS_T68 && ps !== PS_T69) && (!entity_RiskTrialRetList || riskFlag !== 0)) {
+        if ("Y" === pageRedisFlag && (ps !== PS_T68 && ps !== PS_T69) && (!entity_RiskTrialRetList || riskFlag !== 0)) {
             Joyin.error("请先完成风险试算")
             return false;
         }
-        if ($('#riskTrialSpan').text() && $('#riskTrialSpan').text().trim() == '试算不通过') {
+        if ("02" === isRiskMathSoftcontrol && $('#riskTrialSpan').text() && $('#riskTrialSpan').text().trim() == '试算不通过') {
             Joyin.error("风险试算未通过")
             return false;
         }

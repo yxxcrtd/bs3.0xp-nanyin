@@ -619,6 +619,7 @@
         LEFT JOIN mst_counter_party mcp ON ee.counter_id = mcp.counter_id
         where fin_trade_product.branch = '0'
         AND fin_trade_product.trade_market IN ('03', '04')
+        AND trd_product_deal_2.trade_status = '01' and trd_product_deal_2.is_cancel = 'N'
         <if test="tradeId != null and tradeId !=''">
             AND fin_trade_product.finprod_id = #{tradeId,jdbcType=VARCHAR}
         </if>

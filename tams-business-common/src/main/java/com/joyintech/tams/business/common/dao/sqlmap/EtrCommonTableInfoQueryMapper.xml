@@ -19,7 +19,7 @@
 
     <select id="getCommonSearchTabRskInfo"
             resultType="com.joyintech.tams.business.common.dto.CommonSearchRskInfoResponse">
-        SELECT rit.sup_stat supStat,
+        SELECT distinct rit.sup_stat supStat,
             rii.ind_name indName,
             rii.ind_type indType,
             pp.portfolio_name portfolioName,

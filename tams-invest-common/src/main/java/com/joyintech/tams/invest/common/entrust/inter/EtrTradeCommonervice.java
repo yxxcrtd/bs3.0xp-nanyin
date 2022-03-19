@@ -84,6 +84,9 @@ public class EtrTradeCommonervice extends BaseService {
                 if(StringUtil.isEmpty(dto.getCdate())){
                     dto.setCdate(iPlatformDate.getSysDateStr());
                 }
+                if(StringUtil.isEmpty(dto.getPortfolioId())){
+                    continue;
+                }
                 List<String> acctTypeList = new ArrayList<>();
                 acctTypeList.add(BussinessDictCodeList.资金账户类型_托管账户.getValue());
                 acctTypeList.add(BussinessDictCodeList.资金账户类型_交易所资金账户.getValue());
@@ -196,6 +199,9 @@ public class EtrTradeCommonervice extends BaseService {
             String flowType = requestDto.getFlowType();
             flowType = StringUtil.equals("etr", flowType) ? "01" : "02";
             for (PositionCashSecDto dto : list) {
+                if(StringUtil.isEmpty(dto.getPortfolioId())){
+                    continue;
+                }
                 // 从原投管系统取
                 BigDecimal portfolioCash = BigDecimal.ZERO; // 组合现金可用
                 BigDecimal canCash = BigDecimal.ZERO; // 现金可用
