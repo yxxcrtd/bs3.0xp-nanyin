@@ -1604,6 +1604,27 @@
 
         var colsRiskTrialRet = [
             {
+                field: 'kriStatusCn', width: 100, title: 'BaseRiskMathComm.currStatus', sortable: false,
+                render: function (data, type, row, meta) {
+                    if (row.kriStatus == 0) {
+                        return "<span>正常</span>";
+                    }
+                    if (row.kriStatus == 1) {
+                        return "<span style='color:orange'>预警</span>";
+                    }
+                    if (row.kriStatus == 2) {
+                        return "<span style='color:#F7580D'>审批</span>";
+                    }
+                    if (row.kriStatus == 3) {
+                        return "<span style='color:#F71A0D'>违规</span>";
+                    }
+                    if (row.kriStatus == 4) {
+                        return "<span style='color:#951F1F'>异常</span>";
+                    }
+                    return row.kriStatus;
+                }
+            }
+            , {
                 /* 指标名称*/
                 field: 'kriName',
                 width: 200,
@@ -1657,27 +1678,6 @@
                 width: 200,
                 title: 'BaseRiskMathComm.kriTrend',
                 sortable: false
-            }
-            , {
-                field: 'kriStatusCn', title: 'BaseRiskMathComm.currStatus', sortable: false,
-                render: function (data, type, row, meta) {
-                    if (row.kriStatus == 0) {
-                        return "<span>正常</span>";
-                    }
-                    if (row.kriStatus == 1) {
-                        return "<span style='color:orange'>预警</span>";
-                    }
-                    if (row.kriStatus == 2) {
-                        return "<span style='color:#F7580D'>审批</span>";
-                    }
-                    if (row.kriStatus == 3) {
-                        return "<span style='color:#F71A0D'>违规</span>";
-                    }
-                    if (row.kriStatus == 4) {
-                        return "<span style='color:#951F1F'>异常</span>";
-                    }
-                    return row.kriStatus;
-                }
             }
         ]
 
