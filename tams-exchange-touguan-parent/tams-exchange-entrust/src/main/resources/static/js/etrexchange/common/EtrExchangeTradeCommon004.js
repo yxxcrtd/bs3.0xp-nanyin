@@ -3354,7 +3354,9 @@
                     type: 'select', multiple: false, searchable: true, showField: 'text',
                     url: JoyinUtil.getRealPath("/etrexchange/common/EtrExchangeTradeCommon004/getPtlSecAcctInfo"),
                     postData:function () {
-                        return {portfolioId:curPortfolioId,tradeMarket: $("#tradeMarket_"+currentTab).val()};
+                        return {
+                            // portfolioId:curPortfolioId,tradeMarket: $("#tradeMarket_"+currentTab).val()
+                        };
                     }
                 }
             },
