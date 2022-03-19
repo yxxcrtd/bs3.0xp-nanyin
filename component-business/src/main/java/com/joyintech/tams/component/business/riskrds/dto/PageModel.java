@@ -190,12 +190,6 @@ public class PageModel {
             doSpecialAsset(resMap, dto);
             // 交易方向转换
             changePs(resMap, dto);
-
-             if (StringUtil.isNotEmpty(resMap.get(ModelConstant.INF_EVENTDATE))
-                 && resMap.get(ModelConstant.INF_EVENTDATE) instanceof Date){
-                 Date eventDate =  (Date)resMap.get(ModelConstant.INF_EVENTDATE);
-                 resMap.put(ModelConstant.INF_EVENTDATE,DateUtil.format(eventDate, DateUtil.DEFAULT_OTHER_FORMAT));
-             }
         }
         return resMap;
     }
