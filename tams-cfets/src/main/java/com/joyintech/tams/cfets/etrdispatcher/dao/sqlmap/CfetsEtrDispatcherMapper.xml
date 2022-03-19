@@ -99,7 +99,7 @@
 
         WHEN etr_entrust_add.TARGET_TYPE = '01' THEN
         ROUND( decode(nvl( T9.ENT_FINISH_AMT, 0 ),0,0, nvl( T9.ENT_FINISH_AMT, 0 )/ nvl( etr_entrust.ENTRUST_NUM, 1 )), 4 )*100
-        ELSE ROUND( decode(nvl( T9.ENT_FINISH_AMT, 0 ),0,0, decode(nvl( T9.ENT_FINISH_AMT, 0 )/ nvl( etr_entrust.ENTRUST_AMT, 1 )), 4 ) * 100
+        ELSE ROUND( decode(nvl( T9.ENT_FINISH_AMT, 0 ),0,0,nvl( T9.ENT_FINISH_AMT, 0 )/ nvl( etr_entrust.ENTRUST_AMT, 1 )), 4 ) * 100
         END
         ) ELSE (
         CASE
