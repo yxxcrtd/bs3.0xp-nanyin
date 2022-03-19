@@ -255,7 +255,7 @@ public class EtrExchangeTradeEtrExchangeCommonResponse {
     @ApiModelProperty(name="avaDealAmt",value="剩余成交额度(元)")
     private String avaDealAmt;
 
-    @ApiModelProperty(name="avaDealAmt",value="业务模式")
+    @ApiModelProperty(name="businessModel",value="业务模式")
     private String businessModel;
 
     public String getFinprodId() {
