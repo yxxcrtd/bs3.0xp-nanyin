@@ -82,7 +82,10 @@ public class PositionRequestManualSettleService {
 //            }
 //        }
         String type6 = commonPositionEngineService.getType6(entity.getFinprodId());
-        if (DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue().equals(type6)) {
+        if (DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue().equals(type6)
+                // ZGTFCP-1372:增加债券资产类型条件 modify by fuyongsheng 20220319 start
+                && DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(finprodType)) {
+            // ZGTFCP-1372:增加债券资产类型条件 modify by fuyongsheng 20220319 end
             finprodType += "-" + type6;
         }
         TrdProductTempDeal trdProductTempDeal = trdProductTempDealMapper.selectByPrimaryKey(entity.getTradeId());

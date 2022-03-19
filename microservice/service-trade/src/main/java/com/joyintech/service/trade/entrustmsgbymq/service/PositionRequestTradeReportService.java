@@ -72,7 +72,8 @@ public class PositionRequestTradeReportService {
         String finprodType = trdTempDto.getFinprodType2();
         String ps = trdTempDto.getPs();
         String type6 = commonPositionEngineService.getType6(trdTempDto.getFinprodId());
-        if (DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue().equals(type6)) {
+        if (DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue().equals(type6)
+                && DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(finprodType)) {
             finprodType += "-" + type6;
         }
         EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(trdTempDto.getEntrustId());
