@@ -3597,7 +3597,7 @@
     function paramCheck() {
         var ps =  $("#ps_" + currentTab).val();
 
-        if ((ps !== PS_T68 && ps !== PS_T69) && (!entity_RiskTrialRetList || riskFlag !== 0)) {
+        if (("02" === isRiskMathSoftcontrol && "Y" === pageRedisFlag) && (ps !== PS_T68 && ps !== PS_T69) && (!entity_RiskTrialRetList || riskFlag !== 0)) {
             Joyin.error("请先完成风险试算")
             return false;
         }

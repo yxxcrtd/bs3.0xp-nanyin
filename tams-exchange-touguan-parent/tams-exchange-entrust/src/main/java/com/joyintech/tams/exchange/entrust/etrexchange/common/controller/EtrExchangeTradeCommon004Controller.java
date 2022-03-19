@@ -221,6 +221,9 @@ public class EtrExchangeTradeCommon004Controller extends BaseController{
         //展示投资目的或业务模式参数
         String SHOW_INVAIM_OR_BUSSINSSMODEL = CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL");
         model.addAttribute("SHOW_INVAIM_OR_BUSSINSSMODEL", SHOW_INVAIM_OR_BUSSINSSMODEL);
+        model.addAttribute("pageRedisFlag", CacheUtil.getSysParam("pageRedisFlag"));
+        model.addAttribute("isRiskmathSoftcontrol", CacheUtil.getSysParam("IS_RISKMATH_SOFTCONTROL"));
+
 
         // 场内交易指令画面行情区域自动刷新时间（毫秒）
         long etrExchange_HqArea_refresh_period = 20000;
