@@ -84,8 +84,6 @@ public class TokenJob {
 
     private boolean isOutOfService = true;// 是否需要掉线服务
     
-    private static ServiceNode snode;
-
     @PostConstruct
     public void processUrl() {
         if (Objects.nonNull(eurekaUrl)) {
@@ -106,7 +104,6 @@ public class TokenJob {
                 return;
             }
             ServiceNode thisNode = commonManagement.queryServiceNode(node).get(0);
-            snode = thisNode;
             if (Objects.isNull(thisNode)) {
                 logger.info("can not found the ServiceNode by yml node, please check the node !!!!");
                 return;
@@ -277,12 +274,10 @@ public class TokenJob {
     }
     
     public static boolean isMaster() {
-    	return isMaster;
+		return isMaster;
     }
     
-    public static String getNodeAddress() {
-//    	ServiceNode thisNode = commonManagement.queryServiceNode(node).get(0);
-//    	return thisNode.getNodeAddress();
-    	return snode.getNodeAddress();
+    public static String getMasterAddress() {
+    	return masterAddress;
     }
 }
