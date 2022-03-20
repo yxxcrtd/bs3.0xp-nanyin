@@ -155,7 +155,7 @@ public class EtrExchangeTradeCommon004Controller extends BaseController{
                     workflowId);
             //add by chenjiaxing 流程中不显示资产名称 start
             String[] secIds = StringUtil.split(entity.getFinprodId(),"_");
-            if(secIds.length == 2 && (StringUtil.isEmpty(entity.getStockId()))){
+            if(secIds.length == 2){
                 entity.setStockId(secIds[1]);
             }
             if (StringUtil.isNotEmpty(entity.getRiskTrialRetDto())){

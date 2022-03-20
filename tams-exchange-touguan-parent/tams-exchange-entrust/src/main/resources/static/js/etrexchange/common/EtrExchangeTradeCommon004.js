@@ -3189,6 +3189,10 @@
                 $("#settleSpeed_div_xj").show();
             }
 
+            if(finprodType2 == FINPROD_TYPE_TG_F01){
+                $("#entrustNumUnit_" + currentTab).text("张");
+            }
+
 
             initFlag = true;
             hideLeftTopPanel();
