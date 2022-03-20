@@ -3225,6 +3225,7 @@
                 }
                 setRiskFlag(0);
             }
+            linkEntrustNumUnit();
         }
     var addMinPriceStep = function(type,num,input) {
         var $secIdObj = $("#secIdObjRelative_" + currentTab).val();
