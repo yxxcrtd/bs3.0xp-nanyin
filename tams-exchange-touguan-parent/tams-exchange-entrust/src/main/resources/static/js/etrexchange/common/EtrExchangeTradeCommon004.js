@@ -51,6 +51,9 @@
                 object.finprodType2 = FINPROD_TYPE_TG_F03;
             }
         }
+        if(object.ps == PS_T68 || object.ps == PS_T69){
+            object.priceModel = "PRM01";
+        }
         // 隐藏项需要手动获取
         object.finprodId = $("#finprodId_" + currentTab).val();
         object.tradeMarket = $("#tradeMarket_" + currentTab).val();
