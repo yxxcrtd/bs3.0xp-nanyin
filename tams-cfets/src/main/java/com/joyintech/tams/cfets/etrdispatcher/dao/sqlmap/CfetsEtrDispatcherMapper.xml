@@ -1689,7 +1689,7 @@
         ete.entrust_num/100 shareNum,
         eted.our_ent_num/100 entrustOwnNum,
         eted.lendin_ent_num integrateSecAmount,
-        ete.price unitPrice,
+        case when eted.ASSET_TYPE = 'F07' and eted.ASSET_TYPE1 = 'H01' then ete.price * 100 else ete.price end as unitPrice,
         eted.full_price allPrice,
         eted.mature_yield*100 matureYield,
         eted.exer_yield*100 exerYield,
@@ -1718,7 +1718,7 @@
         eted.ASSET_TYPE assetType,
         ete.INV_MANAGER_ID invManagerId,
         eted.TARGET_TYPE targetType,
-        ete.COUNTER_ID counterId,
+        mcpdata.COUNTER_NAME counterId,
         eted.COUNTER_SEAT counterSeat,
         eted.COUNTER_CON_NO counterConNo,
         eted.TRADER trader,
@@ -1730,7 +1730,7 @@
         eted.PREB preb,
         eted.PREC prec,
         fpt.TYPE_11 secType,
-        eted.DEAL_CUR_ACCT dealCurAcct,
+        sci.ACCT_NAME dealCurAcct,
         eted.REQUEST_ID requestId,
         eted.CAP_DAYS capDays,
         to_char(eted.VPAY_DATE,'yyyy-MM-dd') vpayDate,
@@ -1766,6 +1766,7 @@
         LEFT JOIN FIN_PRODUCT T6 ON oete.FINPROD_ID = T6.FINPROD_ID
         LEFT JOIN FIN_STDSEC_CONVERSE_RADIO fscr ON ete.FINPROD_ID = fscr.FINPROD_ID
         LEFT JOIN ( SELECT ENTRUST_ID, wm_concat ( PORTFOLIO_ID ) PORTFOLIO_ID FROM ETR_ENTRUST_DETAIL GROUP BY ENTRUST_ID ) det ON det.ENTRUST_ID = ete.ENTRUST_ID
+        left join MST_COUNTER_PARTY mcpdata on ete.COUNTER_ID = mcpdata.COUNTER_ID
         WHERE ete.entrust_id = #{entrustId}
           AND ( fscr.VDATE  = ( select max(VDATE) from FIN_STDSEC_CONVERSE_RADIO fscr1
           where fscr1.FINPROD_ID= fscr.FINPROD_ID and fscr1.BRANCH = fscr.BRANCH and fscr1.VDATE &lt;= to_date(#{sysDateStr},'yyyy-mm-dd'))  OR fscr.VDATE IS NULL )
@@ -1788,7 +1789,7 @@
         ete.entrust_num/100 shareNum,
         eted.our_ent_num/100 entrustOwnNum,
         eted.lendin_ent_num integrateSecAmount,
-        ete.price unitPrice,
+        case when eted.ASSET_TYPE = 'F07' and eted.ASSET_TYPE1 = 'H01' then ete.price * 100 else ete.price end as unitPrice,
         eted.full_price allPrice,
         eted.mature_yield*100 matureYield,
         eted.exer_yield*100 exerYield,
@@ -1817,7 +1818,7 @@
         eted.ASSET_TYPE assetType,
         ete.INV_MANAGER_ID invManagerId,
         eted.TARGET_TYPE targetType,
-        ete.COUNTER_ID counterId,
+        mcpdata.COUNTER_NAME counterId,
         eted.COUNTER_SEAT counterSeat,
         eted.COUNTER_CON_NO counterConNo,
         eted.TRADER trader,
@@ -1829,7 +1830,7 @@
         eted.PREB preb,
         eted.PREC prec,
         fpt.TYPE_11 secType,
-        eted.DEAL_CUR_ACCT dealCurAcct,
+        sci.ACCT_NAME dealCurAcct,
         eted.REQUEST_ID requestId,
         eted.CAP_DAYS capDays,
         to_char(eted.VPAY_DATE,'yyyy-MM-dd') vpayDate,
@@ -1865,6 +1866,7 @@
         LEFT JOIN FIN_PRODUCT T6 ON oete.FINPROD_ID = T6.FINPROD_ID
         LEFT JOIN FIN_STDSEC_CONVERSE_RADIO fscr ON ete.FINPROD_ID = fscr.FINPROD_ID
         LEFT JOIN ( SELECT ENTRUST_ID, wm_concat ( PORTFOLIO_ID ) PORTFOLIO_ID FROM WFL_ETR_ENTRUST_DETAIL GROUP BY ENTRUST_ID ) det ON det.ENTRUST_ID = ete.ENTRUST_ID
+        left join MST_COUNTER_PARTY mcpdata on ete.COUNTER_ID = mcpdata.COUNTER_ID
         WHERE ete.entrust_id = #{entrustId}
           AND (fscr.VDATE  = ( select max(VDATE) from FIN_STDSEC_CONVERSE_RADIO fscr1
         where fscr1.FINPROD_ID= fscr.FINPROD_ID and fscr1.BRANCH = fscr.BRANCH and fscr1.VDATE &lt;= to_date(#{sysDateStr},'yyyy-mm-dd')) OR fscr.VDATE IS NULL )
