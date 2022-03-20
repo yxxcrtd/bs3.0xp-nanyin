@@ -216,7 +216,7 @@ public class EtrExchangeTradeCommon004Controller extends BaseController{
         model.addAttribute("CONTROL_TYPE_04", BussinessDictCodeListRds.控制类型_小于等于.getValue());
 
         //清算速度
-        //setSettleSpreedSelectOptions(model);
+        setSettleSpreedSelectOptions(model);
         model.addAttribute("ACCOUNT_SPEED_01", DictCodeList.清算速度_T_0.getValue());
         model.addAttribute("ACCOUNT_SPEED_02", DictCodeList.清算速度_T_1.getValue());
         //展示投资目的或业务模式参数
