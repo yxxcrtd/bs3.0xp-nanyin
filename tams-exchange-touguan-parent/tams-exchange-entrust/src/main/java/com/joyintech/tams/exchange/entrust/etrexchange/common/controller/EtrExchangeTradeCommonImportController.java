@@ -1,6 +1,7 @@
 package com.joyintech.tams.exchange.entrust.etrexchange.common.controller;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
@@ -9,6 +10,7 @@ import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.business.common.exception.PositionException;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.PositionUtil;
@@ -21,14 +23,13 @@ import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchang
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tools.util.ValidationUtil;
 import com.joyintech.tools.util.ValidationUtil.ErrorMessage;
 import com.joyintech.tools.util.ValidationUtil.ValidResult;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
-import com.joyintech.workflow.engine.exception.WorkFlowException;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -369,6 +370,7 @@ public AjaxResult save(@RequestBody EtrExchangeTradeSaveRequest allDto, BindingR
 			dto.setCreateTime(new Date());// 创建时间
 			dto.setBusinessTypeName(businessType);//此处存的是类型
 			dto.setOptType(ENTRUST_RECORD_NEW);
+			dto.setSoftSkipMode(allDto.getSoftSkipMode());
 		}
 		/*
 		 * if 画面.金融产品类型（投管）.股票 and 画面.交易平台 = 数据字典.交易平台.竞价交易平台 指令业务类型 =
@@ -391,7 +393,7 @@ public AjaxResult save(@RequestBody EtrExchangeTradeSaveRequest allDto, BindingR
 		 */
 		 //导入兼容
 		 EtrExchangeTradePortfolioRequest portfolioRequest = new EtrExchangeTradePortfolioRequest();
-		 dto.setSoftSkipMode("Y");
+		// dto.setSoftSkipMode("Y");
 		 BeanUtil.copyPropertiesIgnoreNull(portfolioRequest, dto);
 		 List<EtrExchangeTradePortfolioRequest> portfolioList = Lists.newArrayList();
 		 portfolioList.add(portfolioRequest);
@@ -409,24 +411,32 @@ public AjaxResult save(@RequestBody EtrExchangeTradeSaveRequest allDto, BindingR
 		// add by zhangrui1 end
 		ProcessParameter<EtrExchangeTradeSaveRequest> processParameter = new ProcessParameter<EtrExchangeTradeSaveRequest>();
 		WorkFlowParameter<EtrExchangeTradeSaveRequest> params = etrExchangeTradeCommon001Service.getWorkFlowParameter(allDto);
-		params.setPageId("EtrExchangeTradeCommonImport");
-		params.setElementId(allDto.getElementId());
+		params.setPageId("EtrExchangeTradeCommon004");
+		params.setElementId("EtrExchangeImport_btn_submit");
 		params.setBusinessType(item->item.getBusinessTypeName());
 		params.setBusinessCode(item->item.getEntrustId());
 		params.setComment(entity -> getMessage("EtrExchangeTrade003.entrustId") + "(" + entity.getEntrustId() + ")"
 				+ "-" + "业务类型"+ "(" + SysDataUtil.getNameFromDataDict(DictCode.共通业务类型, entity.getBusinessTypeName()) + ")-"
 				+ "平台日" + "(" + DateUtil.format(iPlatformDate.getSysDate()) + ")");
 		processParameter.setWorkFlowParameter(params);
-	String msg = null;
-	try {
-		msg = etrExchangeTradeCommon001Service.start(processParameter, dtoList.toArray(new EtrExchangeTradeSaveRequest[dtoList.size()]));
-	} catch (Exception e) {
-//		Message message=PositionUtil.ajaxErrorReturn(e);
-		AjaxResult ajaxResult1=new AjaxResult();
-//		BaseMap baseMap=(BaseMap)message.getData();
-//		ajaxResult1.setStatuCode(Integer.parseInt(baseMap.get("code").toString()));
-		return ajaxResult1;
-	}
-	return new AjaxResult(msg);
+	   ajaxResult =new AjaxResult();
+	   String msg="";
+		try{
+		    msg=etrExchangeTradeCommon001Service.start(processParameter, dtoList.toArray(new EtrExchangeTradeSaveRequest[dtoList.size()]));
+		} catch (PositionException e) {
+			Message message = PositionUtil.ajaxErrorReturn(e);
+			if (StringUtil.isNotBlank(message.getMessage())) {
+				WorkFlowUtil.showMessage(message.getMessage(), MessageType.错误消息);
+			} else {
+				if (!StringUtil.equals("1", RequestUtil.getParam("confirmOk"))) {
+					BaseMap bm = (BaseMap) message.getData();
+					StringBuffer messageStr = (StringBuffer) bm.get("message");
+					ajaxResult.setMessage(messageStr.toString(), MessageType.确认消息);
+					return ajaxResult;
+				}
+
+			}
+		}
+	     return new AjaxResult(msg);
 	}
 }

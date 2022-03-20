@@ -5,7 +5,7 @@
 <title data-th-text="#{EtrExchangeImport}">场内指令多对多指令新建</title>
 </head>
 <body>
-	<div layout:fragment="content">
+    <div layout:fragment="content" >
 		<div class="pro-module-container">
 			<form class="layui-form joyin-form-wrap pro-module-form" id="searchForm">
 				<div class="pro-module-wrapper pro-module-base">
@@ -24,9 +24,9 @@
 							</div>
 						</div>
 	                </div>
-                    <!-- 风险试算 -->
-	                <div id="baseRiskMathComm" class="page-component" th:data-path="@{/component/common/BaseRiskMathComm/init}"
-	                	th:data-params="|{workflowId: '${workflowId}',entityName:'riskTrialRetDto',tradeId:'${tradeId}'}|"></div>
+						<!-- 风险试算 -->
+						<div id="baseRiskMathComm" class="page-component" th:data-path="@{/component/common/BaseRiskMathComm/init}"
+							 th:data-params="|{workflowId: '${workflowId}',entityName:'riskTrialRetDto',tradeId:'${tradeId}'}|"></div>
 				</div>
 	            <div class="pro-module-wrapper pro-module-block">
 	                <div class="layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11" style="margin: 50px;">

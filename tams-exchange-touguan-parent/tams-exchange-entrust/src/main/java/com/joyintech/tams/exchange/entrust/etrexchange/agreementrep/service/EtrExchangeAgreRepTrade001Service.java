@@ -2117,7 +2117,9 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
         if (StringUtil.equals(optType, ENTRUST_RECORD_MODIFY)) {
         	systemAct = DictCodeListExt3.系统动作_修改.getValue();
         }
-//        entity.setSoftSkipMode("Y");
+        if(StringUtil.equals("1", RequestUtil.getParam("confirmOk"))){
+            entity.setSoftSkipMode("Y");
+        }
         try {
             positionRequestService.send(entity,decisionAct,systemAct);
         } catch (PositionException e) {
