@@ -49,8 +49,11 @@ import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfo
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.common.constant.TempConstant;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
+import com.joyintech.tams.invest.common.dto.position.PositionCashSecDto;
+import com.joyintech.tams.invest.common.entrust.inter.EtrTradeCommonervice;
 import com.joyintech.tams.invest.common.position.dto.PostionParameter;
 import com.joyintech.tams.invest.common.position.service.CommonPositionService;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
@@ -94,7 +97,8 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
      */
     @Autowired(required = false)
     private IPlatformDate iPlatformDate;
-
+    @Autowired
+    private EtrTradeCommonervice etrTradeCommonervice;
 
     public static final String ENTRUST_RECORD_MODIFY = "modify";
     
@@ -172,10 +176,17 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
         pageParam.put("PS_T04", DictCodeList.交易方向_申购.getValue());
         pageParam.put("TRADE_PLACE_03", BussinessDictCodeList.交易场所_深圳证券交易所.getValue());
         pageParam.put("TRADE_PLACE_04", BussinessDictCodeList.交易场所_上海证券交易所.getValue());
+        pageParam.put("A_001", DictCodeListExt3.资产类型_资产账户持仓.getValue());
         Page<EtrExchangeAgreRepTrade002Dto> result = super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(), () -> etrExchangeAgreRepTradeMapper.findPositionsPage(pageParam));
 
         if(!StringUtil.isEmptyList(result.getRoot())){
             for(EtrExchangeAgreRepTrade002Dto entity : result.getRoot()){
+                //可用数量
+                PositionCashSecDto secDto=new PositionCashSecDto();
+                BeanUtil.copyPropertiesIgnoreNull(secDto,entity);
+                secDto.setTradePlat(TempConstant.AGR_EREP_ETR); //临时变量
+                BigDecimal canRepoNum=etrTradeCommonervice.selectAvailableNum(secDto);
+                entity.setCanRepoNum(canRepoNum);
                 // 计算浮动盈亏
                 BigDecimal floatPlPercent = ArithmeticUtil.divide(entity.getFloatingPL(), ArithmeticUtil.multiply(entity.getPrice(),entity.getPtlPositionsNum()),2);
                 entity.setFloatingPLPercent(floatPlPercent);
