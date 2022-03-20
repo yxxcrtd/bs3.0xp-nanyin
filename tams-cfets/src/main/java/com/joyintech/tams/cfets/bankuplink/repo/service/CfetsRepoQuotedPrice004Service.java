@@ -1928,6 +1928,8 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         // 头寸
         PositionHttpRequest.dorevoke(totleTradeId, DictCodeListExt1.子系统代码_交易.getValue(),
                 DictCodeListExt3.头寸业务类型_质押式回购首期.getValue(), result.getRegFinProductDealTotal().getPs());
+        //处理指令执行进度
+        this.insertEtrFinishStatus(result, OperationType.REVOKE);
     }
 
 

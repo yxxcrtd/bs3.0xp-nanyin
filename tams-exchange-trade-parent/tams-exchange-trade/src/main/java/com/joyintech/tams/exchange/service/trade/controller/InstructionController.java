@@ -1,7 +1,28 @@
 package com.joyintech.tams.exchange.service.trade.controller;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.json.JSONUtil;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -11,7 +32,12 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.exchange.common.BusinessResultException;
-import com.joyintech.tams.exchange.common.bean.*;
+import com.joyintech.tams.exchange.common.bean.CalcPriceAndYieldRequest;
+import com.joyintech.tams.exchange.common.bean.CalcPriceAndYieldResponse;
+import com.joyintech.tams.exchange.common.bean.ExpireIncomeRateBean;
+import com.joyintech.tams.exchange.common.bean.ExpireIncomeRateRet;
+import com.joyintech.tams.exchange.common.bean.InstructionOpBean;
+import com.joyintech.tams.exchange.common.bean.InstructionPage;
 import com.joyintech.tams.exchange.common.bean.investment.EntrustOpeBean;
 import com.joyintech.tams.exchange.common.constant.ErrorCode;
 import com.joyintech.tams.exchange.common.constant.ExchangeConstant;
@@ -29,18 +55,12 @@ import com.joyintech.tams.exchange.common.request.InstructionQueryRequest;
 import com.joyintech.tams.exchange.common.utils.JsonUtils;
 import com.joyintech.tams.exchange.common.utils.StockCodeUtils;
 import com.joyintech.tams.exchange.service.trade.management.service.InvestmentManagement;
+import com.joyintech.tams.exchange.util.MasterUtil;
+
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.json.JSONUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletResponse;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/trade/joyin")
@@ -57,6 +77,9 @@ public class InstructionController {
     @RequestMapping(value = "/instruction/users", method = RequestMethod.POST)
     @CrossOrigin
     public Message<InstructionPage<Instruction, InstructionPledge, InstructionDetail>> queryAllInstruction(@RequestBody InstructionQueryRequest instructionQuery) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(instructionQuery);
+    	}
         String fairCode = CacheUtil.getSysParam(ExchangeConstant.FAIR_CODE_IN_PARA);
         String platDate = DateUtil.getSysDate();
         String approveCode = CacheUtil.getSysParam(ExchangeConstant.RISK_APPROVAL_IN_PARA);
@@ -96,6 +119,9 @@ public class InstructionController {
     @RequestMapping(value = "/instruction/confirm", method = RequestMethod.POST)
     @CrossOrigin
     public Message<List<EntrustOpeBean>> acceptOrRefuse(@RequestBody @Validated List<InstructionOpBean> instructionOpBeans) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(instructionOpBeans);
+    	}
         if (Objects.isNull(instructionOpBeans) || instructionOpBeans.size() == 0) {
             throw BusinessResultException.create(ErrorCode.REQ_PARAMETER_ERROR, "参数不可以为空");
         }
@@ -122,6 +148,9 @@ public class InstructionController {
     @ApiOperation(value = "从投管重新刷入指令数据", notes = "从投管重新刷入指令数据", hidden = true)
     @RequestMapping(value = "/instruction/flush", method = RequestMethod.POST)
     public Message<Object> flushInstructionFromInvest(@RequestParam(value = "userId") String userId) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(userId);
+    	}
         return new Message<Object>(investmentManagement.flushInstructionFromInvest());
     }
 

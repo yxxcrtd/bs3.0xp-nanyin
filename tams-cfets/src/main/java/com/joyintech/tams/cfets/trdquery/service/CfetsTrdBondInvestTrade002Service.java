@@ -1169,12 +1169,11 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
         //撤销数据为登记时，将登记数据置为已撤销。删除下行匹配关系表数据
         RegFinProductDealTotal regTotal = cfetsTrdQueryMapper.selectRegTotalInfoById(bizCode);
         if(null!=regTotal){
-            String remark=StringUtil.isEmpty(regTotal.getRemark()) ? "" : regTotal.getRemark();
-            if(StringUtil.isNotBlank(remark)){
-                //remark=remark+(settleRemark==null?"":settleRemark)+"\n"+"交易撤销：" + entity.getRevokeReason();
-                remark=remark+"\n"+"交易撤销：" + entity.getRevokeReason()+settleRemark==null?"":settleRemark;
-            }else{
-                remark= "交易撤销：" + entity.getRevokeReason() + settleRemark == null ? "" : settleRemark;
+            String remark = StringUtil.isEmpty(regTotal.getRemark()) ? "" : regTotal.getRemark();
+            if (StringUtil.isNotBlank(remark)) {
+                remark = remark + "\n" + (settleRemark == null ? "" : settleRemark) + "交易撤销：" + entity.getRevokeReason();
+            } else {
+                remark = (settleRemark == null ? "" : settleRemark) + "交易撤销：" + entity.getRevokeReason();
             }
             regTotal.setRemark(remark);
             cfetsBondDealQuotedPrice004Service.dorevoke(regTotal.getTotleTradeId(),remark,isNeedDealPosition,entity.getTgBusiType());
