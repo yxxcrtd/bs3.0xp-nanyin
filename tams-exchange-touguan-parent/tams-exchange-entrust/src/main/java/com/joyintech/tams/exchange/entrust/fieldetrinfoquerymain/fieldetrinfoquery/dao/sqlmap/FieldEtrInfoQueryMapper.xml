@@ -490,12 +490,14 @@
                 OR t.finprodAbbr like '%' || #{search} || '%'
                 OR t.remark like '%' || #{search} || '%'
                 OR t.secAcctId like '%' || #{search} || '%'
+            <if test="search_isNumberFlag != null and search_isNumberFlag == true">
                 OR round(t.entrustAmt,2)||'' = round(#{search},2)
                 OR round(t.entrustNum,4)||'' = round(#{search},4)
                 OR round(t.etrPrice,2)||'' = round(#{search},2)
                 OR round(t.termDays,2)||'' = round(#{search},2)
                 OR round(t.exeProgress,2)||'' = round(#{search},2)
                 OR round(t.dealProgress,2)||'' = round(#{search},2)
+            </if>
                 OR TO_CHAR(t.entrustDate,'yyyy-MM-dd') ||''= #{search}
                 OR TO_CHAR(t.entrustDate,'yyyy-MM-dd') ||''= #{year}||'-'||#{search}
                 OR replace(TO_CHAR(t.entrustDate,'yyyy-MM-dd'),'-','/')=#{search}

@@ -18,6 +18,7 @@ import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
 
 import com.joyintech.tams.business.common.dto.CommonSearchInfoRequest;
+import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dao.FieldEtrInfoQueryMapper;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.EntrustQueryBean;
@@ -109,7 +110,7 @@ public class FieldEtrInfoQueryService extends BaseService{
         pageParam.put("effectFlag04",DictCodeListExt1.有效状态_流程中.getValue());
         pageParam.put("finType_zq", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         pageParam.put("ps_49", DictCodeListExt3.交易方向_债转股.getValue());
-
+        pageParam.put("search_isNumberFlag", BaseMap.isNumeric(dto.getSearch()));
         if (StringUtil.equals(dto.getSettleSpeed(),
                 DictCodeList.清算速度_T_0.getValue())) {
             pageParam.put("settleSpeed","0");
