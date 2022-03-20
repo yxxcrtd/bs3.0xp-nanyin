@@ -1175,9 +1175,9 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 						List<EtrExchangeTradeSaveRequest> etrExchangeTrade001DtoList = new ArrayList<>();
 						for(EtrExchangeTradePortfolioRequest item:dto.getPortfolioList()) {
 							EtrExchangeTradeSaveRequest etrExchangeTrade001Dto = etrExchangeTrade001CommonService.genEtrExchangeTradeSaveRequest(dto,item);
-							if (dto.getPs().equals(DictCodeListExt3.交易方向_正回购.getValue())) {
+							if ((DictCodeListExt3.交易方向_正回购.getValue()).equals(dto.getPs())) {
 								etrExchangeTrade001Dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
-							} else if (dto.getPs().equals(DictCodeListExt3.交易方向_逆回购.getValue())) {
+							} else if ((DictCodeListExt3.交易方向_逆回购.getValue()).equals(dto.getPs())) {
 								etrExchangeTrade001Dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
 							}
 							if (!StringUtil.isNotEmpty(etrExchangeTrade001Dto.getEntrustId())) {

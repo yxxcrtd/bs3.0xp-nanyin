@@ -5663,7 +5663,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_基金竞价指令.getValue());
 			businessType = DictCodeListExt3.共通业务类型_基金竞价指令.getValue();
 		}
-		if ((dto.getPs().equals(DictCodeListExt3.交易方向_正回购.getValue()) || dto.getPs().equals(DictCodeListExt3.交易方向_逆回购.getValue())) && dto.getTradePlat().equals(DictCodeList.交易平台_大宗交易平台.getValue())) {
+		if (((DictCodeListExt3.交易方向_正回购.getValue()).equals(dto.getPs())  || (DictCodeListExt3.交易方向_逆回购.getValue()).equals(dto.getPs())) && (DictCodeList.交易平台_大宗交易平台.getValue()).equals(dto.getTradePlat())) {
 			dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_大宗债券质押式回购指令.getValue());
 			businessType = DictCodeListExt3.共通业务类型_大宗债券质押式回购指令.getValue();
 			return businessType;
@@ -5742,7 +5742,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_竞价撮合平台.getValue())) {
 			param.setCommonBusinessExtType(DictCodeListExt3.fromDictCodeList(DictCodeListExt3.共通业务类型_基金竞价指令));
 		}
-		if ((dto.getPs().equals(DictCodeListExt3.交易方向_正回购.getValue()) || dto.getPs().equals(DictCodeListExt3.交易方向_逆回购.getValue())) && dto.getTradePlat().equals(DictCodeList.交易平台_大宗交易平台.getValue())) {
+		if (((DictCodeListExt3.交易方向_正回购.getValue()).equals(dto.getPs()) || (DictCodeListExt3.交易方向_逆回购.getValue()).equals(dto.getPs())) && dto.getTradePlat().equals(DictCodeList.交易平台_大宗交易平台.getValue())) {
 			param.setCommonBusinessExtType(DictCodeListExt3.fromDictCodeList(DictCodeListExt3.共通业务类型_大宗债券质押式回购指令));
 		}
 		if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_大宗交易平台.getValue())) {
