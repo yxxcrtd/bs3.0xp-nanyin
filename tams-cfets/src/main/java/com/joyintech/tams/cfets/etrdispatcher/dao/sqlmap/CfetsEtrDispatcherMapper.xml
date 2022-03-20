@@ -54,8 +54,11 @@
     ELSE DECODE( ETR_ENTRUST_ADD.SETTLE_SPREED, 0, '01', 1, '02', 2, '03') END AS settleSpeed,
     CASE WHEN ETR_ENTRUST_ADD.ASSET_TYPE IN ('F01', 'F02', 'F03', 'F04', 'F05', 'F06', 'F09') THEN '' ELSE TO_CHAR(ETR_ENTRUST_ADD.TERM_DAYS)  END AS termDays,
     CASE  WHEN ETR_ENTRUST_ADD.ASSET_TYPE IN ('F05', 'F04', 'F03', 'F09', 'F06', 'F02')   THEN  round( 0, 4 )
-    ELSE  nvl(round(decode(btm.busi_type,#{busiTypePosition02},decode(ETR_ENTRUST_ADD.CALCULATE_FIELD,'price',ETR_ENTRUST.PRICE,'exerYield',ETR_ENTRUST_ADD.EXER_YIELD*100,'matureYield',ETR_ENTRUST_ADD.MATURE_YIELD*100),#{busiTypePosition03},ETR_ENTRUST.PRICE,#{busiTypePosition05},ETR_ENTRUST.PRICE*100,nvl(ETR_ENTRUST.PRICE ,0)),4),round(nvl(ETR_ENTRUST.PRICE ,0),4)) END AS  etrPrice,
-        CASE
+        when ETR_ENTRUST.PS in ('T68', 'T69') then ETR_ENTRUST.PRICE*100
+        ELSE  nvl(round(decode(btm.busi_type,#{busiTypePosition02},decode(ETR_ENTRUST_ADD.CALCULATE_FIELD,'price',ETR_ENTRUST.PRICE,'exerYield',ETR_ENTRUST_ADD.EXER_YIELD*100,'matureYield',ETR_ENTRUST_ADD.MATURE_YIELD*100),
+            #{busiTypePosition03},ETR_ENTRUST.PRICE,#{busiTypePosition05},ETR_ENTRUST.PRICE*100,nvl(ETR_ENTRUST.PRICE ,0)),4),round(nvl(ETR_ENTRUST.PRICE ,0),4))
+    END AS  etrPrice,
+    CASE
         WHEN ETR_ENTRUST.TRADE_MARKET = '03'
         OR ETR_ENTRUST.TRADE_MARKET = '04' THEN
         (
@@ -442,6 +445,7 @@
     ELSE DECODE( ETR_ENTRUST_ADD.SETTLE_SPREED, 0, '01', 1, '02', 2, '03') END AS settleSpeed,
     CASE WHEN ETR_ENTRUST_ADD.ASSET_TYPE IN ('F01', 'F02', 'F03', 'F04', 'F05', 'F06', 'F09') THEN '' ELSE TO_CHAR(ETR_ENTRUST_ADD.TERM_DAYS)  END AS termDays,
     CASE  WHEN ETR_ENTRUST_ADD.ASSET_TYPE IN ('F05', 'F04', 'F03', 'F09', 'F06', 'F02')   THEN  round( 0, 2 )
+        when ETR_ENTRUST.PS in ('T68', 'T69') then ETR_ENTRUST.PRICE*100
     ELSE  nvl(round(decode(btm.busi_type,#{busiTypePosition02},decode(ETR_ENTRUST_ADD.CALCULATE_FIELD,'price',ETR_ENTRUST.PRICE,'exerYield',ETR_ENTRUST_ADD.EXER_YIELD*100,'matureYield',ETR_ENTRUST_ADD.MATURE_YIELD*100),#{busiTypePosition03},ETR_ENTRUST.PRICE,#{busiTypePosition05},ETR_ENTRUST.PRICE*100,nvl(ETR_ENTRUST.PRICE ,0)),2),round(nvl(ETR_ENTRUST.PRICE ,0),2)) END AS  etrPrice,
         CASE
         WHEN ETR_ENTRUST.TRADE_MARKET = '03'
