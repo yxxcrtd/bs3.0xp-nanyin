@@ -3566,6 +3566,13 @@
             sortable: false
         }
         , {
+            /*违规阈值*/
+            field: 'assetName',
+            width: 150,
+            title: 'BaseRiskMathComm.assetName',
+            sortable: false
+        }
+        , {
             /*预警阈值*/
             field: 'warningLine',
             width: 150,
@@ -3577,6 +3584,13 @@
             field: 'approveLine',
             width: 150,
             title: 'BaseRiskMathComm.approveold',
+            sortable: false
+        }
+        , {
+            /*违规阈值*/
+            field: 'forbiddenLn',
+            width: 150,
+            title: 'BaseRiskMathComm.vthreshold',
             sortable: false
         }
         , {
