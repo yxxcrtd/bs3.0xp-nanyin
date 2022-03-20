@@ -235,8 +235,7 @@
         FP.TRADE_MARKET                           AS tradeMarket,
         SSAI.TRD_ACCT_ID                          AS acctNo,
         SCI.ACCT_NAME acctName, /** 资金账户名称 **/
-        SDL.ITEM_VALUE AS tradeMarketStr,
-        TEMP.invAim invAim
+        SDL.ITEM_VALUE AS tradeMarketStr
         FROM
         (
         SELECT
@@ -244,13 +243,9 @@
         PSP.PORTFOLIO_ID AS PORTFOLIO_ID ,
         PSP.SEC_ACCT_ID  AS SEC_ACCT_ID ,
         PSP.FINPROD_ID   AS FINPROD_ID,
-        PSP.BRANCH       AS BRANCH,
-        PSP.INV_AIM invAim,
-        SUM(CASE WHEN PSP.HODING_TYPE IN (#{POSITION_TYPE_03}, #{POSITION_TYPE_05}) THEN NVL(PSP.AMOUNT,0)
-        ELSE -1* NVL(PSP.AMOUNT,0)
-        END) AS AMOUNT
+        SUM(PSP.AMOUNT) AMOUNT
         FROM
-        PTL_SEC_POSITION PSP
+        PTL_SEC_POSITION_RULE PSP
         INNER JOIN
         PTL_PORTFOLIO PP
         ON
@@ -263,16 +258,14 @@
             AND PPA.USER_ID = #{userId}
         </if>
         WHERE
-        PSP.BRANCH =0
-        AND PSP.HODING_TYPE IN (#{POSITION_TYPE_03}, #{POSITION_TYPE_04}, #{POSITION_TYPE_05}, #{POSITION_TYPE_06})
+        PSP.DATE_TYPE =0
+        AND PSP.HODING_TYPE=#{A_001}
         AND PSP.CDATE = #{sysDate}
         GROUP BY
         PSP.CDATE,
         PSP.PORTFOLIO_ID ,
         PSP.SEC_ACCT_ID,
-        PSP.FINPROD_ID,
-        PSP.INV_AIM,
-        PSP.BRANCH
+        PSP.FINPROD_ID
         )TEMP
         LEFT JOIN
         (
@@ -296,7 +289,6 @@
         TEMP.PORTFOLIO_ID = ESP.PORTFOLIO_ID
         AND TEMP.SEC_ACCT_ID = ESP.SEC_ACCT_ID
         AND TEMP.FINPROD_ID = ESP.FINPROD_ID
-        AND TEMP.BRANCH = ESP.BRANCH
         AND TEMP.CDATE = ESP.CDATE
         LEFT JOIN
         FIN_PRODUCT FP
@@ -460,7 +452,6 @@
         TEMP.PORTFOLIO_ID = PSP.PORTFOLIO_ID
         AND TEMP.SEC_ACCT_ID = PSP.SEC_ACCT_ID
         AND TEMP.FINPROD_ID = PSP.FINPROD_ID
-        AND TEMP.BRANCH = PSP.BRANCH
         AND TEMP.CDATE = PSP.CDATE
         LEFT JOIN
         PTL_PORTFOLIO PP
