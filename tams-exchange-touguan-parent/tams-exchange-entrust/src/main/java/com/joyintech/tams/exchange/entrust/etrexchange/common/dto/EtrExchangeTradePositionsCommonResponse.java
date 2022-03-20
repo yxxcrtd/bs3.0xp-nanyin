@@ -69,6 +69,11 @@ public class EtrExchangeTradePositionsCommonResponse {
     
     @ApiModelProperty(name="invAim",value="投资目的",example="12")
     private String invAim;
+
+    @ApiModelProperty(name="businessModel",value="业务模式",example="12")
+    private String businessModel;
+
+
     
     @ApiModelProperty(name="positionsNum",value="持仓数量",example="12")
     private BigDecimal positionsNum;
@@ -319,7 +324,30 @@ public class EtrExchangeTradePositionsCommonResponse {
             return "";
         }
     }
+
+    /**
+     * 获取业务模式名称
+     * @return businessModelStr
+     */
+    public String getBusinessModelStr(){
+        if(StringUtil.isNotEmpty(getBusinessModel())){
+            return SysDataUtil.getNameFromDataDict(DictCode.业务模式,getBusinessModel());
+        }
+        else {
+            return "";
+        }
+    }
+
+
     public  String getFinprodType2Str(){
         return SysDataUtil.getNameFromDataDict(DictCode.金融产品类型_投管用, this.getFinprodType2());
+    }
+
+    public String getBusinessModel() {
+        return businessModel;
+    }
+
+    public void setBusinessModel(String businessModel) {
+        this.businessModel = businessModel;
     }
 }

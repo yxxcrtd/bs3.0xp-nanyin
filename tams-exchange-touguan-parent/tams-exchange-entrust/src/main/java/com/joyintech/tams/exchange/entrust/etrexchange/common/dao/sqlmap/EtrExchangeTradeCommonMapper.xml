@@ -340,6 +340,8 @@
             FP.FINPROD_ABBR AS secName,
             TEMP.AMOUNT     AS positionsNum,
             ESP.AMOUNT      AS sellNum,
+            invaim.INV_AIM as invAim,
+            invaim.BUSINESS_MODEL as businessModel,
             CASE WHEN FP.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01} THEN MBVI.NETPRICE
                 WHEN FP.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F06} THEN MFMI.CLOSE_PRICE
                 WHEN FP.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F10} THEN MSP.CLOSE_PRICE
@@ -595,6 +597,45 @@
         left join (select distinct ACCT_NO acctNo1, BUSI_ACCT_NO busiAcctNo1, CCY ccy, ACCT_NAME acctName
         from STL_CAPACCT_INFO) c1
         on SSAI.TRD_ACCT_ID = c1.acctNo1
+        <!-- 业务模式查交易表 -->
+        left join (
+            select FINPROD_ID, PORTFOLIO_ID,
+                   listagg(INV_AIM, ',') WITHIN GROUP (ORDER BY PORTFOLIO_ID, FINPROD_ID) as INV_AIM,
+        listagg(BUSINESS_MODEL, ',') WITHIN GROUP (ORDER BY PORTFOLIO_ID, FINPROD_ID) as BUSINESS_MODEL
+        from (
+            SELECT FINPROD_ID, PORTFOLIO_ID, INV_AIM,BUSINESS_MODEL
+            FROM (
+            select
+            a.INV_AIM ,a.BUSINESS_MODEL, a.TRADE_DATE ,a.FINPROD_ID,b.PORTFOLIO_ID,
+            ROW_NUMBER () over(
+            PARTITION BY a.TRADE_ID
+            ORDER BY a.TRADE_DATE DESC
+            ) rn
+            from TRD_PRODUCT_DEAL a
+            LEFT JOIN TRD_PRODUCT_DEAL_ADD b ON a.TRADE_ID =b.TRADE_ID
+            WHERE 1=1
+            <if test="portfolioIdList != null">
+                AND b.PORTFOLIO_ID in
+                <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            AND a.TRADE_DATE &lt;= #{sysDate} - 1
+            ) WHERE rn = 1
+            UNION
+            SELECT a.FINPROD_ID, b.PORTFOLIO_ID, a.INV_AIM,a.BUSINESS_MODEL
+            from TRD_PRODUCT_DEAL a
+            LEFT JOIN TRD_PRODUCT_DEAL_ADD b ON a.TRADE_ID =b.TRADE_ID
+            WHERE 1=1
+            <if test="portfolioIdList != null">
+                AND b.PORTFOLIO_ID in
+                <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            AND a.TRADE_DATE = #{sysDate}
+            ) GROUP BY FINPROD_ID, PORTFOLIO_ID
+        ) invaim on invaim.FINPROD_ID=TEMP.FINPROD_ID and invaim.PORTFOLIO_ID=TEMP.PORTFOLIO_ID
         WHERE
             FP.TRADE_MARKET IN (#{TRADE_PLACE_03}, #{TRADE_PLACE_04})
         <if test="portfolioIdList != null and portfolioIdList.size()>0">
