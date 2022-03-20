@@ -21,6 +21,7 @@ import com.joyintech.framework.util.*;
 import com.joyintech.service.entrust.etrexchangetrade.dto.EtrExchangeTrade002Dto;
 import com.joyintech.tams.business.common.dao.JoyinbusinessCommonMapper;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
+import com.joyintech.tams.business.common.dto.PageMode;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
@@ -40,6 +41,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  *  交易所指令交易（债券股票回购基金场内指令交易）
@@ -73,6 +75,17 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
      */
 	public Page<EtrExchangeTradePositionsCommonResponse> findPositionsPage(EtrExchangeTradePositionsCommonRequest dto) {
 		try {
+			PageMode pageMode = null;
+			if (StringUtil.isNotEmpty(dto.getPageMode())
+					&&( dto.getPageMode().getSort().equals("floating")||dto.getPageMode().getSort().equals("floatingPL"))){
+				pageMode =dto.getPageMode();
+				PageMode pageMode2 =new PageMode();
+				pageMode2.setPageNo(pageMode.getPageNo());
+				pageMode2.setPageSize(pageMode.getPageSize());
+				pageMode2.setSort("");
+				pageMode2.setDirection("");
+				dto.setPageMode(pageMode2);
+			}
 			Map<String, Object> param = BeanUtil.object2Map(dto);
 			String userId = SecurityUtil.getLoginUser().getUserName();
 			if (StringUtils.isNotEmpty(userId)) {
@@ -132,13 +145,28 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 						BigDecimal floatPL =ArithmeticUtil.divide(floatFd,ArithmeticUtil.multiply(entity.getPrice(),entity.getPtlPositionsNum()),2);
 						entity.setFloatingPL(floatPL);
 					}
+					if (StringUtil.isNotEmpty(pageMode)) {
+						if (pageMode.getSort().equals("floating")){
+							if(pageMode.getSort().equals("asc")) {
+								result.setRoot(result.getRoot().stream().sorted(Comparator.comparing(EtrExchangeTradePositionsCommonResponse::getFloating)).collect(Collectors.toList()));
+							}else {
+								result.setRoot(result.getRoot().stream().sorted(Comparator.comparing(EtrExchangeTradePositionsCommonResponse::getFloating).reversed()).collect(Collectors.toList()));
+							}
+						}else if (pageMode.getSort().equals("floatingPL")){
+							if(pageMode.getSort().equals("asc")) {
+								result.setRoot(result.getRoot().stream().sorted(Comparator.comparing(EtrExchangeTradePositionsCommonResponse::getFloatingPL)).collect(Collectors.toList()));
+							}else {
+								result.setRoot(result.getRoot().stream().sorted(Comparator.comparing(EtrExchangeTradePositionsCommonResponse::getFloatingPL).reversed()).collect(Collectors.toList()));
+							}
+						}
+					}
 				}
 				return result;
 //				return restTemplate.postForPage(
 //						ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/findPositionsPage", param,
 //						EtrExchangeTrade002Dto.class);
 			}
-		} catch (Exception ex) {
+		} catch (Exception ex) {ex.printStackTrace();
 			logger.info(ex.getMessage());
 		}
 		return null;

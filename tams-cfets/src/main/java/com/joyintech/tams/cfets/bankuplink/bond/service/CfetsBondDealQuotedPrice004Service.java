@@ -1225,6 +1225,8 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             if (isNeedDealPosition) {
                 PositionHttpRequest.dorevoke(cfetsBondDealDbDto.getRegFinProductDealTotal().getpTradeId(), DictCodeListExt1.子系统代码_交易.getValue(), busiType, ps);
             }
+            //处理指令执行进度
+            this.insertEtrFinishStatus(cfetsBondDealDbDto, OperationType.REVOKE);
         } catch (PositionException e) {
             e.printStackTrace();
             Message message = PositionUtil.ajaxErrorReturn(e);
