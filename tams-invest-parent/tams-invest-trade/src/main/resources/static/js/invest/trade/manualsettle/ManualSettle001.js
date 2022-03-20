@@ -243,6 +243,12 @@
     var finalSubmit = function(object){
         WorkFlow.doDeleteList(basePath + 'invest/trade/manualsettle/ManualSettle001/settle', object, "ManualSettle001_btn_settle", "ManualSettle001", function(){
             table.reload();//回调函数
+            // ZGTFCP-1345:禁止按钮置灰 modify by fuyongsheng 20220319 start
+            JoyinUtil.disableButton("ManualSettle001_btn_settle", false);
+            JoyinUtil.disableButton("ManualSettle001_btn_back", false);
+            JoyinUtil.disableButton("ManualSettle001_btn_settledelay", false);
+            JoyinUtil.disableButton("ManualSettle001_btn_settlefail", false);
+            // ZGTFCP-1345:禁止按钮置灰 modify by fuyongsheng 20220319 end
         });
     }
 

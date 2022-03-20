@@ -21,10 +21,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.business.common.exception.PositionException;
+import com.joyintech.tams.business.common.pojo.Message;
+import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeCommonRiskcalDto;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePortfolioRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,13 +56,6 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.ReflectUtil;
-import com.joyintech.framework.util.SpringContextUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDispatcherService;
 import com.joyintech.system.base.dao.SysWflBusinessListMapper;
 import com.joyintech.system.base.entity.SysWflBusinessList;
@@ -2093,8 +2092,20 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
         if (StringUtil.equals(optType, ENTRUST_RECORD_MODIFY)) {
         	systemAct = DictCodeListExt3.系统动作_修改.getValue();
         }
-        entity.setSoftSkipMode("Y");
-        positionRequestService.send(entity,decisionAct,systemAct);
+//        entity.setSoftSkipMode("Y");
+        try {
+            positionRequestService.send(entity,decisionAct,systemAct);
+        } catch (PositionException e) {
+            Message message = PositionUtil.ajaxErrorReturn(e);
+            if (StringUtil.isNotBlank(message.getMessage())) {
+                WorkFlowUtil.showMessage(message.getMessage(), MessageType.错误消息);
+            }
+            else {
+                if (!StringUtil.equals("1", RequestUtil.getParam("confirmOk"))) {
+                    WorkFlowUtil.showMessage(message.getData().toString(), MessageType.确认消息);
+                }
+            }
+        }
         //增加调用头寸引擎代码end
     }
 

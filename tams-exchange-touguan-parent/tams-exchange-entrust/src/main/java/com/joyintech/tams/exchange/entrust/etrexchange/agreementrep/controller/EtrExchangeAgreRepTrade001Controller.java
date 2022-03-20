@@ -504,72 +504,72 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
             ajax.setErrorList(errorList);
             return new Message<AjaxResult>().success().setData(ajax);
         }
-        //正回购、质押券出库
-        if (DictCodeListExt3.交易方向_首期.getValue().equals(dto.getPs()) && StringUtil.equals(dto.getRepPs(),DictCodeList.回购拆借方向_正回购.getValue())) {
-            Map<String, Object> param = new HashMap<String, Object>();
-            param.put("portfolioId", dto.getPortfolioId());
-            param.put("finprodId", dto.getFinprodId());
-            if (null != dto.getSecAcctId()) {
-                param.put("secAcctId", dto.getSecAcctId());
-            }
-            param.put("ccy", DictCodeList.币种_人民币_CNY.getValue());
-            dto.setAccAvailablePos(etrExchangeTradeCommon001Service.selectAvailableNum(param));
-            if (StringUtil.isNotEmpty(dto.getAccAvailablePos()) && StringUtil.isNotEmpty(dto.getRepSecNum())) {
-                if (dto.getAccAvailablePos().compareTo(dto.getRepSecNum()) == -1) {
-                    if(CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_POS_SWITCH).equals(DictCodeListExt1.是或否_否.getValue())) {
-                        errorList.add(new ValidMessage("repSecNum", "质押数量不能大于可用持仓！"));
-                    }
-                    else{
-                        AjaxResult ajaxResult = new AjaxResult();
-                        ajaxResult.setData("质押数量大于可用持仓,是否继续？");
-                        ajaxResult.setMessageType(MessageType.确认消息);
-                        return new Message<AjaxResult>().success().setData(ajaxResult);
-                    }
-                }
-            }
-        }
-        // 中途换券
-        if (DictCodeListExt3.交易方向_中途换券.getValue().equals(dto.getPs())) {
-            Map<String, Object> param = new HashMap<String, Object>();
-            param.put("portfolioId", dto.getPortfolioId());
-            param.put("finprodId", dto.getNewfinprodId());
-            if (null != dto.getSecAcctId()) {
-                param.put("secAcctId", dto.getSecAcctId());
-            }
-            param.put("ccy", DictCodeList.币种_人民币_CNY.getValue());
-            dto.setAccAvailablePos(etrExchangeTradeCommon001Service.selectAvailableNum(param));
-            if (StringUtil.isNotEmpty(dto.getAccAvailablePos()) && StringUtil.isNotEmpty(dto.getNewRepSecNum())) {
-                if (dto.getAccAvailablePos().compareTo(dto.getNewRepSecNum()) == -1) {
-                    if(CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_POS_SWITCH).equals(DictCodeListExt1.是或否_否.getValue())) {
-                        errorList.add(new ValidMessage("newRepSecNum", "质押数量不能大于可用持仓！"));
-                    }
-                    else{
-                        AjaxResult ajaxResult = new AjaxResult();
-                        ajaxResult.setData("质押数量大于可用持仓,是否继续？");
-                        ajaxResult.setMessageType(MessageType.确认消息);
-                        return new Message<AjaxResult>().success().setData(ajaxResult);
-                    }
-                }
-            }
-        }
-        // 逆回购
-        if (DictCodeListExt3.交易方向_首期.getValue().equals(dto.getPs()) && StringUtil.equals(dto.getRepPs(),DictCodeList.回购拆借方向_逆回购.getValue())) {
-            Map<String,Object> cashAmountMap =  etrExchangeAgreRepTrade001Service.getCashAmount(dto.getPortfolioId(),dto.getAcctNo(),dto.getVdate());
-            BigDecimal accAvailableCash = (BigDecimal)cashAmountMap.get("cashUse");
-            if (StringUtil.isNotEmpty(accAvailableCash) && StringUtil.isNotEmpty(dto.getTradeAmt())) {
-                if (accAvailableCash.compareTo(dto.getTradeAmt()) == -1) {
-                    if(CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_CASH_SWITCH).equals(DictCodeListExt1.是或否_否.getValue())) {
-                        errorList.add(new ValidMessage("tradeAmt", this.getMessage("ETR_ERROR_0019")));
-                    }
-                    else{
-                        AjaxResult ajaxResult = new AjaxResult();
-                        ajaxResult.setData("回购金额大于指令可用现金,是否继续？");
-                        ajaxResult.setMessageType(MessageType.确认消息);
-                        return new Message<AjaxResult>().success().setData(ajaxResult);
-                    }
-                }
-            }
-        }
+//        //正回购、质押券出库
+//        if (DictCodeListExt3.交易方向_首期.getValue().equals(dto.getPs()) && StringUtil.equals(dto.getRepPs(),DictCodeList.回购拆借方向_正回购.getValue())) {
+//            Map<String, Object> param = new HashMap<String, Object>();
+//            param.put("portfolioId", dto.getPortfolioId());
+//            param.put("finprodId", dto.getFinprodId());
+//            if (null != dto.getSecAcctId()) {
+//                param.put("secAcctId", dto.getSecAcctId());
+//            }
+//            param.put("ccy", DictCodeList.币种_人民币_CNY.getValue());
+//            dto.setAccAvailablePos(etrExchangeTradeCommon001Service.selectAvailableNum(param));
+//            if (StringUtil.isNotEmpty(dto.getAccAvailablePos()) && StringUtil.isNotEmpty(dto.getRepSecNum())) {
+//                if (dto.getAccAvailablePos().compareTo(dto.getRepSecNum()) == -1) {
+//                    if(CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_POS_SWITCH).equals(DictCodeListExt1.是或否_否.getValue())) {
+//                        errorList.add(new ValidMessage("repSecNum", "质押数量不能大于可用持仓！"));
+//                    }
+//                    else{
+//                        AjaxResult ajaxResult = new AjaxResult();
+//                        ajaxResult.setData("质押数量大于可用持仓,是否继续？");
+//                        ajaxResult.setMessageType(MessageType.确认消息);
+//                        return new Message<AjaxResult>().success().setData(ajaxResult);
+//                    }
+//                }
+//            }
+//        }
+//        // 中途换券
+//        if (DictCodeListExt3.交易方向_中途换券.getValue().equals(dto.getPs())) {
+//            Map<String, Object> param = new HashMap<String, Object>();
+//            param.put("portfolioId", dto.getPortfolioId());
+//            param.put("finprodId", dto.getNewfinprodId());
+//            if (null != dto.getSecAcctId()) {
+//                param.put("secAcctId", dto.getSecAcctId());
+//            }
+//            param.put("ccy", DictCodeList.币种_人民币_CNY.getValue());
+//            dto.setAccAvailablePos(etrExchangeTradeCommon001Service.selectAvailableNum(param));
+//            if (StringUtil.isNotEmpty(dto.getAccAvailablePos()) && StringUtil.isNotEmpty(dto.getNewRepSecNum())) {
+//                if (dto.getAccAvailablePos().compareTo(dto.getNewRepSecNum()) == -1) {
+//                    if(CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_POS_SWITCH).equals(DictCodeListExt1.是或否_否.getValue())) {
+//                        errorList.add(new ValidMessage("newRepSecNum", "质押数量不能大于可用持仓！"));
+//                    }
+//                    else{
+//                        AjaxResult ajaxResult = new AjaxResult();
+//                        ajaxResult.setData("质押数量大于可用持仓,是否继续？");
+//                        ajaxResult.setMessageType(MessageType.确认消息);
+//                        return new Message<AjaxResult>().success().setData(ajaxResult);
+//                    }
+//                }
+//            }
+//        }
+//        // 逆回购
+//        if (DictCodeListExt3.交易方向_首期.getValue().equals(dto.getPs()) && StringUtil.equals(dto.getRepPs(),DictCodeList.回购拆借方向_逆回购.getValue())) {
+//            Map<String,Object> cashAmountMap =  etrExchangeAgreRepTrade001Service.getCashAmount(dto.getPortfolioId(),dto.getAcctNo(),dto.getVdate());
+//            BigDecimal accAvailableCash = (BigDecimal)cashAmountMap.get("cashUse");
+//            if (StringUtil.isNotEmpty(accAvailableCash) && StringUtil.isNotEmpty(dto.getTradeAmt())) {
+//                if (accAvailableCash.compareTo(dto.getTradeAmt()) == -1) {
+//                    if(CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_CASH_SWITCH).equals(DictCodeListExt1.是或否_否.getValue())) {
+//                        errorList.add(new ValidMessage("tradeAmt", this.getMessage("ETR_ERROR_0019")));
+//                    }
+//                    else{
+//                        AjaxResult ajaxResult = new AjaxResult();
+//                        ajaxResult.setData("回购金额大于指令可用现金,是否继续？");
+//                        ajaxResult.setMessageType(MessageType.确认消息);
+//                        return new Message<AjaxResult>().success().setData(ajaxResult);
+//                    }
+//                }
+//            }
+//        }
 
         return new Message<AjaxResult>().success().setData(commonCheck(result, dto.getOperateType()));
     }
