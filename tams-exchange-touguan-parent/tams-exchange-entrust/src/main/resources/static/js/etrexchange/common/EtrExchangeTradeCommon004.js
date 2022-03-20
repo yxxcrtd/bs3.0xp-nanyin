@@ -3160,6 +3160,7 @@
 
         //初始化时，是否隐藏左上角内容
     var initPage = function(){
+        debugger
             $("#businessModelDiv_jj").hide();
             $("#businessModelDiv_gd").hide();
             $("#businessModelDiv_dz").hide();
@@ -3176,6 +3177,16 @@
             if(finprodType2 == FINPROD_TYPE_TG_F06){
                 $("#priceModel_div_"+currentTab).show();
                 $("#entrustNumUnit_" + currentTab).text("份");
+            }
+
+            if(finprodType2 == FINPROD_TYPE_TG_F01){
+                $("#entrustNumUnit_" + currentTab).text("张");
+                $("#trader_div_xj").show();
+                $("#counterId_div_xj").show();
+                $("#counterTrader_div_xj").show();
+                $("#agreeOnId_div_xj").show();
+                $("#declaType_div_xj").show();
+                $("#settleSpeed_div_xj").show();
             }
 
 

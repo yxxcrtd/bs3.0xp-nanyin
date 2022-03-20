@@ -13,6 +13,7 @@ package com.joyintech.tams.exchange.entrust.etrexchange.agreementbond.controller
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.exchange.entrust.etrexchange.agreementbond.dto.EtrExchangeFixedIncomeResponse;
@@ -90,10 +91,10 @@ public class EtrExchangeAgreeBond002Controller extends BaseController{
 	@ApiOperation(value="导出交易行情信息",notes = "导出交易行情信息")
 	@ResponseBody
 	@PostMapping("exportFixedIncomePage")
-	public void exportFixedIncomePage(@RequestBody EtrExchangeTradeExportCommonRequest request, HttpServletResponse response){
+	public void exportFixedIncomePage(@RequestBody CfetsExportRequestDto request, HttpServletResponse response){
 		// 导出
 		ExcelUitl.doExport(request, response, "交易行情", () -> {
-			EtrExchangeTradeQuotationRequest dto = request.getDto(EtrExchangeTradeExportCommonRequest.class);
+			EtrExchangeTradeQuotationRequest dto = request.getDto(EtrExchangeTradeQuotationRequest.class);
 			List dataList = etrExchangeTradeGd002Service.findFixedIncomePage(dto).getRoot();
 			return dataList;
 		});
