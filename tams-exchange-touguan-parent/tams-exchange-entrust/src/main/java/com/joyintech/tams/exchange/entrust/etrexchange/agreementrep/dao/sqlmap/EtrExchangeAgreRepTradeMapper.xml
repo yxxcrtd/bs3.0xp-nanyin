@@ -793,13 +793,26 @@
         <if test="portfolioName != null and portfolioName != ''">
             AND PTL_PORTFOLIO.Portfolio_Id = #{portfolioName}
         </if>
+        <if test="portfolioIdList != null and portfolioIdList.size()>0">
+            <foreach collection="portfolioIdList" open="AND PTL_PORTFOLIO.Portfolio_Id in(" close=")" separator="," item="item">
+                #{item}
+            </foreach>
+        </if>
         <if test="tradeMarket != null and tradeMarket != ''">
             AND etr_entrust.trade_market = #{tradeMarket}
         </if>
         <if test="finprodId != null and finprodId != ''">
             AND etr_pledge.finprod_id = #{finprodId}
         </if>
-        <if test="bussType != null and bussType != ''">
+        <if test="zyj != null and zyj.size()>0">
+            <foreach collection="zyj" open="AND etr_pledge.finprod_id in(" close=")" separator="," item="item">
+                #{item}
+            </foreach>
+        </if>
+        <if test="bussType != null and bussType != '' and bussType == 'T92'">
+            AND etr_entrust.Ps in ('03', '04')
+        </if>
+        <if test="bussType != null and bussType != '' and bussType != 'T92'">
             AND etr_entrust.Ps = #{bussType}
         </if>
         <if test="manager != null and manager != ''">
@@ -925,13 +938,26 @@
             <if test="portfolioName != null and portfolioName != ''">
                 AND PTL_PORTFOLIO.Portfolio_Id = #{portfolioName}
             </if>
+            <if test="portfolioIdList != null and portfolioIdList.size()>0">
+                <foreach collection="portfolioIdList" open="AND PTL_PORTFOLIO.Portfolio_Id in(" close=")" separator="," item="item">
+                    #{item}
+                </foreach>
+            </if>
             <if test="tradeMarket != null and tradeMarket != ''">
                 AND wfl_etr_entrust.trade_market = #{tradeMarket}
             </if>
             <if test="finprodId != null and finprodId != ''">
                 AND wfl_etr_pledge.finprod_id = #{finprodId}
             </if>
-            <if test="bussType != null and bussType != ''">
+            <if test="zyj != null and zyj.size()>0">
+                <foreach collection="zyj" open="AND wfl_etr_pledge.finprod_id in(" close=")" separator="," item="item">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="bussType != null and bussType != '' and bussType == 'T92'">
+                AND wfl_etr_entrust.Ps in ('03', '04')
+            </if>
+            <if test="bussType != null and bussType != ''and bussType != 'T92'">
                 AND wfl_etr_entrust.Ps = #{bussType}
             </if>
             <if test="manager != null and manager != ''">

@@ -571,6 +571,8 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
         param.put("startDate", request.getStartDate());
         param.put("endDate", request.getEndDate());
         param.put("pageMode", request.getPageMode());
+        param.put("portfolioIdList", request.getPortfolioIdList());
+        param.put("zyj", request.getZyj());
         Page<EtrExchangeAgreRepTrade003Dto> page =  super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(), () -> etrExchangeAgreRepTradeMapper.selectEtrEntrust(param));
 
         List<SysUser> userList = restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EntrustCommon/getAllUserList",
