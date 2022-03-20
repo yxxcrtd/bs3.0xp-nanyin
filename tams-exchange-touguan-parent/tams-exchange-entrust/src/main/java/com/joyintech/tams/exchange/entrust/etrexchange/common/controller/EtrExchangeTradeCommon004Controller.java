@@ -249,6 +249,10 @@ public class EtrExchangeTradeCommon004Controller extends BaseController{
                 entity.getTradePlat().equals(DictCodeList.交易平台_大宗交易平台.getValue())){
             model.addAttribute("currentTab", "dz");
         }
+        if(StringUtil.isNotEmpty(entity.getTradePlat()) &&
+                entity.getTradePlat().equals(DictCodeList.交易平台_固定收益平台.getValue())){
+            model.addAttribute("currentTab", "gd");
+        }
         return super.init(model);
     }
     /**

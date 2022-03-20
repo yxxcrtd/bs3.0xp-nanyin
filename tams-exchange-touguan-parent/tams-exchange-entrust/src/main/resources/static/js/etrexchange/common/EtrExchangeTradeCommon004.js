@@ -3181,12 +3181,12 @@
 
             if(finprodType2 == FINPROD_TYPE_TG_F01){
                 $("#entrustNumUnit_" + currentTab).text("张");
-                $("#trader_div_xj").show();
-                $("#counterId_div_xj").show();
-                $("#counterTrader_div_xj").show();
-                $("#agreeOnId_div_xj").show();
-                $("#declaType_div_xj").show();
-                $("#settleSpeed_div_xj").show();
+                // $("#trader_div_xj").show();
+                // $("#counterId_div_xj").show();
+                // $("#counterTrader_div_xj").show();
+                // $("#agreeOnId_div_xj").show();
+                // $("#declaType_div_xj").show();
+                // $("#settleSpeed_div_xj").show();
             }
 
 
