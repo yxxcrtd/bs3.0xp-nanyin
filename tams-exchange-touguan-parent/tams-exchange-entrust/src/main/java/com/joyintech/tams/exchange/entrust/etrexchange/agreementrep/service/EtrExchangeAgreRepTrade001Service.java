@@ -873,6 +873,9 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
             }
         }
         dto.setEtrEntrust(etrEntrust);
+        if (etrEntrustAdd.getVpayDate() != null && etrEntrustAdd.getTermDays() != null) {
+            etrEntrustAdd.setMdate(DateUtil.addDay(etrEntrustAdd.getVpayDate(), etrEntrustAdd.getTermDays().intValue()));
+        }
         dto.setEtrEntrustAdd(etrEntrustAdd);
         dto.setEtrPledgeList(list);
         return dto;
@@ -921,6 +924,7 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
             	// 到期交收日
                 agreRepFristIssueDto.setMpayDate(DateUtil.parse(entity.getExpireSettleDate()));
             }
+
             // 到期应计利息
             agreRepFristIssueDto.setmIntAmt(entity.getIntAmt());
             //到期结算金额
@@ -950,6 +954,11 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
             if(entity.getTerm()!=null){
                 agreRepFristIssueDto.setTermDays(Long.valueOf(entity.getTerm()));
             }
+
+            if (agreRepFristIssueDto.getVpayDate() != null && agreRepFristIssueDto.getTermDays() != null) {
+                agreRepFristIssueDto.setAddMdate(DateUtil.addDay(agreRepFristIssueDto.getVpayDate(), agreRepFristIssueDto.getTermDays().intValue()));
+            }
+
             // 交易对手
             agreRepFristIssueDto.setCounterId(entity.getCounterId());
             // 对手方交易员
@@ -1017,6 +1026,11 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
             if(entity.getTerm()!=null){
             	agreRepAdvBuyDto.setTermDays(Long.valueOf(entity.getTerm()));
             }
+
+            if (agreRepAdvBuyDto.getVpayDate() != null && agreRepAdvBuyDto.getTermDays() != null) {
+                agreRepAdvBuyDto.setAddMdate(DateUtil.addDay(agreRepAdvBuyDto.getVpayDate(), agreRepAdvBuyDto.getTermDays().intValue()));
+            }
+
             // 交易对手
             agreRepAdvBuyDto.setCounterId(entity.getCounterId());
             // 对手方交易员
@@ -1089,6 +1103,11 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
             if(entity.getTerm()!=null){
             	agreRepExpireDto.setTermDays(Long.valueOf(entity.getTerm()));
             }
+
+            if (agreRepExpireDto.getVpayDate() != null && agreRepExpireDto.getTermDays() != null) {
+                agreRepExpireDto.setAddMdate(DateUtil.addDay(agreRepExpireDto.getVpayDate(), agreRepExpireDto.getTermDays().intValue()));
+            }
+
             // 交易对手
             agreRepExpireDto.setCounterId(entity.getCounterId());
             // 对手方交易员
@@ -1160,6 +1179,11 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
             if(entity.getTerm()!=null){
             	agreRepExpireUnBuyDto.setTermDays(Long.valueOf(entity.getTerm()));
             }
+
+            if (agreRepExpireUnBuyDto.getVpayDate() != null && agreRepExpireUnBuyDto.getTermDays() != null) {
+                agreRepExpireUnBuyDto.setAddMdate(DateUtil.addDay(agreRepExpireUnBuyDto.getVpayDate(), agreRepExpireUnBuyDto.getTermDays().intValue()));
+            }
+
             // 交易对手
             agreRepExpireUnBuyDto.setCounterId(entity.getCounterId());
             // 对手方交易员
@@ -1278,6 +1302,10 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
                     if(item.getTerm()!=null){
                         agreRepHwayChgSecDto.setTermDays(Long.valueOf(item.getTerm()));
                     }
+
+                    if (agreRepHwayChgSecDto.getVpayDate() != null && agreRepHwayChgSecDto.getTermDays() != null) {
+                        agreRepHwayChgSecDto.setAddMdate(DateUtil.addDay(agreRepHwayChgSecDto.getVpayDate(), agreRepHwayChgSecDto.getTermDays().intValue()));
+                    }
                 });
             }
 
@@ -1362,6 +1390,10 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
                         agreRepOpenSecDto.setTermDays(Long.valueOf(item.getTerm()));
                     }
 
+                    if (agreRepOpenSecDto.getVpayDate() != null && agreRepOpenSecDto.getTermDays() != null) {
+                        agreRepOpenSecDto.setAddMdate(DateUtil.addDay(agreRepOpenSecDto.getVpayDate(), agreRepOpenSecDto.getTermDays().intValue()));
+                    }
+
                     //质押率
                     if(item.getOrigConRatio()!=null){
                         agreRepOpenSecDto.setPledgeRatio(ArithmeticUtil.divide(item.getOrigConRatio(),new BigDecimal(100),10));
@@ -1383,6 +1415,10 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
 
             BeanUtil.copyPropertiesIgnoreNull(etrEntrust, agreRepOpenSecDto);
             BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd, agreRepOpenSecDto);
+        }
+
+        if (etrEntrustAdd.getVpayDate() != null && etrEntrustAdd.getTermDays() != null) {
+            etrEntrustAdd.setMdate(DateUtil.addDay(etrEntrustAdd.getVpayDate(), etrEntrustAdd.getTermDays().intValue()));
         }
 
         //待分发逻辑处理
