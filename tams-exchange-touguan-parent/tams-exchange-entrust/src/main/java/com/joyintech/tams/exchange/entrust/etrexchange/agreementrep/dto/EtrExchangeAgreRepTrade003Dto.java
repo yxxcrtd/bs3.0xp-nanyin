@@ -191,6 +191,9 @@ public class EtrExchangeAgreRepTrade003Dto extends EtrEntrust{
     @ApiModelProperty(name="avaDealAmt",value="剩余成交额度(元)")
     private String avaDealAmt;
 
+    @ApiModelProperty(name="psStr",value="委托方向")
+    private String psStr;
+
     @ApiModelProperty(name="requestId",value="请求编号")
     private String requestId;
 
@@ -307,7 +310,14 @@ public class EtrExchangeAgreRepTrade003Dto extends EtrEntrust{
      * @return getPsStr.
      */
     public String getPsStr() {
+        if (StringUtil.isNotBlank(this.psStr)) {
+            return this.psStr;
+        }
         return SysDataUtil.getNameFromDataDict(DictCode.交易方向, super.getPs());
+    }
+
+    public void setPsStr(String psStr) {
+        this.psStr = psStr;
     }
 
     public  String getFinprodType2String(){
