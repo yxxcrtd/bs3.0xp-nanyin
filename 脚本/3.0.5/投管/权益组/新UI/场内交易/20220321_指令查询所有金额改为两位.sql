@@ -1,0 +1,1 @@
+update CFG_READONLY_FORM_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"2"}' WHERE PAGECODE = 'FieldEtrDispatcher' AND DTCODE = 'FieldEtrDispatcherInfo' and colcode = 'entrustAmt' and SPCDCODE != 'EX010';
