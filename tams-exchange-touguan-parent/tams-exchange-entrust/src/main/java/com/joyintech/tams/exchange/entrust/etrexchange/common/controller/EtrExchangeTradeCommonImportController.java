@@ -170,18 +170,18 @@ public class EtrExchangeTradeCommonImportController extends BaseController{
 		// add by yushilong 可用现金软校验 20200713 start
 		String confirmMsg = "";
 		// 可用现金软校验
-		for (int i = 0; i < dtoList.size(); i++) {
-			if (StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_CASH_SWITCH),
-					DictCodeListExt1.是或否_是.getValue())
-					&& (StringUtil.equals(dtoList.get(i).getPs(), DictCodeList.交易方向_买入.getValue()))
-					&& dtoList.get(i).getProAvailableCash() != null && dtoList.get(i).getEntrustAmt() != null) {
-				if (dtoList.get(i).getEntrustAmt().compareTo(dtoList.get(i).getProAvailableCash()) == 1) {
-					confirmMsg += getMessage("ETR_E_0025", String.valueOf(i + 1));
-					confirmMsg += "<br />";
-					confirmMsg += dtoList.get(i).getPortfolioId() + this.getMessage("TRD_C_0002");
-				}
-			}
-		}
+//		for (int i = 0; i < dtoList.size(); i++) {
+//			if (StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_CASH_SWITCH),
+//					DictCodeListExt1.是或否_是.getValue())
+//					&& (StringUtil.equals(dtoList.get(i).getPs(), DictCodeList.交易方向_买入.getValue()))
+//					&& dtoList.get(i).getProAvailableCash() != null && dtoList.get(i).getEntrustAmt() != null) {
+//				if (dtoList.get(i).getEntrustAmt().compareTo(dtoList.get(i).getProAvailableCash()) == 1) {
+//					confirmMsg += getMessage("ETR_E_0025", String.valueOf(i + 1));
+//					confirmMsg += "<br />";
+//					confirmMsg += dtoList.get(i).getPortfolioId() + this.getMessage("TRD_C_0002");
+//				}
+//			}
+//		}
 		if (StringUtil.isNotEmpty(confirmMsg)) {
 			AjaxResult ajaxResult = new AjaxResult();
 			ajaxResult.setData(confirmMsg);
