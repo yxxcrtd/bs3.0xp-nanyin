@@ -359,6 +359,12 @@ public class CfetsEtrDispatcherService extends BaseService {
                     if(StringUtil.isNotEmpty(dto2)) {
                         cfetsEtrDispatcherTradeListResponse.setIsWin(dto2.getIsWin());
                         cfetsEtrDispatcherTradeListResponse.setEtrPrice(dto2.getEtrPrice());
+                        CfetsEtrDispatcherTradeListResponse deal =  cfetsEtrDispatcherMapper.getEtrDealInfo(cfetsEtrDispatcherTradeListResponse.getEntrustId());
+                        if(Objects.nonNull(deal)) {
+                            cfetsEtrDispatcherTradeListResponse.setDealProgress(deal.getDealProgress());
+                            cfetsEtrDispatcherTradeListResponse.setTransFinishAmt(deal.getTransFinishAmt());
+                            cfetsEtrDispatcherTradeListResponse.setTransRemainderAmt(deal.getTransRemainderAmt());
+                        }
                     }
                 }
                 //TODO 清算速度

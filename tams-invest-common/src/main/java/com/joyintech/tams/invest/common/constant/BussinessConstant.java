@@ -519,4 +519,8 @@ public interface BussinessConstant {
      */
     String BOND_TRADED_UNIT_DEFAULT = "01";
     // moddify by etliu 20220301 end
+
+    // modfify by etliu 20220320 协议回购资产类型 start
+    String NEGOTIATED_REPURCHASE_TEXT = "协议回购";
+    // modfify by etliu 20220320 协议回购资产类型 end
 }

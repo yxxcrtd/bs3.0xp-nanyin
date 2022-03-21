@@ -90,7 +90,7 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 			String userId = SecurityUtil.getLoginUser().getUserName();
 			if (StringUtils.isNotEmpty(userId)) {
 				logger.info("请求用户【{}】", "userId = " + userId);
-				param.put("userId", SecurityUtil.getLoginUser().getUserName());
+				param.put("userId",SecurityUtil.getLoginUser().getUserName());
 				String portfolioId = (String)param.get("portfolioId");
 				if (StringUtil.isNotEmpty(portfolioId)) {
 					param.put("portfolioIdList",

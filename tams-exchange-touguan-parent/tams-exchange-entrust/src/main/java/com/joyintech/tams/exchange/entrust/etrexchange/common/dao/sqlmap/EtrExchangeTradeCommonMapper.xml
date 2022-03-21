@@ -8,19 +8,16 @@
         T1.ENTRUST_ID entrustId
         ,T1.ENTRUST_STATUS entrustStatus,
         CASE
-        WHEN T2.TARGET_TYPE = '01' AND T1.ENTRUST_NUM!=0 THEN
-        ROUND( nvl( T4.ORDER_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_NUM, 1 ), 4 )
-        WHEN T2.TARGET_TYPE = '01' AND T1.ENTRUST_NUM=0 THEN 0
-        WHEN T2.TARGET_TYPE = '02' AND T1.ENTRUST_AMT=0 THEN 0
-        ELSE ROUND( nvl( T4.ORDER_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_AMT, 1 ), 4 )
+        WHEN T2.TARGET_TYPE = '01' THEN
+        ROUND( decode(nvl( T4.ORDER_FINISH_AMT, 0 ),0,0, nvl( T4.ORDER_FINISH_AMT, 0 )/ nvl( T1.ENTRUST_NUM, 1 )), 4 )
+        ELSE ROUND( decode(nvl( T4.ORDER_FINISH_AMT, 0 ),0,0, nvl( T4.ORDER_FINISH_AMT, 0 )/ nvl( T1.ENTRUST_AMT, 1 )), 4 )
         END AS implementPercent,
         CASE
-        WHEN T2.TARGET_TYPE = '01' AND T1.ENTRUST_NUM!=0 THEN
-        ROUND( nvl( T4.ENT_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_NUM, 1 ), 4 )
-        WHEN T2.TARGET_TYPE = '01' AND T1.ENTRUST_NUM=0 THEN 0
-        WHEN T2.TARGET_TYPE = '02' AND T1.ENTRUST_AMT=0 THEN 0
-        ELSE ROUND( nvl( T4.ENT_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_AMT, 1 ), 4 )
-        END AS dealPercentAge,
+
+        WHEN T2.TARGET_TYPE = '01' THEN
+        ROUND( decode(nvl( T4.ENT_FINISH_AMT, 0 ),0 ,0 , nvl( T4.ENT_FINISH_AMT, 0 )/ nvl( T1.ENTRUST_NUM, 1 )), 4 )
+        ELSE ROUND( decode(nvl( T4.ENT_FINISH_AMT, 0 ),0,0, nvl( T4.ENT_FINISH_AMT, 0 )/ nvl( T1.ENTRUST_AMT, 1 )), 4 )
+        END AS dealPercent,
         CASE
         WHEN T2.TARGET_TYPE = '01' THEN
         ROUND( nvl( T4.ORDER_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( T4.ORDER_FINISH_AMT, 0 ), 4 )
@@ -160,19 +157,15 @@
         T1.ENTRUST_ID entrustId
         ,T1.ENTRUST_STATUS entrustStatus,
         CASE
-        WHEN T2.TARGET_TYPE = '01' AND T1.ENTRUST_NUM!=0 THEN
-        ROUND( nvl( T4.ORDER_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_NUM, 1 ), 4 )
-        WHEN T2.TARGET_TYPE = '01' AND T1.ENTRUST_NUM=0 THEN 0
-        WHEN T2.TARGET_TYPE = '02' AND T1.ENTRUST_AMT=0 THEN 0
-        ELSE ROUND( nvl( T4.ORDER_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_AMT, 1 ), 4 )
+        WHEN T2.TARGET_TYPE = '01' THEN
+        ROUND( decode(nvl( T4.ORDER_FINISH_AMT, 0 ),0,0, nvl( T4.ORDER_FINISH_AMT, 0 )/ nvl( T1.ENTRUST_NUM, 1 )), 4 )
+        ELSE ROUND( decode(nvl( T4.ORDER_FINISH_AMT, 0 ),0,0, nvl( T4.ORDER_FINISH_AMT, 0 )/ nvl( T1.ENTRUST_AMT, 1 )), 4 )
         END AS implementPercent,
         CASE
-        WHEN T2.TARGET_TYPE = '01' AND T1.ENTRUST_NUM!=0 THEN
-        ROUND( nvl( T4.ENT_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_NUM, 1 ), 4 )
-        WHEN T2.TARGET_TYPE = '01' AND T1.ENTRUST_NUM=0 THEN 0
-        WHEN T2.TARGET_TYPE = '02' AND T1.ENTRUST_AMT=0 THEN 0
-        ELSE ROUND( nvl( T4.ENT_FINISH_AMT, 0 ) / nvl( T1.ENTRUST_AMT, 1 ), 4 )
-        END AS dealPercentAge,
+        WHEN T2.TARGET_TYPE = '01' THEN
+        ROUND( decode(nvl( T4.ENT_FINISH_AMT, 0 ),0,0, nvl( T4.ENT_FINISH_AMT, 0 )/ nvl( T1.ENTRUST_NUM, 1 )), 4 )
+        ELSE ROUND( decode(nvl( T4.ENT_FINISH_AMT, 0 ),0,0, nvl( T4.ENT_FINISH_AMT, 0 )/ nvl( T1.ENTRUST_AMT, 1 )), 4 )
+        END AS dealPercent,
         CASE
         WHEN T2.TARGET_TYPE = '01' THEN
         ROUND( nvl( T4.ORDER_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( T4.ORDER_FINISH_AMT, 0 ), 4 )
@@ -347,6 +340,8 @@
             FP.FINPROD_ABBR AS secName,
             TEMP.AMOUNT     AS positionsNum,
             ESP.AMOUNT      AS sellNum,
+            invaim.INV_AIM as invAim,
+            invaim.BUSINESS_MODEL as businessModel,
             CASE WHEN FP.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01} THEN MBVI.NETPRICE
                 WHEN FP.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F06} THEN MFMI.CLOSE_PRICE
                 WHEN FP.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F10} THEN MSP.CLOSE_PRICE
@@ -602,8 +597,48 @@
         left join (select distinct ACCT_NO acctNo1, BUSI_ACCT_NO busiAcctNo1, CCY ccy, ACCT_NAME acctName
         from STL_CAPACCT_INFO) c1
         on SSAI.TRD_ACCT_ID = c1.acctNo1
+        <!-- 业务模式查交易表 -->
+        left join (
+            select FINPROD_ID, PORTFOLIO_ID,
+                   listagg(INV_AIM, ',') WITHIN GROUP (ORDER BY PORTFOLIO_ID, FINPROD_ID) as INV_AIM,
+        listagg(BUSINESS_MODEL, ',') WITHIN GROUP (ORDER BY PORTFOLIO_ID, FINPROD_ID) as BUSINESS_MODEL
+        from (
+            SELECT FINPROD_ID, PORTFOLIO_ID, INV_AIM,BUSINESS_MODEL
+            FROM (
+            select
+            a.INV_AIM ,a.BUSINESS_MODEL, a.TRADE_DATE ,a.FINPROD_ID,b.PORTFOLIO_ID,
+            ROW_NUMBER () over(
+            PARTITION BY a.TRADE_ID
+            ORDER BY a.TRADE_DATE DESC
+            ) rn
+            from TRD_PRODUCT_DEAL a
+            LEFT JOIN TRD_PRODUCT_DEAL_ADD b ON a.TRADE_ID =b.TRADE_ID
+            WHERE 1=1
+            <if test="portfolioIdList != null">
+                AND b.PORTFOLIO_ID in
+                <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            AND a.TRADE_DATE &lt;= #{sysDate} - 1
+            ) WHERE rn = 1
+            UNION
+            SELECT a.FINPROD_ID, b.PORTFOLIO_ID, a.INV_AIM,a.BUSINESS_MODEL
+            from TRD_PRODUCT_DEAL a
+            LEFT JOIN TRD_PRODUCT_DEAL_ADD b ON a.TRADE_ID =b.TRADE_ID
+            WHERE 1=1
+            <if test="portfolioIdList != null">
+                AND b.PORTFOLIO_ID in
+                <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            AND a.TRADE_DATE = #{sysDate}
+            ) GROUP BY FINPROD_ID, PORTFOLIO_ID
+        ) invaim on invaim.FINPROD_ID=TEMP.FINPROD_ID and invaim.PORTFOLIO_ID=TEMP.PORTFOLIO_ID
         WHERE
-            FP.TRADE_MARKET IN (#{TRADE_PLACE_03}, #{TRADE_PLACE_04})
+        TEMP.AMOUNT>0
+        and FP.TRADE_MARKET IN (#{TRADE_PLACE_03}, #{TRADE_PLACE_04})
         <if test="portfolioIdList != null and portfolioIdList.size()>0">
             <foreach collection="portfolioIdList" open="AND TEMP.PORTFOLIO_ID IN (" item="portfolioId" separator="," close=")">
                     #{portfolioId,jdbcType=VARCHAR}
@@ -1438,7 +1473,7 @@
             </if>
             <if test="search_isNumberFlag != null and search_isNumberFlag == true">
                 or (T1.implementPercent*100 = #{search})
-                or (T1.dealPercentAge*100 = #{search})
+                or (T1.dealPercent*100 = #{search})
                 or (T1.price = #{search})
                 or (T1.entrustAmt = #{search})
                 or (T1.entrustNum = #{search})

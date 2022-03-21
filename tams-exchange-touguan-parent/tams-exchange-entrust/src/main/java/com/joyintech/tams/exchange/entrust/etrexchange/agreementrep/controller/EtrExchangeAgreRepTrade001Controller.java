@@ -594,6 +594,7 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
         if (br.hasErrors()) {
             return new Message<AjaxResult>().success().setData(new AjaxResult(br));
         }
+
         //业务类型
         String businessType = String.valueOf("");
         if(DictCodeListExt3.交易方向_提前购回.getValue().equals(dto.getPs())){
@@ -656,9 +657,17 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
         if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())
                 &&(DictCodeListExt3.交易方向_到期续做.getValue().equals(dto.getPs())
                 || DictCodeListExt3.交易方向_逆回购.getValue().equals(dto.getPs())
-                || DictCodeListExt3.交易方向_正回购.getValue().equals(dto.getPs()) )) {
+                || DictCodeListExt3.交易方向_正回购.getValue().equals(dto.getPs())
+                || DictCodeListExt3.交易方向_首期.getValue().equals(dto.getPs()) )) {
+            Boolean isShouQi = StringUtil.equals(DictCodeListExt3.交易方向_首期.getValue(), dto.getPs());
+            if (isShouQi) {
+                dto.setPs(dto.getRepPs());
+            }
             AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(dto,
                     BussinessDictCodeListRds.接口系统ID_预占接口.getValue(),DictCodeList.平安资产类型_质押式回购.getValue());
+            if (isShouQi) {
+                dto.setPs(DictCodeListExt3.交易方向_首期.getValue());
+            }
             if (StringUtil.isNotEmpty(ar)) {
                 return new Message<AjaxResult>().success().setData(ar);
             }

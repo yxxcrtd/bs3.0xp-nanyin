@@ -1182,7 +1182,10 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
     private void updatePtlPosition(List<CfetsManualSettleDealInfo> listTemp, String buttonType) {
         List<String> orderIds = new ArrayList<>();
         listTemp.stream().forEach(item -> {
-            orderIds.add(cfetsManualSettleMapper.selectRegTradeIdBytradeId(item.getTradeId()));
+            String tradeId = cfetsManualSettleMapper.selectRegTradeIdBytradeId(item.getTradeId());
+            if(StringUtil.isNotEmpty(tradeId)) {
+                orderIds.add(tradeId);
+            }
         });
         if (StringUtil.equals(buttonType, DictCodeListExt3.交收操作类型_交收.getValue())) {
             if (CollectionUtils.isNotEmpty(orderIds)) {

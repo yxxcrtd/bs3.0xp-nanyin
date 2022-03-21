@@ -24,34 +24,14 @@ update CFG_READONLY_FORM_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"a
 delete from CFG_READONLY_FORM_SHOW where PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'EX009' and COLCODE = 'secAcctId';
 delete from CFG_READONLY_FORM_SHOW where PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'EX007' and COLCODE = 'secAcctId';
 delete from CFG_READONLY_FORM_SHOW where PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'EX008' and COLCODE = 'secAcctId';
+delete from CFG_READONLY_FORM_SHOW where PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'EX006' and COLCODE = 'secAcctId';
 INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE,DTCODE,SPCDCODE,COLCODE,COLNAME,DICTCODE,SEQNO,EXTENDCFG,STATUS,REMARK1,REMARK2,REMARK3) VALUES ('FieldEtrDispatcher', 'FieldEtrDispatcherInfo', 'EX009', 'secAcctId', '资金账户', NULL, '16', '{"colAlign": "left"}', '1', '0', NULL, NULL);
 INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE,DTCODE,SPCDCODE,COLCODE,COLNAME,DICTCODE,SEQNO,EXTENDCFG,STATUS,REMARK1,REMARK2,REMARK3) VALUES ('FieldEtrDispatcher', 'FieldEtrDispatcherInfo', 'EX007', 'secAcctId', '资金账户', NULL, '22', '{"colAlign": "left"}', '1', '0', NULL, NULL);
 INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE,DTCODE,SPCDCODE,COLCODE,COLNAME,DICTCODE,SEQNO,EXTENDCFG,STATUS,REMARK1,REMARK2,REMARK3) VALUES ('FieldEtrDispatcher', 'FieldEtrDispatcherInfo', 'EX008', 'secAcctId', '资金账户', NULL, '10', '{"colAlign": "left"}', '1', '0', NULL, NULL);
-delete from CFG_READONLY_FORM_SHOW where PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'EX008' and COLCODE = 'secAcctId';
 INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE,DTCODE,SPCDCODE,COLCODE,COLNAME,DICTCODE,SEQNO,EXTENDCFG,STATUS,REMARK1,REMARK2,REMARK3) VALUES ('FieldEtrDispatcher', 'FieldEtrDispatcherInfo', 'EX006', 'secAcctId', '资金账户', NULL, '10', '{"colAlign": "left"}', '1', '0', NULL, NULL);
 
 -- 协议现券
- 	update CFG_READONLY_FORM_SHOW set  EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"2"}'
-	WHERE
-	PAGECODE = 'FieldEtrDispatcher'
-	AND DTCODE = 'FieldEtrDispatcherInfo'
-	AND SPCDCODE = 'EX016'
-	and COLCODE = 'matureYield';
-	update CFG_READONLY_FORM_SHOW set  EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"3"}'
-	WHERE
-	PAGECODE = 'FieldEtrDispatcher'
-	AND DTCODE = 'FieldEtrDispatcherInfo'
-	AND SPCDCODE = 'EX016'
-	and COLCODE = 'unitPrice';
-	update CFG_READONLY_FORM_SHOW set  EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"3"}'
-	WHERE
-	PAGECODE = 'FieldEtrDispatcher'
-	AND DTCODE = 'FieldEtrDispatcherInfo'
-	AND SPCDCODE = 'EX016'
-	and COLCODE = 'allPrice';
-		update CFG_READONLY_FORM_SHOW set  COLCODE = 'otherBusiModel'
-	WHERE
-	PAGECODE = 'FieldEtrDispatcher'
-	AND DTCODE = 'FieldEtrDispatcherInfo'
-	AND SPCDCODE = 'EX016'
-	and COLCODE = 'busiModel';
+update CFG_READONLY_FORM_SHOW set  EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"2"}' WHERE PAGECODE = 'FieldEtrDispatcher' AND DTCODE = 'FieldEtrDispatcherInfo' AND SPCDCODE = 'EX016' and COLCODE = 'matureYield';
+update CFG_READONLY_FORM_SHOW set  EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"3"}' WHERE PAGECODE = 'FieldEtrDispatcher' AND DTCODE = 'FieldEtrDispatcherInfo' AND SPCDCODE = 'EX016' and COLCODE = 'unitPrice';
+update CFG_READONLY_FORM_SHOW set  EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"3"}' WHERE PAGECODE = 'FieldEtrDispatcher' AND DTCODE = 'FieldEtrDispatcherInfo' AND SPCDCODE = 'EX016' and COLCODE = 'allPrice';
+update CFG_READONLY_FORM_SHOW set  COLCODE = 'otherBusiModel' WHERE PAGECODE = 'FieldEtrDispatcher' AND DTCODE = 'FieldEtrDispatcherInfo' AND SPCDCODE = 'EX016' and COLCODE = 'busiModel';

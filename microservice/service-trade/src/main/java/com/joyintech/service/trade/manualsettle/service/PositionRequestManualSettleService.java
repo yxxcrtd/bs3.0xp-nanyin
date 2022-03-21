@@ -96,7 +96,9 @@ public class PositionRequestManualSettleService {
                 finprodType += "-" + etrEntrustAdd.getAssetType1();
             }
         }
+        logger.debug("【手工交收查询头寸接口参数】finprodType:{},ps:{}", finprodType, trdProductTempDeal.getPs());
         String interType = commonPositionEngineService.getPositionInterType("TRD", TRADE_PLAT, finprodType, trdProductTempDeal.getPs(), DictCodeListExt3.共通业务类型_手工交收.getValue(), entity.getClass().getName());
+        logger.debug("【手工交收查询头寸接口结果】interType:{}", interType);
         if (INTERF_TYPE_BOND002.equals(interType)) {
             this.bond002(entity, resultMap);
         } else if (INTERF_TYPE_BOND003.equals(interType)) {

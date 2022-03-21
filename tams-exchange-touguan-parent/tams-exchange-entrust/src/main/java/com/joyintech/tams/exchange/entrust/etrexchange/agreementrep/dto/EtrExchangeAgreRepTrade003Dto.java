@@ -191,6 +191,9 @@ public class EtrExchangeAgreRepTrade003Dto extends EtrEntrust{
     @ApiModelProperty(name="avaDealAmt",value="剩余成交额度(元)")
     private String avaDealAmt;
 
+    @ApiModelProperty(name="requestId",value="请求编号")
+    private String requestId;
+
     public String getFinishAmt() {
         return finishAmt;
     }
@@ -684,5 +687,13 @@ public class EtrExchangeAgreRepTrade003Dto extends EtrEntrust{
 
     public void setAddCla(String addCla) {
         this.addCla = addCla;
+    }
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
     }
 }

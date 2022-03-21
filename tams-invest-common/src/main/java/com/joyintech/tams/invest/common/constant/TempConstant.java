@@ -347,6 +347,11 @@ public class TempConstant {
      * 非交易业务
      */
     public static final String NO_TRADE_BUSINESS_ETR="noTradeBusinessEtr";
+    /**
+     * 协议回购常量
+     */
+    public static final String AGR_EREP_ETR="AgreRepEtr";
+
 
 }
 

@@ -107,12 +107,12 @@ public class EtrTradeCommonervice extends BaseService {
             }
             //组合资金可用 1、老资金相关表
             if(!CollectionUtils.isEmpty(sumPortfolioAcctNoList)){
-//                for (PositionCashSecDto dto : sumPortfolioAcctNoList){
-//                    PositionCashSecData data=querySingleCash(dto);
-//                    if(data!=null&&data.getCashT()!=null){
-//                        portfolioCash=portfolioCash.add(data.getCashT());
-//                    }
-//                }
+                for (PositionCashSecDto dto : sumPortfolioAcctNoList){
+                    PositionCashSecData data=querySingleCash(dto);
+                    if(data!=null&&data.getCashT()!=null){
+                        portfolioCash=portfolioCash.add(data.getCashT());
+                    }
+                }
                 //组合资金可用 2、新头寸引擎
                 BigDecimal newPortfolioAmount=queryPosition(sumPortfolioAcctNoList,flowType, DictCodeListExt3.资产类型_托管户可用资金.getValue());
                 if(newPortfolioAmount!=null){
@@ -139,8 +139,8 @@ public class EtrTradeCommonervice extends BaseService {
 //                        realCash=realCash.add(data.getRealCash());
 //                    }
 //                }
-                //组合资金可用 2、新头寸引擎
-                BigDecimal newCashAmount=queryPosition(sumAcctNoList,flowType, DictCodeListExt3.资产类型_托管户可用资金.getValue());
+                //资金可用金额 2、新头寸引擎
+                BigDecimal newCashAmount=queryPosition(sumAcctNoList,flowType, DictCodeListExt3.资产类型_证券户可用资金.getValue());
                 if(newCashAmount!=null){
                     canCash=canCash.add(newCashAmount);
                 }
@@ -232,12 +232,12 @@ public class EtrTradeCommonervice extends BaseService {
                 }
                 //组合资金可用 1、老资金相关表
                 if (!CollectionUtils.isEmpty(sumPortfolioAcctNoList)) {
-//                    for (PositionCashSecDto tempDto : sumPortfolioAcctNoList) {
-//                        PositionCashSecData data = querySingleCash(tempDto);
-//                        if (data != null && data.getCashT() != null) {
-//                            portfolioCash = portfolioCash.add(data.getCashT());
-//                        }
-//                    }
+                    for (PositionCashSecDto tempDto : sumPortfolioAcctNoList) {
+                        PositionCashSecData data = querySingleCash(tempDto);
+                        if (data != null && data.getCashT() != null) {
+                            portfolioCash = portfolioCash.add(data.getCashT());
+                        }
+                    }
                     //组合资金可用 2、新头寸引擎
                     BigDecimal newPortfolioAmount = queryPosition(sumPortfolioAcctNoList, flowType, BussinessDictCodeList.持仓类型_可用.getValue());
                     if (newPortfolioAmount != null) {
@@ -261,7 +261,7 @@ public class EtrTradeCommonervice extends BaseService {
 //                        canCash = canCash.add(data.getCashT());
 //                        realCash = realCash.add(data.getRealCash());
 //                    }
-                    BigDecimal newCashAmount = queryPosition(sumAcctNoList, flowType, DictCodeListExt3.资产类型_托管户可用资金.getValue());
+                    BigDecimal newCashAmount = queryPosition(sumAcctNoList, flowType, DictCodeListExt3.资产类型_证券户可用资金.getValue());
                     if (newCashAmount != null) {
                         canCash = canCash.add(newCashAmount);
                     }
@@ -667,7 +667,7 @@ public class EtrTradeCommonervice extends BaseService {
         //头寸引擎
         List<PositionCashSecDto> sumAcctNoList = new ArrayList<>();
         sumAcctNoList.add(dto);
-        BigDecimal newCashAmount = queryPosition(sumAcctNoList, "01", DictCodeListExt3.资产类型_托管户可用资金.getValue());
+        BigDecimal newCashAmount = queryPosition(sumAcctNoList, "01", DictCodeListExt3.资产类型_证券户可用资金.getValue());
         if (newCashAmount != null) {
             cashT = cashT.add(newCashAmount);
         }
@@ -735,7 +735,9 @@ public class EtrTradeCommonervice extends BaseService {
                             ||StringUtil.equals(dto.getTradePlat(),DictCodeList.交易平台_大宗交易平台.getValue())
                             ||StringUtil.equals(dto.getTradePlat(),TempConstant.NO_TRADE_BUSINESS_ETR)))
                         holdingType=DictCodeListExt3.资产类型_债券本方券非净额结算可用持仓.getValue();
-                }
+                    }else if(StringUtil.equals(dto.getTradePlat(),TempConstant.AGR_EREP_ETR)){
+                       holdingType=DictCodeListExt3.资产类型_质押式协议回购本方券非净额结算可用持仓.getValue();
+                    }
             } else if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue()) ) {
                 if (StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.估值交易市场_上交所.getValue())) {
                     holdingType=DictCodeListExt3.资产类型_股票上交所可用持仓.getValue();

@@ -2,7 +2,8 @@
  * 指令列表JS
  */
 (function () {
-	
+    var riskFlag = 1;
+
 	var etrExchangeInfoDtoList = parent.correctData || [];
 	
     var getriskdataAll = function () {
@@ -271,7 +272,19 @@
         }
     }
     // add by zhangrui1 end
-    
+
+    function paramCheck() {
+
+        if ("Y" === pageRedisFlag  && riskFlag !== 0) {
+            Joyin.error("请先完成风险试算")
+            return false;
+        }
+        if ("02" === isRiskMathSoftcontrol && $('#riskTrialSpan').text() && $('#riskTrialSpan').text().trim() == '试算不通过') {
+            Joyin.error("风险试算未通过")
+            return false;
+        }
+        return true;
+    }
     /**
      * 保存或提交
      *
@@ -325,15 +338,18 @@
                 function (result) {
                     Joyin.confirm(result.data, function () {
                         if (operateType === 'save') {
-                            WorkFlow.doSaveList(basePath + 'etrexchange/common/EtrExchangeTradeCommonImport/save', allDto, "EtrExchangeImport_btn_save",'EtrExchangeImport', function (result2) {
+                            WorkFlow.doSaveList(basePath + 'etrexchange/common/EtrExchangeTradeCommonImport/save', allDto, "EtrExchangeImport_btn_save",'EtrExchangeTradeCommon004', function (result2) {
                                 var index = parent.layer.getFrameIndex(window.name);
                                 parent.layer.close(index);
                             });
                         } else {
-                            WorkFlow.doSubmitList(basePath + 'etrexchange/common/EtrExchangeTradeCommonImport/save', allDto, "EtrExchangeImport_btn_submit",'EtrExchangeImport', function () {
-                                var index = parent.layer.getFrameIndex(window.name);
-                                parent.layer.close(index);
-                            });
+                           WorkFlow.doSubmitList(basePath + 'etrexchange/common/EtrExchangeTradeCommonImport/save', allDto, "EtrExchangeImport_btn_submit",'EtrExchangeTradeCommon004', function(result){
+                               allDto.softSkipMode='Y';
+                               WorkFlow.doSubmitList(basePath + 'etrexchange/common/EtrExchangeTradeCommonImport/save', allDto, "EtrExchangeImport_btn_submit", 'EtrExchangeTradeCommon004', function () {
+                                   var index = parent.layer.getFrameIndex(window.name);
+                                   parent.layer.close(index);
+                               });
+                           } );
                         }
                     });
                 });
@@ -368,6 +384,7 @@
                     param.push(object[index]);
                 }
             }
+            var pageId="EtrExchangeImport";  //风险试算必须用这个pageId
             window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskRdsTrial/interf/trialList/' + pageId + '/0', param, checkParam);
             // add by zhangrui1 end
         });
@@ -376,7 +393,7 @@
          * 提交
          */
         $('#EtrBrowDepoInfo003_btn_submit').click(function () {
-            saveOrSubmit('submit');
+                saveOrSubmit('submit');
         });
     });
 }());

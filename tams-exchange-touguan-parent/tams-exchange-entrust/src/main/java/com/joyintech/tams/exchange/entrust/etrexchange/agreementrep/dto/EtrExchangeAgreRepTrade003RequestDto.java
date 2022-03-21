@@ -68,6 +68,12 @@ public class EtrExchangeAgreRepTrade003RequestDto{
     @ApiModelProperty(name="keywords",value="关键字",example="A1")
     private String keywords;
 
+    @ApiModelProperty(name="portfolioIdList",value="组合代码列表",example="A1")
+    private List<String> portfolioIdList;
+
+    @ApiModelProperty(name="zyj",value="质押券列表",example="A1")
+    private List<String> zyj;
+
     public String getStartDate() {
         return startDate;
     }
@@ -154,5 +160,21 @@ public class EtrExchangeAgreRepTrade003RequestDto{
 
     public void setKeywords(String keywords) {
         this.keywords = keywords;
+    }
+
+    public List<String> getPortfolioIdList() {
+        return portfolioIdList;
+    }
+
+    public void setPortfolioIdList(List<String> portfolioIdList) {
+        this.portfolioIdList = portfolioIdList;
+    }
+
+    public List<String> getZyj() {
+        return zyj;
+    }
+
+    public void setZyj(List<String> zyj) {
+        this.zyj = zyj;
     }
 }

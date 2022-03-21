@@ -488,7 +488,7 @@
             ete.ps ps,
             DECODE(eted.SETTLE_SPREED,0,'01',1,'02','2','03') settleSpeed,
             ete.price_model priceModel,
-            c1.acctName secAcctId,
+            eted.SEC_ACCT_ID secAcctId,
             ete.ccy ccy,
             ete.entrust_num/100 shareNum,
             eted.our_ent_num/100 entrustOwnNum,
@@ -547,8 +547,8 @@
             eted.EXP_CON_NUM expConNum,
             eted.PREB preb,
             eted.PREC prec,
-            fpt.TYPE_11 secType, 
-            eted.DEAL_CUR_ACCT dealCurAcct,
+            fpt.TYPE_11 secType,
+            sci.ACCT_NAME dealCurAcct,
             eted.REQUEST_ID requestId,
             eted.CAP_DAYS capDays, 
             to_char(eted.VPAY_DATE,'yyyy-MM-dd') vpayDate,
@@ -579,7 +579,7 @@
         LEFT JOIN PTL_SEC_STOCK pss ON pss.pledge_stock_id = eted.pledge_stock_id AND ete.portfolio_id = pss.portfolio_id
         LEFT JOIN MST_CUSTOMER_INFO mci ON mci.CUSTOMER_ID = eted.main_consignee AND mci.IS_SALER = #{YESORNO_YES, jdbcType = VARCHAR}
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON eted.SEC_ACCT_ID = ssai.SEC_ACCT_ID
-        LEFT JOIN ( SELECT DISTINCT ACCT_NO acctNo1, BUSI_ACCT_NO busiAcctNo1, CCY ccy, ACCT_NAME acctName FROM STL_CAPACCT_INFO ) c1 ON ssai.TRD_ACCT_ID = c1.acctNo1
+        LEFT JOIN STL_CAPACCT_INFO sci ON sci.ACCT_NO = ssai.TRD_ACCT_ID
         LEFT JOIN etr_pledge ee ON ete.entrust_id = ee.entrust_id /** 委托指令回购质押品 **/
         <!--LEFT JOIN ETR_ENTRUST oete ON  oete.entrust_id = eted.TRADE_ID-->
         LEFT JOIN etr_pledge oee ON ete.entrust_id = oee.entrust_id
@@ -617,7 +617,7 @@
         ete.ps ps,
         DECODE(eted.SETTLE_SPREED,0,'01',1,'02','2','03') settleSpeed,
         ete.price_model priceModel,
-        c1.acctName secAcctId,
+        eted.SEC_ACCT_ID secAcctId,
         ete.ccy ccy,
         ete.entrust_num/100 shareNum,
         eted.our_ent_num/100 entrustOwnNum,
@@ -677,8 +677,8 @@
         eted.EXP_CON_NUM expConNum,
         eted.PREB preb,
         eted.PREC prec,
-        fpt.TYPE_11 secType, 
-        eted.DEAL_CUR_ACCT dealCurAcct,
+        fpt.TYPE_11 secType,
+        sci.ACCT_NAME dealCurAcct,
         eted.REQUEST_ID requestId,
         eted.CAP_DAYS capDays, 
         to_char(eted.VPAY_DATE,'yyyy-MM-dd') vpayDate,
@@ -709,7 +709,7 @@
         LEFT JOIN PTL_SEC_STOCK pss ON pss.pledge_stock_id = eted.pledge_stock_id AND ete.portfolio_id = pss.portfolio_id
         LEFT JOIN MST_CUSTOMER_INFO mci ON mci.CUSTOMER_ID = eted.main_consignee AND mci.IS_SALER = #{YESORNO_YES, jdbcType = VARCHAR}
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON eted.SEC_ACCT_ID = ssai.SEC_ACCT_ID
-        LEFT JOIN ( SELECT DISTINCT ACCT_NO acctNo1, BUSI_ACCT_NO busiAcctNo1, CCY ccy, ACCT_NAME acctName FROM STL_CAPACCT_INFO ) c1 ON ssai.TRD_ACCT_ID = c1.acctNo1
+        LEFT JOIN STL_CAPACCT_INFO sci ON sci.ACCT_NO = ssai.TRD_ACCT_ID
         LEFT JOIN wfl_etr_pledge ee ON ete.entrust_id = ee.entrust_id /** 委托指令回购质押品 **/
 <!--        LEFT JOIN ETR_ENTRUST oete ON  oete.entrust_id = eted.TRADE_ID-->
         LEFT JOIN etr_pledge oee ON ete.entrust_id = oee.entrust_id

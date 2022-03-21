@@ -163,6 +163,7 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
                 }
             }
             if(!Objects.isNull(entity.getBussTrdTransferOrder().get(i))){
+                ptlFundAllocationDto.setPayType(entity.getPayType());
                 ptlFundAllocationDto = this.setDots(entity.getBussTrdTransferOrder().get(i) , ptlFundAllocationDto,i);
             }
             i++;
@@ -215,6 +216,7 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
             this.setEntityy(detailDto,entity, dto, i);
             dto.setOperateType(entity.getOperateType());
             if(!Objects.isNull(entity.getBussTrdTransferOrder().get(i))){
+                dto.setPayType(entity.getPayType());
                 dto = this.setDots(entity.getBussTrdTransferOrder().get(i) , dto, i);
             }
             restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAllocation/doInsertAction", dto,
@@ -275,7 +277,6 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
     }
 
     public PtlFundAllocation002Dto setDots(BussTrdTransferOrderDto entity ,PtlFundAllocation002Dto dto,int i){
-        dto.setPayType(entity.getPayType());
         dto.setCcy(entity.getCcy());
         dto.setWorkflowId(entity.getWorkflowId());
         dto.setSettleDate(entity.getSettleDate());

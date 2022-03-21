@@ -1295,7 +1295,8 @@
             T12.TRADE_DATE dealDate,
             T9.CAL_MODE calMode,
             T1.INT_AMT intAmt,
-            T1.SETT_CCY  settCcy
+            T1.SETT_CCY  settCcy,
+            T1.UNIT_INT unitInt
         FROM
             REG_FIN_PRODUCT_DEAL_TOTAL T1
         LEFT JOIN FIN_PRODUCT T2 ON
@@ -1423,7 +1424,8 @@
             T12.TRADE_DATE dealDate,
             T9.CAL_MODE calMode,
             T1.INT_AMT intAmt,
-            T1.SETT_CCY  settCcy
+            T1.SETT_CCY  settCcy,
+            T1.UNIT_INT unitInt
         FROM
             REG_FIN_PRODUCT_DEAL_TOTAL T1
         LEFT JOIN FIN_PRODUCT T2 ON
@@ -1558,7 +1560,8 @@
             NULL dealDate,
             '' calMode,
             T1.INT_AMT intAmt,
-            T1.SETT_CCY  settCcy
+            T1.SETT_CCY  settCcy,
+            T1.UNIT_INT unitInt
         FROM
             WFL_REG_FIN_PRODUCT_DEAL_TOTAL T1
         LEFT JOIN FIN_PRODUCT T2 ON

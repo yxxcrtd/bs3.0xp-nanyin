@@ -127,6 +127,9 @@ public class EtrExchangeAgreRepTrade002Controller extends BaseController {
         model.addAttribute("BACK_LEND_DIRECTION_03", DictCodeList.回购拆借方向_正回购.getValue());
         model.addAttribute("BACK_LEND_DIRECTION_04", DictCodeList.回购拆借方向_逆回购.getValue());
 
+        model.addAttribute("risk_math_switch", CacheUtil.getSysParam("risk_math_switch"));
+        model.addAttribute("IS_RISKMATH_SOFTCONTROL", CacheUtil.getSysParam("IS_RISKMATH_SOFTCONTROL"));
+
         //母页面的pageModel
         String parentPageModel = getParam(GlobalConstant.DETAIL_PAGE_MODEL_KEY);
         model.addAttribute("parentPageModel", parentPageModel);

@@ -876,11 +876,12 @@
                 if(object) {
                     object = JSON.parse(object);
                     type9 = object.assetType1;
-                    if(object.othCodeType && (object.othCodeType == FINPROD_OTH_CODE_TYPE_06 || object.othCodeType == FINPROD_OTH_CODE_TYPE_05)){
+                    if(object.othCodeType && (object.othCodeType == FINPROD_OTH_CODE_TYPE_06 || object.othCodeType == FINPROD_OTH_CODE_TYPE_05 || object.othCodeType == FINPROD_OTH_CODE_TYPE_07)){
                         secId = object.marketId;
                         // if(parent.EtrExchangeTradeJjHq) {
                         //     parent.EtrExchangeTradeJjHq.hideFiveLevel();
                         // }
+                        $("#portfolioId_div_" + currentTab).show();
                     }
                     if(secId) {
                         // if(parent.EtrExchangeTradeJjHq) {
@@ -2020,18 +2021,28 @@
      */
     var linkToTrdOthPrice = function(secId) {
         var ps = $("#ps_" + currentTab).val();
+        var othCodeType;
+        if(ps == PS_T97){
+            othCodeType=FINPROD_OTH_CODE_TYPE_05;
+        }else if(ps == PS_T46){
+            othCodeType=FINPROD_OTH_CODE_TYPE_06;
+        }else if(ps == PS_T04){
+            othCodeType=FINPROD_OTH_CODE_TYPE_07;
+        }
         //设置默认小数位
         $("#entrustPrice_" + currentTab).attr("data-textrange", scale);
-        if (ps == PS_T46 || ps == PS_T97) {
+        if (ps == PS_T46 || ps == PS_T97 || ps == PS_T04) {
             if (secId) {
                 var param = {
                     finprodMarketId: secId,
-                    othCodeType: (ps == PS_T97) ? FINPROD_OTH_CODE_TYPE_05: FINPROD_OTH_CODE_TYPE_06
+                    //othCodeType: (ps == PS_T97) ? FINPROD_OTH_CODE_TYPE_05: FINPROD_OTH_CODE_TYPE_06
+                    othCodeType: othCodeType
                 };
                 Joyin.ajaxJson(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeTrade001/selectTrdOthPrice', param,
                     function(result) {
                         if (result) {
                             $("#entrustPrice_" + currentTab).val(result);
+                            $("#entrustPrice_" + currentTab).attr('disabled', 'disabled');
                         } else {
                             $("#entrustPrice_" + currentTab).val('').trigger('blur');
                         }
@@ -2373,7 +2384,7 @@
             linkToShareAvailableNum();
         }else if(ps == PS_T68 || ps == PS_T69){
             linkToConverseRatio();
-        }else if(ps == PS_T46 || ps == PS_T97){
+        }else if(ps == PS_T46 || ps == PS_T97 || ps == PS_T04){
             var secId = $("#secId_" + currentTab).val();
             linkToTrdOthPrice(secId);
         }
@@ -3230,6 +3241,9 @@
                 setRiskFlag(0);
             }
             linkEntrustNumUnit();
+            if(ps==PS_T04 && finprodType2 == FINPROD_TYPE_TG_F10){
+                $("#entrustPrice_" + currentTab).attr('disabled', 'disabled');
+            }
         }
     var addMinPriceStep = function(type,num,input) {
         var $secIdObj = $("#secIdObjRelative_" + currentTab).val();

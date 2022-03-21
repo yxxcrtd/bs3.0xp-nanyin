@@ -15,6 +15,8 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -101,6 +103,9 @@ public class FieldEtrInfoQueryListResponse extends EtrEntrust {
     @ApiModelProperty(name="trdAcctId",value="资金账户",example="XXX资金账户")
     private String trdAcctId;
 
+    @ApiModelProperty(name="assetType1",value="资产一级类型",example="质押式协议回购")
+    private String assetType1;
+
     /**
      * 获取 otherEntrustStatus
      * @return otherEntrustStatus.
@@ -128,6 +133,10 @@ public class FieldEtrInfoQueryListResponse extends EtrEntrust {
     public String getOtherFinprodType2() {
         if (StringUtil.equals(super.getFinprodType2(), BussinessDictCodeList.金融产品类型_投管用_一级投标债券.getValue())){
             return SysDataUtil.getNameFromDataDict(DictCode.平安资产类型, BussinessDictCodeList.平安资产类型_一级投标债券.getValue());
+        }
+        else if (StringUtil.equals(super.getFinprodType2(), BussinessDictCodeList.平安资产类型_回购.getValue())
+                && StringUtil.equals(getAssetType1(), DictCodeList.回购类型_质押式协议回购.getValue())) {
+            return BussinessConstant.NEGOTIATED_REPURCHASE_TEXT;
         }
         return SysDataUtil.getNameFromDataDict(DictCode.平安资产类型, super.getFinprodType2());
     }
@@ -358,5 +367,13 @@ public class FieldEtrInfoQueryListResponse extends EtrEntrust {
      */
     public String getCcyStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.币种, super.getCcy());
+    }
+
+    public String getAssetType1() {
+        return assetType1;
+    }
+
+    public void setAssetType1(String assetType1) {
+        this.assetType1 = assetType1;
     }
 }

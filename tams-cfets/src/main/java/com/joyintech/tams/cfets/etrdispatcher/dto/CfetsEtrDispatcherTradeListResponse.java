@@ -15,6 +15,8 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import io.swagger.annotations.ApiModel;
@@ -140,6 +142,11 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
         if (StringUtil.equals(super.getFinprodType2(), BussinessDictCodeList.金融产品类型_投管用_一级投标债券.getValue())){
             return SysDataUtil.getNameFromDataDict(DictCode.平安资产类型, BussinessDictCodeList.平安资产类型_一级投标债券.getValue());
         }
+        else if (StringUtil.equals(super.getFinprodType2(), BussinessDictCodeList.平安资产类型_回购.getValue())
+            && StringUtil.equals(getAssetType1(), DictCodeList.回购类型_质押式协议回购.getValue())) {
+            return BussinessConstant.NEGOTIATED_REPURCHASE_TEXT;
+        }
+
         return SysDataUtil.getNameFromDataDict(DictCode.平安资产类型, super.getFinprodType2());
     }
 
