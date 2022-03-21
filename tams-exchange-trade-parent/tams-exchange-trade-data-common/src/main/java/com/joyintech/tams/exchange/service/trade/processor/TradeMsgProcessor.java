@@ -705,6 +705,7 @@ public class TradeMsgProcessor {
                 }
                 if (Objects.nonNull(dbCancelEntrust)) {
                     if (entrust.getEntrustStatus() >= dbEntrust.getEntrustStatus()) {
+                        entrust.setInstructionId(dbEntrust.getInstructionId());
                         this.processPosition(entrust);
                     }
                     entrustCancelProcessor.processCancelEntrustByOrigEntrust(entrust, dbEntrust, dbCancelEntrust);
@@ -735,6 +736,7 @@ public class TradeMsgProcessor {
             if (Strings.isNullOrEmpty(dbEntrust.getBrokerEntrustId())) {
                 dbEntrust.setBrokerEntrustId(entrust.getBrokerEntrustId());
             }
+            entrust.setInstructionId(dbEntrust.getInstructionId());
             this.processPosition(entrust);
         } else {
             logger.info("terminal return entrustStatus < dbEntrustStatus {}", dbEntrust.getId());
@@ -751,7 +753,7 @@ public class TradeMsgProcessor {
             logger.info("不处理头寸：entrust entrustType is cancel");
             return;
         }
-
+        logger.info("委托回报处理头寸：{}", JsonUtils.getJsonFromObject(entrust));
         Instruction instruction = instructionService.findById(entrust.getInstructionId());
         PositionInstructionRequest instructionClone = new PositionInstructionRequest();
         BeanUtil.copyProperties(instruction, instructionClone);
