@@ -3142,6 +3142,10 @@
             if(ps == PS_T03){
                 $("#invAim_div_" + currentTab).hide();
             }
+
+            if(ps == PS_T01){
+                $("#priceModel_div_" + currentTab).show();
+            }
             if (finprodType2 == FINPROD_TYPE_TG_F06) {
                 $("#priceModel_div_" + currentTab).show();
                 $("#entrustNumUnit_" + currentTab).text("份");
