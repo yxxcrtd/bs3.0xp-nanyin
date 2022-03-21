@@ -307,7 +307,7 @@ public class PositionRequestManualSettleService {
             resultMap.put("bTotalTradeId", entity.getTradeId());
         } else if (StringUtil.equals(entity.getPageModel(), DictCodeListExt3.交收操作类型_回溯.getValue())) {
             resultMap.put("busiAct", DictCodeListExt3.业务动作_交收回溯.getValue());
-            resultMap.put("bTotalTradeId", entity.getSeqNo());
+            resultMap.put("bTotalTradeId", entity.getSettleSeqNo());
         } else if (StringUtil.equals(entity.getPageModel(), DictCodeListExt3.交收操作类型_交收失败.getValue())) {
             resultMap.put("busiAct", DictCodeListExt3.业务动作_交收失败.getValue());
             resultMap.put("bTotalTradeId", entity.getTradeId());

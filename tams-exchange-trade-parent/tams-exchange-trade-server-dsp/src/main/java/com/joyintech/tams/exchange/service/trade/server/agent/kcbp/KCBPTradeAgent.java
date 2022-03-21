@@ -33,6 +33,7 @@ import java.util.*;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author lifangpeng
@@ -922,10 +923,10 @@ public class KCBPTradeAgent extends TradeAgentDsp {
             poolExecutor.prestartAllCoreThreads();
         }
 
-        for (QueryEnum queryEnum : QueryEnum.values()) {
+        for (QueryEnum queryEnum : QueryEnum.getValues()) {
             try {
                 poolExecutor.execute(new QueryTask(queryEnum, kcbpAccount));
-                Thread.sleep(1000);
+                Thread.sleep(500);
             } catch (Exception e) {
                 logger.error("{}执行异常：{}", queryEnum.name(), e.getMessage(), e);
             }
@@ -933,14 +934,30 @@ public class KCBPTradeAgent extends TradeAgentDsp {
     }
 
     enum QueryEnum {
-        queryIncrementTrade,
-        queryFixedIncomeTrade,
-        queryProtocolBack_SZ_Trade,
-        queryProtocolBack_SH_Trade,
-        queryIncrementEntrust,
-        queryFixedIncomeEntrust,
-        queryProtocolBack_SH_Entrust,
-        queryProtocolBack_SZ_Entrust;
+        queryIncrementEntrust(1),
+        queryFixedIncomeEntrust(2),
+        queryProtocolBack_SH_Entrust(3),
+        queryProtocolBack_SZ_Entrust(4),
+        queryIncrementTrade(5),
+        queryFixedIncomeTrade(6),
+        queryProtocolBack_SZ_Trade(7),
+        queryProtocolBack_SH_Trade(8),
+        ;
+
+        private Integer code;
+
+        QueryEnum(Integer code) {
+            this.code = code;
+        }
+
+        public Integer getCode() {
+            return code;
+        }
+
+        public static List<QueryEnum> getValues(){
+            return Lists.newArrayList(QueryEnum.values()).stream()
+                    .sorted(Comparator.comparing(QueryEnum::getCode)).collect(Collectors.toList());
+        }
     }
 
     class QueryTask implements Runnable {
