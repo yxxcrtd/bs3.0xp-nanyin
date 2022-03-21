@@ -1,0 +1,6 @@
+-- ----------------------------
+-- Table structure for ETR_ENTRUST_ADD
+-- ----------------------------
+ALTER TABLE ETR_ENTRUST_ADD DROP COLUMN R_SEC_ACCT_ID;
+ALTER TABLE ETR_ENTRUST_ADD ADD R_SEC_ACCT_ID VARCHAR2(32 BYTE);
+COMMENT ON COLUMN ETR_ENTRUST_ADD.R_SEC_ACCT_ID is '转入证券账户';
