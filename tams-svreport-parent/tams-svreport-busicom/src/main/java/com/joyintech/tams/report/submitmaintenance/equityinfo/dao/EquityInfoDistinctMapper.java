@@ -13,6 +13,7 @@ package com.joyintech.tams.report.submitmaintenance.equityinfo.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.ChbEquTmp;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -40,14 +41,29 @@ public interface EquityInfoDistinctMapper {
      * 查询所有已报送数据
      * @return
      */
-    List<EquityInfoRegist001Dto> queryAllEquityInfo(List<String> keys);
+    List<EquityInfoRegist001Dto> queryAllEquityInfo(List<ChbEquTmp> list);
+
+    /**
+     * 查询所有已报送数据优化
+     * @return
+     */
+    List<EquityInfoRegist001Dto> queryAllEquityInfoMax();
+
     /**
      * 根据三要素查询维护表数据
      * @param list
      * @return
      */
     
-    List<EquityInfo001Dto> queryEquityInfoList(List<String> keys);
+    List<EquityInfo001Dto> queryEquityInfoList(List<ChbEquTmp> list);
+
+    /**
+     * 根据三要素查询维护表数据优化
+     * @param list
+     * @return
+     */
+
+    List<EquityInfo001Dto> queryEquityInfoListMax();
     
     EquityInfoRegist001Dto queryEquityInfoByIndentifymarkAndBankCode(EquityInfoRegist001Dto qmodel);
     
