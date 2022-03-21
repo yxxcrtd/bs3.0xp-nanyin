@@ -335,4 +335,13 @@
             #{pobCassetId.pobcassetid}
         </foreach>
     </select>
+
+    <select id="selectAssetInofByAssetId" resultType="com.joyintech.tams.report.system.systempbccapassetinfo.dto.PbcCapAssetInfo001Dto">
+        select
+        ASSET_CODE AS assetid,
+        ASSET_NAME AS assetname
+        from chb_asset_info
+        where ASSET_CODE = #{assetId}
+        and STATUS!= 'D'
+    </select>
 </mapper>

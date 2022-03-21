@@ -22,6 +22,7 @@ import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.common.svreport.datacheck.dao.ChbCheckRuleoutMapper;
 import com.joyintech.tams.common.svreport.datacheck.dto.ChbCheckRuleout;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.service.SvrCommonExportService;
@@ -76,6 +77,10 @@ public class ChbTransMonthReportService extends SvrCommonExportService<ChbTransM
      * 1000
      */
     private static final BigDecimal TENTHOUSAND = new BigDecimal(10000);
+    /**
+     * 100
+     */
+    private static final BigDecimal ONEHUNDRED = new BigDecimal(100);
 
     /**
      * 短sql最大一次最大插入条数
@@ -547,14 +552,14 @@ public class ChbTransMonthReportService extends SvrCommonExportService<ChbTransM
             }
             // 加权期末余额
             if (detail.getNewTerms() != null) {
-                detail.setNewTerms(detail.getNewTerms().divide(TENTHOUSAND, 9, BigDecimal.ROUND_HALF_UP));
+                detail.setNewTerms(detail.getNewTerms().multiply(ONEHUNDRED));
             }
             // 期末余额
             if (detail.getOldBalance() != null) {
                 detail.setOldBalance(detail.getOldBalance().divide(TENTHOUSAND, 9, BigDecimal.ROUND_HALF_UP));
             }
             if (detail.getOldTerms() != null) {
-                detail.setOldTerms(detail.getOldTerms().divide(TENTHOUSAND, 9, BigDecimal.ROUND_HALF_UP));
+                detail.setOldTerms(detail.getOldTerms().multiply(ONEHUNDRED));
             }
         }
         return detail;
@@ -609,7 +614,7 @@ public class ChbTransMonthReportService extends SvrCommonExportService<ChbTransM
         // 数据日期为系统时间
         Date checkdate = DateUtil.parse(DateUtil.getSysDate());
         // 删除今天所有已检查的数据
-        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_理财产品转型情况月度统计表.getValue(), checkdate, null);
+        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt3.报表名称_理财产品转型情况月度统计表.getValue(), checkdate, null);
         // 增加例外情况过滤
         List<ChbCheckRuleout> listRuleout = chbCheckRuleoutMapper.selectDataByCheckTypeAndReprotCode(
                 CheckConfConstants.CHB_CHECK_TYPE_B, CheckConfConstants.CHB_PRD_ISSUE_SUB);

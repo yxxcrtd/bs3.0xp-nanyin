@@ -55,7 +55,7 @@ public class Chb3CnBondUpInterfTaskService extends InterfService {
      *
      */
     @SuppressWarnings("resource")
-    public void execute() {
+    public void execute(Date batchDate) {
         FileChannel channel = null;
         FileLock lock = null;
         try {
@@ -85,7 +85,7 @@ public class Chb3CnBondUpInterfTaskService extends InterfService {
                 // 获取消息（读取前一日文件夹信息）
 //                cnBondUpInterfService.getUpInterfMessage(
 //                    DateUtil.addDayLocal(DateUtil.getCurrentDate(), -1));
-            	chb3cnBondUpInterfService.getUpInterfMessage(DateUtil.getYesterDayDate());
+            	chb3cnBondUpInterfService.getUpInterfMessage(DateUtil.format(batchDate));
             }
             catch (Exception e) {
             	 logger.error("error:",e);
@@ -93,7 +93,7 @@ public class Chb3CnBondUpInterfTaskService extends InterfService {
             }
 
             // 获取消息（读取当前日期文件夹信息）
-            chb3cnBondUpInterfService.getUpInterfMessage(DateUtil.getCurrentDate());
+//            chb3cnBondUpInterfService.getUpInterfMessage(DateUtil.getCurrentDate());
 
             // 合并中债mysql早期改造代码  add by zoujiamin  2021/04/20  start
             Date edate=new Date();

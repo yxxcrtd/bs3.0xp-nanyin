@@ -424,10 +424,13 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 				message.add(error1);
 			} else {
 				entity.setPbcCode(list.get(2));
-				ProPeoplebankcodeManagement001Dto dto = peoplebankcodeManagement001DtoMapper.selectByPbcCode(list.get(2));
-				if (null!=dto){
-					if (!StringUtil.equals(entity.getInsideProdId(),dto.getInsideProdId())){
-						message.add("人行代码"+list.get(2)+"已被使用！");
+				List<ProPeoplebankcodeManagement001Dto> dto = peoplebankcodeManagement001DtoMapper.selectByPbcCode(list.get(2));
+				if (CollectionUtils.isNotEmpty(dto)){
+					for (ProPeoplebankcodeManagement001Dto management001Dto : dto) {
+						if (!StringUtil.equals(entity.getInsideProdId(),management001Dto.getInsideProdId())){
+							message.add("人行代码"+list.get(2)+"已被使用！");
+							break;
+						}
 					}
 				}
 			}

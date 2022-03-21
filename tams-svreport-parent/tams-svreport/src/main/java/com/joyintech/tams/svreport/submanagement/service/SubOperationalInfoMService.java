@@ -9,15 +9,20 @@
  */
 package com.joyintech.tams.svreport.submanagement.service;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.FileNameUtil;
+import com.joyintech.tams.common.base.entity.BaseInformationDto;
+import com.joyintech.tams.common.base.entity.ChbInfoMgrResultConfig;
+import com.joyintech.tams.common.base.entity.ChbMgrTableInfo;
+import com.joyintech.tams.common.base.entity.FilterInformationDto;
+import com.joyintech.tams.report.common.constant.SvrServiceApplication;
+import com.joyintech.tams.report.common.dto.ExcelValidDto;
+import com.joyintech.tams.report.common.dto.SvrAjaxResult;
+import com.joyintech.tams.report.common.util.ExcelUtil;
+import com.joyintech.tams.svreport.submanagement.server.SubOperationalInfo001Service;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -30,21 +35,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.FileNameUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.entity.BaseInformationDto;
-import com.joyintech.tams.common.base.entity.ChbInfoMgrResultConfig;
-import com.joyintech.tams.common.base.entity.ChbMgrTableInfo;
-import com.joyintech.tams.common.base.entity.FilterInformationDto;
-import com.joyintech.tams.report.common.constant.SvrServiceApplication;
-import com.joyintech.tams.report.common.dto.ExcelValidDto;
-import com.joyintech.tams.report.common.dto.SvrAjaxResult;
-import com.joyintech.tams.report.common.util.ExcelUtil;
-import com.joyintech.tams.svreport.submanagement.server.SubOperationalInfo001Service;
-import com.joyintech.tams.systemtools.util.CommonUtil;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -53,6 +50,7 @@ import com.joyintech.tams.systemtools.util.CommonUtil;
  * @version 1.7 2019年5月8日
  * @since 1.7
  */
+
 /**
 * @ClassName: OperationalInfoMService
 * @Description: TODO(这里用一句话描述这个类的作用)
@@ -79,7 +77,7 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
 	 * @return 所有基础表信息
 	 */
 	public List<BaseInformationDto> queryAllTableInfo() {
-    	return simpleRestTemplate.getForList(
+    	return restTemplate.getForList(
         		SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalInfo/queryAllTableInfo",
         		BaseInformationDto.class);
 	}
@@ -92,7 +90,7 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
 	* @throws
 	*/
 	public List<BaseInformationDto> queryAllBaseInformation() {
-    	return simpleRestTemplate.getForList(
+    	return restTemplate.getForList(
         		SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalInfo/queryAllBaseInformation",
         		BaseInformationDto.class);
 	}
@@ -103,7 +101,7 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
      * @return 基础表信息
      */
     public List<BaseInformationDto> queryTableIdByInterfType(String interfType) {
-    	return simpleRestTemplate.getForList(
+    	return restTemplate.getForList(
         		SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalInfo/queryTableIdByInterfType?interfType="+interfType,
         		BaseInformationDto.class);
     }
@@ -115,7 +113,7 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
 	 */
 	public Page<FilterInformationDto> queryFilterInfoByUserId(Map<String, Object> param) {
 		param.put("userId", CommonUtil.getUid());
-		return simpleRestTemplate.postForPage(
+		return restTemplate.postForPage(
         		SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalInfo/queryFilterInfoByUserId",param,
         		FilterInformationDto.class);
 	}
@@ -127,7 +125,7 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
 	 * @return 字段代码和名字组成的Json字符串
 	 */
 	public String queryColumnByTableId(String tableId) {
-    	return simpleRestTemplate.getForObject(
+    	return restTemplate.getForObject(
         		SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalInfo/queryColumnByTableId?tableId="+tableId,
         		String.class);
 	}
@@ -139,7 +137,7 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
 	 * @return 字段代码和类型组成的Json字符串
 	 */
 	public String queryColumnTypeByTableId(String tableId) {
-    	return simpleRestTemplate.getForObject(
+    	return restTemplate.getForObject(
         		SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalInfo/queryColumnTypeByTableId?tableId="+tableId,
         		String.class);
 	}
@@ -152,7 +150,7 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
 	 */
 	@SuppressWarnings("unchecked")
 	public String queryData(Map<String, Object> param) {
-		return simpleRestTemplate.postForObject(
+		return restTemplate.postForObject(
         		SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalInfo/queryData",param,
         		String.class);
 	}
@@ -164,7 +162,7 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
 	 * @return 多选框参数
 	 */
 	public String queryColumnInfoList(Map<String, Object> param) {
-		return simpleRestTemplate.postForObject(
+		return restTemplate.postForObject(
         		SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalInfo/queryColumnInfoList",param,
         		String.class);
 	}
@@ -176,7 +174,7 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
 	 * @return 字段信息
 	 */
 	public String queryColmnInfo(Map<String, Object> param) {
-		return simpleRestTemplate.postForObject(
+		return restTemplate.postForObject(
         		SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalInfo/queryColmnInfo",param,
         		String.class);
 	}
@@ -189,7 +187,7 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
 	 */
 	public boolean checkSave(Map<String, Object> param) {
 		param.put("userId", CommonUtil.getUid());
-		return simpleRestTemplate.postForObject(
+		return restTemplate.postForObject(
         		SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalInfo/checkSave",param,
         		Boolean.class);
 	}
@@ -202,7 +200,7 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
 	 */
 	public boolean savePlan(Map<String, Object> param) {
 		param.put("userId", CommonUtil.getUid());
-		return simpleRestTemplate.postForObject(
+		return restTemplate.postForObject(
         		SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalInfo/savePlan",param,
         		Boolean.class);
 	}
@@ -214,7 +212,7 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
 	 * @return 是否修改成功
 	 */
 	public boolean updatePlanName(Map<String, Object> param) {
-		return simpleRestTemplate.postForObject(
+		return restTemplate.postForObject(
         		SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalInfo/updatePlanName",param,
         		Boolean.class);
 	}
@@ -226,7 +224,7 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
 	 * @return 已保存方案
 	 */
 	public String queryPlanByfilterId(Map<String, Object> param) {
-		return simpleRestTemplate.postForObject(
+		return restTemplate.postForObject(
         		SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalInfo/queryPlanByfilterId",param,
         		String.class);
 	}
@@ -237,7 +235,7 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
      * @return 所有日期类型字段
      */
     public String queryDateColumnList(Map<String, Object> param) {
-		return simpleRestTemplate.postForObject(
+		return restTemplate.postForObject(
         		SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalInfo/queryDateColumnList",param,
         		String.class);
     }
@@ -249,7 +247,7 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
      * @return 所有时间类型字段
      */
     public String queryTimeColumnList(Map<String, Object> param) {
-		return simpleRestTemplate.postForObject(
+		return restTemplate.postForObject(
         		SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalInfo/queryTimeColumnList",param,
         		String.class);
     }
@@ -259,7 +257,7 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
 	 * @return 是否是同一张表
 	 */
     public boolean checkIsSingleTable(Map<String, Object> param) {
-		return simpleRestTemplate.postForObject(
+		return restTemplate.postForObject(
         		SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalInfo/checkIsSingleTable",param,
         		Boolean.class);
     }
@@ -271,7 +269,7 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
      */
     @SuppressWarnings("unchecked")
 	public int deleteData(Map<String, Object> param) {
-		return simpleRestTemplate.postForObject(
+		return restTemplate.postForObject(
         		SvrServiceApplication.COMMON_SERVICE_NAME + "/SubOperationalInfo/deleteData",param,
         		Integer.class);
     }
@@ -283,7 +281,7 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
      */
     @SuppressWarnings("unchecked")
 	public int linkSvrReportAfterDelete(Map<String, Object> param) {
-		return simpleRestTemplate.postForObject(
+		return restTemplate.postForObject(
         		SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalInfo/linkSvrReportAfterDelete",param,
         		Integer.class);
     }
@@ -336,10 +334,11 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
 		 }
 
 		 try {
+			 tableName = getTableName(tableName);
 		     Integer headerNum = operationalInfo001Service.selectHeaderNumByChiName(tableName);
 //			 if (headerNum == 2) {
-		     
-		     if(tableName.equals("从业人员登记要素")){
+
+		     if(tableName.equals("从业人员登记")){
 		    	 dataList = ExcelUtil.readToListEMPLOYEE(
 						 //FileNameUtil.getUploadFilePath(fileName), null, null, 0, 1, 1);
 				 fileName, null, null, 0);
@@ -362,7 +361,7 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
 
 		 param.put("tableName", tableName);
 		 param.put("dataList", dataList);
-		 return simpleRestTemplate.postForList(
+		 return restTemplate.postForList(
 				 SvrServiceApplication.COMMON_SERVICE_NAME + "/SubOperationalInfo/checkConfirmMsgForImportData",
 				 param,
 				 ExcelValidDto.class);
@@ -420,8 +419,10 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
 		}
 
 		try {
+			tableName = getTableName(tableName);
 		    int headerNum = operationalInfo001Service.selectHeaderNumByChiName(tableName);
-		    if(tableName.equals("从业人员登记要素")){
+
+		    if(tableName.equals("从业人员登记")){
 		    	 dataList = ExcelUtil.readToListEMPLOYEE(
 				 fileName, null, null, 0);
 		     }else{
@@ -437,7 +438,7 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
 		param.put("tableName", tableName);
 		param.put("dataList", dataList);
 
-		return simpleRestTemplate.postForObject(
+		return restTemplate.postForObject(
 				SvrServiceApplication.COMMON_SERVICE_NAME + "/SubOperationalInfo/importData",
 				param,
 				SvrAjaxResult.class);
@@ -470,7 +471,7 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
 		}
 		param.put("tableId", tableId);
     	param.put("dataList", dataList);
-		return simpleRestTemplate.postForObject(
+		return restTemplate.postForObject(
         		SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalInfo/linkSvrReport",
         		param,
         		Integer.class);
@@ -481,7 +482,7 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
      * @return  删除方案的名称
      */
     public String deleteFilter(Map<String, Object> param) {
-		return simpleRestTemplate.postForObject(
+		return restTemplate.postForObject(
         		SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalInfo/deleteFilter",
         		param,
         		String.class);
@@ -493,7 +494,7 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
      * @return 字段类型
      */
     public String queryColumnTypeByCondition(Map<String, Object> param) {
-		return simpleRestTemplate.postForObject(
+		return restTemplate.postForObject(
         		SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalInfo/queryColumnTypeByCondition",
         		param,
         		String.class);
@@ -505,7 +506,7 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
      * @return 字段名称
      */
     public String queryColumnNameByCondition(Map<String, Object> param) {
-		return simpleRestTemplate.postForObject(
+		return restTemplate.postForObject(
         		SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalInfo/queryColumnNameByCondition",
         		param,
         		String.class);
@@ -525,7 +526,7 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
 	* @throws
 	*/
 	public Page<ChbMgrTableInfo> searchPage(Map<String, Object> selectParam) {
-		return simpleRestTemplate.postForPage(SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalInfo/searchPage",
+		return restTemplate.postForPage(SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalInfo/searchPage",
 				selectParam, ChbMgrTableInfo.class);
 	}
     
@@ -539,7 +540,7 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
 	*/
 	    
 	public AjaxResult checkData(Map<String, Object> selectParam) {
-		return simpleRestTemplate.postForObject(
+		return restTemplate.postForObject(
         		SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalInfo/checkData",
         		selectParam,
         		SvrAjaxResult.class);
@@ -554,7 +555,7 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
 	*/
 	    
 	public void saveData(Map<String, Object> selectParam) {
-		simpleRestTemplate.postForObject(
+		restTemplate.postForObject(
         		SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalInfo/saveData",
         		selectParam,
         		void.class);
@@ -568,7 +569,7 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
 	* @throws
 	*/
 	public Integer updateTableStatus(Map<String, Object> selectParam) {
-		return simpleRestTemplate.postForObject(
+		return restTemplate.postForObject(
         		SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalInfo/updateTableStatus",
         		selectParam,
         		Integer.class);
@@ -583,7 +584,7 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
 	* @throws
 	*/
 	public Page<BaseInformationDto> queryConditionPage(Map<String, Object> selectParam) {
-		return simpleRestTemplate.postForPage(SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalInfo/queryConditionPage",
+		return restTemplate.postForPage(SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalInfo/queryConditionPage",
 				selectParam, BaseInformationDto.class);
 	}
 	
@@ -597,7 +598,7 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
 	* @throws
 	*/
 	public Page<ChbInfoMgrResultConfig> queryDataResultPage(Map<String, Object> selectParam) {
-		return simpleRestTemplate.postForPage(SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalInfo/queryDataResultPage",
+		return restTemplate.postForPage(SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalInfo/queryDataResultPage",
 				selectParam, ChbInfoMgrResultConfig.class);
 	}
 	
@@ -610,7 +611,7 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
 	* @throws
 	*/
 	public List<ExcelValidDto> check(Map<String, Object> selectParam) {
-		return simpleRestTemplate.postForList(SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalInfo/check",
+		return restTemplate.postForList(SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalInfo/check",
 				selectParam, ExcelValidDto.class);
 	}
 	
@@ -623,9 +624,35 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
 	* @throws
 	*/
 	public String savePlanData(Map<String, Object> selectParam) {
-		return simpleRestTemplate.postForObject(
+		return restTemplate.postForObject(
         		SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalInfo/savePlanData",
         		selectParam,
         		String.class);
+	}
+
+
+	private String getTableName(String tableName){
+           if ("报告模板".equals(tableName)){
+           	   tableName = "产品申报登记";
+		   }else  if ("发行登记要素".equals(tableName)){
+			   tableName = "产品发行登记";
+		   }else  if ("募集期总量登记要素".equals(tableName)){
+			   tableName = "募集总量登记";
+		   }else  if ("底层资产持仓信息".equals(tableName)){
+			   tableName = "资管计划底层持仓信息登记";
+		   }else  if ("产品存续期信息登记".equals(tableName)){
+			   tableName = "产品存续期登记";
+		   }else  if ("终止登记要素".equals(tableName)){
+			   tableName = "产品终止登记";
+		   }else  if ("从业人员登记要素".equals(tableName)){
+			   tableName = "从业人员登记";
+		   }else  if ("资产要素登记".equals(tableName)){
+			   tableName = "资产要素信息登记";
+		   }else  if ("产品交易信息登记".equals(tableName)){
+			   tableName = "资产交易信息登记";
+		   }else  if ("资产估值信息登记".equals(tableName)){
+			   tableName = "资产估值信息登记";
+		   }
+		return tableName;
 	}
 }
