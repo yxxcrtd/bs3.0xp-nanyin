@@ -51,7 +51,7 @@
                 object.finprodType2 = FINPROD_TYPE_TG_F03;
             }
         }
-        if (object.ps == PS_T68 || object.ps == PS_T69 || object.ps == PS_T49) {
+        if (object.ps == PS_T68 || object.ps == PS_T69 || object.ps == PS_T49 || object.ps == PS_T97 || object.ps == PS_T46) {
             object.priceModel = "PRM01";
         }
         // 隐藏项需要手动获取
