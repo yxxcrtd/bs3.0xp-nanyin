@@ -139,8 +139,8 @@ public class EtrTradeCommonervice extends BaseService {
 //                        realCash=realCash.add(data.getRealCash());
 //                    }
 //                }
-                //组合资金可用 2、新头寸引擎
-                BigDecimal newCashAmount=queryPosition(sumAcctNoList,flowType, DictCodeListExt3.资产类型_托管户可用资金.getValue());
+                //资金可用金额 2、新头寸引擎
+                BigDecimal newCashAmount=queryPosition(sumAcctNoList,flowType, DictCodeListExt3.资产类型_证券户可用资金.getValue());
                 if(newCashAmount!=null){
                     canCash=canCash.add(newCashAmount);
                 }
@@ -261,7 +261,7 @@ public class EtrTradeCommonervice extends BaseService {
 //                        canCash = canCash.add(data.getCashT());
 //                        realCash = realCash.add(data.getRealCash());
 //                    }
-                    BigDecimal newCashAmount = queryPosition(sumAcctNoList, flowType, DictCodeListExt3.资产类型_托管户可用资金.getValue());
+                    BigDecimal newCashAmount = queryPosition(sumAcctNoList, flowType, DictCodeListExt3.资产类型_证券户可用资金.getValue());
                     if (newCashAmount != null) {
                         canCash = canCash.add(newCashAmount);
                     }
@@ -667,7 +667,7 @@ public class EtrTradeCommonervice extends BaseService {
         //头寸引擎
         List<PositionCashSecDto> sumAcctNoList = new ArrayList<>();
         sumAcctNoList.add(dto);
-        BigDecimal newCashAmount = queryPosition(sumAcctNoList, "01", DictCodeListExt3.资产类型_托管户可用资金.getValue());
+        BigDecimal newCashAmount = queryPosition(sumAcctNoList, "01", DictCodeListExt3.资产类型_证券户可用资金.getValue());
         if (newCashAmount != null) {
             cashT = cashT.add(newCashAmount);
         }
