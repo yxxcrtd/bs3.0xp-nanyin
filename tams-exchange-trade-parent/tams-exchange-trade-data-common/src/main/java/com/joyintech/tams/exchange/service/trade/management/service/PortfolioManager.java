@@ -416,33 +416,8 @@ public class PortfolioManager extends BaseService {
         // 计算结果
         PortfolioCalculateResponse calculateResponse = null;
 
-        // 最低交易数量：大于等于
-        BigDecimal minNum = BigDecimal.ONE;
         // 最小交易单元：整数倍
-        BigDecimal minStep = BigDecimal.ONE;
-        // 最低交易金额：大于等于
-        BigDecimal minAmt = BigDecimal.ZERO;
-        if (instruction.getMinPriceAndMinTrdUnitLimitBean() != null
-                && ErrorCode.isSuccess(instruction.getMinPriceAndMinTrdUnitLimitBean().getErrorCode())
-                && instruction.getMinPriceAndMinTrdUnitLimitBean().getMinTrdUnitLimitList() != null
-                && !instruction.getMinPriceAndMinTrdUnitLimitBean().getMinTrdUnitLimitList().isEmpty()) {
-            MinTrdUnitLimit minTrdUnitLimit = instruction.getMinPriceAndMinTrdUnitLimitBean().getMinTrdUnitLimitList().get(0);
-            if (EntrustProp.isMarketPrice(entrustProp)) {
-                if (Objects.nonNull(minTrdUnitLimit.getMaxNumMarket())) {
-                    minNum = BigDecimal.valueOf(minTrdUnitLimit.getMinNumMarket());
-                }
-            } else {
-                if (Objects.nonNull(minTrdUnitLimit.getMinNum())) {
-                    minNum = BigDecimal.valueOf(minTrdUnitLimit.getMinNum());
-                }
-            }
-            if (Objects.nonNull(minTrdUnitLimit.getMinStep())) {
-                minStep = BigDecimal.valueOf(minTrdUnitLimit.getMinStep());
-            }
-            if (Objects.nonNull(minTrdUnitLimit.getMinAmt())) {
-                minAmt = minTrdUnitLimit.getMinAmt();
-            }
-        }
+        BigDecimal minStep = this.getMinStep(instruction);
 
         //市价委托填充反向涨跌停价
         BigDecimal price = bean.getEntrustPrice();
@@ -893,6 +868,16 @@ public class PortfolioManager extends BaseService {
                 continue;
             }
 
+            // 订单类型：数量单，指令单
+            boolean isVolume = ins.getEntrustNum() > 0L;
+            // 订单数量
+            BigDecimal orderVolume = BigDecimal.valueOf(context.getEntrustVolume());
+            // 委托数量
+            BigDecimal entrustVolume = BigDecimal.ZERO;
+            // 分配比例
+            BigDecimal disRate = BigDecimal.ONE;
+            // 最小步长
+            BigDecimal minStep = this.getMinStep(ins);
             // 单指令多组合扩展列表
             List<Instruction> singleList = new ArrayList<>();
             for (InstructionDetail detail : instructionDetails) {
@@ -901,23 +886,42 @@ public class PortfolioManager extends BaseService {
                 BeanUtil.copyProperties(ins, copyInstruction);
                 copyInstruction.setPortfolioId(detail.getPortfolioId());
                 copyInstruction.setPortfolioName(detail.getPortfolioName());
-                copyInstruction.setConPrice(ins.getConPrice().multiply(detail.getDisRate()));
 
-                Long realVolume = 0L;
-                if (EntrustUtils.isBond(copyInstruction)) {
-                    realVolume = getEntrustVolume(copyInstruction.getConPrice(), copyInstruction.getConNum(), 1);
-                } else if (EntrustUtils.isPledgeRepurchase(copyInstruction)) {
-                    if (Market.SZSE.investValue.equals(copyInstruction.getTradeMarket())) {
-                        realVolume = getEntrustVolume(copyInstruction.getConPrice(), copyInstruction.getConNum(), 1);
+                // - 计算组合委托额度
+                disRate = isVolume ? (detail.getEntrustNum().divide(BigDecimal.valueOf(ins.getEntrustNum()), 8, RoundingMode.HALF_UP)) : (detail.getEntrustAmt().divide(ins.getEntrustAmt(), 8, RoundingMode.HALF_UP));
+                copyInstruction.setConPrice(ins.getConPrice().multiply(disRate));
+
+//                Long realVolume = 0L;
+//                if (EntrustUtils.isBond(copyInstruction)) {
+//                    realVolume = getEntrustVolume(copyInstruction.getConPrice(), copyInstruction.getConNum(), 1);
+//                } else if (EntrustUtils.isPledgeRepurchase(copyInstruction)) {
+//                    if (Market.SZSE.investValue.equals(copyInstruction.getTradeMarket())) {
+//                        realVolume = getEntrustVolume(copyInstruction.getConPrice(), copyInstruction.getConNum(), 1);
+//                    } else {
+//                        realVolume = getEntrustVolume(copyInstruction.getConPrice(), copyInstruction.getConNum(), 3);
+//                    }
+//                } else if (EntrustUtils.isFutures(copyInstruction)) {
+//                    realVolume = getEntrustVolume(copyInstruction.getConPrice(), copyInstruction.getConNum(), 0);
+//                } else {
+//                    realVolume = getEntrustVolume(copyInstruction.getConPrice(), copyInstruction.getConNum(), 2);
+//                }
+//                copyInstruction.setConNum(BigDecimal.valueOf(realVolume));
+
+                // 数量
+                if (TradeUtils.bigThanZero(orderVolume) && TradeUtils.bigThanZero(disRate)) {
+                    // 根据比例计算委托数量
+                    entrustVolume = isVolume ?
+                            ((orderVolume.multiply(detail.getEntrustNum())).divide(BigDecimal.valueOf(ins.getEntrustNum()), 8, RoundingMode.HALF_UP)) :
+                            ((orderVolume.multiply(detail.getEntrustAmt())).divide(ins.getEntrustAmt(), 8, RoundingMode.HALF_UP));
+                    if (TradeUtils.lessThan(entrustVolume, minStep)) {
+                        // 小于最小交易单位时的处理，置为0
+                        entrustVolume = BigDecimal.ZERO;
                     } else {
-                        realVolume = getEntrustVolume(copyInstruction.getConPrice(), copyInstruction.getConNum(), 3);
+                        // 大于等于最小交易单位时的处理，最小交易单位整数倍
+                        entrustVolume = TradeUtils.subtractMod(entrustVolume, minStep);
                     }
-                } else if (EntrustUtils.isFutures(copyInstruction)) {
-                    realVolume = getEntrustVolume(copyInstruction.getConPrice(), copyInstruction.getConNum(), 0);
-                } else {
-                    realVolume = getEntrustVolume(copyInstruction.getConPrice(), copyInstruction.getConNum(), 2);
                 }
-                copyInstruction.setConNum(BigDecimal.valueOf(realVolume));
+                copyInstruction.setConNum(entrustVolume);
 
                 singleList.add(copyInstruction);
             }
@@ -953,7 +957,12 @@ public class PortfolioManager extends BaseService {
         // 借用termDays存放委托数量
         ins.setTermDays(ins.getConNum());
         // 借用minAmt存放委托金额
-        ins.setMinAmt(ArithmeticUtil.multiply(ins.getConNum(), result.getPrice()));
+        // 特殊处理 质押式回购交易，将委托价格设置为100
+        if (EntrustUtils.isPledgeRepurchase(ins))  {
+            ins.setMinAmt(ArithmeticUtil.multiply(ins.getConNum(), BigDecimal.valueOf(100L)));
+        } else {
+            ins.setMinAmt(ArithmeticUtil.multiply(ins.getConNum(), result.getPrice()));
+        }
         if (EntrustUtils.isVolume(ins)) {
             // 借用mIntAmt存放剩余总数量
             BigDecimal leftNum = BigDecimal.valueOf(ins.getEntrustNum() - ins.getEntrustLeftAmt().longValue() - ins.getFrozenQuantity().longValue());
@@ -963,5 +972,58 @@ public class PortfolioManager extends BaseService {
             BigDecimal leftAmt = TradeUtils.subtract(ins.getEntrustAmt(), ins.getEntrustLeftAmt(), ins.getFrozenQuantity(), 2);
             ins.setmTradeAmt(leftAmt.compareTo(BigDecimal.ZERO) > 0 ? leftAmt : BigDecimal.ZERO);
         }
+    }
+
+    private BigDecimal getMinStep(Instruction instruction) {
+        // 最小交易单元：整数倍
+        BigDecimal minStep = BigDecimal.ONE;
+        if (instruction.getMinPriceAndMinTrdUnitLimitBean() != null
+                && ErrorCode.isSuccess(instruction.getMinPriceAndMinTrdUnitLimitBean().getErrorCode())
+                && instruction.getMinPriceAndMinTrdUnitLimitBean().getMinTrdUnitLimitList() != null
+                && !instruction.getMinPriceAndMinTrdUnitLimitBean().getMinTrdUnitLimitList().isEmpty()) {
+            MinTrdUnitLimit minTrdUnitLimit = instruction.getMinPriceAndMinTrdUnitLimitBean().getMinTrdUnitLimitList().get(0);
+
+            if (Objects.nonNull(minTrdUnitLimit.getMinStep())) {
+                minStep = BigDecimal.valueOf(minTrdUnitLimit.getMinStep());
+            }
+        }
+        return minStep;
+    }
+
+    private BigDecimal getMinNum(Instruction instruction, String entrustProp) {
+        // 最低交易数量：大于等于
+        BigDecimal minNum = BigDecimal.ONE;
+        if (instruction.getMinPriceAndMinTrdUnitLimitBean() != null
+                && ErrorCode.isSuccess(instruction.getMinPriceAndMinTrdUnitLimitBean().getErrorCode())
+                && instruction.getMinPriceAndMinTrdUnitLimitBean().getMinTrdUnitLimitList() != null
+                && !instruction.getMinPriceAndMinTrdUnitLimitBean().getMinTrdUnitLimitList().isEmpty()) {
+            MinTrdUnitLimit minTrdUnitLimit = instruction.getMinPriceAndMinTrdUnitLimitBean().getMinTrdUnitLimitList().get(0);
+            if (EntrustProp.isMarketPrice(entrustProp)) {
+                if (Objects.nonNull(minTrdUnitLimit.getMaxNumMarket())) {
+                    minNum = BigDecimal.valueOf(minTrdUnitLimit.getMinNumMarket());
+                }
+            } else {
+                if (Objects.nonNull(minTrdUnitLimit.getMinNum())) {
+                    minNum = BigDecimal.valueOf(minTrdUnitLimit.getMinNum());
+                }
+            }
+        }
+        return minNum;
+    }
+
+    private BigDecimal getMinAmt(Instruction instruction) {
+        // 最低交易金额：大于等于
+        BigDecimal minAmt = BigDecimal.ZERO;
+        if (instruction.getMinPriceAndMinTrdUnitLimitBean() != null
+                && ErrorCode.isSuccess(instruction.getMinPriceAndMinTrdUnitLimitBean().getErrorCode())
+                && instruction.getMinPriceAndMinTrdUnitLimitBean().getMinTrdUnitLimitList() != null
+                && !instruction.getMinPriceAndMinTrdUnitLimitBean().getMinTrdUnitLimitList().isEmpty()) {
+            MinTrdUnitLimit minTrdUnitLimit = instruction.getMinPriceAndMinTrdUnitLimitBean().getMinTrdUnitLimitList().get(0);
+
+            if (Objects.nonNull(minTrdUnitLimit.getMinAmt())) {
+                minAmt = minTrdUnitLimit.getMinAmt();
+            }
+        }
+        return minAmt;
     }
 }
