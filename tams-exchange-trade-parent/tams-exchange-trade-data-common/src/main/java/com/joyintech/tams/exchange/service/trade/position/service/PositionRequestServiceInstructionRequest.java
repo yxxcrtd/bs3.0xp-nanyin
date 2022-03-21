@@ -75,7 +75,9 @@ public class PositionRequestServiceInstructionRequest {
         //设置公共字段，个性化的需要在具体接口中覆盖
         this.setCommonField(entity, resultMap);
         String finprodType = entity.getFinprodType2();
-        if (DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(finprodType)) {
+        if (DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(finprodType) 
+        		&& !DictCodeListExt3.交易方向_质押券入库.getValue().equals(entity.getPs())
+        		&& !DictCodeListExt3.交易方向_质押券出库.getValue().equals(entity.getPs())) {
             String type6 = commonPositionEngineService.getType6(entity.getFinprodId());
             if (DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue().equals(type6)) {
                 finprodType += "-" + type6;
