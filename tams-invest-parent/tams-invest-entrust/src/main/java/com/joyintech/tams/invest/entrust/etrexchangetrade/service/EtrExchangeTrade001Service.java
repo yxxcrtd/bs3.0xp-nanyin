@@ -2192,14 +2192,19 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 						List<SelectOptionDto> ptlSecAcctList = getPtlSecAcctInfo(param);
 						if (null != ptlSecAcctList && ptlSecAcctList.size() > 0) {
 							if (StringUtil.isNotEmpty(rowData.get(2))) {
-								if (rowData.get(2).contains(":")) {
-									if (ptlSecAcctList.stream().noneMatch(m -> m.getId().equals(rowData.get(2)))) {
-										confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-												getMessage("ETR_E_0017", getMessage("EtrExchangeTrade001.acctNo"), lineNo));
-									}
-								} else {
+//								if (rowData.get(2).contains(":")) {
+//									if (ptlSecAcctList.stream().noneMatch(m -> m.getId().equals(rowData.get(2)))) {
+//										confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+//												getMessage("ETR_E_0017", getMessage("EtrExchangeTrade001.acctNo"), lineNo));
+//									}
+//								} else {
+//									confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+//											getMessage("ETR_E_0042", getMessage("EtrExchangeTrade001.acctNo"), getMessage("EtrExchangeTrade001.acctNo"), lineNo));
+//								}
+								//excel改成输入不带冒号的
+								if (ptlSecAcctList.stream().noneMatch(m -> m.getId().split(":")[1].equals(rowData.get(2)))) {
 									confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-											getMessage("ETR_E_0042", getMessage("EtrExchangeTrade001.acctNo"), getMessage("EtrExchangeTrade001.acctNoWithCorrectFormat"), lineNo));
+											getMessage("ETR_E_0017", getMessage("EtrExchangeTrade001.acctNo"), lineNo));
 								}
 								//add by chenjiaixng 添加多券商资金账户时，资金账号代码必填校验 20210827 start
 							} else {
@@ -2231,7 +2236,7 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 					}
 					//add by chenjiaxing 校验投资目的不能为空 start
 					if (!StringUtil.isNotEmpty(rowData.get(11)) && StringUtils.isNotEmpty(unit.getFinprodType2())
-							&& !unit.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
+							&& unit.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
 						confirmMsg = etrCommonService.StringAddByBr(confirmMsg, etrCommonService
 								.checkIsBlank(rowData.get(11), "EtrExchangeTrade001.invAim", lineNo));
 					}

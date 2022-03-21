@@ -857,9 +857,16 @@
             var object = getSecIdSelectObjectData(secId);
             $("#secIdObjRelative_" + currentTab).val(JSON.stringify(object)).trigger('change');
             if (currentTab == 'gd') {
-                if (object) {//固定收益平台 设置清算速度
-                    setSettleSpeed(object.isNetSett);
+                // if (object) {//固定收益平台 设置清算速度
+                //     setSettleSpeed(object.isNetSett);
+                // }
+                let parms = {
+                    finprodId:secId
                 }
+                Joyin.ajaxJson(basePath + '/etrexchange/common/etrExchangeTrade001/IsSpeedTOneOrZero', parms,
+                    function (result) {
+                        setSettleSpeed(result.data);
+                    })
             }
         }
         // 证券代码选择后联动【行情信息】
@@ -2440,6 +2447,7 @@
                 Joyin.ajaxJson(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeTrade001/calcPriceAndYield', param, function (result) {
                     var fprice = formatPrice(price, result.fprice);
                     $("#fprice_" + currentTab).val(fprice).trigger('blur');
+                    debugger
                     $("#yield_" + currentTab).val(result.yield).trigger('blur');
                 }, false);
                 calcEntrustNumAndAmt();
@@ -2672,9 +2680,9 @@
     //根据是否纳入金额结算 设置清算速度
     var setSettleSpeed = function (isNetSett) {
         if (isNetSett == YES_OR_NO_Y) {
-            $("#settleSpeed_" + currentTab).val(ACCOUNT_SPEED_02).trigger('change');
-        } else {
             $("#settleSpeed_" + currentTab).val(ACCOUNT_SPEED_01).trigger('change');
+        } else {
+            $("#settleSpeed_" + currentTab).val(ACCOUNT_SPEED_02).trigger('change');
         }
         $("#settleSpeed_" + currentTab).attr("disabled", true);
     }
@@ -3142,6 +3150,9 @@
 
             if (finprodType2 == FINPROD_TYPE_TG_F01) {
                 $("#entrustNumUnit_" + currentTab).text("张");
+                $("#acctNo_div_" + currentTab).hide();
+                $("#portfolioId_div_" + currentTab).hide();
+                $("#yield_" + currentTab).attr("data-textrange", 4);
                 // $("#trader_div_xj").show();
                 // $("#counterId_div_xj").show();
                 // $("#counterTrader_div_xj").show();
@@ -3500,7 +3511,7 @@
             dateTable.renderRow(i, array[i]);
         }
         ;
-        dateTable.reload();
+        // dateTable.reload();
     }
 
     /**
