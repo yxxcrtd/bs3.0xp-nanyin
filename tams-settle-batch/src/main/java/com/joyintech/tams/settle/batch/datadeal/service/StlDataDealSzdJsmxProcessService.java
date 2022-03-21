@@ -782,10 +782,12 @@ public class StlDataDealSzdJsmxProcessService {
 							if (StringUtil.equals(StlDataDealProcessConstant.YWLX_619, szdJsmx.getYwlx()) && StringUtil.equals(StlDataDealProcessConstant.MMBS_B, szdJsmx.getMmbz())) {
 								settleTransData.setPs(DictCodeList.交易方向_买入.getValue());
 								settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_债券协议正回购_首期_买入.getValue());
+								settleTransData.setApplyTradeId(settleTransData.getCjbh());
 							}
 							if (StringUtil.equals(StlDataDealProcessConstant.YWLX_619, szdJsmx.getYwlx()) && StringUtil.equals(StlDataDealProcessConstant.MMBS_S, szdJsmx.getMmbz())) {
 								settleTransData.setPs(DictCodeList.交易方向_买入.getValue());
 								settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_债券协议逆回购_首期_买入.getValue());
+								settleTransData.setApplyTradeId(settleTransData.getCjbh());
 							}
 							if (StringUtil.equals(StlDataDealProcessConstant.YWLX_615, szdJsmx.getYwlx()) && StringUtil.equals(StlDataDealProcessConstant.MMBS_B, szdJsmx.getMmbz())) {
 								settleTransData.setPs(DictCodeList.交易方向_到期续做.getValue());

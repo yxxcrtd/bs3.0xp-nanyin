@@ -24,6 +24,7 @@ import com.joyintech.tams.invest.common.trade.dto.PortfolioCalculateDto;
 import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonRevokeDto;
 import com.joyintech.tams.invest.trade.api.PositionRequestTradeRestService;
+import com.joyintech.tams.invest.trade.exchangetransmatch.common.dao.ExchangeTransMatchCommonMapper;
 import com.joyintech.tams.invest.trade.exchangetransmatch.position.bean.PositionRequestBaseBean;
 import com.joyintech.tams.invest.trade.exchangetransmatch.position.bean.TrdMoreConvrateDto;
 import com.joyintech.tams.invest.trade.exchangetransmatch.position.constant.PositionConstant;
@@ -33,6 +34,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import static com.joyintech.tams.constant.DictCodeList.是否_否;
 import static com.joyintech.tams.constant.DictCodeListExt3.交易单位_份;
@@ -56,6 +58,12 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
 
     @Autowired
     private EtrEntrustAddMapper etrEntrustAddMapper;
+
+    @Autowired
+    private ExchangeTransMatchCommonMapper exchangeTransMatchCommonMapper;
+
+    @Autowired
+    private TrdCommonBaseService trdCommonBaseService;
   
     public static final String TRADE_PLAT = "TRANS_MATCH";
 
@@ -400,6 +408,11 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
         if(CollectionUtils.isNotEmpty(stlPayOrdersList)){
             bean.setCashAcctId(stlPayOrdersList.get(0).getMyAcctNo());
         }
+        // ZGTFCP-1445:划款指令为空时,查询资金账户 modify by fuyongsheng 20220321 start
+        else{
+            bean.setCashAcctId(exchangeTransMatchCommonMapper.queryAccountNo(bean.getSecAcctId()));
+        }
+        // ZGTFCP-1445:划款指令为空时,查询资金账户 modify by fuyongsheng 20220321 end
         bean.setTradeId(dealEntity.getTradeId());
         bean.setEtrId(trdProductDealAdd.getEntrustId());
         bean.setCashAmount(dealEntity.getTradeAmt());
@@ -409,11 +422,22 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
         map.put(ORD_ENTRUST_ID, null);
         // 标准券代码
         map.put(STANDARD_SEC_ID, STANDAR_SEC_ID);
-        // 标准券总额
-        map.put(STANDARD_SEC_AMOUNT, dealEntity.getShareAmt());
-
         if (DictCodeListExt3.交易方向_质押券入库.getValue().equals(ps) || DictCodeListExt3.交易方向_质押券出库.getValue().equals(ps)) {
             if(CollectionUtils.isNotEmpty(stlPayOrdersList)){
+                //查询当日折算率
+                BigDecimal converseRadio = exchangeTransMatchCommonMapper.queryConverseRadio(dealEntity.getFinprodId(), dealEntity.getTradeDate());
+                if(converseRadio==null) {
+                    converseRadio = BigDecimal.ONE;
+                }
+                // 质押式回购出入库计算时，标准券数量=质押数量*标准折算率*面值/100
+                BigDecimal 百元券面 = trdCommonBaseService.getFaceValue(dealEntity.getFinprodId(), dealEntity.getTradeDate());
+                if (百元券面 == null) {
+                    百元券面 = BigDecimal.valueOf(100);
+                }
+                BigDecimal hundred = BigDecimal.valueOf(100);
+                // 标准券总额
+                map.put(STANDARD_SEC_AMOUNT, ArithmeticUtil.divide(ArithmeticUtil.multiply(dealEntity.getShareAmt(),
+                        converseRadio, 百元券面), hundred, 2, RoundingMode.HALF_UP));
                 // 再折算率	reConversionRate "调用【再折算率查询】参数：资金账户 = 指令资金账户
                 Map<String, Object> paramMap = Maps.newHashMap();
                 paramMap.put("acctNo", stlPayOrdersList.get(0).getMyAcctNo());
@@ -434,12 +458,12 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
             bean.setSecAcctId(dealEntity.getSecManageAcctId());
             bean.setTradeId(dealEntity.getTradeId());
             bean.setEtrId(entity.getEntrustId());
-            bean.setSecAmount(dealEntity.getShareAmt());
+            bean.setSecAmount(ArithmeticUtil.multiply(dealEntity.getShareAmt(), new BigDecimal(100)));
             Map<String, Object> ptlSecMap = BeanUtil.object2Map(bean);
             //融入券券面总额
             ptlSecMap.put(INTEGRATE_SEC_AMOUNT, BigDecimal.ZERO);
             //本方券券面总额 指令对应组合.指令数量*100
-            ptlSecMap.put(OWN_SEC_AMOUNT, dealEntity.getShareAmt());
+            ptlSecMap.put(OWN_SEC_AMOUNT, ArithmeticUtil.multiply(dealEntity.getShareAmt(), new BigDecimal(100)));
             ptlSecList.add(ptlSecMap);
             resultMap.put(PTL_SEC_LIST, ptlSecList);
         }

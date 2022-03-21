@@ -1533,8 +1533,8 @@
 		tpda.SETTLE_STATUS SETTLE_STATUS,
 		<!--交收状态 add by chqf 20211227 end-->
 		<!--基金交易账户 add by chqf 20220111 satrt-->
-		tpda.TRAN_ACCT_ID TRAN_ACCT_ID,
-		tpda.FUND_SALE_TYPE FUND_SALE_TYPE,
+		<!--tpda.TRAN_ACCT_ID TRAN_ACCT_ID,-->
+		<!--tpda.FUND_SALE_TYPE FUND_SALE_TYPE,-->
 		tpda.PARTY_ID PARTY_ID,
 		tpda.VAST_RANSOM_FLAG VAST_RANSOM_FLAG,
 		<!--基金交易账户 add by chqf 20220111 end-->
