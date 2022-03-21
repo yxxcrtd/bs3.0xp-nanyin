@@ -234,7 +234,8 @@ public class PositionInfoService {
      */
     public BaseMap queryTrdPosition(List<String> portfolioIdList, String cdate, String finprodId){
         BaseMap bm = BaseMap.newMap()
-                .put("S_005", DictCodeListExt3.资产类型_交易汇总可用持仓.getValue())
+                .put("S_007", DictCodeListExt3.资产类型_交易汇总可用持仓.getValue())
+                .put("S_005", DictCodeListExt3.资产类型_指令汇总可用现金.getValue())
                 .put("S_003", DictCodeListExt3.资产类型_融入券卖空待购回持仓.getValue())
                 .put("A_004", DictCodeListExt3.资产类型_债券本方券可用持仓.getValue())
                 .put("A_005", DictCodeListExt3.资产类型_债券融入券可用持仓.getValue())
