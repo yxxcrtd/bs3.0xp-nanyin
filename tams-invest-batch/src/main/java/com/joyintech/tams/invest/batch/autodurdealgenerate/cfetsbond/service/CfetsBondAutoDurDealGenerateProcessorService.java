@@ -175,7 +175,7 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
             TrdBondDurationDto TrdBondDurationDto = genDataForShInsertDto(regFinProductDealTotal,batchDate);
             autoPeriodCommonService.insertCfetsShTempDealData(TrdBondDurationDto.getTrdBondDurDbInertDto());
             //插入匹配关系表，且发送头寸
-            genMatchAndSendPosMethod(TrdBondDurationDto.getTrdBondDurDbInertDto(),regFinProductDealTotal);
+            genMatchAndSendPosMethod(TrdBondDurationDto.getTrdBondDurDbInertDto(), regFinProductDealTotal);
         }
         //插入数据
         for(TrdBondDurationDto trdBondDurationDto: trdBondDurationDtoInsertList){
@@ -301,7 +301,7 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
         //应计利息计算
         BigDecimal intAmt = ArithmeticUtil.divide(ArithmeticUtil.multiply(regFinProductDealTotal.getFaceValue(),regFinProductDealTotal.getRedeemRate(),regFinProductDealTotal.getIntAmt()),new BigDecimal(100),2) ;
         //赎回金额计算：默认等于净价总额+应计利息总额；
-        BigDecimal tradeAmt = ArithmeticUtil.doAdd(cpriceAmt,intAmt);
+        BigDecimal tradeAmt = ArithmeticUtil.multiply(ArithmeticUtil.doAdd(cpriceAmt,intAmt),new BigDecimal("100"));
         //乘赎回比例
         BigDecimal shareAmt = ArithmeticUtil.multiply(regFinProductDealTotal.getShareAmt(),regFinProductDealTotal.getRedeemRate());
 
@@ -357,7 +357,7 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
         handleTailDifference(regFinProductDealList,tailDifferenceCprice,"01");
         handleTailDifference(regFinProductDealList,tailDifferenceShAmt,"02");
         regFinProductDealList.forEach(item->{item.setIntAmt(ArithmeticUtil.subtract(item.getTradeAmt(),item.getCpriceAmt()));});
-        for(RegFinProductDeal regFinProductDeal : regFinProductDealList){
+        for(RegFinProductDeal regFinProductDeal : regFinProductDealList) {
             TrdProductDeal trdProductDeal = new TrdProductDeal();
             BeanUtil.copyPropertiesIgnoreNull(trdProductDeal,regFinProductDeal);
             trdProductDeal.setTradeDate(DateUtil.parse(DateUtil.format(batchDate)));
@@ -469,13 +469,13 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
                 }
             }
             posport.setSecAcctId(dto.getSecManageAcctId());
-            posport.setSecAmount(ArithmeticUtil.multiply(dto.getShareAmt()==null?BigDecimal.ZERO:dto.getShareAmt(),new BigDecimal(100)));
+            posport.setSecAmount(ArithmeticUtil.multiply(dto.getShareAmt()==null?BigDecimal.ZERO:dto.getShareAmt(),new BigDecimal(10000)));
             posport.setCashAmount(dto.getTradeAmt()==null?BigDecimal.ZERO:dto.getTradeAmt());
             trdBondDurDbInertDto.getTrdProductDealAdds().forEach(trdProductDealAdd -> {
                 if (dto.getTradeId() != null && dto.getTradeId().equals(trdProductDealAdd.getTradeId())) {
                     posport.setEtrId(trdProductDealAdd.getEntrustId());
                     posport.setIntegrateSecAmount(ArithmeticUtil.multiply(trdProductDealAdd.getLendinShareAmt()==null?BigDecimal.ZERO:trdProductDealAdd.getLendinShareAmt(),new BigDecimal(100)));
-                    posport.setOwnSecAmount(ArithmeticUtil.multiply(trdProductDealAdd.getOurShareAmt()==null?BigDecimal.ZERO:trdProductDealAdd.getOurShareAmt(),new BigDecimal(100)));
+                    posport.setOwnSecAmount(ArithmeticUtil.multiply(trdProductDealAdd.getOurShareAmt()==null?BigDecimal.ZERO:trdProductDealAdd.getOurShareAmt(),new BigDecimal(10000)));
                 }
             });
             ptlList.add(posport);
