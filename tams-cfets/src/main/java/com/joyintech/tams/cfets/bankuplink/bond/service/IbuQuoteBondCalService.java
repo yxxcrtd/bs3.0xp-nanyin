@@ -319,7 +319,7 @@ public class IbuQuoteBondCalService extends BaseService {
      * @param type           type=B06  交易费 type=B08 结算费  type=01 净价总额 type=02 全价总额
      */
     public void handleFeeTailDifference(List<PtlAllocationDto> ptlAllocations, BigDecimal tailDifference, String type) {
-        ptlAllocations.sort((p1, p2) -> p1.getShareAmt().compareTo(p2.getShareAmt()));
+        ptlAllocations.sort((p1, p2) -> p2.getShareAmt().compareTo(p1.getShareAmt()));
         //递增维度
         BigDecimal addDimension = amtDimension;
         int size = ptlAllocations.size();
@@ -360,7 +360,7 @@ public class IbuQuoteBondCalService extends BaseService {
         BigDecimal tailDifferenceSettFeeamt = settFeeAmt;
         for (PtlAllocationDto item : ptlAllocations) {
             item.setDealFeeAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(item.getShareAmt(), dealFeeAmt), shareAmt, 2, RoundingMode.DOWN));
-            item.setSettFeeAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(item.getShareAmt(), settFeeAmt), shareAmt, 2, RoundingMode.DOWN));
+            item.setSettFeeAmt(ArithmeticUtil.divide(settFeeAmt, BigDecimal.valueOf(ptlAllocations.size()), 2, RoundingMode.DOWN));
             tailDifferenceDealFeeAmt = ArithmeticUtil.subtract(tailDifferenceDealFeeAmt, item.getDealFeeAmt());
             tailDifferenceSettFeeamt = ArithmeticUtil.subtract(tailDifferenceSettFeeamt, item.getSettFeeAmt());
         }

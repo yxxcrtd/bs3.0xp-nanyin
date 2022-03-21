@@ -182,8 +182,10 @@
         WHEN T2.TARGET_TYPE = '01' THEN
         ROUND( nvl( T1.ENTRUST_NUM, 0 ) - nvl( T4.ENT_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( T1.ENTRUST_NUM, 0 ) - nvl( T4.ENT_FINISH_AMT, 0 ), 4 )
         END AS avaDealAmt
-        ,T5.PORTFOLIO_ID portfolioId
-        ,T5.PORTFOLIO_NAME  portfolioName
+        ,case when T1.ENTRUST_CLASS = '01' then T5.PORTFOLIO_ID
+        else '' end as portfolioId
+        ,case when T1.ENTRUST_CLASS = '01' then T5.PORTFOLIO_NAME
+        else '' end as portfolioName
         ,T1.FINPROD_ID finprodId
         ,T7.FINPROD_MARKET_ID
         ,CASE WHEN T1.PS IN ('03','04') THEN T1.FINPROD_ID ELSE T7.FINPROD_ABBR END AS finprodAbbr
@@ -1315,7 +1317,9 @@
             and ee.ps = #{ps,jdbcType=VARCHAR}
             and ee.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
             and ee.trade_plat = #{tradePlat,jdbcType=VARCHAR}
-
+            <if test="entrustReturn != null and entrustReturn != ''">
+                and  ee.ENTRUST_STATUS != #{entrustReturn,jdbcType=VARCHAR}
+            </if>
         UNION
         <!-- 查询委托指令流程表中是否已经存在该证券账户发布的此债券的申购委托 -->
         select weea.entrust_id entrustId

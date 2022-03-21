@@ -395,7 +395,7 @@ public class PositionRequestServiceInstructionRequest {
         // 协议回购不存在多组合，不需要循环多组合列表
         PositionRequestBaseBean bean;
         String ps = entity.getPs();
-        String firstRepoPs  = entity.getFirstRepoPs();
+        String firstRepoPs = entity.getFirstRepoPs();
         // 首期组合现金数据集
         if (DictCodeListExt3.交易方向_正回购.getValue().equals(ps)
                 || DictCodeListExt3.交易方向_逆回购.getValue().equals(ps)
@@ -593,7 +593,13 @@ public class PositionRequestServiceInstructionRequest {
         resultMap.put("userId", entity.getTradeId());
         resultMap.put("totalTradeId", entity.getEntrustNo());
         resultMap.put("balanceCheck", balanceCheck);
-        resultMap.put("flowStatus", DictCodeListExt3.流程节点_流程提交.getValue());
+        // modify by swwan ZGTFCP-1393 交易撤销：流程状态flowStatus 应该传流程生效 02 start
+        if (DictCodeListExt3.业务动作_交易下单.getValue().equals(resultMap.get(BUSI_ACT))) {
+            resultMap.put("flowStatus", DictCodeListExt3.流程节点_流程提交.getValue());
+        } else if (DictCodeListExt3.业务动作_撤委托.getValue().equals(resultMap.get(BUSI_ACT))) {
+            resultMap.put("flowStatus", DictCodeListExt3.流程节点_审批生效.getValue());
+        }
+        // modify by swwan ZGTFCP-1393 交易撤销：流程状态flowStatus 应该传流程生效 02 end
         resultMap.put("modelType", DictCodeListExt1.子系统代码_交易.getValue());
 
         //设置头寸业务类型
