@@ -137,7 +137,8 @@
         , {field: 'entrustAmt', title: 'EtrBrowDepoInfo003.entrustAmt2', width: 120, type:'number',sortable: false}
         , {field: 'proAvailableCash', title: 'EtrBrowDepoInfo003.etrAvailableCash', type: 'number', width: 150, sortable: false}
         , {field: 'accAvailablePos', title: 'EtrBrowDepoInfo003.etrAvailablePosition', type: 'number', width: 150, sortable: false}
-        , {field:'vdate', title: 'EtrExchangeTradeCommon001.entrustDate',type:'date', width : 120,sortField:'VDATE'}//持仓成本
+        , {field:'vdate', title: 'EtrExchangeTradeCommon001.entrustDate',type:'date', width : 120,sortField:'VDATE'}
+        , {field:'mdate', title: 'EtrExchangeTrade003.mdate',type:'date', width : 120,sortField:'mdate',visible: false}
         //add by chenjiaxing 20210830 导入添加投资目的 start
         , {field:'invAimStr', title: 'EtrExchangeTrade001.invAim', width : 240,sortable: false}
         //add by chenjiaxing 20210830 导入添加投资目的 end
