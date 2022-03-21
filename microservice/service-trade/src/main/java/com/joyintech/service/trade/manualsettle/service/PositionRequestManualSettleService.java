@@ -301,7 +301,7 @@ public class PositionRequestManualSettleService {
         // ZGTFCP-1281:修改获取业务类型方法 modify by fuyongsheng 20220318 end
         resultMap.put("busiType", busiType);
         // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 start
-        resultMap.put("totalTradeId", entity.getSeqNo());
+        resultMap.put("totalTradeId", entity.getSettleSeqNo());
         // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 end
         if (StringUtil.equals(entity.getPageModel(), DictCodeListExt3.交收操作类型_交收.getValue())) {
             resultMap.put("busiAct", DictCodeListExt3.业务动作_交收确认.getValue());
