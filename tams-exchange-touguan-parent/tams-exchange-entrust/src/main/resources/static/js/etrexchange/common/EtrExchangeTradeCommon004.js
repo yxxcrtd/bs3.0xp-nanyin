@@ -53,7 +53,6 @@
         }
         if (object.ps == PS_T68 || object.ps == PS_T69 || object.ps == PS_T49) {
             object.priceModel = "PRM01";
-            object.entrustAmt = "0";
         }
         // 隐藏项需要手动获取
         object.finprodId = $("#finprodId_" + currentTab).val();
@@ -102,6 +101,11 @@
         object.toShareAvailableNumLabel = $('#toShareAvailableNum_label_jj').text().replace("*", "");
         if (dateTable) {
             object.portfolioList = dateTable.getAllRows();
+            for (var i = 0; i < object.portfolioList.length; i++) {
+                if(!object.portfolioList[i].entrustAmt){
+                    object.portfolioList[i].entrustAmt = 0;
+                }
+            }
         }
         return object;
     }
