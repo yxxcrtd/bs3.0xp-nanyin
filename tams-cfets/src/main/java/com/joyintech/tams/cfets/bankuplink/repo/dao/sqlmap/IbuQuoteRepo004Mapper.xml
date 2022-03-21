@@ -38,6 +38,16 @@
         AND HODING_TYPE IN (#{POSITION_TYPE_ROLLIN}, #{POSITION_TYPE_ROLLOUT})
     </select>
 
+    <select id="selectPtlCashPositionFlow" resultMap="com.joyintech.tams.common.base.dao.PtlCashPositionFlowMapper.BaseResultMap">
+
+        select
+        <include refid="com.joyintech.tams.common.base.dao.PtlCashPositionFlowMapper.Base_Column_List" />
+        from PTL_CASH_POSITION_FLOW
+        WHERE
+        ORDER_ID = #{bizCode}
+        AND HODING_TYPE IN (#{hodingType})
+    </select>
+
     <update id="updatePosition" parameterType="com.joyintech.tams.common.base.entity.EtrSecPosition" >
 		update ETR_SEC_POSITION
 		set AMOUNT = AMOUNT - #{amount,jdbcType=DECIMAL}
@@ -48,6 +58,32 @@
 		  and INV_AIM = #{invAim,jdbcType=VARCHAR}
 		  and HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
 		  and CDATE = #{cdate,jdbcType=DATE}
+	</update>
+
+    <update id="updatePtlCashPosition" parameterType="com.joyintech.tams.common.base.entity.PtlCashPosition" >
+		update PTL_CASH_POSITION
+        <set >
+            <if test="amount != null" >
+                AMOUNT = #{amount,jdbcType=DECIMAL},
+            </if>
+            <if test="chlFinprodId != null" >
+                CHL_FINPROD_ID = #{chlFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isExistNew != null" >
+                IS_EXIST_NEW = #{isExistNew,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          and ACCT_ID = #{acctId,jdbcType=VARCHAR}
+          and HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=DATE}
+          and CCY = #{ccy,jdbcType=VARCHAR}
 	</update>
 
     <select id="selectOldTradeId" resultType="java.lang.String">

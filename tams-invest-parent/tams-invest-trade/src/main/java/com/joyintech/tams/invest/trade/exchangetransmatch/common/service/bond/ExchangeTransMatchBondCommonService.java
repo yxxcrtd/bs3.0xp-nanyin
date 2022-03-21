@@ -16,6 +16,7 @@ import com.joyintech.tams.invest.common.dto.common.TrdProductDealDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
+import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonDto;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonEntrustDetailDto;
@@ -49,6 +50,9 @@ public class ExchangeTransMatchBondCommonService extends BaseService {
 
     @Autowired
     private BasePtlSecPositionInfoService basePtlSecPositionInfoService;
+
+    @Autowired
+    private TrdCommonBaseService trdCommonBaseService;
 
     @Value("${application.micorservice.contextPath.commonService:http://commonService}")
     private String commonServiceName;
@@ -850,6 +854,22 @@ public class ExchangeTransMatchBondCommonService extends BaseService {
         String tradeId = trdProductDeal.getTradeId();
         BigDecimal shareAmt = trdProductDeal.getShareAmt();
         BigDecimal tradeAmt = trdProductDeal.getTradeAmt();
+
+        //查询当日折算率
+        BigDecimal converseRadio = exchangeTransMatchCommonMapper.queryConverseRadio(finprodId, tradeDate);
+        if(converseRadio==null) {
+            converseRadio = BigDecimal.ONE;
+        }
+
+        // modify by etliu 20220303 start
+        // 质押式回购出入库计算时，原公式：标准券数量=质押数量*标准折算率，改成：标准券数量=质押数量*标准折算率*面值/100  ---需求张琼
+        BigDecimal 百元券面 = trdCommonBaseService.getFaceValue(finprodId, tradeDate);
+        if (百元券面 == null) {
+            百元券面 = BigDecimal.valueOf(100);
+        }
+        BigDecimal hundred = BigDecimal.valueOf(100);
+        // modify by etliu 20220303 end
+
         //更新持仓头寸
         if(DictCodeListExt3.交易方向_质押券入库.getValue().equals(trdProductDeal.getPs())) {
             //1.指令持仓流水（标准券）：正流水
@@ -866,7 +886,8 @@ public class ExchangeTransMatchBondCommonService extends BaseService {
             etrSecPositionFlowDtoUnit.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());// 持仓类型
             etrSecPositionFlowDtoUnit.setCdate(tradeDate);// 日期
             etrSecPositionFlowDtoUnit.setCcy(DictCodeList.币种_人民币_CNY.getValue());// 币种
-            etrSecPositionFlowDtoUnit.setAmount(trdProductDeal.getTradeAmt());// 已经乘了折算率
+            etrSecPositionFlowDtoUnit.setAmount(ArithmeticUtil.divide(ArithmeticUtil.multiply(shareAmt, converseRadio,
+                    百元券面), hundred, 2, RoundingMode.HALF_UP));
             etrSecPositionFlowDtoUnit.setpFinprodId(null);// 母金融产品代码
             etrSecPositionFlowDtoUnit.setTradeId(tradeId);// 指令编号
 
@@ -889,7 +910,8 @@ public class ExchangeTransMatchBondCommonService extends BaseService {
             ptlSecPositionFlowDtoUnit.setHodingType(DictCodeList.持仓类型_质押.getValue());// 持仓类型
             ptlSecPositionFlowDtoUnit.setCdate(tradeDate);// 日期
             ptlSecPositionFlowDtoUnit.setCcy(DictCodeList.币种_人民币_CNY.getValue());// 币种
-            ptlSecPositionFlowDtoUnit.setAmount(shareAmt);// 数量
+            ptlSecPositionFlowDtoUnit.setAmount(ArithmeticUtil.divide(ArithmeticUtil.multiply(shareAmt, converseRadio,
+                    百元券面), hundred, 2, RoundingMode.HALF_UP));// 数量
             ptlSecPositionFlowDtoUnit.setpFinprodId(null);// 母金融产品代码
             ptlSecPositionFlowDtoUnit.setTradeId(tradeId);// 指令编号
 
@@ -907,7 +929,7 @@ public class ExchangeTransMatchBondCommonService extends BaseService {
             ptlSecPositionFlowDtoUnit2.setHodingType(DictCodeList.持仓类型_实际.getValue());// 持仓类型
             ptlSecPositionFlowDtoUnit2.setCdate(tradeDate);// 日期
             ptlSecPositionFlowDtoUnit2.setCcy(DictCodeList.币种_人民币_CNY.getValue());// 币种
-            ptlSecPositionFlowDtoUnit2.setAmount(tradeAmt);// 已经乘了当日折算率
+            ptlSecPositionFlowDtoUnit2.setAmount(shareAmt);
             ptlSecPositionFlowDtoUnit2.setpFinprodId(null);// 母金融产品代码
             ptlSecPositionFlowDtoUnit2.setTradeId(tradeId);// 指令编号
 

@@ -333,7 +333,8 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 				for (DataDictItem t:
 						list) {
 					String typeValue = t.getItemValue();
-					if(typeValue.indexOf((String)param.get("search"))!=-1){
+					String typeId = t.getItemCode();
+					if(typeValue.indexOf((String)param.get("search"))!=-1&&typeId.equals("PRM14")){
 						declaTypeList.add(t.getItemCode());
 					}
 				}

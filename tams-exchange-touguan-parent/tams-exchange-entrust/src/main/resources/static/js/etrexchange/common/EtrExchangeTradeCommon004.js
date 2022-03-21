@@ -2447,7 +2447,6 @@
                 Joyin.ajaxJson(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeTrade001/calcPriceAndYield', param, function (result) {
                     var fprice = formatPrice(price, result.fprice);
                     $("#fprice_" + currentTab).val(fprice).trigger('blur');
-                    debugger
                     $("#yield_" + currentTab).val(result.yield).trigger('blur');
                 }, false);
                 calcEntrustNumAndAmt();
@@ -3142,6 +3141,10 @@
             if(ps == PS_T03){
                 $("#invAim_div_" + currentTab).hide();
             }
+
+            if(ps == PS_T01){
+                $("#priceModel_div_" + currentTab).show();
+            }
             if (finprodType2 == FINPROD_TYPE_TG_F06) {
                 $("#priceModel_div_" + currentTab).show();
                 $("#entrustNumUnit_" + currentTab).text("份");
@@ -3342,7 +3345,7 @@
         cols: [
             {
                 field: 'portfolioId',
-                title: 'EtrExchangeTrade002.portfolioId',
+                title: 'EtrExchangeTrade002.portfolioName',
                 sortField: 'portfolioId',
                 width: 200,
                 edit: true,
