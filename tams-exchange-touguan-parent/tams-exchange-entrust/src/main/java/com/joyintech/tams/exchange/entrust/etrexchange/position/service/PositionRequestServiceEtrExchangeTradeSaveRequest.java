@@ -340,7 +340,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
             List<Map<String, Object>> ptlList = new ArrayList<>(portfolioListSize);
             for (EtrExchangeTradePortfolioRequest item : entity.getPortfolioList()) {
                 bean = new PositionRequestBaseBean(item);
-                bean.setFinprodId(null);
+//                bean.setFinprodId(null);
                 bean.setSecAmount(null);
 
                 Map<String, Object> map = BeanUtil.object2Map(bean);

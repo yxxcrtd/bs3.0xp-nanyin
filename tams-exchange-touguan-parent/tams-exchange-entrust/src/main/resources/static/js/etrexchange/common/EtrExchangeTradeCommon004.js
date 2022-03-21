@@ -3135,6 +3135,10 @@
                 $("#priceModel_div_" + currentTab).show();
                 $("#entrustNumUnit_" + currentTab).text("份");
             }
+            if(ps == PS_T68 || ps == PS_T69){
+                $("#riskTrialRet_div").hide();
+                $("#EtrExchangeTradeCommon004_btn_riskcal").hide();
+            }
 
             if (finprodType2 == FINPROD_TYPE_TG_F01) {
                 $("#entrustNumUnit_" + currentTab).text("张");
