@@ -1263,6 +1263,13 @@ public class CfetsEtrDispatcherService extends BaseService {
                             infoForm.addAll(infoForm1);
                         }
                     }
+                }else {//处理本币业务指令交易页面的债券
+                    infoForm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode);
+                    if (StringUtil.equals(CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"), "02")) {
+                        infoForm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode);
+                        spcdCode = spcdCode + ",02";
+                        infoForm.addAll(cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode));
+                    }
                 }
             }
         }

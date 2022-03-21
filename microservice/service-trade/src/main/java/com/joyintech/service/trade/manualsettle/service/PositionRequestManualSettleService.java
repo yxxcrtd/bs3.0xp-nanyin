@@ -96,7 +96,9 @@ public class PositionRequestManualSettleService {
                 finprodType += "-" + etrEntrustAdd.getAssetType1();
             }
         }
+        logger.debug("【手工交收查询头寸接口参数】finprodType:{},ps:{}", finprodType, trdProductTempDeal.getPs());
         String interType = commonPositionEngineService.getPositionInterType("TRD", TRADE_PLAT, finprodType, trdProductTempDeal.getPs(), DictCodeListExt3.共通业务类型_手工交收.getValue(), entity.getClass().getName());
+        logger.debug("【手工交收查询头寸接口结果】interType:{}", interType);
         if (INTERF_TYPE_BOND002.equals(interType)) {
             this.bond002(entity, resultMap);
         } else if (INTERF_TYPE_BOND003.equals(interType)) {
@@ -298,12 +300,24 @@ public class PositionRequestManualSettleService {
                 etrEntrustAdd.getAssetType1());
         // ZGTFCP-1281:修改获取业务类型方法 modify by fuyongsheng 20220318 end
         resultMap.put("busiType", busiType);
+        // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 start
+        resultMap.put("totalTradeId", entity.getSeqNo());
+        // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 end
         if (StringUtil.equals(entity.getPageModel(), DictCodeListExt3.交收操作类型_交收.getValue())) {
             resultMap.put("busiAct", DictCodeListExt3.业务动作_交收确认.getValue());
+            // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 start
+            resultMap.put("bTotalTradeId", entity.getTradeId());
+            // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 end
         } else if (StringUtil.equals(entity.getPageModel(), DictCodeListExt3.交收操作类型_回溯.getValue())) {
             resultMap.put("busiAct", DictCodeListExt3.业务动作_交收回溯.getValue());
+            // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 start
+            resultMap.put("bTotalTradeId", entity.getSeqNo());
+            // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 end
         } else if (StringUtil.equals(entity.getPageModel(), DictCodeListExt3.交收操作类型_交收失败.getValue())) {
             resultMap.put("busiAct", DictCodeListExt3.业务动作_交收失败.getValue());
+            // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 start
+            resultMap.put("bTotalTradeId", entity.getTradeId());
+            // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 end
         }
         resultMap.put("ps", infContractDetailfile.getPs());
         resultMap.put("tradePlace", entity.getTradeMarket());
@@ -315,9 +329,7 @@ public class PositionRequestManualSettleService {
         resultMap.put("workFlowId", null);
         resultMap.put("cdate", entity.getSettleDate());
         resultMap.put("ccy", infContractDetailfile.getCcy());
-        // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 start
-        resultMap.put("bTotalTradeId", entity.getTradeId());
-        // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 end
+
 
         // 首期组合现金数据集
         if (DictCodeListExt3.交易方向_正回购.getValue().equals(infContractDetailfile.getPs())
