@@ -23,7 +23,7 @@
             rii.ind_name indName,
             rii.ind_type indType,
             pp.portfolio_name portfolioName,
-            fp.finprod_abbr finprodAbbr,
+            nvl(fp.finprod_abbr ,fpp.finprod_abbr) finprodAbbr,
             rit.warn_cond warnCond,
             rit.approve_cond approveCond,
             rit.foul_cond foulCond,
@@ -34,11 +34,12 @@
         INNER JOIN RSK_ISUP_INDICATOR rii ON rit.ind_id = rii.ind_id
         LEFT JOIN ptl_portfolio pp ON rit.portfolio_id = pp.portfolio_id
         LEFT JOIN fin_product fp ON rit.asset_code = fp.finprod_id
+        LEFT JOIN ETR_ENTRUST ee ON rit.TRADE_ID = ee.ENTRUST_ID
+        LEFT JOIN fin_product fpp  ON ee.finprod_id = fpp.finprod_id
         WHERE rit.trade_id = #{entrustId}
           and rit.SEQ_NO = (select SEQ_NO from (select SEQ_NO from RSK_ISUP_TRIAL where trade_id = #{entrustId}  order by create_time desc) t where rownum =1 )
         <if test="NOT_NULL_FLAG != null and NOT_NULL_FLAG!='' ">
             AND rit.conclusion is null
-            AND fp.finprod_id is not null
         </if>
         <!-- AND rit.conclusion is null
          AND fp.finprod_id is not null 注释掉这个过滤条件否则质押式回购的风险试算信息无法查出,add by gaowenlong at 20220110-->

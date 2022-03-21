@@ -287,11 +287,11 @@ public class EtrExchangeBlockTrade001ValidatorService implements EtrCommonValida
 				param.put("ccy",DictCodeList.币种_人民币_CNY.getValue());
 				param.put("secAcctId",dto.getSecAcctId());
 				dto.setAccAvailablePos(etrExchangeTrade001Service.selectAvailableNum(param));
-				if (StringUtil.isNotEmpty(dto.getAccAvailablePos()) && StringUtil.isNotEmpty(dto.getEntrustNum())) {
-					if (dto.getAccAvailablePos().compareTo(dto.getEntrustNum()) == -1) {
-						errorList.add(new ValidMessage("accAvailablePos", this.getMessage("ETR_ERROR_0021")));
-					}
-				}
+//				if (StringUtil.isNotEmpty(dto.getAccAvailablePos()) && StringUtil.isNotEmpty(dto.getEntrustNum())) {
+//					if (dto.getAccAvailablePos().compareTo(dto.getEntrustNum()) == -1) {
+//						errorList.add(new ValidMessage("accAvailablePos", this.getMessage("ETR_ERROR_0021")));
+//					}
+//				}
 			}
 			
 			//行权回售
