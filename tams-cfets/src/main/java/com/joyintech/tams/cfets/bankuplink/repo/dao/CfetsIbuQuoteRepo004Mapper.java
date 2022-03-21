@@ -1,8 +1,6 @@
 package com.joyintech.tams.cfets.bankuplink.repo.dao;
 
-import com.joyintech.tams.common.base.entity.EtrSecPosition;
-import com.joyintech.tams.common.base.entity.EtrSecPositionFlow;
-import com.joyintech.tams.common.base.entity.PtlSecPositionFlow;
+import com.joyintech.tams.common.base.entity.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -25,7 +23,12 @@ public interface CfetsIbuQuoteRepo004Mapper {
 
     List<EtrSecPositionFlow> selectEtrSecPositionFlow(Map<String,Object> param);
 
+    List<PtlCashPositionFlow> selectPtlCashPositionFlow(Map<String,Object> param);
+
     int updatePosition(EtrSecPosition etrSecPosition);
+
+
+    int updatePtlCashPosition(PtlCashPosition ptlCashPosition);
 
     List<String> selectOldTradeId(@Param("entrustIdList") List<String> entrustIdList);
 }

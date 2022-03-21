@@ -498,8 +498,6 @@ public class CfetsTrdConfirm001Service extends BaseService{
                 bussRepoSecService.insert(dto, dto.getFinprodId());
             }
         }
-
-        List<String> orderIds = new ArrayList<>();
         // 金融产品交易信息DTO.金融产品交易Entity -> 金融产品交易业务流程表
         for (TrdProductDeal trdProductDeal : entity.getTrdProductDeals()) {
             // 7.8写入交易信息进交易报送信息表，为中债报送用
@@ -540,7 +538,8 @@ public class CfetsTrdConfirm001Service extends BaseService{
             if(!StringUtil.isEmptyList(finishList)){
                 finishEtrList.addAll(finishList);
             }
-            if (StringUtil.equals(entity.getPs(), DictCodeList.回购拆借方向_逆回购.getValue()) && isTrdConfirm) {
+            if (StringUtil.equals(entity.getPs(), DictCodeList.回购拆借方向_逆回购.getValue())
+                    && StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
                 FinProductTradeDto finProductTradeDtoTemp = new FinProductTradeDto();
                 BeanUtil.copyPropertiesIgnoreNull(finProductTradeDtoTemp, finProductTradeDto);
                 finProductTradeDtoTemp.setAssetType2(DictCodeList.回购类型_质押式回购.getValue());
@@ -551,21 +550,25 @@ public class CfetsTrdConfirm001Service extends BaseService{
                     String acctId = EtrCommonCashPositionDealService.select组合托管户(trdProductDeal.getPortfolioId(), trdProductDeal.getCcy(), DictCodeListExt1.资金账户类型_产品托管户.getValue());
                     stlPayOrdersDto.setMyAcctNo(acctId);
                 }
-                orderIds.add(cfetsManualSettleMapper.selectRegTradeId(entity.getRegIbuId(),dealAdd.getEntrustId()));
-                if(StringUtil.isEmpty(stlPayOrdersDto.getOrderId())){
-                    stlPayOrdersDto.setOrderId(trdProductDeal.getTradeId());
+                String orderId = cfetsManualSettleMapper.selectRegTradeId(entity.getRegIbuId(),dealAdd.getEntrustId());
+                if(StringUtil.isEmpty(orderId)){
+                    orderId = entity.getRegIbuId();
                 }
+                stlPayOrdersDto.setOrderId(orderId);
                 List<StlPayOrdersDto> stlPayOrdersDtos = new ArrayList<>();
                 stlPayOrdersDtos.add(stlPayOrdersDto);
                 finProductTradeDtoTemp.getBaseTradeProductDealDtos().get(0).setEntrustId(dealAdd.getEntrustId());
                 finProductTradeDtoTemp.getBaseTradeProductDealDtos().get(0).setStlPayOrdersList(stlPayOrdersDtos);
+                if(!StringUtil.equals(orderId,entity.getRegIbuId())) {
+                    baseAssetCashPositionCommMapper.deleteCashPositionByOrderIds(Arrays.asList(orderId));
+                }
                 baseTradeProductDealCommService.insertPosition(finProductTradeDtoTemp);
             }
+            if (StringUtil.equals(entity.getPs(), DictCodeList.回购拆借方向_逆回购.getValue()) && !isTrdConfirm
+                    && StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
+                baseAssetCashPositionCommMapper.deleteCashPositionByOrderIds(Arrays.asList(entity.getRegIbuId()));
+            }
 
-        }
-        if (StringUtil.equals(entity.getPs(), DictCodeList.回购拆借方向_逆回购.getValue()) && isTrdConfirm) {
-            orderIds.add(entity.getRegIbuId());
-            baseAssetCashPositionCommMapper.deleteCashPositionByOrderIds(orderIds);
         }
        // 发送Murex接口处理
         this.sendMurex(entity, false);

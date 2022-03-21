@@ -26,6 +26,7 @@ import com.joyintech.framework.util.*;
 import com.joyintech.framework.util.DateUtil.DurationType;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.cfets.bankuplink.repo.service.CfetsRepoQuotedPrice004Service;
+import com.joyintech.tams.cfets.cfetsmanualsettle.dao.CfetsManualSettleMapper;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dto.PortIntFenPeiInfoDto;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribBondInfo003Dto;
 import com.joyintech.tams.cfets.trdconfirm.dao.CfetsTrdConfirmMapper;
@@ -127,6 +128,9 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
     private BaseAssetCashPositionCommMapper baseAssetCashPositionCommMapper;
     @Autowired
     private CfetsTrdBondInvestTrade002Service cfetsTrdBondInvestTrade002Service;
+
+    @Autowired
+    private CfetsRepoQuotedPrice004Service cfetsRepoQuotedPrice004Service;
     /**
      * 附件上传类
      */
@@ -260,9 +264,7 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
 
     @Autowired
     private BaseEtrCashPositionCommService baseEtrCashPositionCommService;
-    @Autowired
-    private CfetsRepoQuotedPrice004Service cfetsRepoQuotedPrice004Service;
-	
+
     private final static String SJXY = "SJXY";//深交所协议回购期限品种
 
     @Autowired
@@ -273,6 +275,9 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
     private CfetsTrdQueryMapper cfetsTrdQueryMapper;
     @Autowired
     private TrdTradeFeeTotalMapper trdTradeFeeTotalMapper;
+
+    @Autowired
+    private CfetsManualSettleMapper cfetsManualSettleMapper;
     /**
      * 设置流程业务说明
      */
@@ -1011,6 +1016,7 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
         for(String item : tradeDetailLists){
             //根据交易编号查询信息
             TrdRepoTrade002Dto entity=this.getTrdRepoTradeDto(item);
+            String orderId = cfetsManualSettleMapper.selectRegTradeIdBytradeId(entity.getTradeId());
             //entity.setActPortfolioId(entity.getTrda());
             //entity.setPortfolioId(AllTradeCommonUtil.exchangePortfolio(entity.getPortfolioId()));
             // 调用基础组合.【金融产品交易组件.查询金融产品交易信息】获取原交易信息
@@ -1061,8 +1067,11 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
                     finProductTradeDto.setBussRepoSec(bussRepoSecService.selectBussRepoSec(initSearchParam));
                 }
                 cfetsTrdBondInvestTrade002Service.baseTradeCommExecute(finProductTradeDto);
-                if(StringUtil.equals(entity.getPs(),DictCodeList.回购拆借方向_逆回购.getValue())) {
-                    baseTradeProductDealCommService.execute(finProductTradeDto);
+                if (StringUtil.equals(entity.getPs(), DictCodeList.回购拆借方向_逆回购.getValue())
+                        && StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
+                    finProductTradeDto.setIsExistNew(DictCodeList.是否_是.getValue());
+                    baseTradeProductDealCommService.insertPosition(finProductTradeDto);
+                    cfetsRepoQuotedPrice004Service.revokePtlCashPosition(orderId, DictCodeList.持仓类型_实际.getValue(), DictCodeList.持仓类型_可用.getValue());
                 }
             }
 //        // 撤销委托/回购交易时，删除回购质押品信息

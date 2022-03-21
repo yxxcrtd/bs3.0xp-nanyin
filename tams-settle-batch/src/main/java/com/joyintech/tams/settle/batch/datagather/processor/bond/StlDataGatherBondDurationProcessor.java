@@ -4,7 +4,10 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.settle.batch.datagather.constant.StlDataGatherConstant;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.compress.utils.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,7 +83,18 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
                 param.put("dealDate", DateUtil.parse(DateUtil.getYesterDayDate(mdate2)));
                 // ZGZGST-4216: 查询持仓时日期使用付息截止日前一日 fuyongsheng 20211214 modify end
                 param.put("hodingType",DictCodeList.持仓类型_实际.getValue());
-                ptlSecPositions = stlDataGatherMapper.listPtlSecPosition(param);
+                // ZGTFCP-1363:通过开关控制查询新老头寸,默认查询新头寸 modify by fuyongsheng 20220321 start
+                // 新老头寸开关(Y:新头寸,N:老头寸)
+                String newSecPositionSwitch = CacheUtil.getSysParam("NEW_SEC_POSITION_SWITCH");
+                // 开关配置N查老头存
+                if(DictCodeList.是否_否.getValue().equals(newSecPositionSwitch)){
+                    ptlSecPositions = stlDataGatherMapper.listPtlSecPosition(param);
+                }else{ // 默认查新头寸
+                    param.put("hodingType", DictCodeListExt3.资产类型_资产账户持仓.getValue());
+                    param.put("dateType", StlDataGatherConstant.DATE_TYPE_T_0);
+                    ptlSecPositions = stlDataGatherMapper.listPtlSecPositionRule(param);
+                }
+                // ZGTFCP-1363:通过开关控制查询新老头寸,默认查询新头寸 modify by fuyongsheng 20220321 end
             }
             //按金融产品代码分组
             Map<String,List<PtlSecPosition> > finprodIdMap = new HashMap<>();

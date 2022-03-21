@@ -66,6 +66,7 @@
         ,T1.ENTRUST_TYPE
         ,fpt.TYPE_8 paAssetType
         ,case when T1.ENTRUST_TYPE in ('09','12','13','14','16') then T7.FINPROD_MARKET_ID
+            when T1.ENTRUST_TYPE in (#{PS_10}, #{PS_11}, #{PS_12}) then T7.FINPROD_MARKET_ID
             when T1.STOCK_ID IS NOT NULL THEN T1.STOCK_ID
         ELSE T7.FINPROD_MARKET_ID END finprodMarketId
         /*,T7.FINPROD_MARKET_ID finprodMarketId*/
@@ -213,6 +214,7 @@
         ,T1.ENTRUST_TYPE
         ,fpt.TYPE_8  paAssetType
         ,case when T1.ENTRUST_TYPE in ('09','12','13','14','16') then T7.FINPROD_MARKET_ID
+          when T1.ENTRUST_TYPE in (#{PS_10}, #{PS_11}, #{PS_12}) then T7.FINPROD_MARKET_ID
         when T1.STOCK_ID IS NOT NULL THEN T1.STOCK_ID
         ELSE T7.FINPROD_MARKET_ID END finprodMarketId
         /*,T7.FINPROD_MARKET_ID finprodMarketId*/
@@ -678,6 +680,7 @@
 
         ) M
         left join SYS_DATADICT_LIST sdl1 on M.tradeMarket=sdl1.ITEM_CODE and sdl1.DICT_CODE='TRADE_PLACE'
+        LEFT JOIN SYS_DATADICT_LIST sdl2 ON M.FINPRODTYPE2=sdl2.ITEM_CODE AND sdl2.DICT_CODE='FINPROD_TYPE_TG'
         where
         1=1
         <include refid="etrExchangeBundAnd"/>
@@ -1490,7 +1493,7 @@
         <if test="search != null and search != ''">
             and (
             M.portfolioName|| '|' ||M.secName|| '|' ||M.acctNo|| '|' ||M.finprodType2|| '|' ||
-            M.portfolioId|| '|' ||M.finprodMarketId
+            M.portfolioId|| '|' ||M.finprodMarketId|| '|' ||sdl2.ITEM_VALUE
 <!--             || '|' ||sdl1.ITEM_VALUE|| '|' ||sdl2.ITEM_VALUE-->
             || '|' ||M.dealCurAcctName|| '|' ||M.finprodName
             like '%' || #{search} || '%'

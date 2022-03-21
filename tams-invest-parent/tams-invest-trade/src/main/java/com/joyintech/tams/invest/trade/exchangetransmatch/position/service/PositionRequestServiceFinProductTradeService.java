@@ -491,8 +491,10 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
         if(DictCodeList.交易方向_买入.getValue().equals(entity.getTrdProductDeal().getPs())){
             if(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(entity.getTrdProductDeal().getFinprodType2())){
                 resultMap.put("ps", DictCodeListExt3.交易方向_正回购.getValue());
+                ps = DictCodeListExt3.交易方向_正回购.getValue();
             }else if(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(entity.getTrdProductDeal().getFinprodType2())){
                 resultMap.put("ps", DictCodeListExt3.交易方向_逆回购.getValue());
+                ps = DictCodeListExt3.交易方向_逆回购.getValue();
             }
         }
         // ZGTFCP-1042: add by fuyongsheng 20220315 end
@@ -500,7 +502,6 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
         // 首期组合现金数据集
         if (DictCodeListExt3.交易方向_正回购.getValue().equals(ps)
                 || DictCodeListExt3.交易方向_逆回购.getValue().equals(ps)
-                || DictCodeList.交易方向_买入.getValue().equals(ps)
                 || DictCodeListExt3.交易方向_提前购回.getValue().equals(ps)
                 || (DictCodeListExt3.交易方向_到期购回.getValue().equals(ps))) {
             List<Map<String, Object>> list = new ArrayList<>();

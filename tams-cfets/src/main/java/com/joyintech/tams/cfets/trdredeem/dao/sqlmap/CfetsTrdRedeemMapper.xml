@@ -41,7 +41,7 @@
         reg.ps as ps,
         regAdd.EXERCISE_PRICE as exercisePrice,
         regAdd.redeem_Rate*100 as redeemRate,
-        deal.accountPosition as accountPosition,
+        deal.accountPosition * 100 as accountPosition,
         reg.trade_date as regTradeDate,
         reg.settle_date as exerciseDate,
         regAdd.act_sette_date as actExerciseDate,
@@ -137,7 +137,7 @@
         reg.ps as ps,
         regAdd.EXERCISE_PRICE as exercisePrice,
         regAdd.redeem_Rate*100 as redeemRate,
-        deal.accountPosition as accountPosition,
+        deal.accountPosition * 100 as accountPosition,
         reg.trade_date as regTradeDate,
         reg.settle_date as exerciseDate,
         regAdd.act_sette_date as actExerciseDate,
@@ -250,7 +250,7 @@
         pp.portfolio_name as portfolioName,
         p.sec_acct_id as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdStr,
-        p.amount/10000 as shareAmt
+        p.amount * 100/10000 as shareAmt
         from PTL_SEC_POSITION_RULE p
         left join PTL_PORTFOLIO pp
         on pp.portfolio_id=p.portfolio_id
