@@ -103,7 +103,7 @@ public class SvrProdPeriodyieldFileImpService extends FileImpService {
 	private ChbPrdPeriodYieldInterfMapper chbPrdPeriodYieldInterfMapper;
 	
 	@Override
-	public String importDB(List<Map<String, String>> listData, InterfFile interfFile) {
+	public String importDB(List<Map<String, String>> listData, InterfFile interfFile,String date) {
 		String result = "";
 		logger.debug("报价信息检查----开始-----:" +  df.format(new Date()));
 		checkData(listData, interfFile.getFilename(), InterfDefine.产品收益率净值接口数据.getCode(),InterfDefine.产品收益率净值接口数据.getCode(), null,"FPROD_ID","PROD_ID", "CHANGE_DATE", "CHANG_TYPE");
