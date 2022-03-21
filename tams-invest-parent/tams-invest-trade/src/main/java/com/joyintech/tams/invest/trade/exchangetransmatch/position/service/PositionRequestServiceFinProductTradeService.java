@@ -707,7 +707,7 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
     }
 
     private String getSharesTradePlatform(BaseTradeProductDealDto entity){
-        EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(entity.getEntrustId());
+        EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(entity.getTrdProductDealAdd().getEntrustId());
         if((DictCodeList.交易平台_大宗交易平台.getValue().equals(entity.getTrdProductDeal().getTradePlat())
                 ||DictCodeList.交易平台_综合协议交易平台.getValue().equals(entity.getTrdProductDeal().getTradePlat()))
                 &&(DictCodeList.交易方向_买入.getValue().equals(entity.getTrdProductDeal().getPs())
