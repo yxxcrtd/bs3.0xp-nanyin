@@ -302,23 +302,17 @@ public class PositionRequestManualSettleService {
         resultMap.put("busiType", busiType);
         // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 start
         resultMap.put("totalTradeId", entity.getSettleSeqNo());
-        // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 end
         if (StringUtil.equals(entity.getPageModel(), DictCodeListExt3.交收操作类型_交收.getValue())) {
             resultMap.put("busiAct", DictCodeListExt3.业务动作_交收确认.getValue());
-            // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 start
             resultMap.put("bTotalTradeId", entity.getTradeId());
-            // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 end
         } else if (StringUtil.equals(entity.getPageModel(), DictCodeListExt3.交收操作类型_回溯.getValue())) {
             resultMap.put("busiAct", DictCodeListExt3.业务动作_交收回溯.getValue());
-            // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 start
             resultMap.put("bTotalTradeId", entity.getSeqNo());
-            // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 end
         } else if (StringUtil.equals(entity.getPageModel(), DictCodeListExt3.交收操作类型_交收失败.getValue())) {
             resultMap.put("busiAct", DictCodeListExt3.业务动作_交收失败.getValue());
-            // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 start
             resultMap.put("bTotalTradeId", entity.getTradeId());
-            // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 end
         }
+        // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 end
         resultMap.put("ps", infContractDetailfile.getPs());
         resultMap.put("tradePlace", entity.getTradeMarket());
         resultMap.put("settleSpeed", null);
@@ -333,6 +327,9 @@ public class PositionRequestManualSettleService {
 
         // 首期组合现金数据集
         if (DictCodeListExt3.交易方向_正回购.getValue().equals(infContractDetailfile.getPs())
+                // ZGTFCP-1417:添加逆回购方向 modify by fuyongsheng 20220321 start
+                || DictCodeListExt3.交易方向_逆回购.getValue().equals(infContractDetailfile.getPs())
+                // ZGTFCP-1417:添加逆回购方向 modify by fuyongsheng 20220321 end
                 || DictCodeListExt3.交易方向_首期.getValue().equals(infContractDetailfile.getPs())
                 || DictCodeListExt3.交易方向_提前购回.getValue().equals(infContractDetailfile.getPs())
                 || (DictCodeListExt3.交易方向_到期购回.getValue().equals(infContractDetailfile.getPs()))) {

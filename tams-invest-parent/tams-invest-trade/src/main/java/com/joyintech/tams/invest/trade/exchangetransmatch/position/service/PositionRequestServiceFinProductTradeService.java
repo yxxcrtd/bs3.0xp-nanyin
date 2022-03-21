@@ -499,6 +499,7 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
         PositionRequestBaseBean bean;
         // 首期组合现金数据集
         if (DictCodeListExt3.交易方向_正回购.getValue().equals(ps)
+                || DictCodeListExt3.交易方向_逆回购.getValue().equals(ps)
                 || DictCodeList.交易方向_买入.getValue().equals(ps)
                 || DictCodeListExt3.交易方向_提前购回.getValue().equals(ps)
                 || (DictCodeListExt3.交易方向_到期购回.getValue().equals(ps))) {
