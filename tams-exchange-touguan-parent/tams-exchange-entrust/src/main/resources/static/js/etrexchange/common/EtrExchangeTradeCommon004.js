@@ -3230,6 +3230,9 @@
                 setRiskFlag(0);
             }
             linkEntrustNumUnit();
+            if(ps==PS_T04 && finprodType2 == FINPROD_TYPE_TG_F10){
+                $("#entrustPrice_" + currentTab).attr('disabled', 'disabled');
+            }
         }
     var addMinPriceStep = function(type,num,input) {
         var $secIdObj = $("#secIdObjRelative_" + currentTab).val();
