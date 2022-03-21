@@ -68,6 +68,15 @@ public interface StlDataGatherMapper {
      */
     List<SettleDelDealDetailDto> selectFundDelSettleTransData(Map<String, Object> paraMap);
 
+    // ZGTFCP-1363:通过开关控制查询新老头寸,默认查询新头寸 modify by fuyongsheng 20220321 start
+    /**
+     * 获取基金除权成交明细数据(新头寸)
+     * @param paraMap 查询参数
+     * @return 成交明细列表
+     */
+    List<SettleDelDealDetailDto> selectFundDelSettleTransDataNewPosition(Map<String, Object> paraMap);
+    // ZGTFCP-1363:通过开关控制查询新老头寸,默认查询新头寸 modify by fuyongsheng 20220321 end
+
     /**
      * 获取股票除权交易明细
      * @param paraMap 查询参数
@@ -80,6 +89,12 @@ public interface StlDataGatherMapper {
      * @param paraMap
      */
     List<SettleTransDataDto> selectCashBonusSettleTransData(Map<String, Object> paraMap);
+
+    /**
+     * 获取现金分红成交明细数据
+     * @param paraMap
+     */
+    List<SettleTransDataDto> selectCashBonusSettleTransDataNewPosition(Map<String, Object> paraMap);
 
     /**
      * 获取申购确认成交明细数据
@@ -135,6 +150,15 @@ public interface StlDataGatherMapper {
      */
     List<PtlSecPosition> listPtlSecPosition(Map<String,Object> param);
 
+    // ZGTFCP-1363:通过开关控制查询新老头寸,默认查询新头寸 modify by fuyongsheng 20220321 start
+    /**
+     * 新持仓余额
+     * @param param
+     * @return
+     */
+    List<PtlSecPosition> listPtlSecPositionRule(Map<String,Object> param);
+    // ZGTFCP-1363:通过开关控制查询新老头寸,默认查询新头寸 modify by fuyongsheng 20220321 end
+
     /**
      * 债券申购确认
      * @param paraMap
@@ -164,7 +188,11 @@ public interface StlDataGatherMapper {
 
     List<SettleTransDataDto> selectFundSettleTransData1(SettleTransDataDto dto);
 
+    List<SettleTransDataDto> selectFundSettleTransData1NewPosition(SettleTransDataDto dto);
+
     List<SettleTransDataDto> selectFundSettleTransData2(SettleTransDataDto dto);
+
+    List<SettleTransDataDto> selectFundSettleTransData2NewPosition(SettleTransDataDto dto);
 
     List<String> selectCqTotleTradeId(Map<String, Object> map);
 
