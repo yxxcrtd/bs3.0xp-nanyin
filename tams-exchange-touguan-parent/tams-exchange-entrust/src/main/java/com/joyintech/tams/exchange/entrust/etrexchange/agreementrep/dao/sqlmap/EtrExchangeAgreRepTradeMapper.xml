@@ -63,12 +63,7 @@
           t1.FINPROD_ID tradeId,
           t1.FINPROD_ID intiTradeId,
           t4.FINPROD_MARKET_ID origRepSecId,
-          case
-            when t7.trade_market = #{TRADE_PLACE_03} then
-                t2.PLEDGE_NUMBER/10
-          else
-                t2.PLEDGE_NUMBER
-          end as origRepSecNum,
+          t2.PLEDGE_NUMBER as origRepSecNum,
           t2.PLEDGE_NUMBER* t2.PLEDGE_FACE_VALUE origPrintAmt,
           t2.PLEDGE_RATIO * 100 origConRatio,
           t6.PORTFOLIO_ID portfolioId,
@@ -90,12 +85,7 @@
           t8.BUSI_PS repPs,
           t7.REMARK addCla,
           t3.type_7 ps,
-          case
-            when t7.trade_market = #{TRADE_PLACE_03} then
-            #{UNIT_04}
-          else
-            #{UNIT_01}
-          end as pledgeUnit, /** 质押券单位  **/
+          '01' as pledgeUnit, /** 质押券单位  **/
           t8.COUNTER_CON_NO agreeOnId
         FROM FIN_TRADE_PRODUCT t1
         INNER JOIN FIN_PRODUCT_TYPE t3
