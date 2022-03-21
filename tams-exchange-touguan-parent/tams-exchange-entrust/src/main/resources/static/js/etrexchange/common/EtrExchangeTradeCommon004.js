@@ -2447,7 +2447,6 @@
                 Joyin.ajaxJson(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeTrade001/calcPriceAndYield', param, function (result) {
                     var fprice = formatPrice(price, result.fprice);
                     $("#fprice_" + currentTab).val(fprice).trigger('blur');
-                    debugger
                     $("#yield_" + currentTab).val(result.yield).trigger('blur');
                 }, false);
                 calcEntrustNumAndAmt();
