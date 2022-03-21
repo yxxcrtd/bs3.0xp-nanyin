@@ -1293,6 +1293,36 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 				dto.setPortfolioId(item.getPortfolioId()); //让指令分发能查出来
 				// ----------add by zhangrui1 20200703 预占功能 start----------
 				if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
+					List<EtrExchangeTradeSaveRequest> etrExchangeTrade001DtoList = new ArrayList<>();
+					for(EtrExchangeTradePortfolioRequest item2:dto.getPortfolioList()) {
+						EtrExchangeTradeSaveRequest etrExchangeTrade001Dto = etrExchangeTrade001CommonService.genEtrExchangeTradeSaveRequest(dto,item2);
+						if (dto.getPs().equals(DictCodeListExt3.交易方向_正回购.getValue())) {
+							etrExchangeTrade001Dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
+						} else if (dto.getPs().equals(DictCodeListExt3.交易方向_逆回购.getValue())) {
+							etrExchangeTrade001Dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
+						}
+						if (!StringUtil.isNotEmpty(etrExchangeTrade001Dto.getEntrustId())) {
+							BussinessCodeParameter param = etrExchangeTrade001CommonService.genBussinessCodeParameter(dto);
+							String code = bussGetBussinessIdService != null ? bussGetBussinessIdService.buildBussinessCode(param) : IDGenerator.generate();
+							etrExchangeTrade001Dto.setEntrustId(code);
+						}
+						etrExchangeTrade001Dto.setInvManagerId(LoginUserUtil.getUserName());// 投资经理
+						etrExchangeTrade001Dto.setCreateUser(LoginUserUtil.getUserName());// 用户名
+						etrExchangeTrade001Dto.setCreateDept(LoginUserUtil.getDeptCode());// 用户部门
+						etrExchangeTrade001Dto.setCreateTime(new Date());// 创建时间
+						etrExchangeTrade001Dto.setBusinessTypeName(businessType);//此处存的是类型
+						etrExchangeTrade001Dto.setOptType(ENTRUST_RECORD_NEW);
+						etrExchangeTrade001Dto.setIsMulti(DictCodeList.是否_否.getValue());
+						etrExchangeTrade001Dto.setFromEtrExchange("Y");
+						etrExchangeTrade001Dto.setDisRate(item2.getDisRate());
+						List<EtrExchangeTradePortfolioRequest> portfolioList=new ArrayList<>();
+						EtrExchangeTradePortfolioRequest portfolioRequest=new EtrExchangeTradePortfolioRequest();
+						BeanUtil.copyPropertiesIgnoreNull(portfolioRequest,etrExchangeTrade001Dto);
+						portfolioList.add(portfolioRequest);
+						etrExchangeTrade001Dto.setPortfolioList(portfolioList);
+
+						etrExchangeTrade001DtoList.add(etrExchangeTrade001Dto);
+					}
 					String finprodType2 = "";
 					if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
 						finprodType2 = DictCodeList.平安资产类型_债券.getValue();
@@ -1306,10 +1336,13 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 					//债转股需要走批量接口
 					String infCode = BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue();
 					dto.setFromEtrExchange("Y");//场内指令
-					AjaxResult ar = ExchangeEntrustRdsCommonAop.doPreOccupy(dto, infCode, finprodType2);
+					AjaxResult ar = ExchangeEntrustRdsCommonAop.doListPreOccupy("EtrExchangeTradeMulti001", etrExchangeTrade001DtoList,
+							BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue());
 					if (StringUtil.isNotEmpty(ar)) {
 						return new Message<AjaxResult>().success().setData(ar);
 					}
+					ExchangeEntrustRdsCommonAop.riskListToChildren(dto.getRiskTrialRetDto(), etrExchangeTrade001DtoList,
+							(etrExchangeTrade001Dto, list) -> etrExchangeTrade001Dto.setRiskTrialRetDto(list));
 				}
 				ProcessParameter<EtrExchangeTradeSaveRequest> processParameter = new ProcessParameter<EtrExchangeTradeSaveRequest>();
 				WorkFlowParameter<EtrExchangeTradeSaveRequest> params = new WorkFlowParameter<EtrExchangeTradeSaveRequest>();
