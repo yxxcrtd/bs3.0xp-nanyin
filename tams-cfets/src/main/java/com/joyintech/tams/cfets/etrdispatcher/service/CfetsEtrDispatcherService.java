@@ -32,6 +32,7 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.etrbondfirstlbidding.dao.EtrBondFirstLBiddingMapper;
 import com.joyintech.service.entrust.etrbondfirstlbidding.dto.EtrBondFirstLBiddingDto;
 import com.joyintech.service.entrust.etrbondfirstlbidding.service.EtrBondFirstLBiddingService;
+import com.joyintech.service.trade.investtrade.commanddispatcher.dto.EntrCommandDispatcherDto;
 import com.joyintech.service.trade.investtrade.commanddispatcher.dto.EntrCommandDispatcherTotalDto;
 import com.joyintech.service.trade.investtrade.commanddispatcher.service.EntrCommandDispatcherService;
 import com.joyintech.tams.business.common.dao.CfgDataTableMapper;
@@ -1037,6 +1038,19 @@ public class CfetsEtrDispatcherService extends BaseService {
                 oprHisReq.setBusiDes((String) pageParam.get("rekReason"));
                 joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);
 
+                Map<String, Object> param = new HashMap<>();
+                param.put("entrustId", entrustId);
+                param.put("isAutoReceive", null);
+                EntrCommandDispatcherTotalDto msgdto = entrCommandDispatcherService.pushCommandMsg(param);
+                // modify by etliu 20210203 可转债网下申购不发送交易端 start
+                if (msgdto != null && !StringUtil.isEmptyList(msgdto.getEtr_entrust_list())) {
+                    for (EntrCommandDispatcherDto entrCommandDispatcherDto: msgdto.getEtr_entrust_list()){
+                        entrCommandDispatcherDto.setEntrustStatus(DictCodeList.委托状态_已退回.getValue());
+                    }
+                    restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME
+                            + "/EtrCommandDispatcher/pushCommandMsg", msgdto, Integer.class);
+                }
+                // modify by etliu 20210203 可转债网下申购不发送交易端 end
             }
             return true;
         }

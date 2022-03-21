@@ -286,13 +286,21 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 
 
 	public Page<EtrExchangeTradeEtrExchangeCommonResponse> selectEtrExchange(EtrExchangeTradeEtrExchangeCommonRequest request) {
-		Map<String, Object> param = BeanUtil.object2Map(request);
+//		if (StringUtil.isNotEmpty(request.getPageMode())){
+//			PageMode pageMode =request.getPageMode();
+//			pageMode.setPageNo(1);
+//			request.setPageMode(pageMode);
+//		}
+    	Map<String, Object> param = BeanUtil.object2Map(request);
 		param.put("userId", SecurityUtil.getLoginUser().getUserName());
 		param.put("sysDate",iPlatformDate.getSysDateStr());
 		param.put("PS_03", DictCodeListExt3.交易方向_正回购.getValue());
 		param.put("PS_04", DictCodeListExt3.交易方向_逆回购.getValue());
 		param.put("PS_T68", DictCodeListExt3.交易方向_质押券入库.getValue());
 		param.put("PS_T69", DictCodeListExt3.交易方向_质押券出库.getValue());
+		param.put("PS_10", DictCodeListExt3.上农商_指令业务类型_配股指令.getValue());
+		param.put("PS_11", DictCodeListExt3.上农商_指令业务类型_新股申购指令.getValue());
+		param.put("PS_12", DictCodeListExt3.上农商_指令业务类型_配债指令.getValue());
 		String portfolioId = (String)param.get("portfolioId");
 		if (StringUtil.isNotEmpty(portfolioId)) {
 			param.put("portfolioIdList",
@@ -325,7 +333,8 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 				for (DataDictItem t:
 						list) {
 					String typeValue = t.getItemValue();
-					if(typeValue.indexOf((String)param.get("search"))!=-1){
+					String typeId = t.getItemCode();
+					if(typeValue.indexOf((String)param.get("search"))!=-1&&typeId.equals("PRM14")){
 						declaTypeList.add(t.getItemCode());
 					}
 				}

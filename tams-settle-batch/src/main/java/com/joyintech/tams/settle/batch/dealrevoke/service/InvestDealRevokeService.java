@@ -108,6 +108,9 @@ public class InvestDealRevokeService {
         busiTypeList.add(DictCodeListExt2.共通业务类型_可转债申购交易.getValue());
         // GZYHTZJY-1142: 对债券债转股交易进行撤销 fuyongsheng add start
         busiTypeList.add(DictCodeListExt2.共通业务类型_可转债转股交易.getValue());
+        // ZGTFCP-1507:质押券入库交易撤销 modify by fuyongsheng 20220321 start
+        busiTypeList.add(DictCodeListExt3.共通业务类型_质押券出入库交易.getValue());
+        // ZGTFCP-1507:质押券入库交易撤销 modify by fuyongsheng 20220321 end
         param.put("busiTypeList", busiTypeList);
         // GZYHTZJY-1142: 对债券债转股交易进行撤销 fuyongsheng add end
         //增加协议回购中途换券撤销、竞价回购的入库、出库

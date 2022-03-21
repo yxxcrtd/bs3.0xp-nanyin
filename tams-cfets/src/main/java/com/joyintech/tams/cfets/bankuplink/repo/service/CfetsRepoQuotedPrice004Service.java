@@ -183,6 +183,9 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
     private EtrSecPositionFlowMapper etrSecPositionFlowMapper;
 
     @Autowired
+    private PtlCashPositionFlowMapper ptlCashPositionFlowMapper;
+
+    @Autowired
     private SysWflBusinessListMapper sysWflBusinessListMapper;
 
     @Autowired
@@ -2143,6 +2146,33 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             flow.setSeqno(IDGenerator.generate());
             etrSecPositionFlowMapper.insert(flow);
             cfetsIbuQuoteRepo004Mapper.updatePosition(position);
+        }
+    }
+
+    /**
+     * 撤销时更新组合持仓流水
+     *
+     * @param entrustId
+     * @author jiangpeng
+     * @date 2022/3/11 10:21
+     */
+    public void revokePtlCashPosition(String orderId, String hodingType, String hodingTypeOld) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("bizCode", orderId);
+        param.put("hodingType", hodingType);
+        List<PtlCashPositionFlow> ptlCashPositionFlows = cfetsIbuQuoteRepo004Mapper.selectPtlCashPositionFlow(param);
+        for (PtlCashPositionFlow flow : ptlCashPositionFlows) {
+            PtlCashPosition position = new PtlCashPosition();
+            PtlCashPositionFlow flow1 = new PtlCashPositionFlow();
+            BeanUtil.copyPropertiesIgnoreNull(position, flow);
+            BeanUtil.copyPropertiesIgnoreNull(flow1, flow);
+            flow.setAmount(flow.getAmount().negate());
+            flow.setSeqno(IDGenerator.generate());
+            flow1.setSeqno(IDGenerator.generate());
+            flow1.setHodingType(hodingTypeOld);
+            ptlCashPositionFlowMapper.insert(flow1);
+            ptlCashPositionFlowMapper.insert(flow);
+            cfetsIbuQuoteRepo004Mapper.updatePtlCashPosition(position);
         }
     }
 

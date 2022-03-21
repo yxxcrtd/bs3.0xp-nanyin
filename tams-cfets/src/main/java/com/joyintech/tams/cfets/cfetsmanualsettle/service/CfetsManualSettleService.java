@@ -1357,6 +1357,9 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
      */
     public void insertOldRepoPosition(CfetsManualSettleInsertDto cfetsManualSettleRequest,
                                       String buttonType, BigDecimal tradeAmt, String finprodType2, boolean isFlowStart) {
+        if(StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+            return;
+        }
         TrdBankManualSettleInfo trdBankManualSettleInfo = cfetsManualSettleRequest.getTrdBankManualSettleInfo();
         if (StringUtil.equals(trdBankManualSettleInfo.getBusiType(), DictCodeListExt3.头寸业务类型_质押式回购首期.getValue()) && isFlowStart) {
             return;

@@ -61,35 +61,37 @@ public class BondRevokeService implements BaseRevokeService {
                             && !StringUtil.equals(item.getValue(), DictCodeListExt3.交易方向_质押券入库.getValue())
                             && !StringUtil.equals(item.getValue(), DictCodeListExt3.交易方向_质押券出库.getValue()))
                     .map(item->item.getKey()).collect(Collectors.toList());
-            // GNS-929：上市流通、质押券出入库的头寸撤销特殊处理 modify by fuyongsheng 20220226 end
-            Map<String, Object> param = new HashMap<>();
-            param.put("totalTradeIdList", totalTradeIdList);
-            param.put("status", DictCodeListExt1.交易流程状态_撤销.getValue());
-            param.put("busiType", DictCodeList.共通业务类型_债券类资产交易.getValue());
+            if(CollectionUtils.isNotEmpty(totalTradeIdList)){
+                // GNS-929：上市流通、质押券出入库的头寸撤销特殊处理 modify by fuyongsheng 20220226 end
+                Map<String, Object> param = new HashMap<>();
+                param.put("totalTradeIdList", totalTradeIdList);
+                param.put("status", DictCodeListExt1.交易流程状态_撤销.getValue());
+                param.put("busiType", DictCodeList.共通业务类型_债券类资产交易.getValue());
 
-            // modify by etliu 20220227 start
-            // 广农商二阶段 GNS-890:【广农商场内清算】场内债券存续期交易重复跑批时，未对原交易数据进行撤销操作
-            List<TrdFinProductDealTotal> trdFinProductDealTotalList = investDealRevokeMapper.selectSubTotalTradeData(param);
-            if (!StringUtil.isEmptyList(trdFinProductDealTotalList)) {
-                Map<String, List<TrdFinProductDealTotal>> tempTotalTradeIdMap = trdFinProductDealTotalList.stream().collect(Collectors.groupingBy(x -> x.getpTotleTradeId()));
-                List<String> tempTotalTradeIdList = new ArrayList<>();
-                for (String tempTotalTradeId: totalTradeIdList) {
-                    if (tempTotalTradeIdMap.containsKey(tempTotalTradeId)) {
-                        for (TrdFinProductDealTotal trdFinProductDealTotal : tempTotalTradeIdMap.get(tempTotalTradeId)) {
-                            tempTotalTradeIdList.add(trdFinProductDealTotal.getTotleTradeId());
+                // modify by etliu 20220227 start
+                // 广农商二阶段 GNS-890:【广农商场内清算】场内债券存续期交易重复跑批时，未对原交易数据进行撤销操作
+                List<TrdFinProductDealTotal> trdFinProductDealTotalList = investDealRevokeMapper.selectSubTotalTradeData(param);
+                if (!StringUtil.isEmptyList(trdFinProductDealTotalList)) {
+                    Map<String, List<TrdFinProductDealTotal>> tempTotalTradeIdMap = trdFinProductDealTotalList.stream().collect(Collectors.groupingBy(x -> x.getpTotleTradeId()));
+                    List<String> tempTotalTradeIdList = new ArrayList<>();
+                    for (String tempTotalTradeId: totalTradeIdList) {
+                        if (tempTotalTradeIdMap.containsKey(tempTotalTradeId)) {
+                            for (TrdFinProductDealTotal trdFinProductDealTotal : tempTotalTradeIdMap.get(tempTotalTradeId)) {
+                                tempTotalTradeIdList.add(trdFinProductDealTotal.getTotleTradeId());
+                            }
+                        }
+                        else {
+                            tempTotalTradeIdList.add(tempTotalTradeId);
                         }
                     }
-                    else {
-                        tempTotalTradeIdList.add(tempTotalTradeId);
-                    }
+                    param.put("totalTradeIdList", tempTotalTradeIdList);
                 }
-                param.put("totalTradeIdList", tempTotalTradeIdList);
+                // modify by etliu 20220227 end
+
+                stlDataGatherService.excutePosition(param);
+
+                investDealRevokeService.revokeDealTotal(totalTradeIdList);
             }
-            // modify by etliu 20220227 end
-
-            stlDataGatherService.excutePosition(param);
-
-            investDealRevokeService.revokeDealTotal(totalTradeIdList);
             List<String> ssltTotalTradeIdList =  totalTradeIdMap.entrySet().stream().filter(item-> StringUtil.equals(item.getValue(), DictCodeList.交易方向_上市流通.getValue()))
                     .map(item->item.getKey()).collect(Collectors.toList());
             //GNS-886:解决撤销报错 modify by fuyongsheng 20220216 start

@@ -51,7 +51,7 @@
                 object.finprodType2 = FINPROD_TYPE_TG_F03;
             }
         }
-        if (object.ps == PS_T68 || object.ps == PS_T69 || object.ps == PS_T49 || object.ps == PS_T97 || object.ps == PS_T46) {
+        if (object.ps == PS_T68 || object.ps == PS_T69 || object.ps == PS_T49 || object.ps == PS_T97 || object.ps == PS_T46 || object.ps == PS_T03) {
             object.priceModel = "PRM01";
         }
         // 隐藏项需要手动获取
@@ -857,9 +857,16 @@
             var object = getSecIdSelectObjectData(secId);
             $("#secIdObjRelative_" + currentTab).val(JSON.stringify(object)).trigger('change');
             if (currentTab == 'gd') {
-                if (object) {//固定收益平台 设置清算速度
-                    setSettleSpeed(object.isNetSett);
+                // if (object) {//固定收益平台 设置清算速度
+                //     setSettleSpeed(object.isNetSett);
+                // }
+                let parms = {
+                    finprodId:secId
                 }
+                Joyin.ajaxJson(basePath + '/etrexchange/common/etrExchangeTrade001/IsSpeedTOneOrZero', parms,
+                    function (result) {
+                        setSettleSpeed(result.data);
+                    })
             }
         }
         // 证券代码选择后联动【行情信息】
@@ -2672,9 +2679,9 @@
     //根据是否纳入金额结算 设置清算速度
     var setSettleSpeed = function (isNetSett) {
         if (isNetSett == YES_OR_NO_Y) {
-            $("#settleSpeed_" + currentTab).val(ACCOUNT_SPEED_02).trigger('change');
-        } else {
             $("#settleSpeed_" + currentTab).val(ACCOUNT_SPEED_01).trigger('change');
+        } else {
+            $("#settleSpeed_" + currentTab).val(ACCOUNT_SPEED_02).trigger('change');
         }
         $("#settleSpeed_" + currentTab).attr("disabled", true);
     }
@@ -3131,13 +3138,27 @@
                 $("#entrustAmtUnit_div_" + currentTab).hide();
                 $("#invAim_div_" + currentTab).hide();
             }
+            if(ps == PS_T03){
+                $("#invAim_div_" + currentTab).hide();
+            }
+
+            if(ps == PS_T01){
+                $("#priceModel_div_" + currentTab).show();
+            }
             if (finprodType2 == FINPROD_TYPE_TG_F06) {
                 $("#priceModel_div_" + currentTab).show();
                 $("#entrustNumUnit_" + currentTab).text("份");
             }
+            if(ps == PS_T68 || ps == PS_T69){
+                $("#riskTrialRet_div").hide();
+                $("#EtrExchangeTradeCommon004_btn_riskcal").hide();
+            }
 
             if (finprodType2 == FINPROD_TYPE_TG_F01) {
                 $("#entrustNumUnit_" + currentTab).text("张");
+                $("#acctNo_div_" + currentTab).hide();
+                $("#portfolioId_div_" + currentTab).hide();
+                $("#yield_" + currentTab).attr("data-textrange", 4);
                 // $("#trader_div_xj").show();
                 // $("#counterId_div_xj").show();
                 // $("#counterTrader_div_xj").show();
@@ -3324,12 +3345,12 @@
         cols: [
             {
                 field: 'portfolioId',
-                title: 'EtrExchangeTrade002.portfolioId',
+                title: 'EtrExchangeTrade002.portfolioName',
                 sortField: 'portfolioId',
                 width: 200,
                 edit: true,
                 editOption: {
-                    type: 'select', multiple: false, searchable: true, showField: 'id',
+                    type: 'select', multiple: false, searchable: true, showField: 'text',
                     url: JoyinUtil.getRealPath("/business/common/CommonSelect/selectPortfolioId"),
                     postData: function () {
                         return {};
@@ -3362,9 +3383,10 @@
                 sortField: 'entrustAmt',
                 width: 200,
                 type: 'number',
-                edit: true
+                edit: true,
+                visible: (ps != "T03" && ps != "T49")
             },
-            {field: 'accAvailableCash', title: '可用现金(元)', width: 200, type: 'number', edit: false},
+            {field: 'accAvailableCash', title: '可用现金(元)', width: 200, type: 'number', edit: false, visible: (ps != "T03" && ps != "T49")},
             {field: 'accAvailablePos', title: '可用持仓', width: 200, type: 'number', edit: false},
             {field: 'operation', title: 'SysCommon.operation', type: 'action', buttons: ['delt']}
         ],
@@ -3414,6 +3436,7 @@
             if (dateTable.getAllRows()) {
                 var array = dateTable.getAllRows();
                 if (array.length > 0) {
+                    console.log(array);
                     if (array[0].ps == PS_T68 || array[0].ps == PS_T69) {
                         $("#entrustAmout_total_label").text("标准券数量");
                     } else {
@@ -3496,7 +3519,7 @@
             dateTable.renderRow(i, array[i]);
         }
         ;
-        dateTable.reload();
+        // dateTable.reload();
     }
 
     /**

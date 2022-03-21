@@ -27,6 +27,8 @@ public class FinprodMarketInfoRequest {
 
     @ApiModelProperty(name="tradePlat",value="交易平台",example="A1")
     private String tradePlat;
+    @ApiModelProperty(name="tradeMarket",value="交易场所",example="04")
+    private String tradeMarket;
 
     @ApiModelProperty(name="search",value="关键字",example="A1")
     private String search;
@@ -66,5 +68,13 @@ public class FinprodMarketInfoRequest {
 
     public void setInitValue(String initValue) {
         this.initValue = initValue;
+    }
+
+    public String getTradeMarket() {
+        return tradeMarket;
+    }
+
+    public void setTradeMarket(String tradeMarket) {
+        this.tradeMarket = tradeMarket;
     }
 }

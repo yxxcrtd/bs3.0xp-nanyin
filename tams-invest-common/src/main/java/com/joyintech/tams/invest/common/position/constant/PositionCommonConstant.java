@@ -204,5 +204,10 @@ public class PositionCommonConstant {
      */
     public static final String OWN_SEC_AMOUNT = "ownSecAmount";
 
+    /**
+     * 指令券面总额
+     */
+    public static final String ETR_SEC_AMOUNT="etrSecAmount";
+
 
 }
