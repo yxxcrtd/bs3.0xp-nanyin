@@ -1,11 +1,14 @@
 package com.joyintech.tams.settle.batch.datagather.reader;
 
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.SettleBatchPara;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.settle.batch.datadeal.service.StlDownDataDealService;
+import com.joyintech.tams.settle.batch.datagather.constant.StlDataGatherConstant;
 import com.joyintech.tams.settle.batch.datagather.dto.InvestTradeReaderDto;
 import com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto;
 import com.joyintech.tams.settle.batch.datagather.service.StlDataGatherService;
@@ -66,7 +69,20 @@ public class StlDataGatherShares2Reader extends StlDataGatherReader {
         // GNS-932:除权交易不从SHARE_BONUS_REG读取数据 modify by fuyongsheng 20220224 end
 
         //现金分红和送转和除权登记
-        List<SettleTransDataDto> settleTransDataDtos = stlDataGatherMapper.selectCashBonusSettleTransData(searchParam);
+        // ZGTFCP-1363:通过开关控制查询新老头寸,默认查询新头寸 modify by fuyongsheng 20220321 start
+        // List<SettleTransDataDto> settleTransDataDtos = stlDataGatherMapper.selectCashBonusSettleTransData(searchParam);
+        List<SettleTransDataDto> settleTransDataDtos;
+        // 新老头寸开关(Y:新头寸,N:老头寸)
+        String newSecPositionSwitch = CacheUtil.getSysParam("NEW_SEC_POSITION_SWITCH");
+        // 开关配置N查老头存
+        if(DictCodeList.是否_否.getValue().equals(newSecPositionSwitch)){
+            settleTransDataDtos = stlDataGatherMapper.selectCashBonusSettleTransData(searchParam);
+        }else{ // 默认查新头寸
+            searchParam.put("hodingType", DictCodeListExt3.资产类型_资产账户持仓.getValue());
+            searchParam.put("dateType", StlDataGatherConstant.DATE_TYPE_T_0);
+            settleTransDataDtos = stlDataGatherMapper.selectCashBonusSettleTransDataNewPosition(searchParam);
+        }
+        // ZGTFCP-1363:通过开关控制查询新老头寸,默认查询新头寸 modify by fuyongsheng 20220321 end
         investTradeReaderDto.setSettleTransDataList(settleTransDataDtos);
 
         //申购确认
