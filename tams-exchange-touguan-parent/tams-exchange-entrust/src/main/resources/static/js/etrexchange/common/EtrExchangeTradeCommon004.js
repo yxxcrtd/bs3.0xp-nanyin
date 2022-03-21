@@ -51,7 +51,7 @@
                 object.finprodType2 = FINPROD_TYPE_TG_F03;
             }
         }
-        if (object.ps == PS_T68 || object.ps == PS_T69 || object.ps == PS_T49 || object.ps == PS_T97 || object.ps == PS_T46) {
+        if (object.ps == PS_T68 || object.ps == PS_T69 || object.ps == PS_T49 || object.ps == PS_T97 || object.ps == PS_T46 || object.ps == PS_T03) {
             object.priceModel = "PRM01";
         }
         // 隐藏项需要手动获取
@@ -3139,6 +3139,9 @@
                 $("#entrustAmtUnit_div_" + currentTab).hide();
                 $("#invAim_div_" + currentTab).hide();
             }
+            if(ps == PS_T03){
+                $("#invAim_div_" + currentTab).hide();
+            }
             if (finprodType2 == FINPROD_TYPE_TG_F06) {
                 $("#priceModel_div_" + currentTab).show();
                 $("#entrustNumUnit_" + currentTab).text("份");
@@ -3344,7 +3347,7 @@
                 width: 200,
                 edit: true,
                 editOption: {
-                    type: 'select', multiple: false, searchable: true, showField: 'id',
+                    type: 'select', multiple: false, searchable: true, showField: 'text',
                     url: JoyinUtil.getRealPath("/business/common/CommonSelect/selectPortfolioId"),
                     postData: function () {
                         return {};
@@ -3377,9 +3380,10 @@
                 sortField: 'entrustAmt',
                 width: 200,
                 type: 'number',
-                edit: true
+                edit: true,
+                visible: (ps != "T03" && ps != "T49")
             },
-            {field: 'accAvailableCash', title: '可用现金(元)', width: 200, type: 'number', edit: false},
+            {field: 'accAvailableCash', title: '可用现金(元)', width: 200, type: 'number', edit: false, visible: (ps != "T03" && ps != "T49")},
             {field: 'accAvailablePos', title: '可用持仓', width: 200, type: 'number', edit: false},
             {field: 'operation', title: 'SysCommon.operation', type: 'action', buttons: ['delt']}
         ],
@@ -3429,6 +3433,7 @@
             if (dateTable.getAllRows()) {
                 var array = dateTable.getAllRows();
                 if (array.length > 0) {
+                    console.log(array);
                     if (array[0].ps == PS_T68 || array[0].ps == PS_T69) {
                         $("#entrustAmout_total_label").text("标准券数量");
                     } else {
