@@ -822,6 +822,40 @@
         WHERE deal.TRADE_ID = #{tradeId}
     </select>
 
+    <select id="selectIbTradeIdBytradeId" resultType="java.lang.String">
+        SELECT iqer.QUOTE_ID FROM IBU_QUOTE_ETR_RE iqer
+        LEFT JOIN IBU_QUOTE_BOND iqb ON iqb.QUOTE_ID = iqer.QUOTE_ID
+        LEFT JOIN TRDQUTO_MATCH_INFO matchinfo ON iqb.QUOTE_ID = matchinfo.PRE_TRADE_ID
+        LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL total ON total.TOTLE_TRADE_ID = matchinfo.TRD_ID
+        LEFT JOIN TRD_PRODUCT_DEAL deal ON deal.TOTLE_TRADE_ID = total.TOTLE_TRADE_ID
+        INNER JOIN TRD_PRODUCT_DEAL_ADD dealadd ON dealadd.TRADE_ID = deal.TRADE_ID AND dealadd.ENTRUST_ID = iqer.ENTRUST_ID
+        WHERE deal.TRADE_ID = #{tradeId1}
+    </select>
+
+    <select id="selectIbQuoteBytradeId" parameterType="java.lang.String" resultType="com.joyintech.tams.cfets.cfetsmanualsettle.dto.PtlFlowsDto">
+        SELECT
+            iqb.FINPROD_ID  finprodId,
+            deal.INV_AIM invAim,
+            iqb.SETT_CCY ccy,
+            iqb.PS ps,
+            iqb.SETTLE_DATE settleDate,
+            iqer.QUOTE_ID  tradeId,
+            iqer.ENTRUST_ID entrustId,
+            iqer.PORTFOLIO_ID portfolioId,
+            iqer.SHARE_AMT shareAmt,
+            iqer.FPRICE_AMT tradeAmt,
+            iqer.CREATE_USER createUser,
+            iqer.CREATE_DEPT createDept
+
+        FROM IBU_QUOTE_ETR_RE iqer
+                 LEFT JOIN IBU_QUOTE_BOND iqb ON iqb.QUOTE_ID = iqer.QUOTE_ID
+                 LEFT JOIN TRDQUTO_MATCH_INFO matchinfo ON iqb.QUOTE_ID = matchinfo.PRE_TRADE_ID
+                 LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL total ON total.TOTLE_TRADE_ID = matchinfo.TRD_ID
+                 LEFT JOIN TRD_PRODUCT_DEAL deal ON deal.TOTLE_TRADE_ID = total.TOTLE_TRADE_ID
+                 INNER JOIN TRD_PRODUCT_DEAL_ADD dealadd ON dealadd.TRADE_ID = deal.TRADE_ID AND dealadd.ENTRUST_ID = iqer.ENTRUST_ID
+        WHERE iqer.QUOTE_ID = #{tradeId}
+
+    </select>
     <select id="getTempDealDetailsByTradeId" parameterType="java.lang.String" resultType="com.joyintech.tams.cfets.cfetsmanualsettle.dto.CfetsManualSettleDealInfo">
         SELECT
             TPD.TRADE_ID TRADE_ID,
