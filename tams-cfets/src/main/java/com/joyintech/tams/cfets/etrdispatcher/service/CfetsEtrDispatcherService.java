@@ -359,6 +359,12 @@ public class CfetsEtrDispatcherService extends BaseService {
                     if(StringUtil.isNotEmpty(dto2)) {
                         cfetsEtrDispatcherTradeListResponse.setIsWin(dto2.getIsWin());
                         cfetsEtrDispatcherTradeListResponse.setEtrPrice(dto2.getEtrPrice());
+                        CfetsEtrDispatcherTradeListResponse deal =  cfetsEtrDispatcherMapper.getEtrDealInfo(cfetsEtrDispatcherTradeListResponse.getEntrustId());
+                        if(Objects.nonNull(deal)) {
+                            cfetsEtrDispatcherTradeListResponse.setDealProgress(deal.getDealProgress());
+                            cfetsEtrDispatcherTradeListResponse.setTransFinishAmt(deal.getTransFinishAmt());
+                            cfetsEtrDispatcherTradeListResponse.setTransRemainderAmt(deal.getTransRemainderAmt());
+                        }
                     }
                 }
                 //TODO 清算速度
@@ -1256,6 +1262,13 @@ public class CfetsEtrDispatcherService extends BaseService {
                             List<CfgReadonlyFormShow> infoForm1 = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode.concat(",").concat(dto.getPs()));
                             infoForm.addAll(infoForm1);
                         }
+                    }
+                }else {//处理本币业务指令交易页面的债券
+                    infoForm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode);
+                    if (StringUtil.equals(CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"), "02")) {
+                        infoForm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode);
+                        spcdCode = spcdCode + ",02";
+                        infoForm.addAll(cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode));
                     }
                 }
             }

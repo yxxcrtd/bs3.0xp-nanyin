@@ -1648,6 +1648,19 @@
         GROUP BY T9.ENTRUST_ID, T10.BID_ID, T10.IS_WIN,T10.TRADE_ID
     </select>
 
+    <select id="getEtrDealInfo" resultType="com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTradeListResponse">
+        SELECT
+            round(ETAF.FINISH_AMT / ET.ENTRUST_NUM,4) * 100 as dealProgress,
+            round(ETAF.FINISH_AMT/100,2) as transFinishAmt,
+            round((ET.ENTRUST_NUM-ETAF.FINISH_AMT) / 100,2) as transRemainderAmt
+        from ETR_ENTRUST ET
+        inner join ETR_ENTRUST_ADD ETA on ET.ENTRUST_ID=ETA.ENTRUST_ID
+        left join (SELECT ETR_FINISH_STATUS.ENTRUST_ID, sum(FINISH_AMT) AS FINISH_AMT
+                   FROM ETR_FINISH_STATUS
+                   GROUP BY ENTRUST_ID) ETAF on ET.ENTRUST_ID=ETAF.ENTRUST_ID
+        where ET.ENTRUST_ID=#{entrustId,jdbcType=VARCHAR}
+    </select>
+
     <select id="findAutoDetail" resultType="com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherAutoRequest">
         select
         listagg(ea.DISPENSE_PARA,',') WITHIN GROUP ( order by er.VDATE) distributeParameter,

@@ -158,6 +158,14 @@ public interface CfetsEtrDispatcherMapper {
      */
     CfetsEtrDispatcherTradeListResponse getEtrBidInfo(@Param("entrustId") String entrustId);
 
+    /**
+     * 查询一级投标的进度及完成信息
+     * @param entrustId
+     * @return
+     */
+    CfetsEtrDispatcherTradeListResponse getEtrDealInfo(@Param("entrustId") String entrustId);
+
+
     CfetsEtrDispatcherAutoRequest findAutoDetail(@Param("sysDate") String sysDate);
 
     /**

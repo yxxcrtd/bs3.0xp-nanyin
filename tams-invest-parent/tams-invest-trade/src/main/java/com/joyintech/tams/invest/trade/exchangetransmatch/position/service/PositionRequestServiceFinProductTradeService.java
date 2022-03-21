@@ -679,7 +679,7 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
         // 交易场所	见数据字典：交易场所
         resultMap.put(TRADE_PLACE, entity.getTrdProductDeal().getTradeMarket());
         // 交易平台	见数据字典：交易平台
-        resultMap.put(SHARES_TRADE_PLATFORM, entity.getTrdProductDeal().getTradePlat());
+        resultMap.put(SHARES_TRADE_PLATFORM, this.getSharesTradePlatform(entity));
         // 流程编号	指令的工作流ID
         resultMap.put(WORK_FLOW_ID, entity.getTrdProductDeal().getWorkflowId());
         // 日期
@@ -706,4 +706,21 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
         return null;
     }
 
+    private String getSharesTradePlatform(BaseTradeProductDealDto entity){
+        EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(entity.getTrdProductDealAdd().getEntrustId());
+        if((DictCodeList.交易平台_大宗交易平台.getValue().equals(entity.getTrdProductDeal().getTradePlat())
+                ||DictCodeList.交易平台_综合协议交易平台.getValue().equals(entity.getTrdProductDeal().getTradePlat()))
+                &&(DictCodeList.交易方向_买入.getValue().equals(entity.getTrdProductDeal().getPs())
+                ||DictCodeList.交易方向_卖出.getValue().equals(entity.getTrdProductDeal().getPs()))
+                &&(DictCodeListExt3.申报类型_意向申报.getValue().equals(etrEntrustAdd.getDealMode())
+                ||DictCodeListExt3.申报类型_定价申报.getValue().equals(etrEntrustAdd.getDealMode())
+                ||DictCodeListExt3.申报类型_点击成交申报.getValue().equals(etrEntrustAdd.getDealMode())
+                ||DictCodeListExt3.申报类型_成交申报.getValue().equals(etrEntrustAdd.getDealMode())
+                ||DictCodeListExt3.申报类型_日均价固定价格申报.getValue().equals(etrEntrustAdd.getDealMode())
+                ||DictCodeListExt3.申报类型_收盘价固定价格申报.getValue().equals(etrEntrustAdd.getDealMode()))){
+            return DictCodeList.交易平台_大宗交易平台.getValue();
+        }else {
+            return DictCodeList.交易平台_竞价撮合平台.getValue();
+        }
+    }
 }
