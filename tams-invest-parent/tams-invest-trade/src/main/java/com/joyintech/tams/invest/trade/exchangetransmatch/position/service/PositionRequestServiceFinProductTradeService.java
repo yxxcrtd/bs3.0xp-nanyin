@@ -405,13 +405,15 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
         // 证券管理账户
         bean.setSecAcctId(dealEntity.getSecManageAcctId());
         // 资金账户
+        String cashAcctId = "";
         if(CollectionUtils.isNotEmpty(stlPayOrdersList)){
-            bean.setCashAcctId(stlPayOrdersList.get(0).getMyAcctNo());
+            cashAcctId = stlPayOrdersList.get(0).getMyAcctNo();
         }
         // ZGTFCP-1445:划款指令为空时,查询资金账户 modify by fuyongsheng 20220321 start
         else{
-            bean.setCashAcctId(exchangeTransMatchCommonMapper.queryAccountNo(bean.getSecAcctId()));
+            cashAcctId = exchangeTransMatchCommonMapper.queryAccountNo(bean.getSecAcctId());
         }
+        bean.setCashAcctId(cashAcctId);
         // ZGTFCP-1445:划款指令为空时,查询资金账户 modify by fuyongsheng 20220321 end
         bean.setTradeId(dealEntity.getTradeId());
         bean.setEtrId(trdProductDealAdd.getEntrustId());
@@ -423,29 +425,28 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
         // 标准券代码
         map.put(STANDARD_SEC_ID, STANDAR_SEC_ID);
         if (DictCodeListExt3.交易方向_质押券入库.getValue().equals(ps) || DictCodeListExt3.交易方向_质押券出库.getValue().equals(ps)) {
-            if(CollectionUtils.isNotEmpty(stlPayOrdersList)){
-                //查询当日折算率
-                BigDecimal converseRadio = exchangeTransMatchCommonMapper.queryConverseRadio(dealEntity.getFinprodId(), dealEntity.getTradeDate());
-                if(converseRadio==null) {
-                    converseRadio = BigDecimal.ONE;
-                }
-                // 质押式回购出入库计算时，标准券数量=质押数量*标准折算率*面值/100
-                BigDecimal 百元券面 = trdCommonBaseService.getFaceValue(dealEntity.getFinprodId(), dealEntity.getTradeDate());
-                if (百元券面 == null) {
-                    百元券面 = BigDecimal.valueOf(100);
-                }
-                BigDecimal hundred = BigDecimal.valueOf(100);
-                // 标准券总额
-                map.put(STANDARD_SEC_AMOUNT, ArithmeticUtil.divide(ArithmeticUtil.multiply(dealEntity.getShareAmt(),
-                        converseRadio, 百元券面), hundred, 2, RoundingMode.HALF_UP));
-                // 再折算率	reConversionRate "调用【再折算率查询】参数：资金账户 = 指令资金账户
-                Map<String, Object> paramMap = Maps.newHashMap();
-                paramMap.put("acctNo", stlPayOrdersList.get(0).getMyAcctNo());
-                TrdMoreConvrateDto moreConvrate = this.getMoreConvrate(paramMap);
-                if (StringUtil.isNotEmpty(moreConvrate)) {
-                    map.put("reConversionRate", moreConvrate.getMoreConvrate());
-                }
+            //查询当日折算率
+            BigDecimal converseRadio = exchangeTransMatchCommonMapper.queryConverseRadio(dealEntity.getFinprodId(), dealEntity.getTradeDate());
+            if(converseRadio==null) {
+                converseRadio = BigDecimal.ONE;
             }
+            // 质押式回购出入库计算时，标准券数量=质押数量*标准折算率*面值/100
+            BigDecimal 百元券面 = trdCommonBaseService.getFaceValue(dealEntity.getFinprodId(), dealEntity.getTradeDate());
+            if (百元券面 == null) {
+                百元券面 = BigDecimal.valueOf(100);
+            }
+            BigDecimal hundred = BigDecimal.valueOf(100);
+            // 标准券总额
+            map.put(STANDARD_SEC_AMOUNT, ArithmeticUtil.divide(ArithmeticUtil.multiply(dealEntity.getShareAmt(),
+                    converseRadio, 百元券面), hundred, 2, RoundingMode.HALF_UP));
+            // 再折算率	reConversionRate "调用【再折算率查询】参数：资金账户 = 指令资金账户
+            Map<String, Object> paramMap = Maps.newHashMap();
+            paramMap.put("acctNo", cashAcctId);
+            TrdMoreConvrateDto moreConvrate = this.getMoreConvrate(paramMap);
+            if (StringUtil.isNotEmpty(moreConvrate)) {
+                map.put("reConversionRate", moreConvrate.getMoreConvrate());
+            }
+            map.put("cashAmount", new BigDecimal(0));
         }
         ptlList.add(map);
         resultMap.put(PTL_LIST, ptlList);
