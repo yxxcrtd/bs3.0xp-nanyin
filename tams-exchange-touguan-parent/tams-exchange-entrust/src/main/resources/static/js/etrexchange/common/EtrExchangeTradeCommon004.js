@@ -3345,7 +3345,7 @@
         cols: [
             {
                 field: 'portfolioId',
-                title: 'EtrExchangeTrade002.portfolioId',
+                title: 'EtrExchangeTrade002.portfolioName',
                 sortField: 'portfolioId',
                 width: 200,
                 edit: true,
