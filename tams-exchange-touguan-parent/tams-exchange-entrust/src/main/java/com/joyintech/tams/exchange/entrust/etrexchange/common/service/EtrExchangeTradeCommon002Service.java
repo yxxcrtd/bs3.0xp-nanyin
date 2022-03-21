@@ -286,7 +286,12 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 
 
 	public Page<EtrExchangeTradeEtrExchangeCommonResponse> selectEtrExchange(EtrExchangeTradeEtrExchangeCommonRequest request) {
-		Map<String, Object> param = BeanUtil.object2Map(request);
+		if (StringUtil.isNotEmpty(request.getPageMode())){
+			PageMode pageMode =request.getPageMode();
+			pageMode.setPageNo(1);
+			request.setPageMode(pageMode);
+		}
+    	Map<String, Object> param = BeanUtil.object2Map(request);
 		param.put("userId", SecurityUtil.getLoginUser().getUserName());
 		param.put("sysDate",iPlatformDate.getSysDateStr());
 		param.put("PS_03", DictCodeListExt3.交易方向_正回购.getValue());
