@@ -475,7 +475,7 @@
 			#{item.spvCapAccBank,jdbcType=VARCHAR} SPV_CAP_ACC_BANK,
 			#{item.otherCapAccBank,jdbcType=VARCHAR} OTHER_CAP_ACC_BANK,
 			#{item.spvRegistCode,jdbcType=VARCHAR} SPV_REGIST_CODE,
-<!--			#{item.holderDate,jdbcType=VARCHAR} HOLDER_DATE,-->
+			<!--			#{item.holderDate,jdbcType=VARCHAR} HOLDER_DATE,-->
 			#{item.holderName,jdbcType=VARCHAR} HOLDER_NAME,
 			#{item.holderSex,jdbcType=CHAR} HOLDER_SEX,
 			#{item.holderRiskPrefer,jdbcType=VARCHAR} HOLDER_RISK_PREFER,
@@ -621,7 +621,7 @@
 	</select>
 	<!-- 批量更新  Excel-->
 	<update id="updateBatchEquityInfoExcel" parameterType="java.util.List">
-		
+
 		<foreach collection="list" item="item" index="index" separator=";" >
 			update chb_equ_hold
 			<set>
@@ -667,7 +667,7 @@
 				REGIST_BANK_CODE = #{item.bankCode,jdbcType=VARCHAR}
 			</where>
 		</foreach>
-		
+
 	</update>
 	<!-- 识别标识变更时，将有效数据移植履历表 -->
 	<insert id="insertEquityIdHis" parameterType="java.util.List">

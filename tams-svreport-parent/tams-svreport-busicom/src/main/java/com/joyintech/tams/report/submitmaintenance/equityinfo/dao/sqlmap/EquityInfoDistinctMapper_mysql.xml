@@ -89,7 +89,7 @@
 		on  t1.SUMIT_SEQ = t2.SEQNO
 		<where>
 			(t2.SUBMIT_FEEDBACK_STATUS = '03' or T1.ORG_INDENTIFY_MARK is not null)
-			
+
 			<foreach collection="list" index="index" item="item" open="and (" separator="or" close=")">
 				t1.REGIST_BANK_CODE =  #{item.REGIST_BANK_CODE,jdbcType=VARCHAR}
 				and t1.IDENTIFY_NUMBER = #{item.IDENTIFY_NUMBER,jdbcType=VARCHAR}

@@ -6,7 +6,7 @@
         SELECT
         tmp1.PROD_ID,
         tmp1.VDATE,
-       IFNULL(tmp1.actEndMDate,tmp1.MDate) MDATE,
+        IFNULL(tmp1.actEndMDate,tmp1.MDate) MDATE,
         STR_TO_DATE(#{searchDate,jdbcType=VARCHAR},'%Y-%m-%d') as holdDate
         FROM (
         SELECT

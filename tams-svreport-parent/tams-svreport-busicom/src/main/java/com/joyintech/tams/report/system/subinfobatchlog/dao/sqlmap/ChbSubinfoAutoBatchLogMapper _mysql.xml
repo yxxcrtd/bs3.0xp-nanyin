@@ -33,17 +33,17 @@
         UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, CREATE_DEPT CREATE_DEPT
     </sql>
     <sql id="Sql_All_Data" >
-        select 
+        select
         <include refid="com.joyintech.tams.report.system.subinfobatchlog.dao.ChbSubinfoAutoBatchLogMapper.Base_Column_List" />
         from CHB_SUBINFO_BATCH_LOG
     </sql>
     <sql id="Sql_All_Effective_Data" >
-        select 
+        select
         <include refid="com.joyintech.tams.report.system.subinfobatchlog.dao.ChbSubinfoAutoBatchLogMapper.Base_Column_List" />
         from CHB_SUBINFO_BATCH_LOG
     </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-        select 
+        select
         <include refid="com.joyintech.tams.report.system.subinfobatchlog.dao.ChbSubinfoAutoBatchLogMapper.Base_Column_List" />
         from CHB_SUBINFO_BATCH_LOG
         where BATCH_EXE_ID = #{batchExeId,jdbcType=VARCHAR}
@@ -293,63 +293,63 @@
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
         where BATCH_EXE_ID = #{batchExeId,jdbcType=VARCHAR}
     </update>
-	<select id="queryBatchResult" resultType="com.joyintech.tams.report.system.subinfobatchlog.dto.ChbSubinfoBatchLog">
+    <select id="queryBatchResult" resultType="com.joyintech.tams.report.system.subinfobatchlog.dto.ChbSubinfoBatchLog">
         select * from(
-	        select 
-	        	batch_exe_id        batchExeId,
-	            task_id             taskId,
-	            busi_confirm_date   busiConfirmDate,
-	            operator            operator,
-	            file_type           fileType,
-	            compres_file_id     compresFileId,
-	            compres_file_name   compresFileName,
-	            compres_file_path   compresFilePath,
-	            file_count          fileCount,
-	            record_count        recordCount,
-	            deal_status         dealStatus,
-	            deal_message        dealMessage,
-	            consume_time        consumeTime,
-	            start_time          startTime,
-	            end_time            endTime,
-	            gen_condition       genCondition,
-	            create_user         createUser,
-	            create_time         createTime,
-	            update_user         updateUser,
-	            update_time         updateTime,
-	            create_dept         createDept
-	        from CHB_SUBINFO_BATCH_LOG
-	        where 1=1
-	        <if test="busiConfirmDateStart != null and busiConfirmDateStart != ''">
-	        	and REGEXP_SUBSTR(BUSI_CONFIRM_DATE, '[^ - ]+',1,3) >= #{busiConfirmDateStart,jdbcType=VARCHAR}
-			</if>
-			<if test="busiConfirmDateEnd != null and busiConfirmDateEnd != ''">
-	        	and REGEXP_SUBSTR(BUSI_CONFIRM_DATE, '[^ - ]+',1,1) &lt;= #{busiConfirmDateEnd,jdbcType=VARCHAR}
-			</if>
-	        <if test="queryDateStart != null and queryDateStart != ''">
-	        	and END_TIME >= STR_TO_DATE(#{queryDateStart,jdbcType=DATE},'%Y-%m-%d')
-			</if>
-	        <if test="queryDateEnd != null and queryDateEnd != ''">
-	        	and START_TIME &lt;= STR_TO_DATE(#{queryDateEnd,jdbcType=DATE},'%Y-%m-%d') + 1
-			</if>
-			<if test="fileType != null and fileType != ''">
-				and FILE_TYPE = #{fileType,jdbcType=VARCHAR}
-			</if>
-			<if test="dealStatus != null and dealStatus != ''">
-				and DEAL_STATUS = #{dealStatus,jdbcType=VARCHAR}
-			</if>
-			<if test="operator != null and operator != ''">
-				and OPERATOR = #{operator,jdbcType=VARCHAR}
-			</if>
-		)
+        select
+        batch_exe_id        batchExeId,
+        task_id             taskId,
+        busi_confirm_date   busiConfirmDate,
+        operator            operator,
+        file_type           fileType,
+        compres_file_id     compresFileId,
+        compres_file_name   compresFileName,
+        compres_file_path   compresFilePath,
+        file_count          fileCount,
+        record_count        recordCount,
+        deal_status         dealStatus,
+        deal_message        dealMessage,
+        consume_time        consumeTime,
+        start_time          startTime,
+        end_time            endTime,
+        gen_condition       genCondition,
+        create_user         createUser,
+        create_time         createTime,
+        update_user         updateUser,
+        update_time         updateTime,
+        create_dept         createDept
+        from CHB_SUBINFO_BATCH_LOG
+        where 1=1
+        <if test="busiConfirmDateStart != null and busiConfirmDateStart != ''">
+            and REGEXP_SUBSTR(BUSI_CONFIRM_DATE, '[^ - ]+',1,3) >= #{busiConfirmDateStart,jdbcType=VARCHAR}
+        </if>
+        <if test="busiConfirmDateEnd != null and busiConfirmDateEnd != ''">
+            and REGEXP_SUBSTR(BUSI_CONFIRM_DATE, '[^ - ]+',1,1) &lt;= #{busiConfirmDateEnd,jdbcType=VARCHAR}
+        </if>
+        <if test="queryDateStart != null and queryDateStart != ''">
+            and END_TIME >= STR_TO_DATE(#{queryDateStart,jdbcType=DATE},'%Y-%m-%d')
+        </if>
+        <if test="queryDateEnd != null and queryDateEnd != ''">
+            and START_TIME &lt;= STR_TO_DATE(#{queryDateEnd,jdbcType=DATE},'%Y-%m-%d') + 1
+        </if>
+        <if test="fileType != null and fileType != ''">
+            and FILE_TYPE = #{fileType,jdbcType=VARCHAR}
+        </if>
+        <if test="dealStatus != null and dealStatus != ''">
+            and DEAL_STATUS = #{dealStatus,jdbcType=VARCHAR}
+        </if>
+        <if test="operator != null and operator != ''">
+            and OPERATOR = #{operator,jdbcType=VARCHAR}
+        </if>
+        )
     </select>
     <select id="selectByDealStatus" resultMap="BaseResultMap">
-        select 
+        select
         <include refid="com.joyintech.tams.report.system.subinfobatchlog.dao.ChbSubinfoAutoBatchLogMapper.Base_Column_List" />
         from CHB_SUBINFO_BATCH_LOG
         where 1=1
         <if test="dealStatus != null and dealStatus != ''">
-        	and DEAL_STATUS = #{dealStatus,jdbcType=VARCHAR}
-		</if>
+            and DEAL_STATUS = #{dealStatus,jdbcType=VARCHAR}
+        </if>
     </select>
     <select id="selectUserList" resultType="com.joyintech.tams.common.base.entity.ChbSysUser">
 	    select 

@@ -49,7 +49,7 @@
         <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
         <result column="STATUS" property="status" jdbcType="VARCHAR" />
         <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
-         <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         ASSET_UUID ASSET_UUID, ASSET_CODE ASSET_CODE, ASSETS_INVEST ASSETS_INVEST, EACH_PROPORTION EACH_PROPORTION, 
@@ -70,34 +70,33 @@
         CREATE_DEPT CREATE_DEPT, ORG_CODE ORG_CODE, DEPT_CODE DEPT_CODE, STATUS STATUS, DATA_SOURCE DATA_SOURCE,FINPROD_ID
     </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-        select 
+        select
         <include refid="Base_Column_List" />
         from CHB_LOAN_DETAIL_INFO
         where ASSET_UUID = #{assetUuid,jdbcType=CHAR}
     </select>
     <select id="queryPbcAssetCode" resultType="com.joyintech.framework.select.SelectOptionDto">
-    	select 
-			ASSET_CODE id,
-			ASSET_NAME text
-		from chb_asset_info
-		where (pbc_asset_type1 ='P06' or pbc_asset_type3='R02')
-		<if test="search != null and search != ''">
-		    and (ASSET_CODE like concat_ws('','%',  #{search, jdbcType=VARCHAR},'%')
-		    or ASSET_NAME like concat_ws('','%',  #{search, jdbcType=VARCHAR},'%'))
-		</if>
+        select
+        ASSET_CODE id,
+        ASSET_NAME text
+        from chb_asset_info
+        where (pbc_asset_type1 ='P06' or pbc_asset_type3='R02')
+        <if test="search != null and search != ''">
+            and (ASSET_CODE like concat_ws('','%',  #{search, jdbcType=VARCHAR},'%')
+            or ASSET_NAME like concat_ws('','%',  #{search, jdbcType=VARCHAR},'%'))
+        </if>
     </select>
-    
+
     <select id="queryPbcAssetType" resultType="java.lang.String" parameterType="java.lang.String">
     	select
-        <!--case when pbc_asset_type1 = 'P06' then pbc_asset_type1
-        else pbc_asset_type3
-        end pbcAssetType-->
-        pbc_asset_type3 pbcAssetType
+			case when pbc_asset_type1 = 'P06' then pbc_asset_type1
+			else pbc_asset_type3
+			end pbcAssetType
 		from chb_asset_info
 		where (pbc_asset_type1 ='P06' or pbc_asset_type3='R02')
 			and ASSET_CODE = #{assetCode,jdbcType=VARCHAR}
     </select>
-    
+
     <insert id="insertLoanInfo" parameterType="com.joyintech.tams.svreport.loaninfomanagement.dto.OperationalLoanInfo001Dto" >
         insert into CHB_LOAN_DETAIL_INFO (ASSET_UUID, ASSET_CODE, ASSETS_INVEST, 
             EACH_PROPORTION, LOANS_TYPE, ORIG_CCY, 
@@ -140,7 +139,7 @@
             )
     </insert>
 
-	<insert id="insertLoanInfoSelective" parameterType="com.joyintech.tams.svreport.loaninfomanagement.dto.OperationalLoanInfo001Dto" >
+    <insert id="insertLoanInfoSelective" parameterType="com.joyintech.tams.svreport.loaninfomanagement.dto.OperationalLoanInfo001Dto" >
         insert into CHB_LOAN_DETAIL_INFO
         <trim prefix="(" suffix=")" suffixOverrides="," >
             <if test="assetUuid != null" >
@@ -436,19 +435,19 @@
         </trim>
     </insert>
 
-	<!-- 根据主键更新数据状态-->
+    <!-- 根据主键更新数据状态-->
     <update id="updateStatus">
         update CHB_LOAN_DETAIL_INFO
         set STATUS = #{status,jdbcType=VARCHAR}
         where ASSET_UUID = #{assetUuid,jdbcType=CHAR}
     </update>
-    
+
     <!-- 查询资产代码是否已存在 -->
     <select id="checkAssetCodeExist" parameterType="java.lang.String" resultType="java.lang.Integer" >
     	select count(1) count from CHB_LOAN_DETAIL_INFO
 		where STATUS='E' and ASSET_CODE = #{assetCode,jdbcType=VARCHAR}
     </select>
-    
+
     <!-- 根据计划名称查询计划id以及待维护表ID -->
     <select id="queryPlanInfo" parameterType="java.lang.String" resultType="com.joyintech.tams.svreport.loaninfomanagement.dto.OperationalLoanInfo001Dto" >
     	select 
@@ -459,22 +458,22 @@
         left join CHB_INFOMGR_CONFIG cic on cifd.BASEINFORMATIONID = cic.BASEINFORMATIONID
         where cif.FILTERNAME = #{pid,jdbcType=VARCHAR}
     </select>
-    
+
     <!-- 省市县联动 -->
     <select id="getAddressSelectOption" resultType="com.joyintech.framework.select.SelectOptionDto">
-		select sdl1.ITEM_CODE id,sdl1.ITEM_VALUE text from SYS_DATADICT_LIST sdl1 
-		inner join SYS_DATADICT_LIST_LINK sdll on sdll.LINKED_DICT_CODE = #{dict_code_parent}
-		and sdl1.DICT_CODE = #{item_code_field}
-		and sdl1.ITEM_CODE=sdll.ITEM_CODE
-		<if test="item_code_child != null and item_code_child != ''">
-			and TRIM(sdll.LINKED_ITEM_CODE) = TRIM(#{item_code_child})
-		</if>
-		<where>
-			<if test="search != null and search !=''">
-				sdl1.ITEM_VALUE like concat_ws('','%', #{search,jdbcType=VARCHAR},'%')
-			</if>
-		</where>
-	</select>
+        select sdl1.ITEM_CODE id,sdl1.ITEM_VALUE text from SYS_DATADICT_LIST sdl1
+        inner join SYS_DATADICT_LIST_LINK sdll on sdll.LINKED_DICT_CODE = #{dict_code_parent}
+        and sdl1.DICT_CODE = #{item_code_field}
+        and sdl1.ITEM_CODE=sdll.ITEM_CODE
+        <if test="item_code_child != null and item_code_child != ''">
+            and TRIM(sdll.LINKED_ITEM_CODE) = TRIM(#{item_code_child})
+        </if>
+        <where>
+            <if test="search != null and search !=''">
+                sdl1.ITEM_VALUE like concat_ws('','%', #{search,jdbcType=VARCHAR},'%')
+            </if>
+        </where>
+    </select>
     <!-- 查询导入资产 -->
     <select id="checkByAssetCode" parameterType="java.lang.String" resultType="com.joyintech.tams.common.base.entity.ChbAssetInfo" >
     	select * from CHB_ASSET_INFO

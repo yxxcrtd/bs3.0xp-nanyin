@@ -107,7 +107,7 @@
         D.REG_CODE,
         IF
         ((@PROD_ID = A.PROD_ID AND @INDENTIFY_MARK = B.INDENTIFY_MARK),
-         @rank :=@rank + 1, @rank :=1 ) AS investStatusNo,
+        @rank :=@rank + 1, @rank :=1 ) AS investStatusNo,
         @PROD_ID := A.PROD_ID,
         @INDENTIFY_MARK := B.INDENTIFY_MARK
         FROM
