@@ -418,22 +418,27 @@ public class SvrPerProDeclareInfoMService extends CommonExportService<SvrPerProD
             // 产品投资国家或地区22
             // 投向地区不为空
             if (!(list.get(21) == null || list.get(21).trim().equals(""))) {
-                // 境外
-                if (list.get(21).trim().equals("02")) {
+                // 境内和境外
+                if (list.get(21).trim().equals("03")){
+                    if (list.get(22) == null || list.get(22).trim().equals("")){
+                        flag = false;
+                        message.add("当资金投向地区要素选择“境内和境外”时,产品投资国家或地区不能为空");
+                    }
+                } else if (list.get(21).trim().equals("02")) {
+                    // 境外
                     if (list.get(22) == null || list.get(22).trim().equals("")) {
                         flag = false;
-                        message.add("当资金投向地区要素选择境外时，产品投资国家或地区不能为空");
-                    } else if (list.get(22).trim().equals("CHN")){
+                        message.add("当资金投向地区要素选择“境外”时，产品投资国家或地区不能为空");
+                    } else if (list.get(22).trim().toString().contains("CHN")){
                         flag = false;
-                        message.add("当资金投向地区要素选择境外时，产品投资国家或地区不能为CHN");
+                        message.add("当资金投向地区要素选择“境外”时，产品投资国家或地区不能为CHN");
                     }
-                }
-                // 境内
-                if (list.get(21).trim().equals("01")){
+                } else if (list.get(21).trim().equals("01")){
+                    // 境内
                     // 必须为空
-                    if (list.get(22) != null || !list.get(22).trim().equals("")){
+                    if (!(list.get(22) == null || list.get(22).trim().equals(""))){
                         flag = false;
-                        message.add("当资金投向地区要素选择境内时，此要素必须为空");
+                        message.add("当资金投向地区要素选择“境内”时，产品投资国家或地区必须为空");
                     }
 
                 }
@@ -776,7 +781,40 @@ public class SvrPerProDeclareInfoMService extends CommonExportService<SvrPerProD
                 flag = false;
                 message.add("投资者风险偏好不能为空");
                 // 条件限制
+            } else {
+                if (!(list.get(53) == null || list.get(53).trim().equals(""))){
+                    // 保守型
+                    if (list.get(54).trim().toString().contains("01")){
+                        if (!list.get(53).trim().equals("01")){
+                            flag = false;
+                            message.add("投资者风险偏好 01保守型投资者只能投资风险等级为一级的产品");
+                        }
+                    } else if (list.get(54).trim().toString().contains("02")){
+                        // 稳健型
+                        if (!(list.get(53).trim().equals("01") || list.get(53).trim().equals("02"))){
+                            flag = false;
+                            message.add("投资者风险偏好 02稳健型投资者只能投资风险等级为一级或二级的产品");
+                        }
+                    } else if (list.get(54).trim().toString().contains("03")){
+                        // 平衡型
+                        if (!(list.get(53).trim().equals("01") || list.get(53).trim().equals("02")
+                                || list.get(53).trim().equals("03"))) {
+                            flag = false;
+                            message.add("投资者风险偏好 03平衡型投资者只能投资风险等级为一级、二级或三级的产品");
+                        }
+                    } else if (list.get(54).trim().toString().contains("04")){
+                        // 投资者
+                        if (!(list.get(53).trim().equals("01") || list.get(53).trim().equals("02")
+                                || list.get(53).trim().equals("03") || list.get(53).trim().equals("04"))) {
+                            flag = false;
+                            message.add("投资者风险偏好 04成长型投资者只能投资风险等级为一级、二级、三级或四级的产品");
+                        }
+                    } else if (list.get(54).trim().toString().contains("05")){
+                        ;
+                    }
+                }
             }
+
             // 发行机构提前终止标识55
             if (list.get(55) == null || list.get(55).trim().equals("")){
                 flag = false;
@@ -851,6 +889,24 @@ public class SvrPerProDeclareInfoMService extends CommonExportService<SvrPerProD
             }
             // 数据状态62
             // 备注63
+            // 最短持有期后是否自由赎回27
+            if (!(list.get(27) == null || list.get(27).trim().equals(""))) {
+                if (list.get(27).trim().equals("99")) {
+                    if (list.get(63) == null || list.get(63).trim().equals("")) {
+                        flag = false;
+                        message.add("当是否设置最短持有期限选择“99 其他”时,备注必填");
+                    }
+                }
+            }
+            // 境内托管机构名称48
+            if (!(list.get(48) == null || list.get(48).trim().equals(""))) {
+                if (list.get(48).trim().equals("99")) {
+                    if (list.get(63) == null || list.get(63).trim().equals("")) {
+                        flag = false;
+                        message.add("当境内托管机构名称选择“99 其他”时,备注必填");
+                    }
+                }
+            }
 
             if (CollectionUtils.isNotEmpty(message)) {
                 checkResult.add(new ExcelValidDto(list.get(0), String.valueOf(i+2),
