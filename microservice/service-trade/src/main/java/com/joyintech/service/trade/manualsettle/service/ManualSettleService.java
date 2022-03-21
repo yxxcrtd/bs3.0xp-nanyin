@@ -3,10 +3,7 @@ package com.joyintech.service.trade.manualsettle.service;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.service.trade.entrustmsgbymq.dao.EntrustMsgbyMQMapper;
 import com.joyintech.service.trade.entrustmsgbymq.dto.TrdTempDto;
 import com.joyintech.service.trade.entrustmsgbymq.service.TradePreClearingService;
@@ -18,6 +15,7 @@ import com.joyintech.tams.common.base.dao.TrdManualSettleFlowMapper;
 import com.joyintech.tams.common.base.dao.TrdProductTempDealAddMapper;
 import com.joyintech.tams.common.base.dao.TrdProductTempDealMapper;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.component.business.trade.BaseTradeProductDealCommService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -54,6 +52,10 @@ public class ManualSettleService extends BaseService<ManualSettleDto> {
 
     private final static Logger logger = LoggerFactory.getLogger(ManualSettleService.class);
 
+    // 上交所交易日历ID
+    public static final String STL_DOWNDATA_DEAL_SHJYS_CALID = "STL_DOWNDATA_DEAL_SHJYS_CALID";
+    // 深交所交易日历ID
+    public static final String STL_DOWNDATA_DEAL_SZJYS_CALID = "STL_DOWNDATA_DEAL_SZJYS_CALID";
 
     @Autowired
     private ManualSettleMapper manualSettleMapper;
@@ -86,6 +88,9 @@ public class ManualSettleService extends BaseService<ManualSettleDto> {
 
     @Autowired
     private CommonPositionService commonPositionService;
+
+    @Autowired
+    private DateCalService dateCalService;
 
     public Page<ManualSettleDto> selectForPage(int page, int length, Map<String, Object> pageParam)
             throws Exception {
@@ -396,6 +401,15 @@ public class ManualSettleService extends BaseService<ManualSettleDto> {
         }
         Map<String,Object> param = new HashMap<>();
         param.put("settleSeqNo",dto.getSettleSeqNo());
+        // ZGTFCP-1417:交收延期顺延至下一个工作日 modify by fuyongsheng 20220321 start
+        String calendarId;
+        if(DictCodeListExt1.交易场所_上海证券交易所.getValue().equals(dto.getTradeMarket())){
+            calendarId = CacheUtil.getSysParam(STL_DOWNDATA_DEAL_SHJYS_CALID);
+        }else{
+            calendarId = CacheUtil.getSysParam(STL_DOWNDATA_DEAL_SZJYS_CALID);
+        }
+        param.put("settleDelayDate",DateUtil.parse(this.getNextWorkDay(dto.getSettleDate(),calendarId)));
+        // ZGTFCP-1417:交收延期顺延至下一个工作日 modify by fuyongsheng 20220321 end
         if(StringUtil.equals(dto.getPageModel(),DictCodeListExt3.交收操作类型_交收.getValue())){
             param.put("settleStatus",DictCodeListExt3.交收状态_已交收.getValue());
         }else if(StringUtil.equals(dto.getPageModel(),DictCodeListExt3.交收操作类型_回溯.getValue())){
@@ -413,5 +427,24 @@ public class ManualSettleService extends BaseService<ManualSettleDto> {
         Page<ManualSettleDto> pageDto = super.queryForPage(page, length, () -> manualSettleMapper.findPageExport(pageParam));
         return pageDto;
     }
+
+    /**
+     * 获取下一个工作日
+     *
+     * @param tradeDate， calendarId
+     * @return 下一个工作日
+     * @see
+     * @since 1.0
+     */
+    public String getNextWorkDay(Date tradeDate,String calendarId) {
+        if (dateCalService != null) {
+            List<String> holiday = dateCalService.getDealCalendarHoliday(tradeDate,
+                    DateUtil.addDays(tradeDate, 31), calendarId);
+            Date tradingDay = dateCalService.calculationTradingDay(tradeDate, 1, holiday, "1");
+            return DateUtil.format(tradingDay);
+        }
+        return null;
+    }
+
 } 
 
