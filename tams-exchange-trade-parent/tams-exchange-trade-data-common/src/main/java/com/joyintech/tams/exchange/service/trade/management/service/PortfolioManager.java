@@ -46,6 +46,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.joyintech.tams.exchange.common.constant.joyin.BussinessDictCodeList.币种_人民币;
+import static com.joyintech.tams.exchange.common.constant.joyin.BussinessDictCodeList.是否_否;
 
 /**
  * 组合信息Service
@@ -670,7 +671,9 @@ public class PortfolioManager extends BaseService {
         }
 
         // 系统参数：委托价格不优于指令价格时的处理模式
-        if (EntrustUtils.isfairModeEntrustPriceBestThanInstructionForbid()) {
+        if (EntrustUtils.isfairModeEntrustPriceBestThanInstructionForbid()
+            // 首次调用，特殊处理
+            || TradeUtils.isZero(entrustPrice)) {
             // 01 若输入委托价格不是优于所有指令价格时，
             // 提示：“委托价格必须优于所有指令价格”，
             // 并自动将委托价格调整为能够满足所有指令价格的最低（高）价格
@@ -711,25 +714,38 @@ public class PortfolioManager extends BaseService {
 
             // 提示：“委托价格必须优于所有指令价格”
             if (adjustedPrice.compareTo(entrustPrice) != 0) {
-                result.setInfoLevel("2");
-                result.setInfoDetails("委托价格必须优于所有指令价格");
+                // 首次调用，特殊处理
+                if (!TradeUtils.isZero(entrustPrice)) {
+                    result.setInfoLevel("2");
+                    result.setInfoDetails("委托价格必须优于所有指令价格");
+                }
                 result.setPrice(adjustedPrice);
             }
         } else {
             // 02时，剔除该指令并继续时
             BigDecimal orderPrice = adjustedPrice;
-            if (EntrustBs.isBuy(entrustBs)) {
-                // 买入，过滤价格小于指令价格的指令
-                tempList = tempList.stream().filter(item -> orderPrice.compareTo(item.getEntrustPrice()) >= 0).collect(Collectors.toList());
-            } else {
-                // 卖出，过滤价格大于指令价格的指令
-                tempList = tempList.stream().filter(item -> orderPrice.compareTo(item.getEntrustPrice()) <= 0).collect(Collectors.toList());
+            for (Instruction ins : tempList) {
+                if (EntrustBs.isBuy(entrustBs)) {
+                    // 买入，过滤价格小于指令价格的指令
+                    if (orderPrice.compareTo(ins.getEntrustPrice()) > 0) {
+                        ins.setEntrustClass(是否_否.getValue());
+                    }
+                } else {
+                    // 卖出，过滤价格大于指令价格的指令
+                    if (orderPrice.compareTo(ins.getEntrustPrice()) < 0) {
+                        ins.setEntrustClass(是否_否.getValue());
+                    }
+                 }
             }
 
             // 系统参数“委托价格不优于指令价格时的处理模式”为2.剔除该指令并继续时，
             // 若委托价格选择市价，则限价指令数量调整为0，并不参与数量分配；
             if (EntrustUtils.isMarketPriceByEntrustProp(bean.getEntrustProp())) {
-                tempList = tempList.stream().filter(EntrustUtils::isMarketPrice).collect(Collectors.toList());
+                for (Instruction ins : tempList) {
+                    if (!EntrustUtils.isMarketPrice(ins)) {
+                        ins.setEntrustClass(是否_否.getValue());
+                    }
+                }
             }
         }
         /*
@@ -758,6 +774,9 @@ public class PortfolioManager extends BaseService {
             } else {
                 dto.setLeftVolume(TradeUtils.divide(TradeUtils.subtract(ins.getEntrustAmt(), ins.getEntrustLeftAmt(), ins.getFrozenQuantity(), 2), adjustedPrice, 2).longValue());
             }
+            if (是否_否.getValue().equals(ins.getEntrustClass())) {
+                dto.setLeftVolume(0L);
+            }
             resultList.add(dto);
         }
         // 总剩余指令数量
@@ -771,18 +790,20 @@ public class PortfolioManager extends BaseService {
         // 计算指令的委托数量
         for (PortfolioInstructionContextDto context : resultList) {
             Long realVolume = 0L;
-            if (EntrustUtils.isBond(context.getInstruction())) {
-                realVolume = getEntrustVolume(totalLeftVolume, bean.getEntrustVolume(), context.getLeftVolume(), 1);
-            } else if (EntrustUtils.isPledgeRepurchase(context.getInstruction())) {
-                if (Market.SZSE.investValue.equals(context.getInstruction().getTradeMarket())) {
+            if (bean.getEntrustVolume() != 0L) {
+                if (EntrustUtils.isBond(context.getInstruction())) {
                     realVolume = getEntrustVolume(totalLeftVolume, bean.getEntrustVolume(), context.getLeftVolume(), 1);
+                } else if (EntrustUtils.isPledgeRepurchase(context.getInstruction())) {
+                    if (Market.SZSE.investValue.equals(context.getInstruction().getTradeMarket())) {
+                        realVolume = getEntrustVolume(totalLeftVolume, bean.getEntrustVolume(), context.getLeftVolume(), 1);
+                    } else {
+                        realVolume = getEntrustVolume(totalLeftVolume, bean.getEntrustVolume(), context.getLeftVolume(), 3);
+                    }
+                } else if (EntrustUtils.isFutures(context.getInstruction())) {
+                    realVolume = getEntrustVolume(totalLeftVolume, bean.getEntrustVolume(), context.getLeftVolume(), 0);
                 } else {
-                    realVolume = getEntrustVolume(totalLeftVolume, bean.getEntrustVolume(), context.getLeftVolume(), 3);
+                    realVolume = getEntrustVolume(totalLeftVolume, bean.getEntrustVolume(), context.getLeftVolume(), 2);
                 }
-            } else if (EntrustUtils.isFutures(context.getInstruction())) {
-                realVolume = getEntrustVolume(totalLeftVolume, bean.getEntrustVolume(), context.getLeftVolume(), 0);
-            } else {
-                realVolume = getEntrustVolume(totalLeftVolume, bean.getEntrustVolume(), context.getLeftVolume(), 2);
             }
             context.setEntrustVolume(Math.min(context.getLeftVolume(), realVolume));
             // 分配到指令的委托数量，借用转股数量字段
