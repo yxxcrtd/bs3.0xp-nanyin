@@ -743,7 +743,7 @@
         a.MARKET, a.ASSET_TYPE, a.STOCK_CODE, a.STOCK_NAME, a.BUSINESS_FLAG, a.ENTRUST_TYPE, a.ENTRUST_PROP,
         a.BS_FLAG, a.TRADE_TYPE, a.TRADED_BALANCE, a.TRADED_VOLUME, a.TRADED_PRICE, a.CLEAR_BALANCE,
         <!--nvl(a.TRADE_TIME,0) AS tradeTime,-->
-        TO_CHAR( a.CREATE_TIME, 'HH:mm:ss' ) AS tradeTime,
+        TO_CHAR( a.CREATE_TIME, 'HH:mm:ss' ) AS TRADE_TIME,
         a.DISCOUNT, a.TRANS_CODE, a.PROP_SEAT_NO,
         TO_CHAR( a.CREATE_TIME, 'yyyy-MM-dd' ) TRADING_DAY,
         <!--a.TRADING_DAY,-->
