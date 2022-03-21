@@ -925,7 +925,7 @@ public class KCBPTradeAgent extends TradeAgentDsp {
         for (QueryEnum queryEnum : QueryEnum.values()) {
             try {
                 poolExecutor.execute(new QueryTask(queryEnum, kcbpAccount));
-                Thread.sleep(500);
+                Thread.sleep(1000);
             } catch (Exception e) {
                 logger.error("{}执行异常：{}", queryEnum.name(), e.getMessage(), e);
             }
@@ -957,18 +957,6 @@ public class KCBPTradeAgent extends TradeAgentDsp {
             System.out.println(this.toString() + " is running!");
             try {
                 switch (queryEnum) {
-                    case queryIncrementTrade:
-                        queryIncrementTrade(kcbpAccount);
-                        return;
-                    case queryFixedIncomeTrade:
-                        queryFixedIncomeTrade(kcbpAccount);
-                        return;
-                    case queryProtocolBack_SZ_Trade:
-                        queryProtocolBack_SZ_Trade(kcbpAccount);
-                        return;
-                    case queryProtocolBack_SH_Trade:
-                        queryProtocolBack_SH_Trade(kcbpAccount);
-                        return;
                     case queryIncrementEntrust:
                         queryIncrementEntrust(kcbpAccount);
                         return;
@@ -980,6 +968,18 @@ public class KCBPTradeAgent extends TradeAgentDsp {
                         return;
                     case queryProtocolBack_SZ_Entrust:
                         queryProtocolBack_SZ_Entrust(kcbpAccount);
+                        return;
+                    case queryIncrementTrade:
+                        queryIncrementTrade(kcbpAccount);
+                        return;
+                    case queryFixedIncomeTrade:
+                        queryFixedIncomeTrade(kcbpAccount);
+                        return;
+                    case queryProtocolBack_SH_Trade:
+                        queryProtocolBack_SH_Trade(kcbpAccount);
+                        return;
+                    case queryProtocolBack_SZ_Trade:
+                        queryProtocolBack_SZ_Trade(kcbpAccount);
                         return;
                     default:
                 }
