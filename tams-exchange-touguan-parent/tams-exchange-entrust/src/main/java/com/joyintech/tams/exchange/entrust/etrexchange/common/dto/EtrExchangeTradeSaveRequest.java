@@ -103,7 +103,7 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
     private String businessTypeName;
 
     @ApiModelProperty(name="standardBondVolume",value="标准券数量",example="")
-    private Integer standardBondVolume;
+    private Long standardBondVolume;
 
     @ApiModelProperty(name="repoAmt",value="回购金额",example="12")
     private BigDecimal repoAmt;
@@ -578,11 +578,11 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
         this.priceModel = priceModel;
     }
 
-    public Integer getStandardBondVolume() {
+    public Long getStandardBondVolume() {
         return standardBondVolume;
     }
 
-    public void setStandardBondVolume(Integer standardBondVolume) {
+    public void setStandardBondVolume(Long standardBondVolume) {
         this.standardBondVolume = standardBondVolume;
     }
 
