@@ -10,28 +10,42 @@
  
 package com.joyintech.tams.common;
 
-import java.io.*;
-import java.lang.reflect.Field;
-import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.Vector;
-import java.util.stream.Collectors;
-
-import javax.xml.parsers.ParserConfigurationException;
-
+import com.jcraft.jsch.ChannelSftp.LsEntry;
+import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.framework.util.FileNameUtil;
+import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.ChbFileReadMonitorInfoMapper;
+import com.joyintech.tams.common.base.entity.ChbFileReadMonitorInfo;
+import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.service.CommonCodeCheckBatchService;
+import com.joyintech.tams.common.svreport.datacheck.dao.ChbInterfErrodataMapper;
+import com.joyintech.tams.common.svreport.datacheck.dto.ChbInterfErrodataWithBLOBs;
+import com.joyintech.tams.common.svreport.datacheck.dto.CheckRule;
+import com.joyintech.tams.common.svreport.datacheck.service.DataCheckService;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.report.common.TxtParseUtil;
+import com.joyintech.tams.report.common.XmlParseUtil;
+import com.joyintech.tams.report.common.util.ReportGlobalConstant;
+import com.joyintech.tams.report.common.util.SysDataUtil;
+import com.joyintech.tams.report.framework.util.FtpUtil;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
+import com.joyintech.tams.report.interf.common.constant.InterfConstants;
+import com.joyintech.tams.report.interf.common.imp.ImportGenerator;
+import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpColumn;
+import com.joyintech.tams.report.interf.common.service.InterfService;
+import com.joyintech.tams.report.interf.common.util.InterfUtil;
+import com.joyintech.tams.report.interf.common.util.SftpUtil;
+import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -42,37 +56,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.ReflectionUtils;
 import org.xml.sax.SAXException;
 
-import com.jcraft.jsch.ChannelSftp.LsEntry;
-import com.joyintech.framework.base.BaseEntity;
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.util.FileNameUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.dao.ChbFileReadMonitorInfoMapper;
-import com.joyintech.tams.common.base.entity.ChbFileReadMonitorInfo;
-import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
-import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
-import com.joyintech.tams.common.svreport.datacheck.dao.ChbInterfErrodataMapper;
-import com.joyintech.tams.common.svreport.datacheck.dto.ChbInterfErrodataWithBLOBs;
-import com.joyintech.tams.common.svreport.datacheck.dto.CheckRule;
-import com.joyintech.tams.common.svreport.datacheck.service.DataCheckService;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.report.common.TxtParseUtil;
-import com.joyintech.tams.report.common.XmlParseUtil;
-import com.joyintech.tams.report.common.util.ReportGlobalConstant;
-import com.joyintech.tams.report.common.util.SysDataUtil;
-import com.joyintech.tams.report.framework.util.FtpUtil;
-import com.joyintech.tams.report.interf.common.constant.InterfConstants;
-import com.joyintech.tams.report.interf.common.imp.ImportGenerator;
-import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpColumn;
-import com.joyintech.tams.report.interf.common.service.InterfService;
-import com.joyintech.tams.report.interf.common.util.InterfUtil;
-import com.joyintech.tams.report.interf.common.util.SftpUtil;
-import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
-import com.joyintech.tams.systemtools.util.CommonUtil;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 外部数据文件接口基类
@@ -907,7 +897,7 @@ public abstract class FileImpService extends InterfService{
      * 2、saveData --入库
      * @param fileLists
      */
-    public abstract String importDB(List<Map<String, String>> listData,InterfFile interfFile, String date);
+    public abstract String importDB(List<Map<String, String>> listData,InterfFile interfFile);
     
     public void clearFile(InterfFile interfFile){
         // ftp文件移动
@@ -1126,27 +1116,27 @@ public abstract class FileImpService extends InterfService{
                     }
                 }else if ("java.math.BigDecimal".equals(type.getTypeName())) {
                     try {
-                        field.set(baseEntity ,(value == null || "".equals(value)) ? BigDecimal.ZERO : new BigDecimal(value));
+                        field.set(baseEntity ,(value == null || "".equals(value)) ? null : new BigDecimal(value));
                     } catch ( IllegalAccessException e) {
                         logger.error(e.getMessage(),e);
                     }
                 }
                 else if ("java.lang.Integer".equals(type.getTypeName())) {
                     try {
-                        field.set(baseEntity ,(value == null || "".equals(value)) ? 0 : Integer.valueOf(value));
+                        field.set(baseEntity ,(value == null || "".equals(value)) ? null : Integer.valueOf(value));
                     } catch (IllegalAccessException e) {
                         logger.error(e.getMessage(),e);
                     }
                 }
                 else if ("java.lang.Short".equals(type.getTypeName())) {
                     try {
-                        field.set(baseEntity, (value == null || "".equals(value)) ? 0 : Short.valueOf(value));
+                        field.set(baseEntity, (value == null || "".equals(value)) ? null : Short.valueOf(value));
                     } catch ( IllegalAccessException e) {
                         logger.error(e.getMessage(),e);
                     }
                 } else if ("java.lang.Long".equals(type.getTypeName())) {
                     try {
-                        field.set(baseEntity, (value == null || "".equals(value)) ? 0 : Long.valueOf(value));
+                        field.set(baseEntity, (value == null || "".equals(value)) ? null : Long.valueOf(value));
                     } catch ( IllegalAccessException e) {
                         logger.error(e.getMessage(),e);
                     }
