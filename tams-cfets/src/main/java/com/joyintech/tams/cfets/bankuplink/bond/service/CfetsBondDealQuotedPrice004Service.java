@@ -456,14 +456,14 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
 //                preTrdCommonDto.setIsExistNew(DictCodeList.是否_是.getValue());
 //                preTrdCommonBaseService.excutePosition(preTrdCommonDto,false);
 //            }
-            try {
+//            try {
                 //头寸
                 PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto, DictCodeListExt3.系统动作_新建.getValue(), DictCodeListExt3.系统动作_新建.getValue(), type));
-            } catch (PositionException e) {
-                e.printStackTrace();
-                Message message = PositionUtil.ajaxErrorReturn(e);
-                throw new BusinessException("MSG:" + message.getMessage());
-            }
+//            } catch (PositionException e) {
+//                e.printStackTrace();
+//                Message message = PositionUtil.ajaxErrorReturn(e);
+//                throw new BusinessException("MSG:" + message.getMessage());
+//            }
         }
 
     }
