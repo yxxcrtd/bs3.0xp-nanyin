@@ -1636,7 +1636,7 @@
 
     <select id="getEtrBidInfo" resultType="com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTradeListResponse">
         SELECT T9.ENTRUST_ID,
-        LISTAGG( T9.BID_PRICE * 100 || '%', ',') WITHIN GROUP (order by (T9.BID_PRICE * 100))  etrPrice,
+        LISTAGG(to_char(T9.BID_PRICE * 100,'fm99990.0000') || '%', ',') WITHIN GROUP (order by (T9.BID_PRICE * 100))  etrPrice,
         CASE  WHEN T10.BID_ID IS NULL THEN '01'<!--待投标，待确认-->
         WHEN T10.TRADE_ID IS NOT NULL THEN '05' <!--待投标，已完成-->
         WHEN T10.IS_WIN IS NOT NULL THEN DECODE(T10.IS_WIN,'Y','04','N','03',T10.IS_WIN) <!--中标状态-->

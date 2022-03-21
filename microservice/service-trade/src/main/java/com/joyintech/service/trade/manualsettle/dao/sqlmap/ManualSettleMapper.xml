@@ -144,7 +144,7 @@
     <update id="updateSettleInfo">
         UPDATE TRD_MANUAL_SETTLE_INFO SET
         <if test="settleStatus.equals('03')">
-          SETTLE_DATE = SETTLE_DATE+1,
+          SETTLE_DATE = #{settleDelayDate, jdbcType=DATE},
         </if>
         SETTLE_STATUS = #{settleStatus}
         <where>

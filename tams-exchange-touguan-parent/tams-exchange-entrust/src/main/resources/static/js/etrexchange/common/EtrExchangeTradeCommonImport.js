@@ -137,8 +137,8 @@
         , {field: 'entrustAmt', title: 'EtrBrowDepoInfo003.entrustAmt2', width: 120, type:'number',sortable: false}
         , {field: 'proAvailableCash', title: 'EtrBrowDepoInfo003.etrAvailableCash', type: 'number', width: 150, sortable: false}
         , {field: 'accAvailablePos', title: 'EtrBrowDepoInfo003.etrAvailablePosition', type: 'number', width: 150, sortable: false}
-        , {field:'vdate', title: 'EtrExchangeTrade003.vdate',type:'date', width : 120,sortField:'VDATE'}//持仓成本
-        , {field:'mdate', title: 'EtrExchangeTrade003.mdate',type:'date', width : 120,sortField:'MDATE'}//最新价
+        , {field:'vdate', title: 'EtrExchangeTradeCommon001.entrustDate',type:'date', width : 120,sortField:'VDATE'}
+        , {field:'mdate', title: 'EtrExchangeTrade003.mdate',type:'date', width : 120,sortField:'mdate',visible: false}
         //add by chenjiaxing 20210830 导入添加投资目的 start
         , {field:'invAimStr', title: 'EtrExchangeTrade001.invAim', width : 240,sortable: false}
         //add by chenjiaxing 20210830 导入添加投资目的 end
@@ -219,8 +219,7 @@
         , {field: 'invAim', title: 'EtrAssetConfigTransfer002.invAim', width: 100,edit:true,editOption:{type:'select',formatoption:true,showField: 'text',result: INV_AIM}}
         , {field: 'trader', title: 'EtrExchangeTrade001.traders', width: 120, sortable: false}
         , {field: 'agreeOnId', title: 'EtrExchangeTrade001.agreeOnId', width: 120, sortable: false}
-        , {field:'vdate', title: 'EtrExchangeTrade003.vdate',type:'date', width : 120,sortField:'VDATE'}//委托开始日
-        , {field:'mdate', title: 'EtrExchangeTrade003.mdate',type:'date', width : 120,sortField:'MDATE'}//委托开始日
+        , {field:'vdate', title: 'EtrExchangeTradeCommon001.entrustDate',type:'date', width : 120,sortField:'VDATE'}//委托开始日
     ];
 
     var table =$("#dataTable").joyintable({

@@ -51,9 +51,8 @@
                 object.finprodType2 = FINPROD_TYPE_TG_F03;
             }
         }
-        if (object.ps == PS_T68 || object.ps == PS_T69 || object.ps == PS_T49) {
+        if (object.ps == PS_T68 || object.ps == PS_T69 || object.ps == PS_T49 || object.ps == PS_T97 || object.ps == PS_T46) {
             object.priceModel = "PRM01";
-            object.entrustAmt = "0";
         }
         // 隐藏项需要手动获取
         object.finprodId = $("#finprodId_" + currentTab).val();
@@ -102,6 +101,11 @@
         object.toShareAvailableNumLabel = $('#toShareAvailableNum_label_jj').text().replace("*", "");
         if (dateTable) {
             object.portfolioList = dateTable.getAllRows();
+            for (var i = 0; i < object.portfolioList.length; i++) {
+                if(!object.portfolioList[i].entrustAmt){
+                    object.portfolioList[i].entrustAmt = 0;
+                }
+            }
         }
         return object;
     }
@@ -3138,6 +3142,10 @@
             if (finprodType2 == FINPROD_TYPE_TG_F06) {
                 $("#priceModel_div_" + currentTab).show();
                 $("#entrustNumUnit_" + currentTab).text("份");
+            }
+            if(ps == PS_T68 || ps == PS_T69){
+                $("#riskTrialRet_div").hide();
+                $("#EtrExchangeTradeCommon004_btn_riskcal").hide();
             }
 
             if (finprodType2 == FINPROD_TYPE_TG_F01) {

@@ -281,6 +281,7 @@
         left join SYS_DATADICT_LIST sdl3 on T1.tradeMarket=sdl3.ITEM_CODE and sdl3.DICT_CODE='TRADE_PLACE'
         left join SYS_DATADICT_LIST sdl4 on T1.priceModel=sdl4.ITEM_CODE and sdl4.DICT_CODE='PRICE_MODEL'
         LEFT JOIN SYS_DATADICT_LIST sdl5 ON T1.DECLATYPE=sdl5.ITEM_CODE AND sdl5.DICT_CODE='DECLA_TYPE'
+        LEFT JOIN SYS_DATADICT_LIST sdl6 ON T1.FINPRODTYPE2=sdl6.ITEM_CODE AND sdl6.DICT_CODE='FINPROD_TYPE_TG'
         where 1=1
         <if test="tradePlatList != null and tradePlatList.size()>0 ">
             <foreach collection="tradePlatList" open="AND T1.TRADE_PLAT IN (" item="tradePlat" separator="," close=")">
@@ -1467,7 +1468,7 @@
         <if test="search != null and search != ''">
             and (
             T1.entrustId|| '|' ||sdl1.ITEM_VALUE|| '|' ||sdl2.ITEM_VALUE|| '|' ||sdl3.ITEM_VALUE|| '|' ||T1.portfolioId|| '|' ||T1.portfolioName|| '|' ||T1.finprodId|| '|' ||
-            T1.finprodAbbr|| '|' ||T1.assetType|| '|' || sdl4.ITEM_VALUE|| '|'|| sdl5.ITEM_VALUE|| '|' || T1.dealCurAcctName|| '|' || T1.finprodMarketId|| '|' || T1.SEC_ACCT_NAME
+            T1.finprodAbbr|| '|' ||T1.assetType|| '|' || sdl4.ITEM_VALUE|| '|'|| sdl5.ITEM_VALUE|| '|'|| sdl6.ITEM_VALUE|| '|' || T1.dealCurAcctName|| '|' || T1.finprodMarketId|| '|' || T1.SEC_ACCT_NAME
             like '%' || #{search} || '%'
             )
             <if test="declaTypeList != null and declaTypeList.size()>0">
