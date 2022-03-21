@@ -1126,27 +1126,27 @@ public abstract class FileImpService extends InterfService{
                     }
                 }else if ("java.math.BigDecimal".equals(type.getTypeName())) {
                     try {
-                        field.set(baseEntity ,(value == null || "".equals(value)) ? BigDecimal.ZERO : new BigDecimal(value));
+                        field.set(baseEntity ,(value == null || "".equals(value)) ? null : new BigDecimal(value));
                     } catch ( IllegalAccessException e) {
                         logger.error(e.getMessage(),e);
                     }
                 }
                 else if ("java.lang.Integer".equals(type.getTypeName())) {
                     try {
-                        field.set(baseEntity ,(value == null || "".equals(value)) ? 0 : Integer.valueOf(value));
+                        field.set(baseEntity ,(value == null || "".equals(value)) ? null : Integer.valueOf(value));
                     } catch (IllegalAccessException e) {
                         logger.error(e.getMessage(),e);
                     }
                 }
                 else if ("java.lang.Short".equals(type.getTypeName())) {
                     try {
-                        field.set(baseEntity, (value == null || "".equals(value)) ? 0 : Short.valueOf(value));
+                        field.set(baseEntity, (value == null || "".equals(value)) ? null : Short.valueOf(value));
                     } catch ( IllegalAccessException e) {
                         logger.error(e.getMessage(),e);
                     }
                 } else if ("java.lang.Long".equals(type.getTypeName())) {
                     try {
-                        field.set(baseEntity, (value == null || "".equals(value)) ? 0 : Long.valueOf(value));
+                        field.set(baseEntity, (value == null || "".equals(value)) ? null : Long.valueOf(value));
                     } catch ( IllegalAccessException e) {
                         logger.error(e.getMessage(),e);
                     }
