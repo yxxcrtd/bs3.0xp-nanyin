@@ -171,7 +171,9 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest {
         }
 
         // 解除质押券数据集
-        if (DictCodeListExt3.交易方向_解除质押.getValue().equals(ps) || DictCodeListExt3.交易方向_到期续做.getValue().equals(ps)) {
+        if (DictCodeListExt3.交易方向_解除质押.getValue().equals(ps) 
+        		|| DictCodeListExt3.交易方向_到期续做.getValue().equals(ps)
+        		|| DictCodeListExt3.交易方向_中途换券.getValue().equals(ps)) {
             List<Map<String, Object>> list = new ArrayList<>(1);
             bean = new PositionRequestBaseBean();
             bean.setPortfolioId(entity.getPortfolioId());
