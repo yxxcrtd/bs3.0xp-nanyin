@@ -256,11 +256,11 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
                 //融入券券面总额
                 map.put(INTEGRATE_SEC_AMOUNT, 0);
                 //本方券券面总额
-                if (交易方向_行权_回售.getValue().equals(ps)) {
+//                if (交易方向_行权_回售.getValue().equals(ps)) {
                     map.put(OWN_SEC_AMOUNT, secAmount);
-                } else {
-                    map.put(OWN_SEC_AMOUNT, 0);
-                }
+//                } else {
+//                    map.put(OWN_SEC_AMOUNT, 0);
+//                }
                 bondSecList.add(map);
             }
             resultMap.put("bondSecList", bondSecList);
