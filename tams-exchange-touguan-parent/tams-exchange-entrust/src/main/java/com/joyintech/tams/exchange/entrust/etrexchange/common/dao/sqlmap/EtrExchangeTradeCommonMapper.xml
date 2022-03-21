@@ -66,6 +66,7 @@
         ,T1.ENTRUST_TYPE
         ,fpt.TYPE_8 paAssetType
         ,case when T1.ENTRUST_TYPE in ('09','12','13','14','16') then T7.FINPROD_MARKET_ID
+            when T1.ENTRUST_TYPE in (#{PS_10}, #{PS_11}, #{PS_12}) then T7.FINPROD_MARKET_ID
             when T1.STOCK_ID IS NOT NULL THEN T1.STOCK_ID
         ELSE T7.FINPROD_MARKET_ID END finprodMarketId
         /*,T7.FINPROD_MARKET_ID finprodMarketId*/
@@ -213,6 +214,7 @@
         ,T1.ENTRUST_TYPE
         ,fpt.TYPE_8  paAssetType
         ,case when T1.ENTRUST_TYPE in ('09','12','13','14','16') then T7.FINPROD_MARKET_ID
+          when T1.ENTRUST_TYPE in (#{PS_10}, #{PS_11}, #{PS_12}) then T7.FINPROD_MARKET_ID
         when T1.STOCK_ID IS NOT NULL THEN T1.STOCK_ID
         ELSE T7.FINPROD_MARKET_ID END finprodMarketId
         /*,T7.FINPROD_MARKET_ID finprodMarketId*/
