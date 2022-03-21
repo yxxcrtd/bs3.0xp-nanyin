@@ -1493,7 +1493,7 @@
         <if test="search != null and search != ''">
             and (
             M.portfolioName|| '|' ||M.secName|| '|' ||M.acctNo|| '|' ||M.finprodType2|| '|' ||
-            M.portfolioId|| '|' ||M.finprodMarketId '|' ||sdl2.ITEM_VALUE
+            M.portfolioId|| '|' ||M.finprodMarketId|| '|' ||sdl2.ITEM_VALUE
 <!--             || '|' ||sdl1.ITEM_VALUE|| '|' ||sdl2.ITEM_VALUE-->
             || '|' ||M.dealCurAcctName|| '|' ||M.finprodName
             like '%' || #{search} || '%'
