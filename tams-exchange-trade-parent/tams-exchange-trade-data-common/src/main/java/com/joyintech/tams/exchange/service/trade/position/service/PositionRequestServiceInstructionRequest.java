@@ -297,7 +297,7 @@ public class PositionRequestServiceInstructionRequest {
             for (PortfolioCalculateResponse item : calculates) {
                 bean = new PositionRequestBaseBean(entity);
                 bean.setPortfolioId(item.getPortfolioId());
-                bean.setFinprodId(null);
+//                bean.setFinprodId(null);
                 bean.setCashAmount(item.getEntrustAmt());
                 bean.setSecAmount(BigDecimal.ZERO);
 
