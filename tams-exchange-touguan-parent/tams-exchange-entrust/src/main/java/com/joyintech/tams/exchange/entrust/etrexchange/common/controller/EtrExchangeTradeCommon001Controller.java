@@ -734,8 +734,10 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	@PostMapping("/getFinprodMarketInfo")
 	@ApiOperation(value = "查询资产列表", notes = "查询资产列表")
 	public Message<Page<SelectOptionDto>> getFinprodMarketInfo(@RequestBody FinprodMarketInfoRequest dto){
+		logger.debug("getFinprodMarketInfo() called with parameters => 【dto = {}】",JsonUtils.object2Json(dto));
 		try {
 			Map<String, Object> map = BeanUtil.object2Map(dto);
+			map.put("acctTradeMarket", dto.getTradeMarket());
 			Page<SelectOptionDto> tempList = etrExchangeTrade001CommonService.getFinprodMarketInfo(map);
 			return new Message<Page<SelectOptionDto>>().success().setData(tempList);
 		} catch (Exception e) {
