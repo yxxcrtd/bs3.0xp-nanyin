@@ -848,6 +848,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 //				if (数据状态_修改中.getValue().equals(entity.getStatus())) {
 //					decisionAct = 系统动作_修改.getValue();
 //				}
+				if(ENTRUST_RECORD_NEW.equals(entity.getOptType())) {
+					systemAct = 系统动作_新建.getValue();
+				}
 				if(StringUtil.equals("1", RequestUtil.getParam("confirmOk"))){
 					entity.setSoftSkipMode("Y");
 				}
