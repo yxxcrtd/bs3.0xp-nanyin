@@ -144,6 +144,10 @@ public class CfetsEtrDispatcherInfoExcResponse extends CfetsEtrDispatcherExcInfo
     @ApiModelProperty(name="oldPledStrdPrinAmt",value="原券面金额",example="10000")
     private BigDecimal oldPledStrdPrinAmt;
 
+    @ApiModelProperty(name="finprodTypeTg",value="资产类型")
+    private String finprodTypeTg;
+
+
     public BigDecimal getPledgeStandardNumber() {
         return pledgeStandardNumber;
     }
@@ -576,5 +580,13 @@ public class CfetsEtrDispatcherInfoExcResponse extends CfetsEtrDispatcherExcInfo
 
     public void setTrdAcctId(String trdAcctId) {
         this.trdAcctId = trdAcctId;
+    }
+
+    public String getFinprodTypeTg() {
+        return finprodTypeTg;
+    }
+
+    public void setFinprodTypeTg(String finprodTypeTg) {
+        this.finprodTypeTg = finprodTypeTg;
     }
 }
