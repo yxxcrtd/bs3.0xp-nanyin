@@ -663,8 +663,8 @@
             PAR_VALUE PAR_VALUE,
             CPRICE_AMT CPRICE_AMT,
             case when TPD.PS != 'T07' and (FINPROD_TYPE2 = 'F02' or FINPROD_TYPE2 = 'F03') then SHARE_AMT
-            WHEN FINPROD_TYPE2 = 'F01' THEN SHARE_AMT
-            else SHARE_AMT*100 end SHARE_AMT,
+            WHEN FINPROD_TYPE2 = 'F01' THEN SHARE_AMT * 100
+            else SHARE_AMT end SHARE_AMT,
             PRIN_AMT PRIN_AMT,
             INT_AMT INT_AMT,
             FPRICE_AMT FPRICE_AMT,
@@ -739,8 +739,8 @@
                PAR_VALUE                    PAR_VALUE,
                CPRICE_AMT                   CPRICE_AMT,
                case when TPD.PS != 'T07' and (FINPROD_TYPE2 = 'F02' or FINPROD_TYPE2 = 'F03') then SHARE_AMT
-               WHEN FINPROD_TYPE2 = 'F01' THEN SHARE_AMT
-               else SHARE_AMT*100 end SHARE_AMT,
+               WHEN FINPROD_TYPE2 = 'F01' THEN SHARE_AMT * 100
+               else SHARE_AMT end SHARE_AMT,
                PRIN_AMT                     PRIN_AMT,
                INT_AMT                      INT_AMT,
                FPRICE_AMT                   FPRICE_AMT,
@@ -793,8 +793,8 @@
                TPDA.OUR_SHARE_AMT,
                TPDA.LENDIN_SHARE_AMT
         FROM TRD_PRODUCT_TEMP_DEAL TPD
-                 LEFT JOIN TRD_PRODUCT_TEMP_DEAL_ADD TPDA ON TPD.TRADE_ID = TPDA.TRADE_ID
-                 LEFT JOIN TRD_DEAL_TOTAL_ADD TDTA ON TPD.TOTLE_TRADE_ID = TDTA.TOTLE_TRADE_ID
+        LEFT JOIN TRD_PRODUCT_TEMP_DEAL_ADD TPDA ON TPD.TRADE_ID = TPDA.TRADE_ID
+        LEFT JOIN TRD_DEAL_TOTAL_ADD TDTA ON TPD.TOTLE_TRADE_ID = TDTA.TOTLE_TRADE_ID
         WHERE TPD.TOTLE_TRADE_ID = #{tradeId} AND TPD.TRADE_STATUS ='01'
     </select>
 
@@ -876,7 +876,9 @@
             UNIT_FPRICE UNIT_FPRICE,
             PAR_VALUE PAR_VALUE,
             CPRICE_AMT CPRICE_AMT,
-            case when TPD.PS != 'T07' and (FINPROD_TYPE2 = 'F02' or FINPROD_TYPE2 = 'F03') then SHARE_AMT else SHARE_AMT*100 end SHARE_AMT,
+            case when TPD.PS != 'T07' and (FINPROD_TYPE2 = 'F02' or FINPROD_TYPE2 = 'F03') then SHARE_AMT
+                 WHEN FINPROD_TYPE2 = 'F01' THEN SHARE_AMT * 100
+                 else SHARE_AMT end SHARE_AMT,
             PRIN_AMT PRIN_AMT,
             INT_AMT INT_AMT,
             FPRICE_AMT FPRICE_AMT,

@@ -1,5 +1,30 @@
 package com.joyintech.tams.invest.common.position.service;
 
+import static com.joyintech.tams.constant.DictCodeList.交易平台_大宗交易平台;
+import static com.joyintech.tams.constant.DictCodeList.交易平台_竞价撮合平台;
+import static com.joyintech.tams.constant.DictCodeList.交易平台_综合协议交易平台;
+import static com.joyintech.tams.constant.DictCodeList.交易方向_买入;
+import static com.joyintech.tams.constant.DictCodeList.交易方向_卖出;
+import static com.joyintech.tams.constant.DictCodeListExt3.申报类型_不指定;
+import static com.joyintech.tams.constant.DictCodeListExt3.申报类型_定价申报;
+import static com.joyintech.tams.constant.DictCodeListExt3.申报类型_意向申报;
+import static com.joyintech.tams.constant.DictCodeListExt3.申报类型_成交申报;
+import static com.joyintech.tams.constant.DictCodeListExt3.申报类型_收盘价固定价格申报;
+import static com.joyintech.tams.constant.DictCodeListExt3.申报类型_日均价固定价格申报;
+import static com.joyintech.tams.constant.DictCodeListExt3.申报类型_点击成交申报;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.FinProductAddMapper;
 import com.joyintech.tams.common.base.dao.FinProductTypeMapper;
@@ -13,20 +38,6 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.position.dao.InterfPositionConfigMapper;
 import com.joyintech.tams.invest.common.position.dto.InterfPositionConfigDto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
-
-import static com.joyintech.tams.constant.DictCodeList.*;
-import static com.joyintech.tams.constant.DictCodeListExt3.*;
 
 @Service
 public class CommonPositionEngineService {
@@ -178,8 +189,8 @@ public class CommonPositionEngineService {
      * @param declaType  申报类型
      * @return 交易系统
      */
-    public String getSharesTradePlatform(String tradePlace, String ps, String declaType) {
-        if (isSharesTradePlatform(tradePlace, ps, declaType)) {
+    public String getSharesTradePlatform(String tradePlace, String ps, String declaType, String entrustProp) {
+        if (isSharesTradePlatform(tradePlace, ps, declaType, entrustProp)) {
             return 交易平台_大宗交易平台.getValue();
         }
         return 交易平台_竞价撮合平台.getValue();
@@ -196,8 +207,8 @@ public class CommonPositionEngineService {
         return BigDecimal.valueOf(100L).multiply(value);
     }
 
-    private boolean isSharesTradePlatform(String tradePlace, String ps, String declaType) {
-        return isBulkTradePlace(tradePlace) && isBulkPs(ps) && isBulkDeclaType(declaType);
+    private boolean isSharesTradePlatform(String tradePlace, String ps, String declaType, String entrustProp) {
+        return isBulkTradePlace(tradePlace) && isBulkPs(ps) && (isBulkDeclaType(declaType) || isBulkEntrustProp(entrustProp));
     }
 
     private boolean isBulkTradePlace(String tradePlace) {
@@ -216,6 +227,16 @@ public class CommonPositionEngineService {
                 || 申报类型_成交申报.getValue().equals(declaType)
                 || 申报类型_收盘价固定价格申报.getValue().equals(declaType)
                 || 申报类型_日均价固定价格申报.getValue().equals(declaType)
+                ;
+    }
+    
+    private boolean isBulkEntrustProp(String entrustProp) {
+        return "a".equals(entrustProp)
+                || "b".equals(entrustProp)
+                || "c".equals(entrustProp)
+                || "e".equals(entrustProp)
+                || "AFC".equals(entrustProp)
+                || "AFW".equals(entrustProp)
                 ;
     }
 

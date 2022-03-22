@@ -366,6 +366,7 @@ public class PositionRequestServiceInstructionRequest {
         PositionRequestBaseBean bean;
         String ps = entity.getPs();
         String firstRepoPs = entity.getFirstRepoPs();
+        resultMap.put(PS, firstRepoPs);
         // 首期组合现金数据集
         if (DictCodeListExt3.交易方向_正回购.getValue().equals(ps)
                 || DictCodeListExt3.交易方向_逆回购.getValue().equals(ps)
@@ -584,7 +585,7 @@ public class PositionRequestServiceInstructionRequest {
         // 交易场所	见数据字典：交易场所
         resultMap.put(TRADE_PLACE, entity.getTradeMarket());
         // 交易平台
-        resultMap.put(SHARES_TRADE_PLATFORM, commonPositionEngineService.getSharesTradePlatform(entity.getTradePlat(), entity.getPs(), entity.getDealMode()));
+        resultMap.put(SHARES_TRADE_PLATFORM, commonPositionEngineService.getSharesTradePlatform(entity.getTradePlat(), entity.getPs(), entity.getDealMode(),entity.getEntrustProp()));
         // 流程编号	指令的工作流ID
         resultMap.put(WORK_FLOW_ID, null);
         // 日期

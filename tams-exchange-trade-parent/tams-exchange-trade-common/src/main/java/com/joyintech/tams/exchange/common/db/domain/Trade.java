@@ -154,6 +154,9 @@ public class Trade implements Serializable, KeyMethodInterface<String> {
     @ApiModelProperty(value = "对手方交易商编号")
     private String propSeatNo;
 
+    @ApiModelProperty(value = "对手方交易商")
+    private String propSeatName;
+
     @NotNull
     @Size(max = 10)
     @ApiModelProperty(value = "交易日期")
@@ -459,6 +462,14 @@ public class Trade implements Serializable, KeyMethodInterface<String> {
 
     public void setPropSeatNo(String propSeatNo) {
         this.propSeatNo = propSeatNo == null ? null : propSeatNo.trim();
+    }
+
+    public String getPropSeatName() {
+        return propSeatName;
+    }
+
+    public void setPropSeatName(String propSeatName) {
+        this.propSeatName = propSeatName;
     }
 
     public String getTradingDay() {
