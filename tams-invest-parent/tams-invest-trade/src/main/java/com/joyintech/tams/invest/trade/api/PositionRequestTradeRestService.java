@@ -115,8 +115,8 @@ public class PositionRequestTradeRestService {
         String interType = commonPositionEngineService.getPositionInterType(PositionConstant.POSITION_TYPE_TRD, TRADE_PLAT,
                 finprodType, entity.getTrdProductDeal().getPs(), DictCodeListExt3.业务动作_成交匹配.getValue(), entity.getClass().getName());
         logger.debug("【存续期查询头寸接口结果】interType:{}", interType);
-        if (PositionConstant.INTERF_TYPE_FUND001.equals(interType)) {
-            this.fund001(entity, resultMap);
+        if (PositionConstant.INTERF_TYPE_FUND002.equals(interType)) {
+            this.fund002(entity, resultMap);
         } else if (PositionConstant.INTERF_TYPE_STOCK001.equals(interType)) {
             this.stock001(entity, resultMap);
         }else if (PositionConstant.INTERF_TYPE_REPO003.equals(interType)) {
@@ -134,13 +134,13 @@ public class PositionRequestTradeRestService {
     }
 
     /**
-     * 基金-指令    fund001
+     * 基金-指令
      *
      * @param entity
      * @param resultMap
      */
-    private void fund001(BaseTradeProductDealDto entity, Map<String, Object> resultMap) {
-        resultMap.put(INTERFACE_TYPE, PositionConstant.INTERF_TYPE_FUND001);
+    private void fund002(BaseTradeProductDealDto entity, Map<String, Object> resultMap) {
+        resultMap.put(INTERFACE_TYPE, PositionConstant.INTERF_TYPE_FUND002);
         // 业务动作
         resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_成交匹配.getValue());
         resultMap.put(SETTLE_SPEED, null);
@@ -194,7 +194,7 @@ public class PositionRequestTradeRestService {
     }
 
     /**
-     * 股票-指令    stock001
+     * 股票-指令
      *
      * @param entity
      * @param resultMap
@@ -212,8 +212,6 @@ public class PositionRequestTradeRestService {
         List<StlPayOrdersDto> stlPayOrdersList = entity.getStlPayOrdersList();
         if (StringUtil.isNotEmpty(dealEntity)) {
             String ps = dealEntity.getPs();
-            Map<String,Object> param = Maps.newHashMap();
-            param.put("fTradeId",dealEntity.getfTradeId());
             // 组合数据集
             List<Map<String, Object>> ptlList = new ArrayList<>();
             PositionRequestBaseBean  bean = new PositionRequestBaseBean();
@@ -278,7 +276,7 @@ public class PositionRequestTradeRestService {
         resultMap.put("flowStatus", DictCodeListExt3.流程节点_审批生效.getValue());
         resultMap.put("modelType", DictCodeListExt1.子系统代码_交易.getValue());
         //设置头寸业务类型
-        String busiType = commonPositionEngineService.getPositionBusiType(entity.getTrdProductDeal().getFinprodType2(), entity.getTrdProductDeal().getPs(), entity.getAssetType2());
+        String busiType = this.getPositionBusiType(entity.getTrdProductDeal().getFinprodType2(), entity.getTrdProductDeal().getPs(), entity.getAssetType2());
         resultMap.put("busiType", busiType);
         // 结算方式	见数据字典：结算方式
         // 交易方向
@@ -479,5 +477,49 @@ public class PositionRequestTradeRestService {
             settleSpreed = BussinessDictCodeList.清算速度_T加1.getValue();
         }
         return settleSpreed;
+    }
+
+    /**
+     * 获取头寸业务类型--日间使用
+     *
+     * @param finprodType2
+     * @param ps
+     * @return
+     */
+    private String getPositionBusiType(String finprodType2, String ps, String assetType2) {
+        logger.debug("getPositionBusiType() called with parameters => 【finprodType2 = {}】, 【ps = {}】, 【assetType2 = {}】", finprodType2, ps, assetType2);
+        String busiType = "";
+        if (DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(finprodType2)) {
+            if (BussinessDictCodeList.交易方向_行权回售.getValue().equals(ps)) {
+                busiType = DictCodeListExt3.头寸业务类型_债券行权交易.getValue();
+            } else if (BussinessDictCodeList.交易方向_买入.getValue().equals(ps) || BussinessDictCodeList.交易方向_卖出.getValue().equals(ps)) {
+                busiType = DictCodeListExt3.头寸业务类型_现券交易.getValue();
+            } else if (DictCodeList.交易方向_申购.getValue().equals(ps)) {
+                busiType = DictCodeListExt3.头寸业务类型_网上申购.getValue();
+            } else if (DictCodeListExt3.交易方向_配债.getValue().equals(ps)) {
+                busiType = DictCodeListExt3.头寸业务类型_配债.getValue();
+            } else if (DictCodeListExt3.交易方向_债转股.getValue().equals(ps)) {
+                busiType = DictCodeListExt3.头寸业务类型_债转股.getValue();
+            } else if (DictCodeListExt3.交易方向_质押券入库.getValue().equals(ps)) {
+                busiType = DictCodeListExt3.头寸业务类型_通用回购债券入库.getValue();
+            } else if (DictCodeListExt3.交易方向_质押券出库.getValue().equals(ps)) {
+                busiType = DictCodeListExt3.头寸业务类型_通用回购债券出库.getValue();
+            }
+        }
+        if (DictCodeListExt1.金融产品类型_投管用_股票.getValue().equals(finprodType2)) {
+            if(DictCodeList.交易方向_现金分红.getValue().equals(ps)){
+                busiType = DictCodeListExt3.头寸业务类型_股票分红.getValue();
+            }else if(DictCodeList.交易方向_红利再投.getValue().equals(ps)){
+                busiType = DictCodeListExt3.头寸业务类型_股票送股.getValue();
+            }
+        }
+        if (DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(finprodType2)) {
+            busiType = DictCodeListExt3.头寸业务类型_基金存续期.getValue();
+        }
+        if ((DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(finprodType2) || DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(finprodType2))
+                && DictCodeList.回购类型_质押式竞价回购.getValue().equals(assetType2)) {
+            busiType = DictCodeListExt3.头寸业务类型_通用回购首期.getValue();
+        }
+        return busiType;
     }
 }
