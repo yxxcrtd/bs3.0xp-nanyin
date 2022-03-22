@@ -516,7 +516,7 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
         TrdProductDeal dealEntity = entity.getTrdProductDeal();
         TrdProductDealAdd trdProductDealAdd = entity.getTrdProductDealAdd();
         List<StlPayOrdersDto> stlPayOrdersList = entity.getStlPayOrdersList();
-
+        List<FinDealPledge> finDealPledges = exchangeTransMatchCommonMapper.getFinDealPledge(dealEntity.getTradeId());
         String ps = dealEntity.getPs();
          // resultMap.put("ps", dealEntity.getPs());
         // ZGTFCP-1042: add by fuyongsheng 20220315 start
@@ -569,7 +569,7 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
             List<Map<String, Object>> list = new ArrayList<>();
             bean = new PositionRequestBaseBean();
             bean.setPortfolioId(trdProductDealAdd.getPortfolioId());
-            bean.setFinprodId(dealEntity.getFinprodId());
+            bean.setFinprodId(CollectionUtils.isNotEmpty(finDealPledges) ? finDealPledges.get(0).getPledgeFinprodId() : StringUtil.EMPTY);
 //                    bean.setSecAcctId(dealEntity.getSecManageAcctId());
             bean.setSecAcctId(dealEntity.getSecManageAcctId());
             bean.setTradeId(dealEntity.getTradeId());
@@ -588,7 +588,7 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
             List<Map<String, Object>> list = new ArrayList<>();
             bean = new PositionRequestBaseBean();
             bean.setPortfolioId(trdProductDealAdd.getPortfolioId());
-            bean.setFinprodId(dealEntity.getFinprodId());
+            bean.setFinprodId(CollectionUtils.isNotEmpty(finDealPledges) ? finDealPledges.get(0).getPledgeFinprodId() : StringUtil.EMPTY);
             bean.setSecAcctId(dealEntity.getSecManageAcctId());
             bean.setTradeId(dealEntity.getTradeId());
             bean.setEtrId(trdProductDealAdd.getEntrustId());
