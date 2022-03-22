@@ -1035,4 +1035,19 @@ FROM TRD_PRODUCT_DEAL A
         </if>
     </select>
     <!--add by fuyongsheng 20220308 end-->
+
+    <!--add by fuyongsheng 20220322 start-->
+    <select id="getTrdTempStasecFlows" resultType="com.joyintech.tams.common.base.entity.TrdTempStasecFlow" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.TrdTempStasecFlowMapper.Base_Column_List" />
+        from TRD_TEMP_STASEC_FLOW
+        WHERE
+        CDATE = #{dealDate,jdbcType=DATE}
+        <if test="portfolioIdList != null and portfolioIdList.size() > 0">
+            <foreach collection="portfolioIdList" item="portfolioId" open="AND PORTFOLIO_ID IN (" close=")" separator=",">
+                #{portfolioId,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </select>
+    <!--add by fuyongsheng 20220322 end-->
 </mapper>
