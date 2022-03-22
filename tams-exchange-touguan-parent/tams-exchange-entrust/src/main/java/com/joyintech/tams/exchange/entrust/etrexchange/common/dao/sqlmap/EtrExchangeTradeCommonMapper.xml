@@ -80,6 +80,7 @@
         ,T1.ENTRUST_DATE
         ,T1.INV_AIM
         ,T1.BUSINESS_MODEL businessModel
+        ,T1.STOCK_ID
         FROM
         ETR_ENTRUST T1
         INNER JOIN ETR_ENTRUST_ADD T2 ON
@@ -228,6 +229,7 @@
         ,T1.ENTRUST_DATE
         ,T1.INV_AIM
         ,T1.BUSINESS_MODEL businessModel
+        ,T1.STOCK_ID
         FROM
         WFL_ETR_ENTRUST T1
         INNER JOIN WFL_ETR_ENTRUST_ADD T2 ON
