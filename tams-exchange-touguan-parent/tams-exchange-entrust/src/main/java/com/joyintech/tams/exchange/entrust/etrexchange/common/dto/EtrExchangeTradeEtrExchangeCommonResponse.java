@@ -120,6 +120,12 @@ public class EtrExchangeTradeEtrExchangeCommonResponse {
     private String trader;
 
     /**
+     * 本方交易员
+     */
+    @ApiModelProperty(name="counterTrader ",value="对本方交易员",example="A1")
+    private String counterTrader ;
+
+    /**
      * 对手方交易商
      */
     @ApiModelProperty(name="counterOrg",value="对手方交易商",example="A1")
@@ -528,6 +534,14 @@ public class EtrExchangeTradeEtrExchangeCommonResponse {
      */
     public void setTrader(String trader) {
         this.trader = trader;
+    }
+
+    public String getCounterTrader() {
+        return counterTrader;
+    }
+
+    public void setCounterTrader(String counterTrader) {
+        this.counterTrader = counterTrader;
     }
 
     /**

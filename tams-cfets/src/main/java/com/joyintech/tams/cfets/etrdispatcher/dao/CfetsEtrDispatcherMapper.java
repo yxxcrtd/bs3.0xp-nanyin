@@ -111,6 +111,13 @@ public interface CfetsEtrDispatcherMapper {
     List<CfetsEtrDispatcherDealListInfoResponse> getEtrDispatcherDealListInfo(Map<String, Object> pageParam);
 
     /**
+     * 指令分发成交信息
+     * @param pageParam
+     * @return
+     */
+    List<CfetsEtrDispatcherDealListInfoResponse> getEtrDispatcherBidDealListInfo(Map<String, Object> pageParam);
+
+    /**
      * 根据委托代码查询委托状态
      * add by sjj 20211101
      *

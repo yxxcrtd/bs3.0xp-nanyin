@@ -225,7 +225,10 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
         resultMap.put(SETTLE_SPEED, commonPositionEngineService.parseSettleSpreed((String) resultMap.get(DELIVERY_TYPE)));
         // 申购方式	见数据字典：申购方式
         if (DictCodeList.交易方向_申购.getValue().equals(dealEntity.getPs())) {
+            resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_中签.getValue());
             resultMap.put(PURCH_MODLE, DictCodeListExt2.申购方式_网上申购.getValue());
+        }else if(DictCodeList.交易方向_申购确认.getValue().equals(dealEntity.getPs())){
+            resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_缴款.getValue());
         }
         resultMap.put(DELIVERY_TYPE, commonPositionEngineService.getDeliveryType(dealEntity.getFinprodId()));
         PositionRequestBaseBean bean;
@@ -306,7 +309,10 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
             bean.setTradeId(dealEntity.getTradeId());
             bean.setEtrId(trdProductDealAdd.getEntrustId());
             bean.setSecAmount(ArithmeticUtil.multiply(dealEntity.getShareAmt(), new BigDecimal(100)));
-            applyBondSecList.add(BeanUtil.object2Map(bean));
+            Map<String, Object> applyBondSecMap = BeanUtil.object2Map(bean);
+            applyBondSecMap.put(OWN_SEC_AMOUNT, ArithmeticUtil.multiply(dealEntity.getShareAmt(), new BigDecimal(100)));
+            applyBondSecMap.put(INTEGRATE_SEC_AMOUNT, BigDecimal.ZERO);
+            applyBondSecList.add(applyBondSecMap);
             resultMap.put("applyBondSecList", applyBondSecList);
         }
     }

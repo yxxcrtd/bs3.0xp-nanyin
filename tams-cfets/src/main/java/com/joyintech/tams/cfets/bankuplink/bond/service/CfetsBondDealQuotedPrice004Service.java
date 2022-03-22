@@ -11,22 +11,19 @@
 package com.joyintech.tams.cfets.bankuplink.bond.service;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.security.SecurityUtil;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.common.service.WFlowCommonService;
 import com.joyintech.system.base.dao.SysWflBusinessListMapper;
 import com.joyintech.system.base.entity.SysWflBusinessList;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.exception.PositionException;
+import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
@@ -458,7 +455,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
 //            }
 //            try {
                 //头寸
-                PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto, DictCodeListExt3.系统动作_新建.getValue(), DictCodeListExt3.系统动作_新建.getValue(), type));
+                PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto, DictCodeListExt3.系统动作_新建.getValue(), DictCodeListExt3.系统动作_新建.getValue(), type,null));
 //            } catch (PositionException e) {
 //                e.printStackTrace();
 //                Message message = PositionUtil.ajaxErrorReturn(e);
@@ -537,6 +534,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             return;
         }
         Map<String, Object> map = new HashMap<>();
+        String confirmOk = RequestUtil.getParam("confirmOk");
         if (!StringUtil.equals("revoke", entity.getOperatorType()) && !StringUtil.equals("delete", entity.getOperatorType())) {
 //            if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
 //                //插入旧头寸
@@ -545,6 +543,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
 //            }
             // 先删除流程中数据
             this.deleteBussFlowData(entity.getWorkflowId());
+            entity.setSoftSkipMode(DictCodeList.是否_否.getValue());
             CfetsBondDealDbDto cfetsBondDealDbDto = prepareEntity(entity, StringUtil.equals(entity.getOperatorType(), "revoke") ? OperationType.REVOKE : OperationType.NEW);
             //登录业务流程
             insertWfl(cfetsBondDealDbDto);
@@ -570,14 +569,23 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             SysWflBusinessList sysWflBusinessList = sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());
             try {
                 if (StringUtil.equals(sysWflBusinessList.getProcessState(), ProcessState.BACK.toString())) {
-                    PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto, DictCodeListExt3.系统动作_修改.getValue(), DictCodeListExt3.系统动作_修改.getValue(), OperationType.MODIFY));
+                    PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto, DictCodeListExt3.系统动作_修改.getValue(), DictCodeListExt3.系统动作_修改.getValue(), OperationType.MODIFY,confirmOk));
                 } else if (StringUtil.equals(sysWflBusinessList.getProcessState(), ProcessState.NEW.toString())) {
-                    PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto, DictCodeListExt3.系统动作_新建.getValue(), DictCodeListExt3.系统动作_新建.getValue(), OperationType.NEW));
+                    PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto, DictCodeListExt3.系统动作_新建.getValue(), DictCodeListExt3.系统动作_新建.getValue(), OperationType.NEW,confirmOk));
                 }
             } catch (PositionException e) {
-                e.printStackTrace();
                 Message message = PositionUtil.ajaxErrorReturn(e);
-                throw new BusinessException("MSG:" + message.getMessage());
+                BaseMap bm = (BaseMap) message.getData();
+                String code = (String) bm.get("code");
+                String messageStr = JsonUtils.json2Object((String) bm.get("message").toString(), String.class);
+                if (StringUtil.isEmpty(confirmOk)
+                        && StringUtil.equals(PositionHttpRequest.CODE_BUSI_RK, code)) {
+                    WorkFlowUtil.showMessage(messageStr, MessageType.确认消息);
+                }
+                if (StringUtil.equals(PositionHttpRequest.CODE_BUSI_YK, code)) {
+                    WorkFlowUtil.showMessage(messageStr, MessageType.错误消息);
+                }
+                throw new PositionException(messageStr);
             }
             try {
                 newEntity = WorkFlowUtil.getBusinessObjectFromRequest(CfetsBondDealRegisterQuoteDto.class, true);
@@ -881,6 +889,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
      */
     public CfetsBondDealDbDto prepareEntity(CfetsBondDealRegisterQuoteDto entity, OperationType operationType) {
         CfetsBondDealDbDto result = new CfetsBondDealDbDto();
+        result.setSoftSkipMode(entity.getSoftSkipMode());
         //模式
         String sellPara = CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED");
         //设置一：买入先填充融入券指令额度；卖出先扣除本方券指令额度
@@ -1112,7 +1121,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
      * @param operationType 框架操作
      * @return
      */
-    private Map<String, Object> preparePosition(CfetsBondDealDbDto entity, String decisionAct, String systemAct, OperationType operationType) {
+    private Map<String, Object> preparePosition(CfetsBondDealDbDto entity, String decisionAct, String systemAct, OperationType operationType, String confirmOk) {
         Map<String, Object> result = new HashMap<>();
         if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
             result.put("interfaceType", "Bond001");
@@ -1127,7 +1136,13 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             result.put("totalTradeId", entity.getRegFinProductDealTotal().getTotleTradeId());
             result.put("flowStatus", DictCodeListExt3.流程节点_流程提交.getValue());
             result.put("modelType", DictCodeListExt1.子系统代码_交易.getValue());
-            result.put("balanceCheck", "Y");
+            String balanceCheck = DictCodeList.是否_是.getValue();
+            if ((StringUtil.isNotEmpty(entity.getSoftSkipMode())
+                    && StringUtil.equals(entity.getSoftSkipMode(), DictCodeList.是否_是.getValue()))
+                    || StringUtil.isNotEmpty(confirmOk)) {
+                balanceCheck = DictCodeList.是否_否.getValue();
+            }
+            result.put("balanceCheck", balanceCheck);
             if (StringUtil.equals(ps, BussinessDictCodeList.交易方向_行权回售.getValue())) {
                 result.put("busiType", DictCodeListExt3.头寸业务类型_债券行权交易.getValue());
             } else {

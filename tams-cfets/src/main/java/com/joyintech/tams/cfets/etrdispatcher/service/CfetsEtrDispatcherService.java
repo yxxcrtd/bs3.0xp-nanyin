@@ -685,8 +685,20 @@ public class CfetsEtrDispatcherService extends BaseService {
         if (StringUtil.isBlank(dto.getEntrustId()) || entrustIdList.size() > 1) {
             return new Page<CfetsEtrDispatcherDealListInfoResponse>();
         }
-        Page<CfetsEtrDispatcherDealListInfoResponse> page = super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
-                () -> cfetsEtrDispatcherMapper.getEtrDispatcherDealListInfo(pageParam));
+        Page<CfetsEtrDispatcherDealListInfoResponse> page = null;
+        if(StringUtil.equals(dto.getBusiTypePosition(),DictCodeListExt3.头寸业务类型_债券一级投标.getValue())) {
+            //这里处理一级投标
+            page = super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> cfetsEtrDispatcherMapper.getEtrDispatcherBidDealListInfo(pageParam));
+            for(CfetsEtrDispatcherDealListInfoResponse response : page.getRoot()) {
+                CfetsEtrDispatcherTradeListResponse dto2 = cfetsEtrDispatcherMapper.getEtrBidInfo(response.getEntrustId());
+                if(StringUtil.isNotEmpty(dto2)) {
+                    response.setIsWin(dto2.getIsWin());
+                    response.setBidprice(dto2.getEtrPrice());
+                }
+            }
+        }else {
+            page = super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> cfetsEtrDispatcherMapper.getEtrDispatcherDealListInfo(pageParam));
+        }
         if ("02".equals(CacheUtil.getSysParam("repo_pledge_model")) && "05".equals(dto.getBusiTypePosition())) {
             //处理质押券明细
             CfetsEtribRepoInfo003Dto item = new CfetsEtribRepoInfo003Dto();
