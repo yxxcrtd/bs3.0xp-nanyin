@@ -512,6 +512,10 @@ public interface BussinessConstant {
      * 是否处理旧头寸标识(Y:是，N:否)
      */
     String IS_HANDLE_OLDPOS_FLAG = "IS_HANDLE_OLDPOS_FLAG";
+    /**
+     * 旧头寸 不处理的业务
+     */
+    String finprodType2List = "finprodType2List";
 
     // moddify by etliu 20220301 bond_traded_unit系统参数删除，默认张 start
     /**
