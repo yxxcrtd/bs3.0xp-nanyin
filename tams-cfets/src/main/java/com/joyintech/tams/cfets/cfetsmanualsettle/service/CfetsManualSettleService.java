@@ -1240,12 +1240,15 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
 
                     if (StringUtil.isNotEmpty(deal.getTradeId())) {
                         String acctId = EtrCommonCashPositionDealService.select组合托管户(deal.getPortfolioId(), deal.getCcy(), DictCodeListExt1.资金账户类型_产品托管户.getValue());
-
+                        String secManageAcctId = "";
+                        if (listTemp.size() > 0){
+                            secManageAcctId = listTemp.get(0).getSecManageAcctId();
+                        }
                         if (StringUtil.equals(deal.getPs(), DictCodeList.交易方向_卖出.getValue())
                                 || StringUtil.equals(deal.getPs(), DictCodeList.交易方向_行权_回售.getValue())
                                 || StringUtil.equals(deal.getPs(), DictCodeList.交易方向_到期.getValue())
                         ) {
-                            ptlSecPositionFlows.add(positionDeal(deal, acctId));
+                            ptlSecPositionFlows.add(positionDeal(deal, secManageAcctId));
                         }
                         if (StringUtil.equals(deal.getPs(), DictCodeList.交易方向_买入.getValue())) {
                             ptlCashPositionFlows.add(cashDeal(deal, acctId));
