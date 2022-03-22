@@ -85,9 +85,11 @@ public class TradeCallbackHelper {
                     } else {
                         logger.info("tradeRecord has not found businessFlag brokerEntrustId is {}", tradeRecord.getBrokerEntrustId());
                     }
-                    tradeRecord.setPropSeatNo(((IntegratedEntrust) entrust).getPropSeatNo());
-                    tradeRecord.setDiscount(((IntegratedEntrust) entrust).getDiscount());
-                    transactionHelper.addIntegratedEntrust((IntegratedEntrust) entrust);
+                    IntegratedEntrust integratedEntrust =  (IntegratedEntrust) entrust;
+                    tradeRecord.setPropSeatNo(integratedEntrust.getPropSeatNo());
+                    tradeRecord.setPropSeatName(integratedEntrust.getPropSeatName());
+                    tradeRecord.setDiscount(integratedEntrust.getDiscount());
+                    transactionHelper.addIntegratedEntrust(integratedEntrust);
                     Instruction instruction = instructionService.findById(entrust.getInstructionId());
                     transactionHelper.setInstructionBean(instruction);
 //                    bondHelper.handleTradePriceByFullPrice(tradeRecord, entrust.getIsFullPrice(), instruction);
