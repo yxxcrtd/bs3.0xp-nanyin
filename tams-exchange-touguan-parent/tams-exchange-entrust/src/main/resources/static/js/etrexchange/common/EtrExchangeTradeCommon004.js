@@ -1414,9 +1414,8 @@
             $("#acctNo_" + currentTab).val('').trigger('change');
             $("#acctNo_div_" + currentTab).hide();
         }
-
-        if(ps == PS_T03 || ps == PS_T49){
-            $("#acctNo_div_" + currentTab).hide();
+        if(currentTab == 'gd' || ps == PS_T03 || ps == PS_T49){
+            $("#acctNo_div_" + currentTab).hide()
         }
     };
     /**
@@ -1575,6 +1574,10 @@
             $("#portfolioId_div" + currentTab).hide();
             $("#acctNo_div" + currentTab).hide();
             $("#dateTableDiv").show();
+        }
+
+        if(currentTab == 'gd'){
+            $("#acctNo_div_" + currentTab).hide()
         }
 
     };
