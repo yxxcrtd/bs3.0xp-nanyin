@@ -248,4 +248,18 @@
             #{bankCode.insideProdIdAndCodeType}
         </foreach>
     </select>
+
+    <select id="selectByPbcCode" resultMap="BaseResultMap" parameterType="com.joyintech.tams.report.system.peoplebankcodepoolmanagement.dto.ProPeoplebankcodeManagement001Dto" >
+        select
+        <include refid="Base_Column_List" />
+        from PBC_PROD_ASSETPOOL_CODE
+        where PBC_CODE = #{pbcCode} AND STATUS !='D'
+    </select>
+
+    <select id="CheckProdExist" resultMap="BaseResultMap" parameterType="com.joyintech.tams.report.system.peoplebankcodepoolmanagement.dto.ProPeoplebankcodeManagement001Dto" >
+        select
+            PROD_ID INSIDE_PROD_ID
+        from CHB_PRD_BASEINFO
+        where PROD_ID = #{insideProdId} and status !='D'
+    </select>
 </mapper>
