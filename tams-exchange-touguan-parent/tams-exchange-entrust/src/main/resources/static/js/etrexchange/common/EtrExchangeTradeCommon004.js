@@ -1414,7 +1414,7 @@
             $("#acctNo_" + currentTab).val('').trigger('change');
             $("#acctNo_div_" + currentTab).hide();
         }
-        if(currentTab == 'gd'){
+        if(currentTab == 'gd' || ps == PS_T03 || ps == PS_T49){
             $("#acctNo_div_" + currentTab).hide()
         }
     };
