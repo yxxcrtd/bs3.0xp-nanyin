@@ -39,10 +39,11 @@
         <result column="ACCOUNT_ID" property="accountId" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
-    REPORTUUID, TERMID, REPORTTYPE, STARTDATE, ENDDATE, ISSUE_PARTY_ID, ISSUE_PARTY_NAME,
-    REPORTFREQU, REPORT_ORG_NAME, SOCIAL_CREDIT_CODE, FIN_INSTITUTION_CODE, PROD_VARIETY, 
-    PERSON_LIABLE, CONTACT, REPORT_DATE, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
-    SUBMIT_FEEDBACK_STATUS, STATUS, SEND_STATUS, STATUS_DATE, CREATE_USER, CREATE_TIME, 
+        REPORTUUID
+        , TERMID, REPORTTYPE, STARTDATE, ENDDATE, ISSUE_PARTY_ID, ISSUE_PARTY_NAME,
+    REPORTFREQU, REPORT_ORG_NAME, SOCIAL_CREDIT_CODE, FIN_INSTITUTION_CODE, PROD_VARIETY,
+    PERSON_LIABLE, CONTACT, REPORT_DATE, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+    SUBMIT_FEEDBACK_STATUS, STATUS, SEND_STATUS, STATUS_DATE, CREATE_USER, CREATE_TIME,
     UPDATE_USER, UPDATE_TIME, ORG_CODE, DEPT_CODE, CREATE_DEPT,PBC_ACCOUNT_ID
     </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
@@ -756,7 +757,7 @@
         where 1 =1
         <if test="registList !=null and registList.size()>0">
             <foreach collection="registList" item="regist" open=" AND (" close=")" separator=") or (">
-                 TERMID = #{regist.termid,jdbcType=VARCHAR}
+                TERMID = #{regist.termid,jdbcType=VARCHAR}
                 <if test="null!=regist.orgCode and regist.orgCode != ''">
                     and ORG_CODE = nvl(#{regist.orgCode,jdbcType=VARCHAR},'')
                 </if>
@@ -772,7 +773,7 @@
         where 1 =1
         <if test="registList !=null and registList.size()>0">
             <foreach collection="registList" item="regist" open=" AND(" close=")" separator=") or (">
-                 TERMID = #{regist.termid,jdbcType=VARCHAR}
+                TERMID = #{regist.termid,jdbcType=VARCHAR}
                 <if test="null!=regist.orgCode and regist.orgCode != ''">
                     and ORG_CODE = nvl(#{regist.orgCode,jdbcType=VARCHAR},'')
                 </if>
@@ -1004,24 +1005,24 @@
 
     <select id="selectTermIdList" resultType="com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport">
         select  TERMID,
-                REPORTTYPE,
-                nvl(ORG_CODE,'All') ORG_CODE,
-                REPORTUUID,
-                ISSUE_PARTY_ID,
-                issue_party_name    ,
-                reportfrequ         ,
-                report_org_name     ,
-                social_credit_code  ,
-                fin_institution_code,
-                prod_variety        ,
-                person_liable       ,
-                contact             ,
-                report_date,
-                ENDDATE
+        REPORTTYPE,
+        nvl(ORG_CODE,'All') ORG_CODE,
+        REPORTUUID,
+        ISSUE_PARTY_ID,
+        issue_party_name    ,
+        reportfrequ         ,
+        report_org_name     ,
+        social_credit_code  ,
+        fin_institution_code,
+        prod_variety        ,
+        person_liable       ,
+        contact             ,
+        report_date,
+        ENDDATE
         from PBC_REPORT
         where reporttype != 'ONEPRD_ASSET_DEBT'
         <foreach collection="list" item="item" open="and SEND_STATUS in (" separator="," close=")">
-              #{item,jdbcType=VARCHAR}
+            #{item,jdbcType=VARCHAR}
         </foreach>
         <if test="orgCode != null">
             and ORG_CODE = #{orgCode,jdbcType=VARCHAR}
@@ -1063,5 +1064,174 @@
             </foreach>
         </where>
     </update>
+    <insert id="insertReportHisForOnePrd" parameterType="java.util.Map">
+        insert into PBC_REPORT_HIS (
+        HIS_NO, TERMID, REPORTTYPE,
+        STARTDATE, ENDDATE, ISSUE_PARTY_ID,
+        ISSUE_PARTY_NAME, REPORTFREQU, REPORT_ORG_NAME,
+        SOCIAL_CREDIT_CODE, FIN_INSTITUTION_CODE, PROD_VARIETY,
+        PERSON_LIABLE, CONTACT, REPORT_DATE,
+        SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+        SUBMIT_FEEDBACK_STATUS, STATUS, SEND_STATUS,
+        STATUS_DATE, CREATE_USER, CREATE_TIME,
+        UPDATE_USER, UPDATE_TIME, ORG_CODE,
+        DEPT_CODE, CREATE_DEPT,PBC_ACCOUNT_ID
+        )
+        select
+        REPORTUUID, TERMID, REPORTTYPE,
+        STARTDATE, ENDDATE, ISSUE_PARTY_ID,
+        ISSUE_PARTY_NAME, REPORTFREQU, REPORT_ORG_NAME,
+        SOCIAL_CREDIT_CODE, FIN_INSTITUTION_CODE, PROD_VARIETY,
+        PERSON_LIABLE, CONTACT, REPORT_DATE,
+        SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+        SUBMIT_FEEDBACK_STATUS, STATUS, SEND_STATUS,
+        STATUS_DATE, CREATE_USER, CREATE_TIME,
+        UPDATE_USER, UPDATE_TIME, ORG_CODE,
+        DEPT_CODE, CREATE_DEPT,PBC_ACCOUNT_ID
+        from PBC_REPORT
+        where 1 =1
+        <if test="registList !=null and registList.size()>0">
+            <foreach collection="registList" item="regist" open=" and (" close=")" separator=") or (">
+                REPORTUUID = #{regist.reportuuid}
+                <if test="null!=regist.orgCode and regist.orgCode != ''">
+                    and ORG_CODE = nvl(#{regist.orgCode,jdbcType=VARCHAR},'')
+                </if>
+            </foreach>
+
+        </if>
+        and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
+    </insert>
+
+    <update id="updateInterfSubmitAndSeqBatchForOnePrd" parameterType="java.util.Map">
+        update PBC_REPORT sub
+        <set>
+            <if test="sendStatus != null and sendStatus != ''">
+                sub.SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+            </if>
+            sub.SUBMIT_FEEDBACK_STATUS = '03',
+            <if test="submitadd != null and submitadd != ''">
+                SUBMIT_TIME = sysdate + #{submitadd},
+            </if>
+            <if test="submitadd == null">
+                SUBMIT_TIME = sysdate,
+            </if>
+            sub.UPDATE_TIME = sysdate
+            <!-- 手工处理修改数据日期为数据库时间 add by gaojian 2019-06-25 begin -->
+            , STATUS_DATE = sysdate
+            <!-- 手工处理修改数据日期为数据库时间 add by gaojian 2019-06-25 end -->
+        </set>
+        <where>
+            <!--<foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
+                sub.REPORTUUID = #{regist.reportuuid,jdbcType=CHAR}
+            </foreach>-->
+            <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
+                sub.TERMID = #{regist.termid,jdbcType=CHAR}
+            </foreach>
+        </where>
+    </update>
+
+    <update id="cancelMannultRegistForOnePrd" parameterType="java.util.Map">
+        update PBC_REPORT
+        <set>
+            SEND_STATUS = '01',
+            UPDATE_TIME = sysdate,
+            SUBMIT_TIME = null,
+            SUBMIT_FEEDBACK_STATUS = null
+        </set>
+        <where>
+            <foreach collection="list" item="dto" open="(" close=")" separator=") or (">
+                REPORTUUID = #{dto.reportuuid}
+                <if test="null!=dto.orgCode and dto.orgCode != ''">
+                    and ORG_CODE = nvl(#{dto.orgCode,jdbcType=VARCHAR},'')
+                </if>
+
+            </foreach>
+        </where>
+    </update>
+
+    <insert id="insertReportDataFromHisForOnePrd" parameterType="java.util.Map">
+        insert into PBC_REPORT (
+        REPORTUUID, TERMID, REPORTTYPE,
+        STARTDATE, ENDDATE, ISSUE_PARTY_ID,
+        ISSUE_PARTY_NAME, REPORTFREQU, REPORT_ORG_NAME,
+        SOCIAL_CREDIT_CODE, FIN_INSTITUTION_CODE, PROD_VARIETY,
+        PERSON_LIABLE, CONTACT, REPORT_DATE,
+        SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+        SUBMIT_FEEDBACK_STATUS, STATUS, SEND_STATUS,
+        STATUS_DATE, CREATE_USER, CREATE_TIME,
+        UPDATE_USER, UPDATE_TIME, ORG_CODE,
+        DEPT_CODE, CREATE_DEPT,PBC_ACCOUNT_ID
+        )
+        select
+        HIS_NO, TERMID, REPORTTYPE,
+        STARTDATE, ENDDATE, ISSUE_PARTY_ID,
+        ISSUE_PARTY_NAME, REPORTFREQU, REPORT_ORG_NAME,
+        SOCIAL_CREDIT_CODE, FIN_INSTITUTION_CODE, PROD_VARIETY,
+        PERSON_LIABLE, CONTACT, REPORT_DATE,
+        SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+        SUBMIT_FEEDBACK_STATUS, STATUS, SEND_STATUS,
+        STATUS_DATE, CREATE_USER, CREATE_TIME,
+        UPDATE_USER, UPDATE_TIME, ORG_CODE,
+        DEPT_CODE, CREATE_DEPT,PBC_ACCOUNT_ID
+        from (
+        select
+        HIS_NO, TERMID, REPORTTYPE,
+        STARTDATE, ENDDATE, ISSUE_PARTY_ID,
+        ISSUE_PARTY_NAME, REPORTFREQU, REPORT_ORG_NAME,
+        SOCIAL_CREDIT_CODE, FIN_INSTITUTION_CODE, PROD_VARIETY,
+        PERSON_LIABLE, CONTACT, REPORT_DATE,
+        SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+        SUBMIT_FEEDBACK_STATUS, STATUS, SEND_STATUS,
+        STATUS_DATE, CREATE_USER, CREATE_TIME,
+        UPDATE_USER, UPDATE_TIME, ORG_CODE,
+        DEPT_CODE, CREATE_DEPT,PBC_ACCOUNT_ID,
+        rank() over (partition by TERMID, REPORTTYPE order by nvl(update_time,create_time) desc) ranknum
+        from PBC_REPORT_HIS his
+        <where>
+            <if test="registList !=null and registList.size()>0">
+                <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
+                    TERMID = #{regist.termid,jdbcType=VARCHAR}
+                    <if test="null!=regist.orgCode and regist.orgCode != ''">
+                        and ORG_CODE = nvl(#{regist.orgCode,jdbcType=VARCHAR},'')
+                    </if>
+                </foreach>
+            </if>
+        </where>
+        )
+        where ranknum = 1
+    </insert>
+
+    <delete id="deleteLastSubmitHisForOnePrd" parameterType="java.util.Map">
+        delete from PBC_REPORT_HIS
+        where 1 =1
+        <if test="registList !=null and registList.size()>0">
+            <foreach collection="registList" item="regist" open=" AND (" close=")" separator=") or (">
+                TERMID = #{regist.termid,jdbcType=VARCHAR}
+                <if test="null!=regist.orgCode and regist.orgCode != ''">
+                    and ORG_CODE = nvl(#{regist.orgCode,jdbcType=VARCHAR},'')
+                </if>
+            </foreach>
+        </if>
+        and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
+        and nvl(update_time,create_time) = (
+        select ct
+        from(
+        select nvl(update_time,create_time) ct,
+        rank() over (partition by TERMID, REPORTTYPE order by nvl(update_time,create_time) desc) ranknum
+        from PBC_REPORT_HIS
+        where 1 =1
+        <if test="registList !=null and registList.size()>0">
+            <foreach collection="registList" item="regist" open=" AND(" close=")" separator=") or (">
+                TERMID = #{regist.termid,jdbcType=VARCHAR}
+                <if test="null!=regist.orgCode and regist.orgCode != ''">
+                    and ORG_CODE = nvl(#{regist.orgCode,jdbcType=VARCHAR},'')
+                </if>
+            </foreach>
+        </if>
+        and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
+        )
+        where ranknum = 1
+        )
+    </delete>
 
 </mapper>
