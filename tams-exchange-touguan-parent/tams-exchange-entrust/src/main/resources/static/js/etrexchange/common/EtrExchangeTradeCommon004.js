@@ -1416,6 +1416,9 @@
             $("#acctNo_" + currentTab).val('').trigger('change');
             $("#acctNo_div_" + currentTab).hide();
         }
+        if(currentTab == 'gd'){
+            $("#acctNo_div_" + currentTab).hide()
+        }
     };
     /**
      * 交易场所+资金账户联动证券账户
@@ -1573,6 +1576,10 @@
             $("#portfolioId_div" + currentTab).hide();
             $("#acctNo_div" + currentTab).hide();
             $("#dateTableDiv").show();
+        }
+
+        if(currentTab == 'gd'){
+            $("#acctNo_div_" + currentTab).hide()
         }
 
     };
