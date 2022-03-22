@@ -211,6 +211,9 @@ public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEn
     @ApiModelProperty(name="tradeStatus",value="报价状态")
     private String tradeStatus;
 
+    @ApiModelProperty(name="softSkipMode",value="软控,是否确认")
+    private String softSkipMode;
+
     private List<String> counterIdList;
 
     public String getQuoteId() {
@@ -739,6 +742,14 @@ public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEn
 
     public void setCounterIdList(List<String> counterIdList) {
         this.counterIdList = counterIdList;
+    }
+
+    public String getSoftSkipMode() {
+        return softSkipMode;
+    }
+
+    public void setSoftSkipMode(String softSkipMode) {
+        this.softSkipMode = softSkipMode;
     }
 }
 
