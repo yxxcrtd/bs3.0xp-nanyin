@@ -74,6 +74,7 @@ import com.joyintech.tams.invest.common.riskinfrds.util.EntrustCompleteUtil;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dao.BaseAssetCashPositionCommMapper;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
+import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
@@ -184,6 +185,9 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
      */
     @Autowired
     private BaseGetBussinessId baseGetBussinessIdimpl;
+
+    @Autowired(required = false)
+    private BaseEtrCashPositionCommService baseEtrCashPositionCommService;
 
 
     /**
@@ -953,7 +957,12 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
             // 调用投资委托组件的更新委托状态接口，将委托状态设置为“已关闭”
             String tempEntrustStatu = ee.getEntrustStatus();// 获取该委托原始状态，防止后续更改成关闭
             boolean flag = etrInvestInfoServiceImpl.updateDelegateStatus(entrustId, DictCodeList.委托状态_已关闭.getValue());
-
+            if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+                //插入旧头寸
+                if (baseEtrCashPositionCommService != null && DictCodeList.委托状态_已接收.getValue().equals(tempEntrustStatu)) {
+                    baseEtrCashPositionCommService.entrustCloseExecute(entrustId,DictCodeList.是否_是.getValue());
+                }
+            }
             String remark = ee.getRemark() ==null?settleRemark:ee.getRemark().concat(settleRemark);
             EtrEntrust record =new EtrEntrust();
             record.setEntrustId(entrustId);
