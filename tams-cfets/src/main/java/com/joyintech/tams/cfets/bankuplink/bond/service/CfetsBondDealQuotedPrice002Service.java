@@ -1635,7 +1635,7 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
 		} else if (StringUtil.equals(entity.getQuotaPageModel(), "dialogueResponse")) {
 			// 对话回应
 			if (StringUtil.equals(entity.getOperatorType(), "done")) {
-				entity.setTradeStatus(BussinessDictCodeList.银行间上行报价状态_成交中.getValue());
+				//entity.setTradeStatus(BussinessDictCodeList.银行间上行报价状态_成交中.getValue());
 			} else if (StringUtil.equals(entity.getOperatorType(), "refuse")) {
 				entity.setTradeStatus(BussinessDictCodeList.银行间上行报价状态_终止中.getValue());
 			}
