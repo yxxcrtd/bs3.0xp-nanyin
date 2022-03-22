@@ -1414,6 +1414,10 @@
             $("#acctNo_" + currentTab).val('').trigger('change');
             $("#acctNo_div_" + currentTab).hide();
         }
+
+        if(ps == PS_T03 || ps == PS_T49){
+            $("#acctNo_div_" + currentTab).hide();
+        }
     };
     /**
      * 交易场所+资金账户联动证券账户
