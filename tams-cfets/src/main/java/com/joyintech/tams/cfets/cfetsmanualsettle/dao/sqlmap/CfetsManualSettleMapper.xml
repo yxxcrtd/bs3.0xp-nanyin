@@ -1290,7 +1290,7 @@
             TO_CHAR(T61.ACT_EXERCISE_DATE,'yyyy-MM-dd') actExerciseDate1,
             T1.SHARE_AMT/100 qty,
             decode(T1.PS,#{psT39},T81.EXERCISE_PRICE,T1.unit_cprice) unitPrice,
-            T1.cprice_amt cpriceAmt,
+            T1.Trade_Amt cpriceAmt,
             T1.int_amt intAmt,
             ttft.fee_amt jyFeeAmt,
             ttft1.fee_amt jsFeeAmt,
@@ -1312,7 +1312,7 @@
             T4.IS_RIGHT isRight,
             T1.Delivery_Type deliveryType,
             T1.clear_type clearType,
-            T81.REDEEM_RATE shRate,
+            T81.REDEEM_RATE * 100 shRate,
             bb.PTL_BOND_ZHCC as accountPosition
         FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
         LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL T3 ON T1.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
@@ -1334,7 +1334,7 @@
         LEFT JOIN ibu_quote_crep ic ON ic.quote_id = nvl(T7.PRE_TRADE_ID,T1.B_TRADE_ID)
         LEFT JOIN sys_datadict_list sdl ON sdl.dict_code='DISTRIBUTION' and sdl.item_code = coalesce(T8.DIP_TYPE,ib.DIP_TYPE,ic.DIP_TYPE)
         left join (
-        select t.totle_trade_id as totleTradeId,sum(CASE WHEN a.HODING_TYPE =#{A_001} THEN a.AMOUNT ELSE 0 END)/10000 AS PTL_BOND_ZHCC
+        select t.totle_trade_id as totleTradeId,sum(CASE WHEN a.HODING_TYPE =#{A_001} THEN a.AMOUNT ELSE 0 END)/100 AS PTL_BOND_ZHCC
         from PTL_SEC_POSITION_RULE a
         inner join trd_product_deal t
         on a.finprod_id=t.finprod_id
@@ -1369,7 +1369,7 @@
             TO_CHAR(T61.ACT_EXERCISE_DATE,'yyyy-MM-dd') actExerciseDate1,
             T1.SHARE_AMT/100 qty,
             decode(T1.PS,#{psT39},T81.EXERCISE_PRICE,T1.unit_cprice) unitPrice,
-            T1.cprice_amt cpriceAmt,
+            T1.Trade_Amt cpriceAmt,
             T1.int_amt intAmt,
             ttft.fee_amt jyFeeAmt,
             ttft1.fee_amt jsFeeAmt,
@@ -1391,7 +1391,7 @@
             T4.IS_RIGHT isRight,
             T1.Delivery_Type deliveryType,
             T1.clear_type clearType,
-            T81.REDEEM_RATE shRate,
+            T81.REDEEM_RATE * 100 shRate,
             bb.PTL_BOND_ZHCC as accountPosition
         FROM TRD_PRODUCT_TEMP_DEAL_TOTAL T1
              LEFT JOIN PA_TRD_PROD_TEMP_DEAL_TOTAL T3 ON T1.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
@@ -1413,7 +1413,7 @@
              LEFT JOIN ibu_quote_crep ic ON ic.quote_id = nvl(T7.PRE_TRADE_ID,T1.B_TRADE_ID)
              LEFT JOIN sys_datadict_list sdl ON sdl.dict_code='DISTRIBUTION' and sdl.item_code = coalesce(T8.DIP_TYPE,ib.DIP_TYPE,ic.DIP_TYPE)
              left join (
-        select t.totle_trade_id as totleTradeId,sum(CASE WHEN a.HODING_TYPE =#{A_001} THEN a.AMOUNT ELSE 0 END)/10000 AS PTL_BOND_ZHCC
+        select t.totle_trade_id as totleTradeId,sum(CASE WHEN a.HODING_TYPE =#{A_001} THEN a.AMOUNT ELSE 0 END)/100 AS PTL_BOND_ZHCC
         from PTL_SEC_POSITION_RULE a
                  inner join trd_product_temp_deal t
                             on a.finprod_id=t.finprod_id
