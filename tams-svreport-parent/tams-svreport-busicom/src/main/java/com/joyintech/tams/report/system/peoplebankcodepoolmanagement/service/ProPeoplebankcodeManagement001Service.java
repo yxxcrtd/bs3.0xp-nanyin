@@ -56,7 +56,7 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 	/**
 	 * 查询内部产品代码下拉框
 	 *
-	 * @param pageParam
+	 * @param param
 	 *            参数
 	 * @return 结果list
 	 * @see
@@ -164,7 +164,7 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 	/**
 	 * 导入文件之前检查文件中的数据在数据库中是否已经存在 如果已经存在，需要提示用户进行确认是否覆盖数据库
 	 *
-	 * @param fileName
+	 * @param dataList
 	 *            导入的文件名名
 	 * @return 检查结果
 	 * @see
@@ -175,7 +175,7 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 		String statusEffective = DictCodeListExt1.维护数据状态_有效.getValue();
 		if (!StringUtil.isEmptyList(dataList)) {
 			if (CollectionUtils.isNotEmpty(dataList)) {
-				List<String> data = new ArrayList<String>();
+				List<ProPeoplebankcodeManagement001Dto> data = new ArrayList<ProPeoplebankcodeManagement001Dto>();
 				List<ProPeoplebankcodeManagement001Dto> entities = convertToBean(dataList);
 
 				for(ProPeoplebankcodeManagement001Dto dto : entities){
@@ -223,9 +223,9 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 					// 将序号放入list中
 					List<String> excelNumList = new ArrayList<String>();
 					List<Integer> excelNumIntList = new ArrayList<Integer>();
-					for (String string : data) {
+					for (ProPeoplebankcodeManagement001Dto dto : data) {
 						List<ProPeoplebankcodeManagement001Dto> listTemp = new ArrayList<>();
-						listTemp = equityInfo001Map.get(string);
+						listTemp = equityInfo001Map.get(dto.getInsideProdId()+"|"+dto.getCodeType());
 						// excelNumList.add(listTemp.get(0).getExcelNum());
 						excelNumIntList.add(Integer.valueOf(listTemp.get(0).getExcelNum()));
 					}
@@ -256,7 +256,7 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 	 * 解析excel文件并进行验证
 	 * </p>
 	 *
-	 * @param fileName
+	 * @param dataList
 	 *            导入的文件名名
 	 * @return 导入结果
 	 */
@@ -421,13 +421,10 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 				message.add(error1);
 			} else {
 				entity.setPbcCode(list.get(2));
-				List<ProPeoplebankcodeManagement001Dto> dto = peoplebankcodeManagement001DtoMapper.selectByPbcCode(list.get(2));
-				if (CollectionUtils.isNotEmpty(dto)){
-					for (ProPeoplebankcodeManagement001Dto management001Dto : dto) {
-						if (!StringUtil.equals(entity.getInsideProdId(),management001Dto.getInsideProdId())){
-							message.add("人行代码"+list.get(2)+"已被使用！");
-							break;
-						}
+				ProPeoplebankcodeManagement001Dto dto = peoplebankcodeManagement001DtoMapper.selectByPbcCode(list.get(2));
+				if (null!=dto){
+					if (!StringUtil.equals(entity.getInsideProdId(),dto.getInsideProdId())){
+						message.add("人行代码"+list.get(2)+"已被使用！");
 					}
 				}
 			}
@@ -526,7 +523,7 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 	 * @Description 根据参数修改SYS_SEQ值
 	 * @Author      高健
 	 * @Date        2020年1月13日 下午2:51:31
-	 * @param  参数
+	 * @param  seqMap
 	 * @return void 返回类型
 	 * @throws
 	 */
