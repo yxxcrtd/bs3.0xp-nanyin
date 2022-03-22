@@ -190,7 +190,7 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 					record.setInsideProdId(dto.getInsideProdId());
 					record.setCodeType(dto.getCodeType());
 					record.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
-					ProPeoplebankcodeManagement001Dto proDto = peoplebankcodeManagement001DtoMapper.selectByPrimaryKey(record);
+					ProPeoplebankcodeManagement001Dto proDto = peoplebankcodeManagement001DtoMapper.CheckProdExist(record);
 					if (proDto == null) {
 						webResult.setMessage("内部产品代码"+dto.getInsideProdId()+"在产品基本信息表中不存在");
 						webResult.setMessageType(MessageType.错误消息);
@@ -379,6 +379,13 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 						this.getMessage("REPORT_COMMON_FILE_E_0001", "文件内容")));
 				continue;
 			}
+			for (int j = i + 1; j < dataList.size(); j++) {
+				if (StringUtils.equals(dataList.get(i).get(2), dataList.get(j).get(2))) {
+					checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i),
+							"第" + (i + 1) + "行"+"人行代码与" + "第" + (j + 1) + "行人行代码相同！"));
+					//buffer.append("第" + (i + 1) + "行"+"产品代码与" + "第" + (j + 1) + "行产品代码相同！");
+				}
+			}
 			ProPeoplebankcodeManagement001Dto entity = new ProPeoplebankcodeManagement001Dto();
 			// 验证消息
 			List<String> message = new ArrayList<>();
@@ -414,6 +421,15 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 				message.add(error1);
 			} else {
 				entity.setPbcCode(list.get(2));
+				List<ProPeoplebankcodeManagement001Dto> dto = peoplebankcodeManagement001DtoMapper.selectByPbcCode(list.get(2));
+				if (CollectionUtils.isNotEmpty(dto)){
+					for (ProPeoplebankcodeManagement001Dto management001Dto : dto) {
+						if (!StringUtil.equals(entity.getInsideProdId(),management001Dto.getInsideProdId())){
+							message.add("人行代码"+list.get(2)+"已被使用！");
+							break;
+						}
+					}
+				}
 			}
 //			String error2 = checkCode(list.get(1), "内部产品代码", 50, true);
 //			if (StringUtil.isNotEmpty(error2)) {
