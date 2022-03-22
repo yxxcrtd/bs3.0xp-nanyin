@@ -175,7 +175,9 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
             TrdBondDurationDto TrdBondDurationDto = genDataForShInsertDto(regFinProductDealTotal,batchDate);
             autoPeriodCommonService.insertCfetsShTempDealData(TrdBondDurationDto.getTrdBondDurDbInertDto());
             //插入匹配关系表，且发送头寸
-            genMatchAndSendPosMethod(TrdBondDurationDto.getTrdBondDurDbInertDto(), regFinProductDealTotal);
+           // try {
+                genMatchAndSendPosMethod(TrdBondDurationDto.getTrdBondDurDbInertDto(), regFinProductDealTotal);
+            //}catch (Exception e){}
         }
         //插入数据
         for(TrdBondDurationDto trdBondDurationDto: trdBondDurationDtoInsertList){
@@ -297,11 +299,11 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
         List<StlPayOrders> stlPayOrdersList =new ArrayList<StlPayOrders>();
         List<PtlTrade> ptlTradeList =new ArrayList<PtlTrade>();
         //净价总额计算,净价总额=账户持仓券面总额（万元）*10000*赎回比例%*行权净价/100
-        BigDecimal cpriceAmt = ArithmeticUtil.divide(ArithmeticUtil.multiply(regFinProductDealTotal.getFaceValue(),regFinProductDealTotal.getRedeemRate(),regFinProductDealTotal.getExercisePrice()),new BigDecimal(100),2) ;
+        BigDecimal cpriceAmt = ArithmeticUtil.divide(ArithmeticUtil.multiply(new BigDecimal("100"),regFinProductDealTotal.getFaceValue(),regFinProductDealTotal.getRedeemRate(),regFinProductDealTotal.getExercisePrice()),new BigDecimal(100),2) ;
         //应计利息计算
         BigDecimal intAmt = ArithmeticUtil.divide(ArithmeticUtil.multiply(regFinProductDealTotal.getFaceValue(),regFinProductDealTotal.getRedeemRate(),regFinProductDealTotal.getIntAmt()),new BigDecimal(100),2) ;
         //赎回金额计算：默认等于净价总额+应计利息总额；
-        BigDecimal tradeAmt = ArithmeticUtil.multiply(ArithmeticUtil.doAdd(cpriceAmt,intAmt),new BigDecimal("100"));
+        BigDecimal tradeAmt = ArithmeticUtil.doAdd(cpriceAmt,intAmt);
         //乘赎回比例
         BigDecimal shareAmt = ArithmeticUtil.multiply(regFinProductDealTotal.getShareAmt(),regFinProductDealTotal.getRedeemRate());
 
