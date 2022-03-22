@@ -93,6 +93,7 @@ public class JoyinbusinessCommonService extends BaseService {
         }
         if (StringUtil.isNotEmpty(dto.getDealType()) && StringUtil.equals(dto.getDealType(), "99")) {
             param.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_OTC场外.getValue());
+            param.put("TRADE_PLACE_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
             //需要查询债券资产、回购期限、项目类资产、公募基金、计划类净值型、计划类利率型、计划类货币型、存款
             return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> joyinbusinessCommonMapper.getfinprodIdForAll(param));
         }
