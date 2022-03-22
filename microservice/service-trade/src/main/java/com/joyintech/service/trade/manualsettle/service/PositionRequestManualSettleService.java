@@ -170,7 +170,6 @@ public class PositionRequestManualSettleService {
         resultMap.put("cdate", entity.getSettleDate());
         resultMap.put("ccy", trdProductTempDeal.getCcy());
         resultMap.put("finprodId", entity.getFinprodId());
-        resultMap.put("bTotalTradeId", entity.getTradeId());
 
         Map<String,Object> paraMap = new HashMap<>();
         paraMap.put("dealNo", entity.getTradeId());
@@ -260,7 +259,6 @@ public class PositionRequestManualSettleService {
         resultMap.put("workFlowId", null);
         resultMap.put("cdate", entity.getSettleDate());
         resultMap.put("ccy", trdProductTempDeal.getCcy());
-        resultMap.put("bTotalTradeId", entity.getTradeId());
 
         Map<String,Object> paraMap = new HashMap<>();
         paraMap.put("dealNo", entity.getTradeId());
