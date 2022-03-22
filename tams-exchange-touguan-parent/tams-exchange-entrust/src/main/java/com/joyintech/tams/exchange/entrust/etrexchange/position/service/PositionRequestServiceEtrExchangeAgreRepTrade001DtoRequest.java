@@ -121,7 +121,7 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest extends 
         String ps = entity.getPs();
         if (DictCodeListExt3.交易方向_首期.getValue().equals(ps)
                 || DictCodeListExt3.交易方向_提前购回.getValue().equals(ps)
-                || (DictCodeListExt3.交易方向_到期购回.getValue().equals(ps))) {
+                || DictCodeListExt3.交易方向_到期购回.getValue().equals(ps)) {
             List<Map<String, Object>> list = new ArrayList<>(1);
             bean = new PositionRequestBaseBean();
             bean.setPortfolioId(entity.getPortfolioId());
