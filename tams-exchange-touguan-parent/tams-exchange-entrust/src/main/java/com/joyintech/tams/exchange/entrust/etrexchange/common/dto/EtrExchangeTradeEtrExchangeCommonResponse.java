@@ -264,6 +264,9 @@ public class EtrExchangeTradeEtrExchangeCommonResponse {
     @ApiModelProperty(name="businessModel",value="业务模式")
     private String businessModel;
 
+    @ApiModelProperty(name="stockId",value="stockId")
+    private String stockId;
+
     public String getFinprodId() {
         return finprodId;
     }
@@ -768,5 +771,13 @@ public class EtrExchangeTradeEtrExchangeCommonResponse {
 
     public void setCounterId(String counterId) {
         this.counterId = counterId;
+    }
+
+    public String getStockId() {
+        return stockId;
+    }
+
+    public void setStockId(String stockId) {
+        this.stockId = stockId;
     }
 }
