@@ -275,7 +275,7 @@ public class PositionRequestTradeReportService {
             // ZGTFCP-1250:新增字段赋值 modify by fuyongsheng 20220318 start
             plt.put("etrSecAmount", dto.getEtrSecAmount());
             plt.put("ordId", dto.getOrderId());
-            plt.put("ordSecAmount", dto.getStandardSecAmount());
+            plt.put("ordSecAmount", dto.getOrdSecAmount());
             // ZGTFCP-1250:新增字段赋值 modify by fuyongsheng 20220318 end
             // ZGTFCP-1303:需要增加finprodId字段 modify by fuyongsheng 20220318 start
             plt.put("finprodId", entity.getFinprodId());
