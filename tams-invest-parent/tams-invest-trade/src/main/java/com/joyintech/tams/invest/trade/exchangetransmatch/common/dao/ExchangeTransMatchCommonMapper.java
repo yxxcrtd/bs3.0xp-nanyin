@@ -159,4 +159,21 @@ public interface ExchangeTransMatchCommonMapper {
     String getTradeIdByTotalTradeId(@Param("totalTradeId") String totalTradeId);
 
     List<PtlSecPosition> searchPtlSecPositionList(Map<String, Object> paraMap);
+
+    /**
+     * 根据金融产品代码，日期，查询出当日折算率
+     *
+     * @param finprodId 金融产品代码
+     * @return EtrEntrust
+     * @see
+     * @since 1.0
+     */
+    BigDecimal queryConverseRadio(@Param("finprodId") String finprodId, @Param("vdate") Date vdate);
+
+    /**
+     * 查询资金账户
+     * @param secAcctId
+     * @return
+     */
+    String queryAccountNo(@Param("secAcctId") String secAcctId);
 }

@@ -63,12 +63,7 @@
           t1.FINPROD_ID tradeId,
           t1.FINPROD_ID intiTradeId,
           t4.FINPROD_MARKET_ID origRepSecId,
-          case
-            when t7.trade_market = #{TRADE_PLACE_03} then
-                t2.PLEDGE_NUMBER/10
-          else
-                t2.PLEDGE_NUMBER
-          end as origRepSecNum,
+          t2.PLEDGE_NUMBER as origRepSecNum,
           t2.PLEDGE_NUMBER* t2.PLEDGE_FACE_VALUE origPrintAmt,
           t2.PLEDGE_RATIO * 100 origConRatio,
           t6.PORTFOLIO_ID portfolioId,
@@ -90,12 +85,7 @@
           t8.BUSI_PS repPs,
           t7.REMARK addCla,
           t3.type_7 ps,
-          case
-            when t7.trade_market = #{TRADE_PLACE_03} then
-            #{UNIT_04}
-          else
-            #{UNIT_01}
-          end as pledgeUnit, /** 质押券单位  **/
+          '01' as pledgeUnit, /** 质押券单位  **/
           t8.COUNTER_CON_NO agreeOnId
         FROM FIN_TRADE_PRODUCT t1
         INNER JOIN FIN_PRODUCT_TYPE t3
@@ -774,7 +764,7 @@
         LEFT JOIN SYS_DATADICT_LIST SDL1 ON SDL1.DICT_CODE ='ENTRUST_STATUS' AND SDL1.ITEM_CODE = etr_entrust.entrust_status
         LEFT JOIN SYS_DATADICT_LIST SDL2 ON SDL2.DICT_CODE ='TRADE_PLACE' AND SDL2.ITEM_CODE = etr_entrust.trade_market
         LEFT JOIN SYS_DATADICT_LIST SDL3 ON SDL3.DICT_CODE ='SHARES_TRADE_PLATFORM' AND SDL3.ITEM_CODE = etr_entrust.Trade_Plat
-        LEFT JOIN SYS_DATADICT_LIST SDL4 ON SDL4.DICT_CODE ='PS' AND SDL4.ITEM_CODE = etr_entrust.Ps
+        LEFT JOIN SYS_DATADICT_LIST SDL4 ON SDL4.DICT_CODE ='PS' AND SDL4.ITEM_CODE = etr_entrust_add.BUSI_PS
         LEFT JOIN FIN_PRODUCT_TYPE_CONFIG btm ON (ETR_ENTRUST.FINPROD_TYPE2 = btm.INPUT_VALUE_2 OR  btm.INPUT_VALUE_2 is null)
             AND (ETR_ENTRUST.Ps = btm.INPUT_VALUE_3 OR  btm.INPUT_VALUE_3 is null)
             AND (ETR_ENTRUST.TRADE_PLAT = btm.INPUT_VALUE_1 OR btm.INPUT_VALUE_1 IS NULL)
@@ -919,7 +909,7 @@
             LEFT JOIN SYS_WFL_BUSINESS_LIST SWBL ON SWBL.SEQ_NO = wfl_etr_entrust.WORKFLOW_ID and SWBL.PROCESS_STATE != 'END'
             LEFT JOIN SYS_DATADICT_LIST SDL2 ON SDL2.DICT_CODE ='TRADE_PLACE' AND SDL2.ITEM_CODE = wfl_etr_entrust.trade_market
             LEFT JOIN SYS_DATADICT_LIST SDL3 ON SDL3.DICT_CODE ='SHARES_TRADE_PLATFORM' AND SDL3.ITEM_CODE = wfl_etr_entrust.Trade_Plat
-            LEFT JOIN SYS_DATADICT_LIST SDL4 ON SDL4.DICT_CODE ='PS' AND SDL4.ITEM_CODE = wfl_etr_entrust.Ps
+            LEFT JOIN SYS_DATADICT_LIST SDL4 ON SDL4.DICT_CODE ='PS' AND SDL4.ITEM_CODE = wfl_etr_entrust_add.BUSI_PS
             LEFT JOIN FIN_PRODUCT_TYPE_CONFIG btm ON (wfl_etr_entrust.FINPROD_TYPE2 = btm.INPUT_VALUE_2 OR  btm.INPUT_VALUE_2 is null)
                 AND (wfl_etr_entrust.Ps = btm.INPUT_VALUE_3 OR  btm.INPUT_VALUE_3 is null)
                 AND (wfl_etr_entrust.TRADE_PLAT = btm.INPUT_VALUE_1 OR btm.INPUT_VALUE_1 IS NULL)

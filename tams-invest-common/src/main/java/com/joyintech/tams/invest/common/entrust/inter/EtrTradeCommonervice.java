@@ -75,7 +75,8 @@ public class EtrTradeCommonervice extends BaseService {
         BigDecimal realSec = BigDecimal.ZERO; // 持仓数量
         List<PositionCashSecDto> list = requestDto.getPtlList();
         String flowType= requestDto.getFlowType();
-        flowType=StringUtil.equals(FLOW_TYPE_ETR,flowType)?"01":"02";
+
+        flowType=StringUtil.equals(FLOW_TYPE_TRD,flowType)?"03":"01";// 01 指令现金 02 指令持仓 03 交易现金 04 交易持仓
 
         if (list != null) {
             //查询组合下所有现金账户
@@ -150,7 +151,7 @@ public class EtrTradeCommonervice extends BaseService {
                 }
             }
             //持仓可用
-            flowType=StringUtil.equals("etr",flowType)?"03":"04";
+            flowType=StringUtil.equals(FLOW_TYPE_TRD,flowType)?"04":"02";//01 指令现金 02 指令持仓 03 交易现金 04 交易持仓
             //筛选出有资金账户的组合
             List<PositionCashSecDto> secList = new ArrayList<>();
             for (PositionCashSecDto dto : list){
@@ -161,17 +162,17 @@ public class EtrTradeCommonervice extends BaseService {
                     secList.add(cashSecDto);
                 }
             }
-            //资金可用金额
+            //持仓
             if(!CollectionUtils.isEmpty(secList)&&secList.size()>0){
                 BigDecimal newSecAmount=queryPosition(secList,flowType, "");
-                if(newSecAmount!=null){
+                if(newSecAmount!=null){ //可用持仓
                     canSec=canSec.add(newSecAmount);
                 }
                 secList.stream().forEach(item->{
                     item.setHoldingType("");
                 });
                 BigDecimal newRealSecAmount=queryPosition(secList,flowType, DictCodeListExt3.资产类型_资产账户持仓.getValue());
-                if(newRealSecAmount!=null){
+                if(newRealSecAmount!=null){ //持仓数量
                     realSec=realSec.add(newRealSecAmount);
                 }
             }
@@ -401,7 +402,7 @@ public class EtrTradeCommonervice extends BaseService {
                 .put("field",acctNoCanCash)
                 .put("name", "账户资金可取（元）")
                 .put("type", "xj")
-                .put("amount", bm.get(acctNoUsableCash)));
+                .put("amount", bm.get(acctNoCanCash)));
         String unit="张";
         if(StringUtil.isNotEmpty(requestDto.getPtlList().get(0).getFinprodType2())){
             String finprodType2=requestDto.getPtlList().get(0).getFinprodType2();
@@ -487,12 +488,12 @@ public class EtrTradeCommonervice extends BaseService {
         BigDecimal sumAmount=BigDecimal.ZERO;
         map.put("ptlList",buildPosition(ptList,flowType,positionType));
                 String msg= PositionHttpRequest.queryPosition(map);
-            PositionQueryResp resp = JsonUtils.json2Object(msg,PositionQueryResp.class);
-                if (resp != null&&StringUtil.equals("success", resp.getCode())) {
-                    List<PositionQueryDto> list=resp.getData();
-                    for(PositionQueryDto positionQueryDto:list){
-                        if(positionQueryDto.getAMOUNT()!=null){
-                            sumAmount=sumAmount.add(new BigDecimal(positionQueryDto.getAMOUNT()));
+         BaseMap bm=JsonUtils.json2Object(msg,BaseMap.class);
+                if (bm != null&&StringUtil.equals("success", bm.getString("code"))) {
+                    List<LinkedHashMap> list=(List<LinkedHashMap>)bm.get("data");
+                    for(LinkedHashMap linkedHashMap:list){
+                        if(linkedHashMap.get("AMOUNT")!=null){
+                            sumAmount=sumAmount.add(new BigDecimal(linkedHashMap.get("AMOUNT").toString()));
                         }
                     }
                 }
@@ -508,8 +509,12 @@ public class EtrTradeCommonervice extends BaseService {
             List<PositionQueryDto> list = new ArrayList<>();
             for (PositionCashSecDto temp : ptlList) {
                 PositionQueryDto dto = new PositionQueryDto();
+                if (StringUtil.isEmpty(temp.getCcy())) {
+                    dto.setCcy(DictCodeList.币种_人民币_CNY.getValue());
+                }else{
+                    dto.setCcy(temp.getCcy());
+                }
                 dto.setPortfolioId(temp.getPortfolioId());
-                dto.setCcy(temp.getCcy());
                 dto.setFlowType(flowType);
                 if(StringUtil.isNotEmpty(temp.getHoldingType())){
                     dto.setPositionType(temp.getHoldingType());

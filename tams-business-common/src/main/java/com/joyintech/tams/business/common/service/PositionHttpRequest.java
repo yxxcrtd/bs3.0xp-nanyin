@@ -196,9 +196,10 @@ public class PositionHttpRequest {
                 .put("busiType", busiType)
                 .put("ps", ps)
                 ;
-        logger.info("发送头寸报文:"+JsonUtils.object2Json(bm));
+
         Long seqno = (long) Arrays.deepHashCode(new Object[] { revokeId,modelType,new Date().getTime(),Thread.currentThread().getId() });
         bm.put("seqno",seqno);
+        logger.info("发送头寸报文:"+JsonUtils.object2Json(bm));
         String res = delete(bm);
         Map message = JsonUtils.json2Object(res, Map.class);
         if(message == null){

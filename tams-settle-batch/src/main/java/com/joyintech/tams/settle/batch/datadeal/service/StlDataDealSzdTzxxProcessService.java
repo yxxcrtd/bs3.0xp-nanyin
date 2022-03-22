@@ -62,6 +62,7 @@ public class StlDataDealSzdTzxxProcessService {
                 // mstFundBonusNotice.setUnitBonusUnitValue(szdTzxx.getJe2());
                 mstFundBonusNotice.setUnitBonusUnitValue(new BigDecimal(szdTzxx.getJg2()));
                 // GNS-871: 修改字段赋值 modify by fuyongsheng 20220216 end
+                mstFundBonusNoticeArrayList.add(mstFundBonusNotice);
             }
             stlDownDataDealWriteDto.setMstFundBonusNoticeList(mstFundBonusNoticeArrayList);
         }

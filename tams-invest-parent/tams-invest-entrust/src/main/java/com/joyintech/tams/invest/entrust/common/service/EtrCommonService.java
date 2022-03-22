@@ -630,12 +630,12 @@ public class EtrCommonService extends BaseService<ITableRow> {
             if (DateUtil.compareDate(platedate,startDate) != 0
                     || DateUtil.compareDate(platedate,endDate) != 0){
 
-                return "指令开始日与指令终止日应为【"+platedate+"】(行号为"+indexId+")";
+                return "指令日期应为【"+platedate+"】(行号为"+indexId+")";
 
             }else {
 
                 if (DateUtil.compareDate(startDate,startDate) != 0){
-                    return "指令开始日与指令终止日应为【"+platedate+"】(行号为"+indexId+")";
+                    return "指令日期终止日应为【"+platedate+"】(行号为"+indexId+")";
                 }else {
                     return "";
                 }

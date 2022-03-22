@@ -1,5 +1,7 @@
 package com.joyintech.tams.cfets.cfetsmanualsettle.dao;
 
+import com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteEtrReDto;
+import com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteEtrRe;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dto.*;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dto.PortIntFenPeiInfoDto;
 import com.joyintech.tams.cfets.trdquery.dto.CfetsTrdBondInvestTradeDto;
@@ -243,4 +245,19 @@ public interface CfetsManualSettleMapper {
     List<PortIntFenPeiInfoDto> findManualSettleFenPei(Map<String,Object> params);
 
     int countWflEtr(Map<String, Object> param);
+
+    /**
+     * 报价编号查询
+     * @param tradeId1
+     * @return
+     */
+    String selectIbTradeIdBytradeId(@Param("tradeId1") String tradeId1);
+
+    /**
+     * 报价编号查询报价信息
+     *
+     * @param tradeId
+     * @return
+     */
+    List<PtlFlowsDto> selectIbQuoteBytradeId(@Param("tradeId") String tradeId);
 }
