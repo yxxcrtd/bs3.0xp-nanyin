@@ -64,7 +64,7 @@
 		update PTL_CASH_POSITION
         <set >
             <if test="amount != null" >
-                AMOUNT = #{amount,jdbcType=DECIMAL},
+                AMOUNT = AMOUNT + #{amount,jdbcType=DECIMAL},
             </if>
             <if test="chlFinprodId != null" >
                 CHL_FINPROD_ID = #{chlFinprodId,jdbcType=VARCHAR},
