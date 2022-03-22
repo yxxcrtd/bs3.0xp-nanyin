@@ -170,7 +170,7 @@ public class EtrExchangeTradeCommon004Controller extends BaseController {
                 model.addAttribute("riskTrialSpan", riskTrialFlag ? "试算通过" : "试算不通过");
             } else {
                 String entrustIdWfl = entity.getEntrustId();
-                List<RiskTrialRetDto> riskTrialRetList = new ArrayList<>();
+                List<RiskTrialRetDto> riskTrialRetList;
                 if (StringUtil.equals(entity.getPs(), DictCodeListExt1.交易方向_债转股.getValue())) {
                     entrustIdWfl = entrustIdWfl + DictCodeList.交易方向_卖出.getValue();
                     riskTrialRetList = basRiskMathCommService.select(entrustIdWfl);

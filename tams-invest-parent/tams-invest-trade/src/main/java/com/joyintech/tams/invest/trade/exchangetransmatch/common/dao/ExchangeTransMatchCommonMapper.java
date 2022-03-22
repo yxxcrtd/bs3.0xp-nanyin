@@ -176,4 +176,11 @@ public interface ExchangeTransMatchCommonMapper {
      * @return
      */
     String queryAccountNo(@Param("secAcctId") String secAcctId);
+
+    /**
+     * 查询质押品信息
+     * @param tradeId
+     * @return
+     */
+    List<FinDealPledge> getFinDealPledge(@Param("tradeId") String tradeId);
 }

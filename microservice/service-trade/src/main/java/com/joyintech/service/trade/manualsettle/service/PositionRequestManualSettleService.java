@@ -158,7 +158,8 @@ public class PositionRequestManualSettleService {
                 ||DictCodeListExt3.申报类型_点击成交申报.getValue().equals(etrEntrustAdd.getDealMode())
                 ||DictCodeListExt3.申报类型_成交申报.getValue().equals(etrEntrustAdd.getDealMode())
                 ||DictCodeListExt3.申报类型_日均价固定价格申报.getValue().equals(etrEntrustAdd.getDealMode())
-                ||DictCodeListExt3.申报类型_收盘价固定价格申报.getValue().equals(etrEntrustAdd.getDealMode()))){
+                ||DictCodeListExt3.申报类型_收盘价固定价格申报.getValue().equals(etrEntrustAdd.getDealMode())
+                ||DictCodeListExt3.申报类型_不指定.getValue().equals(etrEntrustAdd.getDealMode()))){
             resultMap.put("sharesTradePlatform", DictCodeList.交易平台_大宗交易平台.getValue());
         }else {
             resultMap.put("sharesTradePlatform", DictCodeList.交易平台_竞价撮合平台.getValue());
@@ -248,7 +249,8 @@ public class PositionRequestManualSettleService {
                 ||DictCodeListExt3.申报类型_点击成交申报.getValue().equals(etrEntrustAdd.getDealMode())
                 ||DictCodeListExt3.申报类型_成交申报.getValue().equals(etrEntrustAdd.getDealMode())
                 ||DictCodeListExt3.申报类型_日均价固定价格申报.getValue().equals(etrEntrustAdd.getDealMode())
-                ||DictCodeListExt3.申报类型_收盘价固定价格申报.getValue().equals(etrEntrustAdd.getDealMode()))){
+                ||DictCodeListExt3.申报类型_收盘价固定价格申报.getValue().equals(etrEntrustAdd.getDealMode())
+                ||DictCodeListExt3.申报类型_不指定.getValue().equals(etrEntrustAdd.getDealMode()))){
             resultMap.put("sharesTradePlatform", DictCodeList.交易平台_大宗交易平台.getValue());
         }else {
             resultMap.put("sharesTradePlatform", DictCodeList.交易平台_竞价撮合平台.getValue());

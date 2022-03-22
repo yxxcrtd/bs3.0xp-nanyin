@@ -227,7 +227,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
     /**
      * 质押券递增维度
      */
-    private static BigDecimal pledgeDimension = new BigDecimal("0.1");
+    private final static String pledgeDimension = "0.1";
 
     /**
      * 提交保存check 必填项
@@ -1204,7 +1204,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             repoEntrustPledgeDtos = repoEntrustPledgeDtos.stream()
                     .sorted(Comparator.comparing(RepoEntrustPledgeDto::getPledgePrin).reversed()).collect(Collectors.toList());
             //递增维度
-            BigDecimal addDimension = pledgeDimension;
+            BigDecimal addDimension = new BigDecimal(pledgeDimension);
             for (Map.Entry<String, BigDecimal> map : pledgeMap.entrySet()) {
                 //尾差
                 BigDecimal tailDifference = map.getValue();
@@ -1239,6 +1239,9 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                     regFinPledge.setPledgeNumber(ArithmeticUtil.divide(pledgePrin, new BigDecimal(100), 12));//质押数量
                     regFinPledge.setPledgeRatio(ArithmeticUtil.divide(dto.getPledgeRatio(), new BigDecimal(100), yieldScale));//质押率
                     regFinPledges.add(regFinPledge);
+                    if(tailDifference.compareTo(BigDecimal.ZERO) <= 0){
+                        break;
+                    }
                 }
             }
         } else {
@@ -1254,7 +1257,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                 }
             }
             //递增维度
-            BigDecimal addDimension = pledgeDimension;
+            BigDecimal addDimension = new BigDecimal(pledgeDimension);;
             for (RepoEntrustPledgeDto pledgeDto : pledgeDtos) {
                 //尾差
                 BigDecimal tailDifference = pledgeDto.getPledgePrin();
@@ -1287,6 +1290,9 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                     regFinPledge.setPledgeNumber(ArithmeticUtil.divide(pledgePrin, new BigDecimal(100), 12));//质押数量
                     regFinPledge.setPledgeRatio(ArithmeticUtil.divide(pledgeDto.getPledgeRatio(), new BigDecimal(100), yieldScale));//质押率
                     regFinPledges.add(regFinPledge);
+                    if(tailDifference.compareTo(BigDecimal.ZERO) <= 0){
+                        break;
+                    }
                 }
                 if (regFinPledgeMap == null) {
                     continue;
@@ -1366,7 +1372,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
      */
     private void handleTailDifferencePledge(List<RegFinPledge> regFinPledges, BigDecimal tailDifference) {
         //递增维度
-        BigDecimal addDimension = pledgeDimension;
+        BigDecimal addDimension = new BigDecimal(pledgeDimension);;
         int size = regFinPledges.size();
         //委托维度 已经完全分配的集合
         Set<String> set = new HashSet<>();
@@ -1397,12 +1403,12 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
      */
     private void handleTailDifference(List<RepoEntrustPledgeDto> repoEntrustPledgeDtos, BigDecimal tailDifference) {
         //递增维度
-        BigDecimal addDimension = pledgeDimension;
+        BigDecimal addDimension = new BigDecimal(pledgeDimension);;
         int size = repoEntrustPledgeDtos.size();
         //委托维度 已经完全分配的集合
         Set<String> set = new HashSet<>();
         while (tailDifference.compareTo(BigDecimal.ZERO) > 0 && size > 0) {
-            if (tailDifference.compareTo(ArithmeticUtil.multiply(pledgeDimension, new BigDecimal(10))) >= 0) {
+            if (tailDifference.compareTo(ArithmeticUtil.multiply(new BigDecimal(pledgeDimension), new BigDecimal(10))) >= 0) {
                 addDimension = ArithmeticUtil.divide(tailDifference, size, 4);
             }
             for (RepoEntrustPledgeDto item : repoEntrustPledgeDtos) {
@@ -1413,6 +1419,9 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                 } else {
                     item.setPledgePrin(ArithmeticUtil.doAdd(item.getPledgePrin(), addDimension));
                     tailDifference = ArithmeticUtil.subtract(tailDifference, addDimension);
+                }
+                if(tailDifference.compareTo(BigDecimal.ZERO) <= 0){
+                    break;
                 }
             }
         }
