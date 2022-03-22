@@ -583,102 +583,104 @@ public class IbuQuoteBondCalService extends BaseService {
                             "SEC_INT_SCALE_BANK")), RoundingMode.HALF_UP));
         }
         try {
-            // 单位净价
-            if (StringUtil.equals(dto.getCalculateField(), "01")) {
-                // 单位全价 = 单位净价 + 单位应计利息
-                calRespone.setUnitFprice(ArithmeticUtil.doAdd(dto.getPrice(), calRespone.getUnitInt()));
-                // 全价总额 = 单位全价 * 券面总额/100
-                calRespone.setFpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(calRespone.getUnitFprice(), calRespone.getShareAmt()),
-                        new BigDecimal(100), SCALE));
-                calRespone.setCpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(calRespone.getPrice(), calRespone.getShareAmt()),
-                        new BigDecimal(100), SCALE));
-            }
-            switch (dto.getCalculateField()) {
+            if(StringUtil.isNotEmpty(dto.getCalculateField())){
                 // 单位净价
-                case "01":
-                    // 全价总额==>到期收益率
-                    yieldPriceInParameter.setFullPrice(
-                            calRespone.getUnitFprice()/* dto.getFpriceAmt() */);
-                    yieldPriceOutParameter = yieldByPriceCalculator.calculate(
-                            yieldPriceInParameter);
-                    calRespone.setMatureYield(yieldPriceOutParameter.getMatYield());
-                    if (secInfoModelDto.getNextExeDate() != null) {
-                        // 全价总额==>行权收益率
-                        yieldPriceInParameter.setNextExeDate(
-                                DateUtil.dateToLocal(secInfoModelDto.getNextExeDate()));
-                        yieldPriceInParameter.setNextExePrice(
-                                secInfoModelDto.getNextExercisePrice());
-                        if (yieldPriceInParameter.getNextExePrice() != null) {
-                            yieldPriceOutParameter = yieldByPriceCalculator.calculate(
-                                    yieldPriceInParameter);
-                            calRespone.setExerYield(yieldPriceOutParameter.getExeYield());
-                        } else {
-                            calRespone.setExerYield(null);
-                        }
-                    }
-                    break;
-                // 到期收益率
-                case "02":
-                    // 到期收益率==>全价总额
-                    priceYieldInParameter.setMatYield(dto.getMatureYield());
-                    priceYieldOutParameter = priceByYieldCalculator.calculate(
-                            priceYieldInParameter);
-                    // dto.setFpriceAmt(priceYieldOutParameter.getFullPrice());
-                    calRespone.setUnitFprice(priceYieldOutParameter.getFullPrice());
-                    // 全价总额==>行权收益率
-                    if (secInfoModelDto.getNextExeDate() != null) {
+                if (StringUtil.equals(dto.getCalculateField(), "01")) {
+                    // 单位全价 = 单位净价 + 单位应计利息
+                    calRespone.setUnitFprice(ArithmeticUtil.doAdd(dto.getPrice(), calRespone.getUnitInt()));
+                    // 全价总额 = 单位全价 * 券面总额/100
+                    calRespone.setFpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(calRespone.getUnitFprice(), calRespone.getShareAmt()),
+                            new BigDecimal(100), SCALE));
+                    calRespone.setCpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(calRespone.getPrice(), calRespone.getShareAmt()),
+                            new BigDecimal(100), SCALE));
+                }
+                switch (dto.getCalculateField()) {
+                    // 单位净价
+                    case "01":
+                        // 全价总额==>到期收益率
                         yieldPriceInParameter.setFullPrice(
                                 calRespone.getUnitFprice()/* dto.getFpriceAmt() */);
-                        yieldPriceInParameter.setNextExeDate(
-                                DateUtil.dateToLocal(secInfoModelDto.getNextExeDate()));
-                        yieldPriceInParameter.setNextExePrice(
-                                secInfoModelDto.getNextExercisePrice());
-                        if (yieldPriceInParameter.getNextExePrice() != null) {
-                            yieldPriceOutParameter = yieldByPriceCalculator.calculate(
-                                    yieldPriceInParameter);
-                            // dto.setExerYield(yieldPriceOutParameter.getMatYield());
-                            calRespone.setExerYield(yieldPriceOutParameter.getExeYield());
-                        } else {
-                            calRespone.setExerYield(null);
-                        }
-                    }
-                    break;
-                // 行权收益率
-                case "03":
-                    // 行权收益率==>全价总额
-                    if (secInfoModelDto.getNextExeDate() != null) {
-//                        priceYieldInParameter.setMatYield(dto.getMatureYield());
-                        priceYieldInParameter.setMatYield(dto.getExerYield());//行权收益
-                        yieldPriceInParameter.setNextExeDate(
-                                DateUtil.dateToLocal(secInfoModelDto.getNextExeDate()));
-                        yieldPriceInParameter.setNextExePrice(
-                                secInfoModelDto.getNextExercisePrice());
-                        priceYieldOutParameter = priceByYieldCalculator.calculate(
-                                priceYieldInParameter);
-                        calRespone.setFpriceAmt(priceYieldOutParameter.getFullPrice());
-                        calRespone.setUnitFprice(priceYieldOutParameter.getFullPrice());
-                        // 全价总额==>到期收益率
-                        yieldPriceInParameter.setFullPrice(calRespone.getFpriceAmt());
                         yieldPriceOutParameter = yieldByPriceCalculator.calculate(
                                 yieldPriceInParameter);
                         calRespone.setMatureYield(yieldPriceOutParameter.getMatYield());
-                    }
-                    break;
-                default:
-                    break;
-            }
-            // 到期收益率 或 行权收益率
-            if (StringUtil.equals(dto.getCalculateField(), "02")
-                    || StringUtil.equals(dto.getCalculateField(), "03")) {
-                calRespone.setFpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(calRespone.getUnitFprice(), calRespone.getShareAmt()),
-                        new BigDecimal(100), SCALE));
-                // 单位净价 = 单位全价 - 单位应计利息
-                calRespone.setPrice(com.joyintech.calculation.util.ArithmeticUtil.doSub(calRespone.getUnitFprice(), calRespone.getUnitInt()));
-                calRespone.setCpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(calRespone.getPrice(), calRespone.getShareAmt()),
-                        new BigDecimal(100), SCALE));
-            }
-            if(null!=calRespone.getFpriceAmt()&&null!=calRespone.getCpriceAmt()){
-                calRespone.setIntAmt(ArithmeticUtil.subtract(calRespone.getFpriceAmt(),calRespone.getCpriceAmt()));
+                        if (secInfoModelDto.getNextExeDate() != null) {
+                            // 全价总额==>行权收益率
+                            yieldPriceInParameter.setNextExeDate(
+                                    DateUtil.dateToLocal(secInfoModelDto.getNextExeDate()));
+                            yieldPriceInParameter.setNextExePrice(
+                                    secInfoModelDto.getNextExercisePrice());
+                            if (yieldPriceInParameter.getNextExePrice() != null) {
+                                yieldPriceOutParameter = yieldByPriceCalculator.calculate(
+                                        yieldPriceInParameter);
+                                calRespone.setExerYield(yieldPriceOutParameter.getExeYield());
+                            } else {
+                                calRespone.setExerYield(null);
+                            }
+                        }
+                        break;
+                    // 到期收益率
+                    case "02":
+                        // 到期收益率==>全价总额
+                        priceYieldInParameter.setMatYield(dto.getMatureYield());
+                        priceYieldOutParameter = priceByYieldCalculator.calculate(
+                                priceYieldInParameter);
+                        // dto.setFpriceAmt(priceYieldOutParameter.getFullPrice());
+                        calRespone.setUnitFprice(priceYieldOutParameter.getFullPrice());
+                        // 全价总额==>行权收益率
+                        if (secInfoModelDto.getNextExeDate() != null) {
+                            yieldPriceInParameter.setFullPrice(
+                                    calRespone.getUnitFprice()/* dto.getFpriceAmt() */);
+                            yieldPriceInParameter.setNextExeDate(
+                                    DateUtil.dateToLocal(secInfoModelDto.getNextExeDate()));
+                            yieldPriceInParameter.setNextExePrice(
+                                    secInfoModelDto.getNextExercisePrice());
+                            if (yieldPriceInParameter.getNextExePrice() != null) {
+                                yieldPriceOutParameter = yieldByPriceCalculator.calculate(
+                                        yieldPriceInParameter);
+                                // dto.setExerYield(yieldPriceOutParameter.getMatYield());
+                                calRespone.setExerYield(yieldPriceOutParameter.getExeYield());
+                            } else {
+                                calRespone.setExerYield(null);
+                            }
+                        }
+                        break;
+                    // 行权收益率
+                    case "03":
+                        // 行权收益率==>全价总额
+                        if (secInfoModelDto.getNextExeDate() != null) {
+//                        priceYieldInParameter.setMatYield(dto.getMatureYield());
+                            priceYieldInParameter.setMatYield(dto.getExerYield());//行权收益
+                            yieldPriceInParameter.setNextExeDate(
+                                    DateUtil.dateToLocal(secInfoModelDto.getNextExeDate()));
+                            yieldPriceInParameter.setNextExePrice(
+                                    secInfoModelDto.getNextExercisePrice());
+                            priceYieldOutParameter = priceByYieldCalculator.calculate(
+                                    priceYieldInParameter);
+                            calRespone.setFpriceAmt(priceYieldOutParameter.getFullPrice());
+                            calRespone.setUnitFprice(priceYieldOutParameter.getFullPrice());
+                            // 全价总额==>到期收益率
+                            yieldPriceInParameter.setFullPrice(calRespone.getFpriceAmt());
+                            yieldPriceOutParameter = yieldByPriceCalculator.calculate(
+                                    yieldPriceInParameter);
+                            calRespone.setMatureYield(yieldPriceOutParameter.getMatYield());
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                // 到期收益率 或 行权收益率
+                if (StringUtil.equals(dto.getCalculateField(), "02")
+                        || StringUtil.equals(dto.getCalculateField(), "03")) {
+                    calRespone.setFpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(calRespone.getUnitFprice(), calRespone.getShareAmt()),
+                            new BigDecimal(100), SCALE));
+                    // 单位净价 = 单位全价 - 单位应计利息
+                    calRespone.setPrice(com.joyintech.calculation.util.ArithmeticUtil.doSub(calRespone.getUnitFprice(), calRespone.getUnitInt()));
+                    calRespone.setCpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(calRespone.getPrice(), calRespone.getShareAmt()),
+                            new BigDecimal(100), SCALE));
+                }
+                if(null!=calRespone.getFpriceAmt()&&null!=calRespone.getCpriceAmt()){
+                    calRespone.setIntAmt(ArithmeticUtil.subtract(calRespone.getFpriceAmt(),calRespone.getCpriceAmt()));
+                }
             }
             if(StringUtil.isNotEmpty(secInfoModelDto.getAssetType11())){
                 //资产四级分类
