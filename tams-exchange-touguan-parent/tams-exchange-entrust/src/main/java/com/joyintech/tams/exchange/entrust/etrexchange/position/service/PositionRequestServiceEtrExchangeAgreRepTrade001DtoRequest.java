@@ -5,6 +5,7 @@ import java.util.*;
 
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.tams.business.common.service.TamsBusinessCommonService;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.entrust.etragrereptrade.dto.EtrAgreRepTradeDto;
 import org.slf4j.Logger;
@@ -35,6 +36,9 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest extends 
 
     @Autowired
     private CommonPositionEngineService commonPositionEngineService;
+
+    @Autowired
+    private TamsBusinessCommonService tamsBusinessCommonService;
 
     /**
      * EtrExchangeAgreRepTrade001Dto 请求对象使用
@@ -121,11 +125,18 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest extends 
         String ps = entity.getPs();
         if (DictCodeListExt3.交易方向_首期.getValue().equals(ps)
                 || DictCodeListExt3.交易方向_提前购回.getValue().equals(ps)
-                || DictCodeListExt3.交易方向_到期购回.getValue().equals(ps)) {
+                || DictCodeListExt3.交易方向_到期购回.getValue().equals(ps)
+                || DictCodeListExt3.交易方向_解除质押.getValue().equals(ps)) {
             List<Map<String, Object>> list = new ArrayList<>(1);
             bean = new PositionRequestBaseBean();
             bean.setPortfolioId(entity.getPortfolioId());
-            bean.setCashAcctId(entity.getAcctNo());
+            if (DictCodeListExt3.交易方向_解除质押.getValue().equals(ps)) {
+                // 解除质押走线下划款，扣托管户现金
+                bean.setCashAcctId(tamsBusinessCommonService.selectProdTghCapacctNo(entity.getPortfolioId()));
+            } else {
+                // 其他走券商资金账户
+                bean.setCashAcctId(entity.getAcctNo());
+            }
             bean.setTradeId(null);
             bean.setEtrId(entity.getEntrustId());
             // 交易金额
