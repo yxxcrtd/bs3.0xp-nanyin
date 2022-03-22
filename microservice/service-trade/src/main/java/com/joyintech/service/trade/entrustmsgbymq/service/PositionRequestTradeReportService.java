@@ -384,7 +384,7 @@ public class PositionRequestTradeReportService {
             if(DictCodeListExt3.交易方向_正回购.getValue().equals(entity.getPs())){
                 Map<String, Object> ptlSec = new HashMap<>();
                 ptlSec.put("portfolioId", dto.getPortfolioId());
-                ptlSec.put("finprodId", entity.getFinprodId());
+                ptlSec.put("finprodId", entity.getFinDealPledge().getPledgeFinprodId());
                 ptlSec.put("secAcctId", dto.getSecAcctId());
                 ptlSec.put("tradeId", entity.getTradeId());
                 ptlSec.put("etrId", entity.getEntrustId());
@@ -400,7 +400,9 @@ public class PositionRequestTradeReportService {
                     || DictCodeListExt3.交易方向_到期续做.getValue().equals(entity.getPs())){
                 Map<String, Object> ptlRelieveSec = new HashMap<>();
                 ptlRelieveSec.put("portfolioId", dto.getPortfolioId());
-                ptlRelieveSec.put("finprodId", entity.getFinprodId());
+                // ZGTFCP-1427:赋值质押品信息 modify by fuyongsheng 20220322 start
+                ptlRelieveSec.put("finprodId", entity.getPositionBaseData().getFinDealPledge().getPledgeFinprodId());
+                // ZGTFCP-1427:赋值质押品信息 modify by fuyongsheng 20220322 end
                 ptlRelieveSec.put("secAcctId", dto.getSecAcctId());
                 ptlRelieveSec.put("tradeId", entity.getTradeId());
                 ptlRelieveSec.put("etrId", entity.getEntrustId());
