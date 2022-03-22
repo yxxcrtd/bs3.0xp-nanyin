@@ -80,6 +80,7 @@
         ,T1.ENTRUST_DATE
         ,T1.INV_AIM
         ,T1.BUSINESS_MODEL businessModel
+        ,T1.STOCK_ID
         FROM
         ETR_ENTRUST T1
         INNER JOIN ETR_ENTRUST_ADD T2 ON
@@ -228,6 +229,7 @@
         ,T1.ENTRUST_DATE
         ,T1.INV_AIM
         ,T1.BUSINESS_MODEL businessModel
+        ,T1.STOCK_ID
         FROM
         WFL_ETR_ENTRUST T1
         INNER JOIN WFL_ETR_ENTRUST_ADD T2 ON
@@ -642,8 +644,7 @@
             ) GROUP BY FINPROD_ID, PORTFOLIO_ID
         ) invaim on invaim.FINPROD_ID=TEMP.FINPROD_ID and invaim.PORTFOLIO_ID=TEMP.PORTFOLIO_ID
         WHERE
-        TEMP.AMOUNT>0
-        and FP.TRADE_MARKET IN (#{TRADE_PLACE_03}, #{TRADE_PLACE_04})
+        FP.TRADE_MARKET IN (#{TRADE_PLACE_03}, #{TRADE_PLACE_04})
         <if test="portfolioIdList != null and portfolioIdList.size()>0">
             <foreach collection="portfolioIdList" open="AND TEMP.PORTFOLIO_ID IN (" item="portfolioId" separator="," close=")">
                     #{portfolioId,jdbcType=VARCHAR}

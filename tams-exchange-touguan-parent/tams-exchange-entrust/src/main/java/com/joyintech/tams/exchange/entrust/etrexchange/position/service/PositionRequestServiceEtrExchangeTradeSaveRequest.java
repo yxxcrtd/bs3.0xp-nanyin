@@ -354,6 +354,11 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
                 if (Objects.nonNull(moreConvrate)) {
                     map.put("reConversionRate", moreConvrate.getMoreConvrate());
                 }
+                if(DictCodeListExt3.交易方向_质押券入库.getValue().equals(entity.getPs())
+                		|| DictCodeListExt3.交易方向_质押券出库.getValue().equals(entity.getPs())) {
+                	map.put(STANDARD_SEC_AMOUNT, map.get("cashAmount"));
+                	map.put("cashAmount", null);//出入库时，可以为空
+                }
                 ptlList.add(map);
             }
             resultMap.put(PTL_LIST, ptlList);
@@ -476,7 +481,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
         // 交易场所	见数据字典：交易场所
         resultMap.put(TRADE_PLACE, entity.getTradeMarket());
         // 交易平台
-        resultMap.put(SHARES_TRADE_PLATFORM, commonPositionEngineService.getSharesTradePlatform(entity.getTradePlat(), entity.getPs(), entity.getDeclaType()));
+        resultMap.put(SHARES_TRADE_PLATFORM, commonPositionEngineService.getSharesTradePlatform(entity.getTradePlat(), entity.getPs(), entity.getDeclaType(), ""));
         // 流程编号	指令的工作流ID
         resultMap.put(WORK_FLOW_ID, entity.getWorkflowId());
         // 日期

@@ -616,6 +616,14 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
                 etrPositionHoldDto.getPtlCashPositionFlows().forEach(item->item.setIsExistNew(entrustCommonDto.getIsExistNew()));
                 etrPositionHoldDto.getPtlSecPositionFlows().forEach(item->item.setIsExistNew(entrustCommonDto.getIsExistNew()));
             }
+            // 非新系统生成的旧头寸数据不入库
+            List<String> finprodType2List = StringUtil.splitToList(",", CacheUtil.getSysParam(BussinessConstant.finprodType2List));
+            if (finprodType2List.contains(etrEntrust.getFinprodType2())
+                    && StringUtil.isEmpty(entrustCommonDto.getIsExistNew())
+                    && StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))
+                    && StringUtil.equals(etrEntrust.getTradeMarket(), DictCodeListExt1.交易场所_银行间.getValue())) {
+                return;
+            }
 
             if(etrEntrustAdd != null && !StringUtil.equals(etrEntrustAdd.getAssetType1(), DictCodeList.回购类型_质押式协议回购.getValue())){
                 etrPositionHoldDto.getPtlCashPositionFlows().forEach(etrCashPositionFlowDto -> etrCashPositionFlowDto.setCdate(platformDateImpl.getSysDate()));

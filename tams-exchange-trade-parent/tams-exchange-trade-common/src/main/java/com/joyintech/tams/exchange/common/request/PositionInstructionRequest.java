@@ -11,6 +11,9 @@ public class PositionInstructionRequest extends Instruction {
 
 	@ApiModelProperty(required = true, name = "entrustNo", value = "委托编号")
     private String entrustNo;
+	
+	@ApiModelProperty(required = true, name = "entrustProp", value = "委托属性")
+	private String entrustProp;
     
     @ApiModelProperty(name="softSkipMode",value="软控是否继续？Y：继续",example="Y")
     private String softSkipMode;
@@ -29,6 +32,14 @@ public class PositionInstructionRequest extends Instruction {
 
 	public void setSoftSkipMode(String softSkipMode) {
 		this.softSkipMode = softSkipMode;
+	}
+
+	public String getEntrustProp() {
+		return entrustProp;
+	}
+
+	public void setEntrustProp(String entrustProp) {
+		this.entrustProp = entrustProp;
 	}
     
 }

@@ -275,7 +275,7 @@ public class PositionRequestTradeReportService {
             // ZGTFCP-1250:新增字段赋值 modify by fuyongsheng 20220318 start
             plt.put("etrSecAmount", dto.getEtrSecAmount());
             plt.put("ordId", dto.getOrderId());
-            plt.put("ordSecAmount", dto.getStandardSecAmount());
+            plt.put("ordSecAmount", dto.getOrdSecAmount());
             // ZGTFCP-1250:新增字段赋值 modify by fuyongsheng 20220318 end
             // ZGTFCP-1303:需要增加finprodId字段 modify by fuyongsheng 20220318 start
             plt.put("finprodId", entity.getFinprodId());
@@ -384,7 +384,7 @@ public class PositionRequestTradeReportService {
             if(DictCodeListExt3.交易方向_正回购.getValue().equals(entity.getPs())){
                 Map<String, Object> ptlSec = new HashMap<>();
                 ptlSec.put("portfolioId", dto.getPortfolioId());
-                ptlSec.put("finprodId", entity.getFinprodId());
+                ptlSec.put("finprodId", entity.getFinDealPledge().getPledgeFinprodId());
                 ptlSec.put("secAcctId", dto.getSecAcctId());
                 ptlSec.put("tradeId", entity.getTradeId());
                 ptlSec.put("etrId", entity.getEntrustId());
@@ -400,7 +400,9 @@ public class PositionRequestTradeReportService {
                     || DictCodeListExt3.交易方向_到期续做.getValue().equals(entity.getPs())){
                 Map<String, Object> ptlRelieveSec = new HashMap<>();
                 ptlRelieveSec.put("portfolioId", dto.getPortfolioId());
-                ptlRelieveSec.put("finprodId", entity.getFinprodId());
+                // ZGTFCP-1427:赋值质押品信息 modify by fuyongsheng 20220322 start
+                ptlRelieveSec.put("finprodId", entity.getPositionBaseData().getFinDealPledge().getPledgeFinprodId());
+                // ZGTFCP-1427:赋值质押品信息 modify by fuyongsheng 20220322 end
                 ptlRelieveSec.put("secAcctId", dto.getSecAcctId());
                 ptlRelieveSec.put("tradeId", entity.getTradeId());
                 ptlRelieveSec.put("etrId", entity.getEntrustId());
@@ -595,7 +597,8 @@ public class PositionRequestTradeReportService {
                 ||DictCodeListExt3.申报类型_点击成交申报.getValue().equals(etrEntrustAdd.getDealMode())
                 ||DictCodeListExt3.申报类型_成交申报.getValue().equals(etrEntrustAdd.getDealMode())
                 ||DictCodeListExt3.申报类型_日均价固定价格申报.getValue().equals(etrEntrustAdd.getDealMode())
-                ||DictCodeListExt3.申报类型_收盘价固定价格申报.getValue().equals(etrEntrustAdd.getDealMode()))){
+                ||DictCodeListExt3.申报类型_收盘价固定价格申报.getValue().equals(etrEntrustAdd.getDealMode())
+                ||DictCodeListExt3.申报类型_不指定.getValue().equals(etrEntrustAdd.getDealMode()))){
             return DictCodeList.交易平台_大宗交易平台.getValue();
         }else {
             return DictCodeList.交易平台_竞价撮合平台.getValue();

@@ -731,7 +731,6 @@
             var secName = $("#secName_" + currentTab).val();
             var finprodType2 = $("#finprodType2_" + currentTab).val();
             var jJHQXX = queryJJHQXX(secId, secName, finprodType2);
-
             var ps = $("#ps_" + currentTab).val();
             if (finprodType2 == FINPROD_TYPE_TG_F06 || finprodType2 == FINPROD_TYPE_TG_F10) {
                 if (ps == PS_T01) {
@@ -742,7 +741,7 @@
                     return jJHQXX.lowest;
                 } else {
                     //return parent.EtrExchangeTradeJjHq.getJJMktPrice("#latestPrice_jj");
-                    return jJHQXX.latest;
+                    return jJHQXX.ceiling;
                 }
             } else {
                 //return parent.EtrExchangeTradeJjHq.getJJMktPrice("#latestPrice_jj");
@@ -851,7 +850,6 @@
         // 证券代码改变，清空数据来源
         $("#dataSource_" + currentTab).val('').trigger('change');
         var secId = $("#secId_" + currentTab).val();
-
         var ps = $("#ps_" + currentTab).val();
         if (secId) {
             var object = getSecIdSelectObjectData(secId);
@@ -1416,6 +1414,9 @@
             $("#acctNo_" + currentTab).val('').trigger('change');
             $("#acctNo_div_" + currentTab).hide();
         }
+        if(currentTab == 'gd' || ps == PS_T03 || ps == PS_T49){
+            $("#acctNo_div_" + currentTab).hide()
+        }
     };
     /**
      * 交易场所+资金账户联动证券账户
@@ -1573,6 +1574,10 @@
             $("#portfolioId_div" + currentTab).hide();
             $("#acctNo_div" + currentTab).hide();
             $("#dateTableDiv").show();
+        }
+
+        if(currentTab == 'gd'){
+            $("#acctNo_div_" + currentTab).hide()
         }
 
     };

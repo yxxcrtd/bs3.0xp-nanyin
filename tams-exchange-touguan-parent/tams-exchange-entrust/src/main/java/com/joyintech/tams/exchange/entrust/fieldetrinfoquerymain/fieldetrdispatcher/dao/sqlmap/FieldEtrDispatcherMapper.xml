@@ -493,7 +493,8 @@
             ete.entrust_num/100 shareNum,
             eted.our_ent_num/100 entrustOwnNum,
             eted.lendin_ent_num integrateSecAmount,
-            ete.price unitPrice,
+            <!--ete.price unitPrice,-->
+            decode(eted.ASSET_TYPE ,'F07' ,nvl(ete.price,0)*100,nvl(ete.price,0)) unitPrice,
         <!--round(
             decode(
                 btm.OUTPUT_VALUE_1,
@@ -622,7 +623,8 @@
         ete.entrust_num/100 shareNum,
         eted.our_ent_num/100 entrustOwnNum,
         eted.lendin_ent_num integrateSecAmount,
-        ete.price unitPrice,
+        <!--ete.price unitPrice,-->
+        decode(eted.ASSET_TYPE ,'F07' ,nvl(ete.price,0)*100,nvl(ete.price,0)) unitPrice,
         <!--ete.price unitPrice,
         round(
             decode(
