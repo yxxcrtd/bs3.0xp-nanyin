@@ -5,16 +5,22 @@
     <select id="getCommonSearchTabInfoQueryOperate"                                        
             resultType="com.joyintech.tams.business.common.dto.CommonSearchInfoOperateListResponse">
         SELECT rownum SEQ_NO,t.* from (select
-        ENTRUST_ID,
-        OPER_TYPE,
-        to_char(OPER_DATE,'yyyy-MM-dd')  OPER_DATE,
-        to_char(OPER_TIME,'hh24:mi:ss') OPER_TIME,
-        BUSI_DES,
-        real_name userId
-        from ETR_ENTRUST_OPER_HIS
-        LEFT JOIN SYS_USER SU on ETR_ENTRUST_OPER_HIS.user_id = SU.user_name
-        WHERE entrust_id = #{entrustId}
-        order by OPER_TIME desc) t
+        his.ENTRUST_ID,
+		his.OPER_TYPE,
+		to_char( his.OPER_DATE, 'yyyy-MM-dd' ) OPER_DATE,
+		to_char( his.OPER_TIME, 'hh24:mi:ss' ) OPER_TIME,
+		his.BUSI_DES,
+	CASE
+
+			WHEN his.OPER_TYPE = '01' THEN
+			SU2.real_name ELSE SU.real_name
+		END AS userId
+        from ETR_ENTRUST_OPER_HIS his
+		LEFT JOIN ETR_ENTRUST EE ON his.ENTRUST_ID = EE.ENTRUST_ID
+		LEFT JOIN SYS_USER SU ON his.user_id = SU.user_name
+		LEFT JOIN SYS_USER SU2 ON EE.CREATE_USER = SU2.user_name
+        WHERE his.entrust_id = #{entrustId}
+        order by his.OPER_TIME desc) t
     </select>
 
     <select id="getCommonSearchTabRskInfo"
