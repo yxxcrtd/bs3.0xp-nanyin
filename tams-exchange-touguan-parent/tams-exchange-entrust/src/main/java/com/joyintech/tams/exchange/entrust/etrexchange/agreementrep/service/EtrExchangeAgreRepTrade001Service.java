@@ -2117,10 +2117,11 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
 		if (null != entity.getEntrustId() && null != etrEntrustMapper.selectByPrimaryKey(entity.getEntrustId())) {
 			optType = ENTRUST_RECORD_MODIFY;
 		}
-  		String decisionAct = DictCodeListExt3.系统动作_新建.getValue();
-  		String systemAct = DictCodeListExt3.系统动作_新建.getValue();
-  		if (StringUtil.equals(optType, ENTRUST_RECORD_MODIFY)) {
-          	systemAct = DictCodeListExt3.系统动作_修改.getValue();
+  		String decisionAct = DictCodeListExt3.系统动作_修改.getValue();
+  		String systemAct = DictCodeListExt3.系统动作_修改.getValue();
+  		if (StringUtil.equals(optType, ENTRUST_RECORD_NEW)) {
+          	systemAct = DictCodeListExt3.系统动作_新建.getValue();
+          	decisionAct = DictCodeListExt3.系统动作_新建.getValue();
         }
   		positionRequestService.send(entity,decisionAct,systemAct);
   		//增加调用头寸引擎代码end
@@ -2144,14 +2145,17 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
 		if (null != entity.getEntrustId() && null != etrEntrustMapper.selectByPrimaryKey(entity.getEntrustId())) {
 			optType = ENTRUST_RECORD_MODIFY;
 		}
-		String decisionAct = DictCodeListExt3.系统动作_新建.getValue();
-		String systemAct = DictCodeListExt3.系统动作_新建.getValue();
-        SysWflBusinessList sysBus=sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());
-        if(null!=sysBus && StringUtil.equals(sysBus.getProcessState(),DictCodeList.流程状态_已退回.getValue())){
-        	decisionAct = DictCodeListExt3.系统动作_修改.getValue();
-        }
-        if (StringUtil.equals(optType, ENTRUST_RECORD_MODIFY)) {
-        	systemAct = DictCodeListExt3.系统动作_修改.getValue();
+		String decisionAct = DictCodeListExt3.系统动作_修改.getValue();
+		String systemAct = DictCodeListExt3.系统动作_修改.getValue();
+//        SysWflBusinessList sysBus=sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());
+//        if(null!=sysBus && StringUtil.equals(sysBus.getProcessState(),DictCodeList.流程状态_已退回.getValue())){
+//        	decisionAct = DictCodeListExt3.系统动作_修改.getValue();
+//        }
+//        if (StringUtil.equals(optType, ENTRUST_RECORD_MODIFY)) {
+//        	systemAct = DictCodeListExt3.系统动作_修改.getValue();
+//        }
+        if (StringUtil.equals(optType, ENTRUST_RECORD_NEW)) {
+        	systemAct = DictCodeListExt3.系统动作_新建.getValue();
         }
         if(StringUtil.equals("1", RequestUtil.getParam("confirmOk"))){
             entity.setSoftSkipMode("Y");
