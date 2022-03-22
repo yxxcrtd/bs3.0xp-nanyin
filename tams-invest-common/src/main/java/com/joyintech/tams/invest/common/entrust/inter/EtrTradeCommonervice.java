@@ -145,7 +145,7 @@ public class EtrTradeCommonervice extends BaseService {
                 if(newCashAmount!=null){
                     canCash=canCash.add(newCashAmount);
                 }
-                BigDecimal newRealCashAmount=queryPosition(sumAcctNoList,flowType, DictCodeListExt3.资产类型_现金账户持仓.getValue());
+                BigDecimal newRealCashAmount=queryPosition(sumAcctNoList,flowType, DictCodeListExt3.资产类型_证券户可取资金.getValue());
                 if(newRealCashAmount!=null){
                     realCash=realCash.add(newRealCashAmount);
                 }
@@ -198,7 +198,7 @@ public class EtrTradeCommonervice extends BaseService {
         if (list != null) {
 
             String flowType = requestDto.getFlowType();
-            flowType = StringUtil.equals("etr", flowType) ? "01" : "02";
+            flowType=StringUtil.equals(FLOW_TYPE_TRD,flowType)?"03":"01";// 01 指令现金 02 指令持仓 03 交易现金 04 交易持仓
             for (PositionCashSecDto dto : list) {
                 if(StringUtil.isEmpty(dto.getPortfolioId())){
                     continue;
@@ -266,14 +266,14 @@ public class EtrTradeCommonervice extends BaseService {
                     if (newCashAmount != null) {
                         canCash = canCash.add(newCashAmount);
                     }
-                    BigDecimal newRealCashAmount = queryPosition(sumAcctNoList, flowType, DictCodeListExt3.资产类型_现金账户持仓.getValue());
+                    BigDecimal newRealCashAmount = queryPosition(sumAcctNoList, flowType, DictCodeListExt3.资产类型_证券户可取资金.getValue());
                     if (newRealCashAmount != null) {
                         realCash = realCash.add(newRealCashAmount);
                     }
                 }
 
                 //持仓可用
-                flowType = StringUtil.equals("etr", flowType) ? "03" : "04";
+                flowType=StringUtil.equals(FLOW_TYPE_TRD,flowType)?"04":"02";//01 指令现金 02 指令持仓 03 交易现金 04 交易持仓
                 //筛选出有资金账户的组合
                 List<PositionCashSecDto> secList = new ArrayList<>();
                 if (StringUtil.isNotEmpty(dto.getFinprodId()) && StringUtil.isNotEmpty(dto.getSecAcctId())) {
@@ -493,7 +493,8 @@ public class EtrTradeCommonervice extends BaseService {
                     List<LinkedHashMap> list=(List<LinkedHashMap>)bm.get("data");
                     for(LinkedHashMap linkedHashMap:list){
                         if(linkedHashMap.get("AMOUNT")!=null){
-                            sumAmount=sumAmount.add(new BigDecimal(linkedHashMap.get("AMOUNT").toString()));
+                            BigDecimal bd=new BigDecimal(linkedHashMap.get("AMOUNT").toString()).setScale(2, BigDecimal.ROUND_HALF_UP);
+                            sumAmount=sumAmount.add(bd);
                         }
                     }
                 }

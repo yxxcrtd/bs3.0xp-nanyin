@@ -51,7 +51,7 @@
                 object.finprodType2 = FINPROD_TYPE_TG_F03;
             }
         }
-        if (object.ps == PS_T68 || object.ps == PS_T69 || object.ps == PS_T49 || object.ps == PS_T97 || object.ps == PS_T46 || object.ps == PS_T03) {
+        if (object.ps == PS_T68 || object.ps == PS_T69 || object.ps == PS_T49 || object.ps == PS_T97 || object.ps == PS_T46 || object.ps == PS_T03 || object.ps == PS_T04) {
             object.priceModel = "PRM01";
         }
         // 隐藏项需要手动获取
@@ -3152,8 +3152,8 @@
             if(ps == PS_T68 || ps == PS_T69){
                 $("#riskTrialRet_div").hide();
                 $("#EtrExchangeTradeCommon004_btn_riskcal").hide();
+                $("#targetType_div_" + currentTab).hide();
             }
-
             if (finprodType2 == FINPROD_TYPE_TG_F01) {
                 $("#entrustNumUnit_" + currentTab).text("张");
                 $("#acctNo_div_" + currentTab).hide();
@@ -3165,6 +3165,9 @@
                 // $("#agreeOnId_div_xj").show();
                 // $("#declaType_div_xj").show();
                 // $("#settleSpeed_div_xj").show();
+            }
+            if(ps == PS_T04){
+                $("#portfolioId_div_" + currentTab).show();
             }
 
             if (finprodType2 == FINPROD_TYPE_TG_F01) {
@@ -3384,10 +3387,12 @@
                 width: 200,
                 type: 'number',
                 edit: true,
-                visible: (ps != "T03" && ps != "T49")
+                visible: (ps != "T03" && ps != "T49" && ps != "T68" && ps != "T69")
             },
-            {field: 'accAvailableCash', title: '可用现金(元)', width: 200, type: 'number', edit: false, visible: (ps != "T03" && ps != "T49")},
-            {field: 'accAvailablePos', title: '可用持仓', width: 200, type: 'number', edit: false},
+            {field: 'accAvailableCash', title: '可用现金(元)', width: 200, type: 'number', edit: false, visible: (ps != "T03" && ps != "T49" && ps != "T68" && ps != "T69")},
+            {field: 'accAvailablePos', title: '可用持仓', width: 200, type: 'number', edit: false, visible: (ps != "T68" && ps != "T69")},
+            {field: 'accAvailablePos', title: '可入库持仓', width: 200, type: 'number', edit: false, visible: (ps == "T68" || ps == "T69")},
+            {field: 'standardBondVolume', title: '可出库持仓', width: 200, type: 'number', edit: false, visible: (ps == "T68" || ps == "T69")},
             {field: 'operation', title: 'SysCommon.operation', type: 'action', buttons: ['delt']}
         ],
         beforeEditCell: function (preVal, field, rowData) {
@@ -3436,7 +3441,6 @@
             if (dateTable.getAllRows()) {
                 var array = dateTable.getAllRows();
                 if (array.length > 0) {
-                    console.log(array);
                     if (array[0].ps == PS_T68 || array[0].ps == PS_T69) {
                         $("#entrustAmout_total_label").text("标准券数量");
                     } else {
@@ -3460,14 +3464,12 @@
                         $("#entrustNum_total").text("--");
                         $("#entrustAmout_total").text("--");
                     }
-
                 } else {
                     $("#finprodId_total").text("--");
                     $("#finprodName_total").text("--");
                     $("#entrustNum_total").text("--");
                     $("#entrustAmout_total").text("--");
                 }
-
             }
         }
     });

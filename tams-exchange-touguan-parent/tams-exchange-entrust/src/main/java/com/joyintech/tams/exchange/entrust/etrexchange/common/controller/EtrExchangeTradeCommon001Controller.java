@@ -31,6 +31,7 @@ import com.joyintech.tams.common.base.entity.FinProductQuto;
 import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
 import com.joyintech.tams.component.business.common.dto.FinStockInfoDto;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
+import com.joyintech.tams.component.business.trade.dto.BussEtrInvestPersonInfoDto;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.exchange.entrust.common.aop.ExchangeEntrustRdsCommonAop;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
@@ -1153,7 +1154,13 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 								finprodType2 = DictCodeList.平安资产类型_质押式回购.getValue();
 							}
 							//债转股需要走批量接口
-							String infCode = BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue();
+							String infCode;
+							if(StringUtils.equals(dto.getPs(), DictCodeListExt3.交易方向_债转股.getValue())) {
+								infCode = BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue();
+							}
+							else {
+								infCode = BussinessDictCodeListRds.接口系统ID_预占接口.getValue();
+							}
 							dto.setFromEtrExchange("Y");//场内指令
 							AjaxResult ar = ExchangeEntrustRdsCommonAop.doPreOccupy(dto, infCode, finprodType2);
 							if (StringUtil.isNotEmpty(ar)) {
@@ -1206,9 +1213,16 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 						}
 						if (StringUtil.isNotEmpty(dto.getIsDoRkRedisFlag()) && StringUtil.equals(dto.getIsDoRkRedisFlag(),"true")) {
 							// ----------预占功能 start----------
+							String infCode;
+							if(StringUtils.equals(dto.getPs(), DictCodeListExt3.交易方向_债转股.getValue())) {
+								infCode = BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue();
+							}
+							else {
+								infCode = BussinessDictCodeListRds.接口系统ID_预占接口.getValue();
+							}
 							// add by zhangrui1 start
 							AjaxResult ar = ExchangeEntrustRdsCommonAop.doListPreOccupy("EtrExchangeTradeMulti001", etrExchangeTrade001DtoList,
-									BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue());
+									infCode);
 							if (null != ar) {
 								//return new Message<AjaxResult>().success().setData(ar);
 							}
@@ -1335,13 +1349,24 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 					} else if ((dto.getPs().equals(DictCodeListExt3.交易方向_正回购.getValue()) || dto.getPs().equals(DictCodeListExt3.交易方向_逆回购.getValue()))) {
 						finprodType2 = DictCodeList.平安资产类型_质押式回购.getValue();
 					}
-					//债转股需要走批量接口
-					String infCode = BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue();
-					dto.setFromEtrExchange("Y");//场内指令
-					AjaxResult ar = ExchangeEntrustRdsCommonAop.doListPreOccupy("EtrExchangeTradeMulti001", etrExchangeTrade001DtoList,
-							BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue());
-					if (StringUtil.isNotEmpty(ar)) {
-						return new Message<AjaxResult>().success().setData(ar);
+					String infCode;
+					if(StringUtils.equals(dto.getPs(), DictCodeListExt3.交易方向_债转股.getValue())) {
+						for (EtrExchangeTradeSaveRequest requestDto:etrExchangeTrade001DtoList) {
+							infCode = BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue();
+							AjaxResult ar = ExchangeEntrustRdsCommonAop.doPreOccupy(requestDto, infCode, finprodType2);
+							if (StringUtil.isNotEmpty(ar)) {
+								return new Message<AjaxResult>().success().setData(ar);
+							}
+						}
+					}
+					else {
+						infCode = BussinessDictCodeListRds.接口系统ID_预占接口.getValue();
+						dto.setFromEtrExchange("Y");//场内指令
+						AjaxResult ar = ExchangeEntrustRdsCommonAop.doListPreOccupy("EtrExchangeTradeMulti001", etrExchangeTrade001DtoList,
+								infCode);
+						if (StringUtil.isNotEmpty(ar)) {
+							return new Message<AjaxResult>().success().setData(ar);
+						}
 					}
 					ExchangeEntrustRdsCommonAop.riskListToChildren(dto.getRiskTrialRetDto(), etrExchangeTrade001DtoList,
 							(etrExchangeTrade001Dto, list) -> etrExchangeTrade001Dto.setRiskTrialRetDto(list));
@@ -1401,11 +1426,37 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 
 				// ----------预占功能 start----------
 				if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
-					// add by zhangrui1 start
-					AjaxResult ar = ExchangeEntrustRdsCommonAop.doListPreOccupy("EtrExchangeTradeMulti001", etrExchangeTrade001DtoList,
-							BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue());
-					if (null != ar) {
-						//return new Message<AjaxResult>().success().setData(ar);
+					String infCode;
+					if(StringUtils.equals(dto.getPs(), DictCodeListExt3.交易方向_债转股.getValue())) {
+						String finprodType2 = "";
+						if(dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
+							finprodType2 =  DictCodeList.平安资产类型_债券.getValue();
+						}
+						else if(dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
+							finprodType2 =  DictCodeList.平安资产类型_基金.getValue();
+						}
+						else if(dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {
+							finprodType2 =  DictCodeListExt2.平安资产类型_股票.getValue();
+						}
+						else if((dto.getPs().equals(DictCodeListExt3.交易方向_正回购.getValue()) || dto.getPs().equals(DictCodeListExt3.交易方向_逆回购.getValue())) ) {
+							finprodType2 =  DictCodeList.平安资产类型_质押式回购.getValue();
+						}
+						for (EtrExchangeTradeSaveRequest requestDto:etrExchangeTrade001DtoList) {
+							infCode = BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue();
+							AjaxResult ar = ExchangeEntrustRdsCommonAop.doPreOccupy(requestDto,infCode,finprodType2);
+							if (null != ar) {
+								//return new Message<AjaxResult>().success().setData(ar);
+							}
+						}
+					}
+					else {
+						infCode = BussinessDictCodeListRds.接口系统ID_预占接口.getValue();
+						// add by zhangrui1 start
+						AjaxResult ar = ExchangeEntrustRdsCommonAop.doListPreOccupy("EtrExchangeTradeMulti001", etrExchangeTrade001DtoList,
+								infCode);
+						if (null != ar) {
+							//return new Message<AjaxResult>().success().setData(ar);
+						}
 					}
 					ExchangeEntrustRdsCommonAop.riskListToChildren(dto.getRiskTrialRetDto(), etrExchangeTrade001DtoList,
 							(etrExchangeTrade001Dto, list) -> etrExchangeTrade001Dto.setRiskTrialRetDto(list));
