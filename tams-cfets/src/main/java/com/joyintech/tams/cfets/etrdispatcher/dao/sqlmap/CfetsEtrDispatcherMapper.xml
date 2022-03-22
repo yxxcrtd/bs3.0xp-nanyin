@@ -1846,7 +1846,8 @@
         T6.finprod_market_id oldFinprodMarketId,
         eted.DEAL_MODE dealMode,  /** 申报类型 **/
         nvl(nvl(fscr.SCALE * ete.ENTRUST_NUM,ee.PLEDGE_NUMBER * ee.PLEDGE_RATIO), ete.ENTRUST_NUM) pledgeStandardNumber, /** 标准券额度 **/
-        fp.Is_Right isRight,sci.ACCT_NAME trdAcctId
+        fp.Is_Right isRight,sci.ACCT_NAME trdAcctId,
+        fp.FINPROD_TYPE2 finprodTypeTg
         FROM ETR_ENTRUST ete
         INNER JOIN ETR_ENTRUST_ADD eted ON ete.entrust_id = eted.entrust_id
         LEFT JOIN FIN_PRODUCT_CONVERTIBLE FPC ON ete.FINPROD_ID = FPC.FINPROD_ID
@@ -1946,7 +1947,8 @@
         T6.finprod_market_id oldFinprodMarketId,
         eted.DEAL_MODE dealMode,  /** 申报类型 **/
         nvl(ee.PLEDGE_NUMBER * ee.PLEDGE_RATIO , ete.ENTRUST_NUM) pledgeStandardNumber, /** 标准券额度 **/
-        fp.Is_Right isRight,sci.ACCT_NAME trdAcctId
+        fp.Is_Right isRight,sci.ACCT_NAME trdAcctId,
+        fp.FINPROD_TYPE2 finprodTypeTg
         FROM WFL_ETR_ENTRUST ete
         INNER JOIN WFL_ETR_ENTRUST_ADD eted ON ete.entrust_id = eted.entrust_id
         LEFT JOIN FIN_PRODUCT_CONVERTIBLE FPC ON ete.FINPROD_ID = FPC.FINPROD_ID
