@@ -1148,14 +1148,23 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
     
     @Override
 	public void doBack(CfetsBondDealDialogueQuoteDto entity){
-    	//doDeletePtlPositionHold(entity.getWorkflowId());
-        if (StringUtil.equals(com.joyintech.tams.constant.DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
-            //插入旧头寸
-            //回退释放头寸
-            doDeletePtlPositionHold(entity.getWorkflowId());
-        }
         String systemAct= handSystemAct(entity);
         sendPosition(entity,DictCodeListExt3.流程节点_流程退回.getValue(),systemAct,systemAct,null);
+
+    	//doDeletePtlPositionHold(entity.getWorkflowId());
+        if (StringUtil.equals(com.joyintech.tams.constant.DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+
+            //回退释放头寸
+            doDeletePtlPositionHold(entity.getWorkflowId());
+            //插入旧头寸
+            if (StringUtil.equals(entity.getQuotaPageModel(), "edit")) {
+                entity.setIsExistNew(DictCodeList.是否_是.getValue());
+                entity.getCfetsBondDealDialogueQuoteDtoList().clear();
+                doInsetOrUpdateForPtlPositionHold(entity);
+            }
+
+        }
+
     }
     
     // add by etliu 20210309 银行间上下行多组合 start
