@@ -372,13 +372,15 @@ public class PositionRequestTradeRestService {
         resultMap.put("busiType", DictCodeListExt3.头寸业务类型_债券存续期交易.getValue());
         // 业务动作
         resultMap.put("busiAct", DictCodeListExt3.业务动作_成交匹配.getValue());
+        // ZGTFCP-1608:还本到账/收息到账交易方向转换 modify by fuyongsheng 20220322 start
         if(DictCodeList.交易方向_还本到账.getValue().equals(trdProductDeal.getPs())){
-            resultMap.put("ps", DictCodeList.交易方向_还本);
+            resultMap.put("ps", DictCodeList.交易方向_还本.getValue());
         }else if(DictCodeList.交易方向_收息到账.getValue().equals(trdProductDeal.getPs())){
-            resultMap.put("ps", DictCodeList.交易方向_收息);
+            resultMap.put("ps", DictCodeList.交易方向_收息.getValue());
         }else{
             resultMap.put("ps", trdProductDeal.getPs());
         }
+        // ZGTFCP-1608:还本到账/收息到账交易方向转换 modify by fuyongsheng 20220322 end
         String deliveryType = commonPositionEngineService.getDeliveryType(trdProductDeal.getFinprodId());
         resultMap.put("settleSpeed", this.parseSettleSpreed(deliveryType));
         resultMap.put("bidResult", 是否_否.getValue());
