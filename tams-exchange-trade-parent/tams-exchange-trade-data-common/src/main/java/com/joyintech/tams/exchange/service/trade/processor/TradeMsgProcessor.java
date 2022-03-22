@@ -764,6 +764,7 @@ public class TradeMsgProcessor {
         instructionClone.setEntrustNum(entrust.getEntrustVolume());
         instructionClone.setEntrustPrice(entrust.getEntrustPrice());
         instructionClone.setFullPrice(entrust.getFullPrice());
+        instructionClone.setEntrustProp(entrust.getEntrustProp());
 
         int entrustStatus = entrust.getEntrustStatus();
         //撤销委托，调用头寸引擎---start
