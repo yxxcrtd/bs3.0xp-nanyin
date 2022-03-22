@@ -500,6 +500,28 @@
     </select>
 
     <select id="selectAllDataByList" resultMap="BaseResultMap">
+        select sub.* from (
+        select
+        sub.REGIST_SEQNO, sub.PROD_ID, sub.ISSUE_PARTY_ID, sub.SINGLE_TOTAL, sub.LEGAL_TOTAL, sub.UNLEGAL_TOTAL,
+        sub.SUBSCRIBE_CCY_AMT, sub.SALE_AREA_AMT, sub.TOTAL_AMT, sub.RAISE_QTY, sub.IS_CONSIGN, sub.CONSIGN_AMT,
+        sub.REMARK, sub.SEND_STATUS, sub.SUBMIT_FEEDBACK_STATUS, sub.STATUS_DATE, sub.STATUS, sub.CREATE_USER,
+        sub.CREATE_DEPT,
+        sub.CREATE_TIME, sub.UPDATE_USER, sub.UPDATE_TIME, sub.SUBMIT_TIME, sub.CHB_SUBMIT_DEADLINE, sub.SUBMIT_DEADLINE,
+        sub.ORG_CODE, sub.DEPT_CODE,info.prod_name prodname,code.reg_code,
+        sub.PROD_REGIST_CODE,sub.ACCT_NAME,sub.BUSI_ACCT_NO
+
+        from CHB_PRD_RAISETOT_SUB sub
+        left join chb_prd_baseinfo info
+        on info.prod_id=sub.prod_id
+        left join CHB_PRDRESIST_CODE code
+        on code.prodid=sub.prod_id
+        where 1=1 and sub.TOTAL_AMT>0 and info.OPERATE_MODE in('01','02')
+        <if test="keyList != null and keyList.size()>0">
+            <foreach collection="keyList" item="items" open="and sub.REGIST_SEQNO in (" separator="," close=")">
+                #{items.registSeqno,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        union all
         select
         sub.REGIST_SEQNO, sub.PROD_ID, sub.ISSUE_PARTY_ID, sub.SINGLE_TOTAL, sub.LEGAL_TOTAL, sub.UNLEGAL_TOTAL,
         sub.SUBSCRIBE_CCY_AMT, sub.SALE_AREA_AMT, sub.TOTAL_AMT, sub.RAISE_QTY, sub.IS_CONSIGN, sub.CONSIGN_AMT,
@@ -512,12 +534,13 @@
         on info.prod_id=sub.prod_id
         left join CHB_PRDRESIST_CODE code
         on code.prodid=sub.prod_id
-        where 1=1
+        where 1=1 and info.OPERATE_MODE in('03','04')
         <if test="keyList != null and keyList.size()>0">
             <foreach collection="keyList" item="items" open="and sub.REGIST_SEQNO in (" separator="," close=")">
                 #{items.registSeqno,jdbcType=VARCHAR}
             </foreach>
         </if>
+        ) sub
         order by sub.SUBMIT_DEADLINE
     </select>
 
@@ -589,9 +612,6 @@
         buyplace,
         tradetype,
         ccy,
-        <!--从青岛合并，起息日当天有强增强减，需要算到实际募集金额份额 add by wm 20220304 start-->
-        SUM(case when tradetype = '15' then -1*tradeprince else tradeprince end) tradeprince,
-        SUM(case when tradetype = '15' then -1*tradeqty else tradeqty end) tradeqty,
         SUM(tradeprince)tradeprince,
         SUM(tradeqty)tradeqty, ISAGENCY,
         remark,
@@ -612,7 +632,7 @@
         left join chb_prd_baseinfo info
         on info.prod_id = deal.prod_id
         and info.status in ('E','M')
-        where in ('01','14','15')
+        where trade_type='01'
         and deal.status in ('E','M')
         <foreach collection="list" item="prod" open="and ( (" close=" ) )"
                  separator=") or (">
@@ -1078,5 +1098,219 @@
         group by indentify_mark)t where t.indentify_mark=det.indentify_mark and shares!=0)
 
         AND  HOLDER_TYPE IN('17','18','19','20','21','22','23','24','25','26')) GREN
+    </select>
+    <select id="selectAllDataForExport" resultType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
+        select sub.* from (
+        select
+        sub.REGIST_SEQNO registSeqno,
+        sub.PROD_ID prodId,
+        <if test="model_type != null">
+            info.REG_CODE issuePartyId, /*发行机构代码*/
+        </if>
+        <if test="model_type == null">
+            sub.ISSUE_PARTY_ID issuePartyId,
+        </if>
+        sub.SINGLE_TOTAL singleTotal,
+        sub.LEGAL_TOTAL legalTotal,
+        sub.UNLEGAL_TOTAL unlegalTotal,
+        sub.SUBSCRIBE_CCY_AMT subscribeCcyAmt,
+        sub.SALE_AREA_AMT saleAreaAmt,
+        sub.TOTAL_AMT totalAmt,
+        sub.RAISE_QTY raiseQty,
+        sub.IS_CONSIGN isConsign,
+        sub.CONSIGN_AMT consignAmt,
+        sub.REMARK remark,
+        sub.SEND_STATUS sendStatus,
+        sub.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+        sub.STATUS_DATE statusDate,
+        sub.STATUS status,
+        sub.CREATE_USER createUser,
+        sub.CREATE_DEPT createDept,
+        sub.CREATE_TIME createTime,
+        sub.UPDATE_USER updateUser,
+        sub.UPDATE_TIME updateTime,
+        sub.SUBMIT_TIME submitTime,
+        sub.CHB_SUBMIT_DEADLINE chbSubmitDeadline,
+        sub.SUBMIT_DEADLINE submitDeadline,
+        sub.ORG_CODE orgCode,
+        sub.DEPT_CODE deptCode,
+        info.PROD_NAME prodName,
+        code.REG_CODE regCode,
+        sub.SUMIT_SEQ sumitSeq,
+        sub.PROD_REGIST_CODE prodRegistCode,
+        sub.BUSI_ACCT_NO busiAcctNo,
+        sub.ACCT_NAME acctName
+
+        from CHB_PRD_RAISETOT_SUB sub
+        left join chb_prd_baseinfo info
+        on info.prod_id=sub.prod_id
+        and info.status != 'D'
+        left join CHB_PRDRESIST_CODE code
+        on code.prodid=sub.prod_id
+        where 1=1 and sub.TOTAL_AMT>0 and info.OPERATE_MODE in('01','02')
+        <if test="isConsign != null and isConsign !='' ">
+            and sub.IS_CONSIGN = #{isConsign,jdbcType=VARCHAR}
+        </if>
+        <if test="prodNameList != null and prodNameList.size()>0">
+            <foreach collection="prodNameList" item="items" open="and info.prod_id in (" separator="," close=")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="regCodeList != null and regCodeList.size()>0">
+            <foreach collection="regCodeList" item="items" open="and code.reg_code in (" separator="," close=")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="submitendDateStart != null and submitendDateStart != ''">
+            and TO_CHAR(sub.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') <![CDATA[ >= ]]> #{submitendDateStart}
+        </if>
+        <if test="submitendDateEnd != null and submitendDateEnd != ''">
+            and TO_CHAR(sub.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') <![CDATA[ <= ]]> #{submitendDateEnd}
+        </if>
+        <if test="dataDateStart != null and dataDateStart != ''">
+            and TO_CHAR(sub.STATUS_DATE,'%Y-%m-%d') <![CDATA[ >= ]]> #{dataDateStart}
+        </if>
+        <if test="dataDateEnd != null and dataDateEnd != ''">
+            and DATE_FORMAT(sub.STATUS_DATE,'%Y-%m-%d') <![CDATA[ <= ]]> #{dataDateEnd}
+        </if>
+        <if test="submitDateStart != null and submitDateStart != ''">
+            and TO_CHAR(sub.SUBMIT_TIME,'%Y-%m-%d') <![CDATA[ >= ]]> #{submitDateStart}
+        </if>
+        <if test="submitDateEnd != null and submitDateEnd != ''">
+            and TO_CHAR(sub.SUBMIT_TIME,'%Y-%m-%d') <![CDATA[ <= ]]> #{submitDateEnd}
+        </if>
+        <if test="vdateStart != null and vdateStart != ''">
+            and TO_CHAR(info.VDATE,'%Y-%m-%d') <![CDATA[ >= ]]> #{vdateStart}
+        </if>
+        <if test="vdateEnd != null and vdateEnd != ''">
+            and TO_CHAR(info.VDATE,'%Y-%m-%d') <![CDATA[ <= ]]> #{vdateEnd}
+        </if>
+        <!-- 报送状态 -->
+        <if test="sendStatusList != null and sendStatusList.size()>0">
+            <foreach collection="sendStatusList" item="items" open="and sub.SEND_STATUS in (" separator="," close=")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <!-- 反馈状态 -->
+        <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size()>0">
+            <foreach collection="submitFeedbackStatusList" item="items" open="and SUBMIT_FEEDBACK_STATUS in ("
+                     separator="," close=")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <!-- 数据状态 -->
+        <if test="statusList != null and statusList.size()>0">
+            <foreach collection="statusList" item="items" open="and sub.STATUS in (" separator="," close=")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+
+        union all
+
+        select
+        sub.REGIST_SEQNO registSeqno,
+        sub.PROD_ID prodId,
+        <if test="model_type != null">
+            info.REG_CODE issuePartyId, /*发行机构代码*/
+        </if>
+        <if test="model_type == null">
+            sub.ISSUE_PARTY_ID issuePartyId,
+        </if>
+        sub.SINGLE_TOTAL singleTotal,
+        sub.LEGAL_TOTAL legalTotal,
+        sub.UNLEGAL_TOTAL unlegalTotal,
+        sub.SUBSCRIBE_CCY_AMT subscribeCcyAmt,
+        sub.SALE_AREA_AMT saleAreaAmt,
+        sub.TOTAL_AMT totalAmt,
+        sub.RAISE_QTY raiseQty,
+        sub.IS_CONSIGN isConsign,
+        sub.CONSIGN_AMT consignAmt,
+        sub.REMARK remark,
+        sub.SEND_STATUS sendStatus,
+        sub.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+        sub.STATUS_DATE statusDate,
+        sub.STATUS status,
+        sub.CREATE_USER createUser,
+        sub.CREATE_DEPT createDept,
+        sub.CREATE_TIME createTime,
+        sub.UPDATE_USER updateUser,
+        sub.UPDATE_TIME updateTime,
+        sub.SUBMIT_TIME submitTime,
+        sub.CHB_SUBMIT_DEADLINE chbSubmitDeadline,
+        sub.SUBMIT_DEADLINE submitDeadline,
+        sub.ORG_CODE orgCode,
+        sub.DEPT_CODE deptCode,
+        info.PROD_NAME prodName,
+        code.REG_CODE regCode,
+        sub.SUMIT_SEQ sumitSeq,
+        sub.PROD_REGIST_CODE prodRegistCode,
+        sub.BUSI_ACCT_NO busiAcctNo,
+        sub.ACCT_NAME acctName
+
+        from CHB_PRD_RAISETOT_SUB sub
+        left join chb_prd_baseinfo info
+        on info.prod_id=sub.prod_id
+        and info.status != 'D'
+        left join CHB_PRDRESIST_CODE code
+        on code.prodid=sub.prod_id
+        where 1=1 and info.OPERATE_MODE in('03','04')
+        <if test="isConsign != null and isConsign !='' ">
+            and sub.IS_CONSIGN = #{isConsign,jdbcType=VARCHAR}
+        </if>
+        <if test="prodNameList != null and prodNameList.size()>0">
+            <foreach collection="prodNameList" item="items" open="and info.prod_id in (" separator="," close=")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="regCodeList != null and regCodeList.size()>0">
+            <foreach collection="regCodeList" item="items" open="and code.reg_code in (" separator="," close=")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="submitendDateStart != null and submitendDateStart != ''">
+            and TO_CHAR(sub.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') <![CDATA[ >= ]]> #{submitendDateStart}
+        </if>
+        <if test="submitendDateEnd != null and submitendDateEnd != ''">
+            and TO_CHAR(sub.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') <![CDATA[ <= ]]> #{submitendDateEnd}
+        </if>
+        <if test="dataDateStart != null and dataDateStart != ''">
+            and TO_CHAR(sub.STATUS_DATE,'%Y-%m-%d') <![CDATA[ >= ]]> #{dataDateStart}
+        </if>
+        <if test="dataDateEnd != null and dataDateEnd != ''">
+            and TO_CHAR(sub.STATUS_DATE,'%Y-%m-%d') <![CDATA[ <= ]]> #{dataDateEnd}
+        </if>
+        <if test="submitDateStart != null and submitDateStart != ''">
+            and TO_CHAR(sub.SUBMIT_TIME,'%Y-%m-%d') <![CDATA[ >= ]]> #{submitDateStart}
+        </if>
+        <if test="submitDateEnd != null and submitDateEnd != ''">
+            and TO_CHAR(sub.SUBMIT_TIME,'%Y-%m-%d') <![CDATA[ <= ]]> #{submitDateEnd}
+        </if>
+        <if test="vdateStart != null and vdateStart != ''">
+            and TO_CHAR(info.VDATE,'%Y-%m-%d') <![CDATA[ >= ]]> #{vdateStart}
+        </if>
+        <if test="vdateEnd != null and vdateEnd != ''">
+            and TO_CHAR(info.VDATE,'%Y-%m-%d') <![CDATA[ <= ]]> #{vdateEnd}
+        </if>
+        <!-- 报送状态 -->
+        <if test="sendStatusList != null and sendStatusList.size()>0">
+            <foreach collection="sendStatusList" item="items" open="and sub.SEND_STATUS in (" separator="," close=")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <!-- 反馈状态 -->
+        <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size()>0">
+            <foreach collection="submitFeedbackStatusList" item="items" open="and SUBMIT_FEEDBACK_STATUS in ("
+                     separator="," close=")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <!-- 数据状态 -->
+        <if test="statusList != null and statusList.size()>0">
+            <foreach collection="statusList" item="items" open="and sub.STATUS in (" separator="," close=")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        ) sub
+        order by sub.submitDeadline
     </select>
 </mapper>
