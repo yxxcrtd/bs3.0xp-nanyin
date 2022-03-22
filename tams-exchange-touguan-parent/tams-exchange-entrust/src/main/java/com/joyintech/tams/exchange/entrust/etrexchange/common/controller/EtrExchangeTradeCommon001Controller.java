@@ -1440,7 +1440,8 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 				// ----------预占功能 start----------
 				if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
 					String infCode;
-					if(StringUtils.equals(dto.getPs(), DictCodeListExt3.交易方向_债转股.getValue())) {
+					if(StringUtils.equals(dto.getPs(), DictCodeListExt3.交易方向_债转股.getValue())
+					|| StringUtils.equals(dto.getPs(), DictCodeList.交易方向_行权_回售.getValue())) {
 						String finprodType2 = "";
 						if(dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
 							finprodType2 =  DictCodeList.平安资产类型_债券.getValue();
@@ -1455,7 +1456,11 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 							finprodType2 =  DictCodeList.平安资产类型_质押式回购.getValue();
 						}
 						for (EtrExchangeTradeSaveRequest requestDto:etrExchangeTrade001DtoList) {
-							infCode = BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue();
+							if (StringUtils.equals(dto.getPs(), DictCodeListExt3.交易方向_债转股.getValue())) {
+								infCode = BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue();
+							}else{
+								infCode = BussinessDictCodeListRds.接口系统ID_预占接口.getValue();
+							}
 							AjaxResult ar = ExchangeEntrustRdsCommonAop.doPreOccupy(requestDto,infCode,finprodType2);
 							if (null != ar) {
 								//return new Message<AjaxResult>().success().setData(ar);
