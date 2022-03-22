@@ -275,7 +275,7 @@ public class PositionRequestTradeReportService {
             // ZGTFCP-1250:新增字段赋值 modify by fuyongsheng 20220318 start
             plt.put("etrSecAmount", dto.getEtrSecAmount());
             plt.put("ordId", dto.getOrderId());
-            plt.put("ordSecAmount", dto.getStandardSecAmount());
+            plt.put("ordSecAmount", dto.getOrdSecAmount());
             // ZGTFCP-1250:新增字段赋值 modify by fuyongsheng 20220318 end
             // ZGTFCP-1303:需要增加finprodId字段 modify by fuyongsheng 20220318 start
             plt.put("finprodId", entity.getFinprodId());
@@ -595,7 +595,8 @@ public class PositionRequestTradeReportService {
                 ||DictCodeListExt3.申报类型_点击成交申报.getValue().equals(etrEntrustAdd.getDealMode())
                 ||DictCodeListExt3.申报类型_成交申报.getValue().equals(etrEntrustAdd.getDealMode())
                 ||DictCodeListExt3.申报类型_日均价固定价格申报.getValue().equals(etrEntrustAdd.getDealMode())
-                ||DictCodeListExt3.申报类型_收盘价固定价格申报.getValue().equals(etrEntrustAdd.getDealMode()))){
+                ||DictCodeListExt3.申报类型_收盘价固定价格申报.getValue().equals(etrEntrustAdd.getDealMode())
+                ||DictCodeListExt3.申报类型_不指定.getValue().equals(etrEntrustAdd.getDealMode()))){
             return DictCodeList.交易平台_大宗交易平台.getValue();
         }else {
             return DictCodeList.交易平台_竞价撮合平台.getValue();

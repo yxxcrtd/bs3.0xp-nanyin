@@ -922,6 +922,9 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
                                  }
                                  trdProductDealMuilt.setTradeAmt(tradeAmtSingle);
                                  trdProductDealMuilt.setShareAmt(shareAmtSingle);
+                                 // ZGTFCP-1499:对系列户交易赋值对应的组合 add by fuyongsheng 20220322 start
+                                 trdProductDealMuilt.setPortfolioId(etrEntrustDetail.getPortfolioId());
+                                 // ZGTFCP-1499:对系列户交易赋值对应的组合 add by fuyongsheng 20220322 end
                                  trdProductDealAddMuilt.setPortfolioId(etrEntrustDetail.getPortfolioId());
                                  List<BaseTradeProductDealDto> baseTradeProductDealDtoListMuilt=new ArrayList<>();
                                  BaseTradeProductDealDto baseTradeProductDealDtoMuilt=new BaseTradeProductDealDto();

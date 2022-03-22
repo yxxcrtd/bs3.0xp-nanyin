@@ -430,30 +430,32 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
         map.put(ORD_ENTRUST_ID, null);
         // 标准券代码
         map.put(STANDARD_SEC_ID, STANDAR_SEC_ID);
+        //查询当日折算率
+        BigDecimal converseRadio = exchangeTransMatchCommonMapper.queryConverseRadio(dealEntity.getFinprodId(), dealEntity.getTradeDate());
+        if(converseRadio==null) {
+            converseRadio = BigDecimal.ONE;
+        }
+        // 质押式回购出入库计算时，标准券数量=质押数量*标准折算率*面值/100
+        BigDecimal 百元券面 = trdCommonBaseService.getFaceValue(dealEntity.getFinprodId(), dealEntity.getTradeDate());
+        if (百元券面 == null) {
+            百元券面 = BigDecimal.valueOf(100);
+        }
+        BigDecimal hundred = BigDecimal.valueOf(100);
+        // 标准券总额
+        map.put(STANDARD_SEC_AMOUNT, ArithmeticUtil.divide(ArithmeticUtil.multiply(dealEntity.getShareAmt(),
+                converseRadio, 百元券面), hundred, 2, RoundingMode.HALF_UP));
+        // 再折算率	reConversionRate "调用【再折算率查询】参数：资金账户 = 指令资金账户
+        Map<String, Object> paramMap = Maps.newHashMap();
+        paramMap.put("acctNo", cashAcctId);
+        TrdMoreConvrateDto moreConvrate = this.getMoreConvrate(paramMap);
+        if (StringUtil.isNotEmpty(moreConvrate)) {
+            map.put("reConversionRate", moreConvrate.getMoreConvrate());
+        }
         if (DictCodeListExt3.交易方向_质押券入库.getValue().equals(ps) || DictCodeListExt3.交易方向_质押券出库.getValue().equals(ps)) {
-            //查询当日折算率
-            BigDecimal converseRadio = exchangeTransMatchCommonMapper.queryConverseRadio(dealEntity.getFinprodId(), dealEntity.getTradeDate());
-            if(converseRadio==null) {
-                converseRadio = BigDecimal.ONE;
-            }
-            // 质押式回购出入库计算时，标准券数量=质押数量*标准折算率*面值/100
-            BigDecimal 百元券面 = trdCommonBaseService.getFaceValue(dealEntity.getFinprodId(), dealEntity.getTradeDate());
-            if (百元券面 == null) {
-                百元券面 = BigDecimal.valueOf(100);
-            }
-            BigDecimal hundred = BigDecimal.valueOf(100);
-            // 标准券总额
-            map.put(STANDARD_SEC_AMOUNT, ArithmeticUtil.divide(ArithmeticUtil.multiply(dealEntity.getShareAmt(),
-                    converseRadio, 百元券面), hundred, 2, RoundingMode.HALF_UP));
-            // 再折算率	reConversionRate "调用【再折算率查询】参数：资金账户 = 指令资金账户
-            Map<String, Object> paramMap = Maps.newHashMap();
-            paramMap.put("acctNo", cashAcctId);
-            TrdMoreConvrateDto moreConvrate = this.getMoreConvrate(paramMap);
-            if (StringUtil.isNotEmpty(moreConvrate)) {
-                map.put("reConversionRate", moreConvrate.getMoreConvrate());
-            }
             map.put("cashAmount", new BigDecimal(0));
         }
+        // 指令券面总额
+        map.put("etrSecAmount", ArithmeticUtil.multiply(dealEntity.getShareAmt(), hundred));
         ptlList.add(map);
         resultMap.put(PTL_LIST, ptlList);
         // 质押券数据集	ptlSecList
@@ -602,7 +604,7 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
     }
 
     /**
-     * 股票-指令    stock001
+     * 股票-指令
      *
      * @param entity
      * @param resultMap
@@ -750,7 +752,8 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
                 ||DictCodeListExt3.申报类型_点击成交申报.getValue().equals(etrEntrustAdd.getDealMode())
                 ||DictCodeListExt3.申报类型_成交申报.getValue().equals(etrEntrustAdd.getDealMode())
                 ||DictCodeListExt3.申报类型_日均价固定价格申报.getValue().equals(etrEntrustAdd.getDealMode())
-                ||DictCodeListExt3.申报类型_收盘价固定价格申报.getValue().equals(etrEntrustAdd.getDealMode()))){
+                ||DictCodeListExt3.申报类型_收盘价固定价格申报.getValue().equals(etrEntrustAdd.getDealMode())
+                ||DictCodeListExt3.申报类型_不指定.getValue().equals(etrEntrustAdd.getDealMode()))){
             return DictCodeList.交易平台_大宗交易平台.getValue();
         }else {
             return DictCodeList.交易平台_竞价撮合平台.getValue();

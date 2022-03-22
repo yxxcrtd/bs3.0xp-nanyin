@@ -164,7 +164,7 @@ public class IbuQuoteRepoService extends BaseService {
     /**
      * 递增维度
      */
-    private static BigDecimal dimension = new BigDecimal("0.01");
+    private final static String dimension = "0.01";
 
     @Autowired(required = false)
     private BaseEtrCashPositionCommService baseEtrCashPositionCommService;
@@ -681,6 +681,9 @@ public class IbuQuoteRepoService extends BaseService {
                 }
                 item.setAvaNum(ArithmeticUtil.subtract(item.getAvaNum(), item.getTradeAmt()));
                 tailDifference = ArithmeticUtil.subtract(tailDifference, item.getTradeAmt());
+                if(tailDifference.compareTo(BigDecimal.ZERO)<=0){
+                    break;
+                }
             }
             handleTailDifference(ptlAllocationListNeed, tailDifference);
         }
@@ -2022,13 +2025,13 @@ public class IbuQuoteRepoService extends BaseService {
      */
     private void handleTailDifference(List<RepoPtlAllocationDto> ptlAllocations, BigDecimal tailDifference) {
         //递增维度
-        BigDecimal addDimension = dimension;
+        BigDecimal addDimension = new BigDecimal(dimension);
         int size = ptlAllocations.size();
         //委托维度 已经完全分配的集合
         Set<String> set = new HashSet<>();
         while (tailDifference.compareTo(BigDecimal.ZERO) > 0 && size > 0) {
             if (tailDifference.compareTo(new BigDecimal("1")) >= 0) {
-                addDimension = ArithmeticUtil.divide(tailDifference, size, 4);
+                addDimension = ArithmeticUtil.divide(tailDifference, size, 2);
             }
             for (RepoPtlAllocationDto item : ptlAllocations) {
                 if ((item.getAvaNum().compareTo(item.getTradeAmt()) == 0 || tailDifference.compareTo(BigDecimal.ZERO) <= 0)) {
@@ -2104,37 +2107,37 @@ public class IbuQuoteRepoService extends BaseService {
             //组合分配中交易金额/基本信息中总的交易金额*金额信息中回购利息
             BigDecimal mIntAmtTemp = ArithmeticUtil.round(
                     ArithmeticUtil.multiply(
-                            ArithmeticUtil.divide(item.getTradeAmt(), tradeAmt, 12, RoundingMode.HALF_UP), mIntAmt), 4, RoundingMode.HALF_UP);
+                            ArithmeticUtil.divide(item.getTradeAmt(), tradeAmt, 12, RoundingMode.HALF_UP), mIntAmt), 2, RoundingMode.HALF_UP);
             item.setmIntAmt(StringUtil.isNotEmpty(mIntAmtTemp) ? mIntAmtTemp : BigDecimal.ZERO);
             mIntAmtTailDifference = ArithmeticUtil.subtract(mIntAmtTailDifference, item.getmIntAmt());
             //组合分配中交易金额/基本信息中总的交易金额*金额信息中到期结算金额
             BigDecimal mtradeAmtTemp = ArithmeticUtil.round(
                     ArithmeticUtil.multiply(
-                            ArithmeticUtil.divide(item.getTradeAmt(), tradeAmt, 12, RoundingMode.HALF_UP), mtradeAmt), 4, RoundingMode.HALF_UP);
+                            ArithmeticUtil.divide(item.getTradeAmt(), tradeAmt, 12, RoundingMode.HALF_UP), mtradeAmt), 2, RoundingMode.HALF_UP);
             item.setMtradeAmt(StringUtil.isNotEmpty(mtradeAmtTemp) ? mtradeAmtTemp : BigDecimal.ZERO);
             mtradeAmtTailDifference = ArithmeticUtil.subtract(mtradeAmtTailDifference, item.getMtradeAmt());
             //组合分配中交易金额/基本信息中总的交易金额*基本信息中交易手续费
             BigDecimal dealFeeAmtTemp = ArithmeticUtil.round(
                     ArithmeticUtil.multiply(
-                            ArithmeticUtil.divide(item.getTradeAmt(), tradeAmt, 12, RoundingMode.HALF_UP), dealFeeAmt), 4, RoundingMode.HALF_UP);
+                            ArithmeticUtil.divide(item.getTradeAmt(), tradeAmt, 12, RoundingMode.HALF_UP), dealFeeAmt), 2, RoundingMode.HALF_UP);
             item.setDealFeeAmt(StringUtil.isNotEmpty(dealFeeAmtTemp) ? dealFeeAmtTemp : BigDecimal.ZERO);
             dealFeeAmtTailDifference = ArithmeticUtil.subtract(dealFeeAmtTailDifference, item.getDealFeeAmt());
             // 结算手续费 平均分配
-            BigDecimal settFeeAmtTemp = ArithmeticUtil.divide(settFeeAmt, size, 4, RoundingMode.HALF_UP);
+            BigDecimal settFeeAmtTemp = ArithmeticUtil.divide(settFeeAmt, size, 2, RoundingMode.HALF_UP);
             item.setSettFeeAmt(StringUtil.isNotEmpty(settFeeAmtTemp) ? settFeeAmtTemp : BigDecimal.ZERO);
             settFeeAmtTailDifference = ArithmeticUtil.subtract(settFeeAmtTailDifference, item.getSettFeeAmt());
             //组合分配中交易金额/基本信息中总的折算券面*基本信息中交易手续费
             if (convertAmt != null) {
                 BigDecimal convertAmtTemp = ArithmeticUtil.round(
                         ArithmeticUtil.multiply(
-                                ArithmeticUtil.divide(item.getTradeAmt(), tradeAmt, 12, RoundingMode.HALF_UP), convertAmt), 4, RoundingMode.HALF_UP);
+                                ArithmeticUtil.divide(item.getTradeAmt(), tradeAmt, 12, RoundingMode.HALF_UP), convertAmt), 2, RoundingMode.HALF_UP);
                 item.setConvertAmt(convertAmtTemp);
                 convertAmtTailDifference = ArithmeticUtil.subtract(convertAmtTailDifference, item.getConvertAmt());
             }
             if (shareAmt != null) {
                 BigDecimal shareAmtTemp = ArithmeticUtil.round(
                         ArithmeticUtil.multiply(
-                                ArithmeticUtil.divide(item.getTradeAmt(), tradeAmt, 12, RoundingMode.HALF_UP), shareAmt), 4, RoundingMode.HALF_UP);
+                                ArithmeticUtil.divide(item.getTradeAmt(), tradeAmt, 12, RoundingMode.HALF_UP), shareAmt), 2, RoundingMode.HALF_UP);
                 item.setShareAmt(shareAmtTemp);
                 shareAmtTailDifference = ArithmeticUtil.subtract(shareAmtTailDifference, item.getShareAmt());
             }
@@ -2162,11 +2165,43 @@ public class IbuQuoteRepoService extends BaseService {
      */
     private void handleTailDifference(List<RepoPtlAllocationDto> ptlAllocations, BigDecimal tailDifference, int type) {
         //递增维度
-        BigDecimal addDimension = dimension;
+        BigDecimal addDimension = new BigDecimal(dimension);
         int size = ptlAllocations.size();
-        while (tailDifference.compareTo(BigDecimal.ZERO) > 0 && size > 0) {
+        while (tailDifference.compareTo(BigDecimal.ZERO) != 0 && size > 0) {
             if (tailDifference.compareTo(new BigDecimal("1")) >= 0) {
-                addDimension = ArithmeticUtil.divide(tailDifference, size, 4);
+                addDimension = ArithmeticUtil.divide(tailDifference, size, 2);
+            }
+            if (size > 0 && tailDifference.compareTo(BigDecimal.ZERO) < 0) {
+                RepoPtlAllocationDto ptlAllocationDto = ptlAllocations.get(size - 1);
+                //回购利息
+                if (type == 0) {
+                    ptlAllocationDto.setmIntAmt(ArithmeticUtil.doAdd(ptlAllocationDto.getmIntAmt(), tailDifference));
+                }
+                //到期结算金额
+                if (type == 1) {
+                    ptlAllocationDto.setMtradeAmt(ArithmeticUtil.doAdd(ptlAllocationDto.getMtradeAmt(), tailDifference));
+                }
+                //交易手续费
+                if (type == 2) {
+                    ptlAllocationDto.setDealFeeAmt(ArithmeticUtil.doAdd(ptlAllocationDto.getDealFeeAmt(), tailDifference));
+                }
+                //结算服务费
+                if (type == 3) {
+                    ptlAllocationDto.setSettFeeAmt(ArithmeticUtil.doAdd(ptlAllocationDto.getSettFeeAmt(), tailDifference));
+                }
+                //交易金额
+                if (type == 4) {
+                    ptlAllocationDto.setTradeAmt(ArithmeticUtil.doAdd(ptlAllocationDto.getTradeAmt(), tailDifference));
+                }
+                //折算质押券
+                if (type == 5) {
+                    ptlAllocationDto.setConvertAmt(ArithmeticUtil.doAdd(ptlAllocationDto.getConvertAmt(), tailDifference));
+                }
+                //质押券面
+                if (type == 6) {
+                    ptlAllocationDto.setShareAmt(ArithmeticUtil.doAdd(ptlAllocationDto.getShareAmt(), tailDifference));
+                }
+                break;
             }
             for (RepoPtlAllocationDto item : ptlAllocations) {
                 //回购利息
@@ -2198,6 +2233,9 @@ public class IbuQuoteRepoService extends BaseService {
                     item.setShareAmt(ArithmeticUtil.doAdd(item.getShareAmt(), addDimension));
                 }
                 tailDifference = ArithmeticUtil.subtract(tailDifference, addDimension);
+                if (tailDifference.compareTo(BigDecimal.ZERO) == 0) {
+                    break;
+                }
             }
         }
     }
