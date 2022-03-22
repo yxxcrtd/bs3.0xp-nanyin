@@ -310,6 +310,10 @@ public class PositionRequestServiceInstructionRequest {
                 map.put(STANDARD_SEC_AMOUNT, item.getEntrustAmt());
                 //指令券面总额
                 map.put(ETR_SEC_AMOUNT,item.getEntrustAmt());
+                if(DictCodeListExt3.交易方向_质押券入库.getValue().equals(entity.getPs())
+                		|| DictCodeListExt3.交易方向_质押券出库.getValue().equals(entity.getPs())) {
+                	map.put("cashAmount", null);//出入库时，可以为空
+                }
                 // 再折算率	reConversionRate "调用【再折算率查询】参数：资金账户 = 指令资金账户 TODO
                 ImmutableMap<String, Object> param = ImmutableMap.of("acctNo", entity.getAcctNo());
 //                TrdMoreConvrateDto moreConvrate = instruction.getMoreConvrate(param);
