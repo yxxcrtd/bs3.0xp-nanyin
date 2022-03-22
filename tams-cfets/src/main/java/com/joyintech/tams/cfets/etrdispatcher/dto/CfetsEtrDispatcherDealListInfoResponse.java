@@ -6,6 +6,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsPledgeBondInfoDto;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -194,6 +195,8 @@ public class CfetsEtrDispatcherDealListInfoResponse extends CfetsEtrDispatcherBa
 
     @ApiModelProperty(name = "recommenderName", value = "资产推荐方名称", example = "字符串1")
     private String recommenderName;
+
+
 
     public String getEffectFlag() {
         return effectFlag;
@@ -1222,5 +1225,146 @@ public class CfetsEtrDispatcherDealListInfoResponse extends CfetsEtrDispatcherBa
 
     public void setErrorMsg(String errorMsg) {
         this.errorMsg = errorMsg;
+    }
+
+    /******* 一级投标 start********/
+
+    @ApiModelProperty(name="bidDate",value="投标日期，一级市场债使用",example="字符串1")
+    private Date bidDate;
+    @ApiModelProperty(name="allBidPrinAmt",value="投标券面总额汇总",example="字符串1")
+    private BigDecimal allBidPrinAmt;
+    @ApiModelProperty(name="bidprice",value="投标标位,多个字符串分割",example="字符串1")
+    private String bidprice;
+    @ApiModelProperty(name="payType",value="缴款方式",example="字符串1")
+    private String payType;
+    private String payTypeValue;
+    @ApiModelProperty(name="winPrinAmt",value="中标券面总额",example="字符串1")
+    private BigDecimal winPrinAmt;
+    @ApiModelProperty(name="winPrice",value="中标标位",example="字符串1")
+    private String winPrice;
+    @ApiModelProperty(name="winType",value="中标方式",example="字符串1")
+    private String winType;
+    private String winTypeValue;
+    @ApiModelProperty(name="payDate",value="缴款日",example="字符串1")
+    private Date payDate;
+    @ApiModelProperty(name="listingDate",value="上市日",example="字符串1")
+    private Date listingDate;
+    @ApiModelProperty(name="bidId",value="投标编号",example="字符串1")
+    private String bidId;
+    @ApiModelProperty(name = "isWin", value = "中标状态", example = "字符串1")
+    private String isWin;
+    @ApiModelProperty(name = "isWin", value = "中标状态字典值", example = "字符串1")
+    private String isWinValue;
+
+    public String getIsWin() {
+        return isWin;
+    }
+
+    public void setIsWin(String isWin) {
+        this.isWin = isWin;
+    }
+
+    public String getIsWinValue() {
+        return SysDataUtil.getNameFromDataDict(BussinessDictCode.中标状态, this.getIsWin());
+    }
+
+    public void setIsWinValue(String isWinValue) {
+        this.isWinValue = isWinValue;
+    }
+
+    public Date getBidDate() {
+        return bidDate;
+    }
+
+    public void setBidDate(Date bidDate) {
+        this.bidDate = bidDate;
+    }
+
+    public BigDecimal getAllBidPrinAmt() {
+        return allBidPrinAmt;
+    }
+
+    public void setAllBidPrinAmt(BigDecimal allBidPrinAmt) {
+        this.allBidPrinAmt = allBidPrinAmt;
+    }
+
+    public String getBidprice() {
+        return bidprice;
+    }
+
+    public void setBidprice(String bidprice) {
+        this.bidprice = bidprice;
+    }
+
+    public String getPayType() {
+        return payType;
+    }
+
+    public void setPayType(String payType) {
+        this.payType = payType;
+    }
+
+    public String getPayTypeValue() {
+        return SysDataUtil.getNameFromDataDict(BussinessDictCode.缴款方式, this.payType);
+    }
+
+    public void setPayTypeValue(String payTypeValue) {
+        this.payTypeValue = payTypeValue;
+    }
+
+    public BigDecimal getWinPrinAmt() {
+        return winPrinAmt;
+    }
+
+    public void setWinPrinAmt(BigDecimal winPrinAmt) {
+        this.winPrinAmt = winPrinAmt;
+    }
+
+    public String getWinPrice() {
+        return winPrice;
+    }
+
+    public void setWinPrice(String winPrice) {
+        this.winPrice = winPrice;
+    }
+
+    public String getWinType() {
+        return winType;
+    }
+
+    public void setWinType(String winType) {
+        this.winType = winType;
+    }
+
+    public Date getPayDate() {
+        return payDate;
+    }
+
+    public void setPayDate(Date payDate) {
+        this.payDate = payDate;
+    }
+
+    public Date getListingDate() {
+        return listingDate;
+    }
+
+    public void setListingDate(Date listingDate) {
+        this.listingDate = listingDate;
+    }
+
+    public String getBidId() {
+        return bidId;
+    }
+
+    public void setBidId(String bidId) {
+        this.bidId = bidId;
+    }
+
+    public String getWinTypeValue() {
+        return SysDataUtil.getNameFromDataDict(BussinessDictCode.中标方式, this.winType);
+    }
+
+    public void setWinTypeValue(String winTypeValue) {
+        this.winTypeValue = winTypeValue;
     }
 }
