@@ -95,6 +95,7 @@ public class OrderManagement extends BaseService {
         	instructionClone.setEntrustPrice(orderPlaceBean.getEntrustPrice());
         	instructionClone.setFullPrice(orderPlaceBean.getFullPrice());
             instructionClone.setEntrustNo(instruction.getEntrustId());
+            instructionClone.setEntrustProp(orderPlaceBean.getEntrustProp());
         	positionRequestServiceInstructionRequest.sendRequest(instructionClone,DictCodeListExt3.业务动作_交易下单.getValue(),DictCodeListExt3.系统动作_检查.getValue(),DictCodeListExt3.系统动作_新建.getValue());
         }catch (Exception e) {
             logger.warn("场内交易下单头寸检测异常",e);
@@ -140,6 +141,7 @@ public class OrderManagement extends BaseService {
         	instructionClone.setEntrustPrice(integratedEntrust.getEntrustPrice());
             instructionClone.setFullPrice(integratedEntrust.getFullPrice());
             instructionClone.setEntrustNo(instruction.getEntrustId());
+            instructionClone.setEntrustProp(integratedEntrust.getEntrustProp());
         	positionRequestServiceInstructionRequest.sendRequest(instructionClone,DictCodeListExt3.业务动作_交易下单.getValue(),DictCodeListExt3.系统动作_检查.getValue(),DictCodeListExt3.系统动作_新建.getValue());
         }catch (Exception e) {
             logger.warn("场内交易大宗下单头寸检测异常",e);
