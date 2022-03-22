@@ -1915,56 +1915,68 @@ public class PbcClassicsDataFileService {
 		subList.addAll(pbcProdRaiseSubMapper.selectByDimension(searchParam));
 		//清除参数
 		searchParam.remove("buyPlace");
-		//按发行机构分组：Map<发行机构,产品List<Map<生成文件的属性键值对>>>
-		Map<String,List<LinkedHashMap<String,String>>> map=new HashMap<String,List<LinkedHashMap<String,String>>>();
-		for(PbcProdRaiseSub sub :subList){
-			Map<String, Object> param = new HashMap<String, Object>();
-			param.put("pbcProdId", sub.getPbcProdId());
-			List<PbcPrdBaseinfoSub> infos = pbcPrdBaseinfoSubMapper.searchPage(param);
-			if(infos.size()==0||infos.get(0).getIssuePartyId()==null)
-				continue;
-			String issuePartyId = infos.get(0).getIssuePartyId();
-			List<LinkedHashMap<String,String>> dataList = null;
-			if(map.get(issuePartyId)==null){
-				dataList = new ArrayList<LinkedHashMap<String,String>>();
-			}else{
-				dataList =(List<LinkedHashMap<String,String>>)map.get(issuePartyId);
-			}
-			//组装数据
-			LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
-			//【dat文件生成留痕】数据的key
-			data.put("datakey",sub.getRegistSeqno() == null ? UUID.randomUUID().toString() : sub.getRegistSeqno());
-			data.put("RAISING_DATE", DateUtil.format(sub.getRaisingDate()));
-			data.put("PBC_PROD_ID", sub.getPbcProdId());
-			data.put("BUY_PLACE", sub.getBuyPlace());
-			data.put("CUSTOMER_TYPE1", sub.getCustomerType1());
-			data.put("CCY", sub.getCcy());
-			data.put("RAISING_AMTSUM", toString("BWB".equals(sub.getCcy())?sub.getRaisingAmtsumCny():sub.getRaisingAmtsum()));
-			data.put("RAISING_AMTSUM_CNY", toString(sub.getRaisingAmtsumCny()));
-			data.put("RAISING_QTY",toString(sub.getRaisingQty()));
-			data.put("REDAMT",  toString("BWB".equals(sub.getCcy())?sub.getRedamtCny():sub.getRedamt()));
-			data.put("REDAMT_CNY",toString(sub.getRedamtCny()));
-			data.put("REDQTY", toString(sub.getRedqty()));
-			data.put("ENDAMTSUM", toString("BWB".equals(sub.getCcy())?sub.getEndamtsumCny(): sub.getEndamtsum()));
-			data.put("ENDAMTSUM_CNY", toString(sub.getEndamtsumCny()));
-			data.put("ENDQTY", toString(sub.getEndqty()));
-			data.put("PROD_VALUE", "");
-			data.put("PROD_VALUE_CNY","");
-			data.put("UNIT_VALUE_TOTAL", "");
-			data.put("UNIT_VALUE_TOTAL_CNY", "");
-			data.put("PROD_HIGH_YIELD", sub.getCcy()==null?toString(sub.getProdHighYield()):"");
-			data.put("PROD_LOW_YIELD", sub.getCcy()==null?toString(sub.getProdLowYield()):"");
-			dataList.add(data);
-			map.put(issuePartyId,dataList);
-		}
-		//循环发行机构分组
-		for (String orgCode:map.keySet() ) {
-			List<LinkedHashMap<String,String>>prods = map.get(orgCode);
-			result.addAll(
-					PbcClassicsDataFileHelper.genFile(prods,PbcClassicsDataFileHelper.DATAFILE_TYPE_AF4,"AF43",genDate,getOrgCode(orgCode),seqMap,manualFlag,fileDataMap));
-		}
-		//改为手工处理状态
-		//手工处理
+
+		searchParam.put("nyield", "000000");
+		searchParam.put("yield", "000000");
+		subList.addAll(pbcProdRaiseSubMapper.selectByDimension2(searchParam));// 净值型产品的单位净值-1：原币
+
+		searchParam.put("ccy", "BWB");
+		subList.addAll(pbcProdRaiseSubMapper.selectByDimension2(searchParam));// 净值型产品的单位净值-2：BWB
+		searchParam.remove("ccy");
+        //按发行机构分组：Map<发行机构,产品List<Map<生成文件的属性键值对>>>
+        Map<String,List<LinkedHashMap<String,String>>> map=new HashMap<String,List<LinkedHashMap<String,String>>>();
+        for(PbcProdRaiseSub sub :subList){
+        	Map<String, Object> param = new HashMap<String, Object>();
+        	param.put("pbcProdId", sub.getPbcProdId());
+        	List<PbcPrdBaseinfoSub> infos = pbcPrdBaseinfoSubMapper.searchPage(param);
+        	if(infos.size()==0||infos.get(0).getIssuePartyId()==null)
+        		continue;
+        	String issuePartyId = infos.get(0).getIssuePartyId();
+        	List<LinkedHashMap<String,String>> dataList = null;
+        	if(map.get(issuePartyId)==null){
+        		dataList = new ArrayList<LinkedHashMap<String,String>>();
+        	}else{
+        		dataList =(List<LinkedHashMap<String,String>>)map.get(issuePartyId);
+        	}
+        	//组装数据
+        	LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
+
+			// 净值型标识
+			//boolean netValueFlag = StringUtil.equals(infos.get(0).getOperateMode(),DictCodeListExt2.产品运作模式_开放式净值型.getValue())||StringUtil.equals(infos.get(0).getOperateMode(),DictCodeListExt2.产品运作模式_封闭式净值型.getValue());
+			boolean netValueFlag = StringUtil.isEmpty(sub.getBuyPlace()) && StringUtil.isNotEmpty(sub.getCcy());
+        	//【dat文件生成留痕】数据的key
+        	data.put("datakey",sub.getRegistSeqno() == null ? UUID.randomUUID().toString() : sub.getRegistSeqno());
+        	data.put("RAISING_DATE", DateUtil.format(sub.getRaisingDate()));
+        	data.put("PBC_PROD_ID", sub.getPbcProdId());
+        	data.put("BUY_PLACE", sub.getBuyPlace());
+        	data.put("CUSTOMER_TYPE1", sub.getCustomerType1());
+        	data.put("CCY", sub.getCcy());
+        	data.put("RAISING_AMTSUM", toString("BWB".equals(sub.getCcy())?sub.getRaisingAmtsumCny():sub.getRaisingAmtsum()));
+        	data.put("RAISING_AMTSUM_CNY", toString(sub.getRaisingAmtsumCny()));
+        	data.put("RAISING_QTY",toString(sub.getRaisingQty()));
+        	data.put("REDAMT",  toString("BWB".equals(sub.getCcy())?sub.getRedamtCny():sub.getRedamt()));
+        	data.put("REDAMT_CNY",toString(sub.getRedamtCny()));
+        	data.put("REDQTY", toString(sub.getRedqty()));
+        	data.put("ENDAMTSUM", toString("BWB".equals(sub.getCcy())?sub.getEndamtsumCny(): sub.getEndamtsum()));
+        	data.put("ENDAMTSUM_CNY", toString(sub.getEndamtsumCny()));
+        	data.put("ENDQTY", toString(sub.getEndqty()));
+			data.put("PROD_VALUE", netValueFlag ? toString(sub.getProdValue()) : "");
+			data.put("PROD_VALUE_CNY",netValueFlag ? toString(sub.getProdValueCny()) : "");
+			data.put("UNIT_VALUE_TOTAL", netValueFlag ? toString(sub.getUnitValueTotal()) : "");
+			data.put("UNIT_VALUE_TOTAL_CNY", netValueFlag ? toString(sub.getUnitValueTotalCny()) : "");
+        	data.put("PROD_HIGH_YIELD", sub.getCcy()==null?toString(sub.getProdHighYield()):"");
+        	data.put("PROD_LOW_YIELD", sub.getCcy()==null?toString(sub.getProdLowYield()):"");
+        	dataList.add(data);
+        	map.put(issuePartyId,dataList);
+        }
+        //循环发行机构分组
+        for (String orgCode:map.keySet() ) {
+            List<LinkedHashMap<String,String>>prods = map.get(orgCode);
+            result.addAll(
+            		PbcClassicsDataFileHelper.genFile(prods,PbcClassicsDataFileHelper.DATAFILE_TYPE_AF4,"AF43",genDate,getOrgCode(orgCode),seqMap,manualFlag,fileDataMap));
+        }
+        //改为手工处理状态
+      //手工处理
 //    	if(!CollectionUtils.isEmpty(doManulList))
 //    		pbcPrdCashRaiseSubService001.doManul(searchParam);
 		return result;
