@@ -786,7 +786,10 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
     public void doBack(CfetsRepoDealRegisterQuoteDto entity) {
         if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
             //插入旧头寸
-            AllTradeCommonUtil.deletePosition(null, entity.getTotleTradeId());
+            List<WflRegFinProductDeal> wfldeals = cfetsIbuQuoteBondMapper.listWflRegFinProductDeal(entity.getTotleTradeId());
+            for (WflRegFinProductDeal deal : wfldeals) {
+                AllTradeCommonUtil.deletePosition(null, deal.getTradeId());
+            }
         }
     }
 
@@ -2172,14 +2175,9 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         List<PtlCashPositionFlow> ptlCashPositionFlows = cfetsIbuQuoteRepo004Mapper.selectPtlCashPositionFlow(param);
         for (PtlCashPositionFlow flow : ptlCashPositionFlows) {
             PtlCashPosition position = new PtlCashPosition();
-            PtlCashPositionFlow flow1 = new PtlCashPositionFlow();
-            BeanUtil.copyPropertiesIgnoreNull(position, flow);
-            BeanUtil.copyPropertiesIgnoreNull(flow1, flow);
             flow.setAmount(flow.getAmount().negate());
+            BeanUtil.copyPropertiesIgnoreNull(position, flow);
             flow.setSeqno(IDGenerator.generate());
-            flow1.setSeqno(IDGenerator.generate());
-            flow1.setHodingType(hodingTypeOld);
-            ptlCashPositionFlowMapper.insert(flow1);
             ptlCashPositionFlowMapper.insert(flow);
             cfetsIbuQuoteRepo004Mapper.updatePtlCashPosition(position);
         }
