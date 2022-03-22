@@ -175,12 +175,24 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 		String statusEffective = DictCodeListExt1.维护数据状态_有效.getValue();
 		if (!StringUtil.isEmptyList(dataList)) {
 			if (CollectionUtils.isNotEmpty(dataList)) {
-				List<ProPeoplebankcodeManagement001Dto> data = new ArrayList<ProPeoplebankcodeManagement001Dto>();
+				List<String> data = new ArrayList<String>();
 				List<ProPeoplebankcodeManagement001Dto> entities = convertToBean(dataList);
 
 				for(ProPeoplebankcodeManagement001Dto dto : entities){
 					if(dto.getPbcCode().length()>15){
 						webResult.setMessage("人行产品代码长度不得大于15");
+						webResult.setMessageType(MessageType.错误消息);
+						webResult.setStatuCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+						return webResult;
+					}
+					//校验内部产品代码在产品基本信息表中是否存在
+					ProPeoplebankcodeManagement001Dto record = new ProPeoplebankcodeManagement001Dto();
+					record.setInsideProdId(dto.getInsideProdId());
+					record.setCodeType(dto.getCodeType());
+					record.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
+					ProPeoplebankcodeManagement001Dto proDto = peoplebankcodeManagement001DtoMapper.selectByPrimaryKey(record);
+					if (proDto == null) {
+						webResult.setMessage("内部产品代码"+dto.getInsideProdId()+"在产品基本信息表中不存在");
 						webResult.setMessageType(MessageType.错误消息);
 						webResult.setStatuCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
 						return webResult;
@@ -206,14 +218,14 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 				}
 				if (data != null && data.size() > 0) {
 					Map<String, List<ProPeoplebankcodeManagement001Dto>> equityInfo001Map = entities.stream()
-							.collect(JoyinCollectors.groupingBy(x -> x.getInsideProdId()+"|"+x.getCodeType()));
+							.collect(JoyinCollectors.groupingBy(x -> x.getInsideProdId()));
 					// Collections.sort(data, Comparator.comparing(EquityInfo001Dto::getExcelNum));
 					// 将序号放入list中
 					List<String> excelNumList = new ArrayList<String>();
 					List<Integer> excelNumIntList = new ArrayList<Integer>();
-					for (ProPeoplebankcodeManagement001Dto dto : data) {
+					for (String string : data) {
 						List<ProPeoplebankcodeManagement001Dto> listTemp = new ArrayList<>();
-						listTemp = equityInfo001Map.get(dto.getInsideProdId()+"|"+dto.getCodeType());
+						listTemp = equityInfo001Map.get(string);
 						// excelNumList.add(listTemp.get(0).getExcelNum());
 						excelNumIntList.add(Integer.valueOf(listTemp.get(0).getExcelNum()));
 					}
