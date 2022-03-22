@@ -10,8 +10,11 @@ import com.joyintech.redis.core.data.RedisHash;
 import com.joyintech.tams.exchange.common.bean.investment.EntrustOpeBean;
 import com.joyintech.tams.exchange.common.constant.InstructionFlag;
 import com.joyintech.tams.exchange.common.constant.InstructionStatus;
+import com.joyintech.tams.exchange.common.constant.InvestmentAssetType;
 import com.joyintech.tams.exchange.common.constant.TradePlat;
 import com.joyintech.tams.exchange.common.constant.joyin.AutoReceiveFlag;
+import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt3;
+import com.joyintech.tams.exchange.common.constant.joyin.InvestmentAssetType1;
 import com.joyintech.tams.exchange.common.db.domain.Instruction;
 import com.joyintech.tams.exchange.common.db.domain.InstructionDetail;
 import com.joyintech.tams.exchange.common.db.domain.InstructionPledge;
@@ -28,6 +31,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @Component
@@ -177,6 +181,12 @@ public class MessageConsumerService {
                             entrustList.add(opeBean);
                         }
                     }
+                    //如果是协议回购、质押式回购 回购利率乘以100
+                    if (isPledge(instruction)) {
+                        BigDecimal entrustPrice = instruction.getEntrustPrice();
+                        instruction.setEntrustPrice(entrustPrice.multiply(BigDecimal.valueOf(100)));
+                    }
+
                     instructionList.add(instruction);
                 } else {
                     logger.info("investSystemDate {} > instruction mDate {}", JsonUtils.getJsonFromObject(investSystemDate), JsonUtils.getJsonFromObject(instruction.getMdate()));
@@ -193,7 +203,7 @@ public class MessageConsumerService {
                         removeInstructionIdSet.add(instruction.getEntrustId());
                     List<InstructionDetail> instructionDetails = instructionDetailService.queryInstructionDetailsByInstructionId(instruction.getEntrustId());
                     if (Objects.nonNull(instructionDetails))
-                        instructionDetailIdSet.add(instruction.getEntrustId());
+                        removeInstructionIdSet.add(instruction.getEntrustId());
                 }
             });
             if (removeInstructionList.size() > 0) {
@@ -204,6 +214,11 @@ public class MessageConsumerService {
                 logger.info("delete origin instructionPledges from DB {}", removeInstructionIdSet.size());
                 instructionPledgeService.deleteInstructionPledgesByInstructionsIds(removeInstructionIdSet);
             }
+            if (removeInstructionIdSet.size() > 0) {
+                logger.info("delete origin instructionDetails from DB {}", removeInstructionIdSet.size());
+                instructionDetailService.deleteInstructionDetailsByInstructionsIds(removeInstructionIdSet);
+            }
+
             logger.info("存储下发指令 {}", instructionList.size());
             instructionService.asyncUpdate(instructionList);
             if (!entrustList.isEmpty()) {
@@ -235,4 +250,24 @@ public class MessageConsumerService {
             });
         }
     }
+
+    public boolean isPledge(Instruction instruction) {
+        String busiTypeTg = instruction.getBusiTypeTg();
+        if (DictCodeListExt3.投管业务类型_首期.getValue().equals(busiTypeTg)
+                || DictCodeListExt3.投管业务类型_提前购回.getValue().equals(busiTypeTg)
+                || DictCodeListExt3.投管业务类型_到期购回.getValue().equals(busiTypeTg)
+                || DictCodeListExt3.投管业务类型_到期续做.getValue().equals(busiTypeTg)
+                || DictCodeListExt3.投管业务类型_中途换券.getValue().equals(busiTypeTg)
+                || DictCodeListExt3.投管业务类型_解除质押.getValue().equals(busiTypeTg)) {
+            return true;
+        } else if (DictCodeListExt3.投管业务类型_竞价交易.getValue().equals(busiTypeTg)) {
+            if (InvestmentAssetType.PLEDGE_REPURCHASE.value.equals(instruction.getAssetType())
+                    && InvestmentAssetType1.BIDDING_REPO.value.equals(instruction.getAssetType1())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 }
