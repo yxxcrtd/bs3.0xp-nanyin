@@ -130,13 +130,19 @@ public class PositionRequestManualSettleService {
                 etrEntrustAdd.getAssetType1());
         // ZGTFCP-1281:修改获取业务类型方法 modify by fuyongsheng 20220318 end
         resultMap.put("busiType", busiType);
+        // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 start
+        resultMap.put("totalTradeId", entity.getSettleSeqNo());
         if (StringUtil.equals(entity.getPageModel(), DictCodeListExt3.交收操作类型_交收.getValue())) {
             resultMap.put("busiAct", DictCodeListExt3.业务动作_交收确认.getValue());
+            resultMap.put("bTotalTradeId", entity.getTradeId());
         } else if (StringUtil.equals(entity.getPageModel(), DictCodeListExt3.交收操作类型_回溯.getValue())) {
             resultMap.put("busiAct", DictCodeListExt3.业务动作_交收回溯.getValue());
+            resultMap.put("bTotalTradeId", entity.getSettleSeqNo());
         } else if (StringUtil.equals(entity.getPageModel(), DictCodeListExt3.交收操作类型_交收失败.getValue())) {
             resultMap.put("busiAct", DictCodeListExt3.业务动作_交收失败.getValue());
+            resultMap.put("bTotalTradeId", entity.getTradeId());
         }
+        // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 end
         resultMap.put("ps", trdProductTempDeal.getPs());
         String deliveryType = commonPositionEngineService.getDeliveryType(entity.getFinprodId());
         resultMap.put("settleSpeed", parseSettleSpreed(deliveryType));
@@ -164,7 +170,6 @@ public class PositionRequestManualSettleService {
         resultMap.put("cdate", entity.getSettleDate());
         resultMap.put("ccy", trdProductTempDeal.getCcy());
         resultMap.put("finprodId", entity.getFinprodId());
-        resultMap.put("bTotalTradeId", entity.getTradeId());
 
         Map<String,Object> paraMap = new HashMap<>();
         paraMap.put("dealNo", entity.getTradeId());
@@ -180,8 +185,12 @@ public class PositionRequestManualSettleService {
             pltMap.put("etrSecAmount", dto.getEtrSecAmount());
             pltMap.put("ordId", dto.getOrderId());
             pltMap.put("ordSecAmount", dto.getOrdSecAmount());
-            pltMap.put("cashAcctId", entity.getAcctNo());
-            pltMap.put("secAcctId", entity.getSecAcctId());
+            // ZGTFCP-1461:修改赋值 modify by fuyongsheng 20220322 start
+//            pltMap.put("cashAcctId", entity.getAcctNo());
+//            pltMap.put("secAcctId", entity.getSecAcctId());
+            pltMap.put("cashAcctId", dto.getCashAcctId());
+            pltMap.put("secAcctId", dto.getSecAcctId());
+            // ZGTFCP-1461:修改赋值 modify by fuyongsheng 20220322 end
             pltMap.put("secAmount", dto.getSecAmount());
             pltMap.put("cashAmount", dto.getCashAmount());
             pltMap.put("invAim", trdProductTempDeal.getInvAim());
@@ -212,13 +221,19 @@ public class PositionRequestManualSettleService {
                 etrEntrustAdd.getAssetType1());
         // ZGTFCP-1281:修改获取业务类型方法 modify by fuyongsheng 20220318 end
         resultMap.put("busiType", busiType);
+        // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 start
+        resultMap.put("totalTradeId", entity.getSettleSeqNo());
         if (StringUtil.equals(entity.getPageModel(), DictCodeListExt3.交收操作类型_交收.getValue())) {
             resultMap.put("busiAct", DictCodeListExt3.业务动作_交收确认.getValue());
+            resultMap.put("bTotalTradeId", entity.getTradeId());
         } else if (StringUtil.equals(entity.getPageModel(), DictCodeListExt3.交收操作类型_回溯.getValue())) {
             resultMap.put("busiAct", DictCodeListExt3.业务动作_交收回溯.getValue());
+            resultMap.put("bTotalTradeId", entity.getSettleSeqNo());
         } else if (StringUtil.equals(entity.getPageModel(), DictCodeListExt3.交收操作类型_交收失败.getValue())) {
             resultMap.put("busiAct", DictCodeListExt3.业务动作_交收失败.getValue());
+            resultMap.put("bTotalTradeId", entity.getTradeId());
         }
+        // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 end
         resultMap.put("ps", trdProductTempDeal.getPs());
         String deliveryType = commonPositionEngineService.getDeliveryType(entity.getFinprodId());
         resultMap.put("settleSpeed", parseSettleSpreed(deliveryType));
@@ -244,7 +259,6 @@ public class PositionRequestManualSettleService {
         resultMap.put("workFlowId", null);
         resultMap.put("cdate", entity.getSettleDate());
         resultMap.put("ccy", trdProductTempDeal.getCcy());
-        resultMap.put("bTotalTradeId", entity.getTradeId());
 
         Map<String,Object> paraMap = new HashMap<>();
         paraMap.put("dealNo", entity.getTradeId());
@@ -254,7 +268,7 @@ public class PositionRequestManualSettleService {
         for (PortfolioCalculateDto dto : list){
             Map<String, Object> ptlCash = new HashMap<>(8);
             ptlCash.put("portfolioId", dto.getPortfolioId());
-            ptlCash.put("cashAcctId", entity.getAcctNo());
+            ptlCash.put("cashAcctId", dto.getCashAcctId());
             ptlCash.put("tradeId", entity.getTradeId());
             ptlCash.put("etrId", etrEntrust.getEntrustId());
             ptlCash.put("cashAmount", dto.getCashAmount());
@@ -266,7 +280,7 @@ public class PositionRequestManualSettleService {
             Map<String, Object> bondSec = new HashMap<>();
             bondSec.put("portfolioId", dto.getPortfolioId());
             bondSec.put("finprodId", entity.getFinprodId());
-            bondSec.put("secAcctId", entity.getSecAcctId());
+            bondSec.put("secAcctId", dto.getSecAcctId());
             // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 start
             bondSec.put("tradeId", entity.getTradeId());
             bondSec.put("etrId", etrEntrust.getEntrustId());
@@ -336,7 +350,7 @@ public class PositionRequestManualSettleService {
             List<Map<String, Object>> list = new ArrayList<>(4);
             Map<String, Object> map = new HashMap<>();
             map.put("portfolioId", entity.getPortfolioId());
-            map.put("cashAcctId", entity.getAcctNo());
+            map.put("cashAcctId", infContractDetailfile.getAcctNo());
             // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 start
             map.put("tradeId", entity.getTradeId());
             map.put("etrId", etrEntrust.getEntrustId());
@@ -351,7 +365,7 @@ public class PositionRequestManualSettleService {
             List<Map<String, Object>> list = new ArrayList<>(4);
             Map<String, Object> map = new HashMap<>();
             map.put("portfolioId", entity.getPortfolioId());
-            map.put("cashAcctId", entity.getAcctNo());
+            map.put("cashAcctId", infContractDetailfile.getAcctNo());
             // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 start
             map.put("tradeId", entity.getTradeId());
             map.put("etrId", etrEntrust.getEntrustId());
@@ -376,7 +390,7 @@ public class PositionRequestManualSettleService {
             Map<String, Object> map = new HashMap<>();
             map.put("portfolioId", entity.getPortfolioId());
             map.put("finprodId", entity.getPledgeId());
-            map.put("secAcctId", entity.getSecAcctId());
+            map.put("secAcctId", infContractDetailfile.getBondId());
             // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 start
             map.put("tradeId", entity.getTradeId());
             map.put("etrId", etrEntrust.getEntrustId());
@@ -395,7 +409,7 @@ public class PositionRequestManualSettleService {
             Map<String, Object> map = new HashMap<>();
             map.put("portfolioId", entity.getPortfolioId());
             map.put("finprodId", entity.getPledgeId());
-            map.put("secAcctId", entity.getSecAcctId());
+            map.put("secAcctId", infContractDetailfile.getBondId());
             // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 start
             map.put("tradeId", entity.getTradeId());
             map.put("etrId", etrEntrust.getEntrustId());
