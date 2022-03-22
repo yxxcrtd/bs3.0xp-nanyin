@@ -98,4 +98,11 @@ public interface BaseAssetCashPositionCommMapper {
      */
     String findPayTypeByProductId(String chlId);
 
+    /**
+     * 查询资金账户
+     * @param secAcctId
+     * @return
+     */
+    String queryAccountNo(@Param("secAcctId") String secAcctId);
+
 }

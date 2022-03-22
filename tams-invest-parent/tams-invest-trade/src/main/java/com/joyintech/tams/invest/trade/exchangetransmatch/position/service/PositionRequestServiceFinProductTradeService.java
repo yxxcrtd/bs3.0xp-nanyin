@@ -225,9 +225,11 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
         resultMap.put(SETTLE_SPEED, commonPositionEngineService.parseSettleSpreed((String) resultMap.get(DELIVERY_TYPE)));
         // 申购方式	见数据字典：申购方式
         if (DictCodeList.交易方向_申购.getValue().equals(dealEntity.getPs())) {
+            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_网上申购.getValue());
             resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_中签.getValue());
             resultMap.put(PURCH_MODLE, DictCodeListExt2.申购方式_网上申购.getValue());
         }else if(DictCodeList.交易方向_申购确认.getValue().equals(dealEntity.getPs())){
+            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_网上申购.getValue());
             resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_缴款.getValue());
         }
         resultMap.put(DELIVERY_TYPE, commonPositionEngineService.getDeliveryType(dealEntity.getFinprodId()));
@@ -400,7 +402,7 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
         TrdProductDeal dealEntity = entity.getTrdProductDeal();
         TrdProductDealAdd trdProductDealAdd = entity.getTrdProductDealAdd();
         List<StlPayOrdersDto> stlPayOrdersList = entity.getStlPayOrdersList();
-
+        EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(entity.getTrdProductDealAdd().getEntrustId());
         String ps = dealEntity.getPs();
         PositionRequestBaseBean bean;
         // 组合数据集
@@ -455,7 +457,7 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
             map.put("cashAmount", new BigDecimal(0));
         }
         // 指令券面总额
-        map.put("etrSecAmount", ArithmeticUtil.multiply(dealEntity.getShareAmt(), hundred));
+        map.put("etrSecAmount", ArithmeticUtil.multiply(etrEntrust.getEntrustNum(), hundred));
         ptlList.add(map);
         resultMap.put(PTL_LIST, ptlList);
         // 质押券数据集	ptlSecList

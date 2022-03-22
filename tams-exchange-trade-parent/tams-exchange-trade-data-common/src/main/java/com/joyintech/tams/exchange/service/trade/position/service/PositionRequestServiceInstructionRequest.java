@@ -1,39 +1,11 @@
 package com.joyintech.tams.exchange.service.trade.position.service;
 
-import static com.joyintech.tams.constant.DictCodeList.是否_否;
-import static com.joyintech.tams.constant.DictCodeListExt3.交易单位_份;
-import static com.joyintech.tams.constant.DictCodeListExt3.交易单位_张;
-import static com.joyintech.tams.constant.DictCodeListExt3.交易方向_债转股;
-import static com.joyintech.tams.constant.DictCodeListExt3.交易方向_质押券入库;
-import static com.joyintech.tams.constant.DictCodeListExt3.交易方向_质押券出库;
-import static com.joyintech.tams.constant.DictCodeListExt3.交易方向_配债;
-import static com.joyintech.tams.exchange.common.constant.joyin.DictCodeList.交易方向_申购;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.*;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import cn.hutool.core.util.NumberUtil;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.exchange.common.bean.OrderPlaceBean;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.constant.joyin.DictCodeList;
@@ -46,8 +18,20 @@ import com.joyintech.tams.exchange.datacommon.db.service.InstructionPledgeServic
 import com.joyintech.tams.exchange.service.trade.management.service.PortfolioManager;
 import com.joyintech.tams.exchange.service.trade.position.bean.PositionRequestBaseBean;
 import com.joyintech.tams.invest.common.position.service.CommonPositionEngineService;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import cn.hutool.core.util.NumberUtil;
+import java.math.BigDecimal;
+import java.util.*;
+
+import static com.joyintech.tams.constant.DictCodeList.是否_否;
+import static com.joyintech.tams.constant.DictCodeListExt3.*;
+import static com.joyintech.tams.exchange.common.constant.joyin.DictCodeList.交易方向_申购;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.*;
 
 @Service
 public class PositionRequestServiceInstructionRequest {
@@ -75,9 +59,9 @@ public class PositionRequestServiceInstructionRequest {
         //设置公共字段，个性化的需要在具体接口中覆盖
         this.setCommonField(entity, resultMap);
         String finprodType = entity.getFinprodType2();
-        if (DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(finprodType) 
-        		&& !DictCodeListExt3.交易方向_质押券入库.getValue().equals(entity.getPs())
-        		&& !DictCodeListExt3.交易方向_质押券出库.getValue().equals(entity.getPs())) {
+        if (DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(finprodType)
+                && !交易方向_质押券入库.getValue().equals(entity.getPs())
+                && !交易方向_质押券出库.getValue().equals(entity.getPs())) {
             String type6 = commonPositionEngineService.getType6(entity.getFinprodId());
             if (DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue().equals(type6)) {
                 finprodType += "-" + type6;
@@ -309,10 +293,10 @@ public class PositionRequestServiceInstructionRequest {
                 // 标准券总额 委托数量*折算率
                 map.put(STANDARD_SEC_AMOUNT, item.getEntrustAmt());
                 //指令券面总额
-                map.put(ETR_SEC_AMOUNT,item.getEntrustAmt());
-                if(DictCodeListExt3.交易方向_质押券入库.getValue().equals(entity.getPs())
-                		|| DictCodeListExt3.交易方向_质押券出库.getValue().equals(entity.getPs())) {
-                	map.put("cashAmount", null);//出入库时，可以为空
+                map.put(ETR_SEC_AMOUNT, item.getEntrustAmt());
+                if (交易方向_质押券入库.getValue().equals(entity.getPs())
+                        || 交易方向_质押券出库.getValue().equals(entity.getPs())) {
+                    map.put("cashAmount", null);//出入库时，可以为空
                 }
                 // 再折算率	reConversionRate "调用【再折算率查询】参数：资金账户 = 指令资金账户 TODO
                 ImmutableMap<String, Object> param = ImmutableMap.of("acctNo", entity.getAcctNo());
@@ -368,11 +352,12 @@ public class PositionRequestServiceInstructionRequest {
         String firstRepoPs = entity.getFirstRepoPs();
         resultMap.put(PS, firstRepoPs);
         // 首期组合现金数据集
-        if (DictCodeListExt3.交易方向_正回购.getValue().equals(ps)
-                || DictCodeListExt3.交易方向_逆回购.getValue().equals(ps)
-                || DictCodeListExt3.交易方向_首期.getValue().equals(ps)
-                || DictCodeListExt3.交易方向_提前购回.getValue().equals(ps)
-                || (DictCodeListExt3.交易方向_到期购回.getValue().equals(ps))) {
+        // IF 交易方向 = 正回购、逆回购、提前购回、到期购回 传值 否则为空
+        if (交易方向_正回购.getValue().equals(ps)
+                || 交易方向_逆回购.getValue().equals(ps)
+                || 交易方向_首期.getValue().equals(ps)
+                || 交易方向_提前购回.getValue().equals(ps)
+                || (交易方向_到期购回.getValue().equals(ps))) {
             List<Map<String, Object>> list = new ArrayList<>(1);
             bean = new PositionRequestBaseBean(entity);
             bean.setCashAmount(NumberUtil.sub(entity.getmTradeAmt(), entity.getmIntAmt()));
@@ -384,7 +369,8 @@ public class PositionRequestServiceInstructionRequest {
         }
 
         // 轧差组合现金数据集
-        if (DictCodeListExt3.交易方向_到期续做.getValue().equals(ps)) {
+        // IF 交易方向 = 到期续作 传值 ELSE 空
+        if (交易方向_到期续做.getValue().equals(ps)) {
             List<Map<String, Object>> list = new ArrayList<>(1);
             bean = new PositionRequestBaseBean(entity);
             bean.setSecAmount(BigDecimal.ZERO);
@@ -392,9 +378,9 @@ public class PositionRequestServiceInstructionRequest {
             // "IF 回购类型 = 正回购 THEN 指令.到期续作金额 - 指令.首期的到期结算金额
             // IF 回购类型 = 逆回购  and 成交编号找不到对应的首期 THEN 指令.到期续作金额
             // IF 回购类型 = 逆回购  and 成交编号找到对应的首期 THEN  指令.到期续作金额 - 指令.首期的到期结算金额"
-            if (DictCodeListExt3.交易方向_正回购.getValue().equals(firstRepoPs)) {
+            if (交易方向_正回购.getValue().equals(firstRepoPs)) {
                 bean.setCashAmount(entity.getmTradeAmt());
-            } else if (DictCodeListExt3.交易方向_逆回购.getValue().equals(firstRepoPs)) {
+            } else if (交易方向_逆回购.getValue().equals(firstRepoPs)) {
                 // 成交编号
                 bean.setCashAmount(entity.getmTradeAmt());
             }
@@ -405,7 +391,12 @@ public class PositionRequestServiceInstructionRequest {
         }
 
         // 质押券数据集	ptlSecList
-        if (DictCodeListExt3.交易方向_正回购.getValue().equals(ps)) {
+        // IF 交易方向 = 首期、中途换券换入and 回购类型 = 正回购 THEN 传值 ELSE 空
+        if (交易方向_正回购.getValue().equals(ps)
+                || (
+                交易方向_中途换券.getValue().equals(ps)
+                        && 交易方向_正回购.getValue().equals(firstRepoPs)
+        )) {
             List<Map<String, Object>> list = new ArrayList<>(1);
             // 查询质押券集合
             InstructionPledge instructionPledge = instructionPledgeService.queryInstructionPledgesByInstructionIdAndStockCode(entity.getEntrustId(), entity.getFinprodMarketId());
@@ -432,9 +423,12 @@ public class PositionRequestServiceInstructionRequest {
         }
 
         // 解除质押券数据集	ptlRelieveSecList
-        if (DictCodeListExt3.交易方向_解除质押.getValue().equals(ps) 
-        		|| DictCodeListExt3.交易方向_到期续做.getValue().equals(ps)
-        		|| DictCodeListExt3.交易方向_中途换券.getValue().equals(ps)) {
+        // IF 交易方向 = 解除质押、到期购回、提前购回、到期续作 and 回购类型 = 正回购 THEN 传值 ELSE 空 END IF
+        if ((交易方向_解除质押.getValue().equals(ps)
+                || 交易方向_到期购回.getValue().equals(ps)
+                || 交易方向_提前购回.getValue().equals(ps)
+                || 交易方向_到期续做.getValue().equals(ps))
+                && 交易方向_正回购.getValue().equals(firstRepoPs)) {
             List<Map<String, Object>> list = new ArrayList<>(4);
             // 查询质押券集合
             List<InstructionPledge> instructionPledges = instructionPledgeService.queryInstructionPledgesByInstructionId(entity.getEntrustId());
@@ -447,7 +441,7 @@ public class PositionRequestServiceInstructionRequest {
                 bean.setTradeId(entity.getEntrustNo());
                 bean.setEtrId(entity.getEntrustId());
                 BigDecimal secAmount = commonPositionEngineService.multiplyWithOneHundred(item.getPledgeNumber());
-                if (DictCodeListExt3.交易方向_解除质押.getValue().equals(ps)) {
+                if (交易方向_解除质押.getValue().equals(ps)) {
                     bean.setSecAmount(secAmount);
                 } else {
                     // 下单到期续作对应首期的成交回报.质押券数量. 到期续作利用首期成交编号找首期的质押券
@@ -458,7 +452,7 @@ public class PositionRequestServiceInstructionRequest {
                 //融入券券面总额
                 map.put(INTEGRATE_SEC_AMOUNT, BigDecimal.ZERO);
                 //本方券券面总额 指令.质押券数量*100
-                if (DictCodeListExt3.交易方向_解除质押.getValue().equals(ps)) {
+                if (交易方向_解除质押.getValue().equals(ps)) {
                     map.put(OWN_SEC_AMOUNT, secAmount);
                 } else {
                     map.put(OWN_SEC_AMOUNT, item.getOldPledgeNumber());
@@ -567,10 +561,10 @@ public class PositionRequestServiceInstructionRequest {
         resultMap.put("totalTradeId", entity.getEntrustNo());
         resultMap.put("balanceCheck", balanceCheck);
         // modify by swwan ZGTFCP-1393 交易撤销：流程状态flowStatus 应该传流程生效 02 start
-        if (DictCodeListExt3.业务动作_交易下单.getValue().equals(resultMap.get(BUSI_ACT))) {
-            resultMap.put("flowStatus", DictCodeListExt3.流程节点_流程提交.getValue());
-        } else if (DictCodeListExt3.业务动作_撤委托.getValue().equals(resultMap.get(BUSI_ACT))) {
-            resultMap.put("flowStatus", DictCodeListExt3.流程节点_审批生效.getValue());
+        if (业务动作_交易下单.getValue().equals(resultMap.get(BUSI_ACT))) {
+            resultMap.put("flowStatus", 流程节点_流程提交.getValue());
+        } else if (业务动作_撤委托.getValue().equals(resultMap.get(BUSI_ACT))) {
+            resultMap.put("flowStatus", 流程节点_审批生效.getValue());
         }
         // modify by swwan ZGTFCP-1393 交易撤销：流程状态flowStatus 应该传流程生效 02 end
         resultMap.put("modelType", DictCodeListExt1.子系统代码_交易.getValue());
@@ -585,7 +579,7 @@ public class PositionRequestServiceInstructionRequest {
         // 交易场所	见数据字典：交易场所
         resultMap.put(TRADE_PLACE, entity.getTradeMarket());
         // 交易平台
-        resultMap.put(SHARES_TRADE_PLATFORM, commonPositionEngineService.getSharesTradePlatform(entity.getTradePlat(), entity.getPs(), entity.getDealMode(),entity.getEntrustProp()));
+        resultMap.put(SHARES_TRADE_PLATFORM, commonPositionEngineService.getSharesTradePlatform(entity.getTradePlat(), entity.getPs(), entity.getDealMode(), entity.getEntrustProp()));
         // 流程编号	指令的工作流ID
         resultMap.put(WORK_FLOW_ID, null);
         // 日期
