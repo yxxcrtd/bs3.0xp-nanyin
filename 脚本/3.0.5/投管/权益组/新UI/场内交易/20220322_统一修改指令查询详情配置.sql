@@ -38,7 +38,7 @@ update CFG_READONLY_FORM_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"a
 --   指令价格：	2	元
 --   可转股数量：	4	股
 update CFG_READONLY_FORM_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"0","unit":"zhang"}' where PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'EX004' and COLCODE = 'entrustNum';
-update CFG_READONLY_FORM_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"2","unit":"zhang"}' where PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'EX004' and COLCODE = 'unitPrice';
+update CFG_READONLY_FORM_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"2","unit":"yuan"}' where PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'EX004' and COLCODE = 'unitPrice';
 update CFG_READONLY_FORM_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"4","unit":"gu"}' where PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'EX004' and COLCODE = 'expConNum';
 
 -- 债券 - 质押券出入库
@@ -218,3 +218,8 @@ update CFG_READONLY_FORM_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"a
 update CFG_READONLY_FORM_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"2","unit":"yuan"}' WHERE PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'EX015' and COLCODE = 'pledStrdPrinAmt';
 update CFG_READONLY_FORM_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"2","unit":"yuan"}' WHERE PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'EX015' and COLCODE = 'entrustAmt';
 
+update CFG_READONLY_FORM_SHOW set COLNAME = '对手席位' WHERE PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'F11EX002' and COLCODE = 'counterSeat';
+update CFG_READONLY_FORM_SHOW set COLNAME = '对手席位' WHERE PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'F02EX002' and COLCODE = 'counterSeat';
+update CFG_READONLY_FORM_SHOW set COLNAME = '对手席位' WHERE PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'F11EX002' and COLCODE = 'counterSeat';
+delete from CFG_READONLY_FORM_SHOW  WHERE PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'EX007' and COLCODE = 'expConNum';
+update CFG_READONLY_FORM_SHOW set COLCODE = 'conNames' WHERE PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'EX007' and COLCODE = 'conName';
