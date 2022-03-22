@@ -103,7 +103,10 @@ public class EtrEntrustDto extends EtrEntrust {
     }
 
     public String getBusiKeyWithoutDate(){
-        return StringUtil.joinString(Arrays.asList(getSecAcctId(),getDealCurAcct(),getFinprodId(), getTradePlat(),getPs()),"_");
+        // ZGTFCP-1462:特殊处理场景忽略交易平台 modify by fuyongsheng 20220322 start
+        // return StringUtil.joinString(Arrays.asList(getSecAcctId(),getDealCurAcct(),getFinprodId(), getTradePlat(),getPs()),"_");
+        return StringUtil.joinString(Arrays.asList(getSecAcctId(),getDealCurAcct(),getFinprodId(),getPs()),"_");
+        // ZGTFCP-1462:特殊处理场景忽略交易平台 modify by fuyongsheng 20220322 end
     }
 }
 

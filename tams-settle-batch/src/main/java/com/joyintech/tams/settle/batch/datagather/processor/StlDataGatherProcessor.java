@@ -349,7 +349,10 @@ public abstract class StlDataGatherProcessor extends BaseProcessor<NeedOperateEn
 
             for (SettleTransDataDto settleTransDataDto: zhsSettleTransDataList)
             {
-                String busiKey = StringUtil.joinString(Arrays.asList(settleTransDataDto.getSecAcctId(),settleTransDataDto.getAcctNo(),settleTransDataDto.getFinprodId(),settleTransDataDto.getTradePlat(),settleTransDataDto.getPs()),"_");
+                // ZGTFCP-1462:特殊处理场景忽略交易平台 modify by fuyongsheng 20220322 start
+                // String busiKey = StringUtil.joinString(Arrays.asList(settleTransDataDto.getSecAcctId(),settleTransDataDto.getAcctNo(),settleTransDataDto.getFinprodId(),settleTransDataDto.getTradePlat(),settleTransDataDto.getPs()),"_");
+                String busiKey = StringUtil.joinString(Arrays.asList(settleTransDataDto.getSecAcctId(),settleTransDataDto.getAcctNo(),settleTransDataDto.getFinprodId(),settleTransDataDto.getPs()),"_");
+                // ZGTFCP-1462:特殊处理场景忽略交易平台 modify by fuyongsheng 20220322 end
                 if (etrEntrustMap.containsKey(busiKey) && finExercisePlanMap.containsKey(settleTransDataDto.getFinprodId())) {
                     List<EtrEntrustDto> currEntrustList = etrEntrustMap.get(busiKey);
                     List<FinExercisePlan> currFinExercisePlanList = finExercisePlanMap.get(settleTransDataDto.getFinprodId());
@@ -374,7 +377,10 @@ public abstract class StlDataGatherProcessor extends BaseProcessor<NeedOperateEn
         if (!StringUtil.isEmptyList(sgSettleTransDataList)) {
             for (SettleTransDataDto settleTransDataDto: sgSettleTransDataList)
             {
-                String busiKey = StringUtil.joinString(Arrays.asList(settleTransDataDto.getSecAcctId(),settleTransDataDto.getAcctNo(),settleTransDataDto.getFinprodId(),settleTransDataDto.getTradePlat(),settleTransDataDto.getPs()),"_");
+                // ZGTFCP-1462:特殊处理场景忽略交易平台 modify by fuyongsheng 20220322 start
+                // String busiKey = StringUtil.joinString(Arrays.asList(settleTransDataDto.getSecAcctId(),settleTransDataDto.getAcctNo(),settleTransDataDto.getFinprodId(),settleTransDataDto.getTradePlat(),settleTransDataDto.getPs()),"_");
+                String busiKey = StringUtil.joinString(Arrays.asList(settleTransDataDto.getSecAcctId(),settleTransDataDto.getAcctNo(),settleTransDataDto.getFinprodId(),settleTransDataDto.getPs()),"_");
+                // ZGTFCP-1462:特殊处理场景忽略交易平台 modify by fuyongsheng 20220322 end
                 if (etrEntrustMap.containsKey(busiKey)) {
                     List<EtrEntrustDto> currEntrustList = etrEntrustMap.get(busiKey);
                     this.handleMatch(settleTransDataDto, currEntrustList, exchangeTransMatchCommons, needUpdateStatusEntrustIdList);
@@ -396,7 +402,10 @@ public abstract class StlDataGatherProcessor extends BaseProcessor<NeedOperateEn
 
             for (SettleTransDataDto settleTransDataDto: pgpzSettleTransDataList)
             {
-                String busiKey = StringUtil.joinString(Arrays.asList(settleTransDataDto.getSecAcctId(),settleTransDataDto.getAcctNo(),settleTransDataDto.getFinprodId(),settleTransDataDto.getTradePlat(),settleTransDataDto.getPs()),"_");
+                // ZGTFCP-1462:特殊处理场景忽略交易平台 modify by fuyongsheng 20220322 start
+                // String busiKey = StringUtil.joinString(Arrays.asList(settleTransDataDto.getSecAcctId(),settleTransDataDto.getAcctNo(),settleTransDataDto.getFinprodId(),settleTransDataDto.getTradePlat(),settleTransDataDto.getPs()),"_");
+                String busiKey = StringUtil.joinString(Arrays.asList(settleTransDataDto.getSecAcctId(),settleTransDataDto.getAcctNo(),settleTransDataDto.getFinprodId(),settleTransDataDto.getPs()),"_");
+                // ZGTFCP-1462:特殊处理场景忽略交易平台 modify by fuyongsheng 20220322 end
                 if (etrEntrustMap.containsKey(busiKey) && finProductOthCodeMap.containsKey(settleTransDataDto.getFinprodId())) {
                     List<EtrEntrustDto> currEntrustList = etrEntrustMap.get(busiKey);
                     List<FinProductOthCode> currfinProductOthCodeList = finProductOthCodeMap.get(settleTransDataDto.getFinprodId());

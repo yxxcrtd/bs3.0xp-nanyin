@@ -1284,9 +1284,7 @@
         left join FIN_DEAL_PLEDGE on tpd.FINPROD_ID = FIN_DEAL_PLEDGE.FINPROD_ID
         LEFT JOIN FIN_PRODUCT fp2 ON fp2.FINPROD_ID  = tpd.CHL_ID
         WHERE tpda.entrust_id = #{entrustId}
-
         union all
-
         SELECT
         #{TRADE_FLOW_STATUS01} effectFlag,
         <include refid="etrDispatcherDealListInfo"/>
@@ -1303,6 +1301,90 @@
         left join FIN_TRADE_PRODUCT FTP on tpd.FINPROD_ID = FTP.FINPROD_ID
         left join FIN_DEAL_PLEDGE on tpd.FINPROD_ID = FIN_DEAL_PLEDGE.FINPROD_ID
         LEFT JOIN FIN_PRODUCT fp2 ON fp2.FINPROD_ID  = tpd.CHL_ID
+        WHERE tpda.entrust_id = #{entrustId}
+    </select>
+
+    <select id="getEtrDispatcherBidDealListInfo" resultType="com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherDealListInfoResponse">
+        SELECT distinct
+            decode(tpd.is_cancel,'Y',#{TRADE_FLOW_STATUS03},#{TRADE_FLOW_STATUS02}) effectFlag,
+            ee.ENTRUST_ID entrustId,
+            tpd.trade_market tradeMarket,
+            ee.ENTRUST_DATE bidDate,
+            BO.BID_ID bidId,
+            ee.ENTRUST_NUM /100 as allBidPrinAmt,
+            eea.PAY_TYPE as payType,
+            BO.WIN_PRIN_AMT /10000 as winPrinAmt,
+            eea.LISTING_DATE as listingDate,
+            to_char(BO.WIN_PRICE * 100,'fm99990.0000') || '%' as winPrice,
+            BO.WIN_TYPE as winType,
+            BO.PAY_DATE as payDate,
+            fpt.TYPE_6 paBussType,
+            fpt.TYPE_9 assetType1,
+            fpt.TYPE_10 assetType10,
+            fpt.TYPE_11 assetType11,
+            tpd.totle_trade_id totleTradeId,
+            tpd.trade_id tradeId,
+            tpda.portfolio_id portfolioId,
+            pp.portfolio_name portfolioName,
+            fp.finprod_market_id finprodMarketId,
+            fp.finprod_abbr finprodAbbr,
+            to_char(tpd.trade_date,'yyyy-MM-dd') tradeDate,
+            tpd.ccy ccy,
+            tpd.counter_id counterId,
+            mcp.counter_name counterName,
+            tpd.remark remark
+        FROM trd_product_deal tpd
+        LEFT JOIN trd_product_deal_add tpda ON tpd.trade_id = tpda.trade_id
+        left join TRD_FIN_PRODUCT_DEAL_TOTAL tpdt on tpd.TOTLE_TRADE_ID=tpdt.TOTLE_TRADE_ID
+        LEFT JOIN PTL_PORTFOLIO pp ON tpda.portfolio_id = pp.portfolio_id
+        LEFT JOIN FIN_PRODUCT fp ON tpd.finprod_id = fp.finprod_id
+        LEFT JOIN MST_COUNTER_PARTY mcp ON tpd.counter_id = mcp.counter_id
+        LEFT JOIN FIN_PRODUCT_TYPE fpt ON tpd.FINPROD_ID  = fpt.FINPROD_ID
+        left join ETR_ENTRUST ee on tpda.ENTRUST_ID=ee.ENTRUST_ID
+        left join ETR_ENTRUST_ADD eea on ee.ENTRUST_ID=eea.ENTRUST_ID
+        left join BID_ORDER_BID_PRICE bobp on ee.ENTRUST_ID=bobp.ENTRUST_ID
+        left join BID_ORDER BO ON bobp.bid_id = BO.BID_ID
+        WHERE tpda.entrust_id = #{entrustId}
+        union all
+        SELECT
+            #{TRADE_FLOW_STATUS01} effectFlag,
+            ee.ENTRUST_ID entrustId,
+            tpd.trade_market tradeMarket,
+            ee.ENTRUST_DATE bidDate,
+            BO.BID_ID bidId,
+            ee.ENTRUST_NUM /100 as allBidPrinAmt,
+            eea.PAY_TYPE as payType,
+            BO.WIN_PRIN_AMT/10000 as winPrinAmt,
+            eea.LISTING_DATE as listingDate,
+            to_char(BO.WIN_PRICE * 100,'fm99990.0000') || '%' as winPrice,
+            BO.WIN_TYPE as winType,
+            BO.PAY_DATE as payDate,
+            fpt.TYPE_6 paBussType,
+            fpt.TYPE_9 assetType1,
+            fpt.TYPE_10 assetType10,
+            fpt.TYPE_11 assetType11,
+            tpd.totle_trade_id totleTradeId,
+            tpd.trade_id tradeId,
+            tpda.portfolio_id portfolioId,
+            pp.portfolio_name portfolioName,
+            fp.finprod_market_id finprodMarketId,
+            fp.finprod_abbr finprodAbbr,
+            to_char(tpd.trade_date,'yyyy-MM-dd') tradeDate,
+            tpd.ccy ccy,
+            tpd.counter_id counterId,
+            mcp.counter_name counterName,
+            tpd.remark remark
+        FROM wfl_trd_product_deal tpd
+        LEFT JOIN wfl_trd_product_deal_add tpda ON tpd.trade_id = tpda.trade_id
+        left join WFL_TRD_FIN_PRODUCT_DEAL_TOTAL tpdt on tpd.TOTLE_TRADE_ID=tpdt.TOTLE_TRADE_ID
+        LEFT JOIN PTL_PORTFOLIO pp ON tpda.portfolio_id = pp.portfolio_id
+        LEFT JOIN FIN_PRODUCT fp ON tpd.finprod_id = fp.finprod_id
+        LEFT JOIN MST_COUNTER_PARTY mcp ON tpd.counter_id = mcp.counter_id
+        LEFT JOIN FIN_PRODUCT_TYPE fpt  ON tpd.FINPROD_ID = fpt.FINPROD_ID
+        left join WFL_ETR_ENTRUST ee on tpda.ENTRUST_ID=ee.ENTRUST_ID
+        left join WFL_ETR_ENTRUST_ADD eea on ee.ENTRUST_ID=eea.ENTRUST_ID
+        left join BID_ORDER_BID_PRICE bobp on ee.ENTRUST_ID=bobp.ENTRUST_ID
+        left join BID_ORDER BO ON bobp.bid_id = BO.BID_ID
         WHERE tpda.entrust_id = #{entrustId}
     </select>
 

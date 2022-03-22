@@ -46,7 +46,7 @@ public class PortIntFenPeiInfoDto {
     private String entrustId;
 
     @ApiModelProperty(name="rowNums",value="序号",example="A1")
-    private Number rowNums;
+    private Integer rowNums;
 
     @ApiModelProperty(name="unFinshAmt",value="剩余指令额度（万元）",example="1000000")
     private BigDecimal unFinshAmt;
@@ -195,11 +195,11 @@ public class PortIntFenPeiInfoDto {
         this.entrustId = entrustId;
     }
 
-    public Number getRowNums() {
+    public Integer getRowNums() {
         return rowNums;
     }
 
-    public void setRowNums(Number rowNums) {
+    public void setRowNums(Integer rowNums) {
         this.rowNums = rowNums;
     }
 

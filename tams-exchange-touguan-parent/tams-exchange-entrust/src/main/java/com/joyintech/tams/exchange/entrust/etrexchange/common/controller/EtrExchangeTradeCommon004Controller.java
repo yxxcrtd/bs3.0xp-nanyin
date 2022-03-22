@@ -170,13 +170,21 @@ public class EtrExchangeTradeCommon004Controller extends BaseController {
                 model.addAttribute("riskTrialSpan", riskTrialFlag ? "试算通过" : "试算不通过");
             } else {
                 String entrustIdWfl = entity.getEntrustId();
+                List<RiskTrialRetDto> riskTrialRetList = new ArrayList<>();
                 if (StringUtil.equals(entity.getPs(), DictCodeListExt1.交易方向_债转股.getValue())) {
                     entrustIdWfl = entrustIdWfl + DictCodeList.交易方向_卖出.getValue();
+                    riskTrialRetList = basRiskMathCommService.select(entrustIdWfl);
+                    entrustIdWfl = entity.getEntrustId() + DictCodeList.交易方向_买入.getValue();
+                    riskTrialRetList.addAll(basRiskMathCommService.select(entrustIdWfl)) ;
+                }else{
+                    riskTrialRetList = basRiskMathCommService.select(entrustIdWfl);
                 }
-                List<RiskTrialRetDto> riskTrialRetList = basRiskMathCommService.select(entrustIdWfl);
                 boolean riskTrialFlag = true;
                 for (RiskTrialRetDto riskTrialRetDto : riskTrialRetList) {
                     if ((StringUtil.isNotEmpty(riskTrialRetDto.getKriStatus()) && riskTrialRetDto.getKriStatus().equals("3")) && (StringUtil.isNotEmpty(riskTrialRetDto.getKriTrend()) && riskTrialRetDto.getKriTrend().equals("向坏"))) {
+                        riskTrialFlag = false;
+                    }
+                    if ((StringUtil.isNotEmpty(riskTrialRetDto.getKriStatus()) && riskTrialRetDto.getKriStatus().equals("4"))) {
                         riskTrialFlag = false;
                     }
                 }

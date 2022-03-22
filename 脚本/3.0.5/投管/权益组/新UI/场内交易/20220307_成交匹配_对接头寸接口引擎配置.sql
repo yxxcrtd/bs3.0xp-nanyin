@@ -72,3 +72,15 @@ INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSI
 VALUES ('TRANS_MATCH', 'F03', 'T22', '19', 'TRD', 'com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto', 'REPO003', 'system', null, sysdate, 'system', sysdate, '逆回购存续期接口-成交匹配-收息到账', 'Y');
 INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE, ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, REMARK, ENABLE) 
 VALUES ('TRANS_MATCH', 'F03', 'T23', '19', 'TRD', 'com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto', 'REPO003', 'system', null, sysdate, 'system', sysdate, '逆回购存续期接口-成交匹配-收息到账', 'Y');
+
+/*基金存续期接口*/
+INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE, ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, REMARK, ENABLE) 
+VALUES ('TRANS_MATCH', 'F06', 'T11', '19', 'TRD', 'com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto', 'Fund002', 'system', null, sysdate, 'system', sysdate, '基金存续期接口成交匹配-现金分红', 'Y');
+INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE, ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, REMARK, ENABLE) 
+VALUES ('TRANS_MATCH', 'F06', 'T12', '19', 'TRD', 'com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto', 'Fund002', 'system', null, sysdate, 'system', sysdate, '基金存续期接口成交匹配-红利再投', 'Y');
+
+/*股票存续期接口*/
+INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE, ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, REMARK, ENABLE) 
+VALUES ('TRANS_MATCH', 'F10', 'T11', '19', 'TRD', 'com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto', 'Stock001', 'system', null, sysdate, 'system', sysdate, '股票存续期接口成交匹配-现金分红', 'Y'); 
+INSERT INTO INTERF_POSITION_CONFIG (TRADE_PLAT, FINPROD_TYPE, PS, BUSI_ACT, POSITION_TYPE, ENTITY, INTERF_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, REMARK, ENABLE) 
+VALUES ('TRANS_MATCH', 'F10', 'T12', '19', 'TRD', 'com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto', 'Stock001', 'system', null, sysdate, 'system', sysdate, '股票存续期接口成交匹配-红利再投', 'Y'); 
