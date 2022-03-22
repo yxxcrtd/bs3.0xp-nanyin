@@ -24,7 +24,7 @@ public class PositionQueryDto {
      */
     private String ccy;
 
-    private Integer AMOUNT;
+    private String AMOUNT;
 
 
 
@@ -94,11 +94,11 @@ public class PositionQueryDto {
     }
 
 
-    public Integer getAMOUNT() {
+    public String getAMOUNT() {
         return AMOUNT;
     }
 
-    public void setAMOUNT(Integer AMOUNT) {
+    public void setAMOUNT(String AMOUNT) {
         this.AMOUNT = AMOUNT;
     }
 }

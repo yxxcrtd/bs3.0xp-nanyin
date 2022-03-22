@@ -833,8 +833,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			//保存不需要处理头寸
 			if(!StringUtil.equals(entity.getOperateType(),"save")) {
 				//增加调用头寸引擎代码start
-				String decisionAct = 系统动作_新建.getValue();
-				String systemAct = 系统动作_新建.getValue();
+				String decisionAct = 系统动作_修改.getValue();
+				String systemAct = 系统动作_修改.getValue();
 //            SysWflBusinessList sysBus=sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());
 //            if(null!=sysBus && StringUtil.equals(sysBus.getProcessState(),DictCodeList.流程状态_已退回.getValue())){
 //			systemAct = DictCodeListExt3.系统动作_修改.getValue();
@@ -842,12 +842,12 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 //			if (StringUtil.equals(entity.getOptType(), ENTRUST_RECORD_MODIFY)) {
 //			decisionAct = DictCodeListExt3.系统动作_修改.getValue();
 //			}
-				if (委托状态_已撤回.getValue().equals(entity.getEntrustStatus())) {
-					systemAct = 系统动作_修改.getValue();
-				}
-				if (数据状态_修改中.getValue().equals(entity.getStatus())) {
-					decisionAct = 系统动作_修改.getValue();
-				}
+//				if (委托状态_已撤回.getValue().equals(entity.getEntrustStatus())) {
+//					systemAct = 系统动作_修改.getValue();
+//				}
+//				if (数据状态_修改中.getValue().equals(entity.getStatus())) {
+//					decisionAct = 系统动作_修改.getValue();
+//				}
 				if(StringUtil.equals("1", RequestUtil.getParam("confirmOk"))){
 					entity.setSoftSkipMode("Y");
 				}
@@ -956,17 +956,18 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		//插入和修改时，指令持仓流水 、现金流水处理,支持多组合
 		doInsetOrUpdateForEtrPositionHoldMulti(entity);
 		//增加调用头寸引擎代码start
-		String decisionAct = 系统动作_新建.getValue();
-		String systemAct = 系统动作_新建.getValue();
-//		if (StringUtil.equals(entity.getOptType(), ENTRUST_RECORD_MODIFY)) {
-//        	systemAct = 系统动作_修改.getValue();
-//        }
-		if (委托状态_已撤回.getValue().equals(entity.getEntrustStatus())) {
-			systemAct = 系统动作_修改.getValue();
+		String decisionAct = 系统动作_修改.getValue();
+		String systemAct = 系统动作_修改.getValue();
+		if(ENTRUST_RECORD_NEW.equals(entity.getOptType())) {
+			systemAct = 系统动作_新建.getValue();
+			decisionAct = 系统动作_新建.getValue();
 		}
-		if (数据状态_修改中.getValue().equals(entity.getStatus())) {
-			decisionAct = 系统动作_修改.getValue();
-		}
+//		if (委托状态_已撤回.getValue().equals(entity.getEntrustStatus())) {
+//			systemAct = 系统动作_修改.getValue();
+//		}
+//		if (数据状态_修改中.getValue().equals(entity.getStatus())) {
+//			decisionAct = 系统动作_修改.getValue();
+//		}
 		positionRequestService.sendEtrExchangeTradeSaveRequest(entity,decisionAct,systemAct);
 		//增加调用头寸引擎代码end
 	}

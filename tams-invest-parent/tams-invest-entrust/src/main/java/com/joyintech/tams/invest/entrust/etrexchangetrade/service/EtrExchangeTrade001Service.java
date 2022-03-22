@@ -2078,16 +2078,16 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 					List<String> rowData = objects.get(i);
 					// 委托开始日日期非空
 					confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-							etrCommonService.checkIsBlank(rowData.get(12), "EtrExchangeTrade001.vdate", lineNo));
+							etrCommonService.checkIsBlank(rowData.get(12), "EtrExchangeTradeCommon001.entrustDate", lineNo));
 					// 委托开始日日期格式check
 					confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-							etrCommonService.checkIsDate(rowData.get(12), "EtrExchangeTrade001.vdate", lineNo));
-					// 委托结束日日期非空
-					confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-							etrCommonService.checkIsBlank(rowData.get(12), "EtrExchangeTrade001.mdate", lineNo));
-					// 委托结束日日期格式check
-					confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-							etrCommonService.checkIsDate(rowData.get(12), "EtrExchangeTrade001.mdate", lineNo));
+							etrCommonService.checkIsDate(rowData.get(12), "EtrExchangeTradeCommon001.entrustDate", lineNo));
+//					// 委托结束日日期非空
+//					confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+//							etrCommonService.checkIsBlank(rowData.get(12), "EtrExchangeTrade001.mdate", lineNo));
+//					// 委托结束日日期格式check
+//					confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+//							etrCommonService.checkIsDate(rowData.get(12), "EtrExchangeTrade001.mdate", lineNo));
 					/**** 委托开始日与终止日必须是平台日 ***/
 					if (StringUtil.isBlank(confirmMsg)) {
 						confirmMsg = etrCommonService.checkIsPlateDate(rowData.get(12), rowData.get(12),

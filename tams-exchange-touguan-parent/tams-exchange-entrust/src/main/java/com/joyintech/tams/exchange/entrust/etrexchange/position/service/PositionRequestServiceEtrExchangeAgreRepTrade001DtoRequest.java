@@ -190,6 +190,8 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest {
             //本方券券面总额 指令.质押券数量*100
             map.put("ownSecAmount", bean.getSecAmount());
 
+            list.add(map);
+
             resultMap.put("ptlRelieveSecList", list);
         }
     }
