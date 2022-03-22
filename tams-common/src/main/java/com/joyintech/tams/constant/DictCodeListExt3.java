@@ -1754,6 +1754,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     业务动作_成交匹配(DictCode.业务动作,"19","成交匹配"),
     业务动作_资金划拨新建(DictCode.业务动作,"29","资金划拨新建"),
     业务动作_资金划拨撤回(DictCode.业务动作,"30","资金划拨撤回"),
+    业务动作_中签(DictCode.业务动作,"26","中签"),
     业务动作_缴款(DictCode.业务动作,"27","缴款"),
 
 
