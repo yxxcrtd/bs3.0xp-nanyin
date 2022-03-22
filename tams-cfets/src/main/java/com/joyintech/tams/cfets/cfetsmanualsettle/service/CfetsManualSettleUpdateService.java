@@ -11,10 +11,7 @@ import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dao.CfetsManualSettleMapper;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dto.*;
-import com.joyintech.tams.common.base.dao.TrdBankManualSetDetailMapper;
-import com.joyintech.tams.common.base.dao.TrdBankManualSettleFlowMapper;
-import com.joyintech.tams.common.base.dao.TrdFinProductDealTotalMapper;
-import com.joyintech.tams.common.base.dao.TrdProductDealMapper;
+import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.constant.DictCodeList;
@@ -71,6 +68,8 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
 
     @Autowired
     private JoyinbusinessCommonService joyinbusinessCommonService;
+    @Autowired
+    private TrdProductTempDealTotalMapper trdProductTempDealTotalMapper;
 
     /**
      * 手工交收修改check
@@ -128,9 +127,27 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
         return list;
     }
 
+
+    /**
+     * 更新交易表数据
+     * 处理逻辑：修改时同交收，直接复制到交收表或者修改状态
+     */
+    private void updateDealData(String tradeId) {
+        TrdFinProductDealTotal tempTotal = trdProductTempDealTotalMapper.selectByPrimaryKey(tradeId);
+        if(Objects.isNull(tempTotal)) return;
+        TrdFinProductDealTotal total = trdFinProductDealTotalMapper.selectByPrimaryKey(tradeId);
+        if(Objects.nonNull(total)) {
+            autoPeriodCommonService.updateDealDataCancel(tradeId,DictCodeList.是否_否.getValue());
+        }else {
+            autoPeriodCommonService.insertDealDataFromTemp(tradeId);
+        }
+    }
+
     @Override
     public void doComplete(CfetsManualSettleUpdateRequest request, OperationType operationType) {
         try{
+            //更新交易表,将临时表数据复制到交易表
+            this.updateDealData(request.getTradeId());
             //处理业务数据
             TrdBankManualSettleInfo trdBankManualSettleInfo = new TrdBankManualSettleInfo();
 
