@@ -14,7 +14,6 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
@@ -28,9 +27,7 @@ import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTra
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.*;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.position.PositionCashSecDto;
-import com.joyintech.tams.invest.common.entrust.dao.EtrTrdCommonMapper;
 import com.joyintech.tams.invest.common.entrust.inter.EtrTradeCommonervice;
-import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections.CollectionUtils;
@@ -39,6 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -75,6 +73,7 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
      */
 	public Page<EtrExchangeTradePositionsCommonResponse> findPositionsPage(EtrExchangeTradePositionsCommonRequest dto) {
 		try {
+			String platDate = iPlatformDate.getSysDateStr();
 			PageMode pageMode = null;
 			if (StringUtil.isNotEmpty(dto.getPageMode())
 					&&( dto.getPageMode().getSort().equals("floating")||dto.getPageMode().getSort().equals("floatingPL"))){
@@ -126,7 +125,18 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 				param.put("A_001", DictCodeListExt3.资产类型_资产账户持仓.getValue());
 				// 浮动盈亏计算修改 modify by yufei 20200806 start
 				Page<EtrExchangeTradePositionsCommonResponse> result = super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> etrExchangeTradeCommonMapper.findPositionsPage(param));
+				// 根据查询结果查询估值、交易数据，用来加工单位成本等字段
+				final List pList = new ArrayList<String>();
+				final List fList = new ArrayList<String>();
 				if(!StringUtil.isEmptyList(result.getRoot())){
+					result.getRoot().stream().forEach(c -> {
+						if (!pList.contains(c.getPortfolioId())){
+							pList.add(c.getPortfolioId());
+						}
+						if (!fList.contains(c.getFinprodId())){
+							fList.add(c.getFinprodId());
+						}
+					});
 					// 计算浮动盈亏
 					for(EtrExchangeTradePositionsCommonResponse entity : result.getRoot()){
 						//可用数量
@@ -161,6 +171,10 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 						}
 					}
 				}
+				// 查询单位成本数据
+				Map<String, EtrExchangeUnitCostDto> unitCostMap = calcEachCostAmtMap(DateUtil.parse(platDate), pList, fList, "");
+				// 计算单位成本、计算持仓成本、最新净价、持仓市值、浮动盈亏
+				 calculationAmount(unitCostMap, result, platDate);
 				return result;
 //				return restTemplate.postForPage(
 //						ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/findPositionsPage", param,
@@ -386,4 +400,191 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 		Page<SelectOptionDto> tempList = super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(), () -> etrExchangeTradeCommonMapper.getId(param));
 		return tempList;
 	}
+
+	/**
+	 * 查询前一日持仓指标
+	 * @param cdate 交易日期
+	 * @param portfolioIdList 组合代码
+	 * @param secType1 债券一级分类
+	 */
+	public List<BaseMap> selectLastCostAmt(Date cdate, List<String> portfolioIdList, List<String> finprodIdList, String secType1){
+		BaseMap reqMap = BaseMap.newMap()
+				.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue())    // 债券
+				.put("SVR_TRADE_MARKET_01", DictCodeListExt1.交易场所_银行间.getValue())
+				.put("SVR_TRADE_MARKET_03", DictCodeListExt1.交易场所_上海证券交易所.getValue())
+				.put("SVR_TRADE_MARKET_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue())
+				.put("cdate", DateUtil.addDay(cdate, -1));
+
+		if(portfolioIdList != null && !portfolioIdList.isEmpty()) reqMap.put("portfolioIdList", portfolioIdList);
+		if(finprodIdList != null && !finprodIdList.isEmpty()) reqMap.put("finprodIdList",finprodIdList);
+		if(StringUtil.isNotEmpty(secType1)) reqMap.put("secType1",secType1);
+
+		List<BaseMap> list = etrExchangeTradeCommonMapper.selectLastCostAmt(reqMap);
+		/**
+		 * 返回结果
+		 * PORTFOLIO_ID、FINPROD_ID、INV_AIM、
+		 * BUY_COST_AMT 成本
+		 * SHARE_AMT    数量
+		 */
+		return list;
+	}
+
+	/**
+	 * 当日交易数据查询
+	 * @param cdate 交易日期
+	 * @param portfolioIdList 组合代码
+	 * @param secType1 债券一级分类
+	 */
+	public List<BaseMap> selectCurrTrdData(Date cdate, List<String> portfolioIdList, List<String> finprodIdList, String secType1){
+		BaseMap reqMap = BaseMap.newMap()
+				.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue())    // 债券
+				.put("SVR_TRADE_MARKET_01", DictCodeListExt1.交易场所_银行间.getValue())           // 银行间
+				.put("PS_T01", DictCodeList.交易方向_买入.getValue())
+				.put("PS_T02", DictCodeList.交易方向_卖出.getValue())
+				.put("PS_T03", DictCodeList.交易方向_行权_回售.getValue())
+				.put("PS_T04", DictCodeList.交易方向_申购.getValue())
+				.put("PS_T49", DictCodeListExt1.交易方向_债转股.getValue())
+				.put("SVR_TRADE_MARKET_03", DictCodeListExt1.交易场所_上海证券交易所.getValue())
+				.put("SVR_TRADE_MARKET_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue())
+				.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue())
+				.put("YN_N", DictCodeList.是否_否.getValue())
+				.put("cdate", cdate);
+
+		if(portfolioIdList != null && !portfolioIdList.isEmpty()) reqMap.put("portfolioIdList", portfolioIdList);
+		if(finprodIdList != null && !finprodIdList.isEmpty()) reqMap.put("finprodIdList",finprodIdList);
+		if(StringUtil.isNotEmpty(secType1)) reqMap.put("secType1",secType1);
+
+		List<BaseMap> list = etrExchangeTradeCommonMapper.selectCurrTrdData(reqMap);
+		/**
+		 *  PORTFOLIO_ID、FINPROD_ID、INV_AIM、PS
+		 *  PRICE,  净价
+		 *  AMT     数量
+		 */
+		return list;
+	}
+
+	/**
+	 * @return
+	 */
+	private Map<String, EtrExchangeUnitCostDto> calcEachCostAmtMap(Date cdate, List<String> portfolioIdList, List<String> finprodIdList, String secType1) {
+		/** 返回结果
+		 * KEY:组合+资产代码+投资目的
+		 * VALUE:持仓单位成本dto
+		 */
+		Map<String, EtrExchangeUnitCostDto> resultMap = new HashMap<>();
+
+		// 查询前一日持仓指标
+		List<BaseMap> lastCostAmt = selectLastCostAmt(cdate, portfolioIdList, finprodIdList, "");
+
+		if (lastCostAmt != null){
+			lastCostAmt.forEach(e->{
+				if(BigDecimal.ZERO.compareTo(e.getBigDecimal("SHARE_AMT")) != 0){
+					// 数量不为0时生成单位净价
+					EtrExchangeUnitCostDto dto = new EtrExchangeUnitCostDto();
+
+					dto.setBuyCostAmt(e.getBigDecimal("BUY_COST_AMT"));
+					dto.setShareAmt(e.getBigDecimal("SHARE_AMT"));
+					// 单位成本=成本/数量， （EACH_COST = BUY_COST_AMT / SHARE_AMT）
+					dto.setUnitCost(ArithmeticUtil.divide(
+							e.getBigDecimal("BUY_COST_AMT"),
+							e.getBigDecimal("SHARE_AMT"),
+							4));
+					resultMap.put(getKey(e), dto);
+				}
+			});
+		}
+
+		// 当日交易数据查询
+		List<BaseMap> currTrdData = selectCurrTrdData(cdate, portfolioIdList, finprodIdList, secType1);
+		if (currTrdData != null){
+			currTrdData.forEach(i -> {
+				String key = getKey(i);
+				EtrExchangeUnitCostDto dto = resultMap.get(key);
+				if (dto == null){
+					dto = new EtrExchangeUnitCostDto(BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
+					resultMap.put(key, dto);
+				}
+
+				if (StringUtil.equals(i.getString("PS"), DictCodeList.交易方向_买入.getValue())){
+					// 成本
+					BigDecimal thisBuyCostAmt = dto.getBuyCostAmt()
+							.add(ArithmeticUtil.multiply(i.getBigDecimal("PRICE"), i.getBigDecimal("AMT")));
+					dto.setBuyCostAmt(thisBuyCostAmt);
+					// 数量
+					dto.setShareAmt(dto.getShareAmt().add(i.getBigDecimal("AMT")));
+					// 单位成本 = 成本/数量
+					dto.setUnitCost(ArithmeticUtil.divide(dto.getBuyCostAmt(), dto.getShareAmt(), 4));
+				}else if (StringUtil.equals(i.getString("PS"), DictCodeList.交易方向_申购.getValue())) {
+					// 成本
+					BigDecimal thisBuyCostAmt = dto.getBuyCostAmt()
+							.add(ArithmeticUtil.multiply(i.getBigDecimal("PRICE"), i.getBigDecimal("AMT")));
+					dto.setBuyCostAmt(thisBuyCostAmt);
+					// 数量
+					dto.setShareAmt(dto.getShareAmt().add(i.getBigDecimal("AMT")));
+					// 单位成本 = 成本/数量
+					dto.setUnitCost(ArithmeticUtil.divide(dto.getBuyCostAmt(), dto.getShareAmt(), 4));
+				}else{ // 卖出或行权回售
+					// 成本
+					BigDecimal thisBuyCostAmt = dto.getBuyCostAmt()
+							.subtract(ArithmeticUtil.multiply(i.getBigDecimal("PRICE"), i.getBigDecimal("AMT")));
+					dto.setBuyCostAmt(thisBuyCostAmt);
+					// 数量
+					dto.setShareAmt(dto.getShareAmt().subtract(i.getBigDecimal("AMT")));
+					// 单位成本 = 成本/数量
+					dto.setUnitCost(ArithmeticUtil.divide(dto.getBuyCostAmt(), dto.getShareAmt(), 2));
+				}
+
+				resultMap.put(key, dto);
+			});
+		}
+		return resultMap;
+	}
+
+	private static String getKey(BaseMap bm){
+		return bm.getString("PORTFOLIO_ID") + bm.get("FINPROD_ID");
+	}
+	private Page<EtrExchangeTradePositionsCommonResponse> calculationAmount(Map<String, EtrExchangeUnitCostDto> unitCostMap, Page<EtrExchangeTradePositionsCommonResponse> pages, String platDate) {
+		if(pages != null && pages.getRoot()!= null && !pages.getRoot().isEmpty()){
+			pages.getRoot().forEach( r->{
+				EtrExchangeUnitCostDto dto = unitCostMap.get(r.getPortfolioId() + r.getFinprodId());
+				if (dto != null){
+					// 1.持仓成本（元）
+					r.setPositionsAmt(dto.getBuyCostAmt());
+					// 2.持仓成本价（元） 取单位成本
+					//r.setUnitCost(dto.getUnitCost());
+				}
+
+				// 3.最新净价（元） 优先从内存获取债券最新净价，没有则使用dto中债券估值行情的值r.getPrice()
+				BigDecimal price = new BigDecimal("0");//BondSocketClient.getLocalCachePrice(r.getFinprodMarketId());
+				if (price != null) {
+					r.setPrice(price);
+				}else{
+					if (r.getPrice() == null) {
+						// 取标的可用面值
+						//price = etrInvestBondInfoService.getAvailableNum(BaseMap.newMap().put("finprodId", r.getFinprodId()).put("sysdate", platDate));
+						r.setPrice(price);
+					}
+				}
+
+				if (r.getPrice() != null){
+					// 4.持仓市值（元）=（交易可用券面总额+交易在途券面总额）* 最新净价 / 单位面值
+//					BigDecimal doAdd = ArithmeticUtil.multiply(ArithmeticUtil.doAdd(r.getTrdAvaShareAmt(), r.getTrdIntransShareAmt()),
+//							BigDecimal.valueOf(10000L));
+					//r.setPositionsPrice(ArithmeticUtil.multiply(doAdd, r.getPrice()).divide(BigDecimal.valueOf(100)));
+
+					if (dto != null){
+						// 5.持仓成本=（交易可用券面总额+交易在途券面总额）* 持仓成本价（元）
+						//r.setPositionsAmt(ArithmeticUtil.multiply(doAdd, r.getUnitCost()).divide(BigDecimal.valueOf(100)));
+					}
+
+					if (r.getPositionsAmt() != null){
+						// 6.浮动盈亏（元） = 持仓市值（元） - 持仓成本（元）
+						//r.setFloatingPl(ArithmeticUtil.subtract(r.getPositionsPrice(), r.getPositionsAmt()));
+					}
+				}
+			});
+		}
+		return pages;
+	}
+
 }

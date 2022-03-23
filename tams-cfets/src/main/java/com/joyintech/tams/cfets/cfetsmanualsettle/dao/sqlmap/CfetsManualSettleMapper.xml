@@ -663,6 +663,7 @@
             PAR_VALUE PAR_VALUE,
             CPRICE_AMT CPRICE_AMT,
             case when TPD.PS != 'T07' and (FINPROD_TYPE2 = 'F02' or FINPROD_TYPE2 = 'F03') then SHARE_AMT
+            when TPD.PS = 'T07' and (FINPROD_TYPE2 = 'F02' or FINPROD_TYPE2 = 'F03') then SHARE_AMT* 100
             WHEN FINPROD_TYPE2 = 'F01' THEN SHARE_AMT * 100
             else SHARE_AMT end SHARE_AMT,
             PRIN_AMT PRIN_AMT,
@@ -739,6 +740,7 @@
                PAR_VALUE                    PAR_VALUE,
                CPRICE_AMT                   CPRICE_AMT,
                case when TPD.PS != 'T07' and (FINPROD_TYPE2 = 'F02' or FINPROD_TYPE2 = 'F03') then SHARE_AMT
+               when TPD.PS = 'T07' and (FINPROD_TYPE2 = 'F02' or FINPROD_TYPE2 = 'F03') then SHARE_AMT* 100
                WHEN FINPROD_TYPE2 = 'F01' THEN SHARE_AMT * 100
                else SHARE_AMT end SHARE_AMT,
                PRIN_AMT                     PRIN_AMT,

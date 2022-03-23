@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.alibaba.fastjson.JSON;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.entity.*;
@@ -427,7 +428,7 @@ public class InvestDealRevokeService {
                 // ZGTFCP-1249:orderId防止重复 modify by fuyongsheng 20220318 end
             }
             batchRevoke.put("data", dataList);
-            batchRevoke.put("userId", "SYSTEM");
+            batchRevoke.put("userId", LoginUserUtil.getUserName());
             batchRevoke.put("totalTradeId",IDGenerator.generate());
             batchRevoke.put("modelType",DictCodeListExt1.子系统代码_交易.getValue());
             //ZGTFCP-1222:更换头寸批处理接口 modify by fuyongsheng  20220318 start
@@ -438,7 +439,7 @@ public class InvestDealRevokeService {
 
 
             orderBatchRevoke.put("data", orderDataList);
-            orderBatchRevoke.put("userId", "SYSTEM");
+            orderBatchRevoke.put("userId", LoginUserUtil.getUserName());
             orderBatchRevoke.put("totalTradeId",IDGenerator.generate());
             orderBatchRevoke.put("modelType",DictCodeListExt1.子系统代码_交易.getValue());
             //ZGTFCP-1222:更换头寸批处理接口 modify by fuyongsheng  20220318 start
@@ -469,7 +470,7 @@ public class InvestDealRevokeService {
                 stasecDataList.add(stasecData);
             }
             stasecBatchRevoke.put("data", stasecDataList);
-            stasecBatchRevoke.put("userId", "SYSTEM");
+            stasecBatchRevoke.put("userId", LoginUserUtil.getUserName());
             stasecBatchRevoke.put("totalTradeId",IDGenerator.generate());
             stasecBatchRevoke.put("modelType",DictCodeListExt1.子系统代码_交易.getValue());
             logger.debug("【批量撤销日间标准券出入库数据】stasecBatchRevoke:{}", JSON.toJSONString(stasecBatchRevoke));

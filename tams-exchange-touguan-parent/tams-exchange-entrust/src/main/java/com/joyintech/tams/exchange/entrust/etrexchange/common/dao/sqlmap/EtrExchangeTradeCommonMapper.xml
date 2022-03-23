@@ -354,11 +354,6 @@
                 WHEN FP.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F10} THEN MSP.CLOSE_PRICE
                 ELSE NULL
             END   AS price,
-            CASE
-            WHEN (NVL(T2.SHARE_AMT,0)+PSP.AMOUNT)=0
-            THEN NVL(PSV.DSC_COST_AMT,0)+NVL(T1.TRADE_AMT,0)
-            ELSE ((NVL(PSV.DSC_COST_AMT,0)+NVL(T1.TRADE_AMT,0)) - (NVL(T2.SHARE_AMT,0)*(NVL(PSV.DSC_COST_AMT,0)+NVL(T1.TRADE_AMT,0))/(NVL(T2.SHARE_AMT,0)+PSP.AMOUNT)))
-            END AS positionsAmt,
             PSP.AMOUNT AS ptlPositionsNum,
             <!-- CASE WHEN FP.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
             THEN MBVI.NETPRICE*PSP.AMOUNT-((nvl(PSV.DSC_COST_AMT,0)+nvl(T1.TRADE_AMT,0)) - (nvl(T2.SHARE_AMT,0)* (nvl(PSV.DSC_COST_AMT,0)+ nvl(T1.TRADE_AMT,0))/(nvl(T2.SHARE_AMT,0)+PSP.AMOUNT)))
@@ -1668,6 +1663,101 @@
         GROUP BY d.PORTFOLIO_ID
         ) cc ON nvl(aa.PORTFOLIO_ID, bb.PORTFOLIO_ID)=cc.PORTFOLIO_ID
         ) summary
+    </select>
+
+    <!-- 查询前一日持仓指标 -->
+    <select id="selectLastCostAmt" parameterType="Map" resultType="com.joyintech.tams.business.common.pojo.BaseMap">
+        select
+        a.PORTFOLIO_ID, a.FINPROD_ID,
+        sum(nvl(a.BUY_COST_AMT, 0)) BUY_COST_AMT, sum(nvl(a.SHARE_AMT, 0)) SHARE_AMT
+        from PTL_SEC_UNITCOST a
+        LEFT JOIN FIN_PRODUCT b ON a.FINPROD_ID =b.FINPROD_ID
+        LEFT JOIN FIN_PRODUCT_TYPE c ON a.FINPROD_ID =c.FINPROD_ID
+        WHERE   (( b.FINPROD_TYPE2 =#{FINPROD_TYPE_TG_F01} AND b.TRADE_MARKET=#{SVR_TRADE_MARKET_01} )
+        or (b.TRADE_MARKET in (#{SVR_TRADE_MARKET_03} ,#{SVR_TRADE_MARKET_04})))
+          AND a.CDATE =#{cdate}
+        <if test="portfolioIdList != null">
+            AND a.PORTFOLIO_ID in
+            <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="finprodIdList != null">
+            AND b.FINPROD_ID in
+            <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="secType1 != null and secType1 != ''">
+            and c.TYPE_8 = #{secType1,jdbcType=VARCHAR}
+        </if>
+        GROUP BY a.PORTFOLIO_ID, a.FINPROD_ID
+        ORDER BY a.PORTFOLIO_ID, a.FINPROD_ID
+    </select>
+
+    <!-- 当日交易数据查询 -->
+    <select id="selectCurrTrdData" parameterType="Map" resultType="com.joyintech.tams.business.common.pojo.BaseMap">
+       select
+        b.PORTFOLIO_ID ,
+        a.FINPROD_ID ,
+        a.INV_AIM ,
+        a.PS ,
+        a.UNIT_CPRICE AS PRICE,
+        a.SHARE_AMT AS AMT
+        from TRD_PRODUCT_DEAL a
+        LEFT JOIN TRD_PRODUCT_DEAL_ADD b ON a.TRADE_ID =b.TRADE_ID
+        LEFT JOIN FIN_PRODUCT c ON a.FINPROD_ID =c.FINPROD_ID
+        LEFT JOIN FIN_PRODUCT_TYPE d ON d.FINPROD_ID =a.FINPROD_ID
+        WHERE a.TRADE_DATE =#{cdate} AND c.TRADE_MARKET in (#{SVR_TRADE_MARKET_03},#{SVR_TRADE_MARKET_04})
+        AND a.PS IN (#{PS_T01},#{PS_T02},#{PS_T03},#{PS_T04},#{PS_T49})
+        AND a.IS_CANCEL=#{YN_N}
+        <if test="portfolioIdList != null">
+            AND b.PORTFOLIO_ID in
+            <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="finprodIdList != null">
+            AND a.FINPROD_ID in
+            <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="secType1 != null and secType1 != ''">
+            and d.TYPE_8 = #{secType1,jdbcType=VARCHAR}
+        </if>
+        union all
+        select
+        b.PORTFOLIO_ID ,
+        a.FINPROD_ID ,
+        a.INV_AIM ,
+        a.PS ,
+        a.UNIT_CPRICE AS PRICE,
+        a.SHARE_AMT AS AMT
+        from TRD_PRODUCT_TEMP_DEAL a
+        LEFT JOIN TRD_PRODUCT_TEMP_DEAL_ADD b ON a.TRADE_ID =b.TRADE_ID
+        LEFT JOIN FIN_PRODUCT c ON a.FINPROD_ID =c.FINPROD_ID
+        LEFT JOIN FIN_PRODUCT_TYPE d ON d.FINPROD_ID =a.FINPROD_ID
+        WHERE a.TRADE_DATE =#{cdate} AND c.TRADE_MARKET in (#{SVR_TRADE_MARKET_03},#{SVR_TRADE_MARKET_04})
+        AND a.PS IN (#{PS_T01},#{PS_T02},#{PS_T03},#{PS_T04},#{PS_T49})
+        AND a.IS_CANCEL=#{YN_N}
+        <if test="portfolioIdList != null">
+            AND b.PORTFOLIO_ID in
+            <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="finprodIdList != null">
+            AND a.FINPROD_ID in
+            <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="secType1 != null and secType1 != ''">
+            and d.TYPE_8 = #{secType1,jdbcType=VARCHAR}
+        </if>
+
+
     </select>
 
 </mapper>

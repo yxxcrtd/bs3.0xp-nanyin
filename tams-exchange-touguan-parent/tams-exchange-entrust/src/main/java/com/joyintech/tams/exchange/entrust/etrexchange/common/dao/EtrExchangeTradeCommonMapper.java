@@ -13,6 +13,7 @@ package com.joyintech.tams.exchange.entrust.etrexchange.common.dao;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.service.entrust.etrexchangetrade.dto.EtrExchangeTrade002Dto;
+import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.common.dto.FinStockInfoDto;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeEtrExchangeCommonResponse;
@@ -346,6 +347,20 @@ public interface EtrExchangeTradeCommonMapper {
 	 * @date 2021/12/4 15:39
 	 */
 	Map queryPositionInfo(Map RequestDto);
+
+	/**
+	 * 查询前一日持仓指标
+	 * @param baseMap
+	 * @return
+	 */
+	List<BaseMap> selectLastCostAmt(BaseMap baseMap);
+
+	/**
+	 * 当日交易数据查询
+	 * @param baseMap
+	 * @return
+	 */
+	List<BaseMap> selectCurrTrdData(BaseMap baseMap);
 
 
 }

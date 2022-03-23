@@ -159,6 +159,11 @@ public class EtrExchangeTradeFjyywzlZqzyDto extends BaseEntity {
     private BigDecimal canRepoNum;
 
     /**
+     * 资金账户代码
+     */
+    private String acctId;
+
+    /**
      * 获取 portfolioId
      * 
      * @return portfolioId.
@@ -567,5 +572,14 @@ public class EtrExchangeTradeFjyywzlZqzyDto extends BaseEntity {
      */
     public void setCanRepoNum(BigDecimal canRepoNum) {
         this.canRepoNum = canRepoNum;
+    }
+
+
+    public String getAcctId() {
+        return acctId;
+    }
+
+    public void setAcctId(String acctId) {
+        this.acctId = acctId;
     }
 }
