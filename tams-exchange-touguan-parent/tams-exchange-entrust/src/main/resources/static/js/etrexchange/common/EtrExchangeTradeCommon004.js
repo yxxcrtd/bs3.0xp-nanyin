@@ -2090,6 +2090,7 @@
                     $("#entrustPriceUnit_" + currentTab).text("%");
                     $("#entrustAmtUnit_" + currentTab).text("元");
                 } else {
+                    $("#entrustDate_label_" + currentTab).text("指令日期").append($star.clone());
                     $("#ps_label_" + currentTab).text("委托方向").append($star.clone());
                     $("#secId_label_" + currentTab).text("资产名称").append($star.clone());
                     $("#acctNo_label_" + currentTab).text("资金账户").append($star.clone());
