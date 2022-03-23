@@ -154,10 +154,13 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
             Map<String,Object> pageParam = new HashMap<>();
             pageParam.put("tradeId",request.getTradeId());
             List<PortSettleinfoDto> list = cfetsManualSettleMapper.queryTempPortSettleinfo(pageParam);
-            //重新分配利息
-            calIntAmt(request,list);
+            //重新分配temp表利息
+            calTempIntAmt(request,list);
             //更新交易表,将临时表数据复制到交易表,状态是撤销
             this.updateDealData(request.getTradeId());
+            //重新分配deal利息
+            list = cfetsManualSettleMapper.queryPortSettleinfo(pageParam);
+            calIntAmt(request,list);
             //处理业务数据
             TrdBankManualSettleInfo trdBankManualSettleInfo = new TrdBankManualSettleInfo();
             BussinessCodeParameter parameter = new BussinessCodeParameter();
@@ -221,7 +224,7 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
      * 修改金额后重新计算利息
      * @param request
      */
-    private void calIntAmt(CfetsManualSettleUpdateRequest request,List<PortSettleinfoDto> list) {
+    private void calTempIntAmt(CfetsManualSettleUpdateRequest request,List<PortSettleinfoDto> list) {
         //1.处理total表
         TrdFinProductDealTotal dealTotal = trdProductTempDealTotalMapper.selectByPrimaryKey(request.getTradeId());
         TrdFinProductDealTotal tempTotal = new TrdFinProductDealTotal();
@@ -245,6 +248,42 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
                             trdProductDeal.setCpriceAmt(trdBankManualSetDetail.getSettleAmt());
                             trdProductDeal.setTradeAmt(trdBankManualSetDetail.getSettleAmt());
                             trdProductTempDealMapper.updateByPrimaryKeySelective(trdProductDeal);
+                        }
+                        continue;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 修改金额后重新计算利息
+     * @param request
+     */
+    private void calIntAmt(CfetsManualSettleUpdateRequest request,List<PortSettleinfoDto> list) {
+        //1.处理total表
+        TrdFinProductDealTotal dealTotal = trdFinProductDealTotalMapper.selectByPrimaryKey(request.getTradeId());
+        TrdFinProductDealTotal tempTotal = new TrdFinProductDealTotal();
+        //设置利息总额
+        if(request.getSettleAmtT().compareTo(dealTotal.getTradeAmt()) != 0) {
+            tempTotal.setIntAmt(ArithmeticUtil.subtract(request.getSettleAmtT(), dealTotal.getTradeAmt()));
+            tempTotal.setTradeAmt(request.getSettleAmtT());
+            tempTotal.setFpriceAmt(request.getSettleAmtT());
+            tempTotal.setTotleTradeId(request.getTradeId());
+            trdFinProductDealTotalMapper.updateByPrimaryKeySelective(tempTotal);
+        }
+        //2.处理deal表
+        if(!CollectionUtils.isEmpty(list)) {
+            for(PortSettleinfoDto trdBankManualSetDetail : request.getPortSettleinfoDtoList()){
+                for(PortSettleinfoDto trdProductDealAdd : list){
+                    if(StringUtil.equals(trdProductDealAdd.getPortfolioId(),trdBankManualSetDetail.getPortfolioId())){
+                        TrdProductDeal trdProductDeal = trdProductDealMapper.selectByPrimaryKey(trdProductDealAdd.getTradeId());
+                        if(trdBankManualSetDetail.getSettleAmt().compareTo(trdProductDealAdd.getSettleAmt()) != 0) {
+                            trdProductDeal.setIntAmt(ArithmeticUtil.subtract(trdBankManualSetDetail.getSettleAmt(), trdProductDealAdd.getSettleAmt()));
+                            trdProductDeal.setFpriceAmt(trdBankManualSetDetail.getSettleAmt());
+                            trdProductDeal.setCpriceAmt(trdBankManualSetDetail.getSettleAmt());
+                            trdProductDeal.setTradeAmt(trdBankManualSetDetail.getSettleAmt());
+                            trdProductDealMapper.updateByPrimaryKeySelective(trdProductDeal);
                         }
                         continue;
                     }
