@@ -2055,6 +2055,7 @@
         if (finprodType2) {
             // if 画面.金融产品类型（投管） = 数据字典.金融产品类型（投管）.债券 && 画面.委托方向 != 数据字典.交易方向.行权-回售 or 申购 or 配债 or 债转股 or 质押入库 or 质押出库
             if (finprodType2 == FINPROD_TYPE_TG_F01 && isStandardPs(ps)) {
+                alert(1)
                 // 净价、到期收益率、全价显示，单选按钮，计算方式 = 数据字典.计算方式.
                 $("#price_div_" + currentTab).show();
                 $("#fprice_div_" + currentTab).show();
@@ -2089,6 +2090,11 @@
                     $("#entrustPriceUnit_" + currentTab).text("%");
                     $("#entrustAmtUnit_" + currentTab).text("元");
                 } else {
+                    $("#entrustDate_label_" + currentTab).text("指令日期").append($star.clone());
+                    $("#ps_label_" + currentTab).text("委托方向").append($star.clone());
+                    $("#secId_label_" + currentTab).text("资产名称").append($star.clone());
+                    $("#acctNo_label_" + currentTab).text("资金账户").append($star.clone());
+                    $("#portfolioId_label_" + currentTab).text("组合名称").append($star.clone());
                     $("#entrustPrice_label_" + currentTab).text("指令价格").append($star.clone());
                     $("#entrustNum_label_" + currentTab).text("指令数量").append($star.clone());
                     $("#entrustAmt_label_" + currentTab).text("指令金额").append($star.clone());

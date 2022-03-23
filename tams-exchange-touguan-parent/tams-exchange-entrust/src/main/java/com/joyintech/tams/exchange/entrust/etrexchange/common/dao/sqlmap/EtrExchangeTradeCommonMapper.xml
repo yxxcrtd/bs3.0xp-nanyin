@@ -616,7 +616,7 @@
             from TRD_PRODUCT_DEAL a
             LEFT JOIN TRD_PRODUCT_DEAL_ADD b ON a.TRADE_ID =b.TRADE_ID
             WHERE 1=1
-            <if test="portfolioIdList != null">
+            <if test="portfolioIdList != null and portfolioIdList.size()>0">
                 AND b.PORTFOLIO_ID in
                 <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
                     #{item}
@@ -629,7 +629,7 @@
             from TRD_PRODUCT_DEAL a
             LEFT JOIN TRD_PRODUCT_DEAL_ADD b ON a.TRADE_ID =b.TRADE_ID
             WHERE 1=1
-            <if test="portfolioIdList != null">
+            <if test="portfolioIdList != null and portfolioIdList.size()>0">
                 AND b.PORTFOLIO_ID in
                 <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
                     #{item}
@@ -640,6 +640,9 @@
         ) invaim on invaim.FINPROD_ID=TEMP.FINPROD_ID and invaim.PORTFOLIO_ID=TEMP.PORTFOLIO_ID
         WHERE
         FP.TRADE_MARKET IN (#{TRADE_PLACE_03}, #{TRADE_PLACE_04})
+        <if test="tradePlat != null and tradePlat !='' and tradePlat==NO_TRADE_BUSINESS_ETR">
+            AND FP.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01,jdbcType=VARCHAR}
+        </if>
         <if test="portfolioIdList != null and portfolioIdList.size()>0">
             <foreach collection="portfolioIdList" open="AND TEMP.PORTFOLIO_ID IN (" item="portfolioId" separator="," close=")">
                     #{portfolioId,jdbcType=VARCHAR}
@@ -1316,7 +1319,9 @@
             and ee.finprod_id = #{finprodId,jdbcType=VARCHAR}
             and ee.ps = #{ps,jdbcType=VARCHAR}
             and ee.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
-            and ee.trade_plat = #{tradePlat,jdbcType=VARCHAR}
+            <if test="tradePlat != null and tradePlat != ''">
+                and ee.trade_plat = #{tradePlat,jdbcType=VARCHAR}
+            </if>
             <if test="entrustReturn != null and entrustReturn != '' and entrustRecall!=null and entrustRecall != ''">
                 and  ee.ENTRUST_STATUS not in  (#{entrustReturn,jdbcType=VARCHAR},#{entrustRecall,jdbcType=VARCHAR})
             </if>
@@ -1332,7 +1337,9 @@
             and weea.workflow_status = '01'
             and wee.ps = #{ps,jdbcType=VARCHAR}
             and wee.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
-            and wee.trade_plat = #{tradePlat,jdbcType=VARCHAR}
+            <if test="tradePlat != null and tradePlat != ''">
+                and wee.trade_plat = #{tradePlat,jdbcType=VARCHAR}
+            </if>
             <if test="entrustReturn != null and entrustReturn != '' and entrustRecall!=null and entrustRecall != ''">
                 and  wee.ENTRUST_STATUS not in  (#{entrustReturn,jdbcType=VARCHAR},#{entrustRecall,jdbcType=VARCHAR})
             </if>
@@ -1828,6 +1835,9 @@
         LEFT JOIN PTL_PORTFOLIO ON RSK_ISUP_TRIAL.PORTFOLIO_ID=PTL_PORTFOLIO.PORTFOLIO_ID
         LEFT JOIN RSK_PORTFOLIO_PACKAGE ON RSK_ISUP_TRIAL.PORTFOLIO_ID=RSK_PORTFOLIO_PACKAGE.PTL_BAG_ID
         LEFT JOIN FIN_PRODUCT ON RSK_ISUP_TRIAL.ASSET_CODE=FIN_PRODUCT.FINPROD_ID
-        WHERE RSK_ISUP_TRIAL.TRADE_ID  in (select TRADE_ID from temp)
+        WHERE RSK_ISUP_TRIAL.TRADE_ID  in (select TRADE_ID from temp) AND RSK_ISUP_TRIAL.SEQ_NO IN (
+        SELECT  max(SEQ_NO) FROM RSK_ISUP_TRIAL
+        WHERE RSK_ISUP_TRIAL.TRADE_ID in (select TRADE_ID from temp) group by PORTFOLIO_ID
+        )
     </select>
 </mapper>

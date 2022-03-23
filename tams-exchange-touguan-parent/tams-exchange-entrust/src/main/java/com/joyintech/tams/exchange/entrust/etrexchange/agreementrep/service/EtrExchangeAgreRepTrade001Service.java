@@ -2118,6 +2118,11 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
         if ("save".equals(entity.getOperateType())) {
             return;
         }
+        //增加调用头寸引擎代码start
+        String optType = ENTRUST_RECORD_NEW;
+        if (null != entity.getEntrustId() && null != etrEntrustMapper.selectByPrimaryKey(entity.getEntrustId())) {
+            optType = ENTRUST_RECORD_MODIFY;
+        }
         try {
             //退回的移到备份表
             BaseEtrInvestInfoDto dto = new BaseEtrInvestInfoDto();
@@ -2129,12 +2134,9 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
             doInsertWflEntity(entity);
         } catch (Exception e) {
             e.printStackTrace();
+            throw new BusinessException("MSG:指令提交发生异常，异常信息：" + e.getMessage());
         }
-        //增加调用头寸引擎代码start
-        String optType = ENTRUST_RECORD_NEW;
-		if (null != entity.getEntrustId() && null != etrEntrustMapper.selectByPrimaryKey(entity.getEntrustId())) {
-			optType = ENTRUST_RECORD_MODIFY;
-		}
+
   		String decisionAct = DictCodeListExt3.系统动作_修改.getValue();
   		String systemAct = DictCodeListExt3.系统动作_修改.getValue();
   		if (StringUtil.equals(optType, ENTRUST_RECORD_NEW)) {
@@ -2156,6 +2158,7 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
                 doInsertWflEntity(entity);
             } catch (Exception e) {
                 e.printStackTrace();
+                throw new BusinessException("MSG:指令提交发生异常，异常信息：" + e.getMessage());
             }
         }
         //增加调用头寸引擎代码start
