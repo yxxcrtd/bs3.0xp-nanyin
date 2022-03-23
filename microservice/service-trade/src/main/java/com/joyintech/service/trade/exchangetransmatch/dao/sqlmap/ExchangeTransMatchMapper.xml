@@ -28,6 +28,9 @@
                 ELSE
                     E.FINPROD_ABBR END finprodAbbr,
                 A.FINPROD_TYPE2 finprodType2,
+                <!--ZGTFCP-1587:查询finProdType字段 modify by fuyongsheng 20220322 start-->
+                A.FINPROD_TYPE,
+                <!--ZGTFCP-1587:查询finProdType字段 modify by fuyongsheng 20220322 end-->
                 A.SEAT_NUMBER seatNumber,
                 A.TRADE_PLAT tradePlat,
                 A.PS ps,
