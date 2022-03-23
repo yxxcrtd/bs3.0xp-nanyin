@@ -1836,4 +1836,15 @@
         WHERE RSK_ISUP_TRIAL.TRADE_ID in (select TRADE_ID from temp) group by PORTFOLIO_ID
         )
     </select>
+
+    <select id="getResidualFace" resultType="java.math.BigDecimal">
+        SELECT
+            100 - nvl(SUM(nvl(PRIN_AMT,0)),0)
+        FROM
+            FIN_CASH_PLAN
+        WHERE
+            FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+        <![CDATA[AND PAY_DATE <= #{sysDate,jdbcType=DATE} ]]>
+        AND CASH_TYPE IN (#{CASH_CLASS_TYPE_02},#{CASH_CLASS_TYPE_03})
+    </select>
 </mapper>
