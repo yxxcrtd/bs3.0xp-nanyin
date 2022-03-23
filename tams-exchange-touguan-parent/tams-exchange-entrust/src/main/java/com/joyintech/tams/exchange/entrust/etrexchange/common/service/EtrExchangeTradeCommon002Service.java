@@ -24,7 +24,9 @@ import com.joyintech.tams.business.common.dto.PageMode;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
+import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeQuotationHqResponse;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.*;
+import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.service.EtrExchangeTradeJj001Service;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.position.PositionCashSecDto;
 import com.joyintech.tams.invest.common.entrust.inter.EtrTradeCommonervice;
@@ -63,6 +65,8 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 	private JoyinbusinessCommonMapper joyinbusinessCommonMapper;
 	@Autowired
 	private EtrTradeCommonervice etrTradeCommonervice;
+	@Autowired
+	private EtrExchangeTradeJj001Service exchangeTradeJj001Service;
     /**
      * 分页查询产品持仓信息
      * <功能详细描述>
@@ -148,6 +152,12 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 						//持仓数量  从PTL_SEC_POSITION_RULE表查询
 //						BigDecimal positionsNum=etrTradeCommonervice.selectAvailableNum(secDto);
 //						entity.setPositionsNum(positionsNum);
+						//最新价从行情取
+						EtrExchangeTradeQuotationHqResponse hqResponse=exchangeTradeJj001Service.findQuotations(entity.getFinprodMarketId());
+						if(hqResponse!=null){
+							BigDecimal lastPrice=hqResponse.getLastPrice()!=null?hqResponse.getLastPrice().setScale(2,BigDecimal.ROUND_HALF_UP):new BigDecimal(0.00);
+							entity.setPrice(lastPrice);
+						}
 						// 最新净价*组合持仓.数量 - 持仓成本 as 浮动盈亏
 						BigDecimal floatFd = ArithmeticUtil.multiply(entity.getPrice(),entity.getPtlPositionsNum());
 						floatFd = ArithmeticUtil.subtract(floatFd,entity.getPositionsAmt());
@@ -557,12 +567,12 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 				// 3.最新净价（元） 优先从内存获取债券最新净价，没有则使用dto中债券估值行情的值r.getPrice()
 				BigDecimal price = new BigDecimal("0");//BondSocketClient.getLocalCachePrice(r.getFinprodMarketId());
 				if (price != null) {
-					r.setPrice(price);
+					//r.setPrice(price);
 				}else{
 					if (r.getPrice() == null) {
 						// 取标的可用面值
 						//price = etrInvestBondInfoService.getAvailableNum(BaseMap.newMap().put("finprodId", r.getFinprodId()).put("sysdate", platDate));
-						r.setPrice(price);
+						//r.setPrice(price);
 					}
 				}
 
