@@ -104,18 +104,16 @@ public class IbuQuoteBondCalService extends BaseService {
         if (null != calRespone.getFpriceAmt()) {
             calRequest.setFpriceAmt(calRespone.getFpriceAmt());
         }
-        if(StringUtil.isNotEmpty(calRequest.getSecManageAcctId())){
-            List<TrdTradeFeeDetail> trdTradeFeeDetails = calFee(calRequest);
-            if (CollectionUtils.isNotEmpty(trdTradeFeeDetails)) {
-                for (TrdTradeFeeDetail item : trdTradeFeeDetails) {
-                    if (StringUtil.equals(item.getFeeType(), BussinessDictCodeList.费用类型_交易手续费.getValue())) {
-                        calRespone.setDealFeeAmt(item.getFeeAmt());
-                        continue;
-                    }
-                    if (StringUtil.equals(item.getFeeType(), BussinessDictCodeList.费用类型_结算手续费.getValue())) {
-                        calRespone.setSettFeeAmt(item.getFeeAmt());
-                        continue;
-                    }
+        List<TrdTradeFeeDetail> trdTradeFeeDetails = calFee(calRequest);
+        if (CollectionUtils.isNotEmpty(trdTradeFeeDetails)) {
+            for (TrdTradeFeeDetail item : trdTradeFeeDetails) {
+                if (StringUtil.equals(item.getFeeType(), BussinessDictCodeList.费用类型_交易手续费.getValue())) {
+                    calRespone.setDealFeeAmt(item.getFeeAmt());
+                    continue;
+                }
+                if (StringUtil.equals(item.getFeeType(), BussinessDictCodeList.费用类型_结算手续费.getValue())) {
+                    calRespone.setSettFeeAmt(item.getFeeAmt());
+                    continue;
                 }
             }
         }
@@ -149,7 +147,7 @@ public class IbuQuoteBondCalService extends BaseService {
         inputDto.setFpriceAmt(calRequest.getFpriceAmt());// 全价总额
         inputDto.setPrinAmt(calRequest.getShareAmt());// 券面总额
         inputDto.setIsGrade("1");
-        String registOrg = cfetsIbuQuoteBondMapper.getRegistOrg(calRequest.getSecManageAcctId());
+        String registOrg = cfetsIbuQuoteBondMapper.getRegistOrgByFinprodId(calRequest.getFinprodId());
         inputDto.setRegistOrg(registOrg);
         inputDto.setFeeTypeList(Arrays.asList(BussinessDictCodeList.费用类型_交易手续费.getValue(), BussinessDictCodeList.费用类型_结算手续费.getValue()));
         return baseTradeFeeCommService.innerBankFeeDeal(inputDto);

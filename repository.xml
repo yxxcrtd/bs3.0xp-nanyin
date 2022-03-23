@@ -10,7 +10,7 @@
   <localRepository>/path/to/local/repo</localRepository>
 
   -->
-  <localRepository>G:\featureMaven</localRepository>
+  <localRepository>E:\maven_lib</localRepository>
 
 <!-- 
 <offline>true</offline>
