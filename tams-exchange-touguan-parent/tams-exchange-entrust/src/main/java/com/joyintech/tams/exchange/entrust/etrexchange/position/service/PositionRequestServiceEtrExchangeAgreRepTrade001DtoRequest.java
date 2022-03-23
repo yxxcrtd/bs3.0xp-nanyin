@@ -1,5 +1,6 @@
 package com.joyintech.tams.exchange.entrust.etrexchange.position.service;
 
+import static com.joyintech.tams.constant.DictCodeListExt3.*;
 import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.B_TOTAL_TRADE_ID;
 
 import java.math.BigDecimal;
@@ -94,8 +95,8 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest extends 
         resultMap.put("modelType", PositionConstant.POSITION_TYPE_ETR);
         resultMap.put("busiType", busiType);
         resultMap.put("ps", entity.getPs());
-        resultMap.put("busiAct", DictCodeListExt3.业务动作_指令手动关闭.getValue());
-        resultMap.put("systemAct", DictCodeListExt3.系统动作_关闭.getValue());
+        resultMap.put("busiAct", 业务动作_指令手动关闭.getValue());
+        resultMap.put("systemAct", 系统动作_关闭.getValue());
         resultMap.put("closeId", entity.getEntrustId());
         PositionHttpRequest.batchClose(resultMap);
     }
@@ -109,7 +110,7 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest extends 
     private void repo002(EtrExchangeAgreRepTrade001Dto entity, Map<String, Object> resultMap) {
         resultMap.put("interfaceType", PositionConstant.INTERF_TYPE_REPO002);
         // 业务动作
-        resultMap.put("busiAct", DictCodeListExt3.业务动作_投资指令.getValue());
+        resultMap.put("busiAct", 业务动作_投资指令.getValue());
         // 回购方向
         String repPs = entity.getRepPs();
         // 交易方向
@@ -125,14 +126,14 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest extends 
 
         // 首期组合现金数据集
         String ps = entity.getPs();
-        if (DictCodeListExt3.交易方向_首期.getValue().equals(ps)
-                || DictCodeListExt3.交易方向_提前购回.getValue().equals(ps)
-                || DictCodeListExt3.交易方向_到期购回.getValue().equals(ps)
-                || DictCodeListExt3.交易方向_解除质押.getValue().equals(ps)) {
+        if (交易方向_首期.getValue().equals(ps)
+                || 交易方向_提前购回.getValue().equals(ps)
+                || 交易方向_到期购回.getValue().equals(ps)
+                || 交易方向_解除质押.getValue().equals(ps)) {
             List<Map<String, Object>> list = new ArrayList<>(1);
             bean = new PositionRequestBaseBean();
             bean.setPortfolioId(entity.getPortfolioId());
-            if (DictCodeListExt3.交易方向_解除质押.getValue().equals(ps)) {
+            if (交易方向_解除质押.getValue().equals(ps)) {
                 // 解除质押走线下划款，扣托管户现金
                 bean.setCashAcctId(tamsBusinessCommonService.selectProdTghCapacctNo(entity.getPortfolioId()));
             } else {
@@ -149,7 +150,7 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest extends 
         }
 
         // 轧差组合现金数据集
-        if (DictCodeListExt3.交易方向_到期续做.getValue().equals(ps)) {
+        if (交易方向_到期续做.getValue().equals(ps)) {
             List<Map<String, Object>> list = new ArrayList<>(1);
             bean = new PositionRequestBaseBean();
             bean.setPortfolioId(entity.getPortfolioId());
@@ -173,10 +174,10 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest extends 
 
         // 质押券数据集
         // IF 交易方向 = 首期、（中途换券换入） and 回购类型 = 正回购 THEN 传值 ELSE 空
-        if (DictCodeListExt3.交易方向_正回购.getValue().equals(repPs)
+        if (交易方向_正回购.getValue().equals(repPs)
             && (
-                DictCodeListExt3.交易方向_首期.getValue().equals(ps)
-                || DictCodeListExt3.交易方向_中途换券.getValue().equals(ps)
+                交易方向_首期.getValue().equals(ps)
+                || 交易方向_中途换券.getValue().equals(ps)
                 )) {
             List<Map<String, Object>> list = new ArrayList<>(1);
             bean = new PositionRequestBaseBean();
@@ -187,6 +188,12 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest extends 
             bean.setEtrId(entity.getEntrustId());
             // 券面总额 指令.质押券数量*100
             bean.setSecAmount(entity.getRepSecNum().multiply(BigDecimal.valueOf(100L)));
+
+            if (交易方向_正回购.getValue().equals(repPs)
+                    && 交易方向_中途换券.getValue().equals(ps)) {
+                bean.setFinprodId(entity.getNewfinprodId());
+                bean.setSecAmount(entity.getNewRepSecNum().multiply(BigDecimal.valueOf(100L)));
+            }
 
             Map<String, Object> map = BeanUtil.object2Map(bean);
             //融入券券面总额
@@ -200,10 +207,10 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest extends 
 
         // 解除质押券数据集
         // IF 交易方向 = 解除质押、到期续作、中途换券换出 and 回购类型 = 正回购 THEN 传值 ELSE 空 END IF
-        if ( DictCodeListExt3.交易方向_正回购.getValue().equals(repPs)
-               && (DictCodeListExt3.交易方向_解除质押.getValue().equals(ps)
-                || DictCodeListExt3.交易方向_到期续做.getValue().equals(ps)
-                || DictCodeListExt3.交易方向_中途换券.getValue().equals(ps))) {
+        if ( 交易方向_正回购.getValue().equals(repPs)
+               && (交易方向_解除质押.getValue().equals(ps)
+                || 交易方向_到期续做.getValue().equals(ps)
+                || 交易方向_中途换券.getValue().equals(ps))) {
             List<Map<String, Object>> list = new ArrayList<>(1);
             bean = new PositionRequestBaseBean();
             bean.setPortfolioId(entity.getPortfolioId());
@@ -241,7 +248,7 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest extends 
                 ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrAgreRepTrade/getEntrustInfoByTradeId",
                 JsonUtils.object2Json(map), JsonUtils.object2Json(result));
         if(StringUtil.isEmptyList(result)) {
-            ps = DictCodeListExt3.交易方向_逆回购.getValue();
+            ps = 交易方向_逆回购.getValue();
         } else {
             ps = result.get(0).getPs();
             amount = result.get(0).getTradeAmt();
@@ -263,7 +270,7 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest extends 
         resultMap.put("userId", SecurityUtil.getLoginUser().getUserName());
         resultMap.put("totalTradeId", entity.getEntrustId());
         resultMap.put("balanceCheck", balanceCheck);
-        resultMap.put("flowStatus", DictCodeListExt3.流程节点_流程提交.getValue());
+        resultMap.put("flowStatus", 流程节点_流程提交.getValue());
         resultMap.put("modelType", DictCodeListExt1.子系统代码_委托.getValue());
 
         //设置头寸业务类型
@@ -287,7 +294,7 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest extends 
         // 币种
         resultMap.put("ccy", DictCodeList.币种_人民币_CNY.getValue());
         // 前次交易编号
-        if (DictCodeListExt3.系统动作_修改.getValue().equals(decisionAct)) {
+        if (系统动作_修改.getValue().equals(decisionAct)) {
             resultMap.put(B_TOTAL_TRADE_ID, entity.getEntrustId());
         } else {
             resultMap.put(B_TOTAL_TRADE_ID, null);

@@ -666,7 +666,7 @@ public class PtlFundAllocationService extends BaseService<PtlFundAllocationDto> 
      * @return
      */
     public int doDelete(PtlFundAllocationDto entity) {
-        if(!StringUtil.equals("save", entity.getPositionType())){
+        if(!StringUtil.equals("save", entity.getPositionType())&&!StringUtil.equals("update", entity.getPositionType())){
             positionRequestService.sendDelete(entity);
         }
         return ptlFundAllocationMapper.deleteFlowByOrderId(entity.getOrderId(), DictCodeList.持仓类型_可用.getValue());

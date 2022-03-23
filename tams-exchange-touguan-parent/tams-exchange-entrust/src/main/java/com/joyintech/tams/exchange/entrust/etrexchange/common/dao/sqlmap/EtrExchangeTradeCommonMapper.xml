@@ -17,7 +17,7 @@
         WHEN T2.TARGET_TYPE = '01' THEN
         ROUND( decode(nvl( T4.ENT_FINISH_AMT, 0 ),0 ,0 , nvl( T4.ENT_FINISH_AMT, 0 )/ nvl( T1.ENTRUST_NUM, 1 )), 4 )
         ELSE ROUND( decode(nvl( T4.ENT_FINISH_AMT, 0 ),0,0, nvl( T4.ENT_FINISH_AMT, 0 )/ nvl( T1.ENTRUST_AMT, 1 )), 4 )
-        END AS dealPercentAge,
+        END AS dealPercent,
         CASE
         WHEN T2.TARGET_TYPE = '01' THEN
         ROUND( nvl( T4.ORDER_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( T4.ORDER_FINISH_AMT, 0 ), 4 )
@@ -167,7 +167,7 @@
         WHEN T2.TARGET_TYPE = '01' THEN
         ROUND( decode(nvl( T4.ENT_FINISH_AMT, 0 ),0,0, nvl( T4.ENT_FINISH_AMT, 0 )/ nvl( T1.ENTRUST_NUM, 1 )), 4 )
         ELSE ROUND( decode(nvl( T4.ENT_FINISH_AMT, 0 ),0,0, nvl( T4.ENT_FINISH_AMT, 0 )/ nvl( T1.ENTRUST_AMT, 1 )), 4 )
-        END AS dealPercentAge,
+        END AS dealPercent,
         CASE
         WHEN T2.TARGET_TYPE = '01' THEN
         ROUND( nvl( T4.ORDER_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( T4.ORDER_FINISH_AMT, 0 ), 4 )
@@ -1317,8 +1317,8 @@
             and ee.ps = #{ps,jdbcType=VARCHAR}
             and ee.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
             and ee.trade_plat = #{tradePlat,jdbcType=VARCHAR}
-            <if test="entrustReturn != null and entrustReturn != ''">
-                and  ee.ENTRUST_STATUS != #{entrustReturn,jdbcType=VARCHAR}
+            <if test="entrustReturn != null and entrustReturn != '' and entrustRecall!=null and entrustRecall != ''">
+                and  ee.ENTRUST_STATUS not in  (#{entrustReturn,jdbcType=VARCHAR},#{entrustRecall,jdbcType=VARCHAR})
             </if>
         UNION
         <!-- 查询委托指令流程表中是否已经存在该证券账户发布的此债券的申购委托 -->
@@ -1333,6 +1333,9 @@
             and wee.ps = #{ps,jdbcType=VARCHAR}
             and wee.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
             and wee.trade_plat = #{tradePlat,jdbcType=VARCHAR}
+            <if test="entrustReturn != null and entrustReturn != '' and entrustRecall!=null and entrustRecall != ''">
+                and  wee.ENTRUST_STATUS not in  (#{entrustReturn,jdbcType=VARCHAR},#{entrustRecall,jdbcType=VARCHAR})
+            </if>
     </select>
 
     <select id="getLastNetPrice" resultType="java.math.BigDecimal">
@@ -1477,7 +1480,7 @@
             </if>
             <if test="search_isNumberFlag != null and search_isNumberFlag == true">
                 or (T1.implementPercent*100 = #{search})
-                or (T1.dealPercentAge*100 = #{search})
+                or (T1.dealPercent*100 = #{search})
                 or (T1.price = #{search})
                 or (T1.entrustAmt = #{search})
                 or (T1.entrustNum = #{search})

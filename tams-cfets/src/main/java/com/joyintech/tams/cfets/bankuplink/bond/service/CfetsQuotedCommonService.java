@@ -801,30 +801,31 @@ public class CfetsQuotedCommonService extends BaseService {
         List<ValidMessage> errorList = new ArrayList<>();
         String ps = cfetsBondDealQuoteCommonDto.getPs();
         try{
-            if(StringUtil.equals(ps, DictCodeList.交易方向_买入.getValue())){
-                //按组合汇总全价总额
-                Map<String, BigDecimal> map = cfetsBondDealQuoteCommonDto.getPtlAllocatios().stream().collect(Collectors.groupingBy(PtlAllocationDto::getPortfolioId,
-                                                Collectors.mapping(PtlAllocationDto::getFpriceAmt,
-                                                        Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))));
-                for(String key : map.keySet()){
-                    BigDecimal fpriceAmt = map.get(key);
-
-                    Map<String,String> accnoParm = new HashMap<>();
-                    accnoParm.put("ccy",cfetsBondDealQuoteCommonDto.getCcy());
-                    accnoParm.put("portfolioId",key);
-                    accnoParm.put("acctType",DictCodeListExt1.资金账户类型_产品托管户.getValue());
-                    String accNo = cfetsIbuQuoteBondEtrMapper.getAccNo(accnoParm);
-                    if(StringUtil.isEmpty(accNo)){
-                        accNo = stlSecAcctInfoMapper.selectByPrimaryKey(cfetsBondDealQuoteCommonDto.getSecManageAcctId()).getTrdAcctId();
-                    }
-                    BaseMap baseMap = positionInfoService.queryTrdAvailableCash(Arrays.asList(key), DateUtil.format(cfetsBondDealQuoteCommonDto.getTradeDate()), accNo, cfetsBondDealQuoteCommonDto.getCcy(), "03", Arrays.asList(DictCodeListExt1.资金账户类型_产品托管户.getValue()), null);
-                    if(null!=baseMap&&fpriceAmt.compareTo((BigDecimal) baseMap.get("cashT"))>0){
-                        errorList.add(new ValidMessage(StringUtil.join("组合可用现金不足,组合代码:[",key,"]")));
-                        ajaxResult.setErrorList(errorList);
-                        break;
-                    }
-                }
-            }
+            // 提交时新头寸已校验,此处不需校验
+//            if(StringUtil.equals(ps, DictCodeList.交易方向_买入.getValue())){
+//                //按组合汇总全价总额
+//                Map<String, BigDecimal> map = cfetsBondDealQuoteCommonDto.getPtlAllocatios().stream().collect(Collectors.groupingBy(PtlAllocationDto::getPortfolioId,
+//                                                Collectors.mapping(PtlAllocationDto::getFpriceAmt,
+//                                                        Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))));
+//                for(String key : map.keySet()){
+//                    BigDecimal fpriceAmt = map.get(key);
+//
+//                    Map<String,String> accnoParm = new HashMap<>();
+//                    accnoParm.put("ccy",cfetsBondDealQuoteCommonDto.getCcy());
+//                    accnoParm.put("portfolioId",key);
+//                    accnoParm.put("acctType",DictCodeListExt1.资金账户类型_产品托管户.getValue());
+//                    String accNo = cfetsIbuQuoteBondEtrMapper.getAccNo(accnoParm);
+//                    if(StringUtil.isEmpty(accNo)){
+//                        accNo = stlSecAcctInfoMapper.selectByPrimaryKey(cfetsBondDealQuoteCommonDto.getSecManageAcctId()).getTrdAcctId();
+//                    }
+//                    BaseMap baseMap = positionInfoService.queryTrdAvailableCash(Arrays.asList(key), DateUtil.format(cfetsBondDealQuoteCommonDto.getTradeDate()), accNo, cfetsBondDealQuoteCommonDto.getCcy(), "03", Arrays.asList(DictCodeListExt1.资金账户类型_产品托管户.getValue()), null);
+//                    if(null!=baseMap&&fpriceAmt.compareTo((BigDecimal) baseMap.get("cashT"))>0){
+//                        errorList.add(new ValidMessage(StringUtil.join("组合可用现金不足,组合代码:[",key,"]")));
+//                        ajaxResult.setErrorList(errorList);
+//                        break;
+//                    }
+//                }
+//            }
             if(StringUtil.equals(ps,DictCodeList.交易方向_卖出.getValue())||StringUtil.equals(ps,DictCodeList.交易方向_行权_回售.getValue())){
                 //按组合汇总券面总额
                 Map<String, BigDecimal> map = cfetsBondDealQuoteCommonDto.getPtlAllocatios().stream().collect(Collectors.groupingBy(PtlAllocationDto::getPortfolioId,

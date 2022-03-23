@@ -217,6 +217,7 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
             dto.setOperateType(entity.getOperateType());
             if(!Objects.isNull(entity.getBussTrdTransferOrder().get(i))){
                 dto.setPayType(entity.getPayType());
+                dto.setWorkflowId(entity.getWorkflowId());
                 dto = this.setDots(entity.getBussTrdTransferOrder().get(i) , dto, i);
             }
             restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAllocation/doInsertAction", dto,
@@ -268,17 +269,16 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
         }
         if(bussCommonMapperDelegateService != null){
             entity.setOrderId(orderId);
+            entity.setPositionType("update");
             simpleRestTemplate.postForObject(
                     ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAllocation/doDelete", entity,
                     String.class);
-            entity.setPositionType("update");
             doInsert(entity, OperationType.NEW);
         }
     }
 
     public PtlFundAllocation002Dto setDots(BussTrdTransferOrderDto entity ,PtlFundAllocation002Dto dto,int i){
         dto.setCcy(entity.getCcy());
-        dto.setWorkflowId(entity.getWorkflowId());
         dto.setSettleDate(entity.getSettleDate());
         dto.setPortfolioId(entity.getPortfolioId());
         dto.setSettleAmt(entity.getSettleAmt());

@@ -6,6 +6,7 @@ import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
+import com.joyintech.tams.common.base.dao.TrdProductDealAddMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
@@ -55,6 +56,9 @@ public class PositionRequestTradeRestService {
 
     @Autowired
     private EtrEntrustMapper etrEntrustMapper;
+
+    @Autowired
+    private TrdProductDealAddMapper trdProductDealAddMapper;
 
     public static final String TRADE_PLAT = "TRANS_MATCH";
 
@@ -232,17 +236,34 @@ public class PositionRequestTradeRestService {
      * @param resultMap
      */
     private void stock001(BaseTradeProductDealDto entity, Map<String, Object> resultMap) {
-        resultMap.put(INTERFACE_TYPE, PositionConstant.INTERF_TYPE_STOCK001);
-        // 业务动作
-        resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_成交匹配.getValue());
-        // 清算速度
-        resultMap.put(SETTLE_SPEED, null);
-        // 结算方式
-        resultMap.put(DELIVERY_TYPE, null);
         TrdProductDeal dealEntity = entity.getTrdProductDeal();
         TrdProductDealAdd dealAddEntity = entity.getTrdProductDealAdd();
         List<StlPayOrdersDto> stlPayOrdersList = entity.getStlPayOrdersList();
         String accountNo = baseAssetCashPositionCommMapper.queryAccountNo(dealEntity.getSecManageAcctId());
+        // 查询申购交易对应的指令
+        TrdProductDealAdd trdProductDealAdd1 = trdProductDealAddMapper.selectByPrimaryKey(dealEntity.getbTradeId());
+
+        resultMap.put(INTERFACE_TYPE, PositionConstant.INTERF_TYPE_STOCK001);
+        // ZGTFCP-1635:修改申购确认相关字段赋值 modify by fuyongsheng 20220322 start
+        // 业务动作
+        if(DictCodeList.交易方向_申购确认.getValue().equals(dealEntity.getPs())){
+            resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_缴款.getValue());
+            resultMap.put("bTotalTradeId", dealEntity.getbTradeId());
+        }else{
+            resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_成交匹配.getValue());
+        }
+        if(DictCodeList.交易方向_还本到账.getValue().equals(dealEntity.getPs())){
+            resultMap.put("ps", DictCodeList.交易方向_还本);
+        }else if(DictCodeList.交易方向_收息到账.getValue().equals(dealEntity.getPs())){
+            resultMap.put("ps", DictCodeList.交易方向_收息);
+        }else{
+            resultMap.put("ps", dealEntity.getPs());
+        }
+        // ZGTFCP-1635:修改申购确认相关字段赋值 modify by fuyongsheng 20220322 end
+        // 清算速度
+        resultMap.put(SETTLE_SPEED, null);
+        // 结算方式
+        resultMap.put(DELIVERY_TYPE, null);
         if (StringUtil.isNotEmpty(dealEntity)) {
             String ps = dealEntity.getPs();
             // 组合数据集
@@ -251,13 +272,15 @@ public class PositionRequestTradeRestService {
             bean.setPortfolioId(dealAddEntity.getPortfolioId());
             bean.setFinprodId(dealEntity.getFinprodId());
             bean.setTradeId(dealEntity.getTradeId());
-            bean.setEtrId(entity.getEntrustId());
+            bean.setEtrId(trdProductDealAdd1 != null ? trdProductDealAdd1.getEntrustId() : StringUtil.EMPTY);
             bean.setSecAcctId(dealEntity.getSecManageAcctId());
             // ZGTFCP-1667:修改股票送转字段赋值 modify by fuyongsheng 20220323 start
             bean.setSecAmount(dealEntity.getShareAmt());
             bean.setCashAcctId(CollectionUtils.isEmpty(stlPayOrdersList)?accountNo: stlPayOrdersList.get(0).getMyAcctNo());
             bean.setCashAmount(dealEntity.getTradeAmt());
             Map<String, Object> map = BeanUtil.object2Map(bean);
+            map.put("ownSecAmount", dealEntity.getShareAmt());
+            map.put("integrateSecAmount", new BigDecimal(0));
             map.put("etrSecAmount", null);
             map.put("ordId", null);
             map.put("ordSecAmount", null);
@@ -280,6 +303,8 @@ public class PositionRequestTradeRestService {
                 bean.setFinprodId(getStockId(dealEntity.getEntrustId()));
                 bean.setCashAmount(dealEntity.getTradeAmt());
                 Map<String, Object> datamap = BeanUtil.object2Map(bean);
+                datamap.put("ownSecAmount", dealEntity.getShareAmt());
+                datamap.put("integrateSecAmount", new BigDecimal(0));
                 datamap.put("etrSecAmount",null);
                 datamap.put("ordId",null);
                 datamap.put("ordSecAmount",null);
@@ -463,6 +488,8 @@ public class PositionRequestTradeRestService {
         TrdProductDeal trdProductDeal = entity.getTrdProductDeal();
         TrdProductDealAdd trdProductDealAdd = entity.getTrdProductDealAdd();
         List<StlPayOrdersDto> stlPayOrdersList = entity.getStlPayOrdersList();
+        // 查询申购交易对应的指令
+        TrdProductDealAdd trdProductDealAdd1 = trdProductDealAddMapper.selectByPrimaryKey(trdProductDeal.getbTradeId());
         String accountNo = baseAssetCashPositionCommMapper.queryAccountNo(trdProductDealTotal.getSecManageAcctId());
         resultMap.put("interfaceType", INTERF_TYPE_BOND003);
         // ZGTFCP-1596:修改申购确认相关字段赋值 modify by fuyongsheng 20220322 start
@@ -503,7 +530,7 @@ public class PositionRequestTradeRestService {
             ptlCash.put("cashAcctId", accountNo);
         }
         ptlCash.put("tradeId", trdProductDeal.getTradeId());
-        ptlCash.put("etrId", null);
+        ptlCash.put("etrId", trdProductDealAdd1 != null ? trdProductDealAdd1.getEntrustId() : StringUtil.EMPTY);
         ptlCash.put("cashAmount", trdProductDeal.getTradeAmt());
         ptlCash.put("etrSecAmount", null);
         ptlCash.put("ordId", null);
@@ -515,7 +542,7 @@ public class PositionRequestTradeRestService {
         bondSec.put("finprodId", trdProductDeal.getFinprodId());
         bondSec.put("secAcctId", trdProductDealTotal.getSecManageAcctId());
         bondSec.put("tradeId", trdProductDeal.getTradeId());
-        bondSec.put("etrId", null);
+        bondSec.put("etrId", trdProductDealAdd1 != null ? trdProductDealAdd1.getEntrustId() : StringUtil.EMPTY);
         bondSec.put("integrateSecAmount", new BigDecimal(0));
         bondSec.put("ownSecAmount", ArithmeticUtil.multiply(trdProductDeal.getShareAmt(), new BigDecimal(100)));
         bondSec.put("secAmount", ArithmeticUtil.multiply(trdProductDeal.getShareAmt(), new BigDecimal(100)));
@@ -566,6 +593,8 @@ public class PositionRequestTradeRestService {
                 busiType = DictCodeListExt3.头寸业务类型_股票分红.getValue();
             }else if(DictCodeList.交易方向_红利再投.getValue().equals(ps)){
                 busiType = DictCodeListExt3.头寸业务类型_股票送股.getValue();
+            }else if(DictCodeList.交易方向_申购确认.getValue().equals(ps)){
+                busiType = DictCodeListExt3.头寸业务类型_网上申购.getValue();
             }
         }
         if (DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(finprodType2)) {
