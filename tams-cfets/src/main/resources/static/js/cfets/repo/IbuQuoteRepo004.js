@@ -368,16 +368,29 @@
         page: false,
         editCell: function (value, data, field, cell, column) {
             if (field === "pledgePrinStr") {
-                var rowData = {};
-                rowData.pledgePrin = JoyinMath.doMul(data.pledgePrinStr,10000, 2);
-                rowData.convertAmt = JoyinMath.doMul(JoyinMath.doDiv(data.pledgeRatio, 100, 4), rowData.pledgePrin, 2);
-                table.renderRow(data.LAY_TABLE_INDEX, rowData);
+                var pledgePrin;
+                var convertAmt;
+                data.pledgePrin = JoyinMath.doMul(data.pledgePrinStr, 10000, 2);
+                pledgeTable.renderRow(data.LAY_TABLE_INDEX, data);
+                for (var i = 0; i < pledgeTable.getAllRows.length; i++) {
+                    pledgePrin = JoyinMath.doAdd(pledgeTable.getAllRows()[i].pledgePrin, pledgePrin);
+                    convertAmt = JoyinMath.doAdd(pledgeTable.getAllRows()[i].convertAmt, convertAmt);
+                }
+                var shareAmtStr = JoyinMath.doDiv(pledgePrin,10000,2);
+                $("#convertAmt").val(convertAmt).change();//质押券折算总额
+                $("#shareAmtStr").val(shareAmtStr).change();//券面总额合计(万元)
+                $("#shareAmt").val(pledgePrin).change();//券面总额合计
                 ptlAndpledgeEdit();
             }
             if (field === "pledgeRatio") {
-                var rowData = {};
-                rowData.convertAmt = JoyinMath.doMul(JoyinMath.doDiv(data.pledgeRatio, 100, 4), data.pledgePrin, 2);
-                table.renderRow(data.LAY_TABLE_INDEX, rowData);
+                var pledgePrin;
+                var convertAmt;
+                data.convertAmt = JoyinMath.doMul(JoyinMath.doDiv(data.pledgeRatio, 100, 4), data.pledgePrin, 2);
+                pledgeTable.renderRow(data.LAY_TABLE_INDEX, data);
+                for (var i = 0; i < pledgeTable.getAllRows.length; i++) {
+                    convertAmt = JoyinMath.doAdd(pledgeTable.getAllRows()[i].convertAmt, convertAmt);
+                }
+                $("#convertAmt").val(convertAmt).change();//质押券折算总额
                 ptlAndpledgeEdit();
             }
             return true;
@@ -439,6 +452,7 @@
             calAmtInfo();
         });
         $("#tradeAmt").change(function () {
+            calFee();
             calAmtInfo();
         });
         $("#price").change(function () {
@@ -500,6 +514,24 @@
                     $("#mtradeAmt").val(data.mtradeAmt).change();//到期结算金额
                     $("#termType").val(data.termType).change();//期限品种
                     autoAllocation();
+                }
+            });
+        }
+    }
+    /**
+     *
+     * 质押式回购计算费用 根据[交易方向][交易金额][证券账户][期限品种]计算 [交易手续费][结算手续费]
+     */
+    var calFee = function () {
+        var request = getParam();
+        if (request.ps != null && request.ps !== ''
+            && request.tradeAmt != null && request.tradeAmt !== ''
+            && request.termType != null && request.termType !== '') {
+            Joyin.ajaxJson(basePath + 'cfets/bankuplink/repo/IbuQuoteRepo/calFee', request, function (result) {
+                if (result) {
+                    var data = result.data;
+                    $("#settFeeAmt").val(data.settFeeAmt).change();//结算服务费
+                    $("#dealFeeAmt").val(data.dealFeeAmt).change();//交易手续费
                 }
             });
         }
