@@ -11,6 +11,9 @@
 package com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.service;
 
 
+import static com.joyintech.tams.constant.DictCodeListExt3.系统动作_修改;
+import static com.joyintech.tams.constant.DictCodeListExt3.系统动作_新建;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
@@ -60,6 +63,7 @@ import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDisp
 import com.joyintech.system.base.dao.SysWflBusinessListMapper;
 import com.joyintech.system.base.entity.SysWflBusinessList;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
+import com.joyintech.tams.common.base.dao.EtrEntrustBackupMapper;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.dao.FinDealPledgeMapper;
 import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
@@ -181,6 +185,12 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
 
     @Autowired
     private TrdCommonBaseService trdCommonBaseService;
+    
+    /**
+     * 指令废弃表
+     */
+    @Autowired
+    private EtrEntrustBackupMapper etrEntrustBackupMapper;
 
     public static final String ENTRUST_RECORD_MODIFY = "modify";
     
@@ -2141,21 +2151,20 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
             }
         }
         //增加调用头寸引擎代码start
-        String optType = ENTRUST_RECORD_NEW;
-		if (null != entity.getEntrustId() && null != etrEntrustMapper.selectByPrimaryKey(entity.getEntrustId())) {
-			optType = ENTRUST_RECORD_MODIFY;
-		}
-		String decisionAct = DictCodeListExt3.系统动作_修改.getValue();
-		String systemAct = DictCodeListExt3.系统动作_修改.getValue();
-//        SysWflBusinessList sysBus=sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());
-//        if(null!=sysBus && StringUtil.equals(sysBus.getProcessState(),DictCodeList.流程状态_已退回.getValue())){
-//        	decisionAct = DictCodeListExt3.系统动作_修改.getValue();
-//        }
-//        if (StringUtil.equals(optType, ENTRUST_RECORD_MODIFY)) {
-//        	systemAct = DictCodeListExt3.系统动作_修改.getValue();
-//        }
-        if (StringUtil.equals(optType, ENTRUST_RECORD_NEW)) {
-        	systemAct = DictCodeListExt3.系统动作_新建.getValue();
+        String decisionAct = 系统动作_修改.getValue();
+		String systemAct = 系统动作_修改.getValue();
+		EtrEntrust etrEntrust = etrEntrustBackupMapper.selectByPrimaryKey(entity.getEntrustId());
+        SysWflBusinessList sysBus=sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());
+        if(null!=sysBus && StringUtil.equals(sysBus.getProcessState(),DictCodeList.流程状态_已退回.getValue())){
+        	if(etrEntrust==null) {
+        		systemAct = 系统动作_新建.getValue();
+        		decisionAct = 系统动作_修改.getValue();
+        	}
+        }else {
+        	if(etrEntrust==null) {
+        		systemAct = 系统动作_新建.getValue();
+        		decisionAct = 系统动作_新建.getValue();
+        	}
         }
         if(StringUtil.equals("1", RequestUtil.getParam("confirmOk"))){
             entity.setSoftSkipMode("Y");
