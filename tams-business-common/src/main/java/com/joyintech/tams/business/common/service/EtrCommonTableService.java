@@ -17,6 +17,7 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -52,9 +53,16 @@ public class EtrCommonTableService extends BaseService {
             return new Page<CommonSearchRskInfoResponse>();
         }else{
             String entrustId = dto.getEntrustId();
+            List<String> entrustIds = new ArrayList<>();
             if (StringUtil.equals(dto.getPs(), DictCodeListExt1.交易方向_债转股.getValue())){
                 entrustId = entrustId+ DictCodeList.交易方向_卖出.getValue();
-                pageParam.put("entrustId",entrustId);
+                entrustIds.add(entrustId);
+                entrustId = dto.getEntrustId()+ DictCodeList.交易方向_买入.getValue();
+                entrustIds.add(entrustId);
+                pageParam.put("entrustIdList",entrustIds);
+            }else{
+                entrustIds.add(entrustId);
+                pageParam.put("entrustIdList",entrustIds);
             }
             return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
                     () -> etrCommonTableInfoQueryMapper.getCommonSearchTabRskInfo(pageParam));

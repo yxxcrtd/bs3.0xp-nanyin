@@ -205,7 +205,7 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
     }
 
     /**
-     * 可转债-指令    bond003
+     * 可转债-指令
      *
      * @param entity
      * @param resultMap
@@ -228,6 +228,7 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
             resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_中签.getValue());
             resultMap.put(PURCH_MODLE, DictCodeListExt2.申购方式_网上申购.getValue());
         }else if(DictCodeList.交易方向_申购确认.getValue().equals(dealEntity.getPs())){
+            resultMap.put("busiType", DictCodeListExt3.头寸业务类型_网上申购.getValue());
             resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_缴款.getValue());
         }
         resultMap.put(DELIVERY_TYPE, commonPositionEngineService.getDeliveryType(dealEntity.getFinprodId()));
@@ -400,7 +401,7 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
         TrdProductDeal dealEntity = entity.getTrdProductDeal();
         TrdProductDealAdd trdProductDealAdd = entity.getTrdProductDealAdd();
         List<StlPayOrdersDto> stlPayOrdersList = entity.getStlPayOrdersList();
-
+        EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(entity.getTrdProductDealAdd().getEntrustId());
         String ps = dealEntity.getPs();
         PositionRequestBaseBean bean;
         // 组合数据集
@@ -455,7 +456,7 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
             map.put("cashAmount", new BigDecimal(0));
         }
         // 指令券面总额
-        map.put("etrSecAmount", ArithmeticUtil.multiply(dealEntity.getShareAmt(), hundred));
+        map.put("etrSecAmount", ArithmeticUtil.multiply(etrEntrust.getEntrustNum(), hundred));
         ptlList.add(map);
         resultMap.put(PTL_LIST, ptlList);
         // 质押券数据集	ptlSecList
@@ -610,19 +611,29 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
      * @param resultMap
      */
     private void stock001(BaseTradeProductDealDto entity, Map<String, Object> resultMap) {
-        resultMap.put(INTERFACE_TYPE, PositionConstant.INTERF_TYPE_STOCK001);
-        // 业务动作
-        resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_成交匹配.getValue());
-        // 清算速度
-        resultMap.put(SETTLE_SPEED, null);
-        // 结算方式
-        resultMap.put(DELIVERY_TYPE, null);
-
         TrdProductDeal dealEntity = entity.getTrdProductDeal();
         TrdProductDealAdd trdProductDealAdd = entity.getTrdProductDealAdd();
         List<StlPayOrdersDto> stlPayOrdersList = entity.getStlPayOrdersList();
 
         String ps = dealEntity.getPs();
+
+        // ZGTFCP-1615:申购、申购确认业务动作特殊处理 modify by fuyongsheng 20220322 start
+        // 业务动作
+        resultMap.put(INTERFACE_TYPE, PositionConstant.INTERF_TYPE_STOCK001);
+        if (DictCodeList.交易方向_申购.getValue().equals(dealEntity.getPs())) {
+            resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_中签.getValue());
+        }else if(DictCodeList.交易方向_申购确认.getValue().equals(dealEntity.getPs())){
+            resultMap.put(BUSI_TYPE, DictCodeListExt3.头寸业务类型_网上申购.getValue());
+            resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_缴款.getValue());
+        }else{
+            resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_成交匹配.getValue());
+        }
+        // ZGTFCP-1615:申购、申购确认业务动作特殊处理 modify by fuyongsheng 20220322 end
+
+        // 清算速度
+        resultMap.put(SETTLE_SPEED, null);
+        // 结算方式
+        resultMap.put(DELIVERY_TYPE, null);
 
         PositionRequestBaseBean bean;
         // 组合数据集
@@ -644,6 +655,10 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
         if(etrEntrust != null){
             map.put("etrSecAmount", etrEntrust.getEntrustNum());
         }
+        // ZGTFCP-1615:增加本方券/融入券赋值 modify by fuyongsheng 20220322 start
+        map.put("ownSecAmount", dealEntity.getShareAmt());
+        map.put("integrateSecAmount", new BigDecimal(0));
+        // ZGTFCP-1615:增加本方券/融入券赋值 modify by fuyongsheng 20220322 end
         map.put("ordId", null);
         map.put("ordSecAmount", null);
         map.put(ORD_ENTRUST_ID,null);
@@ -672,10 +687,14 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
             bean.setCashAmount(dealEntity.getTradeAmt());
             Map<String, Object> ptlRoMap = BeanUtil.object2Map(bean);
             if(etrEntrust != null){
-                map.put("etrSecAmount", etrEntrust.getEntrustNum());
+                ptlRoMap.put("etrSecAmount", etrEntrust.getEntrustNum());
             }
             ptlRoMap.put("ordId", null);
             ptlRoMap.put("ordSecAmount", null);
+            // ZGTFCP-1615:增加本方券/融入券赋值 modify by fuyongsheng 20220322 start
+            ptlRoMap.put("ownSecAmount", dealEntity.getShareAmt());
+            ptlRoMap.put("integrateSecAmount", new BigDecimal(0));
+            // ZGTFCP-1615:增加本方券/融入券赋值 modify by fuyongsheng 20220322 end
             ptlRoMap.put(ORD_ENTRUST_ID,null);
             ptlRoList.add(ptlRoMap);
             resultMap.put(PTL_RO_LIST, ptlRoList);

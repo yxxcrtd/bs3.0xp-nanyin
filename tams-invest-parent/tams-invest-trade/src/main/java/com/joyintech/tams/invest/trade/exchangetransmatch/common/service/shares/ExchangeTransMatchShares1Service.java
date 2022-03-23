@@ -162,6 +162,7 @@ public class ExchangeTransMatchShares1Service extends ExchangeTransMatchSharesCo
         }
         // GNS-862:配股的价格 modify by fuyongsheng 20220218 end
         // GNS-878:配股生成产品交易表的交易日期应该是清算日期 modify by fuyongsheng 20220217 end
+        trdProductDeal.setRemark("数据清算自动处理");
         return trdProductDeal;
     }
 }
