@@ -1,5 +1,7 @@
 package com.joyintech.tams.exchange.entrust.etrexchange.position.service;
 
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.B_TOTAL_TRADE_ID;
+
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -50,7 +52,7 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest extends 
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("decisionAct", decisionAct);
         resultMap.put("systemAct", systemAct);
-        this.setCommonField(entity, resultMap);//设置公共字段，个性化的需要在具体接口中覆盖
+        this.setCommonField(entity, resultMap,decisionAct);//设置公共字段，个性化的需要在具体接口中覆盖
         this.repo002(entity, resultMap);
 
         PositionHttpRequest.send(resultMap);
@@ -253,7 +255,7 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest extends 
      * @param entity    实例对象
      * @param resultMap 封装集合
      */
-    private void setCommonField(EtrExchangeAgreRepTrade001Dto entity, Map<String, Object> resultMap) {
+    private void setCommonField(EtrExchangeAgreRepTrade001Dto entity, Map<String, Object> resultMap,String decisionAct) {
         String balanceCheck = "Y";
         if (StringUtil.isNotEmpty(entity.getSoftSkipMode()) && StringUtil.equals(entity.getSoftSkipMode(), "Y")) {
             balanceCheck = "N";
@@ -285,6 +287,10 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest extends 
         // 币种
         resultMap.put("ccy", DictCodeList.币种_人民币_CNY.getValue());
         // 前次交易编号
-        resultMap.put("bTotalTradeId", null);
+        if (DictCodeListExt3.系统动作_修改.getValue().equals(decisionAct)) {
+            resultMap.put(B_TOTAL_TRADE_ID, entity.getEntrustId());
+        } else {
+            resultMap.put(B_TOTAL_TRADE_ID, null);
+        }
     }
 }

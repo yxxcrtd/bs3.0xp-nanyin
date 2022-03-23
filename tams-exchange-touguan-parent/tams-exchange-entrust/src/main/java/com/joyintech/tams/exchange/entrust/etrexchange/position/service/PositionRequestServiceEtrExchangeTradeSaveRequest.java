@@ -1,10 +1,70 @@
 package com.joyintech.tams.exchange.entrust.etrexchange.position.service;
 
+import static com.joyintech.tams.constant.DictCodeList.交易方向_申购;
+import static com.joyintech.tams.constant.DictCodeListExt2.交易方向_配股;
+import static com.joyintech.tams.constant.DictCodeListExt2.申购方式_网上申购;
+import static com.joyintech.tams.constant.DictCodeListExt3.业务动作_投资指令;
+import static com.joyintech.tams.constant.DictCodeListExt3.交易方向_配债;
+import static com.joyintech.tams.constant.DictCodeListExt3.金融产品其他代码类型_新股申购代码;
+import static com.joyintech.tams.constant.DictCodeListExt3.金融产品其他代码类型_配债代码;
+import static com.joyintech.tams.constant.DictCodeListExt3.金融产品其他代码类型_配股代码;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.BID_RESULT;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.BUSI_ACT;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.B_TOTAL_TRADE_ID;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.CCY;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.DELIVERY_TYPE;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.ETFREDEMPTION_METHOD;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.FINPROD_ID;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.INTEGRATE_SEC_AMOUNT;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.INTERFACE_TYPE;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.INTERF_TYPE_BOND002;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.INTERF_TYPE_BOND003;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.INTERF_TYPE_FUND002;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.INTERF_TYPE_REPO003;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.INTERF_TYPE_STOCK001;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.INV_AIM;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.ORD_ENTRUST_ID;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.OWN_SEC_AMOUNT;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.POSITION_ETR_PAGE;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.POSITION_TYPE_ETR;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.PS;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.PTL_CASH_LIST;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.PTL_LIST;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.PTL_RO_LIST;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.PTL_SEC_LIST;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.PURCH_MODLE;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.SAME_DAY_TURN;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.SETTLE_SPEED;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.SHARES_SEC_LIST;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.SHARES_TRADE_PLATFORM;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.STANDARD_SEC_AMOUNT;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.STANDARD_SEC_ID;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.TRADE_PLACE;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.WORK_FLOW_ID;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.joyintech.framework.security.SecurityUtil;
-import com.joyintech.framework.util.*;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -18,23 +78,6 @@ import com.joyintech.tams.exchange.entrust.etrexchange.position.bean.PositionReq
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.position.service.CommonPositionEngineService;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.TrdMoreConvrateDto;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.util.*;
-
-import static com.joyintech.tams.constant.DictCodeList.是否_否;
-import static com.joyintech.tams.constant.DictCodeList.数据状态_修改中;
-import static com.joyintech.tams.constant.DictCodeList.*;
-import static com.joyintech.tams.constant.DictCodeListExt2.交易方向_配股;
-import static com.joyintech.tams.constant.DictCodeListExt2.申购方式_网上申购;
-import static com.joyintech.tams.constant.DictCodeListExt3.*;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.*;
 
 @Service
 public class PositionRequestServiceEtrExchangeTradeSaveRequest {
@@ -59,7 +102,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("decisionAct", decisionAct);
         resultMap.put("systemAct", systemAct);
-        this.setCommonField(entity, resultMap);//设置公共字段，个性化的需要在具体接口中覆盖
+        this.setCommonField(entity, resultMap,decisionAct);//设置公共字段，个性化的需要在具体接口中覆盖
         String finprodType = entity.getFinprodType2();
         if (DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(finprodType) 
         		&& !DictCodeListExt3.交易方向_质押券入库.getValue().equals(entity.getPs())
@@ -462,7 +505,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
      * @param entity    实例对象
      * @param resultMap 封装集合
      */
-    private void setCommonField(EtrExchangeTradeSaveRequest entity, Map<String, Object> resultMap) {
+    private void setCommonField(EtrExchangeTradeSaveRequest entity, Map<String, Object> resultMap,String decisionAct) {
         String balanceCheck = "Y";
         if (StringUtil.isNotEmpty(entity.getSoftSkipMode()) && StringUtil.equals(entity.getSoftSkipMode(), "Y")) {
             balanceCheck = "N";
@@ -493,7 +536,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
             resultMap.put(CCY, DictCodeList.币种_人民币_CNY.getValue());
         }
         // 前次交易编号
-        if (DictCodeList.数据状态_修改中.getValue().equals(entity.getStatus())) {
+        if (DictCodeListExt3.系统动作_修改.getValue().equals(decisionAct)) {
             resultMap.put(B_TOTAL_TRADE_ID, entity.getEntrustId());
         } else {
             resultMap.put(B_TOTAL_TRADE_ID, null);
