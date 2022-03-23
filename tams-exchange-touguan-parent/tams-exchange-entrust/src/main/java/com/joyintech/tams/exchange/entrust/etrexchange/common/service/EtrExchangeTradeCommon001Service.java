@@ -47,6 +47,7 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.common.service.WFlowCommonService;
 import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDispatcherService;
 import com.joyintech.system.base.dao.SysWflBusinessListMapper;
+import com.joyintech.system.base.entity.SysWflBusinessList;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.exception.PositionException;
 import com.joyintech.tams.business.common.pojo.BaseMap;
@@ -236,6 +237,12 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	
 	@Autowired
     private MstWorkflowCommonServiceMapperImpl mstWorkflowCommonServiceMapperImpl;
+	
+	/**
+     * 指令废弃表
+     */
+    @Autowired
+    private EtrEntrustBackupMapper etrEntrustBackupMapper;
 
 	/**
 	 * {@inheritDoc}
@@ -757,6 +764,20 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 				//增加调用头寸引擎代码start
 				String decisionAct = 系统动作_修改.getValue();
 				String systemAct = 系统动作_修改.getValue();
+				EtrEntrust etrEntrust = etrEntrustBackupMapper.selectByPrimaryKey(entity.getEntrustId());
+//				EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(entity.getEntrustId());
+	            SysWflBusinessList sysBus=sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());
+	            if(null!=sysBus && StringUtil.equals(sysBus.getProcessState(),DictCodeList.流程状态_已退回.getValue())){
+	            	if(etrEntrust==null) {
+	            		systemAct = 系统动作_新建.getValue();
+	            		decisionAct = 系统动作_修改.getValue();
+	            	}
+	            }else {
+	            	if(etrEntrust==null) {
+	            		systemAct = 系统动作_新建.getValue();
+	            		decisionAct = 系统动作_新建.getValue();
+	            	}
+	            }
 //            SysWflBusinessList sysBus=sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());
 //            if(null!=sysBus && StringUtil.equals(sysBus.getProcessState(),DictCodeList.流程状态_已退回.getValue())){
 //			systemAct = DictCodeListExt3.系统动作_修改.getValue();
@@ -770,10 +791,10 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 //				if (数据状态_修改中.getValue().equals(entity.getStatus())) {
 //					decisionAct = 系统动作_修改.getValue();
 //				}
-				if(ENTRUST_RECORD_NEW.equals(entity.getOptType()) && !委托状态_已撤回.getValue().equals(entity.getEntrustStatus())) {
-					systemAct = 系统动作_新建.getValue();
-					decisionAct = 系统动作_新建.getValue();
-				}
+//				if(ENTRUST_RECORD_NEW.equals(entity.getOptType()) && !委托状态_已撤回.getValue().equals(entity.getEntrustStatus())) {
+//					systemAct = 系统动作_新建.getValue();
+//					decisionAct = 系统动作_新建.getValue();
+//				}
 				if(StringUtil.equals("1", RequestUtil.getParam("confirmOk"))){
 					entity.setSoftSkipMode("Y");
 				}
