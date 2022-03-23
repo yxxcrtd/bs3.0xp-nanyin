@@ -365,4 +365,6 @@ public interface EtrExchangeTradeCommonMapper {
 
 
 	List<RiskTrialRetDto> selectRiskList(Map<String, Object> param);
+
+	BigDecimal getResidualFace(Map<String, Object> param);
 }
