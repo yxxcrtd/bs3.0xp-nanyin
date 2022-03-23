@@ -170,7 +170,7 @@ public class EtrExchangeTradeCommon004Controller extends BaseController {
                 List<RiskTrialRetDto> riskTrialRetList;
                 if (StringUtil.equals(entity.getPs(), DictCodeListExt1.交易方向_债转股.getValue())) {
                     entrustIdWfl = entrustIdWfl + DictCodeList.交易方向_卖出.getValue();
-                    riskTrialRetList = basRiskMathCommService.select(entrustIdWfl);
+                    riskTrialRetList = etrExchangeTrade001CommonService.selectRiskList(entrustIdWfl);
                     entrustIdWfl = entity.getEntrustId() + DictCodeList.交易方向_买入.getValue();
                     riskTrialRetList.addAll(etrExchangeTrade001CommonService.selectRiskList(entrustIdWfl)) ;
                 }else{
