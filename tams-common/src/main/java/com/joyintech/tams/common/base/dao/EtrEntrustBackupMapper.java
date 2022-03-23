@@ -31,6 +31,6 @@ public interface EtrEntrustBackupMapper {
 
     int deleteDetailByPrimaryKey(String entrustId);
 
-
+    EtrEntrust selectByPrimaryKey(String entrustId);
 
 }

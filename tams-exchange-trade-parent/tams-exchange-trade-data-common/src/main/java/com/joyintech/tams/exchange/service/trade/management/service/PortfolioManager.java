@@ -672,8 +672,8 @@ public class PortfolioManager extends BaseService {
 
         // 系统参数：委托价格不优于指令价格时的处理模式
         if (EntrustUtils.isfairModeEntrustPriceBestThanInstructionForbid()
-            // 首次调用，特殊处理
-            || TradeUtils.isZero(entrustPrice)) {
+                // 首次调用，特殊处理
+                || TradeUtils.isZero(entrustPrice)) {
             // 01 若输入委托价格不是优于所有指令价格时，
             // 提示：“委托价格必须优于所有指令价格”，
             // 并自动将委托价格调整为能够满足所有指令价格的最低（高）价格
@@ -735,7 +735,7 @@ public class PortfolioManager extends BaseService {
                     if (orderPrice.compareTo(ins.getEntrustPrice()) < 0) {
                         ins.setEntrustClass(是否_否.getValue());
                     }
-                 }
+                }
             }
 
             // 系统参数“委托价格不优于指令价格时的处理模式”为2.剔除该指令并继续时，
@@ -865,6 +865,9 @@ public class PortfolioManager extends BaseService {
     }
 
     private Long getEntrustVolume(Long totalLeftVolume, Long orderVolume, Long leftVolume, int unit) {
+        if (totalLeftVolume == 0L) {
+            return 0L;
+        }
         return TradeUtils.formatLong(orderVolume.doubleValue() * leftVolume.doubleValue() / totalLeftVolume.doubleValue(), -unit, RoundingMode.UP);
     }
 
@@ -979,7 +982,7 @@ public class PortfolioManager extends BaseService {
         ins.setTermDays(ins.getConNum());
         // 借用minAmt存放委托金额
         // 特殊处理 质押式回购交易，将委托价格设置为100
-        if (EntrustUtils.isPledgeRepurchase(ins))  {
+        if (EntrustUtils.isPledgeRepurchase(ins)) {
             ins.setMinAmt(ArithmeticUtil.multiply(ins.getConNum(), BigDecimal.valueOf(100L)));
         } else {
             ins.setMinAmt(ArithmeticUtil.multiply(ins.getConNum(), result.getPrice()));

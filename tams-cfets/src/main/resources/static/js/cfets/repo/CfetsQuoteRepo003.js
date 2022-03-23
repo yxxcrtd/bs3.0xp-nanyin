@@ -336,16 +336,29 @@
         page:false,
         editCell: function (value, data, field, cell, column) {
             if (field === "pledgePrinStr") {
-                var rowData = {};
-                rowData.pledgePrin = JoyinMath.doMul(data.pledgePrinStr,10000, 2);
-                rowData.convertAmt = JoyinMath.doMul(JoyinMath.doDiv(data.pledgeRatio, 100, 4), rowData.pledgePrin, 2);
-                table.renderRow(data.LAY_TABLE_INDEX, rowData);
+                var pledgePrin;
+                var convertAmt;
+                data.pledgePrin = JoyinMath.doMul(data.pledgePrinStr, 10000, 2);
+                pledgeTable.renderRow(data.LAY_TABLE_INDEX, data);
+                for (var i = 0; i < pledgeTable.getAllRows.length; i++) {
+                    pledgePrin = JoyinMath.doAdd(pledgeTable.getAllRows()[i].pledgePrin, pledgePrin);
+                    convertAmt = JoyinMath.doAdd(pledgeTable.getAllRows()[i].convertAmt, convertAmt);
+                }
+                var shareAmtStr = JoyinMath.doDiv(pledgePrin,10000,2);
+                $("#shareCtAmt").val(convertAmt).change();//质押券折算总额
+                $("#shareAmtStr").val(shareAmtStr).change();//券面总额合计(万元)
+                $("#shareAmt").val(pledgePrin).change();//券面总额合计
                 ptlAndpledgeEdit();
             }
             if (field === "pledgeRatio") {
-                var rowData = {};
-                rowData.convertAmt = JoyinMath.doMul(JoyinMath.doDiv(data.pledgeRatio, 100, 4), data.pledgePrin, 2);
-                table.renderRow(data.LAY_TABLE_INDEX, rowData);
+                var pledgePrin;
+                var convertAmt;
+                data.convertAmt = JoyinMath.doMul(JoyinMath.doDiv(data.pledgeRatio, 100, 4), data.pledgePrin, 2);
+                pledgeTable.renderRow(data.LAY_TABLE_INDEX, data);
+                for (var i = 0; i < pledgeTable.getAllRows.length; i++) {
+                    convertAmt = JoyinMath.doAdd(pledgeTable.getAllRows()[i].convertAmt, convertAmt);
+                }
+                $("#shareCtAmt").val(convertAmt).change();//质押券折算总额
                 ptlAndpledgeEdit();
             }
             return true;
@@ -374,6 +387,7 @@
             calAmtInfo();
         });
         $("#tradeAmt").change(function () {
+            calFee();
             calAmtInfo();
         });
         $("#price").change(function () {
@@ -441,6 +455,24 @@
         }
     }
     /**
+     *
+     * 质押式回购计算费用 根据[交易方向][交易金额][证券账户][期限品种]计算 [交易手续费][结算手续费]
+     */
+    var calFee = function () {
+        var request = getParam();
+        if (request.ps != null && request.ps !== ''
+            && request.tradeAmt != null && request.tradeAmt !== ''
+            && request.termType != null && request.termType !== '') {
+            Joyin.ajaxJson(basePath + 'cfets/bankuplink/repo/IbuQuoteRepo/calFee', request, function (result) {
+                if (result) {
+                    var data = result.data;
+                    $("#settFeeAmt").val(data.settFeeAmt).change();//结算服务费
+                    $("#dealFeeAmt").val(data.dealFeeAmt).change();//交易手续费
+                }
+            });
+        }
+    }
+    /**
      * 参数设置
      */
     var getParam = function () {
@@ -452,7 +484,7 @@
         request.distribution = $("#distribution").val();//分配方式
         request.ps = $("#ps").val();//交易方向
         request.shareAmt = $("#shareAmt").val();//质押券总额
-        request.convertAmt = $("#convertAmt").val();//质押券折算总额
+        request.convertAmt = $("#shareCtAmt").val();//质押券折算总额
         request.dealFeeAmt = $("#dealFeeAmt").val();//交易手续费
         request.settFeeAmt = $("#settFeeAmt").val();//结算服务费
         request.mIntAmt = $("#mIntAmt").val();//回购利息
@@ -501,7 +533,7 @@
                     pledgeTable.addRow(data.repoEntrustPledgeDtos)
                 });
                 $("#actCapDays").val(data.actCapDays);//实际占款天数
-                $("#convertAmt").val(data.convertAmt);//质押券折算总额
+                $("#shareCtAmt").val(data.convertAmt);//质押券折算总额
                 $("#dealFeeAmt").val(data.dealFeeAmt);//交易手续费
                 $("#mIntAmt").val(data.mIntAmt);//回购利息
                 $("#mtradeAmt").val(data.mtradeAmt);//到期结算金额

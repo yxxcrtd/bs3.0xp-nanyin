@@ -3,6 +3,7 @@ package com.joyintech.tams.exchange.common.db.domain;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.tams.exchange.common.bean.instrument.MinPriceAndMinTrdUnitLimitBean;
+import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt3;
 import com.joyintech.tams.exchange.common.utils.DoubleSerializerUtils;
 import com.joyintech.tams.exchange.common.utils.TradeUtils;
 import io.swagger.annotations.ApiModel;
@@ -388,6 +389,9 @@ public class Instruction implements Serializable, KeyMethodInterface<String>, Cl
     private Date createTime;
     @ApiModelProperty(required = false, name = "updateTime", value = "修改时间")
     private Date updateTime;
+
+    @ApiModelProperty( name = "tradeSide", value = "交易方向")
+    private String tradeSide;
 
     @Id
     public String getEntrustId() {
@@ -1076,6 +1080,22 @@ public class Instruction implements Serializable, KeyMethodInterface<String>, Cl
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getTradeSide() {
+        if (DictCodeListExt3.投管业务类型_首期.getValue().equals(busiTypeTg)
+                || DictCodeListExt3.投管业务类型_提前购回.getValue().equals(busiTypeTg)
+                || DictCodeListExt3.投管业务类型_到期购回.getValue().equals(busiTypeTg)
+                || DictCodeListExt3.投管业务类型_到期续做.getValue().equals(busiTypeTg)
+                || DictCodeListExt3.投管业务类型_中途换券.getValue().equals(busiTypeTg)
+                || DictCodeListExt3.投管业务类型_解除质押.getValue().equals(busiTypeTg)) {
+            return firstRepoPs;
+        }
+        return ps;
+    }
+
+    public void setTradeSide(String tradeSide) {
+        this.tradeSide = tradeSide;
     }
 
     @Override

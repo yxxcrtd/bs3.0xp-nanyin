@@ -2,11 +2,9 @@ package com.joyintech.tams.invest.trade.api;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
@@ -75,7 +73,13 @@ public class PositionRequestTradeRestService {
             this.revoke(finProductTradeDto);
         }else if(DictCodeListExt1.交易流程状态_有效.getValue().equals(finProductTradeDto.getWorkflowStatus())){
             for (BaseTradeProductDealDto entity:finProductTradeDto.getBaseTradeProductDealDtos()) {
-                this.sendPositionHttpRequest(entity);
+                // ZGTFCP-1593:上市流通特殊处理 modify by fuyongsheng 20220323 start
+                if(DictCodeList.交易方向_上市流通.getValue().equals(entity.getTrdProductDeal().getPs())){
+                    this.sendSsltPositionHttpRequest(entity);
+                }else{
+                    this.sendPositionHttpRequest(entity);
+                }
+                // ZGTFCP-1593:上市流通特殊处理 modify by fuyongsheng 20220323 end
             }
         }
 
@@ -93,6 +97,17 @@ public class PositionRequestTradeRestService {
                     finProductTradeDto.getAssetType2() : baseAssetCashPositionCommMapper.selectFundType(deal.getFinprodId());
             String busiType = commonPositionEngineService.getPositionBusiType(deal.getFinprodType2(),
                     deal.getPs(), assetType2);
+            // ZGTFCP-1577: add by fuyongsheng 20220315 start
+            // 回购首期特殊处理,需传正回购/逆回购
+            String ps = deal.getPs();
+            if(DictCodeList.交易方向_买入.getValue().equals(entity.getTrdProductDeal().getPs())){
+                if(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(entity.getTrdProductDeal().getFinprodType2())){
+                    ps = DictCodeListExt3.交易方向_正回购.getValue();
+                }else if(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(entity.getTrdProductDeal().getFinprodType2())){
+                    ps = DictCodeListExt3.交易方向_逆回购.getValue();
+                }
+            }
+            // ZGTFCP-1577: add by fuyongsheng 20220315 end
             PositionHttpRequest.dorevoke(deal.getTradeId(), PositionConstant.POSITION_TYPE_TRD, busiType, deal.getPs());
         }
     }
@@ -135,6 +150,21 @@ public class PositionRequestTradeRestService {
             logger.debug("[未找到对应的接口配置]");
         }
     }
+
+    // ZGTFCP-1593:上市流通特殊处理 modify by fuyongsheng 20220323 start
+    /**
+     * 发送上市流通接口
+     * @param entity
+     */
+    public void sendSsltPositionHttpRequest(BaseTradeProductDealDto entity) {
+        logger.debug("【发送上市流通头寸请求】entity: {}", JSON.toJSONString(entity));
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("userId", LoginUserUtil.getUserName());
+        resultMap.put("totalTradeId", IDGenerator.generate());
+        resultMap.put("finprodId", entity.getTrdProductDeal().getFinprodId());
+        PositionHttpRequest.sendSslt(resultMap);
+    }
+    // ZGTFCP-1593:上市流通特殊处理 modify by fuyongsheng 20220323 end
 
     /**
      * 基金-指令
