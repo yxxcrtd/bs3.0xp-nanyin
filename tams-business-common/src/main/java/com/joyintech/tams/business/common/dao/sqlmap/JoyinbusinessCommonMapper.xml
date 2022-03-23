@@ -113,7 +113,7 @@
             AND T1.MDATE <![CDATA[>=]]> #{platDate,jdbcType=DATE}
             AND (mbmi.MARKET_AMT > 0 OR mbmi.MARKET_AMT IS NULL )
             AND T1.FINPROD_TYPE2 = #{assestType}
-            AND T1.TRADE_MARKET in(#{TRADE_PLACE_01},#{TRADE_PLACE_02},#{TRADE_PLACE_03},#{TRADE_PLACE_04})
+            AND T1.TRADE_MARKET in(#{TRADE_PLACE_01},#{TRADE_PLACE_02},#{TRADE_PLACE_03},#{TRADE_PLACE_09},#{TRADE_PLACE_04})
             <if test="initValue != null and !initValue.equals('')">
                 and T1.FINPROD_MARKET_ID = #{initValue}
             </if>

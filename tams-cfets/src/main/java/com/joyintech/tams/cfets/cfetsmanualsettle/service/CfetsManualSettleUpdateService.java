@@ -53,9 +53,14 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
 
     @Autowired
     private TrdFinProductDealTotalMapper trdFinProductDealTotalMapper;
+    @Autowired
+    private TrdProductTempDealTotalMapper trdProductTempDealTotalMapper;
 
     @Autowired
     private TrdProductDealMapper trdProductDealMapper;
+
+    @Autowired
+    private TrdProductTempDealMapper trdProductTempDealMapper;
 
     @Autowired
     private TrdBankManualSettleFlowMapper trdBankManualSettleFlowMapper;
@@ -68,8 +73,7 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
 
     @Autowired
     private JoyinbusinessCommonService joyinbusinessCommonService;
-    @Autowired
-    private TrdProductTempDealTotalMapper trdProductTempDealTotalMapper;
+
 
     /**
      * 手工交收修改check
@@ -147,12 +151,13 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
     @Override
     public void doComplete(CfetsManualSettleUpdateRequest request, OperationType operationType) {
         try{
-            //更新交易表,将临时表数据复制到交易表,状态是撤销
-            this.updateDealData(request.getTradeId());
-            //保留原始数据
             Map<String,Object> pageParam = new HashMap<>();
             pageParam.put("tradeId",request.getTradeId());
-            List<PortSettleinfoDto> list = cfetsManualSettleMapper.queryPortSettleinfo(pageParam);
+            List<PortSettleinfoDto> list = cfetsManualSettleMapper.queryTempPortSettleinfo(pageParam);
+            //重新分配利息
+            calIntAmt(request,list);
+            //更新交易表,将临时表数据复制到交易表,状态是撤销
+            this.updateDealData(request.getTradeId());
             //处理业务数据
             TrdBankManualSettleInfo trdBankManualSettleInfo = new TrdBankManualSettleInfo();
             BussinessCodeParameter parameter = new BussinessCodeParameter();
@@ -202,8 +207,7 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
             cfetsManualSettleMapper.mergeInfo(trdBankManualSettleInfo);
             //新增交收流水
             trdBankManualSettleFlowMapper.insertSelective(trdBankManualSettleFlow);
-            //重新分配利息
-            calIntAmt(request,list);
+
             //头寸
             sendPositionMethod(request,trdBankManualSettleInfo);
         }
@@ -219,7 +223,7 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
      */
     private void calIntAmt(CfetsManualSettleUpdateRequest request,List<PortSettleinfoDto> list) {
         //1.处理total表
-        TrdFinProductDealTotal dealTotal = trdFinProductDealTotalMapper.selectByPrimaryKey(request.getTradeId());
+        TrdFinProductDealTotal dealTotal = trdProductTempDealTotalMapper.selectByPrimaryKey(request.getTradeId());
         TrdFinProductDealTotal tempTotal = new TrdFinProductDealTotal();
         //设置利息总额
         if(request.getSettleAmtT().compareTo(dealTotal.getTradeAmt()) != 0) {
@@ -227,20 +231,20 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
             tempTotal.setTradeAmt(request.getSettleAmtT());
             tempTotal.setFpriceAmt(request.getSettleAmtT());
             tempTotal.setTotleTradeId(request.getTradeId());
-            trdFinProductDealTotalMapper.updateByPrimaryKeySelective(tempTotal);
+            trdProductTempDealTotalMapper.updateByPrimaryKeySelective(tempTotal);
         }
         //2.处理deal表
         if(!CollectionUtils.isEmpty(list)) {
             for(PortSettleinfoDto trdBankManualSetDetail : request.getPortSettleinfoDtoList()){
                 for(PortSettleinfoDto trdProductDealAdd : list){
                     if(StringUtil.equals(trdProductDealAdd.getPortfolioId(),trdBankManualSetDetail.getPortfolioId())){
-                        TrdProductDeal trdProductDeal = trdProductDealMapper.selectByPrimaryKey(trdProductDealAdd.getTradeId());
+                        TrdProductTempDeal trdProductDeal = trdProductTempDealMapper.selectByPrimaryKey(trdProductDealAdd.getTradeId());
                         if(trdBankManualSetDetail.getSettleAmt().compareTo(trdProductDealAdd.getSettleAmt()) != 0) {
                             trdProductDeal.setIntAmt(ArithmeticUtil.subtract(trdBankManualSetDetail.getSettleAmt(), trdProductDealAdd.getSettleAmt()));
                             trdProductDeal.setFpriceAmt(trdBankManualSetDetail.getSettleAmt());
                             trdProductDeal.setCpriceAmt(trdBankManualSetDetail.getSettleAmt());
                             trdProductDeal.setTradeAmt(trdBankManualSetDetail.getSettleAmt());
-                            trdProductDealMapper.updateByPrimaryKeySelective(trdProductDeal);
+                            trdProductTempDealMapper.updateByPrimaryKeySelective(trdProductDeal);
                         }
                         continue;
                     }

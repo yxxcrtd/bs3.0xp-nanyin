@@ -186,4 +186,12 @@
         where T.finprod_id=#{chlId,jdbcType=VARCHAR}
     </select>
 
+    <select id="queryAccountNo" resultType="java.lang.String">
+        SELECT
+            TRD_ACCT_ID
+        FROM
+            STL_SEC_ACCT_INFO
+        WHERE
+            SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR}
+    </select>
 </mapper>

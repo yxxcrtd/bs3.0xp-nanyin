@@ -284,10 +284,14 @@ public abstract class StlDataGatherProcessor extends BaseProcessor<NeedOperateEn
                                 // GNS-847:竞价回购匹配时,shareAmt需除以100, modify by fuyongsheng 20220222 end
                                 exchangeTransMatchCommonDto.setEntrustIdList(entrustIds);
                             }else{
+                                // 按金额汇总匹配,筛选指令金额不为空数据
+                                List<EtrEntrustDto> filterEtrEntrustList = currEtrEntrustList.stream().filter(item->item.getEntrustAmt()!=null).collect(Collectors.toList());
                                 //委托金额汇总
-                                BigDecimal entrustAmtTotal = currEtrEntrustList.stream().map(EtrEntrustDto::getEntrustAmt).reduce(BigDecimal.ZERO, BigDecimal::add);
-                                if(null!=settleTransDataDto.getTradeAmt()&&settleTransDataDto.getTradeAmt().compareTo(entrustAmtTotal)>=0){
-                                    exchangeTransMatchCommonDto.setEntrustIdList(entrustIds);
+                                if(CollectionUtils.isNotEmpty(filterEtrEntrustList)){
+                                    BigDecimal entrustAmtTotal = filterEtrEntrustList.stream().map(EtrEntrustDto::getEntrustAmt).reduce(BigDecimal.ZERO, BigDecimal::add);
+                                    if(null!=settleTransDataDto.getTradeAmt()&&settleTransDataDto.getTradeAmt().compareTo(entrustAmtTotal)>=0){
+                                        exchangeTransMatchCommonDto.setEntrustIdList(entrustIds);
+                                    }
                                 }
                             }
                         }
@@ -643,6 +647,9 @@ public abstract class StlDataGatherProcessor extends BaseProcessor<NeedOperateEn
             return StringUtil.joinString(Arrays.asList(settleTransDataDto.getSecAcctId(),settleTransDataDto.getAcctNo(),settleTransDataDto.getFinprodId(), DateUtil.format(settleTransDataDto.getTradeDate()),settleTransDataDto.getPs()),"_");
         }
         // GNS-922:质押券出入库不看交易平台 modify by fuyongsheng 20220219 end
+        else if(DictCodeListExt3.交易方向_债转股.getValue().equals(settleTransDataDto.getPs())){
+            return StringUtil.joinString(Arrays.asList(settleTransDataDto.getSecAcctId(),settleTransDataDto.getAcctNo(),settleTransDataDto.getFinprodId(), DateUtil.format(settleTransDataDto.getTradeDate()),settleTransDataDto.getPs()),"_");
+        }
         else{
             return StringUtil.joinString(Arrays.asList(settleTransDataDto.getSecAcctId(),settleTransDataDto.getAcctNo(),settleTransDataDto.getFinprodId(), DateUtil.format(settleTransDataDto.getTradeDate()),settleTransDataDto.getTradePlat(),settleTransDataDto.getPs()),"_");
         }

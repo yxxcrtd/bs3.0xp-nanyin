@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.alibaba.fastjson.JSON;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.entity.*;
@@ -427,7 +428,7 @@ public class InvestDealRevokeService {
                 // ZGTFCP-1249:orderId防止重复 modify by fuyongsheng 20220318 end
             }
             batchRevoke.put("data", dataList);
-            batchRevoke.put("userId", "SYSTEM");
+            batchRevoke.put("userId", LoginUserUtil.getUserName());
             batchRevoke.put("totalTradeId",IDGenerator.generate());
             batchRevoke.put("modelType",DictCodeListExt1.子系统代码_交易.getValue());
             //ZGTFCP-1222:更换头寸批处理接口 modify by fuyongsheng  20220318 start
@@ -438,7 +439,7 @@ public class InvestDealRevokeService {
 
 
             orderBatchRevoke.put("data", orderDataList);
-            orderBatchRevoke.put("userId", "SYSTEM");
+            orderBatchRevoke.put("userId", LoginUserUtil.getUserName());
             orderBatchRevoke.put("totalTradeId",IDGenerator.generate());
             orderBatchRevoke.put("modelType",DictCodeListExt1.子系统代码_交易.getValue());
             //ZGTFCP-1222:更换头寸批处理接口 modify by fuyongsheng  20220318 start
@@ -448,6 +449,34 @@ public class InvestDealRevokeService {
             //ZGTFCP-1222:更换头寸批处理接口 modify by fuyongsheng  20220318 end
         }
         // 撤销日间成交交易调用新头寸接口 add by fuyongsheng 20220308 end
+
+        // ZGTFCP-1621:冲销成交回报的质押券出入库流水 add by fuyongsheng 20220322 tsart
+        // 查询日间标准券流水表
+        List<TrdTempStasecFlow> trdTempStasecFlows = investDealRevokeMapper.getTrdTempStasecFlows(param);
+        if(!CollectionUtils.isEmpty(trdTempStasecFlows)){
+            // 日间标准券撤销
+            Map<String, Object> stasecBatchRevoke = new HashMap<>();
+            // 日间下单撤销数据列表
+            List<Map<String, Object>> stasecDataList = new ArrayList<>();
+            for(TrdTempStasecFlow trdTempStasecFlow : trdTempStasecFlows){
+                // 日间标准券撤销数据
+                Map<String, Object> stasecData = new HashMap<>();
+                stasecData.put("busiType", commonPositionEngineService.getPositionBusiType(
+                        DictCodeListExt1.金融产品类型_投管用_债券.getValue(), trdTempStasecFlow.getPs(), null));
+                stasecData.put("ps", trdTempStasecFlow.getPs());
+                stasecData.put("closeId", trdTempStasecFlow.getSeqno());
+                stasecData.put("systemAct", DictCodeListExt3.系统动作_新建.getValue());
+                stasecData.put("busiAct", DictCodeListExt3.业务动作_成交匹配.getValue());
+                stasecDataList.add(stasecData);
+            }
+            stasecBatchRevoke.put("data", stasecDataList);
+            stasecBatchRevoke.put("userId", LoginUserUtil.getUserName());
+            stasecBatchRevoke.put("totalTradeId",IDGenerator.generate());
+            stasecBatchRevoke.put("modelType",DictCodeListExt1.子系统代码_交易.getValue());
+            logger.debug("【批量撤销日间标准券出入库数据】stasecBatchRevoke:{}", JSON.toJSONString(stasecBatchRevoke));
+            PositionHttpRequest.batchRevoke(stasecBatchRevoke);
+            // ZGTFCP-1621:冲销成交回报的质押券出入库流水 add by fuyongsheng 20220322 end
+        }
     }
 
     public void updateEtrStatusByTrdId(List<String> tradeIdList, List<String> totalTradeIdList) {

@@ -324,7 +324,13 @@ public class PositionRequestTradeReportService {
         resultMap.put("busiType", busiType);
         // 业务动作
         resultMap.put("busiAct", DictCodeListExt3.业务动作_成交回报.getValue());
-        resultMap.put("ps", entity.getPs());
+        // ZGTFCP-1644:协议回购新头寸交易方向通过资产类型判断 modify by fuyongsheng 20220323 start
+        if(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(entity.getFinprodType2())){
+            resultMap.put("ps", DictCodeListExt3.交易方向_正回购.getValue());
+        }else{
+            resultMap.put("ps", DictCodeListExt3.交易方向_逆回购.getValue());
+        }
+        // ZGTFCP-1644:协议回购新头寸交易方向通过资产类型判断 modify by fuyongsheng 20220323 end
         resultMap.put("tradePlace", entity.getTradeMarket());
         resultMap.put("settleSpeed", null);
         resultMap.put("sharesTradePlatform", null);

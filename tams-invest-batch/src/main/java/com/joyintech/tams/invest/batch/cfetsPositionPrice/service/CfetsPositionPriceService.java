@@ -202,6 +202,11 @@ public class CfetsPositionPriceService extends BaseService{
         if(portfolioIdList != null && !portfolioIdList.isEmpty()) reqMap.put("portfolioIdList", portfolioIdList);
 
         List<BaseMap> list = cfetsPositionPriceMapper.selectCurrTrdData(reqMap);
+        //加上交易所的
+        List<BaseMap> trademarketlist = cfetsPositionPriceMapper.selectExchangeCurrTrdData(reqMap);
+        if(CollectionUtils.isNotEmpty(list)&&CollectionUtils.isNotEmpty(trademarketlist)){
+            list.addAll(trademarketlist);
+        }
         /**
          *  PORTFOLIO_ID、FINPROD_ID、INV_AIM、PS
          *  PRICE,  净价
@@ -225,6 +230,8 @@ public class CfetsPositionPriceService extends BaseService{
                 .put("PS_T03", DictCodeList.交易方向_行权_回售.getValue())
                 .put("PS_T04", DictCodeList.交易方向_申购.getValue())
                 .put("PS_T49", DictCodeListExt1.交易方向_债转股.getValue())
+                .put("SVR_TRADE_MARKET_03", DictCodeListExt1.交易场所_上海证券交易所.getValue())
+                .put("SVR_TRADE_MARKET_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue())
                 .put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue())
                 .put("YN_N", DictCodeList.是否_否.getValue())
                 .put("cdate", cdate);

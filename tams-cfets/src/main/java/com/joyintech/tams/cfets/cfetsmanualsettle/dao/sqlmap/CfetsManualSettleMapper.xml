@@ -19,7 +19,7 @@
             sdl2.item_value tgBusiTypeStr,
             T1.PS ps,
             sdl3.item_value psStr,
-            T1.SHARE_AMT settleNum,
+            T1.SHARE_AMT/100 settleNum,
             T1.TRADE_AMT settleAmt,
             LISTAGG(T4.PORTFOLIO_ID,',') WITHIN GROUP (ORDER BY (T1.TOTLE_TRADE_ID))  portfolioId,
             LISTAGG(T5.PORTFOLIO_NAME,',') WITHIN GROUP (ORDER BY (T1.TOTLE_TRADE_ID)) portfolioName,
@@ -153,7 +153,7 @@
             sdl2.item_value tgBusiTypeStr,
             T1.PS ps,
             sdl3.item_value psStr,
-            T1.SHARE_AMT settleNum,
+            T1.SHARE_AMT/100 settleNum,
             T1.TRADE_AMT settleAmt,
             LISTAGG(T4.PORTFOLIO_ID,',') WITHIN GROUP (ORDER BY (T1.TOTLE_TRADE_ID))  portfolioId,
             LISTAGG(T5.PORTFOLIO_NAME,',') WITHIN GROUP (ORDER BY (T1.TOTLE_TRADE_ID)) portfolioName,
@@ -663,6 +663,7 @@
             PAR_VALUE PAR_VALUE,
             CPRICE_AMT CPRICE_AMT,
             case when TPD.PS != 'T07' and (FINPROD_TYPE2 = 'F02' or FINPROD_TYPE2 = 'F03') then SHARE_AMT
+            when TPD.PS = 'T07' and (FINPROD_TYPE2 = 'F02' or FINPROD_TYPE2 = 'F03') then SHARE_AMT* 100
             WHEN FINPROD_TYPE2 = 'F01' THEN SHARE_AMT * 100
             else SHARE_AMT end SHARE_AMT,
             PRIN_AMT PRIN_AMT,
@@ -739,6 +740,7 @@
                PAR_VALUE                    PAR_VALUE,
                CPRICE_AMT                   CPRICE_AMT,
                case when TPD.PS != 'T07' and (FINPROD_TYPE2 = 'F02' or FINPROD_TYPE2 = 'F03') then SHARE_AMT
+               when TPD.PS = 'T07' and (FINPROD_TYPE2 = 'F02' or FINPROD_TYPE2 = 'F03') then SHARE_AMT* 100
                WHEN FINPROD_TYPE2 = 'F01' THEN SHARE_AMT * 100
                else SHARE_AMT end SHARE_AMT,
                PRIN_AMT                     PRIN_AMT,
@@ -1336,7 +1338,7 @@
         LEFT JOIN ibu_quote_crep ic ON ic.quote_id = nvl(T7.PRE_TRADE_ID,T1.B_TRADE_ID)
         LEFT JOIN sys_datadict_list sdl ON sdl.dict_code='DISTRIBUTION' and sdl.item_code = coalesce(T8.DIP_TYPE,ib.DIP_TYPE,ic.DIP_TYPE)
         left join (
-        select t.totle_trade_id as totleTradeId,sum(CASE WHEN a.HODING_TYPE =#{A_001} THEN a.AMOUNT ELSE 0 END)/100 AS PTL_BOND_ZHCC
+        select t.totle_trade_id as totleTradeId,sum(CASE WHEN a.HODING_TYPE =#{A_001} THEN a.AMOUNT ELSE 0 END)/10000 AS PTL_BOND_ZHCC
         from PTL_SEC_POSITION_RULE a
         inner join trd_product_deal t
         on a.finprod_id=t.finprod_id
@@ -1415,7 +1417,7 @@
              LEFT JOIN ibu_quote_crep ic ON ic.quote_id = nvl(T7.PRE_TRADE_ID,T1.B_TRADE_ID)
              LEFT JOIN sys_datadict_list sdl ON sdl.dict_code='DISTRIBUTION' and sdl.item_code = coalesce(T8.DIP_TYPE,ib.DIP_TYPE,ic.DIP_TYPE)
              left join (
-        select t.totle_trade_id as totleTradeId,sum(CASE WHEN a.HODING_TYPE =#{A_001} THEN a.AMOUNT ELSE 0 END)/100 AS PTL_BOND_ZHCC
+        select t.totle_trade_id as totleTradeId,sum(CASE WHEN a.HODING_TYPE =#{A_001} THEN a.AMOUNT ELSE 0 END)/10000 AS PTL_BOND_ZHCC
         from PTL_SEC_POSITION_RULE a
                  inner join trd_product_temp_deal t
                             on a.finprod_id=t.finprod_id

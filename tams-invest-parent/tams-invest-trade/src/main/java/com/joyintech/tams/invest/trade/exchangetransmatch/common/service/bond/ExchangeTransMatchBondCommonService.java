@@ -910,8 +910,7 @@ public class ExchangeTransMatchBondCommonService extends BaseService {
             ptlSecPositionFlowDtoUnit.setHodingType(DictCodeList.持仓类型_质押.getValue());// 持仓类型
             ptlSecPositionFlowDtoUnit.setCdate(tradeDate);// 日期
             ptlSecPositionFlowDtoUnit.setCcy(DictCodeList.币种_人民币_CNY.getValue());// 币种
-            ptlSecPositionFlowDtoUnit.setAmount(ArithmeticUtil.divide(ArithmeticUtil.multiply(shareAmt, converseRadio,
-                    百元券面), hundred, 2, RoundingMode.HALF_UP));// 数量
+            ptlSecPositionFlowDtoUnit.setAmount(shareAmt);// 数量
             ptlSecPositionFlowDtoUnit.setpFinprodId(null);// 母金融产品代码
             ptlSecPositionFlowDtoUnit.setTradeId(tradeId);// 指令编号
 
@@ -929,7 +928,8 @@ public class ExchangeTransMatchBondCommonService extends BaseService {
             ptlSecPositionFlowDtoUnit2.setHodingType(DictCodeList.持仓类型_实际.getValue());// 持仓类型
             ptlSecPositionFlowDtoUnit2.setCdate(tradeDate);// 日期
             ptlSecPositionFlowDtoUnit2.setCcy(DictCodeList.币种_人民币_CNY.getValue());// 币种
-            ptlSecPositionFlowDtoUnit2.setAmount(shareAmt);
+            ptlSecPositionFlowDtoUnit2.setAmount(ArithmeticUtil.divide(ArithmeticUtil.multiply(shareAmt, converseRadio,
+                    百元券面), hundred, 2, RoundingMode.HALF_UP));
             ptlSecPositionFlowDtoUnit2.setpFinprodId(null);// 母金融产品代码
             ptlSecPositionFlowDtoUnit2.setTradeId(tradeId);// 指令编号
 
@@ -996,7 +996,8 @@ public class ExchangeTransMatchBondCommonService extends BaseService {
             ptlSecPositionFlowDtoUnit2.setHodingType(DictCodeList.持仓类型_实际.getValue());// 持仓类型
             ptlSecPositionFlowDtoUnit2.setCdate(tradeDate);// 日期
             ptlSecPositionFlowDtoUnit2.setCcy(DictCodeList.币种_人民币_CNY.getValue());// 币种
-            ptlSecPositionFlowDtoUnit2.setAmount(tradeAmt.multiply(new BigDecimal(-1)));// 数量
+            ptlSecPositionFlowDtoUnit2.setAmount(ArithmeticUtil.divide(ArithmeticUtil.multiply(shareAmt, converseRadio,
+                    百元券面), hundred, 2, RoundingMode.HALF_UP).negate());// 数量
             ptlSecPositionFlowDtoUnit2.setpFinprodId(null);// 母金融产品代码
             ptlSecPositionFlowDtoUnit2.setTradeId(tradeId);// 指令编号
 

@@ -83,6 +83,50 @@ public class PositionHttpRequest {
     }
 
     /**
+     * 头寸调用上市流通方法
+     * 返回码 300|。。。  表示余额不足，需前端确认
+     * 返回码 410|。。。  表示通信息或网络超时
+     * 返回码 420|。。。  头寸引擎返回不成功，具体参考返回信息
+     * @param req
+     * @throws PositionException
+     */
+    public static void sendSslt(Object req) throws PositionException{
+        //处理seqno
+        Map<String,Object> params  =JsonUtils.stringToMap(JsonUtils.object2Json(req));
+        Long seqno = (long) Arrays.deepHashCode(new Object[] { params.get("totalTradeId"), params.get("modelType"),new Date().getTime(),Thread.currentThread().getId() });
+        params.put("seqno",seqno);
+        logger.info("发送上市流通头寸报文:"+JsonUtils.object2Json(params));
+        String res = sendSsltPosition(params);
+        logger.info("上市流通头头寸返回数据:"+res);
+        Map msgMap = JsonUtils.json2Object(res, Map.class);
+        if(msgMap == null){
+            throw new PositionException("头寸返回上市流通数据为空！");
+        }
+
+        if (!StringUtil.equals("success", msgMap.get("code") + "")){
+            if(StringUtil.equals("FL0007", msgMap.get("code"))){
+                // 头寸引擎提示现金不足时需要再校验原投管现金
+                // 返回true，表示现金够，重新发送
+                boolean isEnough = PositionUtil.checkForFL0007(req, msgMap);
+                if (!isEnough){
+                    // 软控时，加上原投管现金仍不足时需前端确认
+                    throw new PositionException(CODE_BUSI_RK + "|" + JsonUtils.object2Json(msgMap));
+                }
+            }else if(StringUtil.equals("CT0001", msgMap.get("code"))){
+                // 头寸引擎提示现金不足时需要再校验原投管现金
+                // 返回true，表示现金够，重新发送
+//                boolean isEnough = PositionUtil.checkForFL0007(req, msgMap);
+//                if (!isEnough){
+                // 确控时，加上原投管现金仍不足时提示前端
+                throw new PositionException(CODE_BUSI_YK + "|" + JsonUtils.object2Json(msgMap));
+//                }
+            }else {
+                revokeCheck(msgMap, params);
+            }
+        }
+    }
+
+    /**
      * 校验是否需要头寸冲正
      * @param message
      * @param req
@@ -178,6 +222,15 @@ public class PositionHttpRequest {
 //    }
     private static String sendPrivate(Object param) {
         return httpPostRequest(positionUrl + "/position/endpoint/updatePosition", param);
+    }
+
+    /**
+     * 发送上市流通接口
+     * @param param
+     * @return
+     */
+    private static String sendSsltPosition(Object param) {
+        return httpPostRequest(positionUrl + "/position/endpoint/upToMarket", param);
     }
 
     public static void main(String[] args) {

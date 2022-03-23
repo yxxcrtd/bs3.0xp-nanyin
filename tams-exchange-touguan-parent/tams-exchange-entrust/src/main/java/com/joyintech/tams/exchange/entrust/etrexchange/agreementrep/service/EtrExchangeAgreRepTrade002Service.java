@@ -119,6 +119,9 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
     private static final String SB_SHXYHGJCZY = "BPD";
     private static final String SB_SHXYHGHJSB = "BPE";
     private static final String SB_SHXYHGTQZZSB = "BPF";
+    private static final String SB_SZXYHGCSJY = "BPN";
+    private static final String SB_SZXYHGGH = "BPR";
+    private static final String SB_SZXYHGDQXZ = "BPT";
 
     /**
      * 持仓信息查询
@@ -418,6 +421,28 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
                 //BPF	上海协议回购提前终止申报		提前购回
                 else if (StringUtil.equals(SB_SHXYHGTQZZSB, entrustProp)) {
                     dto.setReqType(DictCodeListExt3.交易方向_提前购回.getValue());
+                }
+                //BPF	深圳债券质押协议回购初始交易		正回购
+                else if (StringUtil.equals(SB_SZXYHGCSJY, entrustProp)) {
+                    dto.setReqType(DictCodeListExt3.交易方向_正回购.getValue());
+                }
+                //BPN	深圳债券质押协议回购购回交易		到期购回
+                else if (StringUtil.equals(SB_SZXYHGGH, entrustProp)) {
+                    // 回购到期日
+                    if (StringUtil.isNotEmpty(tmp.get("repurchaseDate"))) {
+                        String mdate = DateUtil.format(DateUtil.parse(tmp.get("repurchaseDate").toString()));
+                        if (DateUtil.compareDate(mdate, DateUtil.getSysDate()) > 0) {
+                            dto.setReqType(DictCodeListExt3.交易方向_提前购回.getValue());
+                        } else {
+                            dto.setReqType(DictCodeListExt3.交易方向_到期购回.getValue());
+                        }
+                    } else {
+                        dto.setReqType(DictCodeListExt3.交易方向_到期购回.getValue());
+                    }
+                }
+                //BPF	深圳债券质押协议回购到期续做		到期续做
+                else if (StringUtil.equals(SB_SZXYHGDQXZ, entrustProp)) {
+                    dto.setReqType(DictCodeListExt3.交易方向_到期续做.getValue());
                 }
                 else{
                     return;
