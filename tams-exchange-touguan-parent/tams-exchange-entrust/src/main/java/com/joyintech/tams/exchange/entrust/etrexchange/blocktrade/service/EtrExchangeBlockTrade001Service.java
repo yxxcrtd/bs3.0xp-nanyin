@@ -856,7 +856,6 @@ public class EtrExchangeBlockTrade001Service extends BaseService<EtrExchangeBloc
 	 * @since 1.0
 	 */
 	public String calcDeviationDegree(Map<String, Object> param) {
-		param.put("sysDate", DateUtil.format(iPlatformDate.getSysDate()));
 		// 参数.资产代码(市场代码)
 		String 市场代码 = (String) param.get("finprodMarketId");
 		// 参数.净价
@@ -864,7 +863,7 @@ public class EtrExchangeBlockTrade001Service extends BaseService<EtrExchangeBloc
 		if (StringUtil.isBlank(市场代码) || StringUtil.isBlank(净价)) {
 			return null;
 		}
-		String sysDate = (String) param.get("sysDate");
+		String sysDate = DateUtil.format(iPlatformDate.getSysDate());
 		param.put("sysDate", DateUtil.parse(sysDate));
 		// 查询债券登记托管机构
 		FinProduct finProduct = finProductMapper.selectByPrimaryKey((String) param.get("finprodId"));
