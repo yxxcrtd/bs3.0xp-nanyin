@@ -45,6 +45,11 @@ public class PositionRequestBaseBean {
     private BigDecimal secAmount;
 
     /**
+     * 本方券券面
+     */
+    private BigDecimal ownSecAmount;
+
+    /**
      * 交易金额
      */
     private BigDecimal cashAmount;
@@ -115,5 +120,13 @@ public class PositionRequestBaseBean {
 
     public void setCashAmount(BigDecimal cashAmount) {
         this.cashAmount = cashAmount;
+    }
+
+    public BigDecimal getOwnSecAmount() {
+        return ownSecAmount;
+    }
+
+    public void setOwnSecAmount(BigDecimal ownSecAmount) {
+        this.ownSecAmount = ownSecAmount;
     }
 }
