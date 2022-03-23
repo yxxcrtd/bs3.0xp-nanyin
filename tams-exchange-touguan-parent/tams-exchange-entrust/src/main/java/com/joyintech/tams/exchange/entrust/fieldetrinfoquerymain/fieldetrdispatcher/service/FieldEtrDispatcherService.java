@@ -306,7 +306,13 @@ public class FieldEtrDispatcherService extends BaseService{
         FieldEtrDispatcherInfoResponse fieldResponseDto =new FieldEtrDispatcherInfoResponse();
         //dto转成map
         Map<String,Object> pageParam = BeanUtil.object2Map(dto);
+        pageParam.put("ASSET_TYPE_07", DictCodeList.平安资产类型_拆借.getValue());
+        pageParam.put("ASSET_TYPE_08", DictCodeList.平安资产类型_质押式回购.getValue());
+        pageParam.put("ASSET_TYPE_10", DictCodeList.平安资产类型_买断式回购.getValue());
+        pageParam.put("ASSET_TYPE_12", DictCodeListExt2.平安资产类型_债券借贷.getValue());
         pageParam.put("YESORNO_YES", DictCodeList.是否_是.getValue());
+        pageParam.put("BACK_LEND_DIRECTION", DictCode.回购拆借方向.getValue());
+        pageParam.put("PS", DictCode.交易方向.getValue());
         List<String> entrustIdList = StringUtil.splitToList(",",(String)pageParam.get("entrustId"));
         if(StringUtil.isBlank(dto.getEntrustId()) || entrustIdList.size() > 1){
             return new FieldEtrDispatcherInfoResponse();
