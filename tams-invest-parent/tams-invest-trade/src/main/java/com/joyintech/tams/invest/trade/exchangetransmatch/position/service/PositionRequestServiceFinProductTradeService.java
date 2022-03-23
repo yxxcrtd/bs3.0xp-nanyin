@@ -379,7 +379,7 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
     }
 
     /**
-     * 质押式通用回购    repo001
+     * 质押式通用回购
      *
      * @param entity
      * @param resultMap
@@ -502,7 +502,7 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
     }
 
     /**
-     * 质押式协议回购-指令    repo002
+     * 质押式协议回购-指令
      *
      * @param entity
      * @param resultMap
@@ -615,12 +615,24 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
             List<Map<String, Object>> list = new ArrayList<>();
             bean = new PositionRequestBaseBean();
             bean.setPortfolioId(trdProductDealAdd.getPortfolioId());
-            bean.setFinprodId(CollectionUtils.isNotEmpty(finDealPledges) ? finDealPledges.get(0).getPledgeFinprodId() : StringUtil.EMPTY);
             bean.setSecAcctId(dealEntity.getSecManageAcctId());
             bean.setTradeId(dealEntity.getTradeId());
             bean.setEtrId(trdProductDealAdd.getEntrustId());
-            bean.setSecAmount(ArithmeticUtil.multiply(dealEntity.getShareAmt(), new BigDecimal(100)));
-            bean.setOwnSecAmount(ArithmeticUtil.multiply(dealEntity.getShareAmt(), new BigDecimal(100)));
+            // ZGTFCP-1672:修改部分字段赋值 modify by fuyongsheng 20220323 start
+            if(DictCodeListExt3.交易方向_解除质押.getValue().equals(ps)){
+                bean.setFinprodId(CollectionUtils.isNotEmpty(finDealPledges) ? finDealPledges.get(0).getPledgeFinprodId() : StringUtil.EMPTY);
+                bean.setSecAmount(ArithmeticUtil.multiply(dealEntity.getShareAmt(), new BigDecimal(100)));
+                bean.setOwnSecAmount(ArithmeticUtil.multiply(dealEntity.getShareAmt(), new BigDecimal(100)));
+            }else{
+                // 获取首期质押券信息
+                FinDealPledge finDealPledge = getSqFinDealPledge(trdProductDealAdd);
+                if(null != finDealPledge){
+                    bean.setFinprodId(finDealPledge.getPledgeFinprodId());
+                    bean.setSecAmount(ArithmeticUtil.multiply(finDealPledge.getPledgeNumber(), new BigDecimal(100)));
+                    bean.setOwnSecAmount(ArithmeticUtil.multiply(finDealPledge.getPledgeNumber(), new BigDecimal(100)));
+                }
+            }
+            // ZGTFCP-1672:修改部分字段赋值 modify by fuyongsheng 20220323 end
             Map<String, Object> map = BeanUtil.object2Map(bean);
             //融入券券面总额
             map.put(INTEGRATE_SEC_AMOUNT, BigDecimal.ZERO);
@@ -802,5 +814,23 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
         }else {
             return DictCodeList.交易平台_竞价撮合平台.getValue();
         }
+    }
+
+    /**
+     * 查询首期质押券信息
+     * @param trdProductDealAdd
+     * @return
+     */
+    private FinDealPledge getSqFinDealPledge(TrdProductDealAdd trdProductDealAdd){
+        EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(trdProductDealAdd.getEntrustId());
+        String hgsqFinprodId = trdCommonBaseService.selectHgsqFinprodId(trdProductDealAdd.getPortfolioId(), etrEntrustAdd.getTradeId());
+        if (StringUtil.isNotBlank(hgsqFinprodId)) {
+            // 质押券信息
+            FinDealPledgeKey finDealPledgeKey = new FinDealPledgeKey();
+            finDealPledgeKey.setFinprodId(hgsqFinprodId);
+            finDealPledgeKey.setBranch(0L);
+            return exchangeTransMatchCommonMapper.selectFinDealPledgeByPrimaryKey(finDealPledgeKey);
+        }
+        return null;
     }
 }
