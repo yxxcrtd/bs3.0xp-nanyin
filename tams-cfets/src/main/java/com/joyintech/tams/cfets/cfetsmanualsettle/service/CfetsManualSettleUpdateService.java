@@ -388,7 +388,7 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
         req.setCcy(cfetsManualSettleUpdateRequest.getCcy());
         req.setFinprodId(cfetsManualSettleUpdateRequest.getFinprodId());
         req.setPtlList(ptlList);
-        //PositionHttpRequest.send(req);
+        PositionHttpRequest.send(req);
     }
 
 
