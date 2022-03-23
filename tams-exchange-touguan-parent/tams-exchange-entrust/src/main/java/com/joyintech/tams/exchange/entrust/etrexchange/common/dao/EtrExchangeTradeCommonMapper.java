@@ -21,6 +21,7 @@ import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTra
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.FinProductOthCodeDto;
 import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
+import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.tams.invest.common.trade.dto.SecInfoModelDto;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.SubEqutityDto;
 import org.apache.ibatis.annotations.Param;
@@ -363,4 +364,5 @@ public interface EtrExchangeTradeCommonMapper {
 	List<BaseMap> selectCurrTrdData(BaseMap baseMap);
 
 
+	List<RiskTrialRetDto> selectRiskList(Map<String, Object> param);
 }
