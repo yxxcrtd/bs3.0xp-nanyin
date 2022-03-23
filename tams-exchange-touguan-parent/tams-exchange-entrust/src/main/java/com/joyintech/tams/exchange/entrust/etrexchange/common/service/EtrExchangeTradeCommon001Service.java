@@ -4992,6 +4992,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 **/
 	public List<String> selectWflEntrustAddAndEtrEntrustAdd(Map<String,Object> map){
 		map.put("entrustReturn", DictCodeList.委托状态_已关闭.getValue());
+		map.put("entrustRecall", DictCodeList.委托状态_已撤回.getValue());
 		return etrExchangeTradeCommonMapper.selectWflEntrustAddAndEtrEntrustAdd(map);
 //		return restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectWflEntrustAddAndEtrEntrustAdd", map,
 //				List.class);

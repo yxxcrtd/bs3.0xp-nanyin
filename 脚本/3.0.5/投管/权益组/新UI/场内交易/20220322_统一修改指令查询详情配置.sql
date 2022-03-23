@@ -41,13 +41,15 @@ update CFG_READONLY_FORM_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"a
 update CFG_READONLY_FORM_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"2","unit":"yuan"}' where PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'EX004' and COLCODE = 'unitPrice';
 update CFG_READONLY_FORM_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"4","unit":"gu"}' where PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'EX004' and COLCODE = 'expConNum';
 
--- 债券 - 质押券出入库
+-- 债券 - 质押券出入库 - 修改 标准券数量 = 指令数量 * 折算率
 --   指令数量：    0	张
 --   折算率：      2	%
 --   标准券数量：  3	张
 update CFG_READONLY_FORM_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"0","unit":"zhang"}' where PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'EX005' and COLCODE = 'entrustNum';
 update CFG_READONLY_FORM_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"2","unit":"%"}' where PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'EX005' and COLCODE = 'pledgeRatio';
 update CFG_READONLY_FORM_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"3","unit":"zhang"}' where PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'EX005' and COLCODE = 'pledgeStandardNumber';
+-- 添加一个 ：资金账户
+
 
 -- 债券 - 配债
 --   指令数量：	0	张
@@ -146,8 +148,8 @@ update CFG_READONLY_FORM_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"a
 --   质押数量：    0	张
 --   券面总额：    0	元
 update CFG_READONLY_FORM_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"2","unit":"yuan"}' WHERE PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'EX011' and COLCODE = 'entrustAmt';
-update CFG_READONLY_FORM_SHOW set EXTENDCFG = '{{"colAlign": "left","unit":"day"}' WHERE PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'EX011' and COLCODE = 'repoTerm';
-update CFG_READONLY_FORM_SHOW set EXTENDCFG = '{{"colAlign": "left","unit":"day"}' WHERE PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'EX011' and COLCODE = 'capDays';
+update CFG_READONLY_FORM_SHOW set EXTENDCFG = '{"colAlign": "left","unit":"day"}' WHERE PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'EX011' and COLCODE = 'repoTerm';
+update CFG_READONLY_FORM_SHOW set EXTENDCFG = '{"colAlign": "left","unit":"day"}' WHERE PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'EX011' and COLCODE = 'capDays';
 update CFG_READONLY_FORM_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"4","unit":"%"}' WHERE PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'EX011' and COLCODE = 'unitPrice';
 update CFG_READONLY_FORM_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"2","unit":"yuan"}' WHERE PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'EX011' and COLCODE = 'mIntAmt';
 update CFG_READONLY_FORM_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"2","unit":"yuan"}' WHERE PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'EX011' and COLCODE = 'mTradeAmt';
@@ -223,3 +225,5 @@ update CFG_READONLY_FORM_SHOW set COLNAME = '对手席位' WHERE PAGECODE = 'Fie
 update CFG_READONLY_FORM_SHOW set COLNAME = '对手席位' WHERE PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'F11EX002' and COLCODE = 'counterSeat';
 delete from CFG_READONLY_FORM_SHOW  WHERE PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'EX007' and COLCODE = 'expConNum';
 update CFG_READONLY_FORM_SHOW set COLCODE = 'conNames' WHERE PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'EX007' and COLCODE = 'conName';
+delete from CFG_READONLY_FORM_SHOW WHERE PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'EX005' and COLCODE = 'secAcctId';
+INSERT INTO CFG_READONLY_FORM_SHOW(PAGECODE,DTCODE,SPCDCODE,COLCODE,COLNAME,DICTCODE,SEQNO,EXTENDCFG,STATUS,REMARK1,REMARK2,REMARK3) VALUES ('FieldEtrDispatcher', 'FieldEtrDispatcherInfo', 'EX005', 'secAcctId', '资金账户', NULL, '10', '{"colAlign": "left"}', '1', '0', NULL, NULL);
