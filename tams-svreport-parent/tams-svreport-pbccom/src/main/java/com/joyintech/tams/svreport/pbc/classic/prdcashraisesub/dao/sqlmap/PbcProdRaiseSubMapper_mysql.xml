@@ -2203,7 +2203,9 @@
            LEFT JOIN PBC_PRD_BASEINFO_SUB info ON info.PBC_PROD_ID=rais.PBC_PROD_ID
     WHERE
       info.OPERATE_MODE = '3'
-      AND rais.PBC_PROD_ID = #{pbcProdId,jdbcType=VARCHAR} and rais.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP} and rais.RAISING_DATE= #{raisingDate,jdbcType=TIMESTAMP}
+      AND rais.PBC_PROD_ID = #{pbcProdId,jdbcType=VARCHAR}
+      and DATE_FORMAT(rais.STATUS_DATE,'%Y-%m-%d')=  DATE_FORMAT(#{statusDate,jdbcType=TIMESTAMP},'%Y-%m-%d')
+      and DATE_FORMAT(rais.RAISING_DATE,'%Y-%m-%d')= DATE_FORMAT(#{raisingDate,jdbcType=TIMESTAMP},'%Y-%m-%d')
   </select>
 
 
