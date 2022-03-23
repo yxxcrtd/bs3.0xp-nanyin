@@ -147,7 +147,7 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
     /**
      * 根据前台传入的条件动态查询结果
      *
-     * @param map 前台条件组成的map
+     * @param param 前台条件组成的map
      * @return 动态结果
      */
     @SuppressWarnings("unchecked")
@@ -630,5 +630,30 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
                 SvrServiceApplication.COMMON_SERVICE_NAME + "/OperationalInfo/savePlanData",
                 selectParam,
                 String.class);
+    }
+
+    private String getTableName(String tableName){
+        if ("报告模板".equals(tableName)){
+            tableName = "产品申报登记";
+        }else  if ("发行登记要素".equals(tableName)){
+            tableName = "产品发行登记";
+        }else  if ("募集期总量登记要素".equals(tableName)){
+            tableName = "募集总量登记";
+        }else  if ("底层资产持仓信息".equals(tableName)){
+            tableName = "资管计划底层持仓信息登记";
+        }else  if ("产品存续期信息登记".equals(tableName)){
+            tableName = "产品存续期登记";
+        }else  if ("终止登记要素".equals(tableName)){
+            tableName = "产品终止登记";
+        }else  if ("从业人员登记要素".equals(tableName)){
+            tableName = "从业人员登记";
+        }else  if ("资产要素登记".equals(tableName)){
+            tableName = "资产要素信息登记";
+        }else  if ("产品交易信息登记".equals(tableName)){
+            tableName = "资产交易信息登记";
+        }else  if ("资产估值信息登记".equals(tableName)){
+            tableName = "资产估值信息登记";
+        }
+        return tableName;
     }
 }
