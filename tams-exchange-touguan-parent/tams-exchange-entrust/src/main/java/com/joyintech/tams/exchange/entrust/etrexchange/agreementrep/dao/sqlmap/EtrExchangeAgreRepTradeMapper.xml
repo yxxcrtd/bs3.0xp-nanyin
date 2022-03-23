@@ -742,7 +742,8 @@
         SYS_USER.REAL_NAME invManagerName,
         etr_entrust_add.TRADER as homeTrader,
         etr_entrust.REMARK as addCla,
-        etr_entrust_add.REQUEST_ID as requestId
+        etr_entrust_add.REQUEST_ID as requestId,
+        etr_entrust_add.TRADE_ID as intiTradeId
         from etr_entrust                            /** 委托指令 **/
         inner JOIN etr_entrust_add                  /** 委托指令附属 **/
         ON    etr_entrust.entrust_id = etr_entrust_add.entrust_id
@@ -887,7 +888,8 @@
             SYS_USER.REAL_NAME invManagerName,
             wfl_etr_entrust_add.TRADER as homeTrader,
             wfl_etr_entrust.REMARK as addCla,
-            wfl_etr_entrust_add.REQUEST_ID as requestId
+            wfl_etr_entrust_add.REQUEST_ID as requestId,
+            wfl_etr_entrust_add.TRADE_ID as intiTradeId
             from wfl_etr_entrust
             inner JOIN wfl_etr_entrust_add
             ON    wfl_etr_entrust.entrust_id = wfl_etr_entrust_add.entrust_id

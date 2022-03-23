@@ -15,6 +15,7 @@ import com.joyintech.tams.exchange.common.db.domain.InstructionPledge;
 import com.joyintech.tams.exchange.common.request.PositionInstructionRequest;
 import com.joyintech.tams.exchange.common.response.PortfolioCalculateResponse;
 import com.joyintech.tams.exchange.datacommon.db.service.InstructionPledgeService;
+import com.joyintech.tams.exchange.service.trade.management.service.EntrustManagement;
 import com.joyintech.tams.exchange.service.trade.management.service.PortfolioManager;
 import com.joyintech.tams.exchange.service.trade.position.bean.PositionRequestBaseBean;
 import com.joyintech.tams.invest.common.position.service.CommonPositionEngineService;
@@ -46,6 +47,8 @@ public class PositionRequestServiceInstructionRequest {
     private PortfolioManager portfolioManager;
     @Autowired
     private InstructionPledgeService instructionPledgeService;
+    @Autowired
+    private EntrustManagement entrustManagement;
 
     /**
      * Instruction 请求对象使用
@@ -506,7 +509,7 @@ public class PositionRequestServiceInstructionRequest {
                     bean = new PositionRequestBaseBean(entity);
                     bean.setPortfolioId(item.getPortfolioId());
                     // 配股/申购代码
-                    bean.setFinprodId(entity.getConShareId());
+                    bean.setFinprodId(entrustManagement.getOthCodeFromInvestment(entity.getEntrustProp(), entity));
                     bean.setCashAmount(item.getEntrustAmt());
                     bean.setSecAmount(item.getEntrustNum());
 

@@ -1,6 +1,7 @@
 package com.joyintech.tams.exchange.service.trade.management.service;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSONObject;
@@ -26,6 +27,7 @@ import com.joyintech.tams.exchange.service.trade.processor.msg.MsgReceiverManage
 import com.joyintech.tams.exchange.service.trade.processor.msg.MsgType;
 import com.joyintech.tams.exchange.service.trade.processor.msg.TradeMsgReceiver;
 import com.joyintech.tams.exchange.service.trade.processor.others.TerminalHelper;
+import org.hibernate.validator.constraints.NotBlank;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -34,10 +36,15 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.joyintech.tams.exchange.common.constant.EntrustProp.*;
+import static com.joyintech.tams.exchange.common.constant.EntrustProp.ETF_APPLY;
+import static com.joyintech.tams.exchange.common.constant.OthCodeType.*;
 
 @Component
 public class EntrustManagement extends BaseService {
@@ -637,5 +644,47 @@ public class EntrustManagement extends BaseService {
             entrustService.asyncUpdate((Entrust) cancelEntrust);
         }
         return cancelEntrust;
+    }
+
+    /**
+     * 查询配股申购等代码
+     *
+     * @param entrustProp   委托属性
+     * @param instruction   指令
+     * @return  申报等代码
+     */
+    public String getOthCodeFromInvestment(@NotBlank String entrustProp, @NotNull Instruction instruction) {
+        String othCode = instruction.getFinprodMarketId();
+        String othCodeType = "";
+        if (HS.value.equals(entrustProp)) {
+            othCodeType = HSDM.value;
+        } else if (ZYCRK.value.equals(entrustProp)) {
+            othCodeType = ZYDM.value;
+        } else if (CHANGE_TO_STOCK.value.equals(entrustProp)) {
+            othCodeType = KZZZGDM.value;
+        } else if (EntrustProp.PS.value.equals(entrustProp)) {
+            othCodeType = PZDM.value;
+        } else if (ALLOTMENT.value.equals(entrustProp)) {
+            othCodeType = PGDM.value;
+        }
+        //申报代码获取
+        ResultBean resultBean = this.getOthCode(instruction.getFinprodId(), othCodeType);
+        if (resultBean.getErrorCode() == ErrorCode.SUCCESS.value) {
+            List<OthCodeBean> list = (List<OthCodeBean>) resultBean.getData();
+            if (CollUtil.isNotEmpty(list)) {
+                //03-可转债信用申购代码 or 07-新股申购代码
+                if (APPLY.value.equals(entrustProp) || ETF_APPLY.value.equals(entrustProp)) {
+                    for (OthCodeBean othCodeBean : list) {
+                        if (KZZXYSGDM.value.equals(othCodeBean.getOthCodeType()) || XGSGDM.value.equals(othCodeBean.getOthCodeType())) {
+                            othCode = othCodeBean.getOthCode();
+                            break;
+                        }
+                    }
+                } else {
+                    othCode = list.get(0).getOthCode();
+                }
+            }
+        }
+        return othCode;
     }
 }

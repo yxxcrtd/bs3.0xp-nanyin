@@ -28,6 +28,7 @@ import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTrade
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.service.EtrExchangeTradeJj001Service;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.constant.TempConstant;
 import com.joyintech.tams.invest.common.dto.position.PositionCashSecDto;
 import com.joyintech.tams.invest.common.entrust.inter.EtrTradeCommonervice;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
@@ -99,6 +100,10 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 					param.put("portfolioIdList",
 							StringUtil.splitToList(GlobalConstant.COMMA, portfolioId));
 				}
+				if (StringUtil.isNotEmpty(portfolioId)) {
+					param.put("portfolioIdList",
+							StringUtil.splitToList(GlobalConstant.COMMA, portfolioId));
+				}
 				param.put("sysDate", iPlatformDate.getSysDate());
 				param.put("POSITION_TYPE_03", BussinessDictCodeList.持仓类型_实际.getValue());
 				param.put("POSITION_TYPE_04", BussinessDictCodeList.持仓类型_质押.getValue());
@@ -127,6 +132,7 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 					param.put("finprodMarketIds", null);
 				}
 				param.put("A_001", DictCodeListExt3.资产类型_资产账户持仓.getValue());
+				param.put("NO_TRADE_BUSINESS_ETR", TempConstant.NO_TRADE_BUSINESS_ETR);
 				// 浮动盈亏计算修改 modify by yufei 20200806 start
 				Page<EtrExchangeTradePositionsCommonResponse> result = super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> etrExchangeTradeCommonMapper.findPositionsPage(param));
 				// 根据查询结果查询估值、交易数据，用来加工单位成本等字段
