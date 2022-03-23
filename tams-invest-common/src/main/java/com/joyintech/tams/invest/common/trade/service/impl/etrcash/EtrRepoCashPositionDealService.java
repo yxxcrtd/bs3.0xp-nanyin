@@ -542,11 +542,13 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
     
                     });
                 }
-                //首期没登录  这里注释
-               /* //资产持仓流水减少券面总额
-                etrSecPositionFlowDto.setAmount(prinAmt.negate());
-                // 添加现金流水到目标dto
-                etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);*/
+                //首期没登录  这里注释 -> modify by jp 本币业务首期登录了,此处做判断
+                if(StringUtil.equals(finProductTradeDto.getIsExistNew(), DictCodeList.是否_是.getValue())) {
+                    //资产持仓流水减少券面总额
+                    etrSecPositionFlowDto.setAmount(prinAmt.negate());
+                    // 添加现金流水到目标dto
+                    etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
+                }
             }
         }
     }
