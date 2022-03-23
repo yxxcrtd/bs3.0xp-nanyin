@@ -830,7 +830,7 @@ public class PbcZipDataFileService {
 			//兑付客户收益
 			data.put("customProfit",subDat.getCustomProfit() == null ? null : subDat.getCustomProfit().toPlainString());
 			//兑付客户收益转人民币
-			data.put("profitCny",subDat.getProfitCny() == null ? null : subDat.getProfitCny().toPlainString());
+			data.put("customProfitCny",subDat.getCustomProfitCny() == null ? null : subDat.getCustomProfitCny().toPlainString());
 			dataList.add(data);
 		}
 		datDownloadDto.setUrl(PbcZipDataFileHelper.genFile(pbcSendZipDatFile,datType,dataList));
