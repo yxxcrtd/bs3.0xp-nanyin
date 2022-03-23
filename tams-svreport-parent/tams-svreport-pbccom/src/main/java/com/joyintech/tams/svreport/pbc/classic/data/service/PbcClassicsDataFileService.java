@@ -606,7 +606,7 @@ public class PbcClassicsDataFileService {
 			//【dat文件生成留痕】数据的key
 			data1.put("datakey",sub.getRegistSeqno());
 			data1.put("type", "1");
-			data1.put("pbc_prod_id", sub.getPbcProdIdShow());
+			data1.put("pbc_prod_id", sub.getPbcProdId());
 			data1.put("issue_party_id", sub.getIssuePartyId());
 			data1.put("pbc_prod_type", sub.getPbcProdType());
 			data1.put("prod_name", sub.getProdName());
@@ -647,7 +647,7 @@ public class PbcClassicsDataFileService {
 				for(String raiseCcy :StringUtil.splitToList(",", sub.getRaiseCcy())){
 					LinkedHashMap<String,String> data21= new LinkedHashMap<String,String>();
 					data21.put("type", "2");
-					data21.put("pbc_prod_id", sub.getPbcProdIdShow());
+					data21.put("pbc_prod_id", sub.getPbcProdId());
 					data21.put("ccy_type", "1");
 					data21.put("raise_ccy", raiseCcy);
 					dataList.add(data21);
@@ -657,7 +657,7 @@ public class PbcClassicsDataFileService {
 				for(String cashPrinCcy :StringUtil.splitToList(",", sub.getCashPrinCcy())){
 					LinkedHashMap<String,String> data22= new LinkedHashMap<String,String>();
 					data22.put("type", "2");
-					data22.put("pbc_prod_id", sub.getPbcProdIdShow());
+					data22.put("pbc_prod_id", sub.getPbcProdId());
 					data22.put("ccy_type", "2");
 					data22.put("cash_prin_ccy", cashPrinCcy);
 					dataList.add(data22);
@@ -668,7 +668,7 @@ public class PbcClassicsDataFileService {
 				for(String cashProfCcy :StringUtil.splitToList(",", sub.getCashProfCcy())){
 					LinkedHashMap<String,String> data23= new LinkedHashMap<String,String>();
 					data23.put("type", "2");
-					data23.put("pbc_prod_id", sub.getPbcProdIdShow());
+					data23.put("pbc_prod_id", sub.getPbcProdId());
 					data23.put("ccy_type", "3");
 					data23.put("cash_prof_ccy", cashProfCcy);
 					dataList.add(data23);
@@ -679,7 +679,7 @@ public class PbcClassicsDataFileService {
 				for(String customerType :StringUtil.splitToList(",", sub.getCustomerType())){
 					LinkedHashMap<String,String> data3= new LinkedHashMap<String,String>();
 					data3.put("type", "3");
-					data3.put("pbc_prod_id", sub.getPbcProdIdShow());
+					data3.put("pbc_prod_id", sub.getPbcProdId());
 					data3.put("customer_type", customerType);
 					dataList.add(data3);
 				}
@@ -689,7 +689,7 @@ public class PbcClassicsDataFileService {
 				for(String creditType :StringUtil.splitToList(",", sub.getCreditType())){
 					LinkedHashMap<String,String> data4= new LinkedHashMap<String,String>();
 					data4.put("type", "4");
-					data4.put("pbc_prod_id", sub.getPbcProdIdShow());
+					data4.put("pbc_prod_id", sub.getPbcProdId());
 					data4.put("credit_type", creditType);
 					dataList.add(data4);
 				}
@@ -699,7 +699,7 @@ public class PbcClassicsDataFileService {
 				for(String creditMode :StringUtil.splitToList(",", sub.getCreditMode())){
 					LinkedHashMap<String,String> data5= new LinkedHashMap<String,String>();
 					data5.put("type", "5");
-					data5.put("pbc_prod_id", sub.getPbcProdIdShow());
+					data5.put("pbc_prod_id", sub.getPbcProdId());
 					data5.put("credit_mode", creditMode);
 					dataList.add(data5);
 				}
@@ -792,7 +792,6 @@ public class PbcClassicsDataFileService {
 		List<String> result = new ArrayList<String>();
 		//PIE1查询PBC_PRD_BASEINFO_END_SUB，新建未报送的数据
 		searchParam.put("nyield", "000000");
-		searchParam.put("datFlag","01");
 		List<PbcPrdBaseinfoEndSub> subList = pbcPrdBaseinfoEndSubMapper.searchPage(searchParam);
 		searchParam.remove("nyield");
 		List<PbcPrdBaseinfoEndSub> doManulList  = new ArrayList<PbcPrdBaseinfoEndSub>();
@@ -806,7 +805,6 @@ public class PbcClassicsDataFileService {
 		//按发行机构分组：Map<发行机构,产品List<Map<生成文件的属性键值对>>>
 		Map<String, Object> param = new HashMap<String, Object>();
 //		param.put("pbcProdId", sub.getPbcProdId());
-		param.put("datFlag","01");
 		List<PbcPrdBaseinfoSub> infos =pbcPrdBaseinfoSubMapper.searchPage(param);
 		Map<String,List<PbcPrdBaseinfoSub>> infosMap = infos.stream().collect(
 				JoyinCollectors.groupingBy(
@@ -1439,7 +1437,6 @@ public class PbcClassicsDataFileService {
 		}
 
 		//产品
-		searchParam.put("datFlag","01");
 		List<PbcPrdBaseinfoSub> subList2 = pbcPrdBaseinfoSubMapper.searchPage(searchParam);
 		//【dat文件生成留痕】
 		List<String> subKeys = new ArrayList<String>();
@@ -1450,7 +1447,6 @@ public class PbcClassicsDataFileService {
 					StringUtil.splitToList(",",DictCodeListExt2.报送状态_手工处理.getValue()+","+DictCodeListExt2.报送状态_接口报送.getValue()));
 			op.put("pbcProdIdList",Arrays.asList(sub.getPbcProdId()));
 			op.put("issuePartyId",issuePartyId);
-			op.put("datFlag","01");
 			List<PbcPrdBaseinfoSub> oList = pbcPrdBaseinfoSubMapper.searchPage(op);
 			if(oList.size()==0)
 				continue;
@@ -1919,7 +1915,6 @@ public class PbcClassicsDataFileService {
 		subList.addAll(pbcProdRaiseSubMapper.selectByDimension(searchParam));
 		//清除参数
 		searchParam.remove("buyPlace");
-
 		searchParam.put("nyield", "000000");
 		searchParam.put("yield", "000000");
 		subList.addAll(pbcProdRaiseSubMapper.selectByDimension2(searchParam));// 净值型产品的单位净值-1：原币
@@ -1927,60 +1922,56 @@ public class PbcClassicsDataFileService {
 		searchParam.put("ccy", "BWB");
 		subList.addAll(pbcProdRaiseSubMapper.selectByDimension2(searchParam));// 净值型产品的单位净值-2：BWB
 		searchParam.remove("ccy");
-        //按发行机构分组：Map<发行机构,产品List<Map<生成文件的属性键值对>>>
-        Map<String,List<LinkedHashMap<String,String>>> map=new HashMap<String,List<LinkedHashMap<String,String>>>();
-        for(PbcProdRaiseSub sub :subList){
-        	Map<String, Object> param = new HashMap<String, Object>();
-        	param.put("pbcProdId", sub.getPbcProdId());
-        	List<PbcPrdBaseinfoSub> infos = pbcPrdBaseinfoSubMapper.searchPage(param);
-        	if(infos.size()==0||infos.get(0).getIssuePartyId()==null)
-        		continue;
-        	String issuePartyId = infos.get(0).getIssuePartyId();
-        	List<LinkedHashMap<String,String>> dataList = null;
-        	if(map.get(issuePartyId)==null){
-        		dataList = new ArrayList<LinkedHashMap<String,String>>();
-        	}else{
-        		dataList =(List<LinkedHashMap<String,String>>)map.get(issuePartyId);
-        	}
-        	//组装数据
-        	LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
-
-			// 净值型标识
-			//boolean netValueFlag = StringUtil.equals(infos.get(0).getOperateMode(),DictCodeListExt2.产品运作模式_开放式净值型.getValue())||StringUtil.equals(infos.get(0).getOperateMode(),DictCodeListExt2.产品运作模式_封闭式净值型.getValue());
-			boolean netValueFlag = StringUtil.isEmpty(sub.getBuyPlace()) && StringUtil.isNotEmpty(sub.getCcy());
-        	//【dat文件生成留痕】数据的key
-        	data.put("datakey",sub.getRegistSeqno() == null ? UUID.randomUUID().toString() : sub.getRegistSeqno());
-        	data.put("RAISING_DATE", DateUtil.format(sub.getRaisingDate()));
-        	data.put("PBC_PROD_ID", sub.getPbcProdId());
-        	data.put("BUY_PLACE", sub.getBuyPlace());
-        	data.put("CUSTOMER_TYPE1", sub.getCustomerType1());
-        	data.put("CCY", sub.getCcy());
-        	data.put("RAISING_AMTSUM", toString("BWB".equals(sub.getCcy())?sub.getRaisingAmtsumCny():sub.getRaisingAmtsum()));
-        	data.put("RAISING_AMTSUM_CNY", toString(sub.getRaisingAmtsumCny()));
-        	data.put("RAISING_QTY",toString(sub.getRaisingQty()));
-        	data.put("REDAMT",  toString("BWB".equals(sub.getCcy())?sub.getRedamtCny():sub.getRedamt()));
-        	data.put("REDAMT_CNY",toString(sub.getRedamtCny()));
-        	data.put("REDQTY", toString(sub.getRedqty()));
-        	data.put("ENDAMTSUM", toString("BWB".equals(sub.getCcy())?sub.getEndamtsumCny(): sub.getEndamtsum()));
-        	data.put("ENDAMTSUM_CNY", toString(sub.getEndamtsumCny()));
-        	data.put("ENDQTY", toString(sub.getEndqty()));
-			data.put("PROD_VALUE", netValueFlag ? toString(sub.getProdValue()) : "");
-			data.put("PROD_VALUE_CNY",netValueFlag ? toString(sub.getProdValueCny()) : "");
-			data.put("UNIT_VALUE_TOTAL", netValueFlag ? toString(sub.getUnitValueTotal()) : "");
-			data.put("UNIT_VALUE_TOTAL_CNY", netValueFlag ? toString(sub.getUnitValueTotalCny()) : "");
-        	data.put("PROD_HIGH_YIELD", sub.getCcy()==null?toString(sub.getProdHighYield()):"");
-        	data.put("PROD_LOW_YIELD", sub.getCcy()==null?toString(sub.getProdLowYield()):"");
-        	dataList.add(data);
-        	map.put(issuePartyId,dataList);
-        }
-        //循环发行机构分组
-        for (String orgCode:map.keySet() ) {
-            List<LinkedHashMap<String,String>>prods = map.get(orgCode);
-            result.addAll(
-            		PbcClassicsDataFileHelper.genFile(prods,PbcClassicsDataFileHelper.DATAFILE_TYPE_AF4,"AF43",genDate,getOrgCode(orgCode),seqMap,manualFlag,fileDataMap));
-        }
-        //改为手工处理状态
-      //手工处理
+		//按发行机构分组：Map<发行机构,产品List<Map<生成文件的属性键值对>>>
+		Map<String,List<LinkedHashMap<String,String>>> map=new HashMap<String,List<LinkedHashMap<String,String>>>();
+		for(PbcProdRaiseSub sub :subList){
+			Map<String, Object> param = new HashMap<String, Object>();
+			param.put("pbcProdId", sub.getPbcProdId());
+			List<PbcPrdBaseinfoSub> infos = pbcPrdBaseinfoSubMapper.searchPage(param);
+			if(infos.size()==0||infos.get(0).getIssuePartyId()==null)
+				continue;
+			String issuePartyId = infos.get(0).getIssuePartyId();
+			List<LinkedHashMap<String,String>> dataList = null;
+			if(map.get(issuePartyId)==null){
+				dataList = new ArrayList<LinkedHashMap<String,String>>();
+			}else{
+				dataList =(List<LinkedHashMap<String,String>>)map.get(issuePartyId);
+			}
+			//组装数据
+			LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
+			//【dat文件生成留痕】数据的key
+			data.put("datakey",sub.getRegistSeqno() == null ? UUID.randomUUID().toString() : sub.getRegistSeqno());
+			data.put("RAISING_DATE", DateUtil.format(sub.getRaisingDate()));
+			data.put("PBC_PROD_ID", sub.getPbcProdId());
+			data.put("BUY_PLACE", sub.getBuyPlace());
+			data.put("CUSTOMER_TYPE1", sub.getCustomerType1());
+			data.put("CCY", sub.getCcy());
+			data.put("RAISING_AMTSUM", toString("BWB".equals(sub.getCcy())?sub.getRaisingAmtsumCny():sub.getRaisingAmtsum()));
+			data.put("RAISING_AMTSUM_CNY", toString(sub.getRaisingAmtsumCny()));
+			data.put("RAISING_QTY",toString(sub.getRaisingQty()));
+			data.put("REDAMT",  toString("BWB".equals(sub.getCcy())?sub.getRedamtCny():sub.getRedamt()));
+			data.put("REDAMT_CNY",toString(sub.getRedamtCny()));
+			data.put("REDQTY", toString(sub.getRedqty()));
+			data.put("ENDAMTSUM", toString("BWB".equals(sub.getCcy())?sub.getEndamtsumCny(): sub.getEndamtsum()));
+			data.put("ENDAMTSUM_CNY", toString(sub.getEndamtsumCny()));
+			data.put("ENDQTY", toString(sub.getEndqty()));
+			data.put("PROD_VALUE", "");
+			data.put("PROD_VALUE_CNY","");
+			data.put("UNIT_VALUE_TOTAL", "");
+			data.put("UNIT_VALUE_TOTAL_CNY", "");
+			data.put("PROD_HIGH_YIELD", sub.getCcy()==null?toString(sub.getProdHighYield()):"");
+			data.put("PROD_LOW_YIELD", sub.getCcy()==null?toString(sub.getProdLowYield()):"");
+			dataList.add(data);
+			map.put(issuePartyId,dataList);
+		}
+		//循环发行机构分组
+		for (String orgCode:map.keySet() ) {
+			List<LinkedHashMap<String,String>>prods = map.get(orgCode);
+			result.addAll(
+					PbcClassicsDataFileHelper.genFile(prods,PbcClassicsDataFileHelper.DATAFILE_TYPE_AF4,"AF43",genDate,getOrgCode(orgCode),seqMap,manualFlag,fileDataMap));
+		}
+		//改为手工处理状态
+		//手工处理
 //    	if(!CollectionUtils.isEmpty(doManulList))
 //    		pbcPrdCashRaiseSubService001.doManul(searchParam);
 		return result;
