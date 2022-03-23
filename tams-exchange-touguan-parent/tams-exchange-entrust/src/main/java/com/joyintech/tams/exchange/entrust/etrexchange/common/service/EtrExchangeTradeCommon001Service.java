@@ -5330,6 +5330,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		etrExchangeTrade001Dto.setVdate(DateUtil.parse(DateUtil.format(dto.getEntrustDate(),DateUtil.DEFAULT_DATE_FORMAT_EN)));
 		etrExchangeTrade001Dto.setStockId(dto.getStockId());
 		etrExchangeTrade001Dto.setEntrustDate(DateUtil.parse(DateUtil.format(dto.getEntrustDate(),DateUtil.DEFAULT_DATE_FORMAT_EN)));
+		etrExchangeTrade001Dto.setOptType(dto.getOptType());
 		return etrExchangeTrade001Dto;
 	}
 

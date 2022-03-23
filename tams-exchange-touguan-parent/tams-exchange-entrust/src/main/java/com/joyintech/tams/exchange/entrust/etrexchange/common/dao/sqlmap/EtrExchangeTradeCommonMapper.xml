@@ -616,7 +616,7 @@
             from TRD_PRODUCT_DEAL a
             LEFT JOIN TRD_PRODUCT_DEAL_ADD b ON a.TRADE_ID =b.TRADE_ID
             WHERE 1=1
-            <if test="portfolioIdList != null">
+            <if test="portfolioIdList != null and portfolioIdList.size()>0">
                 AND b.PORTFOLIO_ID in
                 <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
                     #{item}
@@ -629,7 +629,7 @@
             from TRD_PRODUCT_DEAL a
             LEFT JOIN TRD_PRODUCT_DEAL_ADD b ON a.TRADE_ID =b.TRADE_ID
             WHERE 1=1
-            <if test="portfolioIdList != null">
+            <if test="portfolioIdList != null and portfolioIdList.size()>0">
                 AND b.PORTFOLIO_ID in
                 <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
                     #{item}
@@ -640,6 +640,9 @@
         ) invaim on invaim.FINPROD_ID=TEMP.FINPROD_ID and invaim.PORTFOLIO_ID=TEMP.PORTFOLIO_ID
         WHERE
         FP.TRADE_MARKET IN (#{TRADE_PLACE_03}, #{TRADE_PLACE_04})
+        <if test="tradePlat != null and tradePlat !='' and tradePlat==NO_TRADE_BUSINESS_ETR">
+            AND FP.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01,jdbcType=VARCHAR}
+        </if>
         <if test="portfolioIdList != null and portfolioIdList.size()>0">
             <foreach collection="portfolioIdList" open="AND TEMP.PORTFOLIO_ID IN (" item="portfolioId" separator="," close=")">
                     #{portfolioId,jdbcType=VARCHAR}
