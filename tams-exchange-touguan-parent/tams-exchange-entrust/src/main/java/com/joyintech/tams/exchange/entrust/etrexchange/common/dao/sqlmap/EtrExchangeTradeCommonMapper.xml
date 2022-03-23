@@ -1317,8 +1317,8 @@
             and ee.ps = #{ps,jdbcType=VARCHAR}
             and ee.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
             and ee.trade_plat = #{tradePlat,jdbcType=VARCHAR}
-            <if test="entrustReturn != null and entrustReturn != ''">
-                and  ee.ENTRUST_STATUS != #{entrustReturn,jdbcType=VARCHAR}
+            <if test="entrustReturn != null and entrustReturn != '' and entrustRecall!=null and entrustRecall != ''">
+                and  ee.ENTRUST_STATUS not in  (#{entrustReturn,jdbcType=VARCHAR},#{entrustRecall,jdbcType=VARCHAR})
             </if>
         UNION
         <!-- 查询委托指令流程表中是否已经存在该证券账户发布的此债券的申购委托 -->
@@ -1333,6 +1333,9 @@
             and wee.ps = #{ps,jdbcType=VARCHAR}
             and wee.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
             and wee.trade_plat = #{tradePlat,jdbcType=VARCHAR}
+            <if test="entrustReturn != null and entrustReturn != '' and entrustRecall!=null and entrustRecall != ''">
+                and  wee.ENTRUST_STATUS not in  (#{entrustReturn,jdbcType=VARCHAR},#{entrustRecall,jdbcType=VARCHAR})
+            </if>
     </select>
 
     <select id="getLastNetPrice" resultType="java.math.BigDecimal">
