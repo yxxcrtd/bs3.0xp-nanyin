@@ -18,7 +18,7 @@ public class PortfolioInstructionContextDto {
     /**
      * 指令剩余委托数量
      */
-    private Long leftVolume;
+    private long leftVolume;
 
     /**
      * 指令剩余委托金额
@@ -33,7 +33,7 @@ public class PortfolioInstructionContextDto {
     /**
      * 指令委托数量
      */
-    private Long entrustVolume;
+    private long entrustVolume;
 
     /**
      * 指令委托金额
@@ -48,11 +48,11 @@ public class PortfolioInstructionContextDto {
         this.instruction = instruction;
     }
 
-    public Long getLeftVolume() {
+    public long getLeftVolume() {
         return leftVolume;
     }
 
-    public void setLeftVolume(Long leftVolume) {
+    public void setLeftVolume(long leftVolume) {
         this.leftVolume = leftVolume;
     }
 
@@ -72,11 +72,11 @@ public class PortfolioInstructionContextDto {
         this.entrustPrice = entrustPrice;
     }
 
-    public Long getEntrustVolume() {
+    public long getEntrustVolume() {
         return entrustVolume;
     }
 
-    public void setEntrustVolume(Long entrustVolume) {
+    public void setEntrustVolume(long entrustVolume) {
         this.entrustVolume = entrustVolume;
     }
 
