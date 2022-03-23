@@ -521,13 +521,15 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
         String ps = dealEntity.getPs();
          // resultMap.put("ps", dealEntity.getPs());
         // ZGTFCP-1042: add by fuyongsheng 20220315 start
-        // 回购首期特殊处理,需传正回购/逆回购
-        if(DictCodeList.交易方向_买入.getValue().equals(entity.getTrdProductDeal().getPs())){
-            if(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(entity.getTrdProductDeal().getFinprodType2())){
-                resultMap.put("ps", DictCodeListExt3.交易方向_正回购.getValue());
+        // 协议回购特殊处理,需传正回购/逆回购
+        if(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(entity.getTrdProductDeal().getFinprodType2())){
+            resultMap.put("ps", DictCodeListExt3.交易方向_正回购.getValue());
+            if(DictCodeList.交易方向_买入.getValue().equals(entity.getTrdProductDeal().getPs())) {
                 ps = DictCodeListExt3.交易方向_正回购.getValue();
-            }else if(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(entity.getTrdProductDeal().getFinprodType2())){
-                resultMap.put("ps", DictCodeListExt3.交易方向_逆回购.getValue());
+            }
+        } else {
+            resultMap.put("ps", DictCodeListExt3.交易方向_逆回购.getValue());
+            if(DictCodeList.交易方向_买入.getValue().equals(entity.getTrdProductDeal().getPs())) {
                 ps = DictCodeListExt3.交易方向_逆回购.getValue();
             }
         }
