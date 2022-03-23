@@ -86,7 +86,7 @@ public class PbcSendZipDatFileMService extends BaseService<PbcSendZipDatFile>{
         Map<String,Object> param = new HashMap<>();
         param.put("dataList", ExcelUtil.getDataList1(fileName));
         String name = FileNameUtil.getName(fileName);
-        List<ValidMessage> errorlistall = null;
+        List<ValidMessage> errorlistall = new ArrayList<>();
         String[] strName = name.split("_");
         if(strName.length > 0){
             AjaxResult ajaxResult = new AjaxResult();
