@@ -49,14 +49,14 @@
                 #{item}
             </foreach>)
         </if>
-        and rit.SEQ_NO = (select SEQ_NO from (select SEQ_NO from RSK_ISUP_TRIAL where 1=1
+       <!-- and rit.SEQ_NO = (select SEQ_NO from (select SEQ_NO from RSK_ISUP_TRIAL where 1=1
         <if test="entrustIdList != null and entrustIdList.size() > 0">
             and trade_id IN (
             <foreach item="item" index="index" collection="entrustIdList" separator=",">
                 #{item}
             </foreach>)
         </if>
-        order by create_time desc) t where rownum =1 )
+        order by create_time desc) t)-->
         <if test="NOT_NULL_FLAG != null and NOT_NULL_FLAG!='' ">
             AND rit.conclusion is null
         </if>
