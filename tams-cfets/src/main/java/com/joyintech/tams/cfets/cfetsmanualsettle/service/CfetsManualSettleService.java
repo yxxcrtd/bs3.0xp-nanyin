@@ -1074,6 +1074,12 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
         //设置登记时的成交编号
         List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId());
 
+        //交易份额 处理
+        listTemp.stream().forEach(item -> {
+            if (item.getShareAmt() != null) {
+                item.setShareAmt(ArithmeticUtil.divide(item.getShareAmt(), new BigDecimal("100"), 0));
+            }
+        });
         //  处理组合可用持仓、可用现金
         if ((StringUtil.equals(buttonType, DictCodeListExt3.交收操作类型_交收失败.getValue())) &&
                 (StringUtil.equals(cfetsManualSettleRequest.getPs(), DictCodeList.交易方向_买入.getValue())

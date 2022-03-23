@@ -883,7 +883,7 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
         this.handOurAndLendinShareAmt(entity);
         entity.setWorkflowId(entity.getWorkflowId());
         insertWflBondRequestQuote(entity);
-        if (StringUtil.equals(com.joyintech.tams.constant.DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+        if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
             //插入旧头寸
             entity.setIsExistNew(DictCodeList.是否_是.getValue());
             doInsetOrUpdateForPtlPositionHold(entity);

@@ -1219,7 +1219,7 @@
         tpd.YIELD * 100 fYield,
         tpd.FPRICE_AMT vTradeAmt,
         FTP.M_TRADE_AMT mSettleAmt,
-        fpt.TYPE_6 paBussType,
+        nvl(fpt.TYPE_6,wtpdo.DL_TYPE) paBussType,
         fpt.TYPE_9 assetType1,
         fpt.TYPE_10 assetType10,
         fpt.TYPE_11 assetType11,
@@ -1272,6 +1272,7 @@
         <include refid="etrDispatcherDealListInfo"/>
         FROM trd_product_deal tpd
         LEFT JOIN trd_product_deal_add tpda ON tpd.trade_id = tpda.trade_id
+        left join WFL_TRD_PRODUCT_DEAL_OTH wtpdo on wtpdo.TRADE_ID = tpd.TRADE_ID
         left join TRD_FIN_PRODUCT_DEAL_TOTAL tpdt on tpd.TOTLE_TRADE_ID=tpdt.TOTLE_TRADE_ID
         LEFT JOIN PTL_PORTFOLIO pp ON tpda.portfolio_id = pp.portfolio_id
         LEFT JOIN FIN_PRODUCT fp ON tpd.finprod_id = fp.finprod_id
@@ -1291,6 +1292,7 @@
         <include refid="etrDispatcherDealListInfo"/>
         FROM wfl_trd_product_deal tpd
         LEFT JOIN wfl_trd_product_deal_add tpda ON tpd.trade_id = tpda.trade_id
+        left join WFL_TRD_PRODUCT_DEAL_OTH wtpdo on wtpdo.TRADE_ID = tpd.TRADE_ID
         left join WFL_TRD_FIN_PRODUCT_DEAL_TOTAL tpdt on tpd.TOTLE_TRADE_ID=tpdt.TOTLE_TRADE_ID
         LEFT JOIN PTL_PORTFOLIO pp ON tpda.portfolio_id = pp.portfolio_id
         LEFT JOIN FIN_PRODUCT fp ON tpd.finprod_id = fp.finprod_id

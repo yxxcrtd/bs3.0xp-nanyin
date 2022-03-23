@@ -681,11 +681,9 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
                 bean.setCashAcctId(stlPayOrdersList.get(0).getMyAcctNo());
             }
             // 配股/申购代码
-            // ZGTFCP-1587:金融产品标的赋值错误 modify by fuyongsheng 20220322 start
-//            if(etrEntrust != null){
-//                bean.setFinprodId(etrEntrust.getStockId());
-//            }
-            // ZGTFCP-1587:金融产品标的赋值错误 modify by fuyongsheng 20220322 end
+            if(etrEntrust != null){
+                bean.setFinprodId(etrEntrust.getStockId());
+            }
             bean.setCashAmount(dealEntity.getTradeAmt());
             Map<String, Object> ptlRoMap = BeanUtil.object2Map(bean);
             if(etrEntrust != null){

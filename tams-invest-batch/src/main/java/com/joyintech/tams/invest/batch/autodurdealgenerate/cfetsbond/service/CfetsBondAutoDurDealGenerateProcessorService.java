@@ -299,7 +299,7 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
         List<StlPayOrders> stlPayOrdersList =new ArrayList<StlPayOrders>();
         List<PtlTrade> ptlTradeList =new ArrayList<PtlTrade>();
         //净价总额计算,净价总额=账户持仓券面总额（万元）*10000*赎回比例%*行权净价/100
-        BigDecimal cpriceAmt = ArithmeticUtil.divide(ArithmeticUtil.multiply(new BigDecimal("100"),regFinProductDealTotal.getFaceValue(),regFinProductDealTotal.getRedeemRate(),regFinProductDealTotal.getExercisePrice()),new BigDecimal(100),2) ;
+        BigDecimal cpriceAmt = ArithmeticUtil.divide(ArithmeticUtil.multiply(regFinProductDealTotal.getFaceValue(),regFinProductDealTotal.getRedeemRate(),regFinProductDealTotal.getExercisePrice()),new BigDecimal(100),2) ;
         //应计利息计算
         BigDecimal intAmt = ArithmeticUtil.divide(ArithmeticUtil.multiply(regFinProductDealTotal.getFaceValue(),regFinProductDealTotal.getRedeemRate(),regFinProductDealTotal.getIntAmt()),new BigDecimal(100),2) ;
         //赎回金额计算：默认等于净价总额+应计利息总额；
@@ -471,13 +471,13 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
                 }
             }
             posport.setSecAcctId(dto.getSecManageAcctId());
-            posport.setSecAmount(ArithmeticUtil.multiply(dto.getShareAmt()==null?BigDecimal.ZERO:dto.getShareAmt(),new BigDecimal(10000)));
+            posport.setSecAmount(ArithmeticUtil.multiply(dto.getShareAmt()==null?BigDecimal.ZERO:dto.getShareAmt(),new BigDecimal(100)));
             posport.setCashAmount(dto.getTradeAmt()==null?BigDecimal.ZERO:dto.getTradeAmt());
             trdBondDurDbInertDto.getTrdProductDealAdds().forEach(trdProductDealAdd -> {
                 if (dto.getTradeId() != null && dto.getTradeId().equals(trdProductDealAdd.getTradeId())) {
                     posport.setEtrId(trdProductDealAdd.getEntrustId());
                     posport.setIntegrateSecAmount(ArithmeticUtil.multiply(trdProductDealAdd.getLendinShareAmt()==null?BigDecimal.ZERO:trdProductDealAdd.getLendinShareAmt(),new BigDecimal(100)));
-                    posport.setOwnSecAmount(ArithmeticUtil.multiply(trdProductDealAdd.getOurShareAmt()==null?BigDecimal.ZERO:trdProductDealAdd.getOurShareAmt(),new BigDecimal(10000)));
+                    posport.setOwnSecAmount(ArithmeticUtil.multiply(trdProductDealAdd.getOurShareAmt()==null?BigDecimal.ZERO:trdProductDealAdd.getOurShareAmt(),new BigDecimal(100)));
                 }
             });
             ptlList.add(posport);

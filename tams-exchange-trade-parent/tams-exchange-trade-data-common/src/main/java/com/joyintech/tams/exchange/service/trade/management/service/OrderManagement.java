@@ -86,6 +86,7 @@ public class OrderManagement extends BaseService {
             instructionClone.setSoftSkipMode(orderPlaceBean.getSoftSkipMode());
             //普通下单
             if (tradeHelper.isOrdinaryTransaction(orderPlaceBean, instruction)) {
+                logger.info("普通交易头寸检查...");
                 instructionClone.setEntrustAmt(orderPlaceBean.getEntrustPrice().multiply(BigDecimal.valueOf(orderPlaceBean.getEntrustVolume())));
                 instructionClone.setEntrustNum(orderPlaceBean.getEntrustVolume());
                 instructionClone.setEntrustPrice(orderPlaceBean.getEntrustPrice());

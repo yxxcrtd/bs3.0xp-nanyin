@@ -1053,7 +1053,7 @@ public class TradeHelper {
      * 判断是否普通交易
      */
     public boolean isOrdinaryTransaction(OrderPlaceBean orderPlaceBean, Instruction instruction) {
-        if (isFairTransaction(orderPlaceBean)) {
+        if (isFairTransaction(orderPlaceBean, instruction)) {
             return false;
         } else if (isBatchTransaction(orderPlaceBean)) {
             return false;
@@ -1067,10 +1067,20 @@ public class TradeHelper {
     /**
      * 判断是否公平交易
      */
-    private boolean isFairTransaction(OrderPlaceBean orderPlaceBean) {
+    private boolean isFairTransaction(OrderPlaceBean orderPlaceBean, Instruction instruction) {
         if (Strings.isNullOrEmpty(orderPlaceBean.getAlgorithmId())
                 && EntrustUtils.isFairOrder(orderPlaceBean.getEntrustProp())
                 && EntrustUtils.isFairSwitchOpen(commonManagement.getFairCode())) {
+            return true;
+        }
+        Order order = new Order();
+        order.setEntrustProp(orderPlaceBean.getEntrustProp());
+        order.setStockCode(orderPlaceBean.getStockCode());
+        order.setEntrustBs(orderPlaceBean.getEntrustBs());
+        order.setUserId(orderPlaceBean.getUserId());
+        order.setAssetType(instruction.getAssetType());
+        Map<String, Instruction> instructionBeanMap = getInstructionBeans(order);
+        if (!instructionBeanMap.isEmpty()) {
             return true;
         }
 
@@ -1091,17 +1101,19 @@ public class TradeHelper {
     public void fillEntrustPriceAndAmt(OrderPlaceBean orderPlaceBean, PositionInstructionRequest instructionClone) {
         String entrustProp = orderPlaceBean.getEntrustProp();
         //公平交易
-        if (isFairTransaction(orderPlaceBean)) {
-            if(EntrustProp.isMarketPrice(entrustProp)){
+        if (isFairTransaction(orderPlaceBean, instructionClone)) {
+            logger.info("公平交易头寸检查...");
+            if (EntrustProp.isMarketPrice(entrustProp)) {
                 //取行情涨跌停价
                 this.fillQuotePrice(orderPlaceBean, instructionClone);
-            }else {
+            } else {
                 instructionClone.setEntrustNum(orderPlaceBean.getEntrustVolume());
                 instructionClone.setEntrustPrice(orderPlaceBean.getEntrustPrice());
             }
         }
         //批量委托
         else if (isBatchTransaction(orderPlaceBean)) {
+            logger.info("批量委托头寸检查...");
             BatchInfo batchInfo = orderPlaceBean.getBatchInfo();
             //下单笔数
             int entrustTimes = batchInfo.getEntrustTimes();
@@ -1132,6 +1144,7 @@ public class TradeHelper {
         }
         //市价
         else if (EntrustProp.isMarketPrice(entrustProp)) {
+            logger.info("市价交易头寸检查...");
             //取行情涨跌停价
             this.fillQuotePrice(orderPlaceBean, instructionClone);
             instructionClone.setEntrustNum(orderPlaceBean.getEntrustVolume());

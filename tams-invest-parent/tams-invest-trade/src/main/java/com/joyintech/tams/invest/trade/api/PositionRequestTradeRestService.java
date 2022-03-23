@@ -253,13 +253,15 @@ public class PositionRequestTradeRestService {
             bean.setTradeId(dealEntity.getTradeId());
             bean.setEtrId(entity.getEntrustId());
             bean.setSecAcctId(dealEntity.getSecManageAcctId());
-            bean.setSecAmount(dealEntity.getPrinAmt());
+            // ZGTFCP-1667:修改股票送转字段赋值 modify by fuyongsheng 20220323 start
+            bean.setSecAmount(dealEntity.getShareAmt());
             bean.setCashAcctId(CollectionUtils.isEmpty(stlPayOrdersList)?accountNo: stlPayOrdersList.get(0).getMyAcctNo());
             bean.setCashAmount(dealEntity.getTradeAmt());
             Map<String, Object> map = BeanUtil.object2Map(bean);
-            map.put("etrSecAmount",stlPayOrdersList.get(0).getSettleAmt());
-            map.put("ordId",CollectionUtils.isEmpty(stlPayOrdersList)?"": stlPayOrdersList.get(0).getOrderId());
-            map.put("ordSecAmount",stlPayOrdersList.get(0).getSettleAmt());
+            map.put("etrSecAmount", null);
+            map.put("ordId", null);
+            map.put("ordSecAmount", null);
+            // ZGTFCP-1667:修改股票送转字段赋值 modify by fuyongsheng 20220323 end
             map.put(ORD_ENTRUST_ID,null);
             ptlList.add(map);
             resultMap.put(PTL_LIST, ptlList);
