@@ -492,6 +492,7 @@ public class KCBPTradeAgent extends TradeAgentDsp {
      * 411029	上海债券协议回购公开报价行情查询	上交所质押式协议回购公开报价行情查询
      * 460018	固收平台确定报价行情查询	上交所固收平台现券交易报价行情查询
      * 410556   上海盘后固定价格交易行情查询
+     * 410559   深圳盘后固定价格交易行情查询
      */
     @Override
     public List<IntegratedQuote> reqIntegratedQuotes(QuoteQryBean quoteQryBean) throws Exception {
