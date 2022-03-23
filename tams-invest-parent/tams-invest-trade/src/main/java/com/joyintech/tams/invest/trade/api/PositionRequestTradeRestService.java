@@ -99,8 +99,6 @@ public class PositionRequestTradeRestService {
             // 资产二级类型
             String assetType2 = StringUtil.isNotEmpty(finProductTradeDto.getAssetType2()) ?
                     finProductTradeDto.getAssetType2() : baseAssetCashPositionCommMapper.selectFundType(deal.getFinprodId());
-            String busiType = commonPositionEngineService.getPositionBusiType(deal.getFinprodType2(),
-                    deal.getPs(), assetType2);
             // ZGTFCP-1577: add by fuyongsheng 20220315 start
             // 回购首期特殊处理,需传正回购/逆回购
             String ps = deal.getPs();
@@ -111,8 +109,10 @@ public class PositionRequestTradeRestService {
                     ps = DictCodeListExt3.交易方向_逆回购.getValue();
                 }
             }
+            String busiType = commonPositionEngineService.getPositionBusiType(deal.getFinprodType2(),
+                    ps, assetType2);
             // ZGTFCP-1577: add by fuyongsheng 20220315 end
-            PositionHttpRequest.dorevoke(deal.getTradeId(), PositionConstant.POSITION_TYPE_TRD, busiType, deal.getPs());
+            PositionHttpRequest.dorevoke(deal.getTradeId(), PositionConstant.POSITION_TYPE_TRD, busiType, ps);
         }
     }
 
