@@ -87,6 +87,7 @@ import com.joyintech.tams.invest.common.dto.position.PositionCashSecData;
 import com.joyintech.tams.invest.common.dto.position.PositionCashSecDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import com.joyintech.tams.invest.common.entrust.inter.EtrTradeCommonervice;
+import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
 import com.joyintech.tams.invest.common.trade.dto.SecInfoModelDto;
@@ -5929,9 +5930,11 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	}
 
 
-
-
-
-
+	public List<RiskTrialRetDto> selectRiskList(String tradeId) {
+		Map<String,Object> map = new HashMap<>();
+		map.put("tradeId", tradeId);
+		List<RiskTrialRetDto> list = etrExchangeTradeCommonMapper.selectRiskList(map);
+		return list;
+	}
 
 }
