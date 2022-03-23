@@ -1414,7 +1414,11 @@ public class IbuQuoteBondService extends BaseService {
         param.put("psT02", BussinessDictCodeList.交易方向_卖出.getValue());
         param.put("psT03", BussinessDictCodeList.交易方向_行权回售.getValue());
         param.put("year",DateUtil.getYear(iPlatformDate.getSysDateStr()));
-        param.put("loginUserId", param.containsKey("loginUserId")?(String)param.get("loginUserId"):LoginUserUtil.getUserName());
+        param.put("loginUserId", param.containsKey("loginUserId") ? (String) param.get("loginUserId") : LoginUserUtil.getUserName());
+        param.put("tradeStatusList", Arrays.asList(BussinessDictCodeList.银行间上行报价状态_已成交.getValue(),
+                BussinessDictCodeList.银行间上行报价状态_已撤回.getValue(),
+                BussinessDictCodeList.银行间上行报价状态_已终止.getValue(),
+                BussinessDictCodeList.银行间上行报价状态_已过期.getValue()));
     }
 }
 

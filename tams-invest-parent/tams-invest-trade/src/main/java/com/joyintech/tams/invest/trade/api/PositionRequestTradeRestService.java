@@ -97,6 +97,17 @@ public class PositionRequestTradeRestService {
                     finProductTradeDto.getAssetType2() : baseAssetCashPositionCommMapper.selectFundType(deal.getFinprodId());
             String busiType = commonPositionEngineService.getPositionBusiType(deal.getFinprodType2(),
                     deal.getPs(), assetType2);
+            // ZGTFCP-1577: add by fuyongsheng 20220315 start
+            // 回购首期特殊处理,需传正回购/逆回购
+            String ps = deal.getPs();
+            if(DictCodeList.交易方向_买入.getValue().equals(entity.getTrdProductDeal().getPs())){
+                if(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(entity.getTrdProductDeal().getFinprodType2())){
+                    ps = DictCodeListExt3.交易方向_正回购.getValue();
+                }else if(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(entity.getTrdProductDeal().getFinprodType2())){
+                    ps = DictCodeListExt3.交易方向_逆回购.getValue();
+                }
+            }
+            // ZGTFCP-1577: add by fuyongsheng 20220315 end
             PositionHttpRequest.dorevoke(deal.getTradeId(), PositionConstant.POSITION_TYPE_TRD, busiType, deal.getPs());
         }
     }
