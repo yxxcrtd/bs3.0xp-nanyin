@@ -109,9 +109,6 @@ public class EtrExchangeTradeCommon004Controller extends BaseController {
     private EtrExchangeTradeCommonMapper etrExchangeTradeCommonMapper;
 
     @Autowired
-    private BasRiskMathCommService basRiskMathCommService;
-
-    @Autowired
     private EtrExchangeTradeCommonValidatorService etrExchangeTradeCommonValidatorService;
 
     @Override

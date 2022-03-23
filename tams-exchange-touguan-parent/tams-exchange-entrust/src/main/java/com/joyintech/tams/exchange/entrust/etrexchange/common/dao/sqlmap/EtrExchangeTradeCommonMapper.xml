@@ -1759,7 +1759,7 @@
 
 
     </select>
-    <resultMap id="BaseRedisResultMap" type="com.joyintech.service.common.risk.dto.RiskSelectDto" >
+    <resultMap id="BaseRedisResultMap" type="com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto" >
         <result column="PORTFOLIO_NAME" property="portfolioName" jdbcType="VARCHAR" />
         <result column="IND_ID" property="kriCode" jdbcType="VARCHAR" />
         <result column="SUP_DATE" property="supDate" jdbcType="DATE" />
