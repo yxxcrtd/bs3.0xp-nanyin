@@ -21,7 +21,7 @@ import java.util.List;
  * 
  * @author 刘溶容
  * @version 1.0 2016年11月7日
- * @see FilingRegistrationTupleEntity
+ * @see BaseInfoEntity
  * @since 1.0
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -1121,11 +1121,11 @@ public class BaseInfoEntity implements Feild {
     @XmlElement(name = "wemax:WealthManagementProductPleaseSelect")
     private CommonNodeEntity wealthManagementProductPleaseSelect;
 
-    /**
+   /* *//**
      * 产品登记编码
-     */
+     *//*
     @XmlElement(name = "wemax:ProductRegistrationCode")
-    private CommonNodeEntity productRegistrationCode;
+    private CommonNodeEntity productRegistrationCode;*/
     /***1217升级**/
 
     /**
