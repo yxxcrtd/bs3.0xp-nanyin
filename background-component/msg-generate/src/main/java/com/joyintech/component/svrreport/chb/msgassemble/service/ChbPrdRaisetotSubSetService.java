@@ -147,14 +147,13 @@ public class ChbPrdRaisetotSubSetService {
 	    cnBondItemMap1.put("IssuerIdentificationCode", cnBondItem2);
 		}
 
-
+		/***1217升级**/
 		//5.3.3 资金托管账号
 		if(StringUtil.isNotEmpty(sub.getBusiAcctNo())){
 			CnBondInterfItemDto cnBondItem1 = new CnBondInterfItemDto();
 			cnBondItem1.setValue(sub.getBusiAcctNo());
-			cnBondItemMap1.put("Fund Custody Account Number", cnBondItem1);
+			cnBondItemMap1.put("FundCustodyAccountNumber", cnBondItem1);
 		}
-
 
 		//5.3.4 资金托管账户
 		if(StringUtil.isNotEmpty(sub.getAcctName())){
@@ -162,6 +161,7 @@ public class ChbPrdRaisetotSubSetService {
 			cnBondItem1.setValue(sub.getAcctName());
 			cnBondItemMap1.put("FundCustodyAccountName", cnBondItem1);
 		}
+		/***1217升级**/
 
 		//个人投资者总数
 		if(sub.getSingleTotal() != null){
