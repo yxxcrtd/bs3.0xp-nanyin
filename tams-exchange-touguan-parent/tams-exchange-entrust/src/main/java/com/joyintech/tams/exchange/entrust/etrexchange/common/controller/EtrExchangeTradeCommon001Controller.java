@@ -1202,10 +1202,10 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 							etrExchangeTrade001Dto.setCreateDept(LoginUserUtil.getDeptCode());// 用户部门
 							etrExchangeTrade001Dto.setCreateTime(new Date());// 创建时间
 							etrExchangeTrade001Dto.setBusinessTypeName(businessType);//此处存的是类型
-							etrExchangeTrade001Dto.setOptType(ENTRUST_RECORD_NEW);
 							etrExchangeTrade001Dto.setIsMulti(DictCodeList.是否_否.getValue());
 							etrExchangeTrade001Dto.setFromEtrExchange("Y");
 							etrExchangeTrade001Dto.setDisRate(item.getDisRate());
+							etrExchangeTrade001Dto.setOptType(dto.getOptType());
 							List<EtrExchangeTradePortfolioRequest> portfolioList=new ArrayList<>();
 							EtrExchangeTradePortfolioRequest portfolioRequest=new EtrExchangeTradePortfolioRequest();
 							BeanUtil.copyPropertiesIgnoreNull(portfolioRequest,etrExchangeTrade001Dto);
@@ -1348,7 +1348,6 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 						etrExchangeTrade001Dto.setCreateDept(LoginUserUtil.getDeptCode());// 用户部门
 						etrExchangeTrade001Dto.setCreateTime(new Date());// 创建时间
 						etrExchangeTrade001Dto.setBusinessTypeName(businessType);//此处存的是类型
-						etrExchangeTrade001Dto.setOptType(ENTRUST_RECORD_NEW);
 						etrExchangeTrade001Dto.setIsMulti(DictCodeList.是否_否.getValue());
 						etrExchangeTrade001Dto.setFromEtrExchange("Y");
 						etrExchangeTrade001Dto.setDisRate(item2.getDisRate());
@@ -1432,7 +1431,6 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 					etrExchangeTrade001Dto.setCreateDept(LoginUserUtil.getDeptCode());// 用户部门
 					etrExchangeTrade001Dto.setCreateTime(new Date());// 创建时间
 					etrExchangeTrade001Dto.setBusinessTypeName(businessType);//此处存的是类型
-					etrExchangeTrade001Dto.setOptType(ENTRUST_RECORD_NEW);
 					etrExchangeTrade001Dto.setIsMulti(DictCodeList.是否_否.getValue());
 					etrExchangeTrade001Dto.setFromEtrExchange("Y");
 					etrExchangeTrade001Dto.setDisRate(item.getDisRate());
