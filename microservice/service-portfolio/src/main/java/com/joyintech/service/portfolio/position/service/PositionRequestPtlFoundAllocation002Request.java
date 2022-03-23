@@ -45,7 +45,7 @@ public class PositionRequestPtlFoundAllocation002Request {
         String busiType = null;
         String ps = null;
         if(Objects.equals(entity.getPayType(),DictCodeListExt1.指令类型_银证转账_银转证.getValue())
-                ||Objects.equals(entity.getPayType(),"01")){
+                ||Objects.equals(entity.getPayType(),"01")||Objects.equals(entity.getPayType(),"HK01")){
             busiType = DictCodeListExt3.头寸业务类型_银证转账.getValue();
             ps = DictCodeListExt3.交易方向_银证转账.getValue();
         } else {
@@ -64,7 +64,7 @@ public class PositionRequestPtlFoundAllocation002Request {
         String busiType = null;
         String ps = null;
         if(Objects.equals(entity.getPayType(),DictCodeListExt1.指令类型_银证转账_银转证.getValue())
-                ||Objects.equals(entity.getPayType(),"01")){
+                ||Objects.equals(entity.getPayType(),"01")||Objects.equals(entity.getPayType(),"HK01")){
             busiType = DictCodeListExt3.头寸业务类型_银证转账.getValue();
             ps = DictCodeListExt3.交易方向_银证转账.getValue();
         } else {
@@ -98,7 +98,7 @@ public class PositionRequestPtlFoundAllocation002Request {
 
         //业务类型 交易方向
         if(Objects.equals(entity.getPayType(),DictCodeListExt1.指令类型_银证转账_银转证.getValue())
-        ||Objects.equals(entity.getPayType(),"01")){
+        ||Objects.equals(entity.getPayType(),"01")||Objects.equals(entity.getPayType(),"HK01")){
             resultMap.put("busiType", DictCodeListExt3.头寸业务类型_银证转账.getValue());
             resultMap.put(PS, DictCodeListExt3.交易方向_银证转账.getValue());
         } else {

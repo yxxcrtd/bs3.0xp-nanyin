@@ -661,8 +661,19 @@ public class CfetsEtrDispatcherService extends BaseService {
     public Page<CfetsEtrDispatcherExeListInfoResponse> getEtrDispatcherExeListInfoByExe(CommonSearchInfoRequest dto) {
         Map<String, Object> pageParam = BeanUtil.object2Map(dto);
         pageParam.put("instructionId", dto.getEntrustId());
-        return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
+        Page<CfetsEtrDispatcherExeListInfoResponse> page = super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
                 () -> cfetsEtrDispatcherMapper.queryEntrust2Touguan(pageParam));
+        if (!CollectionUtils.isEmpty(page.getRoot())) {
+            for (CfetsEtrDispatcherExeListInfoResponse response : page.getRoot()) {
+                if (response.getEntrustBs().equals(DictCodeListExt3.交易方向_质押券出库.getValue())
+                || response.getEntrustBs().equals(DictCodeListExt3.交易方向_质押券入库.getValue())) {
+                    response.setEntrustPrice(StringUtil.isNotEmpty(response.getEntrustPrice())?ArithmeticUtil.multiply(response.getEntrustPrice(),BigDecimal.valueOf(100)):null);
+                    response.setTradedPrice(StringUtil.isNotEmpty(response.getTradedPrice())?ArithmeticUtil.multiply(response.getTradedPrice(),BigDecimal.valueOf(100)):null);
+                }
+                response.setTradingDay(StringUtil.isNotEmpty(response.getTradingDay())?DateUtil.format(DateUtil.parse(response.getTradingDay()),DateUtil.DEFAULT_DATE_FORMAT_EN):null);
+            }
+        }
+        return page;
     }
 
     /**
@@ -727,8 +738,19 @@ public class CfetsEtrDispatcherService extends BaseService {
     public Page<CfetsEtrDispatcherDealListInfoResponse> getEtrDispatcherDealListInfoByExe(CommonSearchInfoRequest dto) {
         Map<String, Object> pageParam = BeanUtil.object2Map(dto);
         pageParam.put("instructionId", dto.getEntrustId());
-        return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
+        Page<CfetsEtrDispatcherDealListInfoResponse> page = super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
                 () -> cfetsEtrDispatcherMapper.queryTrade2Touguan(pageParam));
+        if (!CollectionUtils.isEmpty(page.getRoot())) {
+            for (CfetsEtrDispatcherDealListInfoResponse response : page.getRoot()) {
+                if (response.getEntrustBs().equals(DictCodeListExt3.交易方向_质押券出库.getValue())
+                        || response.getEntrustBs().equals(DictCodeListExt3.交易方向_质押券入库.getValue())) {
+                    response.setTradedPrice(StringUtil.isNotEmpty(response.getTradedPrice())?ArithmeticUtil.multiply(response.getTradedPrice(),BigDecimal.valueOf(100)):null);
+                }
+                response.setTradeDate(StringUtil.isNotEmpty(response.getTradeDate())?DateUtil.format(DateUtil.parse(response.getTradeDate()),DateUtil.DEFAULT_DATE_FORMAT_EN):null);
+            }
+
+        }
+        return page;
     }
 
     /**

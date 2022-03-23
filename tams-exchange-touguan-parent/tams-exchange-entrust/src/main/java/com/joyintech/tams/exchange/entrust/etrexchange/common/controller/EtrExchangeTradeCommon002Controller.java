@@ -26,6 +26,7 @@ import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchang
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon002Service;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon003Service;
 import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.*;
+import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.service.EtrExchangeTradeJj001Service;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.TempConstant;
@@ -66,6 +67,7 @@ public class EtrExchangeTradeCommon002Controller extends BaseController{
      */
     @Autowired
     private EtrExchangeTradeCommon002Service etrExchangeTradeCommon002Service;
+
 
     @ApiOperation(value="查询页面初始化参数", notes = "查询页面初始化参数")
     @PostMapping("/init")

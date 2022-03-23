@@ -196,6 +196,8 @@ public class CfetsEtrDispatcherDealListInfoResponse extends CfetsEtrDispatcherBa
     @ApiModelProperty(name = "recommenderName", value = "资产推荐方名称", example = "字符串1")
     private String recommenderName;
 
+    @ApiModelProperty(name = "registOrgStr", value = "登记托管机构", example = "字符串1")
+    private String registOrgStr;
 
 
     public String getEffectFlag() {
@@ -1366,5 +1368,13 @@ public class CfetsEtrDispatcherDealListInfoResponse extends CfetsEtrDispatcherBa
 
     public void setWinTypeValue(String winTypeValue) {
         this.winTypeValue = winTypeValue;
+    }
+
+    public String getRegistOrgStr() {
+        return registOrgStr;
+    }
+
+    public void setRegistOrgStr(String registOrgStr) {
+        this.registOrgStr = registOrgStr;
     }
 }

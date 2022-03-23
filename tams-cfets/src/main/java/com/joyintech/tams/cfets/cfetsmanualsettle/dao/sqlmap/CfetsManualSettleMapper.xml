@@ -19,7 +19,7 @@
             sdl2.item_value tgBusiTypeStr,
             T1.PS ps,
             sdl3.item_value psStr,
-            T1.SHARE_AMT settleNum,
+            T1.SHARE_AMT/100 settleNum,
             T1.TRADE_AMT settleAmt,
             LISTAGG(T4.PORTFOLIO_ID,',') WITHIN GROUP (ORDER BY (T1.TOTLE_TRADE_ID))  portfolioId,
             LISTAGG(T5.PORTFOLIO_NAME,',') WITHIN GROUP (ORDER BY (T1.TOTLE_TRADE_ID)) portfolioName,
@@ -153,7 +153,7 @@
             sdl2.item_value tgBusiTypeStr,
             T1.PS ps,
             sdl3.item_value psStr,
-            T1.SHARE_AMT settleNum,
+            T1.SHARE_AMT/100 settleNum,
             T1.TRADE_AMT settleAmt,
             LISTAGG(T4.PORTFOLIO_ID,',') WITHIN GROUP (ORDER BY (T1.TOTLE_TRADE_ID))  portfolioId,
             LISTAGG(T5.PORTFOLIO_NAME,',') WITHIN GROUP (ORDER BY (T1.TOTLE_TRADE_ID)) portfolioName,
@@ -493,7 +493,7 @@
             T1.FINPROD_TYPE2 finprodType2,
             TO_CHAR(T1.TRADE_DATE,'yyyy-MM-dd') tradeDate,
             TO_CHAR(T1.SETTLE_DATE,'yyyy-MM-dd') settleDate,
-            (T3.THEORY_INT+T3.THEORY_PRIN) AS  totalAmtTheory
+            T1.TRADE_AMT AS  totalAmtTheory
         FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
         LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL T3 ON T1.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
         LEFT JOIN FIN_PRODUCT T4 ON T1.FINPROD_ID = T4.FINPROD_ID
@@ -522,7 +522,7 @@
             T1.FINPROD_TYPE2 finprodType2,
             TO_CHAR(T1.TRADE_DATE,'yyyy-MM-dd') tradeDate,
             TO_CHAR(T1.SETTLE_DATE,'yyyy-MM-dd') settleDate,
-            (T3.THEORY_INT+T3.THEORY_PRIN) AS  totalAmtTheory
+            T1.TRADE_AMT AS  totalAmtTheory
         FROM TRD_PRODUCT_TEMP_DEAL_TOTAL T1
         LEFT JOIN PA_TRD_PROD_TEMP_DEAL_TOTAL T3 ON T1.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
         LEFT JOIN FIN_PRODUCT T4 ON T1.FINPROD_ID = T4.FINPROD_ID
@@ -554,7 +554,7 @@
             TPD.EXER_YIELD*100 exeYield,
             EE.BUSINESS_MODEL busiTypePosition,
             TPD.UNIT_CPRICE unitPrice,
-            (TPD.PRIN_AMT+TPD.INT_AMT) as totalAmtTheory
+            TPD.TRADE_AMT as totalAmtTheory
         FROM TRD_PRODUCT_DEAL TPD
         INNER JOIN TRD_PRODUCT_DEAL_ADD TPDA on TPD.TRADE_ID = TPDA.TRADE_ID
         LEFT JOIN PTL_PORTFOLIO pp on pp.PORTFOLIO_ID = TPDA.PORTFOLIO_ID
@@ -588,7 +588,7 @@
                TPD.EXER_YIELD*100 exeYield,
                EE.BUSINESS_MODEL busiTypePosition,
                TPD.UNIT_CPRICE unitPrice,
-               (TPD.PRIN_AMT+TPD.INT_AMT) as totalAmtTheory
+               TPD.TRADE_AMT as totalAmtTheory
         FROM TRD_PRODUCT_TEMP_DEAL TPD
         INNER JOIN TRD_PRODUCT_TEMP_DEAL_ADD TPDA on TPD.TRADE_ID = TPDA.TRADE_ID
         LEFT JOIN PTL_PORTFOLIO pp on pp.PORTFOLIO_ID = TPDA.PORTFOLIO_ID
@@ -1338,7 +1338,7 @@
         LEFT JOIN ibu_quote_crep ic ON ic.quote_id = nvl(T7.PRE_TRADE_ID,T1.B_TRADE_ID)
         LEFT JOIN sys_datadict_list sdl ON sdl.dict_code='DISTRIBUTION' and sdl.item_code = coalesce(T8.DIP_TYPE,ib.DIP_TYPE,ic.DIP_TYPE)
         left join (
-        select t.totle_trade_id as totleTradeId,sum(CASE WHEN a.HODING_TYPE =#{A_001} THEN a.AMOUNT ELSE 0 END)/100 AS PTL_BOND_ZHCC
+        select t.totle_trade_id as totleTradeId,sum(CASE WHEN a.HODING_TYPE =#{A_001} THEN a.AMOUNT ELSE 0 END)/10000 AS PTL_BOND_ZHCC
         from PTL_SEC_POSITION_RULE a
         inner join trd_product_deal t
         on a.finprod_id=t.finprod_id
@@ -1417,7 +1417,7 @@
              LEFT JOIN ibu_quote_crep ic ON ic.quote_id = nvl(T7.PRE_TRADE_ID,T1.B_TRADE_ID)
              LEFT JOIN sys_datadict_list sdl ON sdl.dict_code='DISTRIBUTION' and sdl.item_code = coalesce(T8.DIP_TYPE,ib.DIP_TYPE,ic.DIP_TYPE)
              left join (
-        select t.totle_trade_id as totleTradeId,sum(CASE WHEN a.HODING_TYPE =#{A_001} THEN a.AMOUNT ELSE 0 END)/100 AS PTL_BOND_ZHCC
+        select t.totle_trade_id as totleTradeId,sum(CASE WHEN a.HODING_TYPE =#{A_001} THEN a.AMOUNT ELSE 0 END)/10000 AS PTL_BOND_ZHCC
         from PTL_SEC_POSITION_RULE a
                  inner join trd_product_temp_deal t
                             on a.finprod_id=t.finprod_id
