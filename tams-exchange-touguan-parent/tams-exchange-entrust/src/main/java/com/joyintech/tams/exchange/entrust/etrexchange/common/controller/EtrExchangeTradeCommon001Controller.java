@@ -38,6 +38,7 @@ import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTra
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommonValidatorService;
+import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.validator.EtrExchangeTradeJj001Validator;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
@@ -121,6 +122,9 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 
 	@Autowired
 	private EtrExchangeTradeCommonValidatorService etrExchangeTradeCommonValidatorService;
+
+	@Autowired
+	private EtrExchangeTradeJj001Validator etrExchangeTradeJj001Validator;
 	/**
 	 * 由于交易平台不同，设置不同交易平台对应的委托方向
 	 *
@@ -1019,8 +1023,12 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 			throws Exception {
 		AjaxResult ajax= etrExchangeTrade001CommonService.checkSave(dto,br);
 		List<ValidMessage> validList = etrExchangeTradeCommonValidatorService.valid(dto);
+		List<ValidMessage> validListBussValid = etrExchangeTradeJj001Validator.bussValid(dto);
 		if (!CollectionUtils.isEmpty(validList)){
 			ajax.setErrorList(validList);
+		}
+		if (!CollectionUtils.isEmpty(validListBussValid)){
+			ajax.setErrorList(validListBussValid);
 		}
 		if (ajax != null && !StringUtil.isEmptyList(ajax.getErrorList()) && !StringUtil.equals(dto.getOperateType(),"save")) {
 			return ajax;
