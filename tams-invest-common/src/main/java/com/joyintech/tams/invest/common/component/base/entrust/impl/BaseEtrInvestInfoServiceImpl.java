@@ -1375,8 +1375,8 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
                 }
             }
             etrEntrustMapper.deleteByPrimaryKey(dto.getEtrEntrust().getEntrustId());
-            etrEntrustAddMapper.deleteByPrimaryKey(dto.getEtrEntrustAdd().getEntrustId());
-            etrEntrustDetailMapper.deleteByEntrustId(dto.getEtrEntrustAdd().getEntrustId());
+            etrEntrustAddMapper.deleteByPrimaryKey(dto.getEtrEntrust().getEntrustId());
+            etrEntrustDetailMapper.deleteByEntrustId(dto.getEtrEntrust().getEntrustId());
         }
     }
 }
