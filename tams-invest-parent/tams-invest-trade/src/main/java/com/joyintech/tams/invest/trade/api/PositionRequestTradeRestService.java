@@ -6,6 +6,7 @@ import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
+import com.joyintech.tams.common.base.dao.TrdProductDealAddMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
@@ -55,6 +56,9 @@ public class PositionRequestTradeRestService {
 
     @Autowired
     private EtrEntrustMapper etrEntrustMapper;
+
+    @Autowired
+    private TrdProductDealAddMapper trdProductDealAddMapper;
 
     public static final String TRADE_PLAT = "TRANS_MATCH";
 
@@ -515,7 +519,9 @@ public class PositionRequestTradeRestService {
         bondSec.put("finprodId", trdProductDeal.getFinprodId());
         bondSec.put("secAcctId", trdProductDealTotal.getSecManageAcctId());
         bondSec.put("tradeId", trdProductDeal.getTradeId());
-        bondSec.put("etrId", null);
+        // 查询申购交易对应的指令
+        TrdProductDealAdd trdProductDealAdd1 = trdProductDealAddMapper.selectByPrimaryKey(trdProductDeal.getbTradeId());
+        bondSec.put("etrId", trdProductDealAdd1 != null ? trdProductDealAdd1.getEntrustId() : StringUtil.EMPTY);
         bondSec.put("integrateSecAmount", new BigDecimal(0));
         bondSec.put("ownSecAmount", ArithmeticUtil.multiply(trdProductDeal.getShareAmt(), new BigDecimal(100)));
         bondSec.put("secAmount", ArithmeticUtil.multiply(trdProductDeal.getShareAmt(), new BigDecimal(100)));
