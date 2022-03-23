@@ -35,7 +35,7 @@ import com.joyintech.tools.collectors.JoyinCollectors;
 
 /**
  * 人行产品资产池代码管理Service
- * 
+ *
  * @author kx
  *
  */
@@ -44,10 +44,10 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 
 	@Autowired
 	private ProPeoplebankcodeManagement001DtoMapper peoplebankcodeManagement001DtoMapper;
-	
+
 	@Autowired
 	private SysSeqMapper sysSeqMapper;
-	
+
 	/**
 	 * 年份前两位
 	 */
@@ -55,8 +55,8 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 
 	/**
 	 * 查询内部产品代码下拉框
-	 * 
-	 * @param pageParam
+	 *
+	 * @param param
 	 *            参数
 	 * @return 结果list
 	 * @see
@@ -70,7 +70,7 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 
 	/**
 	 * 查询列表
-	 * 
+	 *
 	 * @param param
 	 * @return
 	 */
@@ -97,13 +97,13 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 	/*
 	 * 根据内部产品合并列表
 	 * List<ProPeoplebankcodeManagement001Dto>  list
-	 * 
+	 *
 	 */
 	public  List<ProPeoplebankcodeManagement001Dto>  getList(List<ProPeoplebankcodeManagement001Dto>  list){
-		
+
 		//定义map
 		Map<String,ProPeoplebankcodeManagement001Dto> map=new  LinkedHashMap<String,ProPeoplebankcodeManagement001Dto>();
-		
+
 		for(ProPeoplebankcodeManagement001Dto  dto:list){
 			//将list存放在map中
 			map.put(dto.getInsideProdId(), dto);
@@ -129,12 +129,12 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 			}
 			map.put(dto.getInsideProdId(), mapDto);
 		}
-		
-		 Set<String>  stset=map.keySet();
-		 List<ProPeoplebankcodeManagement001Dto>  clist=new  ArrayList<ProPeoplebankcodeManagement001Dto>();
-		 for(String  key:stset){
-			 clist.add(map.get(key));
-		 }
+
+		Set<String>  stset=map.keySet();
+		List<ProPeoplebankcodeManagement001Dto>  clist=new  ArrayList<ProPeoplebankcodeManagement001Dto>();
+		for(String  key:stset){
+			clist.add(map.get(key));
+		}
 		return clist;
 	}
 
@@ -164,7 +164,7 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 	/**
 	 * 导入文件之前检查文件中的数据在数据库中是否已经存在 如果已经存在，需要提示用户进行确认是否覆盖数据库
 	 *
-	 * @param fileName
+	 * @param dataList
 	 *            导入的文件名名
 	 * @return 检查结果
 	 * @see
@@ -179,15 +179,12 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 				List<ProPeoplebankcodeManagement001Dto> entities = convertToBean(dataList);
 
 				for(ProPeoplebankcodeManagement001Dto dto : entities){
-					if(StringUtil.isNotEmpty(dto.getPbcCode())){
-						if(dto.getPbcCode().length()>15){
-							webResult.setMessage("人行产品代码长度不得大于15");
-							webResult.setMessageType(MessageType.错误消息);
-							webResult.setStatuCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-							return webResult;
-						}
+					if(dto.getPbcCode().length()>15){
+						webResult.setMessage("人行产品代码长度不得大于15");
+						webResult.setMessageType(MessageType.错误消息);
+						webResult.setStatuCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+						return webResult;
 					}
-
 					//校验内部产品代码在产品基本信息表中是否存在
 					ProPeoplebankcodeManagement001Dto record = new ProPeoplebankcodeManagement001Dto();
 					record.setInsideProdId(dto.getInsideProdId());
@@ -221,7 +218,7 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 				}
 				if (data != null && data.size() > 0) {
 					Map<String, List<ProPeoplebankcodeManagement001Dto>> equityInfo001Map = entities.stream()
-							.collect(JoyinCollectors.groupingBy(x -> x.getInsideProdId()+"|"+x.getCodeType()));
+							.collect(JoyinCollectors.groupingBy(x -> x.getInsideProdId()));
 					// Collections.sort(data, Comparator.comparing(EquityInfo001Dto::getExcelNum));
 					// 将序号放入list中
 					List<String> excelNumList = new ArrayList<String>();
@@ -259,12 +256,12 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 	 * 解析excel文件并进行验证
 	 * </p>
 	 *
-	 * @param fileName
+	 * @param dataList
 	 *            导入的文件名名
 	 * @return 导入结果
 	 */
 	public List<ExcelValidDto> importData(List<List<String>> dataList, List<List<String>> tempList, String orgCode,
-			String deptCode) {
+										  String deptCode) {
 		if (!StringUtil.isEmptyList(dataList)) {
 			List<String> headList = new ArrayList<String>();
 			headList.add("内部产品代码");
@@ -317,14 +314,14 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 								seqMap.put(seqKey, seqNum);
 							}
 						}
-						
+
 					});
 					// 更新序号
 					updateSysSeq(seqMap);
 				}
 				return checkResult;
 			}
-			
+
 		}
 		return null;
 	}
@@ -352,7 +349,7 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 			}
 			entity.setInsideProdIdAndCodeType(entity.getInsideProdId() + "|" + entity.getCodeType());
 			entity.setPbcCode(list.get(2));
-            entity.setExcelNum(String.valueOf(i+2));
+			entity.setExcelNum(String.valueOf(i+2));
 			entities.add(entity);
 		}
 		return entities;
@@ -372,7 +369,7 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 	 * @return 验证信息
 	 */
 	private List<ExcelValidDto> convertToEntity(List<List<String>> dataList,
-			List<ProPeoplebankcodeManagement001Dto> entities, Map<String, String> box, String orgCode) {
+												List<ProPeoplebankcodeManagement001Dto> entities, Map<String, String> box, String orgCode) {
 		List<ExcelValidDto> checkResult = new ArrayList<>();
 		HashMap<String, String> hashMap = new HashMap<String, String>();
 		for (int i = 0; i < dataList.size(); i++) {
@@ -424,13 +421,10 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 				message.add(error1);
 			} else {
 				entity.setPbcCode(list.get(2));
-				List<ProPeoplebankcodeManagement001Dto> dto = peoplebankcodeManagement001DtoMapper.selectByPbcCode(list.get(2));
-				if (CollectionUtils.isNotEmpty(dto)){
-					for (ProPeoplebankcodeManagement001Dto management001Dto : dto) {
-						if (!StringUtil.equals(entity.getInsideProdId(),management001Dto.getInsideProdId())){
-							message.add("人行代码"+list.get(2)+"已被使用！");
-							break;
-						}
+				ProPeoplebankcodeManagement001Dto dto = peoplebankcodeManagement001DtoMapper.selectByPbcCode(list.get(2));
+				if (null!=dto){
+					if (!StringUtil.equals(entity.getInsideProdId(),dto.getInsideProdId())){
+						message.add("人行代码"+list.get(2)+"已被使用！");
 					}
 				}
 			}
@@ -457,7 +451,7 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 						StringUtil.joinString(message, GlobalConstant.COMMA)));
 			} else {
 				entities.add(entity);
-			}				
+			}
 		}
 		return checkResult;
 	}
@@ -522,56 +516,56 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 		return null;
 	}
 
-	
-    
-    /**
-	 * 
-	 * @Description 根据参数修改SYS_SEQ值  
-	 * @Author      高健  
-	 * @Date        2020年1月13日 下午2:51:31  
-	 * @param  参数  
-	 * @return void 返回类型   
+
+
+	/**
+	 *
+	 * @Description 根据参数修改SYS_SEQ值
+	 * @Author      高健
+	 * @Date        2020年1月13日 下午2:51:31
+	 * @param  seqMap
+	 * @return void 返回类型
 	 * @throws
 	 */
-    public void updateSysSeq(Map<String, Long> seqMap) {
-    	for (String key : seqMap.keySet()) {
-    		String[] keyArr = key.split("-");
-    		SysSeqModel sysSeqModel = new SysSeqModel();
-    		sysSeqModel.setSeqcode(keyArr[0]);
-    		sysSeqModel.setSeqdate(keyArr[1]);
-    		 //查询序列
-            SysSeqModel seqModel = sysSeqMapper.selectByPrimaryKey(sysSeqModel);
-            if(seqModel == null) {
-                //添加序列
-                sysSeqModel.setSeqvalue(seqMap.get(key));
-                sysSeqModel.setRemark("1");
-                sysSeqMapper.insertSelective(sysSeqModel);
-            } else {
-                sysSeqModel.setSeqvalue(seqMap.get(key));
-                //更新序列
-                sysSeqMapper.updateByPrimaryKeySelective(sysSeqModel);
-            }
-    	}
-    }
-    
-    /**
-     * 
-     * @Description 判断导入的内部资产代码是否为标准值  
-     * @Author      高健  
-     * @Date        2020年1月13日 下午4:06:12  
-     * @param @param insideProdId
-     * @param @param codeType
-     * @param @return 参数  
-     * @return boolean 返回类型   
-     * @throws
-     */
-    public boolean checkInsideProdId(String insideProdId, String codeType) {
-    	String standardCodeRegex = "";
-    	if (StringUtil.equals(DictCodeListExt3.代码类型_产品.getValue(), codeType)) {
-    		standardCodeRegex = "^[a-zA-Z0-9]{7}[0-9]{8}$";
+	public void updateSysSeq(Map<String, Long> seqMap) {
+		for (String key : seqMap.keySet()) {
+			String[] keyArr = key.split("-");
+			SysSeqModel sysSeqModel = new SysSeqModel();
+			sysSeqModel.setSeqcode(keyArr[0]);
+			sysSeqModel.setSeqdate(keyArr[1]);
+			//查询序列
+			SysSeqModel seqModel = sysSeqMapper.selectByPrimaryKey(sysSeqModel);
+			if(seqModel == null) {
+				//添加序列
+				sysSeqModel.setSeqvalue(seqMap.get(key));
+				sysSeqModel.setRemark("1");
+				sysSeqMapper.insertSelective(sysSeqModel);
+			} else {
+				sysSeqModel.setSeqvalue(seqMap.get(key));
+				//更新序列
+				sysSeqMapper.updateByPrimaryKeySelective(sysSeqModel);
+			}
+		}
+	}
+
+	/**
+	 *
+	 * @Description 判断导入的内部资产代码是否为标准值
+	 * @Author      高健
+	 * @Date        2020年1月13日 下午4:06:12
+	 * @param @param insideProdId
+	 * @param @param codeType
+	 * @param @return 参数
+	 * @return boolean 返回类型
+	 * @throws
+	 */
+	public boolean checkInsideProdId(String insideProdId, String codeType) {
+		String standardCodeRegex = "";
+		if (StringUtil.equals(DictCodeListExt3.代码类型_产品.getValue(), codeType)) {
+			standardCodeRegex = "^[a-zA-Z0-9]{7}[0-9]{8}$";
 		} else {
 			standardCodeRegex = "^[a-zA-Z0-9]{7}[0-9]{7}$";
 		}
-    	return insideProdId.matches(standardCodeRegex);
-    }
+		return insideProdId.matches(standardCodeRegex);
+	}
 }

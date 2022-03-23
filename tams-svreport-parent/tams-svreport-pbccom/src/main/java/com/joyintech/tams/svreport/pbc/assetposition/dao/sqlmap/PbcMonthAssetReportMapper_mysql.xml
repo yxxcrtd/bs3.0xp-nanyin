@@ -19,13 +19,7 @@
     <result column="INT_AMT" property="intAmt" jdbcType="DECIMAL" />
     <result column="END_DAYS" property="endDays" jdbcType="DECIMAL" />
     <result column="BAL_FLAG" property="balFlag" jdbcType="VARCHAR" />
-    <result column="RATING" property="rating" jdbcType="VARCHAR" />
-    <result column="BANK_SEC_CAPITAL" property="bankSecCapital" jdbcType="VARCHAR" />
-    <result column="BANK_SEC_PERPETUAL" property="bankSecPerpetual" jdbcType="VARCHAR" />
-    <result column="BANK_SEC_PREFER" property="bankSecPrefer" jdbcType="VARCHAR" />
-    <result column="IS_PERPETUAL" property="isPerpetual" jdbcType="VARCHAR" />
     <result column="ASSET_POOL_CODE" property="assetPoolCode" jdbcType="VARCHAR" />
-    <result column="INSTITUTION_CODE" property="institutionCode" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     POSUUID, PRODID, ORG_CODE, POSITION_TYPE, CHL_ID, ASSET_CODE, ASSET_TYPE1, ASSET_TYPE2,
@@ -211,7 +205,7 @@
     INDUSTRY_PBC, CUSTOMER_OBJ_TYPE
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from PBC_MONTH_ASSET_POSITION
     where POSUUID = #{posuuid,jdbcType=CHAR}
@@ -221,18 +215,18 @@
     where POSUUID = #{posuuid,jdbcType=CHAR}
   </delete>
   <insert id="insert" parameterType="com.joyintech.tams.svreport.pbc.assetposition.dto.PbcMonthAssetPositionDto" >
-    insert into PBC_MONTH_ASSET_POSITION (POSUUID, PRODID, ORG_CODE, 
-      POSITION_TYPE, CHL_ID, ASSET_CODE, 
-      ASSET_TYPE1, ASSET_TYPE2, ASSET_TYPE3, 
-      STARTDATE, ENDDATE, BOOKDATE, 
-      CCY, AMT, INT_AMT, END_DAYS, 
-      BAL_FLAG)
-    values (#{posuuid,jdbcType=CHAR}, #{prodid,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, 
-      #{positionType,jdbcType=VARCHAR}, #{chlId,jdbcType=VARCHAR}, #{assetCode,jdbcType=VARCHAR}, 
-      #{assetType1,jdbcType=VARCHAR}, #{assetType2,jdbcType=VARCHAR}, #{assetType3,jdbcType=VARCHAR}, 
-      #{startdate,jdbcType=TIMESTAMP}, #{enddate,jdbcType=TIMESTAMP}, #{bookdate,jdbcType=TIMESTAMP}, 
-      #{ccy,jdbcType=VARCHAR}, #{amt,jdbcType=DECIMAL}, #{intAmt,jdbcType=DECIMAL}, #{endDays,jdbcType=DECIMAL}, 
-      #{balFlag,jdbcType=VARCHAR})
+    insert into PBC_MONTH_ASSET_POSITION (POSUUID, PRODID, ORG_CODE,
+                                          POSITION_TYPE, CHL_ID, ASSET_CODE,
+                                          ASSET_TYPE1, ASSET_TYPE2, ASSET_TYPE3,
+                                          STARTDATE, ENDDATE, BOOKDATE,
+                                          CCY, AMT, INT_AMT, END_DAYS,
+                                          BAL_FLAG)
+    values (#{posuuid,jdbcType=CHAR}, #{prodid,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR},
+            #{positionType,jdbcType=VARCHAR}, #{chlId,jdbcType=VARCHAR}, #{assetCode,jdbcType=VARCHAR},
+            #{assetType1,jdbcType=VARCHAR}, #{assetType2,jdbcType=VARCHAR}, #{assetType3,jdbcType=VARCHAR},
+            #{startdate,jdbcType=TIMESTAMP}, #{enddate,jdbcType=TIMESTAMP}, #{bookdate,jdbcType=TIMESTAMP},
+            #{ccy,jdbcType=VARCHAR}, #{amt,jdbcType=DECIMAL}, #{intAmt,jdbcType=DECIMAL}, #{endDays,jdbcType=DECIMAL},
+            #{balFlag,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.pbc.assetposition.dto.PbcMonthAssetPositionDto" >
     insert into PBC_MONTH_ASSET_POSITION
@@ -400,71 +394,63 @@
   <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.pbc.assetposition.dto.PbcMonthAssetPositionDto" >
     update PBC_MONTH_ASSET_POSITION
     set PRODID = #{prodid,jdbcType=VARCHAR},
-      ORG_CODE = #{orgCode,jdbcType=VARCHAR},
-      POSITION_TYPE = #{positionType,jdbcType=VARCHAR},
-      CHL_ID = #{chlId,jdbcType=VARCHAR},
-      ASSET_CODE = #{assetCode,jdbcType=VARCHAR},
-      ASSET_TYPE1 = #{assetType1,jdbcType=VARCHAR},
-      ASSET_TYPE2 = #{assetType2,jdbcType=VARCHAR},
-      ASSET_TYPE3 = #{assetType3,jdbcType=VARCHAR},
-      STARTDATE = #{startdate,jdbcType=TIMESTAMP},
-      ENDDATE = #{enddate,jdbcType=TIMESTAMP},
-      BOOKDATE = #{bookdate,jdbcType=TIMESTAMP},
-      CCY = #{ccy,jdbcType=VARCHAR},
-      AMT = #{amt,jdbcType=DECIMAL},
-      INT_AMT = #{intAmt,jdbcType=DECIMAL},
-      END_DAYS = #{endDays,jdbcType=DECIMAL},
-      BAL_FLAG = #{balFlag,jdbcType=VARCHAR}
+        ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+        POSITION_TYPE = #{positionType,jdbcType=VARCHAR},
+        CHL_ID = #{chlId,jdbcType=VARCHAR},
+        ASSET_CODE = #{assetCode,jdbcType=VARCHAR},
+        ASSET_TYPE1 = #{assetType1,jdbcType=VARCHAR},
+        ASSET_TYPE2 = #{assetType2,jdbcType=VARCHAR},
+        ASSET_TYPE3 = #{assetType3,jdbcType=VARCHAR},
+        STARTDATE = #{startdate,jdbcType=TIMESTAMP},
+        ENDDATE = #{enddate,jdbcType=TIMESTAMP},
+        BOOKDATE = #{bookdate,jdbcType=TIMESTAMP},
+        CCY = #{ccy,jdbcType=VARCHAR},
+        AMT = #{amt,jdbcType=DECIMAL},
+        INT_AMT = #{intAmt,jdbcType=DECIMAL},
+        END_DAYS = #{endDays,jdbcType=DECIMAL},
+        BAL_FLAG = #{balFlag,jdbcType=VARCHAR}
     where POSUUID = #{posuuid,jdbcType=CHAR}
   </update>
   <select id="selectByDateAndProdid" resultMap="BaseResultMap" parameterType="java.util.Map">
     select
-
-    PMAP.POSUUID, PMAP.PRODID, PMAP.ORG_CODE, PMAP.POSITION_TYPE, PMAP.CHL_ID, PMAP.ASSET_CODE, PMAP.ASSET_TYPE1, PMAP.ASSET_TYPE2,
-    PMAP.ASSET_TYPE3, PMAP.STARTDATE, PMAP.ENDDATE, PMAP.BOOKDATE, PMAP.CCY, PMAP.AMT, PMAP.INT_AMT, PMAP.END_DAYS, PMAP.BAL_FLAG,PMAP.RATING,
-    ASSETINFO.BANK_SEC_CAPITAL,
-    ASSETINFO.BANK_SEC_PERPETUAL,
-    ASSETINFO.BANK_SEC_PREFER,
-    ASSETINFO.IS_PERPETUAL
-    from PBC_MONTH_ASSET_POSITION PMAP
-    left join CHB_ASSET_INFO ASSETINFO
-    ON ASSETINFO.ASSET_CODE = PMAP.ASSET_CODE  and  ASSETINFO.status in('E','M')
+    <include refid="Base_Column_List" />
+    from PBC_MONTH_ASSET_POSITION
     where DATE_FORMAT(ENDDATE,'%Y-%m-%d') = #{bookDate,jdbcType=VARCHAR}
     <if test="prodList !=null">
-        <foreach collection="prodList" item="prodid" open="and PRODID in ("
-            separator="," close=")">
-            #{prodid,jdbcType=VARCHAR}
-        </foreach>
+      <foreach collection="prodList" item="prodid" open="and PRODID in ("
+               separator="," close=")">
+        #{prodid,jdbcType=VARCHAR}
+      </foreach>
     </if>
   </select>
-  
+
   <select id="selectAssetByStatus" parameterType="java.util.Map" resultMap="BaseResultMapAsset">
-    select 
+    select
     <include refid="Base_Column_List_Asset" />
     from CHB_ASSET_INFO
-    where 1 =1 
+    where 1 =1
     <if test="status != null">
-    and status=#{status,jdbcType=VARCHAR}
+      and status=#{status,jdbcType=VARCHAR}
     </if>
   </select>
   <select id="selectByDateAndProdidWithAssetPoolCode" resultMap="BaseResultMap" parameterType="java.util.Map">
-    select 
-    assetposition.POSUUID, 
+    select
+    assetposition.POSUUID,
     assetposition.PRODID,
-    assetposition.ORG_CODE, 
-    assetposition.POSITION_TYPE, 
-    assetposition.CHL_ID, 
-    assetposition.ASSET_CODE, 
-    assetposition.ASSET_TYPE1, 
-    assetposition.ASSET_TYPE2, 
-    assetposition.ASSET_TYPE3, 
-    assetposition.STARTDATE, 
-    assetposition.ENDDATE, 
-    assetposition.BOOKDATE, 
-    assetposition.CCY, 
-    assetposition.AMT, 
-    assetposition.INT_AMT, 
-    assetposition.END_DAYS, 
+    assetposition.ORG_CODE,
+    assetposition.POSITION_TYPE,
+    assetposition.CHL_ID,
+    assetposition.ASSET_CODE,
+    assetposition.ASSET_TYPE1,
+    assetposition.ASSET_TYPE2,
+    assetposition.ASSET_TYPE3,
+    assetposition.STARTDATE,
+    assetposition.ENDDATE,
+    assetposition.BOOKDATE,
+    assetposition.CCY,
+    assetposition.AMT,
+    assetposition.INT_AMT,
+    assetposition.END_DAYS,
     assetposition.BAL_FLAG,
     PRDBASEINFO.PBC_ACCOUNT_ID ASSET_POOL_CODE
     from PBC_MONTH_ASSET_POSITION assetposition
@@ -473,19 +459,19 @@
     where DATE_FORMAT(ENDDATE,'%Y-%m-%d') = #{bookDate,jdbcType=VARCHAR}
     and (assetposition.AMT !=0 or assetposition.INT_AMT !=0)
     <if test="prodList !=null">
-        <foreach collection="prodList" item="prodid" open="and assetposition.PRODID in ("
-            separator="," close=")">
-            #{prodid,jdbcType=VARCHAR}
-        </foreach>
+      <foreach collection="prodList" item="prodid" open="and assetposition.PRODID in ("
+               separator="," close=")">
+        #{prodid,jdbcType=VARCHAR}
+      </foreach>
     </if>
   </select>
-   <select  id="selectChbPrdBalance"  resultType="com.joyintech.tams.svreport.pbc.prod.dto.PbcMonthPrdPostionDto">
-   select 
-   CCY  ccy,
-   ifnull(BALANCE_QTY,0)    endqtysum,
-   ifnull(BALANCE_AMT,0)    endCost
-   from  CHB_PRD_BALANCE 
-   where PRODID=#{prodId,jdbcType=VARCHAR}
-   and  CDATE=#{endDate,jdbcType=DATE}
+  <select  id="selectChbPrdBalance"  resultType="com.joyintech.tams.svreport.pbc.prod.dto.PbcMonthPrdPostionDto">
+    select
+      CCY  ccy,
+      ifnull(BALANCE_QTY,0)    endqtysum,
+      ifnull(BALANCE_AMT,0)    endCost
+    from  CHB_PRD_BALANCE
+    where PRODID=#{prodId,jdbcType=VARCHAR}
+      and  CDATE=#{endDate,jdbcType=DATE}
   </select>
 </mapper>

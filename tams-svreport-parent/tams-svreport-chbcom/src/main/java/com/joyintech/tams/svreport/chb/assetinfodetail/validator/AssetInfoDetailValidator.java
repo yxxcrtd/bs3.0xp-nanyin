@@ -7,7 +7,7 @@
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
- 
+
 package com.joyintech.tams.svreport.chb.assetinfodetail.validator;
 
 import com.joyintech.background.component.common.check.DataCheckCommonUtil;
@@ -96,10 +96,9 @@ public class AssetInfoDetailValidator implements BeanValidator{
             }
         }
         dto.setIssuePartyId(CommonUtil.selectBankCode());
-        // add by zhangliang 20210126 中债check调用 startcom.joyintech.service.chb.common.service.
-        resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, "AssetInfoRegist002", dto.getAssetType2(), ValidMessage.class);
+        // add by zhangliang 20210126 中债check调用 start
+        resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, dto.getAssetType2(), ValidMessage.class);
         // add by zhangliang 20210126 中债check调用 end
-
         if(StringUtil.equals(dto.getAssetType2(), "1503")){
             //“固定收益部分所占比例”与“衍生金融工具所占比例”之和需小于等于1
             SvrBussRepQDIIStructureInfoDto svrBussRepQDIIStructureInfoDto = dto.getSvrBussRepQDIIStructureInfoDto();
@@ -111,7 +110,6 @@ public class AssetInfoDetailValidator implements BeanValidator{
                 }
             }
         }
-
         //modify by tuqirong 2022-01-10 start 错误信息去重处理
         Map<String, Object> errMap = new HashMap<>();
         List<ValidMessage> result = new ArrayList<>();
@@ -124,7 +122,7 @@ public class AssetInfoDetailValidator implements BeanValidator{
         resultList.clear();
         resultList.addAll(result);
         //modify by tuqirong 2022-01-10 end 错误信息去重处理
-         return resultList;
+        return resultList;
     }
 
 }

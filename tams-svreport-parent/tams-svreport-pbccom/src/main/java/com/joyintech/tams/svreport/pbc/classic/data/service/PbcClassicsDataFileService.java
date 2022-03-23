@@ -1915,6 +1915,13 @@ public class PbcClassicsDataFileService {
 		subList.addAll(pbcProdRaiseSubMapper.selectByDimension(searchParam));
 		//清除参数
 		searchParam.remove("buyPlace");
+		searchParam.put("nyield", "000000");
+		searchParam.put("yield", "000000");
+		subList.addAll(pbcProdRaiseSubMapper.selectByDimension2(searchParam));// 净值型产品的单位净值-1：原币
+
+		searchParam.put("ccy", "BWB");
+		subList.addAll(pbcProdRaiseSubMapper.selectByDimension2(searchParam));// 净值型产品的单位净值-2：BWB
+		searchParam.remove("ccy");
 		//按发行机构分组：Map<发行机构,产品List<Map<生成文件的属性键值对>>>
 		Map<String,List<LinkedHashMap<String,String>>> map=new HashMap<String,List<LinkedHashMap<String,String>>>();
 		for(PbcProdRaiseSub sub :subList){
