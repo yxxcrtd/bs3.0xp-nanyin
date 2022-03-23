@@ -628,8 +628,8 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
                 FinDealPledge finDealPledge = getSqFinDealPledge(trdProductDealAdd);
                 if(null != finDealPledge){
                     bean.setFinprodId(finDealPledge.getPledgeFinprodId());
-                    bean.setSecAmount(ArithmeticUtil.multiply(finDealPledge.getPledgeNumber(), new BigDecimal(100)));
-                    bean.setOwnSecAmount(ArithmeticUtil.multiply(finDealPledge.getPledgeNumber(), new BigDecimal(100)));
+                    bean.setSecAmount(finDealPledge.getPledgeNumber());
+                    bean.setOwnSecAmount(finDealPledge.getPledgeNumber());
                 }
             }
             // ZGTFCP-1672:修改部分字段赋值 modify by fuyongsheng 20220323 end
