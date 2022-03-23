@@ -442,6 +442,16 @@
         </where>
     </select>
 
+    <!--通过资产代码获取登记托管机构-->
+    <select id="getRegistOrgByFinprodId" resultType="java.lang.String">
+        SELECT
+        REGIST_ORG
+        FROM FIN_PRODUCT
+        <where>
+            FINPROD_ID = #{finprodId}
+        </where>
+    </select>
+
     <!--指令的执行明细-->
     <select id="listDealTransactionDetails" resultType="com.joyintech.tams.cfets.bankuplink.bond.dto.DealTransactionDetailsDto">
         <!--生效及撤销的登记数据-->

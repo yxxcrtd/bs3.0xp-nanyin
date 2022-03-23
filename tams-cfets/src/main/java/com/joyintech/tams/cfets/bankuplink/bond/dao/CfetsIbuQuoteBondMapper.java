@@ -49,6 +49,13 @@ public interface CfetsIbuQuoteBondMapper {
     String getRegistOrg(@Param("secAcctId") String secManageAcctId);
 
     /**
+     * 通过资产代码获取登记托管机构
+     * @param finprodId
+     * @return
+     */
+    String getRegistOrgByFinprodId(@Param("finprodId") String finprodId);
+
+    /**
      * 当日登记
      * @param param
      * @return
