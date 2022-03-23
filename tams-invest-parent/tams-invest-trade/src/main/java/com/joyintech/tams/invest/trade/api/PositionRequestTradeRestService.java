@@ -189,7 +189,6 @@ public class PositionRequestTradeRestService {
         resultMap.put(ETFREDEMPTION_METHOD, null);
         TrdProductDeal dealEntity = entity.getTrdProductDeal();
         TrdProductDealAdd dealAddEntity = entity.getTrdProductDealAdd();
-        List<StlPayOrdersDto> stlPayOrdersList = entity.getStlPayOrdersList();
         String accountNo = baseAssetCashPositionCommMapper.queryAccountNo(dealEntity.getSecManageAcctId());
         if (StringUtil.isNotEmpty(dealEntity)) {
             PositionRequestBaseBean bean = new PositionRequestBaseBean();
@@ -199,7 +198,7 @@ public class PositionRequestTradeRestService {
             bean.setTradeId(dealEntity.getTradeId());
             bean.setEtrId(entity.getEntrustId());
             bean.setFinprodId(dealEntity.getFinprodId());
-            bean.setCashAcctId(CollectionUtils.isEmpty(stlPayOrdersList)?accountNo: stlPayOrdersList.get(0).getMyAcctNo());
+            bean.setCashAcctId(accountNo);
             bean.setSecAcctId(dealEntity.getSecManageAcctId());
             bean.setSecAmount(dealEntity.getShareAmt());
             bean.setCashAmount(dealEntity.getTradeAmt());
@@ -238,7 +237,6 @@ public class PositionRequestTradeRestService {
     private void stock001(BaseTradeProductDealDto entity, Map<String, Object> resultMap) {
         TrdProductDeal dealEntity = entity.getTrdProductDeal();
         TrdProductDealAdd dealAddEntity = entity.getTrdProductDealAdd();
-        List<StlPayOrdersDto> stlPayOrdersList = entity.getStlPayOrdersList();
         String accountNo = baseAssetCashPositionCommMapper.queryAccountNo(dealEntity.getSecManageAcctId());
         // 查询申购交易对应的指令
         TrdProductDealAdd trdProductDealAdd1 = trdProductDealAddMapper.selectByPrimaryKey(dealEntity.getbTradeId());
@@ -276,7 +274,7 @@ public class PositionRequestTradeRestService {
             bean.setSecAcctId(dealEntity.getSecManageAcctId());
             // ZGTFCP-1667:修改股票送转字段赋值 modify by fuyongsheng 20220323 start
             bean.setSecAmount(dealEntity.getShareAmt());
-            bean.setCashAcctId(CollectionUtils.isEmpty(stlPayOrdersList)?accountNo: stlPayOrdersList.get(0).getMyAcctNo());
+            bean.setCashAcctId(accountNo);
             bean.setCashAmount(dealEntity.getTradeAmt());
             Map<String, Object> map = BeanUtil.object2Map(bean);
             map.put("ownSecAmount", dealEntity.getShareAmt());
@@ -298,7 +296,7 @@ public class PositionRequestTradeRestService {
                 bean.setEtrId(entity.getEntrustId());
                 bean.setSecAcctId(dealEntity.getSecManageAcctId());
                 bean.setSecAmount(dealEntity.getShareAmt());
-                bean.setCashAcctId(CollectionUtils.isEmpty(stlPayOrdersList)?accountNo: stlPayOrdersList.get(0).getMyAcctNo());
+                bean.setCashAcctId(accountNo);
                 // 配股/申购代码
                 bean.setFinprodId(getStockId(dealEntity.getEntrustId()));
                 bean.setCashAmount(dealEntity.getTradeAmt());
@@ -369,7 +367,6 @@ public class PositionRequestTradeRestService {
         TrdFinProductDealTotal trdProductDealTotal = entity.getTrdFinProductDealTotal();
         TrdProductDeal trdProductDeal = entity.getTrdProductDeal();
         TrdProductDealAdd trdProductDealAdd = entity.getTrdProductDealAdd();
-        List<StlPayOrdersDto> stlPayOrdersList = entity.getStlPayOrdersList();
         String accountNo = baseAssetCashPositionCommMapper.queryAccountNo(trdProductDealTotal.getSecManageAcctId());
         resultMap.put("interfaceType", INTERF_TYPE_REPO003);
         // 业务类型
@@ -396,11 +393,7 @@ public class PositionRequestTradeRestService {
 
         Map<String, Object> plt = new HashMap<>(8);
         plt.put("portfolioId", trdProductDealAdd.getPortfolioId());
-        if(!CollectionUtils.isEmpty(stlPayOrdersList)){
-            plt.put("cashAcctId", stlPayOrdersList.get(0).getMyAcctNo());
-        }else{
-            plt.put("cashAcctId", accountNo);
-        }
+        plt.put("cashAcctId", accountNo);
         plt.put("secAcctId", trdProductDealTotal.getSecManageAcctId());
         plt.put("tradeId", trdProductDeal.getTradeId());
         plt.put("etrId", null);
@@ -422,7 +415,6 @@ public class PositionRequestTradeRestService {
         TrdFinProductDealTotal trdProductDealTotal = entity.getTrdFinProductDealTotal();
         TrdProductDeal trdProductDeal = entity.getTrdProductDeal();
         TrdProductDealAdd trdProductDealAdd = entity.getTrdProductDealAdd();
-        List<StlPayOrdersDto> stlPayOrdersList = entity.getStlPayOrdersList();
         String accountNo = baseAssetCashPositionCommMapper.queryAccountNo(trdProductDealTotal.getSecManageAcctId());
         resultMap.put("interfaceType", INTERF_TYPE_BOND002);
         // 业务类型
@@ -462,11 +454,7 @@ public class PositionRequestTradeRestService {
         pltMap.put("etrSecAmount", null);
         pltMap.put("ordId", null);
         pltMap.put("ordSecAmount", null);
-        if(!CollectionUtils.isEmpty(stlPayOrdersList)){
-            pltMap.put("cashAcctId", stlPayOrdersList.get(0).getMyAcctNo());
-        }else{
-            pltMap.put("cashAcctId", accountNo);
-        }
+        pltMap.put("cashAcctId", accountNo);
         pltMap.put("secAcctId", trdProductDealTotal.getSecManageAcctId());
         pltMap.put("secAmount", trdProductDeal.getShareAmt());
         pltMap.put("cashAmount", trdProductDeal.getTradeAmt());
@@ -487,7 +475,6 @@ public class PositionRequestTradeRestService {
         TrdFinProductDealTotal trdProductDealTotal = entity.getTrdFinProductDealTotal();
         TrdProductDeal trdProductDeal = entity.getTrdProductDeal();
         TrdProductDealAdd trdProductDealAdd = entity.getTrdProductDealAdd();
-        List<StlPayOrdersDto> stlPayOrdersList = entity.getStlPayOrdersList();
         // 查询申购交易对应的指令
         TrdProductDealAdd trdProductDealAdd1 = trdProductDealAddMapper.selectByPrimaryKey(trdProductDeal.getbTradeId());
         String accountNo = baseAssetCashPositionCommMapper.queryAccountNo(trdProductDealTotal.getSecManageAcctId());
@@ -524,11 +511,7 @@ public class PositionRequestTradeRestService {
         List<Map<String, Object>> bondSecList = new ArrayList<>(4);
         Map<String, Object> ptlCash = new HashMap<>(8);
         ptlCash.put("portfolioId", trdProductDealAdd.getPortfolioId());
-        if(!CollectionUtils.isEmpty(stlPayOrdersList)){
-            ptlCash.put("cashAcctId", stlPayOrdersList.get(0).getMyAcctNo());
-        }else{
-            ptlCash.put("cashAcctId", accountNo);
-        }
+        ptlCash.put("cashAcctId", accountNo);
         ptlCash.put("tradeId", trdProductDeal.getTradeId());
         ptlCash.put("etrId", trdProductDealAdd1 != null ? trdProductDealAdd1.getEntrustId() : StringUtil.EMPTY);
         ptlCash.put("cashAmount", trdProductDeal.getTradeAmt());
