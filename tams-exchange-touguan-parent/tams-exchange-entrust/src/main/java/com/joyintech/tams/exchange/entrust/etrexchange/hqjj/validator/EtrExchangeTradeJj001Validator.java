@@ -409,7 +409,7 @@ public class EtrExchangeTradeJj001Validator implements EtrCommonValidator {
 //				}
 			}
 			// 可转债申购
-			if (DictCodeList.交易方向_申购.getValue().equals(dto.getPs()) && DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(dto.getFinprodType2()) && DictCodeList.交易平台_竞价撮合平台.getValue().equals(dto.getTradePlat())) {
+			if (DictCodeList.交易方向_申购.getValue().equals(dto.getPs()) && DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(dto.getFinprodType2())) {
 				Map<String, Object> param = new HashMap<String, Object>();
 				param.put("finprodId", dto.getFinprodId());//金融产品代码
 				param.put("entrustId",dto.getEntrustId());

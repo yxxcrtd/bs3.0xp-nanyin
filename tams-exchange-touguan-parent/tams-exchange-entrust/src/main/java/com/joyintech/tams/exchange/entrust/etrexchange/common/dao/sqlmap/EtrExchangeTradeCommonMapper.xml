@@ -1319,7 +1319,9 @@
             and ee.finprod_id = #{finprodId,jdbcType=VARCHAR}
             and ee.ps = #{ps,jdbcType=VARCHAR}
             and ee.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
-            and ee.trade_plat = #{tradePlat,jdbcType=VARCHAR}
+            <if test="tradePlat != null and tradePlat != ''">
+                and ee.trade_plat = #{tradePlat,jdbcType=VARCHAR}
+            </if>
             <if test="entrustReturn != null and entrustReturn != '' and entrustRecall!=null and entrustRecall != ''">
                 and  ee.ENTRUST_STATUS not in  (#{entrustReturn,jdbcType=VARCHAR},#{entrustRecall,jdbcType=VARCHAR})
             </if>
@@ -1335,7 +1337,9 @@
             and weea.workflow_status = '01'
             and wee.ps = #{ps,jdbcType=VARCHAR}
             and wee.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
-            and wee.trade_plat = #{tradePlat,jdbcType=VARCHAR}
+            <if test="tradePlat != null and tradePlat != ''">
+                and wee.trade_plat = #{tradePlat,jdbcType=VARCHAR}
+            </if>
             <if test="entrustReturn != null and entrustReturn != '' and entrustRecall!=null and entrustRecall != ''">
                 and  wee.ENTRUST_STATUS not in  (#{entrustReturn,jdbcType=VARCHAR},#{entrustRecall,jdbcType=VARCHAR})
             </if>

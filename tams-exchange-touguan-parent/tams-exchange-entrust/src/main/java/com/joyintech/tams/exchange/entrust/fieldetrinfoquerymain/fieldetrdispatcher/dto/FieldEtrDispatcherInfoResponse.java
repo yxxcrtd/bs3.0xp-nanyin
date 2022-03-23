@@ -259,6 +259,8 @@ public class FieldEtrDispatcherInfoResponse extends FieldEtrDispatcherBaseInfo {
     @ApiModelProperty(name="dealMode",value="挂钩利率",example="个人定期(整存整取)一年")
     private String dealMode;
 
+    private String otherPs;
+
     @ApiModelProperty(name="termType",value="期限",example="1Y/1M")
     private String termType;
 
@@ -524,7 +526,11 @@ public class FieldEtrDispatcherInfoResponse extends FieldEtrDispatcherBaseInfo {
     }
 
     public String getOtherPs() {
-        return SysDataUtil.getNameFromDataDict(DictCode.交易方向, super.getPs());
+        return this.otherPs;
+    }
+
+    public void setOtherPs(String otherPs) {
+        this.otherPs = otherPs;
     }
 
     public String getEtrBidDate() {

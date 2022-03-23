@@ -485,6 +485,12 @@
             ete.FINPROD_ID ELSE ( CASE WHEN fp.FINPROD_MARKET_ID IS NOT NULL THEN fp.FINPROD_ABBR ELSE OPT_TARGET_INFO.TARGET_NAME END )
             END finprodAbbr,
             ete.trade_market tradeMarket,
+            CASE
+            WHEN eted.ASSET_TYPE IN (#{ASSET_TYPE_07}, #{ASSET_TYPE_08}, #{ASSET_TYPE_10}, #{ASSET_TYPE_12})
+            THEN (SELECT ITEM_VALUE FROM sys_datadict_list WHERE DICT_CODE = #{BACK_LEND_DIRECTION} AND ITEM_CODE =
+            eted.BUSI_PS)
+            ELSE (SELECT ITEM_VALUE FROM sys_datadict_list WHERE DICT_CODE = #{PS} AND ITEM_CODE = ete.PS)
+            END AS otherPs,
             ete.ps ps,
             DECODE(eted.SETTLE_SPREED,0,'01',1,'02','2','03') settleSpeed,
             ete.price_model priceModel,
@@ -615,6 +621,12 @@
         ete.FINPROD_ID ELSE ( CASE WHEN fp.FINPROD_MARKET_ID IS NOT NULL THEN fp.FINPROD_ABBR ELSE OPT_TARGET_INFO.TARGET_NAME END )
         END finprodAbbr,
         ete.trade_market tradeMarket,
+        CASE
+        WHEN eted.ASSET_TYPE IN (#{ASSET_TYPE_07}, #{ASSET_TYPE_08}, #{ASSET_TYPE_10}, #{ASSET_TYPE_12})
+        THEN (SELECT ITEM_VALUE FROM sys_datadict_list WHERE DICT_CODE = #{BACK_LEND_DIRECTION} AND ITEM_CODE =
+        eted.BUSI_PS)
+        ELSE (SELECT ITEM_VALUE FROM sys_datadict_list WHERE DICT_CODE = #{PS} AND ITEM_CODE = ete.PS)
+        END AS otherPs,
         ete.ps ps,
         DECODE(eted.SETTLE_SPREED,0,'01',1,'02','2','03') settleSpeed,
         ete.price_model priceModel,
