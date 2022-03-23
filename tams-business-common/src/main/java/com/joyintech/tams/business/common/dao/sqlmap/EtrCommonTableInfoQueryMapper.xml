@@ -55,7 +55,7 @@
             <foreach item="item" index="index" collection="entrustIdList" separator=",">
                 #{item}
             </foreach>)
-        </if> GROUP BY PORTFOLIO_ID) t)
+        </if> GROUP BY PORTFOLIO_ID,TRADE_ID) t)
         <if test="NOT_NULL_FLAG != null and NOT_NULL_FLAG!='' ">
             AND rit.conclusion is null
         </if>
