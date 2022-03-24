@@ -76,10 +76,10 @@ public class PbcPrdBaseinfoSubNewService extends PbcClassicsSubService<PbcPrdBas
 			return;
 		}
 		/***新人行获取ex映射时候取getSrcfield2 字段**/
-		List<ChbTypeMappingEx>  subjectNoMappingList = chbTypeMappingExMapper
+		/*List<ChbTypeMappingEx>  subjectNoMappingList = chbTypeMappingExMapper
 				.selectByMappingcode(PbcAssetPositionConstants.MAPPINGCODE_DEPT_CODE_CHBTOPBC);
-		Map<String,ChbTypeMappingEx> inDepCodeMap = subjectNoMappingList.stream().collect(Collectors.toMap(ChbTypeMappingEx::getSrcfield1, a -> a,(k1,k2)->k1));
-		Map<String,PbcPrdBaseinfoSubNew> regMap = new HashMap<String,PbcPrdBaseinfoSubNew>();
+		Map<String, ChbTypeMappingEx> inDepCodeMap = subjectNoMappingList.stream().collect(Collectors.toMap(ChbTypeMappingEx::getSrcfield1, a -> a,(k1, k2)->k1));*/
+		Map<String, PbcPrdBaseinfoSubNew> regMap = new HashMap<String, PbcPrdBaseinfoSubNew>();
 		Map<String,String > pbcProdIdMap = new HashMap<String,String>();
 		//查询已生成人行产品代码的数据
 		List<PbcPrdBaseinfoSubNew> allPbcProdIdlist= new ArrayList<PbcPrdBaseinfoSubNew>();
@@ -150,9 +150,11 @@ public class PbcPrdBaseinfoSubNewService extends PbcClassicsSubService<PbcPrdBas
 		List<PbcPrdBaseinfoSubNew> issueDeleteDataList = new ArrayList<PbcPrdBaseinfoSubNew>();
 		// 处理产品发行登记
 		for(PbcPrdBaseinfoSubNew sub : needRegistSubList){
-			if(sub.getInDepName() != null && inDepCodeMap.containsKey(sub.getInDepName())){
+			// modify by zhangliang 20220319 华夏个性化改造 start
+			/*if(sub.getInDepName() != null && inDepCodeMap.containsKey(sub.getInDepName())){
 				sub.setInDepCode(inDepCodeMap.get(sub.getInDepName()).getSrcfield2());
-			}
+			}*/
+			// modify by zhangliang 20220319 华夏个性化改造 end
 			String pbcProdId;
 			if(pbcProdIdMap.containsKey(sub.getProdId())){
 				pbcProdId=pbcProdIdMap.get(sub.getProdId());
