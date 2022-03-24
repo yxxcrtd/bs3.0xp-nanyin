@@ -1,3 +1,5 @@
+--本币业务指令
+update CFG_DATATABLE_SHOW set COLNAME = '估价净价(元)' where PAGECODE = 'CfetsEtrRepoInfo' and DTCODE = 'PLEDPOSITION' and COLCODE = 'firstNetPrice';
 --本币业务交易
 update CFG_DATATABLE_SHOW set COLNAME = '估价净价' where PAGECODE = 'IbuQuoteRepo' and DTCODE = 'ETRDETINFOPLEDGE' and COLCODE = 'firstNetPrice';
 update CFG_DATATABLE_SHOW set COLNAME = '估价净价(元)' where PAGECODE = 'IbuQuoteRepo' and DTCODE = 'PLEDGEINFO' and COLCODE = 'firstNetPrice';
