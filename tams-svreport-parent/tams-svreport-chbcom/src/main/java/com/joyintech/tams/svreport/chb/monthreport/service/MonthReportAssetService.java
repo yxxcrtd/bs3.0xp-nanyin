@@ -13,10 +13,7 @@ import com.joyintech.tams.common.svreport.base.service.ChbTypeMappingService;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.ChbCcyConvertUtil;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.report.interf.common.constant.InterfMappingConstants;
 import com.joyintech.tams.svreport.chb.assetinforeg.dto.ChbAssetInfoSub001Dto;
 import com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthAssetPositionMapper;
@@ -426,6 +423,12 @@ public class MonthReportAssetService {
 					String key7 = null;//主键7
 					String key8 = null;//主键8
 					String key9 = null;//主键9
+					if(StringUtil.equals(key1, DictCodeListExt2.资产_负债二级类别_公司债券.getValue())){
+						key2 = position.getBankSecKzzq();
+					}
+					else if(StringUtil.equals(key1, DictCodeListExt2.资产_负债二级类别_股票_一级市场.getValue())){
+						key2 = chbAssetInfo.getBankSecPrefer();
+					}
 					ChbTypeMappingEx mapping = chbTypeMappingService.getMappingBySrcField(InterfMappingConstants.MAPPINGCODE_SUBASSETTYPE,
 							key1, key2, key3, key4, key5, key6, key7, key8, key9);
 					if (mapping != null) {
