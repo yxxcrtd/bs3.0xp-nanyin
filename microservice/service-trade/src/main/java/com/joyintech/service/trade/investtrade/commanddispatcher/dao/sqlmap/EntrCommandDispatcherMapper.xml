@@ -59,8 +59,12 @@
 		  A.CONTACT_INFO CONTACTINFO,/**对手方联系方式*/
 		  F.counter_org counterDealerId,/**对手方交易商代码*/
 		  F.COUNTER_CON_NO appointmentNumber,/**约定号*/
-          DECODE(A.TRADE_MARKET,'03',F.trade_id,'') dealNo,/**成交编号*/
-          DECODE(A.TRADE_MARKET,'04',F.trade_id,'')  trdMatchId,/**初始交易编号*/
+		  <!--modify by etliu 20220324 start-->
+		<!--DECODE(A.TRADE_MARKET,'03',F.trade_id,'') dealNo,/**成交编号*/
+        DECODE(A.TRADE_MARKET,'04',F.trade_id,'')  trdMatchId,/**初始交易编号*/-->
+		  F.trade_id dealNo,/**成交编号*/
+		  F.trade_id trdMatchId,/**初始交易编号*/
+		  <!--modify by etliu 20220324 end-->
           F.request_id quoterefId,/**交易所请求号*/
 		  A.ENTRUST_DATE tradeDate,/**委托日期*/
 		  A.VDATE,/**委托开始日*/
