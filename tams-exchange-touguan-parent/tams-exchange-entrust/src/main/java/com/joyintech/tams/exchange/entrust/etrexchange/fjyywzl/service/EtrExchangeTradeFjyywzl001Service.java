@@ -61,12 +61,16 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
             Map<String, Object> map = BeanUtil.object2Map(request);
             map.put("search_isNumberFlag", BaseMap.isNumeric(request.getSearch()));
             String userId = SecurityUtil.getLoginUser().getUserName();
+
+
+
+
             if (StringUtils.isNotEmpty(userId)) {
                 logger.info("请求用户【{}】", "userId = " + userId);
                 map.put("userId", SecurityUtil.getLoginUser().getUserName());
                 getZqzyPositionParam(map);
                 Page<EtrExchangeTradeFjyywzlZqzyDto> result = super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(),
-                        () -> etrExchangeTradeFjyywzl001Mapper.findZqzyPositionsPage(map));
+                        () -> etrExchangeTradeFjyywzl001Mapper.findZqzyPositionsPageNew(map));
                 return result;
             }
         } catch (Exception ex) {
@@ -97,6 +101,9 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
         pageParam.put("TRADE_PLACE_03", BussinessDictCodeList.交易场所_深圳证券交易所.getValue());
         pageParam.put("TRADE_PLACE_04", BussinessDictCodeList.交易场所_上海证券交易所.getValue());
         pageParam.put("MORE_CONVRATE", 0.9);
+        pageParam.put("A_158", DictCodeListExt3.资产类型_通用回购融资券折算前额度.getValue());
+        pageParam.put("A_038", DictCodeListExt3.资产类型_债券本方券上交所净额结算可用持仓.getValue());
+        pageParam.put("A_040", DictCodeListExt3.资产类型_债券本方券深交所净额结算竞价可用持仓.getValue());
         if (StringUtil.isNotEmpty(pageParam.get("date"))) {
             pageParam.put("date", DateUtil.parse((String) pageParam.get("date")));
         } else {

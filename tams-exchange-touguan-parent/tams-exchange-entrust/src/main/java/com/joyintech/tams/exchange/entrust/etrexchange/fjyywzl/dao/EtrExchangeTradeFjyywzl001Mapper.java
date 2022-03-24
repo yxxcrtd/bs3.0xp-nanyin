@@ -28,4 +28,8 @@ import java.util.Map;
 public interface EtrExchangeTradeFjyywzl001Mapper {
 
 	List<EtrExchangeTradeFjyywzlZqzyDto> findZqzyPositionsPage(Map<String, Object> pageParam);
+
+	List<EtrExchangeTradeFjyywzlZqzyDto> findZqzyPositionsPageNew(Map<String, Object> pageParam);
+
+
 }

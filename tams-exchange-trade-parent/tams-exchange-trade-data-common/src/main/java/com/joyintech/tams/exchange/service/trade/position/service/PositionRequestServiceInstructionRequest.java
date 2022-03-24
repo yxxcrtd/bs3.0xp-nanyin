@@ -18,6 +18,7 @@ import com.joyintech.tams.exchange.datacommon.db.service.InstructionPledgeServic
 import com.joyintech.tams.exchange.service.trade.management.service.EntrustManagement;
 import com.joyintech.tams.exchange.service.trade.management.service.PortfolioManager;
 import com.joyintech.tams.exchange.service.trade.position.bean.PositionRequestBaseBean;
+import com.joyintech.tams.invest.common.entrust.inter.EtrTradeCommonervice;
 import com.joyintech.tams.invest.common.position.service.CommonPositionEngineService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -49,6 +50,8 @@ public class PositionRequestServiceInstructionRequest {
     private InstructionPledgeService instructionPledgeService;
     @Autowired
     private EntrustManagement entrustManagement;
+    @Autowired
+    private EtrTradeCommonervice etrTradeCommonervice;
 
     /**
      * Instruction 请求对象使用
@@ -293,13 +296,17 @@ public class PositionRequestServiceInstructionRequest {
                 map.put(ORD_ENTRUST_ID, entity.getEntrustNo());
                 // 标准券代码
                 map.put(STANDARD_SEC_ID, STANDAR_SEC_ID);
-                // 标准券总额 委托数量*折算率
-                map.put(STANDARD_SEC_AMOUNT, item.getEntrustAmt());
                 //指令券面总额
                 map.put(ETR_SEC_AMOUNT, item.getEntrustAmt());
                 if (交易方向_质押券入库.getValue().equals(entity.getPs())
                         || 交易方向_质押券出库.getValue().equals(entity.getPs())) {
                     map.put("cashAmount", null);//出入库时，可以为空
+                    // 标准券总额=质押券数量*折算率*最新面值
+                    BigDecimal faceValue = BigDecimal.valueOf(100);//TODO
+                    map.put(STANDARD_SEC_AMOUNT, item.getEntrustAmt().multiply(faceValue));
+                } else {
+                    // 标准券总额=标准券数量*100
+                    map.put(STANDARD_SEC_AMOUNT, item.getEntrustNum() * 100);
                 }
                 // 再折算率	reConversionRate "调用【再折算率查询】参数：资金账户 = 指令资金账户 TODO
                 ImmutableMap<String, Object> param = ImmutableMap.of("acctNo", entity.getAcctNo());
@@ -360,7 +367,8 @@ public class PositionRequestServiceInstructionRequest {
                 || 交易方向_逆回购.getValue().equals(ps)
                 || 交易方向_首期.getValue().equals(ps)
                 || 交易方向_提前购回.getValue().equals(ps)
-                || (交易方向_到期购回.getValue().equals(ps))) {
+                || 交易方向_到期购回.getValue().equals(ps)
+                || 交易方向_解除质押.getValue().equals(ps)) {
             List<Map<String, Object>> list = new ArrayList<>(1);
             bean = new PositionRequestBaseBean(entity);
             bean.setCashAmount(NumberUtil.sub(entity.getmTradeAmt(), entity.getmIntAmt()));
@@ -381,25 +389,18 @@ public class PositionRequestServiceInstructionRequest {
             // "IF 回购类型 = 正回购 THEN 指令.到期续作金额 - 指令.首期的到期结算金额
             // IF 回购类型 = 逆回购  and 成交编号找不到对应的首期 THEN 指令.到期续作金额
             // IF 回购类型 = 逆回购  and 成交编号找到对应的首期 THEN  指令.到期续作金额 - 指令.首期的到期结算金额"
-            if (交易方向_正回购.getValue().equals(firstRepoPs)) {
-                bean.setCashAmount(entity.getmTradeAmt());
-            } else if (交易方向_逆回购.getValue().equals(firstRepoPs)) {
-                // 成交编号
-                bean.setCashAmount(entity.getmTradeAmt());
-            }
+            BigDecimal firstTradeAmt = etrTradeCommonervice.getFirstTradeAmt(entity.getTrdMatchId());
+            bean.setCashAmount(entity.getmTradeAmt().subtract(firstTradeAmt));
 
             Map<String, Object> map = BeanUtil.object2Map(bean);
             list.add(map);
-            resultMap.put("ptlOffsetCashList", list);
+            resultMap.put(PTL_OFFSET_CASH_LIST, list);
         }
 
         // 质押券数据集	ptlSecList
         // IF 交易方向 = 首期、中途换券换入and 回购类型 = 正回购 THEN 传值 ELSE 空
-        if (交易方向_正回购.getValue().equals(ps)
-                || (
-                交易方向_中途换券.getValue().equals(ps)
-                        && 交易方向_正回购.getValue().equals(firstRepoPs)
-        )) {
+        if (交易方向_正回购.getValue().equals(ps) ||
+                (交易方向_中途换券.getValue().equals(ps) && 交易方向_正回购.getValue().equals(firstRepoPs))) {
             List<Map<String, Object>> list = new ArrayList<>(1);
             // 查询质押券集合
             InstructionPledge instructionPledge = instructionPledgeService.queryInstructionPledgesByInstructionIdAndStockCode(entity.getEntrustId(), entity.getFinprodMarketId());
@@ -434,8 +435,9 @@ public class PositionRequestServiceInstructionRequest {
                 && 交易方向_正回购.getValue().equals(firstRepoPs)) {
             List<Map<String, Object>> list = new ArrayList<>(4);
             // 查询质押券集合
-            List<InstructionPledge> instructionPledges = instructionPledgeService.queryInstructionPledgesByInstructionId(entity.getEntrustId());
-            for (InstructionPledge item : instructionPledges) {
+            InstructionPledge item = instructionPledgeService.queryInstructionPledgesByInstructionIdAndStockCode(entity.getEntrustId(), entity.getFinprodMarketId());
+            //取单个质押券
+            if (Objects.nonNull(item)) {
                 bean = new PositionRequestBaseBean();
                 bean.setPortfolioId(entity.getPortfolioId());
                 // 债券代码 指令.质押券的金融产品代码
@@ -444,27 +446,16 @@ public class PositionRequestServiceInstructionRequest {
                 bean.setTradeId(entity.getEntrustNo());
                 bean.setEtrId(entity.getEntrustId());
                 BigDecimal secAmount = commonPositionEngineService.multiplyWithOneHundred(item.getPledgeNumber());
-                if (交易方向_解除质押.getValue().equals(ps)) {
-                    bean.setSecAmount(secAmount);
-                } else {
-                    // 下单到期续作对应首期的成交回报.质押券数量. 到期续作利用首期成交编号找首期的质押券
-                    bean.setSecAmount(item.getOldPledgeNumber());
-                }
+                bean.setSecAmount(secAmount);
 
                 Map<String, Object> map = BeanUtil.object2Map(bean);
                 //融入券券面总额
                 map.put(INTEGRATE_SEC_AMOUNT, BigDecimal.ZERO);
                 //本方券券面总额 指令.质押券数量*100
-                if (交易方向_解除质押.getValue().equals(ps)) {
-                    map.put(OWN_SEC_AMOUNT, secAmount);
-                } else {
-                    map.put(OWN_SEC_AMOUNT, item.getOldPledgeNumber());
-                    // 下单到期续作对应首期的成交回报.质押券数量. 到期续作利用首期成交编号找首期的质押券
-                    bean.setSecAmount(item.getOldPledgeNumber());
-                }
+                map.put(OWN_SEC_AMOUNT, secAmount);
                 list.add(map);
             }
-            resultMap.put("ptlRelieveSecList", list);
+            resultMap.put(PTL_RELIEVE_SEC_LIST, list);
         }
     }
 
