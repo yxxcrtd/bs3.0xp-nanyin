@@ -367,7 +367,8 @@ public class PositionRequestServiceInstructionRequest {
                 || 交易方向_逆回购.getValue().equals(ps)
                 || 交易方向_首期.getValue().equals(ps)
                 || 交易方向_提前购回.getValue().equals(ps)
-                || 交易方向_到期购回.getValue().equals(ps)) {
+                || 交易方向_到期购回.getValue().equals(ps)
+                || 交易方向_解除质押.getValue().equals(ps)) {
             List<Map<String, Object>> list = new ArrayList<>(1);
             bean = new PositionRequestBaseBean(entity);
             bean.setCashAmount(NumberUtil.sub(entity.getmTradeAmt(), entity.getmIntAmt()));
