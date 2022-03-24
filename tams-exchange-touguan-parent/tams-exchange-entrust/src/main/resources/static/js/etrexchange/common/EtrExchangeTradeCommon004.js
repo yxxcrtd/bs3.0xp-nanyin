@@ -1234,7 +1234,7 @@
         } else {
             //质押券出入库不展示投资目的
             var ps = $("#ps_" + currentTab).val();
-            if (ps == PS_T68 || ps == PS_T69 || ps == PS_T04 || ps == PS_T49) {
+            if (ps == PS_T68 || ps == PS_T69 || ps == PS_T04 || ps == PS_T49 || ps == PS_T03) {
                 $("#invAim_div_" + currentTab).hide();
             } else {
                 $("#invAim_div_" + currentTab).show();
@@ -3147,9 +3147,12 @@
             if(ps == PS_T49){
                 $("#entrustAmtUnit_div_" + currentTab).hide();
                 $("#invAim_div_" + currentTab).hide();
+                $("#targetType_div_" + currentTab).hide();
+
             }
             if(ps == PS_T03){
                 $("#invAim_div_" + currentTab).hide();
+                $("#targetType_div_" + currentTab).hide();
             }
 
             if(ps == PS_T01 || ps == PS_T02){
