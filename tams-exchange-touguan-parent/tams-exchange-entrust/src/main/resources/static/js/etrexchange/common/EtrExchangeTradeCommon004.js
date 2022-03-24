@@ -1234,7 +1234,7 @@
         } else {
             //质押券出入库不展示投资目的
             var ps = $("#ps_" + currentTab).val();
-            if (ps == PS_T68 || ps == PS_T69 || ps == PS_T04 || ps == PS_T49) {
+            if (ps == PS_T68 || ps == PS_T69 || ps == PS_T04 || ps == PS_T49 || ps == PS_T03) {
                 $("#invAim_div_" + currentTab).hide();
             } else {
                 $("#invAim_div_" + currentTab).show();
@@ -2089,6 +2089,8 @@
                     $("#entrustPriceUnit_" + currentTab).text("%");
                     $("#entrustAmtUnit_" + currentTab).text("元");
                 } else {
+                    $("#targetType_div_" + currentTab).text("目标类型").append($star.clone());
+                    $("#toShareAvailableNum_label_" + currentTab).text("可转股数量").append($star.clone());
                     $("#entrustDate_label_" + currentTab).text("指令日期").append($star.clone());
                     $("#ps_label_" + currentTab).text("委托方向").append($star.clone());
                     $("#secId_label_" + currentTab).text("资产名称").append($star.clone());
@@ -3147,14 +3149,14 @@
             if(ps == PS_T49){
                 $("#entrustAmtUnit_div_" + currentTab).hide();
                 $("#invAim_div_" + currentTab).hide();
+                $("#targetType_div_" + currentTab).hide();
+
             }
             if(ps == PS_T03){
                 $("#invAim_div_" + currentTab).hide();
+                $("#targetType_div_" + currentTab).hide();
             }
 
-            if(ps == PS_T01 || ps == PS_T02){
-                $("#priceModel_div_" + currentTab).show();
-            }
             if (finprodType2 == FINPROD_TYPE_TG_F06) {
                 $("#priceModel_div_" + currentTab).show();
                 $("#entrustNumUnit_" + currentTab).text("份");
@@ -3224,6 +3226,11 @@
             linkEntrustNumUnit();
             if (ps == PS_T04 && finprodType2 == FINPROD_TYPE_TG_F10) {
                 $("#entrustPrice_" + currentTab).attr('disabled', 'disabled');
+            }
+
+            if(ps == PS_T01 || ps == PS_T02){
+                $("#priceModel_div_" + currentTab).show();
+                $("#acctNo_div_" + currentTab).hide();
             }
         }
     var addMinPriceStep = function (type, num, input) {
