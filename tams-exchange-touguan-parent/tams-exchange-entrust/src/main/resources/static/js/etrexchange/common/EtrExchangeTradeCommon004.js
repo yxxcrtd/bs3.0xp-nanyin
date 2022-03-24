@@ -2055,7 +2055,6 @@
         if (finprodType2) {
             // if 画面.金融产品类型（投管） = 数据字典.金融产品类型（投管）.债券 && 画面.委托方向 != 数据字典.交易方向.行权-回售 or 申购 or 配债 or 债转股 or 质押入库 or 质押出库
             if (finprodType2 == FINPROD_TYPE_TG_F01 && isStandardPs(ps)) {
-                alert(1)
                 // 净价、到期收益率、全价显示，单选按钮，计算方式 = 数据字典.计算方式.
                 $("#price_div_" + currentTab).show();
                 $("#fprice_div_" + currentTab).show();
@@ -3401,10 +3400,38 @@
                 edit: true,
                 visible: (ps != "T03" && ps != "T49" && ps != "T68" && ps != "T69")
             },
-            {field: 'accAvailableCash', title: '可用现金(元)', width: 200, type: 'number', edit: false, visible: (ps != "T03" && ps != "T49" && ps != "T68" && ps != "T69")},
-            {field: 'accAvailablePos', title: '可用持仓', width: 200, type: 'number', edit: false, visible: (ps != "T68" && ps != "T69")},
-            {field: 'accAvailablePos', title: '可入库持仓', width: 200, type: 'number', edit: false, visible: (ps == "T68" || ps == "T69")},
-            {field: 'standardBondVolume', title: '可出库持仓', width: 200, type: 'number', edit: false, visible: (ps == "T68" || ps == "T69")},
+            {
+                field: 'accAvailableCash',
+                title: '可用现金(元)',
+                width: 200,
+                type: 'number',
+                edit: false,
+                visible: (ps != "T03" && ps != "T49" && ps != "T68" && ps != "T69")
+            },
+            {
+                field: 'accAvailablePos',
+                title: '可用持仓',
+                width: 200,
+                type: 'number',
+                edit: false,
+                visible: (ps != "T68" && ps != "T69")
+            },
+            {
+                field: 'accAvailablePos',
+                title: '可入库持仓',
+                width: 200,
+                type: 'number',
+                edit: false,
+                visible: (ps == "T68" || ps == "T69")
+            },
+            {
+                field: 'standardBondVolume',
+                title: '可出库持仓',
+                width: 200,
+                type: 'number',
+                edit: false,
+                visible: (ps == "T68" || ps == "T69")
+            },
             {field: 'operation', title: 'SysCommon.operation', type: 'action', buttons: ['delt']}
         ],
         beforeEditCell: function (preVal, field, rowData) {
@@ -3426,7 +3453,11 @@
                 param.tradeMarket = $("#tradeMarket_" + currentTab).val();
                 Joyin.ajaxJson(basePath + '/etrexchange/common/EtrExchangeTradeCommon004/getPtlSecAcctInfoJson', param, function (result) {
                     if (result.length == 1) { //只有一条，自动选上
-                        dateTable.renderRow(data.LAY_TABLE_INDEX, {"acctNo": result[0].id});
+                        var secAcctId = null;
+                        if(result[0].object.length == 1){
+                            secAcctId = result[0].object[0].secAcctId;
+                        }
+                        dateTable.renderRow(data.LAY_TABLE_INDEX, {"acctNo": result[0].id, "secAcctId":secAcctId});
                     } else {
                         dateTable.renderRow(data.LAY_TABLE_INDEX, {"acctNo": null});
                     }
@@ -3755,7 +3786,6 @@
             if (keyCode == 9) {
                 e.preventDefault();
                 if (inp != null) {
-                    console.log(2345);
                     var submitBtn = $("#EtrExchangeTrade001_btn_submit");
                     if (!submitBtn || submitBtn.length == 0) {
                         submitBtn = $("#EtrExchangeTrade001_btn_submit", window.parent.document);

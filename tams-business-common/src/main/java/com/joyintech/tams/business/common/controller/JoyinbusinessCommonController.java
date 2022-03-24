@@ -26,6 +26,8 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -356,24 +358,20 @@ public class JoyinbusinessCommonController extends BaseController {
     @PostMapping("/getPermissionsByUserId")
     @ApiOperation(value = "查询用户权限接口", notes = "查询用户权限接口")
     @ResponseBody
-    public Message<List<String>> getPermissionsByUserId() {
+    public Message<Map<String, Object>> getPermissionsByUserId() {
         try {
+            Map<String, Object> resultMap = new HashMap<>();
+            List<String> list = new ArrayList<>();
             String userId = SecurityUtil.getLoginUser().getUserName();
-            if(StringUtils.isNotEmpty(userId)){
-                List<String> list = joyinbusinessCommonService.findAllModuleIds(userId);
-                if(!CollectionUtils.isEmpty(list)) {
-                    return new Message<List<String>>().success().setData(list);
-                }
+            if (!SecurityUtil.getLoginUser().isAdmin() && StringUtils.isNotEmpty(userId)) {
+                list = userService.getPermissions(userId);
             }
-            if (StringUtils.isNotEmpty(userId)) {
-                List<String> list = userService.getPermissions(userId);
-                return new Message<List<String>>().success().setData(list);
-            } else {
-                return null;
-            }
+            resultMap.put("isAdmin",SecurityUtil.getLoginUser().isAdmin());
+            resultMap.put("PermissionLists",list);
+            return new Message<Map<String, Object>>().success().setData(resultMap);
         } catch (Exception e) {
             logger.error("查询功能异常", e);
-            return new Message<List<String>>().fail().setMessage("查询异常");
+            return new Message<Map<String, Object>>().fail().setMessage("查询异常");
         }
     }
 
