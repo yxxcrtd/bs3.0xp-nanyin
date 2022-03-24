@@ -908,13 +908,13 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
             if (resultDto.getSettleSpeed() != null) {
                 resultDto.setSettleSpeedStr(String.valueOf(resultDto.getSettleSpeed()));
             }
-            else if(resultDto.getSettleSpeed() == 1L){
+           /* else if(resultDto.getSettleSpeed() == 1L){无用的判断
                 resultDto.setSettleSpeedStr("1");
             }else if(resultDto.getSettleSpeed() == 2L){
                 resultDto.setSettleSpeedStr("2");
             }else{
                 resultDto.setSettleSpeedStr(resultDto.getSettleSpeed().toString());
-            }
+            }*/
             // 到期收益率
             if (resultDto.getYield() != null) {
                 resultDto.setYield(ArithmeticUtil.multiply(resultDto.getYield(), BigDecimal.valueOf(100)));
