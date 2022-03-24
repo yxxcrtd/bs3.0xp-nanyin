@@ -367,4 +367,11 @@ public interface EtrExchangeTradeCommonMapper {
 	List<RiskTrialRetDto> selectRiskList(Map<String, Object> param);
 
 	BigDecimal getResidualFace(Map<String, Object> param);
+
+	int deleteWflEtrEntrustByEntrustId(String entrustId);
+
+	int deleteWflEtrEntrustAddByEntrustId(String entrustId);
+
+	int deleteWflEtrEntrustDetailByEntrustId(String entrustId);
+
 }
