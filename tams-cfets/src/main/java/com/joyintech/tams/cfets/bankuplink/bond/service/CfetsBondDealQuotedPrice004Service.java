@@ -657,6 +657,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         BeanUtil.copyPropertiesIgnoreNull(result, entity);
         result.setOperationType(entity.getOperatorType());
         WflRegFinProductDealTotal wfldealTotal = wflRegFinProductDealTotalMapper.selectByPrimaryKey(entity.getTotleTradeId());
+        WflRegFinProDealTotalAdd wfldealTotalAdd = wflRegFinProDealTotalAddMapper.selectByPrimaryKey(entity.getTotleTradeId());
         List<WflRegTradeFeeTotal> wflfeeTotals = cfetsIbuQuoteBondMapper.listWflRegTradeFeeTotal(entity.getTotleTradeId());
         List<WflRegFinProductDeal> wfldeals = cfetsIbuQuoteBondMapper.listWflRegFinProductDeal(entity.getTotleTradeId());
         List<WflRegFinProductDealAdd> wfldealAdds = cfetsIbuQuoteBondMapper.listWflRegFinProductDealAdd(entity.getTotleTradeId());
@@ -664,6 +665,8 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
 
         RegFinProductDealTotal dealTotal = new RegFinProductDealTotal();
         BeanUtil.copyPropertiesIgnoreNull(dealTotal, wfldealTotal);
+        RegFinProductDealTotalAdd dealTotalAdd = new RegFinProductDealTotalAdd();
+        BeanUtil.copyPropertiesIgnoreNull(dealTotalAdd, wfldealTotalAdd);
         List<RegTradeFeeTotal> feeTotals = new ArrayList<>();
         wflfeeTotals.forEach(wflfeeTotal -> {
             RegTradeFeeTotal feeTotal = new RegTradeFeeTotal();
@@ -691,6 +694,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
 
 
         result.setRegFinProductDealTotal(dealTotal);
+        result.setRegFinProductDealTotalAdd(dealTotalAdd);
         result.setRegTradeFeeTotals(feeTotals);
         result.setRegFinProductDeals(deals);
         result.setRegFinProductDealAdds(dealAdds);
