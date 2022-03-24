@@ -52,7 +52,7 @@ public class PositionSocketClient {
     @PostConstruct
     public void init(){
         logger.info("WebSocketClient初始化一次...");
-        new Thread(this::loopStart).start();
+//        new Thread(this::loopStart).start();
     }
 
     @Autowired
