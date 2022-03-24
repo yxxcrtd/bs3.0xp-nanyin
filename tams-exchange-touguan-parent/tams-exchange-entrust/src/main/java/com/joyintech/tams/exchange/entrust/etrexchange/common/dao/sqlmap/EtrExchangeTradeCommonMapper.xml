@@ -1851,4 +1851,19 @@
         <![CDATA[AND PAY_DATE <= #{sysDate,jdbcType=DATE} ]]>
         AND CASH_TYPE IN (#{CASH_CLASS_TYPE_02},#{CASH_CLASS_TYPE_03})
     </select>
+
+    <delete id="deleteWflEtrEntrustByEntrustId">
+        delete from WFL_ETR_ENTRUST
+        where ENTRUST_ID = #{entrustId, jdbcType=VARCHAR}
+    </delete>
+
+    <delete id="deleteWflEtrEntrustAddByEntrustId">
+        delete from WFL_ETR_ENTRUST_ADD
+        where ENTRUST_ID = #{entrustId, jdbcType=VARCHAR}
+    </delete>
+
+    <delete id="deleteWflEtrEntrustDetailByEntrustId">
+        delete from WFL_ETR_ENTRUST_DETAIL
+        where ENTRUST_ID = #{entrustId, jdbcType=VARCHAR}
+    </delete>
 </mapper>

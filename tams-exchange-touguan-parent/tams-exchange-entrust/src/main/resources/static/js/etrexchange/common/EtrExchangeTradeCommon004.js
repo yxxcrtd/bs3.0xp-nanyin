@@ -2093,7 +2093,8 @@
                     $("#entrustPriceUnit_" + currentTab).text("%");
                     $("#entrustAmtUnit_" + currentTab).text("元");
                 } else {
-                    $("#targetType_div_" + currentTab).text("目标类型").append($star.clone());
+                    $("#targetType_label_" + currentTab).text("目标类型").append($star.clone());
+                    $("#priceModel_label_" + currentTab).text("价格模式").append($star.clone());
                     $("#toShareAvailableNum_label_" + currentTab).text("可转股数量").append($star.clone());
                     $("#entrustDate_label_" + currentTab).text("指令日期").append($star.clone());
                     $("#ps_label_" + currentTab).text("委托方向").append($star.clone());
@@ -3528,14 +3529,34 @@
                     }, false);
                 }
             } else if (filed = 'entrustNum') {
-                var array = dateTable.getAllRows();
-                var entrustNum = 0;
-                for (var i = 0; i < array.length; i++) {
-                    if(array[i].entrustNum){
-                        entrustNum += parseInt(array[i].entrustNum);
-                    }
+                if (parseFloat(value) < 0){
+                    Joyin.error("指令数量不能为负数！",function(){
+                        dateTable.renderRow(data.LAY_TABLE_INDEX, {"entrustNum": 0});
+                    });
+                    return ;
                 }
-                $("#entrustNum_" + currentTab).val(entrustNum);
+                var tradeMarket = $("#tradeMarket_" + currentTab).val();
+                var res = parseFloat(value) % 10;
+                if (tradeMarket == '03' && res != 0 ){
+                    Joyin.error("交易场所为上交所时，组合分配指令数量需满足最小交易单位10的整数倍！",function(){
+                        dateTable.renderRow(data.LAY_TABLE_INDEX, {"entrustNum": 0});
+                    });
+                    return ;
+                }
+                var datas = dateTable.getAllRows();
+                if (datas){
+                    var entrustNum = Number(0)
+                    for (var i in datas) {
+                        var num = 0;
+                        if (datas[i].entrustNum == '' || datas[i].entrustNum == undefined) {
+                            num = 0;
+                        } else {
+                            num = parseFloat(datas[i].entrustNum);
+                        }
+                        entrustNum += parseFloat(num);
+                    }
+                    $("#entrustNum_" + currentTab).val(JoyinUtil.formatNumber(entrustNum, 2, null, 2));
+                }
             }
         },
         done: function (table, allData) {
@@ -3609,6 +3630,20 @@
     //
     function linkTableEntrustNumAmt() {
         var entrustNum = $("#entrustNum_" + currentTab).val();
+        if (parseFloat(entrustNum) < 0){
+            Joyin.error("指令数量不能为负数！",function(){
+                $("#entrustNum_" + currentTab).val(0)
+            });
+            return ;
+        }
+        var tradeMarket = $("#tradeMarket_" + currentTab).val();
+        var res = parseFloat(entrustNum) % 10;
+        if (tradeMarket == '03' && res != 0 ){
+            Joyin.error("交易场所为上交所时，组合分配指令数量需满足最小交易单位10的整数倍！",function(){
+                $("#entrustNum_" + currentTab).val(0)
+            });
+            return ;
+        }
         var entrustAmt = $("#entrustAmt_" + currentTab).val();
         var array = dateTable.getAllRows();
         var len = array.length;
