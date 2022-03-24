@@ -73,8 +73,7 @@
             regist_bank_code  registBankCode
         from CHB_ORG_REGIST_BANK_CODE
         where status = 'E'
-        and pbc_bank_code = #{pbcBankCode,jdbcType=VARCHAR}
-            and rownum = 1
+          and pbc_bank_code = #{pbcBankCode,jdbcType=VARCHAR}
     </select>
 
 </mapper>
