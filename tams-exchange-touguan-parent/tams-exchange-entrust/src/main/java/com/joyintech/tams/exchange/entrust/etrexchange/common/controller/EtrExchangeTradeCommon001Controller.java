@@ -1371,9 +1371,14 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 						finprodType2 = DictCodeList.平安资产类型_质押式回购.getValue();
 					}
 					String infCode;
-					if(StringUtils.equals(dto.getPs(), DictCodeListExt3.交易方向_债转股.getValue())) {
+					if(StringUtils.equals(dto.getPs(), DictCodeListExt3.交易方向_债转股.getValue())
+					  || StringUtils.equals(dto.getPs(), DictCodeList.交易方向_行权_回售.getValue())) {
 						for (EtrExchangeTradeSaveRequest requestDto:etrExchangeTrade001DtoList) {
-							infCode = BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue();
+							if (StringUtils.equals(dto.getPs(), DictCodeListExt3.交易方向_债转股.getValue())) {
+								infCode = BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue();
+							}else{
+								infCode = BussinessDictCodeListRds.接口系统ID_预占接口.getValue();
+							}
 							AjaxResult ar = ExchangeEntrustRdsCommonAop.doPreOccupy(requestDto, infCode, finprodType2);
 							if (StringUtil.isNotEmpty(ar)) {
 								return new Message<AjaxResult>().success().setData(ar);
