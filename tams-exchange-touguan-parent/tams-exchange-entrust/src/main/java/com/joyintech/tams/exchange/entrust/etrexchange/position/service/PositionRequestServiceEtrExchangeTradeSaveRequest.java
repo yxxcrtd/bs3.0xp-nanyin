@@ -389,8 +389,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
                 Map<String, Object> map = BeanUtil.object2Map(bean);
                 // 标准券代码
                 map.put(STANDARD_SEC_ID, STANDAR_SEC_ID);
-                // 标准券总额  指令.准券总额
-                map.put(STANDARD_SEC_AMOUNT, entity.getEntrustNum().multiply(BigDecimal.valueOf(100)));
+
                 // 再折算率	reConversionRate "调用【再折算率查询】参数：资金账户 = 指令资金账户
                 ImmutableMap<String, Object> param = ImmutableMap.of("acctNo", entity.getAcctNo());
                 TrdMoreConvrateDto moreConvrate = etrExchangeTradeCommon001Service.getMoreConvrate(param);
@@ -399,8 +398,13 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
                 }
                 if(DictCodeListExt3.交易方向_质押券入库.getValue().equals(entity.getPs())
                 		|| DictCodeListExt3.交易方向_质押券出库.getValue().equals(entity.getPs())) {
-                	map.put(STANDARD_SEC_AMOUNT, map.get("cashAmount"));
+                    BigDecimal faceValue = BigDecimal.ONE;//TODO
+                    // 标准券总额 =质押券数量*折算率*最新面值
+                	map.put(STANDARD_SEC_AMOUNT, entity.getEntrustNum().multiply(entity.getEntrustPrice()).multiply(faceValue));
                 	map.put("cashAmount", null);//出入库时，可以为空
+                }else {
+                    // 标准券总额 = 标准券数量*100
+                    map.put(STANDARD_SEC_AMOUNT, entity.getEntrustNum().multiply(BigDecimal.valueOf(100)));
                 }
                 ptlList.add(map);
             }
@@ -414,7 +418,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
                     bean = new PositionRequestBaseBean(item);
                     // 券面总额 指令.指令数量*100
                     bean.setCashAmount(null);
-                    BigDecimal secAmount = bean.getSecAmount().multiply(BigDecimal.valueOf(100));
+                    BigDecimal secAmount = item.getEntrustNum().multiply(BigDecimal.valueOf(100));
                     bean.setSecAmount(secAmount);
 
                     Map<String, Object> map = BeanUtil.object2Map(bean);

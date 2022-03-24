@@ -129,10 +129,19 @@ public class PositionCommonConstant {
     public static final String PTL_CASH_LIST = "ptlCashList";
 
     /**
-     * 组合持仓数据集
+     * 轧差现金数据集
+     */
+    public static final String PTL_OFFSET_CASH_LIST = "ptlOffsetCashList";
+
+    /**
+     * 质押券数据集
      */
     public static final String PTL_SEC_LIST = "ptlSecList";
 
+    /**
+     * 解质押券数据集
+     */
+    public static final String PTL_RELIEVE_SEC_LIST = "ptlRelieveSecList";
     /**
      * 组合配股/新股申购数据集
      */
