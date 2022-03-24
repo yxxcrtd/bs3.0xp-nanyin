@@ -1179,7 +1179,10 @@ public class ExchangeTransMatchCommonService extends BaseService {
                     List<FinPledgeDisplaceResult> finPledgeDisplaceResultList =  exchangeTransMatchCommonMapper.getFinPledgeDisplaceResult(queryMap);
                     if(!StringUtil.isEmptyList(finPledgeDisplaceResultList)) {
                         //更新首期的质押品信息
-                        FinPledgeDisplaceResult finPledgeDisplaceResult = finPledgeDisplaceResultList.stream().findFirst().filter(result->StringUtil.equals(result.getResultType(),DictCodeListExt3.质押券置换_置换结果_置换前.getValue())).get();
+                        // ZGTFCP-1805 : 先filter再findFirst modify by fuyongsheng 20220324 start
+                        // FinPledgeDisplaceResult finPledgeDisplaceResult = finPledgeDisplaceResultList.stream().findFirst().filter(result->StringUtil.equals(result.getResultType(),DictCodeListExt3.质押券置换_置换结果_置换前.getValue())).get();
+                        FinPledgeDisplaceResult finPledgeDisplaceResult = finPledgeDisplaceResultList.stream().filter(result->StringUtil.equals(result.getResultType(),DictCodeListExt3.质押券置换_置换结果_置换前.getValue())).findFirst().get();
+                        // ZGTFCP-1805 : 先filter再findFirst modify by fuyongsheng 20220324 end
                         if(StringUtil.equals(itemList.get(0).getPs(), DictCodeListExt3.交易方向_中途换券.getValue())){
                             List<FinDealPledge> firstFinDealPledgeList = exchangeTransMatchRepo3Service.getFirstRepoFinDealPledge(settleTransDataTotal.getfCjbh(),settleTransDataTotal.getVdate(),itemList.get(0).getPortfolioId());
                             if(!StringUtil.isEmptyList(firstFinDealPledgeList)) {

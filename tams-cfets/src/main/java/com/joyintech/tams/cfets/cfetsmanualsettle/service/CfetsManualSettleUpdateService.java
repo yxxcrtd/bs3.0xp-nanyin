@@ -66,13 +66,13 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
     private TrdBankManualSettleFlowMapper trdBankManualSettleFlowMapper;
 
     @Autowired
-    private TrdBankManualSetDetailMapper trdBankManualSetDetailMapper;
-
-    @Autowired
     private AutoPeriodCommonService autoPeriodCommonService;
 
     @Autowired
     private JoyinbusinessCommonService joyinbusinessCommonService;
+
+    @Autowired
+    private StlPayOrdersMapper stlPayOrdersMapper;
 
 
     /**
@@ -290,6 +290,11 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
                 }
             }
         }
+        //3.更新划款指令表
+        StlPayOrders record = new StlPayOrders();
+        record.setTradeId(request.getTradeId());
+        record.setSettleAmt(request.getSettleAmtT());
+        stlPayOrdersMapper.updateByTradeId(record);
     }
 
 

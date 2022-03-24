@@ -108,4 +108,6 @@
         delete from ETR_ENTRUST_DETAIL_BACKUP
         where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
     </delete>
+
+
 </mapper>

@@ -74,18 +74,18 @@ public class EtrExchangeAgreRepTradeValidator implements EtrCommonValidator {
 //            }
 //        }
 
-        if(StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())) {
-            if(StringUtil.equals(dto.getPs(),DictCodeListExt3.交易方向_到期续做.getValue())) {
-            Map<String, Object> queryMap = new HashMap<>();
-            queryMap.put("tradeId",dto.getTradeId() == null ? dto.getIntiTradeId() : dto.getTradeId());
-                EtrExchangeAgreRepTrade001Dto firstEtrAgreRepTradeDto = etrExchangeAgreRepTrade001Service.getEntrustInfoByTradeId(queryMap);
-                if(StringUtil.isNotEmpty(firstEtrAgreRepTradeDto)) {
-                    if(StringUtil.isNotEmpty(firstEtrAgreRepTradeDto.getTerm()) && firstEtrAgreRepTradeDto.getTerm().compareTo(dto.getTerm())>=0) {
-                        errorList.add(new ValidMessage("term", "回购期限必须大于原回购期限！"));
-                    }
-                }
-            }
-        }
+//        if(StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())) {
+//            if(StringUtil.equals(dto.getPs(),DictCodeListExt3.交易方向_到期续做.getValue())) {
+//            Map<String, Object> queryMap = new HashMap<>();
+//            queryMap.put("tradeId",dto.getTradeId() == null ? dto.getIntiTradeId() : dto.getTradeId());
+//                EtrExchangeAgreRepTrade001Dto firstEtrAgreRepTradeDto = etrExchangeAgreRepTrade001Service.getEntrustInfoByTradeId(queryMap);
+//                if(StringUtil.isNotEmpty(firstEtrAgreRepTradeDto)) {
+//                    if(StringUtil.isNotEmpty(firstEtrAgreRepTradeDto.getTerm()) && firstEtrAgreRepTradeDto.getTerm().compareTo(dto.getTerm())>=0) {
+//                        errorList.add(new ValidMessage("term", "回购期限必须大于原回购期限！"));
+//                    }
+//                }
+//            }
+//        }
 
         return errorList;
     }

@@ -34,11 +34,9 @@
         WHEN T2.TARGET_TYPE = '01' THEN
         ROUND( nvl( T1.ENTRUST_NUM, 0 ) - nvl( T4.ENT_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( T1.ENTRUST_NUM, 0 ) - nvl( T4.ENT_FINISH_AMT, 0 ), 4 )
         END AS avaDealAmt,
-        case when T1.ENTRUST_CLASS = '01' then T5.PORTFOLIO_ID
-        else '' end as portfolioId
-        ,case when T1.ENTRUST_CLASS = '01' then T5.PORTFOLIO_NAME
-        else '' end as portfolioName
-        ,T1.FINPROD_ID finprodId
+        nvl(detail.PORTFOLIO_ID,T5.PORTFOLIO_ID) portfolioId,
+        nvl(detail.PORTFOLIO_NAME,T5.PORTFOLIO_NAME) portfolioName,
+        T1.FINPROD_ID finprodId
         ,T7.FINPROD_MARKET_ID
         ,CASE WHEN T1.PS IN ('03','04') THEN T1.FINPROD_ID ELSE T7.FINPROD_ABBR END AS finprodAbbr
         ,T1.FINPROD_TYPE2 finprodType2
@@ -87,25 +85,16 @@
         T2.ENTRUST_ID = T1.ENTRUST_ID and (T2.ASSET_TYPE1 != 'H01' or T2.ASSET_TYPE1 is null)
         LEFT JOIN ETR_FINISH_STATUS T4 ON T4.ENTRUST_ID = T1.ENTRUST_ID AND T1.ENTRUST_ID =
         T4.TRADE_ID
-        <!--LEFT JOIN (
-            SELECT
-                T3.ENTRUST_ID,
-                SUM(FINISH_AMT) FINISH_AMT
-            FROM
-                ETR_FINISH_STATUS T3
-            GROUP BY
-                T3.ENTRUST_ID ) T4 ON
-            T4.ENTRUST_ID = T1.ENTRUST_ID
-            LEFT JOIN (
-            SELECT
-            T8.ENTRUST_ID,
-            SUM(ORDER_FINISH_AMT) ORDER_FINISH_AMT
-            FROM
-            ETR_FINISH_STATUS T8
-            GROUP BY
-            T8.ENTRUST_ID ) T9 ON
-            T9.ENTRUST_ID = T1.ENTRUST_ID -->    LEFT JOIN PTL_PORTFOLIO T5 ON
-        T5.PORTFOLIO_ID = T1.PORTFOLIO_ID
+        LEFT JOIN PTL_PORTFOLIO T5 ON T5.PORTFOLIO_ID = T1.PORTFOLIO_ID
+
+        LEFT JOIN (
+        SELECT EED.ENTRUST_ID,
+        listagg ( EED.PORTFOLIO_ID, ',' ) within GROUP ( ORDER BY EED.PORTFOLIO_ID ) AS PORTFOLIO_ID ,
+        listagg ( FP.PORTFOLIO_NAME, ',' ) within GROUP ( ORDER BY FP.PORTFOLIO_NAME ) AS PORTFOLIO_NAME
+        FROM ETR_ENTRUST_DETAIL EED
+        left join PTL_PORTFOLIO FP on EED.PORTFOLIO_ID = FP.PORTFOLIO_ID
+        GROUP BY EED.ENTRUST_ID ) detail ON T1.ENTRUST_ID = detail.ENTRUST_ID
+
         INNER JOIN PTL_PORTFOLIO_AUTHORITY T6 ON
         T6.PORTFOLIO_ID = T5.PORTFOLIO_ID
         <if test="userId != null and userId != ''">
@@ -183,12 +172,10 @@
         CASE
         WHEN T2.TARGET_TYPE = '01' THEN
         ROUND( nvl( T1.ENTRUST_NUM, 0 ) - nvl( T4.ENT_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( T1.ENTRUST_NUM, 0 ) - nvl( T4.ENT_FINISH_AMT, 0 ), 4 )
-        END AS avaDealAmt
-        ,case when T1.ENTRUST_CLASS = '01' then T5.PORTFOLIO_ID
-        else '' end as portfolioId
-        ,case when T1.ENTRUST_CLASS = '01' then T5.PORTFOLIO_NAME
-        else '' end as portfolioName
-        ,T1.FINPROD_ID finprodId
+        END AS avaDealAmt,
+        nvl(detail.PORTFOLIO_ID,T5.PORTFOLIO_ID) portfolioId,
+        nvl(detail.PORTFOLIO_NAME,T5.PORTFOLIO_NAME) portfolioName,
+        T1.FINPROD_ID finprodId
         ,T7.FINPROD_MARKET_ID
         ,CASE WHEN T1.PS IN ('03','04') THEN T1.FINPROD_ID ELSE T7.FINPROD_ABBR END AS finprodAbbr
         ,T1.FINPROD_TYPE2 finprodType2
@@ -235,8 +222,16 @@
         INNER JOIN WFL_ETR_ENTRUST_ADD T2 ON
         T2.ENTRUST_ID = T1.ENTRUST_ID and (T2.ASSET_TYPE1 != 'H01' or T2.ASSET_TYPE1 is null)
         LEFT JOIN   ETR_FINISH_STATUS T4  ON T4.ENTRUST_ID = T1.ENTRUST_ID AND T1.ENTRUST_ID = T4.TRADE_ID
-        LEFT JOIN PTL_PORTFOLIO T5 ON
-        T5.PORTFOLIO_ID = T1.PORTFOLIO_ID
+        LEFT JOIN PTL_PORTFOLIO T5 ON T5.PORTFOLIO_ID = T1.PORTFOLIO_ID
+
+        LEFT JOIN (
+        SELECT EED.ENTRUST_ID,
+        listagg ( EED.PORTFOLIO_ID, ',' ) within GROUP ( ORDER BY EED.PORTFOLIO_ID ) AS PORTFOLIO_ID ,
+        listagg ( FP.PORTFOLIO_NAME, ',' ) within GROUP ( ORDER BY FP.PORTFOLIO_NAME ) AS PORTFOLIO_NAME
+        FROM ETR_ENTRUST_DETAIL EED
+        left join PTL_PORTFOLIO FP on EED.PORTFOLIO_ID = FP.PORTFOLIO_ID
+        GROUP BY EED.ENTRUST_ID ) detail ON T1.ENTRUST_ID = detail.ENTRUST_ID
+
         INNER JOIN PTL_PORTFOLIO_AUTHORITY T6 ON
         T6.PORTFOLIO_ID = T5.PORTFOLIO_ID
         <if test="userId != null and userId != ''">
@@ -1851,4 +1846,19 @@
         <![CDATA[AND PAY_DATE <= #{sysDate,jdbcType=DATE} ]]>
         AND CASH_TYPE IN (#{CASH_CLASS_TYPE_02},#{CASH_CLASS_TYPE_03})
     </select>
+
+    <delete id="deleteWflEtrEntrustByEntrustId">
+        delete from WFL_ETR_ENTRUST
+        where ENTRUST_ID = #{entrustId, jdbcType=VARCHAR}
+    </delete>
+
+    <delete id="deleteWflEtrEntrustAddByEntrustId">
+        delete from WFL_ETR_ENTRUST_ADD
+        where ENTRUST_ID = #{entrustId, jdbcType=VARCHAR}
+    </delete>
+
+    <delete id="deleteWflEtrEntrustDetailByEntrustId">
+        delete from WFL_ETR_ENTRUST_DETAIL
+        where ENTRUST_ID = #{entrustId, jdbcType=VARCHAR}
+    </delete>
 </mapper>
