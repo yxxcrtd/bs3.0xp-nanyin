@@ -1012,11 +1012,12 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
             input.setTotleTradeId(input.getTotleTradeId().substring(0, input.getTotleTradeId().length() - 1));
         }
         List<String> tradeDetailLists = cfetsTrdQueryMapper.selectAllTrdDetailListById(input.getTotleTradeId());
+        String quoteId = null;
+        String ps = null;
 
         for(String item : tradeDetailLists){
             //根据交易编号查询信息
             TrdRepoTrade002Dto entity=this.getTrdRepoTradeDto(item);
-            String orderId = cfetsManualSettleMapper.selectRegTradeIdBytradeId(entity.getTradeId());
             //entity.setActPortfolioId(entity.getTrda());
             //entity.setPortfolioId(AllTradeCommonUtil.exchangePortfolio(entity.getPortfolioId()));
             // 调用基础组合.【金融产品交易组件.查询金融产品交易信息】获取原交易信息
@@ -1067,12 +1068,13 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
                     finProductTradeDto.setBussRepoSec(bussRepoSecService.selectBussRepoSec(initSearchParam));
                 }
                 cfetsTrdBondInvestTrade002Service.baseTradeCommExecute(finProductTradeDto);
-                if (StringUtil.equals(entity.getPs(), DictCodeList.回购拆借方向_逆回购.getValue())
-                        && StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
-                    finProductTradeDto.setIsExistNew(DictCodeList.是否_是.getValue());
-                    baseTradeProductDealCommService.insertPosition(finProductTradeDto);
-                    cfetsRepoQuotedPrice004Service.revokePtlCashPosition(orderId, DictCodeList.持仓类型_实际.getValue(), DictCodeList.持仓类型_可用.getValue());
+                quoteId = cfetsManualSettleMapper.selectQuoteIdBytradeId(entity.getTradeId());
+                boolean flag = true;
+                if(StringUtil.isNotEmpty(quoteId)){
+                    flag = false;
+                    ps = entity.getPs();
                 }
+                this.insertOldRepoPosition(entity, finProductTradeDto, flag);
             }
 //        // 撤销委托/回购交易时，删除回购质押品信息
             if(StringUtil.isNotEmpty(entity.getBussRepoSec())){
@@ -1119,6 +1121,10 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
             }*/
 
         }
+        if (StringUtil.equals(ps, DictCodeList.回购拆借方向_逆回购.getValue())
+                && StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
+            cfetsRepoQuotedPrice004Service.revokePtlCashPosition(quoteId, DictCodeList.持仓类型_实际.getValue(), DictCodeList.持仓类型_可用.getValue());
+        }
 
         Map<String, Object> params = new HashMap<>();
         params.put("workflowId", input.getWorkflowId());
@@ -1162,6 +1168,41 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
             paramMap.put("totleTradeId", bizCode);
             paramMap.put("tradeStatus", BussinessDictCodeList.银行间上行报价状态_已撤销.getValue());
             cfetsTrdQueryMapper.updateIbuByPrimaryKeySelective(paramMap);
+        }
+    }
+
+    /**
+     * 交收确认撤销时,重新组装质押式回购插入旧头寸
+     *
+     * @param entity
+     * @param finProductTradeDto
+     * @author jiangpeng
+     * @date 2022/3/14 10:23
+     */
+    public void insertOldRepoPosition(TrdRepoTrade002Dto entity, FinProductTradeDto finProductTradeDto,boolean flag) {
+        if (StringUtil.equals(entity.getPs(), DictCodeList.回购拆借方向_逆回购.getValue())
+                && StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
+            String orderId = cfetsManualSettleMapper.selectRegTradeIdBytradeId(entity.getTradeId());
+            finProductTradeDto.setIsExistNew(DictCodeList.是否_是.getValue());
+            FinProductTradeDto finProductTradeDtoTemp = new FinProductTradeDto();
+            BeanUtil.copyPropertiesIgnoreNull(finProductTradeDtoTemp, finProductTradeDto);
+            if (CollectionUtils.isNotEmpty(finProductTradeDtoTemp.getBaseTradeProductDealDtos())) {
+                for (BaseTradeProductDealDto baseDto : finProductTradeDtoTemp.getBaseTradeProductDealDtos()) {
+                    if (CollectionUtils.isNotEmpty(baseDto.getStlPayOrdersList())) {
+                        for (StlPayOrdersDto stlPayOrdersDto : baseDto.getStlPayOrdersList()) {
+                            if (StringUtil.isEmpty(stlPayOrdersDto.getMyAcctNo())) {
+                                String acctId = EtrCommonCashPositionDealService.select组合托管户(entity.getPortfolioId(), entity.getCcy(),
+                                        DictCodeListExt1.资金账户类型_产品托管户.getValue());
+                                stlPayOrdersDto.setMyAcctNo(acctId);
+                            }
+                        }
+                    }
+                }
+            }
+            baseTradeProductDealCommService.insertPosition(finProductTradeDto);
+            if (flag) {
+                cfetsRepoQuotedPrice004Service.revokePtlCashPosition(orderId, DictCodeList.持仓类型_实际.getValue(), DictCodeList.持仓类型_可用.getValue());
+            }
         }
     }
 
