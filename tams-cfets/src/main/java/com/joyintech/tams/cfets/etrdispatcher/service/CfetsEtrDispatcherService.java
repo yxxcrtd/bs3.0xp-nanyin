@@ -69,6 +69,7 @@ import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dao.BussRepoSecMapper;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
+import com.joyintech.tams.invest.common.util.DictCodeUtil;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
@@ -81,6 +82,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -116,7 +118,7 @@ public class CfetsEtrDispatcherService extends BaseService {
     /**
      * 自定义债券一级投标委托mapper
      */
-    @Autowired
+    @Autowired(required = false)
     private EtrBondFirstLBiddingMapper mapper;
 
     @Autowired
@@ -178,7 +180,7 @@ public class CfetsEtrDispatcherService extends BaseService {
     /**
      * 指令推送信息查询service
      */
-    @Autowired
+    @Autowired(required = false)
     private EntrCommandDispatcherService entrCommandDispatcherService;
     @Autowired
     private CfgDataTableMapper cfgDataTableMapper;
@@ -322,9 +324,9 @@ public class CfetsEtrDispatcherService extends BaseService {
         //将交易员和投资经理转为真实姓名
         List<CfetsEtrDispatcherTradeListResponse> list = pageLimit.getRoot();
         if (!list.isEmpty()) {
-            for (CfetsEtrDispatcherTradeListResponse cfetsEtrDispatcherTradeListResponse : list) {
-                if (StringUtil.isNotEmpty(cfetsEtrDispatcherTradeListResponse.getTrader())) {
-                    String[] traders = cfetsEtrDispatcherTradeListResponse.getTrader().split(",");
+            for (CfetsEtrDispatcherTradeListResponse response : list) {
+                if (StringUtil.isNotEmpty(response.getTrader())) {
+                    String[] traders = response.getTrader().split(",");
                     StringBuffer buffer = new StringBuffer();
                     StringBuffer userName = new StringBuffer();
                     for (String trader : traders) {
@@ -335,44 +337,56 @@ public class CfetsEtrDispatcherService extends BaseService {
                         }
                     }
                     if (buffer.toString().length() != 0) {
-                        cfetsEtrDispatcherTradeListResponse.setTrader(buffer.toString().substring(0, buffer.toString().length() - 1));
+                        response.setTrader(buffer.toString().substring(0, buffer.toString().length() - 1));
                     }
 //                    if(userName.toString().length() !=0){
 //                        cfetsEtrDispatcherTradeListResponse.setUserName(userName.toString().substring(0,userName.toString().length() - 1));
 //                    }
                 }
-                if (StringUtil.isNotEmpty(cfetsEtrDispatcherTradeListResponse.getInvManagerId())) {
-                    User user1 = cfetsEtrDispatcherMapper.getRealNameByUserName(cfetsEtrDispatcherTradeListResponse.getInvManagerId());
+                if (StringUtil.isNotEmpty(response.getInvManagerId())) {
+                    User user1 = cfetsEtrDispatcherMapper.getRealNameByUserName(response.getInvManagerId());
                     if (StringUtil.isNotEmpty(user1)) {
-                        cfetsEtrDispatcherTradeListResponse.setInvManagerId(user1.getRealName());
+                        response.setInvManagerId(user1.getRealName());
                     }
                 }
-                if (StringUtil.isNotEmpty(cfetsEtrDispatcherTradeListResponse.getBusiPs())) {
+                if (StringUtil.isNotEmpty(response.getBusiPs())) {
                     //委托指令附属表中取出回购/拆借方向
-                    if (StringUtil.equals(DictCodeList.平安资产类型_质押式回购.getValue(), cfetsEtrDispatcherTradeListResponse.getFinprodType2())
-                            || StringUtil.equals(DictCodeList.平安资产类型_拆借.getValue(), cfetsEtrDispatcherTradeListResponse.getFinprodType2())) {
-                        cfetsEtrDispatcherTradeListResponse.setPs(cfetsEtrDispatcherTradeListResponse.getBusiPs());
+                    if (StringUtil.equals(DictCodeList.平安资产类型_质押式回购.getValue(), response.getFinprodType2())
+                            || StringUtil.equals(DictCodeList.平安资产类型_拆借.getValue(), response.getFinprodType2())) {
+                        response.setPs(response.getBusiPs());
                     }
                 }
-                if(StringUtil.equals(cfetsEtrDispatcherTradeListResponse.getFinprodType2(), BussinessDictCodeList.平安资产类型_一级投标债券.getValue())){
-                    cfetsEtrDispatcherTradeListResponse.setPs(null);
-                    CfetsEtrDispatcherTradeListResponse dto2 = cfetsEtrDispatcherMapper.getEtrBidInfo(cfetsEtrDispatcherTradeListResponse.getEntrustId());
+                //这里特殊处理成交进度和成交额度
+                if(DictCodeUtil.equals(response.getFinprodType2(), BussinessDictCodeList.平安资产类型_一级投标债券,BussinessDictCodeList.平安资产类型_债券,BussinessDictCodeList.平安资产类型_计划类资产_利率型,
+                        BussinessDictCodeList.平安资产类型_计划类资产_货币型,BussinessDictCodeList.平安资产类型_计划类资产_净值型,BussinessDictCodeList.平安资产类型_拆借,BussinessDictCodeList.平安资产类型_买断式回购,
+                        BussinessDictCodeList.平安资产类型_存款,BussinessDictCodeList.平安资产类型_项目类资产,BussinessDictCodeList.平安资产类型_基金)
+                        || DictCodeUtil.equals(response.getFinprodType2(),DictCodeList.平安资产类型_质押式回购)) {
+                    DecimalFormat df = new DecimalFormat("0.##");
+                    response.setDealProgress(ArithmeticUtil.divide(response.getFinishAmt(), response.getEntrustAmt(), 4).multiply(new BigDecimal("100")));
+                    response.setTransRemainderAmt(new BigDecimal(df.format(ArithmeticUtil.divide(ArithmeticUtil.subtract(response.getEntrustAmt(), response.getFinishAmt()), new BigDecimal("10000"), 4))));
+                    response.setTransFinishAmt(new BigDecimal(df.format(ArithmeticUtil.divide(response.getFinishAmt(), new BigDecimal("10000"), 4))));
+                }
+                if(StringUtil.equals(response.getFinprodType2(), BussinessDictCodeList.平安资产类型_一级投标债券.getValue())){
+                    response.setPs(null);
+                    CfetsEtrDispatcherTradeListResponse dto2 = cfetsEtrDispatcherMapper.getEtrBidInfo(response.getEntrustId());
                     if(StringUtil.isNotEmpty(dto2)) {
-                        cfetsEtrDispatcherTradeListResponse.setIsWin(dto2.getIsWin());
-                        cfetsEtrDispatcherTradeListResponse.setEtrPrice(dto2.getEtrPrice());
-                        CfetsEtrDispatcherTradeListResponse deal =  cfetsEtrDispatcherMapper.getEtrDealInfo(cfetsEtrDispatcherTradeListResponse.getEntrustId());
+                        response.setIsWin(dto2.getIsWin());
+                        response.setEtrPrice(dto2.getEtrPrice());
+                      /*  CfetsEtrDispatcherTradeListResponse deal =  cfetsEtrDispatcherMapper.getEtrDealInfo(response.getEntrustId());
                         if(Objects.nonNull(deal)) {
-                            cfetsEtrDispatcherTradeListResponse.setDealProgress(deal.getDealProgress());
-                            cfetsEtrDispatcherTradeListResponse.setTransFinishAmt(deal.getTransFinishAmt());
-                            cfetsEtrDispatcherTradeListResponse.setTransRemainderAmt(deal.getTransRemainderAmt());
-                        }
+                            response.setDealProgress(deal.getDealProgress());
+                            response.setTransFinishAmt(deal.getTransFinishAmt());
+                            response.setTransRemainderAmt(deal.getTransRemainderAmt());
+                        }*/
                     }
                 }
-                //TODO 清算速度
+
             }
         }
         return pageLimit;
     }
+
+
 
     /**
      * 自动分发规则、参数设置check

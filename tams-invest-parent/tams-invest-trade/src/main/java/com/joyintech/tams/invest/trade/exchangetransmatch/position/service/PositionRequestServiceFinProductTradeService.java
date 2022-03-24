@@ -580,8 +580,8 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
                 }
             }else{
                 bean.setFinprodId(CollectionUtils.isNotEmpty(finDealPledges) ? finDealPledges.get(0).getPledgeFinprodId() : StringUtil.EMPTY);
-                bean.setSecAmount(ArithmeticUtil.multiply(dealEntity.getShareAmt(), new BigDecimal(100)));
-                bean.setOwnSecAmount(ArithmeticUtil.multiply(dealEntity.getShareAmt(), new BigDecimal(100)));
+                bean.setSecAmount(ArithmeticUtil.multiply(finDealPledges.get(0).getPledgeNumber(), new BigDecimal(100)));
+                bean.setOwnSecAmount(ArithmeticUtil.multiply(finDealPledges.get(0).getPledgeNumber(), new BigDecimal(100)));
             }
             Map<String, Object> map = BeanUtil.object2Map(bean);
             //融入券券面总额
@@ -591,7 +591,9 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
         }
         // 解除质押券数据集	ptlRelieveSecList
         if (DictCodeListExt3.交易方向_解除质押.getValue().equals(ps)
-                || DictCodeListExt3.交易方向_到期续做.getValue().equals(ps)
+                // ZGTFCP-1753:到期续做不传 modify by fuyongsheng 20220324 start
+                // || DictCodeListExt3.交易方向_到期续做.getValue().equals(ps)
+                // ZGTFCP-1753:到期续做不传 modify by fuyongsheng 20220324 end
                 || DictCodeListExt3.交易方向_提前购回.getValue().equals(ps)
                 || DictCodeListExt3.交易方向_到期购回.getValue().equals(ps)) {
             List<Map<String, Object>> list = new ArrayList<>();
@@ -603,15 +605,22 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
             // ZGTFCP-1672:修改部分字段赋值 modify by fuyongsheng 20220323 start
             if(DictCodeListExt3.交易方向_解除质押.getValue().equals(ps)){
                 bean.setFinprodId(CollectionUtils.isNotEmpty(finDealPledges) ? finDealPledges.get(0).getPledgeFinprodId() : StringUtil.EMPTY);
-                bean.setSecAmount(ArithmeticUtil.multiply(dealEntity.getShareAmt(), new BigDecimal(100)));
-                bean.setOwnSecAmount(ArithmeticUtil.multiply(dealEntity.getShareAmt(), new BigDecimal(100)));
+                bean.setSecAmount(ArithmeticUtil.multiply(finDealPledges.get(0).getPledgeNumber(), new BigDecimal(100)));
+                bean.setOwnSecAmount(ArithmeticUtil.multiply(finDealPledges.get(0).getPledgeNumber(), new BigDecimal(100)));
             }else{
                 // 获取首期质押券信息
                 FinDealPledge finDealPledge = getSqFinDealPledge(trdProductDealAdd);
                 if(null != finDealPledge){
                     bean.setFinprodId(finDealPledge.getPledgeFinprodId());
-                    bean.setSecAmount(finDealPledge.getPledgeNumber());
-                    bean.setOwnSecAmount(finDealPledge.getPledgeNumber());
+                    // ZGTFCP-1753:还本到账、收息到账分别处理 modify by fuyongsheng 20220324 start
+                    if(DictCodeList.交易方向_收息到账.getValue().equals(dealEntity.getPs())){
+                        bean.setSecAmount(new BigDecimal(0));
+                        bean.setOwnSecAmount(new BigDecimal(0));
+                    }else{
+                        bean.setSecAmount(ArithmeticUtil.multiply(finDealPledge.getPledgeNumber(),new BigDecimal(100)));
+                        bean.setOwnSecAmount(ArithmeticUtil.multiply(finDealPledge.getPledgeNumber(),new BigDecimal(100)));
+                    }
+                    // ZGTFCP-1753:还本到账、收息到账分别处理 modify by fuyongsheng 20220324 end
                 }
             }
             // ZGTFCP-1672:修改部分字段赋值 modify by fuyongsheng 20220323 end

@@ -134,7 +134,9 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 				param.put("A_001", DictCodeListExt3.资产类型_资产账户持仓.getValue());
 				param.put("NO_TRADE_BUSINESS_ETR", TempConstant.NO_TRADE_BUSINESS_ETR);
 				// 浮动盈亏计算修改 modify by yufei 20200806 start
-				Page<EtrExchangeTradePositionsCommonResponse> result = super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> etrExchangeTradeCommonMapper.findPositionsPage(param));
+				//Page<EtrExchangeTradePositionsCommonResponse> result = super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> etrExchangeTradeCommonMapper.findPositionsPage(param));
+				Page<EtrExchangeTradePositionsCommonResponse> result=new Page<>();
+				result.setRoot(etrExchangeTradeCommonMapper.findPositionsPage(param));
 				// 根据查询结果查询估值、交易数据，用来加工单位成本等字段
 				final List pList = new ArrayList<String>();
 				final List fList = new ArrayList<String>();
@@ -190,8 +192,7 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 				// 查询单位成本数据
 				Map<String, EtrExchangeUnitCostDto> unitCostMap = calcEachCostAmtMap(DateUtil.parse(platDate), pList, fList, "");
 				// 计算单位成本、计算持仓成本、最新净价、持仓市值、浮动盈亏
-				 calculationAmount(unitCostMap, result, platDate);
-				return result;
+				return calculationAmount(unitCostMap, result, platDate);
 //				return restTemplate.postForPage(
 //						ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/findPositionsPage", param,
 //						EtrExchangeTrade002Dto.class);

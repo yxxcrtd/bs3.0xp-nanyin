@@ -1190,6 +1190,10 @@
             $("#entrustAmt_" + currentTab).prop("disabled", false);
             $("#entrustNum_" + currentTab).prop("disabled", true);
         }
+        if(ps == PS_T68 || ps == PS_T69){
+            $("#entrustNum_" + currentTab).prop("disabled", false);
+            $("#entrustAmt_" + currentTab).prop("disabled", true);
+        }
         calcEntrustNumAndAmt(init);
     };
     /**
@@ -2089,7 +2093,8 @@
                     $("#entrustPriceUnit_" + currentTab).text("%");
                     $("#entrustAmtUnit_" + currentTab).text("元");
                 } else {
-                    $("#targetType_div_" + currentTab).text("目标类型").append($star.clone());
+                    $("#targetType_label_" + currentTab).text("目标类型").append($star.clone());
+                    $("#priceModel_label_" + currentTab).text("价格模式").append($star.clone());
                     $("#toShareAvailableNum_label_" + currentTab).text("可转股数量").append($star.clone());
                     $("#entrustDate_label_" + currentTab).text("指令日期").append($star.clone());
                     $("#ps_label_" + currentTab).text("委托方向").append($star.clone());
@@ -3469,7 +3474,26 @@
                         dateTable.renderRow(data.LAY_TABLE_INDEX, {"acctNo": null});
                     }
                 });
-
+                if(currentTab == 'dz') {
+                    var param = {
+                        portfolioId: value,
+                        finprodId: $("#finprodId_" + currentTab).val(),
+                        finprodType2: $("#finprodType2_" + currentTab).val(),
+                        tradeMarket: $("#tradeMarket_" + currentTab).val(),
+                        acctNo: data.acctNo,
+                        tradePlat: "04",
+                    };
+                    Joyin.ajaxJson(basePath + 'etrexchange/common/etrExchangeTrade001/selectAccAvailableCash', param, function (result) {
+                        if (result.data){
+                            dateTable.renderRow(data.LAY_TABLE_INDEX,  {"accAvailablePos": result.data});
+                        }
+                    }, false);
+                    Joyin.ajaxJson(basePath + 'etrexchange/common/etrExchangeTrade001/selectAvailableNum', param, function (result) {
+                        if (result.data) {
+                            dateTable.renderRow(data.LAY_TABLE_INDEX, {"standardBondVolume": result.data});
+                        }
+                    }, false);
+                }
             } else if (field == "acctNo") {
                 if (data.acctNo && $("#tradeMarket_" + currentTab).val()) {
                     var param = {};
@@ -3484,7 +3508,55 @@
                     countAddTable();
                 }
                 curPortfolioId = "";
+                if(currentTab == 'dz') {
+                    var param = {
+                        portfolioId: data.portfolioId,
+                        finprodId: $("#finprodId_" + currentTab).val(),
+                        finprodType2: $("#finprodType2_" + currentTab).val(),
+                        tradeMarket: $("#tradeMarket_" + currentTab).val(),
+                        acctNo: value,
+                        tradePlat: "04",
+                    };
+                    Joyin.ajaxJson(basePath + 'etrexchange/common/etrExchangeTrade001/selectAccAvailableCash', param, function (result) {
+                        if (result.data) {
+                            dateTable.renderRow(data.LAY_TABLE_INDEX, {"accAvailablePos": result.data});
+                        }
+                    }, false);
+                    Joyin.ajaxJson(basePath + 'etrexchange/common/etrExchangeTrade001/selectAvailableNum', param, function (result) {
+                        if (result.data) {
+                            dateTable.renderRow(data.LAY_TABLE_INDEX, {"standardBondVolume": result.data});
+                        }
+                    }, false);
+                }
             } else if (filed = 'entrustNum') {
+                if (parseFloat(value) < 0){
+                    Joyin.error("指令数量不能为负数！",function(){
+                        dateTable.renderRow(data.LAY_TABLE_INDEX, {"entrustNum": 0});
+                    });
+                    return ;
+                }
+                var tradeMarket = $("#tradeMarket_" + currentTab).val();
+                var res = parseFloat(value) % 10;
+                if (tradeMarket == '03' && res != 0 ){
+                    Joyin.error("交易场所为上交所时，组合分配指令数量需满足最小交易单位10的整数倍！",function(){
+                        dateTable.renderRow(data.LAY_TABLE_INDEX, {"entrustNum": 0});
+                    });
+                    return ;
+                }
+                var datas = dateTable.getAllRows();
+                if (datas){
+                    var entrustNum = Number(0)
+                    for (var i in datas) {
+                        var num = 0;
+                        if (datas[i].entrustNum == '' || datas[i].entrustNum == undefined) {
+                            num = 0;
+                        } else {
+                            num = parseFloat(datas[i].entrustNum);
+                        }
+                        entrustNum += parseFloat(num);
+                    }
+                    $("#entrustNum_" + currentTab).val(JoyinUtil.formatNumber(entrustNum, 2, null, 2));
+                }
             }
         },
         done: function (table, allData) {
@@ -3558,6 +3630,20 @@
     //
     function linkTableEntrustNumAmt() {
         var entrustNum = $("#entrustNum_" + currentTab).val();
+        if (parseFloat(entrustNum) < 0){
+            Joyin.error("指令数量不能为负数！",function(){
+                $("#entrustNum_" + currentTab).val(0)
+            });
+            return ;
+        }
+        var tradeMarket = $("#tradeMarket_" + currentTab).val();
+        var res = parseFloat(entrustNum) % 10;
+        if (tradeMarket == '03' && res != 0 ){
+            Joyin.error("交易场所为上交所时，组合分配指令数量需满足最小交易单位10的整数倍！",function(){
+                $("#entrustNum_" + currentTab).val(0)
+            });
+            return ;
+        }
         var entrustAmt = $("#entrustAmt_" + currentTab).val();
         var array = dateTable.getAllRows();
         var len = array.length;
@@ -3690,8 +3776,7 @@
 
     function paramCheck() {
         var ps = $("#ps_" + currentTab).val();
-
-        if ("Y" === pageRedisFlag && (ps !== PS_T68 && ps !== PS_T69) && (!entity_RiskTrialRetList || riskFlag !== 0)) {
+        if (ps && "Y" === pageRedisFlag && (ps !== PS_T68 && ps !== PS_T69 && ps !== PS_T01 && ps !== PS_T02) && (!entity_RiskTrialRetList || riskFlag !== 0)) {
             Joyin.error("请先完成风险试算")
             return false;
         }
@@ -3769,8 +3854,23 @@
                 })
             });
         } else {
+            if (object.ps == PS_T49 || object.ps == PS_T03) {
+                var posSwitch = false;
+                for (var i = 0; i < object.portfolioList.length; i++) {
+                    if (object.portfolioList[i].entrustNum > object.portfolioList[i].accAvailablePos) {
+                        posSwitch = true;
+                    }
+                }
+                if (ETR_CHECK_POS_SWITCH == '02' && posSwitch) {
+                    Joyin.error("组合分配中可用持仓不足");
+                    return ;
+                }
+            }
             Joyin.ajaxJson(basePath + '/etrexchange/common/EtrExchangeTradeCommon004/checkSaveError', object,
                 function (result) {
+                    if (ETR_CHECK_POS_SWITCH == '01' && posSwitch) {
+                        result.data = "组合分配中可用持仓不足,请确认是否要提交";
+                    }
                     Joyin.confirm(result.data, function () {
                         Joyin.ajaxJson(basePath + '/etrexchange/common/EtrExchangeTradeCommon004/buildDtoFromTodoSubmit', object,
                             function (res) {

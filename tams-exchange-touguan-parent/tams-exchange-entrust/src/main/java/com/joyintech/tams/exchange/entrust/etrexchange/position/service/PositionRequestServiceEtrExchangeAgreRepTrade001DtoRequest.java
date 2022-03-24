@@ -1,33 +1,35 @@
 package com.joyintech.tams.exchange.entrust.etrexchange.position.service;
 
-import static com.joyintech.tams.constant.DictCodeListExt3.*;
-import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.B_TOTAL_TRADE_ID;
-
-import java.math.BigDecimal;
-import java.util.*;
-
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.business.common.service.TamsBusinessCommonService;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dto.EtrExchangeAgreRepTrade001Dto;
+import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dto.EtrExchangeAgreRepTrade003Dto;
+import com.joyintech.tams.exchange.entrust.etrexchange.position.bean.PositionRequestBaseBean;
+import com.joyintech.tams.exchange.entrust.etrexchange.position.constant.PositionConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.common.entrust.inter.EtrTradeCommonervice;
+import com.joyintech.tams.invest.common.position.service.CommonPositionEngineService;
 import com.joyintech.tams.invest.entrust.etragrereptrade.dto.EtrAgreRepTradeDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.joyintech.framework.security.SecurityUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.business.common.service.PositionHttpRequest;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dto.EtrExchangeAgreRepTrade001Dto;
-import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dto.EtrExchangeAgreRepTrade003Dto;
-import com.joyintech.tams.exchange.entrust.etrexchange.position.bean.PositionRequestBaseBean;
-import com.joyintech.tams.exchange.entrust.etrexchange.position.constant.PositionConstant;
-import com.joyintech.tams.invest.common.position.service.CommonPositionEngineService;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.joyintech.tams.constant.DictCodeListExt3.*;
+import static com.joyintech.tams.invest.common.position.constant.PositionCommonConstant.B_TOTAL_TRADE_ID;
 
 /**
  * 协议回购
@@ -39,9 +41,10 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest extends 
 
     @Autowired
     private CommonPositionEngineService commonPositionEngineService;
-
     @Autowired
     private TamsBusinessCommonService tamsBusinessCommonService;
+    @Autowired
+    private EtrTradeCommonervice etrTradeCommonervice;
 
     /**
      * EtrExchangeAgreRepTrade001Dto 请求对象使用
@@ -49,11 +52,11 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest extends 
      * @param entity
      */
     public void send(EtrExchangeAgreRepTrade001Dto entity, String decisionAct, String systemAct) {
-        log.debug("send() called with parameters => 【entity = {}】, 【decisionAct = {}】, 【systemAct = {}】",JsonUtils.object2Json(entity), decisionAct, systemAct);
+        log.debug("send() called with parameters => 【entity = {}】, 【decisionAct = {}】, 【systemAct = {}】", JsonUtils.object2Json(entity), decisionAct, systemAct);
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("decisionAct", decisionAct);
         resultMap.put("systemAct", systemAct);
-        this.setCommonField(entity, resultMap,decisionAct);//设置公共字段，个性化的需要在具体接口中覆盖
+        this.setCommonField(entity, resultMap, decisionAct);//设置公共字段，个性化的需要在具体接口中覆盖
         this.repo002(entity, resultMap);
 
         PositionHttpRequest.send(resultMap);
@@ -158,14 +161,13 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest extends 
             bean.setTradeId(null);
             bean.setEtrId(entity.getEntrustId());
 
-            BigDecimal firstTradeAmt = getFirstTradeAmt(entity);
+            String tradeId = StringUtil.isEmpty(entity.getIntiTradeId()) ? entity.getTradeId() : entity.getIntiTradeId();
+            BigDecimal firstTradeAmt = etrTradeCommonervice.getFirstTradeAmt(tradeId);
             BigDecimal tradeAmt = entity.getTradeAmt();
             // IF 回购类型 = 正回购 THEN 指令.到期续作金额 - 指令.首期的到期结算金额
             //IF 回购类型 = 逆回购  and 成交编号找不到对应的首期 THEN 指令.到期续作金额
             //IF 回购类型 = 逆回购  and 成交编号找到对应的首期 THEN  指令.到期续作金额 - 指令.首期的到期结算金额
-            if (Objects.nonNull(tradeAmt)) {
-                bean.setCashAmount(tradeAmt.subtract(firstTradeAmt));
-            }
+            bean.setCashAmount(tradeAmt.subtract(firstTradeAmt));
 
             Map<String, Object> map = BeanUtil.object2Map(bean);
             list.add(map);
@@ -175,10 +177,7 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest extends 
         // 质押券数据集
         // IF 交易方向 = 首期、（中途换券换入） and 回购类型 = 正回购 THEN 传值 ELSE 空
         if (交易方向_正回购.getValue().equals(repPs)
-            && (
-                交易方向_首期.getValue().equals(ps)
-                || 交易方向_中途换券.getValue().equals(ps)
-                )) {
+                && (交易方向_首期.getValue().equals(ps) || 交易方向_中途换券.getValue().equals(ps))) {
             List<Map<String, Object>> list = new ArrayList<>(1);
             bean = new PositionRequestBaseBean();
             bean.setPortfolioId(entity.getPortfolioId());
@@ -207,8 +206,8 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest extends 
 
         // 解除质押券数据集
         // IF 交易方向 = 解除质押、到期续作、中途换券换出 and 回购类型 = 正回购 THEN 传值 ELSE 空 END IF
-        if ( 交易方向_正回购.getValue().equals(repPs)
-               && (交易方向_解除质押.getValue().equals(ps)
+        if (交易方向_正回购.getValue().equals(repPs)
+                && (交易方向_解除质押.getValue().equals(ps)
                 || 交易方向_到期续做.getValue().equals(ps)
                 || 交易方向_中途换券.getValue().equals(ps))) {
             List<Map<String, Object>> list = new ArrayList<>(1);
@@ -236,24 +235,20 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest extends 
     /**
      * 到期续作使用原始的回购金额
      */
-    private BigDecimal getFirstTradeAmt(EtrExchangeAgreRepTrade001Dto entity){
-        //获得初始回购金额和交易方向
-        BigDecimal amount = BigDecimal.ZERO;
-        String ps;
+    private BigDecimal getFirstTradeAmt(EtrExchangeAgreRepTrade001Dto entity) {
+        //获得初始回购金额
         Map<String, Object> map = new HashMap<>();
         map.put("tradeId", StringUtil.isEmpty(entity.getIntiTradeId()) ? entity.getTradeId() : entity.getIntiTradeId());
-        List<EtrAgreRepTradeDto> result =  restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrAgreRepTrade/getEntrustInfoByTradeId",
+        List<EtrAgreRepTradeDto> result = restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrAgreRepTrade/getEntrustInfoByTradeId",
                 map, EtrAgreRepTradeDto.class);
         log.debug("调用接口查询首期回购 url = [{}], request = [{}], response = [{}]",
                 ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrAgreRepTrade/getEntrustInfoByTradeId",
                 JsonUtils.object2Json(map), JsonUtils.object2Json(result));
-        if(StringUtil.isEmptyList(result)) {
-            ps = 交易方向_逆回购.getValue();
-        } else {
-            ps = result.get(0).getPs();
-            amount = result.get(0).getTradeAmt();
+        if (!StringUtil.isEmptyList(result)) {
+            return result.get(0).getTradeAmt();
         }
-        return amount;
+
+        return BigDecimal.ZERO;
     }
 
     /**
@@ -262,7 +257,7 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest extends 
      * @param entity    实例对象
      * @param resultMap 封装集合
      */
-    private void setCommonField(EtrExchangeAgreRepTrade001Dto entity, Map<String, Object> resultMap,String decisionAct) {
+    private void setCommonField(EtrExchangeAgreRepTrade001Dto entity, Map<String, Object> resultMap, String decisionAct) {
         String balanceCheck = "Y";
         if (StringUtil.isNotEmpty(entity.getSoftSkipMode()) && StringUtil.equals(entity.getSoftSkipMode(), "Y")) {
             balanceCheck = "N";

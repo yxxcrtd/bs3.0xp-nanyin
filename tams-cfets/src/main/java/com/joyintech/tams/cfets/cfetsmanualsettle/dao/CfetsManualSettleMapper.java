@@ -101,6 +101,14 @@ public interface CfetsManualSettleMapper {
     String selectRegTradeIdBytradeId(@Param("tradeId") String tradeId);
 
     /**
+     * 报价编号查询
+     *
+     * @param tradeId 参数
+     * @return String
+     */
+    String selectQuoteIdBytradeId(@Param("tradeId") String tradeId);
+
+    /**
      * 划款指令查询
      *
      * @param tradeId 参数

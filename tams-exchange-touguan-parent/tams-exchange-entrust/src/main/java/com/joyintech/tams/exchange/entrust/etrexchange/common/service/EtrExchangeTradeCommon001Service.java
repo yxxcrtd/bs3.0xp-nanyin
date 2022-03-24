@@ -122,8 +122,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.joyintech.tams.constant.DictCodeList.委托状态_已撤回;
-import static com.joyintech.tams.constant.DictCodeList.数据状态_修改中;
 import static com.joyintech.tams.constant.DictCodeListExt3.系统动作_修改;
 import static com.joyintech.tams.constant.DictCodeListExt3.系统动作_新建;
 import static com.joyintech.tams.invest.common.asset.service.BondAssetCalcService.*;
@@ -244,6 +242,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
      */
     @Autowired
     private EtrEntrustBackupMapper etrEntrustBackupMapper;
+
+	@Autowired
+	private EtrEntrustDetailBackUpMapper etrEntrustDetailBackUpMapper;
 
 	/**
 	 * {@inheritDoc}
@@ -709,6 +710,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 
 	@Override
 	public void doBack(EtrExchangeTradeSaveRequest entity){
+		doDeleteEtrFlowMethod(entity.getEntrustId());
+		//从废弃表还原
+		backReRoll(entity.getEntrustId());
 		// nothing to do just for aspect
 		//产品化_所有投资指令预占需求_场内交易  add by zhangpei 20201128 start
 		AllTradeCommonUtil.deletePosition(null, entity.getEntrustId());
@@ -5922,6 +5926,42 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		map.put("tradeId", tradeId);
 		List<RiskTrialRetDto> list = etrExchangeTradeCommonMapper.selectRiskList(map);
 		return list;
+	}
+	public boolean doDeleteEtrFlowMethod(String entrustId){
+		WflEtrEntrustKey wflEtrEntrustKey = new WflEtrEntrustKey();
+		wflEtrEntrustKey.setEntrustId(entrustId);
+		wflEtrEntrustKey.setWorkflowStatus(DictCodeListExt3.委托状态_流程中.getValue());
+
+		WflEtrEntrustAddKey wflEtrEntrustAddKey = new WflEtrEntrustAddKey();
+		wflEtrEntrustAddKey.setEntrustId(entrustId);
+		wflEtrEntrustAddKey.setWorkflowStatus(DictCodeListExt3.委托状态_流程中.getValue());
+
+		etrExchangeTradeCommonMapper.deleteWflEtrEntrustAddByEntrustId(entrustId);
+		etrExchangeTradeCommonMapper.deleteWflEtrEntrustByEntrustId(entrustId);
+		etrExchangeTradeCommonMapper.deleteWflEtrEntrustDetailByEntrustId(entrustId);
+		return true;
+	}
+	/**
+	 * 修改指令回退时,从废弃表将数据取出重新插入
+	 *
+	 * @param entrustId 指令代码
+	 */
+	public void backReRoll(String entrustId) {
+		//从废弃表中获取，转移到指令表
+		etrEntrustBackupMapper.insertEtrFromQuery(entrustId);
+		etrEntrustBackupMapper.insertEtrAddFromQuery(entrustId);
+		List<EtrEntrustDetailBackUp> list=etrEntrustDetailBackUpMapper.selectList(entrustId);
+		if(!org.apache.commons.collections.CollectionUtils.isEmpty(list)){
+			for(EtrEntrustDetailBackUp etrEntrustDetailBackUp:list){
+				EtrEntrustDetail etrEntrustDetail = new EtrEntrustDetail();
+				BeanUtil.copyPropertiesIgnoreNull(etrEntrustDetail,etrEntrustDetailBackUp);
+				etrEntrustDetailMapper.insert(etrEntrustDetail);
+			}
+		}
+		// 删除废弃表
+		etrEntrustBackupMapper.deleteByPrimaryKey(entrustId);
+		etrEntrustBackupMapper.deleteAddByPrimaryKey(entrustId);
+		etrEntrustBackupMapper.deleteDetailByPrimaryKey(entrustId);
 	}
 
 }

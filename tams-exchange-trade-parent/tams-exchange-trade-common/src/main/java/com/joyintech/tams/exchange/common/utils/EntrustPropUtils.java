@@ -2,12 +2,11 @@ package com.joyintech.tams.exchange.common.utils;
 
 
 import cn.hutool.core.util.StrUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.exchange.common.BusinessResultException;
 import com.joyintech.tams.exchange.common.constant.*;
 import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt3;
-import com.joyintech.tams.exchange.common.constant.joyin.InstructionPriceMode;
 import com.joyintech.tams.exchange.common.db.domain.Instruction;
-import com.joyintech.tams.exchange.common.utils.EntrustUtils;
 import org.apache.commons.lang3.StringUtils;
 
 public class EntrustPropUtils {
@@ -33,7 +32,8 @@ public class EntrustPropUtils {
         }
         //竞价平台
         if (EntrustUtils.isNormalTrade(instruction)) {
-            if (StringUtils.equals(InstructionPriceMode.MARKET.value, instruction.getPriceMode())) {
+            //市价
+            if (StringUtil.isNotEmpty(entrustProp) && EntrustProp.isMarketPrice(entrustProp)) {
                 return entrustProp;
             } else {
                 return decideEntrustProp(instruction.getPs());

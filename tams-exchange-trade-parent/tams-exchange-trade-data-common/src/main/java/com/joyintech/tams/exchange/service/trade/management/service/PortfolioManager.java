@@ -437,6 +437,10 @@ public class PortfolioManager extends BaseService {
             price = BigDecimal.valueOf(100L);
         }
 
+        if (null == price) {
+            price = BigDecimal.ZERO;
+        }
+
         String portfolioId;
         BigDecimal entrustVolume = BigDecimal.ZERO;
         BigDecimal entrustAmt = BigDecimal.ZERO;
@@ -455,7 +459,8 @@ public class PortfolioManager extends BaseService {
             calculateResponse.setPortfolioId(portfolioId);
             calculateResponse.setPortfolioName(detail.getPortfolioName());
             calculateResponse.setFinprodMarketId(instruction.getFinprodMarketId());
-            calculateResponse.setEntrustPrice(bean.getEntrustPrice().compareTo(BigDecimal.ZERO) == 0 ? price : bean.getEntrustPrice());
+//            calculateResponse.setEntrustPrice(bean.getEntrustPrice().compareTo(BigDecimal.ZERO) == 0 ? price : bean.getEntrustPrice());
+            calculateResponse.setEntrustPrice(price);
             calculateResponse.setFinprodName(instruction.getFinprodName());
             calculateResponse.setDisRate(detail.getDisRate());
             calculateResponse.setEntrustProp(entrustProp);
@@ -484,7 +489,8 @@ public class PortfolioManager extends BaseService {
                     // 大于等于最小交易单位时的处理，最小交易单位整数倍
                     entrustVolume = TradeUtils.subtractMod(entrustVolume, minStep);
                 }
-                entrustAmt = NumberUtil.mul(entrustVolume, price);
+//                entrustAmt = NumberUtil.mul(entrustVolume, price);
+                entrustAmt = entrustVolume.multiply(price).setScale(2);
             }
 
             log.debug("根据分配比例计算，组合名称 = [{}]， 组合编号 = [{}]，订单数量 = [{}]， 分配比例 = [{}]， 委托数量 = [{}]，委托金额 = [{}]",
@@ -505,15 +511,24 @@ public class PortfolioManager extends BaseService {
         long sum = list.stream().filter(response -> !StrUtil.equals(response.getPortfolioId(), maxPortfolioCalculateResponse.getPortfolioId()))
                 .mapToLong(PortfolioCalculateResponse::getEntrustNum)
                 .sum();
-        Long tailVolume = bean.getEntrustVolume() - sum;
-        BigDecimal tailAmt = NumberUtil.mul(tailVolume, price);
+//        long tailVolume = bean.getEntrustVolume() - sum;
+//        BigDecimal tailAmt = NumberUtil.mul(tailVolume, price);
+        BigDecimal tailVolume = BigDecimal.valueOf(bean.getEntrustVolume() - sum);
+        if (TradeUtils.lessThan(tailVolume, minStep)) {
+            // 小于最小交易单位时的处理，置为0
+            tailVolume = BigDecimal.ZERO;
+        } else {
+            // 大于等于最小交易单位时的处理，最小交易单位整数倍
+            tailVolume = TradeUtils.subtractMod(tailVolume, minStep);
+        }
+        BigDecimal tailAmt = price.multiply(tailVolume).setScale(2);
         log.debug("尾插处理，组合名称 = [{}], 组合编号 = [{}], 原委托数量 = [{}], 现委托数量 = [{}]，现委托金额 = [{}]",
                 maxPortfolioCalculateResponse.getPortfolioName(),
                 maxPortfolioCalculateResponse.getPortfolioId(),
                 maxPortfolioCalculateResponse.getEntrustNum(),
                 tailVolume,
                 tailAmt);
-        maxPortfolioCalculateResponse.setEntrustNum(tailVolume);
+        maxPortfolioCalculateResponse.setEntrustNum(tailVolume.longValue());
         maxPortfolioCalculateResponse.setEntrustAmt(tailAmt);
 
         if (isVolume && DictCodeListExt3.交易方向_债转股.getValue().equals(instruction.getPs())) {
