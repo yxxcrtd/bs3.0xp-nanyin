@@ -530,6 +530,10 @@ public class FieldEtrDispatcherInfoResponse extends FieldEtrDispatcherBaseInfo {
 
     public String getOtherPs() {
         if(StringUtils.equals(DictCodeListExt3.交易方向_提前购回.getValue(),this.getPs())
+        ||StringUtils.equals(DictCodeListExt3.交易方向_到期购回.getValue(),this.getPs())
+                ||StringUtils.equals(DictCodeListExt3.交易方向_中途换券.getValue(),this.getPs())
+                ||StringUtils.equals(DictCodeListExt3.交易方向_解除质押.getValue(),this.getPs())
+                ||StringUtils.equals(DictCodeListExt3.交易方向_到期续做.getValue(),this.getPs())
         ){
             if(StringUtils.equals(DictCodeList.回购拆借方向_正回购.getValue(),this.getBusiPs())){
                 return DictCodeList.回购拆借方向_正回购.getCodeName();
