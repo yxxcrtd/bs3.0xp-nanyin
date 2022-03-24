@@ -683,12 +683,15 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
 
     @Override
     public void doBack(CfetsManualSettleDto entity) {
-        //处理业务数据
-        List<CfetsManualSettleInsertDto> insertDtoLists = handleSettleData(entity);
-        //插入银行间手工交收相关表
-        for (CfetsManualSettleInsertDto cfetsManualSettleInsertDto : insertDtoLists) {
-            deletePosition(cfetsManualSettleInsertDto);
+        if (StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收.getValue())) {
+            //处理业务数据
+            List<CfetsManualSettleInsertDto> insertDtoLists = handleSettleData(entity);
+            //插入银行间手工交收相关表
+            for (CfetsManualSettleInsertDto cfetsManualSettleInsertDto : insertDtoLists) {
+                deletePosition(cfetsManualSettleInsertDto);
+            }
         }
+
     }
 
     private void deletePosition(CfetsManualSettleInsertDto cfetsManualSettleRequest) {
@@ -1245,7 +1248,6 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                         }
                         if (StringUtil.equals(deal.getPs(), DictCodeList.交易方向_卖出.getValue())
                                 || StringUtil.equals(deal.getPs(), DictCodeList.交易方向_行权_回售.getValue())
-                                || StringUtil.equals(deal.getPs(), DictCodeList.交易方向_到期.getValue())
                         ) {
                             ptlSecPositionFlows.add(positionDeal(deal, secManageAcctId));
                         }
