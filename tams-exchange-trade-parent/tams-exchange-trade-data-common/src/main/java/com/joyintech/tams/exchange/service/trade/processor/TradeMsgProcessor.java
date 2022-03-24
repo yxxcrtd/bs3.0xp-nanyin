@@ -770,8 +770,8 @@ public class TradeMsgProcessor {
         //撤销委托，调用头寸引擎---start
         if (entrustStatus == CANCELED.value ||
                 entrustStatus == PART_TRADED_CANCELED.value) {
-        	instructionClone.setEntrustAmt(entrust.getEntrustPrice().multiply(BigDecimal.valueOf(entrust.getFrozenVolume())));
-            instructionClone.setEntrustNum(entrust.getFrozenVolume());
+        	instructionClone.setEntrustAmt(entrust.getEntrustPrice().multiply(BigDecimal.valueOf(entrust.getEntrustVolume()-entrust.getTradedVolume())));
+            instructionClone.setEntrustNum(entrust.getEntrustVolume()-entrust.getTradedVolume());
             positionRequestServiceInstructionRequest.sendRequest(instructionClone,
                     业务动作_撤委托.getValue(), 系统动作_新建.getValue(), 系统动作_新建.getValue());
             return;
