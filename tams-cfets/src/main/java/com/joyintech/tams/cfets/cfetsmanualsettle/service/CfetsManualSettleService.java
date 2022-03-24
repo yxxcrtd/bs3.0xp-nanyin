@@ -805,13 +805,13 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                         //对债券数据发送头寸
                         this.sendPositionMethod(cfetsManualSettleInsertDto,entity.getButtonType());
                     }else {
+                        sendRepoPositionMethod(cfetsManualSettleInsertDto,entity.getButtonType());
                        //对回购数据进行处理
                         if ((StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收.getValue())
                                 || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_回溯.getValue())
                                 || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收失败.getValue())) ) {
                             this.insertOldRepoPosition(cfetsManualSettleInsertDto, entity.getButtonType(), entity.getSettleAmt(),entity.getFinprodType2(), false);
                         }
-                        sendRepoPositionMethod(cfetsManualSettleInsertDto,entity.getButtonType());
                     }
                 }
                 // 质押券库自动入库
