@@ -181,9 +181,6 @@ public class EtrExchangeTradeCommon004Controller extends BaseController {
                     if ((StringUtil.isNotEmpty(riskTrialRetDto.getKriStatus()) && riskTrialRetDto.getKriStatus().equals("3")) && (StringUtil.isNotEmpty(riskTrialRetDto.getKriTrend()) && riskTrialRetDto.getKriTrend().equals("向坏"))) {
                         riskTrialFlag = false;
                     }
-                    if ((StringUtil.isNotEmpty(riskTrialRetDto.getKriStatus()) && riskTrialRetDto.getKriStatus().equals("4"))) {
-                        riskTrialFlag = false;
-                    }
                 }
                 model.addAttribute("riskTrialSpan", riskTrialFlag ? "试算通过" : "试算不通过");
                 model.addAttribute("entity_RiskTrialRetList", riskTrialRetList);

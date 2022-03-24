@@ -122,8 +122,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.joyintech.tams.constant.DictCodeList.委托状态_已撤回;
-import static com.joyintech.tams.constant.DictCodeList.数据状态_修改中;
 import static com.joyintech.tams.constant.DictCodeListExt3.系统动作_修改;
 import static com.joyintech.tams.constant.DictCodeListExt3.系统动作_新建;
 import static com.joyintech.tams.invest.common.asset.service.BondAssetCalcService.*;

@@ -682,11 +682,11 @@
         LEFT JOIN SYS_DATADICT_LIST sdl2 ON M.FINPRODTYPE2=sdl2.ITEM_CODE AND sdl2.DICT_CODE='FINPROD_TYPE_TG'
         where
         1=1
-        <include refid="etrExchangeBundAnd"/>
+<!--        <include refid="etrExchangeBundAnd"/>-->
         <!--前端传入排序字段-->
-        <if test="sort != null and sort != '' and direction != null and direction != ''">
-            order by ${sort}  ${direction}
-        </if>
+<!--        <if test="sort != null and sort != '' and direction != null and direction != ''">-->
+<!--            order by ${sort}  ${direction}-->
+<!--        </if>-->
     </select>
     <!--// modify by etliu 债券质押持仓查询只有非交易业务指令使用，代码删除 20220308 start -->
     <!-- 场内交易债券质押持仓查询 -->
