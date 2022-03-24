@@ -316,7 +316,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                 }
                 //发送头寸
                 //sendPositionMethod(entity,entity.getSubmitFlag());
-                sendPositionMethod(entity,StringUtil.equals(entity.getSystemAct(),DictCodeListExt3.系统动作_新建.getValue())?true:false,null);
+                sendPositionMethod(entity, StringUtil.equals(entity.getSystemAct(), DictCodeListExt3.系统动作_新建.getValue()),null);
 
             }
         }
@@ -433,8 +433,25 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                 Map<String, Object> param = new HashMap<>();
                 param.put("entrustId", dto.getEntrustId());
                 doDeleteEtrFlowMethod(param);
+                backReRoll(dto.getEntrustId());
             }
         }
+    }
+
+    /**
+     * 修改指令回退时,从废弃表将数据取出重新插入
+     *
+     * @param entrustId 指令代码
+     * @author jiangpeng
+     * @date 2022/3/24 9:01
+     */
+    public void backReRoll(String entrustId) {
+        //从废弃表中获取，转移到指令表
+        etrEntrustBackupMapper.insertEtrFromQuery(entrustId);
+        etrEntrustBackupMapper.insertEtrAddFromQuery(entrustId);
+        // 删除废弃表
+        etrEntrustBackupMapper.deleteByPrimaryKey(entrustId);
+        etrEntrustBackupMapper.deleteAddByPrimaryKey(entrustId);
     }
 
     private void doInsertFlow(CfetsEtribBondInfo003Dto dto) {
@@ -1229,11 +1246,11 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                     param.put("entrustId", dto.getEntrustId());
                     doDeleteEtrFlowMethod(param);
                     //从废弃表中获取，转移到指令表
-                    etrEntrustBackupMapper.insertEtrFromQuery(dto.getEntrustId());
-                    etrEntrustBackupMapper.insertEtrAddFromQuery(dto.getEntrustId());
-                    // 删除废弃表
-                    etrEntrustBackupMapper.deleteByPrimaryKey(dto.getEntrustId());
-                    etrEntrustBackupMapper.deleteAddByPrimaryKey(dto.getEntrustId());
+//                    etrEntrustBackupMapper.insertEtrFromQuery(dto.getEntrustId());
+//                    etrEntrustBackupMapper.insertEtrAddFromQuery(dto.getEntrustId());
+//                    // 删除废弃表
+//                    etrEntrustBackupMapper.deleteByPrimaryKey(dto.getEntrustId());
+//                    etrEntrustBackupMapper.deleteAddByPrimaryKey(dto.getEntrustId());
                 }
 
             }

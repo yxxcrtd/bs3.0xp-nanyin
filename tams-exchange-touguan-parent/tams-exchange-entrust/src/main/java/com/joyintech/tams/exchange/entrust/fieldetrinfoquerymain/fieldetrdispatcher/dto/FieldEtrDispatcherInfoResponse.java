@@ -3,9 +3,12 @@ package com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrdispat
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.EtrEntrustBidPrice;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.thymeleaf.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -526,6 +529,15 @@ public class FieldEtrDispatcherInfoResponse extends FieldEtrDispatcherBaseInfo {
     }
 
     public String getOtherPs() {
+        if(StringUtils.equals(DictCodeListExt3.交易方向_提前购回.getValue(),this.getPs())
+        ){
+            if(StringUtils.equals(DictCodeList.回购拆借方向_正回购.getValue(),this.getBusiPs())){
+                return DictCodeList.回购拆借方向_正回购.getCodeName();
+            }
+            if(StringUtils.equals(DictCodeList.回购拆借方向_逆回购.getValue(),this.getBusiPs())){
+                return DictCodeList.回购拆借方向_逆回购.getCodeName();
+            }
+        }
         return this.otherPs;
     }
 
