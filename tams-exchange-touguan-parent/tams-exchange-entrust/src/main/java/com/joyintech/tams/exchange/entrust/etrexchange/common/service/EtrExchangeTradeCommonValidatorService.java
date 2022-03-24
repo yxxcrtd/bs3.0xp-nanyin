@@ -56,6 +56,7 @@ import com.joyintech.tams.component.business.common.dto.FinStockInfoDto;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.exchange.entrust.common.validator.EtrExchangeCommonValidator;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.FinProductOthCodeDto;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.SubEqutityDto;
@@ -130,7 +131,7 @@ import static com.joyintech.tams.invest.common.asset.service.BondAssetCalcServic
  * @since 1.0
  */
 @Service
-public class EtrExchangeTradeCommonValidatorService implements EtrCommonValidator {
+public class EtrExchangeTradeCommonValidatorService implements EtrExchangeCommonValidator {
 
 	@Autowired
 	private EtrExchangeTradeCommon001Service etrExchangeTradeCommon001Service;
