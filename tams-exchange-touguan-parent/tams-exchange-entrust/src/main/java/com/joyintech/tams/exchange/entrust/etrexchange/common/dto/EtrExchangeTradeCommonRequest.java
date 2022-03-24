@@ -37,6 +37,12 @@ public class EtrExchangeTradeCommonRequest {
     @ApiModelProperty(name="ps",value="交易方向")
     private String ps;
 
+    @ApiModelProperty(name="finprodMarketId",value="市场代码")
+    private String finprodMarketId;
+
+    @ApiModelProperty(name="unitCprice",value="净价")
+    private String unitCprice;
+
     public String getPs() {
         return ps;
     }
@@ -83,5 +89,21 @@ public class EtrExchangeTradeCommonRequest {
 
     public void setOthType(String othType) {
         this.othType = othType;
+    }
+
+    public String getFinprodMarketId() {
+        return finprodMarketId;
+    }
+
+    public void setFinprodMarketId(String finprodMarketId) {
+        this.finprodMarketId = finprodMarketId;
+    }
+
+    public String getUnitCprice() {
+        return unitCprice;
+    }
+
+    public void setUnitCprice(String unitCprice) {
+        this.unitCprice = unitCprice;
     }
 }
