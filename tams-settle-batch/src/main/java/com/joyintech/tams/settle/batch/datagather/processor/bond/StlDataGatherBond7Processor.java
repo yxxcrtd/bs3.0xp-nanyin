@@ -1,13 +1,11 @@
 package com.joyintech.tams.settle.batch.datagather.processor.bond;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.settle.batch.datagather.constant.StlDataGatherConstant;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -90,11 +88,22 @@ public class StlDataGatherBond7Processor extends BaseProcessor<NeedOperateEntity
             //持仓分配
             Map<String,Object> param = new HashMap<>();
             param.put("dealDate",executeDate);
-            // GZYHTZJY-1084:修改持仓类型 modify fuyongsheng 20220111 start
-            param.put("hodingType", DictCodeListExt3.持仓类型_场内上市前冻结.getValue());
-            // GZYHTZJY-1084:修改持仓类型 modify fuyongsheng 20220111 end
-            List<PtlSecPosition> ptlSecPositions = stlDataGatherMapper.listPtlSecPosition(param);
-            List<PtlSecPositionFlow> ptlSecPositionFlows = stlDataGatherMapper.listPtlSecPositionFolw(param);
+            // 新老头寸开关(Y:新头寸,N:老头寸)
+            String newSecPositionSwitch = CacheUtil.getSysParam("NEW_SEC_POSITION_SWITCH");
+            List<PtlSecPosition> ptlSecPositions;
+            List<PtlSecPositionFlow> ptlSecPositionFlows;
+            // 开关配置N查老头存
+            if(DictCodeList.是否_否.getValue().equals(newSecPositionSwitch)){
+                param.put("hodingType", DictCodeListExt3.持仓类型_场内上市前冻结.getValue());
+                ptlSecPositions = stlDataGatherMapper.listPtlSecPosition(param);
+                ptlSecPositionFlows = stlDataGatherMapper.listPtlSecPositionFolw(param);
+            }else{ // 默认查新头寸
+                param.put("hodingTypeList", Arrays.asList(DictCodeListExt3.资产类型_债券本方券冻结持仓.getValue(),
+                        DictCodeListExt3.资产类型_冻结持仓.getValue()));
+                param.put("dateType", StlDataGatherConstant.DATE_TYPE_T_0);
+                ptlSecPositions = stlDataGatherMapper.listPtlSecPositionRule(param);
+                ptlSecPositionFlows = stlDataGatherMapper.listPtlSecPositionFolwRule(param);
+            }
             Map<String, List<PtlSecPositionFlow>> ptlSecPositionFlowMap = ptlSecPositionFlows.stream().collect(JoyinCollectors.groupingBy(i -> i.getFinprodId() + "," + i.getSecAcctId() + "," + i.getInvAim()));
             //按金融产品代码分组
             Map<String,List<PtlSecPosition> > finprodIdMap = new HashMap<>();

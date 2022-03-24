@@ -365,10 +365,15 @@ public class PositionRequestTradeReportService {
                     || DictCodeListExt3.交易方向_逆回购.getValue().equals(entity.getPs())
                     || DictCodeListExt3.交易方向_提前购回.getValue().equals(entity.getPs())
                     || DictCodeListExt3.交易方向_到期购回.getValue().equals(entity.getPs())
+                    || DictCodeListExt3.交易方向_解除质押.getValue().equals(entity.getPs())
             ){
                 Map<String, Object> ptlCash = new HashMap<>();
                 ptlCash.put("portfolioId", dto.getPortfolioId());
-                ptlCash.put("cashAcctId", dto.getCashAcctId());
+                if(DictCodeListExt3.交易方向_解除质押.getValue().equals(entity.getPs())){
+
+                }else{
+                    ptlCash.put("cashAcctId", dto.getCashAcctId());
+                }
                 ptlCash.put("tradeId", entity.getTradeId());
                 ptlCash.put("etrId", entity.getEntrustId());
                 ptlCash.put("cashAmount", dto.getCashAmount());
@@ -398,17 +403,13 @@ public class PositionRequestTradeReportService {
                 // 融入券券面总额
                 ptlSec.put("integrateSecAmount", dto.getIntegrateSecAmount());
                 if(DictCodeListExt3.交易方向_中途换券.getValue().equals(entity.getPs())){
-                    List<FinPledgeDispDetailTemp> finPledgeDispDetailTemps = entity.getFinPledgeDispDetailTempList();
-                    if(!StringUtil.isEmptyList(finPledgeDispDetailTemps)){
-                        for(FinPledgeDispDetailTemp temp : finPledgeDispDetailTemps){
-                            if(DictCodeListExt3.质押券置换_置换方向_换入.getValue().equals(temp.getTradeType())){
-                                ptlSec.put("finprodId", temp.getFinprodId());
-                                // 本方券券面总额
-                                ptlSec.put("ownSecAmount", ArithmeticUtil.multiply(temp.getPledgeDisplaceAmt(), new BigDecimal(100)));
-                                // 券面总额
-                                ptlSec.put("secAmount", ArithmeticUtil.multiply(temp.getPledgeDisplaceAmt(), new BigDecimal(100)));
-                            }
-                        }
+                    FinPledgeDispDetailTemp temp = this.getFinPledgeDispDetailTemp(entity, DictCodeListExt3.质押券置换_置换方向_换入.getValue());
+                    if(null != temp){
+                        ptlSec.put("finprodId", temp.getFinprodId());
+                        // 本方券券面总额
+                        ptlSec.put("ownSecAmount", ArithmeticUtil.multiply(temp.getPledgeDisplaceAmt(), new BigDecimal(100)));
+                        // 券面总额
+                        ptlSec.put("secAmount", ArithmeticUtil.multiply(temp.getPledgeDisplaceAmt(), new BigDecimal(100)));
                     }
                 }else{
                     ptlSec.put("finprodId", entity.getFinDealPledge().getPledgeFinprodId());
@@ -422,7 +423,8 @@ public class PositionRequestTradeReportService {
             if((DictCodeListExt3.交易方向_解除质押.getValue().equals(entity.getPs())
                     || DictCodeListExt3.交易方向_到期续做.getValue().equals(entity.getPs())
                     || DictCodeListExt3.交易方向_到期购回.getValue().equals(entity.getPs())
-                    || DictCodeListExt3.交易方向_提前购回.getValue().equals(entity.getPs()))
+                    || DictCodeListExt3.交易方向_提前购回.getValue().equals(entity.getPs())
+                    || DictCodeListExt3.交易方向_中途换券.getValue().equals(entity.getPs()))
                     && BussinessDictCodeList.金融产品类型_投管用_债券质押式正回购.getValue().equals(etrEntrust.getFinprodType2())){
                 Map<String, Object> ptlRelieveSec = new HashMap<>();
                 ptlRelieveSec.put("portfolioId", dto.getPortfolioId());
@@ -439,6 +441,15 @@ public class PositionRequestTradeReportService {
                     ptlRelieveSec.put("ownSecAmount", ArithmeticUtil.multiply(dto.getOwnSecAmount(), new BigDecimal(100)));
                     // 券面总额
                     ptlRelieveSec.put("secAmount", ArithmeticUtil.multiply(dto.getOwnSecAmount(), new BigDecimal(100)));
+                }else if(DictCodeListExt3.交易方向_中途换券.getValue().equals(entity.getPs())){
+                    FinPledgeDispDetailTemp temp = this.getFinPledgeDispDetailTemp(entity, DictCodeListExt3.质押券置换_置换方向_换出.getValue());
+                    if(null != temp){
+                        ptlRelieveSec.put("finprodId", temp.getFinprodId());
+                        // 本方券券面总额
+                        ptlRelieveSec.put("ownSecAmount", ArithmeticUtil.multiply(temp.getPledgeDisplaceAmt(), new BigDecimal(100)));
+                        // 券面总额
+                        ptlRelieveSec.put("secAmount", ArithmeticUtil.multiply(temp.getPledgeDisplaceAmt(), new BigDecimal(100)));
+                    }
                 }else{
                     ptlRelieveSec.put("ownSecAmount", entity.getPositionBaseData().getFinDealPledge().getPledgeNumber());
                     ptlRelieveSec.put("secAmount", entity.getPositionBaseData().getFinDealPledge().getPledgeNumber());
@@ -644,5 +655,17 @@ public class PositionRequestTradeReportService {
         resultMap.put("balanceCheck", "N");
         resultMap.put("flowStatus", DictCodeListExt3.流程节点_审批生效.getValue());
         resultMap.put("modelType", DictCodeListExt1.子系统代码_交易.getValue());
+    }
+
+    private FinPledgeDispDetailTemp getFinPledgeDispDetailTemp(TrdTempDto entity, String tradeType){
+        List<FinPledgeDispDetailTemp> finPledgeDispDetailTemps = entity.getFinPledgeDispDetailTempList();
+        if(!StringUtil.isEmptyList(finPledgeDispDetailTemps)){
+            for(FinPledgeDispDetailTemp temp : finPledgeDispDetailTemps){
+                if(tradeType.equals(temp.getTradeType())){
+                    return temp;
+                }
+            }
+        }
+        return null;
     }
 }
