@@ -185,7 +185,7 @@ public class PositionUtil {
                         BigDecimal tamsCash = getCashByPId(PORTFOLIO_ID, tamsReq);
                         doAdd = doAdd.add(ArithmeticUtil.doAdd(cashT, CHECKBALANCE));
                         BigDecimal doSub = doAdd.subtract(tamsCash);
-                        if (doSub.compareTo(BigDecimal.ZERO) > 0){
+                        if (doSub.compareTo(BigDecimal.ZERO) >= 0){
                             // 头寸+投管余额足够
                             continue;
                         }else{
