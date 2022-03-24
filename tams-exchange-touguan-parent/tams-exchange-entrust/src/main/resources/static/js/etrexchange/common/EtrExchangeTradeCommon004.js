@@ -3528,6 +3528,14 @@
                     }, false);
                 }
             } else if (filed = 'entrustNum') {
+                var array = dateTable.getAllRows();
+                var entrustNum = 0;
+                for (var i = 0; i < array.length; i++) {
+                    if(array[i].entrustNum){
+                        entrustNum += parseInt(array[i].entrustNum);
+                    }
+                }
+                $("#entrustNum_" + currentTab).val(entrustNum);
             }
         },
         done: function (table, allData) {
