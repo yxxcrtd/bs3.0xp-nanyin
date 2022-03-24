@@ -1,0 +1,1 @@
+update CFG_DATATABLE_SHOW set COLCODE = 'brokerEntrustId' WHERE PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherDealInfo' AND SPCDCODE IN ( 'EX012' ) and EFFERANGE = 0 and RANGEID = 'COMM' and COLCODE = 'entrustId';
