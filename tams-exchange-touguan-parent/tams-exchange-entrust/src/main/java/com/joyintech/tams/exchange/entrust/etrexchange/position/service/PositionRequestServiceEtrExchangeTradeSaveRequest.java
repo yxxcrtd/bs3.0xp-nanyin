@@ -398,8 +398,8 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
                 }
                 if(DictCodeListExt3.交易方向_质押券入库.getValue().equals(entity.getPs())
                 		|| DictCodeListExt3.交易方向_质押券出库.getValue().equals(entity.getPs())) {
-                    BigDecimal faceValue = BigDecimal.ONE;//TODO
                     // 标准券总额 =质押券数量*折算率*最新面值
+                    BigDecimal faceValue = BigDecimal.valueOf(100);//TODO
                 	map.put(STANDARD_SEC_AMOUNT, entity.getEntrustNum().multiply(entity.getEntrustPrice()).multiply(faceValue));
                 	map.put("cashAmount", null);//出入库时，可以为空
                 }else {

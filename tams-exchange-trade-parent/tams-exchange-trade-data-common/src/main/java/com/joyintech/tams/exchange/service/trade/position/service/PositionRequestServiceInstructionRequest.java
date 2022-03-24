@@ -302,7 +302,7 @@ public class PositionRequestServiceInstructionRequest {
                         || 交易方向_质押券出库.getValue().equals(entity.getPs())) {
                     map.put("cashAmount", null);//出入库时，可以为空
                     // 标准券总额=质押券数量*折算率*最新面值
-                    BigDecimal faceValue = BigDecimal.ONE;//TODO
+                    BigDecimal faceValue = BigDecimal.valueOf(100);//TODO
                     map.put(STANDARD_SEC_AMOUNT, item.getEntrustAmt().multiply(faceValue));
                 } else {
                     // 标准券总额=标准券数量*100
