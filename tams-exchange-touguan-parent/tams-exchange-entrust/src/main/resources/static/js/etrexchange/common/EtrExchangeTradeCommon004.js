@@ -1190,6 +1190,10 @@
             $("#entrustAmt_" + currentTab).prop("disabled", false);
             $("#entrustNum_" + currentTab).prop("disabled", true);
         }
+        if(ps == PS_T68 || ps == PS_T69){
+            $("#entrustNum_" + currentTab).prop("disabled", false);
+            $("#entrustAmt_" + currentTab).prop("disabled", true);
+        }
         calcEntrustNumAndAmt(init);
     };
     /**
@@ -2089,6 +2093,8 @@
                     $("#entrustPriceUnit_" + currentTab).text("%");
                     $("#entrustAmtUnit_" + currentTab).text("元");
                 } else {
+                    $("#targetType_div_" + currentTab).text("目标类型").append($star.clone());
+                    $("#toShareAvailableNum_label_" + currentTab).text("可转股数量").append($star.clone());
                     $("#entrustDate_label_" + currentTab).text("指令日期").append($star.clone());
                     $("#ps_label_" + currentTab).text("委托方向").append($star.clone());
                     $("#secId_label_" + currentTab).text("资产名称").append($star.clone());
@@ -3155,9 +3161,6 @@
                 $("#targetType_div_" + currentTab).hide();
             }
 
-            if(ps == PS_T01 || ps == PS_T02){
-                $("#priceModel_div_" + currentTab).show();
-            }
             if (finprodType2 == FINPROD_TYPE_TG_F06) {
                 $("#priceModel_div_" + currentTab).show();
                 $("#entrustNumUnit_" + currentTab).text("份");
@@ -3227,6 +3230,11 @@
             linkEntrustNumUnit();
             if (ps == PS_T04 && finprodType2 == FINPROD_TYPE_TG_F10) {
                 $("#entrustPrice_" + currentTab).attr('disabled', 'disabled');
+            }
+
+            if(ps == PS_T01 || ps == PS_T02){
+                $("#priceModel_div_" + currentTab).show();
+                $("#acctNo_div_" + currentTab).hide();
             }
         }
     var addMinPriceStep = function (type, num, input) {

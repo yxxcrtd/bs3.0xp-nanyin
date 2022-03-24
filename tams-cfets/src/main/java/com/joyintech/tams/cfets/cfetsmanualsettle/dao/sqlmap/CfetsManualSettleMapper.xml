@@ -824,6 +824,15 @@
         WHERE deal.TRADE_ID = #{tradeId}
     </select>
 
+    <select id="selectQuoteIdBytradeId" resultType="java.lang.String">
+        SELECT iqc.QUOTE_ID TRADE_ID
+        FROM IBU_QUOTE_CREP iqc
+                 LEFT JOIN TRDQUTO_MATCH_INFO matchinfo ON matchinfo.PRE_TRADE_ID = iqc.QUOTE_ID
+                 LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL total ON total.TOTLE_TRADE_ID = matchinfo.TRD_ID
+                 LEFT JOIN TRD_PRODUCT_DEAL deal ON deal.TOTLE_TRADE_ID = total.TOTLE_TRADE_ID
+        WHERE deal.TRADE_ID = #{tradeId}
+    </select>
+
     <select id="selectIbTradeIdBytradeId" resultType="java.lang.String">
         SELECT iqer.QUOTE_ID FROM IBU_QUOTE_ETR_RE iqer
         LEFT JOIN IBU_QUOTE_BOND iqb ON iqb.QUOTE_ID = iqer.QUOTE_ID
