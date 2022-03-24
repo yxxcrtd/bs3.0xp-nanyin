@@ -3706,6 +3706,10 @@
                 if (!item.portfolioId || !item.acctNo) {
                     checkFlag = false;
                 }
+                if(!item.entrustNum){
+                    Joyin.error("组合分配中指令数量不能为空")
+                    return false;
+                }
             }
             if (!checkFlag) {
                 Joyin.error("请填写完整组合信息")
