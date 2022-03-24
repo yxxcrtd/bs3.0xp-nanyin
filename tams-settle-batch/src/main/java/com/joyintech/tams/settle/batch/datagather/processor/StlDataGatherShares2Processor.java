@@ -483,7 +483,10 @@ public class StlDataGatherShares2Processor extends StlDataGatherProcessor {
 		// 分支序号
 		dealTotal.setBranch(0L);
 		// 交易日
-		dealTotal.setTradeDate(settleTransDataDto.getSettleDate());
+		// ZGTFCP-1736:除权登记、送转、现金分红交易日期改为除权登记日 modify by fuyongsheng 20220324 start
+		// dealTotal.setTradeDate(settleTransDataDto.getSettleDate());
+		dealTotal.setTradeDate(settleTransDataDto.getTradeDate());
+		// ZGTFCP-1736:除权登记、送转、现金分红交易日期改为除权登记日 modify by fuyongsheng 20220324 end
 		// 交割日
 		dealTotal.setSettleDate(settleTransDataDto.getSettleDate());
 		// 交易币种
@@ -589,7 +592,10 @@ public class StlDataGatherShares2Processor extends StlDataGatherProcessor {
 		// 分支序号
 		trdProductDealDto.setBranch(0L);
 		// 交易日
-		trdProductDealDto.setTradeDate(settleTransDataDto.getSettleDate());
+		// ZGTFCP-1736:除权登记、送转、现金分红交易日期改为除权登记日 modify by fuyongsheng 20220324 start
+		// trdProductDealDto.setTradeDate(settleTransDataDto.getSettleDate());
+		trdProductDealDto.setTradeDate(settleTransDataDto.getTradeDate());
+		// ZGTFCP-1736:除权登记、送转、现金分红交易日期改为除权登记日 modify by fuyongsheng 20220324 end
 		// 交割日
 		trdProductDealDto.setSettleDate(settleTransDataDto.getSettleDate());
 		//交易币种
