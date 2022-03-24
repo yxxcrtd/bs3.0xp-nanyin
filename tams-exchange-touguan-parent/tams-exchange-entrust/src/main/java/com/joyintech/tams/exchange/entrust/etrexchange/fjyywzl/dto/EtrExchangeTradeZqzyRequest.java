@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.dto;
 
+import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.tams.business.common.dto.PageMode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -55,6 +56,7 @@ public class EtrExchangeTradeZqzyRequest {
     @ApiModelProperty(name="从pageMode获取",value="从pageMode获取")
     public String getDirection() {
         return pageMode.getDirection();
+
     }
 
     public String getSearch() {

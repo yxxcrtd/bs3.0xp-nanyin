@@ -795,13 +795,13 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                         //对债券数据发送头寸
                         this.sendPositionMethod(cfetsManualSettleInsertDto,entity.getButtonType());
                     }else {
+                        sendRepoPositionMethod(cfetsManualSettleInsertDto,entity.getButtonType());
                        //对回购数据进行处理
                         if ((StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收.getValue())
                                 || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_回溯.getValue())
                                 || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收失败.getValue())) ) {
                             this.insertOldRepoPosition(cfetsManualSettleInsertDto, entity.getButtonType(), entity.getSettleAmt(),entity.getFinprodType2(), false);
                         }
-                        sendRepoPositionMethod(cfetsManualSettleInsertDto,entity.getButtonType());
                     }
                 }
                 // 质押券库自动入库
@@ -898,13 +898,13 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
             if (resultDto.getSettleSpeed() != null) {
                 resultDto.setSettleSpeedStr(String.valueOf(resultDto.getSettleSpeed()));
             }
-            else if(resultDto.getSettleSpeed() == 1L){
+           /* else if(resultDto.getSettleSpeed() == 1L){无用的判断
                 resultDto.setSettleSpeedStr("1");
             }else if(resultDto.getSettleSpeed() == 2L){
                 resultDto.setSettleSpeedStr("2");
             }else{
                 resultDto.setSettleSpeedStr(resultDto.getSettleSpeed().toString());
-            }
+            }*/
             // 到期收益率
             if (resultDto.getYield() != null) {
                 resultDto.setYield(ArithmeticUtil.multiply(resultDto.getYield(), BigDecimal.valueOf(100)));

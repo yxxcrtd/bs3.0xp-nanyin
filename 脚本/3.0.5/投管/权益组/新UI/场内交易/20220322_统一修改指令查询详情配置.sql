@@ -47,7 +47,7 @@ update CFG_READONLY_FORM_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"a
 --   标准券数量：  3	张
 update CFG_READONLY_FORM_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"0","unit":"zhang"}' where PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'EX005' and COLCODE = 'entrustNum';
 update CFG_READONLY_FORM_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"2","unit":"%"}' where PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'EX005' and COLCODE = 'pledgeRatio';
-update CFG_READONLY_FORM_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"3","unit":"zhang"}' where PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'EX005' and COLCODE = 'pledgeStandardNumber';
+update CFG_READONLY_FORM_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"0","unit":"zhang"}' where PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'EX005' and COLCODE = 'pledgeStandardNumber';
 -- 添加一个 ：资金账户
 
 

@@ -674,22 +674,30 @@
         SELECT
         <include refid="query_entrust"/>
         FROM T_ENTRUST a left join T_INSTRUCTION b on a.INSTRUCTION_ID =b.ENTRUST_ID
-        where a.ENTRUST_TYPE=0 and a.INSTRUCTION_ID = #{instructionId,jdbcType=VARCHAR}
+        where
+        <!--a.ENTRUST_TYPE=0 and -->
+        a.INSTRUCTION_ID = #{instructionId,jdbcType=VARCHAR}
         UNION ALL
         SELECT
         <include refid="query_integrated_entrust"/>
         FROM T_INTEGRATED_ENTRUST a left join T_INSTRUCTION b on a.INSTRUCTION_ID =b.ENTRUST_ID
-        where a.ENTRUST_TYPE=5 and a.INSTRUCTION_ID = #{instructionId,jdbcType=VARCHAR}
+        where
+        <!--a.ENTRUST_TYPE=5 and -->
+        a.INSTRUCTION_ID = #{instructionId,jdbcType=VARCHAR}
         UNION ALL
         SELECT
         <include refid="query_entrust_history"/>
         FROM T_ENTRUSTHISTORY a left join T_INSTRUCTION b on a.INSTRUCTION_ID =b.ENTRUST_ID
-        where a.ENTRUST_TYPE=0 and a.INSTRUCTION_ID = #{instructionId,jdbcType=VARCHAR}
+        where
+        <!--a.ENTRUST_TYPE=0 and -->
+        a.INSTRUCTION_ID = #{instructionId,jdbcType=VARCHAR}
         UNION ALL
         SELECT
         <include refid="query_integrated_entrust_history"/>
         FROM T_INTEGRATED_ENTRUSTHISTORY a left join T_INSTRUCTION b on a.INSTRUCTION_ID =b.ENTRUST_ID
-        where a.ENTRUST_TYPE=5 and a.INSTRUCTION_ID = #{instructionId,jdbcType=VARCHAR}
+        where
+        <!--a.ENTRUST_TYPE=5 and -->
+        a.INSTRUCTION_ID = #{instructionId,jdbcType=VARCHAR}
     </select>
 
     <resultMap id="TradeResultMap"
@@ -757,11 +765,350 @@
         select
         <include refid="Query_Column_List"/>
         FROM T_TRADE a left join T_INSTRUCTION b on a.INSTRUCTION_ID =b.ENTRUST_ID
-        where a.ENTRUST_TYPE=0 and a.INSTRUCTION_ID = #{instructionId,jdbcType=VARCHAR}
+        where
+        <!--a.ENTRUST_TYPE=0 and-->
+        a.INSTRUCTION_ID = #{instructionId,jdbcType=VARCHAR}
         UNION ALL
         select
         <include refid="Query_Column_List"/>
         FROM T_TRADEHISTORY a left join T_INSTRUCTION b on a.INSTRUCTION_ID =b.ENTRUST_ID
-        where a.ENTRUST_TYPE=0 and a.INSTRUCTION_ID = #{instructionId,jdbcType=VARCHAR}
+        where
+        <!--a.ENTRUST_TYPE=0 and-->
+        a.INSTRUCTION_ID = #{instructionId,jdbcType=VARCHAR}
     </select>
+
+    <select id="getEtrDispatcherExeListInfo"
+            resultMap="QueryResultMap" >
+        SELECT
+        decode(tpdp.is_cancel,'Y',#{TRADE_FLOW_STATUS03},#{TRADE_FLOW_STATUS02}) effectFlag,
+        <include refid="etrDispatcherExeListInfo"/>
+        FROM REG_FIN_PRODUCT_DEAL tpdp
+        LEFT JOIN PTL_PORTFOLIO pp ON tpdp.portfolio_id = pp.portfolio_id
+        LEFT JOIN FIN_PRODUCT fp ON tpdp.finprod_id = fp.finprod_id
+        LEFT JOIN STL_SEC_ACCT_INFO ssai ON tpdp.sec_manage_acct_id = ssai.SEC_ACCT_ID
+        LEFT JOIN MST_COUNTER_PARTY mcp ON tpdp.COUNTER_ID = mcp.counter_id
+        LEFT JOIN MST_CFETS_CUSTOMER_TRADER mcct ON tpdp.COUNTER_TRADER= mcct.trader_id
+        LEFT JOIN FIN_EXERCISE_PLAN T6 ON tpdp.FINPROD_ID = T6.FINPROD_ID AND T6.EXERCISE_TYPE ='02'
+        WHERE tpdp.entrust_id = #{entrustId}
+
+        union all
+
+        SELECT
+        #{TRADE_FLOW_STATUS01} effectFlag,
+        <include refid="etrDispatcherExeListInfo"/>
+        FROM WFL_REG_FIN_PRODUCT_DEAL tpdp
+        LEFT JOIN PTL_PORTFOLIO pp ON tpdp.portfolio_id = pp.portfolio_id
+        LEFT JOIN FIN_PRODUCT fp ON tpdp.finprod_id = fp.finprod_id
+        LEFT JOIN STL_SEC_ACCT_INFO ssai ON tpdp.sec_manage_acct_id = ssai.SEC_ACCT_ID
+        LEFT JOIN MST_COUNTER_PARTY mcp ON tpdp.COUNTER_ID = mcp.counter_id
+        LEFT JOIN MST_CFETS_CUSTOMER_TRADER mcct ON tpdp.COUNTER_TRADER= mcct.trader_id
+        LEFT JOIN FIN_EXERCISE_PLAN T6 ON tpdp.FINPROD_ID = T6.FINPROD_ID AND T6.EXERCISE_TYPE ='02'
+        WHERE tpdp.entrust_id = #{entrustId}
+
+        union all
+
+        SELECT
+        decode(tpdp.trade_status,'15',#{TRADE_FLOW_STATUS03},#{TRADE_FLOW_STATUS02}) as effectFlag,
+        <include refid="etrDispatcherExeListInfo1"/>
+        FROM IBU_QUOTE_BOND tpdp
+        LEFT JOIN IBU_QUOTE_BOND_DET tpdpa ON tpdp.QUOTE_ID = tpdpa.QUOTE_ID
+        LEFT JOIN STL_SEC_ACCT_INFO ssai ON tpdp.SEC_MANAGE_ACCT_ID = ssai.SEC_ACCT_ID
+        LEFT JOIN IBU_QUOTE_ETR_RE iqe	 ON  iqe.QUOTE_ID = tpdp.QUOTE_ID
+        LEFT JOIN PTL_PORTFOLIO pp ON iqe.portfolio_id = pp.portfolio_id
+        LEFT JOIN FIN_PRODUCT fp ON tpdp.finprod_id = fp.finprod_id
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO mcp ON tpdpa.cp_party_id = mcp.party_id
+        LEFT JOIN MST_CFETS_CUSTOMER_TRADER mcct ON tpdpa.CP_TRADER= mcct.trader_id
+        LEFT JOIN FIN_EXERCISE_PLAN T6 ON tpdp.FINPROD_ID = T6.FINPROD_ID AND T6.EXERCISE_TYPE ='02'
+        WHERE iqe.entrust_id = #{entrustId}
+
+        union all
+
+        SELECT
+        #{TRADE_FLOW_STATUS01} effectFlag,
+        <include refid="etrDispatcherExeListInfo1"/>
+        FROM WFL_IBU_QUOTE_BOND2 tpdp
+        LEFT JOIN WFL_IBU_QUOTE_BOND_DET tpdpa ON tpdp.QUOTE_ID = tpdpa.QUOTE_ID
+        LEFT JOIN WFL_IBU_QUOTE_ETR_RE wiqe	 ON  wiqe.QUOTE_ID = tpdp.QUOTE_ID
+        LEFT JOIN STL_SEC_ACCT_INFO ssai ON tpdp.SEC_MANAGE_ACCT_ID = ssai.SEC_ACCT_ID
+        LEFT JOIN PTL_PORTFOLIO pp ON wiqe.portfolio_id = pp.portfolio_id
+        LEFT JOIN FIN_PRODUCT fp ON tpdp.finprod_id = fp.finprod_id
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO mcp ON tpdpa.cp_party_id = mcp.party_id
+        LEFT JOIN MST_CFETS_CUSTOMER_TRADER mcct ON tpdpa.CP_TRADER= mcct.trader_id
+        LEFT JOIN FIN_EXERCISE_PLAN T6 ON tpdp.FINPROD_ID = T6.FINPROD_ID AND T6.EXERCISE_TYPE ='02'
+        WHERE wiqe.entrust_id = #{entrustId}
+        union all
+        select
+        decode(iqc.trade_status,'15',#{TRADE_FLOW_STATUS03},#{TRADE_FLOW_STATUS02}) as effectFlag,
+        <include refid="etrDispatcherExeListInfo2"/>
+        from IBU_QUOTE_CREP iqc
+        LEFT JOIN IBU_QUOTE_ETR_RE iqer ON iqer.QUOTE_ID = iqc.QUOTE_ID
+        LEFT JOIN STL_SEC_ACCT_INFO ssai ON iqc.SEC_MANAGE_ACCT_ID = ssai.SEC_ACCT_ID
+        LEFT JOIN PTL_PORTFOLIO pp ON iqer.portfolio_id = pp.portfolio_id
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO mcp ON iqc.cp_party_id = mcp.party_id
+        LEFT JOIN MST_CFETS_CUSTOMER_TRADER mcct ON iqc.CP_TRADER_ID = mcct.trader_id
+        WHERE iqer.entrust_id = #{entrustId}
+        union all
+        select
+        #{TRADE_FLOW_STATUS01} effectFlag,
+        <include refid="etrDispatcherExeListInfo2"/>
+        from WFL_IBU_QUOTE_CREP iqc
+        LEFT JOIN WFL_IBU_QUOTE_ETR_RE iqer ON iqer.QUOTE_ID = iqc.QUOTE_ID
+        LEFT JOIN STL_SEC_ACCT_INFO ssai ON iqc.SEC_MANAGE_ACCT_ID = ssai.SEC_ACCT_ID
+        LEFT JOIN PTL_PORTFOLIO pp ON iqer.portfolio_id = pp.portfolio_id
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO mcp ON iqc.cp_party_id = mcp.party_id
+        LEFT JOIN MST_CFETS_CUSTOMER_TRADER mcct ON iqc.CP_TRADER_ID = mcct.trader_id
+        WHERE iqer.entrust_id = #{entrustId}
+    </select>
+
+    <select id="getEtrDispatcherDealListInfo"
+            resultMap="TradeResultMap">
+        SELECT distinct
+        decode(tpd.is_cancel,'Y',#{TRADE_FLOW_STATUS03},#{TRADE_FLOW_STATUS02}) effectFlag,
+        <include refid="etrDispatcherDealListInfo"/>
+        FROM trd_product_deal tpd
+        LEFT JOIN trd_product_deal_add tpda ON tpd.trade_id = tpda.trade_id
+        left join WFL_TRD_PRODUCT_DEAL_OTH wtpdo on wtpdo.TRADE_ID = tpd.TRADE_ID
+        left join TRD_FIN_PRODUCT_DEAL_TOTAL tpdt on tpd.TOTLE_TRADE_ID=tpdt.TOTLE_TRADE_ID
+        LEFT JOIN PTL_PORTFOLIO pp ON tpda.portfolio_id = pp.portfolio_id
+        LEFT JOIN FIN_PRODUCT fp ON tpd.finprod_id = fp.finprod_id
+        left join SYS_DATADICT_LIST sdl_registorg on fp.REGIST_ORG=sdl_registorg.ITEM_CODE and sdl_registorg.DICT_CODE='REGIST_ORG'
+        LEFT JOIN MST_COUNTER_PARTY mcp ON tpd.counter_id = mcp.counter_id
+        LEFT JOIN STL_SEC_ACCT_INFO ssai ON tpd.sec_manage_acct_id = ssai.SEC_ACCT_ID
+        LEFT JOIN FIN_PRODUCT_TYPE fpt ON tpd.FINPROD_ID  = fpt.FINPROD_ID
+        left join FIN_TRADE_PRODUCT FTP on tpd.FINPROD_ID = FTP.FINPROD_ID
+        left join FIN_DEAL_PLEDGE on tpd.FINPROD_ID = FIN_DEAL_PLEDGE.FINPROD_ID
+        LEFT JOIN FIN_PRODUCT fp2 ON fp2.FINPROD_ID  = tpd.CHL_ID
+        LEFT JOIN FIN_PRODUCT fp3 ON fp3.FINPROD_ID = FIN_DEAL_PLEDGE.PLEDGE_FINPROD_ID
+        WHERE tpd.TRADE_ID  = (SELECT TRADE_ID FROM trd_product_deal_add WHERE ENTRUST_ID  = #{entrustId})
+        OR tpd.B_TRADE_ID = (SELECT TRADE_ID FROM trd_product_deal_add WHERE ENTRUST_ID  = #{entrustId})
+        union all
+        SELECT
+        #{TRADE_FLOW_STATUS01} effectFlag,
+        <include refid="etrDispatcherDealListInfo"/>
+        FROM wfl_trd_product_deal tpd
+        LEFT JOIN wfl_trd_product_deal_add tpda ON tpd.trade_id = tpda.trade_id
+        left join WFL_TRD_PRODUCT_DEAL_OTH wtpdo on wtpdo.TRADE_ID = tpd.TRADE_ID
+        left join WFL_TRD_FIN_PRODUCT_DEAL_TOTAL tpdt on tpd.TOTLE_TRADE_ID=tpdt.TOTLE_TRADE_ID
+        LEFT JOIN PTL_PORTFOLIO pp ON tpda.portfolio_id = pp.portfolio_id
+        LEFT JOIN FIN_PRODUCT fp ON tpd.finprod_id = fp.finprod_id
+        left join SYS_DATADICT_LIST sdl_registorg on fp.REGIST_ORG=sdl_registorg.ITEM_CODE and sdl_registorg.DICT_CODE='REGIST_ORG'
+        LEFT JOIN MST_COUNTER_PARTY mcp ON tpd.counter_id = mcp.counter_id
+        LEFT JOIN STL_SEC_ACCT_INFO ssai ON tpd.sec_manage_acct_id = ssai.SEC_ACCT_ID
+        LEFT JOIN FIN_PRODUCT_TYPE fpt  ON tpd.FINPROD_ID = fpt.FINPROD_ID
+        left join FIN_TRADE_PRODUCT FTP on tpd.FINPROD_ID = FTP.FINPROD_ID
+        left join FIN_DEAL_PLEDGE on tpd.FINPROD_ID = FIN_DEAL_PLEDGE.FINPROD_ID
+        LEFT JOIN FIN_PRODUCT fp2 ON fp2.FINPROD_ID  = tpd.CHL_ID
+        LEFT JOIN FIN_PRODUCT fp3 ON fp3.FINPROD_ID = FIN_DEAL_PLEDGE.PLEDGE_FINPROD_ID
+        WHERE tpd.TRADE_ID  = (SELECT TRADE_ID FROM wfl_trd_product_deal_add WHERE ENTRUST_ID  = #{entrustId})
+        OR tpd.B_TRADE_ID = (SELECT TRADE_ID FROM wfl_trd_product_deal_add WHERE ENTRUST_ID  = #{entrustId})
+    </select>
+
+    <sql id="etrDispatcherDealListInfo">
+        #{busiTypePosition} busiTypePosition,
+        tpda.entrust_id entrustId,
+        FIN_DEAL_PLEDGE.PLEDGE_FINPROD_ID pledgeFinprodId,
+        NVL( fp2.FINPROD_ABBR, fp2.FINPROD_NAME ) chlIdName,
+        tpd.trade_market tradeMarket,
+        tpd.UNIT_CPRICE fCprice,
+        tpd.YIELD * 100 fYield,
+        tpd.FPRICE_AMT vTradeAmt,
+        FTP.M_TRADE_AMT mSettleAmt,
+        nvl(fpt.TYPE_6,wtpdo.DL_TYPE) paBussType,
+        fpt.TYPE_9 assetType1,
+        fpt.TYPE_10 assetType10,
+        fpt.TYPE_11 assetType11,
+        tpd.share_amt  shareAmt,
+        to_char( tpda.PUR_CFM_DATE , 'yyyy-MM-dd' ) purCfmDate,
+        tpd.totle_trade_id totleTradeId,
+        tpd.trade_id tradeId,
+        tpda.portfolio_id portfolioId,
+        pp.portfolio_name portfolioName,
+        case when tpd.FINPROD_TYPE2 in ('F04','F05') then fp3.finprod_market_id else fp.finprod_market_id end finprodMarketId,
+        case when tpd.FINPROD_TYPE2 in ('F04','F05') then fp3.finprod_abbr else fp.finprod_abbr  end finprodAbbr,
+        nvl(tpd.PS, tpdt.ps) ps,
+        ssai.sec_acct_name secAcctId,
+        to_char(tpd.trade_date,'yyyy-MM-dd') tradeDate,
+        DECODE(tpd.settle_speed,0,'01',1,'02','2','03') settleSpeed,
+        to_char(tpd.settle_date,'yyyy-MM-dd') settleDate,
+        tpd.unit_cprice unitPrice,
+        tpd.yield*100 matureYield,
+        tpd.exer_yield*100 exerYield,
+        tpd.share_amt/100 shareNum,
+        tpd.unit_int unitInt,
+        tpd.unit_fprice allPrice,
+        tpd.cprice_amt cpriceAmt,
+        tpd.int_amt intAmt,
+        tpd.fprice_amt fpriceAmt,
+        tpd.ccy ccy,
+        tpd.counter_id counterId,
+        mcp.counter_name counterName,
+        tpd.remark remark,
+        ftp.TERM_TYPE termType,
+        ftp.TERM repoTerm,
+        TO_CHAR(FTP.VPAY_DATE,'YYYY-MM-DD') vpayDate,/*首次结算日*/
+        TO_CHAR(FTP.MPAY_DATE,'YYYY-MM-DD') mpayDate,/*到期结算日*/
+        ftp.ACT_CAP_DAYS actCapDays,
+        ftp.INT_RATE * 100 rebackPrice,
+        TPD.TRADE_AMT tradeAmt,
+        FTP.M_INT_AMT mIntAmt, /*回购利息*/
+        FTP.M_TRADE_AMT mTradeAmt,/* 到期金额*/
+        FTP.M_UNIT_CPRICE mCprice,
+        FTP.M_YIELD * 100 mYield,
+        FIN_DEAL_PLEDGE.PLEDGE_NUMBER * 100 secTotalPrin,
+        tpd.TRADE_AMT actPayAmt,
+        tpd.PRIN_AMT prinAmt,
+        sdl_registOrg.ITEM_VALUE registOrgStr
+    </sql>
+
+    <sql id="etrDispatcherExeListInfo">
+        #{busiTypePosition} busiTypePosition,
+        tpdp.trade_id tradeId,
+        to_char(tpdp.trade_date,'yyyy-MM-dd') exeDate,
+        to_char(tpdp.settle_date,'yyyy-MM-dd') tradeDate,
+        #{quoteType} busiType,
+        pp.portfolio_id portfolioId,
+        pp.portfolio_name portfolioName,
+        fp.finprod_market_id finprodMarketId,
+        fp.finprod_abbr finprodAbbr,
+        tpdp.ps ps,
+        ssai.sec_acct_name secAcctId,
+        DECODE(tpdp.settle_speed,0,'01',1,'02','2','03') settleSpeed,
+        to_char(tpdp.settle_date,'yyyy-MM-dd') settleDate,
+        tpdp.unit_cprice unitPrice,
+        tpdp.yield*100 matureYield,
+        tpdp.exer_yield*100 exerYield,
+        tpdp.share_amt/100 shareNum,
+        tpdp.unit_int unitInt,
+        tpdp.unit_fprice allPrice,
+        tpdp.cprice_amt cpriceAmt,
+        tpdp.int_amt intAmt,
+        tpdp.fprice_amt fpriceAmt,
+        tpdp.ccy ccy,
+        tpdp.clear_type settleType,
+        tpdp.COUNTER_ID counterId,
+        nvl(mcp.counter_name,tpdp.COUNTER_ID) counterName,
+        nvl(mcct.trader_name,tpdp.COUNTER_TRADER) counterTrader,
+        tpdp.remark remark,
+        tpdp.Delivery_Type deliveryType,
+        TO_CHAR(T6.EXERCISE_DATE,'yyyy-MM-dd') exerciseDate,
+        TO_CHAR(T6.ACT_EXERCISE_DATE,'yyyy-MM-dd') actExerciseDate,
+        tpdp.TOTLE_TRADE_ID totalTradeId,
+        tpdp.FINPROD_TYPE2,
+        tpdp.TERM_TYPE termType,
+        tpdp.REPO_TERM  repoTerm,
+        to_char(tpdp.V_SETTLE_DATE,'yyyy-MM-dd') vpayDate,
+        to_char(tpdp.M_SETTLE_DATE,'yyyy-MM-dd') mpayDate,
+        tpdp.ACT_REPO_TERM actCapDays,
+        tpdp.RATE * 100 rebackPrice,
+        tpdp.TRADE_AMT tradeAmt,
+        tpdp.M_INT_AMT mIntAmt,
+        tpdp.M_TRADE_AMT mTradeAmt,
+        tpdp.M_DELIVERY_TYPE mdeliveryType
+    </sql>
+    <sql id="etrDispatcherExeListInfo1">
+        #{busiTypePosition} busiTypePosition,
+        tpdp.quote_id tradeId,
+        to_char(tpdp.quote_date, 'yyyy-MM-dd') exeDate,
+        to_char(tpdp.quote_date, 'yyyy-MM-dd') tradeDate,
+        tpdp.quote_type busiType,
+        pp.portfolio_id portfolioId,
+        pp.portfolio_name portfolioName,
+        fp.finprod_market_id finprodMarketId,
+        fp.finprod_abbr finprodAbbr,
+        tpdp.ps ps,
+        ssai.sec_acct_name secAcctId,
+        DECODE(tpdp.settle_speed,0,'01',1,'02','2','03') settleSpeed,
+        to_char(tpdp.settle_date, 'yyyy-MM-dd') settleDate,
+        tpdpa.unit_cprice unitPrice,
+        tpdpa.yield*100 matureYield,
+        tpdpa.exer_yield*100 exerYield,
+        tpdpa.share_amt/100 shareNum,
+        tpdpa.unit_int unitInt,
+        tpdpa.unit_fprice allPrice,
+        tpdpa.cprice_amt cpriceAmt,
+        tpdpa.int_amt intAmt,
+        tpdpa.fprice_amt fpriceAmt,
+        tpdp.sett_ccy ccy,
+        tpdp.sett_type  settleType,
+        tpdpa.cp_party_id counterId,
+        nvl(mcp.party_name,tpdpa.cp_party_id) counterName,
+        nvl(mcct.trader_name,tpdpa.CP_TRADER) counterTrader,
+        tpdp.remark remark,
+        tpdp.Delivery_Type deliveryType,
+        TO_CHAR(T6.EXERCISE_DATE,'yyyy-MM-dd') exerciseDate,
+        TO_CHAR(T6.ACT_EXERCISE_DATE,'yyyy-MM-dd') actExerciseDate,
+        tpdp.quote_id totalTradeId,
+        tpdp.FINPROD_TYPE2,
+        null termType,
+        null  repoTerm,
+        null vpayDate,
+        null mpayDate,
+        null actCapDays,
+        null rebackPrice,
+        null tradeAmt,
+        null mIntAmt,
+        null mTradeAmt,
+        null mdeliveryType
+    </sql>
+
+    <sql id="etrDispatcherExeListInfo2">
+        #{busiTypePosition}                                   busiTypePosition,
+           iqc.QUOTE_ID                                          tradeId,
+           to_char(iqc.QUOTE_DATE, 'yyyy-MM-dd')                 exeDate,
+           to_char(iqc.QUOTE_DATE, 'yyyy-MM-dd')                 tradeDate,
+           iqc.QUOTE_TYPE                                        busiType,
+           pp.portfolio_id                                       portfolioId,
+           pp.portfolio_name                                     portfolioName,
+           null                                                  finprodMarketId,
+           null                                                  finprodAbbr,
+           iqc.REPO_PS                                           ps,
+           ssai.sec_acct_name                                secAcctId,
+           DECODE(iqc.settle_speed, 0, '01', 1, '02', '2', '03') settleSpeed,
+           to_char(iqc.QUOTE_DATE, 'yyyy-MM-dd')                 settleDate,
+           null                                                  unitPrice,
+           null                                                  matureYield,
+           null                                                  exerYield,
+           iqc.share_amt / 100                                   shareNum,
+           null                                                  unitInt,
+           null                                                  allPrice,
+           null                                                  cpriceAmt,
+           iqc.M_INT_AMT                                         intAmt,
+           iqc.fprice_amt                                        fpriceAmt,
+           iqc.ccy                                               ccy,
+           iqc.SETT_TYPE                                         settleType,
+           iqc.CP_PARTY_ID                                       counterId,
+           mcp.PARTY_ABBR                                        counterName,
+           nvl(mcct.trader_name,iqc.CP_TRADER_ID)                counterTrader,
+           iqc.remark                                            remark,
+           iqc.M_DELIVERY_TYPE                                   deliveryType,
+           null                                                  exerciseDate,
+           null                                                  actExerciseDate,
+           iqc.QUOTE_ID                                          totalTradeId,
+           case when iqc.REPO_PS ='03' then 'F02' else 'F03' end FINPROD_TYPE2,
+           iqc.TERM_TYPE                                         termType,
+           iqc.TERM                                              repoTerm,
+           to_char(iqc.V_SETTLE_DATE, 'yyyy-MM-dd')              vpayDate,
+           to_char(iqc.M_SETTLE_DATE, 'yyyy-MM-dd')              mpayDate,
+           iqc.ACT_DAYS                                          actCapDays,
+           iqc.RATE*100                                          rebackPrice,
+           iqc.FPRICE_AMT                                        tradeAmt,
+           iqc.M_INT_AMT                                         mIntAmt,
+           iqc.M_TRADE_AMT                                       mTradeAmt,
+           iqc.M_DELIVERY_TYPE                                   mdeliveryType
+    </sql>
+
+    <select id="getEtrBidInfo" resultType="com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.FieldEtrInfoQueryListResponse">
+        SELECT T9.ENTRUST_ID,
+        LISTAGG(to_char(T9.BID_PRICE * 100,'fm99990.0000') || '%', ',') WITHIN GROUP (order by (T9.BID_PRICE * 100))  etrPrice,
+        CASE  WHEN T10.BID_ID IS NULL THEN '01'<!--待投标，待确认-->
+        WHEN T10.TRADE_ID IS NOT NULL THEN '05' <!--待投标，已完成-->
+        WHEN T10.IS_WIN IS NOT NULL THEN DECODE(T10.IS_WIN,'Y','04','N','03',T10.IS_WIN) <!--中标状态-->
+        ELSE '02'<!--已投标、已确认-->
+        END isWin
+        FROM ETR_ENTRUST_BID_PRICE T9
+        LEFT JOIN BID_ORDER_BID_PRICE T10  ON T10.ENTRUST_ID = T9.ENTRUST_ID AND T10.BID_PRICE = T9.BID_PRICE
+        where T9.ENTRUST_ID=#{entrustId,jdbcType=VARCHAR}
+        GROUP BY T9.ENTRUST_ID, T10.BID_ID, T10.IS_WIN,T10.TRADE_ID
+    </select>
+
 </mapper>

@@ -574,7 +574,7 @@
     <select id="selectCommandAvailableCash" parameterType="com.joyintech.tams.business.common.dto.CashPositionFlowDto" resultType="java.math.BigDecimal">
         select
         sum(t.amount) as amount
-        from ETR_CASH_POSITION t
+        from ETR_CASH_POSITION_flow t
         where
         t.portfolio_id = #{portfolioId,jdbcType=VARCHAR}
         <if test="acctId != null and acctId != '' ">
@@ -584,7 +584,7 @@
             and t.chl_finprod_id = #{chlFinprodId,jdbcType=VARCHAR}
         </if>
         and t.hoding_type = #{hodingType,jdbcType=VARCHAR}
-        and t.cdate = #{cdate,jdbcType=DATE}
+        and t.cdate  <![CDATA[<=]]> #{cdate,jdbcType=DATE}
         and t.ccy = #{ccy,jdbcType=VARCHAR}
         <if test="acctType != null and acctType.size() > 0 ">
             and t.acct_id in (
@@ -596,6 +596,7 @@
             and t1.portfolio_id = #{portfolioId,jdbcType=VARCHAR}
             )
         </if>
+        and (t.is_exist_new is null or t.is_exist_new != 'Y')
     </select>
 
     <!--ͨ查询手工调整流水-->
@@ -613,7 +614,7 @@
             and t.chl_finprod_id = #{chlFinprodId,jdbcType=VARCHAR}
         </if>
         and t.hoding_type = #{hodingType,jdbcType=VARCHAR}
-        and t.cdate = #{cdate,jdbcType=DATE}
+        and t.cdate <![CDATA[<=]]> #{cdate,jdbcType=DATE}
         and t.ccy = #{ccy,jdbcType=VARCHAR}
         <if test="acctType != null and acctType.size() > 0 ">
             and t.acct_id in (
@@ -625,6 +626,7 @@
             and t1.portfolio_id = #{portfolioId,jdbcType=VARCHAR}
             )
         </if>
+        and (t.is_exist_new is null or t.is_exist_new != 'Y')
     </select>
 
     <insert id="mergeCfetsOprHis" parameterType="java.util.List">

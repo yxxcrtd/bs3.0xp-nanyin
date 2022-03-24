@@ -1058,6 +1058,8 @@
 			ENTRUST_DATE = #{entrustDate,jdbcType=DATE}
 		  	<!--只取已接收和已完成的指令 modify fuyongsheng 20220114 start-->
 		  	AND T1.ENTRUST_STATUS IN ('03','04')
+		  	AND trd.IS_CANCEL = 'N'
+			AND trd.trade_status = '01'
 			<!--只取已接收和已完成的指令 modify fuyongsheng 20220114 end-->
 			<if test="finprodType != null and finprodType.size()>0">
 				AND T1.FINPROD_TYPE2  IN

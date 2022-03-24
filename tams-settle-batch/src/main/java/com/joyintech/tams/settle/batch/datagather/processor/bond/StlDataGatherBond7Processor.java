@@ -162,7 +162,10 @@ public class StlDataGatherBond7Processor extends BaseProcessor<NeedOperateEntity
                         //持仓类型
                         ptlSecPositionFlow.setHodingType(DictCodeList.持仓类型_实际.getValue());
                         //日期
-                        ptlSecPositionFlow.setCdate(ptlTrade.getSettleDate());
+                        // ZGTFCP-1751:上市流通老头存登录日期还是T+1日 modify by fuyongsheng 20220324 start
+                        //  ptlSecPositionFlow.setCdate(ptlTrade.getSettleDate());
+                        ptlSecPositionFlow.setCdate(stlDataDealProcessCommonService.getNextWorkDay(ptlTrade.getSettleDate(),finProduct.getCalendarId()));
+                        // ZGTFCP-1751:上市流通老头存登录日期还是T+1日 modify by fuyongsheng 20220324 end
                         //币种
                         ptlSecPositionFlow.setCcy(trdProductDeal.getCcy());
                         //数量
@@ -204,7 +207,10 @@ public class StlDataGatherBond7Processor extends BaseProcessor<NeedOperateEntity
                             ptlSecPositionFlowFrozen.setHodingType(DictCodeListExt3.持仓类型_场内上市前冻结.getValue());
                             // GZYHTZJY-1084:冲销掉上市前冻结的头寸 modify fuyongsheng 20220112 end
                             //日期
-                            ptlSecPositionFlowFrozen.setCdate(ptlTrade.getSettleDate());
+                            // ZGTFCP-1751:上市流通老头存登录日期还是T+1日 modify by fuyongsheng 20220324 start
+                            // ptlSecPositionFlowFrozen.setCdate(ptlTrade.getSettleDate());
+                            ptlSecPositionFlowFrozen.setCdate(stlDataDealProcessCommonService.getNextWorkDay(ptlTrade.getSettleDate(),finProduct.getCalendarId()));
+                            // ZGTFCP-1751:上市流通老头存登录日期还是T+1日 modify by fuyongsheng 20220324 end
                             //币种
                             ptlSecPositionFlowFrozen.setCcy(positionFlow.getCcy());
                             //数量
@@ -238,7 +244,10 @@ public class StlDataGatherBond7Processor extends BaseProcessor<NeedOperateEntity
                         //持仓类型
                         etrSecPositionFlow.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
                         //日期
-                        etrSecPositionFlow.setCdate(ptlTrade.getSettleDate());
+                        // ZGTFCP-1751:上市流通老头存登录日期还是T+1日 modify by fuyongsheng 20220324 start
+                        // etrSecPositionFlow.setCdate(ptlTrade.getSettleDate());
+                        etrSecPositionFlow.setCdate(stlDataDealProcessCommonService.getNextWorkDay(ptlTrade.getSettleDate(),finProduct.getCalendarId()));
+                        // ZGTFCP-1751:上市流通老头存登录日期还是T+1日 modify by fuyongsheng 20220324 end
                         //币种
                         etrSecPositionFlow.setCcy(trdProductDeal.getCcy());
                         //数量
@@ -310,7 +319,10 @@ public class StlDataGatherBond7Processor extends BaseProcessor<NeedOperateEntity
         // 分支序号
         trdProductDeal.setBranch(0L);
         // 交易日
-        trdProductDeal.setTradeDate(stlDataDealProcessCommonService.getNextWorkDay(settleTransData.getDealDate(),finProduct.getCalendarId()));
+        // ZGTFCP-1751:修改上市流通的交易生成日,修改成T+0日 modify by fuyongsheng 20220324 start
+        // trdProductDeal.setTradeDate(stlDataDealProcessCommonService.getNextWorkDay(settleTransData.getDealDate(),finProduct.getCalendarId()));
+        trdProductDeal.setTradeDate(settleTransData.getDealDate());
+        // ZGTFCP-1751:修改上市流通的交易生成日,修改成T+0日 modify by fuyongsheng 20220324 end
         // 起息日
         trdProductDeal.setVdate(null);
         // 到期日

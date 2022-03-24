@@ -122,8 +122,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.joyintech.tams.constant.DictCodeList.委托状态_已撤回;
-import static com.joyintech.tams.constant.DictCodeList.数据状态_修改中;
 import static com.joyintech.tams.constant.DictCodeListExt3.系统动作_修改;
 import static com.joyintech.tams.constant.DictCodeListExt3.系统动作_新建;
 import static com.joyintech.tams.invest.common.asset.service.BondAssetCalcService.*;
@@ -5307,6 +5305,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		etrExchangeTrade001Dto.setStockId(dto.getStockId());
 		etrExchangeTrade001Dto.setEntrustDate(DateUtil.parse(DateUtil.format(dto.getEntrustDate(),DateUtil.DEFAULT_DATE_FORMAT_EN)));
 		etrExchangeTrade001Dto.setOptType(dto.getOptType());
+
 		return etrExchangeTrade001Dto;
 	}
 
@@ -5522,7 +5521,15 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			BeanUtil.copyPropertiesIgnoreNull(etrBondToStockDto, etrSinglePortfolioDto);
 			etrBondToStockDto.setFinprodType2(dto.getFinprodType2());// 金融产品类型（投管）
 			etrBondToStockDto.setAssetType(DictCodeList.平安资产类型_债券.getValue());// 资产大类
-			etrBondToStockDto.setExpConNum(dto.getToShareAvailableNum());//可转股数量
+			if(StringUtil.equals(DictCodeList.是否_否.getValue(),dto.getIsMulti())){
+				//根据债券面值*指令数量/转股初始价格
+				BigDecimal secFace=trdCommonBaseService.getFaceValue(dto.getFinprodId(), DateUtil.platDateFromCache());
+				BigDecimal	tempAvailableNum=secFace.multiply(dto.getEntrustNum());
+				tempAvailableNum=ArithmeticUtil.divide(tempAvailableNum,dto.getEntrustPrice(),0,RoundingMode.DOWN);
+				etrBondToStockDto.setExpConNum(tempAvailableNum);//可转股数量
+			}else{
+				etrBondToStockDto.setExpConNum(dto.getToShareAvailableNum());//可转股数量
+			}
 			BeanUtil.copyPropertiesIgnoreNull(etrEntrust, etrBondToStockDto);
 			BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd, etrBondToStockDto);
 		}
