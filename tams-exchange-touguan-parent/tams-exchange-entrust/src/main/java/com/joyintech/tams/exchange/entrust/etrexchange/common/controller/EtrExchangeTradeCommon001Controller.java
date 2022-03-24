@@ -904,12 +904,13 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping("/selectSecFaceValue")
-	public BigDecimal selectSecFaceValue(@RequestBody Map<String, Object> param){
+	public Message<BigDecimal> selectSecFaceValue(@RequestBody  SecFaceValueRequest request){
+		Map<String, Object> param = BeanUtil.object2Map(request);
 		BigDecimal faceValue = etrExchangeTrade001CommonService.selectSecFaceValue(param);
 		if(faceValue == null) {
-			return BigDecimal.ZERO;
+			faceValue= BigDecimal.ZERO;
 		}
-		return faceValue;
+		return new Message<BigDecimal>().success().setData(faceValue);
 	}
 
 	/**

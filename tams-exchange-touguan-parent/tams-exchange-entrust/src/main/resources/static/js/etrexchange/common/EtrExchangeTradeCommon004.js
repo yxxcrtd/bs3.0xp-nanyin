@@ -3152,7 +3152,7 @@
                 $("#invAim_div_" + currentTab).hide();
             }
 
-            if(ps == PS_T01){
+            if(ps == PS_T01 || ps == PS_T02){
                 $("#priceModel_div_" + currentTab).show();
             }
             if (finprodType2 == FINPROD_TYPE_TG_F06) {
@@ -3705,6 +3705,10 @@
                 var item = object.portfolioList[index];
                 if (!item.portfolioId || !item.acctNo) {
                     checkFlag = false;
+                }
+                if(!item.entrustNum){
+                    Joyin.error("组合分配中指令数量不能为空")
+                    return false;
                 }
             }
             if (!checkFlag) {

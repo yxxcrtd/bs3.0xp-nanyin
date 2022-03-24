@@ -170,6 +170,22 @@ public class FieldEtrInfoQueryService extends BaseService{
     }
 
     public Page<EntrustQueryBean> getEtrDispatcherExeListInfo(CommonSearchInfoRequest dto) {
+        Map<String, Object> pageParam = BeanUtil.object2Map(dto);
+        pageParam.put("feeType06", BussinessDictCodeList.费用类型_交易手续费.getValue());
+        pageParam.put("feeType08", BussinessDictCodeList.费用类型_结算手续费.getValue());
+        pageParam.put("TRADE_FLOW_STATUS01", DictCodeListExt1.交易流程状态_流程中.getValue());
+        pageParam.put("TRADE_FLOW_STATUS02", DictCodeListExt1.交易流程状态_有效.getValue());
+        pageParam.put("TRADE_FLOW_STATUS03", DictCodeListExt1.交易流程状态_撤销.getValue());
+        pageParam.put("quoteType", BussinessDictCodeList.报价方式_登记报价.getValue());
+        List<String> entrustIdList = StringUtil.splitToList(",", (String) pageParam.get("entrustId"));
+        if (StringUtil.isBlank(dto.getEntrustId()) || entrustIdList.size() > 1) {
+            return new Page<EntrustQueryBean>();
+        }
+        return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
+                () -> fieldEtrInfoQueryMapper.getEtrDispatcherExeListInfo(pageParam));
+    }
+
+    public Page<EntrustQueryBean> getEtrDispatcherExeListInfoByExe(CommonSearchInfoRequest dto) {
         Map<String,Object> pageParam = BeanUtil.object2Map(dto);
         pageParam.put("instructionId",dto.getEntrustId());
         Page<EntrustQueryBean> page = super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
@@ -186,7 +202,24 @@ public class FieldEtrInfoQueryService extends BaseService{
         return page;
     }
 
+
     public Page<TradeQueryBean> getEtrDispatcherDealListInfo(CommonSearchInfoRequest dto) {
+        Map<String, Object> pageParam = BeanUtil.object2Map(dto);
+        pageParam.put("feeType06", BussinessDictCodeList.费用类型_交易手续费.getValue());
+        pageParam.put("feeType08", BussinessDictCodeList.费用类型_结算手续费.getValue());
+        pageParam.put("TRADE_FLOW_STATUS01", DictCodeListExt1.交易流程状态_流程中.getValue());
+        pageParam.put("TRADE_FLOW_STATUS02", DictCodeListExt1.交易流程状态_有效.getValue());
+        pageParam.put("TRADE_FLOW_STATUS03", DictCodeListExt1.交易流程状态_撤销.getValue());
+        List<String> entrustIdList = StringUtil.splitToList(",", (String) pageParam.get("entrustId"));
+        if (StringUtil.isBlank(dto.getEntrustId()) || entrustIdList.size() > 1) {
+            return new Page<TradeQueryBean>();
+        }
+        Page<TradeQueryBean>
+            page = super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> fieldEtrInfoQueryMapper.getEtrDispatcherDealListInfo(pageParam));
+        return page;
+    }
+
+    public Page<TradeQueryBean> getEtrDispatcherDealListInfoByExe(CommonSearchInfoRequest dto) {
         Map<String,Object> pageParam = BeanUtil.object2Map(dto);
         pageParam.put("instructionId",dto.getEntrustId());
         Page<TradeQueryBean> page = super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
