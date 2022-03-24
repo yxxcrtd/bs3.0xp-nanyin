@@ -2089,6 +2089,8 @@
                     $("#entrustPriceUnit_" + currentTab).text("%");
                     $("#entrustAmtUnit_" + currentTab).text("元");
                 } else {
+                    $("#targetType_div_" + currentTab).text("目标类型").append($star.clone());
+                    $("#toShareAvailableNum_label_" + currentTab).text("可转股数量").append($star.clone());
                     $("#entrustDate_label_" + currentTab).text("指令日期").append($star.clone());
                     $("#ps_label_" + currentTab).text("委托方向").append($star.clone());
                     $("#secId_label_" + currentTab).text("资产名称").append($star.clone());
