@@ -1441,7 +1441,14 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                 }
                 orderAmt = ArithmeticUtil.subtract(orderAmt, settleAmt);
                 stlPayOrder.setSettleAmt(settleAmt);
-                orderIds.add(cfetsManualSettleMapper.selectRegTradeIdBytradeId(item.getTradeId()));
+                String orderId = cfetsManualSettleMapper.selectRegTradeIdBytradeId(item.getTradeId());
+                if(StringUtil.isNotEmpty(orderId)){
+                    orderIds.add(orderId);
+                }
+                orderId = cfetsManualSettleMapper.selectQuoteIdBytradeId(item.getTradeId());
+                if(StringUtil.isNotEmpty(orderId)){
+                    orderIds.add(orderId);
+                }
                 stlPayOrders.add(stlPayOrder);
             } else {
                 stlPayOrders = cfetsManualSettleMapper.getStlPayOrdersByTradeId(item.getTradeId());
