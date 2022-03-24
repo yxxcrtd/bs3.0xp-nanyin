@@ -1190,6 +1190,10 @@
             $("#entrustAmt_" + currentTab).prop("disabled", false);
             $("#entrustNum_" + currentTab).prop("disabled", true);
         }
+        if(ps == PS_T68 || ps == PS_T69){
+            $("#entrustNum_" + currentTab).prop("disabled", false);
+            $("#entrustAmt_" + currentTab).prop("disabled", true);
+        }
         calcEntrustNumAndAmt(init);
     };
     /**
