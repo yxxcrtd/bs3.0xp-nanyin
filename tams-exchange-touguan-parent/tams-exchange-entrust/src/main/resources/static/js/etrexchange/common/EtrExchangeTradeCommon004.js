@@ -3465,7 +3465,26 @@
                         dateTable.renderRow(data.LAY_TABLE_INDEX, {"acctNo": null});
                     }
                 });
-
+                if(currentTab == 'dz') {
+                    var param = {
+                        portfolioId: value,
+                        finprodId: $("#finprodId_" + currentTab).val(),
+                        finprodType2: $("#finprodType2_" + currentTab).val(),
+                        tradeMarket: $("#tradeMarket_" + currentTab).val(),
+                        acctNo: data.acctNo,
+                        tradePlat: "04",
+                    };
+                    Joyin.ajaxJson(basePath + 'etrexchange/common/etrExchangeTrade001/selectAccAvailableCash', param, function (result) {
+                        if (result.data){
+                            dateTable.renderRow(data.LAY_TABLE_INDEX,  {"accAvailablePos": result.data});
+                        }
+                    }, false);
+                    Joyin.ajaxJson(basePath + 'etrexchange/common/etrExchangeTrade001/selectAvailableNum', param, function (result) {
+                        if (result.data) {
+                            dateTable.renderRow(data.LAY_TABLE_INDEX, {"standardBondVolume": result.data});
+                        }
+                    }, false);
+                }
             } else if (field == "acctNo") {
                 if (data.acctNo && $("#tradeMarket_" + currentTab).val()) {
                     var param = {};
@@ -3480,6 +3499,26 @@
                     countAddTable();
                 }
                 curPortfolioId = "";
+                if(currentTab == 'dz') {
+                    var param = {
+                        portfolioId: data.portfolioId,
+                        finprodId: $("#finprodId_" + currentTab).val(),
+                        finprodType2: $("#finprodType2_" + currentTab).val(),
+                        tradeMarket: $("#tradeMarket_" + currentTab).val(),
+                        acctNo: value,
+                        tradePlat: "04",
+                    };
+                    Joyin.ajaxJson(basePath + 'etrexchange/common/etrExchangeTrade001/selectAccAvailableCash', param, function (result) {
+                        if (result.data) {
+                            dateTable.renderRow(data.LAY_TABLE_INDEX, {"accAvailablePos": result.data});
+                        }
+                    }, false);
+                    Joyin.ajaxJson(basePath + 'etrexchange/common/etrExchangeTrade001/selectAvailableNum', param, function (result) {
+                        if (result.data) {
+                            dateTable.renderRow(data.LAY_TABLE_INDEX, {"standardBondVolume": result.data});
+                        }
+                    }, false);
+                }
             } else if (filed = 'entrustNum') {
             }
         },
@@ -3765,8 +3804,23 @@
                 })
             });
         } else {
+            if (object.ps == PS_T49 || object.ps == PS_T03) {
+                var posSwitch = false;
+                for (var i = 0; i < object.portfolioList.length; i++) {
+                    if (object.portfolioList[i].entrustNum > object.portfolioList[i].accAvailablePos) {
+                        posSwitch = true;
+                    }
+                }
+                if (ETR_CHECK_POS_SWITCH == '02' && posSwitch) {
+                    Joyin.error("组合分配中可用持仓不足");
+                    return ;
+                }
+            }
             Joyin.ajaxJson(basePath + '/etrexchange/common/EtrExchangeTradeCommon004/checkSaveError', object,
                 function (result) {
+                    if (ETR_CHECK_POS_SWITCH == '01' && posSwitch) {
+                        result.data = "组合分配中可用持仓不足,请确认是否要提交";
+                    }
                     Joyin.confirm(result.data, function () {
                         Joyin.ajaxJson(basePath + '/etrexchange/common/EtrExchangeTradeCommon004/buildDtoFromTodoSubmit', object,
                             function (res) {

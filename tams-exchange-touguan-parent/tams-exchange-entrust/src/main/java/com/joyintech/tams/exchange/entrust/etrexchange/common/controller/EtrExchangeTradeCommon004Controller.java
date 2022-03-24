@@ -257,6 +257,7 @@ public class EtrExchangeTradeCommon004Controller extends BaseController {
         if (StringUtil.isNotEmpty(entity.getTradePlat()) && entity.getTradePlat().equals(DictCodeList.交易平台_固定收益平台.getValue())) {
             model.addAttribute("currentTab", "gd");
         }
+        model.addAttribute("ETR_CHECK_POS_SWITCH",CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_POS_SWITCH));
         return super.init(model);
     }
 
