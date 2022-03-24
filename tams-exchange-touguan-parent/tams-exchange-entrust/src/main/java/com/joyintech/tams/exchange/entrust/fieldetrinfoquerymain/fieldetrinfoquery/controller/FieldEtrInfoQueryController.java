@@ -32,6 +32,7 @@ import org.springframework.stereotype.Controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.joyintech.tams.business.common.pojo.Message;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -144,6 +145,9 @@ public class FieldEtrInfoQueryController extends BaseController {
             throws Exception {
         try {
             Page<EntrustQueryBean> returnDto = fieldEtrInfoQueryService.getEtrDispatcherExeListInfo(dto);
+            if (returnDto.getTotal() == 0 && CollectionUtils.isEmpty(returnDto.getRoot())) {
+                returnDto = fieldEtrInfoQueryService.getEtrDispatcherExeListInfoByExe(dto);
+            }
             return new Message<Page<EntrustQueryBean>>().success().setData(returnDto);
         } catch (Exception e) {
             logger.error("查询指令管理分页数据异常", e);
@@ -167,6 +171,9 @@ public class FieldEtrInfoQueryController extends BaseController {
             throws Exception {
         try {
             Page<TradeQueryBean> returnDto = fieldEtrInfoQueryService.getEtrDispatcherDealListInfo(dto);
+            if (returnDto.getTotal() == 0 && CollectionUtils.isEmpty(returnDto.getRoot())) {
+                returnDto = fieldEtrInfoQueryService.getEtrDispatcherDealListInfoByExe(dto);
+            }
             return new Message<Page<TradeQueryBean>>().success().setData(returnDto);
         } catch (Exception e) {
             logger.error("查询指令成交异常", e);
