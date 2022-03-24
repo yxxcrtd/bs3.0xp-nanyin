@@ -788,8 +788,6 @@
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON tpdp.sec_manage_acct_id = ssai.SEC_ACCT_ID
         LEFT JOIN MST_COUNTER_PARTY mcp ON tpdp.COUNTER_ID = mcp.counter_id
         LEFT JOIN MST_CFETS_CUSTOMER_TRADER mcct ON tpdp.COUNTER_TRADER= mcct.trader_id
-        LEFT JOIN REG_TRADE_FEE ttft ON tpdp.trade_id = ttft.trade_id AND ttft.fee_type =#{feeType06}
-        LEFT JOIN REG_TRADE_FEE ttft1 ON tpdp.trade_id  = ttft1.trade_id AND ttft1.fee_type =#{feeType08}
         LEFT JOIN FIN_EXERCISE_PLAN T6 ON tpdp.FINPROD_ID = T6.FINPROD_ID AND T6.EXERCISE_TYPE ='02'
         WHERE tpdp.entrust_id = #{entrustId}
 
@@ -804,8 +802,6 @@
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON tpdp.sec_manage_acct_id = ssai.SEC_ACCT_ID
         LEFT JOIN MST_COUNTER_PARTY mcp ON tpdp.COUNTER_ID = mcp.counter_id
         LEFT JOIN MST_CFETS_CUSTOMER_TRADER mcct ON tpdp.COUNTER_TRADER= mcct.trader_id
-        LEFT JOIN WFL_REG_TRADE_FEE ttft ON tpdp.trade_id = ttft.trade_id AND ttft.fee_type =#{feeType06}
-        LEFT JOIN WFL_REG_TRADE_FEE ttft1 ON tpdp.trade_id = ttft1.trade_id AND ttft1.fee_type =#{feeType08}
         LEFT JOIN FIN_EXERCISE_PLAN T6 ON tpdp.FINPROD_ID = T6.FINPROD_ID AND T6.EXERCISE_TYPE ='02'
         WHERE tpdp.entrust_id = #{entrustId}
 
@@ -877,8 +873,6 @@
         LEFT JOIN FIN_PRODUCT fp ON tpd.finprod_id = fp.finprod_id
         left join SYS_DATADICT_LIST sdl_registorg on fp.REGIST_ORG=sdl_registorg.ITEM_CODE and sdl_registorg.DICT_CODE='REGIST_ORG'
         LEFT JOIN MST_COUNTER_PARTY mcp ON tpd.counter_id = mcp.counter_id
-        LEFT JOIN TRD_TRADE_FEE_DETAIL ttft ON tpd.trade_id = ttft.trade_id AND ttft.fee_type =#{feeType06}
-        LEFT JOIN TRD_TRADE_FEE_DETAIL ttft1 ON tpd.trade_id = ttft1.trade_id AND ttft1.fee_type =#{feeType08}
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON tpd.sec_manage_acct_id = ssai.SEC_ACCT_ID
         LEFT JOIN FIN_PRODUCT_TYPE fpt ON tpd.FINPROD_ID  = fpt.FINPROD_ID
         left join FIN_TRADE_PRODUCT FTP on tpd.FINPROD_ID = FTP.FINPROD_ID
@@ -899,8 +893,6 @@
         LEFT JOIN FIN_PRODUCT fp ON tpd.finprod_id = fp.finprod_id
         left join SYS_DATADICT_LIST sdl_registorg on fp.REGIST_ORG=sdl_registorg.ITEM_CODE and sdl_registorg.DICT_CODE='REGIST_ORG'
         LEFT JOIN MST_COUNTER_PARTY mcp ON tpd.counter_id = mcp.counter_id
-        LEFT JOIN TRD_TRADE_FEE_DETAIL ttft ON tpd.trade_id = ttft.trade_id AND ttft.fee_type =#{feeType06}
-        LEFT JOIN TRD_TRADE_FEE_DETAIL ttft1 ON tpd.trade_id = ttft1.trade_id AND ttft1.fee_type =#{feeType08}
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON tpd.sec_manage_acct_id = ssai.SEC_ACCT_ID
         LEFT JOIN FIN_PRODUCT_TYPE fpt  ON tpd.FINPROD_ID = fpt.FINPROD_ID
         left join FIN_TRADE_PRODUCT FTP on tpd.FINPROD_ID = FTP.FINPROD_ID
@@ -947,8 +939,6 @@
         tpd.cprice_amt cpriceAmt,
         tpd.int_amt intAmt,
         tpd.fprice_amt fpriceAmt,
-        ttft.fee_amt jyFeeAmt,
-        ttft1.fee_amt jsFeeAmt,
         tpd.ccy ccy,
         tpd.counter_id counterId,
         mcp.counter_name counterName,
@@ -993,8 +983,6 @@
         tpdp.cprice_amt cpriceAmt,
         tpdp.int_amt intAmt,
         tpdp.fprice_amt fpriceAmt,
-        ttft.fee_amt jyFeeAmt,
-        ttft1.fee_amt jsFeeAmt,
         tpdp.ccy ccy,
         tpdp.clear_type settleType,
         tpdp.COUNTER_ID counterId,
@@ -1040,8 +1028,6 @@
         tpdpa.cprice_amt cpriceAmt,
         tpdpa.int_amt intAmt,
         tpdpa.fprice_amt fpriceAmt,
-        tpdp.DEAL_FEE_AMT jyFeeAmt,
-        tpdp.SETT_FEE_AMT jsFeeAmt,
         tpdp.sett_ccy ccy,
         tpdp.sett_type  settleType,
         tpdpa.cp_party_id counterId,
@@ -1088,8 +1074,6 @@
            null                                                  cpriceAmt,
            iqc.M_INT_AMT                                         intAmt,
            iqc.fprice_amt                                        fpriceAmt,
-           iqc.DEAL_FEE_AMT                                      jyFeeAmt,
-           iqc.SETT_FEE_AMT                                      jsFeeAmt,
            iqc.ccy                                               ccy,
            iqc.SETT_TYPE                                         settleType,
            iqc.CP_PARTY_ID                                       counterId,
