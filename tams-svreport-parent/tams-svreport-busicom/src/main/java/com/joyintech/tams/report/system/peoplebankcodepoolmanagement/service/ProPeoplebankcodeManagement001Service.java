@@ -218,7 +218,7 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 				}
 				if (data != null && data.size() > 0) {
 					Map<String, List<ProPeoplebankcodeManagement001Dto>> equityInfo001Map = entities.stream()
-							.collect(JoyinCollectors.groupingBy(x -> x.getInsideProdId()));
+							.collect(JoyinCollectors.groupingBy(x -> x.getInsideProdId()+"|"+x.getCodeType()));
 					// Collections.sort(data, Comparator.comparing(EquityInfo001Dto::getExcelNum));
 					// 将序号放入list中
 					List<String> excelNumList = new ArrayList<String>();
