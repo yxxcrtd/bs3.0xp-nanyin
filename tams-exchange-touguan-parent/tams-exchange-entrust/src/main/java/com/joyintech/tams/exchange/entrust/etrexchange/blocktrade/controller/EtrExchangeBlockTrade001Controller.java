@@ -456,5 +456,19 @@ public class EtrExchangeBlockTrade001Controller extends BaseController{
 			return new Message<String>().setMessage("查询交易行情信息数据异常");
 		}
 	}
+
+	@ApiOperation(value="查询净值偏离度",notes = "查询净值偏离度")
+	@ResponseBody
+	@PostMapping("calcDeviationDegree")
+	public Message<String> calcDeviationDegree(@RequestBody EtrExchangeTradeCommonRequest request){
+		try {
+			Map<String,Object> param= JsonUtils.object2Map(request);
+			String deviationDegree = etrExchangeBlockTrade001Service.calcDeviationDegree(param);
+			return new Message<String>().success().setData(deviationDegree);
+		}catch (Exception e) {
+			logger.error("查询净值偏离度数据异常",e);
+			return new Message<String>().setMessage("查询净值偏离度信息数据异常");
+		}
+	}
 }
 	

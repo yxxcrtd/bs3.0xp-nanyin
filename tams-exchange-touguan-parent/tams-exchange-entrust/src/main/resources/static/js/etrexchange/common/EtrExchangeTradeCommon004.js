@@ -2089,6 +2089,11 @@
                     $("#entrustPriceUnit_" + currentTab).text("%");
                     $("#entrustAmtUnit_" + currentTab).text("元");
                 } else {
+                    $("#entrustDate_label_" + currentTab).text("指令日期").append($star.clone());
+                    $("#ps_label_" + currentTab).text("委托方向").append($star.clone());
+                    $("#secId_label_" + currentTab).text("资产名称").append($star.clone());
+                    $("#acctNo_label_" + currentTab).text("资金账户").append($star.clone());
+                    $("#portfolioId_label_" + currentTab).text("组合名称").append($star.clone());
                     $("#entrustPrice_label_" + currentTab).text("指令价格").append($star.clone());
                     $("#entrustNum_label_" + currentTab).text("指令数量").append($star.clone());
                     $("#entrustAmt_label_" + currentTab).text("指令金额").append($star.clone());
@@ -3395,10 +3400,38 @@
                 edit: true,
                 visible: (ps != "T03" && ps != "T49" && ps != "T68" && ps != "T69")
             },
-            {field: 'accAvailableCash', title: '可用现金(元)', width: 200, type: 'number', edit: false, visible: (ps != "T03" && ps != "T49" && ps != "T68" && ps != "T69")},
-            {field: 'accAvailablePos', title: '可用持仓', width: 200, type: 'number', edit: false, visible: (ps != "T68" && ps != "T69")},
-            {field: 'accAvailablePos', title: '可入库持仓', width: 200, type: 'number', edit: false, visible: (ps == "T68" || ps == "T69")},
-            {field: 'standardBondVolume', title: '可出库持仓', width: 200, type: 'number', edit: false, visible: (ps == "T68" || ps == "T69")},
+            {
+                field: 'accAvailableCash',
+                title: '可用现金(元)',
+                width: 200,
+                type: 'number',
+                edit: false,
+                visible: (ps != "T03" && ps != "T49" && ps != "T68" && ps != "T69")
+            },
+            {
+                field: 'accAvailablePos',
+                title: '可用持仓',
+                width: 200,
+                type: 'number',
+                edit: false,
+                visible: (ps != "T68" && ps != "T69")
+            },
+            {
+                field: 'accAvailablePos',
+                title: '可入库持仓',
+                width: 200,
+                type: 'number',
+                edit: false,
+                visible: (ps == "T68" || ps == "T69")
+            },
+            {
+                field: 'standardBondVolume',
+                title: '可出库持仓',
+                width: 200,
+                type: 'number',
+                edit: false,
+                visible: (ps == "T68" || ps == "T69")
+            },
             {field: 'operation', title: 'SysCommon.operation', type: 'action', buttons: ['delt']}
         ],
         beforeEditCell: function (preVal, field, rowData) {
@@ -3420,7 +3453,11 @@
                 param.tradeMarket = $("#tradeMarket_" + currentTab).val();
                 Joyin.ajaxJson(basePath + '/etrexchange/common/EtrExchangeTradeCommon004/getPtlSecAcctInfoJson', param, function (result) {
                     if (result.length == 1) { //只有一条，自动选上
-                        dateTable.renderRow(data.LAY_TABLE_INDEX, {"acctNo": result[0].id});
+                        var secAcctId = null;
+                        if(result[0].object.length == 1){
+                            secAcctId = result[0].object[0].secAcctId;
+                        }
+                        dateTable.renderRow(data.LAY_TABLE_INDEX, {"acctNo": result[0].id, "secAcctId":secAcctId});
                     } else {
                         dateTable.renderRow(data.LAY_TABLE_INDEX, {"acctNo": null});
                     }
@@ -3749,7 +3786,6 @@
             if (keyCode == 9) {
                 e.preventDefault();
                 if (inp != null) {
-                    console.log(2345);
                     var submitBtn = $("#EtrExchangeTrade001_btn_submit");
                     if (!submitBtn || submitBtn.length == 0) {
                         submitBtn = $("#EtrExchangeTrade001_btn_submit", window.parent.document);

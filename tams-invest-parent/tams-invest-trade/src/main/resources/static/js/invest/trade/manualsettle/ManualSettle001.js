@@ -187,53 +187,69 @@
             Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
             return;
         }
-        for(var i=0;i<selArr.length;i++){
-            if((item=="01"||item=="03"||item=="04")&&(selArr[i].settleStatus==DELIVERY_STATUS_02||selArr[i].settleStatus==DELIVERY_STATUS_04)){
-                exceptionArr.push(selArr[i]);
+        Joyin.ajax(basePath + 'invest/trade/manualsettle/ManualSettle001/getIPlatformDate', {}, function(data){
+            // ZGTFCP-1461:交收、交收回溯、交收失败操作的交收日期必须等于平台日,否则调新头寸引擎会出错 modify by fuyongsheng 20220323 start
+            if(item=="01"||item=="02"||item=="04"){
+                var errorNum = 0;
+                for(var i=0;i<selArr.length;i++){
+                    if(Date.ofDate(selArr[i].settleDate).DateDiff('d',data) != 0){
+                        errorNum ++;
+                    }
+                }
+                if(errorNum>0){
+                    Joyin.error("交收日期须等于平台日");
+                    return;
+                }
             }
-            else if(item=="02"&&selArr[i].settleStatus!=DELIVERY_STATUS_02){
-                exceptionArr.push(selArr[i]);
+            // ZGTFCP-1461:交收、交收回溯、交收失败操作的交收日期必须等于平台日,否则调新头寸引擎会出错 modify by fuyongsheng 20220323 end
+            for(var i=0;i<selArr.length;i++){
+                if((item=="01"||item=="03"||item=="04")&&(selArr[i].settleStatus==DELIVERY_STATUS_02||selArr[i].settleStatus==DELIVERY_STATUS_04)){
+                    exceptionArr.push(selArr[i]);
+                }
+                else if(item=="02"&&selArr[i].settleStatus!=DELIVERY_STATUS_02){
+                    exceptionArr.push(selArr[i]);
+                }
             }
-        }
-        for(var i=0;i<selArr.length;i++){
-            selArr[i].pageModel = item;
-        }
-        var object = {selectedItem: selArr, pageModel:item};
-        var confirmMessage;
-        if(exceptionArr.length>0) {
-            if (item == "01") {
-                confirmMessage = JoyinUtil.getMessage("MANUAL_SETTLE_001");
+            for(var i=0;i<selArr.length;i++){
+                selArr[i].pageModel = item;
             }
-            if (item == "02") {
-                confirmMessage = JoyinUtil.getMessage("MANUAL_SETTLE_002");
-            }
-            if (item == "03") {
-                confirmMessage = JoyinUtil.getMessage("MANUAL_SETTLE_003");
-            }
-            if (item == "04") {
-                confirmMessage = JoyinUtil.getMessage("MANUAL_SETTLE_004");
-            }
-            //是:不操作  否:继续操作
-            Joyin.confirm(confirmMessage, function () {
+            var object = {selectedItem: selArr, pageModel:item};
+            var confirmMessage;
+            if(exceptionArr.length>0) {
+                if (item == "01") {
+                    confirmMessage = JoyinUtil.getMessage("MANUAL_SETTLE_001");
+                }
+                if (item == "02") {
+                    confirmMessage = JoyinUtil.getMessage("MANUAL_SETTLE_002");
+                }
+                if (item == "03") {
+                    confirmMessage = JoyinUtil.getMessage("MANUAL_SETTLE_003");
+                }
+                if (item == "04") {
+                    confirmMessage = JoyinUtil.getMessage("MANUAL_SETTLE_004");
+                }
+                //是:不操作  否:继续操作
+                Joyin.confirm(confirmMessage, function () {
                     cancelCheck(exceptionArr);
-            });
-        }else{
-            if(item == "04") {
-                Joyin.confirm(JoyinUtil.getMessage("MANUAL_SETTLE_005"), function () {
+                });
+            }else{
+                if(item == "04") {
+                    Joyin.confirm(JoyinUtil.getMessage("MANUAL_SETTLE_005"), function () {
+                        confirmMessage = JoyinUtil.getMessage("COMMON_C_0001","提交");
+                        //正常提交
+                        Joyin.confirm(confirmMessage,function(){
+                            finalSubmit(object);
+                        });
+                    });
+                } else {
                     confirmMessage = JoyinUtil.getMessage("COMMON_C_0001","提交");
                     //正常提交
                     Joyin.confirm(confirmMessage,function(){
                         finalSubmit(object);
                     });
-                });
-            } else {
-                confirmMessage = JoyinUtil.getMessage("COMMON_C_0001","提交");
-                //正常提交
-                Joyin.confirm(confirmMessage,function(){
-                    finalSubmit(object);
-                });
+                }
             }
-        }
+        });
     }
 
     /**

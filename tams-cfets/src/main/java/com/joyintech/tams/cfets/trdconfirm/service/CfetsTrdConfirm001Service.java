@@ -81,6 +81,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -498,8 +499,14 @@ public class CfetsTrdConfirm001Service extends BaseService{
                 bussRepoSecService.insert(dto, dto.getFinprodId());
             }
         }
+
+        BigDecimal orderAmt = entity.getBussTrdTransferOrder().get(0).getSettleAmt();
+        int index = 0;
+
+        List<TrdProductDeal> listTemp = entity.getTrdProductDeals().stream().sorted((x, y) -> y.getTradeAmt().compareTo(x.getTradeAmt())).collect(Collectors.toList());
         // 金融产品交易信息DTO.金融产品交易Entity -> 金融产品交易业务流程表
         for (TrdProductDeal trdProductDeal : entity.getTrdProductDeals()) {
+            index++;
             // 7.8写入交易信息进交易报送信息表，为中债报送用
             this.dealInfoCbReportLogic_7_7(trdProductDeal);
             trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
@@ -545,7 +552,7 @@ public class CfetsTrdConfirm001Service extends BaseService{
                 finProductTradeDtoTemp.setAssetType2(DictCodeList.回购类型_质押式回购.getValue());
                 finProductTradeDtoTemp.setIsExistNew(DictCodeList.是否_是.getValue());
                 StlPayOrdersDto stlPayOrdersDto = new StlPayOrdersDto();
-                stlPayOrdersDto = finProductTradeDtoTemp.getBaseTradeProductDealDtos().get(0).getStlPayOrdersList().get(0);
+                BeanUtil.copyPropertiesIgnoreNull(stlPayOrdersDto, finProductTradeDtoTemp.getBaseTradeProductDealDtos().get(0).getStlPayOrdersList().get(0));
                 if (StringUtil.isEmpty(stlPayOrdersDto.getMyAcctNo())) {
                     String acctId = EtrCommonCashPositionDealService.select组合托管户(trdProductDeal.getPortfolioId(), trdProductDeal.getCcy(), DictCodeListExt1.资金账户类型_产品托管户.getValue());
                     stlPayOrdersDto.setMyAcctNo(acctId);
@@ -554,6 +561,13 @@ public class CfetsTrdConfirm001Service extends BaseService{
                 if(StringUtil.isEmpty(orderId)){
                     orderId = entity.getRegIbuId();
                 }
+                BigDecimal settleAmt = ArithmeticUtil.divide(
+                        ArithmeticUtil.multiply(trdProductDeal.getTradeAmt(), stlPayOrdersDto.getSettleAmt()), entity.getTradeAmt(), 4);
+                if (entity.getTrdProductDeals().size() == index) {
+                    settleAmt = orderAmt;
+                }
+                orderAmt = ArithmeticUtil.subtract(orderAmt, settleAmt);
+                stlPayOrdersDto.setSettleAmt(settleAmt);
                 stlPayOrdersDto.setOrderId(orderId);
                 List<StlPayOrdersDto> stlPayOrdersDtos = new ArrayList<>();
                 stlPayOrdersDtos.add(stlPayOrdersDto);
@@ -570,6 +584,7 @@ public class CfetsTrdConfirm001Service extends BaseService{
             }
 
         }
+        entity.setTrdProductDeals(listTemp);
        // 发送Murex接口处理
         this.sendMurex(entity, false);
         //无下行时，插入下行成交匹配关系.有下行时，手工匹配或自动匹配插入下行成交匹配表

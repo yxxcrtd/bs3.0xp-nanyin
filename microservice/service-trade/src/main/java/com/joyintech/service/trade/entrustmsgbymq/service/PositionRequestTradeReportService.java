@@ -387,23 +387,43 @@ public class PositionRequestTradeReportService {
                 ptlOffsetCash.put("secAmount", dto.getSecAmount());
                 ptlOffsetCashList.add(ptlOffsetCash);
             }
-            if(DictCodeListExt3.交易方向_正回购.getValue().equals(entity.getPs())){
+            if((DictCodeListExt3.交易方向_正回购.getValue().equals(entity.getPs())
+            || DictCodeListExt3.交易方向_中途换券.getValue().equals(entity.getPs()))
+                    && BussinessDictCodeList.金融产品类型_投管用_债券质押式正回购.getValue().equals(etrEntrust.getFinprodType2())){
                 Map<String, Object> ptlSec = new HashMap<>();
                 ptlSec.put("portfolioId", dto.getPortfolioId());
-                ptlSec.put("finprodId", entity.getFinDealPledge().getPledgeFinprodId());
                 ptlSec.put("secAcctId", dto.getSecAcctId());
                 ptlSec.put("tradeId", entity.getTradeId());
                 ptlSec.put("etrId", entity.getEntrustId());
                 // 融入券券面总额
                 ptlSec.put("integrateSecAmount", dto.getIntegrateSecAmount());
-                // 本方券券面总额
-                ptlSec.put("ownSecAmount", ArithmeticUtil.multiply(entity.getFinDealPledge().getPledgeNumber(), new BigDecimal(100)));
-                // 券面总额
-                ptlSec.put("secAmount", ArithmeticUtil.multiply(entity.getFinDealPledge().getPledgeNumber(), new BigDecimal(100)));
+                if(DictCodeListExt3.交易方向_中途换券.getValue().equals(entity.getPs())){
+                    List<FinPledgeDispDetailTemp> finPledgeDispDetailTemps = entity.getFinPledgeDispDetailTempList();
+                    if(!StringUtil.isEmptyList(finPledgeDispDetailTemps)){
+                        for(FinPledgeDispDetailTemp temp : finPledgeDispDetailTemps){
+                            if(DictCodeListExt3.质押券置换_置换方向_换入.getValue().equals(temp.getTradeType())){
+                                ptlSec.put("finprodId", temp.getFinprodId());
+                                // 本方券券面总额
+                                ptlSec.put("ownSecAmount", ArithmeticUtil.multiply(temp.getPledgeDisplaceAmt(), new BigDecimal(100)));
+                                // 券面总额
+                                ptlSec.put("secAmount", ArithmeticUtil.multiply(temp.getPledgeDisplaceAmt(), new BigDecimal(100)));
+                            }
+                        }
+                    }
+                }else{
+                    ptlSec.put("finprodId", entity.getFinDealPledge().getPledgeFinprodId());
+                    // 本方券券面总额
+                    ptlSec.put("ownSecAmount", ArithmeticUtil.multiply(entity.getFinDealPledge().getPledgeNumber(), new BigDecimal(100)));
+                    // 券面总额
+                    ptlSec.put("secAmount", ArithmeticUtil.multiply(entity.getFinDealPledge().getPledgeNumber(), new BigDecimal(100)));
+                }
                 ptlSecList.add(ptlSec);
             }
-            if(DictCodeListExt3.交易方向_解除质押.getValue().equals(entity.getPs())
-                    || DictCodeListExt3.交易方向_到期续做.getValue().equals(entity.getPs())){
+            if((DictCodeListExt3.交易方向_解除质押.getValue().equals(entity.getPs())
+                    || DictCodeListExt3.交易方向_到期续做.getValue().equals(entity.getPs())
+                    || DictCodeListExt3.交易方向_到期购回.getValue().equals(entity.getPs())
+                    || DictCodeListExt3.交易方向_提前购回.getValue().equals(entity.getPs()))
+                    && BussinessDictCodeList.金融产品类型_投管用_债券质押式正回购.getValue().equals(etrEntrust.getFinprodType2())){
                 Map<String, Object> ptlRelieveSec = new HashMap<>();
                 ptlRelieveSec.put("portfolioId", dto.getPortfolioId());
                 // ZGTFCP-1427:赋值质押品信息 modify by fuyongsheng 20220322 start

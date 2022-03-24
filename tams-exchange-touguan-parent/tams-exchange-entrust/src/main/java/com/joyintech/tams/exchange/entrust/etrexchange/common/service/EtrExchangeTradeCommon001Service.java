@@ -766,7 +766,6 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 				String decisionAct = 系统动作_修改.getValue();
 				String systemAct = 系统动作_修改.getValue();
 				EtrEntrust etrEntrust = etrEntrustBackupMapper.selectByPrimaryKey(entity.getEntrustId());
-//				EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(entity.getEntrustId());
 	            SysWflBusinessList sysBus=sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());
 	            if(null!=sysBus && StringUtil.equals(sysBus.getProcessState(),DictCodeList.流程状态_已退回.getValue())){
 	            	if(etrEntrust==null) {
@@ -779,23 +778,6 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	            		decisionAct = 系统动作_新建.getValue();
 	            	}
 	            }
-//            SysWflBusinessList sysBus=sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());
-//            if(null!=sysBus && StringUtil.equals(sysBus.getProcessState(),DictCodeList.流程状态_已退回.getValue())){
-//			systemAct = DictCodeListExt3.系统动作_修改.getValue();
-//            }
-//			if (StringUtil.equals(entity.getOptType(), ENTRUST_RECORD_MODIFY)) {
-//			decisionAct = DictCodeListExt3.系统动作_修改.getValue();
-//			}
-//				if (委托状态_已撤回.getValue().equals(entity.getEntrustStatus())) {
-//					systemAct = 系统动作_修改.getValue();
-//				}
-//				if (数据状态_修改中.getValue().equals(entity.getStatus())) {
-//					decisionAct = 系统动作_修改.getValue();
-//				}
-//				if(ENTRUST_RECORD_NEW.equals(entity.getOptType()) && !委托状态_已撤回.getValue().equals(entity.getEntrustStatus())) {
-//					systemAct = 系统动作_新建.getValue();
-//					decisionAct = 系统动作_新建.getValue();
-//				}
 				if(StringUtil.equals("1", RequestUtil.getParam("confirmOk"))){
 					entity.setSoftSkipMode("Y");
 				}
@@ -912,12 +894,6 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			systemAct = 系统动作_新建.getValue();
 			decisionAct = 系统动作_新建.getValue();
 		}
-//		if (委托状态_已撤回.getValue().equals(entity.getEntrustStatus())) {
-//			systemAct = 系统动作_修改.getValue();
-//		}
-//		if (数据状态_修改中.getValue().equals(entity.getStatus())) {
-//			decisionAct = 系统动作_修改.getValue();
-//		}
 		positionRequestService.sendEtrExchangeTradeSaveRequest(entity,decisionAct,systemAct);
 		//增加调用头寸引擎代码end
 	}
@@ -5330,6 +5306,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		etrExchangeTrade001Dto.setVdate(DateUtil.parse(DateUtil.format(dto.getEntrustDate(),DateUtil.DEFAULT_DATE_FORMAT_EN)));
 		etrExchangeTrade001Dto.setStockId(dto.getStockId());
 		etrExchangeTrade001Dto.setEntrustDate(DateUtil.parse(DateUtil.format(dto.getEntrustDate(),DateUtil.DEFAULT_DATE_FORMAT_EN)));
+		etrExchangeTrade001Dto.setOptType(dto.getOptType());
 		return etrExchangeTrade001Dto;
 	}
 
