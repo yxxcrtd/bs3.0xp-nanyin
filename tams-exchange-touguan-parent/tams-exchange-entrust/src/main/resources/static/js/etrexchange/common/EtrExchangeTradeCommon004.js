@@ -3155,9 +3155,6 @@
                 $("#targetType_div_" + currentTab).hide();
             }
 
-            if(ps == PS_T01 || ps == PS_T02){
-                $("#priceModel_div_" + currentTab).show();
-            }
             if (finprodType2 == FINPROD_TYPE_TG_F06) {
                 $("#priceModel_div_" + currentTab).show();
                 $("#entrustNumUnit_" + currentTab).text("份");
@@ -3227,6 +3224,11 @@
             linkEntrustNumUnit();
             if (ps == PS_T04 && finprodType2 == FINPROD_TYPE_TG_F10) {
                 $("#entrustPrice_" + currentTab).attr('disabled', 'disabled');
+            }
+
+            if(ps == PS_T01 || ps == PS_T02){
+                $("#priceModel_div_" + currentTab).show();
+                $("#acctNo_div_" + currentTab).hide();
             }
         }
     var addMinPriceStep = function (type, num, input) {
