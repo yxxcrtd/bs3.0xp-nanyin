@@ -527,6 +527,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 
 		if (null != dto.getEntrustId() && null != etrEntrustMapper.selectByPrimaryKey(dto.getEntrustId())) {
 			dto.setOptType(ENTRUST_RECORD_MODIFY);
+		}else{
+			dto.setOptType(ENTRUST_RECORD_NEW);
 		}
 		if (StringUtil.equals(dto.getOptType(), ENTRUST_RECORD_NEW)) {//
 			if (DictCodeListExt3.上农商_指令业务类型_股票竞价指令.getValue().equals(baseDto.getEntrustType())) {
