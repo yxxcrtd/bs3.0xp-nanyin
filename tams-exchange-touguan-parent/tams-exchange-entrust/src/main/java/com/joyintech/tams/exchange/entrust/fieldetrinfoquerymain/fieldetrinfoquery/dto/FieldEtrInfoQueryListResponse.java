@@ -216,6 +216,13 @@ public class FieldEtrInfoQueryListResponse extends EtrEntrust {
         return otherPs;
     }
 
+    public BigDecimal getEntrustAmt() {
+        if(StringUtils.equals(this.getBusiTypePosition(), DictCodeListExt3.投管业务类型_质押券出入库.getValue())){
+            return null;
+        }
+        return super.getEntrustAmt();
+    }
+
     public void setOtherPs(String otherPs) {
         this.otherPs = otherPs;
     }
