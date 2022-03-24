@@ -438,26 +438,31 @@ public class MonthReportAssetService {
 							!DictCodeListExt3.银行资本补充工具_其他银行资本补充工具.getValue().equals(chbAssetInfo.getBankCapital())) {
 						key5 = chbAssetInfo.getBankCapital();
 						key1 = null;
+						key2 = null;
 					}
 					//是否PPN等低流动性债券
 					else if(StringUtil.isNotEmpty(chbAssetInfo.getIsPpn()) && DictCodeList.是否_中债_是.getValue().equals(chbAssetInfo.getIsPpn())) {
 						key6 = chbAssetInfo.getIsPpn();
 						key1 = null;
+						key2 = null;
 					}
 					//是否商业银行优先股
 					else if(StringUtil.isNotEmpty(chbAssetInfo.getBankSecPrefer()) && DictCodeList.是否_中债_是.getValue().equals(chbAssetInfo.getBankSecPrefer())) {
 						key7 = chbAssetInfo.getBankSecPrefer();
 						key1 = null;
+						key2 = null;
 					}
 					//创业投资基金
 					else if(StringUtil.isNotEmpty(chbAssetInfo.getIsGovernFund()) && DictCodeList.是否_中债_是.getValue().equals(chbAssetInfo.getIsGovernFund())) {
 						key8 = chbAssetInfo.getIsGovernFund();
 						key1 = null;
+						key2 = null;
 					}
 					//是否未上市企业-政府出资产业投资基金
 					else if(StringUtil.isNotEmpty(chbAssetInfo.getIsunlisted()) && DictCodeList.是否_中债_是.getValue().equals(chbAssetInfo.getIsunlisted())) {
 						key9 = chbAssetInfo.getIsunlisted();
 						key1 = null;
+						key2 = null;
 					}
 					// 如果一条数据符合多个规则，则重复计算
 					if(key1 == null && (key5 != null || key6 != null || key7 != null || key8 != null || key9 != null)){
@@ -471,6 +476,7 @@ public class MonthReportAssetService {
 
 					if(supAssetInfo != null){
 						key4 = supAssetInfo.getAssetType2();
+						key2 = null;
 					}
 
 					mapping = chbTypeMappingService.getMappingBySrcField(InterfMappingConstants.MAPPINGCODE_SUBASSETTYPE,
