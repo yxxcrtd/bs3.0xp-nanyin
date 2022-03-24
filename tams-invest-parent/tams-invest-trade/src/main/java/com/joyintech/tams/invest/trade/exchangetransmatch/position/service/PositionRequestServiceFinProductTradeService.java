@@ -580,8 +580,8 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
                 }
             }else{
                 bean.setFinprodId(CollectionUtils.isNotEmpty(finDealPledges) ? finDealPledges.get(0).getPledgeFinprodId() : StringUtil.EMPTY);
-                bean.setSecAmount(ArithmeticUtil.multiply(dealEntity.getShareAmt(), new BigDecimal(100)));
-                bean.setOwnSecAmount(ArithmeticUtil.multiply(dealEntity.getShareAmt(), new BigDecimal(100)));
+                bean.setSecAmount(dealEntity.getShareAmt());
+                bean.setOwnSecAmount(dealEntity.getShareAmt());
             }
             Map<String, Object> map = BeanUtil.object2Map(bean);
             //融入券券面总额
