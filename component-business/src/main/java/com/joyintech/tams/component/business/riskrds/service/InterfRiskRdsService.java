@@ -954,7 +954,13 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                 infMap.put(IS_SYNC, BussinessDictCodeList.是否_是.getValue());
                 // add by zhangrui1 正反同步交易特殊处理 end
                 if(StringUtil.isNotEmpty(infMap.get(PageFieldToInterfFactory.INF_AMOUNT))) {
-                    infMap.put(PageFieldToInterfFactory.INF_TRADENUM, ArithmeticUtil.divide(new BigDecimal((String)infMap.get(PageFieldToInterfFactory.INF_AMOUNT)), new BigDecimal(100), 2));
+                    String amountStr = null;
+                    if (infMap.get(PageFieldToInterfFactory.INF_AMOUNT) instanceof BigDecimal){
+                        amountStr = infMap.get(PageFieldToInterfFactory.INF_AMOUNT).toString();
+                    }else{
+                        amountStr = (String)infMap.get(PageFieldToInterfFactory.INF_AMOUNT);
+                    }
+                    infMap.put(PageFieldToInterfFactory.INF_TRADENUM, ArithmeticUtil.divide(new BigDecimal(amountStr), new BigDecimal(100), 2));
                 }
                 result.add(infMap);
                 //股票
