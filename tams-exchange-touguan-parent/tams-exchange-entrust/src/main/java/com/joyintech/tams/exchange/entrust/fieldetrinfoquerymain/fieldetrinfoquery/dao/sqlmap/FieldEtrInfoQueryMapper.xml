@@ -35,10 +35,6 @@
         END AS otherPs,
         ETR_ENTRUST_ADD.BUSI_PS busiPs,
         ETR_ENTRUST.TRADE_MARKET tradeMarket,
-        <!--     decode(ETR_ENTRUST_ADD.ASSET_TYPE,'F01',NVL(ETR_ENTRUST.ENTRUST_NUM * 100,0),'F10',NVL(ETR_ENTRUST.ENTRUST_NUM *
-             100,0),NVL(ETR_ENTRUST.ENTRUST_AMT,ETR_ENTRUST.ENTRUST_NUM)) entrustAmt,
-             修改 债转股 时 金额为空
-             -->
         decode(
         btm.OUTPUT_VALUE_1,
         'EX004',
@@ -46,7 +42,6 @@
         decode(
         ETR_ENTRUST_ADD.ASSET_TYPE,
         'F01',
-        <!--NVL( ETR_ENTRUST.ENTRUST_NUM * 100, 0 ),-->
         NVL( ETR_ENTRUST.ENTRUST_NUM * ETR_ENTRUST.PRICE, 0 ),
         'F10',
         NVL( ETR_ENTRUST.ENTRUST_NUM * 100, 0 ),
@@ -105,11 +100,11 @@
         to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi:ss') transmitTime,
         to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi') transmitTimeSer,
         ETR_ENTRUST.PRICE_MODEL priceModel,
-        <!--     修改页面显示 资金账户：TRD_ACCT_ID ->账户名称：SEC_ACCT_NAME -->
         sci.ACCT_NAME trdAcctId,
         ETR_ENTRUST.ENTRUST_NUM entrustNum,
         ETR_ENTRUST_ADD.CALCULATE_FIELD calculateField,
-        mcpdata.COUNTER_NAME counterId
+        mcpdata.COUNTER_NAME counterId,
+        ETR_ENTRUST_ADD.TARGET_TYPE
         FROM (SELECT * FROM ETR_ENTRUST ORDER BY ENTRUST_DATE DESC) ETR_ENTRUST
         LEFT JOIN
         PTL_PORTFOLIO
@@ -270,8 +265,6 @@
         END AS otherPs,
         WFL_ETR_ENTRUST_ADD.BUSI_PS busiPs,
         WFL_ETR_ENTRUST.TRADE_MARKET tradeMarket,
-        <!--decode(WFL_ETR_ENTRUST_ADD.ASSET_TYPE,'F01',NVL(WFL_ETR_ENTRUST.ENTRUST_NUM * 100,0),'F10',NVL(WFL_ETR_ENTRUST.ENTRUST_NUM *
-        100,0),NVL(WFL_ETR_ENTRUST.ENTRUST_AMT,WFL_ETR_ENTRUST.ENTRUST_NUM)) entrustAmt,-->
         decode(
         btm.OUTPUT_VALUE_1,
         'EX004',
@@ -279,7 +272,6 @@
         decode(
         WFL_ETR_ENTRUST_ADD.ASSET_TYPE,
         'F01',
-        <!--NVL( WFL_ETR_ENTRUST.ENTRUST_NUM * 100, 0 ),-->
         NVL( WFL_ETR_ENTRUST.ENTRUST_NUM * WFL_ETR_ENTRUST.PRICE, 0 ),
         'F10',
         NVL( WFL_ETR_ENTRUST.ENTRUST_NUM * 100, 0 ),
@@ -341,7 +333,8 @@
         sci.ACCT_NAME trdAcctId,
         WFL_ETR_ENTRUST.ENTRUST_NUM entrustNum,
         WFL_ETR_ENTRUST_ADD.CALCULATE_FIELD calculateField,
-        mcpdata.COUNTER_NAME counterId
+        mcpdata.COUNTER_NAME counterId,
+        WFL_ETR_ENTRUST_ADD.TARGET_TYPE
         FROM (SELECT * FROM WFL_ETR_ENTRUST ORDER BY ENTRUST_DATE DESC) WFL_ETR_ENTRUST
         LEFT JOIN
         PTL_PORTFOLIO

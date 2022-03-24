@@ -48,6 +48,9 @@ public class FieldEtrInfoQueryListResponse extends EtrEntrust {
     @ApiModelProperty(name="otherPs",value="交易方向",example="买入")
     private String otherPs;
 
+    @ApiModelProperty(name="targetType",value="目标类型",example="A1")
+    private String targetType;
+
     @ApiModelProperty(name="busiPs",value="回购方向",example="回购/拆借方向")
     private String busiPs;
 
@@ -214,6 +217,14 @@ public class FieldEtrInfoQueryListResponse extends EtrEntrust {
             }
         }
         return otherPs;
+    }
+
+    public String getTargetType() {
+        return targetType;
+    }
+
+    public void setTargetType(String targetType) {
+        this.targetType = targetType;
     }
 
     public BigDecimal getEntrustAmt() {

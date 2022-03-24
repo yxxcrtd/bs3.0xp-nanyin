@@ -6,6 +6,7 @@
             resultType="com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTradeListResponse">
         SELECT * FROM (SELECT T.* FROM(
         SELECT
+        ETR_ENTRUST_ADD.TARGET_TYPE,
         #{effectFlag} effectFlag,
         ETR_ENTRUST_ADD.ASSET_TYPE1  assetType1,
         ETR_ENTRUST_ADD.ASSET_TYPE_10  assetType10,
