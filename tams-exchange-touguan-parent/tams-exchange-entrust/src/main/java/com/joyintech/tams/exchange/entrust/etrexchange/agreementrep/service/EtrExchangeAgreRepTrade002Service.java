@@ -66,6 +66,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.BindingResult;
 
@@ -180,10 +181,11 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
         pageParam.put("TRADE_PLACE_03", BussinessDictCodeList.交易场所_深圳证券交易所.getValue());
         pageParam.put("TRADE_PLACE_04", BussinessDictCodeList.交易场所_上海证券交易所.getValue());
         pageParam.put("A_001", DictCodeListExt3.资产类型_资产账户持仓.getValue());
-        Page<EtrExchangeAgreRepTrade002Dto> result = super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(), () -> etrExchangeAgreRepTradeMapper.findPositionsPage(pageParam));
-
-        if(!StringUtil.isEmptyList(result.getRoot())){
-            for(EtrExchangeAgreRepTrade002Dto entity : result.getRoot()){
+        //Page<EtrExchangeAgreRepTrade002Dto> result = super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(), () -> etrExchangeAgreRepTradeMapper.findPositionsPage(pageParam));
+        Page<EtrExchangeAgreRepTrade002Dto> result=new Page<>();
+        List<EtrExchangeAgreRepTrade002Dto> list=etrExchangeAgreRepTradeMapper.findPositionsPage(pageParam);
+        if(!CollectionUtils.isEmpty(list)){
+            for(EtrExchangeAgreRepTrade002Dto entity : list){
                 //可用数量
                 PositionCashSecDto secDto=new PositionCashSecDto();
                 BeanUtil.copyPropertiesIgnoreNull(secDto,entity);
@@ -194,8 +196,8 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
                 BigDecimal floatPlPercent = ArithmeticUtil.divide(entity.getFloatingPL(), ArithmeticUtil.multiply(entity.getPrice(),entity.getPtlPositionsNum()),2);
                 entity.setFloatingPLPercent(floatPlPercent);
             }
+            result.setRoot(list);
         }
-
         return result;
     }
 
