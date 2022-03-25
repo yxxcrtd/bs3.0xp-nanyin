@@ -527,6 +527,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 
 		if (null != dto.getEntrustId() && null != etrEntrustMapper.selectByPrimaryKey(dto.getEntrustId())) {
 			dto.setOptType(ENTRUST_RECORD_MODIFY);
+		}else{
+			dto.setOptType(ENTRUST_RECORD_NEW);
 		}
 		if (StringUtil.equals(dto.getOptType(), ENTRUST_RECORD_NEW)) {//
 			if (DictCodeListExt3.上农商_指令业务类型_股票竞价指令.getValue().equals(baseDto.getEntrustType())) {
@@ -4884,7 +4886,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		Map<String,Object> paramMap = new HashMap<String,Object>();
 		Map<String,Object> paramMap1 = new HashMap<String,Object>();
 		paramMap1.put("finprodId",finprodId);
-		paramMap1.put("portfolioId",map.get("portfolioId"));
+		//paramMap1.put("portfolioId",map.get("portfolioId"));
 		paramMap1.put("secAcctId",map.get("secAcctId"));
 		paramMap1.put("cDate",map.get("cDate"));
 //		paramMap1.put("cDate",StringUtil.isNotEmpty(map.get("cDate"))?DateUtil.parse(map.get("cDate").toString()):null);

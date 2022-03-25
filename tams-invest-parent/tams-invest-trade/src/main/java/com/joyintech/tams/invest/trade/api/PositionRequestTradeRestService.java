@@ -20,6 +20,7 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.position.service.CommonPositionEngineService;
+import com.joyintech.tams.invest.common.position.service.CommonPositionService;
 import com.joyintech.tams.invest.common.trade.dao.BaseAssetCashPositionCommMapper;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.common.trade.dto.PortfolioCalculateDto;
@@ -52,10 +53,10 @@ public class PositionRequestTradeRestService {
     private CommonPositionEngineService commonPositionEngineService;
 
     @Autowired
-    private BaseAssetCashPositionCommMapper baseAssetCashPositionCommMapper;
+    private CommonPositionService commonPositionService;
 
     @Autowired
-    private EtrEntrustMapper etrEntrustMapper;
+    private BaseAssetCashPositionCommMapper baseAssetCashPositionCommMapper;
 
     @Autowired
     private TrdProductDealAddMapper trdProductDealAddMapper;
@@ -77,13 +78,7 @@ public class PositionRequestTradeRestService {
             this.revoke(finProductTradeDto);
         }else if(DictCodeListExt1.交易流程状态_有效.getValue().equals(finProductTradeDto.getWorkflowStatus())){
             for (BaseTradeProductDealDto entity:finProductTradeDto.getBaseTradeProductDealDtos()) {
-                // ZGTFCP-1593:上市流通特殊处理 modify by fuyongsheng 20220323 start
-                if(DictCodeList.交易方向_上市流通.getValue().equals(entity.getTrdProductDeal().getPs())){
-                    this.sendSsltPositionHttpRequest(entity);
-                }else{
-                    this.sendPositionHttpRequest(entity);
-                }
-                // ZGTFCP-1593:上市流通特殊处理 modify by fuyongsheng 20220323 end
+                this.sendPositionHttpRequest(entity);
             }
         }
 
@@ -126,12 +121,18 @@ public class PositionRequestTradeRestService {
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("decisionAct", DictCodeListExt3.系统动作_新建.getValue());
         resultMap.put("systemAct", DictCodeListExt3.系统动作_新建.getValue());
+        String repoType = baseAssetCashPositionCommMapper.selectFundType(entity.getTrdProductDeal().getFinprodId());
+        entity.setAssetType2(repoType);
         this.setCommonField(entity, resultMap);
         String finprodType = entity.getTrdProductDeal().getFinprodType2();
         String type6 = commonPositionEngineService.getType6(entity.getTrdProductDeal().getFinprodId());
         if (DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue().equals(type6)
                 && DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(finprodType)) {
             finprodType += "-" + type6;
+        }
+        if (DictCodeList.回购类型_质押式协议回购.getValue().equals(repoType)
+                || (DictCodeList.回购类型_质押式竞价回购.getValue().equals(repoType))) {
+            finprodType += "-" + repoType;
         }
         logger.debug("【存续期查询头寸接口参数】finprodType:{},ps:{}", finprodType, entity.getTrdProductDeal().getPs());
         String interType = commonPositionEngineService.getPositionInterType(PositionConstant.POSITION_TYPE_TRD, TRADE_PLAT,
@@ -143,6 +144,8 @@ public class PositionRequestTradeRestService {
             this.stock001(entity, resultMap);
         }else if (PositionConstant.INTERF_TYPE_REPO003.equals(interType)) {
             this.repo003(entity, resultMap);
+        }else if (PositionConstant.INTERF_TYPE_REPO002.equals(interType)) {
+            this.repo002(entity, resultMap);
         }else if (PositionConstant.INTERF_TYPE_BOND002.equals(interType)) {
             this.bond002(entity, resultMap);
         }else if (PositionConstant.INTERF_TYPE_BOND003.equals(interType)) {
@@ -151,24 +154,49 @@ public class PositionRequestTradeRestService {
         if(StringUtil.isNotEmpty(resultMap.get(INTERFACE_TYPE))){
             PositionHttpRequest.send(resultMap);
         }else{
-            logger.debug("[未找到对应的接口配置]");
+            logger.debug("[存续期未找到对应的接口配置]");
+            // 债券的可转债申购上市流通、股票的红利再投上市流通需要调用上市流通专用接口
+            if(DictCodeList.交易方向_上市流通.getValue().equals(entity.getTrdProductDeal().getPs())){
+                this.sendSsltPositionHttpRequest(entity);
+            }
         }
     }
 
-    // ZGTFCP-1593:上市流通特殊处理 modify by fuyongsheng 20220323 start
     /**
-     * 发送上市流通接口
+     * 质押式协议回购-指令
+     *
      * @param entity
+     * @param resultMap
      */
-    public void sendSsltPositionHttpRequest(BaseTradeProductDealDto entity) {
-        logger.debug("【发送上市流通头寸请求】entity: {}", JSON.toJSONString(entity));
-        Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put("userId", LoginUserUtil.getUserName());
-        resultMap.put("totalTradeId", IDGenerator.generate());
-        resultMap.put("finprodId", entity.getTrdProductDeal().getFinprodId());
-        PositionHttpRequest.sendSslt(resultMap);
+    private void repo002(BaseTradeProductDealDto entity, Map<String, Object> resultMap) {
+        resultMap.put(INTERFACE_TYPE, PositionConstant.INTERF_TYPE_REPO002);
+        // 业务动作
+        resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_成交匹配.getValue());
+        // 清算速度
+        resultMap.put(SETTLE_SPEED, null);
+        // 结算方式
+        resultMap.put(DELIVERY_TYPE, null);
+        TrdProductDeal dealEntity = entity.getTrdProductDeal();
+        TrdProductDealAdd trdProductDealAdd = entity.getTrdProductDealAdd();
+        if(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(entity.getTrdProductDeal().getFinprodType2())){
+            resultMap.put("ps", DictCodeListExt3.交易方向_正回购.getValue());
+        } else {
+            resultMap.put("ps", DictCodeListExt3.交易方向_逆回购.getValue());
+        }
+        PositionRequestBaseBean bean;
+        // 首期组合现金数据集
+        List<Map<String, Object>> list = new ArrayList<>();
+        bean = new PositionRequestBaseBean();
+        bean.setPortfolioId(trdProductDealAdd.getPortfolioId());
+        bean.setSecAcctId(dealEntity.getSecManageAcctId());
+        bean.setCashAcctId(baseAssetCashPositionCommMapper.queryAccountNo(bean.getSecAcctId()));
+        bean.setTradeId(dealEntity.getTradeId());
+        bean.setEtrId(trdProductDealAdd.getEntrustId());
+        bean.setCashAmount(dealEntity.getTradeAmt());
+        list.add(BeanUtil.object2Map(bean));
+        resultMap.put("ptlCashList", list);
     }
-    // ZGTFCP-1593:上市流通特殊处理 modify by fuyongsheng 20220323 end
+
 
     /**
      * 基金-指令
@@ -247,15 +275,18 @@ public class PositionRequestTradeRestService {
         if(DictCodeList.交易方向_申购确认.getValue().equals(dealEntity.getPs())){
             resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_缴款.getValue());
             resultMap.put("bTotalTradeId", dealEntity.getbTradeId());
-        }else{
-            resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_成交匹配.getValue());
         }
-        if(DictCodeList.交易方向_还本到账.getValue().equals(dealEntity.getPs())){
-            resultMap.put("ps", DictCodeList.交易方向_还本);
-        }else if(DictCodeList.交易方向_收息到账.getValue().equals(dealEntity.getPs())){
-            resultMap.put("ps", DictCodeList.交易方向_收息);
-        }else{
-            resultMap.put("ps", dealEntity.getPs());
+        else if(DictCodeList.交易方向_上市流通.getValue().equals(dealEntity.getPs())){
+            resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_上市.getValue());
+            FinProductQuto finProductQuto = getFinProductQuto(dealEntity.getFinprodId(), dealEntity.getTradeDate());
+            // 只有配股的上市流通才有决策树,其余上市流通调上市流通专用接口
+            if(!DictCodeListExt2.交易方向_配股.getValue().equals(finProductQuto.getPs())){
+                resultMap.put(INTERFACE_TYPE, null);
+                return;
+            }
+        }
+        else{
+            resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_成交匹配.getValue());
         }
         // ZGTFCP-1635:修改申购确认相关字段赋值 modify by fuyongsheng 20220322 end
         // 清算速度
@@ -287,7 +318,7 @@ public class PositionRequestTradeRestService {
             ptlList.add(map);
             resultMap.put(PTL_LIST, ptlList);
             // 组合配股/新股申购数据集	ptlRoList
-            if (DictCodeListExt2.交易方向_配股.getValue().equals(ps) || DictCodeList.交易方向_申购.getValue().equals(ps)) {
+            if (DictCodeList.交易方向_上市流通.getValue().equals(ps)) {
                 List<Map<String, Object>> ptlRoList = new ArrayList<>();
                 bean = new PositionRequestBaseBean();
                 bean.setPortfolioId(dealAddEntity.getPortfolioId());
@@ -298,7 +329,7 @@ public class PositionRequestTradeRestService {
                 bean.setSecAmount(dealEntity.getShareAmt());
                 bean.setCashAcctId(accountNo);
                 // 配股/申购代码
-                bean.setFinprodId(getStockId(dealEntity.getEntrustId()));
+                bean.setFinprodId(getStockId(dealEntity.getFinprodId()));
                 bean.setCashAmount(dealEntity.getTradeAmt());
                 Map<String, Object> datamap = BeanUtil.object2Map(bean);
                 datamap.put("ownSecAmount", dealEntity.getShareAmt());
@@ -313,12 +344,21 @@ public class PositionRequestTradeRestService {
         }
     }
 
-    private String getStockId(String entrustId){
-        EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(entrustId);
-        if (StringUtil.isNotEmpty(etrEntrust)){
-            return etrEntrust.getStockId();
-        }
-        return null;
+    private String getStockId(String finprodId){
+        // 查询申报信息
+        Map<String, Object> map = new HashMap<>();
+        map.put("finprodId", finprodId);
+        map.put("othCodeType", DictCodeListExt3.金融产品其他代码类型_上市流通代码.getValue());
+        FinProductOthCode finProductOthCode = commonPositionService.selectFinProductOthCode(map);
+        return finProductOthCode != null ? finProductOthCode.getOthCode() : StringUtil.EMPTY;
+    }
+
+    private FinProductQuto getFinProductQuto(String finprodId, Date tradeDate){
+        Map<String, Object> map = new HashMap<>();
+        map.put("finprodId", finprodId);
+        map.put("othCodeType", DictCodeListExt3.金融产品其他代码类型_上市流通代码.getValue());
+        map.put("cdate", tradeDate);
+        return commonPositionService.selectFinProductQuto(map);
     }
 
     /**
@@ -484,7 +524,17 @@ public class PositionRequestTradeRestService {
         if(DictCodeList.交易方向_申购确认.getValue().equals(trdProductDeal.getPs())){
             resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_缴款.getValue());
             resultMap.put("bTotalTradeId", trdProductDeal.getbTradeId());
-        }else{
+        }
+        else if(DictCodeList.交易方向_上市流通.getValue().equals(trdProductDeal.getPs())){
+            resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_上市.getValue());
+            FinProductQuto finProductQuto = getFinProductQuto(trdProductDeal.getFinprodId(), trdProductDeal.getTradeDate());
+            // 只有配债的上市流通才有决策树,其余上市流通调上市流通专用接口
+            if(!DictCodeListExt3.交易方向_配债.getValue().equals(finProductQuto.getPs())){
+                resultMap.put(INTERFACE_TYPE, null);
+                return;
+            }
+        }
+        else{
             resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_成交匹配.getValue());
         }
         if(DictCodeList.交易方向_还本到账.getValue().equals(trdProductDeal.getPs())){
@@ -567,6 +617,8 @@ public class PositionRequestTradeRestService {
                 busiType = DictCodeListExt3.头寸业务类型_网上申购.getValue();
             }else if(DictCodeList.交易方向_行权_赎回.getValue().equals(ps)){
                 busiType = DictCodeListExt3.头寸业务类型_债券行权交易.getValue();
+            }else if(DictCodeList.交易方向_上市流通.getValue().equals(ps)){
+                busiType = DictCodeListExt3.头寸业务类型_上市流通.getValue();
             }else{
                 busiType = DictCodeListExt3.头寸业务类型_债券存续期交易.getValue();
             }
@@ -574,7 +626,7 @@ public class PositionRequestTradeRestService {
         if (DictCodeListExt1.金融产品类型_投管用_股票.getValue().equals(finprodType2)) {
             if(DictCodeList.交易方向_现金分红.getValue().equals(ps)){
                 busiType = DictCodeListExt3.头寸业务类型_股票分红.getValue();
-            }else if(DictCodeList.交易方向_红利再投.getValue().equals(ps)){
+            }else if(DictCodeList.交易方向_红利再投.getValue().equals(ps) || DictCodeList.交易方向_上市流通.getValue().equals(ps)){
                 busiType = DictCodeListExt3.头寸业务类型_股票送股.getValue();
             }else if(DictCodeList.交易方向_申购确认.getValue().equals(ps)){
                 busiType = DictCodeListExt3.头寸业务类型_网上申购.getValue();
@@ -585,8 +637,27 @@ public class PositionRequestTradeRestService {
         }
         if ((DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(finprodType2)
                 || DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(finprodType2))) {
-            busiType = DictCodeListExt3.头寸业务类型_通用回购到期.getValue();
+            if(DictCodeList.回购类型_质押式协议回购.getValue().equals(assetType2)){
+                busiType = DictCodeListExt3.头寸业务类型_协议回购到期购回.getValue();
+            }else{
+                busiType = DictCodeListExt3.头寸业务类型_通用回购到期.getValue();
+            }
         }
         return busiType;
     }
+
+    // ZGTFCP-1593:上市流通特殊处理 modify by fuyongsheng 20220323 start
+    /**
+     * 发送上市流通接口
+     * @param entity
+     */
+    public void sendSsltPositionHttpRequest(BaseTradeProductDealDto entity) {
+        logger.debug("【发送上市流通头寸请求】entity: {}", JSON.toJSONString(entity));
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("userId", LoginUserUtil.getUserName());
+        resultMap.put("totalTradeId", IDGenerator.generate());
+        resultMap.put("finprodId", entity.getTrdProductDeal().getFinprodId());
+        PositionHttpRequest.sendSslt(resultMap);
+    }
+    // ZGTFCP-1593:上市流通特殊处理 modify by fuyongsheng 20220323 end
 }

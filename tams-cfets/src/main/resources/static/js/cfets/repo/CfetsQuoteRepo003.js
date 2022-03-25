@@ -41,6 +41,9 @@
     var saveOrSubmitAction = function (operateType) {
         var object = $.serializeToObject('#submitForm', true);
         object.operateType = operateType;
+        if ($("#quotaPageModel").val() === 'new' || $("#quotaPageModel").val() === 'edit') {
+            object.operatorType = operateType;
+        }
         object.isDzh = 'Y';
         object.pageId = "CfetsQuoteRepo003";
         object.ptlAllocationList = table.getAllRows();//组合分配列表

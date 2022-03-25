@@ -7,6 +7,8 @@ import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.exchange.entrust.common.service.EtrExchangeCommonService;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.invest.entrust.etrautomanagementaccount.dto.EtrAutoManagementAccountDto;
 import com.joyintech.tams.invest.entrust.etrbondfirstlbidding.dto.EtrBondFirstLBiddingDto;
@@ -17,6 +19,8 @@ import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,11 +33,14 @@ import java.util.Map;
 public class ExchangeEntrustCreditHandlerAop {
 
     @Autowired
-    private EtrCommonService etrCommonService;
+    private EtrExchangeCommonService etrCommonService;
 
-    @Pointcut("execution(* com.joyintech.tams.exchange.entrust..*.*.check(..))")
+    private static Logger logger = LoggerFactory.getLogger(ExchangeEntrustCreditHandlerAop.class);
+
+
+    @Pointcut("execution(* com.joyintech.tams.exchange.entrust..*.*.checkSave(..))")
     protected void checkPoint(){
-
+        logger.info("----------委托指令check----------");
     }
 
     /**
@@ -41,7 +48,7 @@ public class ExchangeEntrustCreditHandlerAop {
      */
     @Pointcut("execution(* com.joyintech.tams.exchange.entrust..*.*.doUpdate(..))")
     protected void updatePoint() {
-
+        logger.info("----------委托指令update----------");
     }
 
     /**
@@ -106,12 +113,13 @@ public class ExchangeEntrustCreditHandlerAop {
                     ajaxResult.setErrorList(ar.getErrorList());
                 }
                 if (ar != null && StringUtil.isNotEmpty(ar.getData())){
-                    if (StringUtil.equals(ajaxResult.getData().toString(),"请确认是否要提交?")
-                            || StringUtil.equals(ajaxResult.getData().toString(),"请确认是否要保存?")){
-                        ajaxResult.setData(ar.getData());
-                    }else {
-                        ajaxResult.setData(ar.getData() + String.valueOf(ajaxResult.getData()));
-                    }
+                      ajaxResult.setData(ar.getData());
+//                    if (StringUtil.equals(ajaxResult.getData().toString(),"请确认是否要提交?")
+//                            || StringUtil.equals(ajaxResult.getData().toString(),"请确认是否要保存?")){
+//                        ajaxResult.setData(ar.getData());
+//                    }else {
+//                        ajaxResult.setData(ar.getData() + String.valueOf(ajaxResult.getData()));
+//                    }
                 }
             }
         }catch (Exception e){

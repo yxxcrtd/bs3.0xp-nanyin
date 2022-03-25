@@ -3,9 +3,6 @@ package com.joyintech.service.trade.manualsettle.service;
 import com.alibaba.fastjson.JSON;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.service.trade.entrustmsgbymq.dto.TrdTempDto;
-import com.joyintech.service.trade.entrustmsgbymq.service.PositionRequestTradeReportService;
-import com.joyintech.service.trade.entrustmsgbymq.service.TradePreClearingService;
 import com.joyintech.service.trade.manualsettle.dao.ManualSettleMapper;
 import com.joyintech.service.trade.manualsettle.dto.ManualSettleDto;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
@@ -44,9 +41,6 @@ public class PositionRequestManualSettleService {
 
     @Autowired
     private TrdProductTempDealMapper trdProductTempDealMapper;
-
-    @Autowired
-    private TrdProductTempDealAddMapper trdProductTempDealAddMapper;
 
     @Autowired
     private ManualSettleMapper manualSettleMapper;
@@ -109,7 +103,7 @@ public class PositionRequestManualSettleService {
         if(StringUtil.isNotEmpty(resultMap.get(INTERFACE_TYPE))){
             PositionHttpRequest.send(resultMap);
         }else{
-            logger.debug("[成交回报未找到对应的接口配置]");
+            logger.debug("[手工交收未找到对应的接口配置]");
         }
     }
 
@@ -347,7 +341,6 @@ public class PositionRequestManualSettleService {
         resultMap.put("cdate", entity.getSettleDate());
         resultMap.put("ccy", infContractDetailfile.getCcy());
 
-
         // 首期组合现金数据集
         if (DictCodeListExt3.交易方向_正回购.getValue().equals(infContractDetailfile.getPs())
                 // ZGTFCP-1417:添加逆回购方向 modify by fuyongsheng 20220321 start
@@ -355,11 +348,16 @@ public class PositionRequestManualSettleService {
                 // ZGTFCP-1417:添加逆回购方向 modify by fuyongsheng 20220321 end
                 || DictCodeListExt3.交易方向_首期.getValue().equals(infContractDetailfile.getPs())
                 || DictCodeListExt3.交易方向_提前购回.getValue().equals(infContractDetailfile.getPs())
-                || (DictCodeListExt3.交易方向_到期购回.getValue().equals(infContractDetailfile.getPs()))) {
+                || (DictCodeListExt3.交易方向_到期购回.getValue().equals(infContractDetailfile.getPs()))
+                || (DictCodeListExt3.交易方向_解除质押.getValue().equals(infContractDetailfile.getPs()))) {
             List<Map<String, Object>> list = new ArrayList<>(4);
             Map<String, Object> map = new HashMap<>();
             map.put("portfolioId", entity.getPortfolioId());
-            map.put("cashAcctId", infContractDetailfile.getAcctNo());
+            if(DictCodeListExt3.交易方向_解除质押.getValue().equals(infContractDetailfile.getPs())){
+                map.put("cashAcctId", getPtlCapAcctNo(infContractDetailfile));
+            }else{
+                map.put("cashAcctId", infContractDetailfile.getAcctNo());
+            }
             // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 start
             map.put("tradeId", entity.getTradeId());
             map.put("etrId", etrEntrust.getEntrustId());
@@ -394,26 +392,42 @@ public class PositionRequestManualSettleService {
 
         // 质押券数据集	ptlSecList
         // if (DictCodeListExt3.交易方向_解除质押.getValue().equals(infContractDetailfile.getPs())) {
-        if (DictCodeListExt3.交易方向_正回购.getValue().equals(infContractDetailfile.getPs())) {
+        if ((DictCodeListExt3.交易方向_正回购.getValue().equals(infContractDetailfile.getPs())
+            || DictCodeListExt3.交易方向_中途换券.getValue().equals(infContractDetailfile.getPs()))
+                && BussinessDictCodeList.金融产品类型_投管用_债券质押式正回购.getValue().equals(etrEntrust.getFinprodType2())) {
             List<Map<String, Object>> list = new ArrayList<>(4);
             Map<String, Object> map = new HashMap<>();
             map.put("portfolioId", entity.getPortfolioId());
-            map.put("finprodId", entity.getPledgeId());
             map.put("secAcctId", infContractDetailfile.getBondId());
             // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 start
             map.put("tradeId", entity.getTradeId());
             map.put("etrId", etrEntrust.getEntrustId());
             // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 end
             map.put("integrateSecAmount", new BigDecimal(0));
-            map.put("ownSecAmount", entity.getPledgeNumber().multiply(new BigDecimal(100)));
-            map.put("secAmount", entity.getPledgeNumber().multiply(new BigDecimal(100)));
+            if(DictCodeListExt3.交易方向_中途换券.getValue().equals(infContractDetailfile.getPs())){
+                FinPledgeDispDetailTemp temp = this.getFinPledgeDispDetailTemp(entity, DictCodeListExt3.质押券置换_置换方向_换入.getValue());
+                if(null != temp){
+                    map.put("finprodId", temp.getFinprodId());
+                    map.put("ownSecAmount", temp.getPledgeDisplaceAmt().multiply(new BigDecimal(100)));
+                    map.put("secAmount", temp.getPledgeDisplaceAmt().multiply(new BigDecimal(100)));
+                }
+            }else{
+                map.put("finprodId", entity.getPledgeId());
+                map.put("ownSecAmount", entity.getPledgeNumber().multiply(new BigDecimal(100)));
+                map.put("secAmount", entity.getPledgeNumber().multiply(new BigDecimal(100)));
+            }
             list.add(map);
             resultMap.put("ptlSecList", list);
         }
 
         // 解除质押券数据集	ptlRelieveSecList
-        if (DictCodeListExt3.交易方向_解除质押.getValue().equals(infContractDetailfile.getPs())
-                || DictCodeListExt3.交易方向_到期续做.getValue().equals(infContractDetailfile.getPs())) {
+        if ((DictCodeListExt3.交易方向_解除质押.getValue().equals(infContractDetailfile.getPs())
+                || DictCodeListExt3.交易方向_到期续做.getValue().equals(infContractDetailfile.getPs())
+                || DictCodeListExt3.交易方向_提前购回.getValue().equals(infContractDetailfile.getPs())
+                || DictCodeListExt3.交易方向_到期购回.getValue().equals(infContractDetailfile.getPs())
+                || DictCodeListExt3.交易方向_中途换券.getValue().equals(infContractDetailfile.getPs()))
+                && BussinessDictCodeList.金融产品类型_投管用_债券质押式正回购.getValue().equals(etrEntrust.getFinprodType2()))
+        {
             List<Map<String, Object>> list = new ArrayList<>(4);
             Map<String, Object> map = new HashMap<>();
             map.put("portfolioId", entity.getPortfolioId());
@@ -427,9 +441,25 @@ public class PositionRequestManualSettleService {
             if(DictCodeListExt3.交易方向_解除质押.getValue().equals(infContractDetailfile.getPs())){
                 map.put("ownSecAmount", entity.getPledgeNumber().multiply(new BigDecimal(100)));
                 map.put("secAmount", entity.getPledgeNumber().multiply(new BigDecimal(100)));
+            }else if(DictCodeListExt3.交易方向_中途换券.getValue().equals(infContractDetailfile.getPs())){
+                FinPledgeDispDetailTemp temp = this.getFinPledgeDispDetailTemp(entity, DictCodeListExt3.质押券置换_置换方向_换出.getValue());
+                if(null != temp){
+                    map.put("finprodId", temp.getFinprodId());
+                    map.put("ownSecAmount", temp.getPledgeDisplaceAmt().multiply(new BigDecimal(100)));
+                    map.put("secAmount", temp.getPledgeDisplaceAmt().multiply(new BigDecimal(100)));
+                }
             }else {
-                map.put("ownSecAmount", entity.getPledgeNumber());
-                map.put("secAmount", entity.getPledgeNumber());
+                // 获取首期质押券信息
+                String firstFTradeId = infContractDetailfile.getvTradeId();
+                if(!StringUtil.isEmpty(etrEntrustAdd.getTradeId())){
+                    firstFTradeId = etrEntrustAdd.getTradeId();
+                }
+                FinDealPledge finDealPledge = trdCommonBaseService.getSqFinDealPledge(entity.getPortfolioId(), firstFTradeId);
+                if(null != finDealPledge){
+                    map.put("finprodId", finDealPledge.getPledgeFinprodId());
+                    map.put("ownSecAmount", finDealPledge.getPledgeNumber());
+                    map.put("secAmount", finDealPledge.getPledgeNumber());
+                }
             }
             list.add(map);
             resultMap.put("ptlRelieveSecList", list);
@@ -470,5 +500,39 @@ public class PositionRequestManualSettleService {
         resultMap.put("balanceCheck", "N");
         resultMap.put("flowStatus", DictCodeListExt3.流程节点_审批生效.getValue());
         resultMap.put("modelType", DictCodeListExt1.子系统代码_交易.getValue());
+    }
+
+    /**
+     * 查询产品托管户
+     * @param infContractDetailfile
+     * @return
+     */
+    private String getPtlCapAcctNo(InfContractDetailfile infContractDetailfile){
+        Map<String, Object> map = new HashMap<>();
+        map.put("portfolioId", infContractDetailfile.getPortfolioId());
+        map.put("ccy", infContractDetailfile.getCcy());
+        map.put("acctType", BussinessDictCodeList.资金账户类型_托管账户.getValue());
+        PtlCapacctInfo ptlCapacctInfo = trdCommonBaseService.getPtlCapAcctInfo(map);
+        return ptlCapacctInfo != null ? ptlCapacctInfo.getAcctNo() : StringUtil.EMPTY;
+    }
+
+    /**
+     * 查询换入换出质押券
+     * @param entity
+     * @param tradeType
+     * @return
+     */
+    private FinPledgeDispDetailTemp getFinPledgeDispDetailTemp(ManualSettleDto entity, String tradeType){
+        Map<String, Object> map = new HashMap<>();
+        map.put("tradeId", entity.getTradeId());
+        List<FinPledgeDispDetailTemp> finPledgeDispDetailTemps = trdCommonBaseService.getFinPledgeDispDetailTemps(map);
+        if(!StringUtil.isEmptyList(finPledgeDispDetailTemps)){
+            for(FinPledgeDispDetailTemp finPledgeDispDetailTemp : finPledgeDispDetailTemps){
+                if(tradeType.equals(finPledgeDispDetailTemp.getTradeType())){
+                    return finPledgeDispDetailTemp;
+                }
+            }
+        }
+        return null;
     }
 }

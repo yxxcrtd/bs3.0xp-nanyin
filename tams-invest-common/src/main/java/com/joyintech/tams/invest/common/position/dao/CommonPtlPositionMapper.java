@@ -75,4 +75,8 @@ public interface CommonPtlPositionMapper {
 	// GZYHTZJY-1145: 【场内对账清结算1231】深交所协议回购首期交易，日终头寸更新有误【解决日期：2022-01-14】】
 	String selectHoldInvAim(Map<String, Object> param);
 	// add by etliu 20220116 end
+
+	FinProductOthCode selectFinProductOthCode(Map<String, Object> map);
+
+	FinProductQuto selectFinProductQuto(Map<String, Object> map);
 }

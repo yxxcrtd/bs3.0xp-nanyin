@@ -649,4 +649,12 @@ public class CommonPositionService {
 	public String getFinTradeProduct(String tradeId) {
 		return commonPtlPositionMapper.getFinTradeProduct(tradeId);
 	}
+
+	public FinProductOthCode selectFinProductOthCode(Map<String, Object> map){
+		return commonPtlPositionMapper.selectFinProductOthCode(map);
+	}
+
+	public FinProductQuto selectFinProductQuto(Map<String, Object> map){
+		return commonPtlPositionMapper.selectFinProductQuto(map);
+	}
 }

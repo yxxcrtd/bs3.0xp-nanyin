@@ -140,6 +140,9 @@ public class TrdCommonBaseService extends BaseService {
 
     @Autowired
     private EtrEntrustMapper etrEntrustMapper;
+
+    @Autowired
+    private EtrEntrustAddMapper etrEntrustAddMapper;
     /**
      * 查询产品登记编码
      *
@@ -1365,4 +1368,31 @@ public class TrdCommonBaseService extends BaseService {
         logger.debug("【组合计算分配结果】portfolioDtos: {}", JSON.toJSONString(portfolioDtos));
         return portfolioDtos;
     }
+
+    public PtlCapacctInfo getPtlCapAcctInfo(Map<String, Object> map){
+        return  trdCommonBaseMapper.getPtlCapAcctInfo(map);
+    }
+
+    public List<FinPledgeDispDetailTemp> getFinPledgeDispDetailTemps(Map<String, Object> map){
+        return  trdCommonBaseMapper.getFinPledgeDispDetailTemps(map);
+    }
+
+    /**
+     * 查询首期质押券信息
+     * @param portfolioId
+     * @param firstFTradeId
+     * @return
+     */
+    public FinDealPledge getSqFinDealPledge(String portfolioId, String firstFTradeId){
+        String hgsqFinprodId = selectHgsqFinprodId(portfolioId, firstFTradeId);
+        if (StringUtil.isNotBlank(hgsqFinprodId)) {
+            // 质押券信息
+            FinDealPledgeKey finDealPledgeKey = new FinDealPledgeKey();
+            finDealPledgeKey.setFinprodId(hgsqFinprodId);
+            finDealPledgeKey.setBranch(0L);
+            return trdCommonBaseMapper.selectFinDealPledgeByPrimaryKey(finDealPledgeKey);
+        }
+        return null;
+    }
+
 }

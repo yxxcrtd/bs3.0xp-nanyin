@@ -735,17 +735,17 @@
             if (finprodType2 == FINPROD_TYPE_TG_F06 || finprodType2 == FINPROD_TYPE_TG_F10) {
                 if (ps == PS_T01) {
                     //return parent.EtrExchangeTradeJjHq.getJJMktPrice("#limitUp_jj");
-                    return jJHQXX.highest;
+                    return jJHQXX.ceiling.toFixed(2);
                 } else if (ps == PS_T02) {
                     //return parent.EtrExchangeTradeJjHq.getJJMktPrice("#limitDown_jj");
-                    return jJHQXX.lowest;
+                    return jJHQXX.ceiling.toFixed(2);
                 } else {
                     //return parent.EtrExchangeTradeJjHq.getJJMktPrice("#latestPrice_jj");
-                    return jJHQXX.ceiling;
+                    return jJHQXX.ceiling.toFixed(2);
                 }
             } else {
                 //return parent.EtrExchangeTradeJjHq.getJJMktPrice("#latestPrice_jj");
-                return jJHQXX.latest;
+                return jJHQXX.ceiling.toFixed(2);
             }
         } else if (currentTab == "dz") {
             var secId = $("#secId_" + currentTab).val();
@@ -2081,6 +2081,10 @@
                     $("#entrustPrice_label_" + currentTab).text("折算率").append($star.clone());
                     $("#entrustNum_label_" + currentTab).text("指令数量").append($star.clone());
                     $("#entrustAmt_label_" + currentTab).text("标准券数量").append($star.clone());
+
+                    var entrustAmt = $("#entrustAmt_" + currentTab).val();
+                    $("#entrustAmt_" + currentTab).val(Math.floor(new Number(entrustAmt)));
+
                     $("#entrustPriceUnit_" + currentTab).text("%");
                     $("#entrustAmtUnit_" + currentTab).text("张");
                 }
@@ -2090,6 +2094,10 @@
                     $("#entrustPrice_label_" + currentTab).text("回购利率").append($star.clone());
                     $("#entrustNum_label_" + currentTab).text("标准券数量").append($star.clone());
                     $("#entrustAmt_label_" + currentTab).text("回购金额").append($star.clone());
+
+                    var entrustAmt = $("#entrustAmt_" + currentTab).val();
+                    $("#entrustAmt_" + currentTab).val(Math.floor(new Number(entrustAmt)));
+
                     $("#entrustPriceUnit_" + currentTab).text("%");
                     $("#entrustAmtUnit_" + currentTab).text("元");
                 } else {
@@ -2216,7 +2224,14 @@
                                 disabled: false
                             });
                         }*/
-            else {
+            else if(finprodType2 == FINPROD_TYPE_TG_F10){
+                $("#priceModel_" + currentTab).updateChosenArr({
+                    item: [PRICE_MODEL_PRM10, PRICE_MODEL_PRM02, PRICE_MODEL_PRM03],
+                    chosen: $("#priceModel_" + currentTab).val(),
+                    disabled: false,
+                    isNotTrigger: true
+                });
+            }else {
                 // 画面.价格模式  = 数据字典.价格模式.限价指令，数据字典.价格模式.市价指令
                 $("#priceModel_" + currentTab).updateChosenArr({
                     item: [PRICE_MODEL_PRM02, PRICE_MODEL_PRM03],
@@ -2401,14 +2416,23 @@
                     }
                 }
             }
+
+            var finprodType2 = $("#finprodType2_" + currentTab).val();
+            var ps = $("#ps_" + currentTab).val();
             //债券交易数量单位 add by yeming 20210729 start
-            if (bond_traded_unit == '02' && $("#finprodType2_" + currentTab).val() == FINPROD_TYPE_TG_F01 && isStandardPs($("#ps_" + currentTab).val())) {
+            if (bond_traded_unit == '02' && finprodType2 == FINPROD_TYPE_TG_F01 && isStandardPs(ps)) {
                 result.entrustNum = JoyinMath.doDiv(result.entrustNum, 10, 0, JoyinMath.ROUND_DOWN);//转成手配置
             }
             //债券交易数量单位 add by yeming 20210729 end
             // modify by etliu 20210901 start
             if (result.entrustAmt) {
-                $("#entrustAmt_" + currentTab).val(result.entrustAmt).trigger('blur');
+                var entrustAmt = result.entrustAmt;
+                if ((finprodType2 == FINPROD_TYPE_TG_F01 || finprodType2 == FINPROD_TYPE_TG_ZYSHG) && (ps == PS_T68 || ps == PS_T69)) {
+                    entrustAmt = Math.floor(new Number(entrustAmt));
+                    $("#entrustAmt_" + currentTab).val(entrustAmt);
+                }else{
+                    $("#entrustAmt_" + currentTab).val(entrustAmt).trigger('blur');
+                }
             } else if ($("#priceModel_" + currentTab).val() == PRICE_MODEL_PRM03) {
                 $("#entrustAmt_" + currentTab).val(0).trigger('blur');
             }
@@ -3535,14 +3559,6 @@
                     });
                     return ;
                 }
-                var tradeMarket = $("#tradeMarket_" + currentTab).val();
-                var res = parseFloat(value) % 10;
-                if (tradeMarket == '03' && res != 0 ){
-                    Joyin.error("交易场所为上交所时，组合分配指令数量需满足最小交易单位10的整数倍！",function(){
-                        dateTable.renderRow(data.LAY_TABLE_INDEX, {"entrustNum": 0});
-                    });
-                    return ;
-                }
                 var datas = dateTable.getAllRows();
                 if (datas){
                     var entrustNum = Number(0)
@@ -3565,6 +3581,8 @@
                 if (array.length > 0) {
                     if (array[0].ps == PS_T68 || array[0].ps == PS_T69) {
                         $("#entrustAmout_total_label").text("标准券数量");
+                        var entrustAmt = $("#entrustAmt_" + currentTab).val();
+                        $("#entrustAmt_" + currentTab).val(Math.floor(new Number(entrustAmt)));
                     } else {
                         $("#entrustAmout_total_label").text("指令金额");
                     }
@@ -3632,14 +3650,6 @@
         var entrustNum = $("#entrustNum_" + currentTab).val();
         if (parseFloat(entrustNum) < 0){
             Joyin.error("指令数量不能为负数！",function(){
-                $("#entrustNum_" + currentTab).val(0)
-            });
-            return ;
-        }
-        var tradeMarket = $("#tradeMarket_" + currentTab).val();
-        var res = parseFloat(entrustNum) % 10;
-        if (tradeMarket == '03' && res != 0 ){
-            Joyin.error("交易场所为上交所时，组合分配指令数量需满足最小交易单位10的整数倍！",function(){
                 $("#entrustNum_" + currentTab).val(0)
             });
             return ;
@@ -4202,6 +4212,12 @@
         //绑定风险是算
         $('#EtrExchangeTradeCommon004_btn_riskcal').click(function () {
             var object = getSearchParams();
+            var tradeMarket = $("#tradeMarket_" + currentTab).val();
+            var res = parseFloat(object.entrustNum) % 10;
+            if (tradeMarket == '03' && res != 0 ){
+                Joyin.error("组合分配指令数量需满足最小交易单位10的整数倍！" );
+                return ;
+            }
             var param = JSON.parse(JSON.stringify(object))
             Joyin.ajaxJson(basePath + '/etrexchange/common/etrExchangeTradeCommonRiskcal/doRiskcal', param, function (data) {
                 $("#riskTrialSpan").html("&nbsp;&nbsp;" + data.data.data.riskTrialSpan);

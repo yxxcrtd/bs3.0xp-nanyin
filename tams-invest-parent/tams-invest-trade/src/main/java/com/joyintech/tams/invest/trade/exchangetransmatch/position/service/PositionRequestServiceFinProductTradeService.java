@@ -503,14 +503,13 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
 //        resultMap.put("tradePlace", null);
         TrdProductDeal dealEntity = entity.getTrdProductDeal();
         TrdProductDealAdd trdProductDealAdd = entity.getTrdProductDealAdd();
-        List<StlPayOrdersDto> stlPayOrdersList = entity.getStlPayOrdersList();
         List<FinDealPledge> finDealPledges = exchangeTransMatchCommonMapper.getFinDealPledge(dealEntity.getTradeId());
         EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(trdProductDealAdd.getEntrustId());
         String ps = etrEntrust.getPs();
          // resultMap.put("ps", dealEntity.getPs());
         // ZGTFCP-1042: add by fuyongsheng 20220315 start
         // 协议回购特殊处理,需传正回购/逆回购
-        if(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(entity.getTrdProductDeal().getFinprodType2())){
+        if(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(etrEntrust.getFinprodType2())){
             resultMap.put("ps", DictCodeListExt3.交易方向_正回购.getValue());
         } else {
             resultMap.put("ps", DictCodeListExt3.交易方向_逆回购.getValue());
@@ -522,12 +521,17 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
                 || DictCodeListExt3.交易方向_逆回购.getValue().equals(ps)
                 || DictCodeListExt3.交易方向_首期.getValue().equals(ps)
                 || DictCodeListExt3.交易方向_提前购回.getValue().equals(ps)
-                || (DictCodeListExt3.交易方向_到期购回.getValue().equals(ps))) {
+                || (DictCodeListExt3.交易方向_到期购回.getValue().equals(ps))
+                || (DictCodeListExt3.交易方向_解除质押.getValue().equals(ps))) {
             List<Map<String, Object>> list = new ArrayList<>();
             bean = new PositionRequestBaseBean();
             bean.setPortfolioId(trdProductDealAdd.getPortfolioId());
             bean.setSecAcctId(dealEntity.getSecManageAcctId());
-            bean.setCashAcctId(exchangeTransMatchCommonMapper.queryAccountNo(bean.getSecAcctId()));
+            if(DictCodeListExt3.交易方向_解除质押.getValue().equals(ps)){
+                bean.setCashAcctId(this.getPtlCapAcctNo(entity));
+            }else{
+                bean.setCashAcctId(exchangeTransMatchCommonMapper.queryAccountNo(bean.getSecAcctId()));
+            }
             bean.setTradeId(dealEntity.getTradeId());
             bean.setEtrId(trdProductDealAdd.getEntrustId());
             bean.setCashAmount(dealEntity.getTradeAmt());
@@ -565,19 +569,14 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
             bean.setTradeId(dealEntity.getTradeId());
             bean.setEtrId(entity.getEntrustId());
             if(DictCodeListExt3.交易方向_中途换券.getValue().equals(ps)){
-                Map<String, Object> paraMap = new HashMap<>();
-                paraMap.put("tradeId", entity.getTrdFinProductDealTotal().getTotleTradeId());
-                paraMap.put("branch", 0);
-                List<FinPledgeDisplaceResult> resultList = exchangeTransMatchCommonMapper.getFinPledgeDisplaceResult(paraMap);
-                if(CollectionUtils.isNotEmpty(resultList)){
-                    for(FinPledgeDisplaceResult temp : resultList){
-                        if(DictCodeListExt3.质押券置换_置换结果_置换后.getValue().equals(temp.getResultType())){
-                            bean.setFinprodId(temp.getFinprodId());
-                            bean.setSecAmount(ArithmeticUtil.multiply(temp.getPledgeAmt(), new BigDecimal(100)));
-                            bean.setOwnSecAmount(ArithmeticUtil.multiply(temp.getPledgeAmt(), new BigDecimal(100)));
-                        }
-                    }
+                // ZGTFCP-1805:修改中途换券字段赋值 modify by fuyongsheng 20220324 start
+                FinPledgeDisplaceResult temp = this.getFinPledgeDisplaceResult(entity, DictCodeListExt3.质押券置换_置换结果_置换后.getValue());
+                if(null != temp){
+                    bean.setFinprodId(temp.getFinprodId());
+                    bean.setSecAmount(ArithmeticUtil.multiply(temp.getPledgeAmt(), new BigDecimal(100)));
+                    bean.setOwnSecAmount(ArithmeticUtil.multiply(temp.getPledgeAmt(), new BigDecimal(100)));
                 }
+                // ZGTFCP-1805:修改中途换券字段赋值 modify by fuyongsheng 20220324 end
             }else{
                 bean.setFinprodId(CollectionUtils.isNotEmpty(finDealPledges) ? finDealPledges.get(0).getPledgeFinprodId() : StringUtil.EMPTY);
                 bean.setSecAmount(ArithmeticUtil.multiply(finDealPledges.get(0).getPledgeNumber(), new BigDecimal(100)));
@@ -590,12 +589,14 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
             resultMap.put("ptlSecList", list);
         }
         // 解除质押券数据集	ptlRelieveSecList
-        if (DictCodeListExt3.交易方向_解除质押.getValue().equals(ps)
+        if ((DictCodeListExt3.交易方向_解除质押.getValue().equals(ps)
                 // ZGTFCP-1753:到期续做不传 modify by fuyongsheng 20220324 start
                 // || DictCodeListExt3.交易方向_到期续做.getValue().equals(ps)
                 // ZGTFCP-1753:到期续做不传 modify by fuyongsheng 20220324 end
                 || DictCodeListExt3.交易方向_提前购回.getValue().equals(ps)
-                || DictCodeListExt3.交易方向_到期购回.getValue().equals(ps)) {
+                || DictCodeListExt3.交易方向_到期购回.getValue().equals(ps)
+                || DictCodeListExt3.交易方向_中途换券.getValue().equals(ps))
+                && BussinessDictCodeList.金融产品类型_投管用_债券质押式正回购.getValue().equals(etrEntrust.getFinprodType2())) {
             List<Map<String, Object>> list = new ArrayList<>();
             bean = new PositionRequestBaseBean();
             bean.setPortfolioId(trdProductDealAdd.getPortfolioId());
@@ -607,6 +608,13 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
                 bean.setFinprodId(CollectionUtils.isNotEmpty(finDealPledges) ? finDealPledges.get(0).getPledgeFinprodId() : StringUtil.EMPTY);
                 bean.setSecAmount(ArithmeticUtil.multiply(finDealPledges.get(0).getPledgeNumber(), new BigDecimal(100)));
                 bean.setOwnSecAmount(ArithmeticUtil.multiply(finDealPledges.get(0).getPledgeNumber(), new BigDecimal(100)));
+            }else if(DictCodeListExt3.交易方向_中途换券.getValue().equals(ps)){
+                FinPledgeDisplaceResult temp = this.getFinPledgeDisplaceResult(entity, DictCodeListExt3.质押券置换_置换结果_置换前.getValue());
+                if(null != temp){
+                    bean.setFinprodId(temp.getFinprodId());
+                    bean.setSecAmount(ArithmeticUtil.multiply(temp.getPledgeAmt(), new BigDecimal(100)));
+                    bean.setOwnSecAmount(ArithmeticUtil.multiply(temp.getPledgeAmt(), new BigDecimal(100)));
+                }
             }else{
                 // 获取首期质押券信息
                 FinDealPledge finDealPledge = getSqFinDealPledge(trdProductDealAdd);
@@ -722,14 +730,6 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
         }
     }
 
-    private String getStockId(String entrustId){
-        EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(entrustId);
-        if (StringUtil.isNotEmpty(etrEntrust)){
-            return etrEntrust.getStockId();
-        }
-        return null;
-    }
-
     /**
      * 设置公共字段
      *
@@ -806,5 +806,34 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
             return exchangeTransMatchCommonMapper.selectFinDealPledgeByPrimaryKey(finDealPledgeKey);
         }
         return null;
+    }
+
+    private FinPledgeDisplaceResult getFinPledgeDisplaceResult(BaseTradeProductDealDto entity, String resultType){
+        Map<String, Object> paraMap = new HashMap<>();
+        paraMap.put("tradeId", entity.getTrdFinProductDealTotal().getTotleTradeId());
+        paraMap.put("branch", 0);
+        List<FinPledgeDisplaceResult> resultList = exchangeTransMatchCommonMapper.getFinPledgeDisplaceResult(paraMap);
+        if(CollectionUtils.isNotEmpty(resultList)){
+            for(FinPledgeDisplaceResult temp : resultList){
+                if(resultType.equals(temp.getResultType())){
+                    return temp;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 查询产品托管户
+     * @param entity
+     * @return
+     */
+    private String getPtlCapAcctNo(BaseTradeProductDealDto entity){
+        Map<String, Object> map = new HashMap<>();
+        map.put("portfolioId", entity.getTrdProductDealAdd().getPortfolioId());
+        map.put("ccy", entity.getTrdProductDeal().getCcy());
+        map.put("acctType", BussinessDictCodeList.资金账户类型_托管账户.getValue());
+        PtlCapacctInfo ptlCapacctInfo = trdCommonBaseService.getPtlCapAcctInfo(map);
+        return ptlCapacctInfo != null ? ptlCapacctInfo.getAcctNo() : StringUtil.EMPTY;
     }
 }

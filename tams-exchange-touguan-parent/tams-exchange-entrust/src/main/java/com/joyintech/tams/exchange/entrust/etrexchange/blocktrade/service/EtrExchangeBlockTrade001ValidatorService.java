@@ -20,6 +20,7 @@ import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.common.base.entity.WflEtrEntrust;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.exchange.entrust.common.validator.EtrExchangeCommonValidator;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.SubEqutityDto;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
@@ -45,7 +46,7 @@ import java.util.Map;
  * @since 1.0
  */
 @Service
-public class EtrExchangeBlockTrade001ValidatorService implements EtrCommonValidator {
+public class EtrExchangeBlockTrade001ValidatorService implements EtrExchangeCommonValidator {
 
 	@Autowired
 	EtrExchangeTradeCommon001Service etrExchangeTrade001Service;

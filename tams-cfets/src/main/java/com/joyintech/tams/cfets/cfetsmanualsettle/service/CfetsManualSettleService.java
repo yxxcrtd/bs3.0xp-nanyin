@@ -305,6 +305,9 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
         //调用【成交确认明细查询】
         List<TrdBankManualSetDetail> listTrdBnakSetDetails = new ArrayList<TrdBankManualSetDetail>();
         List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleDto.getTradeId());
+        if (CollectionUtils.isEmpty(listTemp)) {
+            listTemp = cfetsManualSettleMapper.getTempDealDetailsByTradeId(cfetsManualSettleDto.getTradeId());
+        }
         for(CfetsManualSettleDealInfo cfetsManualSettleDealInfo : listTemp) {
             //银行间手工交收明细Entiy
             TrdBankManualSetDetail trdBankManualSetDetail = new TrdBankManualSetDetail();
@@ -456,6 +459,9 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
         if(StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_回溯.getValue()) || StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收.getValue()) ||
                StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收修改.getValue())|| StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收失败.getValue())){
             List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId());
+            if (CollectionUtils.isEmpty(listTemp)) {
+                listTemp = cfetsManualSettleMapper.getTempDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId());
+            }
             for(CfetsManualSettleDealInfo dto : listTemp) {
                 PositionRulePtlData positionRulePtlData = new PositionRulePtlData();
                 positionRulePtlData.setPortfolioId(dto.getPortfolioId());
@@ -568,6 +574,9 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
         if(StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_回溯.getValue()) || StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收.getValue())
            ||StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收修改.getValue()) || StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收失败.getValue())){
             List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId());
+            if (CollectionUtils.isEmpty(listTemp)) {
+                listTemp = cfetsManualSettleMapper.getTempDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId());
+            }
             for(CfetsManualSettleDealInfo dto : listTemp) {
                 CfetsEtrIbRepoPosPortfolioCashRequest posport = new CfetsEtrIbRepoPosPortfolioCashRequest();
                 posport.setPortfolioId(dto.getPortfolioId());
@@ -684,12 +693,27 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
     @Override
     public void doBack(CfetsManualSettleDto entity) {
         if (StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收.getValue())) {
-            //处理业务数据
-            List<CfetsManualSettleInsertDto> insertDtoLists = handleSettleData(entity);
-            //插入银行间手工交收相关表
-            for (CfetsManualSettleInsertDto cfetsManualSettleInsertDto : insertDtoLists) {
-                deletePosition(cfetsManualSettleInsertDto);
+            if (StringUtil.equals(entity.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
+                if (!(StringUtil.equals(entity.getPs(), DictCodeList.交易方向_买入.getValue())
+                        || StringUtil.equals(entity.getPs(), DictCodeList.交易方向_卖出.getValue())
+                        || StringUtil.equals(entity.getPs(), DictCodeList.交易方向_行权_回售.getValue())
+                )) {
+                    //处理业务数据
+                    List<CfetsManualSettleInsertDto> insertDtoLists = handleSettleData(entity);
+                    //插入银行间手工交收相关表
+                    for (CfetsManualSettleInsertDto cfetsManualSettleInsertDto : insertDtoLists) {
+                        deletePosition(cfetsManualSettleInsertDto);
+                    }
+                }
+            }else{
+                //处理业务数据
+                List<CfetsManualSettleInsertDto> insertDtoLists = handleSettleData(entity);
+                //插入银行间手工交收相关表
+                for (CfetsManualSettleInsertDto cfetsManualSettleInsertDto : insertDtoLists) {
+                    deletePosition(cfetsManualSettleInsertDto);
+                }
             }
+
         }
 
     }
@@ -697,6 +721,9 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
     private void deletePosition(CfetsManualSettleInsertDto cfetsManualSettleRequest) {
         //设置登记时的成交编号
         List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId());
+        if (CollectionUtils.isEmpty(listTemp)) {
+            listTemp = cfetsManualSettleMapper.getTempDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId());
+        }
         for (CfetsManualSettleDealInfo item : listTemp) {
             AllTradeCommonUtil.deletePosition(null, item.getTradeId());
         }
@@ -716,9 +743,11 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                     StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
 
                 if (StringUtil.equals(entity.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
-                    //插入旧头寸
-                    BigDecimal settleAmt = cfetsManualSettleInsertDto.getListTrdBnakSetDetails().stream().map(TrdBankManualSetDetail::getSettleAmt).reduce(BigDecimal.ZERO, BigDecimal::add);
-                    this.insertOldPosition(cfetsManualSettleInsertDto, entity.getButtonType(), settleAmt, true);
+                    if (!StringUtil.equals(entity.getPs(), DictCodeList.交易方向_行权_回售.getValue())) {
+                        //插入旧头寸
+                        BigDecimal settleAmt = cfetsManualSettleInsertDto.getListTrdBnakSetDetails().stream().map(TrdBankManualSetDetail::getSettleAmt).reduce(BigDecimal.ZERO, BigDecimal::add);
+                        this.insertOldPosition(cfetsManualSettleInsertDto, entity.getButtonType(), settleAmt, true);
+                    }
                 } else {
                     //对回购数据进行处理
                     if ((StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收.getValue())
@@ -745,9 +774,11 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                     StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
 
                 if (StringUtil.equals(entity.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
-                    //插入旧头寸
-                    BigDecimal settleAmt = cfetsManualSettleInsertDto.getListTrdBnakSetDetails().stream().map(TrdBankManualSetDetail::getSettleAmt).reduce(BigDecimal.ZERO, BigDecimal::add);
-                    this.insertOldPosition(cfetsManualSettleInsertDto, entity.getButtonType(), settleAmt, true);
+                    if (!StringUtil.equals(entity.getPs(), DictCodeList.交易方向_行权_回售.getValue())) {
+                        //插入旧头寸
+                        BigDecimal settleAmt = cfetsManualSettleInsertDto.getListTrdBnakSetDetails().stream().map(TrdBankManualSetDetail::getSettleAmt).reduce(BigDecimal.ZERO, BigDecimal::add);
+                        this.insertOldPosition(cfetsManualSettleInsertDto, entity.getButtonType(), settleAmt, true);
+                    }
                 } else {
                     //对回购数据进行处理
                     if ((StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收.getValue())
@@ -821,6 +852,9 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                     cfetsTrdBondInvestTrade002Service.doCompleteRevoke(revokeEntity,settleRemark,false);
                     //关闭对应指令
                     List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(entity.getTradeId());
+                    if (CollectionUtils.isEmpty(listTemp)) {
+                        listTemp = cfetsManualSettleMapper.getTempDealDetailsByTradeId(entity.getTradeId());
+                    }
                     List<String> entrustIdList = listTemp.stream().map(CfetsManualSettleDealInfo::getEntrustId).collect(Collectors.toList());
                     Map<String,Object> param = new HashMap<String,Object>();
                     param.put("entrustIds",entrustIdList);
@@ -1066,6 +1100,9 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
     public void insertOldPosition(CfetsManualSettleInsertDto cfetsManualSettleRequest, String buttonType, BigDecimal tradeAmt, boolean isFlowStart) {
         //设置登记时的成交编号
         List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId());
+        if (CollectionUtils.isEmpty(listTemp)) {
+            listTemp = cfetsManualSettleMapper.getTempDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId());
+        }
 
         //交易份额 处理
         listTemp.stream().forEach(item -> {
@@ -1371,6 +1408,9 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
         }
         //设置登记时的成交编号
         List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId());
+        if (CollectionUtils.isEmpty(listTemp)) {
+            listTemp = cfetsManualSettleMapper.getTempDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId());
+        }
         // 正回购 交收失败 指令质押券可用持仓增加 组合质押券质押持仓减少
         // 正回购到期 交收 指令质押券可用持仓增加 组合质押券质押持仓减少
         if (StringUtil.equals(finprodType2, DictCodeListExt1.金融产品类型_债券质押式正回购.getValue())

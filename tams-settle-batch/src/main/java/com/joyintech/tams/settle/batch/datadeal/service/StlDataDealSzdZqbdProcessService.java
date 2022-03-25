@@ -559,6 +559,38 @@ public class StlDataDealSzdZqbdProcessService {
                 // finProductQuto.setQuto(new BigDecimal(szdZqbd.getBdsl()));
                 finProductQuto.setQuto(new BigDecimal(szdZqbd.getBdsl()).abs());
                 // GNS-880:取绝对值 modify by fuyongsheng 20220216 end
+                if(DictCodeListExt1.证券品种_股票.getValue().equals(stlDownDataDealOperatorDto.getFinprodType())){
+                    if((StringUtil.equals(szdZqbd.getZqlb(), StlDataDealProcessConstant.ZQLB_PT)
+                            && StringUtil.equals(szdZqbd.getLtlx(),StlDataDealProcessConstant.LTLX_N)
+                            && StringUtil.equals(szdZqbd.getBdlx(), StlDataDealProcessConstant.BDLB_00G)
+                    )
+                    ||
+                    (StringUtil.equals(szdZqbd.getZqlb(), StlDataDealProcessConstant.ZQLB_PT)
+                            && !StringUtil.equals(szdZqbd.getLtlx(),StlDataDealProcessConstant.LTLX_N)
+                            && StringUtil.equals(szdZqbd.getQylb(),StlDataDealProcessConstant.QYLB_P)
+                            && StringUtil.equals(szdZqbd.getBdlx(), StlDataDealProcessConstant.BDLB_00G)
+                    )
+                    ){
+                        finProductQuto.setPs(DictCodeList.交易方向_红利再投.getValue());
+                    }else if(StringUtil.equals(szdZqbd.getZqlb(), StlDataDealProcessConstant.ZQLB_PT)
+                            && StringUtil.equals(szdZqbd.getQylb(),StlDataDealProcessConstant.QYLB_S)
+                            && StringUtil.equals(szdZqbd.getBdlx(), StlDataDealProcessConstant.BDLB_00G)
+                    ){
+                        finProductQuto.setPs(DictCodeListExt2.交易方向_配股.getValue());
+                    }
+                }else{ // 债券
+                    if(StringUtil.equals(szdZqbd.getZqlb(), StlDataDealProcessConstant.ZQLB_PT)
+                        && StringUtil.equals(szdZqbd.getLtlx(),StlDataDealProcessConstant.LTLX_N)
+                        && StringUtil.equals(szdZqbd.getBdlx(), StlDataDealProcessConstant.BDLB_00G)
+                    ){
+                        finProductQuto.setPs(DictCodeList.交易方向_申购.getValue());
+                    }else if(StringUtil.equals(szdZqbd.getZqlb(), StlDataDealProcessConstant.ZQLB_PT)
+                            && !StringUtil.equals(szdZqbd.getLtlx(),StlDataDealProcessConstant.LTLX_N)
+                            && StringUtil.equals(szdZqbd.getQylb(),StlDataDealProcessConstant.QYLB_P)
+                            && StringUtil.equals(szdZqbd.getBdlx(), StlDataDealProcessConstant.BDLB_00G)){
+                        finProductQuto.setPs(DictCodeListExt3.交易方向_配债.getValue());
+                    }
+                }
                 list.add(finProductQuto);
             }
         }

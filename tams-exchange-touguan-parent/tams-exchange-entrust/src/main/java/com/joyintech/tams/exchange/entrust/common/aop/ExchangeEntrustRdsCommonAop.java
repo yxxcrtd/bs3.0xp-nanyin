@@ -74,7 +74,7 @@ public class ExchangeEntrustRdsCommonAop {
     /**
      * 日志
      */
-    private static Logger logger = LoggerFactory.getLogger(EntrustRdsCommonAop.class);
+    private static Logger logger = LoggerFactory.getLogger(ExchangeEntrustRdsCommonAop.class);
 
     /**
      * 资产基本信息更新Redis服务

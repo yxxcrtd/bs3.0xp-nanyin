@@ -356,4 +356,29 @@
                     AND PTL_SEC_POSITION.HODING_TYPE = '03')
     </select>
     <!--add by etliu 20220116 end-->
+
+    <select id="selectFinProductOthCode" resultType="com.joyintech.tams.common.base.entity.FinProductOthCode">
+        SELECT
+            FINPROD_ID as finprodId,
+            BRANCH as branch,
+            OTH_TYPE as othCodeType,
+            OTH_CODE as othCode,
+            REMARK as remark
+        FROM
+            FIN_PRODUCT_OTH_CODE
+        WHERE
+            FINPROD_ID = #{finprodId,jdbcType=VARCHAR} AND
+            OTH_TYPE = #{othCodeType,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectFinProductQuto" resultType="com.joyintech.tams.common.base.entity.FinProductQuto">
+        SELECT
+        <include refid="com.joyintech.tams.common.base.dao.FinProductQutoMapper.Base_Column_List" />
+        FROM
+            FIN_PRODUCT_QUTO
+        WHERE
+            FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+            AND OTH_TYPE = #{othCodeType,jdbcType=VARCHAR}
+            AND CDATE = #{cdate,jdbcType=DATE}
+    </select>
 </mapper>

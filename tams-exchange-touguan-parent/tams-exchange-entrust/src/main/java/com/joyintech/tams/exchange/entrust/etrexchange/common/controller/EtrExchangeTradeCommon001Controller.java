@@ -1020,6 +1020,8 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	 * @see
 	 * @since 1.0
 	 */
+	@ResponseBody
+	@RequestMapping("check")
 	public AjaxResult check(@RequestBody  EtrExchangeTradeSaveRequest dto, BindingResult br)
 			throws Exception {
 		AjaxResult ajax= etrExchangeTrade001CommonService.checkSave(dto,br);
@@ -1038,7 +1040,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 		String confirmMsg = "";
 		if (DictCodeList.交易方向_申购.getValue().equals(dto.getPs()) && DictCodeListExt1.金融产品类型_投管用_股票.getValue().equals(dto.getFinprodType2())) {
 			Map<String, Object> paramMap = new HashMap<String, Object>();
-			paramMap.put("finprodId", dto.getFinprodId());//金融产品代码
+			//paramMap.put("finprodId", dto.getFinprodId());//金融产品代码
 			List<String> othTypeList = new ArrayList<String>();
 			othTypeList.add(DictCodeListExt3.金融产品其他代码类型_新股申购代码.getValue());
 			paramMap.put("othTypeList", othTypeList);
@@ -1100,6 +1102,14 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 			}
 		}
 		AjaxResult ajaxResult = new AjaxResult();
+		if (StringUtil.isNotEmpty(ajax) && StringUtil.isNotEmpty(ajax.getMessageType())
+				&& StringUtil.isNotEmpty(ajax.getData())) {
+			if (ajax.getMessageType().equals("错误消息")){
+				ajaxResult.setMessageType(MessageType.错误消息);
+			}
+			ajaxResult.setData(ajax.getData());
+			return ajaxResult;
+		}
 		if (StringUtil.isNotEmpty(confirmMsg)) {
 			ajaxResult.setMessageType(MessageType.确认消息);
 			ajaxResult.setData(confirmMsg);
