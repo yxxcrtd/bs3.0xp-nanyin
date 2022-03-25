@@ -144,6 +144,10 @@ public class FieldEtrDispatcherInfoResponse extends FieldEtrDispatcherBaseInfo {
     @ApiModelProperty(name="oldPledStrdPrinAmt",value="原券面金额",example="10000")
     private BigDecimal oldPledStrdPrinAmt;
 
+    private String declaType;
+
+    private String declaTypeStr;
+
     public BigDecimal getPledgeStandardNumber() {
         return pledgeStandardNumber;
     }
@@ -587,5 +591,21 @@ public class FieldEtrDispatcherInfoResponse extends FieldEtrDispatcherBaseInfo {
 
     public String getOtherTargetType() {
         return SysDataUtil.getNameFromDataDict(DictCode.目标类型, super.getTargetType());
+    }
+
+    public String getDeclaType() {
+        return declaType;
+    }
+
+    public void setDeclaType(String declaType) {
+        this.declaType = declaType;
+    }
+
+    public String getDeclaTypeStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.申报类型, this.getDeclaType());
+    }
+
+    public void setDeclaTypeStr(String declaTypeStr) {
+        this.declaTypeStr = declaTypeStr;
     }
 }
