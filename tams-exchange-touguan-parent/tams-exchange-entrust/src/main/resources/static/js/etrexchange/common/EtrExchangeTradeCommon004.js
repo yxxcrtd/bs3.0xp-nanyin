@@ -2081,6 +2081,10 @@
                     $("#entrustPrice_label_" + currentTab).text("折算率").append($star.clone());
                     $("#entrustNum_label_" + currentTab).text("指令数量").append($star.clone());
                     $("#entrustAmt_label_" + currentTab).text("标准券数量").append($star.clone());
+
+                    var entrustAmt = $("#entrustAmt_" + currentTab).val();
+                    $("#entrustAmt_" + currentTab).val(Math.floor(new Number(entrustAmt)));
+
                     $("#entrustPriceUnit_" + currentTab).text("%");
                     $("#entrustAmtUnit_" + currentTab).text("张");
                 }
@@ -2090,6 +2094,10 @@
                     $("#entrustPrice_label_" + currentTab).text("回购利率").append($star.clone());
                     $("#entrustNum_label_" + currentTab).text("标准券数量").append($star.clone());
                     $("#entrustAmt_label_" + currentTab).text("回购金额").append($star.clone());
+
+                    var entrustAmt = $("#entrustAmt_" + currentTab).val();
+                    $("#entrustAmt_" + currentTab).val(Math.floor(new Number(entrustAmt)));
+
                     $("#entrustPriceUnit_" + currentTab).text("%");
                     $("#entrustAmtUnit_" + currentTab).text("元");
                 } else {
@@ -2401,14 +2409,23 @@
                     }
                 }
             }
+
+            var finprodType2 = $("#finprodType2_" + currentTab).val();
+            var ps = $("#ps_" + currentTab).val();
             //债券交易数量单位 add by yeming 20210729 start
-            if (bond_traded_unit == '02' && $("#finprodType2_" + currentTab).val() == FINPROD_TYPE_TG_F01 && isStandardPs($("#ps_" + currentTab).val())) {
+            if (bond_traded_unit == '02' && finprodType2 == FINPROD_TYPE_TG_F01 && isStandardPs(ps)) {
                 result.entrustNum = JoyinMath.doDiv(result.entrustNum, 10, 0, JoyinMath.ROUND_DOWN);//转成手配置
             }
             //债券交易数量单位 add by yeming 20210729 end
             // modify by etliu 20210901 start
             if (result.entrustAmt) {
-                $("#entrustAmt_" + currentTab).val(result.entrustAmt).trigger('blur');
+                var entrustAmt = result.entrustAmt;
+                if ((finprodType2 == FINPROD_TYPE_TG_F01 || finprodType2 == FINPROD_TYPE_TG_ZYSHG) && (ps == PS_T68 || ps == PS_T69)) {
+                    entrustAmt = Math.floor(new Number(entrustAmt));
+                    $("#entrustAmt_" + currentTab).val(entrustAmt);
+                }else{
+                    $("#entrustAmt_" + currentTab).val(entrustAmt).trigger('blur');
+                }
             } else if ($("#priceModel_" + currentTab).val() == PRICE_MODEL_PRM03) {
                 $("#entrustAmt_" + currentTab).val(0).trigger('blur');
             }
@@ -3565,6 +3582,8 @@
                 if (array.length > 0) {
                     if (array[0].ps == PS_T68 || array[0].ps == PS_T69) {
                         $("#entrustAmout_total_label").text("标准券数量");
+                        var entrustAmt = $("#entrustAmt_" + currentTab).val();
+                        $("#entrustAmt_" + currentTab).val(Math.floor(new Number(entrustAmt)));
                     } else {
                         $("#entrustAmout_total_label").text("指令金额");
                     }
