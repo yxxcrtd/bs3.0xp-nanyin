@@ -1308,4 +1308,13 @@
         from T_INTEGRATED_ENTRUST
         where ID = #{dealNo}
     </select>
+
+    <select id="getPtlCapAcctInfo" resultType="com.joyintech.tams.common.base.entity.PtlCapacctInfo">
+        select
+        <include refid="com.joyintech.tams.common.base.dao.PtlCapacctInfoMapper.Base_Column_List" />
+        from PTL_CAPACCT_INFO
+        where ACCT_TYPE = #{acctType,jdbcType=VARCHAR}
+        and PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+        and CCY = #{ccy,jdbcType=VARCHAR}
+    </select>
 </mapper>

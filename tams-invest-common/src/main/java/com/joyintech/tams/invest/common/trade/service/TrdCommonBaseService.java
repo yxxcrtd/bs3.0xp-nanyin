@@ -1365,4 +1365,8 @@ public class TrdCommonBaseService extends BaseService {
         logger.debug("【组合计算分配结果】portfolioDtos: {}", JSON.toJSONString(portfolioDtos));
         return portfolioDtos;
     }
+
+    public PtlCapacctInfo getPtlCapAcctInfo(Map<String, Object> map){
+        return  trdCommonBaseMapper.getPtlCapAcctInfo(map);
+    }
 }

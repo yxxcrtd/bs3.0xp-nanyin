@@ -3,7 +3,6 @@ package com.joyintech.service.trade.entrustmsgbymq.service;
 import com.alibaba.fastjson.JSON;
 import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.trade.entrustmsgbymq.dto.TrdMoreConvrate;
@@ -11,7 +10,6 @@ import com.joyintech.service.trade.entrustmsgbymq.dto.TrdTempDto;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
-import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -370,7 +368,7 @@ public class PositionRequestTradeReportService {
                 Map<String, Object> ptlCash = new HashMap<>();
                 ptlCash.put("portfolioId", dto.getPortfolioId());
                 if(DictCodeListExt3.交易方向_解除质押.getValue().equals(entity.getPs())){
-
+                    ptlCash.put("cashAcctId", this.getPtlCapAcctNo(etrEntrust));
                 }else{
                     ptlCash.put("cashAcctId", dto.getCashAcctId());
                 }
@@ -667,5 +665,19 @@ public class PositionRequestTradeReportService {
             }
         }
         return null;
+    }
+
+    /**
+     * 查询产品托管户
+     * @param etrEntrust
+     * @return
+     */
+    private String getPtlCapAcctNo(EtrEntrust etrEntrust){
+        Map<String, Object> map = new HashMap<>();
+        map.put("portfolioId", etrEntrust.getPortfolioId());
+        map.put("ccy", etrEntrust.getCcy());
+        map.put("acctType", BussinessDictCodeList.资金账户类型_托管账户.getValue());
+        PtlCapacctInfo ptlCapacctInfo = trdCommonBaseService.getPtlCapAcctInfo(map);
+        return ptlCapacctInfo != null ? ptlCapacctInfo.getAcctNo() : StringUtil.EMPTY;
     }
 }

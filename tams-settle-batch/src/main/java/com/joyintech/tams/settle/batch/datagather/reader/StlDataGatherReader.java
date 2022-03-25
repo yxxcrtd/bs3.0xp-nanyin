@@ -161,11 +161,12 @@ public abstract class StlDataGatherReader extends BaseReader<InvestTradeReaderDt
                 searchParam.put("zybsList",  Arrays.asList("债券回购购回收取","220134"));
                 int dzcjCount =  stlDataGatherMapper.selectDzcjList(searchParam);
                 if (StringUtil.equals(isRecon,"02") && dzcjCount > 0){
-                    searchParam.put("checkResult",  "1");
+                    searchParam.put("checkResultList",  Arrays.asList(DictCodeListExt3.对账状态结果_一致.getValue(),
+                            DictCodeListExt3.对账状态结果_手工完成.getValue()));
                 }
                 searchParam.put("dqPs",  DictCodeList.交易方向_到期.getValue());
                 searchParam.put("busiSceneCalssDqList",  Arrays.asList(DictCodeListStl.业务场景分类明细_债券协议逆回购_到期.getValue()));
-                searchParam.put("tradeMarketSh", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+//                searchParam.put("tradeMarketSh", DictCodeListExt1.交易场所_上海证券交易所.getValue());
                 List<SettleTransDataDto> settleTransDataDtos = stlDataGatherService.listRepoSettleTransData(searchParam);
                 investTradeReaderDto.setSettleTransDataList(settleTransDataDtos);
                 List<InvestTradeReaderDto> result = new ArrayList<>();
