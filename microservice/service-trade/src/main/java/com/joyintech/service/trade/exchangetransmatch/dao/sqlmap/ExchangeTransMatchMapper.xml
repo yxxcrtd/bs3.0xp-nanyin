@@ -107,7 +107,9 @@
                 INNER JOIN SETTLE_TRANS_DATA_TOTAL_ADD B2
                     ON A2.SEQ_ID = B2.TRADE_ID
                 WHERE A2.FINPROD_TYPE2 IN (#{FINPROD_TYPE_TG_F03})
-                    AND A2.TRADE_MARKET IN (#{TRADE_PLACE_03})
+                    <!--ZGTFCP-1831:去除交易场所条件 modify by fuyongsheng 20220325 start-->
+                    <!--AND A2.TRADE_MARKET IN (#{TRADE_PLACE_03})-->
+                    <!--ZGTFCP-1831:去除交易场所条件 modify by fuyongsheng 20220325 end-->
                     AND B2.REPO_TYPE = #{TARGET_BACK_TYPE_H01}
                     AND A2.PS IN (#{PS_T07})
             )

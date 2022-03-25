@@ -7,10 +7,12 @@ import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.invest.common.dto.position.PositionCashSecRequest;
 import com.joyintech.tams.invest.common.dto.position.PositionCashSecSingleResp;
 import com.joyintech.tams.invest.common.entrust.inter.EtrTradeCommonervice;
+import com.joyintech.tams.invest.common.entrust.inter.EtrTradeOtherCommonService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -36,6 +38,10 @@ public class InterfSysTrdConfigController{
 
     @Autowired
     private EtrTradeCommonervice etrTradeCommonervice;
+
+
+    @Autowired
+    private EtrTradeOtherCommonService etrTradeOtherCommonService;
 
 
     /**
@@ -207,6 +213,20 @@ public class InterfSysTrdConfigController{
     @ResponseBody
     public List<PositionCashSecSingleResp>  queryPositionInfoSingle(@RequestBody PositionCashSecRequest requestDto) {
         List<PositionCashSecSingleResp>  m = etrTradeCommonervice.queryPositionInfoSingle(requestDto);
+        return m;
+    }
+
+    /**
+     *
+     * @Description // 债券面值接口
+     * @Param [params]
+     * @version 1.0
+     * @see
+     **/
+    @PostMapping("/selectFaceValue")
+    @ResponseBody
+    public BigDecimal selectFaceValue(@RequestBody Map<String, Object> params) {
+        BigDecimal  m = etrTradeOtherCommonService.selectFaceValue(params);
         return m;
     }
 }

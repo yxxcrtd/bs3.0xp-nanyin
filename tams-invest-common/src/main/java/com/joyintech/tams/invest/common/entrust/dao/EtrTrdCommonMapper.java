@@ -14,6 +14,7 @@ import com.joyintech.tams.common.base.entity.PtlCapacctInfo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -36,4 +37,6 @@ public interface EtrTrdCommonMapper {
      * @return 节假日列表
      */
     List<String> getDealCalendarHoliday(Map<String, Object> paraMap);
+
+    BigDecimal selectFaceValue(Map<String, Object> params);
 }

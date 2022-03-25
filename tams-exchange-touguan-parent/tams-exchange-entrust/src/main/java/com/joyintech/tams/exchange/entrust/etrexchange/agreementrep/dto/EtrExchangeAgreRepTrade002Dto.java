@@ -16,6 +16,7 @@ import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -106,6 +107,10 @@ public class EtrExchangeAgreRepTrade002Dto extends BaseEntity {
      * 投资目的
      */
     private String invAim;
+    /**
+     * 业务模式
+     */
+    private String businessModel;
 
     /**
      * 投资目的
@@ -585,12 +590,32 @@ public class EtrExchangeAgreRepTrade002Dto extends BaseEntity {
         return floatingPLPercent;
     }
 
+    public String getBusinessModel() {
+        return businessModel;
+    }
+
+    public void setBusinessModel(String businessModel) {
+        this.businessModel = businessModel;
+    }
+
     public void setFloatingPLPercent(BigDecimal floatingPLPercent) {
         this.floatingPLPercent = floatingPLPercent;
     }
 
     public String getInvAimStr() {
         return SysDataUtil.getNameFromDataDict(BussinessDictCode.投资目的, this.getInvAim());
+    }
+    /**
+     * 获取业务模式名称
+     * @return businessModelStr
+     */
+    public String getBusinessModelStr(){
+        if(StringUtil.isNotEmpty(getBusinessModel())){
+            return SysDataUtil.getNameFromDataDict(DictCode.业务模式,getBusinessModel());
+        }
+        else {
+            return "";
+        }
     }
 
 }

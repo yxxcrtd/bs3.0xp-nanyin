@@ -185,7 +185,34 @@
 									AND SETTLE_DATE > to_date(#{cdate},'yyyy-MM-dd')
 									AND TRADE_STATUS = '01'
 									AND (IS_CANCEL = 'N' OR IS_CANCEL IS NULL)
-							)
+								UNION  ALL
+								SELECT QUOTE_ID  tradeId FROM IBU_QUOTE_BOND WHERE
+								FINPROD_TYPE2 = 'F01' AND QUOTE_DATE &lt;= to_date(#{cdate},'yyyy-MM-dd')
+								AND SETTLE_DATE > to_date(#{cdate},'yyyy-MM-dd') AND TRADE_STATUS = '01'
+								UNION  ALL
+								SELECT QUOTE_ID  tradeId FROM WFL_IBU_QUOTE_BOND2 WHERE
+								FINPROD_TYPE2 = 'F01' AND QUOTE_DATE &lt;= to_date(#{cdate},'yyyy-MM-dd')
+								AND SETTLE_DATE > to_date(#{cdate},'yyyy-MM-dd') AND (TRADE_STATUS = '01' OR TRADE_STATUS IS NULL)
+								UNION  ALL
+								SELECT TRADE_ID  tradeId FROM REG_FIN_PRODUCT_DEAL WHERE
+								FINPROD_TYPE2 IN ('F01', 'F02', 'F03')  AND TRADE_DATE &lt;= to_date(#{cdate},'yyyy-MM-dd')
+								AND SETTLE_DATE > to_date(#{cdate},'yyyy-MM-dd') AND TRADE_STATUS = '01'
+								UNION  ALL
+								SELECT TRADE_ID  tradeId FROM REG_FIN_PRODUCT_DEAL WHERE
+								FINPROD_TYPE2  IN ('F01', 'F02', 'F03') AND TRADE_DATE &lt;= to_date(#{cdate},'yyyy-MM-dd')
+								AND SETTLE_DATE > to_date(#{cdate},'yyyy-MM-dd') AND TRADE_STATUS = '01'
+								UNION  ALL
+								SELECT QUOTE_ID  tradeId FROM IBU_QUOTE_CREP WHERE
+								QUOTE_DATE &lt;= to_date(#{cdate},'yyyy-MM-dd')
+								AND TRADE_STATUS = '01' AND
+								(CASE WHEN REPO_PS = 'T07' THEN  M_SETTLE_DATE ELSE  V_SETTLE_DATE END )  > to_date(#{cdate},'yyyy-MM-dd')
+								UNION  ALL
+								SELECT QUOTE_ID  tradeId FROM WFL_IBU_QUOTE_CREP WHERE
+								QUOTE_DATE &lt;= to_date(#{cdate},'yyyy-MM-dd')
+								AND TRADE_STATUS = '01' AND
+								(CASE WHEN REPO_PS = 'T07' THEN  M_SETTLE_DATE ELSE  V_SETTLE_DATE END )  > to_date(#{cdate},'yyyy-MM-dd')
+
+						    )
 							group by portfolio_id,finprod_id,sec_acct_id
 						) t_andOneData
 						on t_andOneData.portfolio_id = t6.portfolio_id and t_andOneData.finprod_id = t6.finprod_id and t_andOneData.sec_acct_id =  t6.sec_acct_id
