@@ -225,6 +225,14 @@ public class PbcPrdBaseinfoSubNewService extends PbcClassicsSubService<PbcPrdBas
 						sub.setStatus(DictCodeListExt2.报送数据状态_修改.getValue());
 					}
 				}
+				// 根据数据状态重新生成截止日期
+				List<Date> issueDateList = DeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_新人行产品基本信息.getValue(),
+						sub.getStatus(), dateMap,
+						null, SVReportGlobalConstant.SVR_SUBMIT_TIME_PBC);
+				if (CollectionUtils.isNotEmpty(issueDateList)) {
+					sub.setPbcSubmitDeadline(issueDateList.get(0));
+					sub.setSubmitDeadline(issueDateList.get(1));
+				}
 				// 准备插入处理未报送的数据
 				issueInsertDataList.add(sub);
 			}else{
@@ -239,6 +247,7 @@ public class PbcPrdBaseinfoSubNewService extends PbcClassicsSubService<PbcPrdBas
 					sub.setStatus(DictCodeListExt2.报送数据状态_新建.getValue());
 				}
 			}
+
 		}
 		// 删除、插入发行登记
 		dealResultIssueCommitSingle(issueDeleteDataList,issueInsertDataList);
