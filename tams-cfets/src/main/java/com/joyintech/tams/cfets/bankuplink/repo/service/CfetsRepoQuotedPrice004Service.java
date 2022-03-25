@@ -1466,6 +1466,12 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
                     item.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());
                     item.setIsCancel(DictCodeList.是否_否.getValue());
                     item.setpTradeId(tradeId);
+                    //明细
+                    RegFinProductDeal regFinProductDeal = new RegFinProductDeal();
+                    regFinProductDeal.setTradeId(tradeId);
+                    regFinProductDeal.setRemark(regFinProductDealTotal.getRemark());
+                    regFinProductDeal.setIsCancel("Y");
+                    regFinProductDealMapper.updateByPrimaryKeySelective(regFinProductDeal);
                 } else {
                     item.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
                     item.setIsCancel(DictCodeList.是否_否.getValue());
@@ -1548,13 +1554,6 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             regFinProduct.setRemark(regFinProductDealTotal.getRemark());
             regFinProduct.setIsCancel("Y");
             regFinProductDealTotalMapper.updateByPrimaryKeySelective(regFinProduct);
-
-            //明细
-            RegFinProductDeal regFinProductDeal = new RegFinProductDeal();
-            regFinProductDeal.setTotleTradeId(totleTradeId);
-            regFinProductDeal.setRemark(regFinProductDealTotal.getRemark());
-            regFinProductDeal.setIsCancel("Y");
-            regFinProductDealMapper.updateByPrimaryKeySelective(regFinProductDeal);
         }
     }
 
@@ -2040,7 +2039,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             // 标记委托编号,避免重复操作
             Map<String,String> entrustIdList = new HashMap<>();
             for (RegFinProductDeal deal : input.getRegFinProductDeals()) {
-                trdOutRightRepoTradeService.updatePledgeBondForRevoke(deal.getTradeId(), DictCodeList.持仓类型_质押.getValue(), false);
+                trdOutRightRepoTradeService.updatePledgeBondForRevoke(deal.getpTradeId(), DictCodeList.持仓类型_质押.getValue(), true);
                 if(StringUtil.isEmpty(entrustIdList.get(deal.getEntrustId()))) {
                     this.revokeEtrSecPosition(deal.getEntrustId());
                     entrustIdList.put(deal.getEntrustId(),deal.getEntrustId());
@@ -2179,7 +2178,9 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             BeanUtil.copyPropertiesIgnoreNull(position, flow);
             flow.setSeqno(IDGenerator.generate());
             ptlCashPositionFlowMapper.insert(flow);
-            cfetsIbuQuoteRepo004Mapper.updatePtlCashPosition(position);
+            if (StringUtil.equals(DictCodeList.持仓类型_实际.getValue(), hodingType)) {
+                cfetsIbuQuoteRepo004Mapper.updatePtlCashPosition(position);
+            }
         }
     }
 
