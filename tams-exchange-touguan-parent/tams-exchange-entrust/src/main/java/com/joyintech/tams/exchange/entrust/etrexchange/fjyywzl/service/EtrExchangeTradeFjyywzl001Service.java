@@ -5,10 +5,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.business.common.dto.PageMode;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.common.base.dao.FinProductConvertibleMapper;
@@ -143,9 +140,23 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
             List<EtrExchangeTradeFjyywzlZqzyDto> shProList=page.getRoot().stream().filter(item->StringUtil.equals(item.getPortfolioId(),dto.getPortfolioId())&&StringUtil.equals(item.getTradeMarket(), DictCodeListExt1.估值交易市场_上交所.getValue())).collect(Collectors.toList());
             canNumSh=queryProPosition(1,shProList);
             secNumSh=queryProPosition(2,shProList);
+            if(secNumSh!=null&&secNumSh.compareTo(BigDecimal.ZERO) != 0){
+                BigDecimal sumNumSh=canNumSh.add(secNumSh);
+                BigDecimal rateShTemp=ArithmeticUtil.divide(secNumSh,sumNumSh,2);
+                rateSh=rateShTemp+"%";
+            }else{
+                rateSh="0%";
+            }
             List<EtrExchangeTradeFjyywzlZqzyDto> zhProList=page.getRoot().stream().filter(item->StringUtil.equals(item.getPortfolioId(),dto.getPortfolioId())&&StringUtil.equals(item.getTradeMarket(), DictCodeListExt1.估值交易市场_深交所.getValue())).collect(Collectors.toList());
             canNumZh=queryProPosition(1,zhProList);
             secNumZh=queryProPosition(2,zhProList);
+            if(secNumZh!=null&&secNumZh.compareTo(BigDecimal.ZERO) != 0){
+                BigDecimal sumNumZh=canNumZh.add(secNumZh);
+                BigDecimal rateSZhTemp=ArithmeticUtil.divide(secNumZh,sumNumZh,2);
+                rateZh=rateSZhTemp+"%";
+            }else{
+                rateZh="0%";
+            }
         }
         resultMap.put("canNumSh",canNumSh+"张");
         resultMap.put("secNumSh",secNumSh+"张");
@@ -309,6 +320,9 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
             secList.add(positionCashSecDto);
         }
         BigDecimal newSecAmount = etrTradeCommonervice.queryPosition(secList, "02", "");
+        if(newSecAmount!=null){
+            newSecAmount= ArithmeticUtil.divide(newSecAmount,100,0);
+        }
         return newSecAmount;
 
     }
