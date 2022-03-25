@@ -2964,8 +2964,8 @@
     AND code_type='01'
     )t2 ON t2.inside_prod_id=b.PROD_ID
     where NVL(t2.pbc_code,b.PBC_PROD_ID)= #{pbcProdId,jdbcType=VARCHAR}
-    and TO_CHAR(a.STATUS_DATE,'%Y-%m-%d')=  TO_CHAR(#{statusDate,jdbcType=TIMESTAMP},'%Y-%m-%d')
-    and TO_CHAR(a.RAISING_DATE,'%Y-%m-%d')= TO_CHAR(#{raisingDate,jdbcType=TIMESTAMP},'%Y-%m-%d'))
+    and TO_CHAR(a.STATUS_DATE,'yyyy-MM-dd')=  TO_CHAR(#{statusDate,jdbcType=TIMESTAMP},'yyyy-MM-dd')
+    and TO_CHAR(a.RAISING_DATE,'yyyy-MM-dd')= TO_CHAR(#{raisingDate,jdbcType=TIMESTAMP},'yyyy-MM-dd'))
 
     SELECT tab.code,tab.ITEM_VALUE,tab.je,tab.zrmb,tab.fe from tab
     union all
@@ -3004,8 +3004,8 @@
     AND code_type='01'
     )t2 ON t2.inside_prod_id=b.PROD_ID
     where NVL(t2.pbc_code,b.PBC_PROD_ID)= #{pbcProdId,jdbcType=VARCHAR}
-    and to_char(a.STATUS_DATE,'%Y-%m-%d')=  to_char(#{statusDate,jdbcType=TIMESTAMP},'%Y-%m-%d')
-    and to_char(a.RAISING_DATE,'%Y-%m-%d')= to_char(#{raisingDate,jdbcType=TIMESTAMP},'%Y-%m-%d'))
+    and to_char(a.STATUS_DATE,'yyyy-MM-dd')=  to_char(#{statusDate,jdbcType=TIMESTAMP},'yyyy-MM-dd')
+    and to_char(a.RAISING_DATE,'yyyy-MM-dd')= to_char(#{raisingDate,jdbcType=TIMESTAMP},'yyyy-MM-dd'))
 
     SELECT tab.code,tab.ITEM_VALUE,tab.je,tab.zrmb,tab.fe from tab
     union all
@@ -3045,8 +3045,8 @@
     AND code_type='01'
     )t2 ON t2.inside_prod_id=b.PROD_ID
     where NVL(t2.pbc_code,b.PBC_PROD_ID)= #{pbcProdId,jdbcType=VARCHAR}
-    and  to_char(a.STATUS_DATE,'%Y-%m-%d')=  to_char(#{statusDate,jdbcType=TIMESTAMP},'%Y-%m-%d')
-    and  to_char(a.RAISING_DATE,'%Y-%m-%d')= to_char(#{raisingDate,jdbcType=TIMESTAMP},'%Y-%m-%d'))
+    and  to_char(a.STATUS_DATE,'yyyy-MM-dd')=  to_char(#{statusDate,jdbcType=TIMESTAMP},'yyyy-MM-dd')
+    and  to_char(a.RAISING_DATE,'yyyy-MM-dd')= to_char(#{raisingDate,jdbcType=TIMESTAMP},'yyyy-MM-dd'))
 
     SELECT tab.code,tab.ITEM_VALUE,tab.je,tab.zrmb,tab.fe from tab
     union all
@@ -3089,8 +3089,8 @@
     WHERE
       info.OPERATE_MODE  in   ('2','4')
       and nvl(t2.pbc_code,b.PBC_PROD_ID)= #{pbcProdId,jdbcType=VARCHAR}
-      and TO_CHAR(rais.STATUS_DATE,'%Y-%m-%d')=  TO_CHAR(#{statusDate,jdbcType=TIMESTAMP},'%Y-%m-%d')
-      and TO_CHAR(rais.RAISING_DATE,'%Y-%m-%d')= TO_CHAR(#{raisingDate,jdbcType=TIMESTAMP},'%Y-%m-%d')
+      and TO_CHAR(rais.STATUS_DATE,'yyyy-MM-dd')=  TO_CHAR(#{statusDate,jdbcType=TIMESTAMP},'yyyy-MM-dd')
+      and TO_CHAR(rais.RAISING_DATE,'yyyy-MM-dd')= TO_CHAR(#{raisingDate,jdbcType=TIMESTAMP},'yyyy-MM-dd')
 
 
   </select>
@@ -3102,8 +3102,8 @@
            LEFT JOIN PBC_PRD_BASEINFO_SUB info ON info.PBC_PROD_ID=rais.PBC_PROD_ID
     WHERE
       info.OPERATE_MODE = '3'
-      AND TO_CHAR(rais.STATUS_DATE,'%Y-%m-%d')=  TO_CHAR(#{statusDate,jdbcType=TIMESTAMP},'%Y-%m-%d')
-      AND TO_CHAR(rais.RAISING_DATE,'%Y-%m-%d')= TO_CHAR(#{raisingDate,jdbcType=TIMESTAMP},'%Y-%m-%d')
+      AND TO_CHAR(rais.STATUS_DATE,'yyyy-MM-dd')=  TO_CHAR(#{statusDate,jdbcType=TIMESTAMP},'yyyy-MM-dd')
+      AND TO_CHAR(rais.RAISING_DATE,'yyyy-MM-dd')= TO_CHAR(#{raisingDate,jdbcType=TIMESTAMP},'yyyy-MM-dd')
   </select>
 
   <select id="selectOperateMode" resultType="string">
