@@ -533,7 +533,8 @@ public class PositionRequestTradeRestService {
         }
         else if(DictCodeList.交易方向_上市流通.getValue().equals(trdProductDeal.getPs())){
             resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_上市.getValue());
-            FinProductQuto finProductQuto = getFinProductQuto(trdProductDeal.getFinprodId(), trdProductDeal.getTradeDate());
+            FinProductQuto finProductQuto = getFinProductQuto(trdProductDeal.getFinprodId(),
+                    commonPositionService.getLastWorkDate(trdProductDeal.getTradeDate(), this.getCalendarId(trdProductDeal.getTradeMarket())));
             // 只有配债的上市流通才有决策树,其余上市流通调上市流通专用接口
             if(!DictCodeListExt3.交易方向_配债.getValue().equals(finProductQuto.getPs())){
                 resultMap.put(INTERFACE_TYPE, null);
@@ -632,8 +633,10 @@ public class PositionRequestTradeRestService {
         if (DictCodeListExt1.金融产品类型_投管用_股票.getValue().equals(finprodType2)) {
             if(DictCodeList.交易方向_现金分红.getValue().equals(ps)){
                 busiType = DictCodeListExt3.头寸业务类型_股票分红.getValue();
-            }else if(DictCodeList.交易方向_红利再投.getValue().equals(ps) || DictCodeList.交易方向_上市流通.getValue().equals(ps)){
+            }else if(DictCodeList.交易方向_红利再投.getValue().equals(ps)){
                 busiType = DictCodeListExt3.头寸业务类型_股票送股.getValue();
+            }else if(DictCodeList.交易方向_上市流通.getValue().equals(ps)){
+                busiType = DictCodeListExt3.头寸业务类型_配股.getValue();
             }else if(DictCodeList.交易方向_申购确认.getValue().equals(ps)){
                 busiType = DictCodeListExt3.头寸业务类型_网上申购.getValue();
             }
