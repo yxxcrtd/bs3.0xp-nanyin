@@ -908,7 +908,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			systemAct = 系统动作_新建.getValue();
 			decisionAct = 系统动作_新建.getValue();
 		}
-		positionRequestService.sendEtrExchangeTradeSaveRequest(entity,decisionAct,systemAct);
+//		positionRequestService.sendEtrExchangeTradeSaveRequest(entity,decisionAct,systemAct);
 		//增加调用头寸引擎代码end
 	}
 

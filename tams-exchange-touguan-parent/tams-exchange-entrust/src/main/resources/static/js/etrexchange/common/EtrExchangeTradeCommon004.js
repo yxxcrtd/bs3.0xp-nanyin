@@ -3552,14 +3552,6 @@
                     });
                     return ;
                 }
-                var tradeMarket = $("#tradeMarket_" + currentTab).val();
-                var res = parseFloat(value) % 10;
-                if (tradeMarket == '03' && res != 0 ){
-                    Joyin.error("交易场所为上交所时，组合分配指令数量需满足最小交易单位10的整数倍！",function(){
-                        dateTable.renderRow(data.LAY_TABLE_INDEX, {"entrustNum": 0});
-                    });
-                    return ;
-                }
                 var datas = dateTable.getAllRows();
                 if (datas){
                     var entrustNum = Number(0)
@@ -3651,14 +3643,6 @@
         var entrustNum = $("#entrustNum_" + currentTab).val();
         if (parseFloat(entrustNum) < 0){
             Joyin.error("指令数量不能为负数！",function(){
-                $("#entrustNum_" + currentTab).val(0)
-            });
-            return ;
-        }
-        var tradeMarket = $("#tradeMarket_" + currentTab).val();
-        var res = parseFloat(entrustNum) % 10;
-        if (tradeMarket == '03' && res != 0 ){
-            Joyin.error("交易场所为上交所时，组合分配指令数量需满足最小交易单位10的整数倍！",function(){
                 $("#entrustNum_" + currentTab).val(0)
             });
             return ;
@@ -4221,6 +4205,12 @@
         //绑定风险是算
         $('#EtrExchangeTradeCommon004_btn_riskcal').click(function () {
             var object = getSearchParams();
+            var tradeMarket = $("#tradeMarket_" + currentTab).val();
+            var res = parseFloat(object.entrustNum) % 10;
+            if (tradeMarket == '03' && res != 0 ){
+                Joyin.error("组合分配指令数量需满足最小交易单位10的整数倍！" );
+                return ;
+            }
             var param = JSON.parse(JSON.stringify(object))
             Joyin.ajaxJson(basePath + '/etrexchange/common/etrExchangeTradeCommonRiskcal/doRiskcal', param, function (data) {
                 $("#riskTrialSpan").html("&nbsp;&nbsp;" + data.data.data.riskTrialSpan);
