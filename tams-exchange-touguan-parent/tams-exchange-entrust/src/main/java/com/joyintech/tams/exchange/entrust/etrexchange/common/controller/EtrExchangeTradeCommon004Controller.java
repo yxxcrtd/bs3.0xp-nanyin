@@ -116,7 +116,7 @@ public class EtrExchangeTradeCommon004Controller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.交易方向, DictCode.交易场所, DictCode.目标类型, DictCode.申报类型, DictCode.业务模式);
         this.setInvAimSelectOption(model);
         this.setPsSelectOptions(model);
-        this.setPriceModelSelectOptions(model);
+        this.setPriceModelSelectOptions(model, null);
         this.setDeclaTypeSelectOptions(model);
         // 设置固定的数据字典明细参数
         this.setConstSelectOption(model);
@@ -150,6 +150,9 @@ public class EtrExchangeTradeCommon004Controller extends BaseController {
         if (StringUtil.isNotEmpty(workflowId)) {
             //流程代办checkImportData
             entity = etrExchangeTrade001CommonService.getBussinessEntityByWorkflowId(workflowId);
+            if (entity.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {
+                this.setPriceModelSelectOptions(model, Boolean.TRUE);
+            }
             model.addAttribute("ps", entity.getPs());
             //add by chenjiaxing 流程中不显示资产名称 start
             String[] secIds = StringUtil.split(entity.getFinprodId(), "_");
@@ -172,8 +175,8 @@ public class EtrExchangeTradeCommon004Controller extends BaseController {
                     entrustIdWfl = entrustIdWfl + DictCodeList.交易方向_卖出.getValue();
                     riskTrialRetList = etrExchangeTrade001CommonService.selectRiskList(entrustIdWfl);
                     entrustIdWfl = entity.getEntrustId() + DictCodeList.交易方向_买入.getValue();
-                    riskTrialRetList.addAll(etrExchangeTrade001CommonService.selectRiskList(entrustIdWfl)) ;
-                }else{
+                    riskTrialRetList.addAll(etrExchangeTrade001CommonService.selectRiskList(entrustIdWfl));
+                } else {
                     riskTrialRetList = etrExchangeTrade001CommonService.selectRiskList(entrustIdWfl);
                 }
                 boolean riskTrialFlag = true;
@@ -254,7 +257,7 @@ public class EtrExchangeTradeCommon004Controller extends BaseController {
         if (StringUtil.isNotEmpty(entity.getTradePlat()) && entity.getTradePlat().equals(DictCodeList.交易平台_固定收益平台.getValue())) {
             model.addAttribute("currentTab", "gd");
         }
-        model.addAttribute("ETR_CHECK_POS_SWITCH",CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_POS_SWITCH));
+        model.addAttribute("ETR_CHECK_POS_SWITCH", CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_POS_SWITCH));
         return super.init(model);
     }
 
@@ -313,13 +316,17 @@ public class EtrExchangeTradeCommon004Controller extends BaseController {
     /**
      * 价格模式
      *
-     * @param model Model
+     * @param model
+     * @param isF10
      */
-    private void setPriceModelSelectOptions(Model model) {
+    private void setPriceModelSelectOptions(Model model, Boolean isF10) {
         SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.价格模式, null);
-        List<SelectOptionDto> priceModel_jj = selectDto.getOptions().stream().filter(option -> {
-            return StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_限价指令.getValue()) || StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_市价指令.getValue()) || StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_指定价格.getValue());
-        }).collect(Collectors.toList());
+        List<SelectOptionDto> priceModel_jj = selectDto.getOptions().stream().filter(option ->
+                StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_限价指令.getValue())
+                        || StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_市价指令.getValue())
+                        || StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_指定价格.getValue())
+                        || (!Objects.isNull(isF10) && isF10 && StringUtil.equals(option.getId(), DictCodeListExt3.申报类型_收盘价固定价格申报.getValue()))
+        ).collect(Collectors.toList());
         model.addAttribute("PRICE_MODEL_JJ", JsonUtils.objectArray2Json(priceModel_jj.toArray()));
 
         List<SelectOptionDto> priceModel = selectDto.getOptions().stream().filter(option -> {
@@ -377,6 +384,7 @@ public class EtrExchangeTradeCommon004Controller extends BaseController {
         // 价格模式
         model.addAttribute("PRICE_MODEL_PRM02", DictCodeListExt2.价格模式_限价指令.getValue());
         model.addAttribute("PRICE_MODEL_PRM03", DictCodeListExt2.价格模式_市价指令.getValue());
+        model.addAttribute("PRICE_MODEL_PRM10", DictCodeListExt3.申报类型_收盘价固定价格申报.getValue());
         model.addAttribute("PRICE_MODEL_PRM01", DictCodeListExt2.价格模式_指定价格.getValue());
         model.addAttribute("DECLA_TYPE_PRM05", DictCodeListExt3.申报类型_不指定.getValue());
         model.addAttribute("DECLA_TYPE_PRM06", DictCodeListExt3.申报类型_意向申报.getValue());
