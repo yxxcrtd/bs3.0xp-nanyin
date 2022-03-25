@@ -29,6 +29,7 @@ import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.service.entrust.common.service.WFlowCommonService;
 import com.joyintech.tams.business.common.exception.PositionException;
+import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.common.base.dao.*;
@@ -320,9 +321,9 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
         String tradeMarket = (String)map.get("tradeMarket");
         Date mDate = DateUtil.addDay(DateUtil.parse(fristSettleDate), term);
         map.put("mDate", DateUtil.format(mDate));
-        String dealCalId = "04";
+        String dealCalId = "05";
         if(DictCodeListExt1.交易场所_上海证券交易所.getValue().equals(tradeMarket)){
-            dealCalId = "05";
+            dealCalId = "04";
         }
         List<String> holidayList =  dateCalService.getDealCalendarHoliday(mDate, DateUtil.addDay(mDate,30), dealCalId);
 
@@ -2149,6 +2150,12 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
 
         if (!StringUtil.equals("save", entity.getOperateType()) && !StringUtil.equals("revoke", entity.getOperateType()) && !StringUtil.equals("delete", entity.getOperateType())) {
             try {
+                //退回的移到备份表
+                BaseEtrInvestInfoDto dto = new BaseEtrInvestInfoDto();
+                EtrEntrust etrEntrust=new EtrEntrust();
+                etrEntrust.setEntrustId(entity.getEntrustId());
+                dto.setEtrEntrust(etrEntrust);
+                doInsertBackupQuery(dto);
                 doInsertWflEntity(entity);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -2183,7 +2190,9 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
             }
             else {
                 if (!StringUtil.equals("1", RequestUtil.getParam("confirmOk"))) {
-                    WorkFlowUtil.showMessage(message.getData().toString(), MessageType.确认消息);
+                    BaseMap bm = (BaseMap) message.getData();
+                    StringBuffer messageStr = (StringBuffer) bm.get("message");
+                    WorkFlowUtil.showMessage(messageStr.toString(), MessageType.确认消息);
                 }
             }
         }

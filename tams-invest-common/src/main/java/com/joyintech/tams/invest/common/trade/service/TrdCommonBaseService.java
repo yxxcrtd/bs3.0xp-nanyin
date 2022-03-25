@@ -1274,6 +1274,19 @@ public class TrdCommonBaseService extends BaseService {
         if(etrEntrust == null){
             return new ArrayList<>();
         }
+        // ZGTFCP-1560:计算标准券面额 modify by fuyongsheng 20220325 start
+        //查询当日折算率
+        BigDecimal converseRadio = trdCommonBaseMapper.queryConverseRadio(infContractDetailfile.getFinprodId(), infContractDetailfile.getTradeDate());
+        if(converseRadio==null) {
+            converseRadio = BigDecimal.ONE;
+        }
+        // 质押式回购出入库计算时，原公式：标准券数量=质押数量*标准折算率，改成：标准券数量=质押数量*标准折算率*面值/100  ---需求张琼
+        BigDecimal 百元券面 = this.getFaceValue(infContractDetailfile.getFinprodId(), infContractDetailfile.getTradeDate());
+        if (百元券面 == null) {
+            百元券面 = BigDecimal.valueOf(100);
+        }
+        BigDecimal hundred = BigDecimal.valueOf(100);
+        // ZGTFCP-1560:计算标准券面额 modify by fuyongsheng 20220325 end
         if(DictCodeListExt3.投资指令类型_多组合单资产指令.getValue().equals(etrEntrust.getEntrustClass())){ // 多组合指令
             List<EtrEntrustDetail> etrEntrustDetails = trdCommonBaseMapper.selectEtrEntrustDetailByEntrustId(etrEntrust.getEntrustId());
             if(org.springframework.util.CollectionUtils.isEmpty(etrEntrustDetails)){
@@ -1313,7 +1326,8 @@ public class TrdCommonBaseService extends BaseService {
                     // 下单券面总额
                     portfolioDto.setOrdSecAmount(ArithmeticUtil.multiply(orderInfoDto.getEntrustVolume(), new BigDecimal(100), ratio));
                     // 标准券券面总额
-                    portfolioDto.setStandardSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt(), new BigDecimal(100), ratio));
+                    portfolioDto.setStandardSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt().multiply(converseRadio)
+                            .multiply(百元券面).divide(hundred), ratio));
                 }else{
                     // 券面总额
                     portfolioDto.setSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt(), ratio));
@@ -1348,7 +1362,8 @@ public class TrdCommonBaseService extends BaseService {
                 // 本方券面总额
                 portfolioDto.setOwnSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt(), new BigDecimal(100)));
                 // 标准券券面总额
-                portfolioDto.setStandardSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt(), new BigDecimal(100)));
+                portfolioDto.setStandardSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt().multiply(converseRadio)
+                        .multiply(百元券面).divide(hundred)));
             }else{
                 // 指令券面总额
                 portfolioDto.setEtrSecAmount(ArithmeticUtil.multiply(etrEntrust.getEntrustNum()));

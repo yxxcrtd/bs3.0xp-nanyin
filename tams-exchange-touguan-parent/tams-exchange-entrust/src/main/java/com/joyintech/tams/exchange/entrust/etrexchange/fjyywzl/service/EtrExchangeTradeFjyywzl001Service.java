@@ -9,6 +9,7 @@ import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.business.common.dto.PageMode;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.common.base.dao.FinProductConvertibleMapper;
 import com.joyintech.tams.common.base.entity.FinExercisePlan;
@@ -24,7 +25,8 @@ import com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.dao.EtrExchangeTr
 import com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.dto.EtrExchangeTradeFjyywzlZqzyDto;
 import com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.dto.EtrExchangeTradeZqzyRequest;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
-import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.common.dto.position.PositionCashSecDto;
+import com.joyintech.tams.invest.common.entrust.inter.EtrTradeCommonervice;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.TrdOthCodeInfoDto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.apache.commons.lang3.StringUtils;
@@ -33,6 +35,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -53,6 +56,8 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
 
     @Autowired(required = false)
     private IPlatformDate iPlatformDate;
+    @Autowired
+    private EtrTradeCommonervice etrTradeCommonervice;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -114,16 +119,41 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
     /**
      * 查询上交所和深交所标准券数量
      *
-     * @param pageParam 页面参数
+     * @param dto 页面参数
      * @return 上交所和深交所标准券数量
      * @see
      * @since 1.0
      */
-    public Map<String, String> loadSecNum(Map<String, Object> pageParam) {
-        Map<String, String> map = (Map<String, String>) restTemplate.postForObject(
-                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/loadSecNum",
-                pageParam, Map.class);
-        return map;
+    public Map<String, Object> loadSecNum(PositionCashSecDto dto) {
+        Map<String, Object> resultMap = new HashMap<>();
+        BigDecimal secNumSh=BigDecimal.ZERO;
+        BigDecimal canNumSh=BigDecimal.ZERO;
+        String rateSh="";
+        BigDecimal secNumZh=BigDecimal.ZERO;
+        BigDecimal canNumZh=BigDecimal.ZERO;
+        String rateZh="";
+        EtrExchangeTradeZqzyRequest zqzyRequest=new EtrExchangeTradeZqzyRequest();
+        PageMode pageMode=new PageMode();
+        pageMode.setPageSize(100);
+        pageMode.setPageNo(1);
+        zqzyRequest.setPageMode(pageMode);
+        Page<EtrExchangeTradeFjyywzlZqzyDto> page=findZqzyPositionsPage(zqzyRequest);
+        if(page!=null&page.getRoot()!=null){
+            //筛选出当前组合下所有持仓
+            List<EtrExchangeTradeFjyywzlZqzyDto> shProList=page.getRoot().stream().filter(item->StringUtil.equals(item.getPortfolioId(),dto.getPortfolioId())&&StringUtil.equals(item.getTradeMarket(), DictCodeListExt1.估值交易市场_上交所.getValue())).collect(Collectors.toList());
+            canNumSh=queryProPosition(1,shProList);
+            secNumSh=queryProPosition(2,shProList);
+            List<EtrExchangeTradeFjyywzlZqzyDto> zhProList=page.getRoot().stream().filter(item->StringUtil.equals(item.getPortfolioId(),dto.getPortfolioId())&&StringUtil.equals(item.getTradeMarket(), DictCodeListExt1.估值交易市场_深交所.getValue())).collect(Collectors.toList());
+            canNumZh=queryProPosition(1,zhProList);
+            secNumZh=queryProPosition(2,zhProList);
+        }
+        resultMap.put("canNumSh",canNumSh+"张");
+        resultMap.put("secNumSh",secNumSh+"张");
+        resultMap.put("rateSh",rateSh);
+        resultMap.put("canNumZh",canNumZh+"张");
+        resultMap.put("secNumZh",secNumZh+"张");
+        resultMap.put("rateZh",rateZh);
+        return resultMap;
     }
 
     /**
@@ -264,5 +294,22 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
             }
         }
         return null;
+    }
+
+    private BigDecimal queryProPosition(Integer type,List<EtrExchangeTradeFjyywzlZqzyDto> list) {
+        List<PositionCashSecDto> secList = new ArrayList<>();
+        for(EtrExchangeTradeFjyywzlZqzyDto temp:list){
+            PositionCashSecDto positionCashSecDto=new PositionCashSecDto();
+            BeanUtil.copyPropertiesIgnoreNull(positionCashSecDto,temp);
+            if(type==1){
+                positionCashSecDto.setHoldingType(DictCodeListExt3.资产类型_通用回购融资券可用持仓.getValue());
+            }else{
+                positionCashSecDto.setHoldingType(DictCodeListExt3.资产类型_质押式通用回购已使用融资券总额度.getValue());
+            }
+            secList.add(positionCashSecDto);
+        }
+        BigDecimal newSecAmount = etrTradeCommonervice.queryPosition(secList, "02", "");
+        return newSecAmount;
+
     }
 }

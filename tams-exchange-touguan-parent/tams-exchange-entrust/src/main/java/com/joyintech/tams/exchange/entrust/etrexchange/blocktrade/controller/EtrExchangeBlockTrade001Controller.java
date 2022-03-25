@@ -474,10 +474,10 @@ public class EtrExchangeBlockTrade001Controller extends BaseController{
 	@ApiOperation(value="查询竞价交易行情信息",notes = "查询竞价交易行情信息")
 	@ResponseBody
 	@PostMapping("findQuotations")
-	public Message<EtrExchangeTradeQuotationHqResponse> findQuotations(@RequestBody EtrExchangeTradeQuotationRequest request) {
+	public Message<EtrExchangeTradeQuotationHqResponse> findQuotations(@RequestBody EtrExchangeTradeEtrExchangeCommonRequest request) {
 		try {
 			String secId = request.getSecId();
-			EtrExchangeTradeQuotationHqResponse quotations = etrExchangeTrade001CommonService.findQuotations(secId);
+			EtrExchangeTradeQuotationHqResponse quotations = etrExchangeTradeCommon001Service.findQuotations(secId);
 			return new Message<EtrExchangeTradeQuotationHqResponse>().success().setData(quotations);
 		}catch (Exception e) {
 			logger.error("查询竞价易行情数据异常",e);

@@ -21,6 +21,7 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -406,4 +407,14 @@ public interface TrdCommonBaseMapper {
     List<FinPledgeDispDetailTemp> getFinPledgeDispDetailTemps(Map<String, Object> map);
 
     FinDealPledge selectFinDealPledgeByPrimaryKey(FinDealPledgeKey finDealPledgeKey);
+
+    /**
+     * 根据金融产品代码，日期，查询出当日折算率
+     *
+     * @param finprodId 金融产品代码
+     * @return EtrEntrust
+     * @see
+     * @since 1.0
+     */
+    BigDecimal queryConverseRadio(@Param("finprodId") String finprodId, @Param("vdate") Date vdate);
 }
