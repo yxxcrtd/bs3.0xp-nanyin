@@ -208,7 +208,8 @@ public class PositionRequestServiceInstructionRequest {
                 for (PortfolioCalculateResponse item : calculates) {
                     bean = new PositionRequestBaseBean(entity);
                     bean.setPortfolioId(item.getPortfolioId());
-                    bean.setFinprodId(entity.getConShareId());
+//                    bean.setFinprodId(entity.getConShareId());
+                    bean.setFinprodId(entrustManagement.getOthCodeFromInvestment(entity.getEntrustProp(), entity));
                     BigDecimal secAmount = commonPositionEngineService.getSecAmountByBondUnit(item.getEntrustNum());
                     bean.setSecAmount(secAmount);
                     Map<String, Object> map = BeanUtil.object2Map(bean);
