@@ -556,7 +556,8 @@
             fp.finprod_market_id oldFinprodMarketId,
             eted.DEAL_MODE dealMode,  /** 申报类型 **/
             nvl(ete.entrust_num * ete.price, ete.entrust_num) pledgeStandardNumber, /** 标准券额度 **/
-            fp.Is_Right isRight
+            fp.Is_Right isRight,
+            eted.DEAL_MODE declaType
         FROM ETR_ENTRUST ete
         INNER JOIN ETR_ENTRUST_ADD eted ON ete.entrust_id = eted.entrust_id
         LEFT JOIN FIN_PRODUCT_TYPE_CONFIG btm ON ( ete.FINPROD_TYPE2 = btm.INPUT_VALUE_2 OR btm.INPUT_VALUE_2 IS NULL )
@@ -688,7 +689,8 @@
         fp.finprod_market_id oldFinprodMarketId,
         eted.DEAL_MODE dealMode,  /** 申报类型 **/
         nvl(ete.entrust_num * ete.price, ete.entrust_num) pledgeStandardNumber, /** 标准券额度 **/
-        fp.Is_Right isRight
+        fp.Is_Right isRight,
+        eted.DEAL_MODE declaType
         FROM WFL_ETR_ENTRUST ete
         INNER JOIN WFL_ETR_ENTRUST_ADD eted ON ete.entrust_id = eted.entrust_id
         LEFT JOIN FIN_PRODUCT_TYPE_CONFIG btm ON ( ete.FINPROD_TYPE2 = btm.INPUT_VALUE_2 OR btm.INPUT_VALUE_2 IS NULL )

@@ -549,7 +549,8 @@
             where
                 T.id is not null
             <if test="finprodMarketId != null and finprodMarketId!='' ">
-                AND T.id like '%' || #{finprodMarketId} || '%'
+                AND (T.text like '%' || #{finprodMarketId} || '%'
+                or T.id like '%' || #{finprodMarketId} || '%')
             </if>
     </select>
 
