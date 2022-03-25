@@ -1197,7 +1197,7 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
 
 		ptlPositionHoldDto.setPtlCashPositionFlows(ptlCashPositionFlows);
 		ptlPositionHoldDto.setPtlSecPositionFlows(ptlSecPositionFlows);
-		ptlPositionHoldDto.getPtlCashPositionFlows().forEach(etrCashPositionFlowDto -> etrCashPositionFlowDto.setCdate(settleDate));
+		ptlPositionHoldDto.getPtlCashPositionFlows().forEach(etrCashPositionFlowDto -> etrCashPositionFlowDto.setCdate(platDate));
 		ptlPositionHoldDto.getPtlSecPositionFlows().forEach(etrSecPositionFlowDto -> etrSecPositionFlowDto.setCdate(settleDate));
 		// 数据是否已入新头寸
 		if(StringUtil.isNotEmpty(dto.getIsExistNew())){
