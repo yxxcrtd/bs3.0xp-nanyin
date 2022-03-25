@@ -425,7 +425,14 @@
                     }
                 });
             }
-
+            if(ps == 'T93' || ps == 'T94'
+                || ps == 'T95' || ps == 'T96'){
+                $("#riskTrialRet_div").hide();
+                $("#EtrAgreRepTrade001_btn_riskcal").hide();
+            }else{
+                $("#riskTrialRet_div").show();
+                $("#EtrAgreRepTrade001_btn_riskcal").show();
+            }
             removeMustOfRepSecId();
         };
         var amtCal = function() {
@@ -1703,8 +1710,11 @@
          * @returns
          */
         function doRiskcal() {
-            debugger
             var object = getSearchParams();
+            if(object.ps == 'T93' || object.ps == 'T94'
+                || object.ps == 'T95' || object.ps == 'T96'){
+                return;
+            }
             if(object) {
                 // 交易所协议回购 指令环节，只有正回购、逆回购、到期续做等交易方向参与风险试算
                 var busiType = $("#ps").val();
@@ -1802,16 +1812,17 @@
 //        if(!checkDbClickData(object)){
 //            return;
 //        }
-
-                if (!entity_RiskTrialRetList || riskFlag !== 0) {
-                    Joyin.error("请先完成风险试算")
-                    return false;
+                if(!(object.ps == 'T93' || object.ps == 'T94'
+                    || object.ps == 'T95' || object.ps == 'T96')) {
+                    if (!entity_RiskTrialRetList || riskFlag !== 0) {
+                        Joyin.error("请先完成风险试算")
+                        return false;
+                    }
+                    if ($('#riskTrialSpan').text() && $('#riskTrialSpan').text().trim() == '试算不通过') {
+                        Joyin.error("风险试算未通过")
+                        return false;
+                    }
                 }
-                if ($('#riskTrialSpan').text() && $('#riskTrialSpan').text().trim() == '试算不通过') {
-                    Joyin.error("风险试算未通过")
-                    return false;
-                }
-
                 //TODO 风险和授信
 //        Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
                 Joyin.ajaxJson(basePath + '/etrexchange/agreementrep/EtrExchangeAgreRepTrade001/checkSaveError',object,
@@ -1858,7 +1869,15 @@
 //            entrustNumChange();
 //            psChange();
 //            priceModelChange(true);
-
+                    var ps =  $("#ps").val();
+                    if(ps == 'T93' || ps == 'T94'
+                        || ps == 'T95' || ps == 'T96'){
+                        $("#riskTrialRet_div").hide();
+                        $("#EtrAgreRepTrade001_btn_riskcal").hide();
+                    }else{
+                        $("#riskTrialRet_div").show();
+                        $("#EtrAgreRepTrade001_btn_riskcal").show();
+                    }
                 }
                 if(workflowId){
                     $("#EtrAgreRepTrade001_btn_div").show();
