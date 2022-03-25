@@ -1,12 +1,10 @@
 package com.joyintech.service.trade.entrustmsgbymq.service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.joyintech.service.trade.entrustmsgbymq.dto.TrdTempDto;
+import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import org.codehaus.plexus.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -127,6 +125,9 @@ public class FundTradePreClearingService extends BaseService<InfContractDetailfi
      */
     @Autowired
     private EtrEntrustMapper etrEntrustMapper;
+
+	@Autowired
+	private TradePreCommonService tradePreCommonService;
     
     public void trdFund(TrdTempDto trdTempDto, InfContractDetailfile infContractDetailfile) throws Exception {
 		// 金融产品临时交易表Entity
@@ -303,26 +304,61 @@ public class FundTradePreClearingService extends BaseService<InfContractDetailfi
 		stlPayTempOrders.setPortfolioId(trdProductTempDealAdd.getPortfolioId());
 		stlPayTempOrdersMapper.insertSelective(stlPayTempOrders);
 
-		// 构建金融产品交易Entity
-		BaseTradeProductDealDto baseTradeProductDealDto = new BaseTradeProductDealDto();
+//		// 构建金融产品交易Entity
+//		BaseTradeProductDealDto baseTradeProductDealDto = new BaseTradeProductDealDto();
+//
+//		TrdProductDeal trdProductDeal = new TrdProductDeal();
+//		BeanUtil.copyPropertiesIgnoreNull(trdProductDeal, trdProductTempDeal);
+//		baseTradeProductDealDto.setTrdProductDeal(trdProductDeal);
+//
+//		TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
+//		BeanUtil.copyPropertiesIgnoreNull(trdProductDealAdd, trdProductTempDealAdd);
+//		baseTradeProductDealDto.setTrdProductDealAdd(trdProductDealAdd);
+//		List<StlPayOrdersDto> stlPayOrdersList = new ArrayList<StlPayOrdersDto>();
+//		StlPayOrdersDto StlPayOrders = new StlPayOrdersDto();
+//		BeanUtil.copyPropertiesIgnoreNull(StlPayOrders, stlPayTempOrders);
+//		stlPayOrdersList.add(StlPayOrders);
+//		baseTradeProductDealDto.setStlPayOrdersList(stlPayOrdersList);
+//		baseTradeProductDealDto.setEntrustId(trdProductTempDealAdd.getEntrustId());
+//		// 3.写入类型为[实际]的组合持仓流水与组合现金流水
+//		this.insertFundPosition(baseTradeProductDealDto);
 
+		// ZGTFCP-1499:重新封装基础对象，调用头寸公共方法 modify by fuyongsheng 20220325 start
+		FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
+		finProductTradeDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_有效.getValue());
+		BaseTradeProductDealDto baseTradeProductDealDto = new BaseTradeProductDealDto();
 		TrdProductDeal trdProductDeal = new TrdProductDeal();
 		BeanUtil.copyPropertiesIgnoreNull(trdProductDeal, trdProductTempDeal);
-		baseTradeProductDealDto.setTrdProductDeal(trdProductDeal);
+		baseTradeProductDealDto.setTrdProductDeal(trdProductDeal); // 金融产品交易
+
+		baseTradeProductDealDto.setEntrustId(trdProductTempDealAdd.getEntrustId());
 
 		TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
 		BeanUtil.copyPropertiesIgnoreNull(trdProductDealAdd, trdProductTempDealAdd);
-		baseTradeProductDealDto.setTrdProductDealAdd(trdProductDealAdd);
-		List<StlPayOrdersDto> stlPayOrdersList = new ArrayList<StlPayOrdersDto>();
-		StlPayOrdersDto StlPayOrders = new StlPayOrdersDto();
-		BeanUtil.copyPropertiesIgnoreNull(StlPayOrders, stlPayTempOrders);
-		stlPayOrdersList.add(StlPayOrders);
-		baseTradeProductDealDto.setStlPayOrdersList(stlPayOrdersList);
-		baseTradeProductDealDto.setEntrustId(trdProductTempDealAdd.getEntrustId());
-		// 3.写入类型为[实际]的组合持仓流水与组合现金流水
-		this.insertFundPosition(baseTradeProductDealDto);
-		// 3.调用基础组件.【投资委托组件.完成委托】，写入委托完成状况信息(投资委托场合才执行此步)
-		this.finishEntrust(baseTradeProductDealDto, false);
+		baseTradeProductDealDto.setTrdProductDealAdd(trdProductDealAdd); // 金融产品附属
+		// 是否来自场内交易下单成交标识
+		baseTradeProductDealDto.setIsFromExchange(DictCodeList.是否_是.getValue());
+
+		// 划款指令
+		StlPayOrdersDto stlPayOrdersDto = new StlPayOrdersDto();
+		BeanUtil.copyPropertiesIgnoreNull(stlPayOrdersDto, stlPayTempOrders);
+
+		baseTradeProductDealDto.setStlPayOrdersList(Arrays.asList(stlPayOrdersDto));
+		finProductTradeDto.setBaseTradeProductDealDtos(Arrays.asList(baseTradeProductDealDto));
+		finProductTradeDto.setNeedSum(true);
+		String assetType2 = entrustMsgbyMQMapper.queryAssetType1(trdTempDto.getEntrustId());
+		finProductTradeDto.setAssetType2(assetType2);
+		// 委托代码不为空处理委托代码
+		finProductTradeDto.getBaseTradeProductDealDtos().forEach(item -> {
+			String entrustId = infContractDetailfile.getEntrustId();
+			if (StringUtil.isEmpty(item.getEntrustId()) && StringUtil.isNotEmpty(entrustId)) {
+				item.setEntrustId(entrustId);
+			}
+		});
+		// 处理头寸
+		tradePreCommonService.executePosition(finProductTradeDto);
+		// ZGTFCP-1499:重新封装基础对象，调用头寸公共方法 modify by fuyongsheng 20220325 end
+
 		// 调用新头寸接口 add by fuyongsheng 20220307 start
 		BeanUtil.copyPropertiesIgnoreNull(trdTempDto, infContractDetailfile);
 		// 关联系统交易编号
