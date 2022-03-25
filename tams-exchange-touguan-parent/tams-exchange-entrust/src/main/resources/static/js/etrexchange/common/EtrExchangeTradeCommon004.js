@@ -2224,7 +2224,14 @@
                                 disabled: false
                             });
                         }*/
-            else {
+            else if(finprodType2 == FINPROD_TYPE_TG_F10){
+                $("#priceModel_" + currentTab).updateChosenArr({
+                    item: [PRICE_MODEL_PRM10, PRICE_MODEL_PRM02, PRICE_MODEL_PRM03],
+                    chosen: $("#priceModel_" + currentTab).val(),
+                    disabled: false,
+                    isNotTrigger: true
+                });
+            }else {
                 // 画面.价格模式  = 数据字典.价格模式.限价指令，数据字典.价格模式.市价指令
                 $("#priceModel_" + currentTab).updateChosenArr({
                     item: [PRICE_MODEL_PRM02, PRICE_MODEL_PRM03],

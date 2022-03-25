@@ -36,7 +36,7 @@
         SELECT 100 - sum(nvl(PRIN_AMT,0 ))
         FROM FIN_CASH_PLAN
         WHERE FINPROD_ID=#{finprodId}
-          AND TO_DATE(#{sysDate}, 'yyyy-MM-dd') >= MDATE
+          AND #{sysDate} >= MDATE
     </select>
 
 </mapper>
