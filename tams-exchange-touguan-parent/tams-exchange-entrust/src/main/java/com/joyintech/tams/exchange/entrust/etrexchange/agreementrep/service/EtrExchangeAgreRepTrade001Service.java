@@ -31,6 +31,8 @@ import com.joyintech.service.entrust.common.service.WFlowCommonService;
 import com.joyintech.tams.business.common.exception.PositionException;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.PositionUtil;
+import com.joyintech.tams.common.base.dao.*;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeCommonRiskcalDto;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePortfolioRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest;
@@ -64,18 +66,6 @@ import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDisp
 import com.joyintech.system.base.dao.SysWflBusinessListMapper;
 import com.joyintech.system.base.entity.SysWflBusinessList;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
-import com.joyintech.tams.common.base.dao.EtrEntrustBackupMapper;
-import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
-import com.joyintech.tams.common.base.dao.FinDealPledgeMapper;
-import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
-import com.joyintech.tams.common.base.entity.EtrDistribute;
-import com.joyintech.tams.common.base.entity.EtrEntrust;
-import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
-import com.joyintech.tams.common.base.entity.EtrPledge;
-import com.joyintech.tams.common.base.entity.FinDealPledge;
-import com.joyintech.tams.common.base.entity.FinDealPledgeKey;
-import com.joyintech.tams.common.base.entity.FinTradeProduct;
-import com.joyintech.tams.common.base.entity.FinTradeProductKey;
 import com.joyintech.tams.component.base.core.impl.dao.MstWorkflowCommonServiceMapperImpl;
 import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
@@ -192,6 +182,10 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
      */
     @Autowired
     private EtrEntrustBackupMapper etrEntrustBackupMapper;
+    @Autowired
+    private EtrEntrustDetailBackUpMapper etrEntrustDetailBackUpMapper;
+    @Autowired
+    private EtrEntrustDetailMapper etrEntrustDetailMapper;
 
     public static final String ENTRUST_RECORD_MODIFY = "modify";
     
@@ -2212,6 +2206,8 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
     @Override
     public void doBack(EtrExchangeAgreRepTrade001Dto entity) {
         doDeleteWflEntity(entity.getWorkflowId());
+        //从废弃表还原
+        backReRoll(entity.getEntrustId());
         // 释放指令头寸
         EtrExchangeAgreRepTrade001Dto postionFlowDto = new EtrExchangeAgreRepTrade001Dto();
         BeanUtil.copyPropertiesIgnoreNull(postionFlowDto,entity);
@@ -2489,5 +2485,28 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
 
     private void doInsertBackupQuery(BaseEtrInvestInfoDto dto) {
         WFlowCommonService.inserBackuptWithQuery(dto);
+    }
+
+    /**
+     * 修改指令回退时,从废弃表将数据取出重新插入
+     *
+     * @param entrustId 指令代码
+     */
+    public void backReRoll(String entrustId) {
+        //从废弃表中获取，转移到指令表
+        etrEntrustBackupMapper.insertEtrFromQuery(entrustId);
+        etrEntrustBackupMapper.insertEtrAddFromQuery(entrustId);
+        List<EtrEntrustDetailBackUp> list=etrEntrustDetailBackUpMapper.selectList(entrustId);
+        if(!org.apache.commons.collections.CollectionUtils.isEmpty(list)){
+            for(EtrEntrustDetailBackUp etrEntrustDetailBackUp:list){
+                EtrEntrustDetail etrEntrustDetail = new EtrEntrustDetail();
+                BeanUtil.copyPropertiesIgnoreNull(etrEntrustDetail,etrEntrustDetailBackUp);
+                etrEntrustDetailMapper.insert(etrEntrustDetail);
+            }
+        }
+        // 删除废弃表
+        etrEntrustBackupMapper.deleteByPrimaryKey(entrustId);
+        etrEntrustBackupMapper.deleteAddByPrimaryKey(entrustId);
+        etrEntrustBackupMapper.deleteDetailByPrimaryKey(entrustId);
     }
 }
