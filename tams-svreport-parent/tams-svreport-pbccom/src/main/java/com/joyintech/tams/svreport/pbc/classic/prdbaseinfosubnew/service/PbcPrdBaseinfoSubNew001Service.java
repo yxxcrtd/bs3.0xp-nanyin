@@ -421,10 +421,10 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
             	result.setVdate01(date);
             }
 			if (StringUtil.isNotEmpty(result.getCrossBorderFlag())){
-				result.setCrossBorderFlag( SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getCrossBorderFlag()));
+				result.setCrossBorderFlag(result.getCrossBorderFlag() + "-" + SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getCrossBorderFlag()));
 			}
 			if (StringUtil.isNotEmpty(result.getZjxtFlag())){
-				result.setZjxtFlag( SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getZjxtFlag()));
+				result.setZjxtFlag(result.getZjxtFlag() + "-" + SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getZjxtFlag()));
 			}
 		}
 	}
