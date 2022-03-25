@@ -4886,7 +4886,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		Map<String,Object> paramMap = new HashMap<String,Object>();
 		Map<String,Object> paramMap1 = new HashMap<String,Object>();
 		paramMap1.put("finprodId",finprodId);
-		paramMap1.put("portfolioId",map.get("portfolioId"));
+		//paramMap1.put("portfolioId",map.get("portfolioId"));
 		paramMap1.put("secAcctId",map.get("secAcctId"));
 		paramMap1.put("cDate",map.get("cDate"));
 //		paramMap1.put("cDate",StringUtil.isNotEmpty(map.get("cDate"))?DateUtil.parse(map.get("cDate").toString()):null);

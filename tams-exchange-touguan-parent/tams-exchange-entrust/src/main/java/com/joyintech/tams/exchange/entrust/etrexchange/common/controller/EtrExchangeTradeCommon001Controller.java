@@ -1040,7 +1040,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 		String confirmMsg = "";
 		if (DictCodeList.交易方向_申购.getValue().equals(dto.getPs()) && DictCodeListExt1.金融产品类型_投管用_股票.getValue().equals(dto.getFinprodType2())) {
 			Map<String, Object> paramMap = new HashMap<String, Object>();
-			paramMap.put("finprodId", dto.getFinprodId());//金融产品代码
+			//paramMap.put("finprodId", dto.getFinprodId());//金融产品代码
 			List<String> othTypeList = new ArrayList<String>();
 			othTypeList.add(DictCodeListExt3.金融产品其他代码类型_新股申购代码.getValue());
 			paramMap.put("othTypeList", othTypeList);
