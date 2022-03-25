@@ -96,7 +96,7 @@ public interface CfetsIbuQuoteBondMapper {
 
     BigDecimal getWflShareAmtByEntrustId(@Param("entrustId") String entrustId);
 
-    BigDecimal getWflShareAmtByEntrustIdAndWorkFlowId(@Param("entrustId") String entrustId,@Param("workFlowId") String workFlowId);
+    BigDecimal getWflShareAmtByEntrustIdAndWorkFlowId(@Param("entrustId") String entrustId,@Param("totleTradeId") String workFlowId);
 
     String getTradeStatus(@Param("quoteId") String quoteId,@Param("cpPartyId") String cpPartyId);
 

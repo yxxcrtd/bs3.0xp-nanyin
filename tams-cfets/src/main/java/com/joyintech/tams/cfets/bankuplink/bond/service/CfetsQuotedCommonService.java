@@ -861,8 +861,8 @@ public class CfetsQuotedCommonService extends BaseService {
      * @param entrustId
      * @return
      */
-    public BigDecimal getWflShareAmtByEntrustId(String entrustId,String workFlowId){
-        return cfetsIbuQuoteBondMapper.getWflShareAmtByEntrustIdAndWorkFlowId(entrustId,workFlowId);
+    public BigDecimal getWflShareAmtByEntrustId(String entrustId,String totleTradeId){
+        return cfetsIbuQuoteBondMapper.getWflShareAmtByEntrustIdAndWorkFlowId(entrustId,totleTradeId);
     }
 
     public  AjaxResult reclasCheck(CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto){
