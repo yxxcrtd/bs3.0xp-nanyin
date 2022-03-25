@@ -109,8 +109,8 @@ public class EtrExchangeTradeCommon003Controller extends BaseController{
             for(EtrExchangeTradeOperateRequest item : tradeOperateRequests){
                 //银行间保持一致
                 if(!StringUtil.equals(item.getEntrustStatus(), DictCodeList.委托状态_已接收.getValue())
-                &&!StringUtil.equals(item.getEntrustStatus(), DictCodeList.委托状态_已退回.getValue())
-                        &&!StringUtil.equals(item.getEntrustStatus(), DictCodeList.委托状态_已撤回.getValue())){
+                /*&&!StringUtil.equals(item.getEntrustStatus(), DictCodeList.委托状态_已退回.getValue())
+                        &&!StringUtil.equals(item.getEntrustStatus(), DictCodeList.委托状态_已撤回.getValue())*/){
                     errList.add(new ValidMessage(item.getEntrustStatusString()+"的指令不允许关闭!"));
                 }else if(StringUtil.equals(item.getEntrustStatus(), DictCodeList.委托状态_已接收.getValue())
                         &&item.getDealPercent()!=null && BigDecimal.ZERO.compareTo(item.getDealPercent())<0){
