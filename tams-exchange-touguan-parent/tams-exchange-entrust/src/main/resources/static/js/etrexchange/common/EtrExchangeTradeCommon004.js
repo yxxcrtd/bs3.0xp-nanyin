@@ -2405,6 +2405,8 @@
             return;
         }
         Joyin.ajaxJson(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeTrade001/calcEntrustNumAndAmt', param, function (result) {
+            console.log("========"+JSON.stringify(result));
+            console.log("========"+JSON.stringify(param));
             if (param.targetType == TARGET_CLASS_01 && param.availableNum && param.availableNum > 0) {
                 var stockNum = param.availableNum - result.entrustNum;
                 if (result.minNum) {
@@ -2436,6 +2438,7 @@
             } else if ($("#priceModel_" + currentTab).val() == PRICE_MODEL_PRM03) {
                 $("#entrustAmt_" + currentTab).val(0).trigger('blur');
             }
+            alert(result.entrustNum);
             // modify by etliu 20210901 end
             $("#entrustNum_" + currentTab).val(result.entrustNum).trigger('blur');
         }, false);
@@ -3659,7 +3662,12 @@
         var len = array.length;
         for (var i = 0; i < array.length; i++) {
             if (array[i].acctNo) {
-                array[i].entrustNum = entrustNum / len;
+                var entrustNumForOne = entrustNum / len;
+                if(i == 0){
+                    array[i].entrustNum = Math.ceil(entrustNumForOne);
+                }else {
+                    array[i].entrustNum = Math.floor(entrustNumForOne);
+                }
                 array[i].entrustAmt = entrustAmt / len;
             }
         }
@@ -3812,6 +3820,11 @@
                     Joyin.error("组合分配中指令数量不能为空")
                     return false;
                 }
+                if(object.tradeMarket == TRADE_PLACE_03 && item.entrustNum % 10 != 0){
+                    Joyin.error("指令数量，请输入数量最小交易单位10的整数倍")
+                    return false;
+                }
+
             }
             if (!checkFlag) {
                 Joyin.error("请填写完整组合信息")
