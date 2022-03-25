@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.Map;
 
 /**
@@ -24,8 +23,7 @@ public class EtrTradeOtherCommonService extends BaseService {
     private EtrTrdCommonMapper etrTrdCommonMapper;
 
     public BigDecimal selectFaceValue(Map<String, Object> params) {
-        Date sysDate = DateUtil.platDateFromCache();
-        params.put("sysDate",sysDate);
+        params.put("sysDate",DateUtil.platDateFromCache());
         BigDecimal result = etrTrdCommonMapper.selectFaceValue(params);
         return result == null ? new BigDecimal(100) : result;
     }
