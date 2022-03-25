@@ -321,9 +321,9 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
         String tradeMarket = (String)map.get("tradeMarket");
         Date mDate = DateUtil.addDay(DateUtil.parse(fristSettleDate), term);
         map.put("mDate", DateUtil.format(mDate));
-        String dealCalId = "04";
+        String dealCalId = "05";
         if(DictCodeListExt1.交易场所_上海证券交易所.getValue().equals(tradeMarket)){
-            dealCalId = "05";
+            dealCalId = "04";
         }
         List<String> holidayList =  dateCalService.getDealCalendarHoliday(mDate, DateUtil.addDay(mDate,30), dealCalId);
 
