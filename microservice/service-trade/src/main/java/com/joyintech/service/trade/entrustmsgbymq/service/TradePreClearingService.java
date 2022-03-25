@@ -1173,6 +1173,8 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
         EtrEntrust etrEntrust = entrustMsgbyMQMapper.queryEtrEntrust(infContractDetailfile.getEntrustId());
         // 投资目的
         dto.setInvAim(StringUtil.isNotEmpty(etrEntrust.getInvAim())?etrEntrust.getInvAim():AllTradeCommonUtil.getInvAim(infContractDetailfile.getPortfolioId()));
+        //业务模式
+        dto.setBusinessModel(StringUtil.isNotEmpty(etrEntrust.getBusinessModel())?etrEntrust.getInvAim():"");
         // 场内指令
         TrdBondInvestTradeDto inputDto = new TrdBondInvestTradeDto();
         inputDto.setSettleDate(dto.getSettleDate());
