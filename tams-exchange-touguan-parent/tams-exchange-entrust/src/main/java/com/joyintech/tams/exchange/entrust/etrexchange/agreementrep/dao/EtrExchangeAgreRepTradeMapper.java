@@ -104,4 +104,11 @@ public interface EtrExchangeAgreRepTradeMapper {
      * @return 资产信息
      */
     List<FinProduct> selectFinProductData(Map<String, Object> map);
+
+    /**
+     * 查询已经做了的提前购回、到期购回、到期续作、解除质押指令条数
+     * @param map 参数
+     * @return 指令条数
+     */
+    int selectDoneEtrEntrustCount(Map<String, Object> map);
 }
