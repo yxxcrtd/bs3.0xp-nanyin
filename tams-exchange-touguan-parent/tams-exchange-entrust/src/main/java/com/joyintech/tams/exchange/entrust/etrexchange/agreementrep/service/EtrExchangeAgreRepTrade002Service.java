@@ -196,8 +196,8 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
                 BigDecimal floatPlPercent = ArithmeticUtil.divide(entity.getFloatingPL(), ArithmeticUtil.multiply(entity.getPrice(),entity.getPtlPositionsNum()),2);
                 entity.setFloatingPLPercent(floatPlPercent);
             }
-            result.setRoot(list);
         }
+        result.setRoot(list);
         return result;
     }
 
