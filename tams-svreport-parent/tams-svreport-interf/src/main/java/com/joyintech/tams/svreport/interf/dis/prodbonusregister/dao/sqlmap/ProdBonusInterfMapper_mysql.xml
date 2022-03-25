@@ -20,18 +20,20 @@
 
     <select id="select" resultMap="BaseResultMap"  >
         SELECT
-        BONUS_PLAN_ID ID,
+        N.TRADE_ID ID,
         F.FINPROD_MARKET_ID PROD_ID,
-        REG_DATE BONUS_REGISTER_DATE,
-        BONUS_DATE BONUS_DEALT_DATE,
-        (case N.BONU_SCALC_FLAG when ‘02’ then N.TOTAL_AMT else N.UNIT_BONUS_VLU end)UNIT_BONUS_AMT
-        FROM PRD_BONUS_PLAN_N N
+        N.TRADE_DATE BONUS_REGISTER_DATE,
+        N.TRADE_DATE BONUS_DEALT_DATE,
+        N.TRADE_AMT UNIT_BONUS_AMT
+        FROM trd_product_deal N
         LEFT JOIN FIN_PRODUCT F ON N.FINPROD_ID=F.FINPROD_ID
         WHERE 1=1
-        AND BONU_SCALC_FLAG = '01'
+        /*AND BONU_SCALC_FLAG = '01'   已被注释     */
+
+        AND N.ps = 'C9'
         <if test="updatetime != null" >
             and ifnull(N.UPDATE_TIME,N.CREATE_TIME) > #{updatetime,jdbcType=TIMESTAMP}
         </if>
-    </select>
 
+    </select>
 </mapper>

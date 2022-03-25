@@ -15,7 +15,7 @@
     <sql id="Base_Column_List">
     INTERF_ID, LAST_UPDATETIME, REMARK, INTERF_NAME, CONTENT_TYPE, CONTENT_SRC, REF_REPORT,
     SYS_SCOPE, STATUS
-  </sql>
+    </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
@@ -155,7 +155,6 @@
 		where
 			INTERF_ID =  #{interfId,jdbcType=VARCHAR}
 	</update>
-
     <select id="selectByInterfId" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
@@ -163,7 +162,6 @@
         where INTERF_ID = #{interfId,jdbcType=VARCHAR}
         and status= 'E'
     </select>
-
     <select id="selectByInterfIdEx" parameterType="java.lang.String" resultMap="BaseResultMap">
 	  select
 	  c.INTERF_ID, A.LAST_UPDATETIME, c.REMARK, c.INTERF_NAME, c.CONTENT_TYPE, c.CONTENT_SRC, c.REF_REPORT,
@@ -198,20 +196,15 @@
     <update id="updateLastupdatetimeExt" parameterType="map">
 		 UPDATE
 		 CHB_INTERF_CONFIG A
-		 /*SET LAST_UPDATETIME = nvl((SELECT MIN(LAST_UPDATETIME) FROM CHB_INTERF_CONFIG_add B WHERE A.INTERF_ID = b.INTERF_ID) ,sysdate)
-		*/
-		 SET LAST_UPDATETIME = ifnull((SELECT MIN(LAST_UPDATETIME) FROM CHB_INTERF_CONFIG_add B WHERE A.INTERF_ID = b.INTERF_ID) ,now())
+		 SET LAST_UPDATETIME = IFNULL((SELECT MIN(LAST_UPDATETIME) FROM CHB_INTERF_CONFIG_add B WHERE A.INTERF_ID = b.INTERF_ID) ,sysdate)
 		 WHERE INTERF_ID =  #{interfId,jdbcType=VARCHAR}
 	</update>
-
     <update id="updateBySysdate" parameterType="map">
         update
             CHB_INTERF_CONFIG
         set
-            /*LAST_UPDATETIME =  sysdate*/
-            LAST_UPDATETIME =  now()
+            LAST_UPDATETIME =  NOW()
         where
             INTERF_ID =  #{interfId,jdbcType=VARCHAR}
     </update>
-
 </mapper>
