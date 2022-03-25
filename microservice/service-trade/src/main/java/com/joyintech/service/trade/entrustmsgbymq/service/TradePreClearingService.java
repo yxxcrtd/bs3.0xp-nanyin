@@ -1896,6 +1896,15 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
             keyMap.put("vTradeId",infContractDetailfile.getvTradeId());
             keyMap.put("branch",0L);
             List<FinDealPledge> finDealPledgeList = entrustMsgbyMQMapper.getFinDealPledgeList(keyMap);
+            // ZGTFCP-1882: 质押品表的tradeId有时登录的是交易编号 modify by fuyongsheng 20220325 start
+            if(CollectionUtils.isEmpty(finDealPledgeList)){
+                List<TrdProductDeal> trdProductDeals = entrustMsgbyMQMapper.getTrdProductDealByFTradeId(infContractDetailfile.getvTradeId());
+                if(!CollectionUtils.isEmpty(trdProductDeals)){
+                    keyMap.put("vTradeId",trdProductDeals.get(0).getTradeId());
+                    finDealPledgeList = entrustMsgbyMQMapper.getFinDealPledgeList(keyMap);
+                }
+            }
+            // ZGTFCP-1882: 质押品表的tradeId有时登录的是交易编号 modify by fuyongsheng 20220325 end
             List<FinPledgeDispDetailTemp> finPledgeDispDetailTempList = new ArrayList<>();
             dto.setFinPledgeDispDetailTempList(finPledgeDispDetailTempList);
             //换出券或者解除质押券
