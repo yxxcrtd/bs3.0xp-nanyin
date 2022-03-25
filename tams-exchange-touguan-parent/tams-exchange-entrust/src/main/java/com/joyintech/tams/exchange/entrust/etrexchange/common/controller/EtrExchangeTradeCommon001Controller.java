@@ -1020,6 +1020,8 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	 * @see
 	 * @since 1.0
 	 */
+	@ResponseBody
+	@RequestMapping("check")
 	public AjaxResult check(@RequestBody  EtrExchangeTradeSaveRequest dto, BindingResult br)
 			throws Exception {
 		AjaxResult ajax= etrExchangeTrade001CommonService.checkSave(dto,br);
@@ -1100,6 +1102,14 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 			}
 		}
 		AjaxResult ajaxResult = new AjaxResult();
+		if (StringUtil.isNotEmpty(ajax) && StringUtil.isNotEmpty(ajax.getMessageType())
+				&& StringUtil.isNotEmpty(ajax.getData())) {
+			if (ajax.getMessageType().equals("错误消息")){
+				ajaxResult.setMessageType(MessageType.错误消息);
+			}
+			ajaxResult.setData(ajax.getData());
+			return ajaxResult;
+		}
 		if (StringUtil.isNotEmpty(confirmMsg)) {
 			ajaxResult.setMessageType(MessageType.确认消息);
 			ajaxResult.setData(confirmMsg);
