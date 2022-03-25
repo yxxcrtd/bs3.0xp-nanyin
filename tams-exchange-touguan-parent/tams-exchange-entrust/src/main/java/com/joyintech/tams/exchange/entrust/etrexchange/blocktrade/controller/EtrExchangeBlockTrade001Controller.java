@@ -16,6 +16,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,14 +53,6 @@ import com.joyintech.tams.exchange.entrust.etrexchange.blocktrade.dto.SelectOpti
 import com.joyintech.tams.exchange.entrust.etrexchange.blocktrade.service.EtrExchangeBlockTrade001Service;
 import com.joyintech.tams.exchange.entrust.etrexchange.blocktrade.service.EtrExchangeBlockTrade001ValidatorService;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeCommonRequest;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeEtrExchangeCommonRequest;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeEtrExchangeCommonResponse;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeExportCommonRequest;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePortfolioRequest;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePositionsCommonRequest;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.SelectOptionRequestDto;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
@@ -468,6 +461,27 @@ public class EtrExchangeBlockTrade001Controller extends BaseController{
 		}catch (Exception e) {
 			logger.error("查询净值偏离度数据异常",e);
 			return new Message<String>().setMessage("查询净值偏离度信息数据异常");
+		}
+	}
+
+	/**
+	 * 查询交易行情信息
+	 * <一句话功能简述>
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	@ApiOperation(value="查询竞价交易行情信息",notes = "查询竞价交易行情信息")
+	@ResponseBody
+	@PostMapping("findQuotations")
+	public Message<EtrExchangeTradeQuotationHqResponse> findQuotations(@RequestBody EtrExchangeTradeQuotationRequest request) {
+		try {
+			String secId = request.getSecId();
+			EtrExchangeTradeQuotationHqResponse quotations = etrExchangeTrade001CommonService.findQuotations(secId);
+			return new Message<EtrExchangeTradeQuotationHqResponse>().success().setData(quotations);
+		}catch (Exception e) {
+			logger.error("查询竞价易行情数据异常",e);
+			return new Message<EtrExchangeTradeQuotationHqResponse>().fail().setMessage("查询竞价交易行情信息数据异常");
 		}
 	}
 }
