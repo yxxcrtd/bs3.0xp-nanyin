@@ -12,7 +12,6 @@ package com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoqu
 
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.intf.DataDictItem;
-import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
@@ -20,6 +19,7 @@ import com.joyintech.framework.util.*;
 import com.joyintech.tams.business.common.dto.CommonSearchInfoRequest;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.FinProdResponse;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dao.FieldEtrInfoQueryMapper;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.EntrustQueryBean;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.FieldEtrInfoQueryListRequest;
@@ -167,6 +167,12 @@ public class FieldEtrInfoQueryService extends BaseService{
             return pageLimit;
         }
         return pageLimit;
+    }
+
+    public Page<FinProdResponse> findFinProdMarketIdList(FieldEtrInfoQueryListRequest dto) {
+        Map<String,Object> pageParam = BeanUtil.object2Map(dto);
+        return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
+                () -> fieldEtrInfoQueryMapper.findFinProdMarketIdList(pageParam));
     }
 
     public Page<EntrustQueryBean> getEtrDispatcherExeListInfo(CommonSearchInfoRequest dto) {

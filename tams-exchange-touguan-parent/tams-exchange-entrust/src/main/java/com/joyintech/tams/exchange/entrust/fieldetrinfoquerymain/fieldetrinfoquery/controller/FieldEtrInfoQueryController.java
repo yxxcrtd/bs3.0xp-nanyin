@@ -20,6 +20,7 @@ import com.joyintech.tams.business.common.dto.CommonSearchInfoRequest;
 import com.joyintech.tams.business.common.dto.FieldExportRequestDto;
 import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.FinProdResponse;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.EntrustQueryBean;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.FieldEtrInfoQueryListRequest;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.FieldEtrInfoQueryListResponse;
@@ -116,6 +117,14 @@ public class FieldEtrInfoQueryController extends BaseController {
     public Message<Page<FieldEtrInfoQueryListResponse>> findAllData(@RequestBody FieldEtrInfoQueryListRequest dto){
             Page<FieldEtrInfoQueryListResponse> page = fieldEtrInfoQueryService.findAllData(dto);
             return new Message<Page<FieldEtrInfoQueryListResponse>>().success().setData(page);
+    }
+
+    @ApiOperation(value = "场内指令查询列表分页查询", notes = "场内指令查询列表分页查询")
+    @PostMapping("/findFinProdMarketIdList")
+    @ResponseBody
+    public Message<Page<FinProdResponse>> findFinProdMarketIdList(@RequestBody FieldEtrInfoQueryListRequest dto){
+        Page<FinProdResponse> page = fieldEtrInfoQueryService.findFinProdMarketIdList(dto);
+        return new Message<Page<FinProdResponse>>().success().setData(page);
     }
 
     @PostMapping(value = "/exportEtrInfoQueryList")
