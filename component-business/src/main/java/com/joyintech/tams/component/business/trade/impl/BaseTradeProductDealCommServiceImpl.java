@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.invest.common.component.base.trade.BaseTradeProductDealService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -178,6 +179,9 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
     private BussTrdTransferOrderService bussTrdTransferOrderService;
 
     @Autowired
+    private BaseTradeProductDealService baseTradeProductDealService;
+
+    @Autowired
     private PtlTradeMapper ptlTradeMapper;
 
     private static final List<String> 认购确认_申购确认_赎回确认_除权登记_红利再投 = Arrays.asList(
@@ -192,6 +196,19 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
         if (finProductTradeDto == null) {
             return new CommonResult(CommonResult.FAILD, "没有数据需要处理");
         }
+        // ZGTFCP-1736:股票红利再投处理老头存时,交易日需要特殊处理 使用除权日 modify by fuyongsheng 20220325 start
+        if (finProductTradeDto.getBaseTradeProductDealDtos() != null && finProductTradeDto.getBaseTradeProductDealDtos().size() > 0) {
+            for (int index = 0; index < finProductTradeDto.getBaseTradeProductDealDtos().size(); index++) {
+                TrdProductDeal trdProductDeal = finProductTradeDto.getBaseTradeProductDealDtos().get(index).getTrdProductDeal();
+                if(DictCodeListExt1.金融产品类型_投管用_股票.getValue().equals(trdProductDeal.getFinprodType2())
+                        && DictCodeList.交易方向_红利再投.getValue().equals(trdProductDeal.getPs())){
+                    List<TrdProductDeal> trdProductDeals = baseTradeProductDealService.selectTrdProductDeals(trdProductDeal.getTotleTradeId());
+                    TrdProductDeal trdProductDealCq = trdProductDeals.stream().filter(item->DictCodeList.交易方向_除权登记.getValue().equals(item.getPs())).findFirst().get();
+                    trdProductDeal.setTradeDate(trdProductDealCq.getSettleDate());
+                }
+            }
+        }
+        // ZGTFCP-1736:股票红利再投处理老头存时,交易日需要特殊处理 使用除权日 modify by fuyongsheng 20220325 end
         //处理CSTP下行数据
         if(finProductTradeDto.getBaseTradeProductDealDtos() != null && !finProductTradeDto.getBaseTradeProductDealDtos().isEmpty()
                 && finProductTradeDto.getBaseTradeProductDealDtos().get(0).getTrdProductDeal() != null &&

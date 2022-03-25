@@ -137,22 +137,23 @@ public class TradeRestApi {
                 
                 finProductTradeDto.setBaseTradeProductDealDtos(baseTradeProductDealDtos);
                 
-                // 可转债申购确认需要设置申购类型为普通申购
                 if (finProductTradeDto.getBaseTradeProductDealDtos() != null && finProductTradeDto.getBaseTradeProductDealDtos().size() > 0) {
                 	for (int index = 0; index < finProductTradeDto.getBaseTradeProductDealDtos().size(); index++) {
-                		if (StringUtil.equals(finProductTradeDto.getBaseTradeProductDealDtos().get(index).getTrdProductDeal().getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())
-                			&& StringUtil.equals(finProductTradeDto.getBaseTradeProductDealDtos().get(index).getTrdProductDeal().getPs(), DictCodeList.交易方向_申购确认.getValue())) {
+                        TrdProductDeal trdProductDeal = finProductTradeDto.getBaseTradeProductDealDtos().get(index).getTrdProductDeal();
+                        // 可转债申购确认需要设置申购类型为普通申购
+                        if (StringUtil.equals(trdProductDeal.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())
+                			&& StringUtil.equals(trdProductDeal.getPs(), DictCodeList.交易方向_申购确认.getValue())) {
                 			finProductTradeDto.getBaseTradeProductDealDtos().get(index).setPurchType(DictCodeListExt2.申购类型_普通申购.getValue());
                 			// 根据交易表的b_trade_id检索TRD_PRODUCT_DEAL拿到申购的那条交易
                 			List<String> bTradeIdList = new ArrayList<String>();
-                			bTradeIdList.add(finProductTradeDto.getBaseTradeProductDealDtos().get(index).getTrdProductDeal().getbTradeId());
+                			bTradeIdList.add(trdProductDeal.getbTradeId());
                 			List<BaseTradeProductDealDto> bTradeIdTradeProductDealDtos = baseTradeProductDealService.select(bTradeIdList);
                 			if (bTradeIdTradeProductDealDtos != null && bTradeIdTradeProductDealDtos.size() > 0) {
                 				finProductTradeDto.getBaseTradeProductDealDtos().get(index).setSecAmount(ArithmeticUtil.multiply(
                 						ArithmeticUtil.doSub(bTradeIdTradeProductDealDtos.get(0).getTrdProductDeal().getShareAmt(), finProductTradeDto.getBaseTradeProductDealDtos().get(index).getTrdProductDeal().getShareAmt()), new BigDecimal(100)));
                 			}
                 		}
-                	}
+                    }
                 }
                 
                 result = baseTradeProductDealCommService.execute(finProductTradeDto);

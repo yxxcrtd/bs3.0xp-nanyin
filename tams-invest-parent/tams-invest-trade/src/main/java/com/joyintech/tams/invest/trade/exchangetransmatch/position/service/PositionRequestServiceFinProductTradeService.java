@@ -509,7 +509,7 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
          // resultMap.put("ps", dealEntity.getPs());
         // ZGTFCP-1042: add by fuyongsheng 20220315 start
         // 协议回购特殊处理,需传正回购/逆回购
-        if(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(entity.getTrdProductDeal().getFinprodType2())){
+        if(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(etrEntrust.getFinprodType2())){
             resultMap.put("ps", DictCodeListExt3.交易方向_正回购.getValue());
         } else {
             resultMap.put("ps", DictCodeListExt3.交易方向_逆回购.getValue());

@@ -977,10 +977,7 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
              */
             else if (DictCodeListExt1.金融产品类型_投管用_股票.getValue().equals(deal.getFinprodType2())
                      && DictCodeList.交易方向_红利再投.getValue().equals(deal.getPs())) {
-                // ZGTFCP-1736:使用交割日 modify by fuyongsheng 20220324 start
-                // resultDto.setCdate(deal.getTradeDate());
-                resultDto.setCdate(deal.getSettleDate());
-                // ZGTFCP-1736:使用交割日 modify by fuyongsheng 20220324 end
+                resultDto.setCdate(deal.getTradeDate());
                 resultDto.setAmount(deal.getShareAmt());
                 result.add(resultDto);
 
