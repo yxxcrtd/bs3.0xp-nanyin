@@ -168,4 +168,6 @@ public interface EntrustMsgbyMQMapper {
     FinProductOthCode selectFinProductOthCode(Map<String, Object> map);
 
     String selectPledgeId(String getvTradeId);
+
+    List<TrdProductDeal> getTrdProductDealByFTradeId(String fTradeId);
 }
