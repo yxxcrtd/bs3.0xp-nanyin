@@ -503,6 +503,7 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
 //        resultMap.put("tradePlace", null);
         TrdProductDeal dealEntity = entity.getTrdProductDeal();
         TrdProductDealAdd trdProductDealAdd = entity.getTrdProductDealAdd();
+        TrdFinProductDealTotal trdFinProductDealTotal = entity.getTrdFinProductDealTotal();
         List<FinDealPledge> finDealPledges = exchangeTransMatchCommonMapper.getFinDealPledge(dealEntity.getTradeId());
         EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(trdProductDealAdd.getEntrustId());
         String ps = etrEntrust.getPs();
@@ -515,6 +516,15 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
             resultMap.put("ps", DictCodeListExt3.交易方向_逆回购.getValue());
         }
         // ZGTFCP-1042: add by fuyongsheng 20220315 end
+        // ZGTFCP-1848:换入换出的交易头寸都在换入的交易进行处理,换出不处理新头寸 modify by fuyongsheng 20220325 start
+        if(DictCodeListExt3.交易方向_中途换券.getValue().equals(ps)){
+            resultMap.put("totalTradeId", trdFinProductDealTotal.getTotleTradeId());
+            if(DictCodeListExt3.质押券置换_置换方向_换出.getValue().equals(dealEntity.getPs())){
+                resultMap.put(INTERFACE_TYPE, null);
+                return;
+            }
+        }
+        // ZGTFCP-1848:换入换出的交易头寸都在换入的交易进行处理,换出不处理新头寸 modify by fuyongsheng 20220325 end
         PositionRequestBaseBean bean;
         // 首期组合现金数据集
         if (DictCodeListExt3.交易方向_正回购.getValue().equals(ps)
