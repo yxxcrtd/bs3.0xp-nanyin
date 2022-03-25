@@ -1124,7 +1124,6 @@
                     if (finprodType2 == FINPROD_TYPE_TG_F01 && isStandardPs(ps)) {
                         $("#price_" + currentTab).val(formatPrice(getMktPrice())).trigger('blur').trigger('change');
                     } else {
-                        alert(getMktPrice());
                         $("#entrustPrice_" + currentTab).val(formatPrice(getMktPrice())).trigger('blur').trigger('change');
                     }
                 }
