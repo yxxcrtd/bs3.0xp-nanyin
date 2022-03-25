@@ -418,16 +418,6 @@ public class BaseTradeProductDealServiceImpl implements BaseTradeProductDealServ
         return trdProductDealList;
     }
 
-    /**
-     * 金融产品汇总交易查询
-     */
-    @Override
-    public List<TrdProductDeal> selectTrdProductDeals(String totalTradeId) {
-        List<TrdProductDeal> trdProductDealList = new ArrayList<TrdProductDeal>();
-        trdProductDealList = baseTradeProductDealMapper.selectTrdProductDeals(totalTradeId);
-        return trdProductDealList;
-    }
-
     // GNS-923:抽方法，基金类存续期特殊处理 modify by fuyongsheng 20220301 start
     private List<BaseTradeProductDealDto> selectBaseTradeProduct(String tradeId){
         List<BaseTradeProductDealDto> baseTradeProductDealDto =new ArrayList<>();

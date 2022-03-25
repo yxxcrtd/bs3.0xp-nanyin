@@ -142,9 +142,9 @@ public class StlDataGatherShares2Processor extends StlDataGatherProcessor {
 				//现金分红 和 送转的交易（要先登一笔除权登记，再登交易）
 				if(StringUtil.equals(settleTransDataDtos.get(0).getPs(),DictCodeList.交易方向_现金分红.getValue())||
 						StringUtil.equals(settleTransDataDtos.get(0).getPs(),DictCodeList.交易方向_红利再投.getValue())
-				// GNS-932:上交所也在这里生成除权交易 mdify by fuyongsheng 20220224 start
-				// &&StringUtil.equals(settleTransDataDtos.get(0).getTradeMarket(),DictCodeListExt1.交易场所_深圳证券交易所.getValue())
-				// GNS-932:上交所也在这里生成除权交易 mdify by fuyongsheng 20220224 end
+					// GNS-932:上交所也在这里生成除权交易 mdify by fuyongsheng 20220224 start
+					// &&StringUtil.equals(settleTransDataDtos.get(0).getTradeMarket(),DictCodeListExt1.交易场所_深圳证券交易所.getValue())
+					// GNS-932:上交所也在这里生成除权交易 mdify by fuyongsheng 20220224 end
 				){
 					// GNS-877:股票存续期不生成除权交易的交易汇总表 modify by fuyongsheng 20220227 start
 					TotalTrdProductDealDto totalCqTrdProductDealDto = setTotalTrdProductDealDto(settleTransDataDtos,true);
@@ -165,7 +165,7 @@ public class StlDataGatherShares2Processor extends StlDataGatherProcessor {
 					investTradeWriteDto.getFinProductDealTotalList().add(totalTrdProductDealDto);
 
 					SettleTransTgMapping settleTransTgMapping1 = new SettleTransTgMapping();
-					settleTransTgMapping1.setTradeId(IDGenerator.generate(20));
+					settleTransTgMapping1.setTradeId(settleTransDataDtos.get(0).getTradeId());
 					settleTransTgMapping1.setTradeIdTg(totalTrdProductDealDto.getTotleTradeId());
 					settleTransTgMapping1.setTgDataStatus(DictCodeListStl.投管交易数据状态_处理结束.getValue());
 					settleTransTgMapping1.setDealDate(execInfo.getExecuteDate());
@@ -483,10 +483,7 @@ public class StlDataGatherShares2Processor extends StlDataGatherProcessor {
 		// 分支序号
 		dealTotal.setBranch(0L);
 		// 交易日
-		// ZGTFCP-1736:除权登记、送转、现金分红交易日期改为除权登记日 modify by fuyongsheng 20220324 start
-		// dealTotal.setTradeDate(settleTransDataDto.getSettleDate());
-		dealTotal.setTradeDate(settleTransDataDto.getTradeDate());
-		// ZGTFCP-1736:除权登记、送转、现金分红交易日期改为除权登记日 modify by fuyongsheng 20220324 end
+		dealTotal.setTradeDate(settleTransDataDto.getSettleDate());
 		// 交割日
 		dealTotal.setSettleDate(settleTransDataDto.getSettleDate());
 		// 交易币种
@@ -592,10 +589,7 @@ public class StlDataGatherShares2Processor extends StlDataGatherProcessor {
 		// 分支序号
 		trdProductDealDto.setBranch(0L);
 		// 交易日
-		// ZGTFCP-1736:除权登记、送转、现金分红交易日期改为除权登记日 modify by fuyongsheng 20220324 start
-		// trdProductDealDto.setTradeDate(settleTransDataDto.getSettleDate());
-		trdProductDealDto.setTradeDate(settleTransDataDto.getTradeDate());
-		// ZGTFCP-1736:除权登记、送转、现金分红交易日期改为除权登记日 modify by fuyongsheng 20220324 end
+		trdProductDealDto.setTradeDate(settleTransDataDto.getSettleDate());
 		// 交割日
 		trdProductDealDto.setSettleDate(settleTransDataDto.getSettleDate());
 		//交易币种

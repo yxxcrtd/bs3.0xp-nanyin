@@ -140,7 +140,7 @@ public class StlDataGatherBond7Processor extends BaseProcessor<NeedOperateEntity
 
                         //投管交易关系
                         SettleTransTgMapping settleTransTgMapping = new SettleTransTgMapping();
-                        settleTransTgMapping.setTradeId(totalTradeId);
+                        settleTransTgMapping.setTradeId(settleTransData.getTradeId());
                         settleTransTgMapping.setTradeIdTg(totalTradeId);
                         settleTransTgMapping.setTgDataStatus("02");
                         // modify by etliu 20220222 start
@@ -182,7 +182,7 @@ public class StlDataGatherBond7Processor extends BaseProcessor<NeedOperateEntity
                         ptlSecPositionFlow.setTradeId(trdProductDeal.getTradeId());
                         //冲销业务编号
                         ptlSecPositionFlow.setOffsetId(null);
-                         //委托编号
+                        //委托编号
                         ptlSecPositionFlow.setEntrustId(null);
                         ptlSecPositionFlowList.add(ptlSecPositionFlow);
                         //重新
@@ -213,10 +213,7 @@ public class StlDataGatherBond7Processor extends BaseProcessor<NeedOperateEntity
                             ptlSecPositionFlowFrozen.setHodingType(DictCodeListExt3.持仓类型_场内上市前冻结.getValue());
                             // GZYHTZJY-1084:冲销掉上市前冻结的头寸 modify fuyongsheng 20220112 end
                             //日期
-                            // ZGTFCP-1751:上市流通老头存登录日期还是T+1日 modify by fuyongsheng 20220324 start
-                            // ptlSecPositionFlowFrozen.setCdate(ptlTrade.getSettleDate());
-                            ptlSecPositionFlowFrozen.setCdate(stlDataDealProcessCommonService.getNextWorkDay(ptlTrade.getSettleDate(),finProduct.getCalendarId()));
-                            // ZGTFCP-1751:上市流通老头存登录日期还是T+1日 modify by fuyongsheng 20220324 end
+                            ptlSecPositionFlowFrozen.setCdate(ptlTrade.getSettleDate());
                             //币种
                             ptlSecPositionFlowFrozen.setCcy(positionFlow.getCcy());
                             //数量
@@ -250,10 +247,7 @@ public class StlDataGatherBond7Processor extends BaseProcessor<NeedOperateEntity
                         //持仓类型
                         etrSecPositionFlow.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
                         //日期
-                        // ZGTFCP-1751:上市流通老头存登录日期还是T+1日 modify by fuyongsheng 20220324 start
-                        // etrSecPositionFlow.setCdate(ptlTrade.getSettleDate());
-                        etrSecPositionFlow.setCdate(stlDataDealProcessCommonService.getNextWorkDay(ptlTrade.getSettleDate(),finProduct.getCalendarId()));
-                        // ZGTFCP-1751:上市流通老头存登录日期还是T+1日 modify by fuyongsheng 20220324 end
+                        etrSecPositionFlow.setCdate(ptlTrade.getSettleDate());
                         //币种
                         etrSecPositionFlow.setCcy(trdProductDeal.getCcy());
                         //数量
@@ -325,16 +319,13 @@ public class StlDataGatherBond7Processor extends BaseProcessor<NeedOperateEntity
         // 分支序号
         trdProductDeal.setBranch(0L);
         // 交易日
-        // ZGTFCP-1751:修改上市流通的交易生成日,修改成T+0日 modify by fuyongsheng 20220324 start
-        // trdProductDeal.setTradeDate(stlDataDealProcessCommonService.getNextWorkDay(settleTransData.getDealDate(),finProduct.getCalendarId()));
-        trdProductDeal.setTradeDate(settleTransData.getDealDate());
-        // ZGTFCP-1751:修改上市流通的交易生成日,修改成T+0日 modify by fuyongsheng 20220324 end
+        trdProductDeal.setTradeDate(stlDataDealProcessCommonService.getNextWorkDay(settleTransData.getDealDate(),finProduct.getCalendarId()));
         // 起息日
         trdProductDeal.setVdate(null);
         // 到期日
         trdProductDeal.setMdate(null);
         // 交割日
-        trdProductDeal.setSettleDate(stlDataDealProcessCommonService.getNextWorkDay(settleTransData.getDealDate(),finProduct.getCalendarId()));
+        trdProductDeal.setSettleDate(trdProductDeal.getTradeDate());
         // 交易币种
         trdProductDeal.setCcy(DictCodeList.币种_人民币_CNY.getValue());
         // 净值日期

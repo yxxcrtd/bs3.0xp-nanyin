@@ -65,6 +65,11 @@ public class PositionRequestTradeRestService {
 
     public static final String STANDAR_SEC_ID = "XN_PRODID999";
 
+    // 结算数据下行上交所交易日历ID
+    public static final String STL_DOWNDATA_DEAL_SHJYS_CALID = "STL_DOWNDATA_DEAL_SHJYS_CALID";
+    // 结算数据下行深交所交易日历ID
+    public static final String STL_DOWNDATA_DEAL_SZJYS_CALID = "STL_DOWNDATA_DEAL_SZJYS_CALID";
+
     /**
      * 发送交易Rest头寸请求
      * @param finProductTradeDto
@@ -278,7 +283,8 @@ public class PositionRequestTradeRestService {
         }
         else if(DictCodeList.交易方向_上市流通.getValue().equals(dealEntity.getPs())){
             resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_上市.getValue());
-            FinProductQuto finProductQuto = getFinProductQuto(dealEntity.getFinprodId(), dealEntity.getTradeDate());
+            FinProductQuto finProductQuto = getFinProductQuto(dealEntity.getFinprodId(),
+                    commonPositionService.getLastWorkDate(dealEntity.getTradeDate(), this.getCalendarId(dealEntity.getTradeMarket())));
             // 只有配股的上市流通才有决策树,其余上市流通调上市流通专用接口
             if(!DictCodeListExt2.交易方向_配股.getValue().equals(finProductQuto.getPs())){
                 resultMap.put(INTERFACE_TYPE, null);
@@ -386,7 +392,7 @@ public class PositionRequestTradeRestService {
         // 流程编号	指令的工作流ID
         resultMap.put(WORK_FLOW_ID, entity.getTrdProductDeal().getWorkflowId());
         // 日期
-        resultMap.put("cdate", DateUtil.format(entity.getTrdProductDeal().getTradeDate()));
+        resultMap.put("cdate", DateUtil.format(this.getTradeDate(entity.getTrdProductDeal())));
         // 币种
         if(StringUtil.isNotEmpty(entity.getTrdProductDeal().getCcy())) {
             resultMap.put(CCY, entity.getTrdProductDeal().getCcy());
@@ -527,7 +533,8 @@ public class PositionRequestTradeRestService {
         }
         else if(DictCodeList.交易方向_上市流通.getValue().equals(trdProductDeal.getPs())){
             resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_上市.getValue());
-            FinProductQuto finProductQuto = getFinProductQuto(trdProductDeal.getFinprodId(), trdProductDeal.getTradeDate());
+            FinProductQuto finProductQuto = getFinProductQuto(trdProductDeal.getFinprodId(),
+                    commonPositionService.getLastWorkDate(trdProductDeal.getTradeDate(), this.getCalendarId(trdProductDeal.getTradeMarket())));
             // 只有配债的上市流通才有决策树,其余上市流通调上市流通专用接口
             if(!DictCodeListExt3.交易方向_配债.getValue().equals(finProductQuto.getPs())){
                 resultMap.put(INTERFACE_TYPE, null);
@@ -626,8 +633,10 @@ public class PositionRequestTradeRestService {
         if (DictCodeListExt1.金融产品类型_投管用_股票.getValue().equals(finprodType2)) {
             if(DictCodeList.交易方向_现金分红.getValue().equals(ps)){
                 busiType = DictCodeListExt3.头寸业务类型_股票分红.getValue();
-            }else if(DictCodeList.交易方向_红利再投.getValue().equals(ps) || DictCodeList.交易方向_上市流通.getValue().equals(ps)){
+            }else if(DictCodeList.交易方向_红利再投.getValue().equals(ps)){
                 busiType = DictCodeListExt3.头寸业务类型_股票送股.getValue();
+            }else if(DictCodeList.交易方向_上市流通.getValue().equals(ps)){
+                busiType = DictCodeListExt3.头寸业务类型_配股.getValue();
             }else if(DictCodeList.交易方向_申购确认.getValue().equals(ps)){
                 busiType = DictCodeListExt3.头寸业务类型_网上申购.getValue();
             }
@@ -660,4 +669,29 @@ public class PositionRequestTradeRestService {
         PositionHttpRequest.sendSslt(resultMap);
     }
     // ZGTFCP-1593:上市流通特殊处理 modify by fuyongsheng 20220323 end
+
+    private Date getTradeDate(TrdProductDeal trdProductDeal){
+        Date date = trdProductDeal.getTradeDate();
+        if(DictCodeListExt1.金融产品类型_投管用_股票.getValue().equals(trdProductDeal.getFinprodType2())){
+            if(DictCodeList.交易方向_红利再投.getValue().equals(trdProductDeal.getPs())
+                    || DictCodeList.交易方向_现金分红.getValue().equals(trdProductDeal.getPs())){
+                List<SettleTransData> settleTransData = commonPositionService.selectSettleTransData(trdProductDeal.getTotleTradeId());
+                if(!CollectionUtils.isEmpty(settleTransData)){
+                    date = settleTransData.get(0).getTradeDate();
+                }
+            }
+        }
+        if(DictCodeList.交易方向_上市流通.getValue().equals(trdProductDeal.getPs())){
+            date =  commonPositionService.getLastWorkDate(trdProductDeal.getTradeDate(), this.getCalendarId(trdProductDeal.getTradeMarket()));
+        }
+        return date;
+    }
+
+    private String getCalendarId(String tradeMarket){
+        if(DictCodeListExt1.交易场所_上海证券交易所.getValue().equals(tradeMarket)){
+            return CacheUtil.getSysParam(STL_DOWNDATA_DEAL_SHJYS_CALID);
+        }else{
+            return CacheUtil.getSysParam(STL_DOWNDATA_DEAL_SZJYS_CALID);
+        }
+    }
 }

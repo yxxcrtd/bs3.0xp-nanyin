@@ -38,6 +38,7 @@ import com.joyintech.tams.exchange.service.trade.server.agent.AccountManager;
 import com.joyintech.tams.exchange.service.trade.server.agent.TradeAgent;
 import com.joyintech.tams.exchange.service.trade.server.agent.TradeAgentManager;
 import com.joyintech.tams.exchange.service.trade.transaction.TransactionHelper;
+import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -1068,10 +1069,10 @@ public class TradeHelper {
      * 判断是否公平交易
      */
     private boolean isFairTransaction(OrderPlaceBean orderPlaceBean, Instruction instruction) {
-        if (Strings.isNullOrEmpty(orderPlaceBean.getAlgorithmId())
-                && EntrustUtils.isFairOrder(orderPlaceBean.getEntrustProp())
-                && EntrustUtils.isFairSwitchOpen(commonManagement.getFairCode())) {
-            return true;
+        if (!Strings.isNullOrEmpty(orderPlaceBean.getAlgorithmId())
+                || !EntrustUtils.isFairOrder(orderPlaceBean.getEntrustProp())
+                || !EntrustUtils.isFairSwitchOpen(commonManagement.getFairCode())) {
+            return false;
         }
         Order order = new Order();
         order.setEntrustProp(orderPlaceBean.getEntrustProp());
@@ -1080,11 +1081,7 @@ public class TradeHelper {
         order.setUserId(orderPlaceBean.getUserId());
         order.setAssetType(instruction.getAssetType());
         Map<String, Instruction> instructionBeanMap = getInstructionBeans(order);
-        if (!instructionBeanMap.isEmpty()) {
-            return true;
-        }
-
-        return false;
+        return MapUtils.isNotEmpty(instructionBeanMap);
     }
 
     /**
@@ -1131,7 +1128,7 @@ public class TradeHelper {
                 //起始价格
                 BigDecimal beginPrice = batchInfo.getBeginPrice();
                 //价格偏移
-                BigDecimal priceOffset = batchInfo.getPriceOffset();
+                BigDecimal priceOffset = batchInfo.getPriceOffset() == null ? BigDecimal.ZERO : batchInfo.getPriceOffset();
                 //平均价格
                 BigDecimal totalPrice = beginPrice.multiply(BigDecimal.valueOf(entrustTimes)).add(priceOffset.multiply(BigDecimal.valueOf(total)));
                 BigDecimal averagePrice = totalPrice.divide(BigDecimal.valueOf(entrustTimes), 4, RoundingMode.HALF_UP);
@@ -1148,6 +1145,10 @@ public class TradeHelper {
             //取行情涨跌停价
             this.fillQuotePrice(orderPlaceBean, instructionClone);
             instructionClone.setEntrustNum(orderPlaceBean.getEntrustVolume());
+        }
+
+        if (instructionClone.getEntrustPrice() == null) {
+            throw BusinessResultException.create(ErrorCode.REQ_PARAMETER_ERROR, "委托价格取值为空");
         }
 
         instructionClone.setEntrustAmt(instructionClone.getEntrustPrice().multiply(BigDecimal.valueOf(instructionClone.getEntrustNum())));
@@ -1174,7 +1175,7 @@ public class TradeHelper {
 
 
     public Map<String, Instruction> getInstructionBeans(Order order) {
-        Map<String, Instruction> instructionMap = null;
+        Map<String, Instruction> instructionMap;
         if (EntrustUtils.isfairModeEntrustPriceBestThanInstructionForbid(commonManagement.getFairModeEntrustPriceBestThanInstruction())) {
             instructionMap = instructionService.queryInstructionByUserIdAndStockCode(order.getUserId(), order.getStockCode())
                     .stream().filter(instruction -> InvestmentUtils.hasSameDir(instruction, order)

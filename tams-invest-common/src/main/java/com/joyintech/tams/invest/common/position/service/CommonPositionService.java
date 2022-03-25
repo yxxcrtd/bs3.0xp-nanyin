@@ -20,6 +20,7 @@ import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCash
 import com.joyintech.tams.invest.common.util.ExpressionUtil;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -656,5 +657,31 @@ public class CommonPositionService {
 
 	public FinProductQuto selectFinProductQuto(Map<String, Object> map){
 		return commonPtlPositionMapper.selectFinProductQuto(map);
+	}
+
+	/**
+	 * 金融产品汇总交易查询
+	 */
+	public List<TrdProductDeal> selectTrdProductDeals(String totalTradeId) {
+		List<TrdProductDeal> trdProductDealList = new ArrayList<TrdProductDeal>();
+		trdProductDealList = commonPtlPositionMapper.selectTrdProductDeals(totalTradeId);
+		return trdProductDealList;
+	}
+
+	/**
+	 * 金融产品汇总交易查询
+	 */
+	public List<SettleTransData> selectSettleTransData(String totalTradeId) {
+		return commonPtlPositionMapper.selectSettleTransData(totalTradeId);
+	}
+
+	/**
+	 * 查询上一个工作日
+	 * @param cdate
+	 * @param calendarId
+	 * @return
+	 */
+	public Date getLastWorkDate(Date cdate,String calendarId){
+		return commonPtlPositionMapper.getLastWorkDate(cdate,"0", calendarId);
 	}
 }

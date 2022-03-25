@@ -19,6 +19,7 @@ import com.joyintech.tams.exchange.service.trade.management.service.EntrustManag
 import com.joyintech.tams.exchange.service.trade.management.service.PortfolioManager;
 import com.joyintech.tams.exchange.service.trade.position.bean.PositionRequestBaseBean;
 import com.joyintech.tams.invest.common.entrust.inter.EtrTradeCommonervice;
+import com.joyintech.tams.invest.common.entrust.inter.EtrTradeOtherCommonService;
 import com.joyintech.tams.invest.common.position.service.CommonPositionEngineService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -52,6 +53,8 @@ public class PositionRequestServiceInstructionRequest {
     private EntrustManagement entrustManagement;
     @Autowired
     private EtrTradeCommonervice etrTradeCommonervice;
+    @Autowired
+    private EtrTradeOtherCommonService etrTradeOtherCommonService;
 
     /**
      * Instruction 请求对象使用
@@ -306,8 +309,10 @@ public class PositionRequestServiceInstructionRequest {
                 if (交易方向_质押券入库.getValue().equals(entity.getPs())
                         || 交易方向_质押券出库.getValue().equals(entity.getPs())) {
                     map.put("cashAmount", null);//出入库时，可以为空
+                    Map<String, Object> params = new HashMap<>();
+                    params.put("finprodId",entity.getFinprodId());
+                    BigDecimal faceValue = etrTradeOtherCommonService.selectFaceValue(params);
                     // 标准券总额=质押券数量*折算率*最新面值
-                    BigDecimal faceValue = BigDecimal.valueOf(100);//TODO
                     map.put(STANDARD_SEC_AMOUNT, item.getEntrustAmt().multiply(faceValue));
                 } else {
                     // 标准券总额=标准券数量*100

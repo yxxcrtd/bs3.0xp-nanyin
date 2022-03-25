@@ -381,4 +381,24 @@
             AND OTH_TYPE = #{othCodeType,jdbcType=VARCHAR}
             AND CDATE = #{cdate,jdbcType=DATE}
     </select>
+
+    <select id="selectSettleTransData" resultType="com.joyintech.tams.common.base.entity.SettleTransData">
+        SELECT
+            DISTINCT std.*
+        FROM
+        settle_trans_data std
+        LEFT JOIN SETTLE_TRANS_TG_MAPPING sttm ON sttm.TRADE_ID = std.TRADE_ID
+        LEFT JOIN TRD_PRODUCT_DEAL trd ON trd.TOTLE_TRADE_ID = sttm.TRADE_ID_TG
+        WHERE
+            trd.TOTLE_TRADE_ID = #{totalTradeId,jdbcType=VARCHAR}
+    </select>
+
+    <!-- 查询上一工作日 -->
+    <select id="getLastWorkDate" parameterType="java.util.Map" resultType="java.util.Date">
+        SELECT MAX(CDATE)
+        FROM VAL_VW_MST_HOLIDAY
+        WHERE CDATE <![CDATA[<]]> #{cdate}
+          AND IS_HOLIDAY = #{isHoliday}
+          AND TRADE_CALENDAR_ID = #{calendarId}
+    </select>
 </mapper>

@@ -263,6 +263,11 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
                     //update by zznn 20210925 end
                 }
             }
+            if (StringUtil.equals(finProductTradeDto.getIsExistNew(), DictCodeList.是否_是.getValue())) {
+                // 写入指令持仓流水-质押式回购
+                etrSecPositionFlowDto.setAmount(交易券面总额);
+                etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
+            }
         }
         // 交易提交
         if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) {

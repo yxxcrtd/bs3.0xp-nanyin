@@ -796,6 +796,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 					entity.setSoftSkipMode("Y");
 				}
 				try {
+					entity.setPositionSeqno(null);
 					positionRequestService.sendEtrExchangeTradeSaveRequest(entity, decisionAct, systemAct);
 				} catch (PositionException e) {
 					Message message = PositionUtil.ajaxErrorReturn(e);
