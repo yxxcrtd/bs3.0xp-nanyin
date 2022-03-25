@@ -507,8 +507,12 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 					}
 				}
 
-				if (StringUtil.equals("UPDATE_TIME",str)||StringUtil.equals("CREATE_TIME",str)){
-					newMap.put(str, com.joyintech.framework.util.DateUtil.format((Date)newMap.get(str),"yyyy-MM-dd hh:mm:ss"));
+				if ((StringUtil.equals("UPDATE_TIME",str)||StringUtil.equals("CREATE_TIME",str))&&StringUtil.isNotEmpty(newMap.get(str))&&!"CHB_EMPLOYEE_INFO".equals(tableName)){
+					try{
+						newMap.put(str, com.joyintech.framework.util.DateUtil.format((Date)newMap.get(str),"yyyy-MM-dd hh:mm:ss"));
+					}catch (Exception e){
+						logger.error("日期转换失败！");
+					}
 				}
 				//Bigdecimal 转换为string 解决当数据过长被前台截取问题修复 end 20201026
 			}
