@@ -352,15 +352,20 @@
 			<if test="checkResult != null">
 				AND stds.CHECK_RESULT = #{checkResult,jdbcType=VARCHAR}
 			</if>
+			<if test="checkResultList != null and checkResultList.size() > 0">
+				<foreach collection="checkResultList" item="result" open="AND stds.CHECK_RESULT IN (" close=")" separator=",">
+					#{result,jdbcType=VARCHAR}
+				</foreach>
+			</if>
 			<if test="dealDate != null">
 				AND std.DEAL_DATE = #{dealDate,jdbcType=DATE}
 			</if>
 			<if test="dqPs!= null">
 				AND std.PS = #{dqPs,jdbcType=VARCHAR}
 			</if>
-			<if test="tradeMarketSh!= null">
-				AND std.TRADE_MARKET = #{tradeMarketSh,jdbcType=VARCHAR}
-			</if>
+<!--			<if test="tradeMarketSh!= null">-->
+<!--				AND std.TRADE_MARKET = #{tradeMarketSh,jdbcType=VARCHAR}-->
+<!--			</if>-->
 			<if test="finprodIdList != null and finprodIdList.size() > 0">
 				<foreach collection="finprodIdList" item="finprodId" open="AND std.FINPROD_ID IN (" close=")" separator=",">
 					#{finprodId,jdbcType=VARCHAR}
@@ -1097,9 +1102,21 @@
 		FROM
 			PTL_SEC_POSITION_RULE
 		WHERE
-		    HODING_TYPE = #{hodingType,jdbcType=DATE}
-			AND CDATE = #{dealDate,jdbcType=DATE}
-			AND DATE_TYPE = #{dateType,jdbcType=NUMERIC}
+		    1=1
+			<if test="hodingType != null and hodingType != ''">
+				AND HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
+			</if>
+			<if test="hodingTypeList != null and hodingTypeList.size() > 0">
+				<foreach collection="hodingTypeList" item="item" open="AND HODING_TYPE IN (" close=")" separator=",">
+					#{item,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="dealDate != null">
+				AND CDATE = #{dealDate,jdbcType=DATE}
+			</if>
+			<if test="dateType != null">
+				AND DATE_TYPE = #{dateType,jdbcType=NUMERIC}
+			</if>
 		GROUP BY
 			SEC_ACCT_ID,
 			FINPROD_ID,
@@ -1189,6 +1206,36 @@
 			PTL_SEC_POSITION_FLOW
 		WHERE HODING_TYPE = #{hodingType,jdbcType=DATE}
 		  AND CDATE &lt;= #{dealDate,jdbcType=DATE}
+	</select>
+
+	<!--组合持仓-->
+	<select id="listPtlSecPositionFolwRule" resultType="com.joyintech.tams.common.base.entity.PtlSecPositionFlow">
+		SELECT
+			PORTFOLIO_ID,
+			SEC_ACCT_ID,
+			FINPROD_ID,
+			CCY,
+			AMOUNT,
+			TRADE_ID,
+			ENTRUST_ID
+		FROM
+			PTL_SEC_POSITION_FLOW_RULE
+		WHERE
+		1=1
+		<if test="hodingType != null and hodingType != ''">
+			AND HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
+		</if>
+		<if test="hodingTypeList != null and hodingTypeList.size() > 0">
+			<foreach collection="hodingTypeList" item="item" open="AND HODING_TYPE IN (" close=")" separator=",">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="dealDate != null">
+			AND CDATE &lt;= #{dealDate,jdbcType=DATE}
+		</if>
+		<if test="dateType != null">
+			AND DATE_TYPE = #{dateType,jdbcType=NUMERIC}
+		</if>
 	</select>
 
 	<select id="selectFundSettleTransData" parameterType="java.util.Map"

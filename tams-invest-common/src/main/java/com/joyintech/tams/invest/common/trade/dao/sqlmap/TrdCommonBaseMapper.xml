@@ -1308,4 +1308,28 @@
         from T_INTEGRATED_ENTRUST
         where ID = #{dealNo}
     </select>
+
+    <select id="getPtlCapAcctInfo" resultType="com.joyintech.tams.common.base.entity.PtlCapacctInfo">
+        select
+        <include refid="com.joyintech.tams.common.base.dao.PtlCapacctInfoMapper.Base_Column_List" />
+        from PTL_CAPACCT_INFO
+        where ACCT_TYPE = #{acctType,jdbcType=VARCHAR}
+        and PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+        and CCY = #{ccy,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getFinPledgeDispDetailTemps" resultType="com.joyintech.tams.common.base.entity.FinPledgeDispDetailTemp">
+        select
+        <include refid="com.joyintech.tams.common.base.dao.FinPledgeDispDetailTempMapper.Base_Column_List" />
+        from FIN_PLEDGE_DISP_DETAIL_TEMP
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectFinDealPledgeByPrimaryKey" resultType="com.joyintech.tams.common.base.entity.FinDealPledge" parameterType="com.joyintech.tams.common.base.entity.FinDealPledgeKey" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.FinDealPledgeMapper.Base_Column_List" />
+        from FIN_DEAL_PLEDGE
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+        and BRANCH = #{branch,jdbcType=DECIMAL}
+    </select>
 </mapper>

@@ -181,6 +181,13 @@ public interface StlDataGatherMapper {
     List<PtlSecPositionFlow> listPtlSecPositionFolw(Map<String, Object> param);
 
     /**
+     * 组合持仓新头寸流水
+     * @param param
+     * @return
+     */
+    List<PtlSecPositionFlow> listPtlSecPositionFolwRule(Map<String, Object> param);
+
+    /**
      * 获取现金分红成交明细数据
      * @param paraMap
      */

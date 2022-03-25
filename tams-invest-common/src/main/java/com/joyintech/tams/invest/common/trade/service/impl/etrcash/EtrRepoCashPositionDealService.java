@@ -266,7 +266,8 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
         }
         // 交易提交
         if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) {
-            if (StringUtil.isEmpty(entrustId)) { // 无委托
+            if (StringUtil.isEmpty(entrustId)
+                    && StringUtil.equals(finProductTradeDto.getIsExistNew(), DictCodeList.是否_是.getValue())) { // 无委托
                 // 持仓流水dto处理 交易日减少交易券面总额/100
 //                etrSecPositionFlowDto.setAmount(ArithmeticUtil.divide(交易券面总额, 债券面值, 2).negate());
                 // 添加持仓流水到目标dto
@@ -280,11 +281,6 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
                 }
                 etrPositionHoldDto.getPtlSecPositionFlows().addAll(ptlSecPositionFlowList);
                 // 写入质押品的组合持仓流水-质押式回购
-                etrSecPositionFlowDto.setAmount(交易券面总额);
-                etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
-            }
-            if (StringUtil.equals(finProductTradeDto.getIsExistNew(), DictCodeList.是否_是.getValue())) {
-                // 写入指令持仓流水-质押式回购
                 etrSecPositionFlowDto.setAmount(交易券面总额);
                 etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
             }
