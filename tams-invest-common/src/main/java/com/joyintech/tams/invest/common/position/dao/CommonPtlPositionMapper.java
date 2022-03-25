@@ -3,6 +3,7 @@ package com.joyintech.tams.invest.common.position.dao;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.invest.common.position.dto.PtlPositionFlowCfg;
 import com.joyintech.tams.invest.common.position.dto.PtlPositionScene;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -79,4 +80,38 @@ public interface CommonPtlPositionMapper {
 	FinProductOthCode selectFinProductOthCode(Map<String, Object> map);
 
 	FinProductQuto selectFinProductQuto(Map<String, Object> map);
+
+	/**
+	 *
+	 * 金融产品交易查询
+	 * <功能详细描述>
+	 * @param totalTradeId
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	List<TrdProductDeal> selectTrdProductDeals(@Param("totalTradeId") String totalTradeId);
+
+	/**
+	 *
+	 * 金融产品交易查询
+	 * <功能详细描述>
+	 * @param totalTradeId
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	List<SettleTransData> selectSettleTransData(@Param("totalTradeId") String totalTradeId);
+
+	/**
+	 *
+	 * 查询上一工作日
+	 * @param cdate 查询日期
+	 * @param isHoliday 是否节假日（0：工作日；其他：节假日）
+	 * @param calendarId 交易日历
+	 * @return 日期
+	 * @see
+	 * @since 1.0
+	 */
+	Date getLastWorkDate(@Param("cdate") Date cdate,@Param("isHoliday") String isHoliday,@Param("calendarId") String calendarId);
 }

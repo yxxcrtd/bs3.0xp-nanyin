@@ -81,16 +81,6 @@ public interface BaseTradeProductDealService {
      */
     List<TrdProductDeal> selectTrdProductDealsByTotalTradeId(String totalTradeId);
 
-    /**
-     *
-     * 根据汇总交易ID查询金融产品交易信息
-     * <功能详细描述>
-     * @param totalTradeId
-     * @return List<TrdProductDeal>
-     * @see
-     * @since 1.0
-     */
-    List<TrdProductDeal> selectTrdProductDeals(String totalTradeId);
 
     /**
      *
