@@ -632,16 +632,16 @@ public class PbcZipDataFileService {
 			data.put("transferType",subDat.getTransferType());
 			//货币市场基金标识
 			data.put("isMarketFund",subDat.getIsMarketFund());
-			//其他产品标识1
+			/*//其他产品标识1
 			data.put("other1","");
 			//其他产品标识2
-			data.put("other2","");
-			//其他产品标识3
-			data.put("other3","");
+			data.put("other2","");*/
 			//跨境理财通标识
 			data.put("crossBorderFlag",subDat.getCrossBorderFlag());
 			//以财产权信托名义开展的资金信托标识
 			data.put("zjxtFlag",subDat.getZjxtFlag());
+			//其他产品标识3
+			data.put("other3","");
 			dataList.add(data);
 		}
 		for (PbcPrdBaseinfoSubDat subDat : pbcPrdBaseinfoSubDatsNew) {
