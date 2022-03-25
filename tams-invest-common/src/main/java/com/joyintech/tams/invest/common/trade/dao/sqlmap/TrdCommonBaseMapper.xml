@@ -1332,4 +1332,20 @@
         where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
         and BRANCH = #{branch,jdbcType=DECIMAL}
     </select>
+
+    <select id="queryConverseRadio" parameterType="map" resultType="BigDecimal">
+        select
+            NVL(FSCR.SCALE, 0)
+        from FIN_STDSEC_CONVERSE_RADIO FSCR
+        where FSCR.FINPROD_ID = #{finprodId, jdbcType=VARCHAR}
+          AND FSCR.BRANCH = '0'
+          AND FSCR.VDATE  &lt;= #{vdate, jdbcType=DATE}
+          AND NOT EXISTS (SELECT 1
+              FROM FIN_STDSEC_CONVERSE_RADIO FSCRINNER
+              WHERE FSCRINNER.FINPROD_ID = FSCR.FINPROD_ID
+                AND FSCRINNER.BRANCH ='0'
+                AND FSCRINNER.VDATE &lt;= #{vdate, jdbcType=DATE}
+                AND FSCRINNER.VDATE > FSCR.VDATE
+            )
+    </select>
 </mapper>
