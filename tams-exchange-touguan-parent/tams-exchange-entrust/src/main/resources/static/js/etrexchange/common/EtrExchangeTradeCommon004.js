@@ -2438,7 +2438,6 @@
             } else if ($("#priceModel_" + currentTab).val() == PRICE_MODEL_PRM03) {
                 $("#entrustAmt_" + currentTab).val(0).trigger('blur');
             }
-            alert(result.entrustNum);
             // modify by etliu 20210901 end
             $("#entrustNum_" + currentTab).val(result.entrustNum).trigger('blur');
         }, false);
