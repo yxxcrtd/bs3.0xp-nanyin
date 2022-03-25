@@ -1403,7 +1403,8 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
             return;
         }
         TrdBankManualSettleInfo trdBankManualSettleInfo = cfetsManualSettleRequest.getTrdBankManualSettleInfo();
-        if (StringUtil.equals(trdBankManualSettleInfo.getBusiType(), DictCodeListExt3.头寸业务类型_质押式回购首期.getValue()) && isFlowStart) {
+        if (!StringUtil.equals(trdBankManualSettleInfo.getBusiType(), DictCodeListExt3.头寸业务类型_质押式回购到期.getValue()) && isFlowStart) {
+            logger.info("首期流程发起时不处理头寸");
             return;
         }
         //设置登记时的成交编号
@@ -1422,13 +1423,13 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
             return;
         }
         StlPayOrdersDto stlPayOrdersDto = new StlPayOrdersDto();
-        if (trdBankManualSettleInfo != null
-                && StringUtil.equals(trdBankManualSettleInfo.getBusiType(), DictCodeListExt3.头寸业务类型_质押式回购首期.getValue())) {
-            List<StlPayOrdersDto> list = cfetsManualSettleMapper.getStlPayOrdersByTradeId(cfetsManualSettleRequest.getTradeId());
+        List<StlPayOrdersDto> list = cfetsManualSettleMapper.getStlPayOrdersByTradeId(cfetsManualSettleRequest.getTradeId());
+        // 首期只会按汇总编号生成一条汇总的划款指令
+        if(CollectionUtils.isNotEmpty(list)){
             stlPayOrdersDto = list.get(0);
         }
-        listTemp = listTemp.stream().sorted((x, y) -> y.getTradeAmt().compareTo(x.getTradeAmt())).collect(Collectors.toList());
         BigDecimal orderAmt = stlPayOrdersDto.getSettleAmt();
+        listTemp = listTemp.stream().sorted((x, y) -> y.getTradeAmt().compareTo(x.getTradeAmt())).collect(Collectors.toList());
         int index = 0;
         List<String> orderIds = new ArrayList<>();
         for (CfetsManualSettleDealInfo item : listTemp) {
@@ -1469,7 +1470,11 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
             baseTradeProductDealDto.setBussRepoSec(bussRepoSecDto);
             List<StlPayOrdersDto> stlPayOrders = new ArrayList<>();
             if (trdBankManualSettleInfo != null
-                    && StringUtil.equals(trdBankManualSettleInfo.getBusiType(), DictCodeListExt3.头寸业务类型_质押式回购首期.getValue())) {
+                    && StringUtil.equals(trdBankManualSettleInfo.getBusiType(), DictCodeListExt3.头寸业务类型_质押式回购到期.getValue())) {
+                // 到期会按交易编号生成单独的划款指令
+                stlPayOrders = cfetsManualSettleMapper.getStlPayOrdersByTradeId(item.getTradeId());
+                logger.info("交收处理头寸,到期划款指令:" + stlPayOrders.toString());
+            } else {
                 StlPayOrdersDto stlPayOrder = new StlPayOrdersDto();
                 BeanUtil.copyPropertiesIgnoreNull(stlPayOrder, stlPayOrdersDto);
                 if (StringUtil.isEmpty(stlPayOrder.getMyAcctNo())) {
@@ -1484,19 +1489,18 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                 orderAmt = ArithmeticUtil.subtract(orderAmt, settleAmt);
                 stlPayOrder.setSettleAmt(settleAmt);
                 String orderId = cfetsManualSettleMapper.selectRegTradeIdBytradeId(item.getTradeId());
-                if(StringUtil.isNotEmpty(orderId)){
+                if (StringUtil.isNotEmpty(orderId)) {
                     orderIds.add(orderId);
                 }
                 orderId = cfetsManualSettleMapper.selectQuoteIdBytradeId(item.getTradeId());
-                if(StringUtil.isNotEmpty(orderId)){
+                if (StringUtil.isNotEmpty(orderId)) {
                     orderIds.add(orderId);
                 }
                 stlPayOrders.add(stlPayOrder);
-            } else {
-                stlPayOrders = cfetsManualSettleMapper.getStlPayOrdersByTradeId(item.getTradeId());
+                logger.info("交收处理头寸,首期期划款指令:" + stlPayOrder.toString());
             }
             baseTradeProductDealDto.setStlPayOrdersList(stlPayOrders);
-            if(StringUtil.isEmpty(baseTradeProductDealDto.getEntrustId())){
+            if (StringUtil.isEmpty(baseTradeProductDealDto.getEntrustId())) {
                 baseTradeProductDealDto.setEntrustId(cfetsManualSettleMapper.qryEntrustId(item.getFinprodId()));
             }
             // 金融产品交易

@@ -523,6 +523,36 @@
         </where>
     </sql>
 
+    <select id="findFinProdMarketIdList"
+            resultType="com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.FinProdResponse">
+        SELECT
+            id,
+            id|| '|' ||text text
+        FROM
+            (
+            SELECT DISTINCT
+            CASE WHEN ETR_ENTRUST_ADD.ASSET_TYPE = 'F07' AND ETR_ENTRUST.PS IN ( '03', '04', 'T56', 'T93', 'T94', 'T95', 'T96' ) THEN
+            ETR_ENTRUST.STOCK_ID ELSE ( CASE WHEN FIN_PRODUCT.FINPROD_MARKET_ID IS NOT NULL THEN FIN_PRODUCT.FINPROD_MARKET_ID ELSE ETR_ENTRUST_ADD.ASSET_TYPE_10 END )
+            END ID,
+        CASE
+            WHEN ETR_ENTRUST_ADD.ASSET_TYPE = 'F07'
+            AND ETR_ENTRUST.PS IN ( '03', '04' )
+            AND ETR_ENTRUST.ENTRUST_TYPE NOT IN ( '17', '18', '19', '20', '21' ) THEN
+            ETR_ENTRUST.FINPROD_ID ELSE ( CASE WHEN FIN_PRODUCT.FINPROD_MARKET_ID IS NOT NULL THEN FIN_PRODUCT.FINPROD_ABBR ELSE OPT_TARGET_INFO.TARGET_NAME END )
+            END text
+        FROM
+            ETR_ENTRUST
+            LEFT JOIN FIN_PRODUCT ON FIN_PRODUCT.FINPROD_ID = ETR_ENTRUST.FINPROD_ID
+            LEFT JOIN ETR_ENTRUST_ADD ON ETR_ENTRUST.ENTRUST_ID = ETR_ENTRUST_ADD.ENTRUST_ID
+            LEFT JOIN OPT_TARGET_INFO ON ETR_ENTRUST_ADD.ASSET_TYPE_10 = OPT_TARGET_INFO.TARGET_ID
+            ) T
+            where
+                T.id is not null
+            <if test="finprodMarketId != null and finprodMarketId!='' ">
+                AND T.id like '%' || #{finprodMarketId} || '%'
+            </if>
+    </select>
+
     <select id="queryRolePosByLoginUser" resultType="java.lang.Integer">
         select count(1)
         from SYS_USER_ROLE sur
