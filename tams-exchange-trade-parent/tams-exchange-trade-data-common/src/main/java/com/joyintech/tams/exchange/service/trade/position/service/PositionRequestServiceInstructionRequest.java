@@ -212,6 +212,10 @@ public class PositionRequestServiceInstructionRequest {
                     BigDecimal secAmount = commonPositionEngineService.getSecAmountByBondUnit(item.getEntrustNum());
                     bean.setSecAmount(secAmount);
                     Map<String, Object> map = BeanUtil.object2Map(bean);
+                    //融入券券面总额
+                    map.put(INTEGRATE_SEC_AMOUNT, BigDecimal.ZERO);
+                    //本方券券面总额
+                    map.put(OWN_SEC_AMOUNT, secAmount);
                     applyBondSecList.add(map);
                 }
                 resultMap.put(APPLY_BOND_SEC_LIST, applyBondSecList);
