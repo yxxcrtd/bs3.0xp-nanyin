@@ -489,7 +489,15 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			BeanUtil.copyPropertiesIgnoreNull(etrBondToStockDto, etrSinglePortfolioDto);
 			etrBondToStockDto.setFinprodType2(dto.getFinprodType2());// 金融产品类型（投管）
 			etrBondToStockDto.setAssetType(DictCodeList.平安资产类型_债券.getValue());// 资产大类
-			etrBondToStockDto.setExpConNum(dto.getToShareAvailableNum());//可转股数量
+			if(StringUtil.equals(DictCodeList.是否_否.getValue(),dto.getIsMulti())){
+				//根据债券面值*指令数量/转股初始价格
+				BigDecimal secFace=trdCommonBaseService.getFaceValue(dto.getFinprodId(), DateUtil.platDateFromCache());
+				BigDecimal	tempAvailableNum=secFace.multiply(dto.getEntrustNum());
+				tempAvailableNum=ArithmeticUtil.divide(tempAvailableNum,dto.getEntrustPrice(),0,RoundingMode.DOWN);
+				etrBondToStockDto.setExpConNum(tempAvailableNum);//可转股数量
+			}else{
+				etrBondToStockDto.setExpConNum(dto.getToShareAvailableNum());//可转股数量
+			}
 		}
 
 		// 标准券出入库指令
@@ -519,6 +527,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 
 		if (null != dto.getEntrustId() && null != etrEntrustMapper.selectByPrimaryKey(dto.getEntrustId())) {
 			dto.setOptType(ENTRUST_RECORD_MODIFY);
+		}else{
+			dto.setOptType(ENTRUST_RECORD_NEW);
 		}
 		if (StringUtil.equals(dto.getOptType(), ENTRUST_RECORD_NEW)) {//
 			if (DictCodeListExt3.上农商_指令业务类型_股票竞价指令.getValue().equals(baseDto.getEntrustType())) {

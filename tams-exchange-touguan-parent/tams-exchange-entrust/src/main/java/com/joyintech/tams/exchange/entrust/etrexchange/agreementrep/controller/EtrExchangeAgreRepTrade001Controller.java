@@ -20,12 +20,14 @@ import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.common.base.entity.EtrDistribute;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.exchange.entrust.common.validator.EtrExchangeCommonValidator;
 import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dto.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.service.EtrExchangeAgreRepTrade001Service;
 import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.service.EtrExchangeAgreRepTrade002Service;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon002Service;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommonValidatorService;
 import com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.dto.EtrExchangeTradeZqzyRequest;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
@@ -93,6 +95,9 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
 
     @Autowired
     private EtrCommonService etrCommonService;
+
+    @Autowired
+    private EtrExchangeTradeCommonValidatorService etrExchangeTradeCommonValidatorService;
 
     /**
      * 业务编号组件
@@ -504,6 +509,8 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
             ajax.setErrorList(errorList);
             return new Message<AjaxResult>().success().setData(ajax);
         }
+        //共通check
+        etrExchangeTradeCommonValidatorService.valid(dto);
 //        //正回购、质押券出库
 //        if (DictCodeListExt3.交易方向_首期.getValue().equals(dto.getPs()) && StringUtil.equals(dto.getRepPs(),DictCodeList.回购拆借方向_正回购.getValue())) {
 //            Map<String, Object> param = new HashMap<String, Object>();

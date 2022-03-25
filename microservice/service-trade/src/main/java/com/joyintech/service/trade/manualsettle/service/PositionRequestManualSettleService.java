@@ -109,7 +109,7 @@ public class PositionRequestManualSettleService {
         if(StringUtil.isNotEmpty(resultMap.get(INTERFACE_TYPE))){
             PositionHttpRequest.send(resultMap);
         }else{
-            logger.debug("[成交回报未找到对应的接口配置]");
+            logger.debug("[手工交收未找到对应的接口配置]");
         }
     }
 
