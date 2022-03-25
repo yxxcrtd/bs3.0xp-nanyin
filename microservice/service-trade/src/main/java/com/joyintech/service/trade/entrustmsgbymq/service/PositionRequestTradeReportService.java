@@ -3,7 +3,6 @@ package com.joyintech.service.trade.entrustmsgbymq.service;
 import com.alibaba.fastjson.JSON;
 import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.trade.entrustmsgbymq.dto.TrdMoreConvrate;
@@ -11,7 +10,6 @@ import com.joyintech.service.trade.entrustmsgbymq.dto.TrdTempDto;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
-import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -370,7 +368,7 @@ public class PositionRequestTradeReportService {
                 Map<String, Object> ptlCash = new HashMap<>();
                 ptlCash.put("portfolioId", dto.getPortfolioId());
                 if(DictCodeListExt3.交易方向_解除质押.getValue().equals(entity.getPs())){
-
+                    ptlCash.put("cashAcctId", this.getPtlCapAcctNo(etrEntrust));
                 }else{
                     ptlCash.put("cashAcctId", dto.getCashAcctId());
                 }
@@ -428,15 +426,13 @@ public class PositionRequestTradeReportService {
                     && BussinessDictCodeList.金融产品类型_投管用_债券质押式正回购.getValue().equals(etrEntrust.getFinprodType2())){
                 Map<String, Object> ptlRelieveSec = new HashMap<>();
                 ptlRelieveSec.put("portfolioId", dto.getPortfolioId());
-                // ZGTFCP-1427:赋值质押品信息 modify by fuyongsheng 20220322 start
-                ptlRelieveSec.put("finprodId", entity.getPositionBaseData().getFinDealPledge().getPledgeFinprodId());
-                // ZGTFCP-1427:赋值质押品信息 modify by fuyongsheng 20220322 end
                 ptlRelieveSec.put("secAcctId", dto.getSecAcctId());
                 ptlRelieveSec.put("tradeId", entity.getTradeId());
                 ptlRelieveSec.put("etrId", entity.getEntrustId());
                 // 融入券券面总额
                 ptlRelieveSec.put("integrateSecAmount", dto.getIntegrateSecAmount());
                 if(DictCodeListExt3.交易方向_解除质押.getValue().equals(entity.getPs())){
+                    ptlRelieveSec.put("finprodId", entity.getFinDealPledge().getPledgeFinprodId());
                     // 本方券券面总额
                     ptlRelieveSec.put("ownSecAmount", ArithmeticUtil.multiply(dto.getOwnSecAmount(), new BigDecimal(100)));
                     // 券面总额
@@ -451,8 +447,13 @@ public class PositionRequestTradeReportService {
                         ptlRelieveSec.put("secAmount", ArithmeticUtil.multiply(temp.getPledgeDisplaceAmt(), new BigDecimal(100)));
                     }
                 }else{
-                    ptlRelieveSec.put("ownSecAmount", entity.getPositionBaseData().getFinDealPledge().getPledgeNumber());
-                    ptlRelieveSec.put("secAmount", entity.getPositionBaseData().getFinDealPledge().getPledgeNumber());
+                    ptlRelieveSec.put("finprodId", entity.getPositionBaseData().getFinDealPledge().getPledgeFinprodId());
+                    // ZGTFCP-1739:需要乘以100 modify by fuyongsheng 20220325 start
+                    ptlRelieveSec.put("ownSecAmount", ArithmeticUtil.multiply(entity.getPositionBaseData()
+                            .getFinDealPledge().getPledgeNumber(), new BigDecimal(100)));
+                    ptlRelieveSec.put("secAmount", ArithmeticUtil.multiply(entity.getPositionBaseData()
+                            .getFinDealPledge().getPledgeNumber(), new BigDecimal(100)));
+                    // ZGTFCP-1739:需要乘以100 modify by fuyongsheng 20220325 end
                 }
                 ptlRelieveSecList.add(ptlRelieveSec);
             }
@@ -657,6 +658,12 @@ public class PositionRequestTradeReportService {
         resultMap.put("modelType", DictCodeListExt1.子系统代码_交易.getValue());
     }
 
+    /**
+     * 查询换入换出质押券
+     * @param entity
+     * @param tradeType
+     * @return
+     */
     private FinPledgeDispDetailTemp getFinPledgeDispDetailTemp(TrdTempDto entity, String tradeType){
         List<FinPledgeDispDetailTemp> finPledgeDispDetailTemps = entity.getFinPledgeDispDetailTempList();
         if(!StringUtil.isEmptyList(finPledgeDispDetailTemps)){
@@ -667,5 +674,19 @@ public class PositionRequestTradeReportService {
             }
         }
         return null;
+    }
+
+    /**
+     * 查询产品托管户
+     * @param etrEntrust
+     * @return
+     */
+    private String getPtlCapAcctNo(EtrEntrust etrEntrust){
+        Map<String, Object> map = new HashMap<>();
+        map.put("portfolioId", etrEntrust.getPortfolioId());
+        map.put("ccy", etrEntrust.getCcy());
+        map.put("acctType", BussinessDictCodeList.资金账户类型_托管账户.getValue());
+        PtlCapacctInfo ptlCapacctInfo = trdCommonBaseService.getPtlCapAcctInfo(map);
+        return ptlCapacctInfo != null ? ptlCapacctInfo.getAcctNo() : StringUtil.EMPTY;
     }
 }

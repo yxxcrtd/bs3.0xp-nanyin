@@ -171,10 +171,7 @@ public class StlDataGatherBond7Processor extends BaseProcessor<NeedOperateEntity
                         //持仓类型
                         ptlSecPositionFlow.setHodingType(DictCodeList.持仓类型_实际.getValue());
                         //日期
-                        // ZGTFCP-1751:上市流通老头存登录日期还是T+1日 modify by fuyongsheng 20220324 start
-                        //  ptlSecPositionFlow.setCdate(ptlTrade.getSettleDate());
-                        ptlSecPositionFlow.setCdate(stlDataDealProcessCommonService.getNextWorkDay(ptlTrade.getSettleDate(),finProduct.getCalendarId()));
-                        // ZGTFCP-1751:上市流通老头存登录日期还是T+1日 modify by fuyongsheng 20220324 end
+                        ptlSecPositionFlow.setCdate(ptlTrade.getSettleDate());
                         //币种
                         ptlSecPositionFlow.setCcy(trdProductDeal.getCcy());
                         //数量
@@ -337,7 +334,7 @@ public class StlDataGatherBond7Processor extends BaseProcessor<NeedOperateEntity
         // 到期日
         trdProductDeal.setMdate(null);
         // 交割日
-        trdProductDeal.setSettleDate(trdProductDeal.getTradeDate());
+        trdProductDeal.setSettleDate(stlDataDealProcessCommonService.getNextWorkDay(settleTransData.getDealDate(),finProduct.getCalendarId()));
         // 交易币种
         trdProductDeal.setCcy(DictCodeList.币种_人民币_CNY.getValue());
         // 净值日期

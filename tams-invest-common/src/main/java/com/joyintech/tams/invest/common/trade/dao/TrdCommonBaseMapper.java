@@ -400,4 +400,10 @@ public interface TrdCommonBaseMapper {
      * @return
      */
     OrderInfoDto selectOrderInfo(String dealNo);
+
+    PtlCapacctInfo getPtlCapAcctInfo(Map<String, Object> map);
+
+    List<FinPledgeDispDetailTemp> getFinPledgeDispDetailTemps(Map<String, Object> map);
+
+    FinDealPledge selectFinDealPledgeByPrimaryKey(FinDealPledgeKey finDealPledgeKey);
 }
