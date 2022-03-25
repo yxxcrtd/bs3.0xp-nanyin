@@ -24,8 +24,7 @@ public class EtrTradeOtherCommonService extends BaseService {
     private EtrTrdCommonMapper etrTrdCommonMapper;
 
     public BigDecimal selectFaceValue(Map<String, Object> params) {
-        Date sysDate = DateUtil.platDateFromCache();
-        params.put("sysDate",sysDate);
+        params.put("sysDate",DateUtil.platDateFromCache());
         BigDecimal result = etrTrdCommonMapper.selectFaceValue(params);
         return result == null ? new BigDecimal(100) : result;
     }
