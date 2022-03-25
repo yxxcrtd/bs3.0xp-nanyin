@@ -38,7 +38,7 @@ public class ExchangeEntrustCreditHandlerAop {
     private static Logger logger = LoggerFactory.getLogger(ExchangeEntrustCreditHandlerAop.class);
 
 
-    @Pointcut("execution(* com.joyintech.tams.exchange.entrust..*.controller..*.checkSaveError(..))")
+    @Pointcut("execution(* com.joyintech.tams.exchange.entrust..*.*.checkSave(..))")
     protected void checkPoint(){
         logger.info("----------委托指令check----------");
     }
@@ -113,12 +113,13 @@ public class ExchangeEntrustCreditHandlerAop {
                     ajaxResult.setErrorList(ar.getErrorList());
                 }
                 if (ar != null && StringUtil.isNotEmpty(ar.getData())){
-                    if (StringUtil.equals(ajaxResult.getData().toString(),"请确认是否要提交?")
-                            || StringUtil.equals(ajaxResult.getData().toString(),"请确认是否要保存?")){
-                        ajaxResult.setData(ar.getData());
-                    }else {
-                        ajaxResult.setData(ar.getData() + String.valueOf(ajaxResult.getData()));
-                    }
+                      ajaxResult.setData(ar.getData());
+//                    if (StringUtil.equals(ajaxResult.getData().toString(),"请确认是否要提交?")
+//                            || StringUtil.equals(ajaxResult.getData().toString(),"请确认是否要保存?")){
+//                        ajaxResult.setData(ar.getData());
+//                    }else {
+//                        ajaxResult.setData(ar.getData() + String.valueOf(ajaxResult.getData()));
+//                    }
                 }
             }
         }catch (Exception e){

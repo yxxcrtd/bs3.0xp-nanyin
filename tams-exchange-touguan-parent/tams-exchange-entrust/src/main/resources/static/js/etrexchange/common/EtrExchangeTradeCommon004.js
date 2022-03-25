@@ -735,17 +735,17 @@
             if (finprodType2 == FINPROD_TYPE_TG_F06 || finprodType2 == FINPROD_TYPE_TG_F10) {
                 if (ps == PS_T01) {
                     //return parent.EtrExchangeTradeJjHq.getJJMktPrice("#limitUp_jj");
-                    return jJHQXX.highest;
+                    return jJHQXX.ceiling.toFixed(2);
                 } else if (ps == PS_T02) {
                     //return parent.EtrExchangeTradeJjHq.getJJMktPrice("#limitDown_jj");
-                    return jJHQXX.lowest;
+                    return jJHQXX.ceiling.toFixed(2);
                 } else {
                     //return parent.EtrExchangeTradeJjHq.getJJMktPrice("#latestPrice_jj");
-                    return jJHQXX.ceiling;
+                    return jJHQXX.ceiling.toFixed(2);
                 }
             } else {
                 //return parent.EtrExchangeTradeJjHq.getJJMktPrice("#latestPrice_jj");
-                return jJHQXX.latest;
+                return jJHQXX.ceiling.toFixed(2);
             }
         } else if (currentTab == "dz") {
             var secId = $("#secId_" + currentTab).val();
