@@ -383,9 +383,9 @@ public class PositionRequestTradeReportService {
                 ptlOffsetCash.put("cashAcctId", dto.getCashAcctId());
                 ptlOffsetCash.put("tradeId", entity.getTradeId());
                 ptlOffsetCash.put("etrId", entity.getEntrustId());
-
-                ptlOffsetCash.put("finprodId", entity.getFinprodId());
-                ptlOffsetCash.put("secAcctId", dto.getSecAcctId());
+                // ZGTFCP-1746:赋值交易金额 modify by fuyongsheng 20220325 start
+                ptlOffsetCash.put("cashAmount", dto.getCashAmount());
+                // ZGTFCP-1746:赋值交易金额 modify by fuyongsheng 20220325 end
                 ptlOffsetCash.put("ownSecAmount", dto.getOwnSecAmount());
                 ptlOffsetCash.put("secAmount", dto.getSecAmount());
                 ptlOffsetCashList.add(ptlOffsetCash);
