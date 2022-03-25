@@ -40,7 +40,7 @@
         order by rtp.REPORT_CODE desc
     </select>
     <!-- <select id="searchReportCode" resultType="com.joyintech.framework.select.SelectOptionDto">
-		select 
+		select
 			ITEM_CODE id,
 			ITEM_VALUE text
 		from CHB_SYS_DATADICT_LIST
@@ -49,16 +49,28 @@
 	</select> -->
     <update id="updateRegTimePoints" parameterType="com.joyintech.tams.report.system.regtimepoints.dto.RegTimePoints001Dto">
         UPDATE
-            CHB_REG_TIME_POINTS
+        CHB_REG_TIME_POINTS
         SET
-        	UPDATE_SUBMIT_POINT =#{updateSubmitPoint,jdbcType=DECIMAL},
-        	DELETE_SUBMIT_POINT = #{deleteSubmitPoint, jdbcType=DECIMAL},
-        	UPDATE_USER = #{updateUser, jdbcType=VARCHAR},
-        	UPDATE_TIME = #{updateTime, jdbcType=TIMESTAMP}
+        <if test="updateSubmitPoint!='' and updateSubmitPoint !=null">
+            UPDATE_SUBMIT_POINT = #{updateSubmitPoint},
+        </if>
+        <if test="deleteSubmingPoint !='' and deleteSubmingPoint !=null">
+            DELETE_SUBMING_POINT = #{deleteSubmingPoint},
+        </if>
+        <if test="submitPointBond !='' and submitPointBond !=null">
+            SUBMIT_POINT_BOND = #{submitPointBond},
+        </if>
+        <if test="submitPointBank !='' and submitPointBank !=null">
+            SUBMIT_POINT_BANK = #{submitPointBank},
+        </if>
+        UPDATE_USER = #{updateUser, jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime, jdbcType=TIMESTAMP}
         WHERE
-            STATUS = 'E'
-    		AND ORG_CODE = #{orgCode}
-       		AND REPORT_CODE = #{reportCode}
+        STATUS = 'E'
+        <if test="orgCode !='' and orgCode !=null">
+            AND ORG_CODE = #{orgCode}
+        </if>
+        AND SEQNO = #{seqno}
     </update>
     <update id="updateAllRegTimePoints" >
         UPDATE
@@ -114,7 +126,7 @@
 		select
 		rtp.UPDATE_SUBMIT_POINT updateSubmitPoint,
 		rtp.DELETE_SUBMING_POINT deleteSubmingPoint
-		from 
+		from
 		CHB_REG_TIME_POINTS rtp
 		where
 		rtp.STATUS = 'E'

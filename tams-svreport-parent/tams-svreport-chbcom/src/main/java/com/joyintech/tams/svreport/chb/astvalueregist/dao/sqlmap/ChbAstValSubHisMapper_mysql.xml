@@ -33,7 +33,7 @@
     CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select
+    select 
     <include refid="Base_Column_List" />
     from CHB_AST_VAL_SUB_HIS
     where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
@@ -304,72 +304,72 @@
     where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
   </update>
 
-  <insert id="insertSubHisBatch" parameterType="java.lang.String">
-    insert into CHB_AST_VAL_SUB_HIS (REGIST_SEQNO, REGIST_BANK_CODE,
-    ISSUE_PARTY_ID, ASSET_CODE, VAL_DATE, UNIT_VAL_NET,
-    UNIT_VAL_TOTAL, REMARK, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, SEND_STATUS,
-    SUBMIT_TIME,
-    SUMIT_SEQ, SUBMIT_FEEDBACK_STATUS, STATUS, STATUS_DATE, ORG_CODE, DEPT_CODE,
-    CREATE_USER,
-    CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
-    )
-    select
-    REGIST_SEQNO, REGIST_BANK_CODE, ISSUE_PARTY_ID, ASSET_CODE, VAL_DATE, UNIT_VAL_NET,
-    UNIT_VAL_TOTAL, REMARK, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
-    SEND_STATUS, SUBMIT_TIME,
-    SUMIT_SEQ, SUBMIT_FEEDBACK_STATUS, STATUS, STATUS_DATE, ORG_CODE, DEPT_CODE,
-    CREATE_USER,
-    CREATE_DEPT, NOW(), UPDATE_USER, NOW()
-    from CHB_AST_VAL_SUB
-    where SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
-    <if test="regList !=null and regList.size()>0">
-      <foreach collection="regList" item="item" open="and REGIST_SEQNO IN ("
-               separator="," close=")">
-        #{item,jdbcType=VARCHAR}
-      </foreach>
-    </if>
-  </insert>
-
+	<insert id="insertSubHisBatch" parameterType="java.lang.String">
+		insert into CHB_AST_VAL_SUB_HIS (REGIST_SEQNO, REGIST_BANK_CODE,
+		ISSUE_PARTY_ID, ASSET_CODE, VAL_DATE, UNIT_VAL_NET,
+		UNIT_VAL_TOTAL, REMARK, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, SEND_STATUS,
+		SUBMIT_TIME,
+		SUMIT_SEQ, SUBMIT_FEEDBACK_STATUS, STATUS, STATUS_DATE, ORG_CODE, DEPT_CODE,
+		CREATE_USER,
+		CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+		)
+		select
+		REGIST_SEQNO, REGIST_BANK_CODE, ISSUE_PARTY_ID, ASSET_CODE, VAL_DATE, UNIT_VAL_NET,
+		UNIT_VAL_TOTAL, REMARK, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+		SEND_STATUS, SUBMIT_TIME,
+		SUMIT_SEQ, SUBMIT_FEEDBACK_STATUS, STATUS, STATUS_DATE, ORG_CODE, DEPT_CODE,
+		CREATE_USER,
+		CREATE_DEPT, NOW(), UPDATE_USER, NOW()
+		from CHB_AST_VAL_SUB
+		where SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
+		<if test="regList !=null and regList.size()>0">
+			<foreach collection="regList" item="item" open="and REGIST_SEQNO IN ("
+				separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+	</insert>
+  
   <select id="selectByprodId" resultType="java.lang.String" parameterType="com.joyintech.tams.svreport.chb.astvalueregist.dto.ChbAstValueRegist001Dto">
-    select a.REGIST_SEQNO from (
-    SELECT
-    @rownum:=@rownum+1 rownum,
-    REGIST_SEQNO,
-    IF
-    (
-    (
-    @VAL_DATE = A.VAL_DATE
-    AND @ASSET_CODE = A.ASSET_CODE
-    ),
-    @rank := @rank + 1,
-    @rank := 1
-    ) AS myrank,
-    @VAL_DATE := A.VAL_DATE,
-    @ASSET_CODE := A.ASSET_CODE
-    FROM
-    ( SELECT * FROM CHB_AST_VAL_SUB_HIS ORDER BY VAL_DATE,ASSET_CODE, ifnull( UPDATE_TIME, CREATE_TIME ) DESC ) A,
-    (
-    SELECT
-    @rownum := 0,
-    @VAL_DATE := NULL,
-    @ASSET_CODE := NULL,
-    @rank := 0
-    ) B
-    where
+  select a.REGIST_SEQNO from (
+      SELECT
+      @rownum:=@rownum+1 `rownum`,
+      REGIST_SEQNO,
+      IF
+      (
+      (
+      @VAL_DATE = A.VAL_DATE
+      AND @ASSET_CODE = A.ASSET_CODE
+      ),
+      @rank := @rank + 1,
+      @rank := 1
+      ) AS myrank,
+      @VAL_DATE := A.VAL_DATE,
+      @ASSET_CODE := A.ASSET_CODE
+      FROM
+      ( SELECT * FROM CHB_AST_VAL_SUB_HIS ORDER BY VAL_DATE,ASSET_CODE, ifnull( UPDATE_TIME, CREATE_TIME ) DESC ) A,
+      (
+      SELECT
+      @rownum := 0,
+      @VAL_DATE := NULL,
+      @ASSET_CODE := NULL,
+      @rank := 0
+      ) B
+     where
     <foreach collection="regList" item="item" open="(" separator=") or (" close=")">
       ASSET_CODE = #{item.assetCode}
       and VAL_DATE = #{item.valDate}
     </foreach>
-    )a
-    where 1 = 1 limit 1
+  )a
+  where 1 = 1 limit 1
   </select>
-
-  <delete id="deleteBySeqno" parameterType="java.lang.String">
-    delete from CHB_AST_VAL_SUB_HIS
-    where
-    <foreach collection="seqnolist" item="item" open="REGIST_SEQNO in ("
-             separator="," close=")">
-      #{item,jdbcType=VARCHAR}
-    </foreach>
-  </delete>
+  
+   <delete id="deleteBySeqno" parameterType="java.lang.String">
+	delete from CHB_AST_VAL_SUB_HIS
+	where
+	<foreach collection="seqnolist" item="item" open="REGIST_SEQNO in ("
+		separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+	</foreach>
+</delete>
 </mapper>

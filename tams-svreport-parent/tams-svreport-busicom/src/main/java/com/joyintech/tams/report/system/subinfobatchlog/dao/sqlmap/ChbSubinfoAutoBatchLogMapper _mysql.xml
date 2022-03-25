@@ -53,20 +53,20 @@
         where BATCH_EXE_ID = #{batchExeId,jdbcType=VARCHAR}
     </delete>
     <insert id="insert" parameterType="com.joyintech.tams.report.system.subinfobatchlog.dto.ChbSubinfoBatchLog" >
-        insert into CHB_SUBINFO_BATCH_LOG (BATCH_EXE_ID, TASK_ID, BUSI_CONFIRM_DATE, 
-            OPERATOR, FILE_TYPE, COMPRES_FILE_ID, 
-            COMPRES_FILE_NAME, COMPRES_FILE_PATH, FILE_COUNT, 
-            RECORD_COUNT, DEAL_STATUS, DEAL_MESSAGE, 
-            CONSUME_TIME, START_TIME, END_TIME, 
-            GEN_CONDITION, CREATE_USER, CREATE_TIME, 
+        insert into CHB_SUBINFO_BATCH_LOG (BATCH_EXE_ID, TASK_ID, BUSI_CONFIRM_DATE,
+            OPERATOR, FILE_TYPE, COMPRES_FILE_ID,
+            COMPRES_FILE_NAME, COMPRES_FILE_PATH, FILE_COUNT,
+            RECORD_COUNT, DEAL_STATUS, DEAL_MESSAGE,
+            CONSUME_TIME, START_TIME, END_TIME,
+            GEN_CONDITION, CREATE_USER, CREATE_TIME,
             UPDATE_USER, UPDATE_TIME, CREATE_DEPT
             )
-        values (#{batchExeId,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR}, #{busiConfirmDate,jdbcType=VARCHAR}, 
-            #{operator,jdbcType=VARCHAR}, #{fileType,jdbcType=VARCHAR}, #{compresFileId,jdbcType=VARCHAR}, 
-            #{compresFileName,jdbcType=VARCHAR}, #{compresFilePath,jdbcType=VARCHAR}, #{fileCount,jdbcType=DECIMAL}, 
-            #{recordCount,jdbcType=DECIMAL}, #{dealStatus,jdbcType=VARCHAR}, #{dealMessage,jdbcType=VARCHAR}, 
-            #{consumeTime,jdbcType=DECIMAL}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, 
-            #{genCondition,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+        values (#{batchExeId,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR}, #{busiConfirmDate,jdbcType=VARCHAR},
+            #{operator,jdbcType=VARCHAR}, #{fileType,jdbcType=VARCHAR}, #{compresFileId,jdbcType=VARCHAR},
+            #{compresFileName,jdbcType=VARCHAR}, #{compresFilePath,jdbcType=VARCHAR}, #{fileCount,jdbcType=DECIMAL},
+            #{recordCount,jdbcType=DECIMAL}, #{dealStatus,jdbcType=VARCHAR}, #{dealMessage,jdbcType=VARCHAR},
+            #{consumeTime,jdbcType=DECIMAL}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP},
+            #{genCondition,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
             #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR}
             )
     </insert>
@@ -204,13 +204,13 @@
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.report.system.subinfobatchlog.dto.ChbSubinfoBatchLog" >
-        insert into CHB_SUBINFO_BATCH_LOG(BATCH_EXE_ID, TASK_ID, BUSI_CONFIRM_DATE, OPERATOR, 
-        FILE_TYPE, COMPRES_FILE_ID, COMPRES_FILE_NAME, COMPRES_FILE_PATH, FILE_COUNT, RECORD_COUNT, 
-        DEAL_STATUS, DEAL_MESSAGE, CONSUME_TIME, START_TIME, END_TIME, GEN_CONDITION, CREATE_USER, 
+        insert into CHB_SUBINFO_BATCH_LOG(BATCH_EXE_ID, TASK_ID, BUSI_CONFIRM_DATE, OPERATOR,
+        FILE_TYPE, COMPRES_FILE_ID, COMPRES_FILE_NAME, COMPRES_FILE_PATH, FILE_COUNT, RECORD_COUNT,
+        DEAL_STATUS, DEAL_MESSAGE, CONSUME_TIME, START_TIME, END_TIME, GEN_CONDITION, CREATE_USER,
         CREATE_TIME, UPDATE_USER, UPDATE_TIME, CREATE_DEPT)
-        select BATCH_EXE_ID, TASK_ID, BUSI_CONFIRM_DATE, OPERATOR, 
-            FILE_TYPE, COMPRES_FILE_ID, COMPRES_FILE_NAME, COMPRES_FILE_PATH, FILE_COUNT, RECORD_COUNT, 
-            DEAL_STATUS, DEAL_MESSAGE, CONSUME_TIME, START_TIME, END_TIME, GEN_CONDITION, CREATE_USER, 
+        select BATCH_EXE_ID, TASK_ID, BUSI_CONFIRM_DATE, OPERATOR,
+            FILE_TYPE, COMPRES_FILE_ID, COMPRES_FILE_NAME, COMPRES_FILE_PATH, FILE_COUNT, RECORD_COUNT,
+            DEAL_STATUS, DEAL_MESSAGE, CONSUME_TIME, START_TIME, END_TIME, GEN_CONDITION, CREATE_USER,
             CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_DEPT
              from CHB_SUBINFO_BATCH_LOG
              where 1 = 1 and BATCH_EXE_ID = #{batchExeId,jdbcType=VARCHAR}
@@ -340,7 +340,7 @@
         <if test="operator != null and operator != ''">
             and OPERATOR = #{operator,jdbcType=VARCHAR}
         </if>
-        )
+        ) tmp
     </select>
     <select id="selectByDealStatus" resultMap="BaseResultMap">
         select

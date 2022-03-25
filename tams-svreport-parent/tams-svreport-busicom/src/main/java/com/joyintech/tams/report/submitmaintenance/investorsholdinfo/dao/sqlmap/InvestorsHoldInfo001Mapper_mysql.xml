@@ -17,9 +17,9 @@
 	<delete id="deleteByPrimary" parameterType="com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub" >
         delete from CHB_INVESTHOLD_INFO_SUB
         where
-        REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR} 
-		and	INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR} 
-		and PRD_REGIST_CODE = #{prdRegistCode,jdbcType=VARCHAR} 
+        REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR}
+		and	INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR}
+		and PRD_REGIST_CODE = #{prdRegistCode,jdbcType=VARCHAR}
 		and CCY = #{ccy,jdbcType=VARCHAR}
  	 	and HOLD_DATE = #{holdDate,jdbcType=DATE}
 		and SEND_STATUS = #{sendStatus,jdbcType=VARCHAR}
@@ -61,18 +61,18 @@
 
 	<!-- 根据识别标识与登记银行代码从信息维护表中查询数据插入登记表 -->
 	<insert id="insertDeleteInvestReg" parameterType="com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto">
-		insert into CHB_INVESTHOLD_INFO_SUB 
+		insert into CHB_INVESTHOLD_INFO_SUB
 		(
 		REGIST_SEQNO,REGIST_BANK_CODE,CHB_SUBMIT_DEADLINE,PRD_REGIST_CODE,INDENTIFY_MARK,CCY,
 		HOLD_DATE,AMOUNT,QTY,CNY_AMT,REMARK,SUBMIT_DEADLINE,WORKFLOW_ID,SEND_STATUS,
 		STATUS_DATE,STATUS,CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME,
 		ORG_CODE,DEPT_CODE,SUBMIT_TIME
             )
-        select  
+        select
         #{registSeqno,jdbcType=VARCHAR},REGIST_BANK_CODE,#{chbSubmitDeadline,jdbcType=TIMESTAMP},PRD_REGIST_CODE,INDENTIFY_MARK,CCY,
         HOLD_DATE,AMOUNT,QTY,CNY_AMT,REMARK,#{submitDeadline,jdbcType=TIMESTAMP},WORKFLOW_ID,'01',
 		#{statusDate,jdbcType=TIMESTAMP},#{status,jdbcType=VARCHAR},CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME,
-		ORG_CODE,DEPT_CODE,null     
+		ORG_CODE,DEPT_CODE,null
         from chb_investhold_info
          where INDENTIFY_MARK = #{indentifyMark} and REGIST_BANK_CODE = #{registBankCode}
          	    and PRD_REGIST_CODE= #{prdRegistCode,jdbcType=VARCHAR}
@@ -762,7 +762,7 @@
 		)
 	</update>
 	<select id="selectStatusEInvestholdInfoData" resultType="com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto">
-	   select 
+	   select
 	     REGIST_BANK_CODE registBankCode,
 		 INDENTIFY_MARK indentifyMark,
          PRODID prodid,
@@ -785,7 +785,7 @@
 	       AND ORG_CODE = #{orgCode,jdbcType=VARCHAR}
 	</select>
 	<select id="selectAllInvestholdInfoData" resultType="com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto">
-	   select 
+	   select
 	     REGIST_BANK_CODE registBankCode,
 		 INDENTIFY_MARK indentifyMark,
          PRODID prodid,
@@ -852,7 +852,8 @@
 
 	<select id="getSubmitFeedbackStatusList" parameterType="com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub" resultType="com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.InvestorsHoldInfoRegist001Dto">
 		select distinct
-		status.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		ciis.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
 		ciis.CCY ccy,
 		ciis.HOLD_DATE holdDate,
 		ciis.INDENTIFY_MARK indentifyMark,
@@ -862,8 +863,7 @@
 		ciis.QTY qty,
 		ciis.CNY_AMT cnyAmt
 		from CHB_INVESTHOLD_INFO_SUB ciis
-		left join CHB_SUBMIT_STATUS status
-		on ciis.SUMIT_SEQ = status.SEQNO
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 		<where>
 			<foreach collection="list" item="investDto" open=" (" close=")" separator=") or (">
 				ciis.PRODID = #{investDto.prodid,jdbcType=VARCHAR}
@@ -892,14 +892,14 @@
 		T.STATUS status,
 		T.CCY ccyCode,
 		'' as  agent,
-		status.SUBMIT_FEEDBACK_MSG as repFailedInfo
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		T.SUBMIT_FEEDBACK_MSG as repFailedInfo
 		from CHB_INVESTHOLD_INFO_SUB T
-		left join CHB_SUBMIT_STATUS status
-		on T.sumit_seq = status.seqno
 		<where>
 			<if test="FEEDBACKSTATUS!=null and FEEDBACKSTATUS !=''" >
-				status.SUBMIT_FEEDBACK_STATUS = #{FEEDBACKSTATUS,jdbcType=VARCHAR}
-			</if>
+			T.SUBMIT_FEEDBACK_STATUS = #{FEEDBACKSTATUS,jdbcType=VARCHAR}
+
+			/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 			<if test="SEQNO !=null and SEQNO.size()>0 ">
 				<foreach collection="SEQNO" item="SUMIT_SEQ" open=" AND T.SUMIT_SEQ IN (" close=")" separator=",">
 					#{SUMIT_SEQ,jdbcType=VARCHAR}
@@ -928,16 +928,16 @@
 		T.STATUS status,
 		T.CCY ccyCode,
 		'' as  agent,
-		status.SUBMIT_FEEDBACK_MSG as repFailedInfo
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		T.SUBMIT_FEEDBACK_MSG as repFailedInfo
 		from CHB_INVESTHOLD_INFO_SUB T
-		left join CHB_SUBMIT_STATUS status
-		on T.sumit_seq = status.seqno
 		<where>
 			<if test="FEEDBACKSTATUS!=null and FEEDBACKSTATUS !=''" >
-				status.SUBMIT_FEEDBACK_STATUS = #{FEEDBACKSTATUS,jdbcType=VARCHAR}
+				T.SUBMIT_FEEDBACK_STATUS = #{FEEDBACKSTATUS,jdbcType=VARCHAR}
+				/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 			</if>
 			<if test="reportNo !=null and reportNo !=''">
-				AND status.REPORT_NO = #{reportNo,jdbcType=VARCHAR}
+				AND T.REPORT_NO = #{reportNo,jdbcType=VARCHAR}
 			</if>
 		</where>
 	</select>
@@ -984,10 +984,15 @@
 		)
 		select A.* from (
 		<foreach collection="subList" item="item" index="index" separator="union all">
-			select  #{item.registSeqno,jdbcType=VARCHAR},REGIST_BANK_CODE,#{item.chbSubmitDeadline,jdbcType=TIMESTAMP},
+			select
+			#{item.registSeqno,jdbcType=VARCHAR},REGIST_BANK_CODE,
+			#{item.chbSubmitDeadline,jdbcType=TIMESTAMP} CHB_SUBMIT_DEADLINE,
 			PRD_REGIST_CODE,INDENTIFY_MARK,CCY,HOLD_DATE,AMOUNT,QTY,CNY_AMT,REMARK,
-			#{item.submitDeadline,jdbcType=TIMESTAMP},WORKFLOW_ID,'01',#{item.statusDate,jdbcType=TIMESTAMP},
-			#{item.status,jdbcType=VARCHAR},CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ORG_CODE,DEPT_CODE,null,PRODID
+			#{item.submitDeadline,jdbcType=TIMESTAMP} SUBMIT_DEADLINE,WORKFLOW_ID,'01',
+			#{item.statusDate,jdbcType=TIMESTAMP} STATUS_DATE,
+			#{item.status,jdbcType=VARCHAR} STATUS,CREATE_USER,
+			CREATE_TIME,UPDATE_USER,UPDATE_TIME,
+			ORG_CODE,DEPT_CODE,null,PRODID
 			from chb_investhold_info
 			where INDENTIFY_MARK = #{item.indentifyMark} and REGIST_BANK_CODE = #{item.registBankCode}
 			and PRD_REGIST_CODE= #{item.prdRegistCode,jdbcType=VARCHAR}

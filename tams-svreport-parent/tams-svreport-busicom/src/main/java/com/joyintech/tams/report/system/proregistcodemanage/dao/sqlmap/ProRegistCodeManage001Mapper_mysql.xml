@@ -61,7 +61,7 @@
 				</foreach>
 			</if>
 			<if test="isNotNull == true">
-				AND A.REG_CODE is null
+				AND A.REG_CODE is null or A.REG_CODE=''
 			</if>
 			<!-- dingzhipeng add Start 2017-10-23-->
 			<if test="orgCodeList != null and orgCodeList.size() > 0">
@@ -87,13 +87,14 @@
 		A.PRODID prodId,
 		A.ORG_CODE orgCode,
 		b.PROD_NAME prodName,
-		A.REG_CODE regCode,TrdProjectDurationMapper.xml
+		A.REG_CODE regCode,
 		b.OPERATE_MODE operateMode,
 		DATE_FORMAT(b.VDATE,'%Y-%m-%d') vdate,
 		DATE_FORMAT(b.MDATE,'%Y-%m-%d') mdate,
 		A.INVESTOR investor,
 		A.REMARK remark
 		FROM CHB_PRDRESIST_CODE A
+		left join chb_prd_baseinfo b  on b.prod_id = a.PRODID
 		<where>
 			<if test="prodList != null and prodList.size() > 0">
 				<foreach collection="prodList" item="prodid" open=" A.PRODID IN (" close=")" separator=",">
@@ -123,7 +124,7 @@
 				</foreach>
 			</if>
 			<if test="isNotNull == true">
-				AND A.REG_CODE is null
+				AND A.REG_CODE is null or A.REG_CODE=''
 			</if>
 			<!-- dingzhipeng add Start 2017-10-23-->
 			<if test="orgCodeList != null and orgCodeList.size() > 0">
@@ -173,8 +174,8 @@
 		 	ON A.ORG_CODE = B.ORG_CODE AND A.PRODID = B.ACCOUNT
 	</select>
 	<select id="queryProdid" resultType="com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeManage001Dto">
-		SELECT 
-		  * 
+		SELECT
+		  *
 		 FROM CHB_PRDRESIST_CODE B
 		 where
 		 		B.PRODID = #{prodid}
@@ -241,7 +242,7 @@
 		STATUS = #{status}
 		<foreach collection="prdRegistCodeList" item="prdRegistCode" open=" and PRD_REGIST_CODE in (" close=")" separator=",">
 			#{prdRegistCode,jdbcType=VARCHAR}
-		</foreach>)
+		</foreach>) t
 	</select>
 
 	<select id="selectProdInfo" resultType="map">
@@ -291,4 +292,12 @@
 		</foreach>
 		;end;
 	</update>
+
+	<select id="selectInfoByProdId" resultType="com.joyintech.tams.svreport.interf.chb.proddeclare.dto.ChbPrdDeclareInfoDto">
+		select
+			prod_ins_id prodInsId,
+			raise_type raiseType
+		from chb_prd_declare_info
+		where prod_ins_id = #{prodId}
+	</select>
 </mapper>

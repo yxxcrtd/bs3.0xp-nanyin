@@ -88,11 +88,13 @@
 		) manualData,
 		(select count(ces3.SUBMIT_STATUS) as interfPassnum /*接口通过*/
 		from CHB_EQU_SUB  ces3
-		left join CHB_SUBMIT_STATUS substatus
-		on ces3.sumit_seq = substatus.seqno
-		WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d')
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		/*left join CHB_SUBMIT_STATUS substatus
+		on ces3.sumit_seq = substatus.seqno*/
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		WHERE to_char(ces3.SUBMIT_TIME,'yyyy-mm-dd') = to_char(#{searchDate,jdbcType=TIMESTAMP},'yyyy-mm-dd')
 		and ces3.SUBMIT_STATUS='02' /*接口报送*/
-		and substatus.SUBMIT_FEEDBACK_STATUS in ('01','03') /*发送成功，中债通过*/
+		and ces3.SUBMIT_FEEDBACK_STATUS in ('01','03') /*发送成功，中债通过*/
 		<if test="createDeptList != null and createDeptList.size>0">
 			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
 				#{item,jdbcType=VARCHAR}
@@ -243,11 +245,10 @@
 		) manualData,
 		(select count(ces3.SEND_STATUS) as interfPassnum /*接口通过*/
 		from CHB_INVESTHOLD_INFO_SUB  ces3
-		left join CHB_SUBMIT_STATUS substatus
-		on ces3.sumit_seq = substatus.seqno
-		WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d')
+
+		WHERE to_char(ces3.SUBMIT_TIME,'yyyy-mm-dd') = to_char(#{searchDate,jdbcType=TIMESTAMP},'yyyy-mm-dd')
 		and ces3.SEND_STATUS='02' /*接口报送*/
-		and substatus.SUBMIT_FEEDBACK_STATUS in ('01','03') /*发送成功，中债通过*/
+		and ces3.SUBMIT_FEEDBACK_STATUS in ('01','03') /*发送成功，中债通过*/
 		<if test="createDeptList != null and createDeptList.size>0">
 			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
 				#{item,jdbcType=VARCHAR}
@@ -266,11 +267,13 @@
 		) interfPass,
 		(select count(ces3.SEND_STATUS) as interfBacknum /*接口退回*/
 		from CHB_INVESTHOLD_INFO_SUB  ces3
-		left join CHB_SUBMIT_STATUS substatus
-		on ces3.sumit_seq = substatus.seqno
-		WHERE <![CDATA[DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') <= DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') ]]>
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		/*left join CHB_SUBMIT_STATUS substatus
+		on ces3.sumit_seq = substatus.seqno*/
+		WHERE <![CDATA[to_char(ces3.SUBMIT_TIME,'yyyy-mm-dd') <= to_char(#{searchDate,jdbcType=TIMESTAMP},'yyyy-mm-dd') ]]>
 		and ces3.SEND_STATUS='02' /*接口报送*/
-		and substatus.SUBMIT_FEEDBACK_STATUS in ('02','04','05') /*接口退回*/
+		and ces3.SUBMIT_FEEDBACK_STATUS in ('02','04','05') /*接口退回*/
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 		<if test="createDeptList != null and createDeptList.size>0">
 			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
 				#{item,jdbcType=VARCHAR}
@@ -324,7 +327,7 @@
 		interfBack.interfBacknum as interfBacknum,/*接口退回*/
 		deleteTemp.deletenum as deletenum,/*删除模版*/
 		deleteTemp.countType as countType,
-		'28' as reporttype /*投资者持有信息*/
+		'26' as reporttype /*投资者持有信息*/
 		FROM
 		(select count(ciis1.SUBMIT_STATUS) as delaynum from CHB_EQUDET_SUB  ciis1 WHERE DATE_FORMAT(ciis1.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and  ciis1.SUBMIT_STATUS=#{NO_SUBMIT}
 		<if test="createDeptList != null and createDeptList.size>0">
@@ -399,11 +402,11 @@
 		) manualData,
 		(select count(ces3.SUBMIT_STATUS) as interfPassnum /*接口通过*/
 		from CHB_EQUDET_SUB  ces3
-		left join CHB_SUBMIT_STATUS substatus
+		left join CHB_EQUDET_SUBMIT_STATUS substatus
 		on ces3.sumit_seq = substatus.seqno
-		WHERE DATE_FORMAT(ces3.SUBMIT_TIME,'%Y-%m-%d') = DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d')
+		WHERE to_char(ces3.SUBMIT_TIME,'yyyy-mm-dd') = to_char(#{searchDate,jdbcType=TIMESTAMP},'yyyy-mm-dd')
 		and ces3.SUBMIT_STATUS='02' /*接口报送*/
-		and substatus.SUBMIT_FEEDBACK_STATUS in ('01','03') /*发送成功，中债通过*/
+		and ces3.SUBMIT_FEEDBACK_STATUS in ('01','03') /*发送成功，中债通过*/
 		<if test="createDeptList != null and createDeptList.size>0">
 			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
 				#{item,jdbcType=VARCHAR}
@@ -3345,7 +3348,8 @@
 </select>
 
 	<select id="selectMenulist" resultType="java.lang.String">
-	select page_id from sys_menu
-	where PARENT_MENU_ID in (select MENU_ID from sys_menu where PARENT_MENU_ID = 'SVR_003')
-</select>
+		select page_id from sys_menu
+		where PARENT_MENU_ID in (select MENU_ID from sys_menu where
+		PARENT_MENU_ID IN ('REPORT_MAINTAIN_001','REPORT_CHECK_001','REPORT_REGIST_001','REPORT_MANAGE_001'))
+	</select>
 </mapper>
