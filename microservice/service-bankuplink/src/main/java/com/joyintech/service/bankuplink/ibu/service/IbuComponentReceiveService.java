@@ -827,18 +827,32 @@ public class IbuComponentReceiveService extends BaseService{
                 return true;
             }
 			if (StringUtil.equals(ibuQuoteBondDto.getTradeStatus(), BussinessDictCodeList.银行间上行报价状态_已撤回.getValue())) {
-				CfetsBondDealDialogueQuoteDto dto = new CfetsBondDealDialogueQuoteDto();
-				BeanUtil.copyPropertiesIgnoreNull(dto, ibuQuoteBondDto);
-				dto.setQuoteId(ibuQuoteBondDto.getQuoteId());
-				dto.setPortfolioId(ibuQuoteBondDto.getPortfolioId());
-				dto.setFinprodId(ibuQuoteBondDto.getFinprodId());
-				dto.setTradeStatus(ibuQuoteBondDto.getTradeStatus());
+//				CfetsBondDealDialogueQuoteDto dto = new CfetsBondDealDialogueQuoteDto();
+//				BeanUtil.copyPropertiesIgnoreNull(dto, ibuQuoteBondDto);
+//				dto.setQuoteId(ibuQuoteBondDto.getQuoteId());
+//				dto.setPortfolioId(ibuQuoteBondDto.getPortfolioId());
+//				dto.setFinprodId(ibuQuoteBondDto.getFinprodId());
+//				dto.setTradeStatus(ibuQuoteBondDto.getTradeStatus());
+//                //券面总额【单位：万】
+//                dto.setAvaNum(ibuQuoteBondDto.getShareAmt().multiply(new BigDecimal(100)).divide(new BigDecimal(10000)));
+//				dto.setPs(ibuQuoteBondDto.getPs());
+//				if(StringUtil.isNotEmpty(quoteResultDto.getIsExistNew())){
+//                    dto.setIsExistNew(quoteResultDto.getIsExistNew());
+//                }
+
+                CfetsBondDealRequestQuoteDto dto = new CfetsBondDealRequestQuoteDto();
+                BeanUtil.copyPropertiesIgnoreNull(dto, ibuQuoteBondDto);
+                dto.setQuoteId(ibuQuoteBondDto.getQuoteId());
+                dto.setPortfolioId(ibuQuoteBondDto.getPortfolioId());
+                dto.setFinprodId(ibuQuoteBondDto.getFinprodId());
+                dto.setTradeStatus(ibuQuoteBondDto.getTradeStatus());
                 //券面总额【单位：万】
                 dto.setAvaNum(ibuQuoteBondDto.getShareAmt().multiply(new BigDecimal(100)).divide(new BigDecimal(10000)));
-				dto.setPs(ibuQuoteBondDto.getPs());
-				if(StringUtil.isNotEmpty(quoteResultDto.getIsExistNew())){
+                dto.setPs(ibuQuoteBondDto.getPs());
+                if(StringUtil.isNotEmpty(quoteResultDto.getIsExistNew())){
                     dto.setIsExistNew(quoteResultDto.getIsExistNew());
                 }
+
 				cfetsBondDealQuotedPriceService.doInsetOrUpdateForPtlPositionHold(dto);
 				return true;
 			} else if (StringUtil.equals(ibuQuoteBondDto.getTradeStatus(),
