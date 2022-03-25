@@ -147,11 +147,11 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
             canNumZh=queryProPosition(1,zhProList);
             secNumZh=queryProPosition(2,zhProList);
         }
-        resultMap.put("canNumSh",canNumSh);
-        resultMap.put("secNumSh",secNumSh);
+        resultMap.put("canNumSh",canNumSh+"张");
+        resultMap.put("secNumSh",secNumSh+"张");
         resultMap.put("rateSh",rateSh);
-        resultMap.put("canNumZh",canNumZh);
-        resultMap.put("secNumZh",secNumZh);
+        resultMap.put("canNumZh",canNumZh+"张");
+        resultMap.put("secNumZh",secNumZh+"张");
         resultMap.put("rateZh",rateZh);
         return resultMap;
     }

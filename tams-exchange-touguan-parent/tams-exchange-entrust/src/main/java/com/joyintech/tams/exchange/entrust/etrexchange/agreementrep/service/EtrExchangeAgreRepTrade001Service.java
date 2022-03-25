@@ -2150,6 +2150,12 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
 
         if (!StringUtil.equals("save", entity.getOperateType()) && !StringUtil.equals("revoke", entity.getOperateType()) && !StringUtil.equals("delete", entity.getOperateType())) {
             try {
+                //退回的移到备份表
+                BaseEtrInvestInfoDto dto = new BaseEtrInvestInfoDto();
+                EtrEntrust etrEntrust=new EtrEntrust();
+                etrEntrust.setEntrustId(entity.getEntrustId());
+                dto.setEtrEntrust(etrEntrust);
+                doInsertBackupQuery(dto);
                 doInsertWflEntity(entity);
             } catch (Exception e) {
                 e.printStackTrace();
