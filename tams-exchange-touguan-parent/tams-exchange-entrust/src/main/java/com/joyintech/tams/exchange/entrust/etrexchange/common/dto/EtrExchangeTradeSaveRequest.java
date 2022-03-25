@@ -248,6 +248,11 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
      * 风险预占是否来自场内
      */
     private String fromEtrExchange;
+    
+    /**
+     * 头寸使用序列号
+     */
+    private Long positionSeqno;
 
 
     private BigDecimal disRate;
@@ -260,7 +265,15 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
         this.disRate = disRate;
     }
 
-    /**
+	public Long getPositionSeqno() {
+		return positionSeqno;
+	}
+
+	public void setPositionSeqno(Long positionSeqno) {
+		this.positionSeqno = positionSeqno;
+	}
+
+	/**
      * 取得 委托代码
      * @return 委托代码
      */

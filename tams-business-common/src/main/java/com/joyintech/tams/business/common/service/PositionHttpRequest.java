@@ -49,8 +49,13 @@ public class PositionHttpRequest {
         //
         //处理seqno
         Map<String,Object> params  =JsonUtils.stringToMap(JsonUtils.object2Json(req));
-        Long seqno = (long) Arrays.deepHashCode(new Object[] { params.get("totalTradeId"), params.get("modelType"),new Date().getTime(),Thread.currentThread().getId() });
-        params.put("seqno",seqno);
+        if(null == params.get("PositionSeqno")) {
+        	Long seqno = (long) Arrays.deepHashCode(new Object[] { params.get("totalTradeId"), params.get("modelType"),new Date().getTime(),Thread.currentThread().getId() });
+        	params.put("seqno",seqno);
+        }else {
+        	params.put("seqno",params.get("PositionSeqno"));
+        }
+        
         logger.info("发送头寸报文:"+JsonUtils.object2Json(params));
         String res = sendPrivate(params);
         logger.info("头寸返回数据:"+res);

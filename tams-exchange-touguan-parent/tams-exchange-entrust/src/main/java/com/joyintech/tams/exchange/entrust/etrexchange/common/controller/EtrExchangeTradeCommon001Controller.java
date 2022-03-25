@@ -25,6 +25,7 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
+import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.common.base.entity.FinExercisePlan;
 import com.joyintech.tams.common.base.entity.FinProductQuto;
@@ -1455,7 +1456,9 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 					BeanUtil.copyPropertiesIgnoreNull(portfolioRequest,etrExchangeTrade001Dto);
 					portfolioList.add(portfolioRequest);
 					etrExchangeTrade001Dto.setPortfolioList(portfolioList);
-
+					//设置头寸使用序列号
+					Long positionSeqno = (long) Arrays.deepHashCode(new Object[] { etrExchangeTrade001Dto.getEntrustId(), "ETR",new Date().getTime(),Thread.currentThread().getId() });
+					etrExchangeTrade001Dto.setPositionSeqno(positionSeqno);
 					etrExchangeTrade001DtoList.add(etrExchangeTrade001Dto);
 				}
 
@@ -1519,6 +1522,10 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 		            AjaxResult m =new AjaxResult(msg);
 		            return new Message<AjaxResult>().success().setData(m);
 		        }catch (Exception e) {
+		        	for(EtrExchangeTradeSaveRequest etrExchangeTradeSaveRequest:etrExchangeTrade001DtoList) {
+		        		logger.warn("场内交易多组合指令头寸发送失败，EntrustId:{},PositionSeqno:{}",etrExchangeTradeSaveRequest.getEntrustId(),etrExchangeTradeSaveRequest.getPositionSeqno().toString());
+		        		PositionHttpRequest.roll(etrExchangeTradeSaveRequest.getPositionSeqno().toString(), "ETR", "场内交易多组合指令头寸发送失败");
+		        	}
 		            logger.error("场内交易多组合指令新建失败",e);
 		            return PositionUtil.ajaxErrorReturn(e);
 		        }
