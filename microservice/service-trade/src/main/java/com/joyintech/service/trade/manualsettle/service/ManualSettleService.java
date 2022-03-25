@@ -7,13 +7,11 @@ import com.joyintech.framework.util.*;
 import com.joyintech.service.trade.entrustmsgbymq.dao.EntrustMsgbyMQMapper;
 import com.joyintech.service.trade.entrustmsgbymq.dto.TrdTempDto;
 import com.joyintech.service.trade.entrustmsgbymq.service.TradePreClearingService;
+import com.joyintech.service.trade.exchange.dto.Entrust;
 import com.joyintech.service.trade.manualsettle.dao.ManualSettleMapper;
 import com.joyintech.service.trade.manualsettle.dto.ManualSettleDto;
 import com.joyintech.service.trade.manualsettle.dto.ManualSettleFlowDto;
-import com.joyintech.tams.common.base.dao.StlPayTempOrdersMapper;
-import com.joyintech.tams.common.base.dao.TrdManualSettleFlowMapper;
-import com.joyintech.tams.common.base.dao.TrdProductTempDealAddMapper;
-import com.joyintech.tams.common.base.dao.TrdProductTempDealMapper;
+import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.component.business.trade.BaseTradeProductDealCommService;
@@ -88,6 +86,9 @@ public class ManualSettleService extends BaseService<ManualSettleDto> {
 
     @Autowired
     private CommonPositionService commonPositionService;
+
+    @Autowired
+    private EtrEntrustMapper etrEntrustMapper;
 
     @Autowired
     private DateCalService dateCalService;
@@ -203,6 +204,7 @@ public class ManualSettleService extends BaseService<ManualSettleDto> {
                     parameter.setWorkflowStatus(DictCodeListExt1.交易流程状态_有效.getValue());
                     parameter.setOperationType("NEW");
                     parameter.setTradeType("02");
+                    trdTempDto.setFinprodType2(etrEntrustMapper.selectByPrimaryKey(trdTempDto.getEntrustId()).getFinprodType2());
                     parameter.setBusinessType(DictCodeList.回购类型_质押式协议回购.getValue().concat(trdTempDto.getFinprodType2()));
                     // 数据来源设置
                     if (StringUtil.equals(trdTempDto.getPs(), DictCodeListExt3.交易方向_解除质押.getValue())) {
