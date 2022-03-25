@@ -19,6 +19,7 @@ import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchang
 import com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.dto.EtrExchangeTradeFjyywzlZqzyDto;
 import com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.dto.EtrExchangeTradeZqzyRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.service.EtrExchangeTradeFjyywzl001Service;
+import com.joyintech.tams.invest.common.dto.position.PositionCashSecDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -78,17 +79,16 @@ public class EtrExchangeTradeFjyywzl001Controller extends BaseController {
      * @see
      * @since 1.0
      */
-    @ApiOperation(value="查询上交所和深交所标准券数量",notes = "查询上交所和深交所标准券数量")
+    @ApiOperation(value="查询组合上交所和深交所标准券数量",notes = "查询上交所和深交所标准券数量")
     @ResponseBody
     @PostMapping("/loadSecNum")
-    public Message<Map<String, String>> loadSecNum(@RequestBody EtrExchangeTradeZqzyRequest request) {
+    public Message<Map<String, Object>> loadSecNum(@RequestBody PositionCashSecDto request) {
         try {
-            Map<String, Object> param = BeanUtil.object2Map(request);
-            Map<String, String> map = etrExchangeTradeFjyywzl001Service.loadSecNum(param);
-            return new Message<Map<String,String>>().success().setData(map);
+            Map<String, Object> map = etrExchangeTradeFjyywzl001Service.loadSecNum(request);
+            return new Message<Map<String,Object>>().success().setData(map);
         }catch (Exception e){
             logger.error("查询上交所和深交所标准券数量",e);
-            return new Message<Map<String,String>>().fail().setMessage("查询上交所和深交所标准券数量");
+            return new Message<Map<String,Object>>().fail().setMessage("查询上交所和深交所标准券数量");
         }
     }
 
@@ -156,4 +156,5 @@ public class EtrExchangeTradeFjyywzl001Controller extends BaseController {
             return new Message<String>().fail().setMessage("获取标准券持仓异常");
         }
     }
+
 }

@@ -748,6 +748,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 					Object.class);
 		}
 		if (!StringUtil.equals("revoke", entity.getOperateType()) && !StringUtil.equals("delete", entity.getOperateType())) {
+			//退回的移到备份表
+			doInsertBackupQuery(entity);
 			// 先删除流程中数据
 			doDeleteFlow(entity.getWorkflowId());
 			// 重新insert
