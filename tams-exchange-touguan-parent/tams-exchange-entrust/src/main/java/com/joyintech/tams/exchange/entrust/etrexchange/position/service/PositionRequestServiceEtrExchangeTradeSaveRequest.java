@@ -49,6 +49,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import com.alibaba.fastjson.JSONArray;
+import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.common.entrust.inter.EtrTradeOtherCommonService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -91,6 +94,8 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
     private CommonPositionEngineService commonPositionEngineService;
     @Autowired
     private EtrExchangeTradeCommon001Service etrExchangeTradeCommon001Service;
+    @Autowired
+    private EtrTradeOtherCommonService etrTradeOtherCommonService;
 
     /**
      * EtrExchangeTradeSaveRequest请求对象使用
@@ -398,9 +403,11 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
                 }
                 if(DictCodeListExt3.交易方向_质押券入库.getValue().equals(entity.getPs())
                 		|| DictCodeListExt3.交易方向_质押券出库.getValue().equals(entity.getPs())) {
+                    Map<String, Object> params = new HashMap<>();
+                    params.put("finprodId",entity.getFinprodId());
+                    BigDecimal faceValue = etrTradeOtherCommonService.selectFaceValue(params);
                     // 标准券总额 =质押券数量*折算率*最新面值
-                    BigDecimal faceValue = BigDecimal.valueOf(100);//TODO
-                	map.put(STANDARD_SEC_AMOUNT, entity.getEntrustNum().multiply(entity.getEntrustPrice()).multiply(faceValue));
+                    map.put(STANDARD_SEC_AMOUNT, entity.getEntrustNum().multiply(entity.getEntrustPrice()).divide(BigDecimal.valueOf(100)).multiply(faceValue));
                 	map.put("cashAmount", null);//出入库时，可以为空
                 }else {
                     // 标准券总额 = 标准券数量*100
@@ -546,4 +553,7 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
             resultMap.put(B_TOTAL_TRADE_ID, null);
         }
     }
+
+
+
 }
