@@ -621,8 +621,8 @@
             ) WHERE rn = 1
             UNION
             SELECT a.FINPROD_ID, b.PORTFOLIO_ID, a.INV_AIM,a.BUSINESS_MODEL
-            from TRD_PRODUCT_DEAL a
-            LEFT JOIN TRD_PRODUCT_DEAL_ADD b ON a.TRADE_ID =b.TRADE_ID
+            from TRD_PRODUCT_TEMP_DEAL a
+            LEFT JOIN TRD_PRODUCT_TEMP_DEAL_ADD b ON a.TRADE_ID =b.TRADE_ID
             WHERE 1=1
             <if test="portfolioIdList != null and portfolioIdList.size()>0">
                 AND b.PORTFOLIO_ID in

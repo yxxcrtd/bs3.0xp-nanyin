@@ -249,6 +249,9 @@
             <if test="exerYield != null" >
                 EXER_YIELD,
             </if>
+            <if test="businessModel != null" >
+                BUSINESS_MODEL,
+            </if>
             <if test="invAim != null" >
                 INV_AIM,
             </if>
@@ -451,6 +454,9 @@
             </if>
             <if test="invAim != null" >
                 #{invAim,jdbcType=VARCHAR},
+            </if>
+            <if test="businessModel != null" >
+                #{businessModel,jdbcType=VARCHAR},
             </if>
             <if test="deliveryType != null" >
                 #{deliveryType,jdbcType=VARCHAR},
