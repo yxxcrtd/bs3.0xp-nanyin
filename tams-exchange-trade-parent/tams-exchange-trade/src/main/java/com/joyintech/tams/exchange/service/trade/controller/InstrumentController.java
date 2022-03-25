@@ -5,6 +5,7 @@ import com.joyintech.tams.exchange.common.bean.MinPrice;
 import com.joyintech.tams.exchange.common.bean.MinTrdUnitLimit;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.bean.instrument.MinPriceAndMinTrdUnitLimitBean;
+import com.joyintech.tams.exchange.common.constant.ErrorCode;
 import com.joyintech.tams.exchange.common.db.domain.Instrument;
 import com.joyintech.tams.exchange.common.domain.Message;
 import com.joyintech.tams.exchange.common.request.InstrumentFlushRequest;
@@ -46,6 +47,12 @@ public class InstrumentController {
             params.put("count", count);
         }
         return instrumentManagement.flushInstrumentData(params);
+    }
+
+    @RequestMapping(value = "/instrument/trdUnitLimitFlush", method = RequestMethod.GET)
+    public ResultBean trdUnitLimitFlush() {
+        instrumentManagement.trdUnitLimitFlush();
+        return new ResultBean(ErrorCode.SUCCESS);
     }
 
     /**

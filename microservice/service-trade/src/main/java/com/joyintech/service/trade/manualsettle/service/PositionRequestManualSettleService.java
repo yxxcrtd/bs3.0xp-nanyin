@@ -2,6 +2,7 @@ package com.joyintech.service.trade.manualsettle.service;
 
 import com.alibaba.fastjson.JSON;
 import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.trade.manualsettle.dao.ManualSettleMapper;
 import com.joyintech.service.trade.manualsettle.dto.ManualSettleDto;
@@ -457,8 +458,10 @@ public class PositionRequestManualSettleService {
                 FinDealPledge finDealPledge = trdCommonBaseService.getSqFinDealPledge(entity.getPortfolioId(), firstFTradeId);
                 if(null != finDealPledge){
                     map.put("finprodId", finDealPledge.getPledgeFinprodId());
-                    map.put("ownSecAmount", finDealPledge.getPledgeNumber());
-                    map.put("secAmount", finDealPledge.getPledgeNumber());
+                    // ZGTFCP-1888:券面需乘以100 modify by fuyongsheng 20220325 start
+                    map.put("ownSecAmount", ArithmeticUtil.multiply(finDealPledge.getPledgeNumber(), new BigDecimal(100)));
+                    map.put("secAmount", ArithmeticUtil.multiply(finDealPledge.getPledgeNumber(), new BigDecimal(100)));
+                    // ZGTFCP-1888:券面需乘以100 modify by fuyongsheng 20220325 end
                 }
             }
             list.add(map);

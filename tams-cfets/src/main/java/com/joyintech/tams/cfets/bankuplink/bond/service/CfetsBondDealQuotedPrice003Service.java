@@ -287,9 +287,12 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
                     errorList.add(new ValidMessage("报价指令剩余额度不能小于券面总额！"));
                 }
                 if(null!=ptlAllocatio.getShareAmt()){
-                    BigDecimal wflShareAmtByEntrustId = cfetsQuotedCommonServicevue.getWflShareAmtByEntrustId(ptlAllocatio.getEntrustId());
-                    if(null!=wflShareAmtByEntrustId&&wflShareAmtByEntrustId.compareTo(BigDecimal.ZERO)>0&&ArithmeticUtil.doAdd(ptlAllocatio.getShareAmt(),wflShareAmtByEntrustId).compareTo(ptlAllocatio.getAvaNum())>0){
-                        errorList.add(new ValidMessage(StringUtil.join("组合分配券面总额不能超过指令剩余额度!流程中占用额度:",wflShareAmtByEntrustId.toString(),"元,指令代码:",ptlAllocatio.getEntrustId())));
+                    BigDecimal avaNum = cfetsQuotedCommonServicevue.getWflShareAmtByEntrustId(ptlAllocatio.getEntrustId(), entity.getQuoteId());
+                    //if (null != wflShareAmt && wflShareAmt.compareTo(BigDecimal.ZERO) > 0 && ArithmeticUtil.doAdd(ptlAllocatio.getShareAmt(), wflShareAmt).compareTo(ptlAllocatio.getAvaNum()) > 0) {
+                    //组合分配中交易金额要小于等于（剩余指令额度-已成功发出的未收到外汇交易中心成功反馈报价和流程中的报价-流程中交易登记额度）
+                    // 已实现: 剩余指令额度 = 指令额度-生效的交易登记额度-流程中交易登记额度-已成功发出的未收到外汇交易中心成功反馈报价和流程中的报价
+                    if (ptlAllocatio.getShareAmt().compareTo(avaNum) > 0) {
+                        errorList.add(new ValidMessage(StringUtil.join("组合分配券面总额不能超过指令剩余额度!流程中占用额度:", avaNum.toString(), "元,指令代码:", ptlAllocatio.getEntrustId())));
                     }
                 }
                 shareAmtTotal = ArithmeticUtil.doAdd(shareAmtTotal,ptlAllocatio.getShareAmt());

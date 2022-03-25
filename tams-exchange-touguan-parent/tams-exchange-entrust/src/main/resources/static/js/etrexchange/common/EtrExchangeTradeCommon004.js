@@ -3230,7 +3230,7 @@
                 // secId();
                 secAcctIdChange();
                 targetTypeChange(true);
-                entrustNumChange();
+                // entrustNumChange();
                 psChange(true);
                 priceModelChange(true, true);
                 formatEntrustPrice();

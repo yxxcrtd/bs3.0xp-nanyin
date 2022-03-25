@@ -547,9 +547,12 @@
             ee.PLEDGE_NUMBER pledgeNumber,
             ee.PLEDGE_NUMBER * ee.Pledge_Face_Value pledStrdPrinAmt,
             eted.TRADE_ID tradeId,
-            oee.Pledge_Ratio * 100 oldPledgeRatio, /** 折算率 **/
+            old.origRepSecNum oldPledgeNumber,
+            old.origPrintAmt oldPledStrdPrinAmt,
+            ete.ENTRUST_AMT / nvl( old.origPrintAmt, 1 ) * 100 oldPledgeRatio,
+            <!--oee.Pledge_Ratio * 100 oldPledgeRatio, /** 折算率 **/
             oee.PLEDGE_NUMBER oldPledgeNumber,
-            oee.PLEDGE_NUMBER * oee.Pledge_Face_Value oldPledStrdPrinAmt,
+            oee.PLEDGE_NUMBER * oee.Pledge_Face_Value oldPledStrdPrinAmt,-->
             fp.finprod_market_id oldFinprodMarketId,
             eted.DEAL_MODE dealMode,  /** 申报类型 **/
             nvl(ete.entrust_num * ete.price, ete.entrust_num) pledgeStandardNumber, /** 标准券额度 **/
@@ -574,7 +577,16 @@
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON eted.SEC_ACCT_ID = ssai.SEC_ACCT_ID
         LEFT JOIN STL_CAPACCT_INFO sci ON sci.ACCT_NO = ssai.TRD_ACCT_ID
         LEFT JOIN etr_pledge ee ON ete.entrust_id = ee.entrust_id /** 委托指令回购质押品 **/
-        LEFT JOIN etr_pledge oee ON ete.entrust_id = oee.entrust_id
+        LEFT JOIN (
+            SELECT
+                tpd.F_TRADE_ID,
+                t2.PLEDGE_NUMBER AS origRepSecNum,
+                t2.PLEDGE_NUMBER * t2.PLEDGE_FACE_VALUE origPrintAmt
+            FROM
+                FIN_DEAL_PLEDGE t2
+            LEFT JOIN TRD_PRODUCT_DEAL tpd ON t2.FINPROD_ID = tpd.FINPROD_ID
+        ) old ON eted.TRADE_ID = old.F_TRADE_ID
+        <!--LEFT JOIN etr_pledge oee ON ete.entrust_id = oee.entrust_id-->
         LEFT JOIN SYS_USER su on ete.INV_MANAGER_ID = su.USER_NAME
         left join MST_COUNTER_PARTY mcp on ete.COUNTER_ID = mcp.COUNTER_ID
         LEFT JOIN OPT_TARGET_INFO ON eted.ASSET_TYPE_10 = OPT_TARGET_INFO.TARGET_ID
@@ -667,9 +679,12 @@
         ee.PLEDGE_NUMBER pledgeNumber,
         ee.PLEDGE_NUMBER * ee.Pledge_Face_Value pledStrdPrinAmt,
         eted.TRADE_ID tradeId,
-        oee.Pledge_Ratio * 100 oldPledgeRatio, /** 折算率 **/
+        old.origRepSecNum oldPledgeNumber,
+        old.origPrintAmt oldPledStrdPrinAmt,
+        ete.ENTRUST_AMT / nvl( old.origPrintAmt, 1 ) * 100 oldPledgeRatio,
+        <!--oee.Pledge_Ratio * 100 oldPledgeRatio, /** 折算率 **/
         oee.PLEDGE_NUMBER oldPledgeNumber,
-        oee.PLEDGE_NUMBER * oee.Pledge_Face_Value oldPledStrdPrinAmt,
+        oee.PLEDGE_NUMBER * oee.Pledge_Face_Value oldPledStrdPrinAmt,-->
         fp.finprod_market_id oldFinprodMarketId,
         eted.DEAL_MODE dealMode,  /** 申报类型 **/
         nvl(ete.entrust_num * ete.price, ete.entrust_num) pledgeStandardNumber, /** 标准券额度 **/
@@ -693,7 +708,16 @@
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON eted.SEC_ACCT_ID = ssai.SEC_ACCT_ID
         LEFT JOIN STL_CAPACCT_INFO sci ON sci.ACCT_NO = ssai.TRD_ACCT_ID
         LEFT JOIN wfl_etr_pledge ee ON ete.entrust_id = ee.entrust_id /** 委托指令回购质押品 **/
-        LEFT JOIN etr_pledge oee ON ete.entrust_id = oee.entrust_id
+        LEFT JOIN (
+            SELECT
+                tpd.F_TRADE_ID,
+                t2.PLEDGE_NUMBER AS origRepSecNum,
+                t2.PLEDGE_NUMBER * t2.PLEDGE_FACE_VALUE origPrintAmt
+            FROM
+                FIN_DEAL_PLEDGE t2
+            LEFT JOIN TRD_PRODUCT_DEAL tpd ON t2.FINPROD_ID = tpd.FINPROD_ID
+        ) old ON eted.TRADE_ID = old.F_TRADE_ID
+        <!--LEFT JOIN etr_pledge oee ON ete.entrust_id = oee.entrust_id-->
         LEFT JOIN SYS_USER su on ete.INV_MANAGER_ID = su.USER_NAME
         left join MST_COUNTER_PARTY mcp on ete.COUNTER_ID = mcp.COUNTER_ID
         LEFT JOIN OPT_TARGET_INFO ON eted.ASSET_TYPE_10 = OPT_TARGET_INFO.TARGET_ID

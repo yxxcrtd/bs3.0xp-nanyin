@@ -192,8 +192,8 @@ public class FieldEtrInfoQueryService extends BaseService{
                 () -> fieldEtrInfoQueryMapper.queryEntrust2Touguan(pageParam));
         if (!CollectionUtils.isEmpty(page.getRoot())) {
             for (EntrustQueryBean response : page.getRoot()) {
-                if (response.getEntrustBs().equals(DictCodeListExt3.交易方向_质押券出库.getValue())
-                        || response.getEntrustBs().equals(DictCodeListExt3.交易方向_质押券入库.getValue())) {
+                if (StringUtils.equals(response.getEntrustBs(),DictCodeListExt3.交易方向_质押券出库.getValue())
+                        || StringUtils.equals(response.getEntrustBs(),DictCodeListExt3.交易方向_质押券入库.getValue())) {
                     response.setEntrustPrice(StringUtil.isNotEmpty(response.getEntrustPrice())?ArithmeticUtil.multiply(response.getEntrustPrice(), BigDecimal.valueOf(100)):null);
                     response.setTradedPrice(StringUtil.isNotEmpty(response.getTradedPrice())?ArithmeticUtil.multiply(response.getTradedPrice(),BigDecimal.valueOf(100)):null);
                 }
@@ -226,8 +226,8 @@ public class FieldEtrInfoQueryService extends BaseService{
                 () -> fieldEtrInfoQueryMapper.queryTrade2Touguan(pageParam));
         if (!CollectionUtils.isEmpty(page.getRoot())) {
             for (TradeQueryBean response : page.getRoot()) {
-                if (response.getEntrustBs().equals(DictCodeListExt3.交易方向_质押券出库.getValue())
-                        || response.getEntrustBs().equals(DictCodeListExt3.交易方向_质押券入库.getValue())) {
+                if (StringUtils.equals(response.getEntrustBs(),DictCodeListExt3.交易方向_质押券出库.getValue())
+                        || StringUtils.equals(response.getEntrustBs(),DictCodeListExt3.交易方向_质押券入库.getValue())) {
                     response.setTradedPrice(StringUtil.isNotEmpty(response.getTradedPrice())?ArithmeticUtil.multiply(response.getTradedPrice(),BigDecimal.valueOf(100)):null);
                 }
              }

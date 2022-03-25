@@ -192,7 +192,7 @@
             if(item=="01"||item=="02"||item=="04"){
                 var errorNum = 0;
                 for(var i=0;i<selArr.length;i++){
-                    if(Date.ofDate(selArr[i].settleDate).DateDiff('d',data).toString() != '0'){
+                    if(Date.ofDate(selArr[i].settleDate).Format('yyyy-MM-dd') != data){
                         errorNum ++;
                     }
                 }

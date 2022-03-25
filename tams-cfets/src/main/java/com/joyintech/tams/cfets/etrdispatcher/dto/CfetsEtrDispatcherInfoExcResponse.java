@@ -147,6 +147,10 @@ public class CfetsEtrDispatcherInfoExcResponse extends CfetsEtrDispatcherExcInfo
     @ApiModelProperty(name="finprodTypeTg",value="资产类型")
     private String finprodTypeTg;
 
+    @ApiModelProperty(name="declaType",value="申报类型")
+    private String declaType;
+
+    private String declaTypeStr;
 
     public BigDecimal getPledgeStandardNumber() {
         return pledgeStandardNumber;
@@ -588,5 +592,21 @@ public class CfetsEtrDispatcherInfoExcResponse extends CfetsEtrDispatcherExcInfo
 
     public void setFinprodTypeTg(String finprodTypeTg) {
         this.finprodTypeTg = finprodTypeTg;
+    }
+
+    public String getDeclaType() {
+        return declaType;
+    }
+
+    public void setDeclaType(String declaType) {
+        this.declaType = declaType;
+    }
+
+    public String getDeclaTypeStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.申报类型, this.getDeclaType());
+    }
+
+    public void setDeclaTypeStr(String declaTypeStr) {
+        this.declaTypeStr = declaTypeStr;
     }
 }
