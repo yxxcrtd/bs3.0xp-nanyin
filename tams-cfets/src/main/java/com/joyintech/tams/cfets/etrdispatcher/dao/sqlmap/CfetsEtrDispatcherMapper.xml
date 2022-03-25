@@ -41,7 +41,7 @@
         decode(ETR_ENTRUST_ADD.ASSET_TYPE,'F01',decode(ETR_ENTRUST.PS,'T03',ETR_ENTRUST.ENTRUST_AMT, NVL(ETR_ENTRUST.ENTRUST_NUM * 100,0)),'F10',NVL(ETR_ENTRUST.ENTRUST_NUM *
         100,0),'F17',NVL(ETR_ENTRUST.ENTRUST_NUM *100,0),NVL(ETR_ENTRUST.ENTRUST_AMT,ETR_ENTRUST.ENTRUST_NUM)) entrustAmt,
         decode(ETR_ENTRUST_ADD.ASSET_TYPE,'F01',NVL(ETR_FINISH_STATUSA.FINISH_AMT * 100,0),'F10',NVL(ETR_FINISH_STATUSA.FINISH_AMT *
-        100,0),NVL(ETR_FINISH_STATUSA.FINISH_AMT,0)) finishAmt,
+        100,0),'F17',NVL(ETR_FINISH_STATUSA.FINISH_AMT * 100,0),NVL(ETR_FINISH_STATUSA.FINISH_AMT,0)) finishAmt,
         ETR_ENTRUST.CCY ccy,
         ETR_ENTRUST.ENTRUST_DATE entrustDate,
         ETR_ENTRUST.VDATE vdate,
@@ -1062,41 +1062,46 @@
     <!-- 交易员与工作量列表查询 -->
     <select id="getEtrTraderAndWorkloadList" resultType="com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTraderListRequest">
         SELECT
-            DISTINCT
-            su.USER_NAME userName,
-            su.REAL_NAME realName,
-            to_char(NVL(a.totalWork,0)+nvl(b.unfinishedWork,0),'fm999990.009') as totalWork,
-            to_char(NVL(b.unfinishedWork,0),'fm999990.009') as unfinishedWork
-        FROM
-            SYS_USER su
-                INNER JOIN
-            SYS_USER_ROLE sur
-            ON 	su.USER_NAME = sur.USER_ID
-                INNER JOIN SYS_ROLE sr
-                           ON sur.ROLE_ID = sr.ROLE_ID AND sr.ROLE_POS in (06)
-                LEFT JOIN ETR_DISTRIBUTE ed ON ed.TRADER=su.USER_NAME
-                LEFT JOIN
-            (
-                SELECT
-                    edi.TRADER as TRADER,
-                    COUNT(edi.TRADER) AS totalWork
-                FROM
-                    ETR_DISTRIBUTE edi
-                        LEFT JOIN ETR_ENTRUST een ON edi.ENTRUST_ID = een.ENTRUST_ID
-                where een.ENTRUST_STATUS in ('04') and een.ENTRUST_DATE=to_date(#{sysDate},'yyyy-mm-dd')
-                GROUP BY edi.TRADER  ) a
-            ON su.USER_NAME = a.TRADER
-                LEFT JOIN
-            (
-                SELECT
-                    edi.TRADER as TRADER,
-                    COUNT(edi.TRADER) AS unfinishedWork
-                FROM
-                    ETR_DISTRIBUTE edi
-                        LEFT JOIN ETR_ENTRUST een ON edi.ENTRUST_ID = een.ENTRUST_ID
-                where een.ENTRUST_STATUS in ('02','03')
-                GROUP BY edi.TRADER) b
-            ON  b.TRADER=su.USER_NAME
+            su.USER_NAME                                                               userName,
+            su.REAL_NAME                                                               realName,
+            to_char(NVL(a.totalWork, 0), 'fm999990.009') as totalWork,
+            to_char(NVL(b.unfinishedWork, 0), 'fm999990.009')                       as unfinishedWork
+        FROM SYS_USER su
+        INNER JOIN SYS_USER_ROLE sur ON su.USER_NAME = sur.USER_ID
+        INNER JOIN SYS_ROLE sr ON sur.ROLE_ID = sr.ROLE_ID AND sr.ROLE_POS in ('06')
+        LEFT JOIN (
+            select TRADER,sum(totalWork) totalWork from (
+                SELECT edi.TRADER as TRADER,
+                       COUNT(edi.TRADER) AS totalWork
+                FROM ETR_DISTRIBUTE edi
+                LEFT JOIN ETR_ENTRUST een ON edi.ENTRUST_ID = een.ENTRUST_ID
+                where een.ENTRUST_STATUS in ('04') and een.UPDATE_TIME = to_date(#{sysDate},'yyyy-mm-dd') GROUP BY edi.TRADER
+                union all
+                SELECT edi.TRADER        as TRADER,
+                       COUNT(edi.TRADER) AS totalWork
+                FROM ETR_DISTRIBUTE edi
+                LEFT JOIN ETR_ENTRUST een ON edi.ENTRUST_ID = een.ENTRUST_ID
+                where een.ENTRUST_STATUS in ('02','03') GROUP BY edi.TRADER
+            ) t group by TRADER
+        ) a ON su.USER_NAME = a.TRADER
+        LEFT JOIN  (
+            select TRADER,sum(unfinishedWork) unfinishedWork from (
+                  SELECT edi.TRADER        as TRADER,
+                         COUNT(edi.TRADER) AS unfinishedWork
+                  FROM ETR_DISTRIBUTE edi
+                  LEFT JOIN ETR_ENTRUST een ON edi.ENTRUST_ID = een.ENTRUST_ID
+                  where een.ENTRUST_STATUS in ('02') GROUP BY edi.TRADER
+                  union all
+                  SELECT edi.TRADER as TRADER,
+                         sum(round(decode(eena.ASSET_TYPE,'F01',NVL(ees.FINISH_AMT * 100,0),'F10',NVL(ees.FINISH_AMT * 100,0),'F10',NVL(ees.FINISH_AMT *100,0),'F17',NVL(ees.FINISH_AMT * 100,0),NVL(ees.FINISH_AMT,0))/
+                                   decode(eena.ASSET_TYPE,'F01',decode(een.PS,'T03',een.ENTRUST_AMT, NVL(een.ENTRUST_NUM * 100,0)),'F10',NVL(een.ENTRUST_NUM *100,0),'F17',NVL(een.ENTRUST_NUM *100,0),NVL(een.ENTRUST_AMT,een.ENTRUST_NUM * 100)),4)) unfinishedWork
+                  FROM ETR_DISTRIBUTE edi
+                  LEFT JOIN ETR_ENTRUST een ON edi.ENTRUST_ID = een.ENTRUST_ID
+                  left join ETR_ENTRUST_ADD eena on een.ENTRUST_ID=eena.ENTRUST_ID
+                  left join (SELECT ENTRUST_ID,SUM(FINISH_AMT) AS FINISH_AMT FROM ETR_FINISH_STATUS WHERE ENTRUST_ID != TRADE_ID GROUP BY ENTRUST_ID) ees on een.ENTRUST_ID=ees.ENTRUST_ID
+                  where een.ENTRUST_STATUS in ('03') GROUP BY edi.TRADER
+            ) t group by TRADER
+        ) b ON b.TRADER = su.USER_NAME
     </select>
 
     <sql id="etrDispatcherExeListInfo">
