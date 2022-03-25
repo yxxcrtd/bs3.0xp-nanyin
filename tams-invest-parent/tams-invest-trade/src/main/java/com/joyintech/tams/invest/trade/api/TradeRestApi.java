@@ -153,14 +153,6 @@ public class TradeRestApi {
                 						ArithmeticUtil.doSub(bTradeIdTradeProductDealDtos.get(0).getTrdProductDeal().getShareAmt(), finProductTradeDto.getBaseTradeProductDealDtos().get(index).getTrdProductDeal().getShareAmt()), new BigDecimal(100)));
                 			}
                 		}
-                        // ZGTFCP-1736:股票红利再投处理老头存时,交易日需要特殊处理 使用除权日 modify by fuyongsheng 20220325 start
-                        if(DictCodeListExt1.金融产品类型_投管用_股票.getValue().equals(trdProductDeal.getFinprodType2())
-                        && DictCodeList.交易方向_红利再投.getValue().equals(trdProductDeal.getPs())){
-                            List<TrdProductDeal> trdProductDeals = baseTradeProductDealService.selectTrdProductDeals(trdProductDeal.getTotleTradeId());
-                            TrdProductDeal trdProductDealCq = trdProductDeals.stream().filter(item->DictCodeList.交易方向_除权登记.getValue().equals(item.getPs())).findFirst().get();
-                            trdProductDeal.setTradeDate(trdProductDealCq.getSettleDate());
-                        }
-                        // ZGTFCP-1736:股票红利再投处理老头存时,交易日需要特殊处理 使用除权日 modify by fuyongsheng 20220325 end
                     }
                 }
                 
