@@ -3,6 +3,7 @@ package com.joyintech.tams.exchange.datacommon.db.service.impl;
 import com.google.common.base.Strings;
 import com.joyintech.tams.exchange.common.bean.MinPrice;
 import com.joyintech.tams.exchange.common.bean.MinTrdUnitLimit;
+import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.bean.instrument.MinPriceAndMinTrdUnitLimitBean;
 import com.joyintech.tams.exchange.common.constant.ErrorCode;
 import com.joyintech.tams.exchange.common.constant.InstructionPs;
@@ -211,6 +212,11 @@ public class InstrumentServiceImpl extends AsyncServiceImpl<String, Instrument> 
     @Override
     public List<Instrument> queryByAssetType(String assetType) {
         return new ArrayList<>(assetTypeMap.getOrDefault(assetType, new ConcurrentHashMap<>()).values());
+    }
+
+    @Override
+    public void trdUnitLimitFlush() {
+        minPriceAndMinTrdUnitLimitBeanMap.clear();
     }
 
     private String createKey(String tradePlat, String market, Instrument instrument, int type, String instructionPs) {
