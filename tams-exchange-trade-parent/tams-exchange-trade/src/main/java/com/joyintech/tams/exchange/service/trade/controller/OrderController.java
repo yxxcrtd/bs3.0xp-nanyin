@@ -9,6 +9,7 @@ import com.joyintech.tams.exchange.common.db.domain.IntegratedEntrust;
 import com.joyintech.tams.exchange.common.domain.Message;
 import com.joyintech.tams.exchange.datacommon.db.service.InstructionService;
 import com.joyintech.tams.exchange.service.trade.management.service.OrderManagement;
+import com.joyintech.tams.exchange.util.MasterUtil;
 import com.joyintech.tams.exchange.common.utils.EntrustPropUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -56,7 +57,9 @@ public class OrderController {
     @ApiOperation(value = "普通下单（竞价下单）", notes = "普通下单（竞价下单）")
     @RequestMapping(value = "/order", method = RequestMethod.POST)
     public Message<OrderPlaceBean> sendOrder(@RequestBody OrderPlaceBean order) {
-
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(order);
+    	}
         Instruction instruction = instructionService.findById(order.getInstructionId());
         if (Objects.isNull(instruction)) {
             return new Message<>(ResultBean.error(ErrorCode.INSTRUCTIONS_NOT_EXIST, order));
@@ -82,6 +85,9 @@ public class OrderController {
     @ApiOperation(value = "综合业务下单", notes = "综合业务下单")
     @RequestMapping(value = "/order/integratedEntrust", method = RequestMethod.POST)
     public Message<IntegratedEntrust> sendIntegratedEntrust(@RequestBody @Validated IntegratedOrderPlaceBean orderPlaceBean) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(orderPlaceBean);
+    	}
         Instruction instruction = instructionService.findById(orderPlaceBean.getInstructionId());
         if (Objects.isNull(instruction)) {
             return new Message<>(ResultBean.error(ErrorCode.INSTRUCTIONS_NOT_EXIST, orderPlaceBean));

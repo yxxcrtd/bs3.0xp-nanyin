@@ -3628,17 +3628,20 @@
                 array[i].entrustAmt = entrustAmt / len;
             }
         } else { //除不尽
-            var entrustNumData = 0
             var entrustAmtData = 0
+
+            var entrustNumForOne = entrustNum / len;
             for (var i = 0; i < array.length; i++) {
-                array[i].entrustNum = entrustNum ? Math.floor(entrustNum / len) : array[i].entrustNum;
-                array[i].entrustAmt = entrustAmt ? Math.floor(entrustAmt / len) : array[i].entrustAmt;
+                if(i == 0){
+                    array[i].entrustNum = Math.ceil(entrustNumForOne);
+                }else {
+                    array[i].entrustNum = Math.floor(entrustNumForOne);
+                }
+                array[i].entrustAmt = entrustAmt / len;
             }
             for (var i = 0; i < array.length - 1; i++) {
-                entrustNumData += array[i].entrustNum != 0 ? Number(array[i].entrustNum).toFixed(0) : 0;
                 entrustAmtData += array[i].entrustAmt != 0 ? Number(array[i].entrustAmt).toFixed(2) : 0;
             }
-            array[len - 1].entrustNum = entrustNum - entrustNumData;
             array[len - 1].entrustAmt = entrustAmt - entrustAmtData;
         }
         for (var i = 0; i < array.length; i++) {
@@ -3659,9 +3662,9 @@
         var entrustAmt = $("#entrustAmt_" + currentTab).val();
         var array = dateTable.getAllRows();
         var len = array.length;
+        var entrustNumForOne = entrustNum / len;
         for (var i = 0; i < array.length; i++) {
             if (array[i].acctNo) {
-                var entrustNumForOne = entrustNum / len;
                 if(i == 0){
                     array[i].entrustNum = Math.ceil(entrustNumForOne);
                 }else {
@@ -3682,6 +3685,7 @@
      */
     dateTable.bind('click', '.delt', function (data, index) {
         dateTable.removeRow(data);
+        linkTableEntrustNumAmt();
     });
 
     var colsRiskTrialRet = [
