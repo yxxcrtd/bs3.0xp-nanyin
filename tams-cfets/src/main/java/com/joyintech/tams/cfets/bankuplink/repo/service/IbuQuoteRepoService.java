@@ -2489,7 +2489,7 @@ public class IbuQuoteRepoService extends BaseService {
             for (RepoEntrustPledgeDto temp : list) {
                 shareAmt = ArithmeticUtil.doAdd(shareAmt, ArithmeticUtil.divide(ArithmeticUtil.multiply(temp.getPledgePrin(), temp.getPledgeRatio()), new BigDecimal(100), 2));
             }
-            entrustOrderDto.setSumShareAmt(ArithmeticUtil.divide(shareAmt, new BigDecimal(10000), 2));
+            entrustOrderDto.setSumShareAmt(shareAmt);
             resultData.put(dtCode + "_table", infoForm1);
             resultData.put(dtCode + "_tableData", list);
         }
