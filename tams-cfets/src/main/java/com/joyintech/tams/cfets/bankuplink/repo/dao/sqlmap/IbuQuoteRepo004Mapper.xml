@@ -50,7 +50,7 @@
 
     <update id="updatePosition" parameterType="com.joyintech.tams.common.base.entity.EtrSecPosition" >
 		update ETR_SEC_POSITION
-		set AMOUNT = AMOUNT - #{amount,jdbcType=DECIMAL}
+		set AMOUNT = AMOUNT + #{amount,jdbcType=DECIMAL}
 		where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
 		  and SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR}
 		  and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
