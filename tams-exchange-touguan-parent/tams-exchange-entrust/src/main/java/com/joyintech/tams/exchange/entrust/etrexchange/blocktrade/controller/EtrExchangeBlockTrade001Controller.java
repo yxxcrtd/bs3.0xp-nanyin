@@ -475,7 +475,7 @@ public class EtrExchangeBlockTrade001Controller extends BaseController{
 	@ResponseBody
 	@PostMapping("findQuotations")
 	public Message<EtrExchangeTradeQuotationHqResponse> findQuotations(@RequestBody EtrExchangeTradeEtrExchangeCommonRequest request) {
-		try { 
+		try {
 			if (!StringUtil.isNotEmpty(request) || !StringUtil.isNotEmpty(request.getSecId())){
 				return new Message<EtrExchangeTradeQuotationHqResponse>().success().setData(new EtrExchangeTradeQuotationHqResponse());
 			}
