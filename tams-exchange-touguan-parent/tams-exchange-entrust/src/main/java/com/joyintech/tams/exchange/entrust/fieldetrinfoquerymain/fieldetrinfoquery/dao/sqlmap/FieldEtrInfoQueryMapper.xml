@@ -730,7 +730,9 @@
         where
         <!--a.ENTRUST_TYPE=5 and -->
         a.INSTRUCTION_ID = #{instructionId,jdbcType=VARCHAR}
-        ) t order by t.TRADING_DAY DESC,
+        ) t
+        where t.ENTRUST_TYPE != '2'
+        order by t.TRADING_DAY DESC,
         t.TRADE_TIME DESC
     </select>
 
@@ -811,6 +813,7 @@
             <!--a.ENTRUST_TYPE=0 and-->
             a.INSTRUCTION_ID = #{instructionId,jdbcType=VARCHAR}
         ) t
+        where t.ENTRUST_TYPE != '2'
         order by t.TRADING_DAY desc,t.TRADE_TIME desc
     </select>
 
