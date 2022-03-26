@@ -1,6 +1,7 @@
 package com.joyintech.tams.settle.batch.datagather.processor.bond;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -127,10 +128,16 @@ public class StlDataGatherBond7Processor extends BaseProcessor<NeedOperateEntity
                             FinProduct finProduct = finProductMapper.selectByPrimaryKey(settleTransData.getFinprodId());
                             //BigDecimal amountTotal = ptlSecPositionsByFinprodId.stream().map(item2 -> item2.getAmount()).reduce(BigDecimal.ZERO, BigDecimal::add);
                             for (PtlSecPosition ptlSecPosition : ptlSecPositionsByFinprodId) {
+                                // 业务类型
+                                if (StringUtil.equals(finProduct.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
+                                    ptlSecPosition.setAmount(ArithmeticUtil.divide(ptlSecPosition.getAmount(),
+                                            new BigDecimal(100), 4, RoundingMode.HALF_UP));
+                                }
                                 TotalTrdProductDealDto totalTrdProductDeal = new TotalTrdProductDealDto();
                                 String totalTradeId = settleCommonService.buildBussinessCodeExt(DictCodeList.共通业务类型_资产存续期交易);
                                 TrdProductDealDto trdProductDeal = new TrdProductDealDto();
                                 createDeal(trdProductDeal, settleTransData,finProduct, ptlSecPosition);
+                                trdProductDeal.setRemark(stockId);
                                 trdProductDeal.setPs(DictCodeList.交易方向_上市流通.getValue());
                                 //交易份额
                                 trdProductDeal.setShareAmt(ptlSecPosition.getAmount());

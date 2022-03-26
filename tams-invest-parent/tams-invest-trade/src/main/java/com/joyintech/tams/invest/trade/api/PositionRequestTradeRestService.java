@@ -121,6 +121,7 @@ public class PositionRequestTradeRestService {
                 assetType2 = StringUtil.isNotEmpty(finProductTradeDto.getAssetType2()) ?
                         finProductTradeDto.getAssetType2() : baseAssetCashPositionCommMapper.selectFundType(deal.getFinprodId());
                 ps = deal.getPs();
+                finprodType2 = deal.getFinprodType2();
                 busiType = commonPositionEngineService.getDurationPositionBusiType(finprodType2, ps, assetType2);
             }
             // ZGTFCP-1577: add by fuyongsheng 20220315 end
@@ -295,10 +296,9 @@ public class PositionRequestTradeRestService {
         }
         else if(DictCodeList.交易方向_上市流通.getValue().equals(dealEntity.getPs())){
             resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_上市.getValue());
-            FinProductQuto finProductQuto = getFinProductQuto(dealEntity.getFinprodId(),
-                    commonPositionService.getLastWorkDate(dealEntity.getTradeDate(), this.getCalendarId(dealEntity.getTradeMarket())));
+            String stockId = commonPositionService.getStockId(dealEntity.getFinprodId(), dealEntity.getFinprodType2(), dealEntity.getPs());
             // 送转的上市流通调上市流通专用接口
-            if(DictCodeList.交易方向_红利再投.getValue().equals(finProductQuto.getPs())){
+            if(StringUtil.isEmpty(stockId)){
                 resultMap.put(INTERFACE_TYPE, null);
                 return;
             }
@@ -345,11 +345,7 @@ public class PositionRequestTradeRestService {
             bean.setSecAmount(dealEntity.getShareAmt());
             bean.setCashAcctId(accountNo);
             // 配股/申购代码
-            if(DictCodeList.交易方向_上市流通.getValue().equals(dealEntity.getPs())){
-                bean.setFinprodId(commonPositionService.getSsltStockId(dealEntity.getFinprodId(), dealEntity.getFinprodType2(), dealEntity.getPs()));
-            }else{
-                bean.setFinprodId(commonPositionService.getStockId(dealEntity.getFinprodId(), dealEntity.getFinprodType2(), dealEntity.getPs()));
-            }
+            bean.setFinprodId(dealEntity.getRemark());
             bean.setCashAmount(dealEntity.getTradeAmt());
             Map<String, Object> datamap = BeanUtil.object2Map(bean);
             datamap.put("ownSecAmount", dealEntity.getShareAmt());
