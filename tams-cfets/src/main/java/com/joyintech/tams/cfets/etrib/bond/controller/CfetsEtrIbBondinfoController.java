@@ -352,7 +352,14 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     @PostMapping("close")
     @ApiOperation(value = "关闭委托", notes = "关闭委托")
     @ResponseBody
-    public Message<AjaxResult> closeDelegate(@RequestBody CfetsEtribBondInfo003Dto dto) throws Exception{
+    public Message<AjaxResult> closeDelegate(@RequestBody CfetsEtribBondInfo003Dto dto) throws Exception {
+        //质押式回购也是调用这个关闭方法,但前端没有进行校验
+        if(StringUtil.equals(dto.getAssetType(),DictCodeList.平安资产类型_质押式回购.getValue())) {
+            Message<AjaxResult> message = cfetsEtrIbBondinfoService.closeCheckDelegate(dto);
+            if(CollectionUtils.isNotEmpty(message.getData().getErrorList())) {
+                return message;
+            }
+        }
         return cfetsEtrIbBondinfoService.closeDelegate(dto);
     }
 
