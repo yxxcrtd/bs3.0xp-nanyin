@@ -129,7 +129,8 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest extends 
 
         // 首期组合现金数据集，IF 交易方向 = 正回购、逆回购、提前购回、到期购回、解除质押 传值 否则为空
         String ps = entity.getPs();
-        if (交易方向_正回购.getValue().equals(ps)
+        if (交易方向_首期.getValue().equals(ps)
+                || 交易方向_正回购.getValue().equals(ps)
                 || 交易方向_逆回购.getValue().equals(ps)
                 || 交易方向_提前购回.getValue().equals(ps)
                 || 交易方向_到期购回.getValue().equals(ps)
@@ -187,7 +188,7 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest extends 
         // 质押券数据集
         // IF 交易方向 = 首期、（中途换券换入） and 回购类型 = 正回购 THEN 传值 ELSE 空
         if (交易方向_正回购.getValue().equals(repPs)
-                && (交易方向_正回购.getValue().equals(ps) || 交易方向_中途换券.getValue().equals(ps))) {
+                && (交易方向_首期.getValue().equals(ps) || 交易方向_正回购.getValue().equals(ps) || 交易方向_中途换券.getValue().equals(ps))) {
             List<Map<String, Object>> list = new ArrayList<>(1);
             bean = new PositionRequestBaseBean();
             bean.setPortfolioId(entity.getPortfolioId());
