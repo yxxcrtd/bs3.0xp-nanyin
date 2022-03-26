@@ -234,10 +234,10 @@
         PSP.CDATE        AS CDATE,
         PSP.PORTFOLIO_ID AS PORTFOLIO_ID ,
         PSP.SEC_ACCT_ID  AS SEC_ACCT_ID ,
-        PSP.FINPROD_ID   AS FINPROD_ID,
+        nvl((select FINPROD_ID from FIN_PRODUCT_OTH_CODE FPOC where FPOC.OTH_CODE=PSP.FINPROD_ID),PSP.FINPROD_ID) AS FINPROD_ID,
         SUM(PSP.AMOUNT) AMOUNT
         FROM
-        PTL_SEC_POSITION_RULE PSP
+        ETR_SEC_POSITION_RULE PSP
         INNER JOIN
         PTL_PORTFOLIO PP
         ON
@@ -629,7 +629,7 @@
         LEFT JOIN trd_fin_product_deal_total trd_fin_product_deal_total /** 金融产品临时交易1 **/
             on fin_trade_product.finprod_id = trd_fin_product_deal_total.finprod_id
             AND fin_trade_product.branch = trd_fin_product_deal_total.branch
-            AND trd_fin_product_deal_total.ps in ('T96', 'T95', 'T93', 'T56')
+            AND trd_fin_product_deal_total.ps in ('T96', 'T95', 'T93', 'T56', 'T07')
         LEFT JOIN PTL_PORTFOLIO_AUTHORITY /** 组合权限表 **/
             ON PTL_PORTFOLIO.Portfolio_Id = PTL_PORTFOLIO_AUTHORITY.Portfolio_Id
         LEFT JOIN STL_SEC_ACCT_INFO SSAI
@@ -1126,5 +1126,46 @@
             <foreach collection="finprodMarketIdList" open=" FP.finprod_market_id in(" close=")" separator="," item="item">
                 #{item}
             </foreach>
+    </select>
+
+    <select id="selectDoneEtrEntrustCount" resultType="int">
+        select count(1) from
+            (
+                SELECT
+                    ee.ENTRUST_ID
+                FROM
+                    ETR_ENTRUST ee
+                        INNER JOIN
+                    ETR_ENTRUST_ADD eea
+                    on ee.ENTRUST_ID = eea.ENTRUST_ID
+                WHERE
+                    ee.PS = #{ps,jdbcType=VARCHAR}
+                  and eea.TRADE_ID = #{initTradeId,jdbcType=VARCHAR}
+                  and ee.ENTRUST_STATUS != '06'
+
+                UNION
+                SELECT
+                    ee.ENTRUST_ID
+                FROM
+                    ETR_ENTRUST_BACKUP ee
+                        INNER JOIN
+                    ETR_ENTRUST_ADD_BACKUP eea
+                    on ee.ENTRUST_ID = eea.ENTRUST_ID
+                WHERE
+                    ee.PS = #{ps,jdbcType=VARCHAR}
+                  and eea.TRADE_ID = #{initTradeId,jdbcType=VARCHAR}
+
+                UNION
+                SELECT
+                    ee.ENTRUST_ID
+                FROM
+                    WFL_ETR_ENTRUST ee
+                        INNER JOIN
+                    WFL_ETR_ENTRUST_ADD eea
+                    on ee.ENTRUST_ID = eea.ENTRUST_ID
+                WHERE
+                    ee.PS = #{ps,jdbcType=VARCHAR}
+                  and eea.TRADE_ID = #{initTradeId,jdbcType=VARCHAR}
+            )
     </select>
 </mapper>

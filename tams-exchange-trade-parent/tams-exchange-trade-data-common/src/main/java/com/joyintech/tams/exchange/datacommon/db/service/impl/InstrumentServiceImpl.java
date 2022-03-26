@@ -1,5 +1,7 @@
 package com.joyintech.tams.exchange.datacommon.db.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.google.common.base.Strings;
 import com.joyintech.tams.exchange.common.bean.MinPrice;
 import com.joyintech.tams.exchange.common.bean.MinTrdUnitLimit;
@@ -216,6 +218,7 @@ public class InstrumentServiceImpl extends AsyncServiceImpl<String, Instrument> 
 
     @Override
     public void trdUnitLimitFlush() {
+        logger.info("minPriceAndMinTrdUnitLimitBeanMap:{}", JSON.toJSONString(minPriceAndMinTrdUnitLimitBeanMap));
         minPriceAndMinTrdUnitLimitBeanMap.clear();
     }
 

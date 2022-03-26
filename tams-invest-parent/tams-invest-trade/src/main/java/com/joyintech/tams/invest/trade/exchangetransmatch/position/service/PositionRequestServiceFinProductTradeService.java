@@ -515,6 +515,15 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
             resultMap.put("ps", DictCodeListExt3.交易方向_逆回购.getValue());
         }
         // ZGTFCP-1042: add by fuyongsheng 20220315 end
+        // ZGTFCP-1848:换入换出的交易头寸都在换入的交易进行处理,换出不处理新头寸 modify by fuyongsheng 20220325 start
+        if(DictCodeListExt3.交易方向_中途换券.getValue().equals(ps)){
+            resultMap.put("totalTradeId", dealEntity.getTotleTradeId());
+            if(DictCodeListExt3.质押券置换_置换方向_换出.getValue().equals(dealEntity.getPs())){
+                resultMap.put(INTERFACE_TYPE, null);
+                return;
+            }
+        }
+        // ZGTFCP-1848:换入换出的交易头寸都在换入的交易进行处理,换出不处理新头寸 modify by fuyongsheng 20220325 end
         PositionRequestBaseBean bean;
         // 首期组合现金数据集
         if (DictCodeListExt3.交易方向_正回购.getValue().equals(ps)
@@ -566,7 +575,11 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
             bean = new PositionRequestBaseBean();
             bean.setPortfolioId(trdProductDealAdd.getPortfolioId());
             bean.setSecAcctId(dealEntity.getSecManageAcctId());
-            bean.setTradeId(dealEntity.getTradeId());
+            if(DictCodeListExt3.交易方向_中途换券.getValue().equals(ps)){
+                bean.setTradeId(dealEntity.getTotleTradeId());
+            }else{
+                bean.setTradeId(dealEntity.getTradeId());
+            }
             bean.setEtrId(entity.getEntrustId());
             if(DictCodeListExt3.交易方向_中途换券.getValue().equals(ps)){
                 // ZGTFCP-1805:修改中途换券字段赋值 modify by fuyongsheng 20220324 start
@@ -601,7 +614,11 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
             bean = new PositionRequestBaseBean();
             bean.setPortfolioId(trdProductDealAdd.getPortfolioId());
             bean.setSecAcctId(dealEntity.getSecManageAcctId());
-            bean.setTradeId(dealEntity.getTradeId());
+            if(DictCodeListExt3.交易方向_中途换券.getValue().equals(ps)){
+                bean.setTradeId(dealEntity.getTotleTradeId());
+            }else{
+                bean.setTradeId(dealEntity.getTradeId());
+            }
             bean.setEtrId(trdProductDealAdd.getEntrustId());
             // ZGTFCP-1672:修改部分字段赋值 modify by fuyongsheng 20220323 start
             if(DictCodeListExt3.交易方向_解除质押.getValue().equals(ps)){

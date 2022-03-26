@@ -13,6 +13,7 @@ import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.service.EtrE
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
 import com.joyintech.tams.invest.entrust.common.validator.EtrCommonValidator;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -48,7 +49,7 @@ public class EtrExchangeAgreRepTradeValidator implements EtrCommonValidator {
             {
                 put(DictCodeListExt3.交易方向_提前购回.getValue(),DictCodeListExt3.交易方向_提前购回);
                 put(DictCodeListExt3.交易方向_到期购回.getValue(),DictCodeListExt3.交易方向_到期购回);
-                put(DictCodeListExt3.交易方向_中途换券.getValue(),DictCodeListExt3.交易方向_中途换券);
+//                put(DictCodeListExt3.交易方向_中途换券.getValue(),DictCodeListExt3.交易方向_中途换券);
                 put(DictCodeListExt3.交易方向_解除质押.getValue(),DictCodeListExt3.交易方向_解除质押);
                 put(DictCodeListExt3.交易方向_到期续做.getValue(),DictCodeListExt3.交易方向_到期续做);
             }
@@ -86,6 +87,17 @@ public class EtrExchangeAgreRepTradeValidator implements EtrCommonValidator {
 //                }
 //            }
 //        }
+
+        //判断提前购回、到期购回、到期续作、解除质押需要判断是否重复下了指令
+        if (WorkFlowUtil.isNotFromToDoList()) {
+            if(StringUtil.isNotEmpty(psMap.get(dto.getPs())) && !StringUtil.equals(dto.getRedoType(),"1")
+                && StringUtil.isBlank(dto.getEntrustId())) {
+                if (etrExchangeAgreRepTrade001Service.isAlreadyDoEntrust(dto.getPs(),
+                        StringUtil.isNotEmpty(dto.getIntiTradeId()) ? dto.getIntiTradeId() : dto.getTradeId())) {
+                    errorList.add(new ValidMessage("", psMap.get(dto.getPs()).getCodeName()+"不能重复做！"));
+                }
+            }
+        }
 
         return errorList;
     }

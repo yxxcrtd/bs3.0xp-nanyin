@@ -584,17 +584,17 @@ public class TradeHelper {
         if (!createOrderByInstrument(order, instrument, futuresInstrument)) {
             return order;
         }
-        //市价委托填充反向涨跌停价
-        commonCheckHelper.marketPriceCheck(order, instrument);
         Instruction instruction = instructionService.findById(dto.getInstructionId());
         if (!checkInstruction(instruction, order)) {
             return order;
         }
-
         //科创板更新委托属性
-        if (Objects.nonNull(instrument) && SubStockType.KCB.value.equals(instrument.getSubStockType()) && DictCodeListExt2.价格模式_收盘价固定价格.getValue().equals(instruction.getPriceMode())) {
+        if (Objects.nonNull(instrument) && SubStockType.KCB.value.equals(instrument.getSubStockType())
+                && DictCodeListExt2.价格模式_收盘价固定价格.getValue().equals(instruction.getPriceMode())) {
             order.setEntrustProp(NORMAL_AFTER_SET_PRICE.getValue());
         }
+        //市价委托填充反向涨跌停价
+        commonCheckHelper.marketPriceCheck(order, instrument);
 
         String tradingDay = commonManagement.getTradingDay();
         // 指令检查(包括状态,日期,接收人) 价格限定
