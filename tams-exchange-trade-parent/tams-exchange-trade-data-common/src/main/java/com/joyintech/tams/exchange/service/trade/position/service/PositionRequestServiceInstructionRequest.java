@@ -478,8 +478,14 @@ public class PositionRequestServiceInstructionRequest {
                 bean.setEtrId(entity.getEntrustId());
 
                 //券面总额 IF 交易方向 = 解除质押 THEN 下单.质押券数量*100 ELSE 下单到期续作对应首期的成交回报.质押券数量
-                BigDecimal secAmount = commonPositionEngineService.multiplyWithOneHundred(item.getPledgeNumber());
-                bean.setSecAmount(secAmount);
+                if (交易方向_中途换券.getValue().equals(ps)) {
+                    BigDecimal secAmount = commonPositionEngineService.multiplyWithOneHundred(item.getOldPledgeNumber());
+                    bean.setSecAmount(secAmount);
+                } else {
+                    BigDecimal secAmount = commonPositionEngineService.multiplyWithOneHundred(item.getPledgeNumber());
+                    bean.setSecAmount(secAmount);
+                }
+
 
                 Map<String, Object> map = BeanUtil.object2Map(bean);
                 //融入券券面总额
