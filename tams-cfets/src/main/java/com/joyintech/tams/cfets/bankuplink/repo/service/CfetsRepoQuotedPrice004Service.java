@@ -2181,6 +2181,14 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             if (StringUtil.equals(DictCodeList.持仓类型_实际.getValue(), hodingType)) {
                 cfetsIbuQuoteRepo004Mapper.updatePtlCashPosition(position);
             }
+            if(StringUtil.isNotEmpty(hodingTypeOld)){
+                PtlCashPositionFlow flow1 = new PtlCashPositionFlow();
+                BeanUtil.copyPropertiesIgnoreNull(flow1, flow);
+                flow1.setHodingType(hodingTypeOld);
+                flow1.setAmount(flow1.getAmount().negate());
+                flow1.setSeqno(IDGenerator.generate());
+                ptlCashPositionFlowMapper.insert(flow1);
+            }
         }
     }
 
