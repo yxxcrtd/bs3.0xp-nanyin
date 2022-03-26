@@ -1014,11 +1014,23 @@
             and (
             entrustId|| '|' || entrustStatus|| '|' ||  entrustStatusString|| '|' ||  portfolioName|| '|' ||
             dealCurAcct|| '|' ||  tradeMarketString|| '|' ||  tradePlat || '|' || tradePlatString|| '|' ||
-            ps|| '|' ||  psStr|| '|' ||  fristSettleDate || '|' || expireSettleDate|| '|' ||
+            ps|| '|' ||  psStr|| '|' ||  to_char(fristSettleDate,'yyyy-MM-dd') || '|' || to_char(expireSettleDate,'yyyy-MM-dd')|| '|' ||
             finprodId|| '|' ||  finprodMarketId|| '|' ||  finprodAbbr || '|' || secAcctId|| '|' ||
-            counterId|| '|' ||  vdate|| '|' ||  mdate || '|' || nextUser
+            counterName|| '|' ||  to_char(vdate,'yyyy-MM-dd') || '|' ||  mdate || '|' || invManagerName
             like '%' || #{search} || '%'
             )
+            <if test="search_isNumberFlag != null and search_isNumberFlag == true">
+                or (T1.implementPercent*100 = #{search})
+                or (T1.dealPercent*100 = #{search})
+                or (T1.price = #{search})
+                or (T1.entrustAmt = #{search})
+                or (T1.term = #{search})
+                or (T1.intAmt = #{search})
+                or (T1.expireSettleAmt = #{search})
+                or (T1.conRatio = #{search})
+                or (T1.printAmt = #{search})
+                or (T1.repSecNum = #{search})
+            </if>
         </if>
     </sql>
     <select id="getptlAcctNo" parameterType="Map" resultType="com.joyintech.framework.select.SelectOptionDto">

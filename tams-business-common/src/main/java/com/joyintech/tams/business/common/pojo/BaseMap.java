@@ -153,6 +153,9 @@ public class BaseMap extends HashMap<String, Object> {
 		/*if (StringUtil.startsWith(str, "0")){
 			return false;
 		}*/
+		if(StringUtil.contains(str, "-") && !StringUtil.startsWith(str, "-")){
+			return false;
+		}
 		Pattern pattern = Pattern.compile("[0-9.\\-]*");
 		return pattern.matcher(str).matches();
 	}
