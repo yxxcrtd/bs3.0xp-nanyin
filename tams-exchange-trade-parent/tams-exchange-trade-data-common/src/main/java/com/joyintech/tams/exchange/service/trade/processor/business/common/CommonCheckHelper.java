@@ -313,12 +313,14 @@ public class CommonCheckHelper {
     }
 
     public void marketPriceCheck(Order order, Instrument instrument) {
-        // 科创板填写保护价格 不需要反向填充涨跌停价格
-        if (Objects.nonNull(instrument)
+        // 科创板 盘后定价 填写保护价格 不需要反向填充涨跌停价格
+        if (EntrustProp.NORMAL_AFTER_SET_PRICE.getValue().equals(order.getEntrustProp())
+                && Objects.nonNull(instrument)
                 && SubStockType.KCB.value.equals(instrument.getSubStockType())
                 && order.getOrderPrice().compareTo(BigDecimal.ZERO) > 0) {
             return;
         }
+
         //市价委托填充反向涨跌停价
         if (EntrustProp.isMarketPrice(order.getEntrustProp())) {
             QuoteProto.TickBean tick = quoteTickService.getTickFromCache(order.getStockCode());
