@@ -1262,7 +1262,7 @@ public class CfetsEtrDispatcherService extends BaseService {
                 spcdCode = spcdCode.concat(",").concat(dto.getPs());
                 infoTable = cfgDataTableMapper.getByPageCode(pageCode, dtCode, spcdCode, null, null);
                 totalInfo = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, spcdCode);
-                infoForm.addAll(totalInfo);
+                //infoForm.addAll(totalInfo);
             } else if (StringUtil.equals(DictCodeListExt3.头寸业务类型_债券借贷首期.getValue(), dto.getBusiTypePosition())) {
                 //String repoPledgeModel = CacheUtil.getSysParam("repo_pledge_model");
                 String repoPledgeModel = "02";
@@ -1292,7 +1292,6 @@ public class CfetsEtrDispatcherService extends BaseService {
                 //一级投标
                 return bondFirstLBidding(pageCode, dtCode, spcdCode,dto);
             }else {
-
                 if (StringUtil.isNotEmpty(dto.getFinprodType2())) {
                     if (StringUtil.equals(DictCodeListExt3.中债_上游资产一级分类_存款类资产.getValue(), dto.getFinprodType2())) {
                         spcdCode = dto.getFinprodType2();
@@ -1377,7 +1376,11 @@ public class CfetsEtrDispatcherService extends BaseService {
                         }
                     }
                     CfetsEtrDispatcherInfoResponse totalResult = new CfetsEtrDispatcherInfoResponse();
-                    totalResult.setTotalPrinAmt(ArithmeticUtil.divide(totalPrinAmt, new BigDecimal("10000"), 2));
+                    if (!StringUtil.equals(DictCodeListExt3.头寸业务类型_质押式回购首期.getValue(), dto.getBusiTypePosition())) {
+                        totalResult.setTotalPrinAmt(ArithmeticUtil.divide(totalPrinAmt, new BigDecimal("10000"), 2));
+                    }else {
+                        totalResult.setTotalPrinAmt(totalPrinAmt);
+                    }
                     resultData.put(dtCode + "_datatotal", totalResult);
                     detailList.forEach(e -> e.setTotalPrinAmt(totalResult.getTotalPrinAmt()));
                 }

@@ -394,7 +394,8 @@ public class PositionRequestManualSettleService {
         // 质押券数据集	ptlSecList
         // if (DictCodeListExt3.交易方向_解除质押.getValue().equals(infContractDetailfile.getPs())) {
         if ((DictCodeListExt3.交易方向_正回购.getValue().equals(infContractDetailfile.getPs())
-            || DictCodeListExt3.交易方向_中途换券.getValue().equals(infContractDetailfile.getPs()))
+            || DictCodeListExt3.交易方向_中途换券.getValue().equals(infContractDetailfile.getPs())
+            || DictCodeListExt3.交易方向_解除质押.getValue().equals(infContractDetailfile.getPs()))
                 && BussinessDictCodeList.金融产品类型_投管用_债券质押式正回购.getValue().equals(etrEntrust.getFinprodType2())) {
             List<Map<String, Object>> list = new ArrayList<>(4);
             Map<String, Object> map = new HashMap<>();
