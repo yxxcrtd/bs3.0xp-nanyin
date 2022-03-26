@@ -9,6 +9,7 @@
         <form class="layui-form joyin-form-wrap pro-module-form" id="sumbitForm_jj">
             <input type="hidden" id="finprodType2_jj" name="finprodType2" data-th-value="${entity?.finprodType2}">
             <input type="hidden" id="entrustBussType_jj" name="entrustBussType" data-th-value="${entity?.entrustBussType}">
+            <input type="hidden" id="standardBondVolume_jj" name="standardBondVolume" data-th-value="${entity?.standardBondVolume}">
             <input type="hidden" id="acctTradeMarket_jj" name="acctTradeMarket">
             <input type="hidden" id="board_jj" name="board">
             <input type="hidden" id="secIdObjRelative_jj" name="secIdObjRelative">
@@ -140,7 +141,7 @@
                             <div class="layui-input-inline input-inline">
                                 <button type="button" class="decrease-button">-</button>
                                 <input type="text" id="entrustPrice_jj" name="entrustPrice" placeholder="请输入内容" data-pattern="" data-fixtype="2" data-textrange='4'
-                                       class="layui-input form-input text-number price" data-th-value="${entity?.priceModel}" required="required" autocomplete="off" maxlength=9>
+                                       class="layui-input form-input text-number price" data-th-value="${entity?.entrustPrice}" required="required" autocomplete="off" maxlength=9>
                                 <span id="entrustPriceUnit_jj" class="input-right-show priceTitle">元</span>
                                 <button type="button" class="increase-button">+</button>
                             </div>
@@ -267,6 +268,7 @@
             <input type="hidden" id="dataSource_dz" name="dataSource" data-th-value="${entity?.dataSource}">
             <input type="hidden" id="finprodType2_dz" name="finprodType2" data-th-value="${entity?.finprodType2}">
             <input type="hidden" id="entrustBussType_dz" name="entrustBussType" data-th-value="${entity?.entrustBussType}">
+            <input type="hidden" id="standardBondVolume_dz" name="standardBondVolume" data-th-value="${entity?.standardBondVolume}">
             <input type="hidden" id="acctTradeMarket_dz" name="acctTradeMarket">
             <input type="hidden" id="board_dz" name="board">
             <input type="hidden" id="secIdObjRelative_dz" name="secIdObjRelative">
@@ -508,6 +510,7 @@
             <input type="hidden" id="dataSource_gd" name="dataSource" data-th-value="${entity?.dataSource}">
             <input type="hidden" id="finprodType2_gd" name="finprodType2" data-th-value="${entity?.finprodType2}">
             <input type="hidden" id="entrustBussType_gd" name="entrustBussType" data-th-value="${entity?.entrustBussType}">
+            <input type="hidden" id="standardBondVolume_gd" name="standardBondVolume" data-th-value="${entity?.standardBondVolume}">
             <input type="hidden" id="acctTradeMarket_gd" name="acctTradeMarket">
             <input type="hidden" id="board_gd" name="board">
             <input type="hidden" id="secIdObjRelative_gd" name="secIdObjRelative">

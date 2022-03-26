@@ -1062,7 +1062,7 @@
     <!-- 交易员与工作量列表查询 -->
     <select id="getEtrTraderAndWorkloadList" resultType="com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTraderListRequest">
         SELECT
-            su.USER_NAME                                                               userName,
+            DISTINCT su.USER_NAME                                                               userName,
             su.REAL_NAME                                                               realName,
             to_char(NVL(a.totalWork, 0), 'fm999990.009') as totalWork,
             to_char(NVL(b.unfinishedWork, 0), 'fm999990.009')                       as unfinishedWork
@@ -1093,7 +1093,7 @@
                   where een.ENTRUST_STATUS in ('02') GROUP BY edi.TRADER
                   union all
                   SELECT edi.TRADER as TRADER,
-                         sum(round(decode(eena.ASSET_TYPE,'F01',NVL(ees.FINISH_AMT * 100,0),'F10',NVL(ees.FINISH_AMT * 100,0),'F10',NVL(ees.FINISH_AMT *100,0),'F17',NVL(ees.FINISH_AMT * 100,0),NVL(ees.FINISH_AMT,0))/
+                         sum(1 - round(decode(eena.ASSET_TYPE,'F01',NVL(ees.FINISH_AMT * 100,0),'F10',NVL(ees.FINISH_AMT * 100,0),'F10',NVL(ees.FINISH_AMT *100,0),'F17',NVL(ees.FINISH_AMT * 100,0),NVL(ees.FINISH_AMT,0))/
                                    decode(eena.ASSET_TYPE,'F01',decode(een.PS,'T03',een.ENTRUST_AMT, NVL(een.ENTRUST_NUM * 100,0)),'F10',NVL(een.ENTRUST_NUM *100,0),'F17',NVL(een.ENTRUST_NUM *100,0),NVL(een.ENTRUST_AMT,een.ENTRUST_NUM * 100)),2)) unfinishedWork
                   FROM ETR_DISTRIBUTE edi
                   LEFT JOIN ETR_ENTRUST een ON edi.ENTRUST_ID = een.ENTRUST_ID

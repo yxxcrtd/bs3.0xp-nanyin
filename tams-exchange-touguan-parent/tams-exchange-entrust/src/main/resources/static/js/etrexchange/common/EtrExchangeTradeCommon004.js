@@ -2082,7 +2082,7 @@
                     $("#entrustNum_label_" + currentTab).text("指令数量").append($star.clone());
                     $("#entrustAmt_label_" + currentTab).text("标准券数量").append($star.clone());
 
-                    var entrustAmt = $("#entrustAmt_" + currentTab).val();
+                    var entrustAmt = $("#standardBondVolume_" + currentTab).val();
                     $("#entrustAmt_" + currentTab).val(Math.floor(new Number(entrustAmt)));
 
                     $("#entrustPriceUnit_" + currentTab).text("%");
@@ -2095,7 +2095,7 @@
                     $("#entrustNum_label_" + currentTab).text("标准券数量").append($star.clone());
                     $("#entrustAmt_label_" + currentTab).text("回购金额").append($star.clone());
 
-                    var entrustAmt = $("#entrustAmt_" + currentTab).val();
+                    var entrustAmt = $("#standardBondVolume_" + currentTab).val();
                     $("#entrustAmt_" + currentTab).val(Math.floor(new Number(entrustAmt)));
 
                     $("#entrustPriceUnit_" + currentTab).text("%");
@@ -2405,8 +2405,6 @@
             return;
         }
         Joyin.ajaxJson(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeTrade001/calcEntrustNumAndAmt', param, function (result) {
-            console.log("========"+JSON.stringify(result));
-            console.log("========"+JSON.stringify(param));
             if (param.targetType == TARGET_CLASS_01 && param.availableNum && param.availableNum > 0) {
                 var stockNum = param.availableNum - result.entrustNum;
                 if (result.minNum) {
@@ -3416,7 +3414,7 @@
                     url: JoyinUtil.getRealPath("/etrexchange/common/EtrExchangeTradeCommon004/getPtlSecAcctInfo"),
                     postData: function () {
                         return {
-                            // portfolioId:curPortfolioId,tradeMarket: $("#tradeMarket_"+currentTab).val()
+                            portfolioId:curPortfolioId,tradeMarket: $("#tradeMarket_"+currentTab).val()
                         };
                     }
                 }
@@ -3797,7 +3795,7 @@
 
     function paramCheck() {
         var ps = $("#ps_" + currentTab).val();
-        if (ps && "Y" === pageRedisFlag && (ps !== PS_T68 && ps !== PS_T69 && ps !== PS_T01 && ps !== PS_T02) && (!entity_RiskTrialRetList || riskFlag !== 0)) {
+        if (ps && "Y" === pageRedisFlag && (ps !== PS_T68 && ps !== PS_T69) && (!entity_RiskTrialRetList || riskFlag !== 0)) {
             Joyin.error("请先完成风险试算")
             return false;
         }

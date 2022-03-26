@@ -28,15 +28,14 @@ import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.service.entrust.common.service.WFlowCommonService;
+import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.exception.PositionException;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
+import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeCommonRiskcalDto;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePortfolioRequest;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,7 +65,6 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDispatcherService;
 import com.joyintech.system.base.dao.SysWflBusinessListMapper;
 import com.joyintech.system.base.entity.SysWflBusinessList;
-import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.component.base.core.impl.dao.MstWorkflowCommonServiceMapperImpl;
 import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
@@ -192,7 +190,8 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
     
     public static final String ENTRUST_RECORD_NEW = "new";
 
-
+    @Autowired
+    private JoyinbusinessCommonService joyinbusinessCommonService;
     /**
      * 对手方交易员联想文本框初始化。
      *
@@ -1554,6 +1553,8 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
             }
         }
         // 自动分发自动接收 ，杭银投资poc add by yufei 20200905 end
+        //处理履历
+        updateCfetsOprHis(entity.getEntrustId(),optType);
     }
     /**
      * 配置用户
@@ -2536,5 +2537,25 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
         }
 
         return false;
+    }
+
+    /**
+     * 处理履历
+     */
+    public void updateCfetsOprHis(String entrustId,String optType){
+        CfetsOprHisInfoRequest oprHisReq=new CfetsOprHisInfoRequest();
+        oprHisReq.setEntrustId(entrustId);
+        if(ENTRUST_RECORD_NEW.equals(optType)){
+            oprHisReq.setOperType(DictCodeListExt3.操作类型_新建.getValue());
+        }else if(ENTRUST_RECORD_MODIFY.equals(optType)){
+            oprHisReq.setOperType(DictCodeListExt3.操作类型_修改.getValue());
+        }else if("close".equals(optType)){
+            oprHisReq.setOperType(DictCodeListExt3.操作类型_关闭.getValue());
+        }else if("revoke".equals(optType)){
+            oprHisReq.setOperType(DictCodeListExt3.操作类型_撤回.getValue());
+        }else if("export".equals(optType)){
+            oprHisReq.setOperType(DictCodeListExt3.操作类型_导出.getValue());
+        }
+        joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);
     }
 }

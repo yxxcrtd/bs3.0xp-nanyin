@@ -305,6 +305,52 @@ public class CommonPositionEngineService {
     }
 
     /**
+     * 获取头寸业务类型--存续期使用
+     *
+     * @param finprodType2
+     * @param ps
+     * @return
+     */
+    public String getDurationPositionBusiType(String finprodType2, String ps, String assetType2) {
+        log.debug("getPositionBusiType() called with parameters => 【finprodType2 = {}】, 【ps = {}】, 【assetType2 = {}】", finprodType2, ps, assetType2);
+        String busiType = "";
+        if (DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(finprodType2)) {
+            if(DictCodeList.交易方向_申购确认.getValue().equals(ps)){
+                busiType = DictCodeListExt3.头寸业务类型_网上申购.getValue();
+            }else if(DictCodeList.交易方向_行权_赎回.getValue().equals(ps)){
+                busiType = DictCodeListExt3.头寸业务类型_债券行权交易.getValue();
+            }else if(DictCodeList.交易方向_上市流通.getValue().equals(ps)){
+                busiType = DictCodeListExt3.头寸业务类型_上市流通.getValue();
+            }else{
+                busiType = DictCodeListExt3.头寸业务类型_债券存续期交易.getValue();
+            }
+        }
+        if (DictCodeListExt1.金融产品类型_投管用_股票.getValue().equals(finprodType2)) {
+            if(DictCodeList.交易方向_现金分红.getValue().equals(ps)){
+                busiType = DictCodeListExt3.头寸业务类型_股票分红.getValue();
+            }else if(DictCodeList.交易方向_红利再投.getValue().equals(ps)){
+                busiType = DictCodeListExt3.头寸业务类型_股票送股.getValue();
+            }else if(DictCodeList.交易方向_上市流通.getValue().equals(ps)){
+                busiType = DictCodeListExt3.头寸业务类型_配股.getValue();
+            }else if(DictCodeList.交易方向_申购确认.getValue().equals(ps)){
+                busiType = DictCodeListExt3.头寸业务类型_网上申购.getValue();
+            }
+        }
+        if (DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(finprodType2)) {
+            busiType = DictCodeListExt3.头寸业务类型_基金存续期.getValue();
+        }
+        if ((DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(finprodType2)
+                || DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(finprodType2))) {
+            if(DictCodeList.回购类型_质押式协议回购.getValue().equals(assetType2)){
+                busiType = DictCodeListExt3.头寸业务类型_协议回购到期购回.getValue();
+            }else{
+                busiType = DictCodeListExt3.头寸业务类型_通用回购到期.getValue();
+            }
+        }
+        return busiType;
+    }
+
+    /**
      * 判断缓存是否过期
      *
      * @param date

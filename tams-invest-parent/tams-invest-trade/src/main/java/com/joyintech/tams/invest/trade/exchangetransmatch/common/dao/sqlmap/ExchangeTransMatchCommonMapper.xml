@@ -436,4 +436,14 @@
             FINPROD_ID = #{tradeId,jdbcType=VARCHAR}
             AND BRANCH = 0
     </select>
+
+    <select id="getFinTradeProduct" resultType = "com.joyintech.tams.common.base.entity.FinTradeProduct">
+        select
+        <include refid="com.joyintech.tams.common.base.dao.FinTradeProductMapper.Base_Column_List" />
+        from FIN_TRADE_PRODUCT
+        <where>
+            FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+            AND BRANCH = 0
+        </where>
+    </select>
 </mapper>

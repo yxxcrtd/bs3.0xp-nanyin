@@ -865,6 +865,8 @@ public class InvestmentManagement extends BaseService {
                 pledgeList.forEach(instructionPledge -> instructionPledgeIdSet.add(instructionPledge.getEntrustId()));
             if (Objects.nonNull(detailList))
                 detailList.forEach(instructionDetail -> instructionDetailIdSet.add(instructionDetail.getEntrustId()));
+            //对于多组合时，组合代码、组合名称展示多个用逗号隔开
+            messageConsumerService.processInstructionsPortfolio(instructionEtrEntrustList, detailList);
             messageConsumerService.processInstructions(instructionEtrEntrustList, instructionPledgeIdSet, instructionDetailIdSet);
             messageConsumerService.processInstructionPledges(pledgeList, instructionPledgeIdSet);
             messageConsumerService.processInstructionDetail(detailList, instructionDetailIdSet);

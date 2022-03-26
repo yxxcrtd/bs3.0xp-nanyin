@@ -1524,7 +1524,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 		        }catch (Exception e) {
 		        	for(EtrExchangeTradeSaveRequest etrExchangeTradeSaveRequest:etrExchangeTrade001DtoList) {
 		        		logger.warn("场内交易多组合指令头寸发送失败，EntrustId:{},PositionSeqno:{}",etrExchangeTradeSaveRequest.getEntrustId(),etrExchangeTradeSaveRequest.getPositionSeqno().toString());
-		        		PositionHttpRequest.roll(etrExchangeTradeSaveRequest.getPositionSeqno().toString(), "ETR", "场内交易多组合指令头寸发送失败");
+		        		PositionHttpRequest.sendRevoke(etrExchangeTradeSaveRequest.getPositionSeqno().toString(), "ETR", "场内交易多组合指令头寸发送失败");
 		        	}
 		            logger.error("场内交易多组合指令新建失败",e);
 		            return PositionUtil.ajaxErrorReturn(e);

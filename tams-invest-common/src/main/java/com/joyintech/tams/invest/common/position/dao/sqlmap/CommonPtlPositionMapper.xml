@@ -357,7 +357,7 @@
     </select>
     <!--add by etliu 20220116 end-->
 
-    <select id="selectFinProductOthCode" resultType="com.joyintech.tams.common.base.entity.FinProductOthCode">
+    <select id="selectFinProductOthCodes" resultType="com.joyintech.tams.common.base.entity.FinProductOthCode">
         SELECT
             FINPROD_ID as finprodId,
             BRANCH as branch,
@@ -369,6 +369,7 @@
         WHERE
             FINPROD_ID = #{finprodId,jdbcType=VARCHAR} AND
             OTH_TYPE = #{othCodeType,jdbcType=VARCHAR}
+        ORDER BY DECLARED_START_DATE DESC
     </select>
 
     <select id="selectFinProductQuto" resultType="com.joyintech.tams.common.base.entity.FinProductQuto">

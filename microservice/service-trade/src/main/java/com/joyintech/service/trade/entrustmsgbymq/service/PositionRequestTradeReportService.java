@@ -369,12 +369,13 @@ public class PositionRequestTradeReportService {
                 ptlCash.put("portfolioId", dto.getPortfolioId());
                 if(DictCodeListExt3.交易方向_解除质押.getValue().equals(entity.getPs())){
                     ptlCash.put("cashAcctId", this.getPtlCapAcctNo(etrEntrust));
+                    ptlCash.put("cashAmount", entity.getPositionBaseData().getFinTradeProductDto().getmTradeAmt());
                 }else{
                     ptlCash.put("cashAcctId", dto.getCashAcctId());
+                    ptlCash.put("cashAmount", dto.getCashAmount());
                 }
                 ptlCash.put("tradeId", entity.getTradeId());
                 ptlCash.put("etrId", entity.getEntrustId());
-                ptlCash.put("cashAmount", dto.getCashAmount());
                 ptlCashList.add(ptlCash);
             }
             if(DictCodeListExt3.交易方向_到期续做.getValue().equals(entity.getPs())){
@@ -391,7 +392,8 @@ public class PositionRequestTradeReportService {
                 ptlOffsetCashList.add(ptlOffsetCash);
             }
             if((DictCodeListExt3.交易方向_正回购.getValue().equals(entity.getPs())
-            || DictCodeListExt3.交易方向_中途换券.getValue().equals(entity.getPs()))
+            || DictCodeListExt3.交易方向_中途换券.getValue().equals(entity.getPs())
+            || DictCodeListExt3.交易方向_解除质押.getValue().equals(entity.getPs()))
                     && BussinessDictCodeList.金融产品类型_投管用_债券质押式正回购.getValue().equals(etrEntrust.getFinprodType2())){
                 Map<String, Object> ptlSec = new HashMap<>();
                 ptlSec.put("portfolioId", dto.getPortfolioId());
