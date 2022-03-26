@@ -18,6 +18,12 @@
                     <input type="text" id="registBankCode"  class="layui-input form-input" data-th-value="${entity?.bankCode}?:${registBankCode}" disabled>
                 </div>
             </div>
+            <div class="layui-inline layui-col-md6">
+                <label class="layui-form-label form-lable">投资者分类</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="holderClassify" name="holderClassify" class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-initValue="${entity?.holderClassify}"  data-th-data-result='${HOLDER_CLASSIFY}' required>
+                </div>
+            </div>
         </div>
         <div class="layui-form-item">
             <div class="layui-inline layui-col-md6">
@@ -168,20 +174,10 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <div class="layui-inline layui-col-md6">
-                <label class="layui-form-label form-lable">投资者分类</label>
-                <div class="layui-input-inline input-inline">
-                    <input type="text" id="holderClassify" name="holderClassify" class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-initValue="${entity?.holderClassify}"  data-th-data-result='${HOLDER_CLASSIFY}' required>
-                </div>
-            </div>
-
-        </div>
-        <div class="layui-form-item">
-
-            <div class="layui-inline layui-col-md6">
-                <label class="layui-form-label form-lable">备注</label>
-                <div class="layui-input-inline input-inline">
-                    <input type="text" id="remark" name="remark" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.remark}" >
+            <div>
+                <label class="layui-form-label form-lable" style='width: 18%;'>备注</label>
+                <div class="layui-input-inline input-inline" style="width: 80%!important;">
+                    <input type="text" id="remark" name="remark" class="layui-textarea mst-textarea" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.remark}" >
                 </div>
             </div>
         </div>
