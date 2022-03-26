@@ -51,6 +51,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -502,6 +503,15 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
             dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_协议回购首期指令.getValue());
         }
         AjaxResult ajax  = etrExchangeAgreRepTrade001Service.checkSave(dto,result);
+        //共通check
+        List<ValidMessage> valid = etrExchangeTradeCommonValidatorService.valid(dto);
+        if (StringUtil.isNotEmpty(ajax) && !CollectionUtils.isEmpty(valid)){
+            valid.addAll(ajax.getErrorList());
+            ajax.setErrorList(valid);
+        }else if (!StringUtil.isNotEmpty(ajax) && !CollectionUtils.isEmpty(valid)){
+            ajax = new AjaxResult();
+            ajax.setErrorList(valid);
+        }
         if (ajax != null && !StringUtil.isEmptyList(ajax.getErrorList())) {
             for(ValidMessage validMessage:ajax.getErrorList()) {
                 errorList.add(new ValidMessage(validMessage.getField(), this.getMessage(validMessage.getMessage())));
@@ -509,8 +519,6 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
             ajax.setErrorList(errorList);
             return new Message<AjaxResult>().success().setData(ajax);
         }
-        //共通check
-        etrExchangeTradeCommonValidatorService.valid(dto);
 //        //正回购、质押券出库
 //        if (DictCodeListExt3.交易方向_首期.getValue().equals(dto.getPs()) && StringUtil.equals(dto.getRepPs(),DictCodeList.回购拆借方向_正回购.getValue())) {
 //            Map<String, Object> param = new HashMap<String, Object>();
