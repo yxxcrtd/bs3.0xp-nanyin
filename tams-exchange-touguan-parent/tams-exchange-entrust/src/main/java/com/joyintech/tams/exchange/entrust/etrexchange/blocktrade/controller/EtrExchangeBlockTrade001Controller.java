@@ -477,6 +477,9 @@ public class EtrExchangeBlockTrade001Controller extends BaseController{
 	public Message<EtrExchangeTradeQuotationHqResponse> findQuotations(@RequestBody EtrExchangeTradeEtrExchangeCommonRequest request) {
 		try {
 			String secId = request.getSecId();
+			if (!StringUtil.isNotEmpty(secId)){
+				return new Message<EtrExchangeTradeQuotationHqResponse>().success().setData(new EtrExchangeTradeQuotationHqResponse());
+			}
 			EtrExchangeTradeQuotationHqResponse quotations = etrExchangeTradeCommon001Service.findQuotations(secId);
 			return new Message<EtrExchangeTradeQuotationHqResponse>().success().setData(quotations);
 		}catch (Exception e) {
