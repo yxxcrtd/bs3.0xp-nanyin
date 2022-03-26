@@ -2947,9 +2947,10 @@
   <select id="searchListDetailSheet1" parameterType="map" resultMap="SearchResultMap">
     <!-- 子查询出不同客户类型、不同币种的当期申购金额、当期申购金额折人民币、当期申购份额的金额 -->
     WITH
-    tab AS (select
+    tab AS (select * from ( select
     'buyplace'||a.CUSTOMER_TYPE1||a.BUY_PLACE code,
-    list.ITEM_VALUE,a.BUY_PLACE,a.CUSTOMER_TYPE1, a.RAISING_AMTSUM je,a.RAISING_AMTSUM_CNY zrmb,a.RAISING_QTY fe
+    list.ITEM_VALUE,a.BUY_PLACE,a.CUSTOMER_TYPE1, a.RAISING_AMTSUM je,a.RAISING_AMTSUM_CNY zrmb,a.RAISING_QTY fe,
+    RANK() OVER (PARTITION BY a.pbc_prod_id,a.BUY_PLACE,a.CUSTOMER_TYPE1,a.RAISING_DATE,a.CCY ORDER BY NVL(a.STATUS_DATE,a.CREATE_TIME) DESC) RANKNUM
     from PBC_PROD_RAISING_SUB a
     LEFT JOIN SYS_DATADICT_LIST list ON a.CCY=list.ITEM_CODE and list.DICT_CODE='CURRENCY_CHB'
     inner join pbc_prd_baseinfo_sub b on a.pbc_prod_id = b.pbc_prod_id
@@ -2965,7 +2966,7 @@
     )t2 ON t2.inside_prod_id=b.PROD_ID
     where NVL(t2.pbc_code,b.PBC_PROD_ID)= #{pbcProdId,jdbcType=VARCHAR}
     and TO_CHAR(a.STATUS_DATE,'yyyy-MM-dd')=  TO_CHAR(#{statusDate,jdbcType=TIMESTAMP},'yyyy-MM-dd')
-    and TO_CHAR(a.RAISING_DATE,'yyyy-MM-dd')= TO_CHAR(#{raisingDate,jdbcType=TIMESTAMP},'yyyy-MM-dd'))
+    and TO_CHAR(a.RAISING_DATE,'yyyy-MM-dd')= TO_CHAR(#{raisingDate,jdbcType=TIMESTAMP},'yyyy-MM-dd')  )t where t.RANKNUM=1 )
 
     SELECT tab.code,tab.ITEM_VALUE,tab.je,tab.zrmb,tab.fe from tab
     union all
@@ -2987,9 +2988,10 @@
   <select id="searchListDetailSheet2" parameterType="map" resultMap="SearchResultMap">
     <!-- 子查询出不同客户类型、不同币种的当期兑付金额、当期兑付金额折人民币、当期兑付份额的金额 -->
     WITH
-    tab AS (select
+    tab AS (select * from (   select
     'buyplaceSheet2'||a.CUSTOMER_TYPE1||a.BUY_PLACE code,
-    list.ITEM_VALUE,a.BUY_PLACE,a.CUSTOMER_TYPE1, a.REDAMT je,a.REDAMT_CNY zrmb,a.REDQTY fe
+    list.ITEM_VALUE,a.BUY_PLACE,a.CUSTOMER_TYPE1, a.REDAMT je,a.REDAMT_CNY zrmb,a.REDQTY fe,
+    RANK() OVER (PARTITION BY a.pbc_prod_id,a.BUY_PLACE,a.CUSTOMER_TYPE1,a.RAISING_DATE,a.CCY ORDER BY NVL(a.STATUS_DATE,a.CREATE_TIME) DESC) RANKNUM
     from PBC_PROD_RAISING_SUB a
     LEFT JOIN SYS_DATADICT_LIST list ON a.CCY=list.ITEM_CODE and list.DICT_CODE='CURRENCY_CHB'
     inner join pbc_prd_baseinfo_sub b on a.pbc_prod_id = b.pbc_prod_id
@@ -3006,7 +3008,8 @@
     where NVL(t2.pbc_code,b.PBC_PROD_ID)= #{pbcProdId,jdbcType=VARCHAR}
     and to_char(a.STATUS_DATE,'yyyy-MM-dd')=  to_char(#{statusDate,jdbcType=TIMESTAMP},'yyyy-MM-dd')
     and to_char(a.RAISING_DATE,'yyyy-MM-dd')= to_char(#{raisingDate,jdbcType=TIMESTAMP},'yyyy-MM-dd'))
-
+    t where t.RANKNUM=1
+    )
     SELECT tab.code,tab.ITEM_VALUE,tab.je,tab.zrmb,tab.fe from tab
     union all
     select 'buyplaceSheet24000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='4' group by tab.ITEM_VALUE
@@ -3026,11 +3029,11 @@
   <!--  产品资金募集信息页面导出人行Excel报表中的第三个sheet页期末产品的明细数据 -->
   <select id="searchListDetailSheet3" parameterType="map" resultMap="SearchResultMap">
     <!-- 子查询出不同客户类型、不同币种的期末产品金额、期末产品金额折人民币、期末产品份额的金额 -->
-
     WITH
-    tab AS (select
+    tab AS (select * from (  select
     'buyplaceSheet3'||a.CUSTOMER_TYPE1||a.BUY_PLACE code,
-    list.ITEM_VALUE,a.BUY_PLACE,a.CUSTOMER_TYPE1, a.ENDAMTSUM je,a.ENDAMTSUM_CNY zrmb,a.ENDQTY fe
+    list.ITEM_VALUE,a.BUY_PLACE,a.CUSTOMER_TYPE1, a.ENDAMTSUM je,a.ENDAMTSUM_CNY zrmb,a.ENDQTY fe,
+    RANK() OVER (PARTITION BY a.pbc_prod_id,a.BUY_PLACE,a.CUSTOMER_TYPE1,a.RAISING_DATE ,a.CCY ORDER BY NVl(a.STATUS_DATE,a.CREATE_TIME) DESC) RANKNUM
     from PBC_PROD_RAISING_SUB a
     LEFT JOIN SYS_DATADICT_LIST list ON a.CCY=list.ITEM_CODE and list.DICT_CODE='CURRENCY_CHB'
     inner join pbc_prd_baseinfo_sub b on a.pbc_prod_id = b.pbc_prod_id
@@ -3047,7 +3050,8 @@
     where NVL(t2.pbc_code,b.PBC_PROD_ID)= #{pbcProdId,jdbcType=VARCHAR}
     and  to_char(a.STATUS_DATE,'yyyy-MM-dd')=  to_char(#{statusDate,jdbcType=TIMESTAMP},'yyyy-MM-dd')
     and  to_char(a.RAISING_DATE,'yyyy-MM-dd')= to_char(#{raisingDate,jdbcType=TIMESTAMP},'yyyy-MM-dd'))
-
+    t where RANKNUM=1
+    )
     SELECT tab.code,tab.ITEM_VALUE,tab.je,tab.zrmb,tab.fe from tab
     union all
     select 'buyplaceSheet34000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='4' group by tab.ITEM_VALUE
