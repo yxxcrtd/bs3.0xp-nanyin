@@ -2405,8 +2405,6 @@
             return;
         }
         Joyin.ajaxJson(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeTrade001/calcEntrustNumAndAmt', param, function (result) {
-            console.log("========"+JSON.stringify(result));
-            console.log("========"+JSON.stringify(param));
             if (param.targetType == TARGET_CLASS_01 && param.availableNum && param.availableNum > 0) {
                 var stockNum = param.availableNum - result.entrustNum;
                 if (result.minNum) {
