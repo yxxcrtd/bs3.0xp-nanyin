@@ -877,9 +877,6 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
             logger.error("交收失败",e);
             throw new RuntimeException(e);
         }
-        if(StringUtil.isNotEmpty(type)){
-            throw new RuntimeException("jp");
-        }
     }
 
     /**
