@@ -329,8 +329,8 @@
         ELSE FP.FINPROD_MARKET_ID
         END AS secId,
         FP.FINPROD_ABBR AS secName,
-        NVL(TEMP.AMOUNT, 0) AS secNum,
-        NVL(REPO.AMOUNT, 0) AS canRepoNum,
+        NVL(TEMP.AMOUNT, 0)/100 AS secNum,
+        NVL(REPO.AMOUNT, 0)/100 AS canRepoNum,
         FP.FINPROD_TYPE2 AS finprodType2,
         FP.TRADE_MARKET AS tradeMarket,
         SSAI.TRD_ACCT_ID AS acctId,
@@ -346,7 +346,7 @@
         PSP.DATE_TYPE AS DATE_TYPE,
         SUM(NVL(PSP.AMOUNT,0)) AS AMOUNT
         FROM
-        PTL_SEC_POSITION_RULE PSP
+        ETR_SEC_POSITION_RULE PSP
         INNER JOIN
         PTL_PORTFOLIO PP
         ON
