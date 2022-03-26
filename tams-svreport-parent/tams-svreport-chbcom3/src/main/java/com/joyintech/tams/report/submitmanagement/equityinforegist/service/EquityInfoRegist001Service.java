@@ -186,7 +186,7 @@ public class EquityInfoRegist001Service extends CommonExportService<EquityInfoRe
         Page<EquityInfoRegist001Dto> pageList = super.queryForPage(
         		pagenum,legth,()->equityInfoRegist001Mapper.queryForEquityInfoRegistPage(param));
  //       EquityInfoRegistCommonUtil.format(pageList.getRoot());
-        EquityInfoRegistCommonUtil.formatByType(pageList.getRoot(), false);
+        EquityInfoRegistCommonUtil.formatForEquHoldSearchByType(pageList.getRoot(), false);
         return pageList;
     }
     /**
