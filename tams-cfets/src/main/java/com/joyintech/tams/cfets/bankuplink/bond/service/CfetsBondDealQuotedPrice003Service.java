@@ -46,6 +46,7 @@ import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto;
 import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto;
@@ -665,7 +666,15 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
 	 */
 	@Override
 	public void doComplete(CfetsBondDealRequestQuoteDto entity, OperationType type) {
-        if(cfetsQuotedCommonServicevue.checkQuoteStatusChange(entity.getQuoteId(),entity.getTradeStatus())){
+	    String statusValid = null;
+        if(StringUtil.isEmptyList(isInWflProcess(entity.getQuoteId(),entity.getPageId(),null))){
+            statusValid = DictCodeListExt1.有效状态_流程中.getValue();
+        }else{
+            statusValid=DictCodeListExt1.有效状态_有效.getValue();
+        }
+        CfetsBondDealDialogueQuoteDto cetsBondDealDialogueQuoteDto = cfetsBondDealQuotedPrice002Service.getBondDialogueQuote(
+                entity.getQuoteId(), statusValid);
+        if(null!=cetsBondDealDialogueQuoteDto && !StringUtil.isEmpty(entity.getTradeStatus()) && !StringUtil.equals(cetsBondDealDialogueQuoteDto.getTradeStatus(),entity.getTradeStatus())){
             throw new BusinessException("MSG:报价状态已变更,无法审批!");
         }
 		// 历史报价撤销
