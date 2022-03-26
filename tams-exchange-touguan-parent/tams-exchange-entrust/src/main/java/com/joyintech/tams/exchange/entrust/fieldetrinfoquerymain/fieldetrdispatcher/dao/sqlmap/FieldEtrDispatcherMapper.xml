@@ -529,7 +529,7 @@
             eted.TRADER trader,
             ete.COUNTER_TRADER counterTrader,
             FPC.CON_SHARE_ID conId,
-            fp.FINPROD_NAME conName,
+            T5.FINPROD_NAME conName,
             eted.EXP_CON_VALUE expConValue, 
             eted.EXP_CON_NUM expConNum,
             eted.PREB preb,
@@ -562,6 +562,7 @@
         INNER JOIN ETR_ENTRUST_ADD eted ON ete.entrust_id = eted.entrust_id
         LEFT JOIN FIN_PRODUCT_TYPE_CONFIG btm ON ( ete.FINPROD_TYPE2 = btm.INPUT_VALUE_2 OR btm.INPUT_VALUE_2 IS NULL )
         LEFT JOIN FIN_PRODUCT_CONVERTIBLE FPC ON ete.FINPROD_ID = FPC.FINPROD_ID
+        LEFT JOIN FIN_PRODUCT T5 ON FPC.CON_FINPROD_ID = T5.FINPROD_ID
         LEFT JOIN PTL_PORTFOLIO pp ON ete.portfolio_id = pp.portfolio_id
         LEFT JOIN (
             SELECT EED.ENTRUST_ID,
@@ -662,7 +663,7 @@
         eted.TRADER trader,
         ete.COUNTER_TRADER counterTrader,
         FPC.CON_SHARE_ID conId,
-        fp.FINPROD_NAME conName,
+        T5.FINPROD_NAME conName,
         eted.EXP_CON_VALUE expConValue, 
         eted.EXP_CON_NUM expConNum,
         eted.PREB preb,
@@ -695,6 +696,7 @@
         INNER JOIN WFL_ETR_ENTRUST_ADD eted ON ete.entrust_id = eted.entrust_id
         LEFT JOIN FIN_PRODUCT_TYPE_CONFIG btm ON ( ete.FINPROD_TYPE2 = btm.INPUT_VALUE_2 OR btm.INPUT_VALUE_2 IS NULL )
         LEFT JOIN FIN_PRODUCT_CONVERTIBLE FPC ON ete.FINPROD_ID = FPC.FINPROD_ID
+        LEFT JOIN FIN_PRODUCT T5 ON FPC.CON_FINPROD_ID = T5.FINPROD_ID
         LEFT JOIN PTL_PORTFOLIO pp ON ete.portfolio_id = pp.portfolio_id
         LEFT JOIN (
             SELECT EED.ENTRUST_ID,
