@@ -367,8 +367,10 @@
         FROM
             FIN_PRODUCT_OTH_CODE
         WHERE
-            FINPROD_ID = #{finprodId,jdbcType=VARCHAR} AND
-            OTH_TYPE = #{othCodeType,jdbcType=VARCHAR}
+            FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+            <if test="othCodeType != null" >
+                AND OTH_TYPE = #{othCodeType,jdbcType=VARCHAR}
+            </if>
         ORDER BY DECLARED_START_DATE DESC
     </select>
 

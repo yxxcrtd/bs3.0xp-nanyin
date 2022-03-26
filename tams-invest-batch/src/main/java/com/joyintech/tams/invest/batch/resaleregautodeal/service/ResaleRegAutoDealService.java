@@ -48,8 +48,18 @@ public class ResaleRegAutoDealService {
     public void run(Date currentDate) throws BatchException {
         Map<String,Object> paramMap = new HashMap<String,Object>();
         paramMap.put("cdate", DateUtil.format(currentDate));
+        //先删除生成的数据应该
         List<String> totleTradeIds = resaleRegAutoDealMapper.listTotleTradeId(paramMap);
         if(CollectionUtils.isNotEmpty(totleTradeIds)){
+            //删除匹配信息表中的数据
+            totleTradeIds.forEach(e->{
+                resaleRegAutoDealMapper.deletePadeal(e);
+                resaleRegAutoDealMapper.deleteDealAdd(e);
+                resaleRegAutoDealMapper.deleteDeal(e);
+                resaleRegAutoDealMapper.deletePaDealTotal(e);
+                resaleRegAutoDealMapper.deleteDealTotal(e);
+                resaleRegAutoDealMapper.deleteMatchInfoByPreTradeId(e);
+            });
             paramMap.put("totleTradeIds",totleTradeIds);
             //调用页面自动成交确认
             try{

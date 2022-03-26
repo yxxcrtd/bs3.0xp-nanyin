@@ -336,28 +336,30 @@ public class PositionRequestTradeRestService {
             ptlList.add(map);
             resultMap.put(PTL_LIST, ptlList);
             // 组合配股/新股申购数据集	ptlRoList
-            if (DictCodeList.交易方向_上市流通.getValue().equals(ps)) {
-                List<Map<String, Object>> ptlRoList = new ArrayList<>();
-                bean = new PositionRequestBaseBean();
-                bean.setPortfolioId(dealAddEntity.getPortfolioId());
-                bean.setTradeId(dealEntity.getTradeId());
-                bean.setEtrId(entity.getEntrustId());
-                bean.setSecAcctId(dealEntity.getSecManageAcctId());
-                bean.setSecAmount(dealEntity.getShareAmt());
-                bean.setCashAcctId(accountNo);
-                // 配股/申购代码
-                bean.setFinprodId(getStockId(dealEntity.getFinprodId(), dealEntity.getFinprodType2(), dealEntity.getPs()));
-                bean.setCashAmount(dealEntity.getTradeAmt());
-                Map<String, Object> datamap = BeanUtil.object2Map(bean);
-                datamap.put("ownSecAmount", dealEntity.getShareAmt());
-                datamap.put("integrateSecAmount", new BigDecimal(0));
-                datamap.put("etrSecAmount",null);
-                datamap.put("ordId",null);
-                datamap.put("ordSecAmount",null);
-                datamap.put(ORD_ENTRUST_ID,null);
-                ptlRoList.add(datamap);
-                resultMap.put(PTL_RO_LIST, ptlRoList);
+            List<Map<String, Object>> ptlRoList = new ArrayList<>();
+            bean = new PositionRequestBaseBean();
+            bean.setPortfolioId(dealAddEntity.getPortfolioId());
+            bean.setTradeId(dealEntity.getTradeId());
+            bean.setEtrId(entity.getEntrustId());
+            bean.setSecAcctId(dealEntity.getSecManageAcctId());
+            bean.setSecAmount(dealEntity.getShareAmt());
+            bean.setCashAcctId(accountNo);
+            // 配股/申购代码
+            if(DictCodeList.交易方向_上市流通.getValue().equals(dealEntity.getPs())){
+                bean.setFinprodId(commonPositionService.getSsltStockId(dealEntity.getFinprodId(), dealEntity.getFinprodType2(), dealEntity.getPs()));
+            }else{
+                bean.setFinprodId(commonPositionService.getStockId(dealEntity.getFinprodId(), dealEntity.getFinprodType2(), dealEntity.getPs()));
             }
+            bean.setCashAmount(dealEntity.getTradeAmt());
+            Map<String, Object> datamap = BeanUtil.object2Map(bean);
+            datamap.put("ownSecAmount", dealEntity.getShareAmt());
+            datamap.put("integrateSecAmount", new BigDecimal(0));
+            datamap.put("etrSecAmount",null);
+            datamap.put("ordId",null);
+            datamap.put("ordSecAmount",null);
+            datamap.put(ORD_ENTRUST_ID,null);
+            ptlRoList.add(datamap);
+            resultMap.put(PTL_RO_LIST, ptlRoList);
         }
     }
 
@@ -557,7 +559,6 @@ public class PositionRequestTradeRestService {
         resultMap.put("decisionAct", DictCodeListExt3.系统动作_新建.getValue());
         resultMap.put("systemAct", DictCodeListExt3.系统动作_新建.getValue());
         resultMap.put("workFlowId", null);
-        resultMap.put("cdate", trdProductDeal.getTradeDate());
         resultMap.put("ccy", trdProductDeal.getCcy());
 
         List<Map<String, Object>> ptlCashList = new ArrayList<>(4);
@@ -592,7 +593,7 @@ public class PositionRequestTradeRestService {
         // 配债申购数据集
         Map<String, Object> applyBondSec = new HashMap<>();
         applyBondSec.put("portfolioId", trdProductDealAdd.getPortfolioId());
-        applyBondSec.put("finprodId", getStockId(trdProductDeal.getFinprodId(), trdProductDeal.getFinprodType2(), trdProductDeal.getPs()));
+        applyBondSec.put("finprodId", commonPositionService.getStockId(trdProductDeal.getFinprodId(), trdProductDeal.getFinprodType2(), trdProductDeal.getPs()));
         applyBondSec.put("secAcctId", trdProductDealTotal.getSecManageAcctId());
         applyBondSec.put("tradeId", trdProductDeal.getTradeId());
         applyBondSec.put("etrId", trdProductDealAdd1 != null ? trdProductDealAdd1.getEntrustId() : StringUtil.EMPTY);
@@ -600,7 +601,7 @@ public class PositionRequestTradeRestService {
         applyBondSec.put("ownSecAmount", ArithmeticUtil.multiply(trdProductDeal.getShareAmt(), new BigDecimal(100)));
         applyBondSec.put("secAmount", ArithmeticUtil.multiply(trdProductDeal.getShareAmt(), new BigDecimal(100)));
         applyBondSecList.add(applyBondSec);
-        resultMap.put("bondSecList", applyBondSecList);
+        resultMap.put("applyBondSecList", applyBondSecList);
     }
 
     /**
@@ -663,32 +664,4 @@ public class PositionRequestTradeRestService {
         }
     }
 
-    /**
-     * 获取申报代码
-     * @param finprodId
-     * @param ps
-     * @return
-     */
-    private String getStockId(String finprodId, String finprodType2, String ps){
-        // 查询申报信息
-        Map<String, Object> map = new HashMap<>();
-        map.put("finprodId", finprodId);
-        if(DictCodeList.交易方向_申购.getValue().equals(ps) && DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(finprodType2)){
-            map.put("othCodeType", DictCodeListExt3.金融产品其他代码类型_可转债信用申购代码.getValue());
-        }
-        else if(DictCodeList.交易方向_申购.getValue().equals(ps) && DictCodeListExt1.金融产品类型_投管用_股票.getValue().equals(finprodType2)){
-            map.put("othCodeType", DictCodeListExt3.金融产品其他代码类型_新股申购代码.getValue());
-        }
-        else if(DictCodeListExt3.交易方向_配债.getValue().equals(ps)){
-            map.put("othCodeType", DictCodeListExt3.金融产品其他代码类型_配债代码.getValue());
-        }
-        else if(DictCodeListExt2.交易方向_配股.getValue().equals(ps)){
-            map.put("othCodeType", DictCodeListExt3.金融产品其他代码类型_配股代码.getValue());
-        }
-        else if(DictCodeList.交易方向_上市流通.getValue().equals(ps)){
-            map.put("othCodeType", DictCodeListExt3.金融产品其他代码类型_上市流通代码.getValue());
-        }
-        FinProductOthCode finProductOthCode = commonPositionService.selectFinProductOthCode(map);
-        return finProductOthCode != null ? finProductOthCode.getOthCode() : StringUtil.EMPTY;
-    }
 }

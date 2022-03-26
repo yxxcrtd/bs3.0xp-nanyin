@@ -360,11 +360,11 @@ public class PositionHttpRequest {
      */
     public static void batchClose(Object req) throws PositionException{
         //
-        logger.info("发送头寸报文:"+JsonUtils.object2Json(req));
         //处理seqno
         Map<String,Object> params  =JsonUtils.stringToMap(JsonUtils.object2Json(req));
         Long seqno = (long) Arrays.deepHashCode(new Object[] { params.get("totalTradeId"), params.get("modelType"),new Date().getTime(),Thread.currentThread().getId() });
         params.put("seqno",seqno);
+        logger.info("发送头寸报文:"+JsonUtils.object2Json(params));
         String res = batchClosePrivate(params);
         logger.info("头寸返回数据:"+res);
         Map msgMap = JsonUtils.json2Object(res, Map.class);

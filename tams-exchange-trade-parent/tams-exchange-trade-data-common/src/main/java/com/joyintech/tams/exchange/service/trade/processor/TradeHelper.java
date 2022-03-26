@@ -212,6 +212,39 @@ public class TradeHelper {
         }
     }
 
+    /**
+     * 批量委托下单
+     */
+    public void handleBatchEntrust(EntrustInterface entrust, Instruction instruction, int msgType) {
+        //批量委托检查委托价格
+        checkPrice(entrust, instruction);
+
+        logger.info("准备通过风控：instruction {}  entrust {}", instruction.getEntrustId(), entrust.getId());
+        if (checkCommonParam(entrust.getFullPrice(), entrust.getEntrustPrice(), entrust.getEntrustVolume(), entrust, instruction)) {
+            //意向单无需进风控
+            if (EntrustUtils.isIntentionEntrust(entrust.getEntrustProp())) {
+                addEntrustToReceiver(entrust, instruction, msgType);
+            } else {
+                RiskOccupyBean riskOccupyBean = investRiskManagement.riskCheck(Arrays.asList(entrust));
+                if (Objects.isNull(riskOccupyBean) || RiskStatus.PASS.value.equals(riskOccupyBean.getRskStatus()) || RiskStatus.ALERT.value.equals(riskOccupyBean.getRskStatus())) {
+                    addEntrustToReceiver(entrust, instruction, msgType);
+                } else if (RiskStatus.NEED_APPROVE.value.equals(riskOccupyBean.getRskStatus())) {
+                    processRiskApprove(entrust, instruction, msgType);
+                } else {
+                    entrust.setEntrustStatus(EntrustStatus.NOT_RISK.value);
+                    entrust.setErrorMsg(riskOccupyBean.getMessage());
+                }
+            }
+        } else {
+            entrust.setEntrustStatus(EntrustStatus.SYSTEM_INVALID.value);
+        }
+        if (MsgType.REQ_ENTRUST == msgType) {
+            entrustService.asyncUpdate((Entrust) entrust);
+        } else {
+            integratedEntrustService.asyncUpdate((IntegratedEntrust) entrust);
+        }
+    }
+
     public void addEntrustToReceiver(EntrustInterface entrust, Instruction instruction, int msgType) {
         TradeAgent agent = tradeAgentManager.findAgentByAccountId(entrust.getAccountId());
         if (Objects.nonNull(agent)) {
@@ -483,6 +516,67 @@ public class TradeHelper {
             }
         }
         return true;
+    }
+
+    private void checkPrice(OrderInterface entrust, Instruction instruction) {
+        BigDecimal entrustPrice = entrust.getEntrustPrice();
+        BigDecimal price = instruction.getEntrustPrice();
+        //检查指令价格限定
+        if ((instruction.getPriceMode().equals(InstructionPriceMode.SPECIFIED.value) && !TradeUtils.equals(entrustPrice, price))
+                || (instruction.getPriceMode().equals(InstructionPriceMode.FIXED.value) && checkPriceFixed(entrust, price, entrustPrice))) {
+            logger.info("检查【指令价格限定】，指令价格：[{}]，委托价格：[{}]", price, entrustPrice);
+            entrust.setEntrustPrice(price);
+        }
+
+        QuoteProto.TickBean tick = quoteTickService.findFromRedisById(entrust.getStockCode());
+        if (Objects.nonNull(tick)) {
+            double lowerLimitPrice = TradeUtils.formatDouble(tick.getLowerLimitPrice(), 4);
+            double upperLimitPrice = TradeUtils.formatDouble(tick.getUpperLimitPrice(), 4);
+            if (InvestmentAssetType.STOCK.value.equals(entrust.getAssetType())) {
+                logger.info("检查【股票】涨停价格。。。");
+                fillEntrustPrice(entrust, lowerLimitPrice, upperLimitPrice, entrustPrice);
+            } else if (InvestmentAssetType.BOND.value.equals(entrust.getAssetType())) {
+                logger.info("检查【债券】涨停价格。。。");
+                fillEntrustPrice(entrust, lowerLimitPrice, upperLimitPrice, entrustPrice);
+//                boolean isFullPrice = false;
+//                Instrument instrument = instrumentService.queryByInnerCode(entrust.getStockCode());
+//                if (EntrustUtils.isFullPrice(instrument, entrust.getAssetType(), entrust.getEntrustProp(), entrust.getIsFullPrice())) {
+//                    isFullPrice = true;
+//                }
+//                if (isFullPrice) {
+//                    fillEntrustPrice(entrust, lowerLimitPrice, upperLimitPrice, entrust.getFullPrice());
+//                } else {
+//                    fillEntrustPrice(entrust, lowerLimitPrice, upperLimitPrice, entrustPrice);
+//                }
+            } else if (InvestmentAssetType.FUND.value.equals(entrust.getAssetType())) {
+                logger.info("检查【基金】涨停价格。。。");
+                fillEntrustPrice(entrust, lowerLimitPrice, upperLimitPrice, entrustPrice);
+            } else {
+                logger.info("检查涨停价格。。。");
+                fillEntrustPrice(entrust, lowerLimitPrice, upperLimitPrice, entrustPrice);
+            }
+        }
+    }
+
+    private void fillEntrustPrice(OrderInterface entrust, double lowerLimitPrice, double upperLimitPrice, BigDecimal price) {
+        if (entrust.getEntrustBs().equals(EntrustBs.SELL.value)) {
+            //卖出，委托价格不得低于跌停价
+            if (Double.compare(lowerLimitPrice, 0.0) > 0 && Double.compare(lowerLimitPrice, price.doubleValue()) > 0) {
+                logger.info("卖出，委托价格不得低于跌停价。跌停价：[" + lowerLimitPrice + "]，委托价格：[" + price + "]");
+                entrust.setEntrustPrice(TradeUtils.getBigDecimal(lowerLimitPrice, 4));
+            }
+        } else {
+            //买入，委托价格不得高于涨停价
+            if (Double.compare(upperLimitPrice, 0.0) > 0 && Double.compare(upperLimitPrice, price.doubleValue()) < 0) {
+                logger.info("买入，委托价格不得高于涨停价。涨停价：[" + upperLimitPrice + "]，委托价格：[" + price + "]");
+                entrust.setEntrustPrice(TradeUtils.getBigDecimal(upperLimitPrice, 4));
+            }
+        }
+    }
+
+    private boolean checkPriceFixed(OrderInterface order, BigDecimal fixedPrice, BigDecimal orderPrice) {
+        return order.getEntrustBs().equals(EntrustBs.SELL.value) && TradeUtils.bigThan(fixedPrice, orderPrice)
+                || order.getEntrustBs().equals(EntrustBs.BUY.value) && TradeUtils.lessThan(fixedPrice, orderPrice);
     }
 
     public void rollbackCancelStatus(EntrustInterface entrust) {
@@ -955,6 +1049,7 @@ public class TradeHelper {
         orderService.asyncUpdate(order);
         if (entrust.getEntrustVolume() > 0) {
             handleEntrust(entrust, instructionBean, Constants.PROCESS_TYPE_ENTRUST);
+//            handleBatchEntrust(entrust, instructionBean, Constants.PROCESS_TYPE_ENTRUST);
         }
     }
 
