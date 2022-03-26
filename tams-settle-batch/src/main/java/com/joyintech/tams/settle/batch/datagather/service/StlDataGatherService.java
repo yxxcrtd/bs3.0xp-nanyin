@@ -254,6 +254,11 @@ public class StlDataGatherService {
         List<TrdProductDealDto> productDealList = tradeWriteDto.getProductDealList();
 
         /**
+         * 金融产品交易附属表
+         */
+        List<TrdProductDealAdd> trdProductDealAddList = tradeWriteDto.getTrdProductDealAddList();
+
+        /**
          * 组合交易DTO
          */
         List<PtlTrade> ptlTradeList = tradeWriteDto.getPtlTradeList();
@@ -360,16 +365,24 @@ public class StlDataGatherService {
                 paTrdFinProductDealTotalMapper.insertSelective(paProductDealTotal);
             }
         }
-
+        Map<String, TrdProductDealAdd> trdProductDealAddMap = new HashMap<>();
+        if(CollectionUtils.isNotEmpty(trdProductDealAddList)) {
+            for(TrdProductDealAdd trdProductDealAdd : trdProductDealAddList){
+                trdProductDealAddMap.put(trdProductDealAdd.getTradeId(), trdProductDealAdd);
+            }
+        }
         Map<String, List<TrdProductDealDto>> dealMap = new HashMap<String, List<TrdProductDealDto>>();
         if(CollectionUtils.isNotEmpty(productDealList)) {
             dealMap = productDealList.stream().collect(Collectors.groupingBy(TrdProductDealDto::getTradeId));
             for (TrdProductDealDto productDealDto : productDealList) {
                 // 金融产品交易表
                 trdProductDealMapper.insertSelective(productDealDto);
-                // 金融产品交易扩展表
-                TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
-                BeanUtil.copyProperties(trdProductDealAdd, productDealDto);
+                TrdProductDealAdd trdProductDealAdd = trdProductDealAddMap.get(productDealDto.getTradeId());
+                if(trdProductDealAdd == null){
+                    // 金融产品交易扩展表
+                    trdProductDealAdd = new TrdProductDealAdd();
+                    BeanUtil.copyProperties(trdProductDealAdd, productDealDto);
+                }
                 // 申购模式
                 if ((DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(productDealDto.getFinprodType2()))
                         && DictCodeList.交易方向_申购确认.getValue().equals(productDealDto.getPs())) {

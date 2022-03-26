@@ -732,7 +732,6 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
             List<Map<String, Object>> ptlRoList = new ArrayList<>();
             bean = new PositionRequestBaseBean();
             bean.setPortfolioId(trdProductDealAdd.getPortfolioId());
-            bean.setFinprodId(dealEntity.getFinprodId());
             bean.setTradeId(dealEntity.getTradeId());
             bean.setEtrId(trdProductDealAdd.getEntrustId());
             bean.setSecAcctId(dealEntity.getSecManageAcctId());
