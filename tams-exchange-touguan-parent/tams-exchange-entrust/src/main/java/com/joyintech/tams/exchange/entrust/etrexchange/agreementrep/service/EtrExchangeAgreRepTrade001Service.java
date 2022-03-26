@@ -2518,4 +2518,23 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
         etrEntrustBackupMapper.deleteAddByPrimaryKey(entrustId);
         etrEntrustBackupMapper.deleteDetailByPrimaryKey(entrustId);
     }
+
+    /**
+     * 判断是否已经存在提前购回、到期购回、到期续作、解除质押的指令
+     * @param ps 交易方向
+     * @param initTradeId 首期成交编号
+     * @return 是否已经存在提前购回、到期购回、到期续作、解除质押的指令
+     */
+    public boolean isAlreadyDoEntrust(String ps, String initTradeId) {
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("ps", ps);
+        paramMap.put("initTradeId", initTradeId);
+
+        int count = etrExchangeAgreRepTradeMapper.selectDoneEtrEntrustCount(paramMap);
+        if (count > 0) {
+            return true;
+        }
+
+        return false;
+    }
 }

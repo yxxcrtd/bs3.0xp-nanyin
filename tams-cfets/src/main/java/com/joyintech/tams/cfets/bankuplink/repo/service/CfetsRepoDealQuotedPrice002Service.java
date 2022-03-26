@@ -1014,12 +1014,50 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         // 发头寸
         String systemAct = this.handSystemAct(entity);
         this.sendPositionMethod(entity, DictCodeListExt3.流程节点_流程提交.getValue(), systemAct, systemAct, null);
-        if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
+        if (this.isUpdatePosition(entity)) {
             com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice001Dto dto
                     = this.investDto2ServiceDto(entity);
             dto.setIsExistNew(DictCodeList.是否_是.getValue());
             oldCfetsRepoDealQuotedPrice001Service.doInsetOrUpdateForPtlPositionHold(dto);
         }
+    }
+
+    /**
+     * 判断是否要做持仓变更
+     *
+     * @param entity
+     * @return boolean
+     * @author jiangpeng
+     * @date 2022/3/25 10:38
+     */
+    private boolean isUpdatePosition(CfetsRepoDealQuotedPrice001Dto entity) {
+        boolean result = this.isUpdatePosition(entity.getQuotaPageModel(),entity.getOperatorType());
+        if (!StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
+            result = false;
+        }
+        return result;
+    }
+
+    /**
+     * 判断是否要做持仓变更
+     *
+     * @param entity
+     * @return boolean
+     * @author jiangpeng
+     * @date 2022/3/25 10:38
+     */
+    private boolean isUpdatePosition(String quotaPageModel,String operatorType) {
+        boolean result = false;
+        if (StringUtil.equals(quotaPageModel, "new")) {
+            result = true;
+        }
+        if (StringUtil.equals(quotaPageModel, "edit")) {
+            result = true;
+        }
+        if (StringUtil.equals(quotaPageModel, "dialogueResponse") && StringUtil.equals(operatorType, "done")) {
+            result = true;
+        }
+        return result;
     }
 
 
@@ -1067,7 +1105,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
                     WorkFlowUtil.showMessage(message.getMessage(), MessageType.错误消息);
                 }
             }
-            if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
+            if (this.isUpdatePosition(entity)) {
                 com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice001Dto dto
                         = this.investDto2ServiceDto(entity);
                 dto.setIsExistNew(DictCodeList.是否_是.getValue());
@@ -1120,7 +1158,8 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             param.put("pageWflType", "REPO");
             cfetsBondDealQuotedPriceService.doDeletePtlPositionHold(param);
             //退回操作重新占用该条报价单之前的
-            if (StringUtil.isNotEmpty(entity.getQuoteId())) {
+            if (StringUtil.isNotEmpty(entity.getQuoteId())
+                    && this.isUpdatePosition(entity)) {
                 CfetsRepoDealQuotedPrice001Dto cfetsRepoDealQuotedPrice001Dto = new CfetsRepoDealQuotedPrice001Dto();
                 cfetsRepoDealQuotedPrice001Dto.setQuoteId(entity.getQuoteId());
                 cfetsRepoDealQuotedPrice001Dto.setIsDzh(DictCodeList.是否_是.getValue());
@@ -1443,7 +1482,7 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
         ibuComponentCommonService.restoreDayOff(param);
         com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice001Dto cfetsRepoDealQuotedPrice001Dto =
                 JSON.parseObject(JSON.toJSONString(param), com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice001Dto.class);
-        if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
+        if (this.isUpdatePosition(quotaPageModel, operation)) {
             cfetsRepoDealQuotedPrice001Dto.setIsExistNew(DictCodeList.是否_是.getValue());
             oldCfetsRepoDealQuotedPrice001Service.doInsetOrUpdateForPtlPositionHold(cfetsRepoDealQuotedPrice001Dto);
         }

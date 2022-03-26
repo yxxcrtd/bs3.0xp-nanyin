@@ -310,7 +310,7 @@ public class PositionRequestServiceInstructionRequest {
                         || 交易方向_质押券出库.getValue().equals(entity.getPs())) {
                     map.put("cashAmount", null);//出入库时，可以为空
                     Map<String, Object> params = new HashMap<>();
-                    params.put("finprodId",entity.getFinprodId());
+                    params.put("finprodId", entity.getFinprodId());
                     BigDecimal faceValue = etrTradeOtherCommonService.selectFaceValue(params);
                     // 标准券总额=质押券数量*折算率*最新面值
                     map.put(STANDARD_SEC_AMOUNT, item.getEntrustAmt().multiply(faceValue));
@@ -400,6 +400,7 @@ public class PositionRequestServiceInstructionRequest {
             // IF 回购类型 = 逆回购  and 成交编号找不到对应的首期 THEN 指令.到期续作金额
             // IF 回购类型 = 逆回购  and 成交编号找到对应的首期 THEN  指令.到期续作金额 - 指令.首期的到期结算金额"
             BigDecimal firstTradeAmt = etrTradeCommonervice.getFirstTradeAmt(entity.getTrdMatchId());
+            log.info("首期的到期结算金额 firstTradeAmt={}", firstTradeAmt);
             bean.setCashAmount(entity.getmTradeAmt().subtract(firstTradeAmt));
 
             Map<String, Object> map = BeanUtil.object2Map(bean);
