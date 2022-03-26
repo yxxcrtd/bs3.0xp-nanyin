@@ -193,7 +193,7 @@ public class InvestDealRevokeService {
         Map<String, Object> param = createCommonParam(tradeDate, portfolioIdList);
 //        param.put("busiType", DictCodeList.共通业务类型_质押式回购存续期.getValue());
         param.put("psDurList", Arrays.asList(DictCodeList.交易方向_到期续做.getValue(), DictCodeList.交易方向_到期.getValue()
-                , DictCodeListExt3.交易方向_投资端_提前终止.getValue(),DictCodeListExt3.交易方向_中途换券.getValue()
+                , DictCodeListExt3.交易方向_投资端_提前终止.getValue(),DictCodeListExt3.交易方向_中途换券.getValue(),DictCodeListExt3.交易方向_解除质押.getValue()
                 ,DictCodeList.交易方向_收息到账.getValue(),DictCodeList.交易方向_还本到账.getValue()));
         param.put("tgBusiTypeList",Arrays.asList(DictCodeListExt3.平安业务类型_债券质押式逆回购.getValue(),DictCodeListExt3.平安业务类型_债券质押式正回购.getValue()
                 ,DictCodeListExt1.平安业务类型_正回购到期.getValue(),DictCodeListExt1.平安业务类型_逆回购到期.getValue()));

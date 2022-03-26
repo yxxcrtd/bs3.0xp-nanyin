@@ -299,6 +299,7 @@ public class PositionHttpRequest {
         bm.put("seqno",seqno);
         logger.info("发送头寸报文:"+JsonUtils.object2Json(bm));
         String res = revoke(bm);
+        logger.info("头寸返回数据:"+res);
         Map msgMap = JsonUtils.json2Object(res, Map.class);
         if(msgMap == null){
             throw new PositionException("头寸返回数据为空！");

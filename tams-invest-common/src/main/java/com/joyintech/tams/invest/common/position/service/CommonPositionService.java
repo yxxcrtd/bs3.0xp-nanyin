@@ -652,7 +652,11 @@ public class CommonPositionService {
 	}
 
 	public FinProductOthCode selectFinProductOthCode(Map<String, Object> map){
-		return commonPtlPositionMapper.selectFinProductOthCode(map);
+		List<FinProductOthCode> finProductOthCodes =  commonPtlPositionMapper.selectFinProductOthCodes(map);
+		if(CollectionUtils.isNotEmpty(finProductOthCodes)){
+			return finProductOthCodes.get(0);
+		}
+		return null;
 	}
 
 	public FinProductQuto selectFinProductQuto(Map<String, Object> map){

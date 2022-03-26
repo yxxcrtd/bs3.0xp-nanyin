@@ -183,4 +183,11 @@ public interface ExchangeTransMatchCommonMapper {
      * @return
      */
     List<FinDealPledge> getFinDealPledge(@Param("tradeId") String tradeId);
+
+    /**
+     * 金融产品交易表
+     * @param finprodId
+     * @return
+     */
+    FinTradeProduct getFinTradeProduct(@Param("finprodId") String finprodId);
 }

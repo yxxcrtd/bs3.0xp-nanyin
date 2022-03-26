@@ -77,7 +77,7 @@ public interface CommonPtlPositionMapper {
 	String selectHoldInvAim(Map<String, Object> param);
 	// add by etliu 20220116 end
 
-	FinProductOthCode selectFinProductOthCode(Map<String, Object> map);
+	List<FinProductOthCode> selectFinProductOthCodes(Map<String, Object> map);
 
 	FinProductQuto selectFinProductQuto(Map<String, Object> map);
 
