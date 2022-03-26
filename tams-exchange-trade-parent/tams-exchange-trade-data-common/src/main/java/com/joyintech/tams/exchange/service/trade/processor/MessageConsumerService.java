@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
 import com.joyintech.framework.rabbitmq.entity.SimpleRabbitMessage;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.redis.core.base.PipeReadService;
 import com.joyintech.redis.core.data.RedisHash;
 import com.joyintech.tams.exchange.common.bean.investment.EntrustOpeBean;
@@ -95,6 +96,26 @@ public class MessageConsumerService {
             logger.warn("receive or handle rabbitMessage error {}", e);
         }
     }
+    
+    public void processInstructionsPortfolio(List<Instruction> instructionEtrEntrustList, List<InstructionDetail> detailList) {
+    	for(Instruction instruction:instructionEtrEntrustList) {
+    		if("02".equals(instruction.getEntrustClass())) {
+    			String portfolioId = "";
+    			String portfolioName = "";
+    			for(InstructionDetail instructionDetail:detailList) {
+    				if(StringUtil.isNotEmpty(portfolioId)) {
+    					portfolioId = portfolioId+","+instructionDetail.getPortfolioId();
+    					portfolioName = portfolioName+","+instructionDetail.getPortfolioId();
+    				}else {
+    					portfolioId = instructionDetail.getPortfolioId();
+    					portfolioName = instructionDetail.getPortfolioName();
+    				}
+    			}
+    			instruction.setPortfolioId(portfolioId);
+    			instruction.setPortfolioName(portfolioName);
+    		}
+    	}
+    }
 
     public void processInstructions(List<Instruction> instructionEtrEntrustList, Set<String> instructionPledgeIdSet, Set<String> instructionDetailIdSet) {
         List<Instruction> instructionList = new ArrayList<>();
@@ -106,9 +127,9 @@ public class MessageConsumerService {
         Map<String, Set<String>> instructionTraderMap = new HashMap<>();
         List<EntrustOpeBean> entrustList = new ArrayList<>();
         if (instructionEtrEntrustList.size() > 0) {
-            //非交易业务指令，设置交易平台为 沪深竞价撮合平台
             instructionEtrEntrustList.forEach(instruction -> {
                 String entrustBussType = instruction.getEntrustBussType();
+                //非交易业务指令，设置交易平台为 沪深竞价撮合平台
                 if (EntrustBussTypeEnum.BOND_REPURCHASE.value.equals(entrustBussType)
                         || EntrustBussTypeEnum.ALLOTMENT_DEBT.value.equals(entrustBussType)
                         || EntrustBussTypeEnum.CONVERTIBLE_BOND_SUBSCRIPTION.value.equals(entrustBussType)
