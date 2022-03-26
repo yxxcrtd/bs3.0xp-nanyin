@@ -2082,7 +2082,7 @@
                     $("#entrustNum_label_" + currentTab).text("指令数量").append($star.clone());
                     $("#entrustAmt_label_" + currentTab).text("标准券数量").append($star.clone());
 
-                    var entrustAmt = $("#entrustAmt_" + currentTab).val();
+                    var entrustAmt = $("#standardBondVolume_" + currentTab).val();
                     $("#entrustAmt_" + currentTab).val(Math.floor(new Number(entrustAmt)));
 
                     $("#entrustPriceUnit_" + currentTab).text("%");
@@ -2095,7 +2095,7 @@
                     $("#entrustNum_label_" + currentTab).text("标准券数量").append($star.clone());
                     $("#entrustAmt_label_" + currentTab).text("回购金额").append($star.clone());
 
-                    var entrustAmt = $("#entrustAmt_" + currentTab).val();
+                    var entrustAmt = $("#standardBondVolume_" + currentTab).val();
                     $("#entrustAmt_" + currentTab).val(Math.floor(new Number(entrustAmt)));
 
                     $("#entrustPriceUnit_" + currentTab).text("%");
