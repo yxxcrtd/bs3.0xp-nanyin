@@ -211,6 +211,19 @@ public class PositionHttpRequest {
         // 页面端根据异常信息返回前端
         throw new PositionException(errorMsg);
     }
+    
+    public static void sendRevoke(String revokeId, String modelType, String errorMsg){
+        BaseMap bm = BaseMap.newMap()
+                .put("revokeId", revokeId)
+                .put("modelType", modelType)
+                .put("userId", LoginUserUtil.getUserName());
+        logger.info("发送头寸报文:"+JsonUtils.object2Json(bm));
+        try {
+            roll(bm);
+        } catch (Exception e) {
+            errorMsg += "\n" + e.getMessage();
+        }
+    }
 //    public static void deleteMethod(String totalId, String modelType,String interfaceType) throws PositionException{
 //        //
 //        BaseMap bm = BaseMap.newMap()
