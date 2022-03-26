@@ -29,6 +29,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDispatcherService;
 import com.joyintech.system.base.entity.SysUser;
+import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.dao.FinDealPledgeMapper;
 import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
@@ -600,6 +601,7 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
         param.put("pageMode", request.getPageMode());
         param.put("portfolioIdList", request.getPortfolioIdList());
         param.put("zyj", request.getZyj());
+        param.put("search_isNumberFlag", BaseMap.isNumeric(request.getKeywords()));
         Page<EtrExchangeAgreRepTrade003Dto> page =  super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(), () -> etrExchangeAgreRepTradeMapper.selectEtrEntrust(param));
 
         List<SysUser> userList = restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EntrustCommon/getAllUserList",
