@@ -430,10 +430,6 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                         baseEtrCashPositionCommService.entrustCloseExecute(dto.getEntrustId(),DictCodeList.是否_是.getValue());
                     }
                 }
-                Map<String, Object> param = new HashMap<>();
-                param.put("entrustId", dto.getEntrustId());
-                doDeleteEtrFlowMethod(param);
-                backReRoll(dto.getEntrustId());
             }
         }
     }
@@ -1246,11 +1242,11 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                     param.put("entrustId", dto.getEntrustId());
                     doDeleteEtrFlowMethod(param);
                     //从废弃表中获取，转移到指令表
-//                    etrEntrustBackupMapper.insertEtrFromQuery(dto.getEntrustId());
-//                    etrEntrustBackupMapper.insertEtrAddFromQuery(dto.getEntrustId());
-//                    // 删除废弃表
-//                    etrEntrustBackupMapper.deleteByPrimaryKey(dto.getEntrustId());
-//                    etrEntrustBackupMapper.deleteAddByPrimaryKey(dto.getEntrustId());
+                    etrEntrustBackupMapper.insertEtrFromQuery(dto.getEntrustId());
+                    etrEntrustBackupMapper.insertEtrAddFromQuery(dto.getEntrustId());
+                    // 删除废弃表
+                    etrEntrustBackupMapper.deleteByPrimaryKey(dto.getEntrustId());
+                    etrEntrustBackupMapper.deleteAddByPrimaryKey(dto.getEntrustId());
                 }
 
             }

@@ -393,14 +393,14 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
         CfetsEtribRepoInfo003Dto entity = getBussinessEntityByWorkflowId(workflowId);
         WFlowCommonService.doCompleteFlow(entity.getWorkflowId());
         if (CollectionUtils.isNotEmpty(entity.getEtrInvestRepoInfoDtos())) {
-//            for (CfetsEtribRepoInfo003Dto dto : entity.getEtrInvestRepoInfoDtos()) {
-//                //从废弃表中获取，转移到指令表
-//                etrEntrustBackupMapper.insertEtrFromQuery(dto.getEntrustId());
-//                etrEntrustBackupMapper.insertEtrAddFromQuery(dto.getEntrustId());
-//                // 删除废弃表
-//                etrEntrustBackupMapper.deleteByPrimaryKey(dto.getEntrustId());
-//                etrEntrustBackupMapper.deleteAddByPrimaryKey(dto.getEntrustId());
-//            }
+            for (CfetsEtribRepoInfo003Dto dto : entity.getEtrInvestRepoInfoDtos()) {
+                //从废弃表中获取，转移到指令表
+                etrEntrustBackupMapper.insertEtrFromQuery(dto.getEntrustId());
+                etrEntrustBackupMapper.insertEtrAddFromQuery(dto.getEntrustId());
+                // 删除废弃表
+                etrEntrustBackupMapper.deleteByPrimaryKey(dto.getEntrustId());
+                etrEntrustBackupMapper.deleteAddByPrimaryKey(dto.getEntrustId());
+            }
         }
         ProcessMark processMark = mstWorkflowCommonServiceMapperImpl.getBusinessInfo(workflowId);
         if (StringUtil.isNotEmpty(processMark)
@@ -450,7 +450,6 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
     @Override
     public void doBack(CfetsEtribRepoInfo003Dto entity) {
         for (CfetsEtribRepoInfo003Dto dto : entity.getEtrInvestRepoInfoDtos()) {
-            backReRoll(dto.getEntrustId());
             if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
                 AllTradeCommonUtil.deletePosition(null, dto.getEntrustId());
             }
