@@ -127,9 +127,10 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest extends 
 
         PositionRequestBaseBean bean;
 
-        // 首期组合现金数据集
+        // 首期组合现金数据集，IF 交易方向 = 正回购、逆回购、提前购回、到期购回、解除质押 传值 否则为空
         String ps = entity.getPs();
-        if (交易方向_首期.getValue().equals(ps)
+        if (交易方向_正回购.getValue().equals(ps)
+                || 交易方向_逆回购.getValue().equals(ps)
                 || 交易方向_提前购回.getValue().equals(ps)
                 || 交易方向_到期购回.getValue().equals(ps)
                 || 交易方向_解除质押.getValue().equals(ps)) {
@@ -146,7 +147,14 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest extends 
             bean.setTradeId(null);
             bean.setEtrId(entity.getEntrustId());
             // 交易金额
-            bean.setCashAmount(entity.getTradeAmt());
+            // 交易方向= 首期 取回购金额，其他取到期结算金额
+            if (交易方向_提前购回.getValue().equals(ps)
+                    || 交易方向_到期购回.getValue().equals(ps)
+                    || 交易方向_解除质押.getValue().equals(ps)) {
+                bean.setCashAmount(entity.getExpireSettleAmt());
+            } else {
+                bean.setCashAmount(entity.getTradeAmt());
+            }
             Map<String, Object> map = BeanUtil.object2Map(bean);
             list.add(map);
             resultMap.put("ptlCashList", list);
@@ -162,9 +170,11 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest extends 
             bean.setEtrId(entity.getEntrustId());
 
             String tradeId = StringUtil.isEmpty(entity.getIntiTradeId()) ? entity.getTradeId() : entity.getIntiTradeId();
+            //首期的到期结算金额
             BigDecimal firstTradeAmt = etrTradeCommonervice.getFirstTradeAmt(tradeId);
             BigDecimal tradeAmt = entity.getTradeAmt();
-            // IF 回购类型 = 正回购 THEN 指令.到期续作金额 - 指令.首期的到期结算金额
+            log.info("轧差组合现金数据集:到期续作金额 tradeAmt={}，首期的到期结算金额 firstTradeAmt={}", tradeAmt, firstTradeAmt);
+            //IF 回购类型 = 正回购 THEN 指令.到期续作金额 - 指令.首期的到期结算金额
             //IF 回购类型 = 逆回购  and 成交编号找不到对应的首期 THEN 指令.到期续作金额
             //IF 回购类型 = 逆回购  and 成交编号找到对应的首期 THEN  指令.到期续作金额 - 指令.首期的到期结算金额
             bean.setCashAmount(tradeAmt.subtract(firstTradeAmt));
@@ -177,7 +187,7 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest extends 
         // 质押券数据集
         // IF 交易方向 = 首期、（中途换券换入） and 回购类型 = 正回购 THEN 传值 ELSE 空
         if (交易方向_正回购.getValue().equals(repPs)
-                && (交易方向_首期.getValue().equals(ps) || 交易方向_中途换券.getValue().equals(ps))) {
+                && (交易方向_正回购.getValue().equals(ps) || 交易方向_中途换券.getValue().equals(ps))) {
             List<Map<String, Object>> list = new ArrayList<>(1);
             bean = new PositionRequestBaseBean();
             bean.setPortfolioId(entity.getPortfolioId());
@@ -188,15 +198,14 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest extends 
             // 券面总额 指令.质押券数量*100
             bean.setSecAmount(entity.getRepSecNum().multiply(BigDecimal.valueOf(100L)));
 
-            if (交易方向_正回购.getValue().equals(repPs)
-                    && 交易方向_中途换券.getValue().equals(ps)) {
+            if (交易方向_正回购.getValue().equals(repPs) && 交易方向_中途换券.getValue().equals(ps)) {
                 bean.setFinprodId(entity.getNewfinprodId());
                 bean.setSecAmount(entity.getNewRepSecNum().multiply(BigDecimal.valueOf(100L)));
             }
 
             Map<String, Object> map = BeanUtil.object2Map(bean);
             //融入券券面总额
-            map.put("integrateSecAmount", null);
+            map.put("integrateSecAmount", BigDecimal.ZERO);
             //本方券券面总额 指令.质押券数量*100
             map.put("ownSecAmount", bean.getSecAmount());
 
@@ -205,11 +214,13 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest extends 
         }
 
         // 解除质押券数据集
-        // IF 交易方向 = 解除质押、到期续作、中途换券换出 and 回购类型 = 正回购 THEN 传值 ELSE 空 END IF
+        // IF 交易方向 = 交易方向 = 解除质押、到期续作、中途换券换出、到期购回、提前购回 and 回购类型 = 正回购  THEN 传值 ELSE 空 END IF
         if (交易方向_正回购.getValue().equals(repPs)
                 && (交易方向_解除质押.getValue().equals(ps)
                 || 交易方向_到期续做.getValue().equals(ps)
-                || 交易方向_中途换券.getValue().equals(ps))) {
+                || 交易方向_中途换券.getValue().equals(ps)
+                || 交易方向_到期购回.getValue().equals(ps)
+                || 交易方向_提前购回.getValue().equals(ps))) {
             List<Map<String, Object>> list = new ArrayList<>(1);
             bean = new PositionRequestBaseBean();
             bean.setPortfolioId(entity.getPortfolioId());

@@ -788,7 +788,7 @@ public class EtrTradeCommonervice extends BaseService {
 
 
     /**
-     * 到期续作使用原始的回购金额
+     * 到期续作使用原始到期结算金额
      */
     public BigDecimal getFirstTradeAmt(String tradeId) {
         //获得初始回购金额
@@ -799,7 +799,7 @@ public class EtrTradeCommonervice extends BaseService {
         log.debug("调用接口查询首期回购 url = [{}], request = [{}], response = [{}]", url,
                 JsonUtils.object2Json(map), JsonUtils.object2Json(result));
         if (!StringUtil.isEmptyList(result)) {
-            return result.get(0).getTradeAmt();
+            return result.get(0).getExpireSettleAmt();
         }
 
         return BigDecimal.ZERO;
