@@ -354,14 +354,16 @@
             A.PORTFOLIO_ID AS PORTFOLIO_ID ,
             A.SEC_ACCT_ID  AS SEC_ACCT_ID ,
             A.FINPROD_ID AS FINPROD_ID,
-            SUM(A.AMOUNT) AMOUNT
+            SUM(A.AMOUNT) AMOUNT,
+            SUM(A.ptlPositionsNum) ptlPositionsNum
             from(
                     SELECT
                         PSP.CDATE        AS CDATE,
                         PSP.PORTFOLIO_ID AS PORTFOLIO_ID ,
                         PSP.SEC_ACCT_ID  AS SEC_ACCT_ID ,
                         PSP.FINPROD_ID AS FINPROD_ID,
-                        SUM(PSP.AMOUNT) AMOUNT
+                        SUM(PSP.AMOUNT) AMOUNT,
+                        0 as ptlPositionsNum
                     FROM
                       PTL_SEC_POSITION_RULE PSP
                     INNER JOIN
@@ -390,7 +392,8 @@
                         ETRPSP.PORTFOLIO_ID AS PORTFOLIO_ID ,
                         ETRPSP.SEC_ACCT_ID  AS SEC_ACCT_ID ,
                         ETRPSP.FINPROD_ID,
-                         0 AS AMOUNT
+                        0 AS AMOUNT,
+                        SUM(ETRPSP.AMOUNT) as ptlPositionsNum
                         FROM
                         ETR_SEC_POSITION_RULE ETRPSP
                         INNER JOIN
