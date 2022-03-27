@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.joyintech.tams.svreport.interf.chb.assetbasis.dao.ChbAssetBasisInterfMapper_mysql" >
+<mapper namespace="com.joyintech.tams.svreport.interf.chb.assetbasis.dao.ChbAssetBasisInterfMapper_mysql">
 	<resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbAssetsBasisData" >
 		<id column="VAL_ID" property="valId" jdbcType="CHAR" />
 		<result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
@@ -34,14 +34,14 @@
     UPDATE_USER, STATUS, DATA_SOURCE,MD5PrimaryKey
   </sql>
 	<select id="getTableColumnList" resultType="string">
-		select COLUMN_NAME
-		from user_tab_columns
+	    select
+	       distinct COLUMN_NAME
+	    from information_schema.columns
 		where Table_Name = #{tableName,jdbcType=VARCHAR}
 	</select>
 	<delete id="deleteData" parameterType="com.joyintech.tams.common.base.entity.ChbAssetsBasisData">
 		delete from CHB_ASSETS_BASIS_DATA
 		where  1=1
-		and DATA_SOURCE = '16'/*为避免误删除业务数据维护导入的数据，增加此条件*/
 		<if test="valueDate != null" >
 			and value_date = #{valueDate,jdbcType=DATE}
 		</if>
@@ -403,13 +403,11 @@
 		) de ;
 	</insert>
 	<delete id="deleteBatchList" >
-		begin
 		<foreach collection="dataList" item="item" index="index" separator=";">
 			delete from CHB_ASSETS_BASIS_DATA
 			where ASSET_ID = #{item.assetId,jdbcType=VARCHAR}  and VALUE_DATE = #{item.valueDate,jdbcType=TIMESTAMP}
 			and PROD_ID = #{item.prodId,jdbcType=VARCHAR}
 		</foreach>
-		;end;
 	</delete>
 
 
@@ -423,21 +421,21 @@
 
 	<select id="selectByValuedate" parameterType="java.lang.String" resultMap="BaseResultMap"
 			resultSetType="FORWARD_ONLY" fetchSize="1000">
-	  select * from (
-	  select aa.PROD_ID,aa.ASSET_ID,aa.VALUE_DATE,aa.MDATE,aa.ccy,sum(aa.POS_AMT) POS_AMT,
-	  sum(aa.TDY_COST_AMT) TDY_COST_AMT,
-	  sum(aa.TDY_FLOAT_INGPL) TDY_FLOAT_INGPL,
-	  sum(aa.TDY_INTINCEXP) TDY_INTINCEXP,
-	  sum(aa.DELAY_PAY_AMT) DELAY_PAY_AMT,
-	  max(aa.UPDATE_TIME) UPDATE_TIME,
-	  max(aa.CREATE_TIME) CREATE_TIME
-	  from (
-	  select
-	  psv1.PROD_ID as PROD_ID,
-	  psv1.FINPROD_ID as ASSET_ID,
-	  psv1.ccy,
+  select * from (
+					select aa.PROD_ID,aa.ASSET_ID,aa.VALUE_DATE,aa.MDATE,aa.ccy,sum(aa.POS_AMT) POS_AMT,
+						   sum(aa.TDY_COST_AMT) TDY_COST_AMT,
+						   sum(aa.TDY_FLOAT_INGPL) TDY_FLOAT_INGPL,
+						   sum(aa.TDY_INTINCEXP) TDY_INTINCEXP,
+						   sum(aa.DELAY_PAY_AMT) DELAY_PAY_AMT,
+						   max(aa.UPDATE_TIME) UPDATE_TIME,
+						   max(aa.CREATE_TIME) CREATE_TIME
+					from (
+  select
+    psv1.PROD_ID as PROD_ID,
+    psv1.FINPROD_ID  as ASSET_ID,
+    psv1.ccy,
 	  psv1.VALUE_DATE as VALUE_DATE,
-	  ifnull(fp1.MDATE,fp2.MDATE) as MDATE,
+    ifnull(fp1.MDATE,fp2.MDATE) as MDATE,
 	  sum(psv1.POS_AMT) as POS_AMT,
 	  sum(psv1.TDY_COST_AMT) as TDY_COST_AMT,
 	  sum(psv1.TDY_FLOAT_INGPL) as TDY_FLOAT_INGPL,
@@ -446,109 +444,108 @@
 	  -- psv.DELAY_PAY_AMT as DELAY_PAY_AMT,
 	  max(psv1.UPDATE_TIME) UPDATE_TIME,
 	  max(psv1.CREATE_TIME) CREATE_TIME
-	  from (
-	  select
+
+from (
+select
 	  psv.PORTFOLIO_ID as PROD_ID,
 	  ifnull(ifnull(fpf.FINPROD_MARKET_ID,fp.FINPROD_MARKET_ID), fp2.FINPROD_ID) as FINPROD_ID,
 	  psv.ccy,
 	  psv.CDATE as VALUE_DATE,
-	  (case fp.finprod_type when 'F01' then 100*psv.SHARE_AMT else psv.SHARE_AMT end)as POS_AMT,
+	  (case fp.finprod_type when 'F01' then 100*psv.SHARE_AMT else psv.SHARE_AMT end) as POS_AMT,
 	  psv.DSC_COST_AMT as TDY_COST_AMT,
 	  psv.TDY_FLOAT_INGPL as TDY_FLOAT_INGPL,
 	  psv.TDY_INTINCEXP as TDY_INTINCEXP,
 	  psv.DELAY_PAY_AMT as DELAY_PAY_AMT,
 	  ifnull(psv.UPDATE_TIME,psv.CREATE_TIME) UPDATE_TIME,
 	  ifnull(psv.CREATE_TIME,psv.UPDATE_TIME) CREATE_TIME
-	  from PTL_SEC_VALUTION psv
-	  left join FIN_PRODUCT fp on fp.FINPROD_ID = psv.FINPROD_ID
-	  left join FIN_PRODUCT fpf on fpf.FINPROD_ID = fp.P_FINPROD_ID
-	  left join FIN_TRADE_PRODUCT fp2 on fp2.FINPROD_ID = psv.FINPROD_ID and fp2.branch = 0
-	  where DATE_FORMAT(CDATE,'%Y-%m-%d')= #{batchTime,jdbcType=VARCHAR}
-	  and (fp.IS_CHL !='Y' or fp.IS_CHL is null)
-	  and exists(
-	  select 1
-	  from FIN_PRODUCT_ADD fp3
-	  where fp3.PORTFOLIO_ID = psv.PORTFOLIO_ID)
-	  ) psv1
-	  left join FIN_PRODUCT fp1 on fp1.FINPROD_MARKET_ID = psv1.FINPROD_ID
-	  left join FIN_TRADE_PRODUCT fp2 on fp2.FINPROD_ID = psv1.FINPROD_ID and fp2.branch = 0
-	  group by psv1.PROD_ID,fp1.FINPROD_MARKET_ID,psv1.VALUE_DATE,fp1.MDATE,fp2.MDATE,psv1.FINPROD_ID,psv1.ccy
-	  union
-	  select unqixi.PROD_ID,
-	  unqixi.ASSET_ID,
-	  unqixi.ccy,
-	  unqixi.VALUE_DATE,
-	  unqixi.MDATE,
-	  sum(unqixi.POS_AMT),
-	  sum(unqixi.TDY_COST_AMT),
-	  sum(unqixi.TDY_FLOAT_INGPL),
-	  sum(unqixi.TDY_INTINCEXP),
-	  sum(unqixi.DELAY_PAY_AMT),
-	  max(unqixi.UPDATE_TIME),
-	  max(unqixi.CREATE_TIME)
-	  from (select tpda.portfolio_id as PROD_ID,
-	  fp.finprod_market_id as ASSET_ID,
-	  tpd.ccy,
-	  tpd.trade_date as VALUE_DATE,
-	  fp.MDATE as MDATE,
-	  tpd.share_amt*100 as POS_AMT,
-	  tpd.fprice_amt as TDY_COST_AMT,
-	  0 as TDY_FLOAT_INGPL,
-	  0 as TDY_INTINCEXP,
-	  0 as DELAY_PAY_AMT,
-	  ifnull(tpd.UPDATE_TIME, tpd.CREATE_TIME) UPDATE_TIME,
-	  ifnull(tpd.CREATE_TIME, tpd.UPDATE_TIME) CREATE_TIME
-	  from trd_product_deal tpd
-	  inner join fin_product fp
-	  on tpd.finprod_id = fp.finprod_id
-	  inner join trd_product_deal_add tpda
-	  on tpd.trade_id = tpda.trade_id
-	  left join PTL_PORTFOLIO pp
-	  on pp.portfolio_id = tpda.portfolio_id
-	  where tpd.finprod_type = 'F01'
-	  and tpd.chl_id is not null
-	  and tpd.inv_aim = 'AC'
-	  and tpd.ps = 'T01'
-	  and tpd.trade_date <![CDATA[<]]> fp.vdate
-	  and DATE_FORMAT(tpd.trade_date,'%Y-%m-%d') = #{batchTime,jdbcType=VARCHAR}
-	  and pp.portfolio_id is not null) unqixi
-	  group by unqixi.PROD_ID,
-	  unqixi.ASSET_ID,
-	  unqixi.VALUE_DATE,
-	  unqixi.MDATE,
-	  unqixi.ccy)aa group by aa.PROD_ID,aa.ASSET_ID,aa.VALUE_DATE,aa.MDATE,aa.ccy
-	  ) a
-	  where a.ASSET_ID is not null
+	from PTL_SEC_VALUTION psv
+  left join FIN_PRODUCT fp on fp.FINPROD_ID = psv.FINPROD_ID
+  left join FIN_PRODUCT fpf on fpf.FINPROD_ID = fp.P_FINPROD_ID
+  left join FIN_TRADE_PRODUCT fp2 on fp2.FINPROD_ID = psv.FINPROD_ID and fp2.branch = 0
+	 where DATE_FORMAT(CDATE,'%Y-%m-%d')= #{batchTime,jdbcType=VARCHAR}
+	 and (fp.IS_CHL !='Y' or fp.IS_CHL is null)
+	 and exists(
+     select  1
+     from FIN_PRODUCT_ADD fp3
+     where fp3.PORTFOLIO_ID = psv.PORTFOLIO_ID)
+) psv1
+left join FIN_PRODUCT fp1 on fp1.FINPROD_MARKET_ID = psv1.FINPROD_ID
+left join FIN_TRADE_PRODUCT fp2 on fp2.FINPROD_ID = psv1.FINPROD_ID and fp2.branch = 0
+  group by psv1.PROD_ID,fp1.FINPROD_MARKET_ID,psv1.VALUE_DATE,fp1.MDATE,fp2.MDATE,psv1.FINPROD_ID,psv1.ccy
+  union
+  select unqixi.PROD_ID,
+		 unqixi.ASSET_ID,
+		 unqixi.ccy,
+		 unqixi.VALUE_DATE,
+		 unqixi.MDATE,
+		 sum(unqixi.POS_AMT),
+		 sum(unqixi.TDY_COST_AMT),
+		 sum(unqixi.TDY_FLOAT_INGPL),
+		 sum(unqixi.TDY_INTINCEXP),
+		 sum(unqixi.DELAY_PAY_AMT),
+		 max(unqixi.UPDATE_TIME),
+		 max(unqixi.CREATE_TIME)
+  from (select tpda.portfolio_id as PROD_ID,
+			   fp.finprod_market_id as ASSET_ID,
+			   tpd.ccy,
+			   tpd.trade_date as VALUE_DATE,
+			   fp.MDATE as MDATE,
+			   tpd.share_amt*100 as POS_AMT,
+			   tpd.fprice_amt as TDY_COST_AMT,
+			   0 as TDY_FLOAT_INGPL,
+			   0 as TDY_INTINCEXP,
+			   0 as DELAY_PAY_AMT,
+			   ifnull(tpd.UPDATE_TIME, tpd.CREATE_TIME) UPDATE_TIME,
+			   ifnull(tpd.CREATE_TIME, tpd.UPDATE_TIME) CREATE_TIME
+		from trd_product_deal tpd
+				 inner join fin_product fp
+							on tpd.finprod_id = fp.finprod_id
+				 inner join trd_product_deal_add tpda
+							on tpd.trade_id = tpda.trade_id
+				 left join PTL_PORTFOLIO pp
+						   on pp.portfolio_id = tpda.portfolio_id
+		where tpd.finprod_type = 'F01'
+		  and tpd.chl_id is not null
+		  and tpd.inv_aim = 'AC'
+		  and tpd.ps = 'T01'
+		  and tpd.trade_date <![CDATA[<]]> fp.vdate
+		  and DATE_FORMAT(tpd.trade_date,'%Y-%m-%d') = #{batchTime,jdbcType=VARCHAR}
+		  and pp.portfolio_id is not null) unqixi
+  group by unqixi.PROD_ID,
+		   unqixi.ASSET_ID,
+		   unqixi.VALUE_DATE,
+		   unqixi.MDATE,
+		   unqixi.ccy)aa group by aa.PROD_ID,aa.ASSET_ID,aa.VALUE_DATE,aa.MDATE,aa.ccy
+  ) a
+  where a.ASSET_ID is not null
   </select>
-
 	<select id="selectIntadjexpAdd" parameterType="java.lang.String" resultMap="BaseResultMap"
 			resultSetType="FORWARD_ONLY" fetchSize="1000">
 		select ifnull(ifnull(FP.FINPROD_MARKET_ID,FP1.FINPROD_MARKET_ID),BSDP.BOOKSET_ID) as PROD_ID,
-		BSDP.BUSI_ID as ASSET_ID,
-		SUM(BSDP.TDY_INTADJEXP_ADD_B) AS TDY_INTADJEXP_ADD
+			   BSDP.BUSI_ID as ASSET_ID,
+			   SUM(BSDP.TDY_INTADJEXP_ADD_B) AS TDY_INTADJEXP_ADD
 		from BOK_STAT_DET_POSIITON BSDP
-		left join FIN_PRODUCT FP
-		ON BSDP.BOOKSET_ID = FP.FINPROD_ID
-		AND FP.PROFIT_TYPE IN ('01','03')
-		AND FP.FINPROD_TYPE = 'F16'
-		AND FP.FINPROD_TYPE2 = 'F16'
-		left join FIN_PRODUCT FP1
-		ON BSDP.BOOKSET_ID = FP1.FINPROD_MARKET_ID
-		AND FP1.PROFIT_TYPE = '02'
-		AND FP1.FINPROD_TYPE = 'F16'
-		AND FP1.FINPROD_TYPE2 = 'F16'
+				 left join FIN_PRODUCT FP
+						   ON BSDP.BOOKSET_ID = FP.FINPROD_ID
+							   AND FP.PROFIT_TYPE IN ('01','03')
+							   AND FP.FINPROD_TYPE = 'F16'
+							   AND FP.FINPROD_TYPE2 = 'F16'
+				 left join FIN_PRODUCT FP1
+						   ON BSDP.BOOKSET_ID = FP1.FINPROD_MARKET_ID
+							   AND FP1.PROFIT_TYPE = '02'
+							   AND FP1.FINPROD_TYPE = 'F16'
+							   AND FP1.FINPROD_TYPE2 = 'F16'
 		where DATE_FORMAT(BSDP.BOOK_DATE,'%Y-%m-%d')= #{batchTime,jdbcType=VARCHAR}
 		group by BSDP.BOOKSET_ID,BSDP.BUSI_ID,FP.FINPROD_MARKET_ID,FP1.FINPROD_MARKET_ID
-  </select>
-
+	</select>
 	<delete id="deleteByUpdateTime">
     delete from CHB_ASSETS_BASIS_DATA
-    where date_format(UPDATE_TIME,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d')
+    where DATE_FORMAT(UPDATE_TIME,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d')
   </delete>
 
 	<delete id="deleteNoBtmByUpdateTime">
     delete from CHB_ASSETS_BASIS_DATA_NOBTM
-    where date_format(UPDATE_TIME,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d')
+    where DATE_FORMAT(UPDATE_TIME,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d')
   </delete>
 
 	<select id="selectChlBtmByValuedate" parameterType="java.lang.String"
@@ -633,7 +630,7 @@
 		on info.sec_acct_id = psv.sec_acct_id
 		where (psv.sec_acct_id='999999'
 		or info.sec_acct_id is not null)
-		<!-- 	and to_char(nvl(psv.UPDATE_TIME,psv.CREATE_TIME),'yyyy-MM-dd')= #{batchTime,jdbcType=VARCHAR} -->
+		<!-- 	and DATE_FORMAT(ifnull(psv.UPDATE_TIME,psv.CREATE_TIME),'%Y-%m-%d')= #{batchTime,jdbcType=VARCHAR} -->
 		and DATE_FORMAT(psv.CDATE,'%Y-%m-%d')= #{batchTime,jdbcType=VARCHAR}
 		<!-- 	and fp2.branch = 0 -->
 		and exists(
@@ -654,14 +651,14 @@
 
 	<select id="selectChlBtmByValuedateSp" parameterType="map"
 			resultMap="BaseResultMap" resultSetType="FORWARD_ONLY" fetchSize="1000">
-		select t.*,T1.CHL_ID, T1.mdate from (
+		select t.*,T1.CHL_ID from (
 		select * from (
 		SELECT
 		psv1.prod_id      AS prod_id, /*产品代码*/
 		psv1.asset_id     AS asset_id, /*资产代码*/
 		psv1.ccy          AS ccy, /*币种*/
 		psv1.value_date   AS value_date, /*日期*/
-		<!-- psv1.mdate        AS mdate, /*资产到期日*/-->
+		psv1.mdate        AS mdate, /*资产到期日*/
 		SUM(ifnull(psv1.pos_amt,0))			AS pos_amt, /*当日持仓*/
 		SUM(ifnull(psv1.tdy_cost_amt,0)) 		AS tdy_cost_amt, /*当日成本*/
 		SUM(ifnull(psv1.tdy_float_ingpl,0))	AS tdy_float_ingpl, /*当日公允价值变动*/
@@ -675,7 +672,7 @@
 		a.portfolio_id        prod_id, /*产品代码*/
 		a.ccy                 ccy, /*币种*/
 		a.cdate               value_date, /*日期*/
-		<!-- c.mdate               mdate, /*资产到期日*/-->
+		c.mdate               mdate, /*资产到期日*/
 		a.share_amt           pos_amt, /*当日持仓*/
 		a.dsc_cost_amt        tdy_cost_amt, /*当日成本*/
 		a.tdy_float_ingpl     tdy_float_ingpl, /*当日公允价值变动*/
@@ -698,8 +695,8 @@
 		psv1.asset_id,
 		psv1.prod_id,
 		psv1.ccy,
-		psv1.value_date
-		<!-- ,psv1.mdate-->
+		psv1.value_date,
+		psv1.mdate
 		) a
 		where a.ASSET_ID is not null
 		union all
@@ -709,8 +706,7 @@
 		ifnull(ifnull(fpf.FINPROD_MARKET_ID,fp1.FINPROD_MARKET_ID),psv1.FINPROD_ID) as ASSET_ID,
 		psv1.ccy,
 		psv1.VALUE_DATE as VALUE_DATE,
-		<!-- 此处注释是因为到期日直接取通道的到期日 -->
-		<!-- nvl(fp1.MDATE,fp2.MDATE) as MDATE,-->
+		ifnull(fp1.MDATE,fp2.MDATE) as MDATE,
 		sum(ifnull(psv1.POS_AMT,0)) as POS_AMT,
 		sum(ifnull(psv1.TDY_COST_AMT,0)) as TDY_COST_AMT,
 		sum(ifnull(psv1.TDY_FLOAT_INGPL,0)) as TDY_FLOAT_INGPL,
@@ -723,7 +719,7 @@
 		ifnull(ifnull(fp.P_FINPROD_ID,fp.FINPROD_ID),fp2.FINPROD_ID) as FINPROD_ID,
 		psv.ccy,
 		psv.CDATE as VALUE_DATE,
-		(case fp.finprod_type when 'F01' then 100*psv.SHARE_AMT else psv.SHARE_AMT end)as POS_AMT,
+		(case fp.finprod_type when 'F01' then 100*psv.SHARE_AMT else psv.SHARE_AMT end) as POS_AMT,
 		psv.DSC_COST_AMT as TDY_COST_AMT,
 		psv.TDY_FLOAT_INGPL as TDY_FLOAT_INGPL,
 		psv.TDY_INTINCEXP as TDY_INTINCEXP,
@@ -736,7 +732,7 @@
 		on info.sec_acct_id = psv.sec_acct_id
 		where (psv.sec_acct_id='999999'
 		or info.sec_acct_id is not null)
-		<!-- 	and to_char(nvl(psv.UPDATE_TIME,psv.CREATE_TIME),'yyyy-MM-dd')= #{batchTime,jdbcType=VARCHAR} -->
+		<!-- 	and DATE_FORMAT(ifnull(psv.UPDATE_TIME,psv.CREATE_TIME),'%Y-%m-%d')= #{batchTime,jdbcType=VARCHAR} -->
 		and DATE_FORMAT(psv.CDATE,'%Y-%m-%d')= #{batchTime,jdbcType=VARCHAR}
 		<!-- 	and fp2.branch = 0 -->
 		and exists(
@@ -750,15 +746,11 @@
 
 		where 1=1 <!-- fp2.branch = 0 -->
 		group by
-		psv1.PROD_ID,psv1.VALUE_DATE,
-		<!-- nvl(fp1.MDATE,fp2.MDATE), -->
-		ifnull(ifnull(fpf.FINPROD_MARKET_ID,fp1.FINPROD_MARKET_ID),psv1.FINPROD_ID),psv1.ccy
+		psv1.PROD_ID,psv1.VALUE_DATE,ifnull(fp1.MDATE,fp2.MDATE),ifnull(ifnull(fpf.FINPROD_MARKET_ID,fp1.FINPROD_MARKET_ID),psv1.FINPROD_ID),psv1.ccy
 		) a
 		where a.ASSET_ID is not null) t
 		inner join
 		(select DISTINCT fp.finprod_market_id asset_id,fp1.finprod_market_id chl_id
-		<!-- 通过通道投资的资产到期日应该取通道的到期日 -->
-		, fp1.mdate
 		from fin_cash_info ca
 		left join fin_product fp
 		on FP.FINPROD_ID=CA.FINPROD_ID
@@ -787,7 +779,7 @@
 	<!-- 查询所有有效的行权债代码 -->
 	<select id="queryAllSecXQAssetIds"  resultType="java.lang.String">
 	  	SELECT F.FINPROD_MARKET_ID FROM FIN_PRODUCT F
-		WHERE F.finprod_type = 'F01' and F.IS_RIGHT = 'Y'
+		WHERE F.FINPROD_TYPE = 'F01' and F.IS_RIGHT = 'Y'
   	</select>
 	<!-- 根据行权债id和日期查询最近的行权日 -->
 	<select id="queryExerciseDate" resultType="java.util.Date">
@@ -797,30 +789,4 @@
 		and EXERCISE_DATE >= #{valueDate,jdbcType=DATE}
 	</select>
 
-	<select id="getPulicAssetId"  resultType="java.lang.String">
-		select fp1.finprod_market_id from fin_product_add fpd
-		inner join fin_product fp on fpd.appear_market_id = fp.finprod_market_id
-		left join fin_product fp1 on fp1.finprod_id = fpd.finprod_id
-		where fpd.appear_market_id = #{assetId,jdbcType=VARCHAR}
-		and fp.finprod_type ='F01'
-	</select>
-
-	<insert id="insertNoBtm" parameterType="com.joyintech.tams.common.base.entity.ChbAssetsBasisData" >
-		insert into CHB_ASSETS_BASIS_DATA_NOBTM (VAL_ID, PROD_ID, ASSET_ID,CCY,
-		  VALUE_DATE, MDATE, POS_AMT,
-		  TDY_COST_AMT, TDY_FLOAT_INGPL, TDY_INTINCEXP, TDY_INTADJEXP_ADD,
-		  DELAY_PAY_AMT, REMARK, CREATE_TIME,
-		  UPDATE_TIME, CREATE_DEPT, ORG_CODE,
-		  DEPT_CODE, CREATE_USER, UPDATE_USER,
-		  STATUS, DATA_SOURCE, MD5PRIMARYKEY
-		  )
-		values (#{valId,jdbcType=CHAR}, #{prodId,jdbcType=VARCHAR}, #{assetId,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR},
-		  #{valueDate,jdbcType=TIMESTAMP}, #{mdate,jdbcType=TIMESTAMP}, #{posAmt,jdbcType=DECIMAL},
-		  #{tdyCostAmt,jdbcType=DECIMAL}, #{tdyFloatIngpl,jdbcType=DECIMAL}, #{tdyIntincexp,jdbcType=DECIMAL}, #{tdyIntadjexpAdd,jdbcType=DECIMAL},
-		  #{delayPayAmt,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, now(),
-		  now(), #{createDept,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR},
-		  #{deptCode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR},
-		  #{status,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR}, #{md5primarykey,jdbcType=CHAR}
-		  )
-  	</insert>
 </mapper>

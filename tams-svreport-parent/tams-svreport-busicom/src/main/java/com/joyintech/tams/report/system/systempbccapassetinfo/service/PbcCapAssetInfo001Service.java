@@ -378,6 +378,8 @@ public class PbcCapAssetInfo001Service extends CommonExportService<PbcCapAssetIn
                                                 List<PbcCapAssetInfo001Dto> entities, Map<String, String> box, String orgCode) {
         List<ExcelValidDto> checkResult = new ArrayList<>();
         HashMap<String, String> hashMap = new HashMap<String, String>();
+        HashMap<String, String> poCassetIdMap = new HashMap<String, String>();
+        String pobcassetidList = null;
         for (int i = 0; i < dataList.size(); i++) {
             List<String> list = dataList.get(i);
             if (null == list || list.size() != 3) {
@@ -385,6 +387,8 @@ public class PbcCapAssetInfo001Service extends CommonExportService<PbcCapAssetIn
                         this.getMessage("REPORT_COMMON_FILE_E_0001", "文件内容")));
                 continue;
             }
+
+
             PbcCapAssetInfo001Dto entity = new PbcCapAssetInfo001Dto();
             // 验证消息
             List<String> message = new ArrayList<>();
@@ -399,6 +403,30 @@ public class PbcCapAssetInfo001Service extends CommonExportService<PbcCapAssetIn
             } else {
                 entity.setAssetid(list.get(0));
             }
+            //检查资金信托代码有没有对应多个资产代码
+            /*add by zhoubin 20220326 start*/
+            if (StringUtils.isNotBlank(list.get(2))) {
+                // 查询最新人行资金信托代码拼接资产代码的字符串
+                String value = poCassetIdMap.get(list.get(2));
+                if (StringUtils.isBlank(value)) {
+                    // 如果value是空的 说明是第一次取到
+                    poCassetIdMap.put(list.get(2), list.get(0));
+                } else {
+                    if (StringUtils.isBlank(pobcassetidList)) {
+                        pobcassetidList = list.get(2)+",";
+                    }
+                    if (pobcassetidList != null && !pobcassetidList.contains(list.get(2))) {
+                        pobcassetidList = pobcassetidList + list.get(2)+",";
+                    }
+                }
+            }
+            if(StringUtils.isNotBlank(pobcassetidList)) {
+                message.add("人行资金信托代码"+pobcassetidList+"在Excel中对应了多个资产代码");
+                checkResult.add(new ExcelValidDto(entity.getAssetid(), String.valueOf(i + 2),
+                        StringUtil.joinString(message, GlobalConstant.COMMA)));
+                continue;
+            }
+            /*add by zhoubin 20220326 end*/
             // 资产名称
             // 为空判断
             if (StringUtils.isNotBlank(list.get(1))) {
@@ -455,6 +483,8 @@ public class PbcCapAssetInfo001Service extends CommonExportService<PbcCapAssetIn
                         StringUtil.joinString(message, GlobalConstant.COMMA)));
                 continue;
             }
+            PbcCapAssetInfo001Dto dto = pbcCapAssetInfo001DtoMapper.selectAssetInofByAssetId(assetId);
+            entity.setAssetname(dto.getAssetName());
 //            // 判断Excel中同一个人行资金信托代码是否对应了多个资产代码同时去除重复相同更新的
 //            String pobcassetIdAndAssetId = entity.getPobcassetid() + "|"
 //                    + entity.getAssetid();

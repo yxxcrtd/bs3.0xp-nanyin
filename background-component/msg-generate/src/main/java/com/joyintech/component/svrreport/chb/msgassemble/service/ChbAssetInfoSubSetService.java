@@ -627,7 +627,7 @@ public class ChbAssetInfoSubSetService {
 		if(StringUtil.isNotEmpty(item.getIsDepositFlag())){
 			CnBondInterfItemDto cnBondItem1 = new CnBondInterfItemDto();
 			cnBondItem1.setValue(item.getIsDepositFlag());
-			cnBondItemMap1.put("InterbankCashBorrowing", cnBondItem1);
+			cnBondItemMap1.put("InterbankCashBorrowingPleaseSelect", cnBondItem1);
 		}
 		/***1217升级**/
 
@@ -678,7 +678,7 @@ public class ChbAssetInfoSubSetService {
 		if(StringUtil.isNotEmpty(item.getProfitFlag())){
 			CnBondInterfItemDto cnBondItem4 = new CnBondInterfItemDto();
 			cnBondItem4.setValue(item.getProfitFlag());
-			cnBondItemMap1.put("FixedIncomeFund", cnBondItem4);
+			cnBondItemMap1.put("FixedIncomeFundPleaseSelect", cnBondItem4);
 		}
 		/***1217升级**/
 
@@ -861,14 +861,14 @@ public class ChbAssetInfoSubSetService {
 		if(StringUtil.isNotEmpty(item.getFinancialProductFlag())){
 			CnBondInterfItemDto cnBondItem7 = new CnBondInterfItemDto();
 			cnBondItem7.setValue(item.getFinancialProductFlag());
-			cnBondItemMap1.put("WealthManagementProduct", cnBondItem7);
+			cnBondItemMap1.put("WealthManagementProductPleaseSelect", cnBondItem7);
 		}
 
 		//产品登记编码
 		if(StringUtil.isNotEmpty(item.getProdRegisterCode())){
 			CnBondInterfItemDto cnBondItem7 = new CnBondInterfItemDto();
 			cnBondItem7.setValue(item.getProdRegisterCode());
-			cnBondItemMap1.put("ProductRegistrationCodeAsset", cnBondItem7);
+			cnBondItemMap1.put("ProductRegistrationCode", cnBondItem7);
 		}
 		/***1217升级**/
 
@@ -1492,13 +1492,13 @@ public class ChbAssetInfoSubSetService {
 		if(StringUtil.isNotEmpty(item.getIsBzhpj())){
 			CnBondInterfItemDto cnBondItem3 = new CnBondInterfItemDto();
 			cnBondItem3.setValue(item.getIsBzhpj());
-			cnBondItemMap1.put("StandardizedBillorNote", cnBondItem3);
+			cnBondItemMap1.put("StandardizedBillorNotePleaseSelect", cnBondItem3);
 		}
 		//票据代码
 		if(StringUtil.isNotEmpty(item.getBillCode())){
 			CnBondInterfItemDto cnBondItem3 = new CnBondInterfItemDto();
 			cnBondItem3.setValue(item.getBillCode());
-			cnBondItemMap1.put("BillorNoteCode", cnBondItem3);
+			cnBondItemMap1.put("BillOrNoteCode", cnBondItem3);
 		}
 		/***1217升级**/
 

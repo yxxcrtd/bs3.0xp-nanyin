@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.joyintech.tams.cfets.trdquery.dao.CfetsTrdQueryMapper">
+<mapper namespace="com.joyintech.tams.cfets.trdquery.dao.CfetsTrdQueryMapper_mysql">
     <select id="selectSysRoleById" resultType="java.lang.String">
         SELECT distinct
         SYS_ROLE.role_pos as rolePos
@@ -47,14 +47,18 @@
         </if>
     </select>
     <sql id="onlyRegInfo">
-        select  distinct decode(reg.is_cancel,'Y','撤销','N','有效') as effectiveStatusStr,
-        decode(reg.finprod_type2,'F01','01','F02','02','F03','02') as finprodType2,
+        select  distinct /*decode(reg.is_cancel,'Y','撤销','N','有效') as effectiveStatusStr,*/
+        (case reg.is_cancel when 'Y' then '撤销' when 'N' then '有效' end) as effectiveStatusStr,
+        /*decode(reg.finprod_type2,'F01','01','F02','02','F03','02') as finprodType2,*/
+        (case reg.finprod_type2 when 'F01' then '01' when 'F02' then '02' when 'F03' then '02' end) as finprodType2,
         reg.finprod_id as finprodId,
-        nvl(fp.finprod_market_id,reg.term_type) as finprodMarketId,
+        /*nvl(fp.finprod_market_id,reg.term_type) as finprodMarketId,*/
+        ifnull(fp.finprod_market_id,reg.term_type) as finprodMarketId,
         fp.finprod_abbr as finprodAbbr,
         reg.ps as ps,
         reg.trade_market as tradeMarket,
-        decode(reg.settle_speed,0,'01',1,'02',2,'03') as settleSpeed,
+        /*decode(reg.settle_speed,0,'01',1,'02',2,'03') as settleSpeed,*/
+        (case reg.settle_speed when 0 then '01' when 1 then '02' when 2 then '03' end) as settleSpeed,
         reg.sec_manage_acct_id as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdStr,
         decode(reg.finprod_type2,'F01',deal.faceValue,null) as faceValue,
@@ -68,16 +72,20 @@
         deal.tradeAmt as tradeAmt,
         reg.totle_trade_id as busiCode,
         nvl(su.real_name,reg.ou_trader_id) as trader,
-        to_char(reg.trade_date,'yyyy-MM-dd') as regTradeDate,
-        to_char(total.trade_date,'yyyy-MM-dd') as confirmTradeDate,
+        /*to_char(reg.trade_date,'yyyy-MM-dd') as regTradeDate,
+        to_char(total.trade_date,'yyyy-MM-dd') as confirmTradeDate,*/
+        DATE_FORMAT(reg.trade_date,'%Y-%m-%d')as regTradeDate,
+        DATE_FORMAT(total.trade_date,'%Y-%m-%d')as confirmTradeDate,
         reg.counter_id as counterId,
         mcci.counter_name as counterIdStr,
         deal.portfolioId as portfolioIds,
         deal.portfolioName as portfolioNames,
         reg.quote_type as quoteType,
-        nvl(match.match_status,'02') as matchStatus,
+        /*nvl(match.match_status,'02') as matchStatus,*/
+        ifnull(match.match_status,'02') as matchStatus,
         reg.remark as remark,
-        decode(reg.is_cancel,'Y','03','N','01') effectiveStatus,
+        /*decode(reg.is_cancel,'Y','03','N','01') effectiveStatus,*/
+        (case reg.is_cancel when 'Y' then '03' when 'N' then '01') effectiveStatus,
         case when  match.trd_conf_status is null and reg.is_cancel='N' then '01'
         when match.trd_conf_status='1' and reg.is_cancel='N' then '02'
         when reg.is_cancel='Y' then '03' end as regStatus,
@@ -89,7 +97,8 @@
         on fp.finprod_id=reg.finprod_id
         inner join
         (
-            select regdeal.totle_trade_id,wm_concat(regdeal.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
+            /*select regdeal.totle_trade_id,wm_concat(regdeal.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,*/
+            select regdeal.totle_trade_id,group_concat(regdeal.portfolio_id) as portfolioId,group_concat(pp.portfolio_name) portfolioName,
             sum(regdeal.face_value)/10000 as faceValue, sum(regdeal.trade_amt) as tradeAmt
             from reg_fin_product_deal regdeal
             inner join ptl_portfolio pp
@@ -159,7 +168,7 @@
             </foreach>
         </if>
         <if test="busiCode != null and busiCode != ''">
-            AND reg.totle_trade_id like '%' || #{busiCode,jdbcType=VARCHAR} || '%'
+            AND reg.totle_trade_id like/* '%' || #{busiCode,jdbcType=VARCHAR} || '%'*/CONCAT(CONCAT('%',#{busiCode,jdbcType=VARCHAR}),'%')
         </if>
        <!-- <if test="effectiveStatus != null and effectiveStatus != ''">
             <if test="effectiveStatus=='01'">
@@ -173,7 +182,8 @@
             </if>
         </if>-->
         <if test="matchStatus != null and matchStatus != ''">
-            AND  nvl(match.match_status,'02') = #{matchStatus,jdbcType=VARCHAR}
+            /*AND  nvl(match.match_status,'02') = #{matchStatus,jdbcType=VARCHAR}*/
+            AND  ifnull(match.match_status,'02') = #{matchStatus,jdbcType=VARCHAR}
         </if>
         <if test="quoteType != null and quoteType != ''">
             AND reg.quote_type= #{quoteType,jdbcType=VARCHAR}
@@ -192,13 +202,16 @@
     </sql>
     <sql id="onlyWflRegInfo">
         select distinct '流程中' as effectiveStatusStr,
-        decode(reg.finprod_type2,'F01','01','F02','02','F03','02') as finprodType2,
+        /*decode(reg.finprod_type2,'F01','01','F02','02','F03','02') as finprodType2,*/
+        (case reg.finprod_type2 when 'F01' then '01' when 'F02' then '02' when 'F03' then '02' end) as finprodType2,
         reg.finprod_id as finprodId,
-        nvl(fp.finprod_market_id,reg.term_type) as finprodMarketId,
+        /*nvl(fp.finprod_market_id,reg.term_type) as finprodMarketId,*/
+        ifnull(fp.finprod_market_id,reg.term_type) as finprodMarketId,
         fp.finprod_abbr as finprodAbbr,
         reg.ps as ps,
         reg.trade_market as tradeMarket,
-        decode(reg.settle_speed,0,'01',1,'02',2,'03') as settleSpeed,
+        /*decode(reg.settle_speed,0,'01',1,'02',2,'03') as settleSpeed,*/
+        (case reg.settle_speed when 0 then '01' when 1 then '02' when 2 then '03' end) as settleSpeed,
         reg.sec_manage_acct_id as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdStr,
         decode(reg.finprod_type2,'F01',deal.faceValue,null) as faceValue,
@@ -212,14 +225,16 @@
         deal.tradeAmt as tradeAmt,
         reg.totle_trade_id as busiCode,
         reg.ou_trader_id as trader,
-        to_char(reg.trade_date,'yyyy-MM-dd') as regTradeDate,
+        /*to_char(reg.trade_date,'yyyy-MM-dd') as regTradeDate,*/
+        DATE_FORMAT(reg.trade_date,'%Y-%m-%d')as regTradeDate,
         null as confirmTradeDate,
         reg.counter_id as counterId,
         mcci.counter_name as counterIdStr,
         deal.portfolioId as portfolioIds,
         deal.portfolioName as portfolioNames,
         reg.quote_type as quoteType,
-        nvl(match.match_status,'02') as matchStatus,
+        /*nvl(match.match_status,'02') as matchStatus,*/
+        ifnull(match.match_status,'02') as matchStatus,
         reg.remark as remark,
         '04' effectiveStatus,
         '04' as regStatus,
@@ -299,7 +314,8 @@
             </foreach>
         </if>
         <if test="busiCode != null and busiCode != ''">
-            AND reg.totle_trade_id like '%' || #{busiCode,jdbcType=VARCHAR} || '%'
+            /*AND reg.totle_trade_id like '%' || #{busiCode,jdbcType=VARCHAR} || '%'*/
+            AND reg.totle_trade_id like /*'%' || #{busiCode,jdbcType=VARCHAR} || '%'*/CONCAT(CONCAT('%',#{busiCode,jdbcType=VARCHAR}),'%')
         </if>
       <!--  <if test="effectiveStatus != null and effectiveStatus != ''">
             <if test="effectiveStatus=='01'">
@@ -310,7 +326,8 @@
             </if>
         </if>-->
         <if test="matchStatus != null and matchStatus != ''">
-            AND  nvl(match.match_status,'02') = #{matchStatus,jdbcType=VARCHAR}
+           /* AND  nvl(match.match_status,'02') = #{matchStatus,jdbcType=VARCHAR}*/
+            AND  ifnull(match.match_status,'02') = #{matchStatus,jdbcType=VARCHAR}
         </if>
         <if test="quoteType != null and quoteType != ''">
             AND reg.quote_type= #{quoteType,jdbcType=VARCHAR}
@@ -332,24 +349,38 @@
                 and aaa.effectiveStatus=#{effectiveStatus}
             </if>
             <if test="search != null and search != '' and search !='有效' ">
-                and ((aaa.effectiveStatusStr || '|' || sdl.ITEM_VALUE || '|' || aaa.finprodMarketId || '|' || aaa.finprodAbbr
+                /*and ((aaa.effectiveStatusStr || '|' || sdl.ITEM_VALUE || '|' || aaa.finprodMarketId || '|' || aaa.finprodAbbr
                 || '|' || dictps.ITEM_VALUE || '|' || dicttradeMarket.ITEM_VALUE || '|' || dictsp.ITEM_VALUE
                 || '|' || aaa.secManageAcctIdStr || '|' || aaa.busiCode || '|' || aaa.trader
                 || '|' || aaa.counterId  || '|' || aaa.counterIdStr || '|' || aaa.portfolioIds  || '|' || aaa.portfolioNames
                 || '|' || dictquote.ITEM_VALUE  || '|' || dictms.ITEM_VALUE || '|' || aaa.remark
-                like '%' || #{search} || '%')
+                like '%' || #{search} || '%')*/
+                and ((concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(
+                aaa.effectiveStatusStr,'|'),sdl.ITEM_VALUE),'|'),aaa.finprodMarketId),'|'),aaa.finprodAbbr),'|'),
+                dictps.ITEM_VALUE),'|'),dicttradeMarket.ITEM_VALUE),'|'),dictsp.ITEM_VALUE),'|'),aaa.secManageAcctIdStr,),'|'),
+                aaa.busiCode),'|'),aaa.trader),'|'),aaa.counterId),'|'),
+                aaa.counterIdStr),'|'), aaa.portfolioIds),'|'),aaa.portfolioNames),'|'),dictquote.ITEM_VALUE),'|'),dictms.ITEM_VALUE), '|' ),aaa.remark)
+                like concat(concat('%',#{search}),'%')
                 or to_char(aaa.faceValue,'FM9999999999999990.90')=#{search} or to_char(aaa.faceValue)=#{search}
                 or aaa.tradeYield =#{search} or aaa.tradeYield =#{search}||'%'
                 or aaa.termDays||'' =#{search}
                 or to_char(aaa.tradeAmt,'FM9999999999999990.90')=#{search} or to_char(aaa.tradeAmt)=#{search}
-                or aaa.regTradeDate||'' =#{search}
-                or aaa.regTradeDate||'' =#{year}||'-'||#{search}
-                or replace(aaa.regTradeDate,'-','/')||'' =#{search}
-                or replace(aaa.regTradeDate,'-','/')||'' =#{year}||'/'||#{search}
-                or aaa.confirmTradeDate||'' =#{search}
-                or aaa.confirmTradeDate||'' =#{year}||'-'||#{search}
-                or replace(aaa.confirmTradeDate,'-','/')||'' =#{search}
-                or replace(aaa.confirmTradeDate,'-','/')||'' =#{year}||'/'||#{search}
+               /* or aaa.regTradeDate||'' =#{search}*/
+                or concat(aaa.regTradeDate,'')=#{search
+               /* or aaa.regTradeDate||'' =#{year}||'-'||#{search}*/
+                or aaa.regTradeDate=CONCAT(CONCAT(#{year},'-'),#{search})
+                /*or replace(aaa.regTradeDate,'-','/')||'' =#{search}*/
+                or concat(replace(aaa.regTradeDate,'-','/'),'')=#{search}
+                /*or replace(aaa.regTradeDate,'-','/')||'' =#{year}||'/'||#{search}*/
+                or CONCAT(CONCAT(replace(aaa.regTradeDate,'-','/'),'')=CONCAT(CONCAT(#{year},'/'),#{search})
+                /*or aaa.confirmTradeDate||'' =#{search}*/
+                or CONCAT(aaa.confirmTradeDate,'')=#{search}
+                /*or aaa.confirmTradeDate||'' =#{year}||'-'||#{search}*/
+                or CONCAT(aaa.confirmTradeDate,'')=CONCAT(CONCAT(#{year},'-'),#{search})
+                /*or replace(aaa.confirmTradeDate,'-','/')||'' =#{search}*/
+                or concat(replace(aaa.confirmTradeDate,'-','/'),'')=#{search}
+                /*or replace(aaa.confirmTradeDate,'-','/')||'' =#{year}||'/'||#{search}*/
+                or CONCAT(CONCAT(replace(aaa.confirmTradeDate,'-','/'),'')=CONCAT(CONCAT(#{year},'/'),#{search})
                 )
             </if>
         </where>
@@ -365,23 +396,29 @@
         select distinct
         reg.ou_party_id as traderid,
         m1.PARTY_ABBR as traderidStr,
-        nvl(su.real_name,reg.ou_trader_id) as trader,
+        /*nvl(su.real_name,reg.ou_trader_id) as trader,*/
+        ifnull(su.real_name,reg.ou_trader_id) as trader,
         reg.counter_id as counterId,
         m2.counter_name as counterIdStr,
-        nvl(su1.TRADER_NAME,reg.counter_trader)  as counterTrader,
+        /*nvl(su1.TRADER_NAME,reg.counter_trader)  as counterTrader,*/
+        ifnull(su1.TRADER_NAME,reg.counter_trader)  as counterTrader,
         reg.finprod_id as finprodId,
         fp.finprod_market_id as finprodMarketId,
         fp.finprod_abbr as finprodAbbr,
         reg.ps as ps,
         reg.quote_type as quoteType,
-        to_char(reg.trade_date,'yyyy-MM-dd') as regTradeDate,
-        decode(reg.settle_speed,0,'01',1,'02',2,'03')  as settleSpeed,
-        to_char(reg.settle_date,'yyyy-MM-dd') as settleDate,
+        /*to_char(reg.trade_date,'yyyy-MM-dd') as regTradeDate,*/
+        DATE_FORMAT(reg.trade_date,'%Y-%m-%d')as regTradeDate,
+        /*decode(reg.settle_speed,0,'01',1,'02',2,'03')  as settleSpeed,*/
+        (case reg.settle_speed when 0 then '01' when 1 then '02' when 2 then '03' end) as settleSpeed,
+        /*to_char(reg.settle_date,'yyyy-MM-dd') as settleDate,*/
+        DATE_FORMAT(reg.settle_date,'%Y-%m-%d')as settleDate,
         reg.ccy as ccy,
         reg.unit_cprice as unitCprice,
         reg.yield*100 as yield,
         reg.exer_yield*100 as exerYield,
-        nvl(deal.faceValue,reg.face_value/10000) as faceValue,
+        /*nvl(deal.faceValue,reg.face_value/10000) as faceValue,*/
+        ifnull(deal.faceValue,reg.face_value/10000) as faceValue,
         reg.delivery_type deliveryType,
         reg.clear_type as clearType,
         deal.trdFeeAmt as trdFeeAmt,
@@ -393,8 +430,10 @@
         deal.fpriceAmt as fpriceAmt,
         reg.dip_type as distriType,
         reg.remark as remark,
-        to_char(reg.settle_date,'yyyy-MM-dd') as exerciseDate,
-        to_char(regAdd.Act_Sette_Date,'yyyy-MM-dd')  as  acrExerciseDate,
+        /*to_char(reg.settle_date,'yyyy-MM-dd') as exerciseDate,*/
+        DATE_FORMAT(reg.settle_date,'%Y-%m-%d')as exerciseDate,
+        /*to_char(regAdd.Act_Sette_Date,'yyyy-MM-dd')  as  acrExerciseDate,*/
+        DATE_FORMAT(regAdd.Act_Sette_Date,'%Y-%m-%d')as acrExerciseDate,
         reg.unit_cprice as exercisePrice,
         reg.repo_term as repoTerm,
         reg.rate*100 as tradeYield,
@@ -403,8 +442,10 @@
         reg.trade_amt tradeAmt,
         deal.disFaceValue as disFaceValue,
         reg.m_delivery_type mdeliveryType,
-        to_char(reg.v_settle_date,'yyyy-MM-dd') as vsettleDate,
-        to_char(reg.m_settle_date,'yyyy-MM-dd') as msettleDate,
+        /*to_char(reg.v_settle_date,'yyyy-MM-dd') as vsettleDate,*/
+        DATE_FORMAT(reg.v_settle_date,'%Y-%m-%d')as vsettleDate,
+        /*to_char(reg.m_settle_date,'yyyy-MM-dd') as msettleDate,*/
+        DATE_FORMAT(reg.m_settle_date,'%Y-%m-%d')as msettleDate,
         deal.mtradeAmt as  mtradeAmt,
         reg.act_repo_term   actRepoTerm,
         reg.term_type as termType
@@ -417,7 +458,8 @@
         (
             select regdeal.totle_trade_id,
             sum(regdeal.face_value)/10000 as faceValue,
-            sum(decode(regdeal.finprod_type2,'F01',regdeal.int_amt,'F02',regdeal.m_int_amt,'F03',regdeal.m_int_amt)) as intAmt,
+            /*sum(decode(regdeal.finprod_type2,'F01',regdeal.int_amt,'F02',regdeal.m_int_amt,'F03',regdeal.m_int_amt)) as intAmt,*/
+            sum((case regdeal.finprod_type2 when 'F01' then regdeal.int_amt when 'F02' then regdeal.m_int_amt when 'F03' then regdeal.m_int_amt end)) as intAmt,
             sum(regdeal.cprice_amt) as cpriceAmt,
             sum(regdeal.fprice_amt) as fpriceAmt,
             sum(regdeal.trade_amt) as tradeAmt,
@@ -434,8 +476,10 @@
                 AND PPA.USER_ID = #{userId}
             </if>
             left join (
-                select rf.trade_id,sum(decode(rf.fee_type,'B06',rf.fee_amt)) as trdFeeAmt,
-                sum(decode(rf.fee_type,'B08',rf.fee_amt)) as settleFeeAmt
+                /*select rf.trade_id,sum(decode(rf.fee_type,'B06',rf.fee_amt)) as trdFeeAmt,*/
+                select rf.trade_id,sum((case rf.fee_type when 'B06' then rf.fee_amt end)) as trdFeeAmt,
+                /*sum(decode(rf.fee_type,'B08',rf.fee_amt)) as settleFeeAmt*/
+                sum((case rf.fee_type when 'B08' then rf.fee_amt end)) as settleFeeAmt
                 from reg_trade_fee rf
                 group by rf.trade_id
             )feeDeal on regdeal.trade_id=feeDeal.trade_id
@@ -448,28 +492,35 @@
         left join sys_user su on reg.ou_trader_id=su.user_name
         left join MST_CFETS_CUSTOMER_TRADER su1 on reg.counter_trader=su1.TRADER_ID
         where reg.totle_trade_id= #{totleTradeId,jdbcType=VARCHAR}
-        and decode(reg.is_cancel,'Y','03','N','01')= #{effectiveStatus,jdbcType=VARCHAR}
+        /*and decode(reg.is_cancel,'Y','03','N','01')= #{effectiveStatus,jdbcType=VARCHAR}*/
+        and (case reg.is_cancel when 'Y' then '03' when 'N' then '01' end)= #{effectiveStatus,jdbcType=VARCHAR}
         union all
         select
         reg.ou_party_id as traderid,
         m1.PARTY_ABBR as traderidStr,
-        nvl(su.real_name,reg.ou_trader_id) as trader,
+        /*nvl(su.real_name,reg.ou_trader_id) as trader,*/
+        ifnull(su.real_name,reg.ou_trader_id) as trader,
         reg.counter_id as counterId,
         m2.counter_name as counterIdStr,
-        nvl(su1.TRADER_NAME,reg.counter_trader)  as counterTrader,
+        /*nvl(su1.TRADER_NAME,reg.counter_trader)  as counterTrader,*/
+        ifnull(su1.TRADER_NAME,reg.counter_trader)  as counterTrader,
         reg.finprod_id as finprodId,
         fp.finprod_market_id as finprodMarketId,
         fp.finprod_abbr as finprodAbbr,
         reg.ps as ps,
         reg.quote_type as quoteType,
-        to_char(reg.trade_date,'yyyy-MM-dd') as regTradeDate,
-        decode(reg.settle_speed,0,'01',1,'02',2,'03')  as settleSpeed,
-        to_char(reg.settle_date,'yyyy-MM-dd') as settleDate,
+        /*to_char(reg.trade_date,'yyyy-MM-dd') as regTradeDate,*/
+        DATE_FORMAT(reg.trade_date,'%Y-%m-%d')as regTradeDate,
+        /*decode(reg.settle_speed,0,'01',1,'02',2,'03')  as settleSpeed,*/
+        (case reg.settle_speed when 0 then '01' when 1 then '02' when 2 then '03' end)  as settleSpeed,
+        /*to_char(reg.settle_date,'yyyy-MM-dd') as settleDate,*/
+        DATE_FORMAT(reg.settle_date,'%Y-%m-%d')as regTradeDate,
         reg.ccy as ccy,
         reg.unit_cprice as unitCprice,
         reg.yield*100 as yield,
         reg.exer_yield*100 as exerYield,
-        nvl(deal.faceValue,reg.face_value/10000) as faceValue,
+        /*nvl(deal.faceValue,reg.face_value/10000) as faceValue,*/
+        ifnull(deal.faceValue,reg.face_value/10000) as faceValue,
         reg.delivery_type deliveryType,
         reg.clear_type as clearType,
         deal.trdFeeAmt as trdFeeAmt,
@@ -481,8 +532,10 @@
         deal.fpriceAmt as fpriceAmt,
         reg.dip_type as distriType,
         reg.remark as remark,
-        to_char(reg.settle_date,'yyyy-MM-dd') as exerciseDate,
-        to_char(regAdd.Act_Sette_Date,'yyyy-MM-dd')  as  acrExerciseDate,
+       /* to_char(reg.settle_date,'yyyy-MM-dd') as exerciseDate,*/
+        DATE_FORMAT(reg.settle_date,'%Y-%m-%d')as exerciseDate,
+        /*to_char(regAdd.Act_Sette_Date,'yyyy-MM-dd')  as  acrExerciseDate,*/
+        DATE_FORMAT(regAdd.Act_Sette_Date,'%Y-%m-%d')as acrExerciseDate,
         reg.unit_cprice as exercisePrice,
         reg.repo_term as repoTerm,
         reg.rate*100 as tradeYield,
@@ -491,8 +544,10 @@
         reg.trade_amt tradeAmt,
         deal.disFaceValue as disFaceValue,
         reg.m_delivery_type mdeliveryType,
-        to_char(reg.v_settle_date,'yyyy-MM-dd') as vsettleDate,
-        to_char(reg.m_settle_date,'yyyy-MM-dd') as msettleDate,
+        /*to_char(reg.v_settle_date,'yyyy-MM-dd') as vsettleDate,
+        to_char(reg.m_settle_date,'yyyy-MM-dd') as msettleDate,*/
+        DATE_FORMAT(reg.v_settle_date,'%Y-%m-%d')as vsettleDate,
+        DATE_FORMAT(reg.m_settle_date,'%Y-%m-%d')as msettleDate,
         deal.mtradeAmt as  mtradeAmt,
         reg.act_repo_term   actRepoTerm,
         reg.term_type as termType
@@ -505,7 +560,9 @@
         (
         select regdeal.totle_trade_id,
         sum(regdeal.face_value)/10000 as faceValue,
-        sum(decode(regdeal.finprod_type2,'F01',regdeal.int_amt,'F02',regdeal.m_int_amt,'F03',regdeal.m_int_amt)) as intAmt,
+        sum(/*decode(regdeal.finprod_type2,'F01',regdeal.int_amt,'F02',regdeal.m_int_amt,'F03',regdeal.m_int_amt)*/
+        (case regdeal.finprod_type2 when 'F01' then regdeal.int_amt when 'F02' then regdeal.m_int_amt when 'F03' then regdeal.m_int_amt end)
+        ) as intAmt,
         sum(regdeal.cprice_amt) as cpriceAmt,
         sum(regdeal.fprice_amt) as fpriceAmt,
         sum(regdeal.trade_amt) as tradeAmt,
@@ -522,8 +579,8 @@
             AND PPA.USER_ID = #{userId}
         </if>
         left join (
-        select rf.trade_id,sum(decode(rf.fee_type,'B06',rf.fee_amt)) as trdFeeAmt,
-        sum(decode(rf.fee_type,'B08',rf.fee_amt)) as settleFeeAmt
+        select rf.trade_id,sum(/*decode(rf.fee_type,'B06',rf.fee_amt)) */(case rf.fee_type when 'B06' then rf.fee_amt end)) as trdFeeAmt,
+        sum(/*decode(rf.fee_type,'B08',rf.fee_amt)*/(case rf.fee_type when 'B08' then rf.fee_amt)) as settleFeeAmt
         from wfl_reg_trade_fee rf
         group by rf.trade_id
         )feeDeal on regdeal.trade_id=feeDeal.trade_id
@@ -548,7 +605,8 @@
         feeDeal.trdFeeAmt as trdFeeAmt,
         feeDeal.settleFeeAmt as settleFeeAmt,
         reg.cprice_amt as cpriceAmt,
-        decode(reg.finprod_type2,'F01',reg.int_amt,'F02',reg.m_int_amt,'F03',reg.m_int_amt) as intAmt,
+       /* decode(reg.finprod_type2,'F01',reg.int_amt,'F02',reg.m_int_amt,'F03',reg.m_int_amt) as intAmt,*/
+        (case reg.finprod_type2 when 'F01' then reg.int_amt when 'F02' then reg.m_int_amt when 'F03' then reg.m_int_amt end) as intAmt,
         reg.fprice_amt as fpriceAmt,
         EE.PRICE_MODEL as priceModel,
         EE.BUSINESS_MODEL as businessModel,
@@ -570,8 +628,8 @@
             AND PPA.USER_ID = #{userId}
         </if>
         left join (
-        select rf.trade_id,sum(decode(rf.fee_type,'B06',rf.fee_amt)) as trdFeeAmt,
-        sum(decode(rf.fee_type,'B08',rf.fee_amt)) as settleFeeAmt
+        select rf.trade_id,sum(/*decode(rf.fee_type,'B06',rf.fee_amt)*/(case rf.fee_type when 'B06' then rf.fee_amt end)) as trdFeeAmt,
+        sum(/*decode(rf.fee_type,'B08',rf.fee_amt)*/(case rf.fee_type when 'B08' then rf.fee_amt end)) as settleFeeAmt
         from reg_trade_fee rf
         group by rf.trade_id
         )feeDeal
@@ -580,7 +638,8 @@
         left join stl_sec_acct_info stlinfo
         on reg.sec_manage_acct_id=stlinfo.sec_acct_id
         where reg.totle_trade_id=#{totleTradeId,jdbcType=VARCHAR}
-        and decode(reg.is_cancel,'Y','03','N','01')= #{effectiveStatus,jdbcType=VARCHAR}
+        /*and decode(reg.is_cancel,'Y','03','N','01')= #{effectiveStatus,jdbcType=VARCHAR}*/
+        and (case reg.is_cancel when 'Y' then '03' when 'N' then '01' end)= #{effectiveStatus,jdbcType=VARCHAR}
         union all
         select reg.entrust_id as entrustId,
         reg.portfolio_id as portfolioId,
@@ -589,7 +648,8 @@
         feeDeal.trdFeeAmt as trdFeeAmt,
         feeDeal.settleFeeAmt as settleFeeAmt,
         reg.cprice_amt as cpriceAmt,
-        decode(reg.finprod_type2,'F01',reg.int_amt,'F02',reg.m_int_amt,'F03',reg.m_int_amt) as intAmt,
+        /*decode(reg.finprod_type2,'F01',reg.int_amt,'F02',reg.m_int_amt,'F03',reg.m_int_amt) as intAmt,*/
+        (case reg.finprod_type2 when 'F01' then reg.int_amt when 'F02' then reg.m_int_amt when 'F03' then reg.m_int_amt end) as intAmt,
         reg.fprice_amt as fpriceAmt,
         EE.PRICE_MODEL as priceModel,
         EE.BUSINESS_MODEL as businessModel,
@@ -611,8 +671,8 @@
             AND PPA.USER_ID = #{userId}
         </if>
         left join (
-        select rf.trade_id,sum(decode(rf.fee_type,'B06',rf.fee_amt)) as trdFeeAmt,
-        sum(decode(rf.fee_type,'B08',rf.fee_amt)) as settleFeeAmt
+        select rf.trade_id,sum(/*decode(rf.fee_type,'B06',rf.fee_amt)*/ (case rf.fee_type when 'B06' then rf.fee_amt end)) as trdFeeAmt,
+        sum(/*decode(rf.fee_type,'B08',rf.fee_amt)*/(case rf.fee_type when 'B08' then rf.fee_amt end)) as settleFeeAmt
         from wfl_reg_trade_fee rf
         group by rf.trade_id
         )feeDeal
@@ -663,7 +723,8 @@
         LEFT JOIN FIN_PRODUCT tmp2
         ON tmp1.sec_id = tmp2.finprod_market_id
         WHERE 1 = 1
-        AND tmp1.value_date <![CDATA[<=]]> to_date(#{platDate},'yyyy-MM-dd')/*估值行情.日期 小于等于 平台日*/
+        /*AND tmp1.value_date <![CDATA[<=]]> to_date(#{platDate},'yyyy-MM-dd')*//*估值行情.日期 小于等于 平台日*/
+        AND tmp1.value_date <![CDATA[<=]]> STR_TO_DATE(#{platDate},'%Y-%m-%d'))
         AND tmp1.value_source = (
         CASE WHEN tmp2.trade_market IN (#{TRADEPLACE03},#{TRADEPLACE04}) THEN 'CSD'
         ELSE 'CBC'
@@ -677,7 +738,8 @@
         ) mbvi/*以上获取债券小于等于平台日的最新估值行情*/
         ON fp.FINPROD_MARKET_ID = mbvi.SEC_ID
         where regdeal.totle_trade_id=#{totleTradeId,jdbcType=VARCHAR}
-        and decode(regdeal.is_cancel,'Y','03','N','01')= #{effectiveStatus,jdbcType=VARCHAR}
+        and /*decode(regdeal.is_cancel,'Y','03','N','01')= #{effectiveStatus,jdbcType=VARCHAR}*/
+        and (case reg.is_cancel when 'Y' then '03' when 'N' then '01' end)= #{effectiveStatus,jdbcType=VARCHAR}
         group by rp.pledge_finprod_id,
         fp.finprod_market_id,
         fp.finprod_abbr,
@@ -700,7 +762,8 @@
         T8.DIS_FACE_VALUE as disFaceValue
         from wfl_REG_FIN_PLEDGE rp
         left join wfl_reg_fin_product_deal regdeal
-        on rp.trade_id=decode(regdeal.finprod_type2,'F02',regdeal.trade_id,'F03',regdeal.totle_trade_id)
+        on rp.trade_id=/*decode(regdeal.finprod_type2,'F02',regdeal.trade_id,'F03',regdeal.totle_trade_id)*/
+                (case regdeal.finprod_type2 when 'F02' then regdeal.trade_id when 'F03' then regdeal.totle_trade_id end)
         LEFT JOIN wfl_REG_FIN_PRODUCT_DEAL_TOTAL T8 ON T8.TOTLE_TRADE_ID = regdeal.TOTLE_TRADE_ID
         left join ptl_portfolio pp
         on pp.portfolio_id=rp.portfolio_id
@@ -725,7 +788,8 @@
         LEFT JOIN FIN_PRODUCT tmp2
         ON tmp1.sec_id = tmp2.finprod_market_id
         WHERE 1 = 1
-        AND tmp1.value_date <![CDATA[<=]]> to_date(#{platDate},'yyyy-MM-dd')/*估值行情.日期 小于等于 平台日*/
+        /*AND tmp1.value_date <![CDATA[<=]]> to_date(#{platDate},'yyyy-MM-dd')*//*估值行情.日期 小于等于 平台日*/
+        AND tmp1.value_date <![CDATA[<=]]> STR_TO_DATE(#{platDate},'%Y-%m-%d')
         AND tmp1.value_source = (
         CASE WHEN tmp2.trade_market IN (#{TRADEPLACE03},#{TRADEPLACE04}) THEN 'CSD'
         ELSE 'CBC'
@@ -800,11 +864,13 @@
         ib.quote_type as quoteType,
         ib.ou_party_id as traderid,
         mccit.PARTY_ABBR as traderidStr,
-        nvl(su1.TRADER_NAME,ib.ou_trader_id)  as trader,
+       /* nvl(su1.TRADER_NAME,ib.ou_trader_id)  as trader,*/
+        ifnull(su1.TRADER_NAME,ib.ou_trader_id)  as trader,
         ibd.cp_party_id as counterId,
         ibd.PARTY_ABBR as counterIdStr,
         ibd.cp_trader as counterTrader,
-        decode(ib.settle_speed,0,'01',1,'02',2,'03') as settleSpeed,
+        /*decode(ib.settle_speed,0,'01',1,'02',2,'03') as settleSpeed,*/
+        (case ib.settle_speed when 0 then '01' when 1 then '02' when 2 then '03' end)  as settleSpeed,
         ib.sec_manage_acct_id as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdStr,
         ib.share_amt/100 as faceValue,
@@ -816,8 +882,10 @@
         deal.portfolioId as portfolioIds,
         deal.portfolioName as portfolioNames,
         deal.entrustId as entrustId,
-        to_char(ib.quote_date,'yyyy-MM-dd') as quoteDate,
-        to_char(total.trade_date,'yyyy-MM-dd') as tradeDate,
+        /*to_char(ib.quote_date,'yyyy-MM-dd') as quoteDate,
+        to_char(total.trade_date,'yyyy-MM-dd') as tradeDate,*/
+        DATE_FORMAT(ib.quote_date,'%Y-%m-%d')as quoteDate,
+        DATE_FORMAT(total.trade_date,'%Y-%m-%d')as tradeDate,
         ib.remark,
         ibd.calMode as calMode
         from ibu_quote_bond ib
@@ -825,7 +893,8 @@
         on ib.finprod_id=fp.finprod_id
         left join (
             select ibd.quote_id,ibd.cp_party_id as cp_party_id,mccic.PARTY_ABBR as PARTY_ABBR,
-            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.execid,
+            /*nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.execid,*/
+            ifnull(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.execid,
             decode(ibd.CALCULATE_FIELD,'01',TO_CHAR(ROUND(ibd.unit_cprice,4),'FM990.0000'),
                                       '02',TO_CHAR(ROUND(ibd.yield*100,4),'FM990.0000') ||'%',
                                        '03',TO_CHAR(ROUND(ibd.exer_yield*100,4),'FM990.0000')||'%') as tradeYield,
@@ -839,7 +908,8 @@
 
         union all
             select ibd.quote_id,wm_concat(ibd.cp_party_id) as cp_party_id,wm_concat(mccic.PARTY_ABBR) as PARTY_ABBR,
-            wm_concat(nvl(su.TRADER_NAME,ibd.cp_trader)) cp_trader,
+           /* wm_concat(nvl(su.TRADER_NAME,ibd.cp_trader)) cp_trader,*/
+            group_concat(nvl(su.TRADER_NAME,ibd.cp_trader)) cp_trader,
             ibd.execid,null as tradeYield,null as calMode
             from ibu_quote_bond_det ibd
             inner join ibu_quote_bond t1
@@ -864,8 +934,9 @@
         )ibd
         on ib.quote_id=ibd.quote_id
         inner  join(
-        select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
-        wm_concat(distinct ir.entrust_id) as entrustId
+        select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,/*wm_concat(pp.portfolio_name) portfolioName,*/group_concat(pp.portfolio_name) portfolioName,
+        /*wm_concat(distinct ir.entrust_id) as entrustId*/
+        group_concat(distinct ir.entrust_id) as entrustId
         from ibu_quote_etr_re ir
         left join ptl_portfolio pp
         on ir.portfolio_id=pp.portfolio_id
@@ -883,7 +954,7 @@
             </foreach>
         </if>
         <if test="entrustId != null and entrustId != ''">
-            AND ir.entrust_id like '%' || #{entrustId,jdbcType=VARCHAR} || '%'
+            AND ir.entrust_id like /*'%' || #{entrustId,jdbcType=VARCHAR} || '%'*/CONCAT(CONCAT('%',#{entrustId,jdbcType=VARCHAR}),'%')
         </if>
         group by ir.quote_id)deal
         on ib.quote_id=deal.quote_id
@@ -939,7 +1010,7 @@
             AND   ib.quote_type= #{quoteType,jdbcType=VARCHAR}
         </if>
         <if test="counterId != null and counterId != ''">
-            AND ibd.cp_party_id like '%' || #{counterId,jdbcType=VARCHAR} || '%'
+            AND ibd.cp_party_id like /*'%' || #{counterId,jdbcType=VARCHAR} || '%'*/CONCAT(CONCAT('%',#{counterId,jdbcType=VARCHAR}),'%')
         </if>
 
         union all
@@ -958,11 +1029,14 @@
         ic.quote_type as quoteType,
         ic.ou_party_id as traderid,
         mccit.PARTY_ABBR as traderidStr,
-        nvl(su1.TRADER_NAME,ic.ou_trader_id)  as trader,
+        /*nvl(su1.TRADER_NAME,ic.ou_trader_id)  as trader,*/
+        ifnull(su1.TRADER_NAME,ic.ou_trader_id)  as trader,
         ic.cp_party_id as counterId,
         mccic.PARTY_ABBR as counterIdStr,
-        nvl(su2.TRADER_NAME,ic.cp_trader_id) as counterTrader,
+        /*nvl(su2.TRADER_NAME,ic.cp_trader_id) as counterTrader,*/
+        ifnull(su2.TRADER_NAME,ic.cp_trader_id) as counterTrader,
         decode(ic.settle_speed,0,'01',1,'02',2,'03') as settleSpeed,
+        (case ic.settle_speed when 0 then '01' when 1 then '02' when 2 then '03' end)  as settleSpeed,
         ic.sec_manage_acct_id as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdStr,
         null as faceValue,
@@ -974,14 +1048,18 @@
         deal.portfolioId as portfolioIds,
         deal.portfolioName as portfolioNames,
         deal.entrustId as entrustId,
-        to_char(ic.quote_date,'yyyy-MM-dd')  as quoteDate,
-        to_char(total.trade_date,'yyyy-MM-dd') as tradeDate,
+        /*to_char(ic.quote_date,'yyyy-MM-dd')  as quoteDate,
+        to_char(total.trade_date,'yyyy-MM-dd') as tradeDate,*/
+        DATE_FORMAT(ic.quote_date,'%Y-%m-%d')as quoteDate,
+        DATE_FORMAT(total.trade_date,'%Y-%m-%d')as tradeDate,
         ic.remark,
         null as calMode
         from ibu_quote_crep ic
         inner  join(
-        select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
-        wm_concat(distinct ir.entrust_id) as entrustId
+        /*select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
+        wm_concat(distinct ir.entrust_id) as entrustId*/
+        select ir.quote_id,group_concat(ir.portfolio_id) as portfolioId,group_concat(pp.portfolio_name) portfolioName,
+        group_concat(distinct ir.entrust_id) as entrustId
         from ibu_quote_etr_re ir
         left join ptl_portfolio pp
         on ir.portfolio_id=pp.portfolio_id
@@ -999,7 +1077,7 @@
             </foreach>
         </if>
         <if test="entrustId != null and entrustId != ''">
-            AND ir.entrust_id like '%' || #{entrustId,jdbcType=VARCHAR} || '%'
+            AND ir.entrust_id like /*'%' || #{entrustId,jdbcType=VARCHAR} || '%'*/CONCAT(CONCAT('%',#{entrustId,jdbcType=VARCHAR}),'%')
         </if>
         group by ir.quote_id)deal
         on ic.quote_id=deal.quote_id
@@ -1057,7 +1135,7 @@
             AND   ic.quote_type= #{quoteType,jdbcType=VARCHAR}
         </if>
         <if test="counterId != null and counterId != ''">
-            AND ic.cp_party_id like '%' || #{counterId,jdbcType=VARCHAR} || '%'
+            AND ic.cp_party_id like /*'%' || #{counterId,jdbcType=VARCHAR} || '%'*/CONCAT(CONCAT('%',#{counterId,jdbcType=VARCHAR}),'%')
         </if>
     </sql>
     <sql id="onlyWflIbuInfo">
@@ -1074,11 +1152,13 @@
         ib.quote_type as quoteType,
         ib.ou_party_id as traderid,
         mccit.PARTY_ABBR as traderidStr,
-        nvl(su1.TRADER_NAME,ib.ou_trader_id)  as trader,
+        /*nvl(su1.TRADER_NAME,ib.ou_trader_id)  as trader,*/
+        ifnull(su1.TRADER_NAME,ib.ou_trader_id)  as trader,
         ibd.cp_party_id as counterId,
         ibd.PARTY_ABBR as counterIdStr,
         ibd.cp_trader as counterTrader,
-        decode(ib.settle_speed,0,'01',1,'02',2,'03') as settleSpeed,
+        /*decode(ib.settle_speed,0,'01',1,'02',2,'03') as settleSpeed,*/
+        (case ib.settle_speed when 0 then '01' when 1 then '02' when 2 then '03' end) as settleSpeed,
         ib.sec_manage_acct_id as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdStr,
         ib.share_amt/100 as faceValue,
@@ -1090,7 +1170,8 @@
         deal.portfolioId as portfolioIds,
         deal.portfolioName as portfolioNames,
         deal.entrustId as entrustId,
-        to_char(ib.quote_date,'yyyy-MM-dd') as quoteDate,
+        /*to_char(ib.quote_date,'yyyy-MM-dd') as quoteDate,*/
+        DATE_FORMAT(ib.quote_date,'%Y-%m-%d')as quoteDate,
         null as tradeDate,
         ib.remark,
         ibd.calMode as calMode
@@ -1099,7 +1180,8 @@
         on ib.finprod_id=fp.finprod_id
         left join (
             select ibd.quote_id,ibd.cp_party_id as cp_party_id,mccic.PARTY_ABBR as PARTY_ABBR,
-            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.execid,
+            /*nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.execid,*/
+            ifnull(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.execid,
             decode(ibd.CALCULATE_FIELD,'01',TO_CHAR(ROUND(ibd.unit_cprice,4),'FM990.0000'),
                                         '02',TO_CHAR(ROUND(ibd.yield*100,4),'FM990.0000') ||'%',
                                         '03',TO_CHAR(ROUND(ibd.exer_yield*100,4),'FM990.0000')||'%') as tradeYield,
@@ -1112,7 +1194,8 @@
 
             union all
             select ibd.quote_id,wm_concat(ibd.cp_party_id) as cp_party_id,wm_concat(mccic.PARTY_ABBR) as PARTY_ABBR,
-            wm_concat(nvl(su.TRADER_NAME,ibd.cp_trader)) cp_trader,
+            /*wm_concat(nvl(su.TRADER_NAME,ibd.cp_trader)) cp_trader,*/
+            group_concat(ifnll(su.TRADER_NAME,ibd.cp_trader)) cp_trader,
             ibd.execid,null as tradeYield,null as calMode
             from wfl_ibu_quote_bond_det ibd
             inner join wfl_ibu_quote_bond2 t1
@@ -1124,7 +1207,8 @@
 
             union all
             select ibd.quote_id,ibd.cp_party_id as cp_party_id,mccic.PARTY_ABBR as PARTY_ABBR,
-            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.execid,
+            /*nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.execid,*/
+            ifnull(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.execid,
             TO_CHAR(ROUND(ibd.yield*100,4),'FM990.0000') ||'%' as tradeYield,
             ibd.CALCULATE_FIELD as calMode
             from wfl_ibu_quote_bond_det ibd
@@ -1137,8 +1221,10 @@
         )ibd
         on ib.quote_id=ibd.quote_id
         inner  join(
-        select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
-        wm_concat(distinct ir.entrust_id) as entrustId
+        /*select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
+        wm_concat(distinct ir.entrust_id) as entrustId*/
+        select ir.quote_id,group_concat(ir.portfolio_id) as portfolioId,group_concat(pp.portfolio_name) portfolioName,
+        group_concat(distinct ir.entrust_id) as entrustId
         from wfl_ibu_quote_etr_re ir
         left join ptl_portfolio pp
         on ir.portfolio_id=pp.portfolio_id
@@ -1156,7 +1242,7 @@
             </foreach>
         </if>
         <if test="entrustId != null and entrustId != ''">
-            AND ir.entrust_id like '%' || #{entrustId,jdbcType=VARCHAR} || '%'
+            AND ir.entrust_id like /*'%' || #{entrustId,jdbcType=VARCHAR} || '%'*/CONCAT(CONCAT('%',#{entrustId,jdbcType=VARCHAR}),'%')
         </if>
         group by ir.quote_id)deal
         on ib.quote_id=deal.quote_id
@@ -1213,7 +1299,7 @@
             AND   ib.quote_type= #{quoteType,jdbcType=VARCHAR}
         </if>
         <if test="counterId != null and counterId != ''">
-            AND ibd.cp_party_id like '%' || #{counterId,jdbcType=VARCHAR} || '%'
+            AND ibd.cp_party_id like /*'%' || #{counterId,jdbcType=VARCHAR} || '%'*/CONCAT(CONCAT('%',#{counterId,jdbcType=VARCHAR}),'%')
         </if>
     <!--    <if test="quotationStateList != null and quotationStateList.size() > 0">
             AND (case when ib.trade_status in ('07','06','08','15','13') then #{DEAL_TYPE_IBU_02}
@@ -1239,11 +1325,14 @@
         ic.quote_type as quoteType,
         ic.ou_party_id as traderid,
         mccit.PARTY_ABBR as traderidStr,
-        nvl(su1.TRADER_NAME,ic.ou_trader_id)  as trader,
+        /*nvl(su1.TRADER_NAME,ic.ou_trader_id)  as trader,*/
+        ifnull(su1.TRADER_NAME,ic.ou_trader_id)  as trader,
         ic.cp_party_id as counterId,
         mccic.PARTY_ABBR as counterIdStr,
-        nvl(su2.TRADER_NAME,ic.cp_trader_id) as counterTrader,
-        decode(ic.settle_speed,0,'01',1,'02',2,'03') as settleSpeed,
+        /*nvl(su2.TRADER_NAME,ic.cp_trader_id) as counterTrader,*/
+        ifnull(su2.TRADER_NAME,ic.cp_trader_id) as counterTrader,
+        /*decode(ic.settle_speed,0,'01',1,'02',2,'03') as settleSpeed,*/
+        (case ic.settle_speed when 0 then '01' when 1 then '02' when 2 then '03' end) as settleSpeed,
         ic.sec_manage_acct_id as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdStr,
 
@@ -1256,14 +1345,17 @@
         deal.portfolioId as portfolioIds,
         deal.portfolioName as portfolioNames,
         deal.entrustId as entrustId,
-        to_char(ic.quote_date,'yyyy-MM-dd') as quoteDate,
+        /*to_char(ic.quote_date,'yyyy-MM-dd') as quoteDate,*/
+        DATE_FORMAT(ic.quote_date,'%Y-%m-%d')as quoteDate,
         null as tradeDate,
         ic.remark,
         null as calMode
         from wfl_ibu_quote_crep ic
         inner  join(
-        select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
-        wm_concat(distinct ir.entrust_id) as entrustId
+        /*select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
+        wm_concat(distinct ir.entrust_id) as entrustId*/
+        select ir.quote_id,group_concat(ir.portfolio_id) as portfolioId,group_concat(pp.portfolio_name) portfolioName,
+        group_concat(distinct ir.entrust_id) as entrustId
         from wfl_ibu_quote_etr_re ir
         left join ptl_portfolio pp
         on ir.portfolio_id=pp.portfolio_id
@@ -1281,7 +1373,7 @@
             </foreach>
         </if>
         <if test="entrustId != null and entrustId != ''">
-            AND ir.entrust_id like '%' || #{entrustId,jdbcType=VARCHAR} || '%'
+            AND ir.entrust_id like /*'%' || #{entrustId,jdbcType=VARCHAR} || '%'*/CONCAT(CONCAT('%',#{entrustId,jdbcType=VARCHA}),'%')
         </if>
         group by ir.quote_id)deal
         on ic.quote_id=deal.quote_id
@@ -1334,7 +1426,7 @@
             AND   ic.quote_type= #{quoteType,jdbcType=VARCHAR}
         </if>
         <if test="counterId != null and counterId != ''">
-            AND ic.cp_party_id like '%' || #{counterId,jdbcType=VARCHAR} || '%'
+            AND ic.cp_party_id like /*'%' || #{counterId,jdbcType=VARCHAR} || '%'*/CONCAT(CONCAT('%',#{counterId,jdbcType=VARCHAR}),'%')
         </if>
        <!-- <if test="quotationStateList != null and quotationStateList.size() > 0">
             AND (case when ic.trade_status in ('07','06','08','15','13') then #{DEAL_TYPE_IBU_02}
@@ -1354,26 +1446,44 @@
                 </foreach>
             </if>
             <if test="search != null and search != '' and search !='有效' ">
-                AND ((sdlStatus.ITEM_VALUE || '|' || sdlbjStatus.ITEM_VALUE    || '|' || sdlfsStatus.ITEM_VALUE
+                AND ((/*sdlStatus.ITEM_VALUE || '|' || sdlbjStatus.ITEM_VALUE    || '|' || sdlfsStatus.ITEM_VALUE
                     || '|' || sdlrole.ITEM_VALUE || '|' || dictps.ITEM_VALUE || '|' || sdl.ITEM_VALUE
                     || '|' || aaa.finprodMarketId || '|' || aaa.finprodAbbr   || '|' || dictquote.ITEM_VALUE
                     || '|' ||  aaa.traderidStr || '|' ||  aaa.trader  || '|' ||  aaa.counterIdStr || '|' ||  aaa.counterTrader
                     || '|' || dictsp.ITEM_VALUE || '|' || aaa.secManageAcctIdStr || '|' || aaa.quoteId
                     || '|' || aaa.execid  || '|' || aaa.portfolioIds  || '|' || aaa.portfolioNames
                     || '|' || aaa.entrustId || '|' || aaa.remark
-                    like '%' || #{search} || '%')
+                    like '%' || #{search} || '%') */
+                    concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(
+                    sdlStatus.ITEM_VALUE,'|'),sdlbjStatus.ITEM_VALUE),'|'),sdlfsStatus.ITEM_VALUE),'|'),
+                    sdlrole.ITEM_VALUE),'|'),dictps.ITEM_VALUE),'|'),sdl.ITEM_VALUE),'|'),
+                    aaa.finprodMarketId),'|'),aaa.finprodAbbr,),'|'),dictquote.ITEM_VALUE),'|'),
+                    aaa.traderidStr),'|'),aaa.trader),'|'),aaa.counterIdStr),'|'),aaa.counterTrader),'|'),
+                    dictsp.ITEM_VALUE),'|'),aaa.secManageAcctIdStr),aaa.quoteId),
+                    '|' ),aaa.execid ),'|'),aaa.portfolioIds), '|'), aaa.portfolioNames),
+                    '|' ),aaa.entrustId),'|'),aaa.remark) like CONCAT(CONCAT('%',#{search}),'%')
+
                     or to_char(aaa.faceValue,'FM9999999999999990.90')=#{search} or to_char(aaa.faceValue)=#{search}
-                    or aaa.tradeYield=#{search} or  aaa.tradeYield =#{search}||'%'
-                    or aaa.termDays||'' =#{search}
+                    or aaa.tradeYield=#{search} or  /*aaa.tradeYield =#{search}||'%'*/  aaa.tradeYield =CONCAT(#{search},'%')
+                    or /* aaa.termDays||'' =#{search} */ CONCAT(aaa.termDays,'')=#{search}
                     or to_char(aaa.tradeAmt,'FM9999999999999990.90')=#{search} or to_char(aaa.tradeAmt)=#{search}
-                    or aaa.quoteDate||'' =#{search}
-                    or aaa.quoteDate||'' =#{year}||'-'||#{search}
-                    or replace(aaa.quoteDate,'-','/')||'' =#{search}
-                    or replace(aaa.quoteDate,'-','/')||'' =#{year}||'/'||#{search}
-                    or aaa.tradeDate||'' =#{search}
-                    or aaa.tradeDate||'' =#{year}||'-'||#{search}
-                    or replace(aaa.tradeDate,'-','/')||'' =#{search}
-                    or replace(aaa.tradeDate,'-','/')||'' =#{year}||'/'||#{search}
+
+                    or /*aaa.quoteDate||'' =#{search}*/ CONCAT(aaa.quoteDate,'')=#{search}
+
+                    or /*aaa.quoteDate||'' =#{year}||'-'||#{search}*/
+                        CONCAT(aaa.quoteDate,'')=CONCAT(CONCAT(#{year},'-'),#{search})
+                    or /*replace(aaa.quoteDate,'-','/')||'' =#{search}*/
+                        CONCAT(replace(aaa.quoteDate,'-','/'),'') =#{search}
+                    or /*replace(aaa.quoteDate,'-','/')||'' =#{year}||'/'||#{search}*/
+                        CONCAT(replace(aaa.quoteDate,'-','/'),'') =CONCAT(CONCAT(#{year},'/'),#{search})
+                    or /*aaa.tradeDate||'' =#{search}*/
+                        CONCAT(aaa.tradeDate,'')=#{search}
+                    or /*aaa.tradeDate||'' =#{year}||'-'||#{search}*/
+                        CONCAT(aaa.tradeDate,'')=CONCAT(CONCAT(#{year},'-'),#{search})
+                    or /*replace(aaa.tradeDate,'-','/')||'' =#{search}*/
+                        CONCAT(replace(aaa.tradeDate,'-','/'),'') =#{search}
+                    or /*replace(aaa.tradeDate,'-','/')||'' =#{year}||'/'||#{search}*/
+                        CONCAT(replace(aaa.quoteDate,'-','/'),'') =CONCAT(CONCAT(#{year},'/'),#{search})
                     )
             </if>
         </where>
@@ -1391,9 +1501,12 @@
         fp.finprod_abbr as finprodAbbr,
         ib.ps as ps,
         ib.quote_type as quoteType,
-        to_char(ib.quote_date,'yyyy-MM-dd')  as quoteDate,
-        decode(ib.settle_speed,0,'01',1,'02',2,'03') as settleSpeed,
-        to_char(ib.settle_date,'yyyy-MM-dd') as settleDate,
+        /*to_char(ib.quote_date,'yyyy-MM-dd')  as quoteDate,*/
+        DATE_FORMAT(ib.quote_date,'%Y-%m-%d')as quoteDate,
+        /*decode(ib.settle_speed,0,'01',1,'02',2,'03') as settleSpeed,*/
+        (case ib.settle_speed when 0 then '01' when 1 then '02' when 2 then '03' end) as settleSpeed,
+        /*to_char(ib.settle_date,'yyyy-MM-dd') as settleDate,*/
+        DATE_FORMAT(ib.settle_date,'%Y-%m-%d')as settleDate,
         ib.sett_ccy as ccy,
         ibd.unit_cprice as unitCprice,
         ibd.yield*100 as yield,
@@ -1432,8 +1545,10 @@
 
             union all
 
-            select ibd.quote_id,wm_concat(ibd.cp_party_id) as cp_party_id,wm_concat(mccic.PARTY_ABBR) as PARTY_ABBR,
-            wm_concat(nvl(su.TRADER_NAME,ibd.cp_trader)) cp_trader,
+            /*select ibd.quote_id,wm_concat(ibd.cp_party_id) as cp_party_id,wm_concat(mccic.PARTY_ABBR) as PARTY_ABBR,
+            wm_concat(nvl(su.TRADER_NAME,ibd.cp_trader)) cp_trader,*/
+            select ibd.quote_id,group_concat(ibd.cp_party_id) as cp_party_id,group_concat(mccic.PARTY_ABBR) as PARTY_ABBR,
+            group_concat(nvl(su.TRADER_NAME,ibd.cp_trader)) cp_trader,
             null as yield,
             null as unit_cprice,
             null as exer_yield,
@@ -1451,7 +1566,8 @@
             group by ibd.quote_id
             union all
             select ibd.quote_id,ibd.cp_party_id as cp_party_id,mccic.PARTY_ABBR as PARTY_ABBR,
-            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,
+           /* nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,*/
+            ifnull(su.TRADER_NAME,ibd.cp_trader) cp_trader,
             ibd.yield as yield,
             ibd.unit_cprice,
             ibd.exer_yield,
@@ -1470,7 +1586,8 @@
         )ibd
         on ib.quote_id=ibd.quote_id
         left join(
-        select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
+        /*select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,*/
+        select ir.quote_id,group_concat(ir.portfolio_id) as portfolioId,group_concat(pp.portfolio_name) portfolioName,
         sum(ir.share_amt)/100 as faceValue
         from ibu_quote_etr_re ir
         left join ptl_portfolio pp
@@ -1491,7 +1608,8 @@
         select distinct null as  dialogueRecord,
         ib.ou_party_id as traderid,
         mccit.PARTY_ABBR as traderidStr,
-        nvl(su1.TRADER_NAME,ib.ou_trader_id) as trader,
+        /*nvl(su1.TRADER_NAME,ib.ou_trader_id) as trader,*/
+        ifnull(su1.TRADER_NAME,ib.ou_trader_id) as trader,
         ibd.cp_party_id as counterId,
         ibd.PARTY_ABBR as counterIdStr,
         ibd.cp_trader as counterTrader,
@@ -1500,9 +1618,12 @@
         fp.finprod_abbr as finprodAbbr,
         ib.ps as ps,
         ib.quote_type as quoteType,
-        to_char(ib.quote_date,'yyyy-MM-dd') as quoteDate,
+        /*to_char(ib.quote_date,'yyyy-MM-dd') as quoteDate,
         decode(ib.settle_speed,0,'01',1,'02',2,'03') as settleSpeed,
-        to_char(ib.settle_date,'yyyy-MM-dd') as settleDate,
+        to_char(ib.settle_date,'yyyy-MM-dd') as settleDate,*/
+        DATE_FORMAT(ib.quote_date,'%Y-%m-%d')as quoteDate,
+        (case ib.settle_speed when 0 then '01' when 1 then '02' when 2 then '03' end) as settleSpeed,
+        DATE_FORMAT(ib.settle_date,'%Y-%m-%d')as settleDate,
         ib.sett_ccy as ccy,
         ibd.unit_cprice as unitCprice,
         ibd.yield*100 as yield,
@@ -1524,7 +1645,8 @@
         on ib.finprod_id=fp.finprod_id
         left join (
             select ibd.quote_id,ibd.cp_party_id as cp_party_id,mccic.PARTY_ABBR as PARTY_ABBR,
-            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.yield as yield,
+            /*nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.yield as yield,*/
+            ifnull(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.yield as yield,
             ibd.unit_cprice,
             ibd.exer_yield,
             ibd.unit_int,
@@ -1539,8 +1661,10 @@
             left join MST_CFETS_CUSTOMER_TRADER su on ibd.cp_trader=su.TRADER_ID
             where   ibd.quote_id= #{quoteId,jdbcType=VARCHAR}
             union all
-            select ibd.quote_id,wm_concat(ibd.cp_party_id) as cp_party_id,wm_concat(mccic.PARTY_ABBR) as PARTY_ABBR,
-            wm_concat(nvl(su.TRADER_NAME,ibd.cp_trader)) cp_trader,
+            /*select ibd.quote_id,wm_concat(ibd.cp_party_id) as cp_party_id,wm_concat(mccic.PARTY_ABBR) as PARTY_ABBR,
+            wm_concat(nvl(su.TRADER_NAME,ibd.cp_trader)) cp_trader,*/
+            select ibd.quote_id,group_concat(ibd.cp_party_id) as cp_party_id,group_concat(mccic.PARTY_ABBR) as PARTY_ABBR,
+            group_concat(nvl(su.TRADER_NAME,ibd.cp_trader)) cp_trader,
             null as yield,
             null as unit_cprice,
             null as exer_yield,
@@ -1558,7 +1682,8 @@
             group by ibd.quote_id
             union all
             select ibd.quote_id,ibd.cp_party_id as cp_party_id,mccic.PARTY_ABBR as PARTY_ABBR,
-            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,
+            /*nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,*/
+            ifnull(su.TRADER_NAME,ibd.cp_trader) cp_trader,
             ibd.yield as yield,
             ibd.unit_cprice,
             ibd.exer_yield,
@@ -1577,7 +1702,9 @@
         )ibd
         on ib.quote_id=ibd.quote_id
         left join(
-        select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
+        /*select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
+        sum(ir.share_amt)/100 as faceValue*/
+        select ir.quote_id,group_concat(ir.portfolio_id) as portfolioId,group_concat(pp.portfolio_name) portfolioName,
         sum(ir.share_amt)/100 as faceValue
         from wfl_ibu_quote_etr_re ir
         left join ptl_portfolio pp
@@ -1599,16 +1726,20 @@
         select distinct
         ic.ou_party_id as traderid,
         mccit.PARTY_ABBR as traderidStr,
-        nvl(su1.TRADER_NAME, ic.ou_trader_id) as trader,
+        /*nvl(su1.TRADER_NAME, ic.ou_trader_id) as trader,*/
+        ifnull(su1.TRADER_NAME, ic.ou_trader_id) as trader,
         ic.cp_party_id as counterId,
         mccic.PARTY_ABBR as counterIdStr,
-        nvl(su.TRADER_NAME, ic.cp_trader_id) as counterTrader,
+        /*nvl(su.TRADER_NAME, ic.cp_trader_id) as counterTrader,*/
+        ifnull(su.TRADER_NAME, ic.cp_trader_id) as counterTrader,
         ic.repo_ps as ps,
         ic.quote_type as quoteType,
-        to_char(ic.quote_date,'yyyy-MM-dd') as quoteDate,
+        /*to_char(ic.quote_date,'yyyy-MM-dd') as quoteDate,*/
+        DATE_FORMAT(ic.quote_date,'%Y-%m-%d')as quoteDate,
         ic.term as repoTerm,
         ic.rate*100 as tradeYield,
-        decode(ic.settle_speed,0,'01',1,'02',2,'03') as settleSpeed,
+        /*decode(ic.settle_speed,0,'01',1,'02',2,'03') as settleSpeed,*/
+        (case ic.settle_speed when 0 then '01' when 1 then '02' when 2 then '03' end) as settleSpeed,
         ic.ccy as secCcy,
         ic.sett_ccy settCcy,
         ic.fprice_amt as tradeAmt,
@@ -1619,8 +1750,10 @@
         ic.m_delivery_type as mdeliveryType,
         ic.DEAL_FEE_AMT as trdFeeAmt,
         ic.SETT_FEE_AMT as settleFeeAmt,
-        to_char(ic.v_settle_date,'yyyy-MM-dd') as vsettleDate,
-        to_char(ic.m_settle_date,'yyyy-MM-dd') as msettleDate,
+        /*to_char(ic.v_settle_date,'yyyy-MM-dd') as vsettleDate,
+        to_char(ic.m_settle_date,'yyyy-MM-dd') as msettleDate,*/
+        DATE_FORMAT(ic.v_settle_date,'%Y-%m-%d')as vsettleDate,
+        DATE_FORMAT(ic.m_settle_date,'%Y-%m-%d')as msettleDate,
         ic.m_int_amt as intAmt,
         ic.m_trade_amt as mtradeAmt,
         (ic.m_settle_date-ic.v_settle_date) as actRepoTerm,
@@ -1629,7 +1762,9 @@
         ic.remark
         from ibu_quote_crep ic
         inner join(
-        select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
+        /*select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
+        sum(ir.share_amt)/100 as faceValue*/
+        select ir.quote_id,group_concat(ir.portfolio_id) as portfolioId,group_concat(pp.portfolio_name) portfolioName,
         sum(ir.share_amt)/100 as faceValue
         from ibu_quote_etr_re ir
         left join ptl_portfolio pp
@@ -1647,16 +1782,20 @@
         select distinct
         ic.ou_party_id as traderid,
         mccit.PARTY_ABBR as traderidStr,
-        nvl(su1.TRADER_NAME, ic.ou_trader_id) as trader,
+        /*nvl(su1.TRADER_NAME, ic.ou_trader_id) as trader,*/
+        ifnull(su1.TRADER_NAME, ic.ou_trader_id) as trader,
         ic.cp_party_id as counterId,
         mccic.PARTY_ABBR as counterIdStr,
-        nvl(su.TRADER_NAME, ic.cp_trader_id) as counterTrader,
+        /*nvl(su.TRADER_NAME, ic.cp_trader_id) as counterTrader,*/
+        ifnull(su.TRADER_NAME, ic.cp_trader_id) as counterTrader,
         ic.repo_ps as ps,
         ic.quote_type as quoteType,
-        to_char(ic.quote_date,'yyyy-MM-dd') as quoteDate,
+        /*to_char(ic.quote_date,'yyyy-MM-dd') as quoteDate,*/
+        DATE_FORMAT(ic.quote_date,'%Y-%m-%d')as quoteDate,
         ic.term as repoTerm,
         ic.rate as tradeYield,
-        decode(ic.settle_speed,0,'01',1,'02',2,'03') as settleSpeed,
+        /*decode(ic.settle_speed,0,'01',1,'02',2,'03') as settleSpeed,*/
+        (case ic.settle_speed when 0 then '01' when 1 then '02' when 2 then '03' end) as settleSpeed,
         ic.ccy as secCcy,
         ic.sett_ccy settCcy,
         ic.fprice_amt as tradeAmt,
@@ -1667,8 +1806,10 @@
         ic.m_delivery_type as mdeliveryType,
         null as trdFeeAmt,
         null as settleFeeAmt,
-        to_char(ic.v_settle_date,'yyyy-MM-dd') as vsettleDate,
-        to_char(ic.m_settle_date,'yyyy-MM-dd') as msettleDate,
+        /*to_char(ic.v_settle_date,'yyyy-MM-dd') as vsettleDate,
+        to_char(ic.m_settle_date,'yyyy-MM-dd') as msettleDate,*/
+        DATE_FORMAT(ic.v_settle_date,'%Y-%m-%d')as vsettleDate,
+        DATE_FORMAT(ic.m_settle_date,'%Y-%m-%d')as msettleDate,
         ic.m_int_amt as intAmt,
         ic.m_trade_amt as mtradeAmt,
         (ic.m_settle_date-ic.v_settle_date) as actRepoTerm,
@@ -1677,7 +1818,9 @@
         ic.remark
         from wfl_ibu_quote_crep ic
         inner join(
-        select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
+        /*select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
+        sum(ir.share_amt)/100 as faceValue*/
+        select ir.quote_id,group_concat(ir.portfolio_id) as portfolioId,group_concat(pp.portfolio_name) portfolioName,
         sum(ir.share_amt)/100 as faceValue
         from wfl_ibu_quote_etr_re ir
         left join ptl_portfolio pp
@@ -1695,12 +1838,15 @@
         select ir.entrust_id as entrustId,
         ir.portfolio_id as portfolioId,
         pp.portfolio_name as portfolioName,
-        (nvl(ee.entrust_amt,0) - nvl(efs.ent_finish_amt,0))/10000 unFinshAmt,
+        /*(nvl(ee.entrust_amt,0) - nvl(efs.ent_finish_amt,0))/10000 unFinshAmt,*/
+        (ifnull(ee.entrust_amt,0) - ifnull(efs.ent_finish_amt,0))/10000 unFinshAmt,
         ir.share_amt/100 as faceValue,
         ir.DEAL_FEE_AMT as trdFeeAmt,
         ir.SETT_FEE_AMT as settleFeeAmt,
-        nvl(ir.cprice_amt,ir.share_amt*ibd.unit_cprice) as cpriceAmt,
-        nvl(ir.int_amt,ir.fprice_amt-(ir.share_amt*ibd.unit_cprice)) as intAmt,
+        /*nvl(ir.cprice_amt,ir.share_amt*ibd.unit_cprice) as cpriceAmt,
+        nvl(ir.int_amt,ir.fprice_amt-(ir.share_amt*ibd.unit_cprice)) as intAmt,*/
+        ifnull(ir.cprice_amt,ir.share_amt*ibd.unit_cprice) as cpriceAmt,
+        ifnull(ir.int_amt,ir.fprice_amt-(ir.share_amt*ibd.unit_cprice)) as intAmt,
         ir.fprice_amt as fpriceAmt,
         EE.PRICE_MODEL as priceModel,
         EE.BUSINESS_MODEL as businessModel,
@@ -1729,7 +1875,8 @@
         on ib.sec_manage_acct_id=stlinfo.sec_acct_id
         left join (
             select ibd.quote_id,ibd.cp_party_id as cp_party_id,mccic.PARTY_ABBR as PARTY_ABBR,
-            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.yield as yield,
+            /*nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.yield as yield,*/
+            ifnull(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.yield as yield,
             ibd.unit_cprice,
             ibd.exer_yield,
             ibd.unit_int,
@@ -1746,8 +1893,10 @@
 
             union all
 
-            select ibd.quote_id,wm_concat(ibd.cp_party_id) as cp_party_id,wm_concat(mccic.PARTY_ABBR) as PARTY_ABBR,
-            wm_concat(nvl(su.TRADER_NAME,ibd.cp_trader)) cp_trader,
+            /*select ibd.quote_id,wm_concat(ibd.cp_party_id) as cp_party_id,wm_concat(mccic.PARTY_ABBR) as PARTY_ABBR,
+            wm_concat(nvl(su.TRADER_NAME,ibd.cp_trader)) cp_trader,*/
+            select ibd.quote_id,group_concat(ibd.cp_party_id) as cp_party_id,group_concat(mccic.PARTY_ABBR) as PARTY_ABBR,
+            group_concat(nvl(su.TRADER_NAME,ibd.cp_trader)) cp_trader,
             null as yield,
             null as unit_cprice,
             null as exer_yield,
@@ -1765,7 +1914,8 @@
             group by ibd.quote_id
             union all
             select ibd.quote_id,ibd.cp_party_id as cp_party_id,mccic.PARTY_ABBR as PARTY_ABBR,
-            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,
+            /*nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,*/
+            ifnull(su.TRADER_NAME,ibd.cp_trader) cp_trader,
             ibd.yield as yield,
             ibd.unit_cprice,
             ibd.exer_yield,
@@ -1789,12 +1939,15 @@
         select ir.entrust_id as entrustId,
         ir.portfolio_id as portfolioId,
         pp.portfolio_name as portfolioName,
-        (nvl(ee.entrust_amt,0) - nvl(efs.ent_finish_amt,0))/10000 unFinshAmt,
+        /*(nvl(ee.entrust_amt,0) - nvl(efs.ent_finish_amt,0))/10000 unFinshAmt,*/
+        (ifnull(ee.entrust_amt,0) - ifnull(efs.ent_finish_amt,0))/10000 unFinshAmt,
         ir.share_amt/100 as faceValue,
         ir.DEAL_FEE_AMT as trdFeeAmt,
         ir.SETT_FEE_AMT as settleFeeAmt,
-        nvl(ir.cprice_amt,ir.share_amt*ibd.unit_cprice) as cpriceAmt,
-        nvl(ir.int_amt,ir.fprice_amt-(ir.share_amt*ibd.unit_cprice)) as intAmt,
+        /*nvl(ir.cprice_amt,ir.share_amt*ibd.unit_cprice) as cpriceAmt,
+        nvl(ir.int_amt,ir.fprice_amt-(ir.share_amt*ibd.unit_cprice)) as intAmt,*/
+        ifnull(ir.cprice_amt,ir.share_amt*ibd.unit_cprice) as cpriceAmt,
+        ifnull(ir.int_amt,ir.fprice_amt-(ir.share_amt*ibd.unit_cprice)) as intAmt,
         ir.fprice_amt as fpriceAmt,
         EE.PRICE_MODEL as priceModel,
         EE.BUSINESS_MODEL as businessModel,
@@ -1823,7 +1976,8 @@
         on ib.sec_manage_acct_id=stlinfo.sec_acct_id
         left join (
             select ibd.quote_id,ibd.cp_party_id as cp_party_id,mccic.PARTY_ABBR as PARTY_ABBR,
-            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.yield as yield,
+            /*nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.yield as yield,*/
+            ifnull(su.TRADER_NAME,ibd.cp_trader) cp_trader,ibd.yield as yield,
             ibd.unit_cprice,
             ibd.exer_yield,
             ibd.unit_int,
@@ -1840,8 +1994,10 @@
 
             union all
 
-            select ibd.quote_id,wm_concat(ibd.cp_party_id) as cp_party_id,wm_concat(mccic.PARTY_ABBR) as PARTY_ABBR,
-            wm_concat(nvl(su.TRADER_NAME,ibd.cp_trader)) cp_trader,
+           /* select ibd.quote_id,wm_concat(ibd.cp_party_id) as cp_party_id,wm_concat(mccic.PARTY_ABBR) as PARTY_ABBR,
+            wm_concat(nvl(su.TRADER_NAME,ibd.cp_trader)) cp_trader,*/
+            select ibd.quote_id,group_concat(ibd.cp_party_id) as cp_party_id,group_concat(mccic.PARTY_ABBR) as PARTY_ABBR,
+            group_concat(nvl(su.TRADER_NAME,ibd.cp_trader)) cp_trader,
             null as yield,
             null as unit_cprice,
             null as exer_yield,
@@ -1859,7 +2015,8 @@
             group by ibd.quote_id
             union all
             select ibd.quote_id,ibd.cp_party_id as cp_party_id,mccic.PARTY_ABBR as PARTY_ABBR,
-            nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,
+            /*nvl(su.TRADER_NAME,ibd.cp_trader) cp_trader,*/
+            ifnull(su.TRADER_NAME,ibd.cp_trader) cp_trader,
             ibd.yield as yield,
             ibd.unit_cprice,
             ibd.exer_yield,
@@ -1960,7 +2117,8 @@
             LEFT JOIN FIN_PRODUCT tmp2
             ON tmp1.sec_id = tmp2.finprod_market_id
             WHERE 1 = 1
-            AND tmp1.value_date <![CDATA[<=]]> to_date(#{platDate},'yyyy-MM-dd')/*估值行情.日期 小于等于 平台日*/
+            /*AND tmp1.value_date <![CDATA[<=]]> to_date(#{platDate},'yyyy-MM-dd')*//*估值行情.日期 小于等于 平台日*/
+            AND tmp1.value_date <![CDATA[<=]]> STR_TO_DATE(#{platDate},'%Y-%m-%d')
             AND tmp1.value_source = (
             CASE WHEN tmp2.trade_market IN (#{TRADEPLACE03},#{TRADEPLACE04}) THEN 'CSD'
             ELSE 'CBC'
@@ -1994,14 +2152,20 @@
         I.Execid  as execid,
         I.Businesstype as businesstype,
         fp.finprod_id as finprodId,
-        decode(I.BUSINESSTYPE,'BOND',ts.SECID,'REPO',tr.secid) as finprodMarketId,
-        decode(I.BUSINESSTYPE,'BOND',fp.finprod_abbr,'REPO',null) as finprodAbbr,
-        nvl(ts.ps,tr.ps) as ps,
-        decode(decode(I.BUSINESSTYPE,'BOND',ts.SETTLE_SPEED,'REPO',tr.SETTLE_SPEED),'1','01','2','02','3','03') settleSpeed,
-        nvl(ts.OURDEPOSITACCOUNTNUMBER,tr.OURDEPOSITACCOUNTNUMBER) as secManageAcctId,
+        /*decode(I.BUSINESSTYPE,'BOND',ts.SECID,'REPO',tr.secid) as finprodMarketId,
+        decode(I.BUSINESSTYPE,'BOND',fp.finprod_abbr,'REPO',null) as finprodAbbr,*/
+        (case I.BUSINESSTYPE,'BOND' when ts.SECID then 'REPO' else tr.secid end) as finprodMarketId,
+        (case I.BUSINESSTYPE,'BOND' when fp.finprod_abbr then 'REPO'else null end) as finprodAbbr,
+        /*nvl(ts.ps,tr.ps) as ps,*/
+        ifnull(ts.ps,tr.ps) as ps,
+        /*decode(decode(I.BUSINESSTYPE,'BOND',ts.SETTLE_SPEED,'REPO',tr.SETTLE_SPEED),'1','01','2','02','3','03') settleSpeed,*/
+        (case (case I.BUSINESSTYPE when 'BOND' then ts.SETTLE_SPEED when 'REPO' then tr.SETTLE_SPEED end) when '1' then '01' when '2' then '02' when '3' then '03' end) settleSpeed,
+        /*nvl(ts.OURDEPOSITACCOUNTNUMBER,tr.OURDEPOSITACCOUNTNUMBER) as secManageAcctId,*/
+        ifnull(ts.OURDEPOSITACCOUNTNUMBER,tr.OURDEPOSITACCOUNTNUMBER) as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdStr,
         ts.prinamt/10000 as faceValue,
-        decode(I.BUSINESSTYPE, 'BOND', I.yield2*100, 'REPO', I.PRICE*100) tradeYield,
+        /*decode(I.BUSINESSTYPE, 'BOND', I.yield2*100, 'REPO', I.PRICE*100) tradeYield,*/
+        (case I.BUSINESSTYPE when 'BOND' then I.yield2*100 when 'REPO' then I.PRICE*100 end) tradeYield,
         I.TRADELIMITDAYS as termDays,
         I.TRADECASHAMT as tradeAmt,
         I.QUOTEID as quoteid,
@@ -2015,9 +2179,12 @@
        <!-- mccic.PARTY_ABBR as counterIdStr,-->
         I.INSTITUTIONCHINESEFULLNAME as counterIdStr,
 
-        decode(I.Clearingmethod,'13','01','6','02') as clearType,
+        /*decode(I.Clearingmethod,'13','01','6','02') as clearType,
         to_char(total.trade_date,'yyyy-MM-dd') as tradeDate,
-        nvl(ts.dealtext,tr.dealtext) as remark
+        nvl(ts.dealtext,tr.dealtext) as remark*/
+        (case I.Clearingmethod when '13' then '01' when '6' then '02' end) as clearType,
+        DATE_FORMAT(total.trade_date,'%Y-%m-%dd') as tradeDate,
+        ifnull(ts.dealtext,tr.dealtext) as remark
 
         from INTERF_CSTP_TRADE I
         INNER JOIN (SELECT EXECID ,MAX(UPDATETIME) UPDATETIME FROM  INTERF_CSTP_TRADE GROUP BY EXECID)	II ON  II.EXECID = I.EXECID AND II.UPDATETIME = I.UPDATETIME
@@ -2036,7 +2203,8 @@
         LEFT JOIN IBU_QUOTE_CREP iqc ON i.EXECID = iqc.EXECID
         ) QUOTE ON QUOTE.EXECID=I.EXECID-->
         left join stl_sec_acct_info stlinfo
-        on nvl(ts.OURDEPOSITACCOUNTNUMBER,tr.OURDEPOSITACCOUNTNUMBER)=stlinfo.sec_acct_id
+        /*on nvl(ts.OURDEPOSITACCOUNTNUMBER,tr.OURDEPOSITACCOUNTNUMBER)=stlinfo.sec_acct_id*/
+        on ifnull(ts.OURDEPOSITACCOUNTNUMBER,tr.OURDEPOSITACCOUNTNUMBER)=stlinfo.sec_acct_id
       <!--  LEFT JOIN MST_CFETS_CUSTOMER_INFO mccit ON I.ourinstitutioncode= mccit.party_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON I.Counterinstitutioncode= mccic.party_id-->
         left join trdquto_match_info match
@@ -2045,19 +2213,19 @@
         on match.trd_id=total.totle_trade_id
         where 1=1
         <if test="sysDate != null and !sysDate.equals('')">
-            AND  nvl(ts.dealdate,tr.dealdate) = #{sysDate,jdbcType=DATE}
+            AND  /*nvl(ts.dealdate,tr.dealdate) = #{sysDate,jdbcType=DATE}*/ifnull(ts.dealdate,tr.dealdate) = #{sysDate,jdbcType=DATE}
         </if>
         <if test="startDate != null and !startDate.equals('')">
-            AND   nvl(ts.dealdate,tr.dealdate)>= #{startDate,jdbcType=DATE}
+            AND   /*nvl(ts.dealdate,tr.dealdate)>= #{startDate,jdbcType=DATE}*/ifnull(ts.dealdate,tr.dealdate)>= #{startDate,jdbcType=DATE}
         </if>
         <if test="endDate != null and !endDate.equals('')">
-            AND   nvl(ts.dealdate,tr.dealdate)<![CDATA[<=]]>#{endDate,jdbcType=DATE}
+            AND   /*nvl(ts.dealdate,tr.dealdate)<![CDATA[<=]]>#{endDate,jdbcType=DATE}*/ifnull(ts.dealdate,tr.dealdate)<![CDATA[<=]]>#{endDate,jdbcType=DATE}
         </if>
         <if test="submitUserId != null and submitUserId != ''">
             and su.USER_NAME= #{submitUserId}
         </if>
         <if test="ps != null and !ps.equals('')">
-            AND  nvl(ts.ps,tr.ps)=#{ps}
+            AND  /*nvl(ts.ps,tr.ps)=#{ps}*/ ifnull(ts.ps,tr.ps)=#{ps}
         </if>
      <!--   <if test="finprodType2List != null and finprodType2List.size() > 0">
             AND reg.finprod_type2 in
@@ -2069,7 +2237,7 @@
             AND I.Businesstype=#{regAssetType}
         </if>
         <if test="finprodIdList != null and finprodIdList.size() > 0">
-            AND (nvl(ts.SECID,tr.SECID)  in
+            AND (/*nvl(ts.SECID,tr.SECID)*/ ifnull(ts.SECID,tr.SECID) in
             <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
@@ -2084,7 +2252,8 @@
             )
         </if>
         <if test="settleSpeed != null and settleSpeed != ''">
-            and decode(decode(I.BUSINESSTYPE,'BOND',ts.SETTLE_SPEED,'REPO',tr.SETTLE_SPEED),'1','01','2','02','3','03') = #{settleSpeed,jdbcType=VARCHAR}
+/*            and decode(decode(I.BUSINESSTYPE,'BOND',ts.SETTLE_SPEED,'REPO',tr.SETTLE_SPEED),'1','01','2','02','3','03') = #{settleSpeed,jdbcType=VARCHAR}*/
+            (case (case I.BUSINESSTYPE when 'BOND' then ts.SETTLE_SPEED when 'REPO' then tr.SETTLE_SPEED end) when '1' then '01' when '2' then '02' when '3' then '03' end) = #{settleSpeed,jdbcType=VARCHAR}
         </if>
         <if test="secAcctIdList != null and secAcctIdList.size() > 0">
             AND nvl(ts.OURDEPOSITACCOUNTNUMBER,tr.OURDEPOSITACCOUNTNUMBER)  in
@@ -2139,20 +2308,29 @@
         <if test="search != null and search != '' and search !='有效' ">
             <where>
                 ((
-                sdlMatch.ITEM_VALUE || '|' ||aaa.execid || '|' || sdl.ITEM_VALUE || '|' || aaa.finprodMarketId || '|' || aaa.finprodAbbr
+                /*sdlMatch.ITEM_VALUE || '|' ||aaa.execid || '|' || sdl.ITEM_VALUE || '|' || aaa.finprodMarketId || '|' || aaa.finprodAbbr
                 || '|' || dictps.ITEM_VALUE || '|' || dictsp.ITEM_VALUE
                 || '|' || aaa.secManageAcctIdStr   || '|' || aaa.quoteid
                 || '|' || aaa.traderidStr   || '|' || aaa.trader
                 || '|' || aaa.counterIdStr   || '|' || dictct.ITEM_VALUE || '|' || aaa.remark
-                like '%' || #{search} || '%')
+                like '%' || #{search} || '%')*/
+                concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(
+                sdlStatus.ITEM_VALUE,'|'),sdlbjStatus.ITEM_VALUE),'|'),sdlfsStatus.ITEM_VALUE),'|'),
+                sdlrole.ITEM_VALUE),'|'),dictps.ITEM_VALUE),'|'),sdl.ITEM_VALUE),'|'),
+                aaa.finprodMarketId),'|'),aaa.finprodAbbr,),'|'),dictquote.ITEM_VALUE),'|'),
+                aaa.traderidStr),'|'),aaa.trader),'|'),aaa.counterIdStr),'|'),aaa.counterTrader),'|'),
+                dictsp.ITEM_VALUE),'|'),aaa.secManageAcctIdStr),aaa.quoteId),
+                '|' ),aaa.execid ),'|'),aaa.portfolioIds), '|'), aaa.portfolioNames),
+                '|' ),aaa.entrustId),'|'),aaa.remark) like CONCAT(CONCAT('%',#{search}),'%')
                 or to_char(aaa.faceValue,'FM9999999999999990.90')=#{search} or to_char(aaa.faceValue)=#{search}
-                or to_char(aaa.tradeYield,'FM99990.9990')=#{search} or  aaa.tradeYield||'' =#{search}
-                or aaa.termDays||'' =#{search}
+                or to_char(aaa.tradeYield,'FM99990.9990')=#{search} or
+                /*aaa.tradeYield||'' =#{search}*/CONCAT(aaa.tradeYield,'')=#{search}
+              /*  or aaa.termDays||'' =#{search}*/CONCAT(aaa.termDays,'')=#{search}
                 or to_char(aaa.tradeAmt,'FM9999999999999990.90')=#{search} or to_char(aaa.tradeAmt)=#{search}
-                or aaa.tradeDate||'' =#{search}
-                or aaa.tradeDate||''=#{year}||'-'||#{search}
-                or replace(aaa.tradeDate,'-','/')||''=#{search}
-                or replace(aaa.tradeDate,'-','/')||''=#{year}||'/'||#{search}
+                or /*aaa.tradeDate||'' =#{search}*/CONCAT(aaa.tradeDate,'')=#{search}
+                or /*aaa.tradeDate||''=#{year}||'-'||#{search}*/CONCAT(aaa.tradeDate,'')=CONCAT(CONCAT(#{year},'-'),#{search})
+                or /*replace(aaa.tradeDate,'-','/')||''=#{search}*/CONCAT(replace(aaa.tradeDate,'-','/'),'') =#{search}
+                or/* replace(aaa.tradeDate,'-','/')||''=#{year}||'/'||#{search}*/CONCAT(replace(aaa.tradeDate,'-','/'),'') =CONCAT(CONCAT(#{year},'/'),#{search})
                 )
             </where>
         </if>
@@ -2160,7 +2338,8 @@
     <select id="selectCstpBondFormDataByKey" resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryCstpInfoListResponse">
 
         select distinct
-        to_char(total.trade_date,'yyyy-MM-dd') as tradeDate,
+        /*to_char(total.trade_date,'yyyy-MM-dd') as tradeDate,*/
+        DATE_FORMAT(total.trade_date,'%Y-%m-%d')as tradeDate,
         I.execid as execid,
         I.Ourinstitutioncode as buyId,
         I.Ourinstitutionchinesefullname as buyIdStr,
@@ -2172,10 +2351,13 @@
         ts.price_8 as unitCprice,
         I.yield2*100 as yield,
         ts.Strikeyield*100 as exerYield,
-        to_char(ts.settdate,'yyyy-MM-dd') as settleDate,
+        /*to_char(ts.settdate,'yyyy-MM-dd') as settleDate,*/
+        DATE_FORMAT(ts.settdate,'%Y-%m-%d')as settleDate,
         ts.prinamt/10000 as faceValue,
-        decode(I.Clearingmethod,'13','01','6','02') as clearType,
-        decode(I.deliveryType,'0','03','5','02','4','01') as deliveryType,
+        /*decode(I.Clearingmethod,'13','01','6','02') as clearType,*/
+        (case I.Clearingmethod when '13' then '01' when '6' then '02' end) as clearType,
+        /*decode(I.deliveryType,'0','03','5','02','4','01') as deliveryType,*/
+        (case I.deliveryType when '0' then '03' when '5' then '02' when '4' then '01'end) as deliveryType,
         ts.dealtext as remark,
         ts.dirtyprice as unitFprice,
         ts.settamt as tradeAmt,
@@ -2210,7 +2392,7 @@
         where  I.execid = #{execId,jdbcType=VARCHAR}
     </select>
     <select id="selectCstpRepoFormDataByKey" resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryCstpInfoListResponse">
-        select distinct to_char(total.trade_date,'yyyy-MM-dd')  as tradeDate,
+        select distinct /*to_char(total.trade_date,'yyyy-MM-dd')  as tradeDate,*/DATE_FORMAT(total.trade_date,'%Y-%m-%d')  as tradeDate,
         I.execid as execid,
         I.Ourinstitutioncode as rbRepo,
         I.Ourinstitutionchinesefullname as rbRepoStr,
@@ -2224,12 +2406,16 @@
         tr.repointamt as intAmt,
         '1' as repoType,
         decode(I.Clearingmethod,'13','01','6','02') as clearType,
-        to_date(I.Settldate,'yyyy-MM-dd') as vsettleDate,
-        to_date(I.Settldate2,'yyyy-MM-dd') as msettleDate,
+        /*to_date(I.Settldate,'yyyy-MM-dd') as vsettleDate,
+        to_date(I.Settldate2,'yyyy-MM-dd') as msettleDate,*/
+        STR_TO_DATE(total.trade_date,'%Y-%m-%d')  as vsettleDate,
+        STR_TO_DATE(total.trade_date,'%Y-%m-%d')  as msettleDate,
         I.Cashholdingdays as actRepoTerm,
         tr.term_type as termType,
-        decode(I.deliveryType,'0','03','5','02','4','01') as deliveryType,
-        decode(I.Deliverytype2,'0','03','5','02','4','01') as mdeliveryType,
+        /*decode(I.deliveryType,'0','03','5','02','4','01') as deliveryType,
+        decode(I.Deliverytype2,'0','03','5','02','4','01') as mdeliveryType,*/
+        (case I.deliveryType when '0' then '03' when '5' then '02' when '4' then '01'end) as deliveryType,
+        (case I.Deliverytype2 when '0' then '03' when '5' then '02' when '4' then '01'end) as mdeliveryType,
         tr.dealtext as remark,
         I.Ourinstitutioncode as institutionb,
         I.Ourinstitutionchinesefullname as institutionbStr,
@@ -2269,7 +2455,7 @@
         inner join INTERF_TRAD_REPOASST itr
         on repo.oritradeid=itr.tradeid
         inner  join fin_product fprepo
-        on fprepo.finprod_market_id= itr.SECID|| '.' || repo.MARKET
+        on fprepo.finprod_market_id= /*itr.SECID|| '.' || repo.MARKET*/CONCAT(CONCAT(itr.SECID,'.'),epo.MARKET)
         and fprepo.finprod_type='F01'
         where itr.tradeid=#{execId,jdbcType=VARCHAR}
         order by fprepo.finprod_id
@@ -2283,14 +2469,16 @@
                  when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus02} THEN #{cleanStatus02}
                  when T9.PS = #{feePs02} and (T9.SETTLE_STATUS is null or T9.SETTLE_STATUS = #{settlementStatus02}) and T9.ORDER_RET_STATUS = '03' THEN #{cleanStatus03}
                   ELSE NULL END cleanStatus,
-            decode(T1.finprod_type2,'F03',null,nvl(T8.SETTLE_STATUS,#{DELIVERY_STATUS_01})) settleStatus,
+            /*decode(T1.finprod_type2,'F03',null,nvl(T8.SETTLE_STATUS,#{DELIVERY_STATUS_01})) settleStatus,*/
+            (case T1.finprod_type2,'F03' when null then ifnull(T8.SETTLE_STATUS,#{DELIVERY_STATUS_01}) end) settleStatus,
             T1.TOTLE_TRADE_ID totleTradeId,
             T1.FINPROD_TYPE2 finprodType2,
             sdl1.item_value finprodType2Str,
             btm.BUSI_TYPE tgBusiType,
             sdl2.item_value tgBusiTypeStr,
             t2.FINPROD_ID AS finprodId,
-            nvl(T2.FINPROD_MARKET_ID,T3.TERM_TYPE) finprodMarketId,
+            /*nvl(T2.FINPROD_MARKET_ID,T3.TERM_TYPE) finprodMarketId,*/
+            ifnull(T2.FINPROD_MARKET_ID,T3.TERM_TYPE) finprodMarketId,
             T2.FINPROD_ABBR finprodAbbr,
             T1.PS ps,
             sdl3.item_value psStr,
@@ -2299,10 +2487,13 @@
             T1.TRADE_MARKET_MODE tradeMarketMode,
             sdl6.item_value tradeMarketModeStr,
             T1.settle_speed as settleSpeed,
-            'T+'||T1.settle_speed as settleSpeedStr,
+            /*'T+'||T1.settle_speed as settleSpeedStr,*/
+            CONCAT('T+',T1.settle_speed ) as settleSpeedStr,
             T1.SEC_MANAGE_ACCT_ID as secManageAcctId,
             T7.SEC_ACCT_NAME secManageAcctIdStr,
-            decode(T1.finprod_type2,'F01',deal.share_amt/100,null)as faceValue,
+            /*decode(T1.finprod_type2,'F01',deal.share_amt/100,null)as faceValue,*/
+            (case T1.finprod_type2 when 'F01' then deal.share_amt/100 else null end)as faceValue,
+            (T1.finprod_type2,'F01',deal.share_amt/100,null)as faceValue,
             case when T1.finprod_type2='F01'
             then decode(nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD),'01',TO_CHAR(ROUND(T1.unit_cprice,4),'FM990.0000'),
             '02',TO_CHAR(ROUND(T1.yield*100,4),'FM990.0000') ||'%',
@@ -2314,14 +2505,17 @@
             deal.trade_Amt tradeAmt,
             T1.ccy as ccy,
             sdl7.item_value as ccyStr,
-            to_char(T1.TRADE_DATE,'yyyy-MM-dd') as confirmTradeDate,
-            to_char(T1.SETTLE_DATE,'yyyy-MM-dd') as settleDate,
+            /*to_char(T1.TRADE_DATE,'yyyy-MM-dd') as confirmTradeDate,
+            to_char(T1.SETTLE_DATE,'yyyy-MM-dd') as settleDate,*/
+            DATE_FORMAT(T1.TRADE_DATE,'%Y-%m-%d')as confirmTradeDate,
+            DATE_FORMAT(T1.SETTLE_DATE},'%Y-%m-%d')as settleDate,
             match.exe_id as execid,
             T1.counter_id as counterId,
             T6.counter_name counterIdStr,
             T1.remark,
             T1.TRADE_DATE as tradeDate,
-            nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD) as calMode,
+           /* nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD) as calMode,*/
+            ifnull(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD) as calMode,
             match.pre_trade_id preTradeId,
             match.match_status as matchStatus,
             T1.trader as trader
@@ -2428,25 +2622,32 @@
         <if test="search != null and search != '' and search !='有效' ">
             <where>
                 ((
-                sdles.ITEM_VALUE || '|' ||sdlcs.ITEM_VALUE || '|' || sdlss.ITEM_VALUE
+                /*sdles.ITEM_VALUE || '|' ||sdlcs.ITEM_VALUE || '|' || sdlss.ITEM_VALUE
                 || '|' ||aaa.totleTradeId || '|' || aaa.finprodType2Str
                 || '|' || aaa.tgBusiTypeStr || '|' || aaa.finprodMarketId || '|' || aaa.finprodAbbr
                 || '|' || aaa.psStr|| '|' || aaa.tradeMarketStr|| '|' || aaa.tradeMarketModeStr
                 || '|' || aaa.settleSpeedStr  || '|' || aaa.secManageAcctIdStr || '|' || aaa.ccyStr
                 || '|' || aaa.execid   || '|' || aaa.counterIdStr || '|' || aaa.remark
-                like '%' || #{search} || '%')
+                like '%' || #{search} || '%')*/
+               (concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(
+                sdles.ITEM_VALUE,'|'),sdlcs.ITEM_VALUE),'|'),sdlss.ITEM_VALUE),'|'),
+                aaa.totleTradeId),'|'),aaa.finprodType2Str),'|'),aaa.tgBusiTypeStr),'|'),
+                aaa.finprodMarketId),'|'),aaa.finprodAbbr,),'|'),aaa.psSt),'|'),
+                aaa.tradeMarketStr),'|'),aaa.tradeMarketModeStr),'|'),aaa.settleSpeedStr),'|'),aaa.secManageAcctIdStr),'|'),
+                aaa.ccyStr),'|'),aaa.execid),'|'),aaa.counterIdStr),'|'),aaa.remark) like CONCAT(CONCAT('%',#{search}),'%')
+
                 or to_char(aaa.faceValue,'FM9999999999999990.90')=#{search} or to_char(aaa.faceValue)=#{search}
-                or aaa.tradeYield=#{search} or  aaa.tradeYield =#{search}||'%'
-                or aaa.termDays||'' =#{search}
+                or aaa.tradeYield=#{search} or  /*aaa.tradeYield =#{search}||'%'*/CONCAT(aaa.tradeYield,'')=#{search}
+                or /*aaa.termDays||'' =#{search}*/CONCAT(aaa.termDays,'')=#{search}
                 or to_char(aaa.tradeAmt,'FM9999999999999990.90')=#{search} or to_char(aaa.tradeAmt)=#{search}
-                or aaa.confirmTradeDate||'' =#{search}
-                or aaa.confirmTradeDate||''=#{year}||'-'||#{search}
-                or replace(aaa.confirmTradeDate,'-','/')||''=#{search}
-                or replace(aaa.confirmTradeDate,'-','/')||''=#{year}||'/'||#{search}
-                or aaa.settleDate||'' =#{search}
-                or aaa.settleDate||''=#{year}||'-'||#{search}
-                or replace(aaa.settleDate,'-','/')||''=#{search}
-                or replace(aaa.settleDate,'-','/')||''=#{year}||'/'||#{search}
+                or /*aaa.confirmTradeDate||'' =#{search}*/ CONCAT(aaa.confirmTradeDate,'')=#{search}
+                or /*aaa.confirmTradeDate||''=#{year}||'-'||#{search}*/CONCAT(aaa.confirmTradeDate,'')=CONCAT(CONCAT(#{year},'-'),#{search})
+                or /*replace(aaa.confirmTradeDate,'-','/')||''=#{search}*/CONCAT(replace(aaa.confirmTradeDate,'-','/'),'') =#{search}
+                or /*replace(aaa.confirmTradeDate,'-','/')||''=#{year}||'/'||#{search}*/CONCAT(replace(aaa.confirmTradeDate,'-','/'),'') =CONCAT(CONCAT(#{year},'/'),#{search})
+                or /*aaa.settleDate||'' =#{search}*/CONCAT(aaa.settleDate,'')=#{search}
+                or /*aaa.settleDate||''=#{year}||'-'||#{search}*/CONCAT(aaa.settleDate,'')=CONCAT(CONCAT(#{year},'-'),#{search})
+                or /*replace(aaa.settleDate,'-','/')||''=#{search}*/ CONCAT(replace(aaa.settleDate,'-','/'),'') =#{search}
+                or /*replace(aaa.settleDate,'-','/')||''=#{year}||'/'||#{search}*/ CONCAT(replace(aaa.settleDate,'-','/'),'') =CONCAT(CONCAT(#{year},'/'),#{search})
                 )
             </where>
         </if>
@@ -2455,12 +2656,14 @@
             resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryTradeInfoListResponse">
         select * from (SELECT aaa.* FROM(
         select distinct
-        decode(T1.is_cancel,'N',#{STATUS_VALID_01},'Y',#{STATUS_VALID_03}) as  effectiveStatus,
+        /*decode(T1.is_cancel,'N',#{STATUS_VALID_01},'Y',#{STATUS_VALID_03}) as  effectiveStatus,*/
+        (case T1.is_cancel when 'N' then #{STATUS_VALID_01} when 'Y' then #{STATUS_VALID_03} end) as  effectiveStatus,
         case when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus01} THEN #{cleanStatus01}
         when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus02} THEN #{cleanStatus02}
         when T9.PS = #{feePs02} and (T9.SETTLE_STATUS is null or T9.SETTLE_STATUS = #{settlementStatus02}) and T9.ORDER_RET_STATUS = '03' THEN #{cleanStatus03}
         ELSE NULL END cleanStatus,
-        decode(tot.finprod_type2,'F03',null,nvl(T8.SETTLE_STATUS,#{DELIVERY_STATUS_01})) settleStatus,
+        /*decode(tot.finprod_type2,'F03',null,nvl(T8.SETTLE_STATUS,#{DELIVERY_STATUS_01})) settleStatus,*/
+        (case tot.finprod_type2 when 'F03' then null else ifnull(T8.SETTLE_STATUS,#{DELIVERY_STATUS_01}) end) settleStatus,
         t1.totle_trade_id as totleTradeId,
         t1.trade_id as busiCode,
         t2.entrust_id as entrustId,
@@ -2471,7 +2674,8 @@
         t2.portfolio_id as portfolioId,
         pp.portfolio_name as portfolioName,
         t1.finprod_id as finprodId,
-        nvl(fp.finprod_market_id,T3.TERM_TYPE) as finprodMarketId,
+        /*nvl(fp.finprod_market_id,T3.TERM_TYPE) as finprodMarketId,*/
+        ifnull(fp.finprod_market_id,T3.TERM_TYPE) as finprodMarketId,
         fp.finprod_abbr as finprodAbbr,
         tot.ps as ps,
         sdl3.item_value psStr,
@@ -2480,10 +2684,12 @@
         t1.trade_market_mode as tradeMarketMode,
         sdl6.item_value tradeMarketModeStr,
         t1.settle_speed as settleSpeed,
-        'T+'||t1.settle_speed as settleSpeedStr,
+        /*'T+'||t1.settle_speed as settleSpeedStr,*/
+        CONCAT('T+',t1.settle_speed})as settleSpeedStr,
         t1.sec_manage_acct_id as secManageAcctId,
         T7.SEC_ACCT_NAME  as secManageAcctIdStr,
-        decode(T1.finprod_type2,'F01',t1.share_amt/100,null) as faceValue,
+        /*decode(T1.finprod_type2,'F01',t1.share_amt/100,null) as faceValue,*/
+        (case T1.finprod_type2 when 'F01' then t1.share_amt/100 else null end) as faceValue,
         case when T1.finprod_type2='F01'
         then decode(nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD),'01',TO_CHAR(ROUND(T1.unit_cprice,4),'FM990.0000'),
              '02',TO_CHAR(ROUND(T1.yield*100,4),'FM990.0000') ||'%',
@@ -2495,13 +2701,16 @@
         t1.trade_amt as tradeAmt,
         t1.ccy as ccy,
         sdl7.item_value as ccyStr,
-        to_char(T1.TRADE_DATE,'yyyy-MM-dd') as confirmTradeDate,
-        to_char(T1.SETTLE_DATE,'yyyy-MM-dd') as settleDate,
+        /*to_char(T1.TRADE_DATE,'yyyy-MM-dd') as confirmTradeDate,
+        to_char(T1.SETTLE_DATE,'yyyy-MM-dd') as settleDate,*/
+        DATE_FORMAT(T1.TRADE_DATE,'%Y-%m-%d')as confirmTradeDate,
+        DATE_FORMAT(T1.SETTLE_DATE,'%Y-%m-%d')as settleDate,
         match.exe_id as execid,
         t1.counter_id as counterId,
         T6.counter_name counterIdStr,
         tot.remark,
-        nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD) as calMode
+        /*nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD) as calMode*/
+        ifnull(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD) as calMode
         from trd_product_deal t1
         left join trd_product_deal_add t2 on t1.trade_id=t2.trade_id
         left join TRD_FIN_PRODUCT_DEAL_TOTAL tot on tot.TOTLE_TRADE_ID=t1.TOTLE_TRADE_ID
@@ -2585,10 +2794,12 @@
             ELSE NULL END)= #{cleanStatus}
         </if>
         <if test="settleStatus != null and settleStatus!='' ">
-            AND nvl(T8.SETTLE_STATUS,#{DELIVERY_STATUS_01})= #{settleStatus}
+            AND /*nvl(T8.SETTLE_STATUS,#{DELIVERY_STATUS_01})= #{settleStatus}*/
+            ifnull(T8.SETTLE_STATUS,#{DELIVERY_STATUS_01})= #{settleStatus}
         </if>
         <if test="effectiveStatusList != null and effectiveStatusList.size() > 0">
-            AND (decode(T1.is_cancel,'N',#{STATUS_VALID_01},'Y',#{STATUS_VALID_03})) in
+            /*AND (decode(T1.is_cancel,'N',#{STATUS_VALID_01},'Y',#{STATUS_VALID_03})) in*/
+            AND ((case T1.is_cancel when 'N'then #{STATUS_VALID_01} when 'Y' then #{STATUS_VALID_03}) end) in
             <foreach collection="effectiveStatusList" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
@@ -2610,7 +2821,7 @@
         <if test="search != null and search != '' and search !='有效' ">
             <where>
                 ((
-                sdles.ITEM_VALUE || '|' ||sdlcs.ITEM_VALUE || '|' || sdlss.ITEM_VALUE
+                /*sdles.ITEM_VALUE || '|' ||sdlcs.ITEM_VALUE || '|' || sdlss.ITEM_VALUE
                 || '|' ||aaa.totleTradeId || '|' ||aaa.busiCode  || '|' ||aaa.entrustId
                 || '|' || aaa.finprodType2Str   || '|' || aaa.tgBusiTypeStr
                 || '|' || aaa.portfolioId   || '|' || aaa.portfolioName
@@ -2618,19 +2829,26 @@
                 || '|' || aaa.psStr|| '|' || aaa.tradeMarketStr|| '|' || aaa.tradeMarketModeStr
                 || '|' || aaa.settleSpeedStr  || '|' || aaa.secManageAcctIdStr || '|' || aaa.ccyStr
                 || '|' || aaa.execid   || '|' || aaa.counterIdStr || '|' || aaa.remark
-                like '%' || #{search} || '%')
+                like '%' || #{search} || '%')*/
+                (concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(
+                sdles.ITEM_VALUE,'|'),sdlcs.ITEM_VALUE),'|'),sdlss.ITEM_VALUE),'|'),
+                aaa.totleTradeId),'|'),aaa.finprodType2Str),'|'),aaa.tgBusiTypeStr),'|'),
+                aaa.finprodMarketId),'|'),aaa.finprodAbbr,),'|'),aaa.psSt),'|'),
+                aaa.tradeMarketStr),'|'),aaa.tradeMarketModeStr),'|'),aaa.settleSpeedStr),'|'),aaa.secManageAcctIdStr),'|'),
+                aaa.ccyStr),'|'),aaa.execid),'|'),aaa.counterIdStr),'|'),aaa.remark) like CONCAT(CONCAT('%',#{search}),'%')
+
                 or to_char(aaa.faceValue,'FM9999999999999990.90')=#{search} or to_char(aaa.faceValue)=#{search}
-                or aaa.tradeYield=#{search} or  aaa.tradeYield =#{search}||'%'
-                or aaa.termDays||'' =#{search}
+                or aaa.tradeYield=#{search} or  /*aaa.tradeYield =#{search}||'%'*/CONCAT(aaa.tradeYield,'')=#{search}
+                or /*aaa.termDays||'' =#{search}*/CONCAT(aaa.termDays,'')=#{search}
                 or to_char(aaa.tradeAmt,'FM9999999999999990.90')=#{search} or to_char(aaa.tradeAmt)=#{search}
-                or aaa.confirmTradeDate||'' =#{search}
-                or aaa.confirmTradeDate||''=#{year}||'-'||#{search}
-                or replace(aaa.confirmTradeDate,'-','/')||''=#{search}
-                or replace(aaa.confirmTradeDate,'-','/')||''=#{year}||'/'||#{search}
-                or aaa.settleDate||'' =#{search}
-                or aaa.settleDate||''=#{year}||'-'||#{search}
-                or replace(aaa.settleDate,'-','/')||''=#{search}
-                or replace(aaa.settleDate,'-','/')||''=#{year}||'/'||#{search}
+                or /*aaa.confirmTradeDate||'' =#{search}*/ CONCAT(aaa.confirmTradeDate,'')=#{search}
+                or /*aaa.confirmTradeDate||''=#{year}||'-'||#{search}*/CONCAT(aaa.confirmTradeDate,'')=CONCAT(CONCAT(#{year},'-'),#{search})
+                or /*replace(aaa.confirmTradeDate,'-','/')||''=#{search}*/CONCAT(replace(aaa.confirmTradeDate,'-','/'),'') =#{search}
+                or /*replace(aaa.confirmTradeDate,'-','/')||''=#{year}||'/'||#{search}*/CONCAT(replace(aaa.confirmTradeDate,'-','/'),'') =CONCAT(CONCAT(#{year},'/'),#{search})
+                or /*aaa.settleDate||'' =#{search}*/CONCAT(aaa.settleDate,'')=#{search}
+                or /*aaa.settleDate||''=#{year}||'-'||#{search}*/CONCAT(aaa.settleDate,'')=CONCAT(CONCAT(#{year},'-'),#{search})
+                or /*replace(aaa.settleDate,'-','/')||''=#{search}*/ CONCAT(replace(aaa.settleDate,'-','/'),'') =#{search}
+                or /*replace(aaa.settleDate,'-','/')||''=#{year}||'/'||#{search}*/ CONCAT(replace(aaa.settleDate,'-','/'),'') =CONCAT(CONCAT(#{year},'/'),#{search})
                 )
             </where>
         </if>
@@ -2642,16 +2860,24 @@
         T4.FINPROD_MARKET_ID finprodMarketId,
         T4.FINPROD_ABBR finprodAbbr,
         T1.PS ps,
-        TO_CHAR(T1.TRADE_DATE,'yyyy-MM-dd') tradeDate,
-        DECODE(T1.SETTLE_SPEED,0,'01',1,'02','2','03') settleSpeed,
-        TO_CHAR(T1.SETTLE_DATE,'yyyy-MM-dd') settleDate,
+        /*TO_CHAR(T1.TRADE_DATE,'yyyy-MM-dd') tradeDate,*/
+        DATE_FORMAT(T1.TRADE_DATE,'%Y-%m-%d') tradeDate,
+        /*DECODE(T1.SETTLE_SPEED,0,'01',1,'02','2','03') settleSpeed,*/
+        (case T1.SETTLE_SPEED when 0 then '01' when 1 then '02' when '2' then '03' end) settleSpeed,
+        /*TO_CHAR(T1.SETTLE_DATE,'yyyy-MM-dd') settleDate,*/
+        DATE_FORMAT(T1.SETTLE_DATE,'%Y-%m-%d') tradeDate,
         T1.CCY ccy,
         T1.REMARK remark,
-        TO_CHAR(T8.TRADE_DATE,'yyyy-MM-dd') regDate,
-        TO_CHAR(T6.EXERCISE_DATE,'yyyy-MM-dd') exerciseDate,
-        TO_CHAR(T6.ACT_EXERCISE_DATE,'yyyy-MM-dd') actExerciseDate,
-        TO_CHAR(T61.EXERCISE_DATE,'yyyy-MM-dd') exerciseDate1,
-        TO_CHAR(T61.ACT_EXERCISE_DATE,'yyyy-MM-dd') actExerciseDate1,
+        /*TO_CHAR(T8.TRADE_DATE,'yyyy-MM-dd') regDate,*/
+        DATE_FORMAT(T8.TRADE_DATE,'%Y-%m-%d') regDate,
+        /*TO_CHAR(T6.EXERCISE_DATE,'yyyy-MM-dd') exerciseDate,*/
+        DATE_FORMAT(T6.EXERCISE_DATE,'%Y-%m-%d') exerciseDate,
+       /* TO_CHAR(T6.ACT_EXERCISE_DATE,'yyyy-MM-dd') actExerciseDate,*/
+        DATE_FORMAT(T6.ACT_EXERCISE_DATE,'%Y-%m-%d') actExerciseDate,
+        /*TO_CHAR(T61.EXERCISE_DATE,'yyyy-MM-dd') exerciseDate1,*/
+        DATE_FORMAT(T61.EXERCISE_DATE,'%Y-%m-%d') exerciseDate1,
+        /*TO_CHAR(T61.ACT_EXERCISE_DATE,'yyyy-MM-dd') actExerciseDate1,*/
+        DATE_FORMAT(T61.ACT_EXERCISE_DATE,'%Y-%m-%d') actExerciseDate1,
         T.SHARE_AMT/100 qty,
         T.unit_cprice unitPrice,
         T.cprice_amt cpriceAmt,
@@ -2668,10 +2894,14 @@
         T1.TRADE_MARKET_MODE tradeMarketMode,
         T1.TRADE_PLAT tradePlat,
         T7.exe_id tradeId,
-        NVL(T9.PARTY_abbr,tpda.ou_party_id) ouPartyId ,
+        /*NVL(T9.PARTY_abbr,tpda.ou_party_id) ouPartyId ,
         NVL(T10.REAL_NAME,T1.TRADER) ouTraderId,
         NVL(T11.COUNTER_NAME,T1.COUNTER_ID) counterId,
-        NVL(T12.TRADER_NAME,T1.COUNTER_TRADER) counterTrade,
+        NVL(T12.TRADER_NAME,T1.COUNTER_TRADER) counterTrade,*/
+        ifnull(T9.PARTY_abbr,tpda.ou_party_id) ouPartyId ,
+        ifnull(T10.REAL_NAME,T1.TRADER) ouTraderId,
+        ifnull(T11.COUNTER_NAME,T1.COUNTER_ID) counterId,
+        ifnull(T12.TRADER_NAME,T1.COUNTER_TRADER) counterTrade,
         sdl.item_value spanTextOne,
         T4.IS_RIGHT isRight,
         T1.Delivery_Type deliveryType,
@@ -2714,7 +2944,8 @@
         TPD.TRADE_AMT tradeAmt,
         TPDA.Entrust_Id entrustId,
         EE.PRICE_MODEL priceModel,
-        (nvl(ee.entrust_amt,0) - nvl(efs.ent_finish_amt,0))/10000 unFinshAmt,
+        /*(nvl(ee.entrust_amt,0) - nvl(efs.ent_finish_amt,0))/10000 unFinshAmt,*/
+        (ifnull(ee.entrust_amt,0) - ifnull(efs.ent_finish_amt,0))/10000 unFinshAmt,
         ssai.sec_acct_name secAcctId,
         TPD.YIELD*100 matureYield,
         TPD.EXER_YIELD*100 exeYield,
@@ -2808,23 +3039,28 @@
         tpd.SETTLE_SPEED, tpd.TRADE_DATE, tpd.SETTLE_DATE, tpd.PS,
         tpd.FINPROD_ID, fp.finprod_abbr FINPROD_NAME,fp.CALENDAR_ID, tpd.TRADE_MARKET,
         tpd.TRADE_PLAT, tpd.TRADE_MARKET_MODE,
-        nvl(tpd.INV_AIM,trd_product_deal.INV_AIM) INV_AIM,
+        /*nvl(tpd.INV_AIM,trd_product_deal.INV_AIM) INV_AIM,*/
+        ifnull(tpd.INV_AIM,trd_product_deal.INV_AIM) INV_AIM,
         tpd.F_TRADE_ID,
         tpd.SEC_MANAGE_ACCT_ID, nvl(tpd.CCY,trd_product_deal.CCY) CCY,
         tpd.SHARE_AMT * 100 as TRADE_AMT,
         tpda.LENDIN_SHARE_AMT * 100 integrateTradeAmt,
-        nvl(tpda.OUR_SHARE_AMT, tpd.SHARE_AMT) * 100 ownTradeAmt,
+        /*nvl(tpda.OUR_SHARE_AMT, tpd.SHARE_AMT) * 100 ownTradeAmt,*/
+        ifnull(tpda.OUR_SHARE_AMT, tpd.SHARE_AMT) * 100 ownTradeAmt,
         tpd.UNIT_CPRICE,
         tpd.UNIT_INT, tpd.UNIT_FPRICE,
         tpd.CPRICE_AMT,
         tpda.LENDIN_CPRICE_AMT integrateCpriceAmt,
-        nvl(tpda.OUR_CPRICE_AMT, tpd.CPRICE_AMT) ownCpriceAmt,
+        /*nvl(tpda.OUR_CPRICE_AMT, tpd.CPRICE_AMT) ownCpriceAmt,*/
+        ifnull(tpda.OUR_CPRICE_AMT, tpd.CPRICE_AMT) ownCpriceAmt,
         tpd.INT_AMT,
         tpda.LENDIN_FPRICE_AMT2 integrateIntAmt,
-        nvl(tpda.OUR_FPRICE_AMT2, tpd.INT_AMT) ownIntAmt,
+        /*nvl(tpda.OUR_FPRICE_AMT2, tpd.INT_AMT) ownIntAmt,*/
+        ifnull(tpda.OUR_FPRICE_AMT2, tpd.INT_AMT) ownIntAmt,
         tpd.FPRICE_AMT,
         tpda.LENDIN_FPRICE_AMT integrateFpriceAmt,
-        nvl(tpda.OUR_FPRICE_AMT, tpd.FPRICE_AMT) ownFpriceAmt,
+        /*nvl(tpda.OUR_FPRICE_AMT, tpd.FPRICE_AMT) ownFpriceAmt,*/
+        ifnull(tpda.OUR_FPRICE_AMT, tpd.FPRICE_AMT) ownFpriceAmt,
         tpd.YIELD, tpd.EXER_YIELD, tpd.REMARK,
         tpd.TRADER, tpd.COUNTER_ID, tpd.COUNTER_TRADER, tpd.COUNTER_CONTACT,tpd.CHL_ID
         ,det.FEE_AMT
@@ -2838,15 +3074,20 @@
         ,match.exe_id as execid
         ,fp.Finprod_Market_Id as finprodMarketId
         ,decode(tpd.settle_speed,'0','01','1','02','2','03') as settleSpeedStr
+        ,(case tpd.settle_speed when '0' then '01' when '1' then '02' when '2' then '03' end) as settleSpeedStr
         ,tpd.delivery_type as deliveryType
         ,tpd.SHARE_AMT/100 as qty
         ,ttft.fee_amt as procedureAmt
         ,ttft1.fee_amt as settleServiceAmt
         ,tpd.clear_type as clearType
-        ,nvl(t2.PARTY_ABBR,tpda.ou_party_id) as ouPartyIdStr
+        /*,nvl(t2.PARTY_ABBR,tpda.ou_party_id) as ouPartyIdStr
         ,nvl(t3.real_name,tpd.TRADER) as ouTraderIdStr
         ,nvl(t1.counter_name,tpd.COUNTER_ID) as counterIdStr
-        ,nvl(t4.TRADER_NAME,tpd.COUNTER_TRADER) as counterTraderStr
+        ,nvl(t4.TRADER_NAME,tpd.COUNTER_TRADER) as counterTraderStr*/
+        ,ifnull(t2.PARTY_ABBR,tpda.ou_party_id) as ouPartyIdStr
+        ,ifnull(t3.real_name,tpd.TRADER) as ouTraderIdStr
+        ,ifnull(t1.counter_name,tpd.COUNTER_ID) as counterIdStr
+        ,ifnull(t4.TRADER_NAME,tpd.COUNTER_TRADER) as counterTraderStr
         FROM TRD_FIN_PRODUCT_DEAL_TOTAL tpd
         LEFT JOIN TRD_DEAL_TOTAL_ADD tpda ON tpda.TOTLE_TRADE_ID = tpd.TOTLE_TRADE_ID
         LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL ptpd ON ptpd.TOTLE_TRADE_ID = tpd.TOTLE_TRADE_ID
@@ -2970,22 +3211,27 @@
         tpd.SETTLE_SPEED, tpd.TRADE_DATE, tpd.SETTLE_DATE, tpd.PS,
         tpd.FINPROD_ID, tpd.TRADE_MARKET,
         tpd.TRADE_PLAT, tpd.TRADE_MARKET_MODE,
-        nvl(tpd.INV_AIM,trd_product_deal.INV_AIM) INV_AIM,
+        /*nvl(tpd.INV_AIM,trd_product_deal.INV_AIM) INV_AIM,*/
+        ifnull(tpd.INV_AIM,trd_product_deal.INV_AIM) INV_AIM,
         tpd.F_TRADE_ID,
         tpd.SEC_MANAGE_ACCT_ID, nvl(tpd.CCY,trd_product_deal.CCY) CCY,
         tpd.TRADE_AMT as TRADE_AMT,
-        nvl(tpda.OUR_SHARE_AMT, tpd.SHARE_AMT) * 100 ownTradeAmt,
+        /*nvl(tpda.OUR_SHARE_AMT, tpd.SHARE_AMT) * 100 ownTradeAmt,*/
+        ifnull(tpda.OUR_SHARE_AMT, tpd.SHARE_AMT) * 100 ownTradeAmt,
         tpd.UNIT_CPRICE,
         tpd.UNIT_INT, tpd.UNIT_FPRICE,
         tpd.CPRICE_AMT,
         tpda.LENDIN_CPRICE_AMT integrateCpriceAmt,
-        nvl(tpda.OUR_CPRICE_AMT, tpd.CPRICE_AMT) ownCpriceAmt,
+        /*nvl(tpda.OUR_CPRICE_AMT, tpd.CPRICE_AMT) ownCpriceAmt,*/
+        ifnull(tpda.OUR_CPRICE_AMT, tpd.CPRICE_AMT) ownCpriceAmt,
         tpd.INT_AMT,
         tpda.LENDIN_FPRICE_AMT2 integrateIntAmt,
-        nvl(tpda.OUR_FPRICE_AMT2, tpd.INT_AMT) ownIntAmt,
+        /*nvl(tpda.OUR_FPRICE_AMT2, tpd.INT_AMT) ownIntAmt,*/
+        ifnull(tpda.OUR_FPRICE_AMT2, tpd.INT_AMT) ownIntAmt,
         tpd.FPRICE_AMT,
         tpda.LENDIN_FPRICE_AMT integrateFpriceAmt,
-        nvl(tpda.OUR_FPRICE_AMT, tpd.FPRICE_AMT) ownFpriceAmt,
+        /*nvl(tpda.OUR_FPRICE_AMT, tpd.FPRICE_AMT) ownFpriceAmt,*/
+        ifnull(tpda.OUR_FPRICE_AMT, tpd.FPRICE_AMT) ownFpriceAmt,
         tpd.YIELD, tpd.EXER_YIELD, tpd.REMARK,
         tpd.TRADER, tpd.COUNTER_ID, tpd.COUNTER_TRADER, tpd.COUNTER_CONTACT,tpd.CHL_ID
         ,det.FEE_AMT
@@ -2997,27 +3243,39 @@
         ,tpda.ou_party_id as ouPartyId
         ,tpd.TRADER as ouTraderId
         ,match.exe_id as execid
-        ,decode(tpd.settle_speed,'0','01','1','02','2','03') as settleSpeedStr
+        /*,decode(tpd.settle_speed,'0','01','1','02','2','03') as settleSpeedStr*/
+        ,(case tpd.settle_speed when '0' then '01' when '1' then '02' when '2' then '03' end) as settleSpeedStr
         ,tpd.delivery_type as deliveryType
         ,tpd.SHARE_AMT/100 as qty
         ,ttft.fee_amt as procedureAmt
         ,ttft1.fee_amt as settleServiceAmt
         ,tpd.clear_type as clearType
-        ,nvl(t2.PARTY_ABBR,tpda.ou_party_id) as ouPartyIdStr
+        /*,nvl(t2.PARTY_ABBR,tpda.ou_party_id) as ouPartyIdStr
         ,nvl(t3.real_name,tpd.TRADER) as ouTraderIdStr
         ,nvl(t1.counter_name,tpd.COUNTER_ID) as counterIdStr
-        ,nvl(t4.TRADER_NAME,tpd.COUNTER_TRADER) as counterTraderStr
+        ,nvl(t4.TRADER_NAME,tpd.COUNTER_TRADER) as counterTraderStr*/
+        ,ifnull(t2.PARTY_ABBR,tpda.ou_party_id) as ouPartyIdStr
+        ,ifnull(t3.real_name,tpd.TRADER) as ouTraderIdStr
+        ,ifnull(t1.counter_name,tpd.COUNTER_ID) as counterIdStr
+        ,ifnull(t4.TRADER_NAME,tpd.COUNTER_TRADER) as counterTraderStr
         , '1' as repoType
         ,ftp.term as term
         ,tpd.rate as rate
-        ,nvl(reg.SETT_CCY,ic.SETT_CCY) as settCcy
-        ,nvl(reg.DIS_FACE_VALUE,ic.SHARE_CT_AMT) as disFaceValue
+        /*,nvl(reg.SETT_CCY,ic.SETT_CCY) as settCcy
+        ,nvl(reg.DIS_FACE_VALUE,ic.SHARE_CT_AMT) as disFaceValue*/
+        ,ifnull(reg.SETT_CCY,ic.SETT_CCY) as settCcy
+        ,ifnull(reg.DIS_FACE_VALUE,ic.SHARE_CT_AMT) as disFaceValue
         ,tpd.m_delivery_type as mdeliveryType
-        ,nvl(reg.V_SETTLE_DATE,ic.V_SETTLE_DATE) as vsettleDate
+        /*,nvl(reg.V_SETTLE_DATE,ic.V_SETTLE_DATE) as vsettleDate
         ,nvl(reg.M_SETTLE_DATE,ic.M_SETTLE_DATE) as msettleDate
         ,nvl(reg.M_INT_AMT,ic.M_INT_AMT) as mintAmt
         ,nvl(reg.M_TRADE_AMT,ic.M_TRADE_AMT) as mtradeAmt
-        ,nvl(reg.ACT_REPO_TERM,ic.ACT_DAYS) as actRepoTerm
+        ,nvl(reg.ACT_REPO_TERM,ic.ACT_DAYS) as actRepoTerm*/
+        ,ifnull(reg.V_SETTLE_DATE,ic.V_SETTLE_DATE) as vsettleDate
+        ,ifnull(reg.M_SETTLE_DATE,ic.M_SETTLE_DATE) as msettleDate
+        ,ifnull(reg.M_INT_AMT,ic.M_INT_AMT) as mintAmt
+        ,ifnull(reg.M_TRADE_AMT,ic.M_TRADE_AMT) as mtradeAmt
+        ,ifnull(reg.ACT_REPO_TERM,ic.ACT_DAYS) as actRepoTerm
         ,tpd.TERM_TYPE as termType
         ,'A/365' as basis
         FROM TRD_FIN_PRODUCT_DEAL_TOTAL tpd
@@ -3071,7 +3329,8 @@
         LEFT JOIN FIN_PRODUCT tmp2
         ON tmp1.sec_id = tmp2.finprod_market_id
         WHERE 1 = 1
-        AND tmp1.value_date <![CDATA[<=]]> to_date(#{platDate},'yyyy-MM-dd')/*估值行情.日期 小于等于 平台日*/
+       /* AND tmp1.value_date <![CDATA[<=]]> to_date(#{platDate},'yyyy-MM-dd')*//*估值行情.日期 小于等于 平台日*/
+        AND tmp1.value_date <![CDATA[<=]]> STR_TO_DATE(#{platDate},'%Y-%m-%d')
         AND tmp1.value_source = (
         CASE WHEN tmp2.trade_market IN (#{TRADEPLACE03},#{TRADEPLACE04}) THEN 'CSD'
         ELSE 'CBC'
@@ -3097,7 +3356,8 @@
 
     <update id="updateInterfTradSecdealByTradeId">
         update interf_trad_secdeal t
-        set t.dealtext = decode(t.dealtext, '-', '', t.dealtext) || #{remark}
+        /*set t.dealtext = decode(t.dealtext, '-', '', t.dealtext) || #{remark}*/
+        set t.dealtext =  CONCAT((case t.dealtext when  '-' then  '' else t.dealtext end),#{search})
         where t.fedealno = #{exeId,jdbcType=VARCHAR}
     </update>
 
@@ -3111,20 +3371,28 @@
                  resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdSettleInfoResponse">
         SELECT
         distinct
-        NVL(T9.party_abbr,tpda.ou_party_id) traderidStr,
+        /*NVL(T9.party_abbr,tpda.ou_party_id) traderidStr,
         NVL(T10.REAL_NAME,T1.TRADER) trader,
         NVL(T11.COUNTER_NAME,T1.COUNTER_ID) counterIdStr,
-        NVL(T12.TRADER_NAME,T1.COUNTER_TRADER) counterTrader,
+        NVL(T12.TRADER_NAME,T1.COUNTER_TRADER) counterTrader,*/
+        ifnull(T9.party_abbr,tpda.ou_party_id) traderidStr,
+        ifnull(T10.REAL_NAME,T1.TRADER) trader,
+        ifnull(T11.COUNTER_NAME,T1.COUNTER_ID) counterIdStr,
+        ifnull(T12.TRADER_NAME,T1.COUNTER_TRADER) counterTrader,
         T7.exe_id tradeId,
         T1.PS ps,
         '1' as repoType,
         T1.TRADE_MARKET tradeMarket,
-        TO_CHAR(T1.TRADE_DATE,'yyyy-MM-dd') tradeDate,
-        DECODE(T1.SETTLE_SPEED,0,'01',1,'02','2','03') settleSpeed,
+        /*TO_CHAR(T1.TRADE_DATE,'yyyy-MM-dd') tradeDate,*/
+        DATE_FORMAT(1.TRADE_DATE,'%Y-%m-%d')
+      /*  DECODE(T1.SETTLE_SPEED,0,'01',1,'02','2','03') settleSpeed,*/
+        (case T1.SETTLE_SPEED when 0 then '01' when 1 then '02' when '2' then '03' end) settleSpeed,
         ftp.term repoTerm,
         T1.rate*100 as tradeYield,
-        nvl(T1.CCY,T.CCY) secCcy,
-        nvl(T8.SETT_CCY,ic.SETT_CCY) as settCcy,
+        /*nvl(T1.CCY,T.CCY) secCcy,
+        nvl(T8.SETT_CCY,ic.SETT_CCY) as settCcy,*/
+        ifnull(T1.CCY,T.CCY) secCcy,
+        ifnull(T8.SETT_CCY,ic.SETT_CCY) as settCcy,
         T.Trade_Amt tradeAmt,
         pledges.faceValue as faceValue,
         pledges.disFaceValue as disFaceValue,
@@ -3133,15 +3401,18 @@
         T1.m_delivery_type as mdeliveryType,
         ttft.fee_amt trdFeeAmt,
         ttft1.fee_amt settleFeeAmt,
-        to_char(nvl(T8.V_SETTLE_DATE,ic.V_SETTLE_DATE),'yyyy-MM-dd')as vsettleDate,
-        to_char(nvl(T8.M_SETTLE_DATE,ic.M_SETTLE_DATE),'yyyy-MM-dd') as msettleDate,
+        /*to_char(nvl(T8.V_SETTLE_DATE,ic.V_SETTLE_DATE),'yyyy-MM-dd')as vsettleDate,
+        to_char(nvl(T8.M_SETTLE_DATE,ic.M_SETTLE_DATE),'yyyy-MM-dd') as msettleDate,*/
+        DATE_FORMAT(ifnull(T8.V_SETTLE_DATE,ic.V_SETTLE_DATE),'%Y-%m-%d')as vsettleDate,
+        DATE_FORMAT(ifnull(T8.M_SETTLE_DATE,ic.M_SETTLE_DATE),'%Y-%m-%d') as msettleDate
         ftp.m_int_amt as intAmt,
         ftp.m_trade_amt as mtradeAmt,
         ftp.ACT_CAP_DAYS as actRepoTerm,
         ftp.TERM_TYPE as termType,
         ftp.basis as basis,
         T1.remark as remark,
-        nvl(T8.dip_type,ic.dip_type) as distriType
+        /*nvl(T8.dip_type,ic.dip_type) as distriType*/
+        ifnull(T8.dip_type,ic.dip_type) as distriType
         FROM trd_product_deal T
         left join TRD_FIN_PRODUCT_DEAL_TOTAL T1 on T.totle_trade_id=T1.TOTLE_TRADE_ID
         left join FIN_TRADE_PRODUCT ftp on T.finprod_id=ftp.finprod_id
@@ -3154,7 +3425,8 @@
         LEFT JOIN SYS_USER T10 ON T10.USER_NAME = T1.TRADER
         LEFT JOIN MST_COUNTER_PARTY T11 ON T11.COUNTER_ID = T1.COUNTER_ID
         LEFT JOIN MST_CFETS_CUSTOMER_TRADER T12 ON T12.trader_id = T1.COUNTER_TRADER
-        LEFT JOIN ibu_quote_crep ic ON ic.quote_id = nvl(T7.PRE_TRADE_ID,T1.B_TRADE_ID)
+        /*LEFT JOIN ibu_quote_crep ic ON ic.quote_id = nvl(T7.PRE_TRADE_ID,T1.B_TRADE_ID)*/
+        LEFT JOIN ibu_quote_crep ic ON ic.quote_id = ifnull(T7.PRE_TRADE_ID,T1.B_TRADE_ID)
         left join (select pledge.finprod_id,sum(pledge.pledge_number/100) as faceValue,
         sum(pledge.pledge_number*pledge.pledge_ratio*100) as disFaceValue
         from FIN_DEAL_PLEDGE pledge group by pledge.finprod_id)pledges
@@ -3227,7 +3499,8 @@
         LEFT JOIN FIN_PRODUCT tmp2
         ON tmp1.sec_id = tmp2.finprod_market_id
         WHERE 1 = 1
-        AND tmp1.value_date <![CDATA[<=]]> to_date(#{platDate},'yyyy-MM-dd')/*估值行情.日期 小于等于 平台日*/
+        /*AND tmp1.value_date <![CDATA[<=]]> to_date(#{platDate},'yyyy-MM-dd')*//*估值行情.日期 小于等于 平台日*/
+        AND tmp1.value_date <![CDATA[<=]]> STR_TO_DATE(#{platDate},'%Y-%m-%dd')
         AND tmp1.value_source = (
         CASE WHEN tmp2.trade_market IN (#{TRADEPLACE03},#{TRADEPLACE04}) THEN 'CSD'
         ELSE 'CBC'
@@ -3282,7 +3555,8 @@
                               LEFT JOIN FIN_PRODUCT tmp2
                                         ON tmp1.sec_id = tmp2.finprod_market_id
                      WHERE 1 = 1
-                       AND tmp1.value_date <![CDATA[<=]]> to_date(#{platDate},'yyyy-MM-dd')/*估值行情.日期 小于等于 平台日*/
+                       /*AND tmp1.value_date <![CDATA[<=]]> to_date(#{platDate},'yyyy-MM-dd')*//*估值行情.日期 小于等于 平台日*/
+                       AND tmp1.value_date <![CDATA[<=]]> STR_TO_DATE(#{platDate},'%Y-%m-%d')
                        AND tmp1.value_source = (
                          CASE WHEN tmp2.trade_market IN (#{TRADEPLACE03},#{TRADEPLACE04}) THEN 'CSD'
                               ELSE 'CBC'

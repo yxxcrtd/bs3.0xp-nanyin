@@ -21,6 +21,9 @@ public interface ChbInvestholdInfoCheckDtoMapper {
 
     int updataOperateStatus(@Param("dtoAfterDealList") List<ChbInvestholdInfoCheckDto> dtoAfterDealList);
 
+    int updataOperateStatusNew();
+
+
     int insertSelective(ChbInvestholdInfoCheckDto record);
     
     /**
@@ -31,6 +34,9 @@ public interface ChbInvestholdInfoCheckDtoMapper {
     List<ChbInvestholdInfoCheckDto> selectBymodel(ChbInvestholdInfoCheckDto record);
     int deleteBymodel(ChbInvestholdInfoCheckDto record);
     int deleteBymodelAfterDeal(@Param("deleteList") List<ChbInvestholdInfoCheckDto> deleteList);
+
+    int deleteBymodelAfterDealNew();
+
     int updateMergerIdAndOperatestatus(ChbInvestholdInfoCheckDto record);
     
     /**
@@ -126,11 +132,27 @@ public interface ChbInvestholdInfoCheckDtoMapper {
 	
 	List<ChbInvestholdInfoCheckDto> selectNeedCheckDtoList(List<Map<String, String>> list);
 
+    List<ChbInvestholdInfoCheckDto> selectNeedCheckDtoListNew();
+
+
     List<ChbInvestholdInfoCheckDto> selectNeedDealDtoList(List<ChbInvestholdInfoCheckDto> list);
 
-	
-	List<ChbEquHoldCheckDto> getMergerindentifymark(ChbInvestholdInfoCheckDto dto);
+    List<ChbInvestholdInfoCheckDto> selectNeedDealDtoListNew();
 
-	int isExistsMergerindentifymark(ChbInvestholdInfoCheckDto queryModel);
+
+    List<ChbEquHoldCheckDto> getMergerindentifymark(ChbInvestholdInfoCheckDto dto);
+
+
+    int isExistsMergerindentifymark(ChbInvestholdInfoCheckDto queryModel);
+
+    List<ChbInvestholdInfoCheckDto> selectAllChbEquHoldCheck(List<ChbInvestholdInfoCheckDto> list);
+
+    List<ChbInvestholdInfoCheckDto> selectAllChbEquHoldCheckNew();
+
+    int deleteChbInvestholdInfoByTmp();
+
+    int deleteChbInvestholdInfoSubByTmp();
+
+    void truncateInvestholdTmp();
 
 }

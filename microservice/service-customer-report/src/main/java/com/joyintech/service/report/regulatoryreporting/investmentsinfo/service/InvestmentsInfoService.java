@@ -88,6 +88,7 @@ public class InvestmentsInfoService {
 	
 	// 存储值相同的单元格对应情况
 	private static Map<String, String> sameValueMap = new HashMap<String, String>();
+	private static Map<String, String> table8ValueMap = new HashMap<String, String>();
 	static {
 		tablePorpertyMap_1.put("t1_cur12_amt", "ASSETAMT1_1_6+ASSETAMT1_2_3+ASSETAMT1_3_3+ASSETAMT1_4_14+ASSETAMT1_5_17+ASSETAMT1_6_5+ASSETAMT1_7_8+ASSETAMT1_8_11+ASSETAMT1_9_4+ASSETAMT1_10_7+ASSETAMT1_11_7+ASSETAMT1_12_9+ASSETAMT1_14_8");
 		tablePorpertyMap_1.put("t1_last12_amt",  "ASSETAMT1_1_6+ASSETAMT1_2_3+ASSETAMT1_3_3+ASSETAMT1_4_14+ASSETAMT1_5_17+ASSETAMT1_6_5+ASSETAMT1_7_8+ASSETAMT1_8_11+ASSETAMT1_9_4+ASSETAMT1_10_7+ASSETAMT1_11_7+ASSETAMT1_12_9+ASSETAMT1_14_8");
@@ -232,8 +233,8 @@ public class InvestmentsInfoService {
 		tablePorpertyMap_2.put("t2_cur55_amt", "ASSETAMT1_5_16_a");
 		tablePorpertyMap_2.put("t2_last55_amt", "ASSETAMT1_5_16_a");
 		// 同G06-II 1.5.16 其他非标准化债权类投资穿透后期末余额-1.5.16.a 场内股票质押回购穿透后余额+1.5.7 委托债权穿透后余额  add by leipeng
-		tablePorpertyMap_2.put("t2_cur57_amtfq", "ASSETAMT1_5_16-AMT1_5_16_a+ASSETAMT1_5_7");
-		tablePorpertyMap_2.put("t2_last57_amtfq", "ASSETAMT1_5_16-AMT1_5_16_a+ASSETAMT1_5_7");
+		tablePorpertyMap_2.put("t2_cur57_amtfq", "ASSETAMT1_5_16+ASSETAMT1_5_7-AMT1_5_16_a");
+		tablePorpertyMap_2.put("t2_last57_amtfq", "ASSETAMT1_5_16+ASSETAMT1_5_7-AMT1_5_16_a");
 		// 同G06-II 1.5.16 其他非标准化债权类投资穿透后期末余额-1.5.16.a 场内股票质押回购穿透后余额+1.5.7 委托债权穿透后余额  add by leipeng
 
 		tablePorpertyMap_2.put("t2_cur58_amt", "ASSETAMT1_6_5");
@@ -566,6 +567,47 @@ public class InvestmentsInfoService {
 		sameValueMap.put("t6_cur31_amt", "t1_cur14_amt");
 		// 表六D34 = 表一F14
 		sameValueMap.put("t6_last31_amt", "t1_last14_amt");
+
+
+
+
+
+		// 表六C32 = 表一E12
+		table8ValueMap.put("t1_cur17_amt", "t8_cur17_amt");
+		table8ValueMap.put("t1_last17_amt", "t8_last17_amt");
+		table8ValueMap.put("t1_cur12_amt", "t8_cur12_amt");
+		table8ValueMap.put("t1_last12_amt", "t8_last12_amt");
+		table8ValueMap.put("t1_cur13_amt", "t8_cur13_amt");
+		table8ValueMap.put("t1_last13_amt", "t8_last13_amt");
+		table8ValueMap.put("t2_cur21_amt", "t8_cur21_amt");
+		table8ValueMap.put("t2_last21_amt", "t8_last21_amt");
+		table8ValueMap.put("t2_cur31_amt", "t8_cur31_amt");
+		table8ValueMap.put("t2_last31_amt", "t8_last31_amt");
+		table8ValueMap.put("t8_cur01_amt", "t8_cur01_amt");
+		table8ValueMap.put("t8_last01_amt", "t8_last01_amt");
+		table8ValueMap.put("t8_cur02_amt", "t8_cur02_amt");
+		table8ValueMap.put("t8_last02_amt", "t8_last02_amt");
+		table8ValueMap.put("t2_cur40_amt", "t8_cur40_amt");
+		table8ValueMap.put("t2_last40_amt", "t8_last40_amt");
+		table8ValueMap.put("t8_cur03_amt", "t8_cur03_amt");
+		table8ValueMap.put("t8_last03_amt", "t8_last03_amt");
+		table8ValueMap.put("t2_cur58_amt", "t8_cur58_amt");
+		table8ValueMap.put("t2_last58_amt", "t8_last58_amt");
+
+		table8ValueMap.put("t6_cur24_amt", "t8_cur24_amt");
+		table8ValueMap.put("t6_last24_amt", "t8_last24_amt");
+		table8ValueMap.put("t6_cur23_amt", "t8_cur23_amt");
+		table8ValueMap.put("t6_last23_amt", "t8_last23_amt");
+		table8ValueMap.put("thamt1_1_11", "t8_thamt1_1_11");
+		table8ValueMap.put("t3_40_amt", "t8_40_amt");
+		table8ValueMap.put("t3_44_amt", "t8_44_amt");
+		table8ValueMap.put("t3_45_amt", "t8_45_amt");
+		table8ValueMap.put("t4_amt2_10", "t8_amt2_10");
+		table8ValueMap.put("t4_amt1_10", "t8_amt1_10");
+
+
+
+
 	}
 
 	/**  
@@ -599,6 +641,13 @@ public class InvestmentsInfoService {
 			}
 			data.put(detail.getPropertycode(), divideBillion(detail));
 		}
+
+		/***附表8保留一位小数特殊处理*/
+		for(Map.Entry<String,String> dto : table8ValueMap.entrySet()){
+			data.put(dto.getValue(),divideBillionEx((InvestmentBusinessDetailsDto)data.get(dto.getKey())));
+		}
+
+
 		//登录机构
 		InvestmentBusinessDetailsDto reportDto=new InvestmentBusinessDetailsDto();
 		reportDto.setPropertycode("report");
@@ -896,32 +945,6 @@ public class InvestmentsInfoService {
 					money = money.add(queryMoney(lastMap, valueList[i]));
 				}
 		    }
-
-			//新增减法操作  add by leipeng 20220304
-			if(tablePorpertyMap_2.get(key).contains("-")){
-				String[] valueDList = tablePorpertyMap_2.get(key).split("\\-");
-				int lengthD = valueDList.length;
-				// 本季末数额
-				if (key.contains("cur")) {
-					for (int i = 0; i < length; i ++) {
-						money = money.subtract(queryMoney(currMap, valueDList[i]));
-					}
-					// 上季末数额
-				} else if (key.contains("last")) {
-					for (int i = 0; i < length; i ++) {
-						money = money.subtract(queryMoney(lastMap, valueDList[i]));
-					}
-				} else if (key.contains("_zq")) {
-					for (int i = 0; i < length; i ++) {
-						money = money.subtract(queryMoney(currMap, valueDList[i]));
-					}
-				}else if (key.contains("_lzq")) {
-					for (int i = 0; i < length; i ++) {
-						money = money.subtract(queryMoney(lastMap, valueDList[i]));
-					}
-				}
-			}
-			//新增减法操作  add by leipeng 20220304
 
 			resultMap.put(key, money);
 		}
@@ -1784,6 +1807,10 @@ public class InvestmentsInfoService {
 				prodMap.put(single.getTermType(), single);
 			}
 		}
+
+
+
+
 		//资金运用
 		Map<String,InvestmentBusinessDetailsDto> assetMap=new HashMap<String,InvestmentBusinessDetailsDto>();
 
@@ -2082,8 +2109,84 @@ public class InvestmentsInfoService {
 				allList.add(dto);
 			}
 		}
+		//收益率合并计算
+		doSumAvgYeild(allList);
+
 		return allList;
 
+	}
+
+	/**
+	 * 数据计算修改.合计项目直接使用固定公式
+	 * ∑（本季末余额*年初至本季末累计年化收益率）/本季末余额合计
+	 * @param dtoList
+	 */
+	private void doSumAvgYeild(List<InvestmentBusinessDetailsDto> dtoList){
+		//拆分所有的
+		BigDecimal amt1 = BigDecimal.ZERO;
+		BigDecimal amt1Last = BigDecimal.ZERO;
+		BigDecimal amt2 = BigDecimal.ZERO;
+		BigDecimal amt2Last = BigDecimal.ZERO;
+		BigDecimal amt3 = BigDecimal.ZERO;
+		BigDecimal amt3Last = BigDecimal.ZERO;
+
+		for(InvestmentBusinessDetailsDto dto : dtoList){
+			if(!dto.getPropertycode().endsWith("_10")){
+				if(dto.getPropertycode().startsWith("t4_amt1")){
+					amt1 = amt1.add(IsNotZeroBigDecimal(dto,"01")?dto.getSessionendBalance().multiply(dto.getSessionendYield()):BigDecimal.ZERO);
+					amt1Last = amt1Last.add(IsNotZeroBigDecimal(dto,"02")?dto.getLastSessionendBalance().multiply(dto.getLastSessionendYield()):BigDecimal.ZERO);
+				}else if(dto.getPropertycode().startsWith("t4_amt2")){
+					amt2 = amt2.add(IsNotZeroBigDecimal(dto,"01")?dto.getSessionendBalance().multiply(dto.getSessionendYield()):BigDecimal.ZERO);
+					amt2Last = amt2Last.add(IsNotZeroBigDecimal(dto,"02")?dto.getLastSessionendBalance().multiply(dto.getLastSessionendYield()):BigDecimal.ZERO);
+				}else if(dto.getPropertycode().startsWith("t4_amt3")){
+					amt3 = amt3.add(IsNotZeroBigDecimal(dto,"01")?dto.getSessionendBalance().multiply(dto.getSessionendYield()):BigDecimal.ZERO);
+					amt3Last = amt3Last.add(IsNotZeroBigDecimal(dto,"02")?dto.getLastSessionendBalance().multiply(dto.getLastSessionendYield()):BigDecimal.ZERO);
+				}
+			}
+		}
+		/***汇总项目重新计算*/
+		for(InvestmentBusinessDetailsDto dto : dtoList){
+			if(dto.getPropertycode().endsWith("_10")){
+				if(dto.getPropertycode().startsWith("t4_amt1")){
+					dto.setSessionendYield(null!=dto.getSessionendBalance()&&dto.getSessionendBalance().compareTo(BigDecimal.ZERO)!=0?
+							amt1.divide(dto.getSessionendBalance(),4,BigDecimal.ROUND_HALF_UP):BigDecimal.ZERO);
+					dto.setLastSessionendYield(null!=dto.getLastSessionendBalance()&&dto.getLastSessionendBalance().compareTo(BigDecimal.ZERO)!=0?
+							amt1Last.divide(dto.getLastSessionendBalance(),4,BigDecimal.ROUND_HALF_UP):BigDecimal.ZERO);
+				}else if(dto.getPropertycode().startsWith("t4_amt2")){
+					dto.setSessionendYield(null!=dto.getSessionendBalance()&&dto.getSessionendBalance().compareTo(BigDecimal.ZERO)!=0?
+							amt2.divide(dto.getSessionendBalance(),4,BigDecimal.ROUND_HALF_UP):BigDecimal.ZERO);
+					dto.setLastSessionendYield(null!=dto.getLastSessionendBalance()&&dto.getLastSessionendBalance().compareTo(BigDecimal.ZERO)!=0?
+							amt2Last.divide(dto.getLastSessionendBalance(),4,BigDecimal.ROUND_HALF_UP):BigDecimal.ZERO);
+				}else if(dto.getPropertycode().startsWith("t4_amt3")){
+					dto.setSessionendYield(null!=dto.getSessionendBalance()&&dto.getSessionendBalance().compareTo(BigDecimal.ZERO)!=0?
+							amt3.divide(dto.getSessionendBalance(),4,BigDecimal.ROUND_HALF_UP):BigDecimal.ZERO);
+					dto.setLastSessionendYield(null!=dto.getLastSessionendBalance()&&dto.getLastSessionendBalance().compareTo(BigDecimal.ZERO)!=0?
+							amt3Last.divide(dto.getLastSessionendBalance(),4,BigDecimal.ROUND_HALF_UP):BigDecimal.ZERO);
+				}
+			}
+		}
+
+	}
+
+
+	/**
+	 * 判断是否为空或者为0
+	 * @return
+	 */
+	public static boolean IsNotZeroBigDecimal(InvestmentBusinessDetailsDto dto,String code){
+		boolean flag = false;
+			if("01".equals(code)){
+				if(null!=dto.getSessionendBalance()&&dto.getSessionendBalance().compareTo(BigDecimal.ZERO)!=0
+						&&null!=dto.getSessionendYield()&&dto.getSessionendYield().compareTo(BigDecimal.ZERO)!=0){
+					flag = true;
+				}
+			}else if("02".equals(code)){
+				if(null!=dto.getLastSessionendBalance()&&dto.getLastSessionendBalance().compareTo(BigDecimal.ZERO)!=0
+						&&null!=dto.getLastSessionendYield()&&dto.getLastSessionendYield().compareTo(BigDecimal.ZERO)!=0){
+					flag = true;
+				}
+			}
+		return flag;
 	}
 	/**
 	 * 组装表7-1数据到实体类
@@ -2479,6 +2582,17 @@ public class InvestmentsInfoService {
 		Set<String> codeSet = new HashSet<>(Arrays.asList(keyCodes.split("\\|")));
 
 		List<InvestmentBusinessDetailsDto> InvestmentBusinessDetailsList = new ArrayList<InvestmentBusinessDetailsDto>();
+
+
+		InvestmentBusinessDetailsDto sumDto = new InvestmentBusinessDetailsDto();
+		sumDto.setPropertycode("sum");
+		BigDecimal valueA = BigDecimal.ZERO;
+		BigDecimal valueB = BigDecimal.ZERO;
+		BigDecimal valueALast = BigDecimal.ZERO;
+		BigDecimal valueBLast = BigDecimal.ZERO;
+		BigDecimal valueB01 = BigDecimal.ZERO;
+		BigDecimal valueBlast01 = BigDecimal.ZERO;
+
 		//遍历查询出来的月报数据信息
 		for (Map<String,Object> map: ListMap) {
 			InvestmentBusinessDetailsDto investmentBusinessDetailsDto = new InvestmentBusinessDetailsDto();
@@ -2514,6 +2628,13 @@ public class InvestmentsInfoService {
 			//表五计算用 资产支持专项计划 - 上季
 			investmentBusinessDetailsDto.setValueBlast02((BigDecimal) map.get("VALUEBLAST02"));
 
+			//同级合计数据  F01和F06的合计数据需要分开
+			valueA = valueA.add(null!=investmentBusinessDetailsDto.getValueA()&&investmentBusinessDetailsDto.getPropertycode().contains("F06")?investmentBusinessDetailsDto.getValueA():BigDecimal.ZERO);
+			valueB = valueB.add(null!=investmentBusinessDetailsDto.getValueB()&&investmentBusinessDetailsDto.getPropertycode().contains("F01")?investmentBusinessDetailsDto.getValueB():BigDecimal.ZERO);
+			valueALast = valueALast.add(null!=investmentBusinessDetailsDto.getValueALast()&&investmentBusinessDetailsDto.getPropertycode().contains("F06")?investmentBusinessDetailsDto.getValueALast():BigDecimal.ZERO);
+			valueBLast = valueBLast.add(null!=investmentBusinessDetailsDto.getValueBLast()&&investmentBusinessDetailsDto.getPropertycode().contains("F01")?investmentBusinessDetailsDto.getValueBLast():BigDecimal.ZERO);
+			valueB01 = valueB01.add(null!=investmentBusinessDetailsDto.getValueB01()&&investmentBusinessDetailsDto.getPropertycode().contains("F01")?investmentBusinessDetailsDto.getValueB01():BigDecimal.ZERO);
+			valueBlast01 = valueBlast01.add(null!=investmentBusinessDetailsDto.getValueBlast01()&&investmentBusinessDetailsDto.getPropertycode().contains("F01")?investmentBusinessDetailsDto.getValueBlast01():BigDecimal.ZERO);
 			InvestmentBusinessDetailsList.add(investmentBusinessDetailsDto);
 		}
 		//将没有数据的分类进行初始化
@@ -2525,6 +2646,15 @@ public class InvestmentsInfoService {
 		}
 		//附表银保监局	城商行 字段
 
+		//合计数据添加
+		sumDto.setValueA(valueA);
+		sumDto.setValueB(valueB);
+		sumDto.setValueALast(valueALast);
+		sumDto.setValueBLast(valueBLast);
+		sumDto.setValueB01(valueB01);
+		sumDto.setValueBlast01(valueBlast01);
+		InvestmentBusinessDetailsList.add(sumDto);
+		//附表的机构编码及银监编号
 		InvestmentBusinessDetailsDto detailsDto = investmentBusinessDetailsMapper.queryOrgName();
 		InvestmentBusinessDetailsList.add(detailsDto);
 
@@ -2583,7 +2713,19 @@ public class InvestmentsInfoService {
 	 * @throws  
 	 */  
     private BigDecimal queryMoney(Map<String, BigDecimal> map, String key) {
-		return map.get(key) == null ? BigDecimal.ZERO : map.get(key);
+		BigDecimal dec = BigDecimal.ZERO;
+		//计算方法改造.要求减法一定放在最后面
+		String[] values = key.split("\\-");
+		if(values.length>1){
+			dec = map.get(values[0]) == null ? BigDecimal.ZERO : map.get(values[0]);
+			for(int i = 1; i< values.length;i++){
+				dec = dec.subtract(map.get(values[i]) == null ? BigDecimal.ZERO : map.get(values[i]));
+			}
+		}else{
+			dec = map.get(key) == null ? BigDecimal.ZERO : map.get(key);
+		}
+
+		return dec;
 	}
 	
 	public InvestmentBusinessDetailsDto divideBillion(InvestmentBusinessDetailsDto detail) {
@@ -2636,8 +2778,117 @@ public class InvestmentsInfoService {
 		if (detail.getLasttotleBalance() != null) { // 表三总计上季末余额
 			detail.setLasttotleBalance(detail.getLasttotleBalance().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
 		}
+
+		//表五计算用 投资余额 -穿透前
+		detail.setValueA(divideTenThousand(detail.getValueA()));
+		//表五计算用 投资余额 -穿透后
+		detail.setValueB(divideTenThousand(detail.getValueB()));
+		//表五计算用 投资余额 -上季 -穿透前
+		detail.setValueALast(divideTenThousand(detail.getValueALast()));
+		//表五计算用 投资余额 -上季 -穿透后
+		detail.setValueBLast(divideTenThousand(detail.getValueBLast()));
+		//表五计算用 平均杠杆率 -穿透前
+		detail.setAvgRate1(multiplyHundred(detail.getAvgRate1()));
+		//表五计算用 平均杠杆率 -穿透后
+		detail.setAvgRate2(multiplyHundred(detail.getAvgRate2()));
+		//表五计算用 平均杠杆率 -穿透前 - 上季
+		detail.setAvgRate1Last(multiplyHundred(detail.getAvgRate1Last()));
+		//表五计算用 平均杠杆率 -穿透后 - 上季
+		detail.setAvgRate2Last(multiplyHundred(detail.getAvgRate2Last()));
+		//表五计算用 杠杆倍数最高值 -本机
+		detail.setHeaverTimes1(multiplyHundred(detail.getHeaverTimes1()));
+		//表五计算用 杠杆倍数最高值 -上季
+		detail.setHeaverTimes2(multiplyHundred(detail.getHeaverTimes2()));
+		//表五计算用 信贷资产支持证券
+		detail.setValueB01(divideTenThousand(detail.getValueB01()));
+		//表五计算用 信贷资产支持证券 - 上季
+		detail.setValueBlast01(divideTenThousand(detail.getValueBlast01()));
+		//表五计算用 资产支持专项计划
+		detail.setValueB02(divideTenThousand(detail.getValueB02()));
+		//表五计算用 资产支持专项计划 - 上季
+		detail.setValueBlast02(divideTenThousand(detail.getValueBlast02()));
+
 		return detail;
 	}
+	public static BigDecimal divideTenThousand(BigDecimal num){
+    	BigDecimal beo = null;
+		BigDecimal billion = new BigDecimal("10000");
+		if(null!=num){
+			beo = num.divide(billion, 2, BigDecimal.ROUND_HALF_UP);
+		}
+    	return beo;
+	}
+
+
+
+	public InvestmentBusinessDetailsDto divideBillionEx(InvestmentBusinessDetailsDto detail) {
+		BigDecimal billion = BigDecimal.ONE;
+		if(detail.getSessionendNum()!=null)//期末余额
+			detail.setSessionendNum(detail.getSessionendNum().divide(billion, 1, BigDecimal.ROUND_HALF_UP));
+		if(detail.getLastSessionendNum()!=null)//期末余额（穿透后）
+			detail.setLastSessionendNum(detail.getLastSessionendNum().divide(billion, 1, BigDecimal.ROUND_HALF_UP));
+		if(detail.getNonperformingAssetNum()!=null)//本期银行收益
+			detail.setNonperformingAssetNum(detail.getNonperformingAssetNum().divide(billion, 1, BigDecimal.ROUND_HALF_UP));
+		if(detail.getLastNonperformingAssetNum()!=null)//本期客户收益
+			detail.setLastNonperformingAssetNum(detail.getLastNonperformingAssetNum().divide(billion, 1, BigDecimal.ROUND_HALF_UP));
+		if(detail.getTqeAmount()!=null)//本期募集金额
+			detail.setTqeAmount(detail.getTqeAmount().divide(billion, 1, BigDecimal.ROUND_HALF_UP));
+		if(detail.getTlqeAmount()!=null)//本期总募集金额
+			detail.setTlqeAmount(detail.getTlqeAmount().divide(billion, 1, BigDecimal.ROUND_HALF_UP));
+		if (detail.getNonsStandardAmount() != null) { // 非标准化债权类投资本季末数额
+			detail.setNonsStandardAmount(detail.getNonsStandardAmount().divide(billion, 1, BigDecimal.ROUND_HALF_UP));
+		}
+		if (detail.getLastNonsStandardAmount() != null) { // 非标准化债权类投资上季末数额
+			detail.setLastNonsStandardAmount(detail.getLastNonsStandardAmount().divide(billion, 1, BigDecimal.ROUND_HALF_UP));
+		}
+		if (detail.getIndInvestmentAmount() != null) { // 产业投资基金上季末数额
+			detail.setIndInvestmentAmount(detail.getIndInvestmentAmount().divide(billion, 1, BigDecimal.ROUND_HALF_UP));
+		}
+		if (detail.getLastIndInvestmentAmount() != null) { // 产业投资基金上季末数额
+			detail.setLastIndInvestmentAmount(detail.getLastIndInvestmentAmount().divide(billion, 1, BigDecimal.ROUND_HALF_UP));
+		}
+		if (detail.getOtherAmount() != null) { // 其他本季末数额
+			detail.setOtherAmount(detail.getOtherAmount().divide(billion, 1, BigDecimal.ROUND_HALF_UP));
+		}
+		if (detail.getLastOtherAmount() != null) { // 其他上季末数额
+			detail.setLastOtherAmount(detail.getLastOtherAmount().divide(billion, 1, BigDecimal.ROUND_HALF_UP));
+		}
+		if (detail.getSessionendBalance() != null) { // 表四本季末数额余额
+			detail.setSessionendBalance(detail.getSessionendBalance().divide(billion, 1, BigDecimal.ROUND_HALF_UP));
+		}
+		if (detail.getSessionendYield() != null) { // 表四 本季末平均年化收益水平 收益率
+			detail.setSessionendYield(detail.getSessionendYield().multiply(new BigDecimal(100)).setScale(1, BigDecimal.ROUND_HALF_UP));
+		}
+		if (detail.getLastSessionendBalance() != null) { // 表四上季末数额余额
+			detail.setLastSessionendBalance(detail.getLastSessionendBalance().divide(billion, 1, BigDecimal.ROUND_HALF_UP));
+		}
+		if (detail.getLastSessionendYield() != null) { // 表四 上季末平均年化收益水平 收益率
+			detail.setLastSessionendYield(detail.getLastSessionendYield().multiply(new BigDecimal(100)).setScale(1, BigDecimal.ROUND_HALF_UP));
+		}
+		if (detail.getTotleBalance() != null) { // 表三总计本季末余额
+			detail.setTotleBalance(detail.getTotleBalance().divide(billion, 1, BigDecimal.ROUND_HALF_UP));
+		}
+		if (detail.getLasttotleBalance() != null) { // 表三总计上季末余额
+			detail.setLasttotleBalance(detail.getLasttotleBalance().divide(billion, 1, BigDecimal.ROUND_HALF_UP));
+		}
+
+		return detail;
+	}
+
+	/***
+	 * 表5的结构化
+	 * @param num
+	 * @return
+	 */
+	public static BigDecimal multiplyHundred(BigDecimal num){
+		BigDecimal beo = null;
+
+		if(null!=num){
+			beo = num.multiply(BigDecimal.ONE).setScale(2, BigDecimal.ROUND_HALF_UP);
+		}
+		return beo;
+	}
+
     public InvestmentBusinessCounterDetailsDto divideBillionOfCounter(InvestmentBusinessCounterDetailsDto detail) {
         BigDecimal billion = new BigDecimal(10000);
         if(detail.getXtSessionendNum()!=null){
@@ -2810,24 +3061,36 @@ public class InvestmentsInfoService {
 		paraMap.put("endDate",endDate);
 		paraMap.put("modetype", "40");
 
-		paraMap.put("INDUSTRY1", CacheUtil.getSysParam("SEC_END_DAYS_SWITCH").split(";")[0]);
-		paraMap.put("INDUSTRY2", CacheUtil.getSysParam("SEC_END_DAYS_SWITCH").split(";")[1]);
-		paraMap.put("INDUSTRY3", CacheUtil.getSysParam("SEC_END_DAYS_SWITCH").split(";")[2]);
-		paraMap.put("INDUSTRY4", CacheUtil.getSysParam("SEC_END_DAYS_SWITCH").split(";")[3]);
+		String[] deCode = CacheUtil.getSysParam("SVR_EXCESS_PRODUCTION_CAPACITY").split(";");
+
+		paraMap.put("INDUSTRY1", deCode.length>=1?deCode[0]:"");
+		paraMap.put("INDUSTRY2", deCode.length>=2?deCode[1]:"");
+		paraMap.put("INDUSTRY3", deCode.length>=3?deCode[2]:"");
+		paraMap.put("INDUSTRY4", deCode.length>=4?deCode[3]:"");
 
 
 		InvestmentBusinessDetailsDto investmentBusinessDetailsDto40= investmentBusinessDetailsMapper.queryBottomInfoAmountByModeType(paraMap);
 		paraMap.put("modetype", "41");
 		InvestmentBusinessDetailsDto investmentBusinessDetailsDto41= investmentBusinessDetailsMapper.queryBottomInfoAmountByModeType(paraMap);
+		paraMap.put("modetype", "42");
+		InvestmentBusinessDetailsDto investmentBusinessDetailsDto42= investmentBusinessDetailsMapper.queryBottomInfoAmountByModeType(paraMap);
 		paraMap.put("modetype", "43");
 		InvestmentBusinessDetailsDto investmentBusinessDetailsDto43= investmentBusinessDetailsMapper.queryBottomInfoAmountByModeType(paraMap);
-		paraMap.put("provinces", StringUtil.splitToList(GlobalConstant.SEMICOLON,CacheUtil.getSysParam("SVR_LOCAL_AFFIRM_RULE").toString()));
 		paraMap.put("modetype", "44");
 		InvestmentBusinessDetailsDto investmentBusinessDetailsDto44= investmentBusinessDetailsMapper.queryBottomInfoAmountByModeType(paraMap);
+		paraMap.put("modetype", "45");
+		InvestmentBusinessDetailsDto investmentBusinessDetailsDto45= investmentBusinessDetailsMapper.queryBottomInfoAmountByModeType(paraMap);
+
+		paraMap.remove("INDUSTRY1");
+		paraMap.remove("INDUSTRY2");
+		paraMap.remove("INDUSTRY3");
+		paraMap.remove("INDUSTRY4");
 		investmentBusinessDetailsDtoList.add(investmentBusinessDetailsDto40);
 		investmentBusinessDetailsDtoList.add(investmentBusinessDetailsDto41);
+		investmentBusinessDetailsDtoList.add(investmentBusinessDetailsDto42);
 		investmentBusinessDetailsDtoList.add(investmentBusinessDetailsDto43);
 		investmentBusinessDetailsDtoList.add(investmentBusinessDetailsDto44);
+		investmentBusinessDetailsDtoList.add(investmentBusinessDetailsDto45);
 		for(InvestmentBusinessDetailsDto it:investmentBusinessDetailsDtoList){
 			it.setTotleBalance(addAllMoney(it.getSessionendNum(),it.getNonsStandardAmount(),it.getIndInvestmentAmount(),it.getOtherAmount()));
 			it.setLasttotleBalance(addAllMoney(it.getLastSessionendNum(),it.getLastNonsStandardAmount(),it.getLastIndInvestmentAmount(),it.getLastOtherAmount()));
@@ -2879,7 +3142,6 @@ public class InvestmentsInfoService {
 		paraMap.put("startDate", startDate);
 		paraMap.put("lastStartDate", lastDate);
 		paraMap.put("rule",(String) pageParam.get("rule"));
-		paraMap.put("provinces", StringUtil.splitToList(GlobalConstant.SEMICOLON,CacheUtil.getSysParam("SVR_LOCAL_AFFIRM_RULE").toString()));
 
 		List<OverallInfoDto> overallInfoDtoList = overallInfoMapper.queryBottomTable3AddInfoList(paraMap);
 		// Map<行业分类:产品形式, 余额>
@@ -2890,10 +3152,12 @@ public class InvestmentsInfoService {
 		for (OverallInfoDto overallInfoDto : overallInfoDtoList) {
 			String porperty =overallInfoDto.getPropertyCode();
 			boolean isExist=false;
-		    for(InvestmentBusinessDetailsDto item:investmentBusinessDetailsDtoList){
-		    	if(porperty.equals(item.getPropertycode())){
-					isExist=true;
-					break;
+		    if(StringUtil.isNotEmpty(porperty)){
+				for(InvestmentBusinessDetailsDto item:investmentBusinessDetailsDtoList){
+					if(porperty.equals(item.getPropertycode())){
+						isExist=true;
+						break;
+					}
 				}
 			}
 		    if(!isExist){

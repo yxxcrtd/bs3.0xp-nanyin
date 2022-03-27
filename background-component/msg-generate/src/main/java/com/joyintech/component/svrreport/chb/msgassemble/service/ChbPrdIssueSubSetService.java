@@ -225,8 +225,6 @@ public class ChbPrdIssueSubSetService {
 	    }
 
 
-
-
 	    //业绩比较基准下限
 	    if(sub.getYieldLow() != null){
 	    CnBondInterfItemDto cnBondItem11 = new CnBondInterfItemDto();
@@ -299,8 +297,9 @@ public class ChbPrdIssueSubSetService {
 	    cnBondItem17.setValue(sub.getOpenBussRemark());
 	    cnBondItemMap1.put("DetailsOnBusinessTypeDuringOpeningPeriod", cnBondItem17);
 		}
+		/***1217升级**/
 		//资金托管账号
-		if(StringUtil.isNotEmpty(sub.getBusiAcctNo())){
+		/*if(StringUtil.isNotEmpty(sub.getBusiAcctNo())){
 	    CnBondInterfItemDto cnBondItem18 = new CnBondInterfItemDto();
 	    cnBondItem18.setValue(sub.getBusiAcctNo());
 	    cnBondItemMap1.put("FundCustodyAccountNumber", cnBondItem18);
@@ -310,7 +309,8 @@ public class ChbPrdIssueSubSetService {
 	    CnBondInterfItemDto cnBondItem19 = new CnBondInterfItemDto();
 	    cnBondItem19.setValue(sub.getAcctName());
 	    cnBondItemMap1.put("FundCustodyAccountName", cnBondItem19);
-		}
+		}*/
+		/***1217升级**/
 		//登记流水号
 		if(StringUtil.isNotEmpty(sub.getSumitSeq())){
 	    CnBondInterfItemDto cnBondItem20 = new CnBondInterfItemDto();

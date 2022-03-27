@@ -26,17 +26,17 @@
 
     <select id="select" resultMap="BaseResultMap"  >
         SELECT
-        FIN_PRODUCT.FINPROD_MARKET_ID      BUSI_ID,--业务代码
-        FIN_CASH_CALC_RULE.CASH_ID   CASH_ID,--现金流代码
-        sys_datadict_list.ITEM_VALUE CASH_NAME,--现金流名称
-        MST_FEEINFO.ORG_TYPE    CASH_TYPE,--机构类型
-        FIN_CASH_INFO.CASH_TYPE_2    CASH_TYPE2,--现金流二级类型
-        FIN_CASH_CALC_RULE.YIELD     FEE_RATE,--初始利率
-        FIN_CASH_CALC_RULE.EFF_DATE  START_DATE,--生效日
+        FIN_PRODUCT.FINPROD_MARKET_ID      BUSI_ID,/*业务代码*/
+        FIN_CASH_CALC_RULE.CASH_ID   CASH_ID,/*现金流代码*/
+        sys_datadict_list.ITEM_VALUE CASH_NAME,/*现金流名称*/
+        MST_FEEINFO.ORG_TYPE    CASH_TYPE,/*机构类型*/
+        FIN_CASH_INFO.CASH_TYPE_2    CASH_TYPE2,/*现金流二级类型*/
+        FIN_CASH_CALC_RULE.YIELD     FEE_RATE,/*初始利率*/
+        FIN_CASH_CALC_RULE.EFF_DATE  START_DATE,/*生效日*/
         FIN_CASH_CALC_RULE.CREATE_USER,
         FIN_CASH_CALC_RULE.CREATE_DEPT,
         FIN_CASH_CALC_RULE.UPDATE_USER,
-        FIN_PRODUCT.P_FINPROD_ID  --父产品代码
+        FIN_PRODUCT.P_FINPROD_ID  /*父产品代码*/
         FROM
         FIN_PRODUCT,
         FIN_CASH_INFO,

@@ -21,7 +21,7 @@ import java.util.List;
  * 
  * @author 刘溶容
  * @version 1.0 2016年11月7日
- * @see FilingRegistrationTupleEntity
+ * @see BaseInfoEntity
  * @since 1.0
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -699,13 +699,13 @@ public class BaseInfoEntity implements Feild {
     /**
      * 是否为标准化票据
      */
-    @XmlElement(name = "wemax:StandardizedBillorNote")
-    private CommonNodeEntity standardizedBillorNote;
+    @XmlElement(name = "wemax:StandardizedBillOrNotePleaseSelect")
+    private CommonNodeEntity standardizedBillOrNotePleaseSelect;
 
     /**
      * 票据代码
      */
-    @XmlElement(name = "wemax:BillorNoteCode")
+    @XmlElement(name = "wemax:BillOrNoteCode")
     private CommonNodeEntity billorNoteCode;
     /***1217升级**/
 
@@ -1118,14 +1118,14 @@ public class BaseInfoEntity implements Feild {
     /**
      * 是否为银行理财产品
      */
-    @XmlElement(name = "wemax:WealthManagementProduct")
-    private CommonNodeEntity wealthManagementProduct;
+    @XmlElement(name = "wemax:WealthManagementProductPleaseSelect")
+    private CommonNodeEntity wealthManagementProductPleaseSelect;
 
-    /**
+   /* *//**
      * 产品登记编码
-     */
+     *//*
     @XmlElement(name = "wemax:ProductRegistrationCode")
-    private CommonNodeEntity productRegistrationCodeAsset;
+    private CommonNodeEntity productRegistrationCode;*/
     /***1217升级**/
 
     /**
@@ -1355,8 +1355,8 @@ public class BaseInfoEntity implements Feild {
     /**
      * 是否为固定收益类
      */
-    @XmlElement(name = "wemax:FixedIncomeFund")
-    private CommonNodeEntity fixedIncomeFund;
+    @XmlElement(name = "wemax:FixedIncomeFundPleaseSelect")
+    private CommonNodeEntity fixedIncomeFundPleaseSelect;
     /***1217升级**/
 
     /**
@@ -1460,8 +1460,8 @@ public class BaseInfoEntity implements Feild {
     /**
      * 是否为同业借款
      */
-    @XmlElement(name = "wemax:InterbankCashBorrowing")
-    private CommonNodeEntity interbankCashBorrowing;
+    @XmlElement(name = "wemax:InterbankCashBorrowingPleaseSelect")
+    private CommonNodeEntity interbankCashBorrowingPleaseSelect;
     /***1217升级**/
 
 
@@ -2514,8 +2514,8 @@ public class BaseInfoEntity implements Feild {
     /**
      * 分级比例
      */
-    @XmlElement(name = "wemax:RatioofPriority")
-    private CommonNodeEntity ratioofPriority;
+    @XmlElement(name = "wemax:RatioOfPriority")
+    private CommonNodeEntity ratioOfPriority;
     /***1217升级**/
 
     /**
@@ -10932,44 +10932,12 @@ public class BaseInfoEntity implements Feild {
         this.creditAssetTradingCode = creditAssetTradingCode;
     }
 
-    public CommonNodeEntity getStandardizedBillorNote() {
-        return standardizedBillorNote;
-    }
-
-    public void setStandardizedBillorNote(CommonNodeEntity standardizedBillorNote) {
-        this.standardizedBillorNote = standardizedBillorNote;
-    }
-
     public CommonNodeEntity getBillorNoteCode() {
         return billorNoteCode;
     }
 
     public void setBillorNoteCode(CommonNodeEntity billorNoteCode) {
         this.billorNoteCode = billorNoteCode;
-    }
-
-    public CommonNodeEntity getWealthManagementProduct() {
-        return wealthManagementProduct;
-    }
-
-    public void setWealthManagementProduct(CommonNodeEntity wealthManagementProduct) {
-        this.wealthManagementProduct = wealthManagementProduct;
-    }
-
-    public CommonNodeEntity getFixedIncomeFund() {
-        return fixedIncomeFund;
-    }
-
-    public void setFixedIncomeFund(CommonNodeEntity fixedIncomeFund) {
-        this.fixedIncomeFund = fixedIncomeFund;
-    }
-
-    public CommonNodeEntity getInterbankCashBorrowing() {
-        return interbankCashBorrowing;
-    }
-
-    public void setInterbankCashBorrowing(CommonNodeEntity interbankCashBorrowing) {
-        this.interbankCashBorrowing = interbankCashBorrowing;
     }
 
     public CommonNodeEntity getTransactionApproverIDNumber() {
@@ -11004,22 +10972,6 @@ public class BaseInfoEntity implements Feild {
         this.traderName = traderName;
     }
 
-    public CommonNodeEntity getProductSpecialProperty() {
-        return productSpecialProperty;
-    }
-
-    public void setProductSpecialProperty(CommonNodeEntity productSpecialProperty) {
-        this.productSpecialProperty = productSpecialProperty;
-    }
-
-    public CommonNodeEntity getRatioofPriority() {
-        return ratioofPriority;
-    }
-
-    public void setRatioofPriority(CommonNodeEntity ratioofPriority) {
-        this.ratioofPriority = ratioofPriority;
-    }
-
     public CommonNodeEntity getNetValueDate() {
         return netValueDate;
     }
@@ -11028,11 +10980,51 @@ public class BaseInfoEntity implements Feild {
         this.netValueDate = netValueDate;
     }
 
-    public CommonNodeEntity getProductRegistrationCodeAsset() {
-        return productRegistrationCodeAsset;
+    public CommonNodeEntity getStandardizedBillOrNotePleaseSelect() {
+        return standardizedBillOrNotePleaseSelect;
     }
 
-    public void setProductRegistrationCodeAsset(CommonNodeEntity productRegistrationCodeAsset) {
-        this.productRegistrationCodeAsset = productRegistrationCodeAsset;
+    public void setStandardizedBillOrNotePleaseSelect(CommonNodeEntity standardizedBillOrNotePleaseSelect) {
+        this.standardizedBillOrNotePleaseSelect = standardizedBillOrNotePleaseSelect;
+    }
+
+    public CommonNodeEntity getWealthManagementProductPleaseSelect() {
+        return wealthManagementProductPleaseSelect;
+    }
+
+    public void setWealthManagementProductPleaseSelect(CommonNodeEntity wealthManagementProductPleaseSelect) {
+        this.wealthManagementProductPleaseSelect = wealthManagementProductPleaseSelect;
+    }
+
+    public CommonNodeEntity getFixedIncomeFundPleaseSelect() {
+        return fixedIncomeFundPleaseSelect;
+    }
+
+    public void setFixedIncomeFundPleaseSelect(CommonNodeEntity fixedIncomeFundPleaseSelect) {
+        this.fixedIncomeFundPleaseSelect = fixedIncomeFundPleaseSelect;
+    }
+
+    public CommonNodeEntity getInterbankCashBorrowingPleaseSelect() {
+        return interbankCashBorrowingPleaseSelect;
+    }
+
+    public void setInterbankCashBorrowingPleaseSelect(CommonNodeEntity interbankCashBorrowingPleaseSelect) {
+        this.interbankCashBorrowingPleaseSelect = interbankCashBorrowingPleaseSelect;
+    }
+
+    public CommonNodeEntity getProductSpecialProperty() {
+        return productSpecialProperty;
+    }
+
+    public void setProductSpecialProperty(CommonNodeEntity productSpecialProperty) {
+        this.productSpecialProperty = productSpecialProperty;
+    }
+
+    public CommonNodeEntity getRatioOfPriority() {
+        return ratioOfPriority;
+    }
+
+    public void setRatioOfPriority(CommonNodeEntity ratioOfPriority) {
+        this.ratioOfPriority = ratioOfPriority;
     }
 }

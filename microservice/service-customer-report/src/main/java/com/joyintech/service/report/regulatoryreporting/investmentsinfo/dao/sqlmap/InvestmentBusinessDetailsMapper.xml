@@ -595,7 +595,7 @@
 			and CMAP.STARTDATE = #{startDate, jdbcType = DATE}
 		</if>
 
-		AND INFO.ASSET_TYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+		AND INFO.ASSET_TYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
 		<if test="modetype != null  and modetype.equals('40')">
 			and INFO.INDUSTRY_FLAG='01'
 			and INFO.MONIT_TYPE='02'
@@ -647,7 +647,7 @@
 		<if test="lastStartDate != null">
 			and CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
 		</if>
-		AND INFO.ASSET_TYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+		AND INFO.ASSET_TYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
 		<if test="modetype != null  and modetype.equals('40')">
 			and INFO.INDUSTRY_FLAG='01'
 			and INFO.MONIT_TYPE='02'
@@ -968,7 +968,7 @@
 		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
 		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
 		AND mst.province IS NOT NULL
-		AND INFO.ASSET_TYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+		AND INFO.ASSET_TYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
 		<if test="rule != null  and rule.equals('local')">
 			<if test="provinces!=null and provinces.size>0">
 				and  mst.PROVINCE in
@@ -1008,7 +1008,7 @@
 		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
 		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
 		AND mst.province IS NOT NULL
-		AND INFO.ASSET_TYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+		AND INFO.ASSET_TYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
 		<if test="rule != null  and rule.equals('local')">
 			<if test="provinces!=null and provinces.size>0">
 				and  mst.PROVINCE in
@@ -1262,7 +1262,7 @@
 		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
 		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
 		AND mst.province IS NOT NULL
-		AND INFO.ASSET_TYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+		AND INFO.ASSET_TYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
 
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -1285,7 +1285,7 @@
 		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
 		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
 		AND mst.province IS NOT NULL
-		AND INFO.ASSET_TYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+		AND INFO.ASSET_TYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>

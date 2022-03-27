@@ -735,10 +735,19 @@ public class ChbPrdDeclareSubSetService {
 			//产品特殊属性
 			if(StringUtil.isNotEmpty(sub.getPrdSpecProperty())){
 				CnBondInterfItemDto cnBondItem3 = new CnBondInterfItemDto();
-				cnBondItem3.setValue(sub.getPrdSpecProperty());
-				cnBondItemMap.put("ProductSpecialProperty", cnBondItem3);
+				//子节点开始
+				List<Map<String, CnBondInterfItemDto>> cnBondItemMap3 = new ArrayList<Map<String, CnBondInterfItemDto>>();
+				String [] prdSpecPropertys = sub.getPrdSpecProperty().split(ChbConstant.COMMA);
+				for(String str : prdSpecPropertys){
+					Map<String, CnBondInterfItemDto> cnBondItemMap3_1 =  new LinkedHashMap<String, CnBondInterfItemDto>();//子节点map
+					CnBondInterfItemDto cnBondItem3_1 = new CnBondInterfItemDto();//第一个子节点
+					cnBondItem3_1.setValue(str);
+					cnBondItemMap3_1.put("ProductSpecialProperty",cnBondItem3_1);
+					cnBondItemMap3.add(cnBondItemMap3_1);
+				}
+				cnBondItem3.setMaps(cnBondItemMap3);//第一个父子节点组合结束
+				cnBondItemMap.put("ProductSpecialPropertyTuple", cnBondItem3);
 			}
-
 			/***1217升级**/
 
 		    //产品期次
