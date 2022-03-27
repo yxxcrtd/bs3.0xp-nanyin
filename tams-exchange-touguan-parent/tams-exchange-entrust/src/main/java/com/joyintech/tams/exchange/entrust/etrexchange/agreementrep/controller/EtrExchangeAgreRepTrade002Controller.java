@@ -139,6 +139,12 @@ public class EtrExchangeAgreRepTrade002Controller extends BaseController {
             //流程代办
             entity = etrExchangeAgreRepTrade001Service.getBussinessEntityByWorkflowId(
                     workflowId);
+
+            if (entity != null && entity.getHgMDate() == null
+                    && entity.getTerm() != null && StringUtil.isNotBlank(entity.getFristSettleDate())) {
+                entity.setHgMDate(DateUtil.addDay(entity.getFristSettleDate(), entity.getTerm().intValue()));
+            }
+
             model.addAttribute(GlobalConstant.ENTITY, entity);
             model.addAttribute("workflowId", workflowId);
             model.addAttribute("riskTrialSpan", entity.getRiskTrialSpan());
