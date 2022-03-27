@@ -837,7 +837,6 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                     //List<String> entrustIdList = listTemp.stream().map(CfetsManualSettleDealInfo::getEntrustId).collect(Collectors.toList());
                     Map<String,Object> param = new HashMap<String,Object>();
                     param.put("entrustIds",entrustIdList);
-                    // 赎回登记的交收失败无指令出现报错
                     if(StringUtil.isNotEmpty(entrustIdList.size()) && entrustIdList.size()>0
                             && cfetsManualSettleMapper.countWflEtr(param) <= 0){
                         for(CfetsManualSettleDealInfo dealInfo : listTemp){
