@@ -539,6 +539,7 @@
             var tradeMarket =  $("#tradeMarket").val();
             var ps =  $("#ps").val();
             var repPs =  $("#repPs").val();
+
             //回购期限
             $("#term_div").show();
             //回购利率
@@ -1549,6 +1550,15 @@
                 $("#portfolioId").attr("disabled", false);
             }
             linkAcctNoCtrl();
+
+            if (init) {
+                if (ps) {
+                    $("#ps").attr("disabled", true);
+                }
+                if (repPs) {
+                    $("#repPs").attr("disabled", true);
+                }
+            }
         };
         /**
          * 交易场所+资金账户联动证券账户
