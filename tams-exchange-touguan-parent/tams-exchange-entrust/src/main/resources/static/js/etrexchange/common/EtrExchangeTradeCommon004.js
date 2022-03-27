@@ -3553,6 +3553,26 @@
                         }
                     }, false);
                 }
+                if(currentTab == 'jj') {
+                    var param = {
+                        portfolioId: data.portfolioId,
+                        finprodId: data.finprodId,
+                        finprodType2: data.finprodType2,
+                        tradeMarket: data.tradeMarket,
+                        acctNo: value,
+                        tradePlat: "04",
+                    };
+                    Joyin.ajaxJson(basePath + 'etrexchange/common/etrExchangeTrade001/selectAccAvailableCash', param, function (result) {
+                        if (result.data) {
+                            dateTable.renderRow(data.LAY_TABLE_INDEX, {"accAvailableCash": result.data});
+                        }
+                    }, false);
+                    Joyin.ajaxJson(basePath + 'etrexchange/common/etrExchangeTrade001/selectAvailableNum', param, function (result) {
+                        if (result.data) {
+                            dateTable.renderRow(data.LAY_TABLE_INDEX, {"accAvailablePos": result.data});
+                        }
+                    }, false);
+                }
             } else if (filed = 'entrustNum') {
                 if (parseFloat(value) < 0){
                     Joyin.error("指令数量不能为负数！",function(){
