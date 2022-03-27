@@ -3425,8 +3425,7 @@
                 sortField: 'entrustNum',
                 width: 200,
                 type: 'number',
-                fixtype: 1,
-                textrange: 0,
+                digit: 0,
                 edit: true
             },
             {

@@ -978,8 +978,18 @@ public class StlDataDealSzdJsmxProcessService {
 							}
 							// 到期交收日
 							settleTransData.setMpayDate(DateUtil.parse(szdJsmx.getJsrq()));
+
+							// 查询首期清算数据
 					        // 回购利息
-							settleTransData.setmIntAmt(new BigDecimal(szdJsmx.getQsje()).abs().subtract(new BigDecimal(szdJsmx.getCjsl()).abs()));
+							// settleTransData.setmIntAmt(new BigDecimal(szdJsmx.getQsje()).abs().subtract(new BigDecimal(szdJsmx.getCjsl()).abs()));
+							// 查询首期清算数据
+							List<SettleTransData> sqSettleTransDatas = stlDownDataDealMapper.selectShSqSettleTransDatas(
+									settleTransData.getfCjbh(), settleTransData.getSeatNumber(), settleTransData.getSecAcctId(),
+									settleTransData.getVdate());
+							if(!CollectionUtils.isEmpty(sqSettleTransDatas)){
+								SettleTransData sqSettleTransData = sqSettleTransDatas.get(0);
+								settleTransData.setmIntAmt(new BigDecimal(szdJsmx.getQsje()).abs().subtract(sqSettleTransData.getPrinAmt()));
+							}
 							// 利息总额
 							// GZYHTZJY-1062:赋值利息总额 fuyongsheng modify 20220106 start
 							settleTransData.setIntAmt(settleTransData.getmIntAmt());
