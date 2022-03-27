@@ -125,7 +125,13 @@ public class PositionRequestTradeRestService {
                 busiType = commonPositionEngineService.getDurationPositionBusiType(finprodType2, ps, assetType2);
             }
             // ZGTFCP-1577: add by fuyongsheng 20220315 end
-            PositionHttpRequest.dorevoke(deal.getTradeId(), PositionConstant.POSITION_TYPE_TRD, busiType, ps);
+            String tradeId= deal.getTradeId();
+            // ZGTFCP-1883:中途换券成交匹配发送的tradeId是totleTradeId,撤销时保持一致 modify by fuyongsheng 20220327 start
+            if(dealTotal != null &&  DictCodeListExt3.交易方向_中途换券.getValue().equals(dealTotal.getPs())){
+                tradeId = dealTotal.getTotleTradeId();
+            }
+            // ZGTFCP-1883:中途换券成交匹配发送的tradeId是totleTradeId,撤销时保持一致 modify by fuyongsheng 20220327 end
+            PositionHttpRequest.dorevoke(tradeId, PositionConstant.POSITION_TYPE_TRD, busiType, ps);
         }
     }
 
