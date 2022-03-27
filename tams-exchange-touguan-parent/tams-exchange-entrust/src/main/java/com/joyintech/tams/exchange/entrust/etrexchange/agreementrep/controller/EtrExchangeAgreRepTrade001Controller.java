@@ -185,6 +185,39 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
         initPageParams.put("risk_math_switch", CacheUtil.getSysParam("risk_math_switch"));
         initPageParams.put("IS_RISKMATH_SOFTCONTROL", CacheUtil.getSysParam("IS_RISKMATH_SOFTCONTROL"));
 
+        // 非公开行情请求类型下拉列表数据
+        List<SelectOptionDto> options = new ArrayList();
+        SelectOptionDto option = new SelectOptionDto();
+        option.setId(DictCodeListExt3.交易方向_正回购.getValue());
+        option.setText(DictCodeListExt3.交易方向_正回购.getCodeName());
+        options.add(option);
+
+        option = new SelectOptionDto();
+        option.setId(DictCodeListExt3.交易方向_到期续做.getValue());
+        option.setText(DictCodeListExt3.交易方向_到期续做.getCodeName());
+        options.add(option);
+
+        option = new SelectOptionDto();
+        option.setId(DictCodeListExt3.交易方向_解除质押.getValue());
+        option.setText(DictCodeListExt3.交易方向_解除质押.getCodeName());
+        options.add(option);
+
+        option = new SelectOptionDto();
+        option.setId(DictCodeListExt3.交易方向_中途换券.getValue());
+        option.setText(DictCodeListExt3.交易方向_中途换券.getCodeName());
+        options.add(option);
+
+        option = new SelectOptionDto();
+        option.setId(DictCodeListExt3.交易方向_提前购回.getValue());
+        option.setText(DictCodeListExt3.交易方向_提前购回.getCodeName());
+        options.add(option);
+
+        SelectDto select = new SelectDto();
+        select.setCode("REQUEST_TYPE");
+        select.setName("请求类型");
+        select.setOptions(options);
+        initPageParams.put("REQUEST_TYPE", select);
+
         return new Message<Map<String, Object>>(initPageParams).success();
     }
 

@@ -635,6 +635,15 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
                 EtrComponentFactory.getComponentService(EtrBondRepoBiddingDto.class).entrustEdit(etrBondRepoBiddingDto);
             }
         }
+        doDeleteFlow(dto.getWorkflowId());
+        //插入指令明细表
+        BaseEtrInvestInfoDto baseEtrInvestInfoDto = this.buildMultiEtrFlow(dto);
+        if (!StringUtil.isEmptyList(baseEtrInvestInfoDto.getEtrEntrustDetailList())) {
+            etrEntrustDetailMapper.deleteByEntrustId(baseEtrInvestInfoDto.getEtrEntrustDetailList().get(0).getEntrustId());
+            for (EtrEntrustDetail etrEntrustDetail : baseEtrInvestInfoDto.getEtrEntrustDetailList()) {
+                etrEntrustDetailMapper.insertSelective(etrEntrustDetail);
+            }
+        }
         // 自动分发数据入库 add by yufei 20200808 start
         if (!StringUtil.isEmptyList(entity.getEtrDistributeList())) {
             baseEtrInvestInfoService.distributeDelegate(entity.getEtrDistributeList());
@@ -645,16 +654,6 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
             Map<String, Object> param = new HashMap<>();
             param.put("entrustId", dto.getEntrustId());
             etrCommandDispatcherService.pushCommandMsg(param);
-        }
-        doDeleteFlow(dto.getWorkflowId());
-        //插入指令明细表
-        BaseEtrInvestInfoDto baseEtrInvestInfoDto = this.buildMultiEtrFlow(dto);
-
-        if (!StringUtil.isEmptyList(baseEtrInvestInfoDto.getEtrEntrustDetailList())) {
-            etrEntrustDetailMapper.deleteByEntrustId(baseEtrInvestInfoDto.getEtrEntrustDetailList().get(0).getEntrustId());
-            for (EtrEntrustDetail etrEntrustDetail : baseEtrInvestInfoDto.getEtrEntrustDetailList()) {
-                etrEntrustDetailMapper.insertSelective(etrEntrustDetail);
-            }
         }
         //处理履历
         updateCfetsOprHis(dto.getEntrustId(), dto.getOptType());
@@ -907,7 +906,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
             systemAct = 系统动作_新建.getValue();
             decisionAct = 系统动作_新建.getValue();
         }
-        positionRequestService.sendEtrExchangeTradeSaveRequest(entity, decisionAct, systemAct);
+//        positionRequestService.sendEtrExchangeTradeSaveRequest(entity, decisionAct, systemAct);
         //增加调用头寸引擎代码end
     }
 

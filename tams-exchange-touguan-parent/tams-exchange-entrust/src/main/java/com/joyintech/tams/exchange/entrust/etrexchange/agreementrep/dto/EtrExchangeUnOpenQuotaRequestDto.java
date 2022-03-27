@@ -19,6 +19,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 〈一句话功能简述〉 〈功能详细描述〉
@@ -40,8 +41,8 @@ public class EtrExchangeUnOpenQuotaRequestDto {
     @ApiModelProperty(name="bussType",value="业务类型",example="A1")
     private String bussType;
 
-    @ApiModelProperty(name="finprodName",value="资产名称",example="A1")
-    private String finprodName;
+    @ApiModelProperty(name="zyj",value="质押券代码列表",example="A1")
+    private List<String> zyj;
 
     @ApiModelProperty(name="search",value="关键字",example="A1")
     private String search;
@@ -54,12 +55,12 @@ public class EtrExchangeUnOpenQuotaRequestDto {
         this.bussType = bussType;
     }
 
-    public String getFinprodName() {
-        return finprodName;
+    public List<String> getZyj() {
+        return zyj;
     }
 
-    public void setFinprodName(String finprodName) {
-        this.finprodName = finprodName;
+    public void setZyj(List<String> zyj) {
+        this.zyj = zyj;
     }
 
     public String getRequestId() {

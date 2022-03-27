@@ -85,7 +85,7 @@ public class TradeRestApi {
             String workflowStatus = param.getStatus();
             // String busiType = param.getBusiType();
             String assetType2 = param.getAssetType2();
-            
+            String dealOldPositionFlag = param.getDealOldPositionFlag();
             if (StringUtil.isNotEmpty(workflowStatus)
                     && (CollectionUtils.isNotEmpty(tradeIdList) || CollectionUtils.isNotEmpty(totalTradeIdList))) {
                 // 调用业务组件.【金融产品交易共通.交易产品接口】,写入[可用]的组合持仓流水及现金流水
@@ -155,8 +155,12 @@ public class TradeRestApi {
                 		}
                     }
                 }
-                
-                result = baseTradeProductDealCommService.execute(finProductTradeDto);
+
+                // ZGTFCP-1955,ZGTFCP-1510:上市流通、质押券出入库的头寸是在撤销批处理任务里处理的,不用走老头存逻辑 modify by fuyongsheng 20220327 start
+                if(StringUtil.isEmpty(dealOldPositionFlag) || dealOldPositionFlag.equals(DictCodeList.是否_是.getValue())){
+                    result = baseTradeProductDealCommService.execute(finProductTradeDto);
+                }
+                // ZGTFCP-1955,ZGTFCP-1510:上市流通、质押券出入库的头寸是在撤销批处理任务里处理的,不用走老头存逻辑 modify by fuyongsheng 20220327 end
 
                 // 发送新头寸接口数据
                 positionRequestTradeRestService.sendTradeRestPositionRequest(finProductTradeDto);

@@ -206,7 +206,8 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
                     if (etrCashPosition.getAmount() != null) {
                         etrCashPosition.setAmount(etrCashPosition.getAmount().negate());
                     }
-                    if (etrCashPosition.getOrderId().lastIndexOf('R') != etrCashPosition.getOrderId().length() - 1) {
+                    if (etrCashPosition.getOrderId().lastIndexOf('R') != etrCashPosition.getOrderId().length() - 1
+                            && !StringUtil.equals(finProductTradeDto.getIsExistNew(), DictCodeList.是否_是.getValue())) {
                         etrCashPosition.setOrderId(etrCashPosition.getOrderId() + "R");
                     }
                 }
@@ -216,7 +217,8 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
                     if (etrSecPosition.getAmount() != null) {
                         etrSecPosition.setAmount(etrSecPosition.getAmount().negate());
                     }
-                    if (etrSecPosition.getTradeId().lastIndexOf('R') != etrSecPosition.getTradeId().length() - 1) {
+                    if (etrSecPosition.getTradeId().lastIndexOf('R') != etrSecPosition.getTradeId().length() - 1
+                            && !StringUtil.equals(finProductTradeDto.getIsExistNew(), DictCodeList.是否_是.getValue())) {
                         etrSecPosition.setTradeId(etrSecPosition.getTradeId() + "R");
                     }
                 }

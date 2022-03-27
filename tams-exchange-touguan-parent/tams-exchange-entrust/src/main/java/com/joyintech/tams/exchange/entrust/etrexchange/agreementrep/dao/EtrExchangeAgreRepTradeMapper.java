@@ -111,4 +111,11 @@ public interface EtrExchangeAgreRepTradeMapper {
      * @return 指令条数
      */
     int selectDoneEtrEntrustCount(Map<String, Object> map);
+
+    /**
+     * 查询市场代码信息
+     * @param map 参数
+     * @return 市场代码信息
+     */
+    List<String> selectFinprodMarketIdData(Map<String, Object> map);
 }

@@ -284,12 +284,11 @@
                                 data-th-placeholder="#{SysCommon.placeholder}" data-th-data-url="@{/etrexchange/agreementrep/EtrExchangeAgreRepTrade001/getSecAcctInfoWfl}" formatoption=true></select>
                     </div>
                 </div>
-                <div class="form-inline-wrap" style="width: 50%; padding-top:6px;" id="repPs_div">
-                    <label class="layui-form-label" style="width: 150px;" data-th-text="#{EtrExchangeAgreRepTrade001.repPs}">委托方向</label>
+                <div class="form-inline-wrap" style="width: 50%; padding-top:6px;" id="tradeId_div">
+                    <label class="layui-form-label" style="width: 150px;" >初始交易编号</label>
                     <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
-                        <select required type="text" id="repPs" name="repPs" allowClear="true" class="layui-input form-input input-select" data-th-initvalue="${entity?.repPs}"
-                                data-th-placeholder="#{SysCommon.placeholder}" formatoption="true" data-th-data-result='${BACK_LEND_DIRECTION}'>
-                        </select>
+                        <input type="text" id="tradeId" name="tradeId" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                               data-th-value="${entity?.tradeId}" maxlength=30>
                     </div>
                 </div>
                 <div class="form-inline-wrap" style="width: 50%; padding-top:6px;" id="ps_div">
@@ -297,6 +296,14 @@
                     <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
                         <select required type="text" id="ps" name="ps" allowClear="true" class="layui-input form-input input-select" data-th-data-result='${PS}' data-th-initvalue="${entity?.ps}"
                                 parentIds="tradeMarket,psList" data-th-placeholder="#{SysCommon.placeholder}" formatoption="true" th:data-url= "@{/etrexchange/agreementrep/EtrExchangeAgreRepTrade001/selectPs}">
+                        </select>
+                    </div>
+                </div>
+                <div class="form-inline-wrap" style="width: 50%; padding-top:6px;" id="repPs_div">
+                    <label class="layui-form-label" style="width: 150px;" data-th-text="#{EtrExchangeAgreRepTrade001.repPs}">委托方向</label>
+                    <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
+                        <select required type="text" id="repPs" name="repPs" allowClear="true" class="layui-input form-input input-select" data-th-initvalue="${entity?.repPs}"
+                                data-th-placeholder="#{SysCommon.placeholder}" formatoption="true" data-th-data-result='${BACK_LEND_DIRECTION}'>
                         </select>
                     </div>
                 </div>
@@ -330,6 +337,12 @@
                         <input required class="layui-input form-input input-dateSelect" id="fristSettleDate" name="fristSettleDate" placeholder="请选择时间" data-th-value="${entity?.fristSettleDate}">
                     </div>
                 </div>
+                <div class="form-inline-wrap" style="width: 50%; padding-top:6px;" id="hgMDate_div">
+                    <label class="layui-form-label" style="width: 150px;">回购到期日</label>
+                    <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
+                        <input required disabled="disabled" class="layui-input form-input input-dateSelect" id="hgMDate" name="hgMDate" placeholder="请选择时间" data-th-value="${entity?.hgMDate}">
+                    </div>
+                </div>
                 <div class="form-inline-wrap" style="width: 50%; padding-top:6px;" id="expireSettleDate_div">
                     <label class="layui-form-label" style="width: 150px;" data-th-text="#{EtrExchangeAgreRepTrade001.expireSettleDate}">到期结算日</label>
                     <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
@@ -343,7 +356,7 @@
 <!--                    </div>-->
 <!--                </div>-->
                 <div class="form-inline-wrap" style="width: 50%; padding-top:6px;" id="occupyDays_div">
-                    <label class="layui-form-label" style="width: 150px;" data-th-text="#{EtrExchangeAgreRepTrade001.occupyDays}">占款天数</label>
+                    <label class="layui-form-label" style="width: 150px;">占款天数</label>
                     <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
                         <input type="text" id="occupyDays" name="occupyDays" placeholder="请输入内容" data-pattern="" data-fixtype="2" data-textrange='0' class="layui-input form-input text-number"
                                data-th-value="${entity?.occupyDays}" required="required" autocomplete="off" maxlength=9>
@@ -485,13 +498,6 @@
                         <input type="text" id="counterTrader" name="counterTrader" maxlength="6" class="layui-input form-input input-lenovoselect" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
                                data-th-data-url="@{/etrexchange/agreementrep/EtrExchangeAgreRepTrade002/selectCounterTraderWfl}" data-idfield="code" data-keyfield="code" formatOption="false"
                                data-parentids="counterId" data-th-value="${entity?.counterTrader}" data-th-data-effectivefieldsalias='|{"code":"对手方交易员"}|'>
-                    </div>
-                </div>
-                <div class="form-inline-wrap" style="width: 50%; padding-top:6px;" id="tradeId_div">
-                    <label class="layui-form-label" style="width: 150px;" data-th-text="#{EtrExchangeAgreRepTrade001.tradeId}">成交编号</label>
-                    <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
-                        <input type="text" id="tradeId" name="tradeId" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
-                               data-th-value="${entity?.tradeId}" maxlength=30>
                     </div>
                 </div>
                 <div class="form-inline-wrap" style="width: 50%; padding-top:6px;" id="reqOnId_div">

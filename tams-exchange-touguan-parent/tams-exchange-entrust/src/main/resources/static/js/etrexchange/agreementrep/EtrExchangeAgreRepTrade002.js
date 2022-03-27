@@ -539,6 +539,7 @@
             var tradeMarket =  $("#tradeMarket").val();
             var ps =  $("#ps").val();
             var repPs =  $("#repPs").val();
+
             //回购期限
             $("#term_div").show();
             //回购利率
@@ -1242,6 +1243,8 @@
                         $("#yield_div").hide();
                         //首期结算日
                         $("#fristSettleDate_div").hide();
+                        //回购到期日
+                        $("#hgMDate_div").hide();
                         //到期结算日
                         $("#expireSettleDate_div").hide();
                         //占款天数
@@ -1322,6 +1325,8 @@
                         $("#yield_div").hide();
                         //首期结算日
                         $("#fristSettleDate_div").hide();
+                        //回购到期日
+                        $("#hgMDate_div").hide();
                         //到期结算日
                         $("#expireSettleDate_div").hide();
                         //占款天数
@@ -1405,6 +1410,8 @@
                         $("#yield_div").hide();
                         //首期结算日
                         $("#fristSettleDate_div").hide();
+                        //回购到期日
+                        $("#hgMDate_div").hide();
                         //到期结算日
                         $("#expireSettleDate_div").hide();
                         //占款天数
@@ -1478,6 +1485,8 @@
                         $("#yield_div").hide();
                         //首期结算日
                         $("#fristSettleDate_div").hide();
+                        //回购到期日
+                        $("#hgMDate_div").hide();
                         //到期结算日
                         $("#expireSettleDate_div").hide();
                         //占款天数
@@ -1541,6 +1550,15 @@
                 $("#portfolioId").attr("disabled", false);
             }
             linkAcctNoCtrl();
+
+            if (init) {
+                if (ps) {
+                    $("#ps").attr("disabled", true);
+                }
+                if (repPs) {
+                    $("#repPs").attr("disabled", true);
+                }
+            }
         };
         /**
          * 交易场所+资金账户联动证券账户
@@ -1779,6 +1797,27 @@
             EtrExchangeTrade001.cluflag = cluflag;
             Joyin.dialog(JoyinUtil.getLabel('EtrExchangeTradeRiskcal'), '/invest/entrust/etrexchangetrade/EtrExchangeTradeRiskcal/init', '60%', '75%',null);
         }
+
+        function finalSaveOrSubmit(object) {
+            Joyin.ajaxJson(basePath + '/etrexchange/agreementrep/EtrExchangeAgreRepTrade001/checkSaveError',object,
+                function(result) {
+                    Joyin.confirm(result.data,function() {
+                        if (object.operateType === 'save') {
+                            WorkFlow.doSaveList(basePath+'/etrexchange/agreementrep/EtrExchangeAgreRepTrade001/save',object,"EtrAgreRepTrade001_btn_save",null,function() {
+
+                                doReset(true);
+                                JoyinUtil.disableButton("EtrAgreRepTrade001_btn_save", false);
+                            })
+                        }else {
+                            WorkFlow.doSubmitList(basePath+'/etrexchange/agreementrep/EtrExchangeAgreRepTrade001/save',object,"EtrAgreRepTrade001_btn_submit",null,function() {
+                                doReset(true);
+                                JoyinUtil.disableButton("EtrAgreRepTrade001_btn_submit", false);
+                            })
+                        }
+                    });
+                });
+        }
+
         function saveOrSubmit(operateType) {
             var s;
             var object = getSearchParams();
@@ -1795,53 +1834,28 @@
                     })
                 });
             } else {
-                // var riskdata = getriskdata(object);
-                // // ZGTFCP-809:增加首期交易方向 modify by fuyongsheng 20220314 start
-                // // if(BaseRiskMathComm && (object.ps == '03' || object.ps == '04' || object.ps == 'T56')) {
-                // if(BaseRiskMathComm && (object.ps == 'T92' || object.ps == '03' || object.ps == '04' || object.ps == 'T56')) {
-                //     // ZGTFCP-809:增加首期交易方向 modify by fuyongsheng 20220314 end
-                //     s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
-                //     if(!s && s != ''){
-                //         return;
-                //     }
-                //     if (window.BaseRiskMathComm.isCalcConditionChanged(riskdata)){
-                //         return;
-                //     }
-                // }
-                //验证
-//        if(!checkDbClickData(object)){
-//            return;
-//        }
                 if(!(object.ps == 'T93' || object.ps == 'T94'
                     || object.ps == 'T95' || object.ps == 'T96')) {
-                    if (!entity_RiskTrialRetList || riskFlag !== 0) {
+                    if (risk_math_switch == '01' && (!entity_RiskTrialRetList || riskFlag !== 0)) {
                         Joyin.error("请先完成风险试算")
                         return false;
                     }
                     if ($('#riskTrialSpan').text() && $('#riskTrialSpan').text().trim() == '试算不通过') {
-                        Joyin.error("风险试算未通过")
-                        return false;
+                        if (IS_RISKMATH_SOFTCONTROL == '01') {
+                            Joyin.confirm("风险试算未通过，请确认是否继续？",function() {
+                                finalSaveOrSubmit(object);
+                                return false;
+                            });
+                        } else {
+                            Joyin.error("风险试算未通过")
+                            return false;
+                        }
+                    } else {
+                        finalSaveOrSubmit(object);
                     }
+                } else {
+                    finalSaveOrSubmit(object);
                 }
-                //TODO 风险和授信
-//        Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
-                Joyin.ajaxJson(basePath + '/etrexchange/agreementrep/EtrExchangeAgreRepTrade001/checkSaveError',object,
-                    function(result) {
-                        Joyin.confirm(result.data,function() {
-                            if (object.operateType === 'save') {
-                                WorkFlow.doSaveList(basePath+'/etrexchange/agreementrep/EtrExchangeAgreRepTrade001/save',object,"EtrAgreRepTrade001_btn_save",null,function() {
-
-                                    doReset(true);
-                                    JoyinUtil.disableButton("EtrAgreRepTrade001_btn_save", false);
-                                })
-                            }else {
-                                WorkFlow.doSubmitList(basePath+'/etrexchange/agreementrep/EtrExchangeAgreRepTrade001/save',object,"EtrAgreRepTrade001_btn_submit",null,function() {
-                                    doReset(true);
-                                    JoyinUtil.disableButton("EtrAgreRepTrade001_btn_submit", false);
-                                })
-                            }
-                        });
-                    });
             }
         }
         /***行情相关方法 add by chaowei end*/

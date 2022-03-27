@@ -11,15 +11,17 @@ public interface ResaleRegAutoDealMapper {
 
     List<String> listTotleTradeId(Map<String,Object> param);
 
-    int deleteMatchInfoByPreTradeId(@Param("totleTradeId")String totleTradeId);
+    List<String> getTotleTradeId(@Param("totleTradeId")List<String> totleTradeId);
 
-    int deleteDealTotal(@Param("totleTradeId") String totleTradeId);
+    int deleteMatchInfoByPreTradeId(@Param("totleTradeId")List<String> totleTradeId);
 
-    int deletePaDealTotal(@Param("totleTradeId") String totleTradeId);
+    int deleteDealTotal(@Param("totleTradeId") List<String> totleTradeId);
 
-    int deleteDeal(@Param("totleTradeId") String totleTradeId);
+    int deletePaDealTotal(@Param("totleTradeId") List<String> totleTradeId);
 
-    int deletePadeal(@Param("totleTradeId") String totleTradeId);
+    int deleteDeal(@Param("totleTradeId") List<String> totleTradeId);
 
-    int deleteDealAdd(@Param("totleTradeId") String totleTradeId);
+    int deletePadeal(@Param("totleTradeId") List<String> totleTradeId);
+
+    int deleteDealAdd(@Param("totleTradeId") List<String> totleTradeId);
 }

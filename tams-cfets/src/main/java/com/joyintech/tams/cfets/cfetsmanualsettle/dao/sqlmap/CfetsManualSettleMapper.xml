@@ -720,7 +720,9 @@
         LEFT JOIN TRD_PRODUCT_DEAL_ADD TPDA ON TPD.TRADE_ID = TPDA.TRADE_ID
         LEFT JOIN TRD_DEAL_TOTAL_ADD TDTA ON TPD.TOTLE_TRADE_ID = TDTA.TOTLE_TRADE_ID
         WHERE TPD.TOTLE_TRADE_ID = #{tradeId} AND TPD.TRADE_STATUS ='01'
-        AND TPD.IS_CANCEL = 'N'
+        <if test="isCancel==null or isCancel == ''">
+            AND TPD.IS_CANCEL = 'N'
+        </if>
     </select>
 
     <select id="selectRegTradeId" resultType="java.lang.String">

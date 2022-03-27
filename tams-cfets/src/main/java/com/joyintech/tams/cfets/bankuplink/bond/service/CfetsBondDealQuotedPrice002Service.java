@@ -125,6 +125,9 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
     private SysWflBusinessListMapper sysWflBusinessListMapper;
     @Autowired
     private CfetsRepoQuotedPrice004Service cfetsRepoQuotedPrice004Service;
+
+    @Autowired
+    private CfetsBondDealQuotedPrice002Service cfetsBondDealQuotedPrice002Service;
     /**
      * 设置流程业务说明
      */
@@ -1067,7 +1070,15 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
      */
     @Override
 	public void doComplete(CfetsBondDealDialogueQuoteDto entity, OperationType type) {
-        if(cfetsQuotedCommonServicevue.checkQuoteStatusChange(entity.getQuoteId(),entity.getTradeStatus())){
+        String statusValid = null;
+        if(StringUtil.isNotEmpty(isInWflProcess(entity.getQuoteId(),entity.getPageId(),null))){
+            statusValid = DictCodeListExt1.有效状态_流程中.getValue();
+        }else{
+            statusValid=DictCodeListExt1.有效状态_有效.getValue();
+        }
+        CfetsBondDealDialogueQuoteDto cetsBondDealDialogueQuoteDto = cfetsBondDealQuotedPrice002Service.getBondDialogueQuote(
+                entity.getQuoteId(), statusValid);
+        if(null!=cetsBondDealDialogueQuoteDto && !StringUtil.isEmpty(entity.getTradeStatus()) && !StringUtil.equals(cetsBondDealDialogueQuoteDto.getTradeStatus(),entity.getTradeStatus())){
             throw new BusinessException("MSG:报价状态已变更,无法审批!");
         }
         //this.calcListFpriceAmt(entity);
@@ -1635,7 +1646,7 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
 		} else if (StringUtil.equals(entity.getQuotaPageModel(), "dialogueResponse")) {
 			// 对话回应
 			if (StringUtil.equals(entity.getOperatorType(), "done")) {
-				//entity.setTradeStatus(BussinessDictCodeList.银行间上行报价状态_成交中.getValue());
+				entity.setTradeStatus(BussinessDictCodeList.银行间上行报价状态_成交中.getValue());
 			} else if (StringUtil.equals(entity.getOperatorType(), "refuse")) {
 				entity.setTradeStatus(BussinessDictCodeList.银行间上行报价状态_终止中.getValue());
 			}

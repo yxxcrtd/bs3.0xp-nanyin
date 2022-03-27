@@ -1056,17 +1056,15 @@
 		T2.ENTRUST_ID = T1.ENTRUST_ID
 		<!--GNS-946:关联交易表查询首期成交编号 modify by fuyongsheng 20220223 start-->
 		LEFT JOIN TRD_PRODUCT_DEAL trd ON
-		T2.TRADE_ID = trd.F_TRADE_ID
+			T2.TRADE_ID = trd.F_TRADE_ID
+			AND trd.IS_CANCEL = 'N'
+			AND trd.trade_status = '01'
 		<!--GNS-946:关联交易表查询首期成交编号 modify by fuyongsheng 20220223 end-->
 		LEFT JOIN SETTLE_TRANS_DATA_TOTAL_MATCH T3 ON T1.ENTRUST_ID = T3.ENTRUNST_TRADE_ID
 		WHERE
 			ENTRUST_DATE = #{entrustDate,jdbcType=DATE}
-		  	<!--只取已接收和已完成的指令 modify fuyongsheng 20220114 start-->
-		  	AND T1.ENTRUST_STATUS IN ('03','04')
-		  	AND trd.IS_CANCEL = 'N'
-			AND trd.trade_status = '01'
-			<!--只取已接收和已完成的指令 modify fuyongsheng 20220114 end-->
-			<if test="finprodType != null and finprodType.size()>0">
+			AND T1.ENTRUST_STATUS IN ('03','04')
+		<if test="finprodType != null and finprodType.size()>0">
 				AND T1.FINPROD_TYPE2  IN
 				<foreach item="item" index="index" collection="finprodType" open="(" separator=","  close=")">
 					#{item}

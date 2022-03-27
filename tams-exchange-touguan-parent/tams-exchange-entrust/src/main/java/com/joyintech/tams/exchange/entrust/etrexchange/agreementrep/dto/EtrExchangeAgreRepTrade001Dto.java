@@ -126,6 +126,11 @@ public class EtrExchangeAgreRepTrade001Dto extends BaseEntity implements Process
 	 */
 	private List<RiskTrialRetDto> riskTrialRetDto;
 
+	/**
+	 * 回购到期日
+	 */
+	private String hgMDate;
+
 	public String getRiskTrialSpan() {
 		return riskTrialSpan;
 	}
@@ -541,5 +546,13 @@ public class EtrExchangeAgreRepTrade001Dto extends BaseEntity implements Process
 
 	public void setSoftSkipMode(String softSkipMode) {
 		this.softSkipMode = softSkipMode;
+	}
+
+	public String getHgMDate() {
+		return hgMDate;
+	}
+
+	public void setHgMDate(String hgMDate) {
+		this.hgMDate = hgMDate;
 	}
 }

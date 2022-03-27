@@ -1358,12 +1358,38 @@
                  from REG_FIN_PLEDGE  rfp
                  left join REG_FIN_PRODUCT_DEAL rfpd on rfp.TRADE_ID = rfpd.TRADE_ID
                 <where>
-                    and rfpd.IS_CANCEL = 'N'  and rfpd.TRADE_STATUS = '01'
+                    rfpd.IS_CANCEL = 'N'  and rfpd.TRADE_STATUS = '01'
                     <if test="entrustIdList != null and entrustIdList.size() > 0">
                         and rfp.ENTRUST_ID in
                         <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
                             #{item}
                         </foreach>
+                    </if>
+                </where>
+                union all
+                select iqecp.ENTRUST_ID, iqecp.PLEDGE_FINPROD_ID FINPROD_ID, -1*iqecp.PLEDGE_NUMBER
+                from IBU_QUOTE_ENT_CREP_PLEDGE iqecp
+                <where>
+                    <if test="entrustIdList != null and entrustIdList.size() > 0">
+                        iqecp.ENTRUST_ID in
+                        <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                            #{item}
+                        </foreach>
+                    </if>
+                </where>
+                union all
+                select wiqecp.ENTRUST_ID, wiqecp.PLEDGE_FINPROD_ID FINPROD_ID, -1*wiqecp.PLEDGE_NUMBER
+                from wfl_IBU_QUOTE_ENT_CREP_PLEDGE wiqecp
+                left join WFL_IBU_QUOTE_CREP wiqc on wiqc.QUOTE_ID = wiqecp.QUOTE_ID
+                <where>
+                    <if test="entrustIdList != null and entrustIdList.size() > 0">
+                        wiqecp.ENTRUST_ID in
+                        <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                            #{item}
+                        </foreach>
+                    </if>
+                    <if test="workflowId != null and workflowId != '' ">
+                        AND wiqc.WORKFLOW_ID != #{workflowId}
                     </if>
                 </where>
              )
