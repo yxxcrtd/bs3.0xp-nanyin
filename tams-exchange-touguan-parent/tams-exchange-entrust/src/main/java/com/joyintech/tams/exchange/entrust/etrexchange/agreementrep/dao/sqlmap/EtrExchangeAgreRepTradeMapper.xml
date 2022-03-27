@@ -785,6 +785,7 @@
         SDL2.ITEM_VALUE tradeMarketString,
         SDL3.ITEM_VALUE tradePlatString,
         SDL4.ITEM_VALUE psStr,
+        SDL5.ITEM_VALUE busiTypeTgString,
         btm.OUTPUT_VALUE_1 busiTypeTg,
         SYS_USER.REAL_NAME invManagerName,
         etr_entrust_add.TRADER as homeTrader,
@@ -826,6 +827,7 @@
             AND (ETR_ENTRUST.Ps = btm.INPUT_VALUE_3 OR  btm.INPUT_VALUE_3 is null)
             AND (ETR_ENTRUST.TRADE_PLAT = btm.INPUT_VALUE_1 OR btm.INPUT_VALUE_1 IS NULL)
         LEFT JOIN SYS_USER ON ETR_ENTRUST.INV_MANAGER_ID = SYS_USER.USER_NAME
+        LEFT JOIN SYS_DATADICT_LIST SDL5 ON SDL5.DICT_CODE ='BUSI_TYPE_TG' AND SDL5.ITEM_CODE = btm.OUTPUT_VALUE_1
         where etr_entrust.TRADE_MARKET IN ('03','04')
         and etr_entrust_add.ASSET_TYPE1 = 'H01'
         <if test="entrustStatus != null and entrustStatus != ''">
@@ -940,6 +942,7 @@
             SDL2.ITEM_VALUE tradeMarketString,
             SDL3.ITEM_VALUE tradePlatString,
             SDL4.ITEM_VALUE psStr,
+            SDL5.ITEM_VALUE busiTypeTgString,
             btm.OUTPUT_VALUE_1 busiTypeTg,
             SYS_USER.REAL_NAME invManagerName,
             wfl_etr_entrust_add.TRADER as homeTrader,
@@ -981,6 +984,7 @@
                 AND (wfl_etr_entrust.Ps = btm.INPUT_VALUE_3 OR  btm.INPUT_VALUE_3 is null)
                 AND (wfl_etr_entrust.TRADE_PLAT = btm.INPUT_VALUE_1 OR btm.INPUT_VALUE_1 IS NULL)
             LEFT JOIN SYS_USER ON wfl_etr_entrust.INV_MANAGER_ID = SYS_USER.USER_NAME
+            LEFT JOIN SYS_DATADICT_LIST SDL5 ON SDL5.DICT_CODE ='BUSI_TYPE_TG' AND SDL5.ITEM_CODE = btm.OUTPUT_VALUE_1
             where wfl_etr_entrust.TRADE_MARKET IN ('03','04')
             and wfl_etr_entrust_add.ASSET_TYPE1 = 'H01'
             <if test="entrustStatus != null and entrustStatus != ''">
@@ -1044,10 +1048,11 @@
             dealCurAcct|| '|' ||  tradeMarketString|| '|' ||  tradePlat || '|' || tradePlatString|| '|' ||
             ps|| '|' ||  psStr|| '|' ||  to_char(fristSettleDate,'yyyy-MM-dd') || '|' || to_char(expireSettleDate,'yyyy-MM-dd')|| '|' ||
             finprodId|| '|' ||  finprodMarketId|| '|' ||  finprodAbbr || '|' || secAcctId|| '|' ||
-            counterName|| '|' ||  to_char(vdate,'yyyy-MM-dd') || '|' ||  mdate || '|' || invManagerName
+            counterName|| '|' ||  to_char(vdate,'yyyy-MM-dd') || '|' ||  mdate || '|' || invManagerName || '|' || busiTypeTgString
             like '%' || #{search} || '%'
             )
             <if test="search_isNumberFlag != null and search_isNumberFlag == true">
+
                 or (T1.implementPercent*100 = #{search})
                 or (T1.dealPercent*100 = #{search})
                 or (T1.price = #{search})
