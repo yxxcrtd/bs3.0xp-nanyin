@@ -828,10 +828,18 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                     if (CollectionUtils.isEmpty(listTemp)) {
                         listTemp = cfetsManualSettleMapper.getTempDealDetailsByTradeId(entity.getTradeId());
                     }
-                    List<String> entrustIdList = listTemp.stream().map(CfetsManualSettleDealInfo::getEntrustId).collect(Collectors.toList());
+                    List<String> entrustIdList = new ArrayList<>();
+                    for(CfetsManualSettleDealInfo info:listTemp){
+                        if(StringUtil.isNotEmpty(info.getEntrustId())){
+                            entrustIdList.add(info.getEntrustId());
+                        }
+                    }
+                    //List<String> entrustIdList = listTemp.stream().map(CfetsManualSettleDealInfo::getEntrustId).collect(Collectors.toList());
                     Map<String,Object> param = new HashMap<String,Object>();
                     param.put("entrustIds",entrustIdList);
-                    if(cfetsManualSettleMapper.countWflEtr(param) <= 0){
+                    // 行权赎回无指令，此处未考虑出现报错
+                    if(StringUtil.isNotEmpty(entrustIdList.size()) && entrustIdList.size()>0
+                            && cfetsManualSettleMapper.countWflEtr(param) <= 0){
                         for(CfetsManualSettleDealInfo dealInfo : listTemp){
                             this.closeDelegateMethod(dealInfo.getEntrustId(),"","交收失败");
                         }
