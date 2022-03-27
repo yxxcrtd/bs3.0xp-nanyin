@@ -15,6 +15,7 @@ import com.joyintech.tams.common.base.entity.ChbPrdOpensch;
 import com.joyintech.tams.report.interf.common.imp.ImportGenerator;
 import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpColumn;
 import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
+import com.joyintech.tams.report.investormerger.dao.ChbInvestholdInfoCheckDtoMapper;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -52,6 +53,8 @@ import com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInf
 import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tools.collectors.JoyinCollectors;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -69,6 +72,9 @@ public class EquityInfoDistinctService {
 
 	@Autowired
 	private EquityInfoDistinctMapper equityInfoDistinctMapper;
+
+	@Autowired
+	private ChbInvestholdInfoCheckDtoMapper chbInvestholdInfoCheckDtoMapper;
 
 	@Autowired
 	private SqlSessionTemplate template;
@@ -1847,11 +1853,18 @@ public class EquityInfoDistinctService {
 		// 临时文件存放目录
 		String tmpPath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 
-		exeSqlldr(tmpPath, "CHB_EQU_HOLD_CHECK", list, table);
+		exeSqlldr(tmpPath, "CHB_EQU_TMP", list, table);
 		list.clear();
 	}
 
-		public void exeSqlldr(String tmpPath, String tablename, List<? extends BaseEntity> list, ImpTable table) {
+	/**
+	 * SQLLDR共通方法
+	 * @param tmpPath
+	 * @param tablename
+	 * @param list
+	 * @param table
+	 */
+	public void exeSqlldr(String tmpPath, String tablename, List<? extends BaseEntity> list, ImpTable table) {
 
 		// 创建一个线程池
 		if (interfMaxCorePoolSize < 1) {
@@ -1945,5 +1958,10 @@ public class EquityInfoDistinctService {
 				}
 			}
 		}
+	}
+
+	@Transactional(propagation = Propagation.REQUIRES_NEW,rollbackFor = Exception.class)
+	public void deleteBymodelAfterDealNew() {
+		chbInvestholdInfoCheckDtoMapper.deleteBymodelAfterDealNew();
 	}
 }
