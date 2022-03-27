@@ -91,6 +91,10 @@ public class PositionRequestServiceInstructionRequest {
         } else if (INTERF_TYPE_REPO003.equals(interType)) {
             this.repo003(entity, resultMap);
         } else if (INTERF_TYPE_REPO002.equals(interType)) {
+        	if(交易方向_逆回购.getValue().equals(entity.getFirstRepoPs()) 
+        			&& 交易方向_中途换券.getValue().equals(entity.getPs())) {
+        		return ;//逆回购 中途换券不调头寸
+        	}
             this.repo002(entity, resultMap);
         } else if (INTERF_TYPE_STOCK001.equals(interType)) {
             this.stock001(entity, resultMap);
