@@ -1242,6 +1242,8 @@
                         $("#yield_div").hide();
                         //首期结算日
                         $("#fristSettleDate_div").hide();
+                        //回购到期日
+                        $("#hgMDate_div").hide();
                         //到期结算日
                         $("#expireSettleDate_div").hide();
                         //占款天数
@@ -1322,6 +1324,8 @@
                         $("#yield_div").hide();
                         //首期结算日
                         $("#fristSettleDate_div").hide();
+                        //回购到期日
+                        $("#hgMDate_div").hide();
                         //到期结算日
                         $("#expireSettleDate_div").hide();
                         //占款天数
@@ -1405,6 +1409,8 @@
                         $("#yield_div").hide();
                         //首期结算日
                         $("#fristSettleDate_div").hide();
+                        //回购到期日
+                        $("#hgMDate_div").hide();
                         //到期结算日
                         $("#expireSettleDate_div").hide();
                         //占款天数
@@ -1478,6 +1484,8 @@
                         $("#yield_div").hide();
                         //首期结算日
                         $("#fristSettleDate_div").hide();
+                        //回购到期日
+                        $("#hgMDate_div").hide();
                         //到期结算日
                         $("#expireSettleDate_div").hide();
                         //占款天数
