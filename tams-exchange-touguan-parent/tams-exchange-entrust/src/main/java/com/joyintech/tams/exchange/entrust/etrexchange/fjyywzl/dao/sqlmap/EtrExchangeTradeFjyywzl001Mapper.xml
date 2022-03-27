@@ -329,8 +329,8 @@
         ELSE FP.FINPROD_MARKET_ID
         END AS secId,
         FP.FINPROD_ABBR AS secName,
-        NVL(TEMP.AMOUNT, 0)/100 AS secNum,
-        NVL(REPO.AMOUNT, 0)/100 AS canRepoNum,
+        NVL(TEMP.secNum, 0)/100 AS secNum,
+        NVL(TEMP.canRepoNum, 0)/100 AS canRepoNum,
         FP.FINPROD_TYPE2 AS finprodType2,
         FP.TRADE_MARKET AS tradeMarket,
         SSAI.TRD_ACCT_ID AS acctId,
@@ -338,83 +338,90 @@
         FROM
         <!-- 实际持仓 -->
         (
-        SELECT
-        PSP.CDATE AS CDATE,
-        PSP.PORTFOLIO_ID AS PORTFOLIO_ID ,
-        PSP.SEC_ACCT_ID AS SEC_ACCT_ID ,
-        PSP.FINPROD_ID AS FINPROD_ID,
-        PSP.DATE_TYPE AS DATE_TYPE,
-        SUM(NVL(PSP.AMOUNT,0)) AS AMOUNT
-        FROM
-        ETR_SEC_POSITION_RULE PSP
-        INNER JOIN
-        PTL_PORTFOLIO PP
-        ON
-        PSP.PORTFOLIO_ID = PP.PORTFOLIO_ID
-        INNER JOIN
-        PTL_PORTFOLIO_AUTHORITY PPA
-        ON
-        PP.PORTFOLIO_ID = PPA.PORTFOLIO_ID
-        <if test="userId != null and userId != ''">
-            AND PPA.USER_ID = #{userId}
-        </if>
-        WHERE
-        PSP.DATE_TYPE =0
-        AND PSP.HODING_TYPE=#{A_158}
-        AND PSP.CDATE = #{date}
-        GROUP BY
-        PSP.CDATE,
-        PSP.PORTFOLIO_ID ,
-        PSP.SEC_ACCT_ID,
-        PSP.FINPROD_ID,
-        PSP.DATE_TYPE
+            SELECT
+            A.CDATE AS CDATE,
+            A.PORTFOLIO_ID AS PORTFOLIO_ID ,
+            A.SEC_ACCT_ID AS SEC_ACCT_ID ,
+            A.FINPROD_ID AS FINPROD_ID,
+            A.DATE_TYPE AS DATE_TYPE,
+            SUM(NVL(A.secNum,0)) secNum,
+           SUM(NVL(A.canRepoNum,0)) canRepoNum
+            from ( SELECT
+                PSP.CDATE AS CDATE,
+                PSP.PORTFOLIO_ID AS PORTFOLIO_ID ,
+                PSP.SEC_ACCT_ID AS SEC_ACCT_ID ,
+                PSP.FINPROD_ID AS FINPROD_ID,
+                PSP.DATE_TYPE AS DATE_TYPE,
+                SUM(NVL(PSP.AMOUNT,0)) AS secNum,
+                0 as canRepoNum
+                FROM
+                PTL_SEC_POSITION_RULE PSP
+                INNER JOIN
+                PTL_PORTFOLIO PP
+                ON
+                PSP.PORTFOLIO_ID = PP.PORTFOLIO_ID
+                INNER JOIN
+                PTL_PORTFOLIO_AUTHORITY PPA
+                ON
+                PP.PORTFOLIO_ID = PPA.PORTFOLIO_ID
+                <if test="userId != null and userId != ''">
+                    AND PPA.USER_ID = #{userId}
+                </if>
+                WHERE
+                PSP.DATE_TYPE =0
+                AND PSP.HODING_TYPE=#{A_158}
+                AND PSP.CDATE = #{date}
+                GROUP BY
+                PSP.CDATE,
+                PSP.PORTFOLIO_ID ,
+                PSP.SEC_ACCT_ID,
+                PSP.FINPROD_ID,
+                PSP.DATE_TYPE
+                    union
+                SELECT
+                PSP.CDATE AS CDATE,
+                PSP.PORTFOLIO_ID AS PORTFOLIO_ID ,
+                PSP.SEC_ACCT_ID AS SEC_ACCT_ID ,
+                PSP.FINPROD_ID AS FINPROD_ID,
+                PSP.DATE_TYPE AS DATE_TYPE,
+                SUM(NVL(PSP.AMOUNT,0)) AS secNum,
+                0 as secNum
+                FROM
+                ETR_SEC_POSITION_RULE PSP
+                INNER JOIN
+                PTL_PORTFOLIO PP
+                ON
+                PSP.PORTFOLIO_ID = PP.PORTFOLIO_ID
+                INNER JOIN
+                PTL_PORTFOLIO_AUTHORITY PPA
+                ON
+                PP.PORTFOLIO_ID = PPA.PORTFOLIO_ID
+                <if test="userId != null and userId != ''">
+                    AND PPA.USER_ID = #{userId}
+                </if>
+                WHERE
+                PSP.DATE_TYPE =0
+                AND PSP.HODING_TYPE in (#{A_038},#{A_040})
+                <if test="tradeMarket != null and tradeMarket !='' and tradeMarket==TRADE_PLACE_03">
+                    AND PSP.HODING_TYPE =#{A_038}
+                </if>
+                <if test="tradeMarket != null and tradeMarket !='' and tradeMarket==TRADE_PLACE_04">
+                    AND PSP.HODING_TYPE =#{A_040}
+                </if>
+                AND PSP.CDATE = #{date}
+                GROUP BY
+                PSP.CDATE,
+                PSP.PORTFOLIO_ID ,
+                PSP.SEC_ACCT_ID,
+                PSP.FINPROD_ID,
+                PSP.DATE_TYPE) A
+            GROUP BY
+            A.CDATE,
+            A.PORTFOLIO_ID ,
+            A.SEC_ACCT_ID,
+            A.FINPROD_ID,
+            A.DATE_TYPE
         ) TEMP
-        <!-- 可质押持仓 -->
-        LEFT JOIN
-        (
-        SELECT
-        PSP.CDATE AS CDATE,
-        PSP.PORTFOLIO_ID AS PORTFOLIO_ID ,
-        PSP.SEC_ACCT_ID AS SEC_ACCT_ID ,
-        PSP.FINPROD_ID AS FINPROD_ID,
-        PSP.DATE_TYPE AS DATE_TYPE,
-        SUM(NVL(PSP.AMOUNT,0)) AS AMOUNT
-        FROM
-        PTL_SEC_POSITION_RULE PSP
-        INNER JOIN
-        PTL_PORTFOLIO PP
-        ON
-        PSP.PORTFOLIO_ID = PP.PORTFOLIO_ID
-        INNER JOIN
-        PTL_PORTFOLIO_AUTHORITY PPA
-        ON
-        PP.PORTFOLIO_ID = PPA.PORTFOLIO_ID
-        <if test="userId != null and userId != ''">
-            AND PPA.USER_ID = #{userId}
-        </if>
-        WHERE
-        PSP.DATE_TYPE =0
-        AND PSP.HODING_TYPE in (#{A_038},#{A_040})
-        <if test="tradeMarket != null and tradeMarket !='' and tradeMarket==TRADE_PLACE_03">
-            AND PSP.HODING_TYPE =#{A_038}
-        </if>
-        <if test="tradeMarket != null and tradeMarket !='' and tradeMarket==TRADE_PLACE_04">
-            AND PSP.HODING_TYPE =#{A_040}
-        </if>
-        AND PSP.CDATE = #{date}
-        GROUP BY
-        PSP.CDATE,
-        PSP.PORTFOLIO_ID ,
-        PSP.SEC_ACCT_ID,
-        PSP.FINPROD_ID,
-        PSP.DATE_TYPE
-        ) REPO
-        ON
-        TEMP.PORTFOLIO_ID = REPO.PORTFOLIO_ID
-        AND TEMP.SEC_ACCT_ID = REPO.SEC_ACCT_ID
-        AND TEMP.FINPROD_ID = REPO.FINPROD_ID
-        AND TEMP.DATE_TYPE = REPO.DATE_TYPE
-        AND TEMP.CDATE = REPO.CDATE
         INNER JOIN
         FIN_PRODUCT FP
         ON
@@ -441,7 +448,7 @@
         where pci.ACCT_TYPE = 'A07')TEMP2 ON SSAI.TRD_ACCT_ID = TEMP2.ACCT_NO
         WHERE
         FP.TRADE_MARKET IN (#{TRADE_PLACE_03}, #{TRADE_PLACE_04})
-        AND TEMP.AMOUNT > 0
+        AND (TEMP.secNum > 0 or TEMP.canRepoNum > 0)
         <if test="tradeMarket != null and tradeMarket !=''">
             AND FP.TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR}
         </if>
