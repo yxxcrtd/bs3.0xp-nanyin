@@ -3420,7 +3420,7 @@
                     url: JoyinUtil.getRealPath("/etrexchange/common/EtrExchangeTradeCommon004/getPtlSecAcctInfo"),
                     postData: function () {
                         return {
-                            portfolioId: curPortfolioId, tradeMarket: $("#tradeMarket_"+currentTab).val()
+                            // portfolioId: curPortfolioId, tradeMarket: $("#tradeMarket_"+currentTab).val()
                         };
                     }
                 }
