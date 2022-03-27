@@ -231,6 +231,13 @@
         FROM
         (
         SELECT
+        A.CDATE        AS CDATE,
+        A.PORTFOLIO_ID AS PORTFOLIO_ID ,
+        A.SEC_ACCT_ID  AS SEC_ACCT_ID ,
+        A.FINPROD_ID AS FINPROD_ID,
+        SUM(A.AMOUNT) AMOUNT
+        from(
+        SELECT
         PSP.CDATE        AS CDATE,
         PSP.PORTFOLIO_ID AS PORTFOLIO_ID ,
         PSP.SEC_ACCT_ID  AS SEC_ACCT_ID ,
@@ -285,7 +292,12 @@
         ETRPSP.CDATE,
         ETRPSP.PORTFOLIO_ID ,
         ETRPSP.SEC_ACCT_ID,
-        ETRPSP.FINPROD_ID
+        ETRPSP.FINPROD_ID) A
+        GROUP BY
+        A.CDATE,
+        A.PORTFOLIO_ID ,
+        A.SEC_ACCT_ID,
+        A.FINPROD_ID
         )TEMP
         LEFT JOIN
         (

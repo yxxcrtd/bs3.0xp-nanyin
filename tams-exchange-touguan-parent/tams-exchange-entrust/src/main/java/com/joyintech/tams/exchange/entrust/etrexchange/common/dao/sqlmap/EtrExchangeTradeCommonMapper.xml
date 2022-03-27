@@ -415,7 +415,6 @@
                     A.PORTFOLIO_ID ,
                     A.SEC_ACCT_ID,
                     A.FINPROD_ID
-
         )TEMP
         LEFT JOIN
             FIN_PRODUCT FP
@@ -1132,7 +1131,7 @@
             )
         )
         <!-- 查询委托指令附属表中是否已经存在该证券账户发布的此债券的申购委托 -->
-        select ee.entrust_id entrustId
+        select eea.sec_acc_id secAccId
         from etr_entrust_add eea
         left join etr_entrust ee
             on eea.entrust_id = ee.entrust_id
@@ -1149,7 +1148,7 @@
             </if>
         UNION
         <!-- 查询委托指令流程表中是否已经存在该证券账户发布的此债券的申购委托 -->
-        select weea.entrust_id entrustId
+        select weea.sec_acct_id secAcctId
         from wfl_etr_entrust_add weea
         left join wfl_etr_entrust wee
             on weea.entrust_id = wee.entrust_id
