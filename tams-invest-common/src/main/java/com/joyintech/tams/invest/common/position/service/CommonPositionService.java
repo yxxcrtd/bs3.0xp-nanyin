@@ -8,6 +8,7 @@ import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
@@ -687,5 +688,53 @@ public class CommonPositionService {
 	 */
 	public Date getLastWorkDate(Date cdate,String calendarId){
 		return commonPtlPositionMapper.getLastWorkDate(cdate,"0", calendarId);
+	}
+
+	/**
+	 * 获取申报代码
+	 * @param finprodId
+	 * @param ps
+	 * @return
+	 */
+	public String getStockId(String finprodId, String finprodType2, String ps){
+		// 查询申报信息
+		Map<String, Object> map = new HashMap<>();
+		map.put("finprodId", finprodId);
+		if((DictCodeList.交易方向_申购.getValue().equals(ps) || DictCodeList.交易方向_申购确认.getValue().equals(ps)
+				|| DictCodeList.交易方向_上市流通.getValue().equals(ps))
+				&& DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(finprodType2)){
+			map.put("othCodeType", DictCodeListExt3.金融产品其他代码类型_可转债信用申购代码.getValue());
+		}
+		else if((DictCodeList.交易方向_申购.getValue().equals(ps) || DictCodeList.交易方向_申购确认.getValue().equals(ps)
+				|| DictCodeList.交易方向_上市流通.getValue().equals(ps))
+				&& DictCodeListExt1.金融产品类型_投管用_股票.getValue().equals(finprodType2)){
+			map.put("othCodeType", DictCodeListExt3.金融产品其他代码类型_新股申购代码.getValue());
+		}
+		else if(DictCodeListExt3.交易方向_配债.getValue().equals(ps)){
+			map.put("othCodeType", DictCodeListExt3.金融产品其他代码类型_配债代码.getValue());
+		}
+		else if(DictCodeListExt2.交易方向_配股.getValue().equals(ps)){
+			map.put("othCodeType", DictCodeListExt3.金融产品其他代码类型_配股代码.getValue());
+		}
+		else if(DictCodeList.交易方向_上市流通.getValue().equals(ps)){
+			map.put("othCodeType", DictCodeListExt3.金融产品其他代码类型_上市流通代码.getValue());
+		}
+		FinProductOthCode finProductOthCode = this.selectFinProductOthCode(map);
+		return finProductOthCode != null ? finProductOthCode.getOthCode() : StringUtil.EMPTY;
+	}
+
+	/**
+	 * 获取申报代码
+	 * @param finprodId
+	 * @param ps
+	 * @return
+	 */
+	public String getSsltStockId(String finprodId, String finprodType2, String ps){
+		// 查询申报信息
+		Map<String, Object> map = new HashMap<>();
+		map.put("finprodId", finprodId);
+		map.put("othCodeType", DictCodeListExt3.金融产品其他代码类型_上市流通代码.getValue());
+		FinProductOthCode finProductOthCode = this.selectFinProductOthCode(map);
+		return finProductOthCode != null ? finProductOthCode.getOthCode() : StringUtil.EMPTY;
 	}
 }

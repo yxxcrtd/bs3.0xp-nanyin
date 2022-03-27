@@ -5,6 +5,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.invest.common.position.dao.CommonPtlPositionMapper;
+import com.joyintech.tams.invest.common.position.service.CommonPositionService;
 import com.joyintech.tams.settle.batch.datagather.constant.StlDataGatherConstant;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +22,6 @@ import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
-import com.joyintech.tams.common.base.entity.EtrSecPositionFlow;
-import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.common.base.entity.PtlSecPosition;
-import com.joyintech.tams.common.base.entity.PtlSecPositionFlow;
-import com.joyintech.tams.common.base.entity.PtlTrade;
-import com.joyintech.tams.common.base.entity.SettleTransTgMapping;
-import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -62,6 +58,12 @@ public class StlDataGatherBond7Processor extends BaseProcessor<NeedOperateEntity
 
     @Autowired
     private StlDataDealProcessCommonService stlDataDealProcessCommonService;
+
+    @Autowired
+    private CommonPositionService commonPositionService;
+
+    @Autowired
+    private CommonPtlPositionMapper commonPtlPositionMapper;
 
     @Override
     public InvestTradeWriteDto process (NeedOperateEntity operateEntity) throws Exception {
@@ -111,159 +113,169 @@ public class StlDataGatherBond7Processor extends BaseProcessor<NeedOperateEntity
                 ptlSecPositions.stream().collect(Collectors.groupingBy(PtlSecPosition::getFinprodId, Collectors.toList())).forEach(finprodIdMap::put);
             }
             for (SettleTransDataDto settleTransData : settleTransDataDtos) {
-                //汇总交易(资产+组合维度)
-                if (finprodIdMap.containsKey(settleTransData.getFinprodId())) {
-                    List<PtlSecPosition> ptlSecPositionsByFinprodId = finprodIdMap.get(settleTransData.getFinprodId());
-                    FinProduct finProduct = finProductMapper.selectByPrimaryKey(settleTransData.getFinprodId());
-                    BigDecimal amountTotal = ptlSecPositionsByFinprodId.stream().map(item2 -> item2.getAmount()).reduce(BigDecimal.ZERO, BigDecimal::add);
-                    for (PtlSecPosition ptlSecPosition : ptlSecPositionsByFinprodId) {
-                        TotalTrdProductDealDto totalTrdProductDeal = new TotalTrdProductDealDto();
-                        String totalTradeId = settleCommonService.buildBussinessCodeExt(DictCodeList.共通业务类型_资产存续期交易);
-                        TrdProductDealDto trdProductDeal = new TrdProductDealDto();
-                        createDeal(trdProductDeal, settleTransData,finProduct, ptlSecPosition);
-                        trdProductDeal.setPs(DictCodeList.交易方向_上市流通.getValue());
-                        //交易份额
-                        trdProductDeal.setShareAmt(ptlSecPosition.getAmount());
-                        trdProductDeal.setTotleTradeId(totalTradeId);
-                        productDealList.add(trdProductDeal);
-                        TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
-                        trdProductDealAdd.setTradeId(trdProductDeal.getTradeId());
-                        trdProductDealAdd.setPortfolioId(ptlSecPosition.getPortfolioId());
-                        trdProductDealAdd.setGenType(DictCodeListExt1.生成方式_接口接入.getValue());
-                        trdProductDealAddList.add(trdProductDealAdd);
+                Map<String, Object> map = new HashMap<>();
+                map.put("finprodId", settleTransData.getFinprodId());
+                List<FinProductOthCode> finProductOthCodes =  commonPtlPositionMapper.selectFinProductOthCodes(map);
+                if(CollectionUtils.isNotEmpty(finProductOthCodes)){
+                    for(FinProductOthCode finProductOthCode : finProductOthCodes){
+                        String stockId = finProductOthCode.getOthCode();
+                        //汇总交易(资产+组合维度)
+                        //if (finprodIdMap.containsKey(settleTransData.getFinprodId())) {
+                        if (finprodIdMap.containsKey(stockId)) {
+                            // List<PtlSecPosition> ptlSecPositionsByFinprodId = finprodIdMap.get(settleTransData.getFinprodId());
+                            List<PtlSecPosition> ptlSecPositionsByFinprodId = finprodIdMap.get(stockId);
+                            FinProduct finProduct = finProductMapper.selectByPrimaryKey(settleTransData.getFinprodId());
+                            //BigDecimal amountTotal = ptlSecPositionsByFinprodId.stream().map(item2 -> item2.getAmount()).reduce(BigDecimal.ZERO, BigDecimal::add);
+                            for (PtlSecPosition ptlSecPosition : ptlSecPositionsByFinprodId) {
+                                TotalTrdProductDealDto totalTrdProductDeal = new TotalTrdProductDealDto();
+                                String totalTradeId = settleCommonService.buildBussinessCodeExt(DictCodeList.共通业务类型_资产存续期交易);
+                                TrdProductDealDto trdProductDeal = new TrdProductDealDto();
+                                createDeal(trdProductDeal, settleTransData,finProduct, ptlSecPosition);
+                                trdProductDeal.setPs(DictCodeList.交易方向_上市流通.getValue());
+                                //交易份额
+                                trdProductDeal.setShareAmt(ptlSecPosition.getAmount());
+                                trdProductDeal.setTotleTradeId(totalTradeId);
+                                productDealList.add(trdProductDeal);
+                                TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
+                                trdProductDealAdd.setTradeId(trdProductDeal.getTradeId());
+                                trdProductDealAdd.setPortfolioId(ptlSecPosition.getPortfolioId());
+                                trdProductDealAdd.setGenType(DictCodeListExt1.生成方式_接口接入.getValue());
+                                trdProductDealAddList.add(trdProductDealAdd);
 
-                        // 构造金融交易汇总表数据
-                        BeanUtil.copyProperties(totalTrdProductDeal, trdProductDeal);
-                        // 汇总交易编号
-                        totalTrdProductDeal.setTotleTradeId(totalTradeId);
-                        totalProductDealList.add(totalTrdProductDeal);
+                                // 构造金融交易汇总表数据
+                                BeanUtil.copyProperties(totalTrdProductDeal, trdProductDeal);
+                                // 汇总交易编号
+                                totalTrdProductDeal.setTotleTradeId(totalTradeId);
+                                totalProductDealList.add(totalTrdProductDeal);
 
-                        //投管交易关系
-                        SettleTransTgMapping settleTransTgMapping = new SettleTransTgMapping();
-                        settleTransTgMapping.setTradeId(settleTransData.getTradeId());
-                        settleTransTgMapping.setTradeIdTg(totalTradeId);
-                        settleTransTgMapping.setTgDataStatus("02");
-                        // modify by etliu 20220222 start
-                        // 广农商二阶段 GNS-931:【广农商场内清算】上/深交所 基金存续期重复跑批，生成数据有误
+                                //投管交易关系
+                                SettleTransTgMapping settleTransTgMapping = new SettleTransTgMapping();
+                                settleTransTgMapping.setTradeId(settleTransData.getTradeId());
+                                settleTransTgMapping.setTradeIdTg(totalTradeId);
+                                settleTransTgMapping.setTgDataStatus("02");
+                                // modify by etliu 20220222 start
+                                // 广农商二阶段 GNS-931:【广农商场内清算】上/深交所 基金存续期重复跑批，生成数据有误
 //                        settleTransTgMapping.setDealDate(settleTransData.getDealDate());
-                        settleTransTgMapping.setDealDate(getBatchExecuteInfo().getExecuteDate());
-                        // modify by etliu 20220222 end
-                        settleTransTgMappingList.add(settleTransTgMapping);
+                                settleTransTgMapping.setDealDate(getBatchExecuteInfo().getExecuteDate());
+                                // modify by etliu 20220222 end
+                                settleTransTgMappingList.add(settleTransTgMapping);
 
-                        //组合交易
-                        PtlTrade ptlTrade = new PtlTrade();
-                        ptlTrade.setPortfolioId(ptlSecPosition.getPortfolioId());
-                        ptlTradeList.add(createPtlTrade(ptlTrade, trdProductDeal));
-                        //只需要处理指令、组合持仓 组合持仓流水PTL_SEC_POSITION_FLOW
-                        PtlSecPositionFlow ptlSecPositionFlow = new PtlSecPositionFlow();
-                        //流水号
-                        ptlSecPositionFlow.setSeqno(IDGenerator.generate());
-                        //组合代码
-                        ptlSecPositionFlow.setPortfolioId(ptlTrade.getPortfolioId());
-                        //证券管理账户/通道代码
-                        ptlSecPositionFlow.setSecAcctId(ptlTrade.getSecManageAcctId());
-                        //金融产品代码
-                        ptlSecPositionFlow.setFinprodId(ptlTrade.getBusiId());
-                        //分支序号
-                        ptlSecPositionFlow.setBranch(0L);
-                        //投资目的
-                        ptlSecPositionFlow.setInvAim(ptlTrade.getInvAim());
-                        //持仓类型
-                        ptlSecPositionFlow.setHodingType(DictCodeList.持仓类型_实际.getValue());
-                        //日期
-                        ptlSecPositionFlow.setCdate(ptlTrade.getSettleDate());
-                        //币种
-                        ptlSecPositionFlow.setCcy(trdProductDeal.getCcy());
-                        //数量
-                        ptlSecPositionFlow.setAmount(trdProductDeal.getShareAmt());
-                        //母金融产品代码
-                        ptlSecPositionFlow.setpFinprodId(null);
-                        //交易编号
-                        ptlSecPositionFlow.setTradeId(trdProductDeal.getTradeId());
-                        //冲销业务编号
-                        ptlSecPositionFlow.setOffsetId(null);
-                        //委托编号
-                        ptlSecPositionFlow.setEntrustId(null);
-                        ptlSecPositionFlowList.add(ptlSecPositionFlow);
-                        //重新
-                        List<PtlSecPositionFlow> positionFlows = ptlSecPositionFlowMap.get(ptlSecPosition.getFinprodId() + "," + ptlSecPosition.getSecAcctId() + "," + ptlSecPosition.getInvAim());
-                        for (PtlSecPositionFlow positionFlow : positionFlows){
-                            // GNS-932:判断是否同一组合 modify by fuyongsheng 20220225 start
-                            if(!ptlSecPosition.getPortfolioId().equals(positionFlow.getPortfolioId())){
-                                continue;
+                                //组合交易
+                                PtlTrade ptlTrade = new PtlTrade();
+                                ptlTrade.setPortfolioId(ptlSecPosition.getPortfolioId());
+                                ptlTradeList.add(createPtlTrade(ptlTrade, trdProductDeal));
+                                //只需要处理指令、组合持仓 组合持仓流水PTL_SEC_POSITION_FLOW
+                                PtlSecPositionFlow ptlSecPositionFlow = new PtlSecPositionFlow();
+                                //流水号
+                                ptlSecPositionFlow.setSeqno(IDGenerator.generate());
+                                //组合代码
+                                ptlSecPositionFlow.setPortfolioId(ptlTrade.getPortfolioId());
+                                //证券管理账户/通道代码
+                                ptlSecPositionFlow.setSecAcctId(ptlTrade.getSecManageAcctId());
+                                //金融产品代码
+                                ptlSecPositionFlow.setFinprodId(ptlTrade.getBusiId());
+                                //分支序号
+                                ptlSecPositionFlow.setBranch(0L);
+                                //投资目的
+                                ptlSecPositionFlow.setInvAim(ptlTrade.getInvAim());
+                                //持仓类型
+                                ptlSecPositionFlow.setHodingType(DictCodeList.持仓类型_实际.getValue());
+                                //日期
+                                ptlSecPositionFlow.setCdate(ptlTrade.getSettleDate());
+                                //币种
+                                ptlSecPositionFlow.setCcy(trdProductDeal.getCcy());
+                                //数量
+                                ptlSecPositionFlow.setAmount(trdProductDeal.getShareAmt());
+                                //母金融产品代码
+                                ptlSecPositionFlow.setpFinprodId(null);
+                                //交易编号
+                                ptlSecPositionFlow.setTradeId(trdProductDeal.getTradeId());
+                                //冲销业务编号
+                                ptlSecPositionFlow.setOffsetId(null);
+                                //委托编号
+                                ptlSecPositionFlow.setEntrustId(null);
+                                ptlSecPositionFlowList.add(ptlSecPositionFlow);
+                                //重新
+                                List<PtlSecPositionFlow> positionFlows = ptlSecPositionFlowMap.get(ptlSecPosition.getFinprodId() + "," + ptlSecPosition.getSecAcctId() + "," + ptlSecPosition.getInvAim());
+                                for (PtlSecPositionFlow positionFlow : positionFlows){
+                                    // GNS-932:判断是否同一组合 modify by fuyongsheng 20220225 start
+                                    if(!ptlSecPosition.getPortfolioId().equals(positionFlow.getPortfolioId())){
+                                        continue;
+                                    }
+                                    // GNS-932:判断是否同一组合 modify by fuyongsheng 20220225 end
+                                    //只需要处理指令、组合持仓 组合持仓流水PTL_SEC_POSITION_FLOW
+                                    PtlSecPositionFlow ptlSecPositionFlowFrozen = new PtlSecPositionFlow();
+                                    //流水号
+                                    ptlSecPositionFlowFrozen.setSeqno(IDGenerator.generate());
+                                    //组合代码
+                                    ptlSecPositionFlowFrozen.setPortfolioId(positionFlow.getPortfolioId());
+                                    //证券管理账户/通道代码
+                                    ptlSecPositionFlowFrozen.setSecAcctId(positionFlow.getSecAcctId());
+                                    //金融产品代码
+                                    // ptlSecPositionFlowFrozen.setFinprodId(positionFlow.getFinprodId());
+                                    ptlSecPositionFlowFrozen.setFinprodId(settleTransData.getFinprodId());
+                                    //分支序号
+                                    ptlSecPositionFlowFrozen.setBranch(0L);
+                                    //投资目的
+                                    ptlSecPositionFlowFrozen.setInvAim(positionFlow.getInvAim());
+                                    //持仓类型
+                                    // GZYHTZJY-1084:冲销掉上市前冻结的头寸 modify fuyongsheng 20220112 start
+                                    // ptlSecPositionFlowFrozen.setHodingType(DictCodeList.持仓类型_实际.getValue());
+                                    ptlSecPositionFlowFrozen.setHodingType(DictCodeListExt3.持仓类型_场内上市前冻结.getValue());
+                                    // GZYHTZJY-1084:冲销掉上市前冻结的头寸 modify fuyongsheng 20220112 end
+                                    //日期
+                                    ptlSecPositionFlowFrozen.setCdate(ptlTrade.getSettleDate());
+                                    //币种
+                                    ptlSecPositionFlowFrozen.setCcy(positionFlow.getCcy());
+                                    //数量
+                                    ptlSecPositionFlowFrozen.setAmount(ArithmeticUtil.multiply(positionFlow.getAmount(),new BigDecimal(-1)));
+                                    //母金融产品代码
+                                    ptlSecPositionFlowFrozen.setpFinprodId(null);
+                                    //交易编号
+                                    ptlSecPositionFlowFrozen.setTradeId(trdProductDeal.getTradeId());
+                                    //冲销业务编号
+                                    ptlSecPositionFlowFrozen.setOffsetId(positionFlow.getTradeId());
+                                    //委托编号
+                                    ptlSecPositionFlowFrozen.setEntrustId(positionFlow.getEntrustId());
+                                    //冲正标识
+                                    ptlSecPositionFlowFrozen.setOffsetFlag(DictCodeList.冲正标识_冲销交易.getValue());
+                                    ptlSecPositionFlowList.add(ptlSecPositionFlowFrozen);
+                                }
+                                // 	指令持仓流水	ETR_SEC_POSITION_FLOW  流水号 =	自动生成
+                                EtrSecPositionFlow etrSecPositionFlow = new EtrSecPositionFlow();
+                                //流水号
+                                etrSecPositionFlow.setSeqno(IDGenerator.generate());
+                                //组合代码
+                                etrSecPositionFlow.setPortfolioId(ptlTrade.getPortfolioId());
+                                //证券管理账户/通道代码
+                                etrSecPositionFlow.setSecAcctId(StringUtil.isNotEmpty(ptlTrade.getSecManageAcctId())?ptlTrade.getSecManageAcctId():"999999");
+                                //金融产品代码
+                                etrSecPositionFlow.setFinprodId(ptlTrade.getBusiId());
+                                //分支序号
+                                etrSecPositionFlow.setBranch(0L);
+                                //投资目的
+                                etrSecPositionFlow.setInvAim(ptlTrade.getInvAim());
+                                //持仓类型
+                                etrSecPositionFlow.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
+                                //日期
+                                etrSecPositionFlow.setCdate(ptlTrade.getSettleDate());
+                                //币种
+                                etrSecPositionFlow.setCcy(trdProductDeal.getCcy());
+                                //数量
+                                etrSecPositionFlow.setAmount(trdProductDeal.getShareAmt());
+                                //母金融产品代码
+                                etrSecPositionFlow.setpFinprodId(null);
+                                //交易编号
+                                etrSecPositionFlow.setTradeId(trdProductDeal.getTradeId());
+                                //冲销业务编号
+                                etrSecPositionFlow.setOffsetFlag(null);
+                                //委托编号
+                                etrSecPositionFlow.setOffsetId(null);
+                                etrSecPositionFlowList.add(etrSecPositionFlow);
                             }
-                            // GNS-932:判断是否同一组合 modify by fuyongsheng 20220225 end
-                            //只需要处理指令、组合持仓 组合持仓流水PTL_SEC_POSITION_FLOW
-                            PtlSecPositionFlow ptlSecPositionFlowFrozen = new PtlSecPositionFlow();
-                            //流水号
-                            ptlSecPositionFlowFrozen.setSeqno(IDGenerator.generate());
-                            //组合代码
-                            ptlSecPositionFlowFrozen.setPortfolioId(positionFlow.getPortfolioId());
-                            //证券管理账户/通道代码
-                            ptlSecPositionFlowFrozen.setSecAcctId(positionFlow.getSecAcctId());
-                            //金融产品代码
-                            ptlSecPositionFlowFrozen.setFinprodId(positionFlow.getFinprodId());
-                            //分支序号
-                            ptlSecPositionFlowFrozen.setBranch(0L);
-                            //投资目的
-                            ptlSecPositionFlowFrozen.setInvAim(positionFlow.getInvAim());
-                            //持仓类型
-                            // GZYHTZJY-1084:冲销掉上市前冻结的头寸 modify fuyongsheng 20220112 start
-                            // ptlSecPositionFlowFrozen.setHodingType(DictCodeList.持仓类型_实际.getValue());
-                            ptlSecPositionFlowFrozen.setHodingType(DictCodeListExt3.持仓类型_场内上市前冻结.getValue());
-                            // GZYHTZJY-1084:冲销掉上市前冻结的头寸 modify fuyongsheng 20220112 end
-                            //日期
-                            ptlSecPositionFlowFrozen.setCdate(ptlTrade.getSettleDate());
-                            //币种
-                            ptlSecPositionFlowFrozen.setCcy(positionFlow.getCcy());
-                            //数量
-                            ptlSecPositionFlowFrozen.setAmount(ArithmeticUtil.multiply(positionFlow.getAmount(),new BigDecimal(-1)));
-                            //母金融产品代码
-                            ptlSecPositionFlowFrozen.setpFinprodId(null);
-                            //交易编号
-                            ptlSecPositionFlowFrozen.setTradeId(trdProductDeal.getTradeId());
-                            //冲销业务编号
-                            ptlSecPositionFlowFrozen.setOffsetId(positionFlow.getTradeId());
-                            //委托编号
-                            ptlSecPositionFlowFrozen.setEntrustId(positionFlow.getEntrustId());
-                            //冲正标识
-                            ptlSecPositionFlowFrozen.setOffsetFlag(DictCodeList.冲正标识_冲销交易.getValue());
-                            ptlSecPositionFlowList.add(ptlSecPositionFlowFrozen);
                         }
-                        // 	指令持仓流水	ETR_SEC_POSITION_FLOW  流水号 =	自动生成
-                        EtrSecPositionFlow etrSecPositionFlow = new EtrSecPositionFlow();
-                        //流水号
-                        etrSecPositionFlow.setSeqno(IDGenerator.generate());
-                        //组合代码
-                        etrSecPositionFlow.setPortfolioId(ptlTrade.getPortfolioId());
-                        //证券管理账户/通道代码
-                        etrSecPositionFlow.setSecAcctId(StringUtil.isNotEmpty(ptlTrade.getSecManageAcctId())?ptlTrade.getSecManageAcctId():"999999");
-                        //金融产品代码
-                        etrSecPositionFlow.setFinprodId(ptlTrade.getBusiId());
-                        //分支序号
-                        etrSecPositionFlow.setBranch(0L);
-                        //投资目的
-                        etrSecPositionFlow.setInvAim(ptlTrade.getInvAim());
-                        //持仓类型
-                        etrSecPositionFlow.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
-                        //日期
-                        etrSecPositionFlow.setCdate(ptlTrade.getSettleDate());
-                        //币种
-                        etrSecPositionFlow.setCcy(trdProductDeal.getCcy());
-                        //数量
-                        etrSecPositionFlow.setAmount(trdProductDeal.getShareAmt());
-                        //母金融产品代码
-                        etrSecPositionFlow.setpFinprodId(null);
-                        //交易编号
-                        etrSecPositionFlow.setTradeId(trdProductDeal.getTradeId());
-                        //冲销业务编号
-                        etrSecPositionFlow.setOffsetFlag(null);
-                        //委托编号
-                        etrSecPositionFlow.setOffsetId(null);
-                        etrSecPositionFlowList.add(etrSecPositionFlow);
                     }
                 }
-
             }
             investTradeWriteDto.setEtrSecPositionFlowList(etrSecPositionFlowList);
             investTradeWriteDto.setPtlSecPositionFlowList(ptlSecPositionFlowList);

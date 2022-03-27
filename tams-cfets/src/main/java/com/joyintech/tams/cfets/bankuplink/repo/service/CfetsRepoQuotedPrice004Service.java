@@ -2041,7 +2041,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             for (RegFinProductDeal deal : input.getRegFinProductDeals()) {
                 trdOutRightRepoTradeService.updatePledgeBondForRevoke(deal.getpTradeId(), DictCodeList.持仓类型_质押.getValue(), true);
                 if(StringUtil.isEmpty(entrustIdList.get(deal.getEntrustId()))) {
-                    this.revokeEtrSecPosition(deal.getEntrustId());
+                    this.revokeEtrSecPosition(deal.getEntrustId(), null, false, null);
                     entrustIdList.put(deal.getEntrustId(),deal.getEntrustId());
                 }
             }
@@ -2144,7 +2144,10 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
      * @author jiangpeng
      * @date 2022/3/11 10:21
      */
-    public void revokeEtrSecPosition(String entrustId) {
+    public void revokeEtrSecPosition(String entrustId, Date settleDate, boolean isRevoke, String tradeId) {
+        if (StringUtil.isNotEmpty(tradeId)) {
+            tradeId = entrustId;
+        }
         Map<String, Object> param = new HashMap<>();
         param.put("bizCode", entrustId);
         param.put("POSITION_TYPE_ROLLIN", DictCodeListExt1.持仓类型_委托指令可用.getValue());
@@ -2152,9 +2155,16 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         List<EtrSecPositionFlow> etrSecPositionFlowList = cfetsIbuQuoteRepo004Mapper.selectEtrSecPositionFlow(param);
         for (EtrSecPositionFlow flow : etrSecPositionFlowList) {
             EtrSecPosition position = new EtrSecPosition();
-            BeanUtil.copyPropertiesIgnoreNull(position, flow);
             flow.setAmount(flow.getAmount().negate());
+            if (isRevoke) {
+                flow.setAmount(flow.getAmount().negate());
+            }
+            flow.setTradeId(tradeId);
+            if (StringUtil.isNotEmpty(settleDate)) {
+                flow.setCdate(settleDate);
+            }
             flow.setSeqno(IDGenerator.generate());
+            BeanUtil.copyPropertiesIgnoreNull(position, flow);
             etrSecPositionFlowMapper.insert(flow);
             cfetsIbuQuoteRepo004Mapper.updatePosition(position);
         }

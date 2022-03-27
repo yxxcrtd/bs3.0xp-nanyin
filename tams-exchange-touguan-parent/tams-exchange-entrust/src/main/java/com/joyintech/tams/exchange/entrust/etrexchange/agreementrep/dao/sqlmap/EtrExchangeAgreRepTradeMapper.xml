@@ -234,10 +234,10 @@
         PSP.CDATE        AS CDATE,
         PSP.PORTFOLIO_ID AS PORTFOLIO_ID ,
         PSP.SEC_ACCT_ID  AS SEC_ACCT_ID ,
-        nvl((select FINPROD_ID from FIN_PRODUCT_OTH_CODE FPOC where FPOC.OTH_CODE=PSP.FINPROD_ID),PSP.FINPROD_ID) AS FINPROD_ID,
+        PSP.FINPROD_ID AS FINPROD_ID,
         SUM(PSP.AMOUNT) AMOUNT
         FROM
-        ETR_SEC_POSITION_RULE PSP
+        PTL_SEC_POSITION_RULE PSP
         INNER JOIN
         PTL_PORTFOLIO PP
         ON
@@ -258,6 +258,34 @@
         PSP.PORTFOLIO_ID ,
         PSP.SEC_ACCT_ID,
         PSP.FINPROD_ID
+        union
+        SELECT
+        ETRPSP.CDATE        AS CDATE,
+        ETRPSP.PORTFOLIO_ID AS PORTFOLIO_ID ,
+        ETRPSP.SEC_ACCT_ID  AS SEC_ACCT_ID ,
+        ETRPSP.FINPROD_ID,
+        0 AS AMOUNT
+        FROM
+        ETR_SEC_POSITION_RULE ETRPSP
+        INNER JOIN
+        PTL_PORTFOLIO PP
+        ON
+        ETRPSP.PORTFOLIO_ID = PP.PORTFOLIO_ID
+        INNER JOIN
+        PTL_PORTFOLIO_AUTHORITY PPA
+        ON
+        PP.PORTFOLIO_ID = PPA.PORTFOLIO_ID
+        <if test="userId != null and userId != ''">
+            AND PPA.USER_ID = #{userId}
+        </if>
+        WHERE
+        ETRPSP.DATE_TYPE =0
+        AND ETRPSP.CDATE = #{sysDate}
+        GROUP BY
+        ETRPSP.CDATE,
+        ETRPSP.PORTFOLIO_ID ,
+        ETRPSP.SEC_ACCT_ID,
+        ETRPSP.FINPROD_ID
         )TEMP
         LEFT JOIN
         (
@@ -757,6 +785,7 @@
         SDL2.ITEM_VALUE tradeMarketString,
         SDL3.ITEM_VALUE tradePlatString,
         SDL4.ITEM_VALUE psStr,
+        SDL5.ITEM_VALUE busiTypeTgString,
         btm.OUTPUT_VALUE_1 busiTypeTg,
         SYS_USER.REAL_NAME invManagerName,
         etr_entrust_add.TRADER as homeTrader,
@@ -798,6 +827,7 @@
             AND (ETR_ENTRUST.Ps = btm.INPUT_VALUE_3 OR  btm.INPUT_VALUE_3 is null)
             AND (ETR_ENTRUST.TRADE_PLAT = btm.INPUT_VALUE_1 OR btm.INPUT_VALUE_1 IS NULL)
         LEFT JOIN SYS_USER ON ETR_ENTRUST.INV_MANAGER_ID = SYS_USER.USER_NAME
+        LEFT JOIN SYS_DATADICT_LIST SDL5 ON SDL5.DICT_CODE ='BUSI_TYPE_TG' AND SDL5.ITEM_CODE = btm.OUTPUT_VALUE_1
         where etr_entrust.TRADE_MARKET IN ('03','04')
         and etr_entrust_add.ASSET_TYPE1 = 'H01'
         <if test="entrustStatus != null and entrustStatus != ''">
@@ -912,6 +942,7 @@
             SDL2.ITEM_VALUE tradeMarketString,
             SDL3.ITEM_VALUE tradePlatString,
             SDL4.ITEM_VALUE psStr,
+            SDL5.ITEM_VALUE busiTypeTgString,
             btm.OUTPUT_VALUE_1 busiTypeTg,
             SYS_USER.REAL_NAME invManagerName,
             wfl_etr_entrust_add.TRADER as homeTrader,
@@ -953,6 +984,7 @@
                 AND (wfl_etr_entrust.Ps = btm.INPUT_VALUE_3 OR  btm.INPUT_VALUE_3 is null)
                 AND (wfl_etr_entrust.TRADE_PLAT = btm.INPUT_VALUE_1 OR btm.INPUT_VALUE_1 IS NULL)
             LEFT JOIN SYS_USER ON wfl_etr_entrust.INV_MANAGER_ID = SYS_USER.USER_NAME
+            LEFT JOIN SYS_DATADICT_LIST SDL5 ON SDL5.DICT_CODE ='BUSI_TYPE_TG' AND SDL5.ITEM_CODE = btm.OUTPUT_VALUE_1
             where wfl_etr_entrust.TRADE_MARKET IN ('03','04')
             and wfl_etr_entrust_add.ASSET_TYPE1 = 'H01'
             <if test="entrustStatus != null and entrustStatus != ''">
@@ -1014,11 +1046,24 @@
             and (
             entrustId|| '|' || entrustStatus|| '|' ||  entrustStatusString|| '|' ||  portfolioName|| '|' ||
             dealCurAcct|| '|' ||  tradeMarketString|| '|' ||  tradePlat || '|' || tradePlatString|| '|' ||
-            ps|| '|' ||  psStr|| '|' ||  fristSettleDate || '|' || expireSettleDate|| '|' ||
+            ps|| '|' ||  psStr|| '|' ||  to_char(fristSettleDate,'yyyy-MM-dd') || '|' || to_char(expireSettleDate,'yyyy-MM-dd')|| '|' ||
             finprodId|| '|' ||  finprodMarketId|| '|' ||  finprodAbbr || '|' || secAcctId|| '|' ||
-            counterId|| '|' ||  vdate|| '|' ||  mdate || '|' || nextUser
+            counterName|| '|' ||  to_char(vdate,'yyyy-MM-dd') || '|' ||  mdate || '|' || invManagerName || '|' || busiTypeTgString
             like '%' || #{search} || '%'
             )
+            <if test="search_isNumberFlag != null and search_isNumberFlag == true">
+
+                or (T1.implementPercent*100 = #{search})
+                or (T1.dealPercent*100 = #{search})
+                or (T1.price = #{search})
+                or (T1.entrustAmt = #{search})
+                or (T1.term = #{search})
+                or (T1.intAmt = #{search})
+                or (T1.expireSettleAmt = #{search})
+                or (T1.conRatio = #{search})
+                or (T1.printAmt = #{search})
+                or (T1.repSecNum = #{search})
+            </if>
         </if>
     </sql>
     <select id="getptlAcctNo" parameterType="Map" resultType="com.joyintech.framework.select.SelectOptionDto">

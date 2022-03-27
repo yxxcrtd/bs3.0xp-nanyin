@@ -16,7 +16,13 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.security.SecurityUtil;
-import com.joyintech.framework.util.*;
+import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.common.service.WFlowCommonService;
 import com.joyintech.system.base.dao.SysWflBusinessListMapper;
@@ -51,7 +57,6 @@ import com.joyintech.tams.common.base.dao.WflRegTradeFeeMapper;
 import com.joyintech.tams.common.base.dao.WflRegTradeFeeTotalMapper;
 import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
 import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.common.base.entity.RegFinPledge;
 import com.joyintech.tams.common.base.entity.RegFinProductDeal;
 import com.joyintech.tams.common.base.entity.RegFinProductDealAdd;
 import com.joyintech.tams.common.base.entity.RegFinProductDealTotal;
@@ -62,7 +67,6 @@ import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
 import com.joyintech.tams.common.base.entity.TrdProductDealAddPre;
 import com.joyintech.tams.common.base.entity.TrdProductDealPre;
-import com.joyintech.tams.common.base.entity.WflRegFinPledge;
 import com.joyintech.tams.common.base.entity.WflRegFinProDealTotalAdd;
 import com.joyintech.tams.common.base.entity.WflRegFinProductDeal;
 import com.joyintech.tams.common.base.entity.WflRegFinProductDealAdd;
@@ -797,10 +801,10 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             throw new BusinessException("MSG:头寸处理异常!");
         }
         //PositionHttpRequest.sendRevoke(entity.getTotleTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
-        if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
-            //插入旧头寸
-            preTrdCommonBaseService.deletePosition(workflowId);
-        }
+//        if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
+//            //插入旧头寸
+//            preTrdCommonBaseService.deletePosition(workflowId);
+//        }
         deleteBussFlowData(workflowId);
     }
 
