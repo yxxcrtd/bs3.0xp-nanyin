@@ -424,7 +424,9 @@ public class EtrExchangeTradeJj001Validator implements EtrCommonValidator {
 				// 同一股东只允许下达一次可转债信用申购指令
 				List<String> list = etrExchangeTrade001Service.selectWflEntrustAddAndEtrEntrustAdd(param);
 				if (list.size()>0){
-					errorList.add(new ValidMessage(getMessage("ETR_ERROR_0062")));
+					if(list.contains(dto.getSecAcctId())){
+						errorList.add(new ValidMessage(getMessage("ETR_ERROR_0062")));
+					}
 				}
 
 				// 可转债申购下指令数量不能大于实际可转债总数量
