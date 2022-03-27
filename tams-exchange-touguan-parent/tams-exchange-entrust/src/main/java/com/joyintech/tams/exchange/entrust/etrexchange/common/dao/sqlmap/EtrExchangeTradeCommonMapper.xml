@@ -326,8 +326,6 @@
     <!-- 场内交易持仓查询 -->
     <select id="findPositionsPage" parameterType="Map"
             resultType="com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePositionsCommonResponse">
-        select * from (
-
         SELECT
             TEMP.PORTFOLIO_ID  AS portfolioId,
             PP.PORTFOLIO_NAME  AS portfolioName,
@@ -350,85 +348,75 @@
         FROM
             (
             SELECT
-                PSP.CDATE        AS CDATE,
-                PSP.PORTFOLIO_ID AS PORTFOLIO_ID ,
-                PSP.SEC_ACCT_ID  AS SEC_ACCT_ID ,
-                PSP.FINPROD_ID AS FINPROD_ID,
-                SUM(PSP.AMOUNT) AMOUNT
-            FROM
-              PTL_SEC_POSITION_RULE PSP
-            INNER JOIN
-                PTL_PORTFOLIO PP
-            ON
-                PSP.PORTFOLIO_ID = PP.PORTFOLIO_ID
-            INNER JOIN
-                PTL_PORTFOLIO_AUTHORITY PPA
-            ON
-                PP.PORTFOLIO_ID = PPA.PORTFOLIO_ID
-                <if test="userId != null and userId != ''">
-                    AND PPA.USER_ID = #{userId}
-                </if>
-            WHERE
-                PSP.DATE_TYPE =0
-            AND PSP.HODING_TYPE=#{A_001}
-            AND PSP.CDATE = #{sysDate}
-            GROUP BY
-                PSP.CDATE,
-                PSP.PORTFOLIO_ID ,
-                PSP.SEC_ACCT_ID,
-                PSP.FINPROD_ID
-                union
-                SELECT
-                ETRPSP.CDATE        AS CDATE,
-                ETRPSP.PORTFOLIO_ID AS PORTFOLIO_ID ,
-                ETRPSP.SEC_ACCT_ID  AS SEC_ACCT_ID ,
-                ETRPSP.FINPROD_ID,
-                 0 AS AMOUNT
-                FROM
-                ETR_SEC_POSITION_RULE ETRPSP
-                INNER JOIN
-                PTL_PORTFOLIO PP
-                ON
-                ETRPSP.PORTFOLIO_ID = PP.PORTFOLIO_ID
-                INNER JOIN
-                PTL_PORTFOLIO_AUTHORITY PPA
-                ON
-                PP.PORTFOLIO_ID = PPA.PORTFOLIO_ID
-                <if test="userId != null and userId != ''">
-                    AND PPA.USER_ID = #{userId}
-                </if>
-                WHERE
-                ETRPSP.DATE_TYPE =0
-                AND ETRPSP.CDATE = #{sysDate}
-                GROUP BY
-                ETRPSP.CDATE,
-                ETRPSP.PORTFOLIO_ID ,
-                ETRPSP.SEC_ACCT_ID,
-                ETRPSP.FINPROD_ID
+            A.CDATE        AS CDATE,
+            A.PORTFOLIO_ID AS PORTFOLIO_ID ,
+            A.SEC_ACCT_ID  AS SEC_ACCT_ID ,
+            A.FINPROD_ID AS FINPROD_ID,
+            SUM(A.AMOUNT) AMOUNT
+            from(
+                    SELECT
+                        PSP.CDATE        AS CDATE,
+                        PSP.PORTFOLIO_ID AS PORTFOLIO_ID ,
+                        PSP.SEC_ACCT_ID  AS SEC_ACCT_ID ,
+                        PSP.FINPROD_ID AS FINPROD_ID,
+                        SUM(PSP.AMOUNT) AMOUNT
+                    FROM
+                      PTL_SEC_POSITION_RULE PSP
+                    INNER JOIN
+                        PTL_PORTFOLIO PP
+                    ON
+                        PSP.PORTFOLIO_ID = PP.PORTFOLIO_ID
+                    INNER JOIN
+                        PTL_PORTFOLIO_AUTHORITY PPA
+                    ON
+                        PP.PORTFOLIO_ID = PPA.PORTFOLIO_ID
+                        <if test="userId != null and userId != ''">
+                            AND PPA.USER_ID = #{userId}
+                        </if>
+                    WHERE
+                        PSP.DATE_TYPE =0
+                    AND PSP.HODING_TYPE=#{A_001}
+                    AND PSP.CDATE = #{sysDate}
+                    GROUP BY
+                        PSP.CDATE,
+                        PSP.PORTFOLIO_ID ,
+                        PSP.SEC_ACCT_ID,
+                        PSP.FINPROD_ID
+                        union
+                        SELECT
+                        ETRPSP.CDATE        AS CDATE,
+                        ETRPSP.PORTFOLIO_ID AS PORTFOLIO_ID ,
+                        ETRPSP.SEC_ACCT_ID  AS SEC_ACCT_ID ,
+                        ETRPSP.FINPROD_ID,
+                         0 AS AMOUNT
+                        FROM
+                        ETR_SEC_POSITION_RULE ETRPSP
+                        INNER JOIN
+                        PTL_PORTFOLIO PP
+                        ON
+                        ETRPSP.PORTFOLIO_ID = PP.PORTFOLIO_ID
+                        INNER JOIN
+                        PTL_PORTFOLIO_AUTHORITY PPA
+                        ON
+                        PP.PORTFOLIO_ID = PPA.PORTFOLIO_ID
+                        <if test="userId != null and userId != ''">
+                            AND PPA.USER_ID = #{userId}
+                        </if>
+                        WHERE
+                        ETRPSP.DATE_TYPE =0
+                        AND ETRPSP.CDATE = #{sysDate}
+                        GROUP BY
+                        ETRPSP.CDATE,
+                        ETRPSP.PORTFOLIO_ID ,
+                        ETRPSP.SEC_ACCT_ID,
+                        ETRPSP.FINPROD_ID) A
+                    GROUP BY
+                    A.CDATE,
+                    A.PORTFOLIO_ID ,
+                    A.SEC_ACCT_ID,
+                    A.FINPROD_ID
+
         )TEMP
-        LEFT JOIN
-            (
-            SELECT
-                T.PORTFOLIO_ID,
-                T.SEC_ACCT_ID,
-                T.FINPROD_ID,
-                T.BRANCH,
-                T.CDATE,
-                SUM(T.AMOUNT) AMOUNT
-            FROM
-                ETR_SEC_POSITION T
-            GROUP BY
-                T.PORTFOLIO_ID,
-                T.SEC_ACCT_ID,
-                T.FINPROD_ID,
-                T.BRANCH,
-                T.CDATE
-            ) ESP
-        ON
-            TEMP.PORTFOLIO_ID = ESP.PORTFOLIO_ID
-        AND TEMP.SEC_ACCT_ID = ESP.SEC_ACCT_ID
-        AND TEMP.FINPROD_ID = ESP.FINPROD_ID
-        AND TEMP.CDATE = ESP.CDATE
         LEFT JOIN
             FIN_PRODUCT FP
         ON
@@ -467,7 +455,7 @@
                     #{item}
                 </foreach>
             </if>
-            AND a.TRADE_DATE &lt;= #{sysDate} - 1
+            AND a.TRADE_DATE &lt;= #{sysDate}
             ) WHERE rn = 1
             UNION
             SELECT a.FINPROD_ID, b.PORTFOLIO_ID, a.INV_AIM,a.BUSINESS_MODEL
@@ -521,17 +509,6 @@
                 #{item, jdbcType=VARCHAR}
             </foreach>)
         </if>
-
-        ) M
-        left join SYS_DATADICT_LIST sdl1 on M.tradeMarket=sdl1.ITEM_CODE and sdl1.DICT_CODE='TRADE_PLACE'
-        LEFT JOIN SYS_DATADICT_LIST sdl2 ON M.FINPRODTYPE2=sdl2.ITEM_CODE AND sdl2.DICT_CODE='FINPROD_TYPE_TG'
-        where
-        1=1
-<!--        <include refid="etrExchangeBundAnd"/>-->
-        <!--前端传入排序字段-->
-<!--        <if test="sort != null and sort != '' and direction != null and direction != ''">-->
-<!--            order by ${sort}  ${direction}-->
-<!--        </if>-->
     </select>
     <!--// modify by etliu 债券质押持仓查询只有非交易业务指令使用，代码删除 20220308 start -->
     <!-- 场内交易债券质押持仓查询 -->

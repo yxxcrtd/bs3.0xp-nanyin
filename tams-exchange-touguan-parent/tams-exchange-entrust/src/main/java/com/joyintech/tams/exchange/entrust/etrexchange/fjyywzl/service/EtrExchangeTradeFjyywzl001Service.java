@@ -139,17 +139,18 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
                     ServiceApplication.BASICDATA_SERVICE_NAME + "/MstSecuritiesAccountInfo/getPtlSecAcctInfo", map,
                     SelectOptionDto.class);
             if(!CollectionUtils.isEmpty(ptlSecAcctInfoList)){
+                SelectOptionDto selectOptionDto=ptlSecAcctInfoList.get(0);
+                List<LinkedHashMap<String,String>>  acctSecList = (List<LinkedHashMap<String,String>>) selectOptionDto.getObject();
                 List<PositionCashSecDto> shProList=new ArrayList<>();
                 List<PositionCashSecDto> szProList=new ArrayList<>();
-                for(SelectOptionDto selectOptionDto:ptlSecAcctInfoList){
+                for(LinkedHashMap<String,String> linkedHashMap:acctSecList){
                     PositionCashSecDto cashSecDto=new PositionCashSecDto();
                     cashSecDto.setPortfolioId(dto.getPortfolioId());
-                    Map<String,String> mapTemp=(Map)selectOptionDto.getObject();
-                    if(StringUtil.equals(BussinessDictCodeList.交易场所_上海证券交易所.getValue(),mapTemp.get("tradeMarket"))){
-                        cashSecDto.setSecAcctId(mapTemp.get("secAcctId"));
+                    if(StringUtil.equals(BussinessDictCodeList.交易场所_上海证券交易所.getValue(),linkedHashMap.get("tradeMarket"))){
+                        cashSecDto.setSecAcctId(linkedHashMap.get("secAcctId"));
                         shProList.add(cashSecDto);
-                    }else   if(StringUtil.equals(BussinessDictCodeList.交易场所_上海证券交易所.getValue(),mapTemp.get("tradeMarket"))){
-                        cashSecDto.setSecAcctId(mapTemp.get("secAcctId"));
+                    }else   if(StringUtil.equals(BussinessDictCodeList.交易场所_深圳证券交易所.getValue(),linkedHashMap.get("tradeMarket"))){
+                        cashSecDto.setSecAcctId(linkedHashMap.get("secAcctId"));
                         szProList.add(cashSecDto);
                     }
                 }
@@ -199,7 +200,14 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
         Map<String, Object> map = new HashMap<String, Object>();
         Date sysDate = DateUtil.platDateFromCache();
         param.put("date", DateUtil.format(sysDate));
-        if(!StringUtil.isEmpty(request.getOthCodeType())){
+        String othCodeType=request.getOthCodeType();
+        if(!StringUtil.isEmpty(othCodeType)){
+            if (StringUtil.equals(othCodeType, DictCodeListExt3.金融产品其他代码类型_配债代码.getValue())) {
+                selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
+                    return StringUtil.equals(option.getId(), DictCodeListExt3.交易方向_配债.getValue());
+                }).collect(Collectors.toList());
+                return selectOptionDtos;
+            }
             List<TrdOthCodeInfoDto> list = etrExchangeTradeCommon001Service.getTrdOthCodeInfos(param);
             if (null != list && list.size() > 0) {
                 for (TrdOthCodeInfoDto dto : list) {
