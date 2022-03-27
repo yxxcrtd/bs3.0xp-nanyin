@@ -231,6 +231,13 @@
         FROM
         (
         SELECT
+        A.CDATE        AS CDATE,
+        A.PORTFOLIO_ID AS PORTFOLIO_ID ,
+        A.SEC_ACCT_ID  AS SEC_ACCT_ID ,
+        A.FINPROD_ID AS FINPROD_ID,
+        SUM(A.AMOUNT) AMOUNT
+        from(
+        SELECT
         PSP.CDATE        AS CDATE,
         PSP.PORTFOLIO_ID AS PORTFOLIO_ID ,
         PSP.SEC_ACCT_ID  AS SEC_ACCT_ID ,
@@ -285,7 +292,12 @@
         ETRPSP.CDATE,
         ETRPSP.PORTFOLIO_ID ,
         ETRPSP.SEC_ACCT_ID,
-        ETRPSP.FINPROD_ID
+        ETRPSP.FINPROD_ID) A
+        GROUP BY
+        A.CDATE,
+        A.PORTFOLIO_ID ,
+        A.SEC_ACCT_ID,
+        A.FINPROD_ID
         )TEMP
         LEFT JOIN
         (
@@ -671,13 +683,19 @@
         AND fin_trade_product.trade_market IN ('03', '04')
         AND trd_product_deal_2.trade_status = '01' and trd_product_deal_2.is_cancel = 'N'
         <if test="tradeId != null and tradeId !=''">
-            AND fin_trade_product.finprod_id = #{tradeId,jdbcType=VARCHAR}
+            AND (fin_trade_product.finprod_id = #{tradeId,jdbcType=VARCHAR}
+                or trd_product_deal_2.F_TRADE_ID = #{tradeId,jdbcType=VARCHAR})
         </if>
         <if test="userId != null and userId != ''">
             AND PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
         </if>
         <if test="portfolioId != null and portfolioId != ''">
             AND trd_product_deal_add.portfolio_id = #{portfolioId}
+        </if>
+        <if test="portfolioIdList != null and portfolioIdList.size()>0">
+            <foreach collection="portfolioIdList" open="AND trd_product_deal_add.portfolio_id in(" close=")" separator="," item="item">
+                #{item}
+            </foreach>
         </if>
         <if test="tradeMarket != null and tradeMarket != ''">
             AND fin_trade_product.Trade_Market = #{tradeMarket}
@@ -690,7 +708,13 @@
         </if>
         <if test="pledgeFinprodId != null and pledgeFinprodId != ''">
             AND fin_deal_pledge.pledge_finprod_id = #{pledgeFinprodId}
-        </if>)PRODUCT
+        </if>
+        <if test="zyqList != null and zyqList.size()>0">
+            <foreach collection="zyqList" open="AND fin_deal_pledge.pledge_finprod_id in(" close=")" separator="," item="item">
+                #{item}
+            </foreach>
+        </if>
+            )PRODUCT
         LEFT JOIN SYS_DATADICT_LIST SDL1 ON SDL1.DICT_CODE ='PS' AND SDL1.ITEM_CODE = PRODUCT.ps
         LEFT JOIN SYS_DATADICT_LIST SDL2 ON SDL2.DICT_CODE ='TRADE_MARKET' AND SDL2.ITEM_CODE = PRODUCT.market
         WHERE 1=1
@@ -1212,5 +1236,16 @@
                     ee.PS = #{ps,jdbcType=VARCHAR}
                   and eea.TRADE_ID = #{initTradeId,jdbcType=VARCHAR}
             )
+    </select>
+
+    <select id="selectFinprodMarketIdData" parameterType="Map" resultType="string">
+        SELECT
+        FP.FINPROD_MARKET_ID
+        FROM
+        FIN_PRODUCT FP
+        WHERE
+        <foreach collection="finprodIdList" open=" FP.FINPROD_ID in(" close=")" separator="," item="item">
+            #{item}
+        </foreach>
     </select>
 </mapper>

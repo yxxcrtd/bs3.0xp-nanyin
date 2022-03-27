@@ -1325,17 +1325,15 @@ public class TrdCommonBaseService extends BaseService {
                     portfolioDto.setSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt(), new BigDecimal(100), ratio));
                     // 下单券面总额
                     portfolioDto.setOrdSecAmount(ArithmeticUtil.multiply(orderInfoDto.getEntrustVolume(), new BigDecimal(100), ratio));
-                    // 标准券券面总额
-                    portfolioDto.setStandardSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt().multiply(converseRadio)
-                            .multiply(百元券面).divide(hundred), ratio));
                 }else{
                     // 券面总额
                     portfolioDto.setSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt(), ratio));
                     // 下单券面总额
                     portfolioDto.setOrdSecAmount(ArithmeticUtil.multiply(orderInfoDto.getEntrustVolume(), ratio));
-                    // 标准券券面总额
-                    portfolioDto.setStandardSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt(), ratio));
                 }
+                // 标准券券面总额
+                portfolioDto.setStandardSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt().multiply(converseRadio)
+                        .multiply(百元券面).divide(hundred), ratio));
                 // 融入券券面总额
                 portfolioDto.setIntegrateSecAmount(BigDecimal.ZERO);
                 portfolioDtos.add(portfolioDto);
@@ -1361,9 +1359,6 @@ public class TrdCommonBaseService extends BaseService {
                 portfolioDto.setSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt(), new BigDecimal(100)));
                 // 本方券面总额
                 portfolioDto.setOwnSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt(), new BigDecimal(100)));
-                // 标准券券面总额
-                portfolioDto.setStandardSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt().multiply(converseRadio)
-                        .multiply(百元券面).divide(hundred)));
             }else{
                 // 指令券面总额
                 portfolioDto.setEtrSecAmount(ArithmeticUtil.multiply(etrEntrust.getEntrustNum()));
@@ -1373,9 +1368,11 @@ public class TrdCommonBaseService extends BaseService {
                 portfolioDto.setSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt()));
                 // 本方券面总额
                 portfolioDto.setOwnSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt()));
-                // 标准券券面总额
-                portfolioDto.setStandardSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt()));
             }
+            // 标准券券面总额
+            // ZGTFCP-1560: 修改标准券面额赋值 modify by fuyongsheng 20220327 start
+            portfolioDto.setStandardSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt().multiply(converseRadio)
+                    .multiply(百元券面).divide(hundred)));
             // 融入券券面总额
             portfolioDto.setIntegrateSecAmount(BigDecimal.ZERO);
             portfolioDtos.add(portfolioDto);

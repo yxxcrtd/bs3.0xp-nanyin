@@ -214,10 +214,14 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
         Map<String,Object> pageParam = new HashMap<>();
         pageParam.put("search", request.getSearch());
         if (SecurityUtil.getLoginUser() != null) {
-            pageParam.put("userId",SecurityUtil.getLoginUser().getUserName());
+            pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
         }
 
-        pageParam.put("tradeId",request.getTradeId());
+        pageParam.put("portfolioIdList", request.getPortfolioIdList());
+        pageParam.put("tradeMarket", request.getTradeMarket());
+        pageParam.put("tradeId", request.getTradeId());
+        pageParam.put("repPs", request.getRepPs());
+        pageParam.put("zyqList", request.getZyj());
         pageParam.put("sysdate", iPlatformDate.getSysDate());
         pageParam.put("YES_OR_NO_N", DictCodeList.是否_否.getValue());
         pageParam.put("YES_OR_NO_Y", DictCodeList.是否_是.getValue());
@@ -334,11 +338,22 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
                     .filter(item -> StringUtil.equals(item.get("entrustProp") == null ? null : mathEntrustProp(item.get("entrustProp").toString()), request.getBussType()))
                     .collect(Collectors.toList());
         }
-        if(StringUtil.isNotEmpty(request.getFinprodName())){
-            repurchaseQuotes = repurchaseQuotes
-                    .stream()
-                    .filter(item -> StringUtil.equals(item.get("stockCode") == null ? null : item.get("stockCode").toString(), request.getFinprodName()))
-                    .collect(Collectors.toList());
+//        if(StringUtil.isNotEmpty(request.getFinprodName())){
+//            repurchaseQuotes = repurchaseQuotes
+//                    .stream()
+//                    .filter(item -> StringUtil.equals(item.get("stockCode") == null ? null : item.get("stockCode").toString(), request.getFinprodName()))
+//                    .collect(Collectors.toList());
+//        }
+        if (!StringUtil.isEmptyList(request.getZyj())) {
+            Map<String, Object> paramMap = new HashMap<>();
+            paramMap.put("finprodIdList", request.getZyj());
+            List<String> finprodMarketIdList = etrExchangeAgreRepTradeMapper.selectFinprodMarketIdData(paramMap);
+            if (!StringUtil.isEmptyList(finprodMarketIdList)) {
+                repurchaseQuotes = repurchaseQuotes
+                        .stream()
+                        .filter(item -> finprodMarketIdList.contains(item.get("stockCode") == null ? "" : item.get("stockCode").toString()))
+                        .collect(Collectors.toList());
+            }
         }
 
         //去重

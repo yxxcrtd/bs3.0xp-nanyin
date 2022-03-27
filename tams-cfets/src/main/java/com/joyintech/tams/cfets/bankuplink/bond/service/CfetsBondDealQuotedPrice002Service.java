@@ -103,7 +103,6 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
     @Autowired
     private CfetsBondDealQuotedPriceService cfetsBondDealQuotedPriceService;
 
-
     @Autowired
     private IbuQuoteBondService ibuQuoteBondService;
 

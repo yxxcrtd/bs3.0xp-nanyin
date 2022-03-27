@@ -1190,7 +1190,7 @@
             $("#entrustAmt_" + currentTab).prop("disabled", false);
             $("#entrustNum_" + currentTab).prop("disabled", true);
         }
-        if(ps == PS_T68 || ps == PS_T69){
+        if(ps == PS_T68 || ps == PS_T69 || ps == PS_T49 || ps == PS_T03){
             $("#entrustNum_" + currentTab).prop("disabled", false);
             $("#entrustAmt_" + currentTab).prop("disabled", true);
         }
@@ -3414,7 +3414,7 @@
                     url: JoyinUtil.getRealPath("/etrexchange/common/EtrExchangeTradeCommon004/getPtlSecAcctInfo"),
                     postData: function () {
                         return {
-                            portfolioId:curPortfolioId,tradeMarket: $("#tradeMarket_"+currentTab).val()
+                            portfolioId: curPortfolioId, tradeMarket: $("#tradeMarket_"+currentTab).val()
                         };
                     }
                 }
@@ -3425,6 +3425,7 @@
                 sortField: 'entrustNum',
                 width: 200,
                 type: 'number',
+                digit: 0,
                 edit: true
             },
             {
@@ -3569,9 +3570,9 @@
                         } else {
                             num = parseFloat(datas[i].entrustNum);
                         }
-                        entrustNum += parseFloat(num);
+                        entrustNum += parseInt(num);
                     }
-                    $("#entrustNum_" + currentTab).val(JoyinUtil.formatNumber(entrustNum, 2, null, 2));
+                    $("#entrustNum_" + currentTab).val(entrustNum);
                 }
             }
         },

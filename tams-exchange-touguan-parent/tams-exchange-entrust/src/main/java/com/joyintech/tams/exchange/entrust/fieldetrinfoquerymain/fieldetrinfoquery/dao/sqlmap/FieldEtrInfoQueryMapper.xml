@@ -51,7 +51,7 @@
         decode(ETR_ENTRUST_ADD.ASSET_TYPE,'F01',NVL(ETR_FINISH_STATUSA.FINISH_AMT *
         100,0),'F10',NVL(ETR_FINISH_STATUSA.FINISH_AMT *
         100,0),NVL(ETR_FINISH_STATUSA.FINISH_AMT,0)) finishAmt,
-        ETR_ENTRUST.CCY ccy,
+        NVL( ETR_ENTRUST.CCY , 'CNY' ) ccy,
         ETR_ENTRUST.ENTRUST_DATE entrustDate,
         ETR_ENTRUST.VDATE vdate,
         ETR_ENTRUST.MDATE mdate,
@@ -85,7 +85,7 @@
         CASE
 
         WHEN etr_entrust_add.TARGET_TYPE = '01' THEN
-        ROUND( nvl( etr_entrust.ENTRUST_NUM, 0 ) - nvl( T5.ORDER_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( etr_entrust.ENTRUST_NUM, 0 ) - nvl( T5.ORDER_FINISH_AMT, 0 ), 4 )
+        ROUND( nvl( etr_entrust.ENTRUST_NUM, 0 ) - nvl( T5.ORDER_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( etr_entrust.ENTRUST_AMT, 0 ) - nvl( T5.ORDER_FINISH_AMT, 0 ), 4 )
         END AS execRemainderAmt,
         CASE
 
@@ -95,7 +95,7 @@
         CASE
 
         WHEN etr_entrust_add.TARGET_TYPE = '01' THEN
-        ROUND( nvl( etr_entrust.ENTRUST_NUM, 0 ) - nvl( T5.ENT_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( etr_entrust.ENTRUST_NUM, 0 ) - nvl( T5.ENT_FINISH_AMT, 0 ), 4 )
+        ROUND( nvl( etr_entrust.ENTRUST_NUM, 0 ) - nvl( T5.ENT_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( etr_entrust.ENTRUST_AMT, 0 ) - nvl( T5.ENT_FINISH_AMT, 0 ), 4 )
         END AS transRemainderAmt,
         to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi:ss') transmitTime,
         to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi') transmitTimeSer,
@@ -282,7 +282,7 @@
         100,0),'F10',NVL(ETR_FINISH_STATUSA.FINISH_AMT *
         100,0),NVL(ETR_FINISH_STATUSA.FINISH_AMT,0)) */
             0 finishAmt,
-        WFL_ETR_ENTRUST.CCY ccy,
+        NVL( WFL_ETR_ENTRUST.CCY , 'CNY' ) ccy,
         WFL_ETR_ENTRUST.ENTRUST_DATE entrustDate,
         WFL_ETR_ENTRUST.VDATE vdate,
         WFL_ETR_ENTRUST.MDATE mdate,
@@ -505,8 +505,8 @@
                 OR t.secAcctId like '%' || #{search} || '%'
             <if test="search_isNumberFlag != null and search_isNumberFlag == true">
                 OR round(t.entrustAmt,2)||'' = round(#{search},2)
-                OR round(t.entrustNum,4)||'' = round(#{search},4)
-                OR round(t.etrPrice,2)||'' = round(#{search},2)
+                OR round(t.entrustNum,0)||'' = round(#{search},0)
+                OR round(t.etrPrice,3)||'' = round(#{search},3)
                 OR round(t.termDays,2)||'' = round(#{search},2)
                 OR round(t.exeProgress,2)||'' = round(#{search},2)
                 OR round(t.dealProgress,2)||'' = round(#{search},2)
@@ -643,7 +643,7 @@
     a.PROP_SEAT_NO,a.PROP_SEAT_NAME, a.SELLER_NO, a.CONTRACT_ID, a.FIRST_SETTLE_DATE, a.BACK_DATE,
     a.COMPACT_TERM, a.BACK_BALANCE, a.ORIG_SERIAL_NO,a.REDUCTION_TYPE, a.FROZEN_BALANCE, a.FROZEN_VOLUME,
     a.TRADED_BALANCE, a.TRADED_VOLUME, a.TRADED_PRICE, a.CANCEL_VOLUME, a.REPORT_TIME,
-    TO_CHAR(a.CREATE_TIME,'hh24:mm:ss') AS TRADE_TIME,
+    TO_CHAR(a.CREATE_TIME,'HH24:MI:SS') AS TRADE_TIME,
     a.CANCEL_TIME, a.ERROR_CODE, a.ERROR_MSG,
     TO_CHAR(a.CREATE_TIME,'yyyy-MM-dd' ) AS TRADING_DAY,
     a.LOCAL_ENTRUST_ID, a.BROKER_ENTRUST_ID,
@@ -661,7 +661,7 @@
         NULL AS FIRST_SETTLE_DATE, NULL AS BACK_DATE, NULL AS COMPACT_TERM, NULL AS BACK_BALANCE, NULL AS ORIG_SERIAL_NO,
         NULL AS REDUCTION_TYPE, FROZEN_BALANCE,
         a.FROZEN_VOLUME, a.TRADED_BALANCE, a.TRADED_VOLUME, a.TRADED_PRICE, a.CANCEL_VOLUME, a.REPORT_TIME,
-        TO_CHAR(a.CREATE_TIME,'hh24:mm:ss') AS TRADE_TIME,
+        TO_CHAR(a.CREATE_TIME,'HH24:MI:SS') AS TRADE_TIME,
         a.CANCEL_TIME, a.ERROR_CODE, a.ERROR_MSG,
         TO_CHAR(a.CREATE_TIME,'yyyy-MM-dd' ) AS TRADING_DAY,
         a.LOCAL_ENTRUST_ID, a.BROKER_ENTRUST_ID,
@@ -679,7 +679,7 @@
         NULL AS FIRST_SETTLE_DATE, NULL AS BACK_DATE, NULL AS COMPACT_TERM, NULL AS BACK_BALANCE,
         NULL AS ORIG_SERIAL_NO, NULL AS REDUCTION_TYPE, a.FROZEN_BALANCE,a.FROZEN_VOLUME, a.TRADED_BALANCE,
         a.TRADED_VOLUME, a.TRADED_PRICE, a.CANCEL_VOLUME,a. REPORT_TIME,
-        TO_CHAR(a.CREATE_TIME,'hh24:mm:ss') AS TRADE_TIME,
+        TO_CHAR(a.CREATE_TIME,'HH24:MI:SS') AS TRADE_TIME,
         a.CANCEL_TIME, a.ERROR_CODE, a.ERROR_MSG,
         TO_CHAR(a.CREATE_TIME,'yyyy-MM-dd' ) AS TRADING_DAY,
         a.LOCAL_ENTRUST_ID, a.BROKER_ENTRUST_ID,a.IP_MAC, a.REMARK, a.CREATE_TIME, a.UPDATE_TIME,
@@ -696,7 +696,7 @@
     a.PROP_SEAT_NO, a.PROP_SEAT_NAME, a.SELLER_NO, a.CONTRACT_ID, a.FIRST_SETTLE_DATE, a.BACK_DATE,
     a.COMPACT_TERM, a.BACK_BALANCE, a.ORIG_SERIAL_NO, a.REDUCTION_TYPE, a.FROZEN_BALANCE, a.FROZEN_VOLUME,
     a.TRADED_BALANCE, a.TRADED_VOLUME, a.TRADED_PRICE, a.CANCEL_VOLUME, a.REPORT_TIME,
-    TO_CHAR(a.CREATE_TIME,'hh24:mm:ss') AS TRADE_TIME,
+    TO_CHAR(a.CREATE_TIME,'HH24:MI:SS') AS TRADE_TIME,
     a.CANCEL_TIME, a.ERROR_CODE, a.ERROR_MSG,
     TO_CHAR(a.CREATE_TIME,'yyyy-MM-dd' ) AS TRADING_DAY,
     a.LOCAL_ENTRUST_ID, a.BROKER_ENTRUST_ID,
@@ -792,7 +792,7 @@
         a.MARKET, a.ASSET_TYPE, a.STOCK_CODE, a.STOCK_NAME, a.BUSINESS_FLAG, a.ENTRUST_TYPE, a.ENTRUST_PROP,
         a.BS_FLAG, a.TRADE_TYPE, a.TRADED_BALANCE, a.TRADED_VOLUME, a.TRADED_PRICE, a.CLEAR_BALANCE,
         <!--nvl(a.TRADE_TIME,0) AS tradeTime,-->
-        TO_CHAR( a.CREATE_TIME, 'hh24:mm:ss' ) AS TRADE_TIME,
+        TO_CHAR( a.CREATE_TIME, 'HH24:MI:SS' ) AS TRADE_TIME,
         a.DISCOUNT, a.TRANS_CODE, a.PROP_SEAT_NO,
         TO_CHAR( a.CREATE_TIME, 'yyyy-MM-dd' ) TRADING_DAY,
         <!--a.TRADING_DAY,-->

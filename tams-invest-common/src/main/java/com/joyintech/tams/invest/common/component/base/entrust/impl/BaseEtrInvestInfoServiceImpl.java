@@ -5,12 +5,16 @@
 
 package com.joyintech.tams.invest.common.component.base.entrust.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.message.PropertyMessageSource;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
@@ -23,9 +27,12 @@ import com.joyintech.tams.invest.common.component.base.entrust.dto.BaseEtrFinish
 import com.joyintech.tams.invest.common.component.base.entrust.impl.dao.BaseEtrInvestInfoMapper;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.trade.entrust.EtrFinishStatusDto;
+import com.joyintech.tams.invest.common.position.service.CommonPositionEngineService;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,7 +51,10 @@ import java.util.*;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
-
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(BaseEtrInvestInfoServiceImpl.class);
     /**
      * 委托指令Mapper
      */
@@ -173,6 +183,9 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
 
     @Autowired
     private EtrEntrustDetailBackUpMapper etrEntrustDetailBackUpMapper;
+
+    @Autowired
+    private CommonPositionEngineService commonPositionEngineService;
     /* 委托操作相关校验 <一句话功能简述> <功能详细描述>
      *
      * @return
@@ -1084,14 +1097,41 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
         List<BaseEtrFinishAmtDto> etrFinishAmtDtoList = etrInvestInfoServiceImpl.queryDelegateStatus(entrustIdList);
         // 判断委托代码的完成额度是否大于等于100
         BigDecimal bigDecimal = new BigDecimal("100.00");
+        // 指令完成关闭
+        Map<String, Object> batchClose = new HashMap<>();
+        // 完成指令关闭列表
+        List<Map<String, Object>> dataList = new ArrayList<>();
         for (BaseEtrFinishAmtDto etrFinishAmtDto : etrFinishAmtDtoList) {
             if (etrFinishAmtDto.getSumFinishPercent().compareTo(bigDecimal) == 1
                 || etrFinishAmtDto.getSumFinishPercent().compareTo(bigDecimal) == 0) {
                 // 如果满足，则调用投资委托组件的更新委托状态接口，将委托状态设置为“已完成”
-                etrInvestInfoServiceImpl.updateDelegateStatus(etrFinishAmtDto.getEntrustId(), DictCodeList.委托状态_已完成.getValue());
-
+                boolean result = etrInvestInfoServiceImpl.updateDelegateStatus(etrFinishAmtDto.getEntrustId(), DictCodeList.委托状态_已完成.getValue());
+                // ZGTFCP-1529:指令完成后调用新头寸批量关闭接口 modify by fuyongsheng 20220327 start
+                if(result){
+                    EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(etrFinishAmtDto.getEntrustId());
+                    EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(etrFinishAmtDto.getEntrustId());
+                    if(etrEntrust != null){
+                        Map<String, Object> data = new HashMap<>();
+                        data.put("busiType", commonPositionEngineService.getPositionBusiType(etrEntrust.getFinprodType2(), etrEntrust.getPs(),
+                                etrEntrustAdd.getAssetType1()));
+                        data.put("ps", etrEntrust.getPs());
+                        data.put("closeId", etrEntrust.getEntrustId());
+                        data.put("systemAct", DictCodeListExt3.系统动作_完成.getValue());
+                        data.put("busiAct", DictCodeListExt3.业务动作_指令自动完成.getValue());
+                        dataList.add(data);
+                    }
+                }
             }
         }
+        if(CollectionUtils.isNotEmpty(dataList)){
+            batchClose.put("data", dataList);
+            batchClose.put("userId", LoginUserUtil.getUserName());
+            batchClose.put("totalTradeId", IDGenerator.generate());
+            batchClose.put("modelType",DictCodeListExt1.子系统代码_委托.getValue());
+            logger.debug("【批量关闭指令数据】batchRevoke:{}", JSON.toJSONString(batchClose));
+            PositionHttpRequest.batchClose(batchClose);
+        }
+        // ZGTFCP-1529:指令完成后调用新头寸批量关闭接口 modify by fuyongsheng 20220327 end
         // 判断完成委托是否完成
         if (count == etrFinishStatusList.size()) {
             return true;

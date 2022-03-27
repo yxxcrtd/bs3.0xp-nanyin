@@ -61,7 +61,8 @@ public class EtrExchangeAgreRepTradeValidator implements EtrCommonValidator {
         }
 
         if (StringUtil.equals(DictCodeListExt3.交易方向_中途换券.getValue(), dto.getPs())
-                && StringUtil.isNotBlank(dto.getNewfinprodId())) {
+                && StringUtil.isNotBlank(dto.getNewfinprodId())
+                && dto.getExpireSettleDate() != null) {
             finProduct = finProductMapper.selectByPrimaryKey(dto.getNewfinprodId());
             if(StringUtil.isNotEmpty(finProduct) && DateUtil.compareTo(DateUtil.parse(dto.getExpireSettleDate()),finProduct.getMdate())>0) {
                 errorList.add(new ValidMessage("term", "回购期限不能超过新质押券的存续期限！"));

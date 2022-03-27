@@ -1116,6 +1116,7 @@
         AND t.VDATE <![CDATA[<=]]> #{date}
         AND t.MDATE <![CDATA[>=]]> #{date}
         and rownum = 1
+        order by t.VDATE desc
     </select>
 
     <!-- 自定义二级类型查询 -->

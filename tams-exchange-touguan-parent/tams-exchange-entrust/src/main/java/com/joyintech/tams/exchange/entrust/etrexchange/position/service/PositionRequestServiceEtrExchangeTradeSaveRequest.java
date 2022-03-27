@@ -407,11 +407,11 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
                     params.put("finprodId",entity.getFinprodId());
                     BigDecimal faceValue = etrTradeOtherCommonService.selectFaceValue(params);
                     // 标准券总额 =质押券数量*折算率*最新面值
-                    map.put(STANDARD_SEC_AMOUNT, entity.getEntrustNum().multiply(entity.getEntrustPrice()).divide(BigDecimal.valueOf(100)).multiply(faceValue));
+                    map.put(STANDARD_SEC_AMOUNT, item.getEntrustNum().multiply(entity.getEntrustPrice()).divide(BigDecimal.valueOf(100)).multiply(faceValue));
                 	map.put("cashAmount", null);//出入库时，可以为空
                 }else {
                     // 标准券总额 = 标准券数量*100
-                    map.put(STANDARD_SEC_AMOUNT, entity.getEntrustNum().multiply(BigDecimal.valueOf(100)));
+                    map.put(STANDARD_SEC_AMOUNT, item.getEntrustNum().multiply(BigDecimal.valueOf(100)));
                 }
                 ptlList.add(map);
             }

@@ -170,6 +170,16 @@ public interface StlDownDataDealMapper {
    List<SettleTransData> selectSqSettleTransDatas(@Param("sqcjbh") String sqcjbh, @Param("seatNumber") String seatNumber, @Param("secAcctId") String secAcctId);
 
     /**
+     * 查询首期清算数据
+     * @param sqcjbh
+     * @param seatNumber
+     * @param secAcctId
+     * @return
+     */
+    List<SettleTransData> selectShSqSettleTransDatas(@Param("sqcjbh") String sqcjbh, @Param("seatNumber") String seatNumber, @Param("secAcctId") String secAcctId, @Param("vdate") Date vdate);
+
+
+    /**
      * 查询首期质押券信息
      * @param sqcjbh
      * @param seatNumber

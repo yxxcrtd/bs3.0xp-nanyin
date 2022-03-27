@@ -277,7 +277,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
         TrdBankManualSettleFlow trdBankManualSettleFlow = this.createTrdBankManualSettleFlow(cfetsManualSettleDto,trdBankManualSettleInfo);
         //调用【成交确认明细查询】
         List<TrdBankManualSetDetail> listTrdBnakSetDetails = new ArrayList<TrdBankManualSetDetail>();
-        List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleDto.getTradeId());
+        List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleDto.getTradeId(),null);
         if (CollectionUtils.isEmpty(listTemp)) {
             listTemp = cfetsManualSettleMapper.getTempDealDetailsByTradeId(cfetsManualSettleDto.getTradeId());
         }
@@ -431,7 +431,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
         TrdBankManualSettleInfo trdBankManualSettleInfo = cfetsManualSettleRequest.getTrdBankManualSettleInfo();
         if(StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_回溯.getValue()) || StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收.getValue()) ||
                StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收修改.getValue())|| StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收失败.getValue())){
-            List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId());
+            List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId(),null);
             if (CollectionUtils.isEmpty(listTemp)) {
                 listTemp = cfetsManualSettleMapper.getTempDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId());
             }
@@ -546,7 +546,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
         TrdBankManualSettleInfo trdBankManualSettleInfo = cfetsManualSettleRequest.getTrdBankManualSettleInfo();
         if(StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_回溯.getValue()) || StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收.getValue())
            ||StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收修改.getValue()) || StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收失败.getValue())){
-            List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId());
+            List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId(),null);
             if (CollectionUtils.isEmpty(listTemp)) {
                 listTemp = cfetsManualSettleMapper.getTempDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId());
             }
@@ -693,7 +693,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
 
     private void deletePosition(CfetsManualSettleInsertDto cfetsManualSettleRequest) {
         //设置登记时的成交编号
-        List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId());
+        List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId(),null);
         if (CollectionUtils.isEmpty(listTemp)) {
             listTemp = cfetsManualSettleMapper.getTempDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId());
         }
@@ -830,14 +830,22 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                     revokeEntity.setTgBusiType(entity.getTgBusiType());
                     cfetsTrdBondInvestTrade002Service.doCompleteRevoke(revokeEntity,settleRemark,false);
                     //关闭对应指令
-                    List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(entity.getTradeId());
+                    List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(entity.getTradeId(), "Y");
                     if (CollectionUtils.isEmpty(listTemp)) {
                         listTemp = cfetsManualSettleMapper.getTempDealDetailsByTradeId(entity.getTradeId());
                     }
-                    List<String> entrustIdList = listTemp.stream().map(CfetsManualSettleDealInfo::getEntrustId).collect(Collectors.toList());
+                    List<String> entrustIdList = new ArrayList<>();
+                    for(CfetsManualSettleDealInfo info:listTemp){
+                        if(StringUtil.isNotEmpty(info.getEntrustId())){
+                            entrustIdList.add(info.getEntrustId());
+                        }
+                    }
+                    //List<String> entrustIdList = listTemp.stream().map(CfetsManualSettleDealInfo::getEntrustId).collect(Collectors.toList());
                     Map<String,Object> param = new HashMap<String,Object>();
                     param.put("entrustIds",entrustIdList);
-                    if(cfetsManualSettleMapper.countWflEtr(param) <= 0){
+                    // 行权赎回无指令，此处未考虑出现报错
+                    if(StringUtil.isNotEmpty(entrustIdList.size()) && entrustIdList.size()>0
+                            && cfetsManualSettleMapper.countWflEtr(param) <= 0){
                         for(CfetsManualSettleDealInfo dealInfo : listTemp){
                             this.closeDelegateMethod(dealInfo.getEntrustId(),"","交收失败");
                         }
@@ -1079,7 +1087,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
     public void insertOldPosition(CfetsManualSettleInsertDto cfetsManualSettleRequest, String buttonType,
                                   BigDecimal tradeAmt, boolean isFlowStart) {
         //设置登记时的成交编号
-        List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId());
+        List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId(),null);
         if (CollectionUtils.isEmpty(listTemp)) {
             listTemp = cfetsManualSettleMapper.getTempDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId());
         }
@@ -1389,7 +1397,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
             return;
         }
         //设置登记时的成交编号
-        List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId());
+        List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId(),null);
         if (CollectionUtils.isEmpty(listTemp)) {
             listTemp = cfetsManualSettleMapper.getTempDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId());
         }
@@ -1576,13 +1584,13 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
      */
     private void settleFailPosition(List<CfetsManualSettleDealInfo> listTemp, String busiType, boolean isRevoke) {
         // 标记委托编号,避免重复操作
-        List<String> entrustIdList = new ArrayList<>();
-        for (CfetsManualSettleDealInfo deal : listTemp) {
-            if (!entrustIdList.contains(deal.getEntrustId())) {
-                cfetsRepoQuotedPrice004Service.revokeEtrSecPosition(deal.getEntrustId(), deal.getSettleDate(), isRevoke, deal.getTradeId());
-                entrustIdList.add(deal.getEntrustId());
-            }
-        }
+//        List<String> entrustIdList = new ArrayList<>();
+//        for (CfetsManualSettleDealInfo deal : listTemp) {
+//            if (!entrustIdList.contains(deal.getEntrustId())) {
+//                cfetsRepoQuotedPrice004Service.revokeEtrSecPosition(deal.getEntrustId(), deal.getSettleDate(), isRevoke, deal.getTradeId());
+//                entrustIdList.add(deal.getEntrustId());
+//            }
+//        }
         listTemp.forEach(deal -> {
                     String regId = cfetsManualSettleMapper.selectRegTradeIdBytradeId(deal.getFinprodId());
                     if (StringUtil.isEmpty(regId)) {

@@ -349,14 +349,10 @@
 				ON std.TRADE_ID = stds2.TRADE_ID
 			   AND stds2.CHECK_RESULT = '1' -->
 		<where>
-			<if test="checkResult != null">
-				AND stds.CHECK_RESULT = #{checkResult,jdbcType=VARCHAR}
-			</if>
-			<if test="checkResultList != null and checkResultList.size() > 0">
-				<foreach collection="checkResultList" item="result" open="AND stds.CHECK_RESULT IN (" close=")" separator=",">
-					#{result,jdbcType=VARCHAR}
-				</foreach>
-			</if>
+			(stds.CHECK_RESULT IS NULL
+		    	OR
+				(stds.CHECK_RESULT IS NOT NULL AND stds.CHECK_RESULT IN ('1','3'))
+		    )
 			<if test="dealDate != null">
 				AND std.DEAL_DATE = #{dealDate,jdbcType=DATE}
 			</if>
@@ -1056,17 +1052,15 @@
 		T2.ENTRUST_ID = T1.ENTRUST_ID
 		<!--GNS-946:关联交易表查询首期成交编号 modify by fuyongsheng 20220223 start-->
 		LEFT JOIN TRD_PRODUCT_DEAL trd ON
-		T2.TRADE_ID = trd.F_TRADE_ID
+			T2.TRADE_ID = trd.F_TRADE_ID
+			AND trd.IS_CANCEL = 'N'
+			AND trd.trade_status = '01'
 		<!--GNS-946:关联交易表查询首期成交编号 modify by fuyongsheng 20220223 end-->
 		LEFT JOIN SETTLE_TRANS_DATA_TOTAL_MATCH T3 ON T1.ENTRUST_ID = T3.ENTRUNST_TRADE_ID
 		WHERE
 			ENTRUST_DATE = #{entrustDate,jdbcType=DATE}
-		  	<!--只取已接收和已完成的指令 modify fuyongsheng 20220114 start-->
-		  	AND T1.ENTRUST_STATUS IN ('03','04')
-		  	AND trd.IS_CANCEL = 'N'
-			AND trd.trade_status = '01'
-			<!--只取已接收和已完成的指令 modify fuyongsheng 20220114 end-->
-			<if test="finprodType != null and finprodType.size()>0">
+			AND T1.ENTRUST_STATUS IN ('03','04')
+		<if test="finprodType != null and finprodType.size()>0">
 				AND T1.FINPROD_TYPE2  IN
 				<foreach item="item" index="index" collection="finprodType" open="(" separator=","  close=")">
 					#{item}

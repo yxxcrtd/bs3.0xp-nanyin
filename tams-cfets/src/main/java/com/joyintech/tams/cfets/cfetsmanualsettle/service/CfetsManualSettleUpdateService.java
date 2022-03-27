@@ -307,7 +307,7 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
     private void sendPositionMethod(CfetsManualSettleUpdateRequest cfetsManualSettleUpdateRequest,TrdBankManualSettleInfo trdBankManualSettleInfo) {
         List<PositionRulePtlData> ptlList = new ArrayList<>();
         List<PortSettleinfoDto> listTemp = cfetsManualSettleUpdateRequest.getPortSettleinfoDtoList();
-        List<CfetsManualSettleDealInfo> listTemp1 = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleUpdateRequest.getTradeId());
+        List<CfetsManualSettleDealInfo> listTemp1 = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleUpdateRequest.getTradeId(),null);
         if(CollectionUtils.isEmpty(listTemp1)) {
             listTemp1 = cfetsManualSettleMapper.getTempDealDetailsByTradeId(cfetsManualSettleUpdateRequest.getTradeId());
         }

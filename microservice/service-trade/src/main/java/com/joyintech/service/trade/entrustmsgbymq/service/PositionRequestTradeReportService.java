@@ -370,7 +370,14 @@ public class PositionRequestTradeReportService {
                 if(DictCodeListExt3.交易方向_解除质押.getValue().equals(entity.getPs())){
                     ptlCash.put("cashAcctId", this.getPtlCapAcctNo(etrEntrust));
                     ptlCash.put("cashAmount", entity.getPositionBaseData().getFinTradeProductDto().getmTradeAmt());
-                }else{
+                }
+                // ZGTFCP-1974:到期购回需要登录首期的到期结算金额 modify by fuyongsheng 20220327 start
+                else if(DictCodeListExt3.交易方向_到期购回.getValue().equals(entity.getPs())){
+                    ptlCash.put("cashAcctId", dto.getCashAcctId());
+                    ptlCash.put("cashAmount", entity.getPositionBaseData().getFinTradeProductDto().getmTradeAmt());
+                }
+                // ZGTFCP-1974:到期购回需要登录首期的到期结算金额 modify by fuyongsheng 20220327 end
+                else{
                     ptlCash.put("cashAcctId", dto.getCashAcctId());
                     ptlCash.put("cashAmount", dto.getCashAmount());
                 }
@@ -411,6 +418,18 @@ public class PositionRequestTradeReportService {
                         // 券面总额
                         ptlSec.put("secAmount", ArithmeticUtil.multiply(temp.getPledgeDisplaceAmt(), new BigDecimal(100)));
                     }
+                }
+                else if(DictCodeListExt3.交易方向_解除质押.getValue().equals(entity.getPs())){
+                    // ZGTFCP-1900:修改解除质押字段赋值 modify by fuyongsheng 20220327 start
+                    FinPledgeDispDetailTemp temp = this.getFinPledgeDispDetailTemp(entity, DictCodeListExt3.质押券置换_置换方向_换出.getValue());
+                    if(null != temp){
+                        ptlSec.put("finprodId", temp.getFinprodId());
+                        // 本方券券面总额
+                        ptlSec.put("ownSecAmount", ArithmeticUtil.multiply(temp.getPledgeDisplaceAmt(), new BigDecimal(100)));
+                        // 券面总额
+                        ptlSec.put("secAmount", ArithmeticUtil.multiply(temp.getPledgeDisplaceAmt(), new BigDecimal(100)));
+                    }
+                    // ZGTFCP-1900:修改解除质押字段赋值 modify by fuyongsheng 20220327 end
                 }else{
                     ptlSec.put("finprodId", entity.getFinDealPledge().getPledgeFinprodId());
                     // 本方券券面总额
@@ -434,11 +453,16 @@ public class PositionRequestTradeReportService {
                 // 融入券券面总额
                 ptlRelieveSec.put("integrateSecAmount", dto.getIntegrateSecAmount());
                 if(DictCodeListExt3.交易方向_解除质押.getValue().equals(entity.getPs())){
-                    ptlRelieveSec.put("finprodId", entity.getFinDealPledge().getPledgeFinprodId());
-                    // 本方券券面总额
-                    ptlRelieveSec.put("ownSecAmount", ArithmeticUtil.multiply(dto.getOwnSecAmount(), new BigDecimal(100)));
-                    // 券面总额
-                    ptlRelieveSec.put("secAmount", ArithmeticUtil.multiply(dto.getOwnSecAmount(), new BigDecimal(100)));
+                    // ZGTFCP-1900:修改解除质押字段赋值 modify by fuyongsheng 20220327 start
+                    FinPledgeDispDetailTemp temp = this.getFinPledgeDispDetailTemp(entity, DictCodeListExt3.质押券置换_置换方向_换出.getValue());
+                    if(null != temp){
+                        ptlRelieveSec.put("finprodId", temp.getFinprodId());
+                        // 本方券券面总额
+                        ptlRelieveSec.put("ownSecAmount", ArithmeticUtil.multiply(temp.getPledgeDisplaceAmt(), new BigDecimal(100)));
+                        // 券面总额
+                        ptlRelieveSec.put("secAmount", ArithmeticUtil.multiply(temp.getPledgeDisplaceAmt(), new BigDecimal(100)));
+                    }
+                    // ZGTFCP-1900:修改解除质押字段赋值 modify by fuyongsheng 20220327 end
                 }else if(DictCodeListExt3.交易方向_中途换券.getValue().equals(entity.getPs())){
                     FinPledgeDispDetailTemp temp = this.getFinPledgeDispDetailTemp(entity, DictCodeListExt3.质押券置换_置换方向_换出.getValue());
                     if(null != temp){

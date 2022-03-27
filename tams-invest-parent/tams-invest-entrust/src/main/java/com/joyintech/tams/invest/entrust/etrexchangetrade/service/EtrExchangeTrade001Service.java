@@ -36,6 +36,7 @@ import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.system.base.entity.SysUser;
+import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.common.base.dao.FinProductAddMapper;
 import com.joyintech.tams.common.base.dao.FinProductConvertibleMapper;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
@@ -50,12 +51,13 @@ import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.common.dto.position.PositionCashSecDto;
+import com.joyintech.tams.invest.common.entrust.inter.EtrTradeCommonervice;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
 import com.joyintech.tams.invest.common.trade.dto.SecInfoModelDto;
 import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
-import com.joyintech.tams.invest.entrust.etrbondfirstlbidding.dto.EtrBondFirstLBiddingDto;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.*;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.WorkflowContext;
@@ -70,6 +72,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -102,6 +105,9 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 	 */
 	@Autowired
 	private EtrCommonService etrCommonService;
+
+	@Autowired
+	private EtrTradeCommonervice etrTradeCommonervice;
 
 	@Autowired
 	private IPlatformDate iPlatformDate;
@@ -449,6 +455,22 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 				map, SuggestDto.class);
 	}
 
+	public BigDecimal selectAvailableNums(EtrExchangeTrade001Dto etrExchangeTrade001Dto){
+		PositionCashSecDto dto = new PositionCashSecDto();
+		dto.setFinprodId(etrExchangeTrade001Dto.getFinprodId());
+		dto.setFinprodType2(etrExchangeTrade001Dto.getFinprodType2());
+		dto.setPortfolioId(etrExchangeTrade001Dto.getPortfolioId());
+		dto.setPs(etrExchangeTrade001Dto.getPs());
+		dto.setSecAcctId(etrExchangeTrade001Dto.getSecAcctId());
+		dto.setTradeMarket(etrExchangeTrade001Dto.getTradeMarket());
+		dto.setTradePlat(etrExchangeTrade001Dto.getTradePlat());
+		BigDecimal availableNum = etrTradeCommonervice.selectAvailableNum(dto);
+		if(availableNum == null) {
+			availableNum= BigDecimal.ZERO;
+		}
+		return availableNum;
+	}
+
 	/**
 	 * 查询资产对应组合的可用持仓信息
 	 *
@@ -490,6 +512,21 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 			return (BigDecimal)map.get("cashT");
 		}
 		return BigDecimal.ZERO;
+	}
+
+	public BigDecimal selectAccAvailableCashs(EtrExchangeTrade001Dto etrExchangeTrade001Dto){
+		PositionCashSecDto dto = new PositionCashSecDto();
+		dto.setAcctId(etrExchangeTrade001Dto.getAcctNo());
+		dto.setPortfolioId(etrExchangeTrade001Dto.getPortfolioId());
+		dto.setCcy(DictCodeList.币种_人民币_CNY.getValue());
+		dto.setPs(etrExchangeTrade001Dto.getPs());
+		dto.setTradeMarket(etrExchangeTrade001Dto.getTradeMarket());
+		BigDecimal accAvailableCash = etrTradeCommonervice.selectAccAvailableCash(dto);
+		//wsz
+		if(accAvailableCash == null) {
+			accAvailableCash= BigDecimal.ZERO;
+		}
+		return accAvailableCash;
 	}
 
 	/**
@@ -2923,7 +2960,8 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 		//add by chenjiaxing 20210824 指令当日可用现金不对 start
 		param.put("acctId", etrExchangeTrade001Dto.getAcctNo());
 		//add by chenjiaxing 20210824 指令当日可用现金不对 end
-		BigDecimal cashAvailable = this.selectAccAvailableCash(param);
+//		BigDecimal cashAvailable = this.selectAccAvailableCash(param);
+		BigDecimal cashAvailable = this.selectAccAvailableCashs(etrExchangeTrade001Dto);
 		// 指令可用现金
 		if (cashAvailable != null) {
 			etrExchangeTrade001Dto.setProAvailableCash(cashAvailable);
@@ -2938,7 +2976,8 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 		mapSec.put("finprodId", etrExchangeTrade001Dto.getFinprodId());
 		mapSec.put("ccy", DictCodeList.币种_人民币_CNY.getValue());
 		mapSec.put("secAcctId", etrExchangeTrade001Dto.getSecAcctId());
-		BigDecimal vailableNum = selectAvailableNum(mapSec);
+//		BigDecimal vailableNum = selectAvailableNum(mapSec);
+		BigDecimal vailableNum = selectAvailableNums(etrExchangeTrade001Dto);
 		if (StringUtil.isNotEmpty(vailableNum)) {
 			etrExchangeTrade001Dto.setAccAvailablePos(vailableNum);
 		}

@@ -92,6 +92,8 @@ public class FieldEtrDispatcherInfoResponse extends FieldEtrDispatcherBaseInfo {
     private String remark;
     //债券交易 end
 
+    private String addCla;
+
     @ApiModelProperty(name="pledgeBondList",value="质押券信息",example="pledgeBondList")
     private List<PledgeBondInfoDto> pledgeBondList;
 
@@ -466,6 +468,14 @@ public class FieldEtrDispatcherInfoResponse extends FieldEtrDispatcherBaseInfo {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getAddCla() {
+        return addCla;
+    }
+
+    public void setAddCla(String addCla) {
+        this.addCla = addCla;
     }
 
     public String getRepoTerm() {
