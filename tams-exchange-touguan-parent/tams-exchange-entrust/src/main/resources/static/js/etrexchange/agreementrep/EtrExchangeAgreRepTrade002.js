@@ -743,9 +743,9 @@
                     //交易对手
                     $("#counterId").attr("disabled", false);
                     //本方交易员
-                    $("#trader").attr("disabled", true);
+                    $("#trader").attr("disabled", false);
                     //对手交易员
-                    $("#counterTrader").attr("disabled", true);
+                    $("#counterTrader").attr("disabled", false);
                     //新质押券
                     $("#newRepSecId_div").hide();
                     //新折算比例
@@ -818,7 +818,7 @@
                         //券面金额
                         $("#printAmt").attr("disabled", true);
                         //交易对手
-                        $("#counterId").attr("disabled", true);
+                        $("#counterId").attr("disabled", false);
                         //本方交易员
                         $("#trader").attr("disabled", false);
                         //对手交易员
@@ -887,11 +887,11 @@
                         //券面金额
                         $("#printAmt").attr("disabled", true);
                         //交易对手
-                        $("#counterId").attr("disabled", true);
+                        $("#counterId").attr("disabled", false);
                         //本方交易员
-                        $("#trader").attr("disabled", true);
+                        $("#trader").attr("disabled", false);
                         //对手交易员
-                        $("#counterTrader").attr("disabled", true);
+                        $("#counterTrader").attr("disabled", false);
                         //新质押券
                         $("#newRepSecId_div").hide();
                         //新折算比例
@@ -967,7 +967,7 @@
                         //券面金额
                         $("#printAmt").attr("disabled", true);
                         //交易对手
-                        $("#counterId").attr("disabled", true);
+                        $("#counterId").attr("disabled", false);
                         //本方交易员
                         $("#trader").attr("disabled", false);
                         //对手交易员
@@ -1036,11 +1036,11 @@
                         //券面金额
                         $("#printAmt").attr("disabled", true);
                         //交易对手
-                        $("#counterId").attr("disabled", true);
+                        $("#counterId").attr("disabled", false);
                         //本方交易员
-                        $("#trader").attr("disabled", true);
+                        $("#trader").attr("disabled", false);
                         //对手交易员
-                        $("#counterTrader").attr("disabled", true);
+                        $("#counterTrader").attr("disabled", false);
                         //新质押券
                         $("#newRepSecId_div").hide();
                         //新折算比例
@@ -1190,9 +1190,9 @@
                         }
 
                         //本方交易员
-                        $("#trader").attr("disabled", true);
+                        $("#trader").attr("disabled", false);
                         //对手交易员
-                        $("#counterTrader").attr("disabled", true);
+                        $("#counterTrader").attr("disabled", false);
                         //新质押券
                         $("#newRepSecId_div").hide();
                         //新折算比例
@@ -1288,7 +1288,7 @@
                         $("#origPrintAmt").attr("disabled", true);
 
                         //交易对手
-                        $("#counterId").attr("disabled", true);
+                        $("#counterId").attr("disabled", false);
                         //本方交易员
                         $("#trader").attr("disabled", false);
                         //对手交易员
@@ -1370,11 +1370,11 @@
                         $("#origPrintAmt").attr("disabled", true);
 
                         //交易对手
-                        $("#counterId").attr("disabled", true);
+                        $("#counterId").attr("disabled", false);
                         //本方交易员
-                        $("#trader").attr("disabled", true);
+                        $("#trader").attr("disabled", false);
                         //对手交易员
-                        $("#counterTrader").attr("disabled", true);
+                        $("#counterTrader").attr("disabled", false);
 
                         //成交编号
                         $("#tradeId_div").show();
@@ -1448,7 +1448,7 @@
                         $("#origPrintAmt_div").hide();
 
                         //交易对手
-                        $("#counterId").attr("disabled", true);
+                        $("#counterId").attr("disabled", false);
                         //本方交易员
                         $("#trader").attr("disabled", false);
                         //对手交易员
@@ -1522,11 +1522,11 @@
                         //原券面金额
                         $("#origPrintAmt_div").hide();
                         //交易对手
-                        $("#counterId").attr("disabled", true);
+                        $("#counterId").attr("disabled", false);
                         //本方交易员
-                        $("#trader").attr("disabled", true);
+                        $("#trader").attr("disabled", false);
                         //对手交易员
-                        $("#counterTrader").attr("disabled", true);
+                        $("#counterTrader").attr("disabled", false);
 
                         //成交编号
                         $("#tradeId_div").show();
