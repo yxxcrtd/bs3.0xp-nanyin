@@ -51,7 +51,7 @@
         decode(ETR_ENTRUST_ADD.ASSET_TYPE,'F01',NVL(ETR_FINISH_STATUSA.FINISH_AMT *
         100,0),'F10',NVL(ETR_FINISH_STATUSA.FINISH_AMT *
         100,0),NVL(ETR_FINISH_STATUSA.FINISH_AMT,0)) finishAmt,
-        ETR_ENTRUST.CCY ccy,
+        NVL( ETR_ENTRUST.CCY , 'CNY' ) ccy,
         ETR_ENTRUST.ENTRUST_DATE entrustDate,
         ETR_ENTRUST.VDATE vdate,
         ETR_ENTRUST.MDATE mdate,
@@ -282,7 +282,7 @@
         100,0),'F10',NVL(ETR_FINISH_STATUSA.FINISH_AMT *
         100,0),NVL(ETR_FINISH_STATUSA.FINISH_AMT,0)) */
             0 finishAmt,
-        WFL_ETR_ENTRUST.CCY ccy,
+        NVL( WFL_ETR_ENTRUST.CCY , 'CNY' ) ccy,
         WFL_ETR_ENTRUST.ENTRUST_DATE entrustDate,
         WFL_ETR_ENTRUST.VDATE vdate,
         WFL_ETR_ENTRUST.MDATE mdate,
@@ -505,8 +505,8 @@
                 OR t.secAcctId like '%' || #{search} || '%'
             <if test="search_isNumberFlag != null and search_isNumberFlag == true">
                 OR round(t.entrustAmt,2)||'' = round(#{search},2)
-                OR round(t.entrustNum,4)||'' = round(#{search},4)
-                OR round(t.etrPrice,2)||'' = round(#{search},2)
+                OR round(t.entrustNum,0)||'' = round(#{search},0)
+                OR round(t.etrPrice,3)||'' = round(#{search},3)
                 OR round(t.termDays,2)||'' = round(#{search},2)
                 OR round(t.exeProgress,2)||'' = round(#{search},2)
                 OR round(t.dealProgress,2)||'' = round(#{search},2)

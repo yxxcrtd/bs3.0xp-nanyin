@@ -82,7 +82,7 @@ public interface CfetsManualSettleMapper {
      * @param tradeId 参数
      * @return List<CfetsManualSettleDealInfo>
      */
-    List<CfetsManualSettleDealInfo> getDealDetailsByTradeId(@Param("tradeId") String tradeId);
+    List<CfetsManualSettleDealInfo> getDealDetailsByTradeId(@Param("tradeId") String tradeId,@Param("isCancel") String isCancel);
 
     /**
      * 登记编号查询

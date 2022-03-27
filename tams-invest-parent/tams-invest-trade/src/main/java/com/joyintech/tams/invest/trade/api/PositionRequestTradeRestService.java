@@ -121,10 +121,17 @@ public class PositionRequestTradeRestService {
                 assetType2 = StringUtil.isNotEmpty(finProductTradeDto.getAssetType2()) ?
                         finProductTradeDto.getAssetType2() : baseAssetCashPositionCommMapper.selectFundType(deal.getFinprodId());
                 ps = deal.getPs();
+                finprodType2 = deal.getFinprodType2();
                 busiType = commonPositionEngineService.getDurationPositionBusiType(finprodType2, ps, assetType2);
             }
             // ZGTFCP-1577: add by fuyongsheng 20220315 end
-            PositionHttpRequest.dorevoke(deal.getTradeId(), PositionConstant.POSITION_TYPE_TRD, busiType, ps);
+            String tradeId= deal.getTradeId();
+            // ZGTFCP-1883:中途换券成交匹配发送的tradeId是totleTradeId,撤销时保持一致 modify by fuyongsheng 20220327 start
+            if(dealTotal != null &&  DictCodeListExt3.交易方向_中途换券.getValue().equals(dealTotal.getPs())){
+                tradeId = dealTotal.getTotleTradeId();
+            }
+            // ZGTFCP-1883:中途换券成交匹配发送的tradeId是totleTradeId,撤销时保持一致 modify by fuyongsheng 20220327 end
+            PositionHttpRequest.dorevoke(tradeId, PositionConstant.POSITION_TYPE_TRD, busiType, ps);
         }
     }
 
@@ -295,10 +302,9 @@ public class PositionRequestTradeRestService {
         }
         else if(DictCodeList.交易方向_上市流通.getValue().equals(dealEntity.getPs())){
             resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_上市.getValue());
-            FinProductQuto finProductQuto = getFinProductQuto(dealEntity.getFinprodId(),
-                    commonPositionService.getLastWorkDate(dealEntity.getTradeDate(), this.getCalendarId(dealEntity.getTradeMarket())));
+            String stockId = commonPositionService.getStockId(dealEntity.getFinprodId(), dealEntity.getFinprodType2(), dealEntity.getPs());
             // 送转的上市流通调上市流通专用接口
-            if(DictCodeList.交易方向_红利再投.getValue().equals(finProductQuto.getPs())){
+            if(StringUtil.isEmpty(stockId)){
                 resultMap.put(INTERFACE_TYPE, null);
                 return;
             }
@@ -345,11 +351,7 @@ public class PositionRequestTradeRestService {
             bean.setSecAmount(dealEntity.getShareAmt());
             bean.setCashAcctId(accountNo);
             // 配股/申购代码
-            if(DictCodeList.交易方向_上市流通.getValue().equals(dealEntity.getPs())){
-                bean.setFinprodId(commonPositionService.getSsltStockId(dealEntity.getFinprodId(), dealEntity.getFinprodType2(), dealEntity.getPs()));
-            }else{
-                bean.setFinprodId(commonPositionService.getStockId(dealEntity.getFinprodId(), dealEntity.getFinprodType2(), dealEntity.getPs()));
-            }
+            bean.setFinprodId(dealEntity.getRemark());
             bean.setCashAmount(dealEntity.getTradeAmt());
             Map<String, Object> datamap = BeanUtil.object2Map(bean);
             datamap.put("ownSecAmount", dealEntity.getShareAmt());
@@ -593,7 +595,11 @@ public class PositionRequestTradeRestService {
         // 配债申购数据集
         Map<String, Object> applyBondSec = new HashMap<>();
         applyBondSec.put("portfolioId", trdProductDealAdd.getPortfolioId());
-        applyBondSec.put("finprodId", commonPositionService.getStockId(trdProductDeal.getFinprodId(), trdProductDeal.getFinprodType2(), trdProductDeal.getPs()));
+        if(DictCodeList.交易方向_上市流通.getValue().equals(trdProductDeal.getPs())){
+            applyBondSec.put("finprodId", trdProductDeal.getRemark());
+        }else{
+            applyBondSec.put("finprodId", commonPositionService.getStockId(trdProductDeal.getFinprodId(), trdProductDeal.getFinprodType2(), trdProductDeal.getPs()));
+        }
         applyBondSec.put("secAcctId", trdProductDealTotal.getSecManageAcctId());
         applyBondSec.put("tradeId", trdProductDeal.getTradeId());
         applyBondSec.put("etrId", trdProductDealAdd1 != null ? trdProductDealAdd1.getEntrustId() : StringUtil.EMPTY);

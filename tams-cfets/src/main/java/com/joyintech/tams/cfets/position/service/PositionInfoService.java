@@ -50,7 +50,7 @@ public class PositionInfoService {
     @Autowired
     private DateCalService dateCalService;
     
-    public List<BaseMap> queryTrdPositionHead(PositionInfoRequestDto requestDto){
+    public List<BaseMap> queryTrdPositionHead(PositionInfoRequestDto requestDto) throws Exception{
         // 卖空模式
         String sellFlag = CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED");
 

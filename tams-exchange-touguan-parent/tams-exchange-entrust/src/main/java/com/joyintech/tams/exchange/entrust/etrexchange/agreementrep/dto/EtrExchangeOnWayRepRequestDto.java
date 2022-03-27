@@ -22,6 +22,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 〈一句话功能简述〉 〈功能详细描述〉
@@ -40,16 +41,8 @@ public class EtrExchangeOnWayRepRequestDto{
     @ApiModelProperty(name="pageMode",value="分页对象",example="{pageSize: 10,pageNo: 1, sort: 'name', direction: 'asc'}")
     private PageMode pageMode;
 
-    /**
-     * 用户Id
-     */
-//    @ApiModelProperty(name="userId",value="交易编号",example="admin")
-//    private String userId;
-
-//    @ApiModelProperty(name="portfolioId",value="组合代码",example="A1")
-//    private String portfolioId;
-    @ApiModelProperty(name="portfolioName",value="组合名称",example="A1")
-    private String portfolioName;
+    @ApiModelProperty(name="portfolioIdList",value="组合名称列表",example="A1")
+    private List<String> portfolioIdList;
 
     @ApiModelProperty(name="tradeMarket",value="交易场所",example="03")
     private String tradeMarket;
@@ -63,11 +56,8 @@ public class EtrExchangeOnWayRepRequestDto{
     @ApiModelProperty(name="repPs",value="委托方向",example="A1")
     private String repPs;
 
-//    @ApiModelProperty(name="pledgeFinprodId",value="质押券id",example="A1")
-//    private String pledgeFinprodId;
-
-    @ApiModelProperty(name="finprodName",value="资产名称",example="A1")
-    private String finprodName;
+    @ApiModelProperty(name="zyj",value="质押券代码列表",example="A1")
+    private List<String> zyj;
 
     public String getTradeId() {
         return tradeId;
@@ -84,22 +74,6 @@ public class EtrExchangeOnWayRepRequestDto{
     public void setPageMode(PageMode pageMode) {
         this.pageMode = pageMode;
     }
-
-//    public String getUserId() {
-//        return userId;
-//    }
-//
-//    public void setUserId(String userId) {
-//        this.userId = userId;
-//    }
-
-//    public String getPortfolioId() {
-//        return portfolioId;
-//    }
-//
-//    public void setPortfolioId(String portfolioId) {
-//        this.portfolioId = portfolioId;
-//    }
 
     public String getTradeMarket() {
         return tradeMarket;
@@ -125,14 +99,6 @@ public class EtrExchangeOnWayRepRequestDto{
         this.repPs = repPs;
     }
 
-//    public String getPledgeFinprodId() {
-//        return pledgeFinprodId;
-//    }
-//
-//    public void setPledgeFinprodId(String pledgeFinprodId) {
-//        this.pledgeFinprodId = pledgeFinprodId;
-//    }
-
     public String getSearch() {
         return search;
     }
@@ -141,19 +107,19 @@ public class EtrExchangeOnWayRepRequestDto{
         this.search = search;
     }
 
-    public String getPortfolioName() {
-        return portfolioName;
+    public List<String> getPortfolioIdList() {
+        return portfolioIdList;
     }
 
-    public void setPortfolioName(String portfolioName) {
-        this.portfolioName = portfolioName;
+    public void setPortfolioIdList(List<String> portfolioIdList) {
+        this.portfolioIdList = portfolioIdList;
     }
 
-    public String getFinprodName() {
-        return finprodName;
+    public List<String> getZyj() {
+        return zyj;
     }
 
-    public void setFinprodName(String finprodName) {
-        this.finprodName = finprodName;
+    public void setZyj(List<String> zyj) {
+        this.zyj = zyj;
     }
 }
