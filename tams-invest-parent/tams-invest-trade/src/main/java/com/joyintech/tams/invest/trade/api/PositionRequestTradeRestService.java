@@ -595,7 +595,11 @@ public class PositionRequestTradeRestService {
         // 配债申购数据集
         Map<String, Object> applyBondSec = new HashMap<>();
         applyBondSec.put("portfolioId", trdProductDealAdd.getPortfolioId());
-        applyBondSec.put("finprodId", commonPositionService.getStockId(trdProductDeal.getFinprodId(), trdProductDeal.getFinprodType2(), trdProductDeal.getPs()));
+        if(DictCodeList.交易方向_上市流通.getValue().equals(trdProductDeal.getPs())){
+            applyBondSec.put("finprodId", trdProductDeal.getRemark());
+        }else{
+            applyBondSec.put("finprodId", commonPositionService.getStockId(trdProductDeal.getFinprodId(), trdProductDeal.getFinprodType2(), trdProductDeal.getPs()));
+        }
         applyBondSec.put("secAcctId", trdProductDealTotal.getSecManageAcctId());
         applyBondSec.put("tradeId", trdProductDeal.getTradeId());
         applyBondSec.put("etrId", trdProductDealAdd1 != null ? trdProductDealAdd1.getEntrustId() : StringUtil.EMPTY);
