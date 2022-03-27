@@ -202,12 +202,6 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
         param.put("date", DateUtil.format(sysDate));
         String othCodeType=request.getOthCodeType();
         if(!StringUtil.isEmpty(othCodeType)){
-            if (StringUtil.equals(othCodeType, DictCodeListExt3.金融产品其他代码类型_配债代码.getValue())) {
-                selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
-                    return StringUtil.equals(option.getId(), DictCodeListExt3.交易方向_配债.getValue());
-                }).collect(Collectors.toList());
-                return selectOptionDtos;
-            }
             List<TrdOthCodeInfoDto> list = etrExchangeTradeCommon001Service.getTrdOthCodeInfos(param);
             if (null != list && list.size() > 0) {
                 for (TrdOthCodeInfoDto dto : list) {
