@@ -17,11 +17,11 @@
     <result column="ORG_CODE" jdbcType="VARCHAR" property="orgCode" />
   </resultMap>
   <sql id="Base_Column_List">
-    MAPPINGID, SRCDATATYPE, SRCDATATYPEID, OBJDATATYPE, OBJDATATYPEID, STATUS, WORKFLOW_ID, 
+    MAPPINGID, SRCDATATYPE, SRCDATATYPEID, OBJDATATYPE, OBJDATATYPEID, STATUS, WORKFLOW_ID,
     DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, ORG_CODE
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from CHB_TYPE_MAPPING
     where MAPPINGID = #{mappingid,jdbcType=CHAR}
@@ -31,15 +31,15 @@
     where MAPPINGID = #{mappingid,jdbcType=CHAR}
   </delete>
   <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbTypeMapping">
-    insert into CHB_TYPE_MAPPING (MAPPINGID, SRCDATATYPE, SRCDATATYPEID, 
-      OBJDATATYPE, OBJDATATYPEID, STATUS, 
-      WORKFLOW_ID, DEPT_CODE, UPDATE_USER, 
-      UPDATE_TIME, CREATE_USER, CREATE_TIME, 
+    insert into CHB_TYPE_MAPPING (MAPPINGID, SRCDATATYPE, SRCDATATYPEID,
+      OBJDATATYPE, OBJDATATYPEID, STATUS,
+      WORKFLOW_ID, DEPT_CODE, UPDATE_USER,
+      UPDATE_TIME, CREATE_USER, CREATE_TIME,
       ORG_CODE)
-    values (#{mappingid,jdbcType=CHAR}, #{srcdatatype,jdbcType=VARCHAR}, #{srcdatatypeid,jdbcType=VARCHAR}, 
-      #{objdatatype,jdbcType=VARCHAR}, #{objdatatypeid,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
-      #{workflowId,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+    values (#{mappingid,jdbcType=CHAR}, #{srcdatatype,jdbcType=VARCHAR}, #{srcdatatypeid,jdbcType=VARCHAR},
+      #{objdatatype,jdbcType=VARCHAR}, #{objdatatypeid,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},
+      #{workflowId,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR},
+      #{updateTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
       #{orgCode,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbTypeMapping">
@@ -186,28 +186,28 @@
     where MAPPINGID = #{mappingid,jdbcType=CHAR}
   </update>
 
-	<select id="selectMappingBySrcDataType" parameterType="java.lang.String" resultMap="BaseResultMap">
-	    select 
-        <include refid="Base_Column_List" />
-	    from chb_type_mapping
-	    where 1 =1
-	    <if test='srcDataType != null'>
-	    and srcDataType=#{srcDataType,jdbcType=VARCHAR}
-	    </if>
-	</select>
-	
-	<select id="selectMappingObjectValue" parameterType="java.util.Map" resultType="java.lang.String">
-	    select objdatatypeid
-	    from chb_type_mapping
-	    where 1 =1
-	    <if test='srcDataType != null'>
-	    and srcDataType=#{srcDataType,jdbcType=VARCHAR}
-	    </if>
-	    <if test='objDataType != null'>
-	    and objDataType=#{objDataType,jdbcType=VARCHAR}
-	    </if>
-	    <if test='srcValue != null'>
-	    and srcDataTypeId=#{srcValue,jdbcType=VARCHAR}
-	    </if>
-	</select>
+  <select id="selectMappingBySrcDataType" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from chb_type_mapping
+    where 1 =1
+    <if test='srcDataType != null'>
+      and srcDataType=#{srcDataType,jdbcType=VARCHAR}
+    </if>
+  </select>
+
+  <select id="selectMappingObjectValue" parameterType="java.util.Map" resultType="java.lang.String">
+    select objdatatypeid
+    from chb_type_mapping
+    where 1 =1
+    <if test='srcDataType != null'>
+      and srcDataType=#{srcDataType,jdbcType=VARCHAR}
+    </if>
+    <if test='objDataType != null'>
+      and objDataType=#{objDataType,jdbcType=VARCHAR}
+    </if>
+    <if test='srcValue != null'>
+      and srcDataTypeId=#{srcValue,jdbcType=VARCHAR}
+    </if>
+  </select>
 </mapper>

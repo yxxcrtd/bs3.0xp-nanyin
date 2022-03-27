@@ -83,29 +83,29 @@
 
   <insert id="insert" parameterType="com.joyintech.tams.svreport.pbc.classic.prdcashraisesub.dto.PbcProdRaiseSub" >
     insert into PBC_PROD_RAISING_SUB (REGIST_SEQNO, RAISING_DATE, PBC_PROD_ID,
-                                      BUY_PLACE, CUSTOMER_TYPE1, CCY,
-                                      RAISING_AMTSUM, RAISING_AMTSUM_CNY, RAISING_QTY,
-                                      REDAMT, REDAMT_CNY, REDQTY,
-                                      ENDAMTSUM, ENDAMTSUM_CNY, ENDQTY,
-                                      PROD_VALUE, PROD_VALUE_CNY, UNIT_VALUE_TOTAL,
-                                      UNIT_VALUE_TOTAL_CNY, PROD_HIGH_YIELD, PROD_LOW_YIELD,
-                                      SEND_STATUS, SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS,
-                                      SUMIT_SEQ, STATUS_DATE, PBC_SUBMIT_DEADLINE,
-                                      SUBMIT_DEADLINE, STATUS, CREATE_USER,
-                                      ORG_CODE, CREATE_DEPT, CREATE_TIME,
-                                      UPDATE_USER, UPDATE_TIME)
+      BUY_PLACE, CUSTOMER_TYPE1, CCY,
+      RAISING_AMTSUM, RAISING_AMTSUM_CNY, RAISING_QTY,
+      REDAMT, REDAMT_CNY, REDQTY,
+      ENDAMTSUM, ENDAMTSUM_CNY, ENDQTY,
+      PROD_VALUE, PROD_VALUE_CNY, UNIT_VALUE_TOTAL,
+      UNIT_VALUE_TOTAL_CNY, PROD_HIGH_YIELD, PROD_LOW_YIELD,
+      SEND_STATUS, SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS,
+      SUMIT_SEQ, STATUS_DATE, PBC_SUBMIT_DEADLINE,
+      SUBMIT_DEADLINE, STATUS, CREATE_USER,
+      ORG_CODE, CREATE_DEPT, CREATE_TIME,
+      UPDATE_USER, UPDATE_TIME)
     values (#{registSeqno,jdbcType=CHAR}, #{raisingDate,jdbcType=TIMESTAMP}, #{pbcProdId,jdbcType=VARCHAR},
-            #{buyPlace,jdbcType=VARCHAR}, #{customerType1,jdbcType=VARCHAR}, #{ccy,jdbcType=CHAR},
-            #{raisingAmtsum,jdbcType=DECIMAL}, #{raisingAmtsumCny,jdbcType=DECIMAL}, #{raisingQty,jdbcType=DECIMAL},
-            #{redamt,jdbcType=DECIMAL}, #{redamtCny,jdbcType=DECIMAL}, #{redqty,jdbcType=DECIMAL},
-            #{endamtsum,jdbcType=DECIMAL}, #{endamtsumCny,jdbcType=DECIMAL}, #{endqty,jdbcType=DECIMAL},
-            #{prodValue,jdbcType=DECIMAL}, #{prodValueCny,jdbcType=DECIMAL}, #{unitValueTotal,jdbcType=DECIMAL},
-            #{unitValueTotalCny,jdbcType=DECIMAL}, #{prodHighYield,jdbcType=DECIMAL}, #{prodLowYield,jdbcType=DECIMAL},
-            #{sendStatus,jdbcType=VARCHAR}, #{submitTime,jdbcType=TIMESTAMP}, #{submitFeedbackStatus,jdbcType=VARCHAR},
-            #{sumitSeq,jdbcType=VARCHAR}, NOW(), #{pbcSubmitDeadline,jdbcType=TIMESTAMP},
-            #{submitDeadline,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
-            #{orgCode,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, NOW(),
-            #{updateUser,jdbcType=VARCHAR}, NOW())
+      #{buyPlace,jdbcType=VARCHAR}, #{customerType1,jdbcType=VARCHAR}, #{ccy,jdbcType=CHAR},
+      #{raisingAmtsum,jdbcType=DECIMAL}, #{raisingAmtsumCny,jdbcType=DECIMAL}, #{raisingQty,jdbcType=DECIMAL},
+      #{redamt,jdbcType=DECIMAL}, #{redamtCny,jdbcType=DECIMAL}, #{redqty,jdbcType=DECIMAL},
+      #{endamtsum,jdbcType=DECIMAL}, #{endamtsumCny,jdbcType=DECIMAL}, #{endqty,jdbcType=DECIMAL},
+      #{prodValue,jdbcType=DECIMAL}, #{prodValueCny,jdbcType=DECIMAL}, #{unitValueTotal,jdbcType=DECIMAL},
+      #{unitValueTotalCny,jdbcType=DECIMAL}, #{prodHighYield,jdbcType=DECIMAL}, #{prodLowYield,jdbcType=DECIMAL},
+      #{sendStatus,jdbcType=VARCHAR}, #{submitTime,jdbcType=TIMESTAMP}, #{submitFeedbackStatus,jdbcType=VARCHAR},
+      #{sumitSeq,jdbcType=VARCHAR}, NOW(), #{pbcSubmitDeadline,jdbcType=TIMESTAMP},
+      #{submitDeadline,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
+      #{orgCode,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, NOW(),
+      #{updateUser,jdbcType=VARCHAR}, NOW())
   </insert>
 
   <delete id="deleteBatch" parameterType="com.joyintech.tams.svreport.pbc.classic.prdcashraisesub.dto.PbcProdRaiseSub">
@@ -155,20 +155,21 @@
     prdposition.ORG_CODE ORG_CODE
     FROM PBC_MONTH_PRD_POSITION PRDPOSITION
     inner JOIN (
+    select * from (
     SELECT
     PROD_ID,
     PBC_PROD_ID,
     OPERATE_MODE,
     HIGH_YIELD_ISSUE,
     LOW_YIELD_ISSUE,
-    RANK() OVER (PARTITION BY PROD_ID ORDER BY IFNULL(UPDATE_TIME,CREATE_TIME) DESC) RANKNUM
+    RANK() OVER (PARTITION BY PROD_ID ORDER BY ifnull(UPDATE_TIME,CREATE_TIME) DESC) RANKNUM
     from PBC_PRD_BASEINFO_SUB
-    where  PBC_PROD_ID is not null
-    ) prdbaseinfo
+
+    )as tt where  1 = 1 and RANKNUM=1) prdbaseinfo
     ON PRDPOSITION.PRODID = PRDBASEINFO.PROD_ID
-    AND RANKNUM = 1
     left join (
     /*取离月末最近的净值和收益率，不需要判断CHANG_TYPE，默认净值型产品存净值，预期收益率产品存收益率*/
+    select * from (
     select
     YIELD.PROD_VALUE,
     YIELD.PROD_ID,
@@ -179,7 +180,7 @@
     WHERE 1 =1
     AND YIELD.STATUS != 'D'
     AND DATE_FORMAT(YIELD.CHANGE_DATE,'%Y-%m-%d') &lt;= #{cdate,jdbcType=VARCHAR}
-    ) maxyield
+    ) as ttt where 1 =1 limit 1)maxyield
     on PRDPOSITION.PRODID = maxyield.PROD_ID
     where maxyield.ranknum = 1
     and DATE_FORMAT(prdposition.ENDDATE,'%Y-%m-%d') = #{cdate,jdbcType=VARCHAR}
@@ -1399,7 +1400,7 @@
     )t2 ON t2.inside_prod_id=b.PROD_ID
     <where>
       <if test="pbcProdIdList != null and pbcProdIdList.size > 0">
-        <foreach collection="pbcProdIdList" item="items" open="and a.PBC_PROD_ID in (" separator="," close =")">
+        <foreach collection="pbcProdIdList" item="items" open="and IFNULL(t2.pbc_code,a.PBC_PROD_ID) in (" separator="," close =")">
           #{items,jdbcType=VARCHAR}
         </foreach>
       </if>
@@ -1468,10 +1469,10 @@
         and DATE_FORMAT(a.PBC_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= #{pbcSubmitDeadlineDateEnd}
       </if>
       <if test="vdateStart != null and vdateStart != ''">
-        and DATE_FORMAT(a.RAISING_DATE,'%Y-%m') &gt;= #{vdateStart,jdbcType=VARCHAR}
+        and DATE_FORMAT(a.RAISING_DATE,'yyyy-MM') &gt;= #{vdateStart,jdbcType=VARCHAR}
       </if>
       <if test="vdateEnd != null and vdateEnd != ''">
-        and DATE_FORMAT(a.RAISING_DATE,'%Y-%m') &lt;= #{vdateEnd,jdbcType=VARCHAR}
+        and DATE_FORMAT(a.RAISING_DATE,'yyyy-MM') &lt;= #{vdateEnd,jdbcType=VARCHAR}
       </if>
       <if test="updateTime != null and updateTime != ''">
         and DATE_FORMAT(a.UPDATE_TIME,'%Y-%m-%d') = #{updateTime}

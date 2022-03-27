@@ -37,14 +37,16 @@
         <result column="ISSUING_STATUS" jdbcType="VARCHAR" property="issuingStatus" />
         <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
         <result column="PROD_REGIST_CODE" property="prodRegistCode" jdbcType="VARCHAR" />
+        <result column="BUSI_ACCT_NO" property="busiAcctNo" jdbcType="VARCHAR" />
+        <result column="ACCT_NAME" property="acctName" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List">
-        REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID, SINGLE_TOTAL, LEGAL_TOTAL, UNLEGAL_TOTAL,
+    REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID, SINGLE_TOTAL, LEGAL_TOTAL, UNLEGAL_TOTAL,
     SUBSCRIBE_CCY_AMT, SALE_AREA_AMT, TOTAL_AMT, RAISE_QTY, IS_CONSIGN, CONSIGN_AMT,
     REMARK, SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE, STATUS, CREATE_USER, CREATE_DEPT,
     CREATE_TIME, UPDATE_USER, UPDATE_TIME, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
     ORG_CODE, DEPT_CODE, SUMIT_SEQ, PROD_REGIST_CODE
-    </sql>
+  </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
@@ -52,39 +54,31 @@
         where REGIST_SEQNO = #{registSeqno,jdbcType=VARCHAR}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-        delete from CHB_PRD_RAISETOT_SUB
-        where REGIST_SEQNO = #{registSeqno,jdbcType=VARCHAR}
-    </delete>
-    <delete id="deleteByProdRegCode" parameterType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
-        delete from CHB_PRD_RAISETOT_SUB
-        where SEND_STATUS = '01'
-        <foreach collection="deleteList" item="item" index="index" open="and PROD_REGIST_CODE in (" close=")" separator=",">
-            #{item.prodRegistCode,jdbcType=VARCHAR}
-        </foreach>
-
-    </delete>
+    delete from CHB_PRD_RAISETOT_SUB
+    where REGIST_SEQNO = #{registSeqno,jdbcType=VARCHAR}
+  </delete>
     <insert id="insert" parameterType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
-        insert into CHB_PRD_RAISETOT_SUB (SUMIT_SEQ,REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID,
-                                          SINGLE_TOTAL, LEGAL_TOTAL, UNLEGAL_TOTAL,
-                                          SUBSCRIBE_CCY_AMT, SALE_AREA_AMT, TOTAL_AMT,
-                                          RAISE_QTY, IS_CONSIGN, CONSIGN_AMT,
-                                          REMARK, SEND_STATUS, SUBMIT_FEEDBACK_STATUS,
-                                          STATUS_DATE, STATUS, CREATE_USER,
-                                          CREATE_DEPT, CREATE_TIME, UPDATE_USER,
-                                          UPDATE_TIME, SUBMIT_TIME, CHB_SUBMIT_DEADLINE,
-                                          SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE,PROD_REGIST_CODE
-        )
-        values (#{sumitSeq,jdbcType=VARCHAR},#{registSeqno,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{issuePartyId,jdbcType=VARCHAR},
-                #{singleTotal,jdbcType=DECIMAL}, #{legalTotal,jdbcType=DECIMAL}, #{unlegalTotal,jdbcType=DECIMAL},
-                #{subscribeCcyAmt,jdbcType=VARCHAR}, #{saleAreaAmt,jdbcType=VARCHAR}, #{totalAmt,jdbcType=DECIMAL},
-                #{raiseQty,jdbcType=DECIMAL}, #{isConsign,jdbcType=VARCHAR}, #{consignAmt,jdbcType=DECIMAL},
-                #{remark,jdbcType=VARCHAR}, #{sendStatus,jdbcType=VARCHAR}, #{submitFeedbackStatus,jdbcType=VARCHAR},
-                #{statusDate,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
-                #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
-                #{updateTime,jdbcType=TIMESTAMP}, #{submitTime,jdbcType=TIMESTAMP}, #{chbSubmitDeadline,jdbcType=TIMESTAMP},
-                #{submitDeadline,jdbcType=TIMESTAMP}, #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR}, #{prodRegistCode,jdbcType=VARCHAR}
-               )
-    </insert>
+    insert into CHB_PRD_RAISETOT_SUB (SUMIT_SEQ,REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID,
+      SINGLE_TOTAL, LEGAL_TOTAL, UNLEGAL_TOTAL,
+      SUBSCRIBE_CCY_AMT, SALE_AREA_AMT, TOTAL_AMT,
+      RAISE_QTY, IS_CONSIGN, CONSIGN_AMT,
+      REMARK, SEND_STATUS, SUBMIT_FEEDBACK_STATUS,
+      STATUS_DATE, STATUS, CREATE_USER,
+      CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+      UPDATE_TIME, SUBMIT_TIME, CHB_SUBMIT_DEADLINE,
+      SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE,PROD_REGIST_CODE
+      )
+    values (#{sumitSeq,jdbcType=VARCHAR},#{registSeqno,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{issuePartyId,jdbcType=VARCHAR},
+      #{singleTotal,jdbcType=DECIMAL}, #{legalTotal,jdbcType=DECIMAL}, #{unlegalTotal,jdbcType=DECIMAL},
+      #{subscribeCcyAmt,jdbcType=VARCHAR}, #{saleAreaAmt,jdbcType=VARCHAR}, #{totalAmt,jdbcType=DECIMAL},
+      #{raiseQty,jdbcType=DECIMAL}, #{isConsign,jdbcType=VARCHAR}, #{consignAmt,jdbcType=DECIMAL},
+      #{remark,jdbcType=VARCHAR}, #{sendStatus,jdbcType=VARCHAR}, #{submitFeedbackStatus,jdbcType=VARCHAR},
+      #{statusDate,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
+      #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+      #{updateTime,jdbcType=TIMESTAMP}, #{submitTime,jdbcType=TIMESTAMP}, #{chbSubmitDeadline,jdbcType=TIMESTAMP},
+      #{submitDeadline,jdbcType=TIMESTAMP}, #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR}, #{prodRegistCode,jdbcType=VARCHAR}
+      )
+  </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
         insert into CHB_PRD_RAISETOT_SUB
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -357,37 +351,37 @@
         where REGIST_SEQNO = #{registSeqno,jdbcType=VARCHAR}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
-        update CHB_PRD_RAISETOT_SUB
-        set PROD_ID = #{prodId,jdbcType=VARCHAR},
-            ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
-            SINGLE_TOTAL = #{singleTotal,jdbcType=DECIMAL},
-            LEGAL_TOTAL = #{legalTotal,jdbcType=DECIMAL},
-            UNLEGAL_TOTAL = #{unlegalTotal,jdbcType=DECIMAL},
-            SUBSCRIBE_CCY_AMT = #{subscribeCcyAmt,jdbcType=VARCHAR},
-            SALE_AREA_AMT = #{saleAreaAmt,jdbcType=VARCHAR},
-            TOTAL_AMT = #{totalAmt,jdbcType=DECIMAL},
-            RAISE_QTY = #{raiseQty,jdbcType=DECIMAL},
-            IS_CONSIGN = #{isConsign,jdbcType=VARCHAR},
-            CONSIGN_AMT = #{consignAmt,jdbcType=DECIMAL},
-            REMARK = #{remark,jdbcType=VARCHAR},
-            SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
-            SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
-            STATUS_DATE = #{statusDate,jdbcType=TIMESTAMP},
-            STATUS = #{status,jdbcType=VARCHAR},
-            CREATE_USER = #{createUser,jdbcType=VARCHAR},
-            CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
-            CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
-            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-            SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
-            CHB_SUBMIT_DEADLINE = #{chbSubmitDeadline,jdbcType=TIMESTAMP},
-            SUBMIT_DEADLINE = #{submitDeadline,jdbcType=TIMESTAMP},
-            ORG_CODE = #{orgCode,jdbcType=VARCHAR},
-            DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
-            SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
-            PROD_REGIST_CODE = #{prodRegistCode,jdbcType=VARCHAR}
-        where REGIST_SEQNO = #{registSeqno,jdbcType=VARCHAR}
-    </update>
+    update CHB_PRD_RAISETOT_SUB
+    set PROD_ID = #{prodId,jdbcType=VARCHAR},
+      ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
+      SINGLE_TOTAL = #{singleTotal,jdbcType=DECIMAL},
+      LEGAL_TOTAL = #{legalTotal,jdbcType=DECIMAL},
+      UNLEGAL_TOTAL = #{unlegalTotal,jdbcType=DECIMAL},
+      SUBSCRIBE_CCY_AMT = #{subscribeCcyAmt,jdbcType=VARCHAR},
+      SALE_AREA_AMT = #{saleAreaAmt,jdbcType=VARCHAR},
+      TOTAL_AMT = #{totalAmt,jdbcType=DECIMAL},
+      RAISE_QTY = #{raiseQty,jdbcType=DECIMAL},
+      IS_CONSIGN = #{isConsign,jdbcType=VARCHAR},
+      CONSIGN_AMT = #{consignAmt,jdbcType=DECIMAL},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+      SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+      STATUS_DATE = #{statusDate,jdbcType=TIMESTAMP},
+      STATUS = #{status,jdbcType=VARCHAR},
+      CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
+      CHB_SUBMIT_DEADLINE = #{chbSubmitDeadline,jdbcType=TIMESTAMP},
+      SUBMIT_DEADLINE = #{submitDeadline,jdbcType=TIMESTAMP},
+      ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+      DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+      SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+      PROD_REGIST_CODE = #{prodRegistCode,jdbcType=VARCHAR}
+    where REGIST_SEQNO = #{registSeqno,jdbcType=VARCHAR}
+  </update>
 
     <select id="selectAllData" resultType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
         select
@@ -426,7 +420,9 @@
         info.PROD_NAME prodName,
         code.REG_CODE regCode,
         sub.SUMIT_SEQ sumitSeq,
-        sub.PROD_REGIST_CODE prodRegistCode
+        sub.PROD_REGIST_CODE prodRegistCode,
+        sub.BUSI_ACCT_NO  busiAcctNo,
+        sub.ACCT_NAME  acctName
 
         from CHB_PRD_RAISETOT_SUB sub
         left join chb_prd_baseinfo info
@@ -536,6 +532,7 @@
         </if>
         ) sub
         order by sub.SUBMIT_DEADLINE
+
     </select>
 
     <update id="updateSubmitStatusToOk" parameterType="java.util.List">
@@ -606,6 +603,10 @@
         buyplace,
         tradetype,
         ccy,
+        <!--从青岛合并，起息日当天有强增强减，需要算到实际募集金额份额 add by wm 20220304 start-->
+        SUM(case when tradetype = '15' then -1*tradeprince else tradeprince end) tradeprince,
+        SUM(case when tradetype = '15' then -1*tradeqty else tradeqty end) tradeqty,
+        <!--从青岛合并，起息日当天有强增强减，需要算到实际募集金额份额 add by wm 20220304 end-->
         SUM(tradeprince)tradeprince,
         SUM(tradeqty)tradeqty,
         remark,
@@ -628,7 +629,11 @@
         left join chb_prd_baseinfo info
         on info.prod_id = deal.prod_id
         and info.status in ('E','M')
-        where trade_type='01'
+        <!--从青岛合并，起息日当天有强增强减，需要算到实际募集金额份额 add by wm 20220304 start-->
+        where <!--trade_type='01'-->
+        trade_type in ('01','14','15')
+        AND info.vdate = deal.SETTDATE_DATE
+        <!--从青岛合并，起息日当天有强增强减，需要算到实际募集金额份额 add by wm 20220304 end-->
         and deal.status in ('E','M')
         <foreach collection="list" item="prod" open="and ( (" close=" ) )"
                  separator=") or (">
@@ -716,7 +721,8 @@
         STATUS_DATE, STATUS, CREATE_USER,
         CREATE_DEPT, CREATE_TIME, UPDATE_USER,
         UPDATE_TIME, SUBMIT_TIME, CHB_SUBMIT_DEADLINE,
-        SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE, SUMIT_SEQ, PROD_REGIST_CODE
+        SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE, SUMIT_SEQ, PROD_REGIST_CODE,
+        ACCT_NAME,BUSI_ACCT_NO
         )
         <foreach collection="insertList" item="item" index="index" separator="union all" >
             select
@@ -729,7 +735,8 @@
             #{item.createDept,jdbcType=VARCHAR}, NOW(), #{item.updateUser,jdbcType=VARCHAR},
             NOW(), #{item.submitTime,jdbcType=TIMESTAMP}, #{item.chbSubmitDeadline,jdbcType=TIMESTAMP},
             #{item.submitDeadline,jdbcType=TIMESTAMP}, #{item.orgCode,jdbcType=VARCHAR}, #{item.deptCode,jdbcType=VARCHAR},
-            #{item.sumitSeq,jdbcType=VARCHAR}, #{item.prodRegistCode,jdbcType=VARCHAR}
+            #{item.sumitSeq,jdbcType=VARCHAR}, #{item.prodRegistCode,jdbcType=VARCHAR},#{item.acctName,jdbcType=VARCHAR}
+            ,#{item.busiAcctNo,jdbcType=VARCHAR}
             from dual
         </foreach>
     </insert>
@@ -840,7 +847,9 @@
         <!-- 	a.prod_id, -->
         ifnull(a.fprod_id,a.prod_id) prod_id,
         a.RAISE_ENDDATE,
-        sub.REGIST_SEQNO as regseq,a.status status,a.ISSUING_STATUS,a.PROD_REGIST_CODE
+        sub.REGIST_SEQNO as regseq,a.status status,a.ISSUING_STATUS,a.PROD_REGIST_CODE,
+        a.BUSI_ACCT_NO,
+        a.ACCT_NAME
         from
         (select
         <!-- 	ifnull(info.fprod_id,info.prod_id) prod_id, -->
@@ -849,7 +858,9 @@
         code.REG_CODE PROD_REGIST_CODE,
         ifnull(info.RAISE_ENDDATE,info1.RAISE_ENDDATE) RAISE_ENDDATE,
         ifnull(info.ISSUING_STATUS,info1.ISSUING_STATUS) ISSUING_STATUS,
-        deal.status
+        deal.status,
+        info.BUSI_ACCT_NO,
+        info.ACCT_NAME
         from CHB_PRD_BASEINFO info
         left join CHB_PRD_DEAL deal
         on info.prod_id = deal.prod_id
@@ -858,6 +869,194 @@
         left join CHB_PRD_BASEINFO info1
         on deal.fprod_id = info1.prod_id
         AND info1.status in ('E','M')
+
+        left join CHB_PRDRESIST_CODE code
+        on code.prodid=ifnull(info.FPROD_ID,info.PROD_ID)
+
+        WHERE (DATE_FORMAT(info.vdate,'%Y-%m-%d') = #{vdate,jdbcType=VARCHAR}
+        or ifnull(DATE_FORMAT(deal.UPDATE_TIME,'%Y-%m-%d'),DATE_FORMAT(deal.CREATE_TIME,'%Y-%m-%d')) = #{vdate,jdbcType=VARCHAR})
+        and info.issuing_status in ('01','03')) a
+        left join CHB_PRD_RAISETOT_SUB sub
+        on sub.prod_id = a.prod_id
+        and sub.send_status in ('02','03')
+        where 1=1
+        <if test="prodIdList!=null and prodIdList.size()>0">
+            and (a.prod_id in
+            <foreach collection="prodIdList" item="dto" open="("
+                     separator="," close=")">
+                <if test="(index % 999) == 998">
+                    null) OR a.prod_id in (
+                </if>
+                #{dto,jdbcType=VARCHAR}
+            </foreach>
+            OR a.Fprod_id in
+            <foreach collection="prodIdList" item="dto" open="("
+                     separator="," close=")">
+                <if test="(index % 999) == 998">
+                    null) OR a.Fprod_id in (
+                </if>
+                #{dto,jdbcType=VARCHAR}
+            </foreach>
+            )
+        </if>
+    </select>
+    <delete id="deleteBatch"
+            parameterType="java.lang.String">
+        delete from CHB_PRD_RAISETOT_SUB
+        where PROD_ID in
+        <if test="list!=null and list.size()>0">
+            <foreach collection="list" item="dto" open="(" separator=","
+                     close=")">
+                #{dto,jdbcType=VARCHAR}
+            </foreach>
+            AND SEND_STATUS = '01'
+        </if>
+    </delete>
+
+    <update id="updateBySeqno" parameterType="java.lang.String">
+        update CHB_PRD_RAISETOT_SUB
+        set status = '03',update_time=NOW()
+        where PROD_ID in
+        <if test="list!=null and list.size()>0">
+            <foreach collection="list" item="dto" open="(" separator=","
+                     close=")">
+                #{dto,jdbcType=VARCHAR}
+            </foreach>
+            AND SEND_STATUS != '01'
+        </if>
+    </update>
+
+    <delete id="deleteRegistSeqnoList">
+        delete from CHB_PRD_RAISETOT_SUB
+        where
+        <foreach collection="regList" item="item" open="REGIST_SEQNO in (" separator="," close=")">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+    </delete>
+
+    <insert id="insertSeletForSub" parameterType="java.lang.String">
+        insert into CHB_PRD_RAISETOT_SUB (SUMIT_SEQ,PROD_REGIST_CODE,
+        REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID,
+        SINGLE_TOTAL, LEGAL_TOTAL, UNLEGAL_TOTAL,
+        SUBSCRIBE_CCY_AMT, SALE_AREA_AMT, TOTAL_AMT,
+        RAISE_QTY, IS_CONSIGN, CONSIGN_AMT,
+        REMARK, SEND_STATUS, SUBMIT_FEEDBACK_STATUS,
+        STATUS_DATE, STATUS, CREATE_USER,
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+        UPDATE_TIME, SUBMIT_TIME, CHB_SUBMIT_DEADLINE,
+        SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE, SUBMIT_FEEDBACK_MSG,ACCT_NAME,BUSI_ACCT_NO
+        )
+        select  SUMIT_SEQ,PROD_REGIST_CODE,
+        REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID,
+        SINGLE_TOTAL, LEGAL_TOTAL, UNLEGAL_TOTAL,
+        SUBSCRIBE_CCY_AMT, SALE_AREA_AMT, TOTAL_AMT,
+        RAISE_QTY, IS_CONSIGN, CONSIGN_AMT,
+        REMARK, SEND_STATUS, SUBMIT_FEEDBACK_STATUS,
+        STATUS_DATE, STATUS, CREATE_USER,
+        CREATE_DEPT, NOW(), UPDATE_USER,
+        NOW(), SUBMIT_TIME, CHB_SUBMIT_DEADLINE,
+        SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE, SUBMIT_FEEDBACK_MSG,ACCT_NAME,BUSI_ACCT_NO
+        from CHB_PRD_RAISETOT_SUB_HIS
+        where SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
+        <if test="regList !=null and regList.size()>0">
+            <foreach collection="regList" item="item" open="and REGIST_SEQNO IN (" separator=","  close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </insert>
+
+    <select id="selectRegistSeqnoList" resultType="java.lang.String" parameterType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
+        select REGIST_SEQNO
+        from CHB_PRD_RAISETOT_SUB
+        where
+        <if test="flag=='02'">
+            SEND_STATUS in ('02','03')
+        </if>
+        <if test="flag=='01'">
+            SEND_STATUS = '01'
+        </if>
+        <foreach collection="list" item="item" open="and ( (" separator=") or (" close=") )">
+            PROD_ID = #{item.prodId,jdbcType=VARCHAR} and REGIST_SEQNO != #{item.registSeqno,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+    <select id="selectRegPerProdList" parameterType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto"
+            resultType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
+        select
+        REGIST_SEQNO,
+        PROD_ID,
+        ISSUE_PARTY_ID,
+        SINGLE_TOTAL,
+        LEGAL_TOTAL,
+        UNLEGAL_TOTAL,
+        SUBSCRIBE_CCY_AMT,
+        SALE_AREA_AMT,
+        TOTAL_AMT,
+        IS_CONSIGN,
+        CONSIGN_AMT,
+        REMARK,
+        SEND_STATUS,
+        SUBMIT_FEEDBACK_STATUS,
+        STATUS_DATE,
+        STATUS,
+        CREATE_USER,
+        CREATE_DEPT,
+        CREATE_TIME,
+        UPDATE_USER,
+        UPDATE_TIME,
+        SUBMIT_TIME,
+        CHB_SUBMIT_DEADLINE,
+        SUBMIT_DEADLINE,
+        ORG_CODE,
+        DEPT_CODE,
+        RAISE_QTY,
+        PROD_REGIST_CODE,
+        SUMIT_SEQ
+        from CHB_PRD_RAISETOT_SUB
+        where SEND_STATUS in ('02','03')
+        <if test="list!=null and list.size()!=0">
+            <foreach collection="list" item="item" open="and ((" close="))"
+                     separator=") or (">
+                trim(prod_id)= #{item.prodId}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="queryListByKeys" parameterType="java.lang.String" resultType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
+        select  REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID, SINGLE_TOTAL, LEGAL_TOTAL, UNLEGAL_TOTAL,
+        SUBSCRIBE_CCY_AMT, SALE_AREA_AMT, TOTAL_AMT, RAISE_QTY, IS_CONSIGN, CONSIGN_AMT,
+        REMARK, SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE, STATUS, CREATE_USER, CREATE_DEPT,
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+        ORG_CODE, DEPT_CODE, SUMIT_SEQ, PROD_REGIST_CODE from CHB_PRD_RAISETOT_SUB
+        where 1=1
+        <if test="list!=null and list.size()!=0">
+            <foreach collection="list" item="item" open="and ((" close="))"
+                     separator=") or (">
+                trim(REGIST_SEQNO)= #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </select>
+    <select id="getAllInterfRaiseSum" resultMap="BaseResultMap">
+		select
+			FINPROD_ID PROD_ID,
+			PER_SUM SINGLE_TOTAL,
+			LEGALPERSON_SUM LEGAL_TOTAL,
+			N_LEGALPERSON_SUM UNLEGAL_TOTAL,
+			RAISE_AREA_AMT SALE_AREA_AMT,
+			ISAGENCY IS_CONSIGN,
+			CONSIGN_AMT CONSIGN_AMT,
+			CCY
+		from P_INTERF_RAISE_SUM
+   </select>
+    <select id="getEquCount"  resultType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto"  parameterType="java.lang.String">
+        <!-- 个人 -->
+        SELECT  '01' equType,  COUNT(GREN.INDENTIFY_MARK) equCount FROM (
+        select  DISTINCT DET.INDENTIFY_MARK from CHB_EQUDET  DET
+        LEFT JOIN  CHB_EQU_HOLD   HOLD  ON  HOLD.INDENTIFY_MARK=DET.INDENTIFY_MARK  AND  HOLD.STATUS='E'
+        WHERE   ACCOUNT=#{prodId,jdbcType=VARCHAR}
+        AND DET.STATUS='E'
+        and   (DET.BUSI_TYPE='01' or (DET.BUSI_TYPE IN ('14','15')
+        and exists (select 1 from chb_prd_baseinfo info1 where info1.prod_id =det.account
+        and info1.vdate =det.equity_conf_date and info1.status !='D')))
 
         left join CHB_PRDRESIST_CODE code
         on code.prodid=ifnull(info.FPROD_ID,info.PROD_ID)

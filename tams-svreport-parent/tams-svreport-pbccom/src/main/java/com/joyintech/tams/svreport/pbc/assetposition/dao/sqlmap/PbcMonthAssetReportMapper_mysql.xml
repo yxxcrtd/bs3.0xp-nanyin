@@ -222,17 +222,17 @@
   </delete>
   <insert id="insert" parameterType="com.joyintech.tams.svreport.pbc.assetposition.dto.PbcMonthAssetPositionDto" >
     insert into PBC_MONTH_ASSET_POSITION (POSUUID, PRODID, ORG_CODE,
-                                          POSITION_TYPE, CHL_ID, ASSET_CODE,
-                                          ASSET_TYPE1, ASSET_TYPE2, ASSET_TYPE3,
-                                          STARTDATE, ENDDATE, BOOKDATE,
-                                          CCY, AMT, INT_AMT, END_DAYS,
-                                          BAL_FLAG)
+      POSITION_TYPE, CHL_ID, ASSET_CODE,
+      ASSET_TYPE1, ASSET_TYPE2, ASSET_TYPE3,
+      STARTDATE, ENDDATE, BOOKDATE,
+      CCY, AMT, INT_AMT, END_DAYS,
+      BAL_FLAG)
     values (#{posuuid,jdbcType=CHAR}, #{prodid,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR},
-            #{positionType,jdbcType=VARCHAR}, #{chlId,jdbcType=VARCHAR}, #{assetCode,jdbcType=VARCHAR},
-            #{assetType1,jdbcType=VARCHAR}, #{assetType2,jdbcType=VARCHAR}, #{assetType3,jdbcType=VARCHAR},
-            #{startdate,jdbcType=TIMESTAMP}, #{enddate,jdbcType=TIMESTAMP}, #{bookdate,jdbcType=TIMESTAMP},
-            #{ccy,jdbcType=VARCHAR}, #{amt,jdbcType=DECIMAL}, #{intAmt,jdbcType=DECIMAL}, #{endDays,jdbcType=DECIMAL},
-            #{balFlag,jdbcType=VARCHAR})
+      #{positionType,jdbcType=VARCHAR}, #{chlId,jdbcType=VARCHAR}, #{assetCode,jdbcType=VARCHAR},
+      #{assetType1,jdbcType=VARCHAR}, #{assetType2,jdbcType=VARCHAR}, #{assetType3,jdbcType=VARCHAR},
+      #{startdate,jdbcType=TIMESTAMP}, #{enddate,jdbcType=TIMESTAMP}, #{bookdate,jdbcType=TIMESTAMP},
+      #{ccy,jdbcType=VARCHAR}, #{amt,jdbcType=DECIMAL}, #{intAmt,jdbcType=DECIMAL}, #{endDays,jdbcType=DECIMAL},
+      #{balFlag,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.pbc.assetposition.dto.PbcMonthAssetPositionDto" >
     insert into PBC_MONTH_ASSET_POSITION
@@ -480,12 +480,12 @@
     </if>
   </select>
   <select  id="selectChbPrdBalance"  resultType="com.joyintech.tams.svreport.pbc.prod.dto.PbcMonthPrdPostionDto">
-    select
-      CCY  ccy,
-      ifnull(BALANCE_QTY,0)    endqtysum,
-      ifnull(BALANCE_AMT,0)    endCost
-    from  CHB_PRD_BALANCE
-    where PRODID=#{prodId,jdbcType=VARCHAR}
-      and  CDATE=#{endDate,jdbcType=DATE}
+   select 
+   CCY  ccy,
+   ifnull(BALANCE_QTY,0)    endqtysum,
+   ifnull(BALANCE_AMT,0)    endCost
+   from  CHB_PRD_BALANCE 
+   where PRODID=#{prodId,jdbcType=VARCHAR}
+   and  CDATE=#{endDate,jdbcType=DATE}
   </select>
 </mapper>
