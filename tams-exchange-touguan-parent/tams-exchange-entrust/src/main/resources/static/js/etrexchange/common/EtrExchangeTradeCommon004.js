@@ -54,6 +54,7 @@
         if (object.ps == PS_T68 || object.ps == PS_T69 || object.ps == PS_T49 || object.ps == PS_T97 || object.ps == PS_T46 || object.ps == PS_T03 || object.ps == PS_T04) {
             object.priceModel = "PRM01";
         }
+
         // 隐藏项需要手动获取
         object.finprodId = $("#finprodId_" + currentTab).val();
         object.tradeMarket = $("#tradeMarket_" + currentTab).val();
@@ -106,6 +107,11 @@
                     object.portfolioList[i].entrustAmt = 0;
                 }
             }
+        }
+
+        if(!object.ps){
+            object.priceModel = "PRM01";
+            object.entrustPrice = 0;
         }
         return object;
     }
