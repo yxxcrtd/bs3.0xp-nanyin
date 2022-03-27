@@ -179,10 +179,10 @@ public class FieldEtrInfoQueryController extends BaseController {
     public Message<Page<TradeQueryBean>> getEtrDispatcherDealListInfo(@RequestBody CommonSearchInfoRequest dto)
             throws Exception {
         try {
-            Page<TradeQueryBean> returnDto = fieldEtrInfoQueryService.getEtrDispatcherDealListInfo(dto);
-            if (returnDto.getTotal() == 0 && CollectionUtils.isEmpty(returnDto.getRoot())) {
-                returnDto = fieldEtrInfoQueryService.getEtrDispatcherDealListInfoByExe(dto);
-            }
+//            Page<TradeQueryBean> returnDto = fieldEtrInfoQueryService.getEtrDispatcherDealListInfo(dto);
+//            if (returnDto.getTotal() == 0 && CollectionUtils.isEmpty(returnDto.getRoot())) {
+            Page<TradeQueryBean> returnDto = fieldEtrInfoQueryService.getEtrDispatcherDealListInfoByExe(dto);
+//            }
             return new Message<Page<TradeQueryBean>>().success().setData(returnDto);
         } catch (Exception e) {
             logger.error("查询指令成交异常", e);
