@@ -1452,6 +1452,7 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
 		if (null != entity.getEntrustId() && null != etrEntrustMapper.selectByPrimaryKey(entity.getEntrustId())) {
 			optType = ENTRUST_RECORD_MODIFY;
 		}
+
 		EtrParameterDto paraDto = new EtrParameterDto();
         setUser(paraDto);
         if (StringUtil.equals(optType, ENTRUST_RECORD_NEW)) {//
@@ -1541,18 +1542,18 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
             param.put("entrustId", entity.getEntrustId());
             etrCommandDispatcherService.pushCommandMsg(param);
         }
-        // 自动分发自动接收 ，杭银投资poc add by yufei 20200905 start
-        if(!StringUtil.isEmptyList(etrDistributeList) && etrDistributeList.size() == 1){
-            baseEtrInvestInfoService.receptionDelegate(etrDistributeList);
-            // 上交所和深交所推送接收信息到交易系统
-            if (StringUtil.equals(entity.getTradeMarket(),
-                DictCodeListExt1.交易场所_上海证券交易所.getValue()) || StringUtil.equals(
-                		entity.getTradeMarket(),
-                DictCodeListExt1.交易场所_深圳证券交易所.getValue())) {
-                // TODO 调用交易接口做接收操作
-            }
-        }
-        // 自动分发自动接收 ，杭银投资poc add by yufei 20200905 end
+//        // 自动分发自动接收 ，杭银投资poc add by yufei 20200905 start
+//        if(!StringUtil.isEmptyList(etrDistributeList) && etrDistributeList.size() == 1){
+//            baseEtrInvestInfoService.receptionDelegate(etrDistributeList);
+//            // 上交所和深交所推送接收信息到交易系统
+//            if (StringUtil.equals(entity.getTradeMarket(),
+//                DictCodeListExt1.交易场所_上海证券交易所.getValue()) || StringUtil.equals(
+//                		entity.getTradeMarket(),
+//                DictCodeListExt1.交易场所_深圳证券交易所.getValue())) {
+//                // TODO 调用交易接口做接收操作
+//            }
+//        }
+//        // 自动分发自动接收 ，杭银投资poc add by yufei 20200905 end
         //处理履历
         updateCfetsOprHis(entity.getEntrustId(),optType);
     }
@@ -2105,6 +2106,7 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
             this.doHandleComplete(etrExchangeAgreRepTrade001Dto,etrExchangeAgreRepTrade001Dto.getOperateType());
         } catch (Exception e) {
             e.printStackTrace();
+            throw new BusinessException("MSG:指令审批发生异常，异常信息：" + e.getMessage());
         }
         doDeleteWflEntity(etrExchangeAgreRepTrade001Dto.getWorkflowId());
     }
@@ -2157,6 +2159,9 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
                 etrEntrust.setEntrustId(entity.getEntrustId());
                 dto.setEtrEntrust(etrEntrust);
                 doInsertBackupQuery(dto);
+                if (StringUtil.isNotBlank(entity.getWorkflowId())) {
+                    doDeleteWflEntity(entity.getWorkflowId());
+                }
                 doInsertWflEntity(entity);
             } catch (Exception e) {
                 e.printStackTrace();
