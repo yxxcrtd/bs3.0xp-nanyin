@@ -760,7 +760,12 @@ public class TradeMsgProcessor {
         instructionClone.setSoftSkipMode(DictCodeList.是否_是.getValue());
         //委托编号
         instructionClone.setEntrustNo(entrust.getId());
-        instructionClone.setEntrustAmt(entrust.getEntrustPrice().multiply(BigDecimal.valueOf(entrust.getEntrustVolume())));
+        if(交易方向_正回购.getValue().equals(instructionClone.getPs())
+        		|| 交易方向_正回购.getValue().equals(instructionClone.getPs())) {
+        	instructionClone.setEntrustAmt(entrust.getEntrustBalance());
+        }else {
+        	instructionClone.setEntrustAmt(entrust.getEntrustPrice().multiply(BigDecimal.valueOf(entrust.getEntrustVolume())));
+        }
         instructionClone.setEntrustNum(entrust.getEntrustVolume());
         instructionClone.setEntrustPrice(entrust.getEntrustPrice());
         instructionClone.setFullPrice(entrust.getFullPrice());
