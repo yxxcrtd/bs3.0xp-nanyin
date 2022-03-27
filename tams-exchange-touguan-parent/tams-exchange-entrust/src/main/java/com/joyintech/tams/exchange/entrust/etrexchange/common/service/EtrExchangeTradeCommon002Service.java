@@ -136,30 +136,21 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 				// 浮动盈亏计算修改 modify by yufei 20200806 start
 				//Page<EtrExchangeTradePositionsCommonResponse> result = super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> etrExchangeTradeCommonMapper.findPositionsPage(param));
 				Page<EtrExchangeTradePositionsCommonResponse> result=new Page<>();
-				result.setRoot(etrExchangeTradeCommonMapper.findPositionsPage(param));
-				// 根据查询结果查询估值、交易数据，用来加工单位成本等字段
-				final List pList = new ArrayList<String>();
-				final List fList = new ArrayList<String>();
-				if(!StringUtil.isEmptyList(result.getRoot())){
-					result.getRoot().stream().forEach(c -> {
-						if (!pList.contains(c.getPortfolioId())){
-							pList.add(c.getPortfolioId());
-						}
-						if (!fList.contains(c.getFinprodId())){
-							fList.add(c.getFinprodId());
-						}
-					});
+				List<EtrExchangeTradePositionsCommonResponse> queryList= etrExchangeTradeCommonMapper.findPositionsPage(param);
+				List<EtrExchangeTradePositionsCommonResponse> returnList=new ArrayList<>();
+				if(!StringUtil.isEmptyList(queryList)){
 					// 计算浮动盈亏
-					for(EtrExchangeTradePositionsCommonResponse entity : result.getRoot()){
+					for(EtrExchangeTradePositionsCommonResponse entity : queryList){
 						//可用数量
 						PositionCashSecDto secDto=new PositionCashSecDto();
 						BeanUtil.copyPropertiesIgnoreNull(secDto,entity);
 						secDto.setTradePlat(dto.getTradePlat());
 						BigDecimal sellNum=etrTradeCommonervice.selectAvailableNum(secDto);
 						entity.setSellNum(sellNum);
-						//持仓数量  从PTL_SEC_POSITION_RULE表查询
-//						BigDecimal positionsNum=etrTradeCommonervice.selectAvailableNum(secDto);
-//						entity.setPositionsNum(positionsNum);
+						//过滤掉实际持仓和可用持仓都等于0
+						if(entity.getPositionsNum().compareTo(BigDecimal.ZERO)==0&&sellNum.compareTo(BigDecimal.ZERO)==0){
+							continue;
+						}
 						//最新价从行情取
 						EtrExchangeTradeQuotationHqResponse hqResponse=exchangeTradeJj001Service.findQuotations(entity.getFinprodMarketId());
 						if(hqResponse!=null){
@@ -172,23 +163,24 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 						entity.setFloating(floatFd);
 						BigDecimal floatPL =ArithmeticUtil.divide(floatFd,ArithmeticUtil.multiply(entity.getPrice(),entity.getPtlPositionsNum()),2);
 						entity.setFloatingPL(floatPL);
+						returnList.add(entity);
 					}
-					if (StringUtil.isNotEmpty(pageMode)) {
-						if (pageMode.getSort().equals("floating")){
-							if(pageMode.getSort().equals("asc")) {
-								result.setRoot(result.getRoot().stream().sorted(Comparator.comparing(EtrExchangeTradePositionsCommonResponse::getFloating)).collect(Collectors.toList()));
-							}else {
-								result.setRoot(result.getRoot().stream().sorted(Comparator.comparing(EtrExchangeTradePositionsCommonResponse::getFloating).reversed()).collect(Collectors.toList()));
-							}
-						}else if (pageMode.getSort().equals("floatingPL")){
-							if(pageMode.getSort().equals("asc")) {
-								result.setRoot(result.getRoot().stream().sorted(Comparator.comparing(EtrExchangeTradePositionsCommonResponse::getFloatingPL)).collect(Collectors.toList()));
-							}else {
-								result.setRoot(result.getRoot().stream().sorted(Comparator.comparing(EtrExchangeTradePositionsCommonResponse::getFloatingPL).reversed()).collect(Collectors.toList()));
-							}
-						}
-					}
+					result.setRoot(returnList);
 				}
+				// 根据查询结果查询估值、交易数据，用来加工单位成本等字段
+				final List pList = new ArrayList<String>();
+				final List fList = new ArrayList<String>();
+				if(!StringUtil.isEmptyList(returnList)) {
+					result.getRoot().stream().forEach(c -> {
+						if (!pList.contains(c.getPortfolioId())) {
+							pList.add(c.getPortfolioId());
+						}
+						if (!fList.contains(c.getFinprodId())) {
+							fList.add(c.getFinprodId());
+						}
+					});
+				}
+				result.setRoot(returnList);
 				// 查询单位成本数据
 				Map<String, EtrExchangeUnitCostDto> unitCostMap = calcEachCostAmtMap(DateUtil.parse(platDate), pList, fList, "");
 				// 计算单位成本、计算持仓成本、最新净价、持仓市值、浮动盈亏
