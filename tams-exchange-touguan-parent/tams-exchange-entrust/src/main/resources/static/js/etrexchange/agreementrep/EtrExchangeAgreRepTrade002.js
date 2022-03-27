@@ -1985,8 +1985,8 @@
         });
         $("#tradeAmt").change(function() {
             amtCal();
-            // conRatioCal();
-            repSecNumCal();
+            conRatioCal();
+            // repSecNumCal();
         });
         $("#yield").change(function() {
             amtCal();
