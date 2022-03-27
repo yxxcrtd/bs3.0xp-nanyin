@@ -581,9 +581,10 @@ public class StlDataDealSzdSjsmxProcessService {
             // 单位全价
             settleTransData.setUnitFprice(null);
             // 到期利息 => 变量.本金金额*变量.回购利率*（变量.到期交收日-变量.首期交收日)/365
-            BigDecimal hglx = ArithmeticUtil.multiply(ArithmeticUtil.multiply(settleTransData.getPrinAmt(), settleTransData.getIntRate()),
-                    ArithmeticUtil.divide(new BigDecimal(DateUtil.getBetweenDayNumber(settleTransData.getVpayDate(), settleTransData.getMpayDate())), 365, 14));
-            settleTransData.setIntAmt(ArithmeticUtil.round(hglx, 2, RoundingMode.HALF_UP));
+//            BigDecimal hglx = ArithmeticUtil.multiply(ArithmeticUtil.multiply(settleTransData.getPrinAmt(), settleTransData.getIntRate()),
+//                    ArithmeticUtil.divide(new BigDecimal(DateUtil.getBetweenDayNumber(settleTransData.getVpayDate(), settleTransData.getMpayDate())), 365, 14));
+//            settleTransData.setIntAmt(ArithmeticUtil.round(hglx, 2, RoundingMode.HALF_UP));
+            settleTransData.setIntAmt(ArithmeticUtil.subtract(abs(szdSjsmx.getMxsfje()), abs(qsbj)));
             // GNS-925:修改到期赋值 modify by fuyongsheng 20220228 end
         }
     }

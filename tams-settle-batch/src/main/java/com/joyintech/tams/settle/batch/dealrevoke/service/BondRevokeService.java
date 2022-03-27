@@ -100,6 +100,16 @@ public class BondRevokeService implements BaseRevokeService {
                 if(CollectionUtils.isNotEmpty(tradeIds)){
                     // 处理持仓
                     investDealRevokeService.executeSecPositionFlow(tradeIds);
+
+                    // ZGTFCP-1955,ZGTFCP-1510:上市流通、质押券出入库撤销新头寸需特殊处理 modify by fuyongsheng 20220327 start
+                    Map<String, Object> param = new HashMap<>();
+                    param.put("tradeIdList", tradeIds);
+                    param.put("status", DictCodeListExt1.交易流程状态_撤销.getValue());
+                    param.put("busiType", DictCodeList.共通业务类型_债券类资产交易.getValue());
+                    // 处理老头存标识,N:不处理老头存
+                    param.put("dealOldPositionFlag", DictCodeList.是否_否.getValue());
+                    stlDataGatherService.excutePosition(param);
+                    // ZGTFCP-1955,ZGTFCP-1510:上市流通、质押券出入库撤销新头寸需特殊处理 modify by fuyongsheng 20220327 end
                 }
                 investDealRevokeService.revokeDealTotal(ssltTotalTradeIdList);
             }
@@ -119,6 +129,16 @@ public class BondRevokeService implements BaseRevokeService {
                     investDealRevokeService.deleteZyTrdStasecFlows(tradeIds);
                     // 删除标准券出入库明细表
                     investDealRevokeService.deleteZyTrdStasecFlowDetails(tradeIds);
+
+                    // ZGTFCP-1955,ZGTFCP-1510:上市流通、质押券出入库撤销新头寸需特殊处理 modify by fuyongsheng 20220327 start
+                    Map<String, Object> param = new HashMap<>();
+                    param.put("tradeIdList", tradeIds);
+                    param.put("status", DictCodeListExt1.交易流程状态_撤销.getValue());
+                    param.put("busiType", DictCodeList.共通业务类型_债券类资产交易.getValue());
+                    // 处理老头存标识,Y:处理老头存,N:不处理老头存
+                    param.put("dealOldPositionFlag", DictCodeList.是否_否.getValue());
+                    stlDataGatherService.excutePosition(param);
+                    // ZGTFCP-1955,ZGTFCP-1510:上市流通、质押券出入库撤销新头寸需特殊处理 modify by fuyongsheng 20220327 end
                 }
                 investDealRevokeService.revokeDealTotal(zyqTotalTradeIdList);
             }

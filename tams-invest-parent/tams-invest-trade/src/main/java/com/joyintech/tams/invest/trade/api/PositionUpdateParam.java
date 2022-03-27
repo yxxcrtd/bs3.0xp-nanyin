@@ -32,6 +32,19 @@ public class PositionUpdateParam {
      */
     private String isNotWorkflow;
 
+    public String getDealOldPositionFlag() {
+        return dealOldPositionFlag;
+    }
+
+    public void setDealOldPositionFlag(String dealOldPositionFlag) {
+        this.dealOldPositionFlag = dealOldPositionFlag;
+    }
+
+    /**
+     * 处理老头存标识,N:不处理老头存,其余处理老头存
+     */
+    private String dealOldPositionFlag;
+
     public String getStatus() {
         return status;
     }
