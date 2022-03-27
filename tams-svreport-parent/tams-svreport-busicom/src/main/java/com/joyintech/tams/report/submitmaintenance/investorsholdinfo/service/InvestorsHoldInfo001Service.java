@@ -1684,7 +1684,7 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 				investorsHoldInfoDistinctService.deleteChbInvestholdInfoSubByTmp();
 				// 插入
 				investorsHoldInfoDistinctService.saveChbInvestholdInfoSub(subList);
-			}{
+			}else {
 				int maxDataCountOneTime = this.parsToInt(reportInsertLongCount, "1");
 				int dataCount = subList.size();
 				if (dataCount <= maxDataCountOneTime) {
@@ -2749,7 +2749,9 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 					column.setConstant(DictCodeListExt2.报送数据状态_新建.getValue());
 				}
 			}
-
+			// 使用线程安全list
+			List<InvestorsHoldInfo001Dto> listE = new CopyOnWriteArrayList <>();
+			List<InvestorsHoldInfo001Dto> listA = new CopyOnWriteArrayList <>();
 			// 创建一个线程池
 			if (interfMaxCorePoolSize < 1) {
 				interfMaxCorePoolSize = 20;
@@ -2771,7 +2773,7 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 						@Override
 						public Map<String,String> call() {
 							return excuteInvestorsHoldInfoByStepYC(subList, interType, result,
-									tmpPath, table, subTable, prodRegInfoList, paraDto);
+									tmpPath, table, subTable, prodRegInfoList, paraDto,listA,listE);
 						}
 					});
 				}
@@ -2798,6 +2800,12 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 			}
 			// 任务结束，停止线程池的所有线程
 			service.shutdown();
+			// 多线程处理sqlldr不安全  单独处理
+			logger.info("listE.size:"+listE.size()+"###listA.size:"+listA.size());
+			if (listE.size() > 0 || listA.size() > 0) {
+				afterCheckDeal(listE, listA, interType, tmpPath, table, subTable, paraDto);
+
+			}
 
 			Collection<File> files = FileUtils.listFiles(new SafelyFile(tmpPath), new String[] {"tmp"},
 					false);
@@ -3105,6 +3113,9 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 			String[] result, ImpTable table, ImpTable subTable, InvestorsHoldInfo001FileReadParaDto paraDto,
 			List<ChbPrdresistCode> prodRegInfoList, List<ChbInvestholdInfoCheckDto> mergelist, boolean success) {
 
+	// 使用线程安全list
+	List<InvestorsHoldInfo001Dto> listE = new CopyOnWriteArrayList <InvestorsHoldInfo001Dto>();
+	List<InvestorsHoldInfo001Dto> listA = new CopyOnWriteArrayList <InvestorsHoldInfo001Dto>();
         // 创建一个线程池
         if (interfMaxCorePoolSize < 1) {
             interfMaxCorePoolSize = 20;
@@ -3126,7 +3137,7 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
                     @Override
                     public Boolean call() {
                         return excuteInvestorsHoldInfoByStep(subList, interType, result,
-                            tmpPath, table, subTable, prodRegInfoList, paraDto,mergelist);
+                            tmpPath, table, subTable, prodRegInfoList, paraDto,mergelist,listA,listE);
                     }
                 });
             }
@@ -3150,6 +3161,11 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
         }
         // 任务结束，停止线程池的所有线程
         service.shutdown();
+		// 多线程处理sqlldr不安全  单独处理
+		logger.info("listE.size:"+listE.size()+"###listA.size:"+listA.size());
+		if (listE.size() > 0 || listA.size() > 0) {
+			afterCheckDealNew(listE, listA, interType, tmpPath, table, subTable, paraDto,mergelist);
+		}
 	}
 	
 	 @Transactional(propagation = Propagation.REQUIRES_NEW,rollbackFor = Exception.class)
@@ -3253,19 +3269,13 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 	 */
 	private Map<String, String> excuteInvestorsHoldInfoByStepYC(List<Map<String, String>> dataList, String type, String result[],
 																String tmpPath, ImpTable table, ImpTable subTable, List<ChbPrdresistCode> prodRegInfoList,
-																InvestorsHoldInfo001FileReadParaDto paraDto) {
+																InvestorsHoldInfo001FileReadParaDto paraDto, List<InvestorsHoldInfo001Dto>listA,
+																List<InvestorsHoldInfo001Dto> listE) {
 		Map<String,String> tempItem =new HashMap<String, String>();;
 		if (dataList != null && CollectionUtils.isNotEmpty(dataList)) {
-			List<InvestorsHoldInfo001Dto> listE = new ArrayList<>();
-			List<InvestorsHoldInfo001Dto> listA = new ArrayList<>();
 			List<ExcelValidDto> ExcelValidDto=checkDataInfo(dataList, false, listE, listA, prodRegInfoList, paraDto,null,null,null);
 			for(int i=0;i<ExcelValidDto.size();i++){
 				tempItem.put(ExcelValidDto.get(i).getValidKey(), ExcelValidDto.get(i).getErrorInfo());
-			}
-			logger.info("listE.size:"+listE.size()+"###listA.size:"+listA.size());
-			if (listE.size() > 0 || listA.size() > 0) {
-				afterCheckDeal(listE, listA, type, tmpPath, table, subTable, paraDto);
-
 			}
 			return tempItem;
 		}
@@ -3287,20 +3297,15 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 	 * @return 此次是否成功插入
 	 */
 	private boolean excuteInvestorsHoldInfoByStep(List<Map<String, String>> dataList, String type, String result[],
-			String tmpPath, ImpTable table, ImpTable subTable, List<ChbPrdresistCode> prodRegInfoList,
-			InvestorsHoldInfo001FileReadParaDto paraDto,List<ChbInvestholdInfoCheckDto>  mergelist) {
+												  String tmpPath, ImpTable table, ImpTable subTable, List<ChbPrdresistCode> prodRegInfoList,
+												  InvestorsHoldInfo001FileReadParaDto paraDto,List<ChbInvestholdInfoCheckDto>  mergelist,
+												  List<InvestorsHoldInfo001Dto>listA,
+												  List<InvestorsHoldInfo001Dto> listE) {
 		logger.info("excuteInvestorsHoldInfoByStep  -begin "+new Date());
 		if (dataList != null && CollectionUtils.isNotEmpty(dataList)) {
-			List<InvestorsHoldInfo001Dto> listE = new ArrayList<>();
-			List<InvestorsHoldInfo001Dto> listA = new ArrayList<>();
 			logger.info("checkDataInfo  -begin "+new Date());
 			checkDataInfo(dataList, false, listE, listA, prodRegInfoList, paraDto,null,null,null);
 			logger.info("checkDataInfo  -end "+new Date());
-			logger.info("listE.size:"+listE.size()+"###listA.size:"+listA.size());
-			if (listE.size() > 0 || listA.size() > 0) {
-				afterCheckDealNew(listE, listA, type, tmpPath, table, subTable, paraDto,mergelist);
-				
-			}
 			return true;
 		}
 		logger.info("excuteInvestorsHoldInfoByStep  -end "+new Date());
