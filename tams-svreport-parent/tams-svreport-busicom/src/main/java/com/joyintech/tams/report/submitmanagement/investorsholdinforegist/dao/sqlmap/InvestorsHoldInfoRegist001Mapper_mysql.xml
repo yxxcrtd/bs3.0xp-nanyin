@@ -557,7 +557,8 @@
 		ciis.SUMIT_SEQ				sumitSeq,
 		ciis.CHECK_SEQNO			checkSeqno,
 		crc.IS_LOGIC_CHECK			isLogicCheck,
-		staciistus.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus
+		/*staciistus.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus*/
+		ciis.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus
 		from CHB_INVESTHOLD_INFO_SUB ciis
 		left join CHB_REPORT_CHECK crc
 		on ciis.CHECK_SEQNO = crc.CHECK_SEQNO

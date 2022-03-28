@@ -239,7 +239,7 @@
         from PBC_PROD_ASSETPOOL_CODE
         where
         1=1
-        <foreach collection="list" item="bankCode" open="AND CONCAT_WS('|', INSIDE_PROD_ID, CODE_TYPE) IN (" close=")" separator=",">
+        <foreach collection="list" item="bankCode" open="AND INSIDE_PROD_ID||'|'||CODE_TYPE IN (" close=")"  separator=",">
             #{bankCode.insideProdIdAndCodeType}
         </foreach>
     </select>
