@@ -372,7 +372,7 @@ public class PositionRequestTradeReportService {
                     ptlCash.put("cashAmount", entity.getPositionBaseData().getFinTradeProductDto().getmTradeAmt());
                 }
                 // ZGTFCP-1974:到期购回需要登录首期的到期结算金额 modify by fuyongsheng 20220327 start
-                else if(DictCodeListExt3.交易方向_到期购回.getValue().equals(entity.getPs())){
+                else if(DictCodeListExt3.交易方向_到期购回.getValue().equals(entity.getPs()) || DictCodeListExt3.交易方向_提前购回.getValue().equals(entity.getPs())){
                     ptlCash.put("cashAcctId", dto.getCashAcctId());
                     ptlCash.put("cashAmount", entity.getPositionBaseData().getFinTradeProductDto().getmTradeAmt());
                 }
@@ -398,10 +398,9 @@ public class PositionRequestTradeReportService {
                 ptlOffsetCash.put("secAmount", dto.getSecAmount());
                 ptlOffsetCashList.add(ptlOffsetCash);
             }
-            if((DictCodeListExt3.交易方向_正回购.getValue().equals(entity.getPs())
+            if(DictCodeListExt3.交易方向_正回购.getValue().equals(entity.getPs())
             || DictCodeListExt3.交易方向_中途换券.getValue().equals(entity.getPs())
-            || DictCodeListExt3.交易方向_解除质押.getValue().equals(entity.getPs()))
-                    && BussinessDictCodeList.金融产品类型_投管用_债券质押式正回购.getValue().equals(etrEntrust.getFinprodType2())){
+            || DictCodeListExt3.交易方向_解除质押.getValue().equals(entity.getPs())){
                 Map<String, Object> ptlSec = new HashMap<>();
                 ptlSec.put("portfolioId", dto.getPortfolioId());
                 ptlSec.put("secAcctId", dto.getSecAcctId());
@@ -439,12 +438,11 @@ public class PositionRequestTradeReportService {
                 }
                 ptlSecList.add(ptlSec);
             }
-            if((DictCodeListExt3.交易方向_解除质押.getValue().equals(entity.getPs())
+            if(DictCodeListExt3.交易方向_解除质押.getValue().equals(entity.getPs())
                     || DictCodeListExt3.交易方向_到期续做.getValue().equals(entity.getPs())
                     || DictCodeListExt3.交易方向_到期购回.getValue().equals(entity.getPs())
                     || DictCodeListExt3.交易方向_提前购回.getValue().equals(entity.getPs())
-                    || DictCodeListExt3.交易方向_中途换券.getValue().equals(entity.getPs()))
-                    && BussinessDictCodeList.金融产品类型_投管用_债券质押式正回购.getValue().equals(etrEntrust.getFinprodType2())){
+                    || DictCodeListExt3.交易方向_中途换券.getValue().equals(entity.getPs())){
                 Map<String, Object> ptlRelieveSec = new HashMap<>();
                 ptlRelieveSec.put("portfolioId", dto.getPortfolioId());
                 ptlRelieveSec.put("secAcctId", dto.getSecAcctId());
