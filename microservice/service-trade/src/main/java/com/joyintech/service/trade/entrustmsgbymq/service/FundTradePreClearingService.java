@@ -128,6 +128,9 @@ public class FundTradePreClearingService extends BaseService<InfContractDetailfi
 
 	@Autowired
 	private TradePreCommonService tradePreCommonService;
+
+	@Autowired
+	private PositionRequestTradeReportService positionRequestTradeReportService;
     
     public void trdFund(TrdTempDto trdTempDto, InfContractDetailfile infContractDetailfile) throws Exception {
 		// 金融产品临时交易表Entity
@@ -357,9 +360,6 @@ public class FundTradePreClearingService extends BaseService<InfContractDetailfi
 				item.setEntrustId(entrustId);
 			}
 		});
-		// 处理头寸
-		tradePreCommonService.executePosition(finProductTradeDto);
-		// ZGTFCP-1499:重新封装基础对象，调用头寸公共方法 modify by fuyongsheng 20220325 end
 
 		// 调用新头寸接口 add by fuyongsheng 20220307 start
 		BeanUtil.copyPropertiesIgnoreNull(trdTempDto, infContractDetailfile);
@@ -373,6 +373,11 @@ public class FundTradePreClearingService extends BaseService<InfContractDetailfi
 		trdTempDto.setTrdProductTempDeal(trdProductTempDeal);
 		trdTempDto.setTrdProductTempDealAdd(trdProductTempDealAdd);
 		// 调用新头寸接口 add by fuyongsheng 20220307 end
+		positionRequestTradeReportService.sendTradeReportPositionRequest(trdTempDto);
+
+		// 处理头寸
+		tradePreCommonService.executePosition(finProductTradeDto);
+		// ZGTFCP-1499:重新封装基础对象，调用头寸公共方法 modify by fuyongsheng 20220325 end
 	}
 
 	/**

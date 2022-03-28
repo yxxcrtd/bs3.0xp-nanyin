@@ -707,7 +707,7 @@
     </sql>
 
     <select id="queryEntrust2Touguan" resultMap="QueryResultMap" parameterType="java.lang.String">
-      /*  select * from (*/
+      select * from (
         SELECT
         <include refid="query_entrust"/>
         FROM T_ENTRUST a left join T_INSTRUCTION b on a.INSTRUCTION_ID =b.ENTRUST_ID
@@ -735,10 +735,10 @@
         where
         <!--a.ENTRUST_TYPE=5 and -->
         a.INSTRUCTION_ID = #{instructionId,jdbcType=VARCHAR}
-       /* ) t
-        where t.ENTRUST_TYPE = '0'
+        ) t
+        /*where t.ENTRUST_TYPE = '0'*/
         order by t.TRADING_DAY DESC,
-        t.TRADE_TIME DESC*/
+        t.TRADE_TIME DESC
     </select>
 
     <resultMap id="TradeResultMap"
@@ -803,7 +803,7 @@
     </sql>
 
     <select id="queryTrade2Touguan" resultMap="TradeResultMap" parameterType="java.lang.String">
-        /*select* from(*/
+        select* from(
             select
             <include refid="Query_Column_List"/>
             FROM T_TRADE a left join T_INSTRUCTION b on a.INSTRUCTION_ID =b.ENTRUST_ID
@@ -817,9 +817,9 @@
             where
             <!--a.ENTRUST_TYPE=0 and-->
             a.INSTRUCTION_ID = #{instructionId,jdbcType=VARCHAR}
-       /* ) t
-        where t.ENTRUST_TYPE = '0'
-        order by t.TRADING_DAY desc,t.TRADE_TIME desc*/
+       ) t
+        /* where t.ENTRUST_TYPE = '0'*/
+        order by t.TRADING_DAY desc,t.TRADE_TIME desc
     </select>
 
     <select id="getEtrDispatcherExeListInfo"
