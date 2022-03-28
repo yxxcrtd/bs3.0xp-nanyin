@@ -5,6 +5,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.framework.JoyinRestTemplate;
+import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.domain.Message;
 import com.joyintech.tams.exchange.common.utils.SpringContextUtils;
 import com.joyintech.tams.exchange.service.trade.scheduled.TokenJob;
@@ -30,6 +31,11 @@ public class MasterUtil {
 	public static Message postForObject(Object paramObject) {
 		JoyinRestTemplate restTemplate = SpringContextUtils.getBean("loadBalancedRestTemplate");
 		return restTemplate.postForObject(MasterUtil.getMasterUrl() , paramObject, Message.class);
+	}
+	
+	public static ResultBean postForObjectResultBean(Object paramObject) {
+		JoyinRestTemplate restTemplate = SpringContextUtils.getBean("loadBalancedRestTemplate");
+		return restTemplate.postForObject(MasterUtil.getMasterUrl() , paramObject, ResultBean.class);
 	}
 	
 }
