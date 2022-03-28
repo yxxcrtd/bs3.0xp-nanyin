@@ -383,7 +383,8 @@
                     align: 'left',
                     sortable: false,
                     edit: false,
-                    width: 200
+                    width: 200,
+                    visible:false
                 }
                 // 债券简称
                 , {
@@ -404,7 +405,8 @@
                     type: 'text',
                     sortable: false,
                     edit: false,
-                    width: 150
+                    width: 150,
+                    visible:false
                 }
                 // 组合名称
                 , {
