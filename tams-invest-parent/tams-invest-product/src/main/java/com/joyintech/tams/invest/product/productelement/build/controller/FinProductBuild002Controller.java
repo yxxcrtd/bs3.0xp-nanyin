@@ -309,7 +309,7 @@ public class FinProductBuild002Controller extends BaseController {
         AjaxResult ar = new AjaxResult();
        //开放式 的产品 是否设置最短持有期限 和 最短持有期限（天） 必输 yjm start 20190807
         List<ValidMessage> errorList = new ArrayList<>();
-        BussRepFinProductInfoDto repFinProductInfoDto = dto.getBussRepFinProductInfoDto();
+       /* BussRepFinProductInfoDto repFinProductInfoDto = dto.getBussRepFinProductInfoDto();
         if (StringUtil.isNotEmpty(repFinProductInfoDto)){
             if (StringUtil.equals(dto.getOperationType(), DictCodeList.开放类型_开放式.getValue())){
                 if (StringUtil.isEmpty(repFinProductInfoDto.getIsShortTerm())){
@@ -356,7 +356,7 @@ public class FinProductBuild002Controller extends BaseController {
 //                    }
                 }
             }
-        }
+        }*/
         
         
         ar.setErrorList(errorList);
