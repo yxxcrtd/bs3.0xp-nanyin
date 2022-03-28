@@ -281,7 +281,12 @@ public class PositionRequestTradeReportService {
             plt.put("ordEntrustId", null);
             plt.put("standardSecId", STANDAR_SEC_ID);
             plt.put("standardSecAmount", dto.getStandardSecAmount());
-            plt.put("cashAmount", dto.getCashAmount());
+            if(DictCodeListExt3.交易方向_质押券入库.getValue().equals(entity.getPs())
+                    || DictCodeListExt3.交易方向_质押券出库.getValue().equals(entity.getPs())){
+                plt.put("cashAmount", null);
+            }else{
+                plt.put("cashAmount", dto.getCashAmount());
+            }
             TrdMoreConvrate moreConvrate = this.getMoreConvrate(dto.getCashAcctId());
             if (Objects.nonNull(moreConvrate)) {
                 plt.put("reConversionRate", moreConvrate.getMoreConvrate());
