@@ -353,10 +353,10 @@
                 $("#shareAmt").val(pledgePrin).change();//券面总额合计
                 ptlAndpledgeEdit();
             }
-            if (field === "pledgeRatio") {
+            if (field === "pledgeRate") {
                 var pledgePrin;
                 var convertAmt;
-                data.convertAmt = JoyinMath.doMul(JoyinMath.doDiv(data.pledgeRatio, 100, 4), data.pledgePrin, 2);
+                data.convertAmt = JoyinMath.doMul(JoyinMath.doDiv(data.pledgeRate, 100, 4), data.pledgePrin, 2);
                 pledgeTable.renderRow(data.LAY_TABLE_INDEX, data);
                 for (var i = 0; i < pledgeTable.getAllRows.length; i++) {
                     convertAmt = JoyinMath.doAdd(pledgeTable.getAllRows()[i].convertAmt, convertAmt);
@@ -497,8 +497,23 @@
         request.termType = $("#termType").val();//期限品种
         request.settlementEndDate = $("#mSettleDate").val();//到期结算日
         request.quotaPageModel = $("#quotaPageModel").val();//页面模式
-        request.ptlAllocations = table.getAllRows();//组合分配列表
-        request.repoEntrustPledgeDtos = pledgeTable.getAllRows();//质押券信息
+        var ptlAllocationsData = [];
+        var ptlAllocations = table.getAllRows() ;
+        for (i = 0; i < ptlAllocations.length; i++) {
+            var temp1 = ptlAllocations[i];
+            temp1.tradeAmt = temp1.fpriceAmt;
+            temp1.mIntAmt = temp1.intAmt;
+            ptlAllocationsData.push(temp1);
+        }
+        var repoEntrustPledgeData = [];
+        var repoEntrustPledges = pledgeTable.getAllRows();
+        for (i = 0; i < repoEntrustPledges.length; i++) {
+            var temp2 = repoEntrustPledges[i];
+            temp2.pledgeRatio = temp2.pledgeRate;
+            repoEntrustPledgeData.push(temp2);
+        }
+        request.ptlAllocations = ptlAllocationsData;//组合分配列表
+        request.repoEntrustPledgeDtos = repoEntrustPledgeData;//质押券信息
         var entrustIdList = new Array();
         for (var i = 0; i < request.ptlAllocations.length; i++) {
             entrustIdList[i] = request.ptlAllocations[i].entrustId;
@@ -512,7 +527,6 @@
      */
     var autoAllocation = function(){
         var request = getParam();
-        debugger
         Joyin.ajaxJson(basePath + 'cfets/bankuplink/repo/IbuQuoteRepo/autoAllocation', request, function (result) {
             if (result) {
                 var resultData = [];
@@ -537,11 +551,24 @@
         Joyin.ajaxJson(basePath + 'cfets/bankuplink/repo/IbuQuoteRepo/ptlAndpledgeEdit', request, function (result) {
             if (result) {
                 var data = result.data;
+                var ptlAllocationsData = [];
+                for (i = 0; i < data.ptlAllocations.length; i++) {
+                    var temp1 = data.ptlAllocations[i];
+                    temp1.fpriceAmt = temp1.tradeAmt;
+                    temp1.intAmt = temp1.mIntAmt;
+                    ptlAllocationsData.push(temp1);
+                }
                 table.clear(function () {
-                    table.addRow(data.ptlAllocations)
+                    table.addRow(ptlAllocationsData)
                 });
+                var repoEntrustPledgeData = [];
+                for (i = 0; i < data.repoEntrustPledgeDtos.length; i++) {
+                    var temp2 = data.repoEntrustPledgeDtos[i];
+                    temp2.pledgeRate = temp2.pledgeRatio;
+                    repoEntrustPledgeData.push(temp2);
+                }
                 pledgeTable.clear(function () {
-                    pledgeTable.addRow(data.repoEntrustPledgeDtos)
+                    pledgeTable.addRow(repoEntrustPledgeData)
                 });
                 $("#actCapDays").val(data.actCapDays);//实际占款天数
                 $("#shareCtAmt").val(data.convertAmt);//质押券折算总额
