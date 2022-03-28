@@ -432,11 +432,11 @@
                 , {
                     field: 'pledgePrin', title: '质押券面总额（万元）', type: 'number', edit: true, sortable: false, width: 240
                 }
-                // 首次净价
+                // 估价净价
                 , {
                     field: 'firstNetPrice',
                     width: 150, digit: 4,
-                    title: '首次净价（元）',
+                    title: '估价净价（元）',
                     sortable: false,
                     render: function (data, type, row, meta) {
                         return (data * 1).toFixed(4);

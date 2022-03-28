@@ -187,8 +187,11 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest extends 
 
         // 质押券数据集
         // IF 交易方向 = 首期、（中途换券换入） and 回购类型 = 正回购 THEN 传值 ELSE 空
-        if (交易方向_正回购.getValue().equals(repPs)
-                && (交易方向_首期.getValue().equals(ps) || 交易方向_正回购.getValue().equals(ps) || 交易方向_中途换券.getValue().equals(ps))) {
+        if (/*交易方向_正回购.getValue().equals(repPs)&&*/
+                 (交易方向_首期.getValue().equals(ps)
+                         || 交易方向_正回购.getValue().equals(ps)
+                         || 交易方向_逆回购.getValue().equals(ps)
+                         || 交易方向_中途换券.getValue().equals(ps))) {
             List<Map<String, Object>> list = new ArrayList<>(1);
             bean = new PositionRequestBaseBean();
             bean.setPortfolioId(entity.getPortfolioId());
@@ -199,7 +202,7 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest extends 
             // 券面总额 指令.质押券数量*100
             bean.setSecAmount(entity.getRepSecNum().multiply(BigDecimal.valueOf(100L)));
 
-            if (交易方向_正回购.getValue().equals(repPs) && 交易方向_中途换券.getValue().equals(ps)) {
+            if (/*交易方向_正回购.getValue().equals(repPs) && */交易方向_中途换券.getValue().equals(ps)) {
                 bean.setFinprodId(entity.getNewfinprodId());
                 bean.setSecAmount(entity.getNewRepSecNum().multiply(BigDecimal.valueOf(100L)));
             }
@@ -216,8 +219,8 @@ public class PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest extends 
 
         // 解除质押券数据集
         // IF 交易方向 = 交易方向 = 解除质押、到期续作、中途换券换出、到期购回、提前购回 and 回购类型 = 正回购  THEN 传值 ELSE 空 END IF
-        if (交易方向_正回购.getValue().equals(repPs)
-                && (交易方向_解除质押.getValue().equals(ps)
+        if (/*交易方向_正回购.getValue().equals(repPs)&&*/
+                 (交易方向_解除质押.getValue().equals(ps)
                 || 交易方向_到期续做.getValue().equals(ps)
                 || 交易方向_中途换券.getValue().equals(ps)
                 || 交易方向_到期购回.getValue().equals(ps)

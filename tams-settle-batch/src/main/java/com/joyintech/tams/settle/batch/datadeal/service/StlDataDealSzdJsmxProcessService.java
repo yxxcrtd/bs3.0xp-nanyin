@@ -980,6 +980,8 @@ public class StlDataDealSzdJsmxProcessService {
 							settleTransData.setMpayDate(DateUtil.parse(szdJsmx.getJsrq()));
 
 							// 查询首期清算数据
+							//首期_成交编号
+							settleTransData.setfCjbh(szdJsmx.getSqbh());
 					        // 回购利息
 							// settleTransData.setmIntAmt(new BigDecimal(szdJsmx.getQsje()).abs().subtract(new BigDecimal(szdJsmx.getCjsl()).abs()));
 							// 查询首期清算数据
@@ -1011,8 +1013,6 @@ public class StlDataDealSzdJsmxProcessService {
 						settleTransData.setFpriceAmt(new BigDecimal(szdJsmx.getQsje()).abs());
 						// modify by etliu 20211225 end
 
-							//首期_成交编号
-							settleTransData.setfCjbh(szdJsmx.getSqbh());
 						    //申请编号 = 成交编号
 							szdJsmx.setSqbh(szdJsmx.getCjbh());
 							//交易日期 = 清算日期

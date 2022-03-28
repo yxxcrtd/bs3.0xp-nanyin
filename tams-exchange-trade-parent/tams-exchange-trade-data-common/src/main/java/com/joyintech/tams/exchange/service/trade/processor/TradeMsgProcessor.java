@@ -760,7 +760,11 @@ public class TradeMsgProcessor {
         instructionClone.setSoftSkipMode(DictCodeList.是否_是.getValue());
         //委托编号
         instructionClone.setEntrustNo(entrust.getId());
-        instructionClone.setEntrustAmt(entrust.getEntrustPrice().multiply(BigDecimal.valueOf(entrust.getEntrustVolume())));
+        instructionClone.setEntrustAmt(entrust.getEntrustBalance());
+        if (instructionClone.getEntrustAmt() == null) {
+            instructionClone.setEntrustAmt(entrust.getEntrustPrice().multiply(BigDecimal.valueOf(entrust.getEntrustVolume())));
+        }
+
         instructionClone.setEntrustNum(entrust.getEntrustVolume());
         instructionClone.setEntrustPrice(entrust.getEntrustPrice());
         instructionClone.setFullPrice(entrust.getFullPrice());
@@ -770,8 +774,20 @@ public class TradeMsgProcessor {
         //撤销委托，调用头寸引擎---start
         if (entrustStatus == CANCELED.value ||
                 entrustStatus == PART_TRADED_CANCELED.value) {
-        	instructionClone.setEntrustAmt(entrust.getEntrustPrice().multiply(BigDecimal.valueOf(entrust.getEntrustVolume()-entrust.getTradedVolume())));
-            instructionClone.setEntrustNum(entrust.getEntrustVolume()-entrust.getTradedVolume());
+            if (交易方向_正回购.getValue().equals(instructionClone.getPs())
+                    || 交易方向_逆回购.getValue().equals(instructionClone.getPs())
+                    || 交易方向_提前购回.getValue().equals(instructionClone.getPs())
+                    || 交易方向_到期购回.getValue().equals(instructionClone.getPs())
+                    || 交易方向_中途换券.getValue().equals(instructionClone.getPs())
+                    || 交易方向_解除质押.getValue().equals(instructionClone.getPs())
+                    || 交易方向_到期续做.getValue().equals(instructionClone.getPs())
+                    || 交易方向_质押券出库.getValue().equals(instructionClone.getPs())
+                    || 交易方向_质押券入库.getValue().equals(instructionClone.getPs())) {
+                instructionClone.setEntrustAmt(entrust.getEntrustBalance());
+            } else {
+                instructionClone.setEntrustAmt(entrust.getEntrustPrice().multiply(BigDecimal.valueOf(entrust.getEntrustVolume() - entrust.getTradedVolume())));
+            }
+            instructionClone.setEntrustNum(entrust.getEntrustVolume() - entrust.getTradedVolume());
             positionRequestServiceInstructionRequest.sendRequest(instructionClone,
                     业务动作_撤委托.getValue(), 系统动作_新建.getValue(), 系统动作_新建.getValue());
             return;

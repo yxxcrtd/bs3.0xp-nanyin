@@ -716,10 +716,13 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                     StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
 
                 if (StringUtil.equals(entity.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
-                    if (!StringUtil.equals(entity.getPs(), DictCodeList.交易方向_行权_回售.getValue())) {
+                    if (!(StringUtil.equals(entity.getPs(), DictCodeList.交易方向_买入.getValue())
+                            || StringUtil.equals(entity.getPs(), DictCodeList.交易方向_卖出.getValue())
+                            || StringUtil.equals(entity.getPs(), DictCodeList.交易方向_行权_回售.getValue()))) {
                         //插入旧头寸
                         BigDecimal settleAmt = cfetsManualSettleInsertDto.getListTrdBnakSetDetails().stream().map(TrdBankManualSetDetail::getSettleAmt).reduce(BigDecimal.ZERO, BigDecimal::add);
                         this.insertOldPosition(cfetsManualSettleInsertDto, entity.getButtonType(), settleAmt, true);
+
                     }
                 } else {
                     //对回购数据进行处理
@@ -747,10 +750,13 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                     StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
 
                 if (StringUtil.equals(entity.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
-                    if (!StringUtil.equals(entity.getPs(), DictCodeList.交易方向_行权_回售.getValue())) {
+                    if (!(StringUtil.equals(entity.getPs(), DictCodeList.交易方向_买入.getValue())
+                            || StringUtil.equals(entity.getPs(), DictCodeList.交易方向_卖出.getValue())
+                            || StringUtil.equals(entity.getPs(), DictCodeList.交易方向_行权_回售.getValue()))) {
                         //插入旧头寸
                         BigDecimal settleAmt = cfetsManualSettleInsertDto.getListTrdBnakSetDetails().stream().map(TrdBankManualSetDetail::getSettleAmt).reduce(BigDecimal.ZERO, BigDecimal::add);
                         this.insertOldPosition(cfetsManualSettleInsertDto, entity.getButtonType(), settleAmt, true);
+
                     }
                 } else {
                     //对回购数据进行处理
@@ -1096,8 +1102,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
         if ((StringUtil.equals(buttonType, DictCodeListExt3.交收操作类型_交收失败.getValue())) &&
                 (StringUtil.equals(cfetsManualSettleRequest.getPs(), DictCodeList.交易方向_买入.getValue())
                         || StringUtil.equals(cfetsManualSettleRequest.getPs(), DictCodeList.交易方向_卖出.getValue())
-                        || StringUtil.equals(cfetsManualSettleRequest.getPs(), DictCodeList.交易方向_行权_回售.getValue())
-                        || StringUtil.equals(cfetsManualSettleRequest.getPs(), DictCodeList.交易方向_到期.getValue()))
+                        || StringUtil.equals(cfetsManualSettleRequest.getPs(), DictCodeList.交易方向_行权_回售.getValue()))
         ) {
 
             //交收失败 生效 处理 可用
@@ -1125,10 +1130,12 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
         }
 
         if (!isFlowStart) {
-            if ((StringUtil.equals(cfetsManualSettleRequest.getPs(), DictCodeList.交易方向_买入.getValue())
+            if (StringUtil.equals(cfetsManualSettleRequest.getPs(), DictCodeList.交易方向_买入.getValue())
                     || StringUtil.equals(cfetsManualSettleRequest.getPs(), DictCodeList.交易方向_卖出.getValue())
                     || StringUtil.equals(cfetsManualSettleRequest.getPs(), DictCodeList.交易方向_行权_回售.getValue())
-                    || StringUtil.equals(cfetsManualSettleRequest.getPs(), DictCodeList.交易方向_到期.getValue()))) {
+                    || StringUtil.equals(cfetsManualSettleRequest.getPs(), DictCodeList.交易方向_到期.getValue())
+                    || StringUtil.equals(cfetsManualSettleRequest.getPs(), DictCodeList.交易方向_行权_赎回.getValue())
+            ) {
                 //登记、对话，请求 交收、交收回溯处理可用
                 this.updatePtlPosition(listTemp, buttonType);
             }

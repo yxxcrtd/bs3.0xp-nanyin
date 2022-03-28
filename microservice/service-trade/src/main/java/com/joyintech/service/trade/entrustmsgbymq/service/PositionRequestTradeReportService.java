@@ -370,7 +370,14 @@ public class PositionRequestTradeReportService {
                 if(DictCodeListExt3.交易方向_解除质押.getValue().equals(entity.getPs())){
                     ptlCash.put("cashAcctId", this.getPtlCapAcctNo(etrEntrust));
                     ptlCash.put("cashAmount", entity.getPositionBaseData().getFinTradeProductDto().getmTradeAmt());
-                }else{
+                }
+                // ZGTFCP-1974:到期购回需要登录首期的到期结算金额 modify by fuyongsheng 20220327 start
+                else if(DictCodeListExt3.交易方向_到期购回.getValue().equals(entity.getPs())){
+                    ptlCash.put("cashAcctId", dto.getCashAcctId());
+                    ptlCash.put("cashAmount", entity.getPositionBaseData().getFinTradeProductDto().getmTradeAmt());
+                }
+                // ZGTFCP-1974:到期购回需要登录首期的到期结算金额 modify by fuyongsheng 20220327 end
+                else{
                     ptlCash.put("cashAcctId", dto.getCashAcctId());
                     ptlCash.put("cashAmount", dto.getCashAmount());
                 }

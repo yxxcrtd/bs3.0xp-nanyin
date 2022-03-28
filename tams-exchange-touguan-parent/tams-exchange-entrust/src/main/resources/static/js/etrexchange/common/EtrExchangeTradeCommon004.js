@@ -54,6 +54,7 @@
         if (object.ps == PS_T68 || object.ps == PS_T69 || object.ps == PS_T49 || object.ps == PS_T97 || object.ps == PS_T46 || object.ps == PS_T03 || object.ps == PS_T04) {
             object.priceModel = "PRM01";
         }
+
         // 隐藏项需要手动获取
         object.finprodId = $("#finprodId_" + currentTab).val();
         object.tradeMarket = $("#tradeMarket_" + currentTab).val();
@@ -106,6 +107,11 @@
                     object.portfolioList[i].entrustAmt = 0;
                 }
             }
+        }
+
+        if(!object.ps){
+            object.priceModel = "PRM01";
+            object.entrustPrice = 0;
         }
         return object;
     }
@@ -3414,7 +3420,7 @@
                     url: JoyinUtil.getRealPath("/etrexchange/common/EtrExchangeTradeCommon004/getPtlSecAcctInfo"),
                     postData: function () {
                         return {
-                            portfolioId: curPortfolioId, tradeMarket: $("#tradeMarket_"+currentTab).val()
+                            // portfolioId: curPortfolioId, tradeMarket: $("#tradeMarket_"+currentTab).val()
                         };
                     }
                 }
@@ -3550,6 +3556,26 @@
                     Joyin.ajaxJson(basePath + 'etrexchange/common/etrExchangeTrade001/selectAvailableNum', param, function (result) {
                         if (result.data) {
                             dateTable.renderRow(data.LAY_TABLE_INDEX, {"standardBondVolume": result.data});
+                        }
+                    }, false);
+                }
+                if(currentTab == 'jj') {
+                    var param = {
+                        portfolioId: data.portfolioId,
+                        finprodId: data.finprodId,
+                        finprodType2: data.finprodType2,
+                        tradeMarket: data.tradeMarket,
+                        acctNo: value,
+                        tradePlat: "04",
+                    };
+                    Joyin.ajaxJson(basePath + 'etrexchange/common/etrExchangeTrade001/selectAccAvailableCash', param, function (result) {
+                        if (result.data) {
+                            dateTable.renderRow(data.LAY_TABLE_INDEX, {"accAvailableCash": result.data});
+                        }
+                    }, false);
+                    Joyin.ajaxJson(basePath + 'etrexchange/common/etrExchangeTrade001/selectAvailableNum', param, function (result) {
+                        if (result.data) {
+                            dateTable.renderRow(data.LAY_TABLE_INDEX, {"accAvailablePos": result.data});
                         }
                     }, false);
                 }

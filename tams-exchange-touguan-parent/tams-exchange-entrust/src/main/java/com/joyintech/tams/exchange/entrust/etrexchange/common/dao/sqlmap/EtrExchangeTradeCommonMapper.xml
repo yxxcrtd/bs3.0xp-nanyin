@@ -24,7 +24,7 @@
         END AS finishAmt,
         CASE
         WHEN T2.TARGET_TYPE = '01' THEN
-        ROUND( nvl( T1.ENTRUST_NUM, 0 ) - nvl( T4.ORDER_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( T1.ENTRUST_NUM, 0 ) - nvl( T4.ORDER_FINISH_AMT, 0 ), 4 )
+        ROUND( nvl( T1.ENTRUST_NUM, 0 ) - nvl( T4.ORDER_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( T1.ENTRUST_AMT, 0 ) - nvl( T4.ORDER_FINISH_AMT, 0 ), 4 )
         END AS avaNum,
         CASE
         WHEN T2.TARGET_TYPE = '01' THEN
@@ -32,7 +32,7 @@
         END AS finishDealAmt,
         CASE
         WHEN T2.TARGET_TYPE = '01' THEN
-        ROUND( nvl( T1.ENTRUST_NUM, 0 ) - nvl( T4.ENT_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( T1.ENTRUST_NUM, 0 ) - nvl( T4.ENT_FINISH_AMT, 0 ), 4 )
+        ROUND( nvl( T1.ENTRUST_NUM, 0 ) - nvl( T4.ENT_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( T1.ENTRUST_AMT, 0 ) - nvl( T4.ENT_FINISH_AMT, 0 ), 4 )
         END AS avaDealAmt,
         nvl(detail.PORTFOLIO_ID,T5.PORTFOLIO_ID) portfolioId,
         nvl(detail.PORTFOLIO_NAME,T5.PORTFOLIO_NAME) portfolioName,
@@ -79,6 +79,7 @@
         ,T1.INV_AIM
         ,T1.BUSINESS_MODEL businessModel
         ,T1.STOCK_ID
+        ,T2.EXP_CON_NUM
         FROM
         ETR_ENTRUST T1
         INNER JOIN ETR_ENTRUST_ADD T2 ON
@@ -217,6 +218,7 @@
         ,T1.INV_AIM
         ,T1.BUSINESS_MODEL businessModel
         ,T1.STOCK_ID
+        ,T2.EXP_CON_NUM
         FROM
         WFL_ETR_ENTRUST T1
         INNER JOIN WFL_ETR_ENTRUST_ADD T2 ON
@@ -352,14 +354,16 @@
             A.PORTFOLIO_ID AS PORTFOLIO_ID ,
             A.SEC_ACCT_ID  AS SEC_ACCT_ID ,
             A.FINPROD_ID AS FINPROD_ID,
-            SUM(A.AMOUNT) AMOUNT
+            SUM(A.AMOUNT) AMOUNT,
+            SUM(A.ptlPositionsNum) ptlPositionsNum
             from(
                     SELECT
                         PSP.CDATE        AS CDATE,
                         PSP.PORTFOLIO_ID AS PORTFOLIO_ID ,
                         PSP.SEC_ACCT_ID  AS SEC_ACCT_ID ,
                         PSP.FINPROD_ID AS FINPROD_ID,
-                        SUM(PSP.AMOUNT) AMOUNT
+                        SUM(PSP.AMOUNT) AMOUNT,
+                        0 as ptlPositionsNum
                     FROM
                       PTL_SEC_POSITION_RULE PSP
                     INNER JOIN
@@ -388,7 +392,8 @@
                         ETRPSP.PORTFOLIO_ID AS PORTFOLIO_ID ,
                         ETRPSP.SEC_ACCT_ID  AS SEC_ACCT_ID ,
                         ETRPSP.FINPROD_ID,
-                         0 AS AMOUNT
+                        0 AS AMOUNT,
+                        SUM(ETRPSP.AMOUNT) as ptlPositionsNum
                         FROM
                         ETR_SEC_POSITION_RULE ETRPSP
                         INNER JOIN
@@ -1131,7 +1136,7 @@
             )
         )
         <!-- 查询委托指令附属表中是否已经存在该证券账户发布的此债券的申购委托 -->
-        select eea.sec_acc_id secAccId
+        select eea.sec_acct_id secAcctId
         from etr_entrust_add eea
         left join etr_entrust ee
             on eea.entrust_id = ee.entrust_id

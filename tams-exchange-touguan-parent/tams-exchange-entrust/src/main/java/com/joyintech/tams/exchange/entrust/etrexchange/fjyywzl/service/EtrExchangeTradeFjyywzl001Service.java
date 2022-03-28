@@ -146,6 +146,7 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
                 for(LinkedHashMap<String,String> linkedHashMap:acctSecList){
                     PositionCashSecDto cashSecDto=new PositionCashSecDto();
                     cashSecDto.setPortfolioId(dto.getPortfolioId());
+                    cashSecDto.setFinprodId("XN_PRODID999");
                     if(StringUtil.equals(BussinessDictCodeList.交易场所_上海证券交易所.getValue(),linkedHashMap.get("tradeMarket"))){
                         cashSecDto.setSecAcctId(linkedHashMap.get("secAcctId"));
                         shProList.add(cashSecDto);
