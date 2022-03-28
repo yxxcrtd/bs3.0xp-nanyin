@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.joyintech.service.chb.basicdata.perprodeclareinfo.dao.SvrPerProDeclareInfoMapper" >
+<mapper namespace="com.joyintech.service.chb.basicdata.perprodeclareinfo.dao.SvrPerProDeclareInfoMapper_mysql" >
     <resultMap id="BaseResultMap" type="com.joyintech.tams.basicdata.perprodeclareinfo.dto.SvrPerProDeclareInfo001Dto" >
         <id column="DECLARE_UUID" property="declareUuid" jdbcType="CHAR" />
         <result column="PROD_INS_ID" property="prodInsId" jdbcType="VARCHAR" />
