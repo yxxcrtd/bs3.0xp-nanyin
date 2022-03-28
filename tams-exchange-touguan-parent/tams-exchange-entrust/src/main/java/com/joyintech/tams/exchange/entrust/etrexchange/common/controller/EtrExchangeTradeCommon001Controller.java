@@ -982,8 +982,10 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 					dto.setAcctNo(item.getAcctNo());
 					dto.setEntrustNum(item.getEntrustNum());
 					dto.setEntrustAmt(item.getEntrustAmt());
+					dto.setSecAcctId(item.getSecAcctId()); // 证券账户
+					dto.setStockId(item.getSecAcctId());
 					//默认证券账户
-					if (StringUtil.isNotEmpty(item.getPortfolioId()) && StringUtil.isNotEmpty(dto.getFinprodId())) {
+					/*if (StringUtil.isNotEmpty(item.getPortfolioId()) && StringUtil.isNotEmpty(dto.getFinprodId())) {
 						Map<String, Object> map = new HashMap<String, Object>();
 						map.put("portfolioId", item.getPortfolioId());
 						map.put("finprodId", dto.getFinprodId());
@@ -993,7 +995,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 							dto.setSecAcctId(secAcctId); // 证券账户
 							dto.setStockId(secAcctId);
 						}
-					}
+					}*/
 					ajax = check(dto, br);
 					if (null != ajax) {
 						break;
