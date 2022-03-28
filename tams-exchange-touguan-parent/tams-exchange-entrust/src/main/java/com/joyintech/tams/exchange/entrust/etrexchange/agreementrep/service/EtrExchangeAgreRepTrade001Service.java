@@ -1563,8 +1563,6 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
 //            }
 //        }
 //        // 自动分发自动接收 ，杭银投资poc add by yufei 20200905 end
-        //处理履历
-        updateCfetsOprHis(entity.getEntrustId(),optType);
     }
     /**
      * 配置用户
@@ -2143,8 +2141,10 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
             e.printStackTrace();
             throw new BusinessException("MSG:指令提交发生异常，异常信息：" + e.getMessage());
         }
+        //处理履历
+        updateCfetsOprHis(entity.getEntrustId(),optType);
 
-  		String decisionAct = DictCodeListExt3.系统动作_修改.getValue();
+        String decisionAct = DictCodeListExt3.系统动作_修改.getValue();
   		String systemAct = DictCodeListExt3.系统动作_修改.getValue();
   		if (StringUtil.equals(optType, ENTRUST_RECORD_NEW)) {
           	systemAct = DictCodeListExt3.系统动作_新建.getValue();
@@ -2152,6 +2152,7 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
         }
   		positionRequestService.send(entity,decisionAct,systemAct);
   		//增加调用头寸引擎代码end
+
     }
 
     @Override
