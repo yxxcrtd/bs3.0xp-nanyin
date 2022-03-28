@@ -393,10 +393,9 @@ public class PositionRequestManualSettleService {
 
         // 质押券数据集	ptlSecList
         // if (DictCodeListExt3.交易方向_解除质押.getValue().equals(infContractDetailfile.getPs())) {
-        if ((DictCodeListExt3.交易方向_正回购.getValue().equals(infContractDetailfile.getPs())
+        if (DictCodeListExt3.交易方向_正回购.getValue().equals(infContractDetailfile.getPs())
             || DictCodeListExt3.交易方向_中途换券.getValue().equals(infContractDetailfile.getPs())
-            || DictCodeListExt3.交易方向_解除质押.getValue().equals(infContractDetailfile.getPs()))
-                && BussinessDictCodeList.金融产品类型_投管用_债券质押式正回购.getValue().equals(etrEntrust.getFinprodType2())) {
+            || DictCodeListExt3.交易方向_解除质押.getValue().equals(infContractDetailfile.getPs())) {
             List<Map<String, Object>> list = new ArrayList<>(4);
             Map<String, Object> map = new HashMap<>();
             map.put("portfolioId", entity.getPortfolioId());
@@ -407,7 +406,7 @@ public class PositionRequestManualSettleService {
             // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 end
             map.put("integrateSecAmount", new BigDecimal(0));
             if(DictCodeListExt3.交易方向_中途换券.getValue().equals(infContractDetailfile.getPs())){
-                FinPledgeDispDetailTemp temp = this.getFinPledgeDispDetailTemp(entity, DictCodeListExt3.质押券置换_置换方向_换入.getValue());
+                FinPledgeDispDetailTemp temp = this.getFinPledgeDispDetailTemp(infContractDetailfile, DictCodeListExt3.质押券置换_置换方向_换入.getValue());
                 if(null != temp){
                     map.put("finprodId", temp.getFinprodId());
                     map.put("ownSecAmount", temp.getPledgeDisplaceAmt().multiply(new BigDecimal(100)));
@@ -423,12 +422,11 @@ public class PositionRequestManualSettleService {
         }
 
         // 解除质押券数据集	ptlRelieveSecList
-        if ((DictCodeListExt3.交易方向_解除质押.getValue().equals(infContractDetailfile.getPs())
+        if (DictCodeListExt3.交易方向_解除质押.getValue().equals(infContractDetailfile.getPs())
                 || DictCodeListExt3.交易方向_到期续做.getValue().equals(infContractDetailfile.getPs())
                 || DictCodeListExt3.交易方向_提前购回.getValue().equals(infContractDetailfile.getPs())
                 || DictCodeListExt3.交易方向_到期购回.getValue().equals(infContractDetailfile.getPs())
                 || DictCodeListExt3.交易方向_中途换券.getValue().equals(infContractDetailfile.getPs()))
-                && BussinessDictCodeList.金融产品类型_投管用_债券质押式正回购.getValue().equals(etrEntrust.getFinprodType2()))
         {
             List<Map<String, Object>> list = new ArrayList<>(4);
             Map<String, Object> map = new HashMap<>();
@@ -444,7 +442,7 @@ public class PositionRequestManualSettleService {
                 map.put("ownSecAmount", entity.getPledgeNumber().multiply(new BigDecimal(100)));
                 map.put("secAmount", entity.getPledgeNumber().multiply(new BigDecimal(100)));
             }else if(DictCodeListExt3.交易方向_中途换券.getValue().equals(infContractDetailfile.getPs())){
-                FinPledgeDispDetailTemp temp = this.getFinPledgeDispDetailTemp(entity, DictCodeListExt3.质押券置换_置换方向_换出.getValue());
+                FinPledgeDispDetailTemp temp = this.getFinPledgeDispDetailTemp(infContractDetailfile, DictCodeListExt3.质押券置换_置换方向_换出.getValue());
                 if(null != temp){
                     map.put("finprodId", temp.getFinprodId());
                     map.put("ownSecAmount", temp.getPledgeDisplaceAmt().multiply(new BigDecimal(100)));
@@ -526,9 +524,11 @@ public class PositionRequestManualSettleService {
      * @param tradeType
      * @return
      */
-    private FinPledgeDispDetailTemp getFinPledgeDispDetailTemp(ManualSettleDto entity, String tradeType){
+    private FinPledgeDispDetailTemp getFinPledgeDispDetailTemp(InfContractDetailfile entity, String tradeType){
         Map<String, Object> map = new HashMap<>();
-        map.put("tradeId", entity.getTradeId());
+        // ZGTFCP-1988:修改查询换入换出质押券方法 modify by fuyongsheng 20220328 start
+        map.put("fTradeId", entity.getvTradeId());
+        // ZGTFCP-1988:修改查询换入换出质押券方法 modify by fuyongsheng 20220328 end
         List<FinPledgeDispDetailTemp> finPledgeDispDetailTemps = trdCommonBaseService.getFinPledgeDispDetailTemps(map);
         if(!StringUtil.isEmptyList(finPledgeDispDetailTemps)){
             for(FinPledgeDispDetailTemp finPledgeDispDetailTemp : finPledgeDispDetailTemps){
