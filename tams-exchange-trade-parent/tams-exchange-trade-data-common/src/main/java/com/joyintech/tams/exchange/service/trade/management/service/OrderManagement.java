@@ -32,6 +32,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static com.joyintech.tams.constant.DictCodeListExt3.交易方向_质押券入库;
+import static com.joyintech.tams.constant.DictCodeListExt3.交易方向_质押券出库;
+
 @Component
 public class OrderManagement extends BaseService {
     private static final Logger logger = LoggerFactory.getLogger(OrderManagement.class);

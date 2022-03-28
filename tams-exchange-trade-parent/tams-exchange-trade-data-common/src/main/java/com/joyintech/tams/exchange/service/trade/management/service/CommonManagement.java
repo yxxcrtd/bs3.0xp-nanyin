@@ -40,6 +40,7 @@ import com.joyintech.tams.exchange.datacommon.db.service.InstrumentService;
 import com.joyintech.tams.exchange.datacommon.db.service.ServiceNodeService;
 import com.joyintech.tams.exchange.service.trade.processor.account.AccountPositionHelper;
 import com.joyintech.tams.exchange.service.trade.scheduled.TokenJob;
+import com.joyintech.tams.invest.common.entrust.inter.EtrTradeOtherCommonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,7 @@ import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -474,5 +476,15 @@ public class CommonManagement extends BaseService {
             logger.error("调用偏离度查询接口失败，" + e.getMessage(), e);
             return new Message<>(ResultBean.error(ErrorCode.API_RETURN_ERROR));
         }
+    }
+
+    @Autowired
+    private EtrTradeOtherCommonService etrTradeOtherCommonService;
+
+    public Message<BigDecimal> getFaceValue(String finprodId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("finprodId", finprodId);
+        BigDecimal faceValue = etrTradeOtherCommonService.selectFaceValue(params);
+        return new Message<>(faceValue);
     }
 }
