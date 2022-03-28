@@ -10,12 +10,14 @@ import com.joyintech.tams.exchange.common.bean.*;
 import com.joyintech.tams.exchange.common.constant.EntrustProp;
 import com.joyintech.tams.exchange.common.constant.ErrorCode;
 import com.joyintech.tams.exchange.common.constant.InvestmentAssetType;
+import com.joyintech.tams.exchange.common.constant.joyin.InvestmentAssetType1;
 import com.joyintech.tams.exchange.common.db.domain.Algorithm;
 import com.joyintech.tams.exchange.common.db.domain.Instruction;
 import com.joyintech.tams.exchange.common.db.domain.IntegratedEntrust;
 import com.joyintech.tams.exchange.common.db.domain.Order;
 import com.joyintech.tams.exchange.common.request.PositionInstructionRequest;
 import com.joyintech.tams.exchange.common.utils.CheckParamUtils;
+import com.joyintech.tams.exchange.common.utils.TradeUtils;
 import com.joyintech.tams.exchange.datacommon.db.service.InstructionService;
 import com.joyintech.tams.exchange.datacommon.db.service.OrderService;
 import com.joyintech.tams.exchange.service.trade.position.service.PositionRequestServiceInstructionRequest;
@@ -31,9 +33,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
-import static com.joyintech.tams.constant.DictCodeListExt3.交易方向_质押券入库;
-import static com.joyintech.tams.constant.DictCodeListExt3.交易方向_质押券出库;
 
 @Component
 public class OrderManagement extends BaseService {
@@ -135,13 +134,16 @@ public class OrderManagement extends BaseService {
         //头寸引擎余额检查---start
         try {
             Instruction instruction = instructionService.findById(integratedEntrust.getInstructionId());
-//        	PositionInstructionRequest instructionClone = (PositionInstructionRequest)instruction.cloneInstruction();
             PositionInstructionRequest instructionClone = new PositionInstructionRequest();
             BeanUtil.copyProperties(instruction, instructionClone);
             instructionClone.setSoftSkipMode(integratedEntrust.getSoftSkipMode());
-            instructionClone.setEntrustAmt(integratedEntrust.getEntrustBalance());
-            if (instructionClone.getEntrustAmt() == null) {
-                instructionClone.setEntrustAmt(integratedEntrust.getEntrustPrice().multiply(BigDecimal.valueOf(integratedEntrust.getEntrustVolume())));
+            if (InvestmentAssetType1.NEGOTIATED_REPO.value.equals(instruction.getAssetType1())) {
+                logger.info("场内协议回购交易下单头寸检查，回购金额：{}",integratedEntrust.getEntrustBalance());
+                instructionClone.setEntrustAmt(integratedEntrust.getEntrustBalance());
+            } else {
+                // 计算委托金额
+                BigDecimal entrustBalance = TradeUtils.calculateBalance(integratedEntrust.getEntrustBs(), integratedEntrust.getEntrustPrice(), integratedEntrust.getEntrustVolume(), integratedEntrust.getAssetType(), integratedEntrust);
+                instructionClone.setEntrustAmt(entrustBalance);
             }
             instructionClone.setEntrustNum(integratedEntrust.getEntrustVolume());
             instructionClone.setEntrustPrice(integratedEntrust.getEntrustPrice());
