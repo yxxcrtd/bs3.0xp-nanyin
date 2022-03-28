@@ -130,6 +130,12 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
         BigDecimal secNumZh=BigDecimal.ZERO;
         BigDecimal canNumZh=BigDecimal.ZERO;
         String rateZh="";
+        BigDecimal rateShTemp=BigDecimal.ZERO;
+        BigDecimal rateSZhTemp=BigDecimal.ZERO;
+        String secNumShColor="";
+        String canNumShColor="";
+        String rateShColor="";
+        String rateZhColor="";
         if(StringUtil.isNotEmpty(dto.getPortfolioId())&&StringUtil.isNotEmpty(dto.getAcctId())){
             Map<String,Object> map=new HashMap<>();
             map.put("portfolioId",dto.getPortfolioId());
@@ -160,7 +166,7 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
                 secNumSh=queryProPosition(2,shProList);
                 if(secNumSh!=null&&secNumSh.compareTo(BigDecimal.ZERO) != 0){
                     BigDecimal sumNumSh=canNumSh.add(secNumSh);
-                    BigDecimal rateShTemp=ArithmeticUtil.divide(secNumSh,sumNumSh,2);
+                    rateShTemp=ArithmeticUtil.divide(secNumSh,sumNumSh,2);
                     rateSh=rateShTemp+"%";
                 }else{
                     rateSh="0%";
@@ -169,7 +175,7 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
                 secNumZh=queryProPosition(2,szProList);
                 if(secNumZh!=null&&secNumZh.compareTo(BigDecimal.ZERO) != 0){
                     BigDecimal sumNumZh=canNumZh.add(secNumZh);
-                    BigDecimal rateSZhTemp=ArithmeticUtil.divide(secNumZh,sumNumZh,2);
+                    rateSZhTemp=ArithmeticUtil.divide(secNumZh,sumNumZh,2);
                     rateZh=rateSZhTemp+"%";
                 }else{
                     rateZh="0%";
@@ -177,13 +183,36 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
             }
 
         }
-
+        if(canNumSh.compareTo(BigDecimal.ZERO)>0){
+            canNumShColor="green";
+        }else if(canNumSh.compareTo(BigDecimal.ZERO)<0){
+            canNumShColor="red";
+        }
+        if(secNumSh.compareTo(BigDecimal.ZERO)>0){
+            secNumShColor="green";
+        }else if(secNumSh.compareTo(BigDecimal.ZERO)<0){
+            secNumShColor="red";
+        }
+        if(rateShTemp.compareTo(new BigDecimal(100))<0){
+            rateShColor="green";
+        }else if(rateShTemp.compareTo(new BigDecimal(100))>0){
+            rateShColor="red";
+        }
+        if(rateSZhTemp.compareTo(BigDecimal.ZERO)<0){
+            rateZhColor="green";
+        }else if(rateSZhTemp.compareTo(BigDecimal.ZERO)>0){
+            rateZhColor="red";
+        }
         resultMap.put("canNumSh",canNumSh+"张");
         resultMap.put("secNumSh",secNumSh+"张");
         resultMap.put("rateSh",rateSh);
         resultMap.put("canNumZh",canNumZh+"张");
         resultMap.put("secNumZh",secNumZh+"张");
         resultMap.put("rateZh",rateZh);
+        resultMap.put("canNumShColor",canNumShColor);
+        resultMap.put("secNumShColor",secNumShColor);
+        resultMap.put("rateShColor",rateShColor);
+        resultMap.put("rateZhColor",rateShColor);
         return resultMap;
     }
 

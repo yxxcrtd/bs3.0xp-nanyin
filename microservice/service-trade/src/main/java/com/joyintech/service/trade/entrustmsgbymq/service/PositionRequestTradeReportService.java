@@ -281,7 +281,12 @@ public class PositionRequestTradeReportService {
             plt.put("ordEntrustId", null);
             plt.put("standardSecId", STANDAR_SEC_ID);
             plt.put("standardSecAmount", dto.getStandardSecAmount());
-            plt.put("cashAmount", dto.getCashAmount());
+            if(DictCodeListExt3.交易方向_质押券入库.getValue().equals(entity.getPs())
+                    || DictCodeListExt3.交易方向_质押券出库.getValue().equals(entity.getPs())){
+                plt.put("cashAmount", null);
+            }else{
+                plt.put("cashAmount", dto.getCashAmount());
+            }
             TrdMoreConvrate moreConvrate = this.getMoreConvrate(dto.getCashAcctId());
             if (Objects.nonNull(moreConvrate)) {
                 plt.put("reConversionRate", moreConvrate.getMoreConvrate());
@@ -391,9 +396,11 @@ public class PositionRequestTradeReportService {
                 ptlOffsetCash.put("cashAcctId", dto.getCashAcctId());
                 ptlOffsetCash.put("tradeId", entity.getTradeId());
                 ptlOffsetCash.put("etrId", entity.getEntrustId());
-                // ZGTFCP-1746:赋值交易金额 modify by fuyongsheng 20220325 start
-                ptlOffsetCash.put("cashAmount", dto.getCashAmount());
-                // ZGTFCP-1746:赋值交易金额 modify by fuyongsheng 20220325 end
+                // ZGTFCP-2022:赋值交易金额 modify by fuyongsheng 20220325 start
+                // 到期的本金-首期的到期结算金额
+                ptlOffsetCash.put("cashAmount", ArithmeticUtil.subtract(entity.getPrinAmt(),
+                        entity.getPositionBaseData().getFinTradeProductDto().getmTradeAmt()));
+                // ZGTFCP-2022:赋值交易金额 modify by fuyongsheng 20220325 end
                 ptlOffsetCash.put("ownSecAmount", dto.getOwnSecAmount());
                 ptlOffsetCash.put("secAmount", dto.getSecAmount());
                 ptlOffsetCashList.add(ptlOffsetCash);
