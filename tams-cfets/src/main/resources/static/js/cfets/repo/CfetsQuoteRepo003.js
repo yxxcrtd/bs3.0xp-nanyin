@@ -261,7 +261,7 @@
         , {
             field: 'firstNetPrice',
             width: 100,
-            title: '首次净价(元)',
+            title: '估价净价(元)',
             sortable: false,
             type: 'money',
             digit: 4
@@ -320,12 +320,12 @@
         height : 140,
         page:false,
         editCell: function (value, data, field, cell, column) {
-            if (field === "tradeAmt" ) {
-                var tradeAmt = 0;
+            if (field === "fpriceAmt" ) {
+                var dealAmt = 0;
                 for (var i = 0; i < table.getAllRows.length; i++) {
-                    tradeAmt = JoyinMath.doAdd(table.getAllRows()[i].tradeAmt, tradeAmt);
+                    dealAmt = JoyinMath.doAdd(table.getAllRows()[i].fpriceAmt, dealAmt);
                 }
-                $("#tradeAmt").val(tradeAmt).change();//交易金额
+                $("#dealAmt").val(dealAmt).change();//交易金额
             }
             return true;
         }
@@ -389,7 +389,7 @@
         $("#IbuQuoteRepo004_settleSpreed").change(function () {
             calAmtInfo();
         });
-        $("#tradeAmt").change(function () {
+        $("#dealAmt").change(function () {
             calFee();
             calAmtInfo();
         });
@@ -447,10 +447,10 @@
                 if (result) {
                     var data = result.data;
                     $("#settlementStartDate").val(data.settlementStartDate).change();//首次结算日
-                    $("#settlementEndDate").val(data.settlementEndDate).change();//到期结算日
+                    $("#mSettleDate").val(data.settlementEndDate).change();//到期结算日
                     $("#actCapDays").val(data.actCapDays).change();//实际占款天数
                     $("#mIntAmt").val(data.mIntAmt).change();//回购利息
-                    $("#mtradeAmt").val(data.mtradeAmt).change();//到期结算金额
+                    $("#mTradeAmt").val(data.mtradeAmt).change();//到期结算金额
                     $("#termType").val(data.termType).change();//期限品种
                     autoAllocation();
                 }
@@ -480,9 +480,10 @@
      */
     var getParam = function () {
         var request = {};
-        request.repoTerm = $("#repoTerm").val();//回购期限
+        request.distribution = $("#distribution").val();//分配方式
+        request.repoTerm = $("#term").val();//回购期限
         request.settleSpreedCode = $("#CfetsQuoteRepo003_settleSpreed").val();//清算速度
-        request.tradeAmt = $("#tradeAmt").val();//本金金额
+        request.tradeAmt = $("#dealAmt").val();//本金金额
         request.price = $("#price").val();//回购利率
         request.distribution = $("#distribution").val();//分配方式
         request.ps = $("#ps").val();//交易方向
@@ -491,10 +492,10 @@
         request.dealFeeAmt = $("#dealFeeAmt").val();//交易手续费
         request.settFeeAmt = $("#settFeeAmt").val();//结算服务费
         request.mIntAmt = $("#mIntAmt").val();//回购利息
-        request.mtradeAmt = $("#mtradeAmt").val();//到期结算金额
+        request.mtradeAmt = $("#mTradeAmt").val();//到期结算金额
         request.secManageAcctId = $("#secManageAcctId").val();//证券账户
         request.termType = $("#termType").val();//期限品种
-        request.settlementEndDate = $("#settlementEndDate").val();//到期结算日
+        request.settlementEndDate = $("#mSettleDate").val();//到期结算日
         request.quotaPageModel = $("#quotaPageModel").val();//页面模式
         request.ptlAllocations = table.getAllRows();//组合分配列表
         request.repoEntrustPledgeDtos = pledgeTable.getAllRows();//质押券信息
@@ -511,11 +512,18 @@
      */
     var autoAllocation = function(){
         var request = getParam();
+        debugger
         Joyin.ajaxJson(basePath + 'cfets/bankuplink/repo/IbuQuoteRepo/autoAllocation', request, function (result) {
             if (result) {
-                var data = result.data;
+                var resultData = [];
+                for (i = 0; i < result.data.ptlAllocations.length; i++) {
+                    var temp = result.data.ptlAllocations[i];
+                    temp.fpriceAmt = temp.tradeAmt;
+                    temp.intAmt = temp.mIntAmt;
+                    resultData.push(temp);
+                }
                 table.clear(function () {
-                    table.addRow(data.ptlAllocations)
+                    table.addRow(resultData)
                 });
             }
         });
@@ -539,7 +547,7 @@
                 $("#shareCtAmt").val(data.convertAmt);//质押券折算总额
                 $("#dealFeeAmt").val(data.dealFeeAmt);//交易手续费
                 $("#mIntAmt").val(data.mIntAmt);//回购利息
-                $("#mtradeAmt").val(data.mtradeAmt);//到期结算金额
+                $("#mTradeAmt").val(data.mtradeAmt);//到期结算金额
                 $("#settFeeAmt").val(data.settFeeAmt);//结算服务费
                 $("#shareAmt").val(data.shareAmt);//质押券面
                 $("#tradeAmt").val(data.tradeAmt);//交易金额
