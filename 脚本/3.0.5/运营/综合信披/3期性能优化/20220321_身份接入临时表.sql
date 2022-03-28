@@ -1,3 +1,4 @@
+drop table CHB_EQU_TMP;
 CREATE TABLE
     CHB_EQU_TMP
     (
