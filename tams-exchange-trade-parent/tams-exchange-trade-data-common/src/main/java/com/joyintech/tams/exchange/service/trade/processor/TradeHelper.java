@@ -1042,8 +1042,8 @@ public class TradeHelper {
         }
         orderService.asyncUpdate(order);
         if (entrust.getEntrustVolume() > 0) {
-//            handleEntrust(entrust, instructionBean, Constants.PROCESS_TYPE_ENTRUST);
-            handleBatchEntrust(entrust, instructionBean, Constants.PROCESS_TYPE_ENTRUST);
+            handleEntrust(entrust, instructionBean, Constants.PROCESS_TYPE_ENTRUST);
+//            handleBatchEntrust(entrust, instructionBean, Constants.PROCESS_TYPE_ENTRUST);
         }
     }
 

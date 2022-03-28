@@ -3,6 +3,7 @@ package com.joyintech.tams.exchange.util;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.tams.exchange.common.domain.Message;
 import com.joyintech.tams.exchange.common.utils.SpringContextUtils;
@@ -16,6 +17,10 @@ public class MasterUtil {
 	
 	public static String getMasterUrl() {
     	String url = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest().getRequestURL().toString();
+    	String queryString = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest().getQueryString();
+    	if(StringUtil.isNotEmpty(queryString)) {
+    		url += "?"+queryString;
+    	}
 		String masterAddress = TokenJob.getMasterAddress();
 		String[] splitTemp = url.split("//");
 		String masterUrl = splitTemp[0]+"//"+masterAddress+splitTemp[1].substring(splitTemp[1].indexOf("/"));

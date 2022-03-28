@@ -1075,7 +1075,8 @@
                        COUNT(edi.TRADER) AS totalWork
                 FROM ETR_DISTRIBUTE edi
                 LEFT JOIN ETR_ENTRUST een ON edi.ENTRUST_ID = een.ENTRUST_ID
-                where een.ENTRUST_STATUS in ('04') and een.UPDATE_TIME = to_date(#{sysDate},'yyyy-mm-dd') GROUP BY edi.TRADER
+                LEFT JOIN (select ENTRUST_ID,max(FINISH_DATE) FINISH_DATE from ETR_FINISH_STATUS group by ENTRUST_ID,FINISH_DATE) EFS on edi.ENTRUST_ID=EFS.ENTRUST_ID
+                where een.ENTRUST_STATUS in ('04') and EFS.FINISH_DATE = to_date(#{sysDate},'yyyy-mm-dd') GROUP BY edi.TRADER
                 union all
                 SELECT edi.TRADER        as TRADER,
                        COUNT(edi.TRADER) AS totalWork

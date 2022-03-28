@@ -6000,4 +6000,10 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
         etrEntrustBackupMapper.deleteDetailByPrimaryKey(entrustId);
     }
 
+    public MinTrdUnitLimitDto getMinTrdUnitLimitPrice(EtrExchangeMiniLimitPriceRequest request) {
+        BigDecimal minNum = new BigDecimal(1);
+        MinTrdUnitLimitDto minTrdUnitLimitDto = getInterfSysMinTrdUnit(request.getFinprodId(), request.getTradePlat(), request.getTradeMarket(), request.getFinprodType2(), request.getPs());
+        return minTrdUnitLimitDto;
+    }
+
 }

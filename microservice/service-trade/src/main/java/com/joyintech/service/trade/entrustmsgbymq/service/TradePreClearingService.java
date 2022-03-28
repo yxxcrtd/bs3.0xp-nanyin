@@ -361,7 +361,6 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
                 }
             }
         }
-        positionRequestTradeReportService.sendTradeReportPositionRequest(trdTempDto);
         logger.info("【成交数据预清算结束】tradePreClearing entrustId: {}, seqno: {}", infContractDetailfile.getEntrustId(), infContractDetailfile.getSeqno());
     }
 
@@ -781,12 +780,14 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
 //                basePtlSecPositionInfoService.inertSecPositionFlow(ptlSecPositionFlow);
 //            }
 //        }
+        // ZGTFCP-1927:深交所逻辑跟上交所一样,故注释 modify by fuyongsheng 20220328 start
         // 深交所到期续做更新 首期交易的期限、利息、到期交付日、到期结算金额。
-        if (StringUtil.equals(trdTempDto.getTradeMarket(),DictCodeListExt1.交易场所_深圳证券交易所.getValue())
-            && DictCodeListExt3.交易方向_到期续做.getValue().equals(trdTempDto.getPs())){
-            this.updateRepoH01Market04T56(trdTempDto);
-            return;
-        }
+//        if (StringUtil.equals(trdTempDto.getTradeMarket(),DictCodeListExt1.交易场所_深圳证券交易所.getValue())
+//            && DictCodeListExt3.交易方向_到期续做.getValue().equals(trdTempDto.getPs())){
+//            this.updateRepoH01Market04T56(trdTempDto);
+//            return;
+//        }
+        // ZGTFCP-1927:深交所逻辑跟上交所一样,故注释 modify by fuyongsheng 20220328 end
 
         // 写入金融产品临时交易表
         trdProductTempDealMapper.insertSelective(trdTempDto.getTrdProductTempDeal());
@@ -889,6 +890,7 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
 //            }
 //        }else {
         // 处理头寸
+        positionRequestTradeReportService.sendTradeReportPositionRequest(trdTempDto);
         tradePreCommonService.executePosition(finProductTradeDto);
 //        }
     }

@@ -16,6 +16,7 @@ import com.joyintech.tams.exchange.common.request.EntrustQueryRequest;
 import com.joyintech.tams.exchange.common.request.PageEntrustInfoRequest;
 import com.joyintech.tams.exchange.datacommon.db.service.InstructionService;
 import com.joyintech.tams.exchange.service.trade.management.service.EntrustManagement;
+import com.joyintech.tams.exchange.util.MasterUtil;
 import com.joyintech.tams.exchange.common.utils.EntrustPropUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -44,6 +45,9 @@ public class EntrustController {
     @ApiOperation(value = "查询委托信息", notes = "查询委托信息")
     @PostMapping(value = {"/entrust"})
     public Message<OrderAndEntrustQryResult> queryAll(@RequestBody @Validated EntrustQueryRequest entrustQueryRequest) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(entrustQueryRequest);
+    	}
         return new Message<>(entrustManagement.queryEntrust(entrustQueryRequest.getUserId(), entrustQueryRequest.getInstructionId(), entrustQueryRequest.getAccountId(), entrustQueryRequest.getOrderId()));
     }
 
@@ -64,6 +68,9 @@ public class EntrustController {
     @PostMapping(value = "/entrust/cancel")
     public Message<Object> cancelEntrust(@RequestParam String userId,
                                          @RequestParam String entrustId) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(null);
+    	}
         return new Message<>(entrustManagement.cancelEntrust(userId, entrustId));
     }
 
