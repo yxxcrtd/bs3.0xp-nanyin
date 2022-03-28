@@ -5,3 +5,14 @@ INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE,DTCODE,SPCDCODE,COLCODE,COLNAME,DIC
 
 DELETE FROM CFG_READONLY_FORM_SHOW WHERE PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and COLCODE = 'dealCurAcct' and SPCDCODE = 'F11EX001';
 INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE,DTCODE,SPCDCODE,COLCODE,COLNAME,DICTCODE,SEQNO,EXTENDCFG,STATUS,REMARK1,REMARK2,REMARK3) VALUES ('FieldEtrDispatcher', 'FieldEtrDispatcherInfo', 'F11EX001', 'dealCurAcct', '资金账户', NULL, '10', '{"colAlign": "left"}', '1', '0', NULL, NULL);
+
+
+-- 指令分发
+update CFG_DATATABLE_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"0"}' WHERE PAGECODE = 'CfetsEtrDispatcher' and DTCODE = 'CfetsEtrDispatcherDealInfo' AND SPCDCODE IN ( 'EX010' ) and COLCODE = 'tradedVolume';
+update CFG_DATATABLE_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"0"}' WHERE PAGECODE = 'CfetsEtrDispatcher' and DTCODE = 'CfetsEtrDispatcherExeInfo' AND SPCDCODE IN ( 'EX010' ) and COLCODE = 'entrustVolume';
+update CFG_DATATABLE_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"0"}' WHERE PAGECODE = 'CfetsEtrDispatcher' and DTCODE = 'CfetsEtrDispatcherExeInfo' AND SPCDCODE IN ( 'EX010' ) and COLCODE = 'tradedVolume';
+
+-- 指令查询
+update CFG_DATATABLE_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"0"}' WHERE PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherDealInfo' AND SPCDCODE IN ( 'EX001', 'EX004' ) and COLCODE = 'tradedVolume';
+update CFG_DATATABLE_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"0"}' WHERE PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherExeInfo' AND SPCDCODE IN ( 'EX001','EX004' ) and COLCODE = 'entrustVolume';
+update CFG_DATATABLE_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"0"}' WHERE PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherExeInfo' AND SPCDCODE IN ( 'EX001','EX004' ) and COLCODE = 'tradedVolume';
