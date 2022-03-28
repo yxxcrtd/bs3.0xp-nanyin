@@ -14,27 +14,12 @@ import com.joyintech.calculation.CalculatorFactory;
 import com.joyintech.calculation.bonds.PaperIrReset;
 import com.joyintech.calculation.bonds.SecIntSchedule;
 import com.joyintech.calculation.bonds.SecPrinSchedule;
-import com.joyintech.calculation.bonds.constant.AllocationType;
-import com.joyintech.calculation.bonds.constant.Basis;
-import com.joyintech.calculation.bonds.constant.CurrIntCalMethod;
-import com.joyintech.calculation.bonds.constant.DiscountScheme;
-import com.joyintech.calculation.bonds.constant.FlowCashScheme;
-import com.joyintech.calculation.bonds.constant.IntFrequency;
-import com.joyintech.calculation.bonds.constant.IntRateType;
-import com.joyintech.calculation.bonds.constant.NextIntCalMethod;
-import com.joyintech.calculation.bonds.constant.SecIntSchCalMethod;
-import com.joyintech.calculation.bonds.constant.Variety;
+import com.joyintech.calculation.bonds.constant.*;
 import com.joyintech.calculation.shell.AccurIntCalculator;
 import com.joyintech.calculation.shell.AccurIntForSecheduleCalculator;
 import com.joyintech.calculation.shell.PriceByYieldCalculator;
 import com.joyintech.calculation.shell.YieldByPriceCalculator;
-import com.joyintech.calculation.shell.param.AccurIntCalInParameter;
-import com.joyintech.calculation.shell.param.AccurIntCalOutParameter;
-import com.joyintech.calculation.shell.param.PriceYieldInParameter;
-import com.joyintech.calculation.shell.param.PriceYieldOutParameter;
-import com.joyintech.calculation.shell.param.SecInfoModel;
-import com.joyintech.calculation.shell.param.YieldPriceInParameter;
-import com.joyintech.calculation.shell.param.YieldPriceOutParameter;
+import com.joyintech.calculation.shell.param.*;
 import com.joyintech.calculation.util.BasicUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
@@ -46,14 +31,7 @@ import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.SpringContextUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.common.controller.EntrustCommonBaseController;
 import com.joyintech.service.entrust.common.service.WFlowCommonService;
@@ -68,23 +46,9 @@ import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.cfets.etrib.bond.dao.CfetsEtrIbBondinfo002Mapper;
-import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrCalcAmountRequest;
-import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrCalcAmountResponse;
-import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbPosPortfolioRequest;
-import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbPositionRequest;
-import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribBondInfo003Dto;
-import com.joyintech.tams.common.base.dao.EtrEntrustBackupMapper;
-import com.joyintech.tams.common.base.dao.FinProductAddMapper;
-import com.joyintech.tams.common.base.dao.FinProductMapper;
-import com.joyintech.tams.common.base.dao.PtlPortfolioMapper;
-import com.joyintech.tams.common.base.dao.WflEtrEntrustMapper;
-import com.joyintech.tams.common.base.entity.EtrDistribute;
-import com.joyintech.tams.common.base.entity.EtrEntrust;
-import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
-import com.joyintech.tams.common.base.entity.FinCashCalcRule;
-import com.joyintech.tams.common.base.entity.PtlPortfolio;
-import com.joyintech.tams.common.base.entity.WflEtrEntrustAddKey;
-import com.joyintech.tams.common.base.entity.WflEtrEntrustKey;
+import com.joyintech.tams.cfets.etrib.bond.dto.*;
+import com.joyintech.tams.common.base.dao.*;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.base.core.impl.dao.MstWorkflowCommonServiceMapperImpl;
 import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
 import com.joyintech.tams.component.business.common.service.BasRiskMathCommService;
@@ -128,13 +92,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -429,7 +387,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
             for (CfetsEtribBondInfo003Dto dto : entity.getEtrInvestBondInfoDtos()) {
                 dto.setWorkflowId(entity.getWorkflowId());
                 BaseEtrInvestInfoDto base = initBaseEtrInvestInfoDto(dto);
-                WFlowCommonService.insertFlow(initBaseEtrInvestInfoDto(dto));
+                WFlowCommonService.insertFlow(base);
                 if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
                     //插入旧头寸
                     if(baseEtrCashPositionCommService != null){
@@ -466,9 +424,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
         if (CollectionUtils.isNotEmpty(entity.getEtrInvestBondInfoDtos()))  {
             for (CfetsEtribBondInfo003Dto dto: entity.getEtrInvestBondInfoDtos()) {
                 if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
-                    //无流程
-                   // AllTradeCommonUtil.deletePosition(null, dto.getEntrustId());
-                    //插入旧头寸  有流程
+                    //插入旧头寸
                     if (baseEtrCashPositionCommService != null) {
                         // 持仓关闭
                         baseEtrCashPositionCommService.entrustCloseExecute(dto.getEntrustId(),DictCodeList.是否_是.getValue());
@@ -1601,6 +1557,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
 
     public BaseEtrInvestInfoDto initBaseEtrInvestInfoDto(CfetsEtribBondInfo003Dto dto) {
         try {
+            String entrustId = dto.getBussCombDistribtList().get(0).getEntrustId() != null ? dto.getBussCombDistribtList().get(0).getEntrustId(): dto.getEntrustId();
             dto.setOperateType(dto.getOperateType());
             BaseEtrInvestInfoDto entity = new BaseEtrInvestInfoDto();
             EntrustCommonDto entrustCommonDto = new EntrustCommonDto();
@@ -1615,11 +1572,13 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
             dto.setRecStatus(DictCodeListExt3.委托状态_流程中.getValue());
             BeanUtil.copyProperties(etrEntrust, dto);
             //BeanUtil.copyProperties(etrEntrust, dto.getEtrInvestPersonInfo());
+            etrEntrust.setEntrustId(entrustId);
             etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
             etrEntrust.setEntrustAmt(null);
             etrEntrust.setEntrustNum(dto.getEntrustNum().divide(new BigDecimal(100)));
             etrEntrust.setInvAim(dto.getBusinessModel());
             BeanUtil.copyProperties(etrEntrustAdd, dto);
+            etrEntrustAdd.setEntrustId(entrustId);
             etrEntrustAdd.setAssetType(DictCodeList.平安资产类型_债券.getValue());
             etrEntrustAdd.setVdate(null);
             etrEntrustAdd.setMdate(null);
