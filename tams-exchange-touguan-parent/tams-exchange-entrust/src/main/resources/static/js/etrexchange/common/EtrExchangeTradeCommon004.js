@@ -3616,7 +3616,7 @@
                             portfolioId: data.portfolioId,
                             ps: ps,
                             tradeMarket: $("#tradeMarket_" + currentTab).val(),
-                            secAcctId: "jlSJS01",
+                            secAcctId: secAcctId,
                             tradePlat: "02",
                         }, function (result) {
                             if (result.data) {
