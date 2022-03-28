@@ -1223,48 +1223,48 @@
         SELECT
         COUNT(DISTINCT p1.PORTFOLIO_ID)
         FROM PTL_SEC_POSITION_RULE p1
-        LEFT JOIN fin_product a on    p1.FINPROD_ID = a.FINPROD_ID and p1.BRANCH = 0
-        LEFT JOIN fin_trade_product b on  p1.FINPROD_ID = b.FINPROD_ID and p1.BRANCH = 0
+        LEFT JOIN fin_product a on    p1.FINPROD_ID = a.FINPROD_ID
+        LEFT JOIN fin_trade_product b on  p1.FINPROD_ID = b.FINPROD_ID
         LEFT JOIN STL_SEC_ACCT_INFO c
         ON p1.SEC_ACCT_ID=c.SEC_ACCT_ID
         WHERE ((a.FINPROD_MARKET_ID=t1.FINPROD_ID and a.FINPROD_ID is not null) or (a.FINPROD_ID is null and b.TERM_TYPE = t1.TERM_TYPE))
-        AND c.bond_id = t1. SEC_ACCT_ID
+        AND c.bond_id = t1.SEC_ACCT_ID
         <!--AND p1.BRANCH='0'-->
         AND p1.CDATE=t1.CDATE
         )=1 then (
         SELECT
         DISTINCT p1.PORTFOLIO_ID
         FROM PTL_SEC_POSITION_RULE p1
-        LEFT JOIN fin_product a on    p1.FINPROD_ID = a.FINPROD_ID and p1.BRANCH = 0
-        LEFT JOIN fin_trade_product b on  p1.FINPROD_ID = b.FINPROD_ID and p1.BRANCH = 0
+        LEFT JOIN fin_product a on    p1.FINPROD_ID = a.FINPROD_ID
+        LEFT JOIN fin_trade_product b on  p1.FINPROD_ID = b.FINPROD_ID
         LEFT JOIN STL_SEC_ACCT_INFO c
         ON p1.SEC_ACCT_ID=c.SEC_ACCT_ID
         WHERE ((a.FINPROD_MARKET_ID=t1.FINPROD_ID and a.FINPROD_ID is not null) or (a.FINPROD_ID is null and b.TERM_TYPE = t1.TERM_TYPE))
-        AND c.bond_id = t1. SEC_ACCT_ID
+        AND c.bond_id = t1.SEC_ACCT_ID
         <!--AND p1.BRANCH='0'-->
         AND p1.CDATE=t1.CDATE
         ) end portfolioId,
         case when (
         SELECT COUNT(DISTINCT p1.PORTFOLIO_ID)
         FROM PTL_SEC_POSITION_RULE p1
-        LEFT JOIN fin_product a on    p1.FINPROD_ID = a.FINPROD_ID and p1.BRANCH = 0
-        LEFT JOIN fin_trade_product b on  p1.FINPROD_ID = b.FINPROD_ID and p1.BRANCH = 0
+        LEFT JOIN fin_product a on    p1.FINPROD_ID = a.FINPROD_ID
+        LEFT JOIN fin_trade_product b on  p1.FINPROD_ID = b.FINPROD_ID
         LEFT JOIN STL_SEC_ACCT_INFO c
         ON p1.SEC_ACCT_ID=c.SEC_ACCT_ID
         WHERE ((a.FINPROD_MARKET_ID=t1.FINPROD_ID and a.FINPROD_ID is not null) or (a.FINPROD_ID is null and b.TERM_TYPE = t1.TERM_TYPE))
-        AND c.bond_id = t1. SEC_ACCT_ID
+        AND c.bond_id = t1.SEC_ACCT_ID
         <!--AND p1.BRANCH='0'-->
         AND p1.CDATE=t1.CDATE
         )=1 then (
         SELECT DISTINCT p2.PORTFOLIO_NAME
         FROM PTL_SEC_POSITION_RULE p1
-        LEFT JOIN fin_product a on    p1.FINPROD_ID = a.FINPROD_ID and p1.BRANCH = 0
-        LEFT JOIN fin_trade_product b on  p1.FINPROD_ID = b.FINPROD_ID and p1.BRANCH = 0
+        LEFT JOIN fin_product a on    p1.FINPROD_ID = a.FINPROD_ID
+        LEFT JOIN fin_trade_product b on  p1.FINPROD_ID = b.FINPROD_ID
         LEFT JOIN STL_SEC_ACCT_INFO c ON p1.SEC_ACCT_ID=c.SEC_ACCT_ID
         left join PTL_PORTFOLIO p2
         on p2.PORTFOLIO_ID=p1.PORTFOLIO_ID
         WHERE ((a.FINPROD_MARKET_ID=t1.FINPROD_ID and a.FINPROD_ID is not null) or (a.FINPROD_ID is null and b.TERM_TYPE = t1.TERM_TYPE))
-        AND c.bond_id = t1. SEC_ACCT_ID
+        AND c.bond_id = t1.SEC_ACCT_ID
         <!--AND p1.BRANCH='0'-->
         AND p1.CDATE=t1.CDATE
         ) end portfolioName,
