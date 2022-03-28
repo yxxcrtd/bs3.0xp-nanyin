@@ -760,8 +760,15 @@ public class TradeMsgProcessor {
         instructionClone.setSoftSkipMode(DictCodeList.是否_是.getValue());
         //委托编号
         instructionClone.setEntrustNo(entrust.getId());
-        instructionClone.setEntrustAmt(entrust.getEntrustBalance());
-        if (instructionClone.getEntrustAmt() == null) {
+//        instructionClone.setEntrustAmt(entrust.getEntrustBalance());
+//        if (instructionClone.getEntrustAmt() == null) {
+//            instructionClone.setEntrustAmt(entrust.getEntrustPrice().multiply(BigDecimal.valueOf(entrust.getEntrustVolume())));
+//        }
+        if (InvestmentAssetType1.NEGOTIATED_REPO.value.equals(instruction.getAssetType1())) {
+            logger.info("场内协议回购交易下单头寸检查，指令编号：{}，回购金额：{}", entrust.getInstructionId(), entrust.getEntrustBalance());
+            instructionClone.setEntrustAmt(entrust.getEntrustBalance());
+        } else {
+            // 计算委托金额
             instructionClone.setEntrustAmt(entrust.getEntrustPrice().multiply(BigDecimal.valueOf(entrust.getEntrustVolume())));
         }
 
