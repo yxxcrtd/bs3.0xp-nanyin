@@ -54,6 +54,9 @@ public class EntrustController {
     @ApiOperation(value = "查询综合业务信息", notes = "查询综合业务信息")
     @PostMapping(value = {"/entrust/integrated"})
     public Message<List<IntegratedEntrust>> queryIntegratedEntrustAll(@RequestBody @Validated EntrustQueryRequest request) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(request);
+    	}
         return new Message<>(entrustManagement.queryIntegratedEntrust(request.getUserId(), request.getInstructionId(), request.getAccountId(), request.getOrderId()));
     }
 
@@ -116,6 +119,9 @@ public class EntrustController {
      */
     @PostMapping(value = "/entrust/enable")
     public ResultBean queryEnable(@RequestBody @Validated EnableQryBean enableQryBean) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObjectResultBean(enableQryBean);
+    	}
         Instruction instruction = instructionService.findById(enableQryBean.getInstructionId());
         enableQryBean.setEntrustProp(EntrustPropUtils.getEntrustProp(instruction, enableQryBean.getEntrustProp()));
         enableQryBean.setEntrustBs(EntrustBsProp.getEntrustBs(instruction.getPs()));
@@ -138,7 +144,6 @@ public class EntrustController {
     @PostMapping(value = "/entrust/getOthCode")
     public ResultBean getOthCode(@RequestParam(value = "finprod_id", required = false) String finprodId,
                                  @RequestParam(value = "oth_code_type", required = false) String othCodeType) {
-
         return entrustManagement.getOthCode(finprodId, othCodeType);
     }
 

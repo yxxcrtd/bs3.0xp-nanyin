@@ -331,7 +331,7 @@ public class CommonPositionEngineService {
             }else if(DictCodeList.交易方向_红利再投.getValue().equals(ps)){
                 busiType = DictCodeListExt3.头寸业务类型_股票送股.getValue();
             }else if(DictCodeList.交易方向_上市流通.getValue().equals(ps)){
-                busiType = DictCodeListExt3.头寸业务类型_配股.getValue();
+                busiType = DictCodeListExt3.头寸业务类型_上市流通.getValue();
             }else if(DictCodeList.交易方向_申购确认.getValue().equals(ps)){
                 busiType = DictCodeListExt3.头寸业务类型_网上申购.getValue();
             }

@@ -3513,7 +3513,29 @@
                         if(result[0].object.length == 1){
                             secAcctId = result[0].object[0].secAcctId;
                         }
-                        dateTable.renderRow(data.LAY_TABLE_INDEX, {"acctNo": result[0].id, "secAcctId":secAcctId});
+                        var acctNo = result[0].id;
+                        dateTable.renderRow(data.LAY_TABLE_INDEX, {"acctNo": acctNo, "secAcctId":secAcctId});
+                        if(currentTab == 'dz') {
+                            var param = {
+                                portfolioId: value,
+                                finprodId: $("#finprodId_" + currentTab).val(),
+                                finprodType2: $("#finprodType2_" + currentTab).val(),
+                                tradeMarket: $("#tradeMarket_" + currentTab).val(),
+                                acctId: acctNo,
+                                secAcctId:secAcctId,
+                                tradePlat: "04",
+                            };
+                            Joyin.ajaxJson(basePath + 'etrexchange/common/etrExchangeTrade001/selectAccAvailableCash', param, function (result) {
+                                if (result.data){
+                                    dateTable.renderRow(data.LAY_TABLE_INDEX,  {"accAvailableCash": result.data});
+                                }
+                            }, false);
+                            Joyin.ajaxJson(basePath + 'etrexchange/common/etrExchangeTrade001/selectAvailableNum', param, function (result) {
+                                if (result.data) {
+                                    dateTable.renderRow(data.LAY_TABLE_INDEX, {"accAvailablePos": result.data});
+                                }
+                            }, false);
+                        }
                         if(currentTab == 'jj') {
                             Joyin.ajaxJson(basePath + 'etrexchange/common/etrExchangeTrade001/selectAccAvailableCash',
                                 {
@@ -3547,26 +3569,6 @@
                         dateTable.renderRow(data.LAY_TABLE_INDEX, {"acctNo": null});
                     }
                 });
-                if(currentTab == 'dz') {
-                    var param = {
-                        portfolioId: value,
-                        finprodId: $("#finprodId_" + currentTab).val(),
-                        finprodType2: $("#finprodType2_" + currentTab).val(),
-                        tradeMarket: $("#tradeMarket_" + currentTab).val(),
-                        acctNo: data.acctNo,
-                        tradePlat: "04",
-                    };
-                    Joyin.ajaxJson(basePath + 'etrexchange/common/etrExchangeTrade001/selectAccAvailableCash', param, function (result) {
-                        if (result.data){
-                            dateTable.renderRow(data.LAY_TABLE_INDEX,  {"accAvailablePos": result.data});
-                        }
-                    }, false);
-                    Joyin.ajaxJson(basePath + 'etrexchange/common/etrExchangeTrade001/selectAvailableNum', param, function (result) {
-                        if (result.data) {
-                            dateTable.renderRow(data.LAY_TABLE_INDEX, {"standardBondVolume": result.data});
-                        }
-                    }, false);
-                }
             } else if (field == "acctNo") {
                 var secAcctId = "";
                 if (data.acctNo && $("#tradeMarket_" + currentTab).val()) {
