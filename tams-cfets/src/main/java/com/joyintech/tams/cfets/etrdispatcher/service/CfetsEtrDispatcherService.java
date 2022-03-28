@@ -760,7 +760,7 @@ public class CfetsEtrDispatcherService extends BaseService {
                         || response.getEntrustBs().equals(DictCodeListExt3.交易方向_质押券入库.getValue())) {
                     response.setTradedPrice(StringUtil.isNotEmpty(response.getTradedPrice())?ArithmeticUtil.multiply(response.getTradedPrice(),BigDecimal.valueOf(100)):null);
                 }
-                response.setTradeDate(StringUtil.isNotEmpty(response.getTradeDate())?DateUtil.format(DateUtil.parse(response.getTradeDate()),DateUtil.DEFAULT_DATE_FORMAT_EN):null);
+                response.setTradingDay(StringUtil.isNotEmpty(response.getTradingDay())?DateUtil.format(DateUtil.parse(response.getTradingDay()),DateUtil.DEFAULT_DATE_FORMAT_EN):null);
             }
 
         }

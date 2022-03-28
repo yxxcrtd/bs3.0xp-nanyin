@@ -203,6 +203,7 @@ public class FieldEtrInfoQueryService extends BaseService{
                     response.setEntrustPrice(StringUtil.isNotEmpty(response.getEntrustPrice())?ArithmeticUtil.multiply(response.getEntrustPrice(), BigDecimal.valueOf(100)):null);
                     response.setTradedPrice(StringUtil.isNotEmpty(response.getTradedPrice())?ArithmeticUtil.multiply(response.getTradedPrice(),BigDecimal.valueOf(100)):null);
                 }
+                response.setTradingDay(StringUtil.isNotEmpty(response.getTradingDay())?DateUtil.format(DateUtil.parse(response.getTradingDay()),DateUtil.DEFAULT_DATE_FORMAT_EN):null);
              }
         }
         return page;
@@ -236,6 +237,7 @@ public class FieldEtrInfoQueryService extends BaseService{
                         || StringUtils.equals(response.getEntrustBs(),DictCodeListExt3.交易方向_质押券入库.getValue())) {
                     response.setTradedPrice(StringUtil.isNotEmpty(response.getTradedPrice())?ArithmeticUtil.multiply(response.getTradedPrice(),BigDecimal.valueOf(100)):null);
                 }
+                response.setTradingDay(StringUtil.isNotEmpty(response.getTradingDay())?DateUtil.format(DateUtil.parse(response.getTradingDay()),DateUtil.DEFAULT_DATE_FORMAT_EN):null);
              }
         }
         return page;
