@@ -511,24 +511,15 @@ public class PortfolioManager extends BaseService {
         long sum = list.stream().filter(response -> !StrUtil.equals(response.getPortfolioId(), maxPortfolioCalculateResponse.getPortfolioId()))
                 .mapToLong(PortfolioCalculateResponse::getEntrustNum)
                 .sum();
-//        long tailVolume = bean.getEntrustVolume() - sum;
-//        BigDecimal tailAmt = NumberUtil.mul(tailVolume, price);
-        BigDecimal tailVolume = BigDecimal.valueOf(bean.getEntrustVolume() - sum);
-        if (TradeUtils.lessThan(tailVolume, minStep)) {
-            // 小于最小交易单位时的处理，置为0
-            tailVolume = BigDecimal.ZERO;
-        } else {
-            // 大于等于最小交易单位时的处理，最小交易单位整数倍
-            tailVolume = TradeUtils.subtractMod(tailVolume, minStep);
-        }
-        BigDecimal tailAmt = price.multiply(tailVolume).setScale(2);
+        long tailVolume = bean.getEntrustVolume() - sum;
+        BigDecimal tailAmt = price.multiply(BigDecimal.valueOf(tailVolume)).setScale(2);
         log.debug("尾插处理，组合名称 = [{}], 组合编号 = [{}], 原委托数量 = [{}], 现委托数量 = [{}]，现委托金额 = [{}]",
                 maxPortfolioCalculateResponse.getPortfolioName(),
                 maxPortfolioCalculateResponse.getPortfolioId(),
                 maxPortfolioCalculateResponse.getEntrustNum(),
                 tailVolume,
                 tailAmt);
-        maxPortfolioCalculateResponse.setEntrustNum(tailVolume.longValue());
+        maxPortfolioCalculateResponse.setEntrustNum(tailVolume);
         maxPortfolioCalculateResponse.setEntrustAmt(tailAmt);
 
         if (isVolume && DictCodeListExt3.交易方向_债转股.getValue().equals(instruction.getPs())) {
