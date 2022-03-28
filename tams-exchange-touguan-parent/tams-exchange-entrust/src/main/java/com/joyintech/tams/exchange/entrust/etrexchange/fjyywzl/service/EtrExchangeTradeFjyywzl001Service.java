@@ -15,13 +15,16 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePositionsCommonResponse;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.PsOptionsRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
 import com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.dao.EtrExchangeTradeFjyywzl001Mapper;
 import com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.dto.EtrExchangeTradeFjyywzlZqzyDto;
 import com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.dto.EtrExchangeTradeZqzyRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeQuotationHqResponse;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.common.constant.TempConstant;
 import com.joyintech.tams.invest.common.dto.position.PositionCashSecDto;
 import com.joyintech.tams.invest.common.entrust.inter.EtrTradeCommonervice;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.TrdOthCodeInfoDto;
@@ -64,19 +67,34 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
             Map<String, Object> map = BeanUtil.object2Map(request);
             map.put("search_isNumberFlag", BaseMap.isNumeric(request.getSearch()));
             String userId = SecurityUtil.getLoginUser().getUserName();
-
-
-
-
             if (StringUtils.isNotEmpty(userId)) {
                 logger.info("请求用户【{}】", "userId = " + userId);
                 map.put("userId", SecurityUtil.getLoginUser().getUserName());
                 getZqzyPositionParam(map);
                 Page<EtrExchangeTradeFjyywzlZqzyDto> result = super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(),
                         () -> etrExchangeTradeFjyywzl001Mapper.findZqzyPositionsPageNew(map));
+                List<EtrExchangeTradeFjyywzlZqzyDto> returnList=new ArrayList<>();
+                if(result!=null&&!CollectionUtils.isEmpty(result.getRoot())){
+                    // 计算浮动盈亏
+                    for(EtrExchangeTradeFjyywzlZqzyDto entity : result.getRoot()){
+                        //可用数量
+                        PositionCashSecDto secDto=new PositionCashSecDto();
+                        BeanUtil.copyPropertiesIgnoreNull(secDto,entity);
+                        secDto.setTradePlat(TempConstant.NO_TRADE_BUSINESS_ETR);
+                        BigDecimal canRepoNum=etrTradeCommonervice.selectAvailableNum(secDto);
+                        entity.setCanRepoNum(canRepoNum);
+                        //过滤掉标准券和质押数量都等于0
+                        if(entity.getSecNum().compareTo(BigDecimal.ZERO)==0&&canRepoNum.compareTo(BigDecimal.ZERO)==0){
+                            continue;
+                        }
+                        returnList.add(entity);
+                    }
+                    result.setRoot(returnList);
+                }
                 return result;
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
             logger.info(ex.getMessage());
         }
         return null;
@@ -132,8 +150,8 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
         String rateZh="";
         BigDecimal rateShTemp=BigDecimal.ZERO;
         BigDecimal rateSZhTemp=BigDecimal.ZERO;
-        String secNumShColor="";
         String canNumShColor="";
+        String canNumZhColor="";
         String rateShColor="";
         String rateZhColor="";
         if(StringUtil.isNotEmpty(dto.getPortfolioId())&&StringUtil.isNotEmpty(dto.getAcctId())){
@@ -188,10 +206,10 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
         }else if(canNumSh.compareTo(BigDecimal.ZERO)<0){
             canNumShColor="red";
         }
-        if(secNumSh.compareTo(BigDecimal.ZERO)>0){
-            secNumShColor="green";
-        }else if(secNumSh.compareTo(BigDecimal.ZERO)<0){
-            secNumShColor="red";
+        if(canNumZh.compareTo(BigDecimal.ZERO)>0){
+            canNumZhColor="green";
+        }else if(canNumZh.compareTo(BigDecimal.ZERO)<0){
+            canNumZhColor="red";
         }
         if(rateShTemp.compareTo(new BigDecimal(100))<0){
             rateShColor="green";
@@ -210,7 +228,7 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
         resultMap.put("secNumZh",secNumZh+"张");
         resultMap.put("rateZh",rateZh);
         resultMap.put("canNumShColor",canNumShColor);
-        resultMap.put("secNumShColor",secNumShColor);
+        resultMap.put("canNumZhColor",canNumZhColor);
         resultMap.put("rateShColor",rateShColor);
         resultMap.put("rateZhColor",rateShColor);
         return resultMap;
@@ -231,41 +249,39 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
         Date sysDate = DateUtil.platDateFromCache();
         param.put("date", DateUtil.format(sysDate));
         String othCodeType=request.getOthCodeType();
-        if(!StringUtil.isEmpty(othCodeType)){
-            List<TrdOthCodeInfoDto> list = etrExchangeTradeCommon001Service.getTrdOthCodeInfos(param);
-            if (null != list && list.size() > 0) {
-                for (TrdOthCodeInfoDto dto : list) {
-                    SelectOptionDto selectOptionDto = new SelectOptionDto();
-                    if (!StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配股代码.getValue())
-                            && !StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配债代码.getValue())) {
-                        // 只能选择申购，其他委托方向不可选
-                        String ps = OthTypeMapToPs(dto.getOthCodeType());
-                        if (StringUtils.equals(ps, DictCodeList.交易方向_申购.getValue())) {
-                            map.clear();
-                            map.put(ps, dto.getDeclaredPrice());
-                            selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
-                                return StringUtil.equals(option.getId(), ps);
-                            }).collect(Collectors.toList());
-                            for (SelectOptionDto option : selectOptionDtos) {
-                                option.setObject(map.get(option.getId()));
-                            }
-                            return selectOptionDtos;
-                        } else if (StringUtils.equals(ps, DictCodeListExt3.交易方向_质押券入库.getValue())) {
-                            String converseRatio = etrExchangeTradeCommon001Service.selectStdsecConverseRatio(param);
-                            if (StringUtil.isNotEmpty(converseRatio)) {
-                                map.put(DictCodeListExt3.交易方向_质押券入库.getValue(), converseRatio);
-                                map.put(DictCodeListExt3.交易方向_质押券出库.getValue(), converseRatio);
-                            }
-                        } else {
-                            map.put(ps, dto.getDeclaredPrice());
+        List<TrdOthCodeInfoDto> list = etrExchangeTradeCommon001Service.getTrdOthCodeInfos(param);
+        if (null != list && list.size() > 0) {
+            for (TrdOthCodeInfoDto dto : list) {
+                SelectOptionDto selectOptionDto = new SelectOptionDto();
+                if (!StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配股代码.getValue())
+                        && !StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配债代码.getValue())) {
+                    // 只能选择申购，其他委托方向不可选
+                    String ps = OthTypeMapToPs(dto.getOthCodeType());
+                    if (StringUtils.equals(ps, DictCodeList.交易方向_申购.getValue())) {
+                        map.clear();
+                        map.put(ps, dto.getDeclaredPrice());
+                        selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
+                            return StringUtil.equals(option.getId(), ps);
+                        }).collect(Collectors.toList());
+                        for (SelectOptionDto option : selectOptionDtos) {
+                            option.setObject(map.get(option.getId()));
+                        }
+                        return selectOptionDtos;
+                    } else if (StringUtils.equals(ps, DictCodeListExt3.交易方向_质押券入库.getValue())) {
+                        String converseRatio = etrExchangeTradeCommon001Service.selectStdsecConverseRatio(param);
+                        if (StringUtil.isNotEmpty(converseRatio)) {
+                            map.put(DictCodeListExt3.交易方向_质押券入库.getValue(), converseRatio);
+                            map.put(DictCodeListExt3.交易方向_质押券出库.getValue(), converseRatio);
                         }
                     } else {
-                        if (StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配股代码.getValue())) {
-                            map.put(DictCodeListExt2.交易方向_配股.getValue(), dto.getDeclaredPrice());
-                        }
-                        if (StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配债代码.getValue())) {
-                            map.put(DictCodeListExt3.交易方向_配债.getValue(), dto.getDeclaredPrice());
-                        }
+                        map.put(ps, dto.getDeclaredPrice());
+                    }
+                } else {
+                    if (StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配股代码.getValue())) {
+                        map.put(DictCodeListExt2.交易方向_配股.getValue(), dto.getDeclaredPrice());
+                    }
+                    if (StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配债代码.getValue())) {
+                        map.put(DictCodeListExt3.交易方向_配债.getValue(), dto.getDeclaredPrice());
                     }
                 }
             }
