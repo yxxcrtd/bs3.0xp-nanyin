@@ -180,6 +180,10 @@ public class CfetsBondDealRequestQuoteDto extends CfetsBondDealEntrustOrderDto i
     private BigDecimal lendinShareAmt;
 
     private BigDecimal ourShareAmt;
+    /**
+     *数据已入新头寸，Y：已入
+     */
+    private String isExistNew;
 
     public BigDecimal getLendinShareAmt() {
         return lendinShareAmt;
@@ -677,5 +681,13 @@ public class CfetsBondDealRequestQuoteDto extends CfetsBondDealEntrustOrderDto i
 
     public void setQuoteOperatorType(String quoteOperatorType) {
         this.quoteOperatorType = quoteOperatorType;
+    }
+
+    public String getIsExistNew() {
+        return isExistNew;
+    }
+
+    public void setIsExistNew(String isExistNew) {
+        this.isExistNew = isExistNew;
     }
 }

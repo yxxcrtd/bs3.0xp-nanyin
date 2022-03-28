@@ -4,101 +4,118 @@
 
     <select id="findAccountInfo" resultType="com.joyintech.service.basicdata.dayendaccount.dto.DayEndAccountDto">
         SELECT
-            a.SEQ_NO,
-            a.ACCOUT busiAcctNo,
-            a.SETTLE_DATE,
-            a.FINPROD_ID,
-            a.TRADE_MARKET,
-            a.CHECK_RESULT,
-            CASE WHEN f.TYPE_8 IS NOT NULL THEN f.TYPE_8
-            WHEN b.FINPROD_TYPE IS NOT NULL THEN b.FINPROD_TYPE
-            WHEN ins.STOCK_CODE IS NOT NULL THEN #{prodType2_F07}
+            ssr.SEQ_NO,
+            ssr.ACCOUT busiAcctNo,
+            ssr.SETTLE_DATE,
+            ssr.FINPROD_ID,
+            ssr.TRADE_MARKET,
+            ssr.CHECK_RESULT,
+            CASE
+                <!--GZYHTZJY-1075:优先取明细资产类型 modify by fuyongsheng 20220110 start-->
+                WHEN settle.FINPROD_TYPE2 IS NOT NULL THEN settle.FINPROD_TYPE2
+                WHEN ssrd.FINPROD_TYPE IS NOT NULL THEN ssrd.FINPROD_TYPE
+                <!--GZYHTZJY-1075:优先取明细资产类型 modify by fuyongsheng 20220110 end-->
+                WHEN ins.STOCK_CODE IS NOT NULL THEN #{prodType2_F07}
+                WHEN fpt.TYPE_8 IS NOT NULL THEN fpt.TYPE_8
             END  FINPROD_TYPE,
-            a.ENTRUST_TRADE_ID,
-            a.CUSTOMER_ID,
-            a.STL_SEC_DEME,
-            b.TRADE_ID,
-            b.SEAT_NUMBER,
-            NVL(b.COMMISSION_AMT,0) COMMISSION_AMT,
-            NVL(b.JSF_AMT,0) JSF_AMT,
-            NVL(b.ZGF_AMT,0) ZGF_AMT,
-            NVL(b.STAMP_FEE,0) STAMP_FEE,
-            NVL(b.SETTLE_FEE,0) SETTLE_FEE,
-            NVL(b.GHF_AMT,0) GHF_AMT,
-            NVL(b.SXF_AMT,0) SXF_AMT,
-            NVL(b.TRADE_AMT,0) TRADE_AMT,
-            NVL(b.TRADE_NUM,0) TRADE_NUM,
-            b.PS,
-            b.SEC_ACCT_ID,
-            NVL(e.COMMISSION_AMT,0) COMMISSION_AMT2,
-            NVL(e.JSF_AMT,0) JSF_AMT2,
-            NVL(e.ZGF_AMT,0) ZGF_AMT2,
-            NVL(e.STAMP_FEE,0) STAMP_FEE2,
-            NVL(e.SETTLE_FEE,0) SETTLE_FEE2,
-            NVL(e.GHF_AMT,0) GHF_AMT2,
-            NVL(e.SXF_AMT,0) SXF_AMT2,
-            NVL(e.FPRICE_AMT,0) TRADE_AMT2,
-            NVL(e.SHARE_AMT,0) TRADE_NUM2
+            ssr.ENTRUST_TRADE_ID,
+            ssr.CUSTOMER_ID,
+            ssr.STL_SEC_DEME,
+            ssrd.TRADE_ID,
+            ssrd.SEAT_NUMBER,
+            NVL(ssrd.COMMISSION_AMT,0) COMMISSION_AMT,
+            NVL(ssrd.JSF_AMT,0) JSF_AMT,
+            NVL(ssrd.ZGF_AMT,0) ZGF_AMT,
+            NVL(ssrd.STAMP_FEE,0) STAMP_FEE,
+            NVL(ssrd.SETTLE_FEE,0) SETTLE_FEE,
+            NVL(ssrd.GHF_AMT,0) GHF_AMT,
+            NVL(ssrd.SXF_AMT,0) SXF_AMT,
+            NVL(ssrd.TRADE_AMT,0) TRADE_AMT,
+            NVL(ssrd.TRADE_NUM,0) TRADE_NUM,
+            ssrd.PS,
+            ssrd.SEC_ACCT_ID,
+            NVL(settle.COMMISSION_AMT,0) COMMISSION_AMT2,
+            NVL(settle.JSF_AMT,0) JSF_AMT2,
+            NVL(settle.ZGF_AMT,0) ZGF_AMT2,
+            NVL(settle.STAMP_FEE,0) STAMP_FEE2,
+            NVL(settle.SETTLE_FEE,0) SETTLE_FEE2,
+            NVL(settle.GHF_AMT,0) GHF_AMT2,
+            NVL(settle.SXF_AMT,0) SXF_AMT2,
+            NVL(settle.FPRICE_AMT,0) TRADE_AMT2,
+            NVL(settle.SHARE_AMT,0) TRADE_NUM2
         FROM
-            STL_SEC_RECON a
+            STL_SEC_RECON ssr
         LEFT JOIN
-            STL_SEC_RECON_DEAL b ON a.SEQ_NO = b.SEQ_NO
+            STL_SEC_RECON_DEAL ssrd ON ssr.SEQ_NO = ssrd.SEQ_NO
         LEFT JOIN (
             SELECT
-                c.SEQ_NO,
-                SUM(d.COMMISSION_AMT) COMMISSION_AMT,
-                SUM(d.JSF_AMT) JSF_AMT,
-                SUM(d.ZGF_AMT) ZGF_AMT,
-                SUM(d.STAMP_FEE) STAMP_FEE,
-                SUM(d.SETTLE_FEE) SETTLE_FEE,
-                SUM(d.GHF_AMT) GHF_AMT,
-                SUM(d.SXF_AMT) SXF_AMT,
+                detail.SEQ_NO,
+                std.FINPROD_TYPE2,
+                SUM(std.COMMISSION_AMT) COMMISSION_AMT,
+                SUM(std.JSF_AMT) JSF_AMT,
+                SUM(std.ZGF_AMT) ZGF_AMT,
+                SUM(std.STAMP_FEE) STAMP_FEE,
+                SUM(std.SETTLE_FEE) SETTLE_FEE,
+                SUM(std.GHF_AMT) GHF_AMT,
+                SUM(std.SXF_AMT) SXF_AMT,
                 SUM(
-                    CASE WHEN d.PS = #{PS_T01} AND d.FINPROD_TYPE2 != #{prodType2_F02} THEN d.FPRICE_AMT*-1
-                    WHEN d.PS IN (#{PS_T07},#{PS_T54},#{PS_T55},#{PS_T56},#{PS_T95},#{PS_T96}) AND d.FINPROD_TYPE2 = #{prodType2_F02} THEN d.FPRICE_AMT*-1
-                    ELSE d.FPRICE_AMT END
+                    CASE WHEN std.PS = #{PS_T01} AND std.FINPROD_TYPE2 != #{prodType2_F02} THEN std.FPRICE_AMT*-1
+                    WHEN std.PS = #{PS_T56} AND std.BUSI_SCENE_CALSS = #{BUSI_SCENE_CALSS_0902RS03} AND std.TRADE_MARKET = #{TRADE_MARKET_03} THEN std.FPRICE_AMT*-1
+                    WHEN std.PS = #{PS_T56} AND std.BUSI_SCENE_CALSS = #{BUSI_SCENE_CALSS_0902RB01} AND std.TRADE_MARKET = #{TRADE_MARKET_03} THEN std.FPRICE_AMT*-1
+                    WHEN std.PS = #{PS_T56} AND std.BUSI_SCENE_CALSS = #{BUSI_SCENE_CALSS_0902RB04} AND std.TRADE_MARKET = #{TRADE_MARKET_03} THEN std.FPRICE_AMT*-1
+                    WHEN std.PS IN (#{PS_T07},#{PS_T54},#{PS_T55},#{PS_T95},#{PS_T96}) AND std.FINPROD_TYPE2 = #{prodType2_F02} THEN std.FPRICE_AMT*-1
+                    ELSE std.FPRICE_AMT END
                 ) FPRICE_AMT,
                 SUM(
-                    CASE WHEN d.PS = #{PS_T01} AND d.FINPROD_TYPE2 != #{prodType2_F02} THEN d.SHARE_AMT
-                    WHEN d.PS IN (#{PS_T07},#{PS_T54},#{PS_T55},#{PS_T56},#{PS_T95},#{PS_T96}) AND d.FINPROD_TYPE2 = #{prodType2_F02} THEN d.SHARE_AMT
-                    ELSE d.SHARE_AMT*-1 END
+                    CASE WHEN std.PS = #{PS_T01} AND std.FINPROD_TYPE2 != #{prodType2_F02} THEN std.SHARE_AMT
+                    WHEN std.PS = #{PS_T56} AND std.BUSI_SCENE_CALSS = #{BUSI_SCENE_CALSS_0902RS03} THEN std.SHARE_AMT
+                    WHEN std.PS = #{PS_T56} AND std.BUSI_SCENE_CALSS = #{BUSI_SCENE_CALSS_0902RB01} THEN std.SHARE_AMT
+                    WHEN std.PS = #{PS_T56} AND std.BUSI_SCENE_CALSS = #{BUSI_SCENE_CALSS_0902RB04} THEN std.SHARE_AMT
+                    WHEN std.PS IN (#{PS_T07},#{PS_T54},#{PS_T55},#{PS_T95},#{PS_T96}) AND std.FINPROD_TYPE2 = #{prodType2_F02} THEN std.SHARE_AMT
+                    ELSE std.SHARE_AMT*-1 END
                 ) SHARE_AMT
             FROM
-                STL_SEC_RECON_DETAIL c
+                STL_SEC_RECON_DETAIL detail
+            LEFT JOIN
+                STL_SEC_RECON ssr1 ON detail.SEQ_NO = ssr1.SEQ_NO
             INNER JOIN
-                SETTLE_TRANS_DATA d ON c.TRADE_ID = d.TRADE_ID
+                SETTLE_TRANS_DATA std ON detail.TRADE_ID = std.TRADE_ID
             GROUP BY
-                c.SEQ_NO
-            )e ON a.SEQ_NO = e.SEQ_NO
+                detail.SEQ_NO,
+                std.FINPROD_TYPE2
+            )settle ON ssr.SEQ_NO = settle.SEQ_NO
         LEFT JOIN
-            FIN_PRODUCT_TYPE f ON a.FINPROD_ID = f.FINPROD_ID
+            FIN_PRODUCT_TYPE fpt ON ssr.FINPROD_ID = fpt.FINPROD_ID
         LEFT JOIN
-            T_INSTRUMENT ins ON a.FINPROD_ID = ins.STOCK_CODE
+            T_INSTRUMENT ins ON ssr.FINPROD_ID = ins.STOCK_CODE AND
+                CASE WHEN ssr.TRADE_MARKET = #{TRADE_MARKET_03} THEN 'SH'
+                WHEN ssr.TRADE_MARKET = #{TRADE_MARKET_04} THEN 'SZ'
+                END = ins.STOCK_CODE
         WHERE
             1=1
             <if test="accountList != null and accountList.size() > 0">
-                AND a.ACCOUT IN
+                AND ssr.ACCOUT IN
                 <foreach collection="accountList" index="index" item="item" open="(" close=")" separator=",">
                     #{item}
                 </foreach>
             </if>
             <if test="finprodIdList != null and finprodIdList.size() > 0">
-                AND a.FINPROD_ID IN
+                AND ssr.FINPROD_ID IN
                 <foreach collection="finprodIdList" index="index" item="item" open="(" close=")" separator=",">
                     #{item}
                 </foreach>
             </if>
             <if test="tradeMarket != null and tradeMarket != ''">
-                AND a.TRADE_MARKET = #{tradeMarket}
+                AND ssr.TRADE_MARKET = #{tradeMarket}
             </if>
             <if test="tradeDateBegin != null and tradeDateBegin != ''">
-                AND a.SETTLE_DATE >= TO_DATE(#{tradeDateBegin}, 'yyyy-MM-dd')
+                AND ssr.SETTLE_DATE >= TO_DATE(#{tradeDateBegin}, 'yyyy-MM-dd')
             </if>
             <if test="tradeDateEnd != null and tradeDateEnd != ''">
-                AND a.SETTLE_DATE &lt;= TO_DATE(#{tradeDateEnd}, 'yyyy-MM-dd')
+                AND ssr.SETTLE_DATE &lt;= TO_DATE(#{tradeDateEnd}, 'yyyy-MM-dd')
             </if>
             <if test="accountStatus != null and accountStatus != ''">
-                AND a.CHECK_RESULT = #{accountStatus}
+                AND ssr.CHECK_RESULT = #{accountStatus}
             </if>
         ORDER BY
             CUSTOMER_ID,SETTLE_DATE DESC
@@ -1034,7 +1051,7 @@
         ) table2
     </select>
     <select id="selectPage1" resultType="com.joyintech.service.basicdata.dayendaccount.dto.DayEndAccountDto">
-        SELECT #{parentId} parentInfo,
+        SELECT distinct #{parentId} parentInfo,
                null childInfo,
                p1.PORTFOLIO_ID   portfolioId,
                p3.PORTFOLIO_NAME portfolioName,
@@ -1118,7 +1135,7 @@
                 WHEN fpt.TYPE_8 IS NOT NULL THEN fpt.TYPE_8
                 WHEN ssrd.FINPROD_TYPE IS NOT NULL THEN ssrd.FINPROD_TYPE
                 WHEN ins.STOCK_CODE IS NOT NULL THEN 'F07'
-            END  FINPROD_TYPE,
+                END  FINPROD_TYPE,
             ssrd.MARKET_ID,
             ssrd.FINPROD_NAME,
             ssrd.TRADE_MARKET,
@@ -1151,9 +1168,9 @@
             NVL(ssrd.TOTAL_TEEAMT,0) TOTAL_TEEAMT
         FROM
             STL_SEC_RECON_DEAL ssrd
-        LEFT JOIN
+                LEFT JOIN
             FIN_PRODUCT_TYPE fpt ON ssrd.FINPROD_ID = fpt.FINPROD_ID
-        LEFT JOIN
+                LEFT JOIN
             T_INSTRUMENT ins ON ssrd.FINPROD_ID = ins.STOCK_CODE
         WHERE
             ssrd.SEQ_NO = #{seqNo,jdbcType=VARCHAR}

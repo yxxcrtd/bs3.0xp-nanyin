@@ -3,6 +3,7 @@ package com.joyintech.tams.exchange.datacommon.db.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.base.Strings;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.exchange.common.bean.EntrustQryBean;
 import com.joyintech.tams.exchange.common.bean.EntrustQueryBean;
 import com.joyintech.tams.exchange.common.constant.EntrustType;
@@ -128,8 +129,8 @@ public class IntegratedEntrustHistoryServiceImpl implements IntegratedEntrustHis
         String stockCode = request.getStockCode();
         String entrustProp = request.getEntrustProp();
         Integer entrustStatus = request.getEntrustStatus();
-        String startDay = request.getStartDay();
-        String endDay = request.getEndDay();
+        String startDay = DateUtil.formatDate(request.getStartDay());
+        String endDay = DateUtil.formatDate(request.getEndDay());
 
         PageHelper.startPage(pageMode.getPageNo(), pageMode.getPageSize());
         //过滤撤单委托

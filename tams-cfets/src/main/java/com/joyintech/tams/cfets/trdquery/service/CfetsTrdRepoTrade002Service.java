@@ -26,6 +26,7 @@ import com.joyintech.framework.util.*;
 import com.joyintech.framework.util.DateUtil.DurationType;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.cfets.bankuplink.repo.service.CfetsRepoQuotedPrice004Service;
+import com.joyintech.tams.cfets.cfetsmanualsettle.dao.CfetsManualSettleMapper;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dto.PortIntFenPeiInfoDto;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribBondInfo003Dto;
 import com.joyintech.tams.cfets.trdconfirm.dao.CfetsTrdConfirmMapper;
@@ -127,6 +128,9 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
     private BaseAssetCashPositionCommMapper baseAssetCashPositionCommMapper;
     @Autowired
     private CfetsTrdBondInvestTrade002Service cfetsTrdBondInvestTrade002Service;
+
+    @Autowired
+    private CfetsRepoQuotedPrice004Service cfetsRepoQuotedPrice004Service;
     /**
      * 附件上传类
      */
@@ -260,9 +264,7 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
 
     @Autowired
     private BaseEtrCashPositionCommService baseEtrCashPositionCommService;
-    @Autowired
-    private CfetsRepoQuotedPrice004Service cfetsRepoQuotedPrice004Service;
-	
+
     private final static String SJXY = "SJXY";//深交所协议回购期限品种
 
     @Autowired
@@ -273,6 +275,9 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
     private CfetsTrdQueryMapper cfetsTrdQueryMapper;
     @Autowired
     private TrdTradeFeeTotalMapper trdTradeFeeTotalMapper;
+
+    @Autowired
+    private CfetsManualSettleMapper cfetsManualSettleMapper;
     /**
      * 设置流程业务说明
      */
@@ -1007,6 +1012,8 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
             input.setTotleTradeId(input.getTotleTradeId().substring(0, input.getTotleTradeId().length() - 1));
         }
         List<String> tradeDetailLists = cfetsTrdQueryMapper.selectAllTrdDetailListById(input.getTotleTradeId());
+        String quoteId = null;
+        String ps = null;
 
         for(String item : tradeDetailLists){
             //根据交易编号查询信息
@@ -1061,6 +1068,15 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
                     finProductTradeDto.setBussRepoSec(bussRepoSecService.selectBussRepoSec(initSearchParam));
                 }
                 cfetsTrdBondInvestTrade002Service.baseTradeCommExecute(finProductTradeDto);
+                // 报价编号
+                quoteId = cfetsManualSettleMapper.selectQuoteIdBytradeId(entity.getTradeId());
+                // 是否报价标识
+                boolean isQuote = false;
+                if (StringUtil.isNotEmpty(quoteId)) {
+                    isQuote = true;
+                    ps = entity.getPs();
+                }
+                this.insertOldRepoPosition(entity, finProductTradeDto, isQuote);
             }
 //        // 撤销委托/回购交易时，删除回购质押品信息
             if(StringUtil.isNotEmpty(entity.getBussRepoSec())){
@@ -1107,6 +1123,11 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
             }*/
 
         }
+        // 报价撤销时,不会撤销报价交易数据,需要回退实际头寸并生成可用头寸
+        if (StringUtil.equals(ps, DictCodeList.回购拆借方向_逆回购.getValue()) && StringUtil.isNotEmpty(quoteId)
+                && StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
+            cfetsRepoQuotedPrice004Service.revokePtlCashPosition(quoteId, DictCodeList.持仓类型_实际.getValue(), DictCodeList.持仓类型_可用.getValue());
+        }
 
         Map<String, Object> params = new HashMap<>();
         params.put("workflowId", input.getWorkflowId());
@@ -1128,10 +1149,10 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
         RegFinProductDealTotal regTotal = cfetsTrdQueryMapper.selectRegTotalInfoById(bizCode);
         if(null!=regTotal){
             String remark=StringUtil.isEmpty(regTotal.getRemark()) ? "" : regTotal.getRemark();
-            if(StringUtil.isNotBlank(remark)){
-                remark=remark+(settleRemark==null?"":settleRemark)+"交易撤销：" + input.getRevokeReason();
-            }else{
-                remark=(settleRemark==null?"":settleRemark)+"交易撤销：" + input.getRevokeReason();
+            if (StringUtil.isNotBlank(remark)) {
+                remark = remark + "\n" + (settleRemark == null ? "" : settleRemark) + "交易撤销：" + input.getRevokeReason();
+            } else {
+                remark = (settleRemark == null ? "" : settleRemark) + "交易撤销：" + input.getRevokeReason();
             }
             regTotal.setRemark(remark);
             //regTotal.setTradeStatus(DictCodeListExt1.有效状态_撤销.getValue());
@@ -1150,6 +1171,44 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
             paramMap.put("totleTradeId", bizCode);
             paramMap.put("tradeStatus", BussinessDictCodeList.银行间上行报价状态_已撤销.getValue());
             cfetsTrdQueryMapper.updateIbuByPrimaryKeySelective(paramMap);
+        }
+    }
+
+    /**
+     * 交收确认撤销时,重新组装质押式回购插入旧头寸
+     *
+     * @param entity
+     * @param finProductTradeDto
+     * @param isQuote 是否报价
+     * @author jiangpeng
+     * @date 2022/3/14 10:23
+     */
+    public void insertOldRepoPosition(TrdRepoTrade002Dto entity, FinProductTradeDto finProductTradeDto,boolean isQuote) {
+        if (StringUtil.equals(entity.getPs(), DictCodeList.回购拆借方向_逆回购.getValue())
+                && StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
+            String orderId = cfetsManualSettleMapper.selectRegTradeIdBytradeId(entity.getTradeId());
+            finProductTradeDto.setIsExistNew(DictCodeList.是否_是.getValue());
+            FinProductTradeDto finProductTradeDtoTemp = new FinProductTradeDto();
+            BeanUtil.copyPropertiesIgnoreNull(finProductTradeDtoTemp, finProductTradeDto);
+            if (CollectionUtils.isNotEmpty(finProductTradeDtoTemp.getBaseTradeProductDealDtos())) {
+                for (BaseTradeProductDealDto baseDto : finProductTradeDtoTemp.getBaseTradeProductDealDtos()) {
+//                    if (CollectionUtils.isNotEmpty(baseDto.getStlPayOrdersList())) {
+//                        for (StlPayOrdersDto stlPayOrdersDto : baseDto.getStlPayOrdersList()) {
+//                            if (StringUtil.isEmpty(stlPayOrdersDto.getMyAcctNo())) {
+//                                String acctId = EtrCommonCashPositionDealService.select组合托管户(entity.getPortfolioId(), entity.getCcy(),
+//                                        DictCodeListExt1.资金账户类型_产品托管户.getValue());
+//                                stlPayOrdersDto.setMyAcctNo(acctId);
+//                            }
+//                        }
+//                    }
+                    baseDto.setStlPayOrdersList(null);
+                }
+            }
+            baseTradeProductDealCommService.insertPosition(finProductTradeDtoTemp);
+            // 登记数据会连同登记交易数据一起撤销,只用回退实际头寸
+            if(!isQuote) {
+                cfetsRepoQuotedPrice004Service.revokePtlCashPosition(orderId, DictCodeList.持仓类型_实际.getValue(), null);
+            }
         }
     }
 

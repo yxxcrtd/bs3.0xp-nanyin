@@ -1,5 +1,6 @@
 package com.joyintech.tams.exchange.service.trade.controller;
 
+import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.exchange.common.ResponseResultBody;
 import com.joyintech.tams.exchange.common.bean.OrderPlaceBean;
 import com.joyintech.tams.exchange.common.domain.Message;
@@ -9,6 +10,7 @@ import com.joyintech.tams.exchange.common.response.PortfolioAllocationResponse;
 import com.joyintech.tams.exchange.common.response.PortfolioCalculateResponse;
 import com.joyintech.tams.exchange.common.response.PortfolioInfoResponse;
 import com.joyintech.tams.exchange.service.trade.management.service.PortfolioManager;
+import com.joyintech.tams.invest.common.dto.position.PositionCashSecRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -34,6 +36,13 @@ public class PortfolioController {
     @Autowired
     private PortfolioManager portfolioManager;
 
+    @PostMapping("/info")
+    @ApiOperation(value = "查询组合信息", notes = "查询组合信息")
+    public Message<List<BaseMap>> queryPortfolioInfo(@RequestBody PositionCashSecRequest bean) {
+        return new Message<>(portfolioManager.queryPortfolioInfo(bean));
+    }
+
+    @Deprecated
     @PostMapping
     @ApiOperation(value = "查询组合信息", notes = "查询组合信息")
     public Message<Map<String, PortfolioInfoResponse>> queryPortfolioInfo(@RequestBody @Validated PortfolioInfoRequest bean) {

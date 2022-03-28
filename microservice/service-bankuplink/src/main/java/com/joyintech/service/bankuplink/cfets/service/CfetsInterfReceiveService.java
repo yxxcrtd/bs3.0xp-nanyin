@@ -1481,7 +1481,7 @@ public class CfetsInterfReceiveService {
      * @param param 参数
      * @return 发送方交易账户21位码
      */
-    private String getCfetsPartyID(Map<String, Object> param, String 本方机构) {
+    public String getCfetsPartyID(Map<String, Object> param, String 本方机构) {
         List<NoPartyIDDto> noPartyIDs = JSONObject.parseObject(JSON.toJSONString(param.get("noPartyIDs")),new TypeReference<List<NoPartyIDDto>>() {});
         if (!StringUtil.isEmptyList(noPartyIDs)) {
             for(NoPartyIDDto noPartyIDDto:noPartyIDs) {

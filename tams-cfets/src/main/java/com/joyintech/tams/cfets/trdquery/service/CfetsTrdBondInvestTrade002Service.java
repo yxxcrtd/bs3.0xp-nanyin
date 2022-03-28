@@ -37,6 +37,7 @@ import com.joyintech.system.base.dao.SysUploadFileInfoMapper;
 import com.joyintech.system.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.cfets.bankuplink.bond.service.CfetsBondDealQuotedPrice004Service;
+import com.joyintech.tams.cfets.cfetsmanualsettle.dao.CfetsManualSettleMapper;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dto.PortIntFenPeiInfoDto;
 import com.joyintech.tams.cfets.trdconfirm.dao.CfetsTrdConfirmMapper;
 import com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmMatchDto;
@@ -348,6 +349,9 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
     private CfetsBondDealQuotedPrice004Service cfetsBondDealQuotedPrice004Service;
     @Autowired
     private CfetsTrdRepoTrade002Service cfetsTrdRepoTrade002Service;
+
+    @Autowired
+    private CfetsManualSettleMapper cfetsManualSettleMapper;
 
     // 交易份额小数保留位数
     private int decimalPlaces_4 = 4;
@@ -1132,6 +1136,19 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
 
             //删除授信占用
             riskCreditListCommonValidatorService.deleteCredit(cetradeid);
+
+            //插入头寸
+            if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
+                if (baseTradeProductDealDto.getTrdProductDealAdd() != null &&
+                        StringUtil.isNotEmpty(baseTradeProductDealDto.getTrdProductDealAdd().getTradeId())) {
+                    String orderId = cfetsManualSettleMapper.selectRegTradeIdBytradeId(baseTradeProductDealDto.getTrdProductDealAdd().getTradeId());
+                    if (StringUtil.isNotEmpty(orderId)) {
+                        AllTradeCommonUtil.deleteRegPosition(null, orderId);
+                    }
+
+                }
+
+            }
         }
 
         // add by etliu 20210927 start
@@ -1169,12 +1186,11 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
         //撤销数据为登记时，将登记数据置为已撤销。删除下行匹配关系表数据
         RegFinProductDealTotal regTotal = cfetsTrdQueryMapper.selectRegTotalInfoById(bizCode);
         if(null!=regTotal){
-            String remark=StringUtil.isEmpty(regTotal.getRemark()) ? "" : regTotal.getRemark();
-            if(StringUtil.isNotBlank(remark)){
-                //remark=remark+(settleRemark==null?"":settleRemark)+"\n"+"交易撤销：" + entity.getRevokeReason();
-                remark=remark+"\n"+"交易撤销：" + entity.getRevokeReason()+settleRemark==null?"":settleRemark;
-            }else{
-                remark= "交易撤销：" + entity.getRevokeReason() + settleRemark == null ? "" : settleRemark;
+            String remark = StringUtil.isEmpty(regTotal.getRemark()) ? "" : regTotal.getRemark();
+            if (StringUtil.isNotBlank(remark)) {
+                remark = remark + "\n" + (settleRemark == null ? "" : settleRemark) + "交易撤销：" + entity.getRevokeReason();
+            } else {
+                remark = (settleRemark == null ? "" : settleRemark) + "交易撤销：" + entity.getRevokeReason();
             }
             regTotal.setRemark(remark);
             cfetsBondDealQuotedPrice004Service.dorevoke(regTotal.getTotleTradeId(),remark,isNeedDealPosition,entity.getTgBusiType());

@@ -210,6 +210,11 @@ public class CfetsBondDealDialogueQuoteDto extends CfetsBondDealEntrustOrderDto 
      * 可用持仓
      */
     private BigDecimal secManageAvailablePosition;
+    /**
+     *数据已入新头寸，Y：已入
+     */
+    private String isExistNew;
+
 
     public BigDecimal getSecManageAvailablePosition() {
         return secManageAvailablePosition;
@@ -806,5 +811,13 @@ public class CfetsBondDealDialogueQuoteDto extends CfetsBondDealEntrustOrderDto 
 
     public void setDistribution(String distribution) {
         this.distribution = distribution;
+    }
+
+    public String getIsExistNew() {
+        return isExistNew;
+    }
+
+    public void setIsExistNew(String isExistNew) {
+        this.isExistNew = isExistNew;
     }
 }

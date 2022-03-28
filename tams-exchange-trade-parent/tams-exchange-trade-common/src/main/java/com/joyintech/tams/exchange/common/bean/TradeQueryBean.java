@@ -1,6 +1,7 @@
 package com.joyintech.tams.exchange.common.bean;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.exchange.common.constant.Market;
 import com.joyintech.tams.exchange.common.constant.joyin.DictCode;
@@ -8,6 +9,7 @@ import com.joyintech.tams.exchange.common.constant.joyin.DictCodeList;
 import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt1;
 import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt2;
 import com.joyintech.tams.exchange.common.utils.DoubleSerializerUtils;
+import com.joyintech.tams.exchange.common.utils.TradeUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -84,10 +86,26 @@ public class TradeQueryBean implements Serializable {
     @ApiModelProperty(value = "成交时间")
     private Date createTime;
 
+    @ApiModelProperty(name = "secAcctName", value = "证券账户", hidden = true)
+    private String secAcctName;
+    @ApiModelProperty(name = "invManagerId", value = "投资经理", hidden = true)
+    private String invManagerId;
+    @ApiModelProperty(name = "ps", value = "交易方向", hidden = true)
+    private String ps;
+    @ApiModelProperty(name = "busiTypeTg", value = "投管业务类型")
+    private String busiTypeTg;
+    @ApiModelProperty(name = "extend1", value = "扩展信息1")
+    private String extend1;
+    @ApiModelProperty(name = "extend2", value = "扩展信息2")
+    private String extend2;
+
+    @ApiModelProperty(name = "entrustClass", value = "委托指令类别：01-单组合，02-多组合")
+    private String entrustClass;
+
     /**
      * ///////////////////////////////////查询无用字段
      */
-    @ApiModelProperty(value = "交易日期",hidden = true)
+    @ApiModelProperty(value = "交易日期", hidden = true)
     private String tradingDay;
 
     @ApiModelProperty(value = "委托属性", hidden = true)
@@ -173,6 +191,9 @@ public class TradeQueryBean implements Serializable {
 
     @ApiModelProperty(value = "成交ID", hidden = true)
     private String tradeId;
+
+    private String tradeDate;
+    private String dealTime;
 
     public TradeQueryBean() {
         this.tradedBalance = new BigDecimal("0.00");
@@ -543,7 +564,7 @@ public class TradeQueryBean implements Serializable {
     }
 
     public String getMarketStr() {
-        if(StringUtil.isEmpty(market)){
+        if (StringUtil.isEmpty(market)) {
             return null;
         }
         return Market.getMarketName(market);
@@ -554,7 +575,7 @@ public class TradeQueryBean implements Serializable {
     }
 
     public String getTradePlatStr() {
-        if(StringUtil.isEmpty(tradePlat)){
+        if (StringUtil.isEmpty(tradePlat)) {
             return null;
         }
         return DictCodeList.from(DictCode.交易平台, tradePlat).getCodeName();
@@ -565,7 +586,7 @@ public class TradeQueryBean implements Serializable {
     }
 
     public String getFinprodType2Str() {
-        if(StringUtil.isEmpty(finprodType2)){
+        if (StringUtil.isEmpty(finprodType2)) {
             return null;
         }
         return DictCodeListExt1.from(DictCode.金融产品类型, finprodType2).getCodeName();
@@ -576,13 +597,86 @@ public class TradeQueryBean implements Serializable {
     }
 
     public String getEntrustBsStr() {
-        if(StringUtil.isEmpty(entrustBs)){
+        if (StringUtil.isEmpty(ps)) {
             return null;
         }
-        return  DictCodeListExt2.from(DictCode.交易方向, entrustBs).getCodeName();
+        return DictCodeListExt2.from(DictCode.交易方向, ps).getCodeName();
     }
 
     public void setEntrustBsStr(String entrustBsStr) {
         this.entrustBsStr = entrustBsStr;
+    }
+
+    public String getSecAcctName() {
+        return secAcctName;
+    }
+
+    public void setSecAcctName(String secAcctName) {
+        this.secAcctName = secAcctName;
+    }
+
+    public String getInvManagerId() {
+        return invManagerId;
+    }
+
+    public void setInvManagerId(String invManagerId) {
+        this.invManagerId = invManagerId;
+    }
+
+    public String getPs() {
+        return ps;
+    }
+
+    public void setPs(String ps) {
+        this.ps = ps;
+    }
+
+    public String getBusiTypeTg() {
+        return busiTypeTg;
+    }
+
+    public void setBusiTypeTg(String busiTypeTg) {
+        this.busiTypeTg = busiTypeTg;
+    }
+
+    public String getExtend1() {
+        return extend1;
+    }
+
+    public void setExtend1(String extend1) {
+        this.extend1 = extend1;
+    }
+
+    public String getExtend2() {
+        return extend2;
+    }
+
+    public void setExtend2(String extend2) {
+        this.extend2 = extend2;
+    }
+
+    public String getTradeDate() {
+        return TradeUtils.formatDate(tradingDay);
+    }
+
+    public void setTradeDate(String tradeDate) {
+        this.tradeDate = tradeDate;
+    }
+
+
+    public String getDealTime() {
+        return DateUtil.format(createTime,"HH:mm:ss");
+    }
+
+    public void setDealTime(String dealTime) {
+        this.dealTime = dealTime;
+    }
+
+    public String getEntrustClass() {
+        return entrustClass;
+    }
+
+    public void setEntrustClass(String entrustClass) {
+        this.entrustClass = entrustClass;
     }
 }

@@ -20,15 +20,15 @@ import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.common.base.entity.WflEtrEntrust;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.exchange.entrust.common.validator.EtrExchangeCommonValidator;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.SubEqutityDto;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.entrust.common.validator.EtrCommonValidator;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.MinTrdUnitLimitDto;
-import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.SubEqutityDto;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -46,11 +46,14 @@ import java.util.Map;
  * @since 1.0
  */
 @Service
-public class EtrExchangeBlockTrade001ValidatorService implements EtrCommonValidator {
+public class EtrExchangeBlockTrade001ValidatorService implements EtrExchangeCommonValidator {
 
 	@Autowired
 	EtrExchangeTradeCommon001Service etrExchangeTrade001Service;
-	
+
+	@Autowired
+	EtrExchangeBlockTrade001Service etrExchangeBlockTrade001Service;
+
 	 /**
      * 委托指令Mapper
      */
@@ -67,11 +70,15 @@ public class EtrExchangeBlockTrade001ValidatorService implements EtrCommonValida
 		List<ValidMessage> errorList = new ArrayList<>();
 		EtrExchangeTradeSaveRequest dto = (EtrExchangeTradeSaveRequest) value;
 		if (dto.getOperateType().equals("save") || dto.getOperateType().equals("submit")) {
-			Boolean isNonTradingTime = etrExchangeTrade001Service.isNonTradingTime(dto);
-			if (isNonTradingTime) {
-				errorList.add(new ValidMessage(this.getMessage("ETR_ERROR_0056")));
-				return errorList;
-			}
+//			String isNonTradingTime = etrExchangeBlockTrade001Service.isNonTradingTime(dto);
+//			if (StringUtil.isNotEmpty(isNonTradingTime) && StringUtil.equals(isNonTradingTime,"01")) {
+//				errorList.add(new ValidMessage(this.getMessage("ETR_ERROR_00561")));
+//				return errorList;
+//			}
+//			if (StringUtil.isNotEmpty(isNonTradingTime) && StringUtil.equals(isNonTradingTime,"02")) {
+//				errorList.add(new ValidMessage(this.getMessage("ETR_ERROR_0056")));
+//				return errorList;
+//			}
 			if (!StringUtil.isNotEmpty(dto.getPortfolioId())) {
 				errorList.add(new ValidMessage("portfolioId", this.getMessage("ETR_ERROR_0015")));
 			}
@@ -189,7 +196,7 @@ public class EtrExchangeBlockTrade001ValidatorService implements EtrCommonValida
 						}
 						if (flag1 && flag2 && !(null == minTrdUnitLimitDto.getMinNum()
 								&& null == minTrdUnitLimitDto.getMinAmt())) {
-							String prompt = "";
+							String prompt = "单个组合，";
 							if (flag1 && null != minTrdUnitLimitDto.getMinNum()) {
 								prompt += "最低交易数量" + etrExchangeTrade001Service.getNumAndUnit(
 										minTrdUnitLimitDto.getMinNum(), minTrdUnitLimitDto.getMinNumUnit());
@@ -281,11 +288,11 @@ public class EtrExchangeBlockTrade001ValidatorService implements EtrCommonValida
 				param.put("ccy",DictCodeList.币种_人民币_CNY.getValue());
 				param.put("secAcctId",dto.getSecAcctId());
 				dto.setAccAvailablePos(etrExchangeTrade001Service.selectAvailableNum(param));
-				if (StringUtil.isNotEmpty(dto.getAccAvailablePos()) && StringUtil.isNotEmpty(dto.getEntrustNum())) {
-					if (dto.getAccAvailablePos().compareTo(dto.getEntrustNum()) == -1) {
-						errorList.add(new ValidMessage("accAvailablePos", this.getMessage("ETR_ERROR_0021")));
-					}
-				}
+//				if (StringUtil.isNotEmpty(dto.getAccAvailablePos()) && StringUtil.isNotEmpty(dto.getEntrustNum())) {
+//					if (dto.getAccAvailablePos().compareTo(dto.getEntrustNum()) == -1) {
+//						errorList.add(new ValidMessage("accAvailablePos", this.getMessage("ETR_ERROR_0021")));
+//					}
+//				}
 			}
 			
 			//行权回售

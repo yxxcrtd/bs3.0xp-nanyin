@@ -317,6 +317,31 @@ public class CfetsRepoDealQuotedPrice001Service extends BaseService {
     }
 
     /**
+     * 质押券报价查询-指定条件<br />
+     * 根据传入的不为空的属性进行查询，需支持数据权限
+     *
+     * @param inputBean BondQuoteSearchDto 现券报价查询条件
+     * @param userInfo User 登录用户信息
+     * @return List<BondQuoteExtDto>
+     */
+    public com.joyintech.background.component.common.pack.common.grid.Page<RepoQuoteInfoDto> getRepoDayOfferTablePage(Map<String, Object> param) {
+        com.joyintech.background.component.common.pack.common.grid.Page<RepoQuoteInfoDto> repoQuoteInfoDtoPage
+                = new com.joyintech.background.component.common.pack.common.grid.Page<>();
+        List<RepoQuoteInfoDto> bondQuoteInfoDtoList = new ArrayList<>();
+        // 查询条件转换
+        com.joyintech.background.component.common.pack.common.grid.Page<RepoQuoteExtDto> page = ibuComponentCommonService.getRepoDayOfferTablePage(
+                param);
+        List<RepoQuoteExtDto> bondQuoteExtDtoList = page.getRoot();
+        bondQuoteExtDtoList.forEach(x -> {
+            bondQuoteInfoDtoList.add(this.dtoConvert(x));
+        });
+        BeanUtil.copyPropertiesIgnoreNull(repoQuoteInfoDtoPage,page);
+        repoQuoteInfoDtoPage.setRoot(bondQuoteInfoDtoList);
+
+        return repoQuoteInfoDtoPage;
+    }
+
+    /**
      * 实体类属性转换
      * 
      * @param bondQuoteExtDto 组件返回dto
@@ -970,8 +995,14 @@ public class CfetsRepoDealQuotedPrice001Service extends BaseService {
 		}
 		ptlPositionHoldDto.setPtlCashPositionFlows(ptlCashPositionFlows);
 		ptlPositionHoldDto.setPtlSecPositionFlows(ptlSecPositionFlows);
-		ptlPositionHoldDto.getPtlCashPositionFlows().forEach(etrCashPositionFlowDto -> etrCashPositionFlowDto.setCdate(vSettleDate));
-		ptlPositionHoldDto.getPtlSecPositionFlows().forEach(etrSecPositionFlowDto -> etrSecPositionFlowDto.setCdate(platDate));
+        ptlPositionHoldDto.getPtlCashPositionFlows().forEach(etrCashPositionFlowDto -> {
+            etrCashPositionFlowDto.setCdate(vSettleDate);
+            etrCashPositionFlowDto.setIsExistNew(dto.getIsExistNew());
+        });
+        ptlPositionHoldDto.getPtlSecPositionFlows().forEach(etrSecPositionFlowDto -> {
+            etrSecPositionFlowDto.setCdate(platDate);
+            etrSecPositionFlowDto.setIsExistNew(dto.getIsExistNew());
+        });
 
 		// 插入持仓流水
         //撤回不删除流水  登录一比反向流水  add by zhangnian 202010115

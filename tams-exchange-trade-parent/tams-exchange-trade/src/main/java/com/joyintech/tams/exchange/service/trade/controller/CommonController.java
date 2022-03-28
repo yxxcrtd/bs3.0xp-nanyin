@@ -8,7 +8,6 @@ import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.bean.SysParamBean;
 import com.joyintech.tams.exchange.common.bean.request.DeviationDegreeRequest;
 import com.joyintech.tams.exchange.common.bean.request.EtrDispatcherInfoRequest;
-import com.joyintech.tams.exchange.common.bean.response.EtrDispatcherInfoResponse;
 import com.joyintech.tams.exchange.common.bean.response.ExchangeContextResponse;
 import com.joyintech.tams.exchange.common.constant.ErrorCode;
 import com.joyintech.tams.exchange.common.db.domain.Instrument;
@@ -20,6 +19,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -195,7 +195,7 @@ public class CommonController {
 
     @ApiOperation(value = "查询指令明细信息", notes = "根据指令代码查询指令明细信息")
     @RequestMapping(value = "/common/etrDispatcher/info", method = RequestMethod.POST)
-    public Message<Map<String,Object>> getEtrDispatcherInfo(@RequestBody EtrDispatcherInfoRequest request) {
+    public Message<Map<String, Object>> getEtrDispatcherInfo(@RequestBody EtrDispatcherInfoRequest request) {
         return commonManagement.getEtrDispatcherInfo(request);
     }
 
@@ -203,5 +203,11 @@ public class CommonController {
     @RequestMapping(value = "/common/deviationDegree", method = RequestMethod.POST)
     public Message<String> getDeviationDegree(@RequestBody DeviationDegreeRequest request) {
         return commonManagement.getDeviationDegree(request);
+    }
+
+    @ApiOperation(value = "查询最新面值", notes = "根据资产代码查询最新面值")
+    @RequestMapping(value = "/common/getFaceValue", method = RequestMethod.POST)
+    public Message<BigDecimal> getFaceValue(@RequestParam(value = "finprodId") String finprodId) {
+        return commonManagement.getFaceValue(finprodId);
     }
 }

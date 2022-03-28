@@ -1,5 +1,7 @@
 package com.joyintech.tams.cfets.cfetsmanualsettle.dao;
 
+import com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteEtrReDto;
+import com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteEtrRe;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dto.*;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dto.PortIntFenPeiInfoDto;
 import com.joyintech.tams.cfets.trdquery.dto.CfetsTrdBondInvestTradeDto;
@@ -9,6 +11,7 @@ import com.joyintech.tams.common.base.entity.TrdBankManualSettleInfo;
 import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
 import com.joyintech.tams.common.base.entity.User;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
+import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -51,6 +54,13 @@ public interface CfetsManualSettleMapper {
     CfetsManualSettleInfoRespond findManualSettleInfo(Map<String, Object> pageParam);
 
     /**
+     * 交收流水列表分页查询(临时表)
+     *
+     * @param pageParam 参数
+     * @return CfetsManualSettleInfoRespond
+     */
+    CfetsManualSettleInfoRespond findTempManualSettleInfo(Map<String, Object> pageParam);
+    /**
      * 组合分配信息List
      *
      * @param pageParam 参数
@@ -59,12 +69,68 @@ public interface CfetsManualSettleMapper {
     List<PortIntFenPeiInfoDto> findPortIntFenPeiInfoList(Map<String, Object> pageParam);
 
     /**
+     * 组合分配信息List(临时交易表查询)
+     *
+     * @param pageParam 参数
+     * @return List<PortIntFenPeiInfoDto>
+     */
+    List<PortIntFenPeiInfoDto> findTempPortIntFenPeiInfoList(Map<String, Object> pageParam);
+
+    /**
      * 成交确认明细查询
      *
      * @param tradeId 参数
      * @return List<CfetsManualSettleDealInfo>
      */
-    List<CfetsManualSettleDealInfo> getDealDetailsByTradeId(@Param("tradeId") String tradeId);
+    List<CfetsManualSettleDealInfo> getDealDetailsByTradeId(@Param("tradeId") String tradeId,@Param("isCancel") String isCancel);
+
+    /**
+     * 登记编号查询
+     *
+     * @param tradeId 参数
+     * @return String
+     */
+    String selectRegTradeId(@Param("tradeId") String tradeId,@Param("entrustId") String entrustId);
+
+    /**
+     * 登记编号查询
+     *
+     * @param tradeId 参数
+     * @return String
+     */
+    String selectRegTradeIdBytradeId(@Param("tradeId") String tradeId);
+
+    /**
+     * 报价编号查询
+     *
+     * @param tradeId 参数
+     * @return String
+     */
+    String selectQuoteIdBytradeId(@Param("tradeId") String tradeId);
+
+    /**
+     * 划款指令查询
+     *
+     * @param tradeId 参数
+     * @return List<StlPayOrdersDto>
+     */
+    List<StlPayOrdersDto> getStlPayOrdersByTradeId(@Param("tradeId") String tradeId);
+
+    /**
+     * 成交确认明细查询
+     *
+     * @param tradeId 参数
+     * @return String
+     */
+    String qryEntrustId(@Param("tradeId") String tradeId);
+
+    /**
+     * 成交确认明细查询(临时表查询)
+     *
+     * @param tradeId 参数
+     * @return List<CfetsManualSettleDealInfo>
+     */
+    List<CfetsManualSettleDealInfo> getTempDealDetailsByTradeId(@Param("tradeId") String tradeId);
 
     /**
      * 查询证券账户
@@ -104,6 +170,13 @@ public interface CfetsManualSettleMapper {
     List<PortSettleinfoDto> queryPortSettleinfo(Map<String, Object> pageParam);
 
     /**
+     * 查询待修改记录(临时表)
+     * @param pageParam
+     * @return
+     */
+    List<PortSettleinfoDto> queryTempPortSettleinfo(Map<String, Object> pageParam);
+
+    /**
      * 查询金融产品交易附属表数据
      * @param tradeId
      * @return
@@ -124,6 +197,14 @@ public interface CfetsManualSettleMapper {
      * @return CfetsManualSettleInfoF32Respond
      */
     CfetsManualSettleInfoOtherListRespond findManualSettleInfoOther(Map<String, Object> pageParam);
+
+    /**
+     * 一级市场投标交收流水列表分页查询
+     *
+     * @param pageParam 参数
+     * @return CfetsManualSettleInfoF32Respond
+     */
+    CfetsManualSettleInfoOtherListRespond findTempManualSettleInfoOther(Map<String, Object> pageParam);
 
     /**
      * 根据用户名查找真实姓名
@@ -172,4 +253,19 @@ public interface CfetsManualSettleMapper {
     List<PortIntFenPeiInfoDto> findManualSettleFenPei(Map<String,Object> params);
 
     int countWflEtr(Map<String, Object> param);
+
+    /**
+     * 报价编号查询
+     * @param tradeId1
+     * @return
+     */
+    String selectIbTradeIdBytradeId(@Param("tradeId1") String tradeId1);
+
+    /**
+     * 报价编号查询报价信息
+     *
+     * @param tradeId
+     * @return
+     */
+    List<PtlFlowsDto> selectIbQuoteBytradeId(@Param("tradeId") String tradeId);
 }

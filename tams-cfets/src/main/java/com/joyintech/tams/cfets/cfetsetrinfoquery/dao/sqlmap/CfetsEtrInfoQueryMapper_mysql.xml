@@ -55,12 +55,13 @@
     (case ETR_ENTRUST_ADD.SETTLE_SPREED when 0 then '01' when 1 then '02' when '2' then '03' end) settleSpeed,
     (case ETR_ENTRUST_ADD.ASSET_TYPE when 'F01' then '' when 'F07' then ETR_ENTRUST_ADD.TERM_DAYS when 'F10' then ETR_ENTRUST_ADD.TERM_DAYS when 'F12' then ETR_ENTRUST_ADD.TERM_DAYS when 'F16' then ETR_ENTRUST_ADD.TERM_DAYS else '' end) termDays,
     round((case btm.busi_type when #{busiTypePosition02} then (case ETR_ENTRUST_ADD.CALCULATE_FIELD when 'price' then ETR_ENTRUST.PRICE when 'exerYield' then ETR_ENTRUST_ADD.EXER_YIELD*100 when 'matureYield' then ETR_ENTRUST_ADD.MATURE_YIELD*100 end) when #{busiTypePosition03} then ETR_ENTRUST.PRICE when #{busiTypePosition05} then ETR_ENTRUST.PRICE*100 else '' end),4) etrPrice,
-    case when ETR_ENTRUST_ADD.ASSET_TYPE = 'F01'
+    case when ETR_ENTRUST_ADD.ASSET_TYPE = 'F01' and ETR_ENTRUST.ENTRUST_NUM != 0
     /*then trunc(nvl(NVL(T7.FINISH_AMT, 0)+ NVL(T5.ENT_FINISH_AMT*100, 0),0)/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100*/
     then truncate(ifnull(NVL(T7.FINISH_AMT, 0)+ ifnull(T5.ENT_FINISH_AMT*100, 0),0)/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100
     /*else trunc(nvl(nvl(T7.FINISH_AMT, 0) + nvl(T5.Ent_Finish_Amt, 0), 0) / ETR_ENTRUST.ENTRUST_AMT,4) * 100 end  as exeProgress,*/
     else truncate(ifnull(ifnull(T7.FINISH_AMT, 0) + ifnull(T5.Ent_Finish_Amt, 0), 0) / ETR_ENTRUST.ENTRUST_AMT,4) * 100 end  as exeProgress,
     case when ETR_ENTRUST_ADD.ASSET_TYPE = 'F01'
+    case when ETR_ENTRUST_ADD.ASSET_TYPE = 'F01' and ETR_ENTRUST.ENTRUST_NUM != 0
    /* then trunc((NVL(CB.totalShareAmt,nvl(C2B.totalShareAmt,0))+NVL(T6.FINISH_AMT*100,0))/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100
     else trunc((nvl(C.totalShareAmt, nvl(C2.FPRICE_AMT, 0)) + nvl(T6.FINISH_AMT, 0)) */
     then truncate((ifnull(CB.totalShareAmt,ifnull(C2B.totalShareAmt,0))+ifnull(T6.FINISH_AMT*100,0))/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100
@@ -97,7 +98,9 @@
     DATE_FORMAT(ETR_ENTRUST_ADD.TRANSMIT_TIME,'%Y-%m-%d %H:%i:%s') transmitTime,
     DATE_FORMAT(ETR_ENTRUST_ADD.TRANSMIT_TIME,'%Y-%m-%d %H:%i') transmitTimeSer,
     ETR_ENTRUST_ADD.CALCULATE_FIELD calculateField
-    FROM (SELECT * FROM ETR_ENTRUST  ORDER BY ENTRUST_DATE DESC) ETR_ENTRUST
+    FROM (SELECT * FROM ETR_ENTRUST  where ps in ('T01','T02','T03','03','04') and trade_market in ('01','02')
+        and finprod_type2 in ('F01','F02','F03')
+        ORDER BY ENTRUST_DATE DESC) ETR_ENTRUST
     LEFT JOIN
     PTL_PORTFOLIO
     ON
@@ -316,12 +319,12 @@
         (case WFL_ETR_ENTRUST_ADD.SETTLE_SPREED when 0 then '01' when 1 then '02' when '2' then '03' end) settleSpeed,
         (case WFL_ETR_ENTRUST_ADD.ASSET_TYPE when 'F01' then '' when 'F07' then WFL_ETR_ENTRUST_ADD.TERM_DAYS when 'F10' then WFL_ETR_ENTRUST_ADD.TERM_DAYS when 'F12' then WFL_ETR_ENTRUST_ADD.TERM_DAYS when 'F16' then WFL_ETR_ENTRUST_ADD.TERM_DAYS else '' end) termDays,
         round((case btm.busi_type when #{busiTypePosition02} then (case ETR_ENTRUST_ADD.CALCULATE_FIELD when 'price' then WFL_ETR_ENTRUST.PRICE when 'exerYield' then WFL_ETR_ENTRUST.EXER_YIELD*100 when 'matureYield' then WFL_ETR_ENTRUST_ADD.MATURE_YIELD*100 end) when #{busiTypePosition03} then WFL_ETR_ENTRUST.PRICE when #{busiTypePosition05} then WFL_ETR_ENTRUST.PRICE*100 else '' end),4) etrPrice,
-        case when WFL_ETR_ENTRUST_ADD.ASSET_TYPE = 'F01'
+        case when WFL_ETR_ENTRUST_ADD.ASSET_TYPE = 'F01' and WFL_ETR_ENTRUST.ENTRUST_NUM != 0
         /*then trunc(nvl(NVL(T7.FINISH_AMT, 0)+ NVL(T5.ENT_FINISH_AMT*100, 0),0)/(WFL_ETR_ENTRUST.ENTRUST_NUM*100),4)*100
         else trunc(nvl(nvl(T7.FINISH_AMT, 0) + nvl(T5.Ent_Finish_Amt, 0), 0) / WFL_ETR_ENTRUST.ENTRUST_AMT,4) * 100 end  as exeProgress,*/
         then truncate(ifnull(ifnull(T7.FINISH_AMT, 0)+ ifnull(T5.ENT_FINISH_AMT*100, 0),0)/(WFL_ETR_ENTRUST.ENTRUST_NUM*100),4)*100
         else truncate(ifnull(ifnull(T7.FINISH_AMT, 0) + ifnull(T5.Ent_Finish_Amt, 0), 0) / WFL_ETR_ENTRUST.ENTRUST_AMT,4) * 100 end  as exeProgress,
-        case when WFL_ETR_ENTRUST_ADD.ASSET_TYPE = 'F01'
+        case when WFL_ETR_ENTRUST_ADD.ASSET_TYPE = 'F01' and WFL_ETR_ENTRUST.ENTRUST_NUM != 0
         /*then trunc((NVL(CB.totalShareAmt,nvl(C2B.totalShareAmt,0))+NVL(T6.FINISH_AMT*100,0))/(WFL_ETR_ENTRUST.ENTRUST_NUM*100),4)*100
         else trunc((nvl(C.totalShareAmt, nvl(C2.FPRICE_AMT, 0)) + nvl(T6.FINISH_AMT, 0)) */
         then truncate((ifnull(CB.totalShareAmt,ifnull(C2B.totalShareAmt,0))+ifnull(T6.FINISH_AMT*100,0))/(WFL_ETR_ENTRUST.ENTRUST_NUM*100),4)*100
@@ -355,7 +358,8 @@
         NULL transmitTime,
         NULL transmitTimeSer,
         WFL_ETR_ENTRUST_ADD.CAL_MODE calculateField
-        FROM (SELECT * FROM WFL_ETR_ENTRUST  ORDER BY ENTRUST_DATE DESC) WFL_ETR_ENTRUST
+        FROM (SELECT * FROM WFL_ETR_ENTRUST where ps in ('T01','T02','T03','03','04')  and trade_market in ('01','02')
+        and finprod_type2 in ('F01','F02','F03') ORDER BY ENTRUST_DATE DESC) WFL_ETR_ENTRUST
         LEFT JOIN
         PTL_PORTFOLIO
         ON

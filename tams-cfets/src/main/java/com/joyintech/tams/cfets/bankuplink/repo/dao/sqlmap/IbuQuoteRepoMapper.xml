@@ -676,7 +676,7 @@
             from (
                      select ep.ENTRUST_ID
                            ,ep.FINPROD_ID
-                           ,( ep.PLEDGE_NUMBER - wrfp.PLEDGE_NUMBER - rfp.PLEDGE_NUMBER) PLEDGE_NUMBER
+                           ,(nvl(ep.PLEDGE_NUMBER,0) - nvl(wrfp.PLEDGE_NUMBER,0) - nvl(rfp.PLEDGE_NUMBER,0)) PLEDGE_NUMBER
                            ,ep.PLEDGE_RATIO
                      from ETR_PLEDGE ep
                      left join WFL_REG_FIN_PLEDGE wrfp
@@ -1327,7 +1327,7 @@
    </select>
 
     <select id="findEtrPrinByEtrIds" resultType="com.joyintech.tams.cfets.bankuplink.repo.dto.RepoEntrustPledgeDto">
-        select ENTRUST_ID entrustId, FINPROD_ID finprodId, sum(PLEDGE_NUMBER*100) avaPledgePrin
+        select ENTRUST_ID entrustId, FINPROD_ID finprodId, sum(PLEDGE_NUMBER) avaPledgePrin
         from (
                  select ENTRUST_ID, FINPROD_ID, PLEDGE_NUMBER
                  from ETR_PLEDGE ep
@@ -1349,18 +1349,47 @@
                             #{item}
                         </foreach>
                     </if>
+                    <if test="workflowId != null and workflowId != '' ">
+                        AND wrfp.WORKFLOW_ID != #{workflowId}
+                    </if>
                 </where>
                  union all
                  select rfp.ENTRUST_ID, rfp.PLEDGE_FINPROD_ID FINPROD_ID, -1*rfp.PLEDGE_NUMBER
                  from REG_FIN_PLEDGE  rfp
                  left join REG_FIN_PRODUCT_DEAL rfpd on rfp.TRADE_ID = rfpd.TRADE_ID
                 <where>
-                    and rfpd.IS_CANCEL = 'N'  and rfpd.TRADE_STATUS = '01'
+                    rfpd.IS_CANCEL = 'N'  and rfpd.TRADE_STATUS = '01'
                     <if test="entrustIdList != null and entrustIdList.size() > 0">
                         and rfp.ENTRUST_ID in
                         <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
                             #{item}
                         </foreach>
+                    </if>
+                </where>
+                union all
+                select iqecp.ENTRUST_ID, iqecp.PLEDGE_FINPROD_ID FINPROD_ID, -1*iqecp.PLEDGE_NUMBER
+                from IBU_QUOTE_ENT_CREP_PLEDGE iqecp
+                <where>
+                    <if test="entrustIdList != null and entrustIdList.size() > 0">
+                        iqecp.ENTRUST_ID in
+                        <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                            #{item}
+                        </foreach>
+                    </if>
+                </where>
+                union all
+                select wiqecp.ENTRUST_ID, wiqecp.PLEDGE_FINPROD_ID FINPROD_ID, -1*wiqecp.PLEDGE_NUMBER
+                from wfl_IBU_QUOTE_ENT_CREP_PLEDGE wiqecp
+                left join WFL_IBU_QUOTE_CREP wiqc on wiqc.QUOTE_ID = wiqecp.QUOTE_ID
+                <where>
+                    <if test="entrustIdList != null and entrustIdList.size() > 0">
+                        wiqecp.ENTRUST_ID in
+                        <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                            #{item}
+                        </foreach>
+                    </if>
+                    <if test="workflowId != null and workflowId != '' ">
+                        AND wiqc.WORKFLOW_ID != #{workflowId}
                     </if>
                 </where>
              )
@@ -1384,6 +1413,9 @@
                                       and rfpdt.TRADE_STATUS = '01'
                 ) rfpd on rfpd.ENTRUST_ID = ee.ENTRUST_ID
                  left join WFL_REG_FIN_PRODUCT_DEAL wrfpd on wrfpd.ENTRUST_ID = ee.ENTRUST_ID
+                    <if test="totleTradeId != null and totleTradeId != ''">
+                         and wrfpd.TOTLE_TRADE_ID != #{totleTradeId}
+                    </if>
                  left join (
                     select t.FPRICE_AMT ENTRUST_AMT, t.ENTRUST_ID
                     from IBU_QUOTE_ETR_RE t
@@ -1391,6 +1423,9 @@
                     where IQC.SEND_STATUS = '01'
                 ) IBQER on rfpd.ENTRUST_ID = ee.ENTRUST_ID
                  left join WFL_IBU_QUOTE_ETR_RE wiqer on wiqer.ENTRUST_ID = ee.ENTRUST_ID
+                    <if test="totleTradeId != null and totleTradeId != ''">
+                        and wiqer.QUOTE_ID != #{totleTradeId}
+                    </if>
                  where ee.ENTRUST_ID = #{etrId}
              ) T
             LEFT JOIN IBU_PORTFOLIO_ACCT_RELA IPAR
@@ -1437,7 +1472,7 @@
                null                                                                                       quoteRoleType/*本方角色*/,
                MCCI.PARTY_ABBR                                                                            ouPartyName/*本方*/,
                SU.REAL_NAME                                                                               ouTraderName /*本方交易员*/,
-               MCP.COUNTER_NAME                                                                           cpPartyName/*对手方*/,
+               case WHEN RFPDT.QUOTE_TYPE = '05' THEN SDL.ITEM_VALUE else MCP.COUNTER_NAME end            cpPartyName/*对手方*/,
                CASE WHEN MCCT.TRADER_NAME is not null THEN MCCT.TRADER_NAME ELSE RFPDT.COUNTER_TRADER END cpTraderName/*对手方交易员*/,
                DECODE(RFPDT.SETTLE_SPEED, 0, '01', 1, '02')                                               settleSpeed/*清算速度*/,
                RFPDT.V_SETTLE_DATE                                                                        vSettleDate/*首次结算日*/,
@@ -1459,6 +1494,8 @@
                            ON MCP.COUNTER_ID = RFPDT.COUNTER_ID
                  LEFT JOIN SYS_USER SU
                            ON SU.USER_NAME = RFPDT.OU_TRADER_ID
+                 LEFT JOIN SYS_DATADICT_LIST SDL
+                           ON RFPDT.COUNTER_ID = SDL.ITEM_CODE AND SDL.DICT_CODE = 'REGIST_ORG'
         where RFPDT.IS_CANCEL = 'N'
           and RFPDT.TRADE_STATUS != '03'
           and RFPDT.FINPROD_TYPE2 in ('F02', 'F03')
@@ -1485,7 +1522,7 @@
                null                                                                                       quoteRoleType/*本方角色*/,
                MCCI.PARTY_ABBR                                                                            ouPartyName/*本方*/,
                SU.REAL_NAME                                                                               ouTraderName /*本方交易员*/,
-               MCP.COUNTER_NAME                                                                           cpPartyName/*对手方*/,
+               case WHEN RFPDT.QUOTE_TYPE = '05' THEN SDL.ITEM_VALUE else MCP.COUNTER_NAME end            cpPartyName/*对手方*/,
                CASE WHEN MCCT.TRADER_NAME is not null THEN MCCT.TRADER_NAME ELSE RFPDT.COUNTER_TRADER END cpTraderName/*对手方交易员*/,
                DECODE(RFPDT.SETTLE_SPEED, 0, '01', 1, '02')                                               settleSpeed/*清算速度*/,
                RFPDT.V_SETTLE_DATE                                                                        vSettleDate/*首次结算日*/,
@@ -1507,6 +1544,8 @@
                            ON MCP.COUNTER_ID = RFPDT.COUNTER_ID
                  LEFT JOIN SYS_USER SU
                            ON SU.USER_NAME = RFPDT.OU_TRADER_ID
+                 LEFT JOIN SYS_DATADICT_LIST SDL
+                           ON RFPDT.COUNTER_ID = SDL.ITEM_CODE AND SDL.DICT_CODE = 'REGIST_ORG'
         where RFPDT.IS_CANCEL = 'Y'
           and RFPDT.FINPROD_TYPE2 in ('F02', 'F03')
           AND EXISTS (
@@ -1532,7 +1571,7 @@
                null                                                                                        quoteRoleType/*本方角色*/,
                MCCI.PARTY_ABBR                                                                             ouPartyName/*本方*/,
                SU.REAL_NAME                                                                                ouTraderName /*本方交易员*/,
-               MCP.COUNTER_NAME                                                                            cpPartyName/*对手方*/,
+               case WHEN WRFPDT.QUOTE_TYPE = '05' THEN SDL.ITEM_VALUE else MCP.COUNTER_NAME end            cpPartyName/*对手方*/,
                CASE WHEN MCCT.TRADER_NAME is not null THEN MCCT.TRADER_NAME ELSE WRFPDT.COUNTER_TRADER END cpTraderName/*对手方交易员*/,
                DECODE(WRFPDT.SETTLE_SPEED, 0, '01', 1, '02')                                               settleSpeed/*清算速度*/,
                WRFPDT.V_SETTLE_DATE                                                                        vSettleDate/*首次结算日*/,
@@ -1550,6 +1589,8 @@
                            ON MCP.COUNTER_ID = WRFPDT.COUNTER_ID
                  LEFT JOIN SYS_USER SU
                            ON SU.USER_NAME = WRFPDT.OU_TRADER_ID
+                 LEFT JOIN SYS_DATADICT_LIST SDL
+                           ON WRFPDT.COUNTER_ID = SDL.ITEM_CODE AND SDL.DICT_CODE = 'REGIST_ORG'
         where WRFPDT.IS_CANCEL = 'N'
           and WRFPDT.TRADE_STATUS != '03'
           and WRFPDT.FINPROD_TYPE2 in ('F02', 'F03')
@@ -1605,6 +1646,9 @@
                            where sur.USER_ID = #{loginUserId}
                            and sr.ROLE_POS = #{rolePos03})
        </if>
+        <if test="sort != null and sort != '' and direction != null and direction != ''">
+            order by ${sort} ${direction}
+        </if>
     </select>
 
     <sql id="listRegFinPledge_sql">
@@ -1996,15 +2040,16 @@
                     RFPDT.REPO_TYPE        repoType,
                     RFPDT.REPO_TERM        repoTerm,
                     MCCI2.PARTY_ABBR       ouPartyName,
-                    MSCP.COUNTER_NAME      cpPartyName,
+                    case when RFPDT.QUOTE_TYPE = '05' then SDL.ITEM_VALUE else MSCP.COUNTER_NAME end     cpPartyName,
                     MSCP.PARTY_ID          partyId,
-                    SU.REAL_NAME           ouTraderName,
+                    NVL(SU.REAL_NAME,SUA.IBU_TRADER) ouTraderName,
                     case when MCCT.TRADER_NAME is not null then MCCT.TRADER_NAME
                       else RFPDT.COUNTER_TRADER  end  cpTraderName,
                     RFPDT.SETTLE_SPEED     settleSpeed/*清算速度*/,
                     RFPDT.V_SETTLE_DATE    vSettleDate,
                     RFPDT.M_SETTLE_DATE    mSettleDate,
                     RFPDT.TRADE_DATE       tradeDate,
+                    TFPDT.TRADE_DATE       dealDate,
                     EEOH.STATISTICAL_TIMES statisticalTimes,
                     RFPDT.TOTLE_TRADE_ID   quoteId,
                     TMI.TRD_ID             trdId,
@@ -2024,6 +2069,8 @@
                 ON MCCT.TRADER_ID = RFPDT.COUNTER_TRADER
             LEFT JOIN SYS_USER SU
                 ON SU.USER_NAME = RFPDT.OU_TRADER_ID
+            LEFT JOIN SYS_USER_ADD SUA ON SU.USER_ID = SUA.USER_ID
+            LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'REGIST_ORG')SDL ON RFPDT.COUNTER_ID = SDL.ITEM_CODE
             LEFT JOIN (SELECT
             ENTRUST_ID,
             COUNT(1) STATISTICAL_TIMES
@@ -2034,6 +2081,7 @@
             GROUP BY
             ENTRUST_ID) EEOH  ON  EEOH.ENTRUST_ID = RFPDT.TOTLE_TRADE_ID
             LEFT JOIN TRDQUTO_MATCH_INFO TMI ON TMI.PRE_TRADE_ID = RFPDT.TOTLE_TRADE_ID
+            LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TFPDT ON TMI.TRD_ID = TFPDT.TOTLE_TRADE_ID
             WHERE RFPDT.FINPROD_TYPE2 in ('F02', 'F03')
               AND ((RFPDT.TRADE_STATUS = '01' and (RFPDT.IS_CANCEL IS NULL OR RFPDT.IS_CANCEL = 'N')) OR
                    RFPDT.IS_CANCEL = 'Y')
@@ -2063,15 +2111,16 @@
                 RFPDT.REPO_TYPE        repoType,
                 RFPDT.REPO_TERM        repoTerm,
                 MCCI2.PARTY_ABBR       ouPartyName,
-                MSCP.COUNTER_NAME      cpPartyName,
+                case when RFPDT.QUOTE_TYPE = '05' then SDL.ITEM_VALUE else MSCP.COUNTER_NAME end     cpPartyName,
                 MSCP.PARTY_ID          partyId,
-                SU.REAL_NAME           ouTraderName,
+                NVL(SU.REAL_NAME,SUA.IBU_TRADER) ouTraderName,
                 case when MCCT.TRADER_NAME is not null then MCCT.TRADER_NAME
                     else RFPDT.COUNTER_TRADER  end  cpTraderName,
                 RFPDT.SETTLE_SPEED     settleSpeed/*清算速度*/,
                 RFPDT.V_SETTLE_DATE    vSettleDate,
                 RFPDT.M_SETTLE_DATE    mSettleDate,
                 RFPDT.TRADE_DATE       tradeDate,
+                null                   dealDate,
                 EEOH.STATISTICAL_TIMES statisticalTimes,
                 RFPDT.TOTLE_TRADE_ID   quoteId,
                 NULL                   trdId,
@@ -2091,6 +2140,8 @@
             ON MCCT.TRADER_ID = RFPDT.COUNTER_TRADER
         LEFT JOIN SYS_USER SU
             ON SU.USER_NAME = RFPDT.OU_TRADER_ID
+        LEFT JOIN SYS_USER_ADD SUA ON SU.USER_ID = SUA.USER_ID
+        LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'REGIST_ORG')SDL ON RFPDT.COUNTER_ID = SDL.ITEM_CODE
         LEFT JOIN (SELECT
         ENTRUST_ID,
         COUNT(1) STATISTICAL_TIMES
@@ -2124,6 +2175,7 @@
 
     <!--当日登记-->
     <select id="listDayReg" resultType="com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDayRegDto">
+        select * from (
         select
             TT.validStatus,
             TT.quoteType,
@@ -2138,6 +2190,7 @@
             TT.vSettleDate,
             TT.mSettleDate,
             TT.tradeDate,
+            TT.dealDate,
             TT.statisticalTimes,
             TT.quoteId,
             TT.trdId,
@@ -2223,9 +2276,14 @@
                 or to_char(TT.vSettleDate,'yyyy-MM-dd')=#{search}
                 or to_char(TT.mSettleDate,'yyyy-MM-dd')=#{search}
                 or to_char(TT.tradeDate,'yyyy-MM-dd')=#{search}
+                or to_char(TT.dealDate,'yyyy-MM-dd')=#{search}
                 or TT.statisticalTimes||'' =#{search}
                 )
             </if>
+        )
+        <if test="sort != null and sort != '' and direction != null and direction != ''">
+            order by ${sort} ${direction}
+        </if>
     </select>
 
     <!--当日登记本币交易导出 ORA-00600 错-->
@@ -2502,7 +2560,7 @@
             from FIN_EXERCISE_PLAN fep
             left join TRD_FIN_PRODUCT_DEAL_TOTAL tfpdt on tfpdt.FINPROD_ID = fep.FINPROD_ID
             where tfpdt.PS = 'T39'
-                and fep.EXERCISE_DATE >= TO_DATE('2021-07-08','yyyy-MM-dd')
+                and fep.EXERCISE_DATE >= TO_DATE(#{platDate},'yyyy-MM-dd')
                 and fep.EXERCISE_TYPE = '02'
                 <if test="finProdIds != null and finProdIds.size()>0 ">
                     AND fep.FINPROD_ID in
@@ -2661,5 +2719,31 @@
         </where>
         <!-- 根据创建时间排序 （降序）-->
         order by pm.update_time desc
+    </select>
+
+
+    <select id="getEntrustId" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        ENTRUST_ID id,
+        ENTRUST_ID text,
+        PORTFOLIO_ID object /*add by songyawei*/
+        FROM ETR_ENTRUST
+        <where>
+            <if test="param != null and param != ''">
+                ENTRUST_ID LIKE CONCAT('%', CONCAT(#{param}, '%'))
+            </if>
+            <if test="ENTRUST_STATUS_LIST != null and ENTRUST_STATUS_LIST.size() > 0">
+                AND ENTRUST_STATUS IN
+                <foreach collection="ENTRUST_STATUS_LIST" open="(" close=")" item="item" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="finProdType != null and finProdType.size() > 0">
+                AND FINPROD_TYPE2 IN
+                <foreach collection="finProdType" open="(" close=")" item="item1" separator=",">
+                    #{item1}
+                </foreach>
+            </if>
+        </where>
     </select>
 </mapper>

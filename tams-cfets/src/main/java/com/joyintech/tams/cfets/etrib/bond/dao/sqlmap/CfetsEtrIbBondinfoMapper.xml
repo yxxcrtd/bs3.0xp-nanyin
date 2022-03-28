@@ -696,7 +696,7 @@ from
             LEFT JOIN (
                 <!--账户现金-->
                 SELECT d.PORTFOLIO_ID, sum(d.AMOUNT) AMOUNT
-                FROM PTL_CASH_POSITION_RULE d
+                FROM ETR_CASH_POSITION_RULE d
                 where d.cdate = to_date(#{cdate,jdbcType=VARCHAR},'yyyy-MM-dd') AND d.HODING_TYPE =#{C_01} and DATE_TYPE ='0' 
                 <if test="acctId != null and acctId !=''">
                     and d.ACCT_ID = #{acctId,jdbcType=VARCHAR}
@@ -1406,6 +1406,8 @@ from
                     LEFT JOIN TRD_PRODUCT_DEAL_ADD b ON a.TRADE_ID =b.TRADE_ID
                     WHERE 1=1 AND a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
                     AND a.TRADE_DATE &lt;= #{platDate,jdbcType=DATE}-1
+                    and a.trade_status='01'
+                    and a.is_cancel='N'
                 ) WHERE rn = 1
                union
                 SELECT distinct a.FINPROD_ID, b.PORTFOLIO_ID, a.INV_AIM
@@ -1413,6 +1415,8 @@ from
                 LEFT JOIN TRD_PRODUCT_DEAL_ADD b ON a.TRADE_ID =b.TRADE_ID
                 WHERE 1=1 AND a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
                 AND a.TRADE_DATE = #{platDate,jdbcType=DATE}
+                and a.trade_status='01'
+                and a.is_cancel='N'
             ) GROUP BY FINPROD_ID, PORTFOLIO_ID
         ) inva
         on inva.FINPROD_ID=tt.FINPROD_ID and inva.PORTFOLIO_ID=tt.PORTFOLIO_ID
@@ -1447,6 +1451,8 @@ from
             AND b.PORTFOLIO_ID =#{portfolioId,jdbcType=VARCHAR}
             AND a.TRADE_DATE &lt;= to_date(#{cdate,jdbcType=VARCHAR},'yyyy-MM-dd') - 1
             and a.INV_AIM is not null
+            and a.trade_status='01'
+            and a.is_cancel='N'
         ) WHERE rn = 1
         UNION
         SELECT distinct a.INV_AIM as businessModel,pp.PORTFOLIO_NAME  portfolioName
@@ -1458,6 +1464,8 @@ from
             AND a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
             AND b.PORTFOLIO_ID =#{portfolioId,jdbcType=VARCHAR}
             and a.INV_AIM is not null
+            and a.trade_status='01'
+            and a.is_cancel='N'
             AND a.TRADE_DATE = to_date(#{cdate,jdbcType=VARCHAR},'yyyy-MM-dd')
     </select>
     <!--该指令退回时，指令初始下达时间-->
@@ -1471,6 +1479,66 @@ from
         and t1.entrust_status='05'
         and rownum=1
     </select>
+    <!--查询资产是否进行了赎回登记-->
+    <select id="queryAssetIsShReg" resultType="Boolean">
+        SELECT count(*)
+        from reg_fin_product_deal_total
+        where ps='T39' and trade_status='01' and is_cancel='N'
+        and finprod_id=#{finprodId,jdbcType=VARCHAR}
+        and trade_date<![CDATA[<=]]>#{platDate}
+        and settle_date>=#{platDate}
+    </select>
+    <select id="findInvAimInTrd" resultType="string">
+        select distinct businessModel
+        from (
+            SELECT a.INV_AIM as businessModel
+            from TRD_PRODUCT_DEAL a
+            LEFT JOIN TRD_PRODUCT_DEAL_ADD b ON a.TRADE_ID =b.TRADE_ID
+            WHERE 1=1
+            AND a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+            AND b.PORTFOLIO_ID =#{portfolioId,jdbcType=VARCHAR}
+            and a.INV_AIM is not null
+            AND a.TRADE_DATE <![CDATA[<=]]> #{platDate}
+            and a.trade_status='01'
+            and a.is_cancel='N'
+            order by a.update_time desc)
+        where rownum=1
+    </select>
+    <select id="findInvAimInEtr" resultType="string">
+        select distinct businessModel
+        from (
+        select aaa.businessModel from (
+            SELECT a.INV_AIM as businessModel,a.update_time as updateTime
+            from etr_entrust a
+            WHERE 1=1
+            AND a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+            AND a.PORTFOLIO_ID =#{portfolioId,jdbcType=VARCHAR}
+            and a.INV_AIM is not null
+            AND a.entrust_date <![CDATA[<=]]> #{platDate}
+            union
+            SELECT b.INV_AIM as businessModel,b.update_time as updateTime
+            from wfl_etr_entrust b
+            WHERE 1=1
+            AND b.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+            AND b.PORTFOLIO_ID =#{portfolioId,jdbcType=VARCHAR}
+            and b.INV_AIM is not null
+            AND b.entrust_date <![CDATA[<=]]> #{platDate}
+        )aaa
+        order by aaa.updateTime desc
+        )
+        where rownum=1
+    </select>
+    <!--查询资产是否进行了SPPI测试-->
+    <select id="queryAssetIsSppiTest"  resultType="com.joyintech.tams.common.base.entity.SppiImportData">
+        select * from (
+        select x.test_status isSppiPass
+        from sppi_test x
+        where x.finprod_id=#{finprodId,jdbcType=VARCHAR}
+        union
+        select t.is_sppi_pass
+        from SPPI_IMPORT_DATA t
+        where t.bond_id=#{finprodId,jdbcType=VARCHAR}
+        ) where rownum=1
 
-
+    </select>
 </mapper>

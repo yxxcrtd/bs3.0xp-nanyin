@@ -471,6 +471,16 @@
         </where>
     </select>
 
+    <!--通过资产代码获取登记托管机构-->
+    <select id="getRegistOrgByFinprodId" resultType="java.lang.String">
+        SELECT
+        REGIST_ORG
+        FROM FIN_PRODUCT
+        <where>
+            FINPROD_ID = #{finprodId}
+        </where>
+    </select>
+
     <!--指令的执行明细-->
     <select id="listDealTransactionDetails" resultType="com.joyintech.tams.cfets.bankuplink.bond.dto.DealTransactionDetailsDto">
         <!--生效及撤销的登记数据-->
@@ -1452,7 +1462,7 @@
             T5.PARTY_ABBR ouPartyName,
             CASE WHEN T4.PARTY_ABBR IS NOT NULL THEN t4.PARTY_ABBR
             ELSE T3.COUNTER_NAME  END cpPartyName,
-            CASE WHEN T7.TRADER_NAME IS NOT NULL THEN T7.TRADER_NAME
+            CASE WHEN sua.IBU_TRADER  IS NOT NULL THEN sua.IBU_TRADER
             WHEN T13.USER_NAME IS NOT NULL THEN T13.USER_NAME
             ELSE T1.OU_TRADER_ID END ouTraderName,
             T6.TRADER_NAME cpTraderName,
@@ -1474,7 +1484,8 @@
             T12.TRADE_DATE dealDate,
             T9.CAL_MODE calMode,
             T1.INT_AMT intAmt,
-            T1.SETT_CCY  settCcy
+            T1.SETT_CCY  settCcy,
+            T1.UNIT_INT unitInt
         FROM
             REG_FIN_PRODUCT_DEAL_TOTAL T1
         LEFT JOIN FIN_PRODUCT T2 ON
@@ -1503,6 +1514,7 @@
         LEFT JOIN TRDQUTO_MATCH_INFO  T11 ON T11.PRE_TRADE_ID = T1.TOTLE_TRADE_ID
         LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL  T12 ON T12.TOTLE_TRADE_ID = T11.TRD_ID
         LEFT JOIN SYS_USER T13 ON T13.USER_NAME = T1.OU_TRADER_ID
+        LEFT JOIN SYS_USER_ADD sua ON sua.USER_ID = T13.USER_ID
         WHERE T1.PS IN ('T01','T02')  AND (T1.IS_CANCEL IS NULL OR T1.IS_CANCEL = 'N')
         /*and T1.TRADE_DATE = to_date(#{platDate}, 'yyyy-MM-dd')*/
         and T1.TRADE_DATE = STR_TO_DATE(#{platDate}, '%Y-%m-%d')
@@ -1581,7 +1593,7 @@
             T5.PARTY_ABBR ouPartyName,
             CASE WHEN T4.PARTY_ABBR IS NOT NULL THEN t4.PARTY_ABBR
             ELSE T3.COUNTER_NAME  END cpPartyName,
-            CASE WHEN T7.TRADER_NAME IS NOT NULL THEN T7.TRADER_NAME
+            CASE WHEN sua.IBU_TRADER  IS NOT NULL THEN sua.IBU_TRADER
             WHEN T13.USER_NAME IS NOT NULL THEN T13.USER_NAME
             ELSE T1.OU_TRADER_ID END ouTraderName,
             T6.TRADER_NAME cpTraderName,
@@ -1603,7 +1615,8 @@
             T12.TRADE_DATE dealDate,
             T9.CAL_MODE calMode,
             T1.INT_AMT intAmt,
-            T1.SETT_CCY  settCcy
+            T1.SETT_CCY  settCcy,
+            T1.UNIT_INT unitInt
         FROM
             REG_FIN_PRODUCT_DEAL_TOTAL T1
         LEFT JOIN FIN_PRODUCT T2 ON
@@ -1632,6 +1645,7 @@
         LEFT JOIN TRDQUTO_MATCH_INFO  T11 ON T11.PRE_TRADE_ID = T1.TOTLE_TRADE_ID
         LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL  T12 ON T12.TOTLE_TRADE_ID = T11.TRD_ID
         LEFT JOIN SYS_USER T13 ON T13.USER_NAME = T1.OU_TRADER_ID
+        LEFT JOIN SYS_USER_ADD sua ON sua.USER_ID = T13.USER_ID
         WHERE T1.PS = 'T03'  AND (T1.IS_CANCEL IS NULL OR T1.IS_CANCEL = 'N')  AND NOT EXISTS (SELECT 1 FROM TRDQUTO_MATCH_INFO tmi WHERE PRE_TRADE_ID = T1.TOTLE_TRADE_ID and (TRD_CONF_STATUS = #{CONFIRM_STATUS_0} or TRD_CONF_STATUS is null))
         <!--<![CDATA[and T1.TRADE_DATE <= to_date(#{platDate}, 'yyyy-MM-dd') ]]>-->
         <![CDATA[and T1.TRADE_DATE <= STR_TO_DATE(#{platDate}, '%Y-%m-%d') ]]>
@@ -1717,6 +1731,7 @@
             CASE WHEN T4.PARTY_ABBR IS NOT NULL THEN t4.PARTY_ABBR
             ELSE T3.COUNTER_NAME  END cpPartyName,
             CASE WHEN T7.TRADER_NAME IS NOT NULL THEN T7.TRADER_NAME
+            WHEN sua.IBU_TRADER  IS NOT NULL THEN sua.IBU_TRADER
             WHEN T13.USER_NAME IS NOT NULL THEN T13.USER_NAME
             ELSE T1.OU_TRADER_ID END ouTraderName,
             T6.TRADER_NAME cpTraderName,
@@ -1738,7 +1753,8 @@
             NULL dealDate,
             '' calMode,
             T1.INT_AMT intAmt,
-            T1.SETT_CCY  settCcy
+            T1.SETT_CCY  settCcy,
+            T1.UNIT_INT unitInt
         FROM
             WFL_REG_FIN_PRODUCT_DEAL_TOTAL T1
         LEFT JOIN FIN_PRODUCT T2 ON
@@ -1928,6 +1944,16 @@
         FROM
             REG_TRADE_FEE_TOTAL WHERE TRADE_ID  = #{totleTradeId}
     </select>
+
+    <select id="listWflRegTradeFeeTotal" resultType="com.joyintech.tams.common.base.entity.WflRegTradeFeeTotal">
+        SELECT
+            TRADE_ID TRADE_ID,
+            FEE_TYPE FEE_TYPE,
+            IS_PAY_WITH_TRADE IS_PAY_WITH_TRADE,
+            FEE_AMT FEE_AMT
+        FROM
+            WFL_REG_TRADE_FEE_TOTAL WHERE TRADE_ID  = #{totleTradeId}
+    </select>
     <select id="listRegFinProductDeal" resultType="com.joyintech.tams.common.base.entity.RegFinProductDeal">
         SELECT
             TRADE_ID TRADE_ID,
@@ -1989,6 +2015,68 @@
         FROM
             REG_FIN_PRODUCT_DEAL WHERE TOTLE_TRADE_ID  = #{totleTradeId}
     </select>
+
+    <select id="listWflRegFinProductDeal" resultType="com.joyintech.tams.common.base.entity.WflRegFinProductDeal">
+        SELECT
+            TRADE_ID TRADE_ID,
+            BUSI_TYPE BUSI_TYPE,
+            ENTRUST_ID ENTRUST_ID,
+            PORTFOLIO_ID PORTFOLIO_ID,
+            FINPROD_ID FINPROD_ID,
+            FINPROD_TYPE FINPROD_TYPE,
+            FINPROD_TYPE2 FINPROD_TYPE2,
+            BRANCH BRANCH,
+            MARKET_ID MARKET_ID,
+            PS PS,
+            TRADE_DATE TRADE_DATE,
+            OU_PARTY_ID OU_PARTY_ID,
+            OU_TRADER_ID OU_TRADER_ID,
+            COUNTER_ID COUNTER_ID,
+            COUNTER_TRADER COUNTER_TRADER,
+            CCY CCY,
+            SETTLE_SPEED SETTLE_SPEED,
+            SETTLE_DATE SETTLE_DATE,
+            UNIT_CPRICE UNIT_CPRICE,
+            YIELD YIELD,
+            EXER_YIELD EXER_YIELD,
+            UNIT_INT UNIT_INT,
+            UNIT_FPRICE UNIT_FPRICE,
+            PAR_VALUE PAR_VALUE,
+            CPRICE_AMT CPRICE_AMT,
+            INT_AMT INT_AMT,
+            FPRICE_AMT FPRICE_AMT,
+            SHARE_AMT SHARE_AMT,
+            DELIVERY_TYPE DELIVERY_TYPE,
+            M_DELIVERY_TYPE M_DELIVERY_TYPE,
+            TRADE_AMT TRADE_AMT,
+            CLEAR_TYPE CLEAR_TYPE,
+            SEC_MANAGE_ACCT_ID SEC_MANAGE_ACCT_ID,
+            ACCT_ID ACCT_ID,
+            INV_AIM INV_AIM,
+            TRADE_MARKET TRADE_MARKET,
+            TRADE_MARKET_MODE TRADE_MARKET_MODE,
+            RATE RATE,
+            REPO_TERM REPO_TERM,
+            TERM_TYPE TERM_TYPE,
+            FACE_VALUE FACE_VALUE,
+            DIS_FACE_VALUE DIS_FACE_VALUE,
+            REPO_TYPE REPO_TYPE,
+            V_SETTLE_DATE V_SETTLE_DATE,
+            M_SETTLE_DATE M_SETTLE_DATE,
+            ACT_REPO_TERM ACT_REPO_TERM,
+            M_INT_AMT M_INT_AMT,
+            M_TRADE_AMT M_TRADE_AMT,
+            TG_BUSI_TYPE TG_BUSI_TYPE,
+            TRADE_STATUS TRADE_STATUS,
+            P_TRADE_ID P_TRADE_ID,
+            IS_CANCEL IS_CANCEL,
+            IS_OUT_TRADE IS_OUT_TRADE,
+            F_TRADE_ID F_TRADE_ID,
+            TOTLE_TRADE_ID TOTLE_TRADE_ID,
+            REMARK REMARK
+        FROM
+            WFL_REG_FIN_PRODUCT_DEAL WHERE TOTLE_TRADE_ID  = #{totleTradeId}
+    </select>
     <select id="listRegFinProductDealAdd" resultType="com.joyintech.tams.common.base.entity.RegFinProductDealAdd">
         SELECT
             TRADE_ID TRADE_ID,
@@ -2004,6 +2092,22 @@
         FROM
             REG_FIN_PRODUCT_DEAL_ADD where exists (select 1 from REG_FIN_PRODUCT_DEAL where REG_FIN_PRODUCT_DEAL_ADD.TRADE_ID = REG_FIN_PRODUCT_DEAL.TRADE_ID and TOTLE_TRADE_ID  = #{totleTradeId})
     </select>
+
+    <select id="listWflRegFinProductDealAdd" resultType="com.joyintech.tams.common.base.entity.WflRegFinProductDealAdd">
+        SELECT
+            TRADE_ID TRADE_ID,
+            ACT_SETTE_DATE ACT_SETTE_DATE,
+            OUR_SHARE_AMT OUR_SHARE_AMT,
+            LENDIN_SHARE_AMT LENDIN_SHARE_AMT,
+            OUR_CPRICE_AMT OUR_CPRICE_AMT,
+            LENDIN_CPRICE_AMT LENDIN_CPRICE_AMT,
+            OUR_FPRICE_AMT OUR_FPRICE_AMT,
+            LENDIN_FPRICE_AMT LENDIN_FPRICE_AMT,
+            OUR_INT_AMT OUR_INT_AMT,
+            LENDIN_INT_AMT LENDIN_INT_AMT
+        FROM
+            WFL_REG_FIN_PRODUCT_DEAL_ADD where exists (select 1 from WFL_REG_FIN_PRODUCT_DEAL where WFL_REG_FIN_PRODUCT_DEAL_ADD.TRADE_ID = WFL_REG_FIN_PRODUCT_DEAL.TRADE_ID and TOTLE_TRADE_ID  = #{totleTradeId})
+    </select>
     <select id="listRegTradeFee" resultType="com.joyintech.tams.common.base.entity.RegTradeFee">
             SELECT
                 TRADE_ID TRADE_ID,
@@ -2013,6 +2117,39 @@
             FROM
                 REG_TRADE_FEE where exists (select 1 from REG_FIN_PRODUCT_DEAL where REG_FIN_PRODUCT_DEAL.TRADE_ID = REG_TRADE_FEE.TRADE_ID and TOTLE_TRADE_ID  = #{totleTradeId})
     </select>
+    <select id="listWflRegTradeFee" resultType="com.joyintech.tams.common.base.entity.WflRegTradeFee">
+            SELECT
+                TRADE_ID TRADE_ID,
+                FEE_TYPE FEE_TYPE,
+                IS_PAY_WITH_TRADE IS_PAY_WITH_TRADE,
+                FEE_AMT FEE_AMT
+            FROM
+                WFL_REG_TRADE_FEE where exists (select 1 from WFL_REG_FIN_PRODUCT_DEAL where WFL_REG_FIN_PRODUCT_DEAL.TRADE_ID = WFL_REG_TRADE_FEE.TRADE_ID and TOTLE_TRADE_ID  = #{totleTradeId})
+    </select>
+
+    <select id="listWflRegFinPledge" resultType="com.joyintech.tams.common.base.entity.WflRegFinPledge">
+        SELECT
+           trade_id,
+           entrust_id,
+           portfolio_id,
+           pledge_finprod_id,
+           pledge_face_value,
+           pledge_number,
+           pledge_ratio,
+           create_user,
+           create_dept,
+           create_time,
+           update_user,
+           update_time
+        FROM
+            WFL_REG_FIN_PLEDGE
+        where exists (
+            select 1
+            from WFL_REG_FIN_PRODUCT_DEAL
+            where WFL_REG_FIN_PLEDGE.TRADE_ID = WFL_REG_FIN_PRODUCT_DEAL.TRADE_ID and TOTLE_TRADE_ID  = #{totleTradeId})
+            or WFL_REG_FIN_PLEDGE.TRADE_ID = #{totleTradeId}/*逆回购时该字段为汇总编号*/
+    </select>
+
     <!--登记初始化 生效 撤销-->
     <select id="getCfetsBondDealQuoteCommonDto" resultType="com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealQuoteCommonDto">
         SELECT
@@ -2311,6 +2448,35 @@ SELECT
                 SHARE_AMT*100 SHARE_AMT
             FROM
                 WFL_IBU_QUOTE_ETR_RE where ENTRUST_ID = #{entrustId})
+    </select>
+
+    <!--获取指令流程中占用券面总额，不包含当前流程-->
+    <select id="getWflShareAmtByEntrustIdAndWorkFlowId" resultType="java.math.BigDecimal">
+        select nvl(nvl(ee.ENTRUST_NUM*100,0) - nvl(rfpd.ENTRUST_AMT, 0) - nvl(wrfpd.SHARE_AMT*100, 0) - nvl(IBQER.ENTRUST_AMT, 0) -
+        nvl(wiqer.SHARE_AMT*100, 0),0) avaNum
+        from ETR_ENTRUST ee
+        left join ETR_ENTRUST_ADD eea on ee.ENTRUST_ID = eea.ENTRUST_ID
+        left join (select t.TRADE_AMT ENTRUST_AMT, t.ENTRUST_ID
+        from REG_FIN_PRODUCT_DEAL t
+        left join reg_FIN_PRODUCT_DEAL_TOTAL rfpdt on rfpdt.TOTLE_TRADE_ID = t.TOTLE_TRADE_ID
+        where rfpdt.IS_CANCEL = 'N'
+        and rfpdt.TRADE_STATUS = '01'
+        ) rfpd on rfpd.ENTRUST_ID = ee.ENTRUST_ID
+        left join WFL_REG_FIN_PRODUCT_DEAL wrfpd on wrfpd.ENTRUST_ID = ee.ENTRUST_ID
+        <if test="totleTradeId != null and totleTradeId != ''">
+            and wrfpd.TOTLE_TRADE_ID != #{totleTradeId}
+        </if>
+        left join (
+        select t.FPRICE_AMT ENTRUST_AMT, t.ENTRUST_ID
+        from IBU_QUOTE_ETR_RE t
+        left join IBU_QUOTE_BOND IQB on t.QUOTE_ID = IQB.QUOTE_ID
+        where IQB.SEND_STATUS = '01'
+        ) IBQER on rfpd.ENTRUST_ID = ee.ENTRUST_ID
+        left join WFL_IBU_QUOTE_ETR_RE wiqer on wiqer.ENTRUST_ID = ee.ENTRUST_ID
+        <if test="totleTradeId != null and totleTradeId != ''">
+            and wiqer.QUOTE_ID != #{totleTradeId}
+        </if>
+        where ee.ENTRUST_ID = #{entrustId}
     </select>
 
     <select id="getTradeStatus" resultType="java.lang.String">
