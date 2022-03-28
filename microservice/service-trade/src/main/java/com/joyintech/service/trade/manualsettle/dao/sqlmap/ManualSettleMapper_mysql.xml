@@ -140,7 +140,7 @@
         order by T1.SETTLE_TIME DESC
     </select>
 
-    <!--½»ÊÕ×´Ì¬¸üÐÂ-->
+    <!--äº¤æ”¶çŠ¶æ€æ›´æ–°-->
     <update id="updateSettleInfo">
         UPDATE TRD_MANUAL_SETTLE_INFO SET
         <if test="settleStatus.equals('03')">
