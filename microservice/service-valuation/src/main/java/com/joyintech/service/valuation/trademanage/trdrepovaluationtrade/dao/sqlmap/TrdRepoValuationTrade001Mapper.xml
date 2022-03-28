@@ -82,12 +82,10 @@
 			</foreach>
 		</if>
 		<if test="tradeDateBegin !=null and tradeDateBegin !='' ">
-			/*and t.TRADE_DATE <![CDATA[>=]]> to_date(#{tradeDateBegin},'yyyy-mm-dd')*/
-			and t.TRADE_DATE <![CDATA[>=]]> STR_TO_DATE(#{tradeDateBegin},'%Y-%m-%d')
+			and t.TRADE_DATE <![CDATA[>=]]> to_date(#{tradeDateBegin},'yyyy-mm-dd')
 		</if>
 		<if test="tradeDateEnd !=null and tradeDateEnd !='' ">
-			/*and t.TRADE_DATE <![CDATA[<=]]> to_date(#{tradeDateEnd},'yyyy-mm-dd')*/
-			and t.TRADE_DATE <![CDATA[<=]]> STR_TO_DATE(#{tradeDateEnd},'%Y-%m-%d')
+			and t.TRADE_DATE <![CDATA[<=]]> to_date(#{tradeDateEnd},'yyyy-mm-dd')
 		</if>
 		<if test="psArr != null and psArr.length > 0">
 			AND t.PS IN
