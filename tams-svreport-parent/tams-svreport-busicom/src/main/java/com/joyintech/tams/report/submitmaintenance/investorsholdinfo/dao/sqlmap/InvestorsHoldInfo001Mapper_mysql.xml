@@ -900,6 +900,7 @@
 			T.SUBMIT_FEEDBACK_STATUS = #{FEEDBACKSTATUS,jdbcType=VARCHAR}
 
 			/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+			</if>
 			<if test="SEQNO !=null and SEQNO.size()>0 ">
 				<foreach collection="SEQNO" item="SUMIT_SEQ" open=" AND T.SUMIT_SEQ IN (" close=")" separator=",">
 					#{SUMIT_SEQ,jdbcType=VARCHAR}
