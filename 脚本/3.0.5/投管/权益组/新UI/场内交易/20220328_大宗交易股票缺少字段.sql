@@ -16,3 +16,6 @@ update CFG_DATATABLE_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"amoun
 update CFG_DATATABLE_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"0"}' WHERE PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherDealInfo' AND SPCDCODE IN ( 'EX001', 'EX004' ) and COLCODE = 'tradedVolume';
 update CFG_DATATABLE_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"0"}' WHERE PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherExeInfo' AND SPCDCODE IN ( 'EX001','EX004' ) and COLCODE = 'entrustVolume';
 update CFG_DATATABLE_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"0"}' WHERE PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherExeInfo' AND SPCDCODE IN ( 'EX001','EX004' ) and COLCODE = 'tradedVolume';
+
+
+update CFG_READONLY_FORM_SHOW set EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"3","unit":"yuan"}' WHERE PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and COLCODE = 'unitPrice' and COLNAME = '指令价格' and EXTENDCFG = '{"colAlign": "left","dataType":"amount","precision":"2","unit":"yuan"}' ;
