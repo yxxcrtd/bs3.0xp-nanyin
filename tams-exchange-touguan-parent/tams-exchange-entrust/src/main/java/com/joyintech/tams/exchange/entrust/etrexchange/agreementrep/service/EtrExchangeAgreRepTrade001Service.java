@@ -1455,7 +1455,7 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
 		if (null != entity.getEntrustId() && null != etrEntrustMapper.selectByPrimaryKey(entity.getEntrustId())) {
 			optType = ENTRUST_RECORD_MODIFY;
 		}
-        if (StringUtil.equals(optType,ENTRUST_RECORD_MODIFY)
+        if (StringUtil.equals(optType,ENTRUST_RECORD_NEW)
                 && null != entity.getEntrustId() &&  null != etrEntrustBackupMapper.selectByPrimaryKey(entity.getEntrustId())) {
             EtrPledgeKey key = new EtrPledgeKey();
             key.setEntrustId(entity.getEntrustId());
