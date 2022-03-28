@@ -48,6 +48,7 @@ import com.joyintech.tams.invest.common.dto.position.PositionCashSecDto;
 import com.joyintech.tams.invest.common.dto.position.PositionCashSecRequest;
 import com.joyintech.tams.invest.common.entrust.inter.EtrTradeCommonervice;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.MinPirceDto;
+import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.MinTrdUnitLimitDto;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.TrdOthCodeInfoDto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
@@ -1951,6 +1952,18 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new Message<List<BaseMap>>().fail().setMessage("查询失败");
+		}
+	}
+	@ApiOperation(value = "最小价格", notes = "最小价格")
+	@PostMapping("/getMinTrdUnitLimit")
+	@ResponseBody
+	public Message<MinTrdUnitLimitDto> getMinTrdUnitLimit(@RequestBody EtrExchangeMiniLimitPriceRequest request){
+		try {
+			MinTrdUnitLimitDto minNum= etrExchangeTrade001CommonService.getMinTrdUnitLimitPrice(request);
+			return new Message<MinTrdUnitLimitDto>().success().setData(minNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new Message<MinTrdUnitLimitDto>().fail().setMessage("查询失败");
 		}
 	}
 }
