@@ -136,15 +136,18 @@ public class OrderManagement extends BaseService {
             PositionInstructionRequest instructionClone = new PositionInstructionRequest();
             BeanUtil.copyProperties(instruction, instructionClone);
             instructionClone.setSoftSkipMode(integratedEntrust.getSoftSkipMode());
-            instructionClone.setEntrustAmt(integratedEntrust.getEntrustPrice().multiply(BigDecimal.valueOf(integratedEntrust.getEntrustVolume())));
+            instructionClone.setEntrustAmt(integratedEntrust.getEntrustBalance());
+            if (instructionClone.getEntrustAmt() == null) {
+                instructionClone.setEntrustAmt(integratedEntrust.getEntrustPrice().multiply(BigDecimal.valueOf(integratedEntrust.getEntrustVolume())));
+            }
             instructionClone.setEntrustNum(integratedEntrust.getEntrustVolume());
             instructionClone.setEntrustPrice(integratedEntrust.getEntrustPrice());
             instructionClone.setFullPrice(integratedEntrust.getFullPrice());
             instructionClone.setEntrustNo(instruction.getEntrustId());
             instructionClone.setEntrustProp(integratedEntrust.getEntrustProp());
-        	positionRequestServiceInstructionRequest.sendRequest(instructionClone,DictCodeListExt3.业务动作_交易下单.getValue(),DictCodeListExt3.系统动作_检查.getValue(),DictCodeListExt3.系统动作_新建.getValue());
-        }catch (Exception e) {
-            logger.warn("场内交易大宗下单头寸检测异常",e);
+            positionRequestServiceInstructionRequest.sendRequest(instructionClone, DictCodeListExt3.业务动作_交易下单.getValue(), DictCodeListExt3.系统动作_检查.getValue(), DictCodeListExt3.系统动作_新建.getValue());
+        } catch (Exception e) {
+            logger.warn("场内交易大宗下单头寸检测异常", e);
             Message message = PositionUtil.ajaxErrorReturn(e);
             return new ResultBean(Integer.parseInt(message.getCode()), message.getMessage(), message.getData());
         }
