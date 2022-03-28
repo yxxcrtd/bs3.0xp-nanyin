@@ -204,6 +204,26 @@ public class TradeUtils {
         return multiply(entrustPrice, entrustVolume, 2);
     }
 
+    public static BigDecimal calculateBalance(String entrustBs, BigDecimal entrustPrice, long entrustVolume, String assetType, OrderInterface orderInterface) {
+        //协议回购金额计算
+        if (Objects.nonNull(orderInterface) && IntegratedEntrustUtils.isProtocolBack(orderInterface.getEntrustProp())) {
+            return ((IntegratedEntrust) orderInterface).getEntrustBalance();
+        }
+        // 债券按净价冻结 --- 需求新修正为净价 --- > 修正为全价
+        // 债券且是交易类
+        if (InvestmentAssetType.BOND.value.equals(assetType)
+                && Objects.nonNull(orderInterface)
+                && EntrustProp.isTrade(orderInterface.getEntrustProp())) {
+            return multiply(orderInterface.getFullPrice(), entrustVolume, 2);
+        }
+        // 质押式竞价回购，金额计算
+        if (InvestmentAssetType.PLEDGE_REPURCHASE.value.equals(assetType)) {
+            return new BigDecimal(entrustVolume * 100).setScale(2, RoundingMode.HALF_UP);
+        }
+        // TODO ETF计算
+        return multiply(entrustPrice, entrustVolume, 2);
+    }
+
     //投管风控获取全价总额以及净价总额
     public static BigDecimal calculateBalanceForRisk(String entrustBs, BigDecimal entrustPrice, long entrustVolume, String assetType) {
         // 质押式竞价回购，金额计算

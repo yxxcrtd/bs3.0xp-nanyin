@@ -386,7 +386,7 @@ shiro:
     /CfetsRepoDealQuotedPrice001/selectEtrReByQuoteId,/core/getAssetFiveType,/common/trdcommonbase/insertFinProductCashData,/common/entrustcommonbase/finishEntrust,/TrdRepoTrade/selectPreTradeId,/joyin/**,/trade/joyin/**,
     /interf/refreshCache,/interf/execute,/interf/ziguanSysUserInfo,/interf/xp,/interf/xp/**,/interf/zg,/interf/zg/**,/FinProjectTargetAsset/insert,/FinAssetRateAdj/getFinAssetRateAdjByCashId,
     /cfets/**,/common/workflow/**,/common/config/**,/component/**,/FinProductRating/**,/svreport/interf/file/CreateZHXPFile/createFile,
-    /EtrAgreRepTrade/getEntrustInfoByTradeId
+    /EtrAgreRepTrade/getEntrustInfoByTradeId,/trade/joyin/**
 base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
