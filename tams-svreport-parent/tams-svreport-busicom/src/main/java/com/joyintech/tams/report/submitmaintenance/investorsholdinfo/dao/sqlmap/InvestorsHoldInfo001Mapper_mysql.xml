@@ -562,7 +562,7 @@
 		from
 		CHB_INVESTHOLD_INFO cii
 		<!-- 修复持有信息导入代销数据，导入模板内数据检查全不通过时，前台报错问题 add by weiyuqiang 2019-04-17 start -->
-		<where>
+<!--		<where>-->
 			<!-- 	<foreach collection="newKeyList" item="item" open="(cii.REGIST_BANK_CODE,cii.INDENTIFY_MARK,cii.PRODID,cii.HOLD_DATE,cii.CCY) in(" separator="," close=")">
                     (#{item.registBankCode},#{item.indentifyMark},#{item.prodid},#{item.holdDate},#{item.ccy})
                 </foreach>	 -->
