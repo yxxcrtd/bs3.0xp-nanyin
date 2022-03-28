@@ -3179,6 +3179,13 @@
             $("#businessModelDiv_dz").hide();
             var finprodType2 = $("#finprodType2_" + currentTab).val();
             var ps = $("#ps_" + currentTab).val();
+            if(ps){
+                $("#ps_" + currentTab).attr('disabled', 'disabled');
+            }
+            var secId = $("#secId_" + currentTab).val();
+            if(secId){
+                $("#secId_" + currentTab).attr('disabled', 'disabled');
+            }
             //组合隐藏
             //分配组合展示
             if (ps == PS_T04 || ps == PS_T46 || ps == PS_T97) {
