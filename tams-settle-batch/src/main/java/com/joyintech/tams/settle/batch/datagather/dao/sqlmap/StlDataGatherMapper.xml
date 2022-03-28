@@ -1172,21 +1172,20 @@
 
 	<select id="listBoundSharesMarketTradeData" parameterType="java.util.Map"
 			resultType="com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto">
-		SELECT * FROM(
-			SELECT
-			SEQ_NO tradeId,
+		SELECT
 			SEC_ACCT_ID secAcctId,
-			CDATE dealDate,
 			FINPROD_ID finprodId,
-			RANK() OVER(PARTITION BY SEC_ACCT_ID,FINPROD_ID ORDER BY CDATE DESC ) AS RANK
-			FROM
+		    max(CDATE) dealDate
+		FROM
 			FIN_PRODUCT_QUTO
-			WHERE 1=1
+		WHERE 1=1
 			<if test="dealDate != null">
 				AND FIN_PRODUCT_QUTO.CDATE = #{dealDate,jdbcType=DATE}
 			</if>
 			AND FIN_PRODUCT_QUTO.OTH_TYPE = #{OTH_TYPE_15}
-		) where RANK =1
+		GROUP BY
+			SEC_ACCT_ID,
+			FINPROD_ID
 	</select>
 
 	<!--组合持仓-->

@@ -302,12 +302,6 @@ public class PositionRequestTradeRestService {
         }
         else if(DictCodeList.交易方向_上市流通.getValue().equals(dealEntity.getPs())){
             resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_上市.getValue());
-            String stockId = commonPositionService.getStockId(dealEntity.getFinprodId(), dealEntity.getFinprodType2(), dealEntity.getPs());
-            // 送转的上市流通调上市流通专用接口
-            if(StringUtil.isEmpty(stockId)){
-                resultMap.put(INTERFACE_TYPE, null);
-                return;
-            }
         }
         else{
             resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_成交匹配.getValue());
