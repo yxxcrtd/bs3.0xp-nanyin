@@ -406,7 +406,7 @@
 		  T2.SETTLE_DATE,
 		  T2.UNIT_CPRICE,
 		  T2.UNIT_INT,
-		  T6.TRADE_DATE redStockDate,
+		  T6.SETTLE_DATE redStockDate,
 		  sum(T3.REG_DATE_AMT) REG_DATE_AMT/*权益登记日份额*/,
 		  sum(T2.FPRICE_AMT) FPRICE_AMT,
 		  sum(T2.SHARE_AMT) SHARE_AMT
@@ -444,7 +444,7 @@
 		  T2.SETTLE_DATE,
 		  T2.UNIT_CPRICE,
 		  T2.UNIT_INT,
-		  T6.TRADE_DATE
+		  T6.SETTLE_DATE
 	</select>
 
 
