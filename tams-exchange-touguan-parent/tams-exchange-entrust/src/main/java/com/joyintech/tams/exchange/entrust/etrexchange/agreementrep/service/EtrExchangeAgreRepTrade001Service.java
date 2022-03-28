@@ -192,6 +192,9 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
 
     @Autowired
     private JoyinbusinessCommonService joyinbusinessCommonService;
+
+    @Autowired
+    private EtrPledgeMapper etrPledgeMapper;
     /**
      * 对手方交易员联想文本框初始化。
      *
@@ -1449,10 +1452,16 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
 
         String optType = ENTRUST_RECORD_NEW;
 
-		if (null != entity.getEntrustId() && null != etrEntrustMapper.selectByPrimaryKey(entity.getEntrustId())) {
+		if (null != entity.getEntrustId() && (null != etrEntrustMapper.selectByPrimaryKey(entity.getEntrustId())
+        || null != etrEntrustBackupMapper.selectByPrimaryKey(entity.getEntrustId()))) {
 			optType = ENTRUST_RECORD_MODIFY;
 		}
-
+        if (null != entity.getEntrustId() &&  null != etrEntrustBackupMapper.selectByPrimaryKey(entity.getEntrustId())) {
+            EtrPledgeKey key = new EtrPledgeKey();
+            key.setEntrustId(entity.getEntrustId());
+            key.setFinprodId(entity.getFinprodId());
+            etrPledgeMapper.deleteByPrimaryKey(key);
+        }
 		EtrParameterDto paraDto = new EtrParameterDto();
         setUser(paraDto);
         if (StringUtil.equals(optType, ENTRUST_RECORD_NEW)) {//
