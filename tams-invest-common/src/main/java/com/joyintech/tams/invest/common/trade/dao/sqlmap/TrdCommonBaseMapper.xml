@@ -1320,9 +1320,18 @@
 
     <select id="getFinPledgeDispDetailTemps" resultType="com.joyintech.tams.common.base.entity.FinPledgeDispDetailTemp">
         select
-        <include refid="com.joyintech.tams.common.base.dao.FinPledgeDispDetailTempMapper.Base_Column_List" />
-        from FIN_PLEDGE_DISP_DETAIL_TEMP
-        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+            fpddt.SEQ_NO              SEQ_NO,
+            fpddt.TRADE_ID            TRADE_ID,
+            fpddt.FINPROD_ID          FINPROD_ID,
+            fpddt.BRANCH              BRANCH,
+            fpddt.TRADE_TYPE          TRADE_TYPE,
+            fpddt.PLEDGE_DISPLACE_AMT PLEDGE_DISPLACE_AMT,
+            fpddt.SCALE               SCALE,
+            fpddt.FIRST_NETPRICE      FIRST_NETPRICE
+        from FIN_PLEDGE_DISP_DETAIL_TEMP fpddt
+                 LEFT JOIN
+             FIN_PLEDGE_DISP_TEMP fpdt ON fpddt.TRADE_ID = fpdt.TRADE_ID
+        where fpdt.F_TRADE_ID = #{fTradeId,jdbcType=VARCHAR}
     </select>
 
     <select id="selectFinDealPledgeByPrimaryKey" resultType="com.joyintech.tams.common.base.entity.FinDealPledge" parameterType="com.joyintech.tams.common.base.entity.FinDealPledgeKey" >
