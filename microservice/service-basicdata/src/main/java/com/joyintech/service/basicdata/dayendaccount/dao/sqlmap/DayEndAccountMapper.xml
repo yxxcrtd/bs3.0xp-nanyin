@@ -1229,7 +1229,8 @@
         ON p1.SEC_ACCT_ID=c.SEC_ACCT_ID
         WHERE ((a.FINPROD_MARKET_ID=t1.FINPROD_ID and a.FINPROD_ID is not null) or (a.FINPROD_ID is null and b.TERM_TYPE = t1.TERM_TYPE))
         AND c.bond_id = t1.SEC_ACCT_ID
-        <!--AND p1.BRANCH='0'-->
+        AND p1.HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
+        AND p1.DATE_TYPE = #{dateType,jdbcType=NUMERIC}
         AND p1.CDATE=t1.CDATE
         )=1 then (
         SELECT
@@ -1241,7 +1242,8 @@
         ON p1.SEC_ACCT_ID=c.SEC_ACCT_ID
         WHERE ((a.FINPROD_MARKET_ID=t1.FINPROD_ID and a.FINPROD_ID is not null) or (a.FINPROD_ID is null and b.TERM_TYPE = t1.TERM_TYPE))
         AND c.bond_id = t1.SEC_ACCT_ID
-        <!--AND p1.BRANCH='0'-->
+        AND p1.HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
+        AND p1.DATE_TYPE = #{dateType,jdbcType=NUMERIC}
         AND p1.CDATE=t1.CDATE
         ) end portfolioId,
         case when (
@@ -1253,7 +1255,8 @@
         ON p1.SEC_ACCT_ID=c.SEC_ACCT_ID
         WHERE ((a.FINPROD_MARKET_ID=t1.FINPROD_ID and a.FINPROD_ID is not null) or (a.FINPROD_ID is null and b.TERM_TYPE = t1.TERM_TYPE))
         AND c.bond_id = t1.SEC_ACCT_ID
-        <!--AND p1.BRANCH='0'-->
+        AND p1.HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
+        AND p1.DATE_TYPE = #{dateType,jdbcType=NUMERIC}
         AND p1.CDATE=t1.CDATE
         )=1 then (
         SELECT DISTINCT p2.PORTFOLIO_NAME
@@ -1265,7 +1268,8 @@
         on p2.PORTFOLIO_ID=p1.PORTFOLIO_ID
         WHERE ((a.FINPROD_MARKET_ID=t1.FINPROD_ID and a.FINPROD_ID is not null) or (a.FINPROD_ID is null and b.TERM_TYPE = t1.TERM_TYPE))
         AND c.bond_id = t1.SEC_ACCT_ID
-        <!--AND p1.BRANCH='0'-->
+        AND p1.HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
+        AND p1.DATE_TYPE = #{dateType,jdbcType=NUMERIC}
         AND p1.CDATE=t1.CDATE
         ) end portfolioName,
         t1.SEC_ACCT_ID secAcctId,
@@ -1300,9 +1304,8 @@
         WHERE s1.SEC_ACCT_TYPE='SEC'
         AND s1.TRADE_PLACE IN ('03','04')
         AND p2.ACCT_TYPE='A07'
-        AND p1.HODING_TYPE=#{hodingType,jdbcType=VARCHAR}
+        AND p1.HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
         AND p1.DATE_TYPE = #{dateType,jdbcType=NUMERIC}
-        <!--AND p1.BRANCH='0'-->
         GROUP BY p1.FINPROD_ID,s1.BOND_ID,p1.CDATE,f2.type_8,f1.TRADE_MARKET,f1.FINPROD_ID
         UNION ALL
         SELECT
@@ -1341,13 +1344,12 @@
         AND p1.PORTFOLIO_ID=p2.PORTFOLIO_ID
         inner JOIN FIN_TRADE_PRODUCT f1
         ON p1.FINPROD_ID=f1.FINPROD_ID
-        <!--AND p1.BRANCH=f1.BRANCH-->
+        AND p1.BRANCH=f1.BRANCH
         WHERE s1.SEC_ACCT_TYPE='SEC'
         AND s1.TRADE_PLACE IN ('03','04')
         AND p2.ACCT_TYPE='A07'
-        AND p1.HODING_TYPE= #{hodingType,jdbcType=VARCHAR}
+        AND p1.HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
         AND p1.DATE_TYPE = #{dateType,jdbcType=NUMERIC}
-        <!--AND p1.BRANCH='0'-->
         GROUP BY f1.TERM_TYPE,s1.BOND_ID,p1.CDATE
         ) t1
         LEFT JOIN STL_SEC_ACCT_INFO s1
