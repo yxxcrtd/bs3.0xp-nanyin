@@ -346,7 +346,9 @@ public class FundTradePreClearingService extends BaseService<InfContractDetailfi
 		baseTradeProductDealDto.setStlPayOrdersList(Arrays.asList(stlPayOrdersDto));
 		finProductTradeDto.setBaseTradeProductDealDtos(Arrays.asList(baseTradeProductDealDto));
 		finProductTradeDto.setNeedSum(true);
-		String assetType2 = entrustMsgbyMQMapper.queryAssetType1(trdTempDto.getEntrustId());
+		// ZGTFCP-1639:查询资产类型 modify by fuyongsheng 20220328 start
+		String assetType2 = entrustMsgbyMQMapper.queryAssetType1(trdProductTempDealAdd.getEntrustId());
+		// ZGTFCP-1639:查询资产类型 modify by fuyongsheng 20220328 end
 		finProductTradeDto.setAssetType2(assetType2);
 		// 委托代码不为空处理委托代码
 		finProductTradeDto.getBaseTradeProductDealDtos().forEach(item -> {
