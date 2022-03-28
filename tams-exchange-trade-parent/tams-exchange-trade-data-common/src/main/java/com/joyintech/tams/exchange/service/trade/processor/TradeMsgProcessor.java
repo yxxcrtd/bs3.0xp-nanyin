@@ -786,8 +786,8 @@ public class TradeMsgProcessor {
                 instructionClone.setEntrustAmt(entrust.getEntrustBalance());
             } else {
                 instructionClone.setEntrustAmt(entrust.getEntrustPrice().multiply(BigDecimal.valueOf(entrust.getEntrustVolume() - entrust.getTradedVolume())));
-                instructionClone.setEntrustNum(entrust.getEntrustVolume() - entrust.getTradedVolume());
             }
+            instructionClone.setEntrustNum(entrust.getEntrustVolume() - entrust.getTradedVolume());
             positionRequestServiceInstructionRequest.sendRequest(instructionClone,
                     业务动作_撤委托.getValue(), 系统动作_新建.getValue(), 系统动作_新建.getValue());
             return;
