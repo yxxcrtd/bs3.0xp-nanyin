@@ -387,7 +387,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
             for (CfetsEtribBondInfo003Dto dto : entity.getEtrInvestBondInfoDtos()) {
                 dto.setWorkflowId(entity.getWorkflowId());
                 BaseEtrInvestInfoDto base = initBaseEtrInvestInfoDto(dto);
-                WFlowCommonService.insertFlow(base);
+                WFlowCommonService.insertFlow(initBaseEtrInvestInfoDto(dto));
                 if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
                     //插入旧头寸
                     if(baseEtrCashPositionCommService != null){
@@ -1557,7 +1557,6 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
 
     public BaseEtrInvestInfoDto initBaseEtrInvestInfoDto(CfetsEtribBondInfo003Dto dto) {
         try {
-            String entrustId = dto.getBussCombDistribtList().get(0).getEntrustId() != null ? dto.getBussCombDistribtList().get(0).getEntrustId(): dto.getEntrustId();
             dto.setOperateType(dto.getOperateType());
             BaseEtrInvestInfoDto entity = new BaseEtrInvestInfoDto();
             EntrustCommonDto entrustCommonDto = new EntrustCommonDto();
@@ -1572,13 +1571,11 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
             dto.setRecStatus(DictCodeListExt3.委托状态_流程中.getValue());
             BeanUtil.copyProperties(etrEntrust, dto);
             //BeanUtil.copyProperties(etrEntrust, dto.getEtrInvestPersonInfo());
-            etrEntrust.setEntrustId(entrustId);
             etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
             etrEntrust.setEntrustAmt(null);
             etrEntrust.setEntrustNum(dto.getEntrustNum().divide(new BigDecimal(100)));
             etrEntrust.setInvAim(dto.getBusinessModel());
             BeanUtil.copyProperties(etrEntrustAdd, dto);
-            etrEntrustAdd.setEntrustId(entrustId);
             etrEntrustAdd.setAssetType(DictCodeList.平安资产类型_债券.getValue());
             etrEntrustAdd.setVdate(null);
             etrEntrustAdd.setMdate(null);
