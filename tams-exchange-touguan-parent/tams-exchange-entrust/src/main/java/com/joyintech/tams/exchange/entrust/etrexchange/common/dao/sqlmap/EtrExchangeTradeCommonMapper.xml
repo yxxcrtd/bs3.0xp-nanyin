@@ -1136,7 +1136,7 @@
             )
         )
         <!-- 查询委托指令附属表中是否已经存在该证券账户发布的此债券的申购委托 -->
-        select eea.sec_acct_id secAccId
+        select eea.sec_acct_id secAcctId
         from etr_entrust_add eea
         left join etr_entrust ee
             on eea.entrust_id = ee.entrust_id
