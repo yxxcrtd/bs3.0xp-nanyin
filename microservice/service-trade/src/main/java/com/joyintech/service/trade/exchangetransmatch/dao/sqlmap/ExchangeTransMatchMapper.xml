@@ -512,7 +512,7 @@
         WHERE s1.seq_no=#{seqNo}
     </select>
     <select id="findTransMatchInfoPage" resultType="com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch004Dto">
-        select  A.SEQ_NO seqId,
+        select distinct  A.SEQ_NO seqId,
         A.MATCH_CLASS matchType,
         A.ENTRUNST_TRADE_ID busiCode,
         C.TRADE_MARKET tradeMarket,
@@ -520,7 +520,7 @@
         D.PORTFOLIO_ID portfolioId,
         CASE
         WHEN D.ENTRUST_CLASS =  #{ENTRUST_CLASS_02} THEN
-            F1.TREE_NAME
+            F.PORTFOLIO_NAME
         ELSE
             F.PORTFOLIO_NAME
         END portfolioName,
@@ -564,9 +564,9 @@
         ON E.FINPROD_ID = C.FINPROD_ID
         LEFT JOIN PTL_PORTFOLIO F
         ON D.PORTFOLIO_ID = F.PORTFOLIO_ID
-        LEFT JOIN MUTIPTL_PORTFOLIO_TREE F1
-        ON D.PORTFOLIO_ID = F1.TREE_ID
-        AND F1.PAR_TREE_ID IS NOT NULL
+        LEFT JOIN ETR_ENTRUST_DETAIL F1
+        ON D.PORTFOLIO_ID = F1.PORTFOLIO_ID
+        AND F1.PORTFOLIO_ID IS NOT NULL
         <where>
             <if test="matchType!=null and matchType!='' ">
                 AND A.MATCH_CLASS = #{matchType}
