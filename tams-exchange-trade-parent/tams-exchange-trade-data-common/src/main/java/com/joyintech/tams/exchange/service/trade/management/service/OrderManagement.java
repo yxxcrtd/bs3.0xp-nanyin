@@ -133,12 +133,13 @@ public class OrderManagement extends BaseService {
             return new ResultBean(ErrorCode.INSTRUCTION_APPLY_NOT_UNIQUE.value, ErrorCode.INSTRUCTION_APPLY_NOT_UNIQUE.errorMsg + ":" + uniqueCheck, integratedEntrust);
         //头寸引擎余额检查---start
         try {
-            Instruction instruction = instructionService.findById(integratedEntrust.getInstructionId());
+            String instructionId = integratedEntrust.getInstructionId();
+            Instruction instruction = instructionService.findById(instructionId);
             PositionInstructionRequest instructionClone = new PositionInstructionRequest();
             BeanUtil.copyProperties(instruction, instructionClone);
             instructionClone.setSoftSkipMode(integratedEntrust.getSoftSkipMode());
             if (InvestmentAssetType1.NEGOTIATED_REPO.value.equals(instruction.getAssetType1())) {
-                logger.info("场内协议回购交易下单头寸检查，回购金额：{}",integratedEntrust.getEntrustBalance());
+                logger.info("场内协议回购交易下单头寸检查，指令编号：{}，回购金额：{}", instructionId, integratedEntrust.getEntrustBalance());
                 instructionClone.setEntrustAmt(integratedEntrust.getEntrustBalance());
             } else {
                 // 计算委托金额
