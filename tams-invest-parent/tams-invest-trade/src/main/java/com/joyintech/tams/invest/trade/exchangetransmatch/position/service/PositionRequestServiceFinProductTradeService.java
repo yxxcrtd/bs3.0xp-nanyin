@@ -584,8 +584,7 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
         // if (DictCodeListExt3.交易方向_解除质押.getValue().equals(ps)) {
         if ((DictCodeListExt3.交易方向_正回购.getValue().equals(ps)
                 || DictCodeListExt3.交易方向_中途换券.getValue().equals(ps)
-                || DictCodeListExt3.交易方向_解除质押.getValue().equals(ps))
-                && BussinessDictCodeList.金融产品类型_投管用_债券质押式正回购.getValue().equals(etrEntrust.getFinprodType2())) {
+                || DictCodeListExt3.交易方向_解除质押.getValue().equals(ps))) {
             List<Map<String, Object>> list = new ArrayList<>();
             bean = new PositionRequestBaseBean();
             bean.setPortfolioId(trdProductDealAdd.getPortfolioId());
@@ -632,8 +631,7 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
                 // ZGTFCP-1753:到期续做不传 modify by fuyongsheng 20220324 end
                 || DictCodeListExt3.交易方向_提前购回.getValue().equals(ps)
                 || DictCodeListExt3.交易方向_到期购回.getValue().equals(ps)
-                || DictCodeListExt3.交易方向_中途换券.getValue().equals(ps))
-                && BussinessDictCodeList.金融产品类型_投管用_债券质押式正回购.getValue().equals(etrEntrust.getFinprodType2())) {
+                || DictCodeListExt3.交易方向_中途换券.getValue().equals(ps))) {
             List<Map<String, Object>> list = new ArrayList<>();
             bean = new PositionRequestBaseBean();
             bean.setPortfolioId(trdProductDealAdd.getPortfolioId());
@@ -676,6 +674,10 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
             Map<String, Object> map = BeanUtil.object2Map(bean);
             //融入券券面总额
             map.put(INTEGRATE_SEC_AMOUNT, BigDecimal.ZERO);
+            if(DictCodeList.交易方向_收息到账.getValue().equals(dealEntity.getPs())){
+                map.put("secAmount", new BigDecimal(0));
+                map.put("ownSecAmount", new BigDecimal(0));
+            }
             list.add(map);
             resultMap.put("ptlRelieveSecList", list);
         }

@@ -266,6 +266,8 @@ public class EtrExchangeTradeEtrExchangeCommonResponse {
 
     @ApiModelProperty(name="stockId",value="stockId")
     private String stockId;
+    @ApiModelProperty(name="expConNum",value="预计转换股数")
+    private BigDecimal expConNum;
 
     public String getFinprodId() {
         return finprodId;
@@ -779,5 +781,13 @@ public class EtrExchangeTradeEtrExchangeCommonResponse {
 
     public void setStockId(String stockId) {
         this.stockId = stockId;
+    }
+
+    public BigDecimal getExpConNum() {
+        return expConNum;
+    }
+
+    public void setExpConNum(BigDecimal expConNum) {
+        this.expConNum = expConNum;
     }
 }

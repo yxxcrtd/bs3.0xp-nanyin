@@ -157,12 +157,6 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 							BigDecimal lastPrice=hqResponse.getLastPrice()!=null?hqResponse.getLastPrice().setScale(2,BigDecimal.ROUND_HALF_UP):new BigDecimal(0.00);
 							entity.setPrice(lastPrice);
 						}
-						// 最新净价*组合持仓.数量 - 持仓成本 as 浮动盈亏
-						BigDecimal floatFd = ArithmeticUtil.multiply(entity.getPrice(),entity.getPtlPositionsNum());
-						floatFd = ArithmeticUtil.subtract(floatFd,entity.getPositionsAmt());
-						entity.setFloating(floatFd);
-						BigDecimal floatPL =ArithmeticUtil.divide(floatFd,ArithmeticUtil.multiply(entity.getPrice(),entity.getPtlPositionsNum()),2);
-						entity.setFloatingPL(floatPL);
 						returnList.add(entity);
 					}
 					result.setRoot(returnList);
@@ -562,35 +556,13 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 					// 2.持仓成本价（元） 取单位成本
 					//r.setUnitCost(dto.getUnitCost());
 				}
+				// 最新净价*组合持仓.数量 - 持仓成本 as 浮动盈亏
+				BigDecimal floatFd = ArithmeticUtil.multiply(r.getPrice(),r.getPtlPositionsNum());
+				floatFd = ArithmeticUtil.subtract(floatFd,r.getPositionsAmt());
+				r.setFloating(floatFd);
+				BigDecimal floatPL =ArithmeticUtil.divide(floatFd,ArithmeticUtil.multiply(r.getPrice(),r.getPtlPositionsNum()),2);
+				r.setFloatingPL(floatPL);
 
-				// 3.最新净价（元） 优先从内存获取债券最新净价，没有则使用dto中债券估值行情的值r.getPrice()
-				BigDecimal price = new BigDecimal("0");//BondSocketClient.getLocalCachePrice(r.getFinprodMarketId());
-				if (price != null) {
-					//r.setPrice(price);
-				}else{
-					if (r.getPrice() == null) {
-						// 取标的可用面值
-						//price = etrInvestBondInfoService.getAvailableNum(BaseMap.newMap().put("finprodId", r.getFinprodId()).put("sysdate", platDate));
-						//r.setPrice(price);
-					}
-				}
-
-				if (r.getPrice() != null){
-					// 4.持仓市值（元）=（交易可用券面总额+交易在途券面总额）* 最新净价 / 单位面值
-//					BigDecimal doAdd = ArithmeticUtil.multiply(ArithmeticUtil.doAdd(r.getTrdAvaShareAmt(), r.getTrdIntransShareAmt()),
-//							BigDecimal.valueOf(10000L));
-					//r.setPositionsPrice(ArithmeticUtil.multiply(doAdd, r.getPrice()).divide(BigDecimal.valueOf(100)));
-
-					if (dto != null){
-						// 5.持仓成本=（交易可用券面总额+交易在途券面总额）* 持仓成本价（元）
-						//r.setPositionsAmt(ArithmeticUtil.multiply(doAdd, r.getUnitCost()).divide(BigDecimal.valueOf(100)));
-					}
-
-					if (r.getPositionsAmt() != null){
-						// 6.浮动盈亏（元） = 持仓市值（元） - 持仓成本（元）
-						//r.setFloatingPl(ArithmeticUtil.subtract(r.getPositionsPrice(), r.getPositionsAmt()));
-					}
-				}
 			});
 		}
 		return pages;

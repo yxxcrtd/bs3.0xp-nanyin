@@ -165,7 +165,7 @@
         CASE
 
         WHEN etr_entrust_add.TARGET_TYPE = '01' THEN
-        ROUND( nvl( etr_entrust.ENTRUST_NUM, 0 ) - nvl( T9.ORDER_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( etr_entrust.ENTRUST_NUM, 0 ) - nvl( T9.ORDER_FINISH_AMT, 0 ), 4 )
+        ROUND( nvl( etr_entrust.ENTRUST_NUM, 0 ) - nvl( T9.ORDER_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( etr_entrust.ENTRUST_AMT, 0 ) - nvl( T9.ORDER_FINISH_AMT, 0 ), 4 )
         END
         ) ELSE (
         CASE
@@ -207,7 +207,7 @@
         CASE
 
         WHEN etr_entrust_add.TARGET_TYPE = '01' THEN
-        ROUND( nvl( etr_entrust.ENTRUST_NUM, 0 ) - nvl( T9.ENT_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( etr_entrust.ENTRUST_NUM, 0 ) - nvl( T9.ENT_FINISH_AMT, 0 ), 4 )
+        ROUND( nvl( etr_entrust.ENTRUST_NUM, 0 ) - nvl( T9.ENT_FINISH_AMT, 0 ), 4 ) ELSE ROUND( nvl( etr_entrust.ENTRUST_AMT, 0 ) - nvl( T9.ENT_FINISH_AMT, 0 ), 4 )
         END
         ) ELSE (
         CASE

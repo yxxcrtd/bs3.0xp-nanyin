@@ -265,7 +265,7 @@
         , {
             field: 'firstNetPrice',
             width: 100,
-            title: '首次净价(元)',
+            title: '估价净价(元)',
             sortable: false,
             type: 'money',
             digit: 4

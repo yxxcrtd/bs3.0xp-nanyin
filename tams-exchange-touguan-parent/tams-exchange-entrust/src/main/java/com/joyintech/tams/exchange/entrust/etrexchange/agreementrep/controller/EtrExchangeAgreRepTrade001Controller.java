@@ -518,6 +518,18 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
     @PostMapping("check")
     public Message<AjaxResult> check(@RequestBody @Validated() EtrExchangeAgreRepTrade001Dto dto,
                                      BindingResult result) throws Exception {
+
+        List<ValidMessage> errorList = new ArrayList<>();
+        //check流程中是否有数据
+        WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();
+        wflValidInputParameter.setBusinessDataPk1(dto.getEntrustId());
+        if (WorkFlowUtil.isNotFromToDoList() && mstWorkflowCommonService.isInWflProcess(wflValidInputParameter)) {
+            errorList.add(new ValidMessage("所选对象存在有效或流程中的数据不能修改或提交"));
+            AjaxResult ajax = new AjaxResult();
+            ajax.setErrorList(errorList);
+            return new Message<AjaxResult>().success().setData(ajax);
+        }
+
         if (!StringUtil.equals("submit", dto.getOperateType())) {
             return new Message<AjaxResult>().success().setData(commonCheck(result, dto.getOperateType()));
         }
@@ -527,7 +539,7 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
         }
 
         dto.setInvManagerId(LoginUserUtil.getUserName());
-        List<ValidMessage> errorList = new ArrayList<>();
+
         if (DictCodeListExt3.交易方向_提前购回.getValue().equals(dto.getPs())) {
             dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_协议回购提前购回指令.getValue());
         } else if (DictCodeListExt3.交易方向_到期购回.getValue().equals(dto.getPs())) {
