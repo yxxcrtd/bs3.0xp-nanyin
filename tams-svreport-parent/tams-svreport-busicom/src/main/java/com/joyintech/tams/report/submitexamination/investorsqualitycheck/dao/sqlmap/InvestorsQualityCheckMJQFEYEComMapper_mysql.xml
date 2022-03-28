@@ -83,7 +83,7 @@
         tmp1.REG_CODE prdRegistCode,
         tmp1.PROD_ID as prodId,
         tmp1.VDATE prdVDate,
-        STR_TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd') AS holdDate,
+        STR_TO_DATE(#{searchDate,jdbcType=VARCHAR},'%Y-%m-%d') AS holdDate,
         IFNULL(tmp1.RAISE_QTY,0) as prdRaiseTotalQty,
         IFNULL(tmp1.TOTAL_AMT,0) as prdRaiseTotalAmt,
         SUM(IFNULL(QTY,0)) as investRaiseTotalQty,
