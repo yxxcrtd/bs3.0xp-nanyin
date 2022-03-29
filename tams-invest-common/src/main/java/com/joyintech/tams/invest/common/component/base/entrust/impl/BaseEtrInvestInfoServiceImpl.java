@@ -39,6 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 投资委托
@@ -75,7 +76,7 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
      */
     @Autowired
     private EtrEntrustBackupMapper etrEntrustBackupMapper;
-    
+
     /**
      * 委托指令回购质押品Mapper
      */
@@ -471,7 +472,7 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
      */
     @Override
     public String findEtrWordInfo(String entrustId) {
-        return etrEntrustMapper.selectByPrimaryKey(entrustId).getBusinessModel(); 
+        return etrEntrustMapper.selectByPrimaryKey(entrustId).getBusinessModel();
     }
 
     /**
@@ -1073,6 +1074,8 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
         if (CollectionUtils.isEmpty(etrFinishStatusList)) {
             return false;
         }
+        // 是否日终批处理数据
+        boolean isDayEndBatch = etrFinishStatusList.get(0).isDayEndBatch();
         // 遍历List<委托完成状况表Entity>，保存到“委托完成状况表”
         int count = 0;
         for (EtrFinishStatusDto etrFinishStatus : etrFinishStatusList) {
@@ -1093,7 +1096,7 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
         for (EtrFinishStatus etrFinishStatus : etrFinishStatusList) {
             entrustIdList.add(etrFinishStatus.getEntrustId());
         }
-
+        entrustIdList = entrustIdList.stream().distinct().collect(Collectors.toList());
         List<BaseEtrFinishAmtDto> etrFinishAmtDtoList = etrInvestInfoServiceImpl.queryDelegateStatus(entrustIdList);
         // 判断委托代码的完成额度是否大于等于100
         BigDecimal bigDecimal = new BigDecimal("100.00");
@@ -1107,7 +1110,8 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
                 // 如果满足，则调用投资委托组件的更新委托状态接口，将委托状态设置为“已完成”
                 boolean result = etrInvestInfoServiceImpl.updateDelegateStatus(etrFinishAmtDto.getEntrustId(), DictCodeList.委托状态_已完成.getValue());
                 // ZGTFCP-1529:指令完成后调用新头寸批量关闭接口 modify by fuyongsheng 20220327 start
-                if(result){
+                // 只有日终批处理数据才需调用新头寸接口
+                if(result && isDayEndBatch){
                     EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(etrFinishAmtDto.getEntrustId());
                     EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(etrFinishAmtDto.getEntrustId());
                     if(etrEntrust != null){
@@ -1207,7 +1211,7 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
     public BaseEtrFinishAmtDto selectEtrFinishAmtDtoByPrimaryKey(String entrustId) {
         return etrInvestInfoMapper.selectEtrFinishAmtDtoByPrimaryKey(entrustId);
     }
-	
+
 	@Override
     public String findInvAim(String portfolioId, String finprodId) {
         String invAim = baseEtrInvestInfoMapper.findInvAimByPortIdAndFinId(portfolioId, finprodId);
@@ -1383,7 +1387,7 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
         }else{
             dto.getEtrEntrust().setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());
         }
-        
+
         // 指令流程表入库
         return newDelegateFlow(dto);
     }
