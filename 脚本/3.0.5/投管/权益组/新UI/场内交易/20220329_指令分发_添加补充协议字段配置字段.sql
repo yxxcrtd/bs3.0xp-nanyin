@@ -1,0 +1,4 @@
+delete from CFG_READONLY_FORM_SHOW where PAGECODE = 'CfetsEtrDispatcher' and DTCODE='CfetsEtrDispatcherInfo'  and COLNAME = '补充协议';
+INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, EXTENDCFG, STATUS, REMARK1, REMARK2, REMARK3) VALUES ('CfetsEtrDispatcher', 'CfetsEtrDispatcherInfo', 'EX010', 'addCla', '补充协议', null, 24, '{"colAlign": "left"}', 1, 0, null, null);
+INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, EXTENDCFG, STATUS, REMARK1, REMARK2, REMARK3) VALUES ('CfetsEtrDispatcher', 'CfetsEtrDispatcherInfo', 'EX012', 'addCla', '补充协议', null, 24, '{"colAlign": "left"}', 1, 0, null, null);
+INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, EXTENDCFG, STATUS, REMARK1, REMARK2, REMARK3) VALUES ('CfetsEtrDispatcher', 'CfetsEtrDispatcherInfo', 'EX011', 'addCla', '补充协议', null, 24, '{"colAlign": "left"}', 1, 0, null, null);
