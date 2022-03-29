@@ -795,6 +795,16 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
                             || DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2()))){
                         dto.setAmount(ArithmeticUtil.divide(dto.getAmount(),new BigDecimal(100),4));
                     }
+                    if(StringUtil.isNotEmpty(finProductTradeDto.getIsExistNew())){
+                        //新头寸特殊处理质押式回购持仓
+                        if ((DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2())
+                                || DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2()))
+                                && DictCodeListExt1.交易场所_银行间.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getTradeMarket())
+                                && DictCodeList.交易方向_买入.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getPs())){
+                            dto.setCdate(baseTradeProductDealDto.getTrdProductDeal().getTradeDate());
+                        }
+                    }
+
                 }
                 ptlSecPositionFlows.addAll(ptlSecPositionFlowDtoss);
             }
