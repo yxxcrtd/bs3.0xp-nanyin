@@ -166,6 +166,7 @@
 
     <select id="findEntrustPage" resultType="com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch003Dto">
         SELECT
+                DISTINCT
                 A1.ENTRUST_ID entrustId,
                 D1.TARGET_TYPE targetType,
                 A1.UPDATE_TIME updateTime,
