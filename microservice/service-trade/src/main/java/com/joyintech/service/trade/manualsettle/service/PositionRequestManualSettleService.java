@@ -373,7 +373,6 @@ public class PositionRequestManualSettleService {
             map.put("tradeId", entity.getTradeId());
             map.put("etrId", etrEntrust.getEntrustId());
             // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 end
-            map.put("cashAmount", entity.getPrin());
             list.add(map);
             resultMap.put("ptlCashList", list);
         }
