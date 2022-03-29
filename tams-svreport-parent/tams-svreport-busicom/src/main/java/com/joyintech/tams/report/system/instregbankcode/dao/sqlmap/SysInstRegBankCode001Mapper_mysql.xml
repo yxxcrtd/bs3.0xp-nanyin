@@ -71,6 +71,6 @@
         from CHB_ORG_REGIST_BANK_CODE
         where status = 'E'
         and pbc_bank_code = #{pbcBankCode,jdbcType=VARCHAR}
-         LIMIT  1
+         /*LIMIT  1*/
     </select>
 </mapper>
