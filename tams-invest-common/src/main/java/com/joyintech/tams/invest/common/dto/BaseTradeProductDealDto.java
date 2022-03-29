@@ -32,6 +32,19 @@ public class BaseTradeProductDealDto {
      */
     private String secLendFinprodId;
 
+    public boolean isDayEndBatch() {
+        return isDayEndBatch;
+    }
+
+    public void setDayEndBatch(boolean dayEndBatch) {
+        isDayEndBatch = dayEndBatch;
+    }
+
+    /**
+     * 是否是日终批数据
+     */
+    private boolean isDayEndBatch;
+
     /**
      * 金融产品汇总交易
      */

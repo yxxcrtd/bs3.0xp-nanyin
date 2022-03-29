@@ -296,8 +296,8 @@ where
 	WHERE 1=1
 		<if test="newKeyList !=null and newKeyList.size()>0">
 			AND (cii.REGIST_BANK_CODE,cii.INDENTIFY_MARK,cii.PRODID,cii.HOLD_DATE,cii.CCY) in
-			<foreach collection="newKeyList" item="item" open="and (" separator="," close=")">
-				(#{item.registBankCode},{item.indentifyMark},#{item.prodid},#{item.holdDate},#{item.ccy})
+			<foreach collection="newKeyList" item="item" open=" (" separator="," close=")">
+				(#{item.registBankCode},#{item.indentifyMark},#{item.prodid},#{item.holdDate},#{item.ccy})
 			</foreach>
 		</if>
 	</select>
@@ -642,8 +642,8 @@ where
 	where  ciis.SEND_STATUS in('02','03')
 	<if test="list !=null and list.size()>0">
 		AND (ciis.INDENTIFY_MARK,ciis.HOLD_DATE,ciis.CCY,ciis.PRODID,ciis.REGIST_BANK_CODE) in
-		<foreach collection="list" item="item" open="and (" separator="," close=")">
-			(#{item.indentifyMark},{item.holdDate},#{item.ccy},#{item.prodid},#{item.registBankCode})
+		<foreach collection="list" item="item" open=" (" separator="," close=")">
+			(#{item.indentifyMark},#{item.holdDate},#{item.ccy},#{item.prodid},#{item.registBankCode})
 		</foreach>
 	</if>
 </select>
@@ -818,8 +818,8 @@ where
 	    STATUS = 'D'
 	    <if test="dataList !=null and dataList.size()>0">
 			AND (cii.REGIST_BANK_CODE,cii.INDENTIFY_MARK,cii.PRODID,cii.HOLD_DATE,cii.CCY) in
-			<foreach collection="dataList" item="item" open="and (" separator="," close=")">
-				(#{item.registBankCode},{item.indentifyMark},#{item.prodid},#{item.holdDate},#{item.ccy})
+			<foreach collection="dataList" item="item" open="(" separator="," close=")">
+				(#{item.registBankCode},#{item.indentifyMark},#{item.prodid},#{item.holdDate},#{item.ccy})
 			</foreach>
 		</if>
     </update>
