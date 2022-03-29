@@ -170,7 +170,7 @@
                 D1.TARGET_TYPE targetType,
                 A1.UPDATE_TIME updateTime,
                 #{TRADE_TYPE_02} tradeType,
-                A1.PORTFOLIO_ID portfolioId,
+                det.PORTFOLIO_ID portfolioId,
                 CASE
                 WHEN A1.ENTRUST_CLASS = #{ENTRUST_CLASS_02} THEN
                     det.PORTFOLIO_NAME
