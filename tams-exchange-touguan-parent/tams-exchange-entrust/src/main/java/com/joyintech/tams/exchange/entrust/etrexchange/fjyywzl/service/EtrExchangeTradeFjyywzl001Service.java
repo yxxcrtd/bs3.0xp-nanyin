@@ -85,6 +85,7 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
                         BeanUtil.copyPropertiesIgnoreNull(secDto,entity);
                         secDto.setTradePlat(TempConstant.NO_TRADE_BUSINESS_ETR);
                         BigDecimal canRepoNum=etrTradeCommonervice.selectAvailableNum(secDto);
+                        canRepoNum=ArithmeticUtil.divide(canRepoNum,100,0);
                         entity.setCanRepoNum(canRepoNum);
                         //过滤掉标准券和质押数量都等于0
                         if(entity.getSecNum().compareTo(BigDecimal.ZERO)==0&&canRepoNum.compareTo(BigDecimal.ZERO)==0){

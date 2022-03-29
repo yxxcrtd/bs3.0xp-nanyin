@@ -567,6 +567,18 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 		}
 		return pages;
 	}
+	/**
+	 * 场内指令-标准券可用持仓可用查询
+	 *
+	 * @param secDto
+	 * @return
+	 */
+	public BigDecimal querySecInCanUse(PositionCashSecDto secDto) {
+		secDto.setTradePlat(TempConstant.NO_TRADE_BUSINESS_ETR);
+		BigDecimal ticketCanUse=etrTradeCommonervice.selectAvailableNum(secDto);
+		ticketCanUse=ArithmeticUtil.divide(ticketCanUse,100,0);
+		return ticketCanUse;
+	}
 
 	/**
 	 * 场内指令-质押券出库持仓

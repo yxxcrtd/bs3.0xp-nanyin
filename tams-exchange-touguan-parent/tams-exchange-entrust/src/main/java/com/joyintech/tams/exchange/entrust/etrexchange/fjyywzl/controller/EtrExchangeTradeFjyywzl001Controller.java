@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Map;
 
@@ -143,6 +144,27 @@ public class EtrExchangeTradeFjyywzl001Controller extends BaseController {
         }catch (Exception e) {
             logger.error("可出库持仓异常",e);
             return new Message<String>().fail().setMessage("获取标准券持仓异常");
+        }
+    }
+
+    /**
+     * 查询资产对应组合的可用持仓信息
+     *
+     * @param dto
+     * @return 可用持仓
+     * @author dubaojun
+     */
+    @ApiOperation(value = "查询资产对应组合的可用持仓信息", notes = "查询资产对应组合的可用持仓信息")
+    @ResponseBody
+    @PostMapping("/querySecInCanUse")
+    public Message<String> querySecInCanUse(@RequestBody PositionCashSecDto dto){
+        try{
+            BigDecimal availableNum = etrExchangeTradeCommon002Service.querySecInCanUse(dto);
+            String availableNumStr=availableNum.toString();
+            return new Message<>(availableNumStr);
+        } catch (Exception e) {
+            logger.error("查询功能异常", e);
+            return new Message<String>().fail().setMessage("查询异常");
         }
     }
 
