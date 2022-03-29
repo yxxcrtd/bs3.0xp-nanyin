@@ -601,7 +601,16 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 		param.put("MORE_CONVRATE", 0.9);
 		param.put("date", iPlatformDate.getSysDate());
         Map<String,Object> scaleMap=etrExchangeTradeCommonMapper.findTandardRate(param);
-        BigDecimal tandardRate=new BigDecimal(scaleMap.get("TANDARDRATE").toString());//再折算率
+		BigDecimal scale=new BigDecimal(0.9);
+		BigDecimal tandardRate=new BigDecimal(0.9);
+        if(scaleMap==null){
+        	if(scaleMap.get("TANDARDRATE")!=null){
+				tandardRate=new BigDecimal(scaleMap.get("TANDARDRATE").toString());//再折算率
+			}
+			if(scaleMap.get("SCALE")!=null){
+				scale=new BigDecimal(scaleMap.get("SCALE").toString());//折算率
+			}
+		}
 		secNum=ArithmeticUtil.divide(secNum,tandardRate,0);
 		//3、A对应的再折算前持仓
 		BigDecimal canSecNum=queryProPosition(DictCodeListExt3.资产类型_通用回购融资券折算前额度.getValue(),proList);
