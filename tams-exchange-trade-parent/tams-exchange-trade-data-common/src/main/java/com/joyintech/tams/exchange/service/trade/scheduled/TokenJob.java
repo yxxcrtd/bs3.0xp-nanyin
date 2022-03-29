@@ -141,8 +141,9 @@ public class TokenJob {
 //                        redisCacheServiceMap.values().forEach(service -> service.coverCache(dataServiceConfig.isUseRedis()));
                         for(RedisCacheServiceImpl ser:redisCacheServiceMap.values()) {
                         	logger.info("######:"+ser.getClass().getName());
-                        	if(!"com.joyintech.tams.exchange.datacommon.db.service.impl.InstructionDetailServiceImpl".equals(ser.getClass().getName())
-                        			&& !"com.joyintech.tams.exchange.datacommon.db.service.impl.MonitorServiceImpl".equals(ser.getClass().getName()))
+//                        	if(!"com.joyintech.tams.exchange.datacommon.db.service.impl.InstructionDetailServiceImpl".equals(ser.getClass().getName())
+//                        			&& !"com.joyintech.tams.exchange.datacommon.db.service.impl.MonitorServiceImpl".equals(ser.getClass().getName()))
+//                        	if(!"com.joyintech.tams.exchange.datacommon.db.service.impl.MonitorServiceImpl".equals(ser.getClass().getName()))
                         	ser.coverCache(dataServiceConfig.isUseRedis());
                         }
                         logger.info("cover cache from redis success!");
