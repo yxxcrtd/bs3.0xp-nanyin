@@ -402,6 +402,12 @@
         $("#settFeeAmt").change(function () {
             autoAllocation();
         });
+        $("#btn_autoAllocation").click(function () {
+            autoAllocation();
+        })
+        if(ps == PS_03) {//正回购禁止修改交易金额
+            $("#dealAmt").attr('disabled', 'disabled');
+        }
     }
     /**
      * 初始化click事件
@@ -527,6 +533,10 @@
      */
     var autoAllocation = function(){
         var request = getParam();
+        if(!request.distribution && request.ps == PS_04) {
+            Joyin.error("请先选择分配方式");
+            return;
+        }
         Joyin.ajaxJson(basePath + 'cfets/bankuplink/repo/IbuQuoteRepo/autoAllocation', request, function (result) {
             if (result) {
                 var resultData = [];
