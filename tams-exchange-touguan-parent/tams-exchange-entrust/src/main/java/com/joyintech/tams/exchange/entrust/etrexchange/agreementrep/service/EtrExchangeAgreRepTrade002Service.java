@@ -45,7 +45,11 @@ import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dao.EtrExcha
 import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dto.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePositionsCommonRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePositionsCommonResponse;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeUnitCostDto;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.SelectOptionRequestDto;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon002Service;
+import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeQuotationHqResponse;
+import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.service.EtrExchangeTradeJj001Service;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -101,6 +105,11 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
     private IPlatformDate iPlatformDate;
     @Autowired
     private EtrTradeCommonervice etrTradeCommonervice;
+    @Autowired
+    private EtrExchangeTradeJj001Service exchangeTradeJj001Service;
+
+    @Autowired
+    private EtrExchangeTradeCommon002Service etrExchangeTradeCommon002Service;
 
     public static final String ENTRUST_RECORD_MODIFY = "modify";
     
@@ -135,6 +144,7 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
      */
     public Page<EtrExchangeAgreRepTrade002Dto> findPositionsPage(EtrExchangeTradePositionsCommonRequest request) {
         Map<String,Object> pageParam = new HashMap<>();
+        String platDate = iPlatformDate.getSysDateStr();
         if (StringUtil.isNotEmpty(request.getPortfolioIdList())) {
             pageParam.put("portfolioIdList",request.getPortfolioIdList());
         }
@@ -185,6 +195,7 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
         //Page<EtrExchangeAgreRepTrade002Dto> result = super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(), () -> etrExchangeAgreRepTradeMapper.findPositionsPage(pageParam));
         Page<EtrExchangeAgreRepTrade002Dto> result=new Page<>();
         List<EtrExchangeAgreRepTrade002Dto> list=etrExchangeAgreRepTradeMapper.findPositionsPage(pageParam);
+        List<EtrExchangeAgreRepTrade002Dto> returnList=new ArrayList<>();
         if(!CollectionUtils.isEmpty(list)){
             for(EtrExchangeAgreRepTrade002Dto entity : list){
                 //可用数量
@@ -193,13 +204,60 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
                 secDto.setTradePlat(TempConstant.AGR_EREP_ETR); //临时变量
                 BigDecimal canRepoNum=etrTradeCommonervice.selectAvailableNum(secDto);
                 entity.setCanRepoNum(canRepoNum);
-                // 计算浮动盈亏
-                BigDecimal floatPlPercent = ArithmeticUtil.divide(entity.getFloatingPL(), ArithmeticUtil.multiply(entity.getPrice(),entity.getPtlPositionsNum()),2);
-                entity.setFloatingPLPercent(floatPlPercent);
+                //过滤掉实际持仓和可用持仓都等于0
+                if(entity.getPositionsNum().compareTo(BigDecimal.ZERO)==0&&canRepoNum.compareTo(BigDecimal.ZERO)==0){
+                    continue;
+                }
+                //最新价从行情取
+                EtrExchangeTradeQuotationHqResponse hqResponse=exchangeTradeJj001Service.findQuotations(entity.getFinprodMarketId());
+                if(hqResponse!=null){
+                    BigDecimal lastPrice=hqResponse.getLastPrice()!=null?hqResponse.getLastPrice().setScale(2,BigDecimal.ROUND_HALF_UP):new BigDecimal(0.00);
+                    entity.setPrice(lastPrice);
+                }
+                returnList.add(entity);
             }
+
         }
-        result.setRoot(list);
-        return result;
+        // 根据查询结果查询估值、交易数据，用来加工单位成本等字段
+        final List pList = new ArrayList<String>();
+        final List fList = new ArrayList<String>();
+        if(!StringUtil.isEmptyList(returnList)) {
+            returnList.stream().forEach(c -> {
+                if (!pList.contains(c.getPortfolioId())) {
+                    pList.add(c.getPortfolioId());
+                }
+                if (!fList.contains(c.getFinprodId())) {
+                    fList.add(c.getFinprodId());
+                }
+            });
+        }
+        result.setRoot(returnList);
+        // 查询单位成本数据
+        Map<String, EtrExchangeUnitCostDto> unitCostMap = etrExchangeTradeCommon002Service.calcEachCostAmtMap(DateUtil.parse(platDate), pList, fList, "");
+        // 计算单位成本、计算持仓成本、最新净价、持仓市值、浮动盈亏
+        return calculationAmount(unitCostMap, result, platDate);
+    }
+
+    public Page<EtrExchangeAgreRepTrade002Dto> calculationAmount(Map<String, EtrExchangeUnitCostDto> unitCostMap, Page<EtrExchangeAgreRepTrade002Dto> pages, String platDate) {
+        if(pages != null && pages.getRoot()!= null && !pages.getRoot().isEmpty()){
+            pages.getRoot().forEach( r->{
+                EtrExchangeUnitCostDto dto = unitCostMap.get(r.getPortfolioId() + r.getFinprodId());
+                if (dto != null){
+                    // 1.持仓成本（元）
+                    r.setPositionsAmt(dto.getBuyCostAmt());
+                    // 2.持仓成本价（元） 取单位成本
+                    //r.setUnitCost(dto.getUnitCost());
+                }
+                // 最新净价*组合持仓.数量 - 持仓成本 as 浮动盈亏
+                BigDecimal floatFd = ArithmeticUtil.multiply(r.getPrice(),r.getPtlPositionsNum());
+                floatFd = ArithmeticUtil.subtract(floatFd,r.getPositionsAmt());
+                r.setFloatingPL(floatFd);
+                BigDecimal floatPL =ArithmeticUtil.divide(floatFd,ArithmeticUtil.multiply(r.getPrice(),r.getPtlPositionsNum()),2);
+                r.setFloatingPLPercent(floatPL);
+
+            });
+        }
+        return pages;
     }
 
     /**

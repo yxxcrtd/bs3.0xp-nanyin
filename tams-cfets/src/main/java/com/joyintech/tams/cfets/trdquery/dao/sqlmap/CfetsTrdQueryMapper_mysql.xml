@@ -3147,7 +3147,8 @@
         left join reg_fin_product_deal_total_add regAdd on regAdd.totle_trade_id=nvl(match.PRE_TRADE_ID,tot.B_TRADE_ID)
         left join ibu_quote_bond_det ibuDet on ibuDet.QUOTE_ID=nvl(match.PRE_TRADE_ID,tot.B_TRADE_ID) and ibuDet.TRADE_STATUS='07'
         WHERE T1.trade_status='01' and T1.FINPROD_TYPE2 in ('F01','F02','F03') and T1.ps in ('T01','T02','T03','03','04')
-        and T1.IS_CANCEL = #{isCalcN}
+        and ((T8.SETTLE_STATUS is null or T8.SETTLE_STATUS = '01'))
+        and not exists (select 1 from TRD_PRODUCT_TEMP_DEAL_TOTAL where T1.TOTLE_TRADE_ID=TOTLE_TRADE_ID)
         <![CDATA[ AND T1.trade_date >= #{startDate}]]>
         <![CDATA[ AND T1.trade_date <= #{endDate}]]>
         <if test="submitUserId != null and submitUserId != ''">

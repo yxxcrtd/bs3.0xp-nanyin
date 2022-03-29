@@ -5,8 +5,10 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.service.basicdata.dayendaccount.constant.StlDataGatherConstant;
 import com.joyintech.service.basicdata.dayendaccount.dao.DayEndAccountMapper;
 import com.joyintech.service.basicdata.dayendaccount.dto.*;
 import com.joyintech.tams.common.base.dao.*;
@@ -726,6 +728,9 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
         else {
             param.put("busiAcctNoList", new ArrayList<>());
         }
+        // 新老头寸开关(Y:新头寸,N:老头寸)
+        String newSecPositionSwitch = CacheUtil.getSysParam("NEW_SEC_POSITION_SWITCH");
+
         if(StringUtil.isNotEmpty(param.get("parentId")) && !StringUtil.equals(param.get("parentId"),"root")) {
             String param1 = (String) param.get("parentId");
             String[] s = param1.split(",");
@@ -739,7 +744,14 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
                 param.put("busiAcctNo",s[2]);
                 param.put("settleDate",s[3]);
                 param.put("ccy",s[4]);
-                return super.queryForPage(page, length, () -> dayEndAccountMapper.selectPage1(param));
+                // 开关配置N查老头存
+                if(DictCodeList.是否_否.getValue().equals(newSecPositionSwitch)) {
+                    return super.queryForPage(page, length, () -> dayEndAccountMapper.selectPage1(param));
+                }else{// 默认查新头寸
+                    param.put("hodingType", DictCodeListExt3.资产类型_资产账户持仓.getValue());
+                    param.put("dateType", StlDataGatherConstant.DATE_TYPE_T_0);
+                    return super.queryForPage(page, length, () -> dayEndAccountMapper.selectPageNew1(param));
+                }
             }else{
                 param.put("finprodId",s[2]);
                 param.put("settleDate",s[3]);
@@ -747,10 +759,23 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
                 if(StringUtil.isNotEmpty(s[5])&&!"null".equals(s[5])){
                     param.put("termType",s[5]);
                 }
-                return  super.queryForPage(page, length, () -> dayEndAccountMapper.selectPage2(param));
+                if(DictCodeList.是否_否.getValue().equals(newSecPositionSwitch)) {
+                    return  super.queryForPage(page, length, () -> dayEndAccountMapper.selectPage2(param));
+                }else{// 默认查新头寸
+                    param.put("hodingType", DictCodeListExt3.资产类型_资产账户持仓.getValue());
+                    param.put("dateType", StlDataGatherConstant.DATE_TYPE_T_0);
+                    return  super.queryForPage(page, length, () -> dayEndAccountMapper.selectPageNew2(param));
+                }
             }
         }
-        return super.queryForPage(page, length, () -> dayEndAccountMapper.selectPage(param));
+        // 开关配置N查老头存
+        if(DictCodeList.是否_否.getValue().equals(newSecPositionSwitch)) {
+            return super.queryForPage(page, length, () -> dayEndAccountMapper.selectPage(param));
+        }else{// 默认查新头寸
+            param.put("hodingType", DictCodeListExt3.资产类型_资产账户持仓.getValue());
+            param.put("dateType", StlDataGatherConstant.DATE_TYPE_T_0);
+            return super.queryForPage(page, length, () -> dayEndAccountMapper.selectPageNew(param));
+        }
     }
 
     private void setFinprodMarketId(Page<DayEndAccountDto> page){

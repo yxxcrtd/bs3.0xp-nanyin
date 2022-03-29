@@ -1280,7 +1280,7 @@ public class TrdCommonBaseService extends BaseService {
         if(converseRadio==null) {
             converseRadio = BigDecimal.ONE;
         }
-        // 质押式回购出入库计算时，原公式：标准券数量=质押数量*标准折算率，改成：标准券数量=质押数量*标准折算率*面值/100  ---需求张琼
+        // 标准券券面总额=质押数量*标准折算率*面值
         BigDecimal 百元券面 = this.getFaceValue(infContractDetailfile.getFinprodId(), infContractDetailfile.getTradeDate());
         if (百元券面 == null) {
             百元券面 = BigDecimal.valueOf(100);
@@ -1333,7 +1333,7 @@ public class TrdCommonBaseService extends BaseService {
                 }
                 // 标准券券面总额
                 portfolioDto.setStandardSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt().multiply(converseRadio)
-                        .multiply(百元券面).divide(hundred), ratio));
+                        .multiply(百元券面), ratio));
                 // 融入券券面总额
                 portfolioDto.setIntegrateSecAmount(BigDecimal.ZERO);
                 portfolioDtos.add(portfolioDto);
@@ -1372,7 +1372,7 @@ public class TrdCommonBaseService extends BaseService {
             // 标准券券面总额
             // ZGTFCP-1560: 修改标准券面额赋值 modify by fuyongsheng 20220327 start
             portfolioDto.setStandardSecAmount(ArithmeticUtil.multiply(infContractDetailfile.getShareAmt().multiply(converseRadio)
-                    .multiply(百元券面).divide(hundred)));
+                    .multiply(百元券面)));
             // 融入券券面总额
             portfolioDto.setIntegrateSecAmount(BigDecimal.ZERO);
             portfolioDtos.add(portfolioDto);

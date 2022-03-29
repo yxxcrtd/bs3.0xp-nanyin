@@ -16,6 +16,7 @@ import com.joyintech.tams.exchange.common.request.EntrustQueryRequest;
 import com.joyintech.tams.exchange.common.request.PageEntrustInfoRequest;
 import com.joyintech.tams.exchange.datacommon.db.service.InstructionService;
 import com.joyintech.tams.exchange.service.trade.management.service.EntrustManagement;
+import com.joyintech.tams.exchange.util.MasterUtil;
 import com.joyintech.tams.exchange.common.utils.EntrustPropUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -44,12 +45,18 @@ public class EntrustController {
     @ApiOperation(value = "查询委托信息", notes = "查询委托信息")
     @PostMapping(value = {"/entrust"})
     public Message<OrderAndEntrustQryResult> queryAll(@RequestBody @Validated EntrustQueryRequest entrustQueryRequest) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(entrustQueryRequest);
+    	}
         return new Message<>(entrustManagement.queryEntrust(entrustQueryRequest.getUserId(), entrustQueryRequest.getInstructionId(), entrustQueryRequest.getAccountId(), entrustQueryRequest.getOrderId()));
     }
 
     @ApiOperation(value = "查询综合业务信息", notes = "查询综合业务信息")
     @PostMapping(value = {"/entrust/integrated"})
     public Message<List<IntegratedEntrust>> queryIntegratedEntrustAll(@RequestBody @Validated EntrustQueryRequest request) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(request);
+    	}
         return new Message<>(entrustManagement.queryIntegratedEntrust(request.getUserId(), request.getInstructionId(), request.getAccountId(), request.getOrderId()));
     }
 
@@ -64,6 +71,9 @@ public class EntrustController {
     @PostMapping(value = "/entrust/cancel")
     public Message<Object> cancelEntrust(@RequestParam String userId,
                                          @RequestParam String entrustId) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(null);
+    	}
         return new Message<>(entrustManagement.cancelEntrust(userId, entrustId));
     }
 
@@ -109,6 +119,9 @@ public class EntrustController {
      */
     @PostMapping(value = "/entrust/enable")
     public ResultBean queryEnable(@RequestBody @Validated EnableQryBean enableQryBean) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObjectResultBean(enableQryBean);
+    	}
         Instruction instruction = instructionService.findById(enableQryBean.getInstructionId());
         enableQryBean.setEntrustProp(EntrustPropUtils.getEntrustProp(instruction, enableQryBean.getEntrustProp()));
         enableQryBean.setEntrustBs(EntrustBsProp.getEntrustBs(instruction.getPs()));
@@ -131,7 +144,6 @@ public class EntrustController {
     @PostMapping(value = "/entrust/getOthCode")
     public ResultBean getOthCode(@RequestParam(value = "finprod_id", required = false) String finprodId,
                                  @RequestParam(value = "oth_code_type", required = false) String othCodeType) {
-
         return entrustManagement.getOthCode(finprodId, othCodeType);
     }
 

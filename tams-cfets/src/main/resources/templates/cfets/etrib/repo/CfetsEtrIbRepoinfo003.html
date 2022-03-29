@@ -174,7 +174,17 @@
                         </div>
                     </div>
                 </div>
-
+            <div>
+                <div th:if=" ${repo_pledge_model} =='02'"  class="pro-module" id="pledgeBondTotalTblDetailed_div" >
+                    <h3 class="pro-module-title">
+                        <span class="title-des" data-th-utext="#{BussRepoSecPtl.pledgeInfo}">质押券汇总信息</span>
+                        <i class="iconfont icon-arrow-down pro-down-icon"></i>
+                    </h3>
+                    <div>
+                        <table class="layui-table" id="pledgeBondTotalListDetailed" name="pledgeBondTotalListDetailed"></table>
+                    </div>
+                </div>
+            </div>
             <div id="combDistribt_div">
                 <div class="pro-module">
                     <h3 class="pro-module-title">
@@ -189,17 +199,7 @@
                     </div>
                 </div>
             </div>
-             <div>
-	            <div th:if=" ${repo_pledge_model} =='02'"  class="pro-module" id="pledgeBondTotalTblDetailed_div" >
-				    <h3 class="pro-module-title">
-				        <span class="title-des" data-th-utext="#{BussRepoSecPtl.pledgeInfo}">质押券汇总信息</span>
-				        <i class="iconfont icon-arrow-down pro-down-icon"></i>
-				    </h3>
-				    <div>
-				        <table class="layui-table" id="pledgeBondTotalListDetailed" name="pledgeBondTotalListDetailed"></table>
-				    </div>
-				 </div>
-			</div>
+
             <div id="riskTrialRet_div" class="pro-module-wrap">
                 <div class="pro-module">
                     <h3 class="pro-module-title pro-item-wrap">

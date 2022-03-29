@@ -116,6 +116,9 @@ public class OrderController {
     @ApiOperation(value = "委托撤单", notes = "委托撤单")
     @RequestMapping(value = "/order/cancel", method = RequestMethod.POST)
     public Message<Boolean> cancelOrder(@RequestParam String userId, @RequestParam String orderId) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(null);
+    	}
         return new Message<Boolean>(orderManagement.cancelOrder(userId, orderId));
     }
 
