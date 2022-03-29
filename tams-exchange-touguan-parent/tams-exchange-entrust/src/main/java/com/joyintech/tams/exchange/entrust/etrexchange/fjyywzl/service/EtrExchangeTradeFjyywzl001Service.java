@@ -15,9 +15,11 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeCommonRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePositionsCommonResponse;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.PsOptionsRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon002Service;
 import com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.dao.EtrExchangeTradeFjyywzl001Mapper;
 import com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.dto.EtrExchangeTradeFjyywzlZqzyDto;
 import com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.dto.EtrExchangeTradeZqzyRequest;
@@ -45,7 +47,8 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
 
     @Autowired
     private EtrExchangeTradeCommon001Service etrExchangeTradeCommon001Service;
-
+    @Autowired
+    private EtrExchangeTradeCommon002Service etrExchangeTradeCommon002Service;
     @Autowired
     private EtrExchangeTradeCommonMapper etrExchangeTradeCommonMapper;
 
@@ -94,9 +97,9 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
                             entity.setDiscountRate(etrExchangeTradeCommon001Service.selectStdsecConverseRatio(paramMap));
                         }
                         //持仓数量，取交易的
-                        entity.setPositionsNum(selectActNum(1,secDto));
+                        entity.setPositionsNum(selectActNum(DictCodeListExt3.资产类型_资产账户持仓.getValue(),secDto));
                         //质押数量，取交易的
-                        entity.setRepoNum(selectActNum(2,secDto));
+                        entity.setRepoNum(selectActNum(DictCodeListExt3.资产类型_质押式通用回购入库质押券持仓.getValue(),secDto));
                         returnList.add(entity);
                     }
                     result.setRoot(returnList);
@@ -190,8 +193,8 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
                     }
                 }
                 //筛选出当前组合下所有持仓
-                canNumSh=queryProPosition(1,shProList);
-                secNumSh=queryProPosition(2,shProList);
+                canNumSh=etrExchangeTradeCommon002Service.queryProPosition(DictCodeListExt3.资产类型_通用回购融资券可用持仓.getValue(),shProList);
+                secNumSh=etrExchangeTradeCommon002Service.queryProPosition(DictCodeListExt3.资产类型_质押式通用回购已使用融资券总额度.getValue(),shProList);
                 if(secNumSh!=null&&secNumSh.compareTo(BigDecimal.ZERO) != 0){
                     BigDecimal sumNumSh=canNumSh.add(secNumSh);
                     rateShTemp=ArithmeticUtil.divide(secNumSh,sumNumSh,2);
@@ -200,8 +203,8 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
                 }else{
                     rateSh="0%";
                 }
-                canNumZh=queryProPosition(1,szProList);
-                secNumZh=queryProPosition(2,szProList);
+                canNumZh=etrExchangeTradeCommon002Service.queryProPosition(DictCodeListExt3.资产类型_通用回购融资券可用持仓.getValue(),szProList);
+                secNumZh=etrExchangeTradeCommon002Service.queryProPosition(DictCodeListExt3.资产类型_质押式通用回购已使用融资券总额度.getValue(),szProList);
                 if(secNumZh!=null&&secNumZh.compareTo(BigDecimal.ZERO) != 0){
                     BigDecimal sumNumZh=canNumZh.add(secNumZh);
                     rateSZhTemp=ArithmeticUtil.divide(secNumZh,sumNumZh,2);
@@ -385,38 +388,18 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
         return null;
     }
 
-    private BigDecimal queryProPosition(Integer type,List<PositionCashSecDto> list) {
-        List<PositionCashSecDto> secList = new ArrayList<>();
-        for(PositionCashSecDto temp:list){
-            if(type==1){
-                temp.setHoldingType(DictCodeListExt3.资产类型_通用回购融资券可用持仓.getValue());  //可用标准券
-            }else{
-                temp.setHoldingType(DictCodeListExt3.资产类型_质押式通用回购已使用融资券总额度.getValue());//已用标准券
-            }
-            secList.add(temp);
-        }
-        BigDecimal newSecAmount = etrTradeCommonervice.queryPosition(secList, "02", "");
-        if(newSecAmount!=null){
-            newSecAmount= ArithmeticUtil.divide(newSecAmount,100,0);
-        }
-        return newSecAmount;
-
-    }
+   
 
 
 
     //持仓数量,质押数量
-    private BigDecimal selectActNum(Integer type,PositionCashSecDto dto) {
+    private BigDecimal selectActNum(String holdingType,PositionCashSecDto dto) {
         BigDecimal canSec = BigDecimal.ZERO; // 可用持仓
         List<PositionCashSecDto> secList = new ArrayList<>();
         if (StringUtil.isNotEmpty(dto.getFinprodId()) && StringUtil.isNotEmpty(dto.getSecAcctId())) {
             PositionCashSecDto cashSecDto = new PositionCashSecDto();
             BeanUtil.copyPropertiesIgnoreNull(cashSecDto, dto); //复制资产信息
-            if(type==1){
-                cashSecDto.setHoldingType(DictCodeListExt3.资产类型_资产账户持仓.getValue());  //可用标准券
-            }else{
-                cashSecDto.setHoldingType(DictCodeListExt3.资产类型_质押式通用回购入库质押券持仓.getValue());//已用标准券
-            }
+            cashSecDto.setHoldingType(holdingType);
             secList.add(cashSecDto);
         }
         BigDecimal newSecAmount = etrTradeCommonervice.queryPosition(secList, "04", "");
@@ -425,4 +408,7 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
         }
         return canSec;
     }
+
+
+  
 }
