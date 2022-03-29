@@ -1498,7 +1498,6 @@
             #{item.ccy,jdbcType=VARCHAR} CCY,
             #{item.holdDate,jdbcType=DATE} HOLD_DATE,
             #{item.prodid,jdbcType=VARCHAR} PRODID,
-            #{item.mergerindentifymark,jdbcType=VARCHAR} MERGER_INDENTIFY_MARK,
             #{item.operatestatus,jdbcType=VARCHAR} OPERATE_STATUS,
             #{item.status,jdbcType=VARCHAR} STATUS
         </foreach>
@@ -1610,7 +1609,6 @@
         tmp.CCY,
         tmp.HOLD_DATE,
         tmp.PRODID,
-        C.MERGER_INDENTIFY_MARK,
         C.OPERATE_STATUS,
         C.STATUS
         FROM
@@ -1630,7 +1628,6 @@
         tmp.CCY,
         tmp.HOLD_DATE,
         tmp.PRODID,
-        C.MERGER_INDENTIFY_MARK,
         C.OPERATE_STATUS,
         C.STATUS
         FROM CHB_INVESTHOLD_INFO_TMP tmp
