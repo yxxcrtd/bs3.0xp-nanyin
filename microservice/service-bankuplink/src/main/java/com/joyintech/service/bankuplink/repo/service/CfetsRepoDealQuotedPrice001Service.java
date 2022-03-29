@@ -39,6 +39,8 @@ import com.joyintech.tams.invest.common.dto.PtlPositionHoldDto;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.tams.invest.common.dto.common.PtlAllocationDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
 import com.joyintech.tams.invest.common.trade.dao.BaseAssetCashPositionCommMapper;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
@@ -887,6 +889,7 @@ public class CfetsRepoDealQuotedPrice001Service extends BaseService {
 		List<PtlCashPositionFlowDto> ptlCashPositionFlows = new ArrayList<>();// 现金流水
 		List<PtlSecPositionFlowDto> ptlSecPositionFlows = new ArrayList<>();// 持仓流水
         List<EtrSecPositionFlowDto> etrSecPositionFlows = new ArrayList<>();// 指令持仓流水
+        List<EtrCashPositionFlowDto> etrCashPositionFlowDtos = new ArrayList<>();// 指令现金流水
 		BigDecimal factor = new BigDecimal(-1);
         if (!StringUtil.equals(dto.getQuotaPageModel(), QuotaPageModelUtil.MODEL_NEW)
                 && StringUtil.equals(dto.getTradeStatus(), BussinessDictCodeList.银行间上行报价状态_已撤回.getValue())) {
@@ -999,6 +1002,7 @@ public class CfetsRepoDealQuotedPrice001Service extends BaseService {
 		}
 		ptlPositionHoldDto.setPtlCashPositionFlows(ptlCashPositionFlows);
 		ptlPositionHoldDto.setPtlSecPositionFlows(ptlSecPositionFlows);
+
         ptlPositionHoldDto.getPtlCashPositionFlows().forEach(etrCashPositionFlowDto -> {
             etrCashPositionFlowDto.setCdate(vSettleDate);
             etrCashPositionFlowDto.setIsExistNew(dto.getIsExistNew());
@@ -1006,21 +1010,27 @@ public class CfetsRepoDealQuotedPrice001Service extends BaseService {
         ptlPositionHoldDto.getPtlSecPositionFlows().forEach(etrSecPositionFlowDto -> {
             etrSecPositionFlowDto.setCdate(platDate);
             etrSecPositionFlowDto.setIsExistNew(dto.getIsExistNew());
+            EtrSecPositionFlowDto secPositionFlowDto = new EtrSecPositionFlowDto();
+            BeanUtil.copyPropertiesIgnoreNull(secPositionFlowDto, etrSecPositionFlowDto);
+            etrSecPositionFlows.add(secPositionFlowDto);
         });
 
 		// 插入持仓流水
         //撤回不删除流水  登录一比反向流水  add by zhangnian 202010115
 		if(ptlPositionHoldDto.getPtlSecPositionFlows().size() > 0){
-            if (!StringUtil.equals(dto.getTradeStatus(), BussinessDictCodeList.银行间上行报价状态_已撤回.getValue())) {
-                List<PtlSecPositionFlow> positionFlows = baseAssetCashPositionCommMapper.selectAllPosition(dto.getQuoteId());
-                for (PtlSecPositionFlow ptlSecPositionFlow : positionFlows) {
-                    if (StringUtil.equals(ptlSecPositionFlow.getHodingType(), DictCodeList.持仓类型_质押.getValue())) {
-                        PtlSecPositionFlowDto flowDto = new PtlSecPositionFlowDto();
-                        BeanUtil.copyPropertiesIgnoreNull(flowDto, ptlSecPositionFlow);
-                        flowDto.setAmount(flowDto.getAmount().negate());
-                        ptlPositionHoldDto.getPtlSecPositionFlows().add(flowDto);
-                    }
+            List<PtlSecPositionFlow> positionFlows = baseAssetCashPositionCommMapper.selectAllPositionByOffsetFlag(dto.getQuoteId(), DictCodeList.冲正标识_正常交易.getValue());
+            for (PtlSecPositionFlow ptlSecPositionFlow : positionFlows) {
+                if (StringUtil.equals(ptlSecPositionFlow.getHodingType(), DictCodeList.持仓类型_质押.getValue())) {
+                    PtlSecPositionFlowDto flowDto = new PtlSecPositionFlowDto();
+                    BeanUtil.copyPropertiesIgnoreNull(flowDto, ptlSecPositionFlow);
+                    flowDto.setSeqno(IDGenerator.generate());
+                    flowDto.setAmount(flowDto.getAmount().negate());
+                    flowDto.setOffsetFlag(DictCodeList.冲正标识_冲销交易.getValue());
+                    flowDto.setOffsetId(ptlSecPositionFlow.getTradeId());
+                    ptlPositionHoldDto.getPtlSecPositionFlows().add(flowDto);
                 }
+            }
+            if (!StringUtil.equals(dto.getTradeStatus(), BussinessDictCodeList.银行间上行报价状态_已撤回.getValue())) {
                 baseAssetCashPositionCommMapper.deletePositionByTradeId(dto.getQuoteId());
             }
             baseAssetCashPositionCommMapper.deletePositionByTradeId(dto.getQuoteId());
@@ -1041,6 +1051,27 @@ public class CfetsRepoDealQuotedPrice001Service extends BaseService {
 				basePtlCashPositionInfoService.insertCashPositionFlow(ptlCashPositionFlow);
 			}
 		}
+		// 查询正常流水,生成冲销流水,为了余额更新正确
+		if(etrSecPositionFlows.size() > 0){
+            List<EtrSecPositionFlowDto> etrSecPositionFlowDtos = baseAssetCashPositionCommMapper.selectAllEtrPositionByOffsetFlag(dto.getQuoteId(), DictCodeList.冲正标识_正常交易.getValue());
+            for(EtrSecPositionFlowDto flowDto : etrSecPositionFlowDtos){
+                EtrSecPositionFlowDto temp = new EtrSecPositionFlowDto();
+                BeanUtil.copyPropertiesIgnoreNull(temp, flowDto);
+                temp.setSeqno(IDGenerator.generate());
+                temp.setAmount(flowDto.getAmount().negate());
+                temp.setOffsetFlag(DictCodeList.冲正标识_冲销交易.getValue());
+                temp.setOffsetId(flowDto.getTradeId());
+                etrSecPositionFlows.add(temp);
+            }
+        }
+		//删除历史流水
+        baseAssetCashPositionCommMapper.deletePositionByTradeId(dto.getQuoteId());
+
+        EtrPositionHoldDto etrPositionHoldDto = new EtrPositionHoldDto();
+        etrPositionHoldDto.setPtlSecPositionFlows(etrSecPositionFlows);
+        etrPositionHoldDto.setPtlCashPositionFlows(etrCashPositionFlowDtos);
+        // 插入新流水,并更新余额
+        EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
 	}
 
 	private PtlCashPositionFlowDto 逆回购构造现金流水(CfetsRepoDealQuotedPrice001Dto dto,Date vSettleDate,BigDecimal factor){

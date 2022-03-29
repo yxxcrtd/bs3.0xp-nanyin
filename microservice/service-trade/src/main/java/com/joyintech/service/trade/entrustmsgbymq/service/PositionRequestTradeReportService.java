@@ -376,12 +376,12 @@ public class PositionRequestTradeReportService {
                     ptlCash.put("cashAcctId", this.getPtlCapAcctNo(etrEntrust));
                     ptlCash.put("cashAmount", entity.getPositionBaseData().getFinTradeProductDto().getmTradeAmt());
                 }
-                // ZGTFCP-1974:到期购回需要登录首期的到期结算金额 modify by fuyongsheng 20220327 start
+                // ZGTFCP-2114:到期购回、提前购回登录当前交易的到期结算金额 modify by fuyongsheng 20220327 start
                 else if(DictCodeListExt3.交易方向_到期购回.getValue().equals(entity.getPs()) || DictCodeListExt3.交易方向_提前购回.getValue().equals(entity.getPs())){
                     ptlCash.put("cashAcctId", dto.getCashAcctId());
-                    ptlCash.put("cashAmount", entity.getPositionBaseData().getFinTradeProductDto().getmTradeAmt());
+                    ptlCash.put("cashAmount", entity.getPositionBaseData().getEtrEntrustAddDto().getmTradeAmt());
                 }
-                // ZGTFCP-1974:到期购回需要登录首期的到期结算金额 modify by fuyongsheng 20220327 end
+                // ZGTFCP-2114:到期购回、提前购回登录当前交易的到期结算金额 modify by fuyongsheng 20220327 end
                 else{
                     ptlCash.put("cashAcctId", dto.getCashAcctId());
                     ptlCash.put("cashAmount", dto.getCashAmount());

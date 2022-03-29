@@ -28,7 +28,6 @@ import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.cfets.bankuplink.repo.service.CfetsRepoQuotedPrice004Service;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dao.CfetsManualSettleMapper;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dto.PortIntFenPeiInfoDto;
-import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribBondInfo003Dto;
 import com.joyintech.tams.cfets.trdconfirm.dao.CfetsTrdConfirmMapper;
 import com.joyintech.tams.cfets.trdquery.dao.CfetsTrdQueryMapper;
 import com.joyintech.tams.cfets.trdquery.dto.CfetsPledgeInfoResponse;
@@ -47,7 +46,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.invest.common.CommonResult;
+import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
 import com.joyintech.tams.invest.common.component.base.trade.BaseTradeProductDealService;
 import com.joyintech.tams.invest.common.component.business.basicdata.BaseTradeFeeCommService;
 import com.joyintech.tams.invest.common.component.business.basicdata.dto.BasicTradeFeeInputDto;
@@ -278,6 +277,15 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
 
     @Autowired
     private CfetsManualSettleMapper cfetsManualSettleMapper;
+
+    @Autowired
+    private EtrEntrustAddMapper etrEntrustAddMapper;
+
+    /**
+     * 组合可用持仓和实际持仓查询更新
+     */
+    @Autowired(required = false)
+    private BasePtlSecPositionInfoService basePtlSecPositionInfoService;
     /**
      * 设置流程业务说明
      */
@@ -1006,7 +1014,7 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
      * @see
      * @since 1.0
      */
-    private void doRevokeComplete(CfetsTrdRepoTrade002Dto input,String settleRemark,Boolean isNeedDealPosition) {
+    public void doRevokeComplete(CfetsTrdRepoTrade002Dto input,String settleRemark,Boolean isNeedDealPosition) {
         // 调用基础组合.【金融产品交易组件.查询金融产品交易信息】获取原交易信息
         if (input.getTotleTradeId().lastIndexOf('R') == input.getTotleTradeId().length() - 1) {
             input.setTotleTradeId(input.getTotleTradeId().substring(0, input.getTotleTradeId().length() - 1));
@@ -1123,15 +1131,21 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
             }*/
 
         }
-        // 报价撤销时,不会撤销报价交易数据,需要回退实际头寸并生成可用头寸
+        // 交易撤销时,不会撤销报价交易数据,需要回退实际头寸并生成可用头寸;
+        // 交收失败时,报价需要回退实际头寸
         if (StringUtil.equals(ps, DictCodeList.回购拆借方向_逆回购.getValue()) && StringUtil.isNotEmpty(quoteId)
                 && StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))) {
-            cfetsRepoQuotedPrice004Service.revokePtlCashPosition(quoteId, DictCodeList.持仓类型_实际.getValue(), DictCodeList.持仓类型_可用.getValue());
+            String hodingTypeOld = null;
+            if(!isNeedDealPosition){
+                hodingTypeOld = DictCodeList.持仓类型_可用.getValue();
+            }
+            cfetsRepoQuotedPrice004Service.revokePtlCashPosition(quoteId, DictCodeList.持仓类型_实际.getValue(), hodingTypeOld);
         }
 
         Map<String, Object> params = new HashMap<>();
         params.put("workflowId", input.getWorkflowId());
         String bizCode = input.getTotleTradeId();
+        String totleTradeId = cfetsManualSettleMapper.selectIbuQuoteIdByTotleTradeId(bizCode);
         if (bizCode.lastIndexOf('R') == bizCode.length() - 1) {
             bizCode = bizCode.substring(0, bizCode.length() - 1);
         }
@@ -1166,11 +1180,27 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
             PositionHttpRequest.dorevoke(bizCode, DictCodeListExt1.子系统代码_交易.getValue(), DictCodeListExt3.头寸业务类型_质押式回购首期.getValue(), input.getPs());
 
             //PositionHttpRequest.deleteMethod(bizCode,DictCodeListExt1.子系统代码_交易.getValue(),"REPO001");
-        }else{
+        }else {
             Map<String, Object> paramMap = new HashMap<>();
-            paramMap.put("totleTradeId", bizCode);
+            paramMap.put("totleTradeId", totleTradeId);
             paramMap.put("tradeStatus", BussinessDictCodeList.银行间上行报价状态_已撤销.getValue());
-            cfetsTrdQueryMapper.updateIbuByPrimaryKeySelective(paramMap);
+            cfetsTrdQueryMapper.updateIbuRepoByPrimaryKeySelective(paramMap);
+            List<PtlSecPositionFlowDto> ptlSecPositionFlows = new ArrayList<>();
+            List<PtlSecPositionFlow> positionFlows = baseAssetCashPositionCommMapper.selectAllPositionByOffsetFlag(totleTradeId,
+                    com.joyintech.tams.constant.DictCodeList.冲正标识_正常交易.getValue());
+            for (PtlSecPositionFlow ptlSecPositionFlow : positionFlows) {
+                if (StringUtil.equals(ptlSecPositionFlow.getHodingType(), com.joyintech.tams.constant.DictCodeList.持仓类型_质押.getValue())) {
+                    PtlSecPositionFlowDto flowDto = new PtlSecPositionFlowDto();
+                    BeanUtil.copyPropertiesIgnoreNull(flowDto, ptlSecPositionFlow);
+                    flowDto.setAmount(flowDto.getAmount().negate());
+                    flowDto.setOffsetFlag(com.joyintech.tams.constant.DictCodeList.冲正标识_冲销交易.getValue());
+                    flowDto.setOffsetId(ptlSecPositionFlow.getTradeId());
+                    ptlSecPositionFlows.add(flowDto);
+                }
+            }
+            for (PtlSecPositionFlowDto ptlSecPositionFlow : ptlSecPositionFlows) {
+                basePtlSecPositionInfoService.inertSecPositionFlow(ptlSecPositionFlow);
+            }
         }
     }
 

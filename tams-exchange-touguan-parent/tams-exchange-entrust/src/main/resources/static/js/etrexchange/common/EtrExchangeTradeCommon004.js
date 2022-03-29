@@ -2095,8 +2095,8 @@
                     $("#entrustPriceUnit_" + currentTab).text("%");
                     $("#entrustAmtUnit_" + currentTab).text("张");
 
-                    var entrustAmt = $("#standardBondVolume_" + currentTab).val();
-                    $("#entrustAmt_" + currentTab).val(Math.floor(new Number(entrustAmt)));
+                    // var entrustAmt = $("#standardBondVolume_" + currentTab).val();
+                    // $("#entrustAmt_" + currentTab).val(Math.floor(new Number(entrustAmt)));
                 }
                 // if 画面.金融产品类型（投管） = 数据字典.金融产品类型（投管）.质押式回购
                 else if (finprodType2 == FINPROD_TYPE_TG_ZYSHG) {
@@ -2107,8 +2107,8 @@
                     $("#entrustPriceUnit_" + currentTab).text("%");
                     $("#entrustAmtUnit_" + currentTab).text("元");
 
-                    var entrustAmt = $("#standardBondVolume_" + currentTab).val();
-                    $("#entrustAmt_" + currentTab).val(Math.floor(new Number(entrustAmt)));
+                    // var entrustAmt = $("#standardBondVolume_" + currentTab).val();
+                    // $("#entrustAmt_" + currentTab).val(Math.floor(new Number(entrustAmt)));
                 } else {
                     $("#targetType_label_" + currentTab).text("目标类型").append($star.clone());
                     $("#priceModel_label_" + currentTab).text("价格模式").append($star.clone());
@@ -3530,7 +3530,6 @@
                                 finprodType2: $("#finprodType2_" + currentTab).val(),
                                 tradeMarket: $("#tradeMarket_" + currentTab).val(),
                                 acctId: acctNo,
-                                secAcctId:secAcctId,
                                 tradePlat: "04",
                             };
                             Joyin.ajaxJson(basePath + 'etrexchange/common/etrExchangeTrade001/selectAccAvailableCash', param, function (result) {
@@ -3538,6 +3537,8 @@
                                     dateTable.renderRow(data.LAY_TABLE_INDEX,  {"accAvailableCash": result.data});
                                 }
                             }, false);
+                            param.acctId = null;
+                            param.secAcctId = secAcctId;
                             Joyin.ajaxJson(basePath + 'etrexchange/common/etrExchangeTrade001/selectAvailableNum', param, function (result) {
                                 if (result.data) {
                                     dateTable.renderRow(data.LAY_TABLE_INDEX, {"accAvailablePos": result.data});
@@ -3600,7 +3601,6 @@
                         finprodType2: $("#finprodType2_" + currentTab).val(),
                         tradeMarket: $("#tradeMarket_" + currentTab).val(),
                         acctId: value,
-                        secAcctId:data.secAcctId,
                         tradePlat: "04",
                     };
                     Joyin.ajaxJson(basePath + 'etrexchange/common/etrExchangeTrade001/selectAccAvailableCash', param, function (result) {
@@ -3608,6 +3608,8 @@
                             dateTable.renderRow(data.LAY_TABLE_INDEX, {"accAvailableCash": result.data});
                         }
                     }, false);
+                    param.acctId = null;
+                    param.secAcctId = secAcctId;
                     Joyin.ajaxJson(basePath + 'etrexchange/common/etrExchangeTrade001/selectAvailableNum', param, function (result) {
                         if (result.data) {
                             dateTable.renderRow(data.LAY_TABLE_INDEX, {"accAvailablePos": result.data});

@@ -32,6 +32,7 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.tams.invest.common.trade.dao.BussRepoSecMapper;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
+import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,6 +71,9 @@ public class FieldEtrDispatcherService extends BaseService{
 
     @Autowired
     private AutoDispenseRightMapper autoDispenseRightMapper;
+
+    @Autowired
+    private EtrCommonService etrCommonService;
     /**
      * 自定义债券一级投标委托mapper
      */
@@ -323,6 +327,12 @@ public class FieldEtrDispatcherService extends BaseService{
             }
             //一级市场投标增加投标标位List
             if (fieldResponseDto != null) {
+                //折算率 计算 * 面值
+                BigDecimal pledgeStandardNumber = fieldResponseDto.getPledgeStandardNumber();
+                Date sysDate = DateUtil.platDateFromCache();
+                String finprodId = fieldResponseDto.getFinprodId();
+                BigDecimal faceAmt =  (BigDecimal) etrCommonService.select券面面值(finprodId, DateUtil.format(sysDate));
+                fieldResponseDto.setPledgeStandardNumber(pledgeStandardNumber.multiply(faceAmt).divide(new BigDecimal(100)));
                 if (StringUtil.equals(dto.getBusiTypePosition(), DictCodeListExt3.头寸业务类型_债券一级投标.getValue())) {
                     fieldResponseDto.setBidPriceList(mapper.selectBidPriceByKey(pageParam));
                     fieldResponseDto.setEtrBidDate(fieldResponseDto.getEntrustDate());

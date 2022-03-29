@@ -1640,30 +1640,6 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
      * @return
      */
 	public Boolean insertWflBondDialogueQuote(CfetsBondDealDialogueQuoteDto entity) {
-		// 做市方回应
-		if (StringUtil.equals(entity.getQuotaPageModel(), "marketResponse")) {
-
-		} else if (StringUtil.equals(entity.getQuotaPageModel(), "dialogueResponse")) {
-			// 对话回应
-			if (StringUtil.equals(entity.getOperatorType(), "done")) {
-				entity.setTradeStatus(BussinessDictCodeList.银行间上行报价状态_成交中.getValue());
-			} else if (StringUtil.equals(entity.getOperatorType(), "refuse")) {
-				entity.setTradeStatus(BussinessDictCodeList.银行间上行报价状态_终止中.getValue());
-			}
-		} else if (StringUtil.equals(entity.getQuotaPageModel(), "new")) {
-			// 新增
-			if (StringUtil.equals(entity.getOperatorType(), "save")) {
-				// 保存
-			} else if (StringUtil.equals(entity.getOperatorType(), "submit")) {
-				// 提交
-			}
-		} else if (StringUtil.equals(entity.getQuotaPageModel(), "edit")) {
-			// 修改
-			if (StringUtil.equals(entity.getOperatorType(), "save")) {
-			} else if (StringUtil.equals(entity.getOperatorType(), "submit")) {
-				entity.setTradeStatus(BussinessDictCodeList.银行间上行报价状态_修改中.getValue());
-			}
-		}
         return cfetsBondDealQuotedPriceService.insertWflBondDialogueQuote(preparEntity(entity));
 		/*return restTemplate.postForObject(
 				ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsBondDealQuotedPrice/insertWflBondDialogueQuote",
