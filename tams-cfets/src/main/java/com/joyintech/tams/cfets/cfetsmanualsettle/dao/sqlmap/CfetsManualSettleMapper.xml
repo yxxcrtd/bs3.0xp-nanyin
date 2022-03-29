@@ -1408,9 +1408,9 @@
             nvl(T8.dip_type,ic.DIP_TYPE) as distriType,
             nvl(T8.M_TRADE_AMT,ic.M_TRADE_AMT) as mtradeAmt
         FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
-         LEFT JOIN TRD_PRODUCT_DEAL D on T1.TOTLE_TRADE_ID=D.TOTLE_TRADE_ID
          LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL T3 ON T1.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
-         LEFT JOIN FIN_TRADE_PRODUCT T4 ON D.FINPROD_ID = T4.FINPROD_ID
+         left join (select sum(nvl(p.m_int_amt,0)) as m_int_amt, max(p.BASIS) as BASIS,max(p.TERM) as TERM,TOTLE_TRADE_ID from TRD_PRODUCT_DEAL d
+         inner join FIN_TRADE_PRODUCT p on d.FINPROD_ID=p.FINPROD_ID  group by d.TOTLE_TRADE_ID ) t4 on t1.TOTLE_TRADE_ID=t4.TOTLE_TRADE_ID
          LEFT JOIN TRD_TRADE_FEE_TOTAL ttft ON T1.totle_trade_id = ttft.totle_trade_id AND ttft.fee_type =#{feeType06}
          LEFT JOIN TRD_TRADE_FEE_TOTAL ttft1 ON T1.totle_trade_id = ttft1.totle_trade_id AND ttft1.fee_type = #{feeType08}
          LEFT JOIN TRD_DEAL_TOTAL_ADD T5 ON T1.TOTLE_TRADE_ID = T5.TOTLE_TRADE_ID
