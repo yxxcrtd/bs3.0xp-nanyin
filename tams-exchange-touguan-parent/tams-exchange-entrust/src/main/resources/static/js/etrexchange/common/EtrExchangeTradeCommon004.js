@@ -3530,7 +3530,6 @@
                                 finprodType2: $("#finprodType2_" + currentTab).val(),
                                 tradeMarket: $("#tradeMarket_" + currentTab).val(),
                                 acctId: acctNo,
-                                secAcctId:secAcctId,
                                 tradePlat: "04",
                             };
                             Joyin.ajaxJson(basePath + 'etrexchange/common/etrExchangeTrade001/selectAccAvailableCash', param, function (result) {
@@ -3538,6 +3537,8 @@
                                     dateTable.renderRow(data.LAY_TABLE_INDEX,  {"accAvailableCash": result.data});
                                 }
                             }, false);
+                            param.acctId = null;
+                            param.secAcctId = secAcctId;
                             Joyin.ajaxJson(basePath + 'etrexchange/common/etrExchangeTrade001/selectAvailableNum', param, function (result) {
                                 if (result.data) {
                                     dateTable.renderRow(data.LAY_TABLE_INDEX, {"accAvailablePos": result.data});
@@ -3600,7 +3601,6 @@
                         finprodType2: $("#finprodType2_" + currentTab).val(),
                         tradeMarket: $("#tradeMarket_" + currentTab).val(),
                         acctId: value,
-                        secAcctId:data.secAcctId,
                         tradePlat: "04",
                     };
                     Joyin.ajaxJson(basePath + 'etrexchange/common/etrExchangeTrade001/selectAccAvailableCash', param, function (result) {
@@ -3608,6 +3608,8 @@
                             dateTable.renderRow(data.LAY_TABLE_INDEX, {"accAvailableCash": result.data});
                         }
                     }, false);
+                    param.acctId = null;
+                    param.secAcctId = secAcctId;
                     Joyin.ajaxJson(basePath + 'etrexchange/common/etrExchangeTrade001/selectAvailableNum', param, function (result) {
                         if (result.data) {
                             dateTable.renderRow(data.LAY_TABLE_INDEX, {"accAvailablePos": result.data});
