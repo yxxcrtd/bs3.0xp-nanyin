@@ -720,6 +720,7 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
 
     public Page<DayEndAccountDto> selectPage(int page, int length, Map<String, Object> param) {
         Object busiAcctNo = param.get("busiAcctNo");
+        param.put("finProdType2_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         Page<DayEndAccountDto> result;
         if (busiAcctNo != null) {
             param.put("busiAcctNoList",

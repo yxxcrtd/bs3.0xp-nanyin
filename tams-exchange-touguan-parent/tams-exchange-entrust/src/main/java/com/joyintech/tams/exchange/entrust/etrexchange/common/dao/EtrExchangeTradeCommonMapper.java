@@ -20,6 +20,7 @@ import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTra
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePositionsCommonResponse;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.FinProductOthCodeDto;
+import com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.dto.EtrExchangeTradeFjyywzlZqzyDto;
 import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.tams.invest.common.trade.dto.SecInfoModelDto;
@@ -373,5 +374,8 @@ public interface EtrExchangeTradeCommonMapper {
 	int deleteWflEtrEntrustAddByEntrustId(String entrustId);
 
 	int deleteWflEtrEntrustDetailByEntrustId(String entrustId);
+
+	Map findTandardRate(Map<String, Object> pageParam);
+
 
 }

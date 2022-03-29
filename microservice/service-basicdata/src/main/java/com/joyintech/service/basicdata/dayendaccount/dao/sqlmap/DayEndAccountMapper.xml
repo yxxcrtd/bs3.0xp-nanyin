@@ -1287,7 +1287,13 @@
         case when t1.AMOUNT = s3.AMOUT then '1' else '0' end checkResult
         FROM (
         SELECT nvl(f1.FINPROD_ID,p1.FINPROD_ID) FINPROD_ID,s1.BOND_ID SEC_ACCT_ID,p1.CDATE,f1.TRADE_MARKET,f2.type_8,null TERM_TYPE,
-        SUM(p1.AMOUNT) AMOUNT
+        <!--ZGTFCP-2010:新头寸债券需要除以100 modify by fuyongsheng 20220329 start-->
+        <!--SUM(p1.AMOUNT) AMOUNT-->
+        SUM(
+        CASE WHEN f1.FINPROD_TYPE2 IS NOT NULL AND f1.FINPROD_TYPE2 = #{finProdType2_F01} THEN p1.AMOUNT/100
+        ELSE p1.AMOUNT END
+        ) AMOUNT
+        <!--ZGTFCP-2010:新头寸债券需要除以100 modify by fuyongsheng 20220329 end-->
         FROM PTL_SEC_POSITION_RULE p1
         LEFT JOIN STL_SEC_ACCT_INFO s1
         ON p1.SEC_ACCT_ID=s1.SEC_ACCT_ID
@@ -1309,41 +1315,50 @@
         GROUP BY p1.FINPROD_ID,s1.BOND_ID,p1.CDATE,f2.type_8,f1.TRADE_MARKET,f1.FINPROD_ID
         UNION ALL
         SELECT
-        CASE WHEN f1.TERM_TYPE='GC001' THEN '204001'
-        WHEN f1.TERM_TYPE='GC002' THEN '204002'
-        WHEN f1.TERM_TYPE='GC003' THEN '204003'
-        WHEN f1.TERM_TYPE='GC004' THEN '204004'
-        WHEN f1.TERM_TYPE='GC007' THEN '204007'
-        WHEN f1.TERM_TYPE='GC014' THEN '204014'
-        WHEN f1.TERM_TYPE='GC028' THEN '204028'
-        WHEN f1.TERM_TYPE='GC091' THEN '204091'
-        WHEN f1.TERM_TYPE='GC182' THEN '204182'
-        WHEN f1.TERM_TYPE='R-001' THEN '131810'
-        WHEN f1.TERM_TYPE='R-002' THEN '131811'
-        WHEN f1.TERM_TYPE='R-003' THEN '131800'
-        WHEN f1.TERM_TYPE='R-007' THEN '131801'
-        WHEN f1.TERM_TYPE='R-014' THEN '131802'
-        WHEN f1.TERM_TYPE='R-028' THEN '131803'
-        WHEN f1.TERM_TYPE='R-091' THEN '131805'
-        WHEN f1.TERM_TYPE='R-128' THEN '131806'
-        ELSE '131807' END FINPROD_ID,
-        s1.BOND_ID SEC_ACCT_ID,
-        p1.CDATE,
-        case when f1.TERM_TYPE like 'G%' then '03'
-        when f1.TERM_TYPE like 'R%' then '04' else '04'
-        end tradeMarket,
-        'F07' TYPE_8,
-        f1.TERM_TYPE,
-        SUM(p1.AMOUNT) AMOUNT
+            CASE WHEN f1.TERM_TYPE='GC001' THEN '204001'
+            WHEN f1.TERM_TYPE='GC002' THEN '204002'
+            WHEN f1.TERM_TYPE='GC003' THEN '204003'
+            WHEN f1.TERM_TYPE='GC004' THEN '204004'
+            WHEN f1.TERM_TYPE='GC007' THEN '204007'
+            WHEN f1.TERM_TYPE='GC014' THEN '204014'
+            WHEN f1.TERM_TYPE='GC028' THEN '204028'
+            WHEN f1.TERM_TYPE='GC091' THEN '204091'
+            WHEN f1.TERM_TYPE='GC182' THEN '204182'
+            WHEN f1.TERM_TYPE='R-001' THEN '131810'
+            WHEN f1.TERM_TYPE='R-002' THEN '131811'
+            WHEN f1.TERM_TYPE='R-003' THEN '131800'
+            WHEN f1.TERM_TYPE='R-007' THEN '131801'
+            WHEN f1.TERM_TYPE='R-014' THEN '131802'
+            WHEN f1.TERM_TYPE='R-028' THEN '131803'
+            WHEN f1.TERM_TYPE='R-091' THEN '131805'
+            WHEN f1.TERM_TYPE='R-128' THEN '131806'
+            ELSE '131807' END FINPROD_ID,
+            s1.BOND_ID SEC_ACCT_ID,
+            p1.CDATE,
+            case
+                when f1.TERM_TYPE like 'G%' then '03'
+                when f1.TERM_TYPE like 'R%' then '04' else '04'
+            end tradeMarket,
+            'F07' TYPE_8,
+            f1.TERM_TYPE,
+            <!--ZGTFCP-2010:新头寸债券需要除以100 modify by fuyongsheng 20220329 start-->
+            <!--SUM(p1.AMOUNT) AMOUNT-->
+            SUM(
+                CASE WHEN fp.FINPROD_TYPE2 IS NOT NULL AND fp.FINPROD_TYPE2 = #{finProdType2_F01} THEN p1.AMOUNT/100
+                ELSE p1.AMOUNT END
+            ) AMOUNT
+            <!--ZGTFCP-2010:新头寸债券需要除以100 modify by fuyongsheng 20220329 end-->
         FROM PTL_SEC_POSITION_RULE p1
         LEFT JOIN STL_SEC_ACCT_INFO s1
-        ON p1.SEC_ACCT_ID=s1.SEC_ACCT_ID
+            ON p1.SEC_ACCT_ID=s1.SEC_ACCT_ID
         LEFT JOIN PTL_CAPACCT_INFO p2
-        ON s1.TRD_ACCT_ID=p2.ACCT_NO
-        AND s1.TRD_ACCT_CCY=p2.CCY
-        AND p1.PORTFOLIO_ID=p2.PORTFOLIO_ID
+            ON s1.TRD_ACCT_ID=p2.ACCT_NO
+            AND s1.TRD_ACCT_CCY=p2.CCY
+            AND p1.PORTFOLIO_ID=p2.PORTFOLIO_ID
         inner JOIN FIN_TRADE_PRODUCT f1
-        ON p1.FINPROD_ID=f1.FINPROD_ID
+            ON p1.FINPROD_ID=f1.FINPROD_ID
+        LEFT JOIN fin_product fp
+            on p1.FINPROD_ID = fp.FINPROD_ID
         WHERE s1.SEC_ACCT_TYPE='SEC'
         AND s1.TRADE_PLACE IN ('03','04')
         AND p2.ACCT_TYPE='A07'
@@ -1418,19 +1433,28 @@
     </select>
     <select id="selectPageNew2" resultType="com.joyintech.service.basicdata.dayendaccount.dto.DayEndAccountDto">
         SELECT #{parentId} parentInfo,
-        null childInfo,
-        p1.PORTFOLIO_ID portfolioId,
-        p3.PORTFOLIO_NAME portfolioName,
-        sum(p1.AMOUNT) xiTongAmount
-        FROM PTL_SEC_POSITION_RULE p1
+            null childInfo,
+            p1.PORTFOLIO_ID portfolioId,
+            p3.PORTFOLIO_NAME portfolioName,
+            <!--ZGTFCP-2010:新头寸债券需要除以100 modify by fuyongsheng 20220329 start-->
+            <!--sum(p1.AMOUNT) xiTongAmount-->
+            SUM(
+                CASE WHEN fp.FINPROD_TYPE2 IS NOT NULL AND fp.FINPROD_TYPE2 = #{finProdType2_F01} THEN p1.AMOUNT/100
+                ELSE p1.AMOUNT END
+            ) xiTongAmount
+            <!--ZGTFCP-2010:新头寸债券需要除以100 modify by fuyongsheng 20220329 end-->
+        FROM
+             PTL_SEC_POSITION_RULE p1
         LEFT JOIN STL_SEC_ACCT_INFO s1
-        ON p1.SEC_ACCT_ID = s1.SEC_ACCT_ID
+            ON p1.SEC_ACCT_ID = s1.SEC_ACCT_ID
         LEFT JOIN PTL_CAPACCT_INFO p2
-        ON s1.TRD_ACCT_ID = p2.ACCT_NO
-        AND s1.TRD_ACCT_CCY = p2.CCY
-        AND p1.PORTFOLIO_ID = p2.PORTFOLIO_ID
+            ON s1.TRD_ACCT_ID = p2.ACCT_NO
+            AND s1.TRD_ACCT_CCY = p2.CCY
+            AND p1.PORTFOLIO_ID = p2.PORTFOLIO_ID
         LEFT JOIN PTL_PORTFOLIO p3
-        on p1.PORTFOLIO_ID = p3.PORTFOLIO_ID
+            on p1.PORTFOLIO_ID = p3.PORTFOLIO_ID
+        LEFT JOIN FIN_PRODUCT fp
+            ON fp.FINPROD_ID = p1.FINPROD_ID
         <if test="termType!=null">
             inner join FIN_TRADE_PRODUCT f1
             on p1.FINPROD_ID = f1.FINPROD_ID

@@ -2092,12 +2092,11 @@
                     $("#entrustPrice_label_" + currentTab).text("折算率").append($star.clone());
                     $("#entrustNum_label_" + currentTab).text("指令数量").append($star.clone());
                     $("#entrustAmt_label_" + currentTab).text("标准券数量").append($star.clone());
+                    $("#entrustPriceUnit_" + currentTab).text("%");
+                    $("#entrustAmtUnit_" + currentTab).text("张");
 
                     var entrustAmt = $("#standardBondVolume_" + currentTab).val();
                     $("#entrustAmt_" + currentTab).val(Math.floor(new Number(entrustAmt)));
-
-                    $("#entrustPriceUnit_" + currentTab).text("%");
-                    $("#entrustAmtUnit_" + currentTab).text("张");
                 }
                 // if 画面.金融产品类型（投管） = 数据字典.金融产品类型（投管）.质押式回购
                 else if (finprodType2 == FINPROD_TYPE_TG_ZYSHG) {
@@ -2105,12 +2104,11 @@
                     $("#entrustPrice_label_" + currentTab).text("回购利率").append($star.clone());
                     $("#entrustNum_label_" + currentTab).text("标准券数量").append($star.clone());
                     $("#entrustAmt_label_" + currentTab).text("回购金额").append($star.clone());
+                    $("#entrustPriceUnit_" + currentTab).text("%");
+                    $("#entrustAmtUnit_" + currentTab).text("元");
 
                     var entrustAmt = $("#standardBondVolume_" + currentTab).val();
                     $("#entrustAmt_" + currentTab).val(Math.floor(new Number(entrustAmt)));
-
-                    $("#entrustPriceUnit_" + currentTab).text("%");
-                    $("#entrustAmtUnit_" + currentTab).text("元");
                 } else {
                     $("#targetType_label_" + currentTab).text("目标类型").append($star.clone());
                     $("#priceModel_label_" + currentTab).text("价格模式").append($star.clone());
@@ -2185,6 +2183,7 @@
             }
         } else if (currentTab == 'jj') {
             var ps = $("#ps_" + currentTab).val();
+            var board = $("#board_" + currentTab).val();
             // if 画面.金融产品类型（投管） = 数据字典.金融产品类型（投管）.债券
             if (finprodType2 == FINPROD_TYPE_TG_F01) {
                 // 回售 or 申购 or 配债 or 债转股 or 质押入库 or 质押出库
@@ -2236,12 +2235,21 @@
                             });
                         }*/
             else if(finprodType2 == FINPROD_TYPE_TG_F10){
-                $("#priceModel_" + currentTab).updateChosenArr({
-                    item: [PRICE_MODEL_PRM10, PRICE_MODEL_PRM02, PRICE_MODEL_PRM03],
-                    chosen: $("#priceModel_" + currentTab).val(),
-                    disabled: false,
-                    isNotTrigger: true
-                });
+                if(board != BOARD_BD03 && board != BOARD_BD04){
+                    $("#priceModel_" + currentTab).updateChosenArr({
+                        item: [PRICE_MODEL_PRM02, PRICE_MODEL_PRM03],
+                        chosen: $("#priceModel_" + currentTab).val(),
+                        disabled: false,
+                        isNotTrigger: true
+                    });
+                }else {
+                    $("#priceModel_" + currentTab).updateChosenArr({
+                        item: [PRICE_MODEL_PRM10, PRICE_MODEL_PRM02, PRICE_MODEL_PRM03],
+                        chosen: $("#priceModel_" + currentTab).val(),
+                        disabled: false,
+                        isNotTrigger: true
+                    });
+                }
             }else {
                 // 画面.价格模式  = 数据字典.价格模式.限价指令，数据字典.价格模式.市价指令
                 $("#priceModel_" + currentTab).updateChosenArr({
@@ -3764,12 +3772,39 @@
         // dateTable.reload();
     }
 
+    function linkTableEntrustNumAmtFF() {
+        var entrustNum = $("#entrustNum_" + currentTab).val();
+        if (parseFloat(entrustNum) < 0){
+            Joyin.error("指令数量不能为负数！",function(){
+                $("#entrustNum_" + currentTab).val(0)
+            });
+            return ;
+        }
+        var entrustAmt = $("#entrustAmt_" + currentTab).val();
+        var array = dateTable.getAllRows();
+        var len = array.length;
+        var entrustNumForOne = entrustNum / len;
+        for (var i = 0; i < array.length; i++) {
+            if(i == 0){
+                array[i].entrustNum = Math.ceil(entrustNumForOne);
+            }else {
+                array[i].entrustNum = Math.floor(entrustNumForOne);
+            }
+            array[i].entrustAmt = entrustAmt / len;
+        }
+        for (var i = 0; i < array.length; i++) {
+            dateTable.renderRow(i, array[i]);
+        }
+        ;
+    }
+
+
     /**
      * 绑定删除事件
      */
     dateTable.bind('click', '.delt', function (data, index) {
         dateTable.removeRow(data);
-        linkTableEntrustNumAmt();
+        linkTableEntrustNumAmtFF();
     });
 
     var colsRiskTrialRet = [
@@ -3945,7 +3980,7 @@
 
         object.operateType = operateType;
         object.pageModel = pageModel;
-
+        object.currentTab = currentTab;
         //riskdata = getriskdata(object);
         // if(BaseRiskMathComm && isNeedRiskcal()) {
         //     s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
@@ -4333,6 +4368,9 @@
         $("#etrExchangeTradeMulti001_btn_add").click(function () {
             var temp = {};
             dateTable.addRow(temp);
+            if (currentTab == 'dz'){
+             linkTableEntrustNumAmtFF();
+            }
         });
     });
 }());

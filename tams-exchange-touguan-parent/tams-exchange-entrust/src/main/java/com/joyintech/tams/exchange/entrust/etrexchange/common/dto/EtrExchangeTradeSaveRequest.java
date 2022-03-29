@@ -744,4 +744,14 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
     public void setIsDoRkRedisFlag(String isDoRkRedisFlag) {
         this.isDoRkRedisFlag = isDoRkRedisFlag;
     }
+
+    private String currentTab;
+
+    public String getCurrentTab() {
+        return currentTab;
+    }
+
+    public void setCurrentTab(String currentTab) {
+        this.currentTab = currentTab;
+    }
 }

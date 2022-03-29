@@ -28,6 +28,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -90,6 +91,9 @@ public class TradeServiceImpl extends AsyncServiceImpl<String, Trade> implements
                 tradeQueryBean.setFinprodType2(entrust.getFinprodType2());
                 tradeQueryBean.setEntrustBs(entrust.getEntrustBs());
                 tradeQueryBean.setStockName(entrust.getStockName());
+            }
+            if("EX005".equals(tradeQueryBean.getBusiTypeTg())){
+                tradeQueryBean.setTradedPrice(tradeQueryBean.getTradedPrice().multiply(BigDecimal.valueOf(100)));
             }
 
             tradeQueryBeans.add(tradeQueryBean);
@@ -163,6 +167,9 @@ public class TradeServiceImpl extends AsyncServiceImpl<String, Trade> implements
         tradeHistories.forEach(tradeHistory -> {
             if (InvestmentAssetType.isFutures(tradeHistory.getAssetType())) {
                 tradeHistory.setStockCode(StockCodeUtils.getStockCode(tradeHistory.getStockCode()));
+            }
+            if("EX005".equals(tradeHistory.getBusiTypeTg())){
+                tradeHistory.setTradedPrice(tradeHistory.getTradedPrice().multiply(BigDecimal.valueOf(100)));
             }
         });
         return new PageInfo<>(tradeHistories);
