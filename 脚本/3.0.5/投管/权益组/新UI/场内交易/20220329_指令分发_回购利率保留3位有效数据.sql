@@ -13,3 +13,6 @@ INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME
 INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, EXTENDCFG, STATUS, REMARK1, REMARK2, REMARK3) VALUES ('FieldEtrDispatcher', 'FieldEtrDispatcherInfo', 'EX012', 'unitPrice', '回购利率', null, 14, '{"colAlign": "left","dataType":"amount","precision":"3","unit":"%"}', 1, 0, null, null);
 INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, EXTENDCFG, STATUS, REMARK1, REMARK2, REMARK3) VALUES ('FieldEtrDispatcher', 'FieldEtrDispatcherInfo', 'EX013', 'unitPrice', '回购利率', null, 14, '{"colAlign": "left","dataType":"amount","precision":"3","unit":"%"}', 1, 0, null, null);
 
+
+delete from CFG_DATATABLE_SHOW where  PAGECODE = 'EtrExchangeAgreRepTrade001' and DTCODE='UNOPENQUOTA'  and  COLNAME = '回购利率(%)';
+INSERT INTO CFG_DATATABLE_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, ISKEY) VALUES ('EtrExchangeAgreRepTrade001', 'UNOPENQUOTA', '999999', 'yield', '回购利率(%)', null, 9, 1, 0, 0, 100, '{"colAlign": "right","dataType":"amount","precision":"3","supportSearch":"精确"}', 0, 'COMM', 1, 0, null, null, 0);
