@@ -901,13 +901,8 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
             doInsetOrUpdateForPtlPositionHold(entity);
         }
         String systemAct = handSystemAct(entity);
-        try {
-            sendPosition(entity, DictCodeListExt3.流程节点_流程提交.getValue(), systemAct, systemAct,null);
-            //doInsetOrUpdateForPtlPositionHold(entity);
-        }catch(PositionException e){
-            e.printStackTrace(); Message message = PositionUtil.ajaxErrorReturn(e);
-            throw new BusinessException("MSG:"+message.getMessage());
-        }
+        sendPosition(entity, DictCodeListExt3.流程节点_流程提交.getValue(), systemAct, systemAct,null);
+        //doInsetOrUpdateForPtlPositionHold(entity);
     }
     
 	@Override
