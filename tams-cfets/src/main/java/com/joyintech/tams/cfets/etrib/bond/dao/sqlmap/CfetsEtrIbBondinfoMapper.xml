@@ -551,13 +551,13 @@ from
                 f.ITEM_VALUE || '|' || g.ITEM_VALUE 
                 like '%' || #{search} || '%' 
                 <if test="search_isNumberFlag != null and search_isNumberFlag == true">
-                    or (etrptl.ETR_SUM_KYCC = #{search})
-                    or (etrptl.ETR_PLEDGE_KZYCC = #{search})
-                    or (etrptl.ETR_PLEDGE_YZYCC = #{search})
-                    or (etrptl.PTL_BOND_BFQKYCC = #{search})
-                    or (etrptl.PTL_BOND_BFQZTCC = #{search})
+                    or round(etrptl.ETR_SUM_KYCC / 10000,2) = to_number(#{search})
+                    or round(etrptl.ETR_PLEDGE_KZYCC / 10000,2)= to_number(#{search})
+                    or round(etrptl.ETR_PLEDGE_YZYCC / 10000,2) = to_number(#{search})
+                    or round(etrptl.PTL_BOND_BFQKYCC / 10000,2) = to_number(#{search})
+                    or round(etrptl.PTL_BOND_BFQZTCC / 10000,2) = to_number(#{search})
                     or (tt.NETPRICE = #{search})
-                    or (etrptl.PTL_BOND_ZHCC = #{search})
+                    or round(etrptl.PTL_BOND_ZHCC / 10000,2) = to_number(#{search})
                 </if>
             )
         </if>
@@ -1314,7 +1314,6 @@ from
                 || '|T+' || aaa.settleSpreed || '|' || dictpriceModel.ITEM_VALUE   || '|' || aaa.invManagerId
                 || '|' || aaa.entrustId || '|' || approver || '|' || aaa.REMARK || '|' || dictbusiModel.ITEM_VALUE
                 like '%' || #{search} || '%')
-                or to_char(aaa.shareNum,'FM9999999999999990.99')=#{search} or to_char(aaa.shareNum)=#{search}
                 or to_char(aaa.unitPrice,'FM99990.9990')=#{search} or  aaa.unitPrice||'' =#{search}
                 or to_char(aaa.allPrice,'FM99990.9990')=#{search} or  aaa.allPrice||'' =#{search}
                 or to_char(aaa.matureYield,'FM99990.9990')=#{search} or  aaa.matureYield||'' =#{search}
@@ -1325,6 +1324,9 @@ from
                 or  aaa.etrDate=#{year}||'-'||#{search}
                 or  replace(aaa.etrDate,'-','/')=#{search}
                 or  replace(aaa.etrDate,'-','/')=#{year}||'/'||#{search}
+                <if test="search_isNumberFlag != null and search_isNumberFlag == true">
+                    or aaa.shareNum=to_number(#{search})
+                </if>
                 )
             </where>
         </if>
