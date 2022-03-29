@@ -619,9 +619,11 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
                 scale = new BigDecimal(scaleMap.get("SCALE").toString());//折算率
             }
         }
+        secNum= ArithmeticUtil.divide(secNum, 100, 0);
         secNum = ArithmeticUtil.divide(secNum, tandardRate, 0);
         //3、A对应的再折算前持仓
         BigDecimal canSecNum = queryProPosition(DictCodeListExt3.资产类型_通用回购融资券折算前额度.getValue(), proList);
+        canSecNum=ArithmeticUtil.divide(canSecNum, 100, 0);
         //4、标准券可用/折算率和 A对应的再折算前持仓 比较
         secNum = ArithmeticUtil.divide(secNum, scale, 0);
         BigDecimal miniSecNum = canSecNum;
