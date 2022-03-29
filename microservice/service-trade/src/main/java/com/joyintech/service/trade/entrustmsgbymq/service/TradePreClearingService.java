@@ -243,7 +243,6 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
                 infContractDetailfile.getEntrustId(), infContractDetailfile.getSeqno());
             trdTempDto = new TrdTempDto();
             trdStaSec(trdTempDto, infContractDetailfile);
-            
             logger.info("【成交数据预清算-标准券入出库结束】tradePreClearing entrustId: {}, seqno: {}",
                 infContractDetailfile.getEntrustId(), infContractDetailfile.getSeqno());
         } else {
@@ -260,7 +259,6 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
                     infContractDetailfile.getEntrustId(), infContractDetailfile.getSeqno());
                 trdTempDto = new TrdTempDto();
                 fundTradePreClearingService.trdFund(trdTempDto, infContractDetailfile);
-                
                 logger.info("【成交数据预清算-基金结束】tradePreClearing entrustId: {}, seqno: {}",
                     infContractDetailfile.getEntrustId(), infContractDetailfile.getSeqno());
             } else {
@@ -692,6 +690,7 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
         // 交割日
         trdTempDto.setSettleDate(infContractDetailfile.getTradeDate());
         // 调用新头寸接口 add by fuyongsheng 20220308 end
+        positionRequestTradeReportService.sendTradeReportPositionRequest(trdTempDto);
     }
 
 

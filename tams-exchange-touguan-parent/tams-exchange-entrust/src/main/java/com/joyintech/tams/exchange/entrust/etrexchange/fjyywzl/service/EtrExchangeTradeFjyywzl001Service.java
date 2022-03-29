@@ -87,6 +87,16 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
                         if(entity.getSecNum().compareTo(BigDecimal.ZERO)==0&&canRepoNum.compareTo(BigDecimal.ZERO)==0){
                             continue;
                         }
+                        //折算率
+                        Map<String,Object> paramMap=new HashMap<>();
+                        paramMap.put("finprodId",entity.getFinprodId());
+                        if(canRepoNum.compareTo(BigDecimal.ZERO)==0){
+                            entity.setDiscountRate(etrExchangeTradeCommon001Service.selectStdsecConverseRatio(paramMap));
+                        }
+                        //持仓数量，取交易的
+                        entity.setPositionsNum(selectActNum(1,secDto));
+                        //质押数量，取交易的
+                        entity.setRepoNum(selectActNum(2,secDto));
                         returnList.add(entity);
                     }
                     result.setRoot(returnList);
@@ -185,6 +195,7 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
                 if(secNumSh!=null&&secNumSh.compareTo(BigDecimal.ZERO) != 0){
                     BigDecimal sumNumSh=canNumSh.add(secNumSh);
                     rateShTemp=ArithmeticUtil.divide(secNumSh,sumNumSh,2);
+                    rateShTemp=ArithmeticUtil.multiply(rateShTemp,new BigDecimal(100));
                     rateSh=rateShTemp+"%";
                 }else{
                     rateSh="0%";
@@ -194,6 +205,7 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
                 if(secNumZh!=null&&secNumZh.compareTo(BigDecimal.ZERO) != 0){
                     BigDecimal sumNumZh=canNumZh.add(secNumZh);
                     rateSZhTemp=ArithmeticUtil.divide(secNumZh,sumNumZh,2);
+                    rateSZhTemp=ArithmeticUtil.multiply(rateSZhTemp,new BigDecimal(100));
                     rateZh=rateSZhTemp+"%";
                 }else{
                     rateZh="0%";
@@ -389,5 +401,28 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
         }
         return newSecAmount;
 
+    }
+
+
+
+    //持仓数量,质押数量
+    private BigDecimal selectActNum(Integer type,PositionCashSecDto dto) {
+        BigDecimal canSec = BigDecimal.ZERO; // 可用持仓
+        List<PositionCashSecDto> secList = new ArrayList<>();
+        if (StringUtil.isNotEmpty(dto.getFinprodId()) && StringUtil.isNotEmpty(dto.getSecAcctId())) {
+            PositionCashSecDto cashSecDto = new PositionCashSecDto();
+            BeanUtil.copyPropertiesIgnoreNull(cashSecDto, dto); //复制资产信息
+            if(type==1){
+                cashSecDto.setHoldingType(DictCodeListExt3.资产类型_资产账户持仓.getValue());  //可用标准券
+            }else{
+                cashSecDto.setHoldingType(DictCodeListExt3.资产类型_质押式通用回购入库质押券持仓.getValue());//已用标准券
+            }
+            secList.add(cashSecDto);
+        }
+        BigDecimal newSecAmount = etrTradeCommonervice.queryPosition(secList, "04", "");
+        if (newSecAmount != null) {
+            canSec = canSec.add(newSecAmount);
+        }
+        return canSec;
     }
 }

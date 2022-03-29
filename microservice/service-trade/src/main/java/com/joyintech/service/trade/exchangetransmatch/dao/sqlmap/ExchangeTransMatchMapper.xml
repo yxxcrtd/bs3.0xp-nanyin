@@ -166,16 +166,17 @@
 
     <select id="findEntrustPage" resultType="com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch003Dto">
         SELECT
+                DISTINCT
                 A1.ENTRUST_ID entrustId,
                 D1.TARGET_TYPE targetType,
                 A1.UPDATE_TIME updateTime,
                 #{TRADE_TYPE_02} tradeType,
-                A1.PORTFOLIO_ID portfolioId,
+                det.PORTFOLIO_ID portfolioId,
                 CASE
                 WHEN A1.ENTRUST_CLASS = #{ENTRUST_CLASS_02} THEN
-                    B2.TREE_NAME
+                    det.PORTFOLIO_NAME
                 ELSE
-                    B1.PORTFOLIO_NAME
+                    det.PORTFOLIO_NAME
                 END portfolioName,
                 CASE
                     WHEN A1.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01} THEN #{SEC_TYPE_01}
@@ -223,9 +224,8 @@
         FROM ETR_ENTRUST A1
             LEFT JOIN PTL_PORTFOLIO B1
                 ON A1.PORTFOLIO_ID = B1.PORTFOLIO_ID
-            LEFT JOIN MUTIPTL_PORTFOLIO_TREE B2
-                ON A1.PORTFOLIO_ID = B2.TREE_ID
-                AND B2.PAR_TREE_ID IS NOT NULL
+            LEFT JOIN (SELECT ENTRUST_ID, wm_concat ( ETR_ENTRUST_DETAIL.PORTFOLIO_ID ) PORTFOLIO_ID,  wm_concat ( PORTFOLIO_NAME ) PORTFOLIO_NAME FROM ETR_ENTRUST_DETAIL LEFT JOIN PTL_PORTFOLIO
+                ON ETR_ENTRUST_DETAIL.portfolio_id = PTL_PORTFOLIO.portfolio_id GROUP BY ENTRUST_ID ) det on det.ENTRUST_ID = A1.ENTRUST_ID
             LEFT JOIN FIN_PRODUCT C1
                 ON A1.FINPROD_ID = C1.FINPROD_ID
             LEFT JOIN ETR_ENTRUST_ADD D1
@@ -512,17 +512,17 @@
         WHERE s1.seq_no=#{seqNo}
     </select>
     <select id="findTransMatchInfoPage" resultType="com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch004Dto">
-        select  A.SEQ_NO seqId,
+        select distinct  A.SEQ_NO seqId,
         A.MATCH_CLASS matchType,
         A.ENTRUNST_TRADE_ID busiCode,
         C.TRADE_MARKET tradeMarket,
         C.APPLY_TRADE_ID applyTradeId,
-        D.PORTFOLIO_ID portfolioId,
+        det.PORTFOLIO_ID portfolioId,
         CASE
         WHEN D.ENTRUST_CLASS =  #{ENTRUST_CLASS_02} THEN
-            F1.TREE_NAME
+            det.PORTFOLIO_NAME
         ELSE
-            F.PORTFOLIO_NAME
+            det.PORTFOLIO_NAME
         END portfolioName,
         CASE
             WHEN C.SEC_TYPE = #{SEC_TYPE_09} THEN NULL
@@ -564,9 +564,8 @@
         ON E.FINPROD_ID = C.FINPROD_ID
         LEFT JOIN PTL_PORTFOLIO F
         ON D.PORTFOLIO_ID = F.PORTFOLIO_ID
-        LEFT JOIN MUTIPTL_PORTFOLIO_TREE F1
-        ON D.PORTFOLIO_ID = F1.TREE_ID
-        AND F1.PAR_TREE_ID IS NOT NULL
+        LEFT JOIN (SELECT ENTRUST_ID, wm_concat ( ETR_ENTRUST_DETAIL.PORTFOLIO_ID ) PORTFOLIO_ID,  wm_concat ( PORTFOLIO_NAME ) PORTFOLIO_NAME FROM ETR_ENTRUST_DETAIL LEFT JOIN PTL_PORTFOLIO
+        ON ETR_ENTRUST_DETAIL.portfolio_id = PTL_PORTFOLIO.portfolio_id GROUP BY ENTRUST_ID ) det on det.ENTRUST_ID = D.ENTRUST_ID
         <where>
             <if test="matchType!=null and matchType!='' ">
                 AND A.MATCH_CLASS = #{matchType}

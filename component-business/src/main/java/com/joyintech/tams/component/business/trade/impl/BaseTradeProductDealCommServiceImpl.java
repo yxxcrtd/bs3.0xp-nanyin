@@ -420,6 +420,7 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
                             || StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
                             || StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())) {
                         EtrFinishStatusDto status = new EtrFinishStatusDto();
+                        status.setDayEndBatch(baseTradeProductDealDto.isDayEndBatch());
                         status.setEntrustId(trdProductDealAddPre.getEntrustId());
                         status.setTradeId(baseTradeProductDealDto.getTrdProductDealAdd().getTradeId());
                         status.setFinishDate(baseTradeProductDealDto.getTrdProductDeal().getTradeDate());
@@ -478,6 +479,7 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
                 continue;
             }
             EtrFinishStatusDto status = new EtrFinishStatusDto();
+            status.setDayEndBatch(baseTradeProductDealDto.isDayEndBatch());
             status.setEntrustId(baseTradeProductDealDto.getTrdProductDealAdd().getEntrustId());
             status.setTradeId(baseTradeProductDealDto.getTrdProductDealAdd().getTradeId());
             status.setFinishDate(baseTradeProductDealDto.getTrdProductDeal().getTradeDate());

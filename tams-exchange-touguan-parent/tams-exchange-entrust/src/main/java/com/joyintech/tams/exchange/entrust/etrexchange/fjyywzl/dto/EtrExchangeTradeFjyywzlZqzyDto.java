@@ -164,6 +164,11 @@ public class EtrExchangeTradeFjyywzlZqzyDto extends BaseEntity {
     private String acctId;
 
     /**
+     * 折算率
+     */
+    private String discountRate;
+
+    /**
      * 获取 portfolioId
      * 
      * @return portfolioId.
@@ -581,5 +586,13 @@ public class EtrExchangeTradeFjyywzlZqzyDto extends BaseEntity {
 
     public void setAcctId(String acctId) {
         this.acctId = acctId;
+    }
+
+    public String getDiscountRate() {
+        return discountRate;
+    }
+
+    public void setDiscountRate(String discountRate) {
+        this.discountRate = discountRate;
     }
 }

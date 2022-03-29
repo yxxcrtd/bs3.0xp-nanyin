@@ -356,14 +356,23 @@ public class PositionRequestManualSettleService {
             map.put("portfolioId", entity.getPortfolioId());
             if(DictCodeListExt3.交易方向_解除质押.getValue().equals(infContractDetailfile.getPs())){
                 map.put("cashAcctId", getPtlCapAcctNo(infContractDetailfile));
-            }else{
+                map.put("cashAmount", entity.getmTradeAmt());
+            }
+            // ZGTFCP-2045:到期购回需要登录首期的到期结算金额 modify by fuyongsheng 20220327 start
+            else if(DictCodeListExt3.交易方向_到期购回.getValue().equals(infContractDetailfile.getPs())
+                    || DictCodeListExt3.交易方向_提前购回.getValue().equals(infContractDetailfile.getPs())){
+                map.put("cashAcctId", infContractDetailfile.getAcctNo());
+                map.put("cashAmount", entity.getmTradeAmt());
+            }
+            // ZGTFCP-2045:到期购回需要登录首期的到期结算金额 modify by fuyongsheng 20220327 end
+            else{
+                map.put("cashAmount", entity.getPrin());
                 map.put("cashAcctId", infContractDetailfile.getAcctNo());
             }
             // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 start
             map.put("tradeId", entity.getTradeId());
             map.put("etrId", etrEntrust.getEntrustId());
             // ZGTFCP-1372:修改字段赋值 modify by fuyongsheng 20220319 end
-            map.put("cashAmount", entity.getPrin());
             list.add(map);
             resultMap.put("ptlCashList", list);
         }
@@ -382,11 +391,7 @@ public class PositionRequestManualSettleService {
             // "IF 回购类型 = 正回购 THEN 指令.到期续作金额 - 指令.首期的到期结算金额
             // IF 回购类型 = 逆回购  and 成交编号找不到对应的首期 THEN 指令.到期续作金额
             // IF 回购类型 = 逆回购  and 成交编号找到对应的首期 THEN  指令.到期续作金额 - 指令.首期的到期结算金额"
-            if (StringUtil.isNotEmpty(entity.getFinprodId())) {
-                map.put("cashAmount", entity.getSettleAmt());
-            } else{
-                map.put("cashAmount", entity.getSettleAmt().subtract(entity.getmTradeAmt()));
-            }
+            map.put("cashAmount", ArithmeticUtil.subtract(entity.getPrin(), entity.getmTradeAmt()));
             list.add(map);
             resultMap.put("ptlOffsetCashList", list);
         }
