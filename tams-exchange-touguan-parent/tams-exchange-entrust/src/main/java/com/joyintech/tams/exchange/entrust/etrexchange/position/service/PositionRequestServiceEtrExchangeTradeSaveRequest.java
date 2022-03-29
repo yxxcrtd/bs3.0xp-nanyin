@@ -1,6 +1,6 @@
 package com.joyintech.tams.exchange.entrust.etrexchange.position.service;
 
-import static com.joyintech.tams.constant.DictCodeList.交易方向_申购;
+import static com.joyintech.tams.constant.DictCodeList.*;
 import static com.joyintech.tams.constant.DictCodeListExt2.交易方向_配股;
 import static com.joyintech.tams.constant.DictCodeListExt2.申购方式_网上申购;
 import static com.joyintech.tams.constant.DictCodeListExt3.业务动作_投资指令;
@@ -262,7 +262,9 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
                 bean = new PositionRequestBaseBean(item);
                 bean.setFinprodId(null);
                 bean.setSecAcctId(null);
-                if (BussinessDictCodeList.交易方向_买入.getValue().equals(ps) || BussinessDictCodeList.交易方向_卖出.getValue().equals(ps)) {
+                if (交易方向_买入.getValue().equals(ps)
+                        || 交易方向_卖出.getValue().equals(ps)
+                        || 交易方向_行权_回售.getValue().equals(ps)) {
                     BigDecimal fprice = Objects.isNull(entity.getFprice()) ? new BigDecimal(0) : entity.getFprice();
                     bean.setCashAmount(fprice.multiply(item.getEntrustNum()));
                 } else if (交易方向_申购.getValue().equals(ps)) {

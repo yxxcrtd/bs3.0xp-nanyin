@@ -86,6 +86,10 @@ public class CfetsEtribBondInfo003Dto extends EtrEntrust implements ProcessEntit
     private BigDecimal assetAvailablePosition;
 
     /**
+     * 强制完成额度
+     */
+    private BigDecimal forcedFinishAmt;
+    /**
      * 资产起息日
      */
     private Date finvdate;
@@ -713,5 +717,13 @@ public class CfetsEtribBondInfo003Dto extends EtrEntrust implements ProcessEntit
 
     public void setAssetType11(String assetType11) {
         this.assetType11 = assetType11;
+    }
+
+    public BigDecimal getForcedFinishAmt() {
+        return forcedFinishAmt;
+    }
+
+    public void setForcedFinishAmt(BigDecimal forcedFinishAmt) {
+        this.forcedFinishAmt = forcedFinishAmt;
     }
 }

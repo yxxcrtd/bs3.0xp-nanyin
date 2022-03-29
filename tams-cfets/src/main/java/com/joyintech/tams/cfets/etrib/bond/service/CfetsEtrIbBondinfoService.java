@@ -514,6 +514,9 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         if(StringUtil.isNotEmpty(repManager)){
             pageParam.put("repManagerList", StringUtil.splitToList(GlobalConstant.COMMA,repManager));
         }
+        if(StringUtil.isNotEmpty(dto.getSearch())){
+            pageParam.put("search_isNumberFlag", BaseMap.isNumeric(dto.getSearch()));
+        }
 
         Calendar c = Calendar.getInstance();
         c.setTime(DateUtil.parse(DateUtil.getSysDate()));

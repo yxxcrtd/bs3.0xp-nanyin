@@ -18,7 +18,13 @@ import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.util.*;
+import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.bankuplink.bond.service.CfetsBondDealQuotedPriceService;
 import com.joyintech.service.bankuplink.ibu.dto.BondQuoteInfoDto;
@@ -33,9 +39,7 @@ import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealQuoteCommonDto;
-import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealRegisterQuoteDto;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.PtlAllocationDto;
-import com.joyintech.tams.cfets.bankuplink.repo.service.CfetsRepoDealQuotedPrice002Service;
 import com.joyintech.tams.cfets.bankuplink.repo.service.CfetsRepoQuotedPrice004Service;
 import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
@@ -68,7 +72,11 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -892,6 +900,10 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
         if ("save".equals(entity.getOperatorType())) {
             return;
         }
+        //已撤回数据，根据指令重新发起交易。报价状态重置
+        if(StringUtil.equals(entity.getQuotaPageModel(), "new")){
+            entity.setTradeStatus(StringUtil.EMPTY);
+        }
         this.handOurAndLendinShareAmt(entity);
         entity.setWorkflowId(entity.getWorkflowId());
         insertWflBondRequestQuote(entity);
@@ -909,6 +921,10 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
     public void doUpdate(CfetsBondDealRequestQuoteDto entity){
         if ("save".equals(entity.getOperatorType())) {
             return;
+        }
+        //已撤回数据，根据指令重新发起交易。报价状态重置
+        if(StringUtil.equals(entity.getQuotaPageModel(), "new")){
+            entity.setTradeStatus(StringUtil.EMPTY);
         }
         Map<String,Object> map = new HashMap<>();
         if (!StringUtil.equals("revoke", entity.getOperatorType()) && !StringUtil.equals("delete", entity.getOperatorType())) {

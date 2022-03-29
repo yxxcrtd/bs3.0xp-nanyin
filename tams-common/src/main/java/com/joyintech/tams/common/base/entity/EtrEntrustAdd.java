@@ -528,6 +528,18 @@ public class EtrEntrustAdd extends BaseEntity {
     private BigDecimal mulTarget;
 
     /**
+     * 强制完成金额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal forcedFinishAmt;
+
+    /**
+     * 已关闭额度
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal closeAmt;
+
+    /**
      * 目标值单位
      */
     private String mulUnit;
@@ -2081,5 +2093,21 @@ public class EtrEntrustAdd extends BaseEntity {
 
     public void setMulUnit(String mulUnit) {
         this.mulUnit = mulUnit;
+    }
+
+    public BigDecimal getForcedFinishAmt() {
+        return forcedFinishAmt;
+    }
+
+    public void setForcedFinishAmt(BigDecimal forcedFinishAmt) {
+        this.forcedFinishAmt = forcedFinishAmt;
+    }
+
+    public BigDecimal getCloseAmt() {
+        return closeAmt;
+    }
+
+    public void setCloseAmt(BigDecimal closeAmt) {
+        this.closeAmt = closeAmt;
     }
 }
