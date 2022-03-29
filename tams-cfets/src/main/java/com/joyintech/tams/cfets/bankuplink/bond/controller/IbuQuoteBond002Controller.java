@@ -615,14 +615,23 @@ public class IbuQuoteBond002Controller extends BaseController {
         if (StringUtil.equals(cfetsBondDealDialogueQuoteDto.getQuotaPageModel(), "marketResponse")) {
             quoteOperatorType = "回复";
         }
-        if (StringUtil.equals(cfetsBondDealDialogueQuoteDto.getQuotaPageModel(), "dialogueResponse")&&StringUtil.equals(cfetsBondDealDialogueQuoteDto.getOperatorType(), "done")) {
-            quoteOperatorType = "成交";
+        if (StringUtil.equals(cfetsBondDealDialogueQuoteDto.getQuotaPageModel(), "dialogueResponse")) {
+            // 对话回应
+            if (StringUtil.equals(cfetsBondDealDialogueQuoteDto.getOperatorType(), "done")) {
+                quoteOperatorType = "成交";
+                cfetsBondDealDialogueQuoteDto.setTradeStatus(BussinessDictCodeList.银行间上行报价状态_成交中.getValue());
+            } else if (StringUtil.equals(cfetsBondDealDialogueQuoteDto.getOperatorType(), "refuse")) {
+                cfetsBondDealDialogueQuoteDto.setTradeStatus(BussinessDictCodeList.银行间上行报价状态_终止中.getValue());
+            }
         }
         if (StringUtil.equals(cfetsBondDealDialogueQuoteDto.getQuotaPageModel(), "new")) {
             quoteOperatorType = "发起";
         }
         if (StringUtil.equals(cfetsBondDealDialogueQuoteDto.getQuotaPageModel(), "edit")) {
             quoteOperatorType = "修改";
+            if (StringUtil.equals(cfetsBondDealDialogueQuoteDto.getOperatorType(), "submit")) {
+                cfetsBondDealDialogueQuoteDto.setTradeStatus(BussinessDictCodeList.银行间上行报价状态_修改中.getValue());
+            }
         }
         cfetsBondDealDialogueQuoteDto.setQuoteOperatorType(quoteOperatorType);
         DecimalFormat  df = new DecimalFormat("###,###.00");

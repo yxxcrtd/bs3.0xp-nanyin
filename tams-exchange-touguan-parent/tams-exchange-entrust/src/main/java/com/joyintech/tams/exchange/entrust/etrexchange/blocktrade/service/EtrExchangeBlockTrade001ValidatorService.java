@@ -216,6 +216,7 @@ public class EtrExchangeBlockTrade001ValidatorService implements EtrExchangeComm
 									prompt += "，应至少满足一个！";
 								}
 								errorList.add(new ValidMessage(prompt));
+								break;
 							}
 						}
 					}
