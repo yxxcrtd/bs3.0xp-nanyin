@@ -9,3 +9,5 @@ update CFG_DATATABLE_SHOW set COLCODE = 'marketStr' where PAGECODE = 'FieldEtrDi
 
 update CFG_DATATABLE_SHOW set COLCODE = 'stockCode' where PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherDealInfo' and COLNAME = '资产代码' and COLCODE = 'finprodMarketId';
 update CFG_DATATABLE_SHOW set COLCODE = 'stockName' where PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherDealInfo' and COLNAME = '资产名称' and COLCODE = 'finprodAbbr';
+
+update CFG_READONLY_FORM_SHOW set EXTENDCFG = '{"colAlign": "left"}' where PAGECODE = 'FieldEtrDispatcher' and DTCODE = 'FieldEtrDispatcherInfo' and SPCDCODE = 'EX004' and COLCODE = 'dealCurAcct';
