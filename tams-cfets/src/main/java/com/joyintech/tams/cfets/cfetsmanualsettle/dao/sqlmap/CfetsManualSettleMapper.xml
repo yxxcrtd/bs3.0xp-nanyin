@@ -749,6 +749,22 @@
         WHERE deal.TRADE_ID = #{tradeId}
     </select>
 
+    <select id="selectRegTotleTradeIdByTotleTradeId" resultType="java.lang.String">
+        SELECT regtotal.TOTLE_TRADE_ID
+        FROM REG_FIN_PRODUCT_DEAL_TOTAL regtotal
+                 LEFT JOIN TRDQUTO_MATCH_INFO matchinfo
+                           ON matchinfo.PRE_TRADE_ID = regtotal.TOTLE_TRADE_ID
+        WHERE matchinfo.TRD_ID = #{totleTradeId}
+    </select>
+
+    <select id="selectIbuQuoteIdByTotleTradeId" resultType="java.lang.String">
+        SELECT iqc.QUOTE_ID
+        FROM IBU_QUOTE_CREP iqc
+                 LEFT JOIN TRDQUTO_MATCH_INFO matchinfo
+                           ON matchinfo.PRE_TRADE_ID = iqc.QUOTE_ID
+        WHERE matchinfo.TRD_ID = #{totleTradeId}
+    </select>
+
     <select id="selectQuoteIdBytradeId" resultType="java.lang.String">
         SELECT iqc.QUOTE_ID TRADE_ID
         FROM IBU_QUOTE_CREP iqc
@@ -1646,7 +1662,9 @@
                 #{item}
             </foreach>
         </if>
-        WHERE NOT EXISTS (
+        WHERE
+        T1.TRADE_STATUS not in ('08','14','15') and
+        NOT EXISTS (
         SELECT
         1
         FROM
@@ -1673,6 +1691,7 @@
             </foreach>
         </if>
         WHERE
+        T1.TRADE_STATUS not in ('08','14','15') and
         NOT EXISTS (
         SELECT
         1

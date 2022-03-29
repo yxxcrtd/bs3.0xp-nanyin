@@ -2047,7 +2047,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
         // 处理指令持仓和头寸
         if (baseEtrCashPositionCommService != null
                 && DictCodeList.委托状态_已接收.getValue().equals(entity.getEntrustStatus())) {
-            baseEtrCashPositionCommService.entrustCloseExecute(entity.getEntrustId());
+//            baseEtrCashPositionCommService.entrustCloseExecute(entity.getEntrustId());
+            baseEtrCashPositionCommService.entrustCloseExecute(entity.getEntrustId(), DictCodeList.是否_是.getValue());
         }
         //处理履历
         updateCfetsOprHis(entity.getEntrustId(), "close");

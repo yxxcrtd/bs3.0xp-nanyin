@@ -150,14 +150,16 @@
             SELECT ETR_ENTRUST.ENTRUST_STATUS                                                                 entrustStatus/*指令状态*/
                 , (NVL(T5.FINISH_AMT,0)+NVL(T7.ENT_FINISH_AMT,0))                                             finishAmt/*已完成额度(元)*/
                 , NVL(ETR_ENTRUST.ENTRUST_AMT, 0)
-                    - NVL(T5.FINISH_AMT,0) - NVL(T7.ENT_FINISH_AMT,0)                                         avaNum/*剩余指令额度(元)*/
-                , ROUND(NVL(C2.totalShareAmt,0))                                                              finishDealAmt/*已成交额度(元)*/
                 <if test="isInit ==null or isInit == ''">
-                    , ROUND(NVL(ETR_ENTRUST.ENTRUST_AMT, 0) - NVL(C2.totalShareAmt,0))                            avaDealAmt/*剩余成交额度(元)*/
+                    , NVL(ETR_ENTRUST.ENTRUST_AMT, 0)
+                    - NVL(T5.FINISH_AMT,0) - NVL(T7.ENT_FINISH_AMT,0)                                         avaNum/*剩余指令额度(元)*/
                 </if>
                 <if test="isInit !=null and isInit != ''">
-                    , ROUND(NVL(ETR_ENTRUST.ENTRUST_AMT, 0) - NVL(ETR_ENTRUST_ADD.FORCED_FINISH_AMT,0) - NVL(C2.totalShareAmt,0))   avaDealAmt/*剩余成交额度(元)*/
+                    , NVL(ETR_ENTRUST.ENTRUST_AMT, 0)- NVL(ETR_ENTRUST_ADD.FORCED_FINISH_AMT,0)
+                    - NVL(T5.FINISH_AMT,0) - NVL(T7.ENT_FINISH_AMT,0)                                         avaNum/*剩余指令额度(元)*/
                 </if>
+                , ROUND(NVL(C2.totalShareAmt,0))                                                              finishDealAmt/*已成交额度(元)*/
+                , ROUND(NVL(ETR_ENTRUST.ENTRUST_AMT, 0) - NVL(C2.totalShareAmt,0))                            avaDealAmt/*剩余成交额度(元)*/
                 , trunc(nvl(NVL(T5.FINISH_AMT, 0)+
                                        NVL(T7.ENT_FINISH_AMT, 0),0)/(ETR_ENTRUST.ENTRUST_AMT),4)*100          transactioncom/*执行进度(%)*/
                 , trunc(NVL(C2.totalShareAmt,0)/(ETR_ENTRUST.ENTRUST_AMT),4)*100                              tradeFinishPercent/* 成交进度(%)*/
@@ -1422,7 +1424,7 @@
                     from IBU_QUOTE_ETR_RE t
                              left join IBU_QUOTE_CREP IQC on t.QUOTE_ID = IQC.QUOTE_ID
                     where IQC.SEND_STATUS = '01'
-                ) IBQER on rfpd.ENTRUST_ID = ee.ENTRUST_ID
+                ) IBQER on IBQER.ENTRUST_ID = ee.ENTRUST_ID
                  left join WFL_IBU_QUOTE_ETR_RE wiqer on wiqer.ENTRUST_ID = ee.ENTRUST_ID
                     <if test="totleTradeId != null and totleTradeId != ''">
                         and wiqer.QUOTE_ID != #{totleTradeId}
