@@ -2095,8 +2095,8 @@
                     $("#entrustPriceUnit_" + currentTab).text("%");
                     $("#entrustAmtUnit_" + currentTab).text("张");
 
-                    var entrustAmt = $("#standardBondVolume_" + currentTab).val();
-                    $("#entrustAmt_" + currentTab).val(Math.floor(new Number(entrustAmt)));
+                    // var entrustAmt = $("#standardBondVolume_" + currentTab).val();
+                    // $("#entrustAmt_" + currentTab).val(Math.floor(new Number(entrustAmt)));
                 }
                 // if 画面.金融产品类型（投管） = 数据字典.金融产品类型（投管）.质押式回购
                 else if (finprodType2 == FINPROD_TYPE_TG_ZYSHG) {
@@ -2107,8 +2107,8 @@
                     $("#entrustPriceUnit_" + currentTab).text("%");
                     $("#entrustAmtUnit_" + currentTab).text("元");
 
-                    var entrustAmt = $("#standardBondVolume_" + currentTab).val();
-                    $("#entrustAmt_" + currentTab).val(Math.floor(new Number(entrustAmt)));
+                    // var entrustAmt = $("#standardBondVolume_" + currentTab).val();
+                    // $("#entrustAmt_" + currentTab).val(Math.floor(new Number(entrustAmt)));
                 } else {
                     $("#targetType_label_" + currentTab).text("目标类型").append($star.clone());
                     $("#priceModel_label_" + currentTab).text("价格模式").append($star.clone());
