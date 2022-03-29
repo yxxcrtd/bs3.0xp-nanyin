@@ -3419,7 +3419,7 @@
                 width: 200,
                 edit: true,
                 editOption: {
-                    type: 'select', multiple: false, searchable: true, showField: 'text',
+                    type: 'select', multiple: false, searchable: true, showField: 'text',formatoption: true,
                     url: JoyinUtil.getRealPath("/business/common/CommonSelect/selectPortfolioId"),
                     postData: function () {
                         return {};
