@@ -202,8 +202,9 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
                 PositionCashSecDto secDto=new PositionCashSecDto();
                 BeanUtil.copyPropertiesIgnoreNull(secDto,entity);
                 secDto.setTradePlat(TempConstant.AGR_EREP_ETR); //临时变量
+                secDto.setHoldingType(DictCodeListExt3.资产类型_质押式协议回购本方券非净额结算可用持仓.getValue());
                 BigDecimal canRepoNum=etrTradeCommonervice.selectAvailableNum(secDto);
-                entity.setCanRepoNum(canRepoNum);
+                entity.setSellNum(canRepoNum);
                 //过滤掉实际持仓和可用持仓都等于0
                 if(entity.getPositionsNum().compareTo(BigDecimal.ZERO)==0&&canRepoNum.compareTo(BigDecimal.ZERO)==0){
                     continue;

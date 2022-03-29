@@ -247,6 +247,7 @@
         <include refid="Query_Column_List"/>
         from T_TRADEHISTORY a left join T_INSTRUCTION_HISTORY b on a.INSTRUCTION_ID =b.ENTRUST_ID
         <include refid="queryCondition2"/>
+        order by CREATE_TIME desc
     </select>
 
     <delete id="deleteByExample" parameterType="com.joyintech.tams.exchange.common.db.domain.TradeHistoryExample">

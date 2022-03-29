@@ -399,6 +399,7 @@
         <include refid="Query_Column_List"/>
         FROM T_INTEGRATED_ENTRUST a
         <include refid="queryCondition2"/>
+        order by CREATE_TIME desc
     </select>
 
     <select id="selectEntrustsById" resultMap="QueryResultMap" parameterType="java.lang.String">
