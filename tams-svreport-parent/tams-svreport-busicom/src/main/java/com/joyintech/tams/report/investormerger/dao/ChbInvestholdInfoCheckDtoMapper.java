@@ -19,7 +19,7 @@ public interface ChbInvestholdInfoCheckDtoMapper {
 
     int insertAfterDeal(@Param("insert") List<ChbInvestholdInfoCheckDto> insert);
 
-    int updataOperateStatus(@Param("dtoAfterDealList") List<ChbInvestholdInfoCheckDto> dtoAfterDealList);
+    int updataOperateStatus(@Param("list") List<ChbInvestholdInfoCheckDto> dtoAfterDealList);
 
     int updataOperateStatusNew();
 
