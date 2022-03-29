@@ -20,10 +20,20 @@ public class EtrExchangeTradeCommonRequest {
     @ApiModelProperty(name="portfolioId",value="组合代码")
     private String portfolioId;
     /**
+     * 资金账户
+     */
+    @ApiModelProperty(name="accId",value="资金账户")
+    private String accId;
+    /**
      * 证券账户
      */
     @ApiModelProperty(name="secAcctId",value="证券账户")
     private String secAcctId;
+    /**
+     * 证券账户
+     */
+    @ApiModelProperty(name="acctId",value="资金账户")
+    private String acctId;
 
     /**
      * 业务类型
@@ -105,5 +115,21 @@ public class EtrExchangeTradeCommonRequest {
 
     public void setUnitCprice(String unitCprice) {
         this.unitCprice = unitCprice;
+    }
+
+    public String getAcctId() {
+        return acctId;
+    }
+
+    public void setAcctId(String acctId) {
+        this.acctId = acctId;
+    }
+
+    public String getAccId() {
+        return accId;
+    }
+
+    public void setAccId(String accId) {
+        this.accId = accId;
     }
 }

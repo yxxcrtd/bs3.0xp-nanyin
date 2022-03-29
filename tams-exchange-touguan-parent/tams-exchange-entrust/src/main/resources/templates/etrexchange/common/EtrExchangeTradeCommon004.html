@@ -348,7 +348,7 @@
                     <label class="layui-form-label" data-th-text="#{EtrExchangeTrade001.priceModel}">价格模式</label>
                     <div class="layui-input-inline input-inline">
                         <select required type="text" id="priceModel_dz" name="priceModel" allowClear="true" class="layui-input form-input input-select"
-                                data-th-data-result='${PRICE_MODEL_DZ}' data-th-placeholder="#{SysCommon.placeholder}" formatoption="true" data-th-initvalue="${entity?.priceModel}">
+                                data-th-data-result='${PRICE_MODEL_DZ}' data-th-placeholder="#{SysCommon.placeholder}" formatOption="false"  data-th-initvalue="${entity?.priceModel}">
                         </select>
                     </div>
                 </div>
@@ -356,7 +356,7 @@
                     <label class="layui-form-label" data-th-text="#{EtrExchangeTrade001.priceModel2}">申报类型</label>
                     <div class="layui-input-inline input-inline">
                         <select required type="text" id="declaType_dz" name="declaType" allowClear="true" class="layui-input form-input input-select"
-                                data-th-data-result='${DECLA_TYPE_DZ}' data-th-placeholder="#{SysCommon.placeholder}" formatoption="true" data-th-initvalue="${entity?.declaType}">
+                                data-th-data-result='${DECLA_TYPE_DZ}' data-th-placeholder="#{SysCommon.placeholder}" formatOption="false" data-th-initvalue="${entity?.declaType}">
                         </select>
                     </div>
                 </div>
@@ -364,7 +364,7 @@
                     <label class="layui-form-label " th:text="#{EtrExchangeTrade001.targetType}">目标类型</label>
                     <div class="layui-input-inline input-inline">
                         <select type="text" id="targetType_dz" name="targetType" class="layui-input form-input input-select" th:placeholder="#{SysCommon.placeholder}"
-                                data-th-data-result='${TARGET_CLASS}' allowClear="true" th:initValue="${entity?.targetType}" required></select>
+                                data-th-data-result='${TARGET_CLASS}' allowClear="true" th:initValue="${entity?.targetType}" formatOption="false" required></select>
                     </div>
                 </div>
             </div>
@@ -928,6 +928,8 @@
         var isRiskMathSoftcontrol = /*[[${isRiskmathSoftcontrol}]]*/'';
         var ps = /*[[${ps}]]*/'';
         var ETR_CHECK_POS_SWITCH = /*[[${ETR_CHECK_POS_SWITCH}]]*/'';
+        var BOARD_BD03 = /*[[${BOARD_BD03}]]*/'';
+        var BOARD_BD04 = /*[[${BOARD_BD04}]]*/'';
 
     </script>
     <script data-th-src="@{/js/etrexchange/common/EtrExchangeTradeCommon004.js}" type="text/javascript"></script>

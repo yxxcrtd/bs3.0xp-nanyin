@@ -27,6 +27,7 @@ import com.joyintech.tams.component.business.common.service.BasRiskMathCommServi
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.exchange.entrust.common.aop.ExchangeEntrustRdsCommonAop;
+import com.joyintech.tams.exchange.entrust.etrexchange.blocktrade.service.EtrExchangeBlockTrade001ValidatorService;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePortfolioRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest;
@@ -110,6 +111,9 @@ public class EtrExchangeTradeCommon004Controller extends BaseController {
 
     @Autowired
     private EtrExchangeTradeCommonValidatorService etrExchangeTradeCommonValidatorService;
+
+    @Autowired
+    private EtrExchangeBlockTrade001ValidatorService etrExchangeBlockTrade001ValidatorService;
 
     @Override
     public String init(Model model) {
@@ -441,6 +445,10 @@ public class EtrExchangeTradeCommon004Controller extends BaseController {
         model.addAttribute("WINDTYPEONE_B13", DictCodeList.WIND一级分类_含债券一级分类等_资产支持证券.getValue());
         model.addAttribute("WINDTYPEONE_B14", DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue());
         model.addAttribute("WINDTYPEONE_B15", DictCodeList.WIND一级分类_含债券一级分类等_可交换债.getValue());
+
+        //上市板
+        model.addAttribute("BOARD_BD03", DictCodeList.上市板_科创板.getValue());
+        model.addAttribute("BOARD_BD04", DictCodeList.上市板_创业板.getValue());
 
     }
 
@@ -796,7 +804,12 @@ public class EtrExchangeTradeCommon004Controller extends BaseController {
      */
     public AjaxResult check(EtrExchangeTradeSaveRequest dto, BindingResult result) throws Exception {
         AjaxResult ajax = etrExchangeTrade001CommonService.checkSave(dto, result);
-        List<ValidMessage> validList = etrExchangeTradeCommonValidatorService.valid(dto);
+        List<ValidMessage> validList = null;
+        if (StringUtil.equals(dto.getCurrentTab(),"dz")){
+            validList = etrExchangeBlockTrade001ValidatorService.valid(dto);
+        }else{
+            validList = etrExchangeTradeCommonValidatorService.valid(dto);
+        }
         if (!CollectionUtils.isEmpty(validList)) {
             ajax.setErrorList(validList);
         }

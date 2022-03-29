@@ -453,21 +453,13 @@ public class PositionRequestManualSettleService {
                     map.put("ownSecAmount", temp.getPledgeDisplaceAmt().multiply(new BigDecimal(100)));
                     map.put("secAmount", temp.getPledgeDisplaceAmt().multiply(new BigDecimal(100)));
                 }
-            }else {
-                // 获取首期质押券信息
-                String firstFTradeId = infContractDetailfile.getvTradeId();
-                if(!StringUtil.isEmpty(etrEntrustAdd.getTradeId())){
-                    firstFTradeId = etrEntrustAdd.getTradeId();
-                }
-                FinDealPledge finDealPledge = trdCommonBaseService.getSqFinDealPledge(entity.getPortfolioId(), firstFTradeId);
-                if(null != finDealPledge){
-                    map.put("finprodId", finDealPledge.getPledgeFinprodId());
-                    // ZGTFCP-1888:券面需乘以100 modify by fuyongsheng 20220325 start
-                    map.put("ownSecAmount", ArithmeticUtil.multiply(finDealPledge.getPledgeNumber(), new BigDecimal(100)));
-                    map.put("secAmount", ArithmeticUtil.multiply(finDealPledge.getPledgeNumber(), new BigDecimal(100)));
-                    // ZGTFCP-1888:券面需乘以100 modify by fuyongsheng 20220325 end
-                }
             }
+            // ZGTFCP-2059:提前购回、到期购回、提前续作使用当前质押券信息 modify by fuyongsheng 20220329 start
+            else {
+                map.put("ownSecAmount", entity.getPledgeNumber().multiply(new BigDecimal(100)));
+                map.put("secAmount", entity.getPledgeNumber().multiply(new BigDecimal(100)));
+            }
+            // ZGTFCP-2059:提前购回、到期购回、提前续作使用当前质押券信息 modify by fuyongsheng 20220329 end
             list.add(map);
             resultMap.put("ptlRelieveSecList", list);
         }
