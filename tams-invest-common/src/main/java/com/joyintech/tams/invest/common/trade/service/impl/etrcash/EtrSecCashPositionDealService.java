@@ -1235,14 +1235,23 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
 //                    }
                 }
               //交易所债券特殊处理end----------------------------------------------------------------
-                if (entrustCommonDto.getEtrEntrustAdd() != null && entrustCommonDto.getEtrEntrustAdd().getSettleSpreed() != null
-                        && entrustCommonDto.getEtrEntrustAdd().getSettleSpreed().intValue() != 0) {
-                    InvestDateCalService dateCalService = SpringContextUtil.getBean(InvestDateCalService.class);
-                    List<String> holiday = dateCalService.getDealCalendarHoliday(dealDate,
-                            DateUtil.addDays(dealDate, 31), entrustCommonDto.getEtrEntrust().getCalendarId());
-                    dealDate = dateCalService.calculationTradingDay(dealDate, entrustCommonDto.getEtrEntrustAdd().getSettleSpreed().intValue(), holiday, "1");
+                if (!isJiaoYiSuo) {
+                    if (entrustCommonDto.getEtrEntrustAdd() != null && entrustCommonDto.getEtrEntrustAdd().getSettleSpreed() != null
+                            && entrustCommonDto.getEtrEntrustAdd().getSettleSpreed().intValue() != 0) {
+                        InvestDateCalService dateCalService = SpringContextUtil.getBean(InvestDateCalService.class);
+                        List<String> holiday = dateCalService.getDealCalendarHoliday(dealDate,
+                                DateUtil.addDays(dealDate, 31), entrustCommonDto.getEtrEntrust().getCalendarId());
+                        dealDate = dateCalService.calculationTradingDay(dealDate, 0, holiday, "1");
+                    }
+                } else {
+                    if (entrustCommonDto.getEtrEntrustAdd() != null && entrustCommonDto.getEtrEntrustAdd().getSettleSpreed() != null
+                            && entrustCommonDto.getEtrEntrustAdd().getSettleSpreed().intValue() != 0) {
+                        InvestDateCalService dateCalService = SpringContextUtil.getBean(InvestDateCalService.class);
+                        List<String> holiday = dateCalService.getDealCalendarHoliday(dealDate,
+                                DateUtil.addDays(dealDate, 31), entrustCommonDto.getEtrEntrust().getCalendarId());
+                        dealDate = dateCalService.calculationTradingDay(dealDate, entrustCommonDto.getEtrEntrustAdd().getSettleSpreed().intValue(), holiday, "1");
+                    }
                 }
-
                 EtrCommonCashPositionDealService etrCommonCashPositionDealService = SpringContextUtil.getBean(EtrCommonCashPositionDealService.class);
                 BigDecimal 单位应计利息 = etrCommonCashPositionDealService.gen应计利息(entrustCommonDto.getEtrEntrust().getFinprodId(),dealDate);
                 委托全价 = ArithmeticUtil.doAdd(单位应计利息,委托净价);
