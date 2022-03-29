@@ -2235,7 +2235,7 @@
                             });
                         }*/
             else if(finprodType2 == FINPROD_TYPE_TG_F10){
-                if(board == BOARD_BD03 || board == BOARD_BD04){
+                if(board != BOARD_BD03 && board != BOARD_BD04){
                     $("#priceModel_" + currentTab).updateChosenArr({
                         item: [PRICE_MODEL_PRM02, PRICE_MODEL_PRM03],
                         chosen: $("#priceModel_" + currentTab).val(),
