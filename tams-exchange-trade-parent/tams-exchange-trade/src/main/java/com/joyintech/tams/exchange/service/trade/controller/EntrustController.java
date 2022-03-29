@@ -86,6 +86,9 @@ public class EntrustController {
      */
     @PostMapping(value = "/entrust/cancel/revoke")
     public ResultBean cancelEntrustWithRevoke(String userId, @RequestBody RevokeDto dto) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObjectResultBean(dto);
+    	}
         return entrustManagement.cancelEntrustWithRevoke(userId, dto);
     }
 
@@ -150,12 +153,18 @@ public class EntrustController {
     @ApiOperation(value = "查询分页委托信息", notes = "查询分页委托信息")
     @PostMapping(value = "/entrust/page")
     public Message<PageInfo<EntrustQueryBean>> queryAllEntrustForPage(@RequestBody @Validated PageEntrustInfoRequest request) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(request);
+    	}
         return entrustManagement.queryAllEntrustForPage(request);
     }
 
     @ApiOperation(value = "查询分页综合业务委托信息", notes = "查询分页综合业务委托信息")
     @PostMapping(value = "/entrust/integrated/page")
     public Message<PageInfo<EntrustQueryBean>> queryIntegratedEntrustForPage(@RequestBody @Validated PageEntrustInfoRequest request) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(request);
+    	}
         return entrustManagement.queryIntegratedEntrustForPage(request);
     }
 
@@ -173,6 +182,9 @@ public class EntrustController {
     @PostMapping(value = "/entrust/exception")
     public Message<List<EntrustInterface>> queryExceptionEntrust(@RequestParam @NotBlank(message = "用户编号不可为空") String userId,
                                                                  @RequestBody(required = false) List<String> entrustStatusList) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(entrustStatusList);
+    	}
         String entrustStatus = "1,3,4";
         if (CollUtil.isNotEmpty(entrustStatusList)) {
             entrustStatus = CollUtil.join(entrustStatusList, GlobalConstant.COMMA);
@@ -190,6 +202,9 @@ public class EntrustController {
     public Message<Object> cancelExceptionEntrust(@RequestParam @NotBlank(message = "用户编号不可为空") String userId,
                                                   @RequestParam @NotBlank(message = "用户名称不可为空") String userName,
                                                   @RequestParam @NotBlank(message = "委托编号不可为空") String entrustId) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(null);
+    	}
         return new Message<>(entrustManagement.cancelExceptionEntrust(userId, userName, entrustId));
     }
 
