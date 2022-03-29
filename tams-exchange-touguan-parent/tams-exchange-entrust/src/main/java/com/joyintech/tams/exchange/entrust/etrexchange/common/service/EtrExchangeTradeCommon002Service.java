@@ -615,7 +615,6 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 		//3、A对应的再折算前持仓
 		BigDecimal canSecNum=queryProPosition(DictCodeListExt3.资产类型_通用回购融资券折算前额度.getValue(),proList);
 		//4、标准券可用/折算率和 A对应的再折算前持仓 比较
-		BigDecimal scale=new BigDecimal(scaleMap.get("SCALE").toString());
 		secNum=ArithmeticUtil.divide(secNum,scale,0);
 		BigDecimal miniSecNum=canSecNum;
 		if(secNum.compareTo(canSecNum)==-1){
