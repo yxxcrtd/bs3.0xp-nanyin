@@ -400,18 +400,24 @@ public class InvestDealRevokeService {
 
                 // 查询下单明细数据
                 InfContractDetailfile infContractDetailfile = trdCommonBaseMapper.selectInfContractDetailfile(deal.getfTradeId());
-
-                EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(infContractDetailfile.getEntrustId());
-                EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(infContractDetailfile.getEntrustId());
-                if(etrEntrust != null){
-                    data.put("busiType", commonPositionEngineService.getPositionBusiType(etrEntrust.getFinprodType2(), etrEntrust.getPs(),
-                            etrEntrustAdd.getAssetType1()));
-                    data.put("ps", deal.getPs());
-                    data.put("closeId", deal.getTradeId());
-                    data.put("systemAct", DictCodeListExt3.系统动作_新建.getValue());
-                    data.put("busiAct", DictCodeListExt3.业务动作_成交匹配.getValue());
-                    dataList.add(data);
+                if(null == infContractDetailfile){
+                    continue;
                 }
+                EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(infContractDetailfile.getEntrustId());
+                if(null == etrEntrust){
+                    continue;
+                }
+                EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(infContractDetailfile.getEntrustId());
+                if(null == etrEntrustAdd){
+                    continue;
+                }
+                data.put("busiType", commonPositionEngineService.getPositionBusiType(etrEntrust.getFinprodType2(), etrEntrust.getPs(),
+                        etrEntrustAdd.getAssetType1()));
+                data.put("ps", deal.getPs());
+                data.put("closeId", deal.getTradeId());
+                data.put("systemAct", DictCodeListExt3.系统动作_新建.getValue());
+                data.put("busiAct", DictCodeListExt3.业务动作_成交匹配.getValue());
+                dataList.add(data);
                 // ZGTFCP-1249:orderId防止重复 modify by fuyongsheng 20220318 start
                 if(!orderIdSet.contains(infContractDetailfile.getOrderId())){
                     if(etrEntrust != null){
