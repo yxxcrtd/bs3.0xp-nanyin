@@ -1,7 +1,7 @@
 package com.joyintech.tams.exchange.util;
 
-import java.util.concurrent.atomic.AtomicLong;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -14,7 +14,8 @@ import com.joyintech.tams.exchange.service.trade.scheduled.TokenJob;
 
 public class MasterUtil {
 	
-	private static AtomicLong count= new AtomicLong(1);
+//	private static AtomicLong count= new AtomicLong(1);
+	private static final Logger logger = LoggerFactory.getLogger(MasterUtil.class);
 	public static boolean isMaster() {
 //		if(count.getAndIncrement()%2==0) {
 //			return false;
@@ -26,13 +27,16 @@ public class MasterUtil {
 	
 	public static String getMasterUrl() {
     	String url = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest().getRequestURL().toString();
+    	logger.info("Redirect to Master,url:{}",url);
     	String queryString = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest().getQueryString();
+    	logger.info("Redirect to Master,queryString:{}",queryString);
     	if(StringUtil.isNotEmpty(queryString)) {
     		url += "?"+queryString;
     	}
 		String masterAddress = TokenJob.getMasterAddress();
 		String[] splitTemp = url.split("//");
 		String masterUrl = splitTemp[0]+"//"+masterAddress+splitTemp[1].substring(splitTemp[1].indexOf("/"));
+		logger.info("Redirect to Master,masterUrl:{}",masterUrl);
     	return masterUrl;
 //    	return url;
     }

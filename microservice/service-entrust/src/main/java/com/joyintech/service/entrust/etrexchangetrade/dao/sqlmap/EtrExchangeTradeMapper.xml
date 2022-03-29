@@ -1310,7 +1310,7 @@
         to_date(START_DATE,'yyyy-MM-dd') <![CDATA[<=]]> to_date(#{sysDate},'yyyy-MM-dd')
         ) SBMCICP2
         ON 'BROKER' = SBMCICP2.FINPROD_ID AND TEMP.CUSTOMER_ID = SBMCICP2.BROKER_ID
-        ) T
+        ) T where ROWNUM = 1
     </select>
 
     <select id="selectEntrustByKey" resultMap="com.joyintech.tams.common.base.dao.EtrEntrustMapper.BaseResultMap">

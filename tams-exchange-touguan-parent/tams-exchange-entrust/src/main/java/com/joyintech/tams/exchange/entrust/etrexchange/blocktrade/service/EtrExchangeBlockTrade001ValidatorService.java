@@ -21,6 +21,7 @@ import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.common.base.entity.WflEtrEntrust;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.exchange.entrust.common.validator.EtrExchangeCommonValidator;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePortfolioRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.SubEqutityDto;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
@@ -175,45 +176,48 @@ public class EtrExchangeBlockTrade001ValidatorService implements EtrExchangeComm
 					if (null != minTrdUnitLimitDto) {
 						boolean flag1 = false;
 						boolean flag2 = false;
-						if (null == minTrdUnitLimitDto.getMinAmt() || (minTrdUnitLimitDto.getMinAmt() != null
-								&& minTrdUnitLimitDto.getMinAmt().compareTo(BigDecimal.ZERO) > 0
-								&& dto.getEntrustAmt().compareTo(minTrdUnitLimitDto.getMinAmt()) < 0)) {
-							flag1 = true;
-						}
-						if (null == minTrdUnitLimitDto.getMinNum() || (minTrdUnitLimitDto.getMinNum() != null
-								&& minTrdUnitLimitDto.getMinNum().compareTo(BigDecimal.ZERO) > 0
-								&& dto.getEntrustNum().compareTo(minTrdUnitLimitDto.getMinNum()) < 0)) {
-							flag2 = true;
-							if (StringUtils.equals(dto.getTradePlat(), DictCodeList.交易平台_竞价撮合平台.getValue())
-									&& (DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(finprodType2)
-											|| DictCodeListExt1.金融产品类型_投管用_股票.getValue().equals(finprodType2)
-											|| DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(finprodType2))
-									&& StringUtils.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())
-									&& etrExchangeTrade001Service.isSalesOfSmallShares(dto.getAvailableNum(),
-											minTrdUnitLimitDto.getMinStep(), dto.getEntrustNum())) {
-								flag2 = false;
+						for (EtrExchangeTradePortfolioRequest request : dto.getPortfolioList()) {
+							if (null == minTrdUnitLimitDto.getMinAmt() || (minTrdUnitLimitDto.getMinAmt() != null
+									&& minTrdUnitLimitDto.getMinAmt().compareTo(BigDecimal.ZERO) > 0
+									&& request.getEntrustAmt().compareTo(minTrdUnitLimitDto.getMinAmt()) < 0)) {
+								flag1 = true;
 							}
-						}
-						if (flag1 && flag2 && !(null == minTrdUnitLimitDto.getMinNum()
-								&& null == minTrdUnitLimitDto.getMinAmt())) {
-							String prompt = "单个组合，";
-							if (flag1 && null != minTrdUnitLimitDto.getMinNum()) {
-								prompt += "最低交易数量" + etrExchangeTrade001Service.getNumAndUnit(
-										minTrdUnitLimitDto.getMinNum(), minTrdUnitLimitDto.getMinNumUnit());
+							if (null == minTrdUnitLimitDto.getMinNum() || (minTrdUnitLimitDto.getMinNum() != null
+									&& minTrdUnitLimitDto.getMinNum().compareTo(BigDecimal.ZERO) > 0
+									&& request.getEntrustNum().compareTo(minTrdUnitLimitDto.getMinNum()) < 0)) {
+								flag2 = true;
+								if (StringUtils.equals(dto.getTradePlat(), DictCodeList.交易平台_竞价撮合平台.getValue())
+										&& (DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(finprodType2)
+										|| DictCodeListExt1.金融产品类型_投管用_股票.getValue().equals(finprodType2)
+										|| DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(finprodType2))
+										&& StringUtils.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())
+										&& etrExchangeTrade001Service.isSalesOfSmallShares(dto.getAvailableNum(),
+										minTrdUnitLimitDto.getMinStep(), request.getEntrustNum())) {
+									flag2 = false;
+								}
 							}
-							if (flag1 && flag2 && flag1 && null != minTrdUnitLimitDto.getMinNum()
-									&& null != minTrdUnitLimitDto.getMinAmt()) {
-								prompt += "，";
+							if (flag1 && flag2 && !(null == minTrdUnitLimitDto.getMinNum()
+									&& null == minTrdUnitLimitDto.getMinAmt())) {
+								String prompt = "单个组合，";
+								if (flag1 && null != minTrdUnitLimitDto.getMinNum()) {
+									prompt += "最低交易数量" + etrExchangeTrade001Service.getNumAndUnit(
+											minTrdUnitLimitDto.getMinNum(), minTrdUnitLimitDto.getMinNumUnit());
+								}
+								if (flag1 && flag2 && flag1 && null != minTrdUnitLimitDto.getMinNum()
+										&& null != minTrdUnitLimitDto.getMinAmt()) {
+									prompt += "，";
+								}
+								if (flag2 && null != minTrdUnitLimitDto.getMinAmt()) {
+									prompt += "最低交易金额"
+											+ etrExchangeTrade001Service.getNumAndUnit(minTrdUnitLimitDto.getMinAmt());
+								}
+								if (flag1 && flag2 && flag1 && null != minTrdUnitLimitDto.getMinNum()
+										&& null != minTrdUnitLimitDto.getMinAmt()) {
+									prompt += "，应至少满足一个！";
+								}
+								errorList.add(new ValidMessage(prompt));
+								break;
 							}
-							if (flag2 && null != minTrdUnitLimitDto.getMinAmt()) {
-								prompt += "最低交易金额"
-										+ etrExchangeTrade001Service.getNumAndUnit(minTrdUnitLimitDto.getMinAmt());
-							}
-							if (flag1 && flag2 && flag1 && null != minTrdUnitLimitDto.getMinNum()
-									&& null != minTrdUnitLimitDto.getMinAmt()) {
-								prompt += "，应至少满足一个！";
-							}
-							errorList.add(new ValidMessage(prompt));
 						}
 					}
 				}

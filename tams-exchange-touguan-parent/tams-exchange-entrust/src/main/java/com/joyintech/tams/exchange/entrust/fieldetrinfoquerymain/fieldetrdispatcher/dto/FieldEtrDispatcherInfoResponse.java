@@ -150,6 +150,16 @@ public class FieldEtrDispatcherInfoResponse extends FieldEtrDispatcherBaseInfo {
 
     private String declaTypeStr;
 
+    private String finprodId;
+
+    public String getFinprodId() {
+        return finprodId;
+    }
+
+    public void setFinprodId(String finprodId) {
+        this.finprodId = finprodId;
+    }
+
     public BigDecimal getPledgeStandardNumber() {
         return pledgeStandardNumber;
     }

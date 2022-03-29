@@ -7,7 +7,6 @@ import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 import java.util.List;
 
-@ValidLogic(targetClass = EtrExchangeCommonValidator.class)
 public class EtrExchangeCommonRequest extends BaseEntity implements ProcessEntity {
 
     /**

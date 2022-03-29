@@ -1,0 +1,1 @@
+update CFG_READONLY_FORM_SHOW set COLCODE = 'otherAssetType' where  PAGECODE = 'FieldEtrDispatcher' AND DTCODE = 'FieldEtrDispatcherInfo'  and COLCODE ='assetType';
