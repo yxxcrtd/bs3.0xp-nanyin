@@ -91,12 +91,6 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
                         if(entity.getSecNum().compareTo(BigDecimal.ZERO)==0&&canRepoNum.compareTo(BigDecimal.ZERO)==0){
                             continue;
                         }
-                        //折算率
-                        Map<String,Object> paramMap=new HashMap<>();
-                        paramMap.put("finprodId",entity.getFinprodId());
-                        if(canRepoNum.compareTo(BigDecimal.ZERO)==0){
-                            entity.setDiscountRate(etrExchangeTradeCommon001Service.selectStdsecConverseRatio(paramMap));
-                        }
                         //持仓数量，取交易的
                         entity.setPositionsNum(selectActNum(DictCodeListExt3.资产类型_资产账户持仓.getValue(),secDto));
                         //质押数量，取交易的
