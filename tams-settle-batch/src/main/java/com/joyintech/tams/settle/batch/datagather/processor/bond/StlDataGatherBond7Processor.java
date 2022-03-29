@@ -140,9 +140,12 @@ public class StlDataGatherBond7Processor extends BaseProcessor<NeedOperateEntity
                             //BigDecimal amountTotal = ptlSecPositionsByFinprodId.stream().map(item2 -> item2.getAmount()).reduce(BigDecimal.ZERO, BigDecimal::add);
                             for (PtlSecPosition ptlSecPosition : ptlSecPositionsByFinprodId) {
                                 // 业务类型
-                                if (StringUtil.equals(finProduct.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
-                                    ptlSecPosition.setAmount(ArithmeticUtil.divide(ptlSecPosition.getAmount(),
-                                            new BigDecimal(100), 4, RoundingMode.HALF_UP));
+                                // 新头寸债券需要除以100
+                                if(!DictCodeList.是否_否.getValue().equals(newSecPositionSwitch)){
+                                    if (StringUtil.equals(finProduct.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
+                                        ptlSecPosition.setAmount(ArithmeticUtil.divide(ptlSecPosition.getAmount(),
+                                                new BigDecimal(100), 4, RoundingMode.HALF_UP));
+                                    }
                                 }
                                 TotalTrdProductDealDto totalTrdProductDeal = new TotalTrdProductDealDto();
                                 String totalTradeId = settleCommonService.buildBussinessCodeExt(DictCodeList.共通业务类型_资产存续期交易);
