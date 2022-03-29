@@ -3772,12 +3772,39 @@
         // dateTable.reload();
     }
 
+    function linkTableEntrustNumAmtFF() {
+        var entrustNum = $("#entrustNum_" + currentTab).val();
+        if (parseFloat(entrustNum) < 0){
+            Joyin.error("指令数量不能为负数！",function(){
+                $("#entrustNum_" + currentTab).val(0)
+            });
+            return ;
+        }
+        var entrustAmt = $("#entrustAmt_" + currentTab).val();
+        var array = dateTable.getAllRows();
+        var len = array.length;
+        var entrustNumForOne = entrustNum / len;
+        for (var i = 0; i < array.length; i++) {
+            if(i == 0){
+                array[i].entrustNum = Math.ceil(entrustNumForOne);
+            }else {
+                array[i].entrustNum = Math.floor(entrustNumForOne);
+            }
+            array[i].entrustAmt = entrustAmt / len;
+        }
+        for (var i = 0; i < array.length; i++) {
+            dateTable.renderRow(i, array[i]);
+        }
+        ;
+    }
+
+
     /**
      * 绑定删除事件
      */
     dateTable.bind('click', '.delt', function (data, index) {
         dateTable.removeRow(data);
-        linkTableEntrustNumAmt();
+        linkTableEntrustNumAmtFF();
     });
 
     var colsRiskTrialRet = [
@@ -3953,7 +3980,7 @@
 
         object.operateType = operateType;
         object.pageModel = pageModel;
-
+        object.currentTab = currentTab;
         //riskdata = getriskdata(object);
         // if(BaseRiskMathComm && isNeedRiskcal()) {
         //     s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
@@ -4341,6 +4368,9 @@
         $("#etrExchangeTradeMulti001_btn_add").click(function () {
             var temp = {};
             dateTable.addRow(temp);
+            if (currentTab == 'dz'){
+             linkTableEntrustNumAmtFF();
+            }
         });
     });
 }());
