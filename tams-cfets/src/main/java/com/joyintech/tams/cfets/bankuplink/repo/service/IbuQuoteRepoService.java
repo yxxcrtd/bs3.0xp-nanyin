@@ -2543,7 +2543,11 @@ public class IbuQuoteRepoService extends BaseService {
                 }
             }
         }
-        if (statusFlag) {
+        param.put("QUOTE_STUTAS_IBU_08", BussinessDictCodeList.银行间上行报价状态_已终止.getValue());
+        param.put("QUOTE_STUTAS_IBU_14", BussinessDictCodeList.银行间上行报价状态_已拒绝.getValue());
+        param.put("QUOTE_STUTAS_IBU_15", BussinessDictCodeList.银行间上行报价状态_已撤销.getValue());
+        int s = cfetsIbuQuoteRepoMapper.checkWflData(param);
+        if (statusFlag||s>0) {
             errorList.add(new ValidMessage("只可对待分发或者已接收执行进度为0%的指令执行退回操作!"));
         }
         if (flowFlag) {

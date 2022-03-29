@@ -694,7 +694,7 @@
 			</foreach>
 		</if>
 	</select>
-	<select id="queryEquityInfoRegistByPkUnsubmit"  parameterType="java.util.List"
+	<select id="queryEquityInfoRegistByPkUnsubmit"  parameterType="com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001Dto"
 			resultType="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto">
 
 		select INDENTIFY_MARK            as indentifyMark,
@@ -735,12 +735,8 @@
 		CHECK_SEQNO		  		  as checkSeqno
 		from CHB_EQU_SUB
 		where SUBMIT_STATUS='01'
-		<if test="keys !=null and keys.size()>0">
-			AND concat_ws('_',REGIST_BANK_CODE,INDENTIFY_MARK)
-			IN
-			<foreach collection="keys" item="key" open="(" separator=","  close=")">
-				#{key,jdbcType=VARCHAR}
-			</foreach>
-		</if>
+		<foreach collection="newKeyList" item="item" open="AND (REGIST_BANK_CODE,INDENTIFY_MARK) in( values" separator="," close=")">
+			(#{item.registBankCode},#{item.indentifyMark})
+		</foreach>
 	</select>
 </mapper>

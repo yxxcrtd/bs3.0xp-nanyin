@@ -243,4 +243,6 @@ public interface CfetsIbuQuoteRepoMapper {
      * @date 2022/3/29 10:57
      */
     BigDecimal selectFinshAmt(Map<String, Object> param);
+
+    int checkWflData(Map<String, Object> param);
 }

@@ -706,7 +706,9 @@ public class EtrTradeCommonervice extends BaseService {
         if (StringUtil.isNotEmpty(dto.getFinprodId()) && StringUtil.isNotEmpty(dto.getSecAcctId())) {
             PositionCashSecDto cashSecDto = new PositionCashSecDto();
             BeanUtil.copyPropertiesIgnoreNull(cashSecDto, dto); //复制资产信息
-            handleSecType(cashSecDto);
+            if(StringUtil.isEmpty(dto.getHoldingType())){
+                handleSecType(cashSecDto);
+            }
             secList.add(cashSecDto);
         }
         BigDecimal newSecAmount = queryPosition(secList, "02", "");

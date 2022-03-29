@@ -2761,4 +2761,26 @@
         and deal.trade_status = #{TRADE_STATUS_01}
         and deal.is_cancel = #{YES_OR_NO_N}
     </select>
+    <select id="checkWflData" resultType="java.lang.Integer">
+        select count(*) from (
+            select ENTRUST_ID from WFL_REG_FIN_PRODUCT_DEAL
+            where ENTRUST_ID in
+            <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+            union all
+            select ENTRUST_ID from  WFL_IBU_QUOTE_CREP
+            where ENTRUST_ID  in
+            <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+            union all
+            select ENTRUST_ID from IBU_QUOTE_CREP
+            where ENTRUST_ID in
+            <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+              and TRADE_STATUS not in (#{QUOTE_STUTAS_IBU_08},#{QUOTE_STUTAS_IBU_14},#{QUOTE_STUTAS_IBU_15})
+        )
+    </select>
 </mapper>

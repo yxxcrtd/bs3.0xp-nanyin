@@ -414,6 +414,7 @@
         <include refid="QueryIntegratedEntrustHistory"/>
         FROM T_INTEGRATED_ENTRUSTHISTORY a
         <include refid="queryCondition2"/>
+        order by CREATE_TIME desc
     </select>
 
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">

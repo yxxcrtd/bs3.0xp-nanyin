@@ -93,8 +93,6 @@
   </insert>
   
   <insert id="insertByBatch" parameterType="java.util.List" >
-  	begin
-  	<foreach collection ="keyList" item="item" separator =";">
 	    insert into CHB_EQU_HOLD_CHECK (INDENTIFY_MARK, ORG_INDENTIFY_MARK, 
 	      REGIST_BANK_CODE, IS_BELONG_BANK, THE_BANK_NAME, 
 	      THE_BANK_CODE, HOLDER_MARK, HOLDER_REGION, 
@@ -108,7 +106,10 @@
 	      UPDATE_TIME, CREATE_USER, CREATE_TIME,DATA_DATE, 
 	      DATA_SOURCE, ORG_CODE, AGENT, 
 	      CREATE_DEPT, INTERF_CHECK_RESULT,OPERATE_STATUS,MERGER_INDENTIFY_MARK,HOLDER_CLASSIFY,FUND_ACC_PLACE
-        ) values (
+        )
+		select A.* from(
+	  <foreach collection="List" index="index" item = "item" separator="UNION ALL">
+		  select
       	  #{item.indentifyMark,jdbcType=VARCHAR}, 
       	  #{item.orgIndentifyMark,jdbcType=VARCHAR}, 
 	      #{item.registBankCode,jdbcType=VARCHAR}, #{item.isBelongBank,jdbcType=CHAR}, #{item.theBankName,jdbcType=VARCHAR}, 
@@ -123,10 +124,10 @@
 	      sysdate, #{item.createUser,jdbcType=VARCHAR}, sysdate, 
 	      sysdate,#{item.dataSource,jdbcType=CHAR}, #{item.orgCode,jdbcType=VARCHAR}, #{item.agent,jdbcType=VARCHAR}, 
 	      #{item.createDept,jdbcType=VARCHAR}, #{item.interfCheckResult,jdbcType=VARCHAR}, #{item.operatestatus,jdbcType=VARCHAR}
-	      , #{item.mergerindentifymark,jdbcType=VARCHAR},#{item.holderClassify,jdbcType=VARCHAR},#{item.fundAccPlace,jdbcType=VARCHAR}         
-         )
-     </foreach>
-     ;end;
+	      , #{item.mergerindentifymark,jdbcType=VARCHAR},#{item.holderClassify,jdbcType=VARCHAR},#{item.fundAccPlace,jdbcType=VARCHAR}
+		  from dual
+	  </foreach>
+	  ) A
   </insert>
   
   <select id="selectAllData" resultMap="BaseResultMap" parameterType="java.util.Map">
