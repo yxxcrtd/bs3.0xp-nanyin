@@ -3,19 +3,18 @@ package com.joyintech.service.trade.manualsettle.service;
 import com.alibaba.fastjson.JSON;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.trade.manualsettle.dao.ManualSettleMapper;
 import com.joyintech.service.trade.manualsettle.dto.ManualSettleDto;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
-import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;
-import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
-import com.joyintech.tams.common.base.dao.TrdProductTempDealAddMapper;
-import com.joyintech.tams.common.base.dao.TrdProductTempDealMapper;
+import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.position.dto.EtrEntrustAddDto;
 import com.joyintech.tams.invest.common.position.service.CommonPositionEngineService;
 import com.joyintech.tams.invest.common.trade.dto.PortfolioCalculateDto;
 import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
@@ -54,6 +53,9 @@ public class PositionRequestManualSettleService {
 
     @Autowired
     private TrdCommonBaseService trdCommonBaseService;
+
+    @Autowired
+    private FinTradeProductMapper finTradeProductMapper;
 
     public static final String TRADE_PLAT = "TRD_MANUAL_SETTLE";
 
@@ -356,13 +358,21 @@ public class PositionRequestManualSettleService {
             map.put("portfolioId", entity.getPortfolioId());
             if(DictCodeListExt3.交易方向_解除质押.getValue().equals(infContractDetailfile.getPs())){
                 map.put("cashAcctId", getPtlCapAcctNo(infContractDetailfile));
-                map.put("cashAmount", entity.getmTradeAmt());
+                // 查询首期交易信息
+                // ZGTFCP-2097:需要查询首期 modif by fuyongsheng 20220329 start
+                FinTradeProduct finTradeProduct = getSqFinTradeProduct(infContractDetailfile);
+                // ZGTFCP-2097:需要查询首期 modif by fuyongsheng 20220329 end
+                map.put("cashAmount", finTradeProduct != null ? finTradeProduct.getmTradeAmt() : new BigDecimal(0));
             }
             // ZGTFCP-2045:到期购回需要登录首期的到期结算金额 modify by fuyongsheng 20220327 start
             else if(DictCodeListExt3.交易方向_到期购回.getValue().equals(infContractDetailfile.getPs())
                     || DictCodeListExt3.交易方向_提前购回.getValue().equals(infContractDetailfile.getPs())){
                 map.put("cashAcctId", infContractDetailfile.getAcctNo());
-                map.put("cashAmount", entity.getmTradeAmt());
+                // 查询首期交易信息
+                // ZGTFCP-2097:需要查询首期 modif by fuyongsheng 20220329 start
+                FinTradeProduct finTradeProduct = getSqFinTradeProduct(infContractDetailfile);
+                // ZGTFCP-2097:需要查询首期 modif by fuyongsheng 20220329 end
+                map.put("cashAmount", finTradeProduct != null ? finTradeProduct.getmTradeAmt() : new BigDecimal(0));
             }
             // ZGTFCP-2045:到期购回需要登录首期的到期结算金额 modify by fuyongsheng 20220327 end
             else{
@@ -391,7 +401,12 @@ public class PositionRequestManualSettleService {
             // "IF 回购类型 = 正回购 THEN 指令.到期续作金额 - 指令.首期的到期结算金额
             // IF 回购类型 = 逆回购  and 成交编号找不到对应的首期 THEN 指令.到期续作金额
             // IF 回购类型 = 逆回购  and 成交编号找到对应的首期 THEN  指令.到期续作金额 - 指令.首期的到期结算金额"
-            map.put("cashAmount", ArithmeticUtil.subtract(entity.getPrin(), entity.getmTradeAmt()));
+            // 查询首期交易信息
+            // ZGTFCP-2097:需要查询首期 modif by fuyongsheng 20220329 start
+            FinTradeProduct finTradeProduct = getSqFinTradeProduct(infContractDetailfile);
+            map.put("cashAmount", finTradeProduct != null ? ArithmeticUtil.subtract(entity.getPrin(),
+                    finTradeProduct.getmTradeAmt()) : entity.getPrin());
+            // ZGTFCP-2097:需要查询首期 modif by fuyongsheng 20220329 end
             list.add(map);
             resultMap.put("ptlOffsetCashList", list);
         }
@@ -535,5 +550,33 @@ public class PositionRequestManualSettleService {
             }
         }
         return null;
+    }
+
+    /**
+     * 查询首期交易信息
+     * @param infContractDetailfile
+     * @return
+     */
+    private FinTradeProduct getSqFinTradeProduct(InfContractDetailfile infContractDetailfile){
+        // 首期成交编号
+        String finprodId = infContractDetailfile.getvTradeId();
+        String entrustId = infContractDetailfile.getEntrustId();
+        // 指令附属信息
+        EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(entrustId);
+        EtrEntrustAddDto etrEntrustAddDto = new EtrEntrustAddDto();
+        if (etrEntrustAdd != null){
+            BeanUtil.copyPropertiesIgnoreNull(etrEntrustAddDto,etrEntrustAdd);
+            if (etrEntrustAdd.getTradeId() != null) {
+                finprodId = etrEntrustAdd.getTradeId();
+            }
+        }
+        String hgsqFinprodId = trdCommonBaseService.selectHgsqFinprodId(infContractDetailfile.getPortfolioId(), finprodId);
+        if (StringUtil.isNotBlank(hgsqFinprodId)) {
+            finprodId = hgsqFinprodId;
+        }
+        FinTradeProductKey finTradeProductKey = new FinTradeProductKey();
+        finTradeProductKey.setFinprodId(finprodId);
+        finTradeProductKey.setBranch(0L);
+        return finTradeProductMapper.selectByPrimaryKey(finTradeProductKey);
     }
 }
