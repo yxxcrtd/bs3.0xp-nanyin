@@ -442,6 +442,10 @@ public class EtrExchangeTradeCommon004Controller extends BaseController {
         model.addAttribute("WINDTYPEONE_B14", DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue());
         model.addAttribute("WINDTYPEONE_B15", DictCodeList.WIND一级分类_含债券一级分类等_可交换债.getValue());
 
+        //上市板
+        model.addAttribute("BOARD_BD03", DictCodeList.上市板_科创板.getValue());
+        model.addAttribute("BOARD_BD04", DictCodeList.上市板_创业板.getValue());
+
     }
 
     @ApiOperation(value = "下单查询页面初始化参数", notes = "查询页面初始化参数")
