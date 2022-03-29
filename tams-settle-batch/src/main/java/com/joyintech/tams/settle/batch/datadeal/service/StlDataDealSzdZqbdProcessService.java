@@ -76,12 +76,13 @@ public class StlDataDealSzdZqbdProcessService {
                             (StringUtil.equals(szdZqbd.getZqlb(), StlDataDealProcessConstant.ZQLB_PT)
                                     && StringUtil.equals(szdZqbd.getLtlx(),StlDataDealProcessConstant.LTLX_N)
                                     && StringUtil.equals(szdZqbd.getBdlx(), StlDataDealProcessConstant.BDLB_00G)
+                                    && StringUtil.equals(szdZqbd.getQylb(),StlDataDealProcessConstant.QYLB_P)
                             )
                             ||
                             (StringUtil.equals(szdZqbd.getZqlb(), StlDataDealProcessConstant.ZQLB_PT)
                                     && !StringUtil.equals(szdZqbd.getLtlx(),StlDataDealProcessConstant.LTLX_N)
-                                    && StringUtil.equals(szdZqbd.getQylb(),StlDataDealProcessConstant.QYLB_P)
                                     && StringUtil.equals(szdZqbd.getBdlx(), StlDataDealProcessConstant.BDLB_00G)
+                                    && StringUtil.equals(szdZqbd.getQylb(),StlDataDealProcessConstant.QYLB_P)
                             )
                             ||
                             (StringUtil.equals(szdZqbd.getZqlb(), StlDataDealProcessConstant.ZQLB_PT)

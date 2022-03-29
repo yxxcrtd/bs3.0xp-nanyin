@@ -1180,12 +1180,12 @@ SELECT T.QUOTE_ID,
                      OR A.CP_TRADER_ID LIKE '%' || #{keywords} || '%' OR M2.TRADER_NAME LIKE '%' || #{keywords} || '%'
                      OR A.OU_PARTY_ID LIKE '%' || #{keywords} || '%' OR N1.PARTY_ABBR LIKE '%' || #{keywords} || '%'
                      OR A.CP_PARTY_ID LIKE '%' || #{keywords} || '%' OR N2.PARTY_ABBR LIKE '%' || #{keywords} || '%'
-                     OR A.RATE LIKE '%' || #{keywords} || '%'
+                     OR to_char(A.RATE*100, 'FM99990.9990') = #{keywords}
                      OR A.FPRICE_AMT LIKE '%' || #{keywords} || '%'
-                     OR A.M_SETTLE_DATE LIKE '%' || #{keywords} || '%'
-                     OR A.V_SETTLE_DATE LIKE '%' || #{keywords} || '%'
-                     OR A.TERM LIKE '%' || #{keywords} || '%'
-                     OR A.SETTLE_SPEED LIKE '%' || #{keywords} || '%' OR G.ITEM_VALUE LIKE '%' || #{keywords} || '%'
+                     OR to_char(A.M_SETTLE_DATE, 'yyyy-MM-dd')=#{keywords}
+                     OR to_char(A.V_SETTLE_DATE, 'yyyy-MM-dd')=#{keywords}
+                     OR to_char(A.TERM) =#{keywords}
+                     OR A.SETTLE_SPEED LIKE '%' || decode(#{keywords}, 'T+0', '0', 'T+1', '1', 'T+2', '2', #{keywords}) || '%'
                      OR A.QUOTE_ID LIKE '%' || #{keywords} || '%'
 					 OR A.CFETS_QUOTE_ID LIKE '%' || #{keywords} || '%'
                      OR A.EXECID LIKE '%' || #{keywords} || '%')

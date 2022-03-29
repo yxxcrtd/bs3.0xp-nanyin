@@ -173,9 +173,9 @@
                 A1.PORTFOLIO_ID portfolioId,
                 CASE
                 WHEN A1.ENTRUST_CLASS = #{ENTRUST_CLASS_02} THEN
-                    B2.TREE_NAME
+                    det.PORTFOLIO_NAME
                 ELSE
-                    B1.PORTFOLIO_NAME
+                    det.PORTFOLIO_NAME
                 END portfolioName,
                 CASE
                     WHEN A1.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01} THEN #{SEC_TYPE_01}
@@ -223,9 +223,8 @@
         FROM ETR_ENTRUST A1
             LEFT JOIN PTL_PORTFOLIO B1
                 ON A1.PORTFOLIO_ID = B1.PORTFOLIO_ID
-            LEFT JOIN MUTIPTL_PORTFOLIO_TREE B2
-                ON A1.PORTFOLIO_ID = B2.TREE_ID
-                AND B2.PAR_TREE_ID IS NOT NULL
+            LEFT JOIN (SELECT ENTRUST_ID, wm_concat ( ETR_ENTRUST_DETAIL.PORTFOLIO_ID ) PORTFOLIO_ID,  wm_concat ( PORTFOLIO_NAME ) PORTFOLIO_NAME FROM ETR_ENTRUST_DETAIL LEFT JOIN PTL_PORTFOLIO
+                ON ETR_ENTRUST_DETAIL.portfolio_id = PTL_PORTFOLIO.portfolio_id GROUP BY ENTRUST_ID ) det on det.ENTRUST_ID = A1.ENTRUST_ID
             LEFT JOIN FIN_PRODUCT C1
                 ON A1.FINPROD_ID = C1.FINPROD_ID
             LEFT JOIN ETR_ENTRUST_ADD D1
