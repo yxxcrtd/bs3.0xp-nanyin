@@ -1,19 +1,26 @@
 package com.joyintech.tams.exchange.service.trade.controller;
 
+import java.util.List;
+import java.util.Map;
+
+import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.bean.page.PageBean;
 import com.joyintech.tams.exchange.common.domain.Message;
 import com.joyintech.tams.exchange.service.trade.management.service.MemoryCacheManagement;
+import com.joyintech.tams.exchange.util.MasterUtil;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/trade/joyin")
@@ -41,6 +48,9 @@ public class MemoryCacheController {
                                         @RequestParam @NotBlank(message = "表格名称不可为空") String serviceName,
                                         @RequestParam(required = false, defaultValue = "1") Integer page,
                                         @RequestParam(required = false, defaultValue = "1000") Integer perPage) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(null);
+    	}
         return new Message<>(memoryCacheManagement.getData(serviceName, page, perPage));
     }
 
@@ -56,6 +66,9 @@ public class MemoryCacheController {
                                         @RequestParam @NotBlank(message = "表格名称不可为空") String serviceName,
                                         @RequestParam(value = "id", required = false) String id,
                                         @RequestParam(value = "type", required = false, defaultValue = "0") Integer type) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(null);
+    	}
         return new Message<>(memoryCacheManagement.recoverData(serviceName, id, type));
     }
 
@@ -65,6 +78,9 @@ public class MemoryCacheController {
     })
     @PostMapping(value = "/cache/quote")
     public ResultBean recoverCacheQuoteFromRedis(@RequestParam @NotBlank(message = "用户编号不可为空") String userId) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObjectResultBean(null);
+    	}
         return memoryCacheManagement.recoverQuoteData();
     }
 
@@ -76,6 +92,9 @@ public class MemoryCacheController {
     @PostMapping(value = "/cache/clear")
     public Message<Object> clearCache(@RequestParam @NotBlank(message = "用户编号不可为空") String userId,
                                       @RequestParam @NotBlank(message = "表格名称不可为空") String serviceName) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(null);
+    	}
         return new Message<>(memoryCacheManagement.clearData(serviceName));
     }
 
@@ -89,6 +108,9 @@ public class MemoryCacheController {
     public Message<Object> addData(@RequestParam @NotBlank(message = "用户编号不可为空") String userId,
                                    @RequestParam @NotBlank(message = "表格名称不可为空") String serviceName,
                                    @RequestBody @NotBlank(message = "待保存数据不可为空") String beanInfoList) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(null);
+    	}
         return new Message<>(memoryCacheManagement.addData(serviceName, beanInfoList));
     }
 
@@ -102,6 +124,9 @@ public class MemoryCacheController {
     public Message<Object> deleteData(@RequestParam @NotBlank(message = "用户编号不可为空") String userId,
                                       @RequestParam @NotBlank(message = "表格名称不可为空") String serviceName,
                                       @RequestBody @NotBlank(message = "待删除主键列表不可为空") List<String> idList) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(null);
+    	}
         return new Message<>(memoryCacheManagement.deleteData(serviceName, idList));
     }
 }

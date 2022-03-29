@@ -263,8 +263,7 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
         if (null != list && list.size() > 0) {
             for (TrdOthCodeInfoDto dto : list) {
                 SelectOptionDto selectOptionDto = new SelectOptionDto();
-                if (!StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配股代码.getValue())
-                        && !StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配债代码.getValue())) {
+                if ( !StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配债代码.getValue())) {
                     // 只能选择申购，其他委托方向不可选
                     String ps = OthTypeMapToPs(dto.getOthCodeType());
                     if (StringUtils.equals(ps, DictCodeList.交易方向_申购.getValue())) {
@@ -287,10 +286,7 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
                         map.put(ps, dto.getDeclaredPrice());
                     }
                 } else {
-                    if (StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配股代码.getValue())) {
-                        map.put(DictCodeListExt2.交易方向_配股.getValue(), dto.getDeclaredPrice());
-                    }
-                    if (StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配债代码.getValue())) {
+                    if (StringUtils.equals(othCodeType, DictCodeListExt3.金融产品其他代码类型_配债代码.getValue())) { //过滤普通债券
                         map.put(DictCodeListExt3.交易方向_配债.getValue(), dto.getDeclaredPrice());
                     }
                 }

@@ -791,7 +791,8 @@ public class EtrExchangeTradeCommon004Controller extends BaseController {
                 }
             }
         }
-        return ajax == null ? new AjaxResult("确认要提交?") : ajax;
+        return ajax == null || CollectionUtils.isEmpty(ajax.getErrorList()) ?
+                commonCheck(result, dto.getOperateType()): ajax;
     }
 
     /**
@@ -813,7 +814,7 @@ public class EtrExchangeTradeCommon004Controller extends BaseController {
         if (!CollectionUtils.isEmpty(validList)) {
             ajax.setErrorList(validList);
         }
-        return commonCheck(result, dto.getOperateType());
+        return ajax;
     }
 
     /**
