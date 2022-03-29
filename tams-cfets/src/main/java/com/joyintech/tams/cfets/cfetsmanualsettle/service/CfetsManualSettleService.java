@@ -23,7 +23,9 @@ import com.joyintech.tams.cfets.etrib.repo.service.CfetsEtrIbRepoAutoRKService;
 import com.joyintech.tams.cfets.trdquery.dao.CfetsTrdQueryMapper;
 import com.joyintech.tams.cfets.trdquery.dto.CfetsPledgeInfoResponse;
 import com.joyintech.tams.cfets.trdquery.dto.CfetsTrdBondInvestTradeDto;
+import com.joyintech.tams.cfets.trdquery.dto.CfetsTrdRepoTrade002Dto;
 import com.joyintech.tams.cfets.trdquery.service.CfetsTrdBondInvestTrade002Service;
+import com.joyintech.tams.cfets.trdquery.service.CfetsTrdRepoTrade002Service;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
@@ -161,6 +163,9 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
      */
     @Autowired
     private TrdOutRightRepoTradeMapper trdOutRightRepoTradeMapper;
+
+    @Autowired
+    private CfetsTrdRepoTrade002Service cfetsTrdRepoTrade002Service;
 
 
     /**
@@ -825,10 +830,19 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                 }
                 //交收失败后，自动撤销原交易、交易登记、行权登记数据，关闭对应指令
                 if(StringUtil.equals(entity.getButtonType(),DictCodeListExt3.交收操作类型_交收失败.getValue())) {
-                    CfetsTrdBondInvestTradeDto revokeEntity = this.getTrdBondInvestTradeDto(entity.getTradeId());
                     String settleRemark = DictCodeListExt3.交收状态_交收失败.getCodeName();
-                    revokeEntity.setTgBusiType(entity.getTgBusiType());
-                    cfetsTrdBondInvestTrade002Service.doCompleteRevoke(revokeEntity,settleRemark,false);
+                    String totleTradeId = cfetsManualSettleMapper.selectRegTotleTradeIdByTotleTradeId(entity.getTradeId());
+                    if (StringUtil.equals(entity.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
+                        CfetsTrdBondInvestTradeDto revokeEntity = this.getTrdBondInvestTradeDto(entity.getTradeId());
+                        revokeEntity.setTgBusiType(entity.getTgBusiType());
+                        cfetsTrdBondInvestTrade002Service.doCompleteRevoke(revokeEntity, settleRemark, StringUtil.isNotEmpty(totleTradeId));
+                    }else {
+                        CfetsTrdRepoTrade002Dto revokeEntity = new CfetsTrdRepoTrade002Dto();
+                        revokeEntity.setTotleTradeId(entity.getTradeId());
+                        revokeEntity.setTgBusiType(entity.getTgBusiType());
+                        // 登记编号存在时,为登记,反之为报价
+                        cfetsTrdRepoTrade002Service.doRevokeComplete(revokeEntity, settleRemark, StringUtil.isNotEmpty(totleTradeId));
+                    }
                     //关闭对应指令
                     List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(entity.getTradeId(), "Y");
                     if (CollectionUtils.isEmpty(listTemp)) {
