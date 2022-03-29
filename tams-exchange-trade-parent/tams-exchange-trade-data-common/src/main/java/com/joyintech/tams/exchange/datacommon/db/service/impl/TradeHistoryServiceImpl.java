@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -102,6 +103,9 @@ public class TradeHistoryServiceImpl implements TradeHistoryService {
             if (InvestmentAssetType.isFutures(tradeHistory.getAssetType())) {
                 tradeHistory.setStockCode(StockCodeUtils.getStockCode(tradeHistory.getStockCode()));
             }
+            if("EX005".equals(tradeHistory.getBusiTypeTg())){
+                tradeHistory.setTradedPrice(tradeHistory.getTradedPrice().multiply(BigDecimal.valueOf(100)));
+            }
         });
         return new PageInfo<>(tradeHistories);
     }
@@ -118,7 +122,13 @@ public class TradeHistoryServiceImpl implements TradeHistoryService {
     public List<TradeQueryBean> queryTradeHistoryByEntrustId(String entrustId) {
         TradeQryBean tradeQryBean = new TradeQryBean();
         tradeQryBean.setEntrustId(entrustId);
-        return tradeHistoryMapper.selectTradeByPage(tradeQryBean);
+        List<TradeQueryBean> tradeQueryBeans = tradeHistoryMapper.selectTradeByPage(tradeQryBean);
+        tradeQueryBeans.forEach(tradeHistory -> {
+            if("EX005".equals(tradeHistory.getBusiTypeTg())){
+                tradeHistory.setTradedPrice(tradeHistory.getTradedPrice().multiply(BigDecimal.valueOf(100)));
+            }
+        });
+        return tradeQueryBeans;
     }
 
     @Override

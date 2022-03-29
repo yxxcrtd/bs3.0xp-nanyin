@@ -447,12 +447,13 @@
     </select>
     <select id="findEntrustList" resultType="com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch003Dto">
         SELECT
+            distinct
             s1.ENTRUNST_TRADE_ID entrustId,
             #{TRADE_TYPE_02} tradeType,
-            e1.PORTFOLIO_ID portfolioId,
+            det.PORTFOLIO_ID portfolioId,
             CASE
                  WHEN e1.ENTRUST_CLASS = #{ENTRUST_CLASS_02} THEN
-                  p2.TREE_NAME
+                  det.PORTFOLIO_NAME
             ELSE
                   p1.PORTFOLIO_NAME
             END portfolioName,
@@ -492,9 +493,8 @@
                            ON f1.FINPROD_ID=s3.FINPROD_ID
                  LEFT join PTL_PORTFOLIO p1
                            on p1.PORTFOLIO_ID=e1.PORTFOLIO_ID
-                 LEFT JOIN MUTIPTL_PORTFOLIO_TREE p2
-                            ON e1.PORTFOLIO_ID = p2.TREE_ID
-                           AND p2.PAR_TREE_ID IS NOT NULL
+                 LEFT JOIN (SELECT ENTRUST_ID, wm_concat ( ETR_ENTRUST_DETAIL.PORTFOLIO_ID ) PORTFOLIO_ID,  wm_concat ( PORTFOLIO_NAME ) PORTFOLIO_NAME FROM ETR_ENTRUST_DETAIL LEFT JOIN PTL_PORTFOLIO
+                                                                                                                                                                                          ON ETR_ENTRUST_DETAIL.portfolio_id = PTL_PORTFOLIO.portfolio_id GROUP BY ENTRUST_ID ) det on det.ENTRUST_ID = e1.ENTRUST_ID
                  LEFT JOIN (
                       SELECT SEQ_NO,
                              ENTRUNST_TRADE_ID,

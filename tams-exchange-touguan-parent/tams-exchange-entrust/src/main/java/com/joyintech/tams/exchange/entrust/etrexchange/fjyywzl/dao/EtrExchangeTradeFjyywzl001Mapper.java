@@ -31,4 +31,5 @@ public interface EtrExchangeTradeFjyywzl001Mapper {
 
 	List<EtrExchangeTradeFjyywzlZqzyDto> findZqzyPositionsPageNew(Map<String, Object> pageParam);
 
+
 }

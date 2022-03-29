@@ -232,10 +232,11 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
             });
         }
         result.setRoot(returnList);
+        return result;
         // 查询单位成本数据
-        Map<String, EtrExchangeUnitCostDto> unitCostMap = etrExchangeTradeCommon002Service.calcEachCostAmtMap(DateUtil.parse(platDate), pList, fList, "");
+        //Map<String, EtrExchangeUnitCostDto> unitCostMap = etrExchangeTradeCommon002Service.calcEachCostAmtMap(DateUtil.parse(platDate), pList, fList, "");
         // 计算单位成本、计算持仓成本、最新净价、持仓市值、浮动盈亏
-        return calculationAmount(unitCostMap, result, platDate);
+        //return calculationAmount(unitCostMap, result, platDate);
     }
 
     public Page<EtrExchangeAgreRepTrade002Dto> calculationAmount(Map<String, EtrExchangeUnitCostDto> unitCostMap, Page<EtrExchangeAgreRepTrade002Dto> pages, String platDate) {
@@ -290,14 +291,14 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
 
         Page<EtrExchangeOnWayRep002Dto> result = super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(), () -> etrExchangeAgreRepTradeMapper.findOnWayRepPage(pageParam));
 
-        if(result != null && !StringUtil.isEmptyList(result.getRoot())){
-            Date sysDate = iPlatformDate.getSysDate();
-            for(EtrExchangeOnWayRep002Dto entity : result.getRoot()){
-                // 计算剩余天数
-                // 剩余天数
-                entity.setLeftDay(DateUtil.getBetweenDayNumber(sysDate, entity.getExpireSettleDate()));
-            }
-        }
+//        if(result != null && !StringUtil.isEmptyList(result.getRoot())){
+//            Date sysDate = iPlatformDate.getSysDate();
+//            for(EtrExchangeOnWayRep002Dto entity : result.getRoot()){
+//                // 计算剩余天数
+//                // 剩余天数
+//                entity.setLeftDay(DateUtil.getBetweenDayNumber(sysDate, entity.getExpireSettleDate()));
+//            }
+//        }
 
         return result;
     }
