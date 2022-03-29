@@ -129,6 +129,10 @@ public class PositionRequestTradeRestService {
             // ZGTFCP-1883:中途换券成交匹配发送的tradeId是totleTradeId,撤销时保持一致 modify by fuyongsheng 20220327 start
             if(dealTotal != null &&  DictCodeListExt3.交易方向_中途换券.getValue().equals(dealTotal.getPs())){
                 tradeId = dealTotal.getTotleTradeId();
+                // 中途换券有两个交易:换入和换出,传totalTradeId,一次就把换入和换出都处理了,故二者只需处理一次,这里只处理换入
+                if(DictCodeListExt3.质押券置换_置换方向_换出.getValue().equals(deal.getPs())){
+                    continue;
+                }
             }
             // ZGTFCP-1883:中途换券成交匹配发送的tradeId是totleTradeId,撤销时保持一致 modify by fuyongsheng 20220327 end
             PositionHttpRequest.dorevoke(tradeId, PositionConstant.POSITION_TYPE_TRD, busiType, ps);
