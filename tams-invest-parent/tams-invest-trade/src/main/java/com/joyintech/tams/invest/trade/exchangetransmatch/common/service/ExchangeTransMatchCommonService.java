@@ -808,6 +808,15 @@ public class ExchangeTransMatchCommonService extends BaseService {
         baseTradeProductDealDtos.addAll(exchangeTransMatchBaseTradeDtos);
         logger.debug("交易表数据:"+JsonUtils.object2Json(finProductTradeDto));
 
+        // 设置日终批标识
+       if(CollectionUtils.isNotEmpty(finProductTradeDto.getBaseTradeProductDealDtos())){
+           for(BaseTradeProductDealDto dealDto : finProductTradeDto.getBaseTradeProductDealDtos()){
+               dealDto.setDayEndBatch(Boolean.TRUE);
+           }
+       }
+        //增加调用头寸引擎代码start
+        positionRequestService.sendFinProductTradeDto(finProductTradeDto);
+        //增加调用头寸引擎代码end
         // modify by etliu 20220110 start
         // GZYHTZJY-1032: 协议回购的头寸处理，需要走PTL_POSITION_FLOW_CFG配置
         if ((StringUtil.equals(commonEntrustDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
@@ -833,9 +842,6 @@ public class ExchangeTransMatchCommonService extends BaseService {
             baseTradeProductDealCommService.execute(finProductTradeDto);
         }
         // modify by etliu 20220110 end
-        //增加调用头寸引擎代码start
-        positionRequestService.sendFinProductTradeDto(finProductTradeDto);
-        //增加调用头寸引擎代码end
         logger.debug("处理业务交易表---结束,交易编号:"+tradeId);
         return tradeId;
     }
