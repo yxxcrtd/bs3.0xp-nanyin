@@ -609,4 +609,15 @@ public class CfetsEtrDispatcherInfoExcResponse extends CfetsEtrDispatcherExcInfo
     public void setDeclaTypeStr(String declaTypeStr) {
         this.declaTypeStr = declaTypeStr;
     }
+
+    @ApiModelProperty(name="addCla",value="补充协议")
+    private String addCla;
+
+    public String getAddCla() {
+        return addCla;
+    }
+
+    public void setAddCla(String addCla) {
+        this.addCla = addCla;
+    }
 }

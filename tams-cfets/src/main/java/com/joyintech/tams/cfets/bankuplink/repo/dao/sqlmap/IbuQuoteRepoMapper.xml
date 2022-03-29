@@ -2269,15 +2269,16 @@
             <if test="search != null and search != ''">
                 and (
                 D.ITEM_VALUE || F.ITEM_VALUE || H.ITEM_VALUE || TT.ouPartyName || TT.ouTraderName || TT.cpPartyName || TT.cpTraderName
-                    || TT.settleSpeed || TT.quoteId || TT.trdId like '%' || #{search} || '%'
+                    || TT.quoteId || TT.trdId like '%' || #{search} || '%'
                 or to_char(TT.tradeAmt,'FM99990.9990')=#{search} or  TT.tradeAmt||'' =#{search}
-                or to_char(TT.rate,'FM99990.9990')=#{search} or  TT.rate||'' =#{search}
+                or to_char(TT.rate * 100,'FM99990.9990')=#{search} or  TT.rate||'' =#{search}
                 or TT.repoTerm||'' =#{search}
                 or to_char(TT.vSettleDate,'yyyy-MM-dd')=#{search}
                 or to_char(TT.mSettleDate,'yyyy-MM-dd')=#{search}
                 or to_char(TT.tradeDate,'yyyy-MM-dd')=#{search}
                 or to_char(TT.dealDate,'yyyy-MM-dd')=#{search}
                 or TT.statisticalTimes||'' =#{search}
+                OR TT.settleSpeed LIKE '%' || decode(#{search}, 'T+0', '0', 'T+1', '1', 'T+2', '2', #{search}) || '%'
                 )
             </if>
         )
