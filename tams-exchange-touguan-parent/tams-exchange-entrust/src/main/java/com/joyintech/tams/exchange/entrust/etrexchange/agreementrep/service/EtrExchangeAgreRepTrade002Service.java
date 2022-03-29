@@ -291,14 +291,14 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
 
         Page<EtrExchangeOnWayRep002Dto> result = super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(), () -> etrExchangeAgreRepTradeMapper.findOnWayRepPage(pageParam));
 
-        if(result != null && !StringUtil.isEmptyList(result.getRoot())){
-            Date sysDate = iPlatformDate.getSysDate();
-            for(EtrExchangeOnWayRep002Dto entity : result.getRoot()){
-                // 计算剩余天数
-                // 剩余天数
-                entity.setLeftDay(DateUtil.getBetweenDayNumber(sysDate, entity.getExpireSettleDate()));
-            }
-        }
+//        if(result != null && !StringUtil.isEmptyList(result.getRoot())){
+//            Date sysDate = iPlatformDate.getSysDate();
+//            for(EtrExchangeOnWayRep002Dto entity : result.getRoot()){
+//                // 计算剩余天数
+//                // 剩余天数
+//                entity.setLeftDay(DateUtil.getBetweenDayNumber(sysDate, entity.getExpireSettleDate()));
+//            }
+//        }
 
         return result;
     }
