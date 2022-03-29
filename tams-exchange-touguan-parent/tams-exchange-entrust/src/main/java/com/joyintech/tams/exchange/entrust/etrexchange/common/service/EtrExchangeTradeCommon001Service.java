@@ -78,6 +78,7 @@ import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPosition
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.common.constant.TempConstant;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
@@ -4674,10 +4675,11 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
     public BigDecimal queryStandandTicketCanUse(Map<String, Object> pageParam) {
         pageParam.put("PS_T68", DictCodeListExt3.交易方向_质押券入库.getValue());
         pageParam.put("PS_T69", DictCodeListExt3.交易方向_质押券出库.getValue());
-        pageParam.put("PS_03", DictCodeListExt3.交易方向_正回购.getValue());
-        pageParam.put("BROKER", DictCodeListExt3.所有_所有.getValue());
-        String ticketCanUse = etrExchangeTradeCommonMapper.queryStandandTicketCanUse(pageParam);
-        return StringUtil.isNotEmpty(ticketCanUse) ? new BigDecimal(ticketCanUse) : BigDecimal.ZERO;
+        PositionCashSecDto secDto=BeanUtil.mapToObject(pageParam,PositionCashSecDto.class);
+        BigDecimal ticketCanUse=BigDecimal.ZERO;
+        secDto.setTradePlat(TempConstant.NO_TRADE_BUSINESS_ETR);
+        ticketCanUse=etrTradeCommonervice.selectAvailableNum(secDto);
+        return ticketCanUse;
     }
 
     /**
@@ -5998,6 +6000,12 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
         etrEntrustBackupMapper.deleteByPrimaryKey(entrustId);
         etrEntrustBackupMapper.deleteAddByPrimaryKey(entrustId);
         etrEntrustBackupMapper.deleteDetailByPrimaryKey(entrustId);
+    }
+
+    public MinTrdUnitLimitDto getMinTrdUnitLimitPrice(EtrExchangeMiniLimitPriceRequest request) {
+        BigDecimal minNum = new BigDecimal(1);
+        MinTrdUnitLimitDto minTrdUnitLimitDto = getInterfSysMinTrdUnit(request.getFinprodId(), request.getTradePlat(), request.getTradeMarket(), request.getFinprodType2(), request.getPs());
+        return minTrdUnitLimitDto;
     }
 
 }

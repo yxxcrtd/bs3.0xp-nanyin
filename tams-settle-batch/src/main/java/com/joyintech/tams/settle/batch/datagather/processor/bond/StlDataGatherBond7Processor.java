@@ -117,14 +117,25 @@ public class StlDataGatherBond7Processor extends BaseProcessor<NeedOperateEntity
                 Map<String, Object> map = new HashMap<>();
                 map.put("finprodId", settleTransData.getFinprodId());
                 List<FinProductOthCode> finProductOthCodes =  commonPtlPositionMapper.selectFinProductOthCodes(map);
+                FinProductOthCode temp = new FinProductOthCode();
+                temp.setFinprodId(settleTransData.getFinprodId());
+                temp.setOthCode(settleTransData.getFinprodId());
+                finProductOthCodes.add(temp);
                 if(CollectionUtils.isNotEmpty(finProductOthCodes)){
                     for(FinProductOthCode finProductOthCode : finProductOthCodes){
                         String stockId = finProductOthCode.getOthCode();
                         //汇总交易(资产+组合维度)
                         //if (finprodIdMap.containsKey(settleTransData.getFinprodId())) {
-                        if (finprodIdMap.containsKey(stockId)) {
+                        // 兼容新头寸引擎的申报代码和金融产品代码  modify by fuyongsheng 20220328 start
+                        if (finprodIdMap.containsKey(stockId) || finprodIdMap.containsKey(settleTransData.getFinprodId())) {
+                            // 兼容新头寸引擎 modify by fuyongsheng 20220328 end
                             // List<PtlSecPosition> ptlSecPositionsByFinprodId = finprodIdMap.get(settleTransData.getFinprodId());
-                            List<PtlSecPosition> ptlSecPositionsByFinprodId = finprodIdMap.get(stockId);
+                            List<PtlSecPosition> ptlSecPositionsByFinprodId = new ArrayList<>();
+                            ptlSecPositionsByFinprodId = finprodIdMap.get(stockId);
+                            if(CollectionUtils.isEmpty(ptlSecPositionsByFinprodId)){
+                                ptlSecPositionsByFinprodId = finprodIdMap.get(settleTransData.getFinprodId());
+                            }
+                            // 兼容新头寸引擎 modify by fuyongsheng 20220328 end
                             FinProduct finProduct = finProductMapper.selectByPrimaryKey(settleTransData.getFinprodId());
                             //BigDecimal amountTotal = ptlSecPositionsByFinprodId.stream().map(item2 -> item2.getAmount()).reduce(BigDecimal.ZERO, BigDecimal::add);
                             for (PtlSecPosition ptlSecPosition : ptlSecPositionsByFinprodId) {
@@ -157,7 +168,7 @@ public class StlDataGatherBond7Processor extends BaseProcessor<NeedOperateEntity
 
                                 //投管交易关系
                                 SettleTransTgMapping settleTransTgMapping = new SettleTransTgMapping();
-                                settleTransTgMapping.setTradeId(settleTransData.getTradeId());
+                                settleTransTgMapping.setTradeId(totalTradeId);
                                 settleTransTgMapping.setTradeIdTg(totalTradeId);
                                 settleTransTgMapping.setTgDataStatus("02");
                                 // modify by etliu 20220222 start

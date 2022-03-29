@@ -706,6 +706,7 @@ public class IbuComponentReceiveService extends BaseService{
             // 7、MQ发布消息前台订阅通过ws控制表格刷新
             // 对手方对话报价新增(我方作为回复方)，需要制定交易员推送
             cfetsQuotedCommonService.publishMQCommonHandle(quoteResultDto, true);
+            this.updateRepoRequestPositionRule(quoteResultDto);
             // 8、旧头寸处理
             if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
                 quoteResultDto.setIsExistNew(DictCodeList.是否_是.getValue());
@@ -904,6 +905,79 @@ public class IbuComponentReceiveService extends BaseService{
                     || StringUtil.equals(ibuQuoteBondDto.getTradeStatus(),
                     BussinessDictCodeList.银行间上行报价状态_已过期.getValue())) {
                 PositionHttpRequest.send(cfetsQuotedCommonService.prepareRequestPosition(dto, DictCodeListExt3.流程节点_审批生效.getValue(),DictCodeListExt3.系统动作_撤回.getValue(),DictCodeListExt3.系统动作_撤回.getValue(),null));
+                return true;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 头寸引擎处理头寸
+     * @param quoteResultDto
+     * @return
+     */
+    private boolean updateRepoRequestPositionRule(QuoteResultDto quoteResultDto) {
+        if (null != quoteResultDto && null != quoteResultDto.getRepoDialogueQuote()) {
+            List<IbuQuoteCrepPledgeDto> ibuQuoteCrepPledgeDtoList = null;
+            if (null != quoteResultDto.getRepoDialogueQuote().getIbuQuoteCrepPledgeDtoList()) {
+                ibuQuoteCrepPledgeDtoList = quoteResultDto.getRepoDialogueQuote().getIbuQuoteCrepPledgeDtoList();
+            }
+            IbuQuoteCrepDto ibuQuoteCrepDto = quoteResultDto.getRepoDialogueQuote().getIbuQuoteCrepDto();
+            CfetsRepoDealQuotedPrice001Dto dto = new CfetsRepoDealQuotedPrice001Dto();
+            BeanUtil.copyPropertiesIgnoreNull(dto, ibuQuoteCrepDto);
+            dto.setQuoteId(ibuQuoteCrepDto.getQuoteId());
+            dto.setPortfolioId(ibuQuoteCrepDto.getTradeStatus());
+            dto.setTradeStatus(dto.getTradeStatus());
+            dto.setPs(ibuQuoteCrepDto.getRepoPs());
+            dto.setTradeDate(ibuQuoteCrepDto.getQuoteDate());
+            dto.setIsMq("Y"); //mq推送标识
+            dto.setIsDzh(quoteResultDto.getRepoDialogueQuote().getIsDzh());
+            if (null != ibuQuoteCrepPledgeDtoList && ibuQuoteCrepPledgeDtoList.size() > 0) {
+                List<CfetsRepoDealQuotedPrice003Dto> pledgeBondList = new ArrayList<CfetsRepoDealQuotedPrice003Dto>();
+                if (StringUtil.equals(quoteResultDto.getRepoDialogueQuote().getIsDzh(), "Y")) {
+                    //多组合 处理持仓 传入拆分后质押券
+                    List<IbuQuoteEntCrepPledgeDto> ibuQuoteEntCrepPledges = quoteResultDto.getRepoDialogueQuote().getIbuQuoteEntCrepPledgeDtoList();
+                    if (null != ibuQuoteEntCrepPledges && ibuQuoteEntCrepPledges.size() > 0) {
+                        ibuQuoteEntCrepPledges.stream().forEach(item -> {
+                            CfetsRepoDealQuotedPrice003Dto cfetsRepoDealQuotedPrice003Dto = new CfetsRepoDealQuotedPrice003Dto();
+                            BeanUtil.copyPropertiesIgnoreNull(cfetsRepoDealQuotedPrice003Dto, item);
+                            cfetsRepoDealQuotedPrice003Dto.setBondCode(item.getBondCode());
+                            cfetsRepoDealQuotedPrice003Dto.setPledgeNumber(ArithmeticUtil.multiply(item.getPledgeNumber(), new BigDecimal(100)));
+                            cfetsRepoDealQuotedPrice003Dto.setPledgePrin(ArithmeticUtil.multiply(item.getPledgeNumber(), new BigDecimal(100)));
+                            cfetsRepoDealQuotedPrice003Dto.setFinprodId(item.getPledgeFinprodId());
+                            pledgeBondList.add(cfetsRepoDealQuotedPrice003Dto);
+                        });
+                    }
+                } else {
+                    for (IbuQuoteCrepPledgeDto IbuQuoteCrepPledgeDto : ibuQuoteCrepPledgeDtoList) {
+                        CfetsRepoDealQuotedPrice003Dto cfetsRepoDealQuotedPrice003Dto = new CfetsRepoDealQuotedPrice003Dto();
+                        BeanUtil.copyPropertiesIgnoreNull(cfetsRepoDealQuotedPrice003Dto, IbuQuoteCrepPledgeDto);
+                        cfetsRepoDealQuotedPrice003Dto.setBondCode(IbuQuoteCrepPledgeDto.getFinprodMarketId());
+                        cfetsRepoDealQuotedPrice003Dto.setPledgePrin(IbuQuoteCrepPledgeDto.getPledgeAmt());
+                        pledgeBondList.add(cfetsRepoDealQuotedPrice003Dto);
+                    }
+                }
+                dto.setPledgeBondList(pledgeBondList);
+            }
+            List<IbuQuoteEtrReDto> ibuQuoteEtrRes = quoteResultDto.getRepoDialogueQuote().getIbuQuoteEtrReDtoList();
+            List<PtlAllocationDto> ptlAllocationList = new ArrayList<>();
+            if (null != ibuQuoteEtrRes && ibuQuoteEtrRes.size() > 0) {
+                ibuQuoteEtrRes.stream().forEach(item -> {
+                    PtlAllocationDto ptlAllocationDto = new PtlAllocationDto();
+                    BeanUtil.copyPropertiesIgnoreNull(ptlAllocationDto, item);
+                    ptlAllocationList.add(ptlAllocationDto);
+                });
+            }
+            dto.setPtlAllocationList(ptlAllocationList);
+            if (StringUtil.equals(ibuQuoteCrepDto.getTradeStatus(),
+                    BussinessDictCodeList.银行间上行报价状态_已撤回.getValue())) {
+                cfetsQuotedCommonService.sendPositionMethod(dto, DictCodeListExt3.流程节点_审批生效.getValue(), DictCodeListExt3.系统动作_撤回.getValue(), DictCodeListExt3.系统动作_撤回.getValue(), null);
+                return true;
+            } else if (StringUtil.equals(ibuQuoteCrepDto.getTradeStatus(),
+                    BussinessDictCodeList.银行间上行报价状态_已终止.getValue())
+                    || StringUtil.equals(ibuQuoteCrepDto.getTradeStatus(),
+                    BussinessDictCodeList.银行间上行报价状态_已过期.getValue())) {
+                cfetsQuotedCommonService.sendPositionMethod(dto, DictCodeListExt3.流程节点_审批生效.getValue(), DictCodeListExt3.系统动作_撤回.getValue(), DictCodeListExt3.系统动作_撤回.getValue(), null);
                 return true;
             }
         }

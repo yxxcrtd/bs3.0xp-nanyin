@@ -15,13 +15,16 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePositionsCommonResponse;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.PsOptionsRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
 import com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.dao.EtrExchangeTradeFjyywzl001Mapper;
 import com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.dto.EtrExchangeTradeFjyywzlZqzyDto;
 import com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.dto.EtrExchangeTradeZqzyRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeQuotationHqResponse;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.common.constant.TempConstant;
 import com.joyintech.tams.invest.common.dto.position.PositionCashSecDto;
 import com.joyintech.tams.invest.common.entrust.inter.EtrTradeCommonervice;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.TrdOthCodeInfoDto;
@@ -64,19 +67,44 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
             Map<String, Object> map = BeanUtil.object2Map(request);
             map.put("search_isNumberFlag", BaseMap.isNumeric(request.getSearch()));
             String userId = SecurityUtil.getLoginUser().getUserName();
-
-
-
-
             if (StringUtils.isNotEmpty(userId)) {
                 logger.info("请求用户【{}】", "userId = " + userId);
                 map.put("userId", SecurityUtil.getLoginUser().getUserName());
                 getZqzyPositionParam(map);
                 Page<EtrExchangeTradeFjyywzlZqzyDto> result = super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(),
                         () -> etrExchangeTradeFjyywzl001Mapper.findZqzyPositionsPageNew(map));
+                List<EtrExchangeTradeFjyywzlZqzyDto> returnList=new ArrayList<>();
+                if(result!=null&&!CollectionUtils.isEmpty(result.getRoot())){
+                    // 计算浮动盈亏
+                    for(EtrExchangeTradeFjyywzlZqzyDto entity : result.getRoot()){
+                        //可用数量
+                        PositionCashSecDto secDto=new PositionCashSecDto();
+                        BeanUtil.copyPropertiesIgnoreNull(secDto,entity);
+                        secDto.setTradePlat(TempConstant.NO_TRADE_BUSINESS_ETR);
+                        BigDecimal canRepoNum=etrTradeCommonervice.selectAvailableNum(secDto);
+                        entity.setCanRepoNum(canRepoNum);
+                        //过滤掉标准券和质押数量都等于0
+                        if(entity.getSecNum().compareTo(BigDecimal.ZERO)==0&&canRepoNum.compareTo(BigDecimal.ZERO)==0){
+                            continue;
+                        }
+                        //折算率
+                        Map<String,Object> paramMap=new HashMap<>();
+                        paramMap.put("finprodId",entity.getFinprodId());
+                        if(canRepoNum.compareTo(BigDecimal.ZERO)==0){
+                            entity.setDiscountRate(etrExchangeTradeCommon001Service.selectStdsecConverseRatio(paramMap));
+                        }
+                        //持仓数量，取交易的
+                        entity.setPositionsNum(selectActNum(1,secDto));
+                        //质押数量，取交易的
+                        entity.setRepoNum(selectActNum(2,secDto));
+                        returnList.add(entity);
+                    }
+                    result.setRoot(returnList);
+                }
                 return result;
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
             logger.info(ex.getMessage());
         }
         return null;
@@ -130,6 +158,12 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
         BigDecimal secNumZh=BigDecimal.ZERO;
         BigDecimal canNumZh=BigDecimal.ZERO;
         String rateZh="";
+        BigDecimal rateShTemp=BigDecimal.ZERO;
+        BigDecimal rateSZhTemp=BigDecimal.ZERO;
+        String canNumShColor="";
+        String canNumZhColor="";
+        String rateShColor="";
+        String rateZhColor="";
         if(StringUtil.isNotEmpty(dto.getPortfolioId())&&StringUtil.isNotEmpty(dto.getAcctId())){
             Map<String,Object> map=new HashMap<>();
             map.put("portfolioId",dto.getPortfolioId());
@@ -160,7 +194,8 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
                 secNumSh=queryProPosition(2,shProList);
                 if(secNumSh!=null&&secNumSh.compareTo(BigDecimal.ZERO) != 0){
                     BigDecimal sumNumSh=canNumSh.add(secNumSh);
-                    BigDecimal rateShTemp=ArithmeticUtil.divide(secNumSh,sumNumSh,2);
+                    rateShTemp=ArithmeticUtil.divide(secNumSh,sumNumSh,2);
+                    rateShTemp=ArithmeticUtil.multiply(rateShTemp,new BigDecimal(100));
                     rateSh=rateShTemp+"%";
                 }else{
                     rateSh="0%";
@@ -169,7 +204,8 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
                 secNumZh=queryProPosition(2,szProList);
                 if(secNumZh!=null&&secNumZh.compareTo(BigDecimal.ZERO) != 0){
                     BigDecimal sumNumZh=canNumZh.add(secNumZh);
-                    BigDecimal rateSZhTemp=ArithmeticUtil.divide(secNumZh,sumNumZh,2);
+                    rateSZhTemp=ArithmeticUtil.divide(secNumZh,sumNumZh,2);
+                    rateSZhTemp=ArithmeticUtil.multiply(rateSZhTemp,new BigDecimal(100));
                     rateZh=rateSZhTemp+"%";
                 }else{
                     rateZh="0%";
@@ -177,13 +213,36 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
             }
 
         }
-
+        if(canNumSh.compareTo(BigDecimal.ZERO)>0){
+            canNumShColor="green";
+        }else if(canNumSh.compareTo(BigDecimal.ZERO)<0){
+            canNumShColor="red";
+        }
+        if(canNumZh.compareTo(BigDecimal.ZERO)>0){
+            canNumZhColor="green";
+        }else if(canNumZh.compareTo(BigDecimal.ZERO)<0){
+            canNumZhColor="red";
+        }
+        if(rateShTemp.compareTo(new BigDecimal(100))<0){
+            rateShColor="green";
+        }else if(rateShTemp.compareTo(new BigDecimal(100))>0){
+            rateShColor="red";
+        }
+        if(rateSZhTemp.compareTo(BigDecimal.ZERO)<0){
+            rateZhColor="green";
+        }else if(rateSZhTemp.compareTo(BigDecimal.ZERO)>0){
+            rateZhColor="red";
+        }
         resultMap.put("canNumSh",canNumSh+"张");
         resultMap.put("secNumSh",secNumSh+"张");
         resultMap.put("rateSh",rateSh);
         resultMap.put("canNumZh",canNumZh+"张");
         resultMap.put("secNumZh",secNumZh+"张");
         resultMap.put("rateZh",rateZh);
+        resultMap.put("canNumShColor",canNumShColor);
+        resultMap.put("canNumZhColor",canNumZhColor);
+        resultMap.put("rateShColor",rateShColor);
+        resultMap.put("rateZhColor",rateShColor);
         return resultMap;
     }
 
@@ -202,41 +261,39 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
         Date sysDate = DateUtil.platDateFromCache();
         param.put("date", DateUtil.format(sysDate));
         String othCodeType=request.getOthCodeType();
-        if(!StringUtil.isEmpty(othCodeType)){
-            List<TrdOthCodeInfoDto> list = etrExchangeTradeCommon001Service.getTrdOthCodeInfos(param);
-            if (null != list && list.size() > 0) {
-                for (TrdOthCodeInfoDto dto : list) {
-                    SelectOptionDto selectOptionDto = new SelectOptionDto();
-                    if (!StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配股代码.getValue())
-                            && !StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配债代码.getValue())) {
-                        // 只能选择申购，其他委托方向不可选
-                        String ps = OthTypeMapToPs(dto.getOthCodeType());
-                        if (StringUtils.equals(ps, DictCodeList.交易方向_申购.getValue())) {
-                            map.clear();
-                            map.put(ps, dto.getDeclaredPrice());
-                            selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
-                                return StringUtil.equals(option.getId(), ps);
-                            }).collect(Collectors.toList());
-                            for (SelectOptionDto option : selectOptionDtos) {
-                                option.setObject(map.get(option.getId()));
-                            }
-                            return selectOptionDtos;
-                        } else if (StringUtils.equals(ps, DictCodeListExt3.交易方向_质押券入库.getValue())) {
-                            String converseRatio = etrExchangeTradeCommon001Service.selectStdsecConverseRatio(param);
-                            if (StringUtil.isNotEmpty(converseRatio)) {
-                                map.put(DictCodeListExt3.交易方向_质押券入库.getValue(), converseRatio);
-                                map.put(DictCodeListExt3.交易方向_质押券出库.getValue(), converseRatio);
-                            }
-                        } else {
-                            map.put(ps, dto.getDeclaredPrice());
+        List<TrdOthCodeInfoDto> list = etrExchangeTradeCommon001Service.getTrdOthCodeInfos(param);
+        if (null != list && list.size() > 0) {
+            for (TrdOthCodeInfoDto dto : list) {
+                SelectOptionDto selectOptionDto = new SelectOptionDto();
+                if (!StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配股代码.getValue())
+                        && !StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配债代码.getValue())) {
+                    // 只能选择申购，其他委托方向不可选
+                    String ps = OthTypeMapToPs(dto.getOthCodeType());
+                    if (StringUtils.equals(ps, DictCodeList.交易方向_申购.getValue())) {
+                        map.clear();
+                        map.put(ps, dto.getDeclaredPrice());
+                        selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
+                            return StringUtil.equals(option.getId(), ps);
+                        }).collect(Collectors.toList());
+                        for (SelectOptionDto option : selectOptionDtos) {
+                            option.setObject(map.get(option.getId()));
+                        }
+                        return selectOptionDtos;
+                    } else if (StringUtils.equals(ps, DictCodeListExt3.交易方向_质押券入库.getValue())) {
+                        String converseRatio = etrExchangeTradeCommon001Service.selectStdsecConverseRatio(param);
+                        if (StringUtil.isNotEmpty(converseRatio)) {
+                            map.put(DictCodeListExt3.交易方向_质押券入库.getValue(), converseRatio);
+                            map.put(DictCodeListExt3.交易方向_质押券出库.getValue(), converseRatio);
                         }
                     } else {
-                        if (StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配股代码.getValue())) {
-                            map.put(DictCodeListExt2.交易方向_配股.getValue(), dto.getDeclaredPrice());
-                        }
-                        if (StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配债代码.getValue())) {
-                            map.put(DictCodeListExt3.交易方向_配债.getValue(), dto.getDeclaredPrice());
-                        }
+                        map.put(ps, dto.getDeclaredPrice());
+                    }
+                } else {
+                    if (StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配股代码.getValue())) {
+                        map.put(DictCodeListExt2.交易方向_配股.getValue(), dto.getDeclaredPrice());
+                    }
+                    if (StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配债代码.getValue())) {
+                        map.put(DictCodeListExt3.交易方向_配债.getValue(), dto.getDeclaredPrice());
                     }
                 }
             }
@@ -344,5 +401,28 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
         }
         return newSecAmount;
 
+    }
+
+
+
+    //持仓数量,质押数量
+    private BigDecimal selectActNum(Integer type,PositionCashSecDto dto) {
+        BigDecimal canSec = BigDecimal.ZERO; // 可用持仓
+        List<PositionCashSecDto> secList = new ArrayList<>();
+        if (StringUtil.isNotEmpty(dto.getFinprodId()) && StringUtil.isNotEmpty(dto.getSecAcctId())) {
+            PositionCashSecDto cashSecDto = new PositionCashSecDto();
+            BeanUtil.copyPropertiesIgnoreNull(cashSecDto, dto); //复制资产信息
+            if(type==1){
+                cashSecDto.setHoldingType(DictCodeListExt3.资产类型_资产账户持仓.getValue());  //可用标准券
+            }else{
+                cashSecDto.setHoldingType(DictCodeListExt3.资产类型_质押式通用回购入库质押券持仓.getValue());//已用标准券
+            }
+            secList.add(cashSecDto);
+        }
+        BigDecimal newSecAmount = etrTradeCommonervice.queryPosition(secList, "04", "");
+        if (newSecAmount != null) {
+            canSec = canSec.add(newSecAmount);
+        }
+        return canSec;
     }
 }

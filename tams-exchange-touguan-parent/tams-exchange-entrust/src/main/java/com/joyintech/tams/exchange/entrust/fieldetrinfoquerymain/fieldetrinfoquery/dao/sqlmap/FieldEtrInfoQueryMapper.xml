@@ -736,7 +736,7 @@
         <!--a.ENTRUST_TYPE=5 and -->
         a.INSTRUCTION_ID = #{instructionId,jdbcType=VARCHAR}
         ) t
-        <!--where t.ENTRUST_TYPE = '0'-->
+        /*where t.ENTRUST_TYPE = '0'*/
         order by t.TRADING_DAY DESC,
         t.TRADE_TIME DESC
     </select>
@@ -817,8 +817,8 @@
             where
             <!--a.ENTRUST_TYPE=0 and-->
             a.INSTRUCTION_ID = #{instructionId,jdbcType=VARCHAR}
-        ) t
-        <!-- where t.ENTRUST_TYPE = '0'-->
+       ) t
+        /* where t.ENTRUST_TYPE = '0'*/
         order by t.TRADING_DAY desc,t.TRADE_TIME desc
     </select>
 

@@ -725,6 +725,7 @@ public class IbuQuoteBond003Controller extends BaseController {
         String quoteOperatorType = "发起";
         if (StringUtil.equals(cfetsBondDealRequestQuoteDto.getQuotaPageModel(), "response")&&StringUtil.equals(cfetsBondDealRequestQuoteDto.getOperatorType(), "done")) {
             quoteOperatorType = "成交";
+            cfetsBondDealRequestQuoteDto.setTradeStatus(BussinessDictCodeList.银行间上行报价状态_成交中.getValue());
         }
         cfetsBondDealRequestQuoteDto.setQuoteOperatorType(quoteOperatorType);
         DecimalFormat  df = new DecimalFormat("###,###.00");

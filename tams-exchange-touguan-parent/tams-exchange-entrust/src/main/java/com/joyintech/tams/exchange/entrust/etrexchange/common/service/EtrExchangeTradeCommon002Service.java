@@ -469,7 +469,7 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 	/**
 	 * @return
 	 */
-	private Map<String, EtrExchangeUnitCostDto> calcEachCostAmtMap(Date cdate, List<String> portfolioIdList, List<String> finprodIdList, String secType1) {
+	public Map<String, EtrExchangeUnitCostDto> calcEachCostAmtMap(Date cdate, List<String> portfolioIdList, List<String> finprodIdList, String secType1) {
 		/** 返回结果
 		 * KEY:组合+资产代码+投资目的
 		 * VALUE:持仓单位成本dto
@@ -543,7 +543,7 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 		return resultMap;
 	}
 
-	private static String getKey(BaseMap bm){
+	public static String getKey(BaseMap bm){
 		return bm.getString("PORTFOLIO_ID") + bm.get("FINPROD_ID");
 	}
 	private Page<EtrExchangeTradePositionsCommonResponse> calculationAmount(Map<String, EtrExchangeUnitCostDto> unitCostMap, Page<EtrExchangeTradePositionsCommonResponse> pages, String platDate) {

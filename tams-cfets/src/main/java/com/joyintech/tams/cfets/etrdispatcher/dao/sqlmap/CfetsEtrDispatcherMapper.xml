@@ -1062,10 +1062,10 @@
     <!-- 交易员与工作量列表查询 -->
     <select id="getEtrTraderAndWorkloadList" resultType="com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTraderListRequest">
         SELECT
-            DISTINCT su.USER_NAME                                                               userName,
-            su.REAL_NAME                                                               realName,
+            DISTINCT su.USER_NAME as userName,
+            su.REAL_NAME  as realName,
             to_char(NVL(a.totalWork, 0), 'fm999990.009') as totalWork,
-            to_char(NVL(b.unfinishedWork, 0), 'fm999990.009')                       as unfinishedWork
+            to_char(NVL(b.unfinishedWork, 0), 'fm999990.009') as unfinishedWork
         FROM SYS_USER su
         INNER JOIN SYS_USER_ROLE sur ON su.USER_NAME = sur.USER_ID
         INNER JOIN SYS_ROLE sr ON sur.ROLE_ID = sr.ROLE_ID AND sr.ROLE_POS in ('06')
@@ -1075,7 +1075,7 @@
                        COUNT(edi.TRADER) AS totalWork
                 FROM ETR_DISTRIBUTE edi
                 LEFT JOIN ETR_ENTRUST een ON edi.ENTRUST_ID = een.ENTRUST_ID
-                where een.ENTRUST_STATUS in ('04') and een.UPDATE_TIME = to_date(#{sysDate},'yyyy-mm-dd') GROUP BY edi.TRADER
+                where een.ENTRUST_STATUS in ('04') and een.FINISH_DATE = to_date(#{sysDate},'yyyy-mm-dd') GROUP BY edi.TRADER
                 union all
                 SELECT edi.TRADER        as TRADER,
                        COUNT(edi.TRADER) AS totalWork

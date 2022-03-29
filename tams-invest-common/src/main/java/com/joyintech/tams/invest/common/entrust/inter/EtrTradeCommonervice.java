@@ -205,8 +205,8 @@ public class EtrTradeCommonervice extends BaseService {
         List<PositionCashSecDto> list = requestDto.getPtlList();
         if (list != null) {
 
-            String flowType = requestDto.getFlowType();
-            flowType = StringUtil.equals(FLOW_TYPE_TRD, flowType) ? "03" : "01";// 01 指令现金 02 指令持仓 03 交易现金 04 交易持仓
+            String flowTypeParm = requestDto.getFlowType();
+            String flowType = StringUtil.equals(FLOW_TYPE_TRD, flowTypeParm) ? "03" : "01";// 01 指令现金 02 指令持仓 03 交易现金 04 交易持仓
             for (PositionCashSecDto dto : list) {
                 if (StringUtil.isEmpty(dto.getPortfolioId())) {
                     continue;
@@ -281,7 +281,7 @@ public class EtrTradeCommonervice extends BaseService {
                 }
 
                 //持仓可用
-                flowType = StringUtil.equals(FLOW_TYPE_TRD, flowType) ? "04" : "02";//01 指令现金 02 指令持仓 03 交易现金 04 交易持仓
+                flowType = StringUtil.equals(FLOW_TYPE_TRD, flowTypeParm) ? "04" : "02";//01 指令现金 02 指令持仓 03 交易现金 04 交易持仓
                 //筛选出有资金账户的组合
                 List<PositionCashSecDto> secList = new ArrayList<>();
                 if (StringUtil.isNotEmpty(dto.getFinprodId()) && StringUtil.isNotEmpty(dto.getSecAcctId())) {

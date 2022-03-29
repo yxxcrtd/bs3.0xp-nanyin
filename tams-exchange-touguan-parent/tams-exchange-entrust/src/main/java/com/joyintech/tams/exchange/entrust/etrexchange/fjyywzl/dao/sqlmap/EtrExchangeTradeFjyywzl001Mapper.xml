@@ -330,7 +330,7 @@
         END AS secId,
         FP.FINPROD_ABBR AS secName,
         NVL(TEMP.secNum, 0)/100 AS secNum,
-        NVL(TEMP.canRepoNum, 0)/100 AS canRepoNum,
+        NVL(TEMP.canRepoNum, 0) AS canRepoNum,
         FP.FINPROD_TYPE2 AS finprodType2,
         FP.TRADE_MARKET AS tradeMarket,
         SSAI.TRD_ACCT_ID AS acctId,
@@ -384,8 +384,8 @@
                 PSP.SEC_ACCT_ID AS SEC_ACCT_ID ,
                 PSP.FINPROD_ID AS FINPROD_ID,
                 PSP.DATE_TYPE AS DATE_TYPE,
-                SUM(NVL(PSP.AMOUNT,0)) AS secNum,
-                0 as secNum
+                0 AS secNum,
+                0 as canRepoNum
                 FROM
                 ETR_SEC_POSITION_RULE PSP
                 INNER JOIN
@@ -401,14 +401,12 @@
                 </if>
                 WHERE
                 PSP.DATE_TYPE =0
-                AND PSP.HODING_TYPE in (#{A_038},#{A_040})
-                <if test="tradeMarket != null and tradeMarket !='' and tradeMarket==TRADE_PLACE_03">
-                    AND PSP.HODING_TYPE =#{A_038}
-                </if>
-                <if test="tradeMarket != null and tradeMarket !='' and tradeMarket==TRADE_PLACE_04">
-                    AND PSP.HODING_TYPE =#{A_040}
-                </if>
                 AND PSP.CDATE = #{date}
+                and finprod_id in
+                (select DISTINCT t.finprod_id from FIN_STDSEC_CONVERSE_RADIO t where t.branch = 0
+                    AND t.VDATE <![CDATA[<=]]> #{date}
+                    AND t.MDATE <![CDATA[>=]]> #{date}
+                )  and PSP.finprod_id!='XN_PRODID999'
                 GROUP BY
                 PSP.CDATE,
                 PSP.PORTFOLIO_ID ,
@@ -448,7 +446,6 @@
         where pci.ACCT_TYPE = 'A07')TEMP2 ON SSAI.TRD_ACCT_ID = TEMP2.ACCT_NO
         WHERE
         FP.TRADE_MARKET IN (#{TRADE_PLACE_03}, #{TRADE_PLACE_04})
-        AND (TEMP.secNum > 0 or TEMP.canRepoNum > 0)
         <if test="tradeMarket != null and tradeMarket !=''">
             AND FP.TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR}
         </if>

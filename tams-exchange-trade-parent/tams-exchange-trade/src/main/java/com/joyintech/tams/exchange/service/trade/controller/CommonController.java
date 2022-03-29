@@ -8,6 +8,7 @@ import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.bean.SysParamBean;
 import com.joyintech.tams.exchange.common.bean.request.DeviationDegreeRequest;
 import com.joyintech.tams.exchange.common.bean.request.EtrDispatcherInfoRequest;
+import com.joyintech.tams.exchange.common.bean.request.FaceValueRequest;
 import com.joyintech.tams.exchange.common.bean.response.ExchangeContextResponse;
 import com.joyintech.tams.exchange.common.constant.ErrorCode;
 import com.joyintech.tams.exchange.common.db.domain.Instrument;
@@ -207,7 +208,7 @@ public class CommonController {
 
     @ApiOperation(value = "查询最新面值", notes = "根据资产代码查询最新面值")
     @RequestMapping(value = "/common/getFaceValue", method = RequestMethod.POST)
-    public Message<BigDecimal> getFaceValue(@RequestParam(value = "finprodId") String finprodId) {
-        return commonManagement.getFaceValue(finprodId);
+    public Message<BigDecimal> getFaceValue(@RequestBody FaceValueRequest request) {
+        return commonManagement.getFaceValue(request.getFinprodId());
     }
 }

@@ -680,7 +680,7 @@
 		order by cii.REGIST_BANK_CODE, cii.PRODID, cii.CCY, cii.INDENTIFY_MARK, cii.HOLD_DATE
 	</select>
 
-	<select id="getSubmitFeedbackStatusList" parameterType="com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub" resultType="com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.InvestorsHoldInfoRegist001Dto">
+	<select id="getSubmitFeedbackStatusList" parameterType="com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub" resultType="com.joyintech.tams.report.interf.cnbond.dto.InvestorsHoldInfoRegist001InterfDto">
 		select distinct
 		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 		ciis.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,

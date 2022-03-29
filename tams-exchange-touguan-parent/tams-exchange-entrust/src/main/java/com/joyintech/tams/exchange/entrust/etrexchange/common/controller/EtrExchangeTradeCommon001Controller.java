@@ -48,6 +48,7 @@ import com.joyintech.tams.invest.common.dto.position.PositionCashSecDto;
 import com.joyintech.tams.invest.common.dto.position.PositionCashSecRequest;
 import com.joyintech.tams.invest.common.entrust.inter.EtrTradeCommonervice;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.MinPirceDto;
+import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.MinTrdUnitLimitDto;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.TrdOthCodeInfoDto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
@@ -982,8 +983,10 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 					dto.setAcctNo(item.getAcctNo());
 					dto.setEntrustNum(item.getEntrustNum());
 					dto.setEntrustAmt(item.getEntrustAmt());
+					dto.setSecAcctId(item.getSecAcctId()); // 证券账户
+					dto.setStockId(item.getSecAcctId());
 					//默认证券账户
-					if (StringUtil.isNotEmpty(item.getPortfolioId()) && StringUtil.isNotEmpty(dto.getFinprodId())) {
+					/*if (StringUtil.isNotEmpty(item.getPortfolioId()) && StringUtil.isNotEmpty(dto.getFinprodId())) {
 						Map<String, Object> map = new HashMap<String, Object>();
 						map.put("portfolioId", item.getPortfolioId());
 						map.put("finprodId", dto.getFinprodId());
@@ -993,7 +996,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 							dto.setSecAcctId(secAcctId); // 证券账户
 							dto.setStockId(secAcctId);
 						}
-					}
+					}*/
 					ajax = check(dto, br);
 					if (null != ajax) {
 						break;
@@ -1949,6 +1952,18 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new Message<List<BaseMap>>().fail().setMessage("查询失败");
+		}
+	}
+	@ApiOperation(value = "最小价格", notes = "最小价格")
+	@PostMapping("/getMinTrdUnitLimit")
+	@ResponseBody
+	public Message<MinTrdUnitLimitDto> getMinTrdUnitLimit(@RequestBody EtrExchangeMiniLimitPriceRequest request){
+		try {
+			MinTrdUnitLimitDto minNum= etrExchangeTrade001CommonService.getMinTrdUnitLimitPrice(request);
+			return new Message<MinTrdUnitLimitDto>().success().setData(minNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new Message<MinTrdUnitLimitDto>().fail().setMessage("查询失败");
 		}
 	}
 }

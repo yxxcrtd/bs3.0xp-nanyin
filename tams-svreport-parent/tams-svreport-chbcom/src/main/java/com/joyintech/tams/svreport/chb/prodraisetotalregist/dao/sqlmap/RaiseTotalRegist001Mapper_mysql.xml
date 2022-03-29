@@ -604,8 +604,8 @@
         tradetype,
         ccy,
         <!--从青岛合并，起息日当天有强增强减，需要算到实际募集金额份额 add by wm 20220304 start-->
-        SUM(case when tradetype = '15' then -1*tradeprince else tradeprince end) tradeprince,
-        SUM(case when tradetype = '15' then -1*tradeqty else tradeqty end) tradeqty,
+        /*SUM(case when tradetype = '15' then -1*tradeprince else tradeprince end) tradeprince,
+        SUM(case when tradetype = '15' then -1*tradeqty else tradeqty end) tradeqty,*/
         <!--从青岛合并，起息日当天有强增强减，需要算到实际募集金额份额 add by wm 20220304 end-->
         SUM(tradeprince)tradeprince,
         SUM(tradeqty)tradeqty,
@@ -631,7 +631,8 @@
         and info.status in ('E','M')
         <!--从青岛合并，起息日当天有强增强减，需要算到实际募集金额份额 add by wm 20220304 start-->
         where <!--trade_type='01'-->
-        trade_type in ('01','14','15')
+        /*trade_type in ('01','14','15')*/
+        trade_type='01'
         AND info.vdate = deal.SETTDATE_DATE
         <!--从青岛合并，起息日当天有强增强减，需要算到实际募集金额份额 add by wm 20220304 end-->
         and deal.status in ('E','M')

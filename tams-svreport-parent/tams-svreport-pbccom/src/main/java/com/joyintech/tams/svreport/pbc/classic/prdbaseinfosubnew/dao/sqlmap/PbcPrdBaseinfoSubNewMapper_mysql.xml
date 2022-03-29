@@ -557,11 +557,19 @@
         (case TERM_RIGHT_FLAG when '01' then '1' else '2' end) TERM_RIGHT_FLAG,
         (case CUS_REDEEM_FLAG when '01' then '1' else '2' end) CUS_REDEEM_FLAG,
         (case CREDIT_FLAG when '01' then '1' else '2' end) CREDIT_FLAG,
-        REPLACE(CREDIT_TYPE, '0','') CREDIT_TYPE,
-        (case CREDIT_MODE when '01' then '1'  when '02' then '2'  when '03' then '1' else '2' end) CREDIT_MODE,
+        /*REPLACE(CREDIT_TYPE, '0','') CREDIT_TYPE,
+        (case CREDIT_MODE when '01' then '1'  when '02' then '2'  when '03' then '1' else '2' end) CREDIT_MODE,*/
+        REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(CREDIT_TYPE,'05','6'),'04','1'),'03','4'),'02','3'),'03','2')
+        CREDIT_TYPE,
+        REPLACE(CREDIT_MODE,'0','') CREDIT_MODE,
         IN_DEP_NAME,
-        IN_DEP_CODE,
-        OUT_DEP_CTRY,
+        /*IN_DEP_CODE,
+        OUT_DEP_CTRY,*/
+        <!-- modify by zhangliang 20220319 华夏个性化改造取机构登记银行代码管理 start-->
+        <!-- info.IN_DEP_CODE,-->
+        cbc2.PBC_BANK_CODE IN_DEP_CODE,
+        <!-- modify by zhangliang 20220319 华夏个性化改造取机构登记银行代码管理 end-->
+        DECODE(OUT_DEP_CTRY,NULL,'',substrb(OUT_DEP_CTRY,0,3)) OUT_DEP_CTRY,
         case
         when length(OUT_DEP_NAME)>120
         then substr(OUT_DEP_NAME,0,120)
@@ -589,6 +597,22 @@
         left join CHB_ORG_REGIST_BANK_CODE cbc on
         cbc.REGIST_BANK_CODE=info.ISSUE_PARTY_ID
         and CBC.STATUS='E'
+        left join sys_datadict_list sdl
+        on info.IN_DEP_NAME = sdl.item_code
+        and sdl.dict_code = 'SVR_IN_DEP_NAME'
+        left join sys_institution sysi
+        on sysi.institution_name = sdl.item_value
+        left join CHB_ORG_REGIST_BANK_CODE cbc2
+        on sysi.institution_code= cbc2.org_code
+        /****add by leipeng 人行产品基本信息，人行产品代码一旦生成，修改基本信息数据在重新跑批也不会改变了 start**/
+        LEFT JOIN (
+        select ifnull(DEAL.FPROD_ID,DEAL.PROD_ID) PROD_ID, max(UPDATE_TIME) UPDATE_TIME,max(CREATE_TIME) CREATE_TIME
+        from
+        CHB_PRD_DEAL DEAL
+        where trade_type = '01' and status IN ('E','M')
+        group by ifnull(DEAL.FPROD_ID,DEAL.PROD_ID)
+
+        ) DEAL ON INFO.PROD_ID = deal.PROD_ID
 
         where DATE_FORMAT(greatest(ifnull(ifnull(info.UPDATE_TIME,info.CREATE_TIME),STR_TO_DATE('1900-01-01','%Y-%m-%d')),ifnull(info.VDATE,STR_TO_DATE('1900-01-01','%Y-%m-%d')))
         ,'%Y-%m-%d') = DATE_FORMAT(#{statusDate,jdbcType=DATE},'%Y-%m-%d')

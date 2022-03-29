@@ -400,9 +400,7 @@ public class EtrExchangeTradeJj001Validator implements EtrCommonValidator {
 				// 同一股东只允许下达一次同一只新股申购指令
 				List<String> strList = etrExchangeTrade001Service.selectWflEntrustAddAndEtrEntrustAdd(param);
 				if (strList.size()>0){
-					if(strList.contains(dto.getSecAcctId())){
-					   errorList.add(new ValidMessage(getMessage("ETR_ERROR_0064")));
-					}
+					errorList.add(new ValidMessage(getMessage("ETR_ERROR_0064")));
 				}
 
 //				BigDecimal entrustNum = etrExchangeTrade001Service.getEntrustNum(param);
