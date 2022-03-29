@@ -10,21 +10,6 @@
  
 package com.joyintech.service.bankuplink.bond.service;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.service.bankuplink.cstp.dto.CstpSelectDto;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import org.codehaus.plexus.util.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.joyintech.background.component.common.pack.common.security.User;
 import com.joyintech.background.component.common.pack.common.util.DateUtil;
 import com.joyintech.background.component.common.pack.common.util.JsonUtils;
@@ -54,6 +39,7 @@ import com.joyintech.service.bankuplink.calc.dto.SecInfoModelDto;
 import com.joyintech.service.bankuplink.calc.service.SecCalRequestQuoteService;
 import com.joyintech.service.bankuplink.common.dao.CfetsQuotedCommonMapper;
 import com.joyintech.service.bankuplink.common.service.CfetsQuotedCommonService;
+import com.joyintech.service.bankuplink.cstp.dto.CstpSelectDto;
 import com.joyintech.service.bankuplink.ibu.dto.BondQuoteInfoDto;
 import com.joyintech.service.bankuplink.ibu.service.BankUplinkPublishService;
 import com.joyintech.service.bankuplink.ibu.service.IbuComponentCommonService;
@@ -64,8 +50,8 @@ import com.joyintech.tams.common.base.entity.FinProductType;
 import com.joyintech.tams.common.base.entity.FinProductTypeKey;
 import com.joyintech.tams.common.base.entity.MstBondValuationInfo;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
@@ -76,6 +62,19 @@ import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dao.BaseAssetCashPositionCommMapper;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import org.codehaus.plexus.util.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * CFETS现券买卖报价
@@ -1095,7 +1094,7 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
 	 * @param dto
 	 */
 	public void doInsetOrUpdateForPtlPositionHold(CfetsBondDealDialogueQuoteDto dto) {
-	    // T+1情况，可用持仓登在T+1日，可用现金登在T日
+	    // T+1情况，可用持仓登在T日，可用现金登在T+1日
 	    Date platDate = iPlatformDate.getSysDate();
         final Date settleDate = dto.getSettleDate() == null ? platDate : dto.getSettleDate(); 
 	    
@@ -1197,8 +1196,8 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
 
 		ptlPositionHoldDto.setPtlCashPositionFlows(ptlCashPositionFlows);
 		ptlPositionHoldDto.setPtlSecPositionFlows(ptlSecPositionFlows);
-		ptlPositionHoldDto.getPtlCashPositionFlows().forEach(etrCashPositionFlowDto -> etrCashPositionFlowDto.setCdate(platDate));
-		ptlPositionHoldDto.getPtlSecPositionFlows().forEach(etrSecPositionFlowDto -> etrSecPositionFlowDto.setCdate(settleDate));
+		ptlPositionHoldDto.getPtlCashPositionFlows().forEach(etrCashPositionFlowDto -> etrCashPositionFlowDto.setCdate(settleDate));
+		ptlPositionHoldDto.getPtlSecPositionFlows().forEach(etrSecPositionFlowDto -> etrSecPositionFlowDto.setCdate(platDate));
 		// 数据是否已入新头寸
 		if(StringUtil.isNotEmpty(dto.getIsExistNew())){
             ptlPositionHoldDto.getPtlCashPositionFlows().forEach(etrCashPositionFlowDto -> etrCashPositionFlowDto.setIsExistNew(dto.getIsExistNew()));
@@ -1381,7 +1380,7 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
 			}
 		}
 
-        // T+1情况，可用持仓登在T+1日，可用现金登在T日
+        // T+1情况，可用持仓登在T日，可用现金登在T+1日
 		Date platDate = iPlatformDate.getSysDate();
         final Date settleDate = dto.getSettleDate() == null ? platDate : dto.getSettleDate(); 
         
@@ -1521,8 +1520,8 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
 
 		ptlPositionHoldDto.setPtlCashPositionFlows(ptlCashPositionFlows);
 		ptlPositionHoldDto.setPtlSecPositionFlows(ptlSecPositionFlows);
-		ptlPositionHoldDto.getPtlCashPositionFlows().forEach(etrCashPositionFlowDto -> etrCashPositionFlowDto.setCdate(platDate));
-		ptlPositionHoldDto.getPtlSecPositionFlows().forEach(etrSecPositionFlowDto -> etrSecPositionFlowDto.setCdate(settleDate));
+		ptlPositionHoldDto.getPtlCashPositionFlows().forEach(etrCashPositionFlowDto -> etrCashPositionFlowDto.setCdate(settleDate));
+		ptlPositionHoldDto.getPtlSecPositionFlows().forEach(etrSecPositionFlowDto -> etrSecPositionFlowDto.setCdate(platDate));
         // 数据是否已入新头寸
         if(StringUtil.isNotEmpty(dto.getIsExistNew())){
             ptlPositionHoldDto.getPtlCashPositionFlows().forEach(etrCashPositionFlowDto -> etrCashPositionFlowDto.setIsExistNew(dto.getIsExistNew()));

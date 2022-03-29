@@ -92,9 +92,13 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
                             continue;
                         }
                         //持仓数量，取交易的
-                        entity.setPositionsNum(selectActNum(DictCodeListExt3.资产类型_资产账户持仓.getValue(),secDto));
+                        BigDecimal  positionsNum=selectActNum(DictCodeListExt3.资产类型_资产账户持仓.getValue(),secDto);
+                        positionsNum=ArithmeticUtil.divide(positionsNum,100,0);
+                        entity.setPositionsNum(positionsNum);
                         //质押数量，取交易的
-                        entity.setRepoNum(selectActNum(DictCodeListExt3.资产类型_质押式通用回购入库质押券持仓.getValue(),secDto));
+                        BigDecimal  repoNum=selectActNum(DictCodeListExt3.资产类型_质押式通用回购入库质押券持仓.getValue(),secDto);
+                        repoNum=ArithmeticUtil.divide(repoNum,100,0);
+                        entity.setRepoNum(repoNum);
                         returnList.add(entity);
                     }
                     result.setRoot(returnList);
@@ -263,8 +267,7 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
         if (null != list && list.size() > 0) {
             for (TrdOthCodeInfoDto dto : list) {
                 SelectOptionDto selectOptionDto = new SelectOptionDto();
-                if (!StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配股代码.getValue())
-                        && !StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配债代码.getValue())) {
+                if ( !StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配债代码.getValue())) {
                     // 只能选择申购，其他委托方向不可选
                     String ps = OthTypeMapToPs(dto.getOthCodeType());
                     if (StringUtils.equals(ps, DictCodeList.交易方向_申购.getValue())) {
@@ -287,10 +290,7 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
                         map.put(ps, dto.getDeclaredPrice());
                     }
                 } else {
-                    if (StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配股代码.getValue())) {
-                        map.put(DictCodeListExt2.交易方向_配股.getValue(), dto.getDeclaredPrice());
-                    }
-                    if (StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配债代码.getValue())) {
+                    if (StringUtils.equals(othCodeType, DictCodeListExt3.金融产品其他代码类型_配债代码.getValue())) { //过滤普通债券
                         map.put(DictCodeListExt3.交易方向_配债.getValue(), dto.getDeclaredPrice());
                     }
                 }

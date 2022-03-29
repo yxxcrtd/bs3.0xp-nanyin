@@ -1244,6 +1244,7 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
     public static void deal质押式回购EntrustClose(EntrustCommonDto entrustCommonDto, EtrPositionHoldDto etrPositionHoldDto) {
         if (entrustCommonDto != null) {
             EtrEntrust etrEntrust = entrustCommonDto.getEtrEntrust();
+            EtrEntrustAdd etrEntrustAdd = entrustCommonDto.getEtrEntrustAdd();
             String tradePlace = etrEntrust.getTradeMarket();
             // 正回购 or 逆回购
             String ps = etrEntrust.getFinprodType2();
@@ -1263,7 +1264,7 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
                    // etrSecPositionFlowDto.setAmount(ArithmeticUtil.divide(etrEntrust.getEntrustAmt(), 债券面值, 2).negate());
                    // etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
                     BigDecimal entrustAmt = etrEntrust.getEntrustAmt();
-                    EtrEntrustAdd etrEntrustAdd = entrustCommonDto.getEtrEntrustAdd();
+//                    EtrEntrustAdd etrEntrustAdd = entrustCommonDto.getEtrEntrustAdd();
                     if (null != etrEntrustAdd && null != etrEntrustAdd.getTargetType() && etrEntrustAdd.getTargetType().equals(DictCodeListExt3.目标类型_数量.getValue())) {
                         entrustAmt = etrEntrust.getEntrustNum();
                     }
@@ -1311,9 +1312,13 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
                 map.put("entrustId",etrEntrust.getEntrustId());
                 BigDecimal finishAmt = EtrCommonCashPositionDealService.getEtrExchangeFinishAmtMuilt(map);
                 //BigDecimal finishAmt = EtrCommonCashPositionDealService.getEtrFinishAmt(etrEntrust.getEntrustId());
+                BigDecimal closeAmt = etrEntrustAdd.getCloseAmt();
+                finishAmt = ArithmeticUtil.doAdd(finishAmt, closeAmt, entrustCommonDto.getForcedFinishAmt());//加 已关闭额度 强制完成额度
                 // 减少委托本金金额
                 etrCashPositionFlowDto.setAmount(ArithmeticUtil.subtract(etrEntrust.getEntrustAmt(), finishAmt));
+                etrEntrustAdd.setCloseAmt(ArithmeticUtil.doAdd(closeAmt, etrCashPositionFlowDto.getAmount()));
                 etrCashPositionFlowDto.setAcctId(acctId);
+                etrCashPositionFlowDto.setOffsetFlag(DictCodeList.冲正标识_冲销交易.getValue());
                 etrCashPositionFlowDto.setOffsetId(etrEntrust.getEntrustId());
                 etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
             }

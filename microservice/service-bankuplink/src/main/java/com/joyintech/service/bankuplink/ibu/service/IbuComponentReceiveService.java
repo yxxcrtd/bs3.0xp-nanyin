@@ -37,12 +37,16 @@ import com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice001Dto;
 import com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice003Dto;
 import com.joyintech.service.bankuplink.repo.service.CfetsRepoDealQuotedPrice001Service;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
+import com.joyintech.tams.common.base.entity.PtlSecPositionFlow;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.component.base.core.BaseGetBussinessId;
+import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.common.PtlAllocationDto;
+import com.joyintech.tams.invest.common.trade.dao.BaseAssetCashPositionCommMapper;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,6 +116,16 @@ public class IbuComponentReceiveService extends BaseService{
 
     @Autowired
     private CfetsRepoDealQuotedPrice001Mapper cfetsRepoDealQuotedPrice001Mapper;
+
+
+    @Autowired
+    BaseAssetCashPositionCommMapper baseAssetCashPositionCommMapper;
+
+    /**
+     * 组合可用持仓和实际持仓查询更新
+     */
+    @Autowired(required = false)
+    private BasePtlSecPositionInfoService basePtlSecPositionInfoService;
 
     /**
      * 日志
@@ -1049,9 +1063,25 @@ public class IbuComponentReceiveService extends BaseService{
 						BussinessDictCodeList.银行间上行报价状态_已终止.getValue())
 						|| StringUtil.equals(ibuQuoteCrepDto.getTradeStatus(),
 								BussinessDictCodeList.银行间上行报价状态_已过期.getValue())) {
-					cfetsRepoDealQuotedPrice001Service.doDeletePtlPositionHoldByQuoteId(ibuQuoteCrepDto.getQuoteId());
-					return true;
-				}
+                    List<PtlSecPositionFlowDto> ptlSecPositionFlows = new ArrayList<>();
+                    List<PtlSecPositionFlow> positionFlows = baseAssetCashPositionCommMapper.selectAllPositionByOffsetFlag(ibuQuoteCrepDto.getQuoteId(),
+                            com.joyintech.tams.constant.DictCodeList.冲正标识_正常交易.getValue());
+                    for (PtlSecPositionFlow ptlSecPositionFlow : positionFlows) {
+                        if (StringUtil.equals(ptlSecPositionFlow.getHodingType(), com.joyintech.tams.constant.DictCodeList.持仓类型_质押.getValue())) {
+                            PtlSecPositionFlowDto flowDto = new PtlSecPositionFlowDto();
+                            BeanUtil.copyPropertiesIgnoreNull(flowDto, ptlSecPositionFlow);
+                            flowDto.setAmount(flowDto.getAmount().negate());
+                            flowDto.setOffsetFlag(com.joyintech.tams.constant.DictCodeList.冲正标识_冲销交易.getValue());
+                            flowDto.setOffsetId(ptlSecPositionFlow.getTradeId());
+                            ptlSecPositionFlows.add(flowDto);
+                        }
+                    }
+                    cfetsRepoDealQuotedPrice001Service.doDeletePtlPositionHoldByQuoteId(ibuQuoteCrepDto.getQuoteId());
+                    for (PtlSecPositionFlowDto ptlSecPositionFlow : ptlSecPositionFlows) {
+                        basePtlSecPositionInfoService.inertSecPositionFlow(ptlSecPositionFlow);
+                    }
+                    return true;
+                }
 			}
 		}
 		return true;

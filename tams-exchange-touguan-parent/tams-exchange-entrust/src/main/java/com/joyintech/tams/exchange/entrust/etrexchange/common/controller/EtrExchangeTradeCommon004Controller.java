@@ -167,7 +167,15 @@ public class EtrExchangeTradeCommon004Controller extends BaseController {
                 model.addAttribute("entity_RiskTrialRetList", entity.getRiskTrialRetDto());
                 boolean riskTrialFlag = true;
                 for (RiskTrialRetDto riskTrialRetDto : entity.getRiskTrialRetDto()) {
-                    if ((StringUtil.isNotEmpty(riskTrialRetDto.getKriStatus()) && riskTrialRetDto.getKriStatus().equals("3")) && (StringUtil.isNotEmpty(riskTrialRetDto.getKriTrend()) && riskTrialRetDto.getKriTrend().equals("向坏"))) {
+                    if ((StringUtil.isNotEmpty(riskTrialRetDto.getKriStatus())
+                            && riskTrialRetDto.getKriStatus().equals("3"))
+                            && (StringUtil.isNotEmpty(riskTrialRetDto.getKriTrend())
+                            && riskTrialRetDto.getKriTrend().equals("向坏"))) {
+                        riskTrialFlag = false;
+                    }
+                    if ((StringUtil.isNotEmpty(riskTrialRetDto.getKriStatus())
+                            && riskTrialRetDto.getKriStatus().equals("3"))
+                            && !StringUtil.isNotEmpty(riskTrialRetDto.getKriTrend())) {
                         riskTrialFlag = false;
                     }
                 }
@@ -186,6 +194,11 @@ public class EtrExchangeTradeCommon004Controller extends BaseController {
                 boolean riskTrialFlag = true;
                 for (RiskTrialRetDto riskTrialRetDto : riskTrialRetList) {
                     if ((StringUtil.isNotEmpty(riskTrialRetDto.getKriStatus()) && riskTrialRetDto.getKriStatus().equals("3")) && (StringUtil.isNotEmpty(riskTrialRetDto.getKriTrend()) && riskTrialRetDto.getKriTrend().equals("向坏"))) {
+                        riskTrialFlag = false;
+                    }
+                    if ((StringUtil.isNotEmpty(riskTrialRetDto.getKriStatus())
+                            && riskTrialRetDto.getKriStatus().equals("3"))
+                            && !StringUtil.isNotEmpty(riskTrialRetDto.getKriTrend())) {
                         riskTrialFlag = false;
                     }
                 }
@@ -791,7 +804,8 @@ public class EtrExchangeTradeCommon004Controller extends BaseController {
                 }
             }
         }
-        return ajax == null ? new AjaxResult("确认要提交?") : ajax;
+        return ajax == null || CollectionUtils.isEmpty(ajax.getErrorList()) ?
+                commonCheck(result, dto.getOperateType()): ajax;
     }
 
     /**
@@ -813,7 +827,7 @@ public class EtrExchangeTradeCommon004Controller extends BaseController {
         if (!CollectionUtils.isEmpty(validList)) {
             ajax.setErrorList(validList);
         }
-        return commonCheck(result, dto.getOperateType());
+        return ajax;
     }
 
     /**
