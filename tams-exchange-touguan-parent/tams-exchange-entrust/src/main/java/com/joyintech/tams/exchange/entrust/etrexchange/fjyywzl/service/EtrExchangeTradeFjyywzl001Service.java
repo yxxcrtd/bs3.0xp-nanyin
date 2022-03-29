@@ -92,9 +92,13 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
                             continue;
                         }
                         //持仓数量，取交易的
-                        entity.setPositionsNum(selectActNum(DictCodeListExt3.资产类型_资产账户持仓.getValue(),secDto));
+                        BigDecimal  positionsNum=selectActNum(DictCodeListExt3.资产类型_资产账户持仓.getValue(),secDto);
+                        positionsNum=ArithmeticUtil.divide(positionsNum,100,0);
+                        entity.setPositionsNum(positionsNum);
                         //质押数量，取交易的
-                        entity.setRepoNum(selectActNum(DictCodeListExt3.资产类型_质押式通用回购入库质押券持仓.getValue(),secDto));
+                        BigDecimal  repoNum=selectActNum(DictCodeListExt3.资产类型_质押式通用回购入库质押券持仓.getValue(),secDto);
+                        repoNum=ArithmeticUtil.divide(repoNum,100,0);
+                        entity.setRepoNum(repoNum);
                         returnList.add(entity);
                     }
                     result.setRoot(returnList);
