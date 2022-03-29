@@ -871,14 +871,49 @@ public class InvestorsHoldInfoDistinctService {
 			   }
 	        	
 				//查询出对应的未报送登记信息
-	        	List<InvestorsHoldInfoRegist001Dto> list=chbInvestholdInfoCheckDtoMapper.queryInvestorsHoldInfoRegistByPkUnsubmit(keysList);
-	        	//更新正确的识别标识
-	        	//更新info表
-	        	chbInvestholdInfoCheckDtoMapper.updateUnMergeInvestorsHoldInfo(keysList);
-	        	//更新sub表
-	        	chbInvestholdInfoCheckDtoMapper.updateUnMergeInvestorsHoldInfoSub(keysList);
-	        	//更新check表
-	        	chbInvestholdInfoCheckDtoMapper.updateUnMergeInvestorsHoldInfoCheck(keysList);
+//	        	List<InvestorsHoldInfoRegist001Dto> list=chbInvestholdInfoCheckDtoMapper.queryInvestorsHoldInfoRegistByPkUnsubmit(keysList);
+				List<InvestorsHoldInfoRegist001Dto> list = new ArrayList<InvestorsHoldInfoRegist001Dto>();
+				int maxDataCountOneTime = this.parsToInt(reportSelectOrDeleteCount, "2");
+				int dataCount = listR.size();
+				if (dataCount <= maxDataCountOneTime) {
+					list.addAll(chbInvestholdInfoCheckDtoMapper.queryInvestorsHoldInfoRegistByPkUnsubmit(listR));
+					//更新正确的识别标识
+					//更新info表
+					chbInvestholdInfoCheckDtoMapper.updateUnMergeInvestorsHoldInfo(listR);
+					//更新sub表
+					chbInvestholdInfoCheckDtoMapper.updateUnMergeInvestorsHoldInfoSub(listR);
+					//更新check表
+					chbInvestholdInfoCheckDtoMapper.updateUnMergeInvestorsHoldInfoCheck(listR);
+				} else {
+					List<InvestorsHoldInfo001Dto> newKeyList = new ArrayList<InvestorsHoldInfo001Dto>();
+					newKeyList.addAll(listR);
+
+					// 分批处理
+					int part = dataCount / maxDataCountOneTime; // 分批数
+					for (int i = 0; i < part; i++) {
+						list.addAll(
+								chbInvestholdInfoCheckDtoMapper.queryInvestorsHoldInfoRegistByPkUnsubmit(newKeyList.subList(0, maxDataCountOneTime)));
+						//更新正确的识别标识
+						//更新info表
+						chbInvestholdInfoCheckDtoMapper.updateUnMergeInvestorsHoldInfo(newKeyList.subList(0, maxDataCountOneTime));
+						//更新sub表
+						chbInvestholdInfoCheckDtoMapper.updateUnMergeInvestorsHoldInfoSub(newKeyList.subList(0, maxDataCountOneTime));
+						//更新check表
+						chbInvestholdInfoCheckDtoMapper.updateUnMergeInvestorsHoldInfoCheck(newKeyList.subList(0, maxDataCountOneTime));
+						newKeyList.subList(0, maxDataCountOneTime).clear();
+					}
+					// 最后剩下的数据
+					if (CollectionUtils.isNotEmpty(newKeyList)) {
+						list.addAll(chbInvestholdInfoCheckDtoMapper.queryInvestorsHoldInfoRegistByPkUnsubmit(newKeyList));
+						//更新正确的识别标识
+						//更新info表
+						chbInvestholdInfoCheckDtoMapper.updateUnMergeInvestorsHoldInfo(newKeyList);
+						//更新sub表
+						chbInvestholdInfoCheckDtoMapper.updateUnMergeInvestorsHoldInfoSub(newKeyList);
+						//更新check表
+						chbInvestholdInfoCheckDtoMapper.updateUnMergeInvestorsHoldInfoCheck(newKeyList);
+					}
+				}
 	        	//更新原检查表和登记表检查检查状态
 				dochecksafe(list);
 			}
