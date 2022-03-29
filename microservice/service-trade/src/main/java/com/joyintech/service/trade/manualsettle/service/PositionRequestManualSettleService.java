@@ -368,11 +368,9 @@ public class PositionRequestManualSettleService {
             else if(DictCodeListExt3.交易方向_到期购回.getValue().equals(infContractDetailfile.getPs())
                     || DictCodeListExt3.交易方向_提前购回.getValue().equals(infContractDetailfile.getPs())){
                 map.put("cashAcctId", infContractDetailfile.getAcctNo());
-                // 查询首期交易信息
-                // ZGTFCP-2097:需要查询首期 modif by fuyongsheng 20220329 start
-                FinTradeProduct finTradeProduct = getSqFinTradeProduct(infContractDetailfile);
-                // ZGTFCP-2097:需要查询首期 modif by fuyongsheng 20220329 end
-                map.put("cashAmount", finTradeProduct != null ? finTradeProduct.getmTradeAmt() : new BigDecimal(0));
+                // ZGTFCP-2114:登陆当前的到期结算金额 modify by fuyongsheng 20220329 start
+                map.put("cashAmount", entity.getmTradeAmt());
+                // ZGTFCP-2114:登陆当前的到期结算金额 modify by fuyongsheng 20220329 end
             }
             // ZGTFCP-2045:到期购回需要登录首期的到期结算金额 modify by fuyongsheng 20220327 end
             else{
