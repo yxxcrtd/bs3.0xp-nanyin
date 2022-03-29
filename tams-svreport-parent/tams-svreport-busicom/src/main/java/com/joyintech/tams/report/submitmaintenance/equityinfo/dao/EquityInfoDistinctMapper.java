@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.common.base.entity.ChbEquTmp;
+import com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -72,6 +73,6 @@ public interface EquityInfoDistinctMapper {
      * 查询登记表数据 出检查结果用
      * @return
      */
-    List<EquityInfoRegist001Dto> queryEquityInfoRegistByPkUnsubmit(@Param("keys")List<String> keys);
+    List<EquityInfoRegist001Dto> queryEquityInfoRegistByPkUnsubmit(@Param("newKeyList")List<EquityInfo001Dto> newKeyList );
     
 }

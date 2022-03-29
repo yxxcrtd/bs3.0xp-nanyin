@@ -16,6 +16,8 @@ import com.joyintech.tams.report.interf.common.imp.ImportGenerator;
 import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpColumn;
 import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
 import com.joyintech.tams.report.investormerger.dao.ChbInvestholdInfoCheckDtoMapper;
+import com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto;
+import com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.InvestorsHoldInfoRegist001Dto;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -89,6 +91,12 @@ public class EquityInfoDistinctService {
 	 */
 	@Value("${application.reportSelectOrDeleteCount}")
 	public int reportSelectOrDeleteCount;
+
+	/**
+	 * 查询或者删除一次最大sql数
+	 */
+	@Value("${application.reportSelectOrDeleteCount}")
+	public String reportSelectOrDeleteCountString;
 	
 	/**
 	 * check表 单次更新条数（合并后识别标识）
@@ -722,7 +730,7 @@ public class EquityInfoDistinctService {
 	 * @param keys
 	 */
 //	@SuppressWarnings("rawtypes")
-	private List<EquityInfoRegist001Dto> getEquInfoSubList(List<String> keys,int type){
+	private List<EquityInfoRegist001Dto> getEquInfoSubList(List<EquityInfo001Dto> list,int type){
 		List<EquityInfoRegist001Dto> resultList = new ArrayList<EquityInfoRegist001Dto>();
 //		int maxDataCountOneTime =(null == reportSelectOrDeleteCountForShenFen ? 100:Integer.parseInt(reportSelectOrDeleteCountForShenFen));
 //        int dataCount = 0;
@@ -746,7 +754,28 @@ public class EquityInfoDistinctService {
 //        	if(0 == type){
 //        		resultList = equityInfoDistinctMapper.queryAllEquityInfoConStrastYbs(keys);
 //        	}else{
-		resultList = equityInfoDistinctMapper.queryEquityInfoRegistByPkUnsubmit(keys);
+//		resultList = equityInfoDistinctMapper.queryEquityInfoRegistByPkUnsubmit(keys);
+		int maxDataCountOneTime = this.parsToInt(reportSelectOrDeleteCountString, "2");
+		int dataCount = list.size();
+		if (dataCount <= maxDataCountOneTime) {
+			resultList.addAll(equityInfoDistinctMapper.queryEquityInfoRegistByPkUnsubmit(list));
+		} else {
+			List<EquityInfo001Dto> newKeyList = new ArrayList<EquityInfo001Dto>();
+			newKeyList.addAll(list);
+
+			// 分批处理
+			int part = dataCount / maxDataCountOneTime; // 分批数
+			for (int i = 0; i < part; i++) {
+				resultList.addAll(
+						equityInfoDistinctMapper.queryEquityInfoRegistByPkUnsubmit(newKeyList.subList(0, maxDataCountOneTime)));
+				//更新正确的识别标识
+				newKeyList.subList(0, maxDataCountOneTime).clear();
+			}
+			// 最后剩下的数据
+			if (CollectionUtils.isNotEmpty(newKeyList)) {
+				resultList.addAll(equityInfoDistinctMapper.queryEquityInfoRegistByPkUnsubmit(newKeyList));
+			}
+		}
 //        	}
 //            return resultList;
 //        }
@@ -1396,7 +1425,7 @@ public class EquityInfoDistinctService {
 //				chbEquHoldCheckDtoMapper.deleteEquityInfoBatch(keys);
 //	        	chbEquHoldCheckDtoMapper.deleteEquitySubInfoBatch(keys);
 				//查询出对应的未报送登记信息
-				List<EquityInfoRegist001Dto> djlist= getEquInfoSubList(keys,1);
+				List<EquityInfoRegist001Dto> djlist= getEquInfoSubList(listR,1);
 				checkAllData(listR, getKeys(listR),"01");
 				//更新原检查表和登记表检查检查状态
 				dochecksafe(djlist,"02");
@@ -1452,7 +1481,7 @@ public class EquityInfoDistinctService {
 //				chbEquHoldCheckDtoMapper.deleteEquityInfoBatch(keys);
 //	        	chbEquHoldCheckDtoMapper.deleteEquitySubInfoBatch(keys);
 				//查询出对应的未报送登记信息
-				List<EquityInfoRegist001Dto> djlist = getEquInfoSubList(keys1,1);
+				List<EquityInfoRegist001Dto> djlist = getEquInfoSubList(listN,1);
 				//更新原检查表和登记表检查检查状态
 				dochecksafe(djlist,"01");
 				if("01".equals(type)){

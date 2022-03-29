@@ -951,17 +951,13 @@
 		FROM chb_equ_hold)
 		) s1
 	</select>
-	<select id="queryInvestorsHoldInfoRegistByPkUnsubmit" resultMap="DJResultMap" parameterType="java.util.List">
+	<select id="queryInvestorsHoldInfoRegistByPkUnsubmit" resultMap="DJResultMap" parameterType="com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto">
 		SELECT * from
 		CHB_INVESTHOLD_INFO_sub
 		where SEND_STATUS='01'
-		<if test="keys !=null and keys.size()>0">
-			AND concat_ws('_',REGIST_BANK_CODE,INDENTIFY_MARK,CCY,DATE_FORMAT(HOLD_DATE,'%Y-%m-%d'),PRODID)
-			IN
-			<foreach collection="keys" item="key" open="(" separator=","  close=")">
-				#{key,jdbcType=VARCHAR}
-			</foreach>
-		</if>
+		<foreach collection="newKeyList" item="item" open="AND (ciis.REGIST_BANK_CODE,ciis.INDENTIFY_MARK,ciis.CCY,ciis.HOLD_DATE,ciis.PRODID) in( values" separator="," close=")">
+			(#{item.registBankCode},#{item.indentifyMark},#{item.ccy},#{item.holdDate},#{item.prodid})
+		</foreach>
 	</select>
 	<delete id="deleteInvestholdInfoBatch" parameterType="java.util.List">
 		delete from CHB_INVESTHOLD_INFO
@@ -983,31 +979,28 @@
 			#{key,jdbcType=VARCHAR}
 		</foreach>
 	</delete>
-	<update id="updateUnMergeInvestorsHoldInfo">
+	<update id="updateUnMergeInvestorsHoldInfo" parameterType="com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto">
 		update CHB_INVESTHOLD_INFO info set info.INDENTIFY_MARK=(select MERGER_INDENTIFY_MARK from CHB_EQU_HOLD_CHECK cc
 		where info.INDENTIFY_MARK=cc.INDENTIFY_MARK or info.INDENTIFY_MARK=cc.ORG_INDENTIFY_MARK )
-		where concat_ws('_',info.REGIST_BANK_CODE,info.INDENTIFY_MARK,info.CCY,DATE_FORMAT(info.HOLD_DATE,'%Y-%m-%d'),info.PRODID)
-		IN
-		<foreach collection="keys" item="key" open="(" separator=","  close=")">
-			#{key,jdbcType=VARCHAR}
+		where
+		<foreach collection="newKeyList" item="item" open="(info.REGIST_BANK_CODE,info.INDENTIFY_MARK,info.CCY,info.HOLD_DATE,info.PRODID) in( values" separator="," close=")">
+			(#{item.registBankCode},#{item.indentifyMark},#{item.ccy},#{item.holdDate},#{item.prodid})
 		</foreach>
 	</update>
-	<update id="updateUnMergeInvestorsHoldInfoSub">
+	<update id="updateUnMergeInvestorsHoldInfoSub" parameterType="com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto">
 		update CHB_INVESTHOLD_INFO_SUB info set info.INDENTIFY_MARK=(select MERGER_INDENTIFY_MARK from CHB_EQU_HOLD_CHECK cc
 		where info.INDENTIFY_MARK=cc.INDENTIFY_MARK or info.INDENTIFY_MARK=cc.ORG_INDENTIFY_MARK )
-		where concat_ws('_',info.REGIST_BANK_CODE,info.INDENTIFY_MARK,info.CCY,DATE_FORMAT(info.HOLD_DATE,'%Y-%m-%d'),info.PRODID)
-		IN
-		<foreach collection="keys" item="key" open="(" separator=","  close=")">
-			#{key,jdbcType=VARCHAR}
+		where
+		<foreach collection="newKeyList" item="item" open="(info.REGIST_BANK_CODE,info.INDENTIFY_MARK,info.CCY,info.HOLD_DATE,info.PRODID) in( values" separator="," close=")">
+			(#{item.registBankCode},#{item.indentifyMark},#{item.ccy},#{item.holdDate},#{item.prodid})
 		</foreach>
 	</update>
-	<update id="updateUnMergeInvestorsHoldInfoCheck">
+	<update id="updateUnMergeInvestorsHoldInfoCheck" parameterType="com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto">
 		update CHB_INVESTHOLD_INFO_CHECK info set info.MERGER_INDENTIFY_MARK=(select MERGER_INDENTIFY_MARK from CHB_EQU_HOLD_CHECK cc
 		where info.INDENTIFY_MARK=cc.INDENTIFY_MARK or info.INDENTIFY_MARK=cc.ORG_INDENTIFY_MARK )
-		where concat_ws('_',info.REGIST_BANK_CODE,info.MERGER_INDENTIFY_MARK,info.CCY,DATE_FORMAT(info.HOLD_DATE,'%Y-%m-%d'),info.PRODID)
-		IN
-		<foreach collection="keys" item="key" open="(" separator=","  close=")">
-			#{key,jdbcType=VARCHAR}
+		where
+		<foreach collection="newKeyList" item="item" open="(info.REGIST_BANK_CODE,info.INDENTIFY_MARK,info.CCY,info.HOLD_DATE,info.PRODID) in( values" separator="," close=")">
+			(#{item.registBankCode},#{item.indentifyMark},#{item.ccy},#{item.holdDate},#{item.prodid})
 		</foreach>
 	</update>
 

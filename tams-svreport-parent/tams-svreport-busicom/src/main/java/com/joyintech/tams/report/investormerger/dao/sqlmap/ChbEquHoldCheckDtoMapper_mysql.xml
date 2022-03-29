@@ -920,22 +920,22 @@
   	</delete>
 
 	<insert id="insertByBatch" parameterType="java.util.List" >
-		begin
-		<foreach collection ="keyList" item="item" separator =";">
-			insert into CHB_EQU_HOLD_CHECK (INDENTIFY_MARK, ORG_INDENTIFY_MARK,
-			REGIST_BANK_CODE, IS_BELONG_BANK, THE_BANK_NAME,
-			THE_BANK_CODE, HOLDER_MARK, HOLDER_REGION,
-			HOLDER_TYPE, PERSONAL_IDENTIFY_TYPE, INSTITUTION_IDENTIFY_TYPE,
-			OTHER_IDENTIFY_NAME, IDENTIFY_NUMBER, SPV_CAP_ACC_BANK,
-			OTHER_CAP_ACC_BANK, SPV_REGIST_CODE, HOLDER_DATE,
-			HOLDER_NAME, HOLDER_SEX, HOLDER_RISK_PREFER,
-			HOLDER_CELLPHONE, HOLDER_TELEPHONE, IS_SUBMIT,
-			HOLDER_EMAIL, REMARK, STATUS,
-			WORKFLOW_ID, DEPT_CODE, UPDATE_USER,
-			UPDATE_TIME, CREATE_USER, CREATE_TIME,DATA_DATE,
-			DATA_SOURCE, ORG_CODE, AGENT,
-			CREATE_DEPT, INTERF_CHECK_RESULT,OPERATE_STATUS,MERGER_INDENTIFY_MARK,HOLDER_CLASSIFY,FUND_ACC_PLACE
-			) values (
+		insert into CHB_EQU_HOLD_CHECK (INDENTIFY_MARK, ORG_INDENTIFY_MARK,
+		REGIST_BANK_CODE, IS_BELONG_BANK, THE_BANK_NAME,
+		THE_BANK_CODE, HOLDER_MARK, HOLDER_REGION,
+		HOLDER_TYPE, PERSONAL_IDENTIFY_TYPE, INSTITUTION_IDENTIFY_TYPE,
+		OTHER_IDENTIFY_NAME, IDENTIFY_NUMBER, SPV_CAP_ACC_BANK,
+		OTHER_CAP_ACC_BANK, SPV_REGIST_CODE, HOLDER_DATE,
+		HOLDER_NAME, HOLDER_SEX, HOLDER_RISK_PREFER,
+		HOLDER_CELLPHONE, HOLDER_TELEPHONE, IS_SUBMIT,
+		HOLDER_EMAIL, REMARK, STATUS,
+		WORKFLOW_ID, DEPT_CODE, UPDATE_USER,
+		UPDATE_TIME, CREATE_USER, CREATE_TIME,DATA_DATE,
+		DATA_SOURCE, ORG_CODE, AGENT,
+		CREATE_DEPT, INTERF_CHECK_RESULT,OPERATE_STATUS,MERGER_INDENTIFY_MARK,HOLDER_CLASSIFY,FUND_ACC_PLACE
+		)
+		<foreach collection="List" index="index" item = "item" separator="UNION ALL">
+			select
 			#{item.indentifyMark,jdbcType=VARCHAR},
 			#{item.orgIndentifyMark,jdbcType=VARCHAR},
 			#{item.registBankCode,jdbcType=VARCHAR}, #{item.isBelongBank,jdbcType=CHAR}, #{item.theBankName,jdbcType=VARCHAR},
@@ -951,9 +951,8 @@
 			sysdate,#{item.dataSource,jdbcType=CHAR}, #{item.orgCode,jdbcType=VARCHAR}, #{item.agent,jdbcType=VARCHAR},
 			#{item.createDept,jdbcType=VARCHAR}, #{item.interfCheckResult,jdbcType=VARCHAR}, #{item.operatestatus,jdbcType=VARCHAR}
 			, #{item.mergerindentifymark,jdbcType=VARCHAR},#{item.holderClassify,jdbcType=VARCHAR},#{item.fundAccPlace,jdbcType=VARCHAR}
-			)
+			from dual
 		</foreach>
-		;end;
 	</insert>
 
 	<update id="updateMergerIndentifyMarkByBatch" parameterType="java.util.List">
