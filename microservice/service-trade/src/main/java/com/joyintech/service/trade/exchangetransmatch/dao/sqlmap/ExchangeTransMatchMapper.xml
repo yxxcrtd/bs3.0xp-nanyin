@@ -166,11 +166,12 @@
 
     <select id="findEntrustPage" resultType="com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch003Dto">
         SELECT
+                DISTINCT
                 A1.ENTRUST_ID entrustId,
                 D1.TARGET_TYPE targetType,
                 A1.UPDATE_TIME updateTime,
                 #{TRADE_TYPE_02} tradeType,
-                A1.PORTFOLIO_ID portfolioId,
+                det.PORTFOLIO_ID portfolioId,
                 CASE
                 WHEN A1.ENTRUST_CLASS = #{ENTRUST_CLASS_02} THEN
                     det.PORTFOLIO_NAME
@@ -516,12 +517,12 @@
         A.ENTRUNST_TRADE_ID busiCode,
         C.TRADE_MARKET tradeMarket,
         C.APPLY_TRADE_ID applyTradeId,
-        D.PORTFOLIO_ID portfolioId,
+        det.PORTFOLIO_ID portfolioId,
         CASE
         WHEN D.ENTRUST_CLASS =  #{ENTRUST_CLASS_02} THEN
-            F.PORTFOLIO_NAME
+            det.PORTFOLIO_NAME
         ELSE
-            F.PORTFOLIO_NAME
+            det.PORTFOLIO_NAME
         END portfolioName,
         CASE
             WHEN C.SEC_TYPE = #{SEC_TYPE_09} THEN NULL
@@ -563,9 +564,8 @@
         ON E.FINPROD_ID = C.FINPROD_ID
         LEFT JOIN PTL_PORTFOLIO F
         ON D.PORTFOLIO_ID = F.PORTFOLIO_ID
-        LEFT JOIN ETR_ENTRUST_DETAIL F1
-        ON D.PORTFOLIO_ID = F1.PORTFOLIO_ID
-        AND F1.PORTFOLIO_ID IS NOT NULL
+        LEFT JOIN (SELECT ENTRUST_ID, wm_concat ( ETR_ENTRUST_DETAIL.PORTFOLIO_ID ) PORTFOLIO_ID,  wm_concat ( PORTFOLIO_NAME ) PORTFOLIO_NAME FROM ETR_ENTRUST_DETAIL LEFT JOIN PTL_PORTFOLIO
+        ON ETR_ENTRUST_DETAIL.portfolio_id = PTL_PORTFOLIO.portfolio_id GROUP BY ENTRUST_ID ) det on det.ENTRUST_ID = D.ENTRUST_ID
         <where>
             <if test="matchType!=null and matchType!='' ">
                 AND A.MATCH_CLASS = #{matchType}
