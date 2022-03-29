@@ -84,6 +84,7 @@ public class PositionUtil {
                             for (int i=0; i<checkResults.size();i++){
                                 BaseMap flow = BaseMap.newMap((Map) checkResults.get(i));
                                 BigDecimal CHECKBALANCE = flow.getBigDecimal("CHECKBALANCE");
+                                String UNIT = flow.getString("UNIT");
                                 String PORTFOLIO_ID = flow.getString("PORTFOLIO_ID");
                                 String HODING_TYPE = flow.getString("HODING_TYPE");
                                 PtlPortfolio obj = ptlPortfolioMapper.selectByPrimaryKey(PORTFOLIO_ID);
@@ -100,7 +101,7 @@ public class PositionUtil {
 //                                strb.append(CHECKBALANCE.toPlainString());
                                 strb.append("【");
                                 strb.append(SysDataUtil.getNameFromDataDict(DictCode.头寸资产类型, HODING_TYPE));
-                                strb.append("】余额不足，当前余额为：").append(CHECKBALANCE.toPlainString());
+                                strb.append("】余额不足，当前余额为：").append(CHECKBALANCE.toPlainString()).append(UNIT.toString());
                                 if ((i+1) == checkResults.size()){
                                     strb.append("<br/>");
                                 }else{
