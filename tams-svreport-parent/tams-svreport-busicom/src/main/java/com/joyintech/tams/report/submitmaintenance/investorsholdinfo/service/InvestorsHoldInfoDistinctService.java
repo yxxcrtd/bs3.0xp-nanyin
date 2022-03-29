@@ -744,12 +744,18 @@ public class InvestorsHoldInfoDistinctService {
 	@Transactional(propagation = Propagation.REQUIRES_NEW,rollbackFor = Exception.class)
     public void mergeInvestorsHoldInfolist(String type, String interType) {
 	//删除info表中存在check表MergeIndentyMark的当日数据
+	logger.info("deleteByBankcodeAndIndentifyMarkWH 开始");
 	chbInvestholdInfoCheckDtoMapper.deleteByBankcodeAndIndentifyMarkWH();
+	logger.info("deleteByBankcodeAndIndentifyMarkWH 结束");
 	//删除sub表中存在check表MergeIndentyMark的当日数据
+	logger.info("deleteByBankcodeAndIndentifyMarkDJ 开始");
 	chbInvestholdInfoCheckDtoMapper.deleteByBankcodeAndIndentifyMarkDJ();
+	logger.info("deleteByBankcodeAndIndentifyMarkDJ 结束");
 
 	// 查询需要合并的数据
+	logger.info("selectHbhChbInvestholdInfoUnmerged 开始");
 	List<InvestorsHoldInfo001Dto> resultList = chbInvestholdInfoCheckDtoMapper.selectHbhChbInvestholdInfoUnmerged();
+	logger.info("selectHbhChbInvestholdInfoUnmerged 开始");
 
 	/**** 数据处理,大批量删除导致速度降低,修改逻辑 **/
 	if (!resultList.isEmpty()) {
@@ -757,7 +763,10 @@ public class InvestorsHoldInfoDistinctService {
 	    this.deleteInvestholdInfoBatchGroupDto(resultList);
 	}
 	// 更新持有检查表数据状态
+	logger.info("updateChbInvestholdCheckAftermerged 开始");
 	chbInvestholdInfoCheckDtoMapper.updateChbInvestholdCheckAftermerged();
+	logger.info("updateChbInvestholdCheckAftermerged 开始");
+
 	// 插入维护及登记表
 	InvestorsHoldInfo001Service investorsHoldInfo001Service = SpringContextUtil.getBean(InvestorsHoldInfo001Service.class);
 	// 获取所有的产品登记编码

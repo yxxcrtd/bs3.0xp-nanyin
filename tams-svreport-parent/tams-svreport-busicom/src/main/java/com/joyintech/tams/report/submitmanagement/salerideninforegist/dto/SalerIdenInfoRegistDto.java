@@ -131,6 +131,7 @@ public class SalerIdenInfoRegistDto extends ChbSalerIdenSub implements ProcessEn
     /**
      * 理财专业证书
      */
+    @DictFormat(DictCode.销售人员理财专业证书)
     private String salerCertificateType;
 
     /**
@@ -141,6 +142,7 @@ public class SalerIdenInfoRegistDto extends ChbSalerIdenSub implements ProcessEn
     /**
      * 可销售产品风险等级
      */
+    @DictFormat(DictCode.可销售产品风险等级)
     private String salerRiskLevel;
 
     /**

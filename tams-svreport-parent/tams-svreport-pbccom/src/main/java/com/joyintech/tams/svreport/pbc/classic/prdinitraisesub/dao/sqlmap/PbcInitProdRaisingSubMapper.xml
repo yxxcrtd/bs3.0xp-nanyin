@@ -1554,7 +1554,7 @@
     <select id="searchListDetailOth" parameterType="map" resultMap="SearchResultMap">
       WITH tab as (select * from (
            select
-           'buyplace'||a.CUSTOMER_TYPE1||a.BUY_PLACE code,,
+           'buyplace'||a.CUSTOMER_TYPE1||a.BUY_PLACE code,
            list.ITEM_VALUE,a.BUY_PLACE,a.CUSTOMER_TYPE1, a.INIT_RAISING_AMTSUM je,a.INIT_RAISING_AMTSUMCNY zrmb,a.INIT_RAISING_QTY fe,
            RANK() OVER (PARTITION BY a.pbc_prod_id,a.BUY_PLACE,a.CUSTOMER_TYPE1,a.CCY ORDER BY NVL(a.STATUS_DATE,a.CREATE_TIME) DESC) RANKNUM
            from PBC_INIT_PROD_RAISING_SUB a

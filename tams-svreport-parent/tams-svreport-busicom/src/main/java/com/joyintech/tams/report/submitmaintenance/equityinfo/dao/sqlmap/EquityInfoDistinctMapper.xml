@@ -523,17 +523,6 @@
 				 and nvl(HOLD.INSTITUTION_IDENTIFY_TYPE,' ') = nvl(tmp.INSTITUTION_IDENTIFY_TYPE,' ')
 				 and nvl(HOLD.OTHER_IDENTIFY_NAME,' ') = nvl(tmp.OTHER_IDENTIFY_NAME,' ')
 				 )
-				 <!--			     <if test="keys !=null and keys.size()==1">-->
-<!--			        AND REGIST_BANK_CODE-->
-<!--			            ||'_'||IDENTIFY_NUMBER-->
-<!--			            ||'_'||HOLDER_NAME-->
-<!--			            ||'_'||PERSONAL_IDENTIFY_TYPE-->
-<!--			            ||'_'||INSTITUTION_IDENTIFY_TYPE-->
-<!--			            ||'_'||OTHER_IDENTIFY_NAME IN-->
-<!--			        <foreach collection="keys" item="key" open="(" separator=","  close=")">-->
-<!--			            #{key,jdbcType=VARCHAR}-->
-<!--			        </foreach>-->
-<!--			    </if> -->
 				 /*** add by zcw 三期性能优化 end **/
 			 	/*未报送*/
 		        AND NOT EXISTS( SELECT 1 FROM CHB_EQU_SUB T
@@ -600,17 +589,6 @@
 		and nvl(HOLDCHECK.INSTITUTION_IDENTIFY_TYPE,' ') = nvl(tmp.INSTITUTION_IDENTIFY_TYPE,' ')
 		and nvl(HOLDCHECK.OTHER_IDENTIFY_NAME,' ') = nvl(tmp.OTHER_IDENTIFY_NAME,' ')
 		)
-<!--		<if test="keys !=null and keys.size()==1">-->
-<!--		        AND HOLDCHECK.REGIST_BANK_CODE-->
-<!--		            ||'_'||HOLDCHECK.IDENTIFY_NUMBER-->
-<!--		            ||'_'||HOLDCHECK.HOLDER_NAME-->
-<!--		            ||'_'||HOLDCHECK.PERSONAL_IDENTIFY_TYPE-->
-<!--		            ||'_'||HOLDCHECK.INSTITUTION_IDENTIFY_TYPE-->
-<!--		            ||'_'||HOLDCHECK.OTHER_IDENTIFY_NAME IN-->
-<!--		        <foreach collection="keys" item="key" open="(" separator=","  close=")">-->
-<!--		            #{key,jdbcType=VARCHAR}-->
-<!--		        </foreach>-->
-<!--			 </if> -->
 		/*** add by zcw 三期性能优化 end **/
 	</select>
 	
