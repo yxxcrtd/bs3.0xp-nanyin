@@ -643,9 +643,9 @@
 					OR to_char(y.I_Q_B_SHARE_AMT/100,'FM99999.90')=#{keywords}
 					OR to_char(y.I_Q_B_D_PRIN_AMT/10000,'FM99999')=#{keywords}
 					OR y.I_Q_B_SETTLE_SPEED LIKE '%' || decode(#{keywords},'T+0','0','T+1','1','T+2','2',#{keywords})||'%'
-					OR to_char(y.I_Q_B_D_UNIT_CPRICE,'FM99990.9999')=#{keywords} or  y.I_Q_B_D_UNIT_CPRICE||'' =#{keywords}
-					OR to_char(y.I_Q_B_D_YIELD*100,'FM99990.9999')=#{keywords} or  y.I_Q_B_D_YIELD||'' =#{keywords}
-					OR to_char(y.I_Q_B_D_EXER_YIELD*100,'FM99990.9999')=#{keywords} or   y.I_Q_B_D_EXER_YIELD||'' =#{keywords}
+					OR to_char(y.I_Q_B_D_UNIT_CPRICE,'FM99990.9990')=#{keywords} or  y.I_Q_B_D_UNIT_CPRICE||'' =#{keywords}
+					OR to_char(y.I_Q_B_D_YIELD*100,'FM99990.9990')=#{keywords} or  y.I_Q_B_D_YIELD||'' =#{keywords}
+					OR to_char(y.I_Q_B_D_EXER_YIELD*100,'FM99990.9990')=#{keywords} or   y.I_Q_B_D_EXER_YIELD||'' =#{keywords}
 					OR y.I_Q_B_CFETS_QUOTE_ID like '%' || #{keywords} || '%'
 					OR y.I_Q_B_D_EXECID LIKE '%' || #{keywords} || '%'
 					OR y.I_Q_B_QUOTE_ID LIKE  '%'||#{keywords}||'%')

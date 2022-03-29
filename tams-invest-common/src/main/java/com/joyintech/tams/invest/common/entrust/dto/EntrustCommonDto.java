@@ -1,5 +1,6 @@
 package com.joyintech.tams.invest.common.entrust.dto;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -38,6 +39,8 @@ public class EntrustCommonDto {
     private List<EtrEntrustDetail> etrEntrustDetailList;
 
     private String isExistNew;
+
+    private BigDecimal forcedFinishAmt;
 
     public BussRepoSecDto getBussRepoSecDto() {
         return bussRepoSecDto;
@@ -109,5 +112,13 @@ public class EntrustCommonDto {
 
     public void setIsExistNew(String isExistNew) {
         this.isExistNew = isExistNew;
+    }
+
+    public BigDecimal getForcedFinishAmt() {
+        return forcedFinishAmt;
+    }
+
+    public void setForcedFinishAmt(BigDecimal forcedFinishAmt) {
+        this.forcedFinishAmt = forcedFinishAmt;
     }
 }
