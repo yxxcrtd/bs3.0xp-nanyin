@@ -125,12 +125,18 @@ public class OrderController {
     @ApiOperation(value = "普通委托复核", notes = "普通委托复核", hidden = true)
     @RequestMapping(value = "/order/review", method = RequestMethod.POST)
     public Message<ReviewDto> sendOrderWithReview(@RequestParam String userId, @RequestBody ReviewDto dto) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(dto);
+    	}
         return new Message<ReviewDto>(orderManagement.sendOrderWithReview(userId, dto));
     }
 
     @ApiOperation(value = "综合业务委托复核", notes = "综合业务委托复核", hidden = true)
     @RequestMapping(value = "/order/integratedEntrust/review", method = RequestMethod.POST)
     public Message<TrdExchangeDto> sendOrderWithReview(@RequestParam String userId, @RequestBody TrdExchangeDto dto) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(dto);
+    	}
         return new Message<TrdExchangeDto>(orderManagement.sendIntegratedEntrustWithReview(userId, dto));
     }
 
@@ -144,6 +150,9 @@ public class OrderController {
     @ApiOperation(value = "算法单创建", notes = "算法单创建", hidden = true)
     @RequestMapping(value = "/order/algorithm", method = RequestMethod.POST)
     public Message<Algorithm> createAlgorithm(@RequestParam String userId, @RequestBody AlgorithmPlaceBean algorithm) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(algorithm);
+    	}
         return new Message<Algorithm>(orderManagement.createAlgorithm(userId, algorithm));
     }
 
@@ -157,6 +166,9 @@ public class OrderController {
     @ApiOperation(value = "算法单取消", notes = "算法单取消", hidden = true)
     @RequestMapping(value = "/order/algorithm/cancel", method = RequestMethod.POST)
     public Message<Algorithm> cancelAlgorithm(@RequestParam String algorithmId) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(null);
+    	}
         return new Message<Algorithm>(orderManagement.cancelAlgorithm(algorithmId));
     }
 
