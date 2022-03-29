@@ -233,4 +233,14 @@ public interface CfetsIbuQuoteRepoMapper {
      * @since 1.0
      */
     ProcessMark getBusinessInfoByPageIdAndPk(WflValidInputParameter wflValidInputParameter);
+
+    /**
+     * 查询指令完成额度
+     *
+     * @param param
+     * @return java.math.BigDecimal
+     * @author jiangpeng
+     * @date 2022/3/29 10:57
+     */
+    BigDecimal selectFinshAmt(Map<String, Object> param);
 }

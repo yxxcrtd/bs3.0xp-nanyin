@@ -480,6 +480,8 @@
             on fin_trade_product.finprod_id = trd_fin_product_deal_total.finprod_id
             AND fin_trade_product.branch = trd_fin_product_deal_total.branch
             AND trd_fin_product_deal_total.ps in ('T96', 'T95', 'T93', 'T56', 'T07', 'T54')
+            AND trd_fin_product_deal_total.trade_status = '01'
+            AND trd_fin_product_deal_total.is_cancel = 'N'
         LEFT JOIN PTL_PORTFOLIO_AUTHORITY /** 组合权限表 **/
             ON PTL_PORTFOLIO.Portfolio_Id = PTL_PORTFOLIO_AUTHORITY.Portfolio_Id
         LEFT JOIN STL_SEC_ACCT_INFO SSAI

@@ -2,6 +2,7 @@ package com.joyintech.tams.invest.common.trade.service.impl;
 
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
@@ -65,6 +66,9 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
      */
     @Autowired
     private EtrEntrustMapper etrEntrustMapper;
+
+    @Autowired
+    private EtrEntrustAddMapper etrEntrustAddMapper;
 
     @Override
     public CommonResult executeEtrCashPosition(BaseTradeProductDealDto finProductTradeDto, DictCodeList 持仓类型,
@@ -335,23 +339,33 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
     }
     @Override
     public CommonResult entrustCloseExecute(String entrustId){
-        return this.entrustCloseExecute(entrustId,null);
+        return this.entrustCloseExecute(entrustId, null,null);
     }
 
     @Override
-    public CommonResult entrustCloseExecute(String entrustId,String isExistNew) {
+    public CommonResult entrustCloseExecute(String entrustId, String isExistNew){
+        return this.entrustCloseExecute(entrustId, isExistNew,null);
+    }
+
+    @Override
+    public CommonResult entrustCloseExecute(String entrustId, String isExistNew, BigDecimal forcedFinishAmt) {
         if (StringUtil.isNotEmpty(entrustId)) {
             EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(entrustId);
-            if(etrEntrust!=null&&etrEntrust.getEntrustClass()!=null&&StringUtil.equals(DictCodeListExt3.投资指令类型_多组合单资产指令.getValue(),etrEntrust.getEntrustClass())) {
+            if (etrEntrust != null && etrEntrust.getEntrustClass() != null && StringUtil.equals(DictCodeListExt3.投资指令类型_多组合单资产指令.getValue(), etrEntrust.getEntrustClass())) {
                 List<EntrustCommonDto> entrustCommonDtoList = EtrCommonCashPositionDealService.findEntrustMulti(entrustId);
-                if(!CollectionUtils.isEmpty(entrustCommonDtoList)) {
+                if (!CollectionUtils.isEmpty(entrustCommonDtoList)) {
                     entrustCommonDtoList.stream().forEach(entrustCommonDto -> {
                         entrustCommonDto.setIsExistNew(isExistNew);
                         entrustCloseExecuteSinglePortfolio(entrustCommonDto);
                     });
                 }
-            }else{
+            } else {
                 EntrustCommonDto entrustCommonDto = EtrCommonCashPositionDealService.findEntrust(entrustId);
+                // 委托指令附属表查询
+                EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(entrustId);
+                if (StringUtil.isNotEmpty(forcedFinishAmt)) {
+                    entrustCommonDto.setForcedFinishAmt(forcedFinishAmt);//强制完成额度
+                }
                 entrustCommonDto.setIsExistNew(isExistNew);
                 entrustCloseExecuteSinglePortfolio(entrustCommonDto);
             }
@@ -626,6 +640,8 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
                     && StringUtil.equals(etrEntrust.getTradeMarket(), DictCodeListExt1.交易场所_银行间.getValue())) {
                 return;
             }
+            // 委托指令附属表查询
+            etrEntrustAddMapper.updateByPrimaryKeySelective(etrEntrustAdd);
 
             if(etrEntrustAdd != null && !StringUtil.equals(etrEntrustAdd.getAssetType1(), DictCodeList.回购类型_质押式协议回购.getValue())){
                 etrPositionHoldDto.getPtlCashPositionFlows().forEach(etrCashPositionFlowDto -> etrCashPositionFlowDto.setCdate(platformDateImpl.getSysDate()));

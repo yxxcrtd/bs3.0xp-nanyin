@@ -151,13 +151,16 @@
                 , (NVL(T5.FINISH_AMT,0)+NVL(T7.ENT_FINISH_AMT,0))                                             finishAmt/*已完成额度(元)*/
                 , NVL(ETR_ENTRUST.ENTRUST_AMT, 0)
                     - NVL(T5.FINISH_AMT,0) - NVL(T7.ENT_FINISH_AMT,0)                                         avaNum/*剩余指令额度(元)*/
-                , ROUND(NVL(C.totalShareAmt,nvl(C2.FPRICE_AMT, 0))+NVL(T6.FINISH_AMT,0))                      finishDealAmt/*已成交额度(元)*/
-                , NVL(ETR_ENTRUST.ENTRUST_AMT, 0) -
-                        ROUND(NVL(C.totalShareAmt,nvl(C2.FPRICE_AMT, 0))+NVL(T6.FINISH_AMT,0))                avaDealAmt/*剩余成交额度(元)*/
+                , ROUND(NVL(C2.totalShareAmt,0))                                                              finishDealAmt/*已成交额度(元)*/
+                <if test="isInit ==null or isInit == ''">
+                    , ROUND(NVL(ETR_ENTRUST.ENTRUST_AMT, 0) - NVL(C2.totalShareAmt,0))                            avaDealAmt/*剩余成交额度(元)*/
+                </if>
+                <if test="isInit !=null and isInit != ''">
+                    , ROUND(NVL(ETR_ENTRUST.ENTRUST_AMT, 0) - NVL(ETR_ENTRUST_ADD.FORCED_FINISH_AMT,0) - NVL(C2.totalShareAmt,0))   avaDealAmt/*剩余成交额度(元)*/
+                </if>
                 , trunc(nvl(NVL(T5.FINISH_AMT, 0)+
                                        NVL(T7.ENT_FINISH_AMT, 0),0)/(ETR_ENTRUST.ENTRUST_AMT),4)*100          transactioncom/*执行进度(%)*/
-                , trunc((NVL(C.totalShareAmt,nvl(C2.FPRICE_AMT, 0))+NVL(T6.FINISH_AMT,0))
-                                                                /(ETR_ENTRUST.ENTRUST_AMT),4)*100             tradeFinishPercent/* 成交进度(%)*/
+                , trunc(NVL(C2.totalShareAmt,0)/(ETR_ENTRUST.ENTRUST_AMT),4)*100                              tradeFinishPercent/* 成交进度(%)*/
                 , ETR_ENTRUST.ENTRUST_AMT                                                                     entrustNum/*指令额度(元)*/
                 , ETR_ENTRUST.PORTFOLIO_ID                                                                    portfolioId/*组合代码*/
                 , PTL_PORTFOLIO.PORTFOLIO_NAME                                                                portfolioName/*组合名称*/
@@ -318,14 +321,12 @@
         <if test="repo_pledge_model != null and repo_pledge_model.equals('03')">
             LEFT JOIN ETR_SEC_STOCK ON ETR_SEC_STOCK.PLEDGE_STOCK_ID = ETR_ENTRUST_ADD.PLEDGE_STOCK_ID
         </if>
-            LEFT JOIN (SELECT iqer.ENTRUST_ID, SUM(nvl(iqer.FPRICE_AMT, 0)) totalShareAmt
-                          FROM IBU_QUOTE_ETR_RE iqer /*质押式回购银行间报价*/
-                          where QUOTE_ID in (select QUOTE_ID from IBU_QUOTE_CREP where TRADE_STATUS = '07')
-                          GROUP BY iqer.ENTRUST_ID) C /*质押式回购银行间报价 按指令代码汇总 交易份额，债券数量等*/
-                ON C.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
-            LEFT JOIN (SELECT iqer.ENTRUST_ID, iqer.FPRICE_AMT
-                      FROM IBU_QUOTE_ETR_RE iqer /*质押式回购银行间报价*/
-                      where QUOTE_ID in (select QUOTE_ID from IBU_QUOTE_CREP where TRADE_STATUS = '07')) C2/*质押式回购银行间报价*/
+            LEFT JOIN (select sum(SHARE_AMT) totalShareAmt,tpda.ENTRUST_ID
+                        from TRD_PRODUCT_DEAL tpd
+                        left join TRD_PRODUCT_DEAL_ADD tpda on tpd.TRADE_ID = tpda.TRADE_ID
+                        where tpd.IS_CANCEL = 'N' and tpd.TRADE_STATUS = '01'
+                        group by tpda.ENTRUST_ID
+                        ) C2/*质押式回购银行间报价*/
                 ON C2.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
             LEFT JOIN SYS_DATADICT_LIST D
                 ON ETR_ENTRUST.ENTRUST_STATUS = D.ITEM_CODE and D.DICT_CODE = 'ENTRUST_STATUS'/*指令状态参数字典 模糊查询用*/
@@ -441,7 +442,7 @@
                         ETR_ENTRUST.ENTRUST_STATUS like '%' || #{search} || '%' /*指令状态*/
                         OR D.ITEM_VALUE LIKE '%' || #{search} || '%' /*指令状态*/
                         OR to_char(trunc(nvl(NVL(T5.FINISH_AMT, 0)+NVL(T7.ENT_FINISH_AMT, 0),0)/(ETR_ENTRUST.ENTRUST_AMT),4)*100)  = #{search} /*执行进度(%)*/
-                        OR to_char(trunc((NVL(C.totalShareAmt,nvl(C2.FPRICE_AMT, 0))+NVL(T6.FINISH_AMT,0))/(ETR_ENTRUST.ENTRUST_AMT),4)*100) = #{search}/* 成交进度(%)*/
+                        OR to_char(trunc(NVL(C2.totalShareAmt, 0)/(ETR_ENTRUST.ENTRUST_AMT),4)*100) = #{search}/* 成交进度(%)*/
                         OR to_char(ETR_ENTRUST.ENTRUST_AMT,'FM9999999999999990.90') = #{search} /*指令额度(元)*/
                         OR ETR_ENTRUST.PORTFOLIO_ID LIKE '%' || #{search} || '%' /*组合代码*/
                         OR PTL_PORTFOLIO.PORTFOLIO_NAME LIKE '%' || #{search} || '%' /*组合名称*/
@@ -1369,14 +1370,14 @@
                 union all
                 select iqecp.ENTRUST_ID, iqecp.PLEDGE_FINPROD_ID FINPROD_ID, -1*iqecp.PLEDGE_NUMBER
                 from IBU_QUOTE_ENT_CREP_PLEDGE iqecp
-                <where>
-                    <if test="entrustIdList != null and entrustIdList.size() > 0">
-                        iqecp.ENTRUST_ID in
-                        <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
-                            #{item}
-                        </foreach>
-                    </if>
-                </where>
+                left join IBU_QUOTE_CREP iqc on iqc.QUOTE_ID = iqecp.QUOTE_ID
+                where iqc.SEND_STATUS = '01'
+                <if test="entrustIdList != null and entrustIdList.size() > 0">
+                    and iqecp.ENTRUST_ID in
+                    <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                        #{item}
+                    </foreach>
+                </if>
                 union all
                 select wiqecp.ENTRUST_ID, wiqecp.PLEDGE_FINPROD_ID FINPROD_ID, -1*wiqecp.PLEDGE_NUMBER
                 from wfl_IBU_QUOTE_ENT_CREP_PLEDGE wiqecp
@@ -1399,7 +1400,7 @@
     <select id="findEtrLastNumByEtrId" resultType="com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDealEntrustOrderDto">
         select sum(T.ENTRUST_AMT) avaNum ,IPAR.PARTY_ID,T.REPO_TERM,T.SETTLE_SPREED
         from (
-                 select nvl(ee.ENTRUST_AMT - nvl(rfpd.ENTRUST_AMT, 0) - nvl(wrfpd.TRADE_AMT, 0) - nvl(IBQER.ENTRUST_AMT, 0) -
+                 select nvl(ee.ENTRUST_AMT - nvl(eea.FORCED_FINISH_AMT, 0) - nvl(rfpd.ENTRUST_AMT, 0) - nvl(wrfpd.TRADE_AMT, 0) - nvl(IBQER.ENTRUST_AMT, 0) -
                        nvl(wiqer.FPRICE_AMT, 0),0) ENTRUST_AMT,
                        ee.PORTFOLIO_ID,
                        eea.TERM_DAYS            REPO_TERM,
@@ -2746,5 +2747,16 @@
                 </foreach>
             </if>
         </where>
+    </select>
+
+    <select id="selectFinshAmt" resultType="java.math.BigDecimal">
+        select nvl(sum(decode(deal.ps,#{PS_T01},deal.trade_amt,deal.share_amt)),0) as finishAmt
+        from trd_product_deal deal
+        inner join trd_product_deal_add ad
+        on deal.trade_id = ad.trade_id
+        where ad.entrust_id = #{entrustId}
+        and ad.portfolio_id = #{portfolioId}
+        and deal.trade_status = #{TRADE_STATUS_01}
+        and deal.is_cancel = #{YES_OR_NO_N}
     </select>
 </mapper>

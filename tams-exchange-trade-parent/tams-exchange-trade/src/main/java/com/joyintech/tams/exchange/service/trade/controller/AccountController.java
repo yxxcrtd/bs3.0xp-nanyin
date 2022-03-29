@@ -8,6 +8,8 @@ import com.joyintech.tams.exchange.common.domain.Message;
 import com.joyintech.tams.exchange.common.request.*;
 import com.joyintech.tams.exchange.service.trade.management.service.AccountManagement;
 import com.joyintech.tams.exchange.service.trade.management.service.AccountRiskParameterManagement;
+import com.joyintech.tams.exchange.util.MasterUtil;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,9 @@ public class AccountController {
     @ApiOperation(value = "账号查询", notes = "账号查询")
     @RequestMapping(value = "/account", method = RequestMethod.POST)
     public Message<List<CapitalAccountBean>> queryAccount(@RequestBody QueryAccountRequest queryAccountRequest) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(queryAccountRequest);
+    	}
         return new Message<List<CapitalAccountBean>>(accountManagement.queryAccount(queryAccountRequest.getAccountId()));
     }
 
@@ -44,6 +49,9 @@ public class AccountController {
     @ApiOperation(value = "账号连接", notes = "账号连接")
     @RequestMapping(value = "/account/connect", method = RequestMethod.POST)
     public Message<Object> connectAccount(@RequestBody ConnectAccountRequest connectAccountRequest) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(connectAccountRequest);
+    	}
         return new Message<Object>(accountManagement.connectAccount(connectAccountRequest.getAccountId(), connectAccountRequest.getConnectStatus()));
     }
 
@@ -53,6 +61,9 @@ public class AccountController {
     @ApiOperation(value = "账号数据比对", notes = "账号下委托和成交数据处理（处理类型（0：对比数据，1：全量覆盖，2：委托覆盖，3：成交覆盖）")
     @RequestMapping(value = "/account/compare", method = RequestMethod.POST)
     public Message<Object> compareAccount(@RequestBody CompareAccountRequest compareAccountRequest) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(compareAccountRequest);
+    	}
         return new Message<Object>(accountManagement.compareAccount(compareAccountRequest.getAccountId(), compareAccountRequest.getCompareType()));
     }
 
@@ -62,6 +73,9 @@ public class AccountController {
     @ApiOperation(value = "查询账户资金", notes = "查询账户资金")
     @RequestMapping(value = "/account/fund", method = RequestMethod.POST)
     public Message<Object> queryAccountFund(@RequestBody QueryAccountRequest queryAccountRequest) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(queryAccountRequest);
+    	}
         return new Message<Object>(accountManagement.queryAccountFund(queryAccountRequest.getAccountId()));
     }
 
@@ -112,6 +126,9 @@ public class AccountController {
     @ApiOperation(value = "查询资金账户下深证或上海可用标准券总数", notes = "查询资金账户下深证或上海可用标准券总数")
     @RequestMapping(value = "/account/standard/bond/available", method = RequestMethod.POST)
     public Message<Object> queryAccountStandardBonds(@RequestBody QueryAccountStandardBondsRequest queryAccountStandardBondsRequest) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(queryAccountStandardBondsRequest);
+    	}
         return new Message<Object>(accountManagement.queryAccountAvailableStandardBonds(queryAccountStandardBondsRequest.getAccountId(), queryAccountStandardBondsRequest.getMarket()));
     }
 
@@ -121,6 +138,9 @@ public class AccountController {
     @ApiOperation(value = "查询账号风控参数", notes = "查询账号风控参数")
     @RequestMapping(value = "/account/risk", method = RequestMethod.GET)
     public Message<Object> queryAccountRiskParam(@RequestBody QueryAccountRequest queryAccountRequest) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(queryAccountRequest);
+    	}
         return new Message<Object>(accountRiskParameterManagement.queryAccountRiskParam(queryAccountRequest.getAccountId()));
     }
 
@@ -130,6 +150,9 @@ public class AccountController {
     @ApiOperation(value = "添加账号风控参数", notes = "添加账号风控参数")
     @RequestMapping(value = "/account/risk/add", method = RequestMethod.POST)
     public Message<Object> addAccountRiskParam(@RequestBody AccountRiskParameter accountRiskParameter) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(accountRiskParameter);
+    	}
         return new Message<Object>(accountRiskParameterManagement.addAccountRiskParam(accountRiskParameter));
     }
 
@@ -139,6 +162,9 @@ public class AccountController {
     @ApiOperation(value = "修改账号风控参数", notes = "修改账号风控参数")
     @RequestMapping(value = "/account/risk/update", method = RequestMethod.POST)
     public Message<Object> updateAccountRiskParam(@RequestBody AccountRiskParameter accountRiskParameter) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(accountRiskParameter);
+    	}
         return new Message<Object>(accountRiskParameterManagement.updateAccountRiskParam(accountRiskParameter));
     }
 
@@ -148,6 +174,9 @@ public class AccountController {
     @ApiOperation(value = "删除账号风控参数", notes = "删除账号风控参数")
     @RequestMapping(value = "/account/risk/delete", method = RequestMethod.POST)
     public Message<Object> deleteAccountRiskParam(DeleteAccountRiskParamRequest deleteAccountRiskParamRequest) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(deleteAccountRiskParamRequest);
+    	}
         return new Message<Object>(accountRiskParameterManagement.deleteAccountRiskParam(deleteAccountRiskParamRequest.getAccountId()));
     }
 

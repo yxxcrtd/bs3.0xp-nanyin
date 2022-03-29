@@ -334,7 +334,11 @@
         FP.FINPROD_TYPE2 AS finprodType2,
         FP.TRADE_MARKET AS tradeMarket,
         SSAI.TRD_ACCT_ID AS acctId,
-        TEMP2.ACCT_NAME AS acctNo
+        TEMP2.ACCT_NAME AS acctNo,
+        (SELECT FSCR.SCALE from FIN_STDSEC_CONVERSE_RADIO FSCR where FSCR.FINPROD_ID =TEMP.FINPROD_ID AND
+        FSCR.VDATE <![CDATA[<=]]> #{date}
+        AND FSCR.MDATE <![CDATA[>=]]> #{date}   and rownum =1) discountRate
+
         FROM
         <!-- 实际持仓 -->
         (
@@ -467,4 +471,7 @@
             order by ${sort}  ${direction}
         </if>
     </select>
+
+
+
 </mapper>

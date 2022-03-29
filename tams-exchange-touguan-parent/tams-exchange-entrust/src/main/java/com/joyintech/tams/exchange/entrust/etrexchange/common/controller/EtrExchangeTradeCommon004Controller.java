@@ -27,6 +27,7 @@ import com.joyintech.tams.component.business.common.service.BasRiskMathCommServi
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.exchange.entrust.common.aop.ExchangeEntrustRdsCommonAop;
+import com.joyintech.tams.exchange.entrust.etrexchange.blocktrade.service.EtrExchangeBlockTrade001ValidatorService;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePortfolioRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest;
@@ -110,6 +111,9 @@ public class EtrExchangeTradeCommon004Controller extends BaseController {
 
     @Autowired
     private EtrExchangeTradeCommonValidatorService etrExchangeTradeCommonValidatorService;
+
+    @Autowired
+    private EtrExchangeBlockTrade001ValidatorService etrExchangeBlockTrade001ValidatorService;
 
     @Override
     public String init(Model model) {
@@ -787,7 +791,8 @@ public class EtrExchangeTradeCommon004Controller extends BaseController {
                 }
             }
         }
-        return ajax == null ? new AjaxResult("确认要提交?") : ajax;
+        return ajax == null || CollectionUtils.isEmpty(ajax.getErrorList()) ?
+                commonCheck(result, dto.getOperateType()): ajax;
     }
 
     /**
@@ -800,11 +805,16 @@ public class EtrExchangeTradeCommon004Controller extends BaseController {
      */
     public AjaxResult check(EtrExchangeTradeSaveRequest dto, BindingResult result) throws Exception {
         AjaxResult ajax = etrExchangeTrade001CommonService.checkSave(dto, result);
-        List<ValidMessage> validList = etrExchangeTradeCommonValidatorService.valid(dto);
+        List<ValidMessage> validList = null;
+        if (StringUtil.equals(dto.getCurrentTab(),"dz")){
+            validList = etrExchangeBlockTrade001ValidatorService.valid(dto);
+        }else{
+            validList = etrExchangeTradeCommonValidatorService.valid(dto);
+        }
         if (!CollectionUtils.isEmpty(validList)) {
             ajax.setErrorList(validList);
         }
-        return commonCheck(result, dto.getOperateType());
+        return ajax;
     }
 
     /**
