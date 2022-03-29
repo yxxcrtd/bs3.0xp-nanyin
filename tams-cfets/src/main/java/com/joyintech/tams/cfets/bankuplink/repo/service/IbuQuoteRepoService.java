@@ -404,6 +404,7 @@ public class IbuQuoteRepoService extends BaseService {
         CfetsRepoDealQuoteCommonDto cfetsRepoDealQuoteCommonDto = new CfetsRepoDealQuoteCommonDto();
         Map<String, Object> param = BeanUtil.object2Map(cfetsRepoDealQuoteRequest);
         setParam(param, 1);
+        param.put("isInit", "Y");
         // 指令信息查询
         List<CfetsRepoDealEntrustOrderDto> entrustDtos = cfetsIbuQuoteRepoMapper.listEntrust(param);
         setParam(param, 2);
@@ -2335,10 +2336,25 @@ public class IbuQuoteRepoService extends BaseService {
                 etrEntrust.setRemark(StringUtil.join(etrEntrust.getRemark(), (String) param.get("remark")));
                 // 修改委托指令表中值
                 int flag = etrEntrustMapper.updateByPrimaryKeySelective(etrEntrust);
+                // 委托指令附属表查询
+                EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(item.getEntrustId());
+                //获取已完成额度
+                Map<String, Object> params = new HashMap<>();
+                params.put("sumTradeFlag","01");
+                params.put("portfolioId",etrEntrust.getPortfolioId());
+                params.put("entrustId",etrEntrust.getEntrustId());
+                params.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());
+                params.put("YES_OR_NO_N", DictCodeList.是否_否.getValue());
+                params.put("PS_T01", DictCodeList.交易方向_买入.getValue());
+                BigDecimal finshAmt = cfetsIbuQuoteRepoMapper.selectFinshAmt(params);
+                BigDecimal entrustAmt = etrEntrust.getEntrustNum() != null ? etrEntrust.getEntrustNum() : etrEntrust.getEntrustAmt();
+                etrEntrustAdd.setForcedFinishAmt(ArithmeticUtil.subtract(entrustAmt, finshAmt));
+                etrEntrustAddMapper.updateByPrimaryKeySelective(etrEntrustAdd);
                 // 修改委托指令分发表中值 add by yangwenjun 20201209
                 baseEtrInvestInfoMapper.updatEetrDistribute(etrEntrust);
                 CfetsEtribBondInfo003Dto etrInvestBondInfoDto = new CfetsEtribBondInfo003Dto();
                 BeanUtil.copyPropertiesIgnoreNull(etrInvestBondInfoDto, item);
+                etrInvestBondInfoDto.setForcedFinishAmt(ArithmeticUtil.subtract(entrustAmt, finshAmt));
                 dtolist.add(etrInvestBondInfoDto);
             }
             List<String> entrustIdList = dtolist.stream().map(

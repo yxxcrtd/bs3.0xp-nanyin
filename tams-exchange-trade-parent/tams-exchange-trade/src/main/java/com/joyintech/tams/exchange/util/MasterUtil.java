@@ -1,5 +1,7 @@
 package com.joyintech.tams.exchange.util;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -12,7 +14,13 @@ import com.joyintech.tams.exchange.service.trade.scheduled.TokenJob;
 
 public class MasterUtil {
 	
+	private static AtomicLong count= new AtomicLong(1);
 	public static boolean isMaster() {
+//		if(count.getAndIncrement()%2==0) {
+//			return false;
+//		}else {
+//			return true;
+//		}
 		return TokenJob.isMaster();
 	}
 	
@@ -26,6 +34,7 @@ public class MasterUtil {
 		String[] splitTemp = url.split("//");
 		String masterUrl = splitTemp[0]+"//"+masterAddress+splitTemp[1].substring(splitTemp[1].indexOf("/"));
     	return masterUrl;
+//    	return url;
     }
 	
 	public static Message postForObject(Object paramObject) {
@@ -36,6 +45,16 @@ public class MasterUtil {
 	public static ResultBean postForObjectResultBean(Object paramObject) {
 		JoyinRestTemplate restTemplate = SpringContextUtils.getBean("loadBalancedRestTemplate");
 		return restTemplate.postForObject(MasterUtil.getMasterUrl() , paramObject, ResultBean.class);
+	}
+	
+	public static Message getForObject() {
+		JoyinRestTemplate restTemplate = SpringContextUtils.getBean("loadBalancedRestTemplate");
+		return restTemplate.getForObject(MasterUtil.getMasterUrl() , Message.class);
+	}
+	
+	public static ResultBean getForObjectResultBean() {
+		JoyinRestTemplate restTemplate = SpringContextUtils.getBean("loadBalancedRestTemplate");
+		return restTemplate.getForObject(MasterUtil.getMasterUrl() , ResultBean.class);
 	}
 	
 }
