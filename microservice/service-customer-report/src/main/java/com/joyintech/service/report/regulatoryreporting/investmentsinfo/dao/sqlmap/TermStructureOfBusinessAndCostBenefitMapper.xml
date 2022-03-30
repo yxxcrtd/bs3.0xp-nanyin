@@ -598,7 +598,7 @@ with cj as(
 	'02',case when base.OPENCYCLEP*7>1096 and base.OPENCYCLEP*7<![CDATA[<=]]>1827 then '06'
 	when base.OPENCYCLEP*7>1827 then '07' end,
 	'03',case when base.OPENCYCLEP/12>3 and base.OPENCYCLEP/12<![CDATA[<=]]>5 then '06'
-	when base.OPENCYCLEP/12>5 then '07' end
+	when base.OPENCYCLEP/12>5 then '07' end,'00'
 	)days, cp.ENDAMTSUM_OTH
 	from chb_month_prd_position cp
 	<if test="org != null  and org!=''">

@@ -98,7 +98,11 @@ public class StlDownDataDealWriter extends BaseWriter<NeedToWriteEntity> {
 					// 基金分红通告
 					if (dealWriteDto.getMstFundBonusNoticeList() != null && dealWriteDto.getMstFundBonusNoticeList().size() > 0) {
 						for (MstFundBonusNotice mstFundBonusNotice : dealWriteDto.getMstFundBonusNoticeList()) {
-							mstFundBonusNoticeMapper.insertSelective(mstFundBonusNotice);
+							try {
+								mstFundBonusNoticeMapper.insertSelective(mstFundBonusNotice);
+							}catch (Exception ex){
+
+							}
 						}
 					}
 				}

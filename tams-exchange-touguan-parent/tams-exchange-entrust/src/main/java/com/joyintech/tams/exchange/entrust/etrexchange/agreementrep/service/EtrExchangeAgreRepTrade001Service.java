@@ -1975,7 +1975,7 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
         for(Field field : fields) {
             if(StringUtil.equals(field.getName(), "messageType")) {
                 field.setAccessible(true);
-                ReflectionUtils.setField(field, ajax, MessageType.错误消息.name());
+                ReflectionUtils.setField(field, ajax, MessageType.错误消息.getCode());
                 break;
             }
         }
