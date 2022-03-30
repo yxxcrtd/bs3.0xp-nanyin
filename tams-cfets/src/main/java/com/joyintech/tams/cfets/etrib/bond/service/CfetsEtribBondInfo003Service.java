@@ -109,6 +109,7 @@ import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
+import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.invest.entrust.etribbondinfo.dto.FinCashPlanDto;
@@ -394,15 +395,19 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                 List<CfetsEtribBondInfo003Dto> dataList = new ArrayList<>();
                 for (CfetsEtribBondInfo003Dto dto : entity.getEtrInvestBondInfoDtos()) {
                     //默认证券账户
-                    if (StringUtil.isNotEmpty(dto.getPortfolioId()) && StringUtil.isNotEmpty(dto.getFinprodId())) {
-                        Map<String, Object> map = new HashMap<String, Object>();
-                        map.put("portfolioId", dto.getPortfolioId());
-                        map.put("finprodId", dto.getFinprodId());
-                        String secAcctId = cfetsEtrIbBondinfo002Service.qryPortfolioSecAcctId(map);
-                        if (com.joyintech.framework.util.StringUtil.isNotEmpty(secAcctId)) {
-                            dto.setSecAcctId(secAcctId); // 证券账户
-                        }
+                    if (StringUtil.isNotEmpty(dto.getPortfolioId())) {
+                        String acctId = EtrCommonCashPositionDealService.select组合托管户(dto.getPortfolioId(), dto.getCcy(), DictCodeListExt1.资金账户类型_产品托管户.getValue());
+                        dto.setSecAcctId(acctId);
                     }
+//                    if (StringUtil.isNotEmpty(dto.getPortfolioId()) && StringUtil.isNotEmpty(dto.getFinprodId())) {
+//                        Map<String, Object> map = new HashMap<String, Object>();
+//                        map.put("portfolioId", dto.getPortfolioId());
+//                        map.put("finprodId", dto.getFinprodId());
+//                        String secAcctId = cfetsEtrIbBondinfo002Service.qryPortfolioSecAcctId(map);
+//                        if (com.joyintech.framework.util.StringUtil.isNotEmpty(secAcctId)) {
+//                            dto.setSecAcctId(secAcctId); // 证券账户
+//                        }
+//                    }
                     if (StringUtil.isNotEmpty(dto.getEntrustId())) {
                         dataList.add(dto);
                     }
