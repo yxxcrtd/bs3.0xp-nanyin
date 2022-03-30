@@ -25,7 +25,7 @@ public class PositionCashSecDto {
 
     private String holdingType;//持仓类型
 
-    private String tradePlat; //交易平台 可用持仓必传
+    private String tradePlat; //交易平台 可用持仓必传 非交易:
 
     private String finprodType2; //资产类型投管 可用持仓必传
 
