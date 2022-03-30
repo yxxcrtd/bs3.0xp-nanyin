@@ -105,7 +105,7 @@ public class MessageConsumerService {
     			for(InstructionDetail instructionDetail:detailList) {
     				if(StringUtil.isNotEmpty(portfolioId)) {
     					portfolioId = portfolioId+","+instructionDetail.getPortfolioId();
-    					portfolioName = portfolioName+","+instructionDetail.getPortfolioId();
+    					portfolioName = portfolioName+","+instructionDetail.getPortfolioName();
     				}else {
     					portfolioId = instructionDetail.getPortfolioId();
     					portfolioName = instructionDetail.getPortfolioName();
