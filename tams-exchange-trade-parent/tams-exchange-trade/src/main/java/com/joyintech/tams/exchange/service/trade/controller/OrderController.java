@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 @RestController("OrderController_dtx")
@@ -63,6 +64,9 @@ public class OrderController {
         Instruction instruction = instructionService.findById(order.getInstructionId());
         if (Objects.isNull(instruction)) {
             return new Message<>(ResultBean.error(ErrorCode.INSTRUCTIONS_NOT_EXIST, order));
+        }
+        if ("EX005".equals(instruction.getBusiTypeTg())) {
+            order.setEntrustPrice(order.getEntrustPrice().divide(BigDecimal.valueOf(100)));
         }
 
         String entrustBs = EntrustBsProp.getEntrustBs(instruction.getPs());

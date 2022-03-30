@@ -3002,7 +3002,10 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 							(timeColumnList.contains(key) && !("").equals(key))) {
 						String dateStr = formatDateTimeStr((String) jsonMap.get(key));
 						if (null != dateStr) {
-							itemMap.put(key, "'" + dateStr +"'");
+							//修改  orcle的拼法 TISHKS-1005 20220330 by wangyaning start
+//							itemMap.put(key, "'" + dateStr +"'");
+							itemMap.put(key, "to_date('" + dateStr +"' , 'yyyy-mm-dd hh24:mi:ss')");
+							//修改  orcle的拼法 TISHKS-1005 20220330 by wangyaning end
 						} else {
 							itemMap.put(key, null);
 						}

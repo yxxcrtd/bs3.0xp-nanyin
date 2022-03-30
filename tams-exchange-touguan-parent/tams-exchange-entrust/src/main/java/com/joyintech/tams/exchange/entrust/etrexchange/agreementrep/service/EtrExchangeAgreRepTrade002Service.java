@@ -202,11 +202,11 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
             });
         }
         result.setRoot(returnList);
-        return result;
-        // 查询单位成本数据
-        //Map<String, EtrExchangeUnitCostDto> unitCostMap = etrExchangeTradeCommon002Service.calcEachCostAmtMap(DateUtil.parse(platDate), pList, fList, "");
-        // 计算单位成本、计算持仓成本、最新净价、持仓市值、浮动盈亏
-        //return calculationAmount(unitCostMap, result, platDate);
+        //return result;
+         //查询单位成本数据
+        Map<String, EtrExchangeUnitCostDto> unitCostMap = etrExchangeTradeCommon002Service.calcEachCostAmtMap(DateUtil.parse(platDate), pList, fList, "");
+         //计算单位成本、计算持仓成本、最新净价、持仓市值、浮动盈亏
+        return calculationAmount(unitCostMap, result, platDate);
     }
 
     public Page<EtrExchangeAgreRepTrade002Dto> calculationAmount(Map<String, EtrExchangeUnitCostDto> unitCostMap, Page<EtrExchangeAgreRepTrade002Dto> pages, String platDate) {

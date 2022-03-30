@@ -256,7 +256,11 @@ public class InvestmentManagement extends BaseService {
                             } else {
                                 minPriceAndMinTrdUnitLimitBean = instrumentService.queryMinPriceAndMinTrdUnitLimit(instruction.getFinprodMarketId(), instruction.getTradePlat(), instruction.getPs());
                                 instruction.setMinPriceAndMinTrdUnitLimitBean(minPriceAndMinTrdUnitLimitBean);
-                                instructionCloneList.add(instruction);
+                                Instruction instructionClone = instruction.cloneInstruction();
+                                if ("EX005".equals(instructionClone.getBusiTypeTg())) {
+                                    instructionClone.setEntrustPrice(instructionClone.getEntrustPrice().multiply(BigDecimal.valueOf(100)));
+                                }
+                                instructionCloneList.add(instructionClone);
                             }
                             List<InstructionPledge> instructionPledges = instructionPledgeService.queryInstructionPledgesByInstructionId(instruction.getEntrustId());
                             if (Objects.nonNull(instructionPledges) && instructionPledges.size() > 0) {
@@ -856,6 +860,7 @@ public class InvestmentManagement extends BaseService {
 
     public ResultBean appointInstruction(InstructionPage<Instruction, InstructionPledge, InstructionDetail> instructionPage) throws Exception {
         try {
+            logger.info("指令分发数据信息：{}", JsonUtils.getJsonFromObject(instructionPage));
             List<Instruction> instructionEtrEntrustList = instructionPage.getEtr_entrust_list();
             List<InstructionPledge> pledgeList = instructionPage.getEtr_pledge_list();
             List<InstructionDetail> detailList = instructionPage.getEtr_entrust_detail_list();

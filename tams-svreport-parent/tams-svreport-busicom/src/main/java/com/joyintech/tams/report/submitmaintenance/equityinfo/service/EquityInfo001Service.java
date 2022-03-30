@@ -2076,7 +2076,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             success = (boolean) resultmap.get("success");
             subTable = (ImpTable) resultmap.get("subTable");
             table = (ImpTable) resultmap.get("table");
-            needSqldr = (boolean) resultmap.get("needSqldr");
+            needSqldr = null!=resultmap.get("needSqldr")?(boolean)resultmap.get("needSqldr"):false ;
         }catch (Exception e) {
             logger.error("身份信息合并处理失败:"+e.getMessage(),e);
             return "fail";
