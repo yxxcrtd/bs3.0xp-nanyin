@@ -2769,18 +2769,21 @@
                 #{item}
             </foreach>
             union all
-            select ENTRUST_ID from  WFL_IBU_QUOTE_CREP
+            select ENTRUST_ID from  WFL_IBU_QUOTE_ETR_RE
             where ENTRUST_ID  in
             <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
             union all
-            select ENTRUST_ID from IBU_QUOTE_CREP
-            where ENTRUST_ID in
-            <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
-                #{item}
-            </foreach>
-              and TRADE_STATUS not in (#{QUOTE_STUTAS_IBU_08},#{QUOTE_STUTAS_IBU_14},#{QUOTE_STUTAS_IBU_15})
-        )
+            SELECT QUOTE_ID FROM IBU_QUOTE_CREP WHERE QUOTE_ID IN (SELECT
+                QUOTE_ID
+                FROM IBU_QUOTE_ETR_RE
+                    where ENTRUST_ID in
+                    <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                        #{item}
+                    </foreach>
+                )
+                  and TRADE_STATUS not in (#{QUOTE_STUTAS_IBU_08},#{QUOTE_STUTAS_IBU_14},#{QUOTE_STUTAS_IBU_15})
+            )
     </select>
 </mapper>
