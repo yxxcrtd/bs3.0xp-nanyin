@@ -83,6 +83,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.function.Consumer;
@@ -1628,7 +1629,7 @@ public class CfetsEtrDispatcherService extends BaseService {
                     String ps = (String) pageParam.get("ps");
                     if (DictCodeListExt3.交易方向_质押券入库.getValue().equals(ps) && StringUtil.isNotEmpty(fieldResponseDto.getPledgeRatio())) {
                         if(StringUtil.isNotEmpty(fieldResponseDto.getFaceValue())){
-                            fieldResponseDto.setPledgeStandardNumber(ArithmeticUtil.divide(ArithmeticUtil.multiply(fieldResponseDto.getPledgeRatio().divide(new BigDecimal("100")), fieldResponseDto.getEntrustNum(),fieldResponseDto.getFaceValue()),new BigDecimal(100),BigDecimal.ROUND_HALF_DOWN));
+                            fieldResponseDto.setPledgeStandardNumber(ArithmeticUtil.divide(ArithmeticUtil.multiply(fieldResponseDto.getPledgeRatio().divide(new BigDecimal("100")), fieldResponseDto.getEntrustNum(),fieldResponseDto.getFaceValue()),new BigDecimal(100),0, RoundingMode.HALF_DOWN));
                         }else{
                             fieldResponseDto.setPledgeStandardNumber(ArithmeticUtil.multiply(fieldResponseDto.getPledgeRatio().divide(new BigDecimal("100")), fieldResponseDto.getEntrustNum()));
                         }
