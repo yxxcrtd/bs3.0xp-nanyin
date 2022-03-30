@@ -9,6 +9,7 @@
  */
 package com.joyintech.tams.cfets.trdquery.service;
 
+import com.joyintech.background.component.uplink.interbank.business.dto.BaseQuoteDto;
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.dto.UploadFile;
@@ -24,6 +25,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.util.DateUtil.DurationType;
+import com.joyintech.service.bankuplink.common.service.CfetsQuotedCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.cfets.bankuplink.repo.service.CfetsRepoQuotedPrice004Service;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dao.CfetsManualSettleMapper;
@@ -245,6 +247,8 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
     private TrdProductDealAddPreMapper trdProductDealAddPreMapper;
     @Autowired
     private PreTrdCommonBaseService preTrdCommonBaseService;
+    @Autowired
+    private CfetsQuotedCommonService cfetsQuotedCommonService;
 
 	/**
 	 * 投管接口共通组件
@@ -1185,6 +1189,9 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
             paramMap.put("totleTradeId", totleTradeId);
             paramMap.put("tradeStatus", BussinessDictCodeList.银行间上行报价状态_已撤销.getValue());
             cfetsTrdQueryMapper.updateIbuRepoByPrimaryKeySelective(paramMap);
+            // 删除指令完成度
+            BaseQuoteDto baseQuoteDto = new BaseQuoteDto();
+            cfetsQuotedCommonService.deleteByQuoteId(baseQuoteDto);
             List<PtlSecPositionFlowDto> ptlSecPositionFlows = new ArrayList<>();
             List<PtlSecPositionFlow> positionFlows = baseAssetCashPositionCommMapper.selectAllPositionByOffsetFlag(totleTradeId,
                     com.joyintech.tams.constant.DictCodeList.冲正标识_正常交易.getValue());

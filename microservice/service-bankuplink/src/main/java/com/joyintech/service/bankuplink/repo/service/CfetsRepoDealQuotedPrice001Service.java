@@ -952,6 +952,7 @@ public class CfetsRepoDealQuotedPrice001Service extends BaseService {
                             ptlSecPositionFlowDtoUnit.setHodingType(DictCodeList.持仓类型_质押.getValue());// 持仓类型
                             ptlSecPositionFlowDtoUnit.setCdate(platDate);// 日期
                             ptlSecPositionFlowDtoUnit.setCcy(DictCodeList.币种_人民币_CNY.getValue());// 币种
+                            ptlSecPositionFlowDtoUnit.setOffsetFlag(DictCodeList.冲正标识_正常交易.getValue());
                             
                             ptlSecPositionFlowDtoUnit.setAmount(ArithmeticUtil.divide(prin,new BigDecimal(100),2));// 数量
                             ptlSecPositionFlowDtoUnit.setpFinprodId(null);// 母金融产品代码
