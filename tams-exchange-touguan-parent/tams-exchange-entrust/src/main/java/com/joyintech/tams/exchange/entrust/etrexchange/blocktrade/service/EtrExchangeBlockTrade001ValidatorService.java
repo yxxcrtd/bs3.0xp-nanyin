@@ -273,11 +273,11 @@ public class EtrExchangeBlockTrade001ValidatorService implements EtrExchangeComm
 				param.put("portfolioId",dto.getPortfolioId());
 				param.put("ccy",DictCodeList.币种_人民币_CNY.getValue());
 				dto.setAccAvailableCash(etrExchangeTrade001Service.selectAccAvailableCash(param));
-				if (StringUtil.isNotEmpty(dto.getAccAvailableCash()) && StringUtil.isNotEmpty(dto.getEntrustAmt())) {
-					if (dto.getAccAvailableCash().compareTo(dto.getEntrustAmt()) == -1) {
-						errorList.add(new ValidMessage("accAvailableCash", this.getMessage("ETR_ERROR_0019",dto.getPortfolioId())));
-					}
-				}
+//				if (StringUtil.isNotEmpty(dto.getAccAvailableCash()) && StringUtil.isNotEmpty(dto.getEntrustAmt())) {
+//					if (dto.getAccAvailableCash().compareTo(dto.getEntrustAmt()) == -1) {
+//						errorList.add(new ValidMessage("accAvailableCash", this.getMessage("ETR_ERROR_0019",dto.getPortfolioId())));
+//					}
+//				}
 			}
 
 			// etr_check_pos_switch 01 不提示 02 提示 禁止交易
