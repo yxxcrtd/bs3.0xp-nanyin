@@ -423,9 +423,9 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                 dto.setWorkflowId(entity.getWorkflowId());
                 BaseEtrInvestInfoDto base = initBaseEtrInvestInfoDto(dto);
                 WFlowCommonService.insertFlow(base);
-                if (isSubmit && StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+                if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
                     //插入旧头寸
-                    if(baseEtrCashPositionCommService != null){
+                    if(baseEtrCashPositionCommService != null && StringUtil.isNotEmpty(base.getEtrEntrust().getEntrustId())){
                         EntrustCommonDto entrustCommonDto = new EntrustCommonDto();
                         entrustCommonDto.setEtrEntrust(base.getEtrEntrust());
                         entrustCommonDto.setEtrEntrustAdd(base.getEtrEntrustAdd());

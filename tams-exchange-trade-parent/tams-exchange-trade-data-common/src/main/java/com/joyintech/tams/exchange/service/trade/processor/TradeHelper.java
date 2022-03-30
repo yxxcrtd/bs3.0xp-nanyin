@@ -706,7 +706,7 @@ public class TradeHelper {
         order.setTradePlat(instruction.getTradePlat());
         order.setFinprodType2(instruction.getFinprodType2());
         order.setInvManagerId(instruction.getInvManagerId());
-        order.setPs(instruction.getPs());
+        order.setPs(instruction.getTradeSide());
         order.setBusiTypeTg(instruction.getBusiTypeTg());
         order.setConNum(instruction.getConNum());
         order.setEntrustClass(instruction.getEntrustClass());
@@ -1088,7 +1088,7 @@ public class TradeHelper {
             integratedEntrust.setTradePlat(instruction.getTradePlat());
             integratedEntrust.setFinprodType2(instruction.getFinprodType2());
             integratedEntrust.setInvManagerId(instruction.getInvManagerId());
-            integratedEntrust.setPs(instruction.getPs());
+            integratedEntrust.setPs(instruction.getTradeSide());
             integratedEntrust.setBusiTypeTg(instruction.getBusiTypeTg());
             integratedEntrust.setEntrustClass(instruction.getEntrustClass());
 

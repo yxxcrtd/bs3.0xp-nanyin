@@ -394,6 +394,14 @@ public class PbcCapAssetInfo001Service extends CommonExportService<PbcCapAssetIn
             List<String> message = new ArrayList<>();
             // 资产代码
             String error0 = checkCode2(list.get(0), "资产代码", 50, true);
+
+            //获取表中有效的资金信托代码
+            List<PbcCapAssetInfo001Dto> cassetIdList = pbcCapAssetInfo001DtoMapper.selectPobcassetIdList();
+            Map<String,PbcCapAssetInfo001Dto>cassetIdMap = new HashMap<String,PbcCapAssetInfo001Dto>();
+            for(PbcCapAssetInfo001Dto key :cassetIdList){
+                cassetIdMap.put(key.getPobcassetid(),key);
+            }
+
             // 为空判断
             if (StringUtil.isEmpty(list.get(0))) {
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0001", "资产代码"));
@@ -404,6 +412,13 @@ public class PbcCapAssetInfo001Service extends CommonExportService<PbcCapAssetIn
                 entity.setAssetid(list.get(0));
             }
             //检查资金信托代码有没有对应多个资产代码
+            if (cassetIdMap.get(list.get(2)) != null) {
+                message.add("资金信托代码已存在，资金信托代码只能对应一个资产代码");
+                checkResult.add(new ExcelValidDto(entity.getAssetid(), String.valueOf(i + 2),
+                        StringUtil.joinString(message, GlobalConstant.COMMA)));
+                continue;
+            }
+
             /*add by zhoubin 20220326 start*/
             if (StringUtils.isNotBlank(list.get(2))) {
                 // 查询最新人行资金信托代码拼接资产代码的字符串
