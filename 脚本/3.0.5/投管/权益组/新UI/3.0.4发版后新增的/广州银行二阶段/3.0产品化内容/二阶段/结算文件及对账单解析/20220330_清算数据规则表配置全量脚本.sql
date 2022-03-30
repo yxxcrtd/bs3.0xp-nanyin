@@ -1,5 +1,5 @@
 --Mester数据变更
-delete from SETTLE_DATA_RULE
+delete from SETTLE_DATA_RULE;
 
 insert into SETTLE_DATA_RULE values('001','JSMX','JSMX02','01','业务类型','YWLX','003','国债交易','', 'system', '00001', sysdate, 'system', sysdate);
 insert into SETTLE_DATA_RULE values('002','JSMX','JSMX02','01','业务类型','YWLX','004','企债交易','', 'system', '00001', sysdate, 'system', sysdate);
