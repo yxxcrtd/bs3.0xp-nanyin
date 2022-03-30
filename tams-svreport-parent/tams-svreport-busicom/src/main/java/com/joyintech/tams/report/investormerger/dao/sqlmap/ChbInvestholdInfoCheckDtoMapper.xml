@@ -1495,11 +1495,11 @@
         )
         SELECT
         tmp.REGIST_BANK_CODE,
-        tmp.INDENTIFY_MARK,
-        tmp.MERGER_INDENTIFY_MARK,
         tmp.CCY,
         tmp.HOLD_DATE,
         tmp.PRODID,
+        C.INDENTIFY_MARK,
+        C.MERGER_INDENTIFY_MARK,
         C.OPERATE_STATUS,
         C.STATUS
         FROM
@@ -1514,11 +1514,11 @@
             parameterType="com.joyintech.tams.report.investormerger.dto.ChbInvestholdInfoCheckDto" resultSetType="FORWARD_ONLY" fetchSize="1000">
         SELECT
         tmp.REGIST_BANK_CODE,
-        tmp.INDENTIFY_MARK,
-        tmp.MERGER_INDENTIFY_MARK,
         tmp.CCY,
         tmp.HOLD_DATE,
         tmp.PRODID,
+        C.INDENTIFY_MARK,
+        C.MERGER_INDENTIFY_MARK,
         C.OPERATE_STATUS,
         C.STATUS
         FROM CHB_INVESTHOLD_INFO_TMP tmp
