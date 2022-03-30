@@ -1036,6 +1036,7 @@
 	</foreach>
 </select>
 
+    <!-- 该sql目前没有方法调用-->
 <select id="queryRepeatEquityInfoHoldUnSubmit" resultMap="WhResultMap">
 	SELECT  s1.*
 		FROM CHB_INVESTHOLD_INFO s1 INNER join(
@@ -1096,6 +1097,7 @@
         (#{item.registBankCode},#{item.indentifyMark},#{item.ccy},#{item.holdDate},#{item.prodid})
     </foreach>
 </select>
+    <!-- 该sql目前没有方法调用-->
 <delete id="deleteInvestholdInfoBatch" parameterType="java.util.List">
     delete from CHB_INVESTHOLD_INFO
     where 1=1
@@ -1120,6 +1122,7 @@
         #{key,jdbcType=VARCHAR}
     </foreach>
 </delete>
+    <!-- 该sql目前没有方法调用-->
 <delete id="deleteInvestholdInfoSubBatch" parameterType="java.util.List">
 	delete from CHB_INVESTHOLD_INFO_sub
 	where SEND_STATUS='01'

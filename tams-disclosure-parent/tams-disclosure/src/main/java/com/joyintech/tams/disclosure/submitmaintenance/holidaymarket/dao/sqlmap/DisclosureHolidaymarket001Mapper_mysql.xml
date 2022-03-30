@@ -48,10 +48,10 @@
 		FROM CHB_MKT_HOLIDAY A
 		<where>
 			<if test="type !=null and type == '01'.toString()">
-				A.BUSI_DATE &lt; to_date(#{holidayDate},&apos;%Y-%m-%d&apos;)
+				A.BUSI_DATE &lt; STR_TO_DATE(#{holidayDate},'%Y-%m-%d')
 			</if>
 			<if test="type !=null and type == '02'.toString()">
-				A.BUSI_DATE &gt; to_date(#{holidayDate},&apos;%Y-%m-%d&apos;)
+				A.BUSI_DATE &gt; STR_TO_DATE(#{holidayDate},'%Y-%m-%d')
 			</if>
 			AND A.MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
 			AND A.STATUS = 'E'

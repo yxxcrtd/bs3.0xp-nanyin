@@ -93,7 +93,8 @@
 			css.INDENTIFY_MARK as uniqueIdenti
 		</if>
 		<if test="repCode != null and repCode.equals('16')" >
-			css.ORG_CODE||','||css.INDENTIFY_MARK||','||css.PRD_REGIST_CODE||','||to_char(css.HOLD_DATE,'yyyy-MM-dd')||','||css.CCY as uniqueIdenti
+			/*css.ORG_CODE||','||css.INDENTIFY_MARK||','||css.PRD_REGIST_CODE||','||to_char(css.HOLD_DATE,'yyyy-MM-dd')||','||css.CCY as uniqueIdenti*/
+			concat(css.ORG_CODE,',',css.INDENTIFY_MARK,',',css.PRD_REGIST_CODE,',',DATE_FORMAT(css.HOLD_DATE,'%Y-%m-%d'),',',css.CCY) as uniqueIdenti
 		</if>
 		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 		FROM

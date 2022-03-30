@@ -452,7 +452,13 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
         if (!StringUtil.isNotEmpty(entity.getCounterId())) {
             errorList.add(new ValidMessage("请输入对手方"));
         }
-        if (StringUtil.equals(CacheUtil.getSysParam("EXPORT_SHOW"), "01")
+        // 交易对手未绑定21位码,手方交易员非必填
+        CfetsSearchInfoRequest cfetsSearchInfoRequest = new CfetsSearchInfoRequest();
+        cfetsSearchInfoRequest.setDealType("01");
+        cfetsSearchInfoRequest.setInitValue(entity.getCounterId());
+        List<SelectOptionDto> list = joyinbusinessCommonService.queryMySideOrCount(cfetsSearchInfoRequest);
+        if (StringUtil.isNotEmpty(list.get(0).getObject())
+                && StringUtil.equals(CacheUtil.getSysParam("EXPORT_SHOW"), "01")
                 && !StringUtil.isNotEmpty(entity.getCounterTrader())
                 && StringUtil.equals(entity.getQuoteStyle(), BussinessDictCodeList.报价方式_对话报价.getValue())) {
             errorList.add(new ValidMessage("请输入对手方交易员"));
@@ -2145,7 +2151,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
      * @date 2022/3/11 10:21
      */
     public void revokeEtrSecPosition(String entrustId, Date settleDate, boolean isRevoke, String tradeId) {
-        if (StringUtil.isNotEmpty(tradeId)) {
+        if (StringUtil.isEmpty(tradeId)) {
             tradeId = entrustId;
         }
         Map<String, Object> param = new HashMap<>();

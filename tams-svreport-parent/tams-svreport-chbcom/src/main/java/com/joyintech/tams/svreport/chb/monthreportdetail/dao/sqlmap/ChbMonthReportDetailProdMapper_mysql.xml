@@ -64,7 +64,7 @@
 	          else '02' end  isYllccp ,
 			  p.dirtyamtsum,
 			  p.cleanamtsum,
-			  CASE WHEN TO_CHAR(B.VDATE,'yyyyMM') = P.TERM then '01' else '02' end isThisTrem,
+			  CASE WHEN DATE_FORMAT(B.VDATE,'%Y%m') = P.TERM then '01' else '02' end isThisTrem,
 			  DECODE(P.DURATIONFLAG,'02','02','01')  isEndTrem,
 			  P.ENDAMTSUM_OTH endamtsumOth,
 			  P.PAYAMTSUM payamtsum,

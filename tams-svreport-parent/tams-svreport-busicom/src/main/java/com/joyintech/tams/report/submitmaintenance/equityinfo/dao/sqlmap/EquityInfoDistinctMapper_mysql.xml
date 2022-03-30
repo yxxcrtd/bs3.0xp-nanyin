@@ -570,9 +570,9 @@
 			where HOLD.REGIST_BANK_CODE = tmp.REGIST_BANK_CODE
 			and HOLD.IDENTIFY_NUMBER = tmp.IDENTIFY_NUMBER
 			and HOLD.HOLDER_NAME = tmp.HOLDER_NAME
-			and nvl(HOLD.PERSONAL_IDENTIFY_TYPE,' ') = ifnull(tmp.PERSONAL_IDENTIFY_TYPE,' ')
-			and nvl(HOLD.INSTITUTION_IDENTIFY_TYPE,' ') = ifnull(tmp.INSTITUTION_IDENTIFY_TYPE,' ')
-			and nvl(HOLD.OTHER_IDENTIFY_NAME,' ') = ifnull(tmp.OTHER_IDENTIFY_NAME,' ')
+			and ifnull(HOLD.PERSONAL_IDENTIFY_TYPE,' ') = ifnull(tmp.PERSONAL_IDENTIFY_TYPE,' ')
+			and ifnull(HOLD.INSTITUTION_IDENTIFY_TYPE,' ') = ifnull(tmp.INSTITUTION_IDENTIFY_TYPE,' ')
+			and ifnull(HOLD.OTHER_IDENTIFY_NAME,' ') = ifnull(tmp.OTHER_IDENTIFY_NAME,' ')
 			)
 			<!--			     <if test="keys !=null and keys.size()==1">-->
 			<!--			        AND REGIST_BANK_CODE-->
@@ -647,9 +647,9 @@
 		where HOLDCHECK.REGIST_BANK_CODE = tmp.REGIST_BANK_CODE
 		and HOLDCHECK.IDENTIFY_NUMBER = tmp.IDENTIFY_NUMBER
 		and HOLDCHECK.HOLDER_NAME = tmp.HOLDER_NAME
-		and nvl(HOLDCHECK.PERSONAL_IDENTIFY_TYPE,' ') = ifnull(tmp.PERSONAL_IDENTIFY_TYPE,' ')
-		and nvl(HOLDCHECK.INSTITUTION_IDENTIFY_TYPE,' ') = ifnull(tmp.INSTITUTION_IDENTIFY_TYPE,' ')
-		and nvl(HOLDCHECK.OTHER_IDENTIFY_NAME,' ') = ifnull(tmp.OTHER_IDENTIFY_NAME,' ')
+		and ifnull(HOLDCHECK.PERSONAL_IDENTIFY_TYPE,' ') = ifnull(tmp.PERSONAL_IDENTIFY_TYPE,' ')
+		and ifnull(HOLDCHECK.INSTITUTION_IDENTIFY_TYPE,' ') = ifnull(tmp.INSTITUTION_IDENTIFY_TYPE,' ')
+		and ifnull(HOLDCHECK.OTHER_IDENTIFY_NAME,' ') = ifnull(tmp.OTHER_IDENTIFY_NAME,' ')
 		)
 		<!--		<if test="keys !=null and keys.size()==1">-->
 		<!--		        AND HOLDCHECK.REGIST_BANK_CODE-->

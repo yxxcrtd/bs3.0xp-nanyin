@@ -1,6 +1,7 @@
 package com.joyintech.tams.cfets.cfetsmanualsettle.service;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
@@ -8,6 +9,7 @@ import com.joyintech.service.trade.buyoutrepo.dao.TrdOutRightRepoTradeMapper;
 import com.joyintech.service.trade.buyoutrepo.service.TrdOutRightRepoTradeService;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.dto.PositionRulePtlData;
+import com.joyintech.tams.business.common.exception.PositionException;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.cfets.bankuplink.repo.dao.CfetsIbuQuoteRepo004Mapper;
@@ -56,6 +58,7 @@ import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -732,8 +735,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                 } else {
                     //对回购数据进行处理
                     if ((StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收.getValue())
-                            || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_回溯.getValue())
-                            || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收失败.getValue()))) {
+                            || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_回溯.getValue()))) {
                         this.insertOldRepoPosition(cfetsManualSettleInsertDto, entity.getButtonType(), entity.getSettleAmt(), entity.getFinprodType2(), true, entity.getTgBusiType(), false);
                     }
                 }
@@ -766,8 +768,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                 } else {
                     //对回购数据进行处理
                     if ((StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收.getValue())
-                            || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_回溯.getValue())
-                            || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收失败.getValue())) ) {
+                            || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_回溯.getValue())) ) {
                         this.insertOldRepoPosition(cfetsManualSettleInsertDto, entity.getButtonType(), entity.getSettleAmt(), entity.getFinprodType2(), true, entity.getTgBusiType(),false);
                     }
                 }
@@ -816,8 +817,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                         sendRepoPositionMethod(cfetsManualSettleInsertDto,entity.getButtonType());
                        //对回购数据进行处理
                         if ((StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收.getValue())
-                                || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_回溯.getValue())
-                                || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收失败.getValue())) ) {
+                                || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_回溯.getValue())) ) {
                             this.insertOldRepoPosition(cfetsManualSettleInsertDto, entity.getButtonType(), entity.getSettleAmt(), entity.getFinprodType2(), false, entity.getTgBusiType(), false);
                         }
                     }
@@ -863,18 +863,16 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                         for(CfetsManualSettleDealInfo dealInfo : listTemp){
                             this.closeDelegateMethod(dealInfo.getEntrustId(),"","交收失败");
                         }
-                        try {
-                            this.closeDelegate(listTemp,entity.getRemark(),entity.getTgBusiType());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            logger.error("交收失败->关闭指令失败:",e.getMessage());
-                        }
+                        this.closeDelegate(listTemp,entity.getRemark(),entity.getTgBusiType());
                     }
                 }
-
             }
-        }catch (Exception e) {
-            e.printStackTrace();
+        } catch (PositionException e) {
+            logger.error("交收失败-头寸处理异常",e);
+            WorkFlowUtil.showMessage("头寸处理异常,请检查头寸日期", MessageType.错误消息);
+            throw new PositionException(e);
+        } catch(Exception e) {
+            //e.printStackTrace();
             logger.error("交收失败",e);
             throw new RuntimeException(e);
         }
@@ -1204,7 +1202,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                 stlPayOrder.setMyAcctNo(acctId);
 
                 BigDecimal settleAmt = ArithmeticUtil.divide(
-                        ArithmeticUtil.multiply(item.getTradeAmt(), stlPayOrdersDto.getSettleAmt()), tradeAmt, 4);
+                        ArithmeticUtil.multiply(item.getTradeAmt(), stlPayOrdersDto.getSettleAmt()), tradeAmt, 2);
                 if (index == listTemp.size()) {
                     settleAmt = new BigDecimal(String.valueOf(orderAmt));
                 }
@@ -1489,7 +1487,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                     stlPayOrder.setMyAcctNo(acctId);
                 }
                 BigDecimal settleAmt = ArithmeticUtil.divide(
-                        ArithmeticUtil.multiply(item.getTradeAmt(), stlPayOrdersDto.getSettleAmt()), tradeAmt, 4);
+                        ArithmeticUtil.multiply(item.getTradeAmt(), stlPayOrdersDto.getSettleAmt()), tradeAmt, 2);
                 if (index == listTemp.size()) {
                     settleAmt = new BigDecimal(String.valueOf(orderAmt));
                 }
