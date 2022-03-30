@@ -1195,11 +1195,8 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
                     flowDto.setAmount(flowDto.getAmount().negate());
                     flowDto.setOffsetFlag(com.joyintech.tams.constant.DictCodeList.冲正标识_冲销交易.getValue());
                     flowDto.setOffsetId(ptlSecPositionFlow.getTradeId());
-                    ptlSecPositionFlows.add(flowDto);
+                    basePtlSecPositionInfoService.inertSecPositionFlow(flowDto);
                 }
-            }
-            for (PtlSecPositionFlowDto ptlSecPositionFlow : ptlSecPositionFlows) {
-                basePtlSecPositionInfoService.inertSecPositionFlow(ptlSecPositionFlow);
             }
         }
     }
