@@ -2064,6 +2064,11 @@ public class CfetsTrdConfirmService extends BaseService{
                         errorRs.setErrorList(Arrays.asList(new ValidMessage("请选择有效状态的数据！")));
                         return errorRs;
                     }
+                    if(StringUtil.equals(item.getDealType(),BussinessDictCodeList.报价方式_对话报价.getValue())
+                            ||StringUtil.equals(item.getDealType(),BussinessDictCodeList.报价方式_请求报价.getValue())){
+                        errorRs.setErrorList(Arrays.asList(new ValidMessage("上行报价数据不允许点击成交确认！")));
+                        return errorRs;
+                    }
                 }
             }
         }
