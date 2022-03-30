@@ -51,7 +51,7 @@
 				/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 		 	</if>
 			<if test="registBankCode!= null and registBankCode != ''">
-				and ciis.REGIST_BANK_CODE like concat_ws(concat_ws('%',#{registBankCode,jdbcType=VARCHAR}),'%')
+				and ciis.REGIST_BANK_CODE like concat(concat('%',#{registBankCode,jdbcType=VARCHAR}),'%')
 			</if>
 			<!-- <if test="prdRegistCode != null  and prdRegistCode != ''">
 				and ciis.PRD_REGIST_CODE like concat(concat('%',#{prdRegistCode,jdbcType=VARCHAR}),'%')
@@ -81,7 +81,7 @@
 			 	 	and ciis.REGIST_BANK_CODE = #{investDto.registBankCode,jdbcType=VARCHAR} 
 		 	 		and ciis.INDENTIFY_MARK = #{investDto.indentifyMark,jdbcType=VARCHAR}
 		 	 		and ciis.CCY = #{investDto.ccy,jdbcType=VARCHAR}
-		 	 		and DATE_FORMAT(ciis.HOLD_DATE,'y%Y-%m-%d') = DATE_FORMAT(#{investDto.holdDate,jdbcType=DATE},'%Y-%m-%d')
+		 	 		and DATE_FORMAT(ciis.HOLD_DATE,'%Y-%m-%d') = DATE_FORMAT(#{investDto.holdDate,jdbcType=DATE},'%Y-%m-%d')
 		 	 		<choose>
 			 	 		<when test="checkFlag!=null and checkFlag!=''">
 			 	 			and ciis.SEND_STATUS in('02','03')
@@ -194,7 +194,7 @@
 				/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 			</if>
 			<if test="registBankCode!= null and registBankCode != ''">
-				and ciis.REGIST_BANK_CODE like concat_ws(concat_ws('%',#{registBankCode,jdbcType=VARCHAR}),'%')
+				and ciis.REGIST_BANK_CODE like concat(concat('%',#{registBankCode,jdbcType=VARCHAR}),'%')
 			</if>
 			<if test="prdCodeList != null and prdCodeList.size()>0">
 				<foreach collection="prdCodeList" item="item" open="and ciis.PRODID in(" separator="," close=")">

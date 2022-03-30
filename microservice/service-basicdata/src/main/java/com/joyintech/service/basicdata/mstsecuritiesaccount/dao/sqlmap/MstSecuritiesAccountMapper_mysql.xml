@@ -262,7 +262,7 @@
 		FROM FIN_CASH_PLAN FCP
 		INNER JOIN FIN_PRODUCT FP ON FCP.FINPROD_ID = FP.FINPROD_ID
 		<where>
-			T/*O_DATE(#{tradeDate},'yyyy-MM-dd')*/ STR_TO_DATE(#{tradeDate},'%Y-%m-%d') >= FCP.MDATE
+			/*TO_DATE(#{tradeDate},'yyyy-MM-dd')*/ STR_TO_DATE(#{tradeDate},'%Y-%m-%d') >= FCP.MDATE
 			<if test="finprodMarketIdList != null and finprodMarketIdList.size()>0">
 				<foreach collection="finprodMarketIdList" open="and FP.finprod_market_id in(" close=")" separator="," item="item">
 					#{item}
@@ -374,8 +374,10 @@
 		from (
 		<if test="tradePlat != null and tradePlat != '' and tradePlat.equals('02')">
 			select t.oth_code as finprod_market_id,
-			t.oth_code || '|' || v.finprod_abbr ||
-			decode(t.oth_type,#{FINPROD_OTH_CODE_TYPE_05},'配债',#{FINPROD_OTH_CODE_TYPE_06},'配股') as finprod_name,
+			/*t.oth_code || '|' || v.finprod_abbr ||*/
+			concat(concat(concat(t.oth_code,'|'),v.finprod_abbr),
+			(case t.oth_type when #{FINPROD_OTH_CODE_TYPE_05} then '配债' when #{FINPROD_OTH_CODE_TYPE_06} then '配股' end)) as finprod_name,
+			/*decode(t.oth_type,#{FINPROD_OTH_CODE_TYPE_05},'配债',#{FINPROD_OTH_CODE_TYPE_06},'配股') as finprod_name,*/
 			t.oth_type oth_code_type,
 			v.finprod_type2 finprod_type2,
 			v.finprod_id,
@@ -402,7 +404,7 @@
 			union
 		</if>
 		select a.finprod_market_id,
-		a.finprod_market_id || '|' || a.finprod_abbr as finprod_name,
+		concat(concat(a.finprod_market_id,'|'),a.finprod_abbr) as finprod_name,
 		null as oth_code_type,
 		a.finprod_type2,
 		a.finprod_id,
@@ -448,7 +450,7 @@
 		<if test="tradePlat != null and tradePlat != '' and (tradePlat == '02'.toString())">
 			union
 			select distinct a.item_code as finprod_market_id,
-			a.item_code || '|' || a.item_value as finprod_name,
+			concat(concat(a.item_code,'|'),a.item_value) as finprod_name,
 			null as oth_code_type,
 			#{FINPROD_TYPE_TG_ZYSHG} as finprod_type2,
 			a.item_value as finprod_id,
@@ -498,7 +500,7 @@
 				and t.FINPROD_MARKET_ID = #{secId}
 			</if>
 			<if test="expireSettleDate != null and expireSettleDate != ''">
-				and (t.mdate &gt; to_date(#{expireSettleDate},'yyyy-mm-dd') or t.mdate is null)
+				and (t.mdate &gt; STR_TO_DATE(#{expireSettleDate},'%Y-%m-%d') or t.mdate is null)
 			</if>
 			<if test="othCodeType != null and othCodeType != ''">
 				and t.oth_code_type = #{othCodeType}

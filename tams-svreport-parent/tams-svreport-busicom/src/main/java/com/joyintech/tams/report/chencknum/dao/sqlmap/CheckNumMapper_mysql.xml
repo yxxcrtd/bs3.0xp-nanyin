@@ -10,7 +10,7 @@
 		<where>
 			1=1
 			<if test="reportDate != null and reportDate != ''">
-				and to_char(sub.update_time,'yyyyMMdd') = #{reportDate,jdbcType=VARCHAR}
+				and DATE_FORMAT(sub.update_time,'%Y%m%d') = #{reportDate,jdbcType=VARCHAR}
 			</if>
 			and sub.submit_feedback_status='03'
 			/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
@@ -26,7 +26,7 @@
 		<where>
 			1=1
 			<if test="reportDate!=null and reportDate != ''">
-				and to_char(ciis.HOLD_DATE,'yyyyMMdd') = #{reportDate,jdbcType=VARCHAR}
+				and DATE_FORMAT(ciis.HOLD_DATE,'%Y%m%d') = #{reportDate,jdbcType=VARCHAR}
 			</if>
 			and ciis.submit_feedback_status='03'
 			/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
