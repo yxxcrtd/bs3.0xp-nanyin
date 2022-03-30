@@ -433,6 +433,10 @@ public class FieldEtrDispatcherInfoResponse extends FieldEtrDispatcherBaseInfo {
     }
 
     public BigDecimal getUnitPrice() {
+        if(StringUtils.equals(DictCodeList.平安资产类型_基金.getValue(),this.getAssetType())
+                && StringUtils.equals("PRM03",this.getPriceModel())){
+            return new BigDecimal(0.00);
+        }
         return unitPrice;
     }
 

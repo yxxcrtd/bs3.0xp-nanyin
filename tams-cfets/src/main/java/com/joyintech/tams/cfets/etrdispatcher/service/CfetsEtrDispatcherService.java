@@ -358,8 +358,7 @@ public class CfetsEtrDispatcherService extends BaseService {
                     }
                 }
                 //这里特殊处理成交进度和成交额度
-                if(!StringUtils.equals(response.getFinprodType2(),DictCodeList.平安资产类型_基金.getValue())
-                &&!StringUtils.equals(response.getFinprodType2(),DictCodeList.平安资产类型_债券.getValue())){
+                if( StringUtils.isEmpty(dto.getSearchPageType())){
                     if(DictCodeUtil.equals(response.getFinprodType2(),BussinessDictCodeList.平安资产类型_一级投标债券,BussinessDictCodeList.平安资产类型_债券,BussinessDictCodeList.平安资产类型_计划类资产_利率型,
                             BussinessDictCodeList.平安资产类型_计划类资产_货币型,BussinessDictCodeList.平安资产类型_计划类资产_净值型,BussinessDictCodeList.平安资产类型_拆借,BussinessDictCodeList.平安资产类型_买断式回购,
                             BussinessDictCodeList.平安资产类型_存款,BussinessDictCodeList.平安资产类型_项目类资产,BussinessDictCodeList.平安资产类型_基金)

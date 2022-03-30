@@ -323,6 +323,10 @@ public class FieldEtrInfoQueryListResponse extends EtrEntrust {
     }
 
     public BigDecimal getEtrPrice() {
+        if(StringUtils.equals(DictCodeList.平安资产类型_基金.getValue(),this.getFinprodType2())
+        && StringUtils.equals("PRM03",this.getPriceModel())){
+            return new BigDecimal(0.00);
+        }
         return etrPrice;
     }
 
