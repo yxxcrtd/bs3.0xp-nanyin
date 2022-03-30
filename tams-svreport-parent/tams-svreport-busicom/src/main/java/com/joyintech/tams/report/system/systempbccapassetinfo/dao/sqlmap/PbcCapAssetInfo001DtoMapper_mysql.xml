@@ -343,4 +343,12 @@
         where ASSET_CODE = #{assetId}
         and STATUS!= 'D'
     </select>
+
+    <select id="selectPobcassetIdList" resultType="com.joyintech.tams.report.system.systempbccapassetinfo.dto.PbcCapAssetInfo001Dto">
+        select
+        ASSETID AS assetid,
+        POBCASSETID AS pobcassetid
+        from PBC_CAP_ASSET_INFO
+        where STATUS!= 'D'
+    </select>
 </mapper>

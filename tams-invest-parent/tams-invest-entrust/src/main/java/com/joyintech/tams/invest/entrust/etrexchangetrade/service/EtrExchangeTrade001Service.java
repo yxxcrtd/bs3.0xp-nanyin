@@ -462,6 +462,7 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 		dto.setPortfolioId(etrExchangeTrade001Dto.getPortfolioId());
 		dto.setPs(etrExchangeTrade001Dto.getPs());
 		dto.setSecAcctId(etrExchangeTrade001Dto.getSecAcctId());
+		dto.setAcctId(etrExchangeTrade001Dto.getAcctNo());
 		dto.setTradeMarket(etrExchangeTrade001Dto.getTradeMarket());
 		dto.setTradePlat(etrExchangeTrade001Dto.getTradePlat());
 		BigDecimal availableNum = etrTradeCommonervice.selectAvailableNum(dto);
@@ -2964,10 +2965,11 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 		BigDecimal cashAvailable = this.selectAccAvailableCashs(etrExchangeTrade001Dto);
 		// 指令可用现金
 		if (cashAvailable != null) {
-			etrExchangeTrade001Dto.setProAvailableCash(cashAvailable);
+			//etrExchangeTrade001Dto.setProAvailableCash(cashAvailable);
+			etrExchangeTrade001Dto.setAccAvailableCash(cashAvailable);
 		}
 		else {
-			etrExchangeTrade001Dto.setProAvailableCash(BigDecimal.ZERO);
+			etrExchangeTrade001Dto.setAccAvailableCash(BigDecimal.ZERO);
 		}
 
 		//指令可用持仓查询

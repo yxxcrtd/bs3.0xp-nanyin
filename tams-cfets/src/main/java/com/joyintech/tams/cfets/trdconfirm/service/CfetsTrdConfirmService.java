@@ -2031,13 +2031,13 @@ public class CfetsTrdConfirmService extends BaseService{
             String cfets_manualconfirm_repo=CacheUtil.getSysParam("IS_CFETSREPOTRD_MANUALCONFIRM_FLAG");
             if(StringUtil.isNotEmpty(selectedItem)){
                 for(CfetsTrdConfirmRegInfoListResponse item:selectedItem){
-                    if(StringUtil.equals(cfets_manualconfirm_bond,DictCodeList.是否_是.getValue())
+                    if(StringUtil.equals(cfets_manualconfirm_bond,DictCodeList.是否_否.getValue())
                             && StringUtil.equals(item.getFinprodType2(),"01")
                     ){
                         errorRs.setErrorList(Arrays.asList(new ValidMessage("银行间债券交易登记数据通过CSTP下行匹配进行成交匹配确认，不可手工成交确认，请重新选择！")));
                         return errorRs;
                     }
-                    if(StringUtil.equals(cfets_manualconfirm_repo,DictCodeList.是否_是.getValue())
+                    if(StringUtil.equals(cfets_manualconfirm_repo,DictCodeList.是否_否.getValue())
                             && StringUtil.equals(item.getFinprodType2(),"02")
                     ){
                         errorRs.setErrorList(Arrays.asList(new ValidMessage("银行间质押式回购交易登记数据通过CSTP下行匹配进行成交匹配确认，不可手工成交确认，请重新选择！")));

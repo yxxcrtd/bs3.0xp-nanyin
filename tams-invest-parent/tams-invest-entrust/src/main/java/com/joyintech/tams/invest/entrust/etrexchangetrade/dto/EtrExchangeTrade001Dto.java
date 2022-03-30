@@ -243,7 +243,8 @@ public class EtrExchangeTrade001Dto extends EtrEntrust implements ProcessEntity{
      * 是否多组合系列户的指令
      */
     private String isMulti;
-    
+
+
     /**
      * 取得 委托代码
      * @return 委托代码

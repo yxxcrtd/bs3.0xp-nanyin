@@ -1,3 +1,3 @@
---select * from cfg_datatable_show where PAGECODE='cfetsManualSettleQuery' and dtcode='CfetsManualSettleInfo' and SPCDCODE='04,M,P';
-update cfg_readonly_form_show set COLNAME='理论交收金额' where PAGECODE='cfetsManualSettleQuery' and dtcode='CfetsManualSettleInfo' and SPCDCODE='04,M' and colcode='intAmtTheory';
+delete from CFG_READONLY_FORM_SHOW where PAGECODE='cfetsManualSettleQuery' and DTCODE='CfetsManualSettleInfo' and SPCDCODE='04,M' and COLCODE='totalAmtTheory';
+INSERT INTO CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, EXTENDCFG, STATUS, REMARK1, REMARK2, REMARK3) VALUES ('cfetsManualSettleQuery', 'CfetsManualSettleInfo', '04,M', 'totalAmtTheory', '理论交收金额', null, 12, '{"colAlign": "left","dataType":"amount","precision":"2","unit":"yuan"}', 1, 0, null, null);
 update cfg_datatable_show set colname ='理论交收金额（元）' where pagecode='cfetsManualSettleQuery' and dtcode='CfetsManualSettleInfo'  and spcdcode='04,M,P' and colcode='totalAmtTheory';

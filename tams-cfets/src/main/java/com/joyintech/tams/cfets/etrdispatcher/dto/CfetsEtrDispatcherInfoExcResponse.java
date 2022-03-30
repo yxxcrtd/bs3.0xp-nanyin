@@ -620,4 +620,15 @@ public class CfetsEtrDispatcherInfoExcResponse extends CfetsEtrDispatcherExcInfo
     public void setAddCla(String addCla) {
         this.addCla = addCla;
     }
+
+    @ApiModelProperty(name="faceValue",value="债券面值")
+    private BigDecimal faceValue;
+
+    public BigDecimal getFaceValue() {
+        return faceValue;
+    }
+
+    public void setFaceValue(BigDecimal faceValue) {
+        this.faceValue = faceValue;
+    }
 }

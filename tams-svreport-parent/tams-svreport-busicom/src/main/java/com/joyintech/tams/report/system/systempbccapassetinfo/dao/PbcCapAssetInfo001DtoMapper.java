@@ -107,4 +107,12 @@ public interface PbcCapAssetInfo001DtoMapper {
 
     /*根据资产代码查询资产名称*/
     PbcCapAssetInfo001Dto selectAssetInofByAssetId(String assetId);
+
+    /**
+     * 查询所有有效数据便于校验
+     *
+     * @param
+     * @return
+     */
+    List<PbcCapAssetInfo001Dto> selectPobcassetIdList();
 }

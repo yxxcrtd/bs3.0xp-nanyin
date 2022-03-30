@@ -56,6 +56,8 @@ import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.component.base.core.MstWorkflowCommonService;
+import com.joyintech.tams.component.base.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.base.core.impl.dao.MstWorkflowCommonServiceMapperImpl;
 import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
 import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
@@ -246,6 +248,13 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 
     @Autowired
     private EtrEntrustDetailBackUpMapper etrEntrustDetailBackUpMapper;
+
+    /**
+     * 流程组件
+     */
+    @Autowired
+    private MstWorkflowCommonService mstWorkflowCommonService;
+
 
     /**
      * {@inheritDoc}
@@ -5606,6 +5615,12 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
     public AjaxResult dbClickCheck(EtrExchangeTradeSaveRequest dto) {
         AjaxResult webResult = new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<>();
+        //check流程中是否有数据
+        WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();
+        wflValidInputParameter.setBusinessDataPk1(dto.getEntrustId());
+        if (WorkFlowUtil.isNotFromToDoList() && mstWorkflowCommonService.isInWflProcess(wflValidInputParameter)) {
+            errorList.add(new ValidMessage("所选对象存在流程中的数据不能修改"));
+        }
         //双击修改check
         if (!StringUtil.equals(dto.getEntrustStatus(), DictCodeList.委托状态_已退回.getValue()) && !StringUtil.equals(dto.getEntrustStatus(), DictCodeList.委托状态_已撤回.getValue())) {
             String entrustStatusStr = SysDataUtil.getNameFromDataDict(DictCode.委托状态, dto.getEntrustStatus());
