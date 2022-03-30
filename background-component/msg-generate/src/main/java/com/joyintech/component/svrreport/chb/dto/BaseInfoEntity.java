@@ -18,7 +18,7 @@ import java.util.List;
 
 /**
  * 一般个人产品申报登记
- * 
+ *
  * @author 刘溶容
  * @version 1.0 2016年11月7日
  * @see BaseInfoEntity
@@ -302,7 +302,7 @@ public class BaseInfoEntity implements Feild {
      */
     @XmlElement(name = "wemax:AmountForCreditAssetTradingsAndNonStandardDebtObligations")
     private CommonNodeEntity amountForCreditAssetTradingsAndNonStandardDebtObligations;
-  
+
     /**
      * 份额面值
      */
@@ -380,7 +380,7 @@ public class BaseInfoEntity implements Feild {
      */
     @XmlElement(name = "wemax:CreditEnhancementInstitutionCode")
     private CommonNodeEntity creditEnhancementInstitutionCode;
-    
+
     /**
      * 增信机构名称
      */
@@ -422,7 +422,7 @@ public class BaseInfoEntity implements Feild {
      */
     @XmlElement(name = "wemax:StructureGrade")
     private CommonNodeEntity structureGrade;
-    
+
     /**
      * 还本方式
      */
@@ -542,19 +542,19 @@ public class BaseInfoEntity implements Feild {
      */
     @XmlElement(name = "wemax:PledgeTypeForCreditAssetTradingsAndNonStandardDebtObligations")
     private CommonNodeEntity pledgeTypeForCreditAssetTradingsAndNonStandardDebtObligations;
-    
+
     /**
      * 抵质押物价值
      */
     @XmlElement(name = "wemax:PledgeValueCNYForCreditAssetTradingsAndNonStandardDebtObligations")
     private CommonNodeEntity pledgeValueCNYForCreditAssetTradingsAndNonStandardDebtObligations;
-    
+
     /**
      * 担保性质
      */
     @XmlElement(name = "wemax:GuaranteeTypeForCreditAssetTradingsAndNonStandardDebtObligations")
     private CommonNodeEntity guaranteeTypeForCreditAssetTradingsAndNonStandardDebtObligations;
-    
+
     /**
      * 担保人与融资人关系
      */
@@ -572,67 +572,67 @@ public class BaseInfoEntity implements Feild {
      */
     @XmlElement(name = "wemax:ExerciseDateType")
     private CommonNodeEntity exerciseDateType;
-    
+
     /**
      * 固定行权日
      */
     @XmlElement(name = "wemax:FixedExerciseDate")
     private CommonNodeEntity fixedExerciseDate;
-    
+
     /**
      * 首次行权日期
      */
     @XmlElement(name = "wemax:FirstExerciseDate")
     private CommonNodeEntity firstExerciseDate;
-    
+
     /**
      * 行权周期
      */
     @XmlElement(name = "wemax:ExercisePeriod")
     private CommonNodeEntity exercisePeriod;
-    
+
     /**
      * 行权价格
      */
     @XmlElement(name = "wemax:ExercisePrice")
     private CommonNodeEntity exercisePrice;
-    
+
     /**
      * 永续条款类型
      */
     @XmlElement(name = "wemax:PerpetualType")
     private CommonNodeEntity perpetualType;
-    
+
     /**
      * 利息递延条款类型
      */
     @XmlElement(name = "wemax:DeferredInterestType")
     private CommonNodeEntity deferredInterestType;
-    
+
     /**
      * 递延利息是否计息
      */
     @XmlElement(name = "wemax:InterestBearingForDeferredInterestPleaseSelect")
     private CommonNodeEntity interestBearingForDeferredInterestPleaseSelect;
-    
+
     /**
      * 首次重定价日期
      */
     @XmlElement(name = "wemax:FirstRepriceDate")
     private CommonNodeEntity firstRepriceDate;
-    
+
     /**
      * 重定价周期
      */
     @XmlElement(name = "wemax:RepricePeriod")
     private CommonNodeEntity repricePeriod;
-    
+
     /**
      * 部分赎回标识
      */
     @XmlElement(name = "wemax:PartialRedemptionPleaseSelect")
     private CommonNodeEntity partialRedemptionPleaseSelect;
-    
+
     /**
      * 部分赎回比例
      */
@@ -847,7 +847,7 @@ public class BaseInfoEntity implements Feild {
      */
     @XmlElement(name = "wemax:UnderlyingAssetTypeTuple")
     private List<CommonNodeListEntity> underlyingAssetTypeTuple;
-    
+
     /**
      * 持有目的
      */
@@ -1121,7 +1121,7 @@ public class BaseInfoEntity implements Feild {
     @XmlElement(name = "wemax:WealthManagementProductPleaseSelect")
     private CommonNodeEntity wealthManagementProductPleaseSelect;
 
-   /* *//**
+    /* *//**
      * 产品登记编码
      *//*
     @XmlElement(name = "wemax:ProductRegistrationCode")
@@ -1602,43 +1602,43 @@ public class BaseInfoEntity implements Feild {
      */
     @XmlElement(name = "wemax:StandardizedInternalAssetRatingForOther")
     private CommonNodeEntity standardizedInternalAssetRatingForOther;
-    
+
     /**
      * 担保方式
      */
     @XmlElement(name = "wemax:GuaranteeMethodForOther")
     private CommonNodeEntity guaranteeMethodForOther;
-    
+
     /**
      * 抵质押物类型
      */
     @XmlElement(name = "wemax:PledgeTypeForOther")
     private CommonNodeEntity pledgeTypeForOther;
-    
+
     /**
      * 抵质押物价值
      */
     @XmlElement(name = "wemax:PledgeValueCNYForOther")
     private CommonNodeEntity pledgeValueCNYForOther;
-    
+
     /**
      * 担保性质
      */
     @XmlElement(name = "wemax:GuaranteeTypeForOther")
     private CommonNodeEntity guaranteeTypeForOther;
-    
+
     /**
      * 担保人与融资人关系
      */
     @XmlElement(name = "wemax:GuarantorTypeForOther")
     private CommonNodeEntity guarantorTypeForOther;
-    
+
     /**
      * 担保情况说明
      */
     @XmlElement(name = "wemax:DetailsOnGuaranteeStatusForOther")
     private CommonNodeEntity detailsOnGuaranteeStatusForOther;
-    
+
     /**
      * 是否为债转股
      */
@@ -1649,115 +1649,115 @@ public class BaseInfoEntity implements Feild {
      */
     @XmlElement(name = "wemax:OutsourcingInvestmentAgreementName")
     private CommonNodeEntity outsourcingInvestmentAgreementName;
-    
+
     /**
      * 委外投资协议编号
      */
     @XmlElement(name = "wemax:OutsourcingInvestmentAgreementCode")
     private CommonNodeEntity outsourcingInvestmentAgreementCode;
-    
+
     /**
      * 受托人
      */
     @XmlElement(name = "wemax:Trustee")
     private CommonNodeEntity trustee;
-    
+
     /**
      * 实际管理人
      */
     @XmlElement(name = "wemax:ActualManager")
     private CommonNodeEntity actualManager;
-    
-   /**
+
+    /**
      * 托管人
      */
     @XmlElement(name = "wemax:CustodianForOutsourcingInvestmentAgreement")
     private CommonNodeEntity custodianForOutsourcingInvestmentAgreement;
-    
+
     /**
      * 委托投资金额
      */
     @XmlElement(name = "wemax:OutsourcingInvestmentAmount")
     private CommonNodeEntity outsourcingInvestmentAmount;
-    
+
     /**
      * 资金实际投向
      */
     @XmlElement(name = "wemax:ActualInvestmentDirectionOfFundForOutsourcingInvestmentAgreement")
     private CommonNodeEntity actualInvestmentDirectionOfFundForOutsourcingInvestmentAgreement;
-    
+
     /**
      * 资金运用方式
      */
     @XmlElement(name = "wemax:DetailsOnInvestmentForOutsourcingInvestmentAgreement")
     private CommonNodeEntity detailsOnInvestmentForOutsourcingInvestmentAgreement;
-    
+
     /**
      * 资金运用行业
      */
     @XmlElement(name = "wemax:IndustryOfInvestmentForOutsourcingInvestmentAgreement")
     private CommonNodeEntity industryOfInvestmentForOutsourcingInvestmentAgreement;
-    
+
     /**
      * 投资运作起始日期
      */
     @XmlElement(name = "wemax:ValueDateOfOutsourcingInvestment")
     private CommonNodeEntity valueDateOfOutsourcingInvestment;
-    
+
     /**
      * 投资运作终止日期
      */
     @XmlElement(name = "wemax:MaturityDateOfOutsourcingInvestment")
     private CommonNodeEntity maturityDateOfOutsourcingInvestment;
-    
+
     /**
      * 委外投资属性
      */
     @XmlElement(name = "wemax:TypeOfOutsourcingInvestment")
     private CommonNodeEntity typeOfOutsourcingInvestment;
-    
+
     /**
      *  是否有预期收益率
      */
     @XmlElement(name = "wemax:ExpectedReturnPleaseSelectForOutsourcingInvestmentAgreement")
     private CommonNodeEntity expectedReturnPleaseSelectForOutsourcingInvestmentAgreement;
-    
+
     /**
      * 预期最高收益率
      */
     @XmlElement(name = "wemax:MaximumExpectedAnnualReturnForOutsourcingInvestmentAgreement")
     private CommonNodeEntity maximumExpectedAnnualReturnForOutsourcingInvestmentAgreement;
-    
-   /**
+
+    /**
      *  预期最低收益率
      */
     @XmlElement(name = "wemax:MinimumExpectedAnnualReturnForOutsourcingInvestmentAgreement")
     private CommonNodeEntity minimumExpectedAnnualReturnForOutsourcingInvestmentAgreement;
-    
+
     /**
      * 管理费率
      */
     @XmlElement(name = "wemax:ManagementFeeRateForOutsourcingInvestmentAgreement")
     private CommonNodeEntity managementFeeRateForOutsourcingInvestmentAgreement;
-    
+
     /**
      * 托管费率
      */
     @XmlElement(name = "wemax:CustodianFeeRateForOutsourcingInvestmentAgreement")
     private CommonNodeEntity custodianFeeRateForOutsourcingInvestmentAgreement;
-    
+
     /**
      * 交易相关合计费率
      */
     @XmlElement(name = "wemax:TransactionCostRateForOutsourcingInvestmentAgreement")
     private CommonNodeEntity transactionCostRateForOutsourcingInvestmentAgreement;
-    
+
     /**
      * 中介服务机构合计费率
      */
     @XmlElement(name = "wemax:IntermediaryServiceFeeRateForOutsourcingInvestmentAgreement")
     private CommonNodeEntity intermediaryServiceFeeRateForOutsourcingInvestmentAgreement;
-    
+
     /**
      * 其他合计费率
      */
@@ -1805,7 +1805,7 @@ public class BaseInfoEntity implements Feild {
      */
     @XmlElement(name = "wemax:InvestedAssetsLiabilitiesRegistrationDetails")
     private CommonNodeEntity investedAssetsLiabilitiesRegistrationDetails;
-    
+
     /**
      * 资产计量方式
      */
@@ -2047,7 +2047,7 @@ public class BaseInfoEntity implements Feild {
     private CommonNodeEntity financialInstitutionExclusivePleaseSelect;
 
 
-	/**
+    /**
      * 产品期限
      */
     @XmlElement(name = "wemax:ProductTermToMaturity")
@@ -2196,8 +2196,8 @@ public class BaseInfoEntity implements Feild {
      */
     @XmlElement(name = "wemax:InvestmentThreshold")
     private CommonNodeEntity investmentThreshold;
-    
-    
+
+
     /**
      * 子节点(募集币种 [tuple])
      */
@@ -2321,6 +2321,12 @@ public class BaseInfoEntity implements Feild {
     private CommonNodeEntity productBrand;
 
     /****1217升级**/
+
+
+
+
+    @XmlElement(name = "wemax:ProductSpecialPropertyTuple")
+    private List<CommonNodeEntity> productSpecialPropertyTuple;
     /**
      * 产品特殊属性
      */
@@ -2833,7 +2839,7 @@ public class BaseInfoEntity implements Feild {
     @XmlElement(name = "wemax:NetIncomeOfBankCNY")
     private CommonNodeEntity netIncomeOfBankCNY;
 
-    
+
     /**
      * 业务起始日
      */
@@ -2987,7 +2993,7 @@ public class BaseInfoEntity implements Feild {
      */
     @XmlElement(name = "wemax:WealthManagementCertificationTuple")
     private List<CommonNodeListEntity> wealthManagementCertificationTuple;
-    
+
     /**
      * 理财登记培训证书编号
      */
@@ -3023,13 +3029,13 @@ public class BaseInfoEntity implements Feild {
      */
     @XmlElement(name = "wemax:RegistrationClassificationTuple")
     private List<CommonNodeListEntity> registrationClassificationTuple;
-    
+
     /**
      * 登记人员类别
      */
     @XmlElement(name = "wemax:TypeOfRegistrarTuple")
     private List<CommonNodeListEntity> typeOfRegistrarTuple;
-    
+
     /**
      * 从业人员登记备注
      */
@@ -3104,16 +3110,16 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 methodOfAssetMeasurement
-     * 
+     *
      * @param methodOfAssetMeasurement methodOfAssetMeasurement
      */
     public void setMethodOfAssetMeasurement(CommonNodeEntity methodOfAssetMeasurement) {
         this.methodOfAssetMeasurement = methodOfAssetMeasurement;
     }
-    
+
     /**
      * 获取 counterpartyType
-     * 
+     *
      * @return counterpartyType.
      */
     public CommonNodeEntity getCounterpartyType() {
@@ -3122,16 +3128,16 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 counterpartyType
-     * 
+     *
      * @param counterpartyType counterpartyType
      */
     public void setCounterpartyType(CommonNodeEntity counterpartyType) {
         this.counterpartyType = counterpartyType;
     }
-    
+
     /**
      * 获取 productName
-     * 
+     *
      * @return productName.
      */
     public CommonNodeEntity getProductName() {
@@ -3140,7 +3146,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 productName
-     * 
+     *
      * @param productName productName
      */
     public void setProductName(CommonNodeEntity productName) {
@@ -3149,7 +3155,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 preidentificationCode
-     * 
+     *
      * @return preidentificationCode.
      */
     public CommonNodeEntity getPreidentificationCode() {
@@ -3158,7 +3164,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 preidentificationCode
-     * 
+     *
      * @param preidentificationCode preidentificationCode
      */
     public void setPreidentificationCode(CommonNodeEntity preidentificationCode) {
@@ -3167,7 +3173,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 issuerIdentificationCode
-     * 
+     *
      * @return issuerIdentificationCode.
      */
     public CommonNodeEntity getIssuerIdentificationCode() {
@@ -3176,7 +3182,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 issuerIdentificationCode
-     * 
+     *
      * @param issuerIdentificationCode issuerIdentificationCode
      */
     public void setIssuerIdentificationCode(CommonNodeEntity issuerIdentificationCode) {
@@ -3185,7 +3191,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 productApproverIdNumber
-     * 
+     *
      * @return productApproverIdNumber.
      */
     public CommonNodeEntity getProductApproverIdNumber() {
@@ -3194,7 +3200,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 productApproverIdNumber
-     * 
+     *
      * @param productApproverIdNumber productApproverIdNumber
      */
     public void setProductApproverIdNumber(CommonNodeEntity productApproverIdNumber) {
@@ -3203,7 +3209,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 productDesignerIdNumber
-     * 
+     *
      * @return productDesignerIdNumber.
      */
     public CommonNodeEntity getProductDesignerIdNumber() {
@@ -3212,7 +3218,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 productDesignerIdNumber
-     * 
+     *
      * @param productDesignerIdNumber productDesignerIdNumber
      */
     public void setProductDesignerIdNumber(CommonNodeEntity productDesignerIdNumber) {
@@ -3221,7 +3227,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 investmentManagerIdNumber
-     * 
+     *
      * @return investmentManagerIdNumber.
      */
     public CommonNodeEntity getInvestmentManagerIdNumber() {
@@ -3230,7 +3236,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 investmentManagerIdNumber
-     * 
+     *
      * @param investmentManagerIdNumber investmentManagerIdNumber
      */
     public void setInvestmentManagerIdNumber(CommonNodeEntity investmentManagerIdNumber) {
@@ -3239,7 +3245,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 filingContactName
-     * 
+     *
      * @return filingContactName.
      */
     public CommonNodeEntity getFilingContactName() {
@@ -3248,7 +3254,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 filingContactName
-     * 
+     *
      * @param filingContactName filingContactName
      */
     public void setFilingContactName(CommonNodeEntity filingContactName) {
@@ -3257,7 +3263,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 filingContactWorkPhone
-     * 
+     *
      * @return filingContactWorkPhone.
      */
     public CommonNodeEntity getFilingContactWorkPhone() {
@@ -3266,7 +3272,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 filingContactWorkPhone
-     * 
+     *
      * @param filingContactWorkPhone filingContactWorkPhone
      */
     public void setFilingContactWorkPhone(CommonNodeEntity filingContactWorkPhone) {
@@ -3275,7 +3281,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 filingContactMobilePhone
-     * 
+     *
      * @return filingContactMobilePhone.
      */
     public CommonNodeEntity getFilingContactMobilePhone() {
@@ -3284,7 +3290,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 filingContactMobilePhone
-     * 
+     *
      * @param filingContactMobilePhone filingContactMobilePhone
      */
     public void setFilingContactMobilePhone(CommonNodeEntity filingContactMobilePhone) {
@@ -3293,7 +3299,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 filingContactEmail
-     * 
+     *
      * @return filingContactEmail.
      */
     public CommonNodeEntity getFilingContactEmail() {
@@ -3302,7 +3308,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 filingContactEmail
-     * 
+     *
      * @param filingContactEmail filingContactEmail
      */
     public void setFilingContactEmail(CommonNodeEntity filingContactEmail) {
@@ -3311,7 +3317,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 productReturnType
-     * 
+     *
      * @return productReturnType.
      */
     public CommonNodeEntity getProductReturnType() {
@@ -3320,7 +3326,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 productTermToMaturityOfPublicOrPrivateProduct
-     * 
+     *
      * @param productTermToMaturityOfPublicOrPrivateProduct productTermToMaturityOfPublicOrPrivateProduct
      */
     public void setProductTermToMaturityOfPublicOrPrivateProduct(CommonNodeEntity productTermToMaturityOfPublicOrPrivateProduct) {
@@ -3328,7 +3334,7 @@ public class BaseInfoEntity implements Feild {
     }
     /**
      * 获取 productTermToMaturityOfPublicOrPrivateProduct
-     * 
+     *
      * @return productTermToMaturityOfPublicOrPrivateProduct.
      */
     public CommonNodeEntity getProductTermToMaturityOfPublicOrPrivateProduct() {
@@ -3337,7 +3343,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 productReturnType
-     * 
+     *
      * @param productReturnType productReturnType
      */
     public void setProductReturnType(CommonNodeEntity productReturnType) {
@@ -3345,7 +3351,7 @@ public class BaseInfoEntity implements Feild {
     }
     /**
      * 获取 productTermToMaturity
-     * 
+     *
      * @return productTermToMaturity.
      */
     public CommonNodeEntity getProductTermToMaturity() {
@@ -3354,7 +3360,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 productTermToMaturity
-     * 
+     *
      * @param productTermToMaturity productTermToMaturity
      */
     public void setProductTermToMaturity(CommonNodeEntity productTermToMaturity) {
@@ -3363,7 +3369,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 investmentRegion
-     * 
+     *
      * @return investmentRegion.
      */
     public CommonNodeEntity getInvestmentRegion() {
@@ -3372,7 +3378,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 investmentRegion
-     * 
+     *
      * @param investmentRegion investmentRegion
      */
     public void setInvestmentRegion(CommonNodeEntity investmentRegion) {
@@ -3381,7 +3387,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 specificCountryOrRegionTuple
-     * 
+     *
      * @return specificCountryOrRegionTuple.
      */
     public List<CommonNodeListEntity> getSpecificCountryOrRegionTuple() {
@@ -3390,7 +3396,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 specificCountryOrRegionTuple
-     * 
+     *
      * @param specificCountryOrRegionTuple specificCountryOrRegionTuple
      */
     public void setSpecificCountryOrRegionTuple(List<CommonNodeListEntity> specificCountryOrRegionTuple) {
@@ -3399,7 +3405,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 wealthManagementServiceMode
-     * 
+     *
      * @return wealthManagementServiceMode.
      */
     public CommonNodeEntity getWealthManagementServiceMode() {
@@ -3408,7 +3414,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 wealthManagementServiceMode
-     * 
+     *
      * @param wealthManagementServiceMode wealthManagementServiceMode
      */
     public void setWealthManagementServiceMode(CommonNodeEntity wealthManagementServiceMode) {
@@ -3417,7 +3423,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 productOperationMode
-     * 
+     *
      * @return productOperationMode.
      */
     public CommonNodeEntity getProductOperationMode() {
@@ -3426,7 +3432,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 productOperationMode
-     * 
+     *
      * @param productOperationMode productOperationMode
      */
     public void setProductOperationMode(CommonNodeEntity productOperationMode) {
@@ -3435,7 +3441,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 accountingMethod
-     * 
+     *
      * @return accountingMethod.
      */
     public CommonNodeEntity getAccountingMethod() {
@@ -3444,7 +3450,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 accountingMethod
-     * 
+     *
      * @param accountingMethod accountingMethod
      */
     public void setAccountingMethod(CommonNodeEntity accountingMethod) {
@@ -3453,7 +3459,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 productAssetAllocationMethod
-     * 
+     *
      * @return productAssetAllocationMethod.
      */
     public CommonNodeEntity getProductAssetAllocationMethod() {
@@ -3462,7 +3468,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 productAssetAllocationMethod
-     * 
+     *
      * @param productAssetAllocationMethod productAssetAllocationMethod
      */
     public void setProductAssetAllocationMethod(CommonNodeEntity productAssetAllocationMethod) {
@@ -3471,7 +3477,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 productManagementMode
-     * 
+     *
      * @return productManagementMode.
      */
     public CommonNodeEntity getProductManagementMode() {
@@ -3480,7 +3486,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 productManagementMode
-     * 
+     *
      * @param productManagementMode productManagementMode
      */
     public void setProductManagementMode(CommonNodeEntity productManagementMode) {
@@ -3489,7 +3495,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 actualProductManagerName
-     * 
+     *
      * @return actualProductManagerName.
      */
     public CommonNodeEntity getActualProductManagerName() {
@@ -3498,7 +3504,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 actualProductManagerName
-     * 
+     *
      * @param actualProductManagerName actualProductManagerName
      */
     public void setActualProductManagerName(CommonNodeEntity actualProductManagerName) {
@@ -3507,7 +3513,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 pricingMethod
-     * 
+     *
      * @return pricingMethod.
      */
     public CommonNodeEntity getPricingMethod() {
@@ -3516,7 +3522,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 pricingMethod
-     * 
+     *
      * @param pricingMethod pricingMethod
      */
     public void setPricingMethod(CommonNodeEntity pricingMethod) {
@@ -3525,7 +3531,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 investmentAssetType
-     * 
+     *
      * @return investmentAssetType.
      */
     public CommonNodeEntity getInvestmentAssetType() {
@@ -3534,7 +3540,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 investmentAssetType
-     * 
+     *
      * @param investmentAssetType investmentAssetType
      */
     public void setInvestmentAssetType(CommonNodeEntity investmentAssetType) {
@@ -3543,7 +3549,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 structuredProductUnderlyingAssetTuple
-     * 
+     *
      * @return structuredProductUnderlyingAssetTuple.
      */
     public List<CommonNodeListEntity> getStructuredProductUnderlyingAssetTuple() {
@@ -3552,7 +3558,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 structuredProductUnderlyingAssetTuple
-     * 
+     *
      * @param structuredProductUnderlyingAssetTuple structuredProductUnderlyingAssetTuple
      */
     public void setStructuredProductUnderlyingAssetTuple(List<CommonNodeListEntity> structuredProductUnderlyingAssetTuple) {
@@ -3561,7 +3567,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 expectedReturnPleaseSelect
-     * 
+     *
      * @return expectedReturnPleaseSelect.
      */
     public CommonNodeEntity getExpectedReturnPleaseSelect() {
@@ -3570,7 +3576,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 expectedReturnPleaseSelect
-     * 
+     *
      * @param expectedReturnPleaseSelect expectedReturnPleaseSelect
      */
     public void setExpectedReturnPleaseSelect(CommonNodeEntity expectedReturnPleaseSelect) {
@@ -3579,7 +3585,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 returnCalculationBasisPleaseSelect
-     * 
+     *
      * @return returnCalculationBasisPleaseSelect.
      */
     public CommonNodeEntity getReturnCalculationBasisPleaseSelect() {
@@ -3588,7 +3594,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 returnCalculationBasisPleaseSelect
-     * 
+     *
      * @param returnCalculationBasisPleaseSelect returnCalculationBasisPleaseSelect
      */
     public void setReturnCalculationBasisPleaseSelect(CommonNodeEntity returnCalculationBasisPleaseSelect) {
@@ -3597,7 +3603,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 investorMaximumExpectedAnnualReturn
-     * 
+     *
      * @return investorMaximumExpectedAnnualReturn.
      */
     public CommonNodeEntity getInvestorMaximumExpectedAnnualReturn() {
@@ -3606,7 +3612,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 investorMaximumExpectedAnnualReturn
-     * 
+     *
      * @param investorMaximumExpectedAnnualReturn investorMaximumExpectedAnnualReturn
      */
     public void setInvestorMaximumExpectedAnnualReturn(CommonNodeEntity investorMaximumExpectedAnnualReturn) {
@@ -3615,7 +3621,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 investorMinimumExpectedAnnualReturn
-     * 
+     *
      * @return investorMinimumExpectedAnnualReturn.
      */
     public CommonNodeEntity getInvestorMinimumExpectedAnnualReturn() {
@@ -3624,7 +3630,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 investorMinimumExpectedAnnualReturn
-     * 
+     *
      * @param investorMinimumExpectedAnnualReturn investorMinimumExpectedAnnualReturn
      */
     public void setInvestorMinimumExpectedAnnualReturn(CommonNodeEntity investorMinimumExpectedAnnualReturn) {
@@ -3633,7 +3639,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 productSalesRegionTuple
-     * 
+     *
      * @return productSalesRegionTuple.
      */
     public List<CommonNodeListEntity> getProductSalesRegionTuple() {
@@ -3642,7 +3648,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 productSalesRegionTuple
-     * 
+     *
      * @param productSalesRegionTuple productSalesRegionTuple
      */
     public void setProductSalesRegionTuple(List<CommonNodeListEntity> productSalesRegionTuple) {
@@ -3651,7 +3657,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 investmentThreshold
-     * 
+     *
      * @return investmentThreshold.
      */
     public CommonNodeEntity getInvestmentThreshold() {
@@ -3660,7 +3666,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 investmentThreshold
-     * 
+     *
      * @param investmentThreshold investmentThreshold
      */
     public void setInvestmentThreshold(CommonNodeEntity investmentThreshold) {
@@ -3669,7 +3675,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 fundingCurrency
-     * 
+     *
      * @return fundingCurrency.
      */
 /*    public CommonNodeEntity getFundingCurrency() {
@@ -3678,7 +3684,7 @@ public class BaseInfoEntity implements Feild {
 */
     /**
      * 设置 fundingCurrency
-     * 
+     *
      * @param fundingCurrency fundingCurrency
      */
 /*    public void setFundingCurrency(CommonNodeEntity fundingCurrency) {
@@ -3687,7 +3693,7 @@ public class BaseInfoEntity implements Feild {
 */
     /**
      * 获取 principalPaymentCurrency
-     * 
+     *
      * @return principalPaymentCurrency.
      */
 /*    public CommonNodeEntity getPrincipalPaymentCurrency() {
@@ -3696,7 +3702,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 principalPaymentCurrency
-     * 
+     *
      * @param principalPaymentCurrency principalPaymentCurrency
      */
 /*    public void setPrincipalPaymentCurrency(CommonNodeEntity principalPaymentCurrency) {
@@ -3705,7 +3711,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 incomePaymentCurrencyTuple
-     * 
+     *
      * @return incomePaymentCurrencyTuple.
      */
     public List<CommonNodeListEntity> getIncomePaymentCurrencyTuple() {
@@ -3714,7 +3720,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 incomePaymentCurrencyTuple
-     * 
+     *
      * @param incomePaymentCurrencyTuple incomePaymentCurrencyTuple
      */
     public void setIncomePaymentCurrencyTuple(List<CommonNodeListEntity> incomePaymentCurrencyTuple) {
@@ -3723,7 +3729,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 salesCommissionRate
-     * 
+     *
      * @return salesCommissionRate.
      */
     public CommonNodeEntity getSalesCommissionRate() {
@@ -3732,7 +3738,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 salesCommissionRate
-     * 
+     *
      * @param salesCommissionRate salesCommissionRate
      */
     public void setSalesCommissionRate(CommonNodeEntity salesCommissionRate) {
@@ -3741,7 +3747,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 custodianFeeRate
-     * 
+     *
      * @return custodianFeeRate.
      */
     public CommonNodeEntity getCustodianFeeRate() {
@@ -3750,7 +3756,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 custodianFeeRate
-     * 
+     *
      * @param custodianFeeRate custodianFeeRate
      */
     public void setCustodianFeeRate(CommonNodeEntity custodianFeeRate) {
@@ -3759,7 +3765,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 subscriptionStartDateEarliest
-     * 
+     *
      * @return subscriptionStartDateEarliest.
      */
     public CommonNodeEntity getSubscriptionStartDateEarliest() {
@@ -3768,7 +3774,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 subscriptionStartDateEarliest
-     * 
+     *
      * @param subscriptionStartDateEarliest subscriptionStartDateEarliest
      */
     public void setSubscriptionStartDateEarliest(CommonNodeEntity subscriptionStartDateEarliest) {
@@ -3777,7 +3783,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 subscriptionStartDateLatest
-     * 
+     *
      * @return subscriptionStartDateLatest.
      */
     public CommonNodeEntity getSubscriptionStartDateLatest() {
@@ -3786,7 +3792,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 subscriptionStartDateLatest
-     * 
+     *
      * @param subscriptionStartDateLatest subscriptionStartDateLatest
      */
     public void setSubscriptionStartDateLatest(CommonNodeEntity subscriptionStartDateLatest) {
@@ -3795,7 +3801,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 plannedFundingAmountCNY
-     * 
+     *
      * @return plannedFundingAmountCNY.
      */
     public CommonNodeEntity getPlannedFundingAmountCNY() {
@@ -3804,7 +3810,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 plannedFundingAmountCNY
-     * 
+     *
      * @param plannedFundingAmountCNY plannedFundingAmountCNY
      */
     public void setPlannedFundingAmountCNY(CommonNodeEntity plannedFundingAmountCNY) {
@@ -3813,7 +3819,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 domesticCustodianName
-     * 
+     *
      * @return domesticCustodianName.
      */
     public CommonNodeEntity getDomesticCustodianName() {
@@ -3822,7 +3828,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 domesticCustodianName
-     * 
+     *
      * @param domesticCustodianName domesticCustodianName
      */
     public void setDomesticCustodianName(CommonNodeEntity domesticCustodianName) {
@@ -3831,7 +3837,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 domesticCustodianIdentificationCode
-     * 
+     *
      * @return domesticCustodianIdentificationCode.
      */
     public CommonNodeEntity getDomesticCustodianIdentificationCode() {
@@ -3840,7 +3846,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 domesticCustodianIdentificationCode
-     * 
+     *
      * @param domesticCustodianIdentificationCode domesticCustodianIdentificationCode
      */
     public void setDomesticCustodianIdentificationCode(CommonNodeEntity domesticCustodianIdentificationCode) {
@@ -3849,7 +3855,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 overseasCustodianNationalityTuple
-     * 
+     *
      * @return overseasCustodianNationalityTuple.
      */
     public List<CommonNodeListEntity> getOverseasCustodianNationalityTuple() {
@@ -3858,7 +3864,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 overseasCustodianNationalityTuple
-     * 
+     *
      * @param overseasCustodianNationalityTuple overseasCustodianNationalityTuple
      */
     public void setOverseasCustodianNationalityTuple(List<CommonNodeListEntity> overseasCustodianNationalityTuple) {
@@ -3867,7 +3873,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 overseasCustodianName
-     * 
+     *
      * @return overseasCustodianName.
      */
     public CommonNodeEntity getOverseasCustodianName() {
@@ -3876,7 +3882,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 overseasCustodianName
-     * 
+     *
      * @param overseasCustodianName overseasCustodianName
      */
     public void setOverseasCustodianName(CommonNodeEntity overseasCustodianName) {
@@ -3885,7 +3891,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 investorRiskPreferenceTuple
-     * 
+     *
      * @return investorRiskPreferenceTuple.
      */
     public List<CommonNodeListEntity> getInvestorRiskPreferenceTuple() {
@@ -3894,7 +3900,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 investorRiskPreferenceTuple
-     * 
+     *
      * @param investorRiskPreferenceTuple investorRiskPreferenceTuple
      */
     public void setInvestorRiskPreferenceTuple(List<CommonNodeListEntity> investorRiskPreferenceTuple) {
@@ -3903,7 +3909,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 productRiskRating
-     * 
+     *
      * @return productRiskRating.
      */
     public CommonNodeEntity getProductRiskRating() {
@@ -3912,7 +3918,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 productRiskRating
-     * 
+     *
      * @param productRiskRating productRiskRating
      */
     public void setProductRiskRating(CommonNodeEntity productRiskRating) {
@@ -3921,7 +3927,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 issuerEarlyTerminationOptionPleaseSelect
-     * 
+     *
      * @return issuerEarlyTerminationOptionPleaseSelect.
      */
     public CommonNodeEntity getIssuerEarlyTerminationOptionPleaseSelect() {
@@ -3930,7 +3936,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 issuerEarlyTerminationOptionPleaseSelect
-     * 
+     *
      * @param issuerEarlyTerminationOptionPleaseSelect issuerEarlyTerminationOptionPleaseSelect
      */
     public void setIssuerEarlyTerminationOptionPleaseSelect(CommonNodeEntity issuerEarlyTerminationOptionPleaseSelect) {
@@ -3939,7 +3945,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 investorRedemptionOptionPleaseSelect
-     * 
+     *
      * @return investorRedemptionOptionPleaseSelect.
      */
     public CommonNodeEntity getInvestorRedemptionOptionPleaseSelect() {
@@ -3948,7 +3954,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 investorRedemptionOptionPleaseSelect
-     * 
+     *
      * @param investorRedemptionOptionPleaseSelect investorRedemptionOptionPleaseSelect
      */
     public void setInvestorRedemptionOptionPleaseSelect(CommonNodeEntity investorRedemptionOptionPleaseSelect) {
@@ -3957,7 +3963,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 productBrand
-     * 
+     *
      * @return productBrand.
      */
     public CommonNodeEntity getProductBrand() {
@@ -3966,7 +3972,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 productBrand
-     * 
+     *
      * @param productBrand productBrand
      */
     public void setProductBrand(CommonNodeEntity productBrand) {
@@ -3975,7 +3981,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 productTermNumber
-     * 
+     *
      * @return productTermNumber.
      */
     public CommonNodeEntity getProductTermNumber() {
@@ -3984,7 +3990,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 productTermNumber
-     * 
+     *
      * @param productTermNumber productTermNumber
      */
     public void setProductTermNumber(CommonNodeEntity productTermNumber) {
@@ -3993,7 +3999,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 cooperationMode
-     * 
+     *
      * @return cooperationMode.
      */
     public CommonNodeEntity getCooperationMode() {
@@ -4002,7 +4008,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 cooperationMode
-     * 
+     *
      * @param cooperationMode cooperationMode
      */
     public void setCooperationMode(CommonNodeEntity cooperationMode) {
@@ -4011,7 +4017,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 cooperator
-     * 
+     *
      * @return cooperator.
      */
     public CommonNodeEntity getCooperator() {
@@ -4020,7 +4026,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 cooperator
-     * 
+     *
      * @param cooperator cooperator
      */
     public void setCooperator(CommonNodeEntity cooperator) {
@@ -4029,7 +4035,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 dueDateOfInvestedPrincipal
-     * 
+     *
      * @return dueDateOfInvestedPrincipal.
      */
     public CommonNodeEntity getDueDateOfInvestedPrincipal() {
@@ -4038,7 +4044,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 dueDateOfInvestedPrincipal
-     * 
+     *
      * @param dueDateOfInvestedPrincipal dueDateOfInvestedPrincipal
      */
     public void setDueDateOfInvestedPrincipal(CommonNodeEntity dueDateOfInvestedPrincipal) {
@@ -4047,7 +4053,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 dueDateOfInvestmentIncome
-     * 
+     *
      * @return dueDateOfInvestmentIncome.
      */
     public CommonNodeEntity getDueDateOfInvestmentIncome() {
@@ -4056,7 +4062,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 dueDateOfInvestmentIncome
-     * 
+     *
      * @param dueDateOfInvestmentIncome dueDateOfInvestmentIncome
      */
     public void setDueDateOfInvestmentIncome(CommonNodeEntity dueDateOfInvestmentIncome) {
@@ -4065,7 +4071,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 productCreditEnhancementPleaseSelect
-     * 
+     *
      * @return productCreditEnhancementPleaseSelect.
      */
     public CommonNodeEntity getProductCreditEnhancementPleaseSelect() {
@@ -4074,7 +4080,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 productCreditEnhancementPleaseSelect
-     * 
+     *
      * @param productCreditEnhancementPleaseSelect productCreditEnhancementPleaseSelect
      */
     public void setProductCreditEnhancementPleaseSelect(CommonNodeEntity productCreditEnhancementPleaseSelect) {
@@ -4083,7 +4089,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 typeOfProductCreditEnhancementInstitutionTuple
-     * 
+     *
      * @return typeOfProductCreditEnhancementInstitutionTuple.
      */
     public List<CommonNodeListEntity> getTypeOfProductCreditEnhancementInstitutionTuple() {
@@ -4092,7 +4098,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 typeOfProductCreditEnhancementInstitutionTuple
-     * 
+     *
      * @param typeOfProductCreditEnhancementInstitutionTuple
      *            typeOfProductCreditEnhancementInstitutionTuple
      */
@@ -4102,7 +4108,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 methodOfProductCreditEnhancement
-     * 
+     *
      * @return methodOfProductCreditEnhancement.
      */
     public CommonNodeEntity getMethodOfProductCreditEnhancement() {
@@ -4111,7 +4117,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 methodOfProductCreditEnhancement
-     * 
+     *
      * @param methodOfProductCreditEnhancement methodOfProductCreditEnhancement
      */
     public void setMethodOfProductCreditEnhancement(CommonNodeEntity methodOfProductCreditEnhancement) {
@@ -4120,7 +4126,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 investmentAssetTypeAndRatio
-     * 
+     *
      * @return investmentAssetTypeAndRatio.
      */
     public CommonNodeEntity getInvestmentAssetTypeAndRatio() {
@@ -4129,7 +4135,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 investmentAssetTypeAndRatio
-     * 
+     *
      * @param investmentAssetTypeAndRatio investmentAssetTypeAndRatio
      */
     public void setInvestmentAssetTypeAndRatio(CommonNodeEntity investmentAssetTypeAndRatio) {
@@ -4138,7 +4144,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 filingRegistrationDetails
-     * 
+     *
      * @return filingRegistrationDetails.
      */
     public CommonNodeEntity getFilingRegistrationDetails() {
@@ -4147,7 +4153,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 filingRegistrationDetails
-     * 
+     *
      * @param filingRegistrationDetails filingRegistrationDetails
      */
     public void setFilingRegistrationDetails(CommonNodeEntity filingRegistrationDetails) {
@@ -4156,7 +4162,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 mainDocumentsTuple
-     * 
+     *
      * @return mainDocumentsTuple.
      */
     public List<CommonNodeListEntity> getMainDocumentsTuple() {
@@ -4165,7 +4171,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 mainDocumentsTuple
-     * 
+     *
      * @param mainDocumentsTuple mainDocumentsTuple
      */
     public void setMainDocumentsTuple(List<CommonNodeListEntity> mainDocumentsTuple) {
@@ -4174,7 +4180,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 wealthManagementProductFeasibilityReportsTuple
-     * 
+     *
      * @return wealthManagementProductFeasibilityReportsTuple.
      */
     public List<CommonNodeListEntity> getWealthManagementProductFeasibilityReportsTuple() {
@@ -4183,7 +4189,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 wealthManagementProductFeasibilityReportsTuple
-     * 
+     *
      * @param wealthManagementProductFeasibilityReportsTuple
      *            wealthManagementProductFeasibilityReportsTuple
      */
@@ -4193,7 +4199,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 internalAuthorizedDocumentsTuple
-     * 
+     *
      * @return internalAuthorizedDocumentsTuple.
      */
     public List<CommonNodeListEntity> getInternalAuthorizedDocumentsTuple() {
@@ -4202,7 +4208,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 internalAuthorizedDocumentsTuple
-     * 
+     *
      * @param internalAuthorizedDocumentsTuple internalAuthorizedDocumentsTuple
      */
     public void setInternalAuthorizedDocumentsTuple(List<CommonNodeListEntity> internalAuthorizedDocumentsTuple) {
@@ -4211,7 +4217,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 dueDiligenceDocumentsOnRelevantPartiesTuple
-     * 
+     *
      * @return dueDiligenceDocumentsOnRelevantPartiesTuple.
      */
     public List<CommonNodeListEntity> getDueDiligenceDocumentsOnRelevantPartiesTuple() {
@@ -4220,7 +4226,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 dueDiligenceDocumentsOnRelevantPartiesTuple
-     * 
+     *
      * @param dueDiligenceDocumentsOnRelevantPartiesTuple
      *            dueDiligenceDocumentsOnRelevantPartiesTuple
      */
@@ -4230,7 +4236,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 legalDocumentsSignedByRelevantPartiesTuple
-     * 
+     *
      * @return legalDocumentsSignedByRelevantPartiesTuple.
      */
     public List<CommonNodeListEntity> getLegalDocumentsSignedByRelevantPartiesTuple() {
@@ -4239,7 +4245,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 legalDocumentsSignedByRelevantPartiesTuple
-     * 
+     *
      * @param legalDocumentsSignedByRelevantPartiesTuple legalDocumentsSignedByRelevantPartiesTuple
      */
     public void setLegalDocumentsSignedByRelevantPartiesTuple(List<CommonNodeListEntity> legalDocumentsSignedByRelevantPartiesTuple) {
@@ -4248,7 +4254,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 wealthManagementProductSalesDocumentsTuple
-     * 
+     *
      * @return wealthManagementProductSalesDocumentsTuple.
      */
     public List<CommonNodeListEntity> getWealthManagementProductSalesDocumentsTuple() {
@@ -4257,7 +4263,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 wealthManagementProductSalesDocumentsTuple
-     * 
+     *
      * @param wealthManagementProductSalesDocumentsTuple wealthManagementProductSalesDocumentsTuple
      */
     public void setWealthManagementProductSalesDocumentsTuple(List<CommonNodeListEntity> wealthManagementProductSalesDocumentsTuple) {
@@ -4266,7 +4272,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 wealthManagementProductSpecificationsTuple
-     * 
+     *
      * @return wealthManagementProductSpecificationsTuple.
      */
     public List<CommonNodeListEntity> getWealthManagementProductSpecificationsTuple() {
@@ -4275,7 +4281,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 wealthManagementProductSpecificationsTuple
-     * 
+     *
      * @param wealthManagementProductSpecificationsTuple wealthManagementProductSpecificationsTuple
      */
     public void setWealthManagementProductSpecificationsTuple(List<CommonNodeListEntity> wealthManagementProductSpecificationsTuple) {
@@ -4284,7 +4290,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 wealthManagementProductMarketingDocumentsTuple
-     * 
+     *
      * @return wealthManagementProductMarketingDocumentsTuple.
      */
     public List<CommonNodeListEntity> getWealthManagementProductMarketingDocumentsTuple() {
@@ -4293,7 +4299,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 wealthManagementProductMarketingDocumentsTuple
-     * 
+     *
      * @param wealthManagementProductMarketingDocumentsTuple
      *            wealthManagementProductMarketingDocumentsTuple
      */
@@ -4303,7 +4309,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 otherDocumentsTuple
-     * 
+     *
      * @return otherDocumentsTuple.
      */
     public List<CommonNodeListEntity> getOtherDocumentsTuple() {
@@ -4312,7 +4318,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 otherDocumentsTuple
-     * 
+     *
      * @param otherDocumentsTuple otherDocumentsTuple
      */
     public void setOtherDocumentsTuple(List<CommonNodeListEntity> otherDocumentsTuple) {
@@ -4321,7 +4327,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 investorType
-     * 
+     *
      * @return investorType.
      */
     public CommonNodeEntity getInvestorType() {
@@ -4330,7 +4336,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 investorType
-     * 
+     *
      * @param investorType investorType
      */
     public void setInvestorType(CommonNodeEntity investorType) {
@@ -4339,7 +4345,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 investorAverageExpectedAnnualReturn
-     * 
+     *
      * @return investorAverageExpectedAnnualReturn.
      */
     public CommonNodeEntity getInvestorAverageExpectedAnnualReturn() {
@@ -4348,7 +4354,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 investorAverageExpectedAnnualReturn
-     * 
+     *
      * @param investorAverageExpectedAnnualReturn investorAverageExpectedAnnualReturn
      */
     public void setInvestorAverageExpectedAnnualReturn(CommonNodeEntity investorAverageExpectedAnnualReturn) {
@@ -4357,7 +4363,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 ratesOfReturn
-     * 
+     *
      * @return ratesOfReturn.
      */
     public CommonNodeEntity getRatesOfReturn() {
@@ -4366,7 +4372,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 ratesOfReturn
-     * 
+     *
      * @param ratesOfReturn ratesOfReturn
      */
     public void setRatesOfReturn(CommonNodeEntity ratesOfReturn) {
@@ -4375,7 +4381,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 subscriptionStartDate
-     * 
+     *
      * @return subscriptionStartDate.
      */
     public CommonNodeEntity getSubscriptionStartDate() {
@@ -4384,7 +4390,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 subscriptionStartDate
-     * 
+     *
      * @param subscriptionStartDate subscriptionStartDate
      */
     public void setSubscriptionStartDate(CommonNodeEntity subscriptionStartDate) {
@@ -4393,7 +4399,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 subscriptionEndDate
-     * 
+     *
      * @return subscriptionEndDate.
      */
     public CommonNodeEntity getSubscriptionEndDate() {
@@ -4402,7 +4408,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 subscriptionEndDate
-     * 
+     *
      * @param subscriptionEndDate subscriptionEndDate
      */
     public void setSubscriptionEndDate(CommonNodeEntity subscriptionEndDate) {
@@ -4411,7 +4417,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 productValueDate
-     * 
+     *
      * @return productValueDate.
      */
     public CommonNodeEntity getProductValueDate() {
@@ -4420,7 +4426,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 productValueDate
-     * 
+     *
      * @param productValueDate productValueDate
      */
     public void setProductValueDate(CommonNodeEntity productValueDate) {
@@ -4429,7 +4435,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 productMaturityDate
-     * 
+     *
      * @return productMaturityDate.
      */
     public CommonNodeEntity getProductMaturityDate() {
@@ -4438,7 +4444,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 productMaturityDate
-     * 
+     *
      * @param productMaturityDate productMaturityDate
      */
     public void setProductMaturityDate(CommonNodeEntity productMaturityDate) {
@@ -4447,7 +4453,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 structuredProductPleaseSelect
-     * 
+     *
      * @return structuredProductPleaseSelect.
      */
     public CommonNodeEntity getStructuredProductPleaseSelect() {
@@ -4456,7 +4462,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 structuredProductPleaseSelect
-     * 
+     *
      * @param structuredProductPleaseSelect structuredProductPleaseSelect
      */
     public void setStructuredProductPleaseSelect(CommonNodeEntity structuredProductPleaseSelect) {
@@ -4465,7 +4471,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 gradeType
-     * 
+     *
      * @return gradeType.
      */
     public CommonNodeEntity getGradeType() {
@@ -4474,7 +4480,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 gradeType
-     * 
+     *
      * @param gradeType gradeType
      */
     public void setGradeType(CommonNodeEntity gradeType) {
@@ -4483,7 +4489,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 openingMode
-     * 
+     *
      * @return openingMode.
      */
     public CommonNodeEntity getOpeningMode() {
@@ -4492,7 +4498,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 openingMode
-     * 
+     *
      * @param openingMode openingMode
      */
     public void setOpeningMode(CommonNodeEntity openingMode) {
@@ -4501,7 +4507,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 regularOpeningPeriod
-     * 
+     *
      * @return regularOpeningPeriod.
      */
     public CommonNodeEntity getRegularOpeningPeriod() {
@@ -4510,7 +4516,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 regularOpeningPeriod
-     * 
+     *
      * @param regularOpeningPeriod regularOpeningPeriod
      */
     public void setRegularOpeningPeriod(CommonNodeEntity regularOpeningPeriod) {
@@ -4519,7 +4525,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 otherRegularOpeningPeriodDays
-     * 
+     *
      * @return otherRegularOpeningPeriodDays.
      */
     public CommonNodeEntity getOtherRegularOpeningPeriodDays() {
@@ -4528,7 +4534,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 otherRegularOpeningPeriodDays
-     * 
+     *
      * @param otherRegularOpeningPeriodDays otherRegularOpeningPeriodDays
      */
     public void setOtherRegularOpeningPeriodDays(CommonNodeEntity otherRegularOpeningPeriodDays) {
@@ -4537,7 +4543,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 detailsOnIrregularOpeningPeriod
-     * 
+     *
      * @return detailsOnIrregularOpeningPeriod.
      */
     public CommonNodeEntity getDetailsOnIrregularOpeningPeriod() {
@@ -4546,7 +4552,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 detailsOnIrregularOpeningPeriod
-     * 
+     *
      * @param detailsOnIrregularOpeningPeriod detailsOnIrregularOpeningPeriod
      */
     public void setDetailsOnIrregularOpeningPeriod(CommonNodeEntity detailsOnIrregularOpeningPeriod) {
@@ -4555,7 +4561,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 startDateOfFirstOpeningPeriod
-     * 
+     *
      * @return startDateOfFirstOpeningPeriod.
      */
     public CommonNodeEntity getStartDateOfFirstOpeningPeriod() {
@@ -4564,7 +4570,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 startDateOfFirstOpeningPeriod
-     * 
+     *
      * @param startDateOfFirstOpeningPeriod startDateOfFirstOpeningPeriod
      */
     public void setStartDateOfFirstOpeningPeriod(CommonNodeEntity startDateOfFirstOpeningPeriod) {
@@ -4573,7 +4579,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 holidayOpeningPleaseSelect
-     * 
+     *
      * @return holidayOpeningPleaseSelect.
      */
     public CommonNodeEntity getHolidayOpeningPleaseSelect() {
@@ -4582,7 +4588,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 holidayOpeningPleaseSelect
-     * 
+     *
      * @param holidayOpeningPleaseSelect holidayOpeningPleaseSelect
      */
     public void setHolidayOpeningPleaseSelect(CommonNodeEntity holidayOpeningPleaseSelect) {
@@ -4591,7 +4597,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 averageOpeningFrequencyAnnualized
-     * 
+     *
      * @return averageOpeningFrequencyAnnualized.
      */
     public CommonNodeEntity getAverageOpeningFrequencyAnnualized() {
@@ -4600,7 +4606,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 averageOpeningFrequencyAnnualized
-     * 
+     *
      * @param averageOpeningFrequencyAnnualized averageOpeningFrequencyAnnualized
      */
     public void setAverageOpeningFrequencyAnnualized(CommonNodeEntity averageOpeningFrequencyAnnualized) {
@@ -4609,7 +4615,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 businessTypeDuringOpeningPeriod
-     * 
+     *
      * @return businessTypeDuringOpeningPeriod.
      */
     public CommonNodeEntity getBusinessTypeDuringOpeningPeriod() {
@@ -4618,7 +4624,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 businessTypeDuringOpeningPeriod
-     * 
+     *
      * @param businessTypeDuringOpeningPeriod businessTypeDuringOpeningPeriod
      */
     public void setBusinessTypeDuringOpeningPeriod(CommonNodeEntity businessTypeDuringOpeningPeriod) {
@@ -4627,7 +4633,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 detailsOnBusinessTypeDuringOpeningPeriod
-     * 
+     *
      * @return detailsOnBusinessTypeDuringOpeningPeriod.
      */
     public CommonNodeEntity getDetailsOnBusinessTypeDuringOpeningPeriod() {
@@ -4636,7 +4642,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 detailsOnBusinessTypeDuringOpeningPeriod
-     * 
+     *
      * @param detailsOnBusinessTypeDuringOpeningPeriod detailsOnBusinessTypeDuringOpeningPeriod
      */
     public void setDetailsOnBusinessTypeDuringOpeningPeriod(CommonNodeEntity detailsOnBusinessTypeDuringOpeningPeriod) {
@@ -4645,7 +4651,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 issueRegistrationForAgencyAndPrivateBankDetails
-     * 
+     *
      * @return issueRegistrationForAgencyAndPrivateBankDetails.
      */
     public CommonNodeEntity getIssueRegistrationForAgencyAndPrivateBankDetails() {
@@ -4654,7 +4660,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 issueRegistrationForAgencyAndPrivateBankDetails
-     * 
+     *
      * @param issueRegistrationForAgencyAndPrivateBankDetails
      *            issueRegistrationForAgencyAndPrivateBankDetails
      */
@@ -4664,7 +4670,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 productCode
-     * 
+     *
      * @return productCode.
      */
     public CommonNodeEntity getProductCode() {
@@ -4673,7 +4679,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 productCode
-     * 
+     *
      * @param productCode productCode
      */
     public void setProductCode(CommonNodeEntity productCode) {
@@ -4682,7 +4688,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 actualProductTerminationDate
-     * 
+     *
      * @return actualProductTerminationDate.
      */
     public CommonNodeEntity getActualProductTerminationDate() {
@@ -4691,7 +4697,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 actualProductTerminationDate
-     * 
+     *
      * @param actualProductTerminationDate actualProductTerminationDate
      */
     public void setActualProductTerminationDate(CommonNodeEntity actualProductTerminationDate) {
@@ -4700,7 +4706,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 netIncomeOfBankCNY
-     * 
+     *
      * @return netIncomeOfBankCNY.
      */
     public CommonNodeEntity getNetIncomeOfBankCNY() {
@@ -4709,7 +4715,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 netIncomeOfBankCNY
-     * 
+     *
      * @param netIncomeOfBankCNY netIncomeOfBankCNY
      */
     public void setNetIncomeOfBankCNY(CommonNodeEntity netIncomeOfBankCNY) {
@@ -4718,7 +4724,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 interestPaymentCNY
-     * 
+     *
      * @return interestPaymentCNY.
      */
     public CommonNodeEntity getInterestPaymentCNY() {
@@ -4727,7 +4733,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 interestPaymentCNY
-     * 
+     *
      * @param interestPaymentCNY interestPaymentCNY
      */
     public void setInterestPaymentCNY(CommonNodeEntity interestPaymentCNY) {
@@ -4736,7 +4742,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 principalAndInterestPaymentCNY
-     * 
+     *
      * @return principalAndInterestPaymentCNY.
      */
     public CommonNodeEntity getPrincipalAndInterestPaymentCNY() {
@@ -4745,7 +4751,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 principalAndInterestPaymentCNY
-     * 
+     *
      * @param principalAndInterestPaymentCNY principalAndInterestPaymentCNY
      */
     public void setPrincipalAndInterestPaymentCNY(CommonNodeEntity principalAndInterestPaymentCNY) {
@@ -4754,7 +4760,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 deliveredUnits
-     * 
+     *
      * @return deliveredUnits.
      */
     public CommonNodeEntity getDeliveredUnits() {
@@ -4763,7 +4769,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 deliveredUnits
-     * 
+     *
      * @param deliveredUnits deliveredUnits
      */
     public void setDeliveredUnits(CommonNodeEntity deliveredUnits) {
@@ -4772,7 +4778,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 internalCustodianFeeCNY
-     * 
+     *
      * @return internalCustodianFeeCNY.
      */
     public CommonNodeEntity getInternalCustodianFeeCNY() {
@@ -4781,7 +4787,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 internalCustodianFeeCNY
-     * 
+     *
      * @param internalCustodianFeeCNY internalCustodianFeeCNY
      */
     public void setInternalCustodianFeeCNY(CommonNodeEntity internalCustodianFeeCNY) {
@@ -4790,7 +4796,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 internalManagementFeeCNY
-     * 
+     *
      * @return internalManagementFeeCNY.
      */
     public CommonNodeEntity getInternalManagementFeeCNY() {
@@ -4799,7 +4805,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 internalManagementFeeCNY
-     * 
+     *
      * @param internalManagementFeeCNY internalManagementFeeCNY
      */
     public void setInternalManagementFeeCNY(CommonNodeEntity internalManagementFeeCNY) {
@@ -4808,7 +4814,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 internalSalesCommissionCNY
-     * 
+     *
      * @return internalSalesCommissionCNY.
      */
     public CommonNodeEntity getInternalSalesCommissionCNY() {
@@ -4817,7 +4823,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 internalSalesCommissionCNY
-     * 
+     *
      * @param internalSalesCommissionCNY internalSalesCommissionCNY
      */
     public void setInternalSalesCommissionCNY(CommonNodeEntity internalSalesCommissionCNY) {
@@ -4826,7 +4832,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 internalOtherProductFeeCNY
-     * 
+     *
      * @return internalOtherProductFeeCNY.
      */
     public CommonNodeEntity getInternalOtherProductFeeCNY() {
@@ -4835,7 +4841,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 internalOtherProductFeeCNY
-     * 
+     *
      * @param internalOtherProductFeeCNY internalOtherProductFeeCNY
      */
     public void setInternalOtherProductFeeCNY(CommonNodeEntity internalOtherProductFeeCNY) {
@@ -4844,7 +4850,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 otherInstitutionCustodianFeeCNY
-     * 
+     *
      * @return otherInstitutionCustodianFeeCNY.
      */
     public CommonNodeEntity getOtherInstitutionCustodianFeeCNY() {
@@ -4853,7 +4859,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 otherInstitutionCustodianFeeCNY
-     * 
+     *
      * @param otherInstitutionCustodianFeeCNY otherInstitutionCustodianFeeCNY
      */
     public void setOtherInstitutionCustodianFeeCNY(CommonNodeEntity otherInstitutionCustodianFeeCNY) {
@@ -4862,7 +4868,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 otherInstitutionManagementFeeCNY
-     * 
+     *
      * @return otherInstitutionManagementFeeCNY.
      */
     public CommonNodeEntity getOtherInstitutionManagementFeeCNY() {
@@ -4871,7 +4877,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 otherInstitutionManagementFeeCNY
-     * 
+     *
      * @param otherInstitutionManagementFeeCNY otherInstitutionManagementFeeCNY
      */
     public void setOtherInstitutionManagementFeeCNY(CommonNodeEntity otherInstitutionManagementFeeCNY) {
@@ -4880,7 +4886,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 otherInstitutionSalesCommissionCNY
-     * 
+     *
      * @return otherInstitutionSalesCommissionCNY.
      */
     public CommonNodeEntity getOtherInstitutionSalesCommissionCNY() {
@@ -4889,7 +4895,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 otherInstitutionSalesCommissionCNY
-     * 
+     *
      * @param otherInstitutionSalesCommissionCNY otherInstitutionSalesCommissionCNY
      */
     public void setOtherInstitutionSalesCommissionCNY(CommonNodeEntity otherInstitutionSalesCommissionCNY) {
@@ -4898,7 +4904,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 investmentConsultingFeeCNY
-     * 
+     *
      * @return investmentConsultingFeeCNY.
      */
     public CommonNodeEntity getInvestmentConsultingFeeCNY() {
@@ -4907,7 +4913,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 investmentConsultingFeeCNY
-     * 
+     *
      * @param investmentConsultingFeeCNY investmentConsultingFeeCNY
      */
     public void setInvestmentConsultingFeeCNY(CommonNodeEntity investmentConsultingFeeCNY) {
@@ -4916,7 +4922,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 otherInstitutionOtherProductFeeCNY
-     * 
+     *
      * @return otherInstitutionOtherProductFeeCNY.
      */
     public CommonNodeEntity getOtherInstitutionOtherProductFeeCNY() {
@@ -4925,7 +4931,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 otherInstitutionOtherProductFeeCNY
-     * 
+     *
      * @param otherInstitutionOtherProductFeeCNY otherInstitutionOtherProductFeeCNY
      */
     public void setOtherInstitutionOtherProductFeeCNY(CommonNodeEntity otherInstitutionOtherProductFeeCNY) {
@@ -4934,7 +4940,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 realizedAnnualReturnToInvestors
-     * 
+     *
      * @return realizedAnnualReturnToInvestors.
      */
     public CommonNodeEntity getRealizedAnnualReturnToInvestors() {
@@ -4943,7 +4949,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 realizedAnnualReturnToInvestors
-     * 
+     *
      * @param realizedAnnualReturnToInvestors realizedAnnualReturnToInvestors
      */
     public void setRealizedAnnualReturnToInvestors(CommonNodeEntity realizedAnnualReturnToInvestors) {
@@ -4952,7 +4958,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 realizedAnnualReturnToProduct
-     * 
+     *
      * @return realizedAnnualReturnToProduct.
      */
     public CommonNodeEntity getRealizedAnnualReturnToProduct() {
@@ -4961,7 +4967,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 realizedAnnualReturnToProduct
-     * 
+     *
      * @param realizedAnnualReturnToProduct realizedAnnualReturnToProduct
      */
     public void setRealizedAnnualReturnToProduct(CommonNodeEntity realizedAnnualReturnToProduct) {
@@ -4970,7 +4976,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 numberOfIndividualInvestors
-     * 
+     *
      * @return numberOfIndividualInvestors.
      */
     public CommonNodeEntity getNumberOfIndividualInvestors() {
@@ -4979,7 +4985,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 numberOfIndividualInvestors
-     * 
+     *
      * @param numberOfIndividualInvestors numberOfIndividualInvestors
      */
     public void setNumberOfIndividualInvestors(CommonNodeEntity numberOfIndividualInvestors) {
@@ -4988,7 +4994,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 numberOfCorporateInvestors
-     * 
+     *
      * @return numberOfCorporateInvestors.
      */
     public CommonNodeEntity getNumberOfCorporateInvestors() {
@@ -4997,7 +5003,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 numberOfCorporateInvestors
-     * 
+     *
      * @param numberOfCorporateInvestors numberOfCorporateInvestors
      */
     public void setNumberOfCorporateInvestors(CommonNodeEntity numberOfCorporateInvestors) {
@@ -5006,7 +5012,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 numberOfUnincorporatedInvestors
-     * 
+     *
      * @return numberOfUnincorporatedInvestors.
      */
     public CommonNodeEntity getNumberOfUnincorporatedInvestors() {
@@ -5015,7 +5021,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 numberOfUnincorporatedInvestors
-     * 
+     *
      * @param numberOfUnincorporatedInvestors numberOfUnincorporatedInvestors
      */
     public void setNumberOfUnincorporatedInvestors(CommonNodeEntity numberOfUnincorporatedInvestors) {
@@ -5024,7 +5030,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 actualSubscribedAmountCNY
-     * 
+     *
      * @return actualSubscribedAmountCNY.
      */
     public CommonNodeEntity getActualSubscribedAmountCNY() {
@@ -5033,7 +5039,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 actualSubscribedAmountCNY
-     * 
+     *
      * @param actualSubscribedAmountCNY actualSubscribedAmountCNY
      */
     public void setActualSubscribedAmountCNY(CommonNodeEntity actualSubscribedAmountCNY) {
@@ -5042,7 +5048,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 subscribedUnits
-     * 
+     *
      * @return subscribedUnits.
      */
     public CommonNodeEntity getSubscribedUnits() {
@@ -5051,7 +5057,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 subscribedUnits
-     * 
+     *
      * @param subscribedUnits subscribedUnits
      */
     public void setSubscribedUnits(CommonNodeEntity subscribedUnits) {
@@ -5060,7 +5066,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 otherDistributionAgentsPleaseSelect
-     * 
+     *
      * @return otherDistributionAgentsPleaseSelect.
      */
     public CommonNodeEntity getOtherDistributionAgentsPleaseSelect() {
@@ -5069,7 +5075,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 otherDistributionAgentsPleaseSelect
-     * 
+     *
      * @param otherDistributionAgentsPleaseSelect otherDistributionAgentsPleaseSelect
      */
     public void setOtherDistributionAgentsPleaseSelect(CommonNodeEntity otherDistributionAgentsPleaseSelect) {
@@ -5078,7 +5084,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 amountByOtherDistributionAgents
-     * 
+     *
      * @return amountByOtherDistributionAgents.
      */
     public CommonNodeEntity getAmountByOtherDistributionAgents() {
@@ -5087,7 +5093,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 amountByOtherDistributionAgents
-     * 
+     *
      * @param amountByOtherDistributionAgents amountByOtherDistributionAgents
      */
     public void setAmountByOtherDistributionAgents(CommonNodeEntity amountByOtherDistributionAgents) {
@@ -5096,7 +5102,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 productAreaAndSubscriptionAmountTuple
-     * 
+     *
      * @return productAreaAndSubscriptionAmountTuple.
      */
     public List<CommonNodeListEntity> getProductAreaAndSubscriptionAmountTuple() {
@@ -5105,7 +5111,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 productAreaAndSubscriptionAmountTuple
-     * 
+     *
      * @param productAreaAndSubscriptionAmountTuple productAreaAndSubscriptionAmountTuple
      */
     public void setProductAreaAndSubscriptionAmountTuple(List<CommonNodeListEntity> productAreaAndSubscriptionAmountTuple) {
@@ -5114,7 +5120,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 subscriptionCurrencyAndSubscriptionAmountTuple
-     * 
+     *
      * @return subscriptionCurrencyAndSubscriptionAmountTuple.
      */
     public List<CommonNodeListEntity> getSubscriptionCurrencyAndSubscriptionAmountTuple() {
@@ -5123,7 +5129,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 subscriptionCurrencyAndSubscriptionAmountTuple
-     * 
+     *
      * @param subscriptionCurrencyAndSubscriptionAmountTuple
      *            subscriptionCurrencyAndSubscriptionAmountTuple
      */
@@ -5133,7 +5139,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 initialSubscriptionRegistrationDetails
-     * 
+     *
      * @return initialSubscriptionRegistrationDetails.
      */
     public CommonNodeEntity getInitialSubscriptionRegistrationDetails() {
@@ -5142,7 +5148,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 initialSubscriptionRegistrationDetails
-     * 
+     *
      * @param initialSubscriptionRegistrationDetails initialSubscriptionRegistrationDetails
      */
     public void setInitialSubscriptionRegistrationDetails(CommonNodeEntity initialSubscriptionRegistrationDetails) {
@@ -5151,7 +5157,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 initialNetValue
-     * 
+     *
      * @return initialNetValue.
      */
     public CommonNodeEntity getInitialNetValue() {
@@ -5160,7 +5166,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 initialNetValue
-     * 
+     *
      * @param initialNetValue initialNetValue
      */
     public void setInitialNetValue(CommonNodeEntity initialNetValue) {
@@ -5169,7 +5175,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 netValueOfProduct
-     * 
+     *
      * @return netValueOfProduct.
      */
     public CommonNodeEntity getNetValueOfProduct() {
@@ -5178,7 +5184,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 netValueOfProduct
-     * 
+     *
      * @param netValueOfProduct netValueOfProduct
      */
     public void setNetValueOfProduct(CommonNodeEntity netValueOfProduct) {
@@ -5187,7 +5193,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 aggregateNetValue
-     * 
+     *
      * @return aggregateNetValue.
      */
     public CommonNodeEntity getAggregateNetValue() {
@@ -5196,7 +5202,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 aggregateNetValue
-     * 
+     *
      * @param aggregateNetValue aggregateNetValue
      */
     public void setAggregateNetValue(CommonNodeEntity aggregateNetValue) {
@@ -5205,7 +5211,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 initialNetValueCNY
-     * 
+     *
      * @return initialNetValueCNY.
      */
     public CommonNodeEntity getInitialNetValueCNY() {
@@ -5214,7 +5220,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 initialNetValueCNY
-     * 
+     *
      * @param initialNetValueCNY initialNetValueCNY
      */
     public void setInitialNetValueCNY(CommonNodeEntity initialNetValueCNY) {
@@ -5223,7 +5229,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 netValueOfProductCNY
-     * 
+     *
      * @return netValueOfProductCNY.
      */
     public CommonNodeEntity getNetValueOfProductCNY() {
@@ -5232,7 +5238,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 netValueOfProductCNY
-     * 
+     *
      * @param netValueOfProductCNY netValueOfProductCNY
      */
     public void setNetValueOfProductCNY(CommonNodeEntity netValueOfProductCNY) {
@@ -5241,7 +5247,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 aggregateNetValueCNY
-     * 
+     *
      * @return aggregateNetValueCNY.
      */
     public CommonNodeEntity getAggregateNetValueCNY() {
@@ -5250,7 +5256,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 aggregateNetValueCNY
-     * 
+     *
      * @param aggregateNetValueCNY aggregateNetValueCNY
      */
     public void setAggregateNetValueCNY(CommonNodeEntity aggregateNetValueCNY) {
@@ -5259,7 +5265,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 realizedAnnualReturn
-     * 
+     *
      * @return realizedAnnualReturn.
      */
     public CommonNodeEntity getRealizedAnnualReturn() {
@@ -5268,7 +5274,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 realizedAnnualReturn
-     * 
+     *
      * @param realizedAnnualReturn realizedAnnualReturn
      */
     public void setRealizedAnnualReturn(CommonNodeEntity realizedAnnualReturn) {
@@ -5277,7 +5283,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 expectedAnnualReturn
-     * 
+     *
      * @return expectedAnnualReturn.
      */
     public CommonNodeEntity getExpectedAnnualReturn() {
@@ -5286,7 +5292,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 expectedAnnualReturn
-     * 
+     *
      * @param expectedAnnualReturn expectedAnnualReturn
      */
     public void setExpectedAnnualReturn(CommonNodeEntity expectedAnnualReturn) {
@@ -5295,7 +5301,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 businessStartDate
-     * 
+     *
      * @return businessStartDate.
      */
     public CommonNodeEntity getBusinessStartDate() {
@@ -5304,7 +5310,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 businessStartDate
-     * 
+     *
      * @param businessStartDate businessStartDate
      */
     public void setBusinessStartDate(CommonNodeEntity businessStartDate) {
@@ -5313,7 +5319,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 businessEndDate
-     * 
+     *
      * @return businessEndDate.
      */
     public CommonNodeEntity getBusinessEndDate() {
@@ -5322,7 +5328,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 businessEndDate
-     * 
+     *
      * @param businessEndDate businessEndDate
      */
     public void setBusinessEndDate(CommonNodeEntity businessEndDate) {
@@ -5331,7 +5337,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 subscribedUnitsOverLatestSubscriptionPeriod
-     * 
+     *
      * @return subscribedUnitsOverLatestSubscriptionPeriod.
      */
     public CommonNodeEntity getSubscribedUnitsOverLatestSubscriptionPeriod() {
@@ -5340,7 +5346,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 subscribedUnitsOverLatestSubscriptionPeriod
-     * 
+     *
      * @param subscribedUnitsOverLatestSubscriptionPeriod
      *            subscribedUnitsOverLatestSubscriptionPeriod
      */
@@ -5350,7 +5356,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 redeemedUnitsOverLatestSubscriptionPeriod
-     * 
+     *
      * @return redeemedUnitsOverLatestSubscriptionPeriod.
      */
     public CommonNodeEntity getRedeemedUnitsOverLatestSubscriptionPeriod() {
@@ -5359,7 +5365,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 redeemedUnitsOverLatestSubscriptionPeriod
-     * 
+     *
      * @param redeemedUnitsOverLatestSubscriptionPeriod redeemedUnitsOverLatestSubscriptionPeriod
      */
     public void setRedeemedUnitsOverLatestSubscriptionPeriod(CommonNodeEntity redeemedUnitsOverLatestSubscriptionPeriod) {
@@ -5368,7 +5374,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 outstandingAmountCNY
-     * 
+     *
      * @return outstandingAmountCNY.
      */
     public CommonNodeEntity getOutstandingAmountCNY() {
@@ -5377,7 +5383,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 outstandingAmountCNY
-     * 
+     *
      * @param outstandingAmountCNY outstandingAmountCNY
      */
     public void setOutstandingAmountCNY(CommonNodeEntity outstandingAmountCNY) {
@@ -5386,7 +5392,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 outstandingUnits
-     * 
+     *
      * @return outstandingUnits.
      */
     public CommonNodeEntity getOutstandingUnits() {
@@ -5395,7 +5401,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 outstandingUnits
-     * 
+     *
      * @param outstandingUnits outstandingUnits
      */
     public void setOutstandingUnits(CommonNodeEntity outstandingUnits) {
@@ -5404,7 +5410,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 currencySubscriptionAndRedemptionTuple
-     * 
+     *
      * @return currencySubscriptionAndRedemptionTuple.
      */
     public List<CommonNodeListEntity> getCurrencySubscriptionAndRedemptionTuple() {
@@ -5413,7 +5419,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 currencySubscriptionAndRedemptionTuple
-     * 
+     *
      * @param currencySubscriptionAndRedemptionTuple currencySubscriptionAndRedemptionTuple
      */
     public void setCurrencySubscriptionAndRedemptionTuple(List<CommonNodeListEntity> currencySubscriptionAndRedemptionTuple) {
@@ -5422,7 +5428,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 subsequentSubscriptionRegistrationDetails
-     * 
+     *
      * @return subsequentSubscriptionRegistrationDetails.
      */
     public CommonNodeEntity getSubsequentSubscriptionRegistrationDetails() {
@@ -5431,7 +5437,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 subsequentSubscriptionRegistrationDetails
-     * 
+     *
      * @param subsequentSubscriptionRegistrationDetails subsequentSubscriptionRegistrationDetails
      */
     public void setSubsequentSubscriptionRegistrationDetails(CommonNodeEntity subsequentSubscriptionRegistrationDetails) {
@@ -5440,7 +5446,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 assetsAndLiabilitiesIdentificationCode
-     * 
+     *
      * @return assetsAndLiabilitiesIdentificationCode.
      */
     public CommonNodeEntity getAssetsAndLiabilitiesIdentificationCode() {
@@ -5449,7 +5455,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 assetsAndLiabilitiesIdentificationCode
-     * 
+     *
      * @param assetsAndLiabilitiesIdentificationCode assetsAndLiabilitiesIdentificationCode
      */
     public void setAssetsAndLiabilitiesIdentificationCode(CommonNodeEntity assetsAndLiabilitiesIdentificationCode) {
@@ -5458,7 +5464,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 typeOfAssetsAndLiabilities
-     * 
+     *
      * @return typeOfAssetsAndLiabilities.
      */
     public CommonNodeEntity getTypeOfAssetsAndLiabilities() {
@@ -5467,7 +5473,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 typeOfAssetsAndLiabilities
-     * 
+     *
      * @param typeOfAssetsAndLiabilities typeOfAssetsAndLiabilities
      */
     public void setTypeOfAssetsAndLiabilities(CommonNodeEntity typeOfAssetsAndLiabilities) {
@@ -5476,7 +5482,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 tradingVenue
-     * 
+     *
      * @return tradingVenue.
      */
     public CommonNodeEntity getTradingVenue() {
@@ -5485,7 +5491,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 tradingVenue
-     * 
+     *
      * @param tradingVenue tradingVenue
      */
     public void setTradingVenue(CommonNodeEntity tradingVenue) {
@@ -5494,7 +5500,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 currency
-     * 
+     *
      * @return currency.
      */
     public CommonNodeEntity getCurrency() {
@@ -5503,7 +5509,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 currency
-     * 
+     *
      * @param currency currency
      */
     public void setCurrency(CommonNodeEntity currency) {
@@ -5512,7 +5518,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 assetsAndLiabilitiesRegistrationDetails
-     * 
+     *
      * @return assetsAndLiabilitiesRegistrationDetails.
      */
     public CommonNodeEntity getAssetsAndLiabilitiesRegistrationDetails() {
@@ -5521,7 +5527,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 assetsAndLiabilitiesRegistrationDetails
-     * 
+     *
      * @param assetsAndLiabilitiesRegistrationDetails assetsAndLiabilitiesRegistrationDetails
      */
     public void setAssetsAndLiabilitiesRegistrationDetails(CommonNodeEntity assetsAndLiabilitiesRegistrationDetails) {
@@ -5530,7 +5536,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 depositBank
-     * 
+     *
      * @return depositBank.
      */
     public CommonNodeEntity getDepositBank() {
@@ -5539,7 +5545,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 depositBank
-     * 
+     *
      * @param depositBank depositBank
      */
     public void setDepositBank(CommonNodeEntity depositBank) {
@@ -5548,7 +5554,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 depositAmount
-     * 
+     *
      * @return depositAmount.
      */
     public CommonNodeEntity getDepositAmount() {
@@ -5557,7 +5563,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 depositAmount
-     * 
+     *
      * @param depositAmount depositAmount
      */
     public void setDepositAmount(CommonNodeEntity depositAmount) {
@@ -5566,7 +5572,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 valueDateForCashAndBankDepositsIncludingCds
-     * 
+     *
      * @return valueDateForCashAndBankDepositsIncludingCds.
      */
     public CommonNodeEntity getValueDateForCashAndBankDepositsIncludingCds() {
@@ -5575,7 +5581,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 valueDateForCashAndBankDepositsIncludingCds
-     * 
+     *
      * @param valueDateForCashAndBankDepositsIncludingCds
      *            valueDateForCashAndBankDepositsIncludingCds
      */
@@ -5585,7 +5591,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 maturityDateForCashAndBankDepositsIncludingCds
-     * 
+     *
      * @return maturityDateForCashAndBankDepositsIncludingCds.
      */
     public CommonNodeEntity getMaturityDateForCashAndBankDepositsIncludingCds() {
@@ -5594,7 +5600,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 maturityDateForCashAndBankDepositsIncludingCds
-     * 
+     *
      * @param maturityDateForCashAndBankDepositsIncludingCds
      *            maturityDateForCashAndBankDepositsIncludingCds
      */
@@ -5604,7 +5610,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 annualInterestRateForCashAndBankDepositsIncludingCds
-     * 
+     *
      * @return annualInterestRateForCashAndBankDepositsIncludingCds.
      */
     public CommonNodeEntity getAnnualInterestRateForCashAndBankDepositsIncludingCds() {
@@ -5613,7 +5619,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 annualInterestRateForCashAndBankDepositsIncludingCds
-     * 
+     *
      * @param annualInterestRateForCashAndBankDepositsIncludingCds
      *            annualInterestRateForCashAndBankDepositsIncludingCds
      */
@@ -5623,7 +5629,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 interestAccrualBasisForCashAndBankDepositsIncludingCds
-     * 
+     *
      * @return interestAccrualBasisForCashAndBankDepositsIncludingCds.
      */
     public CommonNodeEntity getInterestAccrualBasisForCashAndBankDepositsIncludingCds() {
@@ -5632,7 +5638,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 interestAccrualBasisForCashAndBankDepositsIncludingCds
-     * 
+     *
      * @param interestAccrualBasisForCashAndBankDepositsIncludingCds
      *            interestAccrualBasisForCashAndBankDepositsIncludingCds
      */
@@ -5642,7 +5648,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 structuredDepositsPleaseSelect
-     * 
+     *
      * @return structuredDepositsPleaseSelect.
      */
     public CommonNodeEntity getStructuredDepositsPleaseSelect() {
@@ -5651,7 +5657,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 structuredDepositsPleaseSelect
-     * 
+     *
      * @param structuredDepositsPleaseSelect structuredDepositsPleaseSelect
      */
     public void setStructuredDepositsPleaseSelect(CommonNodeEntity structuredDepositsPleaseSelect) {
@@ -5660,7 +5666,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 underlyingAssetTypeOfStructuredDepositsTuple
-     * 
+     *
      * @return underlyingAssetTypeOfStructuredDepositsTuple.
      */
     public List<CommonNodeListEntity> getUnderlyingAssetTypeOfStructuredDepositsTuple() {
@@ -5669,7 +5675,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 underlyingAssetTypeOfStructuredDepositsTuple
-     * 
+     *
      * @param underlyingAssetTypeOfStructuredDepositsTuple
      *            underlyingAssetTypeOfStructuredDepositsTuple
      */
@@ -5679,7 +5685,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 underlyingAssetOfStructuredDeposits
-     * 
+     *
      * @return underlyingAssetOfStructuredDeposits.
      */
     public CommonNodeEntity getUnderlyingAssetOfStructuredDeposits() {
@@ -5688,7 +5694,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 underlyingAssetOfStructuredDeposits
-     * 
+     *
      * @param underlyingAssetOfStructuredDeposits underlyingAssetOfStructuredDeposits
      */
     public void setUnderlyingAssetOfStructuredDeposits(CommonNodeEntity underlyingAssetOfStructuredDeposits) {
@@ -5697,7 +5703,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 identificationCode
-     * 
+     *
      * @return identificationCode.
      */
     public CommonNodeEntity getIdentificationCode() {
@@ -5706,7 +5712,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 identificationCode
-     * 
+     *
      * @param identificationCode identificationCode
      */
     public void setIdentificationCode(CommonNodeEntity identificationCode) {
@@ -5715,7 +5721,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 nameForBondsDirectFinancingVehiclesAndInterbankCds
-     * 
+     *
      * @return nameForBondsDirectFinancingVehiclesAndInterbankCds.
      */
     public CommonNodeEntity getNameForBondsDirectFinancingVehiclesAndInterbankCds() {
@@ -5724,7 +5730,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 nameForBondsDirectFinancingVehiclesAndInterbankCds
-     * 
+     *
      * @param nameForBondsDirectFinancingVehiclesAndInterbankCds
      *            nameForBondsDirectFinancingVehiclesAndInterbankCds
      */
@@ -5734,7 +5740,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 specificBondType
-     * 
+     *
      * @return specificBondType.
      */
     public CommonNodeEntity getSpecificBondType() {
@@ -5743,7 +5749,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 specificBondType
-     * 
+     *
      * @param specificBondType specificBondType
      */
     public void setSpecificBondType(CommonNodeEntity specificBondType) {
@@ -5752,7 +5758,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 issuingModeOfBond
-     * 
+     *
      * @return issuingModeOfBond.
      */
     public CommonNodeEntity getIssuingModeOfBond() {
@@ -5761,7 +5767,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 issuingModeOfBond
-     * 
+     *
      * @param issuingModeOfBond issuingModeOfBond
      */
     public void setIssuingModeOfBond(CommonNodeEntity issuingModeOfBond) {
@@ -5770,7 +5776,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 issuerRatingForBondsDirectFinancingVehiclesAndInterbankCds
-     * 
+     *
      * @return issuerRatingForBondsDirectFinancingVehiclesAndInterbankCds.
      */
     public CommonNodeEntity getIssuerRatingForBondsDirectFinancingVehiclesAndInterbankCds() {
@@ -5779,7 +5785,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 issuerRatingForBondsDirectFinancingVehiclesAndInterbankCds
-     * 
+     *
      * @param issuerRatingForBondsDirectFinancingVehiclesAndInterbankCds
      *            issuerRatingForBondsDirectFinancingVehiclesAndInterbankCds
      */
@@ -5789,7 +5795,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 issuingInstitutionTypeByScale
-     * 
+     *
      * @return issuingInstitutionTypeByScale.
      */
     public CommonNodeEntity getIssuingInstitutionTypeByScale() {
@@ -5798,7 +5804,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 issuingInstitutionTypeByScale
-     * 
+     *
      * @param issuingInstitutionTypeByScale issuingInstitutionTypeByScale
      */
     public void setIssuingInstitutionTypeByScale(CommonNodeEntity issuingInstitutionTypeByScale) {
@@ -5807,7 +5813,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 issuingInstitutionTypeByTechnicalField
-     * 
+     *
      * @return issuingInstitutionTypeByTechnicalField.
      */
     public CommonNodeEntity getIssuingInstitutionTypeByTechnicalField() {
@@ -5816,7 +5822,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 issuingInstitutionTypeByTechnicalField
-     * 
+     *
      * @param issuingInstitutionTypeByTechnicalField issuingInstitutionTypeByTechnicalField
      */
     public void setIssuingInstitutionTypeByTechnicalField(CommonNodeEntity issuingInstitutionTypeByTechnicalField) {
@@ -5825,7 +5831,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 issuingInstitutionTypeByEconomicType
-     * 
+     *
      * @return issuingInstitutionTypeByEconomicType.
      */
     public CommonNodeEntity getIssuingInstitutionTypeByEconomicType() {
@@ -5834,7 +5840,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 issuingInstitutionTypeByEconomicType
-     * 
+     *
      * @param issuingInstitutionTypeByEconomicType issuingInstitutionTypeByEconomicType
      */
     public void setIssuingInstitutionTypeByEconomicType(CommonNodeEntity issuingInstitutionTypeByEconomicType) {
@@ -5843,7 +5849,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 industryOfIssuerForBondsDirectFinancingVehiclesAndInterbankCds
-     * 
+     *
      * @return industryOfIssuerForBondsDirectFinancingVehiclesAndInterbankCds.
      */
     public CommonNodeEntity getIndustryOfIssuerForBondsDirectFinancingVehiclesAndInterbankCds() {
@@ -5852,7 +5858,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 industryOfIssuerForBondsDirectFinancingVehiclesAndInterbankCds
-     * 
+     *
      * @param industryOfIssuerForBondsDirectFinancingVehiclesAndInterbankCds
      *            industryOfIssuerForBondsDirectFinancingVehiclesAndInterbankCds
      */
@@ -5862,7 +5868,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 registryAndDepository
-     * 
+     *
      * @return registryAndDepository.
      */
     public CommonNodeEntity getRegistryAndDepository() {
@@ -5871,7 +5877,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 registryAndDepository
-     * 
+     *
      * @param registryAndDepository registryAndDepository
      */
     public void setRegistryAndDepository(CommonNodeEntity registryAndDepository) {
@@ -5880,7 +5886,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 detailsOnRegistryAndDepository
-     * 
+     *
      * @return detailsOnRegistryAndDepository.
      */
     public CommonNodeEntity getDetailsOnRegistryAndDepository() {
@@ -5889,7 +5895,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 collateralType
-     * 
+     *
      * @return collateralType.
      */
     public CommonNodeEntity getCollateralType() {
@@ -5898,7 +5904,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 collateralType
-     * 
+     *
      * @param collateralType collateralType
      */
     public void setCollateralType(CommonNodeEntity collateralType) {
@@ -5907,7 +5913,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 collateralValue
-     * 
+     *
      * @return collateralValue.
      */
     public CommonNodeEntity getCollateralValue() {
@@ -5916,7 +5922,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 collateralValue
-     * 
+     *
      * @param collateralValue collateralValue
      */
     public void setCollateralValue(CommonNodeEntity collateralValue) {
@@ -5925,7 +5931,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 incomeBeneficialOwnershipType
-     * 
+     *
      * @return incomeBeneficialOwnershipType.
      */
     public CommonNodeEntity getIncomeBeneficialOwnershipType() {
@@ -5934,7 +5940,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 incomeBeneficialOwnershipType
-     * 
+     *
      * @param incomeBeneficialOwnershipType incomeBeneficialOwnershipType
      */
     public void setIncomeBeneficialOwnershipType(CommonNodeEntity incomeBeneficialOwnershipType) {
@@ -5943,7 +5949,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 buybackPleaseSelectForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @return buybackPleaseSelectForCreditAssetTradingsAndNonStandardDebtObligations.
      */
     public CommonNodeEntity getBuybackPleaseSelectForCreditAssetTradingsAndNonStandardDebtObligations() {
@@ -5952,7 +5958,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 buybackPleaseSelectForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @param buybackPleaseSelectForCreditAssetTradingsAndNonStandardDebtObligations
      *            buybackPleaseSelectForCreditAssetTradingsAndNonStandardDebtObligations
      */
@@ -5962,7 +5968,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 nameForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @return nameForCreditAssetTradingsAndNonStandardDebtObligations.
      */
     public CommonNodeEntity getNameForCreditAssetTradingsAndNonStandardDebtObligations() {
@@ -5971,7 +5977,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 nameForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @param nameForCreditAssetTradingsAndNonStandardDebtObligations
      *            nameForCreditAssetTradingsAndNonStandardDebtObligations
      */
@@ -5981,7 +5987,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 amountForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @return amountForCreditAssetTradingsAndNonStandardDebtObligations.
      */
     public CommonNodeEntity getAmountForCreditAssetTradingsAndNonStandardDebtObligations() {
@@ -5990,7 +5996,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 amountForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @param amountForCreditAssetTradingsAndNonStandardDebtObligations
      *            amountForCreditAssetTradingsAndNonStandardDebtObligations
      */
@@ -6000,7 +6006,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 valueDateForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @return valueDateForCreditAssetTradingsAndNonStandardDebtObligations.
      */
     public CommonNodeEntity getValueDateForCreditAssetTradingsAndNonStandardDebtObligations() {
@@ -6009,7 +6015,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 valueDateForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @param valueDateForCreditAssetTradingsAndNonStandardDebtObligations
      *            valueDateForCreditAssetTradingsAndNonStandardDebtObligations
      */
@@ -6019,7 +6025,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 maturityDateForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @return maturityDateForCreditAssetTradingsAndNonStandardDebtObligations.
      */
     public CommonNodeEntity getMaturityDateForCreditAssetTradingsAndNonStandardDebtObligations() {
@@ -6028,7 +6034,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 maturityDateForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @param maturityDateForCreditAssetTradingsAndNonStandardDebtObligations
      *            maturityDateForCreditAssetTradingsAndNonStandardDebtObligations
      */
@@ -6038,7 +6044,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 expectedReturnPleaseSelectForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @return expectedReturnPleaseSelectForCreditAssetTradingsAndNonStandardDebtObligations.
      */
     public CommonNodeEntity getExpectedReturnPleaseSelectForCreditAssetTradingsAndNonStandardDebtObligations() {
@@ -6047,7 +6053,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 expectedReturnPleaseSelectForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @param expectedReturnPleaseSelectForCreditAssetTradingsAndNonStandardDebtObligations
      *            expectedReturnPleaseSelectForCreditAssetTradingsAndNonStandardDebtObligations
      */
@@ -6057,7 +6063,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 projectAnnualReturnForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @return projectAnnualReturnForCreditAssetTradingsAndNonStandardDebtObligations.
      */
     public CommonNodeEntity getProjectAnnualReturnForCreditAssetTradingsAndNonStandardDebtObligations() {
@@ -6066,7 +6072,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 projectAnnualReturnForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @param projectAnnualReturnForCreditAssetTradingsAndNonStandardDebtObligations
      *            projectAnnualReturnForCreditAssetTradingsAndNonStandardDebtObligations
      */
@@ -6077,7 +6083,7 @@ public class BaseInfoEntity implements Feild {
     /**
      * 获取
      * interestPaymentFrequencyMeasuredByMonthForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @return interestPaymentFrequencyMeasuredByMonthForCreditAssetTradingsAndNonStandardDebtObligations.
      */
     public CommonNodeEntity getInterestPaymentFrequencyMeasuredByMonthForCreditAssetTradingsAndNonStandardDebtObligations() {
@@ -6087,7 +6093,7 @@ public class BaseInfoEntity implements Feild {
     /**
      * 设置
      * interestPaymentFrequencyMeasuredByMonthForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @param interestPaymentFrequencyMeasuredByMonthForCreditAssetTradingsAndNonStandardDebtObligations
      *            interestPaymentFrequencyMeasuredByMonthForCreditAssetTradingsAndNonStandardDebtObligations
      */
@@ -6097,7 +6103,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 detailsOnPrincipalAndInterestPayment
-     * 
+     *
      * @return detailsOnPrincipalAndInterestPayment.
      */
     public CommonNodeEntity getDetailsOnPrincipalAndInterestPayment() {
@@ -6106,7 +6112,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 detailsOnPrincipalAndInterestPayment
-     * 
+     *
      * @param detailsOnPrincipalAndInterestPayment detailsOnPrincipalAndInterestPayment
      */
     public void setDetailsOnPrincipalAndInterestPayment(CommonNodeEntity detailsOnPrincipalAndInterestPayment) {
@@ -6115,7 +6121,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 interestAccrualBasisForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @return interestAccrualBasisForCreditAssetTradingsAndNonStandardDebtObligations.
      */
     public CommonNodeEntity getInterestAccrualBasisForCreditAssetTradingsAndNonStandardDebtObligations() {
@@ -6124,7 +6130,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 interestAccrualBasisForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @param interestAccrualBasisForCreditAssetTradingsAndNonStandardDebtObligations
      *            interestAccrualBasisForCreditAssetTradingsAndNonStandardDebtObligations
      */
@@ -6134,7 +6140,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 totalFeeRate
-     * 
+     *
      * @return totalFeeRate.
      */
     public CommonNodeEntity getTotalFeeRate() {
@@ -6143,7 +6149,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 totalFeeRate
-     * 
+     *
      * @param totalFeeRate totalFeeRate
      */
     public void setTotalFeeRate(CommonNodeEntity totalFeeRate) {
@@ -6152,7 +6158,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 benchmarkInterestRateType
-     * 
+     *
      * @return benchmarkInterestRateType.
      */
     public CommonNodeEntity getBenchmarkInterestRateType() {
@@ -6161,7 +6167,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 benchmarkInterestRateType
-     * 
+     *
      * @param benchmarkInterestRateType benchmarkInterestRateType
      */
     public void setBenchmarkInterestRateType(CommonNodeEntity benchmarkInterestRateType) {
@@ -6170,7 +6176,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 floatingRate
-     * 
+     *
      * @return floatingRate.
      */
     public CommonNodeEntity getFloatingRate() {
@@ -6179,7 +6185,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 floatingRate
-     * 
+     *
      * @param floatingRate floatingRate
      */
     public void setFloatingRate(CommonNodeEntity floatingRate) {
@@ -6188,7 +6194,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 yieldSpreadBasisPoints
-     * 
+     *
      * @return yieldSpreadBasisPoints.
      */
     public CommonNodeEntity getYieldSpreadBasisPoints() {
@@ -6197,7 +6203,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 yieldSpreadBasisPoints
-     * 
+     *
      * @param yieldSpreadBasisPoints yieldSpreadBasisPoints
      */
     public void setYieldSpreadBasisPoints(CommonNodeEntity yieldSpreadBasisPoints) {
@@ -6206,7 +6212,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 debtorForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @return debtorForCreditAssetTradingsAndNonStandardDebtObligations.
      */
     public CommonNodeEntity getDebtorForCreditAssetTradingsAndNonStandardDebtObligations() {
@@ -6215,7 +6221,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 debtorForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @param debtorForCreditAssetTradingsAndNonStandardDebtObligations
      *            debtorForCreditAssetTradingsAndNonStandardDebtObligations
      */
@@ -6225,7 +6231,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 internalDebtorRating
-     * 
+     *
      * @return internalDebtorRating.
      */
     public CommonNodeEntity getInternalDebtorRating() {
@@ -6234,7 +6240,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 internalDebtorRating
-     * 
+     *
      * @param internalDebtorRating internalDebtorRating
      */
     public void setInternalDebtorRating(CommonNodeEntity internalDebtorRating) {
@@ -6243,7 +6249,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 ratingAgencyAndIssuerRatingForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @return ratingAgencyAndIssuerRatingForCreditAssetTradingsAndNonStandardDebtObligations.
      */
     public CommonNodeEntity getRatingAgencyAndIssuerRatingForCreditAssetTradingsAndNonStandardDebtObligations() {
@@ -6252,7 +6258,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 ratingAgencyAndIssuerRatingForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @param ratingAgencyAndIssuerRatingForCreditAssetTradingsAndNonStandardDebtObligations
      *            ratingAgencyAndIssuerRatingForCreditAssetTradingsAndNonStandardDebtObligations
      */
@@ -6262,7 +6268,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 debtorTypeByScaleForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @return debtorTypeByScaleForCreditAssetTradingsAndNonStandardDebtObligations.
      */
     public CommonNodeEntity getDebtorTypeByScaleForCreditAssetTradingsAndNonStandardDebtObligations() {
@@ -6271,7 +6277,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 debtorTypeByScaleForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @param debtorTypeByScaleForCreditAssetTradingsAndNonStandardDebtObligations
      *            debtorTypeByScaleForCreditAssetTradingsAndNonStandardDebtObligations
      */
@@ -6281,7 +6287,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 debtorTypeByTechnicalFieldForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @return debtorTypeByTechnicalFieldForCreditAssetTradingsAndNonStandardDebtObligations.
      */
     public CommonNodeEntity getDebtorTypeByTechnicalFieldForCreditAssetTradingsAndNonStandardDebtObligations() {
@@ -6290,7 +6296,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 debtorTypeByTechnicalFieldForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @param debtorTypeByTechnicalFieldForCreditAssetTradingsAndNonStandardDebtObligations
      *            debtorTypeByTechnicalFieldForCreditAssetTradingsAndNonStandardDebtObligations
      */
@@ -6300,7 +6306,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 debtorTypeByEconomicTypeForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @return debtorTypeByEconomicTypeForCreditAssetTradingsAndNonStandardDebtObligations.
      */
     public CommonNodeEntity getDebtorTypeByEconomicTypeForCreditAssetTradingsAndNonStandardDebtObligations() {
@@ -6309,7 +6315,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 debtorTypeByEconomicTypeForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @param debtorTypeByEconomicTypeForCreditAssetTradingsAndNonStandardDebtObligations
      *            debtorTypeByEconomicTypeForCreditAssetTradingsAndNonStandardDebtObligations
      */
@@ -6319,7 +6325,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 industryOfDebtorForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @return industryOfDebtorForCreditAssetTradingsAndNonStandardDebtObligations.
      */
     public CommonNodeEntity getIndustryOfDebtorForCreditAssetTradingsAndNonStandardDebtObligations() {
@@ -6328,7 +6334,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 industryOfDebtorForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @param industryOfDebtorForCreditAssetTradingsAndNonStandardDebtObligations
      *            industryOfDebtorForCreditAssetTradingsAndNonStandardDebtObligations
      */
@@ -6338,7 +6344,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 regionOfDebtor
-     * 
+     *
      * @return regionOfDebtor.
      */
     public CommonNodeEntity getRegionOfDebtor() {
@@ -6347,7 +6353,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 regionOfDebtor
-     * 
+     *
      * @param regionOfDebtor regionOfDebtor
      */
     public void setRegionOfDebtor(CommonNodeEntity regionOfDebtor) {
@@ -6356,7 +6362,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 organizationCodeForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @return organizationCodeForCreditAssetTradingsAndNonStandardDebtObligations.
      */
     public CommonNodeEntity getOrganizationCodeForCreditAssetTradingsAndNonStandardDebtObligations() {
@@ -6365,7 +6371,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 organizationCodeForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @param organizationCodeForCreditAssetTradingsAndNonStandardDebtObligations
      *            organizationCodeForCreditAssetTradingsAndNonStandardDebtObligations
      */
@@ -6375,7 +6381,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 keyMonitoringIndustryPleaseSelect
-     * 
+     *
      * @return keyMonitoringIndustryPleaseSelect.
      */
     public CommonNodeEntity getKeyMonitoringIndustryPleaseSelect() {
@@ -6384,7 +6390,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 keyMonitoringIndustryPleaseSelect
-     * 
+     *
      * @param keyMonitoringIndustryPleaseSelect keyMonitoringIndustryPleaseSelect
      */
     public void setKeyMonitoringIndustryPleaseSelect(CommonNodeEntity keyMonitoringIndustryPleaseSelect) {
@@ -6393,7 +6399,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 keyMonitoringIndustryType
-     * 
+     *
      * @return keyMonitoringIndustryType.
      */
     public CommonNodeEntity getKeyMonitoringIndustryType() {
@@ -6402,7 +6408,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 keyMonitoringIndustryType
-     * 
+     *
      * @param keyMonitoringIndustryType keyMonitoringIndustryType
      */
     public void setKeyMonitoringIndustryType(CommonNodeEntity keyMonitoringIndustryType) {
@@ -6411,7 +6417,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 detailsOnKeyMonitoringIndustryType
-     * 
+     *
      * @return detailsOnKeyMonitoringIndustryType.
      */
     public CommonNodeEntity getDetailsOnKeyMonitoringIndustryType() {
@@ -6420,7 +6426,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 detailsOnKeyMonitoringIndustryType
-     * 
+     *
      * @param detailsOnKeyMonitoringIndustryType detailsOnKeyMonitoringIndustryType
      */
     public void setDetailsOnKeyMonitoringIndustryType(CommonNodeEntity detailsOnKeyMonitoringIndustryType) {
@@ -6429,7 +6435,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 industryOfProjectForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @return industryOfProjectForCreditAssetTradingsAndNonStandardDebtObligations.
      */
     public CommonNodeEntity getIndustryOfProjectForCreditAssetTradingsAndNonStandardDebtObligations() {
@@ -6438,7 +6444,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 industryOfProjectForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @param industryOfProjectForCreditAssetTradingsAndNonStandardDebtObligations
      *            industryOfProjectForCreditAssetTradingsAndNonStandardDebtObligations
      */
@@ -6448,7 +6454,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 projectForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @return projectForCreditAssetTradingsAndNonStandardDebtObligations.
      */
     public CommonNodeEntity getProjectForCreditAssetTradingsAndNonStandardDebtObligations() {
@@ -6457,7 +6463,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 projectForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @param projectForCreditAssetTradingsAndNonStandardDebtObligations
      *            projectForCreditAssetTradingsAndNonStandardDebtObligations
      */
@@ -6467,7 +6473,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 guaranteeMethod
-     * 
+     *
      * @return guaranteeMethod.
      */
     public CommonNodeEntity getGuaranteeMethod() {
@@ -6476,7 +6482,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 guaranteeMethod
-     * 
+     *
      * @param guaranteeMethod guaranteeMethod
      */
     public void setGuaranteeMethod(CommonNodeEntity guaranteeMethod) {
@@ -6485,7 +6491,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 detailsOnGuaranteeStatusForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @return detailsOnGuaranteeStatusForCreditAssetTradingsAndNonStandardDebtObligations.
      */
     public CommonNodeEntity getDetailsOnGuaranteeStatusForCreditAssetTradingsAndNonStandardDebtObligations() {
@@ -6494,7 +6500,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 detailsOnGuaranteeStatusForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @param detailsOnGuaranteeStatusForCreditAssetTradingsAndNonStandardDebtObligations
      *            detailsOnGuaranteeStatusForCreditAssetTradingsAndNonStandardDebtObligations
      */
@@ -6504,7 +6510,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 debtorRating
-     * 
+     *
      * @return debtorRating.
      */
     public CommonNodeEntity getDebtorRating() {
@@ -6513,7 +6519,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 debtorRating
-     * 
+     *
      * @param debtorRating debtorRating
      */
     public void setDebtorRating(CommonNodeEntity debtorRating) {
@@ -6522,7 +6528,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 internalAssetRating
-     * 
+     *
      * @return internalAssetRating.
      */
     public CommonNodeEntity getInternalAssetRating() {
@@ -6531,7 +6537,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 internalAssetRating
-     * 
+     *
      * @param internalAssetRating internalAssetRating
      */
     public void setInternalAssetRating(CommonNodeEntity internalAssetRating) {
@@ -6540,7 +6546,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 standardizedInternalAssetRatingForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @return standardizedInternalAssetRatingForCreditAssetTradingsAndNonStandardDebtObligations.
      */
     public CommonNodeEntity getStandardizedInternalAssetRatingForCreditAssetTradingsAndNonStandardDebtObligations() {
@@ -6549,7 +6555,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 standardizedInternalAssetRatingForCreditAssetTradingsAndNonStandardDebtObligations
-     * 
+     *
      * @param standardizedInternalAssetRatingForCreditAssetTradingsAndNonStandardDebtObligations
      *            standardizedInternalAssetRatingForCreditAssetTradingsAndNonStandardDebtObligations
      */
@@ -6559,7 +6565,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 optionRight
-     * 
+     *
      * @return optionRight.
      */
     public CommonNodeEntity getOptionRight() {
@@ -6568,7 +6574,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 optionRight
-     * 
+     *
      * @param optionRight optionRight
      */
     public void setOptionRight(CommonNodeEntity optionRight) {
@@ -6577,7 +6583,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 detailsOnOptionExerciseCondition
-     * 
+     *
      * @return detailsOnOptionExerciseCondition.
      */
     public CommonNodeEntity getDetailsOnOptionExerciseCondition() {
@@ -6586,7 +6592,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 detailsOnOptionExerciseCondition
-     * 
+     *
      * @param detailsOnOptionExerciseCondition detailsOnOptionExerciseCondition
      */
     public void setDetailsOnOptionExerciseCondition(CommonNodeEntity detailsOnOptionExerciseCondition) {
@@ -6595,7 +6601,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 incomeBeneficialOwnershipPleaseSelect
-     * 
+     *
      * @return incomeBeneficialOwnershipPleaseSelect.
      */
     public CommonNodeEntity getIncomeBeneficialOwnershipPleaseSelect() {
@@ -6604,7 +6610,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 incomeBeneficialOwnershipPleaseSelect
-     * 
+     *
      * @param incomeBeneficialOwnershipPleaseSelect incomeBeneficialOwnershipPleaseSelect
      */
     public void setIncomeBeneficialOwnershipPleaseSelect(CommonNodeEntity incomeBeneficialOwnershipPleaseSelect) {
@@ -6613,7 +6619,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 buybackPleaseSelectForNonStandardDebtObligations
-     * 
+     *
      * @return buybackPleaseSelectForNonStandardDebtObligations.
      */
     public CommonNodeEntity getBuybackPleaseSelectForNonStandardDebtObligations() {
@@ -6622,7 +6628,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 buybackPleaseSelectForNonStandardDebtObligations
-     * 
+     *
      * @param buybackPleaseSelectForNonStandardDebtObligations
      *            buybackPleaseSelectForNonStandardDebtObligations
      */
@@ -6632,7 +6638,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 typeForNonStandardDebtObligations
-     * 
+     *
      * @return typeForNonStandardDebtObligations.
      */
     public CommonNodeEntity getTypeForNonStandardDebtObligations() {
@@ -6641,7 +6647,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 typeForNonStandardDebtObligations
-     * 
+     *
      * @param typeForNonStandardDebtObligations typeForNonStandardDebtObligations
      */
     public void setTypeForNonStandardDebtObligations(CommonNodeEntity typeForNonStandardDebtObligations) {
@@ -6650,7 +6656,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 quantityForNonStandardDebtObligations
-     * 
+     *
      * @return quantityForNonStandardDebtObligations.
      */
     public CommonNodeEntity getQuantityForNonStandardDebtObligations() {
@@ -6659,7 +6665,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 quantityForNonStandardDebtObligations
-     * 
+     *
      * @param quantityForNonStandardDebtObligations quantityForNonStandardDebtObligations
      */
     public void setQuantityForNonStandardDebtObligations(CommonNodeEntity quantityForNonStandardDebtObligations) {
@@ -6668,7 +6674,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 aggregateAmount
-     * 
+     *
      * @return aggregateAmount.
      */
     public CommonNodeEntity getAggregateAmount() {
@@ -6677,7 +6683,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 aggregateAmount
-     * 
+     *
      * @param aggregateAmount aggregateAmount
      */
     public void setAggregateAmount(CommonNodeEntity aggregateAmount) {
@@ -6686,7 +6692,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 weightedAverageRemainingMaturityDays
-     * 
+     *
      * @return weightedAverageRemainingMaturityDays.
      */
     public CommonNodeEntity getWeightedAverageRemainingMaturityDays() {
@@ -6695,7 +6701,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 weightedAverageRemainingMaturityDays
-     * 
+     *
      * @param weightedAverageRemainingMaturityDays weightedAverageRemainingMaturityDays
      */
     public void setWeightedAverageRemainingMaturityDays(CommonNodeEntity weightedAverageRemainingMaturityDays) {
@@ -6704,7 +6710,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 maximumRemainingMaturityDays
-     * 
+     *
      * @return maximumRemainingMaturityDays.
      */
     public CommonNodeEntity getMaximumRemainingMaturityDays() {
@@ -6713,7 +6719,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 maximumRemainingMaturityDays
-     * 
+     *
      * @param maximumRemainingMaturityDays maximumRemainingMaturityDays
      */
     public void setMaximumRemainingMaturityDays(CommonNodeEntity maximumRemainingMaturityDays) {
@@ -6722,7 +6728,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 minimumRemainingMaturityDays
-     * 
+     *
      * @return minimumRemainingMaturityDays.
      */
     public CommonNodeEntity getMinimumRemainingMaturityDays() {
@@ -6731,7 +6737,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 minimumRemainingMaturityDays
-     * 
+     *
      * @param minimumRemainingMaturityDays minimumRemainingMaturityDays
      */
     public void setMinimumRemainingMaturityDays(CommonNodeEntity minimumRemainingMaturityDays) {
@@ -6740,7 +6746,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 valueDateForNonStandardDebtObligations
-     * 
+     *
      * @return valueDateForNonStandardDebtObligations.
      */
     public CommonNodeEntity getValueDateForNonStandardDebtObligations() {
@@ -6749,7 +6755,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 valueDateForNonStandardDebtObligations
-     * 
+     *
      * @param valueDateForNonStandardDebtObligations valueDateForNonStandardDebtObligations
      */
     public void setValueDateForNonStandardDebtObligations(CommonNodeEntity valueDateForNonStandardDebtObligations) {
@@ -6758,7 +6764,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 maturityDateForNonStandardDebtObligations
-     * 
+     *
      * @return maturityDateForNonStandardDebtObligations.
      */
     public CommonNodeEntity getMaturityDateForNonStandardDebtObligations() {
@@ -6767,7 +6773,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 maturityDateForNonStandardDebtObligations
-     * 
+     *
      * @param maturityDateForNonStandardDebtObligations maturityDateForNonStandardDebtObligations
      */
     public void setMaturityDateForNonStandardDebtObligations(CommonNodeEntity maturityDateForNonStandardDebtObligations) {
@@ -6776,7 +6782,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 industryForNonStandardDebtObligations
-     * 
+     *
      * @return industryForNonStandardDebtObligations.
      */
     public CommonNodeEntity getIndustryForNonStandardDebtObligations() {
@@ -6785,7 +6791,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 industryForNonStandardDebtObligations
-     * 
+     *
      * @param industryForNonStandardDebtObligations industryForNonStandardDebtObligations
      */
     public void setIndustryForNonStandardDebtObligations(CommonNodeEntity industryForNonStandardDebtObligations) {
@@ -6794,7 +6800,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 discountRate
-     * 
+     *
      * @return discountRate.
      */
     public CommonNodeEntity getDiscountRate() {
@@ -6803,7 +6809,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 discountRate
-     * 
+     *
      * @param discountRate discountRate
      */
     public void setDiscountRate(CommonNodeEntity discountRate) {
@@ -6812,7 +6818,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 stockCode
-     * 
+     *
      * @return stockCode.
      */
     public CommonNodeEntity getStockCode() {
@@ -6821,7 +6827,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 stockCode
-     * 
+     *
      * @param stockCode stockCode
      */
     public void setStockCode(CommonNodeEntity stockCode) {
@@ -6830,7 +6836,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 nameOfStockEnterprise
-     * 
+     *
      * @return nameOfStockEnterprise.
      */
     public CommonNodeEntity getNameOfStockEnterprise() {
@@ -6839,7 +6845,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 nameOfStockEnterprise
-     * 
+     *
      * @param nameOfStockEnterprise nameOfStockEnterprise
      */
     public void setNameOfStockEnterprise(CommonNodeEntity nameOfStockEnterprise) {
@@ -6848,7 +6854,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 stockType
-     * 
+     *
      * @return stockType.
      */
     public CommonNodeEntity getStockType() {
@@ -6857,7 +6863,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 stockType
-     * 
+     *
      * @param stockType stockType
      */
     public void setStockType(CommonNodeEntity stockType) {
@@ -6866,7 +6872,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 industryForEquities
-     * 
+     *
      * @return industryForEquities.
      */
     public CommonNodeEntity getIndustryForEquities() {
@@ -6875,7 +6881,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 industryForEquities
-     * 
+     *
      * @param industryForEquities industryForEquities
      */
     public void setIndustryForEquities(CommonNodeEntity industryForEquities) {
@@ -6884,7 +6890,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 investmentStageForEquities
-     * 
+     *
      * @return investmentStageForEquities.
      */
     public CommonNodeEntity getInvestmentStageForEquities() {
@@ -6893,7 +6899,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 investmentStageForEquities
-     * 
+     *
      * @param investmentStageForEquities investmentStageForEquities
      */
     public void setInvestmentStageForEquities(CommonNodeEntity investmentStageForEquities) {
@@ -6902,7 +6908,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 enterpriseTypeByScale
-     * 
+     *
      * @return enterpriseTypeByScale.
      */
     public CommonNodeEntity getEnterpriseTypeByScale() {
@@ -6911,7 +6917,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 enterpriseTypeByScale
-     * 
+     *
      * @param enterpriseTypeByScale enterpriseTypeByScale
      */
     public void setEnterpriseTypeByScale(CommonNodeEntity enterpriseTypeByScale) {
@@ -6920,7 +6926,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 enterpriseTypeByTechnicalField
-     * 
+     *
      * @return enterpriseTypeByTechnicalField.
      */
     public CommonNodeEntity getEnterpriseTypeByTechnicalField() {
@@ -6929,7 +6935,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 enterpriseTypeByTechnicalField
-     * 
+     *
      * @param enterpriseTypeByTechnicalField enterpriseTypeByTechnicalField
      */
     public void setEnterpriseTypeByTechnicalField(CommonNodeEntity enterpriseTypeByTechnicalField) {
@@ -6938,7 +6944,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 enterpriseTypeByEconomicType
-     * 
+     *
      * @return enterpriseTypeByEconomicType.
      */
     public CommonNodeEntity getEnterpriseTypeByEconomicType() {
@@ -6947,7 +6953,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 enterpriseTypeByEconomicType
-     * 
+     *
      * @param enterpriseTypeByEconomicType enterpriseTypeByEconomicType
      */
     public void setEnterpriseTypeByEconomicType(CommonNodeEntity enterpriseTypeByEconomicType) {
@@ -6956,7 +6962,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 pledgedFinancingPleaseSelect
-     * 
+     *
      * @return pledgedFinancingPleaseSelect.
      */
     public CommonNodeEntity getPledgedFinancingPleaseSelect() {
@@ -6965,7 +6971,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 pledgedFinancingPleaseSelect
-     * 
+     *
      * @param pledgedFinancingPleaseSelect pledgedFinancingPleaseSelect
      */
     public void setPledgedFinancingPleaseSelect(CommonNodeEntity pledgedFinancingPleaseSelect) {
@@ -6974,7 +6980,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 nameForDerivatives
-     * 
+     *
      * @return nameForDerivatives.
      */
     public CommonNodeEntity getNameForDerivatives() {
@@ -6983,7 +6989,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 nameForDerivatives
-     * 
+     *
      * @param nameForDerivatives nameForDerivatives
      */
     public void setNameForDerivatives(CommonNodeEntity nameForDerivatives) {
@@ -6992,7 +6998,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 nominalPrincipal
-     * 
+     *
      * @return nominalPrincipal.
      */
     public CommonNodeEntity getNominalPrincipal() {
@@ -7001,7 +7007,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 nominalPrincipal
-     * 
+     *
      * @param nominalPrincipal nominalPrincipal
      */
     public void setNominalPrincipal(CommonNodeEntity nominalPrincipal) {
@@ -7010,7 +7016,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 underlyingAssetTypeTuple
-     * 
+     *
      * @return underlyingAssetTypeTuple.
      */
     public List<CommonNodeListEntity> getUnderlyingAssetTypeTuple() {
@@ -7019,7 +7025,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 underlyingAssetTypeTuple
-     * 
+     *
      * @param underlyingAssetTypeTuple underlyingAssetTypeTuple
      */
     public void setUnderlyingAssetTypeTuple(List<CommonNodeListEntity> underlyingAssetTypeTuple) {
@@ -7028,7 +7034,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 countryOrRegionForQdiiBonds
-     * 
+     *
      * @return countryOrRegionForQdiiBonds.
      */
     public CommonNodeEntity getCountryOrRegionForQdiiBonds() {
@@ -7037,7 +7043,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 countryOrRegionForQdiiBonds
-     * 
+     *
      * @param countryOrRegionForQdiiBonds countryOrRegionForQdiiBonds
      */
     public void setCountryOrRegionForQdiiBonds(CommonNodeEntity countryOrRegionForQdiiBonds) {
@@ -7046,7 +7052,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 bondName
-     * 
+     *
      * @return bondName.
      */
     public CommonNodeEntity getBondName() {
@@ -7055,7 +7061,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 bondName
-     * 
+     *
      * @param bondName bondName
      */
     public void setBondName(CommonNodeEntity bondName) {
@@ -7064,7 +7070,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 bondIdentificationCode
-     * 
+     *
      * @return bondIdentificationCode.
      */
     public CommonNodeEntity getBondIdentificationCode() {
@@ -7073,7 +7079,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 bondIdentificationCode
-     * 
+     *
      * @param bondIdentificationCode bondIdentificationCode
      */
     public void setBondIdentificationCode(CommonNodeEntity bondIdentificationCode) {
@@ -7082,7 +7088,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 issuerForQdiiBonds
-     * 
+     *
      * @return issuerForQdiiBonds.
      */
     public CommonNodeEntity getIssuerForQdiiBonds() {
@@ -7091,7 +7097,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 issuerForQdiiBonds
-     * 
+     *
      * @param issuerForQdiiBonds issuerForQdiiBonds
      */
     public void setIssuerForQdiiBonds(CommonNodeEntity issuerForQdiiBonds) {
@@ -7100,7 +7106,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 industryOfIssuerForQdiiBonds
-     * 
+     *
      * @return industryOfIssuerForQdiiBonds.
      */
     public CommonNodeEntity getIndustryOfIssuerForQdiiBonds() {
@@ -7109,7 +7115,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 industryOfIssuerForQdiiBonds
-     * 
+     *
      * @param industryOfIssuerForQdiiBonds industryOfIssuerForQdiiBonds
      */
     public void setIndustryOfIssuerForQdiiBonds(CommonNodeEntity industryOfIssuerForQdiiBonds) {
@@ -7118,7 +7124,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 valueDateForQdiiBonds
-     * 
+     *
      * @return valueDateForQdiiBonds.
      */
     public CommonNodeEntity getValueDateForQdiiBonds() {
@@ -7127,7 +7133,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 valueDateForQdiiBonds
-     * 
+     *
      * @param valueDateForQdiiBonds valueDateForQdiiBonds
      */
     public void setValueDateForQdiiBonds(CommonNodeEntity valueDateForQdiiBonds) {
@@ -7136,7 +7142,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 maturityDateForQdiiBonds
-     * 
+     *
      * @return maturityDateForQdiiBonds.
      */
     public CommonNodeEntity getMaturityDateForQdiiBonds() {
@@ -7145,7 +7151,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 maturityDateForQdiiBonds
-     * 
+     *
      * @param maturityDateForQdiiBonds maturityDateForQdiiBonds
      */
     public void setMaturityDateForQdiiBonds(CommonNodeEntity maturityDateForQdiiBonds) {
@@ -7154,7 +7160,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 termToMaturityMonths
-     * 
+     *
      * @return termToMaturityMonths.
      */
     public CommonNodeEntity getTermToMaturityMonths() {
@@ -7163,7 +7169,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 termToMaturityMonths
-     * 
+     *
      * @param termToMaturityMonths termToMaturityMonths
      */
     public void setTermToMaturityMonths(CommonNodeEntity termToMaturityMonths) {
@@ -7172,7 +7178,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 issuerRatingForQdiiBonds
-     * 
+     *
      * @return issuerRatingForQdiiBonds.
      */
     public CommonNodeEntity getIssuerRatingForQdiiBonds() {
@@ -7181,7 +7187,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 issuerRatingForQdiiBonds
-     * 
+     *
      * @param issuerRatingForQdiiBonds issuerRatingForQdiiBonds
      */
     public void setIssuerRatingForQdiiBonds(CommonNodeEntity issuerRatingForQdiiBonds) {
@@ -7190,7 +7196,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 bondRating
-     * 
+     *
      * @return bondRating.
      */
     public CommonNodeEntity getBondRating() {
@@ -7199,7 +7205,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 bondRating
-     * 
+     *
      * @param bondRating bondRating
      */
     public void setBondRating(CommonNodeEntity bondRating) {
@@ -7208,7 +7214,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 couponRateForQdiiBonds
-     * 
+     *
      * @return couponRateForQdiiBonds.
      */
     public CommonNodeEntity getCouponRateForQdiiBonds() {
@@ -7217,7 +7223,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 couponRateForQdiiBonds
-     * 
+     *
      * @param couponRateForQdiiBonds couponRateForQdiiBonds
      */
     public void setCouponRateForQdiiBonds(CommonNodeEntity couponRateForQdiiBonds) {
@@ -7226,7 +7232,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 interestPaymentFrequencyMeasuredByMonthForQdiiBonds
-     * 
+     *
      * @return interestPaymentFrequencyMeasuredByMonthForQdiiBonds.
      */
     public CommonNodeEntity getInterestPaymentFrequencyMeasuredByMonthForQdiiBonds() {
@@ -7235,7 +7241,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 interestPaymentFrequencyMeasuredByMonthForQdiiBonds
-     * 
+     *
      * @param interestPaymentFrequencyMeasuredByMonthForQdiiBonds
      *            interestPaymentFrequencyMeasuredByMonthForQdiiBonds
      */
@@ -7245,7 +7251,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 detailsOnGuaranteeStatusForQdiiBonds
-     * 
+     *
      * @return detailsOnGuaranteeStatusForQdiiBonds.
      */
     public CommonNodeEntity getDetailsOnGuaranteeStatusForQdiiBonds() {
@@ -7254,7 +7260,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 detailsOnGuaranteeStatusForQdiiBonds
-     * 
+     *
      * @param detailsOnGuaranteeStatusForQdiiBonds detailsOnGuaranteeStatusForQdiiBonds
      */
     public void setDetailsOnGuaranteeStatusForQdiiBonds(CommonNodeEntity detailsOnGuaranteeStatusForQdiiBonds) {
@@ -7263,7 +7269,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 detailsOnSpecialTermsIEEmbeddedOptions
-     * 
+     *
      * @return detailsOnSpecialTermsIEEmbeddedOptions.
      */
     public CommonNodeEntity getDetailsOnSpecialTermsIEEmbeddedOptions() {
@@ -7272,7 +7278,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 detailsOnSpecialTermsIEEmbeddedOptions
-     * 
+     *
      * @param detailsOnSpecialTermsIEEmbeddedOptions detailsOnSpecialTermsIEEmbeddedOptions
      */
     public void setDetailsOnSpecialTermsIEEmbeddedOptions(CommonNodeEntity detailsOnSpecialTermsIEEmbeddedOptions) {
@@ -7281,7 +7287,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 countryOrRegionForQdiiInterbankLendingReverseRepo
-     * 
+     *
      * @return countryOrRegionForQdiiInterbankLendingReverseRepo.
      */
     public CommonNodeEntity getCountryOrRegionForQdiiInterbankLendingReverseRepo() {
@@ -7290,7 +7296,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 countryOrRegionForQdiiInterbankLendingReverseRepo
-     * 
+     *
      * @param countryOrRegionForQdiiInterbankLendingReverseRepo
      *            countryOrRegionForQdiiInterbankLendingReverseRepo
      */
@@ -7300,7 +7306,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 valueDateForQdiiInterbankLendingReverseRepo
-     * 
+     *
      * @return valueDateForQdiiInterbankLendingReverseRepo.
      */
     public CommonNodeEntity getValueDateForQdiiInterbankLendingReverseRepo() {
@@ -7309,7 +7315,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 valueDateForQdiiInterbankLendingReverseRepo
-     * 
+     *
      * @param valueDateForQdiiInterbankLendingReverseRepo
      *            valueDateForQdiiInterbankLendingReverseRepo
      */
@@ -7319,7 +7325,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 maturityDateForQdiiInterbankLendingReverseRepo
-     * 
+     *
      * @return maturityDateForQdiiInterbankLendingReverseRepo.
      */
     public CommonNodeEntity getMaturityDateForQdiiInterbankLendingReverseRepo() {
@@ -7328,7 +7334,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 maturityDateForQdiiInterbankLendingReverseRepo
-     * 
+     *
      * @param maturityDateForQdiiInterbankLendingReverseRepo
      *            maturityDateForQdiiInterbankLendingReverseRepo
      */
@@ -7338,7 +7344,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 counterpartyForQdiiInterbankLendingReverseRepo
-     * 
+     *
      * @return counterpartyForQdiiInterbankLendingReverseRepo.
      */
     public CommonNodeEntity getCounterpartyForQdiiInterbankLendingReverseRepo() {
@@ -7347,7 +7353,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 counterpartyForQdiiInterbankLendingReverseRepo
-     * 
+     *
      * @param counterpartyForQdiiInterbankLendingReverseRepo
      *            counterpartyForQdiiInterbankLendingReverseRepo
      */
@@ -7357,7 +7363,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 annualInterestRateForQdiiInterbankLendingReverseRepo
-     * 
+     *
      * @return annualInterestRateForQdiiInterbankLendingReverseRepo.
      */
     public CommonNodeEntity getAnnualInterestRateForQdiiInterbankLendingReverseRepo() {
@@ -7366,7 +7372,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 annualInterestRateForQdiiInterbankLendingReverseRepo
-     * 
+     *
      * @param annualInterestRateForQdiiInterbankLendingReverseRepo
      *            annualInterestRateForQdiiInterbankLendingReverseRepo
      */
@@ -7376,7 +7382,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 interestAccrualBasisForQdiiInterbankLendingReverseRepo
-     * 
+     *
      * @return interestAccrualBasisForQdiiInterbankLendingReverseRepo.
      */
     public CommonNodeEntity getInterestAccrualBasisForQdiiInterbankLendingReverseRepo() {
@@ -7385,7 +7391,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 interestAccrualBasisForQdiiInterbankLendingReverseRepo
-     * 
+     *
      * @param interestAccrualBasisForQdiiInterbankLendingReverseRepo
      *            interestAccrualBasisForQdiiInterbankLendingReverseRepo
      */
@@ -7395,7 +7401,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 countryOrRegionForQdiiFundsAndBonds
-     * 
+     *
      * @return countryOrRegionForQdiiFundsAndBonds.
      */
     public CommonNodeEntity getCountryOrRegionForQdiiFundsAndBonds() {
@@ -7404,7 +7410,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 countryOrRegionForQdiiFundsAndBonds
-     * 
+     *
      * @param countryOrRegionForQdiiFundsAndBonds countryOrRegionForQdiiFundsAndBonds
      */
     public void setCountryOrRegionForQdiiFundsAndBonds(CommonNodeEntity countryOrRegionForQdiiFundsAndBonds) {
@@ -7413,7 +7419,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 stockFundIdentificationCode
-     * 
+     *
      * @return stockFundIdentificationCode.
      */
     public CommonNodeEntity getStockFundIdentificationCode() {
@@ -7422,7 +7428,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 stockFundIdentificationCode
-     * 
+     *
      * @param stockFundIdentificationCode stockFundIdentificationCode
      */
     public void setStockFundIdentificationCode(CommonNodeEntity stockFundIdentificationCode) {
@@ -7431,7 +7437,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 stockFundName
-     * 
+     *
      * @return stockFundName.
      */
     public CommonNodeEntity getStockFundName() {
@@ -7440,7 +7446,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 stockFundName
-     * 
+     *
      * @param stockFundName stockFundName
      */
     public void setStockFundName(CommonNodeEntity stockFundName) {
@@ -7449,7 +7455,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 issuerForQdiiFundsAndBonds
-     * 
+     *
      * @return issuerForQdiiFundsAndBonds.
      */
     public CommonNodeEntity getIssuerForQdiiFundsAndBonds() {
@@ -7458,7 +7464,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 issuerForQdiiFundsAndBonds
-     * 
+     *
      * @param issuerForQdiiFundsAndBonds issuerForQdiiFundsAndBonds
      */
     public void setIssuerForQdiiFundsAndBonds(CommonNodeEntity issuerForQdiiFundsAndBonds) {
@@ -7467,7 +7473,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 industryForQdiiFundsAndBonds
-     * 
+     *
      * @return industryForQdiiFundsAndBonds.
      */
     public CommonNodeEntity getIndustryForQdiiFundsAndBonds() {
@@ -7476,7 +7482,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 industryForQdiiFundsAndBonds
-     * 
+     *
      * @param industryForQdiiFundsAndBonds industryForQdiiFundsAndBonds
      */
     public void setIndustryForQdiiFundsAndBonds(CommonNodeEntity industryForQdiiFundsAndBonds) {
@@ -7485,7 +7491,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 countryOrRegionForQdiiStructuredNotes
-     * 
+     *
      * @return countryOrRegionForQdiiStructuredNotes.
      */
     public CommonNodeEntity getCountryOrRegionForQdiiStructuredNotes() {
@@ -7494,7 +7500,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 countryOrRegionForQdiiStructuredNotes
-     * 
+     *
      * @param countryOrRegionForQdiiStructuredNotes countryOrRegionForQdiiStructuredNotes
      */
     public void setCountryOrRegionForQdiiStructuredNotes(CommonNodeEntity countryOrRegionForQdiiStructuredNotes) {
@@ -7503,7 +7509,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 contractName
-     * 
+     *
      * @return contractName.
      */
     public CommonNodeEntity getContractName() {
@@ -7512,7 +7518,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 contractName
-     * 
+     *
      * @param contractName contractName
      */
     public void setContractName(CommonNodeEntity contractName) {
@@ -7521,7 +7527,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 valueDateForQdiiStructuredNotes
-     * 
+     *
      * @return valueDateForQdiiStructuredNotes.
      */
     public CommonNodeEntity getValueDateForQdiiStructuredNotes() {
@@ -7530,7 +7536,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 valueDateForQdiiStructuredNotes
-     * 
+     *
      * @param valueDateForQdiiStructuredNotes valueDateForQdiiStructuredNotes
      */
     public void setValueDateForQdiiStructuredNotes(CommonNodeEntity valueDateForQdiiStructuredNotes) {
@@ -7539,7 +7545,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 maturityDateForQdiiStructuredNotes
-     * 
+     *
      * @return maturityDateForQdiiStructuredNotes.
      */
     public CommonNodeEntity getMaturityDateForQdiiStructuredNotes() {
@@ -7548,7 +7554,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 maturityDateForQdiiStructuredNotes
-     * 
+     *
      * @param maturityDateForQdiiStructuredNotes maturityDateForQdiiStructuredNotes
      */
     public void setMaturityDateForQdiiStructuredNotes(CommonNodeEntity maturityDateForQdiiStructuredNotes) {
@@ -7557,7 +7563,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 couponRateForQdiiStructuredNotes
-     * 
+     *
      * @return couponRateForQdiiStructuredNotes.
      */
     public CommonNodeEntity getCouponRateForQdiiStructuredNotes() {
@@ -7566,7 +7572,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 couponRateForQdiiStructuredNotes
-     * 
+     *
      * @param couponRateForQdiiStructuredNotes couponRateForQdiiStructuredNotes
      */
     public void setCouponRateForQdiiStructuredNotes(CommonNodeEntity couponRateForQdiiStructuredNotes) {
@@ -7575,7 +7581,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 interestPaymentFrequencyMeasuredByMonthForQdiiStructuredNotes
-     * 
+     *
      * @return interestPaymentFrequencyMeasuredByMonthForQdiiStructuredNotes.
      */
     public CommonNodeEntity getInterestPaymentFrequencyMeasuredByMonthForQdiiStructuredNotes() {
@@ -7584,7 +7590,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 interestPaymentFrequencyMeasuredByMonthForQdiiStructuredNotes
-     * 
+     *
      * @param interestPaymentFrequencyMeasuredByMonthForQdiiStructuredNotes
      *            interestPaymentFrequencyMeasuredByMonthForQdiiStructuredNotes
      */
@@ -7594,7 +7600,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 percentageOfFixedIncomeInvestments
-     * 
+     *
      * @return percentageOfFixedIncomeInvestments.
      */
     public CommonNodeEntity getPercentageOfFixedIncomeInvestments() {
@@ -7603,7 +7609,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 percentageOfFixedIncomeInvestments
-     * 
+     *
      * @param percentageOfFixedIncomeInvestments percentageOfFixedIncomeInvestments
      */
     public void setPercentageOfFixedIncomeInvestments(CommonNodeEntity percentageOfFixedIncomeInvestments) {
@@ -7612,7 +7618,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 percentageOfDerivativeInvestments
-     * 
+     *
      * @return percentageOfDerivativeInvestments.
      */
     public CommonNodeEntity getPercentageOfDerivativeInvestments() {
@@ -7621,7 +7627,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 percentageOfDerivativeInvestments
-     * 
+     *
      * @param percentageOfDerivativeInvestments percentageOfDerivativeInvestments
      */
     public void setPercentageOfDerivativeInvestments(CommonNodeEntity percentageOfDerivativeInvestments) {
@@ -7630,7 +7636,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 typeOfDerivativeInvestments
-     * 
+     *
      * @return typeOfDerivativeInvestments.
      */
     public CommonNodeEntity getTypeOfDerivativeInvestments() {
@@ -7639,7 +7645,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 typeOfDerivativeInvestments
-     * 
+     *
      * @param typeOfDerivativeInvestments typeOfDerivativeInvestments
      */
     public void setTypeOfDerivativeInvestments(CommonNodeEntity typeOfDerivativeInvestments) {
@@ -7648,7 +7654,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 underlyingAsset
-     * 
+     *
      * @return underlyingAsset.
      */
     public CommonNodeEntity getUnderlyingAsset() {
@@ -7657,7 +7663,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 underlyingAsset
-     * 
+     *
      * @param underlyingAsset underlyingAsset
      */
     public void setUnderlyingAsset(CommonNodeEntity underlyingAsset) {
@@ -7666,7 +7672,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 detailsOnProceeds
-     * 
+     *
      * @return detailsOnProceeds.
      */
     public CommonNodeEntity getDetailsOnProceeds() {
@@ -7675,7 +7681,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 detailsOnProceeds
-     * 
+     *
      * @param detailsOnProceeds detailsOnProceeds
      */
     public void setDetailsOnProceeds(CommonNodeEntity detailsOnProceeds) {
@@ -7684,7 +7690,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 detailsOnOption
-     * 
+     *
      * @return detailsOnOption.
      */
     public CommonNodeEntity getDetailsOnOption() {
@@ -7693,7 +7699,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 detailsOnOption
-     * 
+     *
      * @param detailsOnOption detailsOnOption
      */
     public void setDetailsOnOption(CommonNodeEntity detailsOnOption) {
@@ -7702,7 +7708,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 structuredNoteMaximumAnnualReturn
-     * 
+     *
      * @return structuredNoteMaximumAnnualReturn.
      */
     public CommonNodeEntity getStructuredNoteMaximumAnnualReturn() {
@@ -7711,7 +7717,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 structuredNoteMaximumAnnualReturn
-     * 
+     *
      * @param structuredNoteMaximumAnnualReturn structuredNoteMaximumAnnualReturn
      */
     public void setStructuredNoteMaximumAnnualReturn(CommonNodeEntity structuredNoteMaximumAnnualReturn) {
@@ -7720,7 +7726,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 structuredNoteMinimumAnnualReturn
-     * 
+     *
      * @return structuredNoteMinimumAnnualReturn.
      */
     public CommonNodeEntity getStructuredNoteMinimumAnnualReturn() {
@@ -7729,7 +7735,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 structuredNoteMinimumAnnualReturn
-     * 
+     *
      * @param structuredNoteMinimumAnnualReturn structuredNoteMinimumAnnualReturn
      */
     public void setStructuredNoteMinimumAnnualReturn(CommonNodeEntity structuredNoteMinimumAnnualReturn) {
@@ -7738,7 +7744,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 underlyingAssetStrikePrice
-     * 
+     *
      * @return underlyingAssetStrikePrice.
      */
     public CommonNodeEntity getUnderlyingAssetStrikePrice() {
@@ -7747,7 +7753,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 underlyingAssetStrikePrice
-     * 
+     *
      * @param underlyingAssetStrikePrice underlyingAssetStrikePrice
      */
     public void setUnderlyingAssetStrikePrice(CommonNodeEntity underlyingAssetStrikePrice) {
@@ -7756,7 +7762,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 underlyingAssetPriceOnRegistrationDate
-     * 
+     *
      * @return underlyingAssetPriceOnRegistrationDate.
      */
     public CommonNodeEntity getUnderlyingAssetPriceOnRegistrationDate() {
@@ -7765,7 +7771,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 underlyingAssetPriceOnRegistrationDate
-     * 
+     *
      * @param underlyingAssetPriceOnRegistrationDate underlyingAssetPriceOnRegistrationDate
      */
     public void setUnderlyingAssetPriceOnRegistrationDate(CommonNodeEntity underlyingAssetPriceOnRegistrationDate) {
@@ -7774,7 +7780,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 transactionCosts
-     * 
+     *
      * @return transactionCosts.
      */
     public CommonNodeEntity getTransactionCosts() {
@@ -7783,7 +7789,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 transactionCosts
-     * 
+     *
      * @param transactionCosts transactionCosts
      */
     public void setTransactionCosts(CommonNodeEntity transactionCosts) {
@@ -7792,7 +7798,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 assetManagementPlanName
-     * 
+     *
      * @return assetManagementPlanName.
      */
     public CommonNodeEntity getAssetManagementPlanName() {
@@ -7801,7 +7807,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 assetManagementPlanName
-     * 
+     *
      * @param assetManagementPlanName assetManagementPlanName
      */
     public void setAssetManagementPlanName(CommonNodeEntity assetManagementPlanName) {
@@ -7810,7 +7816,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 assetManagementPlanIssuerCode
-     * 
+     *
      * @return assetManagementPlanIssuerCode.
      */
     public CommonNodeEntity getAssetManagementPlanIssuerCode() {
@@ -7819,7 +7825,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 assetManagementPlanIssuerCode
-     * 
+     *
      * @param assetManagementPlanIssuerCode assetManagementPlanIssuerCode
      */
     public void setAssetManagementPlanIssuerCode(CommonNodeEntity assetManagementPlanIssuerCode) {
@@ -7828,7 +7834,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 assetManagementPlanRegistrationCode
-     * 
+     *
      * @return assetManagementPlanRegistrationCode.
      */
     public CommonNodeEntity getAssetManagementPlanRegistrationCode() {
@@ -7837,7 +7843,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 assetManagementPlanRegistrationCode
-     * 
+     *
      * @param assetManagementPlanRegistrationCode assetManagementPlanRegistrationCode
      */
     public void setAssetManagementPlanRegistrationCode(CommonNodeEntity assetManagementPlanRegistrationCode) {
@@ -7846,7 +7852,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 manager
-     * 
+     *
      * @return manager.
      */
     public CommonNodeEntity getManager() {
@@ -7855,7 +7861,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 manager
-     * 
+     *
      * @param manager manager
      */
     public void setManager(CommonNodeEntity manager) {
@@ -7864,7 +7870,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 custodian
-     * 
+     *
      * @return custodian.
      */
     public CommonNodeEntity getCustodian() {
@@ -7873,7 +7879,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 custodian
-     * 
+     *
      * @param custodian custodian
      */
     public void setCustodian(CommonNodeEntity custodian) {
@@ -7882,7 +7888,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 amountForAssetManagementPlans
-     * 
+     *
      * @return amountForAssetManagementPlans.
      */
     public CommonNodeEntity getAmountForAssetManagementPlans() {
@@ -7891,7 +7897,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 amountForAssetManagementPlans
-     * 
+     *
      * @param amountForAssetManagementPlans amountForAssetManagementPlans
      */
     public void setAmountForAssetManagementPlans(CommonNodeEntity amountForAssetManagementPlans) {
@@ -7900,7 +7906,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 actualInvestmentDirectionOfFund
-     * 
+     *
      * @return actualInvestmentDirectionOfFund.
      */
     public CommonNodeEntity getActualInvestmentDirectionOfFund() {
@@ -7909,7 +7915,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 actualInvestmentDirectionOfFund
-     * 
+     *
      * @param actualInvestmentDirectionOfFund actualInvestmentDirectionOfFund
      */
     public void setActualInvestmentDirectionOfFund(CommonNodeEntity actualInvestmentDirectionOfFund) {
@@ -7918,7 +7924,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 detailsOnInvestment
-     * 
+     *
      * @return detailsOnInvestment.
      */
     public CommonNodeEntity getDetailsOnInvestment() {
@@ -7927,7 +7933,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 detailsOnInvestment
-     * 
+     *
      * @param detailsOnInvestment detailsOnInvestment
      */
     public void setDetailsOnInvestment(CommonNodeEntity detailsOnInvestment) {
@@ -7936,7 +7942,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 industryOfInvestment
-     * 
+     *
      * @return industryOfInvestment.
      */
     public CommonNodeEntity getIndustryOfInvestment() {
@@ -7945,7 +7951,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 industryOfInvestment
-     * 
+     *
      * @param industryOfInvestment industryOfInvestment
      */
     public void setIndustryOfInvestment(CommonNodeEntity industryOfInvestment) {
@@ -7954,7 +7960,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 valueDateOfAssetManagementPlan
-     * 
+     *
      * @return valueDateOfAssetManagementPlan.
      */
     public CommonNodeEntity getValueDateOfAssetManagementPlan() {
@@ -7963,7 +7969,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 valueDateOfAssetManagementPlan
-     * 
+     *
      * @param valueDateOfAssetManagementPlan valueDateOfAssetManagementPlan
      */
     public void setValueDateOfAssetManagementPlan(CommonNodeEntity valueDateOfAssetManagementPlan) {
@@ -7972,7 +7978,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 maturityDateOfAssetManagementPlan
-     * 
+     *
      * @return maturityDateOfAssetManagementPlan.
      */
     public CommonNodeEntity getMaturityDateOfAssetManagementPlan() {
@@ -7981,7 +7987,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 maturityDateOfAssetManagementPlan
-     * 
+     *
      * @param maturityDateOfAssetManagementPlan maturityDateOfAssetManagementPlan
      */
     public void setMaturityDateOfAssetManagementPlan(CommonNodeEntity maturityDateOfAssetManagementPlan) {
@@ -7990,7 +7996,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 typeOfAssetManagementPlan
-     * 
+     *
      * @return typeOfAssetManagementPlan.
      */
     public CommonNodeEntity getTypeOfAssetManagementPlan() {
@@ -7999,7 +8005,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 typeOfAssetManagementPlan
-     * 
+     *
      * @param typeOfAssetManagementPlan typeOfAssetManagementPlan
      */
     public void setTypeOfAssetManagementPlan(CommonNodeEntity typeOfAssetManagementPlan) {
@@ -8008,7 +8014,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 expectedReturnPleaseSelectForAssetManagementPlans
-     * 
+     *
      * @return expectedReturnPleaseSelectForAssetManagementPlans.
      */
     public CommonNodeEntity getExpectedReturnPleaseSelectForAssetManagementPlans() {
@@ -8017,7 +8023,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 expectedReturnPleaseSelectForAssetManagementPlans
-     * 
+     *
      * @param expectedReturnPleaseSelectForAssetManagementPlans
      *            expectedReturnPleaseSelectForAssetManagementPlans
      */
@@ -8027,7 +8033,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 maximumExpectedAnnualReturn
-     * 
+     *
      * @return maximumExpectedAnnualReturn.
      */
     public CommonNodeEntity getMaximumExpectedAnnualReturn() {
@@ -8036,7 +8042,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 maximumExpectedAnnualReturn
-     * 
+     *
      * @param maximumExpectedAnnualReturn maximumExpectedAnnualReturn
      */
     public void setMaximumExpectedAnnualReturn(CommonNodeEntity maximumExpectedAnnualReturn) {
@@ -8045,7 +8051,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 minimumExpectedAnnualReturn
-     * 
+     *
      * @return minimumExpectedAnnualReturn.
      */
     public CommonNodeEntity getMinimumExpectedAnnualReturn() {
@@ -8054,7 +8060,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 minimumExpectedAnnualReturn
-     * 
+     *
      * @param minimumExpectedAnnualReturn minimumExpectedAnnualReturn
      */
     public void setMinimumExpectedAnnualReturn(CommonNodeEntity minimumExpectedAnnualReturn) {
@@ -8063,7 +8069,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 investmentStructure
-     * 
+     *
      * @return investmentStructure.
      */
     public CommonNodeEntity getInvestmentStructure() {
@@ -8072,7 +8078,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 investmentStructure
-     * 
+     *
      * @param investmentStructure investmentStructure
      */
     public void setInvestmentStructure(CommonNodeEntity investmentStructure) {
@@ -8081,7 +8087,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 managementType
-     * 
+     *
      * @return managementType.
      */
     public CommonNodeEntity getManagementType() {
@@ -8090,7 +8096,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 managementType
-     * 
+     *
      * @param managementType managementType
      */
     public void setManagementType(CommonNodeEntity managementType) {
@@ -8099,7 +8105,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 managementFeeRate
-     * 
+     *
      * @return managementFeeRate.
      */
     public CommonNodeEntity getManagementFeeRate() {
@@ -8108,7 +8114,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 managementFeeRate
-     * 
+     *
      * @param managementFeeRate managementFeeRate
      */
     public void setManagementFeeRate(CommonNodeEntity managementFeeRate) {
@@ -8117,7 +8123,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 custodianFeeRateForAssetManagementPlans
-     * 
+     *
      * @return custodianFeeRateForAssetManagementPlans.
      */
     public CommonNodeEntity getCustodianFeeRateForAssetManagementPlans() {
@@ -8126,7 +8132,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 custodianFeeRateForAssetManagementPlans
-     * 
+     *
      * @param custodianFeeRateForAssetManagementPlans custodianFeeRateForAssetManagementPlans
      */
     public void setCustodianFeeRateForAssetManagementPlans(CommonNodeEntity custodianFeeRateForAssetManagementPlans) {
@@ -8135,7 +8141,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 transactionCostRate
-     * 
+     *
      * @return transactionCostRate.
      */
     public CommonNodeEntity getTransactionCostRate() {
@@ -8144,7 +8150,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 transactionCostRate
-     * 
+     *
      * @param transactionCostRate transactionCostRate
      */
     public void setTransactionCostRate(CommonNodeEntity transactionCostRate) {
@@ -8153,7 +8159,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 intermediaryServiceFeeRate
-     * 
+     *
      * @return intermediaryServiceFeeRate.
      */
     public CommonNodeEntity getIntermediaryServiceFeeRate() {
@@ -8162,7 +8168,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 intermediaryServiceFeeRate
-     * 
+     *
      * @param intermediaryServiceFeeRate intermediaryServiceFeeRate
      */
     public void setIntermediaryServiceFeeRate(CommonNodeEntity intermediaryServiceFeeRate) {
@@ -8171,7 +8177,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 otherExpensesRate
-     * 
+     *
      * @return otherExpensesRate.
      */
     public CommonNodeEntity getOtherExpensesRate() {
@@ -8180,7 +8186,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 otherExpensesRate
-     * 
+     *
      * @param otherExpensesRate otherExpensesRate
      */
     public void setOtherExpensesRate(CommonNodeEntity otherExpensesRate) {
@@ -8189,7 +8195,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 countryOrRegionForCommodities
-     * 
+     *
      * @return countryOrRegionForCommodities.
      */
     public CommonNodeEntity getCountryOrRegionForCommodities() {
@@ -8198,7 +8204,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 countryOrRegionForCommodities
-     * 
+     *
      * @param countryOrRegionForCommodities countryOrRegionForCommodities
      */
     public void setCountryOrRegionForCommodities(CommonNodeEntity countryOrRegionForCommodities) {
@@ -8207,7 +8213,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 nameForCommodities
-     * 
+     *
      * @return nameForCommodities.
      */
     public CommonNodeEntity getNameForCommodities() {
@@ -8216,7 +8222,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 nameForCommodities
-     * 
+     *
      * @param nameForCommodities nameForCommodities
      */
     public void setNameForCommodities(CommonNodeEntity nameForCommodities) {
@@ -8225,7 +8231,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 termToMaturityDaysForCommodities
-     * 
+     *
      * @return termToMaturityDaysForCommodities.
      */
     public CommonNodeEntity getTermToMaturityDaysForCommodities() {
@@ -8234,7 +8240,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 termToMaturityDaysForCommodities
-     * 
+     *
      * @param termToMaturityDaysForCommodities termToMaturityDaysForCommodities
      */
     public void setTermToMaturityDaysForCommodities(CommonNodeEntity termToMaturityDaysForCommodities) {
@@ -8243,7 +8249,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 assetAnnualReturnForCommodities
-     * 
+     *
      * @return assetAnnualReturnForCommodities.
      */
     public CommonNodeEntity getAssetAnnualReturnForCommodities() {
@@ -8252,7 +8258,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 assetAnnualReturnForCommodities
-     * 
+     *
      * @param assetAnnualReturnForCommodities assetAnnualReturnForCommodities
      */
     public void setAssetAnnualReturnForCommodities(CommonNodeEntity assetAnnualReturnForCommodities) {
@@ -8261,7 +8267,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 assetValueForCommodities
-     * 
+     *
      * @return assetValueForCommodities.
      */
     public CommonNodeEntity getAssetValueForCommodities() {
@@ -8270,7 +8276,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 assetValueForCommodities
-     * 
+     *
      * @param assetValueForCommodities assetValueForCommodities
      */
     public void setAssetValueForCommodities(CommonNodeEntity assetValueForCommodities) {
@@ -8279,7 +8285,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 countryOrRegionForAlternativeInvestments
-     * 
+     *
      * @return countryOrRegionForAlternativeInvestments.
      */
     public CommonNodeEntity getCountryOrRegionForAlternativeInvestments() {
@@ -8288,7 +8294,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 countryOrRegionForAlternativeInvestments
-     * 
+     *
      * @param countryOrRegionForAlternativeInvestments countryOrRegionForAlternativeInvestments
      */
     public void setCountryOrRegionForAlternativeInvestments(CommonNodeEntity countryOrRegionForAlternativeInvestments) {
@@ -8297,7 +8303,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 nameForAlternativeInvestments
-     * 
+     *
      * @return nameForAlternativeInvestments.
      */
     public CommonNodeEntity getNameForAlternativeInvestments() {
@@ -8306,7 +8312,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 nameForAlternativeInvestments
-     * 
+     *
      * @param nameForAlternativeInvestments nameForAlternativeInvestments
      */
     public void setNameForAlternativeInvestments(CommonNodeEntity nameForAlternativeInvestments) {
@@ -8315,7 +8321,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 valueDateForAlternativeInvestments
-     * 
+     *
      * @return valueDateForAlternativeInvestments.
      */
     public CommonNodeEntity getValueDateForAlternativeInvestments() {
@@ -8324,7 +8330,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 valueDateForAlternativeInvestments
-     * 
+     *
      * @param valueDateForAlternativeInvestments valueDateForAlternativeInvestments
      */
     public void setValueDateForAlternativeInvestments(CommonNodeEntity valueDateForAlternativeInvestments) {
@@ -8333,7 +8339,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 maturityDateForAlternativeInvestments
-     * 
+     *
      * @return maturityDateForAlternativeInvestments.
      */
     public CommonNodeEntity getMaturityDateForAlternativeInvestments() {
@@ -8342,7 +8348,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 maturityDateForAlternativeInvestments
-     * 
+     *
      * @param maturityDateForAlternativeInvestments maturityDateForAlternativeInvestments
      */
     public void setMaturityDateForAlternativeInvestments(CommonNodeEntity maturityDateForAlternativeInvestments) {
@@ -8351,7 +8357,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 assetValueForAlternativeInvestments
-     * 
+     *
      * @return assetValueForAlternativeInvestments.
      */
     public CommonNodeEntity getAssetValueForAlternativeInvestments() {
@@ -8360,7 +8366,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 assetValueForAlternativeInvestments
-     * 
+     *
      * @param assetValueForAlternativeInvestments assetValueForAlternativeInvestments
      */
     public void setAssetValueForAlternativeInvestments(CommonNodeEntity assetValueForAlternativeInvestments) {
@@ -8369,7 +8375,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 assetAnnualReturnForAlternativeInvestments
-     * 
+     *
      * @return assetAnnualReturnForAlternativeInvestments.
      */
     public CommonNodeEntity getAssetAnnualReturnForAlternativeInvestments() {
@@ -8378,7 +8384,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 assetAnnualReturnForAlternativeInvestments
-     * 
+     *
      * @param assetAnnualReturnForAlternativeInvestments assetAnnualReturnForAlternativeInvestments
      */
     public void setAssetAnnualReturnForAlternativeInvestments(CommonNodeEntity assetAnnualReturnForAlternativeInvestments) {
@@ -8387,7 +8393,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 fundIdentificationCode
-     * 
+     *
      * @return fundIdentificationCode.
      */
     public CommonNodeEntity getFundIdentificationCode() {
@@ -8396,7 +8402,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 fundIdentificationCode
-     * 
+     *
      * @param fundIdentificationCode fundIdentificationCode
      */
     public void setFundIdentificationCode(CommonNodeEntity fundIdentificationCode) {
@@ -8405,7 +8411,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 fundName
-     * 
+     *
      * @return fundName.
      */
     public CommonNodeEntity getFundName() {
@@ -8414,7 +8420,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 fundName
-     * 
+     *
      * @param fundName fundName
      */
     public void setFundName(CommonNodeEntity fundName) {
@@ -8424,7 +8430,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 registrationAgency
-     * 
+     *
      * @return registrationAgency.
      */
     public CommonNodeEntity getRegistrationAgency() {
@@ -8433,7 +8439,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 registrationAgency
-     * 
+     *
      * @param registrationAgency registrationAgency
      */
     public void setRegistrationAgency(CommonNodeEntity registrationAgency) {
@@ -8441,654 +8447,654 @@ public class BaseInfoEntity implements Feild {
     }
 
     public CommonNodeEntity getValueDateForInterbankLendingReverseRepoAndInterbankBorrowingRepo() {
-		return valueDateForInterbankLendingReverseRepoAndInterbankBorrowingRepo;
-	}
-
-	public void setValueDateForInterbankLendingReverseRepoAndInterbankBorrowingRepo(
-			CommonNodeEntity valueDateForInterbankLendingReverseRepoAndInterbankBorrowingRepo) {
-		this.valueDateForInterbankLendingReverseRepoAndInterbankBorrowingRepo = valueDateForInterbankLendingReverseRepoAndInterbankBorrowingRepo;
-	}
-
-	public CommonNodeEntity getMaturityDateForInterbankLendingReverseRepoAndInterbankBorrowingRepo() {
-		return maturityDateForInterbankLendingReverseRepoAndInterbankBorrowingRepo;
-	}
-
-	public void setMaturityDateForInterbankLendingReverseRepoAndInterbankBorrowingRepo(
-			CommonNodeEntity maturityDateForInterbankLendingReverseRepoAndInterbankBorrowingRepo) {
-		this.maturityDateForInterbankLendingReverseRepoAndInterbankBorrowingRepo = maturityDateForInterbankLendingReverseRepoAndInterbankBorrowingRepo;
-	}
-
-	public CommonNodeEntity getCounterpartyForInterbankLendingReverseRepoAndInterbankBorrowingRepo() {
-		return counterpartyForInterbankLendingReverseRepoAndInterbankBorrowingRepo;
-	}
-
-	public void setCounterpartyForInterbankLendingReverseRepoAndInterbankBorrowingRepo(
-			CommonNodeEntity counterpartyForInterbankLendingReverseRepoAndInterbankBorrowingRepo) {
-		this.counterpartyForInterbankLendingReverseRepoAndInterbankBorrowingRepo = counterpartyForInterbankLendingReverseRepoAndInterbankBorrowingRepo;
-	}
-
-	public CommonNodeEntity getCounterpartyTypeForInterbankLendingReverseRepoAndInterbankBorrowingRepo() {
-		return counterpartyTypeForInterbankLendingReverseRepoAndInterbankBorrowingRepo;
-	}
-
-	public void setCounterpartyTypeForInterbankLendingReverseRepoAndInterbankBorrowingRepo(
-			CommonNodeEntity counterpartyTypeForInterbankLendingReverseRepoAndInterbankBorrowingRepo) {
-		this.counterpartyTypeForInterbankLendingReverseRepoAndInterbankBorrowingRepo = counterpartyTypeForInterbankLendingReverseRepoAndInterbankBorrowingRepo;
-	}
-
-	public CommonNodeEntity getAnnualInterestRateForInterbankLendingReverseRepoAndInterbankBorrowingRepo() {
-		return annualInterestRateForInterbankLendingReverseRepoAndInterbankBorrowingRepo;
-	}
-
-	public void setAnnualInterestRateForInterbankLendingReverseRepoAndInterbankBorrowingRepo(
-			CommonNodeEntity annualInterestRateForInterbankLendingReverseRepoAndInterbankBorrowingRepo) {
-		this.annualInterestRateForInterbankLendingReverseRepoAndInterbankBorrowingRepo = annualInterestRateForInterbankLendingReverseRepoAndInterbankBorrowingRepo;
-	}
-
-	public CommonNodeEntity getInterestAccrualBasisForInterbankLendingReverseRepoAndInterbankBorrowingRepo() {
-		return interestAccrualBasisForInterbankLendingReverseRepoAndInterbankBorrowingRepo;
-	}
-
-	public void setInterestAccrualBasisForInterbankLendingReverseRepoAndInterbankBorrowingRepo(
-			CommonNodeEntity interestAccrualBasisForInterbankLendingReverseRepoAndInterbankBorrowingRepo) {
-		this.interestAccrualBasisForInterbankLendingReverseRepoAndInterbankBorrowingRepo = interestAccrualBasisForInterbankLendingReverseRepoAndInterbankBorrowingRepo;
-	}
-
-	public CommonNodeEntity getUnitParValue() {
-		return unitParValue;
-	}
-
-	public void setUnitParValue(CommonNodeEntity unitParValue) {
-		this.unitParValue = unitParValue;
-	}
-
-	public CommonNodeEntity getStatutoryMaturityDate() {
-		return statutoryMaturityDate;
-	}
-
-	public void setStatutoryMaturityDate(CommonNodeEntity statutoryMaturityDate) {
-		this.statutoryMaturityDate = statutoryMaturityDate;
-	}
-
-	public CommonNodeEntity getCouponType() {
-		return couponType;
-	}
-
-	public void setCouponType(CommonNodeEntity couponType) {
-		this.couponType = couponType;
-	}
-
-	public CommonNodeEntity getRegularInterestPaymentPleaseSelect() {
-		return regularInterestPaymentPleaseSelect;
-	}
-
-	public void setRegularInterestPaymentPleaseSelect(CommonNodeEntity regularInterestPaymentPleaseSelect) {
-		this.regularInterestPaymentPleaseSelect = regularInterestPaymentPleaseSelect;
-	}
-
-	public CommonNodeEntity getCouponAllocationType() {
-		return couponAllocationType;
-	}
-
-	public void setCouponAllocationType(CommonNodeEntity couponAllocationType) {
-		this.couponAllocationType = couponAllocationType;
-	}
-
-	public CommonNodeEntity getCreditEnhancementInstitutionCode() {
-		return creditEnhancementInstitutionCode;
-	}
-
-	public void setCreditEnhancementInstitutionCode(CommonNodeEntity creditEnhancementInstitutionCode) {
-		this.creditEnhancementInstitutionCode = creditEnhancementInstitutionCode;
-	}
-
-	public CommonNodeEntity getCreditEnhancementInstitutionName() {
-		return creditEnhancementInstitutionName;
-	}
-
-	public void setCreditEnhancementInstitutionName(CommonNodeEntity creditEnhancementInstitutionName) {
-		this.creditEnhancementInstitutionName = creditEnhancementInstitutionName;
-	}
-
-	public CommonNodeEntity getFloatingFactorPleaseSelect() {
-		return floatingFactorPleaseSelect;
-	}
-
-	public void setFloatingFactorPleaseSelect(CommonNodeEntity floatingFactorPleaseSelect) {
-		this.floatingFactorPleaseSelect = floatingFactorPleaseSelect;
-	}
-
-	public CommonNodeEntity getStructureGrade() {
-		return structureGrade;
-	}
-
-	public void setStructureGrade(CommonNodeEntity structureGrade) {
-		this.structureGrade = structureGrade;
-	}
-
-	public CommonNodeEntity getPrincipalPaymentType() {
-		return principalPaymentType;
-	}
-
-	public void setPrincipalPaymentType(CommonNodeEntity principalPaymentType) {
-		this.principalPaymentType = principalPaymentType;
-	}
-
-	public CommonNodeEntity getInstallmentRepayType() {
-		return installmentRepayType;
-	}
-
-	public void setInstallmentRepayType(CommonNodeEntity installmentRepayType) {
-		this.installmentRepayType = installmentRepayType;
-	}
-
-	public CommonNodeEntity getBaseAssetType() {
-		return baseAssetType;
-	}
-
-	public void setBaseAssetType(CommonNodeEntity baseAssetType) {
-		this.baseAssetType = baseAssetType;
-	}
-
-	public CommonNodeEntity getPercentageOfExcessEarningsDistribution() {
-		return percentageOfExcessEarningsDistribution;
-	}
-
-	public void setPercentageOfExcessEarningsDistribution(CommonNodeEntity percentageOfExcessEarningsDistribution) {
-		this.percentageOfExcessEarningsDistribution = percentageOfExcessEarningsDistribution;
-	}
-
-	public CommonNodeEntity getPledgeTypeForCreditAssetTradingsAndNonStandardDebtObligations() {
-		return pledgeTypeForCreditAssetTradingsAndNonStandardDebtObligations;
-	}
-
-	public void setPledgeTypeForCreditAssetTradingsAndNonStandardDebtObligations(
-			CommonNodeEntity pledgeTypeForCreditAssetTradingsAndNonStandardDebtObligations) {
-		this.pledgeTypeForCreditAssetTradingsAndNonStandardDebtObligations = pledgeTypeForCreditAssetTradingsAndNonStandardDebtObligations;
-	}
-
-	public CommonNodeEntity getPledgeValueCNYForCreditAssetTradingsAndNonStandardDebtObligations() {
-		return pledgeValueCNYForCreditAssetTradingsAndNonStandardDebtObligations;
-	}
-
-	public void setPledgeValueCNYForCreditAssetTradingsAndNonStandardDebtObligations(
-			CommonNodeEntity pledgeValueCNYForCreditAssetTradingsAndNonStandardDebtObligations) {
-		this.pledgeValueCNYForCreditAssetTradingsAndNonStandardDebtObligations = pledgeValueCNYForCreditAssetTradingsAndNonStandardDebtObligations;
-	}
-
-	public CommonNodeEntity getGuaranteeTypeForCreditAssetTradingsAndNonStandardDebtObligations() {
-		return guaranteeTypeForCreditAssetTradingsAndNonStandardDebtObligations;
-	}
-
-	public void setGuaranteeTypeForCreditAssetTradingsAndNonStandardDebtObligations(
-			CommonNodeEntity guaranteeTypeForCreditAssetTradingsAndNonStandardDebtObligations) {
-		this.guaranteeTypeForCreditAssetTradingsAndNonStandardDebtObligations = guaranteeTypeForCreditAssetTradingsAndNonStandardDebtObligations;
-	}
-
-	public CommonNodeEntity getGuarantorTypeForCreditAssetTradingsAndNonStandardDebtObligations() {
-		return guarantorTypeForCreditAssetTradingsAndNonStandardDebtObligations;
-	}
-
-	public void setGuarantorTypeForCreditAssetTradingsAndNonStandardDebtObligations(
-			CommonNodeEntity guarantorTypeForCreditAssetTradingsAndNonStandardDebtObligations) {
-		this.guarantorTypeForCreditAssetTradingsAndNonStandardDebtObligations = guarantorTypeForCreditAssetTradingsAndNonStandardDebtObligations;
-	}
-
-	public CommonNodeEntity getExerciseDateType() {
-		return exerciseDateType;
-	}
-
-	public void setExerciseDateType(CommonNodeEntity exerciseDateType) {
-		this.exerciseDateType = exerciseDateType;
-	}
-
-	public CommonNodeEntity getFixedExerciseDate() {
-		return fixedExerciseDate;
-	}
-
-	public void setFixedExerciseDate(CommonNodeEntity fixedExerciseDate) {
-		this.fixedExerciseDate = fixedExerciseDate;
-	}
-
-	public CommonNodeEntity getFirstExerciseDate() {
-		return firstExerciseDate;
-	}
-
-	public void setFirstExerciseDate(CommonNodeEntity firstExerciseDate) {
-		this.firstExerciseDate = firstExerciseDate;
-	}
-
-	public CommonNodeEntity getExercisePeriod() {
-		return exercisePeriod;
-	}
-
-	public void setExercisePeriod(CommonNodeEntity exercisePeriod) {
-		this.exercisePeriod = exercisePeriod;
-	}
-
-	public CommonNodeEntity getExercisePrice() {
-		return exercisePrice;
-	}
-
-	public void setExercisePrice(CommonNodeEntity exercisePrice) {
-		this.exercisePrice = exercisePrice;
-	}
-
-	public CommonNodeEntity getPerpetualType() {
-		return perpetualType;
-	}
-
-	public void setPerpetualType(CommonNodeEntity perpetualType) {
-		this.perpetualType = perpetualType;
-	}
-
-	public CommonNodeEntity getDeferredInterestType() {
-		return deferredInterestType;
-	}
-
-	public void setDeferredInterestType(CommonNodeEntity deferredInterestType) {
-		this.deferredInterestType = deferredInterestType;
-	}
-
-	public CommonNodeEntity getInterestBearingForDeferredInterestPleaseSelect() {
-		return interestBearingForDeferredInterestPleaseSelect;
-	}
-
-	public void setInterestBearingForDeferredInterestPleaseSelect(
-			CommonNodeEntity interestBearingForDeferredInterestPleaseSelect) {
-		this.interestBearingForDeferredInterestPleaseSelect = interestBearingForDeferredInterestPleaseSelect;
-	}
-
-	public CommonNodeEntity getFirstRepriceDate() {
-		return firstRepriceDate;
-	}
-
-	public void setFirstRepriceDate(CommonNodeEntity firstRepriceDate) {
-		this.firstRepriceDate = firstRepriceDate;
-	}
-
-	public CommonNodeEntity getRepricePeriod() {
-		return repricePeriod;
-	}
-
-	public void setRepricePeriod(CommonNodeEntity repricePeriod) {
-		this.repricePeriod = repricePeriod;
-	}
-
-	public CommonNodeEntity getPartialRedemptionPleaseSelect() {
-		return partialRedemptionPleaseSelect;
-	}
-
-	public void setPartialRedemptionPleaseSelect(CommonNodeEntity partialRedemptionPleaseSelect) {
-		this.partialRedemptionPleaseSelect = partialRedemptionPleaseSelect;
-	}
-
-	public CommonNodeEntity getPartialRedemptionRates() {
-		return partialRedemptionRates;
-	}
-
-	public void setPartialRedemptionRates(CommonNodeEntity partialRedemptionRates) {
-		this.partialRedemptionRates = partialRedemptionRates;
-	}
-
-	public CommonNodeEntity getOptionType() {
-		return optionType;
-	}
-
-	public void setOptionType(CommonNodeEntity optionType) {
-		this.optionType = optionType;
-	}
-
-	public CommonNodeEntity getEquityWithdrawalDate() {
-		return equityWithdrawalDate;
-	}
-
-	public void setEquityWithdrawalDate(CommonNodeEntity equityWithdrawalDate) {
-		this.equityWithdrawalDate = equityWithdrawalDate;
-	}
-
-	public CommonNodeEntity getDebtToEquitySwapPleaseSelectForEquities() {
-		return debtToEquitySwapPleaseSelectForEquities;
-	}
-
-	public void setDebtToEquitySwapPleaseSelectForEquities(CommonNodeEntity debtToEquitySwapPleaseSelectForEquities) {
-		this.debtToEquitySwapPleaseSelectForEquities = debtToEquitySwapPleaseSelectForEquities;
-	}
-
-	public CommonNodeEntity getHoldingObjective() {
-		return holdingObjective;
-	}
-
-	public void setHoldingObjective(CommonNodeEntity holdingObjective) {
-		this.holdingObjective = holdingObjective;
-	}
-
-	public CommonNodeEntity getIssuedByFinancialAssetInvestmentCompanyPleaseSelectForAssetManagementPlans() {
-		return issuedByFinancialAssetInvestmentCompanyPleaseSelectForAssetManagementPlans;
-	}
-
-	public void setIssuedByFinancialAssetInvestmentCompanyPleaseSelectForAssetManagementPlans(
-			CommonNodeEntity issuedByFinancialAssetInvestmentCompanyPleaseSelectForAssetManagementPlans) {
-		this.issuedByFinancialAssetInvestmentCompanyPleaseSelectForAssetManagementPlans = issuedByFinancialAssetInvestmentCompanyPleaseSelectForAssetManagementPlans;
-	}
-
-	public CommonNodeEntity getIndustryForPublicFundsPrivateFunds() {
-		return industryForPublicFundsPrivateFunds;
-	}
-
-	public void setIndustryForPublicFundsPrivateFunds(CommonNodeEntity industryForPublicFundsPrivateFunds) {
-		this.industryForPublicFundsPrivateFunds = industryForPublicFundsPrivateFunds;
-	}
-
-	public CommonNodeEntity getGovernmentInvestmentFundPleaseSelect() {
-		return governmentInvestmentFundPleaseSelect;
-	}
-
-	public void setGovernmentInvestmentFundPleaseSelect(CommonNodeEntity governmentInvestmentFundPleaseSelect) {
-		this.governmentInvestmentFundPleaseSelect = governmentInvestmentFundPleaseSelect;
-	}
-
-	public CommonNodeEntity getInvestmentDirectionOfGovernmentInvestmentFund() {
-		return investmentDirectionOfGovernmentInvestmentFund;
-	}
-
-	public void setInvestmentDirectionOfGovernmentInvestmentFund(
-			CommonNodeEntity investmentDirectionOfGovernmentInvestmentFund) {
-		this.investmentDirectionOfGovernmentInvestmentFund = investmentDirectionOfGovernmentInvestmentFund;
-	}
-
-	public CommonNodeEntity getIssuedByFinancialAssetInvestmentCompanyPleaseSelectForPublicFundsPrivateFunds() {
-		return issuedByFinancialAssetInvestmentCompanyPleaseSelectForPublicFundsPrivateFunds;
-	}
-
-	public void setIssuedByFinancialAssetInvestmentCompanyPleaseSelectForPublicFundsPrivateFunds(
-			CommonNodeEntity issuedByFinancialAssetInvestmentCompanyPleaseSelectForPublicFundsPrivateFunds) {
-		this.issuedByFinancialAssetInvestmentCompanyPleaseSelectForPublicFundsPrivateFunds = issuedByFinancialAssetInvestmentCompanyPleaseSelectForPublicFundsPrivateFunds;
-	}
-
-	public CommonNodeEntity getNameOfInvestmentFund() {
-		return nameOfInvestmentFund;
-	}
-
-	public void setNameOfInvestmentFund(CommonNodeEntity nameOfInvestmentFund) {
-		this.nameOfInvestmentFund = nameOfInvestmentFund;
-	}
-
-	public CommonNodeEntity getInvestmentStageForPublicFundsPrivateFunds() {
-		return investmentStageForPublicFundsPrivateFunds;
-	}
-
-	public void setInvestmentStageForPublicFundsPrivateFunds(CommonNodeEntity investmentStageForPublicFundsPrivateFunds) {
-		this.investmentStageForPublicFundsPrivateFunds = investmentStageForPublicFundsPrivateFunds;
-	}
-
-	public CommonNodeEntity getDetailsOnAssetType() {
-		return detailsOnAssetType;
-	}
-
-	public void setDetailsOnAssetType(CommonNodeEntity detailsOnAssetType) {
-		this.detailsOnAssetType = detailsOnAssetType;
-	}
-
-	public CommonNodeEntity getGuaranteeMethodForOther() {
-		return guaranteeMethodForOther;
-	}
-
-	public void setGuaranteeMethodForOther(CommonNodeEntity guaranteeMethodForOther) {
-		this.guaranteeMethodForOther = guaranteeMethodForOther;
-	}
-
-	public CommonNodeEntity getPledgeTypeForOther() {
-		return pledgeTypeForOther;
-	}
-
-	public void setPledgeTypeForOther(CommonNodeEntity pledgeTypeForOther) {
-		this.pledgeTypeForOther = pledgeTypeForOther;
-	}
-
-	public CommonNodeEntity getPledgeValueCNYForOther() {
-		return pledgeValueCNYForOther;
-	}
-
-	public void setPledgeValueCNYForOther(CommonNodeEntity pledgeValueCNYForOther) {
-		this.pledgeValueCNYForOther = pledgeValueCNYForOther;
-	}
-
-	public CommonNodeEntity getGuaranteeTypeForOther() {
-		return guaranteeTypeForOther;
-	}
-
-	public void setGuaranteeTypeForOther(CommonNodeEntity guaranteeTypeForOther) {
-		this.guaranteeTypeForOther = guaranteeTypeForOther;
-	}
-
-	public CommonNodeEntity getGuarantorTypeForOther() {
-		return guarantorTypeForOther;
-	}
-
-	public void setGuarantorTypeForOther(CommonNodeEntity guarantorTypeForOther) {
-		this.guarantorTypeForOther = guarantorTypeForOther;
-	}
-
-	public CommonNodeEntity getDetailsOnGuaranteeStatusForOther() {
-		return detailsOnGuaranteeStatusForOther;
-	}
-
-	public void setDetailsOnGuaranteeStatusForOther(CommonNodeEntity detailsOnGuaranteeStatusForOther) {
-		this.detailsOnGuaranteeStatusForOther = detailsOnGuaranteeStatusForOther;
-	}
-
-	public CommonNodeEntity getDebtToEquitySwapPleaseSelectForOther() {
-		return debtToEquitySwapPleaseSelectForOther;
-	}
-
-	public void setDebtToEquitySwapPleaseSelectForOther(CommonNodeEntity debtToEquitySwapPleaseSelectForOther) {
-		this.debtToEquitySwapPleaseSelectForOther = debtToEquitySwapPleaseSelectForOther;
-	}
-
-	public CommonNodeEntity getOutsourcingInvestmentAgreementName() {
-		return outsourcingInvestmentAgreementName;
-	}
-
-	public void setOutsourcingInvestmentAgreementName(CommonNodeEntity outsourcingInvestmentAgreementName) {
-		this.outsourcingInvestmentAgreementName = outsourcingInvestmentAgreementName;
-	}
-
-	public CommonNodeEntity getOutsourcingInvestmentAgreementCode() {
-		return outsourcingInvestmentAgreementCode;
-	}
-
-	public void setOutsourcingInvestmentAgreementCode(CommonNodeEntity outsourcingInvestmentAgreementCode) {
-		this.outsourcingInvestmentAgreementCode = outsourcingInvestmentAgreementCode;
-	}
-
-	public CommonNodeEntity getTrustee() {
-		return trustee;
-	}
-
-	public void setTrustee(CommonNodeEntity trustee) {
-		this.trustee = trustee;
-	}
-
-	public CommonNodeEntity getActualManager() {
-		return actualManager;
-	}
-
-	public void setActualManager(CommonNodeEntity actualManager) {
-		this.actualManager = actualManager;
-	}
-
-	public CommonNodeEntity getCustodianForOutsourcingInvestmentAgreement() {
-		return custodianForOutsourcingInvestmentAgreement;
-	}
-
-	public void setCustodianForOutsourcingInvestmentAgreement(CommonNodeEntity custodianForOutsourcingInvestmentAgreement) {
-		this.custodianForOutsourcingInvestmentAgreement = custodianForOutsourcingInvestmentAgreement;
-	}
-
-	public CommonNodeEntity getOutsourcingInvestmentAmount() {
-		return outsourcingInvestmentAmount;
-	}
-
-	public void setOutsourcingInvestmentAmount(CommonNodeEntity outsourcingInvestmentAmount) {
-		this.outsourcingInvestmentAmount = outsourcingInvestmentAmount;
-	}
-
-	public CommonNodeEntity getActualInvestmentDirectionOfFundForOutsourcingInvestmentAgreement() {
-		return actualInvestmentDirectionOfFundForOutsourcingInvestmentAgreement;
-	}
-
-	public void setActualInvestmentDirectionOfFundForOutsourcingInvestmentAgreement(
-			CommonNodeEntity actualInvestmentDirectionOfFundForOutsourcingInvestmentAgreement) {
-		this.actualInvestmentDirectionOfFundForOutsourcingInvestmentAgreement = actualInvestmentDirectionOfFundForOutsourcingInvestmentAgreement;
-	}
-
-	public CommonNodeEntity getDetailsOnInvestmentForOutsourcingInvestmentAgreement() {
-		return detailsOnInvestmentForOutsourcingInvestmentAgreement;
-	}
-
-	public void setDetailsOnInvestmentForOutsourcingInvestmentAgreement(
-			CommonNodeEntity detailsOnInvestmentForOutsourcingInvestmentAgreement) {
-		this.detailsOnInvestmentForOutsourcingInvestmentAgreement = detailsOnInvestmentForOutsourcingInvestmentAgreement;
-	}
-
-	public CommonNodeEntity getIndustryOfInvestmentForOutsourcingInvestmentAgreement() {
-		return industryOfInvestmentForOutsourcingInvestmentAgreement;
-	}
-
-	public void setIndustryOfInvestmentForOutsourcingInvestmentAgreement(
-			CommonNodeEntity industryOfInvestmentForOutsourcingInvestmentAgreement) {
-		this.industryOfInvestmentForOutsourcingInvestmentAgreement = industryOfInvestmentForOutsourcingInvestmentAgreement;
-	}
-
-	public CommonNodeEntity getValueDateOfOutsourcingInvestment() {
-		return valueDateOfOutsourcingInvestment;
-	}
-
-	public void setValueDateOfOutsourcingInvestment(CommonNodeEntity valueDateOfOutsourcingInvestment) {
-		this.valueDateOfOutsourcingInvestment = valueDateOfOutsourcingInvestment;
-	}
-
-	public CommonNodeEntity getMaturityDateOfOutsourcingInvestment() {
-		return maturityDateOfOutsourcingInvestment;
-	}
-
-	public void setMaturityDateOfOutsourcingInvestment(CommonNodeEntity maturityDateOfOutsourcingInvestment) {
-		this.maturityDateOfOutsourcingInvestment = maturityDateOfOutsourcingInvestment;
-	}
-
-	public CommonNodeEntity getTypeOfOutsourcingInvestment() {
-		return typeOfOutsourcingInvestment;
-	}
-
-	public void setTypeOfOutsourcingInvestment(CommonNodeEntity typeOfOutsourcingInvestment) {
-		this.typeOfOutsourcingInvestment = typeOfOutsourcingInvestment;
-	}
-
-	public CommonNodeEntity getExpectedReturnPleaseSelectForOutsourcingInvestmentAgreement() {
-		return expectedReturnPleaseSelectForOutsourcingInvestmentAgreement;
-	}
-
-	public void setExpectedReturnPleaseSelectForOutsourcingInvestmentAgreement(
-			CommonNodeEntity expectedReturnPleaseSelectForOutsourcingInvestmentAgreement) {
-		this.expectedReturnPleaseSelectForOutsourcingInvestmentAgreement = expectedReturnPleaseSelectForOutsourcingInvestmentAgreement;
-	}
-
-	public CommonNodeEntity getMaximumExpectedAnnualReturnForOutsourcingInvestmentAgreement() {
-		return maximumExpectedAnnualReturnForOutsourcingInvestmentAgreement;
-	}
-
-	public void setMaximumExpectedAnnualReturnForOutsourcingInvestmentAgreement(
-			CommonNodeEntity maximumExpectedAnnualReturnForOutsourcingInvestmentAgreement) {
-		this.maximumExpectedAnnualReturnForOutsourcingInvestmentAgreement = maximumExpectedAnnualReturnForOutsourcingInvestmentAgreement;
-	}
-
-	public CommonNodeEntity getMinimumExpectedAnnualReturnForOutsourcingInvestmentAgreement() {
-		return minimumExpectedAnnualReturnForOutsourcingInvestmentAgreement;
-	}
-
-	public void setMinimumExpectedAnnualReturnForOutsourcingInvestmentAgreement(
-			CommonNodeEntity minimumExpectedAnnualReturnForOutsourcingInvestmentAgreement) {
-		this.minimumExpectedAnnualReturnForOutsourcingInvestmentAgreement = minimumExpectedAnnualReturnForOutsourcingInvestmentAgreement;
-	}
-
-	public CommonNodeEntity getManagementFeeRateForOutsourcingInvestmentAgreement() {
-		return managementFeeRateForOutsourcingInvestmentAgreement;
-	}
-
-	public void setManagementFeeRateForOutsourcingInvestmentAgreement(
-			CommonNodeEntity managementFeeRateForOutsourcingInvestmentAgreement) {
-		this.managementFeeRateForOutsourcingInvestmentAgreement = managementFeeRateForOutsourcingInvestmentAgreement;
-	}
-
-	public CommonNodeEntity getCustodianFeeRateForOutsourcingInvestmentAgreement() {
-		return custodianFeeRateForOutsourcingInvestmentAgreement;
-	}
-
-	public void setCustodianFeeRateForOutsourcingInvestmentAgreement(
-			CommonNodeEntity custodianFeeRateForOutsourcingInvestmentAgreement) {
-		this.custodianFeeRateForOutsourcingInvestmentAgreement = custodianFeeRateForOutsourcingInvestmentAgreement;
-	}
-
-	public CommonNodeEntity getTransactionCostRateForOutsourcingInvestmentAgreement() {
-		return transactionCostRateForOutsourcingInvestmentAgreement;
-	}
-
-	public void setTransactionCostRateForOutsourcingInvestmentAgreement(
-			CommonNodeEntity transactionCostRateForOutsourcingInvestmentAgreement) {
-		this.transactionCostRateForOutsourcingInvestmentAgreement = transactionCostRateForOutsourcingInvestmentAgreement;
-	}
-
-	public CommonNodeEntity getIntermediaryServiceFeeRateForOutsourcingInvestmentAgreement() {
-		return intermediaryServiceFeeRateForOutsourcingInvestmentAgreement;
-	}
-
-	public void setIntermediaryServiceFeeRateForOutsourcingInvestmentAgreement(
-			CommonNodeEntity intermediaryServiceFeeRateForOutsourcingInvestmentAgreement) {
-		this.intermediaryServiceFeeRateForOutsourcingInvestmentAgreement = intermediaryServiceFeeRateForOutsourcingInvestmentAgreement;
-	}
-
-	public CommonNodeEntity getOtherExpensesRateForOutsourcingInvestmentAgreement() {
-		return otherExpensesRateForOutsourcingInvestmentAgreement;
-	}
-
-	public void setOtherExpensesRateForOutsourcingInvestmentAgreement(
-			CommonNodeEntity otherExpensesRateForOutsourcingInvestmentAgreement) {
-		this.otherExpensesRateForOutsourcingInvestmentAgreement = otherExpensesRateForOutsourcingInvestmentAgreement;
-	}
-
-	public CommonNodeEntity getOutstandingAmount() {
-		return outstandingAmount;
-	}
-
-	public void setOutstandingAmount(CommonNodeEntity outstandingAmount) {
-		this.outstandingAmount = outstandingAmount;
-	}
-
-	public CommonNodeEntity getDate() {
-		return date;
-	}
-
-	public void setDate(CommonNodeEntity date) {
-		this.date = date;
-	}
-
-	public CommonNodeEntity getInvestedAssetsLiabilitiesRegistrationDetails() {
-		return investedAssetsLiabilitiesRegistrationDetails;
-	}
-
-	public void setInvestedAssetsLiabilitiesRegistrationDetails(
-			CommonNodeEntity investedAssetsLiabilitiesRegistrationDetails) {
-		this.investedAssetsLiabilitiesRegistrationDetails = investedAssetsLiabilitiesRegistrationDetails;
-	}
-
-	public void setDetailsOnRegistryAndDepository(CommonNodeEntity detailsOnRegistryAndDepository) {
-		this.detailsOnRegistryAndDepository = detailsOnRegistryAndDepository;
-	}
-
-	/**
+        return valueDateForInterbankLendingReverseRepoAndInterbankBorrowingRepo;
+    }
+
+    public void setValueDateForInterbankLendingReverseRepoAndInterbankBorrowingRepo(
+            CommonNodeEntity valueDateForInterbankLendingReverseRepoAndInterbankBorrowingRepo) {
+        this.valueDateForInterbankLendingReverseRepoAndInterbankBorrowingRepo = valueDateForInterbankLendingReverseRepoAndInterbankBorrowingRepo;
+    }
+
+    public CommonNodeEntity getMaturityDateForInterbankLendingReverseRepoAndInterbankBorrowingRepo() {
+        return maturityDateForInterbankLendingReverseRepoAndInterbankBorrowingRepo;
+    }
+
+    public void setMaturityDateForInterbankLendingReverseRepoAndInterbankBorrowingRepo(
+            CommonNodeEntity maturityDateForInterbankLendingReverseRepoAndInterbankBorrowingRepo) {
+        this.maturityDateForInterbankLendingReverseRepoAndInterbankBorrowingRepo = maturityDateForInterbankLendingReverseRepoAndInterbankBorrowingRepo;
+    }
+
+    public CommonNodeEntity getCounterpartyForInterbankLendingReverseRepoAndInterbankBorrowingRepo() {
+        return counterpartyForInterbankLendingReverseRepoAndInterbankBorrowingRepo;
+    }
+
+    public void setCounterpartyForInterbankLendingReverseRepoAndInterbankBorrowingRepo(
+            CommonNodeEntity counterpartyForInterbankLendingReverseRepoAndInterbankBorrowingRepo) {
+        this.counterpartyForInterbankLendingReverseRepoAndInterbankBorrowingRepo = counterpartyForInterbankLendingReverseRepoAndInterbankBorrowingRepo;
+    }
+
+    public CommonNodeEntity getCounterpartyTypeForInterbankLendingReverseRepoAndInterbankBorrowingRepo() {
+        return counterpartyTypeForInterbankLendingReverseRepoAndInterbankBorrowingRepo;
+    }
+
+    public void setCounterpartyTypeForInterbankLendingReverseRepoAndInterbankBorrowingRepo(
+            CommonNodeEntity counterpartyTypeForInterbankLendingReverseRepoAndInterbankBorrowingRepo) {
+        this.counterpartyTypeForInterbankLendingReverseRepoAndInterbankBorrowingRepo = counterpartyTypeForInterbankLendingReverseRepoAndInterbankBorrowingRepo;
+    }
+
+    public CommonNodeEntity getAnnualInterestRateForInterbankLendingReverseRepoAndInterbankBorrowingRepo() {
+        return annualInterestRateForInterbankLendingReverseRepoAndInterbankBorrowingRepo;
+    }
+
+    public void setAnnualInterestRateForInterbankLendingReverseRepoAndInterbankBorrowingRepo(
+            CommonNodeEntity annualInterestRateForInterbankLendingReverseRepoAndInterbankBorrowingRepo) {
+        this.annualInterestRateForInterbankLendingReverseRepoAndInterbankBorrowingRepo = annualInterestRateForInterbankLendingReverseRepoAndInterbankBorrowingRepo;
+    }
+
+    public CommonNodeEntity getInterestAccrualBasisForInterbankLendingReverseRepoAndInterbankBorrowingRepo() {
+        return interestAccrualBasisForInterbankLendingReverseRepoAndInterbankBorrowingRepo;
+    }
+
+    public void setInterestAccrualBasisForInterbankLendingReverseRepoAndInterbankBorrowingRepo(
+            CommonNodeEntity interestAccrualBasisForInterbankLendingReverseRepoAndInterbankBorrowingRepo) {
+        this.interestAccrualBasisForInterbankLendingReverseRepoAndInterbankBorrowingRepo = interestAccrualBasisForInterbankLendingReverseRepoAndInterbankBorrowingRepo;
+    }
+
+    public CommonNodeEntity getUnitParValue() {
+        return unitParValue;
+    }
+
+    public void setUnitParValue(CommonNodeEntity unitParValue) {
+        this.unitParValue = unitParValue;
+    }
+
+    public CommonNodeEntity getStatutoryMaturityDate() {
+        return statutoryMaturityDate;
+    }
+
+    public void setStatutoryMaturityDate(CommonNodeEntity statutoryMaturityDate) {
+        this.statutoryMaturityDate = statutoryMaturityDate;
+    }
+
+    public CommonNodeEntity getCouponType() {
+        return couponType;
+    }
+
+    public void setCouponType(CommonNodeEntity couponType) {
+        this.couponType = couponType;
+    }
+
+    public CommonNodeEntity getRegularInterestPaymentPleaseSelect() {
+        return regularInterestPaymentPleaseSelect;
+    }
+
+    public void setRegularInterestPaymentPleaseSelect(CommonNodeEntity regularInterestPaymentPleaseSelect) {
+        this.regularInterestPaymentPleaseSelect = regularInterestPaymentPleaseSelect;
+    }
+
+    public CommonNodeEntity getCouponAllocationType() {
+        return couponAllocationType;
+    }
+
+    public void setCouponAllocationType(CommonNodeEntity couponAllocationType) {
+        this.couponAllocationType = couponAllocationType;
+    }
+
+    public CommonNodeEntity getCreditEnhancementInstitutionCode() {
+        return creditEnhancementInstitutionCode;
+    }
+
+    public void setCreditEnhancementInstitutionCode(CommonNodeEntity creditEnhancementInstitutionCode) {
+        this.creditEnhancementInstitutionCode = creditEnhancementInstitutionCode;
+    }
+
+    public CommonNodeEntity getCreditEnhancementInstitutionName() {
+        return creditEnhancementInstitutionName;
+    }
+
+    public void setCreditEnhancementInstitutionName(CommonNodeEntity creditEnhancementInstitutionName) {
+        this.creditEnhancementInstitutionName = creditEnhancementInstitutionName;
+    }
+
+    public CommonNodeEntity getFloatingFactorPleaseSelect() {
+        return floatingFactorPleaseSelect;
+    }
+
+    public void setFloatingFactorPleaseSelect(CommonNodeEntity floatingFactorPleaseSelect) {
+        this.floatingFactorPleaseSelect = floatingFactorPleaseSelect;
+    }
+
+    public CommonNodeEntity getStructureGrade() {
+        return structureGrade;
+    }
+
+    public void setStructureGrade(CommonNodeEntity structureGrade) {
+        this.structureGrade = structureGrade;
+    }
+
+    public CommonNodeEntity getPrincipalPaymentType() {
+        return principalPaymentType;
+    }
+
+    public void setPrincipalPaymentType(CommonNodeEntity principalPaymentType) {
+        this.principalPaymentType = principalPaymentType;
+    }
+
+    public CommonNodeEntity getInstallmentRepayType() {
+        return installmentRepayType;
+    }
+
+    public void setInstallmentRepayType(CommonNodeEntity installmentRepayType) {
+        this.installmentRepayType = installmentRepayType;
+    }
+
+    public CommonNodeEntity getBaseAssetType() {
+        return baseAssetType;
+    }
+
+    public void setBaseAssetType(CommonNodeEntity baseAssetType) {
+        this.baseAssetType = baseAssetType;
+    }
+
+    public CommonNodeEntity getPercentageOfExcessEarningsDistribution() {
+        return percentageOfExcessEarningsDistribution;
+    }
+
+    public void setPercentageOfExcessEarningsDistribution(CommonNodeEntity percentageOfExcessEarningsDistribution) {
+        this.percentageOfExcessEarningsDistribution = percentageOfExcessEarningsDistribution;
+    }
+
+    public CommonNodeEntity getPledgeTypeForCreditAssetTradingsAndNonStandardDebtObligations() {
+        return pledgeTypeForCreditAssetTradingsAndNonStandardDebtObligations;
+    }
+
+    public void setPledgeTypeForCreditAssetTradingsAndNonStandardDebtObligations(
+            CommonNodeEntity pledgeTypeForCreditAssetTradingsAndNonStandardDebtObligations) {
+        this.pledgeTypeForCreditAssetTradingsAndNonStandardDebtObligations = pledgeTypeForCreditAssetTradingsAndNonStandardDebtObligations;
+    }
+
+    public CommonNodeEntity getPledgeValueCNYForCreditAssetTradingsAndNonStandardDebtObligations() {
+        return pledgeValueCNYForCreditAssetTradingsAndNonStandardDebtObligations;
+    }
+
+    public void setPledgeValueCNYForCreditAssetTradingsAndNonStandardDebtObligations(
+            CommonNodeEntity pledgeValueCNYForCreditAssetTradingsAndNonStandardDebtObligations) {
+        this.pledgeValueCNYForCreditAssetTradingsAndNonStandardDebtObligations = pledgeValueCNYForCreditAssetTradingsAndNonStandardDebtObligations;
+    }
+
+    public CommonNodeEntity getGuaranteeTypeForCreditAssetTradingsAndNonStandardDebtObligations() {
+        return guaranteeTypeForCreditAssetTradingsAndNonStandardDebtObligations;
+    }
+
+    public void setGuaranteeTypeForCreditAssetTradingsAndNonStandardDebtObligations(
+            CommonNodeEntity guaranteeTypeForCreditAssetTradingsAndNonStandardDebtObligations) {
+        this.guaranteeTypeForCreditAssetTradingsAndNonStandardDebtObligations = guaranteeTypeForCreditAssetTradingsAndNonStandardDebtObligations;
+    }
+
+    public CommonNodeEntity getGuarantorTypeForCreditAssetTradingsAndNonStandardDebtObligations() {
+        return guarantorTypeForCreditAssetTradingsAndNonStandardDebtObligations;
+    }
+
+    public void setGuarantorTypeForCreditAssetTradingsAndNonStandardDebtObligations(
+            CommonNodeEntity guarantorTypeForCreditAssetTradingsAndNonStandardDebtObligations) {
+        this.guarantorTypeForCreditAssetTradingsAndNonStandardDebtObligations = guarantorTypeForCreditAssetTradingsAndNonStandardDebtObligations;
+    }
+
+    public CommonNodeEntity getExerciseDateType() {
+        return exerciseDateType;
+    }
+
+    public void setExerciseDateType(CommonNodeEntity exerciseDateType) {
+        this.exerciseDateType = exerciseDateType;
+    }
+
+    public CommonNodeEntity getFixedExerciseDate() {
+        return fixedExerciseDate;
+    }
+
+    public void setFixedExerciseDate(CommonNodeEntity fixedExerciseDate) {
+        this.fixedExerciseDate = fixedExerciseDate;
+    }
+
+    public CommonNodeEntity getFirstExerciseDate() {
+        return firstExerciseDate;
+    }
+
+    public void setFirstExerciseDate(CommonNodeEntity firstExerciseDate) {
+        this.firstExerciseDate = firstExerciseDate;
+    }
+
+    public CommonNodeEntity getExercisePeriod() {
+        return exercisePeriod;
+    }
+
+    public void setExercisePeriod(CommonNodeEntity exercisePeriod) {
+        this.exercisePeriod = exercisePeriod;
+    }
+
+    public CommonNodeEntity getExercisePrice() {
+        return exercisePrice;
+    }
+
+    public void setExercisePrice(CommonNodeEntity exercisePrice) {
+        this.exercisePrice = exercisePrice;
+    }
+
+    public CommonNodeEntity getPerpetualType() {
+        return perpetualType;
+    }
+
+    public void setPerpetualType(CommonNodeEntity perpetualType) {
+        this.perpetualType = perpetualType;
+    }
+
+    public CommonNodeEntity getDeferredInterestType() {
+        return deferredInterestType;
+    }
+
+    public void setDeferredInterestType(CommonNodeEntity deferredInterestType) {
+        this.deferredInterestType = deferredInterestType;
+    }
+
+    public CommonNodeEntity getInterestBearingForDeferredInterestPleaseSelect() {
+        return interestBearingForDeferredInterestPleaseSelect;
+    }
+
+    public void setInterestBearingForDeferredInterestPleaseSelect(
+            CommonNodeEntity interestBearingForDeferredInterestPleaseSelect) {
+        this.interestBearingForDeferredInterestPleaseSelect = interestBearingForDeferredInterestPleaseSelect;
+    }
+
+    public CommonNodeEntity getFirstRepriceDate() {
+        return firstRepriceDate;
+    }
+
+    public void setFirstRepriceDate(CommonNodeEntity firstRepriceDate) {
+        this.firstRepriceDate = firstRepriceDate;
+    }
+
+    public CommonNodeEntity getRepricePeriod() {
+        return repricePeriod;
+    }
+
+    public void setRepricePeriod(CommonNodeEntity repricePeriod) {
+        this.repricePeriod = repricePeriod;
+    }
+
+    public CommonNodeEntity getPartialRedemptionPleaseSelect() {
+        return partialRedemptionPleaseSelect;
+    }
+
+    public void setPartialRedemptionPleaseSelect(CommonNodeEntity partialRedemptionPleaseSelect) {
+        this.partialRedemptionPleaseSelect = partialRedemptionPleaseSelect;
+    }
+
+    public CommonNodeEntity getPartialRedemptionRates() {
+        return partialRedemptionRates;
+    }
+
+    public void setPartialRedemptionRates(CommonNodeEntity partialRedemptionRates) {
+        this.partialRedemptionRates = partialRedemptionRates;
+    }
+
+    public CommonNodeEntity getOptionType() {
+        return optionType;
+    }
+
+    public void setOptionType(CommonNodeEntity optionType) {
+        this.optionType = optionType;
+    }
+
+    public CommonNodeEntity getEquityWithdrawalDate() {
+        return equityWithdrawalDate;
+    }
+
+    public void setEquityWithdrawalDate(CommonNodeEntity equityWithdrawalDate) {
+        this.equityWithdrawalDate = equityWithdrawalDate;
+    }
+
+    public CommonNodeEntity getDebtToEquitySwapPleaseSelectForEquities() {
+        return debtToEquitySwapPleaseSelectForEquities;
+    }
+
+    public void setDebtToEquitySwapPleaseSelectForEquities(CommonNodeEntity debtToEquitySwapPleaseSelectForEquities) {
+        this.debtToEquitySwapPleaseSelectForEquities = debtToEquitySwapPleaseSelectForEquities;
+    }
+
+    public CommonNodeEntity getHoldingObjective() {
+        return holdingObjective;
+    }
+
+    public void setHoldingObjective(CommonNodeEntity holdingObjective) {
+        this.holdingObjective = holdingObjective;
+    }
+
+    public CommonNodeEntity getIssuedByFinancialAssetInvestmentCompanyPleaseSelectForAssetManagementPlans() {
+        return issuedByFinancialAssetInvestmentCompanyPleaseSelectForAssetManagementPlans;
+    }
+
+    public void setIssuedByFinancialAssetInvestmentCompanyPleaseSelectForAssetManagementPlans(
+            CommonNodeEntity issuedByFinancialAssetInvestmentCompanyPleaseSelectForAssetManagementPlans) {
+        this.issuedByFinancialAssetInvestmentCompanyPleaseSelectForAssetManagementPlans = issuedByFinancialAssetInvestmentCompanyPleaseSelectForAssetManagementPlans;
+    }
+
+    public CommonNodeEntity getIndustryForPublicFundsPrivateFunds() {
+        return industryForPublicFundsPrivateFunds;
+    }
+
+    public void setIndustryForPublicFundsPrivateFunds(CommonNodeEntity industryForPublicFundsPrivateFunds) {
+        this.industryForPublicFundsPrivateFunds = industryForPublicFundsPrivateFunds;
+    }
+
+    public CommonNodeEntity getGovernmentInvestmentFundPleaseSelect() {
+        return governmentInvestmentFundPleaseSelect;
+    }
+
+    public void setGovernmentInvestmentFundPleaseSelect(CommonNodeEntity governmentInvestmentFundPleaseSelect) {
+        this.governmentInvestmentFundPleaseSelect = governmentInvestmentFundPleaseSelect;
+    }
+
+    public CommonNodeEntity getInvestmentDirectionOfGovernmentInvestmentFund() {
+        return investmentDirectionOfGovernmentInvestmentFund;
+    }
+
+    public void setInvestmentDirectionOfGovernmentInvestmentFund(
+            CommonNodeEntity investmentDirectionOfGovernmentInvestmentFund) {
+        this.investmentDirectionOfGovernmentInvestmentFund = investmentDirectionOfGovernmentInvestmentFund;
+    }
+
+    public CommonNodeEntity getIssuedByFinancialAssetInvestmentCompanyPleaseSelectForPublicFundsPrivateFunds() {
+        return issuedByFinancialAssetInvestmentCompanyPleaseSelectForPublicFundsPrivateFunds;
+    }
+
+    public void setIssuedByFinancialAssetInvestmentCompanyPleaseSelectForPublicFundsPrivateFunds(
+            CommonNodeEntity issuedByFinancialAssetInvestmentCompanyPleaseSelectForPublicFundsPrivateFunds) {
+        this.issuedByFinancialAssetInvestmentCompanyPleaseSelectForPublicFundsPrivateFunds = issuedByFinancialAssetInvestmentCompanyPleaseSelectForPublicFundsPrivateFunds;
+    }
+
+    public CommonNodeEntity getNameOfInvestmentFund() {
+        return nameOfInvestmentFund;
+    }
+
+    public void setNameOfInvestmentFund(CommonNodeEntity nameOfInvestmentFund) {
+        this.nameOfInvestmentFund = nameOfInvestmentFund;
+    }
+
+    public CommonNodeEntity getInvestmentStageForPublicFundsPrivateFunds() {
+        return investmentStageForPublicFundsPrivateFunds;
+    }
+
+    public void setInvestmentStageForPublicFundsPrivateFunds(CommonNodeEntity investmentStageForPublicFundsPrivateFunds) {
+        this.investmentStageForPublicFundsPrivateFunds = investmentStageForPublicFundsPrivateFunds;
+    }
+
+    public CommonNodeEntity getDetailsOnAssetType() {
+        return detailsOnAssetType;
+    }
+
+    public void setDetailsOnAssetType(CommonNodeEntity detailsOnAssetType) {
+        this.detailsOnAssetType = detailsOnAssetType;
+    }
+
+    public CommonNodeEntity getGuaranteeMethodForOther() {
+        return guaranteeMethodForOther;
+    }
+
+    public void setGuaranteeMethodForOther(CommonNodeEntity guaranteeMethodForOther) {
+        this.guaranteeMethodForOther = guaranteeMethodForOther;
+    }
+
+    public CommonNodeEntity getPledgeTypeForOther() {
+        return pledgeTypeForOther;
+    }
+
+    public void setPledgeTypeForOther(CommonNodeEntity pledgeTypeForOther) {
+        this.pledgeTypeForOther = pledgeTypeForOther;
+    }
+
+    public CommonNodeEntity getPledgeValueCNYForOther() {
+        return pledgeValueCNYForOther;
+    }
+
+    public void setPledgeValueCNYForOther(CommonNodeEntity pledgeValueCNYForOther) {
+        this.pledgeValueCNYForOther = pledgeValueCNYForOther;
+    }
+
+    public CommonNodeEntity getGuaranteeTypeForOther() {
+        return guaranteeTypeForOther;
+    }
+
+    public void setGuaranteeTypeForOther(CommonNodeEntity guaranteeTypeForOther) {
+        this.guaranteeTypeForOther = guaranteeTypeForOther;
+    }
+
+    public CommonNodeEntity getGuarantorTypeForOther() {
+        return guarantorTypeForOther;
+    }
+
+    public void setGuarantorTypeForOther(CommonNodeEntity guarantorTypeForOther) {
+        this.guarantorTypeForOther = guarantorTypeForOther;
+    }
+
+    public CommonNodeEntity getDetailsOnGuaranteeStatusForOther() {
+        return detailsOnGuaranteeStatusForOther;
+    }
+
+    public void setDetailsOnGuaranteeStatusForOther(CommonNodeEntity detailsOnGuaranteeStatusForOther) {
+        this.detailsOnGuaranteeStatusForOther = detailsOnGuaranteeStatusForOther;
+    }
+
+    public CommonNodeEntity getDebtToEquitySwapPleaseSelectForOther() {
+        return debtToEquitySwapPleaseSelectForOther;
+    }
+
+    public void setDebtToEquitySwapPleaseSelectForOther(CommonNodeEntity debtToEquitySwapPleaseSelectForOther) {
+        this.debtToEquitySwapPleaseSelectForOther = debtToEquitySwapPleaseSelectForOther;
+    }
+
+    public CommonNodeEntity getOutsourcingInvestmentAgreementName() {
+        return outsourcingInvestmentAgreementName;
+    }
+
+    public void setOutsourcingInvestmentAgreementName(CommonNodeEntity outsourcingInvestmentAgreementName) {
+        this.outsourcingInvestmentAgreementName = outsourcingInvestmentAgreementName;
+    }
+
+    public CommonNodeEntity getOutsourcingInvestmentAgreementCode() {
+        return outsourcingInvestmentAgreementCode;
+    }
+
+    public void setOutsourcingInvestmentAgreementCode(CommonNodeEntity outsourcingInvestmentAgreementCode) {
+        this.outsourcingInvestmentAgreementCode = outsourcingInvestmentAgreementCode;
+    }
+
+    public CommonNodeEntity getTrustee() {
+        return trustee;
+    }
+
+    public void setTrustee(CommonNodeEntity trustee) {
+        this.trustee = trustee;
+    }
+
+    public CommonNodeEntity getActualManager() {
+        return actualManager;
+    }
+
+    public void setActualManager(CommonNodeEntity actualManager) {
+        this.actualManager = actualManager;
+    }
+
+    public CommonNodeEntity getCustodianForOutsourcingInvestmentAgreement() {
+        return custodianForOutsourcingInvestmentAgreement;
+    }
+
+    public void setCustodianForOutsourcingInvestmentAgreement(CommonNodeEntity custodianForOutsourcingInvestmentAgreement) {
+        this.custodianForOutsourcingInvestmentAgreement = custodianForOutsourcingInvestmentAgreement;
+    }
+
+    public CommonNodeEntity getOutsourcingInvestmentAmount() {
+        return outsourcingInvestmentAmount;
+    }
+
+    public void setOutsourcingInvestmentAmount(CommonNodeEntity outsourcingInvestmentAmount) {
+        this.outsourcingInvestmentAmount = outsourcingInvestmentAmount;
+    }
+
+    public CommonNodeEntity getActualInvestmentDirectionOfFundForOutsourcingInvestmentAgreement() {
+        return actualInvestmentDirectionOfFundForOutsourcingInvestmentAgreement;
+    }
+
+    public void setActualInvestmentDirectionOfFundForOutsourcingInvestmentAgreement(
+            CommonNodeEntity actualInvestmentDirectionOfFundForOutsourcingInvestmentAgreement) {
+        this.actualInvestmentDirectionOfFundForOutsourcingInvestmentAgreement = actualInvestmentDirectionOfFundForOutsourcingInvestmentAgreement;
+    }
+
+    public CommonNodeEntity getDetailsOnInvestmentForOutsourcingInvestmentAgreement() {
+        return detailsOnInvestmentForOutsourcingInvestmentAgreement;
+    }
+
+    public void setDetailsOnInvestmentForOutsourcingInvestmentAgreement(
+            CommonNodeEntity detailsOnInvestmentForOutsourcingInvestmentAgreement) {
+        this.detailsOnInvestmentForOutsourcingInvestmentAgreement = detailsOnInvestmentForOutsourcingInvestmentAgreement;
+    }
+
+    public CommonNodeEntity getIndustryOfInvestmentForOutsourcingInvestmentAgreement() {
+        return industryOfInvestmentForOutsourcingInvestmentAgreement;
+    }
+
+    public void setIndustryOfInvestmentForOutsourcingInvestmentAgreement(
+            CommonNodeEntity industryOfInvestmentForOutsourcingInvestmentAgreement) {
+        this.industryOfInvestmentForOutsourcingInvestmentAgreement = industryOfInvestmentForOutsourcingInvestmentAgreement;
+    }
+
+    public CommonNodeEntity getValueDateOfOutsourcingInvestment() {
+        return valueDateOfOutsourcingInvestment;
+    }
+
+    public void setValueDateOfOutsourcingInvestment(CommonNodeEntity valueDateOfOutsourcingInvestment) {
+        this.valueDateOfOutsourcingInvestment = valueDateOfOutsourcingInvestment;
+    }
+
+    public CommonNodeEntity getMaturityDateOfOutsourcingInvestment() {
+        return maturityDateOfOutsourcingInvestment;
+    }
+
+    public void setMaturityDateOfOutsourcingInvestment(CommonNodeEntity maturityDateOfOutsourcingInvestment) {
+        this.maturityDateOfOutsourcingInvestment = maturityDateOfOutsourcingInvestment;
+    }
+
+    public CommonNodeEntity getTypeOfOutsourcingInvestment() {
+        return typeOfOutsourcingInvestment;
+    }
+
+    public void setTypeOfOutsourcingInvestment(CommonNodeEntity typeOfOutsourcingInvestment) {
+        this.typeOfOutsourcingInvestment = typeOfOutsourcingInvestment;
+    }
+
+    public CommonNodeEntity getExpectedReturnPleaseSelectForOutsourcingInvestmentAgreement() {
+        return expectedReturnPleaseSelectForOutsourcingInvestmentAgreement;
+    }
+
+    public void setExpectedReturnPleaseSelectForOutsourcingInvestmentAgreement(
+            CommonNodeEntity expectedReturnPleaseSelectForOutsourcingInvestmentAgreement) {
+        this.expectedReturnPleaseSelectForOutsourcingInvestmentAgreement = expectedReturnPleaseSelectForOutsourcingInvestmentAgreement;
+    }
+
+    public CommonNodeEntity getMaximumExpectedAnnualReturnForOutsourcingInvestmentAgreement() {
+        return maximumExpectedAnnualReturnForOutsourcingInvestmentAgreement;
+    }
+
+    public void setMaximumExpectedAnnualReturnForOutsourcingInvestmentAgreement(
+            CommonNodeEntity maximumExpectedAnnualReturnForOutsourcingInvestmentAgreement) {
+        this.maximumExpectedAnnualReturnForOutsourcingInvestmentAgreement = maximumExpectedAnnualReturnForOutsourcingInvestmentAgreement;
+    }
+
+    public CommonNodeEntity getMinimumExpectedAnnualReturnForOutsourcingInvestmentAgreement() {
+        return minimumExpectedAnnualReturnForOutsourcingInvestmentAgreement;
+    }
+
+    public void setMinimumExpectedAnnualReturnForOutsourcingInvestmentAgreement(
+            CommonNodeEntity minimumExpectedAnnualReturnForOutsourcingInvestmentAgreement) {
+        this.minimumExpectedAnnualReturnForOutsourcingInvestmentAgreement = minimumExpectedAnnualReturnForOutsourcingInvestmentAgreement;
+    }
+
+    public CommonNodeEntity getManagementFeeRateForOutsourcingInvestmentAgreement() {
+        return managementFeeRateForOutsourcingInvestmentAgreement;
+    }
+
+    public void setManagementFeeRateForOutsourcingInvestmentAgreement(
+            CommonNodeEntity managementFeeRateForOutsourcingInvestmentAgreement) {
+        this.managementFeeRateForOutsourcingInvestmentAgreement = managementFeeRateForOutsourcingInvestmentAgreement;
+    }
+
+    public CommonNodeEntity getCustodianFeeRateForOutsourcingInvestmentAgreement() {
+        return custodianFeeRateForOutsourcingInvestmentAgreement;
+    }
+
+    public void setCustodianFeeRateForOutsourcingInvestmentAgreement(
+            CommonNodeEntity custodianFeeRateForOutsourcingInvestmentAgreement) {
+        this.custodianFeeRateForOutsourcingInvestmentAgreement = custodianFeeRateForOutsourcingInvestmentAgreement;
+    }
+
+    public CommonNodeEntity getTransactionCostRateForOutsourcingInvestmentAgreement() {
+        return transactionCostRateForOutsourcingInvestmentAgreement;
+    }
+
+    public void setTransactionCostRateForOutsourcingInvestmentAgreement(
+            CommonNodeEntity transactionCostRateForOutsourcingInvestmentAgreement) {
+        this.transactionCostRateForOutsourcingInvestmentAgreement = transactionCostRateForOutsourcingInvestmentAgreement;
+    }
+
+    public CommonNodeEntity getIntermediaryServiceFeeRateForOutsourcingInvestmentAgreement() {
+        return intermediaryServiceFeeRateForOutsourcingInvestmentAgreement;
+    }
+
+    public void setIntermediaryServiceFeeRateForOutsourcingInvestmentAgreement(
+            CommonNodeEntity intermediaryServiceFeeRateForOutsourcingInvestmentAgreement) {
+        this.intermediaryServiceFeeRateForOutsourcingInvestmentAgreement = intermediaryServiceFeeRateForOutsourcingInvestmentAgreement;
+    }
+
+    public CommonNodeEntity getOtherExpensesRateForOutsourcingInvestmentAgreement() {
+        return otherExpensesRateForOutsourcingInvestmentAgreement;
+    }
+
+    public void setOtherExpensesRateForOutsourcingInvestmentAgreement(
+            CommonNodeEntity otherExpensesRateForOutsourcingInvestmentAgreement) {
+        this.otherExpensesRateForOutsourcingInvestmentAgreement = otherExpensesRateForOutsourcingInvestmentAgreement;
+    }
+
+    public CommonNodeEntity getOutstandingAmount() {
+        return outstandingAmount;
+    }
+
+    public void setOutstandingAmount(CommonNodeEntity outstandingAmount) {
+        this.outstandingAmount = outstandingAmount;
+    }
+
+    public CommonNodeEntity getDate() {
+        return date;
+    }
+
+    public void setDate(CommonNodeEntity date) {
+        this.date = date;
+    }
+
+    public CommonNodeEntity getInvestedAssetsLiabilitiesRegistrationDetails() {
+        return investedAssetsLiabilitiesRegistrationDetails;
+    }
+
+    public void setInvestedAssetsLiabilitiesRegistrationDetails(
+            CommonNodeEntity investedAssetsLiabilitiesRegistrationDetails) {
+        this.investedAssetsLiabilitiesRegistrationDetails = investedAssetsLiabilitiesRegistrationDetails;
+    }
+
+    public void setDetailsOnRegistryAndDepository(CommonNodeEntity detailsOnRegistryAndDepository) {
+        this.detailsOnRegistryAndDepository = detailsOnRegistryAndDepository;
+    }
+
+    /**
      * 获取 nameOfFundManagementInstitution
-     * 
+     *
      * @return nameOfFundManagementInstitution.
      */
     public CommonNodeEntity getNameOfFundManagementInstitution() {
@@ -9097,7 +9103,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 nameOfFundManagementInstitution
-     * 
+     *
      * @param nameOfFundManagementInstitution nameOfFundManagementInstitution
      */
     public void setNameOfFundManagementInstitution(CommonNodeEntity nameOfFundManagementInstitution) {
@@ -9106,7 +9112,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 nameOfFundCustodianInstitution
-     * 
+     *
      * @return nameOfFundCustodianInstitution.
      */
     public CommonNodeEntity getNameOfFundCustodianInstitution() {
@@ -9115,7 +9121,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 nameOfFundCustodianInstitution
-     * 
+     *
      * @param nameOfFundCustodianInstitution nameOfFundCustodianInstitution
      */
     public void setNameOfFundCustodianInstitution(CommonNodeEntity nameOfFundCustodianInstitution) {
@@ -9124,7 +9130,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 investmentEnterpriseTypeByScale
-     * 
+     *
      * @return investmentEnterpriseTypeByScale.
      */
     public CommonNodeEntity getInvestmentEnterpriseTypeByScale() {
@@ -9133,7 +9139,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 investmentEnterpriseTypeByScale
-     * 
+     *
      * @param investmentEnterpriseTypeByScale investmentEnterpriseTypeByScale
      */
     public void setInvestmentEnterpriseTypeByScale(CommonNodeEntity investmentEnterpriseTypeByScale) {
@@ -9142,7 +9148,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 investmentEnterpriseTypeByTechnicalField
-     * 
+     *
      * @return investmentEnterpriseTypeByTechnicalField.
      */
     public CommonNodeEntity getInvestmentEnterpriseTypeByTechnicalField() {
@@ -9151,7 +9157,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 investmentEnterpriseTypeByTechnicalField
-     * 
+     *
      * @param investmentEnterpriseTypeByTechnicalField investmentEnterpriseTypeByTechnicalField
      */
     public void setInvestmentEnterpriseTypeByTechnicalField(CommonNodeEntity investmentEnterpriseTypeByTechnicalField) {
@@ -9160,7 +9166,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 investmentEnterpriseTypeByEconomicType
-     * 
+     *
      * @return investmentEnterpriseTypeByEconomicType.
      */
     public CommonNodeEntity getInvestmentEnterpriseTypeByEconomicType() {
@@ -9169,7 +9175,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 investmentEnterpriseTypeByEconomicType
-     * 
+     *
      * @param investmentEnterpriseTypeByEconomicType investmentEnterpriseTypeByEconomicType
      */
     public void setInvestmentEnterpriseTypeByEconomicType(CommonNodeEntity investmentEnterpriseTypeByEconomicType) {
@@ -9178,7 +9184,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 investmentAssets
-     * 
+     *
      * @return investmentAssets.
      */
     public CommonNodeEntity getInvestmentAssets() {
@@ -9187,7 +9193,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 investmentAssets
-     * 
+     *
      * @param investmentAssets investmentAssets
      */
     public void setInvestmentAssets(CommonNodeEntity investmentAssets) {
@@ -9196,7 +9202,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 countryOrRegionForOtherLiabilities
-     * 
+     *
      * @return countryOrRegionForOtherLiabilities.
      */
     public CommonNodeEntity getCountryOrRegionForOtherLiabilities() {
@@ -9205,7 +9211,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 countryOrRegionForOtherLiabilities
-     * 
+     *
      * @param countryOrRegionForOtherLiabilities countryOrRegionForOtherLiabilities
      */
     public void setCountryOrRegionForOtherLiabilities(CommonNodeEntity countryOrRegionForOtherLiabilities) {
@@ -9214,7 +9220,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 nameForOtherLiabilities
-     * 
+     *
      * @return nameForOtherLiabilities.
      */
     public CommonNodeEntity getNameForOtherLiabilities() {
@@ -9223,7 +9229,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 nameForOtherLiabilities
-     * 
+     *
      * @param nameForOtherLiabilities nameForOtherLiabilities
      */
     public void setNameForOtherLiabilities(CommonNodeEntity nameForOtherLiabilities) {
@@ -9232,7 +9238,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 termToMaturityDaysForOtherLiabilities
-     * 
+     *
      * @return termToMaturityDaysForOtherLiabilities.
      */
     public CommonNodeEntity getTermToMaturityDaysForOtherLiabilities() {
@@ -9241,7 +9247,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 termToMaturityDaysForOtherLiabilities
-     * 
+     *
      * @param termToMaturityDaysForOtherLiabilities termToMaturityDaysForOtherLiabilities
      */
     public void setTermToMaturityDaysForOtherLiabilities(CommonNodeEntity termToMaturityDaysForOtherLiabilities) {
@@ -9250,7 +9256,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 liabilityAmount
-     * 
+     *
      * @return liabilityAmount.
      */
     public CommonNodeEntity getLiabilityAmount() {
@@ -9259,7 +9265,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 liabilityAmount
-     * 
+     *
      * @param liabilityAmount liabilityAmount
      */
     public void setLiabilityAmount(CommonNodeEntity liabilityAmount) {
@@ -9268,7 +9274,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 annualInterestRate
-     * 
+     *
      * @return annualInterestRate.
      */
     public CommonNodeEntity getAnnualInterestRate() {
@@ -9277,7 +9283,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 annualInterestRate
-     * 
+     *
      * @param annualInterestRate annualInterestRate
      */
     public void setAnnualInterestRate(CommonNodeEntity annualInterestRate) {
@@ -9286,7 +9292,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 nameForOther
-     * 
+     *
      * @return nameForOther.
      */
     public CommonNodeEntity getNameForOther() {
@@ -9295,7 +9301,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 nameForOther
-     * 
+     *
      * @param nameForOther nameForOther
      */
     public void setNameForOther(CommonNodeEntity nameForOther) {
@@ -9304,7 +9310,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 assetType
-     * 
+     *
      * @return assetType.
      */
     public CommonNodeEntity getAssetType() {
@@ -9313,7 +9319,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 assetType
-     * 
+     *
      * @param assetType assetType
      */
     public void setAssetType(CommonNodeEntity assetType) {
@@ -9322,7 +9328,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 amountForOther
-     * 
+     *
      * @return amountForOther.
      */
     public CommonNodeEntity getAmountForOther() {
@@ -9331,7 +9337,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 amountForOther
-     * 
+     *
      * @param amountForOther amountForOther
      */
     public void setAmountForOther(CommonNodeEntity amountForOther) {
@@ -9340,7 +9346,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 valueDateForOther
-     * 
+     *
      * @return valueDateForOther.
      */
     public CommonNodeEntity getValueDateForOther() {
@@ -9349,7 +9355,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 valueDateForOther
-     * 
+     *
      * @param valueDateForOther valueDateForOther
      */
     public void setValueDateForOther(CommonNodeEntity valueDateForOther) {
@@ -9358,7 +9364,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 maturityDateForOther
-     * 
+     *
      * @return maturityDateForOther.
      */
     public CommonNodeEntity getMaturityDateForOther() {
@@ -9367,7 +9373,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 maturityDateForOther
-     * 
+     *
      * @param maturityDateForOther maturityDateForOther
      */
     public void setMaturityDateForOther(CommonNodeEntity maturityDateForOther) {
@@ -9376,7 +9382,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 countryOrRegionForOther
-     * 
+     *
      * @return countryOrRegionForOther.
      */
     public CommonNodeEntity getCountryOrRegionForOther() {
@@ -9385,7 +9391,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 countryOrRegionForOther
-     * 
+     *
      * @param countryOrRegionForOther countryOrRegionForOther
      */
     public void setCountryOrRegionForOther(CommonNodeEntity countryOrRegionForOther) {
@@ -9394,7 +9400,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 expectedReturnPleaseSelectForOther
-     * 
+     *
      * @return expectedReturnPleaseSelectForOther.
      */
     public CommonNodeEntity getExpectedReturnPleaseSelectForOther() {
@@ -9403,7 +9409,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 expectedReturnPleaseSelectForOther
-     * 
+     *
      * @param expectedReturnPleaseSelectForOther expectedReturnPleaseSelectForOther
      */
     public void setExpectedReturnPleaseSelectForOther(CommonNodeEntity expectedReturnPleaseSelectForOther) {
@@ -9412,7 +9418,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 projectAnnualReturnForOther
-     * 
+     *
      * @return projectAnnualReturnForOther.
      */
     public CommonNodeEntity getProjectAnnualReturnForOther() {
@@ -9421,7 +9427,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 projectAnnualReturnForOther
-     * 
+     *
      * @param projectAnnualReturnForOther projectAnnualReturnForOther
      */
     public void setProjectAnnualReturnForOther(CommonNodeEntity projectAnnualReturnForOther) {
@@ -9430,7 +9436,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 interestPaymentFrequencyMeasuredByMonthForOther
-     * 
+     *
      * @return interestPaymentFrequencyMeasuredByMonthForOther.
      */
     public CommonNodeEntity getInterestPaymentFrequencyMeasuredByMonthForOther() {
@@ -9439,7 +9445,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 interestPaymentFrequencyMeasuredByMonthForOther
-     * 
+     *
      * @param interestPaymentFrequencyMeasuredByMonthForOther
      *            interestPaymentFrequencyMeasuredByMonthForOther
      */
@@ -9449,7 +9455,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 debtorForOther
-     * 
+     *
      * @return debtorForOther.
      */
     public CommonNodeEntity getDebtorForOther() {
@@ -9458,7 +9464,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 debtorForOther
-     * 
+     *
      * @param debtorForOther debtorForOther
      */
     public void setDebtorForOther(CommonNodeEntity debtorForOther) {
@@ -9467,7 +9473,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 organizationCodeForOther
-     * 
+     *
      * @return organizationCodeForOther.
      */
     public CommonNodeEntity getOrganizationCodeForOther() {
@@ -9476,7 +9482,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 organizationCodeForOther
-     * 
+     *
      * @param organizationCodeForOther organizationCodeForOther
      */
     public void setOrganizationCodeForOther(CommonNodeEntity organizationCodeForOther) {
@@ -9485,7 +9491,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 ratingAgencyAndIssuerRatingForOther
-     * 
+     *
      * @return ratingAgencyAndIssuerRatingForOther.
      */
     public CommonNodeEntity getRatingAgencyAndIssuerRatingForOther() {
@@ -9494,7 +9500,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 ratingAgencyAndIssuerRatingForOther
-     * 
+     *
      * @param ratingAgencyAndIssuerRatingForOther ratingAgencyAndIssuerRatingForOther
      */
     public void setRatingAgencyAndIssuerRatingForOther(CommonNodeEntity ratingAgencyAndIssuerRatingForOther) {
@@ -9503,7 +9509,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 debtorTypeByScaleForOther
-     * 
+     *
      * @return debtorTypeByScaleForOther.
      */
     public CommonNodeEntity getDebtorTypeByScaleForOther() {
@@ -9512,7 +9518,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 debtorTypeByScaleForOther
-     * 
+     *
      * @param debtorTypeByScaleForOther debtorTypeByScaleForOther
      */
     public void setDebtorTypeByScaleForOther(CommonNodeEntity debtorTypeByScaleForOther) {
@@ -9521,7 +9527,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 debtorTypeByTechnicalFieldForOther
-     * 
+     *
      * @return debtorTypeByTechnicalFieldForOther.
      */
     public CommonNodeEntity getDebtorTypeByTechnicalFieldForOther() {
@@ -9530,7 +9536,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 debtorTypeByTechnicalFieldForOther
-     * 
+     *
      * @param debtorTypeByTechnicalFieldForOther debtorTypeByTechnicalFieldForOther
      */
     public void setDebtorTypeByTechnicalFieldForOther(CommonNodeEntity debtorTypeByTechnicalFieldForOther) {
@@ -9539,7 +9545,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 debtorTypeByEconomicTypeForOther
-     * 
+     *
      * @return debtorTypeByEconomicTypeForOther.
      */
     public CommonNodeEntity getDebtorTypeByEconomicTypeForOther() {
@@ -9548,7 +9554,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 debtorTypeByEconomicTypeForOther
-     * 
+     *
      * @param debtorTypeByEconomicTypeForOther debtorTypeByEconomicTypeForOther
      */
     public void setDebtorTypeByEconomicTypeForOther(CommonNodeEntity debtorTypeByEconomicTypeForOther) {
@@ -9557,7 +9563,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 industryOfDebtorForOther
-     * 
+     *
      * @return industryOfDebtorForOther.
      */
     public CommonNodeEntity getIndustryOfDebtorForOther() {
@@ -9566,7 +9572,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 industryOfDebtorForOther
-     * 
+     *
      * @param industryOfDebtorForOther industryOfDebtorForOther
      */
     public void setIndustryOfDebtorForOther(CommonNodeEntity industryOfDebtorForOther) {
@@ -9575,7 +9581,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 projectForOther
-     * 
+     *
      * @return projectForOther.
      */
     public CommonNodeEntity getProjectForOther() {
@@ -9584,7 +9590,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 projectForOther
-     * 
+     *
      * @param projectForOther projectForOther
      */
     public void setProjectForOther(CommonNodeEntity projectForOther) {
@@ -9593,7 +9599,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 industryOfProjectForOther
-     * 
+     *
      * @return industryOfProjectForOther.
      */
     public CommonNodeEntity getIndustryOfProjectForOther() {
@@ -9602,7 +9608,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 industryOfProjectForOther
-     * 
+     *
      * @param industryOfProjectForOther industryOfProjectForOther
      */
     public void setIndustryOfProjectForOther(CommonNodeEntity industryOfProjectForOther) {
@@ -9611,7 +9617,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 keyMonitoringIndustryPleaseSelectForOther
-     * 
+     *
      * @return keyMonitoringIndustryPleaseSelectForOther.
      */
     public CommonNodeEntity getKeyMonitoringIndustryPleaseSelectForOther() {
@@ -9620,7 +9626,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 keyMonitoringIndustryPleaseSelectForOther
-     * 
+     *
      * @param keyMonitoringIndustryPleaseSelectForOther keyMonitoringIndustryPleaseSelectForOther
      */
     public void setKeyMonitoringIndustryPleaseSelectForOther(CommonNodeEntity keyMonitoringIndustryPleaseSelectForOther) {
@@ -9629,7 +9635,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 keyMonitoringIndustryTypeForOther
-     * 
+     *
      * @return keyMonitoringIndustryTypeForOther.
      */
     public CommonNodeEntity getKeyMonitoringIndustryTypeForOther() {
@@ -9638,7 +9644,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 keyMonitoringIndustryTypeForOther
-     * 
+     *
      * @param keyMonitoringIndustryTypeForOther keyMonitoringIndustryTypeForOther
      */
     public void setKeyMonitoringIndustryTypeForOther(CommonNodeEntity keyMonitoringIndustryTypeForOther) {
@@ -9647,7 +9653,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 detailsOnKeyMonitoringIndustryTypeForOther
-     * 
+     *
      * @return detailsOnKeyMonitoringIndustryTypeForOther.
      */
     public CommonNodeEntity getDetailsOnKeyMonitoringIndustryTypeForOther() {
@@ -9656,7 +9662,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 detailsOnKeyMonitoringIndustryTypeForOther
-     * 
+     *
      * @param detailsOnKeyMonitoringIndustryTypeForOther detailsOnKeyMonitoringIndustryTypeForOther
      */
     public void setDetailsOnKeyMonitoringIndustryTypeForOther(CommonNodeEntity detailsOnKeyMonitoringIndustryTypeForOther) {
@@ -9665,7 +9671,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 standardizedInternalAssetRatingForOther
-     * 
+     *
      * @return standardizedInternalAssetRatingForOther.
      */
     public CommonNodeEntity getStandardizedInternalAssetRatingForOther() {
@@ -9674,7 +9680,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 standardizedInternalAssetRatingForOther
-     * 
+     *
      * @param standardizedInternalAssetRatingForOther standardizedInternalAssetRatingForOther
      */
     public void setStandardizedInternalAssetRatingForOther(CommonNodeEntity standardizedInternalAssetRatingForOther) {
@@ -9683,7 +9689,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 transactionRegistrationCode
-     * 
+     *
      * @return transactionRegistrationCode.
      */
     public CommonNodeEntity getTransactionRegistrationCode() {
@@ -9692,7 +9698,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 transactionRegistrationCode
-     * 
+     *
      * @param transactionRegistrationCode transactionRegistrationCode
      */
     public void setTransactionRegistrationCode(CommonNodeEntity transactionRegistrationCode) {
@@ -9701,7 +9707,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 cashflowType
-     * 
+     *
      * @return cashflowType.
      */
     public CommonNodeEntity getCashflowType() {
@@ -9710,7 +9716,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 cashflowType
-     * 
+     *
      * @param cashflowType cashflowType
      */
     public void setCashflowType(CommonNodeEntity cashflowType) {
@@ -9719,7 +9725,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 detailsOnCashflowType
-     * 
+     *
      * @return detailsOnCashflowType.
      */
     public CommonNodeEntity getDetailsOnCashflowType() {
@@ -9728,7 +9734,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 detailsOnCashflowType
-     * 
+     *
      * @param detailsOnCashflowType detailsOnCashflowType
      */
     public void setDetailsOnCashflowType(CommonNodeEntity detailsOnCashflowType) {
@@ -9737,7 +9743,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 quantity
-     * 
+     *
      * @return quantity.
      */
     public CommonNodeEntity getQuantity() {
@@ -9746,7 +9752,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 quantity
-     * 
+     *
      * @param quantity quantity
      */
     public void setQuantity(CommonNodeEntity quantity) {
@@ -9755,7 +9761,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 settlementAmountCNYForTransaction
-     * 
+     *
      * @return settlementAmountCNYForTransaction.
      */
     public CommonNodeEntity getSettlementAmountCNYForTransaction() {
@@ -9764,7 +9770,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 settlementAmountCNYForTransaction
-     * 
+     *
      * @param settlementAmountCNYForTransaction settlementAmountCNYForTransaction
      */
     public void setSettlementAmountCNYForTransaction(CommonNodeEntity settlementAmountCNYForTransaction) {
@@ -9773,7 +9779,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 settlementAmount
-     * 
+     *
      * @return settlementAmount.
      */
     public CommonNodeEntity getSettlementAmount() {
@@ -9782,7 +9788,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 settlementAmount
-     * 
+     *
      * @param settlementAmount settlementAmount
      */
     public void setSettlementAmount(CommonNodeEntity settlementAmount) {
@@ -9791,7 +9797,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 perUnitTransactionPriceNet
-     * 
+     *
      * @return perUnitTransactionPriceNet.
      */
     public CommonNodeEntity getPerUnitTransactionPriceNet() {
@@ -9800,7 +9806,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 perUnitTransactionPriceNet
-     * 
+     *
      * @param perUnitTransactionPriceNet perUnitTransactionPriceNet
      */
     public void setPerUnitTransactionPriceNet(CommonNodeEntity perUnitTransactionPriceNet) {
@@ -9809,7 +9815,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 perUnitTransactionPriceFull
-     * 
+     *
      * @return perUnitTransactionPriceFull.
      */
     public CommonNodeEntity getPerUnitTransactionPriceFull() {
@@ -9818,7 +9824,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 perUnitTransactionPriceFull
-     * 
+     *
      * @param perUnitTransactionPriceFull perUnitTransactionPriceFull
      */
     public void setPerUnitTransactionPriceFull(CommonNodeEntity perUnitTransactionPriceFull) {
@@ -9827,7 +9833,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 rateOfAnnualReturn
-     * 
+     *
      * @return rateOfAnnualReturn.
      */
     public CommonNodeEntity getRateOfAnnualReturn() {
@@ -9836,7 +9842,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 rateOfAnnualReturn
-     * 
+     *
      * @param rateOfAnnualReturn rateOfAnnualReturn
      */
     public void setRateOfAnnualReturn(CommonNodeEntity rateOfAnnualReturn) {
@@ -9845,7 +9851,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 tradeCounterparty
-     * 
+     *
      * @return tradeCounterparty.
      */
     public CommonNodeEntity getTradeCounterparty() {
@@ -9854,7 +9860,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 tradeCounterparty
-     * 
+     *
      * @param tradeCounterparty tradeCounterparty
      */
     public void setTradeCounterparty(CommonNodeEntity tradeCounterparty) {
@@ -9863,7 +9869,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 transactionIdentificationCodeContractNumber
-     * 
+     *
      * @return transactionIdentificationCodeContractNumber.
      */
     public CommonNodeEntity getTransactionIdentificationCodeContractNumber() {
@@ -9872,7 +9878,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 transactionIdentificationCodeContractNumber
-     * 
+     *
      * @param transactionIdentificationCodeContractNumber
      *            transactionIdentificationCodeContractNumber
      */
@@ -9882,7 +9888,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 transactionRegistrationDetails
-     * 
+     *
      * @return transactionRegistrationDetails.
      */
     public CommonNodeEntity getTransactionRegistrationDetails() {
@@ -9891,7 +9897,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 transactionRegistrationDetails
-     * 
+     *
      * @param transactionRegistrationDetails transactionRegistrationDetails
      */
     public void setTransactionRegistrationDetails(CommonNodeEntity transactionRegistrationDetails) {
@@ -9900,7 +9906,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 tradeDate
-     * 
+     *
      * @return tradeDate.
      */
     public CommonNodeEntity getTradeDate() {
@@ -9909,7 +9915,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 tradeDate
-     * 
+     *
      * @param tradeDate tradeDate
      */
     public void setTradeDate(CommonNodeEntity tradeDate) {
@@ -9918,7 +9924,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 valuationDate
-     * 
+     *
      * @return valuationDate.
      */
     public CommonNodeEntity getValuationDate() {
@@ -9927,7 +9933,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 valuationDate
-     * 
+     *
      * @param valuationDate valuationDate
      */
     public void setValuationDate(CommonNodeEntity valuationDate) {
@@ -9936,7 +9942,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 perUnitValuationNet
-     * 
+     *
      * @return perUnitValuationNet.
      */
     public CommonNodeEntity getPerUnitValuationNet() {
@@ -9945,7 +9951,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 perUnitValuationNet
-     * 
+     *
      * @param perUnitValuationNet perUnitValuationNet
      */
     public void setPerUnitValuationNet(CommonNodeEntity perUnitValuationNet) {
@@ -9954,7 +9960,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 perUnitValuationFull
-     * 
+     *
      * @return perUnitValuationFull.
      */
     public CommonNodeEntity getPerUnitValuationFull() {
@@ -9963,7 +9969,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 perUnitValuationFull
-     * 
+     *
      * @param perUnitValuationFull perUnitValuationFull
      */
     public void setPerUnitValuationFull(CommonNodeEntity perUnitValuationFull) {
@@ -9972,7 +9978,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 valuationRegistrationDetails
-     * 
+     *
      * @return valuationRegistrationDetails.
      */
     public CommonNodeEntity getValuationRegistrationDetails() {
@@ -9981,7 +9987,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 valuationRegistrationDetails
-     * 
+     *
      * @param valuationRegistrationDetails valuationRegistrationDetails
      */
     public void setValuationRegistrationDetails(CommonNodeEntity valuationRegistrationDetails) {
@@ -9990,7 +9996,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 assetsLiabilitiesIdentificationCodeOfAssetManagementPlan
-     * 
+     *
      * @return assetsLiabilitiesIdentificationCodeOfAssetManagementPlan.
      */
     public CommonNodeEntity getAssetsLiabilitiesIdentificationCodeOfAssetManagementPlan() {
@@ -9999,7 +10005,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 assetsLiabilitiesIdentificationCodeOfAssetManagementPlan
-     * 
+     *
      * @param assetsLiabilitiesIdentificationCodeOfAssetManagementPlan
      *            assetsLiabilitiesIdentificationCodeOfAssetManagementPlan
      */
@@ -10009,7 +10015,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 aggregateIssuedQuantityOfAssetManagementPlan
-     * 
+     *
      * @return aggregateIssuedQuantityOfAssetManagementPlan.
      */
     public CommonNodeEntity getAggregateIssuedQuantityOfAssetManagementPlan() {
@@ -10018,7 +10024,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 aggregateIssuedQuantityOfAssetManagementPlan
-     * 
+     *
      * @param aggregateIssuedQuantityOfAssetManagementPlan
      *            aggregateIssuedQuantityOfAssetManagementPlan
      */
@@ -10028,7 +10034,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 aggregateIssuedAmountOfAssetManagementPlanCNY
-     * 
+     *
      * @return aggregateIssuedAmountOfAssetManagementPlanCNY.
      */
     public CommonNodeEntity getAggregateIssuedAmountOfAssetManagementPlanCNY() {
@@ -10037,7 +10043,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 aggregateIssuedAmountOfAssetManagementPlanCNY
-     * 
+     *
      * @param aggregateIssuedAmountOfAssetManagementPlanCNY
      *            aggregateIssuedAmountOfAssetManagementPlanCNY
      */
@@ -10047,7 +10053,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 nonInvestedAmountofAssetManagementPlanCNY
-     * 
+     *
      * @return nonInvestedAmountofAssetManagementPlanCNY.
      */
     public CommonNodeEntity getNonInvestedAmountofAssetManagementPlanCNY() {
@@ -10056,7 +10062,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 nonInvestedAmountofAssetManagementPlanCNY
-     * 
+     *
      * @param nonInvestedAmountofAssetManagementPlanCNY nonInvestedAmountofAssetManagementPlanCNY
      */
     public void setNonInvestedAmountofAssetManagementPlanCNY(CommonNodeEntity nonInvestedAmountofAssetManagementPlanCNY) {
@@ -10065,7 +10071,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 underlyingAssetTuple
-     * 
+     *
      * @return underlyingAssetTuple.
      */
     public List<CommonNodeListEntity> getUnderlyingAssetTuple() {
@@ -10074,7 +10080,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 underlyingAssetTuple
-     * 
+     *
      * @param underlyingAssetTuple underlyingAssetTuple
      */
     public void setUnderlyingAssetTuple(List<CommonNodeListEntity> underlyingAssetTuple) {
@@ -10083,7 +10089,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 profession
-     * 
+     *
      * @return profession.
      */
     public CommonNodeEntity getProfession() {
@@ -10092,7 +10098,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 profession
-     * 
+     *
      * @param profession profession
      */
     public void setProfession(CommonNodeEntity profession) {
@@ -10101,7 +10107,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 name
-     * 
+     *
      * @return name.
      */
     public CommonNodeEntity getName() {
@@ -10110,7 +10116,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 name
-     * 
+     *
      * @param name name
      */
     public void setName(CommonNodeEntity name) {
@@ -10119,7 +10125,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 gender
-     * 
+     *
      * @return gender.
      */
     public CommonNodeEntity getGender() {
@@ -10128,7 +10134,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 gender
-     * 
+     *
      * @param gender gender
      */
     public void setGender(CommonNodeEntity gender) {
@@ -10137,7 +10143,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 practitionerIdNumber
-     * 
+     *
      * @return practitionerIdNumber.
      */
     public CommonNodeEntity getPractitionerIdNumber() {
@@ -10146,7 +10152,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 practitionerIdNumber
-     * 
+     *
      * @param practitionerIdNumber practitionerIdNumber
      */
     public void setPractitionerIdNumber(CommonNodeEntity practitionerIdNumber) {
@@ -10155,7 +10161,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 headquartersBranchOfficePleaseSelect
-     * 
+     *
      * @return headquartersBranchOfficePleaseSelect.
      */
     public CommonNodeEntity getHeadquartersBranchOfficePleaseSelect() {
@@ -10164,7 +10170,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 headquartersBranchOfficePleaseSelect
-     * 
+     *
      * @param headquartersBranchOfficePleaseSelect headquartersBranchOfficePleaseSelect
      */
     public void setHeadquartersBranchOfficePleaseSelect(CommonNodeEntity headquartersBranchOfficePleaseSelect) {
@@ -10173,7 +10179,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 region
-     * 
+     *
      * @return region.
      */
     public CommonNodeEntity getRegion() {
@@ -10182,7 +10188,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 region
-     * 
+     *
      * @param region region
      */
     public void setRegion(CommonNodeEntity region) {
@@ -10191,7 +10197,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 firmName
-     * 
+     *
      * @return firmName.
      */
     public CommonNodeEntity getFirmName() {
@@ -10200,7 +10206,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 firmName
-     * 
+     *
      * @param firmName firmName
      */
     public void setFirmName(CommonNodeEntity firmName) {
@@ -10209,7 +10215,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 department
-     * 
+     *
      * @return department.
      */
     public CommonNodeEntity getDepartment() {
@@ -10218,7 +10224,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 department
-     * 
+     *
      * @param department department
      */
     public void setDepartment(CommonNodeEntity department) {
@@ -10227,7 +10233,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 position
-     * 
+     *
      * @return position.
      */
     public CommonNodeEntity getPosition() {
@@ -10236,7 +10242,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 position
-     * 
+     *
      * @param position position
      */
     public void setPosition(CommonNodeEntity position) {
@@ -10245,7 +10251,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 education
-     * 
+     *
      * @return education.
      */
     public CommonNodeEntity getEducation() {
@@ -10254,7 +10260,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 education
-     * 
+     *
      * @param education education
      */
     public void setEducation(CommonNodeEntity education) {
@@ -10263,7 +10269,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 degree
-     * 
+     *
      * @return degree.
      */
     public CommonNodeEntity getDegree() {
@@ -10272,7 +10278,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 degree
-     * 
+     *
      * @param degree degree
      */
     public void setDegree(CommonNodeEntity degree) {
@@ -10281,7 +10287,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 careerStartDate
-     * 
+     *
      * @return careerStartDate.
      */
     public CommonNodeEntity getCareerStartDate() {
@@ -10290,7 +10296,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 careerStartDate
-     * 
+     *
      * @param careerStartDate careerStartDate
      */
     public void setCareerStartDate(CommonNodeEntity careerStartDate) {
@@ -10299,7 +10305,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 startDateOfWorkingExperienceInWealthManagement
-     * 
+     *
      * @return startDateOfWorkingExperienceInWealthManagement.
      */
     public CommonNodeEntity getStartDateOfWorkingExperienceInWealthManagement() {
@@ -10308,7 +10314,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 startDateOfWorkingExperienceInWealthManagement
-     * 
+     *
      * @param startDateOfWorkingExperienceInWealthManagement
      *            startDateOfWorkingExperienceInWealthManagement
      */
@@ -10318,7 +10324,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 levelofProfessionalQualifications
-     * 
+     *
      * @return levelofProfessionalQualifications.
      */
     public CommonNodeEntity getLevelofProfessionalQualifications() {
@@ -10327,7 +10333,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 levelofProfessionalQualifications
-     * 
+     *
      * @param levelofProfessionalQualifications levelofProfessionalQualifications
      */
     public void setLevelofProfessionalQualifications(CommonNodeEntity levelofProfessionalQualifications) {
@@ -10336,7 +10342,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 wealthManagementCertificationTuple
-     * 
+     *
      * @return wealthManagementCertificationTuple.
      */
     public List<CommonNodeListEntity> getWealthManagementCertificationTuple() {
@@ -10345,7 +10351,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 wealthManagementCertificationTuple
-     * 
+     *
      * @param wealthManagementCertificationTuple wealthManagementCertificationTuple
      */
     public void setWealthManagementCertificationTuple(List<CommonNodeListEntity> wealthManagementCertificationTuple) {
@@ -10354,7 +10360,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 rewardsInWealthManagement
-     * 
+     *
      * @return rewardsInWealthManagement.
      */
     public CommonNodeEntity getRewardsInWealthManagement() {
@@ -10363,7 +10369,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 rewardsInWealthManagement
-     * 
+     *
      * @param rewardsInWealthManagement rewardsInWealthManagement
      */
     public void setRewardsInWealthManagement(CommonNodeEntity rewardsInWealthManagement) {
@@ -10372,7 +10378,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 workPhoneNumberForPractitioner
-     * 
+     *
      * @return workPhoneNumberForPractitioner.
      */
     public CommonNodeEntity getWorkPhoneNumberForPractitioner() {
@@ -10381,7 +10387,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 workPhoneNumberForPractitioner
-     * 
+     *
      * @param workPhoneNumberForPractitioner workPhoneNumberForPractitioner
      */
     public void setWorkPhoneNumberForPractitioner(CommonNodeEntity workPhoneNumberForPractitioner) {
@@ -10390,7 +10396,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 mobilePhoneNumberForPractitioner
-     * 
+     *
      * @return mobilePhoneNumberForPractitioner.
      */
     public CommonNodeEntity getMobilePhoneNumberForPractitioner() {
@@ -10399,7 +10405,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 mobilePhoneNumberForPractitioner
-     * 
+     *
      * @param mobilePhoneNumberForPractitioner mobilePhoneNumberForPractitioner
      */
     public void setMobilePhoneNumberForPractitioner(CommonNodeEntity mobilePhoneNumberForPractitioner) {
@@ -10408,7 +10414,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 email
-     * 
+     *
      * @return email.
      */
     public CommonNodeEntity getEmail() {
@@ -10417,7 +10423,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 email
-     * 
+     *
      * @param email email
      */
     public void setEmail(CommonNodeEntity email) {
@@ -10426,7 +10432,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 practitionerRegistrationDetails
-     * 
+     *
      * @return practitionerRegistrationDetails.
      */
     public CommonNodeEntity getPractitionerRegistrationDetails() {
@@ -10435,7 +10441,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 practitionerRegistrationDetails
-     * 
+     *
      * @param practitionerRegistrationDetails practitionerRegistrationDetails
      */
     public void setPractitionerRegistrationDetails(CommonNodeEntity practitionerRegistrationDetails) {
@@ -10444,7 +10450,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 reportDate
-     * 
+     *
      * @return reportDate.
      */
     public CommonNodeEntity getReportDate() {
@@ -10453,7 +10459,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 reportDate
-     * 
+     *
      * @param reportDate reportDate
      */
     public void setReportDate(CommonNodeEntity reportDate) {
@@ -10462,7 +10468,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 investorsSummationOfDiffenrentTypesInformationRegistrationTuple
-     * 
+     *
      * @return investorsSummationOfDiffenrentTypesInformationRegistrationTuple.
      */
     public List<BaseInfoEntity> getInvestorsSummationOfDiffenrentTypesInformationRegistrationTuple() {
@@ -10471,7 +10477,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 investorsSummationOfDiffenrentTypesInformationRegistrationTuple
-     * 
+     *
      * @param investorsSummationOfDiffenrentTypesInformationRegistrationTuple
      *            investorsSummationOfDiffenrentTypesInformationRegistrationTuple
      */
@@ -10481,7 +10487,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 investorsInformationRegistrationCSVDataExplanatory
-     * 
+     *
      * @return investorsInformationRegistrationCSVDataExplanatory.
      */
     public CommonNodeEntity getInvestorsInformationRegistrationCSVDataExplanatory() {
@@ -10490,7 +10496,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 investorsInformationRegistrationCSVDataExplanatory
-     * 
+     *
      * @param investorsInformationRegistrationCSVDataExplanatory
      *            investorsInformationRegistrationCSVDataExplanatory
      */
@@ -10500,7 +10506,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 registrationBankCode
-     * 
+     *
      * @return registrationBankCode.
      */
     public CommonNodeEntity getRegistrationBankCode() {
@@ -10509,7 +10515,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 registrationBankCode
-     * 
+     *
      * @param registrationBankCode registrationBankCode
      */
     public void setRegistrationBankCode(CommonNodeEntity registrationBankCode) {
@@ -10518,7 +10524,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 productRegistrationCode
-     * 
+     *
      * @return productRegistrationCode.
      */
     public CommonNodeEntity getProductRegistrationCode() {
@@ -10527,7 +10533,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 productRegistrationCode
-     * 
+     *
      * @param productRegistrationCode productRegistrationCode
      */
     public void setProductRegistrationCode(CommonNodeEntity productRegistrationCode) {
@@ -10536,7 +10542,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 registrationSerialNumber
-     * 
+     *
      * @return registrationSerialNumber.
      */
     public CommonNodeEntity getRegistrationSerialNumber() {
@@ -10545,7 +10551,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 registrationSerialNumber
-     * 
+     *
      * @param registrationSerialNumber registrationSerialNumber
      */
     public void setRegistrationSerialNumber(CommonNodeEntity registrationSerialNumber) {
@@ -10554,7 +10560,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 investorsSummationOfDiffenrentTypesInformationRegistrationDetailTuple
-     * 
+     *
      * @return investorsSummationOfDiffenrentTypesInformationRegistrationDetailTuple.
      */
     public List<CommonNodeListEntity> getInvestorsSummationOfDiffenrentTypesInformationRegistrationDetailTuple() {
@@ -10563,7 +10569,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 investorsSummationOfDiffenrentTypesInformationRegistrationDetailTuple
-     * 
+     *
      * @param investorsSummationOfDiffenrentTypesInformationRegistrationDetailTuple
      *            investorsSummationOfDiffenrentTypesInformationRegistrationDetailTuple
      */
@@ -10573,7 +10579,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 units
-     * 
+     *
      * @return units.
      */
     public CommonNodeEntity getUnits() {
@@ -10582,7 +10588,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 units
-     * 
+     *
      * @param units units
      */
     public void setUnits(CommonNodeEntity units) {
@@ -10591,7 +10597,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 numberOfTransactions
-     * 
+     *
      * @return numberOfTransactions.
      */
     public CommonNodeEntity getNumberOfTransactions() {
@@ -10600,7 +10606,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 numberOfTransactions
-     * 
+     *
      * @param numberOfTransactions numberOfTransactions
      */
     public void setNumberOfTransactions(CommonNodeEntity numberOfTransactions) {
@@ -10609,7 +10615,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 获取 businessType
-     * 
+     *
      * @return businessType.
      */
     public CommonNodeEntity getBusinessType() {
@@ -10618,7 +10624,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 businessType
-     * 
+     *
      * @param businessType businessType
      */
     public void setBusinessType(CommonNodeEntity businessType) {
@@ -10626,81 +10632,81 @@ public class BaseInfoEntity implements Feild {
     }
     /**
      * 获取 financialInstitutionExclusivePleaseSelect
-     * 
+     *
      * @return financialInstitutionExclusivePleaseSelect.
      */
     public CommonNodeEntity getFinancialInstitutionExclusivePleaseSelect() {
-		return financialInstitutionExclusivePleaseSelect;
-	}
+        return financialInstitutionExclusivePleaseSelect;
+    }
     /**
      * 设置 financialInstitutionExclusivePleaseSelect
-     * 
+     *
      * @param financialInstitutionExclusivePleaseSelect financialInstitutionExclusivePleaseSelect
      */
-	public void setFinancialInstitutionExclusivePleaseSelect(CommonNodeEntity financialInstitutionExclusivePleaseSelect) {
-		this.financialInstitutionExclusivePleaseSelect = financialInstitutionExclusivePleaseSelect;
-	}
+    public void setFinancialInstitutionExclusivePleaseSelect(CommonNodeEntity financialInstitutionExclusivePleaseSelect) {
+        this.financialInstitutionExclusivePleaseSelect = financialInstitutionExclusivePleaseSelect;
+    }
 
-	public CommonNodeEntity getTypeOfSubscription() {
-		return typeOfSubscription;
-	}
+    public CommonNodeEntity getTypeOfSubscription() {
+        return typeOfSubscription;
+    }
 
-	public void setTypeOfSubscription(CommonNodeEntity typeOfSubscription) {
-		this.typeOfSubscription = typeOfSubscription;
-	}
+    public void setTypeOfSubscription(CommonNodeEntity typeOfSubscription) {
+        this.typeOfSubscription = typeOfSubscription;
+    }
 
-	public CommonNodeEntity getTypeOfInvestmentAsset() {
-		return typeOfInvestmentAsset;
-	}
+    public CommonNodeEntity getTypeOfInvestmentAsset() {
+        return typeOfInvestmentAsset;
+    }
 
-	public void setTypeOfInvestmentAsset(CommonNodeEntity typeOfInvestmentAsset) {
-		this.typeOfInvestmentAsset = typeOfInvestmentAsset;
-	}
+    public void setTypeOfInvestmentAsset(CommonNodeEntity typeOfInvestmentAsset) {
+        this.typeOfInvestmentAsset = typeOfInvestmentAsset;
+    }
 
-	public CommonNodeEntity getPerformanceBenchmarkRate() {
-		return performanceBenchmarkRate;
-	}
+    public CommonNodeEntity getPerformanceBenchmarkRate() {
+        return performanceBenchmarkRate;
+    }
 
-	public void setPerformanceBenchmarkRate(CommonNodeEntity performanceBenchmarkRate) {
-		this.performanceBenchmarkRate = performanceBenchmarkRate;
-	}
+    public void setPerformanceBenchmarkRate(CommonNodeEntity performanceBenchmarkRate) {
+        this.performanceBenchmarkRate = performanceBenchmarkRate;
+    }
 
-	public CommonNodeEntity getMinimumHoldingPeriodPleaseSelect() {
-		return minimumHoldingPeriodPleaseSelect;
-	}
+    public CommonNodeEntity getMinimumHoldingPeriodPleaseSelect() {
+        return minimumHoldingPeriodPleaseSelect;
+    }
 
-	public void setMinimumHoldingPeriodPleaseSelect(CommonNodeEntity minimumHoldingPeriodPleaseSelect) {
-		this.minimumHoldingPeriodPleaseSelect = minimumHoldingPeriodPleaseSelect;
-	}
+    public void setMinimumHoldingPeriodPleaseSelect(CommonNodeEntity minimumHoldingPeriodPleaseSelect) {
+        this.minimumHoldingPeriodPleaseSelect = minimumHoldingPeriodPleaseSelect;
+    }
 
-	public CommonNodeEntity getMinimumHoldingPeriodDays() {
-		return minimumHoldingPeriodDays;
-	}
+    public CommonNodeEntity getMinimumHoldingPeriodDays() {
+        return minimumHoldingPeriodDays;
+    }
 
-	public void setMinimumHoldingPeriodDays(CommonNodeEntity minimumHoldingPeriodDays) {
-		this.minimumHoldingPeriodDays = minimumHoldingPeriodDays;
-	}
+    public void setMinimumHoldingPeriodDays(CommonNodeEntity minimumHoldingPeriodDays) {
+        this.minimumHoldingPeriodDays = minimumHoldingPeriodDays;
+    }
 
-	public CommonNodeEntity getOptionOfRedemptionAfterMinimumHoldingPeriodPleaseSelect() {
-		return optionOfRedemptionAfterMinimumHoldingPeriodPleaseSelect;
-	}
+    public CommonNodeEntity getOptionOfRedemptionAfterMinimumHoldingPeriodPleaseSelect() {
+        return optionOfRedemptionAfterMinimumHoldingPeriodPleaseSelect;
+    }
 
-	public void setOptionOfRedemptionAfterMinimumHoldingPeriodPleaseSelect(
-			CommonNodeEntity optionOfRedemptionAfterMinimumHoldingPeriodPleaseSelect) {
-		this.optionOfRedemptionAfterMinimumHoldingPeriodPleaseSelect = optionOfRedemptionAfterMinimumHoldingPeriodPleaseSelect;
-	}
+    public void setOptionOfRedemptionAfterMinimumHoldingPeriodPleaseSelect(
+            CommonNodeEntity optionOfRedemptionAfterMinimumHoldingPeriodPleaseSelect) {
+        this.optionOfRedemptionAfterMinimumHoldingPeriodPleaseSelect = optionOfRedemptionAfterMinimumHoldingPeriodPleaseSelect;
+    }
 
-	public CommonNodeEntity getCashManagementPleaseSelect() {
-		return cashManagementPleaseSelect;
-	}
+    public CommonNodeEntity getCashManagementPleaseSelect() {
+        return cashManagementPleaseSelect;
+    }
 
-	public void setCashManagementPleaseSelect(CommonNodeEntity cashManagementPleaseSelect) {
-		this.cashManagementPleaseSelect = cashManagementPleaseSelect;
-	}
+    public void setCashManagementPleaseSelect(CommonNodeEntity cashManagementPleaseSelect) {
+        this.cashManagementPleaseSelect = cashManagementPleaseSelect;
+    }
 
     /**
      * 获取 fundingCurrencyTuple
-     * 
+     *
      * @return fundingCurrencyTuple.
      */
     public List<CommonNodeListEntity> getFundingCurrencyTuple() {
@@ -10709,7 +10715,7 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 fundingCurrencyTuple
-     * 
+     *
      * @param fundingCurrencyTuple fundingCurrencyTuple
      */
     public void setFundingCurrencyTuple(List<CommonNodeListEntity> fundingCurrencyTuple) {
@@ -10717,7 +10723,7 @@ public class BaseInfoEntity implements Feild {
     }
     /**
      * 获取 PrincipalPaymentCurrencyTuple
-     * 
+     *
      * @return PrincipalPaymentCurrencyTuple.
      */
     public List<CommonNodeListEntity> getPrincipalPaymentCurrencyTuple() {
@@ -10726,187 +10732,187 @@ public class BaseInfoEntity implements Feild {
 
     /**
      * 设置 PrincipalPaymentCurrencyTuple
-     * 
-     * @param PrincipalPaymentCurrencyTuple PrincipalPaymentCurrencyTuple
+     *
+     * @param principalPaymentCurrencyTuple PrincipalPaymentCurrencyTuple
      */
     public void setPrincipalPaymentCurrencyTuple(List<CommonNodeListEntity> principalPaymentCurrencyTuple) {
         this.principalPaymentCurrencyTuple = principalPaymentCurrencyTuple;
     }
 
-	public CommonNodeEntity getDomesticCustodianNameOfPublicOrPrivateProduct() {
-		return domesticCustodianNameOfPublicOrPrivateProduct;
-	}
+    public CommonNodeEntity getDomesticCustodianNameOfPublicOrPrivateProduct() {
+        return domesticCustodianNameOfPublicOrPrivateProduct;
+    }
 
-	public void setDomesticCustodianNameOfPublicOrPrivateProduct(
-			CommonNodeEntity domesticCustodianNameOfPublicOrPrivateProduct) {
-		this.domesticCustodianNameOfPublicOrPrivateProduct = domesticCustodianNameOfPublicOrPrivateProduct;
-	}
+    public void setDomesticCustodianNameOfPublicOrPrivateProduct(
+            CommonNodeEntity domesticCustodianNameOfPublicOrPrivateProduct) {
+        this.domesticCustodianNameOfPublicOrPrivateProduct = domesticCustodianNameOfPublicOrPrivateProduct;
+    }
 
-	public CommonNodeEntity getInvestmentManagementFeeRate() {
-		return investmentManagementFeeRate;
-	}
+    public CommonNodeEntity getInvestmentManagementFeeRate() {
+        return investmentManagementFeeRate;
+    }
 
-	public void setInvestmentManagementFeeRate(CommonNodeEntity investmentManagementFeeRate) {
-		this.investmentManagementFeeRate = investmentManagementFeeRate;
-	}
+    public void setInvestmentManagementFeeRate(CommonNodeEntity investmentManagementFeeRate) {
+        this.investmentManagementFeeRate = investmentManagementFeeRate;
+    }
 
-	public CommonNodeEntity getManagementMethod() {
-		return managementMethod;
-	}
+    public CommonNodeEntity getManagementMethod() {
+        return managementMethod;
+    }
 
-	public void setManagementMethod(CommonNodeEntity managementMethod) {
-		this.managementMethod = managementMethod;
-	}
+    public void setManagementMethod(CommonNodeEntity managementMethod) {
+        this.managementMethod = managementMethod;
+    }
 
-	public CommonNodeEntity getUpperLimitOfPerformanceBenchmarkRate() {
-		return upperLimitOfPerformanceBenchmarkRate;
-	}
+    public CommonNodeEntity getUpperLimitOfPerformanceBenchmarkRate() {
+        return upperLimitOfPerformanceBenchmarkRate;
+    }
 
-	public void setUpperLimitOfPerformanceBenchmarkRate(CommonNodeEntity upperLimitOfPerformanceBenchmarkRate) {
-		this.upperLimitOfPerformanceBenchmarkRate = upperLimitOfPerformanceBenchmarkRate;
-	}
+    public void setUpperLimitOfPerformanceBenchmarkRate(CommonNodeEntity upperLimitOfPerformanceBenchmarkRate) {
+        this.upperLimitOfPerformanceBenchmarkRate = upperLimitOfPerformanceBenchmarkRate;
+    }
 
-	public CommonNodeEntity getLowerLimitOfPerformanceBenchmarkRate() {
-		return lowerLimitOfPerformanceBenchmarkRate;
-	}
+    public CommonNodeEntity getLowerLimitOfPerformanceBenchmarkRate() {
+        return lowerLimitOfPerformanceBenchmarkRate;
+    }
 
-	public void setLowerLimitOfPerformanceBenchmarkRate(CommonNodeEntity lowerLimitOfPerformanceBenchmarkRate) {
-		this.lowerLimitOfPerformanceBenchmarkRate = lowerLimitOfPerformanceBenchmarkRate;
-	}
+    public void setLowerLimitOfPerformanceBenchmarkRate(CommonNodeEntity lowerLimitOfPerformanceBenchmarkRate) {
+        this.lowerLimitOfPerformanceBenchmarkRate = lowerLimitOfPerformanceBenchmarkRate;
+    }
 
-	public CommonNodeEntity getFundCustodyAccountNumber() {
-		return fundCustodyAccountNumber;
-	}
+    public CommonNodeEntity getFundCustodyAccountNumber() {
+        return fundCustodyAccountNumber;
+    }
 
-	public void setFundCustodyAccountNumber(CommonNodeEntity fundCustodyAccountNumber) {
-		this.fundCustodyAccountNumber = fundCustodyAccountNumber;
-	}
+    public void setFundCustodyAccountNumber(CommonNodeEntity fundCustodyAccountNumber) {
+        this.fundCustodyAccountNumber = fundCustodyAccountNumber;
+    }
 
-	public CommonNodeEntity getFundCustodyAccountName() {
-		return fundCustodyAccountName;
-	}
+    public CommonNodeEntity getFundCustodyAccountName() {
+        return fundCustodyAccountName;
+    }
 
-	public void setFundCustodyAccountName(CommonNodeEntity fundCustodyAccountName) {
-		this.fundCustodyAccountName = fundCustodyAccountName;
-	}
+    public void setFundCustodyAccountName(CommonNodeEntity fundCustodyAccountName) {
+        this.fundCustodyAccountName = fundCustodyAccountName;
+    }
 
-	public CommonNodeEntity getProductOutstandingAmountCNY() {
-		return productOutstandingAmountCNY;
-	}
+    public CommonNodeEntity getProductOutstandingAmountCNY() {
+        return productOutstandingAmountCNY;
+    }
 
-	public void setProductOutstandingAmountCNY(CommonNodeEntity productOutstandingAmountCNY) {
-		this.productOutstandingAmountCNY = productOutstandingAmountCNY;
-	}
+    public void setProductOutstandingAmountCNY(CommonNodeEntity productOutstandingAmountCNY) {
+        this.productOutstandingAmountCNY = productOutstandingAmountCNY;
+    }
 
-	public CommonNodeEntity getAssetsLiabilitiesIdentificationCodeOfAssetManagementProductOrOutsourcingAsset() {
-		return assetsLiabilitiesIdentificationCodeOfAssetManagementProductOrOutsourcingAsset;
-	}
+    public CommonNodeEntity getAssetsLiabilitiesIdentificationCodeOfAssetManagementProductOrOutsourcingAsset() {
+        return assetsLiabilitiesIdentificationCodeOfAssetManagementProductOrOutsourcingAsset;
+    }
 
-	public void setAssetsLiabilitiesIdentificationCodeOfAssetManagementProductOrOutsourcingAsset(
-			CommonNodeEntity assetsLiabilitiesIdentificationCodeOfAssetManagementProductOrOutsourcingAsset) {
-		this.assetsLiabilitiesIdentificationCodeOfAssetManagementProductOrOutsourcingAsset = assetsLiabilitiesIdentificationCodeOfAssetManagementProductOrOutsourcingAsset;
-	}
+    public void setAssetsLiabilitiesIdentificationCodeOfAssetManagementProductOrOutsourcingAsset(
+            CommonNodeEntity assetsLiabilitiesIdentificationCodeOfAssetManagementProductOrOutsourcingAsset) {
+        this.assetsLiabilitiesIdentificationCodeOfAssetManagementProductOrOutsourcingAsset = assetsLiabilitiesIdentificationCodeOfAssetManagementProductOrOutsourcingAsset;
+    }
 
-	public CommonNodeEntity getAggregateQuantityOfAssetManagementProductOrOutsourcingAsset() {
-		return aggregateQuantityOfAssetManagementProductOrOutsourcingAsset;
-	}
+    public CommonNodeEntity getAggregateQuantityOfAssetManagementProductOrOutsourcingAsset() {
+        return aggregateQuantityOfAssetManagementProductOrOutsourcingAsset;
+    }
 
-	public void setAggregateQuantityOfAssetManagementProductOrOutsourcingAsset(
-			CommonNodeEntity aggregateQuantityOfAssetManagementProductOrOutsourcingAsset) {
-		this.aggregateQuantityOfAssetManagementProductOrOutsourcingAsset = aggregateQuantityOfAssetManagementProductOrOutsourcingAsset;
-	}
+    public void setAggregateQuantityOfAssetManagementProductOrOutsourcingAsset(
+            CommonNodeEntity aggregateQuantityOfAssetManagementProductOrOutsourcingAsset) {
+        this.aggregateQuantityOfAssetManagementProductOrOutsourcingAsset = aggregateQuantityOfAssetManagementProductOrOutsourcingAsset;
+    }
 
-	public CommonNodeEntity getAggregateIssuedAmountOfAssetManagementProductOrOutsourcingAssetCNY() {
-		return aggregateIssuedAmountOfAssetManagementProductOrOutsourcingAssetCNY;
-	}
+    public CommonNodeEntity getAggregateIssuedAmountOfAssetManagementProductOrOutsourcingAssetCNY() {
+        return aggregateIssuedAmountOfAssetManagementProductOrOutsourcingAssetCNY;
+    }
 
-	public void setAggregateIssuedAmountOfAssetManagementProductOrOutsourcingAssetCNY(
-			CommonNodeEntity aggregateIssuedAmountOfAssetManagementProductOrOutsourcingAssetCNY) {
-		this.aggregateIssuedAmountOfAssetManagementProductOrOutsourcingAssetCNY = aggregateIssuedAmountOfAssetManagementProductOrOutsourcingAssetCNY;
-	}
+    public void setAggregateIssuedAmountOfAssetManagementProductOrOutsourcingAssetCNY(
+            CommonNodeEntity aggregateIssuedAmountOfAssetManagementProductOrOutsourcingAssetCNY) {
+        this.aggregateIssuedAmountOfAssetManagementProductOrOutsourcingAssetCNY = aggregateIssuedAmountOfAssetManagementProductOrOutsourcingAssetCNY;
+    }
 
-	public CommonNodeEntity getNonInvestedAmountOfAssetManagementProductOrOutsourcingAssetCNY() {
-		return nonInvestedAmountOfAssetManagementProductOrOutsourcingAssetCNY;
-	}
+    public CommonNodeEntity getNonInvestedAmountOfAssetManagementProductOrOutsourcingAssetCNY() {
+        return nonInvestedAmountOfAssetManagementProductOrOutsourcingAssetCNY;
+    }
 
-	public void setNonInvestedAmountOfAssetManagementProductOrOutsourcingAssetCNY(
-			CommonNodeEntity nonInvestedAmountOfAssetManagementProductOrOutsourcingAssetCNY) {
-		this.nonInvestedAmountOfAssetManagementProductOrOutsourcingAssetCNY = nonInvestedAmountOfAssetManagementProductOrOutsourcingAssetCNY;
-	}
+    public void setNonInvestedAmountOfAssetManagementProductOrOutsourcingAssetCNY(
+            CommonNodeEntity nonInvestedAmountOfAssetManagementProductOrOutsourcingAssetCNY) {
+        this.nonInvestedAmountOfAssetManagementProductOrOutsourcingAssetCNY = nonInvestedAmountOfAssetManagementProductOrOutsourcingAssetCNY;
+    }
 
-	public CommonNodeEntity getRealizedNetIncomeOfBankCNY() {
-		return realizedNetIncomeOfBankCNY;
-	}
+    public CommonNodeEntity getRealizedNetIncomeOfBankCNY() {
+        return realizedNetIncomeOfBankCNY;
+    }
 
-	public void setRealizedNetIncomeOfBankCNY(CommonNodeEntity realizedNetIncomeOfBankCNY) {
-		this.realizedNetIncomeOfBankCNY = realizedNetIncomeOfBankCNY;
-	}
+    public void setRealizedNetIncomeOfBankCNY(CommonNodeEntity realizedNetIncomeOfBankCNY) {
+        this.realizedNetIncomeOfBankCNY = realizedNetIncomeOfBankCNY;
+    }
 
-	public CommonNodeEntity getDepositsType() {
-		return depositsType;
-	}
+    public CommonNodeEntity getDepositsType() {
+        return depositsType;
+    }
 
-	public void setDepositsType(CommonNodeEntity depositsType) {
-		this.depositsType = depositsType;
-	}
+    public void setDepositsType(CommonNodeEntity depositsType) {
+        this.depositsType = depositsType;
+    }
 
-	public CommonNodeEntity getFilingRegistrationElementsOfPublicOrPrivateProductDetails() {
-		return filingRegistrationElementsOfPublicOrPrivateProductDetails;
-	}
+    public CommonNodeEntity getFilingRegistrationElementsOfPublicOrPrivateProductDetails() {
+        return filingRegistrationElementsOfPublicOrPrivateProductDetails;
+    }
 
-	public void setFilingRegistrationElementsOfPublicOrPrivateProductDetails(
-			CommonNodeEntity filingRegistrationElementsOfPublicOrPrivateProductDetails) {
-		this.filingRegistrationElementsOfPublicOrPrivateProductDetails = filingRegistrationElementsOfPublicOrPrivateProductDetails;
-	}
+    public void setFilingRegistrationElementsOfPublicOrPrivateProductDetails(
+            CommonNodeEntity filingRegistrationElementsOfPublicOrPrivateProductDetails) {
+        this.filingRegistrationElementsOfPublicOrPrivateProductDetails = filingRegistrationElementsOfPublicOrPrivateProductDetails;
+    }
 
-	public CommonNodeEntity getDetailsOnPerformanceBenchmarkRate() {
-		return detailsOnPerformanceBenchmarkRate;
-	}
+    public CommonNodeEntity getDetailsOnPerformanceBenchmarkRate() {
+        return detailsOnPerformanceBenchmarkRate;
+    }
 
-	public void setDetailsOnPerformanceBenchmarkRate(CommonNodeEntity detailsOnPerformanceBenchmarkRate) {
-		this.detailsOnPerformanceBenchmarkRate = detailsOnPerformanceBenchmarkRate;
-	}
+    public void setDetailsOnPerformanceBenchmarkRate(CommonNodeEntity detailsOnPerformanceBenchmarkRate) {
+        this.detailsOnPerformanceBenchmarkRate = detailsOnPerformanceBenchmarkRate;
+    }
 
-	public CommonNodeEntity getUnitsBonusPerTenThousandUnits() {
-		return unitsBonusPerTenThousandUnits;
-	}
+    public CommonNodeEntity getUnitsBonusPerTenThousandUnits() {
+        return unitsBonusPerTenThousandUnits;
+    }
 
-	public void setUnitsBonusPerTenThousandUnits(CommonNodeEntity unitsBonusPerTenThousandUnits) {
-		this.unitsBonusPerTenThousandUnits = unitsBonusPerTenThousandUnits;
-	}
+    public void setUnitsBonusPerTenThousandUnits(CommonNodeEntity unitsBonusPerTenThousandUnits) {
+        this.unitsBonusPerTenThousandUnits = unitsBonusPerTenThousandUnits;
+    }
 
-	public CommonNodeEntity getCashBonusPerTenThousandUnitsCNY() {
-		return cashBonusPerTenThousandUnitsCNY;
-	}
+    public CommonNodeEntity getCashBonusPerTenThousandUnitsCNY() {
+        return cashBonusPerTenThousandUnitsCNY;
+    }
 
-	public void setCashBonusPerTenThousandUnitsCNY(CommonNodeEntity cashBonusPerTenThousandUnitsCNY) {
-		this.cashBonusPerTenThousandUnitsCNY = cashBonusPerTenThousandUnitsCNY;
-	}
+    public void setCashBonusPerTenThousandUnitsCNY(CommonNodeEntity cashBonusPerTenThousandUnitsCNY) {
+        this.cashBonusPerTenThousandUnitsCNY = cashBonusPerTenThousandUnitsCNY;
+    }
 
-	public CommonNodeEntity getWealthManagementRegistrationTrainingCertificateNumber() {
-		return wealthManagementRegistrationTrainingCertificateNumber;
-	}
+    public CommonNodeEntity getWealthManagementRegistrationTrainingCertificateNumber() {
+        return wealthManagementRegistrationTrainingCertificateNumber;
+    }
 
-	public void setWealthManagementRegistrationTrainingCertificateNumber(
-			CommonNodeEntity wealthManagementRegistrationTrainingCertificateNumber) {
-		this.wealthManagementRegistrationTrainingCertificateNumber = wealthManagementRegistrationTrainingCertificateNumber;
-	}
+    public void setWealthManagementRegistrationTrainingCertificateNumber(
+            CommonNodeEntity wealthManagementRegistrationTrainingCertificateNumber) {
+        this.wealthManagementRegistrationTrainingCertificateNumber = wealthManagementRegistrationTrainingCertificateNumber;
+    }
 
-	public List<CommonNodeListEntity> getRegistrationClassificationTuple() {
-		return registrationClassificationTuple;
-	}
+    public List<CommonNodeListEntity> getRegistrationClassificationTuple() {
+        return registrationClassificationTuple;
+    }
 
-	public void setRegistrationClassificationTuple(List<CommonNodeListEntity> registrationClassificationTuple) {
-		this.registrationClassificationTuple = registrationClassificationTuple;
-	}
+    public void setRegistrationClassificationTuple(List<CommonNodeListEntity> registrationClassificationTuple) {
+        this.registrationClassificationTuple = registrationClassificationTuple;
+    }
 
-	public List<CommonNodeListEntity> getTypeOfRegistrarTuple() {
-		return typeOfRegistrarTuple;
-	}
+    public List<CommonNodeListEntity> getTypeOfRegistrarTuple() {
+        return typeOfRegistrarTuple;
+    }
 
-	public void setTypeOfRegistrarTuple(List<CommonNodeListEntity> typeOfRegistrarTuple) {
-		this.typeOfRegistrarTuple = typeOfRegistrarTuple;
-	}
+    public void setTypeOfRegistrarTuple(List<CommonNodeListEntity> typeOfRegistrarTuple) {
+        this.typeOfRegistrarTuple = typeOfRegistrarTuple;
+    }
 
     public CommonNodeEntity getNewProductPleaseSelect() {
         return newProductPleaseSelect;
@@ -11026,5 +11032,13 @@ public class BaseInfoEntity implements Feild {
 
     public void setRatioOfPriority(CommonNodeEntity ratioOfPriority) {
         this.ratioOfPriority = ratioOfPriority;
+    }
+
+    public List<CommonNodeEntity> getProductSpecialPropertyTuple() {
+        return productSpecialPropertyTuple;
+    }
+
+    public void setProductSpecialPropertyTuple(List<CommonNodeEntity> productSpecialPropertyTuple) {
+        this.productSpecialPropertyTuple = productSpecialPropertyTuple;
     }
 }

@@ -560,7 +560,7 @@ public class ChbPrdDeclareSubSetService {
 		    }
 
 		    cnBondItem29.setMaps(mapList2);//第一个父子节点组合结束
-		    
+
 		    cnBondItemMap.put("ProductSalesRegionTuple", cnBondItem29);
 		    }
 		    //起点销售金额
@@ -737,7 +737,7 @@ public class ChbPrdDeclareSubSetService {
 				CnBondInterfItemDto cnBondItem3 = new CnBondInterfItemDto();
 				//子节点开始
 				List<Map<String, CnBondInterfItemDto>> cnBondItemMap3 = new ArrayList<Map<String, CnBondInterfItemDto>>();
-				String [] prdSpecPropertys = sub.getPrdSpecProperty().split(ChbConstant.COMMA);
+				String [] prdSpecPropertys = sub.getPrdSpecProperty().split(ChbConstant.SEMICOLON);
 				for(String str : prdSpecPropertys){
 					Map<String, CnBondInterfItemDto> cnBondItemMap3_1 =  new LinkedHashMap<String, CnBondInterfItemDto>();//子节点map
 					CnBondInterfItemDto cnBondItem3_1 = new CnBondInterfItemDto();//第一个子节点

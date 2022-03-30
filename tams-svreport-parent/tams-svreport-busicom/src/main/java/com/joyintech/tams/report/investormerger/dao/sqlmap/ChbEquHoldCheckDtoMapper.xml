@@ -107,7 +107,6 @@
 	      DATA_SOURCE, ORG_CODE, AGENT, 
 	      CREATE_DEPT, INTERF_CHECK_RESULT,OPERATE_STATUS,MERGER_INDENTIFY_MARK,HOLDER_CLASSIFY,FUND_ACC_PLACE
         )
-		select A.* from(
 	  <foreach collection="List" index="index" item = "item" separator="UNION ALL">
 		  select
       	  #{item.indentifyMark,jdbcType=VARCHAR}, 
@@ -127,7 +126,6 @@
 	      , #{item.mergerindentifymark,jdbcType=VARCHAR},#{item.holderClassify,jdbcType=VARCHAR},#{item.fundAccPlace,jdbcType=VARCHAR}
 		  from dual
 	  </foreach>
-	  ) A
   </insert>
   
   <select id="selectAllData" resultMap="BaseResultMap" parameterType="java.util.Map">
