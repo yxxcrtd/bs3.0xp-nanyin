@@ -263,14 +263,14 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
                 bean.setFinprodId(null);
                 bean.setSecAcctId(null);
                 if (交易方向_买入.getValue().equals(ps)
-                        || 交易方向_卖出.getValue().equals(ps)
-                        || 交易方向_行权_回售.getValue().equals(ps)) {
+                        || 交易方向_卖出.getValue().equals(ps)) {
                     BigDecimal fprice = Objects.isNull(entity.getFprice()) ? new BigDecimal(0) : entity.getFprice();
                     bean.setCashAmount(fprice.multiply(item.getEntrustNum()));
                 } else if (交易方向_申购.getValue().equals(ps)) {
                     // 系统参数.预估中签比例*指令金额
 //                    bean.setCashAmount(item.getEntrustAmt().multiply(CacheUtil.getSysParam(BussinessConstant.PREDICT_WIN_PERCENT)));
-                } else if (DictCodeListExt3.交易方向_配债.getValue().equals(ps)) {
+                } else if (DictCodeListExt3.交易方向_配债.getValue().equals(ps)
+                        || 交易方向_行权_回售.getValue().equals(ps)) {
                     bean.setCashAmount(item.getEntrustAmt());
                 }
                 bean.setSecAmount(BigDecimal.ZERO);
