@@ -66,7 +66,7 @@ public class CfetsPositionPriceService extends BaseService{
         // 当日交易数据查询
         List<BaseMap> currTrdData = selectCurrTrdData(cdate, portfolioIdList);
         //交易所当日交易数据查询
-        List<BaseMap> exchangeCurrTrdData = selectCurrTrdData(cdate, portfolioIdList);
+        List<BaseMap> exchangeCurrTrdData = selectExchangeCurrTrdData(cdate, portfolioIdList);
 
         if(CollectionUtils.isNotEmpty(exchangeCurrTrdData)){
             currTrdData.addAll(exchangeCurrTrdData);
@@ -202,11 +202,6 @@ public class CfetsPositionPriceService extends BaseService{
         if(portfolioIdList != null && !portfolioIdList.isEmpty()) reqMap.put("portfolioIdList", portfolioIdList);
 
         List<BaseMap> list = cfetsPositionPriceMapper.selectCurrTrdData(reqMap);
-        //加上交易所的
-        List<BaseMap> trademarketlist = cfetsPositionPriceMapper.selectExchangeCurrTrdData(reqMap);
-        if(CollectionUtils.isNotEmpty(list)&&CollectionUtils.isNotEmpty(trademarketlist)){
-            list.addAll(trademarketlist);
-        }
         /**
          *  PORTFOLIO_ID、FINPROD_ID、INV_AIM、PS
          *  PRICE,  净价

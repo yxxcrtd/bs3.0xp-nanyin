@@ -1563,7 +1563,7 @@ public class CfetsEtrDispatcherService extends BaseService {
             }
         });
         CfetsEtrDispatcherInfoExcResponse fieldResponseDto = this.getEtrDispatcherExcInfo(dto);
-        if(DictCodeListExt3.投管业务类型_新股申购.equals(fieldResponseDto.getBusiTypePosition())){
+        if(StringUtil.isNotEmpty(fieldResponseDto) && DictCodeListExt3.投管业务类型_新股申购.equals(fieldResponseDto.getBusiTypePosition())){
             fieldResponseDto.setPriceModel(StringUtil.EMPTY);
         }
         resultData.put(dtCode + "_form", infoForm);
@@ -1627,7 +1627,11 @@ public class CfetsEtrDispatcherService extends BaseService {
                 } else if (StringUtil.equals(dto.getBusiTypePosition(), DictCodeListExt3.投管业务类型_质押券出入库.getValue())) {
                     String ps = (String) pageParam.get("ps");
                     if (DictCodeListExt3.交易方向_质押券入库.getValue().equals(ps) && StringUtil.isNotEmpty(fieldResponseDto.getPledgeRatio())) {
-                        fieldResponseDto.setPledgeStandardNumber(ArithmeticUtil.multiply(fieldResponseDto.getPledgeRatio().divide(new BigDecimal("100")), fieldResponseDto.getEntrustNum()));
+                        if(StringUtil.isNotEmpty(fieldResponseDto.getFaceValue())){
+                            fieldResponseDto.setPledgeStandardNumber(ArithmeticUtil.divide(ArithmeticUtil.multiply(fieldResponseDto.getPledgeRatio().divide(new BigDecimal("100")), fieldResponseDto.getEntrustNum(),fieldResponseDto.getFaceValue()),new BigDecimal(100),BigDecimal.ROUND_HALF_DOWN));
+                        }else{
+                            fieldResponseDto.setPledgeStandardNumber(ArithmeticUtil.multiply(fieldResponseDto.getPledgeRatio().divide(new BigDecimal("100")), fieldResponseDto.getEntrustNum()));
+                        }
                     }
                 } else if (StringUtil.equals(dto.getBusiTypePosition(), DictCodeListExt3.头寸业务类型_现券交易.getValue())) {
                     if (StringUtil.equals("01", CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"))) {

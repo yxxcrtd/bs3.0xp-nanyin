@@ -314,8 +314,16 @@
         left join (select ENTRUST_ID,sum(nvl(FINISH_AMT,0)) as FINISH_AMT from ETR_FINISH_STATUS where ENTRUST_ID != TRADE_ID group by ENTRUST_ID) ETR_FINISH_STATUS_A
         on ETR_FINISH_STATUS_A.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
         LEFT JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID  = ETR_ENTRUST.FINPROD_ID
-        LEFT JOIN (SELECT ENTRUST_ID, wm_concat ( ETR_ENTRUST_DETAIL.PORTFOLIO_ID ) PORTFOLIO_ID,  wm_concat ( PORTFOLIO_NAME ) PORTFOLIO_NAME FROM ETR_ENTRUST_DETAIL LEFT JOIN PTL_PORTFOLIO
-        ON ETR_ENTRUST_DETAIL.portfolio_id = PTL_PORTFOLIO.portfolio_id GROUP BY ENTRUST_ID ) det on det.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
+        LEFT JOIN (
+            SELECT ENTRUST_ID,
+                wm_concat ( ETR_ENTRUST_DETAIL.PORTFOLIO_ID ) PORTFOLIO_ID,
+                wm_concat ( PORTFOLIO_NAME ) PORTFOLIO_NAME
+                FROM ETR_ENTRUST_DETAIL
+                LEFT JOIN
+        (select PORTFOLIO_ID,PORTFOLIO_NAME from PTL_PORTFOLIO order by PORTFOLIO_ID, PORTFOLIO_NAME)
+                PTL_PORTFOLIO
+                ON ETR_ENTRUST_DETAIL.portfolio_id = PTL_PORTFOLIO.portfolio_id
+            GROUP BY ENTRUST_ID ) det on det.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
         LEFT JOIN ETR_FINISH_STATUS T9 ON T9.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID  AND ETR_ENTRUST.ENTRUST_ID = T9.TRADE_ID
         <where>
             AND ETR_ENTRUST.ENTRUST_STATUS IN(#{entrustAwait},#{entrustDistribute},#{entrustReceive},#{entrustUntread},#{entrustClose},#{entrustReturn},#{entrustRecall})
@@ -1486,7 +1494,7 @@
         nvl(nvl(fscr.SCALE * ete.ENTRUST_NUM,ee.PLEDGE_NUMBER * ee.PLEDGE_RATIO), ete.ENTRUST_NUM) pledgeStandardNumber, /** 标准券额度 **/
         fp.Is_Right isRight,sci.ACCT_NAME trdAcctId,
         fp.FINPROD_TYPE2 finprodTypeTg,
-        eted.DEAL_MODE declaType
+        eted.DEAL_MODE declaType,T8.FACE_VALUE faceValue
         FROM ETR_ENTRUST ete
         INNER JOIN ETR_ENTRUST_ADD eted ON ete.entrust_id = eted.entrust_id
         LEFT JOIN FIN_PRODUCT_CONVERTIBLE FPC ON ete.FINPROD_ID = FPC.FINPROD_ID
@@ -1506,6 +1514,8 @@
         LEFT JOIN FIN_STDSEC_CONVERSE_RADIO fscr ON ete.FINPROD_ID = fscr.FINPROD_ID
         LEFT JOIN ( SELECT ENTRUST_ID, wm_concat ( PORTFOLIO_ID ) PORTFOLIO_ID FROM ETR_ENTRUST_DETAIL GROUP BY ENTRUST_ID ) det ON det.ENTRUST_ID = ete.ENTRUST_ID
         left join MST_COUNTER_PARTY mcpdata on ete.COUNTER_ID = mcpdata.COUNTER_ID
+        LEFT JOIN FIN_PRODUCT T7 ON ete.STOCK_ID = T7.FINPROD_MARKET_ID
+        LEFT JOIN FIN_PRODUCT_ADD T8 ON T7.FINPROD_ID = T8.FINPROD_ID
         WHERE ete.entrust_id = #{entrustId}
         AND ( fscr.VDATE  = ( select max(VDATE) from FIN_STDSEC_CONVERSE_RADIO fscr1
         where fscr1.FINPROD_ID= fscr.FINPROD_ID and fscr1.BRANCH = fscr.BRANCH and fscr1.VDATE &lt;= to_date(#{sysDateStr},'yyyy-mm-dd'))  OR fscr.VDATE IS NULL )
@@ -1589,7 +1599,7 @@
         nvl(ee.PLEDGE_NUMBER * ee.PLEDGE_RATIO , ete.ENTRUST_NUM) pledgeStandardNumber, /** 标准券额度 **/
         fp.Is_Right isRight,sci.ACCT_NAME trdAcctId,
         fp.FINPROD_TYPE2 finprodTypeTg,
-        eted.DEAL_MODE declaType
+        eted.DEAL_MODE declaType,T8.FACE_VALUE faceValue
         FROM WFL_ETR_ENTRUST ete
         INNER JOIN WFL_ETR_ENTRUST_ADD eted ON ete.entrust_id = eted.entrust_id
         LEFT JOIN FIN_PRODUCT_CONVERTIBLE FPC ON ete.FINPROD_ID = FPC.FINPROD_ID
@@ -1609,6 +1619,8 @@
         LEFT JOIN FIN_STDSEC_CONVERSE_RADIO fscr ON ete.FINPROD_ID = fscr.FINPROD_ID
         LEFT JOIN ( SELECT ENTRUST_ID, wm_concat ( PORTFOLIO_ID ) PORTFOLIO_ID FROM WFL_ETR_ENTRUST_DETAIL GROUP BY ENTRUST_ID ) det ON det.ENTRUST_ID = ete.ENTRUST_ID
         left join MST_COUNTER_PARTY mcpdata on ete.COUNTER_ID = mcpdata.COUNTER_ID
+        LEFT JOIN FIN_PRODUCT T7 ON ete.STOCK_ID = T7.FINPROD_MARKET_ID
+        LEFT JOIN FIN_PRODUCT_ADD T8 ON T7.FINPROD_ID = T8.FINPROD_ID
         WHERE ete.entrust_id = #{entrustId}
         AND (fscr.VDATE  = ( select max(VDATE) from FIN_STDSEC_CONVERSE_RADIO fscr1
         where fscr1.FINPROD_ID= fscr.FINPROD_ID and fscr1.BRANCH = fscr.BRANCH and fscr1.VDATE &lt;= to_date(#{sysDateStr},'yyyy-mm-dd')) OR fscr.VDATE IS NULL )

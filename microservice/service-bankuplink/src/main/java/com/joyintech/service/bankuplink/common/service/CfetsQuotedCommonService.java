@@ -841,7 +841,7 @@ public class CfetsQuotedCommonService extends BaseService {
      * @see
      * @since 1.0
      */
-    private void deleteByQuoteId(BaseQuoteDto baseDto) {
+    public void deleteByQuoteId(BaseQuoteDto baseDto) {
         log.info("删除报价指令完成度 QuoteId:" + baseDto.getQuoteId());
         EtrQuoteFinishStatusKey key = new EtrQuoteFinishStatusKey();
         key.setQuoteId(baseDto.getQuoteId());

@@ -47,7 +47,7 @@
         <include refid="com.joyintech.tams.common.base.dao.PtlSecPositionFlowMapper.Base_Column_List" />
         from PTL_SEC_POSITION_FLOW
         where TRADE_ID = #{tradeId,jdbcType=VARCHAR} AND HODING_TYPE IN ('01', '02', '04', '05', '06', '09','10','12')
-                AND OFFSET_FLAG = #{tradeId,jdbcType=VARCHAR}
+                AND OFFSET_FLAG = #{offsetFlag,jdbcType=VARCHAR}
     </select>
 
     <select id="selectAllEtrPosition" resultType="com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto"

@@ -48,6 +48,7 @@ import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.common.PtlAllocationDto;
 import com.joyintech.tams.invest.common.trade.dao.BaseAssetCashPositionCommMapper;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -613,8 +614,17 @@ public class IbuComponentReceiveService extends BaseService{
         inputBean.setStatus(true);
         param.put("quoteType", DictCodeList.报价系统区分类型_质押式回购对话报价.getValue()); //质押式回购对话报价
         ReceiveRepoDialogueQuoteDto tempResult = cfetsInterfReceiveService.getIbuQuoteCrepDto(param);
-        if(tempResult == null) {//接口失败反馈
-            return new ResultBaseDto(true);
+        if(StringUtils.equals(tempResult.getIbuQuoteCrepDto().getSendStatus(), DictCodeList.银行间上行发送状态_失败.getValue())) {
+            // 接收撤回新增报价失败通知 // 接收撤回交谈报价失败通知 // 接收报价拒绝失败反馈 // 接收报价撤回失败反馈 // 接收拒绝成交报价失败通知
+            // 场景不处理头寸
+            if (StringUtils.equals(tempResult.getIbuQuoteCrepDto().getTradeStatus(), DictCodeList.银行间上行报价状态_撤回中.getValue())
+                    && StringUtils.equals(tempResult.getIbuQuoteCrepDto().getTradeStatus(), DictCodeList.银行间上行报价状态_撤回中.getValue())
+                    && StringUtils.equals(tempResult.getIbuQuoteCrepDto().getTradeStatus(), DictCodeList.银行间上行报价状态_撤回中.getValue())
+                    && StringUtils.equals(tempResult.getIbuQuoteCrepDto().getTradeStatus(), DictCodeList.银行间上行报价状态_撤回中.getValue())
+                    && StringUtils.equals(tempResult.getIbuQuoteCrepDto().getTradeStatus(), DictCodeList.银行间上行报价状态_撤回中.getValue())) {
+                //接口失败反馈
+                return new ResultBaseDto(true);
+            }
         }
         IbuQuoteCrepDto ibuQuoteCrepDto = tempResult.getIbuQuoteCrepDto();
         ibuQuoteCrepDto.setQuoteType(BussinessDictCodeList.报价方式_对话报价.getValue());
