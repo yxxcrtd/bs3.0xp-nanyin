@@ -260,6 +260,5 @@ public interface CfetsTrdQueryMapper {
      */
     List<CfetsPledgeInfoResponse> findRepoPledgeInfo(Map<String, Object> pageParam);
 
-
-
+    List<String> findEtrEntrustIsForcedFinish(Map<String, Object> pageParam);
 }

@@ -1309,6 +1309,7 @@
 	       to_number(#{item.QTY,jdbcType=VARCHAR}) QTY,
 	       to_number(#{item.CNY_AMT,jdbcType=VARCHAR}) CNY_AMT,
 	       #{item.ORG_CODE,jdbcType=VARCHAR} ORG_CODE,
+          #{item.AGENT,jdbcType=VARCHAR} AGENT,
 	       #{item.DEPT_CODE,jdbcType=VARCHAR} DEPT_CODE
 	    </foreach>
      )
@@ -1323,6 +1324,7 @@
       tmp.CNY_AMT,
       tmp.ORG_CODE,
       tmp.DEPT_CODE,
+      TMP.AGENT,
       infocheck.MERGER_INDENTIFY_MARK,
       infocheck.OPERATE_STATUS,
       infocheck.STATUS
@@ -1355,6 +1357,7 @@
         tmp.CNY_AMT,
         tmp.ORG_CODE,
         tmp.DEPT_CODE,
+        tmp.AGENT,
         infocheck.MERGER_INDENTIFY_MARK,
         infocheck.OPERATE_STATUS,
         infocheck.STATUS

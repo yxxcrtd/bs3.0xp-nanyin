@@ -3858,6 +3858,18 @@
                  mbvi.NETPRICE,
                  fp.REGIST_ORG
     </select>
+
+    <select id="findEtrEntrustIsForcedFinish" resultType="java.lang.String">
+        select distinct eea.ENTRUST_ID
+        from ETR_ENTRUST_ADD eea
+                 left join (select TOTLE_TRADE_ID, ENTRUST_ID, TRADE_ID
+                            from REG_FIN_PRODUCT_DEAL
+                            union
+                            select QUOTE_ID TOTLE_TRADE_ID, ENTRUST_ID, QUOTE_ID
+                            from IBU_QUOTE_ETR_RE) deal on deal.ENTRUST_ID = eea.ENTRUST_ID
+                 left join TRDQUTO_MATCH_INFO tmi on tmi.PRE_TRADE_ID = deal.TOTLE_TRADE_ID
+        where eea.FORCED_FINISH_AMT is not null and tmi.TRD_ID = #{totleTradeId,jdbcType=VARCHAR}
+    </select>
 </mapper>
 
 
