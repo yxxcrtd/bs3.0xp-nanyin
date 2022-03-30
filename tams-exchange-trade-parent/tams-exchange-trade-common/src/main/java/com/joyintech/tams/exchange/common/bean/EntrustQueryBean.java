@@ -928,6 +928,9 @@ public class EntrustQueryBean implements Serializable {
     }
 
     public String getBusiTypeTgStr() {
+        if (StringUtil.isEmpty(busiTypeTg)) {
+            return null;
+        }
         return DictCodeListExt3.from(DictCode.投管业务类型, busiTypeTg).getCodeName();
     }
 
