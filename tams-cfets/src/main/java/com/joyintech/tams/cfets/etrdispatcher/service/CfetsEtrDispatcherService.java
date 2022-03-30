@@ -1563,7 +1563,7 @@ public class CfetsEtrDispatcherService extends BaseService {
             }
         });
         CfetsEtrDispatcherInfoExcResponse fieldResponseDto = this.getEtrDispatcherExcInfo(dto);
-        if(DictCodeListExt3.投管业务类型_新股申购.equals(fieldResponseDto.getBusiTypePosition())){
+        if(StringUtil.isNotEmpty(fieldResponseDto) && DictCodeListExt3.投管业务类型_新股申购.equals(fieldResponseDto.getBusiTypePosition())){
             fieldResponseDto.setPriceModel(StringUtil.EMPTY);
         }
         resultData.put(dtCode + "_form", infoForm);
