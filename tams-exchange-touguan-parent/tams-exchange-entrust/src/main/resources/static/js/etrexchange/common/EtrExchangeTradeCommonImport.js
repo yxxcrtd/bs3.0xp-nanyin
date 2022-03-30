@@ -135,7 +135,7 @@
         , {field: 'yield', title: 'EtrExchangeImport.yield', width:100, type:'number', digit : 6, sortable: false}
         , {field: 'entrustNum', title: 'EtrExchangeTrade001.entrustNum', width: 120, type:'number', digit : 0, sortable: false}
         , {field: 'entrustAmt', title: 'EtrBrowDepoInfo003.entrustAmt2', width: 120, type:'number',sortable: false}
-        , {field: 'proAvailableCash', title: 'EtrBrowDepoInfo003.etrAvailableCash', type: 'number', width: 150, sortable: false}
+        , {field: 'accAvailableCash', title: 'EtrBrowDepoInfo003.etrAvailableCash', type: 'number', width: 150, sortable: false}
         , {field: 'accAvailablePos', title: 'EtrBrowDepoInfo003.etrAvailablePosition', type: 'number', width: 150, sortable: false}
         , {field:'vdate', title: 'EtrExchangeTradeCommon001.entrustDate',type:'date', width : 120,sortField:'VDATE'}
         , {field:'mdate', title: 'EtrExchangeTrade003.mdate',type:'date', width : 120,sortField:'mdate',visible: false}
@@ -167,7 +167,7 @@
         , {field: 'targetTypeStr', title: 'EtrExchangeTrade001.targetType', width: 150, sortable: false}
         , {field: 'entrustNum', title: 'EtrExchangeTrade001.entrustNum', width: 120, type:'number', digit : 0, sortable: false}
         , {field: 'entrustAmt', title: 'EtrExchangeTrade001.entrustAmt', width: 120, type:'number',sortable: false}
-        , {field: 'proAvailableCash', title: 'EtrBrowDepoInfo003.etrAvailableCash', type: 'number', width: 150, sortable: false}
+        , {field: 'accAvailableCash', title: 'EtrBrowDepoInfo003.etrAvailableCash', type: 'number', width: 150, sortable: false}
         , {field: 'accAvailablePos', title: 'EtrBrowDepoInfo003.etrAvailablePosition', type: 'number', width: 150, sortable: false}
         // , {field: 'counterId', title: 'EtrExchangeTrade001.counterId', width: 120, sortable: false}
         , {field: 'counterId', title: 'EtrExchangeTrade001.counterId', width: 120, sortable: false ,
@@ -212,7 +212,7 @@
         , {field: 'targetTypeStr', title: 'EtrExchangeTrade001.targetType', width:100, sortable: false}
         , {field: 'entrustNum', title: 'EtrExchangeTrade001.entrustNum', width: 120, type:'number', digit : 0, sortable: false}
         , {field: 'entrustAmt', title: 'EtrBrowDepoInfo003.entrustAmt', width: 120, type:'number',sortable: false}
-        , {field: 'proAvailableCash', title: 'EtrBrowDepoInfo003.etrAvailableCash', type: 'number', width: 150, sortable: false}
+        , {field: 'accAvailableCash', title: 'EtrBrowDepoInfo003.etrAvailableCash', type: 'number', width: 150, sortable: false}
         , {field: 'accAvailablePos', title: 'EtrBrowDepoInfo003.etrAvailablePosition', type: 'number', width: 150, sortable: false}
         , {field: 'counterId', title: 'EtrExchangeTrade001.counterId', width: 120, sortable: false}
         , {field: 'counterTrader', title: 'EtrExchangeTrade001.counterTrader', width: 120, sortable: false}
