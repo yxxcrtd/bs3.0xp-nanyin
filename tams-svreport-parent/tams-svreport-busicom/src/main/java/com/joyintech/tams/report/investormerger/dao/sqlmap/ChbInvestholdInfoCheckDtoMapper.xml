@@ -1036,6 +1036,7 @@
 	</foreach>
 </select>
 
+    <!-- 该sql目前没有方法调用-->
 <select id="queryRepeatEquityInfoHoldUnSubmit" resultMap="WhResultMap">
 	SELECT  s1.*
 		FROM CHB_INVESTHOLD_INFO s1 INNER join(
@@ -1096,6 +1097,7 @@
         (#{item.registBankCode},#{item.indentifyMark},#{item.ccy},#{item.holdDate},#{item.prodid})
     </foreach>
 </select>
+    <!-- 该sql目前没有方法调用-->
 <delete id="deleteInvestholdInfoBatch" parameterType="java.util.List">
     delete from CHB_INVESTHOLD_INFO
     where 1=1
@@ -1120,6 +1122,7 @@
         #{key,jdbcType=VARCHAR}
     </foreach>
 </delete>
+    <!-- 该sql目前没有方法调用-->
 <delete id="deleteInvestholdInfoSubBatch" parameterType="java.util.List">
 	delete from CHB_INVESTHOLD_INFO_sub
 	where SEND_STATUS='01'
@@ -1306,6 +1309,7 @@
 	       to_number(#{item.QTY,jdbcType=VARCHAR}) QTY,
 	       to_number(#{item.CNY_AMT,jdbcType=VARCHAR}) CNY_AMT,
 	       #{item.ORG_CODE,jdbcType=VARCHAR} ORG_CODE,
+          #{item.AGENT,jdbcType=VARCHAR} AGENT,
 	       #{item.DEPT_CODE,jdbcType=VARCHAR} DEPT_CODE
 	    </foreach>
      )
@@ -1320,6 +1324,7 @@
       tmp.CNY_AMT,
       tmp.ORG_CODE,
       tmp.DEPT_CODE,
+      TMP.AGENT,
       infocheck.MERGER_INDENTIFY_MARK,
       infocheck.OPERATE_STATUS,
       infocheck.STATUS
@@ -1352,6 +1357,7 @@
         tmp.CNY_AMT,
         tmp.ORG_CODE,
         tmp.DEPT_CODE,
+        tmp.AGENT,
         infocheck.MERGER_INDENTIFY_MARK,
         infocheck.OPERATE_STATUS,
         infocheck.STATUS
@@ -1489,11 +1495,11 @@
         )
         SELECT
         tmp.REGIST_BANK_CODE,
-        tmp.INDENTIFY_MARK,
-        tmp.MERGER_INDENTIFY_MARK,
         tmp.CCY,
         tmp.HOLD_DATE,
         tmp.PRODID,
+        C.INDENTIFY_MARK,
+        C.MERGER_INDENTIFY_MARK,
         C.OPERATE_STATUS,
         C.STATUS
         FROM
@@ -1508,11 +1514,11 @@
             parameterType="com.joyintech.tams.report.investormerger.dto.ChbInvestholdInfoCheckDto" resultSetType="FORWARD_ONLY" fetchSize="1000">
         SELECT
         tmp.REGIST_BANK_CODE,
-        tmp.INDENTIFY_MARK,
-        tmp.MERGER_INDENTIFY_MARK,
         tmp.CCY,
         tmp.HOLD_DATE,
         tmp.PRODID,
+        C.INDENTIFY_MARK,
+        C.MERGER_INDENTIFY_MARK,
         C.OPERATE_STATUS,
         C.STATUS
         FROM CHB_INVESTHOLD_INFO_TMP tmp

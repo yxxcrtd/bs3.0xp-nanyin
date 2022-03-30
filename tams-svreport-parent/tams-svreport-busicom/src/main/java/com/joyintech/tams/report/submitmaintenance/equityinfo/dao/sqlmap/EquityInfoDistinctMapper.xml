@@ -47,7 +47,7 @@
  
 	
  
-	<!-- 查询权益人登记表中已报送内容(反馈状态为03，即中债通过的内容)-->
+	<!-- 查询权益人登记表中已报送内容(反馈状态为03，即中债通过的内容)   该sql目前没有方法调用-->
 	<select id="queryAllEquityInfoConStrastYbs"  
 	        parameterType="java.util.List"
 	        resultType="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto"
@@ -243,6 +243,7 @@
 		/*** add by zcw 三期性能优化 end **/
 	</select>
 
+	<!-- 该sql目前没有方法调用-->
 	<select id="queryAllEquityInfoConStrastYbsSingle"  
 	        parameterType="java.lang.String"
 	        resultType="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto">
@@ -568,9 +569,9 @@
                        WHERE HOLD.REGIST_BANK_CODE =  HOLDCHECK.REGIST_BANK_CODE 
 		            		 AND  HOLD.IDENTIFY_NUMBER =  HOLDCHECK.IDENTIFY_NUMBER
 		            		 AND  HOLD.HOLDER_NAME =  HOLDCHECK.HOLDER_NAME
-		            		 AND  HOLD.PERSONAL_IDENTIFY_TYPE =  HOLDCHECK.PERSONAL_IDENTIFY_TYPE
-		            		 AND  HOLD.INSTITUTION_IDENTIFY_TYPE =  HOLDCHECK.INSTITUTION_IDENTIFY_TYPE
-                     AND  HOLD.OTHER_IDENTIFY_NAME =  HOLDCHECK.OTHER_IDENTIFY_NAME
+							AND nvl(HOLD.PERSONAL_IDENTIFY_TYPE,' ') = nvl(HOLDCHECK.PERSONAL_IDENTIFY_TYPE,' ')
+							AND nvl(HOLD.INSTITUTION_IDENTIFY_TYPE,' ') = nvl(HOLDCHECK.INSTITUTION_IDENTIFY_TYPE,' ')
+							AND nvl(HOLD.OTHER_IDENTIFY_NAME,' ') = nvl(HOLDCHECK.OTHER_IDENTIFY_NAME,' ')
                      AND HOLD.INDENTIFY_MARK = HOLDCHECK.INDENTIFY_MARK)
             AND NOT EXISTS (SELECT 1
 							FROM CHB_EQU_SUB SUB

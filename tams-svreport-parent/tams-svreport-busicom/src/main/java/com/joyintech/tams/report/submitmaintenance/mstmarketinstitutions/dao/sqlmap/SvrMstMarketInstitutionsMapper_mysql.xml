@@ -83,10 +83,10 @@
         on T1.CUSTOMER_ID = T2.CUSTOMER_ID
         <where>
             <if test="customerId != null and customerId != ''">
-                AND	T1.CUSTOMER_ID like concat_ws('%',concat_ws(#{customerId,jdbcType=VARCHAR},'%'))
+                AND	T1.CUSTOMER_ID like concat('%',concat(#{customerId,jdbcType=VARCHAR},'%'))
             </if>
             <if test="customerName != null and customerName != ''">
-                AND	T1.CUSTOMER_NAME like concat_ws('%',concat_ws(#{customerName,jdbcType=VARCHAR},'%'))
+                AND	T1.CUSTOMER_NAME like concat('%',concat(#{customerName,jdbcType=VARCHAR},'%'))
             </if>
             <if test="customerType != null and customerType != ''">
                 AND T1.CUSTOMER_TYPE = #{customerType,jdbcType=VARCHAR}
@@ -102,7 +102,7 @@
 			CUSTOMER_NAME shortName,
 			CUSTOMER_ID hidCode
 		FROM MST_CUSTOMER_INFO
-			 where CUSTOMER_ID like concat_ws('%',concat_ws(#{customerId,jdbcType=VARCHAR},'%'))
+			 where CUSTOMER_ID like concat('%',concat(#{customerId,jdbcType=VARCHAR},'%'))
 			 AND CUSTOMER_TYPE = #{customerType,jdbcType=VARCHAR}
 	</select>
     <!-- 客户名称联想查询 -->
@@ -115,10 +115,10 @@
         FROM MST_CUSTOMER_INFO
         <where>
             <if test="customerId != null and customerId != ''">
-                AND	CUSTOMER_ID like concat_ws('%',concat_ws(#{customerId,jdbcType=VARCHAR},'%'))
+                AND	CUSTOMER_ID like concat('%',concat(#{customerId,jdbcType=VARCHAR},'%'))
             </if>
             <if test="customerName != null and customerName != ''">
-                AND	CUSTOMER_NAME like concat_ws('%',concat_ws(#{customerName,jdbcType=VARCHAR},'%'))
+                AND	CUSTOMER_NAME like concat('%',concat(#{customerName,jdbcType=VARCHAR},'%'))
             </if>
         </where>
         AND CUSTOMER_TYPE = #{customerType,jdbcType=VARCHAR}
@@ -210,7 +210,7 @@
         </if>
         <where>
             <if test="search != null and search !=''">
-                sdl1.ITEM_VALUE like concat_ws(concat_ws('%', #{search,jdbcType=VARCHAR}),'%')
+                sdl1.ITEM_VALUE like concat(concat('%', #{search,jdbcType=VARCHAR}),'%')
             </if>
         </where>
     </select>

@@ -4470,6 +4470,14 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
                 m.setErrorList(Arrays.asList(new ValidMessage("已撤销的交易不允许撤销")));
                 return m;
             }
+            Map<String, Object> pageParam = new HashMap<>();
+            pageParam.put("totleTradeId",inputDto.getTotleTradeId());
+            List<String> entrusIds = cfetsTrdQueryMapper.findEtrEntrustIsForcedFinish(pageParam);
+            if(CollectionUtils.isNotEmpty(entrusIds)){
+                AjaxResult m = new AjaxResult();
+                m.setErrorList(Arrays.asList(new ValidMessage("存在已强制完成指令的交易不允许撤销")));
+                return m;
+            }
         }
         return null;
     }

@@ -50,7 +50,6 @@ import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.SpringContextUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -106,8 +105,8 @@ import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
-import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
+import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
@@ -394,15 +393,6 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                 cfetsEtrIbBondinfoService.packageEquityForSubmit(entity);
                 List<CfetsEtribBondInfo003Dto> dataList = new ArrayList<>();
                 for (CfetsEtribBondInfo003Dto dto : entity.getEtrInvestBondInfoDtos()) {
-                    BussinessCodeParameter param = new BussinessCodeParameter();
-                    param.setCommonBusinessType(DictCodeList.共通业务类型_债券投资委托);
-                    String code = bussGetBussinessIdService != null ? bussGetBussinessIdService.buildBussinessCode(param) : IDGenerator.generate();
-                    if (!StringUtil.isNotEmpty(dto.getEntrustId())) {
-                        dto.setEntrustId(code);
-                        dto.getBussCombDistribtList().stream().forEach( x ->{
-                            x.setEntrustId(code);
-                        });
-                    }
                     //默认证券账户
                     if (StringUtil.isNotEmpty(dto.getPortfolioId()) && StringUtil.isNotEmpty(dto.getFinprodId())) {
                         Map<String, Object> map = new HashMap<String, Object>();
@@ -433,7 +423,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                 dto.setWorkflowId(entity.getWorkflowId());
                 BaseEtrInvestInfoDto base = initBaseEtrInvestInfoDto(dto);
                 WFlowCommonService.insertFlow(base);
-                if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+                if (isSubmit && StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
                     //插入旧头寸
                     if(baseEtrCashPositionCommService != null){
                         EntrustCommonDto entrustCommonDto = new EntrustCommonDto();
@@ -470,10 +460,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
             for (CfetsEtribBondInfo003Dto dto: entity.getEtrInvestBondInfoDtos()) {
                 if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
                     //插入旧头寸
-                    if (baseEtrCashPositionCommService != null) {
-                        // 持仓关闭
-                        baseEtrCashPositionCommService.entrustCloseExecute(dto.getEntrustId(),DictCodeList.是否_是.getValue());
-                    }
+                    AllTradeCommonUtil.deletePosition(null, dto.getEntrustId());
                 }
             }
         }

@@ -26,6 +26,7 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.security.User;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.bankuplink.bond.service.CfetsBondDealQuotedPriceService;
@@ -37,6 +38,7 @@ import com.joyintech.service.entrust.common.service.WFlowCommonService;
 import com.joyintech.system.base.dao.SysWflBusinessListMapper;
 import com.joyintech.system.base.entity.SysWflBusinessList;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
+import com.joyintech.tams.business.common.dto.CfetsSearchInfoRequest;
 import com.joyintech.tams.business.common.exception.PositionException;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
@@ -767,7 +769,14 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
                 errorList.add(new ValidMessage("选择的本方交易员未与系统用户关联，请先去【用户管理】关联"));
             }
         }
-        if (StringUtil.equals(CacheUtil.getSysParam("EXPORT_SHOW"), "01")
+        // 交易对手未绑定21位码,手方交易员非必填
+        // 交易对手未绑定21位码,手方交易员非必填
+        CfetsSearchInfoRequest cfetsSearchInfoRequest = new CfetsSearchInfoRequest();
+        cfetsSearchInfoRequest.setDealType("02");
+        cfetsSearchInfoRequest.setInitValue(entity.getCounterId());
+        List<SelectOptionDto> list = joyinbusinessCommonService.queryMySideOrCount(cfetsSearchInfoRequest);
+        if (StringUtil.isNotEmpty(list.get(0).getObject())
+                && StringUtil.equals(CacheUtil.getSysParam("EXPORT_SHOW"), "01")
                 && !StringUtil.isNotEmpty(entity.getCounterTrader())
                 && StringUtil.equals(entity.getQuoteStyle(), BussinessDictCodeList.报价方式_对话报价.getValue())) {
             errorList.add(new ValidMessage("请输入对手方交易员"));

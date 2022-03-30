@@ -2031,16 +2031,16 @@ public class CfetsTrdConfirmService extends BaseService{
             String cfets_manualconfirm_repo=CacheUtil.getSysParam("IS_CFETSREPOTRD_MANUALCONFIRM_FLAG");
             if(StringUtil.isNotEmpty(selectedItem)){
                 for(CfetsTrdConfirmRegInfoListResponse item:selectedItem){
-                    if(StringUtil.equals(cfets_manualconfirm_bond,DictCodeList.是否_否.getValue())
+                    if(StringUtil.equals(cfets_manualconfirm_bond,DictCodeList.是否_是.getValue())
                             && StringUtil.equals(item.getFinprodType2(),"01")
                     ){
-                        errorRs.setErrorList(Arrays.asList(new ValidMessage("根据参数配置，银行间债券不可手工确认！")));
+                        errorRs.setErrorList(Arrays.asList(new ValidMessage("银行间债券交易登记数据通过CSTP下行匹配进行成交匹配确认，不可手工成交确认，请重新选择！")));
                         return errorRs;
                     }
-                    if(StringUtil.equals(cfets_manualconfirm_repo,DictCodeList.是否_否.getValue())
+                    if(StringUtil.equals(cfets_manualconfirm_repo,DictCodeList.是否_是.getValue())
                             && StringUtil.equals(item.getFinprodType2(),"02")
                     ){
-                        errorRs.setErrorList(Arrays.asList(new ValidMessage("根据参数配置，银行间回购不可手工确认！")));
+                        errorRs.setErrorList(Arrays.asList(new ValidMessage("银行间质押式回购交易登记数据通过CSTP下行匹配进行成交匹配确认，不可手工成交确认，请重新选择！")));
                         return errorRs;
                     }
                     WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();
@@ -2062,6 +2062,11 @@ public class CfetsTrdConfirmService extends BaseService{
                     List<CfetsTrdConfirmRegInfoListResponse> flagList=cfetsTrdConfirmMapper.isExistDealInfo(pageParam);
                     if(StringUtil.isEmptyList(flagList)) {
                         errorRs.setErrorList(Arrays.asList(new ValidMessage("请选择有效状态的数据！")));
+                        return errorRs;
+                    }
+                    if(StringUtil.equals(item.getDealType(),BussinessDictCodeList.报价方式_对话报价.getValue())
+                            ||StringUtil.equals(item.getDealType(),BussinessDictCodeList.报价方式_请求报价.getValue())){
+                        errorRs.setErrorList(Arrays.asList(new ValidMessage("上行报价数据不允许点击成交确认！")));
                         return errorRs;
                     }
                 }

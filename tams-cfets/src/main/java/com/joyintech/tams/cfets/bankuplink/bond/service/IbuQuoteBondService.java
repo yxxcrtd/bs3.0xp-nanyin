@@ -19,6 +19,7 @@ import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondEtrMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.*;
+import com.joyintech.tams.cfets.bankuplink.repo.dao.CfetsIbuQuoteRepoMapper;
 import com.joyintech.tams.cfets.etrdispatcher.service.CfetsEtrDispatcherService;
 import com.joyintech.tams.cfets.etrib.bond.dao.CfetsEtrIbBondinfoMapper;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribBondInfo003Dto;
@@ -128,6 +129,9 @@ public class IbuQuoteBondService extends BaseService {
     private BaseEtrCashPositionCommService baseEtrCashPositionCommService;
     @Autowired
     private CfetsEtrIbBondinfoMapper cfetsetrIbBondinfoMapper;
+
+    @Autowired
+    private CfetsIbuQuoteRepoMapper cfetsIbuQuoteRepoMapper;
     /**
      * 风险试算check
      * @param entity
@@ -994,6 +998,20 @@ public class IbuQuoteBondService extends BaseService {
                 int flag = etrEntrustMapper.updateByPrimaryKeySelective(etrEntrust);
                 // 修改委托指令分发表中值 add by yangwenjun 20201209
                 baseEtrInvestInfoMapper.updatEetrDistribute(etrEntrust);
+                // 委托指令附属表查询
+                EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(item.getEntrustId());
+                //获取已完成额度
+                Map<String, Object> params = new HashMap<>();
+                params.put("sumTradeFlag","01");
+                params.put("portfolioId",etrEntrust.getPortfolioId());
+                params.put("entrustId",etrEntrust.getEntrustId());
+                params.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());
+                params.put("YES_OR_NO_N", com.joyintech.tams.constant.DictCodeList.是否_否.getValue());
+                params.put("PS_T01", com.joyintech.tams.constant.DictCodeList.交易方向_买入.getValue());
+                BigDecimal finshAmt = cfetsIbuQuoteRepoMapper.selectFinshAmt(params);
+                BigDecimal entrustAmt = etrEntrust.getEntrustNum() != null ? etrEntrust.getEntrustNum() : etrEntrust.getEntrustAmt();
+                etrEntrustAdd.setForcedFinishAmt(ArithmeticUtil.subtract(entrustAmt, finshAmt));
+                etrEntrustAddMapper.updateByPrimaryKeySelective(etrEntrustAdd);
                 CfetsEtribBondInfo003Dto etrInvestBondInfoDto = new CfetsEtribBondInfo003Dto();
                 BeanUtil.copyPropertiesIgnoreNull(etrInvestBondInfoDto,item);
                 dtolist.add(etrInvestBondInfoDto);
