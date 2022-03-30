@@ -178,6 +178,10 @@ public class EtrExchangeTradeCommon004Controller extends BaseController {
                             && !StringUtil.isNotEmpty(riskTrialRetDto.getKriTrend())) {
                         riskTrialFlag = false;
                     }
+                    if ((StringUtil.isNotEmpty(riskTrialRetDto.getKriStatus())
+                            && riskTrialRetDto.getKriStatus().equals("4"))) {
+                        riskTrialFlag = false;
+                    }
                 }
                 model.addAttribute("riskTrialSpan", riskTrialFlag ? "试算通过" : "试算不通过");
             } else {
@@ -199,6 +203,10 @@ public class EtrExchangeTradeCommon004Controller extends BaseController {
                     if ((StringUtil.isNotEmpty(riskTrialRetDto.getKriStatus())
                             && riskTrialRetDto.getKriStatus().equals("3"))
                             && !StringUtil.isNotEmpty(riskTrialRetDto.getKriTrend())) {
+                        riskTrialFlag = false;
+                    }
+                    if ((StringUtil.isNotEmpty(riskTrialRetDto.getKriStatus())
+                            && riskTrialRetDto.getKriStatus().equals("4"))) {
                         riskTrialFlag = false;
                     }
                 }
