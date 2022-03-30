@@ -10,14 +10,17 @@
 
 package com.joyintech.tams.cfets.etrib.bond.controller;
 
-import com.github.pagehelper.PageInfo;
 import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.*;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.service.trade.investtrade.commanddispatcher.service.TrdCommandDispatcher001Service;
 import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
 import com.joyintech.tams.business.common.dto.CfetsSearchInfoRequest;
@@ -27,7 +30,19 @@ import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.business.common.util.PositionUtil;
-import com.joyintech.tams.cfets.etrib.bond.dto.*;
+import com.joyintech.tams.cfets.etrib.bond.dto.CfetsBussCombDistribtBaseDto;
+import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrFinProductDto;
+import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbBondPosiInfoRequestDto;
+import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbBondPosiPage001RequestDto;
+import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbBondPosinfo001Dto;
+import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbBondinfoDto;
+import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbdoRiskcalRequest;
+import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbfindEtrinfoRequest;
+import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbfindEtrinfoResponse;
+import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrInvestBondInfoReqDto;
+import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribBondInfo003Dto;
+import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribSaveRequest;
+import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribdoRiskcalResponse;
 import com.joyintech.tams.cfets.etrib.bond.service.CfetsEtrIbBondinfo002Service;
 import com.joyintech.tams.cfets.etrib.bond.service.CfetsEtrIbBondinfoService;
 import com.joyintech.tams.cfets.etrib.bond.service.CfetsEtribBondInfo003Service;
@@ -45,6 +60,7 @@ import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInves
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.invest.entrust.etrinvestbondinfo.service.EtrInvestBondInfoService;
@@ -60,7 +76,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -214,15 +236,19 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
                     dto.setEntrustId(code);
                 }
                 //默认证券账户
-                if (StringUtil.isNotEmpty(dto.getPortfolioId()) && StringUtil.isNotEmpty(dto.getFinprodId())) {
-                    Map<String, Object> map = new HashMap<String, Object>();
-                    map.put("portfolioId", dto.getPortfolioId());
-                    map.put("finprodId", dto.getFinprodId());
-                    String secAcctId = cfetsEtrIbBondinfo002Service.qryPortfolioSecAcctId(map);
-                    if (com.joyintech.framework.util.StringUtil.isNotEmpty(secAcctId)) {
-                        dto.setSecAcctId(secAcctId); // 证券账户
-                    }
+                if (StringUtil.isNotEmpty(dto.getPortfolioId())) {
+                    String acctId = EtrCommonCashPositionDealService.select组合托管户(dto.getPortfolioId(), dto.getCcy(), DictCodeListExt1.资金账户类型_产品托管户.getValue());
+                    dto.setSecAcctId(acctId);
                 }
+//                if (StringUtil.isNotEmpty(dto.getPortfolioId()) && StringUtil.isNotEmpty(dto.getFinprodId())) {
+//                    Map<String, Object> map = new HashMap<String, Object>();
+//                    map.put("portfolioId", dto.getPortfolioId());
+//                    map.put("finprodId", dto.getFinprodId());
+//                    String secAcctId = cfetsEtrIbBondinfo002Service.qryPortfolioSecAcctId(map);
+//                    if (com.joyintech.framework.util.StringUtil.isNotEmpty(secAcctId)) {
+//                        dto.setSecAcctId(secAcctId); // 证券账户
+//                    }
+//                }
                 // ----------add by zhangrui1 20200715 预占功能 start----------
                 if (StringUtil.isNotEmpty(dto.getEntrustId())) {
                     dataList.add(dto);

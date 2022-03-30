@@ -1266,9 +1266,24 @@ public class TrdCommonBaseService extends BaseService {
         InfContractDetailfile infContractDetailfile = trdCommonBaseMapper.selectInfContractDetailfile(fTradeId);
         // 根据委托编号查询下单信息
         OrderInfoDto orderInfoDto = trdCommonBaseMapper.selectOrderInfo(infContractDetailfile.getOrderId());
+        // ZGTFCP-2165:查询下单信息,查不到睡一秒再查,循环3次，下个版本优化 modify by fuyongsheng 20220330 start
         if(null == orderInfoDto){
-            return new ArrayList<>();
+            try {
+                for(int i=0; i<3; i++){
+                    logger.debug("【查询下单信息为空】OrderId: {}", infContractDetailfile.getOrderId());
+                    Thread.sleep(1000L);
+                    orderInfoDto = trdCommonBaseMapper.selectOrderInfo(infContractDetailfile.getOrderId());
+                    if(orderInfoDto != null){
+                        break;
+                    }
+                }
+            } catch (InterruptedException e) {
+            }
+            if(orderInfoDto == null){
+                return new ArrayList<>();
+            }
         }
+        // ZGTFCP-2165:查询下单信息,查不到睡一秒再查,循环3次，下个版本优化 modify by fuyongsheng 20220330 end
         // 查询指令信息
         EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(orderInfoDto.getInstructionId());
         if(etrEntrust == null){
