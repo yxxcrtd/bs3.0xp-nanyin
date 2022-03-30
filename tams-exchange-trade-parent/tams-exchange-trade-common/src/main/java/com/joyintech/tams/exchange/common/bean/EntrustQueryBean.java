@@ -149,6 +149,9 @@ public class EntrustQueryBean implements Serializable {
     @ApiModelProperty(name = "entrustClass", value = "委托指令类别：01-单组合，02-多组合")
     private String entrustClass;
 
+    @ApiModelProperty(name = "busiTypeTgStr", value = "业务类型")
+    private String busiTypeTgStr;
+
     /**
      * ////////////////////////////查询无用字段
      */
@@ -932,6 +935,11 @@ public class EntrustQueryBean implements Serializable {
             return null;
         }
         return DictCodeListExt3.from(DictCode.投管业务类型, busiTypeTg).getCodeName();
+    }
+
+
+    public void setBusiTypeTgStr(String busiTypeTgStr) {
+        this.busiTypeTgStr = busiTypeTgStr;
     }
 
     public String getExtend1() {
