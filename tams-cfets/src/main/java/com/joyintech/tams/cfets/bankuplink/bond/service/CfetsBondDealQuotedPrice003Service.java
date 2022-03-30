@@ -985,8 +985,12 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
 	public void doBack(CfetsBondDealRequestQuoteDto entity){
         if (StringUtil.equals(com.joyintech.tams.constant.DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
             //插入旧头寸
-            //回退释放头寸
-            doDeletePtlPositionHold(entity.getWorkflowId());
+            if(BussinessDictCodeList.银行间上行报价状态_成交中.getValue().equals(entity.getTradeStatus())){
+                doInsetOrUpdateForPtlPositionHold(entity);
+            }else{
+                //回退释放头寸
+                doDeletePtlPositionHold(entity.getWorkflowId());
+            }
         }
 		//回退释放头寸
     	//doDeletePtlPositionHold(entity.getWorkflowId());
