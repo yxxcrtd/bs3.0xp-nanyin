@@ -115,11 +115,14 @@
         ON
         FIN_PRODUCT.FINPROD_ID = ETR_ENTRUST.FINPROD_ID
         LEFT JOIN (
-        SELECT EED.ENTRUST_ID,
-        listagg ( EED.PORTFOLIO_ID, ',' ) within GROUP ( ORDER BY EED.PORTFOLIO_ID ) AS PORTFOLIO_ID ,
-        listagg ( FP.PORTFOLIO_NAME, ',' ) within GROUP ( ORDER BY FP.PORTFOLIO_NAME ) AS PORTFOLIO_NAME
-        FROM ETR_ENTRUST_DETAIL EED
-        left join PTL_PORTFOLIO FP on EED.PORTFOLIO_ID = FP.PORTFOLIO_ID
+            SELECT
+                EED.ENTRUST_ID,
+                wm_concat ( FP.PORTFOLIO_ID ) AS PORTFOLIO_ID ,
+                wm_concat ( FP.PORTFOLIO_NAME ) AS PORTFOLIO_NAME
+            FROM ETR_ENTRUST_DETAIL EED
+            left join
+            (select PORTFOLIO_ID,PORTFOLIO_NAME from PTL_PORTFOLIO order by PORTFOLIO_ID, PORTFOLIO_NAME)
+        FP on EED.PORTFOLIO_ID = FP.PORTFOLIO_ID
         GROUP BY EED.ENTRUST_ID ) detail ON ETR_ENTRUST.ENTRUST_ID = detail.ENTRUST_ID
 
         /* LEFT JOIN
@@ -352,12 +355,15 @@
         ON
         FIN_PRODUCT.FINPROD_ID = WFL_ETR_ENTRUST.FINPROD_ID
         LEFT JOIN (
-        SELECT EED.ENTRUST_ID,
-        listagg ( EED.PORTFOLIO_ID, ',' ) within GROUP ( ORDER BY EED.PORTFOLIO_ID ) AS PORTFOLIO_ID ,
-        listagg ( FP.PORTFOLIO_NAME, ',' ) within GROUP ( ORDER BY FP.PORTFOLIO_NAME ) AS PORTFOLIO_NAME
-        FROM ETR_ENTRUST_DETAIL EED
-        left join PTL_PORTFOLIO FP on EED.PORTFOLIO_ID = FP.PORTFOLIO_ID
-        GROUP BY EED.ENTRUST_ID ) detail ON WFL_ETR_ENTRUST.ENTRUST_ID = detail.ENTRUST_ID
+            SELECT
+                EED.ENTRUST_ID,
+                wm_concat ( FP.PORTFOLIO_ID ) AS PORTFOLIO_ID ,
+                wm_concat ( FP.PORTFOLIO_NAME ) AS PORTFOLIO_NAME
+            FROM ETR_ENTRUST_DETAIL EED
+            left join
+            (select PORTFOLIO_ID,PORTFOLIO_NAME from PTL_PORTFOLIO order by PORTFOLIO_ID, PORTFOLIO_NAME)
+            FP on EED.PORTFOLIO_ID = FP.PORTFOLIO_ID
+            GROUP BY EED.ENTRUST_ID ) detail ON WFL_ETR_ENTRUST.ENTRUST_ID = detail.ENTRUST_ID
         /*LEFT JOIN
         (SELECT
         listagg(TRADER, ',') within group ( order by TRADER ) TRADER,

@@ -565,10 +565,12 @@
         LEFT JOIN PTL_PORTFOLIO pp ON ete.portfolio_id = pp.portfolio_id
         LEFT JOIN (
             SELECT EED.ENTRUST_ID,
-            listagg ( EED.PORTFOLIO_ID, ',' ) within GROUP ( ORDER BY EED.PORTFOLIO_ID ) AS PORTFOLIO_ID ,
-            listagg ( FP.PORTFOLIO_NAME, ',' ) within GROUP ( ORDER BY FP.PORTFOLIO_NAME ) AS PORTFOLIO_NAME
+            wm_concat ( FP.PORTFOLIO_ID ) AS PORTFOLIO_ID ,
+            wm_concat ( FP.PORTFOLIO_NAME ) AS PORTFOLIO_NAME
             FROM ETR_ENTRUST_DETAIL EED
-        left join PTL_PORTFOLIO FP on EED.PORTFOLIO_ID = FP.PORTFOLIO_ID
+        left join
+        (select PORTFOLIO_ID,PORTFOLIO_NAME from PTL_PORTFOLIO order by PORTFOLIO_ID, PORTFOLIO_NAME)
+        FP on EED.PORTFOLIO_ID = FP.PORTFOLIO_ID
         GROUP BY EED.ENTRUST_ID ) detail ON ete.ENTRUST_ID = detail.ENTRUST_ID
 
         LEFT JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = ete.FINPROD_ID
@@ -700,10 +702,12 @@
         LEFT JOIN PTL_PORTFOLIO pp ON ete.portfolio_id = pp.portfolio_id
         LEFT JOIN (
             SELECT EED.ENTRUST_ID,
-            listagg ( EED.PORTFOLIO_ID, ',' ) within GROUP ( ORDER BY EED.PORTFOLIO_ID ) AS PORTFOLIO_ID ,
-            listagg ( FP.PORTFOLIO_NAME, ',' ) within GROUP ( ORDER BY FP.PORTFOLIO_NAME ) AS PORTFOLIO_NAME
+            wm_concat ( FP.PORTFOLIO_ID ) AS PORTFOLIO_ID ,
+            wm_concat ( FP.PORTFOLIO_NAME ) AS PORTFOLIO_NAME
             FROM ETR_ENTRUST_DETAIL EED
-        left join PTL_PORTFOLIO FP on EED.PORTFOLIO_ID = FP.PORTFOLIO_ID
+        left join
+        (select PORTFOLIO_ID,PORTFOLIO_NAME from PTL_PORTFOLIO order by PORTFOLIO_ID, PORTFOLIO_NAME)
+        FP on EED.PORTFOLIO_ID = FP.PORTFOLIO_ID
         GROUP BY EED.ENTRUST_ID ) detail ON ete.ENTRUST_ID = detail.ENTRUST_ID
         LEFT JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = ete.FINPROD_ID
         LEFT JOIN FIN_PRODUCT fp ON ete.finprod_id = fp.finprod_id
