@@ -1269,7 +1269,7 @@ public class TrdCommonBaseService extends BaseService {
         // ZGTFCP-2165:查询下单信息,查不到睡一秒再查,循环3次，下个版本优化 modify by fuyongsheng 20220330 start
         if(null == orderInfoDto){
             try {
-                for(int i=0; i<3; i++){
+                for(int i=0; i<10; i++){
                     logger.debug("【查询下单信息为空】OrderId: {}", infContractDetailfile.getOrderId());
                     Thread.sleep(1000L);
                     orderInfoDto = trdCommonBaseMapper.selectOrderInfo(infContractDetailfile.getOrderId());
