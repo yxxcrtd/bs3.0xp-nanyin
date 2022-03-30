@@ -98,7 +98,13 @@ public class StlDownDataDealWriter extends BaseWriter<NeedToWriteEntity> {
 					// 基金分红通告
 					if (dealWriteDto.getMstFundBonusNoticeList() != null && dealWriteDto.getMstFundBonusNoticeList().size() > 0) {
 						for (MstFundBonusNotice mstFundBonusNotice : dealWriteDto.getMstFundBonusNoticeList()) {
-							mstFundBonusNoticeMapper.insertSelective(mstFundBonusNotice);
+							MstFundBonusNoticeKey key = new MstFundBonusNoticeKey();
+							key.setFundId(mstFundBonusNotice.getFundId());
+							key.setRegDate(mstFundBonusNotice.getRegDate());
+							MstFundBonusNotice temp = mstFundBonusNoticeMapper.selectByPrimaryKey(key);
+							if(temp == null){
+								mstFundBonusNoticeMapper.insertSelective(mstFundBonusNotice);
+							}
 						}
 					}
 				}
