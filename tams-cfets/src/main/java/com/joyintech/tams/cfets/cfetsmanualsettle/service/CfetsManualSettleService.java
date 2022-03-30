@@ -1201,7 +1201,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                 stlPayOrder.setMyAcctNo(acctId);
 
                 BigDecimal settleAmt = ArithmeticUtil.divide(
-                        ArithmeticUtil.multiply(item.getTradeAmt(), stlPayOrdersDto.getSettleAmt()), tradeAmt, 4);
+                        ArithmeticUtil.multiply(item.getTradeAmt(), stlPayOrdersDto.getSettleAmt()), tradeAmt, 2);
                 if (index == listTemp.size()) {
                     settleAmt = new BigDecimal(String.valueOf(orderAmt));
                 }
@@ -1486,7 +1486,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                     stlPayOrder.setMyAcctNo(acctId);
                 }
                 BigDecimal settleAmt = ArithmeticUtil.divide(
-                        ArithmeticUtil.multiply(item.getTradeAmt(), stlPayOrdersDto.getSettleAmt()), tradeAmt, 4);
+                        ArithmeticUtil.multiply(item.getTradeAmt(), stlPayOrdersDto.getSettleAmt()), tradeAmt, 2);
                 if (index == listTemp.size()) {
                     settleAmt = new BigDecimal(String.valueOf(orderAmt));
                 }
