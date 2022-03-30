@@ -85,7 +85,7 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
                         BeanUtil.copyPropertiesIgnoreNull(secDto,entity);
                         secDto.setTradePlat(TempConstant.NO_TRADE_BUSINESS_ETR);
                         BigDecimal canRepoNum=etrTradeCommonervice.selectAvailableNum(secDto);
-                        canRepoNum=ArithmeticUtil.divide(canRepoNum,100,0);
+                        //canRepoNum=ArithmeticUtil.divide(canRepoNum,100,0);
                         entity.setCanRepoNum(canRepoNum);
                         //过滤掉标准券和质押数量都等于0
                         if(entity.getSecNum().compareTo(BigDecimal.ZERO)==0&&canRepoNum.compareTo(BigDecimal.ZERO)==0){
@@ -93,11 +93,11 @@ public class EtrExchangeTradeFjyywzl001Service extends CommonExportService<EtrEx
                         }
                         //持仓数量，取交易的
                         BigDecimal  positionsNum=selectActNum(DictCodeListExt3.资产类型_资产账户持仓.getValue(),secDto);
-                        positionsNum=ArithmeticUtil.divide(positionsNum,100,0);
+                        //positionsNum=ArithmeticUtil.divide(positionsNum,100,0);
                         entity.setPositionsNum(positionsNum);
                         //质押数量，取交易的
                         BigDecimal  repoNum=selectActNum(DictCodeListExt3.资产类型_质押式通用回购入库质押券持仓.getValue(),secDto);
-                        repoNum=ArithmeticUtil.divide(repoNum,100,0);
+                        //repoNum=ArithmeticUtil.divide(repoNum,100,0);
                         entity.setRepoNum(repoNum);
                         returnList.add(entity);
                     }

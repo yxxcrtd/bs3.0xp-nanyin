@@ -69,6 +69,8 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
     private EtrTradeCommonervice etrTradeCommonervice;
     @Autowired
     private EtrExchangeTradeJj001Service exchangeTradeJj001Service;
+    @Autowired
+    private EtrExchangeTradeCommon001Service etrExchangeTradeCommon001Service;
 
     /**
      * 分页查询产品持仓信息
@@ -584,7 +586,7 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
     public BigDecimal querySecInCanUse(PositionCashSecDto secDto) {
         secDto.setTradePlat(TempConstant.NO_TRADE_BUSINESS_ETR);
         BigDecimal ticketCanUse = etrTradeCommonervice.selectAvailableNum(secDto);
-        ticketCanUse = ArithmeticUtil.divide(ticketCanUse, 100, 0);
+        //ticketCanUse = ArithmeticUtil.divide(ticketCanUse, 100, 0);
         return ticketCanUse;
     }
 
@@ -599,7 +601,9 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
         PositionCashSecDto cashSecDto = new PositionCashSecDto();
         BeanUtil.copyPropertiesIgnoreNull(cashSecDto, req); //复制资产信息
         List<PositionCashSecDto> proList = new ArrayList<>();
+        cashSecDto.setFinprodId("XN_PRODID999");
         proList.add(cashSecDto);
+
         BigDecimal secNum = queryProPosition(DictCodeListExt3.资产类型_通用回购融资券可用持仓.getValue(), proList);
         //2、标准券可用/再折算率
         Map<String, Object> param = new HashMap<>();
@@ -619,19 +623,23 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
                 scale = new BigDecimal(scaleMap.get("SCALE").toString());//折算率
             }
         }
-        secNum= ArithmeticUtil.divide(secNum, 100, 0);
+        //secNum= ArithmeticUtil.divide(secNum, 100, 0);
         secNum = ArithmeticUtil.divide(secNum, tandardRate, 0);
         //3、A对应的再折算前持仓
+        cashSecDto.setFinprodId(req.getFinprodId());
         BigDecimal canSecNum = queryProPosition(DictCodeListExt3.资产类型_通用回购融资券折算前额度.getValue(), proList);
-        canSecNum=ArithmeticUtil.divide(canSecNum, 100, 0);
+        BigDecimal faceValue=etrExchangeTradeCommon001Service.selectSecFaceValue(param);
+        //canSecNum=ArithmeticUtil.multiply(canSecNum,faceValue);
         //4、标准券可用/折算率和 A对应的再折算前持仓 比较
-        secNum = ArithmeticUtil.divide(secNum, scale, 0);
+        //canSecNum = ArithmeticUtil.divide(canSecNum, scale, 0);
         BigDecimal miniSecNum = canSecNum;
         if (secNum.compareTo(canSecNum) == -1) {
             miniSecNum = secNum;
         }
         //5、较小值/债券的折算率
+        miniSecNum = ArithmeticUtil.divide(miniSecNum, faceValue, 0);
         miniSecNum = ArithmeticUtil.divide(miniSecNum, scale, 0);
+        miniSecNum = ArithmeticUtil.multiply(miniSecNum,new BigDecimal(100));
         return miniSecNum;
     }
 
@@ -643,9 +651,9 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
             secList.add(temp);
         }
         BigDecimal newSecAmount = etrTradeCommonervice.queryPosition(secList, "02", "");
-        if (newSecAmount != null) {
-            newSecAmount = ArithmeticUtil.divide(newSecAmount, 100, 0);
-        }
+//        if (newSecAmount != null) {
+//            newSecAmount = ArithmeticUtil.divide(newSecAmount, 100, 0);
+//        }
         return newSecAmount;
 
     }

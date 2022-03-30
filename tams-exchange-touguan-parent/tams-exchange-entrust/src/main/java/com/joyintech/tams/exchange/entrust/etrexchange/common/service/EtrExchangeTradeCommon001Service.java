@@ -2276,7 +2276,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
             for (Field field : fields) {
                 if (StringUtil.equals(field.getName(), "messageType")) {
                     field.setAccessible(true);
-                    ReflectionUtils.setField(field, ajax, MessageType.错误消息.name());
+                    ReflectionUtils.setField(field, ajax, MessageType.错误消息.getCode());
                     break;
                 }
             }
@@ -5615,16 +5615,17 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
     public AjaxResult dbClickCheck(EtrExchangeTradeSaveRequest dto) {
         AjaxResult webResult = new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<>();
-        //check流程中是否有数据
-        WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();
-        wflValidInputParameter.setBusinessDataPk1(dto.getEntrustId());
-        if (WorkFlowUtil.isNotFromToDoList() && mstWorkflowCommonService.isInWflProcess(wflValidInputParameter)) {
-            errorList.add(new ValidMessage("所选对象存在流程中的数据不能修改"));
-        }
         //双击修改check
         if (!StringUtil.equals(dto.getEntrustStatus(), DictCodeList.委托状态_已退回.getValue()) && !StringUtil.equals(dto.getEntrustStatus(), DictCodeList.委托状态_已撤回.getValue())) {
             String entrustStatusStr = SysDataUtil.getNameFromDataDict(DictCode.委托状态, dto.getEntrustStatus());
             errorList.add(new ValidMessage(entrustStatusStr + "的指令不允许修改!"));
+        }else{
+            //check流程中是否有数据
+            WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();
+            wflValidInputParameter.setBusinessDataPk1(dto.getEntrustId());
+            if (WorkFlowUtil.isNotFromToDoList() && mstWorkflowCommonService.isInWflProcess(wflValidInputParameter)) {
+                errorList.add(new ValidMessage("所选对象存在流程中的数据不能修改"));
+            }
         }
         if (!CollectionUtils.isEmpty(errorList)) {
             webResult.setErrorList(errorList);

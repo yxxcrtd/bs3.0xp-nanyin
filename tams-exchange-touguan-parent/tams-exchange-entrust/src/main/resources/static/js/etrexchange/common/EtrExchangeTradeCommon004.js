@@ -4023,9 +4023,8 @@
                         result.data = "组合分配中可用持仓不足,请确认是否要提交";
                     }
                     if(result.statuCode !== '200'){
-                       alert(1345678);
+
                     }else{
-                        alert(88888);
                         result.data = "请确认是否要提交";
                     }
                     Joyin.confirm(result.data, function () {

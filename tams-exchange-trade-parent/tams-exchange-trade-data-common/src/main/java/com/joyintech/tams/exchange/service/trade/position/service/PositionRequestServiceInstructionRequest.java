@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.*;
 
+import static com.joyintech.tams.constant.DictCodeList.交易方向_行权_回售;
 import static com.joyintech.tams.constant.DictCodeList.是否_否;
 import static com.joyintech.tams.constant.DictCodeListExt3.*;
 import static com.joyintech.tams.exchange.common.constant.joyin.DictCodeList.交易方向_申购;
@@ -126,9 +127,12 @@ public class PositionRequestServiceInstructionRequest {
                 bean = new PositionRequestBaseBean(entity);
                 BigDecimal secAmount = commonPositionEngineService.getSecAmountByBondUnit(item.getEntrustNum());
                 bean.setSecAmount(secAmount);
-                BigDecimal fullPrice = Objects.isNull(entity.getFullPrice()) ? BigDecimal.ZERO : entity.getFullPrice();
-                bean.setCashAmount(fullPrice.multiply(BigDecimal.valueOf(item.getEntrustNum())));
-
+                if (交易方向_行权_回售.getValue().equals(entity.getPs())) {
+                    bean.setCashAmount(item.getEntrustAmt());
+                } else {
+                    BigDecimal fullPrice = Objects.isNull(entity.getFullPrice()) ? BigDecimal.ZERO : entity.getFullPrice();
+                    bean.setCashAmount(fullPrice.multiply(BigDecimal.valueOf(item.getEntrustNum())));
+                }
                 Map<String, Object> map = BeanUtil.object2Map(bean);
                 // 下单委托编号
                 map.put(ORD_ENTRUST_ID, entity.getEntrustNo());
