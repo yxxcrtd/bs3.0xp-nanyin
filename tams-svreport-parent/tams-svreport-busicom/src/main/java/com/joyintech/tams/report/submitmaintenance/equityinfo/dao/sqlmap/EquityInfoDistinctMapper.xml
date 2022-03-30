@@ -47,7 +47,7 @@
  
 	
  
-	<!-- 查询权益人登记表中已报送内容(反馈状态为03，即中债通过的内容)-->
+	<!-- 查询权益人登记表中已报送内容(反馈状态为03，即中债通过的内容)   该sql目前没有方法调用-->
 	<select id="queryAllEquityInfoConStrastYbs"  
 	        parameterType="java.util.List"
 	        resultType="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto"
@@ -243,6 +243,7 @@
 		/*** add by zcw 三期性能优化 end **/
 	</select>
 
+	<!-- 该sql目前没有方法调用-->
 	<select id="queryAllEquityInfoConStrastYbsSingle"  
 	        parameterType="java.lang.String"
 	        resultType="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto">
