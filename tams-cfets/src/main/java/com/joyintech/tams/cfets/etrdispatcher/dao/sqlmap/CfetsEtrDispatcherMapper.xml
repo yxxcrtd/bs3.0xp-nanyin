@@ -1518,7 +1518,7 @@
         LEFT JOIN FIN_PRODUCT_ADD T8 ON T7.FINPROD_ID = T8.FINPROD_ID
         WHERE ete.entrust_id = #{entrustId}
         AND ( fscr.VDATE  = ( select max(VDATE) from FIN_STDSEC_CONVERSE_RADIO fscr1
-        where fscr1.FINPROD_ID= fscr.FINPROD_ID and fscr1.BRANCH = fscr.BRANCH and fscr1.VDATE &lt;= to_date(#{sysDateStr},'yyyy-mm-dd'))  OR fscr.VDATE IS NULL )
+        where fscr1.FINPROD_ID= fscr.FINPROD_ID and fscr1.BRANCH = fscr.BRANCH )  OR fscr.VDATE IS NULL )
         union all
 
         SELECT
@@ -1623,7 +1623,7 @@
         LEFT JOIN FIN_PRODUCT_ADD T8 ON T7.FINPROD_ID = T8.FINPROD_ID
         WHERE ete.entrust_id = #{entrustId}
         AND (fscr.VDATE  = ( select max(VDATE) from FIN_STDSEC_CONVERSE_RADIO fscr1
-        where fscr1.FINPROD_ID= fscr.FINPROD_ID and fscr1.BRANCH = fscr.BRANCH and fscr1.VDATE &lt;= to_date(#{sysDateStr},'yyyy-mm-dd')) OR fscr.VDATE IS NULL )
+        where fscr1.FINPROD_ID= fscr.FINPROD_ID and fscr1.BRANCH = fscr.BRANCH ) OR fscr.VDATE IS NULL )
     </select>
 
     <resultMap id="TradeResultMap" type="com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherDealListInfoResponse">

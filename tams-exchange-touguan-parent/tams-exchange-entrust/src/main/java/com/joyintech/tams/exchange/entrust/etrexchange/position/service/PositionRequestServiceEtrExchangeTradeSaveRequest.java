@@ -211,8 +211,12 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
             fillAttributes(entity);
             for (EtrExchangeTradePortfolioRequest item : entity.getPortfolioList()) {
                 bean = new PositionRequestBaseBean(item);
-                BigDecimal fprice = Objects.isNull(entity.getFprice()) ? new BigDecimal(0) : entity.getFprice();
-                bean.setCashAmount(fprice.multiply(item.getEntrustNum()));
+                if (交易方向_行权_回售.getValue().equals(entity.getPs())) {
+                    bean.setCashAmount(item.getEntrustAmt());
+                } else {
+                    BigDecimal fprice = Objects.isNull(entity.getFprice()) ? new BigDecimal(0) : entity.getFprice();
+                    bean.setCashAmount(fprice.multiply(item.getEntrustNum()));
+                }
                 BigDecimal secAmount = commonPositionEngineService.getSecAmountByBondUnit(item.getEntrustNum());
                 bean.setSecAmount(secAmount);
 
