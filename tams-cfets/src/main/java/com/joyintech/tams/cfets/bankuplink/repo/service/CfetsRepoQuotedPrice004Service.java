@@ -2145,7 +2145,7 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
      * @date 2022/3/11 10:21
      */
     public void revokeEtrSecPosition(String entrustId, Date settleDate, boolean isRevoke, String tradeId) {
-        if (StringUtil.isNotEmpty(tradeId)) {
+        if (StringUtil.isEmpty(tradeId)) {
             tradeId = entrustId;
         }
         Map<String, Object> param = new HashMap<>();

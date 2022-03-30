@@ -732,8 +732,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                 } else {
                     //对回购数据进行处理
                     if ((StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收.getValue())
-                            || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_回溯.getValue())
-                            || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收失败.getValue()))) {
+                            || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_回溯.getValue()))) {
                         this.insertOldRepoPosition(cfetsManualSettleInsertDto, entity.getButtonType(), entity.getSettleAmt(), entity.getFinprodType2(), true, entity.getTgBusiType(), false);
                     }
                 }
@@ -766,8 +765,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                 } else {
                     //对回购数据进行处理
                     if ((StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收.getValue())
-                            || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_回溯.getValue())
-                            || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收失败.getValue())) ) {
+                            || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_回溯.getValue())) ) {
                         this.insertOldRepoPosition(cfetsManualSettleInsertDto, entity.getButtonType(), entity.getSettleAmt(), entity.getFinprodType2(), true, entity.getTgBusiType(),false);
                     }
                 }
@@ -816,8 +814,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                         sendRepoPositionMethod(cfetsManualSettleInsertDto,entity.getButtonType());
                        //对回购数据进行处理
                         if ((StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收.getValue())
-                                || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_回溯.getValue())
-                                || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收失败.getValue())) ) {
+                                || StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_回溯.getValue())) ) {
                             this.insertOldRepoPosition(cfetsManualSettleInsertDto, entity.getButtonType(), entity.getSettleAmt(), entity.getFinprodType2(), false, entity.getTgBusiType(), false);
                         }
                     }
