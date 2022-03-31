@@ -32,10 +32,10 @@
 				and T1.IS_HOLIDAY = #{ishDay}
 			</if>
 			<if test="startDate != null and ! startDate.equals('')">
-				and T1.CDATE &gt;= to_date(#{startDate},'yyyy-MM-dd')
+				and T1.CDATE &gt;= STR_TO_DATE(#{startDate},'%Y-%m-%d')
 			</if>
 			<if test="endDate != null and ! endDate.equals('')">
-				and T1.CDATE &lt;= to_date(#{endDate},'yyyy-MM-dd')
+				and T1.CDATE &lt;= STR_TO_DATE(#{endDate},'%Y-%m-%d')
 			</if>
 			<if test='status=="A"'>
 				and T1.STATUS = #{status}
