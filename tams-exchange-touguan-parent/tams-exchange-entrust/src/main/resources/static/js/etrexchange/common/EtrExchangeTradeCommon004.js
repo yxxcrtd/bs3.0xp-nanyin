@@ -4018,11 +4018,10 @@
             }
             Joyin.ajaxJson(basePath + '/etrexchange/common/EtrExchangeTradeCommon004/checkSaveError', object,
                 function (result) {
-                    console.log(result);
                     if (ETR_CHECK_POS_SWITCH == '01' && posSwitch) {
                         result.data = "组合分配中可用持仓不足,请确认是否要提交";
                     }
-                    if(result.statuCode !== '200'){
+                    if(result.statuCode !== 200){
 
                     }else{
                         result.data = "请确认是否要提交";
