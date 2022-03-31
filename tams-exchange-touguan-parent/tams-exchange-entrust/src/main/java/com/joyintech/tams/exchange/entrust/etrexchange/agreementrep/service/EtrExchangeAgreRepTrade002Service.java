@@ -220,10 +220,10 @@ public class EtrExchangeAgreRepTrade002Service extends CommonExportService {
                     //r.setUnitCost(dto.getUnitCost());
                 }
                 // 最新净价*组合持仓.数量 - 持仓成本 as 浮动盈亏
-                BigDecimal floatFd = ArithmeticUtil.multiply(r.getPrice(),r.getPtlPositionsNum());
+                BigDecimal floatFd = ArithmeticUtil.multiply(r.getPrice(),r.getPositionsNum());
                 floatFd = ArithmeticUtil.subtract(floatFd,r.getPositionsAmt());
                 r.setFloatingPL(floatFd);
-                BigDecimal floatPL =ArithmeticUtil.divide(floatFd,ArithmeticUtil.multiply(r.getPrice(),r.getPtlPositionsNum()),2);
+                BigDecimal floatPL =ArithmeticUtil.divide(floatFd,ArithmeticUtil.multiply(r.getPrice(),r.getPositionsNum()),2);
                 r.setFloatingPLPercent(floatPL);
 
             });
