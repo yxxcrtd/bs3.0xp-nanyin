@@ -8,7 +8,7 @@
  * 系统名称：理财资管管理系统V2.0
  */
  
-package com.joyintech.tams.svreport.chb.businessdatamaintain.dto;
+package com.joyintech.tams.svreport.chb.businessdatamaintain.calendarinfo.dto;
 
 import com.joyintech.tams.common.base.entity.MstCalendarInfo;
 

@@ -7,7 +7,7 @@
  * 修改内容：新建
  * 系统名称：理财资管业务监管报送平台
  */
-package com.joyintech.tams.svreport.chb.businessdatamaintain.controller;
+package com.joyintech.tams.svreport.chb.businessdatamaintain.calendarinfo.controller;
 
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
@@ -20,9 +20,9 @@ import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
-import com.joyintech.tams.svreport.chb.businessdatamaintain.dto.ChbCalendarInfo001Dto;
-import com.joyintech.tams.svreport.chb.businessdatamaintain.dto.ChbCalendarInfoDto;
-import com.joyintech.tams.svreport.chb.businessdatamaintain.service.ChbCalendarInfo001Service;
+import com.joyintech.tams.svreport.chb.businessdatamaintain.calendarinfo.dto.ChbCalendarInfo001Dto;
+import com.joyintech.tams.svreport.chb.businessdatamaintain.calendarinfo.dto.ChbCalendarInfoDto;
+import com.joyintech.tams.svreport.chb.businessdatamaintain.calendarinfo.service.ChbCalendarInfo001Service;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import org.springframework.http.ResponseEntity;
@@ -47,7 +47,7 @@ import java.util.*;
 
 @Controller
 @PageId("ChbCalendarInfo001")
-@RequestMapping("/chb/businessdatamaintain/ChbCalendarInfo001")
+@RequestMapping("/chb/businessdatamaintain/calendarInfo/ChbCalendarInfo001")
 public class ChbCalendarInfo001Controller extends BaseController {
     /**
      *

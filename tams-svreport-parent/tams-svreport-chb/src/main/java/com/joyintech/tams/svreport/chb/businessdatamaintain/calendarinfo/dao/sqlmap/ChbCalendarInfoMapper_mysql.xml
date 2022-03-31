@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.joyintech.tams.svreport.chb.businessdatamaintain.dao.ChbCalendarInfoMapper_mysql">
+<mapper namespace="com.joyintech.tams.svreport.chb.businessdatamaintain.calendarinfo.dao.ChbCalendarInfoMapper_mysql">
 
 	<!-- 查询sql -->
-	<select id="selectInfo" resultType="com.joyintech.tams.svreport.chb.businessdatamaintain.dto.ChbCalendarInfo001Dto">
+	<select id="selectInfo" resultType="com.joyintech.tams.svreport.chb.businessdatamaintain.calendarinfo.dto.ChbCalendarInfo001Dto">
 		SELECT
 		T1.CALENDAR_ID calendarId ,
 		T1.CDATE cdate ,
@@ -48,7 +48,7 @@
 	</select>
 	<!-- 日历类型下拉框信息查询sql -->
 	<select id="selectCalendarInfo"
-			resultType="com.joyintech.tams.svreport.chb.businessdatamaintain.dto.ChbCalendarInfoDto">
+			resultType="com.joyintech.tams.svreport.chb.businessdatamaintain.calendarinfo.dto.ChbCalendarInfoDto">
 		select
 		calendar_Id calendarId,
 		calendar_Name calendarName
@@ -82,7 +82,7 @@
 
 	<!-- 通过主键验证数据库中是否有值 -->
 	<select id="getMstMarketCalendarInfo001DtoByKey"
-			resultType="com.joyintech.tams.svreport.chb.businessdatamaintain.dto.ChbCalendarInfo001Dto">
+			resultType="com.joyintech.tams.svreport.chb.businessdatamaintain.calendarinfo.dto.ChbCalendarInfo001Dto">
 		select calendar_id calendarId,cdate cdate,is_holiday isHoliday from
 		MST_HOLIDAY
 		<where>
