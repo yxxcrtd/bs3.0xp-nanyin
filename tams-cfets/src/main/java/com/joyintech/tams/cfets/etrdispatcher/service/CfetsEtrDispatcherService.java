@@ -1636,6 +1636,12 @@ public class CfetsEtrDispatcherService extends BaseService {
                         }else{
                             fieldResponseDto.setPledgeStandardNumber(ArithmeticUtil.multiply(fieldResponseDto.getPledgeRatio().divide(new BigDecimal("100")), fieldResponseDto.getEntrustNum()));
                         }
+                    }else if (DictCodeListExt3.交易方向_质押券出库.getValue().equals(ps) && StringUtil.isNotEmpty(fieldResponseDto.getPledgeRatio())) {
+                        if(StringUtil.isNotEmpty(fieldResponseDto.getStockSecId())){
+                            Date sysDate = DateUtil.platDateFromCache();
+                            BigDecimal faceValue = etrCommonService.select券面面值(fieldResponseDto.getStockSecId(), DateUtil.format(sysDate));
+                            fieldResponseDto.setPledgeStandardNumber(ArithmeticUtil.divide(ArithmeticUtil.multiply(fieldResponseDto.getPledgeRatio().divide(new BigDecimal("100")), fieldResponseDto.getEntrustNum(),faceValue),new BigDecimal(100),0, RoundingMode.HALF_DOWN));
+                        }
                     }
                 } else if (StringUtil.equals(dto.getBusiTypePosition(), DictCodeListExt3.头寸业务类型_现券交易.getValue())) {
                     if (StringUtil.equals("01", CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"))) {
