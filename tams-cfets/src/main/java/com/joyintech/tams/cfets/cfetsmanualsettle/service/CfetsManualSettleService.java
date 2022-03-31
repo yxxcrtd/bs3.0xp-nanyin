@@ -1280,6 +1280,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
 
                     if (StringUtil.isNotEmpty(deal.getTradeId())) {
                         String acctId = EtrCommonCashPositionDealService.select组合托管户(deal.getPortfolioId(), deal.getCcy(), DictCodeListExt1.资金账户类型_产品托管户.getValue());
+                        //证券管理户代码
                         String secManageAcctId = "";
                         if (listTemp.size() > 0){
                             secManageAcctId = listTemp.get(0).getSecManageAcctId();
