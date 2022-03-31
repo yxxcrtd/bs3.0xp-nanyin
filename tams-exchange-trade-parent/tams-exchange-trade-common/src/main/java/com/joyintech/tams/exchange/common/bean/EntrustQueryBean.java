@@ -5,10 +5,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.exchange.common.constant.EntrustStatus;
 import com.joyintech.tams.exchange.common.constant.Market;
-import com.joyintech.tams.exchange.common.constant.joyin.DictCode;
-import com.joyintech.tams.exchange.common.constant.joyin.DictCodeList;
-import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt1;
-import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt2;
+import com.joyintech.tams.exchange.common.constant.joyin.*;
 import com.joyintech.tams.exchange.common.utils.DoubleSerializerUtils;
 import com.joyintech.tams.exchange.common.utils.EntrustUtils;
 import com.joyintech.tams.exchange.common.utils.TradeUtils;
@@ -151,6 +148,9 @@ public class EntrustQueryBean implements Serializable {
     private BigDecimal conNum;
     @ApiModelProperty(name = "entrustClass", value = "委托指令类别：01-单组合，02-多组合")
     private String entrustClass;
+
+    @ApiModelProperty(name = "busiTypeTgStr", value = "业务类型")
+    private String busiTypeTgStr;
 
     /**
      * ////////////////////////////查询无用字段
@@ -928,6 +928,18 @@ public class EntrustQueryBean implements Serializable {
 
     public void setBusiTypeTg(String busiTypeTg) {
         this.busiTypeTg = busiTypeTg;
+    }
+
+    public String getBusiTypeTgStr() {
+        if (StringUtil.isEmpty(busiTypeTg)) {
+            return null;
+        }
+        return DictCodeListExt3.from(DictCode.投管业务类型, busiTypeTg).getCodeName();
+    }
+
+
+    public void setBusiTypeTgStr(String busiTypeTgStr) {
+        this.busiTypeTgStr = busiTypeTgStr;
     }
 
     public String getExtend1() {

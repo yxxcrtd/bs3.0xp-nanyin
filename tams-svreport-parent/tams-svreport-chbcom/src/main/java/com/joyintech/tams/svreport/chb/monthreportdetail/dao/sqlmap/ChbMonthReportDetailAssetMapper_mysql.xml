@@ -198,7 +198,9 @@
             LEFT JOIN CHB_REPORT_TEMPLATEDETAIL D3 ON D3.propertycode = D4.codeparent and D3.proplevel = '3'
             LEFT JOIN CHB_REPORT_TEMPLATEDETAIL D2 ON D2.propertycode = D3.codeparent and D2.proplevel = '2'
             LEFT JOIN CHB_REPORT_TEMPLATEDETAIL D1 ON D1.propertycode = D2.codeparent and D1.proplevel = '1'
-            LEFT JOIN CHB_ASSETS_BASIS_DATA AP ON AP.PROD_ID = P.PROD_ID AND AP.ASSET_ID = P.ASSET_CODE AND AP.VALUE_DATE = DECODE(P.TERM,NULL,TO_DATE('19000101','yyyyMMdd'),ADD_MONTHS(TO_DATE(P.TERM||'01','yyyyMMdd'),1)-1)
+            LEFT JOIN CHB_ASSETS_BASIS_DATA AP ON AP.PROD_ID = P.PROD_ID AND AP.ASSET_ID = P.ASSET_CODE AND AP.VALUE_DATE =
+            /*DECODE(P.TERM,NULL,STR_TO_DATE('19000101','%Y-%m-%d'),ADD_MONTHS(STR_TO_DATE(P.TERM||'01','%Y-%m-%d'),1)-1)*/
+            (case P.TERM when NULL then STR_TO_DATE('19000101','%Y-%m-%d') else adddate(STR_TO_DATE(concat(P.TERM,'01'),'%Y-%m-%d'),interval 1 month)-1 end)
             LEFT JOIN (SELECT ASSET_ID,ASSET_RATE,change_date,
             row_number() over(partition by ASSET_ID order by change_date desc) row_number
             FROM CHB_ASSET_RATE

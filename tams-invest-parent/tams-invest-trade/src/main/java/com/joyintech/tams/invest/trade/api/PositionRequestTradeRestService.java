@@ -349,7 +349,13 @@ public class PositionRequestTradeRestService {
             bean.setSecAmount(dealEntity.getShareAmt());
             bean.setCashAcctId(accountNo);
             // 配股/申购代码
-            bean.setFinprodId(dealEntity.getRemark());
+            if(DictCodeList.交易方向_上市流通.getValue().equals(dealEntity.getPs())){
+                bean.setFinprodId(dealEntity.getRemark());
+            }else{
+                // ZGTFCP-2190:修改金融产品代码赋值 modify by fuyongsheng 20220330 start
+                bean.setFinprodId(commonPositionService.getStockId(dealEntity.getFinprodId(), dealEntity.getFinprodType2(), dealEntity.getPs()));
+                // ZGTFCP-2190:修改金融产品代码赋值 modify by fuyongsheng 20220330 end
+            }
             bean.setCashAmount(dealEntity.getTradeAmt());
             Map<String, Object> datamap = BeanUtil.object2Map(bean);
             datamap.put("ownSecAmount", dealEntity.getShareAmt());

@@ -973,7 +973,7 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
      * @param etrCashPositionFlowDto 流水dto
      * @return 账号
      */
-    private static String gen账号(String tradePlace, String chlId, String portfolioId, String ccy, String secManageAcctId,String counterId,
+    public static String gen账号(String tradePlace, String chlId, String portfolioId, String ccy, String secManageAcctId,String counterId,
                                 EtrCashPositionFlowDto etrCashPositionFlowDto) {
         return gen账号(tradePlace,chlId,portfolioId,ccy,secManageAcctId,counterId,false,etrCashPositionFlowDto);
     }
@@ -1005,8 +1005,9 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
             if (StringUtil.equals(tradePlace, DictCodeListExt1.交易场所_境外交易场所.getValue())) {
                 return EtrCommonCashPositionDealService.select组合托管户(portfolioId, ccy, DictCodeListExt2.资金账户类型_托管户.getValue());
             }
-            else if (!StringUtil.equals(tradePlace, DictCodeListExt1.交易场所_银行间.getValue()) && StringUtil.isNotEmpty(secManageAcctId)
-            &&!(is卖出&&EtrCommonCashPositionDealService.isInTrade(counterId))) {
+            else if ((!StringUtil.equals(tradePlace, DictCodeListExt1.交易场所_银行间.getValue()) &&
+                    !StringUtil.equals(tradePlace, DictCodeListExt1.交易场所_商业银行柜台.getValue()))
+                            && StringUtil.isNotEmpty(secManageAcctId) &&!(is卖出&&EtrCommonCashPositionDealService.isInTrade(counterId))) {
                 return EtrCommonCashPositionDealService.select资金账户(secManageAcctId, ccy);
             }
             else {

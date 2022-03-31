@@ -1667,28 +1667,36 @@ public class EquityInfoDistinctService {
 		// 分批处理
 		logger.info("insertByBatch批量处理开始：" + DateUtil.getCurrentDateTime());
 		// 临时文件存放目录
-		String tmpPath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
-		ImpTable table = new ImpTable("CHB_EQU_HOLD_CHECK");
-		table.setColumns(ImportGenerator.createImpTableColumns(table.getName()));
-		for (ImpColumn column : table.getColumns()) {
-			if (StringUtil.equals(column.getName(), "OPERATE_STATUS")) {
-				column.setValueField("operatestatus");
+		if(!StringUtil.isEmptyList(insertList) && insertList.size()>1000){
+			String tmpPath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+			ImpTable table = new ImpTable("CHB_EQU_HOLD_CHECK");
+			table.setColumns(ImportGenerator.createImpTableColumns(table.getName()));
+			for (ImpColumn column : table.getColumns()) {
+				if (StringUtil.equals(column.getName(), "OPERATE_STATUS")) {
+					column.setValueField("operatestatus");
+				}
+				if (StringUtil.equals(column.getName(), "MERGER_INDENTIFY_MARK")) {
+					column.setValueField("mergerindentifymark");
+				}
 			}
-			if (StringUtil.equals(column.getName(), "MERGER_INDENTIFY_MARK")) {
-				column.setValueField("mergerindentifymark");
+			exeSqlldr(tmpPath, "CHB_EQU_HOLD_CHECK", insertList, table);
+		}else{
+			List<ChbEquHoldCheckDto> newDataList = new ArrayList<ChbEquHoldCheckDto>();
+			newDataList.addAll(insertList);
+
+			// 分批处理
+			logger.info("insertByBatch批量处理开始：" + DateUtil.getCurrentDateTime());
+			int part = dataCount / maxDataCountOneTime; // 分批数
+			for (int i = 0; i < part; i++ ) {
+				chbEquHoldCheckDtoMapper.insertByBatch(newDataList.subList(0, maxDataCountOneTime));
+				newDataList.subList(0, maxDataCountOneTime).clear();
+			}
+			// 最后剩下的数据
+			if (CollectionUtils.isNotEmpty(newDataList)) {
+				chbEquHoldCheckDtoMapper.insertByBatch(newDataList);
 			}
 		}
-		exeSqlldr(tmpPath, "CHB_EQU_HOLD_CHECK", insertList, table);
 		/*** add by zcw 三期性能优化 end **/
-
-//		for (int i = 0; i < part; i++ ) {
-//			chbEquHoldCheckDtoMapper.insertByBatch(newDataList.subList(0, maxDataCountOneTime));
-//			newDataList.subList(0, maxDataCountOneTime).clear();
-//		}
-//		// 最后剩下的数据
-//		if (CollectionUtils.isNotEmpty(newDataList)) {
-//			chbEquHoldCheckDtoMapper.insertByBatch(newDataList);
-//		}
 		logger.info("insertByBatch批量处理结束：" + DateUtil.getCurrentDateTime());
 	}
 	
@@ -1894,6 +1902,7 @@ public class EquityInfoDistinctService {
 	 * @param table
 	 */
 	public void exeSqlldr(String tmpPath, String tablename, List<? extends BaseEntity> list, ImpTable table) {
+		logger.info("执行sqlldr开始---入表："+tablename +" 时间"+ DateUtil.getCurrentDateTime());
 
 		// 创建一个线程池
 		if (interfMaxCorePoolSize < 1) {
@@ -1987,6 +1996,7 @@ public class EquityInfoDistinctService {
 				}
 			}
 		}
+		logger.info("执行sqlldr结束---入表："+tablename +" 时间"+ DateUtil.getCurrentDateTime());
 	}
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW,rollbackFor = Exception.class)

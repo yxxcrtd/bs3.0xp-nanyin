@@ -841,7 +841,7 @@ public class CfetsQuotedCommonService extends BaseService {
      * @see
      * @since 1.0
      */
-    private void deleteByQuoteId(BaseQuoteDto baseDto) {
+    public void deleteByQuoteId(BaseQuoteDto baseDto) {
         log.info("删除报价指令完成度 QuoteId:" + baseDto.getQuoteId());
         EtrQuoteFinishStatusKey key = new EtrQuoteFinishStatusKey();
         key.setQuoteId(baseDto.getQuoteId());
@@ -1335,8 +1335,10 @@ public class CfetsQuotedCommonService extends BaseService {
         result.put("flowStatus",flowStatus);
         result.put("modelType", DictCodeListExt1.子系统代码_交易.getValue());
         String balanceCheck = com.joyintech.tams.constant.DictCodeList.是否_是.getValue();
-        if (StringUtil.isNotEmpty(confirmOk)) {
-            balanceCheck = com.joyintech.tams.constant.DictCodeList.是否_否.getValue();
+        if ((StringUtil.isNotEmpty(entity.getSoftSkipMode())
+                && StringUtil.equals(entity.getSoftSkipMode(), DictCodeList.是否_是.getValue()))
+                || StringUtil.isNotEmpty(confirmOk)) {
+            balanceCheck = DictCodeList.是否_否.getValue();
         }
         result.put("balanceCheck",balanceCheck);
         if(StringUtil.equals(ps,BussinessDictCodeList.交易方向_行权回售.getValue())){
@@ -1397,8 +1399,10 @@ public class CfetsQuotedCommonService extends BaseService {
         result.put("flowStatus",flowStatus);
         result.put("modelType", DictCodeListExt1.子系统代码_交易.getValue());
         String balanceCheck = com.joyintech.tams.constant.DictCodeList.是否_是.getValue();
-        if (StringUtil.isNotEmpty(confirmOk)) {
-            balanceCheck = com.joyintech.tams.constant.DictCodeList.是否_否.getValue();
+        if ((StringUtil.isNotEmpty(entity.getSoftSkipMode())
+                && StringUtil.equals(entity.getSoftSkipMode(), DictCodeList.是否_是.getValue()))
+                || StringUtil.isNotEmpty(confirmOk)) {
+            balanceCheck = DictCodeList.是否_否.getValue();
         }
         result.put("balanceCheck",balanceCheck);
         if(StringUtil.equals(ps,BussinessDictCodeList.交易方向_行权回售.getValue())){

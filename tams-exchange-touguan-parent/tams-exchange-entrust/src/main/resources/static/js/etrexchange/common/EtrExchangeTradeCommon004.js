@@ -891,6 +891,9 @@
                         // }
                         $("#portfolioId_div_" + currentTab).show();
                     }
+                    if(ps == PS_T04){
+                        $("#portfolioId_div_" + currentTab).show();
+                    }
                     if (secId) {
                         // if(parent.EtrExchangeTradeJjHq) {
                         //     if (useInterfQuoteFlag) {
@@ -1429,7 +1432,7 @@
             $("#acctNo_" + currentTab).val('').trigger('change');
             $("#acctNo_div_" + currentTab).hide();
         }
-        if(currentTab == 'gd' || ps == PS_T03 || ps == PS_T49){
+        if(currentTab == 'gd' || ps == PS_T03 || ps == PS_T49 || ps == PS_T68 || ps == PS_T69){
             $("#acctNo_div_" + currentTab).hide();
         }
     };
@@ -3288,6 +3291,10 @@
                 $("#priceModel_div_" + currentTab).show();
                 $("#acctNo_div_" + currentTab).hide();
             }
+
+            if(ps == PS_T97){
+                $("#invAim_div_" + currentTab).hide();
+            }
         }
     var addMinPriceStep = function (type, num, input) {
         var $secIdObj = $("#secIdObjRelative_" + currentTab).val();
@@ -4017,6 +4024,11 @@
                 function (result) {
                     if (ETR_CHECK_POS_SWITCH == '01' && posSwitch) {
                         result.data = "组合分配中可用持仓不足,请确认是否要提交";
+                    }
+                    if(result.statuCode !== 200){
+
+                    }else{
+                        result.data = "请确认是否要提交";
                     }
                     Joyin.confirm(result.data, function () {
                         Joyin.ajaxJson(basePath + '/etrexchange/common/EtrExchangeTradeCommon004/buildDtoFromTodoSubmit', object,

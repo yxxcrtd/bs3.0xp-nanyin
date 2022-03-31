@@ -115,11 +115,14 @@
         ON
         FIN_PRODUCT.FINPROD_ID = ETR_ENTRUST.FINPROD_ID
         LEFT JOIN (
-        SELECT EED.ENTRUST_ID,
-        listagg ( EED.PORTFOLIO_ID, ',' ) within GROUP ( ORDER BY EED.PORTFOLIO_ID ) AS PORTFOLIO_ID ,
-        listagg ( FP.PORTFOLIO_NAME, ',' ) within GROUP ( ORDER BY FP.PORTFOLIO_NAME ) AS PORTFOLIO_NAME
-        FROM ETR_ENTRUST_DETAIL EED
-        left join PTL_PORTFOLIO FP on EED.PORTFOLIO_ID = FP.PORTFOLIO_ID
+            SELECT
+                EED.ENTRUST_ID,
+                wm_concat ( FP.PORTFOLIO_ID ) AS PORTFOLIO_ID ,
+                wm_concat ( FP.PORTFOLIO_NAME ) AS PORTFOLIO_NAME
+            FROM ETR_ENTRUST_DETAIL EED
+            left join
+            (select PORTFOLIO_ID,PORTFOLIO_NAME from PTL_PORTFOLIO order by PORTFOLIO_ID, PORTFOLIO_NAME)
+        FP on EED.PORTFOLIO_ID = FP.PORTFOLIO_ID
         GROUP BY EED.ENTRUST_ID ) detail ON ETR_ENTRUST.ENTRUST_ID = detail.ENTRUST_ID
 
         /* LEFT JOIN
@@ -352,12 +355,15 @@
         ON
         FIN_PRODUCT.FINPROD_ID = WFL_ETR_ENTRUST.FINPROD_ID
         LEFT JOIN (
-        SELECT EED.ENTRUST_ID,
-        listagg ( EED.PORTFOLIO_ID, ',' ) within GROUP ( ORDER BY EED.PORTFOLIO_ID ) AS PORTFOLIO_ID ,
-        listagg ( FP.PORTFOLIO_NAME, ',' ) within GROUP ( ORDER BY FP.PORTFOLIO_NAME ) AS PORTFOLIO_NAME
-        FROM ETR_ENTRUST_DETAIL EED
-        left join PTL_PORTFOLIO FP on EED.PORTFOLIO_ID = FP.PORTFOLIO_ID
-        GROUP BY EED.ENTRUST_ID ) detail ON WFL_ETR_ENTRUST.ENTRUST_ID = detail.ENTRUST_ID
+            SELECT
+                EED.ENTRUST_ID,
+                wm_concat ( FP.PORTFOLIO_ID ) AS PORTFOLIO_ID ,
+                wm_concat ( FP.PORTFOLIO_NAME ) AS PORTFOLIO_NAME
+            FROM ETR_ENTRUST_DETAIL EED
+            left join
+            (select PORTFOLIO_ID,PORTFOLIO_NAME from PTL_PORTFOLIO order by PORTFOLIO_ID, PORTFOLIO_NAME)
+            FP on EED.PORTFOLIO_ID = FP.PORTFOLIO_ID
+            GROUP BY EED.ENTRUST_ID ) detail ON WFL_ETR_ENTRUST.ENTRUST_ID = detail.ENTRUST_ID
         /*LEFT JOIN
         (SELECT
         listagg(TRADER, ',') within group ( order by TRADER ) TRADER,
@@ -525,6 +531,7 @@
                 )
             </if>
             AND t.tradeMarket in ('03','04','12')
+            AND t.finprodType2 in ('F01','F02','F07','F11')
         </where>
     </sql>
 
@@ -1002,7 +1009,9 @@
         FIN_DEAL_PLEDGE.PLEDGE_NUMBER * 100 secTotalPrin,
         tpd.TRADE_AMT actPayAmt,
         tpd.PRIN_AMT prinAmt,
-        sdl_registOrg.ITEM_VALUE registOrgStr
+        sdl_registOrg.ITEM_VALUE registOrgStr,
+	    TO_CHAR(tpd.CREATE_TIME,'HH24:MI:SS') AS TRADE_TIME,
+        TO_CHAR(tpd.CREATE_TIME,'yyyy-MM-dd' ) AS TRADING_DAY
     </sql>
 
     <sql id="etrDispatcherExeListInfo">
@@ -1048,7 +1057,9 @@
         tpdp.TRADE_AMT tradeAmt,
         tpdp.M_INT_AMT mIntAmt,
         tpdp.M_TRADE_AMT mTradeAmt,
-        tpdp.M_DELIVERY_TYPE mdeliveryType
+        tpdp.M_DELIVERY_TYPE mdeliveryType,
+	TO_CHAR(tpdp.CREATE_TIME,'HH24:MI:SS') AS TRADE_TIME,
+  TO_CHAR(tpdp.CREATE_TIME,'yyyy-MM-dd' ) AS TRADING_DAY
     </sql>
     <sql id="etrDispatcherExeListInfo1">
         #{busiTypePosition} busiTypePosition,
@@ -1093,7 +1104,9 @@
         null tradeAmt,
         null mIntAmt,
         null mTradeAmt,
-        null mdeliveryType
+        null mdeliveryType,
+	TO_CHAR(tpdp.CREATE_TIME,'HH24:MI:SS') AS TRADE_TIME,
+  TO_CHAR(tpdp.CREATE_TIME,'yyyy-MM-dd' ) AS TRADING_DAY
     </sql>
 
     <sql id="etrDispatcherExeListInfo2">
@@ -1139,7 +1152,9 @@
            iqc.FPRICE_AMT                                        tradeAmt,
            iqc.M_INT_AMT                                         mIntAmt,
            iqc.M_TRADE_AMT                                       mTradeAmt,
-           iqc.M_DELIVERY_TYPE                                   mdeliveryType
+           iqc.M_DELIVERY_TYPE                                   mdeliveryType,
+	        TO_CHAR(iqc.CREATE_TIME,'HH24:MI:SS') AS TRADE_TIME,
+            TO_CHAR(iqc.CREATE_TIME,'yyyy-MM-dd' ) AS TRADING_DAY
     </sql>
 
     <select id="getEtrBidInfo" resultType="com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.FieldEtrInfoQueryListResponse">

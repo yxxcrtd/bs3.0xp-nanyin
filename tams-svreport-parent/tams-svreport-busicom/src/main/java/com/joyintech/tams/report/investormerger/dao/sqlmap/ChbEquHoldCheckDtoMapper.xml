@@ -107,7 +107,6 @@
 	      DATA_SOURCE, ORG_CODE, AGENT, 
 	      CREATE_DEPT, INTERF_CHECK_RESULT,OPERATE_STATUS,MERGER_INDENTIFY_MARK,HOLDER_CLASSIFY,FUND_ACC_PLACE
         )
-		select A.* from(
 	  <foreach collection="List" index="index" item = "item" separator="UNION ALL">
 		  select
       	  #{item.indentifyMark,jdbcType=VARCHAR}, 
@@ -127,7 +126,6 @@
 	      , #{item.mergerindentifymark,jdbcType=VARCHAR},#{item.holderClassify,jdbcType=VARCHAR},#{item.fundAccPlace,jdbcType=VARCHAR}
 		  from dual
 	  </foreach>
-	  ) A
   </insert>
   
   <select id="selectAllData" resultMap="BaseResultMap" parameterType="java.util.Map">
@@ -212,7 +210,8 @@
            a.MERGER_INDENTIFY_MARK
  FROM CHB_EQU_HOLD_CHECK a
   </select>
-  
+
+	<!-- 该sql目前没有方法调用-->
   <select id="queryAllCheckData" resultMap="BaseResultMap" parameterType="java.util.List">
   	select <include refid="Base_Column_List"/>
   	from CHB_EQU_HOLD_CHECK
@@ -611,7 +610,8 @@
 		 </foreach>		    
      </if>            
   </delete>
-  
+
+	<!-- 该sql目前没有方法调用-->
    <update id="updateMergerIndentifyMark" parameterType="java.util.Map">
      UPDATE CHB_EQU_HOLD_CHECK HOLD 
        SET MERGER_INDENTIFY_MARK =  #{indentifyMark,jdbcType=VARCHAR} 
@@ -657,8 +657,8 @@
 			CK.MERGER_INDENTIFY_MARK = TEMP.INDENTIFY_MARK,
 			CK.OPERATE_STATUS =  '02'
   </update>
-  
-    
+
+	<!-- 该sql使用时 传的参数为null-->
   <select id="mergerData" resultMap="BaseResultMap" parameterType="java.lang.String">
       select 
         HOLD.INDENTIFY_MARK,

@@ -211,8 +211,12 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
             fillAttributes(entity);
             for (EtrExchangeTradePortfolioRequest item : entity.getPortfolioList()) {
                 bean = new PositionRequestBaseBean(item);
-                BigDecimal fprice = Objects.isNull(entity.getFprice()) ? new BigDecimal(0) : entity.getFprice();
-                bean.setCashAmount(fprice.multiply(item.getEntrustNum()));
+                if (交易方向_行权_回售.getValue().equals(entity.getPs())) {
+                    bean.setCashAmount(item.getEntrustAmt());
+                } else {
+                    BigDecimal fprice = Objects.isNull(entity.getFprice()) ? new BigDecimal(0) : entity.getFprice();
+                    bean.setCashAmount(fprice.multiply(item.getEntrustNum()));
+                }
                 BigDecimal secAmount = commonPositionEngineService.getSecAmountByBondUnit(item.getEntrustNum());
                 bean.setSecAmount(secAmount);
 
@@ -409,8 +413,8 @@ public class PositionRequestServiceEtrExchangeTradeSaveRequest {
                     params.put("finprodId",entity.getFinprodId());
                     BigDecimal faceValue = etrTradeOtherCommonService.selectFaceValue(params);
                     // 标准券总额 =质押券数量*折算率*最新面值
-                    BigDecimal standardSecAmount = item.getEntrustNum().multiply(entity.getEntrustPrice()).divide(BigDecimal.valueOf(100)).multiply(faceValue);
-                    map.put(STANDARD_SEC_AMOUNT, standardSecAmount.setScale( 0, BigDecimal.ROUND_DOWN ).longValue());//向下取整
+                    BigDecimal standardSecAmount = item.getEntrustNum().multiply(entity.getEntrustPrice()).divide(BigDecimal.valueOf(10000)).multiply(faceValue);
+                    map.put(STANDARD_SEC_AMOUNT, standardSecAmount.setScale( 0, BigDecimal.ROUND_DOWN ).longValue()*100);//向下取整
                 	map.put("cashAmount", null);//出入库时，可以为空
                 }else {
                     // 标准券总额 = 标准券数量*100

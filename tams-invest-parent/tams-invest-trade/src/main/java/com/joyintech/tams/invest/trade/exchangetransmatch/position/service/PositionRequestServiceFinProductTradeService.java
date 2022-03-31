@@ -223,7 +223,11 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
 
         resultMap.put(DELIVERY_TYPE, commonPositionEngineService.getDeliveryType(dealEntity.getFinprodId()));
         String ps = dealEntity.getPs();
-        resultMap.put(SETTLE_SPEED, commonPositionEngineService.parseSettleSpreed((String) resultMap.get(DELIVERY_TYPE)));
+        if(DictCodeListExt1.交易方向_债转股.getValue().equals(ps)){
+            resultMap.put(SETTLE_SPEED, BussinessDictCodeList.清算速度_T加0.getValue());
+        }else{
+            resultMap.put(SETTLE_SPEED, commonPositionEngineService.parseSettleSpreed((String) resultMap.get(DELIVERY_TYPE)));
+        }
         // 申购方式	见数据字典：申购方式
         if (DictCodeList.交易方向_申购.getValue().equals(dealEntity.getPs())) {
             resultMap.put(BUSI_ACT, DictCodeListExt3.业务动作_中签.getValue());
@@ -594,7 +598,7 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
             }else{
                 bean.setTradeId(dealEntity.getTradeId());
             }
-            bean.setEtrId(entity.getEntrustId());
+            bean.setEtrId(trdProductDealAdd.getEntrustId());
             if(DictCodeListExt3.交易方向_中途换券.getValue().equals(ps)){
                 // ZGTFCP-1805:修改中途换券字段赋值 modify by fuyongsheng 20220324 start
                 FinPledgeDisplaceResult temp = this.getFinPledgeDisplaceResult(entity, DictCodeListExt3.质押券置换_置换结果_置换后.getValue());

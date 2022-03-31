@@ -99,6 +99,8 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
     /**
      * process 数据处理
      * @param batchDate 传递参数
+     * @return BookGenerateResult
+     * @see
      * @since 1.0
      */
     public void execute(Date batchDate) {
@@ -307,6 +309,8 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
         //乘赎回比例
         BigDecimal shareAmt = ArithmeticUtil.multiply(regFinProductDealTotal.getShareAmt(),regFinProductDealTotal.getRedeemRate());
 
+        BigDecimal shareAmt = ArithmeticUtil.multiply(regFinProductDealTotal.getShareAmt(),regFinProductDealTotal.getRedeemRate());
+
         BeanUtil.copyPropertiesIgnoreNull(trdFinProductDealTotal, regFinProductDealTotal);
         trdFinProductDealTotal.setTotleTradeId(busiCode);
         trdFinProductDealTotal.setBusiType(DictCodeList.共通业务类型_债券类资产存续期.getValue());
@@ -353,6 +357,7 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
         for (RegFinProductDeal regFinProductDeal : regFinProductDealList) {
             regFinProductDeal.setCpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(cpriceAmt,regFinProductDeal.getFaceValue()),avaNumTotal,2,RoundingMode.DOWN));
             regFinProductDeal.setTradeAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(tradeAmt,regFinProductDeal.getFaceValue()),avaNumTotal,2,RoundingMode.DOWN));
+
             tailDifferenceCprice = ArithmeticUtil.subtract(tailDifferenceCprice,regFinProductDeal.getCpriceAmt());
             tailDifferenceShAmt=ArithmeticUtil.subtract(tailDifferenceShAmt,regFinProductDeal.getTradeAmt());
         }

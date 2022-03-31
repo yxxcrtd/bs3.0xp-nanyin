@@ -227,7 +227,7 @@ public class TradeCallbackHelper {
         tradeRecord.setTradePlat(instruction.getTradePlat());
         tradeRecord.setFinprodType2(instruction.getFinprodType2());
         tradeRecord.setInvManagerId(instruction.getInvManagerId());
-        tradeRecord.setPs(instruction.getPs());
+        tradeRecord.setPs(instruction.getTradeSide());
         tradeRecord.setBusiTypeTg(instruction.getBusiTypeTg());
         tradeRecord.setEntrustClass(instruction.getEntrustClass());
         if (InvestmentAssetType.isBond(tradeRecord.getFinprodType2()) && tradeRecord.getFullPrice() != null) {

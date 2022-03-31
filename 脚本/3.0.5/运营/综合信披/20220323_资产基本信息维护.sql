@@ -1,5 +1,5 @@
 
-/** add by baojunjie on 20220314 资产要素公共PPP、是否投向市场化债转股相关产品的部分、投向地方政府融资平台的部分校验 start**/
+-- 资产要素公共PPP、是否投向市场化债转股相关产品的部分、投向地方政府融资平台的部分校验
 delete from chb_datacheck_rule_inv where CHECKRULEID ='ASSET_INFO_DETAIL_RULE_20210414-00000000000000000000000000000033';
 INSERT INTO chb_datacheck_rule_inv (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS) VALUES ('ASSET_INFO_DETAIL_RULE_20210414-00000000000000000000000000000033', 'AssetInfoRegist002', 'isNotEmpty', 'svrBussRepAssetCreditNonstdInfoDto.pppflag', '', '', 'N', '公共PPP不可为空。', 'E', 'com.joyintech.tams.common.svreport.datacheck.service.ChbBaseCheckLib');
 
@@ -18,10 +18,10 @@ INSERT INTO chb_datacheck_rule_inv (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPER
 
 delete from chb_datacheck_condition_inv where CHECKRULEID ='ASSET_INFO_DETAIL_RULE_20210525-00000000000000000000000000000016';
 INSERT INTO chb_datacheck_condition_inv (CHECKCONDITIONID, CHECKRULEID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, REMARK, STATUS) VALUES ('ASSET_INFO_DETAIL_CONDITION_0525-016', 'ASSET_INFO_DETAIL_RULE_20210525-00000000000000000000000000000016', 'inArray', 'assetType2', '==', '1202,1203,1204,1205,1206,1207,1208,1209,1211,1212,1213,2202', '', 'E');
-/** add by baojunjie on 20220314 资产要素公共PPP、是否投向市场化债转股相关产品的部分、投向地方政府融资平台的部分校验 end**/
 
 
-/** add by baojunjie on 20220314 资产要素是否商业银行优先股校验 start**/
+
+--资产要素是否商业银行优先股校验
 delete from chb_datacheck_rule_inv where CHECKRULEID ='ASSET_INFO_DETAIL_RULE_20210522-00000000000000000000000000000015';
 INSERT INTO chb_datacheck_rule_inv (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS) VALUES ('ASSET_INFO_DETAIL_RULE_20210522-00000000000000000000000000000015', 'AssetInfoRegist002', 'isNotEmpty', 'svrBussRepEquityInfoDto.bankSecPrefer', '', '', 'N', '是否商业银行优先股要素不可为空。', 'E', 'com.joyintech.tams.common.svreport.datacheck.service.ChbBaseCheckLib');
 
@@ -29,15 +29,14 @@ INSERT INTO chb_datacheck_rule_inv (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPER
 delete from chb_datacheck_condition_inv where CHECKRULEID ='ASSET_INFO_DETAIL_RULE_20210522-00000000000000000000000000000015';
 INSERT INTO chb_datacheck_condition_inv (CHECKCONDITIONID, CHECKRULEID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, REMARK, STATUS) VALUES ('ASSET_INFO_DETAIL_CONDITION_0522-015', 'ASSET_INFO_DETAIL_RULE_20210522-00000000000000000000000000000015', 'compareValue', 'svrBussRepEquityInfoDto.sharesType', '==', '02', '当股票类型=“02 优先股”时', 'E');
 
-/** add by baojunjie on 20220314 资产要素是否商业银行优先股校验 end**/
 
-/** add by baojunjie on 20220314 资产要素部分赎回比例校验 start**/
+-- 资产要素部分赎回比例校验
 UPDATE chb_datacheck_condition_inv set  status = 'E'  where CHECKRULEID = 'LZ4827E5-DF35-D920-E050-007F01000908';
 UPDATE chb_datacheck_rule_inv set  status = 'E'  where CHECKRULEID = 'LZ4827E5-DF35-D920-E050-007F01000908';
-/** add by baojunjie on 20220314 资产要素部分赎回比例校验 end**/
 
 
-/** add by baojunjie on 20220315 资产要素校验 start**/
+
+--资产要素校验
 delete from chb_datacheck_rule_inv where CHECKRULEID in ('ASSET_INFO_DETAIL_RULE_20210414-00000000000000000000000000000060','ASSET_INFO_DETAIL_RULE_20210414-00000000000000000000000000000061');
 INSERT INTO chb_datacheck_rule_inv (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS) VALUES ('ASSET_INFO_DETAIL_RULE_20210414-00000000000000000000000000000060', 'AssetInfoRegist002', 'isCustomizedString', 'svrBussRepNobleMetalInfoDto.assetName', '', '^[\\u4e00-\\u9fa5\\ue815-\\ue864\\uff01-\\uff5e\\uffe0-\\uffe5\\u3000-\\u3003\\u3005-\\u3017\\u301d-\\u301e\\u2010\\u2013-\\u2016\\u2018-\\u2019\\u201c-\\u201d\\u2025-\\u2026\\u2030\\u2032-\\u2033\\u2035\\u203b\\u00b7\\u0030-\\u0039\\u0041-\\u005a\\u0061-\\u007a\\u2160-\\u216b\\u0020-\\u0026\\u0028-\\u007B\\u007D\\u007E]{0,}$', 'Y', '资产名称必须填写白名单中的文字。', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 INSERT INTO chb_datacheck_rule_inv (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS) VALUES ('ASSET_INFO_DETAIL_RULE_20210414-00000000000000000000000000000061', 'AssetInfoRegist002', 'isNotEmpty', 'svrBussRepNobleMetalInfoDto.assetName', '', '', 'N', '资产名称不可为空。', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
@@ -46,11 +45,10 @@ delete from chb_datacheck_condition_inv where CHECKRULEID in ('ASSET_INFO_DETAIL
 INSERT INTO chb_datacheck_condition_inv (CHECKCONDITIONID, CHECKRULEID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, REMARK, STATUS) VALUES ('ASSET_INFO_DETAIL_CONDITION_0517-094', 'ASSET_INFO_DETAIL_RULE_20210414-00000000000000000000000000000060', 'inArray', 'assetType2', '==', '1601,1602,1699', '', 'E');
 INSERT INTO chb_datacheck_condition_inv (CHECKCONDITIONID, CHECKRULEID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, REMARK, STATUS) VALUES ('ASSET_INFO_DETAIL_CONDITION_0517-095', 'ASSET_INFO_DETAIL_RULE_20210414-00000000000000000000000000000061', 'inArray', 'assetType2', '==', '1601,1602,1699', '', 'E');
 
-/** add by baojunjie on 20220315 资产要素校验 end**/
 
 
 
-/** add by baojunjie on 20220316 资产要素校验 start**/
+-- 资产要素校验
 delete from chb_datacheck_rule_inv where CHECKRULEID = 'ASSET_INFO_DETAIL_RULE_0000-443E4A49-6810-5A9E-E051-007F01006A36';
 INSERT INTO chb_datacheck_rule_inv (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS) VALUES ('ASSET_INFO_DETAIL_RULE_0000-443E4A49-6810-5A9E-E051-007F01006A36', 'AssetInfoRegist002', 'isNotEmpty', 'svrBussRepOtherInvestTargetInfoDto.pppflag', NULL, NULL, 'N', '公共PPP不可为空', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 
@@ -100,10 +98,6 @@ delete from chb_datacheck_condition_inv where CHECKRULEID = 'ASSET_INFO_DETAIL_R
 INSERT INTO chb_datacheck_condition_inv (CHECKCONDITIONID, CHECKRULEID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, REMARK, STATUS) VALUES ('ASSET_INFO_DETAIL_CONDITION_0004-201', 'ASSET_INFO_DETAIL_RULE_0002-884807E5-DF89-D920-E054-407F010077FD', 'inArray', 'assetType2', '==', '1301,1302,1305', NULL, 'E');
 
 
-/** add by baojunjie on 20220316 资产要素校验 end**/
-
-
-/** add by baojunjie on 20220316 资产要素校验 start**/
 delete from chb_datacheck_rule_inv where CHECKRULEID = 'ASSET_INFO_DETAIL_RULE_0000-884807E5-DF88-D920-E151-007F010077FD';
 INSERT INTO chb_datacheck_rule_inv (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS) VALUES ('ASSET_INFO_DETAIL_RULE_0000-884807E5-DF88-D920-E151-007F010077FD', 'AssetInfoRegist002', 'isNotEmpty', 'svrBussRepAssetMngProdInfoDto.privateprdFlag', NULL, NULL, 'N', '投向金融资产投资公司发行的私募资产管理产品要素不可为空', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 

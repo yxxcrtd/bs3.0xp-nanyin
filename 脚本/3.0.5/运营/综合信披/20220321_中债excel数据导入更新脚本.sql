@@ -1,4 +1,4 @@
-/** add by baojunjie on 20220225  中债excle导入表名称修改 start**/
+-- 中债excle导入表名称修改
 update chb_mgrtable_info set MGRTABLE_CHI_NAME='产品申报登记' where MGRTABLE_ID='CHB_PRD_DECLARE_SUB_TMP';
 update chb_mgrtable_info set MGRTABLE_CHI_NAME='产品发行登记' where MGRTABLE_ID='CHB_PRD_ISSUE_SUB_TMP';
 update chb_mgrtable_info set MGRTABLE_CHI_NAME='募集总量登记' where MGRTABLE_ID='CHB_PRD_RAISETOT_SUB_TMP';
@@ -9,4 +9,3 @@ update chb_mgrtable_info set MGRTABLE_CHI_NAME='从业人员登记' where MGRTAB
 update chb_mgrtable_info set MGRTABLE_CHI_NAME='资产要素信息登记' where MGRTABLE_ID='CHB_ASSET_INFO_TMP';
 update chb_mgrtable_info set MGRTABLE_CHI_NAME='资产交易信息登记' where MGRTABLE_ID='CHB_INVEST_TRADE_SUB_TMP';
 update chb_mgrtable_info set MGRTABLE_CHI_NAME='资产估值信息登记' where MGRTABLE_ID='CHB_AST_VAL_SUB_TMP';
-/** add by baojunjie on 20220225  中债excle导入表名称修改 end**/

@@ -56,6 +56,8 @@ import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.component.base.core.MstWorkflowCommonService;
+import com.joyintech.tams.component.base.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.base.core.impl.dao.MstWorkflowCommonServiceMapperImpl;
 import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
 import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
@@ -246,6 +248,13 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 
     @Autowired
     private EtrEntrustDetailBackUpMapper etrEntrustDetailBackUpMapper;
+
+    /**
+     * 流程组件
+     */
+    @Autowired
+    private MstWorkflowCommonService mstWorkflowCommonService;
+
 
     /**
      * {@inheritDoc}
@@ -2071,7 +2080,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
         //处理指令持仓和头寸(仅有未被接收的指令才可以撤会,所以一般只可能存在下指令时生成的持仓和流水)
         if (baseEtrCashPositionCommService != null && (DictCodeList.委托状态_待接收.getValue().equals(entity.getEntrustStatus())
                 || DictCodeListExt3.委托状态_待分发.getValue().equals(entity.getEntrustStatus()))) {
-            baseEtrCashPositionCommService.entrustCloseExecute(entity.getEntrustId());
+            baseEtrCashPositionCommService.entrustCloseExecute(entity.getEntrustId(), DictCodeList.是否_是.getValue());
 //			positionRequestService.sendRevoke(entity);
         }
         //处理履历
@@ -2267,7 +2276,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
             for (Field field : fields) {
                 if (StringUtil.equals(field.getName(), "messageType")) {
                     field.setAccessible(true);
-                    ReflectionUtils.setField(field, ajax, MessageType.错误消息.name());
+                    ReflectionUtils.setField(field, ajax, MessageType.错误消息.getCode());
                     break;
                 }
             }
@@ -5610,6 +5619,13 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
         if (!StringUtil.equals(dto.getEntrustStatus(), DictCodeList.委托状态_已退回.getValue()) && !StringUtil.equals(dto.getEntrustStatus(), DictCodeList.委托状态_已撤回.getValue())) {
             String entrustStatusStr = SysDataUtil.getNameFromDataDict(DictCode.委托状态, dto.getEntrustStatus());
             errorList.add(new ValidMessage(entrustStatusStr + "的指令不允许修改!"));
+        }else{
+            //check流程中是否有数据
+            WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();
+            wflValidInputParameter.setBusinessDataPk1(dto.getEntrustId());
+            if (WorkFlowUtil.isNotFromToDoList() && mstWorkflowCommonService.isInWflProcess(wflValidInputParameter)) {
+                errorList.add(new ValidMessage("所选对象存在流程中的数据不能修改"));
+            }
         }
         if (!CollectionUtils.isEmpty(errorList)) {
             webResult.setErrorList(errorList);

@@ -100,8 +100,7 @@
         ETR_ENTRUST.CCY ccy,
         IBU_PORTFOLIO_ACCT_RELA.CFETS_ACCT_TYPE secAcctSource,
         IBU_PORTFOLIO_ACCT_RELA.PARTY_ID partyId,
-        trunc((NVL(C.totalShareAmt,nvl(C2.totalShareAmt,0))+NVL(T6.FINISH_AMT*100,0))/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100
-        tradeFinishPercent,
+        trunc(NVL(T8.totalShareAmt,0)/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100 tradeFinishPercent,
         ETR_ENTRUST.PRICE_MODEL priceModel,
         ETR_ENTRUST_ADD.SEC_ACCT_ID secManageAcctId,
         PA_PTL_PORTFOLIO.PORTFOLIO_SERIES portfolioSeries,
@@ -112,8 +111,8 @@
         ETR_ENTRUST.ENTRUST_DATE entrustDate,
         ETR_ENTRUST_ADD.FULL_PRICE unitFprice,
         to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi:ss') transmitTime,
-        ROUND(NVL(C.totalShareAmt,nvl(C2.totalShareAmt,0))+NVL(T6.FINISH_AMT*100,0))/10000 finishDealAmt,
-        NVL(ETR_ENTRUST.ENTRUST_NUM, 0)/100 - ROUND(NVL(C.totalShareAmt,nvl(C2.totalShareAmt,0))+NVL(T6.FINISH_AMT*100,0))/10000 avaDealAmt,
+        ROUND(NVL(T8.totalShareAmt,0)) finishDealAmt,
+        ROUND(NVL(ETR_ENTRUST.ENTRUST_NUM*100, 0) - NVL(T8.totalShareAmt,0)) avaDealAmt,
         D.ITEM_VALUE entrustStatusStr,
         E.ITEM_VALUE psStr,
         F.ITEM_VALUE priceModelStr,
@@ -178,6 +177,13 @@
         GROUP BY
         ENTRUST_ID) T7 ON
         ETR_ENTRUST.ENTRUST_ID = T7.ENTRUST_ID
+        LEFT JOIN (select sum(SHARE_AMT) totalShareAmt,tpda.ENTRUST_ID
+        from TRD_PRODUCT_DEAL tpd
+        left join TRD_PRODUCT_DEAL_ADD tpda on tpd.TRADE_ID = tpda.TRADE_ID
+        where tpd.IS_CANCEL = 'N' and tpd.TRADE_STATUS = '01'
+        group by tpda.ENTRUST_ID
+        ) T8
+        ON T8.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
         LEFT JOIN
         FIN_PRODUCT
         ON

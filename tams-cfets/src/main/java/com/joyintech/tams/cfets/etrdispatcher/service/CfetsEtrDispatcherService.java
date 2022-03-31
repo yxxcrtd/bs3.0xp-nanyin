@@ -83,6 +83,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.function.Consumer;
@@ -357,18 +358,18 @@ public class CfetsEtrDispatcherService extends BaseService {
                         response.setPs(response.getBusiPs());
                     }
                 }
-                //这里特殊处理成交进度和成交额度
-                if(!StringUtils.equals(response.getFinprodType2(),DictCodeList.平安资产类型_基金.getValue())
-                &&!StringUtils.equals(response.getFinprodType2(),DictCodeList.平安资产类型_债券.getValue())){
-                    if(DictCodeUtil.equals(response.getFinprodType2(),BussinessDictCodeList.平安资产类型_一级投标债券,BussinessDictCodeList.平安资产类型_债券,BussinessDictCodeList.平安资产类型_计划类资产_利率型,
-                            BussinessDictCodeList.平安资产类型_计划类资产_货币型,BussinessDictCodeList.平安资产类型_计划类资产_净值型,BussinessDictCodeList.平安资产类型_拆借,BussinessDictCodeList.平安资产类型_买断式回购,
-                            BussinessDictCodeList.平安资产类型_存款,BussinessDictCodeList.平安资产类型_项目类资产,BussinessDictCodeList.平安资产类型_基金)
-                            || DictCodeUtil.equals(response.getFinprodType2(),DictCodeList.平安资产类型_质押式回购)) {
-                        DecimalFormat df = new DecimalFormat("0.##");
-                        response.setDealProgress(ArithmeticUtil.divide(response.getFinishAmt(), response.getEntrustAmt(), 4).multiply(new BigDecimal("100")));
-                        response.setTransRemainderAmt(new BigDecimal(df.format(ArithmeticUtil.divide(ArithmeticUtil.subtract(response.getEntrustAmt(), response.getFinishAmt()), new BigDecimal("10000"), 4))));
-                        response.setTransFinishAmt(new BigDecimal(df.format(ArithmeticUtil.divide(response.getFinishAmt(), new BigDecimal("10000"), 4))));
-                    }
+                //这里特殊处理成交进度和成交额度,如果场内和场外的资产类型重合了，考虑用业务类型或者交易场所进行区分，不能单纯的排除某一种类型
+                if(DictCodeUtil.equals(response.getFinprodType2(),BussinessDictCodeList.平安资产类型_一级投标债券,BussinessDictCodeList.平安资产类型_计划类资产_利率型,
+                        BussinessDictCodeList.平安资产类型_计划类资产_货币型,BussinessDictCodeList.平安资产类型_计划类资产_净值型,BussinessDictCodeList.平安资产类型_拆借,BussinessDictCodeList.平安资产类型_买断式回购,
+                        BussinessDictCodeList.平安资产类型_存款,BussinessDictCodeList.平安资产类型_项目类资产)
+                        || (DictCodeUtil.equals(response.getFinprodType2(),DictCodeList.平安资产类型_质押式回购)
+                            && (StringUtil.equals(response.getBusiTypePosition(),DictCodeListExt3.头寸业务类型_质押式回购首期.getValue()) || StringUtil.equals(response.getBusiTypePosition(),DictCodeListExt3.头寸业务类型_质押式回购到期.getValue())))
+                        || StringUtil.equals(response.getBusiTypePosition(),DictCodeListExt3.头寸业务类型_现券交易.getValue())
+                        || (StringUtil.equals(response.getFinprodType2(),BussinessDictCodeList.平安资产类型_基金.getValue()) && StringUtil.isEmpty(response.getBusiTypePosition()))) {
+                    DecimalFormat df = new DecimalFormat("0.##");
+                    response.setDealProgress(ArithmeticUtil.divide(response.getFinishAmt(), response.getEntrustAmt(), 4).multiply(new BigDecimal("100")));
+                    response.setTransRemainderAmt(new BigDecimal(df.format(ArithmeticUtil.divide(ArithmeticUtil.subtract(response.getEntrustAmt(), response.getFinishAmt()), new BigDecimal("10000"), 4))));
+                    response.setTransFinishAmt(new BigDecimal(df.format(ArithmeticUtil.divide(response.getFinishAmt(), new BigDecimal("10000"), 4))));
                 }
                 if(StringUtil.equals(response.getFinprodType2(), BussinessDictCodeList.平安资产类型_一级投标债券.getValue())){
                     response.setPs(null);
@@ -1564,7 +1565,7 @@ public class CfetsEtrDispatcherService extends BaseService {
             }
         });
         CfetsEtrDispatcherInfoExcResponse fieldResponseDto = this.getEtrDispatcherExcInfo(dto);
-        if(DictCodeListExt3.投管业务类型_新股申购.equals(fieldResponseDto.getBusiTypePosition())){
+        if(StringUtil.isNotEmpty(fieldResponseDto) && DictCodeListExt3.投管业务类型_新股申购.equals(fieldResponseDto.getBusiTypePosition())){
             fieldResponseDto.setPriceModel(StringUtil.EMPTY);
         }
         resultData.put(dtCode + "_form", infoForm);
@@ -1628,7 +1629,19 @@ public class CfetsEtrDispatcherService extends BaseService {
                 } else if (StringUtil.equals(dto.getBusiTypePosition(), DictCodeListExt3.投管业务类型_质押券出入库.getValue())) {
                     String ps = (String) pageParam.get("ps");
                     if (DictCodeListExt3.交易方向_质押券入库.getValue().equals(ps) && StringUtil.isNotEmpty(fieldResponseDto.getPledgeRatio())) {
-                        fieldResponseDto.setPledgeStandardNumber(ArithmeticUtil.multiply(fieldResponseDto.getPledgeRatio().divide(new BigDecimal("100")), fieldResponseDto.getEntrustNum()));
+                        if(StringUtil.isNotEmpty(fieldResponseDto.getStockSecId())){
+                            Date sysDate = DateUtil.platDateFromCache();
+                            BigDecimal faceValue = etrCommonService.select券面面值(fieldResponseDto.getStockSecId(), DateUtil.format(sysDate));
+                            fieldResponseDto.setPledgeStandardNumber(ArithmeticUtil.divide(ArithmeticUtil.multiply(fieldResponseDto.getPledgeRatio().divide(new BigDecimal("100")), fieldResponseDto.getEntrustNum(),faceValue),new BigDecimal(100),0, RoundingMode.DOWN));
+                        }else{
+                            fieldResponseDto.setPledgeStandardNumber(ArithmeticUtil.multiply(fieldResponseDto.getPledgeRatio().divide(new BigDecimal("100")), fieldResponseDto.getEntrustNum()));
+                        }
+                    }else if (DictCodeListExt3.交易方向_质押券出库.getValue().equals(ps) && StringUtil.isNotEmpty(fieldResponseDto.getPledgeRatio())) {
+                        if(StringUtil.isNotEmpty(fieldResponseDto.getStockSecId())){
+                            Date sysDate = DateUtil.platDateFromCache();
+                            BigDecimal faceValue = etrCommonService.select券面面值(fieldResponseDto.getStockSecId(), DateUtil.format(sysDate));
+                            fieldResponseDto.setPledgeStandardNumber(ArithmeticUtil.divide(ArithmeticUtil.multiply(fieldResponseDto.getPledgeRatio().divide(new BigDecimal("100")), fieldResponseDto.getEntrustNum(),faceValue),new BigDecimal(100),0, RoundingMode.DOWN));
+                        }
                     }
                 } else if (StringUtil.equals(dto.getBusiTypePosition(), DictCodeListExt3.头寸业务类型_现券交易.getValue())) {
                     if (StringUtil.equals("01", CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"))) {

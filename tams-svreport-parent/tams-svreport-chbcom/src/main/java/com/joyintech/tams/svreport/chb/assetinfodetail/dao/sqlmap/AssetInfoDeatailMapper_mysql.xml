@@ -3317,8 +3317,8 @@
             AND M.ASSET_BUSI_TYPE =#{orgAssetType4}
         </if>
         <if test="search != null and search!=''">
-            AND (E.CHB_ASSET_TYPE2 like '%'|| #{search} ||'%'
-            or l.ITEM_VALUE like '%'|| #{search} ||'%')
+            AND (E.CHB_ASSET_TYPE2 like /*'%'|| #{search} ||'%' or l.ITEM_VALUE like '%'|| #{search} ||'%'*/
+            concat('%',#{search},'%') or l.ITEM_VALUE like concat('%',#{search},'%'))
         </if>
     </select>
 

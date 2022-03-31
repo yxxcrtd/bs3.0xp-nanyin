@@ -52,6 +52,7 @@ import com.joyintech.tams.common.base.entity.MstBondValuationInfo;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
@@ -1412,9 +1413,19 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
                 ibuQuoteEtrReDto.setQuoteId(dto.getQuoteId());
                 ibuQuoteEtrReDto.setPortfolioId(tempDataDto.getPortfolioId());
                 ibuQuoteEtrReDto.setShareAmt(ArithmeticUtil.multiply(tempDataDto.getAvaNum(), BigDecimal.valueOf(100))); // 画面上券面总额为万元单位
-                if (ibuQuoteEtrReDto.getFpriceAmt() == null) {
-                    ibuQuoteEtrReDto.setFpriceAmt(ArithmeticUtil.multiply(
-                        ibuQuoteEtrReDto.getShareAmt(), BigDecimal.valueOf(100)));
+                if(StringUtil.equals(dto.getTradeStatus(), BussinessDictCodeList.银行间上行报价状态_成交中.getValue())
+                    || "done".equals(dto.getOperateType()) ){
+                    if(StringUtil.equals(dto.getOperateType(), DictCodeListExt3.流程节点_流程退回.getValue())){
+                        ibuQuoteEtrReDto.setFpriceAmt(ArithmeticUtil.multiply(
+                                ibuQuoteEtrReDto.getShareAmt(), BigDecimal.valueOf(100)));
+                    }else{
+                        ibuQuoteEtrReDto.setFpriceAmt(tempDataDto.getFpriceAmt());
+                    }
+                }else{
+                    if (ibuQuoteEtrReDto.getFpriceAmt() == null) {
+                        ibuQuoteEtrReDto.setFpriceAmt(ArithmeticUtil.multiply(
+                                ibuQuoteEtrReDto.getShareAmt(), BigDecimal.valueOf(100)));
+                    }
                 }
                 ibuQuoteEtrReDto.setEntrustId(tempDataDto.getEntrustId());
                 ibuQuoteEtrReDtoList.add(ibuQuoteEtrReDto);

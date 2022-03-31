@@ -471,6 +471,19 @@ trade:
     risk:
       alive: 5000
       capacity: 128
+agent:
+  active: false #是否对接接口平台，true-是，false-否
+  terminal:
+    host: http://192.168.90.208:1668/dsp
+    url: /datarouter/http/json/callTrigger
+  query:
+    interval: 10000
+    count: 2
+  keep:
+    fixRate: 30000
+  cache:
+    path: cache
+    clean: 0 0 16 ? * MON-FRI
 
 position:
   flag: false #是否控制账户持仓，true控制，false不控制

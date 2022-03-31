@@ -900,21 +900,23 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
         if ("save".equals(entity.getOperatorType())) {
             return;
         }
-        //已撤回数据，根据指令重新发起交易。报价状态重置
-        if(StringUtil.equals(entity.getQuotaPageModel(), "new")){
-            entity.setTradeStatus(StringUtil.EMPTY);
-        }
         this.handOurAndLendinShareAmt(entity);
         entity.setWorkflowId(entity.getWorkflowId());
         insertWflBondRequestQuote(entity);
         if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+            //已撤回数据，根据指令重新发起交易。报价状态重置
+            if(StringUtil.equals(entity.getQuotaPageModel(), "new") && BussinessDictCodeList.银行间上行报价状态_已撤回.getValue().equals(entity.getStatus())){
+                entity.setTradeStatus(StringUtil.EMPTY);
+            }
             //插入旧头寸
             entity.setIsExistNew(DictCodeList.是否_是.getValue());
             doInsetOrUpdateForPtlPositionHold(entity);
         }
         String systemAct = handSystemAct(entity);
+
         sendPosition(entity, DictCodeListExt3.流程节点_流程提交.getValue(), systemAct, systemAct,null);
         //doInsetOrUpdateForPtlPositionHold(entity);
+
     }
     
 	@Override
@@ -922,16 +924,16 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
         if ("save".equals(entity.getOperatorType())) {
             return;
         }
-        //已撤回数据，根据指令重新发起交易。报价状态重置
-        if(StringUtil.equals(entity.getQuotaPageModel(), "new")){
-            entity.setTradeStatus(StringUtil.EMPTY);
-        }
         Map<String,Object> map = new HashMap<>();
         if (!StringUtil.equals("revoke", entity.getOperatorType()) && !StringUtil.equals("delete", entity.getOperatorType())) {
             this.handOurAndLendinShareAmt(entity);
             // 重新insert
         	insertWflBondRequestQuote(entity);
             if (StringUtil.equals(com.joyintech.tams.constant.DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+                //已撤回数据，根据指令重新发起交易。报价状态重置
+                if(StringUtil.equals(entity.getQuotaPageModel(), "new") && BussinessDictCodeList.银行间上行报价状态_已撤回.getValue().equals(entity.getStatus())){
+                    entity.setTradeStatus(StringUtil.EMPTY);
+                }
                 //插入旧头寸
                 entity.setIsExistNew(DictCodeList.是否_是.getValue());
                 doInsetOrUpdateForPtlPositionHold(entity);
@@ -983,10 +985,16 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
      */
     @Override
 	public void doBack(CfetsBondDealRequestQuoteDto entity){
+        entity.setOperatorType(DictCodeListExt3.流程节点_流程退回.getValue());
         if (StringUtil.equals(com.joyintech.tams.constant.DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
             //插入旧头寸
-            //回退释放头寸
-            doDeletePtlPositionHold(entity.getWorkflowId());
+            if(BussinessDictCodeList.银行间上行报价状态_成交中.getValue().equals(entity.getTradeStatus())
+                || "成交".equals(entity.getQuoteOperatorType())){
+                doInsetOrUpdateForPtlPositionHold(entity);
+            }else{
+                //回退释放头寸
+                doDeletePtlPositionHold(entity.getWorkflowId());
+            }
         }
 		//回退释放头寸
     	//doDeletePtlPositionHold(entity.getWorkflowId());
@@ -1107,6 +1115,7 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
      */
     public com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto preparEntity(CfetsBondDealRequestQuoteDto entity){
         com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto = JsonUtils.json2Object(JsonUtils.object2Json(entity),com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto.class);
+        cfetsBondDealRequestQuoteDto.setOperateType(entity.getOperatorType());
         //处理下业务模式
         if(CollectionUtils.isNotEmpty(cfetsBondDealRequestQuoteDto.getCfetsBondDealRequestQuoteDtoList())) {
             Map<String, Object> entrustReclas = new HashMap<>();

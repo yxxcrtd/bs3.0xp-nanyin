@@ -12,6 +12,7 @@ package com.joyintech.service.bankuplink.bond.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.json.BigDecimalSerializer;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -151,6 +152,9 @@ public class CfetsBondDealRequestQuoteDto extends CfetsBondDealEntrustOrderDto {
      *数据已入新头寸，Y：已入
      */
     private String isExistNew;
+
+    @ApiModelProperty(name="softSkipMode",value="软控是否继续？Y：继续",example="Y")
+    private String softSkipMode;
 
     public BigDecimal getUnitFprice() {
         return unitFprice;
@@ -531,5 +535,17 @@ public class CfetsBondDealRequestQuoteDto extends CfetsBondDealEntrustOrderDto {
 
     public void setIsExistNew(String isExistNew) {
         this.isExistNew = isExistNew;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public String getSoftSkipMode() {
+        return softSkipMode;
+    }
+
+    public void setSoftSkipMode(String softSkipMode) {
+        this.softSkipMode = softSkipMode;
     }
 }

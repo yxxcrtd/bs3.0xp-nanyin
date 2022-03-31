@@ -3,14 +3,15 @@ package com.joyintech.tams.exchange.service.trade.controller;
 import com.joyintech.tams.exchange.common.bean.*;
 import com.joyintech.tams.exchange.common.constant.EntrustBsProp;
 import com.joyintech.tams.exchange.common.constant.ErrorCode;
+import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt3;
 import com.joyintech.tams.exchange.common.db.domain.Algorithm;
 import com.joyintech.tams.exchange.common.db.domain.Instruction;
 import com.joyintech.tams.exchange.common.db.domain.IntegratedEntrust;
 import com.joyintech.tams.exchange.common.domain.Message;
+import com.joyintech.tams.exchange.common.utils.EntrustPropUtils;
 import com.joyintech.tams.exchange.datacommon.db.service.InstructionService;
 import com.joyintech.tams.exchange.service.trade.management.service.OrderManagement;
 import com.joyintech.tams.exchange.util.MasterUtil;
-import com.joyintech.tams.exchange.common.utils.EntrustPropUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 @RestController("OrderController_dtx")
@@ -57,12 +59,15 @@ public class OrderController {
     @ApiOperation(value = "普通下单（竞价下单）", notes = "普通下单（竞价下单）")
     @RequestMapping(value = "/order", method = RequestMethod.POST)
     public Message<OrderPlaceBean> sendOrder(@RequestBody OrderPlaceBean order) {
-    	if(!MasterUtil.isMaster()) {
-    		return MasterUtil.postForObject(order);
-    	}
+        if (!MasterUtil.isMaster()) {
+            return MasterUtil.postForObject(order);
+        }
         Instruction instruction = instructionService.findById(order.getInstructionId());
         if (Objects.isNull(instruction)) {
             return new Message<>(ResultBean.error(ErrorCode.INSTRUCTIONS_NOT_EXIST, order));
+        }
+        if ("EX005".equals(instruction.getBusiTypeTg())) {
+            order.setEntrustPrice(order.getEntrustPrice().divide(BigDecimal.valueOf(100)));
         }
 
         String entrustBs = EntrustBsProp.getEntrustBs(instruction.getPs());
@@ -85,15 +90,19 @@ public class OrderController {
     @ApiOperation(value = "综合业务下单", notes = "综合业务下单")
     @RequestMapping(value = "/order/integratedEntrust", method = RequestMethod.POST)
     public Message<IntegratedEntrust> sendIntegratedEntrust(@RequestBody @Validated IntegratedOrderPlaceBean orderPlaceBean) {
-    	if(!MasterUtil.isMaster()) {
-    		return MasterUtil.postForObject(orderPlaceBean);
-    	}
+        if (!MasterUtil.isMaster()) {
+            return MasterUtil.postForObject(orderPlaceBean);
+        }
         Instruction instruction = instructionService.findById(orderPlaceBean.getInstructionId());
         if (Objects.isNull(instruction)) {
             return new Message<>(ResultBean.error(ErrorCode.INSTRUCTIONS_NOT_EXIST, orderPlaceBean));
         }
+
         IntegratedEntrust integratedEntrust = new IntegratedEntrust();
         BeanUtils.copyProperties(orderPlaceBean, integratedEntrust);
+        if (DictCodeListExt3.投管业务类型_解除质押.getValue().equals(instruction.getBusiTypeTg()) && orderPlaceBean.getEntrustVolume() == 0) {
+            integratedEntrust.setEntrustVolume(instruction.getEntrustNum());
+        }
 
         String entrustBs = EntrustPropUtils.getEntrustBs(instruction);
         logger.info("综合业务下单：买卖方向（entrustBs）转换：{} ==> {}", integratedEntrust.getEntrustBs(), entrustBs);
@@ -116,27 +125,27 @@ public class OrderController {
     @ApiOperation(value = "委托撤单", notes = "委托撤单")
     @RequestMapping(value = "/order/cancel", method = RequestMethod.POST)
     public Message<Boolean> cancelOrder(@RequestParam String userId, @RequestParam String orderId) {
-    	if(!MasterUtil.isMaster()) {
-    		return MasterUtil.postForObject(null);
-    	}
+        if (!MasterUtil.isMaster()) {
+            return MasterUtil.postForObject(null);
+        }
         return new Message<Boolean>(orderManagement.cancelOrder(userId, orderId));
     }
 
     @ApiOperation(value = "普通委托复核", notes = "普通委托复核", hidden = true)
     @RequestMapping(value = "/order/review", method = RequestMethod.POST)
     public Message<ReviewDto> sendOrderWithReview(@RequestParam String userId, @RequestBody ReviewDto dto) {
-    	if(!MasterUtil.isMaster()) {
-    		return MasterUtil.postForObject(dto);
-    	}
+        if (!MasterUtil.isMaster()) {
+            return MasterUtil.postForObject(dto);
+        }
         return new Message<ReviewDto>(orderManagement.sendOrderWithReview(userId, dto));
     }
 
     @ApiOperation(value = "综合业务委托复核", notes = "综合业务委托复核", hidden = true)
     @RequestMapping(value = "/order/integratedEntrust/review", method = RequestMethod.POST)
     public Message<TrdExchangeDto> sendOrderWithReview(@RequestParam String userId, @RequestBody TrdExchangeDto dto) {
-    	if(!MasterUtil.isMaster()) {
-    		return MasterUtil.postForObject(dto);
-    	}
+        if (!MasterUtil.isMaster()) {
+            return MasterUtil.postForObject(dto);
+        }
         return new Message<TrdExchangeDto>(orderManagement.sendIntegratedEntrustWithReview(userId, dto));
     }
 
@@ -150,9 +159,9 @@ public class OrderController {
     @ApiOperation(value = "算法单创建", notes = "算法单创建", hidden = true)
     @RequestMapping(value = "/order/algorithm", method = RequestMethod.POST)
     public Message<Algorithm> createAlgorithm(@RequestParam String userId, @RequestBody AlgorithmPlaceBean algorithm) {
-    	if(!MasterUtil.isMaster()) {
-    		return MasterUtil.postForObject(algorithm);
-    	}
+        if (!MasterUtil.isMaster()) {
+            return MasterUtil.postForObject(algorithm);
+        }
         return new Message<Algorithm>(orderManagement.createAlgorithm(userId, algorithm));
     }
 
@@ -166,9 +175,9 @@ public class OrderController {
     @ApiOperation(value = "算法单取消", notes = "算法单取消", hidden = true)
     @RequestMapping(value = "/order/algorithm/cancel", method = RequestMethod.POST)
     public Message<Algorithm> cancelAlgorithm(@RequestParam String algorithmId) {
-    	if(!MasterUtil.isMaster()) {
-    		return MasterUtil.postForObject(null);
-    	}
+        if (!MasterUtil.isMaster()) {
+            return MasterUtil.postForObject(null);
+        }
         return new Message<Algorithm>(orderManagement.cancelAlgorithm(algorithmId));
     }
 

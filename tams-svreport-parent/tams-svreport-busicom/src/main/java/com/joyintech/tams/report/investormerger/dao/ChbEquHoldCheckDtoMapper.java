@@ -16,7 +16,7 @@ import com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001D
 public interface ChbEquHoldCheckDtoMapper {
     int insert(ChbEquHoldCheckDto record);
     
-    int insertByBatch(@Param("keyList") List<ChbEquHoldCheckDto> keyList);
+    int insertByBatch(@Param("List") List<ChbEquHoldCheckDto> keyList);
     
      /**
      * @Description 分页查询

@@ -160,7 +160,7 @@ public class EtrExchangeTradeCommon004Controller extends BaseController {
             model.addAttribute("ps", entity.getPs());
             //add by chenjiaxing 流程中不显示资产名称 start
             String[] secIds = StringUtil.split(entity.getFinprodId(), "_");
-            if (secIds.length == 2) {
+            if (secIds.length == 2 && (StringUtil.isEmpty(entity.getStockId()))) {
                 entity.setStockId(secIds[1]);
             }
             if (StringUtil.isNotEmpty(entity.getRiskTrialRetDto())) {
@@ -176,6 +176,10 @@ public class EtrExchangeTradeCommon004Controller extends BaseController {
                     if ((StringUtil.isNotEmpty(riskTrialRetDto.getKriStatus())
                             && riskTrialRetDto.getKriStatus().equals("3"))
                             && !StringUtil.isNotEmpty(riskTrialRetDto.getKriTrend())) {
+                        riskTrialFlag = false;
+                    }
+                    if ((StringUtil.isNotEmpty(riskTrialRetDto.getKriStatus())
+                            && riskTrialRetDto.getKriStatus().equals("4"))) {
                         riskTrialFlag = false;
                     }
                 }
@@ -199,6 +203,10 @@ public class EtrExchangeTradeCommon004Controller extends BaseController {
                     if ((StringUtil.isNotEmpty(riskTrialRetDto.getKriStatus())
                             && riskTrialRetDto.getKriStatus().equals("3"))
                             && !StringUtil.isNotEmpty(riskTrialRetDto.getKriTrend())) {
+                        riskTrialFlag = false;
+                    }
+                    if ((StringUtil.isNotEmpty(riskTrialRetDto.getKriStatus())
+                            && riskTrialRetDto.getKriStatus().equals("4"))) {
                         riskTrialFlag = false;
                     }
                 }

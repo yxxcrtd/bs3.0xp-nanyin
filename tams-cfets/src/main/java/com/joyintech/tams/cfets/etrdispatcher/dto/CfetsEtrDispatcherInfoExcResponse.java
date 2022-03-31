@@ -620,4 +620,15 @@ public class CfetsEtrDispatcherInfoExcResponse extends CfetsEtrDispatcherExcInfo
     public void setAddCla(String addCla) {
         this.addCla = addCla;
     }
+
+    @ApiModelProperty(name="faceValue",value="债券面值")
+    private String stockSecId;
+
+    public String getStockSecId() {
+        return stockSecId;
+    }
+
+    public void setStockSecId(String stockSecId) {
+        this.stockSecId = stockSecId;
+    }
 }

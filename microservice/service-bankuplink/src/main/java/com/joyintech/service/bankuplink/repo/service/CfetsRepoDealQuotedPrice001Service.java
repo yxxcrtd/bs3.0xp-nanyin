@@ -952,6 +952,7 @@ public class CfetsRepoDealQuotedPrice001Service extends BaseService {
                             ptlSecPositionFlowDtoUnit.setHodingType(DictCodeList.持仓类型_质押.getValue());// 持仓类型
                             ptlSecPositionFlowDtoUnit.setCdate(platDate);// 日期
                             ptlSecPositionFlowDtoUnit.setCcy(DictCodeList.币种_人民币_CNY.getValue());// 币种
+                            ptlSecPositionFlowDtoUnit.setOffsetFlag(DictCodeList.冲正标识_正常交易.getValue());
                             
                             ptlSecPositionFlowDtoUnit.setAmount(ArithmeticUtil.divide(prin,new BigDecimal(100),2));// 数量
                             ptlSecPositionFlowDtoUnit.setpFinprodId(null);// 母金融产品代码
@@ -1051,27 +1052,29 @@ public class CfetsRepoDealQuotedPrice001Service extends BaseService {
 				basePtlCashPositionInfoService.insertCashPositionFlow(ptlCashPositionFlow);
 			}
 		}
-		// 查询正常流水,生成冲销流水,为了余额更新正确
-		if(etrSecPositionFlows.size() > 0){
-            List<EtrSecPositionFlowDto> etrSecPositionFlowDtos = baseAssetCashPositionCommMapper.selectAllEtrPositionByOffsetFlag(dto.getQuoteId(), DictCodeList.冲正标识_正常交易.getValue());
-            for(EtrSecPositionFlowDto flowDto : etrSecPositionFlowDtos){
-                EtrSecPositionFlowDto temp = new EtrSecPositionFlowDto();
-                BeanUtil.copyPropertiesIgnoreNull(temp, flowDto);
-                temp.setSeqno(IDGenerator.generate());
-                temp.setAmount(flowDto.getAmount().negate());
-                temp.setOffsetFlag(DictCodeList.冲正标识_冲销交易.getValue());
-                temp.setOffsetId(flowDto.getTradeId());
-                etrSecPositionFlows.add(temp);
+        if (DictCodeListExt3.交易方向_正回购.getValue().equals(ps)) {
+            // 查询正常流水,生成冲销流水,为了余额更新正确
+            if (etrSecPositionFlows.size() > 0) {
+                List<EtrSecPositionFlowDto> etrSecPositionFlowDtos = baseAssetCashPositionCommMapper.selectAllEtrPositionByOffsetFlag(dto.getQuoteId(), DictCodeList.冲正标识_正常交易.getValue());
+                for (EtrSecPositionFlowDto flowDto : etrSecPositionFlowDtos) {
+                    EtrSecPositionFlowDto temp = new EtrSecPositionFlowDto();
+                    BeanUtil.copyPropertiesIgnoreNull(temp, flowDto);
+                    temp.setSeqno(IDGenerator.generate());
+                    temp.setAmount(flowDto.getAmount().negate());
+                    temp.setOffsetFlag(DictCodeList.冲正标识_冲销交易.getValue());
+                    temp.setOffsetId(flowDto.getTradeId());
+                    etrSecPositionFlows.add(temp);
+                }
             }
-        }
-		//删除历史流水
-        baseAssetCashPositionCommMapper.deletePositionByTradeId(dto.getQuoteId());
+            //删除历史流水
+            baseAssetCashPositionCommMapper.deleteEtrPositionByTradeId(dto.getQuoteId());
 
-        EtrPositionHoldDto etrPositionHoldDto = new EtrPositionHoldDto();
-        etrPositionHoldDto.setPtlSecPositionFlows(etrSecPositionFlows);
-        etrPositionHoldDto.setPtlCashPositionFlows(etrCashPositionFlowDtos);
-        // 插入新流水,并更新余额
-        EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
+            EtrPositionHoldDto etrPositionHoldDto = new EtrPositionHoldDto();
+            etrPositionHoldDto.setPtlSecPositionFlows(etrSecPositionFlows);
+            etrPositionHoldDto.setPtlCashPositionFlows(etrCashPositionFlowDtos);
+            // 插入新流水,并更新余额
+            EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
+        }
 	}
 
 	private PtlCashPositionFlowDto 逆回购构造现金流水(CfetsRepoDealQuotedPrice001Dto dto,Date vSettleDate,BigDecimal factor){
