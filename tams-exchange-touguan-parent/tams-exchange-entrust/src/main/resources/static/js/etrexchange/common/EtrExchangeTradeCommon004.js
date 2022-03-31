@@ -891,7 +891,7 @@
                         // }
                         $("#portfolioId_div_" + currentTab).show();
                     }
-                    if(object.finprodType2 && (object.finprodType2 == FINPROD_TYPE_TG_F01)){
+                    if(ps == PS_T04){
                         $("#portfolioId_div_" + currentTab).show();
                     }
                     if (secId) {
@@ -977,6 +977,8 @@
     };
 
     var setScale = function (obj) {
+
+        alert("scale======"+obj.scale)
         var ps = $("#ps_" + currentTab).val();
         if (obj.finprodType2 == FINPROD_TYPE_TG_F01 && isStandardPs(ps)) {
             $("#price_" + currentTab).attr("data-textrange", obj.scale);
