@@ -475,6 +475,7 @@ public class CfetsTrdConfirm001Service extends BaseService{
             stlPayOrders.setWorkflowId(entity.getWorkflowId());
             stlPayOrdersMapper.insertSelective(stlPayOrders);
         }
+        logger.debug("成交确认入库划款指令" + JsonUtils.object2Json(stlPayOrders));
         entity.getFinTradeProducts().forEach(finTradeProductDto -> {
             finTradeProductMapper.insertSelective(finTradeProductDto);
             // 7.6写入现金流相关信息表
