@@ -11,3 +11,4 @@ begin
         select CUR_DATE into :new.FINISH_DATE from  SYS_DATE;
     end if;
 end;
+/
