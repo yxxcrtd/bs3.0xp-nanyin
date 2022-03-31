@@ -145,7 +145,7 @@
             </trim>
             <trim prefix="ERR_MSG=case" suffix="end,">
                 <foreach collection="listA" item="item" index="index">
-                    <if test="item.isHoliday!=null">
+                    <if test="item.errMsg != null and ! item.errMsg.equals('')">
                         when cdate=#{item.cdate,jdbcType=DATE} and calendar_id
                         =
                         #{item.calendarId,jdbcType=VARCHAR} then
