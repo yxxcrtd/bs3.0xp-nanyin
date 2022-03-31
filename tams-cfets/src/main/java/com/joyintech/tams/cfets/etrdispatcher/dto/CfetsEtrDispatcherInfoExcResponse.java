@@ -622,13 +622,13 @@ public class CfetsEtrDispatcherInfoExcResponse extends CfetsEtrDispatcherExcInfo
     }
 
     @ApiModelProperty(name="faceValue",value="债券面值")
-    private BigDecimal faceValue;
+    private String stockSecId;
 
-    public BigDecimal getFaceValue() {
-        return faceValue;
+    public String getStockSecId() {
+        return stockSecId;
     }
 
-    public void setFaceValue(BigDecimal faceValue) {
-        this.faceValue = faceValue;
+    public void setStockSecId(String stockSecId) {
+        this.stockSecId = stockSecId;
     }
 }

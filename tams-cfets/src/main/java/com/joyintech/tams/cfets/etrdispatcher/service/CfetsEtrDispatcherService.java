@@ -1628,8 +1628,10 @@ public class CfetsEtrDispatcherService extends BaseService {
                 } else if (StringUtil.equals(dto.getBusiTypePosition(), DictCodeListExt3.投管业务类型_质押券出入库.getValue())) {
                     String ps = (String) pageParam.get("ps");
                     if (DictCodeListExt3.交易方向_质押券入库.getValue().equals(ps) && StringUtil.isNotEmpty(fieldResponseDto.getPledgeRatio())) {
-                        if(StringUtil.isNotEmpty(fieldResponseDto.getFaceValue())){
-                            fieldResponseDto.setPledgeStandardNumber(ArithmeticUtil.divide(ArithmeticUtil.multiply(fieldResponseDto.getPledgeRatio().divide(new BigDecimal("100")), fieldResponseDto.getEntrustNum(),fieldResponseDto.getFaceValue()),new BigDecimal(100),0, RoundingMode.HALF_DOWN));
+                        if(StringUtil.isNotEmpty(fieldResponseDto.getStockSecId())){
+                            Date sysDate = DateUtil.platDateFromCache();
+                            BigDecimal faceValue = etrCommonService.select券面面值(fieldResponseDto.getStockSecId(), DateUtil.format(sysDate));
+                            fieldResponseDto.setPledgeStandardNumber(ArithmeticUtil.divide(ArithmeticUtil.multiply(fieldResponseDto.getPledgeRatio().divide(new BigDecimal("100")), fieldResponseDto.getEntrustNum(),faceValue),new BigDecimal(100),0, RoundingMode.HALF_DOWN));
                         }else{
                             fieldResponseDto.setPledgeStandardNumber(ArithmeticUtil.multiply(fieldResponseDto.getPledgeRatio().divide(new BigDecimal("100")), fieldResponseDto.getEntrustNum()));
                         }
