@@ -108,6 +108,7 @@ public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
                     resultList.add(e);
                 }
             });
+            return resultList;
         }
         return  tradeDataList;
     }
