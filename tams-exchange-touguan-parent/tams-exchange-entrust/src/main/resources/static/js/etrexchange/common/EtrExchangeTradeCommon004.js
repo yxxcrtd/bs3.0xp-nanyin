@@ -3291,6 +3291,10 @@
                 $("#priceModel_div_" + currentTab).show();
                 $("#acctNo_div_" + currentTab).hide();
             }
+
+            if(ps == PS_T97){
+                $("#invAim_div_" + currentTab).hide();
+            }
         }
     var addMinPriceStep = function (type, num, input) {
         var $secIdObj = $("#secIdObjRelative_" + currentTab).val();

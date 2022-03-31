@@ -19,6 +19,7 @@ import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.invest.bankuplink.bond.validator.CfetsBondDealRequestQuoteDtoValidator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -184,6 +185,9 @@ public class CfetsBondDealRequestQuoteDto extends CfetsBondDealEntrustOrderDto i
      *数据已入新头寸，Y：已入
      */
     private String isExistNew;
+
+    @ApiModelProperty(name="softSkipMode",value="软控是否继续？Y：继续",example="Y")
+    private String softSkipMode;
 
     public BigDecimal getLendinShareAmt() {
         return lendinShareAmt;
@@ -689,5 +693,17 @@ public class CfetsBondDealRequestQuoteDto extends CfetsBondDealEntrustOrderDto i
 
     public void setIsExistNew(String isExistNew) {
         this.isExistNew = isExistNew;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public String getSoftSkipMode() {
+        return softSkipMode;
+    }
+
+    public void setSoftSkipMode(String softSkipMode) {
+        this.softSkipMode = softSkipMode;
     }
 }
