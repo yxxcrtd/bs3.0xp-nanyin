@@ -34,7 +34,5 @@ delete from chb_type_mapping_ex t where t.MAPPINGCODE = 'MAPPINGCODE_SUBASSETTYP
 INSERT INTO chb_type_mapping_ex (MAPPINGID, MAPPINGCODE, MAPPINGNAME, SRCFIELD1, SRCFIELD2, SRCFIELD3, SRCFIELD4, SRCFIELD5, OBJFIELD, OBJFIELD1, OBJFIELD2, OBJFIELD3, OBJFIELD4, STATUS, WORKFLOW_ID, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, ORG_CODE, SRCFIELD) VALUES ('e3f2c267-b9d1-11eb-8f25-000c29980c5a', 'MAPPINGCODE_SUBASSETTYPE', '子公司月报资产映射', '1305', null, null, null, null, 'F2', 'F03', 'F0301', null, null, 'E', null, null, 'SYSTEM', sysdate, 'SYSTEM', sysdate, null, '1305|02|||||||');
 delete from CHB_TYPE_MAPPING_EX t where t.MAPPINGCODE = 'MAPPINGCODE_SUBASSETTYPE' and t.OBJFIELD2 = 'F0207' and t.SRCFIELD1 = '2101';
 INSERT INTO chb_type_mapping_ex (MAPPINGID, MAPPINGCODE, MAPPINGNAME, SRCFIELD1, SRCFIELD2, SRCFIELD3, SRCFIELD4, SRCFIELD5, OBJFIELD, OBJFIELD1, OBJFIELD2, OBJFIELD3, OBJFIELD4, STATUS, WORKFLOW_ID, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, ORG_CODE, SRCFIELD) VALUES ('e29wmf12-b9d1-11eb-8f25-000c29980c5a', 'MAPPINGCODE_SUBASSETTYPE', '子公司月报资产映射', '2101', null, null, null, null, 'F2', 'F02', 'F0207', null, null, 'E', null, null, 'SYSTEM', sysdate, 'SYSTEM', sysdate, null, '2101||||||||');
-/** add by wm on 20220319 转型月报资产支持证券未统计以及是否商业银行可转债否统计问题修复 end**/
-/*add by wm on 20220321 流程中资产要素维护展示类型枚举值修复 start*/
-update  sys_datadict_list set ITEM_VALUE = '资产基本信息维护' where DICT_CODE = 'COMMON_BUSINESS_TYPE' and ITEM_CODE = 'SVR01'
-/*add by wm on 20220321 流程中资产要素维护展示类型枚举值修复 end*/
+--为一级菜单顺序更新 交易管理，资产管理，估值管理 更新order_no
+update  sys_datadict_list set ITEM_VALUE = '资产基本信息维护' where DICT_CODE = 'COMMON_BUSINESS_TYPE' and ITEM_CODE = 'SVR01';
