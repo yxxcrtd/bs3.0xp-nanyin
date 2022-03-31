@@ -1,4 +1,4 @@
-/** add by wm on 20220308 监管客户组别枚举值错误修正 end**/
+-- 监管客户组别枚举值错误修正
 update  chb_type_mapping set SRCDATATYPEID = '2305' where SRCDATATYPE in ('CUSTOMER_GROUP_ID','CUSTOMER_GROUP_ID_JW') and SRCDATATYPEID = '2399';
 delete from sys_datadict_list where DICT_CODE = 'SVR_CUSTOMER_TYPE2';
 INSERT INTO sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('SVR_CUSTOMER_TYPE2', 'C0100', '住户', 1, '0', 'system', null, sysdate, 'system', sysdate, null);
@@ -22,11 +22,11 @@ INSERT INTO sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAU
 INSERT INTO sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('SVR_CUSTOMER_TYPE2', 'C0508', '私募机构私募基金', 19, '0', 'system', null, sysdate, 'system', sysdate, null);
 INSERT INTO sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('SVR_CUSTOMER_TYPE2', 'C0509', '其他特定目的载体', 20, '0', 'system', null, sysdate, 'system', sysdate, null);
 INSERT INTO sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('SVR_CUSTOMER_TYPE2', 'C0600', '境外', 21, '0', 'system', null, sysdate, 'system', sysdate, null);
-/** add by wm on 20220308 监管客户组别枚举值错误修正 end**/
-/** add by wm on 20220311 监管客户组别其他金融机构枚举值修改 start**/
+
+-- add by wm on 20220311 监管客户组别其他金融机构枚举值修改
 update  SYS_DATADICT_LIST  set ITEM_CODE = '2305' where DICT_CODE = 'SVR_CUS_CODE' and ITEM_CODE = '2399';
-/** add by wm on 20220311 监管客户组别其他金融机构枚举值修改 end**/
-/** add by wm on 20220319 转型月报资产支持证券未统计以及是否商业银行可转债否统计问题修复 start**/
+
+-- add by wm on 20220319 转型月报资产支持证券未统计以及是否商业银行可转债否统计问题修复
 delete  from chb_type_mapping_ex t where t.MAPPINGCODE = 'MAPPINGCODE_SUBASSETTYPE' and t.SRCFIELD1 in  ('1116','1114');
 INSERT INTO chb_type_mapping_ex (MAPPINGID, MAPPINGCODE, MAPPINGNAME, SRCFIELD1, SRCFIELD2, SRCFIELD3, SRCFIELD4, SRCFIELD5, OBJFIELD, OBJFIELD1, OBJFIELD2, OBJFIELD3, OBJFIELD4, STATUS, WORKFLOW_ID, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, ORG_CODE, SRCFIELD) VALUES ('dfd164cd-b9d1-11eb-wm25-000c29980c5a', 'MAPPINGCODE_SUBASSETTYPE', '子公司月报资产映射', '1116', null, null, null, null, 'F2', 'F01', 'F0102', null, null, 'E', null, null, 'SYSTEM', sysdate, 'SYSTEM', sysdate, null, '1116||||||||');
 INSERT INTO chb_type_mapping_ex (MAPPINGID, MAPPINGCODE, MAPPINGNAME, SRCFIELD1, SRCFIELD2, SRCFIELD3, SRCFIELD4, SRCFIELD5, OBJFIELD, OBJFIELD1, OBJFIELD2, OBJFIELD3, OBJFIELD4, STATUS, WORKFLOW_ID, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, ORG_CODE, SRCFIELD) VALUES ('dfcf3b94-b9d1-11eb-8f25-000c29980c5a', 'MAPPINGCODE_SUBASSETTYPE', '子公司月报资产映射', '1114', null, null, null, null, 'F2', 'F01', 'F0102', null, null, 'E', null, null, 'SYSTEM', sysdate, 'SYSTEM', sysdate, null, '1114|02|||||||');
