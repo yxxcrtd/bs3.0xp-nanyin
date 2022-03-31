@@ -3123,6 +3123,6 @@
         status='E'
         AND code_type='01'
     )t2 ON t2.inside_prod_id=b.PROD_ID
-    where  IFNULL(t2.pbc_code,b.PBC_PROD_ID)=#{pbcProdId}
+    where  NVL(t2.pbc_code,b.PBC_PROD_ID)=#{pbcProdId}
   </select>
 </mapper>
