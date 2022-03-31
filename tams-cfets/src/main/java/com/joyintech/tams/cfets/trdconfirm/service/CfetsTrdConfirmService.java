@@ -878,7 +878,9 @@ public class CfetsTrdConfirmService extends BaseService{
         deal.setSecManageAcctId(entity.getSecManageAcctId());
         deal.setTradeMarketMode(entity.getTradeMarketMode());
         bussSettleOrderParameterDto.setDeal(deal);
+        logger.debug("成交确认开始生成划款指令:" + JsonUtils.object2Json(bussTrdTransferOrder));
         BussTrdTransferOrderDto bussTrdTransferOrderDto = bussTrdTransferOrderService.generateOrder(bussSettleOrderParameterDto);
+        logger.debug("成交确认生成划款指令:" + JsonUtils.object2Json(bussTrdTransferOrder));
         bussTrdTransferOrderDto.setPayAcctNoList(null);
         bussTrdTransferOrderDto.setRecAcctNoList(null);
         bussTrdTransferOrderDto.setIsTotalTrade(BussinessDictCodeList.是否_是.getValue());
@@ -895,6 +897,7 @@ public class CfetsTrdConfirmService extends BaseService{
         bussTrdTransferOrderDto.setOrderRetStatus(DictCodeList.指令处理状态_处理成功.getValue());
         bussTrdTransferOrder.add(bussTrdTransferOrderDto);
         entity.setBussTrdTransferOrder(bussTrdTransferOrderService.save(bussTrdTransferOrder));
+        logger.debug("成交确认生成划款指令结果:" + JsonUtils.object2Json(bussTrdTransferOrder));
         // =====================划款指令信息=====================
 
         entity.getBussTrdTransferOrder().get(0).setTradeId(entity.getTotleTradeId());
