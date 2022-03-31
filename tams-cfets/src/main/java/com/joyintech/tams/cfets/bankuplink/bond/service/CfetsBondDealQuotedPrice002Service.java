@@ -20,8 +20,13 @@ import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.security.SecurityUtil;
-import com.joyintech.framework.util.*;
+import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.bankuplink.bond.service.CfetsBondDealQuotedPriceService;
 import com.joyintech.service.bankuplink.ibu.dto.BondQuoteInfoDto;
@@ -49,7 +54,6 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto;
-import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto;
 import com.joyintech.tams.invest.bankuplink.bond.dto.SecInfoModelDto;
 import com.joyintech.tams.invest.bankuplink.common.service.CfetsQuotedCommonService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
@@ -70,7 +74,11 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 现券买卖-对话报价
@@ -1234,13 +1242,7 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
             doInsetOrUpdateForPtlPositionHold(entity);
         }
         String systemAct = handSystemAct(entity);
-        try {
-            sendPosition(entity, DictCodeListExt3.流程节点_流程提交.getValue(), systemAct, systemAct,null);
-            //doInsetOrUpdateForPtlPositionHold(entity);
-        }catch(PositionException e){
-            e.printStackTrace(); Message message = PositionUtil.ajaxErrorReturn(e);
-            throw new BusinessException("MSG:"+message.getMessage());
-        }
+        sendPosition(entity, DictCodeListExt3.流程节点_流程提交.getValue(), systemAct, systemAct, null);
     }
     
 	@Override
