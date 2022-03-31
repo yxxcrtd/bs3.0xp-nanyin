@@ -329,7 +329,7 @@
         ELSE FP.FINPROD_MARKET_ID
         END AS secId,
         FP.FINPROD_ABBR AS secName,
-        NVL(TEMP.secNum, 0)/100 AS secNum,
+        floor(NVL(TEMP.secNum, 0)/100) AS secNum,
         NVL(TEMP.canRepoNum, 0) AS canRepoNum,
         FP.FINPROD_TYPE2 AS finprodType2,
         FP.TRADE_MARKET AS tradeMarket,
@@ -466,10 +466,10 @@
         left join SYS_DATADICT_LIST sdl1 on a.tradeMarket=sdl1.ITEM_CODE and sdl1.DICT_CODE='TRADE_PLACE'
         where 1=1
         <!-- 关键字模糊查询 -->
-        <include refid="etrExchangeQueryAnd1"/>
-        <if test="sort != null and sort != '' and direction != null and direction != ''">
-            order by ${sort}  ${direction}
-        </if>
+<!--        <include refid="etrExchangeQueryAnd1"/>-->
+<!--        <if test="sort != null and sort != '' and direction != null and direction != ''">-->
+<!--            order by ${sort}  ${direction}-->
+<!--        </if>-->
     </select>
 
 

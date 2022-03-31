@@ -309,8 +309,6 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
         //乘赎回比例
         BigDecimal shareAmt = ArithmeticUtil.multiply(regFinProductDealTotal.getShareAmt(),regFinProductDealTotal.getRedeemRate());
 
-        BigDecimal shareAmt = ArithmeticUtil.multiply(regFinProductDealTotal.getShareAmt(),regFinProductDealTotal.getRedeemRate());
-
         BeanUtil.copyPropertiesIgnoreNull(trdFinProductDealTotal, regFinProductDealTotal);
         trdFinProductDealTotal.setTotleTradeId(busiCode);
         trdFinProductDealTotal.setBusiType(DictCodeList.共通业务类型_债券类资产存续期.getValue());

@@ -1235,28 +1235,28 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
      * @param buttonType
      */
     private void updatePtlPosition(List<CfetsManualSettleDealInfo> listTemp, String buttonType) {
-        List<String> orderIds = new ArrayList<>();
+        List<String> orderIdList = new ArrayList<>();
 
         //登记
         listTemp.stream().forEach(item -> {
             String tradeId = cfetsManualSettleMapper.selectRegTradeIdBytradeId(item.getTradeId());
             if(StringUtil.isNotEmpty(tradeId)) {
-                orderIds.add(tradeId);
+                orderIdList.add(tradeId);
             }
         });
 
         //对话，请求
         listTemp.stream().forEach(item -> {
             if (StringUtil.isNotEmpty(cfetsManualSettleMapper.selectIbTradeIdBytradeId(item.getTradeId()))) {
-                orderIds.add(cfetsManualSettleMapper.selectIbTradeIdBytradeId(item.getTradeId()));
+                orderIdList.add(cfetsManualSettleMapper.selectIbTradeIdBytradeId(item.getTradeId()));
             }
         });
 
+        List<String> orderIds = orderIdList.stream().distinct().collect(Collectors.toList());
+
         if (StringUtil.equals(buttonType, DictCodeListExt3.交收操作类型_交收.getValue())) {
             if (CollectionUtils.isNotEmpty(orderIds)) {
-                orderIds.stream().forEach(orderId -> {
-                    AllTradeCommonUtil.deleteRegPosition(null, orderId);
-                });
+                AllTradeCommonUtil.deleteRegPosition(null, orderIds.get(0));
             }
         }
         if (StringUtil.equals(buttonType, DictCodeListExt3.交收操作类型_回溯.getValue())) {
@@ -1264,6 +1264,36 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                 List<PtlSecPositionFlowDto> ptlSecPositionFlows = new ArrayList<>();
                 List<PtlCashPositionFlowDto> ptlCashPositionFlows = new ArrayList<>();
 
+                //报价
+                orderIds.stream().forEach( orderId ->{
+                    //查询报价信息 报价多组合会有多条数据
+                    List<PtlFlowsDto> dealList = cfetsManualSettleMapper.selectIbQuoteBytradeId(orderId);
+                    dealList.stream().forEach( quoteDeal ->{
+                        PtlFlowsDto deal = new PtlFlowsDto();
+                        if (quoteDeal != null) {
+                            BeanUtil.copyPropertiesIgnoreNull(deal, quoteDeal);
+                        }
+                        if (StringUtil.isNotEmpty(deal.getTradeId())) {
+                            String acctId = EtrCommonCashPositionDealService.select组合托管户(deal.getPortfolioId(), deal.getCcy(), DictCodeListExt1.资金账户类型_产品托管户.getValue());
+                            //证券管理户代码
+                            String secManageAcctId = "";
+                            if (listTemp.size() > 0){
+                                secManageAcctId = listTemp.get(0).getSecManageAcctId();
+                            }
+                            if (StringUtil.equals(deal.getPs(), DictCodeList.交易方向_卖出.getValue())
+                                    || StringUtil.equals(deal.getPs(), DictCodeList.交易方向_行权_回售.getValue())
+                            ) {
+                                ptlSecPositionFlows.add(positionDeal(deal, secManageAcctId));
+                            }
+                            if (StringUtil.equals(deal.getPs(), DictCodeList.交易方向_买入.getValue())) {
+                                ptlCashPositionFlows.add(cashDeal(deal, acctId));
+                            }
+                        }
+                    });
+
+                });
+
+                //登记
                 orderIds.stream().forEach(orderId -> {
                     PtlFlowsDto deal = new PtlFlowsDto();
                     //查询登记信息
@@ -1272,14 +1302,9 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                         BeanUtil.copyPropertiesIgnoreNull(deal, regDeal);
                     }
 
-                    //查询报价信息
-                    List<PtlFlowsDto> dealList = cfetsManualSettleMapper.selectIbQuoteBytradeId(orderId);
-                    if (CollectionUtils.isNotEmpty(dealList) && dealList.size() == 1) {
-                        deal = dealList.get(0);
-                    }
-
                     if (StringUtil.isNotEmpty(deal.getTradeId())) {
                         String acctId = EtrCommonCashPositionDealService.select组合托管户(deal.getPortfolioId(), deal.getCcy(), DictCodeListExt1.资金账户类型_产品托管户.getValue());
+                        //证券管理户代码
                         String secManageAcctId = "";
                         if (listTemp.size() > 0){
                             secManageAcctId = listTemp.get(0).getSecManageAcctId();

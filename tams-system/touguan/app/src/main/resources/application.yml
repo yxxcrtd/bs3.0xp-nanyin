@@ -326,7 +326,7 @@ application:
 flag: false
 
 #头寸引擎地址
-positionUrl: http://192.168.70.146:2667/dsp
+positionUrl: http://192.168.90.244:2667/dsp
 #监听头寸余额地址
 webSocketUrl: ws://192.168.90.244:2667/dsp/positionTopic
 #监听键值
@@ -356,7 +356,6 @@ spring:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    #BS303INIT_EXCHANGE0106
     username: BS303INIT_EXCHANGE0106
     password: BS303INIT_EXCHANGE0106
     reportSqlldrDatabaseName: 192.168.70.245:1521/orcl

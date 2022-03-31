@@ -1,9 +1,13 @@
 package com.joyintech.tams.cfets.cfetsmanualsettle.dao;
 
-import com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteEtrReDto;
-import com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteEtrRe;
-import com.joyintech.tams.cfets.cfetsmanualsettle.dto.*;
+import com.joyintech.tams.cfets.cfetsmanualsettle.dto.CfetsManualSettleDealInfo;
+import com.joyintech.tams.cfets.cfetsmanualsettle.dto.CfetsManualSettleFlowRespond;
+import com.joyintech.tams.cfets.cfetsmanualsettle.dto.CfetsManualSettleInfoOtherListRespond;
+import com.joyintech.tams.cfets.cfetsmanualsettle.dto.CfetsManualSettleInfoRespond;
+import com.joyintech.tams.cfets.cfetsmanualsettle.dto.CfetsManualSettleTradeListRespond;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dto.PortIntFenPeiInfoDto;
+import com.joyintech.tams.cfets.cfetsmanualsettle.dto.PortSettleinfoDto;
+import com.joyintech.tams.cfets.cfetsmanualsettle.dto.PtlFlowsDto;
 import com.joyintech.tams.cfets.trdquery.dto.CfetsTrdBondInvestTradeDto;
 import com.joyintech.tams.cfets.trdquery.dto.CfetsTrdSettleInfoResponse;
 import com.joyintech.tams.common.base.entity.TrdBankManualSetDetail;
@@ -115,6 +119,14 @@ public interface CfetsManualSettleMapper {
      * @return String
      */
     String selectIbuQuoteIdByTotleTradeId(@Param("totleTradeId") String totleTradeId);
+
+    /**
+     * 报价编号查询
+     *
+     * @param totleTradeId 参数
+     * @return String
+     */
+    String selectIbuBondQuoteIdByTotleTradeId(@Param("totleTradeId") String totleTradeId);
 
     /**
      * 报价编号查询

@@ -1352,12 +1352,6 @@
         tmp.CCY,
         tmp.HOLD_DATE,
         tmp.PRODID ,
-        tmp.AMOUNT,
-        tmp.QTY,
-        tmp.CNY_AMT,
-        tmp.ORG_CODE,
-        tmp.DEPT_CODE,
-        tmp.AGENT,
         infocheck.MERGER_INDENTIFY_MARK,
         infocheck.OPERATE_STATUS,
         infocheck.STATUS

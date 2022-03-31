@@ -1166,6 +1166,7 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
         Map<String, Object> params = new HashMap<>();
         params.put("workflowId", entity.getWorkflowId());
         String bizCode = entity.getTotleTradeId();
+        String totleTradeId = cfetsManualSettleMapper.selectIbuBondQuoteIdByTotleTradeId(bizCode);
         if (bizCode.lastIndexOf('R') == bizCode.length() - 1) {
             bizCode = bizCode.substring(0, bizCode.length() - 1);
         }
@@ -1216,7 +1217,7 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
             // PositionHttpRequest.deleteMethod(bizCode,DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
         }else{
             Map<String, Object> paramMap = new HashMap<>();
-            paramMap.put("totleTradeId", bizCode);
+            paramMap.put("totleTradeId", totleTradeId);
             paramMap.put("tradeStatus", BussinessDictCodeList.银行间上行报价状态_已撤销.getValue());
             cfetsTrdQueryMapper.updateIbuByPrimaryKeySelective(paramMap);
             paramMap.put("exeId", exeId);
