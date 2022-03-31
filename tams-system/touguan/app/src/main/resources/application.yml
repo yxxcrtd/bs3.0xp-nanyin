@@ -326,7 +326,7 @@ application:
 flag: false
 
 #头寸引擎地址
-positionUrl: http://192.168.70.146:2667/dsp
+positionUrl: http://192.168.90.244:2667/dsp
 #监听头寸余额地址
 webSocketUrl: ws://192.168.90.244:2667/dsp/positionTopic
 #监听键值
@@ -356,9 +356,8 @@ spring:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    #BS303INIT_EXCHANGE0106
-    username: BS303INIT_EXCHANGE0106
-    password: BS303INIT_EXCHANGE0106
+    username: BS304inv_release_cq
+    password: BS304inv_release_cq
     reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
   rabbitmq:
     # 需求环境使用mq配置如下
@@ -368,8 +367,8 @@ spring:
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: BS303INIT_EXCHANGE0106
-  sqldirpassword: BS303INIT_EXCHANGE0106
+  sqldiruserName: BS304inv_release_cq
+  sqldirpassword: BS304inv_release_cq
 shiro:
   ssoEnable: false  #是否开启sso验证，可以和joyinsso 统一登录配套使用。如果没有统一登录，但为true的话，就不校验密码
   #  loginUrl: http://127.0.0.1:1667/joyinsso/login.html#/login    ##统一登录页面，当有统一登录时配置成统一登录的访问地址
@@ -391,26 +390,26 @@ base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS303INIT_EXCHANGE0106
-    password: BS303INIT_EXCHANGE0106
+    username: BS304inv_release_cq
+    password: BS304inv_release_cq
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS303INIT_EXCHANGE0106
-    password: BS303INIT_EXCHANGE0106
+    username: BS304inv_release_cq
+    password: BS304inv_release_cq
 stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS303INIT_EXCHANGE0106
-    password: BS303INIT_EXCHANGE0106
+    username: BS304inv_release_cq
+    password: BS304inv_release_cq
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS303INIT_EXCHANGE0106
-    password: BS303INIT_EXCHANGE0106
+    username: BS304inv_release_cq
+    password: BS304inv_release_cq
 log:
   path: /home/tams/logs/tams/touguan
   level: debug
