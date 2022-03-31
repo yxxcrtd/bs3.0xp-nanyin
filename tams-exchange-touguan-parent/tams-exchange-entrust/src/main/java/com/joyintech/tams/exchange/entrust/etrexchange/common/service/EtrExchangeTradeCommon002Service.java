@@ -610,11 +610,11 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
         param.put("portfolioId", req.getPortfolioId());
         param.put("finprodId", req.getFinprodId());
         param.put("acctId", req.getAcctId());
-        param.put("MORE_CONVRATE", 0.9);
+        param.put("MORE_CONVRATE", 1);
         param.put("date", iPlatformDate.getSysDate());
         Map<String, Object> scaleMap = etrExchangeTradeCommonMapper.findTandardRate(param);
-        BigDecimal scale = new BigDecimal(0.9);
-        BigDecimal tandardRate = new BigDecimal(0.9);
+        BigDecimal scale = new BigDecimal(1);
+        BigDecimal tandardRate = new BigDecimal(1);
         if (scaleMap != null) {
             if (scaleMap.get("TANDARDRATE") != null) {
                 tandardRate = new BigDecimal(scaleMap.get("TANDARDRATE").toString());//再折算率
