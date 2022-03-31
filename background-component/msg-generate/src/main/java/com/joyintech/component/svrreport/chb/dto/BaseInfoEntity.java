@@ -706,7 +706,7 @@ public class BaseInfoEntity implements Feild {
      * 票据代码
      */
     @XmlElement(name = "wemax:BillOrNoteCode")
-    private CommonNodeEntity billorNoteCode;
+    private CommonNodeEntity billOrNoteCode;
     /***1217升级**/
 
 
@@ -1868,7 +1868,7 @@ public class BaseInfoEntity implements Feild {
     /**
      * 交易审批人身份证号
      */
-    @XmlElement(name = "wemax:TransactionApproverIDNumber")
+    @XmlElement(name = "wemax:TransactionApproverIdNumber")
     private CommonNodeEntity transactionApproverIDNumber;
 
     /**
@@ -1880,7 +1880,7 @@ public class BaseInfoEntity implements Feild {
     /**
      * 交易员身份证号
      */
-    @XmlElement(name = "wemax:TraderIDNumber")
+    @XmlElement(name = "wemax:TraderIdNumber")
     private CommonNodeEntity traderIDNumber;
 
     /**
@@ -10938,12 +10938,12 @@ public class BaseInfoEntity implements Feild {
         this.creditAssetTradingCode = creditAssetTradingCode;
     }
 
-    public CommonNodeEntity getBillorNoteCode() {
-        return billorNoteCode;
+    public CommonNodeEntity getBillOrNoteCode() {
+        return billOrNoteCode;
     }
 
-    public void setBillorNoteCode(CommonNodeEntity billorNoteCode) {
-        this.billorNoteCode = billorNoteCode;
+    public void setBillOrNoteCode(CommonNodeEntity billOrNoteCode) {
+        this.billOrNoteCode = billOrNoteCode;
     }
 
     public CommonNodeEntity getTransactionApproverIDNumber() {

@@ -90,8 +90,8 @@ public class InvestmentsInfoService {
 	private static Map<String, String> sameValueMap = new HashMap<String, String>();
 	private static Map<String, String> table8ValueMap = new HashMap<String, String>();
 	static {
-		tablePorpertyMap_1.put("t1_cur12_amt", "ASSETAMT1_1_6+ASSETAMT1_2_3+ASSETAMT1_3_3+ASSETAMT1_4_14+ASSETAMT1_5_17+ASSETAMT1_6_5+ASSETAMT1_7_8+ASSETAMT1_8_11+ASSETAMT1_9_4+ASSETAMT1_10_7+ASSETAMT1_11_7+ASSETAMT1_12_9+ASSETAMT1_14_8");
-		tablePorpertyMap_1.put("t1_last12_amt",  "ASSETAMT1_1_6+ASSETAMT1_2_3+ASSETAMT1_3_3+ASSETAMT1_4_14+ASSETAMT1_5_17+ASSETAMT1_6_5+ASSETAMT1_7_8+ASSETAMT1_8_11+ASSETAMT1_9_4+ASSETAMT1_10_7+ASSETAMT1_11_7+ASSETAMT1_12_9+ASSETAMT1_14_8");
+		tablePorpertyMap_1.put("t1_cur12_amt", "ASSETAMT1_1_6+ASSETAMT1_2_3+ASSETAMT1_3_3+ASSETAMT1_4_14+ASSETAMT1_5_17+ASSETAMT1_6_5+ASSETAMT1_7_8+ASSETAMT1_8_11+ASSETAMT1_9_4+ASSETAMT1_10_7+ASSETAMT1_12_9+ASSETAMT1_14_8");
+		tablePorpertyMap_1.put("t1_last12_amt",  "ASSETAMT1_1_6+ASSETAMT1_2_3+ASSETAMT1_3_3+ASSETAMT1_4_14+ASSETAMT1_5_17+ASSETAMT1_6_5+ASSETAMT1_7_8+ASSETAMT1_8_11+ASSETAMT1_9_4+ASSETAMT1_10_7+ASSETAMT1_12_9+ASSETAMT1_14_8");
 		tablePorpertyMap_1.put("t1_cur13_amt", "ASSETAMT1_13_1_1+ASSETAMT1_13_2_1+ASSETAMT1_13_3_1+ASSETAMT1_13_4_1+ASSETAMT1_13_5_1+ASSETAMT1_13_6_1");
 		tablePorpertyMap_1.put("t1_last13_amt", "ASSETAMT1_13_1_1+ASSETAMT1_13_2_1+ASSETAMT1_13_3_1+ASSETAMT1_13_4_1+ASSETAMT1_13_5_1+ASSETAMT1_13_6_1");
 		tablePorpertyMap_1.put("t1_cur14_amt", "ASSETAMT1_13_1_2+ASSETAMT1_13_2_2+ASSETAMT1_13_3_2+ASSETAMT1_13_4_2+ASSETAMT1_13_5_2+ASSETAMT1_13_6_2");
@@ -100,8 +100,8 @@ public class InvestmentsInfoService {
 		tablePorpertyMap_1.put("t1_last26_amt",  "ASSETAMT1_13_1_1");
 		tablePorpertyMap_1.put("t1_cur27_amt", "ASSETAMT1_13_2_1");
 		tablePorpertyMap_1.put("t1_last27_amt",  "ASSETAMT1_13_2_1");
-		tablePorpertyMap_1.put("t1_cur28_amt", "ASSETAMT1_13_3_1");
-		tablePorpertyMap_1.put("t1_last28_amt",  "ASSETAMT1_13_3_1");
+		tablePorpertyMap_1.put("t1_cur28_amt", "ASSETAMT1_13_3_1+ASSETAMT1_11_7");
+		tablePorpertyMap_1.put("t1_last28_amt",  "ASSETAMT1_13_3_1+ASSETAMT1_11_7");
 		tablePorpertyMap_1.put("t1_cur29_amt", "ASSETAMT1_13_4_1+ASSETAMT1_13_5_1+ASSETAMT1_13_6_1");
 		tablePorpertyMap_1.put("t1_last29_amt", "ASSETAMT1_13_4_1+ASSETAMT1_13_5_1+ASSETAMT1_13_6_1");
 		tablePorpertyMap_1.put("t1_cur31_amt", "ASSETAMT1_13_1_2");

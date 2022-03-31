@@ -977,8 +977,6 @@
     };
 
     var setScale = function (obj) {
-
-        alert("scale======"+obj.scale)
         var ps = $("#ps_" + currentTab).val();
         if (obj.finprodType2 == FINPROD_TYPE_TG_F01 && isStandardPs(ps)) {
             $("#price_" + currentTab).attr("data-textrange", obj.scale);
@@ -1434,7 +1432,7 @@
             $("#acctNo_" + currentTab).val('').trigger('change');
             $("#acctNo_div_" + currentTab).hide();
         }
-        if(currentTab == 'gd' || ps == PS_T03 || ps == PS_T49){
+        if(currentTab == 'gd' || ps == PS_T03 || ps == PS_T49 || ps == PS_T68 || ps == PS_T69){
             $("#acctNo_div_" + currentTab).hide();
         }
     };
