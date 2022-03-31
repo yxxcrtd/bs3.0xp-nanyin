@@ -1482,7 +1482,7 @@
         to_char(eted.MPAY_DATE,'yyyy-MM-dd') mpayDate,
         eted.M_INT_AMT mIntAmt,
         eted.M_TRADE_AMT mTradeAmt,
-        nvl(fscr.SCALE, 0) * 100 pledgeRatio, /** 折算率 **/
+        nvl(decode( eted.ASSET_TYPE, 'F07' , ee.Pledge_Ratio , fscr.SCALE ), 0 ) * 100 pledgeRatio, /** 折算率 **/
         ee.PLEDGE_NUMBER pledgeNumber,
         ee.PLEDGE_NUMBER * ee.Pledge_Face_Value pledStrdPrinAmt,
         eted.TRADE_ID tradeId,
@@ -1587,7 +1587,7 @@
         to_char(eted.MPAY_DATE,'yyyy-MM-dd') mpayDate,
         eted.M_INT_AMT mIntAmt,
         eted.M_TRADE_AMT mTradeAmt,
-        nvl(fscr.SCALE,0) * 100 pledgeRatio, /** 折算率 **/
+        nvl(decode( eted.ASSET_TYPE, 'F07' , ee.Pledge_Ratio , fscr.SCALE ), 0 ) * 100 pledgeRatio, /** 折算率 **/
         ee.PLEDGE_NUMBER pledgeNumber,
         ee.PLEDGE_NUMBER * ee.Pledge_Face_Value pledStrdPrinAmt,
         eted.TRADE_ID tradeId,
