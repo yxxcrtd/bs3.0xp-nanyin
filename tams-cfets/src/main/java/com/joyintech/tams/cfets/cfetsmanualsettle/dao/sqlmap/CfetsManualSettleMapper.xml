@@ -765,6 +765,13 @@
         WHERE matchinfo.TRD_ID = #{totleTradeId}
     </select>
 
+    <select id="selectIbuBondQuoteIdByTotleTradeId" resultType="java.lang.String">
+        SELECT iqb.QUOTE_ID
+        FROM IBU_QUOTE_BOND iqb
+        LEFT JOIN TRDQUTO_MATCH_INFO matchinfo ON matchinfo.PRE_TRADE_ID = iqb.QUOTE_ID
+        WHERE matchinfo.TRD_ID = #{totleTradeId}
+    </select>
+
     <select id="selectQuoteIdBytradeId" resultType="java.lang.String">
         SELECT iqc.QUOTE_ID TRADE_ID
         FROM IBU_QUOTE_CREP iqc

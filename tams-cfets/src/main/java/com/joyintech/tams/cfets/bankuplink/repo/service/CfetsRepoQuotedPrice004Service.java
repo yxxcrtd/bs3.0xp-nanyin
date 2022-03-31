@@ -514,13 +514,13 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
 //            errorList.add(new ValidMessage("请输入结算服务费"));
 //        }
         /**************************************************************基本信息********************************************/
-        if (StringUtil.isNotEmpty(entity.getCounterId())
-                && !StringUtil.equals(entity.getQuoteStyle(), "05")) {//X-REPO 交易对手是CCP
-            String trader = this.findTraderByCounterId(entity.getCounterId());
-            if (!StringUtil.isNotEmpty(trader)) {
-                errorList.add(new ValidMessage("选择的对手方未与银行间机构关联，请先去关联"));
-            }
-        }
+//        if (StringUtil.isNotEmpty(entity.getCounterId())
+//                && !StringUtil.equals(entity.getQuoteStyle(), "05")) {//X-REPO 交易对手是CCP
+//            String trader = this.findTraderByCounterId(entity.getCounterId());
+//            if (!StringUtil.isNotEmpty(trader)) {
+//                errorList.add(new ValidMessage("选择的对手方未与银行间机构关联，请先去关联"));
+//            }
+//        }
     }
 
     /**
@@ -2046,9 +2046,9 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             Map<String,String> entrustIdList = new HashMap<>();
             for (RegFinProductDeal deal : input.getRegFinProductDeals()) {
                 trdOutRightRepoTradeService.updatePledgeBondForRevoke(deal.getpTradeId(), DictCodeList.持仓类型_质押.getValue(), true);
-                if(StringUtil.isEmpty(entrustIdList.get(deal.getEntrustId()))) {
+                if (StringUtil.isEmpty(entrustIdList.get(deal.getEntrustId()))) {
                     this.revokeEtrSecPosition(deal.getEntrustId(), null, false, null);
-                    entrustIdList.put(deal.getEntrustId(),deal.getEntrustId());
+                    entrustIdList.put(deal.getEntrustId(), deal.getEntrustId());
                 }
             }
         } else {
@@ -2165,12 +2165,12 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             if (isRevoke) {
                 flow.setAmount(flow.getAmount().negate());
             }
-            flow.setTradeId(tradeId);
             if (StringUtil.isNotEmpty(settleDate)) {
                 flow.setCdate(settleDate);
             }
             flow.setOffsetFlag(DictCodeList.冲正标识_冲销交易.getValue());
             flow.setOffsetId(flow.getTradeId());
+            flow.setTradeId(tradeId);
             flow.setSeqno(IDGenerator.generate());
             BeanUtil.copyPropertiesIgnoreNull(position, flow);
             etrSecPositionFlowMapper.insert(flow);

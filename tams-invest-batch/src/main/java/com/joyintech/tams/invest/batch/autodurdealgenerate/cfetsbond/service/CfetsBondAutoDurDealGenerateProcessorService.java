@@ -99,6 +99,8 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
     /**
      * process 数据处理
      * @param batchDate 传递参数
+     * @return BookGenerateResult
+     * @see
      * @since 1.0
      */
     public void execute(Date batchDate) {
@@ -353,6 +355,7 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
         for (RegFinProductDeal regFinProductDeal : regFinProductDealList) {
             regFinProductDeal.setCpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(cpriceAmt,regFinProductDeal.getFaceValue()),avaNumTotal,2,RoundingMode.DOWN));
             regFinProductDeal.setTradeAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(tradeAmt,regFinProductDeal.getFaceValue()),avaNumTotal,2,RoundingMode.DOWN));
+
             tailDifferenceCprice = ArithmeticUtil.subtract(tailDifferenceCprice,regFinProductDeal.getCpriceAmt());
             tailDifferenceShAmt=ArithmeticUtil.subtract(tailDifferenceShAmt,regFinProductDeal.getTradeAmt());
         }

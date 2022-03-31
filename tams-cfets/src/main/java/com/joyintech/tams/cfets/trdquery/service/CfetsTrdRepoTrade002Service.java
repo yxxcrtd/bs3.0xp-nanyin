@@ -1191,6 +1191,7 @@ public class CfetsTrdRepoTrade002Service extends BaseService<CfetsTrdRepoTrade00
             cfetsTrdQueryMapper.updateIbuRepoByPrimaryKeySelective(paramMap);
             // 删除指令完成度
             BaseQuoteDto baseQuoteDto = new BaseQuoteDto();
+            baseQuoteDto.setQuoteId(totleTradeId);
             cfetsQuotedCommonService.deleteByQuoteId(baseQuoteDto);
             List<PtlSecPositionFlowDto> ptlSecPositionFlows = new ArrayList<>();
             List<PtlSecPositionFlow> positionFlows = baseAssetCashPositionCommMapper.selectAllPositionByOffsetFlag(totleTradeId,
