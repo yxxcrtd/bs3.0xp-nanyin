@@ -787,6 +787,8 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
             else {
                 agreRepOpenSecDto.setPledgeNumber(entity.getRepSecNum());
             }
+
+            agreRepOpenSecDto.setEntrustNum(agreRepOpenSecDto.getPledgeNumber());
   
             // 交易对手
             agreRepOpenSecDto.setCounterId(entity.getCounterId());
@@ -1333,6 +1335,8 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
             else {
                 agreRepOpenSecDto.setPledgeNumber(entity.getRepSecNum());
             }
+
+            agreRepOpenSecDto.setEntrustNum(agreRepOpenSecDto.getPledgeNumber());
 
             // 交易对手
             agreRepOpenSecDto.setCounterId(entity.getCounterId());

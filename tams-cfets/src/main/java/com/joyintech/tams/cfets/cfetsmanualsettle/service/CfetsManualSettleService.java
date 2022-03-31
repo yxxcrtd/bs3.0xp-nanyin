@@ -1408,6 +1408,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
             logger.info("首期流程发起时不处理头寸");
             return;
         }
+        logger.info("cfetsManualSettleRequest.getTradeId():" + cfetsManualSettleRequest.getTradeId());
         //设置登记时的成交编号
         List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId(),null);
         if (CollectionUtils.isEmpty(listTemp)) {
@@ -1478,7 +1479,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
             if (StringUtil.equals(busiType, DictCodeListExt3.头寸业务类型_质押式回购到期.getValue())) {
                 // 到期会按交易编号生成单独的划款指令
                 stlPayOrders = cfetsManualSettleMapper.getStlPayOrdersByTradeId(item.getTradeId());
-                logger.info("交收处理头寸,到期划款指令:" + stlPayOrders.toString());
+                logger.info("交收处理头寸,到期划款指令:" + JsonUtils.object2Json(stlPayOrders));
             } else {
                 StlPayOrdersDto stlPayOrder = new StlPayOrdersDto();
                 BeanUtil.copyPropertiesIgnoreNull(stlPayOrder, stlPayOrdersDto);
@@ -1502,7 +1503,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                     orderIds.add(orderId);
                 }
                 stlPayOrders.add(stlPayOrder);
-                logger.info("交收处理头寸,首期期划款指令:" + stlPayOrder.toString());
+                logger.info("交收处理头寸,首期期划款指令:"  + JsonUtils.object2Json(stlPayOrder));
             }
             if (StringUtil.isEmpty(baseTradeProductDealDto.getEntrustId())) {
                 baseTradeProductDealDto.setEntrustId(cfetsManualSettleMapper.qryEntrustId(item.getFinprodId()));
