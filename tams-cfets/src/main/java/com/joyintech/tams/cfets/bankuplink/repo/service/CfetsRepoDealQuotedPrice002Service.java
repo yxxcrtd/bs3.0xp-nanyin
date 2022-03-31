@@ -770,13 +770,12 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
             }
         }
         // 交易对手未绑定21位码,手方交易员非必填
-        // 交易对手未绑定21位码,手方交易员非必填
-        CfetsSearchInfoRequest cfetsSearchInfoRequest = new CfetsSearchInfoRequest();
-        cfetsSearchInfoRequest.setDealType("02");
-        cfetsSearchInfoRequest.setInitValue(entity.getCounterId());
-        List<SelectOptionDto> list = joyinbusinessCommonService.queryMySideOrCount(cfetsSearchInfoRequest);
-        if (StringUtil.isNotEmpty(list.get(0).getObject())
-                && StringUtil.equals(CacheUtil.getSysParam("EXPORT_SHOW"), "01")
+//        CfetsSearchInfoRequest cfetsSearchInfoRequest = new CfetsSearchInfoRequest();
+//        cfetsSearchInfoRequest.setDealType("02");
+//        cfetsSearchInfoRequest.setInitValue(entity.getCounterId());
+//        List<SelectOptionDto> list = joyinbusinessCommonService.queryMySideOrCount(cfetsSearchInfoRequest);
+        if (/*StringUtil.isNotEmpty(list.get(0).getObject())
+                &&*/ StringUtil.equals(CacheUtil.getSysParam("EXPORT_SHOW"), "01")
                 && !StringUtil.isNotEmpty(entity.getCounterTrader())
                 && StringUtil.equals(entity.getQuoteStyle(), BussinessDictCodeList.报价方式_对话报价.getValue())) {
             errorList.add(new ValidMessage("请输入对手方交易员"));
