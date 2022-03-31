@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 import com.joyintech.tams.common.base.entity.ChbEquTmp;
 import com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub;
+import com.joyintech.tams.common.base.entity.ChbSubCheckBasicRule;
 import com.joyintech.tams.report.interf.common.imp.ImportGenerator;
 import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpColumn;
 import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
@@ -455,10 +456,25 @@ public class InvestorsHoldInfoDistinctService {
 			 chbInvestholdInfoCheckDtoMapper.truncateInvestholdTmp();
 
 			 this.saveChbInvestholdInfoCheckTmp(tmpList);
-			 tmpList.clear();
 
 			 checkDtoList = chbInvestholdInfoCheckDtoMapper.selectNeedCheckDtoListNew();
+			 if(!StringUtil.isEmptyList(checkDtoList)){
+				 Map<String, ChbInvestholdInfoCheckDto> tmpMap= tmpList.stream().collect(JoyinCollectors.toMap(item->
+						 item.getRegistBankCode()+"|"+item.getProdid()+"|"+item.getIndentifyMark()+"|"+item.getHoldDate()+"|"+item.getCcy(),item->item));
 
+				 checkDtoList.stream().forEach(
+						 item ->{
+							 ChbInvestholdInfoCheckDto tmpDto = tmpMap.get(item.getRegistBankCode()+"|"+item.getProdid()+"|"+item.getIndentifyMark()+"|"+item.getHoldDate()+"|"+item.getCcy());
+							 item.setAmount(tmpDto.getAmount());
+							 item.setQty(tmpDto.getQty());
+							 item.setCnyAmt(tmpDto.getCnyAmt());
+							 item.setOrgCode(tmpDto.getOrgCode());
+							 item.setDeptCode(tmpDto.getDeptCode());
+							 item.setAgent(tmpDto.getAgent());
+						 }
+				 );
+			 }
+			 tmpList.clear();
 		 }else{
 			 checkDtoList = this.selectAllNeedCheckDtoList(list);
 		 }

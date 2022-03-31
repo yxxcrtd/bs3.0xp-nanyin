@@ -492,7 +492,7 @@
           LEFT JOIN   PA_TRD_PRODUCT_DEAL ptrd
                   ON   ptrd.TRADE_ID = tpd.TRADE_ID
           LEFT JOIN PTL_TRADE PT ON tpd.TRADE_ID = PT.BUSI_NO
-          LEFT JOIN PTL_PORTFOLIO PP ON PT.PORTFOLIO_ID = PP.PORTFOLIO_ID
+          LEFT JOIN PTL_PORTFOLIO PP ON tpda.PORTFOLIO_ID = PP.PORTFOLIO_ID
           LEFT JOIN   FIN_TRADE_PRODUCT ftp
                           ON (case when tpd.IS_OUT_TRADE='N' and tpd.R_TRADE_ID is not null then tpd.R_TRADE_ID else tpd.TRADE_ID end) = ftp.FINPROD_ID
                   <!--ON  (
