@@ -101,6 +101,15 @@ public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
         //去掉已接收成功的数据
         paramMap.put("DELIVERY_STATUS_02","02");
         List<TrdRepoDurationDto> tradeDataList = restTemplate.postForList(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdRepoDuration/selectAllData", paramMap,TrdRepoDurationDto.class);
+        if(!CollectionUtils.isEmpty(tradeDataList)) {
+            List<TrdRepoDurationDto> resultList = new ArrayList<>();
+            tradeDataList.forEach(e -> {
+                if (StringUtil.equals(e.getTradeMarket(), DictCodeListExt1.交易场所_银行间.getValue()) || StringUtil.equals(e.getTradeMarket(), DictCodeListExt1.交易场所_商业银行柜台.getValue())) {
+                    resultList.add(e);
+                }
+            });
+            return resultList;
+        }
         return  tradeDataList;
     }
 
