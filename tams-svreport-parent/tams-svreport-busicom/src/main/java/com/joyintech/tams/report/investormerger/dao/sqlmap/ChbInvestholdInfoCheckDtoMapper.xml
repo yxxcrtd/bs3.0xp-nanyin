@@ -1506,7 +1506,7 @@
 
     <select id="selectAllChbEquHoldCheckNew" resultMap="BaseResultMap"
             parameterType="com.joyintech.tams.report.investormerger.dto.ChbInvestholdInfoCheckDto" resultSetType="FORWARD_ONLY" fetchSize="1000">
-        SELECT
+        SELECT /*+ use_hash(tmp,C) */
         tmp.REGIST_BANK_CODE,
         tmp.CCY,
         tmp.HOLD_DATE,
