@@ -1492,7 +1492,7 @@ public class ChbAssetInfoSubSetService {
 		if(StringUtil.isNotEmpty(item.getIsBzhpj())){
 			CnBondInterfItemDto cnBondItem3 = new CnBondInterfItemDto();
 			cnBondItem3.setValue(item.getIsBzhpj());
-			cnBondItemMap1.put("StandardizedBillorNotePleaseSelect", cnBondItem3);
+			cnBondItemMap1.put("StandardizedBillOrNotePleaseSelect", cnBondItem3);
 		}
 		//票据代码
 		if(StringUtil.isNotEmpty(item.getBillCode())){

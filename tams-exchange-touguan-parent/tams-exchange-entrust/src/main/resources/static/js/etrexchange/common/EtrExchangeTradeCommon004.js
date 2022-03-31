@@ -891,7 +891,7 @@
                         // }
                         $("#portfolioId_div_" + currentTab).show();
                     }
-                    if(object.finprodType2 && (object.finprodType2 == FINPROD_TYPE_TG_F01)){
+                    if(ps == PS_T04){
                         $("#portfolioId_div_" + currentTab).show();
                     }
                     if (secId) {
@@ -1432,7 +1432,7 @@
             $("#acctNo_" + currentTab).val('').trigger('change');
             $("#acctNo_div_" + currentTab).hide();
         }
-        if(currentTab == 'gd' || ps == PS_T03 || ps == PS_T49){
+        if(currentTab == 'gd' || ps == PS_T03 || ps == PS_T49 || ps == PS_T68 || ps == PS_T69){
             $("#acctNo_div_" + currentTab).hide();
         }
     };
