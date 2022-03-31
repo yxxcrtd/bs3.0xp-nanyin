@@ -2169,6 +2169,8 @@ public class CfetsRepoQuotedPrice004Service extends BaseService<CfetsRepoDealReg
             if (StringUtil.isNotEmpty(settleDate)) {
                 flow.setCdate(settleDate);
             }
+            flow.setOffsetFlag(DictCodeList.冲正标识_冲销交易.getValue());
+            flow.setOffsetId(flow.getTradeId());
             flow.setSeqno(IDGenerator.generate());
             BeanUtil.copyPropertiesIgnoreNull(position, flow);
             etrSecPositionFlowMapper.insert(flow);

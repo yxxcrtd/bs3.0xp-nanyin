@@ -594,7 +594,7 @@ public class PositionRequestServiceFinProductTradeService extends BaseService {
             }else{
                 bean.setTradeId(dealEntity.getTradeId());
             }
-            bean.setEtrId(entity.getEntrustId());
+            bean.setEtrId(trdProductDealAdd.getEntrustId());
             if(DictCodeListExt3.交易方向_中途换券.getValue().equals(ps)){
                 // ZGTFCP-1805:修改中途换券字段赋值 modify by fuyongsheng 20220324 start
                 FinPledgeDisplaceResult temp = this.getFinPledgeDisplaceResult(entity, DictCodeListExt3.质押券置换_置换结果_置换后.getValue());

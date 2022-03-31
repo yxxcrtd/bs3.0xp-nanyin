@@ -891,7 +891,7 @@
                         // }
                         $("#portfolioId_div_" + currentTab).show();
                     }
-                    if(object.finprodType2 && (object.finprodType2 == FINPROD_TYPE_TG_F01)){
+                    if(ps == PS_T04){
                         $("#portfolioId_div_" + currentTab).show();
                     }
                     if (secId) {

@@ -36,6 +36,7 @@ import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.systemtools.util.SysDatadictUtil;
+import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
@@ -647,6 +648,12 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
             return new Message<AjaxResult>().success().setData(new AjaxResult(br));
         }
 
+        // 操作类型
+        OperationType operationType = OperationType.NEW;
+        if (StringUtil.isNotBlank(dto.getEntrustId())) {
+            operationType = OperationType.MODIFY;
+        }
+
         //业务类型
         String businessType = String.valueOf("");
         if (DictCodeListExt3.交易方向_提前购回.getValue().equals(dto.getPs())) {
@@ -756,6 +763,7 @@ public class EtrExchangeAgreRepTrade001Controller extends BaseController {
                 entity.getBusinessTypeName()) + ")-"
                 + "平台日" + "(" + DateUtil.format(iPlatformDate.getSysDate()) + ")");
         processParameter.setWorkFlowParameter(params);
+        processParameter.setOperationType(operationType);
         dto.setInvManagerId(LoginUserUtil.getUserName());// 投资经理
         dto.setCreateUser(LoginUserUtil.getUserName());// 用户名
         dto.setCreateDept(LoginUserUtil.getDeptCode());// 用户部门
