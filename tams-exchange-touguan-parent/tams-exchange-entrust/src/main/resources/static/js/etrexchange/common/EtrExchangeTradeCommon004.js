@@ -3215,6 +3215,9 @@
                 $("#invAim_div_" + currentTab).hide();
                 $("#targetType_div_" + currentTab).hide();
             }
+            if(ps == PS_T97){
+                $("#invAim_div_" + currentTab).hide();
+            }
 
             if (finprodType2 == FINPROD_TYPE_TG_F06) {
                 $("#priceModel_div_" + currentTab).show();
