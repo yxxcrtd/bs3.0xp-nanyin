@@ -10,9 +10,18 @@
  
 package com.joyintech.tams.invest.batch.entrust.service;
 
+import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.SpringContextUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
+import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
+import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListRsk;
+import com.joyintech.tams.invest.batch.cfetsentrust.dao.CfetsEntrustStatusMapper;
+import com.joyintech.tams.invest.batch.cfetsentrust.dto.CfetsEntrustClosePosEtrReqDto;
+import com.joyintech.tams.invest.batch.cfetsentrust.dto.CfetsEntrustClosePositionReqDto;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.trade.CreditLinesUpdate;
 import com.joyintech.tams.invest.common.trade.CreditLinesUpdateImpl;
 import com.joyintech.tams.invest.common.trade.dto.CreditLinesInputDto;
@@ -26,10 +35,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.batch.entrust.dao.EntrustStatusMapper;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  *  更新关闭委托状态
@@ -48,6 +54,11 @@ public class EntrustStatusService {
     @Autowired
     private BaseEtrCashPositionCommService baseEtrCashPositionCommService;
 
+    @Autowired
+    private CfetsEntrustStatusMapper cfetsEntrustStatusMapper;
+    @Autowired
+    private JoyinbusinessCommonService joyinbusinessCommonService;
+
    /* @Autowired
     private PinganBatchPlatformDateImpl platformDateService;*/
     
@@ -61,14 +72,30 @@ public class EntrustStatusService {
             params.put("ENTRUST_STATUS_08", DictCodeListExt3.委托状态_待分发.getValue());
             params.put("ENTRUST_STATUS_03", DictCodeList.委托状态_已接收.getValue());
             params.put("ENTRUST_STATUS_05", DictCodeList.委托状态_已退回.getValue());
+            params.put("ENTRUST_STATUS_07", DictCodeList.委托状态_已撤回.getValue());
+
+            // 处理对接了头寸引擎的指令关闭 start
+            List<CfetsEntrustClosePosEtrReqDto> cfetsEntrustIdList = cfetsEntrustStatusMapper.selectEntrustList(params);
+            List<String> cfetsEntrustIds = cfetsEntrustStatusMapper.selectEntrustIds(params);
+            //entrustStatusMapper.updateDistributeStatus(params);//add by yangwenjun 20201211 更新委托指令分发表中的接收状态
+           // entrustStatusMapper.updateEntrustStatus(params);
+            // 日终关闭委托时，同步释放授信预占
+            closeDelegateDealCredit(cfetsEntrustIds);
+            //更新指令业务模式(本币交易涉及资产重分类)
+            updateBusModel(sysDate);
+            //操作记录表
+            closeDelegatOprHisMethod(cfetsEntrustIdList);
+            closeDelegatePositionMethod(cfetsEntrustIdList);
+            // 处理对接了头寸引擎的指令关闭 start
+
+            // 处理未对接了头寸引擎的指令关闭 start
             List<String> entrustIdList = entrustStatusMapper.selectEntrustIds(params);
             entrustIdList.forEach(s -> baseEtrCashPositionCommService.entrustCloseExecute(s));
             entrustStatusMapper.updateDistributeStatus(params);//add by yangwenjun 20201211 更新委托指令分发表中的接收状态
-
             // 日终关闭委托时，同步释放授信预占
             closeDelegateDealCredit(entrustIdList);
-
             entrustStatusMapper.updateEntrustStatus(params);
+            // 处理未对接了头寸引擎的指令关闭 end
         }
     }
 
@@ -89,5 +116,71 @@ public class EntrustStatusService {
             });
             creditLinesUpdate.occupyCreditLinesEtr(inputDtoList,null);
         }
+    }
+
+    private void closeDelegatePositionMethod(List<CfetsEntrustClosePosEtrReqDto> dtolist){
+        CfetsEntrustClosePositionReqDto req=new CfetsEntrustClosePositionReqDto();
+        List<CfetsEntrustClosePosEtrReqDto> etrList=new ArrayList<>();
+        for(CfetsEntrustClosePosEtrReqDto t: dtolist){
+            CfetsEntrustClosePosEtrReqDto closeItem=new CfetsEntrustClosePosEtrReqDto();
+            String busiTypePosition=DictCodeListExt3.头寸业务类型_现券交易.getValue();
+            if(StringUtil.equals(t.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券.getValue())){
+                if(StringUtil.isNotEmpty(t.getPs())
+                        && StringUtil.equals(t.getPs(), BussinessDictCodeList.交易方向_行权回售.getValue())){
+                    busiTypePosition=DictCodeListExt3.头寸业务类型_债券行权交易.getValue(); // 业务类型：01债券一级投标，02现券交易，03债券行权交易，04债券存续期交易
+                }
+            }else{
+                busiTypePosition =DictCodeListExt3.头寸业务类型_质押式回购首期.getValue();
+            }
+
+            closeItem.setBusiType(busiTypePosition);
+            closeItem.setPs(t.getPs());
+            closeItem.setCloseId(t.getCloseId());
+            closeItem.setSystemAct(DictCodeListExt3.系统动作_关闭.getValue());
+            closeItem.setBusiAct(DictCodeListExt3.业务动作_指令日终关闭.getValue());
+            etrList.add(closeItem);
+        }
+        req.setData(etrList);
+        req.setUserId("SYSTEM");
+        req.setTotalTradeId(IDGenerator.generate());
+        req.setModelType(DictCodeListExt1.子系统代码_委托.getValue());
+        PositionHttpRequest.batchClose(req);
+    }
+    private void closeDelegatOprHisMethod(List<CfetsEntrustClosePosEtrReqDto> entrustIdList){
+        if(entrustIdList != null && entrustIdList.size()>0) {
+            for (CfetsEntrustClosePosEtrReqDto entity : entrustIdList) {
+                //更新操作记录日志
+                CfetsOprHisInfoRequest oprHisReq=new CfetsOprHisInfoRequest();
+                oprHisReq.setEntrustId(entity.getCloseId());
+                oprHisReq.setOperType(DictCodeListExt3.操作类型_关闭.getValue());
+                joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);
+            }
+        }
+    }
+
+    /**
+     * 更新业务模式
+     * @param sysDate
+     */
+    public void  updateBusModel(String sysDate){
+        Map<String,Object> param = new HashMap<>();
+        param.put("sysDate", sysDate);
+        List<String> quoteStatusIbu = Arrays.asList(BussinessDictCodeList.银行间上行报价状态_新增中.getValue()
+                ,BussinessDictCodeList.银行间上行报价状态_已新增.getValue()
+                ,BussinessDictCodeList.银行间上行报价状态_修改中.getValue()
+                ,BussinessDictCodeList.银行间上行报价状态_已修改.getValue()
+                ,BussinessDictCodeList.银行间上行报价状态_撤回中.getValue()
+                ,BussinessDictCodeList.银行间上行报价状态_已成交.getValue()
+                ,BussinessDictCodeList.银行间上行报价状态_待回复.getValue()
+                ,BussinessDictCodeList.银行间上行报价状态_成交中.getValue()
+                ,BussinessDictCodeList.银行间上行报价状态_终止中.getValue()
+                ,BussinessDictCodeList.银行间上行报价状态_已回复.getValue()
+                ,BussinessDictCodeList.银行间上行报价状态_拒绝中.getValue()
+                ,BussinessDictCodeList.银行间上行报价状态_回复中.getValue()
+                ,BussinessDictCodeList.银行间上行报价状态_交谈中.getValue()
+                ,BussinessDictCodeList.银行间上行报价状态_已交谈.getValue()
+                ,BussinessDictCodeList.银行间上行报价状态_已交谈.getValue());
+        param.put("QUOTE_STUTAS_IBUS",quoteStatusIbu);
+        cfetsEntrustStatusMapper.updateBusModel(param);
     }
 }

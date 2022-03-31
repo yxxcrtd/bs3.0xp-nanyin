@@ -60,7 +60,6 @@ import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInves
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.invest.entrust.etrinvestbondinfo.service.EtrInvestBondInfoService;
@@ -236,19 +235,19 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
                     dto.setEntrustId(code);
                 }
                 //默认证券账户
-                if (StringUtil.isNotEmpty(dto.getPortfolioId())) {
-                    String acctId = EtrCommonCashPositionDealService.select组合托管户(dto.getPortfolioId(), dto.getCcy(), DictCodeListExt1.资金账户类型_产品托管户.getValue());
-                    dto.setSecAcctId(acctId);
-                }
-//                if (StringUtil.isNotEmpty(dto.getPortfolioId()) && StringUtil.isNotEmpty(dto.getFinprodId())) {
-//                    Map<String, Object> map = new HashMap<String, Object>();
-//                    map.put("portfolioId", dto.getPortfolioId());
-//                    map.put("finprodId", dto.getFinprodId());
-//                    String secAcctId = cfetsEtrIbBondinfo002Service.qryPortfolioSecAcctId(map);
-//                    if (com.joyintech.framework.util.StringUtil.isNotEmpty(secAcctId)) {
-//                        dto.setSecAcctId(secAcctId); // 证券账户
-//                    }
+//                if (StringUtil.isNotEmpty(dto.getPortfolioId())) {
+//                    String acctId = EtrCommonCashPositionDealService.select组合托管户(dto.getPortfolioId(), dto.getCcy(), DictCodeListExt1.资金账户类型_产品托管户.getValue());
+//                    dto.setSecAcctId(acctId);
 //                }
+                if (StringUtil.isNotEmpty(dto.getPortfolioId()) && StringUtil.isNotEmpty(dto.getFinprodId())) {
+                    Map<String, Object> map = new HashMap<String, Object>();
+                    map.put("portfolioId", dto.getPortfolioId());
+                    map.put("finprodId", dto.getFinprodId());
+                    String secAcctId = cfetsEtrIbBondinfo002Service.qryPortfolioSecAcctId(map);
+                    if (com.joyintech.framework.util.StringUtil.isNotEmpty(secAcctId)) {
+                        dto.setSecAcctId(secAcctId); // 证券账户
+                    }
+                }
                 // ----------add by zhangrui1 20200715 预占功能 start----------
                 if (StringUtil.isNotEmpty(dto.getEntrustId())) {
                     dataList.add(dto);
