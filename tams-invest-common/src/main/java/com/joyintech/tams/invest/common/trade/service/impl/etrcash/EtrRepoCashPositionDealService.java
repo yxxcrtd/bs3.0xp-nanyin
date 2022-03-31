@@ -1279,7 +1279,9 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
                     etrSecPositionFlowDto.setAmount(ArithmeticUtil.subtract(entrustAmt, ArithmeticUtil.divide(finishAmt,债券面值,2)));
                     etrSecPositionFlowDto.setCloseFlag("01"); // 委托关闭特殊处理, 委托关闭后, 再撤销交易时, 委托状态会变成已接收, 这时应该要把这笔数据删除
                     etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
-                }else{
+                } else if ((StringUtil.isEmpty(entrustCommonDto.getIsExistNew())
+                        || StringUtil.equals(entrustCommonDto.getIsExistNew(), DictCodeList.是否_否.getValue()))) {
+                    //新业务 在交易执行时才占用债券的指令可用持仓 所以强制完成时不用释放
                     // 质押品的组合持仓流水
                     etrPositionHoldDto.setPtlSecPositionFlows(ptlSecPositionFlowLogic(entrustCommonDto,false)) ;
                 }

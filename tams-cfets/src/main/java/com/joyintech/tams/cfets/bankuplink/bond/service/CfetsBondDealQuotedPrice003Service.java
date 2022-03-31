@@ -985,9 +985,11 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
      */
     @Override
 	public void doBack(CfetsBondDealRequestQuoteDto entity){
+        entity.setOperatorType(DictCodeListExt3.流程节点_流程退回.getValue());
         if (StringUtil.equals(com.joyintech.tams.constant.DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
             //插入旧头寸
-            if(BussinessDictCodeList.银行间上行报价状态_成交中.getValue().equals(entity.getTradeStatus())){
+            if(BussinessDictCodeList.银行间上行报价状态_成交中.getValue().equals(entity.getTradeStatus())
+                || "成交".equals(entity.getQuoteOperatorType())){
                 doInsetOrUpdateForPtlPositionHold(entity);
             }else{
                 //回退释放头寸
@@ -1113,6 +1115,7 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
      */
     public com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto preparEntity(CfetsBondDealRequestQuoteDto entity){
         com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto = JsonUtils.json2Object(JsonUtils.object2Json(entity),com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto.class);
+        cfetsBondDealRequestQuoteDto.setOperateType(entity.getOperatorType());
         //处理下业务模式
         if(CollectionUtils.isNotEmpty(cfetsBondDealRequestQuoteDto.getCfetsBondDealRequestQuoteDtoList())) {
             Map<String, Object> entrustReclas = new HashMap<>();
