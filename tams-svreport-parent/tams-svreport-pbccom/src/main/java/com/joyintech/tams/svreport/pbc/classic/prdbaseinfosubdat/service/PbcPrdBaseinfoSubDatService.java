@@ -53,6 +53,10 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
 
     private static final String TIPS_SUFFIX_ERROR = "只支持2003版(文件后缀为.xls)的excel导入，请修改文件重新导入";
 
+
+    private static final String NOTFILE_ERROR = "导入模板不一致，请重新选择文件！";
+
+
     @Autowired
     private PbcPrdBaseinfoSubDatMapper pbcPrdBaseinfoSubDatMapper;
 
@@ -75,6 +79,17 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
             ajaxResult.setErrorList(Arrays.asList(message));
             return ajaxResult;
         }
+        /***TISHKS-1010 CLONE - 【产品问题】人行报送文件管理（资产管理 ），点击导入资管产品信息，导入模板不一致，也可导入并弹出相关校验*/
+
+        List<List<String>> topList = ExcelUtil.getDataList1top(fileName);
+        if(StringUtil.isEmptyList(topList)||topList.get(0).size()!=34){
+            ValidMessage message = new ValidMessage();
+            message.setMessage(NOTFILE_ERROR);
+            ajaxResult.setErrorList(Arrays.asList(message));
+            return ajaxResult;
+        }
+        /***TISHKS-1010 CLONE - 【产品问题】人行报送文件管理（资产管理 ），点击导入资管产品信息，导入模板不一致，也可导入并弹出相关校验*/
+
         List<List<String>> dataList = ExcelUtil.getDataList1(fileName);
         if(CollectionUtil.isNotEmpty(dataList)){
             List<PbcPrdBaseinfoSubDatDto> pbcPrdBaseinfoSubDatDtos = new ArrayList<>();

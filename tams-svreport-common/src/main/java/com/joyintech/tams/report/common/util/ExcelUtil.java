@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
@@ -459,6 +460,20 @@ public class ExcelUtil {
         }
         return dataList;
     }
+
+    /***TISHKS-1010 CLONE - 【产品问题】人行报送文件管理（资产管理 ），点击导入资管产品信息，导入模板不一致，也可导入并弹出相关校验*/
+
+    public static List<List<String>> getDataList1top(String fileName){
+        List<List<String>> dataList = null;
+        try {
+            dataList = ExcelUtil.readToList(
+                    fileName, null, null, 0, 0, 0);
+        } catch (FileNotFoundException e1) {
+            logger.error(e1.getMessage(),e1);
+        }
+        return !StringUtil.isEmptyList(dataList)? Arrays.asList(dataList.get(0)):new ArrayList<>();
+    }
+    /***TISHKS-1010 CLONE - 【产品问题】人行报送文件管理（资产管理 ），点击导入资管产品信息，导入模板不一致，也可导入并弹出相关校验*/
 
     public static List<List<String>> getTempList(String fileName){
         List<List<String>> dataList = null;
