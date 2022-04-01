@@ -1,4 +1,5 @@
 (function () {
+
     /**
      * 获取查询参数
      */
@@ -37,33 +38,57 @@
 		    ,{field:'action', title: 'SysCommon.operation' , type:'action',buttons: ['edit', 'delt'] , width:100}
 		]
 	  });
+
     /**
      * 绑定编辑事件
      */
     table.bind('click', '.edit', function(data, index) {
-        data.pageModel = PAGE_MODEL_EDIT;
-        Joyin.dialog(JoyinUtil.getLabel("科目信息编辑"),
-                basePath + "valuation/accounadjustmanage/subjectset/ValSubjectSet002/init",
-                "95%", "80%", {pageModel:PAGE_MODEL_EDIT,
-                                booksetId:data.booksetId,
-                                subjectNo:data.subjectNo},function(){
-                                    table.reload();
-                                });
+        data.operateType='edit'
+        data.pageModel=PAGE_MODEL_EDIT;
+        Joyin.ajaxJson(basePath + 'chb/boksubject/boksubject002/check', data, function(result) {
+            Joyin.confirm("请确认是否修改?", function(){
+                Joyin.dialog(JoyinUtil.getLabel("CBokSubject002"),
+                    basePath + "chb/boksubject/boksubject002/init",
+                    "98%", "95%",data,
+                    function(){table.reload();});
+            });
+        });
+
     });
 
-    /**
-     * 绑定删除事件
-     */
-    table.bind('click', '.delt', function(data, index) {
-        var object = {selectedItem: [data], operateType:"delete"};
-        Joyin.ajaxJson(basePath + 'chb/boksubject/boksubject001/check', object, function(result) {
-            Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                Joyin.ajaxJson(basePath + 'valuation/accounadjustmanage/subjectset/BokSubject001/delete', object, function(result) {
-                    table.reload();
+     /**
+         * 绑定删除事件
+         */
+        table.bind('click', '.delt', function(data, index) {
+        	var object = {selectedItem: [data], operateType:"delete"};
+            Joyin.ajaxJson(basePath + 'chb/boksubject/boksubject001/check', object, function(result) {
+                Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
+                    WorkFlow.doDeleteList(basePath + 'chb/boksubject/boksubject001/delete', object, "BokSubject001_btn_delete", "CBokSubject002",function(){
+                        table.reload();
+                    });
                 });
             });
         });
-    });
+    var exportExcel = function(){
+        //modify by yanya on 20210209 增加按照页面选择数据进行导出
+        //Joyin.exportExcel('export',getSearchParams())
+        var selArr = [];
+        var datas = null;
+        if (table != null && table != '') {
+            selArr = table.getAllCheckedRows();
+            datas = JSON.stringify(selArr);
+        }
+        if (!selArr || selArr.length == 0) {
+            var paramObj = getPageParams();
+            Joyin.exportExcel('export', paramObj);
+        } else {
+            Joyin.exportExcel('export', {
+                datas : datas
+            });
+        }
+    };
+
+
 
     /**
      * 画面加载完成
@@ -71,7 +96,7 @@
     $(function() {
       //新建
       $('#BokSubject001_btn_add').click(function() {
-          Joyin.dialog(JoyinUtil.getLabel("SysCommon.create")+JoyinUtil.getLabel("BokSubject002"),
+          Joyin.dialog(JoyinUtil.getLabel("SysCommon.create")+JoyinUtil.getLabel("CBokSubject002"),
                   basePath + "chb/boksubject/boksubject002/init",
                   "95%", "80%", {pageModel:PAGE_MODEL_NEW});
       });
@@ -92,11 +117,50 @@
               return;
           }
           var object = {selectedItem: selArr, operateType:"delete"};
-          Joyin.ajaxJson(basePath + 'valuation/accounadjustmanage/subjectset/BokSubject001/check', object, function(result) {
-              Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                  Joyin.ajaxJson(basePath + 'valuation/accounadjustmanage/subjectset/BokSubject001/delete', object, function(result) {
-                      table.reload();
-                  });
+            Joyin.ajaxJson(basePath + 'chb/boksubject/boksubject001/check', object, function(result) {
+               Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
+                   WorkFlow.doDeleteList(basePath + 'chb/boksubject/boksubject001/delete', object, "BokSubject001_btn_delete", "CBokSubject002",function(){
+                       table.reload();
+                   });
+               });
+           });
+      });
+      /**
+       * 导入按钮
+       */
+      $('#BokSubject001_btn_import').click(function() {
+          Joyin.uploadFile(function(fileName) {
+              Joyin.ajax(basePath +"chb/boksubject/boksubject001/importFile", {
+                  fileName : fileName
+              },function(result){
+                  if(!result || !($.isArray(result) && result.length > 0)){
+                      Joyin.ajax(
+                              basePath + 'chb/boksubject/boksubject001/importFileSave',
+                              {fileName : fileName},function (data1) {
+                                  layui.layer.closeAll()
+                                  table.reload();
+                        });
+                  }
+//                  else if($.isArray(result) && result.length > 0 && result[0].rowNum != "") {
+//                      Joyin.ajax(
+//                              basePath + 'chb/boksubject/boksubject001/duplicateCheck',
+//                              {fileName : fileName},function (data) {
+//                                  if(result.length == data.length){
+//                                      Joyin.confirm("导入文件存在"+data.length+"条数据重复，重复数据不导入，是否确认？", function(){
+//                                          Joyin.ajax(
+//                                                  basePath + 'chb/boksubject/boksubject001/importFileSave',
+//                                                  {fileName : fileName},function (data1) {
+//                                                      layui.layer.closeAll()
+//                                                      table.reload();
+//                                                      Joyin.alert("文件导入成功！", 0);
+//                                            });
+//                                      }, {}, function() {
+//                                          layui.layer.closeAll()
+//                                          table.reload();
+//                                      });
+//                                  }
+//                        });
+//                  }
               });
           });
       });

@@ -1,31 +1,132 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.svreport.chb.boksubject.dao.BokSubjectDao">
-	<sql id = "BASE_COLUMNS">
-		BOOKSET_ID as booksetId,
-		SUBJECT_NO as subjectNo,
-		SUBJECT_NAME as subjectName,
-		FSUBJECT_ID as fsubjectId,
-		BAL_FLAG as balFlag,
-		SUBJECT_TYPE as subjectType,
-		SUBJECT_LEVEL as subjectLevel,
-		ACC_QUA_FLAG as accQuaFlag,
-		ACC_INT_FLAG as accIntFlag,
-		OVERDRAWN_FLAG as overdrawnFlag,
-		BASE_SUBJECT_NATURE as baseSubjectNature,
-		GEN_DETSUB_FLAG as genDetsubFlag,
-		CCY as ccy,
-		SUBJECT_INTERNAL_CODE as subjectInternalCode,
-		SUBJECT_HAND_FEL_CODE as subjectHandFelCode,
-		CREATE_USER as createUser,
-		CREATE_DEPT as createDept,
-		CREATE_TIME as createTime,
-		UPDATE_USER as updateUser,
-		UPDATE_TIME as updateTime
-	</sql>
-	<sql id = "PK_FILTER">
-		BOOKSET_ID = #{booksetId} AND SUBJECT_NO = #{subjectNo}
-	</sql>
+
+	<insert id="insert" parameterType="com.joyintech.tams.svreport.chb.boksubject.dto.BokSubjectDto">
+		insert into BOK_SUBJECT
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="subjectNo !=null and subjectNo !=''">
+		    SUBJECT_NO,
+		    </if>
+			<if test="subjectName !=null and subjectName !=''">
+		    SUBJECT_NAME,
+		    </if>
+			<if test="fsubjectId !=null and fsubjectId !=''">
+		    FSUBJECT_ID,
+		    </if>
+			<if test="subjectType !=null and subjectType !=''">
+		    SUBJECT_TYPE,
+		    </if>
+			<if test="subjectLevel !=null and subjectLevel !=''">
+		    SUBJECT_LEVEL,
+		    </if>
+			<if test="dataSource !=null and dataSource !=''">
+		    DATA_SOURCE,
+		    </if>
+			<if test="status !=null and status !=''">
+		    STATUS,
+		    </if>
+			<if test="remark !=null and remark !=''">
+		    REMARK,
+		    </if>
+			<if test="createUser !=null and createUser !=''">
+		    CREATE_USER,
+		    </if>
+			<if test="createDept !=null and createDept !=''">
+		    CREATE_DEPT,
+		    </if>
+			<if test="createTime !=null">
+		    CREATE_TIME,
+		    </if>
+			<if test="updateUser !=null and updateUser !=''">
+		    UPDATE_USER,
+		    </if>
+			<if test="updateTime !=null">
+		    UPDATE_TIME
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="subjectNo !=null and subjectNo !=''">
+		    #{subjectNo},
+		    </if>
+			<if test="subjectName !=null and subjectName !=''">
+		    #{subjectName},
+		    </if>
+			<if test="fsubjectId !=null and fsubjectId !=''">
+		    #{fsubjectId},
+		    </if>
+			<if test="subjectType !=null and subjectType !=''">
+		    #{subjectType},
+		    </if>
+			<if test="subjectLevel !=null and subjectLevel !=''">
+		    #{subjectLevel},
+		    </if>
+			<if test="dataSource !=null and dataSource !=''">
+		    #{dataSource},
+		    </if>
+			<if test="status !=null and status !=''">
+		    #{status},
+		    </if>
+			<if test="remark !=null and remark !=''">
+		    #{remark},
+		    </if>
+			<if test="createUser !=null and createUser !=''">
+		    #{createUser},
+		    </if>
+			<if test="createDept !=null and createDept !=''">
+		    #{createDept},
+		    </if>
+			<if test="createTime !=null">
+		    #{createTime},
+		    </if>
+			<if test="updateUser !=null and updateUser !=''">
+		    #{updateUser},
+		    </if>
+			<if test="updateTime !=null">
+		    #{updateTime}
+			</if>
+		</trim>
+	</insert>
+	<insert id="batchInsert" parameterType="java.util.List">
+		insert into BOK_SUBJECT(SUBJECT_NO,SUBJECT_NAME,FSUBJECT_ID,SUBJECT_TYPE,SUBJECT_LEVEL,DATA_SOURCE,STATUS,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+		<foreach collection="list" separator="union all" item="bokSubject">
+			(select  #{bokSubject.subjectNo},#{bokSubject.subjectName},#{bokSubject.fsubjectId},#{bokSubject.subjectType},#{bokSubject.subjectLevel},#{bokSubject.dataSource},#{bokSubject.status},#{bokSubject.remark},#{bokSubject.createUser},#{bokSubject.createDept},#{bokSubject.createTime},#{bokSubject.updateUser},#{bokSubject.updateTime}
+			from dual)
+		</foreach>
+	</insert>
+	<update id="update">
+		update BOK_SUBJECT
+		<trim prefix="set" suffixOverrides=",">
+			<if test="subjectNo !=null and subjectNo !=''">
+				SUBJECT_NO = #{subjectNo},
+			</if>
+			<if test="subjectName !=null and subjectName !=''">
+				SUBJECT_NAME = #{subjectName},
+			</if>
+			<if test="fsubjectId !=null and fsubjectId !=''">
+				FSUBJECT_ID = #{fsubjectId},
+			</if>
+			<if test="subjectType !=null and subjectType !=''">
+				SUBJECT_TYPE = #{subjectType},
+			</if>
+			<if test="subjectLevel !=null and subjectLevel !=''">
+				SUBJECT_LEVEL = #{subjectLevel},
+			</if>
+			<if test="status !=null and status !=''">
+				STATUS = #{status},
+			</if>
+			<if test="remark !=null and remark !=''">
+				REMARK = #{remark},
+			</if>
+			<if test="updateUser !=null and updateUser !=''">
+				UPDATE_USER = #{updateUser},
+			</if>
+			<if test="updateTime !=null">
+				UPDATE_TIME = #{updateTime}
+			</if>
+		</trim>
+		where SUBJECT_NO = #{subjectNo}
+	</update>
 
 	<select id="selectAll" resultType="com.joyintech.tams.svreport.chb.boksubject.dto.BokSubjectDto">
 		select 
@@ -47,15 +148,20 @@
 			BS.UPDATE_USER as updateUser,
 			BS.UPDATE_TIME as updateTime,
 			BS.UPDATE_TIME as updateDate,
-		    BS.DATA_SOURCE as dataSource,
-			BS.STATUS as status,
+		    CASE WHEN BS.DATA_SOURCE='D' THEN '新建导入'
+		    WHEN BS.DATA_SOURCE='I' THEN '接口'
+		    END as dataSource,
+			CASE WHEN BS.STATUS='A' THEN '待处理'
+			WHEN BS.STATUS='E' THEN '有效'
+			WHEN BS.STATUS='D' THEN '删除'
+		    END as status,
 			BS.REMARK as remark,
 		    BS.DESCRIBE as describe
 		from BOK_SUBJECT BS
-
 		<where>
+			BS.STATUS IN ('A','E')
 			<if test="subjectLevel != null and subjectLevel != ''">
-				BS.SUBJECT_LEVEL = #{subjectLevel}
+				AND BS.SUBJECT_LEVEL = #{subjectLevel}
 			</if>
 			<if test="fsubjectId != null and fsubjectId != ''">
 				AND BS.FSUBJECT_ID = #{fsubjectId} 
@@ -72,68 +178,10 @@
 			<if test="status != null and status != ''">
 				AND BS.STATUS = #{status}
 			</if>
-
 		</where>
 		order by BS.BOOKSET_ID,BS.SUBJECT_NO,BS.SUBJECT_LEVEL
 	</select>
-	<select id="selectValBokSubject" resultType="com.joyintech.tams.svreport.chb.boksubject.dto.BokSubjectDto">
-		SELECT
-		BS.BOOKSET_ID as booksetId,
-		BS.SUBJECT_NO as subjectNo,
-		BS.SUBJECT_NAME as subjectName,
-		BS.FSUBJECT_ID as fsubjectId,
-		BS.BAL_FLAG as balFlag,
-		BS.SUBJECT_TYPE as subjectType,
-		BS.SUBJECT_LEVEL as subjectLevel,
-		BS.ACC_QUA_FLAG as accQuaFlag,
-		BS.ACC_INT_FLAG as accIntFlag,
-		BS.OVERDRAWN_FLAG as overdrawnFlag,
-		BS.BASE_SUBJECT_NATURE as baseSubjectNature,
-		BS.GEN_DETSUB_FLAG as genDetsubFlag,
-		BS.CCY as ccy,
-		BS.SUBJECT_INTERNAL_CODE as subjectInternalCode,
-		BS.SUBJECT_HAND_FEL_CODE as subjectHandFelCode,
-		BS.CREATE_USER as createUser,
-		BS.CREATE_DEPT as createDept,
-		BS.CREATE_TIME as createTime,
-		BS.UPDATE_USER as updateUser,
-		BS.UPDATE_TIME as updateTime,
-		BOK_BOND_TYPE.HAND_CODE_VALUE as bokBondType,
-		BOK_BOND_TYPE2.HAND_CODE_VALUE as bokBondType2,
-		BOK_TRD_MARKET.HAND_CODE_VALUE as bokTrdMarket,
-		BOK_ISSUE_TYPE.HAND_CODE_VALUE as bokIssueType,
-		BOK_CPY_TYPE.HAND_CODE_VALUE as bokCpyType,
 
-		BOK_ACCOUNT_TYPE.HAND_CODE_VALUE as bokAccountType,
-		BOK_FEE_TYPE.HAND_CODE_VALUE as bokFeeType,
-		BOK_TRD_PROP.HAND_CODE_VALUE as bokTrdProp,
-		BOK_TAX_TYPE.HAND_CODE_VALUE as bokTaxType,
-		BOK_CPY.HAND_CODE_VALUE as bokCpy
-		FROM BOK_SUBJECT BS
-		LEFT JOIN BOK_SUBJECT_HAND_VALUE BOK_BOND_TYPE
-		on BS.BOOKSET_ID=BOK_BOND_TYPE.BOOKSET_ID and BS.SUBJECT_NO=BOK_BOND_TYPE.SUBJECT_NO and BOK_BOND_TYPE.HAND_CODE='BOK_BOND_TYPE'
-		LEFT JOIN BOK_SUBJECT_HAND_VALUE BOK_BOND_TYPE2
-		on BS.BOOKSET_ID=BOK_BOND_TYPE2.BOOKSET_ID and BS.SUBJECT_NO=BOK_BOND_TYPE2.SUBJECT_NO and BOK_BOND_TYPE2.HAND_CODE='BOK_BOND_TYPE2'
-		LEFT JOIN BOK_SUBJECT_HAND_VALUE BOK_TRD_MARKET
-		on BS.BOOKSET_ID=BOK_TRD_MARKET.BOOKSET_ID and BS.SUBJECT_NO=BOK_TRD_MARKET.SUBJECT_NO and BOK_TRD_MARKET.HAND_CODE='BOK_TRD_MARKET'
-		LEFT JOIN BOK_SUBJECT_HAND_VALUE BOK_ISSUE_TYPE
-		on BS.BOOKSET_ID=BOK_ISSUE_TYPE.BOOKSET_ID and BS.SUBJECT_NO=BOK_ISSUE_TYPE.SUBJECT_NO and BOK_ISSUE_TYPE.HAND_CODE='BOK_ISSUE_TYPE'
-		LEFT JOIN BOK_SUBJECT_HAND_VALUE BOK_CPY_TYPE
-		on BS.BOOKSET_ID=BOK_CPY_TYPE.BOOKSET_ID and BS.SUBJECT_NO=BOK_CPY_TYPE.SUBJECT_NO and BOK_CPY_TYPE.HAND_CODE='BOK_CPY_TYPE'
-
-		LEFT JOIN BOK_SUBJECT_HAND_VALUE BOK_ACCOUNT_TYPE
-		on BS.BOOKSET_ID=BOK_ACCOUNT_TYPE.BOOKSET_ID and BS.SUBJECT_NO=BOK_ACCOUNT_TYPE.SUBJECT_NO and BOK_ACCOUNT_TYPE.HAND_CODE='BOK_ACCOUNT_TYPE'
-		LEFT JOIN BOK_SUBJECT_HAND_VALUE BOK_FEE_TYPE
-		on BS.BOOKSET_ID=BOK_FEE_TYPE.BOOKSET_ID and BS.SUBJECT_NO=BOK_FEE_TYPE.SUBJECT_NO and BOK_FEE_TYPE.HAND_CODE='BOK_FEE_TYPE'
-		LEFT JOIN BOK_SUBJECT_HAND_VALUE BOK_TRD_PROP
-		on BS.BOOKSET_ID=BOK_TRD_PROP.BOOKSET_ID and BS.SUBJECT_NO=BOK_TRD_PROP.SUBJECT_NO and BOK_TRD_PROP.HAND_CODE='BOK_TRD_PROP'
-		LEFT JOIN BOK_SUBJECT_HAND_VALUE BOK_TAX_TYPE
-		on BS.BOOKSET_ID=BOK_TAX_TYPE.BOOKSET_ID and BS.SUBJECT_NO=BOK_TAX_TYPE.SUBJECT_NO and BOK_TAX_TYPE.HAND_CODE='BOK_TAX_TYPE'
-		LEFT JOIN BOK_SUBJECT_HAND_VALUE BOK_CPY
-		on BS.BOOKSET_ID=BOK_CPY.BOOKSET_ID and BS.SUBJECT_NO=BOK_CPY.SUBJECT_NO and BOK_CPY.HAND_CODE='BOK_CPY'
-
-		where BS.BOOKSET_ID = #{booksetId} AND BS.SUBJECT_NO = #{subjectNo}
-	</select>
 	
 
 	<select id="getSubjectId" resultType="com.joyintech.framework.select.SuggestDto">
@@ -183,38 +231,8 @@
 			A.SUBJECT_NO = B.FSUBJECT_ID
 		WHERE B.SUBJECT_NO IS NOT NULL
 	</select>
-	<select id="getFSubjectId2" resultType="com.joyintech.framework.select.SuggestDto">
-        SELECT DISTINCT A.SUBJECT_NO code,A.SUBJECT_NAME name,A.SUBJECT_NAME shortName,A.SUBJECT_NO hidCode,A.SUBJECT_NAME linkValue
-        FROM BOK_SUBJECT A
-        LEFT JOIN BOK_SUBJECT B ON
-            A.SUBJECT_NO = B.FSUBJECT_ID
-            AND A.BOOKSET_ID = B.BOOKSET_ID
-        WHERE B.SUBJECT_NO IS NOT NULL
-        <if test="param !=null and  param !='' ">
-                AND (A.SUBJECT_NO like '%' || #{param} || '%'
-                OR A.SUBJECT_NAME like '%' || #{param} || '%')
-        </if>
-    </select>
-	<select id="queryValBokSubject" resultType="com.joyintech.framework.select.SelectOptionDto">
-        select 
-            SUBJECT_NO as id,
-            SUBJECT_NAME as text
-        FROM BOK_SUBJECT 
-        WHERE 1 = 1
-            <if test="booksetId !=null and  booksetId !='' ">
-                AND BOOKSET_ID = #{booksetId}
-            </if>
-            <if test="subjectLevel !=null and  subjectLevel !='' ">
-                AND SUBJECT_LEVEL = #{subjectLevel}
-            </if>
-            <if test="search !=null and  search !='' ">
-                AND (SUBJECT_NO like '%' || #{search} || '%'
-                OR SUBJECT_NAME like '%' || #{search} || '%')
-            </if>
-        GROUP BY 
-           SUBJECT_NO,
-           SUBJECT_NAME
-    </select>
+
+
 	<select id="checkExists" resultType="java.lang.Integer">
 		select count(1) from BOK_SUBJECT where BOOKSET_ID = #{booksetId} and SUBJECT_NO = #{subjectNo}
 	</select>
@@ -234,69 +252,31 @@
 		</where>
 		order by SUBJECT_NAME
 	</select>
+    <select id="isExists" resultType="java.lang.Integer">
+		select count(*) from BOK_SUBJECT where SUBJECT_NO = #{subjectNo} and STATUS IN ('A','E')
+	</select>
+	<select id="selcetByKey" resultType="com.joyintech.tams.svreport.chb.boksubject.dto.BokSubjectDto">
+		select
+			BS.SUBJECT_NO as subjectNo,
+			BS.SUBJECT_NAME as subjectName,
+			BS.FSUBJECT_ID as fsubjectId,
 
-    <delete id="deleteByFSubjectId" parameterType="com.joyintech.tams.common.base.entity.BokSubjectKey" >
-        delete from BOK_SUBJECT
-        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
-          and SUBJECT_NO like #{subjectNo,jdbcType=VARCHAR} || '%'
-    </delete>
+		    BS.SUBJECT_TYPE as subjectType,
+			BS.SUBJECT_LEVEL as subjectLevel,
+			BS.CREATE_USER as createUser,
+			BS.CREATE_DEPT as createDept,
+			BS.CREATE_TIME as createTime,
+			BS.UPDATE_USER as updateUser,
+			BS.UPDATE_TIME as updateTime,
+			BS.UPDATE_TIME as updateDate,
+			BS.DATA_SOURCE as dataSource,
+			BS.STATUS as status,
+			BS.REMARK as remark,
+			BS.DESCRIBE as describe
+		from BOK_SUBJECT BS
+		where SUBJECT_NO = #{subjectNo}
+	</select>
 
-	<delete id="deleteSubjectHands" parameterType="com.joyintech.tams.svreport.chb.boksubject.dto.BokSubjectDto" >
-        delete from BOK_SUBJECT_HAND_VALUE
-        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
-          and SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR}
-
-    </delete>
 
 
-<!--	<insert id="insertSubjectHands" parameterType="com.joyintech.service.valuation.accounadjustmanage.subjectset.dto.ValSubjectHandDto" >-->
-<!--        insert into BOK_SUBJECT_HAND_VALUE (BOOKSET_ID, SUBJECT_NO, SUBJECT_INTERNAL_CODE,-->
-<!--            HAND_CODE, HAND_CODE_VALUE,CREATE_USER,-->
-<!--            CREATE_DEPT, CREATE_TIME, UPDATE_USER,-->
-<!--            UPDATE_TIME)-->
-<!--        values (#{booksetId,jdbcType=VARCHAR}, #{subjectNo,jdbcType=VARCHAR}, #{subjectInternalCode,jdbcType=VARCHAR},-->
-<!--            #{handCode,jdbcType=VARCHAR}, #{handCodeValue,jdbcType=VARCHAR},  #{createUser,jdbcType=VARCHAR},-->
-<!--            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},-->
-<!--            #{updateTime,jdbcType=TIMESTAMP})-->
-<!--    </insert>-->
-
-<!--	<update id="updateByPrimaryKey" parameterType="com.joyintech.service.valuation.accounadjustmanage.subjectset.dto.ValBokSubjectDto" >-->
-<!--        update BOK_SUBJECT-->
-<!--        set SUBJECT_NAME = #{subjectName,jdbcType=VARCHAR},-->
-<!--            FSUBJECT_ID = #{fsubjectId,jdbcType=VARCHAR},-->
-<!--            BAL_FLAG = #{balFlag,jdbcType=VARCHAR},-->
-<!--            SUBJECT_TYPE = #{subjectType,jdbcType=VARCHAR},-->
-<!--            SUBJECT_LEVEL = #{subjectLevel,jdbcType=DECIMAL},-->
-<!--            ACC_QUA_FLAG = #{accQuaFlag,jdbcType=VARCHAR},-->
-<!--            ACC_INT_FLAG = #{accIntFlag,jdbcType=VARCHAR},-->
-<!--            OVERDRAWN_FLAG = #{overdrawnFlag,jdbcType=VARCHAR},-->
-<!--            GEN_DETSUB_FLAG = #{genDetsubFlag,jdbcType=VARCHAR},-->
-<!--            BASE_SUBJECT_NATURE = #{baseSubjectNature,jdbcType=VARCHAR},-->
-<!--            INV_AIM = #{invAim,jdbcType=VARCHAR},-->
-<!--            SEC_MANAGE_ACCT_ID = #{secManageAcctId,jdbcType=VARCHAR},-->
-<!--            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},-->
-<!--            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},-->
-<!--            SUBJECT_INTERNAL_CODE=#{subjectInternalCode,jdbcType=VARCHAR},-->
-<!--            SUBJECT_HAND_FEL_CODE=#{subjectHandFelCode,jdbcType=VARCHAR},-->
-<!--            CCY=#{ccy,jdbcType=VARCHAR}-->
-<!--        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}-->
-<!--          and SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR}-->
-<!--    </update>-->
-
-<!--	<insert id="insert" parameterType="com.joyintech.service.valuation.accounadjustmanage.subjectset.dto.ValBokSubjectDto" >-->
-<!--        insert into BOK_SUBJECT (BOOKSET_ID, SUBJECT_NO, SUBJECT_NAME,-->
-<!--            FSUBJECT_ID, BAL_FLAG, SUBJECT_TYPE,-->
-<!--            SUBJECT_LEVEL, ACC_QUA_FLAG, ACC_INT_FLAG,-->
-<!--            OVERDRAWN_FLAG, GEN_DETSUB_FLAG, BASE_SUBJECT_NATURE,-->
-<!--            INV_AIM, SEC_MANAGE_ACCT_ID, CREATE_USER,-->
-<!--            CREATE_DEPT, CREATE_TIME, UPDATE_USER,-->
-<!--            UPDATE_TIME,SUBJECT_INTERNAL_CODE,SUBJECT_HAND_FEL_CODE,CCY)-->
-<!--        values (#{booksetId,jdbcType=VARCHAR}, #{subjectNo,jdbcType=VARCHAR}, #{subjectName,jdbcType=VARCHAR},-->
-<!--            #{fsubjectId,jdbcType=VARCHAR}, #{balFlag,jdbcType=VARCHAR}, #{subjectType,jdbcType=VARCHAR},-->
-<!--            #{subjectLevel,jdbcType=DECIMAL}, #{accQuaFlag,jdbcType=VARCHAR}, #{accIntFlag,jdbcType=VARCHAR},-->
-<!--            #{overdrawnFlag,jdbcType=VARCHAR}, #{genDetsubFlag,jdbcType=VARCHAR}, #{baseSubjectNature,jdbcType=VARCHAR},-->
-<!--            #{invAim,jdbcType=VARCHAR}, #{secManageAcctId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},-->
-<!--            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},-->
-<!--            #{updateTime,jdbcType=TIMESTAMP},#{subjectInternalCode,jdbcType=VARCHAR}, #{subjectHandFelCode,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR} )-->
-<!--    </insert>-->
 </mapper>
