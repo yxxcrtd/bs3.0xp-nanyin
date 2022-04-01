@@ -43,16 +43,6 @@ public class ValSubjectSet001Service extends CommonExportService<ValBokSubjectDt
     @Autowired
     private ValSubjectSet001Mapper valSubjectSet001Mapper;
 
-//    /**
-//     * 查询所有账套
-//     * <br/> 用于所属账套控件初期化
-//     * @return SelectOptionDto list
-//     * @see
-//     * @since 1.0
-//     */
-//    public List<SelectOptionDto> findBooksets(){
-//        return valSubjectSet001Mapper.findBooksets();
-//    }
 
     /**
      * 检索上级科目代码列表

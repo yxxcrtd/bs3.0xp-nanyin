@@ -99,7 +99,6 @@ public class ValSubjectSet002Controller extends BaseController {
      *
      * @param dto         dto
      * @param result      BindingResult
-     * @param operateType 操作类型
      * @return check结果
      * @see
      * @since 1.0

@@ -1,18 +1,35 @@
 package com.joyintech.tams.svreport.chb.boksubject.service;
 
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.ExcelUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
 import com.joyintech.tams.svreport.chb.boksubject.dao.BokSubjectDao;
 import com.joyintech.tams.svreport.chb.boksubject.dto.BokSubjectDto;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
+import com.joyintech.tams.systemtools.util.CommonUtil;
+import com.joyintech.workflow.engine.constant.OperationType;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
+import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,9 +41,9 @@ import java.util.function.Supplier;
  */
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class BokSubjectService extends CommonExportService<BokSubjectDto> {
+public class BokSubjectService extends CommonExportService<BokSubjectDto> implements BaseProcessService<BokSubjectDto> {
     @Autowired
-    private BokSubjectDao bokSubjectMapper;
+    private BokSubjectDao bokSubjectDao;
     /**
      * 检索上级科目代码列表
      *
@@ -36,7 +53,7 @@ public class BokSubjectService extends CommonExportService<BokSubjectDto> {
      * @since 1.0
      */
     public List<SuggestDto> getFSubjectId(String param) {
-        return queryForSuggest(bokSubjectMapper::getFSubjectId, null, param);
+        return queryForSuggest(bokSubjectDao::getFSubjectId, null, param);
     }
 
     /**
@@ -63,7 +80,7 @@ public class BokSubjectService extends CommonExportService<BokSubjectDto> {
      * @since 1.0
      */
     public List<SelectOptionDto> getSubjectId2(Map<String, Object> map) {
-        List<SelectOptionDto> list = bokSubjectMapper.getSubjectId2(map);
+        List<SelectOptionDto> list = bokSubjectDao.getSubjectId2(map);
         if (CollectionUtils.isNotEmpty(list)) {
             list.forEach(item -> {
                 item.setId(item.getId());
@@ -82,7 +99,7 @@ public class BokSubjectService extends CommonExportService<BokSubjectDto> {
      * @since 1.0
      */
     public List<SelectOptionDto> getSubjectLevel(Map<String, Object> map)  {
-        return bokSubjectMapper.getSubjectLevel(map);
+        return bokSubjectDao.getSubjectLevel(map);
     }
 
     /**
@@ -105,7 +122,7 @@ public class BokSubjectService extends CommonExportService<BokSubjectDto> {
      * @since 1.0
      */
     public Page<BokSubjectDto> selectForPage(Map<String, Object> pageParam) {
-        return queryForPage(Integer.parseInt((String)pageParam.get("page")), Integer.parseInt((String)pageParam.get("length")), () -> bokSubjectMapper.selectAll(pageParam));
+        return queryForPage(Integer.parseInt((String)pageParam.get("page")), Integer.parseInt((String)pageParam.get("length")), () -> bokSubjectDao.selectAll(pageParam));
     }
     /**
      * 根据主键检索科目
@@ -155,13 +172,7 @@ public class BokSubjectService extends CommonExportService<BokSubjectDto> {
     }
 
     public List<SelectOptionDto> getSubjectName(Map<String, Object> pageParam) {
-        List<SelectOptionDto> list = bokSubjectMapper.getSubjectName(pageParam);
-//        if (CollectionUtils.isNotEmpty(list)) {
-//            list.forEach(item -> {
-//                item.setId(item.getId());
-//                item.setText(item.getId() + "（" + item.getText() + "）");
-//            });
-//        }
+        List<SelectOptionDto> list = bokSubjectDao.getSubjectName(pageParam);
         return list;
     }
     protected List<SuggestDto> queryForSuggest(Supplier<List<SuggestDto>> selector, String code, String name) {
@@ -174,4 +185,299 @@ public class BokSubjectService extends CommonExportService<BokSubjectDto> {
         });
     }
 
+    /**
+     *判断科目号是否存在
+     * @param subjectNo
+     * @return
+     */
+    public int isExists(String subjectNo) {
+        return bokSubjectDao.isExists(subjectNo);
+    }
+
+
+    /**
+     * 工作流（留痕操作结束的时候执行的方法）
+     */
+    @Override
+    public void doComplete(BokSubjectDto entity, OperationType type) {
+        if (OperationType.DELETE.equals(type)) {
+            entity.setStatus(DictCodeListExt1.维护数据状态_删除.getValue());
+            bokSubjectDao.update(entity);
+
+        }
+        else if (OperationType.NEW.equals(type)) {
+            entity.setDataSource(DictCodeListExt2.数据来源_新建导入.getValue());
+            entity.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
+            bokSubjectDao.insert(entity);
+        }
+        else if(OperationType.MODIFY.equals(type)){
+            entity.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
+            bokSubjectDao.update(entity);
+        }
+    }
+
+
+    public BokSubjectDto selcetByKey(String subjectNo){
+        return bokSubjectDao.selcetByKey(subjectNo);
+    }
+
+    /**
+     * excel导入功能
+     *
+     * @param flieName 文件名称
+     * @return 检验list
+     * @throws Exception 异常
+     * @see
+     * @since 1.0
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public List<ExcelValidDto> importData(String flieName)
+            throws Exception {
+        // 检查文件名是否为空
+        if (StringUtil.isNotEmpty(flieName)) {
+            if (flieName.indexOf("科目定义导入") != -1) {
+                List<List<String>> dataList = dataAnalysis(flieName);
+                if (null != dataList && dataList.size() > 0) {
+                    // 将excel表格中的数据转化为dto
+                    List<ExcelValidDto> checkResult = checkExcelData(dataList);
+//                    if (checkResult.isEmpty()) {
+//                        List<ComBondQuotationInfoDto> equityList = converToBean(dataList);
+//                        // 保存，已存在则更新
+//                        dealAfterCheck(equityList);
+//                    }
+                    return checkResult;
+                }else{
+                    List<ExcelValidDto> checkResult = new ArrayList<>();
+                    checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
+                            "文件为空"));
+                    return checkResult;
+                }
+            }
+            else {
+                List<ExcelValidDto> checkResult = new ArrayList<>();
+                checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
+                        "文件名称错误，请下载模板后上传"));
+                return checkResult;
+            }
+        }
+        return null;
+    }
+
+
+    /**
+     * excel导入数据整理
+     *
+     * @param flieName 文件名称
+     * @return 检验list
+     * @throws Exception 异常
+     * @see
+     * @since 1.0
+     */
+    public List<List<String>> dataAnalysis(String flieName)
+            throws Exception {
+        String prefix = CacheUtil.getSysParam(GlobalConstant.COM_PROP_UPLOAD_PATH);
+        if(!StringUtil.startsWith(flieName, prefix)
+                && !StringUtil.startsWith(flieName, prefix.replace("/", File.separator))) {
+            flieName = prefix + File.separator + flieName;
+        }
+        ExcelUtil excelUtil = ExcelUtil.build(flieName, null);
+        List<List<String>> dataList = excelUtil.readToList(0, 1, 0);
+        return dataList;
+    }
+    /**
+     * 导入文件重复数据检查 <功能详细描述>
+     *
+     * @param dataList 导入数据
+     * @return 返回检查结果
+     * @throws ParseException 抛出异常
+     * @see
+     * @since 1.0
+     */
+    public List<Integer> duplicateCheck(List<List<String>> dataList)
+            throws ParseException {
+        List<ExcelValidDto> checkResult = checkExcelData(dataList);
+        if(CollectionUtils.isNotEmpty(checkResult)){
+            return new ArrayList<>();
+        }
+        List<BokSubjectDto> equityList = converToBean(dataList,null);
+        List<Integer> duplicateData=new ArrayList<Integer>();
+        for (int i = 0; i < dataList.size(); i++ ) {
+            BokSubjectDto dto = equityList.get(i);
+            if(dto.getSubjectNo() == null
+                    || dto.getSubjectName() == null
+                    || dto.getFsubjectId() == null
+                    || dto.getSubjectType() == null
+                    || dto.getSubjectLevel() == null
+                    || duplicateData.contains(i)){
+                continue;
+            }
+            // 检查表内数据是否有主键重复
+            for (int k = i + 1; k < dataList.size(); k++ ) {
+                if(equityList.get(k).getSubjectNo() == null){
+                    continue;
+                }
+                if (equityList.get(k).getSubjectNo().equals(dto.getSubjectNo())) {
+                    if(!duplicateData.contains(k)){
+                        duplicateData.add(k);
+                    }
+                }
+            }
+        }
+        if(duplicateData.isEmpty()){
+            duplicateData.add(-1);
+        }
+        return duplicateData;
+    }
+
+    /**
+     * 导入文件内容检查 <功能详细描述>
+     *
+     * @param dataList 导入数据
+     * @return 返回检查结果
+     * @throws ParseException 抛出异常
+     * @see
+     * @since 1.0
+     */
+    private List<ExcelValidDto> checkExcelData(List<List<String>> dataList)
+            throws ParseException {
+        List<ExcelValidDto> checkResult = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(dataList)) {
+            for (int i = 0; i < dataList.size(); i++ ) {
+                List<ExcelValidDto> result = checkExcelCow(i, dataList.get(i));
+                // 检查表内数据每行是否合法
+                if (CollectionUtils.isNotEmpty(result)) {
+                    checkResult.addAll(result);
+                }
+            }
+        }
+        if (checkResult.size()>0){
+            return checkResult;
+        }
+        List<BokSubjectDto> equityList = converToBean(dataList,null);
+        BokSubjectDto bokSubjectDto = null;
+        List<Integer> duplicateDataList=new ArrayList<Integer>();
+
+        if (equityList.size() >= 1) {
+            for (int i = 0; i < equityList.size(); i++ ) {
+                bokSubjectDto = equityList.get(i);
+                // 检查表内数据是否有主键重复
+                if (equityList.size() >= 2) {
+                    for (int k = i + 1; k < equityList.size(); k++ ) {
+                        if (equityList.get(k).getSubjectNo().equals(bokSubjectDto.getSubjectNo())) {
+                            if(!duplicateDataList.contains(k)){
+                                duplicateDataList.add(k);
+                                checkResult.add(new ExcelValidDto(dataList.get(k).get(1),
+                                        String.valueOf(k + 2), "表中数据重复"));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return checkResult;
+    }
+    /**
+     * 检查excel是否为空或者传入列是否正确
+     *
+     * @param i 第几行
+     * @param list 每一列解析后的List
+     * @return 检查结构
+     * @see
+     * @since 1.0
+     */
+    private List<ExcelValidDto> checkExcelCow(int i, List<String> list) {
+        List<ExcelValidDto> excelValidDtolist = new ArrayList<ExcelValidDto>();
+        // 列数为15
+        if (null == list || list.size() != 6) {
+            ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i), "数据列数错误");
+            excelValidDtolist.add(dto);
+        }
+        if (StringUtil.isEmpty(list.get(0))) {
+            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "科目号为空");
+            excelValidDtolist.add(dto);
+        }
+        if (StringUtil.isEmpty(list.get(1))) {
+            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "科目名称为空");
+            excelValidDtolist.add(dto);
+        }
+        if (StringUtil.isEmpty(list.get(2))) {
+            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "上级科目号为空");
+            excelValidDtolist.add(dto);
+        }
+        if (StringUtil.isEmpty(list.get(3))) {
+            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "科目类型为空");
+            excelValidDtolist.add(dto);
+        }
+        if (StringUtil.isEmpty(list.get(4))) {
+            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "科目级别为空");
+            excelValidDtolist.add(dto);
+        }
+        return excelValidDtolist;
+    }
+    /**
+     * list转换为Bean
+     *
+     * @param dataList excel解析后的list
+     * @return List<mstMarketCalendarInfo001Dto>
+     * @throws ParseException 抛出异常
+     * @see
+     * @since 1.0
+     */
+    public List<BokSubjectDto> converToBean(List<List<String>> dataList,List<Integer> checkResult)
+            throws ParseException {
+        // 返回的list定义
+        List<BokSubjectDto> returnInfoList = new ArrayList<BokSubjectDto>();
+        BokSubjectDto bokSubjectDto = null;
+        for (int i = 0; i < dataList.size(); i++ ) {
+            if(null !=checkResult && checkResult.contains(i)){
+                continue;
+            }
+            List<String> list = dataList.get(i);
+            bokSubjectDto = new BokSubjectDto();
+            if (StringUtil.isNotEmpty(list.get(0))) {
+                bokSubjectDto.setSubjectNo(list.get(0).trim());
+            }
+            if (StringUtil.isNotEmpty(list.get(1))) {
+                bokSubjectDto.setSubjectName(list.get(1).trim());
+            }
+            if (StringUtil.isNotEmpty(list.get(2))) {
+                bokSubjectDto.setFsubjectId(list.get(2).trim());
+            }
+            if (StringUtil.isNotEmpty(list.get(3))) {
+                bokSubjectDto.setSubjectType(list.get(3).trim());
+            }
+            if (StringUtil.isNotEmpty(list.get(4))) {
+                bokSubjectDto.setSubjectLevel(1);
+            }
+            if (StringUtil.isNotEmpty(list.get(5))) {
+                bokSubjectDto.setRemark(list.get(5).trim());
+            }
+            bokSubjectDto.setCreateUser(CommonUtil.getUserName());
+            bokSubjectDto.setCreateDept(CommonUtil.getDeptCode());
+            bokSubjectDto.setCreateTime(DateUtil.now());
+            bokSubjectDto.setUpdateUser(CommonUtil.getUserName());
+            bokSubjectDto.setUpdateTime(DateUtil.now());
+            bokSubjectDto.setDataSource(DictCodeListExt2.数据来源_新建导入.getValue());
+            bokSubjectDto.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
+            returnInfoList.add(bokSubjectDto);
+        }
+        return returnInfoList;
+    }
+    /**
+     * check后的保存
+     *
+     * @param list 需要保存的数据
+     * @see
+     * @since 1.0
+     */
+    public void dealAfterCheck(List<BokSubjectDto> list) {
+        list.forEach(item->{
+            item.setSubjectType("0"+item.getSubjectType().substring(0,1));
+        });
+        bokSubjectDao.batchInsert(list);
+    }
+
+    public List<BokSubjectDto> selectAllList(Map<String, Object> params) {
+        return bokSubjectDao.selectAll(params);
+    }
 }

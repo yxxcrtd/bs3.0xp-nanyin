@@ -2,16 +2,18 @@
 <Workbook filePath="report/chb/boksubject/BokSubject001.xlsx" name="科目定义信息">
     <Worksheet javaBean="com.joyintech.tams.svreport.chb.boksubject.dto.BokSubjectDto">
         <Row>
-            <Cell order="1" name="数据状态">status</Cell>
-            <Cell order="2" name="科目号">subjectNo</Cell>
-            <Cell order="3" name="科目名称">valueSourceStr</Cell>
-            <Cell order="4" name="上级科目号">fsubjectId</Cell>
-            <Cell order="5" name="科目类型">subjectType</Cell>
-            <Cell order="6" name="科目级别">subjectLevel</Cell>
-            <Cell order="7" name="数据来源">dataSource</Cell>
+
+            <Cell order="1" name="科目号">subjectNo</Cell>
+            <Cell order="2" name="科目名称">subjectName</Cell>
+            <Cell order="3" name="上级科目号">fsubjectId</Cell>
+            <Cell order="4" name="科目类型">subjectType</Cell>
+            <Cell order="5" name="科目级别">subjectLevel</Cell>
+            <Cell order="6" name="数据来源">dataSource</Cell>
+            <Cell order="7" name="数据状态">status</Cell>
             <Cell order="8" name="备注">remark</Cell>
-            <Cell order="9" name="更新时间">updateTime</Cell>
-            <Cell order="10" name="更新人">updateUser</Cell>
+            <Cell order="9" name="描述">describe</Cell>
+            <Cell order="10" name="更新时间">updateTime</Cell>
+            <Cell order="11" name="更新人">updateUser</Cell>
         </Row>
     </Worksheet>
 </Workbook>

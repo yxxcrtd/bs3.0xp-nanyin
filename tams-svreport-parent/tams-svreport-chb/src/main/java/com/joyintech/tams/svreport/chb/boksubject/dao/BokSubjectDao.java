@@ -53,4 +53,24 @@ public interface BokSubjectDao {
      * @param pageParam
      */
     List<BokSubjectDto> selectAll(Map<String, Object> pageParam);
+
+    /**
+     * 判断科目号是否存在
+     * @param subjectNo
+     * @return
+     */
+    int isExists(String subjectNo);
+
+    /**
+     * 插入科目
+     * @param entity
+     */
+    void insert(BokSubjectDto entity);
+
+    BokSubjectDto selcetByKey(String subjectNo);
+
+    void update(BokSubjectDto entity);
+
+    void batchInsert(List<BokSubjectDto> list);
+
 }
