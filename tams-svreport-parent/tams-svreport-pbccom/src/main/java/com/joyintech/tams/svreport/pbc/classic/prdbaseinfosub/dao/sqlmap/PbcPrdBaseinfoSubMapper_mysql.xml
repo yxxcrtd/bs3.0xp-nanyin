@@ -1143,17 +1143,21 @@
 	</delete>
 
 	<select id="queryAllPbcPrdBaseInfo" resultMap="BaseResultMap">
-		select PBC_PROD_ID, prod_name,ACCOUNT_ID,PROD_ID
+		select
+		S.PBC_PROD_ID,
+		S.prod_name,
+		S.ACCOUNT_ID,
+		S.PROD_ID
 		from (
-		select PBC_PROD_ID,prod_name,ACCOUNT_ID,PROD_ID,
-		rank() over (partition by PBC_PROD_ID order by ifnull(update_time,create_time) desc) ranknum
-		from PBC_PRD_BASEINFO_SUB
-		where STATUS != 'D'
-		<if test="search != null and search !='' ">
-			AND (PBC_PROD_ID LIKE concat_ws('','%', #{search},'%')
-			or prod_name LIKE concat_ws('','%', #{search},'%'))
-		</if>
-		)
+			select PBC_PROD_ID,prod_name,ACCOUNT_ID,PROD_ID,
+			rank() over (partition by PBC_PROD_ID order by ifnull(update_time,create_time) desc) ranknum
+			from PBC_PRD_BASEINFO_SUB
+			where STATUS != 'D'
+			<if test="search != null and search !='' ">
+				AND (PBC_PROD_ID LIKE concat_ws('','%', #{search},'%')
+				or prod_name LIKE concat_ws('','%', #{search},'%'))
+			</if>
+		) S
 		where 1 = 1 limit 1
 	</select>
 	<select id="selectAllRegisteAccountData" resultType="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub" parameterType="com.joyintech.tams.svreport.pbc.classic.prdbaseinfosub.dto.PbcPrdBaseinfoSub">

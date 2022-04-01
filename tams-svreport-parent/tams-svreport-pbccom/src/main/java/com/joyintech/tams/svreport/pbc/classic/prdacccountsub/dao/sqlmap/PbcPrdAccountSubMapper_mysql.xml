@@ -536,8 +536,9 @@
  </update>
 
     <select id="queryAllPbcAssetBaseInfo" resultMap="BaseResultMap">
-        select PBC_ACCOUNT_ID,
-        ACCOUNT_NAME
+        select
+        S.PBC_ACCOUNT_ID,
+        S.ACCOUNT_NAME
         from (
         select PBC_ACCOUNT_ID,ACCOUNT_NAME,
         rank() over (partition by PBC_ACCOUNT_ID order by ifnull(update_time,create_time) desc) ranknum
@@ -546,7 +547,7 @@
         <if test="search != null and search !='' ">
             AND PBC_ACCOUNT_ID LIKE concat_ws('','%', #{search},'%')
         </if>
-        )
+        ) S
         where 1 = 1 limit 1
     </select>
     <select id="selectRegistSeqnoList" resultType="java.lang.String" parameterType="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub">
