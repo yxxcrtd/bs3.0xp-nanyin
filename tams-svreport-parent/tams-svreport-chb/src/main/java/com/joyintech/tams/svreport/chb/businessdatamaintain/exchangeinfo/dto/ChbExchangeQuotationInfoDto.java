@@ -18,6 +18,7 @@ import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.MstExchargeQuote;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
+import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -32,7 +33,7 @@ import java.util.List;
  * @since 1.0
  */
 @PageId("ChbExchangeQuotationInfo002")
-public class ChbExchangeQuotationInfoDto extends MstExchargeQuote {
+public class ChbExchangeQuotationInfoDto extends MstExchargeQuote implements ProcessEntity {
     /**
      * <意义，目的和功能，以及可能被用到的地方>
      */

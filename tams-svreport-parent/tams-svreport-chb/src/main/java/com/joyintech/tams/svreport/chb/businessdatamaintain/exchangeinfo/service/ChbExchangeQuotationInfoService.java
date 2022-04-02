@@ -55,7 +55,7 @@ import java.util.*;
  */
 
 @Service
-public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExchangeQuotationInfoDto> {
+public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExchangeQuotationInfoDto> implements BaseProcessService<ChbExchangeQuotationInfoDto>{
 
     private static Logger logger = LoggerFactory.getLogger(ChbExchangeQuotationInfoService.class);
 
@@ -92,6 +92,8 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
     public List<ChbExchangeQuotationInfoDto> selectAllList(Map<String, Object> pageParam) {
         return chbExchangeQuotationInfoMapper.select(pageParam);
     }
+
+
 
     public AjaxResult save(ChbExchangeQuotationInfoDto dto){
         dto.setStatus(DictCodeListExt2.数据状态_有效.getValue());
@@ -478,6 +480,30 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
             return true;
         }catch(Exception e){
             return false;
+        }
+    }
+
+    @Override
+    public void doComplete(ChbExchangeQuotationInfoDto dto, OperationType operationType) {
+        dto.setOperateType(operationType.toString());
+        if (StringUtil.equals(dto.getOperateType(), "DELETE")) {
+            mstExchargeQuoteMapper.deleteByPrimaryKey(dto);
+        }
+        else if (StringUtil.equals(dto.getOperateType(), "NEW")) {
+            List<ChbExchangeQuotationInfoDto> list = new ArrayList<>(1);
+            //设置基本币种，单位币种等
+            String exchargeCode = dto.getExchargeCode();
+            if (exchargeCode != null) {
+                List<String> splitToList = StringUtil.splitToList("/", exchargeCode);
+                dto.setBasisCyy(splitToList.get(0));
+                dto.setQuotCyy(splitToList.get(1));
+            }
+            dto.setStatus(DictCodeListExt2.数据状态_有效.getValue());
+            list.add(dto);
+            chbExchangeQuotationInfoMapper.insertExchargeQuoteInfo(list);
+        }
+        else {
+            mstExchargeQuoteMapper.updateByPrimaryKeySelective(dto);
         }
     }
 }
