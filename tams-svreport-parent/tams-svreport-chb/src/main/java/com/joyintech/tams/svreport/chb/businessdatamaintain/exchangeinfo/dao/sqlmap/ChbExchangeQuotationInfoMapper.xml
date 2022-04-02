@@ -41,6 +41,9 @@
             <if test="tradeDate != null and tradeDate != ''">
                 and to_char(TRADE_DATE,'yyyy-MM-dd') = #{tradeDate}
             </if>
+            <if test="datasourceType != null and datasourceType != ''">
+                and DATASOURCE_TYPE = #{datasourceType}
+            </if>
             <if test='status=="A"'>
                 and STATUS = #{status}
             </if>

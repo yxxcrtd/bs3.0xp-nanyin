@@ -398,7 +398,7 @@
       <!-- 手工处理传入查询日期 起息日 add by gaojian 2019-06-18 end -->
     </where>
 
-    ) group by
+    ) a group by
     PBC_PROD_ID
     ,CUSTOMER_TYPE1
     union all
@@ -522,7 +522,7 @@
       <!-- 手工处理传入查询日期 起息日 add by gaojian 2019-06-18 end -->
     </where>
 
-    ) group by
+    ) a group by
     PBC_PROD_ID
     ,CUSTOMER_TYPE1
     ,CCY
@@ -647,7 +647,7 @@
       <!-- 手工处理传入查询日期 起息日 add by gaojian 2019-06-18 end -->
     </where>
 
-    ) group by
+    ) a group by
     PBC_PROD_ID
     ,CUSTOMER_TYPE1
     ,BUY_PLACE

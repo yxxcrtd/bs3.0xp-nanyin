@@ -1303,6 +1303,12 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 						fileCheckMsg1.append(GlobalConstant.HTML_NEWLINE);
 						continue;
 					}
+
+					if (entry.getName().indexOf(",") > 0){
+						fileCheckMsg1.append("文件中不得包含,字符"+ entry.getName() + "！");
+						fileCheckMsg1.append(GlobalConstant.HTML_NEWLINE);
+						continue;
+					}
 					//    09/:表示文件夹
 					String folderName = entry.getName().substring(0, entry.getName().indexOf("/"));
 					if (entry.getName().indexOf("/") + 1== entry.getName().length()){

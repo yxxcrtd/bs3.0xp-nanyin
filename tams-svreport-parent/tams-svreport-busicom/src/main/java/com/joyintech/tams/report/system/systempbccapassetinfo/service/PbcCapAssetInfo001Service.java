@@ -412,11 +412,13 @@ public class PbcCapAssetInfo001Service extends CommonExportService<PbcCapAssetIn
                 entity.setAssetid(list.get(0));
             }
             //检查资金信托代码有没有对应多个资产代码
-            if (cassetIdMap.get(list.get(2)) != null) {
-                message.add("资金信托代码已存在，资金信托代码只能对应一个资产代码");
-                checkResult.add(new ExcelValidDto(entity.getAssetid(), String.valueOf(i + 2),
-                        StringUtil.joinString(message, GlobalConstant.COMMA)));
-                continue;
+            if (cassetIdMap.get(list.get(2)) != null && !StringUtil.isEmpty(list.get(0))) {
+                if(!cassetIdMap.get(list.get(2)).getAssetid().equals(list.get(0))) {
+                    message.add("资金信托代码已存在，资金信托代码只能对应一个资产代码");
+                    checkResult.add(new ExcelValidDto(entity.getAssetid(), String.valueOf(i + 2),
+                            StringUtil.joinString(message, GlobalConstant.COMMA)));
+                    continue;
+                }
             }
 
             /*add by zhoubin 20220326 start*/

@@ -6,7 +6,7 @@ $(function() {
         object.exchargeCode=$("#exchargeCode").val();
         Joyin.ajaxJson(basePath + 'chb/businessdatamaintain/exchangeinfo/ChbExchangeQuotationInfo002/check', object, function(result) {
             Joyin.confirm(result.data, function() {
-                    WorkFlow.doSaveList(basePath + 'chb/businessdatamaintain/exchangeinfo/ChbExchangeQuotationInfo002/save', object, "ChbExchangeQuotationInfo002_btn_save");
+                    WorkFlow.doSubmitList(basePath + 'chb/businessdatamaintain/exchangeinfo/ChbExchangeQuotationInfo002/save', object, "ChbExchangeQuotationInfo002_btn_submit");
             });
         });
     };
@@ -16,6 +16,7 @@ $(function() {
         if(pageModel==PAGE_MODEL_EDIT){
             $('#exchargeCode').attr("disabled",true);
             $('#tradeDate').attr("disabled",true);
+            $('#datasourceType').attr("disabled",true);
         }
     };
     /**
@@ -25,8 +26,8 @@ $(function() {
     	//初始化画面
         init(); 
         // 绑定按钮事件
-        $('#ChbExchangeQuotationInfo002_btn_save').click(function() {
-            saveOrSubmit('save');
+        $('#ChbExchangeQuotationInfo002_btn_submit').click(function() {
+            saveOrSubmit('submit');
         });
     });
 }());
