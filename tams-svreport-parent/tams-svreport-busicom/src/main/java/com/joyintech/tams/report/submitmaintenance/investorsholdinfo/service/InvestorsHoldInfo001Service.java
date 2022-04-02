@@ -238,7 +238,7 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 			pageParam.put("prdRegistCodeList", StringUtil.splitToList(GlobalConstant.COMMA, prdRegistCode));
 		}
 		// 将数据状态当做多选下拉框处理
-		if (pageParam.containsKey("status") && StringUtil.isNotBlank(pageParam.get("status").toString())) {
+		if (pageParam.containsKey("status") && StringUtil.isNotEmpty(pageParam.get("status"))) {
 			pageParam.put("statusList",
 					StringUtil.splitToList(GlobalConstant.COMMA, pageParam.get("status").toString()));
 		}
