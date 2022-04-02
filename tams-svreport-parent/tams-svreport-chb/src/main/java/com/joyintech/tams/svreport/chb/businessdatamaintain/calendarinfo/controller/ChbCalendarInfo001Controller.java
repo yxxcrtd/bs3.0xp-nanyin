@@ -64,7 +64,7 @@ public class ChbCalendarInfo001Controller extends BaseController {
         //初始化是否节假日下拉框
         this.setSelectOptionToModel(model, DictCode.是否);
         //数据的状态
-        this.setSelectOptionToModel(model, DictCode.科目状态);
+        this.setSelectOptionToModel(model, DictCode.数据入库状态);
         //初始化日历类型下拉框
         List<SelectOptionDto> listCalendar = new LinkedList<>();
         Map<String, Object> map = new HashMap<>(1);
