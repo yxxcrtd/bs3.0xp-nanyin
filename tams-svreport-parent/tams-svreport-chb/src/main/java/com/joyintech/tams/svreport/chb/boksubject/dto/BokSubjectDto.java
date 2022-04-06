@@ -8,6 +8,7 @@ import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.svreport.chb.boksubject.validator.BokSubjectDtoValidator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
+import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 import java.util.List;
@@ -80,7 +81,7 @@ public class BokSubjectDto extends BaseEntity implements ProcessEntity {
     private static final long serialVersionUID = 1L;
     @NotEmpty(fieldName = "BokSubject.subjectNo",groups = {ValidateGroupEdit.class})
     @Length(fieldName = "BokSubject.subjectNo", max = 32, groups = {ValidateGroupEdit.class})
-    @PrimaryKey(PrimaryKey.Field.PK_1)
+    @PrimaryKey(Field.PK_1)
     public String getSubjectNo() {
         return subjectNo;
     }

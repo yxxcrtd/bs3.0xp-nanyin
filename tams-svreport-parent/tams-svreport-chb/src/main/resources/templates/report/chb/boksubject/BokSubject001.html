@@ -43,7 +43,7 @@
                         <label class="layui-form-label form-lable2" data-th-text="#{BokSubject.fsubjectId}">上级科目号</label>
                         <div class="layui-input-inline input-inline">
                             <input type="text" id="fsubjectId" name="fsubjectId"
-                                   class="layui-input form-input input-lenovoselect" placeholder="请输入内容"
+                                   class="layui-input form-input input-lenovoselect " placeholder="请输入内容"
                                    data-th-placeholder="#{SysCommon.placeholder}"
                                    data-th-data-url="@{/chb/boksubject/boksubject001/getFSubjectId}"
                                    data-idfield="code" data-keyfield="code"
@@ -67,6 +67,7 @@
                                     class="layui-input form-input input-select"
                                     parentIds = "subjectNo"
                                     data-th-data-url='@{/chb/boksubject/boksubject001/getSubjectLevel}'
+
                                     allowClear="true" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}">
                             </select>
                         </div>
@@ -75,7 +76,7 @@
                         <label class="layui-form-label form-lable2" data-th-text="#{BokSubject.status}">数据状态</label>
                         <div class="layui-input-inline input-inline">
                             <input type="text" id="status" name="status" placeholder="请选择"
-                                class="layui-input form-input input-select" data-th-data-result='${SUBJECT_STATUS}'>
+                                class="layui-input form-input input-select" data-th-data-result='${MAINTAIN_STATUS}'>
                         </div>
                     </div>
                 </div>

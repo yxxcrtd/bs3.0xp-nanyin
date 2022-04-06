@@ -159,9 +159,8 @@
 		    BS.DESCRIBE as describe
 		from BOK_SUBJECT BS
 		<where>
-			BS.STATUS IN ('A','E')
 			<if test="subjectLevel != null and subjectLevel != ''">
-				AND BS.SUBJECT_LEVEL = #{subjectLevel}
+				BS.SUBJECT_LEVEL = #{subjectLevel}
 			</if>
 			<if test="fsubjectId != null and fsubjectId != ''">
 				AND BS.FSUBJECT_ID = #{fsubjectId} 

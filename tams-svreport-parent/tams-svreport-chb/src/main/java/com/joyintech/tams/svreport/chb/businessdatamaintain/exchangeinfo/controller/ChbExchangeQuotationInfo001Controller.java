@@ -59,7 +59,7 @@ public class ChbExchangeQuotationInfo001Controller extends BaseController {
         //货币对
         this.setSelectOptionToModel(model, DictCode.货币对);
         //数据的状态
-        this.setSelectOptionToModel(model, DictCode.科目状态);
+        this.setSelectOptionToModel(model, DictCode.维护数据状态);
         return super.init(model);
     }
     /**

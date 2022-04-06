@@ -52,7 +52,7 @@ public class BokSubject001Controller extends BaseController {
     public String init(Model model) {
         this.setSelectOptionToModel(model, DictCode.科目类型);
         this.setSelectOptionToModel(model, DictCode.科目级别);
-        this.setSelectOptionToModel(model, DictCode.科目状态);
+        this.setSelectOptionToModel(model, DictCode.维护数据状态);
         return super.init(model);
     }
 

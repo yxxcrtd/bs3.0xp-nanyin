@@ -53,7 +53,7 @@ public class BokSubject002Controller extends BaseController {
     public String init(Model model) {
         this.setSelectOptionToModel(model, DictCode.科目类型);
         this.setSelectOptionToModel(model, DictCode.科目级别);
-        this.setSelectOptionToModel(model, DictCode.科目状态);
+        this.setSelectOptionToModel(model, DictCode.维护数据状态);
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         String subjectNo = getParam("subjectNo");
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {

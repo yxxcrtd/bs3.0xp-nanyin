@@ -159,17 +159,17 @@ public class BokSubjectService extends CommonExportService<BokSubjectDto> implem
      * @see
      * @since 1.0
      */
-    public void deleteByBatch(List<BokSubjectDto> selectedItem) {
-        restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/ValSubjectSet001/deleteByBatch", selectedItem, boolean.class);
-    }
-
-    public List<SuggestDto> getBooksetId(Map<String, Object> param) {
-        return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME+"/ValSubjectSet001/getBooksetId", param, SuggestDto.class);
-    }
-
-    public void save(BokSubjectDto dto) {
-        restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/ValSubjectSet002/save", dto, boolean.class);
-    }
+//    public void deleteByBatch(List<BokSubjectDto> selectedItem) {
+//        restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/ValSubjectSet001/deleteByBatch", selectedItem, boolean.class);
+//    }
+//
+//    public List<SuggestDto> getBooksetId(Map<String, Object> param) {
+//        return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME+"/ValSubjectSet001/getBooksetId", param, SuggestDto.class);
+//    }
+//
+//    public void save(BokSubjectDto dto) {
+//        restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/ValSubjectSet002/save", dto, boolean.class);
+//    }
 
     public List<SelectOptionDto> getSubjectName(Map<String, Object> pageParam) {
         List<SelectOptionDto> list = bokSubjectDao.getSubjectName(pageParam);

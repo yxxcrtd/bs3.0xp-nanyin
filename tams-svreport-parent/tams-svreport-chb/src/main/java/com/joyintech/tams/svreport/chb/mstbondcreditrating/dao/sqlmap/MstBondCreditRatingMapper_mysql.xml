@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.chb.mstbondcreditrating.dao.MstBondCreditRatingDao">
+
+<!--    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.mstbondcreditrating.dto.MstBondCreditRatingDto">-->
+<!--            <result property="oCode" column="O_CODE" jdbcType="VARCHAR"/>-->
+<!--            <result property="gradeOrgId" column="GRADE_ORG_ID" jdbcType="VARCHAR"/>-->
+<!--            <result property="gradeDate" column="GRADE_DATE" jdbcType="TIMESTAMP"/>-->
+<!--            <result property="shortLongTerm" column="SHORT_LONG_TERM" jdbcType="VARCHAR"/>-->
+<!--            <result property="gradeResult" column="GRADE_RESULT" jdbcType="VARCHAR"/>-->
+<!--            <result property="createUser" column="CREATE_USER" jdbcType="VARCHAR"/>-->
+<!--            <result property="createDept" column="CREATE_DEPT" jdbcType="VARCHAR"/>-->
+<!--            <result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP"/>-->
+<!--            <result property="updateUser" column="UPDATE_USER" jdbcType="VARCHAR"/>-->
+<!--            <result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP"/>-->
+<!--            <result property="dataSource" column="DATA_SOURCE" jdbcType="VARCHAR"/>-->
+<!--            <result property="status" column="STATUS" jdbcType="VARCHAR"/>-->
+<!--            <result property="oName" column="O_NAME" jdbcType="VARCHAR"/>-->
+<!--            <result property="oObject" column="O_OBJECT" jdbcType="VARCHAR"/>-->
+<!--    </resultMap>-->
+
+<!--    <sql id="Base_Column_List">-->
+<!--        O_CODE,GRADE_ORG_ID,GRADE_DATE,-->
+<!--        SHORT_LONG_TERM,GRADE_RESULT,-->
+<!--        CREATE_USER,CREATE_DEPT,-->
+<!--        CREATE_TIME,UPDATE_USER,UPDATE_TIME,-->
+<!--        DATA_SOURCE,-->
+<!--        STATUS,O_NAME,O_OBJECT,-->
+<!--        DESCRIBE-->
+<!--    </sql>-->
+</mapper>
