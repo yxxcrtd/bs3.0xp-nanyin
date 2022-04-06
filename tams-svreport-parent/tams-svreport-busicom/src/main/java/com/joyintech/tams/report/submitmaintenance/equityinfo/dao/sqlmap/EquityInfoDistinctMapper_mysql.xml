@@ -233,10 +233,21 @@
 		where
 		(T1.SUBMIT_FEEDBACK_STATUS = '03' or T1.ORG_INDENTIFY_MARK is not null)
 		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
-		<if test="list !=null and list.size() == 1">
-			AND concat_ws('_',T1.REGIST_BANK_CODE,T1.IDENTIFY_NUMBER,IFNULL(T1.HOLDER_NAME,''),IFNULL(T1.PERSONAL_IDENTIFY_TYPE,''),IFNULL(T1.INSTITUTION_IDENTIFY_TYPE,''),IFNULL(T1.OTHER_IDENTIFY_NAME,''))  IN
-			<foreach collection="list" item="key" open="(" separator=","  close=")">
-				#{key,jdbcType=VARCHAR}
+		<if test="list !=null and list.size() >0">
+			AND (T1.REGIST_BANK_CODE
+			,T1.IDENTIFY_NUMBER
+			,T1.HOLDER_NAME
+			,IFNULL(T1.PERSONAL_IDENTIFY_TYPE,' ')
+			,IFNULL(T1.INSTITUTION_IDENTIFY_TYPE,' ')
+			,IFNULL(T1.OTHER_IDENTIFY_NAME,' ')
+			)in
+			<foreach collection="list" item="item" open="(" separator="," close=")">
+				(#{item.registBankCode,jdbcType=VARCHAR},
+				#{item.identifyNumber,jdbcType=VARCHAR},
+				#{item.holderName,jdbcType=VARCHAR},
+				IFNULL(#{item.personalIdentifyType,jdbcType=VARCHAR},' '),
+				IFNULL(#{item.institutionIdentifyType,jdbcType=VARCHAR}, ' '),
+				IFNULL(#{item.otherIdentifyName,jdbcType=VARCHAR},' '))
 			</foreach>
 		</if>
 	</select>
@@ -368,7 +379,9 @@
 		HOLDER_EMAIL holderEmail,
 		ORG_CODE orgCode,
 		DEPT_CODE deptCode,
-		REMARK remark
+		REMARK remark,
+		FUND_ACC_PLACE fundAccPlace,
+		HOLDER_CLASSIFY holderClassify
 		FROM CHB_EQU_HOLD HOLD
 		<!--<where>
 			<if test="keys !=null and keys.size()==1">
