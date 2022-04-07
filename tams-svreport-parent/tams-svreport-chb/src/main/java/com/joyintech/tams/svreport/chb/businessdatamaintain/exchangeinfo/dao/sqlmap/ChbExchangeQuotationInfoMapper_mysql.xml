@@ -36,13 +36,13 @@
 				AND EXCHARGE_CODE like concat(concat('%', #{exchargeCode,jdbcType=VARCHAR}),'%')
 			</if>
 			<if test="tradeDateBegin != null and tradeDateBegin != ''">
-				<![CDATA[ and DATE_FORMAT(TRADE_DATE,'%Y-%m-%d') >= #{tradeDateBegin} ]]>
+				<![CDATA[ and STR_TO_DATE(TRADE_DATE,'%Y-%m-%d') >= #{tradeDateBegin} ]]>
 			</if>
 			<if test="tradeDateEnd != null and tradeDateEnd != ''">
-				<![CDATA[ and DATE_FORMAT(TRADE_DATE,'%Y-%m-%d') <= #{tradeDateEnd} ]]>
+				<![CDATA[ and STR_TO_DATE(TRADE_DATE,'%Y-%m-%d') <= #{tradeDateEnd} ]]>
 			</if>
 			<if test="tradeDate != null and tradeDate != ''">
-				and DATE_FORMAT(TRADE_DATE,'%Y-%m-%d') = #{tradeDate}
+				and STR_TO_DATE(TRADE_DATE,'%Y-%m-%d') = #{tradeDate}
 			</if>
 			<if test="datasourceType != null and datasourceType != ''">
 				and DATASOURCE_TYPE = #{datasourceType}

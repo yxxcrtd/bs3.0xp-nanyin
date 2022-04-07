@@ -39,7 +39,7 @@ $(function() {
             ,{field:'lowPrice',width:100, title: '最低价',sortable:false}
             ,{field:'status',width:80, title: '数据状态',sortable:false}
             ,{field:'errMsg',width:200, title: '错误信息',sortable:false}
-            ,{field:'updateTimeStr',width:120, title: '更新时间',sortable:false}
+            ,{field:'updateTimeStr',width:180, title: '更新时间',sortable:false}
             ,{field:'updateUser',width:100, title: '更新人',sortable:false}
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
         ]
