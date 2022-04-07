@@ -71,21 +71,6 @@ public class BokSubject001Controller extends BaseController {
         return bokSubjectService.getFSubjectId(param);
     }
 
-    /**
-     * 检索科目代码
-     *
-     * @return 账套科目代码联想框内容
-     * @throws Exception
-     * @see
-     * @since 1.0
-     */
-    @ResponseBody
-    @RequestMapping("/getSubjectId")
-    public List<SuggestDto> getSubjectId()
-    {
-        String param = super.getRequest().getParameter("param");
-        return bokSubjectService.getSubjectId(param);
-    }
 
 
     /**
@@ -147,19 +132,6 @@ public class BokSubject001Controller extends BaseController {
         return list;
     }
 
-    /**
-     * 所属科目下拉框获取
-     *
-     * @return 返回的数据
-     * @exception Exception 异常
-     * @since 1.0
-     */
-    @RequestMapping("/queryValBokSubject")
-    @ResponseBody
-    public List<SelectOptionDto> queryValBokSubject(HttpServletRequest request) {
-        Map<String, Object> param = RequestUtil.getPageParam();
-        return bokSubjectService.queryValBokSubject(param);
-    }
 
 
 
@@ -176,6 +148,7 @@ public class BokSubject001Controller extends BaseController {
     public Page<BokSubjectDto> selectAllSubject()
     {
         Page<BokSubjectDto> page = bokSubjectService.selectForPage(RequestUtil.getPageParam());
+
         return page;
     }
 
@@ -238,25 +211,6 @@ public class BokSubject001Controller extends BaseController {
         return this.bokSubjectService.importData(fileName);
     }
 
-    /**
-     * 导入（重复数据获取）
-     *
-     * @param fileName 导入的文件名
-     * @return checkResult
-     * @throws Exception
-     */
-//    @ResponseBody
-//    @RequestMapping("duplicateCheck")
-//    public List<Integer> duplicateCheck(String fileName)
-//            throws Exception {
-//        List<List<String>> dataList = bokSubjectService.dataAnalysis(fileName);
-//        List<Integer> checkResult = new ArrayList<>();
-//        if (null != dataList && dataList.size() > 0) {
-//            // 导入文件重复数据检查
-//            checkResult = bokSubjectService.duplicateCheck(dataList);
-//        }
-//        return checkResult;
-//    }
 
     /**
      * 导入（数据保存）
@@ -303,6 +257,7 @@ public class BokSubject001Controller extends BaseController {
         else {
             list = bokSubjectService.selectAllList(params);
         }
+        list.forEach(item->item.setUpdateTimeStr(DateUtil.format(item.getUpdateTime(),"yyyy-MM-dd")));
         File outFile = bokSubjectService.makeFile(
                 "/com/joyintech/tams/svreport/chb/boksubject/conf/export_conf.xml",
                 list);

@@ -1,4 +1,5 @@
 package com.joyintech.tams.svreport.chb.mstbondcreditrating.dao;
+import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.tams.svreport.chb.mstbondcreditrating.dto.MstBondCreditRatingDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -25,4 +26,6 @@ public interface MstBondCreditRatingDao {
     List<MstBondCreditRatingDto> selectAll(Map<String, Object> pageParam);
 
     void batchInsert(List<MstBondCreditRatingDto> list);
+
+    List<SuggestDto> getFinProdAbbr(@Param("param") String param);
 }

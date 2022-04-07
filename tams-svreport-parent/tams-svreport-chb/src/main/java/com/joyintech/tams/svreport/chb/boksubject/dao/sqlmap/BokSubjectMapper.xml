@@ -133,14 +133,7 @@
 			BS.SUBJECT_NO as subjectNo,
 			BS.SUBJECT_NAME as subjectName,
 			BS.FSUBJECT_ID as fsubjectId,
-			CASE WHEN BS.SUBJECT_TYPE ='01' THEN '资产类'
-			WHEN BS.SUBJECT_TYPE ='02' THEN '负债类'
-			WHEN BS.SUBJECT_TYPE ='03' THEN '资产负债共同类'
-			WHEN BS.SUBJECT_TYPE ='04' THEN '所有者权益类'
-			WHEN BS.SUBJECT_TYPE ='05' THEN '损益类'
-			WHEN BS.SUBJECT_TYPE ='06' THEN '表外科目'
-			WHEN BS.SUBJECT_TYPE ='07' THEN '登记簿类'
-			END  as subjectType,
+			BS.SUBJECT_TYPE as subjectType,
 			BS.SUBJECT_LEVEL as subjectLevel,
 			BS.CREATE_USER as createUser,
 			BS.CREATE_DEPT as createDept,
@@ -148,13 +141,8 @@
 			BS.UPDATE_USER as updateUser,
 			BS.UPDATE_TIME as updateTime,
 			BS.UPDATE_TIME as updateDate,
-		    CASE WHEN BS.DATA_SOURCE='D' THEN '新建导入'
-		    WHEN BS.DATA_SOURCE='I' THEN '接口'
-		    END as dataSource,
-			CASE WHEN BS.STATUS='A' THEN '待处理'
-			WHEN BS.STATUS='E' THEN '有效'
-			WHEN BS.STATUS='D' THEN '删除'
-		    END as status,
+		    BS.DATA_SOURCE as dataSource,
+			BS.STATUS as status,
 			BS.REMARK as remark,
 		    BS.DESCRIBE as describe
 		from BOK_SUBJECT BS
@@ -197,8 +185,8 @@
                   to_number(subject_level) = #{subjectLevel}
               </if>
               <if test="search !=null and  search !='' ">
-                AND (SUBJECT_NO like '%' || #{search} || '%'
-                OR SUBJECT_NAME like '%' || #{search} || '%')
+                AND SUBJECT_NO like '%' || #{search} || '%'
+
               </if>
           </where>
           order by SUBJECT_NO 
@@ -238,6 +226,7 @@
     <select id="getSubjectName" resultType="com.joyintech.framework.select.SelectOptionDto">
 		SELECT
 		DISTINCT
+		SUBJECT_NAME id,
 		SUBJECT_NAME text
 		FROM BOK_SUBJECT
 		<where>
@@ -245,8 +234,7 @@
 				to_number(subject_level) = #{subjectLevel}
 			</if>
 			<if test="search !=null and  search !='' ">
-				AND (SUBJECT_NO like '%' || #{search} || '%'
-				OR SUBJECT_NAME like '%' || #{search} || '%')
+				AND SUBJECT_NAME like '%' || #{search} || '%'
 			</if>
 		</where>
 		order by SUBJECT_NAME

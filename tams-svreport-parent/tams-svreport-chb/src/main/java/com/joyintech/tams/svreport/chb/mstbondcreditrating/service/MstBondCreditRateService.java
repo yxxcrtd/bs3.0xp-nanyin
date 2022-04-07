@@ -3,10 +3,9 @@ package com.joyintech.tams.svreport.chb.mstbondcreditrating.service;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.ExcelUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.svreport.chb.boksubject.dto.BokSubjectDto;
@@ -24,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.File;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -54,13 +54,31 @@ public class MstBondCreditRateService extends CommonExportService<MstBondCreditR
         }
 
     }
+    /**
+     * 获取金融产品简称
+     * @return
+     */
+    public List<SuggestDto> getFinProdAbbr(String param) {
+
+        return mstBondCreditRatingDao.getFinProdAbbr(param);
+    }
 
     public MstBondCreditRatingDto selcetByKey(String oCode, String oObject) {
         return mstBondCreditRatingDao.selcetByKey(oCode,oObject);
     }
 
     public Page<MstBondCreditRatingDto> selectForPage(Map<String, Object> pageParam) {
-        return queryForPage(Integer.parseInt((String)pageParam.get("page")), Integer.parseInt((String)pageParam.get("length")), () -> mstBondCreditRatingDao.selectAll(pageParam));
+        Page<MstBondCreditRatingDto> page = queryForPage(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")), () -> mstBondCreditRatingDao.selectAll(pageParam));
+//        page.getRoot().forEach(item->{
+//            item.setGradeOrgId(SysDataUtil.getNameFromDataDict(DictCode.评级机构,item.getGradeOrgId()));
+//            item.setShortLongTerm(SysDataUtil.getNameFromDataDict(DictCode.长期短期,item.getShortLongTerm()));
+//            item.setGradeResult(SysDataUtil.getNameFromDataDict(DictCode.评级结果,item.getGradeResult()));
+//            item.setDataSource(SysDataUtil.getNameFromDataDict(DictCode.数据来源,item.getDataSource()));
+//            item.setStatus(SysDataUtil.getNameFromDataDict(DictCode.维护数据状态,item.getStatus()));
+//            item.setoObject(SysDataUtil.getNameFromDataDict(DictCode.评级类型,item.getoObject()));
+//            item.setSource(SysDataUtil.getNameFromDataDict(DictCode.评级来源类型,item.getSource()));
+//        });
+        return page;
     }
     @Transactional(rollbackFor = Exception.class)
     public List<ExcelValidDto> importData(String fileName) throws Exception{
@@ -252,7 +270,7 @@ public class MstBondCreditRateService extends CommonExportService<MstBondCreditR
                 mstBondCreditRatingDto.setSource(list.get(6).trim());
             }
             if (StringUtil.isNotEmpty(list.get(7))) {
-                mstBondCreditRatingDto.setGradeDate(DateUtil.parse(list.get(7).trim()));
+                mstBondCreditRatingDto.setGradeDate(list.get(7).trim());
             }
 
             mstBondCreditRatingDto.setCreateUser(CommonUtil.getUserName());
@@ -327,6 +345,16 @@ public class MstBondCreditRateService extends CommonExportService<MstBondCreditR
     }
 
     public List<MstBondCreditRatingDto> selectAll(Map<String, Object> params) {
-       return mstBondCreditRatingDao.selectAll(params);
+        List<MstBondCreditRatingDto> list = mstBondCreditRatingDao.selectAll(params);
+//        list.forEach(item->{
+//            item.setGradeOrgId(SysDataUtil.getNameFromDataDict(DictCode.评级机构,item.getGradeOrgId()));
+//            item.setShortLongTerm(SysDataUtil.getNameFromDataDict(DictCode.长期短期,item.getShortLongTerm()));
+//            item.setGradeResult(SysDataUtil.getNameFromDataDict(DictCode.评级结果,item.getGradeResult()));
+//            item.setDataSource(SysDataUtil.getNameFromDataDict(DictCode.数据来源,item.getDataSource()));
+//            item.setStatus(SysDataUtil.getNameFromDataDict(DictCode.维护数据状态,item.getStatus()));
+//            item.setoObject(SysDataUtil.getNameFromDataDict(DictCode.评级类型,item.getoObject()));
+//            item.setSource(SysDataUtil.getNameFromDataDict(DictCode.评级来源类型,item.getSource()));
+//        });
+        return list;
     }
 }

@@ -10,7 +10,7 @@
             });
         });
     };
-
+    // $('#gradeDate').attr("disabled","disabled")
     /**
      * 画面加载完成
      */

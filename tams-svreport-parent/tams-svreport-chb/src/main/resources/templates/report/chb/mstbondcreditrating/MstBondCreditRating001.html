@@ -27,12 +27,16 @@
 					</div>
                     <div class="layui-inline layui-col-xs4 layui-col-md4  layui-col-sm4 layui-col-lg4">
 						<label class="layui-form-label form-lable" data-th-text="#{MstBondCreditRating001.oName}">债券名称</label>
-						 <div class="layui-input-inline input-inline">
-                            <input type="text" id="oName" name="oName" class="layui-input form-input input-select"  multiple="true"
-                            	placeholder="请输入内容" data-th-data-url="@{/invest/basicdata/mstmarketmanagement/MstMarketManagement001/getFinprodName}"
-                            	data-th-data-effectivefieldsalias='|{"code":"#{MstMarketManagement001.secId}","shortName":"#{MstMarketManagement001.finprodName}"}|'
-                             		data-th-placeholder="#{SysCommon.placeholder}">                            
-                        </div>
+						<div class="layui-input-inline input-inline">
+							<input id="oName" name="oName"
+								   class="layui-input form-input input-lenovoselect"
+								   allowClear="true" placeholder="请输入内容"
+								   data-th-placeholder="#{SysCommon.placeholder}" maxlength="66"
+								   data-th-data-url="@{/chb/mstbondcreditrating/mstbondcreditrating001/getOName}"
+								   data-idfield="shortName" data-keyfield="shortName"
+								   data-th-data-effectivefieldsalias='|{"code":"#{ComBondQuotationInfo001.secId}","shortName":"#{ComBondQuotationInfo001.finprodAbbr}"}|' />
+
+						</div>
 					</div>
 					<div class="layui-inline layui-col-xs4 layui-col-md4  layui-col-sm4 layui-col-lg4">
 						<label class="layui-form-label form-lable" data-th-text="#{MstBondCreditRating001.shortLongTerm}">评级类型</label>

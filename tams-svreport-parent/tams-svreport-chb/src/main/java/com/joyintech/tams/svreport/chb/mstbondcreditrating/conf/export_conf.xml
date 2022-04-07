@@ -4,15 +4,15 @@
         <Row>
             <Cell order="1" name="债券代码">oCode</Cell>
             <Cell order="2" name="债券名称">oName</Cell>
-            <Cell order="3" name="评级对象">oObject</Cell>
-            <Cell order="4" name="评级机构">gradeOrgId</Cell>
-            <Cell order="5" name="评级类型">shortLongTerm</Cell>
-            <Cell order="6" name="评级结果">gradeResult</Cell>
-            <Cell order="7" name="评级来源">source</Cell>
+            <Cell order="3" name="评级对象">oObjectStr</Cell>
+            <Cell order="4" name="评级机构">gradeOrgIdStr</Cell>
+            <Cell order="5" name="评级类型">shortLongTermStr</Cell>
+            <Cell order="6" name="评级结果">gradeResultStr</Cell>
+            <Cell order="7" name="评级来源">sourceStr</Cell>
             <Cell order="8" name="评级日期">gradeDate</Cell>
-            <Cell order="9" name="数据状态">status</Cell>
+            <Cell order="9" name="数据状态">statusStr</Cell>
             <Cell order="9" name="错误信息">describe</Cell>
-            <Cell order="10" name="更新时间">updateTime</Cell>
+            <Cell order="10" name="更新时间">updateTimeStr</Cell>
             <Cell order="11" name="更新人">updateUser</Cell>
         </Row>
     </Worksheet>

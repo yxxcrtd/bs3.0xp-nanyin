@@ -4,6 +4,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.system.constant.SystemGlobalConstant;
@@ -51,6 +52,19 @@ public class MstBondCreditRating001Controller extends BaseController {
         return super.init(model);
     }
     /**
+     * 债券简称的下拉框
+     *
+     * @param param 参数
+     * @return 查询结果集
+     * @throws Exception 异常
+     */
+    @ResponseBody
+    @RequestMapping("getOName")
+    public List<SuggestDto> getOName(String param)
+            throws Exception {
+        return mstBondCreditRateService.getFinProdAbbr(param);
+    }
+    /**
      * 分页查询
      *
      * @return Page<MstMarketManagementDto>泛型的page实体类
@@ -63,6 +77,7 @@ public class MstBondCreditRating001Controller extends BaseController {
     public Page<MstBondCreditRatingDto> selectAllMstMarketManagement(){
 
         Page<MstBondCreditRatingDto> page = mstBondCreditRateService.selectForPage(RequestUtil.getPageParam());
+
         return page;
 
     }
@@ -172,6 +187,10 @@ public class MstBondCreditRating001Controller extends BaseController {
         else {
             list = mstBondCreditRateService.selectAll(params);
         }
+        list.forEach(item->{
+//            item.setGradeDateStr(DateUtil.format(item.getGradeDate(),"yyyy-MM-dd"));
+            item.setUpdateTimeStr(DateUtil.format(item.getUpdateTime(),"yyyy-MM-dd"));
+        });
         File outFile = mstBondCreditRateService.makeFile(
                 "/com/joyintech/tams/svreport/chb/mstbondcreditrating/conf/export_conf.xml",
                 list);

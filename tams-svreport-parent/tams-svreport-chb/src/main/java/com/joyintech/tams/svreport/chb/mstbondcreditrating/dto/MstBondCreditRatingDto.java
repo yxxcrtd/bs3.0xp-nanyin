@@ -1,12 +1,13 @@
 package com.joyintech.tams.svreport.chb.mstbondcreditrating.dto;
 
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.svreport.chb.boksubject.dto.BokSubjectDto;
-import com.joyintech.tams.svreport.chb.boksubject.validator.BokSubjectDtoValidator;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.svreport.chb.mstbondcreditrating.validator.MstBondCreditRatingValidator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
@@ -30,37 +31,46 @@ public class MstBondCreditRatingDto extends BaseEntity implements ProcessEntity 
      * 评级机构
      */
     private String gradeOrgId;
+    private String gradeOrgIdStr;
 
     /**
      * 评级日期
      */
-    private Date gradeDate;
+    private String gradeDate;
+
+
+    private String updateTimeStr;
 
 
     /**
      * 评级类型
      */
     private String shortLongTerm;
+    private String shortLongTermStr;
 
     /**
      * 评级结果
      */
     private String gradeResult;
+    private String gradeResultStr;
 
     /**
      * 评级来源
      */
     private String source;
+    private String sourceStr;
 
     /**
      * 数据来源 
      */
     private String dataSource;
+    private String dataSourceStr;
 
     /**
      * 状态
      */
     private String status;
+    private String statusStr;
 
     /**
      * 债券名称
@@ -71,6 +81,7 @@ public class MstBondCreditRatingDto extends BaseEntity implements ProcessEntity 
      * 评级对象
      */
     private String oObject;
+    private String oObjectStr;
 
     /**
      * 描述
@@ -131,14 +142,14 @@ public class MstBondCreditRatingDto extends BaseEntity implements ProcessEntity 
      * 评级日期
      */
     @NotEmpty(fieldName = "MstBondCreditRating001.gradeDate",groups = {ValidateGroupEdit.class})
-    public Date getGradeDate() {
+    public String getGradeDate() {
         return gradeDate;
     }
 
     /**
      * 评级日期
      */
-    public void setGradeDate(Date gradeDate) {
+    public void setGradeDate(String gradeDate) {
         this.gradeDate = gradeDate;
     }
 
@@ -285,5 +296,71 @@ public class MstBondCreditRatingDto extends BaseEntity implements ProcessEntity 
 
     public void setElementId(String elementId) {
         this.elementId = elementId;
+    }
+
+
+
+    public String getUpdateTimeStr() {
+        return updateTimeStr;
+    }
+
+    public void setUpdateTimeStr(String updateTimeStr) {
+        this.updateTimeStr = updateTimeStr;
+    }
+
+    public String getGradeOrgIdStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.评级机构,gradeOrgId);
+    }
+
+    public void setGradeOrgIdStr(String gradeOrgIdStr) {
+        this.gradeOrgIdStr = gradeOrgIdStr;
+    }
+
+    public String getShortLongTermStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.长期短期,shortLongTerm);
+    }
+
+    public void setShortLongTermStr(String shortLongTermStr) {
+        this.shortLongTermStr = shortLongTermStr;
+    }
+
+    public String getGradeResultStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.评级结果,gradeResult);
+    }
+
+    public void setGradeResultStr(String gradeResultStr) {
+        this.gradeResultStr = gradeResultStr;
+    }
+
+    public String getSourceStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.评级来源类型,source);
+    }
+
+    public void setSourceStr(String sourceStr) {
+        this.sourceStr = sourceStr;
+    }
+
+    public String getDataSourceStr() {
+        return dataSource.equals("D")?"新建导入":"接口";
+    }
+
+    public void setDataSourceStr(String dataSourceStr) {
+        this.dataSourceStr = dataSourceStr;
+    }
+
+    public String getStatusStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.维护数据状态,status);
+    }
+
+    public void setStatusStr(String statusStr) {
+        this.statusStr = statusStr;
+    }
+
+    public String getoObjectStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.评级类型,oObject);
+    }
+
+    public void setoObjectStr(String oObjectStr) {
+        this.oObjectStr = oObjectStr;
     }
 }

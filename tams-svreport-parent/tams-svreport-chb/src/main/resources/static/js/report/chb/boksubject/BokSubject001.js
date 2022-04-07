@@ -27,13 +27,13 @@
 		    {field:'subjectNo', width:100, title: 'BokSubject.subjectNo'}
 		    ,{field:'subjectName', width:180, title: 'BokSubject.subjectName'}
 		    ,{field:'fsubjectId', width:120, title: 'BokSubject.fsubjectId'}
-		    ,{field:'subjectType', width:120, sortField:"subjectType", title: 'BokSubject.subjectType'}
+		    ,{field:'subjectTypeStr', width:120, sortField:"subjectType", title: 'BokSubject.subjectType'}
 		    ,{field:'subjectLevel', width:100, title: 'BokSubject.subjectLevel'}
-		    ,{field:'dataSource', width:100, title: 'BokSubject.dataSource'}
-		    ,{field:'status', width:100, title: 'BokSubject.status'}
+		    ,{field:'dataSourceStr', width:100, title: 'BokSubject.dataSource'}
+		    ,{field:'statusStr', width:100, title: 'BokSubject.status'}
 		    ,{field:'remark', width:150, title: 'BokSubject.remark'}
 		    ,{field:'describe', width:150, title: 'BokSubject.describe'}
-		    ,{field:'updateDate', width:100, title: 'BokSubject.updateTime'}
+		    ,{field:'updateTime', width:100, title: 'BokSubject.updateTime',type:'date'}
 		    ,{field:'updateUser', width:100, title: 'BokSubject.updateUser'}
 		    ,{field:'action', title: 'SysCommon.operation' , type:'action',buttons: ['edit', 'delt'] , width:100}
 		]

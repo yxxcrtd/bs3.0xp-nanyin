@@ -6,10 +6,8 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.ExcelUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
@@ -56,18 +54,6 @@ public class BokSubjectService extends CommonExportService<BokSubjectDto> implem
         return queryForSuggest(bokSubjectDao::getFSubjectId, null, param);
     }
 
-    /**
-     * 获取科目文本输入框模糊查询
-     *
-     * @param param 过滤参数
-     * @return 上级科目代码列表
-     * @see
-     * @since 1.0
-     */
-    public List<SuggestDto> getSubjectId(String param) {
-        return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME+"/ValSubjectSet001/getSubjectId", param, SuggestDto.class);
-//        return queryForSuggest(valSubjectSet001Mapper::getSubjectId, null, param);
-    }
 
 
 
@@ -102,15 +88,7 @@ public class BokSubjectService extends CommonExportService<BokSubjectDto> implem
         return bokSubjectDao.getSubjectLevel(map);
     }
 
-    /**
-     * 获取科目下拉框
-     * @return
-     * @see
-     * @since 1.0
-     */
-    public List<SelectOptionDto> queryValBokSubject(Map<String, Object> map) {
-        return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME+"/ValSubjectSet001/queryValBokSubject", map, SelectOptionDto.class);
-    }
+
 
     /**
      * 检索科目列表
@@ -122,54 +100,11 @@ public class BokSubjectService extends CommonExportService<BokSubjectDto> implem
      * @since 1.0
      */
     public Page<BokSubjectDto> selectForPage(Map<String, Object> pageParam) {
-        return queryForPage(Integer.parseInt((String)pageParam.get("page")), Integer.parseInt((String)pageParam.get("length")), () -> bokSubjectDao.selectAll(pageParam));
-    }
-    /**
-     * 根据主键检索科目
-     *
-     * @param booksetId 账套代码
-     * @param subjectNo 科目代码
-     * @return 科目
-     * @see
-     * @since 1.0
-     */
-    public BokSubjectDto selectValBokSubject(String booksetId, String subjectNo) {
-        Map<String,Object> params = new HashMap<String,Object>();
-        params.put("booksetId", booksetId);
-        params.put("subjectNo", subjectNo);
-        return restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/ValSubjectSet002/selectValBokSubject", params, BokSubjectDto.class);
-    }
-
-    /**
-     * 检索上级科目代码列表(支持入参)
-     *
-     * @param param 过滤参数
-     * @return 上级科目代码列表
-     * @see
-     * @since 1.0
-     */
-    public List<SuggestDto> getFSubjectId2(Map<String, Object> param) {
-        return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME+"/ValSubjectSet001/getFSubjectId2", param, SuggestDto.class);
+        Page<BokSubjectDto> page = queryForPage(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")), () -> bokSubjectDao.selectAll(pageParam));
+        return page;
     }
 
 
-    /**
-     * 批量删除（删除当前科目及其子科目）
-     * @param selectedItem
-     * @see
-     * @since 1.0
-     */
-//    public void deleteByBatch(List<BokSubjectDto> selectedItem) {
-//        restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/ValSubjectSet001/deleteByBatch", selectedItem, boolean.class);
-//    }
-//
-//    public List<SuggestDto> getBooksetId(Map<String, Object> param) {
-//        return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME+"/ValSubjectSet001/getBooksetId", param, SuggestDto.class);
-//    }
-//
-//    public void save(BokSubjectDto dto) {
-//        restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/ValSubjectSet002/save", dto, boolean.class);
-//    }
 
     public List<SelectOptionDto> getSubjectName(Map<String, Object> pageParam) {
         List<SelectOptionDto> list = bokSubjectDao.getSubjectName(pageParam);
@@ -478,6 +413,7 @@ public class BokSubjectService extends CommonExportService<BokSubjectDto> implem
     }
 
     public List<BokSubjectDto> selectAllList(Map<String, Object> params) {
-        return bokSubjectDao.selectAll(params);
+        List<BokSubjectDto> list = bokSubjectDao.selectAll(params);
+        return list;
     }
 }

@@ -7,7 +7,7 @@
     <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.mstbondcreditrating.dto.MstBondCreditRatingDto">
             <result property="oCode" column="O_CODE" jdbcType="VARCHAR"/>
             <result property="gradeOrgId" column="GRADE_ORG_ID" jdbcType="VARCHAR"/>
-            <result property="gradeDate" column="GRADE_DATE" jdbcType="TIMESTAMP"/>
+            <result property="gradeDate" column="GRADE_DATE" jdbcType="VARCHAR"/>
             <result property="shortLongTerm" column="SHORT_LONG_TERM" jdbcType="VARCHAR"/>
             <result property="gradeResult" column="GRADE_RESULT" jdbcType="VARCHAR"/>
             <result property="createUser" column="CREATE_USER" jdbcType="VARCHAR"/>
@@ -24,7 +24,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        O_CODE,GRADE_ORG_ID,GRADE_DATE,
+        O_CODE,GRADE_ORG_ID,to_char(GRADE_DATE,'yyyy-MM-dd') as GRADE_DATE,
         SHORT_LONG_TERM,GRADE_RESULT,
         CREATE_USER,CREATE_DEPT,
         CREATE_TIME,UPDATE_USER,UPDATE_TIME,
@@ -41,7 +41,7 @@
             <if test="gradeOrgId !=null and gradeOrgId !=''">
                 GRADE_ORG_ID,
             </if>
-            <if test="gradeDate !=null">
+            <if test="gradeDate !=null and gradeDate!=''">
                 GRADE_DATE,
             </if>
             <if test="shortLongTerm !=null and shortLongTerm !=''">
@@ -88,8 +88,8 @@
             <if test="gradeOrgId !=null and gradeOrgId !=''">
                 #{gradeOrgId},
             </if>
-            <if test="gradeDate !=null">
-                #{gradeDate},
+            <if test="gradeDate !=null and gradeDate!=''">
+                to_date(#{gradeDate},'yyyy-MM-dd'),
             </if>
             <if test="shortLongTerm !=null and shortLongTerm !=''">
                 #{shortLongTerm},
@@ -150,7 +150,7 @@
             (select
                 #{item.oCode},
                 #{item.gradeOrgId},
-                #{item.gradeDate},
+                to_date(#{gradeDate},'yyyy-MM-dd'),
                 #{item.shortLongTerm},
                 #{item.gradeResult},
                 #{item.dataSource},
@@ -215,5 +215,19 @@
                 and GRADE_DATE &lt;= to_date(#{gradeDateEnd},'yyyy-mm-dd')
             </if>
         </where>
+    </select>
+    <select id="getFinProdAbbr" resultType="com.joyintech.framework.select.SuggestDto">
+        SELECT
+            distinct
+            ASSET_CODE AS code,
+            ASSET_NAME AS shortName
+        FROM CHB_ASSET_INFO
+        WHERE ASSET_TYPE2 IN
+              (SELECT ITEM_CODE FROM SYS_DATADICT_LIST_LINK WHERE LINKED_DICT_CODE ='SVR_ASSET_TYPE_FIRST_LEVEL' AND LINKED_ITEM_CODE ='004')
+        <if test="param !=null and  param !='' ">
+            AND (ASSET_CODE like '%' || #{param} || '%'
+            OR ASSET_NAME like '%' || #{param} || '%')
+        </if>
+
     </select>
 </mapper>

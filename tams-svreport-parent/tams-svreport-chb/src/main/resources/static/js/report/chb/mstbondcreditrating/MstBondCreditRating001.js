@@ -29,13 +29,13 @@ $(function() {
         cols:[
             {field:'oCode', sortable:false, width:100, title: 'MstBondCreditRating001.oCode'}
             ,{field:'oName',sortable:false,width:160,  title: 'MstBondCreditRating001.oName'}
-            ,{field:'oObject', sortable:false,width:100,  title: 'MstBondCreditRating001.oObject'}
-            ,{field:'gradeOrgId',sortable:false,width:180,title: 'MstBondCreditRating001.gradeOrgId'}
-            ,{field:'shortLongTerm', sortable:false,width:100, title: 'MstBondCreditRating001.shortLongTerm'}
-            ,{field:'gradeResult',sortable:false,width:100,title: 'MstBondCreditRating001.gradeResult'}
-            ,{field:'source', sortable:false, width:100,title: 'MstBondCreditRating001.source'}
-            ,{field:'gradeDate', sortable:false, width:100,title: 'MstBondCreditRating001.gradeDate',type:'date'}
-            ,{field:'status', sortable:false, width:100, title: 'MstBondCreditRating001.status'}
+            ,{field:'oObjectStr', sortable:false,width:100,  title: 'MstBondCreditRating001.oObject'}
+            ,{field:'gradeOrgIdStr',sortable:false,width:180,title: 'MstBondCreditRating001.gradeOrgId'}
+            ,{field:'shortLongTermStr', sortable:false,width:100, title: 'MstBondCreditRating001.shortLongTerm'}
+            ,{field:'gradeResultStr',sortable:false,width:100,title: 'MstBondCreditRating001.gradeResult'}
+            ,{field:'sourceStr', sortable:false, width:100,title: 'MstBondCreditRating001.source'}
+            ,{field:'gradeDate', sortable:false, width:100,title: 'MstBondCreditRating001.gradeDate'}
+            ,{field:'statusStr', sortable:false, width:100, title: 'MstBondCreditRating001.status'}
             ,{field:'describe',sortable:false,   width:150,title: 'MstBondCreditRating001.describe'}
             ,{field:'updateTime',sortable:false,width:100, title: 'MstBondCreditRating001.updateTime',type:'date'}
             ,{field:'updateUser', sortable:false,width:100,title: 'MstBondCreditRating001.updateUser'}

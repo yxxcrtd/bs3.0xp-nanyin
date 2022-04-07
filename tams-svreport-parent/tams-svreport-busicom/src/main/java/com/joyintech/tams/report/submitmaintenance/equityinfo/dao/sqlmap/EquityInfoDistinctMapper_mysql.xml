@@ -350,7 +350,7 @@
 		</where>
 	</select>
 
-	<select id="queryEquityInfoList" parameterType="java.util.List"
+	<select id="List" parameterType="java.util.List"
 			resultType="com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001Dto"
 			resultSetType="FORWARD_ONLY" fetchSize="1000">
 		SELECT
@@ -383,73 +383,7 @@
 		FUND_ACC_PLACE fundAccPlace,
 		HOLDER_CLASSIFY holderClassify
 		FROM CHB_EQU_HOLD HOLD
-		<!--<where>
-			<if test="keys !=null and keys.size()==1">
-				AND concat_ws('_',REGIST_BANK_CODE,IDENTIFY_NUMBER,IFNULL(HOLDER_NAME,''),IFNULL(PERSONAL_IDENTIFY_TYPE,''),IFNULL(INSTITUTION_IDENTIFY_TYPE,''),IFNULL(OTHER_IDENTIFY_NAME,''))  IN
-				<foreach collection="keys" item="key" open="(" separator=","  close=")">
-					#{key,jdbcType=VARCHAR}
-				</foreach>
-			</if>
-			AND STATUS !='D'
-			/*未报送*/
-			AND NOT EXISTS( SELECT 1 FROM CHB_EQU_SUB T
-			/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
-			WHERE HOLD.INDENTIFY_MARK = T.INDENTIFY_MARK  AND T.SUBMIT_FEEDBACK_STATUS = '03'
-			)
-		</where>
 
-		UNION ALL
-
-		SELECT
-		INDENTIFY_MARK indentifyMark,
-		ORG_INDENTIFY_MARK orgIndentifyMark,
-		REGIST_BANK_CODE bankCode,
-		IS_BELONG_BANK isBelongBank,
-		THE_BANK_NAME theBankName,
-		THE_BANK_CODE theBankCode,
-		HOLDER_MARK holderMark,
-		HOLDER_REGION holderRegion,
-		HOLDER_TYPE holderType,
-		PERSONAL_IDENTIFY_TYPE personalIdentifyType,
-		INSTITUTION_IDENTIFY_TYPE institutionIdentifyType,
-		OTHER_IDENTIFY_NAME otherIdentifyName,
-		IDENTIFY_NUMBER identifyNumber,
-		SPV_CAP_ACC_BANK spvCapAccBank,
-		OTHER_CAP_ACC_BANK otherCapAccBank,
-		SPV_REGIST_CODE spvRegistCode,
-		HOLDER_DATE holderDate,
-		HOLDER_NAME holderName,
-		HOLDER_SEX holderSex,
-		HOLDER_RISK_PREFER holderRiskPrefer,
-		HOLDER_CELLPHONE holderCellphone,
-		HOLDER_TELEPHONE holderTelephone,
-		HOLDER_EMAIL holderEmail,
-		ORG_CODE orgCode,
-		DEPT_CODE deptCode,
-		REMARK remark
-		FROM CHB_EQU_HOLD_CHECK HOLDCHECK
-		WHERE 1=1
-		AND NOT EXISTS (SELECT 1 FROM CHB_EQU_HOLD HOLD
-		WHERE ifnull(HOLD.REGIST_BANK_CODE,'') =  ifnull(HOLDCHECK.REGIST_BANK_CODE ,'')
-		AND  ifnull(HOLD.IDENTIFY_NUMBER,'') =  ifnull(HOLDCHECK.IDENTIFY_NUMBER,'')
-		AND  ifnull(HOLD.HOLDER_NAME,'') =  ifnull(HOLDCHECK.HOLDER_NAME,'')
-		AND  ifnull(HOLD.PERSONAL_IDENTIFY_TYPE,'') =  ifnull(HOLDCHECK.PERSONAL_IDENTIFY_TYPE,'')
-		AND  ifnull(HOLD.INSTITUTION_IDENTIFY_TYPE,'') =  ifnull(HOLDCHECK.INSTITUTION_IDENTIFY_TYPE,'')
-		AND  ifnull(HOLD.OTHER_IDENTIFY_NAME,'') =  ifnull(HOLDCHECK.OTHER_IDENTIFY_NAME,'')
-		AND ifnull(HOLD.INDENTIFY_MARK,'') = ifnull(HOLDCHECK.INDENTIFY_MARK,''))
-		AND NOT EXISTS (SELECT 1
-		FROM CHB_EQU_SUB SUB
-		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
-		WHERE (HOLDCHECK.MERGER_INDENTIFY_MARK = SUB.INDENTIFY_MARK
-		OR HOLDCHECK.MERGER_INDENTIFY_MARK    = SUB.ORG_INDENTIFY_MARK)
-		AND SUB.SUBMIT_FEEDBACK_STATUS = '03')
-		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
-		<if test="keys !=null and keys.size()==1">
-			AND concat_ws('_',HOLDCHECK.REGIST_BANK_CODE,HOLDCHECK.IDENTIFY_NUMBER,IFNULL(HOLDCHECK.HOLDER_NAME,''),IFNULL(HOLDCHECK.PERSONAL_IDENTIFY_TYPE,''),IFNULL(HOLDCHECK.INSTITUTION_IDENTIFY_TYPE,''),IFNULL(HOLDCHECK.OTHER_IDENTIFY_NAME,''))  IN
-			<foreach collection="keys" item="key" open="(" separator=","  close=")">
-				#{key,jdbcType=VARCHAR}
-			</foreach>
-		</if>-->
 		<where>
 			STATUS !='D'
 			<if test="list !=null and list.size() >0">

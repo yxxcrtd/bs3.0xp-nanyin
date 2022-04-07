@@ -6,6 +6,8 @@ import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.svreport.chb.boksubject.validator.BokSubjectDtoValidator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
@@ -42,6 +44,7 @@ public class BokSubjectDto extends BaseEntity implements ProcessEntity {
      * 科目类型
      */
     private String subjectType;
+    private String subjectTypeStr;
 
     /**
      * 科目级别
@@ -51,13 +54,13 @@ public class BokSubjectDto extends BaseEntity implements ProcessEntity {
      * 数据来源
      */
     private String dataSource;
+    private String dataSourceStr;
 
     /**
      * 备注
      */
     private String remark;
 
-    private String updateDate;
 
     /**
      * 操作类型
@@ -75,8 +78,13 @@ public class BokSubjectDto extends BaseEntity implements ProcessEntity {
      * 要素id
      */
     private String elementId;
+    /**
+     * 状态
+     */
+    private String status;
+    private String statusStr;
 
-
+    private String updateTimeStr;
 
     private static final long serialVersionUID = 1L;
     @NotEmpty(fieldName = "BokSubject.subjectNo",groups = {ValidateGroupEdit.class})
@@ -139,14 +147,6 @@ public class BokSubjectDto extends BaseEntity implements ProcessEntity {
         this.remark = remark;
     }
 
-    public String getUpdateDate() {
-        return updateDate;
-    }
-
-    public void setUpdateDate(String updateDate) {
-        this.updateDate = updateDate;
-    }
-
     public String getOperateType() {
         return operateType;
     }
@@ -179,4 +179,45 @@ public class BokSubjectDto extends BaseEntity implements ProcessEntity {
         this.elementId = elementId;
     }
 
+    @Override
+    public String getStatus() {
+        return status;
+    }
+
+    @Override
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getUpdateTimeStr() {
+        return updateTimeStr;
+    }
+
+    public void setUpdateTimeStr(String updateTimeStr) {
+        this.updateTimeStr = updateTimeStr;
+    }
+
+    public String getSubjectTypeStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.科目类型,subjectType);
+    }
+
+    public void setSubjectTypeStr(String subjectTypeStr) {
+        this.subjectTypeStr = subjectTypeStr;
+    }
+
+    public String getDataSourceStr() {
+        return  dataSource.equals("D")?"新建导入":"接口";
+    }
+
+    public void setDataSourceStr(String dataSourceStr) {
+        this.dataSourceStr = dataSourceStr;
+    }
+
+    public String getStatusStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.维护数据状态,status);
+    }
+
+    public void setStatusStr(String statusStr) {
+        this.statusStr = statusStr;
+    }
 }
