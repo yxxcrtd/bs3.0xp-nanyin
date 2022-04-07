@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +77,7 @@ public class ChbExchangeQuotationInfo002Controller extends BaseController {
             model.addAttribute("entity", mstExchangeQuotationInfoDto);
         } else {
             mstExchangeQuotationInfoDto = new ChbExchangeQuotationInfoDto();
-            mstExchangeQuotationInfoDto.setQuotUnit(1L);
+            mstExchangeQuotationInfoDto.setQuotUnit(BigDecimal.ONE);
             model.addAttribute("entity", mstExchangeQuotationInfoDto);
         }
         return super.init(model);

@@ -9,9 +9,9 @@
 			<Cell order="5" name="中间价（元）">midPrice</Cell>
 			<Cell order="6" name="最高价（元）">highPrice</Cell>
 			<Cell order="7" name="最低价（元）">lowPrice</Cell>
-			<Cell order="7" name="数据状态">status</Cell>
-			<Cell order="7" name="更新时间">updateTime</Cell>
-			<Cell order="7" name="更新人">updateUser</Cell>
+			<Cell order="8" name="数据状态">status</Cell>
+			<Cell order="9" name="更新时间">updateTimeStr</Cell>
+			<Cell order="10" name="更新人">updateUser</Cell>
 		</Row>
 	</Worksheet>
 </Workbook>

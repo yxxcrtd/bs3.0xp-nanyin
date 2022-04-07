@@ -38,16 +38,7 @@ public interface ChbExchangeQuotationInfoMapper {
      * @since 1.0
      */
     List<ChbExchangeQuotationInfoDto> select(Map<String, Object> param);
-    
-    /**
-     * 查询新增数据主键是否重复
-     * @param param 产品list
-     * @return list
-     * @see
-     * @since 1.0
-     */
 
-    String getRegistExcelList( Map<String,Object> param );
 
     /**
      * 查询新增数据主键是否重复
@@ -55,7 +46,7 @@ public interface ChbExchangeQuotationInfoMapper {
      * @return list
      */
 
-    Integer getMstExchargeQuoteByKey(ChbExchangeQuotationInfoDto dto);
+    Integer getChbExchargeQuoteByKey(ChbExchangeQuotationInfoDto dto);
 
     /**
      *
@@ -78,9 +69,10 @@ public interface ChbExchangeQuotationInfoMapper {
     int updateExchargeQuoteInfo(@Param("listA")List<ChbExchangeQuotationInfoDto> listA);
 
     /**
-     * 更新数据类型
-     * @param param
+     * 更新状态
+     * @param dto
+     * @return
      */
-    int updateStatus(Map<String,Object> param );
+    int updateStatus(ChbExchangeQuotationInfoDto dto);
 
 }

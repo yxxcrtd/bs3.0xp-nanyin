@@ -10,7 +10,10 @@
  
 package com.joyintech.tams.svreport.chb.businessdatamaintain.exchangeinfo.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.validation.annotation.Length;
 import com.joyintech.framework.validation.annotation.NotEmpty;
@@ -33,12 +36,81 @@ import java.util.List;
  * @since 1.0
  */
 @PageId("ChbExchangeQuotationInfo002")
-public class ChbExchangeQuotationInfoDto extends MstExchargeQuote implements ProcessEntity {
+public class ChbExchangeQuotationInfoDto extends BaseEntity implements ProcessEntity {
     /**
      * <意义，目的和功能，以及可能被用到的地方>
      */
     private static final long serialVersionUID = 5143537191208289654L;
-    
+
+    /**
+     * 行情代码，一般为货币对
+     */
+    private String exchargeCode;
+
+
+    /**
+     * 交易日
+     */
+    private Date tradeDate;
+
+    /**
+     * 数据来源
+     */
+    private String datasourceType;
+
+    private String updateTimeStr;
+
+    /**
+     * 开盘价
+     */
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal openPrice;
+
+    /**
+     * 收盘价
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal closePrice;
+
+    /**
+     * 最高价
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal highPrice;
+
+    /**
+     * 最低价
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal lowPrice;
+
+    /**
+     * 中间价
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal midPrice;
+
+    /**
+     * 基础币种，比如USD/CNY中的USD
+     */
+    private String basisCyy;
+
+    /**
+     * 报价币种，比如USD/CNY中的CNY
+     */
+    private String quotCyy;
+
+    /**
+     * 报价单位
+     */
+    private BigDecimal quotUnit;
+
+    /**
+     * 录入方式，接口、手工等
+     */
+    private String inputType;
+
+
     /**
      * 选中的数据
      */
@@ -65,6 +137,73 @@ public class ChbExchangeQuotationInfoDto extends MstExchargeQuote implements Pro
      */
     private String errMsg;
 
+    public void setTradeDate(Date tradeDate) {
+        this.tradeDate = tradeDate;
+    }
+
+    public String getDatasourceType() {
+        return datasourceType;
+    }
+
+    public void setDatasourceType(String datasourceType) {
+        this.datasourceType = datasourceType;
+    }
+
+    public void setOpenPrice(BigDecimal openPrice) {
+        this.openPrice = openPrice;
+    }
+
+    public void setClosePrice(BigDecimal closePrice) {
+        this.closePrice = closePrice;
+    }
+
+    public void setHighPrice(BigDecimal highPrice) {
+        this.highPrice = highPrice;
+    }
+
+    public void setLowPrice(BigDecimal lowPrice) {
+        this.lowPrice = lowPrice;
+    }
+
+    public void setMidPrice(BigDecimal midPrice) {
+        this.midPrice = midPrice;
+    }
+
+    public String getBasisCyy() {
+        return basisCyy;
+    }
+
+    public void setBasisCyy(String basisCyy) {
+        this.basisCyy = basisCyy;
+    }
+
+    public String getQuotCyy() {
+        return quotCyy;
+    }
+
+    public void setQuotCyy(String quotCyy) {
+        this.quotCyy = quotCyy;
+    }
+
+    public void setQuotUnit(BigDecimal quotUnit) {
+        this.quotUnit = quotUnit;
+    }
+
+    public String getInputType() {
+        return inputType;
+    }
+
+    public String getUpdateTimeStr() {
+        return updateTimeStr;
+    }
+
+    public void setUpdateTimeStr(String updateTimeStr) {
+        this.updateTimeStr = updateTimeStr;
+    }
+
+    public void setInputType(String inputType) {
+        this.inputType = inputType;
+    }
     /**
      * 获取 selectedItem
      * @return selectedItem.
@@ -101,8 +240,10 @@ public class ChbExchangeQuotationInfoDto extends MstExchargeQuote implements Pro
         this.operateType = operateType;
     }
 
+    public void setExchargeCode(String exchargeCode) {
+        this.exchargeCode = exchargeCode;
+    }
 
-    
     /**
      * 获取 pageModel
      * @return pageModel.
@@ -151,12 +292,12 @@ public class ChbExchangeQuotationInfoDto extends MstExchargeQuote implements Pro
    
     
     
-    @Override
+
     @PrimaryKey(value=Field.PK_1)
     @Length(fieldName = "MstExchangeQuotationInfo001.exchargeCode", max = 50, groups = {ValidateGroupEdit.class})
     @NotEmpty(fieldName = "MstExchangeQuotationInfo001.exchargeCode", groups = {ValidateGroupEdit.class})
     public String getExchargeCode() {
-        return super.getExchargeCode();
+        return exchargeCode;
     }
     /**
      * 设置交易日为主键
@@ -168,55 +309,55 @@ public class ChbExchangeQuotationInfoDto extends MstExchargeQuote implements Pro
      */
     @PrimaryKey(value = Field.PK_2)
     public String getTradeDateStr() {
-        return DateUtil.format(super.getTradeDate());
+        return DateUtil.format(tradeDate);
     }
     
-    @Override
+
     @NotEmpty(fieldName = "MstExchangeQuotationInfo001.tradeDate", groups = {ValidateGroupEdit.class})
     public Date getTradeDate() {
-        return super.getTradeDate();
+        return tradeDate;
     }
 
   
-    @Override
+
     @Length(fieldName = "MstExchangeQuotationInfo002.openPrice", max = 20, groups = {ValidateGroupEdit.class})
     @NotEmpty(fieldName = "MstExchangeQuotationInfo002.openPrice", groups = {ValidateGroupEdit.class})
     public BigDecimal getOpenPrice() {
-        return super.getOpenPrice();
+        return openPrice;
     }
    
-    @Override
+
     @Length(fieldName = "MstExchangeQuotationInfo002.closePrice", max = 20, groups = {ValidateGroupEdit.class})
     @NotEmpty(fieldName = "MstExchangeQuotationInfo002.closePrice", groups = {ValidateGroupEdit.class})
     public BigDecimal getClosePrice() {
-        return super.getClosePrice();
+        return closePrice;
     }
     
-    @Override
+
     @Length(fieldName = "MstExchangeQuotationInfo002.midPrice", max = 20, groups = {ValidateGroupEdit.class})
     @NotEmpty(fieldName = "MstExchangeQuotationInfo002.midPrice", groups = {ValidateGroupEdit.class})
     public BigDecimal getMidPrice() {
-        return super.getMidPrice();
+        return midPrice;
     }
    
-    @Override
+
     @Length(fieldName = "MstExchangeQuotationInfo002.highPrice", max = 20, groups = {ValidateGroupEdit.class})
     @NotEmpty(fieldName = "MstExchangeQuotationInfo002.highPrice", groups = {ValidateGroupEdit.class})
     public BigDecimal getHighPrice() {
-        return super.getHighPrice();
+        return highPrice;
     }
     
-    @Override
+
     @Length(fieldName = "MstExchangeQuotationInfo002.lowPrice", max = 20, groups = {ValidateGroupEdit.class})
     @NotEmpty(fieldName = "MstExchangeQuotationInfo002.lowPrice", groups = {ValidateGroupEdit.class})
     public BigDecimal getLowPrice() {
-        return super.getLowPrice();
+        return lowPrice;
     }
     
-    @Override
+
     @Length(fieldName = "MstExchangeQuotationInfo002.quotUnit", max = 20, groups = {ValidateGroupEdit.class})
     @NotEmpty(fieldName = "MstExchangeQuotationInfo002.quotUnit", groups = {ValidateGroupEdit.class})
-    public Long getQuotUnit() {
-        return super.getQuotUnit();
+    public BigDecimal getQuotUnit() {
+        return quotUnit;
     }
 }

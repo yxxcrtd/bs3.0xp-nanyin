@@ -30,17 +30,17 @@ $(function() {
             	                    exchargeCode:data.exchargeCode,
             	                    tradeDate:tradeDate});
         },            
-        cols:[{field:'exchargeCode',width:120,  title: '货币对'}
+        cols:[{field:'exchargeCode',width:120,  title: '货币对',sortable:false}
             ,{field:'tradeDate',width:120,  title: '交易日期',type:'date'}
-            ,{field:'openPrice',width:100, title: '开盘价'}
-            ,{field:'closePrice',width:100, title: '收盘价'}
-            ,{field:'midPrice',width:100, title: '中间价'}
-            ,{field:'highPrice',width:100, title: '最高价'}
-            ,{field:'lowPrice',width:100, title: '最低价'}
-            ,{field:'status',width:80, title: '数据状态'}
-            ,{field:'errMsg',width:200, title: '错误信息'}
-            ,{field:'updateTime',width:100, title: '更新时间'}
-            ,{field:'updateUser',width:100, title: '更新人'}
+            ,{field:'openPrice',width:100, title: '开盘价',sortable:false}
+            ,{field:'closePrice',width:100, title: '收盘价',sortable:false}
+            ,{field:'midPrice',width:100, title: '中间价',sortable:false}
+            ,{field:'highPrice',width:100, title: '最高价',sortable:false}
+            ,{field:'lowPrice',width:100, title: '最低价',sortable:false}
+            ,{field:'status',width:80, title: '数据状态',sortable:false}
+            ,{field:'errMsg',width:200, title: '错误信息',sortable:false}
+            ,{field:'updateTimeStr',width:120, title: '更新时间',sortable:false}
+            ,{field:'updateUser',width:100, title: '更新人',sortable:false}
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
         ]
     });

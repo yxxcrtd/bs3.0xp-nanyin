@@ -18,7 +18,6 @@ import com.joyintech.tams.svreport.chb.businessdatamaintain.exchangeinfo.service
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,10 +34,9 @@ import java.util.List;
 /**
  * 汇率行情 
  * 
- * @author wangzhao
- * @version 1.0 2018年8月9日
+ * @author zhoubin
+ * @version 1.0 2022年03月30日
  * @see ChbExchangeQuotationInfo001Controller
- * @since 1.0
  */
 @Controller
 @PageId("ChbExchangeQuotationInfo001")
@@ -63,13 +61,8 @@ public class ChbExchangeQuotationInfo001Controller extends BaseController {
         return super.init(model);
     }
     /**
-     * 
      * 汇率行情查询
-     * <功能详细描述>
      * @return 返回查询结果
-     * @throws Exception 抛出异常
-     * @see
-     * @since 1.0
      */
     @ResponseBody
     @RequestMapping("findPage")
@@ -85,8 +78,6 @@ public class ChbExchangeQuotationInfo001Controller extends BaseController {
      * @param dto dto
      * @param result BindingResult
      * @return check结果
-     * @see
-     * @since 1.0
      */
     @ResponseBody
     @RequestMapping("check")
@@ -102,8 +93,6 @@ public class ChbExchangeQuotationInfo001Controller extends BaseController {
      * @param br 报错信息
      * @return 删除结果
      * @throws WorkFlowException 抛出异常
-     * @see
-     * @since 1.0
      */
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
@@ -112,15 +101,28 @@ public class ChbExchangeQuotationInfo001Controller extends BaseController {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
-        return new AjaxResult();
+        ProcessParameter<ChbExchangeQuotationInfoDto> processParameter = new ProcessParameter<>();
+        WorkFlowParameter<ChbExchangeQuotationInfoDto> params = new WorkFlowParameter<>();
+        params.setPageId("ChbExchangeQuotationInfo002");
+        params.setElementId(dto.getElementId());
+        params.setBusinessCode(item -> item.getExchargeCode());
+        params.setBusinessType(DictCodeList.共通业务类型_汇率行情信息.getValue());
+        // 设置流程业务说明, entity即传入的dto
+        params.setComment(
+                entity -> "货币对" + "("
+                        + SysDataUtil.getNameFromDataDict(DictCode.货币对,
+                        entity.getExchargeCode())
+                        + ")" + "-" + "生效日" + "(" + DateUtil.format(entity.getTradeDate()) + ")" + "收盘价" + "("
+                        + entity.getClosePrice() + ")");
+        processParameter.setWorkFlowParameter(params);
+        String msg = chbExchangeQuotationInfoService.start(processParameter,
+                dto.getSelectedItem().toArray(
+                        new ChbExchangeQuotationInfoDto[dto.getSelectedItem().size()]));
+        return new AjaxResult(msg);
     }
 
     /**
      * 导出信息excel
-     * 
-     * @return excel
-     * @see
-     * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export(){

@@ -10,9 +10,7 @@
 
 package com.joyintech.tams.svreport.chb.businessdatamaintain.exchangeinfo.service;
 
-import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
@@ -20,16 +18,13 @@ import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.common.base.dao.MstExchargeQuoteMapper;
-import com.joyintech.tams.common.base.entity.MstExchargeQuote;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.ExcelUtil;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.exchangeinfo.dao.ChbExchangeQuotationInfoMapper;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.exchangeinfo.dto.ChbExchangeQuotationInfoDto;
-import com.joyintech.tams.systemtools.util.CommonUtil;
+import com.joyintech.tams.svreport.chb.common.dto.TabColumnsDto;
+import com.joyintech.tams.svreport.chb.common.service.CheckExcelImportService;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.commons.collections4.CollectionUtils;
@@ -38,86 +33,65 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.*;
 
 /**
- * 汇率行情service 
- * 
- * @author wangzhao
- * @version 1.0 2018年8月8日
+ * 汇率行情
+ *
+ * @author zhoubin
+ * @version 1.0 2022年03月30日
  * @see ChbExchangeQuotationInfoService
  * @since 1.0
  */
 
 @Service
-public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExchangeQuotationInfoDto> implements BaseProcessService<ChbExchangeQuotationInfoDto>{
+public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExchangeQuotationInfoDto> implements BaseProcessService<ChbExchangeQuotationInfoDto> {
 
-    private static Logger logger = LoggerFactory.getLogger(ChbExchangeQuotationInfoService.class);
+    private  final Logger logger = LoggerFactory.getLogger(ChbExchangeQuotationInfoService.class);
 
-    public static String CONFIG_FILE = "/com/joyintech/tams/svreport/chb/businessdatamaintain/exchangeinfo/conf/export_conf.xml";
+    public static final String CONFIG_FILE = "/com/joyintech/tams/svreport/chb/businessdatamaintain/exchangeinfo/conf/export_conf.xml";
+    /**
+     * 表名
+     */
+    public static final String TABLE_NAME = "MST_EXCHARGE_QUOTE";
+
+
     @Resource
     private ChbExchangeQuotationInfoMapper chbExchangeQuotationInfoMapper;
     @Resource
-    private MstExchargeQuoteMapper mstExchargeQuoteMapper;
+    private CheckExcelImportService checkExcelImportService;
+
 
     /**
      * 当在做导入前的check就是判断业务数据是否需要覆盖的时候在webresult的data中塞入这个值可以不会弹框两次
      */
     private static final String NO_INFO_SHOW_OUT = "noInfoShowOut";
+
     /**
      * 汇率行情分页查询 <功能详细描述>
-     * 
+     *
      * @param param 查询参数
      * @return 返回查询结果
      * @see
      * @since 1.0
      */
-    public Page<ChbExchangeQuotationInfoDto> selectForPage(Map<String, Object> param){
-        return super.queryForPage(Integer.parseInt(param.get("page").toString()), Integer.parseInt(param.get("length").toString()),() -> chbExchangeQuotationInfoMapper.select(param));
+    public Page<ChbExchangeQuotationInfoDto> selectForPage(Map<String, Object> param) {
+        return super.queryForPage(Integer.parseInt(param.get("page").toString()), Integer.parseInt(param.get("length").toString()), () -> chbExchangeQuotationInfoMapper.select(param));
     }
 
     /**
-     * 查询所有数据验证删除是否存在 <功能详细描述>
-     * 
+     * 查询所有数据验证删除是否存在
+     *
      * @param pageParam 查询参数
      * @return 查询结果
-     * @see
-     * @since 1.0
      */
     public List<ChbExchangeQuotationInfoDto> selectAllList(Map<String, Object> pageParam) {
         return chbExchangeQuotationInfoMapper.select(pageParam);
     }
 
-
-
-    public AjaxResult save(ChbExchangeQuotationInfoDto dto){
-        dto.setStatus(DictCodeListExt2.数据状态_有效.getValue());
-        //把货币对分割得到基础币种和报价币种
-        String[] currency = dto.getExchargeCode().split("/");
-        //基础币种
-        dto.setBasisCyy(currency[0]);
-        //报价币种
-        dto.setQuotCyy(currency[1]);
-        List<ChbExchangeQuotationInfoDto> list = new ArrayList<>(1);
-        list.add(dto);
-        try {
-            Integer count = chbExchangeQuotationInfoMapper.getMstExchargeQuoteByKey(dto);
-            if (count<1) {
-                chbExchangeQuotationInfoMapper.insertExchargeQuoteInfo(list);
-            }else {
-                chbExchangeQuotationInfoMapper.updateExchargeQuoteInfo(list);
-            }
-        } catch (Exception e) {
-            logger.error("操作失败：{}",e.getMessage());
-            return new AjaxResult("操作失败");
-        }
-        return new AjaxResult("操作成功");
-    }
 
     /**
      * 导出
@@ -126,51 +100,84 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
     public void buildExportParam(ExportParam exportParam) {
         exportParam.config(CONFIG_FILE).dataSource(DataSourceType.MASERT);
     }
+
     @Override
     public Page<ChbExchangeQuotationInfoDto> selectPageData(Map<String, Object> selectParam) {
         return selectForPage(selectParam);
     }
+
     /**
      * 设置导出单元格
      */
     @Override
     public void setCellValue(String beanName, Cell cell, String propName, Object value) {
         if (StringUtil.equals(propName, "tradeDate")) {
-            cell.setCellValue(DateUtil.format((Date)value));
+            cell.setCellValue(DateUtil.format((Date) value));
         }
     }
-    
+
     /**
      * 导入数据文件之前检查数据
      *
      * @param fileName 导入的文件名
      * @return 处理结果
      */
-    public AjaxResult checkConfirmMsgForImportData(String fileName)  {
-        List<List<String>> dataList = ExcelUtil.getDataList1(fileName);
+    public AjaxResult checkConfirmMsgForImportData(String fileName) {
+
+        logger.info("===========导入校验===========");
         AjaxResult webResult = new AjaxResult();
-        List<ValidMessage> errorList = new ArrayList<>();
+        List<ValidMessage> errorList = new LinkedList<>();
+
+        List<List<String>> dataList = ExcelUtil.getDataList1(fileName);
         //判断excel表中货币对和交易日期、数据来源是否冲突
-        for (int i = 0; i < dataList.size(); i++ ) {
-            for (int j = i+1; j < dataList.size(); j++ ) {
-                if(StringUtils.equals(dataList.get(i).get(0), dataList.get(j).get(0)) &&
+        for (int i = 0; i < dataList.size(); i++) {
+            for (int j = i + 1; j < dataList.size(); j++) {
+                if (StringUtils.equals(dataList.get(i).get(0), dataList.get(j).get(0)) &&
                         StringUtils.equals(dataList.get(i).get(1), dataList.get(j).get(1)) &&
-                        StringUtils.equals(dataList.get(i).get(2), dataList.get(j).get(2))){
-                    ValidMessage validMessage = new ValidMessage("第"+(i+2)+"行货币对、交易日期、数据来源与"+"第"+(j+2)+"行货币对、交易日期、数据来源相同");
+                        StringUtils.equals(dataList.get(i).get(2), dataList.get(j).get(2))) {
+                    ValidMessage validMessage = new ValidMessage("第" + (i + 2) + "行货币对、交易日期、数据来源与" + "第" + (j + 2) + "行货币对、交易日期、数据来源相同");
                     errorList.add(validMessage);
                 }
             }
         }
-
-
-        if(errorList.size() == 0){
-            webResult.setData(NO_INFO_SHOW_OUT);
-        }else{
+        if (CollectionUtils.isNotEmpty(errorList)) {
             webResult.setErrorList(errorList);
+            return webResult;
         }
+
+        //基础校验数据库字段属性
+        Map<String, TabColumnsDto> map = checkExcelImportService.getTabColumns(TABLE_NAME);
+        for (int i = 0; i < dataList.size(); i++) {
+            List<String> list = dataList.get(i);
+            //校验货币对
+            this.checkTabColumns(map.get("EXCHARGE_CODE"), list.get(0), i, "货币对", errorList);
+            //校验交易日期
+            this.checkTabColumns(map.get("TRADE_DATE"), list.get(1), i, "交易日期", errorList);
+            //校验开盘价
+            this.checkTabColumns(map.get("OPEN_PRICE"), list.get(2), i, "开盘价", errorList);
+            //校验收盘价
+            this.checkTabColumns(map.get("CLOSE_PRICE"), list.get(3), i, "收盘价", errorList);
+            //校验中间价
+            this.checkTabColumns(map.get("MID_PRICE"), list.get(4), i, "中间价", errorList);
+            //校验最高价
+            this.checkTabColumns(map.get("HIGH_PRICE"), list.get(5), i, "最高价", errorList);
+            //校验最低价
+            this.checkTabColumns(map.get("LOW_PRICE"), list.get(6), i, "最低价", errorList);
+            //校验报价单位
+            this.checkTabColumns(map.get("QUOT_UNIT"), list.get(7), i, "报价单位", errorList);
+            //校验数据来源
+            this.checkTabColumns(map.get("DATASOURCE_TYPE"), list.get(8).split(":")[0], i, "数据来源", errorList);
+        }
+        if (CollectionUtils.isNotEmpty(errorList)) {
+            webResult.setErrorList(errorList);
+            return webResult;
+        }
+
+
+        webResult.setData(NO_INFO_SHOW_OUT);
+
         return webResult;
     }
-
 
 
     /**
@@ -181,231 +188,110 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
      */
     public List<ExcelValidDto> importData(String fileName) {
 
-
+        List<ExcelValidDto> checkResult = new LinkedList<>();
         List<List<String>> dataList = ExcelUtil.getDataList1(fileName);
-        List<List<String>> tempList = ExcelUtil.getTempList1(fileName);
-        String userName=CommonUtil.getUserName();
-        String deptCode=CommonUtil.getDeptCode();
-        if (!StringUtil.isEmptyList(dataList)) {
-            List<String> headList = new ArrayList<String>();
-            headList.add("货币对");
-            headList.add("交易日期");
-            headList.add("数据来源");
-            headList.add("开盘价");
-            headList.add("收盘价");
-            headList.add("最高价");
-            headList.add("最低价");
-            headList.add("中间价");
-            headList.add("报价单位");
-            List<ExcelValidDto> tempCheckResult = ExcelUtil.checkExcelTemp(tempList, headList);
-            if (!StringUtil.isEmptyList(tempCheckResult)) {
-                return tempCheckResult;
-            }
-            if (null != dataList) {
-                List<MstExchargeQuote> entities = new ArrayList<>(dataList.size());
-                List<ExcelValidDto> checkResult= convertToEntity(dataList, entities,userName,deptCode);
-                if(checkResult.isEmpty()) {
-                    for(MstExchargeQuote dto : entities){
-                        mstExchargeQuoteMapper.insert(dto);
-                    }
-                }
-                return checkResult;
-            }
-        }else{
-            List<ExcelValidDto> checkResult = new ArrayList<>();
-            ExcelValidDto excelValidDto = new ExcelValidDto();
-            String errorMsg = "模板为空，请输入数据！";
-            excelValidDto.setErrorInfo(errorMsg);
-            checkResult.add(excelValidDto);
-            return checkResult;
-        }
-        return null;
+        List<ChbExchangeQuotationInfoDto> list = this.checkDataConvertToBean(dataList,checkResult);
+        List<ExcelValidDto> excelValidList = checkExcelImportService.getExcelValidList(checkResult);
+        this.dealAfterCheck(list);
+        return excelValidList;
     }
 
     /**
-     * excel数据转为java对象
-     * <p> 将excel导入的数据，按行转为ProRegistCodeManage001Dto  FinProductValuation对象，同时验证各字段值</p>
+     * 增强check list转换为Bean
      *
-     * @param dataList excel导入的数据
-     * @param entities 转化后的列表
-     * @return 验证信息
+     * @param dataList 导入数据
+     * @return 返回检查结果
      */
-    private List<ExcelValidDto> convertToEntity(List<List<String>> dataList,List<MstExchargeQuote> entities,String userName,String deptCode) {
+    private List<ChbExchangeQuotationInfoDto> checkDataConvertToBean(List<List<String>> dataList,List<ExcelValidDto> checkResultAll) {
 
-        List<ExcelValidDto> checkResult = new ArrayList<>();
-        //数据来源枚举值：BAK:行内、CALYPSO：calypso、CBC:中债登、CFETS:外汇交易中心、CSD:中证登、EXP：专家法、PBOC:央行、SAFE：外管局、SCH：上清所。
-        String[] dataSourceStr = {"行内","calypso","中债登","外汇交易中心","中证登","专家法","央行","外管局","上清所"};
-        List dataSourceList = Arrays.asList(dataSourceStr);
-        Date sysDate = DateUtil.platDateFromCache();// 获取平台日期
-        Date nowDate = new Date();
-        for (int i = 0; i < dataList.size(); i++ ) {
-            //是否正常标志
-            boolean flag = true;
-            //数据来源
-            String dataSource = "";
+
+        List<ChbExchangeQuotationInfoDto> returnList = new LinkedList<>();
+        ChbExchangeQuotationInfoDto dto;
+        for (int i = 0; i < dataList.size(); i++) {
             List<String> list = dataList.get(i);
-
-            Map<String,Object> param = new HashMap<String,Object>();
-            // 验证消息
-            List<String> message = new ArrayList<>();
-
-            //货币对
-            if(list.get(0) == null || list.get(0).trim().equals("")){
-                flag = false;
-                message.add("货币对不能为空");
+            List<ExcelValidDto> checkResult = new LinkedList<>();
+            //校验数据是否为必填
+            if (StringUtil.isEmpty(list.get(0))) {
+                checkResult.add(new ExcelValidDto("货币对", String.valueOf(i + 2), "货币对为空"));
             }
-            //交易日期
-            if(list.get(1) == null || list.get(1).trim().equals("")){
-                flag = false;
-                message.add("交易日期不能为空");
-            }else{
-                if (!checkDate(list.get(1))) {
-                    flag = false;
-                    message.add("交易日期格式不正确");
-                }
+            if (StringUtil.isEmpty(list.get(1))) {
+                checkResult.add(new ExcelValidDto("交易日期", String.valueOf(i + 2), "交易日期为空"));
             }
-            //数据来源
-            if(list.get(2) == null || list.get(2).trim().equals("")){
-                flag = false;
-                message.add("数据来源不能为空");
-            }else{
-                if(!dataSourceList.contains(list.get(2))){
-                    flag = false;
-                    message.add("数据来源不在枚举值之中");
-                }else{
-                    if(list.get(2).equals("行内")){
-                        dataSource = "BAK";
-                    }else if(list.get(2).equals("calypso")){
-                        dataSource = "CALYPSO";
-                    }else if(list.get(2).equals("中债登")){
-                        dataSource = "CBC";
-                    }else if(list.get(2).equals("外汇交易中心")){
-                        dataSource = "CFETS";
-                    }else if(list.get(2).equals("中证登")){
-                        dataSource = "CSD";
-                    }else if(list.get(2).equals("专家法")){
-                        dataSource = "EXP";
-                    }else if(list.get(2).equals("央行")){
-                        dataSource = "PBOC";
-                    }else if(list.get(2).equals("外管局")){
-                        dataSource = "SAFE";
-                    }else if(list.get(2).equals("上清所")){
-                        dataSource = "SCH";
-                    }
-                }
+            if (StringUtil.isEmpty(list.get(2))) {
+                checkResult.add(new ExcelValidDto("开盘价", String.valueOf(i + 2), "开盘价为空"));
             }
-            //开盘价
-            if(list.get(3) == null || list.get(3).trim().equals("")){
-                flag = false;
-                message.add("开盘价不能为空");
-            }else{
-                if(!checkFigure(list.get(3))){
-                    flag = false;
-                    message.add("开盘价不是数字");
-                }
+            if (StringUtil.isEmpty(list.get(3))) {
+                checkResult.add(new ExcelValidDto("收盘价", String.valueOf(i + 2), "收盘价为空"));
             }
-            //收盘价
-            if(list.get(4) == null || list.get(4).trim().equals("")){
-                flag = false;
-                message.add("收盘价不能为空");
-            }else{
-                if(!checkFigure(list.get(4))){
-                    flag = false;
-                    message.add("收盘价不是数字");
-                }
+            if (StringUtil.isEmpty(list.get(4))) {
+                checkResult.add(new ExcelValidDto("中间价", String.valueOf(i + 2), "中间价为空"));
             }
-            //最高价
-            if(list.get(5) == null || list.get(5).trim().equals("")){
-                flag = false;
-                message.add("最高价不能为空");
-            }else{
-                if(!checkFigure(list.get(5))){
-                    flag = false;
-                    message.add("最高价不是数字");
-                }
+            if (StringUtil.isEmpty(list.get(5))) {
+                checkResult.add(new ExcelValidDto("最高价", String.valueOf(i + 2), "最高价为空"));
             }
-            //最低价
-            if(list.get(6) == null || list.get(6).trim().equals("")){
-                flag = false;
-                message.add("最低价不能为空");
-            }else{
-                if(!checkFigure(list.get(6))){
-                    flag = false;
-                    message.add("最低价不是数字");
-                }
+            if (StringUtil.isEmpty(list.get(6))) {
+                checkResult.add(new ExcelValidDto("最低价", String.valueOf(i + 2), "最低价为空"));
             }
-            //中间价
-            if(list.get(7) == null || list.get(7).trim().equals("")){
-                flag = false;
-                message.add("中间价不能为空");
-            }else{
-                if(!checkFigure(list.get(7))){
-                    flag = false;
-                    message.add("中间价不是数字");
-                }
+            if (StringUtil.isEmpty(list.get(7))) {
+                checkResult.add(new ExcelValidDto("报价单位", String.valueOf(i + 2), "报价单位为空"));
             }
-            //报价单位
-            if(list.get(8) == null || list.get(8).trim().equals("")){
-                flag = false;
-                message.add("报价单位不能为空");
-            }else{
-                if(!checkLongFigure(list.get(8))){
-                    flag = false;
-                    message.add("报价单位不是长整型数字");
-                }
+            if (StringUtil.isEmpty(list.get(8))) {
+                checkResult.add(new ExcelValidDto("数据来源", String.valueOf(i + 2), "数据来源为空"));
             }
-            //主键校验
-            if(flag){
-                param.put("finprodId",list.get(0));
-                param.put("tradeDate", DateUtil.parse(list.get(1)));
-                param.put("dataSource", dataSource);
-                String  result = chbExchangeQuotationInfoMapper.getRegistExcelList(param);
-                if(StringUtils.isNotEmpty(result)){
-                    flag = false;
-                    message.add("存在和货币对、交易日、数据来源相同的数据");
-                }
+            //list转换为Bean
+            dto = new ChbExchangeQuotationInfoDto();
+            dto.setExchargeCode(list.get(0));
+            dto.setTradeDate(DateUtil.parse(list.get(1)));
+            dto.setDatasourceType(list.get(8).split(":")[0]);
+            dto.setOpenPrice(StringUtil.isEmpty(list.get(2))==true?null:new BigDecimal(list.get(2)));
+            dto.setClosePrice(StringUtil.isEmpty(list.get(3))==true?null:new BigDecimal(list.get(3)));
+            dto.setMidPrice(StringUtil.isEmpty(list.get(4))==true?null:new BigDecimal(list.get(4)));
+            dto.setHighPrice(StringUtil.isEmpty(list.get(5))==true?null:new BigDecimal(list.get(5)));
+            dto.setLowPrice(StringUtil.isEmpty(list.get(6))==true?null:new BigDecimal(list.get(6)));
+            dto.setQuotUnit(new BigDecimal(list.get(7)));
+            dto.setBasisCyy(list.get(0).split("/")[0]);
+            dto.setQuotCyy(list.get(0).split("/")[1]);
+            if (CollectionUtils.isEmpty(checkResult)) {
+                dto.setStatus(DictCodeListExt2.数据状态_有效.getValue());
+            } else {
+                dto.setStatus(DictCodeListExt2.数据状态_待处理.getValue());
+                dto.setErrMsg(checkExcelImportService.getCheckErrMsg(checkResult));
+                checkResultAll.addAll(checkResult);
             }
 
-            if(flag){
-                MstExchargeQuote entity = new MstExchargeQuote();
-                //货币对
-                entity.setExchargeCode(list.get(0));
-                //交易日期
-                entity.setTradeDate(DateUtil.parse(list.get(1)));
-                //数据来源
-                entity.setDatasourceType(dataSource);
-                //开盘价
-                entity.setOpenPrice(new BigDecimal(list.get(3)));
-                //收盘价
-                entity.setClosePrice(new BigDecimal(list.get(4)));
-                //最高价
-                entity.setHighPrice(new BigDecimal(list.get(5)));
-                //最低价
-                entity.setLowPrice(new BigDecimal(list.get(6)));
-                //中间价
-                entity.setMidPrice(new BigDecimal(list.get(7)));
-                //报价单位
-                entity.setQuotCyy("USD");
-                //基础币种
-                entity.setBasisCyy("CNY");
-                //报价币种
-                entity.setQuotUnit(Long.parseLong(list.get(8)));
-                entity.setInputType(DictCodeListExt1.录入方式_系统导入.getValue());
-                entity.setCreateUser(userName);
-                entity.setCreateDept(deptCode);
-                entity.setCreateTime(nowDate);
-                entity.setUpdateUser(userName);
-                entity.setUpdateTime(nowDate);
-                entities.add(entity);
-            }
-
-            if (CollectionUtils.isNotEmpty(message)) {
-                checkResult.add(new ExcelValidDto(list.get(0), String.valueOf(i+2),
-                        StringUtil.joinString(message, GlobalConstant.SEMICOLON)));
-            }
+            returnList.add(dto);
         }
-        return checkResult;
+        return returnList;
     }
+
+    /**
+     * check后的保存 <功能详细描述>
+     *
+     * @param list 需要保存的数据
+     */
+    public void dealAfterCheck(List<ChbExchangeQuotationInfoDto> list) {
+        List<ChbExchangeQuotationInfoDto> listN = new LinkedList<>();
+        List<ChbExchangeQuotationInfoDto> listA = new LinkedList<>();
+        for (ChbExchangeQuotationInfoDto dto : list) {
+            Integer count = chbExchangeQuotationInfoMapper.getChbExchargeQuoteByKey(dto);
+            if (count < 1) {
+                listN.add(dto);
+            } else {
+                listA.add(dto);
+            }
+
+        }
+        //新增
+        if (CollectionUtils.isNotEmpty(listN)) {
+            chbExchangeQuotationInfoMapper.insertExchargeQuoteInfo(listN);
+        }
+        //更新
+        if (CollectionUtils.isNotEmpty(listA)) {
+            chbExchangeQuotationInfoMapper.updateExchargeQuoteInfo(listA);
+        }
+    }
+
+
 
     /**
      * 日期格式校验
@@ -415,10 +301,10 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
      */
     private boolean checkDate(String date) {
         boolean flag = true;
-        if(!DateUtil.isDateStr(date, DateUtil.DEFAULT_OTHER_FORMAT,
-                DateUtil.DEFAULT_ANOTHER_FORMAT,DateUtil.DEFAULT_DATE_FORMAT_EN)){
+        if (!DateUtil.isDateStr(date, DateUtil.DEFAULT_OTHER_FORMAT,
+                DateUtil.DEFAULT_ANOTHER_FORMAT, DateUtil.DEFAULT_DATE_FORMAT_EN)) {
             flag = false;
-        }else{
+        } else {
             date = date.replace("-", "").replace("/", "");
             //年
             int year = Integer.valueOf(date.substring(0, 4));
@@ -426,24 +312,24 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
             int month = Integer.valueOf(date.substring(4, 6));
             //日
             int day = Integer.valueOf(date.substring(6));
-            if(month < 1 || month > 12){
+            if (month < 1 || month > 12) {
                 flag = false;
-            }else{
-                if(month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12){
-                    if(day < 1 || day > 31){
+            } else {
+                if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) {
+                    if (day < 1 || day > 31) {
                         flag = false;
                     }
-                }else if(month == 4 || month == 6 || month == 9 || month == 11){
-                    if(day < 1 || day > 30){
+                } else if (month == 4 || month == 6 || month == 9 || month == 11) {
+                    if (day < 1 || day > 30) {
                         flag = false;
                     }
-                }else if(month == 2){
-                    if((year % 4 == 0 && year % 100 != 0) ||year % 400 == 0){
-                        if(day < 1 || day > 29){
+                } else if (month == 2) {
+                    if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) {
+                        if (day < 1 || day > 29) {
                             flag = false;
                         }
-                    }else{
-                        if(day < 1 || day > 28){
+                    } else {
+                        if (day < 1 || day > 28) {
                             flag = false;
                         }
                     }
@@ -460,37 +346,55 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
      * @return 返回boolean
      */
     private boolean checkFigure(String figure) {
-        try{
+        try {
             new BigDecimal(figure);
             return true;
-        }catch(Exception e){
+        } catch (Exception e) {
             return false;
         }
     }
 
+
+
+
     /**
-     * 判断是否为长整型数字
-     *
-     * @param
-     * @return 返回boolean
+     * 校验列
      */
-    private boolean checkLongFigure(String longFigure) {
-        try{
-            Long.parseLong(longFigure);
-            return true;
-        }catch(Exception e){
-            return false;
+    private void checkTabColumns(TabColumnsDto dto, String value, int i, String columns, List<ValidMessage> errorList) {
+        //如果字段允许为空，值为空直接返回
+        if (Objects.equals("Y", dto.getNullAble()) && StringUtil.isBlank(value)) {
+            return;
+        }
+        if (StringUtil.isBlank(value)) {
+            errorList.add(new ValidMessage("第" + (i + 2) + "行" + columns + "字段在数据库中不能为空"));
+        }
+        //校验字段长度
+        if (dto.getLength() != 0 && dto.getLength() < value.length()) {
+            errorList.add(new ValidMessage("第" + (i + 2) + "行" + columns + "字段长度不能超过" + dto.getLength()));
+        }
+        //日期类型校验
+        if (Objects.equals("DATE", dto.getDataType())) {
+            if (!this.checkDate(value)) {
+                errorList.add(new ValidMessage("第" + (i + 2) + "行" + columns + "不是日期格式"));
+            }
+        }
+        //数字类型校验
+        if (Objects.equals("NUMBER", dto.getDataType())) {
+            if (!this.checkFigure(value)) {
+                errorList.add(new ValidMessage("第" + (i + 2) + "行" + columns + "不是数字格式"));
+            }
         }
     }
 
     @Override
     public void doComplete(ChbExchangeQuotationInfoDto dto, OperationType operationType) {
         dto.setOperateType(operationType.toString());
+        List<ChbExchangeQuotationInfoDto> list = new ArrayList<>(1);
+        dto.setStatus(DictCodeListExt2.数据状态_有效.getValue());
         if (StringUtil.equals(dto.getOperateType(), "DELETE")) {
-            mstExchargeQuoteMapper.deleteByPrimaryKey(dto);
-        }
-        else if (StringUtil.equals(dto.getOperateType(), "NEW")) {
-            List<ChbExchangeQuotationInfoDto> list = new ArrayList<>(1);
+            dto.setStatus(DictCodeListExt2.数据状态_删除.getValue());
+            chbExchangeQuotationInfoMapper.updateStatus(dto);
+        } else if (StringUtil.equals(dto.getOperateType(), "NEW")) {
             //设置基本币种，单位币种等
             String exchargeCode = dto.getExchargeCode();
             if (exchargeCode != null) {
@@ -498,12 +402,18 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
                 dto.setBasisCyy(splitToList.get(0));
                 dto.setQuotCyy(splitToList.get(1));
             }
-            dto.setStatus(DictCodeListExt2.数据状态_有效.getValue());
             list.add(dto);
-            chbExchangeQuotationInfoMapper.insertExchargeQuoteInfo(list);
-        }
-        else {
-            mstExchargeQuoteMapper.updateByPrimaryKeySelective(dto);
+            //判断是否有重复数据
+            Integer count = chbExchangeQuotationInfoMapper.getChbExchargeQuoteByKey(dto);
+            if (count < 1) {
+                chbExchangeQuotationInfoMapper.insertExchargeQuoteInfo(list);
+            } else {
+                chbExchangeQuotationInfoMapper.updateExchargeQuoteInfo(list);
+            }
+
+        } else {
+            list.add(dto);
+            chbExchangeQuotationInfoMapper.updateExchargeQuoteInfo(list);
         }
     }
 }

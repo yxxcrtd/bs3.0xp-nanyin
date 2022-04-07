@@ -15,7 +15,7 @@
             <form class="layui-form joyin-form-wrap pro-module-form" id="submitForm">
                 <div class="layui-form-item">
                     <div >
-                        <label class="layui-form-label form-lable mst-lable">币种对</label>
+                        <label class="layui-form-label form-lable mst-lable">货币对</label>
                         <div class="layui-input-inline input-inline">
                             <select type="text" id="exchargeCode" name="exchargeCode"
                                     class="layui-input form-input input-select"
@@ -58,7 +58,7 @@
                             <input id="openPrice" name="openPrice" type="text"
                                    class="layui-input form-input text-number" placeholder="请输入内容"
                                    maxlength="30" data-th-value="${entity?.openPrice}" required="required"
-                                   data-fixtype="2" data-textrange='14' data-th-placeholder="#{SysCommon.placeholder}">
+                                   data-fixtype="2" data-textrange='4' data-th-placeholder="#{SysCommon.placeholder}">
                         </div>
                     </div>
                 </div>
@@ -69,7 +69,7 @@
                             <input id="closePrice" name="closePrice" type="text"
                                    class="layui-input form-input text-number" placeholder="请输入内容"
                                    maxlength="30" data-th-value="${entity?.closePrice}" required="required"
-                                   data-fixtype="2" data-textrange='14' data-th-placeholder="#{SysCommon.placeholder}">
+                                   data-fixtype="2" data-textrange='4' data-th-placeholder="#{SysCommon.placeholder}">
                         </div>
                     </div>
                 </div>
@@ -80,7 +80,7 @@
                             <input id="highPrice" name="highPrice" type="text"
                                    class="layui-input form-input text-number" placeholder="请输入内容"
                                    data-th-value="${entity?.highPrice}" required="required" maxlength="30"
-                                   data-fixtype="2" data-textrange='14' data-th-placeholder="#{SysCommon.placeholder}">
+                                   data-fixtype="2" data-textrange='4' data-th-placeholder="#{SysCommon.placeholder}">
                         </div>
                     </div>
                 </div>
@@ -90,7 +90,7 @@
                         <div class="layui-input-inline input-inline">
                             <input id="lowPrice" name="lowPrice" maxlength="30" type="text"
                                    class="layui-input form-input text-number" placeholder="请输入内容"
-                                   data-th-value="${entity?.lowPrice}" required="required" data-fixtype="2" data-textrange='14'
+                                   data-th-value="${entity?.lowPrice}" required="required" data-fixtype="2" data-textrange='4'
                                    data-th-placeholder="#{SysCommon.placeholder}">
                         </div>
                     </div>
@@ -101,7 +101,7 @@
                         <div class="layui-input-inline input-inline">
                             <input id="midPrice" name="midPrice" maxlength="30" type="text"
                                    class="layui-input form-input text-number" placeholder="请输入内容"
-                                   data-th-value="${entity?.midPrice}" required="required" data-fixtype="2" data-textrange='14'
+                                   data-th-value="${entity?.midPrice}" required="required" data-fixtype="2" data-textrange='4'
                                    data-th-placeholder="#{SysCommon.placeholder}">
                         </div>
                     </div>

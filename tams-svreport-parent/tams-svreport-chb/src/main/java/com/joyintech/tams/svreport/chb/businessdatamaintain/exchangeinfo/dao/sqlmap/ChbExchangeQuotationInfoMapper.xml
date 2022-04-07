@@ -13,14 +13,17 @@
 		LOW_PRICE as lowPrice,
 		BASIS_CYY as basisCyy,
 		QUOT_UNIT as quotUnit,
-        STATUS as status,
+        CASE WHEN STATUS ='A' THEN '待处理'
+        ELSE '有效'
+        END
+        as status,
 		ERR_MSG as errMsg,
 		INPUT_TYPE as  inputType,
 		CREATE_USER as createUser,
 		CREATE_DEPT as createDept,
 		CREATE_TIME as createTime,
 		UPDATE_USER as updateUser,
-		UPDATE_TIME as updateTime
+        TO_CHAR(UPDATE_TIME,'yyyy-MM-dd HH:mm:ss') updateTimeStr
     </sql>
     <!-- 汇率行情查询 -->
     <select id="select"
@@ -29,8 +32,9 @@
         <include refid="BASE_COLUMNS"></include>
         from MST_EXCHARGE_QUOTE
         <where>
+            STATUS != 'D'
             <if test="exchargeCode != null and exchargeCode != ''">
-                EXCHARGE_CODE like concat(concat('%', #{exchargeCode,jdbcType=VARCHAR}),'%')
+                AND EXCHARGE_CODE like concat(concat('%', #{exchargeCode,jdbcType=VARCHAR}),'%')
             </if>
             <if test="tradeDateBegin != null and tradeDateBegin != ''">
                 <![CDATA[ and to_char(TRADE_DATE,'yyyy-MM-dd') >= #{tradeDateBegin} ]]>
@@ -44,34 +48,24 @@
             <if test="datasourceType != null and datasourceType != ''">
                 and DATASOURCE_TYPE = #{datasourceType}
             </if>
-            <if test='status=="A"'>
+            <if test="status != null and status != ''">
                 and STATUS = #{status}
-            </if>
-            <if test='status=="E"'>
-                and (STATUS = #{status} or STATUS is null)
             </if>
         </where>
         order by exchargeCode,tradeDate
     </select>
 
-    <select id="getRegistExcelList" resultType="java.lang.String">
-        select A.EXCHARGE_CODE finprodId
-        from MST_EXCHARGE_QUOTE A
-        where A.EXCHARGE_CODE = #{finprodId,jdbcType=VARCHAR}
-          AND A.TRADE_DATE = #{tradeDate}
-          AND A.DATASOURCE_TYPE = #{dataSource}
-    </select>
 
     <update id="updateStatus">
         update MST_EXCHARGE_QUOTE
         set STATUS=#{status}
-        where EXCHARGE_CODE = #{finprodId}
+        where EXCHARGE_CODE = #{exchargeCode}
           AND TRADE_DATE = #{tradeDate}
-          AND DATASOURCE_TYPE = #{dataSource}
+          AND DATASOURCE_TYPE = #{datasourceType}
     </update>
 
     <!-- 通过主键验证数据库中是否有值 -->
-    <select id="getMstExchargeQuoteByKey" resultType="int">
+    <select id="getChbExchargeQuoteByKey" resultType="int">
         select count(1)
         from MST_EXCHARGE_QUOTE
         where EXCHARGE_CODE = #{exchargeCode,jdbcType=VARCHAR}
@@ -99,7 +93,7 @@
             #{item.highPrice,jdbcType=DECIMAL} HIGH_PRICE,
             #{item.lowPrice,jdbcType=DECIMAL} LOW_PRICE,
             #{item.midPrice,jdbcType=DECIMAL} MID_PRICE,
-            #{item.quotUnit,jdbcType=VARCHAR} QUOT_UNIT,
+            #{item.quotUnit,jdbcType=DECIMAL} QUOT_UNIT,
             #{item.basisCyy,jdbcType=VARCHAR} BASIS_CYY,
             #{item.quotCyy,jdbcType=VARCHAR} QUOT_CYY,
             #{item.status,jdbcType=VARCHAR} STATUS,
@@ -179,18 +173,16 @@
                         when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
                         and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
                         and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR} then
-                        #{item.quotUnit,jdbcType=VARCHAR}
+                        #{item.quotUnit,jdbcType=DECIMAL}
                     </if>
                 </foreach>
             </trim>
             <trim prefix="ERR_MSG=case" suffix="end,">
                 <foreach collection="listA" item="item" index="index">
-                    <if test="item.isHoliday!=null">
-                        when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
-                        and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
-                        and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR} then
-                        #{item.errMsg,jdbcType=CLOB}
-                    </if>
+                    when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
+                    and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
+                    and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR} then
+                    #{item.errMsg,jdbcType=CLOB}
                 </foreach>
             </trim>
             <trim prefix="status=case" suffix="end,">
@@ -216,7 +208,7 @@
             <trim prefix="UPDATE_TIME=case" suffix="end,">
                 <foreach collection="listA" item="item" index="index">
                     <if test="item.updateTime!=null">
-                        whenEXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
+                        when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
                         and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
                         and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR} then
                         #{item.updateTime,jdbcType=DATE}
