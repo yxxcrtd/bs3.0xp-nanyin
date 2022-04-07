@@ -1,4 +1,8 @@
 (function() {
+
+    if($('#subjectNo').val()!=''){
+        $("#subjectNo").attr("disabled","disabled");
+    }
     function saveOrSubmit(operateType) {
         var object = $.serializeToObject('#submitForm');
         object.operateType = operateType;

@@ -33,13 +33,13 @@
                         <label class="layui-form-label form-lable"
                                data-th-text="#{BokSubject.fsubjectId}">上级科目号</label>
                         <div class="layui-input-inline input-inline">
-                            <input type="text" id="fsubjectId" name="fsubjectId"
-                                   class="layui-input form-input input-lenovoselect" placeholder="请输入内容"
-                                   data-th-placeholder="#{SysCommon.placeholder}"
-                                   data-th-data-url="@{/chb/boksubject/boksubject001/getFSubjectId}"
-                                   data-linkedids="subjectName" data-idfield="code" data-keyfield="code"
-                                   data-th-value="${entity?.fsubjectId}"
-                                   data-th-data-effectivefieldsalias='|{"code":"#{BokSubject.fsubjectId}","shortName":"#{BokSubject.subjectName}"}|' required>
+                            <select type="text" id="fsubjectId" name="fsubjectId"
+                                    class="layui-input form-input input-select"
+                                    parentIds = "subjectLevel" formatoption = "false"
+                                    data-th-data-url='@{/chb/boksubject/boksubject001/getSubjectId2}'
+                                    data-th-initValue="${entity?.fsubjectId}"
+                                    placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}">
+                            </select>
                         </div>
                     </div>
 

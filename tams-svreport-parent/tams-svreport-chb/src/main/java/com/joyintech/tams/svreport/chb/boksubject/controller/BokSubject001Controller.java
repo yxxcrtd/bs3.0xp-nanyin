@@ -56,21 +56,6 @@ public class BokSubject001Controller extends BaseController {
         return super.init(model);
     }
 
-    /**
-     * 检索上级科目代码
-     *
-     * @return 账套上级科目代码联想框内容
-     * @throws Exception
-     * @see
-     * @since 1.0
-     */
-    @ResponseBody
-    @RequestMapping("/getFSubjectId")
-    public List<SuggestDto> getFSubjectId(String param)
-    {
-        return bokSubjectService.getFSubjectId(param);
-    }
-
 
 
     /**

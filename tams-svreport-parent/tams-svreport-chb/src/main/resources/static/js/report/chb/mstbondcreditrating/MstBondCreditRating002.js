@@ -1,4 +1,11 @@
 (function() {
+    if($('#oCode').val()!=''){
+        $("#oCode").attr("disabled","disabled");
+        $("#oName").attr("disabled","disabled");
+        $("#oObject").attr("disabled","disabled");
+        $("#source").attr("disabled","disabled");
+        $("#gradeDate").attr("disabled","disabled");
+    }
     function saveOrSubmit(operateType) {
         var object = $.serializeToObject('#submitForm');
         object.operateType = operateType;
@@ -10,7 +17,7 @@
             });
         });
     };
-    // $('#gradeDate').attr("disabled","disabled")
+
     /**
      * 画面加载完成
      */

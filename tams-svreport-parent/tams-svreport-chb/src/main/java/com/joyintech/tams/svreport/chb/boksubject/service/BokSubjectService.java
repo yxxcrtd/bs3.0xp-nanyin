@@ -42,17 +42,6 @@ import java.util.function.Supplier;
 public class BokSubjectService extends CommonExportService<BokSubjectDto> implements BaseProcessService<BokSubjectDto> {
     @Autowired
     private BokSubjectDao bokSubjectDao;
-    /**
-     * 检索上级科目代码列表
-     *
-     * @param param 过滤参数
-     * @return 上级科目代码列表
-     * @see
-     * @since 1.0
-     */
-    public List<SuggestDto> getFSubjectId(String param) {
-        return queryForSuggest(bokSubjectDao::getFSubjectId, null, param);
-    }
 
 
 
