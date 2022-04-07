@@ -49,6 +49,8 @@ public class ChbCalendarInfo001Dto extends MstHoliday implements ProcessEntity {
 
     private String isHolidayStr;
 
+    private String updateTimeStr;
+
     /**
      * 错误信息
      */
@@ -70,6 +72,13 @@ public class ChbCalendarInfo001Dto extends MstHoliday implements ProcessEntity {
         this.dataSource = dataSource;
     }
 
+    public String getUpdateTimeStr() {
+        return updateTimeStr;
+    }
+
+    public void setUpdateTimeStr(String updateTimeStr) {
+        this.updateTimeStr = updateTimeStr;
+    }
 
     /**
      * 获取 yorn

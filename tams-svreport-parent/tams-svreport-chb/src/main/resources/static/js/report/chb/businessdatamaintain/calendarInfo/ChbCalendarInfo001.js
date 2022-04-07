@@ -34,7 +34,7 @@
         }, {
             title: '错误信息',field: 'errMsg',width:130,sortable:false
         },{
-            title: '更新时间',field: 'updateTime', type: 'date'
+            title: '更新时间',field: 'updateTimeStr'
         }, {
             title: '更新人',field: 'updateUser',sortable:false
         }, {
@@ -71,13 +71,15 @@
         $('#ChbCalendarInfo001_btn_import').click(function () {
             Joyin.confirm("请确认是否要导入数据?", function () {
                 Joyin.uploadFile(function (fileName) {
-                    Joyin.ajax(basePath + "chb/businessdatamaintain/calendarInfo/ChbCalendarInfo001/importFile", {
+                    Joyin.ajax(basePath + 'chb/businessdatamaintain/calendarInfo/ChbCalendarInfo001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
+                         Joyin.ajax(basePath + "chb/businessdatamaintain/calendarInfo/ChbCalendarInfo001/importFile", {
                         fileName: fileName
                     }, function (result) {
                         if (!result || !($.isArray(result) && result.length > 0)) {
                             layui.layer.closeAll()
                             table.reload();
                         }
+                    });
                     });
                 });
             });

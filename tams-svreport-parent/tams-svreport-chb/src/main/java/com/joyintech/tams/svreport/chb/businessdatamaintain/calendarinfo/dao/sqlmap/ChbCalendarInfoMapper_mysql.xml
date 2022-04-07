@@ -11,7 +11,7 @@
 		when T1.IS_HOLIDAY=1 then '是' else ''
 		end as isHolidayStr,
 		T1.IS_HOLIDAY yorn ,
-		TO_CHAR(T1.UPDATE_TIME,'yyyy-MM-dd HH:mm:ss') updateTime,
+		DATE_FORMAT(T1.UPDATE_TIME,'%Y-%m-%d %H:%i:%s') updateTimeStr,
 		T1.UPDATE_USER updateUser,
 		T2.CALENDAR_NAME calendarName,
 		CASE WHEN T1.STATUS ='A' THEN '待处理'

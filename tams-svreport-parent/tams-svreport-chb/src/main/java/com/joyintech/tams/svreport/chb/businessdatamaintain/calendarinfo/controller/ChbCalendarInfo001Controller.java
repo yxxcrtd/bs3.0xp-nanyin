@@ -30,6 +30,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
@@ -155,6 +156,18 @@ public class ChbCalendarInfo001Controller extends BaseController {
         return new AjaxResult(getMessage("COMMON_I_0011"));
     }
 
+
+    /**
+     * 导入数据文件之前检查数据
+     *
+     * @param fileName 导入的文件名
+     * @return 处理结果
+     */
+    @ResponseBody
+    @RequestMapping(value = "checkConfirmMsgForImportData", method = RequestMethod.POST)
+    public AjaxResult checkConfirmMsgForImportData(String fileName)  {
+        return chbTradingCalendarInfo001Service.checkConfirmMsgForImportData(fileName);
+    }
     /**
      * 导入
      *
@@ -165,7 +178,7 @@ public class ChbCalendarInfo001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("importFile")
     public List<ExcelValidDto> importData(String fileName) throws FileNotFoundException, ParseException {
-        return this.chbTradingCalendarInfo001Service.importData(fileName);
+        return chbTradingCalendarInfo001Service.importData(fileName);
     }
 
     /**
