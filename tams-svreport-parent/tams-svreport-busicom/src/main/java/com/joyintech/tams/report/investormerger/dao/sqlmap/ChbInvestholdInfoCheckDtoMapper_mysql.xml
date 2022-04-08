@@ -388,6 +388,22 @@
 		</if>
 	</delete>
 
+	<delete id="deleteBymodelAfterDeal" parameterType="java.util.List">
+		DELETE FROM CHB_INVESTHOLD_INFO_CHECK
+		where
+		(REGIST_BANK_CODE,PRODID,PRD_REGIST_CODE,INDENTIFY_MARK,CCY,HOLD_DATE)
+		<foreach collection="deleteList" item="item" open="in (" separator=" UNION ALL "  close=")">
+			SELECT
+			#{item.registBankCode,jdbcType=VARCHAR},
+			#{item.prodid,jdbcType=VARCHAR},
+			#{item.prdRegistCode,jdbcType=VARCHAR},
+			#{item.indentifyMark,jdbcType=VARCHAR},
+			#{item.ccy,jdbcType=VARCHAR},
+			#{item.holdDate,jdbcType=DATE}
+			FROM DUAL
+		</foreach>
+	</delete>
+
 	<delete id="deleteBymodelAfterDealNew" parameterType="java.util.List">
         DELETE FROM CHB_INVESTHOLD_INFO_CHECK che
         where exists (
@@ -1491,4 +1507,119 @@
 	<delete id="truncateInvestholdTmp">
 		truncate table CHB_INVESTHOLD_INFO_TMP
 	</delete>
+
+	<insert id="insertAfterDeal" parameterType="java.util.List" >
+		INSERT INTO CHB_INVESTHOLD_INFO_CHECK
+		(
+		REGIST_BANK_CODE,
+		INDENTIFY_MARK,
+		MERGER_INDENTIFY_MARK,
+		PRD_REGIST_CODE,
+		HOLD_DATE,
+		CCY,
+		AMOUNT,
+		QTY,
+		CNY_AMT,
+		REMARK,
+		DATA_SOURCE,
+		STATUS,
+		OPERATE_STATUS,
+		WORKFLOW_ID,
+		ORG_CODE,
+		DEPT_CODE,
+		UPDATE_USER,
+		UPDATE_TIME,
+		CREATE_USER,
+		CREATE_TIME,
+		AGENT,
+		CREATE_DEPT,
+		PRODID,
+		INTERF_CHECK_RESULT
+		) select A.* from (
+		<foreach collection="insert" index="index" item = "item" separator="UNION ALL">
+			select
+			#{item.registBankCode,jdbcType=VARCHAR},
+			#{item.indentifyMark,jdbcType=VARCHAR},
+			#{item.mergerindentifymark,jdbcType=VARCHAR},
+			#{item.prdRegistCode,jdbcType=VARCHAR},
+			#{item.holdDate,jdbcType=TIMESTAMP},
+			#{item.ccy,jdbcType=VARCHAR},
+			#{item.amount,jdbcType=DECIMAL},
+			#{item.qty,jdbcType=DECIMAL},
+			#{item.cnyAmt,jdbcType=DECIMAL},
+			#{item.remark,jdbcType=VARCHAR},
+			#{item.dataSource,jdbcType=CHAR},
+			#{item.status,jdbcType=VARCHAR},
+			#{item.operatestatus,jdbcType=VARCHAR},
+			#{item.workflowId,jdbcType=VARCHAR},
+			#{item.orgCode,jdbcType=VARCHAR},
+			#{item.deptCode,jdbcType=VARCHAR},
+			#{item.updateUser,jdbcType=VARCHAR},
+			#{item.updateTime,jdbcType=TIMESTAMP},
+			#{item.createUser,jdbcType=VARCHAR},
+			#{item.createTime,jdbcType=TIMESTAMP},
+			#{item.agent,jdbcType=VARCHAR},
+			#{item.createDept,jdbcType=VARCHAR},
+			#{item.prodid,jdbcType=VARCHAR},
+			#{item.interfCheckResult,jdbcType=VARCHAR}
+			from dual
+		</foreach>
+		) A
+	</insert>
+
+	<insert id="insertToChbInvestholdInfoAfterDeal" parameterType="com.joyintech.tams.report.investormerger.dto.ChbInvestholdInfoCheckDto">
+		insert into CHB_INVESTHOLD_INFO (
+		REGIST_BANK_CODE,
+		INDENTIFY_MARK,
+		PRODID,
+		HOLD_DATE,
+		CCY,
+		STATUS,
+		PRD_REGIST_CODE,
+		AMOUNT,
+		QTY,
+		CNY_AMT,
+		REMARK,
+		DATA_SOURCE,
+		WORKFLOW_ID,
+		ORG_CODE,
+		DEPT_CODE,
+		UPDATE_USER,
+		UPDATE_TIME,
+		CREATE_USER,
+		CREATE_TIME,
+		AGENT,
+		CREATE_DEPT,
+		INTERF_CHECK_RESULT
+		)
+		select A.*
+		from (
+		<foreach collection="insertToChbInvestholdInfoList" index="index" item = "item" separator="UNION ALL">
+			select
+			#{item.registBankCode,jdbcType=VARCHAR},
+			#{item.indentifyMark,jdbcType=VARCHAR},
+			#{item.prodid,jdbcType=VARCHAR},
+			#{item.holdDate,jdbcType=DATE},
+			#{item.ccy,jdbcType=VARCHAR},
+			#{item.status,jdbcType=VARCHAR},
+			#{item.prdRegistCode,jdbcType=VARCHAR},
+			#{item.amount,jdbcType=DECIMAL},
+			#{item.qty,jdbcType=DECIMAL},
+			#{item.cnyAmt,jdbcType=DECIMAL},
+			#{item.remark,jdbcType=VARCHAR},
+			#{item.dataSource,jdbcType=CHAR},
+			#{item.workflowId,jdbcType=VARCHAR},
+			#{item.orgCode,jdbcType=VARCHAR},
+			#{item.deptCode,jdbcType=VARCHAR},
+			#{item.updateUser,jdbcType=VARCHAR},
+			sysdate,
+			#{item.createUser,jdbcType=VARCHAR},
+			sysdate,
+			#{item.agent,jdbcType=VARCHAR},
+			#{item.createDept,jdbcType=VARCHAR},
+			#{item.interfCheckResult,jdbcType=VARCHAR}
+			from dual
+		</foreach>
+		) A
+	</insert>
 </mapper>

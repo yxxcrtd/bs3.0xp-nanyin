@@ -1126,13 +1126,27 @@
 		set cii.STATUS = 'E'
 		where
 		STATUS = 'D'
-		<foreach collection="dataList" item="item" open="and (" separator="or" close=")">
-			(cii.REGIST_BANK_CODE =#{item.registBankCode}
-			and cii.INDENTIFY_MARK=#{item.indentifyMark}
-			and cii.PRODID=#{item.prodid}
-			and DATE_FORMAT(cii.HOLD_DATE,'%Y-%m-%d') =DATE_FORMAT(#{item.holdDate},'%Y-%m-%d')
-			and cii.CCY =#{item.ccy})
-		</foreach>
+		<if test="dataList !=null and dataList.size()>0">
+			AND (cii.REGIST_BANK_CODE,cii.INDENTIFY_MARK,cii.PRODID,cii.HOLD_DATE,cii.CCY) in
+			<foreach collection="dataList" item="item" open="(" separator="," close=")">
+				(#{item.registBankCode},#{item.indentifyMark},#{item.prodid},#{item.holdDate},#{item.ccy})
+			</foreach>
+		</if>
+	</update>
+
+	<update id="handleInfoDeleteDataNew" parameterType="com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto" >
+		update CHB_INVESTHOLD_INFO info
+		set info.STATUS = 'E'
+		where
+		info.STATUS = 'D'
+       AND EXISTS (
+       SELECT 1 FROM CHB_INVESTHOLD_INFO_TMP tmp WHERE
+        info.REGIST_BANK_CODE = tmp.REGIST_BANK_CODE
+        AND info.INDENTIFY_MARK = tmp.INDENTIFY_MARK
+        AND info.PRD_REGIST_CODE = tmp.PRD_REGIST_CODE
+        AND info.HOLD_DATE = tmp.HOLD_DATE
+        AND info.CCY = tmp.CCY
+       )
 	</update>
 
 	<!-- 删除持有信息登记表中数据状态为删除的数据-->
