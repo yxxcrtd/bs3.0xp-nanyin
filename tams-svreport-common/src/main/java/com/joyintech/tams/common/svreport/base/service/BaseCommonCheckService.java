@@ -3,15 +3,20 @@
  */
 package com.joyintech.tams.common.svreport.base.service;
 
+import com.joyintech.framework.jdbc.datasource.DatabaseInfo;
+import com.joyintech.framework.jdbc.datasource.DatabaseType;
+import com.joyintech.framework.jdbc.datasource.DatabaseTypeHelper;
+import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.BaseCommonCheckDto;
+import com.joyintech.tams.common.base.entity.ColumnDto;
 import com.joyintech.tams.common.svreport.base.dao.BaseCommonCheckMapper;
-import com.joyintech.tams.common.svreport.base.dto.ColumnDto;
-import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.common.svreport.datacheck.dto.ChbInterfErrodataWithBLOBs;
-import com.joyintech.tams.report.common.dto.ExcelValidDto;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -27,18 +32,12 @@ import org.springframework.util.CollectionUtils;
 
 
 
-/**
- * 生成报送业务数据前共通检查
- * 
- * @author dubaojun
- * @since 2020-10-13
- */
 @Service
 public class BaseCommonCheckService {
     /**
      * 日志
      */
-    protected Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static Logger logger = LoggerFactory.getLogger(CommonUtil.class);
 
     @Autowired
     private BaseCommonCheckMapper baseCommonCheckMapper;
@@ -53,9 +52,18 @@ public class BaseCommonCheckService {
         return baseCommonCheckMapper.selectBySql(table);
     }
 
-    public List<ExcelValidDto> check(List<Map<String,String>> list, String tableName) {
+    /**
+     * sql check
+     * @param list 被check数据
+     * @param tableName 表名
+     * @return
+     * @author wubingbing
+     * @since 2022-04-08
+     */
+    public List<BaseCommonCheckDto> checkBysql(List<Map<String,String>> list, String tableName) {
         List<ColumnDto> columns = getColumns(tableName);
-        List<ExcelValidDto> result = new ArrayList<>();
+        List<BaseCommonCheckDto> result = new ArrayList<>();
+        BaseCommonCheckDto resultDto = new BaseCommonCheckDto();
         List<Map<String,String>> errList = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             Set<Map.Entry<String, String>> set = list.get(i).entrySet();
@@ -66,8 +74,9 @@ public class BaseCommonCheckService {
                         if (c.getIS_NULLABLE().equals("YES")) {
                             if (!StringUtils.hasText(entry.getValue())) {
                                 ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2), c.getCOLUMN_COMMENT() + "为空");
-                                dto.setErrMap(list.get(i));
-                                result.add(dto);
+                                resultDto.setExcelValidDto(dto);
+                                resultDto.setErrMap(list.get(i));
+                                result.add(resultDto);
                                 errList.add(list.get(i));
                                 // 跳出 for (Column c : columns)循环
                                 break;
@@ -82,8 +91,9 @@ public class BaseCommonCheckService {
                             // 长度校验
                             if (entry.getValue().length() > Integer.valueOf(c.getCHARACTER_MAXIMUM_LENGTH())) {
                                 ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2), c.getCOLUMN_COMMENT() + "内容太长了");
-                                dto.setErrMap(list.get(i));
-                                result.add(dto);
+                                resultDto.setExcelValidDto(dto);
+                                resultDto.setErrMap(list.get(i));
+                                result.add(resultDto);
                                 errList.add(list.get(i));
                             }
                             break;
@@ -91,15 +101,17 @@ public class BaseCommonCheckService {
                             // 长度校验
                             if (entry.getValue().length() > Integer.valueOf(c.getNUMERIC_PRECISION())) {
                                 ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2), c.getCOLUMN_COMMENT() + "内容太长了");
-                                dto.setErrMap(list.get(i));
-                                result.add(dto);
+                                resultDto.setExcelValidDto(dto);
+                                resultDto.setErrMap(list.get(i));
+                                result.add(resultDto);
                                 errList.add(list.get(i));
                                 break;
                             }else if(!Pattern.matches(rule,entry.getValue())){
                                 //整数校验
                                 ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2), c.getCOLUMN_COMMENT() + "不是整数");
-                                dto.setErrMap(list.get(i));
-                                result.add(dto);
+                                resultDto.setExcelValidDto(dto);
+                                resultDto.setErrMap(list.get(i));
+                                result.add(resultDto);
                                 errList.add(list.get(i));
                                 break;
                             }
@@ -108,14 +120,16 @@ public class BaseCommonCheckService {
                             // 长度校验
                             if (entry.getValue().length() > Integer.valueOf(c.getNUMERIC_PRECISION())) {
                                 ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2), c.getCOLUMN_COMMENT() + "内容太长了");
-                                dto.setErrMap(list.get(i));
-                                result.add(dto);
+                                resultDto.setExcelValidDto(dto);
+                                resultDto.setErrMap(list.get(i));
+                                result.add(resultDto);
                                 errList.add(list.get(i));
                                 break;
                             }else if(!Pattern.matches(floatRule,entry.getValue())){
                                 ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2), c.getCOLUMN_COMMENT() + "内容太长了");
-                                dto.setErrMap(list.get(i));
-                                result.add(dto);
+                                resultDto.setExcelValidDto(dto);
+                                resultDto.setErrMap(list.get(i));
+                                result.add(resultDto);
                                 errList.add(list.get(i));
                                 break;
                             }
@@ -123,15 +137,19 @@ public class BaseCommonCheckService {
                         }else if(c.getDATA_TYPE().equals("date")){
                             if(!DateUtil.isDateStr(entry.getValue())){
                                 ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2), c.getCOLUMN_COMMENT() + "日期格式不正确，请使用yyyy-MM-dd格式");
-                                dto.setErrMap(list.get(i));
-                                result.add(dto);
+                                resultDto.setExcelValidDto(dto);
+                                resultDto.setErrMap(list.get(i));
+                                result.add(resultDto);
+                                errList.add(list.get(i));
                             }
                             break;
                         }else if(c.getDATA_TYPE().equals("datetime")||c.getDATA_TYPE().equals("timestamp")){
                             if(!DateUtil.isDateStr(entry.getValue(),DateUtil.DEFAULT_DATETIME_FORMAT)){
                                 ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2), c.getCOLUMN_COMMENT() + "日期格式不正确，请使用yyyy-MM-dd HH:mm:ss格式");
-                                dto.setErrMap(list.get(i));
-                                result.add(dto);
+                                resultDto.setExcelValidDto(dto);
+                                resultDto.setErrMap(list.get(i));
+                                result.add(resultDto);
+                                errList.add(list.get(i));
                             }
                             break;
                         }
@@ -146,41 +164,43 @@ public class BaseCommonCheckService {
     }
 
 
-
     /**
-     * 数据校验入口
-     * 
-     * @param datas 需要校验的数据
-     * @param TableName 表名
-     * @return 校验后的数据
+     *基础数据库check
+     * @param checkFlag 是接口check还是导入check  接口是interf  导入是import
+     * @param datas 被check数据
+     * @param TableName  表名
+     * @param FileName  文件名
+     * @param interfType 接口类型
+     * @param dataType
+     * @param bussinessKey 业务主键
+     * @param checkEuplicatedKeys 联合主键
+     * @return
      */
-    public  List<ExcelValidDto> checkDataDB(List<Map<String,String>> datas, String TableName, String FileName,String interfType,String dataType,String bussinessKey,String... checkEuplicatedKeys) {
+    public  List<ExcelValidDto> checkDataDB(String checkFlag,List<Map<String,String>> datas, String TableName, String FileName,String interfType,String dataType,String bussinessKey,String... checkEuplicatedKeys) {
         // 判断传入的数据是否为空
         if(CollectionUtils.isEmpty(datas)) {
             return null;
         }
 
-        //使用sql或者orcle的标志  01：sql    02：orcle
-        String checkFlg = SvrDataUtil.getSysParam("BASE_CHECK_SQL_ORCLE");
-        List<ExcelValidDto> aa = new ArrayList<>();
-        if(StringUtil.equals(checkFlg,"01")) {
-             aa = this.check(datas, TableName);
-        }else if(StringUtil.equals(checkFlg,"02")){
+        //使用sql或者orcle?
+        List<BaseCommonCheckDto> aa = new ArrayList<>();
+        //返回的数据结构
+        List<ExcelValidDto> bb = new ArrayList<>();
+        if(isMYSQLDataBase()) {
+             aa = this.checkBysql(datas, TableName);
+        }else{
 
         }
+        for(BaseCommonCheckDto dto:aa){
+            bb.add(dto.getExcelValidDto());
+        }
 
-        if(aa != null && aa.size() !=0) {
+        //当是接口接入时才入CHB_INTERF_ERRODATA表
+        if(aa != null && aa.size() !=0 && StringUtil.equals("interf",checkFlag)) {
             //数据库check不通过的插入CHB_INTERF_ERRODATA
             dealErrBeforInsert(aa, FileName, interfType, bussinessKey, dataType, checkEuplicatedKeys);
         }
-
-        //业务check结果
-        List<ExcelValidDto> bb = checkDataYW(datas);
-        if(bb.size() != 0 && bb != null) {
-            aa.addAll(bb);
-        }
-
-        return aa;
+        return bb;
     }
 
 
@@ -212,12 +232,12 @@ public class BaseCommonCheckService {
      * @param bussinessKey
      * @param checkEuplicatedKeys
      */
-    public void dealErrBeforInsert(List<ExcelValidDto> list,String FileName,String interfType,String dataType,String bussinessKey,String... checkEuplicatedKeys){
+    public void dealErrBeforInsert(List<BaseCommonCheckDto> list,String FileName,String interfType,String dataType,String bussinessKey,String... checkEuplicatedKeys){
         List<Map<String,String>> erroDatas = new ArrayList<>();
         ChbInterfErrodataWithBLOBs data=null;
         List<ChbInterfErrodataWithBLOBs> erroList=new ArrayList<ChbInterfErrodataWithBLOBs>();
-        for (ExcelValidDto dto:list){
-            dto.getErrMap().put("ERRMSG",dto.getErrorInfo());
+        for (BaseCommonCheckDto dto:list){
+            dto.getErrMap().put("ERRMSG",dto.getExcelValidDto().getErrorInfo());
             erroDatas.add(dto.getErrMap());
         }
         for(Map<String, String> erro:erroDatas){
@@ -248,7 +268,6 @@ public class BaseCommonCheckService {
             return null;
         }
 
-
         // 拼装错误信息
         ChbInterfErrodataWithBLOBs errodata = new ChbInterfErrodataWithBLOBs();
         // 主键uuid
@@ -256,9 +275,11 @@ public class BaseCommonCheckService {
         // 文件名
         errodata.setFireName(FileName);
         // 业务主键
-//        errodata.setDataid(dataId);
+        errodata.setDataid("dataId");
         // 接口类型
         errodata.setInterfType(interfType);
+        // 错误提示信息
+        errodata.setErrMsg(msg);
         // 数据状态
         errodata.setStatus("E");
         errodata.setCreateUser("system");
@@ -270,6 +291,10 @@ public class BaseCommonCheckService {
         return errodata;
     }
 
+    /**
+     * 入CHB_INTERF_ERRODATA表
+     * @param erroList
+     */
     public void insertErroData(List<ChbInterfErrodataWithBLOBs> erroList){
         SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
         try {
@@ -296,5 +321,34 @@ public class BaseCommonCheckService {
         finally {
             session.close();
         }
+    }
+
+
+    /**
+     * 判断系统使用的数据库是否是mysql
+     *
+     * @return 系统使用的数据库是否是mysql
+     * @see
+     * @since 1.0
+     */
+    public static boolean isMYSQLDataBase() {
+        try {
+            Map<String, List<DatabaseInfo>> databaseType = DatabaseTypeHelper.getDatabaseType();
+
+            List<DatabaseInfo> dsList = databaseType.get(DataSourceType.MASERT);
+            if (dsList != null && !dsList.isEmpty()) {
+                for (int i = 0; i < dsList.size(); i++) {
+                    DatabaseInfo dbInfo = dsList.get(i);
+                    if (StringUtil.equalsIgnoreCase(DatabaseType.DATABASE_TYPE_MYSQL.getValue(),
+                            dbInfo.getDbType().getValue())) {
+                        return true;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(),e);
+        }
+
+        return false;
     }
 }

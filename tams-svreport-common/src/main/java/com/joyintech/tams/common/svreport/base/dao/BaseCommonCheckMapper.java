@@ -1,8 +1,7 @@
 package com.joyintech.tams.common.svreport.base.dao;
 
 
-import com.joyintech.tams.common.svreport.base.dto.BaseCommonCheckDto;
-import com.joyintech.tams.common.svreport.base.dto.ColumnDto;
+import com.joyintech.tams.common.base.entity.ColumnDto;
 import com.joyintech.tams.common.svreport.datacheck.dto.ChbInterfErrodataWithBLOBs;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -14,8 +13,8 @@ import java.util.List;
 /**
  * 基础共通mapper
  *
- * @author Administrator
- * @version 2016年10月22日
+ * @author
+ * @version
  * @see BaseCommonCheckMapper
  * @since
  */

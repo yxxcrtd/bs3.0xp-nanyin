@@ -88,10 +88,6 @@ public class ExcelValidDto {
      */
     private String isLogicCheck;
 
-    private List<ChbInterfErrodataWithBLOBs> chbInterfErrodataWithBLOBs;
-
-    private Map<String,String> errMap;
-
     /**
      * 获取 dataTime
      * 
@@ -238,21 +234,5 @@ public class ExcelValidDto {
      */
     public void setIsLogicCheck(String isLogicCheck) {
         this.isLogicCheck = isLogicCheck;
-    }
-
-    public List<ChbInterfErrodataWithBLOBs> getChbInterfErrodataWithBLOBs() {
-        return chbInterfErrodataWithBLOBs;
-    }
-
-    public void setChbInterfErrodataWithBLOBs(List<ChbInterfErrodataWithBLOBs> chbInterfErrodataWithBLOBs) {
-        this.chbInterfErrodataWithBLOBs = chbInterfErrodataWithBLOBs;
-    }
-
-    public Map<String, String> getErrMap() {
-        return errMap;
-    }
-
-    public void setErrMap(Map<String, String> errMap) {
-        this.errMap = errMap;
     }
 }

@@ -1,4 +1,4 @@
-package com.joyintech.tams.common.svreport.base.dto;
+package com.joyintech.tams.common.base.entity;
 
 import java.io.Serializable;
 
