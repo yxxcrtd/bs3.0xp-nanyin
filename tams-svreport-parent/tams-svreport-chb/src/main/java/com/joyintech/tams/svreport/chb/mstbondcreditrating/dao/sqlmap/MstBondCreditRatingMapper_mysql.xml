@@ -2,32 +2,232 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.joyintech.tams.svreport.chb.mstbondcreditrating.dao.MstBondCreditRatingDao">
+<mapper namespace="com.joyintech.tams.svreport.chb.mstbondcreditrating.dao.MstBondCreditRatingDao_mysql">
 
-<!--    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.mstbondcreditrating.dto.MstBondCreditRatingDto">-->
-<!--            <result property="oCode" column="O_CODE" jdbcType="VARCHAR"/>-->
-<!--            <result property="gradeOrgId" column="GRADE_ORG_ID" jdbcType="VARCHAR"/>-->
-<!--            <result property="gradeDate" column="GRADE_DATE" jdbcType="TIMESTAMP"/>-->
-<!--            <result property="shortLongTerm" column="SHORT_LONG_TERM" jdbcType="VARCHAR"/>-->
-<!--            <result property="gradeResult" column="GRADE_RESULT" jdbcType="VARCHAR"/>-->
-<!--            <result property="createUser" column="CREATE_USER" jdbcType="VARCHAR"/>-->
-<!--            <result property="createDept" column="CREATE_DEPT" jdbcType="VARCHAR"/>-->
-<!--            <result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP"/>-->
-<!--            <result property="updateUser" column="UPDATE_USER" jdbcType="VARCHAR"/>-->
-<!--            <result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP"/>-->
-<!--            <result property="dataSource" column="DATA_SOURCE" jdbcType="VARCHAR"/>-->
-<!--            <result property="status" column="STATUS" jdbcType="VARCHAR"/>-->
-<!--            <result property="oName" column="O_NAME" jdbcType="VARCHAR"/>-->
-<!--            <result property="oObject" column="O_OBJECT" jdbcType="VARCHAR"/>-->
-<!--    </resultMap>-->
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.mstbondcreditrating.dto.MstBondCreditRatingDto">
+        <result property="oCode" column="O_CODE" jdbcType="VARCHAR"/>
+        <result property="gradeOrgId" column="GRADE_ORG_ID" jdbcType="VARCHAR"/>
+        <result property="gradeDate" column="GRADE_DATE" jdbcType="VARCHAR"/>
+        <result property="shortLongTerm" column="SHORT_LONG_TERM" jdbcType="VARCHAR"/>
+        <result property="gradeResult" column="GRADE_RESULT" jdbcType="VARCHAR"/>
+        <result property="createUser" column="CREATE_USER" jdbcType="VARCHAR"/>
+        <result property="createDept" column="CREATE_DEPT" jdbcType="VARCHAR"/>
+        <result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP"/>
+        <result property="updateUser" column="UPDATE_USER" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP"/>
+        <result property="dataSource" column="DATA_SOURCE" jdbcType="VARCHAR"/>
+        <result property="source" column="SOURCE" jdbcType="VARCHAR"/>
+        <result property="status" column="STATUS" jdbcType="VARCHAR"/>
+        <result property="oName" column="O_NAME" />
+        <result property="oObject" column="O_OBJECT" jdbcType="VARCHAR"/>
+        <result property="describe" column="DESCRIBE" jdbcType="VARCHAR"/>
+    </resultMap>
 
-<!--    <sql id="Base_Column_List">-->
-<!--        O_CODE,GRADE_ORG_ID,GRADE_DATE,-->
-<!--        SHORT_LONG_TERM,GRADE_RESULT,-->
-<!--        CREATE_USER,CREATE_DEPT,-->
-<!--        CREATE_TIME,UPDATE_USER,UPDATE_TIME,-->
-<!--        DATA_SOURCE,-->
-<!--        STATUS,O_NAME,O_OBJECT,-->
-<!--        DESCRIBE-->
-<!--    </sql>-->
+    <sql id="Base_Column_List">
+        O_CODE,GRADE_ORG_ID,date_format(GRADE_DATE,'%Y-%m-%d') as GRADE_DATE,
+        SHORT_LONG_TERM,GRADE_RESULT,
+        CREATE_USER,CREATE_DEPT,
+        CREATE_TIME,UPDATE_USER,UPDATE_TIME,
+        DATA_SOURCE,SOURCE,
+        STATUS,O_NAME,O_OBJECT,
+        DESCRIBE
+    </sql>
+    <insert id="insert">
+        insert into MST_BOND_CREDIT_RATING
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="oCode !=null and oCode !=''">
+                O_CODE,
+            </if>
+            <if test="gradeOrgId !=null and gradeOrgId !=''">
+                GRADE_ORG_ID,
+            </if>
+            <if test="gradeDate !=null and gradeDate!=''">
+                GRADE_DATE,
+            </if>
+            <if test="shortLongTerm !=null and shortLongTerm !=''">
+                SHORT_LONG_TERM,
+            </if>
+            <if test="gradeResult !=null and gradeResult !=''">
+                GRADE_RESULT,
+            </if>
+            <if test="dataSource !=null and dataSource !=''">
+                DATA_SOURCE,
+            </if>
+            <if test="source !=null and source !=''">
+                SOURCE,
+            </if>
+            <if test="status !=null and status !=''">
+                STATUS,
+            </if>
+            <if test="oName !=null and oName !=''">
+                O_NAME,
+            </if>
+            <if test="oObject !=null and oObject !=''">
+                O_OBJECT,
+            </if>
+            <if test="createUser !=null and createUser !=''">
+                CREATE_USER,
+            </if>
+            <if test="createDept !=null and createDept !=''">
+                CREATE_DEPT,
+            </if>
+            <if test="createTime !=null">
+                CREATE_TIME,
+            </if>
+            <if test="updateUser !=null and updateUser !=''">
+                UPDATE_USER,
+            </if>
+            <if test="updateTime !=null">
+                UPDATE_TIME
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="oCode !=null and oCode !=''">
+                #{oCode},
+            </if>
+            <if test="gradeOrgId !=null and gradeOrgId !=''">
+                #{gradeOrgId},
+            </if>
+            <if test="gradeDate !=null and gradeDate!=''">
+                #{gradeDate},
+            </if>
+            <if test="shortLongTerm !=null and shortLongTerm !=''">
+                #{shortLongTerm},
+            </if>
+            <if test="gradeResult !=null and gradeResult !=''">
+                #{gradeResult},
+            </if>
+            <if test="dataSource !=null and dataSource !=''">
+                #{dataSource},
+            </if>
+            <if test="source !=null and source !=''">
+                #{source},
+            </if>
+            <if test="status !=null and status !=''">
+                #{status},
+            </if>
+            <if test="oName !=null and oName !=''">
+                #{oName},
+            </if>
+            <if test="oObject !=null and oObject !=''">
+                #{oObject},
+            </if>
+            <if test="createUser !=null and createUser !=''">
+                #{createUser},
+            </if>
+            <if test="createDept !=null and createDept !=''">
+                #{createDept},
+            </if>
+            <if test="createTime !=null">
+                #{createTime},
+            </if>
+            <if test="updateUser !=null and updateUser !=''">
+                #{updateUser},
+            </if>
+            <if test="updateTime !=null">
+                #{updateTime},
+            </if>
+        </trim>
+    </insert>
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into MST_BOND_CREDIT_RATING (
+        O_CODE,
+        GRADE_ORG_ID,
+        GRADE_DATE,
+        SHORT_LONG_TERM,
+        GRADE_RESULT,
+        DATA_SOURCE,
+        SOURCE,
+        STATUS,
+        O_NAME,
+        O_OBJECT,
+        CREATE_USER,
+        CREATE_DEPT,
+        CREATE_TIME,
+        UPDATE_USER,
+        UPDATE_TIME ) values
+        <foreach collection="list" separator="," item="item">
+            (
+            #{item.oCode},
+            #{item.gradeOrgId},
+            #{gradeDate},
+            #{item.shortLongTerm},
+            #{item.gradeResult},
+            #{item.dataSource},
+            #{item.source},
+            #{item.status},
+            #{item.oName},
+            #{item.oObject},
+            #{item.createUser},
+            #{item.createDept},
+            #{item.createTime},
+            #{item.updateUser},
+            #{item.updateTime}
+            )
+        </foreach>
+    </insert>
+    <update id="update">
+        update MST_BOND_CREDIT_RATING
+        <trim prefix="set" suffixOverrides=",">
+            <if test="gradeOrgId !=null and gradeOrgId !=''">
+                GRADE_ORG_ID = #{gradeOrgId},
+            </if>
+            <if test="shortLongTerm !=null and shortLongTerm !=''">
+                SHORT_LONG_TERM = #{shortLongTerm},
+            </if>
+            <if test="gradeResult !=null and gradeResult !=''">
+                GRADE_RESULT = #{gradeResult},
+            </if>
+            <if test="status !=null and status !=''">
+                STATUS = #{status},
+            </if>
+            <if test="updateUser !=null and updateUser !=''">
+                UPDATE_USER = #{updateUser},
+            </if>
+            <if test="updateTime !=null">
+                UPDATE_TIME = #{updateTime}
+            </if>
+        </trim>
+        where O_CODE = #{oCode} AND O_OBJECT = #{oObject}
+    </update>
+    <select id="selcetByKey" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from MST_BOND_CREDIT_RATING where O_CODE = #{oCode} and O_OBJECT= #{oObject}
+    </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from MST_BOND_CREDIT_RATING
+        <where>
+            <if test="oObject!=null and oObject!=''">
+                O_OBJECT = #{oObject}
+            </if>
+            <if test="oName!=null and oName!=''">
+                and O_NAME = #{oName}
+            </if>
+            <if test="shortLongTerm!=null and shortLongTerm!=''">
+                and SHORT_LONG_TERM = #{shortLongTerm}
+            </if>
+            <if test="status!=null and status!=''">
+                and STATUS = #{status}
+            </if>
+            <if test="gradeDateStart!=null and gradeDateStart!=''">
+                and GRADE_DATE &gt;= #{gradeDateStart}
+            </if>
+            <if test="gradeDateEnd!=null and gradeDateEnd !=''">
+                and GRADE_DATE &lt;= #{gradeDateEnd}
+            </if>
+        </where>
+    </select>
+    <select id="getFinProdAbbr" resultType="com.joyintech.framework.select.SuggestDto">
+        SELECT
+        distinct
+        ASSET_CODE AS code,
+        ASSET_NAME AS shortName
+        FROM CHB_ASSET_INFO
+        WHERE ASSET_TYPE2 IN
+        (SELECT ITEM_CODE FROM SYS_DATADICT_LIST_LINK WHERE LINKED_DICT_CODE ='SVR_ASSET_TYPE_FIRST_LEVEL' AND LINKED_ITEM_CODE ='004')
+        <if test="param !=null and  param !='' ">
+            AND (ASSET_CODE like concat('%',#{param},'%')
+            OR ASSET_NAME like concat('%',#{param},'%'))
+        </if>
+
+    </select>
 </mapper>
