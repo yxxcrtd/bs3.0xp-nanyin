@@ -1,11 +1,11 @@
-package com.joyintech.tams.common.base.entity;
+package com.joyintech.tams.common.svreport.base.dto;
 
 import com.joyintech.framework.base.BaseEntity;
 
 /**
  * check共通dto
  */
-public class BaseCommonCheckTableMessage extends BaseEntity {
+public class BaseCommonCheckDto extends BaseEntity {
 
     //错误信息
     private String errMsg;
