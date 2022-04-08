@@ -48,7 +48,7 @@
   	PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE
   </sql>
     <sql id="PBC_PRD_BASEINFO_SUB">
-  (select a.* from (
+      (select a.* from (
         SELECT
         @rownum:=@rownum+1 rownum,
         PBC_PROD_ID,
@@ -338,47 +338,47 @@
       UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
     where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
   </update>
-  <!-- 根据条件查询 -->
-  <select id="searchPage" parameterType="map" resultType="com.joyintech.tams.svreport.pbc.classic.prdinfoendsub.dto.PbcPrdBaseinfoEndSub" flushCache="true" useCache="false">
-  	select     
-  		a.REGIST_SEQNO registSeqno,
-      <if test="datFlag != null and datFlag != ''">
-          IFNULL(t2.pbc_code,a.PBC_PROD_ID) PBC_PROD_ID,
-      </if>
-      <if test="datFlag == null">
-          a.PBC_PROD_ID PBC_PROD_ID,
-      </if>
-	    a.MDATE mdate,
-	    a.CCY ccy,
-	    a.PROFIT profit,
-	    a.PROFIT_CNY profitCny,
-	    a.CUSTOM_PROFIT customProfit,
-	    a.CUSTOM_PROFIT_CNY customProfitCny,
-	    <if test="nyield  == null">a.CUS_YEAR_YIELD cusYearYield,</if>
-	    a.SEND_STATUS sendStatus,
-	    a.SUBMIT_TIME submitTime,
-	    a.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
-	    a.SUMIT_SEQ sumitSeq,
-	    a.STATUS_DATE statusDate,
-	    a.PBC_SUBMIT_DEADLINE pbcSubmitDeadline,
-	    a.SUBMIT_DEADLINE submitDeadline,
-	    a.STATUS status,
-	    a.CREATE_USER createUser,
-	    a.ORG_CODE orgCode,
-	    a.CREATE_DEPT createDept,
-	    a.CREATE_TIME createTime,
-	    a.UPDATE_USER updateUser,
-	    a.UPDATE_TIME updateTime,
-	    b.PROD_ID prodId,
-	    b.OPERATE_MODE operateMode,
-	    b.IVSTORIENTATION ivstorientation,
-	    b.VDATE vdate,
-	    t2.PBC_CODE pbcCode,
-	    a.PBC_PROD_ID pbcProdIdShow
-  	from PBC_PRD_BASEINFO_END_SUB a 
-  	left join <include refid="PBC_PRD_BASEINFO_SUB" /> b on a.PBC_PROD_ID = b.PBC_PROD_ID 
-  	<!-- and a.ORG_CODE = b.ORG_CODE -->
-  	LEFT JOIN(
+    <!-- 根据条件查询 -->
+    <select id="searchPage" parameterType="map" resultType="com.joyintech.tams.svreport.pbc.classic.prdinfoendsub.dto.PbcPrdBaseinfoEndSub" flushCache="true" useCache="false">
+        select
+        a.REGIST_SEQNO registSeqno,
+        <if test="datFlag != null and datFlag != ''">
+            IFNULL(t2.pbc_code,a.PBC_PROD_ID) PBC_PROD_ID,
+        </if>
+        <if test="datFlag == null">
+            a.PBC_PROD_ID PBC_PROD_ID,
+        </if>
+        a.MDATE mdate,
+        a.CCY ccy,
+        a.PROFIT profit,
+        a.PROFIT_CNY profitCny,
+        a.CUSTOM_PROFIT customProfit,
+        a.CUSTOM_PROFIT_CNY customProfitCny,
+        <if test="nyield  == null">a.CUS_YEAR_YIELD cusYearYield,</if>
+        a.SEND_STATUS sendStatus,
+        a.SUBMIT_TIME submitTime,
+        a.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+        a.SUMIT_SEQ sumitSeq,
+        a.STATUS_DATE statusDate,
+        a.PBC_SUBMIT_DEADLINE pbcSubmitDeadline,
+        a.SUBMIT_DEADLINE submitDeadline,
+        a.STATUS status,
+        a.CREATE_USER createUser,
+        a.ORG_CODE orgCode,
+        a.CREATE_DEPT createDept,
+        a.CREATE_TIME createTime,
+        a.UPDATE_USER updateUser,
+        a.UPDATE_TIME updateTime,
+        b.PROD_ID prodId,
+        b.OPERATE_MODE operateMode,
+        b.IVSTORIENTATION ivstorientation,
+        b.VDATE vdate,
+        t2.PBC_CODE pbcCode,
+        a.PBC_PROD_ID pbcProdIdShow
+        from PBC_PRD_BASEINFO_END_SUB a
+        left join <include refid="PBC_PRD_BASEINFO_SUB" /> b on a.PBC_PROD_ID = b.PBC_PROD_ID
+        <!-- and a.ORG_CODE = b.ORG_CODE -->
+        LEFT JOIN(
         SELECT
         inside_prod_id,
         pbc_code

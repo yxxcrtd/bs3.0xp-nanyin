@@ -28,4 +28,28 @@
 		and send_status = '01'/*只删除未报送数据*/)
 	</delete>
 
+	<delete id="deleteByReportDateDept"  parameterType="map" >
+		delete
+		from PBC_REPORT_PROD prp
+		where prp.REPORTUUID in(
+		select pr.REPORTUUID from PBC_REPORT pr
+		where 1=1
+		<if test="reportStartDate != null" >
+			and DATE_FORMAT(pr.STARTDATE,'%Y-%m-%d')>= #{reportStartDate,jdbcType=VARCHAR}
+		</if>
+		<if test="reportEndDate != null" >
+			and DATE_FORMAT(pr.ENDDATE,'%Y-%m-%d')>= #{reportEndDate,jdbcType=VARCHAR}
+		</if>
+		<if test="reporttype != null" >
+			and pr.REPORTTYPE = #{reporttype,jdbcType=VARCHAR}
+		</if>
+		<if test="deptCode == null" >
+			and pr.DEPT_CODE is null
+		</if>
+		<if test="deptCode != null" >
+			and pr.DEPT_CODE = #{deptCode,jdbcType=VARCHAR}
+		</if>
+		and send_status = '01'/*只删除未报送数据*/)
+	</delete>
+
 </mapper>
