@@ -32,7 +32,7 @@
 		    ,{field:'dataSourceStr', width:100, title: 'BokSubject.dataSource'}
 		    ,{field:'statusStr', width:100, title: 'BokSubject.status'}
 		    ,{field:'remark', width:150, title: 'BokSubject.remark'}
-		    ,{field:'describe', width:150, title: 'BokSubject.describe'}
+		    ,{field:'des', width:150, title: 'BokSubject.des'}
 		    ,{field:'updateTime', width:100, title: 'BokSubject.updateTime',type:'date'}
 		    ,{field:'updateUser', width:100, title: 'BokSubject.updateUser'}
 		    ,{field:'action', title: 'SysCommon.operation' , type:'action',buttons: ['edit', 'delt'] , width:100}

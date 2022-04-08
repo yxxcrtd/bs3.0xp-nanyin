@@ -20,7 +20,7 @@
             <result property="status" column="STATUS" jdbcType="VARCHAR"/>
             <result property="oName" column="O_NAME" />
             <result property="oObject" column="O_OBJECT" jdbcType="VARCHAR"/>
-            <result property="describe" column="DESCRIBE" jdbcType="VARCHAR"/>
+            <result property="des" column="DES" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -30,7 +30,7 @@
         CREATE_TIME,UPDATE_USER,UPDATE_TIME,
         DATA_SOURCE,SOURCE,
         STATUS,O_NAME,O_OBJECT,
-        DESCRIBE
+        DES
     </sql>
     <insert id="insert">
         insert into MST_BOND_CREDIT_RATING

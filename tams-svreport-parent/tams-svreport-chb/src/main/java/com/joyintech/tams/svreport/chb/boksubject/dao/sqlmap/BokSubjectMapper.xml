@@ -144,7 +144,7 @@
 		    BS.DATA_SOURCE as dataSource,
 			BS.STATUS as status,
 			BS.REMARK as remark,
-		    BS.DESCRIBE as describe
+		    BS.DES as des
 		from BOK_SUBJECT BS
 		<where>
 			<if test="subjectLevel != null and subjectLevel != ''">
@@ -259,7 +259,7 @@
 			BS.DATA_SOURCE as dataSource,
 			BS.STATUS as status,
 			BS.REMARK as remark,
-			BS.DESCRIBE as describe
+			BS.DES as des
 		from BOK_SUBJECT BS
 		where SUBJECT_NO = #{subjectNo}
 	</select>

@@ -11,7 +11,7 @@
             <Cell order="7" name="评级来源">sourceStr</Cell>
             <Cell order="8" name="评级日期">gradeDate</Cell>
             <Cell order="9" name="数据状态">statusStr</Cell>
-            <Cell order="9" name="错误信息">describe</Cell>
+            <Cell order="9" name="错误信息">des</Cell>
             <Cell order="10" name="更新时间">updateTimeStr</Cell>
             <Cell order="11" name="更新人">updateUser</Cell>
         </Row>

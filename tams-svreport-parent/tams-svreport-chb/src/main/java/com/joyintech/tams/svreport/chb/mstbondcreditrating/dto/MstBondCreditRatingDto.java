@@ -86,7 +86,7 @@ public class MstBondCreditRatingDto extends BaseEntity implements ProcessEntity 
     /**
      * 描述
      */
-    private String describe;
+    private String des;
     /**
      * 操作类型
      */
@@ -244,19 +244,7 @@ public class MstBondCreditRatingDto extends BaseEntity implements ProcessEntity 
         this.oObject = oObject;
     }
 
-    /**
-     * 描述
-     */
-    public String getDescribe() {
-        return describe;
-    }
 
-    /**
-     * 描述
-     */
-    public void setDescribe(String describe) {
-        this.describe = describe;
-    }
     @NotEmpty(fieldName = "MstBondCreditRating001.source",groups = {ValidateGroupEdit.class})
     public String getSource() {
         return source;
@@ -362,5 +350,13 @@ public class MstBondCreditRatingDto extends BaseEntity implements ProcessEntity 
 
     public void setoObjectStr(String oObjectStr) {
         this.oObjectStr = oObjectStr;
+    }
+
+    public String getDes() {
+        return des;
+    }
+
+    public void setDes(String des) {
+        this.des = des;
     }
 }

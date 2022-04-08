@@ -36,7 +36,7 @@ $(function() {
             ,{field:'sourceStr', sortable:false, width:100,title: 'MstBondCreditRating001.source'}
             ,{field:'gradeDate', sortable:false, width:100,title: 'MstBondCreditRating001.gradeDate'}
             ,{field:'statusStr', sortable:false, width:100, title: 'MstBondCreditRating001.status'}
-            ,{field:'describe',sortable:false,   width:150,title: 'MstBondCreditRating001.describe'}
+            ,{field:'des',sortable:false,   width:150,title: 'MstBondCreditRating001.des'}
             ,{field:'updateTime',sortable:false,width:100, title: 'MstBondCreditRating001.updateTime',type:'date'}
             ,{field:'updateUser', sortable:false,width:100,title: 'MstBondCreditRating001.updateUser'}
             ,{field:'operation', width:100, title: 'SysCommon.operation',sortable:false, type:'action', buttons: ['edit', 'delt']}

@@ -86,6 +86,8 @@ public class BokSubjectDto extends BaseEntity implements ProcessEntity {
 
     private String updateTimeStr;
 
+    private String des;
+
     private static final long serialVersionUID = 1L;
     @NotEmpty(fieldName = "BokSubject.subjectNo",groups = {ValidateGroupEdit.class})
     @Length(fieldName = "BokSubject.subjectNo", max = 32, groups = {ValidateGroupEdit.class})
@@ -219,5 +221,13 @@ public class BokSubjectDto extends BaseEntity implements ProcessEntity {
 
     public void setStatusStr(String statusStr) {
         this.statusStr = statusStr;
+    }
+
+    public String getDes() {
+        return des;
+    }
+
+    public void setDes(String des) {
+        this.des = des;
     }
 }

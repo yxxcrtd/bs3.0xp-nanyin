@@ -42,6 +42,10 @@ public class Column implements Serializable {
      * 列权限
      */
     private String PRIVILEGES;
+    /**
+     * 索引类型
+     */
+    private String COLUMN_KEY;
 
     public String getCOLUMN_NAME() {
         return COLUMN_NAME;
@@ -121,5 +125,13 @@ public class Column implements Serializable {
 
     public void setNUMERIC_SCALE(String NUMERIC_SCALE) {
         this.NUMERIC_SCALE = NUMERIC_SCALE;
+    }
+
+    public String getCOLUMN_KEY() {
+        return COLUMN_KEY;
+    }
+
+    public void setCOLUMN_KEY(String COLUMN_KEY) {
+        this.COLUMN_KEY = COLUMN_KEY;
     }
 }
