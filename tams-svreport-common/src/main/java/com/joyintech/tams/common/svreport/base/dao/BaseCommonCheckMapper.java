@@ -32,4 +32,13 @@ public interface BaseCommonCheckMapper {
      */
     @Select("select column_name,ordinal_position,is_nullable,data_type,character_maximum_length,column_type,column_comment,numeric_precision,numeric_scale,privileges from information_schema.columns where table_schema = 'gd_test' and table_name = #{tableName}")
     List<ColumnDto> selectBySql(@Param("tableName") String tableName);
+
+
+    /**
+     * 查询表结构定义
+     *
+     * @param tableName
+     * @return
+     */
+//    List<TabColumnsDto> selectTabColumns(@Param("tableName") String tableName);
 }

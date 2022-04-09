@@ -1,5 +1,6 @@
 package com.joyintech.tams.common.base.entity;
 
+import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 
 import java.util.Map;
@@ -7,7 +8,7 @@ import java.util.Map;
 /**
  * check共通dto
  */
-public class BaseCommonCheckDto {
+public class BaseCommonCheckDto extends BaseEntity {
 
     //数据状态
     private String status;
