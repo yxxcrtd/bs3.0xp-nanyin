@@ -1,14 +1,20 @@
 package com.joyintech.tams.svreport.chb.common.service;
 
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.svreport.chb.common.dao.UserTabColumnsMapper;
 import com.joyintech.tams.svreport.chb.common.dto.TabColumnsDto;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -73,4 +79,113 @@ public class CheckExcelImportService {
 
         return checkResult;
     }
+
+    /**
+     * 校验列
+     */
+    public void checkTabColumns(TabColumnsDto dto, String value, int i, List<ExcelValidDto> checkResult) {
+        //如果字段允许为空，值为空直接返回
+        if (Objects.equals("Y", dto.getNullAble()) && StringUtil.isBlank(value)) {
+            return;
+        }
+        if (StringUtil.isBlank(value)) {
+            checkResult.add(new ExcelValidDto("0未导入", String.valueOf(i + 2), "货币对为空"));
+        }
+        //校验字段长度
+        if (dto.getLength() != 0 && dto.getLength() < value.length()) {
+            checkResult.add(new ExcelValidDto("0未导入", String.valueOf(i + 2), "字段长度不能超过" + dto.getLength()));
+        }
+        //日期类型校验
+        if (Objects.equals("DATE", dto.getDataType())) {
+            if (!this.checkDate(value)) {
+                checkResult.add(new ExcelValidDto("0未导入", String.valueOf(i + 2), "不是日期格式"));
+            }
+        }
+        //数字类型校验
+        if (Objects.equals("NUMBER", dto.getDataType())) {
+            if (!this.checkFigure(value)) {
+                checkResult.add(new ExcelValidDto("0未导入", String.valueOf(i + 2), "不是数字格式"));
+            }
+        }
+    }
+
+
+    /**
+     * 日期格式校验
+     *
+     * @param
+     * @return 返回boolean
+     */
+    private boolean checkDate(String date) {
+        boolean flag = true;
+        if (!DateUtil.isDateStr(date, DateUtil.DEFAULT_OTHER_FORMAT,
+                DateUtil.DEFAULT_ANOTHER_FORMAT, DateUtil.DEFAULT_DATE_FORMAT_EN)) {
+            flag = false;
+        } else {
+            date = date.replace("-", "").replace("/", "");
+            //年
+            int year = Integer.valueOf(date.substring(0, 4));
+            //月
+            int month = Integer.valueOf(date.substring(4, 6));
+            //日
+            int day = Integer.valueOf(date.substring(6));
+            if (month < 1 || month > 12) {
+                flag = false;
+            } else {
+                if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) {
+                    if (day < 1 || day > 31) {
+                        flag = false;
+                    }
+                } else if (month == 4 || month == 6 || month == 9 || month == 11) {
+                    if (day < 1 || day > 30) {
+                        flag = false;
+                    }
+                } else if (month == 2) {
+                    if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) {
+                        if (day < 1 || day > 29) {
+                            flag = false;
+                        }
+                    } else {
+                        if (day < 1 || day > 28) {
+                            flag = false;
+                        }
+                    }
+                }
+            }
+        }
+        return flag;
+    }
+
+    /**
+     * 判断是否为数字
+     *
+     * @param
+     * @return 返回boolean
+     */
+    private boolean checkFigure(String figure) {
+        try {
+            new BigDecimal(figure);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public List<ExcelValidDto> checkImportDB(List<Map<String, String>> dataList, String tableName) {
+
+        List<ExcelValidDto> checkResult = new LinkedList<>();
+        Map<String, TabColumnsDto> tabColumnsMap = this.getTabColumns(tableName);
+        for (int i = 0; i < dataList.size(); i++) {
+            Map<String, String> map = dataList.get(i);
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                if (tabColumnsMap.containsKey(entry.getKey())) {
+                    this.checkTabColumns(tabColumnsMap.get(entry.getKey()), entry.getValue(), i, checkResult);
+                }
+            }
+
+        }
+        return checkResult;
+
+    }
+
 }
