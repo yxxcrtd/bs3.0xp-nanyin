@@ -11,10 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -173,18 +170,26 @@ public class CheckExcelImportService {
 
     public List<ExcelValidDto> checkImportDB(List<Map<String, String>> dataList, String tableName) {
 
-        List<ExcelValidDto> checkResult = new LinkedList<>();
+        List<ExcelValidDto> checkResultAll = new LinkedList<>();
         Map<String, TabColumnsDto> tabColumnsMap = this.getTabColumns(tableName);
-        for (int i = 0; i < dataList.size(); i++) {
-            Map<String, String> map = dataList.get(i);
+        Iterator<Map<String, String>> iterator = dataList.iterator();
+        int i = 0;
+        while (iterator.hasNext()) {
+            List<ExcelValidDto> checkResult = new LinkedList<>();
+            Map<String, String> map = iterator.next();
             for (Map.Entry<String, String> entry : map.entrySet()) {
                 if (tabColumnsMap.containsKey(entry.getKey())) {
                     this.checkTabColumns(tabColumnsMap.get(entry.getKey()), entry.getValue(), i, checkResult);
                 }
             }
-
+            //如果校验不通过remove元素
+            if (CollectionUtils.isNotEmpty(checkResult)) {
+                iterator.remove();
+                checkResultAll.addAll(checkResult);
+            }
+            i++;
         }
-        return checkResult;
+        return checkResultAll;
 
     }
 
