@@ -19,12 +19,12 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.ExcelUtil;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbexchangeinfo.dao.ChbExchangeQuotationInfoMapper;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbexchangeinfo.dto.ChbExchangeQuotationInfoDto;
 import com.joyintech.tams.svreport.chb.common.dto.TabColumnsDto;
 import com.joyintech.tams.svreport.chb.common.service.CheckExcelImportService;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.commons.collections4.CollectionUtils;
@@ -156,70 +156,6 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
         //未按照要求填写的条数
         int unSuccess = 0;
 
-        //数据存在格式问题数据库字段属性
-        Map<String, TabColumnsDto> map = checkExcelImportService.getTabColumns(TABLE_NAME);
-        for (int i = 0; i < dataList.size(); i++) {
-            List<ExcelValidDto> checkResult = new LinkedList<>();
-            List<String> list = dataList.get(i);
-            //校验货币对
-            checkExcelImportService.checkTabColumns(map.get("EXCHARGE_CODE"), list.get(0), i, checkResult);
-            //校验交易日期
-            checkExcelImportService.checkTabColumns(map.get("TRADE_DATE"), list.get(1), i, checkResult);
-            //校验开盘价
-            checkExcelImportService.checkTabColumns(map.get("OPEN_PRICE"), list.get(2), i, checkResult);
-            //校验收盘价
-            checkExcelImportService.checkTabColumns(map.get("CLOSE_PRICE"), list.get(3), i, checkResult);
-            //校验中间价
-            checkExcelImportService.checkTabColumns(map.get("MID_PRICE"), list.get(4), i, checkResult);
-            //校验最高价
-            checkExcelImportService.checkTabColumns(map.get("HIGH_PRICE"), list.get(5), i, checkResult);
-            //校验最低价
-            checkExcelImportService.checkTabColumns(map.get("LOW_PRICE"), list.get(6), i, checkResult);
-            //校验报价单位
-            checkExcelImportService.checkTabColumns(map.get("QUOT_UNIT"), list.get(7), i, checkResult);
-            //校验数据来源
-            checkExcelImportService.checkTabColumns(map.get("DATASOURCE_TYPE"), list.get(8).split(":")[0], i, checkResult);
-            List<String> firmErrorList = new LinkedList<>();
-            //校验数据是否为必填
-            if (StringUtil.isEmpty(list.get(0))) {
-                firmErrorList.add("货币对为空");
-            }
-            if (StringUtil.isEmpty(list.get(1))) {
-                firmErrorList.add("交易日期为空");
-            }
-            if (StringUtil.isEmpty(list.get(2))) {
-                firmErrorList.add("开盘价为空");
-            }
-            if (StringUtil.isEmpty(list.get(3))) {
-                firmErrorList.add("收盘价为空");
-            }
-            if (StringUtil.isEmpty(list.get(4))) {
-                firmErrorList.add("中间价为空");
-            }
-            if (StringUtil.isEmpty(list.get(5))) {
-                firmErrorList.add("最高价为空");
-            }
-            if (StringUtil.isEmpty(list.get(6))) {
-                firmErrorList.add("最低价为空");
-            }
-            if (StringUtil.isEmpty(list.get(7))) {
-                firmErrorList.add("报价单位为空");
-            }
-            if (StringUtil.isEmpty(list.get(8))) {
-                firmErrorList.add("数据来源为空");
-            }
-            if (CollectionUtils.isNotEmpty(checkResult)) {
-                fail++;
-            }
-            if (CollectionUtils.isNotEmpty(firmErrorList)) {
-                unSuccess++;
-            }
-
-            if (CollectionUtils.isEmpty(checkResult)
-                    && CollectionUtils.isEmpty(firmErrorList)) {
-                success++;
-            }
-        }
         errorListAll.add(new ValidMessage(success + "条数据无问题，可正常接入"));
         if (fail > 0) {
             errorListAll.add(new ValidMessage(fail + "条数据存在格式问题，系统无法接入"));
@@ -253,30 +189,7 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
             }
         }
 
-        //数据存在格式问题数据库字段属性
-        Map<String, TabColumnsDto> map = checkExcelImportService.getTabColumns(TABLE_NAME);
-        for (int i = 0; i < dataList.size(); i++) {
-            List<String> list = dataList.get(i);
-            List<ExcelValidDto> checkResult = new LinkedList<>();
-            //校验货币对
-            checkExcelImportService.checkTabColumns(map.get("EXCHARGE_CODE"), list.get(0), i, checkResult);
-            //校验交易日期
-            checkExcelImportService.checkTabColumns(map.get("TRADE_DATE"), list.get(1), i, checkResult);
-            //校验开盘价
-            checkExcelImportService.checkTabColumns(map.get("OPEN_PRICE"), list.get(2), i, checkResult);
-            //校验收盘价
-            checkExcelImportService.checkTabColumns(map.get("CLOSE_PRICE"), list.get(3), i, checkResult);
-            //校验中间价
-            checkExcelImportService.checkTabColumns(map.get("MID_PRICE"), list.get(4), i, checkResult);
-            //校验最高价
-            checkExcelImportService.checkTabColumns(map.get("HIGH_PRICE"), list.get(5), i, checkResult);
-            //校验最低价
-            checkExcelImportService.checkTabColumns(map.get("LOW_PRICE"), list.get(6), i, checkResult);
-            //校验报价单位
-            checkExcelImportService.checkTabColumns(map.get("QUOT_UNIT"), list.get(7), i, checkResult);
-            //校验数据来源
-            checkExcelImportService.checkTabColumns(map.get("DATASOURCE_TYPE"), list.get(8).split(":")[0], i, checkResult);
-        }
+
 
         List<ChbExchangeQuotationInfoDto> list = this.checkDataConvertToBean(null, 9, checkResultAll);
         List<ExcelValidDto> excelValidList = checkExcelImportService.getExcelValidList(checkResultAll);

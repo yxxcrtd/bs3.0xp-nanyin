@@ -2,10 +2,10 @@ package com.joyintech.tams.svreport.chb.common.service;
 
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.report.common.dto.ExcelValidDto;
+import com.joyintech.tams.common.base.entity.BaseCommonCheckDto;
 import com.joyintech.tams.svreport.chb.common.dao.UserTabColumnsMapper;
 import com.joyintech.tams.svreport.chb.common.dto.TabColumnsDto;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
@@ -80,28 +80,40 @@ public class CheckExcelImportService {
     /**
      * 校验列
      */
-    public void checkTabColumns(TabColumnsDto dto, String value, int i, List<ExcelValidDto> checkResult) {
+    public void checkTabColumns(TabColumnsDto tabDto, String value, int i, List<BaseCommonCheckDto> checkResult, Map<String, String> map) {
         //如果字段允许为空，值为空直接返回
-        if (Objects.equals("Y", dto.getNullAble()) && StringUtil.isBlank(value)) {
+        if (Objects.equals("Y", tabDto.getNullAble()) && StringUtil.isBlank(value)) {
             return;
         }
         if (StringUtil.isBlank(value)) {
-            checkResult.add(new ExcelValidDto("0未导入", String.valueOf(i + 2), "货币对为空"));
+            BaseCommonCheckDto dto = new BaseCommonCheckDto();
+            dto.setErrMap(map);
+            dto.setExcelValidDto(new ExcelValidDto("0未导入", String.valueOf(i + 2), "不能为空"));
+            checkResult.add(dto);
         }
         //校验字段长度
-        if (dto.getLength() != 0 && dto.getLength() < value.length()) {
-            checkResult.add(new ExcelValidDto("0未导入", String.valueOf(i + 2), "字段长度不能超过" + dto.getLength()));
+        if (tabDto.getLength() != 0 && tabDto.getLength() < value.length()) {
+            BaseCommonCheckDto dto = new BaseCommonCheckDto();
+            dto.setErrMap(map);
+            dto.setExcelValidDto(new ExcelValidDto("0未导入", String.valueOf(i + 2), "字段长度不能超过" + tabDto.getLength()));
+            checkResult.add(dto);
         }
         //日期类型校验
-        if (Objects.equals("DATE", dto.getDataType())) {
+        if (Objects.equals("DATE", tabDto.getDataType())) {
             if (!this.checkDate(value)) {
-                checkResult.add(new ExcelValidDto("0未导入", String.valueOf(i + 2), "不是日期格式"));
+                BaseCommonCheckDto dto = new BaseCommonCheckDto();
+                dto.setErrMap(map);
+                dto.setExcelValidDto(new ExcelValidDto("0未导入", String.valueOf(i + 2), "不是日期格式"));
+                checkResult.add(dto);
             }
         }
         //数字类型校验
-        if (Objects.equals("NUMBER", dto.getDataType())) {
+        if (Objects.equals("NUMBER", tabDto.getDataType())) {
             if (!this.checkFigure(value)) {
-                checkResult.add(new ExcelValidDto("0未导入", String.valueOf(i + 2), "不是数字格式"));
+                BaseCommonCheckDto dto = new BaseCommonCheckDto();
+                dto.setErrMap(map);
+                dto.setExcelValidDto(new ExcelValidDto("0未导入", String.valueOf(i + 2), "不是数字格式"));
+                checkResult.add(dto);
             }
         }
     }
@@ -168,18 +180,18 @@ public class CheckExcelImportService {
         }
     }
 
-    public List<ExcelValidDto> checkImportDB(List<Map<String, String>> dataList, String tableName) {
+    public List<BaseCommonCheckDto> checkImportDB(List<Map<String, String>> dataList, String tableName) {
 
-        List<ExcelValidDto> checkResultAll = new LinkedList<>();
+        List<BaseCommonCheckDto> checkResultAll = new LinkedList<>();
         Map<String, TabColumnsDto> tabColumnsMap = this.getTabColumns(tableName);
         Iterator<Map<String, String>> iterator = dataList.iterator();
         int i = 0;
         while (iterator.hasNext()) {
-            List<ExcelValidDto> checkResult = new LinkedList<>();
+            List<BaseCommonCheckDto> checkResult = new LinkedList<>();
             Map<String, String> map = iterator.next();
             for (Map.Entry<String, String> entry : map.entrySet()) {
                 if (tabColumnsMap.containsKey(entry.getKey())) {
-                    this.checkTabColumns(tabColumnsMap.get(entry.getKey()), entry.getValue(), i, checkResult);
+                    this.checkTabColumns(tabColumnsMap.get(entry.getKey()), entry.getValue(), i, checkResult, map);
                 }
             }
             //如果校验不通过remove元素

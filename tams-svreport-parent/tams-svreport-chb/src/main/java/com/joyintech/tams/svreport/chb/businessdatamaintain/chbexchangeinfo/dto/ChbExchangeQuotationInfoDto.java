@@ -18,6 +18,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.validation.annotation.Length;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.common.base.entity.BaseCommonCheckDto;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
@@ -35,7 +36,7 @@ import java.util.List;
  * @since 1.0
  */
 @PageId("ChbExchangeQuotationInfo002")
-public class ChbExchangeQuotationInfoDto extends BaseEntity implements ProcessEntity {
+public class ChbExchangeQuotationInfoDto extends BaseCommonCheckDto  implements ProcessEntity {
     /**
      * <意义，目的和功能，以及可能被用到的地方>
      */
