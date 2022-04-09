@@ -4,9 +4,9 @@ $(function() {
         object.pageModel = pageModel;
         object.operateType = operateType;
         object.exchargeCode=$("#exchargeCode").val();
-        Joyin.ajaxJson(basePath + 'chb/businessdatamaintain/exchangeinfo/ChbExchangeQuotationInfo002/check', object, function(result) {
+        Joyin.ajaxJson(basePath + 'chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo002/check', object, function(result) {
             Joyin.confirm(result.data, function() {
-                    WorkFlow.doSubmitList(basePath + 'chb/businessdatamaintain/exchangeinfo/ChbExchangeQuotationInfo002/save', object, "ChbExchangeQuotationInfo002_btn_submit");
+                    WorkFlow.doSubmitList(basePath + 'chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo002/save', object, "ChbExchangeQuotationInfo002_btn_submit");
             });
         });
     };

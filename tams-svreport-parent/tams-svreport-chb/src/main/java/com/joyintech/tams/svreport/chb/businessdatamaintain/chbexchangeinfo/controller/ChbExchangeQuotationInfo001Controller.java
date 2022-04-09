@@ -40,7 +40,7 @@ import java.util.List;
  */
 @Controller
 @PageId("ChbExchangeQuotationInfo001")
-@RequestMapping("/chb/businessdatamaintain/exchangeinfo/ChbExchangeQuotationInfo001")
+@RequestMapping("/chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo001")
 public class ChbExchangeQuotationInfo001Controller extends BaseController {
     /**
      * 汇率行情service

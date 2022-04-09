@@ -48,7 +48,7 @@ import java.util.*;
 
 @Controller
 @PageId("ChbCalendarInfo001")
-@RequestMapping("/chb/businessdatamaintain/calendarInfo/ChbCalendarInfo001")
+@RequestMapping("/chb/businessdatamaintain/chbcalendarInfo/ChbCalendarInfo001")
 public class ChbCalendarInfo001Controller extends BaseController {
     /**
      *

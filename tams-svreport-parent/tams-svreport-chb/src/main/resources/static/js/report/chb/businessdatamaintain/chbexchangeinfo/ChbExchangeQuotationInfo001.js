@@ -25,7 +25,7 @@ $(function() {
         	 var tradeDate = new Date(parseInt(data.tradeDate));
              tradeDate= tradeDate.format('yyyy-MM-dd');
             Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
-                    basePath + "chb/businessdatamaintain/exchangeinfo/ChbExchangeQuotationInfo002/init",
+                    basePath + "chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo002/init",
                     "95%", "80%", {pageModel:PAGE_MODEL_REFERENCE,
             	                    exchargeCode:data.exchargeCode,
             	                    tradeDate:tradeDate});
@@ -52,9 +52,9 @@ $(function() {
         data.pageModel = PAGE_MODEL_EDIT;
         var tradeDate = new Date(parseInt(data.tradeDate));
         tradeDate= tradeDate.format('yyyy-MM-dd');
-        Joyin.ajaxJson(basePath + 'chb/businessdatamaintain/exchangeinfo/ChbExchangeQuotationInfo002/check', data, function(result) {
+        Joyin.ajaxJson(basePath + 'chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo002/check', data, function(result) {
         	Joyin.dialog("汇率行情信息修改",
-                    basePath + "chb/businessdatamaintain/exchangeinfo/ChbExchangeQuotationInfo002/init",
+                    basePath + "chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo002/init",
                     "60%", "80%", {pageModel:PAGE_MODEL_EDIT,
             	                    exchargeCode:data.exchargeCode,
             	                    tradeDate:tradeDate},function() {
@@ -68,9 +68,9 @@ $(function() {
      */
     table.bind('click', '.delt', function(data, index) {
         var object = {selectedItem: [data], operateType:"delete"};
-        Joyin.ajaxJson(basePath + 'chb/businessdatamaintain/exchangeinfo/ChbExchangeQuotationInfo001/check', object, function(result) {
+        Joyin.ajaxJson(basePath + 'chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo001/check', object, function(result) {
         	Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                WorkFlow.doDeleteList(basePath + 'chb/businessdatamaintain/exchangeinfo/ChbExchangeQuotationInfo001/delete', object, "ChbExchangeQuotationInfo001_btn_delete", "ChbExchangeQuotationInfo002",function() {
+                WorkFlow.doDeleteList(basePath + 'chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo001/delete', object, "ChbExchangeQuotationInfo001_btn_delete", "ChbExchangeQuotationInfo002",function() {
                     table.reload();
                 });
             });
@@ -97,7 +97,7 @@ $(function() {
         $('#ChbExchangeQuotationInfo001_btn_add').click(function() {
         
             Joyin.dialog("汇率行情信息新建",
-                        basePath + "chb/businessdatamaintain/exchangeinfo/ChbExchangeQuotationInfo002/init",
+                        basePath + "chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo002/init",
                         "50%", "90%", {pageModel:PAGE_MODEL_NEW});
         }); 
         $('#ChbExchangeQuotationInfo001_btn_delete').click(function() {
@@ -109,9 +109,9 @@ $(function() {
                 return;
             }
             var object = {selectedItem: selArr, operateType:"delete"};
-            Joyin.ajaxJson(basePath + 'chb/businessdatamaintain/exchangeinfo/ChbExchangeQuotationInfo001/check', object, function(result) {
+            Joyin.ajaxJson(basePath + 'chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo001/check', object, function(result) {
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                    WorkFlow.doDeleteList(basePath + 'chb/businessdatamaintain/exchangeinfo/ChbExchangeQuotationInfo001/delete', object, "ChbExchangeQuotationInfo001_btn_delete", "ChbExchangeQuotationInfo002",function() {
+                    WorkFlow.doDeleteList(basePath + 'chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo001/delete', object, "ChbExchangeQuotationInfo001_btn_delete", "ChbExchangeQuotationInfo002",function() {
                     	table.reload();
                 });      
              });
@@ -122,8 +122,8 @@ $(function() {
         $('#ChbExchangeQuotationInfo001_btn_import').click(function() {
             Joyin.confirm("请确认是否要导入数据？", function() {
                 Joyin.uploadFile(function(fileName) {
-                    Joyin.ajax(basePath + 'chb/businessdatamaintain/exchangeinfo/ChbExchangeQuotationInfo001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
-                        Joyin.ajax(basePath + 'chb/businessdatamaintain/exchangeinfo/ChbExchangeQuotationInfo001/importFile', {fileName: fileName});
+                    Joyin.ajax(basePath + 'chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
+                        Joyin.ajax(basePath + 'chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo001/importFile', {fileName: fileName});
                     });
                 },function() {
                     table.reload();

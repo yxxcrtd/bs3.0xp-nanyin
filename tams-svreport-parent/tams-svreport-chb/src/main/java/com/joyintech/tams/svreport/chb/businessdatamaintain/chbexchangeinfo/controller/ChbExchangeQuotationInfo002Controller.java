@@ -39,7 +39,7 @@ import java.util.*;
 
 @Controller
 @PageId("ChbExchangeQuotationInfo002")
-@RequestMapping("/chb/businessdatamaintain/exchangeinfo/ChbExchangeQuotationInfo002")
+@RequestMapping("/chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo002")
 public class ChbExchangeQuotationInfo002Controller extends BaseController {
 
     /**

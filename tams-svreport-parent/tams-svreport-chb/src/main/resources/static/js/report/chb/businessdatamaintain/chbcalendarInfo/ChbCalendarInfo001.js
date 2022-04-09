@@ -47,7 +47,7 @@
      * 导出
      */
     var exportExcel = function () {
-        Joyin.exportExcel(basePath + "chb/businessdatamaintain/calendarInfo/ChbCalendarInfo001/export", getSearchParams());
+        Joyin.exportExcel(basePath + "chb/businessdatamaintain/chbcalendarInfo/ChbCalendarInfo001/export", getSearchParams());
     };
     /**
      * 绑定按钮事件
@@ -71,8 +71,8 @@
         $('#ChbCalendarInfo001_btn_import').click(function () {
             Joyin.confirm("请确认是否要导入数据?", function () {
                 Joyin.uploadFile(function (fileName) {
-                    Joyin.ajax(basePath + 'chb/businessdatamaintain/calendarInfo/ChbCalendarInfo001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
-                         Joyin.ajax(basePath + "chb/businessdatamaintain/calendarInfo/ChbCalendarInfo001/importFile", {
+                    Joyin.ajax(basePath + 'chb/businessdatamaintain/chbcalendarInfo/ChbCalendarInfo001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
+                         Joyin.ajax(basePath + "chb/businessdatamaintain/chbcalendarInfo/ChbCalendarInfo001/importFile", {
                         fileName: fileName
                     }, function (result) {
                         if (!result || !($.isArray(result) && result.length > 0)) {
@@ -105,7 +105,7 @@
                     layer.msg("请选择节假日标志为工作日的数据");
                 } else {
                     Joyin.confirm("是否设置为节假日?", function () {
-                        Joyin.ajaxJson(basePath + "chb/businessdatamaintain/calendarInfo/ChbCalendarInfo001/sethday", selArr, function () {
+                        Joyin.ajaxJson(basePath + "chb/businessdatamaintain/chbcalendarInfo/ChbCalendarInfo001/sethday", selArr, function () {
                             table.reload();
                         });
                     });
@@ -133,7 +133,7 @@
                     layer.msg("请选择节假日标志为节假日的数据");
                 } else {
                     Joyin.confirm("是否设置为工作日?", function () {
-                        Joyin.ajaxJson(basePath + "chb/businessdatamaintain/calendarInfo/ChbCalendarInfo001/setwday", selArr, function () {
+                        Joyin.ajaxJson(basePath + "chb/businessdatamaintain/chbcalendarInfo/ChbCalendarInfo001/setwday", selArr, function () {
                             table.reload();
                         });
                     });
