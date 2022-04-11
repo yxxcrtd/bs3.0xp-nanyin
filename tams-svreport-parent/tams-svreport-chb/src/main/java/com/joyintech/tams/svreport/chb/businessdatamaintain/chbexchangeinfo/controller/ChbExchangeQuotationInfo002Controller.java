@@ -111,6 +111,7 @@ public class ChbExchangeQuotationInfo002Controller extends BaseController {
         }
         //新建时判断业务之间是否存在
         if (!Objects.equals("edit", dto.getSummitType())) {
+            chbExchangeQuotationInfoService.deleteChbExchargeQuoteByKey(dto);
             Integer count = chbExchangeQuotationInfoService.getChbExchargeQuoteByKey(dto);
             if (count > 0) {
                 List<ValidMessage> messages = new ArrayList<>(1);

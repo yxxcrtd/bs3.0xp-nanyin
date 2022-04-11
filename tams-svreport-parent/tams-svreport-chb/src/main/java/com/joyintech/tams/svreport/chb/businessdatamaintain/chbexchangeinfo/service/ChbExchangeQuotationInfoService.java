@@ -17,7 +17,11 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbexchangeinfo.dao.ChbExchangeQuotationInfoMapper;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbexchangeinfo.dto.ChbExchangeQuotationInfoDto;
@@ -26,6 +30,8 @@ import com.joyintech.tams.svreport.chb.common.service.CheckExcelImportService;
 import com.joyintech.tams.svreport.chb.common.util.ExcelUtil;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.workflow.engine.constant.OperationType;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -286,8 +292,8 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
         List<ChbExchangeQuotationInfoDto> list = new ArrayList<>(1);
         dto.setStatus(DictCodeListExt2.数据状态_有效.getValue());
         if (StringUtil.equals(dto.getOperateType(), DELETE)) {
-            chbExchangeQuotationInfoMapper.deleteChbExchargeQuoteByKey(dto.getExchargeCode(),dto.getTradeDate(),dto.getDatasourceType(),DictCodeListExt2.数据状态_删除.getValue());
-            chbExchangeQuotationInfoMapper.updateStatus(dto.getExchargeCode(),dto.getTradeDate(),dto.getDatasourceType(),DictCodeListExt2.数据状态_有效.getValue(),DictCodeListExt2.数据状态_删除.getValue());
+            dto.setStatus(DictCodeListExt2.数据状态_删除.getValue());
+            chbExchangeQuotationInfoMapper.updateStatus(dto);
         } else if (StringUtil.equals(dto.getOperateType(), NEW)) {
             //设置基本币种，单位币种等
             String exchargeCode = dto.getExchargeCode();
@@ -307,9 +313,15 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
         }
     }
 
+
     public Integer getChbExchargeQuoteByKey(ChbExchangeQuotationInfoDto dto) {
         dto.setStatus(DictCodeListExt2.数据状态_有效.getValue());
         return chbExchangeQuotationInfoMapper.getChbExchargeQuoteByKey(dto);
+    }
+
+    public void deleteChbExchargeQuoteByKey(ChbExchangeQuotationInfoDto dto) {
+        dto.setStatus(DictCodeListExt2.数据状态_删除.getValue());
+         chbExchangeQuotationInfoMapper.deleteChbExchargeQuoteByKey(dto);
     }
 
     /**

@@ -70,28 +70,16 @@ public interface ChbExchangeQuotationInfoMapper {
 
     /**
      * 更新状态
-     * @param exchargeCode
-     * @param tradeDate
-     * @param datasourceType
-     * @param status
-     * @param newStatus
+     * @param dto
      * @return
      */
-    int updateStatus(@Param("exchargeCode") String exchargeCode,
-                     @Param("tradeDate") Date tradeDate,
-                     @Param("datasourceType") String datasourceType,
-                     @Param("status") String status,
-                     @Param("newStatus") String newStatus);
+    int updateStatus(ChbExchangeQuotationInfoDto dto);
 
     /**
      * 主键删除
-     * @param exchargeCode
-     * @param tradeDate
-     * @param datasourceType
-     * @param status
+     * @param dto
      * @return
      */
-    int deleteChbExchargeQuoteByKey(@Param("exchargeCode") String exchargeCode,@Param("tradeDate") Date tradeDate,
-            @Param("datasourceType") String datasourceType,@Param("status") String status);
+    int deleteChbExchargeQuoteByKey(ChbExchangeQuotationInfoDto dto);
 
 }

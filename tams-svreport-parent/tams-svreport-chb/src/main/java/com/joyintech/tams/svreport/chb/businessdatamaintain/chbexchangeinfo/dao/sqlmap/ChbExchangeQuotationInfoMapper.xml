@@ -62,7 +62,6 @@
         where EXCHARGE_CODE = #{exchargeCode}
           AND TRADE_DATE = #{tradeDate}
           AND DATASOURCE_TYPE = #{datasourceType}
-          and STATUS = #{status,jdbcType=VARCHAR}
     </update>
 
     <!-- 通过主键验证数据库中是否有值 -->
@@ -72,7 +71,6 @@
         where EXCHARGE_CODE = #{exchargeCode,jdbcType=VARCHAR}
           and TRADE_DATE = #{tradeDate,jdbcType=DATE}
           and DATASOURCE_TYPE = #{datasourceType,jdbcType=VARCHAR}
-          and STATUS = #{status,jdbcType=VARCHAR}
     </select>
 
     <!-- 将Excel表格数据加入数据库 -->
@@ -124,8 +122,7 @@
                     <if test="item.openPrice!=null">
                         when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
                         and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
-                        and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR}
-                        and STATUS = #{item.status,jdbcType=VARCHAR} then
+                        and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR} then
                         #{item.openPrice,jdbcType=DECIMAL}
                     </if>
                 </foreach>
@@ -135,8 +132,7 @@
                     <if test="item.closePrice!=null">
                         when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
                         and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
-                        and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR}
-                        and STATUS = #{item.status,jdbcType=VARCHAR} then
+                        and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR} then
                         #{item.closePrice,jdbcType=DECIMAL}
                     </if>
                 </foreach>
@@ -146,8 +142,7 @@
                     <if test="item.highPrice!=null">
                         when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
                         and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
-                        and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR}
-                        and STATUS = #{item.status,jdbcType=VARCHAR} then
+                        and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR} then
                         #{item.highPrice,jdbcType=DECIMAL}
                     </if>
                 </foreach>
@@ -157,8 +152,7 @@
                     <if test="item.lowPrice!=null">
                         when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
                         and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
-                        and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR}
-                        and STATUS = #{item.status,jdbcType=VARCHAR} then
+                        and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR} then
                         #{item.lowPrice,jdbcType=DECIMAL}
                     </if>
                 </foreach>
@@ -168,8 +162,7 @@
                     <if test="item.midPrice!=null">
                         when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
                         and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
-                        and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR}
-                        and STATUS = #{item.status,jdbcType=VARCHAR} then
+                        and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR} then
                         #{item.midPrice,jdbcType=DECIMAL}
                     </if>
                 </foreach>
@@ -179,8 +172,7 @@
                     <if test="item.quotUnit!=null">
                         when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
                         and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
-                        and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR}
-                        and STATUS = #{item.status,jdbcType=VARCHAR} then
+                        and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR} then
                         #{item.quotUnit,jdbcType=DECIMAL}
                     </if>
                 </foreach>
@@ -189,8 +181,7 @@
                 <foreach collection="listA" item="item" index="index">
                     when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
                     and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
-                    and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR}
-                    and STATUS = #{item.status,jdbcType=VARCHAR} then
+                    and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR} then
                     #{item.errMsg,jdbcType=CLOB}
                 </foreach>
             </trim>
@@ -199,8 +190,7 @@
                     <if test="item.status!=null">
                         when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
                         and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
-                        and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR}
-                        and STATUS = #{item.status,jdbcType=VARCHAR} then
+                        and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR} then
                         #{item.status,jdbcType=VARCHAR}
                     </if>
                 </foreach>
@@ -210,8 +200,7 @@
                     <if test="item.updateUser!=null">
                         when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
                         and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
-                        and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR}
-                        and STATUS = #{item.status,jdbcType=VARCHAR} then
+                        and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR} then
                         #{item.updateUser,jdbcType=VARCHAR}
                     </if>
                 </foreach>
@@ -221,8 +210,7 @@
                     <if test="item.updateTime!=null">
                         when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
                         and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
-                        and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR}
-                        and STATUS = #{item.status,jdbcType=VARCHAR} then
+                        and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR} then
                         #{item.updateTime,jdbcType=DATE}
                     </if>
                 </foreach>
@@ -233,7 +221,6 @@
             EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
             and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
             and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR}
-            and STATUS = #{item.status,jdbcType=VARCHAR}
         </foreach>
     </update>
 
@@ -244,7 +231,6 @@
         where EXCHARGE_CODE = #{exchargeCode,jdbcType=VARCHAR}
           and TRADE_DATE = #{tradeDate,jdbcType=DATE}
           and DATASOURCE_TYPE = #{datasourceType,jdbcType=VARCHAR}
-          and STATUS = #{status,jdbcType=VARCHAR}
     </delete>
 
 </mapper>
