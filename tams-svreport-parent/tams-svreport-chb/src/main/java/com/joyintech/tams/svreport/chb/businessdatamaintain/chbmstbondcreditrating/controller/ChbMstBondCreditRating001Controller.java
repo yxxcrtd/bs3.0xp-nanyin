@@ -114,15 +114,15 @@ public class ChbMstBondCreditRating001Controller extends BaseController {
         }
         ProcessParameter<ChbMstBondCreditRatingDto> processParameter = new ProcessParameter<ChbMstBondCreditRatingDto>();
         WorkFlowParameter<ChbMstBondCreditRatingDto> params = new WorkFlowParameter<ChbMstBondCreditRatingDto>();
-        params.setPageId("MstBondCreditRating002");
+        params.setPageId("ChbMstBondCreditRating002");
         params.setElementId(dto.getElementId());
         params.setBusinessCode(item -> item.getoCode()+item.getoObject());
         params.setBusinessType(DictCodeList.债券评级.getValue());
         // 设置流程业务说明, entity即传入的dto
-        params.setComment(entity -> this.getMessage("MstBondCreditRating001.oCode") + "("
+        params.setComment(entity -> this.getMessage("ChbMstBondCreditRating001.oCode") + "("
                 + entity.getoCode() + ")"
-                + this.getMessage("MstBondCreditRating001.oName")
-                + "(" + entity.getoName() + ")"+this.getMessage("MstBondCreditRating001.oObject")
+                + this.getMessage("ChbMstBondCreditRating001.oName")
+                + "(" + entity.getoName() + ")"+this.getMessage("ChbMstBondCreditRating001.oObject")
                 +"("+entity.getoObject()+")");
         processParameter.setWorkFlowParameter(params);
         String msg =mstBondCreditRateService.start(processParameter,dto.getSelectedItem().toArray(new ChbMstBondCreditRatingDto[dto.getSelectedItem().size()]));

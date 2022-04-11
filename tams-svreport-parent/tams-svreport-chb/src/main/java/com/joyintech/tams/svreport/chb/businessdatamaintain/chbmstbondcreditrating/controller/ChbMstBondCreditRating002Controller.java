@@ -93,14 +93,14 @@ public class ChbMstBondCreditRating002Controller extends BaseController {
         // 新建留痕表参数和工作流参数
         ProcessParameter<ChbMstBondCreditRatingDto> processParameter = new ProcessParameter<ChbMstBondCreditRatingDto>();
         WorkFlowParameter<ChbMstBondCreditRatingDto> params = new WorkFlowParameter<ChbMstBondCreditRatingDto>();
-        params.setPageId("MstBondCreditRating002");
-        params.setElementId("MstBondCreditRating002_btn_submit");
+        params.setPageId("ChbMstBondCreditRating002");
+        params.setElementId("ChbMstBondCreditRating002_btn_submit");
         params.setBusinessCode(item -> item.getoCode()+item.getoObject());
         params.setBusinessType(DictCodeList.债券评级.getValue());
-        params.setComment(entity -> this.getMessage("MstBondCreditRating001.oCode") + "("
+        params.setComment(entity -> this.getMessage("ChbMstBondCreditRating001.oCode") + "("
                 + entity.getoCode() + ")"
-                + this.getMessage("MstBondCreditRating001.oName")
-                + "(" + entity.getoName() + ")"+this.getMessage("MstBondCreditRating001.oObject")
+                + this.getMessage("ChbMstBondCreditRating001.oName")
+                + "(" + entity.getoName() + ")"+this.getMessage("ChbMstBondCreditRating001.oObject")
                 +"("+entity.getoObject()+")");
         // 塞入工作流参数
         processParameter.setWorkFlowParameter(params);

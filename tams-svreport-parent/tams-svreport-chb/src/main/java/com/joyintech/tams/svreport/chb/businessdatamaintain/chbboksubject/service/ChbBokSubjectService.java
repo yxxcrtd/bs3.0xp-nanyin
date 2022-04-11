@@ -38,7 +38,17 @@ public class ChbBokSubjectService extends CommonExportService<ChbBokSubjectDto> 
     private ChbBokSubjectDao bokSubjectDao;
 
 
-
+    /**
+     * 检索上级科目代码列表
+     *
+     * @param param 过滤参数
+     * @return 上级科目代码列表
+     * @see
+     * @since 1.0
+     */
+    public List<SuggestDto> getFSubjectId(String param) {
+        return queryForSuggest(bokSubjectDao::getFSubjectId, null, param);
+    }
 
     /**
      * 获取科目文本输入框模糊查询 和 联动

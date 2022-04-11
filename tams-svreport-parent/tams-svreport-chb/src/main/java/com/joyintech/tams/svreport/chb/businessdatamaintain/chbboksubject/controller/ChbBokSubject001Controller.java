@@ -6,6 +6,7 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.system.constant.SystemGlobalConstant;
@@ -114,7 +115,20 @@ public class ChbBokSubject001Controller extends BaseController {
         return list;
     }
 
-
+    /**
+     * 检索上级科目代码
+     *
+     * @return 账套上级科目代码联想框内容
+     * @throws Exception
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("/getFSubjectId")
+    public List<SuggestDto> getFSubjectId(String param)
+    {
+        return bokSubjectService.getFSubjectId(param);
+    }
 
 
     /**
@@ -166,13 +180,13 @@ public class ChbBokSubject001Controller extends BaseController {
         }
         ProcessParameter<ChbBokSubjectDto> processParameter = new ProcessParameter<ChbBokSubjectDto>();
         WorkFlowParameter<ChbBokSubjectDto> params = new WorkFlowParameter<ChbBokSubjectDto>();
-        params.setPageId("CBokSubject002");
+        params.setPageId("ChbBokSubject002");
         params.setElementId(dto.getElementId());
         params.setBusinessCode(item -> item.getSubjectNo());
         params.setBusinessType("SYS");
         // 设置流程业务说明, entity即传入的dto
-        params.setComment(entity -> SpringContextUtil.getTextValue("BokSubject.subjectNo") + "(" + entity.getSubjectNo() + ")" + "-"
-                + SpringContextUtil.getTextValue("BokSubject.subjectName") + "("
+        params.setComment(entity -> SpringContextUtil.getTextValue("ChbBokSubject.subjectNo") + "(" + entity.getSubjectNo() + ")" + "-"
+                + SpringContextUtil.getTextValue("ChbBokSubject.subjectName") + "("
                 +entity.getSubjectName() + ")");
         processParameter.setWorkFlowParameter(params);
         String msg = bokSubjectService.start(processParameter,dto.getSelectedItem().toArray(new ChbBokSubjectDto[dto.getSelectedItem().size()]));

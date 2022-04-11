@@ -89,13 +89,13 @@ public class ChbBokSubject002Controller extends BaseController {
         // 新建留痕表参数和工作流参数
         ProcessParameter<ChbBokSubjectDto> processParameter = new ProcessParameter<ChbBokSubjectDto>();
         WorkFlowParameter<ChbBokSubjectDto> params = new WorkFlowParameter<ChbBokSubjectDto>();
-        params.setPageId("CBokSubject002");
-        params.setElementId("BokSubject002_btn_submit");
+        params.setPageId("ChbBokSubject002");
+        params.setElementId("ChbBokSubject002_btn_submit");
         params.setBusinessCode(item -> item.getSubjectNo());
         params.setBusinessType("SYS");
-        params.setComment(entity -> this.getMessage("BokSubject.subjectNo") + "("
+        params.setComment(entity -> this.getMessage("ChbBokSubject.subjectNo") + "("
                 + entity.getSubjectNo() + ")"
-                + this.getMessage("BokSubject.subjectName")
+                + this.getMessage("ChbBokSubject.subjectName")
                 + "(" + entity.getSubjectName() + ")");
         // 塞入工作流参数
         processParameter.setWorkFlowParameter(params);
