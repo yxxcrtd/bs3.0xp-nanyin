@@ -320,7 +320,6 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
     }
 
     public void deleteChbExchargeQuoteByKey(ChbExchangeQuotationInfoDto dto) {
-        dto.setStatus(DictCodeListExt2.数据状态_删除.getValue());
          chbExchangeQuotationInfoMapper.deleteChbExchargeQuoteByKey(dto);
     }
 

@@ -121,8 +121,6 @@ public class ChbExchangeQuotationInfoDto extends BaseCommonCheckDto  implements 
      */
     private String operateType;
 
-    private String summitType;
-
     /**
      * <意义，目的和功能，以及可能被用到的地方>
      */
@@ -134,10 +132,6 @@ public class ChbExchangeQuotationInfoDto extends BaseCommonCheckDto  implements 
      */
     private String elementId;
 
-    /**
-     * 错误信息
-     */
-    private String errMsg;
 
     public void setTradeDate(Date tradeDate) {
         this.tradeDate = tradeDate;
@@ -207,13 +201,6 @@ public class ChbExchangeQuotationInfoDto extends BaseCommonCheckDto  implements 
         this.inputType = inputType;
     }
 
-    public String getSummitType() {
-        return summitType;
-    }
-
-    public void setSummitType(String summitType) {
-        this.summitType = summitType;
-    }
 
     /**
      * 获取 selectedItem
@@ -284,13 +271,6 @@ public class ChbExchangeQuotationInfoDto extends BaseCommonCheckDto  implements 
     }
 
 
-    public String getErrMsg() {
-        return errMsg;
-    }
-
-    public void setErrMsg(String errMsg) {
-        this.errMsg = errMsg;
-    }
 
     /**
      * 设置 elementId

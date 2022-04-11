@@ -109,18 +109,8 @@ public class ChbExchangeQuotationInfo002Controller extends BaseController {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
-        //新建时判断业务之间是否存在
-        if (!Objects.equals("edit", dto.getSummitType())) {
-            chbExchangeQuotationInfoService.deleteChbExchargeQuoteByKey(dto);
-            Integer count = chbExchangeQuotationInfoService.getChbExchargeQuoteByKey(dto);
-            if (count > 0) {
-                List<ValidMessage> messages = new ArrayList<>(1);
-                messages.add(new ValidMessage("数据在数据库已存在!"));
-                AjaxResult m = new AjaxResult();
-                m.setErrorList(messages);
-                return m;
-            }
-        }
+        //先删除已存在的数据
+        chbExchangeQuotationInfoService.deleteChbExchargeQuoteByKey(dto);
         WorkFlowParameter<ChbExchangeQuotationInfoDto> params = new WorkFlowParameter<>();
         params.setPageId(this.getPageId());
         params.setElementId(dto.getElementId());

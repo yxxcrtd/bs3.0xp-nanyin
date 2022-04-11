@@ -13,12 +13,10 @@ $(function() {
   
     //画面初始化
     var init = function(){
-        $('#summitType').hide();
         if(pageModel==PAGE_MODEL_EDIT){
             $('#exchargeCode').attr("disabled",true);
             $('#tradeDate').attr("disabled",true);
             $('#datasourceType').attr("disabled",true);
-            $('#summitType').val("edit");
         }
 
     };
