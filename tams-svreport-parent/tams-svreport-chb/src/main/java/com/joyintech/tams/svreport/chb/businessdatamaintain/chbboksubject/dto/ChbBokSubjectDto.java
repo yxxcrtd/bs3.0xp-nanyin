@@ -212,7 +212,7 @@ public class ChbBokSubjectDto extends BokSubject implements ProcessEntity {
     }
 
     public String getDataSourceStr() {
-        return  dataSource.equals("D")?"新建导入":"接口";
+        return  null!=dataSource&&dataSource.equals("D")?"新建导入":"接口";
     }
 
     public void setDataSourceStr(String dataSourceStr) {

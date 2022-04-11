@@ -329,7 +329,7 @@ public class ChbMstBondCreditRatingDto extends MstBondCreditRating implements Pr
     }
 
     public String getDataSourceStr() {
-        return dataSource.equals("D")?"新建导入":"接口";
+        return null!=dataSource&&dataSource.equals("D")?"新建导入":"接口";
     }
 
     public void setDataSourceStr(String dataSourceStr) {
