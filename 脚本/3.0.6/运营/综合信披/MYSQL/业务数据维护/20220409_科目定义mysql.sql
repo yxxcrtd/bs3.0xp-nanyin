@@ -44,6 +44,8 @@ ALTER TABLE bok_subject ADD STATUS VARCHAR(20) COMMENT '数据状态';
 ALTER TABLE bok_subject ADD REMARK VARCHAR(512) COMMENT '备注';
 ALTER TABLE bok_subject ADD DES BLOB COMMENT '错误信息';
 
+ALTER TABLE bok_subject DROP PRIMARY KEY ;
+ALTER TABLE bok_subject MODIFY BOOKSET_ID varchar(50) NULL COMMENT '账套代码(暂时不用)';
 
 
 

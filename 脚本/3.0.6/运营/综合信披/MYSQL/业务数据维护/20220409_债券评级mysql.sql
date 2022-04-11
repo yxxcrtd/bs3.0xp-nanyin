@@ -181,5 +181,10 @@ ALTER TABLE mst_bond_credit_rating ADD DES BLOB COMMENT '错误信息';
 ALTER TABLE mst_bond_credit_rating ADD O_NAME VARCHAR(20) COMMENT '债券名称';
 ALTER TABLE mst_bond_credit_rating ADD O_OBJECT VARCHAR(20) COMMENT '评级对象';
 
+ALTER TABLE mst_bond_credit_rating DROP PRIMARY KEY ;
+ALTER TABLE mst_bond_credit_rating MODIFY O_TYPE varchar(50) NULL COMMENT '评级类型，主体评级、债项评级（暂时不用）';
+ALTER TABLE mst_bond_credit_rating ADD PRIMARY KEY (O_CODE,GRADE_ORG_ID,GRADE_DATE,O_OBJECT);
+
+
 
 
