@@ -175,15 +175,19 @@ ALTER TABLE mst_bond_credit_rating  MODIFY COLUMN NOTICE_DATE varchar(50) COMMEN
 ALTER TABLE mst_bond_credit_rating  MODIFY COLUMN GRADE_EXPECTATION varchar(50) COMMENT '评级展望(暂时不用)';
 ALTER TABLE mst_bond_credit_rating  MODIFY COLUMN DIRECTION_CHANGE varchar(50) COMMENT '变动方向(暂时不用)';
 
+ALTER TABLE mst_bond_credit_rating DROP COLUMN DATA_SOURCE;
+ALTER TABLE mst_bond_credit_rating DROP COLUMN STATUS;
+ALTER TABLE mst_bond_credit_rating DROP COLUMN DES;
+ALTER TABLE mst_bond_credit_rating DROP COLUMN O_NAME;
+ALTER TABLE mst_bond_credit_rating DROP COLUMN O_OBJECT;
+
+
 ALTER TABLE mst_bond_credit_rating ADD DATA_SOURCE VARCHAR(20) COMMENT '数据来源';
 ALTER TABLE mst_bond_credit_rating ADD STATUS VARCHAR(20) COMMENT '数据状态';
 ALTER TABLE mst_bond_credit_rating ADD DES BLOB COMMENT '错误信息';
 ALTER TABLE mst_bond_credit_rating ADD O_NAME VARCHAR(20) COMMENT '债券名称';
 ALTER TABLE mst_bond_credit_rating ADD O_OBJECT VARCHAR(20) COMMENT '评级对象';
 
-ALTER TABLE mst_bond_credit_rating DROP PRIMARY KEY ;
-ALTER TABLE mst_bond_credit_rating MODIFY O_TYPE varchar(50) NULL COMMENT '评级类型，主体评级、债项评级（暂时不用）';
-ALTER TABLE mst_bond_credit_rating ADD PRIMARY KEY (O_CODE,GRADE_ORG_ID,GRADE_DATE,O_OBJECT);
 
 
 
