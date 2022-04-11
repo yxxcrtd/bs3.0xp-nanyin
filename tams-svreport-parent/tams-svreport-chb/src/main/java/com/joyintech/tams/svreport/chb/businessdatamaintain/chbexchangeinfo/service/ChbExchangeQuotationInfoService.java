@@ -287,7 +287,6 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
         dto.setStatus(DictCodeListExt2.数据状态_有效.getValue());
         if (StringUtil.equals(dto.getOperateType(), DELETE)) {
             chbExchangeQuotationInfoMapper.deleteChbExchargeQuoteByKey(dto.getExchargeCode(),dto.getTradeDate(),dto.getDatasourceType(),DictCodeListExt2.数据状态_删除.getValue());
-            dto.setStatus(DictCodeListExt2.数据状态_有效.getValue());
             chbExchangeQuotationInfoMapper.updateStatus(dto.getExchargeCode(),dto.getTradeDate(),dto.getDatasourceType(),DictCodeListExt2.数据状态_有效.getValue(),DictCodeListExt2.数据状态_删除.getValue());
         } else if (StringUtil.equals(dto.getOperateType(), NEW)) {
             //设置基本币种，单位币种等

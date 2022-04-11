@@ -119,7 +119,7 @@
 			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
 			#{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
 			<if test="item.errMsg != null and ! item.errMsg.equals('')">
-				#{item.errMsg,jdbcType=CLOB} ERR_MSG
+				#{item.errMsg,jdbcType=text} ERR_MSG
 			</if>
 			<if test="item.errMsg == null or item.errMsg.equals('')">
 				null ERR_MSG
@@ -149,7 +149,7 @@
 						when cdate=#{item.cdate,jdbcType=DATE} and calendar_id
 						=
 						#{item.calendarId,jdbcType=VARCHAR} then
-						#{item.errMsg,jdbcType=CLOB}
+						#{item.errMsg,jdbcType=text}
 					</if>
 				</foreach>
 			</trim>
