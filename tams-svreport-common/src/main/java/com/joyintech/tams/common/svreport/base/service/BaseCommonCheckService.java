@@ -59,6 +59,33 @@ public class BaseCommonCheckService {
     @Autowired
     private BaseCheckOracleService baseCheckOracleService;
 
+
+    /**
+     * check包含DB和业务CHECK
+     * @param checkFlag
+     * @param datas
+     * @param TableName
+     * @param FileName
+     * @param interfType
+     * @param dataType
+     * @param bussinessKey
+     * @param checkEuplicatedKeys
+     * @return
+     */
+    public  List<ExcelValidDto> checkDataAll(String checkFlag,List<Map<String,String>> datas, String TableName, String FileName,String interfType,String dataType,String bussinessKey,String... checkEuplicatedKeys) {
+        //检查的总结果
+        List<ExcelValidDto> checkExcelValid = new ArrayList<>();
+        //DB数据库基础check
+        List<ExcelValidDto> checkDB = checkDataDB(checkFlag,datas,TableName,FileName,interfType,dataType,bussinessKey,checkEuplicatedKeys);
+        //业务check
+        List<ExcelValidDto> checkYW = checkDataDB(checkFlag,datas,TableName,FileName,interfType,dataType,bussinessKey,checkEuplicatedKeys);
+
+        checkExcelValid.addAll(checkDB);
+        checkExcelValid.addAll(checkYW);
+
+        return checkExcelValid;
+    }
+
     /**
      *基础数据库check
      * @param checkFlag 是接口check还是导入check  接口是interf  导入是import
@@ -82,7 +109,7 @@ public class BaseCommonCheckService {
         //返回的数据结构
         List<ExcelValidDto> erroListValid = new ArrayList<>();
         if(isMYSQLDataBase()) {
-//            erroList = baseCheckMysqlService.check4Mysql(datas, TableName);
+            erroList = baseCheckMysqlService.check4Mysql(datas, TableName);
         }else{
 //            erroList = baseCheckOracleService.check4Oracle(datas, TableName);
         }
@@ -125,22 +152,17 @@ public class BaseCommonCheckService {
         //查询数据库里配置的check规则
         List<CheckRule> listRules = this.queryCheckRules(TableName);
         //开始检查  处理listMap 并且返回listError
-        List<Map<String, String>> listError = this.checkDataList(datas,listRules);
+        List<ExcelValidDto> listError = this.checkDataList(datas,listRules);
 
-        //将业务check不通过的封装成List<ExcelValidDto>
-        List<ExcelValidDto> errorList = new ArrayList<>();
-        for(Map<String, String> erro :listError){
-            if(!erro.get("ERRMSG_FLAG").isEmpty()){
-                if(erro.get("ERRMSG_FLAG").equals("YW")){
-                    ExcelValidDto erroMsg = new ExcelValidDto();
-                    erroMsg.setRowNum(erro.get("ERRMSG_ROW"));
-                    erroMsg.setErrorInfo(erro.get("ERRMSG"));
-                    erroMsg.setValidKey("业务");
-                    errorList.add(erroMsg);
-                }
+        //移除DBcheck不通过的List
+        List<Map<String,String>> cleanList = new ArrayList<>();
+        for(Map<String,String> cleanMap:datas){
+            if(StringUtil.equals(cleanMap.get("STATUS"),"R")){
+                cleanList.add(cleanMap);
             }
         }
-        return errorList;
+        datas.removeAll(cleanList);
+        return listError;
     }
 
 
@@ -196,7 +218,7 @@ public class BaseCommonCheckService {
         // 文件名
         errodata.setFireName(FileName);
         // 业务主键
-        errodata.setDataid("ERRMSG_ROW");
+        errodata.setDataid("dataId");
         // 接口类型
         errodata.setInterfType(interfType);
         // 错误提示信息
@@ -281,9 +303,10 @@ public class BaseCommonCheckService {
      * @see
      * @since 1.0
      */
-    public static List<Map<String, String>> checkDataList(List<Map<String, String>> listData,List<CheckRule> listRules) {
+    public static List<ExcelValidDto> checkDataList(List<Map<String, String>> listData,List<CheckRule> listRules) {
 
         List<Map<String, String>> listError = new ArrayList<Map<String, String>>();
+        List<ExcelValidDto> errorList = new ArrayList<>();
 
         //定义检查类的方法集合：Map<检查类,Map<方法名称,方法>>
         Map<String,Map<String, Method>> mapClassMethod = new HashMap<String,Map<String,Method>>();
@@ -297,7 +320,7 @@ public class BaseCommonCheckService {
             Map<String, String> x = it.next();
 
             //数据库基础check不通过的不进行检查
-            if(!x.get("ERRMSG_FLAG").equals("DB")) {
+            if(!StringUtil.equals(x.get("STATUS"),"R")) {
                 for (CheckRule r : listRules) {  //循环每个规则
                     Map<String, Method> mapMethod = mapClassMethod.get(r.getCheckclass());
                     if (mapMethod == null) {
@@ -354,19 +377,21 @@ public class BaseCommonCheckService {
 
             //检查不通过的数据处理
             if ( legal==false ) {
+                ExcelValidDto erroMsg = new ExcelValidDto();
+                erroMsg.setErrorInfo(sb.toString());
                 x.put("ERRMSG", sb.toString());
-                x.put("ERRMSG_FALG", "YW");
-                x.put("ERRMSG_ROW",String.valueOf(i));
-                if(!x.get("STATUS").equals("D") || x.get("STATUS").isEmpty()){
+                erroMsg.setValidKey("YW");
+                erroMsg.setRowNum(String.valueOf(i + 1));
+                if(!StringUtil.equals(x.get("STATUS"),"D") || x.get("STATUS").isEmpty()){
                     x.put("STATUS","A");
                 }
+                errorList.add(erroMsg);
                 listError.add(x);
             }
-
             i++;
         } //循环数据结束
 
-        return listError;
+        return errorList;
     }
 
 
