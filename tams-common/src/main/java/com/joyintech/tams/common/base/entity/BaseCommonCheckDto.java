@@ -10,8 +10,6 @@ import java.util.Map;
  */
 public class BaseCommonCheckDto extends BaseEntity {
 
-    //数据状态
-    private String status;
 
     //错误信息
     private String errMsg;
@@ -22,13 +20,6 @@ public class BaseCommonCheckDto extends BaseEntity {
     //check不通过类型  I数据库check不通过标识  Y业务check不通过标识
     private String checkErrCode;
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
 
     private ExcelValidDto excelValidDto;
 

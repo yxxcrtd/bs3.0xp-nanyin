@@ -242,7 +242,7 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
         dto.setMidPrice(StringUtil.isEmpty(list.get(4)) == true ? null : new BigDecimal(list.get(4)));
         dto.setHighPrice(StringUtil.isEmpty(list.get(5)) == true ? null : new BigDecimal(list.get(5)));
         dto.setLowPrice(StringUtil.isEmpty(list.get(6)) == true ? null : new BigDecimal(list.get(6)));
-        dto.setQuotUnit(new BigDecimal(list.get(7)));
+        dto.setQuotUnit(Long.parseLong(list.get(7)));
         dto.setBasisCyy(list.get(0).split("/")[0]);
         dto.setQuotCyy(list.get(0).split("/")[1]);
         if (CollectionUtils.isEmpty(checkResult)) {

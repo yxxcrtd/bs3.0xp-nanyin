@@ -92,7 +92,7 @@
 			#{item.highPrice,jdbcType=DECIMAL} HIGH_PRICE,
 			#{item.lowPrice,jdbcType=DECIMAL} LOW_PRICE,
 			#{item.midPrice,jdbcType=DECIMAL} MID_PRICE,
-			#{item.quotUnit,jdbcType=DECIMAL} QUOT_UNIT,
+			#{item.quotUnit,jdbcType=INTEGER} QUOT_UNIT,
 			#{item.basisCyy,jdbcType=VARCHAR} BASIS_CYY,
 			#{item.quotCyy,jdbcType=VARCHAR} QUOT_CYY,
 			#{item.status,jdbcType=VARCHAR} STATUS,
@@ -178,7 +178,7 @@
 						and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
 						and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR}
 						then
-						#{item.quotUnit,jdbcType=DECIMAL}
+						#{item.quotUnit,jdbcType=INTEGER}
 					</if>
 				</foreach>
 			</trim>

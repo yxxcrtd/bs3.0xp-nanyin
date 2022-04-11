@@ -76,7 +76,7 @@ public class ChbExchangeQuotationInfo002Controller extends BaseController {
             model.addAttribute("entity", mstExchangeQuotationInfoDto);
         } else {
             mstExchangeQuotationInfoDto = new ChbExchangeQuotationInfoDto();
-            mstExchangeQuotationInfoDto.setQuotUnit(BigDecimal.ONE);
+            mstExchangeQuotationInfoDto.setQuotUnit(1L);
             model.addAttribute("entity", mstExchangeQuotationInfoDto);
         }
         return super.init(model);

@@ -3,7 +3,7 @@ package com.joyintech.tams.common.base.entity;
 import com.joyintech.framework.base.BaseEntity;
 import java.util.Date;
 
-public class MstExchargeQuoteKey extends BaseEntity {
+public class MstExchargeQuoteKey extends BaseCommonCheckDto {
     /**
      * 行情代码，一般为货币对
      */
