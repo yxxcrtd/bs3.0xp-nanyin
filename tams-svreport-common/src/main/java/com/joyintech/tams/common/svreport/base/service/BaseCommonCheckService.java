@@ -1,5 +1,6 @@
 /**
- * 
+ * @author wangyaning
+ * @date 2022-04-11 14:52
  */
 package com.joyintech.tams.common.svreport.base.service;
 
@@ -7,18 +8,15 @@ import com.joyintech.framework.jdbc.datasource.DatabaseInfo;
 import com.joyintech.framework.jdbc.datasource.DatabaseType;
 import com.joyintech.framework.jdbc.datasource.DatabaseTypeHelper;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
-import com.joyintech.tams.common.base.dao.BaseMapper;
-import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
-import com.joyintech.tams.common.svreport.datacheck.beforeinsert.util.SvrMaptoEntityUtil;
+import com.joyintech.tams.common.svreport.datacheck.dto.CheckCondition;
 import com.joyintech.tams.common.svreport.datacheck.dto.CheckRule;
+import com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib;
 import com.joyintech.tams.common.svreport.datacheck.service.DataCheckService;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
-import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.BaseCommonCheckDto;
-import com.joyintech.tams.common.base.entity.ColumnDto;
 import com.joyintech.tams.common.svreport.base.dao.BaseCommonCheckMapper;
 import com.joyintech.tams.common.svreport.datacheck.dto.ChbInterfErrodataWithBLOBs;
 import com.joyintech.tams.systemtools.util.CommonUtil;
@@ -28,13 +26,11 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 
-import java.math.BigDecimal;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
-import java.util.function.Function;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -54,257 +50,14 @@ public class BaseCommonCheckService {
     @Autowired
     private SqlSessionTemplate template;
 
-    /**
-     * 中债基础数据mapper
-     */
     @Autowired
-    private BaseMapper baseMapper;
+    private DataCheckService dataCheckService;
 
-    private String rule = "^-?[1-9]\\d*$";
-    private String floatRule = "^(\\-|\\+)?\\d+(\\.\\d+)?$";
+    @Autowired
+    private BaseCheckMysqlService baseCheckMysqlService;
 
-    public List<ColumnDto> getColumns(String table){
-        return baseCommonCheckMapper.selectBySql(table);
-    }
-
-    /**
-     * sql check
-     * @param list 被check数据
-     * @param tableName 表名
-     * @return
-     * @author wubingbing
-     * @since 2022-04-08
-     */
-    public List<BaseCommonCheckDto> check4Mysql(List<Map<String,String>> list, String tableName) {
-        List<ColumnDto> columns = getColumns(tableName);
-        List<BaseCommonCheckDto> result = new ArrayList<>();
-        BaseCommonCheckDto resultDto = new BaseCommonCheckDto();
-        List<Map<String,String>> errList = new ArrayList<>();
-        for (int i = 0; i < list.size(); i++) {
-            Set<Map.Entry<String, String>> set = list.get(i).entrySet();
-            for (Map.Entry<String, String> entry : set) {
-                for (ColumnDto c : columns) {
-                    if (entry.getKey().equals(c.getCOLUMN_NAME())) {
-                        // 非空校验
-                        if (c.getIS_NULLABLE().equals("YES")) {
-                            if (!StringUtils.hasText(entry.getValue())) {
-                                ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2), c.getCOLUMN_COMMENT() + "为空");
-                                resultDto.setExcelValidDto(dto);
-                                resultDto.setErrMap(list.get(i));
-                                result.add(resultDto);
-                                errList.add(list.get(i));
-                                // 跳出 for (Column c : columns)循环
-                                break;
-                            }
-                        }
-                        //表字段是字符类型
-                        if (c.getDATA_TYPE().equals("varchar")||
-                                c.getDATA_TYPE().equals("tinyblob")||
-                                c.getDATA_TYPE().equals("tinytext")||
-                                c.getDATA_TYPE().equals("longblob")||
-                                c.getDATA_TYPE().equals("longtext")) {
-                            // 长度校验
-                            if (entry.getValue().length() > Integer.valueOf(c.getCHARACTER_MAXIMUM_LENGTH())) {
-                                ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2), c.getCOLUMN_COMMENT() + "内容太长了");
-                                resultDto.setExcelValidDto(dto);
-                                resultDto.setErrMap(list.get(i));
-                                result.add(resultDto);
-                                errList.add(list.get(i));
-                            }
-                            break;
-                        } else if (c.getDATA_TYPE().equals("int")||c.getDATA_TYPE().equals("bigint")) {
-                            // 长度校验
-                            if (entry.getValue().length() > Integer.valueOf(c.getNUMERIC_PRECISION())) {
-                                ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2), c.getCOLUMN_COMMENT() + "内容太长了");
-                                resultDto.setExcelValidDto(dto);
-                                resultDto.setErrMap(list.get(i));
-                                result.add(resultDto);
-                                errList.add(list.get(i));
-                                break;
-                            }else if(!Pattern.matches(rule,entry.getValue())){
-                                //整数校验
-                                ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2), c.getCOLUMN_COMMENT() + "不是整数");
-                                resultDto.setExcelValidDto(dto);
-                                resultDto.setErrMap(list.get(i));
-                                result.add(resultDto);
-                                errList.add(list.get(i));
-                                break;
-                            }
-                            break;
-                        }else if(c.getDATA_TYPE().equals("float")||c.getDATA_TYPE().equals("double")||c.getDATA_TYPE().equals("decimal")){
-                            // 长度校验
-                            if (entry.getValue().length() > Integer.valueOf(c.getNUMERIC_PRECISION())) {
-                                ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2), c.getCOLUMN_COMMENT() + "内容太长了");
-                                resultDto.setExcelValidDto(dto);
-                                resultDto.setErrMap(list.get(i));
-                                result.add(resultDto);
-                                errList.add(list.get(i));
-                                break;
-                            }else if(!Pattern.matches(floatRule,entry.getValue())){
-                                ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2), c.getCOLUMN_COMMENT() + "内容太长了");
-                                resultDto.setExcelValidDto(dto);
-                                resultDto.setErrMap(list.get(i));
-                                result.add(resultDto);
-                                errList.add(list.get(i));
-                                break;
-                            }
-                            break;
-                        }else if(c.getDATA_TYPE().equals("date")){
-                            if(!DateUtil.isDateStr(entry.getValue())){
-                                ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2), c.getCOLUMN_COMMENT() + "日期格式不正确，请使用yyyy-MM-dd格式");
-                                resultDto.setExcelValidDto(dto);
-                                resultDto.setErrMap(list.get(i));
-                                result.add(resultDto);
-                                errList.add(list.get(i));
-                            }
-                            break;
-                        }else if(c.getDATA_TYPE().equals("datetime")||c.getDATA_TYPE().equals("timestamp")){
-                            if(!DateUtil.isDateStr(entry.getValue(),DateUtil.DEFAULT_DATETIME_FORMAT)){
-                                ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2), c.getCOLUMN_COMMENT() + "日期格式不正确，请使用yyyy-MM-dd HH:mm:ss格式");
-                                resultDto.setExcelValidDto(dto);
-                                resultDto.setErrMap(list.get(i));
-                                result.add(resultDto);
-                                errList.add(list.get(i));
-                            }
-                            break;
-                        }
-                        break;
-                    }
-                }
-            }
-        }
-        // 移除校验失败的行数据
-        list.removeAll(errList);
-        return result;
-    }
-
-
-//
-//    /**
-//     * orcle check
-//     * @param dataList 被check数据
-//     * @param tableName 表名
-//     * @return
-//     * @author zhoubin
-//     * @since 2022-04-08
-//     */
-//    public List<com.joyintech.tams.report.common.dto.ExcelValidDto> check4Oracle(List<Map<String, String>> dataList, String tableName) {
-//        List<com.joyintech.tams.report.common.dto.ExcelValidDto> checkResult = new LinkedList<>();
-//        Map<String, TabColumnsDto> tabColumnsMap = this.getTabColumns(tableName);
-//        for (int i = 0; i < dataList.size(); i++) {
-//            Map<String, String> map = dataList.get(i);
-//            for (Map.Entry<String, String> entry : map.entrySet()) {
-//                if (tabColumnsMap.containsKey(entry.getKey())) {
-//                    this.checkTabColumns(tabColumnsMap.get(entry.getKey()), entry.getValue(), i, checkResult);
-//                }
-//            }
-//
-//        }
-//        return checkResult;
-//    }
-//
-//
-//    /**
-//     * 获取表中每个字段的相应属性
-//     *
-//     * @return
-//     */
-//    public Map<String, TabColumnsDto> getTabColumns(String tableName) {
-//        List<TabColumnsDto> tabColumnsList = baseCommonCheckMapper.selectTabColumns(tableName);
-//        Map<String, TabColumnsDto> map = tabColumnsList.stream().collect(Collectors.toMap(TabColumnsDto::getColumnName, Function.identity()));
-//        return map;
-//    }
-//
-//    /**
-//     * 校验列
-//     */
-//    public void checkTabColumns(TabColumnsDto dto, String value, int i, List<com.joyintech.tams.report.common.dto.ExcelValidDto> checkResult) {
-//        //如果字段允许为空，值为空直接返回
-//        if (Objects.equals("Y", dto.getNullAble()) && StringUtil.isBlank(value)) {
-//            return;
-//        }
-//        if (StringUtil.isBlank(value)) {
-//            checkResult.add(new com.joyintech.tams.report.common.dto.ExcelValidDto("0未导入", String.valueOf(i + 2), "货币对为空"));
-//        }
-//        //校验字段长度
-//        if (dto.getLength() != 0 && dto.getLength() < value.length()) {
-//            checkResult.add(new com.joyintech.tams.report.common.dto.ExcelValidDto("0未导入", String.valueOf(i + 2), "字段长度不能超过" + dto.getLength()));
-//        }
-//        //日期类型校验
-//        if (Objects.equals("DATE", dto.getDataType())) {
-//            if (!this.checkDate(value)) {
-//                checkResult.add(new com.joyintech.tams.report.common.dto.ExcelValidDto("0未导入", String.valueOf(i + 2), "不是日期格式"));
-//            }
-//        }
-//        //数字类型校验
-//        if (Objects.equals("NUMBER", dto.getDataType())) {
-//            if (!this.checkFigure(value)) {
-//                checkResult.add(new com.joyintech.tams.report.common.dto.ExcelValidDto("0未导入", String.valueOf(i + 2), "不是数字格式"));
-//            }
-//        }
-//    }
-
-    /**
-     * 日期格式校验
-     *
-     * @param
-     * @return 返回boolean
-     */
-    private boolean checkDate(String date) {
-        boolean flag = true;
-        if (!DateUtil.isDateStr(date, DateUtil.DEFAULT_OTHER_FORMAT,
-                DateUtil.DEFAULT_ANOTHER_FORMAT, DateUtil.DEFAULT_DATE_FORMAT_EN)) {
-            flag = false;
-        } else {
-            date = date.replace("-", "").replace("/", "");
-            //年
-            int year = Integer.valueOf(date.substring(0, 4));
-            //月
-            int month = Integer.valueOf(date.substring(4, 6));
-            //日
-            int day = Integer.valueOf(date.substring(6));
-            if (month < 1 || month > 12) {
-                flag = false;
-            } else {
-                if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) {
-                    if (day < 1 || day > 31) {
-                        flag = false;
-                    }
-                } else if (month == 4 || month == 6 || month == 9 || month == 11) {
-                    if (day < 1 || day > 30) {
-                        flag = false;
-                    }
-                } else if (month == 2) {
-                    if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) {
-                        if (day < 1 || day > 29) {
-                            flag = false;
-                        }
-                    } else {
-                        if (day < 1 || day > 28) {
-                            flag = false;
-                        }
-                    }
-                }
-            }
-        }
-        return flag;
-    }
-
-    /**
-     * 判断是否为数字
-     *
-     * @param
-     * @return 返回boolean
-     */
-    private boolean checkFigure(String figure) {
-        try {
-            new BigDecimal(figure);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
+    @Autowired
+    private BaseCheckOracleService baseCheckOracleService;
 
     /**
      *基础数据库check
@@ -329,9 +82,9 @@ public class BaseCommonCheckService {
         //返回的数据结构
         List<ExcelValidDto> erroListValid = new ArrayList<>();
         if(isMYSQLDataBase()) {
-            erroList = this.check4Mysql(datas, TableName);
+//            erroList = baseCheckMysqlService.check4Mysql(datas, TableName);
         }else{
-//            erroList = this.check4Oracle(datas, TableName);
+//            erroList = baseCheckOracleService.check4Oracle(datas, TableName);
         }
 
         //如果检查数据中存在错误数据就进行下一步处理 若无就返回空的检查结果
@@ -364,18 +117,30 @@ public class BaseCommonCheckService {
      * @param checkEuplicatedKeys 联合主键
      * @return 校验后的数据
      */
-    public <T> List<BaseCommonCheckDto> checkDataYW(String checkFlag,List<T> datas, String TableName, String FileName,String interfType,String dataType,String bussinessKey,String... checkEuplicatedKeys) {
+    public List<ExcelValidDto> checkDataYW(String checkFlag,List<Map<String,String>> datas, String TableName, String FileName,String interfType,String dataType,String bussinessKey,String... checkEuplicatedKeys) {
         // 判断传入的数据是否为空
         if(CollectionUtils.isEmpty(datas)) {
             return null;
         }
-        //查询数据库表字段
-        List<String> listCloumn = baseMapper.getTableColumnList(TableName);
-        //将list<接口表DTO>转换成List<Map<Key, Object>>格式
-        List<Map<String, String>> listMap = SvrMaptoEntityUtil.convertEntityToMap(datas, listCloumn);
+        //查询数据库里配置的check规则
+        List<CheckRule> listRules = this.queryCheckRules(TableName);
+        //开始检查  处理listMap 并且返回listError
+        List<Map<String, String>> listError = this.checkDataList(datas,listRules);
 
-
-        return null;
+        //将业务check不通过的封装成List<ExcelValidDto>
+        List<ExcelValidDto> errorList = new ArrayList<>();
+        for(Map<String, String> erro :listError){
+            if(!erro.get("ERRMSG_FLAG").isEmpty()){
+                if(erro.get("ERRMSG_FLAG").equals("YW")){
+                    ExcelValidDto erroMsg = new ExcelValidDto();
+                    erroMsg.setRowNum(erro.get("ERRMSG_ROW"));
+                    erroMsg.setErrorInfo(erro.get("ERRMSG"));
+                    erroMsg.setValidKey("业务");
+                    errorList.add(erroMsg);
+                }
+            }
+        }
+        return errorList;
     }
 
 
@@ -431,7 +196,7 @@ public class BaseCommonCheckService {
         // 文件名
         errodata.setFireName(FileName);
         // 业务主键
-        errodata.setDataid("dataId");
+        errodata.setDataid("ERRMSG_ROW");
         // 接口类型
         errodata.setInterfType(interfType);
         // 错误提示信息
@@ -506,5 +271,374 @@ public class BaseCommonCheckService {
         }
 
         return false;
+    }
+
+    /**
+     * 根据指定的检查规则，检查数据列表，对于某条数据有一个规则不满足，继续检查其它规则，即每条数据都进行全部规则检查
+     * @param listData 被检查的数据列表，错误的数据根据参数removeFlag确定是否移除
+     * @param listRules 检查规则
+     * @return 返回错误的数据
+     * @see
+     * @since 1.0
+     */
+    public static List<Map<String, String>> checkDataList(List<Map<String, String>> listData,List<CheckRule> listRules) {
+
+        List<Map<String, String>> listError = new ArrayList<Map<String, String>>();
+
+        //定义检查类的方法集合：Map<检查类,Map<方法名称,方法>>
+        Map<String,Map<String, Method>> mapClassMethod = new HashMap<String,Map<String,Method>>();
+
+        Iterator<Map<String, String>> it = listData.iterator();
+
+        int i = 1;
+        while (it.hasNext()) {         //循环检查指定的数据列表
+            boolean legal=true;  //检查结果
+            StringBuilder sb = new StringBuilder();  //记录错误信息
+            Map<String, String> x = it.next();
+
+            //数据库基础check不通过的不进行检查
+            if(!x.get("ERRMSG_FLAG").equals("DB")) {
+                for (CheckRule r : listRules) {  //循环每个规则
+                    Map<String, Method> mapMethod = mapClassMethod.get(r.getCheckclass());
+                    if (mapMethod == null) {
+                        mapMethod = new HashMap<String, Method>();
+                        try {
+                            Method[] rm = Class.forName(r.getCheckclass()).getDeclaredMethods();
+                            for (Method m1 : rm) {
+                                mapMethod.put(m1.getName(), m1);
+                            }
+                        } catch (SecurityException e) {
+                            logger.error(e.getMessage(), e);
+                        } catch (ClassNotFoundException e) {
+                            logger.error(e.getMessage(), e);
+                        }
+                        mapClassMethod.put(r.getCheckclass(), mapMethod);
+                    }
+
+                    // 检查逻辑，如果有前置条件，先检查条件是否满足，如果条件满足，执行数据检查，否则不执行数据检查
+                    // 如果没有前置条件，检查数据
+                    // 如果有多个前置条件，循环每个条件检查，各条件之间是与的关系
+                    List<CheckCondition> listConditions = r.getListConditions();
+                    if (listConditions != null) { // 有前置条件，则先执行前置条件是否满足
+                        boolean conCheck = true;
+                        StringBuilder sbCon = new StringBuilder();
+                        sbCon.append("条件:");
+                        for (CheckCondition c : listConditions) {
+                            conCheck = conCheck && checkCondition(x, c, mapMethod);
+                            if (StringUtil.isNotEmpty(c.getRemark()) && !StringUtil.equals(c.getRemark(), "null")) {
+                                sbCon.append(c.getRemark() + ";");
+                            }
+                            if (conCheck == false) { // 条件不满足，不做数据检查
+                                break;
+                            }
+                        }
+                        if (conCheck == true) { // 条件满足，做数据检查
+                            if (!StringUtil.equals(sbCon.toString(), "条件:")) {
+                                sbCon.append("-->");
+                            }
+                            boolean b = checkData(x, r, mapMethod);
+                            if (b == false) {
+                                sb.append(sbCon.toString() + r.getRemark() + "[" + r.getSrcproperty() + "=" + x.get(r.getSrcproperty()) + "];");
+                            }
+                            legal &= b;
+                        }
+                    } else { // 无前置条件，做数据检查
+                        boolean b = checkData(x, r, mapMethod);
+                        if (b == false) {
+                            sb.append(r.getRemark() + "[" + r.getSrcproperty() + "=" + x.get(r.getSrcproperty()) + "];");
+                        }
+                        legal &= b;
+                    }
+                }  //循环规则－结束
+            }
+
+            //检查不通过的数据处理
+            if ( legal==false ) {
+                x.put("ERRMSG", sb.toString());
+                x.put("ERRMSG_FALG", "YW");
+                x.put("ERRMSG_ROW",String.valueOf(i));
+                if(!x.get("STATUS").equals("D") || x.get("STATUS").isEmpty()){
+                    x.put("STATUS","A");
+                }
+                listError.add(x);
+            }
+
+            i++;
+        } //循环数据结束
+
+        return listError;
+    }
+
+
+    /**
+     * 条件检查，判断是否符合条件
+     * @param data 被检查的数据
+     * @param condition 条件实体
+     * @param mapMethod 检查库实现的方法
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public static boolean checkCondition (final Map<String,String> data , CheckCondition condition,Map<String,Method> mapMethod ) {
+        boolean ret=false;
+        Method method = mapMethod.get(condition.getCheckmethod());
+        try {
+            ret = (boolean)method.invoke(null,data, condition);
+        }
+        catch (IllegalAccessException e) {
+            logger.error(e.getMessage(),e);
+        }
+        catch (IllegalArgumentException e) {
+            logger.error(e.getMessage(),e);
+        }
+        catch (InvocationTargetException e) {
+            logger.error(e.getMessage(),e);
+        }
+        return ret;
+
+    }
+
+    /**
+     * 检查单个实体数据
+     * @param data 被检查的数据
+     * @param rule 检查规则
+     * @param mapMethod 检查库实现的检查方法
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public static boolean checkData (final Map<String,String> data , CheckRule rule,Map<String,Method> mapMethod ) {
+        boolean ret=false;
+        Method method = mapMethod.get(rule.getCheckmethod());
+        try {
+            ret = (boolean)method.invoke(null,data, rule);
+        }
+        catch (IllegalAccessException e) {
+            logger.error(e.getMessage(),e);
+        }
+        catch (IllegalArgumentException e) {
+            logger.error(e.getMessage(),e);
+        }
+        catch (InvocationTargetException e) {
+            logger.error(e.getMessage(),e);
+        }
+        return ret;
+
+    }
+
+
+    /**
+     * 根据数据类型，读取检查规则
+     * @param datatype 数据类型
+     * @return 检查规则列表
+     * @see
+     * @since 1.0
+     */
+    public List<CheckRule> queryCheckRules(String datatype) {
+
+        String baseCheckLib = "com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib";
+        Map<String,Method> mapMethod = new HashMap<String,Method>();
+        try {
+            Method[] rm = Class.forName(baseCheckLib).getDeclaredMethods();
+            for (Method m1 : rm) {
+                mapMethod.put(m1.getName(), m1);
+            }
+        }
+        catch (SecurityException e) {
+            logger.error(e.getMessage(),e);
+        }
+        catch (ClassNotFoundException e) {
+            logger.error(e.getMessage(),e);
+        }
+
+        Map<String,List<CheckCondition>> mapConditions = new HashMap<String,List<CheckCondition>>();
+        HashSet<String> setCompareto = new HashSet<String>();
+        setCompareto.add(">");
+        setCompareto.add("<");
+        setCompareto.add(">=");
+        setCompareto.add("<=");
+        setCompareto.add("==");
+        setCompareto.add("!=");
+
+        List<CheckCondition> listConditions = baseCommonCheckMapper.selectByRuleid(null);
+        for ( CheckCondition r:listConditions ) {
+            if ( r.getCheckmethod()==null ) {
+                logger.error("检查规则错误：检查条件中方法名称不能为空!["+r.getCheckconditionid()+"]");
+                continue;
+            }
+            if ( !mapMethod.containsKey(r.getCheckmethod()) ) { //不合法的方法
+                logger.error("检查规则错误：检查条件中无效的方法名称!["+r.getCheckconditionid()+"]");
+                continue;
+            }
+            if ( r.getSrcproperty()==null ||r.getSrcproperty().length()<1) {
+                logger.error("检查规则错误：检查条件中被检查的属性不能为空!["+r.getCheckconditionid()+"]");
+                continue;
+            }
+
+            if ( !"isNotEmpty".equals(r.getCheckmethod()) && !"isNumber".equals(r.getCheckmethod())  ) {
+                if ( r.getObjvalue()==null ||r.getObjvalue().length()<1 ) {
+                    logger.error("检查规则错误："+r.getCheckmethod()+"检查条件中方法的目标值不能为空!["+r.getCheckconditionid()+"]");
+                    continue;
+                } else if ( "lessThanLength".equals(r.getCheckmethod()) ) {
+                    try {
+                        Integer.parseInt(r.getObjvalue());
+                    } catch(Exception e ) {
+                        logger.error("检查规则错误："+r.getCheckmethod()+"检查条件中方法的目标格式错误!["+r.getCheckruleid()+"]");
+                    }
+                }
+            }
+
+            if ( "compareValue".equals(r.getCheckmethod()) || "compareProperty".equals(r.getCheckmethod())
+                    ||"compareValueAsNumber".equals(r.getCheckmethod()) || "comparePropertyAsNumber".equals(r.getCheckmethod())
+                    || "compareValueSysPara".equals(r.getCheckmethod())
+            ) {
+                if ( r.getCompareto()==null ||r.getCompareto().length()<1 ) {
+                    logger.error("检查规则错误：检查条件中数据比较方法逻辑运算符号不能为空!["+r.getCheckconditionid()+"]");
+                    continue;
+                }
+                if ( !setCompareto.contains(r.getCompareto()) ) {
+                    logger.error("检查规则错误：检查条件中数据比较方法逻辑运算符号不合法!["+r.getCheckconditionid()+"]");
+                    continue;
+                }
+                if ( "compareValueAsNumber".equals(r.getCheckmethod())) {
+                    if ( !BaseCheckLib.isNumeric(r.getObjvalue()) )  {
+                        logger.error("检查规则错误：检查条件中数据目标值非数字!["+r.getCheckconditionid()+"]");
+                        continue;
+                    }
+                }
+            }
+
+            if ( "isNumber".equals(r.getCheckmethod()) ) {
+                if ( r.getObjvalue()!=null && r.getObjvalue().length()>0 ) { //目标值不空，则必须符合"数字1,数字2"格式，且数字1>0数字2
+                    String [] objFormat = r.getObjvalue().split(",");
+                    try {
+                        int allbit = Integer.parseInt(objFormat[0]);
+                        int decbit = Integer.parseInt(objFormat[1]);
+                        if ( allbit<=decbit ) {
+                            logger.error("检查规则错误："+r.getCheckmethod()+"检查条件中方法的目标格式数字1>数字2!["+r.getCheckconditionid()+"]");
+                            continue;
+                        }
+                    } catch (Exception e) {
+                        logger.error("检查规则错误："+r.getCheckmethod()+"检查条件中方法的目标格式错误!["+r.getCheckconditionid()+"]");
+                        continue;
+                    }
+                }
+            }
+
+            if ( "isCustomizedString".equals(r.getCheckmethod()) ) {
+                String format = r.getObjvalue();
+                try {
+                    Pattern.compile(Pattern.quote(format));
+                } catch (Exception e) {
+                    logger.error("检查规则错误："+r.getCheckmethod()+"检查条件中方法的目标格式错误!["+r.getCheckconditionid()+"]");
+                    continue;
+                }
+            }
+
+            List<CheckCondition> listRuleCon = mapConditions.get(r.getCheckruleid());
+            if ( listRuleCon == null ) {
+                listRuleCon = new ArrayList<CheckCondition>();
+                listRuleCon.add(r);
+                mapConditions.put(r.getCheckruleid(),listRuleCon);
+            } else {
+                listRuleCon.add(r);
+            }
+
+        }
+
+        List<CheckRule> listResult = new ArrayList<CheckRule>();
+
+
+        List<CheckRule> listRules = baseCommonCheckMapper.selectByDatatype(datatype);
+        for ( CheckRule r:listRules ) {
+            if ( r.getCheckclass()==null ) {
+                logger.error("检查规则错误：检查类不能为空!["+r.getCheckruleid()+"]");
+                continue;
+            }
+            if ( !baseCheckLib.equals(r.getCheckclass()) ) {  //非基本库的方法不做检查
+                listResult.add(r);
+                continue;
+            }
+            if ( r.getCheckmethod()==null ) {
+                logger.error("检查规则错误：方法名称不能为空!["+r.getCheckruleid()+"]");
+                continue;
+            }
+            if ( !mapMethod.containsKey(r.getCheckmethod()) ) { //不合法的方法
+                logger.error("检查规则错误：无效的方法名称!["+r.getCheckruleid()+"]");
+                continue;
+            }
+            if ( r.getSrcproperty()==null ||r.getSrcproperty().length()<1) {
+                logger.error("检查规则错误：被检查的属性不能为空!["+r.getCheckruleid()+"]");
+                continue;
+            }
+
+            if ( !"isNotEmpty".equals(r.getCheckmethod()) && !"isNumber".equals(r.getCheckmethod())  ) {
+                if ( r.getObjvalue()==null ||r.getObjvalue().length()<1 ) {
+                    logger.error("检查规则错误："+r.getCheckmethod()+"方法的目标值不能为空!["+r.getCheckruleid()+"]");
+                    continue;
+                } else if ( "lessThanLength".equals(r.getCheckmethod()) ) {
+                    try {
+                        Integer.parseInt(r.getObjvalue());
+                    } catch(Exception e ) {
+                        logger.error("检查规则错误："+r.getCheckmethod()+"方法的目标格式错误!["+r.getCheckruleid()+"]");
+                    }
+                }
+            }
+
+            if ( "compareValue".equals(r.getCheckmethod()) || "compareProperty".equals(r.getCheckmethod())
+                    ||"compareValueAsNumber".equals(r.getCheckmethod()) || "comparePropertyAsNumber".equals(r.getCheckmethod())
+                    || "compareValueSysPara".equals(r.getCheckmethod())
+            ) {
+                if ( r.getCompareto()==null ||r.getCompareto().length()<1 ) {
+                    logger.error("检查规则错误：数据比较方法逻辑运算符号不能为空!["+r.getCheckruleid()+"]");
+                    continue;
+                }
+                if ( !setCompareto.contains(r.getCompareto()) ) {
+                    logger.error("检查规则错误：数据比较方法逻辑运算符号不合法!["+r.getCheckruleid()+"]");
+                    continue;
+                }
+                if ( "compareValueAsNumber".equals(r.getCheckmethod()) ) {
+                    if ( !BaseCheckLib.isNumeric(r.getObjvalue()) )  {
+                        logger.error("检查规则错误：数据比较方法目标值非数字!["+r.getCheckruleid()+"]");
+                        continue;
+                    }
+                }
+            }
+
+            if ( "isNumber".equals(r.getCheckmethod()) ) {
+                if ( r.getObjvalue()!=null && r.getObjvalue().length()>0 ) { //目标值不空，则必须符合"数字1,数字2"格式，且数字1>0数字2
+                    String [] objFormat = r.getObjvalue().split(",");
+                    try {
+                        int allbit = Integer.parseInt(objFormat[0]);
+                        int decbit = Integer.parseInt(objFormat[1]);
+                        if ( allbit<decbit ) {
+                            logger.error("检查规则错误："+r.getCheckmethod()+"isNumber方法的目标格式数字1>数字2!["+r.getCheckruleid()+"]");
+                            continue;
+                        }
+                    } catch (Exception e) {
+                        logger.error("检查规则错误："+r.getCheckmethod()+"isNumber方法的目标格式错误!["+r.getCheckruleid()+"]");
+                        continue;
+                    }
+
+                }
+
+            }
+
+            if ( "isCustomizedString".equals(r.getCheckmethod()) ) {
+                String format = r.getObjvalue();
+                try {
+                    Pattern.compile(Pattern.quote(format));
+                } catch (Exception e) {
+                    logger.error("检查规则错误："+r.getCheckmethod()+"方法的目标格式错误!["+r.getCheckruleid()+"]");
+                    continue;
+                }
+            }
+            r.setListConditions(mapConditions.get(r.getCheckruleid()));
+
+            listResult.add(r);
+
+        }
+
+        return listResult;
     }
 }
