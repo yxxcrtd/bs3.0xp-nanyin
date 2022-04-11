@@ -58,10 +58,11 @@
 
     <update id="updateStatus">
         update MST_EXCHARGE_QUOTE
-        set STATUS=#{status}
+        set STATUS=#{newStatus}
         where EXCHARGE_CODE = #{exchargeCode}
           AND TRADE_DATE = #{tradeDate}
           AND DATASOURCE_TYPE = #{datasourceType}
+          and STATUS = #{status,jdbcType=VARCHAR}
     </update>
 
     <!-- 通过主键验证数据库中是否有值 -->
@@ -71,6 +72,7 @@
         where EXCHARGE_CODE = #{exchargeCode,jdbcType=VARCHAR}
           and TRADE_DATE = #{tradeDate,jdbcType=DATE}
           and DATASOURCE_TYPE = #{datasourceType,jdbcType=VARCHAR}
+          and STATUS = #{status,jdbcType=VARCHAR}
     </select>
 
     <!-- 将Excel表格数据加入数据库 -->
@@ -223,5 +225,15 @@
             and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR}
         </foreach>
     </update>
+
+    <!-- 通过主键验证数据库中是否有值 -->
+    <delete id="deleteChbExchargeQuoteByKey">
+        delete
+        from MST_EXCHARGE_QUOTE
+        where EXCHARGE_CODE = #{exchargeCode,jdbcType=VARCHAR}
+          and TRADE_DATE = #{tradeDate,jdbcType=DATE}
+          and DATASOURCE_TYPE = #{datasourceType,jdbcType=VARCHAR}
+          and STATUS = #{status,jdbcType=VARCHAR}
+    </delete>
 
 </mapper>

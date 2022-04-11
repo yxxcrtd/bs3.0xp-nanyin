@@ -14,6 +14,7 @@ import com.joyintech.tams.svreport.chb.businessdatamaintain.chbexchangeinfo.dto.
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -69,9 +70,28 @@ public interface ChbExchangeQuotationInfoMapper {
 
     /**
      * 更新状态
-     * @param dto
+     * @param exchargeCode
+     * @param tradeDate
+     * @param datasourceType
+     * @param status
+     * @param newStatus
      * @return
      */
-    int updateStatus(ChbExchangeQuotationInfoDto dto);
+    int updateStatus(@Param("exchargeCode") String exchargeCode,
+                     @Param("tradeDate") Date tradeDate,
+                     @Param("datasourceType") String datasourceType,
+                     @Param("status") String status,
+                     @Param("newStatus") String newStatus);
+
+    /**
+     * 主键删除
+     * @param exchargeCode
+     * @param tradeDate
+     * @param datasourceType
+     * @param status
+     * @return
+     */
+    int deleteChbExchargeQuoteByKey(@Param("exchargeCode") String exchargeCode,@Param("tradeDate") Date tradeDate,
+            @Param("datasourceType") String datasourceType,@Param("status") String status);
 
 }
