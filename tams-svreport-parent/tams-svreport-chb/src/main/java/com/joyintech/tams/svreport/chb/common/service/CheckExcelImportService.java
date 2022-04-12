@@ -2,7 +2,7 @@ package com.joyintech.tams.svreport.chb.common.service;
 
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.entity.BaseCommonCheckDto;
+import com.joyintech.tams.common.svreport.base.dto.BaseCommonCheckDto;
 import com.joyintech.tams.svreport.chb.common.dao.UserTabColumnsMapper;
 import com.joyintech.tams.svreport.chb.common.dto.TabColumnsDto;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;

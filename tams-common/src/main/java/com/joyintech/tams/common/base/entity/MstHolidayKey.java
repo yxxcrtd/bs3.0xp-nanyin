@@ -1,9 +1,8 @@
 package com.joyintech.tams.common.base.entity;
 
-import com.joyintech.framework.base.BaseEntity;
 import java.util.Date;
 
-public class MstHolidayKey extends BaseCommonCheckDto {
+public class MstHolidayKey extends BaseChbEntity {
     /**
      * 日历编号
      */

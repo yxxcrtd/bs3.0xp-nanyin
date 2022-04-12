@@ -1,11 +1,9 @@
 package com.joyintech.tams.svreport.chb.businessdatamaintain.chbmstbondcreditrating.dto;
 
-import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.common.base.entity.BaseCommonCheckDto;
 import com.joyintech.tams.common.base.entity.MstBondCreditRating;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.util.SysDataUtil;

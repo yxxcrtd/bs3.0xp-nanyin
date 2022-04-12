@@ -8,6 +8,7 @@ import com.joyintech.framework.jdbc.datasource.DatabaseInfo;
 import com.joyintech.framework.jdbc.datasource.DatabaseType;
 import com.joyintech.framework.jdbc.datasource.DatabaseTypeHelper;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.tams.common.svreport.base.dto.BaseCommonCheckDto;
 import com.joyintech.tams.common.svreport.datacheck.dto.CheckCondition;
 import com.joyintech.tams.common.svreport.datacheck.dto.CheckRule;
 import com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib;
@@ -16,7 +17,6 @@ import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.entity.BaseCommonCheckDto;
 import com.joyintech.tams.common.svreport.base.dao.BaseCommonCheckMapper;
 import com.joyintech.tams.common.svreport.datacheck.dto.ChbInterfErrodataWithBLOBs;
 import com.joyintech.tams.systemtools.util.CommonUtil;
@@ -78,10 +78,19 @@ public class BaseCommonCheckService {
         //DB数据库基础check
         List<ExcelValidDto> checkDB = checkDataDB(checkFlag,datas,TableName,FileName,interfType,dataType,bussinessKey,checkEuplicatedKeys);
         //业务check
-        List<ExcelValidDto> checkYW = checkDataDB(checkFlag,datas,TableName,FileName,interfType,dataType,bussinessKey,checkEuplicatedKeys);
+        List<ExcelValidDto> checkYW = checkDataYW(checkFlag,datas,TableName,FileName,interfType,dataType,bussinessKey,checkEuplicatedKeys);
 
         checkExcelValid.addAll(checkDB);
         checkExcelValid.addAll(checkYW);
+
+        //移除DBcheck不通过的List
+        List<Map<String,String>> cleanList = new ArrayList<>();
+        for(Map<String,String> cleanMap:datas){
+            if(StringUtil.equals(cleanMap.get("STATUS"),"R")){
+                cleanList.add(cleanMap);
+            }
+        }
+        datas.removeAll(cleanList);
 
         return checkExcelValid;
     }
@@ -111,7 +120,7 @@ public class BaseCommonCheckService {
         if(isMYSQLDataBase()) {
             erroList = baseCheckMysqlService.check4Mysql(datas, TableName);
         }else{
-//            erroList = baseCheckOracleService.check4Oracle(datas, TableName);
+            erroList = baseCheckOracleService.check4Oracle(datas, TableName);
         }
 
         //如果检查数据中存在错误数据就进行下一步处理 若无就返回空的检查结果
@@ -154,14 +163,6 @@ public class BaseCommonCheckService {
         //开始检查  处理listMap 并且返回listError
         List<ExcelValidDto> listError = this.checkDataList(datas,listRules);
 
-        //移除DBcheck不通过的List
-        List<Map<String,String>> cleanList = new ArrayList<>();
-        for(Map<String,String> cleanMap:datas){
-            if(StringUtil.equals(cleanMap.get("STATUS"),"R")){
-                cleanList.add(cleanMap);
-            }
-        }
-        datas.removeAll(cleanList);
         return listError;
     }
 
@@ -175,7 +176,7 @@ public class BaseCommonCheckService {
      * @param bussinessKey
      * @param checkEuplicatedKeys
      */
-    public void dealErrBeforInsert(List<BaseCommonCheckDto> list,String FileName,String interfType,String dataType,String bussinessKey,String... checkEuplicatedKeys){
+    public void dealErrBeforInsert(List<BaseCommonCheckDto> list, String FileName, String interfType, String dataType, String bussinessKey, String... checkEuplicatedKeys){
         List<Map<String,String>> erroDatas = new ArrayList<>();
         ChbInterfErrodataWithBLOBs data=null;
         List<ChbInterfErrodataWithBLOBs> erroList=new ArrayList<ChbInterfErrodataWithBLOBs>();

@@ -2,9 +2,9 @@ package com.joyintech.tams.common.svreport.base.service;
 
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.entity.BaseCommonCheckDto;
 import com.joyintech.tams.common.svreport.base.dao.BaseCheckOracleMapper;
 import com.joyintech.tams.common.svreport.base.dto.BaseCheckOracleDto;
+import com.joyintech.tams.common.svreport.base.dto.BaseCommonCheckDto;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
@@ -180,7 +180,7 @@ public class BaseCheckOracleService {
         }
     }
 
-    public List<BaseCommonCheckDto> checkImportDB(List<Map<String, String>> dataList, String tableName) {
+    public List<BaseCommonCheckDto> check4Oracle(List<Map<String, String>> dataList, String tableName) {
 
         List<BaseCommonCheckDto> checkResultAll = new LinkedList<>();
         Map<String, BaseCheckOracleDto> tabColumnsMap = this.getTabColumns(tableName);

@@ -2,9 +2,9 @@ package com.joyintech.tams.common.svreport.base.service;
 
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.entity.BaseCommonCheckDto;
 import com.joyintech.tams.common.svreport.base.dao.BaseCheckMysqlMapper;
 import com.joyintech.tams.common.svreport.base.dto.BaseCheckMysqlDto;
+import com.joyintech.tams.common.svreport.base.dto.BaseCommonCheckDto;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
