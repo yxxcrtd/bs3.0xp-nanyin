@@ -89,7 +89,7 @@
             select
             #{item.exchargeCode,jdbcType=VARCHAR} EXCHARGE_CODE,
             #{item.tradeDate,jdbcType=DATE} TRADE_DATE,
-            #{item.datasourceType,jdbcType=DECIMAL} DATASOURCE_TYPE,
+            #{item.datasourceType,jdbcType=VARCHAR} DATASOURCE_TYPE,
             #{item.openPrice,jdbcType=DECIMAL} OPEN_PRICE,
             #{item.closePrice,jdbcType=DECIMAL} CLOSE_PRICE,
             #{item.highPrice,jdbcType=DECIMAL} HIGH_PRICE,
