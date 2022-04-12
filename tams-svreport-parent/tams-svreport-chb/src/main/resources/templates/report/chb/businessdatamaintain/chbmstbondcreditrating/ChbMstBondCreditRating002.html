@@ -8,35 +8,49 @@
 <body>
 <div layout:fragment="content">
     <form class="layui-form joyin-form-wrap pro-module-form" id="submitForm">
-        <div class="pro-module">
+
             <div class="pro-module-item">
                 <div class="layui-form-item">
                     <div class="layui-inline layui-col-md4">
                         <label class="layui-form-label form-lable"
                                data-th-text="#{ChbMstBondCreditRating001.oName}">债券名称</label>
                         <div class="layui-input-inline input-inline">
-                            <input type="text" id="oName" name="oName" class="layui-input form-input"
-                                   placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
-                                   data-th-value="${entity?.oName}" required>
+                            <select id="oName" name="oName" class="input-select"
+                                    data-th-data-url='@{/chb/businessdatamaintain/chbmstbondcreditrating/chbmstbondcreditrating001/getMutliCode}'
+                                    data-th-initValue="${entity?.oCode}" placeholder="请选择"
+                                    data-th-placeholder="#{SysCommon.selectplaceholder}"
+                                    allowClear="true" >
+                            </select>
+
                         </div>
+
+
                     </div>
                     <div class="layui-inline layui-col-md4">
                         <label class="layui-form-label form-lable"
                                data-th-text="#{ChbMstBondCreditRating001.oCode}">债券代码</label>
                         <div class="layui-input-inline input-inline">
-                            <input type="text" id="oCode" name="oCode" class="layui-input form-input"
-                                   placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
-                                   data-th-value="${entity?.oCode}" required>
+                            <input id="oCode" name="oCode"
+                                   class="layui-input form-input input-lenovoselect"
+                                   allowClear="true" placeholder="请输入内容"
+                                   data-th-placeholder="#{SysCommon.placeholder}" maxlength="66"
+                                   data-th-data-url="@{/chb/businessdatamaintain/chbmstbondcreditrating/chbmstbondcreditrating001/getOName}"
+                                   data-idfield="code" data-keyfield="code"
+                                   data-th-value="${entity?.oCode}"
+                                   data-th-data-effectivefieldsalias='|{"code":"#{ChbMstBondCreditRating001.oCode}","shortName":"#{ChbMstBondCreditRating001.oName}"}|' />
+
                         </div>
+
+
                     </div>
                     <div class="layui-inline layui-col-md4">
                         <label class="layui-form-label form-lable"
-                               data-th-text="#{ChbMstBondCreditRating001.oObject}">评级对象</label>
+                               data-th-text="#{ChbMstBondCreditRating001.oType}">评级对象</label>
                         <div class="layui-input-inline input-inline">
-                            <input type="text" id="oObject" name="oObject" class="layui-input form-input input-select"
+                            <input type="text" id="oType" name="oType" class="layui-input form-input input-select"
                                    placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
                                    data-th-data-result='${MAIN_GRADE_TYPE}'
-                                   data-th-value="${entity?.oObject}" required>
+                                   data-th-value="${entity?.oType}" required>
                         </div>
 
                 </div>
@@ -87,7 +101,7 @@
                     </div>
                     <div class="layui-inline layui-col-md4">
                         <label class="layui-form-label form-lable"
-                               data-th-text="#{ChbMstBondCreditRating001.gradeDateStr}">评级日期</label>
+                               data-th-text="#{ChbMstBondCreditRating001.gradeDate}">评级日期</label>
                         <div class="layui-input-inline input-inline">
                             <input type="text" id="gradeDateStr" name="gradeDateStr"
                                    class="layui-input form-input input-dateSelect"

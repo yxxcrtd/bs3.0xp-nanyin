@@ -4,6 +4,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
@@ -64,6 +65,19 @@ public class ChbMstBondCreditRating001Controller extends BaseController {
             throws Exception {
         return mstBondCreditRateService.getFinProdAbbr(param);
     }
+
+
+
+    /**
+     * 资产代码下拉框
+     * @return 产品名称列表
+     */
+    @RequestMapping("/getMutliCode")
+    @ResponseBody
+    public List<SelectOptionDto> getMutliCode() {
+        return mstBondCreditRateService.getMutliCode(RequestUtil.getPageParam());
+    }
+
     /**
      * 分页查询
      *
@@ -114,16 +128,15 @@ public class ChbMstBondCreditRating001Controller extends BaseController {
         }
         ProcessParameter<ChbMstBondCreditRatingDto> processParameter = new ProcessParameter<ChbMstBondCreditRatingDto>();
         WorkFlowParameter<ChbMstBondCreditRatingDto> params = new WorkFlowParameter<ChbMstBondCreditRatingDto>();
-        params.setPageId("ChbMstBondCreditRating002");
+        params.setPageId("ChbMstBondCreditRating001");
         params.setElementId(dto.getElementId());
-        params.setBusinessCode(item -> item.getoCode()+item.getoObject());
+        params.setBusinessCode(item -> item.getoCode()+item.getoType());
         params.setBusinessType(DictCodeList.债券评级.getValue());
         // 设置流程业务说明, entity即传入的dto
         params.setComment(entity -> this.getMessage("ChbMstBondCreditRating001.oCode") + "("
                 + entity.getoCode() + ")"
-                + this.getMessage("ChbMstBondCreditRating001.oName")
-                + "(" + entity.getoName() + ")"+this.getMessage("ChbMstBondCreditRating001.oObject")
-                +"("+entity.getoObject()+")");
+                +this.getMessage("ChbMstBondCreditRating001.oType")
+                +"("+entity.getoType()+")");
         processParameter.setWorkFlowParameter(params);
         String msg =mstBondCreditRateService.start(processParameter,dto.getSelectedItem().toArray(new ChbMstBondCreditRatingDto[dto.getSelectedItem().size()]));
         return new AjaxResult(msg);
@@ -187,10 +200,10 @@ public class ChbMstBondCreditRating001Controller extends BaseController {
         else {
             list = mstBondCreditRateService.selectAll(params);
         }
-        list.forEach(item->{
-//            item.setGradeDateStr(DateUtil.format(item.getGradeDate(),"yyyy-MM-dd"));
-            item.setUpdateTimeStr(DateUtil.format(item.getUpdateTime(),"yyyy-MM-dd"));
-        });
+//        list.forEach(item->{
+////            item.setGradeDateStr(DateUtil.format(item.getGradeDate(),"yyyy-MM-dd"));
+//            item.setUpdateTimeStr(DateUtil.format(item.getUpdateTime(),"yyyy-MM-dd"));
+//        });
         File outFile = mstBondCreditRateService.makeFile(
                 "/com/joyintech/tams/svreport/chb/businessdatamaintain/chbmstbondcreditrating/conf/export_conf.xml",
                 list);

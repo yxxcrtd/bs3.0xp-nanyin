@@ -1,9 +1,11 @@
 package com.joyintech.tams.svreport.chb.businessdatamaintain.chbmstbondcreditrating.dao;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbmstbondcreditrating.dto.ChbMstBondCreditRatingDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -21,11 +23,13 @@ public interface ChbMstBondCreditRatingDao {
 
     void insert(ChbMstBondCreditRatingDto entity);
 
-    ChbMstBondCreditRatingDto selcetByKey(@Param("oCode") String oCode, @Param("oObject") String oObject);
+    ChbMstBondCreditRatingDto selcetByKey(@Param("oCode") String oCode,@Param("gradeOrgId") String gradeOrgId,@Param("gradeDate") Date gradeDate, @Param("oType") String oType);
 
     List<ChbMstBondCreditRatingDto> selectAll(Map<String, Object> pageParam);
 
     void batchInsert(List<ChbMstBondCreditRatingDto> list);
 
     List<SuggestDto> getFinProdAbbr(@Param("param") String param);
+
+    List<SelectOptionDto> getMutliCode(Map<String, Object> map);
 }

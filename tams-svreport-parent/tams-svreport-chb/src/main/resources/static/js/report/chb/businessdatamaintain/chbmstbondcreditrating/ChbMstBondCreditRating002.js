@@ -2,9 +2,9 @@
     if($('#oCode').val()!=''){
         $("#oCode").attr("disabled","disabled");
         $("#oName").attr("disabled","disabled");
-        $("#oObject").attr("disabled","disabled");
+        $("#oType").attr("disabled","disabled");
         $("#source").attr("disabled","disabled");
-        $("#gradeDateStr").attr("disabled","disabled");
+        $("#gradeDate").attr("disabled","disabled");
     }
     function saveOrSubmit(operateType) {
         var object = $.serializeToObject('#submitForm');

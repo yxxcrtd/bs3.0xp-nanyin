@@ -3,6 +3,7 @@ package com.joyintech.tams.svreport.chb.businessdatamaintain.chbmstbondcreditrat
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -17,10 +18,12 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -51,30 +54,25 @@ public class ChbMstBondCreditRateService extends CommonExportService<ChbMstBondC
         }
 
     }
+
+
     /**
-     * 获取金融产品简称
-     * @return
+     * 资产代码下拉框
+     * @return 产品名称列表
      */
     public List<SuggestDto> getFinProdAbbr(String param) {
 
+
         return mstBondCreditRatingDao.getFinProdAbbr(param);
     }
-
-    public ChbMstBondCreditRatingDto selcetByKey(String oCode, String oObject) {
-        return mstBondCreditRatingDao.selcetByKey(oCode,oObject);
+    public ChbMstBondCreditRatingDto selcetByKey(String oCode,  String gradeOrgId, Date gradeDate,String oType) {
+        return mstBondCreditRatingDao.selcetByKey(oCode,gradeOrgId,gradeDate,oType);
     }
 
     public Page<ChbMstBondCreditRatingDto> selectForPage(Map<String, Object> pageParam) {
+        pageParam.put("oCodes", StringUtil.isNotEmpty(pageParam.get("oCode"))?(pageParam.get("oCode").toString().split(",")):null);
+
         Page<ChbMstBondCreditRatingDto> page = queryForPage(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")), () -> mstBondCreditRatingDao.selectAll(pageParam));
-//        page.getRoot().forEach(item->{
-//            item.setGradeOrgId(SysDataUtil.getNameFromDataDict(DictCode.评级机构,item.getGradeOrgId()));
-//            item.setShortLongTerm(SysDataUtil.getNameFromDataDict(DictCode.长期短期,item.getShortLongTerm()));
-//            item.setGradeResult(SysDataUtil.getNameFromDataDict(DictCode.评级结果,item.getGradeResult()));
-//            item.setDataSource(SysDataUtil.getNameFromDataDict(DictCode.数据来源,item.getDataSource()));
-//            item.setStatus(SysDataUtil.getNameFromDataDict(DictCode.维护数据状态,item.getStatus()));
-//            item.setoObject(SysDataUtil.getNameFromDataDict(DictCode.评级类型,item.getoObject()));
-//            item.setSource(SysDataUtil.getNameFromDataDict(DictCode.评级来源类型,item.getSource()));
-//        });
         return page;
     }
     @Transactional(rollbackFor = Exception.class)
@@ -162,7 +160,11 @@ public class ChbMstBondCreditRateService extends CommonExportService<ChbMstBondC
                 // 检查表内数据是否有主键重复
                 if (equityList.size() >= 2) {
                     for (int k = i + 1; k < equityList.size(); k++ ) {
-                        if (equityList.get(k).getoCode().equals(mstBondCreditRatingDto.getoCode()) && equityList.get(k).getoObject().equals(mstBondCreditRatingDto.getoObject()) ) {
+                        if (equityList.get(k).getoCode().equals(mstBondCreditRatingDto.getoCode())
+                                && equityList.get(k).getGradeOrgId().equals(mstBondCreditRatingDto.getGradeOrgId())
+                                && equityList.get(k).getGradeDate().equals(mstBondCreditRatingDto.getGradeDate())
+                                && equityList.get(k).getoType().equals(mstBondCreditRatingDto.getoType())
+                        ) {
                             if(!duplicateDataList.contains(k)){
                                 duplicateDataList.add(k);
                                 checkResult.add(new ExcelValidDto(dataList.get(k).get(1),
@@ -187,7 +189,7 @@ public class ChbMstBondCreditRateService extends CommonExportService<ChbMstBondC
     private List<ExcelValidDto> checkExcelCow(int i, List<String> list) {
         List<ExcelValidDto> excelValidDtolist = new ArrayList<ExcelValidDto>();
         // 列数为15
-        if (null == list || list.size() != 8) {
+        if (null == list || list.size() != 7) {
             ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i), "数据列数错误");
             excelValidDtolist.add(dto);
         }
@@ -196,30 +198,26 @@ public class ChbMstBondCreditRateService extends CommonExportService<ChbMstBondC
             excelValidDtolist.add(dto);
         }
         if (StringUtil.isEmpty(list.get(1))) {
-            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "债券名称为空");
-            excelValidDtolist.add(dto);
-        }
-        if (StringUtil.isEmpty(list.get(2))) {
             ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "评级对象为空");
             excelValidDtolist.add(dto);
         }
-        if (StringUtil.isEmpty(list.get(3))) {
+        if (StringUtil.isEmpty(list.get(2))) {
             ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "评级机构为空");
             excelValidDtolist.add(dto);
         }
-        if (StringUtil.isEmpty(list.get(4))) {
+        if (StringUtil.isEmpty(list.get(3))) {
             ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "评级类型为空");
             excelValidDtolist.add(dto);
         }
-        if (StringUtil.isEmpty(list.get(5))) {
+        if (StringUtil.isEmpty(list.get(4))) {
             ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "评级结果为空");
             excelValidDtolist.add(dto);
         }
-        if (StringUtil.isEmpty(list.get(6))) {
+        if (StringUtil.isEmpty(list.get(5))) {
             ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "评级来源为空");
             excelValidDtolist.add(dto);
         }
-        if (StringUtil.isEmpty(list.get(7))) {
+        if (StringUtil.isEmpty(list.get(6))) {
             ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "评级日期为空");
             excelValidDtolist.add(dto);
         }
@@ -248,30 +246,28 @@ public class ChbMstBondCreditRateService extends CommonExportService<ChbMstBondC
             if (StringUtil.isNotEmpty(list.get(0))) {
                 mstBondCreditRatingDto.setoCode(list.get(0).trim());
             }
+
             if (StringUtil.isNotEmpty(list.get(1))) {
-                mstBondCreditRatingDto.setoName(list.get(1).trim());
+                mstBondCreditRatingDto.setoType(list.get(1).trim());
             }
             if (StringUtil.isNotEmpty(list.get(2))) {
-                mstBondCreditRatingDto.setoObject(list.get(2).trim());
+                mstBondCreditRatingDto.setGradeOrgId(list.get(2).trim());
             }
             if (StringUtil.isNotEmpty(list.get(3))) {
-                mstBondCreditRatingDto.setGradeOrgId(list.get(3).trim());
+                mstBondCreditRatingDto.setShortLongTerm(list.get(3).trim());
             }
             if (StringUtil.isNotEmpty(list.get(4))) {
-                mstBondCreditRatingDto.setShortLongTerm(list.get(4).trim());
+                mstBondCreditRatingDto.setGradeResult(list.get(4).trim());
             }
             if (StringUtil.isNotEmpty(list.get(5))) {
-                mstBondCreditRatingDto.setGradeResult(list.get(5).trim());
+                mstBondCreditRatingDto.setSource(list.get(5).trim());
             }
             if (StringUtil.isNotEmpty(list.get(6))) {
-                mstBondCreditRatingDto.setSource(list.get(6).trim());
-            }
-            if (StringUtil.isNotEmpty(list.get(7))) {
-                mstBondCreditRatingDto.setGradeDateStr(list.get(7).trim());
+                mstBondCreditRatingDto.setGradeDate(DateUtil.parse(list.get(6).trim()));
             }
 
             mstBondCreditRatingDto.setCreateUser(CommonUtil.getUserName());
-            mstBondCreditRatingDto.setCreateDept(CommonUtil.getDeptCode());
+            mstBondCreditRatingDto.setCreateDept(CommonUtil.getDeptCode()==null?"":CommonUtil.getDeptCode());
             mstBondCreditRatingDto.setCreateTime(DateUtil.now());
             mstBondCreditRatingDto.setUpdateUser(CommonUtil.getUserName());
             mstBondCreditRatingDto.setUpdateTime(DateUtil.now());
@@ -301,8 +297,7 @@ public class ChbMstBondCreditRateService extends CommonExportService<ChbMstBondC
         for (int i = 0; i < dataList.size(); i++ ) {
             ChbMstBondCreditRatingDto dto = equityList.get(i);
             if(dto.getoCode() == null
-                    || dto.getoName() == null
-                    || dto.getoObject() == null
+                    || dto.getoType() == null
                     || dto.getGradeOrgId() == null
                     || dto.getGradeResult()== null
                     || dto.getShortLongTerm()== null
@@ -316,7 +311,10 @@ public class ChbMstBondCreditRateService extends CommonExportService<ChbMstBondC
                     continue;
                 }
                 if (equityList.get(k).getoCode().equals(dto.getoCode())
-                    && equityList.get(k).getoObject().equals(dto.getoObject())) {
+                    && equityList.get(k).getGradeOrgId().equals(dto.getGradeOrgId())
+                    && equityList.get(k).getGradeDate().equals(dto.getGradeDate())
+                    && equityList.get(k).getoType().equals(dto.getoType())
+                    ) {
                     if(!duplicateData.contains(k)){
                         duplicateData.add(k);
                     }
@@ -337,6 +335,13 @@ public class ChbMstBondCreditRateService extends CommonExportService<ChbMstBondC
      * @since 1.0
      */
     public void dealAfterCheck(List<ChbMstBondCreditRatingDto> list) {
+        list.forEach(ele->{
+            ele.setGradeOrgId(ele.getGradeOrgId().substring(0,2));
+            ele.setShortLongTerm(ele.getShortLongTerm().substring(0,2));
+            ele.setGradeResult(ele.getGradeResult().substring(0,2));
+            ele.setSource(ele.getSource().substring(0,2));
+            ele.setoType(ele.getoType().substring(0,2));
+        });
 
         mstBondCreditRatingDao.batchInsert(list);
     }
@@ -354,4 +359,10 @@ public class ChbMstBondCreditRateService extends CommonExportService<ChbMstBondC
 //        });
         return list;
     }
+
+    public List<SelectOptionDto> getMutliCode(Map<String, Object> map) {
+        return mstBondCreditRatingDao.getMutliCode(map);
+    }
+
+
 }

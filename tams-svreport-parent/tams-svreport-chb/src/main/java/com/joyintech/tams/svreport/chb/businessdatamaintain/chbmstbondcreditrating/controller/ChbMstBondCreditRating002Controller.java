@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.text.ParseException;
 import java.util.Date;
 
 /**
@@ -46,7 +47,9 @@ public class ChbMstBondCreditRating002Controller extends BaseController {
 
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         String oCode = getParam("oCode");
-        String oObject = getParam("oObject");
+        String oType = getParam("oType");
+        String gradeOrgId = getParam("gradeOrgId");
+        String gradeDateStr = getParam("gradeDateStr");
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
             ChbMstBondCreditRatingDto dto = mstBondCreditRateService.getBussinessEntityByWorkflowId(
                     workflowId);
@@ -55,7 +58,12 @@ public class ChbMstBondCreditRating002Controller extends BaseController {
         }
         else if (WorkFlowUtil.isNotFromToDoList() &&StringUtil.isNotEmpty(oCode) ) {
             //通过主键查询数据
-            ChbMstBondCreditRatingDto dto = mstBondCreditRateService.selcetByKey(oCode,oObject);
+            ChbMstBondCreditRatingDto dto = null;
+            try {
+                dto = mstBondCreditRateService.selcetByKey(oCode,gradeOrgId, DateUtil.parseDate(gradeDateStr,"yyyy-MM-dd"),oType);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             model.addAttribute(GlobalConstant.ENTITY, dto);
         }
         return super.init(model);
@@ -95,13 +103,12 @@ public class ChbMstBondCreditRating002Controller extends BaseController {
         WorkFlowParameter<ChbMstBondCreditRatingDto> params = new WorkFlowParameter<ChbMstBondCreditRatingDto>();
         params.setPageId("ChbMstBondCreditRating002");
         params.setElementId("ChbMstBondCreditRating002_btn_submit");
-        params.setBusinessCode(item -> item.getoCode()+item.getoObject());
+        params.setBusinessCode(item -> item.getoCode()+item.getoType());
         params.setBusinessType(DictCodeList.债券评级.getValue());
         params.setComment(entity -> this.getMessage("ChbMstBondCreditRating001.oCode") + "("
                 + entity.getoCode() + ")"
-                + this.getMessage("ChbMstBondCreditRating001.oName")
-                + "(" + entity.getoName() + ")"+this.getMessage("ChbMstBondCreditRating001.oObject")
-                +"("+entity.getoObject()+")");
+                +this.getMessage("ChbMstBondCreditRating001.oType")
+                +"("+entity.getoType()+")");
         // 塞入工作流参数
         processParameter.setWorkFlowParameter(params);
 

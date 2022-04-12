@@ -7,12 +7,13 @@ $(function() {
      */
     var getSearchParams = function() {
         return {
-            oObject:$('#oObject').val(),
-            oName:$('#oName').val(),
+            oCode : $('#oCode').val() == null ? null : $(
+                '#oCode').val().join(","),
+            oType:$('#oType').val(),
             status:$('#status').val(),
             shortLongTerm:$('#shortLongTerm').val(),
-     	   	gradeDateStart: $.trim($('#gradeDateStr').startDate()),
-     	   	gradeDateEnd: $.trim($('#gradeDateStr').endDate()),
+     	   	gradeDateStart: $.trim($('#gradeDate').startDate()),
+     	   	gradeDateEnd: $.trim($('#gradeDate').endDate()),
         };
     };
     /**
@@ -29,15 +30,15 @@ $(function() {
         cols:[
             {field:'oCode', sortable:false, width:100, title: 'ChbMstBondCreditRating001.oCode'}
             ,{field:'oName',sortable:false,width:160,  title: 'ChbMstBondCreditRating001.oName'}
-            ,{field:'oObjectStr', sortable:false,width:100,  title: 'ChbMstBondCreditRating001.oObject'}
+            ,{field:'oTypeStr', sortable:false,width:100,  title: 'ChbMstBondCreditRating001.oType'}
             ,{field:'gradeOrgIdStr',sortable:false,width:180,title: 'ChbMstBondCreditRating001.gradeOrgId'}
             ,{field:'shortLongTermStr', sortable:false,width:100, title: 'ChbMstBondCreditRating001.shortLongTerm'}
             ,{field:'gradeResultStr',sortable:false,width:100,title: 'ChbMstBondCreditRating001.gradeResult'}
             ,{field:'sourceStr', sortable:false, width:100,title: 'ChbMstBondCreditRating001.source'}
-            ,{field:'gradeDateStr', sortable:false, width:100,title: 'ChbMstBondCreditRating001.gradeDateStr'}
+            ,{field:'gradeDateStr', sortable:false, width:100,title: 'ChbMstBondCreditRating001.gradeDate'}
             ,{field:'statusStr', sortable:false, width:100, title: 'ChbMstBondCreditRating001.status'}
             ,{field:'des',sortable:false,   width:150,title: 'ChbMstBondCreditRating001.des'}
-            ,{field:'updateTime',sortable:false,width:100, title: 'ChbMstBondCreditRating001.updateTime',type:'date'}
+            ,{field:'updateTimeStr',sortable:false,width:100, title: 'ChbMstBondCreditRating001.updateTime'}
             ,{field:'updateUser', sortable:false,width:100,title: 'ChbMstBondCreditRating001.updateUser'}
             ,{field:'operation', width:100, title: 'SysCommon.operation',sortable:false, type:'action', buttons: ['edit', 'delt']}
         ]
@@ -68,7 +69,7 @@ $(function() {
         var object = {selectedItem: [data], operateType:"delete"};
         Joyin.ajaxJson(basePath + 'chb/businessdatamaintain/chbmstbondcreditrating/chbmstbondcreditrating001/check', object, function(result) {
             Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                WorkFlow.doDeleteList(basePath + 'chb/businessdatamaintain/chbmstbondcreditrating/chbmstbondcreditrating001/delete', object, "ChbMstBondCreditRating001_btn_delete", "ChbMstBondCreditRating002",function(){
+                WorkFlow.doDeleteList(basePath + 'chb/businessdatamaintain/chbmstbondcreditrating/chbmstbondcreditrating001/delete', object, "ChbMstBondCreditRating001_btn_delete", "ChbMstBondCreditRating001",function(){
                     table.reload();
                 });
             });

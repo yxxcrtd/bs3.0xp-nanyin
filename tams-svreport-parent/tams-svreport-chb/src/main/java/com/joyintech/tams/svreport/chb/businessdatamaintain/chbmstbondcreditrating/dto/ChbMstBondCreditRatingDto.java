@@ -1,9 +1,11 @@
 package com.joyintech.tams.svreport.chb.businessdatamaintain.chbmstbondcreditrating.dto;
 
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+
 import com.joyintech.tams.common.base.entity.MstBondCreditRating;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.util.SysDataUtil;
@@ -11,6 +13,8 @@ import com.joyintech.tams.svreport.chb.businessdatamaintain.chbmstbondcreditrati
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -20,66 +24,22 @@ import java.util.List;
 @ValidLogic(targetClass = ChbMstBondCreditRatingValidator.class, groups = {ValidateGroupEdit.class,
         ValidateGroupDelete.class})
 public class ChbMstBondCreditRatingDto extends MstBondCreditRating implements ProcessEntity {
-    /**
-     * 债券代码（市场代码）
-     */
-    private String oCode;
-
-    /**
-     * 评级机构
-     */
-    private String gradeOrgId;
-    private String gradeOrgIdStr;
-
-    /**
-     * 评级日期
-     */
-    private String gradeDateStr;
-
-
-    private String updateTimeStr;
-
-
-    /**
-     * 评级类型
-     */
-    private String shortLongTerm;
-    private String shortLongTermStr;
-
-    /**
-     * 评级结果
-     */
-    private String gradeResult;
-    private String gradeResultStr;
-
-    /**
-     * 评级来源
-     */
-    private String source;
-    private String sourceStr;
 
     /**
      * 数据来源 
      */
     private String dataSource;
-    private String dataSourceStr;
+
 
     /**
      * 状态
      */
     private String status;
-    private String statusStr;
 
     /**
      * 债券名称
      */
     private String oName;
-
-    /**
-     * 评级对象
-     */
-    private String oObject;
-    private String oObjectStr;
 
     /**
      * 描述
@@ -108,47 +68,36 @@ public class ChbMstBondCreditRatingDto extends MstBondCreditRating implements Pr
     /**
      * 债券代码（市场代码）
      */
-    @NotEmpty(fieldName = "MstBondCreditRating001.oCode",groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName = "ChbMstBondCreditRating001.oCode",groups = {ValidateGroupEdit.class})
     @PrimaryKey(PrimaryKey.Field.PK_1)
     public String getoCode() {
-        return oCode;
+        return super.getoCode();
     }
 
-    /**
-     * 债券代码（市场代码）
-     */
-    public void setoCode(String oCode) {
-        this.oCode = oCode;
-    }
 
     /**
      * 评级机构
      */
-    @NotEmpty(fieldName = "MstBondCreditRating001.gradeOrgId",groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName = "ChbMstBondCreditRating001.gradeOrgId",groups = {ValidateGroupEdit.class})
     public String getGradeOrgId() {
-        return gradeOrgId;
+        return super.getGradeOrgId();
     }
 
-    /**
-     * 评级机构
-     */
-    public void setGradeOrgId(String gradeOrgId) {
-        this.gradeOrgId = gradeOrgId;
-    }
 
     /**
      * 评级日期
      */
-    @NotEmpty(fieldName = "MstBondCreditRating001.gradeDateStr",groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName = "ChbMstBondCreditRating001.gradeDate",groups = {ValidateGroupEdit.class})
     public String getGradeDateStr() {
-        return gradeDateStr;
+        return DateUtil.format(super.getGradeDate());
     }
 
-    /**
-     * 评级日期
-     */
-    public void setGradeDateStr(String gradeDateStr) {
-        this.gradeDateStr = gradeDateStr;
+    public void setGradeDateStr(String gradeDateStr){
+        try {
+            super.setGradeDate(DateUtil.parseDate(gradeDateStr,"yyyy-MM-dd"));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -156,31 +105,18 @@ public class ChbMstBondCreditRatingDto extends MstBondCreditRating implements Pr
     /**
      * 评级类型
      */
-    @NotEmpty(fieldName = "MstBondCreditRating001.shortLongTerm",groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName = "ChbMstBondCreditRating001.shortLongTerm",groups = {ValidateGroupEdit.class})
     public String getShortLongTerm() {
-        return shortLongTerm;
+        return super.getShortLongTerm();
     }
 
-    /**
-     * 评级类型
-     */
-    public void setShortLongTerm(String shortLongTerm) {
-        this.shortLongTerm = shortLongTerm;
-    }
 
     /**
      * 评级结果
      */
-    @NotEmpty(fieldName = "MstBondCreditRating001.gradeResult",groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName = "ChbMstBondCreditRating001.gradeResult",groups = {ValidateGroupEdit.class})
     public String getGradeResult() {
-        return gradeResult;
-    }
-
-    /**
-     * 评级结果
-     */
-    public void setGradeResult(String gradeResult) {
-        this.gradeResult = gradeResult;
+        return super.getGradeResult();
     }
 
     /**
@@ -214,42 +150,24 @@ public class ChbMstBondCreditRatingDto extends MstBondCreditRating implements Pr
     /**
      * 债券名称
      */
-    @NotEmpty(fieldName = "MstBondCreditRating001.oName",groups = {ValidateGroupEdit.class})
     public String getoName() {
         return oName;
     }
 
-    /**
-     * 债券名称
-     */
-    public void setoName(String oName) {
-        this.oName = oName;
-    }
 
     /**
      * 评级对象
      */
-    @NotEmpty(fieldName = "MstBondCreditRating001.oObject",groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName = "ChbMstBondCreditRating001.oType",groups = {ValidateGroupEdit.class})
     @PrimaryKey(PrimaryKey.Field.PK_2)
-    public String getoObject() {
-        return oObject;
-    }
-
-    /**
-     * 评级对象
-     */
-    public void setoObject(String oObject) {
-        this.oObject = oObject;
+    public String getoType() {
+        return super.getoType();
     }
 
 
-    @NotEmpty(fieldName = "MstBondCreditRating001.source",groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName = "ChbMstBondCreditRating001.source",groups = {ValidateGroupEdit.class})
     public String getSource() {
-        return source;
-    }
-
-    public void setSource(String source) {
-        this.source = source;
+        return super.getSource();
     }
 
     public String getOperateType() {
@@ -284,71 +202,44 @@ public class ChbMstBondCreditRatingDto extends MstBondCreditRating implements Pr
         this.elementId = elementId;
     }
 
-
-
-    public String getUpdateTimeStr() {
-        return updateTimeStr;
-    }
-
-    public void setUpdateTimeStr(String updateTimeStr) {
-        this.updateTimeStr = updateTimeStr;
-    }
-
     public String getGradeOrgIdStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.评级机构,gradeOrgId);
+        return SysDataUtil.getNameFromDataDict(DictCode.评级机构,getGradeOrgId());
     }
 
-    public void setGradeOrgIdStr(String gradeOrgIdStr) {
-        this.gradeOrgIdStr = gradeOrgIdStr;
-    }
+
 
     public String getShortLongTermStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.长期短期,shortLongTerm);
+        return SysDataUtil.getNameFromDataDict(DictCode.长期短期,getShortLongTerm());
     }
 
-    public void setShortLongTermStr(String shortLongTermStr) {
-        this.shortLongTermStr = shortLongTermStr;
-    }
+
 
     public String getGradeResultStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.评级结果,gradeResult);
+        return SysDataUtil.getNameFromDataDict(DictCode.评级结果,getGradeResult());
     }
 
-    public void setGradeResultStr(String gradeResultStr) {
-        this.gradeResultStr = gradeResultStr;
-    }
 
     public String getSourceStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.评级来源类型,source);
+        return SysDataUtil.getNameFromDataDict(DictCode.评级来源类型,getSource());
     }
 
-    public void setSourceStr(String sourceStr) {
-        this.sourceStr = sourceStr;
-    }
 
     public String getDataSourceStr() {
         return null!=dataSource&&dataSource.equals("D")?"新建导入":"接口";
     }
 
-    public void setDataSourceStr(String dataSourceStr) {
-        this.dataSourceStr = dataSourceStr;
-    }
 
     public String getStatusStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.维护数据状态,status);
     }
 
-    public void setStatusStr(String statusStr) {
-        this.statusStr = statusStr;
+
+
+    public String getoTypeStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.评级类型,getoType());
     }
 
-    public String getoObjectStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.评级类型,oObject);
-    }
 
-    public void setoObjectStr(String oObjectStr) {
-        this.oObjectStr = oObjectStr;
-    }
 
     public String getDes() {
         return des;
@@ -356,5 +247,9 @@ public class ChbMstBondCreditRatingDto extends MstBondCreditRating implements Pr
 
     public void setDes(String des) {
         this.des = des;
+    }
+
+    public String getupdateTimeStr(){
+        return DateUtil.format(getUpdateTime());
     }
 }

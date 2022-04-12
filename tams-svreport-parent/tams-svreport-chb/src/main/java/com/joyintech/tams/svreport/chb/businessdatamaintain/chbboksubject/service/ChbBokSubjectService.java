@@ -1,13 +1,18 @@
 package com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.service;
 
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.report.common.util.ReportGlobalConstant;
+import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dao.ChbBokSubjectDao;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dto.ChbBokSubjectDto;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
@@ -21,10 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 
 /**
@@ -36,7 +38,8 @@ import java.util.function.Supplier;
 public class ChbBokSubjectService extends CommonExportService<ChbBokSubjectDto> implements BaseProcessService<ChbBokSubjectDto> {
     @Autowired
     private ChbBokSubjectDao bokSubjectDao;
-
+    @Autowired
+    private BaseCommonCheckService baseCommonCheckService;
 
     /**
      * 检索上级科目代码列表
@@ -136,6 +139,7 @@ public class ChbBokSubjectService extends CommonExportService<ChbBokSubjectDto> 
         else if (OperationType.NEW.equals(type)) {
             entity.setDataSource(DictCodeListExt2.数据来源_新建导入.getValue());
             entity.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
+            entity.setBooksetId(UUID.randomUUID().toString());
             bokSubjectDao.insert(entity);
         }
         else if(OperationType.MODIFY.equals(type)){
@@ -152,27 +156,23 @@ public class ChbBokSubjectService extends CommonExportService<ChbBokSubjectDto> 
     /**
      * excel导入功能
      *
-     * @param flieName 文件名称
+     * @param fileName 文件名称
      * @return 检验list
      * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @Transactional(rollbackFor = Exception.class)
-    public List<ExcelValidDto> importData(String flieName)
+    public List<ExcelValidDto> importData(String fileName,String tableName)
             throws Exception {
         // 检查文件名是否为空
-        if (StringUtil.isNotEmpty(flieName)) {
-            if (flieName.indexOf("科目定义导入") != -1) {
-                List<List<String>> dataList = dataAnalysis(flieName);
-                if (null != dataList && dataList.size() > 0) {
-                    // 将excel表格中的数据转化为dto
-                    List<ExcelValidDto> checkResult = checkExcelData(dataList);
-//                    if (checkResult.isEmpty()) {
-//                        List<ComBondQuotationInfoDto> equityList = converToBean(dataList);
-//                        // 保存，已存在则更新
-//                        dealAfterCheck(equityList);
-//                    }
+        if (StringUtil.isNotEmpty(fileName)) {
+            if (fileName.indexOf("科目定义导入") != -1) {
+                List<Map<String, String>> mapList = dataMapAnalysis(fileName);
+                if (null != mapList && mapList.size() > 0) {
+                    List<ExcelValidDto> checkResult = baseCommonCheckService.checkDataDB("import", mapList, tableName, fileName, tableName, tableName, null, null);
+                    ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY, "3", "" + "内容为空");
+                    checkResult.add(dto);
                     return checkResult;
                 }else{
                     List<ExcelValidDto> checkResult = new ArrayList<>();
@@ -180,8 +180,7 @@ public class ChbBokSubjectService extends CommonExportService<ChbBokSubjectDto> 
                             "文件为空"));
                     return checkResult;
                 }
-            }
-            else {
+            }else {
                 List<ExcelValidDto> checkResult = new ArrayList<>();
                 checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
                         "文件名称错误，请下载模板后上传"));
@@ -463,5 +462,32 @@ public class ChbBokSubjectService extends CommonExportService<ChbBokSubjectDto> 
             }
         }
         return null;
+    }
+
+    /**
+     * 导入数据文件之前检查数据
+     *
+     * @param fileName 导入的文件名
+     * @return 处理结果
+     */
+    public AjaxResult checkConfirmMsgForImportData(String fileName,String tableName) throws Exception  {
+        AjaxResult webResult = new AjaxResult();
+        List<Map<String, String>> mapList = dataMapAnalysis(fileName);
+        List<ExcelValidDto> checkResult = baseCommonCheckService.checkDataDB("import", mapList, tableName, fileName, tableName, tableName, null, null);
+        webResult.setMessage(this.getMessage("ChbImportMessage",188,1,3),MessageType.确认消息);
+        return webResult;
+    }
+
+    /**
+     * 导入数据与数据库主键校验
+     * @param fileName
+     * @return
+     * @throws Exception
+     */
+    public AjaxResult checkDuplicateData(String fileName) throws Exception {
+        AjaxResult webResult = new AjaxResult();
+        List<Map<String, String>> mapList = dataMapAnalysis(fileName);
+//        bokSubjectDao.checkDuplicateData(mapList);
+        return webResult;
     }
 }

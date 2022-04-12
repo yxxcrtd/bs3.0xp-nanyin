@@ -16,25 +16,27 @@
 		</div>
 		<div class="joyin-form-wrap joyin-filter-form condition-area">
 			<form class="layui-form" id="searchForm">
+
 				<div class="layui-form-item">
-                    <div class="layui-inline layui-col-xs4 layui-col-md4  layui-col-sm4 layui-col-lg4">
-						<label class="layui-form-label form-lable" data-th-text="#{ChbMstBondCreditRating001.oObject}">评级对象</label>
+
+
+                    <div class="layui-inline layui-col-md4">
+						<label class="layui-form-label form-lable" data-th-text="#{ChbMstBondCreditRating001.oType}">评级对象</label>
 						<div class="layui-input-inline input-inline">
-							<input type="text" id="oObject" name="oObject"
+							<input  id="oType" name="oType"
 								class="layui-input form-input input-select" placeholder="请选择"
 								data-th-data-result="${MAIN_GRADE_TYPE}" allowClear="true">
 						</div>
 					</div>
-                    <div class="layui-inline layui-col-xs4 layui-col-md4  layui-col-sm4 layui-col-lg4">
+					<div class="layui-inline layui-col-md4">
 						<label class="layui-form-label form-lable" data-th-text="#{ChbMstBondCreditRating001.oName}">债券名称</label>
 						<div class="layui-input-inline input-inline">
-							<input id="oName" name="oName"
-								   class="layui-input form-input input-lenovoselect"
-								   allowClear="true" placeholder="请输入内容"
-								   data-th-placeholder="#{SysCommon.placeholder}" maxlength="66"
-								   data-th-data-url="@{/chb/businessdatamaintain/chbmstbondcreditrating/chbmstbondcreditrating001/getOName}"
-								   data-idfield="shortName" data-keyfield="shortName"
-								   data-th-data-effectivefieldsalias='|{"code":"#{ComBondQuotationInfo001.secId}","shortName":"#{ComBondQuotationInfo001.finprodAbbr}"}|' />
+							<select id="oCode" class="input-select"
+									data-th-data-url='@{/chb/businessdatamaintain/chbmstbondcreditrating/chbmstbondcreditrating001/getMutliCode}'
+									initvalue="" placeholder="请选择"
+									data-th-placeholder="#{SysCommon.selectplaceholder}"
+									allowClear="true" multiple="multiple">
+							</select>
 
 						</div>
 					</div>
@@ -49,10 +51,10 @@
 				</div>
 				<div class="layui-form-item">
                     <div class="layui-inline layui-col-xs4 layui-col-md4  layui-col-sm4 layui-col-lg4">
-                	<label class="layui-form-label form-lable" data-th-text="#{ChbMstBondCreditRating001.gradeDateStr}">评级日期</label>
+                	<label class="layui-form-label form-lable" data-th-text="#{ChbMstBondCreditRating001.gradeDate}">评级日期</label>
 						<div class="layui-input-inline input-inline">
-							<input type="text" id="gradeDateStr" name="gradeDateStr"
-								class="layui-input form-input input-dateRangeSelect"  data-th-value = '${gradeDateStr}'
+							<input type="text" id="gradeDate" name="gradeDate"
+								class="layui-input form-input input-dateRangeSelect"  data-th-value = '${gradeDate}'
 								placeholder="请选择、支持区间"  >
 						</div>
                 	</div>

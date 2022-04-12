@@ -26,6 +26,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
@@ -201,10 +202,33 @@ public class ChbBokSubject001Controller extends BaseController {
      * @throws Exception 异常
      */
     @ResponseBody
-    @RequestMapping("importFile")
-    public List<ExcelValidDto> importData(String fileName)
+    @RequestMapping("checkImportFile")
+    public List<ExcelValidDto> checkImportFile(String fileName,String tableName)
             throws Exception{
-        return this.bokSubjectService.importData(fileName);
+        return this.bokSubjectService.importData(fileName,tableName);
+    }
+    /**
+     * 导入数据文件之前检查数据
+     *
+     * @param fileName 导入的文件名
+     * @return 处理结果
+     */
+    @ResponseBody
+    @RequestMapping(value = "checkDuplicateData", method = RequestMethod.POST)
+    public AjaxResult checkDuplicateData(String fileName) throws Exception  {
+        return bokSubjectService.checkDuplicateData(fileName);
+    }
+
+    /**
+     * 导入数据文件之前检查数据
+     *
+     * @param fileName 导入的文件名
+     * @return 处理结果
+     */
+    @ResponseBody
+    @RequestMapping(value = "checkConfirmMsgForImportData", method = RequestMethod.POST)
+    public AjaxResult checkConfirmMsgForImportData(String fileName,String tableName) throws Exception  {
+        return bokSubjectService.checkConfirmMsgForImportData(fileName,tableName);
     }
 
     /**
