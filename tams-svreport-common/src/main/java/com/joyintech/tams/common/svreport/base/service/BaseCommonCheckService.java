@@ -67,18 +67,16 @@ public class BaseCommonCheckService {
      * @param TableName
      * @param FileName
      * @param interfType
-     * @param dataType
-     * @param bussinessKey
-     * @param checkEuplicatedKeys
+     * @param bussinessKeys
      * @return
      */
-    public  List<ExcelValidDto> checkDataAll(String checkFlag,List<Map<String,String>> datas, String TableName, String FileName,String interfType,String dataType,String bussinessKey,String... checkEuplicatedKeys) {
+    public  List<ExcelValidDto> checkDataAll(String checkFlag,List<Map<String,String>> datas, String TableName, String FileName,String interfType,String... bussinessKeys) {
         //检查的总结果
         List<ExcelValidDto> checkExcelValid = new ArrayList<>();
         //DB数据库基础check
-        List<ExcelValidDto> checkDB = checkDataDB(checkFlag,datas,TableName,FileName,interfType,dataType,bussinessKey,checkEuplicatedKeys);
+        List<ExcelValidDto> checkDB = checkDataDB(checkFlag,datas,TableName,FileName,interfType,bussinessKeys);
         //业务check
-        List<ExcelValidDto> checkYW = checkDataYW(checkFlag,datas,TableName,FileName,interfType,dataType,bussinessKey,checkEuplicatedKeys);
+        List<ExcelValidDto> checkYW = checkDataYW(checkFlag,datas,TableName,bussinessKeys);
 
         checkExcelValid.addAll(checkDB);
         checkExcelValid.addAll(checkYW);
@@ -102,12 +100,10 @@ public class BaseCommonCheckService {
      * @param TableName  表名
      * @param FileName  文件名
      * @param interfType 接口类型
-     * @param dataType
-     * @param bussinessKey 业务主键
-     * @param checkEuplicatedKeys 联合主键
+     * @param bussinessKeys 业务主键
      * @return
      */
-    public  List<ExcelValidDto> checkDataDB(String checkFlag,List<Map<String,String>> datas, String TableName, String FileName,String interfType,String dataType,String bussinessKey,String... checkEuplicatedKeys) {
+    public  List<ExcelValidDto> checkDataDB(String checkFlag,List<Map<String,String>> datas, String TableName, String FileName,String interfType,String... bussinessKeys) {
         // 判断传入的数据是否为空
         if(CollectionUtils.isEmpty(datas)) {
             return null;
@@ -124,15 +120,14 @@ public class BaseCommonCheckService {
         }
 
         //如果检查数据中存在错误数据就进行下一步处理 若无就返回空的检查结果
-        if(erroList != null && erroList.size() != 0) {
+        if(!CollectionUtils.isEmpty(erroList)) {
             for (BaseCommonCheckDto dto : erroList) {
                 erroListValid.add(dto.getExcelValidDto());
             }
 
             //当是接口接入时才入CHB_INTERF_ERRODATA表
-            if (erroList != null && erroList.size() != 0 && StringUtil.equals("interf", checkFlag)) {
-                //数据库check不通过的插入CHB_INTERF_ERRODATA
-                dealErrAndInsert(erroList, FileName, interfType, bussinessKey, dataType, checkEuplicatedKeys);
+            if (!CollectionUtils.isEmpty(erroList) && StringUtil.equals("I", checkFlag)) {
+                this.dealErrAndInsert(erroList, FileName, interfType, bussinessKeys);
             }
             return erroListValid;
         }
@@ -143,17 +138,13 @@ public class BaseCommonCheckService {
 
     /**
      * 数据校验入口  业务
-     * @param checkFlag 是接口check还是导入check  接口是interf  导入是import
+     * @param checkFlag 是接口check还是导入check  接口是I  导入是D
      * @param datas 被check数据
      * @param TableName  表名
-     * @param FileName  文件名
-     * @param interfType 接口类型
-     * @param dataType
-     * @param bussinessKey 业务主键
-     * @param checkEuplicatedKeys 联合主键
+     * @param bussinessKeys 业务主键
      * @return 校验后的数据
      */
-    public List<ExcelValidDto> checkDataYW(String checkFlag,List<Map<String,String>> datas, String TableName, String FileName,String interfType,String dataType,String bussinessKey,String... checkEuplicatedKeys) {
+    public List<ExcelValidDto> checkDataYW(String checkFlag,List<Map<String,String>> datas, String TableName,String... bussinessKeys) {
         // 判断传入的数据是否为空
         if(CollectionUtils.isEmpty(datas)) {
             return null;
@@ -172,11 +163,9 @@ public class BaseCommonCheckService {
      * @param list
      * @param FileName
      * @param interfType
-     * @param dataType
-     * @param bussinessKey
-     * @param checkEuplicatedKeys
+     * @param bussinessKeys
      */
-    public void dealErrAndInsert(List<BaseCommonCheckDto> list, String FileName, String interfType, String dataType, String bussinessKey, String... checkEuplicatedKeys){
+    public void dealErrAndInsert(List<BaseCommonCheckDto> list, String FileName, String interfType,String... bussinessKeys){
         List<Map<String,String>> erroDatas = new ArrayList<>();
         ChbInterfErrodataWithBLOBs data=null;
         List<ChbInterfErrodataWithBLOBs> erroList=new ArrayList<ChbInterfErrodataWithBLOBs>();
@@ -186,14 +175,14 @@ public class BaseCommonCheckService {
         }
         for(Map<String, String> erro:erroDatas){
             //生成入CHB_INTERF_ERRODATA表的数据结构
-            data = createChbInterfErrdata(FileName, interfType, erro, bussinessKey, checkEuplicatedKeys);
+            data = this.createChbInterfErrdata(FileName, interfType, erro, bussinessKeys);
             if(data != null) {
                 erroList.add(data);
             }
         }
         if(!erroList.isEmpty()){
             //入CHB_INTERF_ERRODATA表
-            insertErroData(erroList);
+            this.insertErroData(erroList);
         }
     }
 
@@ -202,15 +191,21 @@ public class BaseCommonCheckService {
      * @param FileName
      * @param interfType
      * @param erro
-     * @param bussinessKey
-     * @param checkEuplicatedKeys
+     * @param bussinessKeys 业务主键
      * @return
      */
-    public ChbInterfErrodataWithBLOBs createChbInterfErrdata(String FileName,String interfType,Map<String, String> erro,String bussinessKey,String... checkEuplicatedKeys){
+    public ChbInterfErrodataWithBLOBs createChbInterfErrdata(String FileName,String interfType,Map<String, String> erro,String... bussinessKeys){
         String msg = erro.get("ERRMSG");
         if (StringUtil.isEmpty(msg)) {
             return null;
         }
+            //根据bussinessKeys来进行赋值业务主键
+            StringBuffer keyVFinal = new StringBuffer();
+            for(String key: bussinessKeys){
+                keyVFinal.append(erro.get(key));
+                keyVFinal.append("|");
+            }
+            String dataId = keyVFinal.toString();
 
         // 拼装错误信息
         ChbInterfErrodataWithBLOBs errodata = new ChbInterfErrodataWithBLOBs();
@@ -219,7 +214,7 @@ public class BaseCommonCheckService {
         // 文件名
         errodata.setFireName(FileName);
         // 业务主键
-        errodata.setDataid("dataId");
+        errodata.setDataid(dataId);
         // 接口类型
         errodata.setInterfType(interfType);
         // 错误提示信息
