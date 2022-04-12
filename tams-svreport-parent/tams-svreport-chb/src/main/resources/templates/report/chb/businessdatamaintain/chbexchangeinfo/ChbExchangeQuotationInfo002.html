@@ -57,8 +57,8 @@
                         <div class="layui-input-inline input-inline">
                             <input id="openPrice" name="openPrice" type="text"
                                    class="layui-input form-input text-number" placeholder="请输入内容"
-                                   maxlength="30" data-th-value="${entity?.openPrice}" required="required"
-                                   data-fixtype="2" data-textrange='4' data-th-placeholder="#{SysCommon.placeholder}">
+                                   maxlength="8" data-th-value="${entity?.openPrice}" required="required"
+                                   data-fixtype="2" data-textrange='5' data-th-placeholder="#{SysCommon.placeholder}">
                         </div>
                     </div>
                 </div>
@@ -68,8 +68,8 @@
                         <div class="layui-input-inline input-inline">
                             <input id="closePrice" name="closePrice" type="text"
                                    class="layui-input form-input text-number" placeholder="请输入内容"
-                                   maxlength="30" data-th-value="${entity?.closePrice}" required="required"
-                                   data-fixtype="2" data-textrange='4' data-th-placeholder="#{SysCommon.placeholder}">
+                                   maxlength="8" data-th-value="${entity?.closePrice}" required="required"
+                                   data-fixtype="2" data-textrange='5' data-th-placeholder="#{SysCommon.placeholder}">
                         </div>
                     </div>
                 </div>
@@ -79,8 +79,8 @@
                         <div class="layui-input-inline input-inline">
                             <input id="highPrice" name="highPrice" type="text"
                                    class="layui-input form-input text-number" placeholder="请输入内容"
-                                   data-th-value="${entity?.highPrice}" required="required" maxlength="30"
-                                   data-fixtype="2" data-textrange='4' data-th-placeholder="#{SysCommon.placeholder}">
+                                   data-th-value="${entity?.highPrice}" required="required" maxlength="8"
+                                   data-fixtype="2" data-textrange='5' data-th-placeholder="#{SysCommon.placeholder}">
                         </div>
                     </div>
                 </div>
@@ -88,9 +88,9 @@
                     <div >
                         <label class="layui-form-label form-lable mst-lable">最低价</label>
                         <div class="layui-input-inline input-inline">
-                            <input id="lowPrice" name="lowPrice" maxlength="30" type="text"
+                            <input id="lowPrice" name="lowPrice" maxlength="8" type="text"
                                    class="layui-input form-input text-number" placeholder="请输入内容"
-                                   data-th-value="${entity?.lowPrice}" required="required" data-fixtype="2" data-textrange='4'
+                                   data-th-value="${entity?.lowPrice}" required="required" data-fixtype="2" data-textrange='5'
                                    data-th-placeholder="#{SysCommon.placeholder}">
                         </div>
                     </div>
@@ -99,9 +99,9 @@
                     <div >
                         <label class="layui-form-label form-lable mst-lable">中间价</label>
                         <div class="layui-input-inline input-inline">
-                            <input id="midPrice" name="midPrice" maxlength="30" type="text"
+                            <input id="midPrice" name="midPrice" maxlength="8" type="text"
                                    class="layui-input form-input text-number" placeholder="请输入内容"
-                                   data-th-value="${entity?.midPrice}" required="required" data-fixtype="2" data-textrange='4'
+                                   data-th-value="${entity?.midPrice}" required="required" data-fixtype="2" data-textrange='5'
                                    data-th-placeholder="#{SysCommon.placeholder}">
                         </div>
                     </div>
@@ -110,7 +110,7 @@
                     <div >
                         <label class="layui-form-label form-lable mst-lable">报价单位</label>
                         <div class="layui-input-inline input-inline">
-                            <input id="quotUnit" name="quotUnit" maxlength="20" type="text"
+                            <input id="quotUnit" name="quotUnit" maxlength="15" type="text"
                                    class="layui-input form-input text-number" placeholder="请输入内容"
                                    data-th-value="${entity?.quotUnit}" required="required" data-fixtype="2" data-textrange='0'
                                    data-th-placeholder="#{SysCommon.placeholder}">
