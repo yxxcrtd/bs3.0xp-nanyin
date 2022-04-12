@@ -15,12 +15,12 @@
 		<if test="org != null  and org!=''">
 			where  T.org_code=#{org, jdbcType=VARCHAR}
 		</if>
-		) WHERE RN = 1 AND TERMID = #{termId, jdbcType=VARCHAR}	
+		)A WHERE A.RN = 1 AND A.TERMID = #{termId, jdbcType=VARCHAR}
   	)
 	</select>	
 	
 	<select id="queryMarginTrading" resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.OverallInfoDto" parameterType="java.util.Map">
-		SELECT NVL(SUM(CMAP.ASSETVALUE_A), 0) AS balance
+		SELECT IFNULL(SUM(CMAP.ASSETVALUE_A), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
 		LEFT JOIN FIN_PRODUCT FP
 		ON CMAP.ASSET_CODE = FP.FINPROD_MARKET_ID
@@ -131,7 +131,7 @@
 			/*NVL(INFO.INDUSTRY1, INFO.INDUSTRY_SHARES) AS propertyCode,
 			NVL(SUM(NVL(CMAP.ASSETVALUE_A, 0)), 0) AS balance*/
 		ifnull(INFO.INDUSTRY1, INFO.INDUSTRY_SHARES) AS propertyCode,
-		ifnull(SUM(NVL(CMAP.ASSETVALUE_A, 0)), 0) AS balanc
+		ifnull(SUM(IFNULL(CMAP.ASSETVALUE_A, 0)), 0) AS balanc
 		FROM CHB_MONTH_ASSET_POSITION CMAP
 		LEFT JOIN CHB_ASSET_INFO INFO
 			ON CMAP.ASSET_CODE = INFO.ASSET_CODE
@@ -145,7 +145,7 @@
       		<!-- 四级分类为“融资融券收益权”、“股票质押式回购（场内）”、“股票质押式回购（场外）”的不统计 -->
       		AND FPT.TYPE_11 NOT IN ('057', '075', '076')
 			AND (INFO.INDUSTRY1 IS NOT NULL OR INFO.INDUSTRY_SHARES IS NOT NULL)
-		GROUP BY NVL(INFO.INDUSTRY1, INFO.INDUSTRY_SHARES)
+		GROUP BY IFNULL(INFO.INDUSTRY1, INFO.INDUSTRY_SHARES)
 		/*非标准化债权类投资上季末数额*/
 		UNION ALL
 		SELECT 
@@ -153,7 +153,7 @@
 			/*NVL(INFO.INDUSTRY1, INFO.INDUSTRY_SHARES) AS propertyCode,
 			NVL(SUM(NVL(CMAP.ASSETVALUE_A, 0)), 0) AS balance*/
 			ifnull(INFO.INDUSTRY1, INFO.INDUSTRY_SHARES) AS propertyCode,
-			ifnull(SUM(NVL(CMAP.ASSETVALUE_A, 0)), 0) AS balance
+			ifnull(SUM(IFNULL(CMAP.ASSETVALUE_A, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
 		LEFT JOIN CHB_ASSET_INFO INFO
 			ON CMAP.ASSET_CODE = INFO.ASSET_CODE
@@ -167,13 +167,13 @@
       		<!-- 四级分类为“融资融券收益权”、“股票质押式回购（场内）”、“股票质押式回购（场外）”的不统计 -->
       		AND FPT.TYPE_11 NOT IN ('057', '075', '076')
 			AND (INFO.INDUSTRY1 IS NOT NULL OR INFO.INDUSTRY_SHARES IS NOT NULL)
-		GROUP BY NVL(INFO.INDUSTRY1, INFO.INDUSTRY_SHARES)
+		GROUP BY IFNULL(INFO.INDUSTRY1, INFO.INDUSTRY_SHARES)
 		/*产业投资基金本季末余额*/
 		UNION ALL
 		SELECT 
 			'INDINCUR' AS reportType,
 			INFO.INDUSTRY_SHARES AS propertyCode,
-			NVL(SUM(NVL(CMAP.ASSETVALUE_A, 0)), 0) AS balance
+		IFNULL(SUM(IFNULL(CMAP.ASSETVALUE_A, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
 		LEFT JOIN CHB_ASSET_INFO INFO
 			ON CMAP.ASSET_CODE = INFO.ASSET_CODE
@@ -190,7 +190,7 @@
 		SELECT 
 			'INDINLAST' AS reportType,
 			INFO.INDUSTRY_SHARES AS propertyCode,
-			NVL(SUM(NVL(CMAP.ASSETVALUE_A, 0)), 0) AS balance
+		IFNULL(SUM(IFNULL(CMAP.ASSETVALUE_A, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
 		LEFT JOIN CHB_ASSET_INFO INFO
 			ON CMAP.ASSET_CODE = INFO.ASSET_CODE
@@ -239,7 +239,7 @@
 		)
 	</select>
 	<select id="queryBottomOverallInfoByRating" resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.OverallInfoDto" parameterType="java.util.Map">
-		select NVL(SUM(CMAP.ASSETVALUE_B), 0) AS balance
+		select IFNULL(SUM(CMAP.ASSETVALUE_B), 0) AS balance
 		from CHB_MONTH_ASSET_POSITION cmap
 		<if test="org != null  and org!=''">
 			left join DATA_AUTH_NOTIFY_INST di
@@ -349,7 +349,7 @@
 
 
 	<select id="queryBottomOverallInfoYx" resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.OverallInfoDto" parameterType="java.util.Map">
-		SELECT NVL(SUM(CMAP.ASSETVALUE_B), 0) AS balance
+		SELECT IFNULL(SUM(CMAP.ASSETVALUE_B), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
 		<if test="org != null  and org!=''">
 			left join DATA_AUTH_NOTIFY_INST di
@@ -426,7 +426,7 @@
 	</select>
 	<select id="queryOverallInfoByRating" resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.OverallInfoDto"
 			parameterType="java.util.Map">
-		select NVL(SUM(CMAP.ASSETVALUE_A), 0) AS balance
+		select ifnull(SUM(CMAP.ASSETVALUE_A), 0) AS balance
 		from CHB_MONTH_ASSET_POSITION cmap
 		<if test="org != null  and org!=''">
 			left join DATA_AUTH_NOTIFY_INST di
@@ -436,7 +436,7 @@
 		LEFT JOIN chb_asset_info info
 		ON cmap.asset_code=info.asset_code
 		LEFT JOIN MST_CUSTOMER_INFO_ADD T1 ON T1.CUSTOMER_ID = INFO.Chb_Issuer_Id
-		WHERE  /*TO_CHAR(CMAP.ENDDATE, 'yyyyMM') = #{termId, jdbcType=VARCHAR}*/DATE_FORMAT(CMAP.ENDDATE, '%Y-%m') = #{termId, jdbcType=VARCHAR}
+		WHERE  DATE_FORMAT(CMAP.ENDDATE, '%Y-%m') = #{termId, jdbcType=VARCHAR}
 		AND T1.industry != '10'
 		<if test="rating != null  and rating.equals('1')">
 			and info.asset_type2 in  ('1112','1113','1114','1115','1116','1117')
@@ -527,7 +527,7 @@
 		'BONDCUR' AS reportType,
 		mst.INDUSTRY AS propertyCode,
 		/*NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance*/
-		ifnull(ifnull(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
+		ifnull(ifnull(IFNULL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
 		<if test="org != null  and org!=''">
 			left join DATA_AUTH_NOTIFY_INST di
@@ -553,7 +553,7 @@
 		'BONDLAST' AS reportType,
 		mst.INDUSTRY AS propertyCode,
 		/*NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance*/
-		ifnull(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
+		ifnull(SUM(IFNULL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
 		<if test="org != null  and org!=''">
 			left join DATA_AUTH_NOTIFY_INST di
@@ -637,7 +637,7 @@
 		SELECT
 		'OTHERCUR' AS reportType,
 		'10' AS propertyCode,
-		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
+		IFNULL(SUM(IFNULL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
 		<if test="org != null  and org!=''">
 			left join DATA_AUTH_NOTIFY_INST di
@@ -663,7 +663,7 @@
 		'OTHERLAST' AS reportType,
 		'10' AS propertyCode,
 		/*NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance*/
-		ifnull(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
+		ifnull(SUM(IFNULL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
 		<if test="org != null  and org!=''">
 			left join DATA_AUTH_NOTIFY_INST di
@@ -746,7 +746,7 @@
 		'BONDCUR' AS reportType,
 		d1.item_value AS propertyCode,
 		/*NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance*/
-		ifnull(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
+		ifnull(SUM(IFNULL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP
 		<if test="org != null  and org!=''">
 			left join DATA_AUTH_NOTIFY_INST di
