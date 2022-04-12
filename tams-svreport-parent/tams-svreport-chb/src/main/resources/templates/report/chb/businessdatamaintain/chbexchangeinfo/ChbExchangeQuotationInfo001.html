@@ -21,10 +21,10 @@
 			                <label class="layui-form-label form-lable" >货币对</label>
 		                    <div class="layui-input-inline input-inline">
 			                    <select type="text" id="exchargeCode" name="exchargeCode" 
-			                            class="layui-input form-input input-select" 
+			                            class="layui-input form-input input-select"
 			                            data-th-data-result='${CYY_PAIR}' allowClear="true" 
-			                            placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
-			                            formatoption = "true" >
+			                            placeholder="请输入内容" multiple="multiple" data-th-placeholder="#{SysCommon.placeholder}"
+										data-th-formatoption="false" >
 			                       <option></option>		                     
 			                    </select>
 			                </div>

@@ -33,8 +33,10 @@
         from MST_EXCHARGE_QUOTE
         <where>
             STATUS != 'D'
-            <if test="exchargeCode != null and exchargeCode != ''">
-                AND EXCHARGE_CODE like concat(concat('%', #{exchargeCode,jdbcType=VARCHAR}),'%')
+            <if test="exchargeCodeList != null and exchargeCodeList.size() > 0">
+                <foreach collection="exchargeCodeList" item="exchargeCode" open=" AND EXCHARGE_CODE IN (" close=")" separator=",">
+                    #{exchargeCode,jdbcType=VARCHAR}
+                </foreach>
             </if>
             <if test="tradeDateBegin != null and tradeDateBegin != ''">
                 <![CDATA[ and to_char(TRADE_DATE,'yyyy-MM-dd') >= #{tradeDateBegin} ]]>

@@ -3,8 +3,12 @@ $(function() {
      * 获取查询参数
      */
     var getSearchParams = function() {
+        var exchargeCode = $('#exchargeCode').val();
+        if (exchargeCode) {
+            exchargeCode = exchargeCode.join();
+        }
         return {
-        	exchargeCode: $('#exchargeCode').val(),
+        	exchargeCode: exchargeCode,
         	tradeDateBegin: $('#tradeDate').startDate(),
         	tradeDateEnd: $('#tradeDate').endDate()
         };

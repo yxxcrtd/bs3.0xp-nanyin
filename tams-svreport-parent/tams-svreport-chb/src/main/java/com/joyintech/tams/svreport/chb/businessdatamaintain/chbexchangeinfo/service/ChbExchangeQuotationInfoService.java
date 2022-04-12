@@ -11,6 +11,7 @@
 package com.joyintech.tams.svreport.chb.businessdatamaintain.chbexchangeinfo.service;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
@@ -96,6 +97,10 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
      * @return 返回查询结果
      */
     public Page<ChbExchangeQuotationInfoDto> selectForPage(Map<String, Object> param) {
+        String exchargeCode = (String) param.get("exchargeCode");
+        if (StringUtil.isNotEmpty(exchargeCode)) {
+            param.put("exchargeCodeList", StringUtil.splitToList(GlobalConstant.COMMA, exchargeCode));
+        }
         return super.queryForPage(Integer.parseInt(param.get("page").toString()), Integer.parseInt(param.get("length").toString()), () -> chbExchangeQuotationInfoMapper.select(param));
     }
 
