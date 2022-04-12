@@ -56,15 +56,13 @@ $(function() {
         data.pageModel = PAGE_MODEL_EDIT;
         var tradeDate = new Date(parseInt(data.tradeDate));
         tradeDate= tradeDate.format('yyyy-MM-dd');
-        Joyin.ajaxJson(basePath + 'chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo002/check', data, function(result) {
-        	Joyin.dialog("汇率行情信息修改",
-                    basePath + "chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo002/init",
-                    "60%", "80%", {pageModel:PAGE_MODEL_EDIT,
-            	                    exchargeCode:data.exchargeCode,
-            	                    tradeDate:tradeDate},function() {
-                                        table.reload();
-                                    });
-        });
+        Joyin.dialog("汇率行情信息修改",
+            basePath + "chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo002/init",
+            "60%", "80%", {pageModel:PAGE_MODEL_EDIT,
+                exchargeCode:data.exchargeCode,
+                tradeDate:tradeDate},function() {
+                table.reload();
+            });
     });
     
     /**

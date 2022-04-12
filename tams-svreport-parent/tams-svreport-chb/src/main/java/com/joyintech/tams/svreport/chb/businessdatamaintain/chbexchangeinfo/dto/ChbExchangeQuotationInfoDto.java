@@ -11,8 +11,6 @@
 package com.joyintech.tams.svreport.chb.businessdatamaintain.chbexchangeinfo.dto;
 
 import com.joyintech.framework.annotation.PageId;
-import com.joyintech.tams.common.base.entity.MstExchargeQuote;
-import com.joyintech.tams.common.base.entity.MstExchargeQuoteKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 import java.util.List;
@@ -27,7 +25,7 @@ import java.util.List;
  * @since 1.0
  */
 @PageId("ChbExchangeQuotationInfo002")
-public class ChbExchangeQuotationInfoDto extends MstExchargeQuote implements ProcessEntity {
+public class ChbExchangeQuotationInfoDto extends ChbExchargeQuote implements ProcessEntity {
     /**
      * <意义，目的和功能，以及可能被用到的地方>
      */
