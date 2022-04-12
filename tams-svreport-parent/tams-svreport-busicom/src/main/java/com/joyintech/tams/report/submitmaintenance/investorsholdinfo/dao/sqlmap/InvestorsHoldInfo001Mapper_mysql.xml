@@ -948,7 +948,7 @@
 		<if test="list !=null and list.size()>0">
 			AND (ciis.INDENTIFY_MARK,ciis.HOLD_DATE,ciis.CCY,ciis.PRODID,ciis.REGIST_BANK_CODE) in
 			<foreach collection="list" item="item" open="and (" separator="," close=")">
-				(#{item.indentifyMark},{item.holdDate},#{item.ccy},#{item.prodid},#{item.registBankCode})
+				(#{item.indentifyMark},#{item.holdDate},#{item.ccy},#{item.prodid},#{item.registBankCode})
 			</foreach>
 		</if>
 	</select>
