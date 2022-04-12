@@ -87,6 +87,7 @@ public class BaseCheckOracleService {
         }
         if (StringUtil.isBlank(value)) {
             BaseCommonCheckDto dto = new BaseCommonCheckDto();
+            map.put("STATUS","R");
             dto.setErrMap(map);
             dto.setExcelValidDto(new ExcelValidDto("0未导入", String.valueOf(i + 2), "不能为空"));
             checkResult.add(dto);
@@ -94,6 +95,7 @@ public class BaseCheckOracleService {
         //校验字段长度
         if (tabDto.getLength() != 0 && tabDto.getLength() < value.length()) {
             BaseCommonCheckDto dto = new BaseCommonCheckDto();
+            map.put("STATUS","R");
             dto.setErrMap(map);
             dto.setExcelValidDto(new ExcelValidDto("0未导入", String.valueOf(i + 2), "字段长度不能超过" + tabDto.getLength()));
             checkResult.add(dto);
@@ -102,6 +104,7 @@ public class BaseCheckOracleService {
         if (Objects.equals("DATE", tabDto.getDataType())) {
             if (!this.checkDate(value)) {
                 BaseCommonCheckDto dto = new BaseCommonCheckDto();
+                map.put("STATUS","R");
                 dto.setErrMap(map);
                 dto.setExcelValidDto(new ExcelValidDto("0未导入", String.valueOf(i + 2), "不是日期格式"));
                 checkResult.add(dto);
@@ -111,6 +114,7 @@ public class BaseCheckOracleService {
         if (Objects.equals("NUMBER", tabDto.getDataType())) {
             if (!this.checkFigure(value)) {
                 BaseCommonCheckDto dto = new BaseCommonCheckDto();
+                map.put("STATUS","R");
                 dto.setErrMap(map);
                 dto.setExcelValidDto(new ExcelValidDto("0未导入", String.valueOf(i + 2), "不是数字格式"));
                 checkResult.add(dto);
@@ -180,6 +184,12 @@ public class BaseCheckOracleService {
         }
     }
 
+    /**
+     * oracle检查方法
+     * @param dataList
+     * @param tableName
+     * @return
+     */
     public List<BaseCommonCheckDto> check4Oracle(List<Map<String, String>> dataList, String tableName) {
 
         List<BaseCommonCheckDto> checkResultAll = new LinkedList<>();
@@ -196,7 +206,7 @@ public class BaseCheckOracleService {
             }
             //如果校验不通过remove元素
             if (CollectionUtils.isNotEmpty(checkResult)) {
-                iterator.remove();
+//                iterator.remove();
                 checkResultAll.addAll(checkResult);
             }
             i++;

@@ -132,7 +132,7 @@ public class BaseCommonCheckService {
             //当是接口接入时才入CHB_INTERF_ERRODATA表
             if (erroList != null && erroList.size() != 0 && StringUtil.equals("interf", checkFlag)) {
                 //数据库check不通过的插入CHB_INTERF_ERRODATA
-                dealErrBeforInsert(erroList, FileName, interfType, bussinessKey, dataType, checkEuplicatedKeys);
+                dealErrAndInsert(erroList, FileName, interfType, bussinessKey, dataType, checkEuplicatedKeys);
             }
             return erroListValid;
         }
@@ -176,7 +176,7 @@ public class BaseCommonCheckService {
      * @param bussinessKey
      * @param checkEuplicatedKeys
      */
-    public void dealErrBeforInsert(List<BaseCommonCheckDto> list, String FileName, String interfType, String dataType, String bussinessKey, String... checkEuplicatedKeys){
+    public void dealErrAndInsert(List<BaseCommonCheckDto> list, String FileName, String interfType, String dataType, String bussinessKey, String... checkEuplicatedKeys){
         List<Map<String,String>> erroDatas = new ArrayList<>();
         ChbInterfErrodataWithBLOBs data=null;
         List<ChbInterfErrodataWithBLOBs> erroList=new ArrayList<ChbInterfErrodataWithBLOBs>();
