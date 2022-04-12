@@ -152,7 +152,7 @@
 		AND A.ASSET_ID = B.ASSET_ID
 		AND A.VALUE_DATE = B.VALUE_DATE;
 
-		insert into CHB_ASSETS_BASIS_DATA_NOBTM(VAL_ID,
+		insert into CHB_ASSETS_BASIS_DATA(VAL_ID,
 		PROD_ID,
 		ASSET_ID,
 		VALUE_DATE,
@@ -235,7 +235,7 @@
 		) de ;
 	</insert>
 	<insert id="insertChbAssetBasisDataNoBtm" >
-		UPDATE  CHB_ASSETS_BASIS_DATA as A,
+		UPDATE  CHB_ASSETS_BASIS_DATA_NOBTM as A,
 		(
 		select
 		VAL_ID,
