@@ -1,8 +1,10 @@
 package com.joyintech.tams.svreport.chb.businessdatamaintain.chbexchangeinfo.dto;
 
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.BaseChbEntity;
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
 
 import java.util.Date;
 
@@ -10,18 +12,21 @@ public class ChbExchargeQuoteKey extends BaseChbEntity {
     /**
      * 行情代码，一般为货币对
      */
+    @PrimaryKey(PrimaryKey.Field.PK_1)
     @NotEmpty(fieldName = "MstExchangeQuotationInfo001.exchargeCode", groups = {ValidateGroupEdit.class})
     private String exchargeCode;
 
     /**
      * 交易日
      */
+
     @NotEmpty(fieldName = "MstExchangeQuotationInfo001.tradeDate", groups = {ValidateGroupEdit.class})
     private Date tradeDate;
 
     /**
      * 数据来源
      */
+    @PrimaryKey(PrimaryKey.Field.PK_3)
     @NotEmpty(fieldName = "MstExchangeQuotationInfo001.datasourceType", groups = {ValidateGroupEdit.class})
     private String datasourceType;
 
@@ -31,6 +36,11 @@ public class ChbExchargeQuoteKey extends BaseChbEntity {
      */
     public String getExchargeCode() {
         return exchargeCode;
+    }
+
+    @PrimaryKey(PrimaryKey.Field.PK_2)
+    public String getTradeDateStr() {
+        return DateUtil.format(getTradeDate());
     }
 
     /**

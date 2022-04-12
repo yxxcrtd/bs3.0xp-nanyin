@@ -103,7 +103,7 @@ public class ChbExchangeQuotationInfo001Controller extends BaseController {
         }
         ProcessParameter<ChbExchangeQuotationInfoDto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<ChbExchangeQuotationInfoDto> params = new WorkFlowParameter<>();
-        params.setPageId("ChbExchangeQuotationInfo002");
+        params.setPageId(this.getPageId());
         params.setElementId(dto.getElementId());
         params.setBusinessCode(item -> item.getExchargeCode());
         params.setBusinessType(DictCodeList.共通业务类型_汇率行情信息.getValue());
@@ -112,8 +112,8 @@ public class ChbExchangeQuotationInfo001Controller extends BaseController {
                 entity -> "货币对" + "("
                         + SysDataUtil.getNameFromDataDict(DictCode.货币对,
                         entity.getExchargeCode())
-                        + ")" + "-" + "生效日" + "(" + DateUtil.format(entity.getTradeDate()) + ")" + "收盘价" + "("
-                        + entity.getClosePrice() + ")");
+                        + ")" + "-" + "生效日" + "(" + DateUtil.format(entity.getTradeDate()) + ")" + "数据来源" + "("
+                        + entity.getDatasourceType() + ")");
         processParameter.setWorkFlowParameter(params);
         String msg = chbExchangeQuotationInfoService.start(processParameter,
                 dto.getSelectedItem().toArray(

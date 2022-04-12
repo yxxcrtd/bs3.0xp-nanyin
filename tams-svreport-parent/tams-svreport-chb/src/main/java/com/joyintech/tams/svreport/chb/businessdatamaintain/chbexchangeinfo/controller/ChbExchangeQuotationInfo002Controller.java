@@ -104,8 +104,7 @@ public class ChbExchangeQuotationInfo002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({
-            ValidateGroupEdit.class}) ChbExchangeQuotationInfoDto dto, BindingResult br) throws WorkFlowException {
+    public AjaxResult save(@RequestBody  ChbExchangeQuotationInfoDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -114,15 +113,14 @@ public class ChbExchangeQuotationInfo002Controller extends BaseController {
         WorkFlowParameter<ChbExchangeQuotationInfoDto> params = new WorkFlowParameter<>();
         params.setPageId(this.getPageId());
         params.setElementId(dto.getElementId());
-        params.setBusinessCode(dto.getExchargeCode());
+        params.setBusinessCode(item -> item.getExchargeCode());
         params.setBusinessType(DictCodeList.共通业务类型_汇率行情信息.getValue());
         // 设置流程业务说明, entity即传入的dto
         params.setComment(
                 entity -> "货币对" + "("
                         + SysDataUtil.getNameFromDataDict(DictCode.货币对,
                         entity.getExchargeCode())
-                        + ")" + "-" + "生效日" + "(" + DateUtil.format(entity.getTradeDate()) + ")" + "收盘价" + "("
-                        + entity.getClosePrice() + ")" + "-" + "数据来源" + "(" +
+                        + ")" + "-" + "生效日" + "(" + DateUtil.format(entity.getTradeDate()) + ")"  + "-" + "数据来源" + "(" +
                         SysDataUtil.getNameFromDataDict(DictCode.估值来源,
                                 entity.getExchargeCode() + ")"));
         // 给参数变成ProcessParameter而非WorkFlowParameter
