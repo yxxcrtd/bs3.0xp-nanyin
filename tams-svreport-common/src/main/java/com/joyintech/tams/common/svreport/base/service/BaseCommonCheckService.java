@@ -62,12 +62,12 @@ public class BaseCommonCheckService {
 
     /**
      * check包含DB和业务CHECK
-     * @param checkFlag
-     * @param datas
-     * @param TableName
-     * @param FileName
-     * @param interfType
-     * @param bussinessKeys
+     * @param checkFlag 是接口check还是导入check  接口是I  导入是D
+     * @param datas 被check数据
+     * @param TableName 表名
+     * @param FileName 文件名
+     * @param interfType 接口类型
+     * @param bussinessKeys 业务主键
      * @return
      */
     public  List<ExcelValidDto> checkDataAll(String checkFlag,List<Map<String,String>> datas, String TableName, String FileName,String interfType,String... bussinessKeys) {
@@ -95,7 +95,7 @@ public class BaseCommonCheckService {
 
     /**
      *基础数据库check
-     * @param checkFlag 是接口check还是导入check  接口是interf  导入是import
+     * @param checkFlag 是接口check还是导入check  接口是I  导入是D
      * @param datas 被check数据
      * @param TableName  表名
      * @param FileName  文件名
