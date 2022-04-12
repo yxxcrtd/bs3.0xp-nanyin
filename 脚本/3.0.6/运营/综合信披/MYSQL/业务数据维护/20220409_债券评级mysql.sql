@@ -167,7 +167,7 @@ INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CR
 
 
 -- 更新债券评级表信息
-ALTER TABLE mst_bond_credit_rating  MODIFY COLUMN O_TYPE varchar(50) COMMENT '评级类型，主体评级、债项评级(暂时不用)';
+ALTER TABLE mst_bond_credit_rating  MODIFY COLUMN O_TYPE varchar(50) COMMENT '评级对象（主体评级、债项评级、担保人评级）';
 ALTER TABLE mst_bond_credit_rating  MODIFY COLUMN INPUT_TYPE varchar(50) COMMENT '录入方式(暂时不用)';
 ALTER TABLE mst_bond_credit_rating  MODIFY COLUMN IS_RECOMMAND varchar(50) COMMENT '(暂时不用)';
 ALTER TABLE mst_bond_credit_rating  MODIFY COLUMN ISSUER_RATE_TYPE varchar(50) COMMENT '评级发起类型(暂时不用)';
@@ -178,15 +178,13 @@ ALTER TABLE mst_bond_credit_rating  MODIFY COLUMN DIRECTION_CHANGE varchar(50) C
 ALTER TABLE mst_bond_credit_rating DROP COLUMN DATA_SOURCE;
 ALTER TABLE mst_bond_credit_rating DROP COLUMN STATUS;
 ALTER TABLE mst_bond_credit_rating DROP COLUMN DES;
-ALTER TABLE mst_bond_credit_rating DROP COLUMN O_NAME;
-ALTER TABLE mst_bond_credit_rating DROP COLUMN O_OBJECT;
+
 
 
 ALTER TABLE mst_bond_credit_rating ADD DATA_SOURCE VARCHAR(20) COMMENT '数据来源';
 ALTER TABLE mst_bond_credit_rating ADD STATUS VARCHAR(20) COMMENT '数据状态';
 ALTER TABLE mst_bond_credit_rating ADD DES BLOB COMMENT '错误信息';
-ALTER TABLE mst_bond_credit_rating ADD O_NAME VARCHAR(20) COMMENT '债券名称';
-ALTER TABLE mst_bond_credit_rating ADD O_OBJECT VARCHAR(20) COMMENT '评级对象';
+
 
 
 
