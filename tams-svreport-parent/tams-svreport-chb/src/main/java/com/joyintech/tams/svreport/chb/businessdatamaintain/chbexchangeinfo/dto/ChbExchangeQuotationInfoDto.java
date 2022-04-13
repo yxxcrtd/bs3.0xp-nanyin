@@ -46,6 +46,8 @@ public class ChbExchangeQuotationInfoDto extends ChbExchargeQuote implements Pro
      */
     private String operateType;
 
+    private String submitType;
+
     /**
      * <意义，目的和功能，以及可能被用到的地方>
      */
@@ -66,6 +68,13 @@ public class ChbExchangeQuotationInfoDto extends ChbExchargeQuote implements Pro
         this.updateTimeStr = updateTimeStr;
     }
 
+    public String getSubmitType() {
+        return submitType;
+    }
+
+    public void setSubmitType(String submitType) {
+        this.submitType = submitType;
+    }
 
     /**
      * 获取 selectedItem

@@ -1,4 +1,5 @@
 $(function() {
+    $('#submitType').hide();
     function saveOrSubmit(operateType) {
         var object = $.serializeToObject('#submitForm');
         object.pageModel = pageModel;
@@ -14,6 +15,7 @@ $(function() {
     //画面初始化
     var init = function(){
         if(pageModel==PAGE_MODEL_EDIT){
+            $('#submitType').val("edit");
             $('#exchargeCode').attr("disabled",true);
             $('#tradeDate').attr("disabled",true);
             $('#datasourceType').attr("disabled",true);

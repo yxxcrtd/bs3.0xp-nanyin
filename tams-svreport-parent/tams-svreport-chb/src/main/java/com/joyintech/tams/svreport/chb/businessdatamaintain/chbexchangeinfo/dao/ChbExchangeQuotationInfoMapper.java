@@ -80,6 +80,7 @@ public interface ChbExchangeQuotationInfoMapper {
      * @param dto
      * @return
      */
-    int deleteChbExchargeQuoteByKey(ChbExchangeQuotationInfoDto dto);
+    int deleteChbExchargeQuoteByKey(@Param("exchargeCode") String exchargeCode,@Param("tradeDate") Date tradeDate,
+                                    @Param("datasourceType") String datasourceType,@Param("status") String status);
 
 }

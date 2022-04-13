@@ -300,8 +300,8 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
             dto.setStatus(DictCodeListExt2.数据状态_删除.getValue());
             chbExchangeQuotationInfoMapper.updateStatus(dto);
         } else if (StringUtil.equals(dto.getOperateType(), NEW)) {
-            //先删除已存在的数据
-            chbExchangeQuotationInfoMapper.deleteChbExchargeQuoteByKey(dto);
+            //删除状态是已删除的数据
+            chbExchangeQuotationInfoMapper.deleteChbExchargeQuoteByKey(dto.getExchargeCode(),dto.getTradeDate(),dto.getDatasourceType(),DictCodeListExt2.数据状态_删除.getValue());
             //设置基本币种，单位币种等
             String exchargeCode = dto.getExchargeCode();
             if (exchargeCode != null) {
@@ -324,10 +324,6 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
     public Integer getChbExchargeQuoteByKey(ChbExchangeQuotationInfoDto dto) {
         dto.setStatus(DictCodeListExt2.数据状态_有效.getValue());
         return chbExchangeQuotationInfoMapper.getChbExchargeQuoteByKey(dto);
-    }
-
-    public void deleteChbExchargeQuoteByKey(ChbExchangeQuotationInfoDto dto) {
-         chbExchangeQuotationInfoMapper.deleteChbExchargeQuoteByKey(dto);
     }
 
     /**

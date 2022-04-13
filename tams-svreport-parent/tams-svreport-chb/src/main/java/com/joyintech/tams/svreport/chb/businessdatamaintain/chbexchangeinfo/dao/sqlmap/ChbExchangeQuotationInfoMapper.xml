@@ -73,6 +73,9 @@
         where EXCHARGE_CODE = #{exchargeCode,jdbcType=VARCHAR}
           and TRADE_DATE = #{tradeDate,jdbcType=DATE}
           and DATASOURCE_TYPE = #{datasourceType,jdbcType=VARCHAR}
+        <if test="status != null and status != ''">
+            and STATUS = #{status,jdbcType=VARCHAR}
+        </if>
     </select>
 
     <!-- 将Excel表格数据加入数据库 -->
@@ -233,6 +236,9 @@
         where EXCHARGE_CODE = #{exchargeCode,jdbcType=VARCHAR}
           and TRADE_DATE = #{tradeDate,jdbcType=DATE}
           and DATASOURCE_TYPE = #{datasourceType,jdbcType=VARCHAR}
+        <if test="status != null and status != ''">
+          and STATUS = #{status,jdbcType=VARCHAR}
+        </if>
     </delete>
 
 </mapper>

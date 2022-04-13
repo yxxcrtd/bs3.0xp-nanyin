@@ -10,6 +10,7 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbexchangeinfo.dto.ChbExchangeQuotationInfoDto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbexchangeinfo.service.ChbExchangeQuotationInfoService;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
@@ -92,6 +93,17 @@ public class ChbExchangeQuotationInfo002Controller extends BaseController {
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({
             ValidateGroupEdit.class}) ChbExchangeQuotationInfoDto dto, BindingResult result) {
+        //新建时判断业务之间是否存在
+        if (!Objects.equals("edit", dto.getSubmitType())) {
+            Integer count = chbExchangeQuotationInfoService.getChbExchargeQuoteByKey(dto);
+            if (count > 0) {
+                List<ValidMessage> messages = new ArrayList<>(1);
+                messages.add(new ValidMessage("数据"+dto.getExchargeCode()+DateUtil.format(dto.getTradeDate())+dto.getDatasourceType()+"已存在,不能提交!"));
+                AjaxResult m = new AjaxResult();
+                m.setErrorList(messages);
+                return m;
+            }
+        }
         return commonCheck(result, dto.getOperateType());
     }
 
