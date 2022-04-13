@@ -66,20 +66,8 @@ public class ChbCalendarInfo001Controller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.是否);
         //数据的状态
         this.setSelectOptionToModel(model, DictCode.维护数据状态);
-        //初始化日历类型下拉框
-        List<SelectOptionDto> listCalendar = new LinkedList<>();
-        Map<String, Object> map = new HashMap<>(1);
-        map.put("calendarType", "");
-        List<ChbCalendarInfoDto> list = chbTradingCalendarInfo001Service.selectCalendarInfo(map);
-        SelectOptionDto dto = null;
-        for (ChbCalendarInfoDto e : list) {
-            dto = new SelectOptionDto();
-            dto.setId(e.getCalendarId());
-            dto.setText(e.getCalendarName());
-            dto.setCol("");
-            listCalendar.add(dto);
-        }
-        model.addAttribute("calendarType", JsonUtils.objectArray2Json(listCalendar.toArray()));
+        //节假日信息
+        this.setSelectOptionToModel(model, DictCode.节假日信息);
         Date sysDate = DateUtil.platDateFromCache();
         model.addAttribute("sysDate", sysDate);
         model.addAttribute("_yes", 1);
