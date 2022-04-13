@@ -419,7 +419,7 @@
         <foreach collection="list" open="(" close=")" separator="," item="item">
             #{item.pbcAccountId,jdbcType=CHAR}
         </foreach>
-        )
+        )as tt
         where 1 = 1 limit 1
     </insert>
     <delete id="deleteBatchSubFromHisByUpdateTime" parameterType="java.util.List" >
@@ -435,8 +435,8 @@
         <foreach collection="list" open="(" close=")" separator="," item="item">
             #{item.pbcAccountId,jdbcType=CHAR}
         </foreach>
-        )
-        where 1 = 1 limit 1
+        )as tt
+        where 1 = 1 and ranknum= 1
         )
     </delete>
     <delete id="deleteBatchBySendStatus" parameterType="java.util.List">

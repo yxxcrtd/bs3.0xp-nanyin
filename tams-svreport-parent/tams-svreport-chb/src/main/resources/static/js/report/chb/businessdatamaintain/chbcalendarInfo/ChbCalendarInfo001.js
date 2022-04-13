@@ -1,0 +1,146 @@
+/**
+ * 市场日历信息
+ */
+(function () {
+    /**
+     * 获取查询参数
+     */
+    var getSearchParams = function () {
+        var startDate = $('#cdate').startDate();
+        var endDate = $('#cdate').endDate();
+        if ($('#calendarType').val()) {
+            var calendarType = $('#calendarType').val().join(',');
+        }
+        return {
+            calendarType: calendarType, ishDay: $('#ishDay').val(), status: $('#status').val(),startDate: startDate, endDate: endDate
+        }
+    };
+    /**
+     * 定义数据表格
+     */
+    var table = $("#dataTable").joyintable({
+        ajax: {
+            url: 'queryList', type: 'POST', data: function () {
+                return getSearchParams();
+            }
+        }, cols: [{
+            title: '日期',field: 'cdate',  type: 'date'
+        }, {
+            title: '市场日历类型',field: 'calendarName'
+        }, {
+            title: '是否节假日',field: 'isHolidayStr'
+        }, {
+            title: '数据状态',field: 'status',
+        }, {
+            title: '错误信息',field: 'errMsg',width:130,sortable:false
+        },{
+            title: '更新时间',field: 'updateTimeStr'
+        }, {
+            title: '更新人',field: 'updateUser',sortable:false
+        }, {
+            field: 'yorn', visible: false
+        }, {
+            field: 'calendarId', visible: false
+        }]
+    });
+    /**
+     * 导出
+     */
+    var exportExcel = function () {
+        Joyin.exportExcel(basePath + "chb/businessdatamaintain/chbcalendarInfo/ChbCalendarInfo001/export", getSearchParams());
+    };
+    /**
+     * 绑定按钮事件
+     */
+    $(function () {
+        /**
+         * 查询按钮
+         */
+        $('#ChbCalendarInfo001_btn_search').click(function () {
+            table.load();
+        });
+        /**
+         * 导出按钮
+         */
+        $('#ChbCalendarInfo001_btn_export').click(function () {
+            exportExcel();
+        });
+        /**
+         * 导入按钮
+         */
+        $('#ChbCalendarInfo001_btn_import').click(function () {
+            Joyin.confirm("请确认是否要导入数据?", function () {
+                Joyin.uploadFile(function (fileName) {
+                    Joyin.ajax(basePath + 'chb/businessdatamaintain/chbcalendarInfo/ChbCalendarInfo001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
+                         Joyin.ajax(basePath + "chb/businessdatamaintain/chbcalendarInfo/ChbCalendarInfo001/importFile", {
+                        fileName: fileName
+                    }, function (result) {
+                        if (!result || !($.isArray(result) && result.length > 0)) {
+                            layui.layer.closeAll()
+                            table.reload();
+                        }
+                    });
+                    });
+                });
+            });
+        });
+        /**
+         * 设为节假日
+         */
+        $('#ChbCalendarInfo001_btn_sethday').click(function () {
+            if (table != null && table != '') {
+                var selArr = table.getAllCheckedRows();
+            }
+            if (!selArr || selArr.length == 0) {
+                Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+                return;
+            } else {
+                var count = 0;
+                for (var i = 0; i < selArr.length; i++) {
+                    if (selArr[i].yorn == yes) {
+                        count++;
+                    }
+                }
+                if (count != 0) {
+                    layer.msg("请选择节假日标志为工作日的数据");
+                } else {
+                    Joyin.confirm("是否设置为节假日?", function () {
+                        Joyin.ajaxJson(basePath + "chb/businessdatamaintain/chbcalendarInfo/ChbCalendarInfo001/sethday", selArr, function () {
+                            table.reload();
+                        });
+                    });
+                }
+            }
+        });
+        /**
+         * 设为工作日
+         */
+        $('#ChbCalendarInfo001_btn_setwday').click(function () {
+            if (table != null && table != '') {
+                var selArr = table.getAllCheckedRows();
+            }
+            if (!selArr || selArr.length == 0) {
+                Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+                return;
+            } else {
+                var count = 0;
+                for (var i = 0; i < selArr.length; i++) {
+                    if (selArr[i].yorn == no) {
+                        count++;
+                    }
+                }
+                if (count != 0) {
+                    layer.msg("请选择节假日标志为节假日的数据");
+                } else {
+                    Joyin.confirm("是否设置为工作日?", function () {
+                        Joyin.ajaxJson(basePath + "chb/businessdatamaintain/chbcalendarInfo/ChbCalendarInfo001/setwday", selArr, function () {
+                            table.reload();
+                        });
+                    });
+                }
+            }
+
+        });
+
+    });
+}());

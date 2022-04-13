@@ -13,6 +13,6 @@ import java.util.List;
  */
 @Repository
 public interface ColumnSelector {
-    @Select("select column_name,ordinal_position,is_nullable,data_type,character_maximum_length,column_type,privileges from information_schema.columns where table_schema = #{schema} and table_name = #{tableName}")
-    List<Column> select(@Param("schema") String schema, @Param("tableName") String tableName);
+    @Select("select column_name,ordinal_position,is_nullable,data_type,character_maximum_length,column_type,column_comment,numeric_precision,numeric_scale,column_key,privileges from information_schema.columns where table_schema = 'gd_test' and table_name = #{tableName}")
+    List<Column> select(@Param("tableName") String tableName);
 }

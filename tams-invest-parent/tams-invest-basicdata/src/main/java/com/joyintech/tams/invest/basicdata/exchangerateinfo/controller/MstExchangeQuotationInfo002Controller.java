@@ -128,8 +128,9 @@ public class MstExchangeQuotationInfo002Controller extends BaseController {
             entity -> "货币对" + "("
                       + SysDataUtil.getNameFromDataDict(DictCode.货币对,
                           entity.getExchargeCode())
-                      + ")" + "-" + "生效日" + "(" + DateUtil.format(entity.getTradeDate()) + ")" + "收盘价" + "("
-                      + entity.getClosePrice() + ")");
+                      + ")" + "-" + "生效日" + "(" + DateUtil.format(entity.getTradeDate()) + ")" + "数据来源" + "("
+                      + SysDataUtil.getNameFromDataDict(DictCode.估值来源,
+                    entity.getDatasourceType()) + ")");
         // 给参数变成ProcessParameter而非WorkFlowParameter
         ProcessParameter<MstExchangeQuotationInfoDto> parameter = new ProcessParameter<MstExchangeQuotationInfoDto>();
         parameter.setWorkFlowParameter(params);

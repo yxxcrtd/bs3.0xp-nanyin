@@ -47,7 +47,7 @@
 
 <!--    分页查询-->
     <select id="selectForPage" resultType="com.joyintech.tams.report.submitmaintenance.salerrewpenainfo.dto.SalerRewPenaInfoDto">
-        SELECT *
+        SELECT A.*
         FROM (
         select
         'erro'                    as erroOrInfo,
@@ -65,7 +65,7 @@
         null                     as salerComplainResult,
         SALER_COMPLAIN_DATE       as salerComplainDate,
         'A'                       as dataStatus,
-        to_char(ERR_MSG)          as errMsg
+        ERR_MSG          as errMsg
         from CHB_SALER_REW_PENA_ERRODATA
         where 1=1
         <if test="salerInsNo != null and salerInsNo != ''">
@@ -132,7 +132,7 @@
         <if test="searchSalerComplainDateEnd != null and searchSalerComplainDateEnd != ''">
             and  /*to_char(SALER_COMPLAIN_DATE,'yyyy-MM-dd')*/ DATE_FORMAT(SALER_COMPLAIN_DATE,'%Y-%m-%d')<![CDATA[<=]]> #{searchSalerComplainDateEnd,jdbcType=VARCHAR}
         </if>
-        ) ORDER BY dataStatus DESC
+        ) A ORDER BY A.dataStatus DESC
     </select>
 
     <!--	查询中债银行机构代码-->

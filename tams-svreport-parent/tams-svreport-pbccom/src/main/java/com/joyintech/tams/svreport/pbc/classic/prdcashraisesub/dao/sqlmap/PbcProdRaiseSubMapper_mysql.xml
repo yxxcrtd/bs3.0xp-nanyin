@@ -162,9 +162,9 @@
     OPERATE_MODE,
     HIGH_YIELD_ISSUE,
     LOW_YIELD_ISSUE,
-    RANK() OVER (PARTITION BY PROD_ID ORDER BY ifnull(UPDATE_TIME,CREATE_TIME) DESC) RANKNUM
+    RANK() OVER (PARTITION BY PROD_ID ORDER BY IFNULL(UPDATE_TIME,CREATE_TIME) DESC) RANKNUM
     from PBC_PRD_BASEINFO_SUB
-
+    where  PBC_PROD_ID is not null
     )as tt where  1 = 1 and RANKNUM=1) prdbaseinfo
     ON PRDPOSITION.PRODID = PRDBASEINFO.PROD_ID
     left join (
@@ -215,7 +215,7 @@
     AND 1 = 1
     AND info.RANKNUM = 1
     <!-- and sub.send_status in ('02','03') /*已报送数据*/ -->
-    and DATE_FORMAT(sub.RAISING_DATE,'%Y-%m-%d') = #{cdate,jdbcType=VARCHAR}
+    and DATE_FORMAT(sub.RAISING_DATE,'%Y-%m-%d') = #{cdate,jdbcType=VARCHAR}  limit 1
   </select>
   <select id="selectPCD1All" parameterType="map" resultMap="BaseResultMap" flushCache="true" useCache="false">
     select
@@ -1384,7 +1384,7 @@
     a.UPDATE_TIME updateTime,
     b.PROD_ID prodId,
     t2.PBC_CODE pbcCode,
-    a.PBC_PROD_ID pbcProdIdShow
+    IFNULL(t2.pbc_code,a.PBC_PROD_ID) pbcProdIdShow
     from PBC_PROD_RAISING_SUB a
     left join PBC_PRD_BASEINFO_SUB b
     on a.PBC_PROD_ID = b.PBC_PROD_ID
@@ -1469,10 +1469,10 @@
         and DATE_FORMAT(a.PBC_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= #{pbcSubmitDeadlineDateEnd}
       </if>
       <if test="vdateStart != null and vdateStart != ''">
-        and DATE_FORMAT(a.RAISING_DATE,'yyyy-MM') &gt;= #{vdateStart,jdbcType=VARCHAR}
+        and DATE_FORMAT(a.RAISING_DATE,'%Y-%m') &gt;= #{vdateStart,jdbcType=VARCHAR}
       </if>
       <if test="vdateEnd != null and vdateEnd != ''">
-        and DATE_FORMAT(a.RAISING_DATE,'yyyy-MM') &lt;= #{vdateEnd,jdbcType=VARCHAR}
+        and DATE_FORMAT(a.RAISING_DATE,'%Y-%m') &lt;= #{vdateEnd,jdbcType=VARCHAR}
       </if>
       <if test="updateTime != null and updateTime != ''">
         and DATE_FORMAT(a.UPDATE_TIME,'%Y-%m-%d') = #{updateTime}
@@ -1573,7 +1573,7 @@
   <delete id="deleteBatchSubFromHisByUpdateTime" parameterType="java.util.List" >
     delete from PBC_PROD_RAISING_SUB_HIS
     where PBC_PROD_ID in (
-    select  PBC_PROD_ID
+    select t2.PBC_PROD_ID from (select  t1.PBC_PROD_ID
     from (
     select PBC_PROD_ID ,
     rank() over (partition by PBC_PROD_ID order by ifnull(update_time,create_time) desc) ranknum
@@ -1587,11 +1587,8 @@
         </foreach>
       </if>
     </where>
-    order by
-    PBC_PROD_ID,
-    ifnull(update_time,create_time) desc
-    ) as T
-    where ranknum = 1
+    )as t1
+    where 1 = 1 limit 1) as t2
     )
   </delete>
   <delete id="deleteBatchBySendStatus" parameterType="java.util.List">
@@ -1792,7 +1789,7 @@
         and DATE_FORMAT(a.UPDATE_TIME,'%Y-%m-%d') = #{updateTime}
       </if>
     </where>
-    ) tmp group by
+    )as tt group by
     RAISING_DATE
     ,PBC_PROD_ID
     <if test="yield == null">
@@ -1997,7 +1994,7 @@
         and DATE_FORMAT(a.UPDATE_TIME,'%Y-%m-%d') = #{updateTime}
       </if>
     </where>
-    ) tmp group by
+    )as tt group by
     RAISING_DATE
     ,PBC_PROD_ID
     <if test="yield == null">
@@ -2176,25 +2173,25 @@
 
   <!-- 产品资金募集信息页面导出人行Excel报表中的第四个sheet页净值的明细数据 -->
   <select id="searchListDetailSheet4" parameterType="map" resultMap="BaseResultMap">
-    SELECT DISTINCT 'sheet4' code,(case rais.PROD_VALUE when null then null else rais.ccy end) CCY,(case rais.UNIT_VALUE_TOTAL when null then null else rais.ccy end) RAISE_CCY,
-                    cast(rais.PROD_VALUE AS DECIMAL(22, 5)) PROD_VALUE,
-                    cast(rais.PROD_VALUE_CNY AS DECIMAL(22, 5)) PROD_VALUE_CNY,
-                    cast(rais.UNIT_VALUE_TOTAL AS DECIMAL(22, 5)) UNIT_VALUE_TOTAL,
-                    cast(rais.UNIT_VALUE_TOTAL_CNY AS DECIMAL(22, 5)) UNIT_VALUE_TOTAL_CNY
-    from PBC_PROD_RAISING_SUB rais
-           LEFT JOIN PBC_PRD_BASEINFO_SUB info ON info.PBC_PROD_ID=rais.PBC_PROD_ID
-           inner join pbc_prd_baseinfo_sub b on rais.pbc_prod_id = b.pbc_prod_id
-           LEFT JOIN(
-      SELECT
+  		SELECT DISTINCT 'sheet4' code,(case rais.PROD_VALUE when null then null else rais.ccy end) CCY,(case rais.UNIT_VALUE_TOTAL when null then null else rais.ccy end) RAISE_CCY,
+						cast(rais.PROD_VALUE AS DECIMAL(22, 5)) PROD_VALUE,
+						cast(rais.PROD_VALUE_CNY AS DECIMAL(22, 5)) PROD_VALUE_CNY,
+                		cast(rais.UNIT_VALUE_TOTAL AS DECIMAL(22, 5)) UNIT_VALUE_TOTAL,
+                		cast(rais.UNIT_VALUE_TOTAL_CNY AS DECIMAL(22, 5)) UNIT_VALUE_TOTAL_CNY
+		from PBC_PROD_RAISING_SUB rais
+		LEFT JOIN PBC_PRD_BASEINFO_SUB info ON info.PBC_PROD_ID=rais.PBC_PROD_ID
+		inner join pbc_prd_baseinfo_sub b on rais.pbc_prod_id = b.pbc_prod_id
+        LEFT JOIN(
+        SELECT
         inside_prod_id,
         pbc_code
-      FROM
+        FROM
         pbc_prod_assetpool_code
-      WHERE
+        WHERE
         status='E'
         AND code_type='01'
-    )t2 ON t2.inside_prod_id=b.PROD_ID
-    WHERE
+        )t2 ON t2.inside_prod_id=b.PROD_ID
+		WHERE
       info.OPERATE_MODE  in   ('2','4')
       and IFNULL(t2.pbc_code,b.PBC_PROD_ID)= #{pbcProdId,jdbcType=VARCHAR}
       and DATE_FORMAT(rais.STATUS_DATE,'%Y-%m-%d')=  DATE_FORMAT(#{statusDate,jdbcType=TIMESTAMP},'%Y-%m-%d')
@@ -2204,7 +2201,7 @@
 
   <select id="searchListDetailSheet4Yield" parameterType="map" resultMap="BaseResultMap">
     SELECT DISTINCT 'sheet4' code, cast(rais.PROD_HIGH_YIELD AS DECIMAL(22, 5)) PROD_HIGH_YIELD,
-                    cast(rais.PROD_LOW_YIELD AS DECIMAL(22, 5)) PROD_LOW_YIELD
+            cast(rais.PROD_LOW_YIELD AS DECIMAL(22, 5)) PROD_LOW_YIELD
     FROM PBC_PROD_RAISING_SUB rais
            LEFT JOIN PBC_PRD_BASEINFO_SUB info ON info.PBC_PROD_ID=rais.PBC_PROD_ID
     WHERE
@@ -2214,5 +2211,39 @@
       and DATE_FORMAT(rais.RAISING_DATE,'%Y-%m-%d')= DATE_FORMAT(#{raisingDate,jdbcType=TIMESTAMP},'%Y-%m-%d')
   </select>
 
+  <select id="selectOperateMode" resultType="string">
+    select b.operate_mode from pbc_prod_raising_sub r
+    inner join pbc_prd_baseinfo_sub b on r.pbc_prod_id = b.pbc_prod_id
+    LEFT JOIN(
+      SELECT
+        inside_prod_id,
+        pbc_code
+      FROM
+        pbc_prod_assetpool_code
+      WHERE
+        status='E'
+      AND code_type='01'
+    )t2 ON t2.inside_prod_id=b.PROD_ID
+    where  IFNULL(t2.pbc_code,b.PBC_PROD_ID)=#{pbcProdId}
+  </select>
+
+  <select id="queryListByKeys" parameterType="java.lang.String" resultType="com.joyintech.tams.svreport.pbc.classic.prdcashraisesub.dto.PbcProdRaiseSub">
+    SELECT  r.REGIST_SEQNO, r.RAISING_DATE, f.PROD_ID PROD_ID, r.BUY_PLACE, r.CUSTOMER_TYPE1, r.CCY, r.RAISING_AMTSUM,
+    r.RAISING_AMTSUM_CNY, r.RAISING_QTY, r.REDAMT, r.REDAMT_CNY, r.REDQTY, r.ENDAMTSUM, r.ENDAMTSUM_CNY,
+    r.ENDQTY, r.PROD_VALUE, r.PROD_VALUE_CNY, r.UNIT_VALUE_TOTAL, r.UNIT_VALUE_TOTAL_CNY, r.PROD_HIGH_YIELD,
+    r.PROD_LOW_YIELD, r.SEND_STATUS, r.SUBMIT_TIME, r.SUBMIT_FEEDBACK_STATUS, r.SUMIT_SEQ, r.STATUS_DATE,
+    r.PBC_SUBMIT_DEADLINE, r.SUBMIT_DEADLINE, r.STATUS, r.CREATE_USER, r.ORG_CODE, r.CREATE_DEPT,
+    r.CREATE_TIME, r.UPDATE_USER, r.UPDATE_TIME
+    FROM PBC_PROD_RAISING_SUB r
+    left join pbc_prd_baseinfo_sub f
+    on f.PBC_PROD_ID=r.PBC_PROD_ID
+    where 1=1
+    <if test="list!=null and list.size()!=0">
+      <foreach collection="list" item="item" open="and ((" close="))"
+               separator=") or (">
+        trim(r.REGIST_SEQNO)= #{item,jdbcType=VARCHAR}
+      </foreach>
+    </if>
+  </select>
 
 </mapper>

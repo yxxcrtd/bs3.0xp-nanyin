@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.component.base.report.impl.dao.BaseRepBondAssetInfoMapper_mysql" >
-	<resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepAssetBond" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepAssetBond" >
         <id column="REP_FINPROD_ID" property="repFinprodId" jdbcType="VARCHAR" />
         <result column="SEC_ID" property="secId" jdbcType="VARCHAR" />
         <result column="REP_SECTYPE" property="repSectype" jdbcType="VARCHAR" />
@@ -15,10 +15,10 @@
         <result column="REP_REGIST_ORG" property="repRegistOrg" jdbcType="VARCHAR" />
         <result column="REP_REGISTORG_COMMENT" property="repRegistorgComment" jdbcType="VARCHAR" />
         <result column="REP_REMARK" property="repRemark" jdbcType="VARCHAR" />
-<!-- 债券新建新增快捷录入功能 delete by renping 20191010 start -->
-<!--         <result column="REP_SEND_STATUS" property="repSendStatus" jdbcType="VARCHAR" /> -->
-<!--         <result column="REP_STATUS_DATE" property="repStatusDate" jdbcType="DATE" /> -->
-<!-- 债券新建新增快捷录入功能 delete by renping 20191010 start -->
+        <!-- 债券新建新增快捷录入功能 delete by renping 20191010 start -->
+        <!--         <result column="REP_SEND_STATUS" property="repSendStatus" jdbcType="VARCHAR" /> -->
+        <!--         <result column="REP_STATUS_DATE" property="repStatusDate" jdbcType="DATE" /> -->
+        <!-- 债券新建新增快捷录入功能 delete by renping 20191010 start -->
         <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
         <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
@@ -32,25 +32,25 @@
         T1.REP_REGIST_ORG REP_REGIST_ORG, T1.REP_REGISTORG_COMMENT REP_REGISTORG_COMMENT, T1.REP_REMARK REP_REMARK,
         T2.REP_INSTIT_SIZE,T2.REP_ASSIGNEE
     </sql>
-	<select id="select"  resultMap="BaseResultMap">
-		SELECT 
-		<include refid="com.joyintech.tams.component.base.report.impl.dao.BaseRepBondAssetInfoMapper.Base_Column_List" />
-		FROM REP_ASSET_BOND T1
+    <select id="select"  resultMap="BaseResultMap">
+        SELECT
+        <include refid="com.joyintech.tams.component.base.report.impl.dao.BaseRepBondAssetInfoMapper.Base_Column_List" />
+        FROM REP_ASSET_BOND T1
         left join REP_ASSET_OTHER T2 on T1.REP_FINPROD_ID = T2.REP_FINPROD_ID
         <where> T1.REP_FINPROD_ID in
-        	<foreach collection="finprodIdList" item="item" index="index" open="(" close=")" separator=",">
-        		#{item}
-        	</foreach>
+            <foreach collection="finprodIdList" item="item" index="index" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
         </where>
-	</select>
+    </select>
 
-	<delete id="delete" >
-	DELETE FROM REP_ASSET_BOND 
-	<where>
-		REP_FINPROD_ID in 
-		<foreach collection="finprodIdList" item="item" index="index" open="(" close=")" separator=",">
-			#{item}
-		</foreach>
-	</where>
-	</delete>
+    <delete id="delete" >
+        DELETE FROM REP_ASSET_BOND
+        <where>
+            REP_FINPROD_ID in
+            <foreach collection="finprodIdList" item="item" index="index" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </where>
+    </delete>
 </mapper>

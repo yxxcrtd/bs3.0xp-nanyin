@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.svreport.interf.chb.assetinfo.dao.ChbAssetInfoInterfMapper_mysql">
     <resultMap id="BaseResultMap"
-        type="com.joyintech.tams.common.base.entity.ChbAssetInfo">
+               type="com.joyintech.tams.common.base.entity.ChbAssetInfo">
         <id column="ASSET_UUID" property="assetUuid" jdbcType="CHAR" />
         <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
         <result column="ASSET_TYPE" property="assetType" jdbcType="VARCHAR" />
@@ -12,7 +12,7 @@
         <result column="VDATE" property="vdate" jdbcType="DATE" />
         <result column="MDATE" property="mdate" jdbcType="DATE" />
         <result column="DISCOUNT_YIELD" property="discountYield"
-            jdbcType="DECIMAL" />
+                jdbcType="DECIMAL" />
         <result column="ASSET_YIELD" property="assetYield" jdbcType="DECIMAL" />
         <result column="BASIS" property="basis" jdbcType="VARCHAR" />
         <result column="AMT" property="amt" jdbcType="DECIMAL" />
@@ -31,10 +31,10 @@
         <result column="PARTY_TYPE2" property="partyType2" jdbcType="VARCHAR" />
         <result column="INDUSTRY" property="industry" jdbcType="VARCHAR" />
         <result column="INDUSTRY_LEVEL2" property="industryLevel2"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="REGIST_ORG" property="registOrg" jdbcType="VARCHAR" />
         <result column="REGISTORG_COMMENT" property="registorgComment"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="RIVAL_PARTY" property="rivalParty" jdbcType="VARCHAR" />
         <result column="TARGET_TYPE1" property="targetType1" jdbcType="VARCHAR" />
         <result column="TARGET_AMT" property="targetAmt" jdbcType="DECIMAL" />
@@ -53,50 +53,50 @@
         <result column="FCR_GRADE_IN" property="fcrGradeIn" jdbcType="VARCHAR" />
         <result column="FCR_GRADE_OUT" property="fcrGradeOut" jdbcType="VARCHAR" />
         <result column="FINANCIER_TYPE1" property="financierType1"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="FINANCIER_TYPE2" property="financierType2"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="FINANCIER_TYPE3" property="financierType3"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="FINANCE_PROJ" property="financeProj" jdbcType="VARCHAR" />
         <result column="INDUSTRY1" property="industry1" jdbcType="VARCHAR" />
         <result column="INDUSTRY_LEVEL2_TYPE" property="industryLevel2Type"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="PRO_INDUSTRY" property="proIndustry" jdbcType="VARCHAR" />
         <result column="PRO_INDUSTRY_LEVEL2" property="proIndustryLevel2"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="INDUSTRY_FLAG" property="industryFlag"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="MONIT_TYPE" property="monitType" jdbcType="VARCHAR" />
         <result column="MON_TYPE_COMM" property="monTypeComm" jdbcType="VARCHAR" />
         <result column="GUA_TYPE" property="guaType" jdbcType="VARCHAR" />
         <result column="GUA_TYPE_REMARK" property="guaTypeRemark"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="FINANCIER_GRADE" property="financierGrade"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="IN_GRADE" property="inGrade" jdbcType="VARCHAR" />
         <result column="OUT_GRADE" property="outGrade" jdbcType="VARCHAR" />
         <result column="CHOSE" property="chose" jdbcType="VARCHAR" />
         <result column="CONDITION_CMM" property="conditionCmm"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="FIN_AREA" property="finArea" jdbcType="VARCHAR" />
         <result column="TOTAL_FEE_RATE" property="totalFeeRate"
-            jdbcType="DECIMAL" />
+                jdbcType="DECIMAL" />
         <result column="IS_RIGHT" property="isRight" jdbcType="VARCHAR" />
         <result column="NOTSTAND_SEC_TYPE" property="notstandSecType"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="NOTSTAND_SEC_NUM" property="notstandSecNum"
-            jdbcType="DECIMAL" />
+                jdbcType="DECIMAL" />
         <result column="REMAIN_TERM" property="remainTerm" jdbcType="DECIMAL" />
         <result column="MAX_REMAIN_TERM" property="maxRemainTerm"
-            jdbcType="DECIMAL" />
+                jdbcType="DECIMAL" />
         <result column="MIN_REMAIN_TERM" property="minRemainTerm"
-            jdbcType="DECIMAL" />
+                jdbcType="DECIMAL" />
         <result column="SHARES_TYPE" property="sharesType" jdbcType="VARCHAR" />
         <result column="INDUSTRY_SHARES" property="industryShares"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="INDUSTRY_SHARES2" property="industryShares2"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="INVEST_STAGE" property="investStage" jdbcType="VARCHAR" />
         <result column="SHARES_TYPE1" property="sharesType1" jdbcType="VARCHAR" />
         <result column="SHARES_TYPE2" property="sharesType2" jdbcType="VARCHAR" />
@@ -105,27 +105,27 @@
         <result column="NOM_CAPI" property="nomCapi" jdbcType="DECIMAL" />
         <result column="TARGET_TYPE3" property="targetType3" jdbcType="VARCHAR" />
         <result column="ISSUE_PARTY_ID" property="issuePartyId"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="TERM_MONTH" property="termMonth" jdbcType="DECIMAL" />
         <result column="GUARANTEE_CMT" property="guaranteeCmt"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="SPECIAL_CMT" property="specialCmt" jdbcType="VARCHAR" />
         <result column="CONTRACT_NAME" property="contractName"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="INCOME_RATIO" property="incomeRatio" jdbcType="DECIMAL" />
         <result column="DER_INSTR_RATIO" property="derInstrRatio"
-            jdbcType="DECIMAL" />
+                jdbcType="DECIMAL" />
         <result column="DER_INSTR_INV_TYPE" property="derInstrInvType"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="DER_INSTR_TARGET" property="derInstrTarget"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="ACCT_MODE" property="acctMode" jdbcType="VARCHAR" />
         <result column="SPECIAL_CMT1" property="specialCmt1" jdbcType="VARCHAR" />
         <result column="MAX_YIELD" property="maxYield" jdbcType="DECIMAL" />
         <result column="MIN_YIELD" property="minYield" jdbcType="DECIMAL" />
         <result column="BASIC_PRICE" property="basicPrice" jdbcType="DECIMAL" />
         <result column="REG_DATE_PRICE" property="regDatePrice"
-            jdbcType="DECIMAL" />
+                jdbcType="DECIMAL" />
         <result column="TRADE_FEE" property="tradeFee" jdbcType="VARCHAR" />
         <result column="PARTY_CODE" property="partyCode" jdbcType="VARCHAR" />
         <result column="CHECK_CODE" property="checkCode" jdbcType="VARCHAR" />
@@ -143,33 +143,33 @@
         <result column="BUY_STRUCT" property="buyStruct" jdbcType="VARCHAR" />
         <result column="MANAGE_TYPE" property="manageType" jdbcType="VARCHAR" />
         <result column="IS_CTRL_BOTTOM" property="isCtrlBottom"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="MGR_FEE_RATE" property="mgrFeeRate" jdbcType="DECIMAL" />
         <result column="TRU_FEE_RATE" property="truFeeRate" jdbcType="DECIMAL" />
         <result column="TRADE_FEE_RATE" property="tradeFeeRate"
-            jdbcType="DECIMAL" />
+                jdbcType="DECIMAL" />
         <result column="AGENCY_FEE_RATE" property="agencyFeeRate"
-            jdbcType="DECIMAL" />
+                jdbcType="DECIMAL" />
         <result column="OTHER_FEE_RATE" property="otherFeeRate"
-            jdbcType="DECIMAL" />
+                jdbcType="DECIMAL" />
         <result column="ASSET_VALUE" property="assetValue" jdbcType="DECIMAL" />
         <result column="REGIST_ORG1" property="registOrg1" jdbcType="VARCHAR" />
         <result column="MNG_ORG_NAME" property="mngOrgName" jdbcType="VARCHAR" />
         <result column="TRU_ORG_NAME" property="truOrgName" jdbcType="VARCHAR" />
         <result column="FUND_INVEST_ASSET" property="fundInvestAsset"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="IN_ASSET_TYPE" property="inAssetType" jdbcType="VARCHAR" />
         <result column="IN_ASSET_TYPE_CMM" property="inAssetTypeCmm"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="REMARK" property="remark" jdbcType="VARCHAR" />
         <result column="IS_UNDER_ASSET" property="isUnderAsset"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="IS_GOVERN_FUND" property="isGovernFund"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="GOVERN_INVEST_FUND" property="governInvestFund"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="FUND_ENPE_NAME" property="fundEnpeName"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="TRUSTEE" property="trustee" jdbcType="VARCHAR" />
         <result column="STATUS" property="status" jdbcType="VARCHAR" />
         <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
@@ -180,91 +180,106 @@
         <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
         <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
         <result column="PRIVATEFUND_FLAG" property="privatefundFlag"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="PRIVATEPRD_FLAG" property="privateprdFlag"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="PRIVATE_FLAG" property="privateFlag"
-        	jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="BONDTOSTOCK_FLAG" property="bondtostockFlag"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="PPPFLAG" property="pppflag" jdbcType="VARCHAR" />
         <result column="STATUS_DATE" property="statusDate" jdbcType="DATE" />
         <result column="CAP_USE_INDU_LEVEL2" property="capUseInduLevel2"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="ISSUE_PARTY_NAME" property="issuePartyName"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="SEC_CREDIT_GRADE_TYPE" property="secCreditGradeType"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="SEC_MAIN_GRADE" property="secMainGrade"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="BLN_AREA" property="blnArea"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="INDUSTRY_PBC" property="industryPbc"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="CUSTOMER_OBJ_TYPE" property="customerObjType"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="ORG_ASSET_TYPE1" property="orgAssetType1"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="ORG_ASSET_TYPE2" property="orgAssetType2"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="ORG_ASSET_TYPE3" property="orgAssetType3"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="BUY_PLACE" property="buyPlace"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="ASSET_TYPE3" property="assetType3"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="PBC_ASSET_TYPE1" property="pbcAssetType1"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="PBC_ASSET_TYPE2" property="pbcAssetType2"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="PBC_ASSET_TYPE3" property="pbcAssetType3"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="TRM_FUND_TYPE" property="trmFundType" jdbcType="VARCHAR" />
-            
-      <result column='DEPO_TYPE' property='depoType' jdbcType='VARCHAR' />
-	
-	<result column='RIVAL_PARTY_TYPE' property='rivalPartyType' jdbcType='VARCHAR' />
-	<result column='PRIN_BASEAMT' property='prinBaseamt' jdbcType='DECIMAL' />
-	<result column='FMDATE' property='fmdate' jdbcType='TIMESTAMP' />
-	<result column='COUPON_SPECIES' property='couponSpecies' jdbcType='VARCHAR' />
-	<result column='INTEREST_RULE_FLAG' property='interestRuleFlag' jdbcType='VARCHAR' />
-	<result column='INTPAY_RULE' property='intpayRule' jdbcType='VARCHAR' />
-	<result column='FLOAT_FACTOR_FLAG' property='floatFactorFlag' jdbcType='VARCHAR' />
-	<result column='STRUCT_GRADE' property='structGrade' jdbcType='VARCHAR' />
-	<result column='REPAYMENT_TYPE' property='repaymentType' jdbcType='VARCHAR' />
-	<result column='PERIOD_REPAYMENT_FLAG' property='periodRepaymentFlag' jdbcType='VARCHAR' />
-	<result column='BASIC_ASSET_TYPE' property='basicAssetType' jdbcType='VARCHAR' />
-	<result column='EXCESS_PROFIT_RATE' property='excessProfitRate' jdbcType='DECIMAL' />
-	<result column='PLEDGE_TYPE' property='pledgeType' jdbcType='VARCHAR' />
-	<result column='PLEDGE_VALUE' property='pledgeValue' jdbcType='DECIMAL' />
-	<result column='NATURE_GUARANTEE' property='natureGuarantee' jdbcType='VARCHAR' />
-	<result column='RELATION_FINAN' property='relationFinan' jdbcType='VARCHAR' />
-	<result column='CONTAIN_TYPE' property='containType' jdbcType='VARCHAR' />
-	<result column='EXERCISE_TYPE' property='exerciseType' jdbcType='VARCHAR' />
-	<result column='EXERCISE_DATE' property='exerciseDate' jdbcType='TIMESTAMP' />
-	<result column='FIRST_EXERCISE_DATE' property='firstExerciseDate' jdbcType='TIMESTAMP' />
-	<result column='EXERCISE_PERIOD' property='exercisePeriod' jdbcType='DECIMAL' />
-	<result column='EXERCISE_PRICE' property='exercisePrice' jdbcType='DECIMAL' />
-	<result column='PERPETUAL_CLAUSE_TYPE' property='perpetualClauseType' jdbcType='VARCHAR' />
-	<result column='DEFERRED_INTEREST_TYPE' property='deferredInterestType' jdbcType='VARCHAR' />
-	<result column='DEFERRED_INTEREST_INT' property='deferredInterestInt' jdbcType='VARCHAR' />
-	<result column='FIRST_REPRCE_DATE' property='firstReprceDate' jdbcType='TIMESTAMP' />
-	<result column='REPRCE_CYCLE' property='reprceCycle' jdbcType='DECIMAL' />
-	<result column='PART_REDEM_FLAG' property='partRedemFlag' jdbcType='VARCHAR' />
-	<result column='PART_REDEM_RATE' property='partRedemRate' jdbcType='DECIMAL' />
-	<result column='CREDIT_ORG_CODE' property='creditOrgCode' jdbcType='VARCHAR' />
-	<result column='CREDIT_ORG_NAME' property='creditOrgName' jdbcType='VARCHAR' />
-	<result column='EQUITY_QUIT' property='equityQuit' jdbcType='TIMESTAMP' />
-	<result column='DEPT_EQUITY' property='deptEquity' jdbcType='VARCHAR' />
-	<result column='HOLD_PURPOSE' property='holdPurpose' jdbcType='VARCHAR' />
-	<result column='FINANCIAL_COMISSUE' property='financialComissue' jdbcType='VARCHAR' />
-    <result column="BANK_SEC_CAPITAL" property="bankSecCapital" jdbcType="VARCHAR" />
-    <result column="BANK_SEC_PERPETUAL" property="bankSecPerpetual" jdbcType="VARCHAR" />
-    <result column="BANK_SEC_PREFER" property="bankSecPrefer" jdbcType="VARCHAR" />
-              
+
+        <result column='DEPO_TYPE' property='depoType' jdbcType='VARCHAR' />
+
+        <result column='RIVAL_PARTY_TYPE' property='rivalPartyType' jdbcType='VARCHAR' />
+        <result column='PRIN_BASEAMT' property='prinBaseamt' jdbcType='DECIMAL' />
+        <result column='FMDATE' property='fmdate' jdbcType='TIMESTAMP' />
+        <result column='COUPON_SPECIES' property='couponSpecies' jdbcType='VARCHAR' />
+        <result column='INTEREST_RULE_FLAG' property='interestRuleFlag' jdbcType='VARCHAR' />
+        <result column='INTPAY_RULE' property='intpayRule' jdbcType='VARCHAR' />
+        <result column='FLOAT_FACTOR_FLAG' property='floatFactorFlag' jdbcType='VARCHAR' />
+        <result column='STRUCT_GRADE' property='structGrade' jdbcType='VARCHAR' />
+        <result column='REPAYMENT_TYPE' property='repaymentType' jdbcType='VARCHAR' />
+        <result column='PERIOD_REPAYMENT_FLAG' property='periodRepaymentFlag' jdbcType='VARCHAR' />
+        <result column='BASIC_ASSET_TYPE' property='basicAssetType' jdbcType='VARCHAR' />
+        <result column='EXCESS_PROFIT_RATE' property='excessProfitRate' jdbcType='DECIMAL' />
+        <result column='PLEDGE_TYPE' property='pledgeType' jdbcType='VARCHAR' />
+        <result column='PLEDGE_VALUE' property='pledgeValue' jdbcType='DECIMAL' />
+        <result column='NATURE_GUARANTEE' property='natureGuarantee' jdbcType='VARCHAR' />
+        <result column='RELATION_FINAN' property='relationFinan' jdbcType='VARCHAR' />
+        <result column='CONTAIN_TYPE' property='containType' jdbcType='VARCHAR' />
+        <result column='EXERCISE_TYPE' property='exerciseType' jdbcType='VARCHAR' />
+        <result column='EXERCISE_DATE' property='exerciseDate' jdbcType='TIMESTAMP' />
+        <result column='FIRST_EXERCISE_DATE' property='firstExerciseDate' jdbcType='TIMESTAMP' />
+        <result column='EXERCISE_PERIOD' property='exercisePeriod' jdbcType='DECIMAL' />
+        <result column='EXERCISE_PRICE' property='exercisePrice' jdbcType='DECIMAL' />
+        <result column='PERPETUAL_CLAUSE_TYPE' property='perpetualClauseType' jdbcType='VARCHAR' />
+        <result column='DEFERRED_INTEREST_TYPE' property='deferredInterestType' jdbcType='VARCHAR' />
+        <result column='DEFERRED_INTEREST_INT' property='deferredInterestInt' jdbcType='VARCHAR' />
+        <result column='FIRST_REPRCE_DATE' property='firstReprceDate' jdbcType='TIMESTAMP' />
+        <result column='REPRCE_CYCLE' property='reprceCycle' jdbcType='DECIMAL' />
+        <result column='PART_REDEM_FLAG' property='partRedemFlag' jdbcType='VARCHAR' />
+        <result column='PART_REDEM_RATE' property='partRedemRate' jdbcType='DECIMAL' />
+        <result column='CREDIT_ORG_CODE' property='creditOrgCode' jdbcType='VARCHAR' />
+        <result column='CREDIT_ORG_NAME' property='creditOrgName' jdbcType='VARCHAR' />
+        <result column='EQUITY_QUIT' property='equityQuit' jdbcType='TIMESTAMP' />
+        <result column='DEPT_EQUITY' property='deptEquity' jdbcType='VARCHAR' />
+        <result column='HOLD_PURPOSE' property='holdPurpose' jdbcType='VARCHAR' />
+        <result column='FINANCIAL_COMISSUE' property='financialComissue' jdbcType='VARCHAR' />
+        <result column="BANK_SEC_CAPITAL" property="bankSecCapital" jdbcType="VARCHAR" />
+        <result column="BANK_SEC_PERPETUAL" property="bankSecPerpetual" jdbcType="VARCHAR" />
+        <result column="BANK_SEC_PREFER" property="bankSecPrefer" jdbcType="VARCHAR" />
+        <result column="BANK_SEC_KZZQ" property="bankSecKzzq" jdbcType="VARCHAR" />
+        <result column="BANK_SEC_ZXZQ" property="bankSecZxzq" jdbcType="VARCHAR" />
+        <result column="ISUNLISTED" property="isunlisted" jdbcType="VARCHAR" />
+        <result column="IS_BZHPJ" property="isBzhpj" jdbcType="VARCHAR" />
+        <result column="CHB_ISSUER_ID" property="chbIssuerId" jdbcType="VARCHAR" />
+        <result column="CHB_MANAGER_ID" property="chbManagerId" jdbcType="VARCHAR" />
+        <result column="CHB_FINANCIER_ID" property="chbFinancierId" jdbcType="VARCHAR" />
+        <result column="PERPETUAL_FLAG" property="perpetualFlag" jdbcType="VARCHAR" />
+        <result column="OPTION_FLAG" property="optionFlag" jdbcType="VARCHAR" />
+        <result column="IS_BJSZQ" property="isBjszq" jdbcType="VARCHAR" />
+        <result column="IS_PERPETUAL" property="isPerpetual" jdbcType="VARCHAR" />
+        <result column="IS_FBZB" property="isFbzb" jdbcType="VARCHAR" />
+
+        <result column="CONSTRACTE_BUSI_TYPE" property="constracteBusiType" jdbcType="VARCHAR" />
+        <result column="CONSTRACTE_GRADE" property="constracteGrade" jdbcType="VARCHAR" />
+        <result column="CONSTRACTE_HEAVER_TIMES" property="constracteHeaverTimes" jdbcType="DECIMAL" />
     </resultMap>
     <resultMap id="PsbcBaseResultMap"
-        type="com.joyintech.tams.common.base.entity.ChbAssetInfo">
+               type="com.joyintech.tams.common.base.entity.ChbAssetInfo">
         <id column="ASSET_UUID" property="assetUuid" jdbcType="CHAR" />
         <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
         <result column="ASSET_TYPE" property="assetType" jdbcType="VARCHAR" />
@@ -274,7 +289,7 @@
         <result column="VDATE" property="vdate" jdbcType="DATE" />
         <result column="MDATE" property="mdate" jdbcType="DATE" />
         <result column="DISCOUNT_YIELD" property="discountYield"
-            jdbcType="DECIMAL" />
+                jdbcType="DECIMAL" />
         <result column="ASSET_YIELD" property="assetYield" jdbcType="DECIMAL" />
         <result column="BASIS" property="basis" jdbcType="VARCHAR" />
         <result column="AMT" property="amt" jdbcType="DECIMAL" />
@@ -293,10 +308,10 @@
         <result column="PARTY_TYPE2" property="partyType2" jdbcType="VARCHAR" />
         <result column="INDUSTRY" property="industry" jdbcType="VARCHAR" />
         <result column="INDUSTRY_LEVEL2" property="industryLevel2"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="REGIST_ORG" property="registOrg" jdbcType="VARCHAR" />
         <result column="REGISTORG_COMMENT" property="registorgComment"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="RIVAL_PARTY" property="rivalParty" jdbcType="VARCHAR" />
         <result column="TARGET_TYPE1" property="targetType1" jdbcType="VARCHAR" />
         <result column="TARGET_AMT" property="targetAmt" jdbcType="DECIMAL" />
@@ -315,50 +330,50 @@
         <result column="FCR_GRADE_IN" property="fcrGradeIn" jdbcType="VARCHAR" />
         <result column="FCR_GRADE_OUT" property="fcrGradeOut" jdbcType="VARCHAR" />
         <result column="FINANCIER_TYPE1" property="financierType1"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="FINANCIER_TYPE2" property="financierType2"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="FINANCIER_TYPE3" property="financierType3"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="FINANCE_PROJ" property="financeProj" jdbcType="VARCHAR" />
         <result column="INDUSTRY1" property="industry1" jdbcType="VARCHAR" />
         <result column="INDUSTRY_LEVEL2_TYPE" property="industryLevel2Type"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="PRO_INDUSTRY" property="proIndustry" jdbcType="VARCHAR" />
         <result column="PRO_INDUSTRY_LEVEL2" property="proIndustryLevel2"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="INDUSTRY_FLAG" property="industryFlag"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="MONIT_TYPE" property="monitType" jdbcType="VARCHAR" />
         <result column="MON_TYPE_COMM" property="monTypeComm" jdbcType="VARCHAR" />
         <result column="GUA_TYPE" property="guaType" jdbcType="VARCHAR" />
         <result column="GUA_TYPE_REMARK" property="guaTypeRemark"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="FINANCIER_GRADE" property="financierGrade"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="IN_GRADE" property="inGrade" jdbcType="VARCHAR" />
         <result column="OUT_GRADE" property="outGrade" jdbcType="VARCHAR" />
         <result column="CHOSE" property="chose" jdbcType="VARCHAR" />
         <result column="CONDITION_CMM" property="conditionCmm"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="FIN_AREA" property="finArea" jdbcType="VARCHAR" />
         <result column="TOTAL_FEE_RATE" property="totalFeeRate"
-            jdbcType="DECIMAL" />
+                jdbcType="DECIMAL" />
         <result column="IS_RIGHT" property="isRight" jdbcType="VARCHAR" />
         <result column="NOTSTAND_SEC_TYPE" property="notstandSecType"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="NOTSTAND_SEC_NUM" property="notstandSecNum"
-            jdbcType="DECIMAL" />
+                jdbcType="DECIMAL" />
         <result column="REMAIN_TERM" property="remainTerm" jdbcType="DECIMAL" />
         <result column="MAX_REMAIN_TERM" property="maxRemainTerm"
-            jdbcType="DECIMAL" />
+                jdbcType="DECIMAL" />
         <result column="MIN_REMAIN_TERM" property="minRemainTerm"
-            jdbcType="DECIMAL" />
+                jdbcType="DECIMAL" />
         <result column="SHARES_TYPE" property="sharesType" jdbcType="VARCHAR" />
         <result column="INDUSTRY_SHARES" property="industryShares"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="INDUSTRY_SHARES2" property="industryShares2"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="INVEST_STAGE" property="investStage" jdbcType="VARCHAR" />
         <result column="SHARES_TYPE1" property="sharesType1" jdbcType="VARCHAR" />
         <result column="SHARES_TYPE2" property="sharesType2" jdbcType="VARCHAR" />
@@ -367,27 +382,27 @@
         <result column="NOM_CAPI" property="nomCapi" jdbcType="DECIMAL" />
         <result column="TARGET_TYPE3" property="targetType3" jdbcType="VARCHAR" />
         <result column="ISSUE_PARTY_ID" property="issuePartyId"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="TERM_MONTH" property="termMonth" jdbcType="DECIMAL" />
         <result column="GUARANTEE_CMT" property="guaranteeCmt"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="SPECIAL_CMT" property="specialCmt" jdbcType="VARCHAR" />
         <result column="CONTRACT_NAME" property="contractName"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="INCOME_RATIO" property="incomeRatio" jdbcType="DECIMAL" />
         <result column="DER_INSTR_RATIO" property="derInstrRatio"
-            jdbcType="DECIMAL" />
+                jdbcType="DECIMAL" />
         <result column="DER_INSTR_INV_TYPE" property="derInstrInvType"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="DER_INSTR_TARGET" property="derInstrTarget"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="ACCT_MODE" property="acctMode" jdbcType="VARCHAR" />
         <result column="SPECIAL_CMT1" property="specialCmt1" jdbcType="VARCHAR" />
         <result column="MAX_YIELD" property="maxYield" jdbcType="DECIMAL" />
         <result column="MIN_YIELD" property="minYield" jdbcType="DECIMAL" />
         <result column="BASIC_PRICE" property="basicPrice" jdbcType="DECIMAL" />
         <result column="REG_DATE_PRICE" property="regDatePrice"
-            jdbcType="DECIMAL" />
+                jdbcType="DECIMAL" />
         <result column="TRADE_FEE" property="tradeFee" jdbcType="VARCHAR" />
         <result column="PARTY_CODE" property="partyCode" jdbcType="VARCHAR" />
         <result column="CHECK_CODE" property="checkCode" jdbcType="VARCHAR" />
@@ -405,33 +420,33 @@
         <result column="BUY_STRUCT" property="buyStruct" jdbcType="VARCHAR" />
         <result column="MANAGE_TYPE" property="manageType" jdbcType="VARCHAR" />
         <result column="IS_CTRL_BOTTOM" property="isCtrlBottom"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="MGR_FEE_RATE" property="mgrFeeRate" jdbcType="DECIMAL" />
         <result column="TRU_FEE_RATE" property="truFeeRate" jdbcType="DECIMAL" />
         <result column="TRADE_FEE_RATE" property="tradeFeeRate"
-            jdbcType="DECIMAL" />
+                jdbcType="DECIMAL" />
         <result column="AGENCY_FEE_RATE" property="agencyFeeRate"
-            jdbcType="DECIMAL" />
+                jdbcType="DECIMAL" />
         <result column="OTHER_FEE_RATE" property="otherFeeRate"
-            jdbcType="DECIMAL" />
+                jdbcType="DECIMAL" />
         <result column="ASSET_VALUE" property="assetValue" jdbcType="DECIMAL" />
         <result column="REGIST_ORG1" property="registOrg1" jdbcType="VARCHAR" />
         <result column="MNG_ORG_NAME" property="mngOrgName" jdbcType="VARCHAR" />
         <result column="TRU_ORG_NAME" property="truOrgName" jdbcType="VARCHAR" />
         <result column="FUND_INVEST_ASSET" property="fundInvestAsset"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="IN_ASSET_TYPE" property="inAssetType" jdbcType="VARCHAR" />
         <result column="IN_ASSET_TYPE_CMM" property="inAssetTypeCmm"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="REMARK" property="remark" jdbcType="VARCHAR" />
         <result column="IS_UNDER_ASSET" property="isUnderAsset"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="IS_GOVERN_FUND" property="isGovernFund"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="GOVERN_INVEST_FUND" property="governInvestFund"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="FUND_ENPE_NAME" property="fundEnpeName"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="TRUSTEE" property="trustee" jdbcType="VARCHAR" />
         <result column="STATUS" property="status" jdbcType="VARCHAR" />
         <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
@@ -442,53 +457,53 @@
         <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
         <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
         <result column="PRIVATEFUND_FLAG" property="privatefundFlag"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="PRIVATEPRD_FLAG" property="privateprdFlag"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="PRIVATE_FLAG" property="privateFlag"
-        	jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="BONDTOSTOCK_FLAG" property="bondtostockFlag"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="PPPFLAG" property="pppflag" jdbcType="VARCHAR" />
         <result column="STATUS_DATE" property="statusDate" jdbcType="DATE" />
         <result column="CAP_USE_INDU_LEVEL2" property="capUseInduLevel2"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="ISSUE_PARTY_NAME" property="issuePartyName"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="SEC_CREDIT_GRADE_TYPE" property="secCreditGradeType"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="SEC_MAIN_GRADE" property="secMainGrade"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="BLN_AREA" property="blnArea"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="INDUSTRY_PBC" property="industryPbc"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="CUSTOMER_OBJ_TYPE" property="customerObjType"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="ORG_ASSET_TYPE1" property="orgAssetType1"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="ORG_ASSET_TYPE2" property="orgAssetType2"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="ORG_ASSET_TYPE3" property="orgAssetType3"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="ORG_ASSET_TYPE4" property="orgAssetType4"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="ORG_ASSET_TYPE5" property="orgAssetType5"
-            jdbcType="VARCHAR" />  
+                jdbcType="VARCHAR" />
         <result column="ORG_ASSET_TYPE_EX" property="orgAssetTypeEx"
-            jdbcType="VARCHAR"/>      
+                jdbcType="VARCHAR"/>
         <result column="BUY_PLACE" property="buyPlace"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="ASSET_TYPE3" property="assetType3"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="PBC_ASSET_TYPE1" property="pbcAssetType1"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="PBC_ASSET_TYPE2" property="pbcAssetType2"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="PBC_ASSET_TYPE3" property="pbcAssetType3"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="IS_FIN_LICENCE" property="isFinLicence"
-            jdbcType="VARCHAR" />
+                jdbcType="VARCHAR" />
         <result column="TRM_FUND_TYPE" property="trmFundType" jdbcType="VARCHAR" />
     </resultMap>
     
@@ -6117,10 +6132,10 @@
         null DEPT_EQUITY,
         null HOLD_PURPOSE,
         DETAIL.REP_FINANCIAL_COMISSUE FINANCIAL_COMISSUE,
-		
-		NULL  BANK_SEC_CAPITAL,
-		NULL BANK_SEC_PERPETUAL,
-		NULL BANK_SEC_PREFER
+
+        NULL  BANK_SEC_CAPITAL,
+        NULL BANK_SEC_PERPETUAL,
+        NULL BANK_SEC_PREFER
 
         FROM REP_FUND DETAIL
         left JOIN REP_ASSET_DEPT ASSET
@@ -6351,10 +6366,10 @@
         null DEPT_EQUITY,
         null HOLD_PURPOSE,
         null FINANCIAL_COMISSUE,
-		
-		NULL  BANK_SEC_CAPITAL,
-		NULL BANK_SEC_PERPETUAL,
-		NULL BANK_SEC_PREFER
+
+        NULL  BANK_SEC_CAPITAL,
+        NULL BANK_SEC_PERPETUAL,
+        NULL BANK_SEC_PREFER
         FROM REP_TRUST_INVEST_MODE DETAIL
         left JOIN REP_ASSET_DEPT ASSET
         on detail.REP_FINPROD_ID = ASSET.REP_FINPROD_ID
@@ -6582,11 +6597,11 @@
         null DEPT_EQUITY,
         null HOLD_PURPOSE,
         null FINANCIAL_COMISSUE,
-		
-		NULL  BANK_SEC_CAPITAL,
-		NULL BANK_SEC_PERPETUAL,
-		NULL BANK_SEC_PREFER
-		
+
+        NULL  BANK_SEC_CAPITAL,
+        NULL BANK_SEC_PERPETUAL,
+        NULL BANK_SEC_PREFER
+
         FROM REP_LIABILITIES_OTHER DETAIL
         left JOIN REP_ASSET_DEPT ASSET
         on detail.REP_FINPROD_ID = ASSET.REP_FINPROD_ID
@@ -7101,10 +7116,10 @@
         null DEPT_EQUITY,
         null HOLD_PURPOSE,
         null FINANCIAL_COMISSUE,
-		
-		NULL  BANK_SEC_CAPITAL,
-		NULL BANK_SEC_PERPETUAL,
-		NULL BANK_SEC_PREFER
+
+        NULL  BANK_SEC_CAPITAL,
+        NULL BANK_SEC_PERPETUAL,
+        NULL BANK_SEC_PREFER
 
         FROM fin_trade_product fp
         left join fin_product info
@@ -7117,7 +7132,7 @@
         on info.FINANCIER = customerinfo.CUSTOMER_ID
         left join trd_product_deal td
         on Fp.FINPROD_ID = tD.P_TRADE_ID
-       left join MST_COUNTER_PARTY mcp
+        left join MST_COUNTER_PARTY mcp
         on fp.COUNTER_ID=mcp.COUNTER_ID
         WHERE 1 = 1
         and fp.branch = 0
@@ -11559,9 +11574,9 @@
             #{pbcAssetTyp3,jdbcType=VARCHAR},
         )
     </insert>
-    
-     <insert id="insertPsbc"
-        parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfo">
+
+    <insert id="insertPsbc"
+            parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfo">
         insert into CHB_ASSET_INFO (ASSET_UUID, ASSET_CODE, ASSET_TYPE,
         ASSET_TYPE2, CCY, TRADE_MARKET,
         VDATE, MDATE, DISCOUNT_YIELD,
@@ -11766,29 +11781,29 @@
             #{pbcAssetTyp3,jdbcType=VARCHAR},
         )
     </insert>
-    
+
     <delete id="deleteAllData">
       truncate table chb_asset_info
     </delete>
-    
+
     <delete id="deleteBySysTime" parameterType="java.util.Map">
         delete from chb_asset_info
         <where>
             <if test="isToday != null ">
                 <choose>
                     <when test="isToday == true">
-                        DATE_FORMAT(ifnull(update_time,create_time),'%Y-%m-%d') 
+                        DATE_FORMAT(ifnull(update_time,create_time),'%Y-%m-%d')
                         = DATE_FORMAT(NOW(),'%Y-%m-%d')
                     </when>
                     <otherwise>
-                        DATE_FORMAT(ifnull(update_time,create_time),'%Y-%m-%d') 
+                        DATE_FORMAT(ifnull(update_time,create_time),'%Y-%m-%d')
                         &lt;= DATE_FORMAT(NOW(),'%Y-%m-%d')
                     </otherwise>
                 </choose>
             </if>
         </where>
-    </delete>   
-    
+    </delete>
+
     <insert id="mergeInfoList"  parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfo">
         UPDATE  CHB_ASSET_INFO as A,
         (
@@ -11993,25 +12008,12 @@
         FINANCIAL_COMISSUE,
         BANK_SEC_CAPITAL,
         BANK_SEC_PREFER,
-        BANK_SEC_PERPETUAL,
-        BANK_SEC_KZZQ,
-        BANK_SEC_ZXZQ,
-        ISUNLISTED,
-        IS_BZHPJ,
-        CHB_ISSUER_ID,
-        CHB_MANAGER_ID,
-        CHB_FINANCIER_ID,
-        PERPETUAL_FLAG,
-        OPTION_FLAG,
-        IS_BJSZQ,
-        IS_PERPETUAL,
-        IS_FBZB,
-        PRIVATE_FLAG
-        from
-        (
-        select TEMP.* from
-        (
-        <foreach collection="newDataList" item="item"  separator="union all">
+        BANK_SEC_PERPETUAL
+        from (
+        select
+        TEMP.*
+        from (
+        <foreach collection="newDataList" item="item" separator="union all">
             select
             #{item.assetUuid,jdbcType=CHAR} ASSET_UUID,
             #{item.assetCode,jdbcType=VARCHAR} ASSET_CODE,
@@ -12213,31 +12215,13 @@
             #{item.financialComissue,jdbcType=VARCHAR} FINANCIAL_COMISSUE,
             #{item.bankSecCapital,jdbcType=VARCHAR} BANK_SEC_CAPITAL,
             #{item.bankSecPrefer,jdbcType=VARCHAR}  BANK_SEC_PREFER,
-            #{item.bankSecPerpetual,jdbcType=VARCHAR} BANK_SEC_PERPETUAL,
-            #{item.bankSecKzzq,jdbcType=VARCHAR} BANK_SEC_KZZQ,
-            #{item.bankSecZxzq,jdbcType=VARCHAR} BANK_SEC_ZXZQ,
-            #{item.isunlisted,jdbcType=VARCHAR} ISUNLISTED,
-            #{item.isBzhpj,jdbcType=VARCHAR} IS_BZHPJ,
-            <!-- add by zhangliang G06升级字段新增  start -->
-            #{item.chbIssuerId,jdbcType=VARCHAR} CHB_ISSUER_ID,
-            #{item.chbManagerId,jdbcType=VARCHAR} CHB_MANAGER_ID,
-            #{item.chbFinancierId,jdbcType=VARCHAR} CHB_FINANCIER_ID,
-            #{item.perpetualFlag,jdbcType=VARCHAR} PERPETUAL_FLAG,
-            #{item.optionFlag,jdbcType=VARCHAR} OPTION_FLAG,
-            #{item.isBjszq,jdbcType=VARCHAR} IS_BJSZQ,
-            #{item.isPerpetual,jdbcType=VARCHAR} IS_PERPETUAL,
-            #{item.isFbzb,jdbcType=VARCHAR} IS_FBZB
-            <!-- add by zhangliang G06升级字段新增  end -->
-            ,#{item.privateFlag,jdbcType=VARCHAR} PRIVATE_FLAG
-            FROM
-            DUAL
+            #{item.bankSecPerpetual,jdbcType=VARCHAR} BANK_SEC_PERPETUAL
+            from dual
         </foreach>
         ) TEMP
         ) de
         ) AS B
-        set
-        <!-- A.ASSET_UUID = B.ASSET_UUID,
-                    A.ASSET_CODE = B.ASSET_CODE, -->
+        SET
         A.ASSET_TYPE = B.ASSET_TYPE,
         A.ASSET_TYPE2 = B.ASSET_TYPE2,
         A.CCY = B.CCY,
@@ -12368,7 +12352,7 @@
         A.GOVERN_INVEST_FUND = B.GOVERN_INVEST_FUND,
         A.FUND_ENPE_NAME = B.FUND_ENPE_NAME,
         A.TRUSTEE = B.TRUSTEE,
-        A.STATUS = (case B.STATUS when 'N' then 'M' when 'E' then 'M' else 'D' end),
+        A.STATUS = (case B.STATUS when 'E' then 'M' else 'D' end),
         A.CREATE_USER = B.CREATE_USER,
         /*A.CREATE_TIME = B.CREATE_TIME,*/
         A.UPDATE_USER = B.UPDATE_USER,
@@ -13105,69 +13089,71 @@
             #{item.isFbzb,jdbcType=VARCHAR} IS_FBZB
             <!-- add by zhangliang G06升级字段新增  end -->
             ,#{item.privateFlag,jdbcType=VARCHAR} PRIVATE_FLAG
-            FROM
-            DUAL
+            ,#{item.constracteBusiType,jdbcType=VARCHAR} CONSTRACTE_BUSI_TYPE
+            ,#{item.constracteGrade,jdbcType=VARCHAR} CONSTRACTE_GRADE
+            ,#{item.constracteHeaverTimes,jdbcType=DECIMAL} CONSTRACTE_HEAVER_TIMES
+            from dual
         </foreach>
         ) TEMP where not exists (select 1 from CHB_ASSET_INFO CII where CII.ASSET_CODE = TEMP.ASSET_CODE)
         ) de ;
     </insert>
-    
-     <insert id="mergeInfoListPsbc"  parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfo">
-         UPDATE  CHB_ASSET_INFO as A,
-         (
-         select
-         ASSET_UUID, ASSET_CODE, ASSET_TYPE,
-         ASSET_TYPE2, CCY, TRADE_MARKET,
-         VDATE, MDATE, DISCOUNT_YIELD,
-         ASSET_YIELD, BASIS, AMT,
-         BANK_NAME, IS_STRUCT, TARGET_TYPE,
-         TARGET, ASSET_ID, ASSET_NAME,
-         CHB_SECTYPE, ISSUE_MODE, PARTY_GRADE,INSTIT_SIZE,
-         PARTY_TYPE1, PARTY_TYPE3, PARTY_TYPE2,
-         INDUSTRY, INDUSTRY_LEVEL2, REGIST_ORG,
-         REGISTORG_COMMENT, RIVAL_PARTY, TARGET_TYPE1,
-         TARGET_AMT, COUNTRY_AREA, PROFIT_TYPE,
-         IS_RESALE, TERM_DATE, RATE_FLAG,
-         INTPAY_CYCLE, REPAY_CMT, BASIS_TYPE,
-         FLOAT_FACTOR, SPREAD_RATE, FINANCIE,
-         FIN_ORG_CODE, FCR_GRADE_IN, FCR_GRADE_OUT,
-         FINANCIER_TYPE1, FINANCIER_TYPE2, FINANCIER_TYPE3,
-         FINANCE_PROJ, INDUSTRY1, INDUSTRY_LEVEL2_TYPE,
-         PRO_INDUSTRY, PRO_INDUSTRY_LEVEL2, INDUSTRY_FLAG,
-         MONIT_TYPE, MON_TYPE_COMM, GUA_TYPE,
-         GUA_TYPE_REMARK, FINANCIER_GRADE, IN_GRADE,
-         OUT_GRADE, CHOSE, CONDITION_CMM,
-         FIN_AREA, TOTAL_FEE_RATE, IS_RIGHT,
-         NOTSTAND_SEC_TYPE, NOTSTAND_SEC_NUM, REMAIN_TERM,
-         MAX_REMAIN_TERM, MIN_REMAIN_TERM, SHARES_TYPE,
-         INDUSTRY_SHARES, INDUSTRY_SHARES2, INVEST_STAGE,
-         SHARES_TYPE1, SHARES_TYPE2, SHARES_TYPE3,
-         IS_PLEDGE, NOM_CAPI, TARGET_TYPE3,
-         ISSUE_PARTY_ID, TERM_MONTH, GUARANTEE_CMT,
-         SPECIAL_CMT, CONTRACT_NAME, INCOME_RATIO,
-         DER_INSTR_RATIO, DER_INSTR_INV_TYPE, DER_INSTR_TARGET,
-         ACCT_MODE, SPECIAL_CMT1, MAX_YIELD,
-         MIN_YIELD, BASIC_PRICE, REG_DATE_PRICE,
-         TRADE_FEE, PARTY_CODE, CHECK_CODE,
-         MANAGER_ID, TRUSTEE_ID, TRU_ACT_TYPE,
-         INVEST_TYPE, CAP_USE_INDU, PLAN_SDATE,
-         PLAN_EDATE, PRO_PROPERTY, MAX_RATE,
-         MIN_RATE, DEBT_SCALE, BUY_STRUCT,
-         MANAGE_TYPE, IS_CTRL_BOTTOM, MGR_FEE_RATE,
-         TRU_FEE_RATE, TRADE_FEE_RATE, AGENCY_FEE_RATE,
-         OTHER_FEE_RATE, ASSET_VALUE, REGIST_ORG1,
-         MNG_ORG_NAME, TRU_ORG_NAME, FUND_INVEST_ASSET,
-         IN_ASSET_TYPE, IN_ASSET_TYPE_CMM, REMARK,
-         IS_UNDER_ASSET, IS_GOVERN_FUND, GOVERN_INVEST_FUND,
-         FUND_ENPE_NAME, TRUSTEE, STATUS,
-         CREATE_USER, CREATE_TIME, UPDATE_USER,
-         UPDATE_TIME, DEPT_CODE, ORG_CODE,
-         DATA_SOURCE, PRIVATEFUND_FLAG, PRIVATEPRD_FLAG,
-         BONDTOSTOCK_FLAG, PPPFLAG, STATUS_DATE,
-         CAP_USE_INDU_LEVEL2, ISSUE_PARTY_NAME, SEC_CREDIT_GRADE_TYPE,
-         SEC_MAIN_GRADE,BLN_AREA,INDUSTRY_PBC,CUSTOMER_OBJ_TYPE,
-         ORG_ASSET_TYPE1,ORG_ASSET_TYPE2,ORG_ASSET_TYPE3,ORG_ASSET_TYPE4,ORG_ASSET_TYPE5,BUY_PLACE,
-         ASSET_TYPE3,PBC_ASSET_TYPE1,PBC_ASSET_TYPE2,PBC_ASSET_TYPE3
+
+    <insert id="mergeInfoListPsbc"  parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfo">
+        UPDATE  CHB_ASSET_INFO as A,
+        (
+        select
+        ASSET_UUID, ASSET_CODE, ASSET_TYPE,
+        ASSET_TYPE2, CCY, TRADE_MARKET,
+        VDATE, MDATE, DISCOUNT_YIELD,
+        ASSET_YIELD, BASIS, AMT,
+        BANK_NAME, IS_STRUCT, TARGET_TYPE,
+        TARGET, ASSET_ID, ASSET_NAME,
+        CHB_SECTYPE, ISSUE_MODE, PARTY_GRADE,INSTIT_SIZE,
+        PARTY_TYPE1, PARTY_TYPE3, PARTY_TYPE2,
+        INDUSTRY, INDUSTRY_LEVEL2, REGIST_ORG,
+        REGISTORG_COMMENT, RIVAL_PARTY, TARGET_TYPE1,
+        TARGET_AMT, COUNTRY_AREA, PROFIT_TYPE,
+        IS_RESALE, TERM_DATE, RATE_FLAG,
+        INTPAY_CYCLE, REPAY_CMT, BASIS_TYPE,
+        FLOAT_FACTOR, SPREAD_RATE, FINANCIE,
+        FIN_ORG_CODE, FCR_GRADE_IN, FCR_GRADE_OUT,
+        FINANCIER_TYPE1, FINANCIER_TYPE2, FINANCIER_TYPE3,
+        FINANCE_PROJ, INDUSTRY1, INDUSTRY_LEVEL2_TYPE,
+        PRO_INDUSTRY, PRO_INDUSTRY_LEVEL2, INDUSTRY_FLAG,
+        MONIT_TYPE, MON_TYPE_COMM, GUA_TYPE,
+        GUA_TYPE_REMARK, FINANCIER_GRADE, IN_GRADE,
+        OUT_GRADE, CHOSE, CONDITION_CMM,
+        FIN_AREA, TOTAL_FEE_RATE, IS_RIGHT,
+        NOTSTAND_SEC_TYPE, NOTSTAND_SEC_NUM, REMAIN_TERM,
+        MAX_REMAIN_TERM, MIN_REMAIN_TERM, SHARES_TYPE,
+        INDUSTRY_SHARES, INDUSTRY_SHARES2, INVEST_STAGE,
+        SHARES_TYPE1, SHARES_TYPE2, SHARES_TYPE3,
+        IS_PLEDGE, NOM_CAPI, TARGET_TYPE3,
+        ISSUE_PARTY_ID, TERM_MONTH, GUARANTEE_CMT,
+        SPECIAL_CMT, CONTRACT_NAME, INCOME_RATIO,
+        DER_INSTR_RATIO, DER_INSTR_INV_TYPE, DER_INSTR_TARGET,
+        ACCT_MODE, SPECIAL_CMT1, MAX_YIELD,
+        MIN_YIELD, BASIC_PRICE, REG_DATE_PRICE,
+        TRADE_FEE, PARTY_CODE, CHECK_CODE,
+        MANAGER_ID, TRUSTEE_ID, TRU_ACT_TYPE,
+        INVEST_TYPE, CAP_USE_INDU, PLAN_SDATE,
+        PLAN_EDATE, PRO_PROPERTY, MAX_RATE,
+        MIN_RATE, DEBT_SCALE, BUY_STRUCT,
+        MANAGE_TYPE, IS_CTRL_BOTTOM, MGR_FEE_RATE,
+        TRU_FEE_RATE, TRADE_FEE_RATE, AGENCY_FEE_RATE,
+        OTHER_FEE_RATE, ASSET_VALUE, REGIST_ORG1,
+        MNG_ORG_NAME, TRU_ORG_NAME, FUND_INVEST_ASSET,
+        IN_ASSET_TYPE, IN_ASSET_TYPE_CMM, REMARK,
+        IS_UNDER_ASSET, IS_GOVERN_FUND, GOVERN_INVEST_FUND,
+        FUND_ENPE_NAME, TRUSTEE, STATUS,
+        CREATE_USER, CREATE_TIME, UPDATE_USER,
+        UPDATE_TIME, DEPT_CODE, ORG_CODE,
+        DATA_SOURCE, PRIVATEFUND_FLAG, PRIVATEPRD_FLAG,
+        BONDTOSTOCK_FLAG, PPPFLAG, STATUS_DATE,
+        CAP_USE_INDU_LEVEL2, ISSUE_PARTY_NAME, SEC_CREDIT_GRADE_TYPE,
+        SEC_MAIN_GRADE,BLN_AREA,INDUSTRY_PBC,CUSTOMER_OBJ_TYPE,
+        ORG_ASSET_TYPE1,ORG_ASSET_TYPE2,ORG_ASSET_TYPE3,ORG_ASSET_TYPE4,ORG_ASSET_TYPE5,BUY_PLACE,
+        ASSET_TYPE3,PBC_ASSET_TYPE1,PBC_ASSET_TYPE2,PBC_ASSET_TYPE3
 
          from
          (
@@ -14104,30 +14090,14 @@
             #{item.financialComissue,jdbcType=VARCHAR} FINANCIAL_COMISSUE,
             #{item.bankSecCapital,jdbcType=VARCHAR} BANK_SEC_CAPITAL,
             #{item.bankSecPerpetual,jdbcType=VARCHAR} BANK_SEC_PERPETUAL,
-            #{item.bankSecPrefer,jdbcType=VARCHAR} BANK_SEC_PREFER,
-            <!-- G06升级 add by qufangxu at 2021-02-03 -->
-            #{item.bankSecKzzq,jdbcType=VARCHAR} BANK_SEC_KZZQ,
-            #{item.bankSecZxzq,jdbcType=VARCHAR} BANK_SEC_ZXZQ,
-            #{item.isunlisted,jdbcType=VARCHAR} ISUNLISTED,
-            #{item.isBzhpj,jdbcType=VARCHAR} IS_BZHPJ,
-            #{item.chbIssuerId,jdbcType=VARCHAR} chb_ISSUER_ID,
-            #{item.chbManagerId,jdbcType=VARCHAR} chb_MANAGER_ID,
-            #{item.chbFinancierId,jdbcType=VARCHAR} chb_FINANCIER_ID,
-            #{item.perpetualFlag,jdbcType=VARCHAR} PERPETUAL_FLAG,
-            #{item.optionFlag,jdbcType=VARCHAR} OPTION_FLAG,
-            #{item.isBjszq,jdbcType=VARCHAR} IS_BJSZQ,
-            #{item.isPerpetual,jdbcType=VARCHAR} IS_PERPETUAL,
-            #{item.isFbzb,jdbcType=VARCHAR} IS_FBZB
-            <!-- G06升级 add by qufangxu at 2021-02-03 -->
-            FROM
-            DUAL
+            #{item.bankSecPrefer,jdbcType=VARCHAR} BANK_SEC_PREFER
+
+            from dual
         </foreach>
         ) TEMP
         ) de
         ) AS B
-        set
-        <!-- A.ASSET_UUID = B.ASSET_UUID,
-                  A.ASSET_CODE = B.ASSET_CODE, -->
+        SET
         A.ASSET_TYPE = B.ASSET_TYPE,
         A.ASSET_TYPE2 = B.ASSET_TYPE2,
         A.CCY = B.CCY,
@@ -14394,69 +14364,17 @@
         BONDTOSTOCK_FLAG, PPPFLAG, STATUS_DATE,
         CAP_USE_INDU_LEVEL2, ISSUE_PARTY_NAME, SEC_CREDIT_GRADE_TYPE,
         SEC_MAIN_GRADE,BLN_AREA,INDUSTRY_PBC,CUSTOMER_OBJ_TYPE,
-        ORG_ASSET_TYPE1,ORG_ASSET_TYPE2,ORG_ASSET_TYPE3,BUY_PLACE,
-        ASSET_TYPE3,PBC_ASSET_TYPE1,PBC_ASSET_TYPE2,PBC_ASSET_TYPE3,ASSET_CODE_OLD,TRM_FUND_TYPE, DEPO_TYPE,
-        RIVAL_PARTY_TYPE,
-        PRIN_BASEAMT,
-        FMDATE,
-        COUPON_SPECIES,
-        INTEREST_RULE_FLAG,
-        INTPAY_RULE,
-        FLOAT_FACTOR_FLAG,
-        STRUCT_GRADE,
-        REPAYMENT_TYPE,
-        PERIOD_REPAYMENT_FLAG,
-        BASIC_ASSET_TYPE,
-        EXCESS_PROFIT_RATE,
-        PLEDGE_TYPE,
-        PLEDGE_VALUE,
-        NATURE_GUARANTEE,
-        RELATION_FINAN,
-        CONTAIN_TYPE,
-        EXERCISE_TYPE,
-        EXERCISE_DATE,
-        FIRST_EXERCISE_DATE,
-        EXERCISE_PERIOD,
-        EXERCISE_PRICE,
-        PERPETUAL_CLAUSE_TYPE,
-        DEFERRED_INTEREST_TYPE,
-        DEFERRED_INTEREST_INT,
-        FIRST_REPRCE_DATE,
-        REPRCE_CYCLE,
-        PART_REDEM_FLAG,
-        PART_REDEM_RATE,
-        CREDIT_ORG_CODE,
-        CREDIT_ORG_NAME,
-        EQUITY_QUIT,
-        DEPT_EQUITY,
-        HOLD_PURPOSE,
-        FINANCIAL_COMISSUE,
-        BANK_SEC_CAPITAL,
-        BANK_SEC_PREFER,
-        BANK_SEC_PERPETUAL,
-        <!-- G06升级 add by qufangxu at 2021-02-03 -->
-        BANK_SEC_KZZQ,
-        BANK_SEC_ZXZQ,
-        ISUNLISTED,
-        IS_BZHPJ,
-        CHB_ISSUER_ID,
-        CHB_MANAGER_ID,
-        CHB_FINANCIER_ID,
-        PERPETUAL_FLAG,
-        OPTION_FLAG,
-        IS_BJSZQ,
-        IS_PERPETUAL,
-        IS_FBZB)
-
-
-        SELECT
+        ORG_ASSET_TYPE1,ORG_ASSET_TYPE2,ORG_ASSET_TYPE3,ORG_ASSET_TYPE4,ORG_ASSET_TYPE5,BUY_PLACE,
+        ASSET_TYPE3,PBC_ASSET_TYPE1,PBC_ASSET_TYPE2,PBC_ASSET_TYPE3,ASSET_CODE_OLD,TRM_FUND_TYPE)
+        select
         ASSET_UUID, ASSET_CODE, ASSET_TYPE,
         ASSET_TYPE2, CCY, TRADE_MARKET,
         VDATE, MDATE, DISCOUNT_YIELD,
         ASSET_YIELD, BASIS, AMT,
         BANK_NAME, IS_STRUCT, TARGET_TYPE,
         TARGET, ASSET_ID, ASSET_NAME,
-        CHB_SECTYPE, ISSUE_MODE, PARTY_GRADE,INSTIT_SIZE,
+        CHB_SECTYPE, ISSUE_MODE, PARTY_GRADE,
+        INSTIT_SIZE,
         PARTY_TYPE1, PARTY_TYPE3, PARTY_TYPE2,
         INDUSTRY, INDUSTRY_LEVEL2, REGIST_ORG,
         REGISTORG_COMMENT, RIVAL_PARTY, TARGET_TYPE1,
@@ -14552,7 +14470,9 @@
         OPTION_FLAG,
         IS_BJSZQ,
         IS_PERPETUAL,
-        IS_FBZB
+        IS_FBZB,
+        PRIVATE_FLAG
+        from
         from
         (
         select TEMP.* from
@@ -14837,13 +14757,12 @@
         CAP_USE_INDU_LEVEL2, ISSUE_PARTY_NAME, SEC_CREDIT_GRADE_TYPE,
         SEC_MAIN_GRADE,BLN_AREA,INDUSTRY_PBC,CUSTOMER_OBJ_TYPE,
         ORG_ASSET_TYPE1,ORG_ASSET_TYPE2,ORG_ASSET_TYPE3,ORG_ASSET_TYPE4,ORG_ASSET_TYPE5,BUY_PLACE,
-        ASSET_TYPE3,PBC_ASSET_TYPE1,PBC_ASSET_TYPE2,PBC_ASSET_TYPE3,TRM_FUND_TYPE
-
-        from
-        (
-        select TEMP.* from
-        (
-        <foreach collection="newDataList" item="item"  separator="union all">
+        ASSET_TYPE3,PBC_ASSET_TYPE1,PBC_ASSET_TYPE2,PBC_ASSET_TYPE3,ASSET_CODE_OLD,TRM_FUND_TYPE
+        from (
+        select
+        TEMP.*
+        from (
+        <foreach collection="newDataList" item="item" separator="union all">
             select
             #{item.assetUuid,jdbcType=CHAR} ASSET_UUID,
             #{item.assetCode,jdbcType=VARCHAR} ASSET_CODE,
@@ -15181,298 +15100,11 @@
         A.PBC_ASSET_TYPE2 = B.PBC_ASSET_TYPE2,
         A.PBC_ASSET_TYPE3 = B.PBC_ASSET_TYPE3,
         A.TRM_FUND_TYPE = B.TRM_FUND_TYPE
-        <!-- 未匹配到这插入 -->
         where A.ASSET_CODE = B.ASSET_CODE;
-
-        insert into CHB_ASSET_INFO(ASSET_UUID, ASSET_CODE, ASSET_TYPE,
-        ASSET_TYPE2, CCY, TRADE_MARKET,
-        VDATE, MDATE, DISCOUNT_YIELD,
-        ASSET_YIELD, BASIS, AMT,
-        BANK_NAME, IS_STRUCT, TARGET_TYPE,
-        TARGET, ASSET_ID, ASSET_NAME,
-        CHB_SECTYPE, ISSUE_MODE, PARTY_GRADE,
-        INSTIT_SIZE,
-        PARTY_TYPE1, PARTY_TYPE3, PARTY_TYPE2,
-        INDUSTRY, INDUSTRY_LEVEL2, REGIST_ORG,
-        REGISTORG_COMMENT, RIVAL_PARTY, TARGET_TYPE1,
-        TARGET_AMT, COUNTRY_AREA, PROFIT_TYPE,
-        IS_RESALE, TERM_DATE, RATE_FLAG,
-        INTPAY_CYCLE, REPAY_CMT, BASIS_TYPE,
-        FLOAT_FACTOR, SPREAD_RATE, FINANCIE,
-        FIN_ORG_CODE, FCR_GRADE_IN, FCR_GRADE_OUT,
-        FINANCIER_TYPE1, FINANCIER_TYPE2, FINANCIER_TYPE3,
-        FINANCE_PROJ, INDUSTRY1, INDUSTRY_LEVEL2_TYPE,
-        PRO_INDUSTRY, PRO_INDUSTRY_LEVEL2, INDUSTRY_FLAG,
-        MONIT_TYPE, MON_TYPE_COMM, GUA_TYPE,
-        GUA_TYPE_REMARK, FINANCIER_GRADE, IN_GRADE,
-        OUT_GRADE, CHOSE, CONDITION_CMM,
-        FIN_AREA, TOTAL_FEE_RATE, IS_RIGHT,
-        NOTSTAND_SEC_TYPE, NOTSTAND_SEC_NUM, REMAIN_TERM,
-        MAX_REMAIN_TERM, MIN_REMAIN_TERM, SHARES_TYPE,
-        INDUSTRY_SHARES, INDUSTRY_SHARES2, INVEST_STAGE,
-        SHARES_TYPE1, SHARES_TYPE2, SHARES_TYPE3,
-        IS_PLEDGE, NOM_CAPI, TARGET_TYPE3,
-        ISSUE_PARTY_ID, TERM_MONTH, GUARANTEE_CMT,
-        SPECIAL_CMT, CONTRACT_NAME, INCOME_RATIO,
-        DER_INSTR_RATIO, DER_INSTR_INV_TYPE, DER_INSTR_TARGET,
-        ACCT_MODE, SPECIAL_CMT1, MAX_YIELD,
-        MIN_YIELD, BASIC_PRICE, REG_DATE_PRICE,
-        TRADE_FEE, PARTY_CODE, CHECK_CODE,
-        MANAGER_ID, TRUSTEE_ID, TRU_ACT_TYPE,
-        INVEST_TYPE, CAP_USE_INDU, PLAN_SDATE,
-        PLAN_EDATE, PRO_PROPERTY, MAX_RATE,
-        MIN_RATE, DEBT_SCALE, BUY_STRUCT,
-        MANAGE_TYPE, IS_CTRL_BOTTOM, MGR_FEE_RATE,
-        TRU_FEE_RATE, TRADE_FEE_RATE, AGENCY_FEE_RATE,
-        OTHER_FEE_RATE, ASSET_VALUE, REGIST_ORG1,
-        MNG_ORG_NAME, TRU_ORG_NAME, FUND_INVEST_ASSET,
-        IN_ASSET_TYPE, IN_ASSET_TYPE_CMM, REMARK,
-        IS_UNDER_ASSET, IS_GOVERN_FUND, GOVERN_INVEST_FUND,
-        FUND_ENPE_NAME, TRUSTEE, STATUS,
-        CREATE_USER, CREATE_TIME, UPDATE_USER,
-        UPDATE_TIME, DEPT_CODE, ORG_CODE,
-        DATA_SOURCE, PRIVATEFUND_FLAG, PRIVATEPRD_FLAG,PRIVATE_FLAG,
-        BONDTOSTOCK_FLAG, PPPFLAG, STATUS_DATE,
-        CAP_USE_INDU_LEVEL2, ISSUE_PARTY_NAME, SEC_CREDIT_GRADE_TYPE,
-        SEC_MAIN_GRADE,BLN_AREA,INDUSTRY_PBC,CUSTOMER_OBJ_TYPE,
-        ORG_ASSET_TYPE1,ORG_ASSET_TYPE2,ORG_ASSET_TYPE3,ORG_ASSET_TYPE4,ORG_ASSET_TYPE5,BUY_PLACE,
-        ASSET_TYPE3,PBC_ASSET_TYPE1,PBC_ASSET_TYPE2,PBC_ASSET_TYPE3,ASSET_CODE_OLD,TRM_FUND_TYPE)
-
-
-        SELECT
-        ASSET_UUID, ASSET_CODE, ASSET_TYPE,
-        ASSET_TYPE2, CCY, TRADE_MARKET,
-        VDATE, MDATE, DISCOUNT_YIELD,
-        ASSET_YIELD, BASIS, AMT,
-        BANK_NAME, IS_STRUCT, TARGET_TYPE,
-        TARGET, ASSET_ID, ASSET_NAME,
-        CHB_SECTYPE, ISSUE_MODE, PARTY_GRADE,
-        INSTIT_SIZE,
-        PARTY_TYPE1, PARTY_TYPE3, PARTY_TYPE2,
-        INDUSTRY, INDUSTRY_LEVEL2, REGIST_ORG,
-        REGISTORG_COMMENT, RIVAL_PARTY, TARGET_TYPE1,
-        TARGET_AMT, COUNTRY_AREA, PROFIT_TYPE,
-        IS_RESALE, TERM_DATE, RATE_FLAG,
-        INTPAY_CYCLE, REPAY_CMT, BASIS_TYPE,
-        FLOAT_FACTOR, SPREAD_RATE, FINANCIE,
-        FIN_ORG_CODE, FCR_GRADE_IN, FCR_GRADE_OUT,
-        FINANCIER_TYPE1, FINANCIER_TYPE2, FINANCIER_TYPE3,
-        FINANCE_PROJ, INDUSTRY1, INDUSTRY_LEVEL2_TYPE,
-        PRO_INDUSTRY, PRO_INDUSTRY_LEVEL2, INDUSTRY_FLAG,
-        MONIT_TYPE, MON_TYPE_COMM, GUA_TYPE,
-        GUA_TYPE_REMARK, FINANCIER_GRADE, IN_GRADE,
-        OUT_GRADE, CHOSE, CONDITION_CMM,
-        FIN_AREA, TOTAL_FEE_RATE, IS_RIGHT,
-        NOTSTAND_SEC_TYPE, NOTSTAND_SEC_NUM, REMAIN_TERM,
-        MAX_REMAIN_TERM, MIN_REMAIN_TERM, SHARES_TYPE,
-        INDUSTRY_SHARES, INDUSTRY_SHARES2, INVEST_STAGE,
-        SHARES_TYPE1, SHARES_TYPE2, SHARES_TYPE3,
-        IS_PLEDGE, NOM_CAPI, TARGET_TYPE3,
-        ISSUE_PARTY_ID, TERM_MONTH, GUARANTEE_CMT,
-        SPECIAL_CMT, CONTRACT_NAME, INCOME_RATIO,
-        DER_INSTR_RATIO, DER_INSTR_INV_TYPE, DER_INSTR_TARGET,
-        ACCT_MODE, SPECIAL_CMT1, MAX_YIELD,
-        MIN_YIELD, BASIC_PRICE, REG_DATE_PRICE,
-        TRADE_FEE, PARTY_CODE, CHECK_CODE,
-        MANAGER_ID, TRUSTEE_ID, TRU_ACT_TYPE,
-        INVEST_TYPE, CAP_USE_INDU, PLAN_SDATE,
-        PLAN_EDATE, PRO_PROPERTY, MAX_RATE,
-        MIN_RATE, DEBT_SCALE, BUY_STRUCT,
-        MANAGE_TYPE, IS_CTRL_BOTTOM, MGR_FEE_RATE,
-        TRU_FEE_RATE, TRADE_FEE_RATE, AGENCY_FEE_RATE,
-        OTHER_FEE_RATE, ASSET_VALUE, REGIST_ORG1,
-        MNG_ORG_NAME, TRU_ORG_NAME, FUND_INVEST_ASSET,
-        IN_ASSET_TYPE, IN_ASSET_TYPE_CMM, REMARK,
-        IS_UNDER_ASSET, IS_GOVERN_FUND, GOVERN_INVEST_FUND,
-        FUND_ENPE_NAME, TRUSTEE, STATUS,
-        CREATE_USER, CREATE_TIME, UPDATE_USER,
-        UPDATE_TIME, DEPT_CODE, ORG_CODE,
-        DATA_SOURCE, PRIVATEFUND_FLAG, PRIVATEPRD_FLAG,PRIVATE_FLAG,
-        BONDTOSTOCK_FLAG, PPPFLAG, STATUS_DATE,
-        CAP_USE_INDU_LEVEL2, ISSUE_PARTY_NAME, SEC_CREDIT_GRADE_TYPE,
-        SEC_MAIN_GRADE,BLN_AREA,INDUSTRY_PBC,CUSTOMER_OBJ_TYPE,
-        ORG_ASSET_TYPE1,ORG_ASSET_TYPE2,ORG_ASSET_TYPE3,ORG_ASSET_TYPE4,ORG_ASSET_TYPE5,BUY_PLACE,
-        ASSET_TYPE3,PBC_ASSET_TYPE1,PBC_ASSET_TYPE2,PBC_ASSET_TYPE3,ASSET_CODE_OLD,TRM_FUND_TYPE
-        from
-        (
-        select TEMP.* from
-        (
-        <foreach collection="newDataList" item="item"  separator="union all">
-            select
-            #{item.assetUuid,jdbcType=CHAR} ASSET_UUID,
-            #{item.assetCode,jdbcType=VARCHAR} ASSET_CODE,
-            #{item.assetType,jdbcType=VARCHAR} ASSET_TYPE,
-            #{item.assetType2,jdbcType=VARCHAR} ASSET_TYPE2,
-            #{item.ccy,jdbcType=VARCHAR} CCY,
-            #{item.tradeMarket,jdbcType=VARCHAR} TRADE_MARKET,
-            #{item.vdate,jdbcType=TIMESTAMP} VDATE,
-            #{item.mdate,jdbcType=TIMESTAMP} MDATE,
-            #{item.discountYield,jdbcType=DECIMAL} DISCOUNT_YIELD,
-            #{item.assetYield,jdbcType=DECIMAL} ASSET_YIELD,
-            #{item.basis,jdbcType=VARCHAR} BASIS,
-            #{item.amt,jdbcType=DECIMAL} AMT,
-            #{item.bankName,jdbcType=VARCHAR} BANK_NAME,
-            #{item.isStruct,jdbcType=VARCHAR} IS_STRUCT,
-            #{item.targetType,jdbcType=VARCHAR} TARGET_TYPE,
-            #{item.target,jdbcType=VARCHAR} TARGET,
-            #{item.assetId,jdbcType=VARCHAR} ASSET_ID,
-            #{item.assetName,jdbcType=VARCHAR} ASSET_NAME,
-            #{item.chbSectype,jdbcType=VARCHAR} CHB_SECTYPE,
-            #{item.issueMode,jdbcType=VARCHAR} ISSUE_MODE,
-            #{item.partyGrade,jdbcType=VARCHAR} PARTY_GRADE,
-            #{item.institSize,jdbcType=VARCHAR} INSTIT_SIZE,
-            #{item.partyType1,jdbcType=VARCHAR} PARTY_TYPE1,
-            #{item.partyType3,jdbcType=VARCHAR} PARTY_TYPE3,
-            #{item.partyType2,jdbcType=VARCHAR} PARTY_TYPE2,
-            #{item.industry,jdbcType=VARCHAR} INDUSTRY,
-            #{item.industryLevel2,jdbcType=VARCHAR} INDUSTRY_LEVEL2,
-            #{item.registOrg,jdbcType=VARCHAR} REGIST_ORG,
-            #{item.registorgComment,jdbcType=VARCHAR} REGISTORG_COMMENT,
-            #{item.rivalParty,jdbcType=VARCHAR} RIVAL_PARTY,
-            #{item.targetType1,jdbcType=VARCHAR} TARGET_TYPE1,
-            #{item.targetAmt,jdbcType=DECIMAL} TARGET_AMT,
-            #{item.countryArea,jdbcType=VARCHAR} COUNTRY_AREA,
-            #{item.profitType,jdbcType=VARCHAR} PROFIT_TYPE,
-            #{item.isResale,jdbcType=VARCHAR} IS_RESALE,
-            #{item.termDate,jdbcType=DECIMAL} TERM_DATE,
-            #{item.rateFlag,jdbcType=VARCHAR} RATE_FLAG,
-            #{item.intpayCycle,jdbcType=DECIMAL} INTPAY_CYCLE,
-            #{item.repayCmt,jdbcType=VARCHAR} REPAY_CMT,
-            #{item.basisType,jdbcType=VARCHAR} BASIS_TYPE,
-            #{item.floatFactor,jdbcType=DECIMAL} FLOAT_FACTOR,
-            #{item.spreadRate,jdbcType=DECIMAL} SPREAD_RATE,
-            #{item.financie,jdbcType=VARCHAR} FINANCIE,
-            #{item.finOrgCode,jdbcType=VARCHAR} FIN_ORG_CODE,
-            #{item.fcrGradeIn,jdbcType=VARCHAR} FCR_GRADE_IN,
-            #{item.fcrGradeOut,jdbcType=VARCHAR} FCR_GRADE_OUT,
-            #{item.financierType1,jdbcType=VARCHAR} FINANCIER_TYPE1,
-            #{item.financierType2,jdbcType=VARCHAR} FINANCIER_TYPE2,
-            #{item.financierType3,jdbcType=VARCHAR} FINANCIER_TYPE3,
-            #{item.financeProj,jdbcType=VARCHAR} FINANCE_PROJ,
-            #{item.industry1,jdbcType=VARCHAR} INDUSTRY1,
-            #{item.industryLevel2Type,jdbcType=VARCHAR} INDUSTRY_LEVEL2_TYPE,
-            #{item.proIndustry,jdbcType=VARCHAR} PRO_INDUSTRY,
-            #{item.proIndustryLevel2,jdbcType=VARCHAR} PRO_INDUSTRY_LEVEL2,
-            #{item.industryFlag,jdbcType=VARCHAR} INDUSTRY_FLAG,
-            #{item.monitType,jdbcType=VARCHAR} MONIT_TYPE,
-            #{item.monTypeComm,jdbcType=VARCHAR} MON_TYPE_COMM,
-            #{item.guaType,jdbcType=VARCHAR} GUA_TYPE,
-            #{item.guaTypeRemark,jdbcType=VARCHAR} GUA_TYPE_REMARK,
-            #{item.financierGrade,jdbcType=VARCHAR} FINANCIER_GRADE,
-            #{item.inGrade,jdbcType=VARCHAR} IN_GRADE,
-            #{item.outGrade,jdbcType=VARCHAR} OUT_GRADE,
-            #{item.chose,jdbcType=VARCHAR} CHOSE,
-            #{item.conditionCmm,jdbcType=VARCHAR} CONDITION_CMM,
-            #{item.finArea,jdbcType=VARCHAR} FIN_AREA,
-            #{item.totalFeeRate,jdbcType=DECIMAL} TOTAL_FEE_RATE,
-            #{item.isRight,jdbcType=VARCHAR} IS_RIGHT,
-            #{item.notstandSecType,jdbcType=VARCHAR} NOTSTAND_SEC_TYPE,
-            #{item.notstandSecNum,jdbcType=DECIMAL} NOTSTAND_SEC_NUM,
-            #{item.remainTerm,jdbcType=DECIMAL} REMAIN_TERM,
-            #{item.maxRemainTerm,jdbcType=DECIMAL} MAX_REMAIN_TERM,
-            #{item.minRemainTerm,jdbcType=DECIMAL} MIN_REMAIN_TERM,
-            #{item.sharesType,jdbcType=VARCHAR} SHARES_TYPE,
-            #{item.industryShares,jdbcType=VARCHAR} INDUSTRY_SHARES,
-            #{item.industryShares2,jdbcType=VARCHAR} INDUSTRY_SHARES2,
-            #{item.investStage,jdbcType=VARCHAR} INVEST_STAGE,
-            #{item.sharesType1,jdbcType=VARCHAR} SHARES_TYPE1,
-            #{item.sharesType2,jdbcType=VARCHAR} SHARES_TYPE2,
-            #{item.sharesType3,jdbcType=VARCHAR} SHARES_TYPE3,
-            #{item.isPledge,jdbcType=VARCHAR} IS_PLEDGE,
-            #{item.nomCapi,jdbcType=DECIMAL} NOM_CAPI,
-            #{item.targetType3,jdbcType=VARCHAR} TARGET_TYPE3,
-            #{item.issuePartyId,jdbcType=VARCHAR} ISSUE_PARTY_ID,
-            #{item.termMonth,jdbcType=DECIMAL} TERM_MONTH,
-            #{item.guaranteeCmt,jdbcType=VARCHAR} GUARANTEE_CMT,
-            #{item.specialCmt,jdbcType=VARCHAR} SPECIAL_CMT,
-            #{item.contractName,jdbcType=VARCHAR} CONTRACT_NAME,
-            #{item.incomeRatio,jdbcType=DECIMAL} INCOME_RATIO,
-            #{item.derInstrRatio,jdbcType=DECIMAL} DER_INSTR_RATIO,
-            #{item.derInstrInvType,jdbcType=VARCHAR} DER_INSTR_INV_TYPE,
-            #{item.derInstrTarget,jdbcType=VARCHAR} DER_INSTR_TARGET,
-            #{item.acctMode,jdbcType=VARCHAR} ACCT_MODE,
-            #{item.specialCmt1,jdbcType=VARCHAR} SPECIAL_CMT1,
-            #{item.maxYield,jdbcType=DECIMAL} MAX_YIELD,
-            #{item.minYield,jdbcType=DECIMAL} MIN_YIELD,
-            #{item.basicPrice,jdbcType=DECIMAL} BASIC_PRICE,
-            #{item.regDatePrice,jdbcType=DECIMAL} REG_DATE_PRICE,
-            #{item.tradeFee,jdbcType=VARCHAR} TRADE_FEE,
-            #{item.partyCode,jdbcType=VARCHAR} PARTY_CODE,
-            #{item.checkCode,jdbcType=VARCHAR} CHECK_CODE,
-            #{item.managerId,jdbcType=VARCHAR} MANAGER_ID,
-            #{item.trusteeId,jdbcType=VARCHAR} TRUSTEE_ID,
-            #{item.truActType,jdbcType=VARCHAR} TRU_ACT_TYPE,
-            #{item.investType,jdbcType=VARCHAR} INVEST_TYPE,
-            #{item.capUseIndu,jdbcType=VARCHAR} CAP_USE_INDU,
-            #{item.planSdate,jdbcType=TIMESTAMP} PLAN_SDATE,
-            #{item.planEdate,jdbcType=TIMESTAMP} PLAN_EDATE,
-            #{item.proProperty,jdbcType=VARCHAR} PRO_PROPERTY,
-            #{item.maxRate,jdbcType=DECIMAL} MAX_RATE,
-            #{item.minRate,jdbcType=DECIMAL} MIN_RATE,
-            #{item.debtScale,jdbcType=DECIMAL} DEBT_SCALE,
-            #{item.buyStruct,jdbcType=VARCHAR} BUY_STRUCT,
-            #{item.manageType,jdbcType=VARCHAR} MANAGE_TYPE,
-            #{item.isCtrlBottom,jdbcType=VARCHAR} IS_CTRL_BOTTOM,
-            #{item.mgrFeeRate,jdbcType=DECIMAL} MGR_FEE_RATE,
-            #{item.truFeeRate,jdbcType=DECIMAL} TRU_FEE_RATE,
-            #{item.tradeFeeRate,jdbcType=DECIMAL} TRADE_FEE_RATE,
-            #{item.agencyFeeRate,jdbcType=DECIMAL} AGENCY_FEE_RATE,
-            #{item.otherFeeRate,jdbcType=DECIMAL} OTHER_FEE_RATE,
-            #{item.assetValue,jdbcType=DECIMAL} ASSET_VALUE,
-            #{item.registOrg1,jdbcType=VARCHAR} REGIST_ORG1,
-            #{item.mngOrgName,jdbcType=VARCHAR} MNG_ORG_NAME,
-            #{item.truOrgName,jdbcType=VARCHAR} TRU_ORG_NAME,
-            #{item.fundInvestAsset,jdbcType=VARCHAR} FUND_INVEST_ASSET,
-            #{item.inAssetType,jdbcType=VARCHAR} IN_ASSET_TYPE,
-            #{item.inAssetTypeCmm,jdbcType=VARCHAR} IN_ASSET_TYPE_CMM,
-            #{item.remark,jdbcType=VARCHAR} REMARK,
-            #{item.isUnderAsset,jdbcType=VARCHAR} IS_UNDER_ASSET,
-            #{item.isGovernFund,jdbcType=VARCHAR} IS_GOVERN_FUND,
-            #{item.governInvestFund,jdbcType=VARCHAR} GOVERN_INVEST_FUND,
-            #{item.fundEnpeName,jdbcType=VARCHAR} FUND_ENPE_NAME,
-            #{item.trustee,jdbcType=VARCHAR} TRUSTEE,
-            #{item.status,jdbcType=VARCHAR} STATUS,
-            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
-            NOW() CREATE_TIME,
-            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
-            NOW() UPDATE_TIME,
-            #{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
-            #{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
-            #{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
-            #{item.privatefundFlag,jdbcType=VARCHAR} PRIVATEFUND_FLAG,
-            #{item.privateprdFlag,jdbcType=VARCHAR} PRIVATEPRD_FLAG,
-            #{item.privateFlag,jdbcType=VARCHAR} PRIVATE_FLAG,
-            #{item.bondtostockFlag,jdbcType=VARCHAR} BONDTOSTOCK_FLAG,
-            #{item.pppflag,jdbcType=VARCHAR} PPPFLAG,
-            #{item.statusDate,jdbcType=TIMESTAMP} STATUS_DATE,
-            #{item.capUseInduLevel2,jdbcType=VARCHAR} CAP_USE_INDU_LEVEL2,
-            #{item.issuePartyName,jdbcType=VARCHAR} ISSUE_PARTY_NAME,
-            #{item.secCreditGradeType,jdbcType=VARCHAR} SEC_CREDIT_GRADE_TYPE,
-            #{item.secMainGrade,jdbcType=VARCHAR} SEC_MAIN_GRADE,
-            #{item.blnArea,jdbcType=VARCHAR} BLN_AREA,
-            #{item.industryPbc,jdbcType=VARCHAR} INDUSTRY_PBC,
-            #{item.customerObjType,jdbcType=VARCHAR} CUSTOMER_OBJ_TYPE,
-            #{item.orgAssetType1,jdbcType=VARCHAR} ORG_ASSET_TYPE1,
-            #{item.orgAssetType2,jdbcType=VARCHAR} ORG_ASSET_TYPE2,
-            #{item.orgAssetType3,jdbcType=VARCHAR} ORG_ASSET_TYPE3,
-            #{item.orgAssetType4,jdbcType=VARCHAR} ORG_ASSET_TYPE4,
-            #{item.orgAssetType5,jdbcType=VARCHAR} ORG_ASSET_TYPE5,
-            #{item.buyPlace,jdbcType=VARCHAR} BUY_PLACE,
-            #{item.assetType3,jdbcType=VARCHAR} ASSET_TYPE3,
-            #{item.pbcAssetType1,jdbcType=VARCHAR} PBC_ASSET_TYPE1,
-            #{item.pbcAssetType2,jdbcType=VARCHAR} PBC_ASSET_TYPE2,
-            #{item.pbcAssetType3,jdbcType=VARCHAR} PBC_ASSET_TYPE3,
-            #{item.assetCode,jdbcType=VARCHAR} ASSET_CODE_OLD,
-            #{item.trmFundType,jdbcType=VARCHAR} TRM_FUND_TYPE
-            FROM
-            DUAL
-        </foreach>
-        ) TEMP where not exists (select 1 from CHB_ASSET_INFO CII where CII.ASSET_CODE = TEMP.ASSET_CODE)
-        ) de ;
     </insert>
-    
-    <select id="selectChlAssetByInterfdateBatch" parameterType="map" 
-        resultMap="BaseResultMap" resultSetType="FORWARD_ONLY" fetchSize="1000">
+
+    <select id="selectChlAssetByInterfdateBatch" parameterType="map"
+            resultMap="BaseResultMap" resultSetType="FORWARD_ONLY" fetchSize="1000">
         SELECT null ASSET_UUID,
         asset.FINPROD_MARKET_ID asset_code,
         null ASSET_TYPE,
@@ -15609,10 +15241,10 @@
         detail.CREATE_TIME CREATE_TIME,
         detail.UPDATE_USER UPDATE_USER,
         greatest(ifnull(ifnull(asset.UPDATE_TIME,asset.CREATE_TIME),STR_TO_DATE('1900-01-01','%Y-%m-%d')),
-       ifnull(ifnull(info.UPDATE_TIME,info.CREATE_TIME),STR_TO_DATE('1900-01-01','%Y-%m-%d')),
-       ifnull(ifnull(customerinfo.UPDATE_TIME,customerinfo.CREATE_TIME),STR_TO_DATE('1900-01-01','%Y-%m-%d')),
-       ifnull(ifnull(addq.UPDATE_TIME,addq.CREATE_TIME),STR_TO_DATE('1900-01-01','%Y-%m-%d'))
-       ) UPDATE_TIME,
+        ifnull(ifnull(info.UPDATE_TIME,info.CREATE_TIME),STR_TO_DATE('1900-01-01','%Y-%m-%d')),
+        ifnull(ifnull(customerinfo.UPDATE_TIME,customerinfo.CREATE_TIME),STR_TO_DATE('1900-01-01','%Y-%m-%d')),
+        ifnull(ifnull(addq.UPDATE_TIME,addq.CREATE_TIME),STR_TO_DATE('1900-01-01','%Y-%m-%d'))
+        ) UPDATE_TIME,
         detail.CREATE_DEPT DEPT_CODE,
         NULL ORG_CODE,
         'bszg' data_source,/*数据来源*/
@@ -15680,7 +15312,7 @@
         <![CDATA[or ifnull(addq.UPDATE_TIME,addq.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>
     </select>
 
-     <select id="selectChlAssetByInterfdateBatchPsbc" parameterType="map" 
+     <select id="selectChlAssetByInterfdateBatchPsbc" parameterType="map"
         resultMap="PsbcBaseResultMap" resultSetType="FORWARD_ONLY" fetchSize="1000">
         SELECT null ASSET_UUID,
         asset.FINPROD_MARKET_ID asset_code,
@@ -15834,17 +15466,17 @@
         NULL ISSUE_PARTY_NAME,/*发行机构*/
         null SEC_CREDIT_GRADE_TYPE,
         NULL SEC_MAIN_GRADE,/**/
-         ifnull(info.BLN_AREA,(case info.ccy when 'CNY' then '01' when null then null else '02' end)) BLN_AREA,/*境内外*/
-         addq.INDUSTRY INDUSTRY_PBC,/*融资人所属行业一级分类（人行）*/
-         (case customerinfo.CUSTOMER_TYPE when '02' then 'C01' else ifnull(addq.CUSTOMER_OBJ_TYPE,'C03') end) CUSTOMER_OBJ_TYPE,/*客户主体类型*/
+        ifnull(info.BLN_AREA,(case info.ccy when 'CNY' then '01' when null then null else '02' end)) BLN_AREA,/*境内外*/
+        addq.INDUSTRY INDUSTRY_PBC,/*融资人所属行业一级分类（人行）*/
+        (case customerinfo.CUSTOMER_TYPE when '02' then 'C01' else ifnull(addq.CUSTOMER_OBJ_TYPE,'C03') end) CUSTOMER_OBJ_TYPE,/*客户主体类型*/
         'F09' ORG_ASSET_TYPE1,/*原资产一级分类*/
-         (case asset.REP_ASSET_TYPE when '1703' then 'N01'
-         when '1701' then  'N02'
-         when '1704' then  'N03'
-         when '1702' then 'N04'
-         when '1706' then 'N05'
-         when '1705' then 'N06'
-         else  '' end) ORG_ASSET_TYPE2,/*原资产二级分类*/
+        (case asset.REP_ASSET_TYPE when '1703' then 'N01'
+        when '1701' then  'N02'
+        when '1704' then  'N03'
+        when '1702' then 'N04'
+        when '1706' then 'N05'
+        when '1705' then 'N06'
+        else  '' end) ORG_ASSET_TYPE2,/*原资产二级分类*/
         null ORG_ASSET_TYPE3,/*原资产三级分类*/
         null ORG_ASSET_TYPE4,/*原资产四级分类*/
         null ORG_ASSET_TYPE5,/*原资产五级分类*/
@@ -15894,7 +15526,7 @@
         on info.FINANCIER=addq.CUSTOMER_ID
         left join mst_customer_info customerinfo
         on info.FINANCIER=customerinfo.CUSTOMER_ID
-        WHERE 1 =1 
+        WHERE 1 =1
         and info.IS_CHL = 'Y'<!-- 通道资产的信息单独查询 -->
         /*根据创建时间、更新时间和接口接入时间接入数据*/
         <![CDATA[AND( ifnull(asset.UPDATE_TIME,asset.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>

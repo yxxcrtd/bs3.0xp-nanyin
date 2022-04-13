@@ -34,7 +34,7 @@
     </sql>
 
     <select id="selectForPage" resultType="com.joyintech.tams.report.submitmaintenance.salerinstinfo.dto.SalerInstInfoDto">
-        SELECT *
+        SELECT A.*
         FROM (
         select
         'erro'                      as erroOrInfo,
@@ -47,7 +47,7 @@
         erro.DATA_DATE            as dataDate,
         erro.WORKFLOW_ID          as workflowId,
         null                      as remark,
-        to_char(erro.ERR_MSG)     as errMsg
+        erro.ERR_MSG              as errMsg
         from CHB_SALER_INST_ERRODATA erro
         where 1=1
         <if test="salerOrgCode != null and salerOrgCode != ''">
@@ -85,7 +85,7 @@
         <if test="status != null and status != ''">
             and info.STATUS = #{status,jdbcType=VARCHAR}
         </if>
-        ) ORDER BY dataStatus DESC
+        ) AS A ORDER BY A.dataStatus DESC
     </select>
 
     <!--    删除检查-->

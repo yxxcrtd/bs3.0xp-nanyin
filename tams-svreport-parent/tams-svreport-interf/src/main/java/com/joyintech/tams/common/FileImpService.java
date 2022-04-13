@@ -10,28 +10,42 @@
 
 package com.joyintech.tams.common;
 
-import java.io.*;
-import java.lang.reflect.Field;
-import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.Vector;
-import java.util.stream.Collectors;
-
-import javax.xml.parsers.ParserConfigurationException;
-
+import com.jcraft.jsch.ChannelSftp.LsEntry;
+import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.framework.util.FileNameUtil;
+import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.ChbFileReadMonitorInfoMapper;
+import com.joyintech.tams.common.base.entity.ChbFileReadMonitorInfo;
+import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.service.CommonCodeCheckBatchService;
+import com.joyintech.tams.common.svreport.datacheck.dao.ChbInterfErrodataMapper;
+import com.joyintech.tams.common.svreport.datacheck.dto.ChbInterfErrodataWithBLOBs;
+import com.joyintech.tams.common.svreport.datacheck.dto.CheckRule;
+import com.joyintech.tams.common.svreport.datacheck.service.DataCheckService;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.report.common.TxtParseUtil;
+import com.joyintech.tams.report.common.XmlParseUtil;
+import com.joyintech.tams.report.common.util.ReportGlobalConstant;
+import com.joyintech.tams.report.common.util.SysDataUtil;
+import com.joyintech.tams.report.framework.util.FtpUtil;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
+import com.joyintech.tams.report.interf.common.constant.InterfConstants;
+import com.joyintech.tams.report.interf.common.imp.ImportGenerator;
+import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpColumn;
+import com.joyintech.tams.report.interf.common.service.InterfService;
+import com.joyintech.tams.report.interf.common.util.InterfUtil;
+import com.joyintech.tams.report.interf.common.util.SftpUtil;
+import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -42,37 +56,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.ReflectionUtils;
 import org.xml.sax.SAXException;
 
-import com.jcraft.jsch.ChannelSftp.LsEntry;
-import com.joyintech.framework.base.BaseEntity;
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.util.FileNameUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.dao.ChbFileReadMonitorInfoMapper;
-import com.joyintech.tams.common.base.entity.ChbFileReadMonitorInfo;
-import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
-import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
-import com.joyintech.tams.common.svreport.datacheck.dao.ChbInterfErrodataMapper;
-import com.joyintech.tams.common.svreport.datacheck.dto.ChbInterfErrodataWithBLOBs;
-import com.joyintech.tams.common.svreport.datacheck.dto.CheckRule;
-import com.joyintech.tams.common.svreport.datacheck.service.DataCheckService;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.report.common.TxtParseUtil;
-import com.joyintech.tams.report.common.XmlParseUtil;
-import com.joyintech.tams.report.common.util.ReportGlobalConstant;
-import com.joyintech.tams.report.common.util.SysDataUtil;
-import com.joyintech.tams.report.framework.util.FtpUtil;
-import com.joyintech.tams.report.interf.common.constant.InterfConstants;
-import com.joyintech.tams.report.interf.common.imp.ImportGenerator;
-import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpColumn;
-import com.joyintech.tams.report.interf.common.service.InterfService;
-import com.joyintech.tams.report.interf.common.util.InterfUtil;
-import com.joyintech.tams.report.interf.common.util.SftpUtil;
-import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
-import com.joyintech.tams.systemtools.util.CommonUtil;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 外部数据文件接口基类
@@ -83,11 +73,15 @@ import com.joyintech.tams.systemtools.util.CommonUtil;
  */
 public abstract class FileImpService extends InterfService{
 
-//    /**
-//     * 维护表常量
-//     */
-//    private static final String[] XML_FILE_NAME = new String[] {"CHB_EQU_HOLD", "CHB_EQUDET","CHB_INVESTHOLD_INFO","MST_EXCHANGE_INFO", "MKT_HOLIDAY"
-//            ,"CHB_PRD_BASEINFO", "CHB_PRD_DEAL", "BTA_CLIENT_AREA_"};
+    /**
+     * 常量 I:接口
+     */
+    protected String I ="I";
+
+    /**
+     * 常量 F:全量
+     */
+    protected String F ="F";
 
     /**
      * 募集总量接口临时表名
@@ -1104,10 +1098,10 @@ public abstract class FileImpService extends InterfService{
             baseEntity.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
             for (String key : map.keySet()) {
                 // 空数据和错误数据置为待处理
-                if(key==null||key.equals("ERRMSG")){
-                    baseEntity.setStatus(DictCodeListExt1.维护数据状态_待处理.getValue());
-                    continue;
-                }
+//                if(key==null||key.equals("ERRMSG")){
+//                    baseEntity.setStatus(DictCodeListExt1.维护数据状态_待处理.getValue());
+//                    continue;
+//                }
                 // 获取map值
                 String value = map.get(key);
                 // 反射通过字段名寻找字段

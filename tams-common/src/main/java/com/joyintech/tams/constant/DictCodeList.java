@@ -2021,6 +2021,8 @@ public enum DictCodeList implements BaseDictCodeList {
 	共同业务类型_DVP资金调拨管理(DictCode.共通业务类型, "PTL09", "DVP资金调拨管理"),
     释放状态_未释放(DictCode.释放状态,"0","未释放"),
     释放状态_已释放(DictCode.释放状态,"1","已释放"),
+	债券评级(DictCode.校验接口类型,"MST_BOND_CREDIT_RATING","债券评级信息"),
+
 	;
 	/*字典值已经满了 ，不要添加了*/
     private String value;

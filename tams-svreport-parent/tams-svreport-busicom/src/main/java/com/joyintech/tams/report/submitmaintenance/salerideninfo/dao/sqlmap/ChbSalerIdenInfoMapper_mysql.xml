@@ -64,7 +64,7 @@
 
     <!--    分页查询-->
     <select id="selectForPage" resultType="com.joyintech.tams.report.submitmaintenance.salerideninfo.dto.SalerIdenInfoDto">
-        SELECT *
+        SELECT A.*
         FROM (
         select
         'erro'                       as erroOrInfo,
@@ -171,7 +171,7 @@
         <if test="salerOrgCode != null and salerOrgCode != ''">
             and info.SALER_ORG_CODE  like concat('%',concat(#{salerOrgCode,jdbcType=VARCHAR},'%'))
         </if>
-        ) ORDER BY dataStatus DESC
+        ) A ORDER BY A.dataStatus DESC
     </select>
 
     <!--    该机构是否已维护过奖惩投诉记录信息-->

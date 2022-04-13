@@ -28,4 +28,8 @@
 		</if>
 		order by tabNum,IFNULL(UPDATE_TIME,CREATE_TIME)  desc
 	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        update  DIS_POI_TAB  set  status='D'  where TAB_NUM = #{tabNum,jdbcType=VARCHAR}
+    </delete>
 </mapper>

@@ -209,17 +209,20 @@
         update PBC_REPORT
         <set>
             SEND_STATUS = '01',
-            UPDATE_TIME = now(),
+            UPDATE_TIME = NOW(),
             SUBMIT_TIME = null,
             SUBMIT_FEEDBACK_STATUS = null
         </set>
         <where>
-            <foreach collection="list" item="dto" open="(" close=")" separator=") or (">
+            <!--<foreach collection="list" item="dto" open="(" close=")" separator=") or (">
                 TERMID = #{dto.termid}
                 <if test="null!=dto.orgCode and dto.orgCode != ''">
                     and ORG_CODE = IFNULL(#{dto.orgCode,jdbcType=VARCHAR},'')
                 </if>
 
+            </foreach>-->
+            <foreach collection="list" item="dto" open="(" close=")" separator=") or (">
+                REPORTUUID = #{dto.reportuuid}
             </foreach>
         </where>
     </update>
@@ -279,11 +282,10 @@
         from PBC_REPORT
         where 1 =1
         <if test="registList !=null and registList.size()>0">
-            <foreach collection="registList" item="regist" open=" and (" close=")" separator=") or (">
-                TERMID = #{regist.termid}
-                <if test="null!=regist.orgCode and regist.orgCode != ''">
-                    and ORG_CODE = IFNULL(#{regist.orgCode,jdbcType=VARCHAR},'')
-                </if>
+            <foreach collection="registList" item="regist" open="and (TERMID,REPORTTYPE,ifnull(PBC_ACCOUNT_ID,'')) IN (" separator="UNION all"  close=")">
+                select #{regist.termid,jdbcType=VARCHAR},
+                #{regist.reporttype,jdbcType=VARCHAR},ifnull(#{regist.pbcAccountId,jdbcType=VARCHAR},'')
+                from dual
             </foreach>
 
         </if>
@@ -342,11 +344,10 @@
         from PBC_REPORT_HIS  his
         <where>
             <if test="registList !=null and registList.size()>0">
-                <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
-                    TERMID = #{regist.termid,jdbcType=VARCHAR}
-                    <if test="null!=regist.orgCode and regist.orgCode != ''">
-                        and ORG_CODE = IFNULL(#{regist.orgCode,jdbcType=VARCHAR},'')
-                    </if>
+                <foreach collection="registList" item="regist" open="(TERMID,REPORTTYPE,ifnull(PBC_ACCOUNT_ID,'')) IN (" separator="UNION all"  close=")">
+                    select #{regist.termid,jdbcType=VARCHAR},
+                    #{regist.reporttype,jdbcType=VARCHAR},ifnull(#{regist.pbcAccountId,jdbcType=VARCHAR},'')
+                    from dual
                 </foreach>
             </if>
         </where>
@@ -357,11 +358,10 @@
         delete from PBC_REPORT_HIS
         where 1 =1
         <if test="registList !=null and registList.size()>0">
-            <foreach collection="registList" item="regist" open=" AND (" close=")" separator=") or (">
-                TERMID = #{regist.termid,jdbcType=VARCHAR}
-                <if test="null!=regist.orgCode and regist.orgCode != ''">
-                    and ORG_CODE = IFNULL(#{regist.orgCode,jdbcType=VARCHAR},'')
-                </if>
+            <foreach collection="registList" item="regist" open="and (TERMID,REPORTTYPE,ifnull(PBC_ACCOUNT_ID,'')) IN (" separator="UNION all"  close=")">
+                select #{regist.termid,jdbcType=VARCHAR},
+                #{regist.reporttype,jdbcType=VARCHAR},ifnull(#{regist.pbcAccountId,jdbcType=VARCHAR},'')
+                from dual
             </foreach>
         </if>
         and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
@@ -373,16 +373,15 @@
         from PBC_REPORT_HIS
         where 1 =1
         <if test="registList !=null and registList.size()>0">
-            <foreach collection="registList" item="regist" open=" AND(" close=")" separator=") or (">
-                TERMID = #{regist.termid,jdbcType=VARCHAR}
-                <if test="null!=regist.orgCode and regist.orgCode != ''">
-                    and ORG_CODE = IFNULL(#{regist.orgCode,jdbcType=VARCHAR},'')
-                </if>
+            <foreach collection="registList" item="regist" open="and (TERMID,REPORTTYPE,ifnull(PBC_ACCOUNT_ID,'')) IN (" separator="UNION all"  close=")">
+                select #{regist.termid,jdbcType=VARCHAR},
+                #{regist.reporttype,jdbcType=VARCHAR},ifnull(#{regist.pbcAccountId,jdbcType=VARCHAR},'')
+                from dual
             </foreach>
         </if>
         and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
-        )as t
-        where 1 = 1 limit 1
+        ) tmp
+        where ranknum = 1
         )
     </delete>
     <delete id="deleteBatchSubFromHisByUpdateTime" parameterType="java.util.List">
@@ -391,13 +390,19 @@
         select  ISSUE_PARTY_ID
         from (
         select ISSUE_PARTY_ID ,
-        rank() over (partition by ISSUE_PARTY_ID order by ifnull(update_time,create_time) desc) ranknum
-        from PBC_REPORT
+        if
+        (@ISSUE_PARTY_ID = ISSUE_PARTY_ID, @rank := @rank + 1,@rank :=1) as ranknum,
+        (@ISSUE_PARTY_ID := ISSUE_PARTY_ID)
+        from PBC_REPORT,
+        (select @rank := 0, @ISSUE_PARTY_ID := null) b
         where
         ISSUE_PARTY_ID in
         <foreach collection="list" open="(" close=")" separator="," item="item">
             #{item.issuePartyId,jdbcType=CHAR}
         </foreach>
+        order by
+        ISSUE_PARTY_ID,
+        ifnull(update_time,create_time) desc
         )
         where 1 = 1 limit 1
         )
@@ -539,13 +544,12 @@
             </if>
             and rep.reporttype = 'ONEPRD_ASSET_DEBT'<!-- 只查询资产负债信息 -->
         </where>
-        ) as tt
+        ) tmp
         <!-- ORDER BY STATUS_DATE -->
         <!-- 查询结果默认按照报送截止日升序,数据更新时间降序 add by gaojian 2019-06-25 begin -->
         ORDER BY CHBSUBMITDEADLINE ASC, UPDATETIME DESC
         <!-- 查询结果默认按照报送截止日升序,数据更新时间降序 add by gaojian 2019-06-25 end -->
     </select>
-
 
     <select id="selectRegList" resultMap="BaseResultMap"
             parameterType="java.util.Map">
@@ -570,27 +574,27 @@
         </if>
     </select>
     <insert id="insertOnePrd" parameterType="com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport" >
-    insert into PBC_REPORT (REPORTUUID, TERMID, REPORTTYPE,
-      STARTDATE, ENDDATE, ISSUE_PARTY_ID,
-      ISSUE_PARTY_NAME, REPORTFREQU, REPORT_ORG_NAME,
-      SOCIAL_CREDIT_CODE, FIN_INSTITUTION_CODE, PROD_VARIETY,
-      PERSON_LIABLE, CONTACT, REPORT_DATE,
-      SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
-      SUBMIT_FEEDBACK_STATUS, STATUS, SEND_STATUS,
-      STATUS_DATE, CREATE_USER, CREATE_TIME,
-      UPDATE_USER, UPDATE_TIME, ORG_CODE,
-      DEPT_CODE, CREATE_DEPT,PBC_ACCOUNT_ID)
-    values (#{reportuuid,jdbcType=CHAR}, #{termid,jdbcType=VARCHAR}, #{reporttype,jdbcType=VARCHAR},
-      #{startdate,jdbcType=TIMESTAMP}, #{enddate,jdbcType=TIMESTAMP}, #{issuePartyId,jdbcType=VARCHAR},
-      #{issuePartyName,jdbcType=VARCHAR}, #{reportfrequ,jdbcType=VARCHAR}, #{reportOrgName,jdbcType=VARCHAR},
-      #{socialCreditCode,jdbcType=VARCHAR}, #{finInstitutionCode,jdbcType=VARCHAR}, #{prodVariety,jdbcType=VARCHAR},
-      #{personLiable,jdbcType=VARCHAR}, #{contact,jdbcType=VARCHAR}, #{reportDate,jdbcType=TIMESTAMP},
-      #{submitTime,jdbcType=TIMESTAMP}, #{chbSubmitDeadline,jdbcType=TIMESTAMP}, #{submitDeadline,jdbcType=TIMESTAMP},
-      #{submitFeedbackStatus,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{sendStatus,jdbcType=VARCHAR},
-      NOW(), #{createUser,jdbcType=VARCHAR}, NOW(),
-      #{updateUser,jdbcType=VARCHAR}, NOW(), #{orgCode,jdbcType=VARCHAR},
-      #{deptCode,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{pbcAccountId,jdbcType=VARCHAR})
-  </insert>
+        insert into PBC_REPORT (REPORTUUID, TERMID, REPORTTYPE,
+                                STARTDATE, ENDDATE, ISSUE_PARTY_ID,
+                                ISSUE_PARTY_NAME, REPORTFREQU, REPORT_ORG_NAME,
+                                SOCIAL_CREDIT_CODE, FIN_INSTITUTION_CODE, PROD_VARIETY,
+                                PERSON_LIABLE, CONTACT, REPORT_DATE,
+                                SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+                                SUBMIT_FEEDBACK_STATUS, STATUS, SEND_STATUS,
+                                STATUS_DATE, CREATE_USER, CREATE_TIME,
+                                UPDATE_USER, UPDATE_TIME, ORG_CODE,
+                                DEPT_CODE, CREATE_DEPT,PBC_ACCOUNT_ID)
+        values (#{reportuuid,jdbcType=CHAR}, #{termid,jdbcType=VARCHAR}, #{reporttype,jdbcType=VARCHAR},
+                #{startdate,jdbcType=TIMESTAMP}, #{enddate,jdbcType=TIMESTAMP}, #{issuePartyId,jdbcType=VARCHAR},
+                #{issuePartyName,jdbcType=VARCHAR}, #{reportfrequ,jdbcType=VARCHAR}, #{reportOrgName,jdbcType=VARCHAR},
+                #{socialCreditCode,jdbcType=VARCHAR}, #{finInstitutionCode,jdbcType=VARCHAR}, #{prodVariety,jdbcType=VARCHAR},
+                #{personLiable,jdbcType=VARCHAR}, #{contact,jdbcType=VARCHAR}, #{reportDate,jdbcType=TIMESTAMP},
+                #{submitTime,jdbcType=TIMESTAMP}, #{chbSubmitDeadline,jdbcType=TIMESTAMP}, #{submitDeadline,jdbcType=TIMESTAMP},
+                #{submitFeedbackStatus,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{sendStatus,jdbcType=VARCHAR},
+                NOW(), #{createUser,jdbcType=VARCHAR}, NOW(),
+                #{updateUser,jdbcType=VARCHAR}, NOW(), #{orgCode,jdbcType=VARCHAR},
+                #{deptCode,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{pbcAccountId,jdbcType=VARCHAR})
+    </insert>
 
 
     <update id="updateDoMannultSendZipDatFile" parameterType="java.util.Map">
@@ -683,8 +687,11 @@
             <!-- 手工处理修改数据日期为数据库时间 add by gaojian 2019-06-25 end -->
         </set>
         <where>
-            <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
+            <!--<foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
                 sub.REPORTUUID = #{regist.reportuuid,jdbcType=CHAR}
+            </foreach>-->
+            <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
+                sub.TERMID = #{regist.termid,jdbcType=CHAR}
             </foreach>
         </where>
     </update>
@@ -744,29 +751,31 @@
         STATUS_DATE, CREATE_USER, CREATE_TIME,
         UPDATE_USER, UPDATE_TIME, ORG_CODE,
         DEPT_CODE, CREATE_DEPT,PBC_ACCOUNT_ID,
-        rank() over (partition by TERMID, REPORTTYPE order by ifnull(update_time,create_time) desc) ranknum
-        from PBC_REPORT_HIS  his
+        rank() over (partition by TERMID, REPORTTYPE order by nvl(update_time,create_time) desc) ranknum
+        from PBC_REPORT_HIS his
         <where>
             <if test="registList !=null and registList.size()>0">
-                <foreach collection="registList" item="regist" open="(TERMID,REPORTTYPE,IFNULL(PBC_ACCOUNT_ID,'')) IN (" separator="UNION all"  close=")">
-                    select #{regist.termid,jdbcType=VARCHAR},
-                    #{regist.reporttype,jdbcType=VARCHAR},IFNULL(#{regist.pbcAccountId,jdbcType=VARCHAR},'')
-                    from dual
+                <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
+                    TERMID = #{regist.termid,jdbcType=VARCHAR}
+                    <if test="null!=regist.orgCode and regist.orgCode != ''">
+                        and ORG_CODE = IFNULL(#{regist.orgCode,jdbcType=VARCHAR},'')
+                    </if>
                 </foreach>
             </if>
         </where>
-        )as t
-        where 1 = 1 limit 1
+        )
+        where ranknum = 1
     </insert>
 
     <delete id="deleteLastSubmitHisForOnePrd" parameterType="java.util.Map">
         delete from PBC_REPORT_HIS
         where 1 =1
         <if test="registList !=null and registList.size()>0">
-            <foreach collection="registList" item="regist" open="and (TERMID,REPORTTYPE,IFNULL(PBC_ACCOUNT_ID,'')) IN (" separator="UNION all"  close=")">
-                select #{regist.termid,jdbcType=VARCHAR},
-                #{regist.reporttype,jdbcType=VARCHAR},IFNULL(#{regist.pbcAccountId,jdbcType=VARCHAR},'')
-                from dual
+            <foreach collection="registList" item="regist" open=" AND (" close=")" separator=") or (">
+                TERMID = #{regist.termid,jdbcType=VARCHAR}
+                <if test="null!=regist.orgCode and regist.orgCode != ''">
+                    and ORG_CODE = ifnull(#{regist.orgCode,jdbcType=VARCHAR},'')
+                </if>
             </foreach>
         </if>
         and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
@@ -778,15 +787,409 @@
         from PBC_REPORT_HIS
         where 1 =1
         <if test="registList !=null and registList.size()>0">
-            <foreach collection="registList" item="regist" open="and (TERMID,REPORTTYPE,IFNULL(PBC_ACCOUNT_ID,'')) IN (" separator="UNION all"  close=")">
-                select #{regist.termid,jdbcType=VARCHAR},
-                #{regist.reporttype,jdbcType=VARCHAR},IFNULL(#{regist.pbcAccountId,jdbcType=VARCHAR},'')
-                from dual
+            <foreach collection="registList" item="regist" open=" AND(" close=")" separator=") or (">
+                TERMID = #{regist.termid,jdbcType=VARCHAR}
+                <if test="null!=regist.orgCode and regist.orgCode != ''">
+                    and ORG_CODE = ifnull(#{regist.orgCode,jdbcType=VARCHAR},'')
+                </if>
             </foreach>
         </if>
         and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
-        )as t
-        where 1 = 1 limit 1
+        )
+        where ranknum = 1
         )
     </delete>
+
+    <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport" >
+        insert into PBC_REPORT
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="reportuuid != null" >
+                REPORTUUID,
+            </if>
+            <if test="termid != null" >
+                TERMID,
+            </if>
+            <if test="reporttype != null" >
+                REPORTTYPE,
+            </if>
+            <if test="startdate != null" >
+                STARTDATE,
+            </if>
+            <if test="enddate != null" >
+                ENDDATE,
+            </if>
+            <if test="issuePartyId != null" >
+                ISSUE_PARTY_ID,
+            </if>
+            <if test="issuePartyName != null" >
+                ISSUE_PARTY_NAME,
+            </if>
+            <if test="reportfrequ != null" >
+                REPORTFREQU,
+            </if>
+            <if test="reportOrgName != null" >
+                REPORT_ORG_NAME,
+            </if>
+            <if test="socialCreditCode != null" >
+                SOCIAL_CREDIT_CODE,
+            </if>
+            <if test="finInstitutionCode != null" >
+                FIN_INSTITUTION_CODE,
+            </if>
+            <if test="prodVariety != null" >
+                PROD_VARIETY,
+            </if>
+            <if test="personLiable != null" >
+                PERSON_LIABLE,
+            </if>
+            <if test="contact != null" >
+                CONTACT,
+            </if>
+            <if test="reportDate != null" >
+                REPORT_DATE,
+            </if>
+            <if test="submitTime != null" >
+                SUBMIT_TIME,
+            </if>
+            <if test="chbSubmitDeadline != null" >
+                CHB_SUBMIT_DEADLINE,
+            </if>
+            <if test="submitDeadline != null" >
+                SUBMIT_DEADLINE,
+            </if>
+            <if test="submitFeedbackStatus != null" >
+                SUBMIT_FEEDBACK_STATUS,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="sendStatus != null" >
+                SEND_STATUS,
+            </if>
+            <if test="statusDate != null" >
+                STATUS_DATE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE,
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="pbcAccountId != null" >
+                PBC_ACCOUNT_ID,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="reportuuid != null" >
+                #{reportuuid,jdbcType=CHAR},
+            </if>
+            <if test="termid != null" >
+                #{termid,jdbcType=VARCHAR},
+            </if>
+            <if test="reporttype != null" >
+                #{reporttype,jdbcType=VARCHAR},
+            </if>
+            <if test="startdate != null" >
+                #{startdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="enddate != null" >
+                #{enddate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="issuePartyId != null" >
+                #{issuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="issuePartyName != null" >
+                #{issuePartyName,jdbcType=VARCHAR},
+            </if>
+            <if test="reportfrequ != null" >
+                #{reportfrequ,jdbcType=VARCHAR},
+            </if>
+            <if test="reportOrgName != null" >
+                #{reportOrgName,jdbcType=VARCHAR},
+            </if>
+            <if test="socialCreditCode != null" >
+                #{socialCreditCode,jdbcType=VARCHAR},
+            </if>
+            <if test="finInstitutionCode != null" >
+                #{finInstitutionCode,jdbcType=VARCHAR},
+            </if>
+            <if test="prodVariety != null" >
+                #{prodVariety,jdbcType=VARCHAR},
+            </if>
+            <if test="personLiable != null" >
+                #{personLiable,jdbcType=VARCHAR},
+            </if>
+            <if test="contact != null" >
+                #{contact,jdbcType=VARCHAR},
+            </if>
+            <if test="reportDate != null" >
+                #{reportDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitTime != null" >
+                #{submitTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="chbSubmitDeadline != null" >
+                #{chbSubmitDeadline,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitDeadline != null" >
+                #{submitDeadline,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitFeedbackStatus != null" >
+                #{submitFeedbackStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="sendStatus != null" >
+                #{sendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="statusDate != null" >
+                #{statusDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orgCode != null" >
+                #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="pbcAccountId != null" >
+                #{pbcAccountId,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport" >
+        update PBC_REPORT
+        <set >
+            <if test="termid != null" >
+                TERMID = #{termid,jdbcType=VARCHAR},
+            </if>
+            <if test="reporttype != null" >
+                REPORTTYPE = #{reporttype,jdbcType=VARCHAR},
+            </if>
+            <if test="startdate != null" >
+                STARTDATE = #{startdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="enddate != null" >
+                ENDDATE = #{enddate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="issuePartyId != null" >
+                ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="issuePartyName != null" >
+                ISSUE_PARTY_NAME = #{issuePartyName,jdbcType=VARCHAR},
+            </if>
+            <if test="reportfrequ != null" >
+                REPORTFREQU = #{reportfrequ,jdbcType=VARCHAR},
+            </if>
+            <if test="reportOrgName != null" >
+                REPORT_ORG_NAME = #{reportOrgName,jdbcType=VARCHAR},
+            </if>
+            <if test="socialCreditCode != null" >
+                SOCIAL_CREDIT_CODE = #{socialCreditCode,jdbcType=VARCHAR},
+            </if>
+            <if test="finInstitutionCode != null" >
+                FIN_INSTITUTION_CODE = #{finInstitutionCode,jdbcType=VARCHAR},
+            </if>
+            <if test="prodVariety != null" >
+                PROD_VARIETY = #{prodVariety,jdbcType=VARCHAR},
+            </if>
+            <if test="personLiable != null" >
+                PERSON_LIABLE = #{personLiable,jdbcType=VARCHAR},
+            </if>
+            <if test="contact != null" >
+                CONTACT = #{contact,jdbcType=VARCHAR},
+            </if>
+            <if test="reportDate != null" >
+                REPORT_DATE = #{reportDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitTime != null" >
+                SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="chbSubmitDeadline != null" >
+                CHB_SUBMIT_DEADLINE = #{chbSubmitDeadline,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitDeadline != null" >
+                SUBMIT_DEADLINE = #{submitDeadline,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitFeedbackStatus != null" >
+                SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="sendStatus != null" >
+                SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="statusDate != null" >
+                STATUS_DATE = #{statusDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER = #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="pbcAccountId != null" >
+                PBC_ACCOUNT_ID=#{pbcAccountId,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where REPORTUUID = #{reportuuid,jdbcType=CHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport" >
+        update PBC_REPORT
+        set TERMID = #{termid,jdbcType=VARCHAR},
+            REPORTTYPE = #{reporttype,jdbcType=VARCHAR},
+            STARTDATE = #{startdate,jdbcType=TIMESTAMP},
+            ENDDATE = #{enddate,jdbcType=TIMESTAMP},
+            ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
+            ISSUE_PARTY_NAME = #{issuePartyName,jdbcType=VARCHAR},
+            REPORTFREQU = #{reportfrequ,jdbcType=VARCHAR},
+            REPORT_ORG_NAME = #{reportOrgName,jdbcType=VARCHAR},
+            SOCIAL_CREDIT_CODE = #{socialCreditCode,jdbcType=VARCHAR},
+            FIN_INSTITUTION_CODE = #{finInstitutionCode,jdbcType=VARCHAR},
+            PROD_VARIETY = #{prodVariety,jdbcType=VARCHAR},
+            PERSON_LIABLE = #{personLiable,jdbcType=VARCHAR},
+            CONTACT = #{contact,jdbcType=VARCHAR},
+            REPORT_DATE = #{reportDate,jdbcType=TIMESTAMP},
+            SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
+            CHB_SUBMIT_DEADLINE = #{chbSubmitDeadline,jdbcType=TIMESTAMP},
+            SUBMIT_DEADLINE = #{submitDeadline,jdbcType=TIMESTAMP},
+            SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+            STATUS = #{status,jdbcType=VARCHAR},
+            SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+            STATUS_DATE = #{statusDate,jdbcType=TIMESTAMP},
+            CREATE_USER = #{createUser,jdbcType=VARCHAR},
+            CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+            PBC_ACCOUNT_ID=#{pbcAccountId,jdbcType=VARCHAR}
+        where REPORTUUID = #{reportuuid,jdbcType=CHAR}
+    </update>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from PBC_REPORT
+        where REPORTUUID = #{reportuuid,jdbcType=CHAR}
+    </delete>
+
+    <delete id="deleteByTermId" parameterType="java.util.Map">
+        delete from PBC_REPORT
+        where 1 =1
+        <if test="termid != null and termid != ''">
+            and termid = #{termid,jdbcType=VARCHAR}
+        </if>
+        <if test="reportType != null and reportType != ''">
+            and REPORTTYPE = #{reportType,jdbcType=VARCHAR}
+        </if>
+        <if test="reportFrequ != null and reportFrequ != ''">
+            and REPORTFREQU = #{reportFrequ,jdbcType=VARCHAR}
+        </if>
+    </delete>
+
+    <delete id="deleteBatchBySendStatus" parameterType="java.util.List">
+        delete from PBC_REPORT
+        where
+        REPORTUUID in <foreach collection="list" item="item" open="(" close=")" separator=",">
+        #{item.reportuuid,jdbcType=CHAR}
+    </foreach>
+        and SEND_STATUS in ('02','03')
+    </delete>
+
+    <select id="findProductByName" resultType="java.lang.String">
+        select
+            BOOKSET_ID prodId,
+            BOOKSET_NAME prodName
+        from BOK_BOOKSET
+    </select>
+
+    <select id="selectTermIdList" resultType="com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport">
+    select
+    TERMID,
+    REPORTTYPE,
+    nvl(ORG_CODE,'All') ORG_CODE,
+    REPORTUUID,
+    ISSUE_PARTY_ID,
+    issue_party_name    ,
+    reportfrequ         ,
+    report_org_name     ,
+    social_credit_code  ,
+    fin_institution_code,
+    prod_variety        ,
+    person_liable       ,
+    contact             ,
+    report_date,
+    ENDDATE
+    from PBC_REPORT
+    where reporttype != 'ONEPRD_ASSET_DEBT'
+    <foreach collection="list" item="item" open="and SEND_STATUS in (" separator="," close=")">
+        #{item,jdbcType=VARCHAR}
+    </foreach>
+    <if test="orgCode != null">
+        and ORG_CODE = #{orgCode,jdbcType=VARCHAR}
+    </if>
+    group by
+    TERMID,
+    REPORTTYPE,
+    ORG_CODE,
+    REPORTUUID,
+    ISSUE_PARTY_ID,
+    issue_party_name    ,
+    reportfrequ         ,
+    report_org_name     ,
+    social_credit_code  ,
+    fin_institution_code,
+    prod_variety        ,
+    person_liable       ,
+    contact             ,
+    report_date,
+    ENDDATE
+    </select>
 </mapper>

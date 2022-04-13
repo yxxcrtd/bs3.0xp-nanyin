@@ -941,6 +941,26 @@ $(function() {
 					});
 				});
 
+	/**
+	 * 导入按钮
+	 */
+	$('#SvrOperationalInfo001_btn_import').click(function() {
+		Joyin.uploadFile(function(fileName) {
+			Joyin.ajax(basePath +"common/infomanagement/SvrOperationalInfo001/checkConfirmMsgForImportData", {
+				fileName : fileName
+			},function(result){
+				if(!result || !($.isArray(result) && result.length > 0)){
+					Joyin.ajax(
+						basePath + 'chb/boksubject/boksubject001/importFileSave',
+						{fileName : fileName},function (data1) {
+							layui.layer.closeAll()
+							table.reload();
+						});
+				}
+			});
+		});
+	});
+
 	// 删除按钮点击事件
 	$('#SvrOperationalInfo001_btn_delete').click(
 		function() {

@@ -28,14 +28,24 @@ public class Column implements Serializable {
      * 字符串最大长度
      */
     private String CHARACTER_MAXIMUM_LENGTH;
+    private String NUMERIC_PRECISION;
+    private String NUMERIC_SCALE;
     /**
      * 索引
      */
     private String COLUMN_TYPE;
     /**
+     * 注解
+     */
+    private String COLUMN_COMMENT;
+    /**
      * 列权限
      */
     private String PRIVILEGES;
+    /**
+     * 索引类型
+     */
+    private String COLUMN_KEY;
 
     public String getCOLUMN_NAME() {
         return COLUMN_NAME;
@@ -85,11 +95,43 @@ public class Column implements Serializable {
         this.COLUMN_TYPE = COLUMN_TYPE;
     }
 
+    public String getCOLUMN_COMMENT() {
+        return COLUMN_COMMENT;
+    }
+
+    public void setCOLUMN_COMMENT(String COLUMN_COMMENT) {
+        this.COLUMN_COMMENT = COLUMN_COMMENT;
+    }
+
     public String getPRIVILEGES() {
         return PRIVILEGES;
     }
 
     public void setPRIVILEGES(String PRIVILEGES) {
         this.PRIVILEGES = PRIVILEGES;
+    }
+
+    public String getNUMERIC_PRECISION() {
+        return NUMERIC_PRECISION;
+    }
+
+    public void setNUMERIC_PRECISION(String NUMERIC_PRECISION) {
+        this.NUMERIC_PRECISION = NUMERIC_PRECISION;
+    }
+
+    public String getNUMERIC_SCALE() {
+        return NUMERIC_SCALE;
+    }
+
+    public void setNUMERIC_SCALE(String NUMERIC_SCALE) {
+        this.NUMERIC_SCALE = NUMERIC_SCALE;
+    }
+
+    public String getCOLUMN_KEY() {
+        return COLUMN_KEY;
+    }
+
+    public void setCOLUMN_KEY(String COLUMN_KEY) {
+        this.COLUMN_KEY = COLUMN_KEY;
     }
 }
