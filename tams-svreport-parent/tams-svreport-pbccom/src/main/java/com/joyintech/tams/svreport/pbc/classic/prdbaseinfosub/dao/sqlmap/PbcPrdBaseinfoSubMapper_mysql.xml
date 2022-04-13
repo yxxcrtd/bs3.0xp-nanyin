@@ -763,8 +763,8 @@
 		select info.ISSUE_PARTY_ID,
 		'1' PBC_PROD_TYPE,
 		case
-		when lengthb(PROD_NAME)>180
-		then substrb(PROD_NAME,0,180)
+		when length(PROD_NAME)>180
+		then substr(PROD_NAME,0,180)
 		else PROD_NAME
 		end PROD_NAME,
 		PROD_BRAND,
@@ -816,8 +816,8 @@
 		IN_DEP_CODE,
 		OUT_DEP_CTRY,
 		case
-		when lengthb(OUT_DEP_NAME)>120
-		then substrb(OUT_DEP_NAME,0,120)
+		when length(OUT_DEP_NAME)>120
+		then substr(OUT_DEP_NAME,0,120)
 		else OUT_DEP_NAME
 		end OUT_DEP_NAME,
 		VDATE,

@@ -1003,11 +1003,13 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
         dataList.forEach(action -> {
             Map<String, String> temp = new HashMap<>();
             for (int i = 0; i < fieldName.length; i++ ) {
-                String cell = action.get(i).trim();
+                // modify by NullPoint yangxianjiu 20220413 start
+                String cell = action.get(i) == null ? null : action.get(i).trim();
                 String name=fieldName[i];
                 if(dictMap.containsKey(name)){
                     //是枚举值
-                    if (cell.contains(StringUtil.SPACE)) {
+                    if (cell != null && cell.contains(StringUtil.SPACE)) {
+                        // modify by NullPoint yangxianjiu 20220413 end
                         String[] value = StringUtil.split(cell, StringUtil.SPACE);
                         cell = value[0];
                     }

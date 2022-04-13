@@ -751,7 +751,7 @@
         STATUS_DATE, CREATE_USER, CREATE_TIME,
         UPDATE_USER, UPDATE_TIME, ORG_CODE,
         DEPT_CODE, CREATE_DEPT,PBC_ACCOUNT_ID,
-        rank() over (partition by TERMID, REPORTTYPE order by nvl(update_time,create_time) desc) ranknum
+        rank() over (partition by TERMID, REPORTTYPE order by ifnull(update_time,create_time) desc) ranknum
         from PBC_REPORT_HIS his
         <where>
             <if test="registList !=null and registList.size()>0">
@@ -1154,7 +1154,7 @@
     select
     TERMID,
     REPORTTYPE,
-    nvl(ORG_CODE,'All') ORG_CODE,
+    ifnull(ORG_CODE,'All') ORG_CODE,
     REPORTUUID,
     ISSUE_PARTY_ID,
     issue_party_name    ,
