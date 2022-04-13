@@ -11,6 +11,7 @@ import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dto.ChbBokSubjectDto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.service.ChbBokSubjectService;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
@@ -184,7 +185,7 @@ public class ChbBokSubject001Controller extends BaseController {
         params.setPageId("ChbBokSubject002");
         params.setElementId(dto.getElementId());
         params.setBusinessCode(item -> item.getSubjectNo());
-        params.setBusinessType("SYS");
+        params.setBusinessType(DictCodeList.共通业务类型_科目定义信息.getValue());
         // 设置流程业务说明, entity即传入的dto
         params.setComment(entity -> SpringContextUtil.getTextValue("ChbBokSubject.subjectNo") + "(" + entity.getSubjectNo() + ")" + "-"
                 + SpringContextUtil.getTextValue("ChbBokSubject.subjectName") + "("
@@ -291,7 +292,6 @@ public class ChbBokSubject001Controller extends BaseController {
         else {
             list = bokSubjectService.selectAllList(params);
         }
-        list.forEach(item->item.setUpdateTimeStr(DateUtil.format(item.getUpdateTime(),"yyyy-MM-dd")));
         File outFile = bokSubjectService.makeFile(
                 "/com/joyintech/tams/svreport/chb/businessdatamaintain/chbboksubject/conf/export_conf.xml",
                 list);

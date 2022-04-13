@@ -28,12 +28,12 @@
 		    ,{field:'subjectName', width:180, title: 'ChbBokSubject.subjectName'}
 		    ,{field:'fsubjectId', width:120, title: 'ChbBokSubject.fsubjectId'}
 		    ,{field:'subjectTypeStr', width:120, sortField:"subjectType", title: 'ChbBokSubject.subjectType'}
-		    ,{field:'subjectLevel', width:100, title: 'ChbBokSubject.subjectLevel'}
+		    ,{field:'subjectLevelStr', width:100, title: 'ChbBokSubject.subjectLevel'}
 		    ,{field:'dataSourceStr', width:100, title: 'ChbBokSubject.dataSource'}
 		    ,{field:'statusStr', width:100, title: 'ChbBokSubject.status'}
 		    ,{field:'remark', width:150, title: 'ChbBokSubject.remark'}
 		    ,{field:'des', width:150, title: 'ChbBokSubject.des'}
-		    ,{field:'updateTime', width:100, title: 'ChbBokSubject.updateTime',type:'date'}
+		    ,{field:'updateTimeStr', width:100, title: 'ChbBokSubject.updateTime'}
 		    ,{field:'updateUser', width:100, title: 'ChbBokSubject.updateUser'}
 		    ,{field:'action', title: 'SysCommon.operation' , type:'action',buttons: ['edit', 'delt'] , width:100}
 		]
@@ -128,46 +128,44 @@
       /**
        * 导入按钮
        */
-      // $('#ChbBokSubject001_btn_import').click(function() {
-      //     Joyin.uploadFile(function(fileName) {
-      //         Joyin.ajax(basePath +"chb/businessdatamaintain/chbboksubject/chbboksubject001/checkImportFile", {
-      //             fileName : fileName,
-      //             tableName : "bok_subject"
-      //         },function(result){
-      //             Joyin.confirm(result,function (){
-      //                 if(!result || !($.isArray(result) && result.length > 0)){
-      //                     Joyin.ajax(
-      //                         basePath + 'chb/businessdatamaintain/chbboksubject/chbboksubject001/importFileSave',
-      //                         {fileName : fileName},function (data1) {
-      //                             layui.layer.closeAll()
-      //                             table.reload();
-      //                         });
-      //                 }
-      //             });
-      //
-      //         });
-      //     });
-      // });
+      $('#ChbBokSubject001_btn_import').click(function() {
+          Joyin.uploadFile(function(fileName) {
+              Joyin.ajax(basePath +"chb/businessdatamaintain/chbboksubject/chbboksubject001/checkImportFile", {
+                  fileName : fileName,
+                  tableName : "bok_subject"
+              },function(result){
+                      if(!result || !($.isArray(result) && result.length > 0)){
+                          Joyin.ajax(
+                              basePath + 'chb/businessdatamaintain/chbboksubject/chbboksubject001/importFileSave',
+                              {fileName : fileName},function (data1) {
+                                  layui.layer.closeAll()
+                                  table.reload();
+                              });
+                      }
+
+              });
+          });
+      });
 
         // 导入按钮
-        $('#ChbBokSubject001_btn_import').click(function() {
-            Joyin.confirm("请确认是否要导入数据？", function() {
-                var options = {};
-                options.pageId = "ChbBokSubject002";
-                options.exts = 'xls|xlsx';
-                Joyin.uploadFile(options,function(fileName) {
-                    Joyin.ajax(basePath + 'chb/businessdatamaintain/chbboksubject/chbboksubject001/checkConfirmMsgForImportData', {fileName: fileName,tableName:'bok_subject'}, function() {
-                        Joyin.ajax(basePath + 'chb/businessdatamaintain/chbboksubject/chbboksubject001/checkDuplicateData',{fileName: fileName},function() {
-                            Joyin.ajax(basePath + 'chb/businessdatamaintain/chbboksubject/chbboksubject001/importFileSave', {fileName: fileName},function () {
-                                table.reload();
-                            });
-                        })
-                    });
-                },function() {
-                    table.reload();
-                });
-            });
-        });
+        // $('#ChbBokSubject001_btn_import').click(function() {
+        //     Joyin.confirm("请确认是否要导入数据？", function() {
+        //         var options = {};
+        //         options.pageId = "ChbBokSubject002";
+        //         options.exts = 'xls|xlsx';
+        //         Joyin.uploadFile(options,function(fileName) {
+        //             Joyin.ajax(basePath + 'chb/businessdatamaintain/chbboksubject/chbboksubject001/checkConfirmMsgForImportData', {fileName: fileName,tableName:'bok_subject'}, function() {
+        //                 Joyin.ajax(basePath + 'chb/businessdatamaintain/chbboksubject/chbboksubject001/checkDuplicateData',{fileName: fileName},function() {
+        //                     Joyin.ajax(basePath + 'chb/businessdatamaintain/chbboksubject/chbboksubject001/importFileSave', {fileName: fileName},function () {
+        //                         table.reload();
+        //                     });
+        //                 })
+        //             });
+        //         },function() {
+        //             table.reload();
+        //         });
+        //     });
+        // });
 
     });
 }());

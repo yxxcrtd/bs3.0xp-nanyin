@@ -103,9 +103,9 @@
                         <label class="layui-form-label form-lable"
                                data-th-text="#{ChbMstBondCreditRating001.gradeDate}">评级日期</label>
                         <div class="layui-input-inline input-inline">
-                            <input type="text" id="gradeDateStr" name="gradeDateStr"
+                            <input type="text" id="gradeDate" name="gradeDate"
                                    class="layui-input form-input input-dateSelect"
-                                   data-th-value="${entity?.gradeDateStr}" >
+                                   data-th-value='${#dates.format(entity?.gradeDate,"yyyy-MM-dd")}'>
                         </div>
                     </div>
                 </div>

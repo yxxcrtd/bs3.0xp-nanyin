@@ -65,58 +65,24 @@ public class ChbMstBondCreditRatingDto extends MstBondCreditRating implements Pr
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 债券代码（市场代码）
-     */
-    @NotEmpty(fieldName = "ChbMstBondCreditRating001.oCode",groups = {ValidateGroupEdit.class})
-    @PrimaryKey(PrimaryKey.Field.PK_1)
-    public String getoCode() {
-        return super.getoCode();
-    }
-
-
-    /**
-     * 评级机构
-     */
-    @NotEmpty(fieldName = "ChbMstBondCreditRating001.gradeOrgId",groups = {ValidateGroupEdit.class})
-    public String getGradeOrgId() {
-        return super.getGradeOrgId();
-    }
-
-
-    /**
-     * 评级日期
-     */
-    @NotEmpty(fieldName = "ChbMstBondCreditRating001.gradeDate",groups = {ValidateGroupEdit.class})
+    @PrimaryKey(PrimaryKey.Field.PK_3)
     public String getGradeDateStr() {
         return DateUtil.format(super.getGradeDate());
     }
 
-    public void setGradeDateStr(String gradeDateStr){
-        try {
-            super.setGradeDate(DateUtil.parseDate(gradeDateStr,"yyyy-MM-dd"));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+
+    @PrimaryKey(PrimaryKey.Field.PK_1)
+    public String getoCode(){
+        return super.getoCode();
+    }
+    @PrimaryKey(PrimaryKey.Field.PK_2)
+    public String getGradeOrgId(){
+        return super.getGradeOrgId();
     }
 
-
-
-    /**
-     * 评级类型
-     */
-    @NotEmpty(fieldName = "ChbMstBondCreditRating001.shortLongTerm",groups = {ValidateGroupEdit.class})
-    public String getShortLongTerm() {
-        return super.getShortLongTerm();
-    }
-
-
-    /**
-     * 评级结果
-     */
-    @NotEmpty(fieldName = "ChbMstBondCreditRating001.gradeResult",groups = {ValidateGroupEdit.class})
-    public String getGradeResult() {
-        return super.getGradeResult();
+    @PrimaryKey(PrimaryKey.Field.PK_4)
+    public String getoType(){
+        return super.getoType();
     }
 
     /**
@@ -154,18 +120,6 @@ public class ChbMstBondCreditRatingDto extends MstBondCreditRating implements Pr
         return oName;
     }
 
-
-    /**
-     * 评级对象
-     */
-    @NotEmpty(fieldName = "ChbMstBondCreditRating001.oType",groups = {ValidateGroupEdit.class})
-    @PrimaryKey(PrimaryKey.Field.PK_2)
-    public String getoType() {
-        return super.getoType();
-    }
-
-
-    @NotEmpty(fieldName = "ChbMstBondCreditRating001.source",groups = {ValidateGroupEdit.class})
     public String getSource() {
         return super.getSource();
     }
@@ -234,11 +188,9 @@ public class ChbMstBondCreditRatingDto extends MstBondCreditRating implements Pr
     }
 
 
-
     public String getoTypeStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.评级类型,getoType());
     }
-
 
 
     public String getDes() {

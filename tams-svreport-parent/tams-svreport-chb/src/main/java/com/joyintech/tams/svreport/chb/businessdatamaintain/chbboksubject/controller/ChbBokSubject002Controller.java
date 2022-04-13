@@ -8,6 +8,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dto.ChbBokSubjectDto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.service.ChbBokSubjectService;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
@@ -43,6 +44,7 @@ public class ChbBokSubject002Controller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.维护数据状态);
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         String subjectNo = getParam("subjectNo");
+        String booksetId = getParam("booksetId");
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
             ChbBokSubjectDto dto = bokSubjectService.getBussinessEntityByWorkflowId(
                     workflowId);
@@ -51,7 +53,7 @@ public class ChbBokSubject002Controller extends BaseController {
         }
         else if (WorkFlowUtil.isNotFromToDoList() &&StringUtil.isNotEmpty(subjectNo) ) {
             //通过主键查询数据
-            ChbBokSubjectDto dto = bokSubjectService.selcetByKey(subjectNo);
+            ChbBokSubjectDto dto = bokSubjectService.selcetByKey(subjectNo,booksetId);
             model.addAttribute(GlobalConstant.ENTITY, dto);
         }
         return super.init(model);
@@ -91,8 +93,8 @@ public class ChbBokSubject002Controller extends BaseController {
         WorkFlowParameter<ChbBokSubjectDto> params = new WorkFlowParameter<ChbBokSubjectDto>();
         params.setPageId("ChbBokSubject002");
         params.setElementId("ChbBokSubject002_btn_submit");
-        params.setBusinessCode(item -> item.getSubjectNo());
-        params.setBusinessType("SYS");
+        params.setBusinessCode(item -> item.getSubjectNo()+item.getBooksetId());
+        params.setBusinessType(DictCodeList.共通业务类型_科目定义信息.getValue());
         params.setComment(entity -> this.getMessage("ChbBokSubject.subjectNo") + "("
                 + entity.getSubjectNo() + ")"
                 + this.getMessage("ChbBokSubject.subjectName")

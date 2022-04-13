@@ -5,6 +5,9 @@
 	<insert id="insert" parameterType="com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dto.ChbBokSubjectDto">
 		insert into BOK_SUBJECT
 		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="booksetId !=null and booksetId !=''">
+			BOOKSET_ID,
+			</if>
 			<if test="subjectNo !=null and subjectNo !=''">
 		    SUBJECT_NO,
 		    </if>
@@ -46,6 +49,9 @@
 			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="booksetId !=null and booksetId !=''">
+			#{booksetId},
+			</if>
 			<if test="subjectNo !=null and subjectNo !=''">
 		    #{subjectNo},
 		    </if>
@@ -88,18 +94,15 @@
 		</trim>
 	</insert>
 	<insert id="batchInsert" parameterType="java.util.List">
-		insert into BOK_SUBJECT(SUBJECT_NO,SUBJECT_NAME,FSUBJECT_ID,SUBJECT_TYPE,SUBJECT_LEVEL,DATA_SOURCE,STATUS,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+		insert into BOK_SUBJECT(BOOKSET_ID,SUBJECT_NO,SUBJECT_NAME,FSUBJECT_ID,SUBJECT_TYPE,SUBJECT_LEVEL,DATA_SOURCE,STATUS,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
 		<foreach collection="list" separator="union all" item="bokSubject">
-			(select  #{bokSubject.subjectNo},#{bokSubject.subjectName},#{bokSubject.fsubjectId},#{bokSubject.subjectType},#{bokSubject.subjectLevel},#{bokSubject.dataSource},#{bokSubject.status},#{bokSubject.remark},#{bokSubject.createUser},#{bokSubject.createDept},#{bokSubject.createTime},#{bokSubject.updateUser},#{bokSubject.updateTime}
+			(select #{bokSubject.booksetId},#{bokSubject.subjectNo},#{bokSubject.subjectName},#{bokSubject.fsubjectId},#{bokSubject.subjectType},#{bokSubject.subjectLevel},#{bokSubject.dataSource},#{bokSubject.status},#{bokSubject.remark},#{bokSubject.createUser},#{bokSubject.createDept},#{bokSubject.createTime},#{bokSubject.updateUser},#{bokSubject.updateTime}
 			from dual)
 		</foreach>
 	</insert>
 	<update id="update">
 		update BOK_SUBJECT
 		<trim prefix="set" suffixOverrides=",">
-			<if test="subjectNo !=null and subjectNo !=''">
-				SUBJECT_NO = #{subjectNo},
-			</if>
 			<if test="subjectName !=null and subjectName !=''">
 				SUBJECT_NAME = #{subjectName},
 			</if>
@@ -125,11 +128,19 @@
 				UPDATE_TIME = #{updateTime}
 			</if>
 		</trim>
-		where SUBJECT_NO = #{subjectNo}
+		<where>
+			<if test="subjectNo!=null and subjectNo!=''">
+				SUBJECT_NO = #{subjectNo}
+			</if>
+			<if test="booksetId!=null and booksetId!=''">
+				AND BOOKSET_ID = #{booksetId}
+			</if>
+		</where>
 	</update>
 
 	<select id="selectAll" resultType="com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dto.ChbBokSubjectDto">
-		select 
+		select
+			BS.BOOKSET_ID as booksetId,
 			BS.SUBJECT_NO as subjectNo,
 			BS.SUBJECT_NAME as subjectName,
 			BS.FSUBJECT_ID as fsubjectId,
@@ -240,10 +251,11 @@
 		order by SUBJECT_NAME
 	</select>
     <select id="isExists" resultType="java.lang.Integer">
-		select count(*) from BOK_SUBJECT where SUBJECT_NO = #{subjectNo} and STATUS IN ('A','E')
+		select count(*) from BOK_SUBJECT where SUBJECT_NO = #{subjectNo}
 	</select>
 	<select id="selcetByKey" resultType="com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dto.ChbBokSubjectDto">
 		select
+		    BS.BOOKSET_ID as booksetId,
 			BS.SUBJECT_NO as subjectNo,
 			BS.SUBJECT_NAME as subjectName,
 			BS.FSUBJECT_ID as fsubjectId,
@@ -261,7 +273,14 @@
 			BS.REMARK as remark,
 			BS.DES as des
 		from BOK_SUBJECT BS
-		where SUBJECT_NO = #{subjectNo}
+		<where>
+			<if test="subjectNo!=null and subjectNo!=''">
+				SUBJECT_NO = #{subjectNo}
+			</if>
+			<if test="booksetId!=null and booksetId!=''">
+				AND BOOKSET_ID = #{booksetId}
+			</if>
+		</where>
 	</select>
 
 

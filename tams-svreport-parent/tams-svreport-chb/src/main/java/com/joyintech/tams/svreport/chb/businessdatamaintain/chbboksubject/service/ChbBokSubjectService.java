@@ -139,7 +139,7 @@ public class ChbBokSubjectService extends CommonExportService<ChbBokSubjectDto> 
         else if (OperationType.NEW.equals(type)) {
             entity.setDataSource(DictCodeListExt2.数据来源_新建导入.getValue());
             entity.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
-            entity.setBooksetId(UUID.randomUUID().toString());
+            entity.setBooksetId("00000000000000000002");
             bokSubjectDao.insert(entity);
         }
         else if(OperationType.MODIFY.equals(type)){
@@ -149,8 +149,8 @@ public class ChbBokSubjectService extends CommonExportService<ChbBokSubjectDto> 
     }
 
 
-    public ChbBokSubjectDto selcetByKey(String subjectNo){
-        return bokSubjectDao.selcetByKey(subjectNo);
+    public ChbBokSubjectDto selcetByKey(String subjectNo,String booksetId){
+        return bokSubjectDao.selcetByKey(subjectNo,booksetId);
     }
 
     /**
@@ -168,13 +168,24 @@ public class ChbBokSubjectService extends CommonExportService<ChbBokSubjectDto> 
         // 检查文件名是否为空
         if (StringUtil.isNotEmpty(fileName)) {
             if (fileName.indexOf("科目定义导入") != -1) {
-                List<Map<String, String>> mapList = dataMapAnalysis(fileName);
+                List<List<String>> dataList = dataAnalysis(fileName);
+                if (null != dataList && dataList.size() > 0) {
+                    // 将excel表格中的数据转化为dto
+                    List<ExcelValidDto> checkResult = checkExcelData(dataList);
+//                    if (checkResult.isEmpty()) {
+//                        List<ComBondQuotationInfoDto> equityList = converToBean(dataList);
+//                        // 保存，已存在则更新
+//                        dealAfterCheck(equityList);
+//                    }
+                    return checkResult;
+                }
+                 /* List<Map<String, String>> mapList = dataMapAnalysis(fileName);
                 if (null != mapList && mapList.size() > 0) {
                     List<ExcelValidDto> checkResult = baseCommonCheckService.checkDataDB("import", mapList, tableName, fileName, tableName, tableName, null, null);
                     ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY, "3", "" + "内容为空");
                     checkResult.add(dto);
                     return checkResult;
-                }else{
+                }*/else{
                     List<ExcelValidDto> checkResult = new ArrayList<>();
                     checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
                             "文件为空"));
@@ -430,7 +441,9 @@ public class ChbBokSubjectService extends CommonExportService<ChbBokSubjectDto> 
      */
     public void dealAfterCheck(List<ChbBokSubjectDto> list) {
         list.forEach(item->{
+            item.setBooksetId("00000000000000000002");
             item.setSubjectType("0"+item.getSubjectType().substring(0,1));
+            item.setCreateDept(null==item.getCreateDept()?"":item.getCreateDept());
         });
         bokSubjectDao.batchInsert(list);
     }
@@ -490,4 +503,5 @@ public class ChbBokSubjectService extends CommonExportService<ChbBokSubjectDto> 
 //        bokSubjectDao.checkDuplicateData(mapList);
         return webResult;
     }
+
 }
