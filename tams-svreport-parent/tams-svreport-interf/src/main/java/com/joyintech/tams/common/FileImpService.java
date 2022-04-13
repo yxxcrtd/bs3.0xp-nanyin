@@ -61,6 +61,7 @@ import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -1120,6 +1121,16 @@ public abstract class FileImpService extends InterfService{
                     }
                 }else if ("java.math.BigDecimal".equals(type.getTypeName())) {
                     try {
+                        //如果是利率带%特殊处理
+                        if(StringUtil.isNotEmpty(value)){
+                            int cishu = this.ciShu(value,"%");
+                            if(cishu==1){
+                                value = value.replace("%","");
+                                BigDecimal bd = new BigDecimal(value);
+                                bd.divide(new BigDecimal(100));
+                                value = String.valueOf(bd);
+                            }
+                        }
                         field.set(baseEntity ,(value == null || "".equals(value)) ? null : new BigDecimal(value));
                     } catch ( IllegalAccessException e) {
                         logger.error(e.getMessage(),e);
@@ -1176,6 +1187,23 @@ public abstract class FileImpService extends InterfService{
             rs.add(baseEntity);
         }
         return rs;
+    }
+
+    /**
+     * 判断str1中包含str2的个数
+     * @param str1
+     * @param str2
+     * @return counter
+     */
+    public static int ciShu(String str1,String str2){
+        int counter = 0;
+        for(int i = 0;i < str1.length() ;i++) {
+            int index = str1.indexOf(str2, i);
+            if (i == index) {
+                counter++;
+            }
+        }
+        return counter;
     }
 
 }
