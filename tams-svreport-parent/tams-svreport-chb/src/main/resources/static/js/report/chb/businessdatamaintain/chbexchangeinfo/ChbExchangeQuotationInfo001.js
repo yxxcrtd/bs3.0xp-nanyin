@@ -9,6 +9,7 @@ $(function() {
         }
         return {
         	exchargeCode: exchargeCode,
+            status: $('#status').val(),
         	tradeDateBegin: $('#tradeDate').startDate(),
         	tradeDateEnd: $('#tradeDate').endDate()
         };
@@ -34,7 +35,7 @@ $(function() {
             	                    exchargeCode:data.exchargeCode,
             	                    tradeDate:tradeDate});
         },            
-        cols:[{field:'status',width:80, title: '数据状态',sortable:false}
+        cols:[{field:'statusStr',width:80, title: '数据状态',sortable:false}
              ,{field:'exchargeCode',width:120,  title: '货币对',sortable:false}
             ,{field:'tradeDate',width:120,  title: '交易日期',type:'date'}
             ,{field:'openPrice',width:100, title: '开盘价',sortable:false}
@@ -45,6 +46,8 @@ $(function() {
             ,{field:'errMsg',width:200, title: '错误信息',sortable:false}
             ,{field:'updateTimeStr',width:180, title: '更新时间',sortable:false}
             ,{field:'updateUser',width:100, title: '更新人',sortable:false}
+             ,{field:'datasourceType',visible: false}
+             ,{field:'status',visible: false}
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
         ]
     });
@@ -59,8 +62,8 @@ $(function() {
         Joyin.dialog("汇率行情信息修改",
             basePath + "chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo002/init",
             "60%", "80%", {pageModel:PAGE_MODEL_EDIT,
-                exchargeCode:data.exchargeCode,
-                tradeDate:tradeDate},function() {
+                exchargeCode:data.exchargeCode, tradeDate:tradeDate,
+                datasourceType:data.datasourceType,status:data.status},function() {
                 table.reload();
             });
     });

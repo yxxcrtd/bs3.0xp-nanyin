@@ -13,17 +13,14 @@
 		LOW_PRICE as lowPrice,
 		BASIS_CYY as basisCyy,
 		QUOT_UNIT as quotUnit,
-        CASE WHEN STATUS ='A' THEN '待处理'
-        ELSE '有效'
-		END
-		as status,
+        STATUS as status,
 		ERR_MSG as errMsg,
 		INPUT_TYPE as  inputType,
 		CREATE_USER as createUser,
 		CREATE_DEPT as createDept,
 		CREATE_TIME as createTime,
 		UPDATE_USER as updateUser,
-        DATE_FORMAT(UPDATE_TIME,'%Y-%m-%d %H:%i:%s') updateTimeStr
+        UPDATE_TIME as updateTime
 	</sql>
 	<!-- 汇率行情查询 -->
 	<select id="select" resultType="com.joyintech.tams.svreport.chb.businessdatamaintain.chbexchangeinfo.dto.ChbExchangeQuotationInfoDto">
@@ -31,7 +28,6 @@
 		<include refid="BASE_COLUMNS"></include>
 		from MST_EXCHARGE_QUOTE
 		<where>
-			STATUS != 'D'
 			<if test="exchargeCodeList != null and exchargeCodeList.size() > 0">
 				<foreach collection="exchargeCodeList" item="exchargeCode" open=" AND EXCHARGE_CODE IN (" close=")" separator=",">
 					#{exchargeCode,jdbcType=VARCHAR}
@@ -59,7 +55,7 @@
 
 	<update id="updateStatus">
 		update MST_EXCHARGE_QUOTE
-		set STATUS=#{newStatus}
+		set STATUS=#{status}
 		where EXCHARGE_CODE = #{exchargeCode}
 		  AND TRADE_DATE = #{tradeDate}
 		  AND DATASOURCE_TYPE = #{datasourceType}

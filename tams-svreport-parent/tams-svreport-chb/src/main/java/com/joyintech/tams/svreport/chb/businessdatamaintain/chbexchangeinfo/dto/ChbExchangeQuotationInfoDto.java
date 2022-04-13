@@ -10,7 +10,10 @@
 
 package com.joyintech.tams.svreport.chb.businessdatamaintain.chbexchangeinfo.dto;
 
+import com.joyintech.background.component.common.pack.common.util.DateUtil;
 import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 import java.util.List;
@@ -31,8 +34,6 @@ public class ChbExchangeQuotationInfoDto extends ChbExchargeQuote implements Pro
      */
     private static final long serialVersionUID = 5143537191208289654L;
 
-
-    private String updateTimeStr;
 
 
 
@@ -61,12 +62,14 @@ public class ChbExchangeQuotationInfoDto extends ChbExchargeQuote implements Pro
 
 
     public String getUpdateTimeStr() {
-        return updateTimeStr;
+        return DateUtil.formatDateTime(super.getUpdateTime());
     }
 
-    public void setUpdateTimeStr(String updateTimeStr) {
-        this.updateTimeStr = updateTimeStr;
+    public String getStatusStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.维护数据状态,
+                super.getStatus());
     }
+
 
     public String getSubmitType() {
         return submitType;
