@@ -3,6 +3,7 @@ package com.joyintech.tams.svreport.chb.businessdatamaintain.chbexchangeinfo.con
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
@@ -59,14 +60,16 @@ public class ChbExchangeQuotationInfo002Controller extends BaseController {
         String exchargeCode = getParam("exchargeCode");
         String tradeDate = getParam("tradeDate");
         String datasourceType = getParam("datasourceType");
+        String status = getParam("status");
         String workflowId = getParam("workflowId");
         ChbExchangeQuotationInfoDto mstExchangeQuotationInfoDto = null;
         // 修改时
         if (StringUtil.isNotEmpty(exchargeCode)) {
-            Map<String, Object> pageParam = new HashMap<>(3);
-            pageParam.put("exchargeCode", exchargeCode);
+            Map<String, Object> pageParam = new HashMap<>(4);
+            pageParam.put("exchargeCodeList", StringUtil.splitToList(GlobalConstant.COMMA, exchargeCode));
             pageParam.put("tradeDate", tradeDate);
             pageParam.put("datasourceType", datasourceType);
+            pageParam.put("status", status);
             List<ChbExchangeQuotationInfoDto> selectAllList = chbExchangeQuotationInfoService.selectAllList(pageParam);
             if (CollectionUtils.isNotEmpty(selectAllList)) {
                 mstExchangeQuotationInfoDto = selectAllList.get(0);
