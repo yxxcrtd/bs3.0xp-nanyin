@@ -87,7 +87,8 @@ public class ChbCalendarInfo001Service extends CommonExportService<ChbCalendarIn
         if (StringUtil.isNotEmpty(calendarType)) {
             param.put("calendarTypeList", StringUtil.split(calendarType, GlobalConstant.COMMA));
         }
-        return super.queryForPage(Integer.parseInt(param.get("page").toString()), Integer.parseInt(param.get("length").toString()), () -> chbCalendarInfoMapper.selectInfo(param));
+        Page<ChbCalendarInfo001Dto> pageList = super.queryForPage(Integer.parseInt(param.get("page").toString()), Integer.parseInt(param.get("length").toString()), () -> chbCalendarInfoMapper.selectInfo(param));
+        return pageList;
     }
 
     /**
@@ -107,13 +108,13 @@ public class ChbCalendarInfo001Service extends CommonExportService<ChbCalendarIn
      * @param entity 实体类
      */
     public void doComplete(ChbCalendarInfo001Dto entity) {
-        if (entity.getYorn() == 0) {
+        if (entity.getIsHoliday() == 0) {
             // 工作日设节假日
-            entity.setYorn(1);
+            entity.setIsHoliday(1L);
             chbCalendarInfoMapper.sethday(entity);
-        } else if (entity.getYorn() == 1) {
+        } else if (entity.getIsHoliday() == 1) {
             // 节假日设工作日
-            entity.setYorn(0);
+            entity.setIsHoliday(0L);
             chbCalendarInfoMapper.setwday(entity);
         }
     }

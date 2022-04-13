@@ -63,7 +63,7 @@ public class ChbCalendarInfo001Controller extends BaseController {
     @Override
     public String init(Model model) {
         //初始化是否节假日下拉框
-        this.setSelectOptionToModel(model, DictCode.是否);
+        this.setSelectOptionToModel(model, DictCode.是否节假日);
         //数据的状态
         this.setSelectOptionToModel(model, DictCode.维护数据状态);
         //节假日信息

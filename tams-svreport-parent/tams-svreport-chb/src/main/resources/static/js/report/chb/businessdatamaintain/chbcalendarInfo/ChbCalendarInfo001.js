@@ -28,17 +28,17 @@
         }, {
             title: '市场日历类型',field: 'calendarName'
         }, {
-            title: '是否节假日',field: 'isHolidayStr'
+            title: '是否节假日',field: 'isHolidayStr',width:100
         }, {
-            title: '数据状态',field: 'status',
+            title: '数据状态',field: 'statusStr',width:130
         }, {
-            title: '错误信息',field: 'errMsg',width:130,sortable:false
+            title: '错误信息',field: 'errMsg',width:250,sortable:false
         },{
             title: '更新时间',field: 'updateTimeStr'
         }, {
-            title: '更新人',field: 'updateUser',sortable:false
+            title: '更新人',field: 'updateUser',width:100,sortable:false
         }, {
-            field: 'yorn', visible: false
+            field: 'isHoliday', visible: false
         }, {
             field: 'calendarId', visible: false
         }]
@@ -97,7 +97,7 @@
             } else {
                 var count = 0;
                 for (var i = 0; i < selArr.length; i++) {
-                    if (selArr[i].yorn == yes) {
+                    if (selArr[i].isHoliday == yes) {
                         count++;
                     }
                 }
@@ -125,7 +125,7 @@
             } else {
                 var count = 0;
                 for (var i = 0; i < selArr.length; i++) {
-                    if (selArr[i].yorn == no) {
+                    if (selArr[i].isHoliday == no) {
                         count++;
                     }
                 }

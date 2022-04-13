@@ -12,10 +12,13 @@ package com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dto
 
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.MstHoliday;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -38,56 +41,15 @@ public class ChbCalendarInfo001Dto extends MstHoliday implements ProcessEntity {
      * 日历名
      */
     private String calendarName;
-    /**
-     * 获取是否
-     */
-    private Integer yorn;
-    /**
-     * 数据来源
-     */
-    private String dataSource;
 
-    private String isHolidayStr;
 
-    private String updateTimeStr;
-
-    /**
-     * 错误信息
-     */
-    private String  errMsg;
-
-    public String getErrMsg() {
-        return errMsg;
-    }
-
-    public void setErrMsg(String errMsg) {
-        this.errMsg = errMsg;
-    }
-
-    public String getDataSource() {
-        return dataSource;
-    }
-
-    public void setDataSource(String dataSource) {
-        this.dataSource = dataSource;
-    }
 
     public String getUpdateTimeStr() {
-        return updateTimeStr;
+        return com.joyintech.background.component.common.pack.common.util.DateUtil.formatDateTime(super.getUpdateTime());
     }
 
-    public void setUpdateTimeStr(String updateTimeStr) {
-        this.updateTimeStr = updateTimeStr;
-    }
 
-    /**
-     * 获取 yorn
-     * 
-     * @return yorn.
-     */
-    public Integer getYorn() {
-        return yorn;
-    }
+
 
     /**
      * 获取 calendarName
@@ -114,14 +76,6 @@ public class ChbCalendarInfo001Dto extends MstHoliday implements ProcessEntity {
         this.calendarName = calendarName;
     }
 
-    /**
-     * 设置 yorn
-     * 
-     * @param yorn yorn
-     */
-    public void setYorn(Integer yorn) {
-        this.yorn = yorn;
-    }
 
 
 
@@ -171,10 +125,13 @@ public class ChbCalendarInfo001Dto extends MstHoliday implements ProcessEntity {
     }
 
     public String getIsHolidayStr() {
-        return isHolidayStr;
+        return super.getIsHoliday()==null?null:SysDataUtil.getNameFromDataDict(DictCode.是否节假日,
+                super.getIsHoliday().toString());
     }
 
-    public void setIsHolidayStr(String isHolidayStr) {
-        this.isHolidayStr = isHolidayStr;
+    public String getStatusStr() {
+        return StringUtils.isBlank(super.getStatus())==true?"有效":SysDataUtil.getNameFromDataDict(DictCode.维护数据状态,
+                super.getStatus());
     }
+
 }

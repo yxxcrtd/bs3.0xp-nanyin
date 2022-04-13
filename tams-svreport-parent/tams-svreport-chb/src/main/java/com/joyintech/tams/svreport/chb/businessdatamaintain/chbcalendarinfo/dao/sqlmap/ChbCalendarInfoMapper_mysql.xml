@@ -4,19 +4,13 @@
 
 	<!-- 查询sql -->
 	<select id="selectInfo" resultType="com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dto.ChbCalendarInfo001Dto">
-		SELECT
 		T1.CALENDAR_ID calendarId ,
 		T1.CDATE cdate ,
-		CASE WHEN T1.IS_HOLIDAY=0 then '否'
-		when T1.IS_HOLIDAY=1 then '是' else ''
-		end as isHolidayStr,
-		T1.IS_HOLIDAY yorn ,
-		DATE_FORMAT(T1.UPDATE_TIME,'%Y-%m-%d %H:%i:%s') updateTimeStr,
+		T1.IS_HOLIDAY isHoliday ,
+		T1.UPDATE_TIME  updateTime,
 		T1.UPDATE_USER updateUser,
 		T2.CALENDAR_NAME calendarName,
-		CASE WHEN T1.STATUS ='A' THEN '待处理'
-		ELSE '有效'
-		END as status,
+		T1.STATUS status,
 		T1.ERR_MSG errMsg
 		from
 		MST_HOLIDAY T1
@@ -61,7 +55,7 @@
 	<!-- 工作日设置为节假日 -->
 	<update id="sethday">
 		update MST_HOLIDAY
-		set is_holiday=#{yorn},
+		set is_holiday=#{isHoliday},
 			UPDATE_USER=#{updateUser},
 			UPDATE_TIME=#{updateTime}
 		where CDATE = #{cdate}
@@ -70,7 +64,7 @@
 	<!-- 节假日设置为工作日 -->
 	<update id="setwday">
 		update MST_HOLIDAY
-		set is_holiday=#{yorn},
+		set is_holiday=#{isHoliday},
 			UPDATE_USER=#{updateUser},
 			UPDATE_TIME=#{updateTime}
 		where CDATE = #{cdate}
