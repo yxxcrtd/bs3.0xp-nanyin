@@ -76,7 +76,7 @@ public class BaseCommonCheckService {
         //DB数据库基础check
         List<ExcelValidDto> checkDB = checkDataDB(checkFlag,datas,TableName,FileName,interfType,bussinessKeys);
         //业务check
-        List<ExcelValidDto> checkYW = checkDataYW(checkFlag,datas,TableName,bussinessKeys);
+        List<ExcelValidDto> checkYW = checkDataYW(checkFlag,datas,TableName);
 
         checkExcelValid.addAll(checkDB);
         checkExcelValid.addAll(checkYW);
@@ -141,10 +141,9 @@ public class BaseCommonCheckService {
      * @param checkFlag 是接口check还是导入check  接口是I  导入是D
      * @param datas 被check数据
      * @param TableName  表名
-     * @param bussinessKeys 业务主键
      * @return 校验后的数据
      */
-    public List<ExcelValidDto> checkDataYW(String checkFlag,List<Map<String,String>> datas, String TableName,String... bussinessKeys) {
+    public List<ExcelValidDto> checkDataYW(String checkFlag,List<Map<String,String>> datas, String TableName) {
         // 判断传入的数据是否为空
         if(CollectionUtils.isEmpty(datas)) {
             return null;
@@ -226,6 +225,7 @@ public class BaseCommonCheckService {
         errodata.setCreateTime(new Date());
         errodata.setUpdateTime(new Date());
         erro.remove("ERRMSG");
+        erro.remove("STATUS");
         errodata.setOrgData(JsonUtils.object2Json(erro));
         return errodata;
     }
