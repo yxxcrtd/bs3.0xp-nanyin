@@ -38,7 +38,7 @@ import java.util.regex.Pattern;
  * @date 2022-03-31 14:52
  */
 @Component
-public class SqlldrUtil {
+public class BatchInsertUtil {
     /**
      * logger
      */
