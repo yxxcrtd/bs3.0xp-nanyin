@@ -87,26 +87,23 @@ public class BaseCheckOracleService {
         }
         if (StringUtil.isBlank(value)) {
             BaseCommonCheckDto dto = new BaseCommonCheckDto();
-            map.put("STATUS","R");
             dto.setErrMap(map);
-            dto.setExcelValidDto(new ExcelValidDto("0未导入", String.valueOf(i + 2), "不能为空"));
+            dto.setExcelValidDto(new ExcelValidDto("0未导入", String.valueOf(i + 2), tabDto.getColumnName()+ "不能为空"));
             checkResult.add(dto);
         }
         //校验字段长度
         if (tabDto.getLength() != 0 && tabDto.getLength() < value.length()) {
             BaseCommonCheckDto dto = new BaseCommonCheckDto();
-            map.put("STATUS","R");
             dto.setErrMap(map);
-            dto.setExcelValidDto(new ExcelValidDto("0未导入", String.valueOf(i + 2), "字段长度不能超过" + tabDto.getLength()));
+            dto.setExcelValidDto(new ExcelValidDto("0未导入", String.valueOf(i + 2), tabDto.getColumnName()+"字段长度不能超过" + tabDto.getLength()));
             checkResult.add(dto);
         }
         //日期类型校验
         if (Objects.equals("DATE", tabDto.getDataType())) {
             if (!this.checkDate(value)) {
                 BaseCommonCheckDto dto = new BaseCommonCheckDto();
-                map.put("STATUS","R");
                 dto.setErrMap(map);
-                dto.setExcelValidDto(new ExcelValidDto("0未导入", String.valueOf(i + 2), "不是日期格式"));
+                dto.setExcelValidDto(new ExcelValidDto("0未导入", String.valueOf(i + 2), tabDto.getColumnName()+"不是日期格式"));
                 checkResult.add(dto);
             }
         }
@@ -114,9 +111,8 @@ public class BaseCheckOracleService {
         if (Objects.equals("NUMBER", tabDto.getDataType())) {
             if (!this.checkFigure(value)) {
                 BaseCommonCheckDto dto = new BaseCommonCheckDto();
-                map.put("STATUS","R");
                 dto.setErrMap(map);
-                dto.setExcelValidDto(new ExcelValidDto("0未导入", String.valueOf(i + 2), "不是数字格式"));
+                dto.setExcelValidDto(new ExcelValidDto("0未导入", String.valueOf(i + 2), tabDto.getColumnName()+"不是数字格式"));
                 checkResult.add(dto);
             }
         }
@@ -206,6 +202,7 @@ public class BaseCheckOracleService {
             }
             //如果校验不通过remove元素
             if (CollectionUtils.isNotEmpty(checkResult)) {
+                map.put("STATUS","R");
 //                iterator.remove();
                 checkResultAll.addAll(checkResult);
             }

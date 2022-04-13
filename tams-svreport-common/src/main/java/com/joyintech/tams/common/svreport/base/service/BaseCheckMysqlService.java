@@ -36,6 +36,7 @@ public class BaseCheckMysqlService {
         List<BaseCommonCheckDto> result = new ArrayList<>();
         List<Map<String,String>> errList = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
+            boolean errFlag = false;//检查结果 true为有错误
             Set<Map.Entry<String, String>> set = list.get(i).entrySet();
             for (Map.Entry<String, String> entry : set) {
                 for (BaseCheckMysqlDto c : columns) {
@@ -43,14 +44,14 @@ public class BaseCheckMysqlService {
                         // 非空校验
                         if (c.getIS_NULLABLE().equals("YES")) {
                             if (!StringUtils.hasText(entry.getValue())) {
-                                ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2), c.getCOLUMN_COMMENT() + "为空");
+                                ExcelValidDto dto = new ExcelValidDto("0未导入", String.valueOf(i + 2), c.getCOLUMN_COMMENT() + "为空");
                                 BaseCommonCheckDto commonCheckDto = new BaseCommonCheckDto();
-                                list.get(i).put("STATUS","R");
                                 commonCheckDto.setErrMap(list.get(i));
                                 commonCheckDto.setExcelValidDto(dto);
                                 result.add(commonCheckDto);
                                 errList.add(list.get(i));
                                 // 跳出 for (Column c : columns)循环
+                                errFlag = true;
                                 break;
                             }
                         }
@@ -62,80 +63,80 @@ public class BaseCheckMysqlService {
                             c.getDATA_TYPE().equals("longtext")) {
                             // 长度校验
                             if (entry.getValue().length() > Integer.valueOf(c.getCHARACTER_MAXIMUM_LENGTH())) {
-                                ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2), c.getCOLUMN_COMMENT() + "内容太长了");
+                                ExcelValidDto dto = new ExcelValidDto("0未导入", String.valueOf(i + 2), c.getCOLUMN_COMMENT() + "内容太长了");
                                 BaseCommonCheckDto commonCheckDto = new BaseCommonCheckDto();
-                                list.get(i).put("STATUS","R");
                                 commonCheckDto.setErrMap(list.get(i));
                                 commonCheckDto.setExcelValidDto(dto);
                                 result.add(commonCheckDto);
                                 errList.add(list.get(i));
+                                errFlag = true;
                             }
                             break;
                         } else if (c.getDATA_TYPE().equals("int")||c.getDATA_TYPE().equals("bigint")) {
                             // 长度校验
                             if (entry.getValue().length() > Integer.valueOf(c.getNUMERIC_PRECISION())) {
-                                ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2), c.getCOLUMN_COMMENT() + "内容太长了");
+                                ExcelValidDto dto = new ExcelValidDto("0未导入", String.valueOf(i + 2), c.getCOLUMN_COMMENT() + "内容太长了");
                                 BaseCommonCheckDto commonCheckDto = new BaseCommonCheckDto();
-                                list.get(i).put("STATUS","R");
                                 commonCheckDto.setErrMap(list.get(i));
                                 commonCheckDto.setExcelValidDto(dto);
                                 result.add(commonCheckDto);
                                 errList.add(list.get(i));
+                                errFlag = true;
                                 break;
                             }else if(!Pattern.matches(rule,entry.getValue())){
                                 //整数校验
-                                ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2), c.getCOLUMN_COMMENT() + "不是整数");
+                                ExcelValidDto dto = new ExcelValidDto("0未导入", String.valueOf(i + 2), c.getCOLUMN_COMMENT() + "不是整数");
                                 BaseCommonCheckDto commonCheckDto = new BaseCommonCheckDto();
-                                list.get(i).put("STATUS","R");
                                 commonCheckDto.setErrMap(list.get(i));
                                 commonCheckDto.setExcelValidDto(dto);
                                 result.add(commonCheckDto);
                                 errList.add(list.get(i));
+                                errFlag = true;
                                 break;
                             }
                             break;
                         }else if(c.getDATA_TYPE().equals("float")||c.getDATA_TYPE().equals("double")||c.getDATA_TYPE().equals("decimal")){
                             // 长度校验
                             if (entry.getValue().length() > Integer.valueOf(c.getNUMERIC_PRECISION())) {
-                                ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2), c.getCOLUMN_COMMENT() + "内容太长了");
+                                ExcelValidDto dto = new ExcelValidDto("0未导入", String.valueOf(i + 2), c.getCOLUMN_COMMENT() + "内容太长了");
                                 BaseCommonCheckDto commonCheckDto = new BaseCommonCheckDto();
-                                list.get(i).put("STATUS","R");
                                 commonCheckDto.setErrMap(list.get(i));
                                 commonCheckDto.setExcelValidDto(dto);
                                 result.add(commonCheckDto);
                                 errList.add(list.get(i));
+                                errFlag = true;
                                 break;
                             }else if(!Pattern.matches(floatRule,entry.getValue())){
-                                ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2), c.getCOLUMN_COMMENT() + "内容太长了");
+                                ExcelValidDto dto = new ExcelValidDto("0未导入", String.valueOf(i + 2), c.getCOLUMN_COMMENT() + "内容太长了");
                                 BaseCommonCheckDto commonCheckDto = new BaseCommonCheckDto();
-                                list.get(i).put("STATUS","R");
                                 commonCheckDto.setErrMap(list.get(i));
                                 commonCheckDto.setExcelValidDto(dto);
                                 result.add(commonCheckDto);
                                 errList.add(list.get(i));
+                                errFlag = true;
                                 break;
                             }
                             break;
                         }else if(c.getDATA_TYPE().equals("date")){
                             if(!DateUtil.isDateStr(entry.getValue())){
-                                ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2), c.getCOLUMN_COMMENT() + "日期格式不正确，请使用yyyy-MM-dd格式");
+                                ExcelValidDto dto = new ExcelValidDto("0未导入", String.valueOf(i + 2), c.getCOLUMN_COMMENT() + "日期格式不正确，请使用yyyy-MM-dd格式");
                                 BaseCommonCheckDto commonCheckDto = new BaseCommonCheckDto();
-                                list.get(i).put("STATUS","R");
                                 commonCheckDto.setErrMap(list.get(i));
                                 commonCheckDto.setExcelValidDto(dto);
                                 result.add(commonCheckDto);
                                 errList.add(list.get(i));
+                                errFlag = true;
                             }
                             break;
                         }else if(c.getDATA_TYPE().equals("datetime")||c.getDATA_TYPE().equals("timestamp")){
                             if(!DateUtil.isDateStr(entry.getValue(),DateUtil.DEFAULT_DATETIME_FORMAT)){
-                                ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2), c.getCOLUMN_COMMENT() + "日期格式不正确，请使用yyyy-MM-dd HH:mm:ss格式");
+                                ExcelValidDto dto = new ExcelValidDto("0未导入", String.valueOf(i + 2), c.getCOLUMN_COMMENT() + "日期格式不正确，请使用yyyy-MM-dd HH:mm:ss格式");
                                 BaseCommonCheckDto commonCheckDto = new BaseCommonCheckDto();
-                                list.get(i).put("STATUS","R");
                                 commonCheckDto.setErrMap(list.get(i));
                                 commonCheckDto.setExcelValidDto(dto);
                                 result.add(commonCheckDto);
                                 errList.add(list.get(i));
+                                errFlag = true;
                             }
                             break;
                         }
@@ -143,6 +144,9 @@ public class BaseCheckMysqlService {
                         break;
                     }
                 }
+            }
+            if(errFlag){
+                list.get(i).put("STATUS","R");
             }
         }
         List<Map<String,String>> uniList = new ArrayList<>();
@@ -158,7 +162,6 @@ public class BaseCheckMysqlService {
                             if(list.get(j).get(c.getCOLUMN_NAME()).equals(map.get(c.getCOLUMN_NAME()))){
                                 ExcelValidDto dto = new ExcelValidDto(list.get(j).get(1),String.valueOf(j + 2), "表中数据重复");
                                 BaseCommonCheckDto commonCheckDto = new BaseCommonCheckDto();
-                                map.put("STATUS","R");
                                 commonCheckDto.setErrMap(map);
                                 commonCheckDto.setExcelValidDto(dto);
                                 result.add(commonCheckDto);
@@ -194,7 +197,6 @@ public class BaseCheckMysqlService {
                         if(num == primaries.size()){
                             ExcelValidDto dto = new ExcelValidDto(list.get(j).get(1),String.valueOf(j + 2), "表中数据重复");
                             BaseCommonCheckDto commonCheckDto = new BaseCommonCheckDto();
-                            list.get(j).put("STATUS","R");
                             commonCheckDto.setErrMap(list.get(j));
                             commonCheckDto.setExcelValidDto(dto);
                             result.add(commonCheckDto);
