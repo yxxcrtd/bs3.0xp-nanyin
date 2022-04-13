@@ -37,11 +37,8 @@
 			<if test="endDate != null and ! endDate.equals('')">
 				and T1.CDATE &lt;= STR_TO_DATE(#{endDate},'%Y-%m-%d')
 			</if>
-			<if test='status=="A"'>
+			<if test="status != null and ! status.equals('')">
 				and T1.STATUS = #{status}
-			</if>
-			<if test='status=="E"'>
-				and (T1.STATUS = #{status} or T1.STATUS is null)
 			</if>
 		</where>
 		ORDER BY calendarId ASC,cdate DESC
