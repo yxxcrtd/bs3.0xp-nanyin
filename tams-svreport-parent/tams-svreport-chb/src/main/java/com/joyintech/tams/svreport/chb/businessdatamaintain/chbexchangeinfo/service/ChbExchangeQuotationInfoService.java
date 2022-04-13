@@ -300,6 +300,8 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
             dto.setStatus(DictCodeListExt2.数据状态_删除.getValue());
             chbExchangeQuotationInfoMapper.updateStatus(dto);
         } else if (StringUtil.equals(dto.getOperateType(), NEW)) {
+            //先删除已存在的数据
+            chbExchangeQuotationInfoMapper.deleteChbExchargeQuoteByKey(dto);
             //设置基本币种，单位币种等
             String exchargeCode = dto.getExchargeCode();
             if (exchargeCode != null) {

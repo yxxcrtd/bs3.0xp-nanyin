@@ -108,12 +108,10 @@ public class ChbExchangeQuotationInfo002Controller extends BaseController {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
-        //先删除已存在的数据
-        chbExchangeQuotationInfoService.deleteChbExchargeQuoteByKey(dto);
         WorkFlowParameter<ChbExchangeQuotationInfoDto> params = new WorkFlowParameter<>();
         params.setPageId(this.getPageId());
         params.setElementId(dto.getElementId());
-        params.setBusinessCode(item -> item.getExchargeCode());
+        params.setBusinessCode(dto.getExchargeCode()+DateUtil.format(dto.getTradeDate())+dto.getDatasourceType());
         params.setBusinessType(DictCodeList.共通业务类型_汇率行情信息.getValue());
         // 设置流程业务说明, entity即传入的dto
         params.setComment(
