@@ -103,8 +103,8 @@ public class ChbMstBondCreditRating002Controller extends BaseController {
         WorkFlowParameter<ChbMstBondCreditRatingDto> params = new WorkFlowParameter<ChbMstBondCreditRatingDto>();
         params.setPageId("ChbMstBondCreditRating002");
         params.setElementId("ChbMstBondCreditRating002_btn_submit");
-        params.setBusinessCode(item -> item.getoCode()+item.getoType());
-        params.setBusinessType(DictCodeList.债券评级.getValue());
+        params.setBusinessCode(item -> item.getoCode()+item.getGradeDateStr()+item.getGradeOrgId()+item.getoType());
+        params.setBusinessType(DictCodeList.共通业务类型_债券评级信息.getValue());
         params.setComment(entity -> this.getMessage("ChbMstBondCreditRating001.oCode") + "("
                 + entity.getoCode() + ")"
                 +this.getMessage("ChbMstBondCreditRating001.oType")

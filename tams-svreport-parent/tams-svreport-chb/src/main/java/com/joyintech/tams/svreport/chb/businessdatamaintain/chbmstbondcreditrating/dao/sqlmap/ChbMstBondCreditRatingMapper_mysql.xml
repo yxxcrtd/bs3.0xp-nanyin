@@ -189,10 +189,10 @@
                 O_CODE = #{oCode}
             </if>
             <if test="gradeOrgId !=null and gradeOrgId !=''">
-                GRADE_ORG_ID = #{gradeOrgId},
+                AND GRADE_ORG_ID = #{gradeOrgId}
             </if>
-            <if test="gradeDate !=null and gradeDate !=''">
-                GRADE_DATE = #{gradeDate},
+            <if test="gradeDate !=null">
+                AND GRADE_DATE = #{gradeDate}
             </if>
             <if test="oType!=null and oType!=''">
                 AND O_TYPE = #{oType}

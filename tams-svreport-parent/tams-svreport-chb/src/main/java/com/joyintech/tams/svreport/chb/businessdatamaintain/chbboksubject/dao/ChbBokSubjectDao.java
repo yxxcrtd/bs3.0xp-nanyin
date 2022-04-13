@@ -3,6 +3,7 @@ package com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dao;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dto.ChbBokSubjectDto;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -67,7 +68,7 @@ public interface ChbBokSubjectDao {
      */
     void insert(ChbBokSubjectDto entity);
 
-    ChbBokSubjectDto selcetByKey(String subjectNo);
+    ChbBokSubjectDto selcetByKey(@Param("subjectNo") String subjectNo,@Param("booksetId") String booksetId);
 
     void update(ChbBokSubjectDto entity);
 

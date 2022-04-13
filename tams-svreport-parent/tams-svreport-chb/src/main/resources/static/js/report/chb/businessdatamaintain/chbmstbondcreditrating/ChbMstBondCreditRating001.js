@@ -69,7 +69,7 @@ $(function() {
         var object = {selectedItem: [data], operateType:"delete"};
         Joyin.ajaxJson(basePath + 'chb/businessdatamaintain/chbmstbondcreditrating/chbmstbondcreditrating001/check', object, function(result) {
             Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                WorkFlow.doDeleteList(basePath + 'chb/businessdatamaintain/chbmstbondcreditrating/chbmstbondcreditrating001/delete', object, "ChbMstBondCreditRating001_btn_delete", "ChbMstBondCreditRating001",function(){
+                WorkFlow.doDeleteList(basePath + 'chb/businessdatamaintain/chbmstbondcreditrating/chbmstbondcreditrating001/delete', object, "ChbMstBondCreditRating001_btn_delete", "ChbMstBondCreditRating002",function(){
                     table.reload();
                 });
             });
@@ -115,7 +115,7 @@ $(function() {
             var object = {selectedItem: selArr, operateType:"delete"};
             Joyin.ajaxJson(basePath + 'chb/businessdatamaintain/chbmstbondcreditrating/chbmstbondcreditrating001/check', object, function(result) {
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                    WorkFlow.doDeleteList(basePath + 'chb/businessdatamaintain/chbmstbondcreditrating/chbmstbondcreditrating001/delete', object, "ChbMstBondCreditRating001_btn_delete", "ChbMstBondCreditRating001",function(){
+                    WorkFlow.doDeleteList(basePath + 'chb/businessdatamaintain/chbmstbondcreditrating/chbmstbondcreditrating001/delete', object, "ChbMstBondCreditRating001_btn_delete", "ChbMstBondCreditRating002",function(){
                         table.reload();
                     });
                 });

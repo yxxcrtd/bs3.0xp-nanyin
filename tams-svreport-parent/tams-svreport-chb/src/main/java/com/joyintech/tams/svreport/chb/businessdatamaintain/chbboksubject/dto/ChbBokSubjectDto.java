@@ -1,5 +1,6 @@
 package com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dto;
 
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.validation.annotation.Length;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
@@ -25,48 +26,17 @@ import java.util.List;
 public class ChbBokSubjectDto extends BokSubject implements ProcessEntity {
 
 
-    /**
-     * 科目号
-     */
-    private String subjectNo;
 
-    /**
-     * 科目名称
-     */
-    private String subjectName;
-
-    /**
-     * 上级科目号
-     */
-    private String fsubjectId;
-
-    /**
-     * 科目类型
-     */
-    private String subjectType;
-
-
-    /**
-     * 科目级别
-     */
-    private Long subjectLevel;
     /**
      * 数据来源
      */
     private String dataSource;
-
 
     /**
      * 备注
      */
     private String remark;
 
-
-
-    /**
-     * 要素id
-     */
-    private String elementId;
     /**
      * 状态
      */
@@ -76,6 +46,10 @@ public class ChbBokSubjectDto extends BokSubject implements ProcessEntity {
      */
     private String des;
 
+    /**
+     * 要素id
+     */
+    private String elementId;
 
 
     private String operateType;
@@ -86,55 +60,15 @@ public class ChbBokSubjectDto extends BokSubject implements ProcessEntity {
      * 目的和意义以及可能会用到的地方
      */
     private String pageModel;
-    private String updateTimeStr;
-
-    private String subjectTypeStr;
-    private String dataSourceStr;
-    private String statusStr;
 
     private static final long serialVersionUID = 1L;
-    @NotEmpty(fieldName = "BokSubject.subjectNo",groups = {ValidateGroupEdit.class})
-    @Length(fieldName = "BokSubject.subjectNo", max = 32, groups = {ValidateGroupEdit.class})
     @PrimaryKey(Field.PK_1)
+    public String getBooksetId(){
+        return super.getBooksetId();
+    }
+    @PrimaryKey(Field.PK_2)
     public String getSubjectNo() {
-        return subjectNo;
-    }
-
-    public void setSubjectNo(String subjectNo) {
-        this.subjectNo = subjectNo;
-    }
-    @NotEmpty(fieldName = "BokSubject.subjectName",groups = {ValidateGroupEdit.class})
-    @Length(fieldName = "BokSubject.subjectName", max = 300, groups = {ValidateGroupEdit.class})
-    public String getSubjectName() {
-        return subjectName;
-    }
-
-    public void setSubjectName(String subjectName) {
-        this.subjectName = subjectName;
-    }
-    @NotEmpty(fieldName = "BokSubject.fsubjectId",groups = {ValidateGroupEdit.class})
-    public String getFsubjectId() {
-        return fsubjectId;
-    }
-
-    public void setFsubjectId(String fsubjectId) {
-        this.fsubjectId = fsubjectId;
-    }
-    @NotEmpty(fieldName = "BokSubject.subjectType",groups = {ValidateGroupEdit.class})
-    public String getSubjectType() {
-        return subjectType;
-    }
-
-    public void setSubjectType(String subjectType) {
-        this.subjectType = subjectType;
-    }
-    @NotEmpty(fieldName = "BokSubject.subjectLevel",groups = {ValidateGroupEdit.class})
-    public Long getSubjectLevel() {
-        return subjectLevel;
-    }
-
-    public void setSubjectLevel(Long subjectLevel) {
-        this.subjectLevel = subjectLevel;
+        return super.getSubjectNo();
     }
 
     public String getDataSource() {
@@ -144,7 +78,7 @@ public class ChbBokSubjectDto extends BokSubject implements ProcessEntity {
     public void setDataSource(String dataSource) {
         this.dataSource = dataSource;
     }
-    @Length(fieldName = "BokSubject.remark", max = 1000, groups = {ValidateGroupEdit.class})
+
     public String getRemark() {
         return remark;
     }
@@ -196,35 +130,25 @@ public class ChbBokSubjectDto extends BokSubject implements ProcessEntity {
     }
 
     public String getUpdateTimeStr() {
-        return updateTimeStr;
-    }
-
-    public void setUpdateTimeStr(String updateTimeStr) {
-        this.updateTimeStr = updateTimeStr;
+        return DateUtil.format(super.getUpdateTime());
     }
 
     public String getSubjectTypeStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.科目类型,subjectType);
+        return SysDataUtil.getNameFromDataDict(DictCode.科目类型,super.getSubjectType());
     }
 
-    public void setSubjectTypeStr(String subjectTypeStr) {
-        this.subjectTypeStr = subjectTypeStr;
-    }
 
     public String getDataSourceStr() {
         return  null!=dataSource&&dataSource.equals("D")?"新建导入":"接口";
     }
 
-    public void setDataSourceStr(String dataSourceStr) {
-        this.dataSourceStr = dataSourceStr;
-    }
 
     public String getStatusStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.维护数据状态,status);
     }
 
-    public void setStatusStr(String statusStr) {
-        this.statusStr = statusStr;
+    public String getSubjectLevelStr(){
+        return SysDataUtil.getNameFromDataDict(DictCode.科目级别,super.getSubjectLevel().toString());
     }
 
     public String getDes() {

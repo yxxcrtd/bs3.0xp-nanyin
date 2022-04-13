@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author wubingbing
@@ -32,6 +34,11 @@ public class BaseCheckMysqlService {
     }
 
     public List<BaseCommonCheckDto> check4Mysql(List<Map<String,String>> list, String tableName) {
+        //给map添加编号
+        for(int i=0;i<list.size();i++){
+            list.get(i).put("index",i+2+"");
+        }
+
         List<BaseCheckMysqlDto> columns = getColumns(tableName);
         List<BaseCommonCheckDto> result = new ArrayList<>();
         List<Map<String,String>> errList = new ArrayList<>();
@@ -42,7 +49,7 @@ public class BaseCheckMysqlService {
                 for (BaseCheckMysqlDto c : columns) {
                     if (entry.getKey().equals(c.getCOLUMN_NAME())) {
                         // 非空校验
-                        if (c.getIS_NULLABLE().equals("YES")) {
+                        if (c.getIS_NULLABLE().equals("NO")) {
                             if (!StringUtils.hasText(entry.getValue())) {
                                 ExcelValidDto dto = new ExcelValidDto("0未导入", String.valueOf(i + 2), c.getCOLUMN_COMMENT() + "为空");
                                 BaseCommonCheckDto commonCheckDto = new BaseCommonCheckDto();
@@ -152,23 +159,19 @@ public class BaseCheckMysqlService {
         List<Map<String,String>> uniList = new ArrayList<>();
         List<Map<String,String>> priList = new ArrayList<>();
         if(list.size()>1){
-            Map<String,String> map = null;
             //唯一索引校验
             for(BaseCheckMysqlDto c:columns){
                 if(c.getCOLUMN_KEY().equals("UNI")){
-                    for(int i=0;i<list.size();i++){
-                        map = list.get(i);
-                        for(int j=i+1;j<list.size();j++){
-                            if(list.get(j).get(c.getCOLUMN_NAME()).equals(map.get(c.getCOLUMN_NAME()))){
-                                ExcelValidDto dto = new ExcelValidDto(list.get(j).get(1),String.valueOf(j + 2), "表中数据重复");
-                                BaseCommonCheckDto commonCheckDto = new BaseCommonCheckDto();
-                                commonCheckDto.setErrMap(map);
-                                commonCheckDto.setExcelValidDto(dto);
-                                result.add(commonCheckDto);
-                                uniList.add(list.get(j));
-                            }
-                        }
-                    }
+                    Map<String, List<Map<String, String>>> uniMap = list.stream().collect(Collectors.groupingBy(ele -> ele.get(c.getCOLUMN_KEY())));
+                        uniMap.values().stream().filter(ele->ele.size()>1).forEach(ele->ele.forEach(e->{
+                        ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY,e.get("index"), "表中数据重复");
+                        BaseCommonCheckDto commonCheckDto = new BaseCommonCheckDto();
+                        commonCheckDto.setErrMap(e);
+                        commonCheckDto.setExcelValidDto(dto);
+                        result.add(commonCheckDto);
+                        uniList.add(e);
+                        }));
+
                 }
             }
 
@@ -180,31 +183,23 @@ public class BaseCheckMysqlService {
                     primaries.add(c.getCOLUMN_NAME());
                 }
             }
-            Map<String,String> var1 = null;
-            Map<String,String> var2 = null;
-            if(primaries.size()>0){
-                for(int i=0;i<list.size();i++){
-                    var1 = list.get(i);
-                    for(int j=i+1;j<list.size();j++){
-                        var2 = list.get(j);
-                        int num=0;
-                        for(String s: primaries){
-                            if(!var1.get(s).equals(var2.get(s))){
-                                break;
-                            }
-                            num ++;
-                        }
-                        if(num == primaries.size()){
-                            ExcelValidDto dto = new ExcelValidDto(list.get(j).get(1),String.valueOf(j + 2), "表中数据重复");
-                            BaseCommonCheckDto commonCheckDto = new BaseCommonCheckDto();
-                            commonCheckDto.setErrMap(list.get(j));
-                            commonCheckDto.setExcelValidDto(dto);
-                            result.add(commonCheckDto);
-                            priList.add(list.get(j));
-                        }
-                    }
+
+            Map<String, List<Map<String, String>>> priMap = list.stream().collect(Collectors.groupingBy(ele -> {
+                StringBuilder sb = new StringBuilder();
+                for(String s:primaries){
+                    sb.append(ele.get(s));
                 }
-            }
+                return sb.toString();
+            }));
+
+                priMap.values().stream().filter(ele->ele.size()>1).forEach(ele->ele.forEach(e->{
+                ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY,e.get("index"), "表中数据重复");
+                BaseCommonCheckDto commonCheckDto = new BaseCommonCheckDto();
+                commonCheckDto.setErrMap(e);
+                commonCheckDto.setExcelValidDto(dto);
+                result.add(commonCheckDto);
+                priList.add(e);
+            }));
         }
 //        // 移除校验失败的行数据
 //        list.removeAll(errList);

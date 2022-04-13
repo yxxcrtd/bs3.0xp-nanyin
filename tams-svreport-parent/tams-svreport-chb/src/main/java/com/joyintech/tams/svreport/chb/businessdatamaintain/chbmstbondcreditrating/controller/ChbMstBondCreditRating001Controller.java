@@ -128,10 +128,10 @@ public class ChbMstBondCreditRating001Controller extends BaseController {
         }
         ProcessParameter<ChbMstBondCreditRatingDto> processParameter = new ProcessParameter<ChbMstBondCreditRatingDto>();
         WorkFlowParameter<ChbMstBondCreditRatingDto> params = new WorkFlowParameter<ChbMstBondCreditRatingDto>();
-        params.setPageId("ChbMstBondCreditRating001");
+        params.setPageId("ChbMstBondCreditRating002");
         params.setElementId(dto.getElementId());
         params.setBusinessCode(item -> item.getoCode()+item.getoType());
-        params.setBusinessType(DictCodeList.债券评级.getValue());
+        params.setBusinessType(DictCodeList.共通业务类型_债券评级信息.getValue());
         // 设置流程业务说明, entity即传入的dto
         params.setComment(entity -> this.getMessage("ChbMstBondCreditRating001.oCode") + "("
                 + entity.getoCode() + ")"
