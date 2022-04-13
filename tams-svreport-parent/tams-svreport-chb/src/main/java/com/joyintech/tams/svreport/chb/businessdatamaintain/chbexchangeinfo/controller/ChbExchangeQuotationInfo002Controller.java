@@ -120,7 +120,7 @@ public class ChbExchangeQuotationInfo002Controller extends BaseController {
                         entity.getExchargeCode())
                         + ")" + "-" + "生效日" + "(" + DateUtil.format(entity.getTradeDate()) + ")"  + "-" + "数据来源" + "(" +
                         SysDataUtil.getNameFromDataDict(DictCode.估值来源,
-                                entity.getExchargeCode() + ")"));
+                                entity.getDatasourceType())+")");
         // 给参数变成ProcessParameter而非WorkFlowParameter
         ProcessParameter<ChbExchangeQuotationInfoDto> parameter = new ProcessParameter<>();
         parameter.setWorkFlowParameter(params);
