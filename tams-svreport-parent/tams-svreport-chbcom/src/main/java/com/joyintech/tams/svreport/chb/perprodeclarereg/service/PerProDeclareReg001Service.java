@@ -219,7 +219,7 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 			if(item.getInvestArae()!=null){
 				item.setInvestArae(item.getInvestArae().trim()+" "+SvrDataUtil.getNameFromDataDict(DictCode.资金投向地区, item.getInvestArae()));
 			}
-		    if(item.getInvestCountry()!=null){
+		    if(item.getInvestCountry()!=null && item.getInvestCountry()!=""){
 		    	List<String> investCountrys=StringUtil.splitToList(GlobalConstant.COMMA, item.getInvestCountry());
 				item.setInvestCountry("");
 				for(String investCountry : investCountrys){
@@ -249,7 +249,7 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 			if(item.getInvAssetType()!=null){
 				item.setInvAssetType(item.getInvAssetType().trim()+" "+SvrDataUtil.getNameFromDataDict(DictCode.资金实际投向, item.getInvAssetType()));
 			}
-			if(item.getConPrdTraget()!=null){
+			if(StringUtil.isNotEmpty(item.getConPrdTraget())){
 				List<String> conPrdTragets=StringUtil.splitToList(GlobalConstant.COMMA, item.getConPrdTraget());
 				item.setConPrdTraget("");
 				for(String conPrdTraget : conPrdTragets){
@@ -260,7 +260,7 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 			if(item.getContMode()!=null){
 				item.setContMode(item.getContMode().trim()+" "+SvrDataUtil.getNameFromDataDict(DictCode.合作模式, item.getContMode()));
 			}
-			if(item.getRiskType()!=null){
+			if(StringUtil.isNotEmpty(item.getRiskType())){
 				List<String> riskTypeS=StringUtil.splitToList(GlobalConstant.COMMA, item.getRiskType());
 				item.setRiskType("");
 				for(String riskType : riskTypeS){
@@ -286,7 +286,7 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 			if(item.getCreditFlag()!=null){
 				item.setCreditFlag(item.getCreditFlag().trim()+" "+SvrDataUtil.getNameFromDataDict(DictCode.有无_中债, item.getCreditFlag()));
 			}
-			if(item.getCreditType()!=null){
+			if(StringUtil.isNotEmpty(item.getCreditType())){
 				List<String> creditTypes=StringUtil.splitToList(GlobalConstant.COMMA, item.getCreditType());
 				String crediType="";
 				for(String creditType : creditTypes){
@@ -304,7 +304,7 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 			if(item.getIsYieldMeasBasis()!=null){
 				item.setIsYieldMeasBasis(item.getIsYieldMeasBasis().trim()+" "+SvrDataUtil.getNameFromDataDict(DictCode.是否_中债, item.getIsYieldMeasBasis()));
 			}
-			if(item.getSaleArea()!=null){
+			if(StringUtil.isNotEmpty(item.getSaleArea())){
 				List<String> saleAreas=StringUtil.splitToList(GlobalConstant.COMMA, item.getSaleArea());
 				item.setSaleArea("");
 				for(String saleArea : saleAreas){
@@ -313,7 +313,7 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 				item.setSaleArea(item.getSaleArea().substring(1));
 			}
 			
-			if(item.getOutDepCtry()!=null){
+			if(StringUtil.isNotEmpty(item.getOutDepCtry())){
 				List<String> outDepCtrys=StringUtil.splitToList(GlobalConstant.COMMA, item.getOutDepCtry());
 				item.setOutDepCtry("");
 				for(String outDepCtry : outDepCtrys){
@@ -382,7 +382,7 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 				item.setIsFhxgcp(item.getIsFhxgcp().trim()+" "+SvrDataUtil.getNameFromDataDict(DictCode.新老产品标记, item.getIsFhxgcp()));
 			}
 			//产品特殊属性
-			if(item.getPrdSpecProperty()!=null){
+			if(StringUtil.isNotEmpty(item.getPrdSpecProperty())){
 				List<String> prdSpecPropertys=StringUtil.splitToList(GlobalConstant.COMMA, item.getPrdSpecProperty());
 				item.setPrdSpecProperty("");
 				for(String prdSpecProperty : prdSpecPropertys){
