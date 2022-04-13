@@ -21,6 +21,7 @@ import com.joyintech.workflow.engine.dto.ProcessEntity;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 节假日表dto 〈功能详细描述〉
@@ -130,7 +131,7 @@ public class ChbCalendarInfo001Dto extends MstHoliday implements ProcessEntity {
     }
 
     public String getStatusStr() {
-        return StringUtils.isBlank(super.getStatus())==true?"有效":SysDataUtil.getNameFromDataDict(DictCode.维护数据状态,
+        return Objects.equals("N",super.getStatus()) || StringUtils.isBlank(super.getStatus())?"有效":SysDataUtil.getNameFromDataDict(DictCode.维护数据状态,
                 super.getStatus());
     }
 
