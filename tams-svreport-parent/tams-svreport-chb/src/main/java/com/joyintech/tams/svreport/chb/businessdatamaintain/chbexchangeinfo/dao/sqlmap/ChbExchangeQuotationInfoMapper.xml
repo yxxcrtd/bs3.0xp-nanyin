@@ -50,7 +50,7 @@
                 and STATUS = #{status}
             </if>
         </where>
-        order by exchargeCode,tradeDate
+        order by tradeDate desc,exchargeCode asc
     </select>
 
 
