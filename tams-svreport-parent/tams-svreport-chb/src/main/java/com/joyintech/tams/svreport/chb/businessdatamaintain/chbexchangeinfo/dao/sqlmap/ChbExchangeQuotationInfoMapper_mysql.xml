@@ -103,7 +103,7 @@
 			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
 			#{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
 			<if test="item.errMsg != null and ! item.errMsg.equals('')">
-				#{item.errMsg,jdbcType=text} ERR_MSG
+				#{item.errMsg,jdbcType=BLOB} ERR_MSG
 			</if>
 			<if test="item.errMsg == null or item.errMsg.equals('')">
 				null ERR_MSG
@@ -189,7 +189,7 @@
 					and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
 					and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR}
 					 then
-					#{item.errMsg,jdbcType=text}
+					#{item.errMsg,jdbcType=BLOB}
 				</foreach>
 			</trim>
 			<trim prefix="status=case" suffix="end,">
