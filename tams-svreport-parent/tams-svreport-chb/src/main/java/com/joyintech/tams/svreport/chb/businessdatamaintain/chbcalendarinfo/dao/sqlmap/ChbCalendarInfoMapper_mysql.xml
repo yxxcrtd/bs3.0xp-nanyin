@@ -4,7 +4,8 @@
 
 	<!-- 查询sql -->
 	<select id="selectInfo" resultType="com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dto.ChbCalendarInfo001Dto">
-		T1.CALENDAR_ID calendarId ,
+		SELECT
+        T1.CALENDAR_ID calendarId ,
 		T1.CDATE cdate ,
 		T1.IS_HOLIDAY isHoliday ,
 		T1.UPDATE_TIME  updateTime,
