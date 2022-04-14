@@ -32,8 +32,8 @@ $(function() {
             Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
                     basePath + "chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo002/init",
                     "95%", "80%", {pageModel:PAGE_MODEL_REFERENCE,
-            	                    exchargeCode:data.exchargeCode,
-            	                    tradeDate:tradeDate});
+            	                    exchargeCode:data.exchargeCode,tradeDate:tradeDate,
+                                    datasourceType:data.datasourceType,status:data.status});
         },            
         cols:[{field:'statusStr',width:80, title: '数据状态',sortable:false}
              ,{field:'exchargeCode',width:120,  title: '货币对',sortable:false}
