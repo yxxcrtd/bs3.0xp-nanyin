@@ -1179,6 +1179,8 @@ public class ChbAssetInfo extends BaseEntity {
      */
     private String isDepositFlag;
 
+    private String isPropertyTrust;
+
     /**
      * 取得 资产要素uuid（为修改删除使用）
      * @return 资产要素uuid（为修改删除使用）
@@ -1209,6 +1211,14 @@ public class ChbAssetInfo extends BaseEntity {
      */
     public void setAssetCode(String assetCode) {
         this.assetCode = assetCode == null ? null : assetCode.trim();
+    }
+
+    public String getIsPropertyTrust() {
+        return isPropertyTrust;
+    }
+
+    public void setIsPropertyTrust(String isPropertyTrust) {
+        this.isPropertyTrust = isPropertyTrust;
     }
 
     /**
