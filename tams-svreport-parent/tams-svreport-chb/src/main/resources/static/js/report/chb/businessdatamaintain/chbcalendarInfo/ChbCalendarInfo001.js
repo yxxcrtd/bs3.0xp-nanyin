@@ -12,7 +12,11 @@
             var calendarType = $('#calendarType').val().join(',');
         }
         return {
-            calendarType: calendarType, ishDay: $('#ishDay').val(), status: $('#status').val(),startDate: startDate, endDate: endDate
+            calendarType: calendarType,
+            ishDay: $('#ishDay').val(),
+            status: $('#status').val(),
+            startDate: startDate,
+            endDate: endDate
         }
     };
     /**
@@ -23,25 +27,27 @@
             url: 'queryList', type: 'POST', data: function () {
                 return getSearchParams();
             }
-        }, cols: [{
-            title: '日期',field: 'cdate',  type: 'date'
-        }, {
-            title: '市场日历类型',field: 'calendarName'
-        }, {
-            title: '是否节假日',field: 'isHolidayStr',width:100
-        }, {
-            title: '数据状态',field: 'statusStr',width:130
-        }, {
-            title: '错误信息',field: 'errMsg',width:250,sortable:false
-        },{
-            title: '更新时间',field: 'updateTimeStr'
-        }, {
-            title: '更新人',field: 'updateUser',width:100,sortable:false
-        }, {
-            field: 'isHoliday', visible: false
-        }, {
-            field: 'calendarId', visible: false
-        }]
+        }, cols: [
+            {
+                title: '数据状态', field: 'statusStr', width: 100
+            },
+            {
+                title: '日期', field: 'cdate', type: 'date'
+            }, {
+                title: '市场日历类型', field: 'calendarName'
+            }, {
+                title: '是否节假日', field: 'isHolidayStr', width: 100
+            }, {
+                title: '错误信息', field: 'errMsg', width: 250, sortable: false
+            }, {
+                title: '更新时间', field: 'updateTimeStr'
+            }, {
+                title: '更新人', field: 'updateUser', width: 100, sortable: false
+            }, {
+                field: 'isHoliday', visible: false
+            }, {
+                field: 'calendarId', visible: false
+            }]
     });
     /**
      * 导出
@@ -71,15 +77,15 @@
         $('#ChbCalendarInfo001_btn_import').click(function () {
             Joyin.confirm("请确认是否要导入数据?", function () {
                 Joyin.uploadFile(function (fileName) {
-                    Joyin.ajax(basePath + 'chb/businessdatamaintain/chbcalendarInfo/ChbCalendarInfo001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
-                         Joyin.ajax(basePath + "chb/businessdatamaintain/chbcalendarInfo/ChbCalendarInfo001/importFile", {
-                        fileName: fileName
-                    }, function (result) {
-                        if (!result || !($.isArray(result) && result.length > 0)) {
-                            layui.layer.closeAll()
-                            table.reload();
-                        }
-                    });
+                    Joyin.ajax(basePath + 'chb/businessdatamaintain/chbcalendarInfo/ChbCalendarInfo001/checkConfirmMsgForImportData', {fileName: fileName}, function () {
+                        Joyin.ajax(basePath + "chb/businessdatamaintain/chbcalendarInfo/ChbCalendarInfo001/importFile", {
+                            fileName: fileName
+                        }, function (result) {
+                            if (!result || !($.isArray(result) && result.length > 0)) {
+                                layui.layer.closeAll()
+                                table.reload();
+                            }
+                        });
                     });
                 });
             });
