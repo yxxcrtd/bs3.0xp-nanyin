@@ -1127,7 +1127,7 @@ public abstract class FileImpService extends InterfService{
                             if(cishu==1){
                                 value = value.replace("%","");
                                 BigDecimal bd = new BigDecimal(value);
-                                bd.divide(new BigDecimal(100));
+                                bd = bd.divide(new BigDecimal(100));
                                 value = String.valueOf(bd);
                             }
                         }
