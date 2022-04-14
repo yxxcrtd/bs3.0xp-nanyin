@@ -158,7 +158,7 @@
             LEFT JOIN CHB_MST_COUNTER_PARTY MP1 ON MP1.COUNTER_ID = P.SUBJECT_NAME
             LEFT JOIN CHB_MST_COUNTER_PARTY MP ON MP.COUNTER_ID = P.RIVAL_PARTY
             /*LEFT JOIN CHB_ASSETS_BASIS_DATA AP ON AP.PROD_ID = P.PRODID AND AP.ASSET_ID = P.ASSET_CODE AND AP.VALUE_DATE = DECODE(P.TERM,NULL,TO_DATE('19000101','yyyyMMdd'),ADD_MONTHS(TO_DATE(P.TERM||'01','yyyyMMdd'),1)-1)*/
-            LEFT JOIN CHB_ASSETS_BASIS_DATA AP ON AP.PROD_ID = P.PRODID AND AP.ASSET_ID = P.ASSET_CODE AND AP.VALUE_DATE = (case P.TERM when NULL then STR_TO_DATE('19000101','%Y-%m-%d') when  adddate(STR_TO_DATE(concat(P.TERM,'01'),'%Y-%m-%d'),interval 1 month) then -1 end)
+            LEFT JOIN CHB_ASSETS_BASIS_DATA AP ON AP.PROD_ID = P.PRODID AND AP.ASSET_ID = P.ASSET_CODE AND AP.VALUE_DATE = (case P.TERM when NULL then STR_TO_DATE('19000101','%Y%m%d') else adddate(STR_TO_DATE(concat(P.TERM,'01'),'%Y%m%d'),interval 1 month)-1 end)
             LEFT JOIN PBC_REPORT_TEMPLATEDETAIL P6 ON P6.PROPERTYCODE = P.DETAILNO AND P6.PROPLEVEL = '6' AND P6.STATUS='E'
             LEFT JOIN PBC_REPORT_TEMPLATEDETAIL P5 ON (P5.PROPERTYCODE = P6.CODEPARENT or (p.detailno2 is not null and p5.propertycode = p.detailno2)) AND P5.PROPLEVEL = '5' AND P5.STATUS='E'
             LEFT JOIN PBC_REPORT_TEMPLATEDETAIL P4 ON P4.PROPERTYCODE = P5.CODEPARENT AND P4.PROPLEVEL = '4' AND P4.STATUS='E'
@@ -166,11 +166,11 @@
             LEFT JOIN PBC_REPORT_TEMPLATEDETAIL P2 ON P2.PROPERTYCODE = P3.CODEPARENT AND P2.PROPLEVEL = '2' AND P2.STATUS='E'
             LEFT JOIN PBC_REPORT_TEMPLATEDETAIL P1 ON P1.PROPERTYCODE = P2.CODEPARENT AND P1.PROPLEVEL = '1' AND P1.STATUS='E'
             LEFT JOIN CHB_TYPE_MAPPING_EX EX ON EX.SRCFIELD1 = P.ASSET_CODE AND EX.MAPPINGCODE = 'MAPPINGCODE_SUBJECTNO' AND EX.OBJFIELD3 = 'C01'
-            LEFT JOIN (SELECT ASSET_ID,IFNULL(ASSET_RATE,0)*100 ASSET_RATE,change_date,
-            row_number() over(partition by ASSET_ID order by change_date desc) row_number
+            LEFT JOIN (SELECT ASSET_ID,ifnull(ASSET_RATE,0) * 100 ASSET_RATE,CHANGE_DATE,
+            ROW_NUMBER() OVER (PARTITION BY ASSET_ID ORDER BY CHANGE_DATE DESC ) monthMarkNo
             FROM CHB_ASSET_RATE
-            WHERE asset_rate is not null
-            AND CHANGE_DATE &lt;= #{enddateDate,jdbcType=DATE}) RATE ON RATE.ASSET_ID = P.ASSET_CODE AND RATE.row_number = 1
+            WHERE ASSET_RATE is not null
+            AND CHANGE_DATE &lt;= #{enddateDate,jdbcType=DATE}) RATE ON RATE.ASSET_ID = P.ASSET_CODE AND RATE.monthMarkNo = 1
 
             WHERE P.AMT IS NOT NULL AND P.AMT !=0
 
@@ -188,7 +188,7 @@
 
                 <foreach item="item" index="index" collection="keysList" separator="," open=" AND P.POSUUID IN(" close=")">
                     <if test="(index % 999) == 998">
-                        null) OR P.POSUUID in (
+                        null) TEMP OR P.POSUUID in (
                     </if>
                     #{item}
                 </foreach>
@@ -200,7 +200,7 @@
                 #{item}
             </foreach>
         </if>
-        ORDER BY A.DETAILNO)
+        ORDER BY A.DETAILNO) t
     </select>
 
     <select id="getAssetCode" resultType="com.joyintech.framework.select.SelectOptionDto">

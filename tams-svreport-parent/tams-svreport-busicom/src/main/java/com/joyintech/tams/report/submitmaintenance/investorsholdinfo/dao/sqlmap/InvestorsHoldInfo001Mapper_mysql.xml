@@ -947,7 +947,7 @@
 		where  ciis.SEND_STATUS in('02','03')
 		<if test="list !=null and list.size()>0">
 			AND (ciis.INDENTIFY_MARK,ciis.HOLD_DATE,ciis.CCY,ciis.PRODID,ciis.REGIST_BANK_CODE) in
-			<foreach collection="list" item="item" open="and (" separator="," close=")">
+			<foreach collection="list" item="item" open=" (" separator="," close=")">
 				(#{item.indentifyMark},#{item.holdDate},#{item.ccy},#{item.prodid},#{item.registBankCode})
 			</foreach>
 		</if>
