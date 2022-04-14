@@ -201,8 +201,8 @@
             )
         values (#{salerOrgCode,jdbcType=VARCHAR}, #{salerInstCode,jdbcType=VARCHAR}, #{salerInstName,jdbcType=VARCHAR}, 
             #{salerOrgName,jdbcType=VARCHAR}, #{salerOrgLevel,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
-            sysdate, #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},#{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},
-            sysdate, #{updateUser,jdbcType=VARCHAR}, sysdate
+            now(), #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},#{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},
+            now(), #{updateUser,jdbcType=VARCHAR}, now()
             )
     </insert>
 
@@ -214,7 +214,7 @@
             SALER_ORG_LEVEL = #{salerOrgLevel,jdbcType=VARCHAR},
             STATUS = #{status,jdbcType=VARCHAR},
             REMARK = #{remark,jdbcType=VARCHAR},
-            UPDATE_TIME = sysdate
+            UPDATE_TIME = now()
         where SALER_ORG_CODE = #{salerOrgCode,jdbcType=VARCHAR}
     </update>
 

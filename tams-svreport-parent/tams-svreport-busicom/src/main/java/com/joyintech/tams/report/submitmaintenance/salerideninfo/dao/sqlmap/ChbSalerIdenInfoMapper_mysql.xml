@@ -302,8 +302,8 @@
             #{salerChbTrainNo,jdbcType=VARCHAR}, #{salerRiskLevel,jdbcType=VARCHAR}, #{salerQualification,jdbcType=VARCHAR}, 
             #{salerTel,jdbcType=VARCHAR}, #{salerMobile,jdbcType=VARCHAR}, #{salerMail,jdbcType=VARCHAR}, 
             #{salerStatus,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},
-            sysdate, #{createUser,jdbcType=VARCHAR}, sysdate,
-            #{updateUser,jdbcType=VARCHAR}, sysdate)
+            now(), #{createUser,jdbcType=VARCHAR}, now(),
+            #{updateUser,jdbcType=VARCHAR}, now())
     </insert>
 
     <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.report.submitmaintenance.salerideninfo.dto.SalerIdenInfoDto" >
@@ -446,7 +446,7 @@
     <update id="updateSalerRegistNo" parameterType="com.joyintech.tams.report.submitmaintenance.salerideninfo.dto.SalerIdenInfoDto" >
         update CHB_SALER_IDEN_INFO
         set SALER_REGIST_NO = #{salerRegistNo,jdbcType=VARCHAR},
-        UPDATE_TIME = sysdate
+        UPDATE_TIME = now()
         where SALER_INS_NO = #{salerInsNo,jdbcType=VARCHAR}
     </update>
 
