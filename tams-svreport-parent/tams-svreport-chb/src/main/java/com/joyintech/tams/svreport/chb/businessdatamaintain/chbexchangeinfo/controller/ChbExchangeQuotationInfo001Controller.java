@@ -101,7 +101,6 @@ public class ChbExchangeQuotationInfo001Controller extends BaseController {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
-        ProcessParameter<ChbExchangeQuotationInfoDto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<ChbExchangeQuotationInfoDto> params = new WorkFlowParameter<>();
         params.setPageId(this.getPageId());
         params.setElementId(dto.getElementId());
@@ -112,12 +111,13 @@ public class ChbExchangeQuotationInfo001Controller extends BaseController {
                 entity -> "货币对" + "("
                         + SysDataUtil.getNameFromDataDict(DictCode.货币对,
                         entity.getExchargeCode())
-                        + ")" + "-" + "生效日" + "(" + DateUtil.format(entity.getTradeDate()) + ")" + "数据来源" + "("
-                        + entity.getDatasourceType() + ")");
-        processParameter.setWorkFlowParameter(params);
-        String msg = chbExchangeQuotationInfoService.start(processParameter,
-                dto.getSelectedItem().toArray(
-                        new ChbExchangeQuotationInfoDto[dto.getSelectedItem().size()]));
+                        + ")" + "-" + "生效日" + "(" + DateUtil.format(entity.getTradeDate()) + ")"  + "-" + "数据来源" + "(" +
+                        SysDataUtil.getNameFromDataDict(DictCode.估值来源,
+                                entity.getDatasourceType())+")");
+        // 给参数变成ProcessParameter而非WorkFlowParameter
+        ProcessParameter<ChbExchangeQuotationInfoDto> parameter = new ProcessParameter<>();
+        parameter.setWorkFlowParameter(params);
+        String msg = chbExchangeQuotationInfoService.start(parameter, dto);
         return new AjaxResult(msg);
     }
 

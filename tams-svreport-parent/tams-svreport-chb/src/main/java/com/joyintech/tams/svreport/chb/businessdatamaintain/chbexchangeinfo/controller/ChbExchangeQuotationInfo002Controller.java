@@ -138,7 +138,6 @@ public class ChbExchangeQuotationInfo002Controller extends BaseController {
         // 给参数变成ProcessParameter而非WorkFlowParameter
         ProcessParameter<ChbExchangeQuotationInfoDto> parameter = new ProcessParameter<>();
         parameter.setWorkFlowParameter(params);
-        // 系统页面表IS_NEED_WORKFLOW 是否走流程，01-是，02-否
         String msg = chbExchangeQuotationInfoService.start(parameter, dto);
         return new AjaxResult(msg);
 
