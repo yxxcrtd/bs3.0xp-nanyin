@@ -237,7 +237,7 @@
                 SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
             </if>
             SUBMIT_FEEDBACK_STATUS = '03',
-            submit_time = sysdate
+            submit_time = now()
         </set>
         <where>
             <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">

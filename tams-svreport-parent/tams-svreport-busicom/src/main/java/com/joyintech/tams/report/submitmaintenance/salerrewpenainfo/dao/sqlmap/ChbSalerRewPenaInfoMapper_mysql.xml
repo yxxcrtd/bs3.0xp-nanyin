@@ -253,9 +253,9 @@
             #{salerRewPenaInst,jdbcType=VARCHAR}, #{salerRewPenaInstName,jdbcType=VARCHAR}, 
             #{salerRewPenaStart,jdbcType=DATE}, #{salerRewPenaEnd,jdbcType=DATE}, #{salerComplainDetail,jdbcType=VARCHAR}, 
             #{salerComplainResult,jdbcType=VARCHAR}, #{salerComplainDate,jdbcType=DATE}, 
-            #{status,jdbcType=VARCHAR}, sysdate,#{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},
-            #{createUser,jdbcType=VARCHAR}, sysdate, #{updateUser,jdbcType=VARCHAR},
-            sysdate)
+            #{status,jdbcType=VARCHAR}, now(),#{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},
+            #{createUser,jdbcType=VARCHAR}, now(), #{updateUser,jdbcType=VARCHAR},
+            now())
     </insert>
 
     <insert id="insertSelective" parameterType="com.joyintech.tams.report.submitmaintenance.salerrewpenainfo.dto.SalerRewPenaInfoDto" >
@@ -441,8 +441,8 @@
             <if test="status != null" >
                 STATUS = #{status,jdbcType=VARCHAR},
             </if>
-                DATA_DATE = sysdate,
-                UPDATE_TIME = sysdate,
+                DATA_DATE = now(),
+                UPDATE_TIME = now(),
         </set>
         where SALER_REW_PENA_NO = #{salerRewPenaNo,jdbcType=VARCHAR}
     </update>

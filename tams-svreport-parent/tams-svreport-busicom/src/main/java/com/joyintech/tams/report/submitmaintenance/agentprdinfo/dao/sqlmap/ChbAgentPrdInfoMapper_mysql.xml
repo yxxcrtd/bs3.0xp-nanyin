@@ -168,8 +168,8 @@
             CREATE_TIME, UPDATE_TIME)
         values (#{agentInstitutionCode,jdbcType=VARCHAR},#{issuePartyId,jdbcType=VARCHAR},
             #{prodId,jdbcType=VARCHAR}, #{prodName,jdbcType=VARCHAR}, #{prodRegistCode,jdbcType=VARCHAR}, 
-            #{status,jdbcType=VARCHAR}, sysdate, #{remark,jdbcType=VARCHAR},#{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},sysdate,
-            sysdate)
+            #{status,jdbcType=VARCHAR}, now(), #{remark,jdbcType=VARCHAR},#{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},now(),
+            now())
     </insert>
     <!--	产品代码及名称-->
     <select id="selectPrdCodeList" resultType="com.joyintech.tams.report.submitmaintenance.agentprdinfo.dto.AgentPrdInfoDto" >
