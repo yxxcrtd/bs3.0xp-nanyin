@@ -19,4 +19,12 @@ public interface BaseCheckOracleMapper {
      * @return
      */
     List<BaseCheckOracleDto> selectTabColumns(@Param("tableName") String tableName);
+
+    /**
+     * 查询表的唯一索引
+     *
+     * @param tableName
+     * @return
+     */
+    List<String> selectUniqueConstraint(@Param("tableName") String tableName);
 }

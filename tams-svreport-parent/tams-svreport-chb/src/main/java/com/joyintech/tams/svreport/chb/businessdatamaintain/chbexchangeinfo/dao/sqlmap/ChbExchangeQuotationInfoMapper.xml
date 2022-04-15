@@ -80,7 +80,7 @@
         MST_EXCHARGE_QUOTE (EXCHARGE_CODE,TRADE_DATE,
         DATASOURCE_TYPE,OPEN_PRICE,CLOSE_PRICE,HIGH_PRICE,
         LOW_PRICE,MID_PRICE,QUOT_UNIT,BASIS_CYY,QUOT_CYY,
-        STATUS,CREATE_USER,
+        DATA_SOURCE,STATUS,CREATE_USER,
         CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ERR_MSG)
         select A.* from (
         <foreach collection="listN" item="item" index="index"
@@ -97,6 +97,7 @@
             #{item.quotUnit,jdbcType=INTEGER} QUOT_UNIT,
             #{item.basisCyy,jdbcType=VARCHAR} BASIS_CYY,
             #{item.quotCyy,jdbcType=VARCHAR} QUOT_CYY,
+            #{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
             #{item.status,jdbcType=VARCHAR} STATUS,
             #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
             #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,

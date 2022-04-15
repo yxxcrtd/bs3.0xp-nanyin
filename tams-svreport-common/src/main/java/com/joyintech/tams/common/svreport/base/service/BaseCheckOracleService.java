@@ -7,6 +7,7 @@ import com.joyintech.tams.common.svreport.base.dto.BaseCheckOracleDto;
 import com.joyintech.tams.common.svreport.base.dto.BaseCommonCheckDto;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -35,6 +36,15 @@ public class BaseCheckOracleService {
         List<BaseCheckOracleDto> tabColumnsList = baseCheckOracleMapper.selectTabColumns(tableName);
         Map<String, BaseCheckOracleDto> map = tabColumnsList.stream().collect(Collectors.toMap(BaseCheckOracleDto::getColumnName, Function.identity()));
         return map;
+    }
+
+    /**
+     * 查询表的唯一索引
+     *
+     * @return
+     */
+    public List<String> getUniqueConstraint(String tableName) {
+        return baseCheckOracleMapper.selectUniqueConstraint(tableName);
     }
 
     /**
@@ -88,14 +98,14 @@ public class BaseCheckOracleService {
         if (StringUtil.isBlank(value)) {
             BaseCommonCheckDto dto = new BaseCommonCheckDto();
             dto.setErrMap(map);
-            dto.setExcelValidDto(new ExcelValidDto("0未导入", String.valueOf(i + 2), tabDto.getColumnName()+ "不能为空"));
+            dto.setExcelValidDto(new ExcelValidDto("0未导入", String.valueOf(i + 2), tabDto.getColumnName() + "不能为空"));
             checkResult.add(dto);
         }
         //校验字段长度
         if (tabDto.getLength() != 0 && tabDto.getLength() < value.length()) {
             BaseCommonCheckDto dto = new BaseCommonCheckDto();
             dto.setErrMap(map);
-            dto.setExcelValidDto(new ExcelValidDto("0未导入", String.valueOf(i + 2), tabDto.getColumnName()+"字段长度不能超过" + tabDto.getLength()));
+            dto.setExcelValidDto(new ExcelValidDto("0未导入", String.valueOf(i + 2), tabDto.getColumnName() + "字段长度不能超过" + tabDto.getLength()));
             checkResult.add(dto);
         }
         //日期类型校验
@@ -103,7 +113,7 @@ public class BaseCheckOracleService {
             if (!this.checkDate(value)) {
                 BaseCommonCheckDto dto = new BaseCommonCheckDto();
                 dto.setErrMap(map);
-                dto.setExcelValidDto(new ExcelValidDto("0未导入", String.valueOf(i + 2), tabDto.getColumnName()+"不是日期格式"));
+                dto.setExcelValidDto(new ExcelValidDto("0未导入", String.valueOf(i + 2), tabDto.getColumnName() + "不是日期格式"));
                 checkResult.add(dto);
             }
         }
@@ -112,7 +122,7 @@ public class BaseCheckOracleService {
             if (!this.checkFigure(value)) {
                 BaseCommonCheckDto dto = new BaseCommonCheckDto();
                 dto.setErrMap(map);
-                dto.setExcelValidDto(new ExcelValidDto("0未导入", String.valueOf(i + 2), tabDto.getColumnName()+"不是数字格式"));
+                dto.setExcelValidDto(new ExcelValidDto("0未导入", String.valueOf(i + 2), tabDto.getColumnName() + "不是数字格式"));
                 checkResult.add(dto);
             }
         }
@@ -182,6 +192,7 @@ public class BaseCheckOracleService {
 
     /**
      * oracle检查方法
+     *
      * @param dataList
      * @param tableName
      * @return
@@ -189,27 +200,61 @@ public class BaseCheckOracleService {
     public List<BaseCommonCheckDto> check4Oracle(List<Map<String, String>> dataList, String tableName) {
 
         List<BaseCommonCheckDto> checkResultAll = new LinkedList<>();
+        //表中列的属性
         Map<String, BaseCheckOracleDto> tabColumnsMap = this.getTabColumns(tableName);
+        //表的唯一约束
+        List<String> uniqueList = this.getUniqueConstraint(tableName);
+        Set<String> set = new HashSet();
         Iterator<Map<String, String>> iterator = dataList.iterator();
-        int i = 0;
-        while (iterator.hasNext()) {
+
+        for (int i = 0; i < dataList.size(); i++) {
             List<BaseCommonCheckDto> checkResult = new LinkedList<>();
-            Map<String, String> map = iterator.next();
+            Map<String, String> map = dataList.get(i);
+            //判断是否有重复数据
+            if (CollectionUtils.isNotEmpty(uniqueList)) {
+                //将唯一索引拼成字符串
+                String uniqueKeyValue = this.getUniqueKeyValue(map, uniqueList);
+                if (StringUtils.isNotBlank(uniqueKeyValue)) {
+                    if (set.contains(uniqueKeyValue)) {
+                        //数据重复
+                        map.put("STATUS", "R");
+                    } else {
+                        set.add(uniqueKeyValue);
+                    }
+
+                }
+
+            }
+            //数据库校验
             for (Map.Entry<String, String> entry : map.entrySet()) {
                 if (tabColumnsMap.containsKey(entry.getKey())) {
                     this.checkTabColumns(tabColumnsMap.get(entry.getKey()), entry.getValue(), i, checkResult, map);
                 }
             }
-            //如果校验不通过remove元素
             if (CollectionUtils.isNotEmpty(checkResult)) {
-                map.put("STATUS","R");
-//                iterator.remove();
+                map.put("STATUS", "R");
                 checkResultAll.addAll(checkResult);
             }
-            i++;
+
         }
+
         return checkResultAll;
 
+    }
+
+    /**
+     * 将唯一索引拼成字符串
+     *
+     * @param map
+     * @param list
+     * @return
+     */
+    private String getUniqueKeyValue(Map<String, String> map, List<String> list) {
+        StringBuffer sb = new StringBuffer("");
+        list.forEach(key -> {
+            sb.append(StringUtils.isBlank(map.get(key)) ? "" : map.get(key));
+        });
+        return sb.toString();
     }
 
 }

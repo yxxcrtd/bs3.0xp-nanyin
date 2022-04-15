@@ -86,7 +86,7 @@
     <insert id="insertBtachEquityInfo" parameterType="java.util.List">
         insert into
         MST_HOLIDAY(CALENDAR_ID,CDATE,
-        DATASOURCE,STATUS,
+        DATA_SOURCE,STATUS,
         IS_HOLIDAY,CREATE_USER,
         CREATE_DEPT,CREATE_TIME,
         UPDATE_USER,UPDATE_TIME,
@@ -97,7 +97,7 @@
             select
             #{item.calendarId,jdbcType=VARCHAR} CALENDAR_ID,
             #{item.cdate,jdbcType=DATE} CDATE,
-            #{item.dataSource,jdbcType=VARCHAR} DATASOURCE,
+            #{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
             #{item.status,jdbcType=VARCHAR} STATUS,
             <if test="item.isHoliday != null">
                 #{item.isHoliday,jdbcType=INTEGER} IS_HOLIDAY,

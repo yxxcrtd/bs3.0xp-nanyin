@@ -313,6 +313,7 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
                 dto.setBasisCyy(splitToList.get(0));
                 dto.setQuotCyy(splitToList.get(1));
             }
+            dto.setDataSource(DictCodeListExt2.数据来源_新建导入.getValue());
             list.add(dto);
 
             chbExchangeQuotationInfoMapper.insertExchargeQuoteInfo(list);
