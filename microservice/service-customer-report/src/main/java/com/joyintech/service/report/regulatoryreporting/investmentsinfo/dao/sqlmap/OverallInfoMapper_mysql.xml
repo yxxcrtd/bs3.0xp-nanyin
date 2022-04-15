@@ -330,7 +330,7 @@
 		select REPLACE(group_concat(t.remark),',','、') remark from
 		(
 		select
-		t1.asset_name||'+'||round(t1.balance/10000,2) AS remark
+		concat(t1.asset_name,'+',round(t1.balance/10000,2)) AS remark
 		,t1.balance as balance,t1.posAmt as posAmt,row_number() over(order by t1.balance desc) as idx
 		from(
 		select
@@ -629,7 +629,7 @@
 		from(
 		select
 		'10' INDUSTRY,
-		t1.asset_name||'+'||round(t1.balance/10000,2) AS remark
+		concat(t1.asset_name,'+',round(t1.balance/10000,2)) AS remark
 		,t1.balance as balance,t1.posAmt as posAmt,row_number() over(order by t1.balance desc) as idx
 		from(select
 		coalesce(info.asset_name,case when info.asset_type2 in ('1108','1902') then CONCAT(info.mdate-info.vdate,'天回购')
@@ -1072,12 +1072,25 @@
 
 	</select>
 	<select id="selectBankModeOrgName" resultType="java.lang.String">
-		select sysi.institution_name
-		from  chb_org_regist_bank_code corbc
-		inner join sys_institution sysi
-		on corbc.org_code=sysi.institution_code
-		and corbc.status='E'
-		where   rownum=1
+		SELECT
+			institution_name
+		FROM
+			(
+				SELECT
+					sysi.institution_name,
+					@rownum:=@rownum + 1 AS num
+				FROM
+					(
+						SELECT
+							@rownum:=0) r,
+					chb_org_regist_bank_code corbc
+				INNER JOIN
+					sys_institution sysi
+				ON
+					corbc.org_code=sysi.institution_code
+				AND corbc.status='E') t
+		WHERE
+			num=1
 	</select>
 
 </mapper>
