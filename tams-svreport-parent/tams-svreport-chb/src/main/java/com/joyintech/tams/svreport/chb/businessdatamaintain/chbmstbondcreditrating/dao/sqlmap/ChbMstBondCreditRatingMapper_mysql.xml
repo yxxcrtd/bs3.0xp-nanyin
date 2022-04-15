@@ -20,7 +20,7 @@
         <result property="source" column="SOURCE" jdbcType="VARCHAR"/>
         <result property="status" column="STATUS" jdbcType="VARCHAR"/>
 
-        <result property="des" column="DES" jdbcType="VARCHAR"/>
+        <result property="errMsg" column="ERR_MSG" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -30,7 +30,7 @@
         CREATE_TIME,UPDATE_USER,UPDATE_TIME,
         DATA_SOURCE,SOURCE,
         STATUS,
-        DES
+        ERR_MSG
     </sql>
     <insert id="insert">
         insert into MST_BOND_CREDIT_RATING
@@ -62,7 +62,9 @@
             <if test="status !=null and status !=''">
                 STATUS,
             </if>
-
+            <if test="errMsg !=null and errMsg !=''">
+                ERR_MSG,
+            </if>
             <if test="createUser !=null and createUser !=''">
                 CREATE_USER,
             </if>
@@ -107,7 +109,9 @@
             <if test="status !=null and status !=''">
                 #{status},
             </if>
-
+            <if test="errMsg !=null and errMsg !=''">
+                #{errMsg},
+            </if>
             <if test="createUser !=null and createUser !=''">
                 #{createUser},
             </if>
@@ -136,7 +140,7 @@
         DATA_SOURCE,
         SOURCE,
         STATUS,
-
+        ERR_MSG,
         CREATE_USER,
         CREATE_DEPT,
         CREATE_TIME,
@@ -153,7 +157,7 @@
             #{item.dataSource},
             #{item.source},
             #{item.status},
-
+            #{item.errMsg},
             #{item.createUser},
             #{item.createDept},
             #{item.createTime},
@@ -270,5 +274,8 @@
             AND (ASSET_CODE like concat('%',#{search},'%')
             OR ASSET_NAME like  concat('%',#{search},'%')
         </if>
+    </select>
+    <select id="selectValidRecords" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from MST_BOND_CREDIT_RATING  where STATUS in ("A","E")
     </select>
 </mapper>

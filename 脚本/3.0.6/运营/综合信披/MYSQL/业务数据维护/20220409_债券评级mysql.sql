@@ -180,13 +180,13 @@ ALTER TABLE mst_bond_credit_rating  MODIFY COLUMN DIRECTION_CHANGE varchar(50) C
 
 ALTER TABLE mst_bond_credit_rating DROP COLUMN DATA_SOURCE;
 ALTER TABLE mst_bond_credit_rating DROP COLUMN STATUS;
-ALTER TABLE mst_bond_credit_rating DROP COLUMN DES;
+ALTER TABLE mst_bond_credit_rating DROP COLUMN ERR_MSG;
 
 
 
 ALTER TABLE mst_bond_credit_rating ADD DATA_SOURCE VARCHAR(20) COMMENT '数据来源';
 ALTER TABLE mst_bond_credit_rating ADD STATUS VARCHAR(20) COMMENT '数据状态';
-ALTER TABLE mst_bond_credit_rating ADD DES BLOB COMMENT '错误信息';
+ALTER TABLE mst_bond_credit_rating ADD ERR_MSG TEXT COMMENT '错误信息';
 
 
 

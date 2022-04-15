@@ -29,6 +29,9 @@
             <if test="remark !=null and remark !=''">
                 REMARK,
             </if>
+            <if test="errMsg !=null and errMsg !=''">
+                ERR_MSG,
+            </if>
             <if test="createUser !=null and createUser !=''">
                 CREATE_USER,
             </if>
@@ -70,6 +73,9 @@
             <if test="remark !=null and remark !=''">
                 #{remark},
             </if>
+            <if test="errMsg !=null and errMsg !=''">
+                #{errMsg},
+            </if>
             <if test="createUser !=null and createUser !=''">
                 #{createUser},
             </if>
@@ -88,9 +94,9 @@
         </trim>
     </insert>
     <insert id="batchInsert" parameterType="java.util.List">
-        insert into BOK_SUBJECT(SUBJECT_NO,SUBJECT_NAME,FSUBJECT_ID,SUBJECT_TYPE,SUBJECT_LEVEL,DATA_SOURCE,STATUS,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values
+        insert into BOK_SUBJECT(SUBJECT_NO,SUBJECT_NAME,FSUBJECT_ID,SUBJECT_TYPE,SUBJECT_LEVEL,DATA_SOURCE,STATUS,REMARK,ERR_MSG,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values
         <foreach collection="list" separator="," item="bokSubject">
-            (#{bokSubject.subjectNo},#{bokSubject.subjectName},#{bokSubject.fsubjectId},#{bokSubject.subjectType},#{bokSubject.subjectLevel},#{bokSubject.dataSource},#{bokSubject.status},#{bokSubject.remark},#{bokSubject.createUser},#{bokSubject.createDept},#{bokSubject.createTime},#{bokSubject.updateUser},#{bokSubject.updateTime})
+            (#{bokSubject.subjectNo},#{bokSubject.subjectName},#{bokSubject.fsubjectId},#{bokSubject.subjectType},#{bokSubject.subjectLevel},#{bokSubject.dataSource},#{bokSubject.status},#{bokSubject.remark},#{bokSubject.errMsg},#{bokSubject.createUser},#{bokSubject.createDept},#{bokSubject.createTime},#{bokSubject.updateUser},#{bokSubject.updateTime})
         </foreach>
     </insert>
     <update id="update">
@@ -124,7 +130,14 @@
                 UPDATE_TIME = #{updateTime}
             </if>
         </trim>
-        where SUBJECT_NO = #{subjectNo}
+        <where>
+            <if test="subjectNo!=null and subjectNo!=''">
+                SUBJECT_NO = #{subjectNo}
+            </if>
+            <if test="booksetId!=null and booksetId!=''">
+                AND BOOKSET_ID = #{booksetId}
+            </if>
+        </where>
     </update>
 
     <select id="selectAll" resultType="com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dto.ChbBokSubjectDto">
@@ -143,7 +156,7 @@
         BS.DATA_SOURCE as dataSource,
         BS.STATUS as status,
         BS.REMARK as remark,
-        BS.DES as des
+        BS.ERR_MSG as errMsg
         from BOK_SUBJECT BS
         <where>
             <if test="subjectLevel != null and subjectLevel != ''">
@@ -239,7 +252,7 @@
         order by SUBJECT_NAME
     </select>
     <select id="isExists" resultType="java.lang.Integer">
-        select count(*) from BOK_SUBJECT where SUBJECT_NO = #{subjectNo} and STATUS IN ('A','E')
+        select count(*) from BOK_SUBJECT where BOOKSET_ID = #{booksetId} AND  SUBJECT_NO = #{subjectNo} and STATUS IN ('A','E')
     </select>
     <select id="selcetByKey" resultType="com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dto.ChbBokSubjectDto">
         select
@@ -258,8 +271,21 @@
             BS.DATA_SOURCE as dataSource,
             BS.STATUS as status,
             BS.REMARK as remark,
-            BS.DES as des
+            BS.ERR_MSG as errMsg
         from BOK_SUBJECT BS
-        where SUBJECT_NO = #{subjectNo}
+        <where>
+            <if test="subjectNo!=null and subjectNo!=''">
+                SUBJECT_NO = #{subjectNo}
+            </if>
+            <if test="booksetId!=null and booksetId!=''">
+                AND BOOKSET_ID = #{booksetId}
+            </if>
+        </where>
+    </select>
+    <select id="selectValidRecords" resultType="com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dto.ChbBokSubjectDto">
+        select
+            BS.BOOKSET_ID as booksetId,
+            BS.SUBJECT_NO as subjectNo
+        from BOK_SUBJECT where STATUS in ('A','E')
     </select>
 </mapper>

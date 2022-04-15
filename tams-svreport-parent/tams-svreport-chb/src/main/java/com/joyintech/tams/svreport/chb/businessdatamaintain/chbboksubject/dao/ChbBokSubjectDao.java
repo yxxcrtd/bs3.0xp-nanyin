@@ -60,7 +60,7 @@ public interface ChbBokSubjectDao {
      * @param subjectNo
      * @return
      */
-    int isExists(String subjectNo);
+    int isExists(@Param("booksetId") String booksetId,@Param("subjectNo") String subjectNo);
 
     /**
      * 插入科目
@@ -74,4 +74,5 @@ public interface ChbBokSubjectDao {
 
     void batchInsert(List<ChbBokSubjectDto> list);
 
+    List<ChbBokSubjectDto> selectValidRecords();
 }

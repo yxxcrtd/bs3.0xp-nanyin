@@ -4,34 +4,35 @@ import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.svreport.base.dao.BaseCheckMysqlMapper;
-import com.joyintech.tams.common.svreport.base.dto.BaseCheckMysqlDto;
-import com.joyintech.tams.common.svreport.base.dto.BaseCommonCheckDto;
+
 import com.joyintech.tams.report.framework.thread.JoyinThreadPoolExecutor;
 import com.joyintech.tams.report.interf.common.imp.ImportGenerator;
 import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpColumn;
 import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
-import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-import java.util.regex.Pattern;
 
 /**
  * @author zcw
@@ -67,6 +68,19 @@ public class BatchInsertUtil {
      */
     @Value("${application.reportInterfOneTimeSqlLdrDataCount}")
     private int reportInterfOneTimeSqlLdrDataCount;
+
+
+
+    private Connection conn = null;
+    @Value("${spring.datasource.driverClassName}")
+    private String driverName;
+    @Value("${spring.datasource.url}")
+    private String url;
+    @Value("${spring.datasource.username}")
+    private String userName;
+    @Value("${spring.datasource.password}")
+    private String password;
+    private String database ="gd_test";
 
     /**
      * SQLLDR共通方法
@@ -193,6 +207,134 @@ public class BatchInsertUtil {
             e.getMessage();
             logger.error(e.getMessage(),e);
         }
+    }
+    /**
+     * 获取原生jdbc连接
+     *
+     * @return
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     */
+    private Connection getConnection() throws SQLException, ClassNotFoundException {
+        Class.forName(driverName);
+        conn = DriverManager.getConnection(url, userName, password);
+        return conn;
+    }
+
+    /**
+     * 组装 SQL 语句
+     *
+     * @param dataBaseName 数据库名。
+     * @param tableName    表名。
+     * @param columnName   要插入数据的列名。
+     */
+    public String assembleSql(String dataBaseName, String tableName, List<String> columnName) {
+        String insertColumnName = StringUtils.join(columnName, ",");
+        //插入方案的核心就是下面这个语句
+        String sql = "LOAD DATA LOCAL INFILE 'sql.csv' IGNORE INTO TABLE " + dataBaseName + "." + tableName + " (" + insertColumnName + ")";
+        return sql;
+    }
+
+
+
+    /**
+     * 将数据从输入流加载到MySQL。
+     *
+     * @param loadDataSql SQL语句。
+     * @param dataStream  输入流。
+     * @return int         成功插入的行数。
+     */
+    private int bulkLoadFromInputStream(String loadDataSql,
+                                        InputStream dataStream) throws SQLException, ClassNotFoundException {
+        if (null == dataStream) {
+            logger.info("输入流为NULL，没有数据导入。");
+            return 0;
+        }
+        //做测试发现连接池好像不支持，所以获取原生的jdbc连接
+        conn = getConnection();
+        PreparedStatement statement = null;
+        int result = 0;
+        try {
+            statement = conn.prepareStatement(loadDataSql);
+//            mysql8  使用下面的方式
+        /*if (statement.isWrapperFor(com.mysql.cj.jdbc.JdbcStatement.class)) {
+            com.mysql.cj.jdbc.ClientPreparedStatement mysqlStatement = statement.unwrap(com.mysql.cj.jdbc.ClientPreparedStatement.class);
+            mysqlStatement.setLocalInfileInputStream(dataStream);
+            mysqlStatement.executeUpdate();
+        }*/
+//        mysql5 使用下面的方式
+            if (statement.isWrapperFor(com.mysql.jdbc.Statement.class)) {
+                com.mysql.jdbc.PreparedStatement mysqlStatement = statement.unwrap(com.mysql.jdbc.PreparedStatement.class);
+                mysqlStatement.setLocalInfileInputStream(dataStream);
+                result = mysqlStatement.executeUpdate();
+            }
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+        }
+        return result;
+    }
+    /**
+     * 往 StringBuilder 里追加数据。
+     *
+     * @param builder StringBuilder。
+     * @param object  数据。
+     */
+    public void builderAppend(StringBuilder builder, Object object) {
+        builder.append(object);
+        builder.append("\t");
+    }
+
+    /**
+     * 往 StringBuilder 里追加一条数据的最后一个字段。
+     *
+     * @param builder StringBuilder。
+     * @param object  数据。
+     */
+    public void builderEnd(StringBuilder builder, Object object) {
+        builder.append(object);
+        builder.append("\n");
+    }
+
+    public int execLoadFromInputStream(List<Map<String ,String>> list,String tableName){
+        if(CollectionUtils.isEmpty(list)){
+            return 0;
+        }
+        List<String> columns = new ArrayList<>();
+        Set<String> keySet = list.get(0).keySet();
+        for(String s:keySet){
+            columns.add(s);
+        }
+
+        int size = keySet.size();
+        String sql = assembleSql(database,tableName,columns);
+        StringBuilder sb = new StringBuilder();
+        list.forEach(ele->{
+            Set<String> keys = ele.keySet();
+            int i=1;
+            for (String key : keys) {
+                if(i==size){
+                    builderEnd(sb,ele.get(key));
+                }else{
+                    builderAppend(sb,ele.get(key));
+                }
+                i++;
+            }
+
+        });
+        byte[] bytes = sb.toString().getBytes();
+        InputStream in = new ByteArrayInputStream(bytes);
+        int result =0;
+        try {
+            result = bulkLoadFromInputStream(sql, in);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return result;
     }
 
 }

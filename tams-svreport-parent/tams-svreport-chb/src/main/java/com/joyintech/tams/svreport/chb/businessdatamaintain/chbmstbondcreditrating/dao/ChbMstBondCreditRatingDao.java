@@ -32,4 +32,6 @@ public interface ChbMstBondCreditRatingDao {
     List<SuggestDto> getFinProdAbbr(@Param("param") String param);
 
     List<SelectOptionDto> getMutliCode(Map<String, Object> map);
+
+    List<ChbMstBondCreditRatingDto> selectValidRecords();
 }

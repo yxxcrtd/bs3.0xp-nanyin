@@ -1,6 +1,7 @@
 package com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.service;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.JoyinMessage;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
@@ -15,6 +16,7 @@ import com.joyintech.tams.report.common.util.ReportGlobalConstant;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dao.ChbBokSubjectDao;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dto.ChbBokSubjectDto;
+import com.joyintech.tams.svreport.chb.businessdatamaintain.chbmstbondcreditrating.dto.ChbMstBondCreditRatingDto;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -28,6 +30,7 @@ import java.io.File;
 import java.text.ParseException;
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * @author wubingbing
@@ -121,8 +124,8 @@ public class ChbBokSubjectService extends CommonExportService<ChbBokSubjectDto> 
      * @param subjectNo
      * @return
      */
-    public int isExists(String subjectNo) {
-        return bokSubjectDao.isExists(subjectNo);
+    public int isExists(String booksetId,String subjectNo) {
+        return bokSubjectDao.isExists(booksetId,subjectNo);
     }
 
 
@@ -485,13 +488,36 @@ public class ChbBokSubjectService extends CommonExportService<ChbBokSubjectDto> 
      */
     public AjaxResult checkConfirmMsgForImportData(String fileName,String tableName) throws Exception  {
         AjaxResult webResult = new AjaxResult();
+        if (fileName.indexOf("科目定义") == -1){
+            webResult.setMessage(this.getMessage("ImportFileName"),MessageType.错误消息);
+            return webResult;
+        }
         List<Map<String, String>> mapList = dataMapAnalysis(fileName);
-        List<ExcelValidDto> checkResult = baseCommonCheckService.checkDataDB("import", mapList, tableName, fileName, tableName, tableName, null, null);
-        webResult.setMessage(this.getMessage("ChbImportMessage",188,1,3),MessageType.确认消息);
+        int size = mapList.size();
+        List<ExcelValidDto> checkResult = baseCommonCheckService.checkDataAll("D", mapList, tableName, fileName, tableName, tableName, null, null);
+        long count = mapList.stream().filter(ele -> ele.get("STATUS").equals("A")).count();
+        webResult.setMessage(this.getMessage("ChbImportMessage",mapList.size()-count,size-mapList.size(),count),MessageType.确认消息);
+        //查数据库记录
+        List<ChbBokSubjectDto> list = bokSubjectDao.selectValidRecords();
+        List<ChbBokSubjectDto> dtoList = converToBean(mapList);
+        int duplicate = 0;
+        for (ChbBokSubjectDto ele : dtoList) {
+            for (ChbBokSubjectDto e : list) {
+                if(ele.getBooksetId().equals(e.getBooksetId())
+                        && ele.getSubjectNo().equals(e.getSubjectNo())){
+                    duplicate++;
+                }
+            }
+        }
+        List<JoyinMessage> joyinMessages = new ArrayList<>();
+        JoyinMessage ms = new JoyinMessage(this.getMessage("ChbImportDuplicateMessage",duplicate), MessageType.确认消息);
+        joyinMessages.add(ms);
+        webResult.setJoyinMessages(joyinMessages);
         return webResult;
     }
 
     /**
+     *
      * 导入数据与数据库主键校验
      * @param fileName
      * @return
@@ -504,4 +530,50 @@ public class ChbBokSubjectService extends CommonExportService<ChbBokSubjectDto> 
         return webResult;
     }
 
+
+    public List<ExcelValidDto> importFileSave(String fileName,String tableName) throws Exception {
+        List<Map<String, String>> list = dataMapAnalysis(fileName);
+        List<ExcelValidDto> checkResult = baseCommonCheckService.checkDataAll("D", list, tableName, fileName, tableName, tableName, null, null);
+        List<ChbBokSubjectDto> chbBokSubjectDtoDtos = converToBean(list);
+        bokSubjectDao.batchInsert(chbBokSubjectDtoDtos);
+        return checkResult.stream().filter(ele -> ele.getValidKey().equals("YW")).collect(Collectors.toList());
+    }
+    public List<ChbBokSubjectDto> converToBean(List<Map<String,String>> dataList)
+            throws ParseException {
+        // 返回的list定义
+        List<ChbBokSubjectDto> returnInfoList = new ArrayList<ChbBokSubjectDto>();
+        ChbBokSubjectDto bokSubjectDto = null;
+
+        for (Map<String, String> map : dataList) {
+            bokSubjectDto = new ChbBokSubjectDto();
+            if (StringUtil.isNotEmpty(map.get("SUBJECT_NO"))) {
+                bokSubjectDto.setSubjectNo(map.get("SUBJECT_NO"));
+            }
+            if (StringUtil.isNotEmpty(map.get("SUBJECT_NAME"))) {
+                bokSubjectDto.setSubjectName(map.get("SUBJECT_NAME"));
+            }
+            if (StringUtil.isNotEmpty(map.get("FSUBJECT_ID"))) {
+                bokSubjectDto.setFsubjectId(map.get("FSUBJECT_ID"));
+            }
+            if (StringUtil.isNotEmpty(map.get("SUBJECT_TYPE"))) {
+                bokSubjectDto.setSubjectType(map.get("SUBJECT_TYPE"));
+            }
+            if (StringUtil.isNotEmpty(map.get("SUBJECT_LEVEL"))) {
+                bokSubjectDto.setSubjectLevel(Long.valueOf(map.get("SUBJECT_LEVEL")));
+            }
+            if (StringUtil.isNotEmpty(map.get("ERRMSG"))) {
+                bokSubjectDto.setErrMsg(map.get("ERRMSG"));
+            }
+            bokSubjectDto.setCreateUser(CommonUtil.getUserName());
+            bokSubjectDto.setCreateDept(CommonUtil.getDeptCode()==null?"":CommonUtil.getDeptCode());
+            bokSubjectDto.setCreateTime(DateUtil.now());
+            bokSubjectDto.setUpdateUser(CommonUtil.getUserName());
+            bokSubjectDto.setUpdateTime(DateUtil.now());
+            bokSubjectDto.setDataSource(DictCodeListExt2.数据来源_新建导入.getValue());
+            bokSubjectDto.setStatus(map.get("STATUS").equals("A")?DictCodeListExt1.维护数据状态_待处理.getValue():DictCodeListExt1.维护数据状态_有效.getValue());
+            returnInfoList.add(bokSubjectDto);
+
+        }
+        return returnInfoList;
+    }
 }

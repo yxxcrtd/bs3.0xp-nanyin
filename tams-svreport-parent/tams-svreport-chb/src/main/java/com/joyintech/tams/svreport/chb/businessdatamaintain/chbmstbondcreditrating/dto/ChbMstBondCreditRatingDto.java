@@ -1,7 +1,6 @@
 package com.joyintech.tams.svreport.chb.businessdatamaintain.chbmstbondcreditrating.dto;
 
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
@@ -13,8 +12,6 @@ import com.joyintech.tams.svreport.chb.businessdatamaintain.chbmstbondcreditrati
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
-import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -44,7 +41,7 @@ public class ChbMstBondCreditRatingDto extends MstBondCreditRating implements Pr
     /**
      * 描述
      */
-    private String des;
+    private String errMsg;
     /**
      * 操作类型
      */
@@ -192,16 +189,21 @@ public class ChbMstBondCreditRatingDto extends MstBondCreditRating implements Pr
         return SysDataUtil.getNameFromDataDict(DictCode.评级类型,getoType());
     }
 
-
-    public String getDes() {
-        return des;
+    public void setoName(String oName) {
+        this.oName = oName;
     }
 
-    public void setDes(String des) {
-        this.des = des;
+    public String getErrMsg() {
+        return errMsg;
+    }
+
+    public void setErrMsg(String errMsg) {
+        this.errMsg = errMsg;
     }
 
     public String getupdateTimeStr(){
         return DateUtil.format(getUpdateTime());
     }
+
+
 }

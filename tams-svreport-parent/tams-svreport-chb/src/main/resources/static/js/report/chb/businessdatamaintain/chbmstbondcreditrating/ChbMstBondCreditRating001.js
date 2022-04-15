@@ -37,7 +37,7 @@ $(function() {
             ,{field:'sourceStr', sortable:false, width:100,title: 'ChbMstBondCreditRating001.source'}
             ,{field:'gradeDateStr', sortable:false, width:100,title: 'ChbMstBondCreditRating001.gradeDate'}
             ,{field:'statusStr', sortable:false, width:100, title: 'ChbMstBondCreditRating001.status'}
-            ,{field:'des',sortable:false,   width:150,title: 'ChbMstBondCreditRating001.des'}
+            ,{field:'errMsg',sortable:false,   width:150,title: 'ChbMstBondCreditRating001.errMsg'}
             ,{field:'updateTimeStr',sortable:false,width:100, title: 'ChbMstBondCreditRating001.updateTime'}
             ,{field:'updateUser', sortable:false,width:100,title: 'ChbMstBondCreditRating001.updateUser'}
             ,{field:'operation', width:100, title: 'SysCommon.operation',sortable:false, type:'action', buttons: ['edit', 'delt']}
@@ -129,19 +129,50 @@ $(function() {
         /**
          * 导入按钮
          */
+        // $('#ChbMstBondCreditRating001_btn_import').click(function() {
+        //     Joyin.uploadFile(function(fileName) {
+        //         Joyin.ajax(basePath +"chb/businessdatamaintain/chbmstbondcreditrating/chbmstbondcreditrating001/importFile", {
+        //             fileName : fileName
+        //         },function(result){
+        //             if(!result || !($.isArray(result) && result.length > 0)){
+        //                 Joyin.ajax(
+        //                     basePath + 'chb/businessdatamaintain/chbmstbondcreditrating/chbmstbondcreditrating001/importFileSave',
+        //                     {fileName : fileName},function (data1) {
+        //                         layui.layer.closeAll()
+        //                         table.reload();
+        //                     });
+        //             }
+        //         });
+        //     });
+        // });
+
+
+        // 导入按钮
         $('#ChbMstBondCreditRating001_btn_import').click(function() {
-            Joyin.uploadFile(function(fileName) {
-                Joyin.ajax(basePath +"chb/businessdatamaintain/chbmstbondcreditrating/chbmstbondcreditrating001/importFile", {
-                    fileName : fileName
-                },function(result){
-                    if(!result || !($.isArray(result) && result.length > 0)){
-                        Joyin.ajax(
-                            basePath + 'chb/businessdatamaintain/chbmstbondcreditrating/chbmstbondcreditrating001/importFileSave',
-                            {fileName : fileName},function (data1) {
-                                layui.layer.closeAll()
+            Joyin.confirm("请确认是否要导入数据？", function() {
+                var options = {};
+                options.pageId = "ChbMstBondCreditRating001";
+                options.exts = 'xls|xlsx';
+                Joyin.uploadFile(options,function(fileName) {
+                    Joyin.ajax(basePath + 'chb/businessdatamaintain/chbmstbondcreditrating/chbmstbondcreditrating001/checkConfirmMsgForImportData', {fileName: fileName,tableName:'MST_BOND_CREDIT_RATING'}, function(result) {
+                        if ($.isArray(result.joyinMessages) && result.joyinMessages.length > 0) {
+                            var joyinMessages = "";
+                            $.each(result.joyinMessages, function(i, joyinMessage){
+                                joyinMessages += joyinMessage.message + "<br />"
+                            });
+                            Joyin.confirm(joyinMessages, function(){
+                                Joyin.ajax(basePath + 'chb/businessdatamaintain/chbmstbondcreditrating/chbmstbondcreditrating001/importFileSave', {fileName: fileName,tableName:'MST_BOND_CREDIT_RATING'},function () {
+                                    table.reload();
+                                });
+                            });
+                        }else{
+                            Joyin.ajax(basePath + 'chb/businessdatamaintain/chbmstbondcreditrating/chbmstbondcreditrating001/importFileSave', {fileName: fileName,tableName:'MST_BOND_CREDIT_RATING'},function () {
                                 table.reload();
                             });
-                    }
+                        }
+                    });
+                },function() {
+                    table.reload();
                 });
             });
         });

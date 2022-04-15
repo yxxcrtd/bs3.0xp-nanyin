@@ -7,131 +7,131 @@ import java.io.Serializable;
  * @author wubingbing
  * @date 2022-03-31 15:01
  */
-public class BaseCheckMysqlDto implements Serializable {
+public class BaseCheckMysqlDto {
     /**
      * 列名
      */
-    private String COLUMN_NAME;
+    private String columnName;
     /**
      * 顺序
      */
-    private String ORDINAL_POSITION;
+    private String ordinalPosition;
     /**
      * 是否为空
      */
-    private String IS_NULLABLE;
+    private String isNullable;
     /**
      * 数据类型
      */
-    private String DATA_TYPE;
+    private String dataType;
     /**
      * 字符串最大长度
      */
-    private String CHARACTER_MAXIMUM_LENGTH;
-    private String NUMERIC_PRECISION;
-    private String NUMERIC_SCALE;
+    private String characterMaximumLength;
+    private String numericPrecision;
+    private String numericScale;
     /**
      * 索引
      */
-    private String COLUMN_TYPE;
+    private String columnType;
     /**
      * 注解
      */
-    private String COLUMN_COMMENT;
+    private String columnComment;
     /**
      * 列权限
      */
-    private String PRIVILEGES;
+    private String privileges;
     /**
      * 索引类型
      */
-    private String COLUMN_KEY;
+    private String columnKey;
 
-    public String getCOLUMN_NAME() {
-        return COLUMN_NAME;
+    public String getColumnName() {
+        return columnName;
     }
 
-    public void setCOLUMN_NAME(String COLUMN_NAME) {
-        this.COLUMN_NAME = COLUMN_NAME;
+    public void setColumnName(String columnName) {
+        this.columnName = columnName;
     }
 
-    public String getORDINAL_POSITION() {
-        return ORDINAL_POSITION;
+    public String getOrdinalPosition() {
+        return ordinalPosition;
     }
 
-    public void setORDINAL_POSITION(String ORDINAL_POSITION) {
-        this.ORDINAL_POSITION = ORDINAL_POSITION;
+    public void setOrdinalPosition(String ordinalPosition) {
+        this.ordinalPosition = ordinalPosition;
     }
 
-    public String getIS_NULLABLE() {
-        return IS_NULLABLE;
+    public String getIsNullable() {
+        return isNullable;
     }
 
-    public void setIS_NULLABLE(String IS_NULLABLE) {
-        this.IS_NULLABLE = IS_NULLABLE;
+    public void setIsNullable(String isNullable) {
+        this.isNullable = isNullable;
     }
 
-    public String getDATA_TYPE() {
-        return DATA_TYPE;
+    public String getDataType() {
+        return dataType;
     }
 
-    public void setDATA_TYPE(String DATA_TYPE) {
-        this.DATA_TYPE = DATA_TYPE;
+    public void setDataType(String dataType) {
+        this.dataType = dataType;
     }
 
-    public String getCHARACTER_MAXIMUM_LENGTH() {
-        return CHARACTER_MAXIMUM_LENGTH;
+    public String getCharacterMaximumLength() {
+        return characterMaximumLength;
     }
 
-    public void setCHARACTER_MAXIMUM_LENGTH(String CHARACTER_MAXIMUM_LENGTH) {
-        this.CHARACTER_MAXIMUM_LENGTH = CHARACTER_MAXIMUM_LENGTH;
+    public void setCharacterMaximumLength(String characterMaximumLength) {
+        this.characterMaximumLength = characterMaximumLength;
     }
 
-    public String getCOLUMN_TYPE() {
-        return COLUMN_TYPE;
+    public String getNumericPrecision() {
+        return numericPrecision;
     }
 
-    public void setCOLUMN_TYPE(String COLUMN_TYPE) {
-        this.COLUMN_TYPE = COLUMN_TYPE;
+    public void setNumericPrecision(String numericPrecision) {
+        this.numericPrecision = numericPrecision;
     }
 
-    public String getCOLUMN_COMMENT() {
-        return COLUMN_COMMENT;
+    public String getNumericScale() {
+        return numericScale;
     }
 
-    public void setCOLUMN_COMMENT(String COLUMN_COMMENT) {
-        this.COLUMN_COMMENT = COLUMN_COMMENT;
+    public void setNumericScale(String numericScale) {
+        this.numericScale = numericScale;
     }
 
-    public String getPRIVILEGES() {
-        return PRIVILEGES;
+    public String getColumnType() {
+        return columnType;
     }
 
-    public void setPRIVILEGES(String PRIVILEGES) {
-        this.PRIVILEGES = PRIVILEGES;
+    public void setColumnType(String columnType) {
+        this.columnType = columnType;
     }
 
-    public String getNUMERIC_PRECISION() {
-        return NUMERIC_PRECISION;
+    public String getColumnComment() {
+        return columnComment;
     }
 
-    public void setNUMERIC_PRECISION(String NUMERIC_PRECISION) {
-        this.NUMERIC_PRECISION = NUMERIC_PRECISION;
+    public void setColumnComment(String columnComment) {
+        this.columnComment = columnComment;
     }
 
-    public String getNUMERIC_SCALE() {
-        return NUMERIC_SCALE;
+    public String getPrivileges() {
+        return privileges;
     }
 
-    public void setNUMERIC_SCALE(String NUMERIC_SCALE) {
-        this.NUMERIC_SCALE = NUMERIC_SCALE;
+    public void setPrivileges(String privileges) {
+        this.privileges = privileges;
     }
 
-    public String getCOLUMN_KEY() {
-        return COLUMN_KEY;
+    public String getColumnKey() {
+        return columnKey;
     }
 
-    public void setCOLUMN_KEY(String COLUMN_KEY) {
-        this.COLUMN_KEY = COLUMN_KEY;
+    public void setColumnKey(String columnKey) {
+        this.columnKey = columnKey;
     }
 }

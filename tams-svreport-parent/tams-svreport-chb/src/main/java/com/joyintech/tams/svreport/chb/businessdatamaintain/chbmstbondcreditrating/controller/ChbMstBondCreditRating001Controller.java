@@ -24,6 +24,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
@@ -165,18 +166,10 @@ public class ChbMstBondCreditRating001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("importFileSave")
-    public List<Integer> importFileSave(String fileName)
+    public List<ExcelValidDto> importFileSave(String fileName,String tableName)
             throws Exception {
-        List<List<String>> dataList = mstBondCreditRateService.dataAnalysis(fileName);
-        List<Integer> checkResult = new ArrayList<>();
-        if (null != dataList && dataList.size() > 0) {
-            // 导入文件重复数据检查
-            checkResult = mstBondCreditRateService.duplicateCheck(dataList);
-            List<ChbMstBondCreditRatingDto> equityList = mstBondCreditRateService.converToBean(dataList,checkResult);
-            // 保存，已存在则更新
-            mstBondCreditRateService.dealAfterCheck(equityList);
-        }
-        return checkResult;
+
+        return mstBondCreditRateService.importFileSave(fileName,tableName);
     }
     /**
      * 导出信息excel
@@ -215,5 +208,17 @@ public class ChbMstBondCreditRating001Controller extends BaseController {
                         + FileNameUtil.getFileExtName(outFile),
                 outFile, true);
 
+    }
+
+    /**
+     * 导入数据文件之前检查数据
+     *
+     * @param fileName 导入的文件名
+     * @return 处理结果
+     */
+    @ResponseBody
+    @RequestMapping(value = "checkConfirmMsgForImportData", method = RequestMethod.POST)
+    public AjaxResult checkConfirmMsgForImportData(String fileName,String tableName) throws Exception  {
+        return mstBondCreditRateService.checkConfirmMsgForImportData(fileName,tableName);
     }
 }

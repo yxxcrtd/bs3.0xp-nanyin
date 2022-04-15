@@ -1,11 +1,15 @@
 package com.joyintech.tams.svreport.chb.businessdatamaintain.chbmstbondcreditrating.service;
 
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.JoyinMessage;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbmstbondcreditrating.dao.ChbMstBondCreditRatingDao;
@@ -22,10 +26,8 @@ import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author wubingbing
@@ -36,6 +38,8 @@ import java.util.Map;
 public class ChbMstBondCreditRateService extends CommonExportService<ChbMstBondCreditRatingDto> implements BaseProcessService<ChbMstBondCreditRatingDto> {
     @Autowired
     private ChbMstBondCreditRatingDao mstBondCreditRatingDao;
+    @Autowired
+    private BaseCommonCheckService baseCommonCheckService;
     @Override
     public void doComplete(ChbMstBondCreditRatingDto entity, OperationType type) {
         if (OperationType.DELETE.equals(type)) {
@@ -335,6 +339,9 @@ public class ChbMstBondCreditRateService extends CommonExportService<ChbMstBondC
      * @since 1.0
      */
     public void dealAfterCheck(List<ChbMstBondCreditRatingDto> list) {
+
+
+
         list.forEach(ele->{
             ele.setGradeOrgId(ele.getGradeOrgId().substring(0,2));
             ele.setShortLongTerm(ele.getShortLongTerm().substring(0,2));
@@ -348,21 +355,130 @@ public class ChbMstBondCreditRateService extends CommonExportService<ChbMstBondC
 
     public List<ChbMstBondCreditRatingDto> selectAll(Map<String, Object> params) {
         List<ChbMstBondCreditRatingDto> list = mstBondCreditRatingDao.selectAll(params);
-//        list.forEach(item->{
-//            item.setGradeOrgId(SysDataUtil.getNameFromDataDict(DictCode.评级机构,item.getGradeOrgId()));
-//            item.setShortLongTerm(SysDataUtil.getNameFromDataDict(DictCode.长期短期,item.getShortLongTerm()));
-//            item.setGradeResult(SysDataUtil.getNameFromDataDict(DictCode.评级结果,item.getGradeResult()));
-//            item.setDataSource(SysDataUtil.getNameFromDataDict(DictCode.数据来源,item.getDataSource()));
-//            item.setStatus(SysDataUtil.getNameFromDataDict(DictCode.维护数据状态,item.getStatus()));
-//            item.setoObject(SysDataUtil.getNameFromDataDict(DictCode.评级类型,item.getoObject()));
-//            item.setSource(SysDataUtil.getNameFromDataDict(DictCode.评级来源类型,item.getSource()));
-//        });
         return list;
     }
 
     public List<SelectOptionDto> getMutliCode(Map<String, Object> map) {
         return mstBondCreditRatingDao.getMutliCode(map);
     }
+    /**
+     * 导入数据文件之前检查数据
+     *
+     * @param fileName 导入的文件名
+     * @return 处理结果
+     */
+    public AjaxResult checkConfirmMsgForImportData(String fileName, String tableName) throws Exception  {
+        AjaxResult webResult = new AjaxResult();
+        if (fileName.indexOf("债券评级") == -1){
+            webResult.setMessage(this.getMessage("ImportFileName"),MessageType.错误消息);
+            return webResult;
+        }
+        List<Map<String, String>> mapList = dataMapAnalysis(fileName);
+        int size = mapList.size();
+        List<ExcelValidDto> checkResult = baseCommonCheckService.checkDataAll("D", mapList, tableName, fileName, tableName, tableName, null, null);
+        long count = mapList.stream().filter(ele -> ele.get("STATUS").equals("A")).count();
+        webResult.setMessage(this.getMessage("ChbImportMessage",mapList.size()-count,size-mapList.size(),count),MessageType.确认消息);
+        //查数据库记录
+        List<ChbMstBondCreditRatingDto> list = mstBondCreditRatingDao.selectValidRecords();
+        List<ChbMstBondCreditRatingDto> dtoList = converToBean(mapList);
+        int duplicate = 0;
+        for (ChbMstBondCreditRatingDto ele : dtoList) {
+            for (ChbMstBondCreditRatingDto e : list) {
+                if(ele.getoCode().equals(e.getoCode())
+                        && ele.getGradeOrgId().equals(e.getGradeOrgId())
+                        && ele.getGradeDateStr().equals(e.getGradeDateStr())
+                        && ele.getoType().equals(e.getoType())){
+                    duplicate++;
+                }
+            }
+        }
+        List<JoyinMessage> joyinMessages = new ArrayList<>();
+        JoyinMessage ms = new JoyinMessage(this.getMessage("ChbImportDuplicateMessage",duplicate), MessageType.确认消息);
+        joyinMessages.add(ms);
+        webResult.setJoyinMessages(joyinMessages);
+        return webResult;
+    }
+    /**
+     * excel导入数据整理
+     *
+     * @param flieName 文件名称
+     * @return 检验list
+     * @throws Exception 异常
+     * @see
+     * @since 1.0
+     */
+    public List<Map<String,String>> dataMapAnalysis(String flieName)
+            throws Exception {
+        String prefix = CacheUtil.getSysParam(GlobalConstant.COM_PROP_UPLOAD_PATH);
+        if(!StringUtil.startsWith(flieName, prefix)
+                && !StringUtil.startsWith(flieName, prefix.replace("/", File.separator))) {
+            flieName = prefix + File.separator + flieName;
+        }
+        ExcelUtil excelUtil = ExcelUtil.build(flieName, null);
+        List<List<String>> dataList = excelUtil.readToList(0, 1, 0);
+        List<Map<String,String>> list = new ArrayList<>();
+        dataList.forEach(item->{
+            Map<String,String> map = new HashMap<>();
+            map.put("O_CODE",item.get(0));
+            map.put("O_TYPE",item.get(1).substring(0,2));
+            map.put("GRADE_ORG_ID",item.get(2).substring(0,2));
+            map.put("SHORT_LONG_TERM",item.get(3).substring(0,2));
+            map.put("GRADE_RESULT",item.get(4).substring(0,2));
+            map.put("SOURCE",item.get(5).substring(0,2));
+            map.put("GRADE_DATE",item.get(6));
+            list.add(map);
+        });
 
+        return list;
+    }
+    public List<ChbMstBondCreditRatingDto> converToBean(List<Map<String,String>> list){
+        // 返回的list定义
+        List<ChbMstBondCreditRatingDto> returnInfoList = new ArrayList<ChbMstBondCreditRatingDto>();
+        for (Map<String,String> map:list) {
 
+            ChbMstBondCreditRatingDto mstBondCreditRatingDto = new ChbMstBondCreditRatingDto();
+            if (StringUtil.isNotEmpty(map.get("O_CODE"))) {
+                mstBondCreditRatingDto.setoCode(map.get("O_CODE"));
+            }
+            if (StringUtil.isNotEmpty(map.get("O_TYPE"))) {
+                mstBondCreditRatingDto.setoType(map.get("O_TYPE"));
+            }
+            if (StringUtil.isNotEmpty(map.get("GRADE_ORG_ID"))) {
+                mstBondCreditRatingDto.setGradeOrgId(map.get("GRADE_ORG_ID"));
+            }
+            if (StringUtil.isNotEmpty(map.get("SHORT_LONG_TERM"))) {
+                mstBondCreditRatingDto.setShortLongTerm(map.get("SHORT_LONG_TERM"));
+            }
+            if (StringUtil.isNotEmpty(map.get("GRADE_RESULT"))) {
+                mstBondCreditRatingDto.setGradeResult(map.get("GRADE_RESULT"));
+            }
+            if (StringUtil.isNotEmpty(map.get("SOURCE"))) {
+                mstBondCreditRatingDto.setSource(map.get("SOURCE"));
+            }
+            if (StringUtil.isNotEmpty(map.get("GRADE_DATE"))) {
+                mstBondCreditRatingDto.setGradeDate(DateUtil.parse(map.get("GRADE_DATE")));
+            }
+            if (StringUtil.isNotEmpty(map.get("ERRMSG"))) {
+                mstBondCreditRatingDto.setErrMsg(map.get("ERRMSG"));
+            }
+            mstBondCreditRatingDto.setCreateUser(CommonUtil.getUserName());
+            mstBondCreditRatingDto.setCreateDept(CommonUtil.getDeptCode()==null?"":CommonUtil.getDeptCode());
+            mstBondCreditRatingDto.setCreateTime(DateUtil.now());
+            mstBondCreditRatingDto.setUpdateUser(CommonUtil.getUserName());
+            mstBondCreditRatingDto.setUpdateTime(DateUtil.now());
+
+            mstBondCreditRatingDto.setDataSource(DictCodeListExt2.数据来源_新建导入.getValue());
+            mstBondCreditRatingDto.setStatus(map.get("STATUS").equals("A")?DictCodeListExt1.维护数据状态_待处理.getValue():DictCodeListExt1.维护数据状态_有效.getValue());
+            returnInfoList.add(mstBondCreditRatingDto);
+        }
+        return returnInfoList;
+    }
+
+    public List<ExcelValidDto> importFileSave(String fileName,String tableName) throws Exception {
+        List<Map<String, String>> list = dataMapAnalysis(fileName);
+        List<ExcelValidDto> checkResult = baseCommonCheckService.checkDataAll("D", list, tableName, fileName, tableName, tableName, null, null);
+        List<ChbMstBondCreditRatingDto> chbMstBondCreditRatingDtos = converToBean(list);
+        mstBondCreditRatingDao.batchInsert(chbMstBondCreditRatingDtos);
+        return checkResult.stream().filter(ele -> ele.getValidKey().equals("YW")).collect(Collectors.toList());
+    }
 }

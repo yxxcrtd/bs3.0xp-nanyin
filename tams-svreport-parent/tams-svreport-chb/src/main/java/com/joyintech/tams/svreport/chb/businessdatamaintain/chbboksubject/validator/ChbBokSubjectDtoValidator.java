@@ -73,7 +73,7 @@ public class ChbBokSubjectDtoValidator implements BeanValidator {
             else {
                 // 保存check
                  //判断新建的数据是否存在
-                if (StringUtils.hasText(dto.getSubjectNo()) && bokSubjectService.isExists(dto.getSubjectNo()) > 0) {
+                if (StringUtils.hasText(dto.getSubjectNo()) && bokSubjectService.isExists(dto.getBooksetId(),dto.getSubjectNo()) > 0) {
                     StringBuffer sb = new StringBuffer();
                     sb.append(getMessage("BokSubject.subjectNo")).append(GlobalConstant.COLON).append(dto.getSubjectNo());
                     resultList.add( new ValidMessage("subjectNo", getMessage("CHB_BUSS_E_0006", sb.toString())));

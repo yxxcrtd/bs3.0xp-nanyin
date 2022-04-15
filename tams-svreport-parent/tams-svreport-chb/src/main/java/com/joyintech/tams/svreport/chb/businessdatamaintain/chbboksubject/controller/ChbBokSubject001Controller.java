@@ -209,7 +209,7 @@ public class ChbBokSubject001Controller extends BaseController {
         return this.bokSubjectService.importData(fileName,tableName);
     }
     /**
-     * 导入数据文件之前检查数据
+     * 校验数据在数据库是否存在
      *
      * @param fileName 导入的文件名
      * @return 处理结果
@@ -231,6 +231,7 @@ public class ChbBokSubject001Controller extends BaseController {
     public AjaxResult checkConfirmMsgForImportData(String fileName,String tableName) throws Exception  {
         return bokSubjectService.checkConfirmMsgForImportData(fileName,tableName);
     }
+
 
     /**
      * 导入（必填项校验）
@@ -256,18 +257,10 @@ public class ChbBokSubject001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("importFileSave")
-    public List<Integer> importFileSave(String fileName)
+    public List<ExcelValidDto> importFileSave(String fileName,String tableName)
             throws Exception {
-        List<List<String>> dataList = bokSubjectService.dataAnalysis(fileName);
-        List<Integer> checkResult = new ArrayList<>();
-        if (null != dataList && dataList.size() > 0) {
-            // 导入文件重复数据检查
-            checkResult = bokSubjectService.duplicateCheck(dataList);
-            List<ChbBokSubjectDto> equityList = bokSubjectService.converToBean(dataList,checkResult);
-            // 保存，已存在则更新
-            bokSubjectService.dealAfterCheck(equityList);
-        }
-        return checkResult;
+
+        return bokSubjectService.importFileSave(fileName,tableName);
     }
 
     /**

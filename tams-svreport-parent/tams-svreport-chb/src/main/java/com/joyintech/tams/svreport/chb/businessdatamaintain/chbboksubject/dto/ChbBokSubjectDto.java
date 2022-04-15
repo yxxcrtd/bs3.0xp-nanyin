@@ -44,7 +44,7 @@ public class ChbBokSubjectDto extends BokSubject implements ProcessEntity {
     /**
      * 错误信息
      */
-    private String des;
+    private String errMsg;
 
     /**
      * 要素id
@@ -151,11 +151,11 @@ public class ChbBokSubjectDto extends BokSubject implements ProcessEntity {
         return SysDataUtil.getNameFromDataDict(DictCode.科目级别,super.getSubjectLevel().toString());
     }
 
-    public String getDes() {
-        return des;
+    public String getErrMsg() {
+        return errMsg;
     }
 
-    public void setDes(String des) {
-        this.des = des;
+    public void setErrMsg(String errMsg) {
+        this.errMsg = errMsg;
     }
 }
