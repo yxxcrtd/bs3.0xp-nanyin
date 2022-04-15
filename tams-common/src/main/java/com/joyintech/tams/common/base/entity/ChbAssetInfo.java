@@ -20,19 +20,19 @@ public class ChbAssetInfo extends BaseEntity {
     /**
      * 行内资产负债编码
      */
-	@PrimaryKey(Field.PK_1)
+    @PrimaryKey(Field.PK_1)
     private String assetCode;
 
     /**
      * 资产类型
      */
-	@PrimaryKey(Field.PK_2)
+    @PrimaryKey(Field.PK_2)
     private String assetType;
 
     /**
      * 资产/负债二级类别 参考数据字典:ASSET_TYPE_SECOND_LEVEL
      */
-	@PrimaryKey(Field.PK_3)
+    @PrimaryKey(Field.PK_3)
     private String assetType2;
 
     /**
@@ -1143,8 +1143,8 @@ public class ChbAssetInfo extends BaseEntity {
      * 是否持有金融牌照
      */
     private String isFinLicence;
-	
-	/**
+
+    /**
      * 存款账号
      */
     private String accountNo;
@@ -1179,8 +1179,6 @@ public class ChbAssetInfo extends BaseEntity {
      */
     private String isDepositFlag;
 
-    private String isPropertyTrust;
-
     /**
      * 取得 资产要素uuid（为修改删除使用）
      * @return 资产要素uuid（为修改删除使用）
@@ -1211,14 +1209,6 @@ public class ChbAssetInfo extends BaseEntity {
      */
     public void setAssetCode(String assetCode) {
         this.assetCode = assetCode == null ? null : assetCode.trim();
-    }
-
-    public String getIsPropertyTrust() {
-        return isPropertyTrust;
-    }
-
-    public void setIsPropertyTrust(String isPropertyTrust) {
-        this.isPropertyTrust = isPropertyTrust;
     }
 
     /**
@@ -4702,8 +4692,8 @@ public class ChbAssetInfo extends BaseEntity {
     public void setIsFinLicence(String isFinLicence) {
         this.isFinLicence = isFinLicence == null ? null : isFinLicence.trim();
     }
-	
-	public String getAccountNo() {
+
+    public String getAccountNo() {
         return accountNo;
     }
 

@@ -362,18 +362,6 @@
                         </select>
 					</div>
 				</div>
-
-                <div class="form-inline-wrap" th:id="|${entityName}_isPropertyTrust_div|">
-                    <label class="layui-form-label form-label" style="line-height: normal!important;">是否为财产权信托产品</label>
-                    <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_isPropertyTrust|" th:name="|${entityName}.isPropertyTrust|"
-                                th:initValue="${entity?.isPropertyTrust}" class="layui-input form-input input-select"
-                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required
-                                data-th-data-result="${SVR_YES_OR_NO}">
-                        </select>
-                    </div>
-                </div>
-
             </div>
 
             <div class="layui-form-item">
