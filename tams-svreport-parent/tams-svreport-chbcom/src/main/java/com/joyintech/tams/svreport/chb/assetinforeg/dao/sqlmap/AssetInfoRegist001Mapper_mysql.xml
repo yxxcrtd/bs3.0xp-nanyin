@@ -5419,7 +5419,7 @@
 				select distinct cabd.prod_id,cbap.asset_code from  CHB_ASSETS_BASIS_DATA_NOBTM cabd
 				left join(select distinct cbap.plan_asset_id as plan_asset_id,cbap.asset_code from  chb_bot_ast_pos cbap) cbap
 				on cabd.asset_id=cbap.plan_asset_id
-				)cabds　
+				)cabds 
 				LEFT JOIN DATA_AUTH_NOTIFY_INST DA ON cabds.prod_id=dA.business_id and dA.model_type = '02' and DA.DATA_TYPE='PTL01'
 				where 1=1 and ASSETINFO.ASSET_CODE=cabds.asset_id
 				<if test="orgCode != null and orgCode.size() > 0">
@@ -5760,7 +5760,7 @@
 			select distinct cabd.prod_id,cbap.asset_code from  CHB_ASSETS_BASIS_DATA cabd
 			left join(select distinct cbap.plan_asset_id as plan_asset_id,cbap.asset_code from  chb_bot_ast_pos cbap) cbap
 			on cabd.asset_id=cbap.plan_asset_id
-			)cabds　
+			)cabds 
 			on ASSETINFO.ASSET_CODE=cabds.asset_id
 		</if>
 		<if test="isChlBtmStr != null  and isChlBtmStr!='' and isChlBtmStr.equals('02')">
@@ -5769,11 +5769,11 @@
 			select distinct cabd.prod_id,cbap.asset_code from  CHB_ASSETS_BASIS_DATA_NOBTM cabd
 			left join(select distinct cbap.plan_asset_id as plan_asset_id,cbap.asset_code from  chb_bot_ast_pos cbap) cbap
 			on cabd.asset_id=cbap.plan_asset_id
-			)cabds　
+			)cabds 
 			on ASSETINFO.ASSET_CODE=cabds.asset_id
 		</if>
 		LEFT JOIN (SELECT D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE FROM DATA_AUTH_NOTIFY_INST D  WHERE D.MODEL_TYPE = '02' GROUP BY D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE) DA
-		ON (substr(DA.BUSINESS_ID,5)  = ASSETINFO.ASSET_CODE)　or (DA.BUSINESS_ID = cabds.prod_id)
+		ON (substr(DA.BUSINESS_ID,5)  = ASSETINFO.ASSET_CODE) or (DA.BUSINESS_ID = cabds.prod_id)
 		LEFT JOIN CHB_ORG_REGIST_BANK_CODE CC ON da.BELONG_INSTITUTION_CODE=cc.org_code
 		LEFT JOIN CHB_ASSET_SUB_STATUS CS ON ASSETINFO.REGIST_SEQNO=CS.REGIST_SEQNO
 		AND DA.BELONG_INSTITUTION_CODE=CS.INSTITUTION_CODE AND CS.ASSET_TYPE='01'
@@ -6165,7 +6165,7 @@
 				select distinct cabd.prod_id,cbap.asset_code from  CHB_ASSETS_BASIS_DATA_NOBTM cabd
 				left join(select distinct cbap.plan_asset_id as plan_asset_id,cbap.asset_code from  chb_bot_ast_pos cbap) cbap
 				on cabd.asset_id=cbap.plan_asset_id
-				)cabds　
+				)cabds 
 				LEFT JOIN DATA_AUTH_NOTIFY_INST DA ON cabds.prod_id=dA.business_id and dA.model_type = '02' and DA.DATA_TYPE='PTL01'
 				where 1=1 and ASSETINFO.ASSET_CODE=cabds.asset_id
 				<if test="orgCode != null and orgCode.size() > 0">
@@ -6423,7 +6423,7 @@
 			select distinct cabd.prod_id,cbap.asset_code from  CHB_ASSETS_BASIS_DATA cabd
 			left join(select distinct cbap.plan_asset_id as plan_asset_id,cbap.asset_code from  chb_bot_ast_pos cbap) cbap
 			on cabd.asset_id=cbap.plan_asset_id
-			)cabds　
+			)cabds 
 			on ASSETINFO.ASSET_CODE=cabds.asset_id
 		</if>
 		<if test="isChlBtmStr != null  and isChlBtmStr!='' and isChlBtmStr.equals('02')">
@@ -6432,11 +6432,11 @@
 			select distinct cabd.prod_id,cbap.asset_code from  CHB_ASSETS_BASIS_DATA_NOBTM cabd
 			left join(select distinct cbap.plan_asset_id as plan_asset_id,cbap.asset_code from  chb_bot_ast_pos cbap) cbap
 			on cabd.asset_id=cbap.plan_asset_id
-			)cabds　
+			)cabds 
 			on ASSETINFO.ASSET_CODE=cabds.asset_id
 		</if>
 		LEFT JOIN (SELECT D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE FROM DATA_AUTH_NOTIFY_INST D  WHERE D.MODEL_TYPE = '02' GROUP BY D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE) DA
-		ON (substr(DA.BUSINESS_ID,5)  = ASSETINFO.ASSET_CODE)　or (DA.BUSINESS_ID = cabds.prod_id)
+		ON (substr(DA.BUSINESS_ID,5)  = ASSETINFO.ASSET_CODE) or (DA.BUSINESS_ID = cabds.prod_id)
 		LEFT JOIN CHB_ORG_REGIST_BANK_CODE CC ON da.BELONG_INSTITUTION_CODE=cc.org_code
 		LEFT JOIN CHB_ASSET_SUB_STATUS CS ON ASSETINFO.REGIST_SEQNO=CS.REGIST_SEQNO
 		AND DA.BELONG_INSTITUTION_CODE=CS.INSTITUTION_CODE AND CS.ASSET_TYPE='01'

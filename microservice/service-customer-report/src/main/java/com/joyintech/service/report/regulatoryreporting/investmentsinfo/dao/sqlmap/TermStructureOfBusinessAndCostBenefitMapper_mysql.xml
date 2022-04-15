@@ -2086,7 +2086,7 @@
             on fc2.prod_id=di.business_id
             and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
         </if>
-        where fc2.asset_code= fc1.asset_id　and fc2.status='E'
+        where fc2.asset_code= fc1.asset_id and fc2.status='E'
         <if test="org != null  and org!=''">
             and di.institution_code=#{org, jdbcType=VARCHAR}
         </if>)
@@ -3022,7 +3022,7 @@
         or (cr.finprod_type2 ='XJ' and cr.change_type='05')
         )
         and cr.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr.asset_id
-        and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}　and fc1.asset_rate is not null)
+        and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.asset_rate is not null)
 
         union all
 
@@ -3068,7 +3068,7 @@
         group by fc1.plan_asset_id,fc1.asset_code)cdeal
         on cr.asset_id=cdeal.assetid
         where cr.change_date<![CDATA[<]]>cdeal.dealmindate
-        and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('01') and cr.change_type='02'　
+        and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('01') and cr.change_type='02' 
         and cr.status='E')t where t.idx=1
         )fjycr
         on cr.asset_id=fjycr.asset_id
@@ -3679,7 +3679,7 @@
         group by fc1.plan_asset_id,fc1.asset_code)cdeal
         on cr.asset_id=cdeal.assetid
         where cr.change_date<![CDATA[<]]>cdeal.dealmindate
-        and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('01') and cr.change_type='02'　
+        and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('01') and cr.change_type='02' 
         and cr.status='E')t where t.idx=1
         )fjycr
         on cr.asset_id=fjycr.asset_id
@@ -3917,14 +3917,14 @@
         and lastcmap.ENDDATE=#{lastEndDate,jdbcType=DATE}
         <if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
             left join(select distinct cabd.mdate as mdate,cabd.asset_id
-            　　　　 from CHB_ASSETS_BASIS_DATA cabd
+                 from CHB_ASSETS_BASIS_DATA cabd
             WHERE 1=1 and cabd.value_date=#{endDate,jdbcType=DATE}
             )exeplan
             on cmap.asset_code=exeplan.asset_id
         </if>
         <if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
             left join(select distinct cabd.mdate as mdate,cabd.asset_id
-            　　　　 from CHB_ASSETS_BASIS_DATA_NOBTM cabd
+                 from CHB_ASSETS_BASIS_DATA_NOBTM cabd
             WHERE 1=1 and cabd.value_date=#{endDate,jdbcType=DATE}
             )exeplan
             on cmap.asset_code=exeplan.asset_id
@@ -3969,7 +3969,7 @@
         )
         ,psisum as(
         select
-        end.days as days,sum((ifnull(end.amt,0)+ifnull(end.lastamt,0))/2*ifnull(rate.assetRate,0))　sumAllamt
+        end.days as days,sum((ifnull(end.amt,0)+ifnull(end.lastamt,0))/2*ifnull(rate.assetRate,0)) sumAllamt
         from enddays end
         left join rate on end.assetId=rate.assetId
         where rate.assetRate is not null and rate.assetRate!=0
@@ -4121,7 +4121,7 @@
         or (cr.finprod_type2 ='XJ' and cr.change_type='05')
         )
         and cr.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr.asset_id
-        and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}　and fc1.asset_rate is not null)
+        and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.asset_rate is not null)
 
         union all
 
@@ -4142,7 +4142,7 @@
         left join (select cr1.asset_rate,cr1.change_date,cr1.asset_id from chb_asset_rate cr1
         where cr1.finprod_Type2 in ('F17','F06') and cr1.profit_Type in ('01')
         and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-        and fc1.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}-1　and fc1.change_type='02') and
+        and fc1.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}-1 and fc1.change_type='02') and
         cr1.change_type='02'
         )fcr
         on cr.asset_id=fcr.asset_id
@@ -4165,7 +4165,7 @@
             on fc2.prod_id=di.business_id
             and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
         </if>
-        where fc2.asset_code= fc1.asset_id　and fc2.status='E'
+        where fc2.asset_code= fc1.asset_id and fc2.status='E'
         <if test="org != null  and org!=''">
             and di.institution_code=#{org, jdbcType=VARCHAR}
         </if>)
@@ -4408,7 +4408,7 @@
         group by fc1.plan_asset_id,fc1.asset_code)cdeal
         on cr.asset_id=cdeal.assetid
         where cr.change_date<![CDATA[<]]>cdeal.dealmindate
-        and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('01') and cr.change_type='02'　
+        and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('01') and cr.change_type='02' 
         and cr.status='E')t where t.idx=1
         )fjycr
         on cr.asset_id=fjycr.asset_id
@@ -4681,7 +4681,7 @@
         )
         ,psisum as(
         select
-        end.industryType as industryType,sum(ifnull(end.amt,0)* ifnull(rate.assetRate,0))　sumAllamt
+        end.industryType as industryType,sum(ifnull(end.amt,0)* ifnull(rate.assetRate,0)) sumAllamt
         from industryTypes end
         left join rate on end.assetId=rate.assetId
         where rate.assetRate is not null and rate.assetRate!=0
@@ -4713,7 +4713,7 @@
         or (cr.finprod_type2 ='XJ' and cr.change_type='05')
         )
         and cr.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr.asset_id
-        and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}　and fc1.asset_rate is not null)
+        and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.asset_rate is not null)
 
         union all
 
@@ -4734,7 +4734,7 @@
         left join (select cr1.asset_rate,cr1.change_date,cr1.asset_id from chb_asset_rate cr1
         where cr1.finprod_Type2 in ('F17','F06') and cr1.profit_Type in ('01')
         and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-        and fc1.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}-1　and fc1.change_type='02') and
+        and fc1.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}-1 and fc1.change_type='02') and
         cr1.change_type='02'
         )fcr
         on cr.asset_id=fcr.asset_id
@@ -4954,7 +4954,7 @@
         or (cr.finprod_type2 ='XJ' and cr.change_type='05')
         )
         and cr.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr.asset_id
-        and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}　and fc1.asset_rate is not null)
+        and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.asset_rate is not null)
 
         union all
 
@@ -5235,7 +5235,7 @@
             and di.institution_code=#{org, jdbcType=VARCHAR}
         </if>
         union all
-        select ifnull(cmap.ASSETVALUE_A,0) amt,cmap.asset_code　as assetId,ifnull(lastcmap.ASSETVALUE_A,0) lastamt,
+        select ifnull(cmap.ASSETVALUE_A,0) amt,cmap.asset_code as assetId,ifnull(lastcmap.ASSETVALUE_A,0) lastamt,
         '15' as industryType
         from
         CHB_MONTH_ASSET_POSITION cmap
@@ -5272,7 +5272,7 @@
         ,psisum as(
         select
         end.industryType as
-        industryType,sum((ifnull(end.amt,0)+ifnull(end.lastamt,0))/2*ifnull(rate.assetRate,0))　sumAllamt
+        industryType,sum((ifnull(end.amt,0)+ifnull(end.lastamt,0))/2*ifnull(rate.assetRate,0)) sumAllamt
         from industryTypes end
         left join rate on end.assetId=rate.assetId
         where rate.assetRate is not null and rate.assetRate!=0

@@ -520,7 +520,7 @@
 	 	from MST_INT_RATE_INFO
 	 	where
 	 		INT_RATE_ID = #{indexId,jdbcType=VARCHAR}
-	 		AND　EFF_DATE　<![CDATA[<=]]> STR_TO_DATE(#{effDate},'%Y-%m-%d')
+	 		AND EFF_DATE <![CDATA[<=]]> STR_TO_DATE(#{effDate},'%Y-%m-%d')
 	 	)
 	 </select>
 	<select id="getFinBaseRuleInfo"

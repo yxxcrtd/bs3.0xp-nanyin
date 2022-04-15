@@ -290,7 +290,7 @@
         </if>
         <if test="assetType == PINAN_ASSET_TYPE_F01 or assetType == PINAN_ASSET_TYPE_F07
                 or assetType == PINAN_ASSET_TYPE_F10  or assetType == PINAN_ASSET_TYPE_F11">
-            T1.PRICE_MODEL priceModel,　
+            T1.PRICE_MODEL priceModel, 
             T1.PS ps,
         </if>
         <if test="assetType == PINAN_ASSET_TYPE_F01">
@@ -350,12 +350,12 @@
                     IFNULL(T3.FINISHED_AMT * 100,0),
                     IFNULL(T3.FINISHED_AMT,0)
                 )
-            ) unfinishedAmt,　
+            ) unfinishedAmt, 
             T2.SEC_ACCT_ID secAcctId,
             T1.INV_MANAGER_ID invManagerId,
             T6.SEC_ACCT_NAME SecAcctName,
             T1.REMARK remark
-        FROM ETR_ENTRUST　T1
+        FROM ETR_ENTRUST T1
         LEFT JOIN ETR_ENTRUST_ADD T2 ON T1.ENTRUST_ID = T2.ENTRUST_ID
         LEFT JOIN (SELECT ENTRUST_ID,SUM(FINISH_AMT) AS FINISHED_AMT FROM ETR_FINISH_STATUS GROUP BY ENTRUST_ID) T3 ON T1.ENTRUST_ID = T3.ENTRUST_ID
         LEFT JOIN ETR_DISTRIBUTE T5 ON T1.ENTRUST_ID = T5.ENTRUST_ID

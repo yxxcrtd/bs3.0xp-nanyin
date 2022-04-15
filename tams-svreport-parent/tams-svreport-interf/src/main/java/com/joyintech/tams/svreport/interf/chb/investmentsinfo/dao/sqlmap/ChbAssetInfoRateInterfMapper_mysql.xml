@@ -26,7 +26,7 @@
         on fp.finprod_id=fpt.finprod_id
         where (fp.finprod_type2 in ('F01','F18','F07') or (fp.finprod_type2='F17' and fp.profit_type='02'))
         and (fpt.type_11!='013' or fpt.type_11 is null)
-        and cash.cash_type_1='02'　and f.yield is not null
+        and cash.cash_type_1='02' and f.yield is not null
         and ifnull(f.UPDATE_TIME,f.CREATE_TIME)  > #{updatetime,jdbcType=TIMESTAMP}
 
         union all

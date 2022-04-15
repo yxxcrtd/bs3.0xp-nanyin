@@ -186,7 +186,7 @@
                     crule.yield,
                     crule.eff_date,
                     crule.finprod_id
-               from 　FIN_CASH_CALC_RULE crule,
+               from  FIN_CASH_CALC_RULE crule,
                  FIN_CASH_INFO      info                  
                  where info.cash_id = crule.cash_id
                  and info.finprod_id = #{finprodId,jdbcType=VARCHAR}
