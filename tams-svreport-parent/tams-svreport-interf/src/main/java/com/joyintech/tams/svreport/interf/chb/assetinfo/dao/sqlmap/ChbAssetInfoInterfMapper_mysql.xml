@@ -12013,7 +12013,6 @@
         BANK_SEC_ZXZQ,
         ISUNLISTED,
         IS_BZHPJ,
-        <!-- add by zhangliang G06升级字段新增  start -->
         CHB_ISSUER_ID,
         CHB_MANAGER_ID,
         CHB_FINANCIER_ID,
@@ -12022,7 +12021,6 @@
         IS_BJSZQ,
         IS_PERPETUAL,
         IS_FBZB,
-        <!-- add by zhangliang G06升级字段新增  end -->
         PRIVATE_FLAG,
         CONSTRACTE_BUSI_TYPE,
         CONSTRACTE_GRADE,
@@ -12167,9 +12165,9 @@
             #{item.trustee,jdbcType=VARCHAR} TRUSTEE,
             #{item.status,jdbcType=VARCHAR} STATUS,
             #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
-            NOW() CREATE_TIME,
+            now() CREATE_TIME,
             #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
-            NOW() UPDATE_TIME,
+            now() UPDATE_TIME,
             #{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
             #{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
             #{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
@@ -12390,7 +12388,6 @@
         A.TRUSTEE = B.TRUSTEE,
         A.STATUS = (case B.STATUS when 'E' then 'M' else 'D' end),
         A.CREATE_USER = B.CREATE_USER,
-        /*A.CREATE_TIME = B.CREATE_TIME,*/
         A.UPDATE_USER = B.UPDATE_USER,
         A.UPDATE_TIME = B.UPDATE_TIME,
         A.DEPT_CODE = B.DEPT_CODE,
@@ -12472,10 +12469,14 @@
         A.IS_FBZB	=	B.IS_FBZB
         <!-- add by zhangliang G06升级字段新增  end -->
         ,A.PRIVATE_FLAG	=	B.PRIVATE_FLAG
+        ,A.CONSTRACTE_BUSI_TYPE	=	B.CONSTRACTE_BUSI_TYPE
+        ,A.CONSTRACTE_GRADE	=	B.CONSTRACTE_GRADE
+        ,A.CONSTRACTE_HEAVER_TIMES	=	B.CONSTRACTE_HEAVER_TIMES
         <!-- 未匹配到这插入 -->
         where A.ASSET_CODE = B.ASSET_CODE;
 
-        insert into CHB_ASSET_INFO(ASSET_UUID,
+        insert into CHB_ASSET_INFO(
+        ASSET_UUID,
         ASSET_CODE,
         ASSET_TYPE,
         ASSET_TYPE2,
@@ -12688,8 +12689,12 @@
         IS_BJSZQ,
         IS_PERPETUAL,
         IS_FBZB,
-        PRIVATE_FLAG)
-        select ASSET_UUID,
+        PRIVATE_FLAG,
+        CONSTRACTE_BUSI_TYPE,
+        CONSTRACTE_GRADE,
+        CONSTRACTE_HEAVER_TIMES)
+        select
+        ASSET_UUID,
         ASSET_CODE,
         ASSET_TYPE,
         ASSET_TYPE2,
@@ -12902,7 +12907,10 @@
         IS_BJSZQ,
         IS_PERPETUAL,
         IS_FBZB,
-        PRIVATE_FLAG
+        PRIVATE_FLAG,
+        CONSTRACTE_BUSI_TYPE,
+        CONSTRACTE_GRADE,
+        CONSTRACTE_HEAVER_TIMES
         from
         (
         select TEMP.* from
@@ -13043,9 +13051,9 @@
             #{item.trustee,jdbcType=VARCHAR} TRUSTEE,
             #{item.status,jdbcType=VARCHAR} STATUS,
             #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
-            NOW() CREATE_TIME,
+            now() CREATE_TIME,
             #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
-            NOW() UPDATE_TIME,
+            now() UPDATE_TIME,
             #{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
             #{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
             #{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
