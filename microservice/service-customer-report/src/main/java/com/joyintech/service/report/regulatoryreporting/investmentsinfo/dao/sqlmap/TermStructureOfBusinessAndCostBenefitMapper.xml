@@ -1264,14 +1264,14 @@ with cj as(
 		</if>
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
 			left join(select distinct cabd.mdate as mdate,cabd.asset_id
-			　　　　           from  CHB_ASSETS_BASIS_DATA cabd
+			from  CHB_ASSETS_BASIS_DATA cabd
 			            WHERE 1=1 and cabd.value_date=#{endDate,jdbcType=DATE}
 			)exeplan
 			on cmap.asset_code=exeplan.asset_id
 		</if>
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			left join(select distinct cabd.mdate as mdate,cabd.asset_id
-			　　　　    from CHB_ASSETS_BASIS_DATA_NOBTM cabd
+			from CHB_ASSETS_BASIS_DATA_NOBTM cabd
 			          WHERE 1=1 and cabd.value_date=#{endDate,jdbcType=DATE}
 			)exeplan
 			on cmap.asset_code=exeplan.asset_id
@@ -1283,7 +1283,7 @@ with cj as(
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
 
-		　　　union all
+		union all
 
 		select nvl(cmap.ASSETVALUE_A,0) amt,'10' days
 		from
@@ -1362,15 +1362,15 @@ with cj as(
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>)
-		　and fc1.change_type='02')
-		and cr1.change_type='02'　
+		and fc1.change_type='02')
+		and cr1.change_type='02'
 		and ft.dealdate=(select min(dealdate) from chb_invest_trade fc2
 		<if test="org != null  and org!=''">
 			left join DATA_AUTH_NOTIFY_INST di
 			on fc2.prod_id=di.business_id
 			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
 		</if>
-		where fc2.asset_code= ft.asset_code　and fc2.status='E'
+		where fc2.asset_code= ft.asset_code and fc2.status='E'
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>)
