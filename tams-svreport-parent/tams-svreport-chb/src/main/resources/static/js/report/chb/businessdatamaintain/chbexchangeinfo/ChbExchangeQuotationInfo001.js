@@ -72,10 +72,7 @@ $(function() {
      * 绑定删除事件
      */
     table.bind('click', '.delt', function(data, index) {
-        var tradeDate = new Date(parseInt(data.tradeDate));
-        tradeDate= tradeDate.format('yyyy-MM-dd');
-        var object = {exchargeCode:data.exchargeCode, tradeDate:tradeDate,
-            datasourceType:data.datasourceType, operateType:"DELETE"};
+        var object = {selectedItem: [data], operateType:"DELETE"};
         Joyin.ajaxJson(basePath + 'chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo001/check', object, function(result) {
         	Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
                 WorkFlow.doDeleteList(basePath + 'chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo001/delete', object, "ChbExchangeQuotationInfo001_btn_delete");
@@ -114,12 +111,16 @@ $(function() {
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
                 return;
             }
+            for (var i=0;i<selArr.length;i++) {
+              if (selArr[i].status=='D'){
+                  Joyin.error("存在已删除状态的数据");
+                  return;
+              }
+            }
             var object = {selectedItem: selArr, operateType:"delete"};
             Joyin.ajaxJson(basePath + 'chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo001/check', object, function(result) {
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                    WorkFlow.doDeleteList(basePath + 'chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo001/delete', object, "ChbExchangeQuotationInfo001_btn_delete", "ChbExchangeQuotationInfo002",function() {
-                    	table.reload();
-                });      
+                    WorkFlow.doDeleteList(basePath + 'chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo001/delete', object, "ChbExchangeQuotationInfo001_btn_delete");
              });
            });
         });

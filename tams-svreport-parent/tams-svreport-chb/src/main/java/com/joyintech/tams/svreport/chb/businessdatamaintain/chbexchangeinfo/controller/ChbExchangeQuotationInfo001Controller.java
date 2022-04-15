@@ -104,7 +104,7 @@ public class ChbExchangeQuotationInfo001Controller extends BaseController {
         WorkFlowParameter<ChbExchangeQuotationInfoDto> params = new WorkFlowParameter<>();
         params.setPageId(this.getPageId());
         params.setElementId(dto.getElementId());
-        params.setBusinessCode(dto.getExchargeCode()+DateUtil.format(dto.getTradeDate())+dto.getDatasourceType());
+        params.setBusinessCode(item -> item.getExchargeCode());
         params.setBusinessType(DictCodeList.共通业务类型_汇率行情信息.getValue());
         // 设置流程业务说明, entity即传入的dto
         params.setComment(
@@ -117,7 +117,9 @@ public class ChbExchangeQuotationInfo001Controller extends BaseController {
         // 给参数变成ProcessParameter而非WorkFlowParameter
         ProcessParameter<ChbExchangeQuotationInfoDto> parameter = new ProcessParameter<>();
         parameter.setWorkFlowParameter(params);
-        String msg = chbExchangeQuotationInfoService.start(parameter, dto);
+        String msg = chbExchangeQuotationInfoService.start(parameter,
+                dto.getSelectedItem().toArray(
+                        new ChbExchangeQuotationInfoDto[dto.getSelectedItem().size()]));
         return new AjaxResult(msg);
     }
 

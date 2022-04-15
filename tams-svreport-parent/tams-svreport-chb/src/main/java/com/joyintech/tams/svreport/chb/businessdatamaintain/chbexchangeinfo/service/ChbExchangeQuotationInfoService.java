@@ -68,7 +68,7 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
     /**
      * 接口类型
      */
-    public static final String CHECK_FLAG = "import";
+    public static final String CHECK_FLAG = "D";
 
     /**
      * 删除
@@ -152,14 +152,30 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
         if (!fileName.contains("汇率行情信息")) {
             throw new RuntimeException("模板名称错误");
         }
-
         List<List<String>> dataList = ExcelUtil.getDataList1(fileName);
+        List<List<String>> tempList = ExcelUtil.getTempList1(fileName);
+        List<String> headList = new ArrayList<>(9);
+        headList.add("货币对");
+        headList.add("交易日期");
+        headList.add("数据来源");
+        headList.add("开盘价");
+        headList.add("收盘价");
+        headList.add("最高价");
+        headList.add("最低价");
+        headList.add("中间价");
+        headList.add("报价单位");
+        //校验文件中列是否一致
+        List<ExcelValidDto> tempCheckResult = ExcelUtil.checkExcelTemp(tempList, headList);
+        if (!StringUtil.isEmptyList(tempCheckResult)) {
+           // return tempCheckResult;
+        }
+
         //去掉重复的数据
         List<List<String>> newDataList = this.getNewDataList(dataList);
         //List<List<String>>转成List<Map<String, String>>
         List<Map<String, String>> mapList = this.convertMapList(newDataList);
-
-        List<ExcelValidDto> excelValidDtos = baseCommonCheckService.checkDataDB(CHECK_FLAG,mapList,TABLE_NAME,fileName,null,null,null,null);
+        //check包含DB和业务CHECK
+        List<ExcelValidDto> excelValidDtos = baseCommonCheckService.checkDataAll(CHECK_FLAG,mapList,TABLE_NAME,fileName,null,null,null,null);
 
 
         return null;
@@ -177,21 +193,6 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
         List<ExcelValidDto> checkResultAll = new LinkedList<>();
         List<List<String>> dataList = ExcelUtil.getDataList1(fileName);
         List<List<String>> tempList = ExcelUtil.getTempList1(fileName);
-
-        List<String> headList = new ArrayList<>(9);
-        headList.add("货币对");
-        headList.add("交易日期");
-        headList.add("数据来源");
-        headList.add("开盘价");
-        headList.add("收盘价");
-        headList.add("最高价");
-        headList.add("最低价");
-        headList.add("中间价");
-        headList.add("报价单位");
-        List<ExcelValidDto> tempCheckResult = ExcelUtil.checkExcelTemp(tempList, headList);
-        if (!StringUtil.isEmptyList(tempCheckResult)) {
-            return tempCheckResult;
-        }
 
         List<ChbExchangeQuotationInfoDto> list = this.checkDataConvertToBean(null, 9, checkResultAll);
         List<ExcelValidDto> excelValidList = checkExcelImportService.getExcelValidList(checkResultAll);
@@ -297,8 +298,11 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
         List<ChbExchangeQuotationInfoDto> list = new ArrayList<>(1);
         dto.setStatus(DictCodeListExt2.数据状态_有效.getValue());
         if (StringUtil.equals(dto.getOperateType(), DELETE)) {
-            dto.setStatus(DictCodeListExt2.数据状态_删除.getValue());
-            chbExchangeQuotationInfoMapper.updateStatus(dto);
+            List<ChbExchangeQuotationInfoDto> selectedItem = dto.getSelectedItem();
+            selectedItem.forEach(e->{
+                e.setStatus(DictCodeListExt2.数据状态_删除.getValue());
+            });
+            chbExchangeQuotationInfoMapper.updateExchargeQuoteInfo(selectedItem);
         } else if (StringUtil.equals(dto.getOperateType(), NEW)) {
             //删除状态是已删除的数据
             chbExchangeQuotationInfoMapper.deleteChbExchargeQuoteByKey(dto.getExchargeCode(),dto.getTradeDate(),dto.getDatasourceType(),DictCodeListExt2.数据状态_删除.getValue());
