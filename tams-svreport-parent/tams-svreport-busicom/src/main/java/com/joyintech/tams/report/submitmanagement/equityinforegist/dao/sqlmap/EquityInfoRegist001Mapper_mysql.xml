@@ -820,7 +820,7 @@
 	</update>
 
 	<update id="updateChbEquSubSubmitStatus" parameterType="java.util.List">
-		begin
+		/*begin*/
 		<foreach collection="list" item="item" index="index" open="" close=";" separator=";">
 			update CHB_EQU_SUB
 			<set >
@@ -830,7 +830,7 @@
 			</set>
 			where SUMIT_SEQ = #{item.seqno,jdbcType=VARCHAR}
 		</foreach>
-		end;
+		/*end;*/
 	</update>
 
 	<update id="updateSubmitStatusToOk" parameterType="java.util.List">
@@ -971,7 +971,10 @@
 		STATUS, DEPT_CODE, UPDATE_USER,
 		sub.UPDATE_TIME, sub.CREATE_USER, sub.CREATE_TIME,
 		sub.SUMIT_SEQ, sub.DELETE_RES, sub.ORG_CODE,
-		sub.CREATE_DEPT,sub.CHECK_SEQNO,sub.FUND_ACC_PLACE,sub.HOLDER_CLASSIFY
+		sub.CREATE_DEPT,sub.CHECK_SEQNO,sub.HOLDER_CLASSIFY,sub.FUND_ACC_PLACE,
+		sub.submit_feedback_status,
+		sub.report_no,
+		sub.submit_feedback_msg
 		from (select max(HIS_NO) HIS_NO,INDENTIFY_MARK,REGIST_BANK_CODE
 		from CHB_EQU_SUB_HIS where SUBMIT_STATUS NOT IN('01') GROUP BY INDENTIFY_MARK,REGIST_BANK_CODE) A
 		left join CHB_EQU_SUB_HIS sub
