@@ -21,7 +21,7 @@
 		UPDATE_TIME,
 		REMARK
 	    FROM CHB_AGENT_INSTITUTION_INFO
-		WHERE DATE_FORMAT(NVL(UPDATE_TIME,CREATE_TIME),'%Y-%m-%d') = #{batchDate,jdbcType=VARCHAR}
+		WHERE DATE_FORMAT(ifnull(UPDATE_TIME,CREATE_TIME),'%Y-%m-%d') = #{batchDate,jdbcType=VARCHAR}
 
 	</select>
 	

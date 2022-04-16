@@ -251,13 +251,13 @@
   FROM WFL_IBU_QUOTE_BOND2 a
   FULL JOIN IBU_QUOTE_BOND B
     ON A.QUOTE_ID = B.QUOTE_ID) a
-	left join (select LISTAGG(x.det_id, ',') WITHIN GROUP(ORDER BY x.det_id) AS det_id,
+	left join (select group_concat(x.det_id) WITHIN GROUP(ORDER BY x.det_id) AS det_id,
        x.req_id,
        x.version,
        x.cfets_req_id,
        x.quote_id,
-       LISTAGG(x.cp_party_id, ',') WITHIN GROUP(ORDER BY x.det_id) AS cp_party_id,
-       LISTAGG(x.cp_trader, ',') WITHIN GROUP(ORDER BY x.det_id) AS cp_trader,
+       group_concat(x.cp_party_id) WITHIN GROUP(ORDER BY x.det_id) AS cp_party_id,
+       group_concat(x.cp_trader) WITHIN GROUP(ORDER BY x.det_id) AS cp_trader,
        x.unit_cprice,
        x.unit_int,
        x.unit_fprice,
@@ -283,8 +283,8 @@
        x.create_dept,
        x.update_user,
        x.update_time,
-       LISTAGG(m.TRADER_NAME, ',') WITHIN GROUP(ORDER BY x.det_id) AS TRADER_NAME,
-       LISTAGG(n.PARTY_ABBR, ',') WITHIN GROUP(ORDER BY x.det_id) AS PARTY_ABBR
+       group_concat(m.TRADER_NAME) WITHIN GROUP(ORDER BY x.det_id) AS TRADER_NAME,
+       group_concat(n.PARTY_ABBR) WITHIN GROUP(ORDER BY x.det_id) AS PARTY_ABBR
   from (select ifnull(a.det_id, b.det_id) det_id,
                ifnull(a.req_id, b.req_id) req_id,
                ifnull(a.version, b.version) version,
@@ -388,10 +388,10 @@
                     UNION ALL SELECT COUNT(*) COUNTS, QUOTE_ID FROM WFL_IBU_QUOTE_ETR_RE GROUP BY QUOTE_ID )I ON  I.QUOTE_ID=A.QUOTE_ID -->
 		LEFT JOIN (SELECT
 		QUOTE_ID,
-		LISTAGG(PORTFOLIO_ID, ',') WITHIN GROUP(
+		group_concat(PORTFOLIO_ID) WITHIN GROUP(
 		ORDER BY
 		QUOTE_ID) PORTFOLIO_ID ,
-		LISTAGG(ENTRUST_ID, ',') WITHIN GROUP(
+		group_concat(ENTRUST_ID) WITHIN GROUP(
 		ORDER BY
 		QUOTE_ID) ENTRUST_ID
 		FROM
@@ -905,10 +905,10 @@
   FROM IBU_QUOTE_CREP T LEFT JOIN (
 		SELECT
 		QUOTE_ID,
-		LISTAGG(PORTFOLIO_ID, ',') WITHIN GROUP(
+		group_concat(PORTFOLIO_ID) WITHIN GROUP(
 		ORDER BY
 		QUOTE_ID) PORTFOLIO_ID ,
-		LISTAGG(ENTRUST_ID, ',') WITHIN GROUP(
+		group_concat(ENTRUST_ID) WITHIN GROUP(
 		ORDER BY
 		QUOTE_ID) ENTRUST_ID
 		FROM
@@ -980,10 +980,10 @@ SELECT T.QUOTE_ID,
   FROM WFL_IBU_QUOTE_CREP T LEFT JOIN  (
 		SELECT
 		QUOTE_ID,
-		LISTAGG(PORTFOLIO_ID, ',') WITHIN GROUP(
+		group_concat(PORTFOLIO_ID) WITHIN GROUP(
 		ORDER BY
 		QUOTE_ID) PORTFOLIO_ID ,
-		LISTAGG(ENTRUST_ID, ',') WITHIN GROUP(
+		group_concat(ENTRUST_ID) WITHIN GROUP(
 		ORDER BY
 		QUOTE_ID) ENTRUST_ID
 		FROM
@@ -1327,10 +1327,10 @@ SELECT T.QUOTE_ID,
 		FROM IBU_QUOTE_CREP T LEFT JOIN (
 		SELECT
 		QUOTE_ID,
-		LISTAGG(PORTFOLIO_ID, ',') WITHIN GROUP(
+		group_concat(PORTFOLIO_ID) WITHIN GROUP(
 		ORDER BY
 		QUOTE_ID) PORTFOLIO_ID ,
-		LISTAGG(ENTRUST_ID, ',') WITHIN GROUP(
+		group_concat(ENTRUST_ID) WITHIN GROUP(
 		ORDER BY
 		QUOTE_ID) ENTRUST_ID
 		FROM
@@ -1402,10 +1402,10 @@ SELECT T.QUOTE_ID,
 		FROM WFL_IBU_QUOTE_CREP T LEFT JOIN  (
 		SELECT
 		QUOTE_ID,
-		LISTAGG(PORTFOLIO_ID, ',') WITHIN GROUP(
+		group_concat(PORTFOLIO_ID) WITHIN GROUP(
 		ORDER BY
 		QUOTE_ID) PORTFOLIO_ID ,
-		LISTAGG(ENTRUST_ID, ',') WITHIN GROUP(
+		group_concat(ENTRUST_ID) WITHIN GROUP(
 		ORDER BY
 		QUOTE_ID)ENTRUST_ID
 		FROM

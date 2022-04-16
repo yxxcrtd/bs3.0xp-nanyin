@@ -1348,33 +1348,14 @@
 		sub.AMOUNT,
 		sub.QTY,
 		sub.CNY_AMT,
-		/*C.MERGER_INDENTIFY_MARK,
-		'99' AS OPERATE_STATUS,
-		C.STATUS*/
+
 		tmp.MERGER_INDENTIFY_MARK,
 		tmp.OPERATE_STATUS,
 		tmp.STATUS
 		FROM
 		tmp
 		INNER JOIN
-		/*CHB_EQU_HOLD_CHECK C
-		on  C.MERGER_INDENTIFY_MARK = tmp.MERGER_INDENTIFY_MARK
-		INNER JOIN
-		CHB_INVESTHOLD_INFO_SUB sub
-		on     C.REGIST_BANK_CODE = sub.REGIST_BANK_CODE
-		and C.INDENTIFY_MARK = sub.INDENTIFY_MARK
-		and tmp.HOLD_DATE = sub.HOLD_DATE
-		and tmp.CCY = sub.CCY
-		and tmp.PRODID = sub.PRODID
-		and sub.SEND_STATUS = '01'
-		LEFT JOIN
-		CHB_INVESTHOLD_INFO_CHECK D
-		on C.INDENTIFY_MARK = D.INDENTIFY_MARK
-		and C.REGIST_BANK_CODE = D.REGIST_BANK_CODE
-		and tmp.CCY = D.CCY
-		and tmp.PRODID = D.PRODID
-		and tmp.HOLD_DATE = D.HOLD_DATE
-		WHERE D.INDENTIFY_MARK is null*/
+
 		CHB_INVESTHOLD_INFO_SUB sub
 		on tmp.REGIST_BANK_CODE = sub.REGIST_BANK_CODE
 		and tmp.INDENTIFY_MARK = sub.INDENTIFY_MARK
@@ -1612,9 +1593,9 @@
 			#{item.orgCode,jdbcType=VARCHAR},
 			#{item.deptCode,jdbcType=VARCHAR},
 			#{item.updateUser,jdbcType=VARCHAR},
-			sysdate,
+			NOW(),
 			#{item.createUser,jdbcType=VARCHAR},
-			sysdate,
+			NOW(),
 			#{item.agent,jdbcType=VARCHAR},
 			#{item.createDept,jdbcType=VARCHAR},
 			#{item.interfCheckResult,jdbcType=VARCHAR}

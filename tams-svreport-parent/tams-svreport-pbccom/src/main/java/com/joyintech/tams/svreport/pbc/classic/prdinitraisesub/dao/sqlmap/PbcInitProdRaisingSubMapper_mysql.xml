@@ -642,7 +642,7 @@
   <select id="searchPage" parameterType="map" resultType="com.joyintech.tams.svreport.pbc.classic.prdinitraisesub.dto.PbcInitProdRaisingSub" flushCache="true" useCache="false">
     select
     a.REGIST_SEQNO registSeqno,
-    <!--nvl(t2.pbc_code,a.pbc_prod_id) PBC_PROD_ID,-->
+    <!--ifnulll(t2.pbc_code,a.pbc_prod_id) PBC_PROD_ID,-->
     a.pbc_prod_id PBC_PROD_ID,
     a.BUY_PLACE buyPlace,
     a.CUSTOMER_TYPE1 customerType1,
@@ -1024,9 +1024,9 @@
   <select id="searchListDetailCNY" parameterType="map" resultMap="SearchResultMap">
 	 with tab as ( select * from (
       select
-      'buyplace'||a.CUSTOMER_TYPE1||a.BUY_PLACE code,
+      concat('buyplace',a.CUSTOMER_TYPE1,a.BUY_PLACE code),
       list.ITEM_VALUE,a.BUY_PLACE,a.CUSTOMER_TYPE1, a.INIT_RAISING_AMTSUM rmbje, a.INIT_RAISING_QTY rmbfe,
-      RANK() OVER (PARTITION BY a.pbc_prod_id,a.BUY_PLACE,a.CUSTOMER_TYPE1,a.CCY ORDER BY NVl(a.STATUS_DATE,a.CREATE_TIME) DESC) RANKNUM
+      RANK() OVER (PARTITION BY a.pbc_prod_id,a.BUY_PLACE,a.CUSTOMER_TYPE1,a.CCY ORDER BY ifnulll(a.STATUS_DATE,a.CREATE_TIME) DESC) RANKNUM
       from PBC_INIT_PROD_RAISING_SUB a
       LEFT JOIN SYS_DATADICT_LIST list ON a.CCY=list.ITEM_CODE and list.DICT_CODE='CURRENCY_CHB'
       where a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR}

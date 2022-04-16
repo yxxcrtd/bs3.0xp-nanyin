@@ -86,16 +86,16 @@
                 and T1.BUSI_TYPE =#{busiType}
             </if>
             <if test="tradeDateStart != null and tradeDateStart != ''">
-                and T1.TRADE_DATE >= /*to_date(#{tradeDateStart}, 'yyyy-MM-dd')*/ DATE_FORMAT(#{tradeDateStart},'%Y-%m-%d')
+                and T1.TRADE_DATE >= DATE_FORMAT(#{tradeDateStart},'%Y-%m-%d')
             </if>
             <if test="tradeDateEnd != null and tradeDateEnd != ''">
-                and T1.TRADE_DATE &lt;= /*to_date(#{tradeDateEnd}, 'yyyy-MM-dd')*/ DATE_FORMAT(#{tradeDateEnd},'%Y-%m-%d')
+                and T1.TRADE_DATE &lt;= DATE_FORMAT(#{tradeDateEnd},'%Y-%m-%d')
             </if>
             <if test="settleDateStart != null and settleDateStart != ''">
-                and T1.SETTLE_DATE >= /*to_date(#{settleDateStart}, 'yyyy-MM-dd')*/ DATE_FORMAT(#{settleDateStart},'%Y-%m-%d')
+                and T1.SETTLE_DATE >= DATE_FORMAT(#{settleDateStart},'%Y-%m-%d')
             </if>
             <if test="settleDateEnd != null and settleDateEnd != ''">
-                and T1.SETTLE_DATE &lt;= /*to_date(#{settleDateEnd}, 'yyyy-MM-dd')*/ DATE_FORMAT(#{settleDateEnd},'%Y-%m-%d')
+                and T1.SETTLE_DATE &lt;= DATE_FORMAT(#{settleDateEnd},'%Y-%m-%d')
             </if>
         </where>
         order by sort,T1.UPDATE_TIME desc
@@ -275,16 +275,16 @@
                 and T1.BUSI_TYPE =#{busiType}
             </if>
             <if test="tradeDateStart != null and tradeDateStart != ''">
-                and T1.TRADE_DATE >= to_date(#{tradeDateStart}, 'yyyy-MM-dd')
+                and T1.TRADE_DATE >= str_to_date(#{tradeDateStart}, '%Y-%m-%d')
             </if>
             <if test="tradeDateEnd != null and tradeDateEnd != ''">
-                and T1.TRADE_DATE &lt;= to_date(#{tradeDateEnd}, 'yyyy-MM-dd')
+                and T1.TRADE_DATE &lt;= str_str_to_date(#{tradeDateEnd}, '%Y-%m-%d')
             </if>
             <if test="settleDateStart != null and settleDateStart != ''">
-                and T1.SETTLE_DATE >= to_date(#{settleDateStart}, 'yyyy-MM-dd')
+                and T1.SETTLE_DATE >= str_str_to_date(#{settleDateStart}, '%Y-%m-%d')
             </if>
             <if test="settleDateEnd != null and settleDateEnd != ''">
-                and T1.SETTLE_DATE &lt;= to_date(#{settleDateEnd}, 'yyyy-MM-dd')
+                and T1.SETTLE_DATE &lt;= str_to_date(#{settleDateEnd}, '%Y-%m-%d')
             </if>
         </where>
         order by sort,T1.SETTLE_SEQ_NO,T1.UPDATE_TIME desc)a
@@ -298,7 +298,7 @@
     </select>
 
     <select id="listPtlSecPositionFlow" resultType="com.joyintech.tams.common.base.entity.PtlSecPosition">
-        SELECT PORTFOLIO_ID,HODING_TYPE,SEC_ACCT_ID,FINPROD_ID,INV_AIM,CDATE,BRANCH,SUM(NVL(AMOUNT,0)) AMOUNT
+        SELECT PORTFOLIO_ID,HODING_TYPE,SEC_ACCT_ID,FINPROD_ID,INV_AIM,CDATE,BRANCH,SUM(ifnull(AMOUNT,0)) AMOUNT
         FROM PTL_SEC_POSITION_FLOW WHERE TRADE_ID = #{tradeId}
         GROUP BY PORTFOLIO_ID,HODING_TYPE,SEC_ACCT_ID,FINPROD_ID,INV_AIM,CDATE,BRANCH
     </select>
@@ -316,7 +316,7 @@
     </select>
 
     <select id="listEtrCashPositionFlow" resultType="com.joyintech.tams.common.base.entity.EtrCashPosition">
-        SELECT PORTFOLIO_ID,ACCT_ID,HODING_TYPE,CDATE,CCY,SUM(NVL(AMOUNT, 0)) AMOUNT
+        SELECT PORTFOLIO_ID,ACCT_ID,HODING_TYPE,CDATE,CCY,SUM(ifnull(AMOUNT, 0)) AMOUNT
         FROM ETR_CASH_POSITION_FLOW WHERE ORDER_ID = #{orderId}
         GROUP BY PORTFOLIO_ID,ACCT_ID,HODING_TYPE,CDATE,CCY
     </select>

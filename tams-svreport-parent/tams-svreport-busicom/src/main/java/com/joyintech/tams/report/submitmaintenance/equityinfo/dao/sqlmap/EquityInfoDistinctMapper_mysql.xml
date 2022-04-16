@@ -403,7 +403,6 @@
 					ifnull(#{item.otherIdentifyName,jdbcType=VARCHAR},' '))
 				</foreach>
 			</if>
-			/*未报送*/
 			AND NOT EXISTS( SELECT 1 FROM CHB_EQU_SUB T
 			/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 			WHERE HOLD.INDENTIFY_MARK = T.INDENTIFY_MARK  AND T.SUBMIT_FEEDBACK_STATUS = '03'

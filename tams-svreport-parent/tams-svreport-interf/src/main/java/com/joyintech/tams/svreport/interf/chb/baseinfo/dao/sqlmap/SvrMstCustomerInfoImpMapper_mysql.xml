@@ -334,7 +334,7 @@
 </delete>
 
     <delete id="deleteTodayData">
-  delete from MST_CUSTOMER_INFO where to_char(nvl(UPDATE_TIME,CREATE_TIME),'yyyymmdd')=to_char(sysdate,'yyyymmdd')
+  delete from MST_CUSTOMER_INFO where DATE_FORMAT(ifnull(UPDATE_TIME,CREATE_TIME),'%Y%m%d')=DATE_FORMAT(sysdate,'%Y%m%d')
   </delete>
 
     <insert id="mergeMstCustomerInfoData"

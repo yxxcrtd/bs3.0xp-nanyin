@@ -711,7 +711,7 @@
 		/*头寸计算：几个金额的计算，以产品id，币种，客户二级类型，销售区域分组*/
 		WITH pos AS (
 		select ds.*
-		,nvl(pv.prod_value,1) prod_value ,/*产品最新净值*/
+		,ifnulll(pv.prod_value,1) prod_value ,/*产品最新净值*/
 		pv.ccy yieldccy/*报价币种*/
 		from (
 		SELECT
@@ -794,7 +794,7 @@
 		ELSE 0
 		END
 		) redcost,
-		SUM(DECODE(dl.DEALTYPE, '1', dl.DEALAMT, '2', dl.DEALAMT, '5', dl.DEALAMT, - 1 * nvl(dl.RED_COST,0))) endcost,
+		SUM(DECODE(dl.DEALTYPE, '1', dl.DEALAMT, '2', dl.DEALAMT, '5', dl.DEALAMT, - 1 * ifnulll(dl.RED_COST,0))) endcost,
 		SUM(DECODE(dl.DEALTYPE, '1', dl.PRINQTY, '2', dl.PRINQTY, '5', dl.PRINQTY, - 1 * dl.PRINQTY)) endqtysum
 		FROM
 		P_INTERF_PRO_CUSTOM_DEAL dl
@@ -819,18 +819,18 @@
 		LEFT JOIN (
 		SELECT
 		prod_value,
-		nvl(fprod_id, prod_id) prod_id,ccy
+		ifnulll(fprod_id, prod_id) prod_id,ccy
 		FROM
 		(
 		SELECT
 		RANK() OVER(
-		PARTITION BY prod_id,nvl(ccy,'CNY')
+		PARTITION BY prod_id,ifnulll(ccy,'CNY')
 		ORDER BY
 		change_date DESC
 		) my_rank,
 		fprod_id,
 		prod_id,
-		nvl(ccy,'CNY') ccy,
+		ifnulll(ccy,'CNY') ccy,
 		prod_value
 		FROM
 		chb_prd_periodyield
@@ -893,10 +893,10 @@
 		info.vdate,/*起息日*/
 		info.mdate,/*合同期限*/
 		info.terminatedate /*终止日期*/
-		,nvl(sch.plancounts,0) plancounts /*开放计划条数*/
+		,ifnulll(sch.plancounts,0) plancounts /*开放计划条数*/
 		,sch.minopenstart minopenstart /*最小开放日*/
-		,nvl(dealstat.dealcounts,0) dealcounts /*交易条数*/
-		,nvl(dealstat.terminatecounts,0) terminatecounts /*终止交易条数*/
+		,ifnulll(dealstat.dealcounts,0) dealcounts /*交易条数*/
+		,ifnulll(dealstat.terminatecounts,0) terminatecounts /*终止交易条数*/
 		,dealstat.settdate_date /*终止交易确认日*/
 		,info.issuing_status /*存续状态*/
 		FROM
@@ -906,7 +906,7 @@
 		left join (
 		SELECT
 		a.prod_id,
-		nvl(a.plancounts,0) plancounts,
+		ifnulll(a.plancounts,0) plancounts,
 		b.minopenstart
 		FROM
 		(
@@ -938,8 +938,8 @@
 		left join(
 		SELECT
 		a.prod_id,
-		nvl(a.dealcounts,0) dealcounts,
-		nvl(b.terminatecounts,0) terminatecounts,
+		ifnulll(a.dealcounts,0) dealcounts,
+		ifnulll(b.terminatecounts,0) terminatecounts,
 		b.settdate_date
 		FROM
 		(
@@ -1030,11 +1030,11 @@
 		end
 		END paystatus,/*兑付状态*/
 		DECODE(info.operate_mode, '03', '0', '04', '0', info.mdate - info.vdate) term,/*合同期限*/
-		/*TRIM(nvl(deal.ccy,baseinfo.RAISE_CCY)) ccy,*/
+		/*TRIM(ifnulll(deal.ccy,baseinfo.RAISE_CCY)) ccy,*/
 		/*若币种取值与产品基本信息表，取前三位*/
-		nvl(deal.ccy, DECODE(baseinfo.RAISE_CCY, NULL, NULL, SUBSTR(baseinfo.RAISE_CCY, 1, 3))) ccy,/*币种*/
+		ifnulll(deal.ccy, DECODE(baseinfo.RAISE_CCY, NULL, NULL, SUBSTR(baseinfo.RAISE_CCY, 1, 3))) ccy,/*币种*/
 		deal.customer_type2 customertype2,/*客户二级类型*/
-		deal.endqtysum*DECODE(#{jsbankStr,jdbcType=VARCHAR},'01',TRUNC(deal.prod_value,5),'02',ROUND(deal.prod_value,5))*nvl(rate.yeid,1) ENDAMTSUM_OTH,/*期末余额*/
+		deal.endqtysum*DECODE(#{jsbankStr,jdbcType=VARCHAR},'01',TRUNC(deal.prod_value,5),'02',ROUND(deal.prod_value,5))*ifnulll(rate.yeid,1) ENDAMTSUM_OTH,/*期末余额*/
 		deal.dirtyamtsum       dirtyamtsum,/*募集金额*/
 		deal.redamt            redamt,/*兑付金额*/
 		deal.raiseqty       raiseqty,/*当期募集份额*/
@@ -1047,7 +1047,7 @@
 		(
 		CASE
 		WHEN info.plancounts = 0 THEN 1 /*开放计划条数为0，表示高频开放*/
-		ELSE greatest(nvl(info.minopenstart,info.mdate)- #{reportEndDate,jdbcType=DATE}, 0)
+		ELSE greatest(ifnulll(info.minopenstart,info.mdate)- #{reportEndDate,jdbcType=DATE}, 0)
 		END
 		)
 		END end_days,/*剩余期限*/

@@ -158,7 +158,7 @@
         </trim>
     </insert>
     <select id="selectEtrProcess" resultType="java.math.BigDecimal">
-        select ROUND(NVL(sta.ENT_FINISH_AMT, 0)/etr.ENTRUST_AMT, 2)
+        select ROUND(ifnull(sta.ENT_FINISH_AMT, 0)/etr.ENTRUST_AMT, 2)
         from ETR_ENTRUST etr
         left join ETR_FINISH_STATUS sta
         on etr.ENTRUST_ID = sta.ENTRUST_ID

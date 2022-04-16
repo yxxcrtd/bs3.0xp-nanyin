@@ -78,16 +78,16 @@
             and SALER_REW_PENA_INST = #{salerRewPenaInst,jdbcType=VARCHAR}
         </if>
         <if test="searchSalerRewPenaStartStart != null and searchSalerRewPenaStartStart != ''">
-            and  /*to_char(SALER_REW_PENA_START,'yyyy-MM-dd')*/ DATE_FORMAT(SALER_REW_PENA_START,'%Y-%m-%d')<![CDATA[>=]]> #{searchSalerRewPenaStartStart,jdbcType=VARCHAR}
+            and DATE_FORMAT(SALER_REW_PENA_START,'%Y-%m-%d')<![CDATA[>=]]> #{searchSalerRewPenaStartStart,jdbcType=VARCHAR}
         </if>
         <if test="searchSalerRewPenaStartEnd != null and searchSalerRewPenaStartEnd != ''">
-            and  /*to_char(SALER_REW_PENA_START,'yyyy-MM-dd')*/ DATE_FORMAT(SALER_REW_PENA_START,'%Y-%m-%d')<![CDATA[<=]]> #{searchSalerRewPenaStartEnd,jdbcType=VARCHAR}
+            and DATE_FORMAT(SALER_REW_PENA_START,'%Y-%m-%d')<![CDATA[<=]]> #{searchSalerRewPenaStartEnd,jdbcType=VARCHAR}
         </if>
         <if test="searchSalerComplainDateStart != null and searchSalerComplainDateStart != ''">
-            and  /*to_char(SALER_COMPLAIN_DATE,'yyyy-MM-dd')*/ DATE_FORMAT(SALER_COMPLAIN_DATE,'%Y-%m-%d')<![CDATA[>=]]> #{searchSalerComplainDateStart,jdbcType=VARCHAR}
+            and DATE_FORMAT(SALER_COMPLAIN_DATE,'%Y-%m-%d')<![CDATA[>=]]> #{searchSalerComplainDateStart,jdbcType=VARCHAR}
         </if>
         <if test="searchSalerComplainDateEnd != null and searchSalerComplainDateEnd != ''">
-            and  /*to_char(SALER_COMPLAIN_DATE,'yyyy-MM-dd')*/ DATE_FORMAT(SALER_COMPLAIN_DATE,'%Y-%m-%d')<![CDATA[<=]]> #{searchSalerComplainDateEnd,jdbcType=VARCHAR}
+            and DATE_FORMAT(SALER_COMPLAIN_DATE,'%Y-%m-%d')<![CDATA[<=]]> #{searchSalerComplainDateEnd,jdbcType=VARCHAR}
         </if>
 
         UNION ALL
@@ -121,16 +121,16 @@
             and SALER_REW_PENA_INST = #{salerRewPenaInst,jdbcType=VARCHAR}
         </if>
         <if test="searchSalerRewPenaStartStart != null and searchSalerRewPenaStartStart != ''">
-            and  /*to_char(SALER_REW_PENA_START,'yyyy-MM-dd')*/DATE_FORMAT(SALER_REW_PENA_START,'%Y-%m-%d') <![CDATA[>=]]> #{searchSalerRewPenaStartStart,jdbcType=VARCHAR}
+            and DATE_FORMAT(SALER_REW_PENA_START,'%Y-%m-%d') <![CDATA[>=]]> #{searchSalerRewPenaStartStart,jdbcType=VARCHAR}
         </if>
         <if test="searchSalerRewPenaStartEnd != null and searchSalerRewPenaStartEnd != ''">
-            and  /*to_char(SALER_REW_PENA_START,'yyyy-MM-dd')*/DATE_FORMAT(SALER_REW_PENA_START,'%Y-%m-%d') <![CDATA[<=]]> #{searchSalerRewPenaStartEnd,jdbcType=VARCHAR}
+            and DATE_FORMAT(SALER_REW_PENA_START,'%Y-%m-%d') <![CDATA[<=]]> #{searchSalerRewPenaStartEnd,jdbcType=VARCHAR}
         </if>
         <if test="searchSalerComplainDateStart != null and searchSalerComplainDateStart != ''">
-            and  /*to_char(SALER_COMPLAIN_DATE,'yyyy-MM-dd')*/ DATE_FORMAT(SALER_COMPLAIN_DATE,'%Y-%m-%d')<![CDATA[>=]]> #{searchSalerComplainDateStart,jdbcType=VARCHAR}
+            and DATE_FORMAT(SALER_COMPLAIN_DATE,'%Y-%m-%d')<![CDATA[>=]]> #{searchSalerComplainDateStart,jdbcType=VARCHAR}
         </if>
         <if test="searchSalerComplainDateEnd != null and searchSalerComplainDateEnd != ''">
-            and  /*to_char(SALER_COMPLAIN_DATE,'yyyy-MM-dd')*/ DATE_FORMAT(SALER_COMPLAIN_DATE,'%Y-%m-%d')<![CDATA[<=]]> #{searchSalerComplainDateEnd,jdbcType=VARCHAR}
+            and DATE_FORMAT(SALER_COMPLAIN_DATE,'%Y-%m-%d')<![CDATA[<=]]> #{searchSalerComplainDateEnd,jdbcType=VARCHAR}
         </if>
         ) A ORDER BY A.dataStatus DESC
     </select>

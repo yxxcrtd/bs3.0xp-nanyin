@@ -52,7 +52,7 @@
         deal.portfolioId as portfolioIds,
         deal.portfolioName as portfolioNames,
         reg.ccy as ccy,
-       /* decode(reg.is_cancel,'Y',  rr.remark,'N',reg.remark)  as remark*/
+
         ( case reg.is_cancel when 'Y' then rr.remark when 'N' then reg.remark end)  as remark
         from reg_fin_product_deal_total reg
         left join fin_product fp
@@ -61,11 +61,11 @@
         on reg.totle_trade_id=regAdd.totle_trade_id
         inner join
         (
-            /*select regdeal.totle_trade_id,wm_concat(regdeal.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,*/
+
             select regdeal.totle_trade_id,group_concat(regdeal.portfolio_id) as portfolioId,group_concat(pp.portfolio_name) portfolioName,
-            /*wm_concat(regdeal.sec_manage_acct_id) sec_manage_acct_id,wm_concat(stlinfo.SEC_ACCT_NAME) SEC_ACCT_NAME,*/
+
             group_concat(regdeal.sec_manage_acct_id) sec_manage_acct_id,group_concat(stlinfo.SEC_ACCT_NAME) SEC_ACCT_NAME,
-            /*nvl(sum(bb.PTL_BOND_ZHCC),0)/10000 as accountPosition*/
+
             ifnull(sum(bb.PTL_BOND_ZHCC),0)/10000 as accountPosition
             from reg_fin_product_deal regdeal
             inner join ptl_portfolio pp
@@ -127,12 +127,12 @@
         </if>
         <if test="tabType != null and tabType.equals('regCur')">
             and reg.is_cancel='N'
-            /*and nvl(T8.SETTLE_STATUS,#{DELIVERY_STATUS_01}) in (#{DELIVERY_STATUS_01},#{DELIVERY_STATUS_04})*/
+
             and ifnull(T8.SETTLE_STATUS,#{DELIVERY_STATUS_01}) in (#{DELIVERY_STATUS_01},#{DELIVERY_STATUS_04})
         </if>
         <if test="tabType != null and tabType.equals('regPre')">
             and (reg.is_cancel='Y' or (reg.is_cancel='N'
-            /*and nvl(T8.SETTLE_STATUS,#{DELIVERY_STATUS_01})=#{DELIVERY_STATUS_02}))*/
+
             and ifnull(T8.SETTLE_STATUS,#{DELIVERY_STATUS_01})=#{DELIVERY_STATUS_02}))
         </if>
     </sql>
@@ -164,9 +164,7 @@
         on reg.totle_trade_id=regAdd.totle_trade_id
         inner join
         (
-        /*select regdeal.totle_trade_id,wm_concat(regdeal.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
-        wm_concat(regdeal.sec_manage_acct_id) sec_manage_acct_id,wm_concat(stlinfo.SEC_ACCT_NAME) SEC_ACCT_NAME,
-        nvl(sum(bb.PTL_BOND_ZHCC),0)/10000 as accountPosition*/
+
         select regdeal.totle_trade_id,group_concat(regdeal.portfolio_id) as portfolioId,group_concat(pp.portfolio_name) portfolioName,
         group_concat(regdeal.sec_manage_acct_id) sec_manage_acct_id,group_concat(stlinfo.SEC_ACCT_NAME) SEC_ACCT_NAME,
         ifnull(sum(bb.PTL_BOND_ZHCC),0)/10000 as accountPosition

@@ -20,7 +20,7 @@
 		) as accessFilenum,
 		(select count(1) from chb_file_read_monitor_info a
 		where a.HANDLE_FILE_TYPE=b.HANDLE_FILE_TYPE
-		and a.FILE_HANDLE_STATUS = '03'/*异常结束*/
+		and a.FILE_HANDLE_STATUS = '03'
 		and DATE_FORMAT(a.FILE_READ_START_TIME,'%Y-%m-%d') = #{searchDate,jdbcType=VARCHAR}
 		and DATE_FORMAT(a.FILE_READ_END_TIME,'%Y-%m-%d') = #{searchDate,jdbcType=VARCHAR}
 		<if test="createDeptList != null and createDeptList.size>0">
@@ -263,10 +263,10 @@
 				#{item,jdbcType=VARCHAR}
 			</foreach>
 		</if>
-		) as accessFilenum,/*接入文件*/
+		) as accessFilenum,
 		(select count(1) from chb_file_read_monitor_info a
 		where a.HANDLE_FILE_TYPE=b.HANDLE_FILE_TYPE
-		and a.FILE_HANDLE_STATUS = '03'/*异常结束*/
+		and a.FILE_HANDLE_STATUS = '03'
 		and DATE_FORMAT(a.FILE_READ_START_TIME,'%Y-%m-%d') = #{searchDate,jdbcType=VARCHAR}
 		and DATE_FORMAT(a.FILE_READ_END_TIME,'%Y-%m-%d') = #{searchDate,jdbcType=VARCHAR}
 		<if test="createDeptList != null and createDeptList.size>0">
@@ -279,7 +279,7 @@
 				#{item,jdbcType=VARCHAR}
 			</foreach>
 		</if>
-		) as exceptionnum,/*异常结束个数*/
+		) as exceptionnum,
 		(select count(1) from chb_file_read_monitor_info a
 		where a.HANDLE_FILE_TYPE=b.HANDLE_FILE_TYPE
 		and a.FILE_HANDLE_STATUS = '02'/*正常结束*/
@@ -295,10 +295,10 @@
 				#{item,jdbcType=VARCHAR}
 			</foreach>
 		</if>
-		) as normalnum,/*正常结束个数*/
+		) as normalnum,
 		ifnull((select sum(ifnull(a.FILE_DATA_COUNT,0)) from chb_file_read_monitor_info a
 		where a.HANDLE_FILE_TYPE=b.HANDLE_FILE_TYPE
-		and a.FILE_HANDLE_STATUS = '02'/*正常结束*/
+		and a.FILE_HANDLE_STATUS = '02'
 		and DATE_FORMAT(a.FILE_READ_START_TIME,'%Y-%m-%d') = #{searchDate,jdbcType=VARCHAR}
 		and DATE_FORMAT(a.FILE_READ_END_TIME,'%Y-%m-%d') = #{searchDate,jdbcType=VARCHAR}
 		<if test="createDeptList != null and createDeptList.size>0">
@@ -311,7 +311,7 @@
 				#{item,jdbcType=VARCHAR}
 			</foreach>
 		</if>
-		),0) as datanum /*数据接入总数*/
+		),0) as datanum
 		from htmlreport c
 		left join chb_file_read_monitor_info b
 		on b.HANDLE_FILE_TYPE = c.reportcode

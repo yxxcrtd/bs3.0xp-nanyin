@@ -11,17 +11,17 @@
 		t3.PA_BUSS_TYPE paBussType,
 		T1.PORTFOLIO_ID portfolioId,
 		T2.PORTFOLIO_NAME portfolioName,
-		NVL(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
-		nvl(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
+		ifnull(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
+		ifnull(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
 		T4.FINPROD_MARKET_ID finprodMarketId,
 		T4.FINPROD_ABBR finprodAbbr,
-		to_char(T1.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-		to_char(T1.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+		DATE_FORMAT(T1.VDATE, '%Y-%m-%d') vDate/*计息开始日*/,
+		DATE_FORMAT(T1.MDATE, '%Y-%m-%d') mDate/*计息结束日*/,
 		T1.FPRICE_AMT tradeAmt/*实收本息总额*/,
 		null tradeAmt2,
 		T1.SHARE_AMT  shareAmt,
 		T1.CCY ccy,
-		to_char(T1.SETTLE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T1.SETTLE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -38,7 +38,7 @@
 		LEFT JOIN FIN_PRODUCT FP ON T1.CHL_ID = FP.FINPROD_ID
 		LEFT JOIN SYS_INSTITUTION SI ON T1.INSTITUTION_CODE = SI.INSTITUTION_CODE
 		WHERE T4.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF03}
-		AND nvl(T1.IS_OVERDUE_DEAL,#{YESNO_N}) = #{YESNO_N}
+		AND ifnull(T1.IS_OVERDUE_DEAL,#{YESNO_N}) = #{YESNO_N}
 		AND wtdta.MP_FINPROD_ID IS NULL
 		AND T1.P_TRADE_ID IS NULL/*撤销流程中的数据不展示*/
 		AND T1.P_TOTLE_TRADE_ID IS NULL <!-- 只展示汇总的汇总交易 -->
@@ -66,13 +66,13 @@
 		fp.FINPROD_NAME secAcctName,
 		NULL finprodMarketId,
 		NULL finprodAbbr,
-		to_char(T4.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-		to_char(T4.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+		DATE_FORMAT(T4.VDATE, '%Y-%m-%d') vDate/*计息开始日*/,
+		DATE_FORMAT(T4.MDATE, '%Y-%m-%d') mDate/*计息结束日*/,
 		T1.FPRICE_AMT tradeAmt,/*实收本息总额*/
 		null tradeAmt2,
 		T1.SHARE_AMT  shareAmt,
 		T1.CCY ccy,
-		to_char(T1.SETTLE_DATE, 'yyyy-MM-dd') tradeDate,
+		DATE_FORMAT(T1.SETTLE_DATE, '%Y-%m-%d') tradeDate,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -109,13 +109,13 @@
 		fp.FINPROD_NAME secAcctName,
 		T4.FINPROD_MARKET_ID finprodMarketId,
 		T4.FINPROD_ABBR finprodAbbr,
-		to_char(T1.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-		to_char(T1.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+		DATE_FORMAT(T1.VDATE, '%Y-%m-%d') vDate/*计息开始日*/,
+		DATE_FORMAT(T1.MDATE, '%Y-%m-%d') mDate/*计息结束日*/,
 		T1.FPRICE_AMT tradeAmt/*实收本息总额*/,
 		null tradeAmt2,
 		T1.SHARE_AMT  shareAmt,
 		T1.CCY ccy,
-		to_char(T1.TRADE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T1.TRADE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -132,7 +132,7 @@
 		LEFT JOIN FIN_PRODUCT FP ON T1.CHL_ID = FP.FINPROD_ID
 		LEFT JOIN SYS_INSTITUTION SI ON T1.INSTITUTION_CODE = SI.INSTITUTION_CODE
 		WHERE T4.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF07}
-		AND nvl(T1.IS_OVERDUE_DEAL,#{YESNO_N}) = #{YESNO_N}
+		AND ifnull(T1.IS_OVERDUE_DEAL,#{YESNO_N}) = #{YESNO_N}
 		and T1.TRADE_STATUS =  #{TRADE_STATUS01}
 		AND T1.P_TOTLE_TRADE_ID is null
 		AND (T1.PORTFOLIO_ID IS NULL or T1.PS = #{PS_T38} or T1.PS = #{PS_C7})
@@ -171,13 +171,13 @@
 		null secAcctName,
 		null finprodMarketId,
 		null finprodAbbr,
-		to_char(T1.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-		to_char(T1.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+		DATE_FORMAT(T1.VDATE, '%Y-%m-%d') vDate/*计息开始日*/,
+		DATE_FORMAT(T1.MDATE, '%Y-%m-%d') mDate/*计息结束日*/,
 		T1.TRADE_AMT tradeAmt/*实付本息和*/,
 		null tradeAmt2,
 		T1.SHARE_AMT  shareAmt,
 		T1.CCY ccy,
-		to_char(T1.SETTLE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T1.SETTLE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -217,7 +217,7 @@
 		null tradeAmt2,
 		T1.SHARE_AMT shareAmt,
 		T1.CCY ccy,
-		to_char(T1.TRADE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T1.TRADE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName, /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -258,7 +258,7 @@
 		null tradeAmt2,
 		T1.SHARE_AMT shareAmt,
 		T1.CCY ccy,
-		to_char(T1.TRADE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T1.TRADE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName, /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -294,13 +294,13 @@
 		fp.FINPROD_NAME secAcctName,
 		T4.FINPROD_MARKET_ID finprodMarketId,
 		T4.FINPROD_ABBR finprodAbbr,
-		to_char(T1.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-		to_char(T1.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+		DATE_FORMAT(T1.VDATE, '%Y-%m-%d') vDate/*计息开始日*/,
+		DATE_FORMAT(T1.MDATE, '%Y-%m-%d') mDate/*计息结束日*/,
 		T1.TRADE_AMT tradeAmt/*实收本息总额*/,
 		null tradeAmt2,
 		T1.SHARE_AMT  shareAmt,
 		T4.CCY ccy,
-		to_char(T1.TRADE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T1.TRADE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -320,7 +320,7 @@
 		T1.TRADE_STATUS = #{TRADE_STATUS01}
 		AND T1.P_TRADE_ID IS NULL/*撤销流程中的数据不展示*/
 		AND T1.PORTFOLIO_ID IS NULL
-		AND nvl(T1.IS_OVERDUE_DEAL,#{YESNO_N}) = #{YESNO_N}
+		AND ifnull(T1.IS_OVERDUE_DEAL,#{YESNO_N}) = #{YESNO_N}
 		AND T1.IS_CANCEL = #{YESNO_N}
 		AND T1.BUSI_TYPE = #{TRD15}
 		AND T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF17}
@@ -343,13 +343,13 @@
 		fp.FINPROD_NAME secAcctName,
 		T4.FINPROD_MARKET_ID finprodMarketId,
 		T4.FINPROD_ABBR finprodAbbr,
-		to_char(T1.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-		to_char(T1.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+		DATE_FORMAT(T1.VDATE, '%Y-%m-%d') vDate/*计息开始日*/,
+		DATE_FORMAT(T1.MDATE, '%Y-%m-%d') mDate/*计息结束日*/,
 		T1.TRADE_AMT tradeAmt/*实收本息总额*/,
 		null tradeAmt2,
 		T1.SHARE_AMT  shareAmt,
 		T1.CCY ccy,
-		to_char(T1.SETTLE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T1.SETTLE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -385,13 +385,13 @@
 		fp.FINPROD_NAME secAcctName,
 		T4.FINPROD_MARKET_ID finprodMarketId,
 		T4.FINPROD_ABBR finprodAbbr,
-		to_char(T1.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-		to_char(T1.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+		DATE_FORMAT(T1.VDATE, '%Y-%m-%d') vDate/*计息开始日*/,
+		DATE_FORMAT(T1.MDATE, '%Y-%m-%d') mDate/*计息结束日*/,
 		T1.TRADE_AMT tradeAmt/*实收本息总额*/,
 		null tradeAmt2,
 		T1.SHARE_AMT  shareAmt,
 		T1.CCY ccy,
-		to_char(T1.TRADE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T1.TRADE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -413,7 +413,7 @@
 		AND T1.BUSI_TYPE = #{TRD15}
 		AND T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF17}
 		AND T1.PORTFOLIO_ID IS NULL
-		AND nvl(T1.IS_OVERDUE_DEAL,#{YESNO_N}) = #{YESNO_N}
+		AND ifnull(T1.IS_OVERDUE_DEAL,#{YESNO_N}) = #{YESNO_N}
 		AND EXISTS (SELECT 1 FROM WFL_TRD_FIN_PRODUCT_DEAL_TOTAL DEAL
 		where DEAL.P_TOTLE_TRADE_ID = T1.TOTLE_TRADE_ID AND DEAL.PORTFOLIO_ID <include refid="portfolioAth"/>)
 		<include refid="where_sql" />
@@ -432,13 +432,13 @@
 		fp.FINPROD_NAME secAcctName,
 		T4.FINPROD_MARKET_ID finprodMarketId,
 		T4.FINPROD_ABBR finprodAbbr,
-		to_char(T1.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-		to_char(T1.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+		DATE_FORMAT(T1.VDATE, '%Y-%m-%d') vDate/*计息开始日*/,
+		DATE_FORMAT(T1.MDATE, '%Y-%m-%d') mDate/*计息结束日*/,
 		T1.FPRICE_AMT tradeAmt/*实收本息总额*/,
 		null tradeAmt2,
 		T1.SHARE_AMT  shareAmt,
 		T1.CCY ccy,
-		to_char(T1.TRADE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T1.TRADE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -475,13 +475,13 @@
 		fp.FINPROD_NAME secAcctName,
 		T4.FINPROD_MARKET_ID finprodMarketId,
 		T4.FINPROD_ABBR finprodAbbr,
-		to_char(T6.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-		to_char(T6.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+		DATE_FORMAT(T6.VDATE, '%Y-%m-%d') vDate/*计息开始日*/,
+		DATE_FORMAT(T6.MDATE, '%Y-%m-%d') mDate/*计息结束日*/,
 		T6.FPRICE_AMT tradeAmt/*实收本息总额*/,
 		null tradeAmt2,
 		T6.SHARE_AMT  shareAmt,
 		T6.CCY ccy,
-		to_char(T6.SETTLE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T6.SETTLE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -506,7 +506,7 @@
 		LEFT JOIN FIN_PRODUCT FP ON T1.CHL_ID = FP.FINPROD_ID
 		WHERE T1.P_TRADE_ID IS NULL
 		AND T1.FINPROD_TYPE2 = #{F10}
-		and nvl(T2.PARENT_PORTFOLIO_ID,'null') = 'null'
+		and ifnull(T2.PARENT_PORTFOLIO_ID,'null') = 'null'
 		<include refid="where_sql" />)
 		union all
 		/*利率互换*/
@@ -522,13 +522,13 @@
 		fp.FINPROD_NAME secAcctName,
 		T4.FINPROD_MARKET_ID finprodMarketId,
 		T4.FINPROD_ABBR finprodAbbr,
-		to_char(T21.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-		to_char(T21.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+		DATE_FORMAT(T21.VDATE, '%Y-%m-%d') vDate/*计息开始日*/,
+		DATE_FORMAT(T21.MDATE, '%Y-%m-%d') mDate/*计息结束日*/,
 		T21.FPRICE_AMT tradeAmt/*实收本息总额*/,
 		T31.FPRICE_AMT tradeAmt2/*实收本息总额*/,
 		T1.SHARE_AMT  shareAmt,
 		T21.CCY ccy,
-		to_char(T1.SETTLE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T1.SETTLE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -545,7 +545,7 @@
 		LEFT JOIN WFL_TRD_PRODUCT_DEAL T31 ON T1.TOTLE_TRADE_ID = T31.TOTLE_TRADE_ID
 		AND ((T31.PS = #{psR} and T41.IRS_TYPE = #{irsType02})
 		OR (T31.PS = #{psP} and T41.IRS_TYPE = #{irsType01}))
-		LEFT JOIN PTL_TRADE PT ON NVL(NVL(T21.P_TRADE_ID, T21.TRADE_ID), NVL(T31.P_TRADE_ID, T31.TRADE_ID)) = PT.BUSI_NO
+		LEFT JOIN PTL_TRADE PT ON ifnull(ifnull(T21.P_TRADE_ID, T21.TRADE_ID), ifnull(T31.P_TRADE_ID, T31.TRADE_ID)) = PT.BUSI_NO
 		LEFT JOIN
 		PTL_PORTFOLIO T2
 		ON
@@ -578,13 +578,13 @@
 		null secAcctName,
 		T4.FINPROD_MARKET_ID finprodMarketId,
 		T4.FINPROD_ABBR finprodAbbr,
-		to_char(FTP.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-		to_char(FTP.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+		DATE_FORMAT(FTP.VDATE, '%Y-%m-%d') vDate/*计息开始日*/,
+		DATE_FORMAT(FTP.MDATE, '%Y-%m-%d') mDate/*计息结束日*/,
 		T1.TRADE_AMT tradeAmt/*实收本息总额*/,
 		null tradeAmt2,
 		T1.SHARE_AMT shareAmt,
 		T1.CCY ccy,
-		to_char(T1.TRADE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T1.TRADE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -615,17 +615,17 @@
 		t3.PA_BUSS_TYPE paBussType,
 		T1.PORTFOLIO_ID portfolioId,
 		T2.PORTFOLIO_NAME portfolioName,
-		NVL(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
-		nvl(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
+		ifnull(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
+		ifnull(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
 		T4.FINPROD_MARKET_ID finprodMarketId,
 		T4.FINPROD_ABBR finprodAbbr,
-		to_char(T1.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-		to_char(T1.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+		DATE_FORMAT(T1.VDATE, '%Y-%m-%d') vDate/*计息开始日*/,
+		DATE_FORMAT(T1.MDATE, '%Y-%m-%d') mDate/*计息结束日*/,
 		T1.FPRICE_AMT tradeAmt/*实收本息总额*/,
 		null tradeAmt2,
 		null  shareAmt,
 		T1.CCY ccy,
-		to_char(T1.TRADE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T1.TRADE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -658,17 +658,17 @@
 		t3.PA_BUSS_TYPE paBussType,
 		T1.PORTFOLIO_ID portfolioId,
 		T2.PORTFOLIO_NAME portfolioName,
-		NVL(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
-		nvl(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
+		ifnull(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
+		ifnull(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
 		T4.FINPROD_MARKET_ID finprodMarketId,
 		T4.FINPROD_ABBR finprodAbbr,
-		to_char(T1.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-		to_char(T1.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+		DATE_FORMAT(T1.VDATE, '%Y-%m-%d') vDate/*计息开始日*/,
+		DATE_FORMAT(T1.MDATE, '%Y-%m-%d') mDate/*计息结束日*/,
 		T1.FPRICE_AMT tradeAmt/*实收本息总额*/,
 		null tradeAmt2,
 		T1.SHARE_AMT  shareAmt,
 		T1.CCY ccy,
-		to_char(T1.SETTLE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T1.SETTLE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -685,7 +685,7 @@
 		LEFT JOIN FIN_PRODUCT FP ON T1.CHL_ID = FP.FINPROD_ID
 		LEFT JOIN SYS_INSTITUTION SI ON T1.INSTITUTION_CODE = SI.INSTITUTION_CODE
 		WHERE T1.TRADE_STATUS = #{TRADE_STATUS01}
-		AND nvl(T1.IS_OVERDUE_DEAL,#{YESNO_N}) = #{YESNO_N}
+		AND ifnull(T1.IS_OVERDUE_DEAL,#{YESNO_N}) = #{YESNO_N}
 		AND wtdta.MP_FINPROD_ID IS NULL
 		AND T1.IS_CANCEL = #{YESNO_N}
 		AND T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF01}
@@ -714,13 +714,13 @@
 		fp.FINPROD_NAME secAcctName,
 		NULL finprodMarketId,
 		NULL finprodAbbr,
-		to_char(T4.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-		to_char(T4.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+		DATE_FORMAT(T4.VDATE, '%Y-%m-%d') vDate/*计息开始日*/,
+		DATE_FORMAT(T4.MDATE, '%Y-%m-%d') mDate/*计息结束日*/,
 		T1.FPRICE_AMT tradeAmt,/*实收本息总额*/
 		null tradeAmt2,
 		T1.SHARE_AMT  shareAmt,
 		T1.CCY ccy,
-		to_char(T1.SETTLE_DATE, 'yyyy-MM-dd') tradeDate,
+		DATE_FORMAT(T1.SETTLE_DATE, '%Y-%m-%d') tradeDate,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -758,13 +758,13 @@
 		fp.FINPROD_NAME secAcctName,
 		T4.FINPROD_MARKET_ID finprodMarketId,
 		T4.FINPROD_ABBR finprodAbbr,
-		to_char(T1.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-		to_char(T1.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+		DATE_FORMAT(T1.VDATE, '%Y-%m-%d') vDate/*计息开始日*/,
+		DATE_FORMAT(T1.MDATE, '%Y-%m-%d') mDate/*计息结束日*/,
 		T1.FPRICE_AMT tradeAmt/*实收本息总额*/,
 		null tradeAmt2,
 		T1.SHARE_AMT  shareAmt,
 		T1.CCY ccy,
-		to_char(T1.TRADE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T1.TRADE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -780,7 +780,7 @@
 		LEFT JOIN SYS_INSTITUTION SI ON T1.INSTITUTION_CODE = SI.INSTITUTION_CODE
 		LEFT JOIN STL_SEC_ACCT_INFO SAI ON T1.SEC_MANAGE_ACCT_ID = SAI.SEC_ACCT_ID
 		WHERE T1.TRADE_STATUS = #{TRADE_STATUS01}
-		AND nvl(T1.IS_OVERDUE_DEAL,#{YESNO_N}) = #{YESNO_N}
+		AND ifnull(T1.IS_OVERDUE_DEAL,#{YESNO_N}) = #{YESNO_N}
 		AND T1.IS_CANCEL = #{YESNO_N}
 		AND T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF07}
 		AND T1.P_TOTLE_TRADE_ID is null
@@ -816,13 +816,13 @@
 		null secAcctName,
 		null finprodMarketId,
 		null finprodAbbr,
-		to_char(T1.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-		to_char(T1.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+		DATE_FORMAT(T1.VDATE, '%Y-%m-%d') vDate/*计息开始日*/,
+		DATE_FORMAT(T1.MDATE, '%Y-%m-%d') mDate/*计息结束日*/,
 		T1.TRADE_AMT tradeAmt/*实付本息和*/,
 		null tradeAmt2,
 		T1.SHARE_AMT  shareAmt,
 		T1.CCY ccy,
-		to_char(T1.SETTLE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T1.SETTLE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -865,7 +865,7 @@
 		null tradeAmt2,
 		T1.SHARE_AMT  shareAmt,
 		T1.CCY ccy,
-		to_char(T1.TRADE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T1.TRADE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -904,7 +904,7 @@
 		null tradeAmt2,
 		T1.SHARE_AMT  shareAmt,
 		T1.CCY ccy,
-		to_char(T1.TRADE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T1.TRADE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -938,13 +938,13 @@
 		fp.FINPROD_NAME secAcctName,
 		T4.FINPROD_MARKET_ID finprodMarketId,
 		T4.FINPROD_ABBR finprodAbbr,
-		to_char(T1.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-		to_char(T1.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+		DATE_FORMAT(T1.VDATE, '%Y-%m-%d') vDate/*计息开始日*/,
+		DATE_FORMAT(T1.MDATE, '%Y-%m-%d') mDate/*计息结束日*/,
 		T1.TRADE_AMT tradeAmt/*实收本息总额*/,
 		null tradeAmt2,
 		T1.SHARE_AMT  shareAmt,
 		T4.CCY ccy,
-		to_char(T1.TRADE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T1.TRADE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -963,7 +963,7 @@
 		WHERE
 		T1.TRADE_STATUS = #{TRADE_STATUS01}
 		AND T1.PORTFOLIO_ID IS NULL
-		AND nvl(T1.IS_OVERDUE_DEAL,#{YESNO_N}) = #{YESNO_N}
+		AND ifnull(T1.IS_OVERDUE_DEAL,#{YESNO_N}) = #{YESNO_N}
 		AND T1.IS_CANCEL = #{YESNO_N}
 		AND T1.BUSI_TYPE = #{TRD15}
 		AND T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF17}
@@ -985,13 +985,13 @@
 		fp.FINPROD_NAME secAcctName,
 		T4.FINPROD_MARKET_ID finprodMarketId,
 		T4.FINPROD_ABBR finprodAbbr,
-		to_char(T1.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-		to_char(T1.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+		DATE_FORMAT(T1.VDATE, '%Y-%m-%d') vDate/*计息开始日*/,
+		DATE_FORMAT(T1.MDATE, '%Y-%m-%d') mDate/*计息结束日*/,
 		T1.TRADE_AMT tradeAmt/*实收本息总额*/,
 		null tradeAmt2,
 		T1.SHARE_AMT  shareAmt,
 		T1.CCY ccy,
-		to_char(T1.SETTLE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T1.SETTLE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -1028,13 +1028,13 @@
 		fp.FINPROD_NAME secAcctName,
 		T4.FINPROD_MARKET_ID finprodMarketId,
 		T4.FINPROD_ABBR finprodAbbr,
-		to_char(T1.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-		to_char(T1.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+		DATE_FORMAT(T1.VDATE, '%Y-%m-%d') vDate/*计息开始日*/,
+		DATE_FORMAT(T1.MDATE, '%Y-%m-%d') mDate/*计息结束日*/,
 		T1.TRADE_AMT tradeAmt/*实收本息总额*/,
 		null tradeAmt2,
 		T1.SHARE_AMT  shareAmt,
 		T1.CCY ccy,
-		to_char(T1.TRADE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T1.TRADE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -1054,7 +1054,7 @@
 		AND T1.IS_CANCEL = #{YESNO_N}
 		AND T1.BUSI_TYPE = #{TRD15}
 		AND T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF17}
-		AND nvl(T1.IS_OVERDUE_DEAL,#{YESNO_N}) = #{YESNO_N}
+		AND ifnull(T1.IS_OVERDUE_DEAL,#{YESNO_N}) = #{YESNO_N}
 		AND EXISTS (SELECT 1 FROM TRD_FIN_PRODUCT_DEAL_TOTAL DEAL
 		where DEAL.P_TOTLE_TRADE_ID = T1.TOTLE_TRADE_ID AND DEAL.PORTFOLIO_ID <include refid="portfolioAth"/>)
 		<include refid="where_sql" />
@@ -1072,13 +1072,13 @@
 		fp.FINPROD_NAME secAcctName,
 		T4.FINPROD_MARKET_ID finprodMarketId,
 		T4.FINPROD_ABBR finprodAbbr,
-		to_char(T1.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-		to_char(T1.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+		DATE_FORMAT(T1.VDATE, '%Y-%m-%d') vDate/*计息开始日*/,
+		DATE_FORMAT(T1.MDATE, '%Y-%m-%d') mDate/*计息结束日*/,
 		T1.TRADE_AMT tradeAmt/*实收本息总额*/,
 		null tradeAmt2,
 		T1.SHARE_AMT  shareAmt,
 		T1.CCY ccy,
-		to_char(T1.TRADE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T1.TRADE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -1114,13 +1114,13 @@
 		fp.FINPROD_NAME secAcctName,
 		T4.FINPROD_MARKET_ID finprodMarketId,
 		T4.FINPROD_ABBR finprodAbbr,
-		to_char(T6.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-		to_char(T6.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+		DATE_FORMAT(T6.VDATE, '%Y-%m-%d') vDate/*计息开始日*/,
+		DATE_FORMAT(T6.MDATE, '%Y-%m-%d') mDate/*计息结束日*/,
 		T6.FPRICE_AMT tradeAmt/*实收本息总额*/,
 		null tradeAmt2,
 		T6.SHARE_AMT shareAmt,
 		T6.CCY ccy,
-		to_char(T6.SETTLE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T6.SETTLE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName, /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -1141,7 +1141,7 @@
 		ON T1.TOTLE_TRADE_ID = T6.TOTLE_TRADE_ID AND T6.PS = #{PS_T13,jdbcType=VARCHAR}
 		AND T1.IS_CANCEL = #{YES_OR_NO_N}
 		AND T1.FINPROD_TYPE2 = #{F10}
-		and nvl(T2.PARENT_PORTFOLIO_ID,'null') = 'null'
+		and ifnull(T2.PARENT_PORTFOLIO_ID,'null') = 'null'
 		<include refid="where_sql" />)
 		union all
 		SELECT * FROM (
@@ -1156,13 +1156,13 @@
 		fp.FINPROD_NAME secAcctName,
 		T4.FINPROD_MARKET_ID finprodMarketId,
 		T4.FINPROD_ABBR finprodAbbr,
-		to_char(T21.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-		to_char(T21.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+		DATE_FORMAT(T21.VDATE, '%Y-%m-%d') vDate/*计息开始日*/,
+		DATE_FORMAT(T21.MDATE, '%Y-%m-%d') mDate/*计息结束日*/,
 		T21.FPRICE_AMT tradeAmt/*实收本息总额*/,
 		T31.FPRICE_AMT tradeAmt2/*实收本息总额*/,
 		T1.SHARE_AMT  shareAmt,
 		T21.CCY ccy,
-		to_char(T1.SETTLE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T1.SETTLE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -1179,7 +1179,7 @@
 		LEFT JOIN TRD_PRODUCT_DEAL T31 ON T1.TOTLE_TRADE_ID = T31.TOTLE_TRADE_ID
 		AND ((T31.PS = #{psR} and T41.IRS_TYPE = #{irsType02})
 		OR (T31.PS = #{psP} and T41.IRS_TYPE = #{irsType01}))
-		LEFT JOIN PTL_TRADE PT ON NVL(NVL(T21.P_TRADE_ID, T21.TRADE_ID), NVL(T31.P_TRADE_ID, T31.TRADE_ID)) = PT.BUSI_NO
+		LEFT JOIN PTL_TRADE PT ON ifnull(ifnull(T21.P_TRADE_ID, T21.TRADE_ID), ifnull(T31.P_TRADE_ID, T31.TRADE_ID)) = PT.BUSI_NO
 		LEFT JOIN
 		PTL_PORTFOLIO T2
 		ON
@@ -1211,13 +1211,13 @@
 		null secAcctName,
 		T4.FINPROD_MARKET_ID finprodMarketId,
 		T4.FINPROD_ABBR finprodAbbr,
-		to_char(FTP.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-		to_char(FTP.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+		DATE_FORMAT(FTP.VDATE, '%Y-%m-%d') vDate/*计息开始日*/,
+		DATE_FORMAT(FTP.MDATE, '%Y-%m-%d') mDate/*计息结束日*/,
 		T1.TRADE_AMT tradeAmt/*实收本息总额*/,
 		null tradeAmt2,
 		T1.SHARE_AMT shareAmt,
 		T1.CCY ccy,
-		to_char(T1.TRADE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T1.TRADE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -1250,17 +1250,17 @@
 		t3.PA_BUSS_TYPE paBussType,
 		T1.PORTFOLIO_ID portfolioId,
 		T2.PORTFOLIO_NAME portfolioName,
-		NVL(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
-		nvl(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
+		ifnull(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
+		ifnull(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
 		T4.FINPROD_MARKET_ID finprodMarketId,
 		T4.FINPROD_ABBR finprodAbbr,
-		to_char(T1.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-		to_char(T1.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+		DATE_FORMAT(T1.VDATE, '%Y-%m-%d') vDate/*计息开始日*/,
+		DATE_FORMAT(T1.MDATE, '%Y-%m-%d') mDate/*计息结束日*/,
 		T1.FPRICE_AMT tradeAmt/*实收本息总额*/,
 		null tradeAmt2,
 		null  shareAmt,
 		T1.CCY ccy,
-		to_char(T1.TRADE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T1.TRADE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -1295,17 +1295,17 @@
 		t3.PA_BUSS_TYPE paBussType,
 		T1.PORTFOLIO_ID portfolioId,
 		T2.PORTFOLIO_NAME portfolioName,
-		NVL(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
-		nvl(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
+		ifnull(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
+		ifnull(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
 		T4.FINPROD_MARKET_ID finprodMarketId,
 		T4.FINPROD_ABBR finprodAbbr,
-		to_char(T1.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-		to_char(T1.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+		DATE_FORMAT(T1.VDATE, '%Y-%m-%d') vDate/*计息开始日*/,
+		DATE_FORMAT(T1.MDATE, '%Y-%m-%d') mDate/*计息结束日*/,
 		T1.TRADE_AMT tradeAmt/*实收本息总额*/,
 		null tradeAmt2,
 		T1.SHARE_AMT  shareAmt,
 		T1.CCY ccy,
-		to_char(T1.SETTLE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T1.SETTLE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -1322,7 +1322,7 @@
 		LEFT JOIN FIN_PRODUCT FP ON T1.CHL_ID = FP.FINPROD_ID
 		LEFT JOIN SYS_INSTITUTION SI ON T1.INSTITUTION_CODE = SI.INSTITUTION_CODE
 		WHERE T1.TRADE_STATUS = #{TRADE_STATUS03}
-		AND nvl(T1.IS_OVERDUE_DEAL,#{YESNO_N}) = #{YESNO_N}
+		AND ifnull(T1.IS_OVERDUE_DEAL,#{YESNO_N}) = #{YESNO_N}
 		AND wtdta.MP_FINPROD_ID IS NULL
 		AND T1.BUSI_TYPE = #{TRD10}
 		AND T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF01}
@@ -1351,13 +1351,13 @@
 		fp.FINPROD_NAME secAcctName,
 		NULL finprodMarketId,
 		NULL finprodAbbr,
-		to_char(T4.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-		to_char(T4.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+		DATE_FORMAT(T4.VDATE, '%Y-%m-%d') vDate/*计息开始日*/,
+		DATE_FORMAT(T4.MDATE, '%Y-%m-%d') mDate/*计息结束日*/,
 		T1.FPRICE_AMT tradeAmt,/*实收本息总额*/
 		null tradeAmt2,
 		T1.SHARE_AMT  shareAmt,
 		T1.CCY ccy,
-		to_char(T1.SETTLE_DATE, 'yyyy-MM-dd') tradeDate,
+		DATE_FORMAT(T1.SETTLE_DATE, '%Y-%m-%d') tradeDate,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -1394,13 +1394,13 @@
 		FP.FINPROD_NAME secAcctName,
 		T4.FINPROD_MARKET_ID finprodMarketId,
 		T4.FINPROD_ABBR finprodAbbr,
-		to_char(T1.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-		to_char(T1.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+		DATE_FORMAT(T1.VDATE, '%Y-%m-%d') vDate/*计息开始日*/,
+		DATE_FORMAT(T1.MDATE, '%Y-%m-%d') mDate/*计息结束日*/,
 		T1.FPRICE_AMT tradeAmt/*实收本息总额*/,
 		null tradeAmt2,
 		T1.SHARE_AMT  shareAmt,
 		T1.CCY ccy,
-		to_char(T1.TRADE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T1.TRADE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -1416,7 +1416,7 @@
 		LEFT JOIN STL_SEC_ACCT_INFO SAI ON T1.SEC_MANAGE_ACCT_ID = SAI.SEC_ACCT_ID
 		LEFT JOIN FIN_PRODUCT FP ON T1.CHL_ID = FP.FINPROD_ID
 		WHERE T1.TRADE_STATUS = #{TRADE_STATUS03}
-		AND nvl(T1.IS_OVERDUE_DEAL,#{YESNO_N}) = #{YESNO_N}
+		AND ifnull(T1.IS_OVERDUE_DEAL,#{YESNO_N}) = #{YESNO_N}
 		AND T1.IS_CANCEL = #{YESNO_N}
 		AND T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF07}
 		AND T1.P_TOTLE_TRADE_ID is null
@@ -1452,13 +1452,13 @@
 		null secAcctName,
 		null finprodMarketId,
 		null finprodAbbr,
-		to_char(T1.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-		to_char(T1.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+		DATE_FORMAT(T1.VDATE, '%Y-%m-%d') vDate/*计息开始日*/,
+		DATE_FORMAT(T1.MDATE, '%Y-%m-%d') mDate/*计息结束日*/,
 		T1.TRADE_AMT tradeAmt/*实付本息和*/,
 		null tradeAmt2,
 		T1.SHARE_AMT  shareAmt,
 		T1.CCY ccy,
-		to_char(T1.SETTLE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T1.SETTLE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -1500,7 +1500,7 @@
 		null tradeAmt2,
 		T1.SHARE_AMT  shareAmt,
 		T1.CCY ccy,
-		to_char(T1.TRADE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T1.TRADE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -1539,7 +1539,7 @@
 		null tradeAmt2,
 		T1.SHARE_AMT  shareAmt,
 		T1.CCY ccy,
-		to_char(T1.TRADE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T1.TRADE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -1573,13 +1573,13 @@
 		fp.FINPROD_NAME secAcctName,
 		T4.FINPROD_MARKET_ID finprodMarketId,
 		T4.FINPROD_ABBR finprodAbbr,
-		to_char(T1.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-		to_char(T1.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+		DATE_FORMAT(T1.VDATE, '%Y-%m-%d') vDate/*计息开始日*/,
+		DATE_FORMAT(T1.MDATE, '%Y-%m-%d') mDate/*计息结束日*/,
 		T1.TRADE_AMT tradeAmt/*实收本息总额*/,
 		null tradeAmt2,
 		T1.SHARE_AMT  shareAmt,
 		T4.CCY ccy,
-		to_char(T1.TRADE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T1.TRADE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -1617,13 +1617,13 @@
 		fp.FINPROD_NAME secAcctName,
 		T4.FINPROD_MARKET_ID finprodMarketId,
 		T4.FINPROD_ABBR finprodAbbr,
-		to_char(T1.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-		to_char(T1.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+		DATE_FORMAT(T1.VDATE, '%Y-%m-%d') vDate/*计息开始日*/,
+		DATE_FORMAT(T1.MDATE, '%Y-%m-%d') mDate/*计息结束日*/,
 		T1.TRADE_AMT tradeAmt/*实收本息总额*/,
 		null tradeAmt2,
 		T1.SHARE_AMT  shareAmt,
 		T1.CCY ccy,
-		to_char(T1.SETTLE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T1.SETTLE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -1658,13 +1658,13 @@
 		fp.FINPROD_NAME secAcctName,
 		T4.FINPROD_MARKET_ID finprodMarketId,
 		T4.FINPROD_ABBR finprodAbbr,
-		to_char(T1.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-		to_char(T1.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+		DATE_FORMAT(T1.VDATE, '%Y-%m-%d') vDate/*计息开始日*/,
+		DATE_FORMAT(T1.MDATE, '%Y-%m-%d') mDate/*计息结束日*/,
 		T1.TRADE_AMT tradeAmt/*实收本息总额*/,
 		null tradeAmt2,
 		T1.SHARE_AMT  shareAmt,
 		T1.CCY ccy,
-		to_char(T1.SETTLE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T1.SETTLE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -1701,13 +1701,13 @@
 		fp.FINPROD_NAME secAcctName,
 		T4.FINPROD_MARKET_ID finprodMarketId,
 		T4.FINPROD_ABBR finprodAbbr,
-		to_char(T6.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-		to_char(T6.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+		DATE_FORMAT(T6.VDATE, '%Y-%m-%d') vDate/*计息开始日*/,
+		DATE_FORMAT(T6.MDATE, '%Y-%m-%d') mDate/*计息结束日*/,
 		T6.FPRICE_AMT tradeAmt/*实收本息总额*/,
 		null tradeAmt2,
 		T6.SHARE_AMT  shareAmt,
 		T6.CCY ccy,
-		to_char(T6.SETTLE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T6.SETTLE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -1730,7 +1730,7 @@
 		WHERE T1.P_TRADE_ID  IS NULL
 		AND T1.IS_CANCEL = #{YES_OR_NO_Y}
 		AND T1.FINPROD_TYPE2 = #{F10}
-		and nvl(T2.PARENT_PORTFOLIO_ID,'null') = 'null'
+		and ifnull(T2.PARENT_PORTFOLIO_ID,'null') = 'null'
 		<include refid="where_sql" />)
 		union all
 		SELECT * FROM (
@@ -1745,13 +1745,13 @@
 		fp.FINPROD_NAME secAcctName,
 		T4.FINPROD_MARKET_ID finprodMarketId,
 		T4.FINPROD_ABBR finprodAbbr,
-		to_char(T21.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-		to_char(T21.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+		DATE_FORMAT(T21.VDATE, '%Y-%m-%d') vDate/*计息开始日*/,
+		DATE_FORMAT(T21.MDATE, '%Y-%m-%d') mDate/*计息结束日*/,
 		T21.FPRICE_AMT tradeAmt/*实收本息总额*/,
 		T31.FPRICE_AMT tradeAmt2/*实收本息总额*/,
 		T1.SHARE_AMT  shareAmt,
 		T21.CCY ccy,
-		to_char(T1.SETTLE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T1.SETTLE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -1768,7 +1768,7 @@
 		LEFT JOIN TRD_PRODUCT_DEAL T31 ON T1.TOTLE_TRADE_ID = T31.TOTLE_TRADE_ID
 		AND ((T31.PS = #{psR} and T41.IRS_TYPE = #{irsType02})
 		OR (T31.PS = #{psP} and T41.IRS_TYPE = #{irsType01}))
-		LEFT JOIN PTL_TRADE PT ON NVL(NVL(T21.P_TRADE_ID, T21.TRADE_ID), NVL(T31.P_TRADE_ID, T31.TRADE_ID)) = PT.BUSI_NO
+		LEFT JOIN PTL_TRADE PT ON ifnull(ifnull(T21.P_TRADE_ID, T21.TRADE_ID), ifnull(T31.P_TRADE_ID, T31.TRADE_ID)) = PT.BUSI_NO
 		LEFT JOIN
 		PTL_PORTFOLIO T2
 		ON
@@ -1798,13 +1798,13 @@
 		null secAcctName,
 		T4.FINPROD_MARKET_ID finprodMarketId,
 		T4.FINPROD_ABBR finprodAbbr,
-		to_char(FTP.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-		to_char(FTP.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+		DATE_FORMAT(FTP.VDATE, '%Y-%m-%d') vDate/*计息开始日*/,
+		DATE_FORMAT(FTP.MDATE, '%Y-%m-%d') mDate/*计息结束日*/,
 		T1.TRADE_AMT tradeAmt/*实收本息总额*/,
 		null tradeAmt2,
 		T1.SHARE_AMT shareAmt,
 		T1.CCY ccy,
-		to_char(T1.TRADE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T1.TRADE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -1836,17 +1836,17 @@
 		t3.PA_BUSS_TYPE paBussType,
 		T1.PORTFOLIO_ID portfolioId,
 		T2.PORTFOLIO_NAME portfolioName,
-		NVL(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
-		nvl(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
+		ifnull(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
+		ifnull(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
 		T4.FINPROD_MARKET_ID finprodMarketId,
 		T4.FINPROD_ABBR finprodAbbr,
-		to_char(T1.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-		to_char(T1.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+		DATE_FORMAT(T1.VDATE, '%Y-%m-%d') vDate/*计息开始日*/,
+		DATE_FORMAT(T1.MDATE, '%Y-%m-%d') mDate/*计息结束日*/,
 		T1.FPRICE_AMT tradeAmt/*实收本息总额*/,
 		null tradeAmt2,
 		null  shareAmt,
 		T1.CCY ccy,
-		to_char(T1.TRADE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
+		DATE_FORMAT(T1.TRADE_DATE, '%Y-%m-%d') tradeDate/*资金到账日*/,
 		T1.REMARK remark,
 		SI.INSTITUTION_NAME institutionName,    /*所属机构*/
 		T1.INSTITUTION_CODE institutionCode,
@@ -1886,10 +1886,10 @@
 			AND T3.PA_BUSS_TYPE = #{paBizType}
 		</if>
 		<if test="tradeDateStart != null and !tradeDateStart.isEmpty()">
-			AND T1.TRADE_DATE >= to_date(#{tradeDateStart}, 'yyyy-MM-dd')
+			AND T1.TRADE_DATE >= str_to_date(#{tradeDateStart}, '%Y-%m-%d')
 		</if>
 		<if test="tradeDateEnd != null and !tradeDateEnd.isEmpty()">
-			AND T1.TRADE_DATE &lt;= to_date(#{tradeDateEnd}, 'yyyy-MM-dd')
+			AND T1.TRADE_DATE &lt;= str_to_date(#{tradeDateEnd}, '%Y-%m-%d')
 		</if>
 		<if test="chlId != null and !chlId.isEmpty()">
 			AND FP.FINPROD_ID = #{chlId}

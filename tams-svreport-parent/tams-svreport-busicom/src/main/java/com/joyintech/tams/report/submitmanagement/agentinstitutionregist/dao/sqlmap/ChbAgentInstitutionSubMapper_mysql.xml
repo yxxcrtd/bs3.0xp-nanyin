@@ -64,19 +64,19 @@
             </foreach>
         </if>
         <if test="searchSubmitDeadlineStart != null and searchSubmitDeadlineStart != ''">
-            and a.CHB_SUBMIT_DEADLINE between /*to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd')*/STR_TO_DATE(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'%Y-%m-%d') and /*to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')*/STR_TO_DATE(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'%Y-%m-%d')
+            and a.CHB_SUBMIT_DEADLINE between STR_TO_DATE(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'%Y-%m-%d') and STR_TO_DATE(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'%Y-%m-%d')
         </if>
         <if test="searchDataDateStart != null and searchDataDateStart != ''">
-            and  /*to_char(a.DATA_DATE,'yyyy-MM-dd')*/DATE_FORMAT(a.DATA_DATE,'%Y-%m-%d') <![CDATA[>=]]> #{searchDataDateStart,jdbcType=VARCHAR}
+            and DATE_FORMAT(a.DATA_DATE,'%Y-%m-%d') <![CDATA[>=]]> #{searchDataDateStart,jdbcType=VARCHAR}
         </if>
         <if test="searchDataDateEnd != null and searchDataDateEnd != ''">
-            and  /*to_char(a.DATA_DATE,'yyyy-MM-dd'*/)DATE_FORMAT(a.DATA_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{searchDataDateEnd,jdbcType=VARCHAR}
+            and DATE_FORMAT(a.DATA_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{searchDataDateEnd,jdbcType=VARCHAR}
         </if>
         <if test="searchSubmitTimeStart != null and searchSubmitTimeStart != ''">
-            and  /*to_char(a.SUBMIT_TIME,'yyyy-MM-dd')*/ DATE_FORMAT(a.SUBMIT_TIME,'%Y-%m-%d')<![CDATA[>=]]> #{searchSubmitTimeStart,jdbcType=VARCHAR}
+            and DATE_FORMAT(a.SUBMIT_TIME,'%Y-%m-%d')<![CDATA[>=]]> #{searchSubmitTimeStart,jdbcType=VARCHAR}
         </if>
         <if test="searchSubmitTimeEnd != null and searchSubmitTimeEnd != ''">
-            and  /*to_char(a.SUBMIT_TIME,'yyyy-MM-dd')*/ DATE_FORMAT(a.SUBMIT_TIME,'%Y-%m-%d')<![CDATA[<=]]> #{searchSubmitTimeEnd,jdbcType=VARCHAR}
+            and DATE_FORMAT(a.SUBMIT_TIME,'%Y-%m-%d')<![CDATA[<=]]> #{searchSubmitTimeEnd,jdbcType=VARCHAR}
         </if>
         ORDER BY a.UPDATE_TIME DESC
     </select>
@@ -132,19 +132,19 @@
                 </foreach>
             </if>
             <if test="searchSubmitDeadlineStart != null and searchSubmitDeadlineStart != ''">
-                and SUBMIT_DEADLINE between /*to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd')*/STR_TO_DATE(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'%Y-%m-%d') and /*to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')*/STR_TO_DATE(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'%Y-%m-%d')
+                and SUBMIT_DEADLINE between STR_TO_DATE(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'%Y-%m-%d') and STR_TO_DATE(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'%Y-%m-%d')
             </if>
             <if test="searchDataDateStart != null and searchDataDateStart != ''">
-                and  /*to_char(DATA_DATE,'yyyy-MM-dd')*/DATE_FORMAT(DATA_DATE,'%Y-%m-%d') <![CDATA[>=]]> #{searchDataDateStart,jdbcType=VARCHAR}
+                and DATE_FORMAT(DATA_DATE,'%Y-%m-%d') <![CDATA[>=]]> #{searchDataDateStart,jdbcType=VARCHAR}
             </if>
             <if test="searchDataDateEnd != null and searchDataDateEnd != ''">
-                and  /*to_char(DATA_DATE,'yyyy-MM-dd')*/DATE_FORMAT(DATA_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{searchDataDateEnd,jdbcType=VARCHAR}
+                and DATE_FORMAT(DATA_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{searchDataDateEnd,jdbcType=VARCHAR}
             </if>
             <if test="searchSubmitTimeStart != null and searchSubmitTimeStart != ''">
-                and  /*to_char(SUBMIT_TIME,'yyyy-MM-dd')*/DATE_FORMAT(SUBMIT_TIME,'%Y-%m-%d') <![CDATA[>=]]> #{searchSubmitTimeStart,jdbcType=VARCHAR}
+                and DATE_FORMAT(SUBMIT_TIME,'%Y-%m-%d') <![CDATA[>=]]> #{searchSubmitTimeStart,jdbcType=VARCHAR}
             </if>
             <if test="searchSubmitTimeEnd != null and searchSubmitTimeEnd != ''">
-                and  /*to_char(SUBMIT_TIME,'yyyy-MM-dd')*/ DATE_FORMAT(SUBMIT_TIME,'%Y-%m-%d')<![CDATA[<=]]> #{searchSubmitTimeEnd,jdbcType=VARCHAR}
+                and DATE_FORMAT(SUBMIT_TIME,'%Y-%m-%d')<![CDATA[<=]]> #{searchSubmitTimeEnd,jdbcType=VARCHAR}
             </if>
         </where>
         ) ORDER BY dataDate
@@ -238,7 +238,7 @@
         ENCLOSURE_ADDRESS,ENCLOSURE_CHANGE_FLAG,REMARK,CHB_SUBMIT_DEADLINE,
         SUBMIT_DEADLINE,DATA_DATE,SUBMIT_TIME,SUMIT_SEQ,FILE_NO,
         SEND_STATUS,SUBMIT_FEEDBACK_STATUS,SUBMIT_FEEDBACK_MSG,CREATE_DEPT,ORG_CODE,
-        CREATE_USER,his.CREATE_TIME,UPDATE_USER, UPDATE_TIME
+        CREATE_USER,CREATE_TIME,UPDATE_USER, UPDATE_TIME
         from CHB_AGENT_INSTITUTION_SUB_HIS  his
         INNER join (
         SELECT max(CREATE_TIME) CREATE_TIME from CHB_AGENT_INSTITUTION_SUB_HIS
@@ -326,19 +326,19 @@
             </foreach>
         </if>
         <if test="searchSubmitDeadlineStart != null and searchSubmitDeadlineStart != ''">
-            and a.SUBMIT_DEADLINE between /*to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd')*/ STR_TO_DATE(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'%Y-%m-%d')and /*to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')*/STR_TO_DATE(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'%Y-%m-%d')
+            and a.SUBMIT_DEADLINE between STR_TO_DATE(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'%Y-%m-%d')and STR_TO_DATE(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'%Y-%m-%d')
         </if>
         <if test="searchDataDateStart != null and searchDataDateStart != ''">
-            and  /*to_char(a.DATA_DATE,'yyyy-MM-dd')*/DATE_FORMAT(a.DATA_DATE,'%Y-%m-%d') <![CDATA[>=]]> #{searchDataDateStart,jdbcType=VARCHAR}
+            and DATE_FORMAT(a.DATA_DATE,'%Y-%m-%d') <![CDATA[>=]]> #{searchDataDateStart,jdbcType=VARCHAR}
         </if>
         <if test="searchDataDateEnd != null and searchDataDateEnd != ''">
-            and  /*to_char(a.DATA_DATE,'yyyy-MM-dd')*/DATE_FORMAT(a.DATA_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{searchDataDateEnd,jdbcType=VARCHAR}
+            and DATE_FORMAT(a.DATA_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{searchDataDateEnd,jdbcType=VARCHAR}
         </if>
         <if test="searchSubmitTimeStart != null and searchSubmitTimeStart != ''">
-            and  /*to_char(a.SUBMIT_TIME,'yyyy-MM-dd')*/ DATE_FORMAT(a.SUBMIT_TIME,'%Y-%m-%d')<![CDATA[>=]]> #{searchSubmitTimeStart,jdbcType=VARCHAR}
+            and DATE_FORMAT(a.SUBMIT_TIME,'%Y-%m-%d')<![CDATA[>=]]> #{searchSubmitTimeStart,jdbcType=VARCHAR}
         </if>
         <if test="searchSubmitTimeEnd != null and searchSubmitTimeEnd != ''">
-            and  /*to_char(a.SUBMIT_TIME,'yyyy-MM-dd')*/DATE_FORMAT(a.SUBMIT_TIME,'%Y-%m-%d') <![CDATA[<=]]> #{searchSubmitTimeEnd,jdbcType=VARCHAR}
+            and DATE_FORMAT(a.SUBMIT_TIME,'%Y-%m-%d') <![CDATA[<=]]> #{searchSubmitTimeEnd,jdbcType=VARCHAR}
         </if>
         ORDER BY AGENT_INSTITUTION_CODE DESC
     </select>

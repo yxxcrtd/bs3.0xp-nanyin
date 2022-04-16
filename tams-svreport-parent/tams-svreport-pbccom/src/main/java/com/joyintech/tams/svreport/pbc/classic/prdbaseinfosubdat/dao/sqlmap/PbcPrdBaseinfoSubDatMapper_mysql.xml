@@ -388,7 +388,7 @@
         group by IFNULL(DEAL.FPROD_ID,DEAL.PROD_ID)
 
         ) DEAL ON INFO.PROD_ID = deal.PROD_ID
-        where DATE_FORMAT(greatest(nvl(NVL(info.UPDATE_TIME, info.CREATE_TIME),
+        where DATE_FORMAT(greatest(ifnull(ifnull(info.UPDATE_TIME, info.CREATE_TIME),
         STR_TO_DATE('1900-01-01', '%Y-%m-%d')),
         IFNULL(info.VDATE, STR_TO_DATE('1900-01-01', '%Y-%m-%d')),
         IFNULL(IFNULL(DEAL.UPDATE_TIME, DEAL.CREATE_TIME),
@@ -486,7 +486,7 @@
         CREATE_DEPT, now(), UPDATE_USER, now(),CROSS_BORDER_FLAG,ZJXT_FLAG
         from (
         select <include refid="Base_Column_List2"></include>,
-        rank() over (partition by PBC_PROD_ID order by nvl(update_time,create_time) desc) ranknum
+        rank() over (partition by PBC_PROD_ID order by ifnull(update_time,create_time) desc) ranknum
         from PBC_PRD_BASEINFO_SUB_HIS
         where
         PBC_PROD_ID in

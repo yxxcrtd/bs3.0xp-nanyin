@@ -98,20 +98,20 @@
         ces.ORG_CODE,
         ces.CREATE_DEPT
         from CHB_PRD_DECLARE_SUB ces
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
         </if>
-        /* add by songyawei 20200702 end */
+
         where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             and inst.institution_code IN
             <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         union all
         <!-- 履历表数据 -->
         select
@@ -121,20 +121,20 @@
         ces.ORG_CODE,
         ces.CREATE_DEPT
         from CHB_PRD_DECLARE_SUB_HIS ces
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
         </if>
-        /* add by songyawei 20200702 end */
+
         where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             and inst.institution_code IN
             <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         )temp
         <where>
             <if test="isNotCount !=null and isNotCount=='01'">
@@ -165,20 +165,20 @@
         ces.ORG_CODE,
         ces.CREATE_DEPT
         from CHB_PRD_ISSUE_SUB ces
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
         </if>
-        /* add by songyawei 20200702 end */
+
         where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             and inst.institution_code IN
             <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         union all
         <!-- 履历表数据 -->
         select
@@ -188,20 +188,20 @@
         ces.ORG_CODE,
         ces.CREATE_DEPT
         from CHB_PRD_ISSUE_SUB_HIS ces
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
         </if>
-        /* add by songyawei 20200702 end */
+
         where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             and inst.institution_code IN
             <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         )temp
         <where>
             <if test="isNotCount !=null and isNotCount=='01'">
@@ -232,20 +232,20 @@
         ces.ORG_CODE,
         ces.CREATE_DEPT
         from CHB_PRD_RAISETOT_SUB ces
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
         </if>
-        /* add by songyawei 20200702 end */
+
         where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             and inst.institution_code IN
             <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         union all
         <!-- 履历表数据 -->
         select
@@ -255,20 +255,20 @@
         ces.ORG_CODE,
         ces.CREATE_DEPT
         from CHB_PRD_RAISETOT_SUB_HIS ces
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
         </if>
-        /* add by songyawei 20200702 end */
+
         where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             and inst.institution_code IN
             <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         )temp
         <where>
             <if test="isNotCount !=null and isNotCount=='01'">
@@ -299,20 +299,20 @@
         ces.ORG_CODE,
         ces.CREATE_DEPT
         from CHB_PRD_DEAL_SUB ces
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
         </if>
-        /* add by songyawei 20200702 end */
+
         where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             and inst.institution_code IN
             <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         union all
         <!-- 履历表数据 -->
         select
@@ -322,20 +322,20 @@
         ces.ORG_CODE,
         ces.CREATE_DEPT
         from CHB_PRD_DEAL_SUB_HIS ces
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
         </if>
-        /* add by songyawei 20200702 end */
+
         where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             and inst.institution_code IN
             <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         )temp
         <where>
             <if test="isNotCount !=null and isNotCount=='01'">
@@ -366,20 +366,20 @@
         ces.ORG_CODE,
         ces.CREATE_DEPT
         from CHB_PRD_END_SUB ces
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
         </if>
-        /* add by songyawei 20200702 end */
+
         where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             and inst.institution_code IN
             <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         union all
         <!-- 履历表数据 -->
         select
@@ -389,20 +389,20 @@
         ces.ORG_CODE,
         ces.CREATE_DEPT
         from CHB_PRD_END_SUB_HIS ces
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
         </if>
-        /* add by songyawei 20200702 end */
+
         where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             and inst.institution_code IN
             <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         )temp
         <where>
             <if test="isNotCount !=null and isNotCount=='01'">
@@ -433,20 +433,20 @@
         ces.ORG_CODE,
         ces.CREATE_DEPT
         from CHB_ASSET_INFO_SUB ces
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             LEFT JOIN chb_asset_sub_status INST ON INST.regist_seqno = ces.regist_seqno
         </if>
-        /* add by songyawei 20200702 end */
+
         where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             and inst.institution_code IN
             <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         union all
         <!-- 履历表数据 -->
         select
@@ -456,21 +456,21 @@
         ces.ORG_CODE,
         ces.CREATE_DEPT
         from CHB_ASSET_INFO_SUB_HIS ces
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             LEFT JOIN CHB_ASSET_INFO_SUB ces1 on ces.asset_code=ces1.asset_code
             LEFT JOIN chb_asset_sub_status INST ON INST.regist_seqno = ces1.regist_seqno
         </if>
-        /* add by songyawei 20200702 end */
+
         where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             and inst.institution_code IN
             <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         )temp
         <where>
             <if test="isNotCount !=null and isNotCount=='01'">
@@ -501,20 +501,20 @@
         ces.ORG_CODE,
         ces.CREATE_DEPT
         from CHB_INVEST_TRADE_SUB ces
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
         </if>
-        /* add by songyawei 20200702 end */
+
         where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             and inst.institution_code IN
             <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         union all
         <!-- 履历表数据 -->
         select
@@ -524,20 +524,20 @@
         ces.ORG_CODE,
         ces.CREATE_DEPT
         from CHB_INVEST_TRADE_SUB_HIS ces
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
         </if>
-        /* add by songyawei 20200702 end */
+
         where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             and inst.institution_code IN
             <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         )temp
         <where>
             <if test="isNotCount !=null and isNotCount=='01'">
@@ -568,21 +568,21 @@
         ces.ORG_CODE,
         ces.CREATE_DEPT
         from CHB_AST_VAL_SUB ces
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             LEFT JOIN CHB_ASSET_INFO_SUB ces1 on ces.asset_code=ces1.asset_code
             LEFT JOIN chb_asset_sub_status INST ON INST.regist_seqno = ces1.regist_seqno
         </if>
-        /* add by songyawei 20200702 end */
+
         where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             and inst.institution_code IN
             <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         union all
         <!-- 履历表数据 -->
         select
@@ -592,21 +592,21 @@
         ces.ORG_CODE,
         ces.CREATE_DEPT
         from CHB_AST_VAL_SUB_HIS ces
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             LEFT JOIN CHB_ASSET_INFO_SUB ces1 on ces.asset_code=ces1.asset_code
             LEFT JOIN chb_asset_sub_status INST ON INST.regist_seqno = ces1.regist_seqno
         </if>
-        /* add by songyawei 20200702 end */
+
         where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             and inst.institution_code IN
             <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         )temp
         <where>
             <if test="isNotCount !=null and isNotCount=='01'">
@@ -637,21 +637,21 @@
         ces.ORG_CODE,
         ces.CREATE_DEPT
         from CHB_BOT_AST_POS_SUB ces
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             LEFT JOIN CHB_ASSET_INFO_SUB ces1 on ces.asset_code=ces1.asset_code
             LEFT JOIN chb_asset_sub_status INST ON INST.regist_seqno = ces1.regist_seqno
         </if>
-        /* add by songyawei 20200702 end */
+
         where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             and inst.institution_code IN
             <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         union all
         <!-- 履历表数据 -->
         select
@@ -661,21 +661,21 @@
         ces.ORG_CODE,
         ces.CREATE_DEPT
         from CHB_BOT_AST_POS_SUB_HIS ces
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             LEFT JOIN CHB_ASSET_INFO_SUB ces1 on ces.asset_code=ces1.asset_code
             LEFT JOIN chb_asset_sub_status INST ON INST.regist_seqno = ces1.regist_seqno
         </if>
-        /* add by songyawei 20200702 end */
+
         where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             and inst.institution_code IN
             <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         )temp
         <where>
             <if test="isNotCount !=null and isNotCount=='01'">
@@ -707,14 +707,14 @@
         ces.CREATE_DEPT
         from CHB_MONTH_REPORT ces
         where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             and ces.ORG_CODE IN
             <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         union all
         <!-- 履历表数据 -->
         select
@@ -725,14 +725,14 @@
         ces.CREATE_DEPT
         from CHB_MONTH_REPORT_HIS ces
         where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             and ces.ORG_CODE IN
             <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         )temp
         <where>
             <if test="isNotCount !=null and isNotCount=='01'">
@@ -765,14 +765,14 @@
         ces.CREATE_DEPT
         from CHB_SALER_STL_DEAL_SUB ces
         where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             and ces.ORG_CODE IN
             <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         union all
         <!-- 履历表数据 -->
         select
@@ -783,14 +783,14 @@
         ces.CREATE_DEPT
         from CHB_SALER_STL_DEAL_SUB_HIS ces
         where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             and ces.ORG_CODE IN
             <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         )temp
         <where>
             <if test="isNotCount !=null and isNotCount=='01'">
@@ -821,20 +821,20 @@
         ces.ORG_CODE,
         ces.CREATE_DEPT
         from CHB_INVESTHOLD_INFO_SUB ces
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PRODID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
         </if>
-        /* add by songyawei 20200702 end */
+
         where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             and inst.institution_code IN
             <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         union all
         <!-- 履历表数据 -->
         select
@@ -844,20 +844,20 @@
         ces.ORG_CODE,
         ces.CREATE_DEPT
         from CHB_INVESTHOLD_INFO_SUB_HIS ces
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PRODID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
         </if>
-        /* add by songyawei 20200702 end */
+
         where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             and inst.institution_code IN
             <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         )temp
         <where>
             <if test="isNotCount !=null and isNotCount=='01'">
@@ -927,11 +927,11 @@
         ceqs.SUBMIT_STATUS,
         ceqs.CREATE_DEPT
         from CHB_EQUDET_SUB ceqs
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ceqs.ACCOUNT AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
         </if>
-        /* add by songyawei 20200702 end */
+
         where ceqs.CHB_SUBMIT_DEADLINE &lt;= #{searchDateEnd}
         <if test="flag">
             and inst.institution_code IN
@@ -939,7 +939,7 @@
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         union all
         <!-- 履历表数据 -->
         select
@@ -948,11 +948,11 @@
         ceqs.SUBMIT_STATUS,
         ceqs.CREATE_DEPT
         from CHB_EQUDET_SUB_HIS ceqs
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ceqs.ACCOUNT AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
         </if>
-        /* add by songyawei 20200702 end */
+
         where ceqs.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
         <if test="flag">
             and inst.institution_code IN
@@ -960,7 +960,7 @@
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         )temp
         <where>
             <if test="isNotCount !=null and isNotCount=='01'">
@@ -1006,20 +1006,20 @@
         ces.ORG_CODE,
         ces.CREATE_DEPT
         from PBC_PRD_ACCOUNT_SUB ces
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
         </if>
-        /* add by songyawei 20200702 end */
+
         where ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             and inst.institution_code IN
             <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         <choose>
             <when test="hisTableId != null and hisTableId != ''">
                 union all
@@ -1031,20 +1031,20 @@
                 ces.ORG_CODE,
                 ces.CREATE_DEPT
                 from PBC_PRD_ACCOUNT_SUB_HIS ces
-                /* add by songyawei 20200702 start */
+
                 <if test="flag">
                     LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.ACCOUNT_ID  AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                 </if>
-                /* add by songyawei 20200702 end */
+
                 where ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                /* add by songyawei 20200702 start */
+
                 <if test="flag">
                     and inst.institution_code IN
                     <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                         #{item,jdbcType=VARCHAR}
                     </foreach>
                 </if>
-                /* add by songyawei 20200702 end */
+
             </when>
         </choose>
         )temp
@@ -1076,20 +1076,20 @@
         ces.ORG_CODE,
         ces.CREATE_DEPT
         from PBC_PRD_BASEINFO_SUB ces
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
         </if>
-        /* add by songyawei 20200702 end */
+
         where ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             and inst.institution_code IN
             <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         <choose>
             <when test="hisTableId != null and hisTableId != ''">
                 union all
@@ -1101,20 +1101,20 @@
                 ces.ORG_CODE,
                 ces.CREATE_DEPT
                 from PBC_PRD_BASEINFO_SUB_HIS ces
-                /* add by songyawei 20200702 start */
+
                 <if test="flag">
                     LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                 </if>
-                /* add by songyawei 20200702 end */
+
                 where ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                /* add by songyawei 20200702 start */
+
                 <if test="flag">
                     and inst.institution_code IN
                     <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                         #{item,jdbcType=VARCHAR}
                     </foreach>
                 </if>
-                /* add by songyawei 20200702 end */
+
             </when>
         </choose>
         )temp
@@ -1146,21 +1146,21 @@
         ces.ORG_CODE,
         ces.CREATE_DEPT
         from PBC_INIT_PROD_RAISING_SUB ces
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = ces.PBC_PROD_ID
             LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
         </if>
-        /* add by songyawei 20200702 end */
+
         where ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             and inst.institution_code IN
             <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         <choose>
             <when test="hisTableId != null and hisTableId != ''">
                 union all
@@ -1172,21 +1172,21 @@
                 ces.ORG_CODE,
                 ces.CREATE_DEPT
                 from PBC_INIT_PROD_RAISING_SUB_HIS ces
-                /* add by songyawei 20200702 start */
+
                 <if test="flag">
                     Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = ces.PBC_PROD_ID
                     LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                 </if>
-                /* add by songyawei 20200702 end */
+
                 where ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                /* add by songyawei 20200702 start */
+
                 <if test="flag">
                     and inst.institution_code IN
                     <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                         #{item,jdbcType=VARCHAR}
                     </foreach>
                 </if>
-                /* add by songyawei 20200702 end */
+
             </when>
         </choose>
         )temp
@@ -1218,21 +1218,21 @@
         ces.ORG_CODE,
         ces.CREATE_DEPT
         from PBC_PRD_BASEINFO_END_SUB ces
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = ces.PBC_PROD_ID
             LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID  AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
         </if>
-        /* add by songyawei 20200702 end */
+
         where ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             and inst.institution_code IN
             <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         <choose>
             <when test="hisTableId != null and hisTableId != ''">
                 union all
@@ -1243,23 +1243,23 @@
                 ces.SEND_STATUS,
                 ces.ORG_CODE,
                 ces.CREATE_DEPT
-                ,FP.FINPROD_ID /* add by songyawei 20200702 */
+                ,FP.FINPROD_ID
                 from PBC_PRD_BASEINFO_END_SUB_HIS ces
-                /* add by songyawei 20200702 start */
+
                 <if test="flag">
                     Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = ces.PBC_PROD_ID
                     LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID =  ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                 </if>
-                /* add by songyawei 20200702 end */
+
                 where ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                /* add by songyawei 20200702 start */
+
                 <if test="flag">
                     and inst.institution_code IN
                     <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                         #{item,jdbcType=VARCHAR}
                     </foreach>
                 </if>
-                /* add by songyawei 20200702 end */
+
             </when>
         </choose>
         )temp
@@ -1291,21 +1291,21 @@
         ces.ORG_CODE,
         ces.CREATE_DEPT
         from PBC_PRD_ACCOUNT_END_SUB ces
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = ces.PBC_ACCOUNT_ID
             LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
         </if>
-        /* add by songyawei 20200702 end */
+
         where ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             and inst.institution_code IN
             <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         <choose>
             <when test="hisTableId != null and hisTableId != ''">
                 union all
@@ -1316,23 +1316,23 @@
                 ces.SEND_STATUS,
                 ces.ORG_CODE,
                 ces.CREATE_DEPT
-                ,FP.FINPROD_ID /* add by songyawei 20200702 */
+                ,FP.FINPROD_ID
                 from PBC_PRD_ACCOUNT_END_SUB_HIS ces
-                /* add by songyawei 20200702 start */
+
                 <if test="flag">
                     Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = ces.PBC_ACCOUNT_ID
                     LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                 </if>
-                /* add by songyawei 20200702 end */
+
                 where ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                /* add by songyawei 20200702 start */
+
                 <if test="flag">
                     and inst.institution_code IN
                     <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                         #{item,jdbcType=VARCHAR}
                     </foreach>
                 </if>
-                /* add by songyawei 20200702 end */
+
             </when>
         </choose>
         )temp
@@ -1364,21 +1364,21 @@
         ces.ORG_CODE,
         ces.CREATE_DEPT
         from PBC_PROD_RAISING_SUB ces
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = ces.PBC_PROD_ID
             LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
         </if>
-        /* add by songyawei 20200702 end */
+
         where ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             and inst.institution_code IN
             <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         <choose>
             <when test="hisTableId != null and hisTableId != ''">
                 union all
@@ -1389,23 +1389,23 @@
                 ces.SEND_STATUS,
                 ces.ORG_CODE,
                 ces.CREATE_DEPT
-                ,FP.FINPROD_ID /* add by songyawei 20200702 */
+                ,FP.FINPROD_ID
                 from PBC_PROD_RAISING_SUB_HIS ces
-                /* add by songyawei 20200702 start */
+
                 <if test="flag">
                     Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = ces.PBC_PROD_ID
                     LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                 </if>
-                /* add by songyawei 20200702 end */
+
                 where ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                /* add by songyawei 20200702 start */
+
                 <if test="flag">
                     and inst.institution_code IN
                     <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                         #{item,jdbcType=VARCHAR}
                     </foreach>
                 </if>
-                /* add by songyawei 20200702 end */
+
             </when>
         </choose>
         )temp
@@ -1439,14 +1439,14 @@
         from PBC_REPORT ces
         where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
         and ces.reporttype = 'ONEPRD_ASSET_DEBT'<!-- 只查询资产负债信息 -->
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             and ces.ORG_CODE IN
             <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         <choose>
             <when test="hisTableId != null and hisTableId != ''">
                 union all
@@ -1500,14 +1500,14 @@
         ces.CREATE_DEPT
         from (SELECT DISTINCT termId,CHB_SUBMIT_DEADLINE,SEND_STATUS,ORG_CODE,SUBMIT_TIME,CREATE_DEPT FROM PBC_REPORT WHERE reporttype != 'ONEPRD_ASSET_DEBT') ces
         where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             and ces.ORG_CODE IN
             <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         <choose>
             <when test="hisTableId != null and hisTableId != ''">
                 union all
@@ -1520,14 +1520,14 @@
                 ces.CREATE_DEPT
                 from (SELECT DISTINCT termId,CHB_SUBMIT_DEADLINE,SEND_STATUS,ORG_CODE,SUBMIT_TIME,CREATE_DEPT FROM PBC_REPORT_HIS WHERE reporttype != 'ONEPRD_ASSET_DEBT') ces
                 where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                /* add by songyawei 20200702 start */
+
                 <if test="flag">
                     and ces.ORG_CODE IN
                     <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                         #{item,jdbcType=VARCHAR}
                     </foreach>
                 </if>
-                /* add by songyawei 20200702 end */
+
             </when>
         </choose>
         )temp
@@ -1560,20 +1560,20 @@
         ces.ORG_CODE,
         ces.CREATE_DEPT
         from PBC_PRD_BASEINFO_SUB_NEW ces
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
         </if>
-        /* add by songyawei 20200702 end */
+
         where ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             and inst.institution_code IN
             <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         <choose>
             <when test="hisTableId != null and hisTableId != ''">
                 union all
@@ -1585,20 +1585,20 @@
                 ces.ORG_CODE,
                 ces.CREATE_DEPT
                 from PBC_PRD_BASEINFO_SUB_NEW_HIS ces
-                /* add by songyawei 20200702 start */
+
                 <if test="flag">
                     LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                 </if>
-                /* add by songyawei 20200702 end */
+
                 where ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                /* add by songyawei 20200702 start */
+
                 <if test="flag">
                     and inst.institution_code IN
                     <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                         #{item,jdbcType=VARCHAR}
                     </foreach>
                 </if>
-                /* add by songyawei 20200702 end */
+
             </when>
         </choose>
         )temp
@@ -1633,21 +1633,21 @@
         ces.ORG_CODE,
         ces.CREATE_DEPT
         from PBC_PRD_BASEINFO_END_SUB_NEW ces
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             Left join PBC_PRD_BASEINFO_SUB_NEW ppas on ppas.PBC_PROD_ID = ces.PBC_PROD_ID
             LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.Prod_Id  AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
         </if>
-        /* add by songyawei 20200702 end */
+
         where ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        /* add by songyawei 20200702 start */
+
         <if test="flag">
             and inst.institution_code IN
             <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         <choose>
             <when test="hisTableId != null and hisTableId != ''">
                 union all
@@ -1658,23 +1658,23 @@
                 ces.SEND_STATUS,
                 ces.ORG_CODE,
                 ces.CREATE_DEPT
-                ,FP.FINPROD_ID /* add by songyawei 20200702 */
+                ,FP.FINPROD_ID
                 from PBC_PRD_BASEEND_SUB_NEW_HIS ces
-                /* add by songyawei 20200702 start */
+
                 <if test="flag">
                     Left join PBC_PRD_ACCOUNT_SUB_NEW ppas on ppas.PBC_PROD_ID = ces.PBC_PROD_ID
                     LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID =  ppas.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                 </if>
-                /* add by songyawei 20200702 end */
+
                 where ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                /* add by songyawei 20200702 start */
+
                 <if test="flag">
                     and inst.institution_code IN
                     <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
                         #{item,jdbcType=VARCHAR}
                     </foreach>
                 </if>
-                /* add by songyawei 20200702 end */
+
             </when>
         </choose>
         )temp
@@ -1914,7 +1914,7 @@
             </otherwise>
         </choose>
 
-        /* add by songyawei 20200702 start */
+
         <!-- 1. 个人申报登记 -->
         <if test="flag">
             <if test="tableId != null and tableId == 'CHB_PRD_DECLARE_SUB'">
@@ -2019,7 +2019,7 @@
             </otherwise>
         </choose>
         )
-        /* add by songyawei 20200702 start */
+
         <if test="flag and tableId != null and tableId!='CHB_MONTH_REPORT' and tableId!='CHB_EQU_SUB' ">
             and inst.institution_code IN
             <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
@@ -2044,7 +2044,7 @@
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
-        /* add by songyawei 20200702 end */
+
         <choose>
             <when test="hisTableId != null and hisTableId != ''">
                 union all
@@ -2276,7 +2276,7 @@
                     #{item,jdbcType=VARCHAR}
                 </foreach>
             </if>
-            /*and temp.STATUS = '01'*/
+
         </where>
         order by temp.submitDeadline DESC
 
