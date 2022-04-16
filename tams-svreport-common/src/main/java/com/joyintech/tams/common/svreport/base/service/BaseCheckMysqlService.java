@@ -56,6 +56,11 @@ public class BaseCheckMysqlService {
                                 errFlag = true;
                                 break;
                             }
+                        }else {
+                            //值为空不校验
+                            if(StringUtils.hasText(entry.getValue())){
+                                break;
+                            }
                         }
                         //表字段是字符类型
                         if (c.getDataType().equals("varchar")||
@@ -192,7 +197,7 @@ public class BaseCheckMysqlService {
                     var1 = list.get(i);
                     for (int j = i + 1; j < list.size(); j++) {
                         var2 = list.get(j);
-                        int num = 1;
+                        int num = 0;
                         for (String s : primaries) {
                             if (!var1.get(s).equals(var2.get(s))) {
                                 break;

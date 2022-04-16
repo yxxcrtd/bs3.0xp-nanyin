@@ -380,18 +380,9 @@ public class ChbMstBondCreditRateService extends CommonExportService<ChbMstBondC
         long count = mapList.stream().filter(ele ->null!= ele.get("STATUS")&&ele.get("STATUS").equals("A")).count();
         webResult.setMessage(this.getMessage("ChbImportMessage",mapList.size()-count,size-mapList.size(),count),MessageType.确认消息);
         //查数据库记录
-        List<ChbMstBondCreditRatingDto> list = mstBondCreditRatingDao.selectValidRecords();
-        List<ChbMstBondCreditRatingDto> dtoList = converToBean(mapList);
         int duplicate = 0;
-        for (ChbMstBondCreditRatingDto ele : dtoList) {
-            for (ChbMstBondCreditRatingDto e : list) {
-                if(ele.getoCode().equals(e.getoCode())
-                        && ele.getGradeOrgId().equals(e.getGradeOrgId())
-                        && ele.getGradeDateStr().equals(e.getGradeDateStr())
-                        && ele.getoType().equals(e.getoType())){
-                    duplicate++;
-                }
-            }
+        if(CollectionUtils.isEmpty(mapList)){
+            duplicate = mstBondCreditRatingDao.selectValidRecords(mapList);
         }
         List<JoyinMessage> joyinMessages = new ArrayList<>();
         JoyinMessage ms = new JoyinMessage(this.getMessage("ChbImportDuplicateMessage",duplicate), MessageType.确认消息);
@@ -421,11 +412,11 @@ public class ChbMstBondCreditRateService extends CommonExportService<ChbMstBondC
         dataList.forEach(item->{
             Map<String,String> map = new HashMap<>();
             map.put("O_CODE",item.get(0));
-            map.put("O_TYPE",item.get(1).substring(0,2));
-            map.put("GRADE_ORG_ID",item.get(2).substring(0,2));
-            map.put("SHORT_LONG_TERM",item.get(3).substring(0,2));
-            map.put("GRADE_RESULT",item.get(4).substring(0,2));
-            map.put("SOURCE",item.get(5).substring(0,2));
+            map.put("O_TYPE",null!=item.get(1)&&item.get(1).length()>1?item.get(1).substring(0,2):"");
+            map.put("GRADE_ORG_ID",null!=item.get(2)&&item.get(2).length()>1?item.get(2).substring(0,2):"");
+            map.put("SHORT_LONG_TERM",null!=item.get(3)&&item.get(3).length()>1?item.get(3).substring(0,2):"");
+            map.put("GRADE_RESULT",null!=item.get(4)&&item.get(4).length()>1?item.get(4).substring(0,2):"");
+            map.put("SOURCE",null!=item.get(5)&&item.get(5).length()>1?item.get(5).substring(0,2):"");
             map.put("GRADE_DATE",item.get(6));
             list.add(map);
         });
@@ -477,8 +468,10 @@ public class ChbMstBondCreditRateService extends CommonExportService<ChbMstBondC
     public List<ExcelValidDto> importFileSave(String fileName,String tableName) throws Exception {
         List<Map<String, String>> list = dataMapAnalysis(fileName);
         List<ExcelValidDto> checkResult = baseCommonCheckService.checkDataAll("D", list, tableName, fileName, tableName, tableName, null, null);
-        List<ChbMstBondCreditRatingDto> chbMstBondCreditRatingDtos = converToBean(list);
-        mstBondCreditRatingDao.batchInsert(chbMstBondCreditRatingDtos);
-        return checkResult.stream().filter(ele -> ele.getValidKey().equals("YW")).collect(Collectors.toList());
+        if(!CollectionUtils.isEmpty(list)) {
+            List<ChbMstBondCreditRatingDto> chbMstBondCreditRatingDtos = converToBean(list);
+            mstBondCreditRatingDao.batchInsert(chbMstBondCreditRatingDtos);
+        }
+        return checkResult.stream().filter(ele ->null != ele.getValidKey() && ele.getValidKey().equals("YW")).collect(Collectors.toList());
     }
 }

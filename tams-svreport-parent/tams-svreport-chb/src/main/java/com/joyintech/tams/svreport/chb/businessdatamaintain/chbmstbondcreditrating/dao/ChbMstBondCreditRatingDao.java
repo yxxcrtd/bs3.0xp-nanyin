@@ -33,5 +33,5 @@ public interface ChbMstBondCreditRatingDao {
 
     List<SelectOptionDto> getMutliCode(Map<String, Object> map);
 
-    List<ChbMstBondCreditRatingDto> selectValidRecords();
+    int selectValidRecords(@Param("list") List<Map<String, String>> list);
 }

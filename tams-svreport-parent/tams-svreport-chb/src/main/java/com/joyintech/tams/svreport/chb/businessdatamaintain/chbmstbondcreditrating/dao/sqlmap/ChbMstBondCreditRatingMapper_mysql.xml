@@ -53,21 +53,21 @@
         select TEMP.* from
         (
             SELECT
-            #{item.oCode} O_CODE,
-            #{item.gradeOrgId} GRADE_ORG_ID,
-            #{item.gradeDate} GRADE_DATE,
-            #{item.oType} O_TYPE,
-            #{item.shortLongTerm} SHORT_LONG_TERM,
-            #{item.gradeResult} GRADE_RESULT,
-            #{item.dataSource} DATA_SOURCE,
-            #{item.source} SOURCE,
-            #{item.status} STATUS,
-            #{item.errMsg} ERR_MSG,
-            #{item.createUser} CREATE_USER,
-            #{item.createDept} CREATE_DEPT,
-            #{item.createTime} CREATE_TIME,
-            #{item.updateUser} UPDATE_USER,
-            #{item.updateTime} UPDATE_TIME
+            #{oCode} O_CODE,
+            #{gradeOrgId} GRADE_ORG_ID,
+            #{gradeDate} GRADE_DATE,
+            #{oType} O_TYPE,
+            #{shortLongTerm} SHORT_LONG_TERM,
+            #{gradeResult} GRADE_RESULT,
+            #{dataSource} DATA_SOURCE,
+            #{source} SOURCE,
+            #{status} STATUS,
+            #{errMsg} ERR_MSG,
+            #{createUser} CREATE_USER,
+            #{createDept} CREATE_DEPT,
+            #{createTime} CREATE_TIME,
+            #{updateUser} UPDATE_USER,
+            #{updateTime} UPDATE_TIME
             FROM dual
         ) TEMP
         where not EXISTS (
@@ -83,21 +83,22 @@
         select TEMP.* from
         (
             SELECT
-            #{item.oCode} O_CODE,
-            #{item.gradeOrgId} GRADE_ORG_ID,
-            #{item.gradeDate} GRADE_DATE,
-            #{item.oType} O_TYPE,
-            #{item.shortLongTerm} SHORT_LONG_TERM,
-            #{item.gradeResult} GRADE_RESULT,
-            #{item.dataSource} DATA_SOURCE,
-            #{item.source} SOURCE,
-            #{item.status} STATUS,
-            #{item.errMsg} ERR_MSG,
-            #{item.createUser} CREATE_USER,
-            #{item.createDept} CREATE_DEPT,
-            #{item.createTime} CREATE_TIME,
-            #{item.updateUser} UPDATE_USER,
-            #{item.updateTime} UPDATE_TIME
+            SELECT
+            #{oCode} O_CODE,
+            #{gradeOrgId} GRADE_ORG_ID,
+            #{gradeDate} GRADE_DATE,
+            #{oType} O_TYPE,
+            #{shortLongTerm} SHORT_LONG_TERM,
+            #{gradeResult} GRADE_RESULT,
+            #{dataSource} DATA_SOURCE,
+            #{source} SOURCE,
+            #{status} STATUS,
+            #{errMsg} ERR_MSG,
+            #{createUser} CREATE_USER,
+            #{createDept} CREATE_DEPT,
+            #{createTime} CREATE_TIME,
+            #{updateUser} UPDATE_USER,
+            #{updateTime} UPDATE_TIME
             FROM dual
         ) TEMP
 
@@ -312,7 +313,12 @@
             OR ASSET_NAME like  concat('%',#{search},'%'))
         </if>
     </select>
-    <select id="selectValidRecords" resultMap="BaseResultMap">
-        select <include refid="Base_Column_List"/> from MST_BOND_CREDIT_RATING  where STATUS in ("A","E")
+    <select id="selectValidRecords" resultType="java.lang.Integer">
+        select count(*) from MST_BOND_CREDIT_RATING  where
+        (O_CODE,GRADE_ORG_ID,GRADE_DATE,O_TYPE) in
+        <foreach collection="list" item="item" separator="," open="(" close=")">
+            (#{item.O_CODE},#{item.GRADE_ORG_ID},#{item.GRADE_DATE},#{item.O_TYPE})
+        </foreach>
+        and STATUS in ("A","E")
     </select>
 </mapper>

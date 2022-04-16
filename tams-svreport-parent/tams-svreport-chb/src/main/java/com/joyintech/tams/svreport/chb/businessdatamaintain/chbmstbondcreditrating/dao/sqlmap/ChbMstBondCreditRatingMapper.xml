@@ -210,7 +210,12 @@
             OR ASSET_NAME like '%' || #{search} || '%')
         </if>
     </select>
-    <select id="selectValidRecords" resultMap="BaseResultMap">
-        select <include refid="Base_Column_List"/> from MST_BOND_CREDIT_RATING  where STATUS in ("A","E")
+    <select id="selectValidRecords" resultType="java.lang.Integer">
+        select count(*) from MST_BOND_CREDIT_RATING  where
+       (O_CODE,GRADE_ORG_ID,GRADE_DATE,O_TYPE) in
+        <foreach collection="list" item="item" separator="," open="(" close=")">
+        (#{item.O_CODE},#{item.GRADE_ORG_ID},#{item.GRADE_DATE},#{item.O_TYPE})
+        </foreach>
+        and STATUS in ("A","E")
     </select>
 </mapper>

@@ -46,6 +46,7 @@ public class ChbBokSubjectDto extends BokSubject implements ProcessEntity {
      */
     private String errMsg;
 
+
     /**
      * 要素id
      */
@@ -158,4 +159,6 @@ public class ChbBokSubjectDto extends BokSubject implements ProcessEntity {
     public void setErrMsg(String errMsg) {
         this.errMsg = errMsg;
     }
+
+
 }

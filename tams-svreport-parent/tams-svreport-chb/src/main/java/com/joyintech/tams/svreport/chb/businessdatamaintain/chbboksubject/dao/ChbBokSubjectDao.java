@@ -74,5 +74,5 @@ public interface ChbBokSubjectDao {
 
     void batchInsert(@Param("list") List<ChbBokSubjectDto> list);
 
-    List<ChbBokSubjectDto> selectValidRecords();
+    int  selectValidRecords(@Param("list") List<Map<String,String>> list);
 }

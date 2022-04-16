@@ -23,14 +23,12 @@
         select * from
         (  select TEMP.* from
         (
-        <foreach collection="list" item="bokSubject.subjectNo" separator="union all">
-            SELECT #{bokSubject.subjectNo} BOOKSET_ID,#{bokSubject.subjectNo} SUBJECT_NO,#{bokSubject.subjectName} SUBJECT_NAME,#{bokSubject.fsubjectId} FSUBJECT_ID,
-            #{bokSubject.subjectType} SUBJECT_TYPE,#{bokSubject.subjectLevel} SUBJECT_LEVEL,#{bokSubject.dataSource} DATA_SOURCE,
-            #{bokSubject.status} STATUS,#{bokSubject.remark} REMARK,#{bokSubject.errMsg} ERR_MSG,#{bokSubject.createUser} CREATE_USER,
-            #{bokSubject.createDept} CREATE_DEPT,#{bokSubject.createTime} CREATE_TIME,#{bokSubject.updateUser} UPDATE_USER,#{bokSubject.updateTime} UPDATE_TIME
+            SELECT #{booksetId} BOOKSET_ID,#{subjectNo} SUBJECT_NO,#{subjectName} SUBJECT_NAME,#{fsubjectId} FSUBJECT_ID,
+            #{subjectType} SUBJECT_TYPE,#{subjectLevel} SUBJECT_LEVEL,#{dataSource} DATA_SOURCE,
+            #{status} STATUS,#{remark} REMARK,#{errMsg} ERR_MSG,#{createUser} CREATE_USER,
+            #{createDept} CREATE_DEPT,#{createTime} CREATE_TIME,#{updateUser} UPDATE_USER,#{updateTime} UPDATE_TIME
             from
             dual
-        </foreach>
         )TEMP
 
         ) a
@@ -51,8 +49,8 @@
         select * from
         (  select TEMP.* from
         (
-        <foreach collection="list" item="item" separator="union all">
-            SELECT #{item.booksetId} BOOKSET_ID,#{bokSubject.subjectNo} SUBJECT_NO,#{bokSubject.subjectName} SUBJECT_NAME,#{bokSubject.fsubjectId} FSUBJECT_ID,
+        <foreach collection="list" item="bokSubject" separator="union all">
+            SELECT #{bokSubject.booksetId} BOOKSET_ID,#{bokSubject.subjectNo} SUBJECT_NO,#{bokSubject.subjectName} SUBJECT_NAME,#{bokSubject.fsubjectId} FSUBJECT_ID,
                    #{bokSubject.subjectType} SUBJECT_TYPE,#{bokSubject.subjectLevel} SUBJECT_LEVEL,#{bokSubject.dataSource} DATA_SOURCE,
                    #{bokSubject.status} STATUS,#{bokSubject.remark} REMARK,#{bokSubject.errMsg} ERR_MSG,#{bokSubject.createUser} CREATE_USER,
                    #{bokSubject.createDept} CREATE_DEPT,#{bokSubject.createTime} CREATE_TIME,#{bokSubject.updateUser} UPDATE_USER,#{bokSubject.updateTime} UPDATE_TIME
@@ -69,8 +67,8 @@
         select * from
         (  select TEMP.* from
         (
-        <foreach collection="list" item="item" separator="union all">
-            SELECT #{item.booksetId} BOOKSET_ID,#{bokSubject.subjectNo} SUBJECT_NO,#{bokSubject.subjectName} SUBJECT_NAME,#{bokSubject.fsubjectId} FSUBJECT_ID,
+        <foreach collection="list" item="bokSubject" separator="union all">
+            SELECT #{bokSubject.booksetId} BOOKSET_ID,#{bokSubject.subjectNo} SUBJECT_NO,#{bokSubject.subjectName} SUBJECT_NAME,#{bokSubject.fsubjectId} FSUBJECT_ID,
             #{bokSubject.subjectType} SUBJECT_TYPE,#{bokSubject.subjectLevel} SUBJECT_LEVEL,#{bokSubject.dataSource} DATA_SOURCE,
             #{bokSubject.status} STATUS,#{bokSubject.remark} REMARK,#{bokSubject.errMsg} ERR_MSG,#{bokSubject.createUser} CREATE_USER,
             #{bokSubject.createDept} CREATE_DEPT,#{bokSubject.createTime} CREATE_TIME,#{bokSubject.updateUser} UPDATE_USER,#{bokSubject.updateTime} UPDATE_TIME
@@ -273,10 +271,12 @@
             </if>
         </where>
     </select>
-    <select id="selectValidRecords" resultType="com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dto.ChbBokSubjectDto">
-        select
-            BS.BOOKSET_ID as booksetId,
-            BS.SUBJECT_NO as subjectNo
-        from BOK_SUBJECT where STATUS in ('A','E')
+    <select id="selectValidRecords" resultType="java.lang.Integer">
+        select count(*) from  BOK_SUBJECT where
+        (BOOKSET_ID,SUBJECT_NO) in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            (#{item.BOOKSET_ID},#{item.SUBJECT_NO})
+        </foreach>
+        and STATUS in ('A','E')
     </select>
 </mapper>

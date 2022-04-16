@@ -247,11 +247,13 @@ public class ChbBokSubjectService extends CommonExportService<ChbBokSubjectDto> 
         List<Map<String,String>> list = new ArrayList<>();
         dataList.forEach(item->{
             Map<String,String> map = new HashMap<>();
+            map.put("BOOKSET_ID","00000000000000000002");
             map.put("SUBJECT_NO",item.get(0));
             map.put("SUBJECT_NAME",item.get(1));
             map.put("FSUBJECT_ID",item.get(2));
-            map.put("SUBJECT_TYPE",item.get(3));
-            map.put("SUBJECT_LEVEL",item.get(4));
+            map.put("SUBJECT_TYPE",null!=item.get(3)&&item.get(3).length()>1?"0"+item.get(3).substring(0,1):"");
+            map.put("SUBJECT_LEVEL",null !=item.get(4)&&item.get(4).length()>1?item.get(4).substring(0,1):"");
+            map.put("REMARK",item.get(5));
             list.add(map);
         });
 
@@ -499,18 +501,11 @@ public class ChbBokSubjectService extends CommonExportService<ChbBokSubjectDto> 
 
         long count = mapList.stream().filter(ele ->null != ele.get("STATUS")&&ele.get("STATUS").equals("A")).count();
         webResult.setMessage(this.getMessage("ChbImportMessage",mapList.size()-count,size-mapList.size(),count),MessageType.确认消息);
-        //查数据库记录
-        List<ChbBokSubjectDto> list = bokSubjectDao.selectValidRecords();
-        List<ChbBokSubjectDto> dtoList = converToBean(mapList);
         int duplicate = 0;
-        for (ChbBokSubjectDto ele : dtoList) {
-            for (ChbBokSubjectDto e : list) {
-                if(ele.getBooksetId().equals(e.getBooksetId())
-                        && ele.getSubjectNo().equals(e.getSubjectNo())){
-                    duplicate++;
-                }
-            }
+        if(!CollectionUtils.isEmpty(mapList)){
+            duplicate = bokSubjectDao.selectValidRecords(mapList);
         }
+        //查数据库记录
         List<JoyinMessage> joyinMessages = new ArrayList<>();
         JoyinMessage ms = new JoyinMessage(this.getMessage("ChbImportDuplicateMessage",duplicate), MessageType.确认消息);
         joyinMessages.add(ms);
@@ -536,18 +531,19 @@ public class ChbBokSubjectService extends CommonExportService<ChbBokSubjectDto> 
     public List<ExcelValidDto> importFileSave(String fileName,String tableName) throws Exception {
         List<Map<String, String>> list = dataMapAnalysis(fileName);
         List<ExcelValidDto> checkResult = baseCommonCheckService.checkDataAll("D", list, tableName, fileName, tableName, tableName, null, null);
-        List<ChbBokSubjectDto> chbBokSubjectDtoDtos = converToBean(list);
-        bokSubjectDao.batchInsert(chbBokSubjectDtoDtos);
-        return checkResult.stream().filter(ele -> ele.getValidKey().equals("YW")).collect(Collectors.toList());
+        if(!CollectionUtils.isEmpty(list)){
+            List<ChbBokSubjectDto> chbBokSubjectDtoDtos = converToBean(list);
+            bokSubjectDao.batchInsert(chbBokSubjectDtoDtos);
+        }
+        return checkResult.stream().filter(ele ->null != ele.getValidKey()&&ele.getValidKey().equals("YW")).collect(Collectors.toList());
     }
     public List<ChbBokSubjectDto> converToBean(List<Map<String,String>> dataList)
             throws ParseException {
         // 返回的list定义
         List<ChbBokSubjectDto> returnInfoList = new ArrayList<ChbBokSubjectDto>();
-        ChbBokSubjectDto bokSubjectDto = null;
-
         for (Map<String, String> map : dataList) {
-            bokSubjectDto = new ChbBokSubjectDto();
+            ChbBokSubjectDto bokSubjectDto = new ChbBokSubjectDto();
+            bokSubjectDto.setBooksetId(map.get("BOOKSET_ID"));
             if (StringUtil.isNotEmpty(map.get("SUBJECT_NO"))) {
                 bokSubjectDto.setSubjectNo(map.get("SUBJECT_NO"));
             }
@@ -563,9 +559,14 @@ public class ChbBokSubjectService extends CommonExportService<ChbBokSubjectDto> 
             if (StringUtil.isNotEmpty(map.get("SUBJECT_LEVEL"))) {
                 bokSubjectDto.setSubjectLevel(Long.valueOf(map.get("SUBJECT_LEVEL")));
             }
+            if (StringUtil.isNotEmpty(map.get("REMARK"))) {
+                bokSubjectDto.setRemark(map.get("REMARK"));
+            }
+
             if (StringUtil.isNotEmpty(map.get("ERRMSG"))) {
                 bokSubjectDto.setErrMsg(map.get("ERRMSG"));
             }
+
             bokSubjectDto.setErrMsg(null!=map.get("ERRMSG")?map.get("ERRMSG"):"");
             bokSubjectDto.setCreateUser(CommonUtil.getUserName());
             bokSubjectDto.setCreateDept(CommonUtil.getDeptCode()==null?"":CommonUtil.getDeptCode());

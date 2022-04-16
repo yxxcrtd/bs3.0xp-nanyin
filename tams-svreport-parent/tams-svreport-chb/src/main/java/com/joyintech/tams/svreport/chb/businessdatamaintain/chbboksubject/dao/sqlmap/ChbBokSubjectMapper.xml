@@ -257,10 +257,12 @@
 			</if>
 		</where>
 	</select>
-    <select id="selectValidRecords" resultType="com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dto.ChbBokSubjectDto">
-		select
-			BS.BOOKSET_ID as booksetId,
-			BS.SUBJECT_NO as subjectNo
-		from BOK_SUBJECT where STATUS in ('A','E')
+    <select id="selectValidRecords" resultType="java.lang.Integer">
+		select count(*) from  BOK_SUBJECT where
+		(BOOKSET_ID,SUBJECT_NO) in
+		<foreach collection="list" item="item" open="(" close=")" separator=",">
+			(#{item.BOOKSET_ID},#{item.SUBJECT_NO})
+		</foreach>
+		and STATUS in ('A','E')
 	</select>
 </mapper>
