@@ -3230,7 +3230,7 @@
         </where>
     </delete>
     <update id="updateBatch" parameterType="com.joyintech.tams.common.base.entity.ChbInvestTrade">
-        begin
+        /*begin*/
         <foreach collection="updateList" item="item" index="index"
                  separator=";">
             update CHB_INVEST_TRADE

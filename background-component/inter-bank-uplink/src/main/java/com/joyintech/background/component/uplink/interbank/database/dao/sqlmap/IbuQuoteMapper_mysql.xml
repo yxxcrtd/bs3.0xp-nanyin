@@ -319,7 +319,7 @@
 
     <!-- 批量对话报价新增 -->
     <insert id="batchInsertBondDialogueQuote">
-    	begin
+    	/*begin*/
 	        insert into IBU_QUOTE_BOND${tableSuffix} (QUOTE_ID, QUOTE_TYPE, QUOTE_ROLE_TYPE, 
 	            VERSION, EXE_TYPE, P_QUOTE_ID, 
 	            CFETS_QUOTE_ID, FINPROD_ID, FINPROD_TYPE2, 
@@ -374,7 +374,7 @@
 		            , #{dto.transactime,jdbcType=VARCHAR}
 	          from dual 
 			</foreach>;
-		end;
+		/*end;*/
     </insert>
 
     <update id="updateDialogueDetVersionByQuoteId" parameterType="com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteBondDet" >
@@ -483,7 +483,7 @@
 
     <!-- 批量请求报价新增 -->
     <insert id="batchInsertBondRequestQuote">
-    	begin
+    	/*begin*/
 	        insert into IBU_QUOTE_BOND${tableSuffix} (QUOTE_ID, QUOTE_TYPE, QUOTE_ROLE_TYPE, 
 	            VERSION, EXE_TYPE, P_QUOTE_ID, 
 	            CFETS_QUOTE_ID, FINPROD_ID, FINPROD_TYPE2, 
@@ -539,7 +539,7 @@
 		          from dual
 	          	</foreach>
 			</foreach>;
-		end;
+		/*end;*/
     </insert>
     
     <!-- 批量请求报价明细新增 -->
@@ -633,7 +633,7 @@
 
 	<!--  批量更新现劵报价明细列表 -->
 	<update id="updateQuoteBondDetList" parameterType="java.util.List">
-		begin
+		/*begin*/
 	    <foreach collection="list" item="item" index="index" open="" close=";" separator=";">
 	        update IBU_QUOTE_BOND_DET
 	        <set >
@@ -721,7 +721,7 @@
 	        </set>
 	        where DET_ID = #{item.detId,jdbcType=VARCHAR}
 	    </foreach>      
-		end;
+		/*end;*/
 	</update>
 
 	<!-- 根据detId列表查询现卷报价明细列表 -->
@@ -1037,7 +1037,7 @@
 	</select>
 
 	<insert id="batchInsertRepoDialogueQuote">
-    	begin
+    	/*begin*/
 	        insert into IBU_QUOTE_CREP${tableSuffix} (QUOTE_ID, QUOTE_TYPE, P_QUOTE_ID, 
             VERSION, EXE_TYPE, CFETS_QUOTE_ID, 
             QUOTE_ROLE_TYPE, PORTFOLIO_ID, ENTRUST_ID, 
@@ -1096,7 +1096,7 @@
 		          from dual 
 	        	</foreach>
 			</foreach>;
-		end;
+		/*end;*/
     </insert>
     
     <!-- 批量插入质押品信息 -->
@@ -1197,14 +1197,14 @@
 
 	<!-- 批量删除押品 -->
     <delete id="deleteQuoteCrepPledges" parameterType="java.util.List" >
-    	begin
+    	/*begin*/
 	    <foreach collection="list" item="key" separator=";" close=";" >
 			delete from IBU_QUOTE_CREP_PLEDGE
 			where QUOTE_ID = #{key.quoteId,jdbcType=VARCHAR}
 			and BRANCH = #{key.branch,jdbcType=BIGINT}
 			and PLEDGE_FINPROD_ID = #{key.pledgeFinprodId,jdbcType=VARCHAR}
 	    </foreach>
-		end;
+		/*end;*/
     </delete>
     <!-- 质押式回购报价End -->
 

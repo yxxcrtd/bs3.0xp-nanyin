@@ -653,7 +653,7 @@
             and sub.INDENTIFY_MARK = #{item.indentifyMark}
             and sub.SUBMIT_STATUS='02'
         </foreach>
-        /*;end;*/
+        ;/*end;*/
     </update>
 
 
@@ -1522,7 +1522,7 @@
 
     <update id="updateChbEquSubSubmitStatus" parameterType="java.util.List">
         /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
-        begin
+        /*begin*/
         <foreach collection="list" item="item" index="index" open="" close=";" separator=";">
             update CHB_EQU_SUB
             <set >

@@ -281,7 +281,7 @@
 	</select>
 
 	<update id="updateOperateModeByProdId" parameterType="java.util.List">
-		begin
+		/*begin*/
 		<foreach collection="list" item="item" index="index" separator=";" >
 			update CHB_PRDRESIST_CODE
 			set
@@ -290,7 +290,7 @@
 			where
 			PRODID = #{item.prodId}
 		</foreach>
-		;end;
+		;/*end;*/
 	</update>
 
 	<select id="selectInfoByProdId" resultType="com.joyintech.tams.svreport.interf.chb.proddeclare.dto.ChbPrdDeclareInfoDto">

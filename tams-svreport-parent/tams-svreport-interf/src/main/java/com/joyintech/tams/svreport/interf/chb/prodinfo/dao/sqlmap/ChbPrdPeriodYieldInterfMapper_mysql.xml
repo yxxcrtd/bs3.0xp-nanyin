@@ -148,7 +148,7 @@
 
 	<delete id="deleteBatch"
 			parameterType="com.joyintech.tams.common.base.entity.ChbPrdPeriodYield">
-		begin
+		/*begin*/
 		<foreach collection="list" item="dto" separator=";">
 			delete from
 			CHB_PRD_PERIODYIELD
@@ -160,7 +160,7 @@
 				and FPROD_ID=#{dto.fprodId,jdbcType=VARCHAR}
 			</if>
 		</foreach>
-		;end;
+		;/*end;*/
 	</delete>
 	<delete id="deleteBatch2"
 			parameterType="com.joyintech.tams.common.base.entity.ChbPrdPeriodYield">

@@ -168,13 +168,13 @@
     </insert>
 
   <delete id="deleteBatchList" parameterType="com.joyintech.tams.common.base.entity.ChbBotAstPosition">
-    begin
+    /*begin*/
     <foreach collection="listChbBotAstPosition" item="item" index="index" separator=";">
       delete from CHB_BOT_AST_POS
       where PLAN_ASSET_ID = #{item.posId,jdbcType=VARCHAR} and POS_DATE = #{item.posDate,jdbcType=TIMESTAMP}
       and ASSET_CODE = #{item.assetCode,jdbcType=VARCHAR}
     </foreach>
-    ;end;
+    ;/*end;*/
   </delete>
 
   <delete id="deleteByUpdateTime" parameterType="java.lang.String">

@@ -150,13 +150,13 @@
 		AND CII.VALUE_DATE = TEMP.VALUE_DATE );
 	</insert>
 	<delete id="deleteBatchList" >
-		begin
+		/*begin*/
 		<foreach collection="dataList" item="item" index="index" separator=";">
 			delete from CHB_ASSETS_BASIS_DATA_CHILD
 			where ASSET_ID = #{item.assetId,jdbcType=VARCHAR}  and VALUE_DATE = #{item.valueDate,jdbcType=TIMESTAMP}
 			and PROD_ID = #{item.prodId,jdbcType=VARCHAR}
 		</foreach>
-		;end;
+		;/*end;*/
 	</delete>
 
 

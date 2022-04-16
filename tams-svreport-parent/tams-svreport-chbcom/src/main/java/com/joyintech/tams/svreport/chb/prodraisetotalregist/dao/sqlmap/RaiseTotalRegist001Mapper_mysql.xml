@@ -752,7 +752,7 @@
     </select>
 
     <update id="updateBatch" parameterType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
-        begin
+        /*begin*/
         <foreach collection="updateList" item="item" index="index" separator=";">
             update CHB_PRD_RAISETOT_SUB
             <set>
@@ -840,7 +840,7 @@
             where PROD_ID = #{item.prodId,jdbcType=VARCHAR}
             and SEND_STATUS = '01'
         </foreach>
-        ;end;
+        ;/*end;*/
     </update>
     <select id="selectRaiseTotallist" resultMap="BaseResultMap"
             parameterType="java.lang.String">

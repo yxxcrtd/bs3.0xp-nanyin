@@ -3975,7 +3975,7 @@
 
 	<!-- 批量更新 -->
 	<update id="updateBatch" parameterType="com.joyintech.tams.svreport.chb.assetinforeg.dto.AssetInfoRegist001Dto">
-		begin
+		/*begin*/
 		<foreach collection="updateList" item="item" index="index" separator=";">
 			update CHB_ASSET_INFO_SUB
 			<set>
@@ -4468,7 +4468,7 @@
 			and send_status = '01'/*未報送*/
 			and status in ('01','02')/*非刪除*/
 		</foreach>
-		;end;
+		;/*end;*/
 	</update>
 	<delete id="deleteByAssetCode" parameterType="java.util.Map">
 		delete from chb_asset_info_sub

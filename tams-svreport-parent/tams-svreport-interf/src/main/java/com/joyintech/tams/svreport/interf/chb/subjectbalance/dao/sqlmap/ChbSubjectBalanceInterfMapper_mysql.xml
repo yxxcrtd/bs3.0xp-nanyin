@@ -343,13 +343,13 @@
 		AND A.BALANCE_DATE = B.BALANCE_DATE;
 	</insert>
 	<delete id="deleteBatchList" >
-		begin
+		/*begin*/
 		<foreach collection="dataList" item="item" index="index" separator=";">
 			delete from CHB_SUBJECT_BALANCE
 			where SUBJECT_NO = #{item.subjectNo,jdbcType=VARCHAR}  and BALANCE_DATE = #{item.balanceDate,jdbcType=TIMESTAMP}
 			and PROD_ID = #{item.prodId,jdbcType=VARCHAR}
 		</foreach>
-		;end;
+		;/*end;*/
 	</delete>
 
 	<insert id="insert"  parameterType="com.joyintech.tams.svreport.interf.chb.subjectbalance.dto.BokBalance" >

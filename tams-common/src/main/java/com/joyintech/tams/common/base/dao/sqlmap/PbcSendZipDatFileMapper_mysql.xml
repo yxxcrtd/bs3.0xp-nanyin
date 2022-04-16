@@ -529,7 +529,7 @@
     </select>
 
     <update id="updateByZipCodeAndZipType" >
-        <foreach collection="list" item="item" index="index" open="BEGIN" close=";END;" separator=";">
+        <foreach collection="list" item="item" index="index"  separator=";">
             update PBC_SEND_ZIP_DAT_FILE set
             ZIP_DOWNLOAD_TIME=#{item.zipDownloadTime,jdbcType=TIMESTAMP},
             DAT_ZIP_PATH=#{item.datZipPath,jdbcType=VARCHAR},
@@ -541,6 +541,7 @@
             DAT_ZIP_CODE= #{item.datZipCode,jdbcType=VARCHAR}
             and ZIP_SEND_STATUS='01'
         </foreach>
+        ;
     </update>
 
     <select id="selectByUUIDAndType" resultMap="BaseResultMap" parameterType="java.lang.String" >

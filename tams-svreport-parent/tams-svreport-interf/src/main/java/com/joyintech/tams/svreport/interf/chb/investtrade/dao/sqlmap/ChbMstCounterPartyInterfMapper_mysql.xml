@@ -125,7 +125,7 @@
 	</select>
 	<update id="updateBatch"
 			parameterType="com.joyintech.tams.common.base.entity.ChbMstCounterParty">
-		begin
+		/*begin*/
 		<foreach collection="updateList" item="item" index="index"
 				 separator=";">
 			update CHB_MST_COUNTER_PARTY
@@ -178,7 +178,7 @@
 			</set>
 			where COUNTER_ID = #{counterId,jdbcType=VARCHAR}
 		</foreach>
-		;end;
+		;/*end;*/
 	</update>
 
 	<insert id="insert"

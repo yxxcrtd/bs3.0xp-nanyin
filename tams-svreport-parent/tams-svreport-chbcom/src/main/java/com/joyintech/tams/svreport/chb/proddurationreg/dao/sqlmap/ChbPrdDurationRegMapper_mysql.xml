@@ -498,7 +498,7 @@
 	</insert>
 
 	<delete id="deleteBatch" parameterType="java.util.List">
-		begin
+		/*begin*/
 		<foreach collection="resultList" item="item" index="index" separator=";">
 			delete from CHB_PRD_DEAL_SUB
 			where 1 = 1
@@ -513,11 +513,11 @@
 			</if>
 			and send_status='01'
 		</foreach>
-		;end;
+		;/*end;*/
 	</delete>
 
 	<update id="updateBatch" parameterType="java.util.List">
-		begin
+		/*begin*/
 		<foreach collection="resultList" item="item" index="index" separator=";">
 			update CHB_PRD_DEAL_SUB
 			<set>
@@ -621,17 +621,17 @@
 			</set>
 			where REGIST_SEQNO = #{item.registSeqno,jdbcType=VARCHAR} AND SEND_STATUS = '01'
 		</foreach>
-		;end;
+		;/*end;*/
 	</update>
 
 	<!-- <delete id="deleteBatch" parameterType="java.util.List">
-       begin
+       /*begin*/
        <foreach collection="resultList" item="item" index="index" separator=";">
        delete from CHB_PRD_DEAL_SUB
        where REGIST_SEQNO = #{item.registSeqno,jdbcType=VARCHAR}
        AND SEND_STATUS = '01'
       </foreach>
-      ;end;
+      ;/*end;*/
     </delete> -->
 	<select id="isLevProd" resultType="java.lang.Integer">
 		SELECT

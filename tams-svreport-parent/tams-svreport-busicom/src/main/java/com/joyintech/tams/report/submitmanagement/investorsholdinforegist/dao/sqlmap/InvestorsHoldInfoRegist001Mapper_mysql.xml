@@ -311,7 +311,7 @@
 	</update>
 	<!-- 接口报送更新并且更新 报送流水号-->
 	<update id="updateInterfSubmitAndSeq" parameterType="java.util.Map">
-		begin
+		/*begin*/
 		<foreach collection="investList" item="item" index="index" separator=";" >
 			update CHB_INVESTHOLD_INFO_SUB  sub
 			set
@@ -322,7 +322,7 @@
 			where
 			sub.REGIST_SEQNO = #{item.registSeqno}
 		</foreach>
-		;end;
+		;/*end;*/
 	</update>
 
 	<!-- add by etliu 20180818 start-->
@@ -377,7 +377,7 @@
 
 	<!-- 批量插入报送状态表 -->
 	<insert id="insertSubmitStatus" parameterType="java.util.List" >
-		begin
+		/*begin*/
 		<foreach collection="list" item="item" index="index" open="" close=";" separator=";">
 			update CHB_INVESTHOLD_INFO_SUB
 			<set >
@@ -387,7 +387,7 @@
 			</set>
 			where SUMIT_SEQ = #{item.seqno,jdbcType=VARCHAR}
 		</foreach>
-		end;
+		/*end;*/
 	</insert>
 
 	<update id="updateSubmitStatusToOk" parameterType="java.util.List">
@@ -734,7 +734,7 @@
 	</update>
 	<!-- 批量更新投资者身份信息发送状态 -->
 	<update id="updateInvestorsHoldInfoRegistSendStatus" parameterType="com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.InvestorsHoldInfoRegist001Dto">
-		begin
+		/*begin*/
 		<foreach collection="list" item="item" index="index" separator=";" >
 			update CHB_INVESTHOLD_INFO_SUB  sub
 			set
@@ -742,7 +742,7 @@
 			where
 			sub.SUMIT_SEQ = #{item.sumitSeq}
 		</foreach>
-		;end;
+		;/*end;*/
 	</update>
 	<select id="selectNoendCountByTaskBeanName" parameterType="string" resultType="int">
 		select count(1)
@@ -866,7 +866,7 @@
 
 	<!-- 批量插入报送状态表 -->
 	<insert id="insertSubmitStatusDto" parameterType="com.joyintech.tams.common.base.entity.ChbSubmitStatus" >
-		begin
+		/*begin*/
 		<foreach collection="list" item="item" index="index" separator=";" >
 			update CHB_INVESTHOLD_INFO_SUB  sub
 			set
@@ -874,7 +874,7 @@
 			where
 			sub.SUMIT_SEQ = #{item.seqno}
 		</foreach>
-		;end;
+		;/*end;*/
 	</insert>
 
 	<update id="updateSubmitStatusToSuccess" parameterType="string">

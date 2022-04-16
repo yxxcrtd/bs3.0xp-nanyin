@@ -84,14 +84,14 @@
 	</select>
 
 	<delete id="deletePrdDealBatchList" parameterType="com.joyintech.tams.common.base.entity.ChbPrdDeal">
-		begin
+		/*begin*/
 		<foreach collection="listChbPrdDeal" item="item" index="index"
 				 separator=";">
 			delete from CHB_PRD_DEAL
 			where TRADE_ID =
 			#{item.tradeId,jdbcType=VARCHAR}
 		</foreach>
-		;end;
+		;/*end;*/
 	</delete>
 
 	<insert id="insertPrdDealBatchList" parameterType="com.joyintech.tams.common.base.entity.ChbPrdDeal">
@@ -268,14 +268,14 @@
 
 	<delete id="deletePrdFeeDealBatchList"
 			parameterType="com.joyintech.tams.common.base.entity.ChbPrdFeeDeal">
-		begin
+		/*begin*/
 		<foreach collection="listChbPrdFeeDeal" item="item" index="index"
 				 separator=";">
 			delete from CHB_PRD_FEE_DEAL
 			where TRADE_ID =
 			#{item.tradeId,jdbcType=VARCHAR}
 		</foreach>
-		;end;
+		;/*end;*/
 	</delete>
 
 	<insert id="insertPrdFeeDealBatchList"

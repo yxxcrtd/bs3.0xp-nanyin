@@ -1020,7 +1020,7 @@
 
     <update id="updateBatch"
         parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfo">
-        begin
+        /*begin*/
         <foreach collection="updateList" item="item" index="index"
             separator=";">
             update CHB_ASSET_INFO
@@ -1499,12 +1499,12 @@
             </set>
             where ASSET_CODE = #{assetCode,jdbcType=VARCHAR}
         </foreach>
-        ;end;
+        ;/*end;*/
     </update>
     
     <update id="updateBatchPsbc"
         parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfo">
-        begin
+        /*begin*/
         <foreach collection="updateList" item="item" index="index"
             separator=";">
             update CHB_ASSET_INFO
@@ -1989,7 +1989,8 @@
             </set>
             where ASSET_CODE = #{assetCode,jdbcType=VARCHAR}
         </foreach>
-        ;end;
+        ;
+        /*end;*/
     </update>
     
     <select id="selectIsExistAssetByAssetCode" parameterType="java.lang.String" resultType="java.lang.Integer">

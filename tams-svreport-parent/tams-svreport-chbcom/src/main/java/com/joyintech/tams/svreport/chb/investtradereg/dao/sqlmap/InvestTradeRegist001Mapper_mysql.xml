@@ -1060,7 +1060,7 @@
 
   <!-- 批量更新 -->
   <update id="updateBatch" parameterType="com.joyintech.tams.svreport.chb.assetinforeg.dto.AssetInfoRegist001Dto">
-    begin
+    /*begin*/
     <foreach collection="updateList" item="item" index="index" separator=";">
       update CHB_INVEST_TRADE_SUB
       <set>
@@ -1197,7 +1197,7 @@
       <!-- where REGIST_SEQNO = #{item.registSeqno,jdbcType=CHAR} -->
       where REF_TRADESEQNO = #{item.refTradeseqno,jdbcType=VARCHAR}
     </foreach>
-    ;end;
+    ;/*end;*/
   </update>
 
   <select id="selectProdIsNProd" parameterType="java.lang.String" resultType="java.lang.String">
