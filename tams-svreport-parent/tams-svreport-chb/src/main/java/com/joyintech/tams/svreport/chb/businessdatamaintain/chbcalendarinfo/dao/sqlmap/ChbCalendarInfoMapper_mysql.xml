@@ -92,7 +92,7 @@
 		UPDATE_USER,UPDATE_TIME,
 		ERR_MSG)
 		select A.* from (
-		<foreach collection="listN" item="item" index="index"
+		<foreach collection="list" item="item" index="index"
 				 separator="union all">
 			select
 			#{item.calendarId,jdbcType=VARCHAR} CALENDAR_ID,

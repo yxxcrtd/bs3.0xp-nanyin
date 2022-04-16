@@ -136,7 +136,7 @@ public class ChbCalendarInfo001Service extends CommonExportService<ChbCalendarIn
 
         AjaxResult webResult = new AjaxResult();
         // 检查文件名是否包含汇率行情信息
-        if (!fileName.contains("交易日历")) {
+        if (!fileName.contains("节假日信息")) {
             webResult.setMessage(this.getMessage("ImportFileName"), MessageType.错误消息);
             return webResult;
         }
@@ -262,8 +262,8 @@ public class ChbCalendarInfo001Service extends CommonExportService<ChbCalendarIn
             List<String> list = dataList.get(i);
             Map<String, String> map = new LinkedHashMap<>(3);
             map.put("CDATE", list.get(0));
-            map.put("CALENDAR_ID", StringUtil.isNotBlank(list.get(1))?list.get(1).split(" ")[0]:null);
-            map.put("IS_HOLIDAY", StringUtil.isNotBlank(list.get(2)) ? list.get(2).split(" ")[0] : null);
+            map.put("CALENDAR_ID", StringUtil.isNotBlank(list.get(1))?list.get(1).split(" ")[0]:"");
+            map.put("IS_HOLIDAY", StringUtil.isNotBlank(list.get(2)) ? list.get(2).split(" ")[0] :"");
             mapList.add(map);
         }
         return mapList;
