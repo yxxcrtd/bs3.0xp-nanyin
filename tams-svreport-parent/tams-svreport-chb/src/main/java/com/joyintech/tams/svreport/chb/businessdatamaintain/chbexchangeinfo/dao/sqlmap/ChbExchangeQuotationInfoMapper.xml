@@ -13,7 +13,7 @@
 		LOW_PRICE as lowPrice,
 		BASIS_CYY as basisCyy,
 		QUOT_UNIT as quotUnit,
-        STATUS as status,
+        STATUS as statusValid,
 		ERR_MSG as errMsg,
 		INPUT_TYPE as  inputType,
 		CREATE_USER as createUser,

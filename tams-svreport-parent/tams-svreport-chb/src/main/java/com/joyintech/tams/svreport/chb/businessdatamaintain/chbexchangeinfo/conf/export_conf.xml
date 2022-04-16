@@ -2,7 +2,7 @@
 <Workbook filePath="ChbExchangeQuotationInfo002.xlsx" name="汇率行情信息">
 	<Worksheet javaBean="com.joyintech.tams.svreport.chb.businessdatamaintain.chbexchangeinfo.dto.ChbExchangeQuotationInfoDto">
 		<Row>
-			<Cell order="1" name="数据状态">statusStr</Cell>
+			<Cell order="1" name="数据状态">statusValidStr</Cell>
 			<Cell order="2" name="货币对">exchargeCode</Cell>
 			<Cell order="3" name="交易日期">tradeDate</Cell>
 			<Cell order="4" name="开盘价（元）">openPrice</Cell>

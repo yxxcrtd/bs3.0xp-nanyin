@@ -11,6 +11,8 @@
 package com.joyintech.tams.svreport.chb.businessdatamaintain.chbexchangeinfo.dto;
 
 import com.joyintech.background.component.common.pack.common.util.DateUtil;
+import com.joyintech.background.component.common.pack.common.util.StringUtil;
+import com.joyintech.component.svrreport.chb.contant.DictCodeList;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
@@ -60,15 +62,37 @@ public class ChbExchangeQuotationInfoDto extends ChbExchargeQuote implements Pro
      */
     private String elementId;
 
+    /**
+     * 有效状态
+     */
+    private String statusValid;
+
+    // updateFlg 02 不展示  01 显示
+    public String getUpdateFlg() {
+        if(!StringUtil.isEmpty(statusValid) && StringUtil.equals(DictCodeList.维护数据状态_删除.getValue(), statusValid)){
+            return "02";
+        }else{
+            return "01";
+        }
+    }
+
+    public String getStatusValidStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.维护数据状态,
+                getStatusValid());
+    }
+
+    public String getStatusValid() {
+        return statusValid;
+    }
+
+    public void setStatusValid(String statusValid) {
+        this.statusValid = statusValid;
+    }
 
     public String getUpdateTimeStr() {
         return DateUtil.formatDateTime(super.getUpdateTime());
     }
 
-    public String getStatusStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.维护数据状态,
-                super.getStatus());
-    }
 
 
     public String getSubmitType() {
