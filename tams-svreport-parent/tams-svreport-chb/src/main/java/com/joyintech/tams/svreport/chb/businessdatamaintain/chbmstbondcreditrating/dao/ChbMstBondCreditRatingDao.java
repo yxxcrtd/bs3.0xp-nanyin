@@ -27,7 +27,7 @@ public interface ChbMstBondCreditRatingDao {
 
     List<ChbMstBondCreditRatingDto> selectAll(Map<String, Object> pageParam);
 
-    void batchInsert(List<ChbMstBondCreditRatingDto> list);
+    void batchInsert(@Param("list") List<ChbMstBondCreditRatingDto> list);
 
     List<SuggestDto> getFinProdAbbr(@Param("param") String param);
 

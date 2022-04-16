@@ -3,108 +3,77 @@
 <mapper namespace="com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dao.ChbBokSubjectDao">
 
 	<insert id="insert" parameterType="com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dto.ChbBokSubjectDto">
-		insert into BOK_SUBJECT
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="booksetId !=null and booksetId !=''">
-			BOOKSET_ID,
-			</if>
-			<if test="subjectNo !=null and subjectNo !=''">
-		    SUBJECT_NO,
-		    </if>
-			<if test="subjectName !=null and subjectName !=''">
-		    SUBJECT_NAME,
-		    </if>
-			<if test="fsubjectId !=null and fsubjectId !=''">
-		    FSUBJECT_ID,
-		    </if>
-			<if test="subjectType !=null and subjectType !=''">
-		    SUBJECT_TYPE,
-		    </if>
-			<if test="subjectLevel !=null and subjectLevel !=''">
-		    SUBJECT_LEVEL,
-		    </if>
-			<if test="dataSource !=null and dataSource !=''">
-		    DATA_SOURCE,
-		    </if>
-			<if test="status !=null and status !=''">
-		    STATUS,
-		    </if>
-			<if test="remark !=null and remark !=''">
-		    REMARK,
-		    </if>
-			<if test="errMsg !=null and errMsg !=''">
-				ERR_MSG,
-			</if>
-			<if test="createUser !=null and createUser !=''">
-		    CREATE_USER,
-		    </if>
-			<if test="createDept !=null and createDept !=''">
-		    CREATE_DEPT,
-		    </if>
-			<if test="createTime !=null">
-		    CREATE_TIME,
-		    </if>
-			<if test="updateUser !=null and updateUser !=''">
-		    UPDATE_USER,
-		    </if>
-			<if test="updateTime !=null">
-		    UPDATE_TIME
-			</if>
-		</trim>
-		<trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="booksetId !=null and booksetId !=''">
-			#{booksetId},
-			</if>
-			<if test="subjectNo !=null and subjectNo !=''">
-		    #{subjectNo},
-		    </if>
-			<if test="subjectName !=null and subjectName !=''">
-		    #{subjectName},
-		    </if>
-			<if test="fsubjectId !=null and fsubjectId !=''">
-		    #{fsubjectId},
-		    </if>
-			<if test="subjectType !=null and subjectType !=''">
-		    #{subjectType},
-		    </if>
-			<if test="subjectLevel !=null and subjectLevel !=''">
-		    #{subjectLevel},
-		    </if>
-			<if test="dataSource !=null and dataSource !=''">
-		    #{dataSource},
-		    </if>
-			<if test="status !=null and status !=''">
-		    #{status},
-		    </if>
-			<if test="remark !=null and remark !=''">
-		    #{remark},
-		    </if>
-			<if test="errMsg !=null and errMsg !=''">
-				#{errMsg},
-			</if>
-			<if test="createUser !=null and createUser !=''">
-		    #{createUser},
-		    </if>
-			<if test="createDept !=null and createDept !=''">
-		    #{createDept},
-		    </if>
-			<if test="createTime !=null">
-		    #{createTime},
-		    </if>
-			<if test="updateUser !=null and updateUser !=''">
-		    #{updateUser},
-		    </if>
-			<if test="updateTime !=null">
-		    #{updateTime}
-			</if>
-		</trim>
+		MERGE INSERT  BOK_SUBJECT a USING (
+		SELECT
+			#{booksetId} BOOKSET_ID,
+			#{subjectNo} SUBJECT_NO,
+			#{subjectName} SUBJECT_NAME,
+			#{fsubjectId} FSUBJECT_ID,
+			#{subjectType} SUBJECT_TYPE,
+			#{subjectLevel} SUBJECT_LEVEL,
+			#{dataSource} DATA_SOURCE,
+			#{status} STATUS,
+			#{remark} REMARK,
+			#{errMsg} ERR_MSG,
+			#{createUser} CREATE_USER,
+			#{createDept} CREATE_DEPT,
+			#{createTime} CREATE_TIME,
+			#{updateUser} UPDATE_USER,
+			#{updateTime} UPDATE_TIME
+		FROM  DUAL
+		) b
+		    ON (a.BOOKSET_ID = b.BOOKSET_ID AND a.SUBJECT_NO = b.SUBJECT_NO)
+			WHEN MATCHED THEN
+		    UPDATE SET
+		        a.SUBJECT_NAME = b.SUBJECT_NAME,
+		        a.FSUBJECT_ID = b.FSUBJECT_ID,
+		        a.SUBJECT_TYPE = b.SUBJECT_TYPE,
+		        a.SUBJECT_LEVEL = b.SUBJECT_LEVEL,
+		        a.STATUS = b.STATUS,
+				a.ERR_MSG = b.ERR_MSG,
+				a.UPDATE_USER = b.UPDATE_USER,
+				a.UPDATE_TIME = b.UPDATE_TIME
+			WHEN NOT MATCHED THEN
+			INSERT(BOOKSET_ID,SUBJECT_NO,SUBJECT_NAME,FSUBJECT_ID,SUBJECT_TYPE,SUBJECT_LEVEL,SUBJECT_LEVEL,DATA_SOURCE,STATUS,REMARK,ERR_MSG,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+			VALUES(b.BOOKSET_ID,b.SUBJECT_NO,b.SUBJECT_NAME,b.FSUBJECT_ID,b.SUBJECT_TYPE,b.SUBJECT_LEVEL,b.SUBJECT_LEVEL,b.DATA_SOURCE,b.STATUS,b.REMARK,b.ERR_MSG,b.CREATE_USER,b.CREATE_DEPT,b.CREATE_TIME,b.UPDATE_USER,b.UPDATE_TIME)
 	</insert>
 	<insert id="batchInsert" parameterType="java.util.List">
-		insert into BOK_SUBJECT(BOOKSET_ID,SUBJECT_NO,SUBJECT_NAME,FSUBJECT_ID,SUBJECT_TYPE,SUBJECT_LEVEL,DATA_SOURCE,STATUS,REMARK,ERR_MSG,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
-		<foreach collection="list" separator="union all" item="bokSubject">
-			(select #{bokSubject.booksetId},#{bokSubject.subjectNo},#{bokSubject.subjectName},#{bokSubject.fsubjectId},#{bokSubject.subjectType},#{bokSubject.subjectLevel},#{bokSubject.dataSource},#{bokSubject.status},#{bokSubject.remark},#{bokSubject.errMsg},#{bokSubject.createUser},#{bokSubject.createDept},#{bokSubject.createTime},#{bokSubject.updateUser},#{bokSubject.updateTime}
-			from dual)
+		MERGE INSERT  BOK_SUBJECT a USING (
+		<foreach collection="list" item="item" open="select * from("
+				 close=")" separator="union all">
+			SELECT
+			#{item.booksetId} BOOKSET_ID,
+			#{item.subjectNo} SUBJECT_NO,
+			#{item.subjectName} SUBJECT_NAME,
+			#{item.fsubjectId} FSUBJECT_ID,
+			#{item.subjectType} SUBJECT_TYPE,
+			#{item.subjectLevel} SUBJECT_LEVEL,
+			#{item.dataSource} DATA_SOURCE,
+			#{item.status} STATUS,
+			#{item.remark} REMARK,
+			#{item.errMsg} ERR_MSG,
+			#{item.createUser} CREATE_USER,
+			#{item.createDept} CREATE_DEPT,
+			#{item.createTime} CREATE_TIME,
+			#{item.updateUser} UPDATE_USER,
+			#{item.updateTime} UPDATE_TIME
+			FROM  DUAL
 		</foreach>
+			) b
+			ON (a.BOOKSET_ID = b.BOOKSET_ID AND a.SUBJECT_NO = b.SUBJECT_NO)
+			WHEN MATCHED THEN
+		UPDATE SET
+			a.SUBJECT_NAME = b.SUBJECT_NAME,
+			a.FSUBJECT_ID = b.FSUBJECT_ID,
+			a.SUBJECT_TYPE = b.SUBJECT_TYPE,
+			a.SUBJECT_LEVEL = b.SUBJECT_LEVEL,
+			a.STATUS = b.STATUS,
+			a.ERR_MSG = b.ERR_MSG,
+			a.UPDATE_USER = b.UPDATE_USER,
+			a.UPDATE_TIME = b.UPDATE_TIME
+			WHEN NOT MATCHED THEN
+		INSERT(BOOKSET_ID,SUBJECT_NO,SUBJECT_NAME,FSUBJECT_ID,SUBJECT_TYPE,SUBJECT_LEVEL,SUBJECT_LEVEL,DATA_SOURCE,STATUS,REMARK,ERR_MSG,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+		VALUES(b.BOOKSET_ID,b.SUBJECT_NO,b.SUBJECT_NAME,b.FSUBJECT_ID,b.SUBJECT_TYPE,b.SUBJECT_LEVEL,b.SUBJECT_LEVEL,b.DATA_SOURCE,b.STATUS,b.REMARK,b.ERR_MSG,b.CREATE_USER,b.CREATE_DEPT,b.CREATE_TIME,b.UPDATE_USER,b.UPDATE_TIME)
 	</insert>
 	<update id="update">
 		update BOK_SUBJECT

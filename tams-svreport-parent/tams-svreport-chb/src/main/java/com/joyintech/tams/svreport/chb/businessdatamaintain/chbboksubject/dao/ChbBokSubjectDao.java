@@ -72,7 +72,7 @@ public interface ChbBokSubjectDao {
 
     void update(ChbBokSubjectDto entity);
 
-    void batchInsert(List<ChbBokSubjectDto> list);
+    void batchInsert(@Param("list") List<ChbBokSubjectDto> list);
 
     List<ChbBokSubjectDto> selectValidRecords();
 }
