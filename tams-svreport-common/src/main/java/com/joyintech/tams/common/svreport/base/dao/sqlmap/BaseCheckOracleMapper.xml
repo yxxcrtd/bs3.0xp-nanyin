@@ -13,7 +13,7 @@
         where TABLE_NAME = #{tableName}
     </select>
 
-    <select id="selectUniqueConstraint">
+    <select id="selectUniqueConstraint" resultType="string">
         select COLUMN_NAME from user_cons_columns where TABLE_NAME=#{tableName}
         AND POSITION is not null order by POSITION
     </select>

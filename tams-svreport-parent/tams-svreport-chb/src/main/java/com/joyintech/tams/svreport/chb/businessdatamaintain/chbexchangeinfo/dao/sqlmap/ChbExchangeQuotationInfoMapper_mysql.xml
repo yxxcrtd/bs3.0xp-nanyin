@@ -82,7 +82,7 @@
 		DATA_SOURCE,STATUS,CREATE_USER,
 		CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ERR_MSG)
 		select A.* from (
-		<foreach collection="listN" item="item" index="index"
+		<foreach collection="list" item="item" index="index"
 				 separator="union all">
 			select
 			#{item.exchargeCode,jdbcType=VARCHAR} EXCHARGE_CODE,
@@ -111,15 +111,30 @@
 			</if>
 			from dual
 		</foreach>
-		)A
+		) A ON DUPLICATE KEY
+		UPDATE
+         EXCHARGE_CODE=A.EXCHARGE_CODE,
+		TRADE_DATE=A.TRADE_DATE,
+		DATASOURCE_TYPE=A.DATASOURCE_TYPE,
+		OPEN_PRICE=A.OPEN_PRICE,
+		CLOSE_PRICE=A.CLOSE_PRICE,
+		HIGH_PRICE=A.HIGH_PRICE,
+		MID_PRICE=A.MID_PRICE,
+		QUOT_UNIT=A.QUOT_UNIT,
+		BASIS_CYY=A.BASIS_CYY,
+		QUOT_CYY=A.QUOT_CYY,
+		DATA_SOURCE=A.DATA_SOURCE,
+		STATUS=A.STATUS,
+		UPDATE_USER=A.UPDATE_USER,
+		UPDATE_TIME=NOW(),
+		ERR_MSG=A.ERR_MSG
 	</insert>
-
 	<!-- 将Excel表格数据覆盖数据库 -->
 	<update id="updateExchargeQuoteInfo">
 		update MST_EXCHARGE_QUOTE
 		<trim prefix="set" suffixOverrides=",">
 			<trim prefix="OPEN_PRICE=case" suffix="end,">
-				<foreach collection="listA" item="item" index="index">
+				<foreach collection="list" item="item" index="index">
 					<if test="item.openPrice!=null">
 						when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
 						and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
@@ -130,7 +145,7 @@
 				</foreach>
 			</trim>
 			<trim prefix="CLOSE_PRICE=case" suffix="end,">
-				<foreach collection="listA" item="item" index="index">
+				<foreach collection="list" item="item" index="index">
 					<if test="item.closePrice!=null">
 						when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
 						and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
@@ -141,7 +156,7 @@
 				</foreach>
 			</trim>
 			<trim prefix="HIGH_PRICE=case" suffix="end,">
-				<foreach collection="listA" item="item" index="index">
+				<foreach collection="list" item="item" index="index">
 					<if test="item.highPrice!=null">
 						when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
 						and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
@@ -152,7 +167,7 @@
 				</foreach>
 			</trim>
 			<trim prefix="LOW_PRICE=case" suffix="end,">
-				<foreach collection="listA" item="item" index="index">
+				<foreach collection="list" item="item" index="index">
 					<if test="item.lowPrice!=null">
 						when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
 						and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
@@ -163,7 +178,7 @@
 				</foreach>
 			</trim>
 			<trim prefix="MID_PRICE=case" suffix="end,">
-				<foreach collection="listA" item="item" index="index">
+				<foreach collection="list" item="item" index="index">
 					<if test="item.midPrice!=null">
 						when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
 						and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
@@ -174,7 +189,7 @@
 				</foreach>
 			</trim>
 			<trim prefix="QUOT_UNIT=case" suffix="end,">
-				<foreach collection="listA" item="item" index="index">
+				<foreach collection="list" item="item" index="index">
 					<if test="item.quotUnit!=null">
 						when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
 						and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
@@ -185,7 +200,7 @@
 				</foreach>
 			</trim>
 			<trim prefix="ERR_MSG=case" suffix="end,">
-				<foreach collection="listA" item="item" index="index">
+				<foreach collection="list" item="item" index="index">
 					when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
 					and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
 					and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR}
@@ -194,7 +209,7 @@
 				</foreach>
 			</trim>
 			<trim prefix="status=case" suffix="end,">
-				<foreach collection="listA" item="item" index="index">
+				<foreach collection="list" item="item" index="index">
 					<if test="item.status!=null">
 						when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
 						and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
@@ -205,7 +220,7 @@
 				</foreach>
 			</trim>
 			<trim prefix="UPDATE_USER=case" suffix="end,">
-				<foreach collection="listA" item="item" index="index">
+				<foreach collection="list" item="item" index="index">
 					<if test="item.updateUser!=null">
 						when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
 						and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
@@ -216,7 +231,7 @@
 				</foreach>
 			</trim>
 			<trim prefix="UPDATE_TIME=case" suffix="end,">
-				<foreach collection="listA" item="item" index="index">
+				<foreach collection="list" item="item" index="index">
 					<if test="item.updateTime!=null">
 						when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
 						and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
@@ -227,7 +242,7 @@
 			</trim>
 		</trim>
 		where
-		<foreach collection="listA" separator="or" item="item" index="index">
+		<foreach collection="list" separator="or" item="item" index="index">
 			EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
 			and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
 			and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR}
@@ -245,5 +260,34 @@
 			and STATUS = #{status,jdbcType=VARCHAR}
 		</if>
 	</delete>
+
+
+	<select id="selectExchargeQuoteCount" resultType="int">
+		SELECT COUNT(*)
+		FROM MST_EXCHARGE_QUOTE
+		<where>
+				<foreach collection="list" item="items" index="i" separator="or">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						STATUS in ('A','E')
+					<foreach collection="items.entrySet()" item="value"
+							 index="key">
+						<if test="key == 'EXCHARGE_CODE'">
+							and
+							EXCHARGE_CODE=#{value,jdbcType=VARCHAR}
+						</if>
+						<if test="key == 'TRADE_DATE'">
+							and
+							TRADE_DATE=#{value,jdbcType=DATE}
+						</if>
+						<if test="key == 'DATASOURCE_TYPE'">
+							and
+							DATASOURCE_TYPE=#{value,jdbcType=VARCHAR}
+						</if>
+					</foreach>
+					</trim>
+				</foreach>
+	    </where>
+
+	</select>
 
 </mapper>

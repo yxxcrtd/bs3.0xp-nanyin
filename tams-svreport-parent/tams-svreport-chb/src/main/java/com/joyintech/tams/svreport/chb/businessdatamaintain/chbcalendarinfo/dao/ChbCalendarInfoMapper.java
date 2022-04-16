@@ -84,22 +84,22 @@ public interface ChbCalendarInfoMapper {
      * 
      * 导入（新建）
      * <功能详细描述>
-     * @param listN 导入数据
+     * @param list 导入数据
      * @return 导入结果
      * @see
      * @since 1.0
      */
-    int insertBtachEquityInfo(@Param("listN")List<ChbCalendarInfo001Dto> listN);
+    int insertBatchMstHoliday(@Param("list")List<ChbCalendarInfo001Dto> list);
     /**
      * 
      * 导入（修改）
      * <功能详细描述>
-     * @param listA 导入数据
+     * @param list 导入数据
      * @return 导入结果
      * @see
      * @since 1.0
      */
-    int updateBtachEquityInfo(@Param("listA")List<ChbCalendarInfo001Dto> listA);
+    int updateBtachEquityInfo(@Param("list")List<ChbCalendarInfo001Dto> list);
 
     /**
      * 日历信息--用于wind 自动加券
@@ -109,4 +109,12 @@ public interface ChbCalendarInfoMapper {
      * @since 1.0
      */
     List<MstCalendarInfo> getMstCalendarInfo();
+
+
+    /**
+     * 查询记录条数
+     * @param list
+     * @return
+     */
+    int  selectMstHoliday(@Param("list")List<Map<String, String>> list);
 }

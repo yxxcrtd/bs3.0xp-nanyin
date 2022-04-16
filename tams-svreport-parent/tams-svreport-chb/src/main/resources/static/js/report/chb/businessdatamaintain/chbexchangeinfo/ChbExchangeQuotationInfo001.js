@@ -129,8 +129,22 @@ $(function() {
         $('#ChbExchangeQuotationInfo001_btn_import').click(function() {
             Joyin.confirm("请确认是否要导入数据？", function() {
                 Joyin.uploadFile(function(fileName) {
-                    Joyin.ajax(basePath + 'chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
-                        Joyin.ajax(basePath + 'chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo001/importFile', {fileName: fileName});
+                    Joyin.ajax(basePath + 'chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo001/checkConfirmMsgForImportData', {fileName: fileName}, function(result) {
+                        if ($.isArray(result.joyinMessages) && result.joyinMessages.length > 0) {
+                            var joyinMessages = "";
+                            $.each(result.joyinMessages, function(i, joyinMessage){
+                                joyinMessages += joyinMessage.message + "<br />"
+                            });
+                            Joyin.confirm(joyinMessages, function(){
+                                Joyin.ajax(basePath + '/chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo001/importFile', {fileName: fileName},function () {
+                                    table.reload();
+                                });
+                            });
+                        }else{
+                            Joyin.ajax(basePath + '/chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo001/importFile', {fileName: fileName},function () {
+                                table.reload();
+                            });
+                        }
                     });
                 },function() {
                     table.reload();

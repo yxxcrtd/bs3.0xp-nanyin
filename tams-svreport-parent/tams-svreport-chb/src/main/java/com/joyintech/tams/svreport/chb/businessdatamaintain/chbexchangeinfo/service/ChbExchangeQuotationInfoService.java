@@ -10,7 +10,10 @@
 
 package com.joyintech.tams.svreport.chb.businessdatamaintain.chbexchangeinfo.service;
 
+import com.google.common.collect.Lists;
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.JoyinMessage;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
@@ -45,6 +48,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 汇率行情
@@ -79,15 +84,16 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
      */
     public static final String NEW = "NEW";
 
+    /**
+     * 分页大小
+     */
+    public static final int PAGE_SIZE = 500;
+
 
     @Resource
     private ChbExchangeQuotationInfoMapper chbExchangeQuotationInfoMapper;
     @Resource
-    private CheckExcelImportService checkExcelImportService;
-    @Resource
     private BaseCommonCheckService baseCommonCheckService;
-
-
 
 
     /**
@@ -150,35 +156,57 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
         AjaxResult webResult = new AjaxResult();
         // 检查文件名是否包含汇率行情信息
         if (!fileName.contains("汇率行情信息")) {
-            throw new RuntimeException("模板名称错误");
+            webResult.setMessage(this.getMessage("ImportFileName"), MessageType.错误消息);
+            return webResult;
         }
         List<List<String>> dataList = ExcelUtil.getDataList1(fileName);
         List<List<String>> tempList = ExcelUtil.getTempList1(fileName);
         List<String> headList = new ArrayList<>(9);
         headList.add("货币对");
         headList.add("交易日期");
-        headList.add("数据来源");
-        headList.add("开盘价");
-        headList.add("收盘价");
-        headList.add("最高价");
-        headList.add("最低价");
-        headList.add("中间价");
+        headList.add("开盘价（元）");
+        headList.add("收盘价（元）");
+        headList.add("中间价（元）");
+        headList.add("最高价（元）");
+        headList.add("最低价（元）");
         headList.add("报价单位");
+        headList.add("数据来源");
         //校验文件中列是否一致
         List<ExcelValidDto> tempCheckResult = ExcelUtil.checkExcelTemp(tempList, headList);
         if (!StringUtil.isEmptyList(tempCheckResult)) {
-           // return tempCheckResult;
+            webResult.setMessage(this.getMessage("ImportFileTemplate"), MessageType.错误消息);
+            return webResult;
         }
 
-        //去掉重复的数据
-        List<List<String>> newDataList = this.getNewDataList(dataList);
         //List<List<String>>转成List<Map<String, String>>
-        List<Map<String, String>> mapList = this.convertMapList(newDataList);
+        List<Map<String, String>> mapList = this.convertMapList(dataList);
         //check包含DB和业务CHECK
-        List<ExcelValidDto> excelValidDtos = baseCommonCheckService.checkDataAll(CHECK_FLAG,mapList,TABLE_NAME,fileName,null,null,null,null);
-
-
-        return null;
+        List<ExcelValidDto> excelValidList = baseCommonCheckService.checkDataAll(CHECK_FLAG, mapList, TABLE_NAME, fileName, TABLE_NAME, TABLE_NAME, null, null);
+        //总数据
+        int count = mapList.size();
+        //待处理数据
+        long countA = mapList.stream().filter(ele -> Objects.equals("A", ele.get("STATUS"))).count();
+        //问题数据
+        int countR = excelValidList.size();
+        webResult.setMessage(this.getMessage("ChbImportMessage", count - countA, countR, countA), MessageType.确认消息);
+        //按500条分页
+        List<List<Map<String, String>>> partitionList = Lists.partition(mapList, PAGE_SIZE);
+        //数据重复的个数
+        int duplicateCount = 0;
+         for (List<Map<String, String>> list:partitionList) {
+             int i = chbExchangeQuotationInfoMapper.selectExchargeQuoteCount(list);
+             if (i>0){
+                 duplicateCount+=i;
+             }
+         }
+         //存在重复数据提示错误
+         if (duplicateCount>0) {
+             List<JoyinMessage> joyinMessages = new ArrayList<>(1);
+             JoyinMessage ms = new JoyinMessage(this.getMessage("ChbImportDuplicateMessage",duplicateCount), MessageType.确认消息);
+             joyinMessages.add(ms);
+             webResult.setJoyinMessages(joyinMessages);
+         }
+        return webResult;
     }
 
 
@@ -189,15 +217,23 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
      * @return 导入结果，包含验证内容，如果验证失败，返回message
      */
     public List<ExcelValidDto> importData(String fileName) {
-
-        List<ExcelValidDto> checkResultAll = new LinkedList<>();
+        //根据文件名获取文件数据
         List<List<String>> dataList = ExcelUtil.getDataList1(fileName);
-        List<List<String>> tempList = ExcelUtil.getTempList1(fileName);
 
-        List<ChbExchangeQuotationInfoDto> list = this.checkDataConvertToBean(null, 9, checkResultAll);
-        List<ExcelValidDto> excelValidList = checkExcelImportService.getExcelValidList(checkResultAll);
-        this.dealAfterCheck(list);
-        return excelValidList;
+        //List<List<String>>转成List<Map<String, String>>
+        List<Map<String, String>> mapList = this.convertMapList(dataList);
+
+        //check包含DB和业务CHECK
+        List<ExcelValidDto> excelValidList = baseCommonCheckService.checkDataAll(CHECK_FLAG, mapList, TABLE_NAME, fileName, TABLE_NAME, TABLE_NAME, null, null);
+
+        List<ChbExchangeQuotationInfoDto> dtoList = this.convertToBean(mapList);
+        //按500条分页
+        List<List<ChbExchangeQuotationInfoDto>> partitionList = Lists.partition(dtoList, PAGE_SIZE);
+        //批量入库
+        for (List<ChbExchangeQuotationInfoDto> list:partitionList) {
+            chbExchangeQuotationInfoMapper.insertExchargeQuoteInfo(list);
+        }
+        return excelValidList.stream().filter(e -> Objects.equals("YW",e.getValidKey())).collect(Collectors.toList());
     }
 
     /**
@@ -205,90 +241,60 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
      *
      * @return 返回检查结果
      */
-    private List<ChbExchangeQuotationInfoDto> checkDataConvertToBean(List<String> list, int i, List<ExcelValidDto> checkResultAll) {
+    private List<ChbExchangeQuotationInfoDto> convertToBean(List<Map<String, String>> mapList) {
 
 
         List<ChbExchangeQuotationInfoDto> returnList = new LinkedList<>();
-        List<ExcelValidDto> checkResult = new LinkedList<>();
-        //校验数据是否为必填
-        if (StringUtil.isEmpty(list.get(0))) {
-            checkResult.add(new ExcelValidDto("货币对", String.valueOf(i + 2), "货币对为空"));
+        ChbExchangeQuotationInfoDto dto = null;
+        for (Map<String, String> map : mapList) {
+            dto = new ChbExchangeQuotationInfoDto();
+            if (map.containsKey("EXCHARGE_CODE")) {
+                String exchargeCode = map.get("EXCHARGE_CODE");
+                dto.setExchargeCode(exchargeCode);
+                dto.setBasisCyy(exchargeCode.split("/")[0]);
+                dto.setQuotCyy(exchargeCode.split("/")[1]);
+            }
+            if (map.containsKey("TRADE_DATE")) {
+                dto.setTradeDate(DateUtil.parse(map.get("TRADE_DATE")));
+            }
+            if (map.containsKey("DATASOURCE_TYPE")) {
+                dto.setDatasourceType(map.get("DATASOURCE_TYPE"));
+            }
+            if (map.containsKey("OPEN_PRICE")) {
+                String openPrice = map.get("OPEN_PRICE");
+                dto.setOpenPrice(StringUtil.isBlank(openPrice) == true ? null : new BigDecimal(openPrice));
+            }
+            if (map.containsKey("CLOSE_PRICE")) {
+                String closePrice = map.get("CLOSE_PRICE");
+                dto.setClosePrice(StringUtil.isBlank(closePrice) == true ? null : new BigDecimal(closePrice));
+            }
+            if (map.containsKey("MID_PRICE")) {
+                String midPrice = map.get("MID_PRICE");
+                dto.setMidPrice(StringUtil.isBlank(midPrice) == true ? null : new BigDecimal(midPrice));
+            }
+            if (map.containsKey("HIGH_PRICE")) {
+                String highPrice = map.get("HIGH_PRICE");
+                dto.setHighPrice(StringUtil.isBlank(highPrice) == true ? null : new BigDecimal(highPrice));
+            }
+            if (map.containsKey("LOW_PRICE")) {
+                String lowPrice = map.get("LOW_PRICE");
+                dto.setLowPrice(StringUtil.isBlank(lowPrice) == true ? null : new BigDecimal(lowPrice));
+            }
+            if (map.containsKey("QUOT_UNIT")) {
+                dto.setQuotUnit(Long.parseLong(map.get("QUOT_UNIT")));
+            }
+            if (Objects.equals("A", map.get("STATUS"))) {
+                dto.setStatus(DictCodeListExt2.数据状态_待处理.getValue());
+                dto.setErrMsg(map.get("ERRMSG"));
+            } else {
+                dto.setStatus(DictCodeListExt2.数据状态_有效.getValue());
+            }
+            dto.setDataSource(DictCodeListExt2.数据来源_新建导入.getValue());
+            returnList.add(dto);
         }
-        if (StringUtil.isEmpty(list.get(1))) {
-            checkResult.add(new ExcelValidDto("交易日期", String.valueOf(i + 2), "交易日期为空"));
-        }
-        if (StringUtil.isEmpty(list.get(2))) {
-            checkResult.add(new ExcelValidDto("开盘价", String.valueOf(i + 2), "开盘价为空"));
-        }
-        if (StringUtil.isEmpty(list.get(3))) {
-            checkResult.add(new ExcelValidDto("收盘价", String.valueOf(i + 2), "收盘价为空"));
-        }
-        if (StringUtil.isEmpty(list.get(4))) {
-            checkResult.add(new ExcelValidDto("中间价", String.valueOf(i + 2), "中间价为空"));
-        }
-        if (StringUtil.isEmpty(list.get(5))) {
-            checkResult.add(new ExcelValidDto("最高价", String.valueOf(i + 2), "最高价为空"));
-        }
-        if (StringUtil.isEmpty(list.get(6))) {
-            checkResult.add(new ExcelValidDto("最低价", String.valueOf(i + 2), "最低价为空"));
-        }
-        if (StringUtil.isEmpty(list.get(7))) {
-            checkResult.add(new ExcelValidDto("报价单位", String.valueOf(i + 2), "报价单位为空"));
-        }
-        if (StringUtil.isEmpty(list.get(8))) {
-            checkResult.add(new ExcelValidDto("数据来源", String.valueOf(i + 2), "数据来源为空"));
-        }
-        //list转换为Bean
-        ChbExchangeQuotationInfoDto dto = new ChbExchangeQuotationInfoDto();
-        dto.setExchargeCode(list.get(0));
-        dto.setTradeDate(DateUtil.parse(list.get(1)));
-        dto.setDatasourceType(list.get(8).split(":")[0]);
-        dto.setOpenPrice(StringUtil.isEmpty(list.get(2)) == true ? null : new BigDecimal(list.get(2)));
-        dto.setClosePrice(StringUtil.isEmpty(list.get(3)) == true ? null : new BigDecimal(list.get(3)));
-        dto.setMidPrice(StringUtil.isEmpty(list.get(4)) == true ? null : new BigDecimal(list.get(4)));
-        dto.setHighPrice(StringUtil.isEmpty(list.get(5)) == true ? null : new BigDecimal(list.get(5)));
-        dto.setLowPrice(StringUtil.isEmpty(list.get(6)) == true ? null : new BigDecimal(list.get(6)));
-        dto.setQuotUnit(Long.parseLong(list.get(7)));
-        dto.setBasisCyy(list.get(0).split("/")[0]);
-        dto.setQuotCyy(list.get(0).split("/")[1]);
-        if (CollectionUtils.isEmpty(checkResult)) {
-            dto.setStatus(DictCodeListExt2.数据状态_有效.getValue());
-        } else {
-            dto.setStatus(DictCodeListExt2.数据状态_待处理.getValue());
-            dto.setErrMsg(checkExcelImportService.getCheckErrMsg(checkResult));
-            checkResultAll.addAll(checkResult);
-        }
-
-        returnList.add(dto);
         return returnList;
     }
 
-    /**
-     * check后的保存 <功能详细描述>
-     *
-     * @param list 需要保存的数据
-     */
-    public void dealAfterCheck(List<ChbExchangeQuotationInfoDto> list) {
-        List<ChbExchangeQuotationInfoDto> listN = new LinkedList<>();
-        List<ChbExchangeQuotationInfoDto> listA = new LinkedList<>();
-        for (ChbExchangeQuotationInfoDto dto : list) {
-            Integer count = chbExchangeQuotationInfoMapper.getChbExchargeQuoteByKey(dto);
-            if (count < 1) {
-                listN.add(dto);
-            } else {
-                listA.add(dto);
-            }
-
-        }
-        //新增
-        if (CollectionUtils.isNotEmpty(listN)) {
-            chbExchangeQuotationInfoMapper.insertExchargeQuoteInfo(listN);
-        }
-        //更新
-        if (CollectionUtils.isNotEmpty(listA)) {
-            chbExchangeQuotationInfoMapper.updateExchargeQuoteInfo(listA);
-        }
-    }
 
 
     @Override
@@ -299,13 +305,13 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
         dto.setStatus(DictCodeListExt2.数据状态_有效.getValue());
         if (StringUtil.equals(dto.getOperateType(), DELETE)) {
             List<ChbExchangeQuotationInfoDto> selectedItem = dto.getSelectedItem();
-            selectedItem.forEach(e->{
+            selectedItem.forEach(e -> {
                 e.setStatus(DictCodeListExt2.数据状态_删除.getValue());
             });
             chbExchangeQuotationInfoMapper.updateExchargeQuoteInfo(selectedItem);
         } else if (StringUtil.equals(dto.getOperateType(), NEW)) {
             //删除状态是已删除的数据
-            chbExchangeQuotationInfoMapper.deleteChbExchargeQuoteByKey(dto.getExchargeCode(),dto.getTradeDate(),dto.getDatasourceType(),DictCodeListExt2.数据状态_删除.getValue());
+            chbExchangeQuotationInfoMapper.deleteChbExchargeQuoteByKey(dto.getExchargeCode(), dto.getTradeDate(), dto.getDatasourceType(), DictCodeListExt2.数据状态_删除.getValue());
             //设置基本币种，单位币种等
             String exchargeCode = dto.getExchargeCode();
             if (exchargeCode != null) {
@@ -331,36 +337,10 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
         return chbExchangeQuotationInfoMapper.getChbExchargeQuoteByKey(dto);
     }
 
-    /**
-     * 去掉重复的数据
-     *
-     * @param dataList
-     * @return
-     */
-    private List<List<String>> getNewDataList(List<List<String>> dataList) {
-        List<List<String>> newDataList = new LinkedList<>();
-        //判断excel表中货币对和交易日期、数据来源是否冲突
-        for (int i = 0; i < dataList.size(); i++) {
-            boolean flag = true;
-            for (int j = i + 1; j < dataList.size(); j++) {
-                if (StringUtils.equals(dataList.get(i).get(0), dataList.get(j).get(0)) &&
-                        StringUtils.equals(dataList.get(i).get(1), dataList.get(j).get(1)) &&
-                        StringUtils.equals(dataList.get(i).get(2), dataList.get(j).get(2))) {
-                    flag = false;
-                    break;
-                }
-            }
-            if (flag) {
-                newDataList.add(dataList.get(i));
-            }
-        }
-
-        return newDataList;
-    }
-
 
     /**
      * List<List<String>>转成List<Map<String, String>>
+     *
      * @param dataList
      * @return
      */
@@ -371,14 +351,14 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
             List<String> list = dataList.get(i);
             Map<String, String> map = new LinkedHashMap<>(9);
             map.put("EXCHARGE_CODE", list.get(0));
-            map.put("TRADE_DATE", list.get(1));
+            map.put("TRADE_DATE", StringUtils.isNotBlank(list.get(1))?list.get(1).replaceAll("/","-"):null);
             map.put("OPEN_PRICE", list.get(2));
             map.put("CLOSE_PRICE", list.get(3));
             map.put("MID_PRICE", list.get(4));
             map.put("HIGH_PRICE", list.get(5));
             map.put("LOW_PRICE", list.get(6));
             map.put("QUOT_UNIT", list.get(7));
-            map.put("DATASOURCE_TYPE", list.get(8));
+            map.put("DATASOURCE_TYPE", StringUtils.isNotBlank(list.get(8))?list.get(8).split(":")[0]:null);
             mapList.add(map);
         }
 

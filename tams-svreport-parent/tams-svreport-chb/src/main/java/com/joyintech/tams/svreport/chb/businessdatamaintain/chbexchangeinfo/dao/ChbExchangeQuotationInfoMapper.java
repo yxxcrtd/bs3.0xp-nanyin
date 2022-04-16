@@ -55,18 +55,18 @@ public interface ChbExchangeQuotationInfoMapper {
      * @param listN 导入数据
      * @return 导入结果
      */
-    int insertExchargeQuoteInfo(@Param("listN")List<ChbExchangeQuotationInfoDto> listN);
+    int insertExchargeQuoteInfo(@Param("list")List<ChbExchangeQuotationInfoDto> listN);
 
     /**
      *
      * 导入（修改）
      * <功能详细描述>
-     * @param listA 导入数据
+     * @param list 导入数据
      * @return 导入结果
      * @see
      * @since 1.0
      */
-    int updateExchargeQuoteInfo(@Param("listA")List<ChbExchangeQuotationInfoDto> listA);
+    int updateExchargeQuoteInfo(@Param("list")List<ChbExchangeQuotationInfoDto> list);
 
     /**
      * 更新状态
@@ -77,10 +77,16 @@ public interface ChbExchangeQuotationInfoMapper {
 
     /**
      * 主键删除
-     * @param dto
      * @return
      */
     int deleteChbExchargeQuoteByKey(@Param("exchargeCode") String exchargeCode,@Param("tradeDate") Date tradeDate,
                                     @Param("datasourceType") String datasourceType,@Param("status") String status);
+
+    /**
+     * 查询记录条数
+     * @param list
+     * @return
+     */
+    int  selectExchargeQuoteCount(@Param("list")List<Map<String, String>> list);
 
 }

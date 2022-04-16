@@ -10,7 +10,10 @@
 
 package com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.service;
 
+import com.google.common.collect.Lists;
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.JoyinMessage;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
@@ -18,15 +21,14 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.report.common.util.ExcelUtil;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dao.ChbCalendarInfoMapper;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dto.ChbCalendarInfo001Dto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dto.ChbCalendarInfoDto;
-import com.joyintech.tams.svreport.chb.common.dto.TabColumnsDto;
-import com.joyintech.tams.svreport.chb.common.service.CheckExcelImportService;
+import com.joyintech.tams.svreport.chb.businessdatamaintain.chbexchangeinfo.dto.ChbExchangeQuotationInfoDto;
+import com.joyintech.tams.svreport.chb.common.util.ExcelUtil;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -40,7 +42,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * 市场日历信息service层 〈功能详细描述〉
@@ -62,14 +64,19 @@ public class ChbCalendarInfo001Service extends CommonExportService<ChbCalendarIn
     public static String TABLE_NAME = "MST_HOLIDAY";
 
     /**
-     * 数字正则表达式
+     * 接口类型
      */
-    public static String NUMBER_REGEX = "-?[0-9]+(\\.[0-9]+)?";
+    public static final String CHECK_FLAG = "D";
+
+    /**
+     * 分页大小
+     */
+    public static final int PAGE_SIZE = 500;
 
     @Resource
     private ChbCalendarInfoMapper chbCalendarInfoMapper;
     @Resource
-    private CheckExcelImportService checkExcelImportService;
+    private BaseCommonCheckService baseCommonCheckService;
 
     /**
      * 市场日历信息查询
@@ -128,51 +135,56 @@ public class ChbCalendarInfo001Service extends CommonExportService<ChbCalendarIn
     public AjaxResult checkConfirmMsgForImportData(String fileName) {
 
         AjaxResult webResult = new AjaxResult();
-        List<ValidMessage> errorList = new LinkedList<>();
-        // 检查文件名是否包含节假日信息导入
-        if (!fileName.contains("节假日信息导入")) {
-            errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0002", "市场日历信息导入")));
-            webResult.setErrorList(errorList);
+        // 检查文件名是否包含汇率行情信息
+        if (!fileName.contains("交易日历")) {
+            webResult.setMessage(this.getMessage("ImportFileName"), MessageType.错误消息);
+            return webResult;
+        }
+        List<List<String>> dataList = ExcelUtil.getDataList1(fileName);
+        List<List<String>> tempList = ExcelUtil.getTempList1(fileName);
+        List<String> headList = new ArrayList<>(3);
+        headList.add("日期");
+        headList.add("市场日历类型");
+        headList.add("是否节假日");
+        //校验文件中列是否一致
+        List<ExcelValidDto> tempCheckResult = ExcelUtil.checkExcelTemp(tempList, headList);
+        if (!StringUtil.isEmptyList(tempCheckResult)) {
+            webResult.setMessage(this.getMessage("ImportFileTemplate"), MessageType.错误消息);
             return webResult;
         }
 
-        List<List<String>> dataList = ExcelUtil.getDataList1(fileName);
-        //判断excel表中日期和市场日历类型是否冲突
-        for (int i = 0; i < dataList.size(); i++) {
-            for (int j = i + 1; j < dataList.size(); j++) {
-                if (StringUtils.equals(dataList.get(i).get(0), dataList.get(j).get(0)) &&
-                        StringUtils.equals(dataList.get(i).get(1), dataList.get(j).get(1))) {
-                    ValidMessage validMessage = new ValidMessage("第" + (i + 2) + "日期、市场日历类型与" + "第" + (j + 2) + "日期、市场日历类型相同");
-                    errorList.add(validMessage);
-                }
+        //List<List<String>>转成List<Map<String, String>>
+        List<Map<String, String>> mapList = this.convertMapList(dataList);
+        //check包含DB和业务CHECK
+        List<ExcelValidDto> excelValidList = baseCommonCheckService.checkDataAll(CHECK_FLAG, mapList, TABLE_NAME, fileName, TABLE_NAME, TABLE_NAME, null, null);
+        //总数据
+        int count = mapList.size();
+        //待处理数据
+        long countA = mapList.stream().filter(ele -> Objects.equals("A", ele.get("STATUS"))).count();
+        //问题数据
+        int countR = excelValidList.size();
+        webResult.setMessage(this.getMessage("ChbImportMessage", count - countA, countR, countA), MessageType.确认消息);
+        //按500条分页
+        List<List<Map<String, String>>> partitionList = Lists.partition(mapList, PAGE_SIZE);
+        //数据重复的个数
+        int duplicateCount = 0;
+        for (List<Map<String, String>> list:partitionList) {
+            int i = chbCalendarInfoMapper.selectMstHoliday(list);
+            if (i>0){
+                duplicateCount+=i;
             }
         }
-        if (CollectionUtils.isNotEmpty(errorList)) {
-            webResult.setErrorList(errorList);
-            return webResult;
+        //存在重复数据提示错误
+        if (duplicateCount>0) {
+            List<JoyinMessage> joyinMessages = new ArrayList<>(1);
+            JoyinMessage ms = new JoyinMessage(this.getMessage("ChbImportDuplicateMessage",duplicateCount), MessageType.确认消息);
+            joyinMessages.add(ms);
+            webResult.setJoyinMessages(joyinMessages);
         }
-
-        //基础校验数据库字段属性
-        Map<String, TabColumnsDto> map = checkExcelImportService.getTabColumns(TABLE_NAME);
-        for (int i = 0; i < dataList.size(); i++) {
-            List<String> list = dataList.get(i);
-            //校验日期
-            this.checkTabColumns(map.get("CDATE"), list.get(0), i, "日期", errorList);
-            //校验市场日历类型
-            this.checkTabColumns(map.get("CALENDAR_ID"), list.get(1), i, "市场日历类型", errorList);
-            //校验是否节假日
-            this.checkTabColumns(map.get("IS_HOLIDAY"), list.get(2), i, "是否节假日", errorList);
-        }
-        if (CollectionUtils.isNotEmpty(errorList)) {
-            webResult.setErrorList(errorList);
-            return webResult;
-        }
-
-
-        webResult.setData("noInfoShowOut");
-
         return webResult;
     }
+
+
 
     /**
      * excel导入功能
@@ -182,134 +194,82 @@ public class ChbCalendarInfo001Service extends CommonExportService<ChbCalendarIn
      */
     @Transactional(rollbackFor = Exception.class)
     public List<ExcelValidDto> importData(String fileName) throws FileNotFoundException, ParseException {
-        List<ExcelValidDto> checkResult = new LinkedList<>();
-
+        //根据文件名获取文件数据
         List<List<String>> dataList = ExcelUtil.getDataList1(fileName);
-        if (CollectionUtils.isEmpty(dataList)) {
-            checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY, "数据不能为空"));
-            return checkResult;
-        }
-        // 增强check 将excel表格中的数据转化为dto
-        List<ChbCalendarInfo001Dto> list = this.checkDataConvertToBean(dataList, checkResult);
-        List<ExcelValidDto> excelValidList = checkExcelImportService.getExcelValidList(checkResult);
-        this.dealAfterCheck(list);
-        return excelValidList;
-    }
 
+        //List<List<String>>转成List<Map<String, String>>
+        List<Map<String, String>> mapList = this.convertMapList(dataList);
 
-    /**
-     * 校验列
-     */
-    private void checkTabColumns(TabColumnsDto dto, String value, int i, String columns, List<ValidMessage> errorList) {
-        //如果字段允许为空，值为空直接返回
-        if (Objects.equals("Y", dto.getNullAble()) && StringUtil.isBlank(value)) {
-            return;
-        }
-        if (StringUtil.isEmpty(value)) {
-            errorList.add(new ValidMessage("第" + (i + 2) + "行" + columns + "字段在数据库中不能为空"));
-        }
-        //校验字段长度
-        if (dto.getLength() != 0 && dto.getLength() < value.length()) {
-            errorList.add(new ValidMessage("第" + (i + 2) + "行" + columns + "字段长度不能超过" + dto.getLength()));
-        }
-        //日期类型校验
-        if (Objects.equals("DATE", dto.getDataType())) {
-            if (!this.isValidDate(value)) {
-                errorList.add(new ValidMessage("第" + (i + 2) + "行" + columns + "不是日期格式"));
-            }
-        }
-        //数字类型校验
-        if (Objects.equals("NUMBER", dto.getDataType())) {
-            if (!this.isNumeric(value.split(" ")[0])) {
-                errorList.add(new ValidMessage("第" + (i + 2) + "行" + columns + "不是数字格式"));
-            }
-        }
-    }
+        //check包含DB和业务CHECK
+        List<ExcelValidDto> excelValidList = baseCommonCheckService.checkDataAll(CHECK_FLAG, mapList, TABLE_NAME, fileName, TABLE_NAME, TABLE_NAME, null, null);
 
-    /**
-     * 判断一个字符串是否可以转成日期
-     */
-    public boolean isValidDate(String date) {
-        boolean convertSuccess = true;
-        String newDate = date.replaceAll("/", "-");
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            format.setLenient(false);
-            format.parse(newDate);
-        } catch (ParseException e) {
-            convertSuccess = false;
+        List<ChbCalendarInfo001Dto> dtoList = this.convertToBean(mapList);
+        //按500条分页
+        List<List<ChbCalendarInfo001Dto>> partitionList = Lists.partition(dtoList, PAGE_SIZE);
+        //批量入库
+        for (List<ChbCalendarInfo001Dto> list:partitionList) {
+            chbCalendarInfoMapper.insertBatchMstHoliday(list);
         }
-        return convertSuccess;
-    }
-
-    /**
-     * 匹配是否为数字
-     *
-     * @param str 可能为中文，也可能是-19162431.1254，不使用BigDecimal的话，变成-1.91624311254E7
-     * @author yutao
-     * @date 2016年11月14日下午7:41:22
-     */
-    public boolean isNumeric(String str) {
-        // 该正则表达式可以匹配所有的数字 包括负数
-        Pattern pattern = Pattern.compile(NUMBER_REGEX);
-        String bigStr;
-        try {
-            bigStr = new BigDecimal(str).toString();
-        } catch (Exception e) {
-            //异常 说明包含非数字。
-            return false;
-        }
-        // matcher是全匹配
-        return pattern.matcher(bigStr).matches();
+        return excelValidList.stream().filter(e -> Objects.equals("YW",e.getValidKey())).collect(Collectors.toList());
     }
 
 
     /**
      * 增强check list转换为Bean
      *
-     * @param dataList 导入数据
      * @return 返回检查结果
      */
-    private List<ChbCalendarInfo001Dto> checkDataConvertToBean(List<List<String>> dataList, List<ExcelValidDto> checkResultAll) {
+    private List<ChbCalendarInfo001Dto> convertToBean(List<Map<String, String>> mapList) {
 
 
-        List<ChbCalendarInfo001Dto> returnInfoList = new LinkedList<>();
-        ChbCalendarInfo001Dto chbCalendarInfo001Dto;
+        List<ChbCalendarInfo001Dto> returnList = new LinkedList<>();
+        ChbCalendarInfo001Dto dto = null;
+        for (Map<String, String> map : mapList) {
+            dto = new ChbCalendarInfo001Dto();
+
+            if (map.containsKey("CALENDAR_ID")) {
+                dto.setCalendarId(map.get("CALENDAR_ID"));
+            }
+            if (map.containsKey("CDATE")) {
+                dto.setCdate(DateUtil.parse(map.get("CDATE").replaceAll("/","-")));
+            }
+            if (map.containsKey("IS_HOLIDAY")) {
+                dto.setIsHoliday(StringUtils.isNotBlank(map.get("IS_HOLIDAY"))?Long.parseLong(map.get("IS_HOLIDAY")):null);
+            }
+            if (Objects.equals("A", map.get("STATUS"))) {
+                dto.setStatus(DictCodeListExt2.数据状态_待处理.getValue());
+                dto.setErrMsg(map.get("ERRMSG"));
+            } else {
+                dto.setStatus(DictCodeListExt2.数据状态_有效.getValue());
+            }
+            dto.setDataSource(DictCodeListExt2.数据来源_新建导入.getValue());
+            returnList.add(dto);
+        }
+        return returnList;
+    }
+
+
+    /**
+     * List<List<String>>转成List<Map<String, String>>
+     *
+     * @param dataList
+     * @return
+     */
+    private List<Map<String, String>> convertMapList(List<List<String>> dataList) {
+
+        List<Map<String, String>> mapList = new LinkedList<>();
         for (int i = 0; i < dataList.size(); i++) {
             List<String> list = dataList.get(i);
-            List<ExcelValidDto> checkResult = new LinkedList<>();
-            //校验数据是否为必填
-            if (StringUtil.isEmpty(list.get(0))) {
-                checkResult.add(new ExcelValidDto("日期", String.valueOf(i + 2), "日期为空"));
-            }
-            if (StringUtil.isEmpty(list.get(1))) {
-                checkResult.add(new ExcelValidDto("市场日历类型", String.valueOf(i + 2), "市场日历类型为空"));
-            }
-            if (StringUtil.isEmpty(list.get(2))) {
-                checkResult.add(new ExcelValidDto("是否节假日", String.valueOf(i + 2), "是否节假日为空"));
-            }
-            // 检查表内数据每行是否合法
-            if (CollectionUtils.isNotEmpty(checkExcelCow(i, dataList.get(i)))) {
-                checkResult.addAll(checkExcelCow(i, dataList.get(i)));
-            }
-            //list转换为Bean
-            chbCalendarInfo001Dto = new ChbCalendarInfo001Dto();
-            chbCalendarInfo001Dto.setCdate(DateUtil.parse(list.get(0)));
-            chbCalendarInfo001Dto.setCalendarId(list.get(1).split(" ")[0]);
-            chbCalendarInfo001Dto.setIsHoliday(StringUtil.isNotBlank(list.get(2)) ? Long.parseLong(list.get(2).split(" ")[0]) : null);
-            chbCalendarInfo001Dto.setDataSource(DictCodeListExt2.数据来源_新建导入.getValue());
-            if (CollectionUtils.isEmpty(checkResult)) {
-                chbCalendarInfo001Dto.setStatus(DictCodeListExt2.数据状态_有效.getValue());
-            } else {
-                chbCalendarInfo001Dto.setStatus(DictCodeListExt2.数据状态_待处理.getValue());
-                chbCalendarInfo001Dto.setErrMsg(checkExcelImportService.getCheckErrMsg(checkResult));
-                checkResultAll.addAll(checkResult);
-            }
-
-            returnInfoList.add(chbCalendarInfo001Dto);
+            Map<String, String> map = new LinkedHashMap<>(3);
+            map.put("CDATE", list.get(0));
+            map.put("CALENDAR_ID", StringUtil.isNotBlank(list.get(1))?list.get(1).split(" ")[0]:null);
+            map.put("IS_HOLIDAY", StringUtil.isNotBlank(list.get(2)) ? list.get(2).split(" ")[0] : null);
+            mapList.add(map);
         }
-        return returnInfoList;
+        return mapList;
+
     }
+
 
 
     /**
@@ -332,32 +292,6 @@ public class ChbCalendarInfo001Service extends CommonExportService<ChbCalendarIn
 
 
     /**
-     * check后的保存 <功能详细描述>
-     *
-     * @param equityList 需要保存的数据
-     */
-    public void dealAfterCheck(List<ChbCalendarInfo001Dto> equityList) {
-        List<ChbCalendarInfo001Dto> listN = new LinkedList<>();
-        List<ChbCalendarInfo001Dto> listA = new LinkedList<>();
-        for (ChbCalendarInfo001Dto chbCalendarInfo001Dto : equityList) {
-            ChbCalendarInfo001Dto equityInfoCheck = getMstMarketCalendarInfo001DtoByKey(chbCalendarInfo001Dto);
-            if (equityInfoCheck == null) {
-                listN.add(chbCalendarInfo001Dto);
-            } else {
-                listA.add(chbCalendarInfo001Dto);
-            }
-
-        }
-        if (CollectionUtils.isNotEmpty(listN)) {
-
-            this.insertBtachEquityInfoByPart(listN);
-        }
-        if (CollectionUtils.isNotEmpty(listA)) {
-            this.updateBtachEquityInfoByPart(listA);
-        }
-    }
-
-    /**
      * 根据key获取dto <功能详细描述>
      *
      * @param dto key
@@ -367,12 +301,6 @@ public class ChbCalendarInfo001Service extends CommonExportService<ChbCalendarIn
         return chbCalendarInfoMapper.getMstMarketCalendarInfo001DtoByKey(dto);
     }
 
-    /**
-     * 插入数据 <功能详细描述>
-     */
-    private void insertBtachEquityInfo(List<ChbCalendarInfo001Dto> list) {
-        chbCalendarInfoMapper.insertBtachEquityInfo(list);
-    }
 
     /**
      * 更新数据
@@ -383,35 +311,6 @@ public class ChbCalendarInfo001Service extends CommonExportService<ChbCalendarIn
         chbCalendarInfoMapper.updateBtachEquityInfo(list);
     }
 
-    /**
-     * 分批次执行insertBtachEquityInfo
-     *
-     * @param dataList 数据
-     */
-    private void insertBtachEquityInfoByPart(List<ChbCalendarInfo001Dto> dataList) {
-        if (CollectionUtils.isEmpty(dataList)) {
-            return;
-        }
-        int maxDataCountOneTime = 20;
-        int dataCount = dataList.size();
-        if (dataCount <= maxDataCountOneTime) {
-            insertBtachEquityInfo(dataList);
-        } else {
-            List<ChbCalendarInfo001Dto> newDataList = new ArrayList<>(dataList);
-
-            // 分批处理
-            // 分批数
-            int part = dataCount / maxDataCountOneTime;
-            for (int i = 0; i < part; i++) {
-                insertBtachEquityInfo(newDataList.subList(0, maxDataCountOneTime));
-                newDataList.subList(0, maxDataCountOneTime).clear();
-            }
-            // 最后剩下的数据
-            if (CollectionUtils.isNotEmpty(newDataList)) {
-                insertBtachEquityInfo(newDataList);
-            }
-        }
-    }
 
     /**
      * 分批次执行updateBtachEquityInfo

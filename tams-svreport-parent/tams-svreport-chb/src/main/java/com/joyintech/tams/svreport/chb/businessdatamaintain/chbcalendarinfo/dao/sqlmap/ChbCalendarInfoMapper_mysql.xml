@@ -83,7 +83,7 @@
 	</select>
 
 	<!-- 将Excel表格数据加入数据库 -->
-	<insert id="insertBtachEquityInfo" parameterType="java.util.List">
+	<insert id="insertBatchMstHoliday" parameterType="java.util.List">
 		insert into
 		MST_HOLIDAY(CALENDAR_ID,CDATE,
 		DATA_SOURCE,STATUS,
@@ -118,7 +118,16 @@
 			</if>
 			from dual
 		</foreach>
-		)A
+		) A ON DUPLICATE KEY
+		UPDATE
+		 CALENDAR_ID=A.CALENDAR_ID,
+		CDATE=A.CDATE,
+		DATA_SOURCE=A.DATA_SOURCE,
+		STATUS=A.STATUS,
+		IS_HOLIDAY=A.IS_HOLIDAY,
+		UPDATE_USER=A.UPDATE_USER,
+		UPDATE_TIME=NOW(),
+		ERR_MSG=A.ERR_MSG
 	</insert>
 
 	<!-- 将Excel表格数据覆盖数据库 -->
@@ -126,7 +135,7 @@
 		update MST_HOLIDAY
 		<trim prefix="set" suffixOverrides=",">
 			<trim prefix="is_holiday=case" suffix="end,">
-				<foreach collection="listA" item="item" index="index">
+				<foreach collection="list" item="item" index="index">
 					<if test="item.isHoliday!=null">
 						when cdate=#{item.cdate,jdbcType=DATE} and calendar_id
 						=
@@ -136,7 +145,7 @@
 				</foreach>
 			</trim>
 			<trim prefix="ERR_MSG=case" suffix="end,">
-				<foreach collection="listA" item="item" index="index">
+				<foreach collection="list" item="item" index="index">
 					<if test="item.errMsg != null and ! item.errMsg.equals('')">
 						when cdate=#{item.cdate,jdbcType=DATE} and calendar_id
 						=
@@ -146,7 +155,7 @@
 				</foreach>
 			</trim>
 			<trim prefix="status=case" suffix="end,">
-				<foreach collection="listA" item="item" index="index">
+				<foreach collection="list" item="item" index="index">
 					<if test="item.status!=null">
 						when cdate=#{item.cdate,jdbcType=DATE} and calendar_id
 						=
@@ -156,7 +165,7 @@
 				</foreach>
 			</trim>
 			<trim prefix="UPDATE_USER=case" suffix="end,">
-				<foreach collection="listA" item="item" index="index">
+				<foreach collection="list" item="item" index="index">
 					<if test="item.updateUser!=null">
 						when cdate=#{item.cdate,jdbcType=DATE} and calendar_id
 						=
@@ -166,7 +175,7 @@
 				</foreach>
 			</trim>
 			<trim prefix="UPDATE_TIME=case" suffix="end,">
-				<foreach collection="listA" item="item" index="index">
+				<foreach collection="list" item="item" index="index">
 					<if test="item.updateTime!=null">
 						when cdate=#{item.cdate,jdbcType=DATE} and calendar_id
 						=
@@ -177,7 +186,7 @@
 			</trim>
 		</trim>
 		where
-		<foreach collection="listA" separator="or" item="item" index="index">
+		<foreach collection="list" separator="or" item="item" index="index">
 			cdate=#{item.cdate,jdbcType=DATE} and calendar_id =
 			#{item.calendarId,jdbcType=VARCHAR}
 		</foreach>
@@ -188,5 +197,27 @@
 		SELECT CALENDAR_ID,
 			   OTHER_ID
 		FROM MST_CALENDAR_INFO
+	</select>
+
+	<select id="selectMstHoliday" resultType="int">
+		SELECT COUNT(*)
+		FROM MST_HOLIDAY <where>
+			<foreach collection="list" item="items" index="i" separator="or">
+				<trim prefix="(" suffix=")" prefixOverrides="and">
+				STATUS in ('A','E')
+				<foreach collection="items.entrySet()" item="value"
+						 index="key">
+					<if test="key == 'CALENDAR_ID'">
+						and
+						CALENDAR_ID=#{value,jdbcType=VARCHAR}
+					</if>
+					<if test="key == 'CDATE'">
+						and
+						CDATE=#{value,jdbcType=DATE}
+					</if>
+				</foreach>
+				</trim>
+			</foreach>
+	</where>
 	</select>
 </mapper>
