@@ -974,7 +974,6 @@
 			select
 			#{item.registBankCode,jdbcType=VARCHAR} REGIST_BANK_CODE,
 			#{item.identifyNumber,jdbcType=VARCHAR} IDENTIFY_NUMBER,
-			/*NVL(#{item.holderName,jdbcType=VARCHAR},'null') HOLDER_NAME,*/
 			#{item.holderName,jdbcType=VARCHAR} HOLDER_NAME,
 			IFNULL(#{item.personalIdentifyType,jdbcType=VARCHAR},'null') PERSONAL_IDENTIFY_TYPE,
 			IFNULL(#{item.institutionIdentifyType,jdbcType=VARCHAR},'null') INSTITUTION_IDENTIFY_TYPE,
