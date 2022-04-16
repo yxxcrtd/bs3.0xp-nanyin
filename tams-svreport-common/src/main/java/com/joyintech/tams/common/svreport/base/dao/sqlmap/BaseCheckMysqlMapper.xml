@@ -18,7 +18,7 @@
         FROM
             information_schema.COLUMNS
         WHERE
-            table_schema = 'gd_test'
+            table_schema = 'cvr_306_mysql_test'
           AND table_name = #{tableName}
     </select>
 </mapper>

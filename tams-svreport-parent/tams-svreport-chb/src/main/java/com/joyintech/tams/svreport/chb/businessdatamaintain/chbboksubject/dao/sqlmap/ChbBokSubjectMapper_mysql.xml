@@ -3,108 +3,99 @@
 <mapper namespace="com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dao.ChbBokSubjectDao_mysql">
 
     <insert id="insert" parameterType="com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dto.ChbBokSubjectDto">
-        insert into BOK_SUBJECT
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="subjectNo !=null and subjectNo !=''">
-                SUBJECT_NO,
-            </if>
-            <if test="subjectName !=null and subjectName !=''">
-                SUBJECT_NAME,
-            </if>
-            <if test="fsubjectId !=null and fsubjectId !=''">
-                FSUBJECT_ID,
-            </if>
-            <if test="subjectType !=null and subjectType !=''">
-                SUBJECT_TYPE,
-            </if>
-            <if test="subjectLevel !=null and subjectLevel !=''">
-                SUBJECT_LEVEL,
-            </if>
-            <if test="dataSource !=null and dataSource !=''">
-                DATA_SOURCE,
-            </if>
-            <if test="status !=null and status !=''">
-                STATUS,
-            </if>
-            <if test="remark !=null and remark !=''">
-                REMARK,
-            </if>
-            <if test="errMsg !=null and errMsg !=''">
-                ERR_MSG,
-            </if>
-            <if test="createUser !=null and createUser !=''">
-                CREATE_USER,
-            </if>
-            <if test="createDept !=null and createDept !=''">
-                CREATE_DEPT,
-            </if>
-            <if test="createTime !=null">
-                CREATE_TIME,
-            </if>
-            <if test="updateUser !=null and updateUser !=''">
-                UPDATE_USER,
-            </if>
-            <if test="updateTime !=null">
-                UPDATE_TIME
-            </if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="subjectNo !=null and subjectNo !=''">
-                #{subjectNo},
-            </if>
-            <if test="subjectName !=null and subjectName !=''">
-                #{subjectName},
-            </if>
-            <if test="fsubjectId !=null and fsubjectId !=''">
-                #{fsubjectId},
-            </if>
-            <if test="subjectType !=null and subjectType !=''">
-                #{subjectType},
-            </if>
-            <if test="subjectLevel !=null and subjectLevel !=''">
-                #{subjectLevel},
-            </if>
-            <if test="dataSource !=null and dataSource !=''">
-                #{dataSource},
-            </if>
-            <if test="status !=null and status !=''">
-                #{status},
-            </if>
-            <if test="remark !=null and remark !=''">
-                #{remark},
-            </if>
-            <if test="errMsg !=null and errMsg !=''">
-                #{errMsg},
-            </if>
-            <if test="createUser !=null and createUser !=''">
-                #{createUser},
-            </if>
-            <if test="createDept !=null and createDept !=''">
-                #{createDept},
-            </if>
-            <if test="createTime !=null">
-                #{createTime},
-            </if>
-            <if test="updateUser !=null and updateUser !=''">
-                #{updateUser},
-            </if>
-            <if test="updateTime !=null">
-                #{updateTime}
-            </if>
-        </trim>
+        insert into BOK_SUBJECT(BOOKSET_ID,SUBJECT_NO,SUBJECT_NAME,FSUBJECT_ID,SUBJECT_TYPE,SUBJECT_LEVEL,DATA_SOURCE,STATUS,REMARK,ERR_MSG,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+        select * from
+        (  select TEMP.* from
+        (
+            SELECT #{booksetId} BOOKSET_ID,#{subjectNo} SUBJECT_NO,#{subjectName} SUBJECT_NAME,#{fsubjectId} FSUBJECT_ID,
+            #{subjectType} SUBJECT_TYPE,#{subjectLevel} SUBJECT_LEVEL,#{dataSource} DATA_SOURCE,
+            #{status} STATUS,#{remark} REMARK,#{errMsg} ERR_MSG,#{createUser} CREATE_USER,
+            #{createDept} CREATE_DEPT,#{createTime} CREATE_TIME,#{updateUser} UPDATE_USER,#{updateTime} UPDATE_TIME
+            from
+            dual
+        )TEMP
+        where not EXISTS (
+        select 1 from BOK_SUBJECT a where a.BOOKSET_ID = TEMP.BOOKSET_ID
+        AND a.SUBJECT_NO = TEMP.SUBJECT_NO
+        )
+        ) a;
+        update BOK_SUBJECT a,(
+        select * from
+        (  select TEMP.* from
+        (
+        <foreach collection="list" item="bokSubject.subjectNo" separator="union all">
+            SELECT #{bokSubject.subjectNo} BOOKSET_ID,#{bokSubject.subjectNo} SUBJECT_NO,#{bokSubject.subjectName} SUBJECT_NAME,#{bokSubject.fsubjectId} FSUBJECT_ID,
+            #{bokSubject.subjectType} SUBJECT_TYPE,#{bokSubject.subjectLevel} SUBJECT_LEVEL,#{bokSubject.dataSource} DATA_SOURCE,
+            #{bokSubject.status} STATUS,#{bokSubject.remark} REMARK,#{bokSubject.errMsg} ERR_MSG,#{bokSubject.createUser} CREATE_USER,
+            #{bokSubject.createDept} CREATE_DEPT,#{bokSubject.createTime} CREATE_TIME,#{bokSubject.updateUser} UPDATE_USER,#{bokSubject.updateTime} UPDATE_TIME
+            from
+            dual
+        </foreach>
+        )TEMP
+
+        ) a
+        )b
+        set a.SUBJECT_NAME = b.SUBJECT_NAME,
+        a.FSUBJECT_ID = b.FSUBJECT_ID,
+        a.SUBJECT_TYPE = b.SUBJECT_TYPE,
+        a.SUBJECT_LEVEL = b.SUBJECT_LEVEL,
+        a.STATUS = b.STATUS,
+        a.REMARK = b.REMARK,
+        a.ERR_MSG = b.ERR_MSG,
+        a.UPDATE_USER = b.UPDATE_USER,
+        a.UPDATE_TIME = b.UPDATE_TIME
+        where a.BOOKSET_ID = b.BOOKSET_ID and a.SUBJECT_NO = b.SUBJECT_NO
     </insert>
     <insert id="batchInsert" parameterType="java.util.List">
-        insert into BOK_SUBJECT(SUBJECT_NO,SUBJECT_NAME,FSUBJECT_ID,SUBJECT_TYPE,SUBJECT_LEVEL,DATA_SOURCE,STATUS,REMARK,ERR_MSG,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values
-        <foreach collection="list" separator="," item="bokSubject">
-            (#{bokSubject.subjectNo},#{bokSubject.subjectName},#{bokSubject.fsubjectId},#{bokSubject.subjectType},#{bokSubject.subjectLevel},#{bokSubject.dataSource},#{bokSubject.status},#{bokSubject.remark},#{bokSubject.errMsg},#{bokSubject.createUser},#{bokSubject.createDept},#{bokSubject.createTime},#{bokSubject.updateUser},#{bokSubject.updateTime})
+        insert into BOK_SUBJECT(BOOKSET_ID,SUBJECT_NO,SUBJECT_NAME,FSUBJECT_ID,SUBJECT_TYPE,SUBJECT_LEVEL,DATA_SOURCE,STATUS,REMARK,ERR_MSG,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+        select * from
+        (  select TEMP.* from
+        (
+        <foreach collection="list" item="item" separator="union all">
+            SELECT #{item.booksetId} BOOKSET_ID,#{bokSubject.subjectNo} SUBJECT_NO,#{bokSubject.subjectName} SUBJECT_NAME,#{bokSubject.fsubjectId} FSUBJECT_ID,
+                   #{bokSubject.subjectType} SUBJECT_TYPE,#{bokSubject.subjectLevel} SUBJECT_LEVEL,#{bokSubject.dataSource} DATA_SOURCE,
+                   #{bokSubject.status} STATUS,#{bokSubject.remark} REMARK,#{bokSubject.errMsg} ERR_MSG,#{bokSubject.createUser} CREATE_USER,
+                   #{bokSubject.createDept} CREATE_DEPT,#{bokSubject.createTime} CREATE_TIME,#{bokSubject.updateUser} UPDATE_USER,#{bokSubject.updateTime} UPDATE_TIME
+            from
+            dual
         </foreach>
+            )TEMP
+        where not EXISTS (
+        select 1 from BOK_SUBJECT a where a.BOOKSET_ID = TEMP.BOOKSET_ID
+        AND a.SUBJECT_NO = TEMP.SUBJECT_NO
+        )
+        ) a;
+        update BOK_SUBJECT a,(
+        select * from
+        (  select TEMP.* from
+        (
+        <foreach collection="list" item="item" separator="union all">
+            SELECT #{item.booksetId} BOOKSET_ID,#{bokSubject.subjectNo} SUBJECT_NO,#{bokSubject.subjectName} SUBJECT_NAME,#{bokSubject.fsubjectId} FSUBJECT_ID,
+            #{bokSubject.subjectType} SUBJECT_TYPE,#{bokSubject.subjectLevel} SUBJECT_LEVEL,#{bokSubject.dataSource} DATA_SOURCE,
+            #{bokSubject.status} STATUS,#{bokSubject.remark} REMARK,#{bokSubject.errMsg} ERR_MSG,#{bokSubject.createUser} CREATE_USER,
+            #{bokSubject.createDept} CREATE_DEPT,#{bokSubject.createTime} CREATE_TIME,#{bokSubject.updateUser} UPDATE_USER,#{bokSubject.updateTime} UPDATE_TIME
+            from
+            dual
+        </foreach>
+        )TEMP
+
+        ) a
+        )b
+        set a.SUBJECT_NAME = b.SUBJECT_NAME,
+            a.FSUBJECT_ID = b.FSUBJECT_ID,
+            a.SUBJECT_TYPE = b.SUBJECT_TYPE,
+            a.SUBJECT_LEVEL = b.SUBJECT_LEVEL,
+            a.STATUS = b.STATUS,
+            a.REMARK = b.REMARK,
+            a.ERR_MSG = b.ERR_MSG,
+            a.UPDATE_USER = b.UPDATE_USER,
+            a.UPDATE_TIME = b.UPDATE_TIME
+        where a.BOOKSET_ID = b.BOOKSET_ID and a.SUBJECT_NO = b.SUBJECT_NO
     </insert>
     <update id="update">
         update BOK_SUBJECT
         <trim prefix="set" suffixOverrides=",">
-            <if test="subjectNo !=null and subjectNo !=''">
-                SUBJECT_NO = #{subjectNo},
-            </if>
+
             <if test="subjectName !=null and subjectName !=''">
                 SUBJECT_NAME = #{subjectName},
             </if>

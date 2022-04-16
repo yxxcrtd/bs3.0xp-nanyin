@@ -50,6 +50,7 @@ public class ChbMstBondCreditRateService extends CommonExportService<ChbMstBondC
         else if (OperationType.NEW.equals(type)) {
             entity.setDataSource(DictCodeListExt2.数据来源_新建导入.getValue());
             entity.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
+            entity.setErrMsg("");
             mstBondCreditRatingDao.insert(entity);
         }
         else if(OperationType.MODIFY.equals(type)){
@@ -376,7 +377,7 @@ public class ChbMstBondCreditRateService extends CommonExportService<ChbMstBondC
         List<Map<String, String>> mapList = dataMapAnalysis(fileName);
         int size = mapList.size();
         List<ExcelValidDto> checkResult = baseCommonCheckService.checkDataAll("D", mapList, tableName, fileName, tableName, tableName, null, null);
-        long count = mapList.stream().filter(ele -> ele.get("STATUS").equals("A")).count();
+        long count = mapList.stream().filter(ele ->null!= ele.get("STATUS")&&ele.get("STATUS").equals("A")).count();
         webResult.setMessage(this.getMessage("ChbImportMessage",mapList.size()-count,size-mapList.size(),count),MessageType.确认消息);
         //查数据库记录
         List<ChbMstBondCreditRatingDto> list = mstBondCreditRatingDao.selectValidRecords();
@@ -458,9 +459,8 @@ public class ChbMstBondCreditRateService extends CommonExportService<ChbMstBondC
             if (StringUtil.isNotEmpty(map.get("GRADE_DATE"))) {
                 mstBondCreditRatingDto.setGradeDate(DateUtil.parse(map.get("GRADE_DATE")));
             }
-            if (StringUtil.isNotEmpty(map.get("ERRMSG"))) {
-                mstBondCreditRatingDto.setErrMsg(map.get("ERRMSG"));
-            }
+
+            mstBondCreditRatingDto.setErrMsg(null !=map.get("ERRMSG")?map.get("ERRMSG"):"");
             mstBondCreditRatingDto.setCreateUser(CommonUtil.getUserName());
             mstBondCreditRatingDto.setCreateDept(CommonUtil.getDeptCode()==null?"":CommonUtil.getDeptCode());
             mstBondCreditRatingDto.setCreateTime(DateUtil.now());
@@ -468,7 +468,7 @@ public class ChbMstBondCreditRateService extends CommonExportService<ChbMstBondC
             mstBondCreditRatingDto.setUpdateTime(DateUtil.now());
 
             mstBondCreditRatingDto.setDataSource(DictCodeListExt2.数据来源_新建导入.getValue());
-            mstBondCreditRatingDto.setStatus(map.get("STATUS").equals("A")?DictCodeListExt1.维护数据状态_待处理.getValue():DictCodeListExt1.维护数据状态_有效.getValue());
+            mstBondCreditRatingDto.setStatus(null !=map.get("STATUS")&&map.get("STATUS").equals("A")?DictCodeListExt1.维护数据状态_待处理.getValue():DictCodeListExt1.维护数据状态_有效.getValue());
             returnInfoList.add(mstBondCreditRatingDto);
         }
         return returnInfoList;

@@ -143,6 +143,7 @@ public class ChbBokSubjectService extends CommonExportService<ChbBokSubjectDto> 
             entity.setDataSource(DictCodeListExt2.数据来源_新建导入.getValue());
             entity.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
             entity.setBooksetId("00000000000000000002");
+            entity.setErrMsg("");
             bokSubjectDao.insert(entity);
         }
         else if(OperationType.MODIFY.equals(type)){
@@ -495,7 +496,8 @@ public class ChbBokSubjectService extends CommonExportService<ChbBokSubjectDto> 
         List<Map<String, String>> mapList = dataMapAnalysis(fileName);
         int size = mapList.size();
         List<ExcelValidDto> checkResult = baseCommonCheckService.checkDataAll("D", mapList, tableName, fileName, tableName, tableName, null, null);
-        long count = mapList.stream().filter(ele -> ele.get("STATUS").equals("A")).count();
+
+        long count = mapList.stream().filter(ele ->null != ele.get("STATUS")&&ele.get("STATUS").equals("A")).count();
         webResult.setMessage(this.getMessage("ChbImportMessage",mapList.size()-count,size-mapList.size(),count),MessageType.确认消息);
         //查数据库记录
         List<ChbBokSubjectDto> list = bokSubjectDao.selectValidRecords();
@@ -564,13 +566,14 @@ public class ChbBokSubjectService extends CommonExportService<ChbBokSubjectDto> 
             if (StringUtil.isNotEmpty(map.get("ERRMSG"))) {
                 bokSubjectDto.setErrMsg(map.get("ERRMSG"));
             }
+            bokSubjectDto.setErrMsg(null!=map.get("ERRMSG")?map.get("ERRMSG"):"");
             bokSubjectDto.setCreateUser(CommonUtil.getUserName());
             bokSubjectDto.setCreateDept(CommonUtil.getDeptCode()==null?"":CommonUtil.getDeptCode());
             bokSubjectDto.setCreateTime(DateUtil.now());
             bokSubjectDto.setUpdateUser(CommonUtil.getUserName());
             bokSubjectDto.setUpdateTime(DateUtil.now());
             bokSubjectDto.setDataSource(DictCodeListExt2.数据来源_新建导入.getValue());
-            bokSubjectDto.setStatus(map.get("STATUS").equals("A")?DictCodeListExt1.维护数据状态_待处理.getValue():DictCodeListExt1.维护数据状态_有效.getValue());
+            bokSubjectDto.setStatus(null!=map.get("STATUS") && map.get("STATUS").equals("A")?DictCodeListExt1.维护数据状态_待处理.getValue():DictCodeListExt1.维护数据状态_有效.getValue());
             returnInfoList.add(bokSubjectDto);
 
         }

@@ -20,7 +20,7 @@
             <result property="source" column="SOURCE" jdbcType="VARCHAR"/>
             <result property="status" column="STATUS" jdbcType="VARCHAR"/>
 
-            <result property="errMsg" column="ERR_MSG" jdbcType="VARCHAR"/>
+            <result property="errMsg" column="ERR_MSG" />
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -33,138 +33,75 @@
         ERR_MSG
     </sql>
     <insert id="insert">
-        insert into MST_BOND_CREDIT_RATING
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="oCode !=null and oCode !=''">
-                O_CODE,
-            </if>
-            <if test="gradeOrgId !=null and gradeOrgId !=''">
-                GRADE_ORG_ID,
-            </if>
-            <if test="gradeDate !=null">
-                GRADE_DATE,
-            </if>
-            <if test="oType !=null and oType !=''">
-                O_TYPE,
-            </if>
-            <if test="shortLongTerm !=null and shortLongTerm !=''">
-                SHORT_LONG_TERM,
-            </if>
-            <if test="gradeResult !=null and gradeResult !=''">
-                GRADE_RESULT,
-            </if>
-            <if test="dataSource !=null and dataSource !=''">
-                DATA_SOURCE,
-            </if>
-            <if test="source !=null and source !=''">
-                SOURCE,
-            </if>
-            <if test="status !=null and status !=''">
-                STATUS,
-            </if>
-            <if test="errMsg !=null and errMsg !=''">
-                ERR_MSG,
-            </if>
-            <if test="createUser !=null and createUser !=''">
-                CREATE_USER,
-            </if>
-            <if test="createDept !=null and createDept !=''">
-                CREATE_DEPT,
-            </if>
-            <if test="createTime !=null">
-                CREATE_TIME,
-            </if>
-            <if test="updateUser !=null and updateUser !=''">
-                UPDATE_USER,
-            </if>
-            <if test="updateTime !=null">
-                UPDATE_TIME
-            </if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="oCode !=null and oCode !=''">
-                #{oCode},
-            </if>
-            <if test="gradeOrgId !=null and gradeOrgId !=''">
-                #{gradeOrgId},
-            </if>
-            <if test="gradeDate !=null">
-               #{gradeDate},
-            </if>
-            <if test="oType !=null and oType !=''">
-                #{oType},
-            </if>
-            <if test="shortLongTerm !=null and shortLongTerm !=''">
-                #{shortLongTerm},
-            </if>
-            <if test="gradeResult !=null and gradeResult !=''">
-                #{gradeResult},
-            </if>
-            <if test="dataSource !=null and dataSource !=''">
-                #{dataSource},
-            </if>
-            <if test="source !=null and source !=''">
-                #{source},
-            </if>
-            <if test="status !=null and status !=''">
-                #{status},
-            </if>
-            <if test="errMsg !=null and errMsg !=''">
-                #{errMsg},
-            </if>
-            <if test="createUser !=null and createUser !=''">
-                #{createUser},
-            </if>
-            <if test="createDept !=null and createDept !=''">
-                #{createDept},
-            </if>
-            <if test="createTime !=null">
-                #{createTime},
-            </if>
-            <if test="updateUser !=null and updateUser !=''">
-                #{updateUser},
-            </if>
-            <if test="updateTime !=null">
-                #{updateTime},
-            </if>
-        </trim>
+        MERGE  INTO MST_BOND_CREDIT_RATING a USING (
+            SELECT
+                #{oCode} O_CODE,
+                #{gradeOrgId} GRADE_ORG_ID,
+                #{gradeDate} GRADE_DATE,
+                #{oType} O_TYPE,
+                #{shortLongTerm} SHORT_LONG_TERM,
+                #{gradeResult} GRADE_RESULT,
+                #{dataSource} DATA_SOURCE,
+                #{source} SOURCE,
+                #{status} STATUS,
+                NVL(#{errMsg},'') ERR_MSG,
+                #{createUser} CREATE_USER,
+                #{createDept} CREATE_DEPT,
+                #{createTime} CREATE_TIME,
+                #{updateUser} UPDATE_USER,
+                #{updateTime} UPDATE_TIME
+            FROM  DUAL
+        ) b
+         ON (a.O_CODE = b.O_CODE AND a.GRADE_ORG_ID = b.GRADE_ORG_ID AND a.GRADE_DATE = b.GRADE_DATE AND a.O_TYPE = b.O_TYPE)
+            WHEN MATCHED THEN
+             UPDATE SET
+                 a.SHORT_LONG_TERM = b.SHORT_LONG_TERM,
+                 a.GRADE_RESULT = b.GRADE_RESULT,
+                 a.SOURCE = b.SOURCE,
+                 a.STATUS = b.STATUS,
+                 a.ERR_MSG = b.ERR_MSG,
+                 a.UPDATE_USER = b.UPDATE_USER,
+                 a.UPDATE_TIME = b.UPDATE_TIME
+            WHEN NOT MATCHED THEN
+            INSERT ( O_CODE,GRADE_ORG_ID, GRADE_DATE,O_TYPE,SHORT_LONG_TERM,GRADE_RESULT,DATA_SOURCE,SOURCE,STATUS,ERR_MSG, CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+            VALUES (b.O_CODE,b.GRADE_ORG_ID,b.GRADE_DATE,b.O_TYPE,b.SHORT_LONG_TERM,b.GRADE_RESULT,b.DATA_SOURCE,b.SOURCE,b.STATUS,b.ERR_MSG, b.CREATE_USER,b.CREATE_DEPT,b.CREATE_TIME,b.UPDATE_USER,b.UPDATE_TIME)
     </insert>
     <insert id="batchInsert" parameterType="java.util.List">
-        insert into MST_BOND_CREDIT_RATING (
-                O_CODE,
-                GRADE_ORG_ID,
-                GRADE_DATE,
-                O_TYPE,
-                SHORT_LONG_TERM,
-                GRADE_RESULT,
-                DATA_SOURCE,
-                SOURCE,
-                STATUS,
-                ERR_MSG,
-                CREATE_USER,
-                CREATE_DEPT,
-                CREATE_TIME,
-                UPDATE_USER,
-                UPDATE_TIME )
-        <foreach collection="list" separator="union all" item="item">
-            (select
-                #{item.oCode},
-                #{item.gradeOrgId},
-                #{item.gradeDate},
-                #{item.oType},
-                #{item.shortLongTerm},
-                #{item.gradeResult},
-                #{item.dataSource},
-                #{item.source},
-                #{item.status},
-                #{item.errMsg},
-                #{item.createUser},
-                #{item.createDept},
-                #{item.createTime},
-                #{item.updateUser},
-                #{item.updateTime}
-            from dual)
+        MERGE INTO MST_BOND_CREDIT_RATING a USING (
+        <foreach collection="list" item="item" open="select * from("
+                 close=")" separator="union all">
+            SELECT
+                #{item.oCode} O_CODE,
+                #{item.gradeOrgId} GRADE_ORG_ID,
+                #{item.gradeDate} GRADE_DATE,
+                #{item.oType} O_TYPE,
+                #{item.shortLongTerm} SHORT_LONG_TERM,
+                #{item.gradeResult} GRADE_RESULT,
+                #{item.dataSource} DATA_SOURCE,
+                #{item.source} SOURCE,
+                #{item.status} STATUS,
+                #{item.errMsg} ERR_MSG,
+                #{item.createUser} CREATE_USER,
+                #{item.createDept} CREATE_DEPT,
+                #{item.createTime} CREATE_TIME,
+                #{item.updateUser} UPDATE_USER,
+                #{item.updateTime} UPDATE_TIME
+            FROM  DUAL
         </foreach>
+        ) b
+            ON (a.O_CODE = b.O_CODE AND a.GRADE_ORG_ID = b.GRADE_ORG_ID AND a.GRADE_DATE = b.GRADE_DATE AND a.O_TYPE = b.O_TYPE)
+            WHEN MATCHED THEN
+                UPDATE SET
+                    a.SHORT_LONG_TERM = b.SHORT_LONG_TERM,
+                    a.GRADE_RESULT = b.GRADE_RESULT,
+                    a.SOURCE = b.SOURCE,
+                    a.STATUS = b.STATUS,
+                    a.ERR_MSG = b.ERR_MSG,
+                    a.UPDATE_USER = b.UPDATE_USER,
+                    a.UPDATE_TIME = b.UPDATE_TIME
+            WHEN NOT MATCHED THEN
+            INSERT ( O_CODE,GRADE_ORG_ID, GRADE_DATE,O_TYPE,SHORT_LONG_TERM,GRADE_RESULT,DATA_SOURCE,SOURCE,STATUS,ERR_MSG, CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+            VALUES (b.O_CODE,b.GRADE_ORG_ID,b.GRADE_DATE,b.O_TYPE,b.SHORT_LONG_TERM,b.GRADE_RESULT,b.DATA_SOURCE,b.SOURCE,b.STATUS,b.ERR_MSG, b.CREATE_USER,b.CREATE_DEPT,b.CREATE_TIME,b.UPDATE_USER,b.UPDATE_TIME)
     </insert>
     <update id="update">
         update MST_BOND_CREDIT_RATING
