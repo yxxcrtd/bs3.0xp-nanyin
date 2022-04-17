@@ -5,6 +5,7 @@
         $("#oType").attr("disabled","disabled");
         $("#source").attr("disabled","disabled");
         $("#gradeDate").attr("disabled","disabled");
+        $("#gradeOrgId").attr("disabled","disabled");
     }
     function saveOrSubmit(operateType) {
         var object = $.serializeToObject('#submitForm');

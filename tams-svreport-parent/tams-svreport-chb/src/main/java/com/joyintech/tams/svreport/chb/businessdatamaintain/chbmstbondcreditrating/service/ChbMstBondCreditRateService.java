@@ -10,6 +10,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
+import com.joyintech.tams.common.svreport.base.service.BatchInsertUtil;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbmstbondcreditrating.dao.ChbMstBondCreditRatingDao;
@@ -24,7 +25,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -381,7 +384,7 @@ public class ChbMstBondCreditRateService extends CommonExportService<ChbMstBondC
         webResult.setMessage(this.getMessage("ChbImportMessage",mapList.size()-count,size-mapList.size(),count),MessageType.确认消息);
         //查数据库记录
         int duplicate = 0;
-        if(CollectionUtils.isEmpty(mapList)){
+        if(!CollectionUtils.isEmpty(mapList)){
             duplicate = mstBondCreditRatingDao.selectValidRecords(mapList);
         }
         List<JoyinMessage> joyinMessages = new ArrayList<>();
@@ -470,6 +473,35 @@ public class ChbMstBondCreditRateService extends CommonExportService<ChbMstBondC
         List<ExcelValidDto> checkResult = baseCommonCheckService.checkDataAll("D", list, tableName, fileName, tableName, tableName, null, null);
         if(!CollectionUtils.isEmpty(list)) {
             List<ChbMstBondCreditRatingDto> chbMstBondCreditRatingDtos = converToBean(list);
+            // mysql load data
+       /*     StringBuilder sb = new StringBuilder();
+            BatchInsertUtil batchInsertUtil = new BatchInsertUtil();
+            for (ChbMstBondCreditRatingDto dto : chbMstBondCreditRatingDtos) {
+                batchInsertUtil.builderAppend(sb,dto.getoCode());
+                batchInsertUtil.builderAppend(sb,dto.getGradeOrgId());
+                batchInsertUtil.builderAppend(sb,DateUtil.format(dto.getGradeDate()));
+                batchInsertUtil.builderAppend(sb,dto.getoType());
+                batchInsertUtil.builderAppend(sb,dto.getShortLongTerm());
+                batchInsertUtil.builderAppend(sb,null==dto.getGradeResult()?"":dto.getGradeResult());
+                batchInsertUtil.builderAppend(sb,"");
+                batchInsertUtil.builderAppend(sb,dto.getCreateUser());
+                batchInsertUtil.builderAppend(sb,dto.getCreateDept());
+                batchInsertUtil.builderAppend(sb,DateUtil.format(dto.getCreateTime()));
+                batchInsertUtil.builderAppend(sb,dto.getUpdateUser());
+                batchInsertUtil.builderAppend(sb,DateUtil.format(dto.getUpdateTime()));
+                batchInsertUtil.builderAppend(sb,"");
+                batchInsertUtil.builderAppend(sb,"");
+                batchInsertUtil.builderAppend(sb,"");
+                batchInsertUtil.builderAppend(sb,"");
+                batchInsertUtil.builderAppend(sb,"");
+                batchInsertUtil.builderAppend(sb,dto.getSource());
+                batchInsertUtil.builderAppend(sb,dto.getDataSource());
+                batchInsertUtil.builderAppend(sb,dto.getStatus());
+                batchInsertUtil.builderEnd(sb,dto.getErrMsg());
+            }
+            byte[] bytes = sb.toString().getBytes();
+            InputStream in = new ByteArrayInputStream(bytes);
+            batchInsertUtil.bulkLoadFromInputStream("cvr_306_mysql_test",tableName,in);*/
             mstBondCreditRatingDao.batchInsert(chbMstBondCreditRatingDtos);
         }
         return checkResult.stream().filter(ele ->null != ele.getValidKey() && ele.getValidKey().equals("YW")).collect(Collectors.toList());

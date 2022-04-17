@@ -10,6 +10,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
+import com.joyintech.tams.common.svreport.base.service.BatchInsertUtil;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.util.ReportGlobalConstant;
@@ -26,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.text.ParseException;
 import java.util.*;
@@ -533,6 +535,40 @@ public class ChbBokSubjectService extends CommonExportService<ChbBokSubjectDto> 
         List<ExcelValidDto> checkResult = baseCommonCheckService.checkDataAll("D", list, tableName, fileName, tableName, tableName, null, null);
         if(!CollectionUtils.isEmpty(list)){
             List<ChbBokSubjectDto> chbBokSubjectDtoDtos = converToBean(list);
+            // mysql load data
+           /* StringBuilder sb = new StringBuilder();
+            BatchInsertUtil batchInsertUtil = new BatchInsertUtil();
+            for (ChbBokSubjectDto dto : chbBokSubjectDtoDtos) {
+                batchInsertUtil.builderAppend(sb,"00000000000000000002");
+                batchInsertUtil.builderAppend(sb,dto.getSubjectNo());
+                batchInsertUtil.builderAppend(sb,dto.getSubjectName());
+                batchInsertUtil.builderAppend(sb,dto.getFsubjectId());
+                batchInsertUtil.builderAppend(sb,"");
+                batchInsertUtil.builderAppend(sb,dto.getSubjectType());
+                batchInsertUtil.builderAppend(sb,dto.getSubjectLevel());
+                batchInsertUtil.builderAppend(sb,"");
+                batchInsertUtil.builderAppend(sb,"");
+                batchInsertUtil.builderAppend(sb,"");
+                batchInsertUtil.builderAppend(sb,"");
+                batchInsertUtil.builderAppend(sb,"");
+                batchInsertUtil.builderAppend(sb,"");
+                batchInsertUtil.builderAppend(sb,"");
+                batchInsertUtil.builderAppend(sb,dto.getCreateUser());
+                batchInsertUtil.builderAppend(sb,dto.getCreateDept());
+                batchInsertUtil.builderAppend(sb,DateUtil.format(dto.getCreateTime()));
+                batchInsertUtil.builderAppend(sb,dto.getUpdateUser());
+                batchInsertUtil.builderAppend(sb,DateUtil.format(dto.getUpdateTime()));
+                batchInsertUtil.builderAppend(sb,"");
+                batchInsertUtil.builderAppend(sb,"");
+                batchInsertUtil.builderAppend(sb,"");
+                batchInsertUtil.builderAppend(sb,dto.getDataSource());
+                batchInsertUtil.builderAppend(sb,dto.getStatus());
+                batchInsertUtil.builderAppend(sb,dto.getRemark());
+                batchInsertUtil.builderEnd(sb,dto.getErrMsg());
+            }
+            byte[] bytes = sb.toString().getBytes();
+            ByteArrayInputStream in = new ByteArrayInputStream(bytes);
+            batchInsertUtil.bulkLoadFromInputStream("cvr_306_mysql_test",tableName,in);*/
             bokSubjectDao.batchInsert(chbBokSubjectDtoDtos);
         }
         return checkResult.stream().filter(ele ->null != ele.getValidKey()&&ele.getValidKey().equals("YW")).collect(Collectors.toList());

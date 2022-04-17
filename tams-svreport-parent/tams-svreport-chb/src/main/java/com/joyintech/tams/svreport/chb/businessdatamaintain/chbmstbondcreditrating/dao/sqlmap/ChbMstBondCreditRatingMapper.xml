@@ -18,7 +18,7 @@
             <result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP"/>
             <result property="dataSource" column="DATA_SOURCE" jdbcType="VARCHAR"/>
             <result property="source" column="SOURCE" jdbcType="VARCHAR"/>
-            <result property="status" column="STATUS" jdbcType="VARCHAR"/>
+            <result property="statusValid" column="STATUS" jdbcType="VARCHAR"/>
 
             <result property="errMsg" column="ERR_MSG" />
     </resultMap>
@@ -214,8 +214,8 @@
         select count(*) from MST_BOND_CREDIT_RATING  where
        (O_CODE,GRADE_ORG_ID,GRADE_DATE,O_TYPE) in
         <foreach collection="list" item="item" separator="," open="(" close=")">
-        (#{item.O_CODE},#{item.GRADE_ORG_ID},#{item.GRADE_DATE},#{item.O_TYPE})
+        (#{item.O_CODE},#{item.GRADE_ORG_ID},to_date(#{item.GRADE_DATE},'yyyy-MM-dd'),#{item.O_TYPE})
         </foreach>
-        and STATUS in ("A","E")
+        and STATUS in ('A','E')
     </select>
 </mapper>

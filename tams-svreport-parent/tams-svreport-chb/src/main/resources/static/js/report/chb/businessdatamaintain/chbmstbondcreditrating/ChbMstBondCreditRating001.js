@@ -36,7 +36,7 @@ $(function() {
             ,{field:'gradeResultStr',sortable:false,width:100,title: 'ChbMstBondCreditRating001.gradeResult'}
             ,{field:'sourceStr', sortable:false, width:100,title: 'ChbMstBondCreditRating001.source'}
             ,{field:'gradeDateStr', sortable:false, width:100,title: 'ChbMstBondCreditRating001.gradeDate'}
-            ,{field:'statusStr', sortable:false, width:100, title: 'ChbMstBondCreditRating001.status'}
+            ,{field:'statusValidStr', sortable:false, width:100, title: 'ChbMstBondCreditRating001.status'}
             ,{field:'errMsg',sortable:false,   width:150,title: 'ChbMstBondCreditRating001.errMsg'}
             ,{field:'updateTimeStr',sortable:false,width:100, title: 'ChbMstBondCreditRating001.updateTime'}
             ,{field:'updateUser', sortable:false,width:100,title: 'ChbMstBondCreditRating001.updateUser'}

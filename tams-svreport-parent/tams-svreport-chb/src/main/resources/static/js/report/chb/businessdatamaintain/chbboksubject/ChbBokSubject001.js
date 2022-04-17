@@ -30,7 +30,7 @@
 		    ,{field:'subjectTypeStr', width:120, sortField:"subjectType", title: 'ChbBokSubject.subjectType'}
 		    ,{field:'subjectLevelStr', width:100, title: 'ChbBokSubject.subjectLevel'}
 		    ,{field:'dataSourceStr', width:100, title: 'ChbBokSubject.dataSource'}
-		    ,{field:'statusStr', width:100, title: 'ChbBokSubject.status'}
+		    ,{field:'statusValidStr', width:100, title: 'ChbBokSubject.status'}
 		    ,{field:'remark', width:150, title: 'ChbBokSubject.remark'}
 		    ,{field:'errMsg', width:150, title: 'ChbBokSubject.errMsg'}
 		    ,{field:'updateTimeStr', width:100, title: 'ChbBokSubject.updateTime'}

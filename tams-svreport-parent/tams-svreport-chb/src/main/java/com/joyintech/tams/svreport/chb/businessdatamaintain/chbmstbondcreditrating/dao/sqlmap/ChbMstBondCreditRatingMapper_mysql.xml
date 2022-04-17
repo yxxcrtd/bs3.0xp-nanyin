@@ -13,12 +13,12 @@
         <result property="gradeResult" column="GRADE_RESULT" jdbcType="VARCHAR"/>
         <result property="createUser" column="CREATE_USER" jdbcType="VARCHAR"/>
         <result property="createDept" column="CREATE_DEPT" />
-        <result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP"/>
+        <result property="createTime" column="CREATE_TIME" />
         <result property="updateUser" column="UPDATE_USER" jdbcType="VARCHAR"/>
-        <result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="UPDATE_TIME" />
         <result property="dataSource" column="DATA_SOURCE" jdbcType="VARCHAR"/>
         <result property="source" column="SOURCE" jdbcType="VARCHAR"/>
-        <result property="status" column="STATUS" jdbcType="VARCHAR"/>
+        <result property="statusValid" column="STATUS" jdbcType="VARCHAR"/>
 
         <result property="errMsg" column="ERR_MSG" jdbcType="VARCHAR"/>
     </resultMap>
@@ -82,7 +82,6 @@
         select * from (
         select TEMP.* from
         (
-            SELECT
             SELECT
             #{oCode} O_CODE,
             #{gradeOrgId} GRADE_ORG_ID,
@@ -319,6 +318,6 @@
         <foreach collection="list" item="item" separator="," open="(" close=")">
             (#{item.O_CODE},#{item.GRADE_ORG_ID},#{item.GRADE_DATE},#{item.O_TYPE})
         </foreach>
-        and STATUS in ("A","E")
+        and STATUS in ('A','E')
     </select>
 </mapper>

@@ -5,11 +5,15 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.util.DateUtil;
 
+import com.joyintech.framework.util.SpringContextUtil;
+import com.joyintech.tams.common.svreport.base.dao.BaseCheckMysqlMapper;
+import com.joyintech.tams.common.svreport.base.dto.BaseCheckMysqlDto;
 import com.joyintech.tams.report.framework.thread.JoyinThreadPoolExecutor;
 import com.joyintech.tams.report.interf.common.imp.ImportGenerator;
 import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpColumn;
 import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -33,6 +37,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 /**
  * @author zcw
@@ -43,7 +48,7 @@ public class BatchInsertUtil {
     /**
      * logger
      */
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private static Logger logger = LoggerFactory.getLogger(BatchInsertUtil.class);
 
     /**
      * 上游接口解析读取文件处理最大线程数
@@ -72,14 +77,14 @@ public class BatchInsertUtil {
 
 
     private Connection conn = null;
-    @Value("${spring.datasource.driverClassName}")
-    private String driverName;
-    @Value("${spring.datasource.url}")
-    private String url;
-    @Value("${spring.datasource.username}")
-    private String userName;
-    @Value("${spring.datasource.password}")
-    private String password;
+//    @Value("${spring.datasource.driverClassName}")
+    private String driverName = "com.mysql.jdbc.Driver";
+//    @Value("${spring.datasource.url}")
+    private String url = "jdbc:mysql://192.168.60.43:3306/cvr_306_mysql_test?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false";
+//    @Value("${spring.datasource.username}")
+    private String userName = "wzc";
+//    @Value("${spring.datasource.password}")
+    private String password ="wzc";
     private String database ="gd_test";
 
     /**
@@ -215,7 +220,7 @@ public class BatchInsertUtil {
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    private Connection getConnection() throws SQLException, ClassNotFoundException {
+    private  Connection getConnection() throws SQLException, ClassNotFoundException {
         Class.forName(driverName);
         conn = DriverManager.getConnection(url, userName, password);
         return conn;
@@ -226,10 +231,11 @@ public class BatchInsertUtil {
      *
      * @param dataBaseName 数据库名。
      * @param tableName    表名。
-     * @param columnName   要插入数据的列名。
      */
-    public String assembleSql(String dataBaseName, String tableName, List<String> columnName) {
-        String insertColumnName = StringUtils.join(columnName, ",");
+    public String assembleSql(String dataBaseName, String tableName) {
+        BaseCheckMysqlMapper baseCheckMysqlMapper = SpringContextUtil.getBean(BaseCheckMysqlMapper.class);
+        List<String> columnList = baseCheckMysqlMapper.select(tableName).stream().map(ele -> ele.getColumnName()).collect(Collectors.toList());
+        String insertColumnName = StringUtils.join(columnList, ",");
         //插入方案的核心就是下面这个语句
         String sql = "LOAD DATA LOCAL INFILE 'sql.csv' IGNORE INTO TABLE " + dataBaseName + "." + tableName + " (" + insertColumnName + ")";
         return sql;
@@ -240,28 +246,28 @@ public class BatchInsertUtil {
     /**
      * 将数据从输入流加载到MySQL。
      *
-     * @param loadDataSql SQL语句。
      * @param dataStream  输入流。
      * @return int         成功插入的行数。
      */
-    private int bulkLoadFromInputStream(String loadDataSql,
-                                        InputStream dataStream) throws SQLException, ClassNotFoundException {
+    public int bulkLoadFromInputStream(String dataBaseName, String tableName,
+                                        InputStream dataStream) throws SQLException, ClassNotFoundException, IOException {
         if (null == dataStream) {
             logger.info("输入流为NULL，没有数据导入。");
             return 0;
         }
+        String assembleSql = assembleSql(dataBaseName, tableName);
         //做测试发现连接池好像不支持，所以获取原生的jdbc连接
         conn = getConnection();
         PreparedStatement statement = null;
         int result = 0;
         try {
-            statement = conn.prepareStatement(loadDataSql);
+            statement = conn.prepareStatement(assembleSql);
 //            mysql8  使用下面的方式
-        /*if (statement.isWrapperFor(com.mysql.cj.jdbc.JdbcStatement.class)) {
-            com.mysql.cj.jdbc.ClientPreparedStatement mysqlStatement = statement.unwrap(com.mysql.cj.jdbc.ClientPreparedStatement.class);
-            mysqlStatement.setLocalInfileInputStream(dataStream);
-            mysqlStatement.executeUpdate();
-        }*/
+//        if (statement.isWrapperFor(JdbcStatement.class)) {
+//            ClientPreparedStatement mysqlStatement = statement.unwrap(ClientPreparedStatement.class);
+//            mysqlStatement.setLocalInfileInputStream(dataStream);
+//            mysqlStatement.executeUpdate();
+//        }
 //        mysql5 使用下面的方式
             if (statement.isWrapperFor(com.mysql.jdbc.Statement.class)) {
                 com.mysql.jdbc.PreparedStatement mysqlStatement = statement.unwrap(com.mysql.jdbc.PreparedStatement.class);
@@ -269,8 +275,14 @@ public class BatchInsertUtil {
                 result = mysqlStatement.executeUpdate();
             }
         } finally {
-            if (statement != null) {
+            if (null != statement) {
                 statement.close();
+            }
+            if(null !=dataStream){
+                dataStream.close();
+            }
+            if(null !=conn){
+                conn.close();
             }
         }
         return result;
@@ -281,7 +293,7 @@ public class BatchInsertUtil {
      * @param builder StringBuilder。
      * @param object  数据。
      */
-    public void builderAppend(StringBuilder builder, Object object) {
+    public  void builderAppend(StringBuilder builder, Object object) {
         builder.append(object);
         builder.append("\t");
     }
@@ -292,49 +304,10 @@ public class BatchInsertUtil {
      * @param builder StringBuilder。
      * @param object  数据。
      */
-    public void builderEnd(StringBuilder builder, Object object) {
+    public  void builderEnd(StringBuilder builder, Object object) {
         builder.append(object);
         builder.append("\n");
     }
 
-    public int execLoadFromInputStream(List<Map<String ,String>> list,String tableName){
-        if(CollectionUtils.isEmpty(list)){
-            return 0;
-        }
-        List<String> columns = new ArrayList<>();
-        Set<String> keySet = list.get(0).keySet();
-        for(String s:keySet){
-            columns.add(s);
-        }
-
-        int size = keySet.size();
-        String sql = assembleSql(database,tableName,columns);
-        StringBuilder sb = new StringBuilder();
-        list.forEach(ele->{
-            Set<String> keys = ele.keySet();
-            int i=1;
-            for (String key : keys) {
-                if(i==size){
-                    builderEnd(sb,ele.get(key));
-                }else{
-                    builderAppend(sb,ele.get(key));
-                }
-                i++;
-            }
-
-        });
-        byte[] bytes = sb.toString().getBytes();
-        InputStream in = new ByteArrayInputStream(bytes);
-        int result =0;
-        try {
-            result = bulkLoadFromInputStream(sql, in);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        return result;
-    }
 
 }

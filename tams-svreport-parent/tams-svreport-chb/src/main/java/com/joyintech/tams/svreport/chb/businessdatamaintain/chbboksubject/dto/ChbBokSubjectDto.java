@@ -1,5 +1,7 @@
 package com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dto;
 
+import com.joyintech.background.component.common.pack.common.util.StringUtil;
+import com.joyintech.component.svrreport.chb.contant.DictCodeList;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.validation.annotation.Length;
 import com.joyintech.framework.validation.annotation.NotEmpty;
@@ -61,6 +63,32 @@ public class ChbBokSubjectDto extends BokSubject implements ProcessEntity {
      * 目的和意义以及可能会用到的地方
      */
     private String pageModel;
+    /**
+     * 有效状态
+     */
+    private String statusValid;
+
+    // updateFlg 02 不展示  01 显示
+    public String getUpdateFlg() {
+        if(!StringUtil.isEmpty(statusValid) && StringUtil.equals(DictCodeList.维护数据状态_删除.getValue(), statusValid)){
+            return "02";
+        }else{
+            return "01";
+        }
+    }
+
+    public String getStatusValidStr() {
+        return com.joyintech.framework.util.SysDataUtil.getNameFromDataDict(DictCode.维护数据状态,
+                getStatusValid());
+    }
+
+    public String getStatusValid() {
+        return statusValid;
+    }
+
+    public void setStatusValid(String statusValid) {
+        this.statusValid = statusValid;
+    }
 
     private static final long serialVersionUID = 1L;
     @PrimaryKey(Field.PK_1)
