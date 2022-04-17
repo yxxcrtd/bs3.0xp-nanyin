@@ -121,4 +121,20 @@
             SUMIT_SEQ = #{registNo,  jdbcType=VARCHAR}
     </update>
 
+    <select id="querySubDataStatusBySumitSeq" resultType="com.joyintech.component.svrreport.chb.dto.ChbSubmitStatusDto">
+        SELECT
+        STATUS status,
+        SEND_STATUS sendStatus,
+        SUBMIT_FEEDBACK_STATUS submitFeedbackStatus
+        FROM
+        ${tableName}
+        WHERE
+        <foreach collection="registNo" item = "item" index="index" open=" SUMIT_SEQ in(" separator="," close=")">
+            <if test="(index % 999) == 998">
+                null) OR SUMIT_SEQ in (
+            </if>
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+
 </mapper>
