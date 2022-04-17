@@ -185,9 +185,9 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
         //总数据
         int count = mapList.size();
         //待处理数据
-        long countA = mapList.stream().filter(ele -> Objects.equals("A", ele.get("STATUS"))).count();
-        //问题数据
-        int countR = excelValidList.size();
+        long countA = mapList.stream().filter(e -> Objects.equals("A", e.get("STATUS"))).count();
+        //无法接入系统的数据
+        long countR = excelValidList.stream().filter(e -> Objects.equals("0未导入", e.getValidKey())).count();
         webResult.setMessage(this.getMessage("ChbImportMessage", count - countA, countR, countA), MessageType.确认消息);
         //按500条分页
         List<List<Map<String, String>>> partitionList = Lists.partition(mapList, PAGE_SIZE);
@@ -262,23 +262,23 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
             }
             if (map.containsKey("OPEN_PRICE")) {
                 String openPrice = map.get("OPEN_PRICE");
-                dto.setOpenPrice(StringUtil.isBlank(openPrice) == true ? null : new BigDecimal(openPrice));
+                dto.setOpenPrice(StringUtil.isBlank(openPrice) ? null : new BigDecimal(openPrice));
             }
             if (map.containsKey("CLOSE_PRICE")) {
                 String closePrice = map.get("CLOSE_PRICE");
-                dto.setClosePrice(StringUtil.isBlank(closePrice) == true ? null : new BigDecimal(closePrice));
+                dto.setClosePrice(StringUtil.isBlank(closePrice) ? null: new BigDecimal(closePrice));
             }
             if (map.containsKey("MID_PRICE")) {
                 String midPrice = map.get("MID_PRICE");
-                dto.setMidPrice(StringUtil.isBlank(midPrice) == true ? null : new BigDecimal(midPrice));
+                dto.setMidPrice(StringUtil.isBlank(midPrice)? null : new BigDecimal(midPrice));
             }
             if (map.containsKey("HIGH_PRICE")) {
                 String highPrice = map.get("HIGH_PRICE");
-                dto.setHighPrice(StringUtil.isBlank(highPrice) == true ? null : new BigDecimal(highPrice));
+                dto.setHighPrice(StringUtil.isBlank(highPrice)? null : new BigDecimal(highPrice));
             }
             if (map.containsKey("LOW_PRICE")) {
                 String lowPrice = map.get("LOW_PRICE");
-                dto.setLowPrice(StringUtil.isBlank(lowPrice) == true ? null : new BigDecimal(lowPrice));
+                dto.setLowPrice(StringUtil.isBlank(lowPrice)? null : new BigDecimal(lowPrice));
             }
             if (map.containsKey("QUOT_UNIT")) {
                 dto.setQuotUnit(Long.parseLong(map.get("QUOT_UNIT")));

@@ -32,15 +32,15 @@
                 title: '数据状态', field: 'statusStr', width: 100
             },
             {
-                title: '日期', field: 'cdate', type: 'date'
+                title: '日期', field: 'cdate', type: 'date',width: 150
             }, {
-                title: '市场日历类型', field: 'calendarName'
+                title: '市场日历类型', field: 'calendarName',width: 200
             }, {
                 title: '是否节假日', field: 'isHolidayStr', width: 100
             }, {
-                title: '错误信息', field: 'errMsg', width: 250, sortable: false
+                title: '错误信息', field: 'errMsg', width: 480, sortable: false
             }, {
-                title: '更新时间', field: 'updateTimeStr'
+                title: '更新时间', field: 'updateTimeStr', width: 200
             }, {
                 title: '更新人', field: 'updateUser', width: 100, sortable: false
             }, {

@@ -161,8 +161,8 @@ public class ChbCalendarInfo001Service extends CommonExportService<ChbCalendarIn
         int count = mapList.size();
         //待处理数据
         long countA = mapList.stream().filter(ele -> Objects.equals("A", ele.get("STATUS"))).count();
-        //问题数据
-        int countR = excelValidList.size();
+        //无法接入系统的数据
+        long countR = excelValidList.stream().filter(e -> Objects.equals("0未导入", e.getValidKey())).count();
         webResult.setMessage(this.getMessage("ChbImportMessage", count - countA, countR, countA), MessageType.确认消息);
         //按500条分页
         List<List<Map<String, String>>> partitionList = Lists.partition(mapList, PAGE_SIZE);

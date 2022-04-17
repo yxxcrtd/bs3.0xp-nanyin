@@ -84,34 +84,25 @@
 
     <!-- 将Excel表格数据加入数据库 -->
     <insert id="insertBatchMstHoliday" parameterType="list">
-        MERGE INTO MST_HOLIDAY T using (
+        MERGE INTO MST_HOLIDAY T USING (
         <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
                  close="from dual)">
             #{item.calendarId,jdbcType=VARCHAR} calendarId,
             #{item.cdate,jdbcType=DATE} cdate,
             #{item.dataSource,jdbcType=VARCHAR} dataSource,
             #{item.status,jdbcType=VARCHAR} status,
-            <if test="item.isHoliday != null">
-                #{item.isHoliday,jdbcType=INTEGER} isHoliday,
-            </if>
-            <if test="item.isHoliday == null">
-                null isHoliday,
-            </if>
+            #{item.isHoliday,jdbcType=INTEGER} isHoliday,
             #{item.createUser,jdbcType=VARCHAR} createUser,
             #{item.createDept,jdbcType=VARCHAR} createDept,
             #{item.createTime,jdbcType=TIMESTAMP} createTime,
             #{item.updateUser,jdbcType=VARCHAR} updateUser,
             #{item.updateTime,jdbcType=TIMESTAMP} updateTime,
-            <if test="item.errMsg != null and ! item.errMsg.equals('')">
-                #{item.errMsg,jdbcType=CLOB} errMsg
-            </if>
-            <if test="item.errMsg == null or item.errMsg.equals('')">
-                null errMsg
-            </if>
+            #{item.errMsg,jdbcType=VARCHAR} errMsg
         </foreach>
-        ) datas on (T.CALENDAR_ID = datas.calendarId and T.CDATE = datas.cdate)
+        ) datas ON (T.CALENDAR_ID = datas.calendarId and T.CDATE = datas.cdate)
         WHEN MATCHED THEN
-        UPDATE set T.UPDATE_TIME = SYSDATE
+        UPDATE SET T.IS_HOLIDAY = datas.isHoliday,T.ERR_MSG = datas.errMsg,
+        T.UPDATE_USER = datas.updateUser,T.STATUS = datas.status,T.UPDATE_TIME = SYSDATE
         WHEN NOT MATCHED THEN
         INSERT (
         CALENDAR_ID,
@@ -160,7 +151,7 @@
                         when cdate=#{item.cdate,jdbcType=DATE} and calendar_id
                         =
                         #{item.calendarId,jdbcType=VARCHAR} then
-                        #{item.errMsg,jdbcType=CLOB}
+                        #{item.errMsg,jdbcType=VARCHAR}
                     </if>
                 </foreach>
             </trim>

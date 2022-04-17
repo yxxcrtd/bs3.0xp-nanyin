@@ -83,11 +83,36 @@
             #{item.exchargeCode,jdbcType=VARCHAR} EXCHARGE_CODE,
             #{item.tradeDate,jdbcType=DATE} TRADE_DATE,
             #{item.datasourceType,jdbcType=VARCHAR} DATASOURCE_TYPE,
-            #{item.openPrice,jdbcType=DECIMAL} OPEN_PRICE,
-            #{item.closePrice,jdbcType=DECIMAL} CLOSE_PRICE,
-            #{item.highPrice,jdbcType=DECIMAL} HIGH_PRICE,
-            #{item.lowPrice,jdbcType=DECIMAL} LOW_PRICE,
-            #{item.midPrice,jdbcType=DECIMAL} MID_PRICE,
+            <if test="item.openPrice != null">
+                #{item.openPrice,jdbcType=DECIMAL} OPEN_PRICE,
+            </if>
+            <if test="item.openPrice == null">
+                null OPEN_PRICE,
+            </if>
+            <if test="item.closePrice != null">
+                #{item.closePrice,jdbcType=DECIMAL} CLOSE_PRICE,
+            </if>
+            <if test="item.closePrice == null">
+                null CLOSE_PRICE,
+            </if>
+            <if test="item.highPrice != null">
+                #{item.highPrice,jdbcType=DECIMAL} HIGH_PRICE,
+            </if>
+            <if test="item.highPrice == null">
+                null HIGH_PRICE,
+            </if>
+            <if test="item.lowPrice != null">
+                #{item.lowPrice,jdbcType=DECIMAL} LOW_PRICE,
+            </if>
+            <if test="item.lowPrice == null">
+                null LOW_PRICE,
+            </if>
+            <if test="item.midPrice != null">
+                #{item.midPrice,jdbcType=DECIMAL} MID_PRICE,
+            </if>
+            <if test="item.midPrice == null">
+                null MID_PRICE,
+            </if>
             #{item.quotUnit,jdbcType=INTEGER} QUOT_UNIT,
             #{item.basisCyy,jdbcType=VARCHAR} BASIS_CYY,
             #{item.quotCyy,jdbcType=VARCHAR} QUOT_CYY,
@@ -98,11 +123,11 @@
             #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
             #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
             #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
-            <if test="item.errMsg != null and ! item.errMsg.equals('')">
-                #{item.errMsg,jdbcType=CLOB} ERR_MSG
+            <if test="item.errMsg != null">
+                #{item.errMsg,jdbcType=VARCHAR} ERR_MSG
             </if>
-            <if test="item.errMsg == null or item.errMsg.equals('')">
-                NULL ERR_MSG
+            <if test="item.errMsg == null">
+                null ERR_MSG
             </if>
             FROM DUAL
         </foreach>
@@ -225,7 +250,7 @@
                     when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
                     and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
                     and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR} then
-                    #{item.errMsg,jdbcType=CLOB}
+                    #{item.errMsg,jdbcType=VARCHAR}
                 </foreach>
             </trim>
             <trim prefix="status=case" suffix="end,">
