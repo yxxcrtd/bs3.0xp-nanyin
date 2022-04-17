@@ -21,6 +21,10 @@
         <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
         <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser" />
         <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="IS_BROKER" property="isBroker" jdbcType="VARCHAR" />
+        <result column="IS_COUNTER" property="isCounter" jdbcType="VARCHAR" />
+        <result column="IS_BANK" property="isBank" jdbcType="VARCHAR" />
+        <result column="IS_FUTURE_COM" property="isFutureCom" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List">
     CUSTOMER_ID, CUSTOMER_NAME, CUSTOMER_ABBR, CUSTOMER_TYPE, IS_ISSUER, IS_ASSTE_MANAGER,
@@ -334,7 +338,7 @@
 </delete>
 
     <delete id="deleteTodayData">
-  delete from MST_CUSTOMER_INFO where DATE_FORMAT(ifnull(UPDATE_TIME,CREATE_TIME),'%Y%m%d')=DATE_FORMAT(sysdate,'%Y%m%d')
+  delete from MST_CUSTOMER_INFO where DATE_FORMAT(ifnull(UPDATE_TIME,CREATE_TIME),'%Y%m%d')=DATE_FORMAT(NOW(),'%Y%m%d')
   </delete>
 
     <insert id="mergeMstCustomerInfoData"

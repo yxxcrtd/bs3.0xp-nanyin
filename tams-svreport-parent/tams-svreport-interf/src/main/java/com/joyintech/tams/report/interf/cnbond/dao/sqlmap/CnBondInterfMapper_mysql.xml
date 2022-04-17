@@ -25,7 +25,14 @@
     </select>
     <!-- 更新中债报送结果 -->
     <update id="updateChbSubmitStatus" parameterType="com.joyintech.tams.common.base.entity.ChbSubmitStatus" >
-        update CHB_SUBMIT_STATUS
+
+        <if test="flag != null and flag.equals('14')" >
+            update CHB_EQU_SUB
+        </if>
+        <if test="flag != null and flag.equals('16')" >
+            update CHB_INVESTHOLD_INFO_SUB
+        </if>
+
         <set >
             <if test="submitFeedbackStatus != null" >
                 SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},

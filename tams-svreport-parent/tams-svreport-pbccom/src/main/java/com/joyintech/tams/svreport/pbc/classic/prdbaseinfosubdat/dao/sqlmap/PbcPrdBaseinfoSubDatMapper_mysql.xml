@@ -316,37 +316,37 @@
         CASH_PRIN_CCY,
         CASH_PROF_CCY,
         CUSTOMER_TYPE,
-        /*decode(RAISE_TYPE,'01','1','2') RAISE_TYPE,*/
+
         (case RAISE_TYPE when '01' then '1' else '2' end ) RAISE_TYPE,
-        /*decode(MANAGE_TYPE,'01','1','2') MANAGE_TYPE,*/
+
         (case MANAGE_TYPE when '01' then '1' else '2' end ) MANAGE_TYPE,
-        /*decode(FIDUCIARY_DUTY,'01','1','2') FIDUCIARY_DUTY,*/
+
         (case FIDUCIARY_DUTY when '01' case '1' else '2' end) FIDUCIARY_DUTY,
-        /*decode(CONT_MODE,'01','11','02','12','03','13','04','14','05','15','07','16','99','17') CONT_MODE,*/
+
         (case CONT_MODE when '01' then '11' when '02' then '12' when '03' then '13' when '04' then '14' when '05' then '15' when '07' then '16' when '99' then '17' end ) CONT_MODE,
-        /*decode(OPERATE_MODE,'01','4','02','5','03','2','04','3') OPERATE_MODE,*/
+
         (case OPERATE_MODE when '01' then '4' when '02' then '5' when '03' then '2' when '04' then '3' end) OPERATE_MODE,
-        /*decode(PROFIT_TYPE,'03',decode(IVSTORIENTATION,'01','007','02','008','03','009','04','010'),'011')*/
+
         (case PROFIT_TYPE when '03' then (case IVSTORIENTATION when '01' then '007' when '02' then '008' when '03' then '009' when '04' then '010' end) else '011' end) IVSTORIENTATION,
         PROFIT_TYPE,
-        /*decode(PROFIT_TYPE,'03','3','1') BUSI_MODEL,*/
+
         (case PROFIT_TYPE when '03' then '3' else '1' end) BUSI_MODEL,
-        /*decode(PROFIT_TYPE,'01','1','2') INCOME_GUARAN_IDENT,*/
+
         (case PROFIT_TYPE when '01' then '1' else '2' end) INCOME_GUARAN_IDENT,
-        /*decode(PROFIT_TYPE,'01','1','2') PRIN_GUARAN_IDENT,*/
+
         (case PROFIT_TYPE when '01' then '1' else '2' end) PRIN_GUARAN_IDENT,
         HIGH_YIELD_ISSUE,
         LOW_YIELD_ISSUE,
         RAISE_VDATE,
         RAISE_ENDDATE,
-        /*decode(TERM_RIGHT_FLAG,'01','1','2') TERM_RIGHT_FLAG,*/
+
         (case TERM_RIGHT_FLAG when '01' then '1' else '2' end) TERM_RIGHT_FLAG,
-        /*decode(CUS_REDEEM_FLAG,'01','1','2') CUS_REDEEM_FLAG,*/
+
         (case CUS_REDEEM_FLAG when '01' then '1' else '2' end) CUS_REDEEM_FLAG,
-        /*decode(CREDIT_FLAG,'01','1','2') CREDIT_FLAG,*/
+
         (case CREDIT_FLAG when '01' then '1' else '2' end) CREDIT_FLAG,
         REPLACE(CREDIT_TYPE, '0','') CREDIT_TYPE,
-        /*decode(CREDIT_MODE,'01','1','02','2','03','1,2') CREDIT_MODE,*/
+
         (case CREDIT_MODE when '01' then '1' when '02' then '2' when '03' then '1,2' end) CREDIT_MODE,
         IN_DEP_NAME,
         IN_DEP_CODE,
@@ -359,14 +359,14 @@
         VDATE,
         MDATE,
         null ACCOUNT_ID,
-        /*decode(IS_CONSTRACTE,'01','1','2')IS_CONSTRACTE,*/
+
         (case IS_CONSTRACTE when '01' then '1' else '2' end ) IS_CONSTRACTE,
-        /*decode(TRANSFER_TYPE,'01','1','99','2')TRANSFER_TYPE,*/
+
         (case TRANSFER_TYPE when '01' then '1' when '99' then '2' end) TRANSFER_TYPE,
-        /*decode(cbc.IS_FIN_SUB_COMPANY,'01','2','1') IDENTI_FLAG,*/
+
         (case cbc.IS_FIN_SUB_COMPANY when '01' then '2' else '1' end) IDENTI_FLAG,
         now() STATUS_DATE,
-        /*DECODE(info.IS_MARKET_FUND,'01',1,2) IS_MARKET_FUND,*/
+
         (case info.IS_MARKET_FUND when '01' then 1 else 2 end) IS_MARKET_FUND,
         info.STATUS,
         info.CREATE_USER,

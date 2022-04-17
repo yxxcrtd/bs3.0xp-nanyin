@@ -494,8 +494,7 @@
     ISSUE_AMT,
     sum(ifnull(pos.UNINVEST_CASH,0)) as UNINVEST_CASH,
 
-    SUM(ifnull(val.share_amt,0)*(case info1.finprod_type2 when 'F01' then 100 else 1 end))AS POS_NUM,--
-    如果是债券则需要乘以100 -->
+    SUM(ifnull(val.share_amt,0)*(case info1.finprod_type2 when 'F01' then 100 else 1 end))AS POS_NUM,
     sum((ifnull(val.TDY_FLOAT_INGPL,0)+ifnull(val.DSC_COST_AMT,0)+ifnull(val.TDY_INTINCEXP,0)
     /*+ifnull(val.DELAY_PAY_AMT,0)*/ )*
     (case info1.ccy when 'CNY' then 1 else ifnull(rate1.yeid,0) end)) as POS_AMT,

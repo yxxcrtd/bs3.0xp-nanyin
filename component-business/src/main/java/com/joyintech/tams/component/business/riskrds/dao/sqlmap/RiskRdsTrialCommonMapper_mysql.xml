@@ -14,8 +14,7 @@
     </select>
 
     <select id="getIsShareholderIssue" parameterType="java.util.Map" resultType="java.lang.String">
-        select /*decode(count(0), 0, 'N', 'Y')*/
-        (case count(0) when 0 then 'N' else 'Y' end)
+        select  (case count(0) when 0 then 'N' else 'Y' end)
           from (select *
                   from fin_product f
                   inner join MST_CUSTOMER_INFO_ADD m

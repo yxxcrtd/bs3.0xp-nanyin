@@ -8,7 +8,7 @@
 											PRODID,PRODNAME,PRD_REGIST_CODE,INDENTIFY_MARK,
 											CCY,TDYQTY,YSTQTY,CHANGEQTY,UPDATE_USER,
 											UPDATE_TIME,CREATE_USER,CREATE_TIME,CREATE_DEPT)
-		select F_GUID() SEQNO, r.*
+		select UUID() SEQNO, r.*
 		from (
 				 select
 					 todayData.HOLD_DATE EQUITY_CONF_DATE, /*查询日期*/

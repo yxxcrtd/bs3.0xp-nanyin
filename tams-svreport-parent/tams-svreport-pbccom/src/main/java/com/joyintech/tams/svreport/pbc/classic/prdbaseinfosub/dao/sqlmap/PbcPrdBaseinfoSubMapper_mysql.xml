@@ -931,7 +931,7 @@
 		t1.OUT_DEP_NAME outDepName,
 		t1.VDATE vdate,
 		t1.MDATE mdate,
-		t1.ACCOUNT_ID accountId,
+		ifnull(t3.PBC_CODE, t1.ACCOUNT_ID) accountId accountId,
 		t1.IS_CONSTRACTE isConstracte,
 		t1.TRANSFER_TYPE transferType,
 		t1.IDENTI_FLAG identiFlag,
@@ -950,7 +950,10 @@
 		t1.UPDATE_USER updateUser,
 		t1.UPDATE_TIME updateTime,
 		t2.PBC_CODE pbcCode,
-		t1.PBC_PROD_ID pbcProdIdShow
+		ifnull(T2.pbc_code,t1.pbc_prod_id) pbcProdIdShow,
+		CB.Profit_Type  profitType,
+		t1.CASH_MANA_CATE cashManaCate,
+		t1.CROSS_BORDER_FLAG crossBorderFlag,
 		from PBC_PRD_BASEINFO_SUB t1
 		LEFT JOIN(
 		SELECT
@@ -962,10 +965,25 @@
 		status='E'
 		AND code_type='01'
 		)t2 ON t2.inside_prod_id=t1.PROD_ID
+		LEFT JOIN(
+		SELECT
+		inside_prod_id,
+		pbc_code
+		FROM
+		pbc_prod_assetpool_code
+		WHERE
+		status='E'
+		AND code_type='02'
+		)t3 ON t3.inside_prod_id=t1.PROD_ID
+		LEFT JOIN CHB_ORG_REGIST_BANK_CODE CORBC
+		ON CORBC.REGIST_BANK_CODE = t1.ISSUE_PARTY_ID
+		LEFT JOIN SYS_INSTITUTION SI
+		ON SI.INSTITUTION_CODE = CORBC.ORG_CODE
+		LEFT JOIN CHB_PRD_BASEINFO CB ON t1.Prod_Id = CB.PROD_ID AND CB.STATUS IN ('E','M')
 		<where>
 			STATUS !='04'
 			<if test="pbcProdIdList != null and pbcProdIdList.size > 0">
-				<foreach collection="pbcProdIdList" item="items" open="and PBC_PROD_ID in (" separator="," close =")">
+				<foreach collection="pbcProdIdList" item="items" open="and ifnull(T2.pbc_code,t1.pbc_prod_id) in (" separator="," close =")">
 					#{items,jdbcType=VARCHAR}
 				</foreach>
 			</if>
@@ -977,40 +995,40 @@
 			</if>
 			<!-- 手工处理传入的产品ID列表 add by gaojian 2019-06-18 end -->
 			<if test="issuePartyId != null and issuePartyId !=''">
-				and ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR}
+				and t1.ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR}
 			</if>
 			<if test="statusList != null and statusList.size > 0">
-				and STATUS in
+				and t1.STATUS in
 				<foreach collection="statusList" open="(" close=")" separator="," item="item">
 					#{item,jdbcType=VARCHAR}
 				</foreach>
 			</if>
 			<if test="keyList != null and keyList.size > 0">
-				and trim(REGIST_SEQNO) in
+				and trim(t1.REGIST_SEQNO) in
 				<foreach collection="keyList" open="(" close=")" separator="," item="item">
 					#{item,jdbcType=VARCHAR}
 				</foreach>
 			</if>
 			<if test="sendStatusList != null and sendStatusList.size > 0">
-				and SEND_STATUS in
+				and t1.SEND_STATUS in
 				<foreach collection="sendStatusList" open="(" close=")" separator="," item="item">
 					#{item,jdbcType=VARCHAR}
 				</foreach>
 			</if>
 			<if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size > 0">
-				and SUBMIT_FEEDBACK_STATUS in
+				and t1.SUBMIT_FEEDBACK_STATUS in
 				<foreach collection="submitFeedbackStatusList" open="(" close=")" separator="," item="item">
 					#{item,jdbcType=VARCHAR}
 				</foreach>
 			</if>
 			<if test="operateModeList != null and operateModeList.size > 0">
-				and OPERATE_MODE in
+				and t1.OPERATE_MODE in
 				<foreach collection="operateModeList" open="(" close=")" separator="," item="item">
 					#{item,jdbcType=VARCHAR}
 				</foreach>
 			</if>
 			<if test="ivstorientationList != null and ivstorientationList.size > 0">
-				and IVSTORIENTATION in
+				and t1.IVSTORIENTATION in
 				<foreach collection="ivstorientationList" open="(" close=")" separator="," item="item">
 					#{item,jdbcType=VARCHAR}
 				</foreach>
@@ -1049,6 +1067,13 @@
 			<if test="endDate != null and endDate != ''">
 				and DATE_FORMAT(VDATE,'%Y-%m-%d') &lt;= #{endDate}
 			</if>
+
+			<if test="allExport != null and allExport !=''">
+				and exists (
+				select 1 from PBC_INIT_PROD_RAISING_SUB pi where pi.Pbc_Prod_Id=T1.PBC_PROD_ID
+				)
+			</if>
+
 			<if test="registList!=null and registList.size()!=0">
 				<foreach collection="registList" item="items"
 						 open=" AND TRIM(REGIST_SEQNO) IN (" close=")" separator=",">
@@ -1246,5 +1271,23 @@
 		AND T0.STATUS = 'E'
 		)as t
 		where ranknum = 1
+	</select>
+
+	<update id="updateByProdIds" parameterType="java.util.List">
+		update PBC_PRD_BASEINFO_SUB
+		set SEND_STATUS = '03',
+		SUBMIT_TIME = sysdate,
+		SUBMIT_FEEDBACK_STATUS = '03'
+		where  SEND_STATUS = '01'
+		and PROD_ID in
+		<foreach collection="list" item="item" open="(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+
+	<select id="countByProdId" parameterType="java.lang.String" resultType="int">
+		select count(1) as num
+		from PBC_PRD_BASEINFO_SUB
+		where PROD_ID = #{prodId,jdbcType=VARCHAR}
 	</select>
 </mapper>

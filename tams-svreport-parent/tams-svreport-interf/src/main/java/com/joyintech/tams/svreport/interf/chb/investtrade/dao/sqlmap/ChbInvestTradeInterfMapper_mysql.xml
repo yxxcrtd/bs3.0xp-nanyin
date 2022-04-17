@@ -3346,6 +3346,6 @@
             </set>
             where TRADE_SEQNO = #{tradeSeqno,jdbcType=CHAR}
         </foreach>
-        ;end;
+        ;
     </update>
 </mapper>
