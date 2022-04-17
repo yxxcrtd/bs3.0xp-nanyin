@@ -38,7 +38,7 @@
             }, {
                 title: '是否节假日', field: 'isHolidayStr', width: 100
             }, {
-                title: '错误信息', field: 'errMsg', width: 480, sortable: false
+                title: '错误信息', field: 'errMsg', width: 495, sortable: false
             }, {
                 title: '更新时间', field: 'updateTimeStr', width: 200
             }, {
