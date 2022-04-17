@@ -113,7 +113,7 @@
     <!--    导入时check表中是否存在相同的逻辑删除数据-->
     <select id="checkAgentInstitutionCodeDImport" resultType="com.joyintech.tams.report.submitmaintenance.agentprdinfo.dto.AgentPrdInfoDto">
         select
-        AGENT_INSTITUTION_CODE agentInstitutionCode，
+        AGENT_INSTITUTION_CODE agentInstitutionCode,
         PROD_REGIST_CODE prodRegistCode
         from
         CHB_AGENT_PRD_INFO
@@ -123,7 +123,7 @@
 
     <select id="checkProdRegistCodeImport" resultType="com.joyintech.tams.report.submitmaintenance.agentprdinfo.dto.AgentPrdInfoDto">
         select
-        AGENT_INSTITUTION_CODE agentInstitutionCode，
+        AGENT_INSTITUTION_CODE agentInstitutionCode,
         PROD_REGIST_CODE prodRegistCode
         from
         CHB_AGENT_PRD_INFO
@@ -131,7 +131,7 @@
         STATUS = 'E'
     </select>
 
-<!--    校验代销机构代码相同时，产品登记编码不能相同-->
+<!--    校验代销机构代码相同时,产品登记编码不能相同-->
     <select id="checkProdRegistCode" resultType="integer" parameterType="java.lang.String" >
         select
           count(*)
