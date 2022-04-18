@@ -47,45 +47,6 @@ public class BaseCheckOracleService {
         return baseCheckOracleMapper.selectUniqueConstraint(tableName);
     }
 
-    /**
-     * 拼接错误信息
-     *
-     * @param checkResult
-     * @return
-     */
-    public String getCheckErrMsg(List<ExcelValidDto> checkResult) {
-        StringBuffer errMsg = new StringBuffer();
-        checkResult.forEach(e -> {
-            errMsg.append("第")
-                    .append(e.getRowNum())
-                    .append("行").append(e.getErrorInfo())
-                    .append(";");
-        });
-
-        return errMsg.toString();
-    }
-
-    /**
-     * 将多行错误凭借成一个行
-     *
-     * @param list
-     * @return
-     */
-    public List<ExcelValidDto> getExcelValidList(List<ExcelValidDto> list) {
-
-        List<ExcelValidDto> checkResult = new LinkedList<>();
-        Map<String, List<ExcelValidDto>> map = list.stream().collect(Collectors.groupingBy(ExcelValidDto::getRowNum));
-        map.forEach((rowNum, checkList) -> {
-            ExcelValidDto dto = new ExcelValidDto();
-            dto.setRowNum(rowNum);
-            dto.setCheckResult("检查不通过");
-            dto.setValidKey(checkList.stream().map(ExcelValidDto::getValidKey).collect(Collectors.joining(";")));
-            dto.setErrorInfo(checkList.stream().map(ExcelValidDto::getErrorInfo).collect(Collectors.joining(";")));
-            checkResult.add(dto);
-        });
-
-        return checkResult;
-    }
 
     /**
      * 校验列
@@ -95,37 +56,40 @@ public class BaseCheckOracleService {
         if (Objects.equals("Y", tabDto.getNullAble()) && StringUtil.isBlank(value)) {
             return;
         }
+        BaseCommonCheckDto dto = new BaseCommonCheckDto();
+        StringBuffer errMsg = new StringBuffer("");
         if (StringUtil.isBlank(value)) {
-            BaseCommonCheckDto dto = new BaseCommonCheckDto();
-            dto.setErrMap(map);
-            dto.setExcelValidDto(new ExcelValidDto("0未导入", String.valueOf(i + 2), tabDto.getColumnName() + "不能为空"));
-            checkResult.add(dto);
+            errMsg.append("不能为空;");
         }
-        //校验字段长度
-        if (tabDto.getLength() != 0 && tabDto.getLength() < value.length()) {
-            BaseCommonCheckDto dto = new BaseCommonCheckDto();
-            dto.setErrMap(map);
-            dto.setExcelValidDto(new ExcelValidDto("0未导入", String.valueOf(i + 2), tabDto.getColumnName() + "字段长度不能超过" + tabDto.getLength()));
-            checkResult.add(dto);
+        if (Objects.equals("VARCHAR2", tabDto.getDataType()) && StringUtil.isNotBlank(value)) {
+            //校验字段长度
+            if (tabDto.getLength() != 0 && tabDto.getLength() < value.length()) {
+                errMsg.append("字段长度不能超过" + tabDto.getLength());
+            }
         }
+
         //日期类型校验
         if (Objects.equals("DATE", tabDto.getDataType())) {
             if (!this.checkDate(value)) {
-                BaseCommonCheckDto dto = new BaseCommonCheckDto();
-                dto.setErrMap(map);
-                dto.setExcelValidDto(new ExcelValidDto("0未导入", String.valueOf(i + 2), tabDto.getColumnName() + "不是日期格式"));
-                checkResult.add(dto);
+                errMsg.append("不是日期格式;");
             }
         }
         //数字类型校验
         if (Objects.equals("NUMBER", tabDto.getDataType())) {
             if (!this.checkFigure(value)) {
-                BaseCommonCheckDto dto = new BaseCommonCheckDto();
-                dto.setErrMap(map);
-                dto.setExcelValidDto(new ExcelValidDto("0未导入", String.valueOf(i + 2), tabDto.getColumnName() + "不是数字格式"));
-                checkResult.add(dto);
+                errMsg.append("不是数字格式;");
+            }
+
+            if (tabDto.getNumberLength() < value.length()) {
+                errMsg.append("值大于为此列指定的允许精度;");
             }
         }
+        if (StringUtils.isNotBlank(errMsg.toString())) {
+            dto.setErrMap(map);
+            dto.setExcelValidDto(new ExcelValidDto("0未导入", String.valueOf(i + 2), tabDto.getColumnName() + errMsg));
+            checkResult.add(dto);
+        }
+
     }
 
 
@@ -205,8 +169,6 @@ public class BaseCheckOracleService {
         //表的唯一约束
         List<String> uniqueList = this.getUniqueConstraint(tableName);
         Set<String> set = new HashSet();
-        Iterator<Map<String, String>> iterator = dataList.iterator();
-
         for (int i = 0; i < dataList.size(); i++) {
             List<BaseCommonCheckDto> checkResult = new LinkedList<>();
             Map<String, String> map = dataList.get(i);
