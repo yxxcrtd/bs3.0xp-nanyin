@@ -57,7 +57,7 @@
     <update id="sethday">
         update MST_HOLIDAY
         set is_holiday=#{isHoliday},
-            UPDATE_USER=#{updateUser},
+            UPDATE_USER=#{createUser},
             UPDATE_TIME=#{updateTime}
         where CDATE = #{cdate}
           and CALENDAR_ID = #{calendarId}
@@ -66,7 +66,7 @@
     <update id="setwday">
         update MST_HOLIDAY
         set is_holiday=#{isHoliday},
-            UPDATE_USER=#{updateUser},
+            UPDATE_USER=#{createUser},
             UPDATE_TIME=#{updateTime}
         where CDATE = #{cdate}
           and CALENDAR_ID = #{calendarId}
