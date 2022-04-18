@@ -75,7 +75,9 @@ $(function() {
         var object = {selectedItem: [data], operateType:"DELETE"};
         Joyin.ajaxJson(basePath + 'chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo001/check', object, function(result) {
         	Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                WorkFlow.doDeleteList(basePath + 'chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo001/delete', object, "ChbExchangeQuotationInfo001_btn_delete");
+                WorkFlow.doDeleteList(basePath + 'chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo001/delete', object, "ChbExchangeQuotationInfo001_btn_delete", "ChbExchangeQuotationInfo002",function() {
+                    table.reload();
+                });
             });
         });
     });
@@ -120,7 +122,9 @@ $(function() {
             var object = {selectedItem: selArr, operateType:"delete"};
             Joyin.ajaxJson(basePath + 'chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo001/check', object, function(result) {
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                    WorkFlow.doDeleteList(basePath + 'chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo001/delete', object, "ChbExchangeQuotationInfo001_btn_delete");
+                    WorkFlow.doDeleteList(basePath + 'chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo001/delete', object, "ChbExchangeQuotationInfo001_btn_delete", "ChbExchangeQuotationInfo002",function() {
+                        table.reload();
+                    });
              });
            });
         });
