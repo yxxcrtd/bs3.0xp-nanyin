@@ -249,7 +249,7 @@
                 OR SALER_ORG_NAME  like concat('%',concat(#{salerOrgCode,jdbcType=VARCHAR},'%')))
             </if>
         </where>
-        )
+        ) T
     </select>
 
     <!--	双击查看详细信息查询info-->

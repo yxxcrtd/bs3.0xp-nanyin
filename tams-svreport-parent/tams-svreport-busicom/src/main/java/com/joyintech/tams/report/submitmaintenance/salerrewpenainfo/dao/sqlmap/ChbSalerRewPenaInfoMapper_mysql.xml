@@ -496,7 +496,7 @@
                 AND	SALER_INS_NO  like concat('%',concat(#{salerInsNo,jdbcType=VARCHAR},'%'))
             </if>
         </where>
-        )
+        ) T
     </select>
 
     <select id="checkSalerInsNo" resultType="integer">
