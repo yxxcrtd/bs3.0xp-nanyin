@@ -3,12 +3,12 @@
 <mapper namespace="com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dao.ChbBokSubjectDao_mysql">
 
     <insert id="insert" parameterType="com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dto.ChbBokSubjectDto">
-        insert into BOK_SUBJECT(BOOKSET_ID,SUBJECT_NO,SUBJECT_NAME,FSUBJECT_ID,SUBJECT_TYPE,SUBJECT_LEVEL,DATA_SOURCE,STATUS,REMARK,ERR_MSG,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+        insert into BOK_SUBJECT(BOOKSET_ID,SUBJECT_NO,SUBJECT_NAME,FSUBJECT_ID,SUBJECT_TYPE,SUBJECT_LEVEL,BAL_FLAG,DATA_SOURCE,STATUS,REMARK,ERR_MSG,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
         select * from
         (  select TEMP.* from
         (
             SELECT #{booksetId} BOOKSET_ID,#{subjectNo} SUBJECT_NO,#{subjectName} SUBJECT_NAME,#{fsubjectId} FSUBJECT_ID,
-            #{subjectType} SUBJECT_TYPE,#{subjectLevel} SUBJECT_LEVEL,#{dataSource} DATA_SOURCE,
+            #{subjectType} SUBJECT_TYPE,#{subjectLevel} SUBJECT_LEVEL,#{balFlag} BAL_FLAG,#{dataSource} DATA_SOURCE,
             #{status} STATUS,#{remark} REMARK,#{errMsg} ERR_MSG,#{createUser} CREATE_USER,
             #{createDept} CREATE_DEPT,#{createTime} CREATE_TIME,#{updateUser} UPDATE_USER,#{updateTime} UPDATE_TIME
             from
@@ -24,7 +24,7 @@
         (  select TEMP.* from
         (
             SELECT #{booksetId} BOOKSET_ID,#{subjectNo} SUBJECT_NO,#{subjectName} SUBJECT_NAME,#{fsubjectId} FSUBJECT_ID,
-            #{subjectType} SUBJECT_TYPE,#{subjectLevel} SUBJECT_LEVEL,#{dataSource} DATA_SOURCE,
+            #{subjectType} SUBJECT_TYPE,#{subjectLevel} SUBJECT_LEVEL,#{balFlag} BAL_FLAG,#{dataSource} DATA_SOURCE,
             #{status} STATUS,#{remark} REMARK,#{errMsg} ERR_MSG,#{createUser} CREATE_USER,
             #{createDept} CREATE_DEPT,#{createTime} CREATE_TIME,#{updateUser} UPDATE_USER,#{updateTime} UPDATE_TIME
             from
@@ -37,6 +37,7 @@
         a.FSUBJECT_ID = b.FSUBJECT_ID,
         a.SUBJECT_TYPE = b.SUBJECT_TYPE,
         a.SUBJECT_LEVEL = b.SUBJECT_LEVEL,
+        a.BAL_FLAG = b.BAL_FLAG,
         a.STATUS = b.STATUS,
         a.REMARK = b.REMARK,
         a.ERR_MSG = b.ERR_MSG,
@@ -45,13 +46,13 @@
         where a.BOOKSET_ID = b.BOOKSET_ID and a.SUBJECT_NO = b.SUBJECT_NO
     </insert>
     <insert id="batchInsert" parameterType="java.util.List">
-        insert into BOK_SUBJECT(BOOKSET_ID,SUBJECT_NO,SUBJECT_NAME,FSUBJECT_ID,SUBJECT_TYPE,SUBJECT_LEVEL,DATA_SOURCE,STATUS,REMARK,ERR_MSG,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+        insert into BOK_SUBJECT(BOOKSET_ID,SUBJECT_NO,SUBJECT_NAME,FSUBJECT_ID,SUBJECT_TYPE,SUBJECT_LEVEL,BAL_FLAG,DATA_SOURCE,STATUS,REMARK,ERR_MSG,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
         select * from
         (  select TEMP.* from
         (
         <foreach collection="list" item="bokSubject" separator="union all">
             SELECT #{bokSubject.booksetId} BOOKSET_ID,#{bokSubject.subjectNo} SUBJECT_NO,#{bokSubject.subjectName} SUBJECT_NAME,#{bokSubject.fsubjectId} FSUBJECT_ID,
-                   #{bokSubject.subjectType} SUBJECT_TYPE,#{bokSubject.subjectLevel} SUBJECT_LEVEL,#{bokSubject.dataSource} DATA_SOURCE,
+                   #{bokSubject.subjectType} SUBJECT_TYPE,#{bokSubject.subjectLevel} SUBJECT_LEVEL,#{bokSubject.balFlag} BAL_FLAG,#{bokSubject.dataSource} DATA_SOURCE,
                    #{bokSubject.status} STATUS,#{bokSubject.remark} REMARK,#{bokSubject.errMsg} ERR_MSG,#{bokSubject.createUser} CREATE_USER,
                    #{bokSubject.createDept} CREATE_DEPT,#{bokSubject.createTime} CREATE_TIME,#{bokSubject.updateUser} UPDATE_USER,#{bokSubject.updateTime} UPDATE_TIME
             from
@@ -69,7 +70,7 @@
         (
         <foreach collection="list" item="bokSubject" separator="union all">
             SELECT #{bokSubject.booksetId} BOOKSET_ID,#{bokSubject.subjectNo} SUBJECT_NO,#{bokSubject.subjectName} SUBJECT_NAME,#{bokSubject.fsubjectId} FSUBJECT_ID,
-            #{bokSubject.subjectType} SUBJECT_TYPE,#{bokSubject.subjectLevel} SUBJECT_LEVEL,#{bokSubject.dataSource} DATA_SOURCE,
+            #{bokSubject.subjectType} SUBJECT_TYPE,#{bokSubject.subjectLevel} SUBJECT_LEVEL,#{bokSubject.balFlag} BAL_FLAG,#{bokSubject.dataSource} DATA_SOURCE,
             #{bokSubject.status} STATUS,#{bokSubject.remark} REMARK,#{bokSubject.errMsg} ERR_MSG,#{bokSubject.createUser} CREATE_USER,
             #{bokSubject.createDept} CREATE_DEPT,#{bokSubject.createTime} CREATE_TIME,#{bokSubject.updateUser} UPDATE_USER,#{bokSubject.updateTime} UPDATE_TIME
             from
@@ -83,6 +84,7 @@
             a.FSUBJECT_ID = b.FSUBJECT_ID,
             a.SUBJECT_TYPE = b.SUBJECT_TYPE,
             a.SUBJECT_LEVEL = b.SUBJECT_LEVEL,
+            a.BAL_FLAG = b.BAL_FLAG,
             a.STATUS = b.STATUS,
             a.REMARK = b.REMARK,
             a.ERR_MSG = b.ERR_MSG,
@@ -105,6 +107,9 @@
             </if>
             <if test="subjectLevel !=null and subjectLevel !=''">
                 SUBJECT_LEVEL = #{subjectLevel},
+            </if>
+            <if test="balFlag !=null and balFlag !=''">
+                BAL_FLAG = #{balFlag},
             </if>
             <if test="status !=null and status !=''">
                 STATUS = #{status},
@@ -136,6 +141,7 @@
         BS.FSUBJECT_ID as fsubjectId,
         BS.SUBJECT_TYPE as subjectType,
         BS.SUBJECT_LEVEL as subjectLevel,
+        BS.BAL_FLAG as balFlag,
         BS.CREATE_USER as createUser,
         BS.CREATE_DEPT as createDept,
         BS.CREATE_TIME as createTime,
@@ -150,6 +156,9 @@
         <where>
             <if test="subjectLevel != null and subjectLevel != ''">
                 BS.SUBJECT_LEVEL = #{subjectLevel}
+            </if>
+            <if test="balFlag != null and balFlag != ''">
+                AND BS.BAL_FLAG = #{balFlag}
             </if>
             <if test="fsubjectId != null and fsubjectId != ''">
                 AND BS.FSUBJECT_ID = #{fsubjectId}
@@ -251,6 +260,7 @@
 
             BS.SUBJECT_TYPE as subjectType,
             BS.SUBJECT_LEVEL as subjectLevel,
+            BS.BAL_FLAG as balFlag,
             BS.CREATE_USER as createUser,
             BS.CREATE_DEPT as createDept,
             BS.CREATE_TIME as createTime,

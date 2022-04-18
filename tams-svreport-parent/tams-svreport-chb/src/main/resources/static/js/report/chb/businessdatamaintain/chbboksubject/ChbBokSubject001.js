@@ -7,6 +7,7 @@
         return {
             fsubjectId: $('#fsubjectId').val()
             ,subjectLevel: $('#subjectLevel').val()
+            ,balFlag: $('#balFlag').val()
             ,subjectNo: $('#subjectNo').val()
             ,subjectName: $('#subjectName').val()
             ,subjectType: $('#subjectType').val()
@@ -25,10 +26,11 @@
 		cellMinWidth:100 ,
 		cols: [
 		    {field:'subjectNo', width:100, title: 'ChbBokSubject.subjectNo'}
-		    ,{field:'subjectName', width:180, title: 'ChbBokSubject.subjectName'}
-		    ,{field:'fsubjectId', width:120, title: 'ChbBokSubject.fsubjectId'}
-		    ,{field:'subjectTypeStr', width:120, sortField:"subjectType", title: 'ChbBokSubject.subjectType'}
+		    ,{field:'subjectName', width:150, title: 'ChbBokSubject.subjectName'}
+		    ,{field:'fsubjectId', width:100, title: 'ChbBokSubject.fsubjectId'}
+		    ,{field:'subjectTypeStr', width:100, sortField:"subjectType", title: 'ChbBokSubject.subjectType'}
 		    ,{field:'subjectLevelStr', width:100, title: 'ChbBokSubject.subjectLevel'}
+		    ,{field:'balFlagStr', width:100, title: 'ChbBokSubject.balFlag'}
 		    ,{field:'dataSourceStr', width:100, title: 'ChbBokSubject.dataSource'}
 		    ,{field:'statusValidStr', width:100, title: 'ChbBokSubject.status'}
 		    ,{field:'remark', width:150, title: 'ChbBokSubject.remark'}

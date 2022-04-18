@@ -256,6 +256,16 @@ public class ChbBokSubjectService extends CommonExportService<ChbBokSubjectDto> 
             map.put("FSUBJECT_ID",item.get(2));
             map.put("SUBJECT_TYPE",null!=item.get(3)&&item.get(3).length()>1?"0"+item.get(3).substring(0,1):"");
             map.put("SUBJECT_LEVEL",null !=item.get(4)&&item.get(4).length()>1?item.get(4).substring(0,1):"");
+            if(null !=item.get(5)&&item.get(5).length()>1){
+                switch (item.get(5).substring(0,1)){
+                    case "1":map.put("BAL_FLAG","D");break;
+                    case "2":map.put("BAL_FLAG","C");break;
+                    case "3":map.put("BAL_FLAG","B");break;
+                }
+            }else{
+                map.put("BAL_FLAG","");
+            }
+
             map.put("REMARK",item.get(5));
             list.add(map);
         });
@@ -547,6 +557,7 @@ public class ChbBokSubjectService extends CommonExportService<ChbBokSubjectDto> 
                 batchInsertUtil.builderAppend(sb,"");
                 batchInsertUtil.builderAppend(sb,dto.getSubjectType());
                 batchInsertUtil.builderAppend(sb,dto.getSubjectLevel());
+                batchInsertUtil.builderAppend(sb,dto.getBalFlag());
                 batchInsertUtil.builderAppend(sb,"");
                 batchInsertUtil.builderAppend(sb,"");
                 batchInsertUtil.builderAppend(sb,"");
@@ -600,6 +611,9 @@ public class ChbBokSubjectService extends CommonExportService<ChbBokSubjectDto> 
             }
             if (StringUtil.isNotEmpty(map.get("SUBJECT_LEVEL"))) {
                 bokSubjectDto.setSubjectLevel(Long.valueOf(map.get("SUBJECT_LEVEL")));
+            }
+            if (StringUtil.isNotEmpty(map.get("BAL_FLAG"))) {
+                bokSubjectDto.setBalFlag(map.get("BAL_FLAG"));
             }
             if (StringUtil.isNotEmpty(map.get("REMARK"))) {
                 bokSubjectDto.setRemark(map.get("REMARK"));

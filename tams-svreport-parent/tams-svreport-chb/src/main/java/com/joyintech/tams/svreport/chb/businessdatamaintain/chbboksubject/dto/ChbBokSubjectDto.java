@@ -179,7 +179,9 @@ public class ChbBokSubjectDto extends BokSubject implements ProcessEntity {
     public String getSubjectLevelStr(){
         return SysDataUtil.getNameFromDataDict(DictCode.科目级别,super.getSubjectLevel().toString());
     }
-
+    public String getBalFlagStr(){
+        return SysDataUtil.getNameFromDataDict(DictCode.余额方向,super.getBalFlag());
+    }
     public String getErrMsg() {
         return errMsg;
     }

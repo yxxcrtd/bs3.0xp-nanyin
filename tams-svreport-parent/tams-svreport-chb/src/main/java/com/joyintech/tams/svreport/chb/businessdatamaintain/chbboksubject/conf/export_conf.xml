@@ -7,7 +7,8 @@
             <Cell order="2" name="科目名称">subjectName</Cell>
             <Cell order="3" name="上级科目号">fsubjectId</Cell>
             <Cell order="4" name="科目类型">subjectTypeStr</Cell>
-            <Cell order="5" name="科目级别">subjectLevel</Cell>
+            <Cell order="5" name="科目级别">subjectLevelStr</Cell>
+            <Cell order="5" name="科目方向">balFlagStr</Cell>
             <Cell order="6" name="数据来源">dataSourceStr</Cell>
             <Cell order="7" name="数据状态">statusValidStr</Cell>
             <Cell order="8" name="备注">remark</Cell>
