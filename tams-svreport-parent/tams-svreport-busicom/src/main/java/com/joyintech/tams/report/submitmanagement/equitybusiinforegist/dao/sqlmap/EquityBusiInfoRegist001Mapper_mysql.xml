@@ -310,7 +310,6 @@
     </update>
     <!-- 接口报送更新并且更新 报送流水号-->
     <update id="updateInterfSubmitAndSeq" parameterType="java.util.Map">
-        /*begin*/
         <foreach collection="investList" item="item" index="index" separator=";">
             update CHB_INVESTHOLD_INFO_SUB sub
             set
@@ -321,7 +320,6 @@
             where
             sub.REGIST_SEQNO = #{item.registSeqno}
         </foreach>
-        /* ;end;*/
     </update>
 
     <!-- add by etliu 20180818 start-->
@@ -639,7 +637,6 @@
     </delete>
     <!-- 接口报送更新并且更新 报送流水号-->
     <update id="updateInterfSeq" parameterType="java.util.Map">
-        /*begin*/
         <foreach collection="investList" item="item" index="index" separator=";">
             update CHB_EQUDET_SUB sub
             set
@@ -653,7 +650,7 @@
             and sub.INDENTIFY_MARK = #{item.indentifyMark}
             and sub.SUBMIT_STATUS='02'
         </foreach>
-        ;/*end;*/
+        ;
     </update>
 
 
@@ -1077,7 +1074,7 @@
         ciis.SUMIT_SEQ sumitSeq,
         ciis.CHECK_SEQNO checkSeqno
         from CHB_EQUDET_SUB ciis
-        left join CHB_SUBMIT_STATUS status
+        left join CHB_EQUDET_SUBMIT_STATUS status
         on ciis.sumit_seq = status.seqno
         <where>
             ciis.SUBMIT_STATUS='01'
@@ -1522,7 +1519,6 @@
 
     <update id="updateChbEquSubSubmitStatus" parameterType="java.util.List">
         /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
-        /*begin*/
         <foreach collection="list" item="item" index="index" open="" close=";" separator=";">
             update CHB_EQU_SUB
             <set >
@@ -1532,7 +1528,6 @@
             </set>
             where SUMIT_SEQ = #{item.seqno,jdbcType=VARCHAR}
         </foreach>
-        end;
         /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
     </update>
 </mapper>

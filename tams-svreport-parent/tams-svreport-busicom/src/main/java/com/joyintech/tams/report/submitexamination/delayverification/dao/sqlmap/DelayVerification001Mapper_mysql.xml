@@ -772,6 +772,45 @@
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
+        union all
+
+        <!-- 12.理财业务销售数据月度统计表	-->
+        select
+        count(temp.SEND_STATUS) as total,
+        ifnull(sum(temp.lateNums),0) as unSubmitNum,
+        '12' as pageType
+        from(
+        select
+        case when ces.SEND_STATUS != #{nosubmit}
+        and ces.CHB_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1  <!-- 已报送数据，且延时报送数量 -->
+        when ces.SEND_STATUS = #{nosubmit}
+        and ces.CHB_SUBMIT_DEADLINE &lt; #{sysTime} then 1 <!-- 未报送数据，且延时报送数量 -->
+        else 0 end lateNums,  <!-- 统计延时数据 -->
+        ces.SEND_STATUS,
+        ces.ORG_CODE,
+        ces.CREATE_DEPT
+        from (SELECT DISTINCT termId,SEND_STATUS,CHB_SUBMIT_DEADLINE,ORG_CODE,SUBMIT_TIME,CREATE_DEPT FROM CHB_SALE_MONTH_REPORT) ces
+        where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
+        /* add by songyawei 20200702 start */
+        <if test="flag">
+            and ces.ORG_CODE IN
+            <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        /* add by songyawei 20200702 end */
+        )temp
+        <where>
+            <if test="isNotCount !=null and isNotCount=='01'">
+                <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
+                temp.SEND_STATUS != #{manualSub}
+            </if>
+            <if test="createDeptList != null and createDeptList.size>0">
+                <foreach collection="createDeptList" item = "item" open="and temp.CREATE_DEPT in(" separator="," close=")">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
 
         union all
         <!-- 履历表数据 -->
@@ -809,7 +848,7 @@
         select
         count(temp.SEND_STATUS) as total,
         ifnull(sum(temp.lateNums),0) as unSubmitNum,
-        '12' as pageType
+        '13' as pageType
         from(
         select
         case when ces.SEND_STATUS != #{nosubmit}
@@ -876,7 +915,7 @@
         select
         count(temp.SUBMIT_STATUS) as total,
         ifnull(sum(temp.lateNums),0) as unSubmitNum,
-        '13' as pageType
+        '14' as pageType
         from(
         select
         case when ces.Submit_Status != #{nosubmit}
@@ -916,7 +955,7 @@
         select
         count(temp.SUBMIT_STATUS) as total,
         ifnull(sum(temp.lateNums),0) as unSubmitNum,
-        '14' as pageType
+        '15' as pageType
         from(
         select
         case when ceqs.Submit_Status != #{nosubmit}
@@ -973,6 +1012,184 @@
                 </foreach>
             </if>
         </where>
+        <!-- 16.总部或分支机构信息登记 -->
+        select
+        count(temp.SEND_STATUS) as total,
+        ifnull(sum(temp.lateNums),0) as unSubmitNum,
+        '16' as pageType
+        from(
+        select
+        case when ces.SEND_STATUS != #{nosubmit}
+        and ces.CHB_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
+        when ces.SEND_STATUS = #{nosubmit}
+        and ces.CHB_SUBMIT_DEADLINE &lt; #{sysTime} then 1 <!-- 未报送数据，且延时报送数量 -->
+        else 0 end lateNums,  <!-- 统计延时数据 -->
+        ces.SEND_STATUS,
+        ces.CREATE_DEPT
+        from CHB_SALER_INST_SUB ces
+        where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
+        union all
+        <!-- 履历表数据 -->
+        select
+        case when ces.CHB_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
+        else 0 end lateNums, <!-- 统计延时数据 -->
+        ces.SEND_STATUS,
+        ces.CREATE_DEPT
+        from CHB_SALER_INST_SUB_HIS ces
+        where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
+        )temp
+        <where>
+            <if test="isNotCount !=null and isNotCount=='01'">
+                <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
+                temp.SEND_STATUS != #{manualSub}
+            </if>
+            <if test="createDeptList != null and createDeptList.size>0">
+                <foreach collection="createDeptList" item = "item" open="and temp.CREATE_DEPT in(" separator="," close=")">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+
+        </where>
+        union all
+        <!-- 17.销售人员身份信息登记 -->
+        select
+        count(temp.SEND_STATUS) as total,
+        ifnull(sum(temp.lateNums),0) as unSubmitNum,
+        '17' as pageType
+        from(
+        select
+        case when ces.SEND_STATUS != #{nosubmit}
+        and ces.CHB_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
+        when ces.SEND_STATUS = #{nosubmit}
+        and ces.CHB_SUBMIT_DEADLINE &lt; #{sysTime} then 1 <!-- 未报送数据，且延时报送数量 -->
+        else 0 end lateNums,  <!-- 统计延时数据 -->
+        ces.SEND_STATUS,
+        ces.CREATE_DEPT
+        from CHB_SALER_IDEN_SUB ces
+        where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
+        union all
+        <!-- 履历表数据 -->
+        select
+        case when ces.CHB_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
+        else 0 end lateNums, <!-- 统计延时数据 -->
+        ces.SEND_STATUS,
+        ces.CREATE_DEPT
+        from CHB_SALER_IDEN_SUB_HIS ces
+        where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
+        )temp
+        <where>
+            <if test="isNotCount !=null and isNotCount=='01'">
+                <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
+                temp.SEND_STATUS != #{manualSub}
+            </if>
+            <if test="createDeptList != null and createDeptList.size>0">
+                <foreach collection="createDeptList" item = "item" open="and temp.CREATE_DEPT in(" separator="," close=")">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+
+        union all
+        <!-- 18.销售人员奖惩投诉记录信息登记 -->
+        select
+        count(temp.SEND_STATUS) as total,
+        ifnull(sum(temp.lateNums),0) as unSubmitNum,
+        '18' as pageType
+        from(
+        select
+        case when ces.SEND_STATUS != #{nosubmit}
+        and ces.CHB_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
+        when ces.SEND_STATUS = #{nosubmit}
+        and ces.CHB_SUBMIT_DEADLINE &lt; #{sysTime} then 1 <!-- 未报送数据，且延时报送数量 -->
+        else 0 end lateNums,  <!-- 统计延时数据 -->
+        ces.SEND_STATUS,
+        ces.CREATE_DEPT
+        from CHB_SALER_REW_PENA_SUB ces
+        where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
+        union all
+        <!-- 履历表数据 -->
+        select
+        case when ces.CHB_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
+        else 0 end lateNums, <!-- 统计延时数据 -->
+        ces.SEND_STATUS,
+        ces.CREATE_DEPT
+        from CHB_SALER_REW_PENA_SUB_HIS ces
+        where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
+        )temp
+        <where>
+            <if test="isNotCount !=null and isNotCount=='01'">
+                <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
+                temp.SEND_STATUS != #{manualSub}
+            </if>
+            <if test="createDeptList != null and createDeptList.size>0">
+                <foreach collection="createDeptList" item = "item" open="and temp.CREATE_DEPT in(" separator="," close=")">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+        union all
+        <!-- 19.代理销售机构信息登记 -->
+        select
+        count(temp.SEND_STATUS) as total,
+        ifnull(sum(temp.lateNums),0) as unSubmitNum,
+        '19' as pageType
+        from(
+        select
+        case when ces.SEND_STATUS != #{nosubmit}
+        and ces.CHB_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
+        when ces.SEND_STATUS = #{nosubmit}
+        and ces.CHB_SUBMIT_DEADLINE &lt; #{sysTime} then 1 <!-- 未报送数据，且延时报送数量 -->
+        else 0 end lateNums,  <!-- 统计延时数据 -->
+        ces.SEND_STATUS
+        from CHB_AGENT_INSTITUTION_SUB ces
+        where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
+        union all
+        <!-- 履历表数据 -->
+        select
+        case when ces.CHB_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
+        else 0 end lateNums, <!-- 统计延时数据 -->
+        ces.SEND_STATUS
+        from CHB_AGENT_INSTITUTION_SUB_HIS ces
+        where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
+        )temp
+        <where>
+            <if test="isNotCount !=null and isNotCount=='01'">
+                <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
+                temp.SEND_STATUS != #{manualSub}
+            </if>
+        </where>
+        union all
+        <!-- 20.委托销售产品编码信息登记 -->
+        select
+        count(temp.SEND_STATUS) as total,
+        ifnull(sum(temp.lateNums),0) as unSubmitNum,
+        '20' as pageType
+        from(
+        select
+        case when ces.SEND_STATUS != #{nosubmit}
+        and ces.CHB_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
+        when ces.SEND_STATUS = #{nosubmit}
+        and ces.CHB_SUBMIT_DEADLINE &lt; #{sysTime} then 1 <!-- 未报送数据，且延时报送数量 -->
+        else 0 end lateNums,  <!-- 统计延时数据 -->
+        ces.SEND_STATUS
+        from CHB_AGENT_PRD_SUB ces
+        where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
+        union all
+        <!-- 履历表数据 -->
+        select
+        case when ces.CHB_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
+        else 0 end lateNums, <!-- 统计延时数据 -->
+        ces.SEND_STATUS
+        from CHB_AGENT_PRD_SUB_HIS ces
+        where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
+        )temp
+        <where>
+            <if test="isNotCount !=null and isNotCount=='01'">
+                <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
+                temp.SEND_STATUS != #{manualSub}
+            </if>
+        </where>
+
         ) tmp
     </select>
 
