@@ -1,5 +1,6 @@
 package com.joyintech.tams.svreport.chb.businessdatamaintain.chbmstbondcreditrating.service;
 
+import com.google.common.collect.Lists;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.JoyinMessage;
 import com.joyintech.framework.ajax.MessageType;
@@ -13,6 +14,7 @@ import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
 import com.joyintech.tams.common.svreport.base.service.BatchInsertUtil;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.svreport.chb.businessdatamaintain.chbexchangeinfo.dto.ChbExchangeQuotationInfoDto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbmstbondcreditrating.dao.ChbMstBondCreditRatingDao;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbmstbondcreditrating.dto.ChbMstBondCreditRatingDto;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
@@ -502,7 +504,11 @@ public class ChbMstBondCreditRateService extends CommonExportService<ChbMstBondC
             byte[] bytes = sb.toString().getBytes();
             InputStream in = new ByteArrayInputStream(bytes);
             batchInsertUtil.bulkLoadFromInputStream("cvr_306_mysql_test",tableName,in);*/
-            mstBondCreditRatingDao.batchInsert(chbMstBondCreditRatingDtos);
+            //按500条分批保存
+            List<List<ChbMstBondCreditRatingDto>> partitionList = Lists.partition(chbMstBondCreditRatingDtos, 500);
+            for (List<ChbMstBondCreditRatingDto> dtos : partitionList) {
+                mstBondCreditRatingDao.batchInsert(dtos);
+            }
         }
         return checkResult.stream().filter(ele ->null != ele.getValidKey() && ele.getValidKey().equals("YW")).collect(Collectors.toList());
     }

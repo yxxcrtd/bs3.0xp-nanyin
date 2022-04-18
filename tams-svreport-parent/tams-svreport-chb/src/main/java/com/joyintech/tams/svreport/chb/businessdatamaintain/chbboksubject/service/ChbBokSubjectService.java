@@ -1,5 +1,6 @@
 package com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.service;
 
+import com.google.common.collect.Lists;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.JoyinMessage;
 import com.joyintech.framework.ajax.MessageType;
@@ -569,7 +570,12 @@ public class ChbBokSubjectService extends CommonExportService<ChbBokSubjectDto> 
             byte[] bytes = sb.toString().getBytes();
             ByteArrayInputStream in = new ByteArrayInputStream(bytes);
             batchInsertUtil.bulkLoadFromInputStream("cvr_306_mysql_test",tableName,in);*/
-            bokSubjectDao.batchInsert(chbBokSubjectDtoDtos);
+            //按500条分批保存
+            List<List<ChbBokSubjectDto>> partition = Lists.partition(chbBokSubjectDtoDtos, 500);
+            for (List<ChbBokSubjectDto> dtos : partition) {
+
+                bokSubjectDao.batchInsert(dtos);
+            }
         }
         return checkResult.stream().filter(ele ->null != ele.getValidKey()&&ele.getValidKey().equals("YW")).collect(Collectors.toList());
     }
