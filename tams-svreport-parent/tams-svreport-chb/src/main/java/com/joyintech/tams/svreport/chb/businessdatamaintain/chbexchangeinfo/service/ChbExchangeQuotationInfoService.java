@@ -233,7 +233,7 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
         for (List<ChbExchangeQuotationInfoDto> list:partitionList) {
             chbExchangeQuotationInfoMapper.insertExchargeQuoteInfo(list);
         }
-        return excelValidList.stream().filter(e -> Objects.equals("YW",e.getValidKey())).collect(Collectors.toList());
+        return excelValidList;
     }
 
     /**
