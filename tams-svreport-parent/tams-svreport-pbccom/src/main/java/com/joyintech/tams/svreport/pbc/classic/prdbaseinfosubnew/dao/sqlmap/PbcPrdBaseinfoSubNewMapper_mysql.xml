@@ -520,7 +520,7 @@
         then CAST(substring(PROD_STAGE,1,4) AS decimal(30,4))
         else PROD_STAGE
         end PROD_STAGE,
-        PROD_ID,
+        info.PROD_ID,
         RAISE_CCY,
         CASH_PRIN_CCY,
         CASH_PROF_CCY,
@@ -557,19 +557,15 @@
         (case TERM_RIGHT_FLAG when '01' then '1' else '2' end) TERM_RIGHT_FLAG,
         (case CUS_REDEEM_FLAG when '01' then '1' else '2' end) CUS_REDEEM_FLAG,
         (case CREDIT_FLAG when '01' then '1' else '2' end) CREDIT_FLAG,
-        /*REPLACE(CREDIT_TYPE, '0','') CREDIT_TYPE,
-        (case CREDIT_MODE when '01' then '1'  when '02' then '2'  when '03' then '1' else '2' end) CREDIT_MODE,*/
         REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(CREDIT_TYPE,'05','6'),'04','1'),'03','4'),'02','3'),'03','2')
         CREDIT_TYPE,
         REPLACE(CREDIT_MODE,'0','') CREDIT_MODE,
         IN_DEP_NAME,
-        /*IN_DEP_CODE,
-        OUT_DEP_CTRY,*/
         <!-- modify by zhangliang 20220319 华夏个性化改造取机构登记银行代码管理 start-->
         <!-- info.IN_DEP_CODE,-->
         cbc2.PBC_BANK_CODE IN_DEP_CODE,
         <!-- modify by zhangliang 20220319 华夏个性化改造取机构登记银行代码管理 end-->
-        (cash OUT_DEP_CTRY when null '' else substr(OUT_DEP_CTRY,0,3)) OUT_DEP_CTRY,
+        (case OUT_DEP_CTRY when null then '' else substr(OUT_DEP_CTRY,0,3) end) OUT_DEP_CTRY,
         case
         when length(OUT_DEP_NAME)>120
         then substr(OUT_DEP_NAME,0,120)
