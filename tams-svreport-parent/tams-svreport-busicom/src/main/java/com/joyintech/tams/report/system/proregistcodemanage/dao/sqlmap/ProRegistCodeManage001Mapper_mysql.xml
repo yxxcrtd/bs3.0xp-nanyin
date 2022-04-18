@@ -157,28 +157,28 @@
 	</select>
 	<select id="queryAllRegistCode" resultType="com.joyintech.framework.select.SelectOptionDto">
 		SELECT DISTINCT
-		  B.REG_CODE id,
-		  B.REG_CODE text
-		 FROM CHB_PRDRESIST_CODE B
-		 where B.REG_CODE is not null
-		 order by B.REG_CODE
+		B.REG_CODE id,
+		B.REG_CODE text
+		FROM CHB_PRDRESIST_CODE B
+		where B.REG_CODE is not null
+		order by B.REG_CODE
 	</select>
 	<select id="queryRegCode" resultType="com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeManage001Dto">
 		SELECT
-		  A.REG_CODE regCode,
-		  A.ORG_CODE orgCode,
-		  A.PRODID prodId,
-		  A.PRODNAME prodname
-		 FROM CHB_PRDRESIST_CODE A
-		 INNER JOIN CHB_EQUDET_IMP_TMP B
-		 	ON A.ORG_CODE = B.ORG_CODE AND A.PRODID = B.ACCOUNT
+		A.REG_CODE regCode,
+		A.ORG_CODE orgCode,
+		A.PRODID prodId,
+		A.PRODNAME prodname
+		FROM CHB_PRDRESIST_CODE A
+		INNER JOIN CHB_EQUDET_IMP_TMP B
+		ON A.ORG_CODE = B.ORG_CODE AND A.PRODID = B.ACCOUNT
 	</select>
 	<select id="queryProdid" resultType="com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeManage001Dto">
 		SELECT
-		  *
-		 FROM CHB_PRDRESIST_CODE B
-		 where
-		 		B.PRODID = #{prodid}
+		*
+		FROM CHB_PRDRESIST_CODE B
+		where
+		B.PRODID = #{prodid}
 	</select>
 	<select id="isExist" resultType="java.lang.Integer">
 		SELECT
@@ -281,7 +281,6 @@
 	</select>
 
 	<update id="updateOperateModeByProdId" parameterType="java.util.List">
-		/*begin*/
 		<foreach collection="list" item="item" index="index" separator=";" >
 			update CHB_PRDRESIST_CODE
 			set
@@ -290,13 +289,62 @@
 			where
 			PRODID = #{item.prodId}
 		</foreach>
-		;/*end;*/
+		;
 	</update>
+
+	<select id="selectCode" resultType="java.util.Map">
+		select
+		cpc.REG_CODE regCode
+		from
+		CHB_PRDRESIST_CODE cpc
+		<where>
+			<if test="regCode != null" >
+				cpc.REG_CODE = #{regCode,jdbcType=VARCHAR}
+			</if>
+			<if test="prodId != null  and prodId !='' " >
+				and cpc.PRODID != #{prodId,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectInfo" resultType="com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeManage002Dto">
+		select
+		chb_prd_baseinfo.PROD_NAME prodName,
+		chb_prd_baseinfo.OPERATE_MODE operateMode<!--,
+		chb_prd_baseinfo.VDATE vdate,
+		chb_prd_baseinfo.MDATE mdate-->
+		from chb_prd_baseinfo
+		<!--left join FIN_PRODUCT on FIN_PRODUCT.FINPROD_MARKET_ID = chb_prd_baseinfo.PROD_ID-->
+		where chb_prd_baseinfo.PROD_ID = #{prodId}
+		and chb_prd_baseinfo.status IN ('E','M') and chb_prd_baseinfo.fprod_id is null
+		<!--  and FIN_PRODUCT.FINPROD_TYPE = 'F16' and FIN_PRODUCT.FINPROD_TYPE2 = 'F16'-->
+	</select>
+
+	<select id="selectInfoN" resultType="com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeManage002Dto">
+		select
+		ci.prod_NAME prodName,
+		REP_PROD_DECLARE.REP_OPERATE_MODE operateMode<!--,
+		FIN_PRODUCT.VDATE vdate,
+		FIN_PRODUCT.MDATE mdate-->
+		from chb_prd_declare_info ci
+		left join REP_PROD_DECLARE  on REP_PROD_DECLARE.rep_finprod_ins_id = ci.prod_ins_id
+		where ci.prod_ins_id = #{prodId}
+	</select>
+
+	<select id="selectId" resultType="java.util.Map">
+		select
+		cpc.PRODID prodId
+		from
+		CHB_PRDRESIST_CODE cpc
+		<where>
+			cpc.PRODID = #{prodId}
+		</where>
+	</select>
 
 	<select id="selectInfoByProdId" resultType="com.joyintech.tams.svreport.interf.chb.proddeclare.dto.ChbPrdDeclareInfoDto">
 		select
-			prod_ins_id prodInsId,
-			raise_type raiseType
+		prod_ins_id prodInsId,
+		raise_type raiseType
 		from chb_prd_declare_info
 		where prod_ins_id = #{prodId}
 	</select>

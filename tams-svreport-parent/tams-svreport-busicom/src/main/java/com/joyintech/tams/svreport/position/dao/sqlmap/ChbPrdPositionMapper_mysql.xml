@@ -62,40 +62,40 @@
 	</insert>
 
 	<insert id="insertPos" parameterType="com.joyintech.tams.svreport.position.dto.ChbPrdPosition" >
-       insert into CHB_PRD_POSITION
-	       (CDATE, PROD_ID, INDENTIFY_MARK,CCY,
-	        ISSUE_PARTY_ID, TDADD_QTY, TDADD_AMT,
-	        TDADD_COST, TDADD_INTAMT,BALANCE_QTY, BALANCE_AMT,
-	        TOTAL_INTAMT,ORG_CODE,DEPT_CODE,
-	        CREATE_USER,CREATE_TIME, REMARK,CONSIGN_AMT,BUY_PLACE,
-	        CUST_COUNTS,CUSTOMER_TYPE2,CUSTAMT,CUSTQTY,RAISEAMT)
-      values(
-	        #{cdate,jdbcType=DATE},
-	        #{prodId,jdbcType=VARCHAR},
-	        #{indentifyMark,jdbcType=VARCHAR},
-	        #{ccy,jdbcType=VARCHAR},
-            #{issuePartyId,jdbcType=VARCHAR},
-            #{tdaddQty,jdbcType=DECIMAL},
-            #{tdaddAmt,jdbcType=DECIMAL},
-            #{tdaddCost,jdbcType=DECIMAL},
-            #{tdaddIntamt,jdbcType=DECIMAL},
-            #{balanceQty,jdbcType=DECIMAL},
-            #{balanceAmt,jdbcType=DECIMAL},
-            #{totalIntamt,jdbcType=DECIMAL},
-            #{orgCode,jdbcType=VARCHAR},
-            #{deptCode,jdbcType=VARCHAR},
-            #{createUser,jdbcType=VARCHAR},
-            NOW(),
-            #{remark,jdbcType=VARCHAR},
-            #{consignamt,jdbcType=DECIMAL},
-            #{buyplace,jdbcType=VARCHAR},
-            #{custCounts,jdbcType=DECIMAL},
-            #{customerType2,jdbcType=VARCHAR},
-            #{custamt,jdbcType=DECIMAL},
-            #{custqty,jdbcType=DECIMAL},
-            #{raiseamt,jdbcType=DECIMAL}
-            )
-  </insert>
+		insert into CHB_PRD_POSITION
+		(CDATE, PROD_ID, INDENTIFY_MARK,CCY,
+		ISSUE_PARTY_ID, TDADD_QTY, TDADD_AMT,
+		TDADD_COST, TDADD_INTAMT,BALANCE_QTY, BALANCE_AMT,
+		TOTAL_INTAMT,ORG_CODE,DEPT_CODE,
+		CREATE_USER,CREATE_TIME, REMARK,CONSIGN_AMT,BUY_PLACE,
+		CUST_COUNTS,CUSTOMER_TYPE2,CUSTAMT,CUSTQTY,RAISEAMT)
+		values(
+		#{cdate,jdbcType=DATE},
+		#{prodId,jdbcType=VARCHAR},
+		#{indentifyMark,jdbcType=VARCHAR},
+		#{ccy,jdbcType=VARCHAR},
+		#{issuePartyId,jdbcType=VARCHAR},
+		#{tdaddQty,jdbcType=DECIMAL},
+		#{tdaddAmt,jdbcType=DECIMAL},
+		#{tdaddCost,jdbcType=DECIMAL},
+		#{tdaddIntamt,jdbcType=DECIMAL},
+		#{balanceQty,jdbcType=DECIMAL},
+		#{balanceAmt,jdbcType=DECIMAL},
+		#{totalIntamt,jdbcType=DECIMAL},
+		#{orgCode,jdbcType=VARCHAR},
+		#{deptCode,jdbcType=VARCHAR},
+		#{createUser,jdbcType=VARCHAR},
+		NOW(),
+		#{remark,jdbcType=VARCHAR},
+		#{consignamt,jdbcType=DECIMAL},
+		#{buyplace,jdbcType=VARCHAR},
+		#{custCounts,jdbcType=DECIMAL},
+		#{customerType2,jdbcType=VARCHAR},
+		#{custamt,jdbcType=DECIMAL},
+		#{custqty,jdbcType=DECIMAL},
+		#{raiseamt,jdbcType=DECIMAL}
+		)
+	</insert>
 
 	<delete id="deletePosition" parameterType="map">
 		delete from
@@ -279,13 +279,10 @@
 		from chb_prd_deal deal
 		where deal.status != 'D'
 		and (deal.BUY_PLACE not in('210200','330200','350200','370200','440300') or deal.BUY_PLACE is null)
-		<!-- and deal.trade_type in ('01','02','03','04','15','16','17') -->
 		and settdate_date=#{batchDate,jdbcType=DATE}
 		<if test="prodIdList!=null">
 			<foreach collection="prodIdList" item="prodId" open="and ( (" close=" ) )" separator=") or (">
 				ifnull(DEAL.FPROD_ID,DEAL.PROD_ID) = #{prodId,jdbcType = VARCHAR}
-				<!-- and deal.org_code = #{prdEndSub.orgCode,jdbcType = VARCHAR} -->
-				<!-- and deal.settdate_date<![CDATA[<=]]> #{prdEndSub.settDate,jdbcType = DATE} -->
 			</foreach>
 		</if>
 	</select>
