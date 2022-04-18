@@ -247,7 +247,7 @@
                 AND	SALER_NAME  like concat('%',concat(#{salerName,jdbcType=VARCHAR},'%'))
             </if>
         </where>
-        )
+        ) T
     </select>
 
     <!--    总部或分支机构编码联想框-->
