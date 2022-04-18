@@ -102,7 +102,7 @@ public class ChbExchangeQuotationInfo001Controller extends BaseController {
             return new AjaxResult(br);
         }
         WorkFlowParameter<ChbExchangeQuotationInfoDto> params = new WorkFlowParameter<>();
-        params.setPageId(this.getPageId());
+        params.setPageId("ChbExchangeQuotationInfo002");
         params.setElementId(dto.getElementId());
         params.setBusinessCode(item -> item.getExchargeCode());
         params.setBusinessType(DictCodeList.共通业务类型_汇率行情信息.getValue());
