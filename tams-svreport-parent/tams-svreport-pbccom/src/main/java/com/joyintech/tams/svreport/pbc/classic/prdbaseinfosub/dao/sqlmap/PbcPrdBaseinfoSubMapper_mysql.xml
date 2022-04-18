@@ -931,7 +931,7 @@
 		t1.OUT_DEP_NAME outDepName,
 		t1.VDATE vdate,
 		t1.MDATE mdate,
-		ifnull(t3.PBC_CODE, t1.ACCOUNT_ID) accountId accountId,
+		ifnull(t3.PBC_CODE, t1.ACCOUNT_ID) accountId,
 		t1.IS_CONSTRACTE isConstracte,
 		t1.TRANSFER_TYPE transferType,
 		t1.IDENTI_FLAG identiFlag,
@@ -953,7 +953,7 @@
 		ifnull(T2.pbc_code,t1.pbc_prod_id) pbcProdIdShow,
 		CB.Profit_Type  profitType,
 		t1.CASH_MANA_CATE cashManaCate,
-		t1.CROSS_BORDER_FLAG crossBorderFlag,
+		t1.CROSS_BORDER_FLAG crossBorderFlag
 		from PBC_PRD_BASEINFO_SUB t1
 		LEFT JOIN(
 		SELECT
@@ -981,7 +981,7 @@
 		ON SI.INSTITUTION_CODE = CORBC.ORG_CODE
 		LEFT JOIN CHB_PRD_BASEINFO CB ON t1.Prod_Id = CB.PROD_ID AND CB.STATUS IN ('E','M')
 		<where>
-			STATUS !='04'
+			t1.STATUS !='04'
 			<if test="pbcProdIdList != null and pbcProdIdList.size > 0">
 				<foreach collection="pbcProdIdList" item="items" open="and ifnull(T2.pbc_code,t1.pbc_prod_id) in (" separator="," close =")">
 					#{items,jdbcType=VARCHAR}
