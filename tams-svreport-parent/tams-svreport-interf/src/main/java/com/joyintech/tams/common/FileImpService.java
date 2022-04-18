@@ -52,6 +52,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
+import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -1129,13 +1130,15 @@ public abstract class FileImpService extends InterfService{
                     }
                 }else if ("java.math.BigDecimal".equals(type.getTypeName())) {
                     try {
-                        field.set(baseEntity ,(value == null || "".equals(value)) ? BigDecimal.ZERO : new BigDecimal(value));
+                        value = valueWipePercent(value);
+                        field.set(baseEntity ,(value == null || "".equals(value)) ? null : new BigDecimal(value));
                     } catch ( IllegalAccessException e) {
                         logger.error(e.getMessage(),e);
                     }
                 }
                 else if ("java.lang.Integer".equals(type.getTypeName())) {
                     try {
+                        value = valueWipePercent(value);
                         field.set(baseEntity ,(value == null || "".equals(value)) ? 0 : Integer.valueOf(value));
                     } catch (IllegalAccessException e) {
                         logger.error(e.getMessage(),e);
@@ -1143,12 +1146,14 @@ public abstract class FileImpService extends InterfService{
                 }
                 else if ("java.lang.Short".equals(type.getTypeName())) {
                     try {
+                        value = valueWipePercent(value);
                         field.set(baseEntity, (value == null || "".equals(value)) ? 0 : Short.valueOf(value));
                     } catch ( IllegalAccessException e) {
                         logger.error(e.getMessage(),e);
                     }
                 } else if ("java.lang.Long".equals(type.getTypeName())) {
                     try {
+                        value = valueWipePercent(value);
                         field.set(baseEntity, (value == null || "".equals(value)) ? 0 : Long.valueOf(value));
                     } catch ( IllegalAccessException e) {
                         logger.error(e.getMessage(),e);
@@ -1186,12 +1191,29 @@ public abstract class FileImpService extends InterfService{
         }
         return rs;
     }
+
     /**
-     //     *
-     //     * @param dataList
-     //     * @param clz
-     //     * @return
-     //     */
+     * 去除百分号计算
+     * @param value
+     */
+    public String valueWipePercent(String value) {
+        if(StringUtil.isNotEmpty(value)){
+            int cishu = this.ciShu(value,"%");
+            if(cishu==1){
+                value = value.replace("%","");
+                BigDecimal bd = new BigDecimal(value);
+                bd = bd.divide(new BigDecimal(100));
+                value = String.valueOf(bd);
+            }
+        }
+        return value;
+    }
+//    /**
+//     //     *
+//     //     * @param dataList
+//     //     * @param clz
+//     //     * @return
+//     //     */
 //    public List<? extends BaseChbEntity> convertMapToEntity(List<Map<String, String>> dataList, Class clz) {
 //        // 返回对象list
 //        List<BaseChbEntity> rs = new ArrayList<>();
@@ -1230,6 +1252,7 @@ public abstract class FileImpService extends InterfService{
 //                    }
 //                }else if ("java.math.BigDecimal".equals(type.getTypeName())) {
 //                    try {
+//                        value = valueWipePercent(value);
 //                        //如果是利率带%特殊处理
 //                        if(StringUtil.isNotEmpty(value)){
 //                            int cishu = this.ciShu(value,"%");
@@ -1247,6 +1270,7 @@ public abstract class FileImpService extends InterfService{
 //                }
 //                else if ("java.lang.Integer".equals(type.getTypeName())) {
 //                    try {
+//                        value = valueWipePercent(value);
 //                        field.set(baseChbEntity ,(value == null || "".equals(value)) ? null : Integer.valueOf(value));
 //                    } catch (IllegalAccessException e) {
 //                        logger.error(e.getMessage(),e);
@@ -1254,12 +1278,14 @@ public abstract class FileImpService extends InterfService{
 //                }
 //                else if ("java.lang.Short".equals(type.getTypeName())) {
 //                    try {
+//                        value = valueWipePercent(value);
 //                        field.set(baseChbEntity, (value == null || "".equals(value)) ? null : Short.valueOf(value));
 //                    } catch ( IllegalAccessException e) {
 //                        logger.error(e.getMessage(),e);
 //                    }
 //                } else if ("java.lang.Long".equals(type.getTypeName())) {
 //                    try {
+//                        value = valueWipePercent(value);
 //                        field.set(baseChbEntity, (value == null || "".equals(value)) ? null : Long.valueOf(value));
 //                    } catch ( IllegalAccessException e) {
 //                        logger.error(e.getMessage(),e);
@@ -1305,8 +1331,8 @@ public abstract class FileImpService extends InterfService{
 //        }
 //        return rs;
 //    }
+////
 //
-
     /**
      * 判断str1中包含str2的个数
      * @param str1
