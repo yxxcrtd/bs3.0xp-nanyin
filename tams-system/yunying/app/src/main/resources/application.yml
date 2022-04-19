@@ -41,7 +41,7 @@ spring:
     exclude: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
   http:
     multipart:
-      maxFileSize: 10Mb
+      maxFileSize: 200Mb
       maxRequestSize: 100Mb
   #静态资源配置:js和css变更时无需手工清缓存
   resources:
