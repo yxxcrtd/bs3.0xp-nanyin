@@ -473,7 +473,7 @@
             </if>
             and REPORTTYPE != 'ONEPRD_ASSET_DEBT'<!-- 过滤单产品资产负债表 -->
         </where>
-        )as t ORDER BY STATUSDATE
+        )as t ORDER BY STATUS_DATE
     </select>
 
     <update id="updateDoMannultSendZipDatFile" parameterType="java.util.Map">

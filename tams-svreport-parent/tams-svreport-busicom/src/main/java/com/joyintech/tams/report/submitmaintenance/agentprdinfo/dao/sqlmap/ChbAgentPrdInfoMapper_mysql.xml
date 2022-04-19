@@ -162,14 +162,131 @@
     </select>
 
     <insert id="insert" parameterType="com.joyintech.tams.report.submitmaintenance.agentprdinfo.dto.AgentPrdInfoDto" >
-        insert into CHB_AGENT_PRD_INFO (AGENT_INSTITUTION_CODE,ISSUE_PARTY_ID,
-            PROD_ID, PROD_NAME, PROD_REGIST_CODE, 
-            STATUS, DATA_DATE, REMARK, CREATE_DEPT,ORG_CODE,
-            CREATE_TIME, UPDATE_TIME)
-        values (#{agentInstitutionCode,jdbcType=VARCHAR},#{issuePartyId,jdbcType=VARCHAR},
-            #{prodId,jdbcType=VARCHAR}, #{prodName,jdbcType=VARCHAR}, #{prodRegistCode,jdbcType=VARCHAR}, 
-            #{status,jdbcType=VARCHAR}, now(), #{remark,jdbcType=VARCHAR},#{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},now(),
-            now())
+        insert into CHB_AGENT_PRD_INFO (AGENT_INSTITUTION_CODE, ISSUE_PARTY_ID,
+                                        PROD_ID, PROD_NAME, PROD_REGIST_CODE,
+                                        STATUS, DATA_DATE, REMARK, CREATE_DEPT, ORG_CODE,
+                                        CREATE_TIME, UPDATE_TIME)
+        select *
+        from (select TEMP.*
+              from (
+                       SELECT #{agentInstitutionCode} AGENT_INSTITUTION_CODE,
+                              #{issuePartyId}         ISSUE_PARTY_ID,
+                              #{prodId}               PROD_ID,
+                              #{prodName}             PROD_NAME,
+                              #{prodRegistCode}       PROD_REGIST_CODE,
+                              #{status}               STATUS,
+                              now()                   DATA_DATE,
+                              #{remark}               REMARK,
+                              #{createDept}           CREATE_DEPT,
+                              #{orgCode}              ORG_CODE,
+                              now()                   CREATE_TIME,
+                              now()                   UPDATE_TIME
+                       from dual
+                   ) TEMP
+              where not EXISTS(
+                      select 1
+                      from CHB_AGENT_PRD_INFO a
+                      where a.AGENT_INSTITUTION_CODE = TEMP.AGENT_INSTITUTION_CODE
+                        AND a.PROD_REGIST_CODE = TEMP.PROD_REGIST_CODE
+                  )
+             ) a;
+        update CHB_AGENT_PRD_INFO a,(
+            select *
+            from (select TEMP.*
+            from (
+            SELECT #{agentInstitutionCode} AGENT_INSTITUTION_CODE,
+            #{issuePartyId} ISSUE_PARTY_ID,
+            #{prodId} PROD_ID,
+            #{prodName} PROD_NAME,
+            #{prodRegistCode} PROD_REGIST_CODE,
+            #{status} STATUS,
+            now() DATA_DATE,
+            #{remark} REMARK,
+            #{createDept} CREATE_DEPT,
+            #{orgCode} ORG_CODE,
+            now() CREATE_TIME,
+            now() UPDATE_TIME
+            from dual
+            ) TEMP
+            ) a
+            ) b
+        set a.ISSUE_PARTY_ID = b.ISSUE_PARTY_ID,
+            a.PROD_ID = b.PROD_ID,
+            a.PROD_NAME = b.PROD_NAME,
+            a.STATUS = b.STATUS,
+            a.DATA_DATE = b.DATA_DATE,
+            a.REMARK = b.REMARK,
+            a.CREATE_DEPT = b.CREATE_DEPT,
+            a.ORG_CODE = b.ORG_CODE,
+            a.CREATE_TIME = b.CREATE_TIME,
+            a.UPDATE_TIME = b.UPDATE_TIME
+        where a.AGENT_INSTITUTION_CODE = b.AGENT_INSTITUTION_CODE and a.PROD_REGIST_CODE = b.PROD_REGIST_CODE
+    </insert>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into CHB_AGENT_PRD_INFO (AGENT_INSTITUTION_CODE, ISSUE_PARTY_ID,
+                                        PROD_ID, PROD_NAME, PROD_REGIST_CODE,
+                                        STATUS, DATA_DATE, REMARK, CREATE_DEPT, ORG_CODE,
+                                        CREATE_TIME, UPDATE_TIME)
+        select *
+        from (select TEMP.*
+              from (
+        <foreach collection="list" item="item" separator="union all">
+                       SELECT #{item.agentInstitutionCode} AGENT_INSTITUTION_CODE,
+                              #{item.issuePartyId}         ISSUE_PARTY_ID,
+                              #{item.prodId}               PROD_ID,
+                              #{item.prodName}             PROD_NAME,
+                              #{item.prodRegistCode}       PROD_REGIST_CODE,
+                              #{item.status}               STATUS,
+                              now()                   DATA_DATE,
+                              #{item.remark}               REMARK,
+                              #{item.createDept}           CREATE_DEPT,
+                              #{item.orgCode}              ORG_CODE,
+                              now()                   CREATE_TIME,
+                              now()                   UPDATE_TIME
+                       from dual
+        </foreach>
+                   ) TEMP
+              where not EXISTS(
+                      select 1
+                      from CHB_AGENT_PRD_INFO a
+                      where a.AGENT_INSTITUTION_CODE = TEMP.AGENT_INSTITUTION_CODE
+                        AND a.PROD_REGIST_CODE = TEMP.PROD_REGIST_CODE
+                  )
+             ) a;
+        update CHB_AGENT_PRD_INFO a,(
+            select *
+            from (select TEMP.*
+            from (
+        <foreach collection="list" item="item" separator="union all">
+            SELECT #{item.agentInstitutionCode} AGENT_INSTITUTION_CODE,
+            #{item.issuePartyId}         ISSUE_PARTY_ID,
+            #{item.prodId}               PROD_ID,
+            #{item.prodName}             PROD_NAME,
+            #{item.prodRegistCode}       PROD_REGIST_CODE,
+            #{item.status}               STATUS,
+            now()                   DATA_DATE,
+            #{item.remark}               REMARK,
+            #{item.createDept}           CREATE_DEPT,
+            #{item.orgCode}              ORG_CODE,
+            now()                   CREATE_TIME,
+            now()                   UPDATE_TIME
+            from dual
+        </foreach>
+            ) TEMP
+            ) a
+            ) b
+        set a.ISSUE_PARTY_ID = b.ISSUE_PARTY_ID,
+            a.PROD_ID = b.PROD_ID,
+            a.PROD_NAME = b.PROD_NAME,
+            a.STATUS = b.STATUS,
+            a.DATA_DATE = b.DATA_DATE,
+            a.REMARK = b.REMARK,
+            a.CREATE_DEPT = b.CREATE_DEPT,
+            a.ORG_CODE = b.ORG_CODE,
+            a.CREATE_TIME = b.CREATE_TIME,
+            a.UPDATE_TIME = b.UPDATE_TIME
+        where a.AGENT_INSTITUTION_CODE = b.AGENT_INSTITUTION_CODE and a.PROD_REGIST_CODE = b.PROD_REGIST_CODE
     </insert>
     <!--	产品代码及名称-->
     <select id="selectPrdCodeList" resultType="com.joyintech.tams.report.submitmaintenance.agentprdinfo.dto.AgentPrdInfoDto" >
