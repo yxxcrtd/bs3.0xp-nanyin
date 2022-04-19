@@ -671,9 +671,9 @@
         LEFT JOIN BOK_BOOKSET BOOKSET /*投资组合关联账套查询相关信息*/
         ON BOOKSET.BOOKSET_ID = BALANCE.BOOKSET_ID
         LEFT JOIN FIN_PRODUCT PROD/*标的类金融产品表*/
-        ON PROD.FINPROD_MARKET_ID = replace(BALANCE.BOOKSET_ID,'F16_')
+        ON PROD.FINPROD_MARKET_ID = replace(BALANCE.BOOKSET_ID,'F16_','')
         LEFT JOIN FIN_PRODUCT_ADD PRODADD /*产品附属信息表*/
-        ON replace(BALANCE.BOOKSET_ID,'F16_')=PRODADD.PORTFOLIO_ID
+        ON replace(BALANCE.BOOKSET_ID,'F16_','')=PRODADD.PORTFOLIO_ID
         WHERE 1 =1
         AND DATE_FORMAT(ifnull(BALANCE.UPDATE_TIME,BALANCE.CREATE_TIME),'%Y-%m-%d') = DATE_FORMAT(#{cdate,jdbcType=DATE},'%Y-%m-%d')
         /*标的类金融产品.投管分类=理财产品*/
@@ -716,7 +716,7 @@
         ifnull(min(BALANCE.BALANCE_DATE),#{cdate,jdbcType=DATE}) SETTDATEDATE
         FROM BOK_BALANCE BALANCE
         LEFT JOIN CHB_PRD_BASEINFO PRODINFO /*产品要素信息*/
-        on prodinfo.PROD_ID = replace(balance.BOOKSET_ID,'F16_')
+        on prodinfo.PROD_ID = replace(balance.BOOKSET_ID,'F16_','')
         WHERE 1 =1
         AND DATE_FORMAT(ifnull(BALANCE.UPDATE_TIME,BALANCE.CREATE_TIME),'%Y-%m-%d') = DATE_FORMAT(#{cdate,jdbcType=DATE},'%Y-%m-%d')
         and prodinfo.PROFIT_TYPE = '03'/*只取非保本理财产品 */
@@ -873,7 +873,7 @@
         BALANCE.B_CCY BCCY/*本币币种*/
         FROM BOK_BALANCE BALANCE
         LEFT JOIN CHB_PRD_BASEINFO PRODINFO /*产品要素信息*/
-        on prodinfo.PROD_ID = replace(balance.BOOKSET_ID,'F16_')
+        on prodinfo.PROD_ID = replace(balance.BOOKSET_ID,'F16_','')
         WHERE 1 =1
         AND DATE_FORMAT(BALANCE.BALANCE_DATE,'%Y-%m-%d') = DATE_FORMAT(#{cdate,jdbcType=DATE},'%Y-%m-%d')
         and prodinfo.PROFIT_TYPE = '03'/*只取非保本理财产品 */
