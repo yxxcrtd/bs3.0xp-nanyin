@@ -94,7 +94,6 @@ $(function() {
         // 绑定按钮事件
         $('#ChbExchangeQuotationInfo001_btn_search').click(function() {
             table.load();
-            $('#ChbExchangeQuotationInfo001_btn_delete').show();
         });
         $('#ChbExchangeQuotationInfo001_btn_export').click(function() {
             exportExcel();
