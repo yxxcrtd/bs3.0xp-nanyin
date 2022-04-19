@@ -500,8 +500,11 @@ public class PbcCapAssetInfo001Service extends CommonExportService<PbcCapAssetIn
                         StringUtil.joinString(message, GlobalConstant.COMMA)));
                 continue;
             }
-            PbcCapAssetInfo001Dto dto = pbcCapAssetInfo001DtoMapper.selectAssetInofByAssetId(assetId);
-            entity.setAssetname(dto.getAssetName());
+            List<PbcCapAssetInfo001Dto> dtoList = pbcCapAssetInfo001DtoMapper.selectAssetInofByAssetId(assetId);
+            if (CollectionUtils.isNotEmpty(dtoList)) {
+                entity.setAssetname(dtoList.get(0).getAssetname());
+            }
+
 //            // 判断Excel中同一个人行资金信托代码是否对应了多个资产代码同时去除重复相同更新的
 //            String pobcassetIdAndAssetId = entity.getPobcassetid() + "|"
 //                    + entity.getAssetid();

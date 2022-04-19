@@ -9,7 +9,7 @@
         <result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP"/>
         <result column="CASHMDATE" property="cashmdate" jdbcType="TIMESTAMP"/>
         <result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR"/>
-        <result column="CHANGE_TYPE" property="changType" jdbcType="VARCHAR"/>
+        <result column="CHANGE_TYPE" property="changeType" jdbcType="VARCHAR"/>
         <result column="PROD_YIELD" property="prodYield" jdbcType="DECIMAL"/>
         <result column="PROD_BENCHMARK_RATE" property="prodBenchmarkRate" jdbcType="DECIMAL"/>
         <result column="UNIT_VALUE_TOTAL" property="unitValueTotal" jdbcType="DECIMAL"/>
@@ -181,7 +181,7 @@
             #{dto.status,jdbcType=VARCHAR},
             #{dto.revDate,jdbcType=TIMESTAMP}, #{dto.dataSource,jdbcType=VARCHAR},
             #{dto.updateUser,jdbcType=VARCHAR},
-            sysdate, #{dto.createUser,jdbcType=VARCHAR}, sysdate,
+            now(), #{dto.createUser,jdbcType=VARCHAR}, now(),
             #{dto.remark,jdbcType=VARCHAR},
             #{dto.ccy,jdbcType=VARCHAR} from dual
         </foreach>
@@ -204,7 +204,7 @@
 		#{status,jdbcType=VARCHAR},
 		#{revDate,jdbcType=TIMESTAMP}, #{dataSource,jdbcType=VARCHAR},
 		#{updateUser,jdbcType=VARCHAR},
-		sysdate, #{createUser,jdbcType=VARCHAR}, sysdate,
+        now(), #{createUser,jdbcType=VARCHAR}, now(),
 		#{remark,jdbcType=VARCHAR},#{unitValueTotal,jdbcType=DECIMAL}
 		,#{ccy,jdbcType=VARCHAR}
 		)
@@ -219,7 +219,6 @@
 
     <delete id="deleteBatch"
             parameterType="com.joyintech.tams.common.base.entity.ChbPrdPeriodYield">
-        /*begin*/
         <foreach collection="list" item="dto" separator=";">
             delete from
             CHB_PRD_PERIODYIELD
@@ -231,7 +230,7 @@
                 and FPROD_ID=#{dto.fprodId,jdbcType=VARCHAR}
             </if>
         </foreach>
-        ;/*end;*/
+        ;
     </delete>
     <delete id="deleteBatch2"
             parameterType="com.joyintech.tams.common.base.entity.ChbPrdPeriodYield">
@@ -287,9 +286,9 @@
             #{item.revDate,jdbcType=TIMESTAMP} REV_DATE,
             #{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
             #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
-            sysdate UPDATE_TIME,
+            now() UPDATE_TIME,
             #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
-            sysdate CREATE_TIME,
+            now() CREATE_TIME,
             #{item.remark,jdbcType=VARCHAR} REMARK,
             #{item.ccy,jdbcType=VARCHAR} ccy
             FROM    DUAL
@@ -340,9 +339,9 @@
             #{item.revDate,jdbcType=TIMESTAMP} REV_DATE,
             #{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
             #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
-            sysdate UPDATE_TIME,
+            now() UPDATE_TIME,
             #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
-            sysdate CREATE_TIME,
+            now() CREATE_TIME,
             #{item.remark,jdbcType=VARCHAR} REMARK,
             #{item.ccy,jdbcType=VARCHAR} ccy
             FROM    DUAL
@@ -357,6 +356,6 @@
     </insert>
 
     <delete id="deleteTodayData">
-  delete from CHB_PRD_PERIODYIELD where DATE_FORMAT(IFNULL(UPDATE_TIME,CREATE_TIME),'%Y%m%d')=DATE_FORMAT(sysdate,'%Y%m%d')
+  delete from CHB_PRD_PERIODYIELD where DATE_FORMAT(IFNULL(UPDATE_TIME,CREATE_TIME),'%Y%m%d')=DATE_FORMAT(now(),'%Y%m%d')
   </delete>
 </mapper>
