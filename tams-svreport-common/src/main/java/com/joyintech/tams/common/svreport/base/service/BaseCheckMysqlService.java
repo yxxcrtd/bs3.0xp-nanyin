@@ -58,7 +58,7 @@ public class BaseCheckMysqlService {
                             }
                         }else {
                             //值为空不校验
-                            if(StringUtils.hasText(entry.getValue())){
+                            if(org.apache.commons.lang3.StringUtils.isBlank(entry.getValue())){
                                 break;
                             }
                         }
