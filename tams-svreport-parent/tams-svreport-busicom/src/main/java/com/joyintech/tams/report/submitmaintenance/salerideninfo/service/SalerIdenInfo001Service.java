@@ -110,7 +110,7 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
                     ValidMessage validMessage = new ValidMessage("第"+(i+2)+"内部编号与"+"第"+(j+2)+"内部编号不能重复");
                     errorList.add(validMessage);
                 }
-                if(!(dataList.get(i).get(5).isEmpty()) && !(dataList.get(j).get(5).isEmpty())) {
+                if(dataList.get(i).get(5)!=null&&dataList.get(j).get(5)!=null&&!(dataList.get(i).get(5).isEmpty()) && !(dataList.get(j).get(5).isEmpty())) {
                     if (this.subDictcode(dataList.get(i).get(4), " ").equals("99") && this.subDictcode(dataList.get(j).get(4), " ").equals("99")) {
                         if (StringUtils.equals(dataList.get(i).get(4), dataList.get(j).get(4))) {
                             if (StringUtils.equals(dataList.get(i).get(5), dataList.get(j).get(5))) {
