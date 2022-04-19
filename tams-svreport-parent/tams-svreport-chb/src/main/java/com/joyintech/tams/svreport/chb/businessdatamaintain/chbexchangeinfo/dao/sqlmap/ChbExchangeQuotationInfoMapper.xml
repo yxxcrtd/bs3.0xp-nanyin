@@ -279,7 +279,7 @@
                         when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
                         and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
                         and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR} then
-                        #{item.updateTime,jdbcType=DATE}
+                        SYSDATE
                     </if>
                 </foreach>
             </trim>

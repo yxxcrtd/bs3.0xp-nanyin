@@ -58,7 +58,7 @@
 		update MST_HOLIDAY
 		set is_holiday=#{isHoliday},
 			UPDATE_USER=#{createUser},
-			UPDATE_TIME=#{updateTime}
+			UPDATE_TIME=NOW()
 		where CDATE = #{cdate}
 		  and CALENDAR_ID = #{calendarId}
 	</update>
@@ -67,7 +67,7 @@
 		update MST_HOLIDAY
 		set is_holiday=#{isHoliday},
 			UPDATE_USER=#{createUser},
-			UPDATE_TIME=#{updateTime}
+			UPDATE_TIME=NOW()
 		where CDATE = #{cdate}
 		  and CALENDAR_ID = #{calendarId}
 	</update>
@@ -180,7 +180,7 @@
 						when cdate=#{item.cdate,jdbcType=DATE} and calendar_id
 						=
 						#{item.calendarId,jdbcType=VARCHAR} then
-						#{item.updateTime,jdbcType=DATE}
+						NOW()
 					</if>
 				</foreach>
 			</trim>
