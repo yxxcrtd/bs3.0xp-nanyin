@@ -2418,7 +2418,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
         			// add by dubaojun 2020-10-15 删除不存在的字段，防止报错 start
         			Set<String> keySet = new HashSet<>(dataMap.keySet());
         			for (String key : keySet) {
-        			    if(!allColumnList.contains(key)) {
+        			    if(!columnTypeList.contains(key)) {
         			        dataMap.remove(key);
         			    }
                     }
@@ -2886,7 +2886,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
                         // add by dubaojun 2020-10-15 删除不存在的字段，防止报错 start
                         Set<String> keySet = new HashSet<>(insertMap.keySet());
                         for (String key : keySet) {
-                            if(!allColumnList.contains(key)) {
+                            if(!columnList.contains(key)) {
                                 insertMap.remove(key);
                             }
                         }
