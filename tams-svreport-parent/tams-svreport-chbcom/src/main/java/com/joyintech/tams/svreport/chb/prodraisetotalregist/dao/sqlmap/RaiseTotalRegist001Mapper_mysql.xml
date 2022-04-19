@@ -617,7 +617,7 @@
         ifnull(deal.fprod_id,deal.prod_id) prodid,
         deal.buy_place
         buyplace,deal.trade_type tradetype,deal.ccy ccy,deal.trade_prince
-        tradeprince,deal.trade_qty tradeqty,info.ISAGENCY remark,deal.SETTDATE_DATE settdateDate
+        tradeprince,deal.trade_qty tradeqty,deal.ISAGENCY, deal.remark,deal.SETTDATE_DATE settdateDate
         /****当系统参数SVR_PRD_DEAL_DIMENSION=02时，三个客户数字段改成从Chb_Prd_Deal表取认购交易的保有客户数字段 leipeng 20210224***/
         ,deal.customer_type2,deal.cust_counts
         from chb_prd_deal deal
