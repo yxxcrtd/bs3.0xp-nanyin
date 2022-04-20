@@ -10,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -199,7 +196,7 @@ public class BaseCheckMysqlService {
                         var2 = list.get(j);
                         int num = 0;
                         for (String s : primaries) {
-                            if (!var1.get(s).equals(var2.get(s))) {
+                            if (!Objects.equals(var1.get(s),var2.get(s))) {
                                 break;
                             }
                             num++;
