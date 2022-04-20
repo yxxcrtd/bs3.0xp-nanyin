@@ -760,8 +760,7 @@
       #{item.customerId,jdbcType=VARCHAR} CUSTOMER_ID,
       #{item.orgType,jdbcType=VARCHAR} ORG_TYPE,
       #{item.isShareholderRelated,jdbcType=VARCHAR} IS_SHAREHOLDER_RELATED
-      FROM
-      DUAL
+      from  dual
     </foreach>
     ) TEMP where not exists (select 1 from MST_CUSTOMER_INFO_ADD CII where CII.CUSTOMER_ID = TEMP.CUSTOMER_ID)
     ) de ;

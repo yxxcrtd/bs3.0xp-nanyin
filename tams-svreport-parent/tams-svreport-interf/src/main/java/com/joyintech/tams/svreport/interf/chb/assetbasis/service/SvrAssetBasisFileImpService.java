@@ -232,7 +232,7 @@ public class SvrAssetBasisFileImpService extends FileImpService{
 					 	int count = 0;
 			            logger.debug("资产基础指标插入开始--------------" + new Date());
 			            ChbAssetBasisInterfMapper batchMapper = session.getMapper(ChbAssetBasisInterfMapper.class);
-			            int batchCount = reportInsertLongCount==0?50:reportInsertLongCount;//每批commit的个数
+			            int batchCount = reportInsertLongCount==0?500:reportInsertLongCount;//每批commit的个数
 			            int batchLastIndex = batchCount;//每批最后一个的下标
 			            for(int index = 0; index < listNE.size();){
 			                if(batchLastIndex > listNE.size()-1){
