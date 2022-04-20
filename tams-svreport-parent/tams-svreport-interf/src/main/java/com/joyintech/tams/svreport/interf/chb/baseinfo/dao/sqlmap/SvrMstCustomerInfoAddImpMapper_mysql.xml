@@ -685,23 +685,7 @@
     CREATE_DEPT, CREATE_TIME, UPDATE_USER,
     UPDATE_TIME, HS_TYPE, IS_FIN_LICENCE, INDUSTRY3, INDUSTRY4
     ,ORG_TYPE, IS_SHAREHOLDER_RELATED)
-    select CUSTOMER_ID, PARTY_TYPE3, PARTY_TYPE2,
-    PARTY_TYPE1, INDUSTRY, INDUSTRY2,
-    INSITITUTE_CODE, IS_GOV, MAIN_CAPITAL,
-    REGISTER_CAPITAL, PROVINCE, CITY,
-    COUNTY, HOLDING_TYPE, CUSTOMER_OBJ_TYPE,
-    IS_LISTED_COMPANY, IS_GROUP_CUSTOMER, PARENT_CUSTOMER_ID,
-    PARENT_CUSTOMER_NAME, IS_PRIVATE, IS_ESCAPE_DEPT,
-    CREDIT_TYPE, IS_CREDIT_RELATED_TRD, STRUCT_ADJUST_TYPE,
-    INDUS_UPGRATE_TYPE, BUSI_SCOPE, MAIN_BUSI,
-    SEX, PERSON_ID, M_PHONE,
-    PHONE, POSITION, COMPANY_NAME,
-    ADDRESS, MAIL, PROPERTY,
-    COMPANY_NATURE, LINK_ID1, LINK_ID2,
-    LINK_ID3, REMARK, CREATE_USER,
-    CREATE_DEPT, CREATE_TIME, UPDATE_USER,
-    UPDATE_TIME, HS_TYPE, IS_FIN_LICENCE, INDUSTRY3, INDUSTRY4,ORG_TYPE,
-    IS_SHAREHOLDER_RELATED
+    select de.*
     from
     (
     select TEMP.* from
@@ -715,8 +699,8 @@
       #{item.industry2,jdbcType=VARCHAR} INDUSTRY2,
       #{item.insitituteCode,jdbcType=VARCHAR} INSITITUTE_CODE,
       #{item.isGov,jdbcType=VARCHAR} IS_GOV,
-      #{item.mainCapital,jdbcType=DECIMAL} MAIN_CAPITAL,
-      #{item.registerCapital,jdbcType=DECIMAL} REGISTER_CAPITAL,
+      CAST(#{item.mainCapital,jdbcType=DECIMAL} AS DECIMAL(30,14) ) MAIN_CAPITAL,
+      CAST(#{item.registerCapital,jdbcType=DECIMAL} AS DECIMAL(30,14) )  REGISTER_CAPITAL,
       #{item.province,jdbcType=VARCHAR} PROVINCE,
       #{item.city,jdbcType=VARCHAR} CITY,
       #{item.county,jdbcType=VARCHAR} COUNTY,
@@ -767,29 +751,11 @@
 
     UPDATE  MST_CUSTOMER_INFO_ADD as A,
     (
-    select
-    CUSTOMER_ID, PARTY_TYPE3, PARTY_TYPE2,
-    PARTY_TYPE1, INDUSTRY, INDUSTRY2,
-    INSITITUTE_CODE, IS_GOV, MAIN_CAPITAL,
-    REGISTER_CAPITAL, PROVINCE, CITY,
-    COUNTY, HOLDING_TYPE, CUSTOMER_OBJ_TYPE,
-    IS_LISTED_COMPANY, IS_GROUP_CUSTOMER, PARENT_CUSTOMER_ID,
-    PARENT_CUSTOMER_NAME, IS_PRIVATE, IS_ESCAPE_DEPT,
-    CREDIT_TYPE, IS_CREDIT_RELATED_TRD, STRUCT_ADJUST_TYPE,
-    INDUS_UPGRATE_TYPE, BUSI_SCOPE, MAIN_BUSI,
-    SEX, PERSON_ID, M_PHONE,
-    PHONE, POSITION, COMPANY_NAME,
-    ADDRESS, MAIL, PROPERTY,
-    COMPANY_NATURE, LINK_ID1, LINK_ID2,
-    LINK_ID3, REMARK, CREATE_USER,
-    CREATE_DEPT, CREATE_TIME, UPDATE_USER,
-    UPDATE_TIME, HS_TYPE, IS_FIN_LICENCE, INDUSTRY3, INDUSTRY4,
-    ORG_TYPE,IS_SHAREHOLDER_RELATED from
-    (
     select TEMP.* from
     (
     <foreach collection="list" item="item"  separator="union all">
       SELECT
+      #{item.customerId,jdbcType=VARCHAR} CUSTOMER_ID,
       #{item.partyType3,jdbcType=VARCHAR} PARTY_TYPE3,
       #{item.partyType2,jdbcType=VARCHAR} PARTY_TYPE2,
       #{item.partyType1,jdbcType=VARCHAR} PARTY_TYPE1,
@@ -797,8 +763,8 @@
       #{item.industry2,jdbcType=VARCHAR} INDUSTRY2,
       #{item.insitituteCode,jdbcType=VARCHAR} INSITITUTE_CODE,
       #{item.isGov,jdbcType=VARCHAR} IS_GOV,
-      #{item.mainCapital,jdbcType=DECIMAL} MAIN_CAPITAL,
-      #{item.registerCapital,jdbcType=DECIMAL} REGISTER_CAPITAL,
+      CAST(#{item.mainCapital,jdbcType=DECIMAL}  AS DECIMAL(30,14) ) MAIN_CAPITAL,
+      CAST(#{item.registerCapital,jdbcType=DECIMAL}  AS DECIMAL(30,14) ) REGISTER_CAPITAL,
       #{item.province,jdbcType=VARCHAR} PROVINCE,
       #{item.city,jdbcType=VARCHAR} CITY,
       #{item.county,jdbcType=VARCHAR} COUNTY,
@@ -840,12 +806,11 @@
       #{item.industry3,jdbcType=VARCHAR} INDUSTRY3,
       #{item.industry4,jdbcType=VARCHAR} INDUSTRY4,
       #{item.orgType,jdbcType=VARCHAR} ORG_TYPE,
-      #{item.isShareholderRelated,jdbcType=VARCHAR} IS_SHAREHOLDER_RELATED,
+      #{item.isShareholderRelated,jdbcType=VARCHAR} IS_SHAREHOLDER_RELATED
       FROM
       DUAL
     </foreach>
     ) TEMP
-    ) de
     ) AS B
     SET
     A.PARTY_TYPE3 = B.PARTY_TYPE3,

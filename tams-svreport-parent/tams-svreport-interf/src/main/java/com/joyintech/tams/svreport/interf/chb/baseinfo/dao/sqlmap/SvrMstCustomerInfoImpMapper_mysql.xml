@@ -351,14 +351,7 @@
         UPDATE_TIME, IS_PLEDGOR, IS_DEPOSIT_BANK,
         IS_INVEST_ADVISER, IS_BROKER, IS_COUNTER,
         IS_BANK, IS_FUTURE_COM)
-        select CUSTOMER_ID, CUSTOMER_NAME, CUSTOMER_ABBR,
-        CUSTOMER_TYPE, IS_ISSUER, IS_ASSTE_MANAGER,
-        IS_TRUSTER, IS_SALER, IS_FINANCIER,
-        IS_GUARANTEE, IS_RATING_AGENCIES, CREATE_USER,
-        CREATE_DEPT, CREATE_TIME, UPDATE_USER,
-        UPDATE_TIME, IS_PLEDGOR, IS_DEPOSIT_BANK,
-        IS_INVEST_ADVISER, IS_BROKER, IS_COUNTER,
-        IS_BANK, IS_FUTURE_COM from
+        select de.* from
         (
         select TEMP.* from
         (
@@ -395,16 +388,6 @@
 
         UPDATE  MST_CUSTOMER_INFO as A,
         (
-        select
-        CUSTOMER_ID, CUSTOMER_NAME, CUSTOMER_ABBR,
-        CUSTOMER_TYPE, IS_ISSUER, IS_ASSTE_MANAGER,
-        IS_TRUSTER, IS_SALER, IS_FINANCIER,
-        IS_GUARANTEE, IS_RATING_AGENCIES, CREATE_USER,
-        CREATE_DEPT, CREATE_TIME, UPDATE_USER,
-        UPDATE_TIME, IS_PLEDGOR, IS_DEPOSIT_BANK,
-        IS_INVEST_ADVISER, IS_BROKER, IS_COUNTER,
-        IS_BANK, IS_FUTURE_COM from
-        (
         select TEMP.* from
         (
         <foreach collection="list" item="item"  separator="union all">
@@ -436,7 +419,6 @@
             DUAL
         </foreach>
         ) TEMP
-        ) de
         ) AS B
         SET
         A.CUSTOMER_NAME = B.CUSTOMER_NAME,
