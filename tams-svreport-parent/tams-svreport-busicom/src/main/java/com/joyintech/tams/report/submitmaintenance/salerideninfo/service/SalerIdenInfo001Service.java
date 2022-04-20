@@ -8,6 +8,7 @@ import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.svreport.base.dto.BaseCheckOracleDto;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.ExcelUtil;
@@ -23,6 +24,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 @Service("SalerIdenInfo001Service")
@@ -189,13 +192,10 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
                     entities = convertToEntity(dataList, orgCode);
                     //校验是否已存在逻辑删除的数据
                     List<SalerIdenInfoDto> SalerIdenInfoDImportList =  chbSalerIdenInfoMapper.checkSalerIdentInfoDImport();
-                    Map<String,SalerIdenInfoDto> SalerIdenInfoDImportMap = new HashMap<String,SalerIdenInfoDto>();
-                    for(SalerIdenInfoDto info :SalerIdenInfoDImportList){
-                        SalerIdenInfoDImportMap.put(info.getSalerInsNo(),info);
-                    }
+                    Map<String,SalerIdenInfoDto> salerIdenInfoDImportMap = SalerIdenInfoDImportList.stream().collect(Collectors.toMap(SalerIdenInfoDto::getSalerInsNo, Function.identity()));;
                     for(SalerIdenInfoDto dto : entities){
                         //check表中是否存在已逻辑删除的数据
-                        if(SalerIdenInfoDImportMap.get(dto.getSalerInsNo()) != null){
+                        if(salerIdenInfoDImportMap.containsKey(dto.getSalerInsNo())){
                             //如果存在就先 删除表中删除状态数据再 新增插入
                             chbSalerIdenInfoMapper.deleteByPrimaryKey(dto.getSalerInsNo());
                         }
