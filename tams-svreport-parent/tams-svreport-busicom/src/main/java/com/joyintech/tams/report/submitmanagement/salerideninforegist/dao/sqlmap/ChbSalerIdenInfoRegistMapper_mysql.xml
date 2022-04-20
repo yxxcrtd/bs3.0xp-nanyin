@@ -173,7 +173,7 @@
                 and  /*to_char(SUBMIT_TIME,'yyyy-MM-dd')*/ DATE_FORMAT(SUBMIT_TIME,'%Y-%m-%d')<![CDATA[<=]]> #{searchSubmitTimeEnd,jdbcType=VARCHAR}
             </if>
         </where>
-        ) ORDER BY dataDate
+        ) T ORDER BY dataDate
     </select>
 
 
@@ -311,8 +311,8 @@
 
     <delete id="deleteReportDataHis" parameterType="java.util.Map">
         delete
-        from CHB_SALER_IDEN_SUB_HIS  his
-        where his.CREATE_TIME=(
+        from CHB_SALER_IDEN_SUB_HIS
+        where CREATE_TIME=( SELECT T.CREATE_TIME FROM (
         SELECT max(CREATE_TIME) CREATE_TIME from CHB_SALER_IDEN_SUB_HIS
         <where>
             <if test="registList !=null and registList.size()>0">
@@ -322,7 +322,7 @@
                     #{regist.salerInsNo,jdbcType=VARCHAR}
                 </foreach>
             </if>
-        </where> )
+        </where> )T)
         <if test="registList !=null and registList.size()>0">
             and SALER_INS_NO
             IN
