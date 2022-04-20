@@ -73,6 +73,10 @@ public class BaseCheckOracleService {
             if (!this.checkDate(value)) {
                 errMsg.append("不是日期格式;");
             }
+            //校验日期格式
+            if(!(DateUtil.isDateStr(value)||DateUtil.isDateStr(value,DateUtil.DEFAULT_ANOTHER_FORMAT))) {
+                errMsg.append("日期格式不正确，请使用yyyy-MM-dd或yyyy/MM/dd格式;");
+            }
         }
         //数字类型校验
         if (Objects.equals("NUMBER", tabDto.getDataType())) {
