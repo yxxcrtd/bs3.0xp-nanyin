@@ -351,7 +351,14 @@
         UPDATE_TIME, IS_PLEDGOR, IS_DEPOSIT_BANK,
         IS_INVEST_ADVISER, IS_BROKER, IS_COUNTER,
         IS_BANK, IS_FUTURE_COM)
-        select de.* from
+        select de.CUSTOMER_ID, de.CUSTOMER_NAME, de.CUSTOMER_ABBR,
+        de.CUSTOMER_TYPE, de.IS_ISSUER, de.IS_ASSTE_MANAGER,
+        de.IS_TRUSTER, de.IS_SALER, de.IS_FINANCIER,
+        de.IS_GUARANTEE, de.IS_RATING_AGENCIES, de.CREATE_USER,
+        de.CREATE_DEPT, de.CREATE_TIME, de.UPDATE_USER,
+        de.UPDATE_TIME, de.IS_PLEDGOR, de.IS_DEPOSIT_BANK,
+        de.IS_INVEST_ADVISER, de.IS_BROKER, de.IS_COUNTER,
+        de.IS_BANK, de.IS_FUTURE_COM from
         (
         select TEMP.* from
         (
