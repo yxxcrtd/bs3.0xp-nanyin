@@ -773,7 +773,36 @@
             </foreach>
         </if>
         union all
-
+        <!-- 履历表数据 -->
+        select
+        case when ces.CHB_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
+        else 0 end lateNums,  <!-- 统计延时数据 -->
+        ces.SEND_STATUS,
+        ces.ORG_CODE,
+        ces.CREATE_DEPT
+        from CHB_SALER_STL_DEAL_SUB_HIS ces
+        where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
+        /* add by songyawei 20200702 start */
+        <if test="flag">
+            and ces.ORG_CODE IN
+            <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        /* add by songyawei 20200702 end */
+        )temp
+        <where>
+            <if test="isNotCount !=null and isNotCount=='01'">
+                <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
+                temp.SEND_STATUS != #{manualSub}
+            </if>
+            <if test="createDeptList != null and createDeptList.size>0">
+                <foreach collection="createDeptList" item = "item" open="and temp.CREATE_DEPT in(" separator="," close=")">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+        union all
         <!-- 12.理财业务销售数据月度统计表	-->
         select
         count(temp.SEND_STATUS) as total,
@@ -811,38 +840,6 @@
                 </foreach>
             </if>
         </where>
-
-        union all
-        <!-- 履历表数据 -->
-        select
-        case when ces.CHB_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
-        else 0 end lateNums,  <!-- 统计延时数据 -->
-        ces.SEND_STATUS,
-        ces.ORG_CODE,
-        ces.CREATE_DEPT
-        from CHB_SALER_STL_DEAL_SUB_HIS ces
-        where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-
-        <if test="flag">
-            and ces.ORG_CODE IN
-            <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-
-        )temp
-        <where>
-            <if test="isNotCount !=null and isNotCount=='01'">
-                <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
-                temp.SEND_STATUS != #{manualSub}
-            </if>
-            <if test="createDeptList != null and createDeptList.size>0">
-                <foreach collection="createDeptList" item = "item" open="and temp.CREATE_DEPT in(" separator="," close=")">
-                    #{item,jdbcType=VARCHAR}
-                </foreach>
-            </if>
-        </where>
-
         union all
         <!-- 11.投资者持有信息-->
         select
@@ -1012,6 +1009,7 @@
                 </foreach>
             </if>
         </where>
+        union all
         <!-- 16.总部或分支机构信息登记 -->
         select
         count(temp.SEND_STATUS) as total,
