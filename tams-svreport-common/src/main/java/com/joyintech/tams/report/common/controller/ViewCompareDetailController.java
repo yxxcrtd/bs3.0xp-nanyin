@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,6 +63,8 @@ import com.joyintech.tams.systemtools.util.CommonUtil;
 
 import oracle.sql.TIMESTAMP;
 
+import javax.annotation.Resource;
+
 /**
  * 查看对比详情共同画面
  *
@@ -74,6 +77,7 @@ import oracle.sql.TIMESTAMP;
 @PageId("ViewCompareDetail")
 @RequestMapping("/common/detail")
 public class ViewCompareDetailController extends BaseController {
+
 	/**
 	 * 界面特殊处理字段
 	 */
@@ -460,7 +464,14 @@ public class ViewCompareDetailController extends BaseController {
 
             // 如果是履历表
             if(StringUtil.endsWith(tableName, "_HIS")) {
-                searchParam.put("order", " ORDER BY nvl(UPDATE_TIME,CREATE_TIME) DESC");
+                //判断是mysql还是oracle数据库
+                if (BaseCommonCheckService.isMYSQLDataBase()) {
+                    searchParam.put("order", " ORDER BY IFNULL(UPDATE_TIME,CREATE_TIME) DESC");
+                }else{
+                    searchParam.put("order", " ORDER BY NVL(UPDATE_TIME,CREATE_TIME) DESC");
+                }
+
+
             }
             else {
                 if(searchParam.get("tableName").equals("CHB_SALER_STL_DEAL_SUB")){
