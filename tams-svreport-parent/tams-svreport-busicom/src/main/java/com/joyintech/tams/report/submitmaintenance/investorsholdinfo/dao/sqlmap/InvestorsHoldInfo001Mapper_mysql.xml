@@ -565,7 +565,7 @@
 		<if test="newKeyList !=null and newKeyList.size()>0">
 			AND (cii.REGIST_BANK_CODE,cii.INDENTIFY_MARK,cii.PRODID,cii.HOLD_DATE,cii.CCY) in
 			<foreach collection="newKeyList" item="item" open="(" separator="," close=")">
-				(#{item.registBankCode},{item.indentifyMark},#{item.prodid},#{item.holdDate},#{item.ccy})
+				(#{item.registBankCode},#{item.indentifyMark},#{item.prodid},#{item.holdDate},#{item.ccy})
 			</foreach>
 		</if>
 	</select>
