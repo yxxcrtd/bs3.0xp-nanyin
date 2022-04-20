@@ -776,8 +776,8 @@
 				<if test="equityRegist.sumitSeq != null and equityRegist.sumitSeq != ''">
 					sub.SUMIT_SEQ = #{equityRegist.sumitSeq},
 				</if>
-				sub.SUBMIT_TIME = sysdate,
-				sub.UPDATE_TIME = sysdate
+				sub.SUBMIT_TIME = NOW(),
+				sub.UPDATE_TIME = NOW()
 			</set>
 			where sub.REGIST_BANK_CODE = #{equityRegist.bankCode,jdbcType=VARCHAR}
 			and sub.INDENTIFY_MARK = #{equityRegist.indentifyMark,jdbcType=VARCHAR}

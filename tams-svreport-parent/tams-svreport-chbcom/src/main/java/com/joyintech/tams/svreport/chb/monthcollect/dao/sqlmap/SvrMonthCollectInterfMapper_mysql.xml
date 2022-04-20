@@ -391,24 +391,24 @@
 		A.STATUS,A.PRD_REGIST_CODE prdRegistCode, ifnull(B.THE_BANK_CODE,B.REGIST_BANK_CODE) institutionCode, B.FUND_ACC_PLACE areaCode,A.HOLD_DATE holdDate,
 		CASE B.HOLDER_CLASSIFY
 		when   '01' THEN   (case when B.HOLDER_TYPE in ('01','02','03') then '02'
-								when HOLDER_TYPE = '04' then '03'
-								when HOLDER_TYPE = '05' then '04'
-								when HOLDER_TYPE ='06' then '05'
-								when HOLDER_TYPE ='07' then '06'
-								when HOLDER_TYPE ='08' then '07'
-								when HOLDER_TYPE ='09' then '08'
-								when HOLDER_TYPE ='10' then '09'
-								when HOLDER_TYPE in ('17','18','19','20','21','22','23') then '10'
+								when B.HOLDER_TYPE = '04' then '03'
+								when B.HOLDER_TYPE = '05' then '04'
+								when B.HOLDER_TYPE ='06' then '05'
+								when B.HOLDER_TYPE ='07' then '06'
+								when B.HOLDER_TYPE ='08' then '07'
+								when B.HOLDER_TYPE ='09' then '08'
+								when B.HOLDER_TYPE ='10' then '09'
+								when B.HOLDER_TYPE in ('17','18','19','20','21','22','23') then '10'
 								else '99' END)
 		when   '02' THEN  (case when B.HOLDER_TYPE in ('01','02','03') then '01'
-								when HOLDER_TYPE = '04' then '03'
-								when HOLDER_TYPE = '05' then '04'
-								when HOLDER_TYPE ='06' then '05'
-								when HOLDER_TYPE ='07' then '06'
-								when HOLDER_TYPE ='08' then '07'
-								when HOLDER_TYPE ='09' then '08'
-								when HOLDER_TYPE ='10' then '09'
-								when HOLDER_TYPE in ('17','18','19','20','21','22','23') then '10'
+								when B.HOLDER_TYPE = '04' then '03'
+								when B.HOLDER_TYPE = '05' then '04'
+								when B.HOLDER_TYPE ='06' then '05'
+								when B.HOLDER_TYPE ='07' then '06'
+								when B.HOLDER_TYPE ='08' then '07'
+								when B.HOLDER_TYPE ='09' then '08'
+								when B.HOLDER_TYPE ='10' then '09'
+								when B.HOLDER_TYPE in ('17','18','19','20','21','22','23') then '10'
 								else '99' END)
 		END  as  holderType,
 		A.INDENTIFY_MARK indentifyMark, A.CCY ccy, A.AMOUNT amount, A.QTY qty, A.CNY_AMT cnyAmt
@@ -425,7 +425,7 @@
 		inner join
 		CHB_EQU_HOLD_CHECK C
 		ON A.INDENTIFY_MARK = C.INDENTIFY_MARK
-		)
+		) T
 		where
 		STATUS != '03'
 	</select>

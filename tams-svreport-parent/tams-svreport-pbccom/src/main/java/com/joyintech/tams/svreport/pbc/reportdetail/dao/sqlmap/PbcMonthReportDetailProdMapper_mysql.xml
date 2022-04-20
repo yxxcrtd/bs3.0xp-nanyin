@@ -752,8 +752,8 @@
 					OPEN_TYPE, PROFIT_TYPE, SALE_TARGET,
 					IS_TRANSFER, IS_FHXGCP, IS_YLLCCP
 					)
-		<foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
-				 close="from dual)">
+		<foreach collection="list" item="item" separator="from dual union all select" open="select  T.* from (select "
+				 close="from dual) T">
 			sys_guid(), #{item.prodid,jdbcType=VARCHAR}, #{item.orgCode,jdbcType=VARCHAR},
 			#{item.isConstracte,jdbcType=VARCHAR}, #{item.transferType,jdbcType=VARCHAR}, #{item.buyPlace,jdbcType=VARCHAR},
 			#{item.operateMode,jdbcType=VARCHAR}, #{item.ordIdentified,jdbcType=VARCHAR}, #{item.raisemode,jdbcType=VARCHAR}, #{item.ivstorientation,jdbcType=VARCHAR},
