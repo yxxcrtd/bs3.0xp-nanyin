@@ -25,8 +25,6 @@ public interface ChbAgentPrdInfoMapper {
 
     int insert(AgentPrdInfoDto record);
 
-    int batchInsert(@Param("list") List<AgentPrdInfoDto> list);
-
     AgentPrdInfoDto selectByPrimaryKey(String agentInstitutionCode);
 
     /**
