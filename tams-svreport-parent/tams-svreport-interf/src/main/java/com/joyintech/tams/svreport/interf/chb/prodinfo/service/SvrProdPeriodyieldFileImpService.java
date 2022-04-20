@@ -143,7 +143,7 @@ public class SvrProdPeriodyieldFileImpService extends FileImpService {
 			if(!CollectionUtils.isEmpty(listNE)){
 				mergeIntoData(listNE);
 			}
-		}else if (periodyieldList.size() <= 1000) {
+		}else if (periodyieldList.size() <= 50000) {
 			// 数据小于1000直接入库
 			success = excuteProdPeriodyieldByStep(dateSource,saveFlag,periodyieldList, null, null, null, null, null);
 		} else {
@@ -269,12 +269,12 @@ public class SvrProdPeriodyieldFileImpService extends FileImpService {
 		logger.debug("报价信息map转dto----开始-----:" +  df.format(new Date()));
 		if (listNE != null && listNE.size() > 0) {
 			deleteAllData();
-			if (tmpPath == null) {
+//			if (tmpPath == null) {
 				// 插入报价数据
 				insertBatch(listNE);
-			} else {
-				createDataFile(tmpPath + "/CHB_PRD_PERIODYIELD/CHB_PRD_PERIODYIELD", listNE, table.getColumns());
-			}
+//			} else {
+//				createDataFile(tmpPath + "/CHB_PRD_PERIODYIELD/CHB_PRD_PERIODYIELD", listNE, table.getColumns());
+//			}
 		}
 		return (CollectionUtils.isNotEmpty(listNE));
 	}
