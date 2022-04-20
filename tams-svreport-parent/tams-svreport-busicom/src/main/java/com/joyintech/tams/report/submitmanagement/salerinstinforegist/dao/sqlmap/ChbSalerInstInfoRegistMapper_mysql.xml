@@ -124,7 +124,7 @@
                 and  to_char(SUBMIT_TIME,'yyyy-MM-dd') DATE_FORMAT(SUBMIT_TIME,'%Y-%m-%d')<![CDATA[<=]]> #{searchSubmitTimeEnd,jdbcType=VARCHAR}
             </if>
         </where>
-        ) ORDER BY dataDate
+        ) T ORDER BY dataDate
     </select>
 
 
