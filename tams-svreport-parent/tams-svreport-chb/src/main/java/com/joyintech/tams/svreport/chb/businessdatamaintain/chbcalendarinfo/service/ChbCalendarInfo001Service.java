@@ -210,7 +210,7 @@ public class ChbCalendarInfo001Service extends CommonExportService<ChbCalendarIn
         for (List<ChbCalendarInfo001Dto> list:partitionList) {
             chbCalendarInfoMapper.insertBatchMstHoliday(list);
         }
-        return excelValidList.stream().filter(e -> Objects.equals("YW",e.getValidKey())).collect(Collectors.toList());
+        return excelValidList;
     }
 
 

@@ -225,7 +225,7 @@ public class SvrCustomerInfoFileImpService extends FileImpService {
             int count = 0;
             logger.debug("市场机构info表插入开始--------------" + new Date());
             SvrMstCustomerInfoImpMapper batchMapper = session.getMapper(SvrMstCustomerInfoImpMapper.class);
-            int batchCount = reportInsertLongCount==0?50:reportInsertLongCount;//每批commit的个数
+            int batchCount = reportInsertLongCount==0?500:reportInsertLongCount;//每批commit的个数
             int batchLastIndex = batchCount;//每批最后一个的下标
             for(int index = 0; index < listInfoE.size();){
                 if(batchLastIndex > listInfoE.size()-1){

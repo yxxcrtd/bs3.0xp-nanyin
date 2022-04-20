@@ -265,8 +265,8 @@
 
     <delete id="deleteReportDataHis" parameterType="java.util.Map">
         delete
-        from CHB_AGENT_INSTITUTION_SUB_HIS  his
-        where his.CREATE_TIME=(
+        from CHB_AGENT_INSTITUTION_SUB_HIS
+        where CREATE_TIME=( select T.CREATE_TIME from (
         SELECT max(CREATE_TIME) CREATE_TIME from CHB_AGENT_INSTITUTION_SUB_HIS
         <where>
             <if test="registList !=null and registList.size()>0">
@@ -276,7 +276,7 @@
                     #{regist.agentInstitutionCode,jdbcType=VARCHAR}
                 </foreach>
             </if>
-        </where> )
+        </where> ) T )
         <if test="registList !=null and registList.size()>0">
             and AGENT_INSTITUTION_CODE
             IN
