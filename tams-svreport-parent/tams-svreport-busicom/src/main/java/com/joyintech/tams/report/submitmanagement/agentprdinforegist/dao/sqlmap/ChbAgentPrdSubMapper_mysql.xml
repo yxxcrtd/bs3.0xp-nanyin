@@ -265,7 +265,7 @@
         REMARK, CHB_SUBMIT_DEADLINE,
         SUBMIT_DEADLINE,DATA_DATE,SUBMIT_TIME,SUMIT_SEQ,
         SEND_STATUS,SUBMIT_FEEDBACK_STATUS,SUBMIT_FEEDBACK_MSG,CREATE_DEPT,ORG_CODE,
-        CREATE_USER,CREATE_TIME,UPDATE_USER, UPDATE_TIME)
+        CREATE_USER,his.CREATE_TIME,UPDATE_USER, UPDATE_TIME
         from CHB_AGENT_PRD_SUB_HIS his
         INNER join (
         SELECT max(CREATE_TIME) CREATE_TIME from CHB_AGENT_PRD_SUB_HIS
@@ -306,8 +306,8 @@
 
     <delete id="deleteReportDataHis" parameterType="java.util.Map">
         delete
-        from CHB_AGENT_PRD_SUB_HIS  his
-        where his.CREATE_TIME=(
+        from CHB_AGENT_PRD_SUB_HIS
+        where CREATE_TIME=(SELECT T.CREATE_TIME FROM (
         SELECT max(CREATE_TIME) CREATE_TIME from CHB_AGENT_PRD_SUB_HIS
         <where>
             <if test="registList !=null and registList.size()>0">
@@ -324,7 +324,7 @@
                     #{regist.prodRegistCode,jdbcType=VARCHAR}
                 </foreach>
             </if>
-        </where> )
+        </where> )T)
         <if test="registList !=null and registList.size()>0">
             and AGENT_INSTITUTION_CODE
             IN
