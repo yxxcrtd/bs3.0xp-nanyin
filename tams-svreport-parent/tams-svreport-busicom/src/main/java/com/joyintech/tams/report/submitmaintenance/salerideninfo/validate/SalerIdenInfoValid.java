@@ -84,7 +84,7 @@ public class SalerIdenInfoValid implements BeanValidator {
                 if (dto.getSalerAreaType().equals("900000") || dto.getSalerDegree().equals("99")
                         || dto.getSalerEduLevel().equals("99") || dto.getSalerLevle().equals("99")
                         || this.inclodeNine(dto.getSalerCertificateType())) {
-                    if (dto.getRemark().isEmpty()) {
+                    if (StringUtil.isEmpty(dto.getRemark())) {
                         errorList.add(new ValidMessage("remark", "所属区域，学位，学历，专业技术职称或理财专业证书选择其他时，备注不能为空。"));
                     }
                 }
