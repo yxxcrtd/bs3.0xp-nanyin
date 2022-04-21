@@ -143,9 +143,9 @@
 <!--	分投资者类型获得投资者数量-->
 	<select id="typeHolderNum" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
 		select
-		prdRegistCode, holderType, count(DISTINCT(indentifyMark)) holderNum
+		T2.prdRegistCode, T2.holderType, count(DISTINCT(T2.indentifyMark)) holderNum
 		FROM
-		(select prdRegistCode,holderType,indentifyMark
+		(select T1.prdRegistCode,T1.holderType,T1.indentifyMark
 		FROM
 		(select
 		A.STATUS,
@@ -173,11 +173,11 @@
 								else '99' END)
 		END  as  holderType,
 		A.INDENTIFY_MARK indentifyMark,
-		ROW_NUMBER() over( partition by A.PRD_REGIST_CODE,A.INDENTIFY_MARK,A.HOLD_DATE order by A.UPDATE_TIME desc ) holderMarkNo
+		rank() over( partition by A.PRD_REGIST_CODE,A.INDENTIFY_MARK,A.HOLD_DATE order by A.UPDATE_TIME desc ) holderMarkNo
 		FROM CHB_INVESTHOLD_INFO_SUB A
 		LEFT JOIN CHB_EQU_SUB B
-		on A.INDENTIFY_MARK = B.INDENTIFY_MARK WHERE A.HOLD_DATE = #{batchDateEnd}) T
-		WHERE holderMarkNo = 1 and STATUS != '03') T
+		on A.INDENTIFY_MARK = B.INDENTIFY_MARK WHERE A.HOLD_DATE = #{batchDateEnd}) T1
+		WHERE holderMarkNo = 1 and STATUS != '03') T2
 		GROUP BY prdRegistCode,holderType
 	</select>
 

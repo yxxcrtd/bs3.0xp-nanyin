@@ -244,21 +244,29 @@
                     EACH_PROPORTION)
         <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
                  close="from dual)">
-            sys_guid(), #{item.prodid,jdbcType=VARCHAR}, #{item.term,jdbcType=VARCHAR},
-            #{item.detailno,jdbcType=VARCHAR}, #{item.detailno2,jdbcType=VARCHAR}, #{item.positionType,jdbcType=VARCHAR},
-            #{item.chlId,jdbcType=VARCHAR}, #{item.assetCode,jdbcType=VARCHAR}, #{item.assetType1,jdbcType=VARCHAR},
-            #{item.assetType2,jdbcType=VARCHAR}, #{item.assetType3,jdbcType=VARCHAR}, #{item.subjectName,jdbcType=VARCHAR},
-            #{item.rivalParty,jdbcType=VARCHAR}, #{item.rate,jdbcType=DECIMAL}, #{item.ccy,jdbcType=VARCHAR},
-            #{item.amt,jdbcType=DECIMAL}, #{item.intAmt,jdbcType=DECIMAL}, #{item.endDays,jdbcType=DECIMAL},
-            #{item.delayPayAmt,jdbcType=DECIMAL}, #{item.costAmt,jdbcType=DECIMAL}, #{item.floatIngpl,jdbcType=DECIMAL},
-            #{item.intincexp,jdbcType=DECIMAL}, #{item.intadjexpAdd,jdbcType=DECIMAL}, #{item.lossAmt,jdbcType=DECIMAL},
-            #{item.balFlag,jdbcType=VARCHAR}, #{item.vdate,jdbcType=DATE}, #{item.mdate,jdbcType=DATE},
-            #{item.openplan,jdbcType=DATE}, #{item.industry,jdbcType=VARCHAR}, #{item.industryLevel2,jdbcType=VARCHAR},
-            #{item.partyType1,jdbcType=VARCHAR}, #{item.partyType3,jdbcType=VARCHAR}, #{item.partyType2,jdbcType=VARCHAR},
-            #{item.orgAssetType1,jdbcType=VARCHAR}, #{item.orgAssetType2,jdbcType=VARCHAR}, #{item.orgAssetType3,jdbcType=VARCHAR},
-            #{item.buyPlace,jdbcType=VARCHAR}, #{item.borrowerType,jdbcType=VARCHAR}, #{item.industryInfo,jdbcType=VARCHAR},
-            #{item.enterpriseScale,jdbcType=VARCHAR}, #{item.borrowerCity,jdbcType=VARCHAR}, #{item.assetsInvest,jdbcType=VARCHAR},
-            #{item.eachProportion,jdbcType=VARCHAR}
+            F_GUID(), #{item.prodid,jdbcType=VARCHAR} PRODID, #{item.term,jdbcType=VARCHAR} TERM,
+            #{item.detailno,jdbcType=VARCHAR} DETAILNO, #{item.detailno2,jdbcType=VARCHAR} DETAILNO2,
+            #{item.positionType,jdbcType=VARCHAR} POSITION_TYPE,
+            #{item.chlId,jdbcType=VARCHAR} CHL_ID, #{item.assetCode,jdbcType=VARCHAR} ASSET_CODE,
+            #{item.assetType1,jdbcType=VARCHAR} ASSET_TYPE1,
+            #{item.assetType2,jdbcType=VARCHAR} ASSET_TYPE2, #{item.assetType3,jdbcType=VARCHAR} ASSET_TYPE3,
+            #{item.subjectName,jdbcType=VARCHAR} SUBJECT_NAME,
+            #{item.rivalParty,jdbcType=VARCHAR} RIVAL_PARTY, CAST(#{item.rate,jdbcType=DECIMAL} AS DECIMAL(28,6) )RATE,
+            #{item.ccy,jdbcType=VARCHAR} CCY,
+            CAST(#{item.amt,jdbcType=DECIMAL} AS DECIMAL(30,2) ) AMT, CAST(#{item.intAmt,jdbcType=DECIMAL} AS DECIMAL(30,4) ) INT_AMT,
+            CAST(#{item.endDays,jdbcType=DECIMAL} AS DECIMAL(30,4) )  END_DAYS,
+            CAST(#{item.delayPayAmt,jdbcType=DECIMAL} AS DECIMAL(30,2) ) DELAY_PAY_AMT, CAST(#{item.costAmt,jdbcType=DECIMAL} AS DECIMAL(30,2) ) COST_AMT,
+            CAST(#{item.floatIngpl,jdbcType=DECIMAL} AS DECIMAL(30,2) )  FLOAT_INGPL,
+            CAST(#{item.intincexp,jdbcType=DECIMAL} AS DECIMAL(30,2) )  INTINCEXP,
+            CAST(#{item.intadjexpAdd,jdbcType=DECIMAL} AS DECIMAL(30,2) )  INTADJEXP_ADD,
+            CAST(#{item.lossAmt,jdbcType=DECIMAL} AS DECIMAL(30,2) )  LOSS_AMT,
+            #{item.balFlag,jdbcType=VARCHAR} BAL_FLAG, #{item.vdate,jdbcType=DATE} VDATE, #{item.mdate,jdbcType=DATE} MDATE,
+            #{item.openplan,jdbcType=DATE} OPENPLAN, #{item.industry,jdbcType=VARCHAR} INDUSTRY, #{item.industryLevel2,jdbcType=VARCHAR} INDUSTRY_LEVEL2,
+            #{item.partyType1,jdbcType=VARCHAR} PARTY_TYPE1, #{item.partyType3,jdbcType=VARCHAR} PARTY_TYPE3, #{item.partyType2,jdbcType=VARCHAR} PARTY_TYPE2,
+            #{item.orgAssetType1,jdbcType=VARCHAR} ORG_ASSET_TYPE1, #{item.orgAssetType2,jdbcType=VARCHAR} ORG_ASSET_TYPE2, #{item.orgAssetType3,jdbcType=VARCHAR} ORG_ASSET_TYPE3,
+            #{item.buyPlace,jdbcType=VARCHAR} BUY_PLACE, #{item.borrowerType,jdbcType=VARCHAR} BORROWER_TYPE, #{item.industryInfo,jdbcType=VARCHAR} INDUSTRY_INFO,
+            #{item.enterpriseScale,jdbcType=VARCHAR} ENTERPRISE_SCALE, #{item.borrowerCity,jdbcType=VARCHAR} BORROWER_CITY, #{item.assetsInvest,jdbcType=VARCHAR} ASSETS_INVEST,
+            #{item.eachProportion,jdbcType=VARCHAR} EACH_PROPORTION
         </foreach>
 
     </insert>
@@ -288,11 +296,11 @@
     <select id="getCounterList" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT  A.CODE id,A.TRADE_COUNTER text,A.COUNTER_ID col,A.LINK_ID parentId from(
         SELECT /*T.PROD_ID||'_'||T.ASSET_CODE CODE,*/
-        concat(concat(T.PROD_ID,'_'),T.ASSET_CODE CODE),
+        concat(concat(T.PROD_ID,'_'),T.ASSET_CODE ) CODE,
         /*DECODE(MP.COUNTER_NAME,NULL,DECODE(MC.CUSTOMER_NAME,NULL,T.TRADE_COUNTER,MC.CUSTOMER_NAME),MP.COUNTER_NAME) TRADE_COUNTER,*/
         (case MP.COUNTER_NAME when NULL then (case MC.CUSTOMER_NAME when NULL then T.TRADE_COUNTER else MC.CUSTOMER_NAME end) else MP.COUNTER_NAME end ) TRADE_COUNTER,
         MP.COUNTER_ID,MP.LINK_ID,
-        row_number() over(partition by T.PROD_ID,T.ASSET_CODE order by DEALDATE) row_number
+        rank() over(partition by T.PROD_ID,T.ASSET_CODE order by DEALDATE) rk
         FROM CHB_INVEST_TRADE T
         LEFT JOIN MST_CUSTOMER_INFO MC ON MC.CUSTOMER_ID = T.TRADE_COUNTER
         LEFT JOIN CHB_MST_COUNTER_PARTY MP ON MP.COUNTER_ID = T.TRADE_COUNTER
@@ -306,7 +314,7 @@
             </foreach>
         </if>
         ) a
-        WHERE A.row_number = 1
+        WHERE A.rk = 1
     </select>
 
 

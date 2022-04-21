@@ -754,19 +754,27 @@
 					)
 		<foreach collection="list" item="item" separator="from dual union all select" open="select  T.* from (select "
 				 close="from dual) T">
-			sys_guid(), #{item.prodid,jdbcType=VARCHAR}, #{item.orgCode,jdbcType=VARCHAR},
-			#{item.isConstracte,jdbcType=VARCHAR}, #{item.transferType,jdbcType=VARCHAR}, #{item.buyPlace,jdbcType=VARCHAR},
-			#{item.operateMode,jdbcType=VARCHAR}, #{item.ordIdentified,jdbcType=VARCHAR}, #{item.raisemode,jdbcType=VARCHAR}, #{item.ivstorientation,jdbcType=VARCHAR},
-			#{item.manageType,jdbcType=VARCHAR}, #{item.fiduciaryDuty,jdbcType=VARCHAR}, #{item.durationflag,jdbcType=VARCHAR},
-			#{item.isMarketFund,jdbcType=VARCHAR}, #{item.vdate,jdbcType=DATE}, #{item.mdate,jdbcType=DATE},
-			#{item.paystatus,jdbcType=VARCHAR}, #{item.term,jdbcType=VARCHAR}, #{item.ccy,jdbcType=VARCHAR},
-			#{item.customerType2,jdbcType=VARCHAR}, #{item.endamtsumOth,jdbcType=DECIMAL}, #{item.dirtyamtsum,jdbcType=DECIMAL},
-			#{item.redamt,jdbcType=DECIMAL}, #{item.endDays,jdbcType=DECIMAL}, #{item.endqtysum,jdbcType=DECIMAL},
-			#{item.dirtyqty,jdbcType=DECIMAL}, #{item.redqty,jdbcType=DECIMAL}, #{item.redCost,jdbcType=DECIMAL},
-			#{item.endCost,jdbcType=DECIMAL}, #{item.cashManaCate,jdbcType=VARCHAR}, #{item.isNewPrd,jdbcType=VARCHAR},
-			#{item.termtype,jdbcType=VARCHAR}, #{item.termdays,jdbcType=DECIMAL}, #{item.openType,jdbcType=VARCHAR},
-			#{item.profitType,jdbcType=VARCHAR}, #{item.saleTarget,jdbcType=VARCHAR}, #{item.isTransfer,jdbcType=VARCHAR},
-			#{item.isFhxgcp,jdbcType=VARCHAR}, #{item.isYllccp,jdbcType=VARCHAR}
+			F_GUID(), #{item.prodid,jdbcType=VARCHAR} PRODID, #{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+			#{item.isConstracte,jdbcType=VARCHAR} IS_CONSTRACTE, #{item.transferType,jdbcType=VARCHAR} TRANSFER_TYPE, #{item.buyPlace,jdbcType=VARCHAR} BUY_PLACE,
+			#{item.operateMode,jdbcType=VARCHAR} OPERATE_MODE, #{item.ordIdentified,jdbcType=VARCHAR} ORD_IDENTIFIED, #{item.raisemode,jdbcType=VARCHAR} RAISEMODE,
+			#{item.ivstorientation,jdbcType=VARCHAR} IVSTORIENTATION,
+			#{item.manageType,jdbcType=VARCHAR} MANAGE_TYPE, #{item.fiduciaryDuty,jdbcType=VARCHAR} FIDUCIARY_DUTY,
+			#{item.durationflag,jdbcType=VARCHAR} DURATIONFLAG,
+			#{item.isMarketFund,jdbcType=VARCHAR} IS_MARKET_FUND, #{item.vdate,jdbcType=DATE} VDATE,
+			#{item.mdate,jdbcType=DATE} MDATE,
+			#{item.paystatus,jdbcType=VARCHAR} PAYSTATUS, #{item.term,jdbcType=VARCHAR} TERM, #{item.ccy,jdbcType=VARCHAR} CCY,
+			#{item.customerType2,jdbcType=VARCHAR} CUSTOMER_TYPE2, CAST(#{item.endamtsumOth,jdbcType=DECIMAL} AS DECIMAL(24,2)) ENDAMTSUM_OTH,
+			CAST(#{item.dirtyamtsum,jdbcType=DECIMAL} AS DECIMAL(24,2)) DIRTYAMTSUM,
+			CAST(#{item.redamt,jdbcType=DECIMAL} AS DECIMAL(24,2)) REDAMT,
+			CAST(#{item.endDays,jdbcType=DECIMAL} AS DECIMAL(30,4)) END_DAYS,
+			CAST(#{item.endqtysum,jdbcType=DECIMAL} AS DECIMAL(30,5)) ENDQTYSUM,
+			CAST(#{item.dirtyqty,jdbcType=DECIMAL}  AS DECIMAL(30,5)) DIRTYQTY,
+			CAST(#{item.redqty,jdbcType=DECIMAL}  AS DECIMAL(30,5)) REDQTY,
+			CAST(#{item.redCost,jdbcType=DECIMAL}  AS DECIMAL(24,2)) REDCOST,
+			CAST(#{item.endCost,jdbcType=DECIMAL}  AS DECIMAL(30,2)) ENDCOST, #{item.cashManaCate,jdbcType=VARCHAR} CASH_MANA_CATE, #{item.isNewPrd,jdbcType=VARCHAR} IS_NEW_PRD,
+			#{item.termtype,jdbcType=VARCHAR} TERMTYPE, #{item.termdays,jdbcType=DECIMAL} TERMDAYS, #{item.openType,jdbcType=VARCHAR} OPEN_TYPE,
+			#{item.profitType,jdbcType=VARCHAR} PROFIT_TYPE, #{item.saleTarget,jdbcType=VARCHAR} SALE_TARGET, #{item.isTransfer,jdbcType=VARCHAR} IS_TRANSFER,
+			#{item.isFhxgcp,jdbcType=VARCHAR} IS_FHXGCP, #{item.isYllccp,jdbcType=VARCHAR} IS_YLLCCP
 		</foreach>
 
     </insert>
