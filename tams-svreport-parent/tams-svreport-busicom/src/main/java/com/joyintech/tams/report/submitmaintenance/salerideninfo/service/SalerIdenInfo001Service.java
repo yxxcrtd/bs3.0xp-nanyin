@@ -439,7 +439,7 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
                 flag = false;
                 message.add("理财专业证书不能为空");
             }else{
-                if(checkSalerCertificateType(list.get(18))){
+                if(checkSalerCertificateType(this.subDictcodeMultiple(list.get(18), ","))){
                     flag = false;
                     message.add("理财专业证书输入格式错误，请严格按照规则输入！");
                 }
@@ -457,7 +457,7 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
                 flag = false;
                 message.add("可销售产品风险等级不能为空");
             }else{
-                if(checksalerRiskLevel(list.get(20))){
+                if(checksalerRiskLevel(this.subDictcodeMultiple(list.get(20), ","))){
                     flag = false;
                     message.add("可销售产品风险等级输入格式错误，请严格按照规则输入！");
                 }
@@ -608,7 +608,7 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
             salerIdenInfoDto.setSalerLevle(this.subDictcode(list.get(17), " "));
 
             //理财专业证书
-            salerIdenInfoDto.setSalerCertificateType(list.get(18));
+            salerIdenInfoDto.setSalerCertificateType(this.subDictcodeMultiple(list.get(18), ","));
 
             //理财登记培训证书编号
             if(list.get(19) != null && list.get(19) != "") {
@@ -616,7 +616,7 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
             }
 
             //可销售产品风险等级
-            salerIdenInfoDto.setSalerRiskLevel(list.get(20));
+            salerIdenInfoDto.setSalerRiskLevel(this.subDictcodeMultiple(list.get(20), ","));
 
             //销售资质
             salerIdenInfoDto.setSalerQualification(list.get(21));
