@@ -112,7 +112,7 @@ public class SvrProdDealFileImpService extends FileImpService {
 	/**
 	 * 使用sqlloader入库的条数限制
 	 */
-	private static final int SQLLOADER_MAX_SIZE = 1000;
+	private static final int SQLLOADER_MAX_SIZE = 100000;
 	private String reportSqlldrDatabaseName;
 
 	@Autowired
