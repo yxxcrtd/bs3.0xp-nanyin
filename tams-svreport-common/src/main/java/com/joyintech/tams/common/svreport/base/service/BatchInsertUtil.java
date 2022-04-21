@@ -77,15 +77,14 @@ public class BatchInsertUtil {
 
 
     private Connection conn = null;
-//    @Value("${spring.datasource.driverClassName}")
-    private String driverName = "com.mysql.jdbc.Driver";
-//    @Value("${spring.datasource.url}")
-    private String url = "jdbc:mysql://192.168.60.43:3306/cvr_306_mysql_test?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false";
-//    @Value("${spring.datasource.username}")
-    private String userName = "wzc";
-//    @Value("${spring.datasource.password}")
-    private String password ="wzc";
-    private String database ="gd_test";
+    @Value("${spring.datasource.driverClassName}")
+    private String driverName;
+    @Value("${spring.datasource.url}")
+    private String url;
+    @Value("${spring.datasource.username}")
+    private String userName;
+    @Value("${spring.datasource.password}")
+    private String password;
 
     /**
      * SQLLDR共通方法
@@ -234,7 +233,8 @@ public class BatchInsertUtil {
      */
     public String assembleSql(String dataBaseName, String tableName) {
         BaseCheckMysqlMapper baseCheckMysqlMapper = SpringContextUtil.getBean(BaseCheckMysqlMapper.class);
-        List<String> columnList = baseCheckMysqlMapper.select(tableName).stream().map(ele -> ele.getColumnName()).collect(Collectors.toList());
+        String[] schema = url.split("/");
+        List<String> columnList = baseCheckMysqlMapper.select(schema[3].substring(0,schema[3].indexOf("?")),tableName).stream().map(ele -> ele.getColumnName()).collect(Collectors.toList());
         String insertColumnName = StringUtils.join(columnList, ",");
         //插入方案的核心就是下面这个语句
         String sql = "LOAD DATA LOCAL INFILE 'sql.csv' IGNORE INTO TABLE " + dataBaseName + "." + tableName + " (" + insertColumnName + ")";
