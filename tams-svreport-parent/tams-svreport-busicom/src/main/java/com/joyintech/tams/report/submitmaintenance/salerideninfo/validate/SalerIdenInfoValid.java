@@ -45,7 +45,7 @@ public class SalerIdenInfoValid implements BeanValidator {
             //其他证件名称
             if(dto.getSalerCredentType() != null && dto.getSalerCredentType() != "") {
                 if (dto.getSalerCredentType().equals("99")) {
-                    if (dto.getSalerOtherCredentName().isEmpty()){
+                    if (StringUtil.isEmpty(dto.getSalerOtherCredentName())){
                         errorList.add(new ValidMessage("salerOtherCredentName", "证件类别选择其他时，其他证件名称不可为空。"));
                     }
                 }
