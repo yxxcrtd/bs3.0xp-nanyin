@@ -13,5 +13,5 @@ import java.util.List;
  */
 @Repository
 public interface BaseCheckMysqlMapper {
-    List<BaseCheckMysqlDto> select(@Param("tableName") String tableName);
+    List<BaseCheckMysqlDto> select(@Param("schema") String schema,@Param("tableName") String tableName);
 }

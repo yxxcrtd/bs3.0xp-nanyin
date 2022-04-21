@@ -7,6 +7,7 @@ import com.joyintech.tams.common.svreport.base.dto.BaseCheckMysqlDto;
 import com.joyintech.tams.common.svreport.base.dto.BaseCommonCheckDto;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -25,13 +26,17 @@ public class BaseCheckMysqlService {
     private String floatRule = "^(\\-|\\+)?\\d+(\\.\\d+)?$";
     @Autowired
     private BaseCheckMysqlMapper baseCheckMysqlMapper;
+    @Value("${spring.datasource.url}")
+    private String url;
 
-    public List<BaseCheckMysqlDto> getColumns(String table){
-        return baseCheckMysqlMapper.select(table);
+    public List<BaseCheckMysqlDto> getColumns(String schema,String table){
+        return baseCheckMysqlMapper.select(schema,table);
     }
 
     public List<BaseCommonCheckDto> check4Mysql(List<Map<String,String>> list, String tableName) {
-        List<BaseCheckMysqlDto> columns = getColumns(tableName);
+        String[] schema=url.split("/");
+
+        List<BaseCheckMysqlDto> columns = getColumns(schema[3].substring(0,schema[3].indexOf("?")),tableName);
         List<BaseCommonCheckDto> result = new ArrayList<>();
         List<Map<String,String>> errList = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
