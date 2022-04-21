@@ -160,7 +160,7 @@
                 and DATE_FORMAT(SUBMIT_TIME,'%Y-%m-%d') <![CDATA[<=]]> #{searchSubmitTimeEnd,jdbcType=VARCHAR}
             </if>
         </where>
-        ) ORDER BY DataDate
+        ) T ORDER BY DataDate
     </select>
 
 
