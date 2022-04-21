@@ -7,7 +7,12 @@ $(function() {
         object.exchargeCode=$("#exchargeCode").val();
         Joyin.ajaxJson(basePath + 'chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo002/check', object, function(result) {
             Joyin.confirm(result.data, function() {
+                if(operateType === 'save') {
+                    WorkFlow.doSaveList(basePath + 'chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo002/save', object, "ChbExchangeQuotationInfo002_btn_save");
+                }else{
                     WorkFlow.doSubmitList(basePath + 'chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo002/save', object, "ChbExchangeQuotationInfo002_btn_submit");
+                }
+
             });
         });
     };
@@ -29,6 +34,9 @@ $(function() {
     	//初始化画面
         init(); 
         // 绑定按钮事件
+        $('#ChbExchangeQuotationInfo002_btn_save').click(function() {
+            saveOrSubmit('save');
+        });
         $('#ChbExchangeQuotationInfo002_btn_submit').click(function() {
             saveOrSubmit('submit');
         });
