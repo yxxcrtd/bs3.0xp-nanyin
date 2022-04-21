@@ -1,6 +1,7 @@
 package com.joyintech.tams.report.submitmaintenance.salerideninfo.service;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
@@ -104,9 +105,14 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
      * @see
      * @since 1.0
      */
-    public AjaxResult checkConfirmMsgForImportData(List<List<String>> dataList) {
+    public AjaxResult checkConfirmMsgForImportData(List<List<String>> dataList,String fileName) {
         AjaxResult webResult = new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<>();
+        if (!fileName.contains("销售人员身份信息")) {
+            errorList.add( new ValidMessage("导入模板不一致, 请重新选择文件!"));
+            webResult.setErrorList(errorList);
+            return webResult;
+        }
         for (int i = 0; i < dataList.size(); i++ ) {
             for (int j = i+1; j < dataList.size(); j++ ) {
                 if(StringUtils.equals(dataList.get(i).get(7), dataList.get(j).get(7))){
@@ -842,9 +848,15 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
      * @see
      * @since 1.0
      */
-    public AjaxResult checkConfirmMsgForImportCodeData(List<List<String>> dataList) {
+    public AjaxResult checkConfirmMsgForImportCodeData(List<List<String>> dataList,String fileName) {
         AjaxResult webResult = new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<>();
+        if (!fileName.contains("销售人员编码信息")) {
+            errorList.add( new ValidMessage("导入模板不一致, 请重新选择文件!"));
+            webResult.setErrorList(errorList);
+            return webResult;
+        }
+
         for (int i = 0; i < dataList.size(); i++ ) {
             for (int j = i+1; j < dataList.size(); j++ ) {
                 if(StringUtils.equals(dataList.get(i).get(0), dataList.get(j).get(0))){
