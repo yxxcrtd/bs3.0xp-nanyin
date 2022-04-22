@@ -476,7 +476,7 @@ public class ChbMstBondCreditRateService extends CommonExportService<ChbMstBondC
         if(!CollectionUtils.isEmpty(list)) {
             List<ChbMstBondCreditRatingDto> chbMstBondCreditRatingDtos = converToBean(list);
             // mysql load data
-       /*     StringBuilder sb = new StringBuilder();
+           /* StringBuilder sb = new StringBuilder();
             BatchInsertUtil batchInsertUtil = new BatchInsertUtil();
             for (ChbMstBondCreditRatingDto dto : chbMstBondCreditRatingDtos) {
                 batchInsertUtil.builderAppend(sb,dto.getoCode());
@@ -503,7 +503,7 @@ public class ChbMstBondCreditRateService extends CommonExportService<ChbMstBondC
             }
             byte[] bytes = sb.toString().getBytes();
             InputStream in = new ByteArrayInputStream(bytes);
-            batchInsertUtil.bulkLoadFromInputStream("cvr_306_mysql_test",tableName,in);*/
+            batchInsertUtil.bulkLoadFromInputStream(tableName,in);*/
             //按500条分批保存
             List<List<ChbMstBondCreditRatingDto>> partitionList = Lists.partition(chbMstBondCreditRatingDtos, 500);
             for (List<ChbMstBondCreditRatingDto> dtos : partitionList) {
