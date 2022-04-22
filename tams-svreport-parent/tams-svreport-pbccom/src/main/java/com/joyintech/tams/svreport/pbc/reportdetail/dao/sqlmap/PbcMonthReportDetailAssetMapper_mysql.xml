@@ -242,8 +242,8 @@
                     BUY_PLACE, BORROWER_TYPE, INDUSTRY_INFO,
                     ENTERPRISE_SCALE, BORROWER_CITY, ASSETS_INVEST,
                     EACH_PROPORTION)
-        <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
-                 close="from dual)">
+        <foreach collection="list" item="item" separator="from dual union all select" open="select t.* from (select "
+                 close="from dual) t">
             F_GUID(), #{item.prodid,jdbcType=VARCHAR} PRODID, #{item.term,jdbcType=VARCHAR} TERM,
             #{item.detailno,jdbcType=VARCHAR} DETAILNO, #{item.detailno2,jdbcType=VARCHAR} DETAILNO2,
             #{item.positionType,jdbcType=VARCHAR} POSITION_TYPE,
