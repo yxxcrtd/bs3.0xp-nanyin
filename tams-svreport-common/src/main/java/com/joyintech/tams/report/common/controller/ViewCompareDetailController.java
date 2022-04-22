@@ -684,6 +684,11 @@ public class ViewCompareDetailController extends BaseController {
             else if(value instanceof String){
                 v = value.toString();
             }
+            //add by wangyaning 未对date类型数据做处理导致为空 2022 04 22
+            else if(value instanceof Date){
+                v = value.toString();
+            }
+            //add by wangyaning 未对date类型数据做处理导致为空 2022 04 22
         }
         catch (SecurityException e) {
             this.getLogger().error("ViewCompareDetailController.getValue", e);
