@@ -43,6 +43,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.executor.ExecutorException;
@@ -1530,6 +1531,10 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
         EquityInfo001Dto equityInfo001Dto = null;
         for (int i = 0; i < dataList.size(); i++ ) {
             List<String> list = dataList.get(i);
+            // mysql时去除空字符串
+            if(BaseCommonCheckService.isMYSQLDataBase()){
+                BaseCommonCheckService.listRemoveEmptyString(list);
+            }
             equityInfo001Dto = new EquityInfo001Dto();
             equityInfo001Dto.setBankCode(list.get(0));
             equityInfo001Dto.setIndentifyMark(list.get(1));
