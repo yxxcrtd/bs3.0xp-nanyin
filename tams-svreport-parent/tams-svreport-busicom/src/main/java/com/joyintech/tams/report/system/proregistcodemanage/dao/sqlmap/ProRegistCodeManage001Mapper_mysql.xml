@@ -251,7 +251,7 @@
 	</select>
 
 	<select id="queryRegistCodeByProdId" parameterType="java.lang.String" resultType="map">
-		select PRODID prodId,REG_CODE regCode
+		select PRODID PRODID,REG_CODE REGCODE
 		from CHB_PRDRESIST_CODE
 		<where>
 			1=1

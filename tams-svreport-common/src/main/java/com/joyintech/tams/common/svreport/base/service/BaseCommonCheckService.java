@@ -662,4 +662,16 @@ public class BaseCommonCheckService {
 
         return listResult;
     }
+
+    /**
+     * 去除list中空字符串
+     * @param list
+     */
+    public static void listRemoveEmptyString(List<String> list) {
+        for(int i=0; i<list.size(); i++){
+            if(StringUtil.isEmpty(list.get(i))){
+                list.set(i, null);
+            }
+        }
+    }
 }

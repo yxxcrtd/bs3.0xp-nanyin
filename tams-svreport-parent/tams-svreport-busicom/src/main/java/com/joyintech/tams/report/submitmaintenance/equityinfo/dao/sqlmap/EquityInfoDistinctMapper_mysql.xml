@@ -155,9 +155,9 @@
 		where T1.REGIST_BANK_CODE = tmp.REGIST_BANK_CODE
 		and T1.IDENTIFY_NUMBER = tmp.IDENTIFY_NUMBER
 		and T1.HOLDER_NAME = tmp.HOLDER_NAME
-		and ifnull(T1.PERSONAL_IDENTIFY_TYPE,' ') = ifnull(tmp.PERSONAL_IDENTIFY_TYPE,' ')
-		and ifnull(T1.INSTITUTION_IDENTIFY_TYPE,' ') = ifnull(tmp.INSTITUTION_IDENTIFY_TYPE,' ')
-		and ifnull(T1.OTHER_IDENTIFY_NAME,' ') = ifnull(tmp.OTHER_IDENTIFY_NAME,' ')
+		and ifnull(T1.PERSONAL_IDENTIFY_TYPE,'') = ifnull(tmp.PERSONAL_IDENTIFY_TYPE,'')
+		and ifnull(T1.INSTITUTION_IDENTIFY_TYPE,'') = ifnull(tmp.INSTITUTION_IDENTIFY_TYPE,'')
+		and ifnull(T1.OTHER_IDENTIFY_NAME,'') = ifnull(tmp.OTHER_IDENTIFY_NAME,'')
 		)
 		/*** add by zcw 三期性能优化 end **/
 	</select>
@@ -205,17 +205,17 @@
 			AND (T1.REGIST_BANK_CODE
 			,T1.IDENTIFY_NUMBER
 			,T1.HOLDER_NAME
-			,IFNULL(T1.PERSONAL_IDENTIFY_TYPE,' ')
-			,IFNULL(T1.INSTITUTION_IDENTIFY_TYPE,' ')
-			,IFNULL(T1.OTHER_IDENTIFY_NAME,' ')
+			,IFNULL(T1.PERSONAL_IDENTIFY_TYPE,'')
+			,IFNULL(T1.INSTITUTION_IDENTIFY_TYPE,'')
+			,IFNULL(T1.OTHER_IDENTIFY_NAME,'')
 			)in
 			<foreach collection="list" item="item" open="(" separator="," close=")">
 				(#{item.registBankCode,jdbcType=VARCHAR},
 				#{item.identifyNumber,jdbcType=VARCHAR},
 				#{item.holderName,jdbcType=VARCHAR},
-				IFNULL(#{item.personalIdentifyType,jdbcType=VARCHAR},' '),
-				IFNULL(#{item.institutionIdentifyType,jdbcType=VARCHAR}, ' '),
-				IFNULL(#{item.otherIdentifyName,jdbcType=VARCHAR},' '))
+				IFNULL(#{item.personalIdentifyType,jdbcType=VARCHAR},''),
+				IFNULL(#{item.institutionIdentifyType,jdbcType=VARCHAR}, ''),
+				IFNULL(#{item.otherIdentifyName,jdbcType=VARCHAR},''))
 			</foreach>
 		</if>
 	</select>
@@ -358,17 +358,17 @@
 				AND (REGIST_BANK_CODE
 				,IDENTIFY_NUMBER
 				,HOLDER_NAME
-				,ifnull(PERSONAL_IDENTIFY_TYPE,' ')
-				,ifnull(INSTITUTION_IDENTIFY_TYPE,' ')
-				,ifnull(OTHER_IDENTIFY_NAME,' ')
+				,ifnull(PERSONAL_IDENTIFY_TYPE,'')
+				,ifnull(INSTITUTION_IDENTIFY_TYPE,'')
+				,ifnull(OTHER_IDENTIFY_NAME,'')
 				)in
 				<foreach collection="list" item="item" open="(" separator="," close=")">
 					(#{item.registBankCode,jdbcType=VARCHAR},
 					#{item.identifyNumber,jdbcType=VARCHAR},
 					#{item.holderName,jdbcType=VARCHAR},
-					ifnull(#{item.personalIdentifyType,jdbcType=VARCHAR},' '),
-					ifnull(#{item.institutionIdentifyType,jdbcType=VARCHAR}, ' '),
-					ifnull(#{item.otherIdentifyName,jdbcType=VARCHAR},' '))
+					ifnull(#{item.personalIdentifyType,jdbcType=VARCHAR},''),
+					ifnull(#{item.institutionIdentifyType,jdbcType=VARCHAR}, ''),
+					ifnull(#{item.otherIdentifyName,jdbcType=VARCHAR},''))
 				</foreach>
 			</if>
 			AND NOT EXISTS( SELECT 1 FROM CHB_EQU_SUB T
@@ -429,17 +429,17 @@
 			AND (HOLDCHECK.REGIST_BANK_CODE
 			,HOLDCHECK.IDENTIFY_NUMBER
 			,HOLDCHECK.HOLDER_NAME
-			,ifnull(HOLDCHECK.PERSONAL_IDENTIFY_TYPE,' ')
-			,ifnull(HOLDCHECK.INSTITUTION_IDENTIFY_TYPE,' ')
-			,ifnull(HOLDCHECK.OTHER_IDENTIFY_NAME,' ')
+			,ifnull(HOLDCHECK.PERSONAL_IDENTIFY_TYPE,'')
+			,ifnull(HOLDCHECK.INSTITUTION_IDENTIFY_TYPE,'')
+			,ifnull(HOLDCHECK.OTHER_IDENTIFY_NAME,'')
 			)in
 			<foreach collection="list" item="item" open="(" separator="," close=")">
 				(#{item.registBankCode,jdbcType=VARCHAR},
 				#{item.identifyNumber,jdbcType=VARCHAR},
 				#{item.holderName,jdbcType=VARCHAR},
-				ifnull(#{item.personalIdentifyType,jdbcType=VARCHAR},' '),
-				ifnull(#{item.institutionIdentifyType,jdbcType=VARCHAR}, ' '),
-				ifnull(#{item.otherIdentifyName,jdbcType=VARCHAR},' '))
+				ifnull(#{item.personalIdentifyType,jdbcType=VARCHAR},''),
+				ifnull(#{item.institutionIdentifyType,jdbcType=VARCHAR}, ''),
+				ifnull(#{item.otherIdentifyName,jdbcType=VARCHAR},''))
 			</foreach>
 		</if>
 	</select>
@@ -562,17 +562,17 @@
 				AND (REGIST_BANK_CODE
 				,IDENTIFY_NUMBER
 				,HOLDER_NAME
-				,ifnull(PERSONAL_IDENTIFY_TYPE,' ')
-				,ifnull(INSTITUTION_IDENTIFY_TYPE,' ')
-				,ifnull(OTHER_IDENTIFY_NAME,' ')
+				,ifnull(PERSONAL_IDENTIFY_TYPE,'')
+				,ifnull(INSTITUTION_IDENTIFY_TYPE,'')
+				,ifnull(OTHER_IDENTIFY_NAME,'')
 				)in
 				<foreach collection="list" item="item" open="(" separator="," close=")">
 					(#{item.registBankCode,jdbcType=VARCHAR},
 					#{item.identifyNumber,jdbcType=VARCHAR},
 					#{item.holderName,jdbcType=VARCHAR},
-					ifnull(#{item.personalIdentifyType,jdbcType=VARCHAR},' '),
-					ifnull(#{item.institutionIdentifyType,jdbcType=VARCHAR}, ' '),
-					ifnull(#{item.otherIdentifyName,jdbcType=VARCHAR},' '))
+					ifnull(#{item.personalIdentifyType,jdbcType=VARCHAR},''),
+					ifnull(#{item.institutionIdentifyType,jdbcType=VARCHAR}, ''),
+					ifnull(#{item.otherIdentifyName,jdbcType=VARCHAR},''))
 				</foreach>
 			</if>
 			/*未报送*/
@@ -632,17 +632,17 @@
 			AND (HOLDCHECK.REGIST_BANK_CODE
 			,HOLDCHECK.IDENTIFY_NUMBER
 			,HOLDCHECK.HOLDER_NAME
-			,ifnull(HOLDCHECK.PERSONAL_IDENTIFY_TYPE,' ')
-			,ifnull(HOLDCHECK.INSTITUTION_IDENTIFY_TYPE,' ')
-			,ifnull(HOLDCHECK.OTHER_IDENTIFY_NAME,' ')
+			,ifnull(HOLDCHECK.PERSONAL_IDENTIFY_TYPE,'')
+			,ifnull(HOLDCHECK.INSTITUTION_IDENTIFY_TYPE,'')
+			,ifnull(HOLDCHECK.OTHER_IDENTIFY_NAME,'')
 			)in
 			<foreach collection="list" item="item" open="(" separator="," close=")">
 				(#{item.registBankCode,jdbcType=VARCHAR},
 				#{item.identifyNumber,jdbcType=VARCHAR},
 				#{item.holderName,jdbcType=VARCHAR},
-				ifnull(#{item.personalIdentifyType,jdbcType=VARCHAR},' '),
-				ifnull(#{item.institutionIdentifyType,jdbcType=VARCHAR}, ' '),
-				ifnull(#{item.otherIdentifyName,jdbcType=VARCHAR},' '))
+				ifnull(#{item.personalIdentifyType,jdbcType=VARCHAR},''),
+				ifnull(#{item.institutionIdentifyType,jdbcType=VARCHAR}, ''),
+				ifnull(#{item.otherIdentifyName,jdbcType=VARCHAR},''))
 			</foreach>
 		</if>
 	</select>
@@ -688,9 +688,9 @@
 			where HOLD.REGIST_BANK_CODE = tmp.REGIST_BANK_CODE
 			and HOLD.IDENTIFY_NUMBER = tmp.IDENTIFY_NUMBER
 			and HOLD.HOLDER_NAME = tmp.HOLDER_NAME
-			and ifnull(HOLD.PERSONAL_IDENTIFY_TYPE,' ') = ifnull(tmp.PERSONAL_IDENTIFY_TYPE,' ')
-			and ifnull(HOLD.INSTITUTION_IDENTIFY_TYPE,' ') = ifnull(tmp.INSTITUTION_IDENTIFY_TYPE,' ')
-			and ifnull(HOLD.OTHER_IDENTIFY_NAME,' ') = ifnull(tmp.OTHER_IDENTIFY_NAME,' ')
+			and ifnull(HOLD.PERSONAL_IDENTIFY_TYPE,'') = ifnull(tmp.PERSONAL_IDENTIFY_TYPE,'')
+			and ifnull(HOLD.INSTITUTION_IDENTIFY_TYPE,'') = ifnull(tmp.INSTITUTION_IDENTIFY_TYPE,'')
+			and ifnull(HOLD.OTHER_IDENTIFY_NAME,'') = ifnull(tmp.OTHER_IDENTIFY_NAME,'')
 			)
 			/*** add by zcw 三期性能优化 end **/
 			/*未报送*/
@@ -737,9 +737,9 @@
 		WHERE HOLD.REGIST_BANK_CODE =  HOLDCHECK.REGIST_BANK_CODE
 		AND  HOLD.IDENTIFY_NUMBER =  HOLDCHECK.IDENTIFY_NUMBER
 		AND  HOLD.HOLDER_NAME =  HOLDCHECK.HOLDER_NAME
-		AND ifnull(HOLD.PERSONAL_IDENTIFY_TYPE,' ') = ifnull(HOLDCHECK.PERSONAL_IDENTIFY_TYPE,' ')
-		AND ifnull(HOLD.INSTITUTION_IDENTIFY_TYPE,' ') = ifnull(HOLDCHECK.INSTITUTION_IDENTIFY_TYPE,' ')
-		AND ifnull(HOLD.OTHER_IDENTIFY_NAME,' ') = ifnull(HOLDCHECK.OTHER_IDENTIFY_NAME,' ')
+		AND ifnull(HOLD.PERSONAL_IDENTIFY_TYPE,'') = ifnull(HOLDCHECK.PERSONAL_IDENTIFY_TYPE,'')
+		AND ifnull(HOLD.INSTITUTION_IDENTIFY_TYPE,'') = ifnull(HOLDCHECK.INSTITUTION_IDENTIFY_TYPE,'')
+		AND ifnull(HOLD.OTHER_IDENTIFY_NAME,'') = ifnull(HOLDCHECK.OTHER_IDENTIFY_NAME,'')
 		AND HOLD.INDENTIFY_MARK = HOLDCHECK.INDENTIFY_MARK)
 		AND NOT EXISTS (SELECT 1
 		FROM CHB_EQU_SUB SUB
@@ -754,9 +754,9 @@
 		where HOLDCHECK.REGIST_BANK_CODE = tmp.REGIST_BANK_CODE
 		and HOLDCHECK.IDENTIFY_NUMBER = tmp.IDENTIFY_NUMBER
 		and HOLDCHECK.HOLDER_NAME = tmp.HOLDER_NAME
-		and ifnull(HOLDCHECK.PERSONAL_IDENTIFY_TYPE,' ') = ifnull(tmp.PERSONAL_IDENTIFY_TYPE,' ')
-		and ifnull(HOLDCHECK.INSTITUTION_IDENTIFY_TYPE,' ') = ifnull(tmp.INSTITUTION_IDENTIFY_TYPE,' ')
-		and ifnull(HOLDCHECK.OTHER_IDENTIFY_NAME,' ') = ifnull(tmp.OTHER_IDENTIFY_NAME,' ')
+		and ifnull(HOLDCHECK.PERSONAL_IDENTIFY_TYPE,'') = ifnull(tmp.PERSONAL_IDENTIFY_TYPE,'')
+		and ifnull(HOLDCHECK.INSTITUTION_IDENTIFY_TYPE,'') = ifnull(tmp.INSTITUTION_IDENTIFY_TYPE,'')
+		and ifnull(HOLDCHECK.OTHER_IDENTIFY_NAME,'') = ifnull(tmp.OTHER_IDENTIFY_NAME,'')
 		)
 		/*** add by zcw 三期性能优化 end **/
 	</select>

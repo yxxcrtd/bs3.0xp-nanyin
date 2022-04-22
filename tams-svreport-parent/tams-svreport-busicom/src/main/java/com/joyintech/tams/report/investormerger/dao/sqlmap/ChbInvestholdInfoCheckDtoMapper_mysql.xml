@@ -1074,11 +1074,11 @@
 
 	<insert id="insertListToTmp" parameterType="java.util.List" >
 		insert into chb_investhold_check_tmp(REGIST_BANK_CODE,INDENTIFY_MARK,CCY,HOLD_DATE,PRODID,AMOUNT,QTY,CNY_AMT,ORG_CODE,DEPT_CODE)
-		<foreach collection="list" item="item" separator="from dual union all select" open="select * from (select " close="from dual)">
+		<foreach collection="list" item="item" separator="from dual union all select" open="select * from (select " close="from dual)aa">
 			#{item.REGIST_BANK_CODE, jdbcType=VARCHAR} REGIST_BANK_CODE,
 			#{item.INDENTIFY_MARK, jdbcType=VARCHAR} INDENTIFY_MARK,
 			#{item.CCY,jdbcType=VARCHAR} CCY,
-			STR_TO_DATE(#{item.HOLD_DATE,jdbcType=VARCHAR},'%Y-%m-%d')HOLD_DATE,
+			STR_TO_DATE(#{item.HOLD_DATE,jdbcType=VARCHAR},'%Y%m%d')HOLD_DATE,
 			#{item.PRODID,jdbcType=VARCHAR} PRODID,
 			cast(#{item.AMOUNT,jdbcType=VARCHAR} as decimal(10,2)) AMOUNT,
 			cast(#{item.QTY,jdbcType=VARCHAR} as decimal(10,2)) QTY,
@@ -1124,11 +1124,11 @@
 		infocheck.STATUS
 		from
 		(
-		<foreach collection="list" item="item" separator="from dual union all select" open=" select * from (select " close="from dual)">
+		<foreach collection="list" item="item" separator="from dual union all select" open=" select * from (select " close="from dual)aa">
 			#{item.REGIST_BANK_CODE, jdbcType=VARCHAR} REGIST_BANK_CODE,
 			#{item.INDENTIFY_MARK, jdbcType=VARCHAR} INDENTIFY_MARK,
 			#{item.CCY,jdbcType=VARCHAR} CCY,
-			STR_TO_DATE(#{item.HOLD_DATE,jdbcType=VARCHAR},'%Y-%m-%d')HOLD_DATE,
+			STR_TO_DATE(#{item.HOLD_DATE,jdbcType=VARCHAR},'%Y%m%d')HOLD_DATE,
 			#{item.ACCOUNT,jdbcType=VARCHAR} PRODID,
 			cast(#{item.AMOUNT,jdbcType=VARCHAR} as decimal(10,2)) AMOUNT,
 			cast(#{item.QTY,jdbcType=VARCHAR} as decimal(10,2)) QTY,
@@ -1358,20 +1358,21 @@
 		sub.AMOUNT,
 		sub.QTY,
 		sub.CNY_AMT,
-
+		sub.PRD_REGIST_CODE, sub.REMARK, sub.WORKFLOW_ID,
+		sub.ORG_CODE, sub.DEPT_CODE, sub.UPDATE_USER,
+		sub.UPDATE_TIME, sub.CREATE_USER, sub.CREATE_TIME,sub.CREATE_DEPT,
 		tmp.MERGER_INDENTIFY_MARK,
 		tmp.OPERATE_STATUS,
 		tmp.STATUS
 		FROM
 		(
-		<foreach collection="list" item="item" separator="from dual union all select" open=" select * from (select " close="from dual)">
+		<foreach collection="list" item="item" separator="from dual union all select" open=" select * from (select " close="from dual)aa">
 			#{item.registBankCode, jdbcType=VARCHAR} REGIST_BANK_CODE,
 			#{item.indentifyMark, jdbcType=VARCHAR} INDENTIFY_MARK,
 			#{item.mergerindentifymark, jdbcType=VARCHAR} MERGER_INDENTIFY_MARK,
 			#{item.ccy,jdbcType=VARCHAR} CCY,
 			#{item.holdDate,jdbcType=DATE} HOLD_DATE,
 			#{item.prodid,jdbcType=VARCHAR} PRODID,
-			#{item.mergerindentifymark,jdbcType=VARCHAR} MERGER_INDENTIFY_MARK,
 			#{item.operatestatus,jdbcType=VARCHAR} OPERATE_STATUS,
 			#{item.status,jdbcType=VARCHAR} STATUS
 		</foreach>
@@ -1445,7 +1446,7 @@
 		C.STATUS
 		FROM
 		(
-		<foreach collection="list" item="item" separator="from dual union all select" open=" select * from (select " close="from dual)">
+		<foreach collection="list" item="item" separator="from dual union all select" open=" select * from (select " close="from dual)aa">
 			#{item.registBankCode, jdbcType=VARCHAR} REGIST_BANK_CODE,
 			#{item.indentifyMark, jdbcType=VARCHAR} INDENTIFY_MARK,
 			#{item.mergerindentifymark, jdbcType=VARCHAR} MERGER_INDENTIFY_MARK,
@@ -1542,30 +1543,30 @@
 		) select A.* from (
 		<foreach collection="insert" index="index" item = "item" separator="UNION ALL">
 			select
-			#{item.registBankCode,jdbcType=VARCHAR},
-			#{item.indentifyMark,jdbcType=VARCHAR},
-			#{item.mergerindentifymark,jdbcType=VARCHAR},
-			#{item.prdRegistCode,jdbcType=VARCHAR},
-			#{item.holdDate,jdbcType=TIMESTAMP},
-			#{item.ccy,jdbcType=VARCHAR},
-			#{item.amount,jdbcType=DECIMAL},
-			#{item.qty,jdbcType=DECIMAL},
-			#{item.cnyAmt,jdbcType=DECIMAL},
-			#{item.remark,jdbcType=VARCHAR},
-			#{item.dataSource,jdbcType=CHAR},
-			#{item.status,jdbcType=VARCHAR},
-			#{item.operatestatus,jdbcType=VARCHAR},
-			#{item.workflowId,jdbcType=VARCHAR},
-			#{item.orgCode,jdbcType=VARCHAR},
-			#{item.deptCode,jdbcType=VARCHAR},
-			#{item.updateUser,jdbcType=VARCHAR},
-			#{item.updateTime,jdbcType=TIMESTAMP},
-			#{item.createUser,jdbcType=VARCHAR},
-			#{item.createTime,jdbcType=TIMESTAMP},
-			#{item.agent,jdbcType=VARCHAR},
-			#{item.createDept,jdbcType=VARCHAR},
-			#{item.prodid,jdbcType=VARCHAR},
-			#{item.interfCheckResult,jdbcType=VARCHAR}
+			#{item.registBankCode,jdbcType=VARCHAR} REGIST_BANK_CODE,
+			#{item.indentifyMark,jdbcType=VARCHAR} INDENTIFY_MARK,
+			#{item.mergerindentifymark,jdbcType=VARCHAR} MERGER_INDENTIFY_MARK,
+			#{item.prdRegistCode,jdbcType=VARCHAR} PRD_REGIST_CODE,
+			#{item.holdDate,jdbcType=TIMESTAMP} HOLD_DATE,
+			#{item.ccy,jdbcType=VARCHAR} CCY,
+			#{item.amount,jdbcType=DECIMAL} AMOUNT,
+			#{item.qty,jdbcType=DECIMAL} QTY,
+			#{item.cnyAmt,jdbcType=DECIMAL} CNY_AMT,
+			#{item.remark,jdbcType=VARCHAR} REMARK,
+			#{item.dataSource,jdbcType=CHAR} DATA_SOURCE,
+			#{item.status,jdbcType=VARCHAR} STATUS,
+			#{item.operatestatus,jdbcType=VARCHAR} OPERATE_STATUS,
+			#{item.workflowId,jdbcType=VARCHAR} WORKFLOW_ID,
+			#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+			#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
+			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+			#{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+			#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+			#{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+			#{item.agent,jdbcType=VARCHAR} AGENT,
+			#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+			#{item.prodid,jdbcType=VARCHAR} PRODID,
+			#{item.interfCheckResult,jdbcType=VARCHAR} INTERF_CHECK_RESULT
 			from dual
 		</foreach>
 		) A
@@ -1600,28 +1601,28 @@
 		from (
 		<foreach collection="insertToChbInvestholdInfoList" index="index" item = "item" separator="UNION ALL">
 			select
-			#{item.registBankCode,jdbcType=VARCHAR},
-			#{item.indentifyMark,jdbcType=VARCHAR},
-			#{item.prodid,jdbcType=VARCHAR},
-			#{item.holdDate,jdbcType=DATE},
-			#{item.ccy,jdbcType=VARCHAR},
-			#{item.status,jdbcType=VARCHAR},
-			#{item.prdRegistCode,jdbcType=VARCHAR},
-			#{item.amount,jdbcType=DECIMAL},
-			#{item.qty,jdbcType=DECIMAL},
-			#{item.cnyAmt,jdbcType=DECIMAL},
-			#{item.remark,jdbcType=VARCHAR},
-			#{item.dataSource,jdbcType=CHAR},
-			#{item.workflowId,jdbcType=VARCHAR},
-			#{item.orgCode,jdbcType=VARCHAR},
-			#{item.deptCode,jdbcType=VARCHAR},
-			#{item.updateUser,jdbcType=VARCHAR},
+			#{item.registBankCode,jdbcType=VARCHAR} REGIST_BANK_CODE,
+			#{item.indentifyMark,jdbcType=VARCHAR} INDENTIFY_MARK,
+			#{item.prodid,jdbcType=VARCHAR} PRODID,
+			#{item.holdDate,jdbcType=DATE} HOLD_DATE,
+			#{item.ccy,jdbcType=VARCHAR} CCY,
+			#{item.status,jdbcType=VARCHAR} STATUS,
+			#{item.prdRegistCode,jdbcType=VARCHAR} PRD_REGIST_CODE,
+			#{item.amount,jdbcType=DECIMAL} AMOUNT,
+			#{item.qty,jdbcType=DECIMAL} QTY,
+			#{item.cnyAmt,jdbcType=DECIMAL} CNY_AMT,
+			#{item.remark,jdbcType=VARCHAR} REMARK,
+			#{item.dataSource,jdbcType=CHAR} DATA_SOURCE,
+			#{item.workflowId,jdbcType=VARCHAR} WORKFLOW_ID,
+			#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+			#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
+			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
 			NOW(),
-			#{item.createUser,jdbcType=VARCHAR},
+			#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
 			NOW(),
-			#{item.agent,jdbcType=VARCHAR},
-			#{item.createDept,jdbcType=VARCHAR},
-			#{item.interfCheckResult,jdbcType=VARCHAR}
+			#{item.agent,jdbcType=VARCHAR} AGENT,
+			#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+			#{item.interfCheckResult,jdbcType=VARCHAR} INTERF_CHECK_RESULT
 			from dual
 		</foreach>
 		) A

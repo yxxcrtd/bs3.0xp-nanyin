@@ -548,8 +548,8 @@
 		DELETE FROM CHB_EQU_HOLD_CHECK HOLD
 		WHERE 1 = 1
 		<if test="key !=null and key.size()>0">
-			<foreach collection="key" item="item" open="AND (HOLD.REGIST_BANK_CODE, ifnull(HOLD.IDENTIFY_NUMBER,''), ifnull(HOLD.HOLDER_NAME,''), ifnull(HOLD.PERSONAL_IDENTIFY_TYPE,''), ifnull(HOLD.INSTITUTION_IDENTIFY_TYPE,''), ifnull(HOLD.OTHER_IDENTIFY_NAME,'')) in(" separator="," close=")">
-				(#{item.bankCode,jdbcType=VARCHAR}, ifnull(#{item.identifyNumber,jdbcType=VARCHAR},''), ifnull(#{item.holderName,jdbcType=VARCHAR},''), ifnull(#{item.personalIdentifyType,jdbcType=VARCHAR},''), ifnull(#{item.institutionIdentifyType,jdbcType=VARCHAR},''), ifnull(#{item.otherIdentifyName,jdbcType=VARCHAR},''))
+			<foreach collection="key" item="item" open="AND (HOLD.REGIST_BANK_CODE, HOLD.IDENTIFY_NUMBER, HOLD.HOLDER_NAME, ifnull(HOLD.PERSONAL_IDENTIFY_TYPE,''), ifnull(HOLD.INSTITUTION_IDENTIFY_TYPE,''), ifnull(HOLD.OTHER_IDENTIFY_NAME,'')) in(" separator="," close=")">
+				(#{item.bankCode,jdbcType=VARCHAR}, #{item.identifyNumber,jdbcType=VARCHAR}, #{item.holderName,jdbcType=VARCHAR}, ifnull(#{item.personalIdentifyType,jdbcType=VARCHAR},''), ifnull(#{item.institutionIdentifyType,jdbcType=VARCHAR},''), ifnull(#{item.otherIdentifyName,jdbcType=VARCHAR},''))
 			</foreach>
 		</if>
 	</delete>
