@@ -118,7 +118,8 @@ public class ChbExchangeQuotationInfo002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody  ChbExchangeQuotationInfoDto dto, BindingResult br) throws WorkFlowException {
+    public AjaxResult save(@RequestBody  @Validated({
+            ValidateGroupEdit.class}) ChbExchangeQuotationInfoDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

@@ -15,7 +15,11 @@ import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.component.svrreport.chb.contant.DictCodeList;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.framework.validation.annotation.ValidLogic;
+import com.joyintech.framework.validation.groups.ValidateGroupDelete;
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.svreport.chb.businessdatamaintain.chbexchangeinfo.validator.ChbExchangeQuotationInfoValidator;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 import java.util.List;
@@ -30,6 +34,8 @@ import java.util.List;
  * @since 1.0
  */
 @PageId("ChbExchangeQuotationInfo002")
+@ValidLogic(targetClass = ChbExchangeQuotationInfoValidator.class, groups = {ValidateGroupEdit.class,
+        ValidateGroupDelete.class})
 public class ChbExchangeQuotationInfoDto extends ChbExchargeQuote implements ProcessEntity {
     /**
      * <意义，目的和功能，以及可能被用到的地方>
