@@ -1093,8 +1093,8 @@
 		delete from CHB_INVESTHOLD_INFO_SUB
 		<where>
 			STATUS = '03'
-			<foreach collection="dataList" item="item" open="and (REGIST_BANK_CODE,INDENTIFY_MARK,PRD_REGIST_CODE,DATE_FORMAT(HOLD_DATE,'%Y-%m-%d'),CCY) in(" separator="," close=")">
-				(#{item.registBankCode},#{item.indentifyMark},#{item.prdRegistCode},DATE_FORMAT(#{item.holdDate},'%Y-%m-%d'),#{item.ccy})
+			<foreach collection="dataList" item="item" open="and (REGIST_BANK_CODE,INDENTIFY_MARK,PRD_REGIST_CODE,HOLD_DATE,CCY) in(" separator="," close=")">
+				(#{item.registBankCode},#{item.indentifyMark},#{item.prdRegistCode},#{item.holdDate},#{item.ccy})
 			</foreach>
 		</where>
 	</delete>
