@@ -829,6 +829,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
             }
             catch (Exception e) {
                 // 防止在进行导入前check时进行了两次的弹框
+                logger.error(e.getMessage(), e);
                 webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
             }
         
@@ -1047,11 +1048,11 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
         dataList.forEach(action -> {
             Map<String, String> temp = new HashMap<>();
             for (int i = 0; i < fieldName.length; i++ ) {
-                String cell = action.get(i).trim();
-                String name=fieldName[i];
-                if(dictMap.containsKey(name)){
+                String cell = action.get(i) == null ? null : action.get(i).trim();
+                String name = fieldName[i];
+                if (dictMap.containsKey(name)) {
                     //是枚举值
-                    if (cell.contains(StringUtil.SPACE)) {
+                    if (cell!=null && cell.contains(StringUtil.SPACE)) {
                         String[] value = StringUtil.split(cell, StringUtil.SPACE);
                         cell = value[0];
                     }
@@ -1325,19 +1326,19 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
         dataList.forEach(action -> {
             Map<String, String> temp = new HashMap<>();
             for (int i = 0; i < fieldName.length; i++ ) {
-                String cell = action.get(i).trim();
-                String name=fieldName[i];
-                if(dictMap.containsKey(name)){
-                    //是枚举值
-                    if (cell.contains(StringUtil.SPACE)) {
-                        String[] value = StringUtil.split(cell, StringUtil.SPACE);
-                        cell = value[0];
+                    String cell = action.get(i) == null ? null : action.get(i).trim();
+                    String name=fieldName[i];
+                    if(dictMap.containsKey(name)){
+                        //是枚举值
+                        if (cell != null && cell.contains(StringUtil.SPACE)) {
+                            String[] value = StringUtil.split(cell, StringUtil.SPACE);
+                            cell = value[0];
+                        }
                     }
-                }
-                temp.put(fieldName[i], cell);
-                if (fieldName[i].equals("regCode")) {
-                    temp.put("operateMode", allRegCodeMap.get(cell));
-                }
+                    temp.put(fieldName[i], cell);
+                    if (fieldName[i].equals("regCode")) {
+                        temp.put("operateMode", allRegCodeMap.get(cell));
+                    }
             }
             /** modify by yanya on 20210525 增加是否代销导入模板判定**/
             temp.put("dxTplFlag", DictCodeList.是否_是.getValue());
@@ -1388,11 +1389,11 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
         dataList.forEach(action -> {
             Map<String, String> temp = new HashMap<>();
             for (int i = 0; i < fieldName.length; i++ ) {
-                String cell = action.get(i).trim();
+                String cell = action.get(i) == null ? null : action.get(i).trim();
                 String name=fieldName[i];
                 if(dictMap.containsKey(name)){
                     //是枚举值
-                    if (cell.contains(StringUtil.SPACE)) {
+                    if (cell!= null && cell.contains(StringUtil.SPACE)) {
                         String[] value = StringUtil.split(cell, StringUtil.SPACE);
                         cell = value[0];
                     }
