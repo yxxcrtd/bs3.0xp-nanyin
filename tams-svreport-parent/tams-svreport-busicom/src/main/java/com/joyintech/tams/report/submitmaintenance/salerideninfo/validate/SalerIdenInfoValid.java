@@ -33,8 +33,8 @@ public class SalerIdenInfoValid implements BeanValidator {
         SalerIdenInfoDto dto = (SalerIdenInfoDto)value;
         List<ValidMessage> errorList = new ArrayList<ValidMessage>();
         if(dto.getPageModel() != null && dto.getPageModel() != "" &&
-                (dto.getPageModel().equals(GlobalConstant.DETAIL_PAGE_MODEL_NEW) || dto.getPageModel().equals(GlobalConstant.DETAIL_PAGE_MODEL_EDIT))){
-            if(dto.getPageModel().equals(GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
+                (StringUtil.equals(dto.getPageModel(),GlobalConstant.DETAIL_PAGE_MODEL_NEW) || StringUtil.equals(dto.getPageModel(),GlobalConstant.DETAIL_PAGE_MODEL_EDIT))){
+            if(StringUtil.equals(dto.getPageModel(),GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
                 //内部编码重复校验
                 if (dto.getSalerInsNo() != null && dto.getSalerInsNo() != "") {
                     if (salerIdenInfo002Service.checkSalerInsNo(dto.getSalerInsNo()) > 0) {
@@ -44,16 +44,16 @@ public class SalerIdenInfoValid implements BeanValidator {
             }
             //其他证件名称
             if(dto.getSalerCredentType() != null && dto.getSalerCredentType() != "") {
-                if (dto.getSalerCredentType().equals("99")) {
+                if (StringUtil.equals(dto.getSalerCredentType(),"99")) {
                     if (StringUtil.isEmpty(dto.getSalerOtherCredentName())){
                         errorList.add(new ValidMessage("salerOtherCredentName", "证件类别选择其他时，其他证件名称不可为空。"));
                     }
                 }
             }
-            if(dto.getPageModel().equals(GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
+            if(StringUtil.equals(dto.getPageModel(),GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
                 //证件号码重复校验
                 if (dto.getSalerCredentType() != null && dto.getSalerCredentType() != "") {
-                    if (dto.getSalerCredentType().equals("99")) {
+                    if (StringUtil.equals(dto.getSalerCredentType(),"99")) {
                         if (dto.getSalerOtherCredentName() != null && dto.getSalerOtherCredentName() != "") {
                             if (dto.getSalerCredentNo() != null && dto.getSalerCredentNo() != "") {
                                 if (salerIdenInfo002Service.checkSalerCredentNo(null, dto.getSalerOtherCredentName(), dto.getSalerCredentNo()) > 0) {
@@ -81,8 +81,8 @@ public class SalerIdenInfoValid implements BeanValidator {
             if((dto.getSalerAreaType() != null && dto.getSalerAreaType() != "") || (dto.getSalerDegree() != null && dto.getSalerDegree() != "")
             || (dto.getSalerEduLevel() != null && dto.getSalerEduLevel() != "") || (dto.getSalerLevle() != null && dto.getSalerLevle() != "")
             ||(dto.getSalerCertificateType() != null && dto.getSalerCertificateType() != "")){
-                if (dto.getSalerAreaType().equals("900000") || dto.getSalerDegree().equals("99")
-                        || dto.getSalerEduLevel().equals("99") || dto.getSalerLevle().equals("99")
+                if (StringUtil.equals(dto.getSalerAreaType(),"900000") || StringUtil.equals(dto.getSalerDegree(),"99")
+                        || StringUtil.equals(dto.getSalerEduLevel(),"99") || StringUtil.equals(dto.getSalerLevle(),"99")
                         || this.inclodeNine(dto.getSalerCertificateType())) {
                     if (StringUtil.isEmpty(dto.getRemark())) {
                         errorList.add(new ValidMessage("remark", "所属区域，学位，学历，专业技术职称或理财专业证书选择其他时，备注不能为空。"));
@@ -98,7 +98,7 @@ public class SalerIdenInfoValid implements BeanValidator {
                 }
             }
         }
-        if(dto.getPageModel() != null && dto.getPageModel() != "" && dto.getPageModel().equals(GlobalConstant.DETAIL_PAGE_MODEL_EDIT)){
+        if(dto.getPageModel() != null && dto.getPageModel() != "" && StringUtil.equals(dto.getPageModel(),GlobalConstant.DETAIL_PAGE_MODEL_EDIT)){
 
         }
         //调用数据库配置脚本check方法
