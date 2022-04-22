@@ -60,7 +60,9 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
      * @throws Exception
      */
     public List<SalerIdenInfoDto> queryAllList(Map<String, Object> params) throws Exception{
-        return chbSalerIdenInfoMapper.selectForPage(params);
+        List<SalerIdenInfoDto> dataList = chbSalerIdenInfoMapper.selectForPage(params);
+        this.formatByType(dataList);
+        return dataList;
     }
 
     /**
