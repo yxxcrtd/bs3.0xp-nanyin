@@ -856,8 +856,6 @@
         0 DEALQTY,/*交易份额*/
         SUM(BALANCE.O_AMT) ACCUAMT,/*剩余金额*/
         SUM(BALANCE.O_AMT) ACCUQTY,/*剩余本金*/
-        SUM(BALANCE.B_AMT) ACCUAMT_B,/*本币金额=科目余额.原币余额*/
-        SUM(BALANCE.B_AMT) ACCUQTY_B,/*本币金额=科目余额.原币余额*/
         BALANCE.BALANCE_DATE CDATE,/*生成日*/
         NULL ORG_CODE,/*机构代码*/
         NULL DEPT_CODE,/*部门代码*/
@@ -869,8 +867,7 @@
         /*交易类型:关联资产要素信息表，判断ASSET_TYPE字段的值，若为12,15,16,19则该字段存05，否则存01*/
         '02' IS_UNDER_TRADE,/*是否底层交易流水:02 否*/
         NULL INVEST_VARIETY,/*投资品种 01债券 02ABS*/
-        BALANCE.O_CCY CCY,/*币种:关联资产要素信息表CHB_ASSET_INFO得到币种CCY*/
-        BALANCE.B_CCY BCCY/*本币币种*/
+        BALANCE.O_CCY CCY/*币种:关联资产要素信息表CHB_ASSET_INFO得到币种CCY*/
         FROM BOK_BALANCE BALANCE
         LEFT JOIN CHB_PRD_BASEINFO PRODINFO /*产品要素信息*/
         on prodinfo.PROD_ID = replace(balance.BOOKSET_ID,'F16_','')
