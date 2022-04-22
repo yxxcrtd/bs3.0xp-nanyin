@@ -52,34 +52,7 @@ public interface ChbCalendarInfoMapper {
      * @since 1.0
      */
     List<ChbCalendarInfoDto> selectCalendarInfo(Map<String,Object> parm);
-    /**
-     * 
-     * 设置为节假日
-     * <功能详细描述>
-     * @param dto 需要修改节假日信息的数据
-     * @see
-     * @since 1.0
-     */
-    void sethday(ChbCalendarInfo001Dto dto);
-    /**
-     * 
-     * 设置为工作日
-     * <功能详细描述>
-     * @param dto 需要修改节假日信息的数据
-     * @see
-     * @since 1.0
-     */
-    void setwday(ChbCalendarInfo001Dto dto);
-    /**
-     * 
-     * 检验导入表中的数据是否存在
-     * <功能详细描述>
-     * @param equityInfo001Dto 导入数据
-     * @return 查询结果
-     * @see
-     * @since 1.0
-     */
-    ChbCalendarInfo001Dto getMstMarketCalendarInfo001DtoByKey(ChbCalendarInfo001Dto equityInfo001Dto);
+
     /**
      * 
      * 导入（新建）
@@ -99,16 +72,8 @@ public interface ChbCalendarInfoMapper {
      * @see
      * @since 1.0
      */
-    int updateBtachEquityInfo(@Param("list")List<ChbCalendarInfo001Dto> list);
+    int updateBatchCalendarInfo(@Param("list")List<ChbCalendarInfo001Dto> list);
 
-    /**
-     * 日历信息--用于wind 自动加券
-     * <功能详细描述>
-     * @return
-     * @see
-     * @since 1.0
-     */
-    List<MstCalendarInfo> getMstCalendarInfo();
 
 
     /**

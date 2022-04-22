@@ -13,18 +13,12 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dto.ChbCalendarInfo001Dto;
-import com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dto.ChbCalendarInfoDto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.service.ChbCalendarInfo001Service;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
-import com.joyintech.workflow.engine.constant.OperationType;
-import com.joyintech.workflow.engine.dto.ProcessParameter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -89,59 +83,14 @@ public class ChbCalendarInfo001Controller extends BaseController {
     }
 
     /**
-     * 将工作日设置为节假日
-     * @param dto 实体类集合
+     * 节假日和工作日更新
+     * @param list 实体类集合
      * @return 返回处理信息
      */
     @ResponseBody
-    @RequestMapping("sethday")
-    public AjaxResult sethday(@RequestBody List<ChbCalendarInfo001Dto> dto) {
-        ProcessParameter<ChbCalendarInfo001Dto> processParam = new ProcessParameter<>();
-        processParam.setPageId(this.getPageId());
-        processParam.setOperationType(OperationType.MODIFY);
-        Date sysDate = DateUtil.platDateFromCache();
-        //判断日期是否小于平台日
-        for (ChbCalendarInfo001Dto mci : dto) {
-            if (mci.getCdate().before(sysDate)) {
-                AjaxResult aj = new AjaxResult();
-                List<ValidMessage> errorList = new ArrayList<>();
-                errorList.add(new ValidMessage(getMessage("MST_INFO_E_0003")));
-                aj.setErrorList(errorList);
-                return aj;
-            }
-        }
-        for (ChbCalendarInfo001Dto mci : dto) {
-            chbTradingCalendarInfo001Service.doComplete(mci);
-        }
-        return new AjaxResult(getMessage("COMMON_I_0011"));
-    }
-
-    /**
-     * 将节假日设为工作日
-     * @param dto 实体类集合
-     * @return 返回处理信息
-     */
-    @ResponseBody
-    @RequestMapping("setwday")
-    public AjaxResult setWDay(@RequestBody List<ChbCalendarInfo001Dto> dto) {
-        ProcessParameter<ChbCalendarInfo001Dto> processParam = new ProcessParameter<ChbCalendarInfo001Dto>();
-        processParam.setPageId(this.getPageId());
-        processParam.setOperationType(OperationType.MODIFY);
-        Date sysDate = DateUtil.platDateFromCache();
-        //判断日期是否小于平台日
-        for (ChbCalendarInfo001Dto mci : dto) {
-            if (mci.getCdate().before(sysDate)) {
-                AjaxResult aj = new AjaxResult();
-                List<ValidMessage> errorList = new ArrayList<>();
-                errorList.add(new ValidMessage(getMessage("MST_INFO_E_0003")));
-                aj.setErrorList(errorList);
-                return aj;
-            }
-        }
-        for (ChbCalendarInfo001Dto mci : dto) {
-            chbTradingCalendarInfo001Service.doComplete(mci);
-        }
-        return new AjaxResult(getMessage("COMMON_I_0011"));
+    @RequestMapping("updateIsHoliday")
+    public AjaxResult updateIsHoliday(@RequestBody List<ChbCalendarInfo001Dto> list) {
+        return chbTradingCalendarInfo001Service.updateIsHoliday(list);
     }
 
 

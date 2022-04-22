@@ -17,7 +17,6 @@ import com.joyintech.tams.common.base.entity.MstHoliday;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
-import com.joyintech.workflow.engine.dto.ProcessEntity;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
@@ -32,7 +31,7 @@ import java.util.Objects;
  * @since 1.0
  */
 @PageId("ChbCalendarInfo001")
-public class ChbCalendarInfo001Dto extends MstHoliday implements ProcessEntity {
+public class ChbCalendarInfo001Dto extends MstHoliday{
 
     /**
      * <意义，目的和功能，以及可能被用到的地方>
