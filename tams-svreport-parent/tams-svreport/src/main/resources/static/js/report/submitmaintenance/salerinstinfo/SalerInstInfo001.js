@@ -106,9 +106,9 @@
         Joyin.ajaxJson(basePath + 'report/submitmaintenance/salerinstinfo/SalerInstInfo001/check', object, function(result) {
           Joyin.ajaxJson(basePath + 'report/submitmaintenance/salerinstinfo/SalerInstInfo001/deleteCheck', object, function(result1) {
             Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                WorkFlow.doDeleteList(basePath + 'report/submitmaintenance/salerinstinfo/SalerInstInfo001/delete', object,"SalerInstInfo001_btn_delete", "SalerInstInfo002", function(result) {
-                                        table.reload();
-                });
+                   Joyin.ajaxJson(basePath + 'report/submitmaintenance/salerinstinfo/SalerInstInfo001/delete', object, function() {
+                                   $('#SalerInstInfo001_btn_search').trigger("click");
+                   });
             });
           });
         });
@@ -176,8 +176,8 @@
             Joyin.ajaxJson(basePath + 'report/submitmaintenance/salerinstinfo/SalerInstInfo001/check', object, function(result) {
               Joyin.ajaxJson(basePath + 'report/submitmaintenance/salerinstinfo/SalerInstInfo001/deleteCheck', object, function(result1) {
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                    WorkFlow.doDeleteList(basePath + 'report/submitmaintenance/salerinstinfo/SalerInstInfo001/delete', object,"SalerInstInfo001_btn_delete", "SalerInstInfo002", function(result) {
-                        table.reload();
+                    Joyin.ajaxJson(basePath + 'report/submitmaintenance/salerinstinfo/SalerInstInfo001/delete', object, function() {
+                                     $('#SalerInstInfo001_btn_search').trigger("click");
                     });
                 });
               });
