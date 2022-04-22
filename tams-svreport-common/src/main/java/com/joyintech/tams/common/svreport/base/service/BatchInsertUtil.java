@@ -228,12 +228,12 @@ public class BatchInsertUtil {
     /**
      * 组装 SQL 语句
      *
-     * @param dataBaseName 数据库名。
      * @param tableName    表名。
      */
-    public String assembleSql(String dataBaseName, String tableName) {
+    public String assembleSql( String tableName) {
         BaseCheckMysqlMapper baseCheckMysqlMapper = SpringContextUtil.getBean(BaseCheckMysqlMapper.class);
         String[] schema = url.split("/");
+        String dataBaseName = schema[3].substring(0, schema[3].indexOf("?"));
         List<String> columnList = baseCheckMysqlMapper.select(schema[3].substring(0,schema[3].indexOf("?")),tableName).stream().map(ele -> ele.getColumnName()).collect(Collectors.toList());
         String insertColumnName = StringUtils.join(columnList, ",");
         //插入方案的核心就是下面这个语句
@@ -249,13 +249,13 @@ public class BatchInsertUtil {
      * @param dataStream  输入流。
      * @return int         成功插入的行数。
      */
-    public int bulkLoadFromInputStream(String dataBaseName, String tableName,
+    public int bulkLoadFromInputStream(String tableName,
                                         InputStream dataStream) throws SQLException, ClassNotFoundException, IOException {
         if (null == dataStream) {
             logger.info("输入流为NULL，没有数据导入。");
             return 0;
         }
-        String assembleSql = assembleSql(dataBaseName, tableName);
+        String assembleSql = assembleSql(tableName);
         //做测试发现连接池好像不支持，所以获取原生的jdbc连接
         conn = getConnection();
         PreparedStatement statement = null;
