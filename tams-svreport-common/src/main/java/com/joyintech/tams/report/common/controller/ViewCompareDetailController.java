@@ -600,6 +600,10 @@ public class ViewCompareDetailController extends BaseController {
                             }
                             if (sb.toString().equals("current")) {
                                 detail.setCurrentValue(v);
+                                //销售结算资金交易 date类型做特殊处理
+                                if(StringUtil.equals(detail.getType(),"date") && StringUtil.equals(detail.getData(),"tradeVdate")) {
+                                    detail.setType(null);
+                                }
                             }
                             else {
                                 detail.setHasOldValue(true);
