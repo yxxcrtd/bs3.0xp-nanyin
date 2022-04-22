@@ -600,10 +600,13 @@ public class ViewCompareDetailController extends BaseController {
                             }
                             if (sb.toString().equals("current")) {
                                 detail.setCurrentValue(v);
-                                //销售结算资金交易 date类型做特殊处理
-                                if(StringUtil.equals(detail.getType(),"date") && StringUtil.equals(detail.getData(),"tradeVdate")) {
+                                //add by zhoubin 20220422 start
+                                //产品发行登记日期做处理;销售结算资金交易 date类型做特殊处理
+                                List list=Arrays.asList("raiseVdate","raiseEnddate","prdVdate","prdMdate","firstOpenDay","tradeVdate");
+                                if(StringUtil.equals(detail.getType(),"date") && list.contains(detail.getData())) {
                                     detail.setType(null);
                                 }
+                                //add by zhoubin 20220422 end
                             }
                             else {
                                 detail.setHasOldValue(true);
