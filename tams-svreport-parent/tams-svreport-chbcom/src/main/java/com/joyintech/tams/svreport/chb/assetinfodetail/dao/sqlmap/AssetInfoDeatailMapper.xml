@@ -262,6 +262,8 @@
     <result column="BANK_SEC_CAPITAL" property="bankSecCapital" jdbcType="VARCHAR" />
     <result column="BANK_SEC_PERPETUAL" property="bankSecPerpetual" jdbcType="VARCHAR" />
     <result column="BANK_SEC_PREFER" property="bankSecPrefer" jdbcType="VARCHAR" />
+        <result column="IS_CONSTRACTE_BUSI" property="isConstracteBusi" jdbcType="VARCHAR" />
+        <result column="IS_BANK_CAP" property="isBankCap" jdbcType="VARCHAR" />
 
         <result column="dataStatus" property="dataStatus" jdbcType="VARCHAR" />
         <result column="ERRMSG" property="errMsg" jdbcType="VARCHAR" />
@@ -540,6 +542,11 @@
         <result column="PROD_REGISTER_CODE" property="prodRegisterCode" jdbcType="VARCHAR" />
         <result column="PROFIT_FLAG" property="profitFlag" jdbcType="VARCHAR" />
         <result column="IS_DEPOSIT_FLAG" property="isDepositFlag" jdbcType="VARCHAR" />
+
+        <result column="IS_CONSTRACTE_BUSI" property="isConstracteBusi" jdbcType="VARCHAR" />
+        <result column="IS_BANK_CAP" property="isBankCap" jdbcType="VARCHAR" />
+
+
     </resultMap>
 
 
@@ -2500,6 +2507,13 @@
             #{item.isDepositFlag,jdbcType=VARCHAR} IS_DEPOSIT_FLAG
             <!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-29 end -->
 
+
+            <!-- 资产要素维护升级 add by leipeng 2022-04-23 start -->
+            ,#{item.isConstracteBusi,jdbcType=VARCHAR} IS_CONSTRACTE_BUSI,
+            #{item.isBankCap,jdbcType=VARCHAR} IS_BANK_CAP
+            <!-- 资产要素维护升级 add by tuqirong 2022-04-23 start -->
+
+
             from dual
         </foreach>
         ) TEMP
@@ -2736,6 +2750,12 @@
         CII.PROFIT_FLAG=TEMP.PROFIT_FLAG,
         CII.IS_DEPOSIT_FLAG=TEMP.IS_DEPOSIT_FLAG
         <!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-29 end -->
+
+        <!-- 资产要素维护升级 add by leipeng 2022-04-23 start -->
+        ,CII.IS_CONSTRACTE_BUSI=TEMP.IS_CONSTRACTE_BUSI,
+        CII.IS_BANK_CAP=TEMP.IS_BANK_CAP
+
+        <!-- 资产要素维护升级 add by leipeng 2022-04-23 start -->
         <!-- 未匹配到这插入 -->
         WHEN NOT MATCHED THEN
         INSERT (ASSET_UUID, ASSET_CODE, ASSET_TYPE,
@@ -2841,6 +2861,9 @@
         PROFIT_FLAG,
         IS_DEPOSIT_FLAG
         <!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-29 end -->
+        ,IS_CONSTRACTE_BUSI,IS_BANK_CAP
+        <!-- 资产要素维护升级 add by leipeng 2022-04-23 start -->
+
         )
         values(
         TEMP.ASSET_UUID,
@@ -3060,6 +3083,10 @@
         TEMP.PROFIT_FLAG,
         TEMP.IS_DEPOSIT_FLAG
         <!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-29 end -->
+        <!-- 资产要素维护升级 add by leipeng 2022-04-23 start -->
+        ,TEMP.IS_CONSTRACTE_BUSI,
+        TEMP.IS_BANK_CAP
+        <!-- 资产要素维护升级 add by leipeng 2022-04-23 start -->
         )
     </insert>
 
@@ -3361,6 +3388,10 @@
                     IS_PPN = #{item.isPpn,jdbcType=VARCHAR},
                     BANK_CAPITAL = #{item.bankCapital,jdbcType=VARCHAR},
                     HOLD_PURPOSE = #{item.holdPurpose},
+                    <!-- 资产要素维护升级 add by leipeng 2022-04-23 start -->
+                    IS_CONSTRACTE_BUSI = #{item.isConstracteBusi,jdbcType=VARCHAR},
+                    IS_BANK_CAP = #{item.isBankCap,jdbcType=VARCHAR},
+                    <!-- 资产要素维护升级 add by tuqirong 2022-04-23 start -->
                     UPDATE_USER = #{item.updateUser,jdbcType=VARCHAR},
                     UPDATE_TIME = #{item.updateTime,jdbcType=TIMESTAMP}
             </set>

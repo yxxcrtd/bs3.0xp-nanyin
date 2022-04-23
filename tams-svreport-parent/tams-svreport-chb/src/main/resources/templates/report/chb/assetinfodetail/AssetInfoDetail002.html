@@ -387,9 +387,12 @@
 							<div class="form-inline-wrap">
 								<label class="layui-form-label form-label-wrap" >投向“公共私营合作项目”（PPP）的部分</label>
 								<div class="layui-input-inline input-inline">
-									<input type="checkbox" name="pppflag" id="pppflag"
-										   lay-skin="switch" data-th-value="${YES}" lay-text="是|否"
-										   data-th-checked="${YES} == ${entity?.pppflag}" required="required">
+									<select name="pppflag" id="pppflag"
+											class="layui-input form-input input-select"
+											data-th-initValue= "${entity?.pppflag}"
+											data-th-placeholder="#{SysCommon.placeholder}"
+											data-th-data-result="${SVR_YES_OR_NO}" required>
+									</select>
 
 								</div>
 

@@ -571,7 +571,7 @@ var QueryFunc=function(){
             $("#privatefundFlag").val('').trigger("change");
         }
 
-        //是否投向金融资产投资公司或其附属机构发行的私募股权投资基金
+        //是否政府出资产业投资基金
         if(repAssetType == '2607'||repAssetType == '2610'||repAssetType == '2611'||
             repAssetType == '2612'||repAssetType == '2613'||repAssetType == '2617'){
             $('#isunlisted').attr('disabled',false);
@@ -583,7 +583,7 @@ var QueryFunc=function(){
         //是否投向金融资产投资公司发行的私募资产管理产品
         if(repAssetType == '1701'||repAssetType == '1703'||repAssetType == '1704'||
             repAssetType == '1705'||repAssetType == '1702'||repAssetType == '1706'){
-            $('#privateprdFlag').attr('disabled',false);
+             $('#privateprdFlag').attr('disabled',false);
         }else{
             $('#privateprdFlag').attr('disabled',true);
             $("#privateprdFlag").val('').trigger("change");
@@ -682,6 +682,7 @@ var QueryFunc=function(){
     setTimeout(function () {
         dateVal();
         assetVal();
+        assetTypeDetail();
     }, 10000);
 
 
