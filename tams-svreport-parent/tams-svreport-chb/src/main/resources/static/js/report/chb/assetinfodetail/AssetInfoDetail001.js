@@ -49,14 +49,14 @@
 		rowno:false,
 		cols:[
 			{ field: 'assetUuid',width:0,sortField:'',visible:false},
-			{ title: "报送信息维护状态", field: 'dataStatusStr',width:120 ,sortField:'dataStatus'},
+			{ title: "数据状态", field: 'dataStatusStr',width:120 ,sortField:'dataStatus'},
 			{ title: "资产代码", field: 'assetCode',width:180 ,sortField:'asset_code'},
 			{ title: "资产名称", field: 'assetName',width:300 ,sortField:'asset_name'},
 			{ title: "资产一级类型",field:'orgAssetType1Str', width:120,sortField:'org_asset_type1'},
 			{ title: '资产二级分类', field:'orgAssetType2Str', width:120,sortField:'org_asset_type2'},
 			{ title: "起息日",width:100,sortField:'vDateStr', field: 'vDateStr'},
 			{ title: "到期日",width:100,sortField:'mDateStr', field: 'mDateStr'},
-			{ title: '资产/负债类别', field:'assetTypeStr', width:180,sortField:'asset_type'},
+			{ title: '资产/负债一级类别', field:'assetTypeStr', width:180,sortField:'asset_type'},
 			{ title: '资产/负债二级类别', field:'assetType2Str', width:130,sortField:'asset_type2'},
 			{ title: '错误信息', field:'errMsg', width:130,sortable:false},
 			{ field:'action', title: '操作' , type:'action',buttons: ['edit', 'delt'] , width:100}

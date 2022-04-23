@@ -27,7 +27,7 @@
 		<form class="layui-form" id="searchForm">
 			<div class="layui-form-item">
 				<div class="layui-inline layui-col-md4">
-					<label class="layui-form-label form-lable">资产代码</label>
+					<label class="layui-form-label form-lable">资产名称</label>
 					<div class="layui-input-inline input-inline">
 						<select id="assetCode" class="input-select"
 								data-th-data-url='@{/chb/assetinfodetail/AssetInfoDetail001/getAssetCode}'
@@ -65,7 +65,7 @@
 			</div>
 			<div class="layui-form-item">
 				<div class="layui-inline layui-col-md4">
-					<label class="layui-form-label form-lable">资产/负债类别</label>
+					<label class="layui-form-label form-lable">资产/负债一级类别</label>
 					<div class="layui-input-inline input-inline">
 						<select id="assetType" class="layui-input form-input input-select"
 								data-th-data-result='${SVR_ASSETDEBT_TYPE}' placeholder="请选择"
@@ -87,7 +87,7 @@
 					</div>
 				</div>
 				<div class="layui-inline layui-col-md4">
-					<label class="layui-form-label form-lable">报送信息维护状态</label>
+					<label class="layui-form-label form-lable">数据状态</label>
 					<div class="layui-input-inline input-inline">
 							<select id="dataStatus" class="layui-input form-input input-select"
 									data-th-data-result='${DATA_STATUS}' placeholder="请选择"
