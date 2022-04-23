@@ -94,7 +94,6 @@ $(function() {
         // 绑定按钮事件
         $('#ChbExchangeQuotationInfo001_btn_search').click(function() {
             table.load();
-            $('#ChbExchangeQuotationInfo001_btn_delete').show();
         });
         $('#ChbExchangeQuotationInfo001_btn_export').click(function() {
             exportExcel();
@@ -119,7 +118,7 @@ $(function() {
                   return;
               }
             }
-            var object = {selectedItem: selArr, operateType:"delete"};
+            var object = {selectedItem: selArr, operateType:"DELETE"};
             Joyin.ajaxJson(basePath + 'chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo001/check', object, function(result) {
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
                     WorkFlow.doDeleteList(basePath + 'chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo001/delete', object, "ChbExchangeQuotationInfo001_btn_delete", "ChbExchangeQuotationInfo002",function() {

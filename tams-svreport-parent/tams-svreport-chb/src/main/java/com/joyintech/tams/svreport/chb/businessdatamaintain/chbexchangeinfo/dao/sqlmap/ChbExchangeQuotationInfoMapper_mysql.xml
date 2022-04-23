@@ -104,7 +104,7 @@
 			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
 			#{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
 			<if test="item.errMsg != null and ! item.errMsg.equals('')">
-				#{item.errMsg,jdbcType=BLOB} ERR_MSG
+				#{item.errMsg,jdbcType=VARCHAR} ERR_MSG
 			</if>
 			<if test="item.errMsg == null or item.errMsg.equals('')">
 				null ERR_MSG
@@ -205,7 +205,7 @@
 					and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
 					and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR}
 					 then
-					#{item.errMsg,jdbcType=BLOB}
+					#{item.errMsg,jdbcType=VARCHAR}
 				</foreach>
 			</trim>
 			<trim prefix="status=case" suffix="end,">
@@ -236,7 +236,7 @@
 						when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
 						and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
 						and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR} then
-						#{item.updateTime,jdbcType=DATE}
+						NOW()
 					</if>
 				</foreach>
 			</trim>

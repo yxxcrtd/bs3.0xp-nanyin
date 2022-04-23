@@ -580,7 +580,7 @@ public class ChbBokSubjectService extends CommonExportService<ChbBokSubjectDto> 
             }
             byte[] bytes = sb.toString().getBytes();
             ByteArrayInputStream in = new ByteArrayInputStream(bytes);
-            batchInsertUtil.bulkLoadFromInputStream("cvr_306_mysql_test",tableName,in);*/
+            batchInsertUtil.bulkLoadFromInputStream(tableName,in);*/
             //按500条分批保存
             List<List<ChbBokSubjectDto>> partition = Lists.partition(chbBokSubjectDtoDtos, 500);
             for (List<ChbBokSubjectDto> dtos : partition) {

@@ -102,8 +102,7 @@
 		values (
 		<foreach collection="list" item="dto" separator="union all">select #{dto.seqno,jdbcType=CHAR},
 			#{dto.fprodId,jdbcType=VARCHAR},
-			#{
-              dto.prodId,jdbcType=VARCHAR},
+			#{dto.prodId,jdbcType=VARCHAR},
 			#{dto.changeDate,jdbcType=TIMESTAMP}, #{dto.changType,jdbcType=VARCHAR}, #{dto.prodValue,jdbcType=DECIMAL},
 			#{dto.orgCode,jdbcType=VARCHAR}, #{dto.deptCode,jdbcType=VARCHAR},
 			#{dto.status,jdbcType=VARCHAR},

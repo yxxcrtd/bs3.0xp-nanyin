@@ -8,6 +8,7 @@
                COLUMN_NAME columnName,
                DATA_TYPE   dataType,
                CHAR_LENGTH length,
+               DATA_PRECISION numberLength,
                NULLABLE    nullAble
         from USER_TAB_COLUMNS
         where TABLE_NAME = #{tableName}

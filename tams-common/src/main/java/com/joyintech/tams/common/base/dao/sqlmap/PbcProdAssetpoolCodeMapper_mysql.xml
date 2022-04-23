@@ -158,4 +158,30 @@
         where INSIDE_PROD_ID = #{insideProdId,jdbcType=VARCHAR}
           and CODE_TYPE = #{codeType,jdbcType=VARCHAR}
     </update>
+
+    <select id="selectByInsideProdList" resultMap="BaseResultMap" parameterType="java.util.List" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.PbcProdAssetpoolCodeMapper.Base_Column_List" />
+        from PBC_PROD_ASSETPOOL_CODE
+        where CODE_TYPE = '01' and
+        INSIDE_PROD_ID IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")" >
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+
+    <insert id="batchInsertPbcCode" parameterType="java.util.List">
+        insert into PBC_PROD_ASSETPOOL_CODE (INSIDE_PROD_ID, CODE_TYPE, PBC_CODE,
+        STATUS, ORG_CODE, CREATE_USER,
+        CREATE_DEPT,  CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        <foreach collection="list" item="item" separator="from dual union all select" open="select t.* from (select "
+                 close=" from dual) t">
+            #{item.insideProdId,jdbcType=VARCHAR}, #{item.codeType,jdbcType=VARCHAR}, #{item.pbcCode,jdbcType=VARCHAR},
+            #{item.status,jdbcType=VARCHAR}, #{item.orgCode,jdbcType=VARCHAR}, #{item.createUser,jdbcType=VARCHAR},
+            #{item.createDept,jdbcType=VARCHAR},
+            #{item.createTime,jdbcType=TIMESTAMP},
+            #{item.updateUser,jdbcType=VARCHAR},
+            #{item.updateTime,jdbcType=TIMESTAMP}
+        </foreach>
+    </insert>
 </mapper>

@@ -189,7 +189,7 @@
 			and T3.CUSTOMER_ID= #{customerId,jdbcType=VARCHAR}
 		union all  select count(*) count from MST_CUSTOMER_INFO T5,FIN_PRODUCT_ADD T6
 		where T5.CUSTOMER_ID = T6.UNDER_WRITER_ID
-			and T5.CUSTOMER_ID = #{customerId,jdbcType=VARCHAR})
+			and T5.CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}) A
 	</select>
     <!-- 删除按钮check -->
     <select id="checkAllCodeIsUse" parameterType="java.util.List" resultMap="BaseResultMap">

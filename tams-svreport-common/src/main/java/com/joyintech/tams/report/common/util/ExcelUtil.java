@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
@@ -226,6 +227,10 @@ public class ExcelUtil {
                 // 遇到一行全为空结束
                 if (dataFlag) {
                     break;
+                }
+                // mysql时去除空字符串
+                if(BaseCommonCheckService.isMYSQLDataBase()){
+                    BaseCommonCheckService.listRemoveEmptyString(r);
                 }
                 ls.add(r);
             }

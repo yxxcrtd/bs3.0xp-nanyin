@@ -53,34 +53,7 @@
         </where>
         ORDER BY calendarId ASC
     </select>
-    <!-- 工作日设置为节假日 -->
-    <update id="sethday">
-        update MST_HOLIDAY
-        set is_holiday=#{isHoliday},
-            UPDATE_USER=#{createUser},
-            UPDATE_TIME=#{updateTime}
-        where CDATE = #{cdate}
-          and CALENDAR_ID = #{calendarId}
-    </update>
-    <!-- 节假日设置为工作日 -->
-    <update id="setwday">
-        update MST_HOLIDAY
-        set is_holiday=#{isHoliday},
-            UPDATE_USER=#{createUser},
-            UPDATE_TIME=#{updateTime}
-        where CDATE = #{cdate}
-          and CALENDAR_ID = #{calendarId}
-    </update>
 
-    <!-- 通过主键验证数据库中是否有值 -->
-    <select id="getMstMarketCalendarInfo001DtoByKey"
-            resultType="com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dto.ChbCalendarInfo001Dto">
-        select calendar_id calendarId,cdate cdate,is_holiday isHoliday from
-        MST_HOLIDAY
-        <where>
-            cdate = #{cdate} and calendar_id = #{calendarId}
-        </where>
-    </select>
 
     <!-- 将Excel表格数据加入数据库 -->
     <insert id="insertBatchMstHoliday" parameterType="list">
@@ -132,7 +105,7 @@
     </insert>
 
     <!-- 将Excel表格数据覆盖数据库 -->
-    <update id="updateBtachEquityInfo">
+    <update id="updateBatchCalendarInfo">
         update MST_HOLIDAY
         <trim prefix="set" suffixOverrides=",">
             <trim prefix="is_holiday=case" suffix="end,">
@@ -181,7 +154,7 @@
                         when cdate=#{item.cdate,jdbcType=DATE} and calendar_id
                         =
                         #{item.calendarId,jdbcType=VARCHAR} then
-                        #{item.updateTime,jdbcType=DATE}
+                        SYSDATE
                     </if>
                 </foreach>
             </trim>
@@ -193,12 +166,6 @@
         </foreach>
     </update>
 
-    <!-- 日历信息用于wind 自动加券 -->
-    <select id="getMstCalendarInfo" resultType="com.joyintech.tams.common.base.entity.MstCalendarInfo">
-        SELECT CALENDAR_ID,
-               OTHER_ID
-        FROM MST_CALENDAR_INFO
-    </select>
 
     <select id="selectMstHoliday" resultType="int">
         SELECT COUNT(*)

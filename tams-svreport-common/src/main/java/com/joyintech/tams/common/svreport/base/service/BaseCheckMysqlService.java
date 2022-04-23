@@ -7,13 +7,11 @@ import com.joyintech.tams.common.svreport.base.dto.BaseCheckMysqlDto;
 import com.joyintech.tams.common.svreport.base.dto.BaseCommonCheckDto;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -28,13 +26,17 @@ public class BaseCheckMysqlService {
     private String floatRule = "^(\\-|\\+)?\\d+(\\.\\d+)?$";
     @Autowired
     private BaseCheckMysqlMapper baseCheckMysqlMapper;
+    @Value("${spring.datasource.url}")
+    private String url;
 
-    public List<BaseCheckMysqlDto> getColumns(String table){
-        return baseCheckMysqlMapper.select(table);
+    public List<BaseCheckMysqlDto> getColumns(String schema,String table){
+        return baseCheckMysqlMapper.select(schema,table);
     }
 
     public List<BaseCommonCheckDto> check4Mysql(List<Map<String,String>> list, String tableName) {
-        List<BaseCheckMysqlDto> columns = getColumns(tableName);
+        String[] schema=url.split("/");
+
+        List<BaseCheckMysqlDto> columns = getColumns(schema[3].substring(0,schema[3].indexOf("?")),tableName);
         List<BaseCommonCheckDto> result = new ArrayList<>();
         List<Map<String,String>> errList = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
@@ -58,7 +60,7 @@ public class BaseCheckMysqlService {
                             }
                         }else {
                             //值为空不校验
-                            if(StringUtils.hasText(entry.getValue())){
+                            if(org.apache.commons.lang3.StringUtils.isBlank(entry.getValue())){
                                 break;
                             }
                         }
@@ -199,7 +201,7 @@ public class BaseCheckMysqlService {
                         var2 = list.get(j);
                         int num = 0;
                         for (String s : primaries) {
-                            if (!var1.get(s).equals(var2.get(s))) {
+                            if (!Objects.equals(var1.get(s),var2.get(s))) {
                                 break;
                             }
                             num++;

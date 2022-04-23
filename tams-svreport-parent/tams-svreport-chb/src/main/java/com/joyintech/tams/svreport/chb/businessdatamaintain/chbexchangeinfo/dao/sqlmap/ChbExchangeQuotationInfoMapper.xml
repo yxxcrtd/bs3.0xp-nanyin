@@ -206,7 +206,7 @@
                 </foreach>
             </trim>
             <trim prefix="HIGH_PRICE=case" suffix="end,">
-                <foreach collection="listA" item="item" index="index">
+                <foreach collection="list" item="item" index="index">
                     <if test="item.highPrice!=null">
                         when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
                         and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
@@ -279,7 +279,7 @@
                         when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
                         and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
                         and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR} then
-                        #{item.updateTime,jdbcType=DATE}
+                        SYSDATE
                     </if>
                 </foreach>
             </trim>

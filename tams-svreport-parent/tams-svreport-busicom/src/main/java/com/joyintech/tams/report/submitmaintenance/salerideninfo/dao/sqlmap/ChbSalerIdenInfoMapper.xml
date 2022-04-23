@@ -193,7 +193,7 @@
     <select id="checkSalerIdenInfoImport" resultMap="BaseResultMap" parameterType="java.lang.String" >
         select
         <include refid="com.joyintech.tams.report.submitmaintenance.salerideninfo.dao.ChbSalerIdenInfoMapper.Base_Column_List" />
-        from CHB_SALER_IDEN_INFO
+        from CHB_SALER_IDEN_INFO where STATUS = 'E'
     </select>
 
 <!--    导入时为check查询全部-->

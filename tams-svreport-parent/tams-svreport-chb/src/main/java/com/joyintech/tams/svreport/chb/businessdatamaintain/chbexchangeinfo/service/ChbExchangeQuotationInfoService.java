@@ -233,7 +233,7 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
         for (List<ChbExchangeQuotationInfoDto> list:partitionList) {
             chbExchangeQuotationInfoMapper.insertExchargeQuoteInfo(list);
         }
-        return excelValidList.stream().filter(e -> Objects.equals("YW",e.getValidKey())).collect(Collectors.toList());
+        return excelValidList;
     }
 
     /**
@@ -304,11 +304,10 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
         List<ChbExchangeQuotationInfoDto> list = new ArrayList<>(1);
         dto.setStatus(DictCodeListExt2.数据状态_有效.getValue());
         if (StringUtil.equals(dto.getOperateType(), DELETE)) {
-            List<ChbExchangeQuotationInfoDto> selectedItem = dto.getSelectedItem();
-            selectedItem.forEach(e -> {
-                e.setStatus(DictCodeListExt2.数据状态_删除.getValue());
-            });
-            chbExchangeQuotationInfoMapper.updateExchargeQuoteInfo(selectedItem);
+            List<ChbExchangeQuotationInfoDto> listDto = new ArrayList<>(1);
+            dto.setStatus(DictCodeListExt2.数据状态_删除.getValue());
+            listDto.add(dto);
+            chbExchangeQuotationInfoMapper.updateExchargeQuoteInfo(listDto);
         } else if (StringUtil.equals(dto.getOperateType(), NEW)) {
             //删除状态是已删除的数据
             chbExchangeQuotationInfoMapper.deleteChbExchargeQuoteByKey(dto.getExchargeCode(), dto.getTradeDate(), dto.getDatasourceType(), DictCodeListExt2.数据状态_删除.getValue());

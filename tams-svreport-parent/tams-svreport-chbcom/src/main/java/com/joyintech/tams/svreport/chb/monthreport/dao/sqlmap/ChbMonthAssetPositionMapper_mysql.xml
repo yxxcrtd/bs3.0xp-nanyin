@@ -1280,9 +1280,9 @@
         SELECT
         TEMP.GRADERESULT as GRADERESULT,
         TEMP.OCODE AS OCODE,
-        rank() over (partition by TEMP.OCODE order by rownum) rk
+        rank() over (partition by TEMP.OCODE order by rk) rk
         FROM (
-        <include refid="com.joyintech.tams.busicommon.productRating.dao.CommonProductRatingMapper.searchProductRatingSql"/>
+        <include refid="com.joyintech.tams.busicommon.productRating.dao.CommonProductRatingMapper_mysql.searchProductRatingSql"/>
         )
         <!--SQL注入 -->
         <if test="getProductRatingOrderSqlByZx != null and getProductRatingOrderSqlByZx != ''">
@@ -1296,9 +1296,9 @@
         SELECT
         TEMP.GRADERESULT as GRADERESULT,
         TEMP.OCODE AS OCODE,
-        rank() over (partition by TEMP.OCODE order by rownum) rk
+        rank() over (partition by TEMP.OCODE order by rk) rk
         FROM(
-        <include refid="com.joyintech.tams.busicommon.productRating.dao.CommonProductRatingMapper.searchProductRatingSql"/>
+        <include refid="com.joyintech.tams.busicommon.productRating.dao.CommonProductRatingMapper_mysql.searchProductRatingSql"/>
         )
         <!--SQL注入 -->
         <if test="getProductRatingOrderSqlByZt != null and getProductRatingOrderSqlByZt != ''">

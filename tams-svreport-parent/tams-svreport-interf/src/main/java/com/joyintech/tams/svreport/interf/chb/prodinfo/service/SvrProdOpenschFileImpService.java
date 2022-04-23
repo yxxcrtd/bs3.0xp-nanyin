@@ -158,7 +158,7 @@ public class SvrProdOpenschFileImpService extends FileImpService {
 			deleteData(prodlistE);
 			logger.debug("开放计划数据删除----结束-----:" +  df.format(new Date()));
 			// 数据小于1000直接入库
-			if (listNE.size() <= 1000) {
+			if (listNE.size() <= 50000) {
 				// 插入开放计划
 				insertData(listNE);
 			} else {// 大于1000使用sqlloader入库
@@ -304,23 +304,38 @@ public class SvrProdOpenschFileImpService extends FileImpService {
 	 */
 	private void insertData(List<ChbPrdOpensch> openSchlist) {
 		logger.debug("批量插入开放计划信息----开始-----:" + df.format(new Date()));
+
+		int count = 0;
 		SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
 		ChbPrdOpenschInterfMapper chbPrdOpenschInterfMapper = session.getMapper(ChbPrdOpenschInterfMapper.class);
-		try {
-			int count = 0;
-			for (ChbPrdOpensch sch : openSchlist) {
-				chbPrdOpenschInterfMapper.insert(sch);
-				count++;
-				if (count % 1000 == 0) {
-					session.commit();
-					session.clearCache();
-				}
+		try{
+		int batchCount =500;//每批commit的个数
+		int batchLastIndex = batchCount;//每批最后一个的下标
+		for(int index = 0; index < openSchlist.size();){
+			if(batchLastIndex > openSchlist.size()-1){
+				batchLastIndex = openSchlist.size();
+				chbPrdOpenschInterfMapper.insertBatchList(openSchlist.subList(index, batchLastIndex));
+				break;//数据插入完毕,退出循环
+			}else{
+				chbPrdOpenschInterfMapper.insertBatchList(openSchlist.subList(index, batchLastIndex));
+				index = batchLastIndex;//设置下一批下标
+				batchLastIndex = index + batchCount;
 			}
+			count ++;
+			// 每20次提交
+			if (count % 20 == 0) {
+				session.commit();
+				// 清理缓存，防止溢出
+				session.clearCache();
+			}
+		 }
 			session.commit();
+			// 清理缓存，防止溢出
 			session.clearCache();
-		} finally {
-			session.close();
-		}
+	   }
+        finally {
+		session.close();
+	}
 		logger.debug("批量插入开放计划信息----结束-----:" + df.format(new Date()));
 	}
 	

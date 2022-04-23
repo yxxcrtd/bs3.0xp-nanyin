@@ -21,28 +21,27 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dao.ChbCalendarInfoMapper;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dto.ChbCalendarInfo001Dto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dto.ChbCalendarInfoDto;
-import com.joyintech.tams.svreport.chb.businessdatamaintain.chbexchangeinfo.dto.ChbExchangeQuotationInfoDto;
 import com.joyintech.tams.svreport.chb.common.util.ExcelUtil;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.io.FileNotFoundException;
-import java.math.BigDecimal;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 /**
  * 市场日历信息service层 〈功能详细描述〉
@@ -56,7 +55,7 @@ import java.util.stream.Collectors;
 public class ChbCalendarInfo001Service extends CommonExportService<ChbCalendarInfo001Dto> {
 
     public static String CONFIG_FILE = "/com/joyintech/tams/svreport/chb/businessdatamaintain/chbcalendarinfo/conf/export_conf.xml";
-
+    private final Logger logger = LoggerFactory.getLogger(ChbCalendarInfo001Service.class);
 
     /**
      * 表名
@@ -110,21 +109,38 @@ public class ChbCalendarInfo001Service extends CommonExportService<ChbCalendarIn
     }
 
     /**
-     * 修改日历状态 <功能详细描述>
+     * 节假日和工作日更新
      *
-     * @param entity 实体类
+     * @param list
+     * @return
      */
-    public void doComplete(ChbCalendarInfo001Dto entity) {
-        if (entity.getIsHoliday() == 0) {
-            // 工作日设节假日
-            entity.setIsHoliday(1L);
-            chbCalendarInfoMapper.sethday(entity);
-        } else if (entity.getIsHoliday() == 1) {
-            // 节假日设工作日
-            entity.setIsHoliday(0L);
-            chbCalendarInfoMapper.setwday(entity);
+    public AjaxResult updateIsHoliday(List<ChbCalendarInfo001Dto> list) {
+        Date sysDate = DateUtil.platDateFromCache();
+        //判断日期是否小于平台日
+        for (ChbCalendarInfo001Dto dto : list) {
+            if (dto.getCdate().before(sysDate)) {
+                AjaxResult aj = new AjaxResult();
+                List<ValidMessage> errorList = new ArrayList<>();
+                errorList.add(new ValidMessage(getMessage("MST_INFO_E_0003")));
+                aj.setErrorList(errorList);
+                return aj;
+            }
+            if (dto.getIsHoliday() == 0L) {
+                dto.setIsHoliday(1L);
+            } else {
+                dto.setIsHoliday(0L);
+            }
         }
+        try {
+            chbCalendarInfoMapper.updateBatchCalendarInfo(list);
+        } catch (Exception e) {
+            logger.error("数据更新异常:{}", e.getMessage());
+            throw new RuntimeException("操作异常!");
+        }
+
+        return new AjaxResult(getMessage("COMMON_I_0011"));
     }
+
 
     /**
      * 导入数据文件之前检查数据
@@ -168,22 +184,21 @@ public class ChbCalendarInfo001Service extends CommonExportService<ChbCalendarIn
         List<List<Map<String, String>>> partitionList = Lists.partition(mapList, PAGE_SIZE);
         //数据重复的个数
         int duplicateCount = 0;
-        for (List<Map<String, String>> list:partitionList) {
+        for (List<Map<String, String>> list : partitionList) {
             int i = chbCalendarInfoMapper.selectMstHoliday(list);
-            if (i>0){
-                duplicateCount+=i;
+            if (i > 0) {
+                duplicateCount += i;
             }
         }
         //存在重复数据提示错误
-        if (duplicateCount>0) {
+        if (duplicateCount > 0) {
             List<JoyinMessage> joyinMessages = new ArrayList<>(1);
-            JoyinMessage ms = new JoyinMessage(this.getMessage("ChbImportDuplicateMessage",duplicateCount), MessageType.确认消息);
+            JoyinMessage ms = new JoyinMessage(this.getMessage("ChbImportDuplicateMessage", duplicateCount), MessageType.确认消息);
             joyinMessages.add(ms);
             webResult.setJoyinMessages(joyinMessages);
         }
         return webResult;
     }
-
 
 
     /**
@@ -207,10 +222,10 @@ public class ChbCalendarInfo001Service extends CommonExportService<ChbCalendarIn
         //按500条分页
         List<List<ChbCalendarInfo001Dto>> partitionList = Lists.partition(dtoList, PAGE_SIZE);
         //批量入库
-        for (List<ChbCalendarInfo001Dto> list:partitionList) {
+        for (List<ChbCalendarInfo001Dto> list : partitionList) {
             chbCalendarInfoMapper.insertBatchMstHoliday(list);
         }
-        return excelValidList.stream().filter(e -> Objects.equals("YW",e.getValidKey())).collect(Collectors.toList());
+        return excelValidList;
     }
 
 
@@ -231,10 +246,10 @@ public class ChbCalendarInfo001Service extends CommonExportService<ChbCalendarIn
                 dto.setCalendarId(map.get("CALENDAR_ID"));
             }
             if (map.containsKey("CDATE")) {
-                dto.setCdate(DateUtil.parse(map.get("CDATE").replaceAll("/","-")));
+                dto.setCdate(DateUtil.parse(map.get("CDATE").replaceAll("/", "-")));
             }
             if (map.containsKey("IS_HOLIDAY")) {
-                dto.setIsHoliday(StringUtils.isNotBlank(map.get("IS_HOLIDAY"))?Long.parseLong(map.get("IS_HOLIDAY")):null);
+                dto.setIsHoliday(StringUtils.isNotBlank(map.get("IS_HOLIDAY")) ? Long.parseLong(map.get("IS_HOLIDAY")) : null);
             }
             if (Objects.equals("A", map.get("STATUS"))) {
                 dto.setStatus(DictCodeListExt2.数据状态_待处理.getValue());
@@ -262,14 +277,13 @@ public class ChbCalendarInfo001Service extends CommonExportService<ChbCalendarIn
             List<String> list = dataList.get(i);
             Map<String, String> map = new LinkedHashMap<>(3);
             map.put("CDATE", list.get(0));
-            map.put("CALENDAR_ID", StringUtil.isNotBlank(list.get(1))?list.get(1).split(" ")[0]:"");
-            map.put("IS_HOLIDAY", StringUtil.isNotBlank(list.get(2)) ? list.get(2).split(" ")[0] :"");
+            map.put("CALENDAR_ID", StringUtil.isNotBlank(list.get(1)) ? list.get(1).split(" ")[0] : "");
+            map.put("IS_HOLIDAY", StringUtil.isNotBlank(list.get(2)) ? list.get(2).split(" ")[0] : "");
             mapList.add(map);
         }
         return mapList;
 
     }
-
 
 
     /**
@@ -288,96 +302,6 @@ public class ChbCalendarInfo001Service extends CommonExportService<ChbCalendarIn
         if (StringUtil.equals(propName, "cdate")) {
             cell.setCellValue(DateUtil.format((Date) value));
         }
-    }
-
-
-    /**
-     * 根据key获取dto <功能详细描述>
-     *
-     * @param dto key
-     * @return 数据
-     */
-    private ChbCalendarInfo001Dto getMstMarketCalendarInfo001DtoByKey(ChbCalendarInfo001Dto dto) {
-        return chbCalendarInfoMapper.getMstMarketCalendarInfo001DtoByKey(dto);
-    }
-
-
-    /**
-     * 更新数据
-     *
-     * @param list 参数
-     */
-    private void updateBtachEquityInfo(List<ChbCalendarInfo001Dto> list) {
-        chbCalendarInfoMapper.updateBtachEquityInfo(list);
-    }
-
-
-    /**
-     * 分批次执行updateBtachEquityInfo
-     *
-     * @param dataList 数据
-     */
-    private void updateBtachEquityInfoByPart(List<ChbCalendarInfo001Dto> dataList) {
-        if (StringUtil.isEmptyList(dataList)) {
-            return;
-        }
-
-        int maxDataCountOneTime = 20;
-        int dataCount = dataList.size();
-        if (dataCount <= maxDataCountOneTime) {
-            updateBtachEquityInfo(dataList);
-        } else {
-
-            List<ChbCalendarInfo001Dto> newDataList = new ArrayList<>(dataList);
-
-            // 分批处理
-            // 分批数
-            int part = dataCount / maxDataCountOneTime;
-            for (int i = 0; i < part; i++) {
-                updateBtachEquityInfo(newDataList.subList(0, maxDataCountOneTime));
-                newDataList.subList(0, maxDataCountOneTime).clear();
-            }
-            // 最后剩下的数据
-            if (CollectionUtils.isNotEmpty(newDataList)) {
-                updateBtachEquityInfo(newDataList);
-            }
-        }
-    }
-
-    /**
-     * 检查excel是否为空或者传入列是否正确
-     *
-     * @param i    第几行
-     * @param list 每一列解析后的List<String>
-     * @return 检查结构
-     */
-    private List<ExcelValidDto> checkExcelCow(int i, List<String> list) {
-        List<ExcelValidDto> excelValidDtoList = new LinkedList<>();
-        // 删除数据列 SPV 登记编码
-        // 列数变为3
-        if (null == list || list.size() != 3) {
-            ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i), this.getMessage("MST_INFO_E_0001"));
-            excelValidDtoList.add(dto);
-        }
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Date date;
-        // 使用日期格式化捕获异常来判断日期格式是否合法
-        String newDate = list.get(0).replaceAll("/", "-");
-        try {
-
-            date = list == null ? null : sdf.parse(newDate);
-            // 获取平台日期
-            Date sysDate = DateUtil.platDateFromCache();
-            if (date != null && date.before(sysDate)) {
-                // 验证导入数据日期是否小于平台日期
-                ExcelValidDto dto = new ExcelValidDto(newDate, String.valueOf(i), this.getMessage("BUSS_COM_E_0003", "平台日期", "导入数据的日期"));
-                excelValidDtoList.add(dto);
-            }
-        } catch (ParseException e) {
-            ExcelValidDto dto = new ExcelValidDto(newDate, String.valueOf(i), this.getMessage("MST_INFO_E_0001"));
-            excelValidDtoList.add(dto);
-        }
-        return excelValidDtoList;
     }
 
     /**

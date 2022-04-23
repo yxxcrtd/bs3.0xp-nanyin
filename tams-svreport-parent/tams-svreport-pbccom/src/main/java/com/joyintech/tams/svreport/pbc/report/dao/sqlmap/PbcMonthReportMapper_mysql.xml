@@ -468,12 +468,12 @@
             </if>
             <if test="createDept != null and createDept !=''">
                 and CREATE_DEPT in ( select dept_code from sys_department
-                start with dept_code = #{createDept,jdbcType=VARCHAR}
-                connect by prior dept_code = upper_dept_code )
+                where dept_code = #{createDept,jdbcType=VARCHAR}
+                or upper_dept_code = #{createDept,jdbcType=VARCHAR} )
             </if>
             and REPORTTYPE != 'ONEPRD_ASSET_DEBT'<!-- 过滤单产品资产负债表 -->
         </where>
-        )as t ORDER BY STATUSDATE
+        )as t ORDER BY STATUS_DATE
     </select>
 
     <update id="updateDoMannultSendZipDatFile" parameterType="java.util.Map">
@@ -920,8 +920,8 @@
             </if>
             <if test="createDept != null and createDept !=''">
                 and rep.CREATE_DEPT in ( select dept_code from sys_department sd1
-                start with sd1.dept_code = #{createDept,jdbcType=VARCHAR}
-                connect by prior sd1.dept_code = sd1.upper_dept_code )
+                where sd1.dept_code = #{createDept,jdbcType=VARCHAR}
+                or sd1.upper_dept_code = #{createDept,jdbcType=VARCHAR} )
             </if>
             and rep.reporttype = 'ONEPRD_ASSET_DEBT'<!-- 只查询资产负债信息 -->
         </where>

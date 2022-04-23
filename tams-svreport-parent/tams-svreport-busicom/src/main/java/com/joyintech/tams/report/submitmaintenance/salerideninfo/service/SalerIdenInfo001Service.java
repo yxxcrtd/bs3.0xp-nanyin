@@ -1,6 +1,7 @@
 package com.joyintech.tams.report.submitmaintenance.salerideninfo.service;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
@@ -8,6 +9,7 @@ import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.svreport.base.dto.BaseCheckOracleDto;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.ExcelUtil;
@@ -23,6 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 @Service("SalerIdenInfo001Service")
@@ -56,7 +60,9 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
      * @throws Exception
      */
     public List<SalerIdenInfoDto> queryAllList(Map<String, Object> params) throws Exception{
-        return chbSalerIdenInfoMapper.selectForPage(params);
+        List<SalerIdenInfoDto> dataList = chbSalerIdenInfoMapper.selectForPage(params);
+        this.formatByType(dataList);
+        return dataList;
     }
 
     /**
@@ -101,16 +107,21 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
      * @see
      * @since 1.0
      */
-    public AjaxResult checkConfirmMsgForImportData(List<List<String>> dataList) {
+    public AjaxResult checkConfirmMsgForImportData(List<List<String>> dataList,String fileName) {
         AjaxResult webResult = new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<>();
+        if (!fileName.contains("销售人员身份信息")) {
+            errorList.add( new ValidMessage("导入模板不一致, 请重新选择文件!"));
+            webResult.setErrorList(errorList);
+            return webResult;
+        }
         for (int i = 0; i < dataList.size(); i++ ) {
             for (int j = i+1; j < dataList.size(); j++ ) {
                 if(StringUtils.equals(dataList.get(i).get(7), dataList.get(j).get(7))){
                     ValidMessage validMessage = new ValidMessage("第"+(i+2)+"内部编号与"+"第"+(j+2)+"内部编号不能重复");
                     errorList.add(validMessage);
                 }
-                if(!(dataList.get(i).get(5).isEmpty()) && !(dataList.get(j).get(5).isEmpty())) {
+                if(dataList.get(i).get(5)!=null&&dataList.get(j).get(5)!=null&&!(dataList.get(i).get(5).isEmpty()) && !(dataList.get(j).get(5).isEmpty())) {
                     if (this.subDictcode(dataList.get(i).get(4), " ").equals("99") && this.subDictcode(dataList.get(j).get(4), " ").equals("99")) {
                         if (StringUtils.equals(dataList.get(i).get(4), dataList.get(j).get(4))) {
                             if (StringUtils.equals(dataList.get(i).get(5), dataList.get(j).get(5))) {
@@ -189,13 +200,10 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
                     entities = convertToEntity(dataList, orgCode);
                     //校验是否已存在逻辑删除的数据
                     List<SalerIdenInfoDto> SalerIdenInfoDImportList =  chbSalerIdenInfoMapper.checkSalerIdentInfoDImport();
-                    Map<String,SalerIdenInfoDto> SalerIdenInfoDImportMap = new HashMap<String,SalerIdenInfoDto>();
-                    for(SalerIdenInfoDto info :SalerIdenInfoDImportList){
-                        SalerIdenInfoDImportMap.put(info.getSalerInsNo(),info);
-                    }
+                    Map<String,SalerIdenInfoDto> salerIdenInfoDImportMap = SalerIdenInfoDImportList.stream().collect(Collectors.toMap(SalerIdenInfoDto::getSalerInsNo, Function.identity()));;
                     for(SalerIdenInfoDto dto : entities){
                         //check表中是否存在已逻辑删除的数据
-                        if(SalerIdenInfoDImportMap.get(dto.getSalerInsNo()) != null){
+                        if(salerIdenInfoDImportMap.containsKey(dto.getSalerInsNo())){
                             //如果存在就先 删除表中删除状态数据再 新增插入
                             chbSalerIdenInfoMapper.deleteByPrimaryKey(dto.getSalerInsNo());
                         }
@@ -842,9 +850,15 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
      * @see
      * @since 1.0
      */
-    public AjaxResult checkConfirmMsgForImportCodeData(List<List<String>> dataList) {
+    public AjaxResult checkConfirmMsgForImportCodeData(List<List<String>> dataList,String fileName) {
         AjaxResult webResult = new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<>();
+        if (!fileName.contains("销售人员编码信息")) {
+            errorList.add( new ValidMessage("导入模板不一致, 请重新选择文件!"));
+            webResult.setErrorList(errorList);
+            return webResult;
+        }
+
         for (int i = 0; i < dataList.size(); i++ ) {
             for (int j = i+1; j < dataList.size(); j++ ) {
                 if(StringUtils.equals(dataList.get(i).get(0), dataList.get(j).get(0))){

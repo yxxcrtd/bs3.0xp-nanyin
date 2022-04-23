@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,6 +63,8 @@ import com.joyintech.tams.systemtools.util.CommonUtil;
 
 import oracle.sql.TIMESTAMP;
 
+import javax.annotation.Resource;
+
 /**
  * 查看对比详情共同画面
  *
@@ -74,6 +77,7 @@ import oracle.sql.TIMESTAMP;
 @PageId("ViewCompareDetail")
 @RequestMapping("/common/detail")
 public class ViewCompareDetailController extends BaseController {
+
 	/**
 	 * 界面特殊处理字段
 	 */
@@ -460,7 +464,14 @@ public class ViewCompareDetailController extends BaseController {
 
             // 如果是履历表
             if(StringUtil.endsWith(tableName, "_HIS")) {
-                searchParam.put("order", " ORDER BY nvl(UPDATE_TIME,CREATE_TIME) DESC");
+                //判断是mysql还是oracle数据库
+                if (BaseCommonCheckService.isMYSQLDataBase()) {
+                    searchParam.put("order", " ORDER BY IFNULL(UPDATE_TIME,CREATE_TIME) DESC");
+                }else{
+                    searchParam.put("order", " ORDER BY NVL(UPDATE_TIME,CREATE_TIME) DESC");
+                }
+
+
             }
             else {
                 if(searchParam.get("tableName").equals("CHB_SALER_STL_DEAL_SUB")){
@@ -589,6 +600,13 @@ public class ViewCompareDetailController extends BaseController {
                             }
                             if (sb.toString().equals("current")) {
                                 detail.setCurrentValue(v);
+                                //add by zhoubin 20220422 start
+                                //产品发行登记日期做处理;销售结算资金交易 date类型做特殊处理
+                                List list=Arrays.asList("raiseVdate","raiseEnddate","prdVdate","prdMdate","firstOpenDay","tradeVdate");
+                                if(StringUtil.equals(detail.getType(),"date") && list.contains(detail.getData())) {
+                                    detail.setType(null);
+                                }
+                                //add by zhoubin 20220422 end
                             }
                             else {
                                 detail.setHasOldValue(true);
@@ -673,6 +691,11 @@ public class ViewCompareDetailController extends BaseController {
             else if(value instanceof String){
                 v = value.toString();
             }
+            //add by wangyaning 未对date类型数据做处理导致为空 2022 04 22
+            else if(value instanceof Date){
+                v = value.toString();
+            }
+            //add by wangyaning 未对date类型数据做处理导致为空 2022 04 22
         }
         catch (SecurityException e) {
             this.getLogger().error("ViewCompareDetailController.getValue", e);

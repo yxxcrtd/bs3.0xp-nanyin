@@ -1201,7 +1201,7 @@
 	<select id="isDeal" resultType="java.lang.Integer"
 			parameterType="com.joyintech.tams.report.submitmaintenance.prodfactorinfo.dto.ProdFactorInfo001Dto">
 		SELECT
-		COUNT(PROD_ID)
+		COUNT(A.PROD_ID)
 		FROM
 		(
 		SELECT
@@ -1220,7 +1220,7 @@
 		STATUS = 'E'
 		and PROD_ID =
 		#{prodId,jdbcType=VARCHAR}
-		)
+		) A
 	</select>
 
 	<delete id="delete1">

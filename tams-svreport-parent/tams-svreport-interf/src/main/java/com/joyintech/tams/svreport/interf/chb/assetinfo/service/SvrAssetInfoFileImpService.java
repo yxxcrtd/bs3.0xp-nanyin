@@ -8,7 +8,7 @@ import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.joyintech.tams.common.base.entity.MstCustomerInfoAdd;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import com.joyintech.tams.svreport.interf.chb.baseinfo.dao.SvrMstCustomerInfoAddImpMapper;
 import org.apache.commons.collections4.CollectionUtils;
@@ -30,12 +30,9 @@ import com.joyintech.tams.common.FileImpService;
 import com.joyintech.tams.common.InterfDefine;
 import com.joyintech.tams.common.InterfFile;
 import com.joyintech.tams.common.base.dao.BaseMapper;
-import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.common.svreport.base.service.ChbTypeMappingService;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
-import com.joyintech.tams.common.base.entity.ChbInterfConfigDto;
-import com.joyintech.tams.common.base.entity.ChbMstCounterParty;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.report.interf.common.constant.InterfConstant;
@@ -255,27 +252,8 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
         // 将map转换成dto
         List<ChbAssetInfo> assetInfoList = new ArrayList<>(infoList.size());
         List<String> listCloumn = baseMapper.getTableColumnList(InterfDefine.资产要素信息接口数据.getCode());
-        assetInfoList = this.convertMapToEntity(infoList, dataSource, listCloumn);
-        if (assetInfoList != null && assetInfoList.size() > 0) {
-            // 增量方式入库
-            insertDataMerge(assetInfoList,saveFlag);
-        }
-        return true;
-    }
+        assetInfoList = (List<ChbAssetInfo>)super.convertMapToEntity(infoList, ChbAssetInfo.class);
 
-    /**
-     * 将map转换为entity格式
-     *
-     * @param infoList 传入的listMap
-     * @param entities 转换后的lis
-     * @param listCloumn 表列名
-     * @param dataSource 数据来源
-     * @see
-     * @since 1.0
-     */
-    private List<ChbAssetInfo> convertMapToEntity(List<Map<String, String>> infoList,String dataSource,
-                                     List<String> listCloumn) {
-        List<ChbAssetInfo> entities = new ArrayList<ChbAssetInfo>();
         // 交易对手信息
         List<ChbMstCounterParty> allCounterList = chbMstCounterPartyInterfMapper.selectAllCounterParty();
         // 交易对手信息
@@ -286,126 +264,9 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
         List<MstCustomerInfoAdd> institList = svrMstCustomerInfoAddImpMapper.getAllMstCustomerInfoInstit();
         Map<String,String> institMap = institList.stream().collect(HashMap<String,String>::new,
                 (map, item)->map.put(item.getCustomerId(), item.getPartyType1()), (m, n)->m.putAll(n));
-        // 获取产品表的列
-        // List<String> listCloumn = prodFactorInfo001Mapper.getTableColumnList(CHB_PRD_BASEINFO);
-        for (Map<String, String> map : infoList) {
-            ChbAssetInfo chbAssetInfo = new ChbAssetInfo();
-            try{
-            	
-            
-            for (String string : listCloumn) {
-                String value = map.get(string);
-                if(value==null){
-                	continue;
-                }
-                Field field = ReflectionUtils.findField(chbAssetInfo.getClass(),
-//                  StringUtil.dealString(StringUtil.lowerCase(string), false));
-                        this.subBlank(StringUtil.lowerCase(string)));
-                if(field==null){
-//                    System.out.println(string);
-                    logger.info(string);
-                    continue;
-                  }
-                field.setAccessible(true);
-                Type type = field.getGenericType();
-                if ("java.math.BigDecimal".equals(type.getTypeName())) {
-                    try {
-                        if (StringUtil.isNotEmpty(value)){
-                            field.set(chbAssetInfo,new BigDecimal(value));
-                        }
-                    } catch ( IllegalAccessException e) {
-                        logger.error(e.getMessage(),e);
-                        return entities;
-                    }
-                }
-                else if ("java.lang.Integer".equals(type.getTypeName())
-                        || "int".equals(type.getTypeName())) {
-                    try {
-                        if (StringUtil.isNotEmpty(value)){
-                            field.set(chbAssetInfo,Integer.valueOf(value));
-                        }
-                    } catch (IllegalAccessException e) {
-                        logger.error(e.getMessage(),e);
-                        return entities;
-                    }
-                }
-                else if ("java.lang.Long".equals(type.getTypeName())) {
-                    try {
-                        if (StringUtil.isNotEmpty(value)){
-                            field.set(chbAssetInfo, Long.valueOf(value));
-                        }
-                    } catch ( IllegalAccessException e) {
-                        logger.error(e.getMessage(),e);
-                        return entities;
-                    }
-                }
-                else if ("java.lang.Short".equals(type.getTypeName())) {
-                    try {
-                        if (StringUtil.isNotEmpty(value)){
-                            field.set(chbAssetInfo,Short.valueOf(value));
-                        }
-                    } catch ( IllegalAccessException e) {
-                        logger.error(e.getMessage(),e);
-                        return entities;
-                    }
-                }
-                else if ("java.util.Date".equals(type.getTypeName())) {
-                    if (value != null&&""!=value) {
-                        try {
-//                        	System.out.println(string);
-//                        	System.out.println(value);
-                            field.set(chbAssetInfo, DateUtil.parse(value));
-                        } catch ( IllegalAccessException e) {
-                            logger.error(e.getMessage(),e);
-                            return entities;
-                        }
-                    }
-                }
-                else {
-                    try {
-                        field.set(chbAssetInfo, (value == null || "".equals(value)) ? "" : value);
-                    } catch ( IllegalAccessException e) {
-                        logger.error(e.getMessage(),e);
-                        return entities;
-                    }
-                }
-            }
-            }catch(Exception e){
-            	logger.debug(e.getMessage(),e);
-            	logger.error(e.getMessage(), e);
-            }
-            chbAssetInfo.setDataSource(SysDataUtil.getNameFromDataDict(DictCode.数据来源, dataSource));
-            // 以下是定制化的dto设置
-            // 有效状态
-//            chbAssetInfo.setStatus(SVReportDictCodeList.维护数据状态_有效.getValue());
-            // 主键
+
+        for(ChbAssetInfo chbAssetInfo : assetInfoList){
             chbAssetInfo.setAssetUuid(IDGenerator.generate(36));
-//            // 债券主体评级
-//            chbAssetInfo.setSecMainGrade(SysDataUtil.getNameFromDataDict(DictCode.资产评级,chbAssetInfo.getSecMainGrade()));
-//            // 债券信用评级
-//            chbAssetInfo.setSecCreditGradeType(SysDataUtil.getNameFromDataDict(DictCode.资产评级,chbAssetInfo.getSecCreditGradeType()));
-//            // 发行机构主体信用评级
-//            chbAssetInfo.setPartyGrade(SysDataUtil.getNameFromDataDict(DictCode.资产评级,chbAssetInfo.getPartyGrade()));
-//            // 融资人内部信用评级
-//            chbAssetInfo.setFcrGradeIn(SysDataUtil.getNameFromDataDict(DictCode.资产评级,chbAssetInfo.getFcrGradeIn()));
-//            // 外部评级机构名称及融资人评级结果
-//            chbAssetInfo.setFcrGradeOut(SysDataUtil.getNameFromDataDict(DictCode.资产评级,chbAssetInfo.getFcrGradeOut()));
-//            // 融资人主体评级
-//            chbAssetInfo.setFinancierGrade(SysDataUtil.getNameFromDataDict(DictCode.资产评级,chbAssetInfo.getFinancierGrade()));
-//            // 资产内部评级
-//            chbAssetInfo.setInGrade(SysDataUtil.getNameFromDataDict(DictCode.资产评级,chbAssetInfo.getInGrade()));
-//            // 资产外部评级
-//            chbAssetInfo.setOutGrade(SysDataUtil.getNameFromDataDict(DictCode.资产评级,chbAssetInfo.getOutGrade()));
-            // 创建人
-            chbAssetInfo.setCreateUser("interf");
-			//更新人
-			chbAssetInfo.setUpdateUser("interf");
-            // 创建部门
-            chbAssetInfo.setCreateDept(CommonUtil.getDeptCode());
-            // 部门代码
-            chbAssetInfo.setDeptCode(CommonUtil.getDeptCode());
-            // 机构代码
-            chbAssetInfo.setOrgCode(CommonUtil.getOrgCode());
             // 客户主体类型映射
             if (StringUtil.isNotEmpty(chbAssetInfo.getCustomerObjType())){
                 // 映射后的数据
@@ -419,13 +280,15 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
 
             //2-5企业债券分行业、企业规模统计的列统计维度调整为根据市场机构管理中“机构类型（规模）”字段来取值。
             ChbAssetInfoInterf.convertInstitSize(chbAssetInfo,institMap);
-
-            entities.add(chbAssetInfo);
         }
-        return entities;
+
+        if (assetInfoList != null && assetInfoList.size() > 0) {
+            // 增量方式入库
+            insertDataMerge(assetInfoList,saveFlag);
+        }
+        return true;
     }
-    
-    
+
     /**
      * 功能:数据入库
      * @since 1.7.0

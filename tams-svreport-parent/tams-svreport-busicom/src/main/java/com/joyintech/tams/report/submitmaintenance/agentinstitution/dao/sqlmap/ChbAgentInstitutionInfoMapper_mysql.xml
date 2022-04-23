@@ -233,6 +233,6 @@
         <if test="agentInstitutionCode != null and agentInstitutionCode != ''">
             and cpds.AGENT_INSTITUTION_CODE = #{agentInstitutionCode}
         </if>
-        ) and rownum = 1
+        ) limit 1
     </select>
 </mapper>

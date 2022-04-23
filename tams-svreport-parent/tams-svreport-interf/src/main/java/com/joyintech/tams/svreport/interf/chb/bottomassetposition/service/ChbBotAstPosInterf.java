@@ -200,7 +200,7 @@ public class ChbBotAstPosInterf extends BaseInterfService {
 			position.setUpdateUser("system");
 			position.setStatus("E");
 			//数据来源
-			if("D".equals(source)){
+			if("D".equals(sourceNew)){
 				position.setDatasource("16");
 			}
 			if (assetPlanLList.contains(position.getAssetCode())) {

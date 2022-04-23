@@ -21,6 +21,11 @@ public class BaseCheckOracleDto {
      * 字段长度
      */
     private Integer length;
+
+    /**
+     * 数字长度
+     */
+    private Integer numberLength;
     /**
      * 字段是否为null
      */
@@ -56,6 +61,14 @@ public class BaseCheckOracleDto {
 
     public void setLength(Integer length) {
         this.length = length;
+    }
+
+    public Integer getNumberLength() {
+        return numberLength;
+    }
+
+    public void setNumberLength(Integer numberLength) {
+        this.numberLength = numberLength;
     }
 
     public String getNullAble() {
