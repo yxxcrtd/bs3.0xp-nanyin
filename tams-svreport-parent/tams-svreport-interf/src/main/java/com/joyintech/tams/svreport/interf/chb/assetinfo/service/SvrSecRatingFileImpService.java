@@ -369,9 +369,41 @@ public class SvrSecRatingFileImpService extends FileImpService {
 		svrMstBondCreditRatingMapper.deleteTodayData(dateSet);
 	}
 
-	@SuppressWarnings("unused")
-	private void mergeSecRating(List<MstBondCreditRating> list){
-		svrMstBondCreditRatingMapper.mergeSecRating(list);
+
+	public void mergeSecRating(List<MstBondCreditRating> list) {
+		SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+		try {
+			int count = 0;
+			logger.debug("债券评级插入开始--------------" + new Date());
+			SvrMstBondCreditRatingMapper batchMapper = session.getMapper(SvrMstBondCreditRatingMapper.class);
+			int batchCount = reportInsertLongCount==0?50:reportInsertLongCount;//每批commit的个数
+			int batchLastIndex = batchCount;//每批最后一个的下标
+			for(int index = 0; index < list.size();){
+				if(batchLastIndex > list.size()-1){
+					batchLastIndex = list.size();
+					batchMapper.mergeSecRating(list.subList(index, batchLastIndex));
+					break;//数据插入完毕,退出循环
+				}else{
+					batchMapper.mergeSecRating(list.subList(index, batchLastIndex));
+					index = batchLastIndex;//设置下一批下标
+					batchLastIndex = index + batchCount;
+				}
+				count ++;
+				// 每20次提交
+				if (count % 20 == 0) {
+					session.commit();
+					// 清理缓存，防止溢出
+					session.clearCache();
+				}
+			}
+			logger.debug("债券评级插入结束--------------" + new Date());
+			session.commit();
+			// 清理缓存，防止溢出
+			session.clearCache();
+		}
+		finally {
+			session.close();
+		}
 	}
 
 	/**
