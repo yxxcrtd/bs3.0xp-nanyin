@@ -629,7 +629,7 @@ var QueryFunc=function(){
     var assetTypeValSet = function(){
         var repAssetType = $('#assetType2').val();
         //隐藏所有中债报送信息
-        var obj = JSON.parse(AssetTypeListLink) ;
+        var obj = JSON.parse(AssetTypeListLinkTwo) ;
         for(var i in obj){
             if(obj[i].indexOf(repAssetType)>0){
                 $("#assetType").val(i).trigger('change');

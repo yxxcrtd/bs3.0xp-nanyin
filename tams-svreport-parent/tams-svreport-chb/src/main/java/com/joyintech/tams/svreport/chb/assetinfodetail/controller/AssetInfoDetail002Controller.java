@@ -76,7 +76,7 @@ public class AssetInfoDetail002Controller extends BaseController {
                 DictCode.交易流通场所_中债,DictCode.币种_中债,
                 DictCode.中债_上游资产一级分类, DictCode.中债_上游资产二级分类,DictCode.中债_上游资产三级分类,DictCode.中债_上游资产四级分类,
                 DictCode.中债_上游资产五级分类,DictCode.是否_中债,DictCode.结构化业务类型,DictCode.结构化层级
-                ,DictCode.人行资产一级分类,DictCode.人行资产二级分类,DictCode.人行资产三级分类,DictCode.银行资本补充工具);
+                ,DictCode.人行资产一级分类,DictCode.人行资产二级分类,DictCode.人行资产三级分类,DictCode.银行资本补充工具,DictCode.资产负债一级类别);
 
         String assetUuid = this.getParam("assetUuid");
         String dataStatus = this.getParam("dataStatus");
@@ -84,6 +84,8 @@ public class AssetInfoDetail002Controller extends BaseController {
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         String jsonObject= JSONObject.toJSONString(assetInfoDetailMService.getDataListLink());
         model.addAttribute("AssetTypeListLink", jsonObject);
+
+        model.addAttribute("AssetTypeListLinkTwo", JSONObject.toJSONString(assetInfoDetailMService.getDataListLink(DictCode.资产负债一级类别.getValue())));
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {// 判断是否存在于工作流中
             AssetInfoDetailDto dto = assetInfoDetailMService.getBussinessEntityByWorkflowId(
                     workflowId);
