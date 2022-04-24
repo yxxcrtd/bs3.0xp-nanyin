@@ -386,11 +386,15 @@ select * from (SELECT t.*,LIMIT ROW_ID FROM ${tableId} t WHERE
 	<insert id="insertData" parameterType="java.util.Map" statementType="STATEMENT">
 		INSERT INTO ${tableId}
 		<foreach collection="map" index="key" item="value" open="(" separator="," close=")">
-			${key}
+			<if test="value!=null">
+		    ${key}
+			</if>
 		</foreach>
 		VALUES
 		<foreach collection="map" index="key" item="value" open="(" separator="," close=")">
+			<if test="value!=null">
 			${value}
+			</if>
 		</foreach>
 	</insert>
 
