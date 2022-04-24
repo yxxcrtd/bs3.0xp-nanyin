@@ -30,7 +30,16 @@
     <result column="BANK_SEC_PERPETUAL" property="bankSecPerpetual" jdbcType="VARCHAR" />
     <result column="BANK_SEC_PREFER" property="bankSecPrefer" jdbcType="VARCHAR" />
   </resultMap>
-
+    <resultMap id="PlanResultMap" type="com.joyintech.tams.common.base.entity.ChbBotAstPosition" >
+        <id column="PLAN_ASSET_ID" property="planAssetId" jdbcType="CHAR" />
+        <result column="TOTAL_NUM" property="totalNum" jdbcType="DECIMAL" />
+        <result column="ISSUE_AMT" property="issueAmt" jdbcType="DECIMAL" />
+        <result column="ASSET_CODE" property="assetCode" jdbcType="CHAR" />
+        <result column="POS_NUM" property="posNum" jdbcType="DECIMAL" />
+        <result column="POS_AMT" property="posAmt" jdbcType="DECIMAL" />
+        <result column="ISFINAPLAN" property="isfinaplan" jdbcType="CHAR" />
+        <result column="ACCUAMT" property="accuamt" jdbcType="DECIMAL" />
+    </resultMap>
     <sql id="searchProductRatingSql">
         SELECT de.* FROM (
         SELECT
@@ -644,7 +653,26 @@
 		info.MANAGE_TYPE
 		
   </select>
-  
+
+    <select id="selectPlanDeal" resultMap="PlanResultMap" parameterType="com.joyintech.tams.common.base.entity.ChbBotAstPosition" >
+		select pos.PLAN_ASSET_ID
+        ,pos.TOTAL_NUM
+		,pos.ISSUE_AMT
+		,pos.asset_code
+		,pos.POS_NUM
+		,pos.POS_AMT
+		,pos.POS_DATE
+		,pos.ISFINAPLAN
+		,#{accuamt} ACCUAMT
+		from CHB_BOT_AST_POS pos
+		left join CHB_ASSET_INFO info  on  pos.asset_code=info.asset_code
+    	where pos.PLAN_ASSET_ID = #{planAssetId,jdbcType=VARCHAR}
+    	and  pos.POS_DATE=#{posDate,jdbcType=DATE}
+    	and  pos.status !='D'
+    	and  info.status!='D'
+        and  pos.asset_code!='REMAININGCASH'
+
+  	</select>
 
   	<select id="selectPlanInfo" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition" 
   		flushCache="true" useCache="false">

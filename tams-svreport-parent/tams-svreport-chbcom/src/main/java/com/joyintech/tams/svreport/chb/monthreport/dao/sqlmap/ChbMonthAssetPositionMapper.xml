@@ -580,20 +580,22 @@
   </select>
   
     <select id="selectPlanDeal" resultMap="PlanResultMap" parameterType="com.joyintech.tams.common.base.entity.ChbBotAstPosition" >
-		select PLAN_ASSET_ID
-        ,TOTAL_NUM
-		,ISSUE_AMT
-		,asset_code
-		,POS_NUM
-		,POS_AMT
-		,POS_DATE
-		,ISFINAPLAN
+		select pos.PLAN_ASSET_ID
+        ,pos.TOTAL_NUM
+		,pos.ISSUE_AMT
+		,pos.asset_code
+		,pos.POS_NUM
+		,pos.POS_AMT
+		,pos.POS_DATE
+		,pos.ISFINAPLAN
 		,#{accuamt} ACCUAMT
-		from CHB_BOT_AST_POS
-    	where PLAN_ASSET_ID = #{planAssetId,jdbcType=VARCHAR}
-    	and POS_DATE=#{posDate,jdbcType=DATE}
-    	and status !='D'
-        and asset_code!='REMAININGCASH'
+		from CHB_BOT_AST_POS pos
+		left join CHB_ASSET_INFO info  on  pos.asset_code=info.asset_code
+    	where pos.PLAN_ASSET_ID = #{planAssetId,jdbcType=VARCHAR}
+    	and  pos.POS_DATE=#{posDate,jdbcType=DATE}
+    	and  pos.status !='D'
+    	and  info.status!='D'
+        and  pos.asset_code!='REMAININGCASH'
     	
   	</select>
   	<select id="selectPlanInfo" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition" 
