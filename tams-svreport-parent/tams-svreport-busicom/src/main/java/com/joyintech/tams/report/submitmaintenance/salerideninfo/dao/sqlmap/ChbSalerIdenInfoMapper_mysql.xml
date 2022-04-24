@@ -456,11 +456,11 @@
         SALER_ORG_CODE id,
         SALER_ORG_NAME text
         from CHB_SALER_INST_INFO
-        <where>
+        where 1=1
             <if test="search != null and search != ''">
                 and SALER_ORG_CODE like concat(concat('%', #{search}),'%')
             </if>
-        </where>
+        and STATUS = 'E'
     </select>
 
     <!--	双击查看详细信息查询info-->
