@@ -176,12 +176,16 @@
         CREATE_DEPT,  CREATE_TIME, UPDATE_USER, UPDATE_TIME)
         <foreach collection="list" item="item" separator="from dual union all select" open="select t.* from (select "
                  close=" from dual) t">
-            #{item.insideProdId,jdbcType=VARCHAR}, #{item.codeType,jdbcType=VARCHAR}, #{item.pbcCode,jdbcType=VARCHAR},
-            #{item.status,jdbcType=VARCHAR}, #{item.orgCode,jdbcType=VARCHAR}, #{item.createUser,jdbcType=VARCHAR},
-            #{item.createDept,jdbcType=VARCHAR},
-            #{item.createTime,jdbcType=TIMESTAMP},
-            #{item.updateUser,jdbcType=VARCHAR},
-            #{item.updateTime,jdbcType=TIMESTAMP}
+            #{item.insideProdId,jdbcType=VARCHAR} AS INSIDE_PROD_ID,
+            #{item.codeType,jdbcType=VARCHAR} AS CODE_TYPE,
+            #{item.pbcCode,jdbcType=VARCHAR} AS PBC_CODE,
+            #{item.status,jdbcType=VARCHAR} AS STATUS,
+            #{item.orgCode,jdbcType=VARCHAR} AS ORG_CODE,
+            #{item.createUser,jdbcType=VARCHAR} AS CREATE_USER,
+            #{item.createDept,jdbcType=VARCHAR} AS CREATE_DEPT,
+            #{item.createTime,jdbcType=TIMESTAMP} AS CREATE_TIME,
+            #{item.updateUser,jdbcType=VARCHAR} AS UPDATE_USER,
+            #{item.updateTime,jdbcType=TIMESTAMP} AS UPDATE_TIME
         </foreach>
     </insert>
 </mapper>
