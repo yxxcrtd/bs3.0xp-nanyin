@@ -34,8 +34,7 @@ import java.util.List;
  * @since 1.0
  */
 @PageId("ChbExchangeQuotationInfo002")
-@ValidLogic(targetClass = ChbExchangeQuotationInfoValidator.class, groups = {ValidateGroupEdit.class,
-        ValidateGroupDelete.class})
+@ValidLogic(targetClass = ChbExchangeQuotationInfoValidator.class, groups = {ValidateGroupEdit.class})
 public class ChbExchangeQuotationInfoDto extends ChbExchargeQuote implements ProcessEntity {
     /**
      * <意义，目的和功能，以及可能被用到的地方>
