@@ -347,7 +347,7 @@ public class AgentInstitution001Service extends CommonExportService<AgentInstitu
                 if (srcName.contains("+")) {
                     fileAgentInstitutionCode = srcName.substring(0, srcName.lastIndexOf("+"));
                 } else {
-                    fileCheckMsg1.append("文件名" + srcName + "命名不规范！");
+                    fileCheckMsg1.append("文件名" + srcName + "命名不规范,必须有\'+\'号");
                     fileCheckMsg1.append(GlobalConstant.HTML_NEWLINE);
                 }
             }
@@ -371,7 +371,7 @@ public class AgentInstitution001Service extends CommonExportService<AgentInstitu
                 ZipFile zipFile=new ZipFile(new File(targetFileSTR),Charset.forName("GBK"));
 
             } catch (Exception e) {
-                fileCheckMsg1.append("文件名"+srcName+"内容格式错误！");
+                fileCheckMsg1.append("文件名"+srcName+"中包含不必要的文件或文件夹");
                 fileCheckMsg1.append(GlobalConstant.HTML_NEWLINE);
             }
             if(fileCheckMsg1.length() > 0){
