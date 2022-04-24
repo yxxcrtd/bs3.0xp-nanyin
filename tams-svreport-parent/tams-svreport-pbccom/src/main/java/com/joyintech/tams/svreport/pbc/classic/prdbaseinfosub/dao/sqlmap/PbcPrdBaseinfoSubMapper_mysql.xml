@@ -1202,22 +1202,29 @@
 	</delete>
 
 	<select id="queryAllPbcPrdBaseInfo" resultMap="BaseResultMap">
-		select
-		S.PBC_PROD_ID,
-		S.prod_name,
-		S.ACCOUNT_ID,
-		S.PROD_ID
+		select PBC_PROD_ID, prod_name,ACCOUNT_ID,PROD_ID,ORG_CODE
 		from (
-		select PBC_PROD_ID,prod_name,ACCOUNT_ID,PROD_ID,
+		select ifnull(T3.pbc_code,t1.PBC_PROD_ID) PBC_PROD_ID,prod_name,ACCOUNT_ID,PROD_ID,ORG_CODE,
 		rank() over (partition by PBC_PROD_ID order by ifnull(update_time,create_time) desc) ranknum
-		from PBC_PRD_BASEINFO_SUB
+		from PBC_PRD_BASEINFO_SUB t1
+		LEFT JOIN(
+		SELECT
+		inside_prod_id,
+		pbc_code
+		FROM
+		pbc_prod_assetpool_code
+		WHERE
+		status='E'
+		AND code_type='01'
+		)t3 ON t3.inside_prod_id=t1.PROD_ID
 		where STATUS != 'D'
 		<if test="search != null and search !='' ">
 			AND (PBC_PROD_ID LIKE concat_ws('','%', #{search},'%')
-			or prod_name LIKE concat_ws('','%', #{search},'%'))
+			or prod_name LIKE concat_ws('','%', #{search},'%')
+			or pbc_code LIKE concat_ws('','%', #{search},'%'))
 		</if>
-		) S
-		where 1 = 1 limit 1
+		) A
+		where ranknum = 1
 	</select>
 	<select id="selectAllRegisteAccountData" resultType="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub" parameterType="com.joyintech.tams.svreport.pbc.classic.prdbaseinfosub.dto.PbcPrdBaseinfoSub">
 		select DISTINCT trim(ACCOUNT_ID) accountId,trim(PBC_ACCOUNT_ID) pbcAccountId
