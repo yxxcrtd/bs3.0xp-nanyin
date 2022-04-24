@@ -602,7 +602,7 @@ public class ViewCompareDetailController extends BaseController {
                                 detail.setCurrentValue(v);
                                 //add by zhoubin 20220422 start
                                 //产品发行登记日期做处理;销售结算资金交易 date类型做特殊处理
-                                List list=Arrays.asList("raiseVdate","raiseEnddate","prdVdate","prdMdate","firstOpenDay","tradeVdate","chbSubmitDeadline");
+                                List list=Arrays.asList("raiseVdate","raiseEnddate","prdVdate","prdMdate","firstOpenDay","tradeVdate","chbSubmitDeadline","mdate","vdate");
                                 if(StringUtil.equals(detail.getType(),"date") && list.contains(detail.getData())) {
                                     detail.setType(null);
                                 }
