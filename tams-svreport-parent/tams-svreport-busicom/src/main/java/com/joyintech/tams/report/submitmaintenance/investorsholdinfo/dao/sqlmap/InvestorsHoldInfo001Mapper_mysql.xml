@@ -594,6 +594,28 @@
 		)
 	</select>
 
+	<select id="selectAllSubHoldInfoData" resultType = "com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub">
+		select
+		ciis.REGIST_SEQNO registSeqno,
+		ciis.REGIST_BANK_CODE registBankCode,
+		ciis.INDENTIFY_MARK indentifyMark,
+		ciis.PRD_REGIST_CODE prdRegistCode,
+		ciis.HOLD_DATE holdDate,
+		ciis.CCY ccy,
+		ciis.AMOUNT amount,
+		ciis.QTY qty,
+		ciis.CNY_AMT cnyAmt,
+		ciis.STATUS status,
+		ciis.SEND_STATUS,
+		ciis.CHECK_SEQNO checkSeqno
+		from
+		CHB_INVESTHOLD_INFO_SUB ciis
+		where
+		<foreach collection="newKeyList" item="item" open="(ciis.REGIST_BANK_CODE,ciis.INDENTIFY_MARK,ciis.PRD_REGIST_CODE,ciis.HOLD_DATE,ciis.CCY) in(" separator="," close=")">
+			(#{item.registBankCode},#{item.indentifyMark},#{item.prdRegistCode},#{item.holdDate},#{item.ccy})
+		</foreach>
+	</select>
+
 	<select id="selectAllSubHoldInfoDataNew" resultType = "com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub">
 		select
 		ciis.REGIST_SEQNO registSeqno,
