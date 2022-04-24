@@ -2818,7 +2818,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             				}  else if(StringUtil.isNotEmpty(columnData)&&columnData.contains("'")){
             					columnData = "'" +columnData.replace("'", "''")+ "'";
             				} else {
-            					columnData = "'" + columnData + "'";
+            					columnData = null==columnData?columnData:"'" + columnData + "'";
             				}
             				insertMap.put(column, columnData);
                 		}
