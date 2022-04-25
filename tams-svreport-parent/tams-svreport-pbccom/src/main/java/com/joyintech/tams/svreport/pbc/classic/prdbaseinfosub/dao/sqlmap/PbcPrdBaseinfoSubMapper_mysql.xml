@@ -1012,7 +1012,7 @@
 			</if>
 			<!-- 手工处理传入的产品ID列表 add by gaojian 2019-06-18 begin -->
 			<if test="prodIdList != null and prodIdList.size > 0">
-				<foreach collection="prodIdList" item="items" open="and PROD_ID in (" separator="," close =")">
+				<foreach collection="prodIdList" item="items" open="and t1.PROD_ID in (" separator="," close =")">
 					#{items,jdbcType=VARCHAR}
 				</foreach>
 			</if>
@@ -1075,20 +1075,20 @@
 				and DATE_FORMAT(PBC_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= #{pbcSubmitDeadlineDateEnd}
 			</if>
 			<if test="vdateStart != null and vdateStart != ''">
-				and DATE_FORMAT(VDATE,'%Y-%m-%d') &gt;= #{vdateStart}
+				and DATE_FORMAT(t1.VDATE,'%Y-%m-%d') &gt;= #{vdateStart}
 			</if>
 			<if test="vdateEnd != null and vdateEnd != ''">
-				and DATE_FORMAT(VDATE,'%Y-%m-%d') &lt;= #{vdateEnd}
+				and DATE_FORMAT(t1.VDATE,'%Y-%m-%d') &lt;= #{vdateEnd}
 			</if>
 			<if test="updateTime != null and updateTime != ''">
 				and DATE_FORMAT(UPDATE_TIME,'%Y-%m-%d') = #{updateTime}
 			</if>
 			<!-- 手工处理传入查询日期 起息日 add by gaojian 2019-06-18 begin -->
 			<if test="startDate != null and startDate != ''">
-				and DATE_FORMAT(VDATE,'%Y-%m-%d') &gt;= #{startDate}
+				and DATE_FORMAT(t1.VDATE,'%Y-%m-%d') &gt;= #{startDate}
 			</if>
 			<if test="endDate != null and endDate != ''">
-				and DATE_FORMAT(VDATE,'%Y-%m-%d') &lt;= #{endDate}
+				and DATE_FORMAT(t1.VDATE,'%Y-%m-%d') &lt;= #{endDate}
 			</if>
 
 			<if test="allExport != null and allExport !=''">

@@ -47,7 +47,8 @@
             #{item.saveAmtRmb ,jdbcType=DECIMAL } SAVE_AMT_RMB,
             #{item.saveQty ,jdbcType=DECIMAL } SAVE_QTY,
             #{item.exchangeRate ,jdbcType=DECIMAL } EXCHANGE_RATE,
-            #{item.cusType ,jdbcType=VARCHAR } CUS_TYPE
+            #{item.cusType ,jdbcType=VARCHAR } CUS_TYPE,
+            sysdate  UPDATETIME
             from dual
         </foreach>
         ) TEMP
@@ -94,7 +95,9 @@
         L.SAVE_AMT_RMB = TEMP.SAVE_AMT_RMB,
         L.SAVE_QTY = TEMP.SAVE_QTY,
         L.EXCHANGE_RATE = TEMP.EXCHANGE_RATE,
-        L.CUS_TYPE = TEMP.CUS_TYPE
+        L.CUS_TYPE = TEMP.CUS_TYPE,
+        L.UPDATETIME = TEMP.UPDATETIME
+
         WHEN NOT MATCHED THEN
         INSERT (
         SENDDATE,
@@ -136,7 +139,8 @@
         SAVE_AMT_RMB,
         SAVE_QTY,
         EXCHANGE_RATE,
-        CUS_TYPE
+        CUS_TYPE,
+        UPDATETIME
         )
         VALUES(
         TEMP.SENDDATE,
@@ -178,7 +182,8 @@
         TEMP.SAVE_AMT_RMB,
         TEMP.SAVE_QTY,
         TEMP.EXCHANGE_RATE,
-        TEMP.CUS_TYPE
+        TEMP.CUS_TYPE,
+        TEMP.UPDATETIME
         )
     </insert>
 
