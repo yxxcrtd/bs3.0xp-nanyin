@@ -2797,16 +2797,20 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             					if ("CREATE_TIME".equals(column) || "UPDATE_TIME".equals(column)) {
             						columnData = "SYSDATE";
             					} else {
-            						//excel中输入了时间戳数据处理
-            						if(columnData.length() > 10){
-            							columnData = columnData.substring(0,10);
-            						}
-            						String dateStr = formatDateStr(columnData);
-                					if (null != dateStr) {
-                						columnData = "DATE'" + dateStr + "'";
-                					} else {
-                						columnData = null;
-                					}
+            					    if(columnData==null||("").equals(columnData)){
+                                        columnData = null;
+                                    }else {
+                                        //excel中输入了时间戳数据处理
+                                        if (columnData.length() > 10) {
+                                            columnData = columnData.substring(0, 10);
+                                        }
+                                        String dateStr = formatDateStr(columnData);
+                                        if (null != dateStr) {
+                                            columnData = "DATE'" + dateStr + "'";
+                                        } else {
+                                            columnData = null;
+                                        }
+                                    }
 //            						columnData = "DATE'" + columnData.substring(0, 10) +"'"; 
             					}
             					// 时间类型字段全存入当前时间
@@ -2957,18 +2961,22 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             					if ("UPDATE_TIME".equals(column)) {
             						columnData = "SYSDATE";
             					} else {
-            						//excel中输入了时间戳数据处理
-            						if(columnData.length() > 10){
-            							columnData = columnData.substring(0,10);
-            						}
-            						String dateStr = formatDateStr(columnData);
-                					if (null != dateStr) {
-                						columnData = "DATE'" + dateStr + "'";
-                					} else {
-                						columnData = null;
-                					}
+                                    if (columnData == null || ("").equals(columnData)) {
+                                        columnData = null;
+                                    } else {
+                                        //excel中输入了时间戳数据处理
+                                        if (columnData.length() > 10) {
+                                            columnData = columnData.substring(0, 10);
+                                        }
+                                        String dateStr = formatDateStr(columnData);
+                                        if (null != dateStr) {
+                                            columnData = "DATE'" + dateStr + "'";
+                                        } else {
+                                            columnData = null;
+                                        }
 //            						columnData = "DATE'" + columnData.substring(0, 10) +"'"; 
-            					}
+                                    }
+                                }
             				// 时间类型字段
             				} else if (timeColumnList.contains(column)) {
             					// 修改时间变动,其余时间不变
