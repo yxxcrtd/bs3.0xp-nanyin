@@ -619,10 +619,6 @@ public class ChbBokSubjectService extends CommonExportService<ChbBokSubjectDto> 
                 bokSubjectDto.setRemark(map.get("REMARK"));
             }
 
-            if (StringUtil.isNotEmpty(map.get("ERRMSG"))) {
-                bokSubjectDto.setErrMsg(map.get("ERRMSG"));
-            }
-
             bokSubjectDto.setErrMsg(null!=map.get("ERRMSG")?map.get("ERRMSG"):"");
             bokSubjectDto.setCreateUser(CommonUtil.getUserName());
             bokSubjectDto.setCreateDept(CommonUtil.getDeptCode()==null?"":CommonUtil.getDeptCode());

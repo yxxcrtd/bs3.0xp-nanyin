@@ -72,4 +72,7 @@ public interface AssetInfoDetailMapper {
 
 	List<SelectOptionDto> selectCounterId(Map<String, Object> pageParam);
 
+	int selectValidRecords(@Param("list") List<Map<String,String>> list);
+
+	void batchInsert(@Param("list") List<AssetInfoDetailDto> list);
 }
