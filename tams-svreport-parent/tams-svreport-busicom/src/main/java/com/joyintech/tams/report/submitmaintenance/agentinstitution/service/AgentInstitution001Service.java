@@ -347,7 +347,7 @@ public class AgentInstitution001Service extends CommonExportService<AgentInstitu
                 if (srcName.contains("+")) {
                     fileAgentInstitutionCode = srcName.substring(0, srcName.lastIndexOf("+"));
                 } else {
-                    fileCheckMsg1.append("文件名" + srcName + "命名不规范,必须有\'+\'号");
+                    fileCheckMsg1.append("压缩包必须命名为: 代销机构代码+XX.zip");
                     fileCheckMsg1.append(GlobalConstant.HTML_NEWLINE);
                 }
             }
