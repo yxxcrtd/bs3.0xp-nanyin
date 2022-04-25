@@ -159,10 +159,6 @@
 					</div>
 				</div>
 
-
-
-
-
 				<div class="form-inline-wrap">
 					<label class="layui-form-label form-lable"
 						   data-th-utext="#{SvrBussRepFundInfo.fundEnpeName}">基金公司名称</label>
@@ -173,7 +169,6 @@
 							   data-fixtype="2" class="layui-input form-input"/>
 					</div>
 				</div>
-
 
 			</div>
 
@@ -258,22 +253,7 @@
 			</div>
 
 			<div class="layui-form-item">
-				<div class="form-inline-wrap">
-					<label class="layui-form-label form-lable"
-						   data-th-utext="#{SvrBussRepFundInfo.chbManagerId}">管理人</label>
-					<div class="layui-input-inline input-inline">
-						<!--						<input type="text" th:id="|${entityName}_chbManagerId|"-->
-						<!--							   th:name="|${entityName}.chbManagerId|"-->
-						<!--							   th:value="${entity?.chbManagerId}"-->
-						<!--							   data-fixtype="2" class="layui-input form-input"/>-->
-						<select th:id="|${entityName}_chbManagerId|"
-								th:name="|${entityName}.chbManagerId|"
-								th:value="${entity?.chbManagerId}" required
-								class="layui-input form-input input-select"
-								data-th-data-url="@{/common/select/getManagerId}">
-						</select>
-					</div>
-				</div>
+
 
 				<div class="form-inline-wrap">
 					<label class="layui-form-label form-lable"

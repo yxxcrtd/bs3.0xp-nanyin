@@ -74,6 +74,8 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 	private AssetInfoDetailUtil assetInfoDetailUtil;
 
 	static Map<String,Set<String>> map = null;
+
+	static Map<String,Set<String>> maptwo = null;
 	/**
 	 *
 	 * 业务画面查询事件
@@ -221,6 +223,31 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 			}
 		}
 		return map;
+	}
+
+
+	/**
+	 * 获取资产及二级类型的关系
+	 * @return
+	 */
+	public Map<String, Set<String>> getDataListLink(String DictCode){
+
+		if(maptwo==null||maptwo.isEmpty()){
+			maptwo = new HashMap<>();
+			//界面配置,根据SYS_DATADICT_LIST_LINK
+			Map<String,Object> params = new HashMap<>();
+			params.put("linkDictCode", DictCode);
+//		params.put("linkItemCode", itemCode);
+			List<SysDatadictListLink> listLink = assetInfoDetailMapper.getDataListLinkData(params);
+			for (SysDatadictListLink link:listLink) {
+				if(null!=maptwo.get(link.getLinkedItemCode())){
+					maptwo.get(link.getLinkedItemCode()).add(link.getItemCode());
+				}else{
+					maptwo.put(link.getLinkedItemCode(),new HashSet<>(Arrays.asList(link.getItemCode())));
+				}
+			}
+		}
+		return maptwo;
 	}
 
 	/**

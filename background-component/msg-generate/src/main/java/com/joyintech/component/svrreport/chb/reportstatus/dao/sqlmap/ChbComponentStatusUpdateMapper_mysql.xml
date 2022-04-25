@@ -125,7 +125,10 @@
         SELECT
         STATUS status,
         SEND_STATUS sendStatus,
-        SUBMIT_FEEDBACK_STATUS submitFeedbackStatus
+        case when
+        length(trim(SUBMIT_FEEDBACK_STATUS))<![CDATA[<]]>1
+        then null else SUBMIT_FEEDBACK_STATUS
+        end submitFeedbackStatus
         FROM
         ${tableName}
         WHERE
