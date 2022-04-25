@@ -788,7 +788,7 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 	 *             异常
 	 * @see
 	 * @since 1.0
-	 */@Transactional(rollbackFor = Exception.class)
+	 */
 	public List<ExcelValidDto> importData(List<List<String>> dataList,List<List<String>> tempList,String bankCode,String deptCode,String orgCode ) {
 		if (!StringUtil.isEmptyList(dataList)) {
 			List<String> headList = new ArrayList<String>();
@@ -815,8 +815,14 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 			List<ExcelValidDto> checkResult = checkDataInfo(mapList, true, listE, listA, null, null,bankCode,deptCode,orgCode);
 			if (checkResult.isEmpty()) {
 				// 进行了数据检查与转化后 无错误信息可以进行后续操作
-				investorsHoldInfoDistinctService.checkInvestorsHoldInfolist(listE,"02");
-				afterCheckDeal(listE, null, DictCodeListExt2.数据来源_EXCEL导入.getValue(), null, null, null, null);
+				InvestorsHoldInfo001FileReadParaDto paraDto = this.buildFileReadParaDto(mapList);
+				mapList.stream().forEach(item->{
+					String[] codeList = StringUtil.split(item.get("CCY"), StringUtil.SPACE);
+					item.put("CCY", codeList[0]);
+				});
+
+				List<ChbInvestholdInfoCheckDto> mergelist = investorsHoldInfoDistinctService.checkInvestorsHoldInfolistBackNew(mapList,paraDto);
+				afterCheckDealNew(listE, null, DictCodeListExt2.数据来源_EXCEL导入.getValue(), null, null, null, paraDto, mergelist);
 				investorsHoldInfoDistinctService.mergeInvestorsHoldInfolistNew("02",DictCodeListExt2.数据来源_EXCEL导入.getValue());
 			}
 			return checkResult;
@@ -1163,6 +1169,7 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 				investorsHoldInfoDistinctService.saveChbInvestholdInfoCheckTmpByInfo(listE);
 
 				investorsHoldInfo001Mapper.handleInfoDeleteDataNew();
+				investorsHoldInfo001Mapper.handleSubDeleteDataNew();
 			}else{
 				investorsHoldInfoDistinctService.handleStatusDeleteData(listE);
 			}
@@ -1212,9 +1219,9 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 		    sequenceList = CommonUtil.getBatchSequenceIndexData(DataIndexSequenceType.中债登记管理, listE.size());
 		    if (allMergedMap==null){//如果listA初始化过，就不再初始化，否则初始化
 			 allMergedMap=  mergelist.stream().collect(JoyinCollectors.toMap(x -> x.getRegistBankCode()
-					+ GlobalConstant.UNDER_LINE + x.getIndentifyMark() + GlobalConstant.UNDER_LINE
-					+ x.getPrdRegistCode()  + GlobalConstant.UNDER_LINE + x.getCcy() + GlobalConstant.UNDER_LINE
-					+ DateUtil.format(x.getHoldDate()), x -> x));
+						+ GlobalConstant.UNDER_LINE + x.getIndentifyMark() + GlobalConstant.UNDER_LINE
+						+ x.getPrdRegistCode()  + GlobalConstant.UNDER_LINE + x.getCcy() + GlobalConstant.UNDER_LINE
+						+ DateUtil.format(x.getHoldDate()), x -> x));
 		    }
 		}
 		int index = 0;
@@ -1329,6 +1336,7 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 			    }
 			} else {
 			    logger.info("createDataFile处理开始 " + DateUtil.getCurrentDateTime());
+			    // TODO
 			    createDataFile(tmpPath, listIn, subListInsert, table.getColumns(), subTable.getColumns());
 			    logger.info("createDataFile处理结束 " + DateUtil.getCurrentDateTime());
 			}
@@ -3591,9 +3599,10 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 			List<ExcelValidDto> checkResult = checkDataInfo(mapList, true, listE, listA, null, null,bankCode,deptCode,orgCode);
 			if (checkResult.isEmpty()) {
 				// 进行了数据检查与转化后 无错误信息可以进行后续操作
-				investorsHoldInfoDistinctService.checkInvestorsHoldInfolist(listE,"02");
-				afterCheckDeal(listE, null, DictCodeListExt2.数据来源_EXCEL导入.getValue(), null, null, null, null);
-				investorsHoldInfoDistinctService.mergeInvestorsHoldInfolist("02",DictCodeListExt2.数据来源_EXCEL导入.getValue());
+				InvestorsHoldInfo001FileReadParaDto paraDto = this.buildFileReadParaDto(mapList);
+				List<ChbInvestholdInfoCheckDto> mergelist = investorsHoldInfoDistinctService.checkInvestorsHoldInfolistBackNew(mapList,paraDto);
+				afterCheckDealNew(listE, null, DictCodeListExt2.数据来源_EXCEL导入.getValue(), null, null, null, paraDto, mergelist);
+				investorsHoldInfoDistinctService.mergeInvestorsHoldInfolistNew("02",DictCodeListExt2.数据来源_EXCEL导入.getValue());
 			}
 			return checkResult;
 		}
