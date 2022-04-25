@@ -681,9 +681,17 @@ public class ViewCompareDetailController extends BaseController {
                 }
             }
             else if (value instanceof Timestamp) {
-                Timestamp time = (Timestamp)value;
-                v = String.valueOf(time.getTime());
+                //add by zhoubin 20220425 start
+                try {
+                    Timestamp time = (Timestamp)value;
+                    Date date = new Date(time.getTime());
+                    v = DateUtil.format(date);
+                }
+                catch (Exception e) {
+                    logger.error(e.getMessage(), e);
+                }
             }
+            //add by zhoubin 20220425 end
             // 数值类型
             else if (value instanceof Number) {
                 v = StringUtil.numberToString((BigDecimal)value);
