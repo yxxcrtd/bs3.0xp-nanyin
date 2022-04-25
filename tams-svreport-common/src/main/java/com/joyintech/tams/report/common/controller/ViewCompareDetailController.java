@@ -17,17 +17,12 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
 import org.apache.commons.collections4.CollectionUtils;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +72,12 @@ import javax.annotation.Resource;
 @PageId("ViewCompareDetail")
 @RequestMapping("/common/detail")
 public class ViewCompareDetailController extends BaseController {
+
+
+   static final List list=Arrays.asList("raiseVdate","submitTime",
+           "raiseEnddate","prdVdate","prdMdate","yieldDate","dealdate",
+           "firstOpenDay","tradeVdate","chbSubmitDeadline",
+           "mdate","vdate","raisePstrdate","raisePenddate");
 
 	/**
 	 * 界面特殊处理字段
@@ -602,8 +603,10 @@ public class ViewCompareDetailController extends BaseController {
                                 detail.setCurrentValue(v);
                                 //add by zhoubin 20220422 start
                                 //产品发行登记日期做处理;销售结算资金交易 date类型做特殊处理
-                                List list=Arrays.asList("raiseVdate","raiseEnddate","prdVdate","prdMdate","firstOpenDay","tradeVdate","chbSubmitDeadline","mdate","vdate");
-                                if(StringUtil.equals(detail.getType(),"date") && list.contains(detail.getData())) {
+                                if(Objects.equals(detail.getType(),"date") && list.contains(detail.getData())) {
+                                    detail.setType(null);
+                                }
+                                if(Objects.equals(detail.getType(),"datetime") && list.contains(detail.getData())) {
                                     detail.setType(null);
                                 }
                                 //add by zhoubin 20220422 end
@@ -685,7 +688,12 @@ public class ViewCompareDetailController extends BaseController {
                 try {
                     Timestamp time = (Timestamp)value;
                     Date date = new Date(time.getTime());
-                    v = DateUtil.format(date);
+                    if (Objects.equals(field,"submitTime")) {
+                        v = DateUtil.formatDateTime(date);
+                    } else {
+                        v = DateUtil.format(date);
+                    }
+
                 }
                 catch (Exception e) {
                     logger.error(e.getMessage(), e);
