@@ -272,7 +272,7 @@ public class CommonUtil {
 	 * @see
 	 */
 	public static String getSequenceIndexData(DataIndexSequenceType sequenceType) {
-		if(isMYSQLDataBase()){
+		if(isMYSQLDataBase()&&StringUtil.equals("CHB_FILE_READ_MONITOR_SEQNO",sequenceType.getSequenceName())){
 			String sequenceResult = IDGenerator.generate();
 			return sequenceResult;
 		}else{

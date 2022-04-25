@@ -119,6 +119,9 @@ public class CommonCodeCheckBatchService {
                 case 终止登记TMP:
                     checkProdEndSubTmp(map,prodRegistCodeList);
                     break;
+                case 销售结算资金交易信息表INFO:
+                    checkChbSalerStlDea(map, ChbCheckTableInfo.销售结算资金交易信息表INFO.getTableName());
+                    break;
                 case 总部或分支机构信息登记表SUB:
                     checkSaleInstInfo(map,ChbCheckTableInfo.总部或分支机构信息登记表SUB.getTableName());
                 case 销售人员身份信息登记表SUB:
@@ -2305,6 +2308,35 @@ public class CommonCodeCheckBatchService {
         return chbAssetInfoErrodata;
     }
 
+    /***
+     * 检查总部机构信息
+     * @param dataMap
+     */
+    public    void  checkChbSalerStlDea(Map<String, String> dataMap,String tableName){
+        String  errMsg = dataMap.getOrDefault("ERRMSG", "");
+        // 总部或分支机构名称
+        String tradeTime = dataMap.get("TRADE_TIME");
+        if(tableName.equals("CHB_SALER_STL_DEAL_INFO")) {
+            if (tradeTime != null && tradeTime != "") {
+                if (tradeTime.length() != 6) {
+                    errMsg += "交易时间填写错误。[TRADE_TIME=" + dataMap.get("TRADE_TIME") + "];";
+                }else if (!checkFigure(tradeTime)){
+                    errMsg += "交易时间填写错误。[TRADE_TIME=" + dataMap.get("TRADE_TIME") + "];";
+                }
+                if(tradeTime.length() == 6 && checkFigure(tradeTime)) {
+                    if(!checkFigure(tradeTime.substring(0, 1))){
+                        errMsg += "交易时间填写错误。[TRADE_TIME=" + dataMap.get("TRADE_TIME") + "];";
+                    }
+                    else if (Integer.parseInt(tradeTime.substring(0, 2)) > 23
+                            || Integer.parseInt(tradeTime.substring(2, 3)) > 5 || Integer.parseInt(tradeTime.substring(4, 5)) > 5) {
+                        errMsg += "交易时间填写错误。[TRADE_TIME=" + dataMap.get("TRADE_TIME") + "];";
+                    }
+                }
+            }
+        }
+        dataMap.put("ERRMSG", errMsg);
+    }
+
 
     /***
      * 检查销售奖惩信息
@@ -2485,5 +2517,20 @@ public class CommonCodeCheckBatchService {
             flag = true;
         }
         return flag;
+    }
+
+    /**
+     * 判断是否为数字
+     *
+     * @param
+     * @return 返回boolean
+     */
+    private boolean checkFigure(String figure) {
+        try{
+            new BigDecimal(figure);
+            return true;
+        }catch(Exception e){
+            return false;
+        }
     }
 }

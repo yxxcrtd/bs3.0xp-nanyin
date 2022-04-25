@@ -602,7 +602,7 @@ public class ViewCompareDetailController extends BaseController {
                                 detail.setCurrentValue(v);
                                 //add by zhoubin 20220422 start
                                 //产品发行登记日期做处理;销售结算资金交易 date类型做特殊处理
-                                List list=Arrays.asList("raiseVdate","raiseEnddate","prdVdate","prdMdate","firstOpenDay","tradeVdate");
+                                List list=Arrays.asList("raiseVdate","raiseEnddate","prdVdate","prdMdate","firstOpenDay","tradeVdate","chbSubmitDeadline","mdate","vdate");
                                 if(StringUtil.equals(detail.getType(),"date") && list.contains(detail.getData())) {
                                     detail.setType(null);
                                 }
@@ -681,9 +681,17 @@ public class ViewCompareDetailController extends BaseController {
                 }
             }
             else if (value instanceof Timestamp) {
-                Timestamp time = (Timestamp)value;
-                v = String.valueOf(time.getTime());
+                //add by zhoubin 20220425 start
+                try {
+                    Timestamp time = (Timestamp)value;
+                    Date date = new Date(time.getTime());
+                    v = DateUtil.format(date);
+                }
+                catch (Exception e) {
+                    logger.error(e.getMessage(), e);
+                }
             }
+            //add by zhoubin 20220425 end
             // 数值类型
             else if (value instanceof Number) {
                 v = StringUtil.numberToString((BigDecimal)value);

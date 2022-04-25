@@ -42,7 +42,7 @@
         SAVE_AMT_RMB,
         SAVE_QTY,
         EXCHANGE_RATE,
-        CUS_TYPE)
+        CUS_TYPE,UPDATETIME)
         select SENDDATE,
         FINPROD_ID,
         ISSUEMEMBER,
@@ -82,7 +82,7 @@
         SAVE_AMT_RMB,
         SAVE_QTY,
         EXCHANGE_RATE,
-        CUS_TYPE from
+        CUS_TYPE,UPDATETIME from
         (
         select TEMP.* from
         (
@@ -127,7 +127,7 @@
             CAST(#{item.saveAmtRmb ,jdbcType=DECIMAL }  AS DECIMAL (30,2) ) SAVE_AMT_RMB,
             CAST(#{item.saveQty ,jdbcType=DECIMAL }  AS DECIMAL (30,4) ) SAVE_QTY,
             CAST(#{item.exchangeRate ,jdbcType=DECIMAL }  AS DECIMAL (30,2) ) EXCHANGE_RATE,
-            #{item.cusType ,jdbcType=VARCHAR } CUS_TYPE
+            #{item.cusType ,jdbcType=VARCHAR } CUS_TYPE, NOW() UPDATETIME
             from dual
         </foreach>
         ) TEMP where not exists (select 1 from SALE_CUST_SVRREPORT CII where CII.FINPROD_ID = TEMP.FINPROD_ID
@@ -181,7 +181,7 @@
             CAST(#{item.saveAmtRmb ,jdbcType=DECIMAL }  AS DECIMAL (30,2) ) SAVE_AMT_RMB,
             CAST(#{item.saveQty ,jdbcType=DECIMAL }  AS DECIMAL (30,4) ) SAVE_QTY,
             CAST(#{item.exchangeRate ,jdbcType=DECIMAL }  AS DECIMAL (30,2) ) EXCHANGE_RATE,
-            #{item.cusType ,jdbcType=VARCHAR } CUS_TYPE
+            #{item.cusType ,jdbcType=VARCHAR } CUS_TYPE, NOW() UPDATETIME
             from dual
         </foreach>
         ) TEMP
@@ -225,7 +225,8 @@
         A.SAVE_AMT_RMB = B.SAVE_AMT_RMB,
         A.SAVE_QTY = B.SAVE_QTY,
         A.EXCHANGE_RATE = B.EXCHANGE_RATE,
-        A.CUS_TYPE = B.CUS_TYPE
+        A.CUS_TYPE = B.CUS_TYPE,
+        A.UPDATETIME = B.UPDATETIME
         where A.FINPROD_ID = B.FINPROD_ID
         and A.SENDDATE = B.SENDDATE and A.ISSUEMEMBER = B.ISSUEMEMBER
         and A.INORABOARD = B.INORABOARD and A.CUS_CODE = B.CUS_CODE
