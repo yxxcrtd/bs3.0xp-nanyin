@@ -12,6 +12,8 @@ package com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dto
 
 import com.joyintech.tams.common.base.entity.MstCalendarInfo;
 
+import java.util.List;
+
 /**
  * 日历信息表dto
  * 〈功能详细描述〉
@@ -23,5 +25,26 @@ import com.joyintech.tams.common.base.entity.MstCalendarInfo;
 public class ChbCalendarInfoDto extends MstCalendarInfo{
 
     private static final long serialVersionUID = -2226636630539705742L;
- 
+
+
+    private List<ChbCalendarInfo001Dto> list;
+
+    private String isHoliday;
+
+
+    public List<ChbCalendarInfo001Dto> getList() {
+        return list;
+    }
+
+    public void setList(List<ChbCalendarInfo001Dto> list) {
+        this.list = list;
+    }
+
+    public String getIsHoliday() {
+        return isHoliday;
+    }
+
+    public void setIsHoliday(String isHoliday) {
+        this.isHoliday = isHoliday;
+    }
 }

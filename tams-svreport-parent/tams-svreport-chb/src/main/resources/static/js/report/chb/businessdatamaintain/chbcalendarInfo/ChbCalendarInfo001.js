@@ -118,7 +118,7 @@
                     layer.msg("请选择节假日标志为工作日的数据");
                 } else {
                     Joyin.confirm("是否设置为节假日?", function () {
-                        Joyin.ajaxJson(basePath + "chb/businessdatamaintain/chbcalendarInfo/ChbCalendarInfo001/updateIsHoliday", selArr, function () {
+                        Joyin.ajaxJson(basePath + "chb/businessdatamaintain/chbcalendarInfo/ChbCalendarInfo001/updateIsHoliday", {list:selArr,isHoliday:'1'}, function () {
                             table.reload();
                         });
                     });
@@ -146,7 +146,7 @@
                     layer.msg("请选择节假日标志为节假日的数据");
                 } else {
                     Joyin.confirm("是否设置为工作日?", function () {
-                        Joyin.ajaxJson(basePath + "chb/businessdatamaintain/chbcalendarInfo/ChbCalendarInfo001/updateIsHoliday", selArr, function () {
+                        Joyin.ajaxJson(basePath + "chb/businessdatamaintain/chbcalendarInfo/ChbCalendarInfo001/updateIsHoliday", {list:selArr,isHoliday:'0'}, function () {
                             table.reload();
                         });
                     });

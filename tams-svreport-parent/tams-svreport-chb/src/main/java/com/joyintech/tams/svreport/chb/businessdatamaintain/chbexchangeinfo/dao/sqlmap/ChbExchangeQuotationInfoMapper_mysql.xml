@@ -226,7 +226,7 @@
 						and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
 						and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR}
 						 then
-						#{item.updateUser,jdbcType=VARCHAR}
+						#{item.createUser,jdbcType=VARCHAR}
 					</if>
 				</foreach>
 			</trim>

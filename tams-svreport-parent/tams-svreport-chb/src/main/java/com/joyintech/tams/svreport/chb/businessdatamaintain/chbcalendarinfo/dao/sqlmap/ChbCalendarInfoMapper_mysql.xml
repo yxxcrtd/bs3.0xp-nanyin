@@ -143,7 +143,7 @@
 						when cdate=#{item.cdate,jdbcType=DATE} and calendar_id
 						=
 						#{item.calendarId,jdbcType=VARCHAR} then
-						#{item.updateUser,jdbcType=VARCHAR}
+						#{item.createUser,jdbcType=VARCHAR}
 					</if>
 				</foreach>
 			</trim>

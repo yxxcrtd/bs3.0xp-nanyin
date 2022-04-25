@@ -17,6 +17,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dto.ChbCalendarInfo001Dto;
+import com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dto.ChbCalendarInfoDto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.service.ChbCalendarInfo001Service;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.springframework.http.ResponseEntity;
@@ -84,13 +85,13 @@ public class ChbCalendarInfo001Controller extends BaseController {
 
     /**
      * 节假日和工作日更新
-     * @param list 实体类集合
+     * @param dto 实体类集合
      * @return 返回处理信息
      */
     @ResponseBody
     @RequestMapping("updateIsHoliday")
-    public AjaxResult updateIsHoliday(@RequestBody List<ChbCalendarInfo001Dto> list) {
-        return chbTradingCalendarInfo001Service.updateIsHoliday(list);
+    public AjaxResult updateIsHoliday(@RequestBody ChbCalendarInfoDto dto) {
+        return chbTradingCalendarInfo001Service.updateIsHoliday(dto);
     }
 
 
