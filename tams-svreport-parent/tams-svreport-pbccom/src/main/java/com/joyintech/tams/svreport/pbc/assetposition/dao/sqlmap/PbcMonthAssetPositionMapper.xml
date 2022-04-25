@@ -356,6 +356,9 @@
       <if test="balFlag != null" >
         #{balFlag,jdbcType=VARCHAR},
       </if>
+      <if test="rating != null" >
+        #{rating,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.svreport.pbc.assetposition.dto.PbcMonthAssetPositionDto" >
