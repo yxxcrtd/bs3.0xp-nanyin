@@ -626,13 +626,13 @@ var QueryFunc=function(){
             $("#isConstracteBusi").val('').trigger("change");
         }
 
-        var obj = JSON.parse(AssetTypeListLink) ;
+        var obj = JSON.parse(AssetTypeListLinkTwo) ;
         if(obj["002"].indexOf(repAssetType)>=0||
             obj["004"].indexOf(repAssetType)>=0){
             $('#chbIssuerId').attr('disabled',false);
         }else{
             $('#chbIssuerId').attr('disabled',true);
-            $("#chbIssuerId").val('');
+            $("#chbIssuerId").val('').trigger("change");
         }
 
 
@@ -695,6 +695,7 @@ var QueryFunc=function(){
         dateVal();
         assetVal();
         assetTypeDetail();
+        changeReport();
     }, 10000);
 
 
