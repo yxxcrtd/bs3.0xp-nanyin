@@ -39,7 +39,7 @@ public class SalerIdenInfoController {
      * selectDetail
      */
     @PostMapping("selectDetail")
-    public SalerIdenInfoDto selectDetail(@RequestBody Map<String, Object> param){
+    public SalerIdenInfoDto selectDetail(@RequestBody Map<String, Object> param) throws Exception{
         return  salerIdenInfo002Service.selectDetail(param);
     }
 

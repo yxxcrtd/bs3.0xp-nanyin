@@ -1,5 +1,6 @@
 package com.joyintech.tams.report.submitmaintenance.salerideninfo.service;
 
+import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.tams.report.submitmaintenance.salerideninfo.dao.ChbSalerIdenInfoMapper;
 import com.joyintech.tams.report.submitmaintenance.salerideninfo.dto.SalerIdenInfoDto;
@@ -7,6 +8,8 @@ import com.joyintech.tams.report.submitmaintenance.salerideninfo.util.IdenInfoEr
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,11 +24,13 @@ public class SalerIdenInfo002Service extends BaseService{
      * 双击查看详细信息查询 修改页面信息查询
      *
      */
-    public SalerIdenInfoDto selectDetail(Map<String,Object> param) {
+    public SalerIdenInfoDto selectDetail(Map<String,Object> param) throws Exception{
         String erroOrInfo = param.get("erroOrInfo").toString();
         if (erroOrInfo.equals("info")) {
             //来自info表
-            return chbSalerIdenInfoMapper.selectDetail(param);
+            SalerIdenInfoDto dto = chbSalerIdenInfoMapper.selectDetail(param);
+            this.formateTime(dto);
+            return dto;
         } else {
             //来自erro表
             SalerIdenInfoDto infoDto = new SalerIdenInfoDto();
@@ -34,6 +39,7 @@ public class SalerIdenInfo002Service extends BaseService{
                 IdenInfoErrdataConvertUtil.errdataAssetInfoConvert(infoDto, listSalerErrordata.get(0));
                 infoDto.setErroOrInfo("erro");
             }
+            this.formateTime(infoDto);
             return infoDto;
         }
     }
@@ -117,4 +123,32 @@ public class SalerIdenInfo002Service extends BaseService{
     public int checkSalerOrgCode(String salerOrgCode){
         return  chbSalerIdenInfoMapper.checkSalerOrgCode(salerOrgCode);
     }
+
+    //处理YYYY-MM的时间
+    public void formateTime(SalerIdenInfoDto dto) throws Exception {
+        SimpleDateFormat formatter  = new SimpleDateFormat("yyyy-MM");
+        SimpleDateFormat formatter2  = new SimpleDateFormat("yyyyMM");
+        //首次参加工作时间
+        if(StringUtil.isNotEmpty(dto.getSalerWorkStartYmd())){
+            String SalerWorkStartYmd = dto.getSalerWorkStartYmd();
+            Date date = formatter2.parse(SalerWorkStartYmd);
+            String  dString = formatter.format(date);
+            dto.setSalerWorkStartYmd(dString);
+        }
+        //首次从事金融工作时间
+        if(StringUtil.isNotEmpty(dto.getSalerFinanceStartYmd())){
+            String SalerFinanceStartYmd = dto.getSalerFinanceStartYmd();
+            Date date = formatter2.parse(SalerFinanceStartYmd);
+            String  dString = formatter.format(date);
+            dto.setSalerFinanceStartYmd(dString);
+        }
+       //首次从事理财销售时间
+        if(StringUtil.isNotEmpty(dto.getSalerStartYmd())){
+            String SalerStartYmd = dto.getSalerStartYmd();
+            Date date = formatter2.parse(SalerStartYmd);
+            String  dString = formatter.format(date);
+            dto.setSalerStartYmd(dString);
+        }
+    }
+
 }
