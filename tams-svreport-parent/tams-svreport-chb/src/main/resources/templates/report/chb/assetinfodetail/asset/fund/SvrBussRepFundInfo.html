@@ -179,21 +179,28 @@
 					<label class="layui-form-label form-lable"
 						   data-th-utext="#{SvrBussRepFundInfo.mngOrgName}">基金管理机构名称</label>
 					<div class="layui-input-inline input-inline">
-						<input type="text" th:id="|${entityName}_mngOrgName|"
-							   th:name="|${entityName}.mngOrgName|" required
-							   th:value="${entity?.mngOrgName}"
-							   data-fixtype="2" class="layui-input form-input"/>
+						<select th:id="|${entityName}_managerId|"
+								th:name="|${entityName}.managerId|"
+								th:initValue="${entity?.managerId}"
+								class="layui-input form-input input-select"
+								required="required"
+								data-th-data-url="@{/common/select/getManagerId}">
+						</select>
 					</div>
 				</div>
+
 
 				<div class="form-inline-wrap">
 					<label class="layui-form-label form-lable"
 						   data-th-utext="#{SvrBussRepFundInfo.truOrgName}">基金托管机构名称</label>
 					<div class="layui-input-inline input-inline">
-						<input type="text" th:id="|${entityName}_truOrgName|"
-							   th:name="|${entityName}.truOrgName|" required
-							   th:value="${entity?.truOrgName}"
-							   data-fixtype="2" class="layui-input form-input"/>
+						<select th:id="|${entityName}_trusteeId|"
+								th:name="|${entityName}.trusteeId|"
+								th:initValue="${entity?.trusteeId}"
+								class="layui-input form-input input-select"
+								required="required"
+								data-th-data-url="@{/common/select/getTrusterId}">
+						</select>
 					</div>
 				</div>
 
@@ -252,54 +259,21 @@
 				</div>
 			</div>
 
+
 			<div class="layui-form-item">
 
-
-				<div class="form-inline-wrap">
-					<label class="layui-form-label form-lable"
-						   data-th-utext="#{SvrBussRepFundInfo.isUnlisted}">是否政府出资产业投资基金</label>
-					<div class="layui-input-inline input-inline">
-						<select th:id="|${entityName}_isUnlisted|"
-								th:name="|${entityName}.isUnlisted|"
-								th:initValue="${entity?.isUnlisted}"
-								data-th-data-result="${SVR_YES_OR_NO}" required
-								class="layui-input form-input input-select" placeholder="请输入内容"
-								data-th-placeholder="#{SysCommon.placeholder}">
-						</select>
+				<div class="form-inline-wrap" style="width:100%;">
+					<label class="layui-form-label form-label-wrap"
+						   style=" width: 12.55%;">基金投资资产</label>
+					<div class="layui-input-inline input-inline" style="width:81%!important;">
+                            <textarea th:id="|${entityName}_fundInvestAsset|" th:name="|${entityName}.fundInvestAsset|"
+									  th:value="${entity?.fundInvestAsset}" data-th-text="${entity?.fundInvestAsset}"
+									  class="layui-textarea"
+									  placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required="required"></textarea>
 					</div>
 				</div>
 			</div>
 
-
-
-			<div class="layui-form-item">
-				<div class="form-inline-wrap">
-					<label class="layui-form-label form-lable"
-						   data-th-utext="#{SvrBussRepFundInfo.fundInvestAsset}">基金投资资产</label>
-					<div class="layui-input-inline input-inline">
-						<input type="text" th:id="|${entityName}_fundInvestAsset|"
-							   th:name="|${entityName}.fundInvestAsset|" required
-							   th:value="${entity?.fundInvestAsset}"
-							   data-fixtype="2" class="layui-input form-input"/>
-					</div>
-				</div>
-
-
-				<div class="form-inline-wrap">
-					<label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepFundInfo.privatefundFlag}">投向金融资产投资公司或其附属机构发行的私募股权投资基金</label>
-					<div class="layui-input-inline input-inline">
-						<select th:id="|${entityName}_privatefundFlag|" th:name="|${entityName}.privatefundFlag|"
-								th:initValue="${entity?.privatefundFlag}"
-								class="layui-input form-input input-select" placeholder="请输入内容"
-								data-th-placeholder="#{SysCommon.placeholder}" data-th-data-result="${SVR_YES_OR_NO}" required>
-						</select>
-					</div>
-				</div>
-				<!-- 中债新增字段 add by tuqirong 2021-12-30 start -->
-
-				<!-- 中债新增字段 add by tuqirong 2021-12-30 end -->
-
-			</div>
 
 		</div>
 	</div>

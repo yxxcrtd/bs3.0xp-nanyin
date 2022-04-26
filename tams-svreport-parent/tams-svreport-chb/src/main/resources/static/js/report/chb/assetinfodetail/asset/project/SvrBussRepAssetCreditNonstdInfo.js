@@ -231,6 +231,15 @@
 
     var  initAssetCreditNonstd=function(){
         var assetTvalueCreditNonstd=$('#assetType2').val();
+
+        if(assetTvalueCreditNonstd=="2202"){
+            $('#constracteBusiType').attr('disabled',false);
+        }else{
+            $('#constracteBusiType').attr('disabled',true);
+            $("#constracteBusiType").val('').trigger("change");
+        }
+
+
         if(assetTvalueCreditNonstd=='2201'||assetTvalueCreditNonstd=='2202'){
             //份额面值置灰不可填
             $("#svrBussRepAssetCreditNonstdInfoDto_repPrinBaseamt").val('').trigger("change");
@@ -319,9 +328,7 @@
             $("#svrBussRepAssetCreditNonstdInfoDto_creditOrgName").val('').trigger("change");
             $("#svrBussRepAssetCreditNonstdInfoDto_creditOrgName").attr("disabled",true);
 
-            if(assetTvalueCreditNonstd=="2202"){
-                $('#repCreditAssetCode_Div').show();
-            }
+
             //要素去除必填标识 add by tuqirong 2022-01-08 start
             $("#svrBussRepAssetCreditNonstdInfoDto_repPrinBaseamt").prop("required",false);
             $("#svrBussRepAssetCreditNonstdInfoDto_repCouponSpecies").prop("required",false);

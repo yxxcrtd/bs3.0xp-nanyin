@@ -571,7 +571,24 @@
 						<span class="title-des">城商行报送信息</span>
 					</h3>
 					<div class="pro-module-item pro-item-wrap">
+
+
+
 						<div class="layui-form-item">
+
+
+							<div class="form-inline-wrap">
+								<label class="layui-form-label form-label-wrap" >发行人</label>
+								<div class="layui-input-inline input-inline">
+									<select name="chbIssuerId" id="chbIssuerId"
+											class="layui-input form-input input-select" disabled="true"
+											data-th-initValue= "${entity?.chbIssuerId}"
+											data-th-placeholder="#{SysCommon.placeholder}"
+											data-th-data-url="@{/common/select/getTrusterId}">
+									</select>
+								</div>
+							</div>
+
 							<div class="form-inline-wrap">
 								<label class="layui-form-label form-label-wrap" >是否结构化资产</label>
 								<div class="layui-input-inline input-inline">
@@ -594,6 +611,10 @@
 									</select>
 								</div>
 							</div>
+
+						</div>
+
+						<div class="layui-form-item">
 							<div class="form-inline-wrap">
 								<label class="layui-form-label form-label-wrap" >结构化层级</label>
 								<div class="layui-input-inline input-inline">
@@ -605,10 +626,6 @@
 									</select>
 								</div>
 							</div>
-						</div>
-
-						<div class="layui-form-item">
-
 							<div class="form-inline-wrap">
 								<label class="layui-form-label form-label-wrap" >结构化杠杆倍数</label>
 								<div class="layui-input-inline input-inline">
