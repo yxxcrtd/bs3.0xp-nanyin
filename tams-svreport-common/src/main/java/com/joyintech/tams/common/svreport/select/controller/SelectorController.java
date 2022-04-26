@@ -81,6 +81,20 @@ public class SelectorController {
         return selectorService.getCustomerId(map);
     }
 
+
+    /**
+     * 托管人
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/getPbcCapAssetInfo")
+    public List<SelectOptionDto> getPbcCapAssetInfo() {
+        Map<String,Object> map = RequestUtil.getPageParam();
+        map.put("param", map.get("search"));
+        //map.put("IS_TRUSTER", DictCodeList.是否_是.getValue());
+        return null;
+    }
+
     /**
      * 担保人
      * @return

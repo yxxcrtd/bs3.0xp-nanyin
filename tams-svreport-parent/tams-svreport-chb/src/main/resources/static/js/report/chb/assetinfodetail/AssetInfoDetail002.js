@@ -517,6 +517,10 @@ var QueryFunc=function(){
         $("input[id$='_mdate']").val($('#mdate').val());
     }
 
+    var poolCode = function(){
+        var assetinfo = JSON.parse(PbcCapAssetInfo) ;
+        $("#pobcassetid").val(assetinfo[$('#assetCode').val()]).trigger("change");
+    }
 
     var isBankCapVal = function(){
         var isBankCap = $('#isBankCap').val();
@@ -693,6 +697,7 @@ var QueryFunc=function(){
     //新增的日期及产品名称赋值..延迟10秒以便保证可以赋值到
     setTimeout(function () {
         dateVal();
+        poolCode();
         assetVal();
         assetTypeDetail();
         changeReport();
@@ -743,6 +748,7 @@ var QueryFunc=function(){
 
         $('#assetCode').change(function(){
             assetVal();
+            poolCode();
         });
 
         $('#assetName').change(function(){
