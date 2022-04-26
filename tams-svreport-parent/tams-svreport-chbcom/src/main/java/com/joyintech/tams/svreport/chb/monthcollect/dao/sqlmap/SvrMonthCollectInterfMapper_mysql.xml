@@ -23,7 +23,7 @@
 <!--	查询check表-->
 	<select id="selectHolderNumCheck" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
 		select
-		indentifyMark, prdRegistCode, institutionCode, areaCode, holderType, ccy, round(sum(qty)*ifnull(V.PROD_VALUE,1),5) balanceAmt, sum(qty) balanceShares, round(sum(qty)*ifnull(V.PROD_VALUE,1),5) cnyAmt
+		indentifyMark, prdRegistCode, institutionCode, areaCode, holderType, ccy, sum(amount) balanceAmt, sum(qty) balanceShares, sum(cnyAmt) cnyAmt
 		FROM
 		(select
 		A.PRD_REGIST_CODE prdRegistCode, ifnull(B.THE_BANK_CODE,B.REGIST_BANK_CODE) institutionCode, B.FUND_ACC_PLACE areaCode,
@@ -53,13 +53,7 @@
 		FROM CHB_INVESTHOLD_INFO_CHECK A
 		LEFT JOIN CHB_EQU_HOLD_CHECK B
 		on A.INDENTIFY_MARK = B.INDENTIFY_MARK WHERE A.HOLD_DATE = #{batchDateEnd,jdbcType=VARCHAR}
-		) T
-		<!-- liuzy	华夏银行按最后一天产品净值推算余额	start -->
-		LEFT JOIN (
-			select  PROD_ID,PROD_VALUE from chb_prd_periodyield WHERE  CHANGE_DATE=#{batchDateEnd,jdbcType=VARCHAR}
-			) V on v.PROD_ID=t.PRODID
-		<!-- liuzy	华夏银行按最后一天产品净值推算余额	end -->	 
-		GROUP BY prdRegistCode,institutionCode,areaCode,holderType,ccy,indentifyMark
+		) T GROUP BY prdRegistCode,institutionCode,areaCode,holderType,ccy,indentifyMark
 	</select>
 
 	<!--生成持有余额-->
@@ -255,58 +249,72 @@
 
 <!--    取得人民币兑SAFE汇率-->
 	<select id="CNYExchange" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ccyExcharge">
-		SELECT
+		select
 		EXCHARGE_CODE exchargeCode,
-		OPEN_PRICE openPrice,
-		CLOSE_PRICE closePrice,
-		HIGH_PRICE highPrice,
-		LOW_PRICE lowPrice,
-		MID_PRICE midPrice
+		CHARGE charge
 		FROM
 		(
 		select
 		EXCHARGE_CODE,
-		OPEN_PRICE,
-		CLOSE_PRICE,
-		HIGH_PRICE,
-		LOW_PRICE,
-		MID_PRICE,
+		CHARGE,
 		ROW_NUMBER() over( partition by EXCHARGE_CODE order by TRADE_DATE desc ) excNo
+		from
+		(
+		select
+		EXCHARGE_CODE,
+		case #{exchangeSource,jdbcType=VARCHAR}
+		when '01' then OPEN_PRICE
+		when '02' then CLOSE_PRICE
+		when '03' then HIGH_PRICE
+		when '04' then LOW_PRICE
+		when '05' then MID_PRICE
+		end as CHARGE,
+		TRADE_DATE
 		FROM
 		MST_EXCHARGE_QUOTE quote
 		WHERE
 		DATASOURCE_TYPE = 'SAFE'
 		AND EXCHARGE_CODE like '%/CNY%'
-		AND TRADE_DATE BETWEEN #{batchDateStart} and #{batchDateEnd}
-		) t WHERE excNo = 1
+		AND TRADE_DATE  <![CDATA[ <= ]]> STR_TO_DATE(#{batchDateEnd,jdbcType=VARCHAR},'%Y-%m-%d')
+		) A
+		WHERE CHARGE is not null
+		) T
+		WHERE excNo = 1
 	</select>
 
 	<!--   获取美元兑 CFETS:外汇交易中心-->
 	<select id="USDExchange" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ccyExcharge">
-		SELECT
+		select
 		EXCHARGE_CODE exchargeCode,
-		OPEN_PRICE openPrice,
-		CLOSE_PRICE closePrice,
-		HIGH_PRICE highPrice,
-		LOW_PRICE lowPrice,
-		MID_PRICE midPrice
+		CHARGE charge
 		FROM
 		(
 		select
 		EXCHARGE_CODE,
-		OPEN_PRICE,
-		CLOSE_PRICE,
-		HIGH_PRICE,
-		LOW_PRICE,
-		MID_PRICE,
+		CHARGE,
 		ROW_NUMBER() over( partition by EXCHARGE_CODE order by TRADE_DATE desc ) excNo
+		from
+		(
+		select
+		EXCHARGE_CODE,
+		case #{exchangeSource,jdbcType=VARCHAR}
+		when '01' then OPEN_PRICE
+		when '02' then CLOSE_PRICE
+		when '03' then HIGH_PRICE
+		when '04' then LOW_PRICE
+		when '05' then MID_PRICE
+		end as CHARGE,
+		TRADE_DATE
 		FROM
 		MST_EXCHARGE_QUOTE quote
 		WHERE
 		DATASOURCE_TYPE = 'CFETS'
 		AND EXCHARGE_CODE like '%/USD%'
-		AND TRADE_DATE BETWEEN #{batchDateStart} and #{batchDateEnd}
-		) t WHERE excNo = 1
+		AND TRADE_DATE  <![CDATA[ <= ]]> STR_TO_DATE(#{batchDateEnd,jdbcType=VARCHAR},'%Y-%m-%d')
+		) A
+		WHERE CHARGE is not null
+		) T
+		WHERE excNo = 1
 	</select>
 
 	<select id="selectNotChangeEquHold" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
@@ -441,8 +449,7 @@
 	</select>
 	<insert id="insertMonthTemp">
 		insert into chb_month_count_tmp(prdRegistCode,institutionCode,areaCode,holderType,ccy,amount,qty,cnyAmt)
-		select A.*
-		from (
+		(
 		<foreach collection="newList" index="index" item = "item" separator="UNION ALL">
 			select
 			#{item.prdRegistCode,jdbcType=VARCHAR},
@@ -455,7 +462,7 @@
 			#{item.cnyAmt,jdbcType=DECIMAL}
 			from dual
 		</foreach>
-		) A
+		)
 	</insert>
 
 	<delete id="deleteAllMonthTemp">
@@ -463,30 +470,37 @@
 	</delete>
 
 	<select id="USDExchangeCNY" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ccyExcharge">
-		SELECT
+		select
 		EXCHARGE_CODE exchargeCode,
-		OPEN_PRICE openPrice,
-		CLOSE_PRICE closePrice,
-		HIGH_PRICE highPrice,
-		LOW_PRICE lowPrice,
-		MID_PRICE midPrice
+		CHARGE charge
 		FROM
 		(
 		select
 		EXCHARGE_CODE,
-		OPEN_PRICE,
-		CLOSE_PRICE,
-		HIGH_PRICE,
-		LOW_PRICE,
-		MID_PRICE,
+		CHARGE,
 		ROW_NUMBER() over( partition by EXCHARGE_CODE order by TRADE_DATE desc ) excNo
+		from
+		(
+		select
+		EXCHARGE_CODE,
+		case #{exchangeSource,jdbcType=VARCHAR}
+		when '01' then OPEN_PRICE
+		when '02' then CLOSE_PRICE
+		when '03' then HIGH_PRICE
+		when '04' then LOW_PRICE
+		when '05' then MID_PRICE
+		end as CHARGE,
+		TRADE_DATE
 		FROM
 		MST_EXCHARGE_QUOTE quote
 		WHERE
 		DATASOURCE_TYPE = 'CFETS'
 		AND EXCHARGE_CODE = 'USD/CNY'
-		AND TRADE_DATE BETWEEN #{batchDateStart} and #{batchDateEnd}
-		) t WHERE excNo = 1
+		AND TRADE_DATE  <![CDATA[ <= ]]> STR_TO_DATE(#{batchDateEnd,jdbcType=VARCHAR},'%Y-%m-%d')
+		) A
+		WHERE CHARGE is not null
+		) T
+		WHERE excNo = 1
 	</select>
 
 </mapper>

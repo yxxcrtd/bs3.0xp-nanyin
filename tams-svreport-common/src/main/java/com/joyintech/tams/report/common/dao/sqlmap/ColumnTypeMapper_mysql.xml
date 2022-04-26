@@ -41,7 +41,7 @@
         </if>
     </select>
     <select id="queryColumn" resultMap="BaseResultMap" parameterType="java.lang.String" >
-		SELECT DISTINCT COLUMN_NAME, DATA_TYPE
+		SELECT DISTINCT COLUMN_NAME, UPPER(DATA_TYPE) as DATA_TYPE
  		 FROM information_schema.`COLUMNS`
  	    WHERE TABLE_NAME = #{tableId,jdbcType=CHAR}
 	</select>

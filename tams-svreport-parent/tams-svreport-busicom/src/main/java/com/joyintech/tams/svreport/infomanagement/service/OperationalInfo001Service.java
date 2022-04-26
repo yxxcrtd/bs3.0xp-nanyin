@@ -2795,7 +2795,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             				} else if (dateColumnList.contains(column) && !("").equals(columnData)) {
             					// 特殊情况,CREATE_TIME和UPDATE_TIME为DATE类型
             					if ("CREATE_TIME".equals(column) || "UPDATE_TIME".equals(column)) {
-            						columnData = "SYSDATE";
+                                    columnData =  "DATE'" + DateUtil.format(DateUtil.now())+ "'";
             					} else {
             					    if(columnData==null||("").equals(columnData)){
                                         columnData = null;
@@ -2815,7 +2815,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             					}
             					// 时间类型字段全存入当前时间
             				} else if (timeColumnList.contains(column)) {
-            					columnData = "SYSDATE";
+            					columnData =  "DATE'" + DateUtil.format(DateUtil.now())+ "'";
             					// 创建者和修改者均设置为当前用户
             				} else if ("CREATE_USER".equals(column) || "UPDATE_USER".equals(column)) {
             					columnData = "'" + userName + "'";
@@ -2836,10 +2836,11 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             			}
             			//包含定义的接口名称的时候，这些接口的数据来源导入默认增加datasource为手工处理 2020-07-17 end
             			if (CHB_ASSET_INFO_LIST.contains(tableName)) {
+                           String SYSDATE=  "DATE'" + DateUtil.format(DateUtil.now())+ "'";
             				insertMap.put("ASSET_TYPE", "'" + assetType + "'");
             				insertMap.put("STATUS", "'" + "E" + "'");
-            				insertMap.put("CREATE_TIME", "SYSDATE");
-            				insertMap.put("UPDATE_TIME", "SYSDATE");
+            				insertMap.put("CREATE_TIME", SYSDATE);
+            				insertMap.put("UPDATE_TIME", SYSDATE);
             				insertMap.put("CREATE_USER", "'" + userName + "'");
             				insertMap.put("UPDATE_USER", "'" + userName + "'");
             				String industryShares2 = insertMap.get("INDUSTRY_SHARES2");
@@ -2906,7 +2907,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             						(timeColumnList.contains(column) && !("").equals(columnData))) {
             					// add by zhangliang 20201026 删除的数据不需要解析CREATE_TIME和UPDATE_TIME为DATE类型  start
 								if ("CREATE_TIME".equals(column) || "UPDATE_TIME".equals(column)) {
-									columnData = "SYSDATE";
+									columnData =  "DATE'" + DateUtil.format(DateUtil.now())+ "'";
 								// add by zhangliang 20201026 删除的数据不需要解析CREATE_TIME和UPDATE_TIME为DATE类型  end
 								}else{
 									String dateStr = formatDateStr(columnData);
@@ -2959,7 +2960,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             				if (dateColumnList.contains(column) && !("").equals(columnData)) {
             					// 特殊情况,UPDATE_TIME为DATE类型
             					if ("UPDATE_TIME".equals(column)) {
-            						columnData = "SYSDATE";
+            						columnData = "DATE'" + DateUtil.format(DateUtil.now())+ "'";
             					} else {
                                     if (columnData == null || ("").equals(columnData)) {
                                         columnData= "'" + columnData + "'";
@@ -2981,7 +2982,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             				} else if (timeColumnList.contains(column)) {
             					// 修改时间变动,其余时间不变
             					if(column.indexOf("UPDATE") > -1) {
-            						columnData = "SYSDATE";
+            						columnData = "DATE'" + DateUtil.format(DateUtil.now())+ "'";
             					} else {
             						continue;
             					}
@@ -3009,9 +3010,10 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             			}
             			//包含定义的接口名称的时候，这些接口的数据来源导入默认增加datasource为手工处理 2020-07-17 end
             			if (CHB_ASSET_INFO_LIST.contains(tableName)) {
+            			    String  SYSDATE="DATE'" + DateUtil.format(DateUtil.now())+ "'";
             				updateMap.put("ASSET_TYPE", "'" + assetType + "'");
             				updateMap.put("STATUS", "'" + "M" + "'");
-            				updateMap.put("UPDATE_TIME", "SYSDATE");
+            				updateMap.put("UPDATE_TIME", SYSDATE);
             				updateMap.put("UPDATE_USER", "'" + userName + "'");
             				String industryShares2 = updateMap.get("INDUSTRY_SHARES2");
             				if (StringUtil.isNotEmpty(industryShares2)) {

@@ -51,6 +51,8 @@ public interface ChbSalerIdenInfoMapper {
 
     int deleteErroByPrimaryKey(String workflowId);
 
+    int deleteBatchByPrimaryKey(List<String> ids);
+
     int insert(ChbSalerIdenInfo record);
 
     ChbSalerIdenInfo selectByPrimaryKey(String salerInsNo);

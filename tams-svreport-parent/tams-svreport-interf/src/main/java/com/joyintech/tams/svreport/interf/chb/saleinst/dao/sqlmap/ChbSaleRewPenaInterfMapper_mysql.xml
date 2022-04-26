@@ -27,8 +27,8 @@
         ,UPDATE_TIME
         from (
         select TE.* from (
-        <foreach collection="newDataList" item="item" open="select * from("
-                 close=")" separator="union all">
+        <foreach collection="newDataList" item="item" open="select t.* from("
+                 close=") t" separator="union all">
             select
             #{item.salerRewPenaNo,jdbcType=VARCHAR} SALER_REW_PENA_NO,
             #{item.salerInsNo,jdbcType=VARCHAR}  SALER_INS_NO,
@@ -122,8 +122,8 @@
         ,UPDATE_TIME
         from (
         select TEMP.* from (
-        <foreach collection="newDataList" item="item" open="select * from("
-                 close=")" separator="union all">
+        <foreach collection="newDataList" item="item" open="select t.* from("
+                 close=") t" separator="union all">
             select
             #{item.salerRewPenaNo,jdbcType=VARCHAR} SALER_REW_PENA_NO,
             #{item.salerInsNo,jdbcType=VARCHAR}  SALER_INS_NO,
