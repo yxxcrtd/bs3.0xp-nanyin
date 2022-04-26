@@ -3632,15 +3632,15 @@
 
     <select id="selectValidRecords" resultType="java.lang.Integer">
         select count(*) from  CHB_ASSET_INFO where
-        ASSET_CODE in
+        ASSET_ID in
         <foreach collection="list" item="item" open="(" close=")" separator=",">
-            #{item.ASSET_CODE}
+            #{item.ASSET_ID}
         </foreach>
         and STATUS in ('A','E')
     </select>
 
     <insert id="batchInsert" parameterType="com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto">
-        INSERT INTO CHB_ASSET_INFO CII (
+        INSERT INTO CHB_ASSET_INFO  (
         ASSET_UUID, ASSET_CODE, ASSET_TYPE,
         ASSET_TYPE2, CCY, TRADE_MARKET,
         VDATE, MDATE, DISCOUNT_YIELD,
@@ -3750,7 +3750,7 @@
         )
         SELECT * FROM (
            SELECT   TEMP.* FROM (
-        <foreach collection="list" item="bokSubject" separator="union all">
+        <foreach collection="list" item="item" separator="union all">
             select
             #{item.assetUuid,jdbcType=CHAR} ASSET_UUID,
             #{item.assetCode,jdbcType=VARCHAR} ASSET_CODE,
@@ -3886,9 +3886,9 @@
             #{item.trustee,jdbcType=VARCHAR} TRUSTEE,
             #{item.status,jdbcType=VARCHAR} STATUS,
             #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
-            sysdate CREATE_TIME,
+            CURRENT_DATE CREATE_TIME,
             #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
-            sysdate UPDATE_TIME,
+            CURRENT_DATE UPDATE_TIME,
             #{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
             #{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
             #{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
@@ -3915,6 +3915,7 @@
             #{item.pbcAssetType1,jdbcType=VARCHAR} PBC_ASSET_TYPE1,
             #{item.pbcAssetType2,jdbcType=VARCHAR} PBC_ASSET_TYPE2,
             #{item.pbcAssetType3,jdbcType=VARCHAR} PBC_ASSET_TYPE3,
+            #{item.assetCodeOld} ASSET_CODE_OLD,
             #{item.trmFundType,jdbcType=VARCHAR} TRM_FUND_TYPE,
             #{item.depoType,jdbcType=VARCHAR} DEPO_TYPE,
             #{item.rivalPartyType,jdbcType=VARCHAR} RIVAL_PARTY_TYPE,
@@ -3995,10 +3996,10 @@
         )
         )a;
 
-        UPDATE CHB_ASSET_INFO a,(
+        UPDATE CHB_ASSET_INFO CII,(
             SELECT * FROM (
             SELECT TEMP.* FROM (
-        <foreach collection="list" item="bokSubject" separator="union all">
+        <foreach collection="list" item="item" separator="union all">
             select
             #{item.assetUuid,jdbcType=CHAR} ASSET_UUID,
             #{item.assetCode,jdbcType=VARCHAR} ASSET_CODE,
@@ -4134,9 +4135,9 @@
             #{item.trustee,jdbcType=VARCHAR} TRUSTEE,
             #{item.status,jdbcType=VARCHAR} STATUS,
             #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
-            sysdate CREATE_TIME,
+            CURRENT_DATE CREATE_TIME,
             #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
-            sysdate UPDATE_TIME,
+            CURRENT_DATE UPDATE_TIME,
             #{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
             #{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
             #{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
@@ -4163,6 +4164,7 @@
             #{item.pbcAssetType1,jdbcType=VARCHAR} PBC_ASSET_TYPE1,
             #{item.pbcAssetType2,jdbcType=VARCHAR} PBC_ASSET_TYPE2,
             #{item.pbcAssetType3,jdbcType=VARCHAR} PBC_ASSET_TYPE3,
+            #{item.assetCodeOld} ASSET_CODE_OLD,
             #{item.trmFundType,jdbcType=VARCHAR} TRM_FUND_TYPE,
             #{item.depoType,jdbcType=VARCHAR} DEPO_TYPE,
             #{item.rivalPartyType,jdbcType=VARCHAR} RIVAL_PARTY_TYPE,
@@ -4239,7 +4241,7 @@
         </foreach>
         ) TEMP
         ) a
-        )b
+        )TEMP
         SET <!-- CII.ASSET_UUID = TEMP.ASSET_UUID,
             CII.ASSET_CODE = TEMP.ASSET_CODE, -->
         CII.ASSET_TYPE = TEMP.ASSET_TYPE,
@@ -4472,6 +4474,6 @@
         ,CII.IS_CONSTRACTE_BUSI=TEMP.IS_CONSTRACTE_BUSI,
         CII.IS_BANK_CAP=TEMP.IS_BANK_CAP
         ,CII.ERR_MSG = TEMP.ERR_MSG
-       WHERE a.ASSET_CODE = b.ASSET_CODE
+       WHERE CII.ASSET_CODE = TEMP.ASSET_CODE
     </insert>
 </mapper>

@@ -2442,6 +2442,7 @@
             #{item.pbcAssetType1,jdbcType=VARCHAR} PBC_ASSET_TYPE1,
             #{item.pbcAssetType2,jdbcType=VARCHAR} PBC_ASSET_TYPE2,
             #{item.pbcAssetType3,jdbcType=VARCHAR} PBC_ASSET_TYPE3,
+            #{item.assetCodeOld,jdbcType=VARCHAR} ASSET_CODE_OLD,
             #{item.trmFundType,jdbcType=VARCHAR} TRM_FUND_TYPE,
             #{item.depoType,jdbcType=VARCHAR} DEPO_TYPE,
             #{item.rivalPartyType,jdbcType=VARCHAR} RIVAL_PARTY_TYPE,
@@ -3030,6 +3031,7 @@
         TEMP.PBC_ASSET_TYPE2,
         TEMP.PBC_ASSET_TYPE3,
         TEMP.ASSET_CODE,
+        TEMP.ASSET_CODE_OLD,
         TEMP.TRM_FUND_TYPE,
         TEMP.DEPO_TYPE,
         TEMP.RIVAL_PARTY_TYPE,
@@ -3402,9 +3404,9 @@
 
     <select id="selectValidRecords" resultType="java.lang.Integer">
         select count(*) from  CHB_ASSET_INFO where
-        ASSET_CODE in
+        ASSET_ID in
         <foreach collection="list" item="item" open="(" close=")" separator=",">
-            #{item.ASSET_CODE}
+            #{item.ASSET_ID}
         </foreach>
         and STATUS in ('A','E')
     </select>
@@ -3578,6 +3580,7 @@
             #{item.pbcAssetType1,jdbcType=VARCHAR} PBC_ASSET_TYPE1,
             #{item.pbcAssetType2,jdbcType=VARCHAR} PBC_ASSET_TYPE2,
             #{item.pbcAssetType3,jdbcType=VARCHAR} PBC_ASSET_TYPE3,
+            #{item.assetCodeOld,jdbcType=VARCHAR} ASSET_CODE_OLD,
             #{item.trmFundType,jdbcType=VARCHAR} TRM_FUND_TYPE,
             #{item.depoType,jdbcType=VARCHAR} DEPO_TYPE,
             #{item.rivalPartyType,jdbcType=VARCHAR} RIVAL_PARTY_TYPE,
@@ -3654,7 +3657,7 @@
         </foreach>
         ) TEMP
         <!-- 业务主键匹配 -->
-        ON CII.ASSET_CODE = TEMP.ASSET_CODE
+        ON (CII.ASSET_CODE = TEMP.ASSET_CODE)
 
         <!-- 匹配到则更新 -->
         WHEN MATCHED THEN
