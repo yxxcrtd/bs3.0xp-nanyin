@@ -187,7 +187,7 @@ select * from (SELECT t.*,LIMIT ROW_ID FROM ${tableId} t WHERE
 	<select id="queryDateColumnList" resultType="java.lang.String" parameterType="java.lang.String">
 		<if test="tableId != null">
 			SELECT distinct COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME = #{tableId,jdbcType=VARCHAR}
-			AND DATA_TYPE ='DATE'
+			AND UPPER(DATA_TYPE) ='DATE'
 		</if>
 	</select>
 
@@ -338,7 +338,7 @@ select * from (SELECT t.*,LIMIT ROW_ID FROM ${tableId} t WHERE
 
 	<select id="queryAllColumns" resultType="java.lang.String" parameterType="java.lang.String">
 		<if test="tableId != null">
-			SELECT distinct COLUMN_COMMENT FROM information_schema.COLUMNS WHERE TABLE_NAME = #{tableId,jdbcType=VARCHAR}
+			SELECT distinct COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME = #{tableId,jdbcType=VARCHAR}
 
 		</if>
 	</select>
@@ -374,7 +374,9 @@ select * from (SELECT t.*,LIMIT ROW_ID FROM ${tableId} t WHERE
 	<update id="updateData" parameterType="java.util.Map" statementType="STATEMENT">
 		UPDATE ${tableId} SET
 		<foreach collection="map" index="key" item="value" separator=",">
+            <if test="value!=null">
 			${key} = ${value}
+            </if>
 		</foreach>
 		<where>
 			<foreach collection="pkMap" index="key" item="value" separator="AND">

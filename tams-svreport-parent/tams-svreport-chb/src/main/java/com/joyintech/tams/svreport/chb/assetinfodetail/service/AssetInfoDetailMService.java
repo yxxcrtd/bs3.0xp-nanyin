@@ -1,30 +1,26 @@
 package com.joyintech.tams.svreport.chb.assetinfodetail.service;
 
+import com.google.common.collect.Lists;
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.JoyinMessage;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.system.base.entity.SysDatadictListLink;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
+import com.joyintech.tams.common.base.entity.ChbInfoMgrResultConfig;
 import com.joyintech.tams.common.base.entity.MstCustomerInfoAdd;
+import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
-import com.joyintech.tams.report.common.dto.ExcelValidDto;
-import com.joyintech.tams.report.common.util.ExcelUtil;
-import com.joyintech.tams.report.common.util.ReportGlobalConstant;
-import com.joyintech.tams.report.errormessage.dto.ErrorMessage001;
+import com.joyintech.tams.report.common.dao.ChbInfoMgrResultConfigMapper;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.DtoChangeUtil;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dao.AssetInfoDetailMapper;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
@@ -36,17 +32,21 @@ import com.joyintech.tams.svreport.interf.chb.baseinfo.dao.SvrMstCustomerInfoAdd
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
-import org.apache.ibatis.annotations.Options;
+import org.apache.commons.collections.CollectionUtils;
+import org.aspectj.weaver.ast.Var;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.beans.PropertyDescriptor;
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 资产要素登记服务
@@ -72,6 +72,10 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 
 	@Autowired
 	private AssetInfoDetailUtil assetInfoDetailUtil;
+	@Autowired
+	private ChbInfoMgrResultConfigMapper chbInfoMgrResultConfigMapper;
+	@Autowired
+	private BaseCommonCheckService baseCommonCheckService;
 
 	static Map<String,Set<String>> map = null;
 
@@ -357,40 +361,149 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 	 * @param fileName 导入的文件名
 	 * @return 处理结果
 	 */
-	public AjaxResult checkConfirmMsgForImportData(String fileName)  {
+	public AjaxResult checkConfirmMsgForImportData(String fileName,String tableName) throws Exception {
 		AjaxResult webResult = new AjaxResult();
-		List<List<String>> data = ExcelUtil.getDataList2(fileName);
-		List<AssetInfoDetailDto> list = new ArrayList<>();
-		List<ExcelValidDto> checkResult = assetInfoDetailUtil.convertToBean(list,data);
-		if (StringUtil.isEmptyList(checkResult) && StringUtil.isNotEmpty(list) && list.size()>0 ){
-			int dataCount = this.assetInfoDetailMapper.selectDataCount(list);
-			if (dataCount > 0) {
-				webResult.setMessage(this.getMessage("REPORT_ASSET_C_0003"), MessageType.确认消息);
-			}
-			else{
-				webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
-			}
-		}else {
-			webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
+		if (fileName.indexOf("资产要素") == -1){
+			webResult.setMessage(this.getMessage("ImportFileName"),MessageType.错误消息);
+			return webResult;
 		}
+		List<Map<String, String>> mapList = dataMapAnalysis(fileName,tableName);
+		int size = mapList.size();
+		List<com.joyintech.tams.systemtools.dto.ExcelValidDto> checkResult = baseCommonCheckService.checkDataAll("D", mapList, tableName, fileName, tableName, tableName, null, null);
+
+		long count = mapList.stream().filter(ele ->null != ele.get("STATUS")&&ele.get("STATUS").equals("A")).count();
+		webResult.setMessage(this.getMessage("ChbImportMessage",mapList.size()-count,size-mapList.size(),count),MessageType.确认消息);
+		int duplicate = 0;
+		if(!CollectionUtils.isEmpty(mapList)){
+			duplicate = assetInfoDetailMapper.selectValidRecords(mapList);
+		}
+		//查数据库记录
+		List<JoyinMessage> joyinMessages = new ArrayList<>();
+		JoyinMessage ms = new JoyinMessage(this.getMessage("ChbImportDuplicateMessage",duplicate), MessageType.确认消息);
+		joyinMessages.add(ms);
+		webResult.setJoyinMessages(joyinMessages);
 		return webResult;
 	}
 
-	public List<ExcelValidDto> importData(String fileName){
-		List<ExcelValidDto> tempCheckResult = assetInfoDetailUtil.checkExcelTemp(fileName);
-		if (!StringUtil.isEmptyList(tempCheckResult)) {
-			return tempCheckResult;
+	public List<com.joyintech.tams.systemtools.dto.ExcelValidDto> importData(String fileName,String tableName) throws Exception{
+		List<Map<String, String>> list = dataMapAnalysis(fileName,tableName);
+		List<com.joyintech.tams.systemtools.dto.ExcelValidDto> checkResult = baseCommonCheckService.checkDataAll("D", list, tableName, fileName, tableName, tableName, null, null);
+		if(!CollectionUtils.isEmpty(list)){
+			List<AssetInfoDetailDto> AssetInfoDetailDtos= converToBean(list);
+			//按500条分批保存
+			List<List<AssetInfoDetailDto>> partition = Lists.partition(AssetInfoDetailDtos, 500);
+			for (List<AssetInfoDetailDto> dtos : partition) {
+
+				assetInfoDetailMapper.batchInsert(dtos);
+			}
 		}
-		List<List<String>> data = ExcelUtil.getDataList2(fileName);
-		List<AssetInfoDetailDto> list = new ArrayList<>();
-		List<ExcelValidDto> resultList = assetInfoDetailUtil.convertToBean(list,data);
-		if (StringUtil.isEmptyList(resultList)){
-			return restTemplate.postForList(
-					SvrServiceApplication.CHB3_SERVICE_NAME + "/AssetInfoDetail/importData",
-					list,
-					ExcelValidDto.class);
-		}
-		return resultList;
+		return checkResult.stream().filter(ele ->null != ele.getValidKey()&&ele.getValidKey().equals("YW")).collect(Collectors.toList());
+
 	}
 
+	/**
+	 * excel导入数据整理
+	 *
+	 * @param flieName 文件名称
+	 * @return 检验list
+	 * @throws Exception 异常
+	 * @see
+	 * @since 1.0
+	 */
+	public List<Map<String,String>> dataMapAnalysis(String flieName,String tableName)
+			throws Exception {
+		String prefix = CacheUtil.getSysParam(GlobalConstant.COM_PROP_UPLOAD_PATH);
+		if(!StringUtil.startsWith(flieName, prefix)
+				&& !StringUtil.startsWith(flieName, prefix.replace("/", File.separator))) {
+			flieName = prefix + File.separator + flieName;
+		}
+		com.joyintech.framework.util.ExcelUtil excelUtil = com.joyintech.framework.util.ExcelUtil.build(flieName, null);
+
+		List<List<String>> dataList = excelUtil.readToList(0);
+		List<String> headList = dataList.get(1);
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("tableId", tableName);
+		param.put("flag", false);
+		List<ChbInfoMgrResultConfig> chbInfoMgrResultConfigList = chbInfoMgrResultConfigMapper.queryAllchbMgrTableInfo(param);
+		Map<String,String> map = new HashMap<>();
+		chbInfoMgrResultConfigList.forEach(ele->map.put(ele.getColumnName(),ele.getColumnId()));
+		List<String> columnList = new ArrayList<>();
+		for(int i=0;i<headList.size();++i){
+			String columnName = headList.get(i);
+			columnName= map.get(columnName);
+			columnList.add(i,columnName);
+
+		}
+		List<Map<String,String>> list = new ArrayList<>();
+		for(int i=2;i<dataList.size();++i){
+			Map<String,String> subMap = new HashMap<>();
+			List<String> subList = dataList.get(i);
+			for(int j=0;j<subList.size();++j){
+				subMap.put(columnList.get(j),subList.get(j));
+			}
+			subMap.put("ASSET_UUID",IDGenerator.generate(36));
+			list.add(subMap);
+		}
+
+
+		return list;
+	}
+	public List<AssetInfoDetailDto> converToBean(List<Map<String,String>> dataList)
+			throws Exception {
+		// 返回的list定义
+		List<AssetInfoDetailDto> assetInfoDetailDtoList = new ArrayList<AssetInfoDetailDto>();
+		Class<AssetInfoDetailDto> clazz = AssetInfoDetailDto.class;
+		Map<String, Method> toMap = methodToMap(clazz);
+		Map<String, String> filedToMap = filedToMap(clazz);
+		Object var = null;
+		for (Map<String, String> map : dataList) {
+			Map<String,String> temp = new HashMap<>();
+			Set<String> keys = map.keySet();
+			for(String key :keys){
+				temp.put(key.toLowerCase().replace("_", ""),map.get(key));
+			}
+
+			AssetInfoDetailDto assetInfoDetailDto = clazz.newInstance();
+				for(Map.Entry e:temp.entrySet()){
+					for(Map.Entry el:toMap.entrySet()){
+						if(((String)el.getKey()).substring(3).equalsIgnoreCase((String) e.getKey())){
+							if(filedToMap.get(e.getKey()).equals(String.class.getName())){
+								var =null==e.getValue()?"":(String)e.getValue();
+							}else if(filedToMap.get(e.getKey()).equals(Date.class.getName())){
+								var = null==e.getValue()?null:DateUtil.parse((String) e.getValue());
+							}else if(filedToMap.get(e.getKey()).equals(Long.class.getName())){
+								var = null==e.getValue()?null:Long.valueOf((String) e.getValue()) ;
+							}else if(filedToMap.get(e.getKey()).equals(Integer.class.getName())){
+								var = null==e.getValue()?null:Integer.valueOf((String) e.getValue()) ;
+							}else if(filedToMap.get(e.getKey()).equals(BigDecimal.class.getName())){
+								var = null==e.getValue()?null:new BigDecimal((String) e.getValue());
+							}
+							((Method)el.getValue()).invoke(assetInfoDetailDto,var);
+							break;
+						}
+					}
+				}
+			assetInfoDetailDto.setErrMsg(null!=map.get("ERRMSG")?map.get("ERRMSG"):"");
+			assetInfoDetailDto.setCreateUser(CommonUtil.getUserName());
+			assetInfoDetailDto.setCreateDept(CommonUtil.getDeptCode()==null?"":CommonUtil.getDeptCode());
+			assetInfoDetailDto.setCreateTime(DateUtil.now());
+			assetInfoDetailDto.setUpdateUser(CommonUtil.getUserName());
+			assetInfoDetailDto.setUpdateTime(DateUtil.now());
+			assetInfoDetailDto.setDataSource(DictCodeListExt2.数据来源_新建导入.getValue());
+			assetInfoDetailDto.setStatus(null!=map.get("STATUS") && map.get("STATUS").equals("A")? DictCodeListExt1.维护数据状态_待处理.getValue():DictCodeListExt1.维护数据状态_有效.getValue());
+			assetInfoDetailDtoList.add(assetInfoDetailDto);
+		}
+		return  assetInfoDetailDtoList;
+	}
+	// 获取类的set方法
+	public Map<String,Method> methodToMap(Class clazz){
+		return Arrays.stream(clazz.getMethods()).filter(m -> m.getName().startsWith("set")).collect(Collectors.toMap(m -> m.getName(), m -> m));
+	}
+	// 获取类的属性类型
+	public Map<String,String> filedToMap(Class clazz){
+		Map<String, String> var1 = Arrays.stream(clazz.getDeclaredFields()).collect(Collectors.toMap(f -> f.getName().toLowerCase(), f -> f.getGenericType().getTypeName()));
+		Map<String, String> var2 = Arrays.stream(clazz.getSuperclass().getDeclaredFields()).collect(Collectors.toMap(f -> f.getName().toLowerCase(), f -> f.getGenericType().getTypeName()));
+		var2.putAll(var1);
+		return var2;
+	}
 }

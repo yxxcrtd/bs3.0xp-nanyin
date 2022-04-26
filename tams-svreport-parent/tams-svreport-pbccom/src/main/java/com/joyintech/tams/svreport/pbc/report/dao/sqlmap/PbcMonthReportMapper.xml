@@ -1065,4 +1065,22 @@
         </where>
     </update>
 
+    <update id="cancelMannultRegistForOnePrd" parameterType="java.util.Map">
+        update PBC_REPORT
+        <set>
+            SEND_STATUS = '01',
+            UPDATE_TIME = sysdate,
+            SUBMIT_TIME = null,
+            SUBMIT_FEEDBACK_STATUS = null
+        </set>
+        <where>
+            <foreach collection="list" item="dto" open="(" close=")" separator=") or (">
+                REPORTUUID = #{dto.reportuuid}
+                <if test="null!=dto.orgCode and dto.orgCode != ''">
+                    and ORG_CODE = nvl(#{dto.orgCode,jdbcType=VARCHAR},'')
+                </if>
+
+            </foreach>
+        </where>
+    </update>
 </mapper>

@@ -44,7 +44,7 @@ public class BaseCheckMysqlService {
             Set<Map.Entry<String, String>> set = list.get(i).entrySet();
             for (Map.Entry<String, String> entry : set) {
                 for (BaseCheckMysqlDto c : columns) {
-                    if (entry.getKey().equals(c.getColumnName())) {
+                    if (null != entry.getKey() && entry.getKey().equals(c.getColumnName())) {
                         // 非空校验
                         if (c.getIsNullable().equals("NO")) {
                             if (!StringUtils.hasText(entry.getValue())) {

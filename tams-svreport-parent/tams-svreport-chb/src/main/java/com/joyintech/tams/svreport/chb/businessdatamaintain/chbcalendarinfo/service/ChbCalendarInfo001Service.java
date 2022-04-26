@@ -111,25 +111,30 @@ public class ChbCalendarInfo001Service extends CommonExportService<ChbCalendarIn
     /**
      * 节假日和工作日更新
      *
-     * @param list
+     * @param dto
      * @return
      */
-    public AjaxResult updateIsHoliday(List<ChbCalendarInfo001Dto> list) {
+    public AjaxResult updateIsHoliday(ChbCalendarInfoDto dto) {
         Date sysDate = DateUtil.platDateFromCache();
+        List<ChbCalendarInfo001Dto> list = dto.getList();
         //判断日期是否小于平台日
-        for (ChbCalendarInfo001Dto dto : list) {
-            if (dto.getCdate().before(sysDate)) {
+        for (ChbCalendarInfo001Dto cDto : list) {
+            if (cDto.getCdate().before(sysDate)) {
                 AjaxResult aj = new AjaxResult();
                 List<ValidMessage> errorList = new ArrayList<>();
                 errorList.add(new ValidMessage(getMessage("MST_INFO_E_0003")));
                 aj.setErrorList(errorList);
                 return aj;
             }
-            if (dto.getIsHoliday() == 0L) {
-                dto.setIsHoliday(1L);
-            } else {
-                dto.setIsHoliday(0L);
+            if (Objects.equals(dto.getIsHoliday(),"0")) {
+                cDto.setIsHoliday(0L);
+            }else {
+                cDto.setIsHoliday(1L);
             }
+            if (Objects.equals(dto.getStatus(),DictCodeListExt2.数据状态_待处理.getValue())) {
+                cDto.setStatus(DictCodeListExt2.数据状态_有效.getValue());
+            }
+
         }
         try {
             chbCalendarInfoMapper.updateBatchCalendarInfo(list);
