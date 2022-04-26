@@ -116,7 +116,7 @@ public class SvrChbEmployeeDBInterf extends BaseService{
     	
     	for(ChbEmployeeInfoSub sub : subList){
     		//数据日期
-        	sub.setStatusDate(batchDate);
+        	sub.setStatusDate(new Date());
             //创建人
         	sub.setCreateUser(CommonUtil.getUserName());
             //更新人
