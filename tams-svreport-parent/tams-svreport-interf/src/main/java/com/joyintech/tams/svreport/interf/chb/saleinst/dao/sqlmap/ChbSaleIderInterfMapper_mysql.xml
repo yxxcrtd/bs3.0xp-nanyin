@@ -41,8 +41,8 @@
         ,UPDATE_TIME
         from (
         select TE.* from (
-        <foreach collection="newDataList" item="item" open="select * from("
-                 close=")" separator="union all">
+        <foreach collection="newDataList" item="item" open="select t.* from("
+                 close=") t" separator="union all">
             select
             #{item.salerInsNo,jdbcType=CHAR} SALER_INS_NO,
             #{item.salerRegistNo,jdbcType=VARCHAR}  SALER_REGIST_NO,
@@ -75,9 +75,9 @@
             #{item.status,jdbcType=VARCHAR}  STATUS,
             #{item.dataDate,jdbcType=DATE}  DATA_DATE,
             #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
-            sysdate CREATE_TIME,
+            NOW() CREATE_TIME,
             #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
-            sysdate  UPDATE_TIME
+            NOW()  UPDATE_TIME
             from dual
         </foreach>
         ) TE
@@ -192,8 +192,8 @@
         ,UPDATE_TIME
         from (
         select TEMP.* from (
-        <foreach collection="newDataList" item="item" open="select * from("
-                 close=")" separator="union all">
+        <foreach collection="newDataList" item="item" open="select t.* from("
+                 close=") t" separator="union all">
             select
             #{item.salerInsNo,jdbcType=CHAR} SALER_INS_NO,
             #{item.salerRegistNo,jdbcType=VARCHAR}  SALER_REGIST_NO,
@@ -231,7 +231,7 @@
             now()  UPDATE_TIME
             from dual
         </foreach>
-        ) TEMP where not exists (select 1 from CHB_SALER_IDEN_INFO CII where CII.PROD_ID = TEMP.PROD_ID)
+        ) TEMP where not exists (select 1 from CHB_SALER_IDEN_INFO CII where CII.SALER_INS_NO = TEMP.SALER_INS_NO)
         ) de ;
     </insert>
 
