@@ -2962,7 +2962,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             						columnData = "SYSDATE";
             					} else {
                                     if (columnData == null || ("").equals(columnData)) {
-                                        columnData = null;
+                                        columnData= "'" + columnData + "'";
                                     } else {
                                         //excel中输入了时间戳数据处理
                                         if (columnData.length() > 10) {
@@ -2970,7 +2970,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
                                         }
                                         String dateStr = formatDateStr(columnData);
                                         if (null != dateStr) {
-                                            columnData = "DATE'" + dateStr + "'";
+                                            columnData = "'" + dateStr + "'";
                                         } else {
                                             columnData = null;
                                         }
