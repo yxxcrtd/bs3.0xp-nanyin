@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -206,7 +207,12 @@ public class SvrMaptoEntityUtil {
 					if(field.get(clazz)!=null){
 						map.put(str, field.get(clazz).toString());
 					}else {
-						map.put(str, "");
+						// mysql对空字符串特殊处理
+						if(BaseCommonCheckService.isMYSQLDataBase()){
+							map.put(str, null);
+						}else{
+							map.put(str, "");
+						}
 					}
 					
 				}

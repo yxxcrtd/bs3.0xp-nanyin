@@ -769,11 +769,11 @@
 		</foreach>
 	</update>
 	<delete id="deleteByBankcodeAndIndentifyMarkWH" parameterType="com.joyintech.tams.report.investormerger.dto.ChbInvestholdInfoCheckDto">
-  	DELETE FROM CHB_INVESTHOLD_INFO
+ 	DELETE FROM CHB_INVESTHOLD_INFO
 		WHERE (REGIST_BANK_CODE,INDENTIFY_MARK,HOLD_DATE,PRODID)IN (
 			SELECT
 		 	 	ck.REGIST_BANK_CODE registBankCode,
-             	ck.MERGER_INDENTIFY_MARK indentifyMark,
+             	ck.INDENTIFY_MARK indentifyMark,
              	ck.HOLD_DATE holdDate,
              	ck.PRODID prodid
       		FROM CHB_INVESTHOLD_INFO_CHECK ck
