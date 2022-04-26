@@ -77,7 +77,8 @@ public class ViewCompareDetailController extends BaseController {
    static final List list=Arrays.asList("raiseVdate","submitTime",
            "raiseEnddate","prdVdate","prdMdate","yieldDate","dealdate",
            "firstOpenDay","tradeVdate","chbSubmitDeadline",
-           "mdate","vdate","raisePstrdate","raisePenddate");
+           "mdate","vdate","raisePstrdate","raisePenddate",
+           "valDate","posDate","pbcSubmitDeadline","salerBirthday");
 
 	/**
 	 * 界面特殊处理字段

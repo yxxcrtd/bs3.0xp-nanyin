@@ -182,13 +182,13 @@ public class AssetInfoDetail001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "checkConfirmMsgForImportData", method = RequestMethod.POST)
-	public AjaxResult checkConfirmMsgForImportData(String fileName)  {
-		return assetInfoDetailMService.checkConfirmMsgForImportData(fileName);
+	public AjaxResult checkConfirmMsgForImportData(String fileName,String tableName) throws Exception {
+		return assetInfoDetailMService.checkConfirmMsgForImportData(fileName,tableName);
 	}
 
 	@ResponseBody
 	@RequestMapping("/importFile")
-	public List<ExcelValidDto> importData(String fileName){
-		return this.assetInfoDetailMService.importData(fileName);
+	public List<com.joyintech.tams.systemtools.dto.ExcelValidDto> importData(String fileName,String tableName) throws Exception {
+		return this.assetInfoDetailMService.importData(fileName,tableName);
 	}
 }

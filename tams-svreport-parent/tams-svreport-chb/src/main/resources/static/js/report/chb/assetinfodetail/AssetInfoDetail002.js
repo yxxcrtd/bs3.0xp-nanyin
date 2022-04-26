@@ -490,9 +490,20 @@ var QueryFunc=function(){
      * 将当前子页面的数据赋值
      */
     var assetVal = function(){
-        $("input[id$='_assetId']").val($('#assetCode').val());
-        $("input[id$='_assetName']").val($('#assetName').val());
         var repAssetType = $('#assetType2').val();
+
+        $("input[id$='_assetId']").val($('#assetCode').val());
+
+        if(repAssetType=="2202"){
+            $("input[id$='_repCreditAssetCode']").attr('disabled',false);
+            $("input[id$='_repCreditAssetCode']").val($('#assetCode').val());
+        }else{
+            $("input[id$='_repCreditAssetCode']").attr('disabled',true);
+            $("input[id$='_repCreditAssetCode']").val('').trigger("change");
+        }
+
+        $("input[id$='_assetName']").val($('#assetName').val());
+
 
         if (repAssetType == '1503'){
             $("#svrBussRepQDIIStructureInfoDto_contractName").val($('#assetName').val());
@@ -539,7 +550,7 @@ var QueryFunc=function(){
     var assetTypeDetail = function () {
         var repAssetType = $('#assetType2').val();
         //是否专项债券
-        if(repAssetType == '1503'){
+        if(repAssetType == '1110'){
             $('#bankSecZxzq').attr('disabled',false);
         }else{
             $('#bankSecZxzq').attr('disabled',true);
@@ -616,11 +627,12 @@ var QueryFunc=function(){
         }
 
         var obj = JSON.parse(AssetTypeListLink) ;
-        if(obj["03"].indexOf(repAssetType)>=0){
-            $('#assetYield').attr('disabled',false);
+        if(obj["002"].indexOf(repAssetType)>=0||
+            obj["004"].indexOf(repAssetType)>=0){
+            $('#chbIssuerId').attr('disabled',false);
         }else{
-            $('#assetYield').attr('disabled',true);
-            $("#assetYield").val('');
+            $('#chbIssuerId').attr('disabled',true);
+            $("#chbIssuerId").val('');
         }
 
 

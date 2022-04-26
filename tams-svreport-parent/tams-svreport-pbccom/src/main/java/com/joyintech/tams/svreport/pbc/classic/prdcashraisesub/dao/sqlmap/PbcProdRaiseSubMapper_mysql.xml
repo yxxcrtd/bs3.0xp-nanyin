@@ -81,6 +81,11 @@
     where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
   </select>
 
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PBC_PROD_RAISING_SUB
+    where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
+  </delete>
+
   <insert id="insert" parameterType="com.joyintech.tams.svreport.pbc.classic.prdcashraisesub.dto.PbcProdRaiseSub" >
     insert into PBC_PROD_RAISING_SUB (REGIST_SEQNO, RAISING_DATE, PBC_PROD_ID,
       BUY_PLACE, CUSTOMER_TYPE1, CCY,
@@ -107,6 +112,372 @@
       #{orgCode,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, NOW(),
       #{updateUser,jdbcType=VARCHAR}, NOW())
   </insert>
+
+  <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.pbc.classic.prdcashraisesub.dto.PbcProdRaiseSub" >
+    insert into PBC_PROD_RAISING_SUB
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="registSeqno != null" >
+        REGIST_SEQNO,
+      </if>
+      <if test="raisingDate != null" >
+        RAISING_DATE,
+      </if>
+      <if test="pbcProdId != null" >
+        PBC_PROD_ID,
+      </if>
+      <if test="buyPlace != null" >
+        BUY_PLACE,
+      </if>
+      <if test="customerType1 != null" >
+        CUSTOMER_TYPE1,
+      </if>
+      <if test="ccy != null" >
+        CCY,
+      </if>
+      <if test="raisingAmtsum != null" >
+        RAISING_AMTSUM,
+      </if>
+      <if test="raisingAmtsumCny != null" >
+        RAISING_AMTSUM_CNY,
+      </if>
+      <if test="raisingQty != null" >
+        RAISING_QTY,
+      </if>
+      <if test="redamt != null" >
+        REDAMT,
+      </if>
+      <if test="redamtCny != null" >
+        REDAMT_CNY,
+      </if>
+      <if test="redqty != null" >
+        REDQTY,
+      </if>
+      <if test="endamtsum != null" >
+        ENDAMTSUM,
+      </if>
+      <if test="endamtsumCny != null" >
+        ENDAMTSUM_CNY,
+      </if>
+      <if test="endqty != null" >
+        ENDQTY,
+      </if>
+      <if test="prodValue != null" >
+        PROD_VALUE,
+      </if>
+      <if test="prodValueCny != null" >
+        PROD_VALUE_CNY,
+      </if>
+      <if test="unitValueTotal != null" >
+        UNIT_VALUE_TOTAL,
+      </if>
+      <if test="unitValueTotalCny != null" >
+        UNIT_VALUE_TOTAL_CNY,
+      </if>
+      <if test="prodHighYield != null" >
+        PROD_HIGH_YIELD,
+      </if>
+      <if test="prodLowYield != null" >
+        PROD_LOW_YIELD,
+      </if>
+      <if test="sendStatus != null" >
+        SEND_STATUS,
+      </if>
+      <if test="submitTime != null" >
+        SUBMIT_TIME,
+      </if>
+      <if test="submitFeedbackStatus != null" >
+        SUBMIT_FEEDBACK_STATUS,
+      </if>
+      <if test="sumitSeq != null" >
+        SUMIT_SEQ,
+      </if>
+      <if test="statusDate != null" >
+        STATUS_DATE,
+      </if>
+      <if test="pbcSubmitDeadline != null" >
+        PBC_SUBMIT_DEADLINE,
+      </if>
+      <if test="submitDeadline != null" >
+        SUBMIT_DEADLINE,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="createUser != null" >
+        CREATE_USER,
+      </if>
+      <if test="orgCode != null" >
+        ORG_CODE,
+      </if>
+      <if test="createDept != null" >
+        CREATE_DEPT,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateUser != null" >
+        UPDATE_USER,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="registSeqno != null" >
+        #{registSeqno,jdbcType=CHAR},
+      </if>
+      <if test="raisingDate != null" >
+        #{raisingDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pbcProdId != null" >
+        #{pbcProdId,jdbcType=VARCHAR},
+      </if>
+      <if test="buyPlace != null" >
+        #{buyPlace,jdbcType=VARCHAR},
+      </if>
+      <if test="customerType1 != null" >
+        #{customerType1,jdbcType=VARCHAR},
+      </if>
+      <if test="ccy != null" >
+        #{ccy,jdbcType=CHAR},
+      </if>
+      <if test="raisingAmtsum != null" >
+        #{raisingAmtsum,jdbcType=DECIMAL},
+      </if>
+      <if test="raisingAmtsumCny != null" >
+        #{raisingAmtsumCny,jdbcType=DECIMAL},
+      </if>
+      <if test="raisingQty != null" >
+        #{raisingQty,jdbcType=DECIMAL},
+      </if>
+      <if test="redamt != null" >
+        #{redamt,jdbcType=DECIMAL},
+      </if>
+      <if test="redamtCny != null" >
+        #{redamtCny,jdbcType=DECIMAL},
+      </if>
+      <if test="redqty != null" >
+        #{redqty,jdbcType=DECIMAL},
+      </if>
+      <if test="endamtsum != null" >
+        #{endamtsum,jdbcType=DECIMAL},
+      </if>
+      <if test="endamtsumCny != null" >
+        #{endamtsumCny,jdbcType=DECIMAL},
+      </if>
+      <if test="endqty != null" >
+        #{endqty,jdbcType=DECIMAL},
+      </if>
+      <if test="prodValue != null" >
+        #{prodValue,jdbcType=DECIMAL},
+      </if>
+      <if test="prodValueCny != null" >
+        #{prodValueCny,jdbcType=DECIMAL},
+      </if>
+      <if test="unitValueTotal != null" >
+        #{unitValueTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="unitValueTotalCny != null" >
+        #{unitValueTotalCny,jdbcType=DECIMAL},
+      </if>
+      <if test="prodHighYield != null" >
+        #{prodHighYield,jdbcType=DECIMAL},
+      </if>
+      <if test="prodLowYield != null" >
+        #{prodLowYield,jdbcType=DECIMAL},
+      </if>
+      <if test="sendStatus != null" >
+        #{sendStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="submitTime != null" >
+        #{submitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="submitFeedbackStatus != null" >
+        #{submitFeedbackStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="sumitSeq != null" >
+        #{sumitSeq,jdbcType=VARCHAR},
+      </if>
+      <if test="statusDate != null" >
+        #{statusDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pbcSubmitDeadline != null" >
+        #{pbcSubmitDeadline,jdbcType=TIMESTAMP},
+      </if>
+      <if test="submitDeadline != null" >
+        #{submitDeadline,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="orgCode != null" >
+        #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createDept != null" >
+        #{createDept,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.svreport.pbc.classic.prdcashraisesub.dto.PbcProdRaiseSub" >
+    update PBC_PROD_RAISING_SUB
+    <set >
+      <if test="raisingDate != null" >
+        RAISING_DATE = #{raisingDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pbcProdId != null" >
+        PBC_PROD_ID = #{pbcProdId,jdbcType=VARCHAR},
+      </if>
+      <if test="buyPlace != null" >
+        BUY_PLACE = #{buyPlace,jdbcType=VARCHAR},
+      </if>
+      <if test="customerType1 != null" >
+        CUSTOMER_TYPE1 = #{customerType1,jdbcType=VARCHAR},
+      </if>
+      <if test="ccy != null" >
+        CCY = #{ccy,jdbcType=CHAR},
+      </if>
+      <if test="raisingAmtsum != null" >
+        RAISING_AMTSUM = #{raisingAmtsum,jdbcType=DECIMAL},
+      </if>
+      <if test="raisingAmtsumCny != null" >
+        RAISING_AMTSUM_CNY = #{raisingAmtsumCny,jdbcType=DECIMAL},
+      </if>
+      <if test="raisingQty != null" >
+        RAISING_QTY = #{raisingQty,jdbcType=DECIMAL},
+      </if>
+      <if test="redamt != null" >
+        REDAMT = #{redamt,jdbcType=DECIMAL},
+      </if>
+      <if test="redamtCny != null" >
+        REDAMT_CNY = #{redamtCny,jdbcType=DECIMAL},
+      </if>
+      <if test="redqty != null" >
+        REDQTY = #{redqty,jdbcType=DECIMAL},
+      </if>
+      <if test="endamtsum != null" >
+        ENDAMTSUM = #{endamtsum,jdbcType=DECIMAL},
+      </if>
+      <if test="endamtsumCny != null" >
+        ENDAMTSUM_CNY = #{endamtsumCny,jdbcType=DECIMAL},
+      </if>
+      <if test="endqty != null" >
+        ENDQTY = #{endqty,jdbcType=DECIMAL},
+      </if>
+      <if test="prodValue != null" >
+        PROD_VALUE = #{prodValue,jdbcType=DECIMAL},
+      </if>
+      <if test="prodValueCny != null" >
+        PROD_VALUE_CNY = #{prodValueCny,jdbcType=DECIMAL},
+      </if>
+      <if test="unitValueTotal != null" >
+        UNIT_VALUE_TOTAL = #{unitValueTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="unitValueTotalCny != null" >
+        UNIT_VALUE_TOTAL_CNY = #{unitValueTotalCny,jdbcType=DECIMAL},
+      </if>
+      <if test="prodHighYield != null" >
+        PROD_HIGH_YIELD = #{prodHighYield,jdbcType=DECIMAL},
+      </if>
+      <if test="prodLowYield != null" >
+        PROD_LOW_YIELD = #{prodLowYield,jdbcType=DECIMAL},
+      </if>
+      <if test="sendStatus != null" >
+        SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="submitTime != null" >
+        SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="submitFeedbackStatus != null" >
+        SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="sumitSeq != null" >
+        SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+      </if>
+      <if test="statusDate != null" >
+        STATUS_DATE = #{statusDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pbcSubmitDeadline != null" >
+        PBC_SUBMIT_DEADLINE = #{pbcSubmitDeadline,jdbcType=TIMESTAMP},
+      </if>
+      <if test="submitDeadline != null" >
+        SUBMIT_DEADLINE = #{submitDeadline,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="orgCode != null" >
+        ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createDept != null" >
+        CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.pbc.classic.prdcashraisesub.dto.PbcProdRaiseSub" >
+    update PBC_PROD_RAISING_SUB
+    set RAISING_DATE = #{raisingDate,jdbcType=TIMESTAMP},
+    PBC_PROD_ID = #{pbcProdId,jdbcType=VARCHAR},
+    BUY_PLACE = #{buyPlace,jdbcType=VARCHAR},
+    CUSTOMER_TYPE1 = #{customerType1,jdbcType=VARCHAR},
+    CCY = #{ccy,jdbcType=CHAR},
+    RAISING_AMTSUM = #{raisingAmtsum,jdbcType=DECIMAL},
+    RAISING_AMTSUM_CNY = #{raisingAmtsumCny,jdbcType=DECIMAL},
+    RAISING_QTY = #{raisingQty,jdbcType=DECIMAL},
+    REDAMT = #{redamt,jdbcType=DECIMAL},
+    REDAMT_CNY = #{redamtCny,jdbcType=DECIMAL},
+    REDQTY = #{redqty,jdbcType=DECIMAL},
+    ENDAMTSUM = #{endamtsum,jdbcType=DECIMAL},
+    ENDAMTSUM_CNY = #{endamtsumCny,jdbcType=DECIMAL},
+    ENDQTY = #{endqty,jdbcType=DECIMAL},
+    PROD_VALUE = #{prodValue,jdbcType=DECIMAL},
+    PROD_VALUE_CNY = #{prodValueCny,jdbcType=DECIMAL},
+    UNIT_VALUE_TOTAL = #{unitValueTotal,jdbcType=DECIMAL},
+    UNIT_VALUE_TOTAL_CNY = #{unitValueTotalCny,jdbcType=DECIMAL},
+    PROD_HIGH_YIELD = #{prodHighYield,jdbcType=DECIMAL},
+    PROD_LOW_YIELD = #{prodLowYield,jdbcType=DECIMAL},
+    SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+    SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
+    SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+    SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+    STATUS_DATE = #{statusDate,jdbcType=TIMESTAMP},
+    PBC_SUBMIT_DEADLINE = #{pbcSubmitDeadline,jdbcType=TIMESTAMP},
+    SUBMIT_DEADLINE = #{submitDeadline,jdbcType=TIMESTAMP},
+    STATUS = #{status,jdbcType=VARCHAR},
+    CREATE_USER = #{createUser,jdbcType=VARCHAR},
+    ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+    CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+    CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+    UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+    UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
+  </update>
 
   <delete id="deleteBatch" parameterType="com.joyintech.tams.svreport.pbc.classic.prdcashraisesub.dto.PbcProdRaiseSub">
     delete from PBC_PROD_RAISING_SUB
@@ -155,7 +526,6 @@
     prdposition.ORG_CODE ORG_CODE
     FROM PBC_MONTH_PRD_POSITION PRDPOSITION
     inner JOIN (
-    select * from (
     SELECT
     PROD_ID,
     PBC_PROD_ID,
@@ -165,11 +535,11 @@
     RANK() OVER (PARTITION BY PROD_ID ORDER BY IFNULL(UPDATE_TIME,CREATE_TIME) DESC) RANKNUM
     from PBC_PRD_BASEINFO_SUB
     where  PBC_PROD_ID is not null
-    )as tt where  1 = 1 and RANKNUM=1) prdbaseinfo
+    ) prdbaseinfo
     ON PRDPOSITION.PRODID = PRDBASEINFO.PROD_ID
+    AND RANKNUM = 1
     left join (
     /*取离月末最近的净值和收益率，不需要判断CHANG_TYPE，默认净值型产品存净值，预期收益率产品存收益率*/
-    select * from (
     select
     YIELD.PROD_VALUE,
     YIELD.PROD_ID,
@@ -180,9 +550,10 @@
     WHERE 1 =1
     AND YIELD.STATUS != 'D'
     AND DATE_FORMAT(YIELD.CHANGE_DATE,'%Y-%m-%d') &lt;= #{cdate,jdbcType=VARCHAR}
-    ) as ttt where 1 =1 limit 1)maxyield
+    ) maxyield
     on PRDPOSITION.PRODID = maxyield.PROD_ID
-    where maxyield.ranknum = 1
+    and maxyield.ranknum = 1
+    where 1 =1
     and DATE_FORMAT(prdposition.ENDDATE,'%Y-%m-%d') = #{cdate,jdbcType=VARCHAR}
     <if test="ifpsbc !=null and ifpsbc='001' ">
       and (prdposition.BUY_PLACE not in('210200','330200','350200','370200','440300') or prdposition.BUY_PLACE is null)
@@ -212,8 +583,8 @@
     from PBC_PRD_BASEINFO_SUB
     ) info
     ON sub.PBC_PROD_ID = info.PBC_PROD_ID
-    AND 1 = 1
     AND info.RANKNUM = 1
+    where 1 =1
     <!-- and sub.send_status in ('02','03') /*已报送数据*/ -->
     and DATE_FORMAT(sub.RAISING_DATE,'%Y-%m-%d') = #{cdate,jdbcType=VARCHAR}  limit 1
   </select>
@@ -1573,7 +1944,7 @@
   <delete id="deleteBatchSubFromHisByUpdateTime" parameterType="java.util.List" >
     delete from PBC_PROD_RAISING_SUB_HIS
     where PBC_PROD_ID in (
-    select t2.PBC_PROD_ID from (select  t1.PBC_PROD_ID
+    select  t1.PBC_PROD_ID
     from (
     select PBC_PROD_ID ,
     rank() over (partition by PBC_PROD_ID order by ifnull(update_time,create_time) desc) ranknum
@@ -1587,8 +1958,8 @@
         </foreach>
       </if>
     </where>
-    )as t1
-    where 1 = 1 limit 1) as t2
+    ) t1
+    where t1.ranknum = 1
     )
   </delete>
   <delete id="deleteBatchBySendStatus" parameterType="java.util.List">
