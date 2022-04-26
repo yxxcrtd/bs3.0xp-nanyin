@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.svreport.select.service.SelectorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +67,9 @@ public class AssetInfoDetail002Controller extends BaseController {
     @Autowired
     private AssetInfoDetailMService assetInfoDetailMService;
 
+    @Autowired
+    private SelectorService selectorService;
+
     /**
      * 日志
      */
@@ -84,6 +88,8 @@ public class AssetInfoDetail002Controller extends BaseController {
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         String jsonObject= JSONObject.toJSONString(assetInfoDetailMService.getDataListLink());
         model.addAttribute("AssetTypeListLink", jsonObject);
+
+        model.addAttribute("PbcCapAssetInfo", JSONObject.toJSONString(selectorService.getPbcCapAssetInfo(null)));
 
         model.addAttribute("AssetTypeListLinkTwo", JSONObject.toJSONString(assetInfoDetailMService.getDataListLink(DictCode.资产负债一级类别.getValue())));
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {// 判断是否存在于工作流中
