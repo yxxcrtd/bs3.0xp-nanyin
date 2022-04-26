@@ -116,7 +116,7 @@
 						   style="line-height: normal !important;">是否属于政府投资基金
 					</label>
 					<div class="layui-input-inline input-inline">
-						<select th:id="|${entityName}_isGovernFund|" th:name="|${entityName}.isGovernFund|"
+						<select th:id="|${entityName}_isGovernFund|" th:name="|${entityName}.isGovernFund|" disabled="true"
 								th:initValue="${entity?.isGovernFund}" class="layui-input form-input input-select"
 								placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
 								data-th-data-result="${SVR_YES_OR_NO}">

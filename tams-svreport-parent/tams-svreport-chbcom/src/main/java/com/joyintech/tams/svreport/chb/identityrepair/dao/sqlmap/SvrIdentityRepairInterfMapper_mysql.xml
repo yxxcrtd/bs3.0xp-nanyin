@@ -207,7 +207,7 @@
 	<update id="updataLastRepairTime" parameterType="string">
 		UPDATE SYS_PARA
 		SET
-		PARAM_VALUE = DATE_FORMAT(sysdate,'%Y-%m-%d %H:%i:%s')
+		PARAM_VALUE = DATE_FORMAT(now(),'%Y-%m-%d %H:%i:%s')
 		WHERE PARA_CODE = 'SVR_LAST_REPAIR_TIME'
 	</update>
 

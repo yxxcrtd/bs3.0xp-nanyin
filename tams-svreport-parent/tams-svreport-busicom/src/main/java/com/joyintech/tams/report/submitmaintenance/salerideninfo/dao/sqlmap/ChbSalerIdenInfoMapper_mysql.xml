@@ -277,6 +277,14 @@
         delete from CHB_SALER_IDEN_ERRODATA
         where WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
     </delete>
+    <!--    根据主键批量删除-->
+    <delete id="deleteBatchByPrimaryKey" parameterType="java.lang.String">
+        delete from CHB_SALER_IDEN_INFO
+        where SALER_INS_NO in
+        <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+            #{id,jdbcType=VARCHAR}
+        </foreach>
+    </delete>
 
     <!--    新建，导入插入-->
     <insert id="insert" parameterType="com.joyintech.tams.report.submitmaintenance.salerideninfo.dto.SalerIdenInfoDto" >
