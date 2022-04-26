@@ -2970,7 +2970,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
                                         }
                                         String dateStr = formatDateStr(columnData);
                                         if (null != dateStr) {
-                                            columnData = "'" + dateStr + "'";
+                                            columnData = "DATE'" + dateStr + "'";
                                         } else {
                                             columnData = null;
                                         }

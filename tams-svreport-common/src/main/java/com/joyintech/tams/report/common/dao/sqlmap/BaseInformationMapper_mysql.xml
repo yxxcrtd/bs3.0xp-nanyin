@@ -374,7 +374,7 @@ select * from (SELECT t.*,LIMIT ROW_ID FROM ${tableId} t WHERE
 	<update id="updateData" parameterType="java.util.Map" statementType="STATEMENT">
 		UPDATE ${tableId} SET
 		<foreach collection="map" index="key" item="value" separator=",">
-			${key} = case when ${value}= 'null' then null else ${value} end
+			${key} = case when CAST(${value} as character)= 'null' then null else ${value} end
 		</foreach>
 		<where>
 			<foreach collection="pkMap" index="key" item="value" separator="AND">
