@@ -390,12 +390,7 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		List<com.joyintech.tams.systemtools.dto.ExcelValidDto> checkResult = baseCommonCheckService.checkDataAll("D", list, tableName, fileName, tableName, tableName, null, null);
 		if(!CollectionUtils.isEmpty(list)){
 			List<AssetInfoDetailDto> AssetInfoDetailDtos= converToBean(list);
-			//按500条分批保存
-			List<List<AssetInfoDetailDto>> partition = Lists.partition(AssetInfoDetailDtos, 500);
-			for (List<AssetInfoDetailDto> dtos : partition) {
-
-				assetInfoDetailMapper.batchInsert(dtos);
-			}
+			AssetInfoDetailDtos.forEach(e-> assetInfoDetailMapper.batchInsert(Lists.newArrayList(e)));
 		}
 		return checkResult.stream().filter(ele ->null != ele.getValidKey()&&ele.getValidKey().equals("YW")).collect(Collectors.toList());
 
@@ -441,98 +436,100 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 			Map<String,String> subMap = new HashMap<>();
 			List<String> subList = dataList.get(i);
 			for(int j=0;j<subList.size();++j){
-				subMap.put(columnList.get(j),subList.get(j));
+				if(StringUtil.isEmpty(subMap.get(columnList.get(j)))){
+					subMap.put(columnList.get(j),subList.get(j));
+				}
 			}
 			subMap.put("ASSET_UUID",IDGenerator.generate(36));
-			subMap.put("TRADE_MARKET",null==subMap.get("TRADE_MARKET")?"":subMap.get("TRADE_MARKET").substring(0,2));
-			subMap.put("BASIS",null==subMap.get("BASIS")?"":subMap.get("BASIS").substring(0,2));
-			subMap.put("DEPO_TYPE",null==subMap.get("DEPO_TYPE")?"":subMap.get("DEPO_TYPE").substring(0,2));
-			subMap.put("ISSUE_MODE",null==subMap.get("ISSUE_MODE")?"":subMap.get("ISSUE_MODE").substring(0,2));
-			subMap.put("SEC_MAIN_GRADE",null==subMap.get("SEC_MAIN_GRADE")?"":subMap.get("SEC_MAIN_GRADE").substring(0,2));
-			subMap.put("PARTY_TYPE1",null==subMap.get("PARTY_TYPE1")?"":subMap.get("PARTY_TYPE1").substring(0,2));
-			subMap.put("PARTY_TYPE3",null==subMap.get("PARTY_TYPE3")?"":subMap.get("PARTY_TYPE3").substring(0,2));
-			subMap.put("PARTY_TYPE2",null==subMap.get("PARTY_TYPE2")?"":subMap.get("PARTY_TYPE2").substring(0,2));
+			subMap.put("TRADE_MARKET",StringUtil.isEmpty(subMap.get("TRADE_MARKET"))?null:subMap.get("TRADE_MARKET").substring(0,2));
+			subMap.put("BASIS",StringUtil.isEmpty(subMap.get("BASIS"))?null:subMap.get("BASIS").substring(0,2));
+			subMap.put("DEPO_TYPE",StringUtil.isEmpty(subMap.get("DEPO_TYPE"))?null:subMap.get("DEPO_TYPE").substring(0,2));
+			subMap.put("ISSUE_MODE",StringUtil.isEmpty(subMap.get("ISSUE_MODE"))?null:subMap.get("ISSUE_MODE").substring(0,2));
+			subMap.put("SEC_MAIN_GRADE",StringUtil.isEmpty(subMap.get("SEC_MAIN_GRADE"))?null:subMap.get("SEC_MAIN_GRADE").substring(0,2));
+			subMap.put("PARTY_TYPE1",StringUtil.isEmpty(subMap.get("PARTY_TYPE1"))?null:subMap.get("PARTY_TYPE1").substring(0,2));
+			subMap.put("PARTY_TYPE3",StringUtil.isEmpty(subMap.get("PARTY_TYPE3"))?null:subMap.get("PARTY_TYPE3").substring(0,2));
+			subMap.put("PARTY_TYPE2",StringUtil.isEmpty(subMap.get("PARTY_TYPE2"))?null:subMap.get("PARTY_TYPE2").substring(0,2));
 
-			subMap.put("REGIST_ORG",null==subMap.get("REGIST_ORG")?"":subMap.get("REGIST_ORG").substring(0,2));
-			subMap.put("RIVAL_PARTY_TYPE",null==subMap.get("RIVAL_PARTY_TYPE")?"":subMap.get("RIVAL_PARTY_TYPE").substring(0,2));
-			subMap.put("TARGET_TYPE1",null==subMap.get("TARGET_TYPE1")?"":subMap.get("TARGET_TYPE1").substring(0,2));
-			subMap.put("PROFIT_TYPE",null==subMap.get("PROFIT_TYPE")?"":subMap.get("PROFIT_TYPE").substring(0,2));
-			subMap.put("IS_RESALE",null==subMap.get("IS_RESALE")?"":subMap.get("IS_RESALE").substring(0,2));
+			subMap.put("REGIST_ORG",StringUtil.isEmpty(subMap.get("REGIST_ORG"))?null:subMap.get("REGIST_ORG").substring(0,2));
+			subMap.put("RIVAL_PARTY_TYPE",StringUtil.isEmpty(subMap.get("RIVAL_PARTY_TYPE"))?null:subMap.get("RIVAL_PARTY_TYPE").substring(0,2));
+			subMap.put("TARGET_TYPE1",StringUtil.isEmpty(subMap.get("TARGET_TYPE1"))?null:subMap.get("TARGET_TYPE1").substring(0,2));
+			subMap.put("PROFIT_TYPE",StringUtil.isEmpty(subMap.get("PROFIT_TYPE"))?null:subMap.get("PROFIT_TYPE").substring(0,2));
+			subMap.put("IS_RESALE",StringUtil.isEmpty(subMap.get("IS_RESALE"))?null:subMap.get("IS_RESALE").substring(0,2));
 
-			subMap.put("RATE_FLAG",null==subMap.get("RATE_FLAG")?"":subMap.get("RATE_FLAG").substring(0,2));
-			subMap.put("COUPON_SPECIES",null==subMap.get("COUPON_SPECIES")?"":subMap.get("COUPON_SPECIES").substring(0,2));
-			subMap.put("INTEREST_RULE_FLAG",null==subMap.get("INTEREST_RULE_FLAG")?"":subMap.get("INTEREST_RULE_FLAG").substring(0,2));
+			subMap.put("RATE_FLAG",StringUtil.isEmpty(subMap.get("RATE_FLAG"))?null:subMap.get("RATE_FLAG").substring(0,2));
+			subMap.put("COUPON_SPECIES",StringUtil.isEmpty(subMap.get("COUPON_SPECIES"))?null:subMap.get("COUPON_SPECIES").substring(0,2));
+			subMap.put("INTEREST_RULE_FLAG",StringUtil.isEmpty(subMap.get("INTEREST_RULE_FLAG"))?null:subMap.get("INTEREST_RULE_FLAG").substring(0,2));
 
 
-			subMap.put("INTPAY_RULE",null==subMap.get("INTPAY_RULE")?"":subMap.get("INTPAY_RULE").substring(0,2));
-			subMap.put("FLOAT_FACTOR_FLAG",null==subMap.get("FLOAT_FACTOR_FLAG")?"":subMap.get("FLOAT_FACTOR_FLAG").substring(0,2));
-			subMap.put("STRUCT_GRADE",null==subMap.get("STRUCT_GRADE")?"":subMap.get("STRUCT_GRADE").substring(0,2));
-			subMap.put("REPAYMENT_TYPE",null==subMap.get("REPAYMENT_TYPE")?"":subMap.get("REPAYMENT_TYPE").substring(0,2));
+			subMap.put("INTPAY_RULE",StringUtil.isEmpty(subMap.get("INTPAY_RULE"))?null:subMap.get("INTPAY_RULE").substring(0,2));
+			subMap.put("FLOAT_FACTOR_FLAG",StringUtil.isEmpty(subMap.get("FLOAT_FACTOR_FLAG"))?null:subMap.get("FLOAT_FACTOR_FLAG").substring(0,2));
+			subMap.put("STRUCT_GRADE",StringUtil.isEmpty(subMap.get("STRUCT_GRADE"))?null:subMap.get("STRUCT_GRADE").substring(0,2));
+			subMap.put("REPAYMENT_TYPE",StringUtil.isEmpty(subMap.get("REPAYMENT_TYPE"))?null:subMap.get("REPAYMENT_TYPE").substring(0,2));
 
-			subMap.put("PERIOD_REPAYMENT_FLAG",null==subMap.get("PERIOD_REPAYMENT_FLAG")?"":subMap.get("PERIOD_REPAYMENT_FLAG").substring(0,2));
-			subMap.put("FINANCIER_TYPE1",null==subMap.get("FINANCIER_TYPE1")?"":subMap.get("FINANCIER_TYPE1").substring(0,2));
-			subMap.put("FINANCIER_TYPE2",null==subMap.get("FINANCIER_TYPE2")?"":subMap.get("FINANCIER_TYPE2").substring(0,2));
-			subMap.put("FINANCIER_TYPE3",null==subMap.get("FINANCIER_TYPE3")?"":subMap.get("FINANCIER_TYPE3").substring(0,2));
+			subMap.put("PERIOD_REPAYMENT_FLAG",StringUtil.isEmpty(subMap.get("PERIOD_REPAYMENT_FLAG"))?null:subMap.get("PERIOD_REPAYMENT_FLAG").substring(0,2));
+			subMap.put("FINANCIER_TYPE1",StringUtil.isEmpty(subMap.get("FINANCIER_TYPE1"))?null:subMap.get("FINANCIER_TYPE1").substring(0,2));
+			subMap.put("FINANCIER_TYPE2",StringUtil.isEmpty(subMap.get("FINANCIER_TYPE2"))?null:subMap.get("FINANCIER_TYPE2").substring(0,2));
+			subMap.put("FINANCIER_TYPE3",StringUtil.isEmpty(subMap.get("FINANCIER_TYPE3"))?null:subMap.get("FINANCIER_TYPE3").substring(0,2));
 
-			subMap.put("INDUSTRY_FLAG",null==subMap.get("INDUSTRY_FLAG")?"":subMap.get("INDUSTRY_FLAG").substring(0,2));
-			subMap.put("GUA_TYPE",null==subMap.get("GUA_TYPE")?"":subMap.get("GUA_TYPE").substring(0,2));
-			subMap.put("PLEDGE_TYPE",null==subMap.get("PLEDGE_TYPE")?"":subMap.get("PLEDGE_TYPE").substring(0,2));
+			subMap.put("INDUSTRY_FLAG",StringUtil.isEmpty(subMap.get("INDUSTRY_FLAG"))?null:subMap.get("INDUSTRY_FLAG").substring(0,2));
+			subMap.put("GUA_TYPE",StringUtil.isEmpty(subMap.get("GUA_TYPE"))?null:subMap.get("GUA_TYPE").substring(0,2));
+			subMap.put("PLEDGE_TYPE",StringUtil.isEmpty(subMap.get("PLEDGE_TYPE"))?null:subMap.get("PLEDGE_TYPE").substring(0,2));
 
-			subMap.put("NATURE_GUARANTEE",null==subMap.get("NATURE_GUARANTEE")?"":subMap.get("NATURE_GUARANTEE").substring(0,2));
-			subMap.put("RELATION_FINAN",null==subMap.get("RELATION_FINAN")?"":subMap.get("RELATION_FINAN").substring(0,2));
-			subMap.put("FINANCIER_GRADE",null==subMap.get("FINANCIER_GRADE")?"":subMap.get("FINANCIER_GRADE").substring(0,2));
+			subMap.put("NATURE_GUARANTEE",StringUtil.isEmpty(subMap.get("NATURE_GUARANTEE"))?null:subMap.get("NATURE_GUARANTEE").substring(0,2));
+			subMap.put("RELATION_FINAN",StringUtil.isEmpty(subMap.get("RELATION_FINAN"))?null:subMap.get("RELATION_FINAN").substring(0,2));
+			subMap.put("FINANCIER_GRADE",StringUtil.isEmpty(subMap.get("FINANCIER_GRADE"))?null:subMap.get("FINANCIER_GRADE").substring(0,2));
 
-			subMap.put("OUT_GRADE",null==subMap.get("OUT_GRADE")?"":subMap.get("OUT_GRADE").substring(0,2));
-			subMap.put("CONTAIN_TYPE",null==subMap.get("CONTAIN_TYPE")?"":subMap.get("CONTAIN_TYPE").substring(0,2));
-			subMap.put("EXERCISE_TYPE",null==subMap.get("EXERCISE_TYPE")?"":subMap.get("EXERCISE_TYPE").substring(0,2));
-			subMap.put("PERPETUAL_CLAUSE_TYPE",null==subMap.get("PERPETUAL_CLAUSE_TYPE")?"":subMap.get("PERPETUAL_CLAUSE_TYPE").substring(0,2));
+			subMap.put("OUT_GRADE",StringUtil.isEmpty(subMap.get("OUT_GRADE"))?null:subMap.get("OUT_GRADE").substring(0,2));
+			subMap.put("CONTAIN_TYPE",StringUtil.isEmpty(subMap.get("CONTAIN_TYPE"))?null:subMap.get("CONTAIN_TYPE").substring(0,2));
+			subMap.put("EXERCISE_TYPE",StringUtil.isEmpty(subMap.get("EXERCISE_TYPE"))?null:subMap.get("EXERCISE_TYPE").substring(0,2));
+			subMap.put("PERPETUAL_CLAUSE_TYPE",StringUtil.isEmpty(subMap.get("PERPETUAL_CLAUSE_TYPE"))?null:subMap.get("PERPETUAL_CLAUSE_TYPE").substring(0,2));
 
-			subMap.put("DEFERRED_INTEREST_TYPE",null==subMap.get("DEFERRED_INTEREST_TYPE")?"":subMap.get("DEFERRED_INTEREST_TYPE").substring(0,2));
-			subMap.put("DEFERRED_INTEREST_INT",null==subMap.get("DEFERRED_INTEREST_INT")?"":subMap.get("DEFERRED_INTEREST_INT").substring(0,2));
-			subMap.put("PART_REDEM_FLAG",null==subMap.get("PART_REDEM_FLAG")?"":subMap.get("PART_REDEM_FLAG").substring(0,2));
-			subMap.put("IS_RIGHT",null==subMap.get("IS_RIGHT")?"":subMap.get("IS_RIGHT").substring(0,2));
+			subMap.put("DEFERRED_INTEREST_TYPE",StringUtil.isEmpty(subMap.get("DEFERRED_INTEREST_TYPE"))?null:subMap.get("DEFERRED_INTEREST_TYPE").substring(0,2));
+			subMap.put("DEFERRED_INTEREST_INT",StringUtil.isEmpty(subMap.get("DEFERRED_INTEREST_INT"))?null:subMap.get("DEFERRED_INTEREST_INT").substring(0,2));
+			subMap.put("PART_REDEM_FLAG",StringUtil.isEmpty(subMap.get("PART_REDEM_FLAG"))?null:subMap.get("PART_REDEM_FLAG").substring(0,2));
+			subMap.put("IS_RIGHT",StringUtil.isEmpty(subMap.get("IS_RIGHT"))?null:subMap.get("IS_RIGHT").substring(0,2));
 
-			subMap.put("IS_RESALE",null==subMap.get("IS_RESALE")?"":subMap.get("IS_RESALE").substring(0,2));
-			subMap.put("NOTSTAND_SEC_TYPE",null==subMap.get("NOTSTAND_SEC_TYPE")?"":subMap.get("NOTSTAND_SEC_TYPE").substring(0,2));
-			subMap.put("IS_BZHPJ",null==subMap.get("IS_BZHPJ")?"":subMap.get("IS_BZHPJ").substring(0,2));
-			subMap.put("SHARES_TYPE",null==subMap.get("SHARES_TYPE")?"":subMap.get("SHARES_TYPE").substring(0,2));
+			subMap.put("IS_RESALE",StringUtil.isEmpty(subMap.get("IS_RESALE"))?null:subMap.get("IS_RESALE").substring(0,2));
+			subMap.put("NOTSTAND_SEC_TYPE",StringUtil.isEmpty(subMap.get("NOTSTAND_SEC_TYPE"))?null:subMap.get("NOTSTAND_SEC_TYPE").substring(0,2));
+			subMap.put("IS_BZHPJ",StringUtil.isEmpty(subMap.get("IS_BZHPJ"))?null:subMap.get("IS_BZHPJ").substring(0,2));
+			subMap.put("SHARES_TYPE",StringUtil.isEmpty(subMap.get("SHARES_TYPE"))?null:subMap.get("SHARES_TYPE").substring(0,2));
 
-			subMap.put("INVEST_STAGE",null==subMap.get("INVEST_STAGE")?"":subMap.get("INVEST_STAGE").substring(0,2));
-			subMap.put("SHARES_TYPE1",null==subMap.get("SHARES_TYPE1")?"":subMap.get("SHARES_TYPE1").substring(0,2));
-			subMap.put("SHARES_TYPE3",null==subMap.get("SHARES_TYPE3")?"":subMap.get("SHARES_TYPE3").substring(0,2));
-			subMap.put("SHARES_TYPE2",null==subMap.get("SHARES_TYPE2")?"":subMap.get("SHARES_TYPE2").substring(0,2));
+			subMap.put("INVEST_STAGE",StringUtil.isEmpty(subMap.get("INVEST_STAGE"))?null:subMap.get("INVEST_STAGE").substring(0,2));
+			subMap.put("SHARES_TYPE1",StringUtil.isEmpty(subMap.get("SHARES_TYPE1"))?null:subMap.get("SHARES_TYPE1").substring(0,2));
+			subMap.put("SHARES_TYPE3",StringUtil.isEmpty(subMap.get("SHARES_TYPE3"))?null:subMap.get("SHARES_TYPE3").substring(0,2));
+			subMap.put("SHARES_TYPE2",StringUtil.isEmpty(subMap.get("SHARES_TYPE2"))?null:subMap.get("SHARES_TYPE2").substring(0,2));
 
-			subMap.put("IS_PLEDGE",null==subMap.get("IS_PLEDGE")?"":subMap.get("IS_PLEDGE").substring(0,2));
-			subMap.put("DEPT_EQUITY",null==subMap.get("DEPT_EQUITY")?"":subMap.get("DEPT_EQUITY").substring(0,2));
-			subMap.put("HOLD_PURPOSE",null==subMap.get("HOLD_PURPOSE")?"":subMap.get("HOLD_PURPOSE").substring(0,2));
-			subMap.put("FINANCIAL_PRODUCT_FLAG",null==subMap.get("FINANCIAL_PRODUCT_FLAG")?"":subMap.get("FINANCIAL_PRODUCT_FLAG").substring(0,2));
+			subMap.put("IS_PLEDGE",StringUtil.isEmpty(subMap.get("IS_PLEDGE"))?null:subMap.get("IS_PLEDGE").substring(0,2));
+			subMap.put("DEPT_EQUITY",StringUtil.isEmpty(subMap.get("DEPT_EQUITY"))?null:subMap.get("DEPT_EQUITY").substring(0,2));
+			subMap.put("HOLD_PURPOSE",StringUtil.isEmpty(subMap.get("HOLD_PURPOSE"))?null:subMap.get("HOLD_PURPOSE").substring(0,2));
+			subMap.put("FINANCIAL_PRODUCT_FLAG",StringUtil.isEmpty(subMap.get("FINANCIAL_PRODUCT_FLAG"))?null:subMap.get("FINANCIAL_PRODUCT_FLAG").substring(0,2));
 
-			subMap.put("FINANCIAL_COMISSUE",null==subMap.get("FINANCIAL_COMISSUE")?"":subMap.get("FINANCIAL_COMISSUE").substring(0,2));
-			subMap.put("TRU_ACT_TYPE",null==subMap.get("TRU_ACT_TYPE")?"":subMap.get("TRU_ACT_TYPE").substring(0,2));
-			subMap.put("PRO_PROPERTY",null==subMap.get("PRO_PROPERTY")?"":subMap.get("PRO_PROPERTY").substring(0,2));
+			subMap.put("FINANCIAL_COMISSUE",StringUtil.isEmpty(subMap.get("FINANCIAL_COMISSUE"))?null:subMap.get("FINANCIAL_COMISSUE").substring(0,2));
+			subMap.put("TRU_ACT_TYPE",StringUtil.isEmpty(subMap.get("TRU_ACT_TYPE"))?null:subMap.get("TRU_ACT_TYPE").substring(0,2));
+			subMap.put("PRO_PROPERTY",StringUtil.isEmpty(subMap.get("PRO_PROPERTY"))?null:subMap.get("PRO_PROPERTY").substring(0,2));
 
-			subMap.put("BUY_STRUCT",null==subMap.get("BUY_STRUCT")?"":subMap.get("BUY_STRUCT").substring(0,2));
-			subMap.put("MANAGE_TYPE",null==subMap.get("MANAGE_TYPE")?"":subMap.get("MANAGE_TYPE").substring(0,2));
-			subMap.put("IN_ASSET_TYPE",null==subMap.get("IN_ASSET_TYPE")?"":subMap.get("IN_ASSET_TYPE").substring(0,2));
-			subMap.put("MONIT_TYPE",null==subMap.get("MONIT_TYPE")?"":subMap.get("MONIT_TYPE").substring(0,2));
+			subMap.put("BUY_STRUCT",StringUtil.isEmpty(subMap.get("BUY_STRUCT"))?null:subMap.get("BUY_STRUCT").substring(0,2));
+			subMap.put("MANAGE_TYPE",StringUtil.isEmpty(subMap.get("MANAGE_TYPE"))?null:subMap.get("MANAGE_TYPE").substring(0,2));
+			subMap.put("IN_ASSET_TYPE",StringUtil.isEmpty(subMap.get("IN_ASSET_TYPE"))?null:subMap.get("IN_ASSET_TYPE").substring(0,2));
+			subMap.put("MONIT_TYPE",StringUtil.isEmpty(subMap.get("MONIT_TYPE"))?null:subMap.get("MONIT_TYPE").substring(0,2));
 
-			subMap.put("REGIST_ORG1",null==subMap.get("REGIST_ORG1")?"":subMap.get("REGIST_ORG1").substring(0,2));
-			subMap.put("PROFIT_FLAG",null==subMap.get("PROFIT_FLAG")?"":subMap.get("PROFIT_FLAG").substring(0,2));
-			subMap.put("IS_GOVERN_FUND",null==subMap.get("IS_GOVERN_FUND")?"":subMap.get("IS_GOVERN_FUND").substring(0,2));
-			subMap.put("GOVERN_INVEST_FUND",null==subMap.get("GOVERN_INVEST_FUND")?"":subMap.get("GOVERN_INVEST_FUND").substring(0,2));
+			subMap.put("REGIST_ORG1",StringUtil.isEmpty(subMap.get("REGIST_ORG1"))?null:subMap.get("REGIST_ORG1").substring(0,2));
+			subMap.put("PROFIT_FLAG",StringUtil.isEmpty(subMap.get("PROFIT_FLAG"))?null:subMap.get("PROFIT_FLAG").substring(0,2));
+			subMap.put("IS_GOVERN_FUND",StringUtil.isEmpty(subMap.get("IS_GOVERN_FUND"))?null:subMap.get("IS_GOVERN_FUND").substring(0,2));
+			subMap.put("GOVERN_INVEST_FUND",StringUtil.isEmpty(subMap.get("GOVERN_INVEST_FUND"))?null:subMap.get("GOVERN_INVEST_FUND").substring(0,2));
 
-			subMap.put("IS_DEPOSIT_FLAG",null==subMap.get("IS_DEPOSIT_FLAG")?"":subMap.get("IS_DEPOSIT_FLAG").substring(0,2));
-			subMap.put("BANK_SEC_ZXZQ",null==subMap.get("BANK_SEC_ZXZQ")?"":subMap.get("BANK_SEC_ZXZQ").substring(0,2));
-			subMap.put("BONDTOSTOCK_FLAG",null==subMap.get("BONDTOSTOCK_FLAG")?"":subMap.get("BONDTOSTOCK_FLAG").substring(0,2));
-			subMap.put("PRIVATEFUND_FLAG",null==subMap.get("PRIVATEFUND_FLAG")?"":subMap.get("PRIVATEFUND_FLAG").substring(0,2));
+			subMap.put("IS_DEPOSIT_FLAG",StringUtil.isEmpty(subMap.get("IS_DEPOSIT_FLAG"))?null:subMap.get("IS_DEPOSIT_FLAG").substring(0,2));
+			subMap.put("BANK_SEC_ZXZQ",StringUtil.isEmpty(subMap.get("BANK_SEC_ZXZQ"))?null:subMap.get("BANK_SEC_ZXZQ").substring(0,2));
+			subMap.put("BONDTOSTOCK_FLAG",StringUtil.isEmpty(subMap.get("BONDTOSTOCK_FLAG"))?null:subMap.get("BONDTOSTOCK_FLAG").substring(0,2));
+			subMap.put("PRIVATEFUND_FLAG",StringUtil.isEmpty(subMap.get("PRIVATEFUND_FLAG"))?null:subMap.get("PRIVATEFUND_FLAG").substring(0,2));
 
-			subMap.put("ISUNLISTED",null==subMap.get("ISUNLISTED")?"":subMap.get("ISUNLISTED").substring(0,2));
-			subMap.put("PRIVATEPRD_FLAG",null==subMap.get("PRIVATEPRD_FLAG")?"":subMap.get("PRIVATEPRD_FLAG").substring(0,2));
-			subMap.put("CONSTRACTE_BUSI_TYPE",null==subMap.get("CONSTRACTE_BUSI_TYPE")?"":subMap.get("CONSTRACTE_BUSI_TYPE").substring(0,2));
-			subMap.put("CONSTRACTE_GRADE",null==subMap.get("CONSTRACTE_GRADE")?"":subMap.get("CONSTRACTE_GRADE").substring(0,2));
-			subMap.put("PRIVATE_FLAG",null==subMap.get("PRIVATE_FLAG")?"":subMap.get("PRIVATE_FLAG").substring(0,2));
-			subMap.put("IS_BANK_CAP",null==subMap.get("IS_BANK_CAP")?"":subMap.get("IS_BANK_CAP").substring(0,2));
-			subMap.put("IS_CONSTRACTE_BUSI",null==subMap.get("IS_CONSTRACTE_BUSI")?"":subMap.get("IS_CONSTRACTE_BUSI").substring(0,2));
+			subMap.put("ISUNLISTED",StringUtil.isEmpty(subMap.get("ISUNLISTED"))?null:subMap.get("ISUNLISTED").substring(0,2));
+			subMap.put("PRIVATEPRD_FLAG",StringUtil.isEmpty(subMap.get("PRIVATEPRD_FLAG"))?null:subMap.get("PRIVATEPRD_FLAG").substring(0,2));
+			subMap.put("CONSTRACTE_BUSI_TYPE",StringUtil.isEmpty(subMap.get("CONSTRACTE_BUSI_TYPE"))?null:subMap.get("CONSTRACTE_BUSI_TYPE").substring(0,2));
+			subMap.put("CONSTRACTE_GRADE",StringUtil.isEmpty(subMap.get("CONSTRACTE_GRADE"))?null:subMap.get("CONSTRACTE_GRADE").substring(0,2));
+			subMap.put("PRIVATE_FLAG",StringUtil.isEmpty(subMap.get("PRIVATE_FLAG"))?null:subMap.get("PRIVATE_FLAG").substring(0,2));
+			subMap.put("IS_BANK_CAP",StringUtil.isEmpty(subMap.get("IS_BANK_CAP"))?null:subMap.get("IS_BANK_CAP").substring(0,2));
+			subMap.put("IS_CONSTRACTE_BUSI",StringUtil.isEmpty(subMap.get("IS_CONSTRACTE_BUSI"))?null:subMap.get("IS_CONSTRACTE_BUSI").substring(0,2));
 
 			list.add(subMap);
 		}
@@ -563,15 +560,15 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 						if(null !=e.getKey()){
 							if(((String)el.getKey()).substring(3).equalsIgnoreCase((String) e.getKey())){
 								if(null !=filedToMap.get(e.getKey())&&filedToMap.get(e.getKey()).equals(String.class.getName())){
-									var =null==e.getValue()?"":(String)e.getValue();
+									var =StringUtil.isEmpty((String)e.getValue())?null:(String)e.getValue();
 								}else if(null !=filedToMap.get(e.getKey())&&filedToMap.get(e.getKey()).equals(Date.class.getName())){
-									var = null==e.getValue()?null:DateUtil.parse((String) e.getValue());
+									var = StringUtil.isEmpty((String)e.getValue())?null:DateUtil.parse((String) e.getValue());
 								}else if(null !=filedToMap.get(e.getKey())&&filedToMap.get(e.getKey()).equals(Long.class.getName())){
-									var = null==e.getValue()?null:Long.valueOf((String) e.getValue()) ;
+									var = StringUtil.isEmpty((String)e.getValue())?null:Long.valueOf((String) e.getValue()) ;
 								}else if(null !=filedToMap.get(e.getKey())&&filedToMap.get(e.getKey()).equals(Integer.class.getName())){
-									var = null==e.getValue()?null:Integer.valueOf((String) e.getValue()) ;
+									var = StringUtil.isEmpty((String)e.getValue())?null:Integer.valueOf((String) e.getValue()) ;
 								}else if(null !=filedToMap.get(e.getKey())&&filedToMap.get(e.getKey()).equals(BigDecimal.class.getName())){
-									var = null==e.getValue()?null:new BigDecimal((String) e.getValue());
+									var = StringUtil.isEmpty((String)e.getValue())?null:new BigDecimal((String) e.getValue());
 								}
 								((Method)el.getValue()).invoke(assetInfoDetailDto,var);
 								break;

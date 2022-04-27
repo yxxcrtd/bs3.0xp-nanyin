@@ -3406,7 +3406,7 @@
         select count(*) from  CHB_ASSET_INFO where
         ASSET_CODE in
         <foreach collection="list" item="item" open="(" close=")" separator=",">
-            #{item.ASSET_CODE}
+            #{item.assetCode,jdbcType=VARCHAR}
         </foreach>
         and STATUS in ('A','E')
     </select>
