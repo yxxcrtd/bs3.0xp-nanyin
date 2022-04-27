@@ -57,6 +57,8 @@ public interface ChbSalerIdenInfoMapper {
 
     ChbSalerIdenInfo selectByPrimaryKey(String salerInsNo);
 
+    int getByPrimaryKeyCount(@Param("salerInsNo") String salerInsNo);
+
     int updateByPrimaryKeySelective(SalerIdenInfoDto record);
 
     int updateByPrimaryKey(SalerIdenInfoDto record);

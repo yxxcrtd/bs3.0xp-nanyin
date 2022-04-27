@@ -7,6 +7,7 @@ import com.joyintech.tams.report.submitmaintenance.salerideninfo.dto.SalerIdenIn
 import com.joyintech.tams.report.submitmaintenance.salerideninfo.util.IdenInfoErrdataConvertUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -36,7 +37,9 @@ public class SalerIdenInfo002Service extends BaseService{
             SalerIdenInfoDto infoDto = new SalerIdenInfoDto();
             List<SalerIdenInfoDto> listSalerErrordata = chbSalerIdenInfoMapper.selectErroDetail(param);
             if (listSalerErrordata != null && listSalerErrordata.size() > 0) {
-                IdenInfoErrdataConvertUtil.errdataAssetInfoConvert(infoDto, listSalerErrordata.get(0));
+                SalerIdenInfoDto salerIdenInfoDto = listSalerErrordata.get(0);
+                IdenInfoErrdataConvertUtil.errdataAssetInfoConvert(infoDto, salerIdenInfoDto);
+                infoDto.setWorkflowId(salerIdenInfoDto.getWorkflowId());
                 infoDto.setErroOrInfo("erro");
             }
             this.formateTime(infoDto);
@@ -49,14 +52,9 @@ public class SalerIdenInfo002Service extends BaseService{
      * @param
      */
     public void saveAndSubmit(SalerIdenInfoDto dto) {
-        //校验是否已存在逻辑删除的数据
-        List<SalerIdenInfoDto> SalerIdenInfoDImportList =  chbSalerIdenInfoMapper.checkSalerIdentInfoDImport();
-        Map<String,SalerIdenInfoDto> SalerIdenInfoDMap = new HashMap<String,SalerIdenInfoDto>();
-        for(SalerIdenInfoDto info :SalerIdenInfoDImportList){
-            SalerIdenInfoDMap.put(info.getSalerInsNo(),info);
-        }
+
         //check表中是否存在已逻辑删除的数据
-        if(SalerIdenInfoDMap.get(dto.getSalerInsNo()) != null){
+        if(chbSalerIdenInfoMapper.getByPrimaryKeyCount(dto.getSalerInsNo())>0){
             //如果存在就先 删除表中删除状态数据再 新增插入
             chbSalerIdenInfoMapper.deleteByPrimaryKey(dto.getSalerInsNo());
         }
@@ -71,6 +69,7 @@ public class SalerIdenInfo002Service extends BaseService{
      * 修改保存
      * @param
      */
+    @Transactional(rollbackFor = Exception.class)
     public void update(SalerIdenInfoDto dto) {
         //来自info表的直接更新数据
         if(dto.getErroOrInfo().equals("info")){

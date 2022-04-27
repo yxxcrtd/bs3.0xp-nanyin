@@ -1229,8 +1229,8 @@ public class EquityInfoValid {
             map.put("HOLDER_NAME", list.get(15));
         }
         // 性别
-        else if (!CommonUtil.equalsIgnoreNull(list.get(16).trim(),
-                equityInfoRegist001Dto.getHolderSex())) {
+        else if (list.get(16)!=null&&(!CommonUtil.equalsIgnoreNull(list.get(16).trim(),
+                equityInfoRegist001Dto.getHolderSex()))) {
             map.put("HOLDER_SEX", list.get(16));
         }
         // 备注
