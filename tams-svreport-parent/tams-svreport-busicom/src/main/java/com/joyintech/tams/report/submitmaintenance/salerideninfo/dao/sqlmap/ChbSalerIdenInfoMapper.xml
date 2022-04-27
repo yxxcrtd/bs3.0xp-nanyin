@@ -218,6 +218,13 @@
         where SALER_INS_NO = #{salerInsNo,jdbcType=VARCHAR}
     </select>
 
+    <select id="getByPrimaryKeyCount" resultType="int" >
+        select
+        COUNT(*)
+        from CHB_SALER_IDEN_INFO
+        where SALER_INS_NO = #{salerInsNo,jdbcType=VARCHAR}
+    </select>
+
     <!--    理财销售人员姓名联想框-->
     <select id="getSalerName" parameterType="Map" resultType="com.joyintech.framework.select.SuggestDto">
         select distinct(code),name,shortName,hidCode

@@ -292,8 +292,8 @@
 
     <delete id="deleteReportDataHis" parameterType="java.util.Map">
         delete
-        from CHB_SALER_REW_PENA_SUB_HIS  his
-        where his.CREATE_TIME=(
+        from CHB_SALER_REW_PENA_SUB_HIS
+        where CREATE_TIME=( SELECT T.CREATE_TIME FROM (
         SELECT max(CREATE_TIME) CREATE_TIME from CHB_SALER_REW_PENA_SUB_HIS
         <where>
             <if test="registList !=null and registList.size()>0">
@@ -303,7 +303,7 @@
                     #{regist.salerRewPenaNo,jdbcType=VARCHAR}
                 </foreach>
             </if>
-        </where> )
+        </where> )T)
         <if test="registList !=null and registList.size()>0">
             and SALER_REW_PENA_NO
             IN

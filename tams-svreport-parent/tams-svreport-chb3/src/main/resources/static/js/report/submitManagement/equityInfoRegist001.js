@@ -110,7 +110,7 @@ $(function(){
             { field: 'status',visible:false},
             { title: "数据日期", field: 'updateTimeStr',width:150,sortField:'updateTime'},
             { title: "报送状态", field: 'submitStatusName',width:100 ,sortField:'submitStatus'},           
-            { title: "报送日期", field: 'submitTimeStr',width:150,sortField:'submitTime'},
+            { title: "报送日期", field: 'submitTime',type: 'datetime',width:150,sortField:'submitTime'},
             { title: "报送截止日", field: 'chbSubmitDeadline', type: 'date',width:150,sortField:'chbSubmitDeadline'},
             { title: "反馈状态", field: 'submitFeedbackStatus',width:100,visible: false},
             { title: "反馈状态", field: 'submitFeedbackStatusStr',width:100,sortField:'submitFeedbackStatus'/*界面查询性能优化,
