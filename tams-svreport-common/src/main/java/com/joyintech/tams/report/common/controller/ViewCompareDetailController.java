@@ -17,12 +17,17 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
 import org.apache.commons.collections4.CollectionUtils;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,137 +78,134 @@ import javax.annotation.Resource;
 @RequestMapping("/common/detail")
 public class ViewCompareDetailController extends BaseController {
 
+    /**
+     * 界面特殊处理字段
+     */
+    enum PageFiledList {
+
+        产品资金募集信息("PbcPrdCashRaiseSub", new String[] { "PROD_VALUE_CNY", "UNIT_VALUE_TOTAL_CNY" }),
+
+        产品发行登记("SvrProdPersonIssue001", new String[] { "YIELD_LOW", "YIELD_HIGH" });
 
 
+        /**
+         * 界面id
+         */
+        private String pageId;
 
-	/**
-	 * 界面特殊处理字段
-	 */
-	enum PageFiledList {
+        /**
+         * 特殊处理字段
+         */
+        private String[] filedArr;
 
-		产品资金募集信息("PbcPrdCashRaiseSub", new String[] { "PROD_VALUE_CNY", "UNIT_VALUE_TOTAL_CNY" }),
-		
-		产品发行登记("SvrProdPersonIssue001", new String[] { "YIELD_LOW", "YIELD_HIGH" });
+        public String getPageId() {
+            return pageId;
+        }
 
+        public void setPageId(String pageId) {
+            this.pageId = pageId;
+        }
 
-		/**
-		 * 界面id
-		 */
-		private String pageId;
+        public String[] getFiledArr() {
+            return filedArr;
+        }
 
-		/**
-		 * 特殊处理字段
-		 */
-		private String[] filedArr;
+        public void setFiledArr(String[] filedArr) {
+            this.filedArr = filedArr;
+        }
 
-		public String getPageId() {
-			return pageId;
-		}
+        PageFiledList(String pageId, String[] filedArr) {
+            this.pageId = pageId;
+            this.filedArr = filedArr;
+        }
+    }
+    enum CCYDictCodeList{
+        中债币种_人民币( "CNY", "人民币"),
+        /**
+         * 中债币种_美元
+         */
+        中债币种_美元("USD", "美元"),
+        /**
+         * 中债币种_欧元
+         */
+        中债币种_欧元( "EUR", "欧元"),
+        /**
+         * 中债币种_英镑
+         */
+        中债币种_英镑( "GBP", "英镑"),
+        /**
+         * 中债币种_日元
+         */
+        中债币种_日元( "JPY", "日元"),
+        ;
+        /**
+         * 对应于数据字典code
+         */
+        private String value;
 
-		public void setPageId(String pageId) {
-			this.pageId = pageId;
-		}
+        /**
+         * 明细名称
+         */
+        private String codeName;
+        /**
+         * 获取 value
+         *
+         * @return value.
+         */
+        public String getValue() {
+            return value;
+        }
+        /**
+         * 设置 value
+         *
+         * @param value value
+         */
+        public void setValue(String value) {
+            this.value = value;
+        }
+        /**
+         * 获取 codeName
+         *
+         * @return codeName.
+         */
+        public String getCodeName() {
+            return codeName;
+        }
 
-		public String[] getFiledArr() {
-			return filedArr;
-		}
-
-		public void setFiledArr(String[] filedArr) {
-			this.filedArr = filedArr;
-		}
-
-		PageFiledList(String pageId, String[] filedArr) {
-			this.pageId = pageId;
-			this.filedArr = filedArr;
-		}
-	}
-	 enum CCYDictCodeList{
-		 中债币种_人民币( "CNY", "人民币"),
- 	    /**
- 	     * 中债币种_美元
- 	     */
- 	    中债币种_美元("USD", "美元"),
- 	    /**
- 	     * 中债币种_欧元
- 	     */
- 	    中债币种_欧元( "EUR", "欧元"),
- 	    /**
- 	     * 中债币种_英镑
- 	     */
- 	    中债币种_英镑( "GBP", "英镑"),
- 	    /**
- 	     * 中债币种_日元
- 	     */
- 	    中债币种_日元( "JPY", "日元"),
- 	    ;
- 	   /**
- 	     * 对应于数据字典code
- 	     */
- 	    private String value;
-
- 	    /**
- 	     * 明细名称
- 	     */
- 	    private String codeName;
- 	   /**
- 	     * 获取 value
- 	     *
- 	     * @return value.
- 	     */
- 	    public String getValue() {
- 	        return value;
- 	    }
- 	    /**
- 	     * 设置 value
- 	     *
- 	     * @param value value
- 	     */
- 	    public void setValue(String value) {
- 	        this.value = value;
- 	    }
- 	   /**
- 	     * 获取 codeName
- 	     *
- 	     * @return codeName.
- 	     */
- 	    public String getCodeName() {
- 	        return codeName;
- 	    }
- 	    
- 	   /**
- 	     * 设置 codeName
- 	     *
- 	     * @param codeName codeName
- 	     */
- 	    public void setCodeName(String codeName) {
- 	        this.codeName = codeName;
- 	    }
- 	   CCYDictCodeList( String value, String codeName) {
- 	        this.value = value;
- 	        this.codeName=codeName;
- 	    }
- 	   static CCYDictCodeList from( String name) {
- 		  CCYDictCodeList[] values = CCYDictCodeList.values();
- 	        for (CCYDictCodeList code : values) {
- 	            if (StringUtil.equals(name, code.getCodeName())) {
- 	                return code;
- 	            }
- 	        }
- 	        return null;
- 	    }
-	}
+        /**
+         * 设置 codeName
+         *
+         * @param codeName codeName
+         */
+        public void setCodeName(String codeName) {
+            this.codeName = codeName;
+        }
+        CCYDictCodeList( String value, String codeName) {
+            this.value = value;
+            this.codeName=codeName;
+        }
+        static CCYDictCodeList from( String name) {
+            CCYDictCodeList[] values = CCYDictCodeList.values();
+            for (CCYDictCodeList code : values) {
+                if (StringUtil.equals(name, code.getCodeName())) {
+                    return code;
+                }
+            }
+            return null;
+        }
+    }
     /**
      * ViewCompareDetailMapper
      */
     @Autowired
     private ViewCompareDetailMapper mapper;
-    
+
     /**
      * 产品登记编码
      */
     @Autowired
     private ChbPrdresistCodeMapper chbPrdresistCodeMapper;
-    
+
     /**
      * 产品要素
      */
@@ -374,7 +376,7 @@ public class ViewCompareDetailController extends BaseController {
         if (null != registSeqNo) {
             Map<String, Object> registSeqNoMap = new HashMap<>(2);
             if(searchParam.get("tableName").equals("CHB_EQU_SUB") || searchParam.get("tableName").equals("CHB_EQUDET_SUB")
-               || searchParam.get("tableName").equals("CHB_EMPLOYEE_INFO_SUB")){
+                    || searchParam.get("tableName").equals("CHB_EMPLOYEE_INFO_SUB")){
                 registSeqNoMap.put("field", "SUMIT_SEQ");
             }
             else{
@@ -410,20 +412,20 @@ public class ViewCompareDetailController extends BaseController {
                                 continue;
                             }
                             if(tmpKeyField.equals("ccy")){
-                            	if(CCYDictCodeList.from(detail.getCurrentValue())!=null){
-                            		detail.setCurrentValue(CCYDictCodeList.from(detail.getCurrentValue()).getValue());
-                            	}
+                                if(CCYDictCodeList.from(detail.getCurrentValue())!=null){
+                                    detail.setCurrentValue(CCYDictCodeList.from(detail.getCurrentValue()).getValue());
+                                }
                             }
                             if (StringUtil.equals(detail.getType(), "date")) {
                                 conditionMap.put("value", "DATE '" + DateUtil.format(
-                                    new Date(Long.valueOf(detail.getCurrentValue()))) + "'");
+                                        new Date(Long.valueOf(detail.getCurrentValue()))) + "'");
                             }
                             else if (StringUtil.equals(detail.getType(), "datetime")) {
                                 conditionMap.put("value", "TIMESTAMP '"
-                                                          +
-                                    DateUtil.format(
-                                        new Date(Long.valueOf(detail.getCurrentValue())),
-                                        DateUtil.DEFAULT_DATETIME_FORMAT) + "'");
+                                        +
+                                        DateUtil.format(
+                                                new Date(Long.valueOf(detail.getCurrentValue())),
+                                                DateUtil.DEFAULT_DATETIME_FORMAT) + "'");
                             }
                             else {
                                 conditionMap.put("value", "'" + detail.getCurrentValue() + "'");
@@ -482,17 +484,17 @@ public class ViewCompareDetailController extends BaseController {
 
         // 产品资金募集信息特殊处理：为0时候显示空
         if (StringUtil.equals(pageId, PageFiledList.产品资金募集信息.getPageId())) {
-        	dataResultList.forEach(map->{
-        		map.forEach((key, value)->{
-        			if(Arrays.asList(PageFiledList.产品资金募集信息.getFiledArr()).contains(key) && StringUtil.isNotEmpty(value)
-        					&& BigDecimal.ZERO.compareTo((BigDecimal)value)==0) {
-        				map.put(key, null);
-        			}
-        		});
-        	});
-		}
-        
-        
+            dataResultList.forEach(map->{
+                map.forEach((key, value)->{
+                    if(Arrays.asList(PageFiledList.产品资金募集信息.getFiledArr()).contains(key) && StringUtil.isNotEmpty(value)
+                            && BigDecimal.ZERO.compareTo((BigDecimal)value)==0) {
+                        map.put(key, null);
+                    }
+                });
+            });
+        }
+
+
         // 识别标识变更的情况，用原识别标识查询比较数据
         try {
             if (sb.toString().equals("old")) {
@@ -508,15 +510,15 @@ public class ViewCompareDetailController extends BaseController {
 
                     dataResultList = mapper.selectDetail(searchParam);
                     if(CollectionUtils.isEmpty(dataResultList)){
-                    	searchParam.put("tableName", tableName.replace("_HIS", "")); 
-                    	searchParam.put("order", oder);
+                        searchParam.put("tableName", tableName.replace("_HIS", ""));
+                        searchParam.put("order", oder);
                         dataResultList = mapper.selectDetail(searchParam);
                     }
                 }
             }
         }
         catch (Exception e) {
-        	logger.error(e.getMessage(), e);
+            logger.error(e.getMessage(), e);
         }
 
         if (CollectionUtils.isNotEmpty(dataResultList)) {
@@ -524,40 +526,40 @@ public class ViewCompareDetailController extends BaseController {
             if(!StringUtil.equals(sendStatus, DictCodeListExt2.报送状态_未报送.getValue()) || StringUtil.equals(status, DictCodeListExt2.报送数据状态_新建.getValue()) || sb.toString().equals("old")){
                 dataResult = dataResultList.get(dataResultList.size()-1);
             }
-            
+
             //add by leipeng 20200708 多法人模式下界面中的发行机构代码字段由界面数字填充
             if(CommonUtil.isBAmodel()){
-            	String issue_party_id = "";
-            	String REGIST_BANK_CODE = "";
-            	String prodid = "";
-            	for (RegistDetailDto data : detailList) {
-            		//获取前台界面传入的登记编码
-					if(data.getData().equals("issuePartyId")){
-						issue_party_id = data.getCurrentValue();
-					}
-					//前台传入的登记编码修改
-					if(data.getData().equals("registBankCode")){
-						REGIST_BANK_CODE = data.getCurrentValue();
-					}
-					//获取前台界面传入的产品编号
-					if(data.getData().equals("prodId")){
-						prodid = data.getCurrentValue();
-					}
-				}
-            	if(StringUtil.isEmpty(issue_party_id)&&StringUtil.isEmpty(REGIST_BANK_CODE)
-            			&&StringUtil.isNotEmpty(prodid)){
-            		issue_party_id = mapper.selectBankCodeByOrgCode(prodid);
-            		REGIST_BANK_CODE = issue_party_id;
-            	}
-            	dataResult.put("ISSUE_PARTY_ID", issue_party_id);
-            	dataResult.put("REGIST_BANK_CODE", REGIST_BANK_CODE);
+                String issue_party_id = "";
+                String REGIST_BANK_CODE = "";
+                String prodid = "";
+                for (RegistDetailDto data : detailList) {
+                    //获取前台界面传入的登记编码
+                    if(data.getData().equals("issuePartyId")){
+                        issue_party_id = data.getCurrentValue();
+                    }
+                    //前台传入的登记编码修改
+                    if(data.getData().equals("registBankCode")){
+                        REGIST_BANK_CODE = data.getCurrentValue();
+                    }
+                    //获取前台界面传入的产品编号
+                    if(data.getData().equals("prodId")){
+                        prodid = data.getCurrentValue();
+                    }
+                }
+                if(StringUtil.isEmpty(issue_party_id)&&StringUtil.isEmpty(REGIST_BANK_CODE)
+                        &&StringUtil.isNotEmpty(prodid)){
+                    issue_party_id = mapper.selectBankCodeByOrgCode(prodid);
+                    REGIST_BANK_CODE = issue_party_id;
+                }
+                dataResult.put("ISSUE_PARTY_ID", issue_party_id);
+                dataResult.put("REGIST_BANK_CODE", REGIST_BANK_CODE);
             }
-            
+
             for (Map<String, Object> map : dataResultList) {
-				if(!StringUtil.equals(DictCodeListExt2.数据类型_中债_识别标识变更.getValue(), map.get("TYPE"))){
-					map.put("ORG_INDENTIFY_MARK", "");
-				}
-			}
+                if(!StringUtil.equals(DictCodeListExt2.数据类型_中债_识别标识变更.getValue(), map.get("TYPE"))){
+                    map.put("ORG_INDENTIFY_MARK", "");
+                }
+            }
             // 添加产品登记编码
             if (dataResult.containsKey("PROD_ID")){
                 ChbPrdresistCodeKey key = new ChbPrdresistCodeKey();
@@ -569,7 +571,7 @@ public class ViewCompareDetailController extends BaseController {
                         ChbPrdresistCode value = chbPrdresistCodeMapper.selectByPrimaryKey(key);
                         if (value != null){
                             dataResult.put("PROD_REG_CODE",value.getRegCode());
-                        } 
+                        }
                     }
                     if (dataResult.get("PROD_NAME") == null){
                         // 查询产品名称
@@ -587,28 +589,22 @@ public class ViewCompareDetailController extends BaseController {
                             ||(StringUtil.equals("identifyType", detail.getData())&&(StringUtil.equals("personalIdentifyType", field)||StringUtil.equals("institutionIdentifyType", field))
                             &&StringUtil.isNotEmpty(value))
                             // modify by zhangliang 20201215 资产要素登记 委外投资属性特殊处理
-                        || (StringUtil.equals("proProperty1", detail.getData()) && StringUtil.equals("proProperty", field))
-                        ) {
-                            String v ="";
-                            if(StringUtil.equals("personalIdentifyType", field)||StringUtil.equals("institutionIdentifyType", field)){
-                                v = getValue(value, field, fields);
-                            }
-                            else{
-                                v = getValue(value, detail.getData(), fields);
-                            }
-                        //add by zhoubin 20220422 start
-                        //产品发行登记日期做处理;销售结算资金交易 date类型做特殊处理
-                        if(Objects.equals(detail.getType(),"date") || Objects.equals(detail.getType(),"datetime")) {
-                            detail.setType(null);
+                            || (StringUtil.equals("proProperty1", detail.getData()) && StringUtil.equals("proProperty", field))
+                    ) {
+                        String v ="";
+                        if(StringUtil.equals("personalIdentifyType", field)||StringUtil.equals("institutionIdentifyType", field)){
+                            v = getValue(value, field, fields);
                         }
-                        //add by zhoubin 20220422 end
-                            if (sb.toString().equals("current")) {
-                                detail.setCurrentValue(v);
-                            }
-                            else {
-                                detail.setHasOldValue(true);
-                                detail.setOldValue(v);
-                            }
+                        else{
+                            v = getValue(value, detail.getData(), fields);
+                        }
+                        if (sb.toString().equals("current")) {
+                            detail.setCurrentValue(v);
+                        }
+                        else {
+                            detail.setHasOldValue(true);
+                            detail.setOldValue(v);
+                        }
                     }
                 });
             });
@@ -645,23 +641,23 @@ public class ViewCompareDetailController extends BaseController {
                         v = SysDataUtil.getZZDictCodeAndName(code, (String)value);
                         //update zhangweiqi 2021-5-12 HYXXDJZL-101  【资产要素登记】项目类标的--非标资产/新增可投资，双击打开时，融资人所属地区字段为空 begin
                         if(DictCode.行政区划_省市县.getValue().equals(code.getValue())&&"finArea".equals(field)&&!StringUtil.isNotEmpty(v)){
-                        	if(StringUtil.isNotEmpty(SvrDataUtil.getNameFromDataDict(DictCode.行政区划_省市县,(String)value))){
-            					
-                        		v = (String)value+" "+SysDataUtil.getNameFromDataDict(DictCode.行政区划_省市县, (String)value);
-            				}
-            				else if(StringUtil.isNotEmpty(SvrDataUtil.getNameFromDataDict(DictCode.行政区划_省,(String)value))){
-            					
-            					v = (String)value+" "+SysDataUtil.getNameFromDataDict(DictCode.行政区划_省, (String)value);
-            				
-            				}else if(StringUtil.isNotEmpty(SvrDataUtil.getNameFromDataDict(DictCode.行政区划_市,(String)value))){
-            				
-            					v = (String)value+" "+SysDataUtil.getNameFromDataDict(DictCode.行政区划_市, (String)value);
-            					
-            				}else if(StringUtil.isNotEmpty(SvrDataUtil.getNameFromDataDict(DictCode.行政区划_县,(String)value))){
-            					
-            					v = (String)value+" "+SysDataUtil.getNameFromDataDict(DictCode.行政区划_县, (String)value);
-            				}
-                           }
+                            if(StringUtil.isNotEmpty(SvrDataUtil.getNameFromDataDict(DictCode.行政区划_省市县,(String)value))){
+
+                                v = (String)value+" "+SysDataUtil.getNameFromDataDict(DictCode.行政区划_省市县, (String)value);
+                            }
+                            else if(StringUtil.isNotEmpty(SvrDataUtil.getNameFromDataDict(DictCode.行政区划_省,(String)value))){
+
+                                v = (String)value+" "+SysDataUtil.getNameFromDataDict(DictCode.行政区划_省, (String)value);
+
+                            }else if(StringUtil.isNotEmpty(SvrDataUtil.getNameFromDataDict(DictCode.行政区划_市,(String)value))){
+
+                                v = (String)value+" "+SysDataUtil.getNameFromDataDict(DictCode.行政区划_市, (String)value);
+
+                            }else if(StringUtil.isNotEmpty(SvrDataUtil.getNameFromDataDict(DictCode.行政区划_县,(String)value))){
+
+                                v = (String)value+" "+SysDataUtil.getNameFromDataDict(DictCode.行政区划_县, (String)value);
+                            }
+                        }
                         //update zhangweiqi 2021-5-12 HYXXDJZL-101  【资产要素登记】项目类标的--非标资产/新增可投资，双击打开时，融资人所属地区字段为空 end
                     }
                 }
@@ -670,33 +666,17 @@ public class ViewCompareDetailController extends BaseController {
             else if (value instanceof TIMESTAMP) {
                 try {
                     TIMESTAMP time = (TIMESTAMP)value;
-                    if (Objects.equals(field,"submitTime")) {
-                        v = DateUtil.formatDateTime(time.dateValue());
-                    } else {
-                        v = DateUtil.format(time.dateValue());
-                    }
+                    Date date = DateUtil.parse(time.dateValue() + " " + time.timeValue());
+                    v = String.valueOf(date.getTime());
                 }
                 catch (SQLException e) {
-                	logger.error(e.getMessage(), e);
-                }
-            }
-            else if (value instanceof Timestamp) {
-                //add by zhoubin 20220425 start
-                try {
-                    Timestamp time = (Timestamp)value;
-                    Date date = new Date(time.getTime());
-                    if (Objects.equals(field,"submitTime")) {
-                        v = DateUtil.formatDateTime(date);
-                    } else {
-                        v = DateUtil.format(date);
-                    }
-
-                }
-                catch (Exception e) {
                     logger.error(e.getMessage(), e);
                 }
             }
-            //add by zhoubin 20220425 end
+            else if (value instanceof Timestamp) {
+                Timestamp time = (Timestamp)value;
+                v = String.valueOf(time.getTime());
+            }
             // 数值类型
             else if (value instanceof Number) {
                 v = StringUtil.numberToString((BigDecimal)value);
@@ -704,11 +684,12 @@ public class ViewCompareDetailController extends BaseController {
             else if(value instanceof String){
                 v = value.toString();
             }
-            //add by wangyaning 未对date类型数据做处理导致为空 2022 04 22
+            //add by zcw mysql date类型特殊处理 20220427
             else if(value instanceof Date){
-                v = value.toString();
+                Date time = (Date)value;
+                v = String.valueOf(time.getTime());
             }
-            //add by wangyaning 未对date类型数据做处理导致为空 2022 04 22
+            //add by zcw mysql date类型特殊处理 20220427
         }
         catch (SecurityException e) {
             this.getLogger().error("ViewCompareDetailController.getValue", e);
@@ -743,7 +724,7 @@ public class ViewCompareDetailController extends BaseController {
         if(StringUtil.equals(status, DictCodeListExt2.报送数据状态_修改.getValue())||StringUtil.equals(status, DictCodeListExt2.报送数据状态_修改.getCodeName())) {
             // 报送状态为已报送的和履历表最新数据比较
             if(StringUtil.equals(sendStatus, DictCodeListExt2.报送状态_手工处理.getValue())
-                || StringUtil.equals(sendStatus, DictCodeListExt2.报送状态_接口报送.getValue())) {
+                    || StringUtil.equals(sendStatus, DictCodeListExt2.报送状态_接口报送.getValue())) {
                 return tableName + "_HIS";
             }
             // 报送状态为未报送的和当前表前一条数据（已报送）比较
