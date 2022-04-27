@@ -74,11 +74,7 @@ import javax.annotation.Resource;
 public class ViewCompareDetailController extends BaseController {
 
 
-   static final List list=Arrays.asList("raiseVdate","submitTime",
-           "raiseEnddate","prdVdate","prdMdate","yieldDate","dealdate",
-           "firstOpenDay","tradeVdate","chbSubmitDeadline",
-           "mdate","vdate","raisePstrdate","raisePenddate",
-           "valDate","posDate","pbcSubmitDeadline","salerBirthday");
+
 
 	/**
 	 * 界面特殊处理字段
@@ -600,17 +596,14 @@ public class ViewCompareDetailController extends BaseController {
                             else{
                                 v = getValue(value, detail.getData(), fields);
                             }
+                        //add by zhoubin 20220422 start
+                        //产品发行登记日期做处理;销售结算资金交易 date类型做特殊处理
+                        if(Objects.equals(detail.getType(),"date") || Objects.equals(detail.getType(),"datetime")) {
+                            detail.setType(null);
+                        }
+                        //add by zhoubin 20220422 end
                             if (sb.toString().equals("current")) {
                                 detail.setCurrentValue(v);
-                                //add by zhoubin 20220422 start
-                                //产品发行登记日期做处理;销售结算资金交易 date类型做特殊处理
-                                if(Objects.equals(detail.getType(),"date") && list.contains(detail.getData())) {
-                                    detail.setType(null);
-                                }
-                                if(Objects.equals(detail.getType(),"datetime") && list.contains(detail.getData())) {
-                                    detail.setType(null);
-                                }
-                                //add by zhoubin 20220422 end
                             }
                             else {
                                 detail.setHasOldValue(true);
@@ -677,8 +670,11 @@ public class ViewCompareDetailController extends BaseController {
             else if (value instanceof TIMESTAMP) {
                 try {
                     TIMESTAMP time = (TIMESTAMP)value;
-                    Date date = DateUtil.parse(time.dateValue() + " " + time.timeValue());
-                    v = String.valueOf(date.getTime());
+                    if (Objects.equals(field,"submitTime")) {
+                        v = DateUtil.formatDateTime(time.dateValue());
+                    } else {
+                        v = DateUtil.format(time.dateValue());
+                    }
                 }
                 catch (SQLException e) {
                 	logger.error(e.getMessage(), e);
