@@ -17,6 +17,7 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import com.joyintech.framework.util.DateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -99,9 +100,9 @@ public class PbcExportService extends BaseService<ITableRow>{
 		}
 		if(data.get("report") instanceof Map){
 			Map pbcReport = (Map)data.get("report");
-			if(null!=pbcReport.get("enddate")){
-				Date enddate = new Date(Long.parseLong(pbcReport.get("enddate").toString()));
-				pbcReport.put("enddate",enddate);
+			if(null!=pbcReport.get("statusDate")){
+				Date statusDate = new Date(Long.parseLong(pbcReport.get("statusDate").toString()));
+				pbcReport.put("enddate", DateUtil.format(statusDate));
 			}
 			if(!MultilevelDataAuthorityUtil.isEnabled()) {
         		//银行模式
