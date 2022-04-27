@@ -427,13 +427,6 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		List<ChbInfoMgrResultConfig> chbInfoMgrResultConfigList = chbInfoMgrResultConfigMapper.queryAllchbMgrTableInfo(param);
 		Map<String,String> map = new HashMap<>();
 		chbInfoMgrResultConfigList.forEach(ele->map.put(ele.getColumnName(),ele.getRealColumnId()));
-		Set<String> keySet = map.keySet();
-		ArrayList<Object> arrayList = new ArrayList<>();
-		for(String s:headList){
-			if(!keySet.contains(s)){
-				arrayList.add(s);
-			}
-		}
 
 
 		List<String> columnList = new ArrayList<>();
