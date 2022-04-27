@@ -646,7 +646,7 @@ var QueryFunc=function(){
         //隐藏所有中债报送信息
         var obj = JSON.parse(AssetTypeListLinkTwo) ;
         for(var i in obj){
-            if(obj[i].indexOf(repAssetType)>0){
+            if(obj[i].indexOf(repAssetType)>=0){
                 $("#assetType").val(i).trigger('change');
                 break;
             }
