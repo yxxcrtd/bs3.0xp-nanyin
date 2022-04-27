@@ -3632,9 +3632,9 @@
 
     <select id="selectValidRecords" resultType="java.lang.Integer">
         select count(*) from  CHB_ASSET_INFO where
-        ASSET_ID in
+        ASSET_CODE in
         <foreach collection="list" item="item" open="(" close=")" separator=",">
-            #{item.ASSET_ID}
+            #{item.ASSET_CODE}
         </foreach>
         and STATUS in ('A','E')
     </select>
