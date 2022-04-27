@@ -240,7 +240,7 @@
         INSERT INTO chb_infomgr_result_config VALUES ('bf9c573d-0c13-4393-8a66-09bc3a13d14c', 'CHB_ASSET_INFO', 'BLN_AREA', '境内外', 'BLN_AREA', 283, 'Y', 'BLN_AREA');
         INSERT INTO chb_infomgr_result_config VALUES ('bfe96148-acfe-4c16-a6a3-fb60d3bb3e1a', 'CHB_ASSET_INFO', 'DEPT_EQUITY06', '是否为债转股', 'SVR_YES_OR_NO', 127, 'N', 'DEPT_EQUITY');
         INSERT INTO chb_infomgr_result_config VALUES ('c0fa22e5-aa41-4be8-8fb5-1f99ae119bba', 'CHB_ASSET_INFO', 'BASIC_ASSET_TYPE04', '基础资产类型', NULL, 60, 'N', 'BASIC_ASSET_TYPE');
-        INSERT INTO chb_infomgr_result_config VALUES ('c13df5a3-af68-4b1e-b77f-55081d907ee7', 'CHB_ASSET_INFO', 'FINANCIAL_COMISSUE15', '是否由金融资产投资公司发行', 'SVR_YES_OR_NO', 247, 'N', 'FINANCIAL_COMISSUE');
+        INSERT INTO chb_infomgr_result_config VALUES ('c13df5a3-af68-4b1e-b77f-55081d907ee8', 'CHB_ASSET_INFO', 'FINANCIAL_COMISSUE15', '是否由金融资产投资公司发行', 'SVR_YES_OR_NO', 247, 'N', 'FINANCIAL_COMISSUE');
         INSERT INTO chb_infomgr_result_config VALUES ('c23a4506-dea1-4fe0-ad84-f869660b559a', 'CHB_ASSET_INFO', 'REGIST_ORG03', '*登记托管机构', 'SVR_REGIST_ORG', 26, 'N', 'REGIST_ORG');
         INSERT INTO chb_infomgr_result_config VALUES ('c6e10b80-7282-40f2-a277-6d5bee431a61', 'CHB_ASSET_INFO', 'NOM_CAPI07', '*名义本金', NULL, 129, 'N', 'NOM_CAPI');
         INSERT INTO chb_infomgr_result_config VALUES ('c8734513-40c7-45b7-b5e5-f8abeecff651', 'CHB_ASSET_INFO', 'ASSET_VALUE13', '*资产价值', NULL, 202, 'N', 'ASSET_VALUE');
