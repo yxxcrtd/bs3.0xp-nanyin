@@ -32,7 +32,9 @@ public class SalerInstInfo002Service extends BaseService{
             SalerInstInfoDto infoDto = new SalerInstInfoDto();
             List<SalerInstInfoDto> listSalerErrordata = chbSalerInstInfoMapper.selectErroDetail(param);
             if (listSalerErrordata != null && listSalerErrordata.size() > 0) {
-                infoDto=listSalerErrordata.get(0);
+                SalerInstInfoDto salerInstInfoDto = listSalerErrordata.get(0);
+                InstiInfoErrdataConvertUtil.errdataAssetInfoConvert(infoDto, salerInstInfoDto);
+                infoDto.setWorkflowId(salerInstInfoDto.getWorkflowId());
                 infoDto.setErroOrInfo("erro");
             }
             return infoDto;
