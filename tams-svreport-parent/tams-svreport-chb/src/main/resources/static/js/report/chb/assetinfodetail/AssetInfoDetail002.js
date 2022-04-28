@@ -113,7 +113,8 @@ var QueryFunc=function(){
             //本行/他行存款||大额存单
             if(repAssetType=='1004'||repAssetType=='1005'){
                 //存款类型置灰不可修改
-                $("#svrBussRepDepositInfoDto_repDepoType").val('').attr("disabled",true);
+                $("#svrBussRepDepositInfoDto_repDepoType").val('').trigger("change");
+                $("#svrBussRepDepositInfoDto_repDepoType").attr("disabled",true);
             }else{
                 $("#svrBussRepDepositInfoDto_repDepoType").attr("disabled",false);
             }
@@ -495,7 +496,9 @@ var QueryFunc=function(){
 
         if(repAssetType=="2202"){
             $("input[id$='_repCreditAssetCode']").attr('disabled',false);
-            $("input[id$='_repCreditAssetCode']").val($('#assetCode').val());
+            if($('#assetCode').val().length == 8){
+                $("input[id$='_repCreditAssetCode']").val($('#assetCode').val());
+            }
         }else{
             $("input[id$='_repCreditAssetCode']").attr('disabled',true);
             $("input[id$='_repCreditAssetCode']").val('').trigger("change");
