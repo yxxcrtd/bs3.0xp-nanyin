@@ -160,11 +160,11 @@
     </select>
 
 
-    <select id="getRewPenaInfoCount" resultType="int">
+    <select id="getSalerInstInfoCount" resultType="int">
         select
             COUNT(*)
         from
-            CHB_SALER_REW_PENA_INFO
+            CHB_SALER_INST_INFO
         where
             SALER_ORG_CODE = #{salerOrgCode}
     </select>

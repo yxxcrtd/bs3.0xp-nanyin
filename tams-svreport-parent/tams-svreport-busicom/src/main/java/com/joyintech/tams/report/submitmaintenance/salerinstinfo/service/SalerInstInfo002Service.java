@@ -47,7 +47,7 @@ public class SalerInstInfo002Service extends BaseService{
      */
     public void saveAndSubmit(SalerInstInfoDto dto) {
         //check表中是否存在的数据
-        if(chbSalerInstInfoMapper.getRewPenaInfoCount(dto.getSalerOrgCode())>0){
+        if(chbSalerInstInfoMapper.getSalerInstInfoCount(dto.getSalerOrgCode())>0){
             //如果存在就先 删除表中删除状态数据再 新增插入
             chbSalerInstInfoMapper.deleteByPrimaryKey(dto.getSalerOrgCode());
         }

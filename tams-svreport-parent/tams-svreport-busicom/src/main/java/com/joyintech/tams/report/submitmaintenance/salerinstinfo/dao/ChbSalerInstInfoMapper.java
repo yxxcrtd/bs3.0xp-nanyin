@@ -73,7 +73,7 @@ public interface ChbSalerInstInfoMapper {
      * @param salerOrgCode
      * @return
      */
-    int getRewPenaInfoCount(@Param("salerOrgCode") String salerOrgCode);
+    int getSalerInstInfoCount(@Param("salerOrgCode") String salerOrgCode);
 
     /**
      * 根据主键删除erro表中数据
