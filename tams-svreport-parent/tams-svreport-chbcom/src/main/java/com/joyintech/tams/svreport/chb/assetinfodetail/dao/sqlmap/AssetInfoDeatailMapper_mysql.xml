@@ -2075,7 +2075,6 @@
         null   ERRMSG
         FROM chb_asset_info i
         WHERE 1=1
-        and i.status in ('E','M')
         <if test="assetCodes != null and assetCodes.length>0">
             <foreach collection="assetCodes" item="item" open=" and ASSET_CODE in(" separator="," close=")">
                 #{item}
@@ -3634,7 +3633,7 @@
         select count(*) from  CHB_ASSET_INFO where
         ASSET_CODE in
         <foreach collection="list" item="item" open="(" close=")" separator=",">
-            #{item.assetCode}
+            #{item.ASSET_CODE}
         </foreach>
         and STATUS in ('A','E')
     </select>
