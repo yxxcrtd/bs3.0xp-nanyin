@@ -257,6 +257,20 @@ public class ChbMonthAssetPosition extends CommonProductRatingDto implements Clo
      */
     private String subCode;
 
+
+    /**
+     * 是否母行产品
+     */
+    private String isFprod;
+
+    public String getIsFprod() {
+        return isFprod;
+    }
+
+    public void setIsFprod(String isFprod) {
+        this.isFprod = isFprod;
+    }
+
     public String getSubCode() {
         return subCode;
     }
