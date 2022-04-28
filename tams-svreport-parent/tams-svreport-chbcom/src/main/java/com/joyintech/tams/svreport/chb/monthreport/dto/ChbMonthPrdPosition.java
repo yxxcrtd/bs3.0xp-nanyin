@@ -692,4 +692,30 @@ public class ChbMonthPrdPosition {
     public void setYieldE(BigDecimal yieldE) {
         this.yieldE = yieldE;
     }
+
+    /**
+     * 期限品种2 01 T+0产品/02 7天（含）以内/03 7天-1个月（含）/04 1-3个月（含）/05 3-6 25个月(含)/06 6-12个月（含）/08 1-3年（含）/09 3年以上
+     */
+    private String termtype2;
+
+    public String getTermtype2() {
+        return termtype2;
+    }
+
+    public void setTermtype2(String termtype2) {
+        this.termtype2 = termtype2;
+    }
+
+    /**
+     * 是否完全符合《通知》要求,01是/02否
+     */
+    private String isNotice;
+
+    public String getIsNotice() {
+        return isNotice;
+    }
+
+    public void setIsNotice(String isNotice) {
+        this.isNotice = isNotice;
+    }
 }

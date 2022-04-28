@@ -2677,7 +2677,7 @@ SELECT
                     </when>
                     <otherwise>
                         and info.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                        and info.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
+<!--                        and info.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}-->
                         and (
                         
                             (info.SEND_STATUS = #{nosubmit}
@@ -2834,7 +2834,7 @@ SELECT
                             <otherwise>
                                 and info.SUBMIT_TIME &gt; info.PBC_SUBMIT_DEADLINE
                                 and info.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                                and info.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
+<!--                                and info.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}-->
                             </otherwise>
                         </choose>
                          /* add by songyawei 20200702 start */
