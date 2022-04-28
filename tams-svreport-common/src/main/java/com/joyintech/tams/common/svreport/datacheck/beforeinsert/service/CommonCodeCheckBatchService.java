@@ -19,6 +19,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -2470,7 +2471,7 @@ public class CommonCodeCheckBatchService {
             }
         }
         //理财登记培训证书编号格式校验
-        if(salerChbTrainNo != null && salerChbTrainNo != ""){
+        if(StringUtils.isNotEmpty(salerChbTrainNo)){
             String regex = "^([L][C][0-9]{12})$";
             if(!salerChbTrainNo.matches(regex)){
                 errMsg +="理财登记培训证书编号格式不对。[SALER_CHB_TRAIN_NO="+dataMap.get("SALER_CHB_TRAIN_NO")+"];";
