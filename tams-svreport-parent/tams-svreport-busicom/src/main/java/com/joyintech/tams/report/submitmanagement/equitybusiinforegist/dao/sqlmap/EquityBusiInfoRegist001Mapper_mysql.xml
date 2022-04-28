@@ -960,7 +960,7 @@
     </update>
     <!-- 根据识别标识与登记银行代码从信息维护表中查询数据插入登记表 -->
     <insert id="insertEquityBusiHis" parameterType="java.util.List">
-        insert into CHB_EQUDET_HIS ( BUSI_SEQNO, REG_CODE,
+        insert into CHB_EQUDET_HIS (HIS_NO, BUSI_SEQNO, REG_CODE,
         ACCOUNT, REGIST_BANK_CODE, INDENTIFY_MARK,
         EQUITY_CONF_DATE, SHARE_CONF_DATETIME, FUND_ACC_PLACE,
         BUSI_TYPE, CCY, AMOUNT,
@@ -974,7 +974,7 @@
         UPDATE_TIME, CREATE_USER, CREATE_TIME,
         DATA_SOURCE, ORG_CODE, AGENT,
         CREATE_DEPT, IS_SUBMIT)
-        select
+        select _NEXTINDEX('seq_equity_busi'),
         BUSI_SEQNO, REG_CODE,
         ACCOUNT, REGIST_BANK_CODE, INDENTIFY_MARK,
         EQUITY_CONF_DATE, SHARE_CONF_DATETIME, FUND_ACC_PLACE,
@@ -1148,18 +1148,7 @@
     <delete id="deleteEquDetSubmitRegist" parameterType="map">
         delete from CHB_EQUDET_SUB aa
         where aa.SUBMIT_STATUS in ('02','03')
-        and ( BUSI_SEQNO,REG_CODE,REGIST_BANK_CODE,INDENTIFY_MARK) IN
-        ( SELECT * FROM (
-        SELECT
-        BUSI_SEQNO,REG_CODE,REGIST_BANK_CODE,INDENTIFY_MARK
-        FROM
-        chb_equdet_sub
-        GROUP BY
-        BUSI_SEQNO,REG_CODE,REGIST_BANK_CODE,INDENTIFY_MARK
-        HAVING
-        COUNT(1) > 1)t
-        )
-        <!--and EXISTS (
+        and EXISTS (
         select BUSI_SEQNO,REG_CODE,REGIST_BANK_CODE,INDENTIFY_MARK,count(1)
         from chb_equdet_sub ciis
         <include refid="wherecase"/>
@@ -1168,7 +1157,7 @@
         and ciis.REGIST_BANK_CODE=aa.REGIST_BANK_CODE
         and ciis.INDENTIFY_MARK=aa.INDENTIFY_MARK
         group by BUSI_SEQNO, REG_CODE, REGIST_BANK_CODE, INDENTIFY_MARK
-        having count(1)>1)-->
+        having count(1)>1)
     </delete>
     <sql id="wherecase">
         <where>
@@ -1373,13 +1362,6 @@
         set sub.SUBMIT_STATUS = '02',
         sub.submit_time = NOW()
         where sub.SUBMIT_STATUS = '01'
-        <!--update CHB_EQUDET_SUB sub
-        set sub.SUBMIT_STATUS = '02',
-            sub.submit_time = NOW()
-        where
-            sub.SUMIT_SEQ in (select SUMIT_SEQ from CHB_EQUDET_SEND_TEMP)
-            and sub.SUBMIT_STATUS = '01'-->
-
     </update>
     <select id="getChbEquSubSend" resultType="string" parameterType="map">
 		select INDENTIFY_MARK from CHB_EQU_SUB  cs
