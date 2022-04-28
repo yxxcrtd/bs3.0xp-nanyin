@@ -29,6 +29,7 @@ import com.joyintech.tams.svreport.chb.assetinfodetail.util.ServerMenu;
 import com.joyintech.tams.svreport.chb.common.util.asset.RechbAassetInfoUtilService;
 import com.joyintech.tams.svreport.interf.chb.assetinfo.service.ChbAssetInfoInterf;
 import com.joyintech.tams.svreport.interf.chb.baseinfo.dao.SvrMstCustomerInfoAddImpMapper;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -392,7 +393,9 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 			List<AssetInfoDetailDto> AssetInfoDetailDtos= converToBean(list);
 			AssetInfoDetailDtos.forEach(e-> assetInfoDetailMapper.batchInsert(Lists.newArrayList(e)));
 		}
-		return checkResult.stream().filter(ele ->null != ele.getValidKey()&&ele.getValidKey().equals("YW")).collect(Collectors.toList());
+		List<ExcelValidDto> resultList = checkResult.stream().filter(ele -> null != ele.getValidKey() && ele.getValidKey().equals("YW")).collect(Collectors.toList());
+		resultList.forEach(e->e.setRowNum(String.valueOf(Integer.valueOf(e.getRowNum())+1)));
+		return resultList;
 
 	}
 
@@ -530,6 +533,7 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 			subMap.put("PRIVATE_FLAG",StringUtil.isEmpty(subMap.get("PRIVATE_FLAG"))?null:subMap.get("PRIVATE_FLAG").substring(0,2));
 			subMap.put("IS_BANK_CAP",StringUtil.isEmpty(subMap.get("IS_BANK_CAP"))?null:subMap.get("IS_BANK_CAP").substring(0,2));
 			subMap.put("IS_CONSTRACTE_BUSI",StringUtil.isEmpty(subMap.get("IS_CONSTRACTE_BUSI"))?null:subMap.get("IS_CONSTRACTE_BUSI").substring(0,2));
+			subMap.put("ASSET_TYPE2",!StringUtil.isEmpty(subMap.get("ASSET_TYPE2"))&&subMap.get("ASSET_TYPE2").length()>3?subMap.get("ASSET_TYPE2").substring(0,4):null);
 
 			list.add(subMap);
 		}

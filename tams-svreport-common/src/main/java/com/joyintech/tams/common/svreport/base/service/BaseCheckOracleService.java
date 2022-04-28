@@ -63,7 +63,7 @@ public class BaseCheckOracleService {
         }
         if (Objects.equals("VARCHAR2", tabDto.getDataType()) && StringUtil.isNotBlank(value)) {
             //校验字段长度
-            if (tabDto.getLength() != 0 && tabDto.getLength() < value.length()) {
+            if (tabDto.getLength() != 0 && tabDto.getLength() < value.getBytes().length) {
                 errMsg.append("字段长度不能超过" + tabDto.getLength());
             }
         }
