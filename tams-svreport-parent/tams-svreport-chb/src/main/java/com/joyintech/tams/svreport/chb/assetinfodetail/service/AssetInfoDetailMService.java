@@ -214,7 +214,6 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 
 		if(map==null||map.isEmpty()){
 			map = new HashMap<>();
-			//界面配置,根据SYS_DATADICT_LIST_LINK
 			Map<String,Object> params = new HashMap<>();
 			params.put("linkDictCode", DictCode.资产_负债类别.getValue());
 //		params.put("linkItemCode", itemCode);
@@ -375,14 +374,16 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		long count = mapList.stream().filter(ele ->null != ele.get("STATUS")&&ele.get("STATUS").equals("A")).count();
 		webResult.setMessage(this.getMessage("ChbImportMessage",mapList.size()-count,size-mapList.size(),count),MessageType.确认消息);
 		int duplicate = 0;
+		//查数据库记录
 		if(!CollectionUtils.isEmpty(mapList)){
 			duplicate = assetInfoDetailMapper.selectValidRecords(mapList);
 		}
-		//查数据库记录
-		List<JoyinMessage> joyinMessages = new ArrayList<>();
-		JoyinMessage ms = new JoyinMessage(this.getMessage("ChbImportDuplicateMessage",duplicate), MessageType.确认消息);
-		joyinMessages.add(ms);
-		webResult.setJoyinMessages(joyinMessages);
+		if(duplicate >0){
+			List<JoyinMessage> joyinMessages = new ArrayList<>();
+			JoyinMessage ms = new JoyinMessage(this.getMessage("ChbImportDuplicateMessage",duplicate), MessageType.确认消息);
+			joyinMessages.add(ms);
+			webResult.setJoyinMessages(joyinMessages);
+		}
 		return webResult;
 	}
 
@@ -435,6 +436,22 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 
 		}
 		List<Map<String,String>> list = new ArrayList<>();
+		// 根据资产负债二级类别找一级类别
+		Map<String,String> dictAssetType = new HashMap<>();
+		Map<String,Object> params = new HashMap<>();
+		params.put("linkDictCode", DictCode.资产_负债类别.getValue());
+		List<SysDatadictListLink> listLink = assetInfoDetailMapper.getDataListLinkData(params);
+		listLink.forEach(sysDatadictListLink -> {
+			dictAssetType.put(sysDatadictListLink.getItemCode(),sysDatadictListLink.getLinkedItemCode());
+		});
+
+		// 根据机构所属行业二级类别找一级类别
+		Map<String,String> dictIndustry = new HashMap<>();
+		params.put("linkDictCode", DictCode.机构所属行业一级分类.getValue());
+		List<SysDatadictListLink> industryListLink = assetInfoDetailMapper.getDataListLinkData(params);
+		industryListLink.forEach(sysDatadictListLink -> {
+			dictIndustry.put(sysDatadictListLink.getItemCode(),sysDatadictListLink.getLinkedItemCode());
+		});
 		for(int i=2;i<dataList.size();++i){
 			Map<String,String> subMap = new HashMap<>();
 			List<String> subList = dataList.get(i);
@@ -534,6 +551,20 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 			subMap.put("IS_BANK_CAP",StringUtil.isEmpty(subMap.get("IS_BANK_CAP"))?null:subMap.get("IS_BANK_CAP").substring(0,2));
 			subMap.put("IS_CONSTRACTE_BUSI",StringUtil.isEmpty(subMap.get("IS_CONSTRACTE_BUSI"))?null:subMap.get("IS_CONSTRACTE_BUSI").substring(0,2));
 			subMap.put("ASSET_TYPE2",!StringUtil.isEmpty(subMap.get("ASSET_TYPE2"))&&subMap.get("ASSET_TYPE2").length()>3?subMap.get("ASSET_TYPE2").substring(0,4):null);
+			subMap.put("PBC_ASSET_TYPE1",StringUtil.isEmpty(subMap.get("PBC_ASSET_TYPE1"))?null:subMap.get("PBC_ASSET_TYPE1").substring(0,3));
+			subMap.put("PBC_ASSET_TYPE2",StringUtil.isEmpty(subMap.get("PBC_ASSET_TYPE2"))?null:subMap.get("PBC_ASSET_TYPE2").substring(0,3));
+			subMap.put("PBC_ASSET_TYPE3",StringUtil.isEmpty(subMap.get("PBC_ASSET_TYPE3"))?null:subMap.get("PBC_ASSET_TYPE3").substring(0,3));
+			subMap.put("CCY",StringUtil.isEmpty(subMap.get("CCY"))?null:subMap.get("CCY").substring(0,3));
+			subMap.put("ORG_ASSET_TYPE2",StringUtil.isEmpty(subMap.get("ORG_ASSET_TYPE2"))?null:subMap.get("ORG_ASSET_TYPE2").substring(0,3));
+
+			subMap.put("ASSET_TYPE",dictAssetType.get(subMap.get("ASSET_TYPE2")));
+
+			subMap.put("CAP_USE_INDU",dictIndustry.get(subMap.get("CAP_USE_INDU_LEVEL2")));
+			subMap.put("INDUSTRY_SHARES",dictAssetType.get(subMap.get("INDUSTRY_SHARES2")));
+			subMap.put("PRO_INDUSTRY",dictAssetType.get(subMap.get("PRO_INDUSTRY_LEVEL2")));
+			subMap.put("INDUSTRY",dictAssetType.get(subMap.get("INDUSTRY_LEVEL2")));
+			subMap.put("INDUSTRY1",dictAssetType.get(subMap.get("INDUSTRY_LEVEL2_TYPE")));
+
 
 			list.add(subMap);
 		}
