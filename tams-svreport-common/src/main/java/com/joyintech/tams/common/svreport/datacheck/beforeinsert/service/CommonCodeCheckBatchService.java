@@ -69,6 +69,8 @@ public class CommonCodeCheckBatchService {
         Set<String> prodRegistCodeList = new HashSet<>();
         Set<String> prodIdCodeList = new HashSet<>();
 
+        Set<String> saleInstSet = new HashSet<>();
+
         Map<String, List<String>> prodRegistCodeMap = new HashMap<>();
         
         Map<String,String> detailMap = new HashMap();
@@ -124,7 +126,7 @@ public class CommonCodeCheckBatchService {
                     checkChbSalerStlDea(map, ChbCheckTableInfo.销售结算资金交易信息表INFO.getTableName());
                     break;
                 case 总部或分支机构信息登记表SUB:
-                    checkSaleInstInfo(map,ChbCheckTableInfo.总部或分支机构信息登记表SUB.getTableName());
+                    checkSaleInstInfo(map,saleInstSet,ChbCheckTableInfo.总部或分支机构信息登记表SUB.getTableName());
                 case 销售人员身份信息登记表SUB:
                     checkSalerIdenInfo(map,ChbCheckTableInfo.销售人员身份信息登记表SUB.getTableName());
                 case 销售人员奖惩投诉记录登记表SUB:
@@ -135,7 +137,7 @@ public class CommonCodeCheckBatchService {
                 case 销售人员身份信息表INFO:
                     checkSalerIdenInfo(map,ChbCheckTableInfo.销售人员身份信息表INFO.getTableName());
                 case  总部或分支机构信息表INFO:
-                    checkSaleInstInfo(map,ChbCheckTableInfo.总部或分支机构信息表INFO.getTableName());
+                    checkSaleInstInfo(map,saleInstSet,ChbCheckTableInfo.总部或分支机构信息表INFO.getTableName());
                 default:
                     break;
             }
@@ -2385,17 +2387,18 @@ public class CommonCodeCheckBatchService {
      * 检查总部机构信息
      * @param dataMap
      */
-    public    void  checkSaleInstInfo(Map<String, String> dataMap,String tableName){
+    public    void  checkSaleInstInfo(Map<String, String> dataMap,Set<String> saleInstSet,String tableName){
         String  errMsg = dataMap.getOrDefault("ERRMSG", "");
         // 总部或分支机构名称
         String salerOrgName = dataMap.get("SALER_ORG_NAME");
             //销售机构代码
             String rewPenaInst = dataMap.get("SALER_INST_CODE");
         if(tableName.equals("CHB_SALER_INST_INFO")) {
-            if (salerOrgName != null && salerOrgName != "") {
-                if (commonCodeCheckMapper.checkSalerOrgName(salerOrgName) > 0) {
+            if (StringUtils.isNotEmpty(salerOrgName)) {
+                if (commonCodeCheckMapper.checkSalerOrgName(salerOrgName) > 0 || saleInstSet.contains(salerOrgName)) {
                     errMsg += "总部或分支机构名称已存在。[SALER_ORG_NAME=" + dataMap.get("SALER_ORG_NAME") + "];";
                 }
+                saleInstSet.add(salerOrgName);
             }
         }
         // 银行模式才判断发行机构代码，联社模式不判断
