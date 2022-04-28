@@ -87,7 +87,7 @@
         data.operateType = "edit";
         data.pageModel=PAGE_MODEL_EDIT;
         Joyin.ajaxJson(basePath + 'report/submitmaintenance/salerinstinfo/SalerInstInfo002/editCheck', data, function(result) {
-            Joyin.dialog(JoyinUtil.getLabel("销售结算资金交易信息维护编辑"),
+            Joyin.dialog(JoyinUtil.getLabel("总部或分支机构信息编辑"),
                 JoyinUtil.getRealPath("report/submitmaintenance/salerinstinfo/SalerInstInfo002/init"),
                 "98%", "95%", data,
            function(){table.reload();});
