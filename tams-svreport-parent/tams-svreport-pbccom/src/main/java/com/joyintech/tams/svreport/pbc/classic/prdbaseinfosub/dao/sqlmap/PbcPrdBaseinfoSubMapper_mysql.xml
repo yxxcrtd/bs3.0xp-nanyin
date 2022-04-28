@@ -919,6 +919,7 @@
 		</if>
 		t2.pbc_code pbcPoolCode,
 		t1.ISSUE_PARTY_ID issuePartyId,
+		SI.INSTITUTION_NAME issuePartyName,
 		t1.PBC_PROD_TYPE pbcProdType,
 		t1.PROD_NAME prodName,
 		t1.PROD_BRAND prodBrand,
