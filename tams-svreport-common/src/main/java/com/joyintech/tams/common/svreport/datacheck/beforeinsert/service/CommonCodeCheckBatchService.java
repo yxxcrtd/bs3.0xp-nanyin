@@ -19,6 +19,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -193,7 +194,7 @@ public class CommonCodeCheckBatchService {
             }
 
             //销售数据反馈
-            if (StringUtil.equals(CacheUtil.getSysParam("INSERT_ERRDATA_MODE"), "02") && StringUtil.equals(tableInfo.getTableName(), ChbCheckTableInfo.销售结算资金交易信息表INFO.getTableName())){
+            if (StringUtil.equals(tableInfo.getTableName(), ChbCheckTableInfo.销售结算资金交易信息表INFO.getTableName())){
                 // 记录销售数据信息表
                 ChbSalerStlDeaErrodataWithBLOBs ChbSalerStlDeaErrodata = createChbSalerStlDeaErrodata(map);
                 if(ChbSalerStlDeaErrodata != null) {
@@ -201,7 +202,7 @@ public class CommonCodeCheckBatchService {
                 }
             }
             //销售人员数据
-            if (StringUtil.equals(CacheUtil.getSysParam("INSERT_ERRDATA_MODE"), "02") && StringUtil.equals(tableInfo.getTableName(), ChbCheckTableInfo.销售人员身份信息表INFO.getTableName())) {
+            if (StringUtil.equals(tableInfo.getTableName(), ChbCheckTableInfo.销售人员身份信息表INFO.getTableName())) {
                //销售人员信息
                 ChbSalerIdenErrodataWithBLOBs   chbSalerIdenErrodata=createChbSalerInderErrodata(map);
                 if(chbSalerIdenErrodata !=null){
@@ -209,14 +210,14 @@ public class CommonCodeCheckBatchService {
                 }
             }
             //总部或分支机构信息
-            if (StringUtil.equals(CacheUtil.getSysParam("INSERT_ERRDATA_MODE"), "02") && StringUtil.equals(tableInfo.getTableName(), ChbCheckTableInfo.总部或分支机构信息表INFO.getTableName())) {
+            if (StringUtil.equals(tableInfo.getTableName(), ChbCheckTableInfo.总部或分支机构信息表INFO.getTableName())) {
                 ChbSalerInstErrodataWithBLOBs   chbSalerIdenErrodata=createChbSalerInstErrodata(map);
                 if(chbSalerIdenErrodata !=null){
                     chbSalerInstErrodataList.add(chbSalerIdenErrodata);
                 }
             }
             //销售人员惩奖记录信息
-            if (StringUtil.equals(CacheUtil.getSysParam("INSERT_ERRDATA_MODE"), "02") && StringUtil.equals(tableInfo.getTableName(), ChbCheckTableInfo.销售人员奖惩投诉记录信息表INFO.getTableName())) {
+            if (StringUtil.equals(tableInfo.getTableName(), ChbCheckTableInfo.销售人员奖惩投诉记录信息表INFO.getTableName())) {
                 ChbSalerRewPenaErrodataWithBLOBs   chbSalerRewPenaErrodata=createChbSalerRewErrodata(map);
                 if(chbSalerRewPenaErrodata !=null){
                     chbSalerRewPenaErrodataList.add(chbSalerRewPenaErrodata);
@@ -2470,7 +2471,7 @@ public class CommonCodeCheckBatchService {
             }
         }
         //理财登记培训证书编号格式校验
-        if(salerChbTrainNo != null && salerChbTrainNo != ""){
+        if(StringUtils.isNotEmpty(salerChbTrainNo)){
             String regex = "^([L][C][0-9]{12})$";
             if(!salerChbTrainNo.matches(regex)){
                 errMsg +="理财登记培训证书编号格式不对。[SALER_CHB_TRAIN_NO="+dataMap.get("SALER_CHB_TRAIN_NO")+"];";
