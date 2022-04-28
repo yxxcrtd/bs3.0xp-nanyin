@@ -162,7 +162,7 @@
                 and  /*to_char(SALER_COMPLAIN_DATE,'yyyy-MM-dd')*/DATE_FORMAT(SALER_COMPLAIN_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{searchSalerComplainDateEnd,jdbcType=VARCHAR}
             </if>
         </where>
-        ) ORDER BY dataDate
+        ) T ORDER BY dataDate
     </select>
 
 
