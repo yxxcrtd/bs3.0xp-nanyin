@@ -613,8 +613,8 @@
         customer_type2
         FROM(
         select deal.fprod_id fprodid,
-
-        ifnull(deal.fprod_id,deal.prod_id) prodid,
+        case when deal.fprod_id is null or LENGTH(deal.fprod_id)=0 then deal.prod_id
+        else deal.fprod_id end as prodid,
         deal.buy_place
         buyplace,deal.trade_type tradetype,deal.ccy ccy,deal.trade_prince
         tradeprince,deal.trade_qty tradeqty,deal.ISAGENCY, deal.remark,deal.SETTDATE_DATE settdateDate
