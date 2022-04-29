@@ -2429,16 +2429,7 @@
                         LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = info.ACCOUNT AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                     </if>
                 </if>
-                <!-- LEFT JOIN SYS_DATADICT_LIST sdl1 on sdl1.DICT_CODE='REPORT_CODE' and sdl1.ITEM_CODE=#{reportIndex}
-                LEFT JOIN SYS_DATADICT_LIST sdl2 on sdl2.DICT_CODE='SUBMIT_STATUS' and sdl2.ITEM_CODE=
-                <choose>
-                    <when test="tableId !=null and tableId=='CHB_INVESTHOLD_INFO_SUB'">
-                    info.SEND_STATUS
-                    </when>
-                    <otherwise>
-                    info.SUBMIT_STATUS
-                    </otherwise>
-                </choose> -->
+
                 <choose>
                     <when test="tableId !=null and (tableId == 'CHB_PRD_RAISETOT_SUB' or tableId == 'CHB_PRD_END_SUB')">
                         LEFT JOIN CHB_PRDRESIST_CODE codeTable ON
@@ -2520,17 +2511,17 @@
             </when>
             <!-- 2. 人行单产品月报-产品基本信息 -->
             <when test="tableId != null and tableId == 'PBC_PRD_BASEINFO_SUB'">
-                concat_ws('','理财产品代码:',info.PBC_PROD_ID ) as code,
+                concat_ws('','理财产品代码:',ifnull(t2.pbc_code,info.PBC_PROD_ID) ) as code,
                 info.PBC_SUBMIT_DEADLINE as submitDeadline,
             </when>
             <!-- 3. 人行单产品月报-产品起始募集信息 -->
             <when test="tableId != null and tableId == 'PBC_INIT_PROD_RAISING_SUB'">
-                concat_ws('','理财产品代码:',info.PBC_PROD_ID ) as code,
+                concat_ws('','理财产品代码:',ifnull(t2.pbc_code,info.PBC_PROD_ID) ) as code,
                 info.PBC_SUBMIT_DEADLINE as submitDeadline,
             </when>
             <!-- 4. 人行单产品月报-产品终止信息 -->
             <when test="tableId != null and tableId == 'PBC_PRD_BASEINFO_END_SUB'">
-                concat_ws('','理财产品代码:',info.PBC_PROD_ID ) as code,
+                concat_ws('','理财产品代码:',ifnull(t2.pbc_code,info.PBC_PROD_ID) ) as code,
                 info.PBC_SUBMIT_DEADLINE as submitDeadline,
             </when>
             <!-- 5. 人行单产品月报-资产池终止信息 -->
@@ -2540,7 +2531,7 @@
             </when>
             <!-- 6. 人行单产品月报-产品募集信息 -->
             <when test="tableId != null and tableId == 'PBC_PROD_RAISING_SUB'">
-                concat_ws('','理财产品代码:',info.PBC_PROD_ID,',业务结束日:', DATE_FORMAT(info.RAISING_DATE,'%Y-%m-%d')) as code,
+                concat_ws('','理财产品代码:',ifnull(t2.pbc_code,info.PBC_PROD_ID),',业务结束日:', DATE_FORMAT(info.RAISING_DATE,'%Y-%m-%d')) as code,
                 info.PBC_SUBMIT_DEADLINE as submitDeadline,
             </when>
             <!-- 7. 人行单产品月报-资产负债信息 -->
@@ -2550,17 +2541,17 @@
             </when>
             <!-- 8. 人行月报 -->
             <when test="tableId != null and tableId == 'PBC_REPORT' and index != null and index==8 ">
-                concat_ws('',info.reporttype ,'|', info.TERMID ) as code,
+                concat_ws('','期次' ,'|', info.TERMID ) as code,
                 info.CHB_SUBMIT_DEADLINE as submitDeadline,
             </when>
             <!-- 10. 新人行单产品月报-产品基本信息 -->
             <when test="tableId != null and tableId == 'PBC_PRD_BASEINFO_SUB_NEW'">
-                concat_ws('','理财产品代码:',info.PBC_PROD_ID )  as code,
+                concat_ws('','理财产品代码:',ifnull(t2.pbc_code,info.PBC_PROD_ID) )  as code,
                 info.PBC_SUBMIT_DEADLINE as submitDeadline,
             </when>
             <!-- 11. 新人行单产品月报-产品终止信息 -->
             <when test="tableId != null and tableId == 'PBC_PRD_BASEINFO_END_SUB_NEW'">
-                concat_ws('','理财产品代码:',info.PBC_PROD_ID )  as code,
+                concat_ws('','理财产品代码:',ifnull(t2.pbc_code,info.PBC_PROD_ID) )  as code,
                 info.PBC_SUBMIT_DEADLINE as submitDeadline,
             </when>
         </choose>
@@ -2573,12 +2564,165 @@
         info.CREATE_DEPT AS createDept,
         info.STATUS
         FROM
-        ${tableId} info
+        <choose>
+            <when test="tableId != null and tableId == 'PBC_REPORT' and index != null and index==8">
+                (SELECT DISTINCT termId,CHB_SUBMIT_DEADLINE,SEND_STATUS,ORG_CODE,SUBMIT_TIME,CREATE_DEPT,CREATE_USER,STATUS FROM PBC_REPORT
+                WHERE reporttype != 'ONEPRD_ASSET_DEBT'<!-- 只查询资产负债信息 -->) info
+            </when>
+            <otherwise>
+                ${tableId} info
+            </otherwise>
+        </choose>
+        <if test="flag">
+            <!-- 1. 人行单产品月报-资产池基本信息 -->
+            <if test="tableId != null and tableId == 'PBC_PRD_ACCOUNT_SUB'">
+                LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = info.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
+            </if>
+            <!-- 2. 人行单产品月报-产品基本信息 -->
+            <if test="tableId != null and tableId == 'PBC_PRD_BASEINFO_SUB'">
+                LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = info.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
+            </if>
+            <!-- 3. 人行单产品月报-产品起始募集信息 -->
+            <if test="tableId != null and tableId == 'PBC_INIT_PROD_RAISING_SUB'">
+                Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = info.PBC_PROD_ID
+                LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
+            </if>
+            <!-- 4. 人行单产品月报-产品终止信息 -->
+            <if test="tableId != null and tableId == 'PBC_PRD_BASEINFO_END_SUB'">
+                Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = info.PBC_PROD_ID
+                LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
+            </if>
+            <!-- 5. 人行单产品月报-资产池终止信息 -->
+            <if test="tableId != null and tableId == 'PBC_PRD_ACCOUNT_END_SUB'">
+                Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = info.PBC_ACCOUNT_ID
+                LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
+            </if>
+            <!-- 6. 人行单产品月报-产品募集信息 -->
+            <if test="tableId != null and tableId == 'PBC_PROD_RAISING_SUB'">
+                Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = info.PBC_PROD_ID
+                LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
+            </if>
+
+            <!-- 7. 新人行单产品月报-产品基本信息 -->
+            <if test="tableId != null and tableId == 'PBC_PRD_BASEINFO_SUB_NEW'">
+                LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = info.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
+            </if>
+            <!-- 8. 新人行单产品月报-产品终止信息 -->
+            <if test="tableId != null and tableId == 'PBC_PRD_BASEINFO_END_SUB_NEW'">
+                Left join PBC_PRD_BASEINFO_SUB_NEW ppas on ppas.PBC_PROD_ID = info.PBC_PROD_ID
+                LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
+            </if>
+        </if>
+        <!-- 2. 人行单产品月报-产品基本信息 -->
+        <if test="tableId != null and tableId == 'PBC_PRD_BASEINFO_SUB'">
+            LEFT JOIN(
+            SELECT
+            inside_prod_id,
+            pbc_code
+            FROM
+            pbc_prod_assetpool_code
+            WHERE
+            status='E'
+            AND code_type='01'
+            )t2 ON t2.inside_prod_id=info.PROD_ID
+        </if>
+        <!-- 3. 人行单产品月报-产品起始募集信息 -->
+        <if test="tableId != null and tableId == 'PBC_INIT_PROD_RAISING_SUB'">
+            left join (
+            select a.* from (SELECT PBC_PROD_ID,PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE,status,RAISE_ENDDATE,ORG_CODE,
+            row_number() OVER (partition BY PBC_PROD_ID ORDER BY ifnull(UPDATE_TIME,CREATE_TIME)
+            DESC) AS myrank
+            FROM pbc_prd_baseinfo_sub
+            where PBC_PROD_ID is not null) a
+            WHERE a.myrank=1
+            ) b on info.PBC_PROD_ID = b.PBC_PROD_ID
+            LEFT JOIN(
+            SELECT
+            inside_prod_id,
+            pbc_code
+            FROM
+            pbc_prod_assetpool_code
+            WHERE
+            status='E'
+            AND code_type='01'
+            )t2 ON t2.inside_prod_id=b.PROD_ID
+        </if>
+        <!-- 4. 人行单产品月报-产品终止信息 -->
+        <if test="tableId != null and tableId == 'PBC_PRD_BASEINFO_END_SUB'">
+            left join (
+            select a.* from (SELECT PBC_PROD_ID,PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE,status,RAISE_ENDDATE,ORG_CODE,
+            row_number() OVER (partition BY PBC_PROD_ID ORDER BY ifnull(UPDATE_TIME,CREATE_TIME)
+            DESC) AS myrank
+            FROM pbc_prd_baseinfo_sub
+            where PBC_PROD_ID is not null) a
+            WHERE a.myrank=1
+            ) b on info.PBC_PROD_ID = b.PBC_PROD_ID
+            LEFT JOIN(
+            SELECT
+            inside_prod_id,
+            pbc_code
+            FROM
+            pbc_prod_assetpool_code
+            WHERE
+            status='E'
+            AND code_type='01'
+            )t2 ON t2.inside_prod_id=b.PROD_ID
+        </if>
+        <!-- 6. 人行单产品月报-产品募集信息 -->
+        <if test="tableId != null and tableId == 'PBC_PROD_RAISING_SUB'">
+            left join PBC_PRD_BASEINFO_SUB b
+            on info.PBC_PROD_ID = b.PBC_PROD_ID
+            LEFT JOIN(
+            SELECT
+            inside_prod_id,
+            pbc_code
+            FROM
+            pbc_prod_assetpool_code
+            WHERE
+            status='E'
+            AND code_type='01'
+            )t2 ON t2.inside_prod_id=b.PROD_ID
+        </if>
+
+        <!-- 7. 新人行单产品月报-产品基本信息 -->
+        <if test="tableId != null and tableId == 'PBC_PRD_BASEINFO_SUB_NEW'">
+            LEFT JOIN(
+            SELECT
+            inside_prod_id,
+            pbc_code
+            FROM
+            pbc_prod_assetpool_code
+            WHERE
+            status='E'
+            AND code_type='01'
+            )t2 ON t2.inside_prod_id=info.PROD_ID
+        </if>
+        <!-- 8. 新人行单产品月报-产品终止信息 -->
+        <if test="tableId != null and tableId == 'PBC_PRD_BASEINFO_END_SUB_NEW'">
+            left join
+            (select a.* from (SELECT PBC_PROD_ID,PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE,status,RAISE_ENDDATE,ORG_CODE,ISSUE_PARTY_ID,
+            row_number() OVER (partition BY PBC_PROD_ID ORDER BY IFNULL(UPDATE_TIME,CREATE_TIME)
+            DESC) AS myrank
+            FROM pbc_prd_baseinfo_sub_new) a
+            WHERE a.myrank=1)
+            b on info.PBC_PROD_ID = b.PBC_PROD_ID
+
+            LEFT JOIN(
+            SELECT
+            inside_prod_id,
+            pbc_code
+            FROM
+            pbc_prod_assetpool_code
+            WHERE
+            status='E'
+            AND code_type='01'
+            )t2 ON t2.inside_prod_id=b.PROD_ID
+        </if>
+
         WHERE 1 =1
         <choose>
             <when test="tableId != null and tableId == 'PBC_REPORT'">
                 and info.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                and info.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
                 and (
 
                 (info.SEND_STATUS = #{nosubmit}
@@ -2588,16 +2732,13 @@
                 and info.SUBMIT_TIME &gt; info.CHB_SUBMIT_DEADLINE)
 
                 )
-                <if test="index == 8"><!-- 人行月报 -->
-                    and info.reporttype != 'ONEPRD_ASSET_DEBT'<!-- 只查询资产负债信息 -->
-                </if>
                 <if test="index == 7"><!-- 人行月报 -->
                     and info.reporttype = 'ONEPRD_ASSET_DEBT'<!-- 只查询资产负债信息 -->
                 </if>
             </when>
             <otherwise>
                 and info.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                and info.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
+<!--                and info.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}-->
                 and (
 
                 (info.SEND_STATUS = #{nosubmit}
@@ -2609,7 +2750,18 @@
                 )
             </otherwise>
         </choose>
-
+        <if test="flag and tableId != null and tableId!='PBC_REPORT' ">
+            and inst.institution_code IN
+            <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="flag and tableId != null and tableId == 'PBC_REPORT' ">
+            and info.ORG_CODE IN
+            <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
         <choose>
             <when test="hisTableId != null and hisTableId != ''">
                 union all
@@ -2624,17 +2776,17 @@
                     </when>
                     <!-- 2. 人行单产品月报-产品基本信息 -->
                     <when test="tableId != null and tableId == 'PBC_PRD_BASEINFO_SUB'">
-                        concat_ws('','理财产品代码:',info.PBC_PROD_ID ) as code,
+                        concat_ws('','理财产品代码:',ifnull(t2.pbc_code,info.PBC_PROD_ID) ) as code,
                         info.PBC_SUBMIT_DEADLINE as submitDeadline,
                     </when>
                     <!-- 3. 人行单产品月报-产品起始募集信息 -->
                     <when test="tableId != null and tableId == 'PBC_INIT_PROD_RAISING_SUB'">
-                        concat_ws('','理财产品代码:',info.PBC_PROD_ID ) as code,
+                        concat_ws('','理财产品代码:',ifnull(t2.pbc_code,info.PBC_PROD_ID) ) as code,
                         info.PBC_SUBMIT_DEADLINE as submitDeadline,
                     </when>
                     <!-- 4. 人行单产品月报-产品终止信息 -->
                     <when test="tableId != null and tableId == 'PBC_PRD_BASEINFO_END_SUB'">
-                        concat_ws('','理财产品代码:',info.PBC_PROD_ID ) as code,
+                        concat_ws('','理财产品代码:',ifnull(t2.pbc_code,info.PBC_PROD_ID) ) as code,
                         info.PBC_SUBMIT_DEADLINE as submitDeadline,
                     </when>
                     <!-- 5. 人行单产品月报-资产池终止信息 -->
@@ -2644,7 +2796,7 @@
                     </when>
                     <!-- 6. 人行单产品月报-产品募集信息 -->
                     <when test="tableId != null and tableId == 'PBC_PROD_RAISING_SUB'">
-                        concat_ws('','理财产品代码:',info.PBC_PROD_ID,',业务结束日:', DATE_FORMAT(info.RAISING_DATE,'%Y-%m-%d') ) as code,
+                        concat_ws('','理财产品代码:',ifnull(t2.pbc_code,info.PBC_PROD_ID),',业务结束日:', DATE_FORMAT(info.RAISING_DATE,'%Y-%m-%d') ) as code,
                         info.PBC_SUBMIT_DEADLINE as submitDeadline,
                     </when>
                     <!-- 7. 人行单产品月报-资产负债信息 -->
@@ -2654,17 +2806,17 @@
                     </when>
                     <!-- 8. 人行月报 -->
                     <when test="tableId != null and tableId == 'PBC_REPORT' and index != null and index==8 ">
-                        concat_ws('',info.reporttype ,'|', info.TERMID ) as code,
+                        concat_ws('','期次','|', info.TERMID ) as code,
                         info.CHB_SUBMIT_DEADLINE as submitDeadline,
                     </when>
                     <!-- 10. 新人行单产品月报-产品基本信息 -->
                     <when test="tableId != null and tableId == 'PBC_PRD_BASEINFO_SUB_NEW'">
-                        concat_ws('','理财产品代码:',info.PBC_PROD_ID ) as code,
+                        concat_ws('','理财产品代码:',ifnull(t2.pbc_code,info.PBC_PROD_ID) ) as code,
                         info.PBC_SUBMIT_DEADLINE as submitDeadline,
                     </when>
                     <!-- 11. 新人行单产品月报-产品终止信息 -->
                     <when test="tableId != null and tableId == 'PBC_PRD_BASEINFO_END_SUB_NEW'">
-                        concat_ws('','理财产品代码:',info.PBC_PROD_ID ) as code,
+                        concat_ws('','理财产品代码:',ifnull(t2.pbc_code,info.PBC_PROD_ID) ) as code,
                         info.PBC_SUBMIT_DEADLINE as submitDeadline,
                     </when>
                 </choose>
@@ -2676,16 +2828,164 @@
                 info.CREATE_DEPT AS createDept,
                 info.STATUS
                 FROM
-                ${hisTableId} info
+                <choose>
+                    <when test="tableId != null and tableId == 'PBC_REPORT' and index != null and index==8">
+                        (SELECT DISTINCT termId,CHB_SUBMIT_DEADLINE,SEND_STATUS,ORG_CODE,SUBMIT_TIME,CREATE_DEPT,CREATE_USER,STATUS FROM PBC_REPORT_HIS
+                        WHERE reporttype != 'ONEPRD_ASSET_DEBT') info
+                    </when>
+                    <otherwise>
+                        ${hisTableId} info
+                    </otherwise>
+                </choose>
+                <if test="flag">
+                    <!-- 1. 人行单产品月报-资产池基本信息 -->
+                    <if test="tableId != null and tableId == 'PBC_PRD_ACCOUNT_SUB'">
+                        LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = info.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
+                    </if>
+                    <!-- 2. 人行单产品月报-产品基本信息 -->
+                    <if test="tableId != null and tableId == 'PBC_PRD_BASEINFO_SUB'">
+                        LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = info.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
+                    </if>
+                    <!-- 3. 人行单产品月报-产品起始募集信息 -->
+                    <if test="tableId != null and tableId == 'PBC_INIT_PROD_RAISING_SUB'">
+                        Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = info.PBC_PROD_ID
+                        LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
+                    </if>
+                    <!-- 4. 人行单产品月报-产品终止信息 -->
+                    <if test="tableId != null and tableId == 'PBC_PRD_BASEINFO_END_SUB'">
+                        Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = info.PBC_PROD_ID
+                        LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID =ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
+                    </if>
+                    <!-- 5. 人行单产品月报-资产池终止信息 -->
+                    <if test="tableId != null and tableId == 'PBC_PRD_ACCOUNT_END_SUB'">
+                        Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = info.PBC_ACCOUNT_ID
+                        LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
+                    </if>
+                    <!-- 6. 人行单产品月报-产品募集信息 -->
+                    <if test="tableId != null and tableId == 'PBC_PROD_RAISING_SUB'">
+                        Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = info.PBC_PROD_ID
+                        LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
+                    </if>
+                    <!-- 7. 新人行单产品月报-产品基本信息 -->
+                    <if test="tableId != null and tableId == 'PBC_PRD_BASEINFO_SUB_NEW'">
+                        LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = info.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
+                    </if>
+                    <!-- 8. 新人行单产品月报-产品终止信息 -->
+                    <if test="tableId != null and tableId == 'PBC_PRD_BASEINFO_END_SUB_NEW'">
+                        Left join PBC_PRD_BASEINFO_SUB_NEW ppas on ppas.PBC_PROD_ID = info.PBC_PROD_ID
+                        LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
+                    </if>
+                </if>
+                <!-- 2. 人行单产品月报-产品基本信息 -->
+                <if test="tableId != null and tableId == 'PBC_PRD_BASEINFO_SUB'">
+                    LEFT JOIN(
+                    SELECT
+                    inside_prod_id,
+                    pbc_code
+                    FROM
+                    pbc_prod_assetpool_code
+                    WHERE
+                    status='E'
+                    AND code_type='01'
+                    )t2 ON t2.inside_prod_id=info.PROD_ID
+                </if>
+                <!-- 3. 人行单产品月报-产品起始募集信息 -->
+                <if test="tableId != null and tableId == 'PBC_INIT_PROD_RAISING_SUB'">
+                    left join (
+                    select a.* from (SELECT PBC_PROD_ID,PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE,status,RAISE_ENDDATE,ORG_CODE,
+                    row_number() OVER (partition BY PBC_PROD_ID ORDER BY ifnull(UPDATE_TIME,CREATE_TIME)
+                    DESC) AS myrank
+                    FROM pbc_prd_baseinfo_sub
+                    where PBC_PROD_ID is not null) a
+                    WHERE a.myrank=1
+                    ) b on info.PBC_PROD_ID = b.PBC_PROD_ID
+                    LEFT JOIN(
+                    SELECT
+                    inside_prod_id,
+                    pbc_code
+                    FROM
+                    pbc_prod_assetpool_code
+                    WHERE
+                    status='E'
+                    AND code_type='01'
+                    )t2 ON t2.inside_prod_id=b.PROD_ID
+                </if>
+                <!-- 4. 人行单产品月报-产品终止信息 -->
+                <if test="tableId != null and tableId == 'PBC_PRD_BASEINFO_END_SUB'">
+                    left join (
+                    select a.* from (SELECT PBC_PROD_ID,PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE,status,RAISE_ENDDATE,ORG_CODE,
+                    row_number() OVER (partition BY PBC_PROD_ID ORDER BY ifnull(UPDATE_TIME,CREATE_TIME)
+                    DESC) AS myrank
+                    FROM pbc_prd_baseinfo_sub
+                    where PBC_PROD_ID is not null) a
+                    WHERE a.myrank=1
+                    ) b on info.PBC_PROD_ID = b.PBC_PROD_ID
+                    LEFT JOIN(
+                    SELECT
+                    inside_prod_id,
+                    pbc_code
+                    FROM
+                    pbc_prod_assetpool_code
+                    WHERE
+                    status='E'
+                    AND code_type='01'
+                    )t2 ON t2.inside_prod_id=b.PROD_ID
+                </if>
+                <!-- 6. 人行单产品月报-产品募集信息 -->
+                <if test="tableId != null and tableId == 'PBC_PROD_RAISING_SUB'">
+                    left join PBC_PRD_BASEINFO_SUB b
+                    on info.PBC_PROD_ID = b.PBC_PROD_ID
+                    LEFT JOIN(
+                    SELECT
+                    inside_prod_id,
+                    pbc_code
+                    FROM
+                    pbc_prod_assetpool_code
+                    WHERE
+                    status='E'
+                    AND code_type='01'
+                    )t2 ON t2.inside_prod_id=b.PROD_ID
+                </if>
+
+                <!-- 7. 新人行单产品月报-产品基本信息 -->
+                <if test="tableId != null and tableId == 'PBC_PRD_BASEINFO_SUB_NEW'">
+                    LEFT JOIN(
+                    SELECT
+                    inside_prod_id,
+                    pbc_code
+                    FROM
+                    pbc_prod_assetpool_code
+                    WHERE
+                    status='E'
+                    AND code_type='01'
+                    )t2 ON t2.inside_prod_id=info.PROD_ID
+                </if>
+                <!-- 8. 新人行单产品月报-产品终止信息 -->
+                <if test="tableId != null and tableId == 'PBC_PRD_BASEINFO_END_SUB_NEW'">
+                    left join
+                    (select a.* from (SELECT PBC_PROD_ID,PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE,status,RAISE_ENDDATE,ORG_CODE,ISSUE_PARTY_ID,
+                    row_number() OVER (partition BY PBC_PROD_ID ORDER BY IFNULL(UPDATE_TIME,CREATE_TIME)
+                    DESC) AS myrank
+                    FROM pbc_prd_baseinfo_sub_new) a
+                    WHERE a.myrank=1)
+                    b on info.PBC_PROD_ID = b.PBC_PROD_ID
+
+                    LEFT JOIN(
+                    SELECT
+                    inside_prod_id,
+                    pbc_code
+                    FROM
+                    pbc_prod_assetpool_code
+                    WHERE
+                    status='E'
+                    AND code_type='01'
+                    )t2 ON t2.inside_prod_id=b.PROD_ID
+                </if>
                 WHERE 1 =1
                 <choose>
                     <when test="tableId != null and tableId == 'PBC_REPORT'">
                         and info.SUBMIT_TIME &gt; info.CHB_SUBMIT_DEADLINE
                         and info.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                        and info.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                        <if test="index == 8"><!-- 人行月报 -->
-                            and info.reporttype != 'ONEPRD_ASSET_DEBT'<!-- 只查询资产负债信息 -->
-                        </if>
                         <if test="index == 7"><!-- 人行月报 -->
                             and info.reporttype = 'ONEPRD_ASSET_DEBT'<!-- 只查询资产负债信息 -->
                         </if>
@@ -2693,9 +2993,20 @@
                     <otherwise>
                         and info.SUBMIT_TIME &gt; info.PBC_SUBMIT_DEADLINE
                         and info.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                        and info.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
                     </otherwise>
                 </choose>
+                <if test="flag and tableId != null and tableId!='PBC_REPORT' ">
+                    and inst.institution_code IN
+                    <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
+                        #{item,jdbcType=VARCHAR}
+                    </foreach>
+                </if>
+                <if test="flag and tableId != null and tableId == 'PBC_REPORT' ">
+                    and info.ORG_CODE IN
+                    <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
+                        #{item,jdbcType=VARCHAR}
+                    </foreach>
+                </if>
             </when>
             <otherwise></otherwise>
         </choose>
@@ -2715,11 +3026,5 @@
         order by temp.submitDeadline DESC
 
     </select>
-    <!-- <select id ="readConfig" resultType="java.lang.String">
-        SELECT
-            sp.SUBSYSTEM_CODE || ',' || sp.PARAM_VALUE
-            from SYS_PARA sp
-        where
-            sp.PARA_CODE='COLOR_CONFIG'
-    </select> -->
+
 </mapper>

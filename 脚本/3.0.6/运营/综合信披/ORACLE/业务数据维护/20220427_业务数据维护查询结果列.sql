@@ -113,7 +113,7 @@
         INSERT INTO chb_infomgr_result_config VALUES ('585cbbfb-c5cf-4af1-bf8f-95a2ae363918', 'CHB_ASSET_INFO', 'AMT04', '*金额', NULL, 40, 'N', 'AMT');
         INSERT INTO chb_infomgr_result_config VALUES ('58af79aa-da86-4f28-954c-911b68c5e797', 'CHB_ASSET_INFO', 'BANK_SEC_ZXZQ', '是否专项债券', 'SVR_YES_OR_NO', 296, 'Y', 'BANK_SEC_ZXZQ');
         INSERT INTO chb_infomgr_result_config VALUES ('59cc1231-9e04-4c40-b9a7-d5da7f86a23b', 'CHB_ASSET_INFO', 'OUT_GRADE04', '*资产外部评级', 'SVR_MAIN_GRADE', 81, 'N', 'OUT_GRADE');
-        INSERT INTO chb_infomgr_result_config VALUES ('59daa73c-5fe2-4f87-9480-dfe36f491b89', 'CHB_ASSET_INFO', 'ASSET_ID03', '*资产代码', NULL, 17, 'N', 'ASSET_ID');
+        INSERT INTO chb_infomgr_result_config VALUES ('59daa73c-5fe2-4f87-9480-dfe36f491b89', 'CHB_ASSET_INFO', 'ASSET_ID03', '*资产代码', NULL, 17, 'N', 'ASSET_CODE');
         INSERT INTO chb_infomgr_result_config VALUES ('5a9c84dc-ac15-4ab4-b433-ff833a8562e6', 'CHB_ASSET_INFO', 'BONDTOSTOCK_FLAG', '*是否投向市场化债转股相关产品', 'SVR_YES_OR_NO', 284, 'Y', 'BONDTOSTOCK_FLAG');
         INSERT INTO chb_infomgr_result_config VALUES ('5b78e3eb-a95c-4a18-a16f-f209456bd504', 'CHB_ASSET_INFO', 'FINANCIER_TYPE104', '*融资人类型（按规模划分）', 'SVR_PARTY_TYPE1', 65, 'N', 'FINANCIER_TYPE1');
         INSERT INTO chb_infomgr_result_config VALUES ('5be4701f-d6d9-42f9-b961-07326fa95d8a', 'CHB_ASSET_INFO', 'ASSET_YIELD08', '*票面利率%', NULL, 142, 'N', 'ASSET_YIELD');

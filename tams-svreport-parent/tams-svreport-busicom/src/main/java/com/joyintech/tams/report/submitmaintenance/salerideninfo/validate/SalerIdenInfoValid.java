@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 @Component
@@ -31,26 +32,16 @@ public class SalerIdenInfoValid implements BeanValidator {
     @Override
     public List<ValidMessage> valid(Object value) {
         SalerIdenInfoDto dto = (SalerIdenInfoDto)value;
-        List<ValidMessage> errorList = new ArrayList<ValidMessage>();
-        if(dto.getPageModel() != null && dto.getPageModel() != "" &&
-                (StringUtil.equals(dto.getPageModel(),GlobalConstant.DETAIL_PAGE_MODEL_NEW) || StringUtil.equals(dto.getPageModel(),GlobalConstant.DETAIL_PAGE_MODEL_EDIT))){
-            if(StringUtil.equals(dto.getPageModel(),GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
+        List<ValidMessage> errorList = new ArrayList<>();
+
+            if(StringUtil.equals(dto.getPageModel(),GlobalConstant.DETAIL_PAGE_MODEL_NEW) || Objects.equals(dto.getErroOrInfo(),"erro")) {
                 //内部编码重复校验
                 if (dto.getSalerInsNo() != null && dto.getSalerInsNo() != "") {
                     if (salerIdenInfo002Service.checkSalerInsNo(dto.getSalerInsNo()) > 0) {
                         errorList.add(new ValidMessage("salerInsNo", "内部编号已存在。"));
                     }
                 }
-            }
-            //其他证件名称
-            if(dto.getSalerCredentType() != null && dto.getSalerCredentType() != "") {
-                if (StringUtil.equals(dto.getSalerCredentType(),"99")) {
-                    if (StringUtil.isEmpty(dto.getSalerOtherCredentName())){
-                        errorList.add(new ValidMessage("salerOtherCredentName", "证件类别选择其他时，其他证件名称不可为空。"));
-                    }
-                }
-            }
-            if(StringUtil.equals(dto.getPageModel(),GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
+
                 //证件号码重复校验
                 if (dto.getSalerCredentType() != null && dto.getSalerCredentType() != "") {
                     if (StringUtil.equals(dto.getSalerCredentType(),"99")) {
@@ -70,6 +61,15 @@ public class SalerIdenInfoValid implements BeanValidator {
                     }
                 }
             }
+            //其他证件名称
+            if(dto.getSalerCredentType() != null && dto.getSalerCredentType() != "") {
+                if (StringUtil.equals(dto.getSalerCredentType(),"99")) {
+                    if (StringUtil.isEmpty(dto.getSalerOtherCredentName())){
+                        errorList.add(new ValidMessage("salerOtherCredentName", "证件类别选择其他时，其他证件名称不可为空。"));
+                    }
+                }
+            }
+
             //理财登记培训证书编号格式校验
             if(dto.getSalerChbTrainNo() != null && dto.getSalerChbTrainNo() != ""){
                 String regex = "^([L][C][0-9]{12})$";
@@ -97,7 +97,7 @@ public class SalerIdenInfoValid implements BeanValidator {
                     errorList.add(new ValidMessage("salerOrgCode", "所属总部或分支机构已被删除请重新选择。"));
                 }
             }
-        }
+
         if(dto.getPageModel() != null && dto.getPageModel() != "" && StringUtil.equals(dto.getPageModel(),GlobalConstant.DETAIL_PAGE_MODEL_EDIT)){
 
         }

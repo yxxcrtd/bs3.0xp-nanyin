@@ -1284,7 +1284,7 @@ public class EquityInfoValid {
         		// 投资者分类 - 仅供四期使用字段
             	if (StringUtil.isNotEmpty(list.get(22))
                         && !list.get(22).equals(
-                        equityInfoRegist001Dto.getHolderClassify())) {
+                        equityInfoRegist001Dto.getHolderClassifyStr())) {
                     map.put("HOLDER_CLASSIFY", list.get(22));
                     type = "05";
                 }

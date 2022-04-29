@@ -5135,7 +5135,7 @@
 		PROFIT_FLAG,
 		IS_DEPOSIT_FLAG,
 		<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 end -->
-		rank() over (partition by ASSET_CODE order by nvl(update_time,create_time) desc) ranknum
+		rank() over (partition by ASSET_CODE order by COALESCE(update_time,create_time) desc) ranknum
 		from CHB_ASSET_INFO_SUB_HIS  his
 		<where>
 			<if test="registList !=null and registList.size()>0">
