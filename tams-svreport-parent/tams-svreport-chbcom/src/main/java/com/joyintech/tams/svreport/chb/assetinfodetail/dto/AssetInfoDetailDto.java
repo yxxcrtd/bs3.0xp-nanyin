@@ -377,4 +377,7 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 	public String getmdateStr(){
 		return null!=getMdate()?DateUtil.format(getMdate()):null;
 	}
+	public String getStatusStr() {
+		return com.joyintech.tams.report.common.util.SysDataUtil.getNameFromDataDict(DictCode.维护数据状态,getStatus());
+	}
 }
