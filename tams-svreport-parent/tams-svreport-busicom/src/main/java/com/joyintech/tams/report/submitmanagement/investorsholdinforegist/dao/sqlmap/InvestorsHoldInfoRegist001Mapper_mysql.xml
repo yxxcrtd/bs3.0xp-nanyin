@@ -793,10 +793,10 @@
 				and ciis.INDENTIFY_MARK like concat(concat('%',#{indentifyMark,jdbcType=VARCHAR}),'%')
 			</if>
 			<if test="holdDateStart != null and holdDateStart != ''">
-				and DATE_FORMAT(ciis.HOLD_DATE,'%Y-%m-%d') &gt;= #{holdDateStart,jdbcType=VARCHAR}
+				and ciis.HOLD_DATE &gt;= STR_TO_DATE(#{holdDateStart,jdbcType=VARCHAR},'%Y-%m-%d')
 			</if>
 			<if test="holdDateEnd != null and holdDateEnd != ''">
-				and DATE_FORMAT(ciis.HOLD_DATE,'%Y-%m-%d') &lt;= #{holdDateEnd,jdbcType=VARCHAR}
+				and ciis.HOLD_DATE &lt;= STR_TO_DATE(#{holdDateEnd,jdbcType=VARCHAR},'%Y-%m-%d')
 			</if>
 			<if test="orgCodeList != null and orgCodeList.size()>0">
 				<foreach collection="orgCodeList" item="item" open="and ciis.ORG_CODE in(" separator="," close=")">
