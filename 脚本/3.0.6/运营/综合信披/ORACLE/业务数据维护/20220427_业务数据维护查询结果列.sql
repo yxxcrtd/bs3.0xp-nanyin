@@ -117,7 +117,7 @@
         INSERT INTO chb_infomgr_result_config VALUES ('5a9c84dc-ac15-4ab4-b433-ff833a8562e6', 'CHB_ASSET_INFO', 'BONDTOSTOCK_FLAG', '*是否投向市场化债转股相关产品', 'SVR_YES_OR_NO', 284, 'Y', 'BONDTOSTOCK_FLAG');
         INSERT INTO chb_infomgr_result_config VALUES ('5b78e3eb-a95c-4a18-a16f-f209456bd504', 'CHB_ASSET_INFO', 'FINANCIER_TYPE104', '*融资人类型（按规模划分）', 'SVR_PARTY_TYPE1', 65, 'N', 'FINANCIER_TYPE1');
         INSERT INTO chb_infomgr_result_config VALUES ('5be4701f-d6d9-42f9-b961-07326fa95d8a', 'CHB_ASSET_INFO', 'ASSET_YIELD08', '*票面利率%', NULL, 142, 'N', 'ASSET_YIELD');
-        INSERT INTO chb_infomgr_result_config VALUES ('5c1b700c-cba6-4422-947c-ac567c3af9d9', 'CHB_ASSET_INFO', 'BASIS_TYPE04', '基准利率种类', 'SVR_BASIS_TYPE', 53, 'N', 'BASIS_TYPE');
+        INSERT INTO chb_infomgr_result_config VALUES ('5c1b700c-cba6-4422-947c-ac567c3af9d9', 'CHB_ASSET_INFO', 'BASIS_TYPE04', '基准利率种类', 'BASIS_TYPE', 53, 'N', 'BASIS_TYPE');
         INSERT INTO chb_infomgr_result_config VALUES ('5c2256c0-41c5-4805-ac25-02bddd662579', 'CHB_ASSET_INFO', 'EXCESS_PROFIT_RATE04', '超额收益分配比例（%）', NULL, 61, 'N', 'EXCESS_PROFIT_RATE');
         INSERT INTO chb_infomgr_result_config VALUES ('5c99ac9a-4d1f-41d0-a1c4-fb0625ae218e', 'CHB_ASSET_INFO', 'MAX_YIELD11', '*结构性票据最高收益率%', NULL, 169, 'N', 'MAX_YIELD');
         INSERT INTO chb_infomgr_result_config VALUES ('5d2f7399-f2ce-46b7-bca1-0be45ad5b162', 'CHB_ASSET_INFO', 'BASIS09', '*计息基础', 'SVR_BASIS', 151, 'N', 'BASIS');
@@ -308,7 +308,7 @@
         INSERT INTO chb_infomgr_result_config VALUES ('f704a0d3-0dff-4515-afb3-0eeadfa84101', 'CHB_ASSET_INFO', 'ORG_ASSET_TYPE4', '资产四级分类', NULL, 321, 'N', 'ORG_ASSET_TYPE4');
         INSERT INTO chb_infomgr_result_config VALUES ('f704a0d3-0dff-4515-afb3-0eeadfa84102', 'CHB_ASSET_INFO', 'ORG_ASSET_TYPE5', '资产五级分类', NULL, 322, 'N', 'ORG_ASSET_TYPE5');
         INSERT INTO chb_infomgr_result_config VALUES ('f704a0d3-0dff-4515-afb3-0eeadfa84103', 'CHB_ASSET_INFO', 'VDATE14', ' *起息日', NULL, 323, 'N', 'VDATE');
-        INSERT INTO chb_infomgr_result_config VALUES ('f704a0d3-0dff-4515-afb3-0eeadfa84104', 'CHB_ASSET_INFO', 'BASIS_TYPE05', ' 基准利率种类', NULL, 324, 'N', 'SVR_BASIS_TYPE');
+        INSERT INTO chb_infomgr_result_config VALUES ('f704a0d3-0dff-4515-afb3-0eeadfa84104', 'CHB_ASSET_INFO', 'BASIS_TYPE05', ' 基准利率种类', NULL, 324, 'N', 'BASIS_TYPE');
         INSERT INTO chb_infomgr_result_config VALUES ('f704a0d3-0dff-4515-afb3-0eeadfa84105', 'CHB_ASSET_INFO', 'IS_BANK_CAP', ' 是否银行资本补充工具', 'SVR_YES_OR_NO', 325, 'N', 'IS_BANK_CAP');
         INSERT INTO chb_infomgr_result_config VALUES ('f704a0d3-0dff-4515-afb3-0eeadfa84106', 'CHB_ASSET_INFO', 'IS_CONSTRACTE_BUSI', ' 是否结构化资产', 'SVR_YES_OR_NO', 326, 'N', 'IS_CONSTRACTE_BUSI');
         INSERT INTO chb_infomgr_result_config VALUES ('f704a0d3-0dff-4515-afb3-0eeadfa84107', 'CHB_ASSET_INFO', 'ASSET_YIELD12', '票面利率', NULL, 327, 'N', 'ASSET_YIELD');
@@ -329,3 +329,4 @@
         INSERT INTO chb_infomgr_result_config VALUES ('hkC7DF40-G001-F1CA-E010-007F010099F1', 'CHB_ASSET_INFO', 'BANK_SEC_CAPITAL', '是否商业银行二级资本债', 'SVR_YES_OR_NO', 311, 'Y', 'BANK_SEC_CAPITAL');
         INSERT INTO chb_infomgr_result_config VALUES ('hkC7DF40-G002-F1CA-E010-007F010099F2', 'CHB_ASSET_INFO', 'BANK_SEC_PERPETUAL', '是否商业银行永续债', 'SVR_YES_OR_NO', 312, 'Y', 'BANK_SEC_PERPETUAL');
         INSERT INTO chb_infomgr_result_config VALUES ('hkC7DF40-G003-F1CA-E010-007F010099F3', 'CHB_ASSET_INFO', 'BANK_SEC_PREFER', '是否商业银行优先股', 'SVR_YES_OR_NO', 313, 'Y', 'BANK_SEC_PREFER');
+        INSERT INTO chb_infomgr_result_config VALUES ('00158aff-654d-480b-97e5-f393862fb111', 'CHB_ASSET_INFO', 'CHB_ISSUER_ID', '发行人', NULL, 238, 'N', 'CHB_ISSUER_ID');
