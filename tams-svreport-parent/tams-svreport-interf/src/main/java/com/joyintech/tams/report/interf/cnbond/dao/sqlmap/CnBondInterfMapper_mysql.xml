@@ -191,6 +191,6 @@
         SELECT UPLOAD_RESULT
         from
         CHB_INFO_REPORT where CHECK_SUCCESS_COUNT is null and
-        to_char(trunc(SEND_TIME - sysdate),'fm9999') = 0
+        datediff(SEND_TIME , now()) = 0
     </select>
 </mapper>

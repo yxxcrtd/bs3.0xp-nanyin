@@ -96,6 +96,10 @@ public class ExcelUtil {
                 if (dataFlag) {
                     break;
                 }
+                // mysql时去除空字符串
+                if(BaseCommonCheckService.isMYSQLDataBase()){
+                    BaseCommonCheckService.listRemoveEmptyString(r);
+                }
                 ls.add(r);
             }
         }
@@ -168,7 +172,10 @@ public class ExcelUtil {
                         r.add(0,employeeType);
                         r.add(3,issuePartyId);
                     }
-
+                    // mysql时去除空字符串
+                    if(BaseCommonCheckService.isMYSQLDataBase()){
+                        BaseCommonCheckService.listRemoveEmptyString(r);
+                    }
                     ls.add(r);
                 }
             }
