@@ -105,18 +105,8 @@ public class BaseCheckMysqlService {
                             }
                             break;
                         }else if(c.getDataType().equals("float")||c.getDataType().equals("double")||c.getDataType().equals("decimal")){
-                            // 长度校验
-                            if (entry.getValue().length() > Integer.valueOf(c.getNumericPrecision())) {
-                                ExcelValidDto dto = new ExcelValidDto("0未导入", String.valueOf(i + 2), c.getColumnComment() + "内容太长了");
-                                BaseCommonCheckDto commonCheckDto = new BaseCommonCheckDto();
-                                commonCheckDto.setErrMap(list.get(i));
-                                commonCheckDto.setExcelValidDto(dto);
-                                result.add(commonCheckDto);
-                                errList.add(list.get(i));
-                                errFlag = true;
-                                break;
-                            }else if(!Pattern.matches(floatRule,entry.getValue())){
-                                ExcelValidDto dto = new ExcelValidDto("0未导入", String.valueOf(i + 2), c.getColumnComment() + "内容太长了");
+                            if(!Pattern.matches(floatRule,entry.getValue())){
+                                ExcelValidDto dto = new ExcelValidDto("0未导入", String.valueOf(i + 2), c.getColumnComment() + "不是整数或小数");
                                 BaseCommonCheckDto commonCheckDto = new BaseCommonCheckDto();
                                 commonCheckDto.setErrMap(list.get(i));
                                 commonCheckDto.setExcelValidDto(dto);
@@ -125,7 +115,71 @@ public class BaseCheckMysqlService {
                                 errFlag = true;
                                 break;
                             }
-                            break;
+                            if(!entry.getValue().contains(".")){
+                                //负数，负号不计算
+                                if(entry.getValue().contains("-")){
+                                    if (entry.getValue().length()-1 > (Integer.valueOf(c.getNumericPrecision())-Integer.valueOf(c.getNumericScale()))) {
+                                        ExcelValidDto dto = new ExcelValidDto("0未导入", String.valueOf(i + 2), c.getColumnComment() + "内容太长了");
+                                        BaseCommonCheckDto commonCheckDto = new BaseCommonCheckDto();
+                                        commonCheckDto.setErrMap(list.get(i));
+                                        commonCheckDto.setExcelValidDto(dto);
+                                        result.add(commonCheckDto);
+                                        errList.add(list.get(i));
+                                        errFlag = true;
+                                        break;
+                                    }
+                                }
+                                if(!entry.getValue().contains("-")){
+                                    if (entry.getValue().length() > (Integer.valueOf(c.getNumericPrecision())-Integer.valueOf(c.getNumericScale()))) {
+                                        ExcelValidDto dto = new ExcelValidDto("0未导入", String.valueOf(i + 2), c.getColumnComment() + "内容太长了");
+                                        BaseCommonCheckDto commonCheckDto = new BaseCommonCheckDto();
+                                        commonCheckDto.setErrMap(list.get(i));
+                                        commonCheckDto.setExcelValidDto(dto);
+                                        result.add(commonCheckDto);
+                                        errList.add(list.get(i));
+                                        errFlag = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if(entry.getValue().contains(".")){
+                                //负数，负号不计算
+                                if(entry.getValue().contains("-")){
+                                    if (entry.getValue().split("\\.")[0].length()-1 > (Integer.valueOf(c.getNumericPrecision())-Integer.valueOf(c.getNumericScale()))) {
+                                        ExcelValidDto dto = new ExcelValidDto("0未导入", String.valueOf(i + 2), c.getColumnComment() + "内容太长了");
+                                        BaseCommonCheckDto commonCheckDto = new BaseCommonCheckDto();
+                                        commonCheckDto.setErrMap(list.get(i));
+                                        commonCheckDto.setExcelValidDto(dto);
+                                        result.add(commonCheckDto);
+                                        errList.add(list.get(i));
+                                        errFlag = true;
+                                        break;
+                                    }
+                                }
+                                if(!entry.getValue().contains("-")){
+                                    if (entry.getValue().split("\\.")[0].length() > (Integer.valueOf(c.getNumericPrecision())-Integer.valueOf(c.getNumericScale()))) {
+                                        ExcelValidDto dto = new ExcelValidDto("0未导入", String.valueOf(i + 2), c.getColumnComment() + "内容太长了");
+                                        BaseCommonCheckDto commonCheckDto = new BaseCommonCheckDto();
+                                        commonCheckDto.setErrMap(list.get(i));
+                                        commonCheckDto.setExcelValidDto(dto);
+                                        result.add(commonCheckDto);
+                                        errList.add(list.get(i));
+                                        errFlag = true;
+                                        break;
+                                    }
+                                }
+                                if (entry.getValue().split("\\.")[1].length() > Integer.valueOf(c.getNumericScale())) {
+                                    ExcelValidDto dto = new ExcelValidDto("0未导入", String.valueOf(i + 2), c.getColumnComment() + "小数位太长了");
+                                    BaseCommonCheckDto commonCheckDto = new BaseCommonCheckDto();
+                                    commonCheckDto.setErrMap(list.get(i));
+                                    commonCheckDto.setExcelValidDto(dto);
+                                    result.add(commonCheckDto);
+                                    errList.add(list.get(i));
+                                    errFlag = true;
+                                    break;
+                                }
+                            }
+                                break;
                         }else if(c.getDataType().equals("date")){
                             if(!(DateUtil.isDateStr(entry.getValue())||DateUtil.isDateStr(entry.getValue(),DateUtil.DEFAULT_ANOTHER_FORMAT))){
                                 ExcelValidDto dto = new ExcelValidDto("0未导入", String.valueOf(i + 2), c.getColumnComment() + "日期格式不正确，请使用yyyy-MM-dd或yyyy/MM/dd格式");
