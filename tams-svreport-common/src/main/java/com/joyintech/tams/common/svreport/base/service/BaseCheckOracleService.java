@@ -51,49 +51,55 @@ public class BaseCheckOracleService {
     /**
      * 校验列
      */
-    public void checkTabColumns(BaseCheckOracleDto tabDto, String value, int i, List<BaseCommonCheckDto> checkResult, Map<String, String> map) {
-        //如果字段允许为空，值为空直接返回
-        if (Objects.equals("Y", tabDto.getNullAble()) && StringUtil.isBlank(value)) {
-            return;
-        }
-        BaseCommonCheckDto dto = new BaseCommonCheckDto();
+    public void checkTabColumns(Map<String, BaseCheckOracleDto> tabColumnsMap, int i, List<BaseCommonCheckDto> checkResult, Map<String, String> map) {
         StringBuffer errMsg = new StringBuffer("");
-        if (StringUtil.isBlank(value)) {
-            errMsg.append("不能为空;");
-        }
-        if (Objects.equals("VARCHAR2", tabDto.getDataType()) && StringUtil.isNotBlank(value)) {
-            //校验字段长度
-            if (tabDto.getLength() != 0 && tabDto.getLength() < value.getBytes().length) {
-                errMsg.append("字段长度不能超过" + tabDto.getLength());
-            }
-        }
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            if (tabColumnsMap.containsKey(entry.getKey())) {
+                BaseCheckOracleDto tabDto = tabColumnsMap.get(entry.getKey());
+                String value = entry.getValue();
+                //如果字段允许为空，值为空直接返回
+                if (Objects.equals("Y", tabDto.getNullAble()) && StringUtil.isBlank(value)) {
+                    continue;
+                }
+                if (StringUtil.isBlank(value)) {
+                    errMsg.append("["+tabDto.getColumnName()+"]："+"不能为空;");
+                }
+                if (Objects.equals("VARCHAR2", tabDto.getDataType()) && StringUtil.isNotBlank(value)) {
+                    //校验字段长度
+                    if (tabDto.getLength() != 0 && tabDto.getLength() < value.getBytes().length) {
+                        errMsg.append("["+tabDto.getColumnName()+"]："+"字段长度不能超过" + tabDto.getLength());
+                    }
+                }
 
-        //日期类型校验
-        if (Objects.equals("DATE", tabDto.getDataType())) {
-            if (!this.checkDate(value)) {
-                errMsg.append("不是日期格式;");
-            }
-            //校验日期格式
-            if(!(DateUtil.isDateStr(value)||DateUtil.isDateStr(value,DateUtil.DEFAULT_ANOTHER_FORMAT))) {
-                errMsg.append("日期格式不正确，请使用yyyy-MM-dd或yyyy/MM/dd格式;");
-            }
-        }
-        //数字类型校验
-        if (Objects.equals("NUMBER", tabDto.getDataType())) {
-            if (!this.checkFigure(value)) {
-                errMsg.append("不是数字格式;");
-            }
+                //日期类型校验
+                if (Objects.equals("DATE", tabDto.getDataType())) {
+                    if (!this.checkDate(value)) {
+                        errMsg.append("["+tabDto.getColumnName()+"]："+"不是日期格式;");
+                    }
+                    //校验日期格式
+                    if(!(DateUtil.isDateStr(value)||DateUtil.isDateStr(value,DateUtil.DEFAULT_ANOTHER_FORMAT))) {
+                        errMsg.append("["+tabDto.getColumnName()+"]："+"日期格式不正确，请使用yyyy-MM-dd或yyyy/MM/dd格式;");
+                    }
+                }
+                //数字类型校验
+                if (Objects.equals("NUMBER", tabDto.getDataType())) {
+                    if (!this.checkFigure(value)) {
+                        errMsg.append("["+tabDto.getColumnName()+"]："+"不是数字格式;");
+                    }
 
-            if (tabDto.getNumberLength() < value.length()) {
-                errMsg.append("值大于为此列指定的允许精度;");
+                    if (tabDto.getNumberLength() < value.length()) {
+                        errMsg.append("["+tabDto.getColumnName()+"]："+"值大于为此列指定的允许精度;");
+                    }
+                }
             }
         }
         if (StringUtils.isNotBlank(errMsg.toString())) {
+            map.put("STATUS", "R");
+            BaseCommonCheckDto dto  = new BaseCommonCheckDto();
             dto.setErrMap(map);
-            dto.setExcelValidDto(new ExcelValidDto("0未导入", String.valueOf(i + 2), tabDto.getColumnName() + errMsg));
+            dto.setExcelValidDto(new ExcelValidDto("0未导入", String.valueOf(i + 2), errMsg.toString()));
             checkResult.add(dto);
         }
-
     }
 
 
@@ -108,7 +114,9 @@ public class BaseCheckOracleService {
         if (!DateUtil.isDateStr(date, DateUtil.DEFAULT_OTHER_FORMAT,
                 DateUtil.DEFAULT_ANOTHER_FORMAT, DateUtil.DEFAULT_DATE_FORMAT_EN)) {
             flag = false;
-        } else {
+        }
+        else {
+            date = DateUtil.format(DateUtil.parse(date));
             date = date.replace("-", "").replace("/", "");
             //年
             int year = Integer.valueOf(date.substring(0, 4));
@@ -174,7 +182,6 @@ public class BaseCheckOracleService {
         List<String> uniqueList = this.getUniqueConstraint(tableName);
         Set<String> set = new HashSet();
         for (int i = 0; i < dataList.size(); i++) {
-            List<BaseCommonCheckDto> checkResult = new LinkedList<>();
             Map<String, String> map = dataList.get(i);
             //判断是否有重复数据
             if (CollectionUtils.isNotEmpty(uniqueList)) {
@@ -192,15 +199,8 @@ public class BaseCheckOracleService {
 
             }
             //数据库校验
-            for (Map.Entry<String, String> entry : map.entrySet()) {
-                if (tabColumnsMap.containsKey(entry.getKey())) {
-                    this.checkTabColumns(tabColumnsMap.get(entry.getKey()), entry.getValue(), i, checkResult, map);
-                }
-            }
-            if (CollectionUtils.isNotEmpty(checkResult)) {
-                map.put("STATUS", "R");
-                checkResultAll.addAll(checkResult);
-            }
+            this.checkTabColumns(tabColumnsMap, i, checkResultAll, map);
+
 
         }
 

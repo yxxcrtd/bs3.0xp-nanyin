@@ -376,7 +376,7 @@ public class BaseCommonCheckService {
                 ExcelValidDto erroMsg = new ExcelValidDto();
                 erroMsg.setErrorInfo(sb.toString());
                 x.put("ERRMSG", sb.toString());
-                erroMsg.setValidKey("YW");
+                erroMsg.setValidKey("1已导入");
                 erroMsg.setRowNum(String.valueOf(i + 1));
                 if(!StringUtil.equals(x.get("STATUS"),"D") || x.get("STATUS").isEmpty()){
                     x.put("STATUS","A");

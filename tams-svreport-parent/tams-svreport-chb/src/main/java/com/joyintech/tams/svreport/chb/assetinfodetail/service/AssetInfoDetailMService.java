@@ -373,7 +373,7 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		}
 		List<Map<String, String>> mapList = dataMapAnalysis(fileName,tableName);
 		int size = mapList.size();
-		List<com.joyintech.tams.systemtools.dto.ExcelValidDto> checkResult = baseCommonCheckService.checkDataAll("D", mapList, tableName, fileName, tableName, tableName, null, null);
+		List<ExcelValidDto> checkResult = baseCommonCheckService.checkDataAll("D", mapList, tableName, fileName, tableName, tableName, null, null);
 
 		long count = mapList.stream().filter(ele ->null != ele.get("STATUS")&&ele.get("STATUS").equals("A")).count();
 		webResult.setMessage(this.getMessage("ChbImportMessage",mapList.size()-count,size-mapList.size(),count),MessageType.确认消息);
@@ -391,16 +391,15 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		return webResult;
 	}
 
-	public List<com.joyintech.tams.systemtools.dto.ExcelValidDto> importData(String fileName,String tableName) throws Exception{
+	public List<ExcelValidDto> importData(String fileName,String tableName) throws Exception{
 		List<Map<String, String>> list = dataMapAnalysis(fileName,tableName);
-		List<com.joyintech.tams.systemtools.dto.ExcelValidDto> checkResult = baseCommonCheckService.checkDataAll("D", list, tableName, fileName, tableName, tableName, null, null);
+		List<ExcelValidDto> checkResult = baseCommonCheckService.checkDataAll("D", list, tableName, fileName, tableName, tableName, null, null);
 		if(!CollectionUtils.isEmpty(list)){
 			List<AssetInfoDetailDto> AssetInfoDetailDtos= converToBean(list);
 			AssetInfoDetailDtos.forEach(e-> assetInfoDetailMapper.batchInsert(Lists.newArrayList(e)));
 		}
-		List<ExcelValidDto> resultList = checkResult.stream().filter(ele -> null != ele.getValidKey() && ele.getValidKey().equals("YW")).collect(Collectors.toList());
-		resultList.forEach(e->e.setRowNum(String.valueOf(Integer.valueOf(e.getRowNum())+1)));
-		return resultList;
+		checkResult.forEach(e->e.setRowNum(String.valueOf(Integer.valueOf(e.getRowNum())+1)));
+		return checkResult;
 
 	}
 
