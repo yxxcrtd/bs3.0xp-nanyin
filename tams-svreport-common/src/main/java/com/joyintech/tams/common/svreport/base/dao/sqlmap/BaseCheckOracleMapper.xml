@@ -9,7 +9,8 @@
                DATA_TYPE   dataType,
                CHAR_LENGTH length,
                DATA_PRECISION numberLength,
-               NULLABLE    nullAble
+               NULLABLE    nullAble,
+               DATA_SCALE dataScale
         from USER_TAB_COLUMNS
         where TABLE_NAME = #{tableName}
     </select>

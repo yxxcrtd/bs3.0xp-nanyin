@@ -14,6 +14,7 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -23,6 +24,8 @@ import java.util.stream.Collectors;
  */
 @Service
 public class BaseCheckOracleService {
+
+    private static final String rule = "^-?[0-9]\\d*$";
 
     @Resource
     private BaseCheckOracleMapper baseCheckOracleMapper;
@@ -62,40 +65,72 @@ public class BaseCheckOracleService {
                     continue;
                 }
                 if (StringUtil.isBlank(value)) {
-                    errMsg.append("["+tabDto.getColumnName()+"]："+"不能为空;");
+                    errMsg.append("[" + tabDto.getColumnName() + "]：" + "不能为空;");
                 }
                 if (Objects.equals("VARCHAR2", tabDto.getDataType()) && StringUtil.isNotBlank(value)) {
                     //校验字段长度
                     if (tabDto.getLength() != 0 && tabDto.getLength() < value.getBytes().length) {
-                        errMsg.append("["+tabDto.getColumnName()+"]："+"字段长度不能超过" + tabDto.getLength());
+                        errMsg.append("[" + tabDto.getColumnName() + "]：" + "字段长度不能超过" + tabDto.getLength());
                     }
                 }
 
                 //日期类型校验
                 if (Objects.equals("DATE", tabDto.getDataType())) {
                     if (!this.checkDate(value)) {
-                        errMsg.append("["+tabDto.getColumnName()+"]："+"不是日期格式;");
+                        errMsg.append("[" + tabDto.getColumnName() + "]：" + "不是日期格式;");
+                    } else {
+                        //校验日期格式
+                        if (!(DateUtil.isDateStr(value) || DateUtil.isDateStr(value, DateUtil.DEFAULT_ANOTHER_FORMAT))) {
+                            errMsg.append("[" + tabDto.getColumnName() + "]：" + "日期格式不正确，请使用yyyy-MM-dd或yyyy/MM/dd格式;");
+                        }
                     }
-                    //校验日期格式
-                    if(!(DateUtil.isDateStr(value)||DateUtil.isDateStr(value,DateUtil.DEFAULT_ANOTHER_FORMAT))) {
-                        errMsg.append("["+tabDto.getColumnName()+"]："+"日期格式不正确，请使用yyyy-MM-dd或yyyy/MM/dd格式;");
-                    }
+
                 }
                 //数字类型校验
                 if (Objects.equals("NUMBER", tabDto.getDataType())) {
+                    //是否是数字格式
                     if (!this.checkFigure(value)) {
-                        errMsg.append("["+tabDto.getColumnName()+"]："+"不是数字格式;");
+                        errMsg.append("[" + tabDto.getColumnName() + "]：" + "不是数字格式;");
+                    } else {
+                        // 是否是整数类型
+                        if (tabDto.getDataScale() == 0) {
+                            if (!Pattern.matches(rule, value)) {
+                                errMsg.append("[" + tabDto.getColumnName() + "]：" + "值不是整数;");
+                            }
+                        }
+                        //小数位精度判断
+                        if (tabDto.getDataScale() > 0 && !Pattern.matches(rule, value)) {
+                            String[] split = value.split("\\.");
+                            //整数
+                            String integer = split[0];
+                            //小数位
+                            String decimal = split[1];
+                            //整数位允许长度
+                            Integer integerLength = tabDto.getNumberLength() - tabDto.getDataScale();
+                            //整数位是否超限
+                            if (integerLength < integer.length()) {
+                                errMsg.append("此列整数位允许的最大长度为")
+                                        .append(integerLength)
+                                        .append("[" + tabDto.getColumnName() + "]：" + "值大于为此列指定的允许精度;");
+                            }
+                            //小数位是否超限
+                            if (tabDto.getDataScale() < decimal.length()) {
+                                errMsg.append("此列小数位允许的最大长度为")
+                                        .append(tabDto.getDataScale())
+                                        .append("[" + tabDto.getColumnName() + "]：" + "值大于为此列指定的允许精度;");
+                            }
+
+
+                        }
                     }
 
-                    if (tabDto.getNumberLength() < value.length()) {
-                        errMsg.append("["+tabDto.getColumnName()+"]："+"值大于为此列指定的允许精度;");
-                    }
+
                 }
             }
         }
         if (StringUtils.isNotBlank(errMsg.toString())) {
             map.put("STATUS", "R");
-            BaseCommonCheckDto dto  = new BaseCommonCheckDto();
+            BaseCommonCheckDto dto = new BaseCommonCheckDto();
             dto.setErrMap(map);
             dto.setExcelValidDto(new ExcelValidDto("0未导入", String.valueOf(i + 2), errMsg.toString()));
             checkResult.add(dto);
@@ -114,8 +149,7 @@ public class BaseCheckOracleService {
         if (!DateUtil.isDateStr(date, DateUtil.DEFAULT_OTHER_FORMAT,
                 DateUtil.DEFAULT_ANOTHER_FORMAT, DateUtil.DEFAULT_DATE_FORMAT_EN)) {
             flag = false;
-        }
-        else {
+        } else {
             date = DateUtil.format(DateUtil.parse(date));
             date = date.replace("-", "").replace("/", "");
             //年
