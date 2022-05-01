@@ -1,5 +1,6 @@
 package com.joyintech.tams.common.svreport.base.dto;
 
+
 /**
  * 表的定义
  * @author zhoubin
@@ -26,6 +27,11 @@ public class BaseCheckOracleDto {
      * 数字长度
      */
     private Integer numberLength;
+
+    /**
+     * 小数点长度
+     */
+    private Integer  dataScale;
     /**
      * 字段是否为null
      */
@@ -77,5 +83,13 @@ public class BaseCheckOracleDto {
 
     public void setNullAble(String nullAble) {
         this.nullAble = nullAble;
+    }
+
+    public Integer getDataScale() {
+        return dataScale;
+    }
+
+    public void setDataScale(Integer dataScale) {
+        this.dataScale = dataScale;
     }
 }

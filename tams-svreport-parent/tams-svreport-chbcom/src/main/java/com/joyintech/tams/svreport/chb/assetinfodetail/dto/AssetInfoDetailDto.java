@@ -3,6 +3,7 @@ package com.joyintech.tams.svreport.chb.assetinfodetail.dto;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.ValidLogic;
@@ -15,7 +16,6 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.base.annotate.BusinessKey;
 import com.joyintech.tams.report.common.base.annotate.DictFormat;
 import com.joyintech.tams.report.common.base.annotate.TableName;
-import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.*;
 import com.joyintech.tams.svreport.chb.assetinfodetail.validator.AssetInfoDetailValidator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
@@ -370,5 +370,14 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 
 	public void setPageModel(String pageModel) {
 		this.pageModel = pageModel;
+	}
+	public String getvdateStr(){
+		return null!=getVdate()?DateUtil.format(getVdate()):null;
+	}
+	public String getmdateStr(){
+		return null!=getMdate()?DateUtil.format(getMdate()):null;
+	}
+	public String getStatusStr() {
+		return com.joyintech.tams.report.common.util.SysDataUtil.getNameFromDataDict(DictCode.维护数据状态,getStatus());
 	}
 }

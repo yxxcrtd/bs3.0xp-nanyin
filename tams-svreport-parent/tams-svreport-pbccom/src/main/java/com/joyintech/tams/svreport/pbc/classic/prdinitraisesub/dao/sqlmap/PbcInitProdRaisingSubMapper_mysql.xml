@@ -804,7 +804,7 @@
     <!-- 手工处理修改数据日期为数据库时间 add by gaojian 2019-06-25 end -->
     where  PBC_PROD_ID in
     <foreach collection="list" open="(" close=")" separator="," item="item">
-      #{item.pbcProdIdShow,jdbcType=CHAR}
+      #{item.pbcProdId,jdbcType=CHAR}
     </foreach>
   </update>
   <insert id="insertHisBatchBySendStatus" parameterType="java.util.List">

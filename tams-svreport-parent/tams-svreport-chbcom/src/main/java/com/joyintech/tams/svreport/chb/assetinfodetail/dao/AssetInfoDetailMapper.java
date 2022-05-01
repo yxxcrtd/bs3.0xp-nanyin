@@ -75,4 +75,6 @@ public interface AssetInfoDetailMapper {
 	int selectValidRecords(@Param("list") List<Map<String,String>> list);
 
 	void batchInsert(@Param("list") List<AssetInfoDetailDto> list);
+
+	List<AssetInfoDetailDto> selectList(Map<String, Object> param);
 }
