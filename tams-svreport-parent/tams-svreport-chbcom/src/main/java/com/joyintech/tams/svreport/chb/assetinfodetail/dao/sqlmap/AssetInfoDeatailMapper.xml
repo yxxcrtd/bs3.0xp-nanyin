@@ -2268,7 +2268,6 @@
     <select id="getChbAssetInfoByUUid"  resultMap="ChbBaseResultMap">
           SELECT * FROM CHB_ASSET_INFO
           where ASSET_UUID = #{Assetuuid}
-          and STATUS IN ('E','M')
     </select>
 
     <insert id="mergeInfoListEx"  parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfo">
@@ -2517,8 +2516,7 @@
         </foreach>
         ) TEMP
         <!-- 业务主键匹配 -->
-        ON (CII.ASSET_CODE = TEMP.ASSET_CODE
-        and CII.status IN ('E','M'))
+        ON (CII.ASSET_CODE = TEMP.ASSET_CODE)
         <!-- 匹配到则更新 -->
         WHEN MATCHED THEN
         UPDATE

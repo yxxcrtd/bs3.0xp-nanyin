@@ -298,7 +298,9 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 					//获取对应的实体类字段
 					Object obj1 = getMethod.invoke(dto);
 					//执行数据转换方法
-					DtoChangeUtil.SetChbToRep(obj1, dto, menu.getFlagStr(), true);
+					if(null!=obj1){
+						DtoChangeUtil.SetChbToRep(obj1, dto, menu.getFlagStr(), true);
+					}
 					//资产类型赋值
 					dto.setAssetType(menu.getAssetType());
 				}

@@ -2266,7 +2266,6 @@
     <select id="getChbAssetInfoByUUid"  resultMap="ChbBaseResultMap">
         SELECT * FROM CHB_ASSET_INFO
         where ASSET_UUID = #{Assetuuid}
-        and STATUS IN ('E','M')
     </select>
 
     <insert id="mergeInfoListEx"  parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfo">
@@ -2727,7 +2726,7 @@
             <!-- 资产要素维护升级 add by tuqirong 2022-04-23 start -->
             from dual
         </foreach>
-        ) TEMP where not exists (select 1 from CHB_ASSET_INFO CII where CII.ASSET_CODE = TEMP.ASSET_CODE and CII.status IN ('E','M'))
+        ) TEMP where not exists (select 1 from CHB_ASSET_INFO CII where CII.ASSET_CODE = TEMP.ASSET_CODE)
         ) de ;
 
         UPDATE  CHB_ASSET_INFO as A,
@@ -3079,7 +3078,7 @@
             <!-- 资产要素维护升级 add by tuqirong 2022-04-23 start -->
             from dual
         </foreach>
-        ) TEMP where exists (select 1 from CHB_ASSET_INFO CII where CII.ASSET_CODE = TEMP.ASSET_CODE and CII.status IN ('E','M'))
+        ) TEMP where exists (select 1 from CHB_ASSET_INFO CII where CII.ASSET_CODE = TEMP.ASSET_CODE )
         ) de
         ) AS B
         set
@@ -3316,7 +3315,7 @@
         <!-- 资产要素维护升级 add by tuqirong 2022-04-23 start -->
 
 
-        where A.ASSET_CODE = B.ASSET_CODE and A.status IN ('E','M');
+        where A.ASSET_CODE = B.ASSET_CODE ;
 
     </insert>
 
