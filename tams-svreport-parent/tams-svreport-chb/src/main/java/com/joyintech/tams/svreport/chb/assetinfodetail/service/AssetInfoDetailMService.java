@@ -29,6 +29,7 @@ import com.joyintech.tams.svreport.chb.assetinfodetail.util.ServerMenu;
 import com.joyintech.tams.svreport.chb.common.util.asset.RechbAassetInfoUtilService;
 import com.joyintech.tams.svreport.interf.chb.assetinfo.service.ChbAssetInfoInterf;
 import com.joyintech.tams.svreport.interf.chb.baseinfo.dao.SvrMstCustomerInfoAddImpMapper;
+import com.joyintech.tams.svreport.interf.chb.baseinfo.dao.SvrMstCustomerInfoImpMapper;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -70,6 +71,10 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 
 	@Autowired
 	private SvrMstCustomerInfoAddImpMapper svrMstCustomerInfoAddImpMapper;
+
+
+	@Autowired
+	private SvrMstCustomerInfoImpMapper svrMstCustomerInfoImpMapper;
 
 	@Autowired
 	private AssetInfoDetailUtil assetInfoDetailUtil;
@@ -166,6 +171,8 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		dto.setOperateType(type.toString());
 		//分别调用各自的setEntity方法
 		this.getDtoByPageMessgae(dto);
+		//获取市场机构规模数据
+
 		//赋值相关数据
 		dto.setIssuePartyId(CommonUtil.selectBankCode());
 		if(StringUtil.isEmpty(dto.getAssetUuid())){
@@ -185,10 +192,29 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 			}
 		}
 
-		//获取市场机构规模数据
 		List<MstCustomerInfoAdd> institList = svrMstCustomerInfoAddImpMapper.getAllMstCustomerInfoInstit();
+		//获取市场机构规模数据
+		Map<String,MstCustomerInfoAdd> orgListMap = institList.stream().collect(
+				Collectors.toMap(MstCustomerInfoAdd::getCustomerId,(p)->p,(key1, key2)->key1));
+
+		/*** 基金类资产数据接入会同步保存mngOrgName字段 **/
+		if(DictCodeListExt2.资产_负债类别_私募基金.getValue().equals(dto.getAssetType())
+			||DictCodeListExt2.资产_负债类别_公募基金.getValue().equals(dto.getAssetType())){
+			if(dto.getMngOrgName()!=null) {
+				dto.setMngOrgName(null!=orgListMap.get(dto.getChbManagerId())?
+						orgListMap.get(dto.getChbManagerId()).getCompanyName():null);
+			}
+			if(dto.getTruOrgName()!=null) {
+				dto.setTruOrgName(null!=orgListMap.get(dto.getChbFinancierId())?
+						orgListMap.get(dto.getChbManagerId()).getCompanyName():null);
+			}
+		}
+
+
+		//获取市场机构规模数据
 		Map<String,String> institMap = institList.stream().collect(HashMap<String,String>::new,
 				(map, item)->map.put(item.getCustomerId(), item.getPartyType1()), (m, n)->m.putAll(n));
+
 		//2-5企业债券分行业、企业规模统计的列统计维度调整为根据市场机构管理中“机构类型（规模）”字段来取值。
 		ChbAssetInfoInterf.convertInstitSize(dto,institMap);
 		restTemplate.postForObject(

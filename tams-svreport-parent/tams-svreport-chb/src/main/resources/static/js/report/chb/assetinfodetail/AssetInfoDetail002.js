@@ -702,6 +702,7 @@ var QueryFunc=function(){
         poolCode();
         assetVal();
         assetTypeDetail();
+        assetTypeValSet();
         changeReport();
     }, 10000);
 

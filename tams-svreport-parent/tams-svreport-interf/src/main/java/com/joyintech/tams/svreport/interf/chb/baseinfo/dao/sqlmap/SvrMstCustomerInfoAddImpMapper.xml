@@ -77,8 +77,9 @@
 
   <select id="getAllMstCustomerInfoInstit" parameterType="com.joyintech.tams.common.base.entity.MstCustomerInfoAdd" resultType="com.joyintech.tams.common.base.entity.MstCustomerInfoAdd">
     select
-    CUSTOMER_ID,PARTY_TYPE1
-    from MST_CUSTOMER_INFO_ADD
+    A.CUSTOMER_ID,A.PARTY_TYPE1,B.CUSTOMER_NAME  COMPANY_NAME
+    from MST_CUSTOMER_INFO_ADD A
+    LEFT JOIN MST_CUSTOMER_INFO B ON A.CUSTOMER_ID = B.CUSTOMER_ID
     where 1=1
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
