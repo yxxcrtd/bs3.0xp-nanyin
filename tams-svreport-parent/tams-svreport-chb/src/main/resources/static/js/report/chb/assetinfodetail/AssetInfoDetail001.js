@@ -81,7 +81,7 @@
 	table.bind('click', '.delt', function(data, index) {
 		var object = {selectedItem: [data],operateType:"delete"};
 		Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-			WorkFlow.doDeleteList(basePath + 'chb/assetinfodetail/AssetInfoDetail001/delete', object, "AssetInfoDetail001_btn_delete", "AssetInfoDetail002");
+			WorkFlow.doDeleteList(basePath + 'chb/assetinfodetail/AssetInfoDetail001/delete', object, "AssetInfoDetail001_btn_delete", "AssetInfoDetail002",function(){table.reload();});
 		});
 	});
 

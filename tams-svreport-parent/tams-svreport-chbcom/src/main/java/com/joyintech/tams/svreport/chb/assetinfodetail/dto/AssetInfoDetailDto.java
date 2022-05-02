@@ -1,20 +1,16 @@
 package com.joyintech.tams.svreport.chb.assetinfodetail.dto;
 
+import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
-import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.report.common.base.annotate.BusinessKey;
-import com.joyintech.tams.report.common.base.annotate.DictFormat;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.common.base.annotate.TableName;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.*;
 import com.joyintech.tams.svreport.chb.assetinfodetail.validator.AssetInfoDetailValidator;
@@ -22,10 +18,6 @@ import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
-import javax.validation.Valid;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -271,7 +263,7 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 	}
 
 	public String getDataStatusStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.中债_处理状态, this.getDataStatus());
+		return SysDataUtil.getNameFromDataDict(DictCode.中债数据状态, this.getDataStatus());
 	}
 
 
@@ -378,6 +370,15 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 		return null!=getMdate()?DateUtil.format(getMdate()):null;
 	}
 	public String getStatusStr() {
-		return com.joyintech.tams.report.common.util.SysDataUtil.getNameFromDataDict(DictCode.维护数据状态,getStatus());
+		return com.joyintech.tams.report.common.util.SysDataUtil.getNameFromDataDict(DictCode.中债数据状态,getStatus());
+	}
+
+	// updateFlg 02 不展示  01 显示
+	public String getUpdateFlg() {
+		if(!com.joyintech.background.component.common.pack.common.util.StringUtil.isEmpty(dataStatus) && StringUtil.equals(DictCodeListExt3.中债数据状态_删除.getValue(), dataStatus)){
+			return "02";
+		}else{
+			return "01";
+		}
 	}
 }
