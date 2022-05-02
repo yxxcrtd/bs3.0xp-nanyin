@@ -131,7 +131,8 @@ var QueryFunc=function(){
                 $("#issueAmt").attr("disabled",false);
                 $("#svrBussRepPlacementInfoDto_targetType1").val('01').trigger("change");
                 $("#svrBussRepPlacementInfoDto_targetType1").prop('required', true);
-                $("#targetAmt").prop('required', true);
+                $("#targetAmt").attr("disabled",false);
+
                 // var parms={assetuuid:$("#assetUuid").val()}
                 // Joyin.ajaxJson(
                 //     basePath + "chb/assetinfodetail/AssetInfoDetail002/getValue",parms,
@@ -145,7 +146,8 @@ var QueryFunc=function(){
                 $("#issueAmt").attr("disabled",true);
                 $("#issueAmt").val('');
                 $("#svrBussRepPlacementInfoDto_targetType1").prop('required', false);
-                $("#targetAmt").prop('required', false);
+                $("#targetAmt").val('').trigger("change");
+                $("#targetAmt").attr("disabled",true);
             }
         }else if(obj["03"].indexOf(repAssetType)>=0){
             //债券类资产/理财直接融资工具/同业存单
