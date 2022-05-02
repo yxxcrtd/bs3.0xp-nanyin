@@ -2125,7 +2125,7 @@
         e.org_asset_type3,
         e.vdate  vDateStr,
         e.mdate mDateStr,
-        E.ERR_MSG
+        e.ERR_MSG
         FROM CHB_ASSET_INFO_ERRODATA e
         WHERE 1=1
         and e.status in ('E')
