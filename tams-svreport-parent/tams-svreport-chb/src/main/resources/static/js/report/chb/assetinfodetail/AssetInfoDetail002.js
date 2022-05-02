@@ -625,7 +625,7 @@ var QueryFunc=function(){
             repAssetType == '1211'||repAssetType == '1212'||repAssetType == '1213'||
             repAssetType == '1209'||repAssetType == '1299'||repAssetType == '2202'||
             repAssetType == '1202'||repAssetType == '1301'||repAssetType == '1399'||
-            repAssetType == '2101'||repAssetType == '2617'){
+            repAssetType == '2101'||repAssetType == '2617'||repAssetType == '1210'){
             $('#isConstracteBusi').attr('disabled',false);
         }else{
             $('#isConstracteBusi').attr('disabled',true);
@@ -642,6 +642,18 @@ var QueryFunc=function(){
         }
 
 
+    }
+
+    var  initprofitFlag=function(){
+        var assetTvalueFund=$('#assetType2').val();
+        //公募基金/私募基金
+        if(assetTvalueFund=='1106'||assetTvalueFund=='2401'||assetTvalueFund=='1303'||
+            assetTvalueFund=='2403'||assetTvalueFund=='2402'||assetTvalueFund=='2499'){
+            $("#svrBussRepFundInfoDto_profitFlag").attr("disabled",false);
+        }else{
+            $("#svrBussRepFundInfoDto_profitFlag").val('').trigger("change");
+            $("#svrBussRepFundInfoDto_profitFlag").attr("disabled",true);
+        }
     }
 
     var assetTypeValSet = function(){
@@ -705,6 +717,7 @@ var QueryFunc=function(){
         assetTypeValSet();
         changeReport();
         isBankCapVal();
+        initprofitFlag();
     }, 10000);
 
 
@@ -736,7 +749,7 @@ var QueryFunc=function(){
             assetVal();
             resetVal();
             assetTypeValSet();
-
+            initprofitFlag();
             //新增中债月报要素信息分类配置
             assetTypeDetail();
         });

@@ -210,8 +210,8 @@
           getElementById('floatFactor').val('').trigger("change");
           getElementById('floatFactor').attr("disabled",true);
 
-          getElementById('spreadRate').val('').trigger("change");
-          getElementById('spreadRate').attr("disabled",true);
+          // getElementById('spreadRate').val('').trigger("change");
+          // getElementById('spreadRate').attr("disabled",true);
 
       }else if(getElementById('floatFactorFlag').val() != null &&　getElementById('floatFactorFlag').val() != ''){
           getElementById('floatFactor').attr("disabled",false);

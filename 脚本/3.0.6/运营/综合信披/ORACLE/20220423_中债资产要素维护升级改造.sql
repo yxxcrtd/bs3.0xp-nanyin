@@ -70,7 +70,7 @@ UPDATE CHB_DATACHECK_RULE_INV SET CHECKCLASS = 'com.joyintech.service.chb.common
 
 DELETE FROM CHB_DATACHECK_CONDITION_INV WHERE CHECKRULEID = 'ASSET_INFO_DETAIL_RULE_0000-isConstracteBusi';
 insert into CHB_DATACHECK_CONDITION_INV (CHECKCONDITIONID, CHECKRULEID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, REMARK, STATUS)
-values ('ASSET_INFO_DETAIL_CONDITION_03-busi', 'ASSET_INFO_DETAIL_RULE_0000-isConstracteBusi', 'inArray', 'assetType2', '==', '1116,2299,1201,1202,1203,1204,1205,1206,1207,1208,1209,1211,1212,1213,1299,2202,1301,1399,2101,2617', null, 'E');
+values ('ASSET_INFO_DETAIL_CONDITION_03-busi', 'ASSET_INFO_DETAIL_RULE_0000-isConstracteBusi', 'inArray', 'assetType2', '==', '1116,2299,1201,1202,1203,1204,1205,1206,1207,1208,1209,1210,1211,1212,1213,1299,2202,1301,1399,2101,2617', null, 'E');
 DELETE FROM CHB_DATACHECK_RULE_INV WHERE CHECKRULEID = 'ASSET_INFO_DETAIL_RULE_0000-isConstracteBusi';
 insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
 values ('ASSET_INFO_DETAIL_RULE_0000-isConstracteBusi', 'AssetInfoRegist002', 'isNotEmpty', 'isConstracteBusi', null, null, 'N', '是否结构化资产不可为空', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
@@ -184,3 +184,60 @@ insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPER
 values ('ASSET_INFO_DETAIL_RULE_ASSETID-001', 'AssetInfoRegist002', 'isCustomizedString', 'svrBussFinBondRepInfoDto.assetId', null, '\d{0,15}', 'Y', '代码必须填写15位以内数字。', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 
 DELETE FROM CHB_DATACHECK_RULE_INV WHERE REMARK  LIKE '%是否商业银行可转债%' and page_ID ='AssetInfoRegist002';
+
+DELETE FROM CHB_DATACHECK_RULE_INV WHERE srcproperty  = 'bondtostockFlag';
+insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
+values ('ASSET_INFO_DETAIL_RULE_1006-bondtostockFlag-001', 'AssetInfoRegist002', 'isNotEmpty', 'bondtostockFlag', null, null, 'N', '是否投向市场化债转股相关产品不可为空', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+
+insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
+values ('ASSET_INFO_DETAIL_RULE_1006-bondtostockFlag-002', 'AssetInfoRegist002', 'inDatadict', 'bondtostockFlag', '==', 'SVR_YES_OR_NO', 'Y', '是否投向市场化债转股相关产品不在值域范围内', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+
+
+DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'SVR_PRO_STYLE' AND ITEM_CODE = '99';
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SVR_PRO_STYLE', '99', '其他', 3, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+
+DELETE FROM CHB_DATACHECK_RULE_INV WHERE CHECKMETHOD IN ('isCustomizedString','lessThanCharLength') AND SRCPROPERTY = 'remark' AND PAGE_ID = 'AssetInfoRegist002';
+
+insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
+values ('ASSET_INFO_DETAIL_RULE_remark-TYPE001', 'AssetInfoRegist002', 'isCustomizedString', 'remark', null, '^[\u4e00-\u9fa5\ue815-\ue864\uff01-\uff5e\uffe0-\uffe5\u3000-\u3003\u3005-\u3017\u301d-\u301e\u2010\u2013-\u2016\u2018-\u2019\u201c-\u201d\u2025-\u2026\u2030\u2032-\u2033\u2035\u203b\u00b7\u0030-\u0039\u0041-\u005a\u0061-\u007a\u2160-\u216b\u0020-\u0026\u0028-\u007B\u007D\u007E]{0,}$', 'Y', '备注必须填写白名单中的文字。', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+
+insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
+values ('ASSET_INFO_DETAIL_RULE_remark-TYPE002', 'AssetInfoRegist002', 'lessThanCharLength', 'remark', null, '257', 'Y', '备注不能超过256字符', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+
+
+DELETE FROM CHB_DATACHECK_CONDITION_INV WHERE CHECKRULEID = 'ASSET_INFO_DETAIL_RULE_0000-0000-industryShares-001';
+insert into CHB_DATACHECK_CONDITION_INV (CHECKCONDITIONID, CHECKRULEID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, REMARK, STATUS)
+values ('ASSET_INFO_DETAIL_CONDITION_00SHARES', 'ASSET_INFO_DETAIL_RULE_0000-0000-industryShares-001', 'inArray', 'assetType2', '==', '2403,2499,2402,1106,2401,2604,2602,2601,2617,2616,2614,2618,2699,2620,2619,2607,2606,2605,2610,2613,2612,2611,1303', null, 'E');
+delete from CHB_DATACHECK_RULE_INV where SRCPROPERTY = 'svrBussRepFundInfoDto.industryShares';
+insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
+values ('ASSET_INFO_DETAIL_RULE_0000-0000-industryShares-001', 'AssetInfoRegist002', 'isNotEmpty', 'svrBussRepFundInfoDto.industryShares', null, null, 'N', '行业一级要素不可为空', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
+values ('ASSET_INFO_DETAIL_RULE_0000-0000-industryShares-002', 'AssetInfoRegist002', 'inDatadict', 'svrBussRepFundInfoDto.industryShares', '==', 'INSTITUTION_INDUSTRY_FIRST_LEVEL', 'Y', '行业一级不在值域范围内。', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+
+
+
+
+DELETE FROM CHB_DATACHECK_CONDITION_INV WHERE CHECKRULEID = 'ASSET_INFO_DETAIL_RULE_svrBussRepEquityInfoDto.assetId-001';
+insert into CHB_DATACHECK_CONDITION_INV (CHECKCONDITIONID, CHECKRULEID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, REMARK, STATUS)
+values ('ASSET_INFO_DETAIL_CONDITION_assetIdA', 'ASSET_INFO_DETAIL_RULE_svrBussRepEquityInfoDto.assetId-001', 'inArray', 'assetType2', '==', '1301,1302,1305', null, 'E');
+DELETE FROM CHB_DATACHECK_CONDITION_INV WHERE CHECKRULEID = 'ASSET_INFO_DETAIL_RULE_0000-0000-industryShares-E001';
+insert into CHB_DATACHECK_CONDITION_INV (CHECKCONDITIONID, CHECKRULEID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, REMARK, STATUS)
+values ('ASSET_INFO_DETAIL_CONDITION_SharesE0', 'ASSET_INFO_DETAIL_RULE_0000-0000-industryShares-E001', 'inArray', 'assetType2', '==', '1301,1302,1305', null, 'E');
+delete from CHB_DATACHECK_RULE_INV where SRCPROPERTY = 'svrBussRepEquityInfoDto.industryShares';
+insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
+values ('ASSET_INFO_DETAIL_RULE_0000-0000-industryShares-E001', 'AssetInfoRegist002', 'isNotEmpty', 'svrBussRepEquityInfoDto.industryShares', null, null, 'N', '行业一级要素不可为空', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
+values ('ASSET_INFO_DETAIL_RULE_0000-0000-industryShares-E002', 'AssetInfoRegist002', 'inDatadict', 'svrBussRepEquityInfoDto.industryShares', '==', 'INSTITUTION_INDUSTRY_FIRST_LEVEL', 'Y', '行业一级要素不在值域范围内。', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+DELETE FROM CHB_DATACHECK_RULE_INV WHERE SRCPROPERTY = 'svrBussRepEquityInfoDto.assetId';
+insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
+values ('ASSET_INFO_DETAIL_RULE_svrBussRepEquityInfoDto.assetId-001', 'AssetInfoRegist002', 'isNotEmpty', 'svrBussRepEquityInfoDto.assetId', null, null, 'N', '股票代码要素不可为空', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
+values ('ASSET_INFO_DETAIL_RULE_svrBussRepEquityInfoDto.assetId-002', 'AssetInfoRegist002', 'lessThanCharLength', 'svrBussRepEquityInfoDto.assetId', null, '21', 'Y', '股票代码过长', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
+values ('ASSET_INFO_DETAIL_RULE_svrBussRepEquityInfoDto.assetId-003', 'AssetInfoRegist002', 'isCustomizedString', 'svrBussRepEquityInfoDto.assetId', null, '^[\u4e00-\u9fa5\ue815-\ue864\uff01-\uff5e\uffe0-\uffe5\u3000-\u3003\u3005-\u3017\u301d-\u301e\u2010\u2013-\u2016\u2018-\u2019\u201c-\u201d\u2025-\u2026\u2030\u2032-\u2033\u2035\u203b\u00b7\u0030-\u0039\u0041-\u005a\u0061-\u007a\u2160-\u216b\u0020-\u0026\u0028-\u007B\u007D\u007E]{0,}$', 'Y', '股票代码必须填写白名单中的文字。', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+UPDATE CHB_DATACHECK_RULE_INV SET REMARK = '行业二级要素不在值域范围内。' WHERE SRCPROPERTY = 'svrBussRepEquityInfoDto.industryShares2' and CHECKMETHOD = 'inDatadict';
+
+DELETE FROM CHB_DATACHECK_RULE_INV WHERE CHECKRULEID = 'ASSET_INFO_DETAIL_RULE_0000-0000-0000-0000-0000-0000-0000-000018';
+insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
+values ('ASSET_INFO_DETAIL_RULE_0000-0000-0000-0000-0000-0000-0000-000018', 'AssetInfoRegist002', 'isCustomizedString', 'svrBussRepAssetMngProdInfoDto.partyCode', null, '^[0-9a-zA-Z]{0,32}$', 'Y', '资管计划发起人机构编码只能填写数字及英文', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
