@@ -232,14 +232,6 @@
     var  initAssetCreditNonstd=function(){
         var assetTvalueCreditNonstd=$('#assetType2').val();
 
-        if(assetTvalueCreditNonstd=="2202"){
-            $('#constracteBusiType').attr('disabled',false);
-        }else{
-            $('#constracteBusiType').attr('disabled',true);
-            $("#constracteBusiType").val('').trigger("change");
-        }
-
-
         if(assetTvalueCreditNonstd=='2201'||assetTvalueCreditNonstd=='2202'){
             //份额面值置灰不可填
             $("#svrBussRepAssetCreditNonstdInfoDto_repPrinBaseamt").val('').trigger("change");
