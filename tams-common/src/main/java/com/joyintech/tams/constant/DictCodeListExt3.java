@@ -1957,6 +1957,10 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
 	结算方式_头寸引擎_净额结算(DictCode.结算方式_头寸引擎, "01", "净额结算"),
 	结算方式_头寸引擎_RTGS(DictCode.结算方式_头寸引擎, "02", "RTGS"),
 	结算方式_头寸引擎_逐笔全额结算(DictCode.结算方式_头寸引擎, "03", "逐笔全额结算"),
+    中债数据状态_有效(DictCode.中债数据状态, "E", "有效"),
+    中债数据状态_待处理(DictCode.中债数据状态, "A", "待处理"),
+    中债数据状态_删除(DictCode.中债数据状态, "D", "删除"),
+    中债数据状态_修改(DictCode.中债数据状态, "M", "修改"),
     ;
     /**
      * 对应于数据字典code
