@@ -63,7 +63,7 @@
                     <div class="layui-input-inline input-inline">
                         <select th:id="|${entityName}_issuePartyName|"
                                 th:name="|${entityName}.issuePartyName|"
-                                data-th-value="${entity?.issuePartyName}"
+                                th:initValue="${entity?.issuePartyName}"
                                 class="layui-input form-input input-select"
                                 data-th-placeholder="#{SysCommon.placeholder}"
                                 data-th-data-url="@{/common/select/getTrusterId}">

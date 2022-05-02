@@ -682,7 +682,7 @@ var QueryFunc=function(){
         $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType1').val('').trigger('change');
         $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType2').val('').trigger('change');
         $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType3').val('').trigger('change');
-        $('#svrBussRepAssetCreditNonstdInfoDto_repIndustry1').val('0').trigger('change');
+        $('#svrBussRepAssetCreditNonstdInfoDto_repIndustry1').val('').trigger('change');
         $('#svrBussRepAssetCreditNonstdInfoDto_industryLevel2Type').val('').trigger('change');
 
         // 管理人2置空
@@ -714,6 +714,7 @@ var QueryFunc=function(){
         poolCode();
         assetVal();
         assetTypeDetail();
+        isConstracteBusiVal();
         assetTypeValSet();
         changeReport();
         isBankCapVal();
