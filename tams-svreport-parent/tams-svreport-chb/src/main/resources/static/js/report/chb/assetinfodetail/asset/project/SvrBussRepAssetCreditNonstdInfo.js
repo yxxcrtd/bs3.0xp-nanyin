@@ -481,7 +481,7 @@
             }
             else{
                 var data = {
-                    svrBussRepAssetCreditNonstdInfoDto_chbFinancierId: $('#svrBussRepAssetCreditNonstdInfoDto_chbFinancierId').val()
+                    chbFinancierId: $('#svrBussRepAssetCreditNonstdInfoDto_chbFinancierId').val()
                 }
                 //$('#fundName').val($('#finprodId').select2('data')[0].text).trigger('change');
                 Joyin.ajaxJson(basePath + 'common/select/getFinancierInfo', data,
@@ -528,7 +528,7 @@
             }
             else{
                 var data = {
-                    svrBussRepAssetCreditNonstdInfoDto_chbFinancierId: $('#svrBussRepAssetCreditNonstdInfoDto_repFinancie').val()
+                    chbFinancierId: $('#svrBussRepAssetCreditNonstdInfoDto_repFinancie').val()
                 };
                 //$('#fundName').val($('#finprodId').select2('data')[0].text).trigger('change');
                 Joyin.ajaxJson(basePath + 'common/select/getFinancierInfo', data,
