@@ -152,16 +152,7 @@ public class AssetInfoDetail001Controller extends BaseController {
     @SuppressWarnings("unchecked")
 	@RequestMapping(value = ACTION_EXPORT)
     public ResponseEntity<byte[]> export() {
-
-		List<AssetInfoDetailDto> dtoList = assetInfoDetailMService.setDataList(RequestUtil.getParameters(getRequest()));
-		File outFile = assetInfoDetailMService.makeFile(
-				"/com/joyintech/tams/svreport/chb/assetinfodetail/conf/export_conf.xml", dtoList);
-		return ExportUtil.export(
-				"资产基本信息" + GlobalConstant.OPEN_PARENTHESIS
-						+ DateUtil.format(new Date()) + GlobalConstant.CLOSE_PARENTHESIS
-						+ GlobalConstant.POINT + FileNameUtil.getFileExtName(outFile),
-				outFile, true);
-
+		return assetInfoDetailMService.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
     }
       
     /**

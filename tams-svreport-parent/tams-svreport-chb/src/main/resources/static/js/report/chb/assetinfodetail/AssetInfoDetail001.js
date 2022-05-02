@@ -130,55 +130,10 @@
 
 		// 导出按钮
 		$('#AssetInfoDetail001_btn_export').click(function(){
-			var expArr=table.getAllCheckedRows();
-			//modify by yjp ZGBSEI-90 20210803 start
-			var elementId = '';
-			var event = JoyinUtil.getEvent();
-			if ((elementId || elementId === '') && event && event.currentTarget && $(event.currentTarget).attr('id') && $(event.currentTarget).attr('id') != elementId) {
-				elementId = $(event.currentTarget).attr('id');
-			}
-			//导出选中行
-			if ((elementId.indexOf("_btn_exportCheck")!=-1)) {
-				if(expArr.length == 0) {
-					Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
-					return;
-				}else{
-					Joyin.confirm('确认导出选中信息？',function(){
-						exportExcel(1);
-					})
-				}
-			}else{
-				if(expArr.length == 0) {
-					//导出全部行
-					Joyin.confirm('确认导出全部信息？',function(){
-						exportExcel(0);
-					})
-				}else{
-					Joyin.confirm('确认导出选中信息？',function(){
-						exportExcel(1);
-					})
-				}
-
-			}
+			var paramObj = getSearchParams();
+			Joyin.exportExcel('export', paramObj);
 		})
 
-		/**
-		 * 导出
-		 * flag:0 全部导出，1 选中导出
-		 */
-		var exportExcel = function(flag) {
-
-			var selectedItem = table.getAllCheckedRows();
-			var paramObj={};
-			if(flag==0){
-				paramObj= getSearchParams();
-			}else{
-				//add by wm 针对特殊字符处理  jason 识别“'”字符时转换会有问题，将企转换为“&apos;” end
-				paramObj.keyList = JSON.stringify(selectedItem);
-			}
-			Joyin.exportExcel('export', paramObj);
-		};
-		//modify by yjp ZGBSEI-90 20210803 end
 	});
 }());
 

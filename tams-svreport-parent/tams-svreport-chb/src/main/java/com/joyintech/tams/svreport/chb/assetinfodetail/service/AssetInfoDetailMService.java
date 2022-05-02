@@ -105,7 +105,7 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		param.put("orgAssetType1s", StringUtil.isNotEmpty(param.get("orgAssetType1"))?(param.get("orgAssetType1").toString().split(",")):null);
 		param.put("orgAssetType2s", StringUtil.isNotEmpty(param.get("orgAssetType2"))?(param.get("orgAssetType2").toString().split(",")):null);
 
-		return queryForPage(Integer.valueOf((String) param.get("page")), Integer.valueOf((String) param.get("length")),
+		return queryForPage(Integer.valueOf(param.get("page").toString()), Integer.valueOf(param.get("length").toString()),
 				() -> assetInfoDetailMapper.selectChbInfoByParam(param));
 	}
 
@@ -684,4 +684,5 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		var2.putAll(var1);
 		return var2;
 	}
+
 }
