@@ -41,13 +41,15 @@
     insert into MST_EXCHARGE_QUOTE (EXCHARGE_CODE, TRADE_DATE, DATASOURCE_TYPE, 
       OPEN_PRICE, CLOSE_PRICE, HIGH_PRICE, 
       LOW_PRICE, MID_PRICE, BASIS_CYY, 
-      QUOT_CYY, QUOT_UNIT, INPUT_TYPE, 
+      QUOT_CYY, QUOT_UNIT, INPUT_TYPE,
+      DATA_SOURCE,STATUS,ERR_MSG,
       CREATE_USER, CREATE_DEPT, CREATE_TIME, 
       UPDATE_USER, UPDATE_TIME)
     values (#{exchargeCode,jdbcType=VARCHAR}, #{tradeDate,jdbcType=TIMESTAMP}, #{datasourceType,jdbcType=VARCHAR}, 
       #{openPrice,jdbcType=DECIMAL}, #{closePrice,jdbcType=DECIMAL}, #{highPrice,jdbcType=DECIMAL}, 
       #{lowPrice,jdbcType=DECIMAL}, #{midPrice,jdbcType=DECIMAL}, #{basisCyy,jdbcType=VARCHAR}, 
-      #{quotCyy,jdbcType=VARCHAR}, #{quotUnit,jdbcType=DECIMAL}, #{inputType,jdbcType=VARCHAR}, 
+      #{quotCyy,jdbcType=VARCHAR}, #{quotUnit,jdbcType=DECIMAL}, #{inputType,jdbcType=VARCHAR},
+      #{dataSource,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},#{errMsg,jdbcType=VARCHAR},
       #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, NOW(),
       #{updateUser,jdbcType=VARCHAR}, NOW())
   </insert>
@@ -247,92 +249,60 @@
   </delete>
 
   <insert id="mergeExchangeData"
-          parameterType="com.joyintech.tams.common.base.entity.MstExchargeQuote">
-    insert into MST_EXCHARGE_QUOTE(EXCHARGE_CODE, TRADE_DATE, DATASOURCE_TYPE,
-    OPEN_PRICE, CLOSE_PRICE, HIGH_PRICE,
-    LOW_PRICE, MID_PRICE, BASIS_CYY,
-    QUOT_CYY, QUOT_UNIT, INPUT_TYPE,
-    CREATE_USER, CREATE_DEPT, CREATE_TIME,
-    UPDATE_USER, UPDATE_TIME)
-    select EXCHARGE_CODE, TRADE_DATE, DATASOURCE_TYPE,
-    OPEN_PRICE, CLOSE_PRICE, HIGH_PRICE,
-    LOW_PRICE, MID_PRICE, BASIS_CYY,
-    QUOT_CYY, QUOT_UNIT, INPUT_TYPE,
-    CREATE_USER, CREATE_DEPT, CREATE_TIME,
-    UPDATE_USER, UPDATE_TIME from
-    (
-    select TEMP.* from
-    (
-    <foreach collection="list" item="item"  separator="union all">
-      SELECT
+          parameterType="java.util.List">
+    insert into
+    MST_EXCHARGE_QUOTE (EXCHARGE_CODE,TRADE_DATE,
+    DATASOURCE_TYPE,OPEN_PRICE,CLOSE_PRICE,HIGH_PRICE,
+    LOW_PRICE,MID_PRICE,QUOT_UNIT,BASIS_CYY,QUOT_CYY,
+    DATA_SOURCE,STATUS,CREATE_USER,
+    CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ERR_MSG)
+    select A.* from (
+    <foreach collection="list" item="item" index="index"
+             separator="union all">
+      select
       #{item.exchargeCode,jdbcType=VARCHAR} EXCHARGE_CODE,
-      #{item.tradeDate,jdbcType=TIMESTAMP} TRADE_DATE,
+      #{item.tradeDate,jdbcType=DATE} TRADE_DATE,
       #{item.datasourceType,jdbcType=VARCHAR} DATASOURCE_TYPE,
       #{item.openPrice,jdbcType=DECIMAL} OPEN_PRICE,
       #{item.closePrice,jdbcType=DECIMAL} CLOSE_PRICE,
       #{item.highPrice,jdbcType=DECIMAL} HIGH_PRICE,
       #{item.lowPrice,jdbcType=DECIMAL} LOW_PRICE,
       #{item.midPrice,jdbcType=DECIMAL} MID_PRICE,
+      #{item.quotUnit,jdbcType=INTEGER} QUOT_UNIT,
       #{item.basisCyy,jdbcType=VARCHAR} BASIS_CYY,
       #{item.quotCyy,jdbcType=VARCHAR} QUOT_CYY,
-      #{item.quotUnit,jdbcType=DECIMAL} QUOT_UNIT,
-      #{item.inputType,jdbcType=VARCHAR} INPUT_TYPE,
+      #{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
+      #{item.status,jdbcType=VARCHAR} STATUS,
       #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
       #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
-      NOW() CREATE_TIME,
+      #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
       #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
-      NOW() UPDATE_TIME
-      FROM    DUAL
+      #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+      <if test="item.errMsg != null and ! item.errMsg.equals('')">
+        #{item.errMsg,jdbcType=VARCHAR} ERR_MSG
+      </if>
+      <if test="item.errMsg == null or item.errMsg.equals('')">
+        null ERR_MSG
+      </if>
+      from dual
     </foreach>
-    ) TEMP where not exists (select 1 from MST_EXCHARGE_QUOTE CII where CII.EXCHARGE_CODE = TEMP.EXCHARGE_CODE
-    AND CII.TRADE_DATE = TEMP.TRADE_DATE AND CII.DATASOURCE_TYPE = TEMP.DATASOURCE_TYPE)
-    ) de ;
-
-    UPDATE  MST_EXCHARGE_QUOTE as A,
-    (
-    select
-    OPEN_PRICE,
-    CLOSE_PRICE,
-    HIGH_PRICE,
-    LOW_PRICE,
-    MID_PRICE,
-    BASIS_CYY,
-    QUOT_CYY,
-    QUOT_UNIT,
-    INPUT_TYPE,
-    CREATE_USER,
-    CREATE_DEPT,
-    CREATE_TIME,
-    UPDATE_USER,
-    UPDATE_TIME from
-    (
-    select TEMP.* from
-    (
-    <foreach collection="list" item="item"  separator="union all">
-      SELECT
-      #{item.tradeDate,jdbcType=TIMESTAMP} TRADE_DATE,
-      #{item.datasourceType,jdbcType=VARCHAR} DATASOURCE_TYPE,
-      #{item.openPrice,jdbcType=DECIMAL} OPEN_PRICE,
-      #{item.closePrice,jdbcType=DECIMAL} CLOSE_PRICE,
-      #{item.highPrice,jdbcType=DECIMAL} HIGH_PRICE,
-      #{item.lowPrice,jdbcType=DECIMAL} LOW_PRICE,
-      #{item.midPrice,jdbcType=DECIMAL} MID_PRICE,
-      #{item.basisCyy,jdbcType=VARCHAR} BASIS_CYY,
-      #{item.quotCyy,jdbcType=VARCHAR} QUOT_CYY,
-      #{item.quotUnit,jdbcType=DECIMAL} QUOT_UNIT,
-      #{item.inputType,jdbcType=VARCHAR} INPUT_TYPE,
-      #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
-      #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
-      NOW() CREATE_TIME,
-      #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
-      NOW() UPDATE_TIME
-      FROM    DUAL
-    </foreach>
-    ) TEMP
-    ) de
-    ) AS B
-    set  A.* = B.* where exists (select 1 from MST_EXCHARGE_QUOTE CII where CII.EXCHARGE_CODE = TEMP.EXCHARGE_CODE
-    AND CII.TRADE_DATE = TEMP.TRADE_DATE AND CII.DATASOURCE_TYPE = TEMP.DATASOURCE_TYPE);
+    ) A ON DUPLICATE KEY
+    UPDATE
+    EXCHARGE_CODE=A.EXCHARGE_CODE,
+    TRADE_DATE=A.TRADE_DATE,
+    DATASOURCE_TYPE=A.DATASOURCE_TYPE,
+    OPEN_PRICE=A.OPEN_PRICE,
+    CLOSE_PRICE=A.CLOSE_PRICE,
+    HIGH_PRICE=A.HIGH_PRICE,
+    MID_PRICE=A.MID_PRICE,
+    QUOT_UNIT=A.QUOT_UNIT,
+    BASIS_CYY=A.BASIS_CYY,
+    QUOT_CYY=A.QUOT_CYY,
+    DATA_SOURCE=A.DATA_SOURCE,
+    STATUS=A.STATUS,
+    UPDATE_USER=A.UPDATE_USER,
+    UPDATE_TIME=NOW(),
+    ERR_MSG=A.ERR_MSG
   </insert>
 
   <delete id="deleteAllData">
