@@ -473,97 +473,97 @@
         });
 
         // 融资人2
-        $('#svrBussRepAssetCreditNonstdInfoDto_chbFinancierId').change(function(){
-            // $("#fundType").val('').trigger('change');
-            var svrBussRepAssetCreditNonstdInfoDto_chbFinancierId = $('#svrBussRepAssetCreditNonstdInfoDto_chbFinancierId').val();
-            if(svrBussRepAssetCreditNonstdInfoDto_chbFinancierId ==''|| svrBussRepAssetCreditNonstdInfoDto_chbFinancierId==undefined){
-                // $('#fundName').val('');
-            }
-            else{
-                var data = {
-                    chbFinancierId: $('#svrBussRepAssetCreditNonstdInfoDto_chbFinancierId').val()
-                }
-                //$('#fundName').val($('#finprodId').select2('data')[0].text).trigger('change');
-                Joyin.ajaxJson(basePath + 'common/select/getFinancierInfo', data,
-                    function (resultObj) {
-                        //if (resultObj.fundType) {
-                        // $('#fundName').val(resultObj.fundName).trigger('change');
-                        // $("#fundType").val(resultObj.fundType).trigger('change');
-                        //}
-                        if (resultObj.partyType1!=null){
-                            $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType1').val(resultObj.partyType1).trigger('change');
-                        } else {
-                            $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType1').val('').trigger('change');
-                        }
-                        if (resultObj.partyType2!=null){
-                            $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType2').val(resultObj.partyType2).trigger('change');
-                        } else {
-                            $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType2').val('').trigger('change');
-                        }
-                        if (resultObj.partyType3!=null){
-                            $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType3').val(resultObj.partyType3).trigger('change');
-                        } else {
-                            $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType3').val('').trigger('change');
-                        }
-                        if (resultObj.industry!=null){
-                            $('#svrBussRepAssetCreditNonstdInfoDto_repIndustry1').val(resultObj.industry).trigger('change');
-                        } else {
-                            $('#svrBussRepAssetCreditNonstdInfoDto_repIndustry1').val('').trigger('change');
-                        }
-                        if (resultObj.industry2!=null){
-                            $('#svrBussRepAssetCreditNonstdInfoDto_industryLevel2Type').val(resultObj.industry2).trigger('change');
-                        } else {
-                            $('#svrBussRepAssetCreditNonstdInfoDto_industryLevel2Type').val('').trigger('change');
-                        }
-                    });
-            }
-        });
-
-        // 融资人
-        $('#svrBussRepAssetCreditNonstdInfoDto_repFinancie').change(function(){
-            // $("#fundType").val('').trigger('change');
-            var svrBussRepAssetCreditNonstdInfoDto_repFinancie = $('#svrBussRepAssetCreditNonstdInfoDto_repFinancie').val();
-            if(svrBussRepAssetCreditNonstdInfoDto_repFinancie ==''|| svrBussRepAssetCreditNonstdInfoDto_repFinancie==undefined){
-                // $('#fundName').val('');
-            }
-            else{
-                var data = {
-                    chbFinancierId: $('#svrBussRepAssetCreditNonstdInfoDto_repFinancie').val()
-                };
-                //$('#fundName').val($('#finprodId').select2('data')[0].text).trigger('change');
-                Joyin.ajaxJson(basePath + 'common/select/getFinancierInfo', data,
-                    function (resultObj) {
-                        //if (resultObj.fundType) {
-                        // $('#fundName').val(resultObj.fundName).trigger('change');
-                        // $("#fundType").val(resultObj.fundType).trigger('change');
-                        //}
-                        if (resultObj.partyType1!=null){
-                            $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType1').val(resultObj.partyType1).trigger('change');
-                        } else {
-                            $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType1').val('').trigger('change');
-                        }
-                        if (resultObj.partyType2!=null){
-                            $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType2').val(resultObj.partyType2).trigger('change');
-                        } else {
-                            $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType2').val('').trigger('change');
-                        }
-                        if (resultObj.partyType3!=null){
-                            $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType3').val(resultObj.partyType3).trigger('change');
-                        } else {
-                            $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType3').val('').trigger('change');
-                        }
-                        if (resultObj.industry!=null){
-                            $('#svrBussRepAssetCreditNonstdInfoDto_repIndustry1').val(resultObj.industry).trigger('change');
-                        } else {
-                            $('#svrBussRepAssetCreditNonstdInfoDto_repIndustry1').val('').trigger('change');
-                        }
-                        if (resultObj.industry2!=null){
-                            $('#svrBussRepAssetCreditNonstdInfoDto_industryLevel2Type').val(resultObj.industry2).trigger('change');
-                        } else {
-                            $('#svrBussRepAssetCreditNonstdInfoDto_industryLevel2Type').val('').trigger('change');
-                        }
-                    });
-            }
-        });
+        // $('#svrBussRepAssetCreditNonstdInfoDto_chbFinancierId').change(function(){
+        //     // $("#fundType").val('').trigger('change');
+        //     var svrBussRepAssetCreditNonstdInfoDto_chbFinancierId = $('#svrBussRepAssetCreditNonstdInfoDto_chbFinancierId').val();
+        //     if(svrBussRepAssetCreditNonstdInfoDto_chbFinancierId ==''|| svrBussRepAssetCreditNonstdInfoDto_chbFinancierId==undefined){
+        //         // $('#fundName').val('');
+        //     }
+        //     else{
+        //         var data = {
+        //             chbFinancierId: $('#svrBussRepAssetCreditNonstdInfoDto_chbFinancierId').val()
+        //         }
+        //         //$('#fundName').val($('#finprodId').select2('data')[0].text).trigger('change');
+        //         Joyin.ajaxJson(basePath + 'common/select/getFinancierInfo', data,
+        //             function (resultObj) {
+        //                 //if (resultObj.fundType) {
+        //                 // $('#fundName').val(resultObj.fundName).trigger('change');
+        //                 // $("#fundType").val(resultObj.fundType).trigger('change');
+        //                 //}
+        //                 if (resultObj.partyType1!=null){
+        //                     $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType1').val(resultObj.partyType1).trigger('change');
+        //                 } else {
+        //                     $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType1').val('').trigger('change');
+        //                 }
+        //                 if (resultObj.partyType2!=null){
+        //                     $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType2').val(resultObj.partyType2).trigger('change');
+        //                 } else {
+        //                     $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType2').val('').trigger('change');
+        //                 }
+        //                 if (resultObj.partyType3!=null){
+        //                     $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType3').val(resultObj.partyType3).trigger('change');
+        //                 } else {
+        //                     $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType3').val('').trigger('change');
+        //                 }
+        //                 if (resultObj.industry!=null){
+        //                     $('#svrBussRepAssetCreditNonstdInfoDto_repIndustry1').val(resultObj.industry).trigger('change');
+        //                 } else {
+        //                     $('#svrBussRepAssetCreditNonstdInfoDto_repIndustry1').val('').trigger('change');
+        //                 }
+        //                 if (resultObj.industry2!=null){
+        //                     $('#svrBussRepAssetCreditNonstdInfoDto_industryLevel2Type').val(resultObj.industry2).trigger('change');
+        //                 } else {
+        //                     $('#svrBussRepAssetCreditNonstdInfoDto_industryLevel2Type').val('').trigger('change');
+        //                 }
+        //             });
+        //     }
+        // });
+        //
+        // // 融资人
+        // $('#svrBussRepAssetCreditNonstdInfoDto_repFinancie').change(function(){
+        //     // $("#fundType").val('').trigger('change');
+        //     var svrBussRepAssetCreditNonstdInfoDto_repFinancie = $('#svrBussRepAssetCreditNonstdInfoDto_repFinancie').val();
+        //     if(svrBussRepAssetCreditNonstdInfoDto_repFinancie ==''|| svrBussRepAssetCreditNonstdInfoDto_repFinancie==undefined){
+        //         // $('#fundName').val('');
+        //     }
+        //     else{
+        //         var data = {
+        //             chbFinancierId: $('#svrBussRepAssetCreditNonstdInfoDto_repFinancie').val()
+        //         };
+        //         //$('#fundName').val($('#finprodId').select2('data')[0].text).trigger('change');
+        //         Joyin.ajaxJson(basePath + 'common/select/getFinancierInfo', data,
+        //             function (resultObj) {
+        //                 //if (resultObj.fundType) {
+        //                 // $('#fundName').val(resultObj.fundName).trigger('change');
+        //                 // $("#fundType").val(resultObj.fundType).trigger('change');
+        //                 //}
+        //                 if (resultObj.partyType1!=null){
+        //                     $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType1').val(resultObj.partyType1).trigger('change');
+        //                 } else {
+        //                     $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType1').val('').trigger('change');
+        //                 }
+        //                 if (resultObj.partyType2!=null){
+        //                     $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType2').val(resultObj.partyType2).trigger('change');
+        //                 } else {
+        //                     $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType2').val('').trigger('change');
+        //                 }
+        //                 if (resultObj.partyType3!=null){
+        //                     $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType3').val(resultObj.partyType3).trigger('change');
+        //                 } else {
+        //                     $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType3').val('').trigger('change');
+        //                 }
+        //                 if (resultObj.industry!=null){
+        //                     $('#svrBussRepAssetCreditNonstdInfoDto_repIndustry1').val(resultObj.industry).trigger('change');
+        //                 } else {
+        //                     $('#svrBussRepAssetCreditNonstdInfoDto_repIndustry1').val('').trigger('change');
+        //                 }
+        //                 if (resultObj.industry2!=null){
+        //                     $('#svrBussRepAssetCreditNonstdInfoDto_industryLevel2Type').val(resultObj.industry2).trigger('change');
+        //                 } else {
+        //                     $('#svrBussRepAssetCreditNonstdInfoDto_industryLevel2Type').val('').trigger('change');
+        //                 }
+        //             });
+        //     }
+        // });
     });
 }());
