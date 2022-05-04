@@ -96,9 +96,9 @@ public class AssetInfoDetail001Controller extends BaseController {
 			model.addAttribute("searchDataEnd", map.get("searchDataEnd"));
 			model.addAttribute("isMain", "01");
 		}
-		super.setSelectOptionToModel(model,DictCode.资产_负债类别, DictCode.资产_负债二级类别
+		super.setSelectOptionToModel(model,DictCode.资产_负债类别, DictCode.资产_负债二级类别,DictCode.资产负债一级类别
 				, DictCode.中债_上游资产一级分类, DictCode.中债_上游资产二级分类,DictCode.中债_上游资产三级分类,DictCode.中债_上游资产四级分类,
-				DictCode.中债_上游资产五级分类, DictCode.中债_处理状态);
+				DictCode.中债_上游资产五级分类, DictCode.中债数据状态);
 		return super.init(model);
 	}
 
@@ -152,16 +152,7 @@ public class AssetInfoDetail001Controller extends BaseController {
     @SuppressWarnings("unchecked")
 	@RequestMapping(value = ACTION_EXPORT)
     public ResponseEntity<byte[]> export() {
-
-		List<AssetInfoDetailDto> dtoList = assetInfoDetailMService.setDataList(RequestUtil.getParameters(getRequest()));
-		File outFile = assetInfoDetailMService.makeFile(
-				"/com/joyintech/tams/svreport/chb/assetinfodetail/conf/export_conf.xml", dtoList);
-		return ExportUtil.export(
-				"资产基本信息" + GlobalConstant.OPEN_PARENTHESIS
-						+ DateUtil.format(new Date()) + GlobalConstant.CLOSE_PARENTHESIS
-						+ GlobalConstant.POINT + FileNameUtil.getFileExtName(outFile),
-				outFile, true);
-
+		return assetInfoDetailMService.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
     }
       
     /**

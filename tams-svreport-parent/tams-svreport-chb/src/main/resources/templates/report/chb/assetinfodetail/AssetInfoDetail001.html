@@ -19,7 +19,9 @@
 <div layout:fragment="content">
 	<div class="form-button-area" filter="false">
 		<a id="AssetInfoDetail001_btn_add" class="layui-btn layui-btn-sm btn-create">新建</a>
+<!--
 		<a id="AssetInfoDetail001_btn_import" class="layui-btn layui-btn-sm btn-default btn-import">导入</a>
+-->
 	</div>
 
 
@@ -68,7 +70,7 @@
 					<label class="layui-form-label form-lable">资产/负债一级类别</label>
 					<div class="layui-input-inline input-inline">
 						<select id="assetType" class="layui-input form-input input-select"
-								data-th-data-result='${SVR_ASSETDEBT_TYPE}' placeholder="请选择"
+								data-th-data-result='${SVR_ASSET_TYPE_FIRST_LEVEL}' placeholder="请选择"
 								data-th-initvalue="${assetType}"
 								data-th-placeholder="#{SysCommon.selectplaceholder}"
 								allowClear="true" multiple="true">
@@ -90,7 +92,7 @@
 					<label class="layui-form-label form-lable">数据状态</label>
 					<div class="layui-input-inline input-inline">
 							<select id="dataStatus" class="layui-input form-input input-select"
-									data-th-data-result='${DATA_STATUS}' placeholder="请选择"
+									data-th-data-result='${SVR_STATUS}' placeholder="请选择"
 									data-th-initvalue="${dataStatus}"
 									data-th-placeholder="#{SysCommon.selectplaceholder}"
 									allowClear="true">

@@ -18,17 +18,6 @@
 
 
 
-<!--			人行及其他公共数据.页面直接跳过修改直接保存数据-->
-			<input id="chbIssuerId" name="chbIssuerId"
-				   data-th-value="${entity?.chbIssuerId}" hidden>
-			<input id="chbFinancierId" name="chbFinancierId"
-				   data-th-value="${entity?.chbFinancierId}" hidden>
-			<input id="chbManagerId" name="chbManagerId"
-				   data-th-value="${entity?.chbManagerId}" hidden>
-			<input id="isBjszq" name="isBjszq"
-				   data-th-value="${entity?.isBjszq}" hidden>
-
-<!--			人行及其他公共数据.页面直接跳过修改直接保存数据-->
 
 
 
@@ -46,7 +35,7 @@
 
 										<input type="text" name="assetCode" id="assetCode" required
 											   style=" width: 100%!important; display: inline-block;"
-											   data-th-value="${entity?.assetCode}" maxlength="18"
+											   data-th-value="${entity?.assetCode}" maxlength="40"
 											   class="layui-input form-input" placeholder="请输入内容"
 											   data-th-placeholder="#{SysCommon.placeholder}">
 									</div>

@@ -210,8 +210,8 @@
           getElementById('floatFactor').val('').trigger("change");
           getElementById('floatFactor').attr("disabled",true);
 
-          getElementById('spreadRate').val('').trigger("change");
-          getElementById('spreadRate').attr("disabled",true);
+          // getElementById('spreadRate').val('').trigger("change");
+          // getElementById('spreadRate').attr("disabled",true);
 
       }else if(getElementById('floatFactorFlag').val() != null &&　getElementById('floatFactorFlag').val() != ''){
           getElementById('floatFactor').attr("disabled",false);
@@ -231,14 +231,6 @@
 
     var  initAssetCreditNonstd=function(){
         var assetTvalueCreditNonstd=$('#assetType2').val();
-
-        if(assetTvalueCreditNonstd=="2202"){
-            $('#constracteBusiType').attr('disabled',false);
-        }else{
-            $('#constracteBusiType').attr('disabled',true);
-            $("#constracteBusiType").val('').trigger("change");
-        }
-
 
         if(assetTvalueCreditNonstd=='2201'||assetTvalueCreditNonstd=='2202'){
             //份额面值置灰不可填
@@ -489,7 +481,7 @@
             }
             else{
                 var data = {
-                    svrBussRepAssetCreditNonstdInfoDto_chbFinancierId: $('#svrBussRepAssetCreditNonstdInfoDto_chbFinancierId').val()
+                    chbFinancierId: $('#svrBussRepAssetCreditNonstdInfoDto_chbFinancierId').val()
                 }
                 //$('#fundName').val($('#finprodId').select2('data')[0].text).trigger('change');
                 Joyin.ajaxJson(basePath + 'common/select/getFinancierInfo', data,
@@ -536,7 +528,7 @@
             }
             else{
                 var data = {
-                    svrBussRepAssetCreditNonstdInfoDto_chbFinancierId: $('#svrBussRepAssetCreditNonstdInfoDto_repFinancie').val()
+                    chbFinancierId: $('#svrBussRepAssetCreditNonstdInfoDto_repFinancie').val()
                 };
                 //$('#fundName').val($('#finprodId').select2('data')[0].text).trigger('change');
                 Joyin.ajaxJson(basePath + 'common/select/getFinancierInfo', data,

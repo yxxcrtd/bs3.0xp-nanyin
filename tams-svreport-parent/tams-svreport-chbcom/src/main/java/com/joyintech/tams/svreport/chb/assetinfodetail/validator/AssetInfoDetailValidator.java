@@ -92,7 +92,7 @@ public class AssetInfoDetailValidator implements BeanValidator{
         if(StringUtil.isEmpty(dto.getAssetUuid())){
             AssetInfoDetailDto resultDto = assetInfoDetailMapper.queryAssetInfo(dto.getAssetCode());
             if(null!=resultDto){
-                resultList.add(new ValidMessage("assetCode","资产编码已存在"));
+                resultList.add(new ValidMessage("assetCode","资产代码已存在"));
             }
         }
         dto.setIssuePartyId(CommonUtil.selectBankCode());

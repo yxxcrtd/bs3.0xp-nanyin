@@ -131,7 +131,8 @@ var QueryFunc=function(){
                 $("#issueAmt").attr("disabled",false);
                 $("#svrBussRepPlacementInfoDto_targetType1").val('01').trigger("change");
                 $("#svrBussRepPlacementInfoDto_targetType1").prop('required', true);
-                $("#targetAmt").prop('required', true);
+                $("#targetAmt").attr("disabled",false);
+
                 // var parms={assetuuid:$("#assetUuid").val()}
                 // Joyin.ajaxJson(
                 //     basePath + "chb/assetinfodetail/AssetInfoDetail002/getValue",parms,
@@ -145,7 +146,8 @@ var QueryFunc=function(){
                 $("#issueAmt").attr("disabled",true);
                 $("#issueAmt").val('');
                 $("#svrBussRepPlacementInfoDto_targetType1").prop('required', false);
-                $("#targetAmt").prop('required', false);
+                $("#targetAmt").val('').trigger("change");
+                $("#targetAmt").attr("disabled",true);
             }
         }else if(obj["03"].indexOf(repAssetType)>=0){
             //债券类资产/理财直接融资工具/同业存单
@@ -425,7 +427,7 @@ var QueryFunc=function(){
         object.svrBussRepDepositInfoDto.repTargetType = object.svrBussRepDepositInfoDto.repTargetType?object.svrBussRepDepositInfoDto.repTargetType.join(","):'';
         object.svrBussRepDepositInfoDto.repBankName = object.svrBussRepDepositInfoDto.bankName?object.svrBussRepDepositInfoDto.bankName:'';
         object.svrBussRepDepositInfoDto.repBasis = object.svrBussRepDepositInfoDto.basis?object.svrBussRepDepositInfoDto.basis:'';
-        object.svrBussRepAssetCreditNonstdInfoDto.repFinancie = $("#svrBussRepAssetCreditNonstdInfoDto_repFinancie").select2('data')[0].text;
+        //object.svrBussRepAssetCreditNonstdInfoDto.repFinancie = $("#svrBussRepAssetCreditNonstdInfoDto_repFinancie").select2('data')[0].text;
         object.pageModel = pageModel;
 
         Joyin.ajaxJson(basePath + 'chb/assetinfodetail/AssetInfoDetail002/check',object,function(result){
@@ -625,7 +627,7 @@ var QueryFunc=function(){
             repAssetType == '1211'||repAssetType == '1212'||repAssetType == '1213'||
             repAssetType == '1209'||repAssetType == '1299'||repAssetType == '2202'||
             repAssetType == '1202'||repAssetType == '1301'||repAssetType == '1399'||
-            repAssetType == '2101'||repAssetType == '2617'){
+            repAssetType == '2101'||repAssetType == '2617'||repAssetType == '1210'){
             $('#isConstracteBusi').attr('disabled',false);
         }else{
             $('#isConstracteBusi').attr('disabled',true);
@@ -642,6 +644,18 @@ var QueryFunc=function(){
         }
 
 
+    }
+
+    var  initprofitFlag=function(){
+        var assetTvalueFund=$('#assetType2').val();
+        //公募基金/私募基金
+        if(assetTvalueFund=='1106'||assetTvalueFund=='2401'||assetTvalueFund=='1303'||
+            assetTvalueFund=='2403'||assetTvalueFund=='2402'||assetTvalueFund=='2499'){
+            $("#svrBussRepFundInfoDto_profitFlag").attr("disabled",false);
+        }else{
+            $("#svrBussRepFundInfoDto_profitFlag").val('').trigger("change");
+            $("#svrBussRepFundInfoDto_profitFlag").attr("disabled",true);
+        }
     }
 
     var assetTypeValSet = function(){
@@ -670,7 +684,7 @@ var QueryFunc=function(){
         $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType1').val('').trigger('change');
         $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType2').val('').trigger('change');
         $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType3').val('').trigger('change');
-        $('#svrBussRepAssetCreditNonstdInfoDto_repIndustry1').val('0').trigger('change');
+        $('#svrBussRepAssetCreditNonstdInfoDto_repIndustry1').val('').trigger('change');
         $('#svrBussRepAssetCreditNonstdInfoDto_industryLevel2Type').val('').trigger('change');
 
         // 管理人2置空
@@ -702,7 +716,11 @@ var QueryFunc=function(){
         poolCode();
         assetVal();
         assetTypeDetail();
+        isConstracteBusiVal();
+        assetTypeValSet();
         changeReport();
+        isBankCapVal();
+        initprofitFlag();
     }, 10000);
 
 
@@ -734,7 +752,7 @@ var QueryFunc=function(){
             assetVal();
             resetVal();
             assetTypeValSet();
-
+            initprofitFlag();
             //新增中债月报要素信息分类配置
             assetTypeDetail();
         });

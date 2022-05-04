@@ -507,28 +507,29 @@ public class PbcMonthAssetReportService  extends BaseService{
             if(!PbcMonthReportConstants.PBC_ASSETTYPE1_P14.equals(pos.getAssetType1())){
                 //3和4过滤减值
                 //要过滤应收账款和应付账款
-            if(!(PbcMonthReportConstants.PBC_ASSETTYPE1_P11.equals(pos.getAssetType1())||PbcMonthReportConstants.PBC_ASSETTYPE1_P12.equals(pos.getAssetType1()))) {
+            if(DictCodeListExt3.银行资本补充工具_永续债_债性.getValue().equals(pos.getBankCapital())||
+                    DictCodeListExt3.银行资本补充工具_永续债_股性.getValue().equals(pos.getBankCapital())||
+                    DictCodeListExt3.银行资本补充工具_二级资本债.getValue().equals(pos.getBankCapital())||
+                    DictCodeListExt2.股票类型_优先股.getValue().equals(pos.getSharesType())) {
                 //h30000	三、银行资本补充工具合计	=“h31000优先股+h32000永续债（债性）+h33000永续债（股性）+h34000二级资本债”
-                if (DictCodeList.是否_是.getValue().equals(pos.getBankSecPrefer())) {
+                if (DictCodeListExt2.股票类型_优先股.getValue().equals(pos.getSharesType())) {
                     //h31000	  其中：优先股	统计资产要素信息中 是否商业银行优先股=“是”的资产
                     setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H31000_QZYXG, reportType, rateMap, source, null, massageMap);
                     setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H30000_YHZBBCGJ, reportType, rateMap, source, null, massageMap);
                 }
 
-                if (DictCodeList.是否_是.getValue().equals(pos.getBankSecPerpetual())) {
-                    if (DictCodeListExt3.债券性质_债性.getValue().equals(pos.getIsPerpetual())) {
-                        //h32000	        永续债（债性）	统计资产要素信息中 是否商业银行永续债=“是”，且债券性质=“债性”的资产
-                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H32000_YXZZX, reportType, rateMap, source, null, massageMap);
-                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H30000_YHZBBCGJ, reportType, rateMap, source, null, massageMap);
-                    }
-                    if (DictCodeListExt3.债券性质_股性.getValue().equals(pos.getIsPerpetual())) {
-                        //h33000 永续债（股性）	统计资产要素信息中 是否商业银行永续债=“是”，且债券性质=“股性”的资产
-                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H33000_YXZGX, reportType, rateMap, source, null, massageMap);
-                        setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H30000_YHZBBCGJ, reportType, rateMap, source, null, massageMap);
-                    }
+                if (DictCodeListExt3.银行资本补充工具_永续债_债性.getValue().equals(pos.getBankCapital())) {
+                    //h32000	        永续债（债性）	统计资产要素信息中 是否商业银行永续债=“是”，且债券性质=“债性”的资产
+                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H32000_YXZZX, reportType, rateMap, source, null, massageMap);
+                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H30000_YHZBBCGJ, reportType, rateMap, source, null, massageMap);
+                }
+                if (DictCodeListExt3.银行资本补充工具_永续债_股性.getValue().equals(pos.getBankCapital())) {
+                    //h33000 永续债（股性）	统计资产要素信息中 是否商业银行永续债=“是”，且债券性质=“股性”的资产
+                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H33000_YXZGX, reportType, rateMap, source, null, massageMap);
+                    setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H30000_YHZBBCGJ, reportType, rateMap, source, null, massageMap);
                 }
 
-                if (DictCodeList.是否_是.getValue().equals(pos.getBankSecCapital())) {
+                if (DictCodeListExt3.银行资本补充工具_二级资本债.getValue().equals(pos.getBankCapital())) {
                     //h34000	   二级资本债	统计资产要素信息中 是否商业银行二级资本债=“是”的资产
                     setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H34000_EJZBZ, reportType, rateMap, source, null, massageMap);
                     setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H30000_YHZBBCGJ, reportType, rateMap, source, null, massageMap);

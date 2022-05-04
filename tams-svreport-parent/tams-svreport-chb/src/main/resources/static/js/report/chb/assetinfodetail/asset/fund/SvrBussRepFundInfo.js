@@ -94,7 +94,7 @@
 			}
 			else{
 				var data = {
-					svrBussRepFundInfoDto_chbManagerId: $('#svrBussRepFundInfoDto_chbManagerId').val()
+					chbManagerId: $('#svrBussRepFundInfoDto_chbManagerId').val()
 				}
 				//$('#fundName').val($('#finprodId').select2('data')[0].text).trigger('change');
 				Joyin.ajaxJson(basePath + 'common/select/getManagerInfo', data,
@@ -102,6 +102,7 @@
 						//if (resultObj.fundType) {
 						// $('#fundName').val(resultObj.fundName).trigger('change');
 						// $("#fundType").val(resultObj.fundType).trigger('change');
+
 						//}
 						// console.log($('#svrBussRepFundInfoDto_chbManagerId').val());
 						// console.log(resultObj);

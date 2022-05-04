@@ -40,6 +40,12 @@
       <result column="SUNASSETTYPE" property="sunassettype" jdbcType="VARCHAR" />
       <result column="SUNASSETTYPE2" property="sunassettype2" jdbcType="VARCHAR" />
       <result column="OLD_ASSET_CODE" property="oldAssetCode" jdbcType="VARCHAR" />
+      <result column="BANK_CAPITAL" property="bankCapital" jdbcType="VARCHAR" />
+      <result column="SHARES_TYPE" property="sharesType" jdbcType="VARCHAR" />
+
+
+
+
 
 
   </resultMap>
@@ -760,7 +766,9 @@
         ASSETINFO.IS_FBZB,
         ASSETINFO.BANK_SEC_KZZQ,
         POSITION.IS_FHXGCP,
-        POSITION.OLD_ASSET_CODE
+        POSITION.OLD_ASSET_CODE,
+        ASSETINFO.BANK_CAPITAL,
+        ASSETINFO.SHARES_TYPE
         /*G06改造新加字段*/
         from CHB_MONTH_ASSET_POSITION POSITION
         LEFT JOIN CHB_ASSET_INFO ASSETINFO
