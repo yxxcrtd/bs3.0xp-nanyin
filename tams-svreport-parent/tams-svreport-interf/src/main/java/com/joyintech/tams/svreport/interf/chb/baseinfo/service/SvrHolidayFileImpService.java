@@ -104,7 +104,7 @@ public class SvrHolidayFileImpService extends FileImpService {
 	public String importDB(List<Map<String, String>> listData,InterfFile interfFile, String date) {
 		String result = "";
 		logger.info("节假日数据check---开始-----:" +  DateUtil.format(new Date()));
-		baseCommonCheckService.checkDataAll(I, listData, "MST_HOLIDAY", interfFile.getFilename() ,InterfDefine.节假日数据.getCode(), "MARKET_CODE","CDATE");
+		List<Map<String, String>> listError = checkData(listData, interfFile.getFilename(), InterfDefine.节假日数据.getCode(), InterfDefine.节假日数据.getCode(), null,"MARKET_CODE","CDATE");
 		logger.info("节假日数据check查---结束-----:" +  DateUtil.format(new Date()));
 		if(CollectionUtils.isEmpty(listData)){
 			return "success";

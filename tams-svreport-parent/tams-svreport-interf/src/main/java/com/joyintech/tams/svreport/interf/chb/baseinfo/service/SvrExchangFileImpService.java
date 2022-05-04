@@ -14,6 +14,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.interf.common.constant.InterfConstants;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections4.CollectionUtils;
@@ -100,6 +103,9 @@ public class SvrExchangFileImpService extends FileImpService {
 	
 	@Autowired
 	private SvrMstExchangeImpMapper chbExchangeImpMapper;
+
+	@Autowired
+	private BaseCommonCheckService baseCommonCheckService;
 	
 	@Override
 	public String saveData(List<Map<String, String>> listData, String saveFlag, String dateSource) {
@@ -109,7 +115,7 @@ public class SvrExchangFileImpService extends FileImpService {
 		logger.debug("汇率数据转dto---开始-----:" +  df.format(new Date()));
 		// modify by convertMapToEntity yangnxianjiu 2022-01-19 start
 //		listNE = convertMapToEntity(exchangeList);
-		List<MstExchargeQuote> listNE = (List<MstExchargeQuote>) convertMapToEntity(listData,MstExchargeQuote.class);
+		List<MstExchargeQuote> listNE = this.convertToBean(listData);
 		// modify by convertMapToEntity yangnxianjiu 2022-01-19 end
 		logger.debug("汇率数据转dto---结束-----:" +  df.format(new Date()));
 		if(!CollectionUtils.isEmpty(listNE)){
@@ -237,8 +243,8 @@ public class SvrExchangFileImpService extends FileImpService {
 		String result = "";
 		
 		logger.debug("汇率数据检查---开始-----:" +  df.format(new Date()));
-		@SuppressWarnings("unused")
-		List<Map<String, String>> listError = checkData(listData, fileList.getFilename(), InterfDefine.汇率信息数据.getCode(), InterfDefine.汇率信息数据.getCode(), null,"EXCHARGE_CODE", "TRADE_DATE");
+	    //对数据进行校验
+		baseCommonCheckService.checkDataAll("I", listData, "MST_EXCHARGE_QUOTE", fileList.getFilename() ,InterfDefine.汇率信息数据.getCode(), "EXCHARGE_CODE","TRADE_DATE","DATASOURCE_TYPE");
 		logger.debug("汇率数据检查---结束-----:" +  df.format(new Date()));
 		ChbInterfConfigDto interfConfig = ChbInterfUtil.queryInterfConfigByInterfid(InterfDefine.汇率信息数据.getCode());
 		if(CollectionUtils.isEmpty(listData)){
@@ -317,10 +323,7 @@ public class SvrExchangFileImpService extends FileImpService {
 	
 	/**
      * 将map转换为entity格式
-     * @param infoList 传入的listMap
-     * @param entities 转换后的lis
-     * @param listCloumn 表列名
-     * @param interType 数据来源
+     * @param dataList 传入的listMap
      * @see
      * @since 1.0
      */
@@ -405,4 +408,64 @@ public class SvrExchangFileImpService extends FileImpService {
         }
         return rs;
     }
+
+
+	/**
+	 * 增强check list转换为Bean
+	 *
+	 * @return 返回检查结果
+	 */
+	private List<MstExchargeQuote> convertToBean(List<Map<String, String>> mapList) {
+
+
+		List<MstExchargeQuote> returnList = new LinkedList<>();
+		MstExchargeQuote dto = null;
+		for (Map<String, String> map : mapList) {
+			dto = new MstExchargeQuote();
+			if (map.containsKey("EXCHARGE_CODE")) {
+				String exchargeCode = map.get("EXCHARGE_CODE");
+				dto.setExchargeCode(exchargeCode);
+				dto.setBasisCyy(exchargeCode.split("/")[0]);
+				dto.setQuotCyy(exchargeCode.split("/")[1]);
+			}
+			if (map.containsKey("TRADE_DATE")) {
+				dto.setTradeDate(com.joyintech.framework.util.DateUtil.parse(map.get("TRADE_DATE")));
+			}
+			if (map.containsKey("DATASOURCE_TYPE")) {
+				dto.setDatasourceType(map.get("DATASOURCE_TYPE"));
+			}
+			if (map.containsKey("OPEN_PRICE")) {
+				String openPrice = map.get("OPEN_PRICE");
+				dto.setOpenPrice(StringUtil.isBlank(openPrice) ? null : new BigDecimal(openPrice));
+			}
+			if (map.containsKey("CLOSE_PRICE")) {
+				String closePrice = map.get("CLOSE_PRICE");
+				dto.setClosePrice(StringUtil.isBlank(closePrice) ? null: new BigDecimal(closePrice));
+			}
+			if (map.containsKey("MID_PRICE")) {
+				String midPrice = map.get("MID_PRICE");
+				dto.setMidPrice(StringUtil.isBlank(midPrice)? null : new BigDecimal(midPrice));
+			}
+			if (map.containsKey("HIGH_PRICE")) {
+				String highPrice = map.get("HIGH_PRICE");
+				dto.setHighPrice(StringUtil.isBlank(highPrice)? null : new BigDecimal(highPrice));
+			}
+			if (map.containsKey("LOW_PRICE")) {
+				String lowPrice = map.get("LOW_PRICE");
+				dto.setLowPrice(StringUtil.isBlank(lowPrice)? null : new BigDecimal(lowPrice));
+			}
+			if (map.containsKey("QUOT_UNIT")) {
+				dto.setQuotUnit(Long.parseLong(map.get("QUOT_UNIT")));
+			}
+			if (Objects.equals("A", map.get("STATUS"))) {
+				dto.setStatus(DictCodeListExt2.数据状态_待处理.getValue());
+				dto.setErrMsg(map.get("ERRMSG"));
+			} else {
+				dto.setStatus(DictCodeListExt2.数据状态_有效.getValue());
+			}
+			dto.setDataSource(DictCodeListExt2.数据来源_接口.getValue());
+			returnList.add(dto);
+		}
+		return returnList;
+	}
 }
