@@ -500,12 +500,14 @@ public class PbcPrdBaseinfoSubNew extends BaseEntity{
      * 跨境理财通标识
      *
      */
+    @DictFormat(DictCode.人行是否)
     private  String crossBorderFlag;
 
     /**
      * 以财产权信托名义开展的资金信托标识
      *
      */
+    @DictFormat(DictCode.人行是否)
     private  String zjxtFlag;
     
     /** 人行代码（外部）
