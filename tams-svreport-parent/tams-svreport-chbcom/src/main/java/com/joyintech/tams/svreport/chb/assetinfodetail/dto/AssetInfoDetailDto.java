@@ -289,7 +289,7 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 	 */
 	public String getAssetTypeStr() {
 
-		return SysDataUtil.getNameFromDataDict(DictCode.资产_负债类别, this.getAssetType());
+		return SysDataUtil.getNameFromDataDict(DictCode.资产负债一级类别, this.getAssetType());
 	}
 	/**
 	 * 资产_负债二级类别

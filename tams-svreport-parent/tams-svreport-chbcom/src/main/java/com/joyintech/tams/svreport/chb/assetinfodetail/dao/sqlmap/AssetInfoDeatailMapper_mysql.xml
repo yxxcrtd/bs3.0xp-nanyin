@@ -2059,7 +2059,20 @@
 
     <select id="selectChbInfoByParam"  resultMap="BaseResultMap">
 
-        SELECT *
+        SELECT
+        A.dataStatus ,
+        A.ASSET_UUID,
+        A.asset_name,
+        A.asset_code,
+        trim(L.LINKED_ITEM_CODE) asset_type,
+        A.asset_type2,
+        A.org_asset_type1,
+        A.org_asset_type2,
+        A.org_asset_type3,
+        A.vDateStr,
+        A.mDateStr,
+        A.ERRMSG
+
         FROM (
         SELECT i.status dataStatus ,
         i.ASSET_UUID,
@@ -2081,11 +2094,7 @@
                 #{item}
             </foreach>
         </if>
-        <if test="assetTypes != null and assetTypes.length>0">
-            <foreach collection="assetTypes" item="item" open=" and asset_type in(" separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
+
         <if test="assetType2s != null and assetType2s.length>0">
             <foreach collection="assetType2s" item="item" open=" and asset_type2 in(" separator="," close=")">
                 #{item}
@@ -2134,11 +2143,6 @@
                 #{item}
             </foreach>
         </if>
-        <if test="assetTypes != null and assetTypes.length>0">
-            <foreach collection="assetTypes" item="item" open=" and e.asset_type in(" separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
         <if test="assetType2s != null and assetType2s.length>0">
             <foreach collection="assetType2s" item="item" open=" and e.asset_type2 in(" separator="," close=")">
                 #{item}
@@ -2160,7 +2164,15 @@
         <if test="Assetuuid != null and Assetuuid!=''">
             AND DATAUUID = #{Assetuuid,jdbcType=VARCHAR}
         </if>
-        ) t ORDER BY dataStatus DESC
+        )  a
+        left join  SYS_DATADICT_LIST_LINK L ON  L.LINKED_DICT_CODE = 'SVR_ASSET_TYPE_FIRST_LEVEL'  AND L.ITEM_CODE = A.asset_type2
+        WHERE 1=1
+        <if test="assetTypes != null and assetTypes.length>0">
+            <foreach collection="assetTypes" item="item" open=" and trim(L.LINKED_ITEM_CODE) in(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        ORDER BY A.dataStatus DESC
 
     </select>
 
