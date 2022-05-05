@@ -135,10 +135,15 @@
                 <div class="form-inline-wrap">
                     <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussQDIIBondRepInfo.partyGrade}">发行机构主体信用评级</label>
                     <div class="layui-input-inline input-inline">
-                        <input type="text" th:id="|${entityName}_partyGrade|" th:name="|${entityName}.partyGrade|"
-                               data-th-value="${entity?.partyGrade}"
-                               class="layui-input form-input" placeholder="请输入内容"
-                               data-th-placeholder="#{SysCommon.placeholder}" required>
+
+                        <select th:id="|${entityName}_partyGrade|" th:name="|${entityName}.partyGrade|"
+                                th:initValue="${entity?.partyGrade}"
+                                class="layui-input form-input input-select" placeholder="请输入内容"
+                                data-th-placeholder="#{SysCommon.placeholder}" data-th-data-result="${CHB_BODY_GRADE}"
+                                required>
+                        </select>
+
+
                     </div>
                 </div>
 
