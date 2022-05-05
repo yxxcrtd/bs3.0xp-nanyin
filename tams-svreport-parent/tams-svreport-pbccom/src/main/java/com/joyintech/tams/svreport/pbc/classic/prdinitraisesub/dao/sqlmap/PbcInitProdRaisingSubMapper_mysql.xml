@@ -783,7 +783,7 @@
     SUBMIT_FEEDBACK_STATUS = null
     where  trim(PBC_PROD_ID) in
     <foreach collection="list" open="(" close=")" separator="," item="item">
-      #{item.pbcProdIdShow,jdbcType=CHAR}
+      #{item.pbcProdId,jdbcType=CHAR}
     </foreach>
   </update>
   <!-- 手工处理 -->
