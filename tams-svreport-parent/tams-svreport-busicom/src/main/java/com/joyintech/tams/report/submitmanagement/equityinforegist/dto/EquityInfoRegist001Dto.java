@@ -450,6 +450,9 @@ public class EquityInfoRegist001Dto extends TableRow {
     public String getSubmitFeedbackStatusStr() {
         return submitFeedbackStatus==null?null:SysDataUtil.getNameFromDataDict(DictCode.报送反馈状态, this.submitFeedbackStatus);
     }
+    public String getSubmitFeedbackStatusDesc() {
+        return submitFeedbackStatus==null?null:SysDataUtil.getNameFromDataDict(DictCode.报送反馈状态, this.submitFeedbackStatus);
+    }
     /**
      * 设置 submitFeedbackStatus
      *
