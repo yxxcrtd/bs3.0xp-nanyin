@@ -823,7 +823,7 @@
         (case TERM_RIGHT_FLAG when '01' then '1' else '2' end) TERM_RIGHT_FLAG,
         (case CUS_REDEEM_FLAG when '01' then '1' else '2' end) CUS_REDEEM_FLAG,
         (case CREDIT_FLAG when '01' then '1' else '2' end) CREDIT_FLAG,
-        REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(CREDIT_TYPE,'05','6'),'04','1'),'03','4'),'02','3'),'03','2')
+        REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(CREDIT_TYPE,'05','6'),'04','1'),'03','4'),'02','3'),'01','2')
         CREDIT_TYPE,
         REPLACE(CREDIT_MODE,'0','') CREDIT_MODE,
         IN_DEP_NAME,
