@@ -493,32 +493,25 @@ var QueryFunc=function(){
      */
     var assetVal = function(){
         var repAssetType = $('#assetType2').val();
-
-        $("input[id$='_assetId']").val($('#assetCode').val());
-
-        if(repAssetType=="2202"){
-            $("input[id$='_repCreditAssetCode']").attr('disabled',false);
-            if($('#assetCode').val().length == 8){
-                $("input[id$='_repCreditAssetCode']").val($('#assetCode').val());
-            }
-        }else{
-            $("input[id$='_repCreditAssetCode']").attr('disabled',true);
-            $("input[id$='_repCreditAssetCode']").val('').trigger("change");
-        }
-
         $("input[id$='_assetName']").val($('#assetName').val());
-
-
+        $("input[id$='_assetId']").val($('#assetCode').val());
         if (repAssetType == '1503'){
             $("#svrBussRepQDIIStructureInfoDto_contractName").val($('#assetName').val());
         }else {
             $("#svrBussRepQDIIStructureInfoDto_contractName").val('');
         }
+        if(repAssetType=="2202"){
+            if($('#assetCode').val().length == 8){
+                $("input[id$='_repCreditAssetCode']").val($('#assetCode').val());
+            }
+        }
+
     }
 
     var dateVal = function(){
         $("input[id$='_vdate']").val($('#vdate').val());
         $("input[id$='_mdate']").val($('#mdate').val());
+
     }
 
     var poolCode = function(){
@@ -565,6 +558,13 @@ var QueryFunc=function(){
             $("#bankSecZxzq").val('').trigger("change");
         }
 
+
+        if(repAssetType=="2202"){
+            $("input[id$='_repCreditAssetCode']").attr('disabled',false);
+        }else{
+            $("input[id$='_repCreditAssetCode']").attr('disabled',true);
+            $("input[id$='_repCreditAssetCode']").val('').trigger("change");
+        }
 
         //是否银行资本补充工具
         if(repAssetType == '1101'||repAssetType == '1110'||repAssetType == '1109'||
@@ -712,13 +712,18 @@ var QueryFunc=function(){
     setTimeout(function () {
         dateVal();
         poolCode();
-        assetVal();
-        assetTypeDetail();
-        isConstracteBusiVal();
         assetTypeValSet();
-        changeReport();
-        isBankCapVal();
-        initprofitFlag();
+        assetVal();
+
+        if(pageModel!=PAGE_MODEL_REFERENCE){
+
+            assetTypeDetail();
+            isConstracteBusiVal();
+
+            changeReport();
+            isBankCapVal();
+            initprofitFlag();
+        }
     }, 10000);
 
 
