@@ -2261,7 +2261,6 @@
         SELECT *
         FROM CHB_ASSET_INFO A
         where ASSET_CODE = #{assetCode,jdbcType=VARCHAR}
-          AND A.STATUS IN ('E')
     </select>
 
     <select id="getDataListLinkData"  resultType="com.joyintech.system.base.entity.SysDatadictListLink">
