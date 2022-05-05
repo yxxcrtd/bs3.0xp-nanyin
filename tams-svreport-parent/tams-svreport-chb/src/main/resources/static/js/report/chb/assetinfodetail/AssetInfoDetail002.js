@@ -684,8 +684,6 @@ var QueryFunc=function(){
         $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType1').val('').trigger('change');
         $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType2').val('').trigger('change');
         $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType3').val('').trigger('change');
-        $('#svrBussRepAssetCreditNonstdInfoDto_repIndustry1').val('').trigger('change');
-        $('#svrBussRepAssetCreditNonstdInfoDto_industryLevel2Type').val('').trigger('change');
 
         // 管理人2置空
         $('#svrBussRepFundInfoDto_chbManagerId').val('').trigger('change');
