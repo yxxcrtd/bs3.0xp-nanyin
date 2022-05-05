@@ -8,7 +8,7 @@ values ('ASSET_INFO_DETAIL_RULE_0000-182110B0-6B55-4D18-9496-0C92E4B002DB', 'Ass
 insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
 values ('ASSET_INFO_DETAIL_RULE_0000-182110B0-6B55-4D18-9496-0C92E4B003DB', 'AssetInfoRegist002', 'isNotEmpty', 'pbcAssetType3', null, null, 'N', '新人行三级分类要素不可为空。', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 
-
+DELETE FROM chb_datacheck_rule_inv WHERE SRCPROPERTY like '%ppp%';
 DELETE FROM CHB_DATACHECK_RULE_INV WHERE SRCPROPERTY = 'pppflag' AND PAGE_ID = 'AssetInfoRegist002' AND STATUS = 'E';
 insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
 values ('ASSET_INFO_DETAIL_RULE_1005-pppflag-NOTNULL', 'AssetInfoRegist002', 'isNotEmpty', 'pppflag', null, null, 'N', '公共PPP不可为空', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');

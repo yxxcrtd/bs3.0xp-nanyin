@@ -2244,7 +2244,7 @@
                 </foreach>
             </if>
         </where>
-        )
+        ) A
         ORDER BY COUNTER_NAME
 
     </select>
