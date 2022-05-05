@@ -26,13 +26,11 @@ public class ChbAssetInfo extends BaseEntity {
     /**
      * 资产类型
      */
-    @PrimaryKey(Field.PK_2)
     private String assetType;
 
     /**
      * 资产/负债二级类别 参考数据字典:ASSET_TYPE_SECOND_LEVEL
      */
-    @PrimaryKey(Field.PK_3)
     private String assetType2;
 
     /**
