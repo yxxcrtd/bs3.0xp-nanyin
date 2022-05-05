@@ -320,10 +320,11 @@ public class ChbTransMonthReportAssetBatchService {
             }
             // 5 银行资本补充工具
 //            if (pos.getSunassettype() != null && pos.getSunassettype().indexOf("F05") != -1) {
-            if (pos.getBankCapital().equals(DictCodeListExt3.银行资本补充工具_永续债_债性.getValue())||
-                    pos.getBankCapital().equals(DictCodeListExt3.银行资本补充工具_永续债_股性.getValue())||
-                    pos.getBankCapital().equals(DictCodeListExt3.银行资本补充工具_二级资本债.getValue())||
-                    pos.getSharesType().equals(DictCodeListExt2.股票类型_优先股.getValue())) {
+            if (Objects.equals(pos.getBankCapital(),DictCodeListExt3.银行资本补充工具_永续债_债性.getValue()) ||
+                    Objects.equals(pos.getBankCapital(),DictCodeListExt3.银行资本补充工具_永续债_股性.getValue()) ||
+                    Objects.equals(pos.getBankCapital(),DictCodeListExt3.银行资本补充工具_二级资本债.getValue()) ||
+                    Objects.equals(pos.getSharesType(),DictCodeListExt2.股票类型_优先股.getValue())) {
+
                 // 5.1 合 计
                 calcMonthReportSubDetail(AMT5_1, pos, true, false, null);
                 // 计算剩余加权期限使用剩余期限不等于零的合计 modify by wuhaisen 20220120 start
@@ -333,25 +334,25 @@ public class ChbTransMonthReportAssetBatchService {
                 }
                 // 计算剩余加权期限使用剩余期限不等于零的合计 modify by wuhaisen 20220120 end
                 // 其中 5.1.a 优先股
-                if (pos.getSharesType().equals(DictCodeListExt2.股票类型_优先股.getValue())) {
+                if (Objects.equals(pos.getSharesType(),DictCodeListExt2.股票类型_优先股.getValue())) {
                     calcMonthReportSubDetail(AMT5_1_a, pos, true, false, null);
                 }
                 // 5.1.b 永续债（债性）
-                if (pos.getBankCapital().equals(DictCodeListExt3.银行资本补充工具_永续债_债性.getValue())) {
+                if (Objects.equals(pos.getBankCapital(),DictCodeListExt3.银行资本补充工具_永续债_债性.getValue())) {
                     calcMonthReportSubDetail(AMT5_1_b, pos, true, false, null);
                 }
 //                if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0506")  != -1) {
 //                    calcMonthReportSubDetail(AMT5_1_b, pos, true, false, null);
 //                }
                 // 5.1.c 永续债（股性）
-                if ( pos.getBankCapital().equals(DictCodeListExt3.银行资本补充工具_永续债_股性.getValue())) {
+                if (Objects.equals(pos.getBankCapital(),DictCodeListExt3.银行资本补充工具_永续债_股性.getValue())) {
                     calcMonthReportSubDetail(AMT5_1_c, pos, true, false, null);
                 }
 //                if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0505")  != -1) {
 //                    calcMonthReportSubDetail(AMT5_1_c, pos, true, false, null);
 //                }
                 // 5.1.d 二级资本债
-                if (pos.getBankCapital().equals(DictCodeListExt3.银行资本补充工具_二级资本债.getValue())) {
+                if (Objects.equals(pos.getBankCapital(),DictCodeListExt3.银行资本补充工具_二级资本债.getValue())) {
                     calcMonthReportSubDetail(AMT5_1_d, pos, true, false, null);
                 }
 //                if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0505")  != -1) {
