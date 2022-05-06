@@ -45,7 +45,7 @@
 					<div class="layui-input-inline input-inline">
 						<select id="orgAssetType1" class="layui-input form-input input-select"
 								data-th-data-result='${SVR_ORG_ASSET_TYPE1}' placeholder="请选择"
-								data-th-initvalue="${orgAssetType1}"
+								data-th-initvalue="${orgAssetType1}" childrenIds="orgAssetType2"
 								data-th-placeholder="#{SysCommon.selectplaceholder}"
 								allowClear="true" multiple="true">
 						</select>
@@ -56,7 +56,7 @@
 					<div class="layui-input-inline input-inline">
 						<select id="orgAssetType2" class="layui-input form-input input-select"
 								data-th-data-result='${SVR_ORG_ASSET_TYPE2}' placeholder="请选择"
-								data-th-initvalue="${orgAssetType2}"
+								data-th-initvalue="${orgAssetType2}" parentIds="orgAssetType1"
 								data-th-placeholder="#{SysCommon.selectplaceholder}"
 								allowClear="true" multiple="true">
 						</select>

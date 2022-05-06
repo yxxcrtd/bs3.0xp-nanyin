@@ -2244,7 +2244,7 @@
                 </foreach>
             </if>
         </where>
-        )
+        ) A
         ORDER BY COUNTER_NAME
 
     </select>
@@ -2261,7 +2261,6 @@
         SELECT *
         FROM CHB_ASSET_INFO A
         where ASSET_CODE = #{assetCode,jdbcType=VARCHAR}
-          AND A.STATUS IN ('E')
     </select>
 
     <select id="getDataListLinkData"  resultType="com.joyintech.system.base.entity.SysDatadictListLink">
@@ -2375,7 +2374,7 @@
         BANK_SEC_PERPETUAL,BANK_SEC_KZZQ,BANK_SEC_ZXZQ,ISUNLISTED,
         IS_BZHPJ,CHB_ISSUER_ID,CHB_MANAGER_ID,
         CHB_FINANCIER_ID,PERPETUAL_FLAG,OPTION_FLAG,
-        IS_BJSZQ,IS_PERPETUAL,IS_FBZB,CONSTRACTE_BUSI_TYPE,CONSTRACTE_GRADE,CONSTRACTE_HEAVER_TIMES,IS_PROPERTY_TRUST
+        IS_BJSZQ,IS_PERPETUAL,IS_FBZB,CONSTRACTE_BUSI_TYPE,CONSTRACTE_GRADE,CONSTRACTE_HEAVER_TIMES
         <!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-29 start -->
         ,ACCOUNT_NO,
         CREDIT_ASSET_CODE,
@@ -2485,7 +2484,7 @@
         BANK_SEC_PERPETUAL,BANK_SEC_KZZQ,BANK_SEC_ZXZQ,ISUNLISTED,
         IS_BZHPJ,CHB_ISSUER_ID,CHB_MANAGER_ID,
         CHB_FINANCIER_ID,PERPETUAL_FLAG,OPTION_FLAG,
-        IS_BJSZQ,IS_PERPETUAL,IS_FBZB,CONSTRACTE_BUSI_TYPE,CONSTRACTE_GRADE,CONSTRACTE_HEAVER_TIMES,IS_PROPERTY_TRUST
+        IS_BJSZQ,IS_PERPETUAL,IS_FBZB,CONSTRACTE_BUSI_TYPE,CONSTRACTE_GRADE,CONSTRACTE_HEAVER_TIMES
         <!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-29 start -->
         ,ACCOUNT_NO,
         CREDIT_ASSET_CODE,
@@ -2723,9 +2722,8 @@
             #{item.constracteBusiType,jdbcType=VARCHAR} CONSTRACTE_BUSI_TYPE,
             #{item.constracteGrade,jdbcType=VARCHAR} CONSTRACTE_GRADE,
             #{item.constracteHeaverTimes,jdbcType=DECIMAL} CONSTRACTE_HEAVER_TIMES,
-            #{item.isPropertyTrust,jdbcType=VARCHAR} IS_PROPERTY_TRUST
             <!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-29 start -->
-            ,#{item.accountNo,jdbcType=VARCHAR} ACCOUNT_NO,
+            #{item.accountNo,jdbcType=VARCHAR} ACCOUNT_NO,
             #{item.creditAssetCode,jdbcType=VARCHAR} CREDIT_ASSET_CODE,
             #{item.billCode,jdbcType=VARCHAR} BILL_CODE,
             #{item.financialProductFlag,jdbcType=VARCHAR} FINANCIAL_PRODUCT_FLAG,
@@ -2837,7 +2835,7 @@
         BANK_SEC_PERPETUAL,BANK_SEC_KZZQ,BANK_SEC_ZXZQ,ISUNLISTED,
         IS_BZHPJ,CHB_ISSUER_ID,CHB_MANAGER_ID,
         CHB_FINANCIER_ID,PERPETUAL_FLAG,OPTION_FLAG,
-        IS_BJSZQ,IS_PERPETUAL,IS_FBZB,CONSTRACTE_BUSI_TYPE,CONSTRACTE_GRADE,CONSTRACTE_HEAVER_TIMES,IS_PROPERTY_TRUST
+        IS_BJSZQ,IS_PERPETUAL,IS_FBZB,CONSTRACTE_BUSI_TYPE,CONSTRACTE_GRADE,CONSTRACTE_HEAVER_TIMES
         <!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-29 start -->
         ,ACCOUNT_NO,
         CREDIT_ASSET_CODE,
@@ -3075,9 +3073,8 @@
             #{item.constracteBusiType,jdbcType=VARCHAR} CONSTRACTE_BUSI_TYPE,
             #{item.constracteGrade,jdbcType=VARCHAR} CONSTRACTE_GRADE,
             #{item.constracteHeaverTimes,jdbcType=DECIMAL} CONSTRACTE_HEAVER_TIMES,
-            #{item.isPropertyTrust,jdbcType=VARCHAR} IS_PROPERTY_TRUST
             <!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-29 start -->
-            ,#{item.accountNo,jdbcType=VARCHAR} ACCOUNT_NO,
+            #{item.accountNo,jdbcType=VARCHAR} ACCOUNT_NO,
             #{item.creditAssetCode,jdbcType=VARCHAR} CREDIT_ASSET_CODE,
             #{item.billCode,jdbcType=VARCHAR} BILL_CODE,
             #{item.financialProductFlag,jdbcType=VARCHAR} FINANCIAL_PRODUCT_FLAG,
@@ -3314,7 +3311,6 @@
         A.CONSTRACTE_BUSI_TYPE	  =	B.CONSTRACTE_BUSI_TYPE,
         A.CONSTRACTE_GRADE	  =	B.CONSTRACTE_GRADE,
         A.CONSTRACTE_HEAVER_TIMES	  =	B.CONSTRACTE_HEAVER_TIMES,
-        A.IS_PROPERTY_TRUST= B.IS_PROPERTY_TRUST,
         A.ACCOUNT_NO	  =	B.ACCOUNT_NO,
         A.CREDIT_ASSET_CODE	  =	B.CREDIT_ASSET_CODE,
         A.BILL_CODE	  =	B.BILL_CODE,
