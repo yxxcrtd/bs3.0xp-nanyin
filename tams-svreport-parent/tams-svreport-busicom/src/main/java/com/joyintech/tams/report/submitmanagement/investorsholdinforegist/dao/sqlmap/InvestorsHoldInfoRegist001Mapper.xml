@@ -828,21 +828,17 @@
 	
 	
 	<!-- 批量插入报送状态表 -->
-	 <insert id="insertSubmitStatusDto" parameterType="com.joyintech.tams.common.base.entity.ChbSubmitStatus" >
-		 begin
-		 <foreach collection="list" item="item" index="index" separator=";" >
+	 <update id="insertSubmitStatusDto" parameterType="java.util.List">
 			 update CHB_INVESTHOLD_INFO_SUB  sub
 			 set
-			 sub.SUBMIT_SEND_STATUS = #{item.submitSendStatus}
+			 sub.SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR}
 			 where
-			 sub.SUMIT_SEQ = #{item.seqno}
-		 </foreach>
-		 ;end;
-    </insert>
+			 sub.SUMIT_SEQ = #{seqno,jdbcType=VARCHAR}
+    </update>
 
 	<update id="updateSubmitStatusToSuccess" parameterType="string">
 	update CHB_INVESTHOLD_INFO_SUB set SUBMIT_FEEDBACK_STATUS ='03'
-	 where seqno = #{seqno,jdbcType=VARCHAR}
+	 where SUMIT_SEQ = #{seqno,jdbcType=VARCHAR}
 	</update>
 	
 	
