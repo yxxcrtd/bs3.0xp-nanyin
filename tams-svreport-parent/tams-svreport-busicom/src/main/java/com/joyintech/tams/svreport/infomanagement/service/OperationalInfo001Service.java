@@ -2012,21 +2012,21 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
     					String saleArea = strList.get(33) ;
     					//产品销售区域多选校验
     					if(!BaseCheckLib.inDatadict3(saleArea,DictCode.销售区域_中债.getValue(),true,true)){
-    						checkResult.add(new ExcelValidDto(strList.get(2)+"|"+strList.get(63), String.valueOf(i + 1), "产品销售区域不在值域范围内并且多选选项不可重复。"
+    						checkResult.add(new ExcelValidDto(strList.get(2)+"|"+strList.get(64), String.valueOf(i + 1), "产品销售区域不在值域范围内并且多选选项不可重复。"
     								+ "[SALE_AREA="+saleArea+"]",
     								"各产品销售区域"));
     					}
     					String rskType = strList.get(47) ;
     					//投资者风险偏好多选校验
     					if(!BaseCheckLib.inDatadict3(rskType,DictCode.投资者风险偏好.getValue(),true,true)){
-    						checkResult.add(new ExcelValidDto(strList.get(2)+"|"+strList.get(63), String.valueOf(i + 1), "投资者风险偏好不在值域范围内并且多选选项不可重复。"
+    						checkResult.add(new ExcelValidDto(strList.get(2)+"|"+strList.get(64), String.valueOf(i + 1), "投资者风险偏好不在值域范围内并且多选选项不可重复。"
     								+ "[RISK_TYPE="+rskType+"]",
     								"投资者风险偏好"));
     					}
-    					String creditType = strList.get(59) ;
+    					String creditType = strList.get(60) ;
     					//产品增信机构类型多选校验
     					if(!BaseCheckLib.inDatadict3(creditType,DictCode.产品增信机构类型.getValue(),true,true)){
-    						checkResult.add(new ExcelValidDto(strList.get(2)+"|"+strList.get(63), String.valueOf(i + 1), "产品增信机构类型不在值域范围内并且多选选项不可重复。"
+    						checkResult.add(new ExcelValidDto(strList.get(2)+"|"+strList.get(64), String.valueOf(i + 1), "产品增信机构类型不在值域范围内并且多选选项不可重复。"
     								+ "[CREDIT_TYPE="+creditType+"] ",
     								"产品增信机构类型"));
     					}
@@ -2037,7 +2037,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 							String investArae=strList.get(18) ;//资金投向地区
 							if(outDepCitys.size()>1 && StringUtil.equals(investArae,DictCodeListExt2.资金投向地区_境外.getValue()+" "+DictCodeListExt2.资金投向地区_境外.getCodeName())){
 								if(outDepCitys.contains("CHN")){
-									checkResult.add(new ExcelValidDto(strList.get(2)+"|"+strList.get(63), String.valueOf(i + 1), "当“资金投向地区”要素选择“02 境外”时,境外托管机构国别不能填写中国。"
+									checkResult.add(new ExcelValidDto(strList.get(2)+"|"+strList.get(64), String.valueOf(i + 1), "当“资金投向地区”要素选择“02 境外”时,境外托管机构国别不能填写中国。"
 											+ "[OUT_DEP_CTRY="+"CHN"+"] ",
 											"境外托管机构国别"));
 								}
