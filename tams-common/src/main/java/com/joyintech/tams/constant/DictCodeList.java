@@ -2023,6 +2023,7 @@ public enum DictCodeList implements BaseDictCodeList {
     释放状态_已释放(DictCode.释放状态,"1","已释放"),
 	共通业务类型_债券评级信息(DictCode.共通业务类型,"MST34","债券评级信息"),
 	共通业务类型_科目定义信息(DictCode.共通业务类型,"MST35","科目定义信息"),
+	共通业务类型_投资交易信息(DictCode.共通业务类型,"MST36","投资交易信息"),
 
 
 	;
