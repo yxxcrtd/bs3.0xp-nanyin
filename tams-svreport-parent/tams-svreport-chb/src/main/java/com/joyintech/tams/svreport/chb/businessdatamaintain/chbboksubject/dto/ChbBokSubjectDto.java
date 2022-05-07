@@ -2,6 +2,7 @@ package com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dto;
 
 import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.component.svrreport.chb.contant.DictCodeList;
+import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.validation.annotation.Length;
 import com.joyintech.framework.validation.annotation.NotEmpty;
@@ -22,6 +23,7 @@ import java.util.List;
  * @author wubingbing
  * @date 2022-03-28 14:42
  */
+@PageId("ChbBokSubject002")
 @ValidLogic(targetClass = ChbBokSubjectDtoValidator.class, groups = {ValidateGroupEdit.class,
         ValidateGroupDelete.class})
 

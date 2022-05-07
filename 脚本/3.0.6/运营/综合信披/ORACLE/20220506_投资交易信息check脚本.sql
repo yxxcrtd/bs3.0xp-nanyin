@@ -11,7 +11,7 @@ INSERT INTO CHB_DATACHECK_CONDITION_INV VALUES ('CHB_INVEST_TRADE_CONDITION-TZJY
 -- check校验
 INSERT INTO CHB_DATACHECK_RULE_INV VALUES ('CHB_INVEST_TRADE-TZJY-20220506-0001-01','CchbInvestTrade002','isNotEmpty','prodId',NULL,NULL,'N','资产代码不可为空','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 INSERT INTO CHB_DATACHECK_RULE_INV VALUES ('CHB_INVEST_TRADE-TZJY-20220506-0001-02','CchbInvestTrade002','isNotEmpty','registBankCode',NULL,NULL,'N','发行机构代码不可为空','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
-INSERT INTO CHB_DATACHECK_RULE_INV VALUES ('CHB_INVEST_TRADE-TZJY-20220506-0001-03','CchbInvestTrade002','lessThanCharLength','tradeCode',NULL,NULL,'32','行内交易编码不可为空,且长度不能超过32个字符','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+INSERT INTO CHB_DATACHECK_RULE_INV VALUES ('CHB_INVEST_TRADE-TZJY-20220506-0001-03','CchbInvestTrade002','fixedLength','tradeCode',NULL,'32','N','行内交易编码不可为空,且长度不能超过32个字符','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 INSERT INTO CHB_DATACHECK_RULE_INV VALUES ('CHB_INVEST_TRADE-TZJY-20220506-0001-04','CchbInvestTrade002','inDatadict','ccy','==','CCY','N','币种不可为空，且必须在值域范围内','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 
 INSERT INTO CHB_DATACHECK_RULE_INV VALUES ('CHB_INVEST_TRADE-TZJY-20220506-0001-05','CchbInvestTrade002','isNumber2','amt',NULL,'15,2','N','发生金额不可为空，且必须为n(15,2)格式。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
