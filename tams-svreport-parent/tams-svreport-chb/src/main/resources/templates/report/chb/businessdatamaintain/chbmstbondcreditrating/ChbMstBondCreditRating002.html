@@ -36,7 +36,7 @@
                                    data-th-placeholder="#{SysCommon.placeholder}" maxlength="66"
                                    data-th-data-url="@{/chb/businessdatamaintain/chbmstbondcreditrating/chbmstbondcreditrating001/getOName}"
                                    data-idfield="code" data-keyfield="code"
-                                   data-th-value="${entity?.oCode}"
+                                   data-th-value="${entity?.oCode}" required
                                    data-th-data-effectivefieldsalias='|{"code":"#{ChbMstBondCreditRating001.oCode}","shortName":"#{ChbMstBondCreditRating001.oName}"}|' />
 
                         </div>
@@ -105,8 +105,9 @@
                         <div class="layui-input-inline input-inline">
                             <input type="text" id="gradeDate" name="gradeDate"
                                    class="layui-input form-input input-dateSelect"
-                                   data-th-value='${#dates.format(entity?.gradeDate,"yyyy-MM-dd")}'>
+                                   data-th-value='${#dates.format(entity?.gradeDate,"yyyy-MM-dd")}' required>
                         </div>
+                            <input type="hidden"  id="statusValid" name="statusValid" class="layui-input form-input" data-th-value="${entity?.statusValid}">
                     </div>
                 </div>
             </div>
