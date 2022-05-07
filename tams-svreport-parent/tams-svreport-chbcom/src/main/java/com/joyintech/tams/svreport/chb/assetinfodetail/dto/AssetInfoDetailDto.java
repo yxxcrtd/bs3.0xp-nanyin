@@ -381,4 +381,281 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 			return "01";
 		}
 	}
+	public String getTradeMarketStr(){
+		return SysDataUtil.getNameFromDataDict(DictCode.交易流通场所,getTradeMarket());
+	}
+	/**
+	 * 资产三级类型
+	 * @return
+	 */
+	public String getOrgAssetType3Str() {
+		return SysDataUtil.getNameFromDataDict(DictCode.中债_上游资产三级分类, this.getOrgAssetType3());
+	}
+	public String getOrgAssetType4Str() {
+		return SysDataUtil.getNameFromDataDict(DictCode.中债_上游资产四级分类, this.getOrgAssetType4());
+	}
+	public String getOrgAssetType5Str() {
+		return SysDataUtil.getNameFromDataDict(DictCode.中债_上游资产五级分类, this.getOrgAssetType5());
+	}
+	public String getCcyStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.币种, this.getCcy());
+	}
+	public String getbasisStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.计息基础_中债, this.getBasis());
+	}
+	public String getDepoTypeStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.存款类型, this.getDepoType());
+	}
+	public String getTargetTypeStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.标的类别, this.getTargetType());
+	}
+	public String getChbSectypeStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.具体类别, this.getChbSectype());
+	}
+	public String getIssueModeStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.发行方式, this.getIssueMode());
+	}
+	public String getSecMainGradeStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.主体评级_中债, this.getSecMainGrade());
+	}
+	public String getPartyType1Str() {
+		return SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按规模划分, this.getPartyType1());
+	}
+	public String getPartyType2Str() {
+		return SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按经济类型划分, this.getPartyType2());
+	}
+	public String getPartyType3Str() {
+		return SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按技术领域划分, this.getPartyType3());
+	}
+	public String getIndustryLevel2Str() {
+		return SysDataUtil.getNameFromDataDict(DictCode.机构所属行业二级分类, this.getIndustryLevel2());
+	}
+	public String getRegistOrgStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.登记托管机构, this.getRegistOrg());
+	}
+	public String getRivalPartyTypeStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.对手方类型, this.getRivalPartyType());
+	}
+	public String getTargetType1Str() {
+		return SysDataUtil.getNameFromDataDict(DictCode.回购标的类别, this.getTargetType1());
+	}
+	public String getProfitTypeStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.收受益权类型, this.getProfitType());
+	}
+	public String getIsResaleStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsResale());
+	}
+	public String getRateFlagStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getRateFlag());
+	}
+	public String getCouponSpeciesStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.计息类型, this.getCouponSpecies());
+	}
+	public String getInterestRuleFlagStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getInterestRuleFlag());
+	}
+	public String getIntpayRuleStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.利息分布方式, this.getIntpayRule());
+	}
+	public String getBasisTypeStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.基准利率, this.getBasisType());
+	}
+	public String getFloatFactorFlagStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getFloatFactorFlag());
+	}
+	public String getStructGradeStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.结构档次, this.getStructGrade());
+	}
+	public String getRepaymentTypeStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.还本方式, this.getRepaymentType());
+	}
+	public String getPeriodRepaymentFlagStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.分期还本条款标识, this.getPeriodRepaymentFlag());
+	}
+	public String getFinancierType1Str() {
+		return SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按规模划分, this.getFinancierType1());
+	}
+	public String getFinancierType2Str() {
+		return SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按经济类型划分, this.getFinancierType2());
+	}
+	public String getFinancierType3Str() {
+		return SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按技术领域划分, this.getFinancierType3());
+	}
+	public String getProIndustryLevel2Str() {
+		return SysDataUtil.getNameFromDataDict(DictCode.机构所属行业二级分类, this.getProIndustryLevel2());
+	}
+	public String getIndustryFlagStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIndustryFlag());
+	}
+	public String getMonitTypeStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.重点监控行业和领域类别, this.getMonitType());
+	}
+	public String getGuaTypeStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.担保方式, this.getGuaType());
+	}
+	public String getPledgeTypeStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.抵质押物类型, this.getPledgeType());
+	}
+	public String getNatureGuaranteeStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.担保性质, this.getNatureGuarantee());
+	}
+	public String getRelationFinanStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.担保人与融资人关系, this.getRelationFinan());
+	}
+	public String getFinancierGradeStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.资产评级, this.getFinancierGrade());
+	}
+	public String getOutGradeStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.资产评级, this.getOutGrade());
+	}
+	public String getContainTypeStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.含权类型, this.getContainType());
+	}
+	public String getExerciseTypeStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.资产行权方式, this.getExerciseType());
+	}
+	public String getPerpetualClauseTypeStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.永续条款类型, this.getPerpetualClauseType());
+	}
+	public String getDeferredInterestTypeStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.利息递延条款类型, this.getDeferredInterestType());
+	}
+	public String getDeferredInterestIntStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getDeferredInterestInt());
+	}
+	public String getPartRedemFlagStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getPartRedemFlag());
+	}
+	public String getFinAreaStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.行政区划_省市县, this.getFinArea());
+	}
+	public String getIsRightStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsRight());
+	}
+	public String getNotstandSecTypeStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.票据类信用证类资产类型, this.getNotstandSecType());
+	}
+	public String getIsBzhpjStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsBzhpj());
+	}
+	public String getIndustryShares2Str() {
+		return SysDataUtil.getNameFromDataDict(DictCode.机构所属行业二级分类, this.getIndustryShares2());
+	}
+	public String getSharesTypeStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.股票类型, this.getSharesType());
+	}
+	public String getInvestStageStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.投资阶段, this.getInvestStage());
+	}
+	public String getSharesType1Str() {
+		return SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按规模划分, this.getSharesType1());
+	}
+	public String getSharesType3Str() {
+		return SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按技术领域划分, this.getSharesType3());
+	}
+	public String getSharesType2Str() {
+		return SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按经济类型划分, this.getSharesType2());
+	}
+	public String getIsPledgeStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsPledge());
+	}
+	public String getDeptEquityStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getDeptEquity());
+	}
+	public String getTargetType3Str() {
+		return SysDataUtil.getNameFromDataDict(DictCode.标的类别, this.getTargetType3());
+	}
+	public String getHoldPurposeStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.持有目的, this.getHoldPurpose());
+	}
+	public String getCountryAreaStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.所属国家或地区, this.getCountryArea());
+	}
+	public String getPartyGradeStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.资产评级, this.getPartyGrade());
+	}
+	public String getFinancialProductFlagStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getFinancialProductFlag());
+	}
+	public String getFinancialComissueStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getFinancialComissue());
+	}
+	public String getTruActTypeStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.资金实际投向, this.getTruActType());
+	}
+	public String getCapUseInduLevel2Str() {
+		return SysDataUtil.getNameFromDataDict(DictCode.机构所属行业二级分类, this.getCapUseInduLevel2());
+	}
+	public String getProPropertyStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.资管计划属性, this.getProProperty());
+	}
+	public String getBuyStructStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.购买结构, this.getBuyStruct());
+	}
+	public String getManageTypeStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.管理方式, this.getManageType());
+	}
+	public String getInAssetTypeStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.行内资产类别, this.getInAssetType());
+	}
+	public String getRegistOrg1Str() {
+		return SysDataUtil.getNameFromDataDict(DictCode.登记备案机构, this.getRegistOrg1());
+	}
+	public String getProfitFlagStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getProfitFlag());
+	}
+	public String getIsGovernFundStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsGovernFund());
+	}
+	public String getGovernInvestFundStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.政府投资基金投向, this.getGovernInvestFund());
+	}
+	public String getIsDepositFlagStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsDepositFlag());
+	}
+	public String getPppflagStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getPppflag());
+	}
+	public String getBankSecZxzqStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getBankSecZxzq());
+	}
+	public String getIsBankCapStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsBankCap());
+	}
+	public String getBankCapitalStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.中债月度明细_银行资本补充工具, this.getBankCapital());
+	}
+	public String getBondtostockFlagStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getBondtostockFlag());
+	}
+	public String getPrivatefundFlagStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getPrivatefundFlag());
+	}
+	public String getIsunlistedStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsunlisted());
+	}
+	public String getPrivateprdFlagStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getPrivateprdFlag());
+	}
+	public String getPrivateFlagStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getPrivateFlag());
+	}
+	public String getPbcAssetType1Str() {
+		return SysDataUtil.getNameFromDataDict(DictCode.人行资产一级分类, this.getPbcAssetType1());
+	}
+	public String getPbcAssetType2Str() {
+		return SysDataUtil.getNameFromDataDict(DictCode.人行资产二级分类, this.getPbcAssetType2());
+	}
+	public String getPbcAssetType3Str() {
+		return SysDataUtil.getNameFromDataDict(DictCode.人行资产三级分类, this.getPbcAssetType3());
+	}
+	public String getIsConstracteBusiStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsConstracteBusi());
+	}
+	public String getConstracteBusiTypeStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.结构化业务类型, this.getConstracteBusiType());
+	}
+	public String getConstracteGradeStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.结构化层级, this.getConstracteGrade());
+	}
 }
