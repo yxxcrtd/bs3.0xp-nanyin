@@ -72,7 +72,7 @@
                 #{createUser,jdbcType=VARCHAR} CREATE_USER,
                 #{createTime,jdbcType=DATE} CREATE_TIME,
                 #{updateUser,jdbcType=VARCHAR} UPDATE_USER,
-                #{createTime,jdbcType=DATE} UPDATE_TIME,
+                #{updateTime,jdbcType=DATE} UPDATE_TIME,
                 #{dataSource,jdbcType=VARCHAR} DATA_SOURCE,
                 #{num,jdbcType=NUMERIC} NUM,
                 #{assetMethod,jdbcType=VARCHAR} ASSET_METHOD,
@@ -368,14 +368,16 @@
                 and a.TRADE_COUNTER = #{tradeCounter}
             </if>
             <if test="dealDateStart!=null and dealDateStart!=''">
-                and DEALDATE &gt;= to_date(#{dealDateStart},'yyyy-mm-dd')
+                and a.DEALDATE &gt;= to_date(#{dealDateStart},'yyyy-mm-dd')
             </if>
             <if test="dealDateEnd!=null and dealDateEnd !=''">
-                and DEALDATE &lt;= to_date(#{dealDateEnd},'yyyy-mm-dd')
+                and a.DEALDATE &lt;= to_date(#{dealDateEnd},'yyyy-mm-dd')
             </if>
             <if test="dealDateStart==null or dealDateStart ==''">
-                and to_char(DEALDATE,'yyyy-mm-dd') = to_char( SYSDATE - 1, 'yyyy-mm-dd' )
+                and to_char(a.DEALDATE,'yyyy-mm-dd') = to_char( SYSDATE - 1, 'yyyy-mm-dd' )
             </if>
+            and a.ASSET_CODE!=''
+            and a.ASSET_CODE is not null
         </where>
 
 
