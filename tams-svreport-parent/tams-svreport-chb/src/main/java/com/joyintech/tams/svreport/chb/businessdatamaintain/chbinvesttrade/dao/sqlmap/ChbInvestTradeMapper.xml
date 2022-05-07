@@ -367,11 +367,14 @@
             <if test="tradeCounter!=null and tradeCounter!=''">
                 and a.TRADE_COUNTER = #{tradeCounter}
             </if>
-            <if test="gradeDateStart!=null and gradeDateStart!=''">
-                and GRADE_DATE &gt;= to_date(#{dealDateStart},'yyyy-mm-dd')
+            <if test="dealDateStart!=null and dealDateStart!=''">
+                and DEALDATE &gt;= to_date(#{dealDateStart},'yyyy-mm-dd')
             </if>
-            <if test="gradeDateEnd!=null and gradeDateEnd !=''">
-                and GRADE_DATE &lt;= to_date(#{dealDateEnd},'yyyy-mm-dd')
+            <if test="dealDateEnd!=null and dealDateEnd !=''">
+                and DEALDATE &lt;= to_date(#{dealDateEnd},'yyyy-mm-dd')
+            </if>
+            <if test="dealDateStart==null or dealDateStart ==''">
+                and to_char(DEALDATE,'yyyy-mm-dd') = to_char( SYSDATE - 1, 'yyyy-mm-dd' )
             </if>
         </where>
 
