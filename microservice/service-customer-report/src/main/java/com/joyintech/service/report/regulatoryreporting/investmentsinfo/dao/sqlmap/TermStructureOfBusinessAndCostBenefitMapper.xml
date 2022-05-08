@@ -3890,9 +3890,9 @@ with cj as(
   			left join chb_asset_info info
   　　　　　　on cmap.asset_code=info.asset_code
 		    left join mst_customer_info_add mst
-		    on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		    on coalesce(info.chb_issuer_id,info.manager_id,info.financie)=mst.customer_id
 		　　 where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
-		    and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		    and coalesce(info.chb_issuer_id,info.manager_id,info.financie) is not null
 		    and  (cmap.ASSETTYPE2 in ('1102','1112','1106','2401','1303','2403','2402','2499','2601','2602','2604',
 		     '2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620','1701','1703',
 		     '1704','1706','1702','1705') or (cmap.ASSETTYPE2='1209'  <!--and info.ISFBZB!=01-->))
@@ -3912,9 +3912,9 @@ with cj as(
 		left join chb_asset_info info
 		　　　　　　on cmap.asset_code=info.asset_code
 		left join mst_customer_info_add mst
-		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		on coalesce(info.chb_issuer_id,info.manager_id,info.financie)=mst.customer_id
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
-		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		and coalesce(info.chb_issuer_id,info.manager_id,info.financie) is not null
 		and  (cmap.ASSETTYPE2 in ('1102','1112','1106','2401','1303','2403','2402','2499','2601','2602','2604',
 		'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620','1701','1703',
 		'1704','1706','1702','1705') or (cmap.ASSETTYPE2='1209'  <!--and info.ISFBZB!=01-->))
@@ -4437,9 +4437,9 @@ with cj as(
   			left join chb_asset_info info
   　　　　　　on cmap.asset_code=info.asset_code
 		    left join mst_customer_info_add mst
-		    on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		    on coalesce(info.chb_issuer_id,info.manager_id,info.financie)=mst.customer_id
 		　　 where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
-		    and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		    and coalesce(info.chb_issuer_id,info.manager_id,info.financie) is not null
 		and  (cmap.ASSETTYPE2 in ('1102','1112','1106','2401','1303','2403','2402','2499','2601','2602','2604',
 		'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620','1701','1703',
 		'1704','1706','1702','1705') or (cmap.ASSETTYPE2='1209'  <!--and info.ISFBZB!=01-->))
@@ -4465,9 +4465,9 @@ with cj as(
 		left join chb_asset_info info
 		on cmap.asset_code=info.asset_code
 		left join mst_customer_info_add mst
-		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		on coalesce(info.chb_issuer_id,info.manager_id,info.financie)=mst.customer_id
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
-		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		and coalesce(info.chb_issuer_id,info.manager_id,info.financie) is not null
 		and  (cmap.ASSETTYPE2 in ('1102','1112','1106','2401','1303','2403','2402','2499','2601','2602','2604',
 		'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620','1701','1703',
 		'1704','1706','1702','1705') or (cmap.ASSETTYPE2='1209'  <!--and info.ISFBZB!=01-->))
@@ -5013,9 +5013,9 @@ with cj as(
 		and cmap.prod_id=lastcmap.prod_id
 		and lastcmap.ENDDATE=#{lastEndDate,jdbcType=DATE}
 		    left join mst_customer_info_add mst
-		    on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		    on coalesce(info.chb_issuer_id,info.manager_id,info.financie)=mst.customer_id
 		　　 where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
-		    and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		    and coalesce(info.chb_issuer_id,info.manager_id,info.financie) is not null
 		and  (cmap.ASSETTYPE2 in ('1102','1112','1106','2401','1303','2403','2402','2499','2601','2602','2604',
 		'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620','1701','1703',
 		'1704','1706','1702','1705') or (cmap.ASSETTYPE2='1209'  <!--and info.ISFBZB!=01-->))
@@ -5040,9 +5040,9 @@ with cj as(
 		and cmap.prod_id=lastcmap.prod_id
 		and lastcmap.ENDDATE=#{lastEndDate,jdbcType=DATE}
 		left join mst_customer_info_add mst
-		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		on coalesce(info.chb_issuer_id,info.manager_id,info.financie)=mst.customer_id
 		　　 where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
-		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		and coalesce(info.chb_issuer_id,info.manager_id,info.financie) is not null
 		and  (cmap.ASSETTYPE2 in ('1102','1112','1106','2401','1303','2403','2402','2499','2601','2602','2604',
 		'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620','1701','1703',
 		'1704','1706','1702','1705') or (cmap.ASSETTYPE2='1209'  <!--and info.ISFBZB!=01-->))
@@ -5124,11 +5124,11 @@ with cj as(
 		left join chb_asset_info info
 		on cmap.asset_code=info.asset_code
 		left join mst_customer_info_add mst
-		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		on coalesce(info.chb_issuer_id,info.manager_id,info.financie)=mst.customer_id
 		left join mst_customer_info mstinfo
 		on mst.customer_id=mstinfo.customer_id
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}　and cmap.ASSETVALUE_A is not null and  cmap.ASSETVALUE_A !=0
-		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		and coalesce(info.chb_issuer_id,info.manager_id,info.financie) is not null
 		and  (cmap.ASSETTYPE2 in ('1102','1112','1106','2401','1303','2403','2402','2499','2601','2602','2604',
 		'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620','1701','1703',
 		'1704','1706','1702','1705') or (cmap.ASSETTYPE2='1209'  <!--and info.ISFBZB!=01-->))
@@ -5173,11 +5173,11 @@ with cj as(
 		left join chb_asset_info info
 		on cmap.asset_code=info.asset_code
 		left join mst_customer_info_add mst
-		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		on coalesce(info.chb_issuer_id,info.manager_id,info.financie)=mst.customer_id
 		left join mst_customer_info mstinfo
 		on mst.customer_id=mstinfo.customer_id
 		where 1=1 and cmap.ENDDATE=#{lastEndDate,jdbcType=DATE} and cmap.ASSETVALUE_A is not null and  cmap.ASSETVALUE_A !=0
-		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		and coalesce(info.chb_issuer_id,info.manager_id,info.financie) is not null
 		and  (cmap.ASSETTYPE2 in ('1102','1112','1106','2401','1303','2403','2402','2499','2601','2602','2604',
 		'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620','1701','1703',
 		'1704','1706','1702','1705') or (cmap.ASSETTYPE2='1209'  <!--and info.ISFBZB!=01-->))
@@ -5222,11 +5222,11 @@ with cj as(
 		left join chb_asset_info info
 		on cmap.asset_code=info.asset_code
 		left join mst_customer_info_add mst
-		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		on coalesce(info.chb_issuer_id,info.manager_id,info.financie)=mst.customer_id
 		left join mst_customer_info mstinfo
 		on mst.customer_id=mstinfo.customer_id
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE} and cmap.ASSETVALUE_A is not null and  cmap.ASSETVALUE_A !=0
-		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		and coalesce(info.chb_issuer_id,info.manager_id,info.financie) is not null
 		and  (cmap.ASSETTYPE2 in ('1102','1112','1106','2401','1303','2403','2402','2499','2601','2602','2604',
 		'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620','1701','1703',
 		'1704','1706','1702','1705') or (cmap.ASSETTYPE2='1209'  <!--and info.ISFBZB!=01-->))
@@ -5276,11 +5276,11 @@ with cj as(
 		left join chb_asset_info info
 		on cmap.asset_code=info.asset_code
 		left join mst_customer_info_add mst
-		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		on coalesce(info.chb_issuer_id,info.manager_id,info.financie)=mst.customer_id
 		left join mst_customer_info mstinfo
 		on mst.customer_id=mstinfo.customer_id
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE} and cmap.ASSETVALUE_B is not null and  cmap.ASSETVALUE_B !=0
-		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		and coalesce(info.chb_issuer_id,info.manager_id,info.financie) is not null
 		and  (cmap.ASSETTYPE2 in ('1102','1112','1106','2401','1303','2403','2402','2499','2601','2602','2604',
 		'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620','1701','1703',
 		'1704','1706','1702','1705') or (cmap.ASSETTYPE2='1209'  <!--and info.ISFBZB!=01-->))
