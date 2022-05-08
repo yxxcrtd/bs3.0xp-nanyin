@@ -17,13 +17,7 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
@@ -269,6 +263,9 @@ public class ViewCompareDetailController extends BaseController {
                 // 如果有反馈状态为feedbackStr则改为feedbackstatus\
                 if ("submitFeedbackStatusStr".equals(item.getData())){
                     item.setData("submitFeedbackStatus");
+                }
+                if (Objects.equals("pbcAccountIdShow",item.getData())){
+                    item.setData("pbcAccountId");
                 }
                 // 银行模式不需要所属机构
                 if(!isShowBelongInstitutionNameflag && "belongInstitutionName".equals(item.getData())){

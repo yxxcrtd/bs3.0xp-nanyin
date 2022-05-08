@@ -2,6 +2,7 @@ package com.joyintech.tams.svreport.chb.businessdatamaintain.chbmstbondcreditrat
 
 import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.component.svrreport.chb.contant.DictCodeList;
+import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
@@ -20,6 +21,7 @@ import java.util.List;
  * 债券信用评级
  * @TableName MST_BOND_CREDIT_RATING
  */
+@PageId("ChbMstBondCreditRating002")
 @ValidLogic(targetClass = ChbMstBondCreditRatingValidator.class, groups = {ValidateGroupEdit.class,
         ValidateGroupDelete.class})
 public class ChbMstBondCreditRatingDto extends MstBondCreditRating implements ProcessEntity {

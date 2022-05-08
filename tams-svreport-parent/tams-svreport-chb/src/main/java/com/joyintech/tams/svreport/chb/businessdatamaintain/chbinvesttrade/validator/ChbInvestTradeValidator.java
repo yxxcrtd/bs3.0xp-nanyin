@@ -33,27 +33,35 @@ public class ChbInvestTradeValidator implements BeanValidator {
     private ChbInvestTradeDao chbInvestTradeDao;
     @Override
     public List<ValidMessage> valid(Object value) {
-        ChbInvestTradeDto dto = (ChbInvestTradeDto)value;
-        List<ValidMessage> resultList = new ArrayList<ValidMessage>();
-        if(StringUtil.isEmpty(dto.getTradeSeqno())){
-            ChbInvestTradeDto resultDto = chbInvestTradeDao.selectByKey(dto.getTradeCode(),dto.getProdId(),dto.getRegistBankCode(),dto.getAssetCode());
-            if(null!=resultDto){
-                resultList.add(new ValidMessage("assetCode","投资交易信息已存在"));
+        ChbInvestTradeDto dto = (ChbInvestTradeDto) value;
+        if (dto.getOperateType().equals("submit")) {
+            List<ValidMessage> resultList = new ArrayList<ValidMessage>();
+            if (!StringUtil.isEmpty(dto.getTradeCode())
+                &&!StringUtil.isEmpty(dto.getProdId())
+                &&!StringUtil.isEmpty(dto.getRegistBankCode())
+                &&!StringUtil.isEmpty(dto.getAssetCode())
+                //新建
+                &&StringUtil.isEmpty(dto.getStatusValid())) {
+                ChbInvestTradeDto resultDto = chbInvestTradeDao.selectByKey(dto.getTradeCode(), dto.getProdId(), dto.getRegistBankCode(), dto.getAssetCode());
+                if (null != resultDto) {
+                    resultList.add(new ValidMessage("assetCode", "投资交易信息已存在"));
+                }
             }
+            // add by zhangliang 20210126 中债check调用 start
+            resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, null, ValidMessage.class);
+            Map<String, Object> errMap = new HashMap<>();
+            List<ValidMessage> result = new ArrayList<>();
+            resultList.forEach(validMessage -> {
+                if (!errMap.containsKey(validMessage.getMessage())) {
+                    result.add(validMessage);
+                    errMap.put(validMessage.getMessage(), validMessage.getMessage());
+                }
+            });
+            resultList.clear();
+            resultList.addAll(result);
+            //modify by tuqirong 2022-01-10 end 错误信息去重处理
+            return resultList;
         }
-        // add by zhangliang 20210126 中债check调用 start
-        resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, null, ValidMessage.class);
-        Map<String, Object> errMap = new HashMap<>();
-        List<ValidMessage> result = new ArrayList<>();
-        resultList.forEach(validMessage -> {
-            if (!errMap.containsKey(validMessage.getMessage())) {
-                result.add(validMessage);
-                errMap.put(validMessage.getMessage(),validMessage.getMessage());
-            }
-        });
-        resultList.clear();
-        resultList.addAll(result);
-        //modify by tuqirong 2022-01-10 end 错误信息去重处理
-        return resultList;
+        return null;
     }
 }
