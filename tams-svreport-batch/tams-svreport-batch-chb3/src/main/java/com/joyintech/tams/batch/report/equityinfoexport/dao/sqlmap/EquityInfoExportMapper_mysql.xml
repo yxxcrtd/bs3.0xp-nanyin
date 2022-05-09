@@ -91,13 +91,14 @@
 
 	<select id="selectAllDataByPage"  resultType="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto"
 			resultSetType="FORWARD_ONLY" fetchSize="10000">
+		set @rownum=0;
 		SELECT
 		*
 		FROM
 		(
 		SELECT
 		tmp_page.*,
-		ROWNUM row_id
+		@rownum := @rownum+1 row_id
 		FROM (
 		select INDENTIFY_MARK            as indentifyMark,
 		ORG_INDENTIFY_MARK        as orgIndentifyMark,
@@ -134,7 +135,7 @@
 		STATUS                    as status,
 		sub.UPDATE_TIME           as updateTime,
 		sub.ORG_CODE orgCode,
-		status.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
+		sub.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
 		sub.CHECK_SEQNO    		  as checkSeqno
 		from chb_equ_sub sub
 		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/

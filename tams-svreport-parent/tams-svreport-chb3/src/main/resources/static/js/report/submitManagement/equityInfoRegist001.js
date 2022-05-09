@@ -113,7 +113,7 @@ $(function(){
             { title: "报送日期", field: 'submitTime',type: 'datetime',width:150,sortField:'submitTime'},
             { title: "报送截止日", field: 'chbSubmitDeadline', type: 'date',width:150,sortField:'chbSubmitDeadline'},
             { title: "反馈状态", field: 'submitFeedbackStatus',width:100,visible: false},
-            { title: "反馈状态", field: 'submitFeedbackStatusDesc',width:100,sortField:'submitFeedbackStatus'/*界面查询性能优化,
+            { title: "反馈状态", field: 'submitFeedbackStatusStr',width:100,sortField:'submitFeedbackStatus'/*界面查询性能优化,
                 render: function (data, type, row, meta) {
                     if(!row.submitFeedbackStatus){
                         return "";

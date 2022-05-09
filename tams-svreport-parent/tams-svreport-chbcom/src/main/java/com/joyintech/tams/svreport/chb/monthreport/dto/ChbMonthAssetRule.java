@@ -179,11 +179,11 @@ public enum ChbMonthAssetRule {
 	政府出资产业投资基金("AMT3_1_2","3.1.2 政府出资产业投资基金","ISUNLISTED","01"),
 	合计3_1_3("AMT3_1_3","3.1.3 合计","",""),
 
-	优先股("AMT3_2_1","3.2.1 优先股","SHARESTYPE","02"),
-	永续债("AMT3_2_2","3.2.2 永续债","BANKCAPITAL","01|02"),
-	二级资本债("AMT3_2_3","3.2.3 二级资本债","BANKCAPITAL","03"),
-	可转债("AMT3_2_4","3.2.4 可转债","BANKCAPITAL","04"),
-	其他银行资本补充工具("AMT3_2_5","3.2.5 其他银行资本补充工具","BANKCAPITAL","05"),
+	优先股("AMT3_2_1","3.2.1 优先股","BANKSECPREFER","01"),
+	永续债("AMT3_2_2","3.2.2 永续债","BANKSECPERPETUAL","01"),
+	二级资本债("AMT3_2_3","3.2.3 二级资本债","BANKSECCAPITAL","01"),
+	可转债("AMT3_2_4","3.2.4 可转债","BANKSECKZZQ","01"),
+	其他银行资本补充工具("AMT3_2_5","3.2.5 其他银行资本补充工具","ASSETTYPE2","9999"),
 	合计3_2_6("AMT3_2_6","3.2.6 合计","",""),
 
 
@@ -198,7 +198,7 @@ public enum ChbMonthAssetRule {
 	合计3_2_9("AMT3_3_9","3.3.9 合计","",""),
 	;
 	/**
-	 * 属性代码 
+	 * 属性代码
 	 */
 	private String propertyCode;
 

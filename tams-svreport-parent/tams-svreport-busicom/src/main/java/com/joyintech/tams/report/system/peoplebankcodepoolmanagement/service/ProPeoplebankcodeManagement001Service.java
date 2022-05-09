@@ -263,11 +263,12 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 	public List<ExcelValidDto> importData(List<List<String>> dataList, List<List<String>> tempList, String orgCode,
 										  String deptCode) {
 		if (!StringUtil.isEmptyList(dataList)) {
-			List<String> headList = new ArrayList<String>();
-			headList.add("内部产品代码");
+			List<String> headList = new ArrayList<>(3);
+			//支持两个表头
+			headList.add("内部产品代码/内部资产代码");
 			headList.add("代码类型");
 			headList.add("人行代码");
-			List<ExcelValidDto> tempCheckResult = ExcelUtil.checkExcelTemp(tempList, headList);
+			List<ExcelValidDto> tempCheckResult = this.checkExcelTemp(tempList, headList);
 			if (!StringUtil.isEmptyList(tempCheckResult)) {
 				return tempCheckResult;
 			}
@@ -570,5 +571,43 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 			standardCodeRegex = "^[a-zA-Z0-9]{7}[0-9]{7}$";
 		}
 		return insideProdId.matches(standardCodeRegex);
+	}
+
+
+
+	/**
+	 * 检查Excel模板是否正确
+	 *
+	 * @param flieName 上传文件名
+	 * @return headList 模板头list
+	 * @see
+	 * @since 1.0
+	 */
+	private   List<ExcelValidDto> checkExcelTemp(List<List<String>> tempDataList, List<String> headList) {
+		List<ExcelValidDto> tempCheckResult = new ArrayList<ExcelValidDto>();
+		String errorMsg = "导入模板不一致，请重新选择文件！";
+		ExcelValidDto excelValidDto = new ExcelValidDto();
+		excelValidDto.setErrorInfo(errorMsg);
+		tempCheckResult.add(excelValidDto);
+
+
+		if (StringUtil.isEmptyList(tempDataList)) {
+			// Excel没有有效数据
+			return tempCheckResult;
+		}
+		List<String> excelHeadList = tempDataList.get(0);
+		if (excelHeadList.size() < headList.size()) {
+			// Excel中列数少于要求列数
+			return tempCheckResult;
+		}
+
+		for (int i = 0; i < headList.size(); i++ ) {
+			if (!headList.get(i).contains(excelHeadList.get(i))) {
+				// Excel中列不一致
+				return tempCheckResult;
+			}
+		}
+
+		return null;
 	}
 }

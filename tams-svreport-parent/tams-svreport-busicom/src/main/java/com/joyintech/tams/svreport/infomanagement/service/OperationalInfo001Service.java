@@ -29,6 +29,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.FilterInformationDetailMapper;
 import com.joyintech.tams.common.base.dao.FilterInformationMapper;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.service.CommonCodeCheckBatchService;
@@ -2714,7 +2715,11 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
                 	//----add by lxq on 2020-07-15 for 导入后更新人以及时间未更新(QDXPJG-229) ----->>>>>
             		strList.add("admin");//创建人
             		strList.add("admin");//更新人
-            		strList.add(DateUtil.getCurrentDate());//更新时间
+                    if(BaseCommonCheckService.isMYSQLDataBase()){
+                        strList.add(DateUtil.getCurrentDate());//更新时间
+                    }else{
+                        strList.add("SYSDATE");
+                    }
                 	//----add by lxq on 2020-07-15 for 导入后更新人以及时间未更新(QDXPJG-229) -----<<<<<
             		int beginIndex = 0;
             		int endIndex = 0;
@@ -2796,7 +2801,11 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             				} else if (dateColumnList.contains(column) && !("").equals(columnData)) {
             					// 特殊情况,CREATE_TIME和UPDATE_TIME为DATE类型
             					if ("CREATE_TIME".equals(column) || "UPDATE_TIME".equals(column)) {
-                                    columnData =  "'" + DateUtil.formatDateTime(DateUtil.now())+ "'";
+                                    if(BaseCommonCheckService.isMYSQLDataBase()){
+                                        columnData =  "'" + DateUtil.formatDateTime(DateUtil.now())+ "'";
+                                    }else{
+                                        columnData = "SYSDATE";
+                                    }
             					} else {
             					    if(columnData==null||("").equals(columnData)){
                                         columnData = null;
@@ -2816,7 +2825,11 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             					}
             					// 时间类型字段全存入当前时间
             				} else if (timeColumnList.contains(column)) {
-            					columnData =  "'" + DateUtil.formatDateTime(DateUtil.now())+ "'";
+                                if(BaseCommonCheckService.isMYSQLDataBase()){
+                                    columnData =  "'" + DateUtil.formatDateTime(DateUtil.now())+ "'";
+                                }else{
+                                    columnData = "SYSDATE";
+                                }
             					// 创建者和修改者均设置为当前用户
             				} else if ("CREATE_USER".equals(column) || "UPDATE_USER".equals(column)) {
             					columnData = "'" + userName + "'";
@@ -2840,8 +2853,14 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
                            String SYSDATE=  "'" + DateUtil.formatDateTime(DateUtil.now())+ "'";
             				insertMap.put("ASSET_TYPE", "'" + assetType + "'");
             				insertMap.put("STATUS", "'" + "E" + "'");
-            				insertMap.put("CREATE_TIME", SYSDATE);
-            				insertMap.put("UPDATE_TIME", SYSDATE);
+                            if(BaseCommonCheckService.isMYSQLDataBase()){
+                                insertMap.put("CREATE_TIME", SYSDATE);
+                                insertMap.put("UPDATE_TIME", SYSDATE);
+                            }else{
+                                insertMap.put("CREATE_TIME", "SYSDATE");
+                                insertMap.put("UPDATE_TIME", "SYSDATE");
+                            }
+
             				insertMap.put("CREATE_USER", "'" + userName + "'");
             				insertMap.put("UPDATE_USER", "'" + userName + "'");
             				String industryShares2 = insertMap.get("INDUSTRY_SHARES2");
@@ -2908,7 +2927,12 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             						(timeColumnList.contains(column) && !("").equals(columnData))) {
             					// add by zhangliang 20201026 删除的数据不需要解析CREATE_TIME和UPDATE_TIME为DATE类型  start
 								if ("CREATE_TIME".equals(column) || "UPDATE_TIME".equals(column)) {
-									columnData =  "'" + DateUtil.formatDateTime(DateUtil.now())+ "'";
+
+                                    if(BaseCommonCheckService.isMYSQLDataBase()){
+                                        columnData =  "'" + DateUtil.formatDateTime(DateUtil.now())+ "'";
+                                    }else{
+                                        columnData = "SYSDATE";
+                                    }
 								// add by zhangliang 20201026 删除的数据不需要解析CREATE_TIME和UPDATE_TIME为DATE类型  end
 								}else{
 									String dateStr = formatDateStr(columnData);
@@ -2961,7 +2985,12 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             				if (dateColumnList.contains(column) && !("").equals(columnData)) {
             					// 特殊情况,UPDATE_TIME为DATE类型
             					if ("UPDATE_TIME".equals(column)) {
-            						columnData = "'" + DateUtil.formatDateTime(DateUtil.now())+ "'";
+                                    if(BaseCommonCheckService.isMYSQLDataBase()){
+                                        columnData =  "'" + DateUtil.formatDateTime(DateUtil.now())+ "'";
+                                    }else{
+                                        columnData = "SYSDATE";
+                                    }
+
             					} else {
                                     if (columnData == null || ("").equals(columnData)) {
                                         columnData= "'" + columnData + "'";
@@ -2983,7 +3012,11 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             				} else if (timeColumnList.contains(column)) {
             					// 修改时间变动,其余时间不变
             					if(column.indexOf("UPDATE") > -1) {
-            						columnData = "'" + DateUtil.formatDateTime(DateUtil.now())+ "'";
+                                    if(BaseCommonCheckService.isMYSQLDataBase()){
+                                        columnData =  "'" + DateUtil.formatDateTime(DateUtil.now())+ "'";
+                                    }else{
+                                        columnData = "SYSDATE";
+                                    }
             					} else {
             						continue;
             					}
@@ -3014,7 +3047,12 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             			    String  SYSDATE="'" + DateUtil.formatDateTime(DateUtil.now())+ "'";
             				updateMap.put("ASSET_TYPE", "'" + assetType + "'");
             				updateMap.put("STATUS", "'" + "M" + "'");
-            				updateMap.put("UPDATE_TIME", SYSDATE);
+
+                            if(BaseCommonCheckService.isMYSQLDataBase()){
+                                updateMap.put("UPDATE_TIME", SYSDATE);
+                            }else{
+                                updateMap.put("UPDATE_TIME", "SYSDATE");
+                            }
             				updateMap.put("UPDATE_USER", "'" + userName + "'");
             				String industryShares2 = updateMap.get("INDUSTRY_SHARES2");
             				if (StringUtil.isNotEmpty(industryShares2)) {
