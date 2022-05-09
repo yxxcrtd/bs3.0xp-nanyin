@@ -1941,6 +1941,8 @@ public class PbcClassicsDataFileService {
 			}
 			//组装数据
 			LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
+			// 净值型标识
+			boolean netValueFlag = StringUtil.isEmpty(sub.getBuyPlace()) && StringUtil.isNotEmpty(sub.getCcy());
 			//【dat文件生成留痕】数据的key
 			data.put("datakey",sub.getRegistSeqno() == null ? UUID.randomUUID().toString() : sub.getRegistSeqno());
 			data.put("RAISING_DATE", DateUtil.format(sub.getRaisingDate()));
@@ -1957,10 +1959,10 @@ public class PbcClassicsDataFileService {
 			data.put("ENDAMTSUM", toString("BWB".equals(sub.getCcy())?sub.getEndamtsumCny(): sub.getEndamtsum()));
 			data.put("ENDAMTSUM_CNY", toString(sub.getEndamtsumCny()));
 			data.put("ENDQTY", toString(sub.getEndqty()));
-			data.put("PROD_VALUE", "");
-			data.put("PROD_VALUE_CNY","");
-			data.put("UNIT_VALUE_TOTAL", "");
-			data.put("UNIT_VALUE_TOTAL_CNY", "");
+			data.put("PROD_VALUE", netValueFlag ? toString(sub.getProdValue()) : "");
+			data.put("PROD_VALUE_CNY",netValueFlag ? toString(sub.getProdValueCny()) : "");
+			data.put("UNIT_VALUE_TOTAL", netValueFlag ? toString(sub.getUnitValueTotal()) : "");
+			data.put("UNIT_VALUE_TOTAL_CNY", netValueFlag ? toString(sub.getUnitValueTotalCny()) : "");
 			data.put("PROD_HIGH_YIELD", sub.getCcy()==null?toString(sub.getProdHighYield()):"");
 			data.put("PROD_LOW_YIELD", sub.getCcy()==null?toString(sub.getProdLowYield()):"");
 			dataList.add(data);
