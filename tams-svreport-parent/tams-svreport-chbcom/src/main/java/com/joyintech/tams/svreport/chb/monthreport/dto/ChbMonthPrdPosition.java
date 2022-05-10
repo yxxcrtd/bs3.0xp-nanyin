@@ -138,7 +138,7 @@ public class ChbMonthPrdPosition {
      * 起息日
      */
     private Date vdate;
-    
+
     /**
      * 开放期限
      */
@@ -260,15 +260,15 @@ public class ChbMonthPrdPosition {
     }
 
     public String getInstitutionCode() {
-		return institutionCode;
-	}
+        return institutionCode;
+    }
 
-	public void setInstitutionCode(String institutionCode) {
-		this.institutionCode = institutionCode;
-	}
-	//add by leipeng 20200606
-    
-    
+    public void setInstitutionCode(String institutionCode) {
+        this.institutionCode = institutionCode;
+    }
+    //add by leipeng 20200606
+
+
     /**
      * null
      * @return POSUUID null
@@ -668,22 +668,22 @@ public class ChbMonthPrdPosition {
     public void setVdate(Date vdate) {
         this.vdate = vdate;
     }
-    
+
     public String getOpenduration() {
         return openduration;
     }
-    
+
     public void setOpenduration(String openduration) {
         this.openduration = openduration;
     }
-    
-    public String getCashmanacate() {
-		return cashmanacate;
-	}
 
-	public void setCashmanacate(String cashmanacate) {
-		this.cashmanacate = cashmanacate;
-	}
+    public String getCashmanacate() {
+        return cashmanacate;
+    }
+
+    public void setCashmanacate(String cashmanacate) {
+        this.cashmanacate = cashmanacate;
+    }
 
     public BigDecimal getYieldE() {
         return yieldE;
@@ -717,5 +717,55 @@ public class ChbMonthPrdPosition {
 
     public void setIsNotice(String isNotice) {
         this.isNotice = isNotice;
+    }
+
+    /**
+     * 本位币
+     */
+    private String functionalCurrency;
+
+    /**
+     * 获取 本位币
+     * @return
+     */
+    public String getFunctionalCurrency() {
+        return functionalCurrency;
+    }
+
+    /**
+     * 设置 本位币
+     * @param functionalCurrency
+     */
+    public void setFunctionalCurrency(String functionalCurrency) {
+        this.functionalCurrency = functionalCurrency;
+    }
+
+
+
+    /**
+     * 现金管理类产品-是否完全符合
+     */
+    private String isFullyCompliant;
+
+    /**
+     * 期限(天)
+     */
+    private BigDecimal termday;
+
+    public BigDecimal getTermday() {
+        return termday;
+    }
+
+    public void setTermday(BigDecimal termday) {
+        this.termday = termday;
+    }
+
+
+    public String getIsFullyCompliant() {
+        return isFullyCompliant;
+    }
+
+    public void setIsFullyCompliant(String isFullyCompliant) {
+        this.isFullyCompliant = isFullyCompliant;
     }
 }

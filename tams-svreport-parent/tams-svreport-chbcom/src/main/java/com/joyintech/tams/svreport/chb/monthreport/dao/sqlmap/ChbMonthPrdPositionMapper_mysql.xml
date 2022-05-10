@@ -29,6 +29,19 @@
     <result column="VDATE" property="vdate" jdbcType="TIMESTAMP" />
     <result column="OPENDURATION" property="openduration" jdbcType="VARCHAR" />
     <result column="CASH_MANA_CATE" property="cashmanacate" jdbcType="VARCHAR" />
+      <result column="INSTITUTION_CODE" property="institutionCode" jdbcType="VARCHAR" />
+      <result column="PAYAMTSUM" property="payamtsum" jdbcType="DECIMAL" />
+      <result column="CLOSETERMDAY" property="closetermday" jdbcType="DECIMAL" />
+      <result column="IS_FHXGCP" property="isFhxgcp" jdbcType="VARCHAR" />
+      <result column="IS_YLLCCP" property="isYllccp" jdbcType="VARCHAR" />
+      <result column="FUNCTIONAL_CURRENCY" property="functionalCurrency" jdbcType="VARCHAR" />
+      <result column="IS_TRANSFER" property="isTransfer" jdbcType="VARCHAR" />
+      <result column="IS_NOTICE" property="isNotice" jdbcType="VARCHAR" />
+      <result column="YIELD_E" property="yieldE" jdbcType="DECIMAL" />
+      <result column="TERMDAY" property="termday" jdbcType="DECIMAL" />
+      <result column="TERMTYPE2" property="termtype2" jdbcType="VARCHAR" />
+      <result column="PRD_SPEC_PROPERTY" property="prdSpecProperty" jdbcType="VARCHAR" />
+      <result column="IS_FULLY_COMPLIANT" property="isFullyCompliant" jdbcType="VARCHAR" />
   </resultMap>
 
   <insert id="genPosition"  parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReport" >
@@ -57,9 +70,14 @@
       ,CUSTOMERAMT
       ,PAYAMTSUM  /**本期兑付金额*/
       ,CLOSETERMDAY  /**封闭式产品期限*/
+      <!-- add by dubaojun 2020-06-05 增加理财子公司所需字段的入库 start -->
+      ,FUNCTIONAL_CURRENCY
+      ,IS_TRANSFER
+      ,IS_NOTICE
       ,YIELD_E
       ,TERMDAY
       ,TERMTYPE2
+      <!-- add by dubaojun 2020-06-05 增加理财子公司所需字段的入库 end -->
       )
       with
       /*产品存续状态*/
@@ -85,9 +103,15 @@
       ,info.OPENTYPEP
       ,info.CASH_MANA_CATE
       /***封闭期在半年以上的定期开放式产品：改成按照期限品种统计； leipeng 20201226***/
-      , case when info.operate_mode in ('03') and info.termtype in ('06','08','09')
-      then '02' when info.CASH_MANA_CATE='01' then '01'
-      else '03'  end openduration
+      ,  case when info.operate_mode in ('03') and info.termtype in ('06','08','09')
+      then '02' else
+      (case when info.SHORT_TERM is null
+      then null
+      when info.SHORT_TERM>184
+      then '02'
+      else
+      '01' end)
+      end  openduration
       ,info.PROFIT_TYPE
       ,(case info.EXC_FIN_SECTOR when '01' then '04' else info.SALETARGET end) saletarget
       ,info.CON_PRD_TRAGET
@@ -544,11 +568,14 @@
       ,prod.closetermday  /*封闭式产品期限*/
       /*add  新加2个字段   by  dongxiangyang  end*/
       <!-- add by dubaojun 2020-06-05 增加理财子公司所需字段的入库 start -->
+      ,prod.FUNCTIONAL_CURRENCY
+      ,prod.IS_TRANSFER
+      ,prod.IS_NOTICE
       ,prod.YIELD_E
       ,prod.TERMDAY
       ,case when prod.operate_mode in ('01','02') then
       case
-      when prod.closetermday &lt;= 90 then '04'
+      when prod.closetermday &lt;= 92 then '04'
       when prod.closetermday &lt;= 184 then '05'
       when prod.closetermday &lt;= 366 then '06'
       when prod.closetermday &lt;= 1096 then '08'
@@ -639,6 +666,9 @@
       then TIMESTAMPDIFF(DAY,prod.vdate,prod.mdate) else null
       end  closetermday  /**新加字段封闭式产品期限*/
       <!-- add by dubaojun 2020-06-05 增加理财子公司所需字段的入库 start -->
+      ,pos1.FUNCTIONAL_CURRENCY
+      ,pos1.IS_TRANSFER
+      ,pos1.IS_NOTICE
       ,pos1.YIELD_E
       ,pos1.TERMDAY
       ,pos1.TERMTYPE2
@@ -696,13 +726,15 @@
 	        ) de where my_rank=1
   </select>
   <select id="select" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthPrdPosition" >
-        select
-        pos.POSUUID, pos.PRODID, pos.STARTDATE, pos.ENDDATE, pos.BOOKDATE, pos.CCY, pos.RAISEMODE, pos.IVSTORIENTATION,
-        pos.TERMTYPE,
-        pos.OPERATE_MODE, pos.PROFIT_TYPE, pos.SALE_TARGET, pos.CON_PRD_TRAGET, pos.ORD_IDENTIFIED, pos.DIRTYAMTSUM,
-        pos.CLEANAMTSUM, pos.REDEEMAMT, pos.TERMINATIONAMT, pos.ENDAMTSUM_OTH, pos.CUSTOMERAMT, pos.REDEEMINTAMT,
-        pos.TERMINATIONINTAMT, pos.CASHAMT, pos.DURATIONFLAG, pos.VDATE,pos.OPENDURATION,pos.CASH_MANA_CATE, di.INSTITUTION_CODE,
-        pos.PAYAMTSUM,pos.CLOSETERMDAY,info.IS_TRANSFER,info.IS_FHXGCP,info.IS_YLLCCP,pos.YIELD_E,info.PRD_SPEC_PROPERTY
+      select
+      pos.POSUUID, pos.PRODID, pos.STARTDATE, pos.ENDDATE, pos.BOOKDATE, pos.CCY, pos.RAISEMODE, pos.IVSTORIENTATION,
+      pos.TERMTYPE,
+      pos.OPERATE_MODE, pos.PROFIT_TYPE, pos.SALE_TARGET, pos.CON_PRD_TRAGET, pos.ORD_IDENTIFIED, pos.DIRTYAMTSUM,
+      pos.CLEANAMTSUM, pos.REDEEMAMT, pos.TERMINATIONAMT, pos.ENDAMTSUM_OTH, pos.CUSTOMERAMT, pos.REDEEMINTAMT,
+      pos.TERMINATIONINTAMT, pos.CASHAMT, pos.DURATIONFLAG, pos.VDATE,pos.OPENDURATION,pos.CASH_MANA_CATE, di.INSTITUTION_CODE,
+      pos.PAYAMTSUM,pos.CLOSETERMDAY,info.IS_TRANSFER,info.IS_FHXGCP,info.IS_YLLCCP,pos.YIELD_E,info.PRD_SPEC_PROPERTY,
+      pos.FUNCTIONAL_CURRENCY, info.IS_TRANSFER, pos.IS_NOTICE,
+      pos.TERMDAY,pos.TERMTYPE2,info.IS_FULLY_COMPLIANT
         from CHB_MONTH_PRD_POSITION pos
         left join (      select distinct  di.business_id finprod_market_id,di.institution_code
         from DATA_AUTH_NOTIFY_INST di where di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
