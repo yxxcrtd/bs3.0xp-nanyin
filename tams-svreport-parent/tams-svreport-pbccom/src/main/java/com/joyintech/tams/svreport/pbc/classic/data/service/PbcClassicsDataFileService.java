@@ -1776,6 +1776,7 @@ public class PbcClassicsDataFileService {
 		for(PbcProdRaiseSub sub :subList){
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("pbcProdId", sub.getPbcProdId());
+			param.put("datFlag","01");
 			List<PbcPrdBaseinfoSub> infos = pbcPrdBaseinfoSubMapper.searchPage(param);
 			if(infos.size()==0||infos.get(0).getIssuePartyId()==null)
 				continue;
@@ -1837,6 +1838,7 @@ public class PbcClassicsDataFileService {
 		for(PbcProdRaiseSub sub :subList){
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("pbcProdId", sub.getPbcProdId());
+			param.put("datFlag","01");
 			List<PbcPrdBaseinfoSub> infos = pbcPrdBaseinfoSubMapper.searchPage(param);
 			if(infos.size()==0||infos.get(0).getIssuePartyId()==null)
 				continue;
@@ -1929,6 +1931,7 @@ public class PbcClassicsDataFileService {
 		for(PbcProdRaiseSub sub :subList){
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("pbcProdId", sub.getPbcProdId());
+			param.put("datFlag","01");
 			List<PbcPrdBaseinfoSub> infos = pbcPrdBaseinfoSubMapper.searchPage(param);
 			if(infos.size()==0||infos.get(0).getIssuePartyId()==null)
 				continue;
