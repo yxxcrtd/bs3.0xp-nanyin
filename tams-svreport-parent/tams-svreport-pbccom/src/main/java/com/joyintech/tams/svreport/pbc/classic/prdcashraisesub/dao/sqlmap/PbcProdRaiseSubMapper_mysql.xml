@@ -1718,7 +1718,7 @@
     select
     a.REGIST_SEQNO registSeqno,
     a.RAISING_DATE raisingDate,
-    a.PBC_PROD_ID PBC_PROD_ID,
+    IFNULL(t2.pbc_code,a.PBC_PROD_ID) PBC_PROD_ID,
     a.BUY_PLACE buyPlace,
     a.CUSTOMER_TYPE1 customerType1,
     a.BUY_PLACE buyPlaceCode,
