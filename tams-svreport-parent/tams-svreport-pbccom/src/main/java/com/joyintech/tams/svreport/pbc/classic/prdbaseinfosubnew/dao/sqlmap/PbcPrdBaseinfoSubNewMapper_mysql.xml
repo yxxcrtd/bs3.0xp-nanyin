@@ -1263,7 +1263,7 @@
         LEFT JOIN SYS_INSTITUTION SI
         ON SI.INSTITUTION_CODE = CORBC.ORG_CODE
         <where>
-            t1.STATUS !='04'
+            t1.STATUS !='04' and SI.INSTITUTION_TYPE='01'
             <if test="pbcProdIdList != null and pbcProdIdList.size > 0">
                 <foreach collection="pbcProdIdList" item="items" open="and PBC_PROD_ID in (" separator="," close=")">
                     #{items,jdbcType=VARCHAR}
