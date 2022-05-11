@@ -338,3 +338,27 @@ insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPER
 values ('ASSET_INFO_DETAIL_RULE_0000-0000-industryShares-A001', 'AssetInfoRegist002', 'isNotEmpty', 'svrBussRepAssetAstBillInfoDto.industryShares', null, null, 'N', '行业一级要素不可为空', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
 values ('ASSET_INFO_DETAIL_RULE_0000-0000-industryShares-A002', 'AssetInfoRegist002', 'inDatadict', 'svrBussRepAssetAstBillInfoDto.industryShares', '==', 'INSTITUTION_INDUSTRY_FIRST_LEVEL', 'Y', '行业一级要素不在值域范围内。', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+
+
+DELETE FROM CHB_DATACHECK_RULE_INV WHERE REMARK LIKE '%商业银行%';
+
+
+DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'BANK_CAPITAL_TOOL';
+
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('BANK_CAPITAL_TOOL', '01', '永续债（债性）', 2, '0', 'system', null, now(), 'system', now(), null);
+
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('BANK_CAPITAL_TOOL', '02', '永续债（股性）', 3, '0', 'system', null, now(), 'system', now(), null);
+
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('BANK_CAPITAL_TOOL', '03', '二级资本债', 4, '0', 'system', null, now(), 'system', now(), null);
+
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('BANK_CAPITAL_TOOL', '04', '可转债', 5, '0', 'system', null, now(), 'system', now(), null);
+
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('BANK_CAPITAL_TOOL', '05', '优先股', 6, '0', 'system', null, now(), 'system', now(), null);
+
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('BANK_CAPITAL_TOOL', '99', '其他银行资本补充工具', 6, '0', 'system', null, now(), 'system', now(), null);

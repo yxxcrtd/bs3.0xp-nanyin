@@ -567,12 +567,16 @@ var QueryFunc=function(){
         }
 
         //是否银行资本补充工具
-        if(repAssetType == '1101'||repAssetType == '1110'||repAssetType == '1109'||
+        if((repAssetType == '1101'||repAssetType == '1110'||repAssetType == '1109'||
             repAssetType == '1102'||repAssetType == '1111'||repAssetType == '1112'||
             repAssetType == '1113'||repAssetType == '1114'||repAssetType == '1115'||
-            repAssetType == '1116'||repAssetType == '1117'){
+            repAssetType == '1116'||repAssetType == '1117')){
             $('#isBankCap').attr('disabled',false);
-        }else{
+        }else if(repAssetType == '1301'||repAssetType == '1305'||repAssetType == '1302'){
+            if($('#svrBussRepEquityInfoDto_sharesType').val() == '02'){
+                $('#isBankCap').attr('disabled',false);
+            }
+        }else {
             $('#isBankCap').attr('disabled',true);
             $("#isBankCap").val('').trigger("change");
         }
@@ -734,6 +738,10 @@ var QueryFunc=function(){
             $("#assetCode").attr('disabled',true);
         }
 
+
+        $('#svrBussRepEquityInfoDto_sharesType').change(function(){
+            assetTypeDetail();
+        });
 
         //隐藏所有中债报送信息
         $(".businessDeptClass").hide();
