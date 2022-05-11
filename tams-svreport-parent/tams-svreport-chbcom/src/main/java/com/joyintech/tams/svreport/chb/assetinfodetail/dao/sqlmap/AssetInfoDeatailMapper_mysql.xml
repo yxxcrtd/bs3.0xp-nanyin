@@ -542,7 +542,6 @@
         <result column="PROD_REGISTER_CODE" property="prodRegisterCode" jdbcType="VARCHAR" />
         <result column="PROFIT_FLAG" property="profitFlag" jdbcType="VARCHAR" />
         <result column="IS_DEPOSIT_FLAG" property="isDepositFlag" jdbcType="VARCHAR" />
-        <result column="IS_PROPERTY_TRUST" property="isPropertyTrust" jdbcType="VARCHAR" />
 
         <result column="IS_CONSTRACTE_BUSI" property="isConstracteBusi" jdbcType="VARCHAR" />
         <result column="IS_BANK_CAP" property="isBankCap" jdbcType="VARCHAR" />
