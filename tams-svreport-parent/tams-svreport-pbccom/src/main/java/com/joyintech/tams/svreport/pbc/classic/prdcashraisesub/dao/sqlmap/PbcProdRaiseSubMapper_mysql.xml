@@ -586,7 +586,7 @@
     AND info.RANKNUM = 1
     where 1 =1
     <!-- and sub.send_status in ('02','03') /*已报送数据*/ -->
-    and DATE_FORMAT(sub.RAISING_DATE,'%Y-%m-%d') = #{cdate,jdbcType=VARCHAR}  limit 1
+    and DATE_FORMAT(sub.RAISING_DATE,'%Y-%m-%d') = #{cdate,jdbcType=VARCHAR}
   </select>
   <select id="selectPCD1All" parameterType="map" resultMap="BaseResultMap" flushCache="true" useCache="false">
     select
