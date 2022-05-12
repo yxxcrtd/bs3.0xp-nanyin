@@ -119,7 +119,7 @@
                        #{errMsg,jdbcType=VARCHAR} ERR_MSG
                    FROM  DUAL
                 )TEMP WHERE NOT EXISTS(
-                    SELECT 1 FROM CHB_INVEST_TRADE a WHERE a.TRADE_CODE = TEMP.TRADE_CODE AND a.PROD_ID = TEMP.PROD_ID AND a.REGIST_BANK_CODE = TEMP.REGIST_BANK_CODE AND a.ASSET_CODE = TEMP.ASSET_CODE
+                    SELECT 1 FROM CHB_INVEST_TRADE a WHERE a.TRADE_CODE = TEMP.TRADE_CODE AND a.PROD_ID = TEMP.PROD_ID  AND a.ASSET_CODE = TEMP.ASSET_CODE
                     )
             )a;
 
@@ -164,6 +164,7 @@
                 ) a
             )b
                      SET
+                    a.REGIST_BANK_CODE = b.REGIST_BANK_CODE,
                     a.CCY = b.CCY,
                     a.AMT = b.AMT,
                     a.CNY_AMT = b.CNY_AMT,
@@ -187,7 +188,7 @@
                     a.INVEST_TRADER_ID = b.INVEST_TRADER_ID,
                     a.INVEST_TRADER_NAME = b.INVEST_TRADER_NAME,
                     a.ERR_MSG = b.ERR_MSG
-            WHERE a.TRADE_CODE = b.TRADE_CODE AND a.PROD_ID = b.PROD_ID AND a.REGIST_BANK_CODE = b.REGIST_BANK_CODE AND a.ASSET_CODE = b.ASSET_CODE
+            WHERE a.TRADE_CODE = b.TRADE_CODE AND a.PROD_ID = b.PROD_ID  AND a.ASSET_CODE = b.ASSET_CODE
 
     </insert>
     <update id="update">
@@ -198,9 +199,6 @@
             </if>
             <if test="prodId!=null and prodId!=''">
                 AND PROD_ID = #{prodId}
-            </if>
-            <if test="registBankCode!=null and registBankCode!=''">
-                AND REGIST_BANK_CODE = #{registBankCode}
             </if>
             <if test="assetCode!=null and assetCode!=''">
                 AND ASSET_CODE = #{assetCode}
@@ -214,7 +212,10 @@
         FROM CHB_PRD_BASEINFO
         <where>
             <if test="search !=null and  search !='' ">
-                PROD_NAME LIKE CONCAT('%',#{search},'%')
+                PROD_NAME LIKE '%' || #{search} || '%'
+            </if>
+            <if test="prodName !=null and  prodName !='' ">
+                and PROD_NAME = #{prodName}
             </if>
         </where>
     </select>
@@ -222,12 +223,11 @@
         SELECT
         DISTINCT REG_CODE id,
         REG_CODE text
-        FROM CHB_PRD_BASEINFO
+        FROM CHB_PRDRESIST_CODE
         <where>
             <if test="search !=null and  search !='' ">
                 REG_CODE LIKE  CONCAT('%',#{search}, '%')
             </if>
-            AND REG_CODE IS NOT NULL
         </where>
     </select>
     <select id="getCustomerName" resultType="com.joyintech.framework.select.SelectOptionDto">
@@ -239,6 +239,9 @@
             <if test="search !=null and  search !='' ">
                 REG_CODE LIKE CONCAT('%',#{search}, '%')
             </if>
+            <if test="tradeCounter !=null and  tradeCounter !='' ">
+                and CUSTOMER_ID = #{tradeCounter}
+            </if>
         </where>
     </select>
     <select id="getAssetCode" resultType="com.joyintech.framework.select.SelectOptionDto">
@@ -247,14 +250,16 @@
         ASSET_NAME text
         FROM CHB_ASSET_INFO
         <where>
-            ASSET_CODE IS  NOT NULL
             <if test="search !=null and  search !='' ">
                 AND ASSET_CODE LIKE CONCAT( '%',#{search},'%')
+            </if>
+            <if test="assetCode !=null and  assetCode !='' ">
+                and ASSET_CODE = #{assetCode}
             </if>
         </where>
     </select>
     <select id="selectProdIdAndRegCodeByProdName" resultType="java.util.Map">
-        SELECT PROD_ID,REG_CODE FROM CHB_PRD_BASEINFO WHERE PROD_NAME=#{prodName} limit 1
+        SELECT PROD_ID,REG_CODE FROM CHB_PRD_BASEINFO WHERE PROD_NAME=#{prodName}
     </select>
     <select id="selectByKey" resultMap="BaseResultMap">
         select
@@ -302,9 +307,6 @@
             </if>
             <if test="prodId!=null and prodId!=''">
                 AND a.PROD_ID = #{prodId}
-            </if>
-            <if test="registBankCode!=null and registBankCode!=''">
-                AND a.REGIST_BANK_CODE = #{registBankCode}
             </if>
             <if test="assetCode!=null and assetCode!=''">
                 AND a.ASSET_CODE = #{assetCode}
@@ -387,8 +389,9 @@
             <if test="dealDateStart==null or dealDateStart ==''">
                 and a.DEALDATE =  DATE_SUB(CURDATE(), INTERVAL 1 DAY)
             </if>
-            and a.ASSET_CODE!=''
-            and a.ASSET_CODE is not null
         </where>
+    </select>
+    <select id="selectRivalPartyType" resultType="java.util.Map">
+        select COUNTER_TYPE from CHB_MST_COUNTER_PARTY where COUNTER_ID = #{tradeCounter}
     </select>
 </mapper>

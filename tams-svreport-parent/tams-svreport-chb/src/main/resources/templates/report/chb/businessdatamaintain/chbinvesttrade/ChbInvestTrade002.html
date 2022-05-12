@@ -16,8 +16,8 @@
                                data-th-text="#{ChbInvestTrade001.prodName}">产品名称</label>
                         <div class="layui-input-inline input-inline">
                             <select type="text" id="prodName" name="prodName" class="layui-input form-input input-select"
-                                    data-th-data-url='@{/chb/businessdatamaintain/chbinvesttrade/chbinvesttrade001/getProdName}'
-                                    data-th-value="${entity?.prodName}" placeholder="请选择" formatoption = "false"
+                                    data-th-data-url='@{/chb/businessdatamaintain/chbinvesttrade/chbinvesttrade001/getProdName(prodName=${entity?.prodName})}'
+                                    data-th-initValue="${entity?.prodName}" placeholder="请选择" formatoption = "false"
                                     data-th-placeholder="#{SysCommon.selectplaceholder}"
                                     allowClear="true" required >
                             </select>
@@ -68,7 +68,7 @@
                                data-th-text="#{ChbInvestTrade001.assetCode}">行内资产/负债编码</label>
                         <div class="layui-input-inline input-inline">
                             <select id="assetCode" name="assetCode" class="input-select"
-                                    data-th-data-url='@{/chb/businessdatamaintain/chbinvesttrade/chbinvesttrade001/getAssetCode}'
+                                    data-th-data-url='@{/chb/businessdatamaintain/chbinvesttrade/chbinvesttrade001/getAssetCode(assetCode=${entity?.assetCode})}'
                                     data-th-placeholder="#{SysCommon.selectplaceholder}" data-th-initValue = "${entity?.assetCode}"
                                     formatoption = "false" allowClear="true" required>
                             </select>
@@ -128,10 +128,11 @@
                         <label class="layui-form-label form-lable"
                                data-th-text="#{ChbInvestTrade001.assetMethod}">资产计量方式</label>
                         <div class="layui-input-inline input-inline">
-                            <input type="text" id="assetMethod" name="assetMethod" class="layui-input form-input input-select"
+                            <select type="text" id="assetMethod" name="assetMethod" class="layui-input form-input input-select"
                                    placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
                                    data-th-data-result='${SVR_ASSET_METHOD}'
                                    data-th-value="${entity?.assetMethod}" required>
+                            </select>
                         </div>
                     </div>
 
@@ -178,8 +179,8 @@
                                data-th-text="#{ChbInvestTrade001.tradeCounter}">交易对手</label>
                         <div class="layui-input-inline input-inline">
                             <select type="text" id="tradeCounter" name="tradeCounter" class="layui-input form-input input-select"
-                                   data-th-data-url='@{/chb/businessdatamaintain/chbinvesttrade/chbinvesttrade001/getCustomerName}'
-                                   placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                                   data-th-data-url='@{/chb/businessdatamaintain/chbinvesttrade/chbinvesttrade001/getCustomerName(tradeCounter=${entity?.tradeCounter})}'
+                                   placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" formatoption = "false"
                                    data-th-initValue="${entity?.tradeCounter}" required>
                             </select>
                         </div>
@@ -189,10 +190,10 @@
                         <label class="layui-form-label form-lable"
                                data-th-text="#{ChbInvestTrade001.rivalPartyType}">交易对手对手类型</label>
                         <div class="layui-input-inline input-inline">
-                            <input type="text" id="rivalPartyType" name="rivalPartyType" class="layui-input form-input input-select"
+                            <input type="text" id="rivalPartyType" name="rivalPartyType" class="layui-input form-input"
                                    placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
-                                   data-th-data-result='${COUNTER_TYPE}'
-                                   data-th-value="${entity?.rivalPartyType}" required>
+                                   data-th-value="${entity?.rivalPartyType}" required disabled>
+
                         </div>
                     </div>
                     <div class="layui-inline layui-col-md4">
@@ -242,7 +243,7 @@
                                data-th-text="#{ChbInvestTrade001.investApproverId}">交易审批人身份证号</label>
                         <div class="layui-input-inline input-inline">
                             <input type="text" id="investApproverId" name="investApproverId"
-                                   class="layui-input form-input"
+                                   class="layui-input form-input" maxlength="30"
                                    data-th-value="${entity?.investApproverId}"required>
                         </div>
                     </div>
@@ -260,7 +261,7 @@
                                data-th-text="#{ChbInvestTrade001.investTraderId}">交易员身份证号</label>
                         <div class="layui-input-inline input-inline">
                             <input type="text" id="investTraderId" name="investTraderId" class="layui-input form-input "
-                                   placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                                   placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" maxlength="30"
                                    data-th-value="${entity?.investTraderId}" required >
                         </div>
                     </div>

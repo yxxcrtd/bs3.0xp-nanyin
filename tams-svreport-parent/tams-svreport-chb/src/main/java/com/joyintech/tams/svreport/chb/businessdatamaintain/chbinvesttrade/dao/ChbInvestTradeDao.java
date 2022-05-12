@@ -25,7 +25,7 @@ public interface ChbInvestTradeDao {
 
     Map<String,String> selectProdIdAndRegCodeByProdName(String prodName);
 
-    ChbInvestTradeDto selectByKey(@Param("tradeCode") String tradeCode,@Param("prodId") String prodId, @Param("registBankCode") String registBankCode, @Param("assetCode") String assetCode);
+    ChbInvestTradeDto selectByKey(@Param("tradeCode") String tradeCode,@Param("prodId") String prodId,@Param("assetCode") String assetCode);
 
     Map<String,String> selectAssetNameByAssetCode(String assetCode);
 
@@ -34,4 +34,6 @@ public interface ChbInvestTradeDao {
     void insert(ChbInvestTradeDto entity);
 
     List<ChbInvestTradeDto> selectAll(Map<String, Object> pageParam);
+
+    Map<String, String> selectRivalPartyType(String tradeCounter);
 }
