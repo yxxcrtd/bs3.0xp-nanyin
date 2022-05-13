@@ -40,8 +40,6 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
     private ChbInvestTradeDao chbInvestTradeDao;
     @Override
     public void doComplete(ChbInvestTradeDto entity, OperationType type) {
-        entity.setUpdateUser(CommonUtil.getUserName());
-        entity.setUpdateTime(DateUtil.now());
         if (OperationType.DELETE.equals(type)) {
             entity.setStatus(DictCodeListExt1.维护数据状态_删除.getValue());
             chbInvestTradeDao.update(entity);

@@ -2,6 +2,8 @@
  * 证券账户管理
  */
 $(function() {
+    $('#dealdate').val(sysDate+' - '+sysDate);
+
     /**
      * 获取查询参数
      */
@@ -61,7 +63,7 @@ $(function() {
             ,{field:'remark', sortable:false,width:100, title: 'ChbInvestTrade001.remark'}
             ,{field:'errMsg',sortable:false,width:100,title: 'ChbInvestTrade001.errMsg'}
             ,{field:'updateTimeStr', sortable:false, width:100,title: 'ChbInvestTrade001.updateTime'}
-            ,{field:'updateUser', sortable:false, width:100,title: 'ChbInvestTrade001.updateUser'}
+            ,{field:'createUser', sortable:false, width:100,title: 'ChbInvestTrade001.updateUser'}
             ,{field:'operation', width:100, title: 'SysCommon.operation',sortable:false, type:'action', buttons: ['edit', 'delt']}
         ]
     });

@@ -131,9 +131,10 @@ public class ChbInvestTrade002Controller extends BaseController {
         // 塞入工作流参数
         processParameter.setWorkFlowParameter(params);
 
-        Date sysDate = DateUtil.platDateFromCache();// 获取平台日期
-        dto.setCreateTime(sysDate);
-
+        dto.setCreateTime(DateUtil.now());
+        dto.setCreateUser(CommonUtil.getUserName());
+        dto.setUpdateTime(DateUtil.now());
+        dto.setUpdateUser(CommonUtil.getUserName());
         // 流程开始
         String msg = chbInvestTradeService.start(processParameter, dto);
         return new AjaxResult(msg);

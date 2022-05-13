@@ -14,6 +14,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbmstbondcreditrating.dto.ChbMstBondCreditRatingDto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbmstbondcreditrating.service.ChbMstBondCreditRateService;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -139,6 +140,12 @@ public class ChbMstBondCreditRating001Controller extends BaseController {
                 +this.getMessage("ChbMstBondCreditRating001.oType")
                 +"("+entity.getoType()+")");
         processParameter.setWorkFlowParameter(params);
+        dto.getSelectedItem().forEach(e->{
+            e.setCreateUser(CommonUtil.getUserName());
+            e.setCreateTime(DateUtil.now());
+            e.setUpdateUser(CommonUtil.getUserName());
+            e.setUpdateTime(DateUtil.now());
+        });
         String msg =mstBondCreditRateService.start(processParameter,dto.getSelectedItem().toArray(new ChbMstBondCreditRatingDto[dto.getSelectedItem().size()]));
         return new AjaxResult(msg);
 

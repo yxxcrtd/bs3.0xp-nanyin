@@ -39,8 +39,6 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
     @Override
     @Transactional
     public void doComplete(ChbPrdBaseInfoDto entity, OperationType type) {
-        entity.setUpdateUser(CommonUtil.getUserName());
-        entity.setUpdateTime(DateUtil.now());
         if (OperationType.DELETE.equals(type)) {
             entity.setStatus(DictCodeListExt1.维护数据状态_删除.getValue());
             chbPrdBaseInfoDao.update(entity);
@@ -49,8 +47,6 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
         else if (OperationType.NEW.equals(type)) {
             entity.setDataSource(DictCodeListExt2.数据来源_新建导入.getValue());
             entity.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
-            entity.setCreateTime(DateUtil.now());
-            entity.setCreateUser(CommonUtil.getUserName());
             entity.setProduuid(IDGenerator.generate(32));
             chbPrdBaseInfoDao.insert(entity);
             ChbPrdresistCode code = new ChbPrdresistCode();

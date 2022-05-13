@@ -15,6 +15,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbinvesttrade.dto.ChbInvestTradeDto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.dto.ChbPrdBaseInfoDto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.service.ChbPrdBaseInfoService;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,6 +110,12 @@ public class ChbPrdBaseInfo001Controller extends BaseController {
         params.setComment(entity -> this.getMessage("CchbPrdBaseInfo001.prodId") + "("
                 + entity.getProdId() + ")");
         processParameter.setWorkFlowParameter(params);
+        dto.getSelectedItem().forEach(e->{
+            e.setCreateUser(CommonUtil.getUserName());
+            e.setCreateTime(DateUtil.now());
+            e.setUpdateUser(CommonUtil.getUserName());
+            e.setUpdateTime(DateUtil.now());
+        });
         String msg = chbPrdBaseInfoService.start(processParameter,dto.getSelectedItem().toArray(new ChbPrdBaseInfoDto[dto.getSelectedItem().size()]));
         return new AjaxResult(msg);
 

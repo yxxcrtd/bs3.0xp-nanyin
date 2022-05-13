@@ -114,9 +114,10 @@ public class ChbPrdBaseInfo002Contreoller extends BaseController {
                 + entity.getProdId() + ")");
         // 塞入工作流参数
         processParameter.setWorkFlowParameter(params);
-        Date sysDate = DateUtil.platDateFromCache();// 获取平台日期
-        dto.setCreateTime(sysDate);
-
+        dto.setCreateUser(CommonUtil.getUserName());
+        dto.setCreateTime(DateUtil.now());
+        dto.setUpdateUser(CommonUtil.getUserName());
+        dto.setUpdateTime(DateUtil.now());
         // 流程开始
         String msg = chbPrdBaseInfoService.start(processParameter, dto);
         return new AjaxResult(msg);
