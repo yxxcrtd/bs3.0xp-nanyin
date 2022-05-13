@@ -187,13 +187,13 @@ insert into CHB_DATACHECK_CONDITION_INV (CHECKCONDITIONID, CHECKRULEID, CHECKMET
 values ('ASSET_INFO_DETAIL_CONDITIOA_SbankCap', 'ASSET_INFO_DETAIL_RULE_05-bankCapital', 'inArray', 'assetType2', '==', '1101,1102,1109,1110,1111,1112,1113,1114,1115,1116,1117', null, 'E');
 DELETE FROM CHB_DATACHECK_RULE_INV WHERE CHECKRULEID = 'ASSET_INFO_DETAIL_RULE_05-bankCapital';
 insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
-values ('ASSET_INFO_DETAIL_RULE_05-bankCapital', 'AssetInfoRegist002', 'inArray', 'bankCapital', '==', '01,02,03,04', 'Y', '银行资本补充工具不可选择优先股。', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+values ('ASSET_INFO_DETAIL_RULE_05-bankCapital', 'AssetInfoRegist002', 'inArray', 'bankCapital', '==', '01,02,03,04,99', 'Y', '银行资本补充工具不可选择优先股。', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 delete FROM CHB_DATACHECK_CONDITION_INV WHERE CHECKRULEID = 'ASSET_INFO_DETAIL_RULE_06-bankCapital';
 insert into CHB_DATACHECK_CONDITION_INV (CHECKCONDITIONID, CHECKRULEID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, REMARK, STATUS)
 values ('ASSET_INFO_DETAIL_CONDITIOA_BbankCap', 'ASSET_INFO_DETAIL_RULE_06-bankCapital', 'inArray', 'assetType2', '==', '1301,1302,1305', null, 'E');
 DELETE FROM CHB_DATACHECK_RULE_INV WHERE CHECKRULEID = 'ASSET_INFO_DETAIL_RULE_06-bankCapital';
 insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
-values ('ASSET_INFO_DETAIL_RULE_06-bankCapital', 'AssetInfoRegist002', 'inArray', 'bankCapital', '==', '05', 'Y', '银行资本补充工具不可选择非优先股及其他。', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+values ('ASSET_INFO_DETAIL_RULE_06-bankCapital', 'AssetInfoRegist002', 'inArray', 'bankCapital', '==', '05,99', 'Y', '银行资本补充工具不可选择非优先股及其他。', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 
 
 
