@@ -6,6 +6,7 @@ import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.util.DateUtil;
 
 import com.joyintech.framework.util.FileNameUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.report.framework.thread.JoyinThreadPoolExecutor;
 import com.joyintech.tams.report.interf.common.imp.ImportGenerator;
 import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpColumn;
@@ -77,11 +78,9 @@ public class BatchInsertService {
 
     /**
      * 批量插入共通方法共通方法
-     * @param tmpPath
-     * @param tablename
-     * @param list
-     *
-     * @param table
+     * @param tmpPath 临时数据路径
+     * @param list  数据list
+     * @param table 表对象
      */
     public void exeBatchldr(String tmpPath, List<? extends Object> list, ImpTable table) {
         String tablename = table.getName();
@@ -166,6 +165,60 @@ public class BatchInsertService {
                 }
             }
         } else if(BaseCommonCheckService.isMYSQLDataBase()){
+            if (StringUtil.isEmptyList(content)) {
+                return ;
+            }
+            int dataCount = content.size();
+            if (dataCount <= reportInterfOneTimeSqlLdrDataCount) {
+                //临时文件
+                String absoultPath = tmpPath + table.getName() + FileNameUtil.createFileName(".txt");
+                File tmpFile = new SafelyFile(absoultPath);
+                try {
+                    FileUtils.writeLines(tmpFile, "UTF-8", content);
+                    exeLoadData(tmpPath, table);
+                }catch(Exception e){
+                    logger.error(e.getMessage(), e);
+                }finally {
+                    // 删除临时文件
+                    delete(absoultPath);
+                }
+            }else{
+                List<String> newDataList = new ArrayList<String>();
+                newDataList.addAll(content);
+                // 分批处理
+                int part = dataCount / reportInterfOneTimeSqlLdrDataCount; // 分批数
+                for (int i = 0; i < part; i++ ) {
+                    //临时文件
+                    String absoultPath = tmpPath + table.getName() + FileNameUtil.createFileName(".txt");
+                    File tmpFile = new SafelyFile(absoultPath);
+                    try {
+                        FileUtils.writeLines(tmpFile, "UTF-8", newDataList.subList(0, reportInterfOneTimeSqlLdrDataCount));
+                        exeLoadData(tmpPath, table);
+                    }catch(Exception e){
+                        logger.error(e.getMessage(), e);
+                    }finally {
+                        // 删除临时文件
+                        delete(absoultPath);
+                    }
+                    newDataList.subList(0, reportInterfOneTimeSqlLdrDataCount).clear();
+                }
+                // 最后剩下的数据
+                if (CollectionUtils.isNotEmpty(newDataList)) {
+                    //临时文件
+                    String absoultPath = tmpPath + table.getName() + FileNameUtil.createFileName(".txt");
+                    File tmpFile = new SafelyFile(absoultPath);
+                    try {
+                        FileUtils.writeLines(tmpFile, "UTF-8", newDataList);
+                        exeLoadData(tmpPath, table);
+                    }catch(Exception e){
+                        logger.error(e.getMessage(), e);
+                    }finally {
+                        // 删除临时文件
+                        delete(absoultPath);
+                    }
+                }
+            }
+
             //临时文件
             String absoultPath = tmpPath + table.getName() + FileNameUtil.createFileName(".txt");
             File tmpFile = new SafelyFile(absoultPath);
