@@ -2507,9 +2507,11 @@
             #{item.isFbzb,jdbcType=VARCHAR} IS_FBZB,
             #{item.constracteBusiType,jdbcType=VARCHAR} CONSTRACTE_BUSI_TYPE,
             #{item.constracteGrade,jdbcType=VARCHAR} CONSTRACTE_GRADE,
-            #{item.constracteHeaverTimes,jdbcType=DECIMAL} CONSTRACTE_HEAVER_TIMES
+            #{item.constracteHeaverTimes,jdbcType=DECIMAL} CONSTRACTE_HEAVER_TIMES,
+            #{item.bankCapital,jdbcType=VARCHAR} BANK_CAPITAL,
+            #{item.isPpn,jdbcType=VARCHAR} IS_PPN,
 	    <!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-29 start -->
-            ,#{item.accountNo,jdbcType=VARCHAR} ACCOUNT_NO,
+            #{item.accountNo,jdbcType=VARCHAR} ACCOUNT_NO,
             #{item.creditAssetCode,jdbcType=VARCHAR} CREDIT_ASSET_CODE,
             #{item.billCode,jdbcType=VARCHAR} BILL_CODE,
             #{item.financialProductFlag,jdbcType=VARCHAR} FINANCIAL_PRODUCT_FLAG,
@@ -2750,9 +2752,11 @@
         CII.IS_FBZB=TEMP.IS_FBZB,
         CII.CONSTRACTE_BUSI_TYPE=TEMP.CONSTRACTE_BUSI_TYPE,
         CII.CONSTRACTE_GRADE=TEMP.CONSTRACTE_GRADE,
-        CII.CONSTRACTE_HEAVER_TIMES=TEMP.CONSTRACTE_HEAVER_TIMES  
+        CII.CONSTRACTE_HEAVER_TIMES=TEMP.CONSTRACTE_HEAVER_TIMES  ,
+        CII.BANK_CAPITAL=TEMP.BANK_CAPITAL  ,
+        CII.IS_PPN=TEMP.IS_PPN  ,
 	<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-29 start -->
-        ,CII.ACCOUNT_NO=TEMP.ACCOUNT_NO,
+        CII.ACCOUNT_NO=TEMP.ACCOUNT_NO,
         CII.CREDIT_ASSET_CODE=TEMP.CREDIT_ASSET_CODE,
         CII.BILL_CODE=TEMP.BILL_CODE,
         CII.FINANCIAL_PRODUCT_FLAG=TEMP.FINANCIAL_PRODUCT_FLAG,
@@ -2862,6 +2866,7 @@
         IS_BZHPJ,CHB_ISSUER_ID,CHB_MANAGER_ID,
         CHB_FINANCIER_ID,PERPETUAL_FLAG,OPTION_FLAG,
         IS_BJSZQ,IS_PERPETUAL,IS_FBZB,CONSTRACTE_BUSI_TYPE,CONSTRACTE_GRADE,CONSTRACTE_HEAVER_TIMES
+        ,BANK_CAPITAL,IS_PPN
 	<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-29 start -->
         ,ACCOUNT_NO,
         CREDIT_ASSET_CODE,
@@ -3095,6 +3100,8 @@
         TEMP.CONSTRACTE_BUSI_TYPE,
         TEMP.CONSTRACTE_GRADE,
         TEMP.CONSTRACTE_HEAVER_TIMES        ,
+        TEMP.BANK_CAPITAL,
+        TEMP.IS_PPN,
         TEMP.ACCOUNT_NO,
         TEMP.CREDIT_ASSET_CODE,
         TEMP.BILL_CODE,

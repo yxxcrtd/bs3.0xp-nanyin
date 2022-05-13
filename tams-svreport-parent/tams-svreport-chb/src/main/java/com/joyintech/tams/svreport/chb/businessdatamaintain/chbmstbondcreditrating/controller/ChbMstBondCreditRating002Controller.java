@@ -11,6 +11,7 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbmstbondcreditrating.dto.ChbMstBondCreditRatingDto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbmstbondcreditrating.service.ChbMstBondCreditRateService;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
@@ -111,10 +112,10 @@ public class ChbMstBondCreditRating002Controller extends BaseController {
                 +"("+entity.getoType()+")");
         // 塞入工作流参数
         processParameter.setWorkFlowParameter(params);
-
-        Date sysDate = DateUtil.platDateFromCache();// 获取平台日期
-        dto.setCreateTime(sysDate);
-
+        dto.setCreateUser(CommonUtil.getUserName());
+        dto.setCreateTime(DateUtil.now());
+        dto.setUpdateUser(CommonUtil.getUserName());
+        dto.setUpdateTime(DateUtil.now());
         // 流程开始
         String msg = mstBondCreditRateService.start(processParameter, dto);
         return new AjaxResult(msg);

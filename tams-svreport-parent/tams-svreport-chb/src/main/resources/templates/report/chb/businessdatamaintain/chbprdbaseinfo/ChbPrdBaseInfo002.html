@@ -113,6 +113,7 @@
 							<div class="layui-input-inline input-inline">
 								<input type="text" name="yieldHigh" id="yieldHigh"
 									   data-th-value="${entity?.yieldHigh}" required
+									   data-pattern="#.#######" data-fixtype="7" maxlength="9" onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"
 									   class="layui-input form-input" placeholder="请输入内容"
 									   data-th-placeholder="#{SysCommon.placeholder}" >
 							</div>
@@ -122,6 +123,7 @@
 							<div class="layui-input-inline input-inline">
 								<input type="text" name="yieldLow" id="yieldLow"
 									   data-th-value="${entity?.yieldLow}" required
+									   data-pattern="#.#######" data-fixtype="7" maxlength="9" onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"
 									   class="layui-input form-input" placeholder="请输入内容"
 									   data-th-placeholder="#{SysCommon.placeholder}" >
 							</div>
@@ -162,6 +164,7 @@
 							<div class="layui-input-inline input-inline">
 								<input type="text" name="gradProportion" id="gradProportion"
 									   data-th-value="${entity?.gradProportion}" required
+									   data-pattern="###.#####" data-fixtype="5" maxlength="9" onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"
 									   class="layui-input form-input" placeholder="请输入内容"
 									   data-th-placeholder="#{SysCommon.placeholder}" >
 							</div>
@@ -220,7 +223,7 @@
 								></select>
 							</div>
 						</div>
-						<div class="form-inline-wrap">
+						<div class="form-inline-wrap" style="display: none;">
 							<label class="layui-form-label form-label-wrap" data-th-text="#{CchbPrdBaseInfo001.fitCircleDays}">定期开放周期(天)</label>
 							<div class="layui-input-inline input-inline">
 								<input type="text" name="fitCircleDays" id="fitCircleDays"

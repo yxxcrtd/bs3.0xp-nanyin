@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,8 +40,6 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
     private ChbInvestTradeDao chbInvestTradeDao;
     @Override
     public void doComplete(ChbInvestTradeDto entity, OperationType type) {
-        entity.setUpdateUser(CommonUtil.getUserName());
-        entity.setUpdateTime(DateUtil.now());
         if (OperationType.DELETE.equals(type)) {
             entity.setStatus(DictCodeListExt1.维护数据状态_删除.getValue());
             chbInvestTradeDao.update(entity);
@@ -106,6 +105,9 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
 
     public Map<String, String> selectRivalPartyType(String tradeCounter) {
         Map<String, String> map = chbInvestTradeDao.selectRivalPartyType(tradeCounter);
+        if(null==map){
+            map = new HashMap<>();
+        }
         map.put("COUNTER_TYPE", SysDataUtil.getNameFromDataDict(DictCode.交易对手类型,map.get("COUNTER_TYPE")));
         return map;
     }

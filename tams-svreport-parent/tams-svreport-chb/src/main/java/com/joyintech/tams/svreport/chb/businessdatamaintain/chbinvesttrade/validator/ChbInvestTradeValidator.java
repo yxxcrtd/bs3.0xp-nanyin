@@ -47,6 +47,11 @@ public class ChbInvestTradeValidator implements BeanValidator {
                     resultList.add(new ValidMessage("assetCode", "投资交易信息已存在"));
                 }
             }
+            if(null !=dto.getUnitPriceFull() && null !=dto.getUnitPriceNet()){
+                if(dto.getUnitPriceFull().compareTo(dto.getUnitPriceNet())<0){
+                    resultList.add(new ValidMessage("unitPriceFull","单位成交价（全价）不能小于单位成交价（净价）"));
+                }
+            }
             // add by zhangliang 20210126 中债check调用 start
             resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, null, ValidMessage.class);
             Map<String, Object> errMap = new HashMap<>();
