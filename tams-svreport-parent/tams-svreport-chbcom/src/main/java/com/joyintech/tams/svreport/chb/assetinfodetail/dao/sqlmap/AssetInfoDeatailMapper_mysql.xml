@@ -2374,6 +2374,7 @@
         IS_BZHPJ,CHB_ISSUER_ID,CHB_MANAGER_ID,
         CHB_FINANCIER_ID,PERPETUAL_FLAG,OPTION_FLAG,
         IS_BJSZQ,IS_PERPETUAL,IS_FBZB,CONSTRACTE_BUSI_TYPE,CONSTRACTE_GRADE,CONSTRACTE_HEAVER_TIMES
+        ,BANK_CAPITAL,IS_PPN
         <!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-29 start -->
         ,ACCOUNT_NO,
         CREDIT_ASSET_CODE,
@@ -2484,6 +2485,7 @@
         IS_BZHPJ,CHB_ISSUER_ID,CHB_MANAGER_ID,
         CHB_FINANCIER_ID,PERPETUAL_FLAG,OPTION_FLAG,
         IS_BJSZQ,IS_PERPETUAL,IS_FBZB,CONSTRACTE_BUSI_TYPE,CONSTRACTE_GRADE,CONSTRACTE_HEAVER_TIMES
+        ,BANK_CAPITAL,IS_PPN
         <!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-29 start -->
         ,ACCOUNT_NO,
         CREDIT_ASSET_CODE,
@@ -2721,6 +2723,8 @@
             #{item.constracteBusiType,jdbcType=VARCHAR} CONSTRACTE_BUSI_TYPE,
             #{item.constracteGrade,jdbcType=VARCHAR} CONSTRACTE_GRADE,
             #{item.constracteHeaverTimes,jdbcType=DECIMAL} CONSTRACTE_HEAVER_TIMES,
+            #{item.bankCapital,jdbcType=VARCHAR} BANK_CAPITAL,
+            #{item.isPpn,jdbcType=VARCHAR} IS_PPN,
             <!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-29 start -->
             #{item.accountNo,jdbcType=VARCHAR} ACCOUNT_NO,
             #{item.creditAssetCode,jdbcType=VARCHAR} CREDIT_ASSET_CODE,
@@ -2835,6 +2839,7 @@
         IS_BZHPJ,CHB_ISSUER_ID,CHB_MANAGER_ID,
         CHB_FINANCIER_ID,PERPETUAL_FLAG,OPTION_FLAG,
         IS_BJSZQ,IS_PERPETUAL,IS_FBZB,CONSTRACTE_BUSI_TYPE,CONSTRACTE_GRADE,CONSTRACTE_HEAVER_TIMES
+        ,BANK_CAPITAL,IS_PPN
         <!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-29 start -->
         ,ACCOUNT_NO,
         CREDIT_ASSET_CODE,
@@ -3072,6 +3077,8 @@
             #{item.constracteBusiType,jdbcType=VARCHAR} CONSTRACTE_BUSI_TYPE,
             #{item.constracteGrade,jdbcType=VARCHAR} CONSTRACTE_GRADE,
             #{item.constracteHeaverTimes,jdbcType=DECIMAL} CONSTRACTE_HEAVER_TIMES,
+            #{item.bankCapital,jdbcType=VARCHAR} BANK_CAPITAL,
+            #{item.isPpn,jdbcType=VARCHAR} IS_PPN,
             <!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-29 start -->
             #{item.accountNo,jdbcType=VARCHAR} ACCOUNT_NO,
             #{item.creditAssetCode,jdbcType=VARCHAR} CREDIT_ASSET_CODE,
@@ -3316,9 +3323,11 @@
         A.FINANCIAL_PRODUCT_FLAG	  =	B.FINANCIAL_PRODUCT_FLAG,
         A.PROD_REGISTER_CODE	  =	B.PROD_REGISTER_CODE,
         A.PROFIT_FLAG	  =	B.PROFIT_FLAG,
-        A.IS_DEPOSIT_FLAG 	  =	B.IS_DEPOSIT_FLAG
+        A.IS_DEPOSIT_FLAG 	  =	B.IS_DEPOSIT_FLAG,
+        A.BANK_CAPITAL = B.BANK_CAPITAL,
+        A.IS_PPN = B.IS_PPN,
         <!-- 资产要素维护升级 add by leipeng 2022-04-23 start -->
-        ,A.IS_CONSTRACTE_BUSI 	  =	B.IS_CONSTRACTE_BUSI
+        A.IS_CONSTRACTE_BUSI 	  =	B.IS_CONSTRACTE_BUSI
         ,A.IS_BANK_CAP 	  =	B.IS_BANK_CAP
         <!-- 资产要素维护升级 add by tuqirong 2022-04-23 start -->
 

@@ -16,7 +16,7 @@
                                data-th-text="#{ChbInvestTrade001.prodName}">产品名称</label>
                         <div class="layui-input-inline input-inline">
                             <select type="text" id="prodName" name="prodName" class="layui-input form-input input-select"
-                                    data-th-data-url='@{/chb/businessdatamaintain/chbinvesttrade/chbinvesttrade001/getProdName}'
+                                    data-th-data-url='@{/chb/businessdatamaintain/chbinvesttrade/chbinvesttrade001/getProdName(prodName=${entity?.prodName})}'
                                     data-th-initValue="${entity?.prodName}" placeholder="请选择" formatoption = "false"
                                     data-th-placeholder="#{SysCommon.selectplaceholder}"
                                     allowClear="true" required >
@@ -68,7 +68,7 @@
                                data-th-text="#{ChbInvestTrade001.assetCode}">行内资产/负债编码</label>
                         <div class="layui-input-inline input-inline">
                             <select id="assetCode" name="assetCode" class="input-select"
-                                    data-th-data-url='@{/chb/businessdatamaintain/chbinvesttrade/chbinvesttrade001/getAssetCode}'
+                                    data-th-data-url='@{/chb/businessdatamaintain/chbinvesttrade/chbinvesttrade001/getAssetCode(assetCode=${entity?.assetCode})}'
                                     data-th-placeholder="#{SysCommon.selectplaceholder}" data-th-initValue = "${entity?.assetCode}"
                                     formatoption = "false" allowClear="true" required>
                             </select>
@@ -100,7 +100,7 @@
                                data-th-text="#{ChbInvestTrade001.amt}">发生金额</label>
                         <div class="layui-input-inline input-inline">
                             <input type="text" id="amt" name="amt" class="layui-input form-input "onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"
-                                   placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-pattern="##.##" data-fixtype="2" maxlength="15" data-th-value="${entity?.amt}" required >
+                                   placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-pattern="##.##" data-fixtype="2" maxlength="16" data-th-value="${entity?.amt}" required >
                         </div>
                     </div>
 
@@ -111,7 +111,7 @@
                                data-th-text="#{ChbInvestTrade001.cnyAmt}">折算人民币金额</label>
                         <div class="layui-input-inline input-inline">
                             <input type="text" id="cnyAmt" name="cnyAmt" onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"
-                                   class="layui-input form-input " data-pattern="##.##" data-fixtype="2" maxlength="15"
+                                   class="layui-input form-input " data-pattern="##.##" data-fixtype="2" maxlength="16"
                                    data-th-value="${entity?.cnyAmt}"required>
                         </div>
                     </div>
@@ -120,7 +120,7 @@
                                data-th-text="#{ChbInvestTrade001.num}">数量</label>
                         <div class="layui-input-inline input-inline">
                             <input type="text" id="num" name="num" class="layui-input form-input" onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"
-                                   placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-pattern="##.#####" data-fixtype="5" maxlength="18"
+                                   placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-pattern="##.#####" data-fixtype="5" maxlength="19"
                                    data-th-value="${entity?.num}" required>
                         </div>
                     </div>
@@ -128,10 +128,11 @@
                         <label class="layui-form-label form-lable"
                                data-th-text="#{ChbInvestTrade001.assetMethod}">资产计量方式</label>
                         <div class="layui-input-inline input-inline">
-                            <input type="text" id="assetMethod" name="assetMethod" class="layui-input form-input input-select"
+                            <select type="text" id="assetMethod" name="assetMethod" class="layui-input form-input input-select"
                                    placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
                                    data-th-data-result='${SVR_ASSET_METHOD}'
                                    data-th-value="${entity?.assetMethod}" required>
+                            </select>
                         </div>
                     </div>
 
@@ -177,9 +178,9 @@
                         <label class="layui-form-label form-lable"
                                data-th-text="#{ChbInvestTrade001.tradeCounter}">交易对手</label>
                         <div class="layui-input-inline input-inline">
-                            <select type="text" id="tradeCounter" name="tradeCounter" class="input-select"
-                                   data-th-data-url='@{/chb/businessdatamaintain/chbinvesttrade/chbinvesttrade001/getCustomerName}'
-                                   placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                            <select type="text" id="tradeCounter" name="tradeCounter" class="layui-input form-input input-select"
+                                   data-th-data-url='@{/chb/businessdatamaintain/chbinvesttrade/chbinvesttrade001/getCustomerName(tradeCounter=${entity?.tradeCounter})}'
+                                   placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" formatoption = "false"
                                    data-th-initValue="${entity?.tradeCounter}" required>
                             </select>
                         </div>
@@ -189,10 +190,10 @@
                         <label class="layui-form-label form-lable"
                                data-th-text="#{ChbInvestTrade001.rivalPartyType}">交易对手对手类型</label>
                         <div class="layui-input-inline input-inline">
-                            <input type="text" id="rivalPartyType" name="rivalPartyType" class="layui-input form-input input-select"
+                            <input type="text" id="rivalPartyType" name="rivalPartyType" class="layui-input form-input"
                                    placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
-                                   data-th-data-result='${COUNTER_TYPE}'
-                                   data-th-value="${entity?.rivalPartyType}" required>
+                                   data-th-value="${entity?.rivalPartyType}" required disabled>
+
                         </div>
                     </div>
                     <div class="layui-inline layui-col-md4">
@@ -200,7 +201,7 @@
                                data-th-text="#{ChbInvestTrade001.unitPriceFull}">单位成交价（全价）</label>
                         <div class="layui-input-inline input-inline">
                             <input type="text" id="unitPriceFull" name="unitPriceFull" class="layui-input form-input " onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"
-                                   placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-pattern="##.####" data-fixtype="4" maxlength="17"
+                                   placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-pattern="##.####" data-fixtype="4" maxlength="18"
                                    data-th-value="${entity?.unitPriceFull}" required>
                         </div>
                     </div>
@@ -212,7 +213,7 @@
                                data-th-text="#{ChbInvestTrade001.unitPriceNet}">单位成交价（净价）</label>
                         <div class="layui-input-inline input-inline">
                             <input type="text" id="unitPriceNet" name="unitPriceNet" class="layui-input form-input " onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"
-                                   placeholder="请输入内容"  data-th-placeholder="#{SysCommon.placeholder}" data-pattern="##.####" data-fixtype="4" maxlength="17"
+                                   placeholder="请输入内容"  data-th-placeholder="#{SysCommon.placeholder}" data-pattern="##.####" data-fixtype="4" maxlength="18"
                                    data-th-value="${entity?.unitPriceNet}" required>
                         </div>
                     </div>
@@ -242,7 +243,7 @@
                                data-th-text="#{ChbInvestTrade001.investApproverId}">交易审批人身份证号</label>
                         <div class="layui-input-inline input-inline">
                             <input type="text" id="investApproverId" name="investApproverId"
-                                   class="layui-input form-input"
+                                   class="layui-input form-input" maxlength="30"
                                    data-th-value="${entity?.investApproverId}"required>
                         </div>
                     </div>
@@ -260,7 +261,7 @@
                                data-th-text="#{ChbInvestTrade001.investTraderId}">交易员身份证号</label>
                         <div class="layui-input-inline input-inline">
                             <input type="text" id="investTraderId" name="investTraderId" class="layui-input form-input "
-                                   placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                                   placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" maxlength="30"
                                    data-th-value="${entity?.investTraderId}" required >
                         </div>
                     </div>

@@ -295,9 +295,8 @@
 
     <select id="getCounterList" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT  A.CODE id,A.TRADE_COUNTER text,A.COUNTER_ID col,A.LINK_ID parentId from(
-        SELECT /*T.PROD_ID||'_'||T.ASSET_CODE CODE,*/
-        concat(concat(T.PROD_ID,'_'),T.ASSET_CODE ) CODE,
-        /*DECODE(MP.COUNTER_NAME,NULL,DECODE(MC.CUSTOMER_NAME,NULL,T.TRADE_COUNTER,MC.CUSTOMER_NAME),MP.COUNTER_NAME) TRADE_COUNTER,*/
+        SELECT
+        concat(concat(T.PROD_ID,'_'),ifnull(T.ASSET_CODE,'') ) CODE,
         (case MP.COUNTER_NAME when NULL then (case MC.CUSTOMER_NAME when NULL then T.TRADE_COUNTER else MC.CUSTOMER_NAME end) else MP.COUNTER_NAME end ) TRADE_COUNTER,
         MP.COUNTER_ID,MP.LINK_ID,
         rank() over(partition by T.PROD_ID,T.ASSET_CODE order by DEALDATE) rk
@@ -308,7 +307,7 @@
         <if test="keysList != null and keysList.size()>0 ">
             <foreach item="item" index="index" collection="keysList" separator="," open=" AND T.PROD_ID||'_'||T.ASSET_CODE IN (" close=")">
                 <if test="(index % 999) == 998">
-                    null) OR /*T.PROD_ID||'_'||T.ASSET_CODE*/ concat(concat(T.PROD_ID,'_'),T.ASSET_CODE) IN (
+                    null) OR  concat(concat(T.PROD_ID,'_'),ifnull(T.ASSET_CODE,'')) IN (
                 </if>
                 #{item}
             </foreach>
