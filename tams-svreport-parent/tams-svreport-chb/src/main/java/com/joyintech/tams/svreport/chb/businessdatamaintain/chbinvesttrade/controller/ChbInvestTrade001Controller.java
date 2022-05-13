@@ -53,7 +53,7 @@ public class ChbInvestTrade001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getProdName")
-    public List<SelectOptionDto> getProdName()
+    public Page<SelectOptionDto> getProdName()
     {
         return chbInvestTradeService.getProdName(RequestUtil.getPageParam());
     }
@@ -63,7 +63,7 @@ public class ChbInvestTrade001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getRegCode")
-    public List<SelectOptionDto> getRegCode()
+    public Page<SelectOptionDto> getRegCode()
     {
         return chbInvestTradeService.getRegCode(RequestUtil.getPageParam());
     }
@@ -74,7 +74,7 @@ public class ChbInvestTrade001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getAssetCode")
-    public List<SelectOptionDto> getAssetCode()
+    public Page<SelectOptionDto> getAssetCode()
     {
         return chbInvestTradeService.getAssetCode(RequestUtil.getPageParam());
     }
@@ -85,7 +85,7 @@ public class ChbInvestTrade001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getCustomerName")
-    public List<SelectOptionDto> getCustomerName()
+    public Page<SelectOptionDto> getCustomerName()
     {
         return chbInvestTradeService.getCustomerName(RequestUtil.getPageParam());
     }
@@ -157,6 +157,9 @@ public class ChbInvestTrade001Controller extends BaseController {
             list = JsonUtils.json2List(datas, ChbInvestTradeDto.class);
         }
         else {
+            params.put("prodNames", StringUtil.isNotEmpty(params.get("prodName"))?(params.get("prodName").toString().split(",")):null);
+            params.put("regCodes", StringUtil.isNotEmpty(params.get("regCode"))?(params.get("regCode").toString().split(",")):null);
+            params.put("assetCodes", StringUtil.isNotEmpty(params.get("assetCode"))?(params.get("assetCode").toString().split(",")):null);
             list = chbInvestTradeService.selectAll(params);
         }
 //        list.forEach(item->{

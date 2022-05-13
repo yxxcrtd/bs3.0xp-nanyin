@@ -1,5 +1,6 @@
 package com.joyintech.tams.svreport.chb.businessdatamaintain.chbinvesttrade.service;
 
+import com.github.pagehelper.PageHelper;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
@@ -7,8 +8,10 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.ChbInvestTrade;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dto.ChbBokSubjectDto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbinvesttrade.dao.ChbInvestTradeDao;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbinvesttrade.dto.ChbInvestTradeDto;
@@ -55,35 +58,35 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
 
     }
 
-    public List<SelectOptionDto> getProdName(Map<String, Object> param) {
-        return chbInvestTradeDao.getProdName(param);
+    public Page<SelectOptionDto> getProdName(Map<String, Object> param) {
+        return queryForPageForSelectReturn(Integer.parseInt(null == param.get("page")?"1":(String) param.get("page")), Integer.parseInt(null == (String) param.get("length")?"1":(String) param.get("length")),()->chbInvestTradeDao.getProdName(param));
     }
 
-    public List<SelectOptionDto> getRegCode(Map<String, Object> param) {
-        return chbInvestTradeDao.getRegCode(param);
+    public Page<SelectOptionDto> getRegCode(Map<String, Object> param) {
+        return queryForPageForSelectReturn(Integer.parseInt(null == param.get("page")?"1":(String) param.get("page")), Integer.parseInt(null == (String) param.get("length")?"1":(String) param.get("length")),()->chbInvestTradeDao.getRegCode(param));
     }
 
-    public List<SelectOptionDto> getCustomerName(Map<String, Object> param) {
-        return chbInvestTradeDao.getCustomerName(param);
+    public Page<SelectOptionDto> getCustomerName(Map<String, Object> param) {
+        return queryForPageForSelectReturn(Integer.parseInt(null == param.get("page")?"1":(String) param.get("page")), Integer.parseInt(null == (String) param.get("length")?"1":(String) param.get("length")),()->chbInvestTradeDao.getCustomerName(param));
     }
 
-    public List<SelectOptionDto> getAssetCode(Map<String, Object> param) {
-        List<SelectOptionDto> list = chbInvestTradeDao.getAssetCode(param);
-        if (CollectionUtils.isNotEmpty(list)) {
-            list.forEach(item -> {
+    public Page<SelectOptionDto> getAssetCode(Map<String, Object> param) {
+        Page<SelectOptionDto> page = queryForPageForSelectReturn(Integer.parseInt(null == param.get("page")?"1":(String) param.get("page")), Integer.parseInt(null == (String) param.get("length")?"1":(String) param.get("length")), () -> chbInvestTradeDao.getAssetCode(param));
+        if (CollectionUtils.isNotEmpty(page.getRoot())) {
+            page.getRoot().forEach(item -> {
                 item.setId(item.getId());
                 item.setText(item.getId());
             });
         }
-        return list;
+        return page;
     }
 
     public Map<String,String> selectProdIdAndRegCodeByProdName(String prodName) {
         return chbInvestTradeDao.selectProdIdAndRegCodeByProdName(prodName);
     }
 
-    public ChbInvestTradeDto selectByKey(String tradeCode,String prodId,String registBankCode,String assetCode) {
-        return chbInvestTradeDao.selectByKey(tradeCode,prodId,registBankCode,assetCode);
+    public ChbInvestTradeDto selectByKey(String tradeCode,String prodId,String assetCode) {
+        return chbInvestTradeDao.selectByKey(tradeCode,prodId,assetCode);
     }
 
     public Map<String,String> selectAssetNameByAssetCode(String assetCode) {
@@ -99,5 +102,11 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
     public List<ChbInvestTradeDto> selectAll(Map<String, Object> params) {
         List<ChbInvestTradeDto> list = chbInvestTradeDao.selectAll(params);
         return list;
+    }
+
+    public Map<String, String> selectRivalPartyType(String tradeCounter) {
+        Map<String, String> map = chbInvestTradeDao.selectRivalPartyType(tradeCounter);
+        map.put("COUNTER_TYPE", SysDataUtil.getNameFromDataDict(DictCode.交易对手类型,map.get("COUNTER_TYPE")));
+        return map;
     }
 }

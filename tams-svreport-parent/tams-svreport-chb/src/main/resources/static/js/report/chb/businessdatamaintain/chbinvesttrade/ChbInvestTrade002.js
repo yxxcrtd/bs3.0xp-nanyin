@@ -26,7 +26,7 @@
    });
     $('#assetCode').change(function (){
         var assetCode = $('#assetCode').val();
-        if(''==prodName||null==prodName){
+        if(''==assetCode||null==assetCode){
         }else{
             Joyin.ajaxJson(basePath+'/chb/businessdatamaintain/chbinvesttrade/chbinvesttrade002/selectAssetNameByAssetCode?assetCode='+assetCode,{},function (result){
                 $('#assetName').val(result['ASSET_NAME']);
@@ -34,14 +34,34 @@
         }
 
     });
+    $('#tradeCounter').change(function (){
+        var tradeCounter = $('#tradeCounter').val();
+        if(''==tradeCounter||null==tradeCounter){
+        }else{
+            Joyin.ajaxJson(basePath+'/chb/businessdatamaintain/chbinvesttrade/chbinvesttrade002/selectRivalPartyType?tradeCounter='+tradeCounter,{},function (result){
+                $('#rivalPartyType').val(result['COUNTER_TYPE']);
+            })
+        }
+    });
     let curAssetType = ['01','02','03','04','05','06','07','08']
     $('#curAssetType').change(function (){
        if(!curAssetType.includes( $('#curAssetType').val())&&''!=$('#curAssetType').val()){
-           $("#assetMethod").attr("disabled","disabled");
+           $('#assetMethod').val('').trigger('change');
+           $('#assetMethod').attr("disabled","disabled");
        }else{
            $("#assetMethod").removeAttr("disabled");
        }
     });
+    $('#ccy').change(function(){
+        if($('#ccy').val()=='CNY'){
+            $('#cnyAmt').attr("disabled","disabled");
+            $('#amt').blur(function (){
+                $('#cnyAmt').val($('#amt').val());
+            })
+
+        }
+    });
+
     function saveOrSubmit(operateType) {
         var object = $.serializeToObject('#submitForm');
         object.operateType = operateType;

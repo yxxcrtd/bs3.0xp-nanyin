@@ -53,7 +53,7 @@
 						<label class="layui-form-label form-lable" data-th-text="#{ChbInvestTrade001.assetCode}">行内资产/负债编码</label>
 						<div class="layui-input-inline input-inline">
 							<select type="text" id="assetCode" class="input-select"
-									data-th-data-url='@{/chb/businessdatamaintain/chbinvesttrade/chbinvesttrade001/getAssetCode}'
+									data-th-data-url='@{/chb/businessdatamaintain/chbinvesttrade/chbinvesttrade001/getAssetCode}' formatoption = "false"
 									allowClear="true" placeholder="请输入内容"  multiple="true" data-th-placeholder="#{SysCommon.placeholder}">
 							</select>
 						</div>
@@ -63,7 +63,7 @@
 						<div class="layui-input-inline input-inline">
 							<select id="tradeCounter" class="input-select"
 									data-th-data-url='@{/chb/businessdatamaintain/chbinvesttrade/chbinvesttrade001/getCustomerName}'
-									initvalue="" placeholder="请选择"
+									initvalue="" placeholder="请选择"  formatoption = "false"
 									data-th-placeholder="#{SysCommon.selectplaceholder}"
 									allowClear="true" >
 							</select>

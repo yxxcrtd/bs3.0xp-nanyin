@@ -29,7 +29,7 @@
             <Cell order="24" name="备注">remark</Cell>
             <Cell order="25" name="错误信息">errMsg</Cell>
             <Cell order="27" name="更新时间">updateTimeStr</Cell>
-            <Cell order="26" name="更新人">updateUser</Cell>
+            <Cell order="28" name="更新人">updateUser</Cell>
         </Row>
     </Worksheet>
 </Workbook>

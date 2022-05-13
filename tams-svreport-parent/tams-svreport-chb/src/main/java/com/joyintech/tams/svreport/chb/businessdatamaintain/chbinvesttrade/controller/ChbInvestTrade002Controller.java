@@ -48,7 +48,6 @@ public class ChbInvestTrade002Controller extends BaseController {
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         String tradeCode = getParam("tradeCode");
         String prodId = getParam("prodId");
-        String registBankCode = getParam("registBankCode");
         String assetCode = getParam("assetCode");
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
             ChbInvestTradeDto dto = chbInvestTradeService.getBussinessEntityByWorkflowId(
@@ -60,7 +59,7 @@ public class ChbInvestTrade002Controller extends BaseController {
             //通过主键查询数据
             ChbInvestTradeDto dto = null;
             try {
-                dto = chbInvestTradeService.selectByKey(tradeCode,prodId,registBankCode,assetCode);
+                dto = chbInvestTradeService.selectByKey(tradeCode,prodId,assetCode);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -81,6 +80,12 @@ public class ChbInvestTrade002Controller extends BaseController {
     public Map<String,String> selectAssetNameByAssetCode(String assetCode){
         return chbInvestTradeService.selectAssetNameByAssetCode(assetCode);
     }
+    @ResponseBody
+    @RequestMapping("/selectRivalPartyType")
+    public Map<String,String> selectRivalPartyType(String tradeCounter){
+        return chbInvestTradeService.selectRivalPartyType(tradeCounter);
+    }
+
     /**
      * 保存按钮点击时的check
      *
