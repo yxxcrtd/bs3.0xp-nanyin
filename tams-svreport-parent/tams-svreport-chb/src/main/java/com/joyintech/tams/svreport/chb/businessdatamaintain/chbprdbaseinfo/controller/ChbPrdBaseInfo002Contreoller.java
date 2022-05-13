@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -74,7 +74,8 @@ public class ChbPrdBaseInfo002Contreoller extends BaseController {
     @ResponseBody
     @RequestMapping("/selectRegCodeByProdId")
     public Map<String,String> selectRegCodeByProdId(String prodId){
-        return chbPrdBaseInfoService.selectRegCodeByProdId(prodId);
+        Map<String, String> map = chbPrdBaseInfoService.selectRegCodeByProdId(prodId);
+        return map==null?new HashMap<>():map;
     }
     /**
      * 保存按钮点击时的check

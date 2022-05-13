@@ -33,6 +33,8 @@ $(function() {
                 return getSearchParams();
             }
         },
+        searchOnInit: false,
+        cellMinWidth:100 ,
         cols:[
             {field:'statusValidStr', sortable:false, width:100, title: 'ChbInvestTrade001.status'}
             ,{field:'prodId',sortable:false,width:100,  title: 'ChbInvestTrade001.prodId'}

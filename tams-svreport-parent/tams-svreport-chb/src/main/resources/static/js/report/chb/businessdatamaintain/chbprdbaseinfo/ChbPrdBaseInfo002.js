@@ -1,6 +1,6 @@
 (function() {
-    var prodId = $('#prodId').val();
-    if(''==prodId||null==prodId){
+    var prodIdInit = $('#prodId').val();
+    if(''==prodIdInit||null==prodIdInit){
         //新建页面
         $('#issuePartyId').val(issuePartyId_New);
         $('#prodId').blur(function (){
@@ -8,7 +8,7 @@
             if(''==prodId||null==prodId){
             }else{
                 Joyin.ajaxJson(basePath+'/chb/businessdatamaintain/chbprdbaseinfo/chbprdbaseinfo002/selectRegCodeByProdId?prodId='+prodId,{},function (result){
-                    if(!''==result['REG_CODE'] && !null==result['REG_CODE']){
+                    if(result['REG_CODE']!='' && result['REG_CODE']!=null){
                         $('#regCode').val(result['REG_CODE']);
                         $('#regCode').attr("disabled","disabled");
                     }else{
