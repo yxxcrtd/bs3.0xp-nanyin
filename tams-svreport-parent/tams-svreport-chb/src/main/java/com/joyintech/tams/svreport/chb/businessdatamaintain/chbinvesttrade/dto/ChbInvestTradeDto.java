@@ -172,6 +172,6 @@ public class ChbInvestTradeDto extends ChbInvestTrade implements ProcessEntity {
         return null !=getDealdate()? DateUtil.format(getDealdate()):null;
     }
     public String getupdateTimeStr(){
-        return DateUtil.format(getUpdateTime());
+        return DateUtil.formatDateTime(getUpdateTime());
     }
 }

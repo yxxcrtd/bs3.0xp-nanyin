@@ -12,6 +12,7 @@
         $("#registBankCode").attr("disabled","disabled");
         $("#assetCode").attr("disabled","disabled");
         $("#prodName").attr("disabled","disabled");
+        $("#curAssetType").attr("disabled","disabled");
     }
 
     $('#prodName').change(function(){

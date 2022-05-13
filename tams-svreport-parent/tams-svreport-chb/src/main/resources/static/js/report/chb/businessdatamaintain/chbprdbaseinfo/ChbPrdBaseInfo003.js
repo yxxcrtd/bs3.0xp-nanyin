@@ -34,7 +34,8 @@
         Joyin.ajaxJson(basePath + 'chb/businessdatamaintain/chbprdbaseinfo/chbprdbaseinfo003/check',object, function(result) {
             Joyin.confirm(result.data, function() {
                 Joyin.ajaxJson(basePath + 'chb/businessdatamaintain/chbprdbaseinfo/chbprdbaseinfo003/updateIssuingStatus', object, function (result){
-                    layer.message(result)
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
                 });
             });
         })
