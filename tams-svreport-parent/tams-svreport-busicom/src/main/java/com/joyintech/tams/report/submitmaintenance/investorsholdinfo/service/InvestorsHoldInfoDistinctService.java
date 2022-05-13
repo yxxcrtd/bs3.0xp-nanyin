@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 import com.joyintech.tams.common.base.entity.ChbEquTmp;
 import com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub;
 import com.joyintech.tams.common.base.entity.ChbSubCheckBasicRule;
+import com.joyintech.tams.common.svreport.base.service.BatchInsertService;
 import com.joyintech.tams.report.interf.common.imp.ImportGenerator;
 import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpColumn;
 import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
@@ -84,6 +85,8 @@ public class InvestorsHoldInfoDistinctService {
 	private InvestorsHoldInfo001Mapper investorsHoldInfo001Mapper;
 	@Autowired
 	private EquityInfoDistinctService equityInfoDistinctService;
+	@Autowired
+	private BatchInsertService batchInsertService;
     /**
      * sql最大一次最大删除条数
      */
@@ -1508,7 +1511,7 @@ public class InvestorsHoldInfoDistinctService {
 		// 临时文件存放目录
 		String tmpPath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 
-		equityInfoDistinctService.exeSqlldr(tmpPath, "CHB_INVESTHOLD_INFO", list, table);
+		batchInsertService.exeBatchldr(tmpPath, list, table);
 	}
 
 	/**
@@ -1523,7 +1526,7 @@ public class InvestorsHoldInfoDistinctService {
 		// 临时文件存放目录
 		String tmpPath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 
-		equityInfoDistinctService.exeSqlldr(tmpPath, "CHB_INVESTHOLD_INFO_SUB", list, table);
+		batchInsertService.exeBatchldr(tmpPath, list, table);
 	}
 
 	/**
@@ -1545,7 +1548,7 @@ public class InvestorsHoldInfoDistinctService {
 		// 临时文件存放目录
 		String tmpPath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 
-		equityInfoDistinctService.exeSqlldr(tmpPath, "CHB_INVESTHOLD_INFO_CHECK", list, table);
+		batchInsertService.exeBatchldr(tmpPath, list, table);
 	}
 
 	/**
@@ -1560,7 +1563,7 @@ public class InvestorsHoldInfoDistinctService {
 		// 临时文件存放目录
 		String tmpPath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 
-		equityInfoDistinctService.exeSqlldr(tmpPath, "CHB_INVESTHOLD_INFO_TMP", list, table);
+		batchInsertService.exeBatchldr(tmpPath, list, table);
 	}
 
 	/**
@@ -1575,7 +1578,7 @@ public class InvestorsHoldInfoDistinctService {
 		// 临时文件存放目录
 		String tmpPath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 
-		equityInfoDistinctService.exeSqlldr(tmpPath, "CHB_INVESTHOLD_INFO_TMP", list, table);
+		batchInsertService.exeBatchldr(tmpPath, list, table);
 	}
 
 	/**
@@ -1597,7 +1600,7 @@ public class InvestorsHoldInfoDistinctService {
 		// 临时文件存放目录
 		String tmpPath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 
-		equityInfoDistinctService.exeSqlldr(tmpPath, "CHB_INVESTHOLD_INFO_TMP", list, table);
+		batchInsertService.exeBatchldr(tmpPath, list, table);
 	}
 
 

@@ -5,9 +5,7 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.util.DateUtil;
 
-import com.joyintech.framework.util.SpringContextUtil;
-import com.joyintech.tams.common.svreport.base.dao.BaseCheckMysqlMapper;
-import com.joyintech.tams.common.svreport.base.dto.BaseCheckMysqlDto;
+import com.joyintech.framework.util.FileNameUtil;
 import com.joyintech.tams.report.framework.thread.JoyinThreadPoolExecutor;
 import com.joyintech.tams.report.interf.common.imp.ImportGenerator;
 import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpColumn;
@@ -16,17 +14,13 @@ import com.joyintech.tams.systemtools.util.CommonUtil;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -37,18 +31,17 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-import java.util.stream.Collectors;
 
 /**
  * @author zcw
  * @date 2022-03-31 14:52
  */
 @Component
-public class BatchInsertUtil {
+public class BatchInsertService {
     /**
      * logger
      */
-    private static Logger logger = LoggerFactory.getLogger(BatchInsertUtil.class);
+    private static Logger logger = LoggerFactory.getLogger(BatchInsertService.class);
 
     /**
      * 上游接口解析读取文件处理最大线程数
@@ -73,10 +66,6 @@ public class BatchInsertUtil {
      */
     @Value("${application.reportInterfOneTimeSqlLdrDataCount}")
     private int reportInterfOneTimeSqlLdrDataCount;
-
-
-
-    private Connection conn = null;
     @Value("${spring.datasource.driverClassName}")
     private String driverName;
     @Value("${spring.datasource.url}")
@@ -87,14 +76,17 @@ public class BatchInsertUtil {
     private String password;
 
     /**
-     * SQLLDR共通方法
+     * 批量插入共通方法共通方法
      * @param tmpPath
      * @param tablename
      * @param list
+     *
      * @param table
      */
-    public void exeSqlldr(String tmpPath, String tablename, List<? extends BaseEntity> list, ImpTable table) {
-        logger.info("执行sqlldr开始---入表："+tablename +" 时间"+ DateUtil.getCurrentDateTime());
+    public void exeBatchldr(String tmpPath, List<? extends Object> list, ImpTable table) {
+        String tablename = table.getName();
+        logger.info("执行批量插入开始---入表："+tablename +" 时间"+ DateUtil.getCurrentDateTime());
+        tmpPath = tmpPath + (tmpPath.endsWith("/")?"": "/") + tablename + "/";
 
         // 创建一个线程池
         if (interfMaxCorePoolSize < 1) {
@@ -104,20 +96,22 @@ public class BatchInsertUtil {
         int max = (int) Math.ceil((double) size / 1000);
         ExecutorService service = new JoyinThreadPoolExecutor( max>20?interfMaxCorePoolSize : max);
         List<Callable<Boolean>> tasks = new ArrayList<>();
+        // 临时文件路径+文件名前缀
+        String path = tmpPath + tablename;
         if (null != list) {
             int start = 0;
             int end = 0;
             for (int i = 0; i < max; i++) {
                 start = end;
                 end = Math.min(size, 1000 * (i + 1));
-                List<? extends BaseEntity> subList = list.subList(start, end);
-                logger.debug("生成sqlloader文件"+i);
+                List<? extends Object> subList = list.subList(start, end);
+                logger.debug("生成批量文件"+i);
                 tasks.add(new Callable<Boolean>() {
                     @Override
                     public Boolean call() {
-                        logger.debug("生成sqlloader文件----开始-----");
-                        createDataFile(tmpPath + tablename, subList, table.getColumns());
-                        logger.debug("生成sqlloader文件----结束-----:");
+                        logger.debug("生成批量文件----开始-----");
+                        createDataFile(path, subList, table.getColumns());
+                        logger.debug("生成批量文件----结束-----:");
                         return true;
                     }
                 });
@@ -141,30 +135,29 @@ public class BatchInsertUtil {
         }
         // 任务结束，停止线程池的所有线程
         service.shutdown();
-        Collection<File> files = FileUtils.listFiles(new SafelyFile(tmpPath), new String[] { "tmp" }, false);
-        logger.debug("sqlloder文件个数"+files.size());
+        Collection<File> files = FileUtils.listFiles(new SafelyFile(tmpPath), new String[] {"tmp" }, false);
+        logger.debug("批量文件个数"+files.size());
         List<String> content = new ArrayList<>(list.size());
         for (File f : files) {
             if (f.getName().startsWith(tablename)) {
                 try {
                     content.addAll(FileUtils.readLines(f, Charset.forName("UTF-8")));
-                    logger.debug("查找sqlloder文件"+f);
+                    logger.debug("查找批量文件"+f);
                 } catch (IOException e) {
-                    logger.debug("查找sqlloder文件异常");
+                    logger.debug("查找批量文件异常");
                     logger.error(e.getMessage(), e);
                 } finally {
                     f.delete();
                 }
             }
         }
-        logger.debug("读取sqlloder文件共"+content.size()+"条");
+        logger.debug("读取批量文件共"+content.size()+"条");
         // 系统是否使用的db2数据库
-        boolean isDB2DataBase = CommonUtil.isDB2DataBase();
-        if (isDB2DataBase) {
+        if (CommonUtil.isDB2DataBase()) {
             // db2数据库处理
             if (CollectionUtils.isNotEmpty(content)) {
                 try {
-                    ImportGenerator.importToDBByPart(table, tmpPath+tablename+"/", content,
+                    ImportGenerator.importToDBByPart(table, tmpPath, content,
                             reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "del",
                             reportSqlldrDatabaseName);
                 } catch (IOException | InterruptedException e) {
@@ -172,12 +165,25 @@ public class BatchInsertUtil {
                     return;
                 }
             }
-        } else {
+        } else if(BaseCommonCheckService.isMYSQLDataBase()){
+            //临时文件
+            String absoultPath = tmpPath + table.getName() + FileNameUtil.createFileName(".txt");
+            File tmpFile = new SafelyFile(absoultPath);
+            try {
+                FileUtils.writeLines(tmpFile, "UTF-8", content);
+                exeLoadData(tmpPath, table);
+            }catch(Exception e){
+                logger.error(e.getMessage(), e);
+            }finally {
+                // 删除临时文件
+                delete(absoultPath);
+            }
+        }else{
             // oracle原逻辑
             if (CollectionUtils.isNotEmpty(content)) {
                 try {
                     logger.debug("sqlloader入库开始");
-                    ImportGenerator.importToDBByPart(table, tmpPath+tablename+"/", content,
+                    ImportGenerator.importToDBByPart(table, tmpPath, content,
                             reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "txt",
                             reportSqlldrDatabaseName);
                     logger.debug("sqlloader入库结束");
@@ -198,11 +204,12 @@ public class BatchInsertUtil {
      * @param baseinfoList 对象列表
      * @param columns 数据库表对应的列
      */
-    public void createDataFile(String path, List<? extends BaseEntity> baseinfoList, List<ImpColumn> columns) {
+    public void createDataFile(String path, List<? extends Object> baseinfoList, List<ImpColumn> columns) {
         // 生成txt文件
         List<String> lines = new ArrayList<>(baseinfoList.size());
         baseinfoList.forEach(item -> lines.add(ImportGenerator.buildTxt(item, columns)));
         try {
+            // 临时文件路径+文件名
             FileUtils.writeLines(
                     new SafelyFile(path + GlobalConstant.UNDER_LINE + UUID.randomUUID().toString() + ".tmp"),
                     "UTF-8", lines, true);
@@ -213,101 +220,122 @@ public class BatchInsertUtil {
         }
     }
     /**
-     * 获取原生jdbc连接
+     *  LOAD DATA LOCAL INFILE 大批量导入数据到 MySQL。
      *
-     * @return
-     * @throws ClassNotFoundException
-     * @throws SQLException
+     * @see
+     * @since 1.0
      */
-    private  Connection getConnection() throws SQLException, ClassNotFoundException {
-        Class.forName(driverName);
-        conn = DriverManager.getConnection(url, userName, password);
-        return conn;
+    public void exeLoadData(String tmpPath, ImpTable table) {
+
+        Collection<File> files = FileUtils.listFiles(new File(tmpPath),
+                new String[] {"txt"}, false);
+        String absoultPath = null;
+        logger.info("size:"+files.size());
+        List<ImpColumn> array = table.getColumns();
+        List<String> colunm = new ArrayList<>();
+        List<String> colunmDeal = new ArrayList<>();
+
+        for (ImpColumn impColumn : array) {
+            colunm.add("@"+impColumn.getName());
+            colunmDeal.add(impColumn.getName() + " = CASE WHEN LENGTH("+"@"+impColumn.getName()+") = 0 THEN NULL ELSE "+"@"+impColumn.getName() + " END");
+        }
+        String insertColumnName = StringUtils.join(colunm, ",");
+
+        String insertColumnNameDeal = StringUtils.join(colunmDeal, ",");
+
+        FileInputStream fileInputStream = null;
+        Connection conn = null;
+        try {
+            Class.forName(driverName);
+            conn = DriverManager.getConnection(url, userName, password);
+            for (File file : files) {
+                absoultPath = file.getAbsolutePath();
+                /*secure-file-priv特性
+                secure-file-priv参数是用来限制LOAD DATA, SELECT ... OUTFILE, and LOAD_FILE()传到哪个指定目录的
+                secure-file-priv的值为null ，表示限制mysqld 不允许导入|导出
+                当secure_file_priv的值为/tmp/ ，表示限制mysqld 的导入|导出只能发生在/tmp/目录下
+                当secure_file_priv的值没有具体值时，表示不对mysqld 的导入|导出做限制
+                查询命令：show global variables like '%secure%';
+                */
+                String sql = "LOAD DATA LOCAL INFILE '"+absoultPath +"' IGNORE INTO TABLE " + table.getName() + " CHARACTER SET utf8 FIELDS TERMINATED  BY '|' LINES TERMINATED BY '\\n' (" + insertColumnName + ") set " + insertColumnNameDeal;
+                logger.info("----------------sql:"+sql);
+                fileInputStream = new FileInputStream(file);
+                //批量插入数据。
+                long beginTime = System.currentTimeMillis();
+                int rows = 0;
+                PreparedStatement statement = conn.prepareStatement(sql);
+                rows = bulkLoadFromInputStream(statement, fileInputStream);
+                long endTime = System.currentTimeMillis();
+                logger.info(" LOAD DATA LOCAL INFILE :【插入" + rows + "行数据至MySql中，耗时" + (endTime - beginTime) + "ms。】");
+            }
+        }catch (Exception e){
+            logger.error("LOAD DATA 异常----");
+            logger.error(e.getMessage(),e);
+        }finally {
+            try {
+                if (null != fileInputStream) {
+                    fileInputStream.close();
+                }
+                if (null != conn) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
-
-    /**
-     * 组装 SQL 语句
-     *
-     * @param tableName    表名。
-     */
-    public String assembleSql( String tableName) {
-        BaseCheckMysqlMapper baseCheckMysqlMapper = SpringContextUtil.getBean(BaseCheckMysqlMapper.class);
-        String[] schema = url.split("/");
-        String dataBaseName = schema[3].substring(0, schema[3].indexOf("?"));
-        List<String> columnList = baseCheckMysqlMapper.select(schema[3].substring(0,schema[3].indexOf("?")),tableName).stream().map(ele -> ele.getColumnName()).collect(Collectors.toList());
-        String insertColumnName = StringUtils.join(columnList, ",");
-        //插入方案的核心就是下面这个语句
-        String sql = "LOAD DATA LOCAL INFILE 'sql.csv' IGNORE INTO TABLE " + dataBaseName + "." + tableName + " (" + insertColumnName + ")";
-        return sql;
-    }
-
-
 
     /**
      * 将数据从输入流加载到MySQL。
      *
-     * @param dataStream  输入流。
+     * @param loadDataSql SQL语句。
+     * @param fileInputStream  输入流。
      * @return int         成功插入的行数。
      */
-    public int bulkLoadFromInputStream(String tableName,
-                                        InputStream dataStream) throws SQLException, ClassNotFoundException, IOException {
-        if (null == dataStream) {
+    private int bulkLoadFromInputStream(PreparedStatement statement,
+                                        FileInputStream fileInputStream) throws SQLException {
+        if (null == fileInputStream) {
             logger.info("输入流为NULL，没有数据导入。");
             return 0;
         }
-        String assembleSql = assembleSql(tableName);
-        //做测试发现连接池好像不支持，所以获取原生的jdbc连接
-        conn = getConnection();
-        PreparedStatement statement = null;
         int result = 0;
         try {
-            statement = conn.prepareStatement(assembleSql);
-//            mysql8  使用下面的方式
+//        mysql8  使用下面的方式
 //        if (statement.isWrapperFor(JdbcStatement.class)) {
 //            ClientPreparedStatement mysqlStatement = statement.unwrap(ClientPreparedStatement.class);
-//            mysqlStatement.setLocalInfileInputStream(dataStream);
+//            mysqlStatement.setLocalInfileInputStream(fileInputStream);
 //            mysqlStatement.executeUpdate();
 //        }
 //        mysql5 使用下面的方式
             if (statement.isWrapperFor(com.mysql.jdbc.Statement.class)) {
                 com.mysql.jdbc.PreparedStatement mysqlStatement = statement.unwrap(com.mysql.jdbc.PreparedStatement.class);
-                mysqlStatement.setLocalInfileInputStream(dataStream);
+                mysqlStatement.setLocalInfileInputStream(fileInputStream);
                 result = mysqlStatement.executeUpdate();
             }
-        } finally {
-            if (null != statement) {
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+        }finally {
+            if (statement != null) {
                 statement.close();
-            }
-            if(null !=dataStream){
-                dataStream.close();
-            }
-            if(null !=conn){
-                conn.close();
             }
         }
         return result;
     }
-    /**
-     * 往 StringBuilder 里追加数据。
-     *
-     * @param builder StringBuilder。
-     * @param object  数据。
-     */
-    public  void builderAppend(StringBuilder builder, Object object) {
-        builder.append(object);
-        builder.append("\t");
-    }
 
     /**
-     * 往 StringBuilder 里追加一条数据的最后一个字段。
+     * 删除文件
      *
-     * @param builder StringBuilder。
-     * @param object  数据。
+     * @param filePath 文件路径
      */
-    public  void builderEnd(StringBuilder builder, Object object) {
-        builder.append(object);
-        builder.append("\n");
+    private void delete(String filePath) {
+        if (filePath != null && filePath.length() > 0) {
+            File file = new SafelyFile(filePath);
+            if (file.exists()) {
+                file.delete();
+            }
+        }
     }
-
 
 }

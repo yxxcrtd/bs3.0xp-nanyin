@@ -183,7 +183,7 @@
 	<select id="queryAllEquityInfoMax"
 	        resultType="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto"
 	        resultSetType="FORWARD_ONLY" fetchSize="1000">
-    	  SELECT 		    
+    	  SELECT 	/*+ use_hash(T1,tmp) */
    	        T1.INDENTIFY_MARK  AS indentifyMark,
 			T1.ORG_INDENTIFY_MARK AS orgIndentifyMark,
 			T1.REGIST_BANK_CODE AS bankCode,

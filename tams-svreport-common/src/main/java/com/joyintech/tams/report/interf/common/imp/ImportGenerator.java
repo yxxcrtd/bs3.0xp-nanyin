@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -76,49 +77,50 @@ public final class ImportGenerator {
 
         for (TableColumn col : dbCols) {
             ImpColumn column = new ImpColumn(StringUtil.upperCase(col.getColumnName()));
-            // CHAR
-            if (StringUtil.equalsIgnoreCase(col.getDataType(), JDBCType.CHAR.name())) {
-                column.setType(JDBCType.CHAR);
-                column.setLength(col.getDataLength());
-            }
-            if(StringUtil.equalsIgnoreCase(col.getDataType(), JDBCType.VARCHAR.name())||
-            		col.getDataLength()>255){
-            	column.setType(JDBCType.CHAR);
-            	column.setLength(col.getDataLength());
-            }
-            // DATE
-            else if (StringUtil.equalsIgnoreCase(col.getDataType(), JDBCType.DATE.name())) {
-                column.setType(JDBCType.DATE);
-            }
-            // TIMESTAMP
-            else if (StringUtil.startsWithIgnoreCase(col.getDataType(),
-                JDBCType.TIMESTAMP.name())) {
-                column.setType(JDBCType.TIMESTAMP);
-            }
+            if(!BaseCommonCheckService.isMYSQLDataBase()){
+                // CHAR
+                if (StringUtil.equalsIgnoreCase(col.getDataType(), JDBCType.CHAR.name())) {
+                    column.setType(JDBCType.CHAR);
+                    column.setLength(col.getDataLength());
+                }
+                if(StringUtil.equalsIgnoreCase(col.getDataType(), JDBCType.VARCHAR.name())||
+                        col.getDataLength()>255){
+                    column.setType(JDBCType.CHAR);
+                    column.setLength(col.getDataLength());
+                }
+                // DATE
+                else if (StringUtil.equalsIgnoreCase(col.getDataType(), JDBCType.DATE.name())) {
+                    column.setType(JDBCType.DATE);
+                }
+                // TIMESTAMP
+                else if (StringUtil.startsWithIgnoreCase(col.getDataType(),
+                        JDBCType.TIMESTAMP.name())) {
+                    column.setType(JDBCType.TIMESTAMP);
+                }
 
-            if (isDB2DataBase) {
-                // DECIMAL
-                if (StringUtil.startsWithIgnoreCase(col.getDataType(),
-                    JDBCType.DECIMAL.name())) {
-                    column.setType(JDBCType.DECIMAL);
-                }
-                // SMALLINT
-                else if (StringUtil.startsWithIgnoreCase(col.getDataType(),
-                    JDBCType.SMALLINT.name())) {
-                    column.setType(JDBCType.SMALLINT);
-                }
-                // INTEGER
-                else if (StringUtil.startsWithIgnoreCase(col.getDataType(),
-                    JDBCType.INTEGER.name())) {
-                    column.setType(JDBCType.INTEGER);
-                }
-                // NUMERIC
-                else if (StringUtil.startsWithIgnoreCase(col.getDataType(),
-                    JDBCType.NUMERIC.name())) {
-                    column.setType(JDBCType.NUMERIC);
+                if (isDB2DataBase) {
+                    // DECIMAL
+                    if (StringUtil.startsWithIgnoreCase(col.getDataType(),
+                            JDBCType.DECIMAL.name())) {
+                        column.setType(JDBCType.DECIMAL);
+                    }
+                    // SMALLINT
+                    else if (StringUtil.startsWithIgnoreCase(col.getDataType(),
+                            JDBCType.SMALLINT.name())) {
+                        column.setType(JDBCType.SMALLINT);
+                    }
+                    // INTEGER
+                    else if (StringUtil.startsWithIgnoreCase(col.getDataType(),
+                            JDBCType.INTEGER.name())) {
+                        column.setType(JDBCType.INTEGER);
+                    }
+                    // NUMERIC
+                    else if (StringUtil.startsWithIgnoreCase(col.getDataType(),
+                            JDBCType.NUMERIC.name())) {
+                        column.setType(JDBCType.NUMERIC);
+                    }
                 }
             }
-
             columns.add(column);
         }
         return columns;
