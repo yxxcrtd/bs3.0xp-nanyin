@@ -257,9 +257,10 @@
                 and ASSET_CODE = #{assetCode}
             </if>
         </where>
+
     </select>
     <select id="selectProdIdAndRegCodeByProdName" resultType="java.util.Map">
-        SELECT PROD_ID,REG_CODE FROM CHB_PRD_BASEINFO WHERE PROD_NAME=#{prodName}
+        SELECT PROD_ID,REG_CODE FROM CHB_PRD_BASEINFO WHERE PROD_NAME=#{prodName} limit 1
     </select>
     <select id="selectByKey" resultMap="BaseResultMap">
         select
@@ -385,9 +386,6 @@
             </if>
             <if test="dealDateEnd!=null and dealDateEnd !=''">
                 and a.DEALDATE &lt;= #{dealDateEnd}
-            </if>
-            <if test="dealDateStart==null or dealDateStart ==''">
-                and a.DEALDATE =  DATE_SUB(CURDATE(), INTERVAL 1 DAY)
             </if>
         </where>
     </select>

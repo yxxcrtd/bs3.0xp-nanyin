@@ -41,7 +41,7 @@ public class ChbPrdBaseInfo002Contreoller extends BaseController {
     @Override
     public String init(Model model) {
         this.setSelectOptionToModel(model, DictCode.管理方式_发行登记);
-        this.setSelectOptionToModel(model, DictCode.是否);
+        this.setSelectOptionToModel(model, DictCode.是否_中债);
         this.setSelectOptionToModel(model, DictCode.开放模式_中债);
         this.setSelectOptionToModel(model, DictCode.规律开放周期);
         this.setSelectOptionToModel(model, DictCode.投资性质);

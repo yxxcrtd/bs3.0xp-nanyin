@@ -143,7 +143,7 @@
 								<select  id="isConstracte" name="isConstracte"
 										 data-th-initValue="${entity?.isConstracte}"
 										 class="layui-input form-input input-select"
-										 data-th-data-result="${YES_OR_NO}"
+										 data-th-data-result="${SVR_YES_OR_NO}"
 								></select>
 							</div>
 						</div>
@@ -208,7 +208,7 @@
 							<label class="layui-form-label form-label-wrap " data-th-text="#{CchbPrdBaseInfo001.openCircleDays}">其他规律开放周期（天）</label>
 							<div class="layui-input-inline input-inline">
 								<input type="text" name="openCircleDays" id="openCircleDays"
-									   data-th-value="${entity?.openCircleDays}" required
+									   data-th-value="${entity?.openCircleDays}"
 									   class="layui-input form-input" placeholder="请输入内容"
 									   data-th-placeholder="#{SysCommon.placeholder}" >
 							</div>
@@ -227,7 +227,7 @@
 							<label class="layui-form-label form-label-wrap" data-th-text="#{CchbPrdBaseInfo001.fitCircleDays}">定期开放周期(天)</label>
 							<div class="layui-input-inline input-inline">
 								<input type="text" name="fitCircleDays" id="fitCircleDays"
-									   data-th-value="${entity?.fitCircleDays}" required
+									   data-th-value="${entity?.fitCircleDays}"
 									   class="layui-input form-input" placeholder="请输入内容"
 									   data-th-placeholder="#{SysCommon.placeholder}" >
 							</div>
@@ -238,7 +238,7 @@
 							<label class="layui-form-label form-label-wrap " data-th-text="#{CchbPrdBaseInfo001.ruleComment}">无规律开放说明</label>
 							<div class="layui-input-inline input-inline">
 								<input type="text" name="ruleComment" id="ruleComment"
-									   data-th-value="${entity?.ruleComment}" required
+									   data-th-value="${entity?.ruleComment}"
 									   class="layui-input form-input" placeholder="请输入内容"
 									   data-th-placeholder="#{SysCommon.placeholder}" >
 							</div>
@@ -257,7 +257,7 @@
 								<select  id="holidayOnFlag" name="holidayOnFlag"
 										 data-th-initValue="${entity?.holidayOnFlag}"
 										 class="layui-input form-input input-select"
-										 data-th-data-result="${YES_OR_NO}"
+										 data-th-data-result="${SVR_YES_OR_NO}"
 								></select>
 							</div>
 						</div>
@@ -287,7 +287,7 @@
 							<label class="layui-form-label form-label-wrap" data-th-text="#{CchbPrdBaseInfo001.openBussRemark}">开放期业务说明</label>
 							<div class="layui-input-inline input-inline">
 								<input type="text" name="openBussRemark" id="openBussRemark"
-									   data-th-value="${entity?.openBussRemark}" required
+									   data-th-value="${entity?.openBussRemark}"
 									   class="layui-input form-input" placeholder="请输入内容"
 									   data-th-placeholder="#{SysCommon.placeholder}" >
 							</div>
@@ -380,7 +380,7 @@
 							<label class="layui-form-label form-label-wrap" data-th-text="#{CchbPrdBaseInfo001.basic}">计息基础</label>
 							<div class="layui-input-inline input-inline">
 								<select  id="basic" name="basic"
-										 data-th-initValue="${entity?.basic}"
+										 data-th-initValue="${entity?.basic}" required
 										 class="layui-input form-input input-select"
 										 data-th-data-result="${SVR_BASIS}"
 								></select>
@@ -389,7 +389,7 @@
 						<div class="form-inline-wrap">
 							<label class="layui-form-label form-label-wrap " data-th-text="#{CchbPrdBaseInfo001.terminatedate}">提前终止日</label>
 							<div class="layui-input-inline input-inline">
-								<input type="text" id="terminatedate" name="terminatedate" required
+								<input type="text" id="terminatedate" name="terminatedate"
 									   data-th-value='${#dates.format(entity?.terminatedate,"yyyy-MM-dd")}'
 									   class="layui-input form-input input-dateSelect" />
 							</div>
@@ -409,7 +409,7 @@
 								<select  id="isTransfer" name="isTransfer"
 										 data-th-initValue="${entity?.isTransfer}"
 										 class="layui-input form-input input-select"
-										 data-th-data-result="${YES_OR_NO}"
+										 data-th-data-result="${SVR_YES_OR_NO}"
 								></select>
 							</div>
 						</div>
@@ -419,7 +419,7 @@
 								<select  id="cashManaCate" name="cashManaCate"
 										 data-th-initValue="${entity?.cashManaCate}"
 										 class="layui-input form-input input-select"
-										 data-th-data-result="${YES_OR_NO}"
+										 data-th-data-result="${SVR_YES_OR_NO}"
 								></select>
 							</div>
 						</div>
@@ -430,7 +430,7 @@
 								<select  id="manaCateFit" name="manaCateFit"
 										 data-th-initValue="${entity?.manaCateFit}"
 										 class="layui-input form-input input-select"
-										 data-th-data-result="${YES_OR_NO}"
+										 data-th-data-result="${SVR_YES_OR_NO}"
 								></select>
 							</div>
 						</div>
@@ -482,7 +482,7 @@
 								<select  id="zjxtFlag" name="zjxtFlag"
 										 data-th-initValue="${entity?.zjxtFlag}"
 										 class="layui-input form-input input-select"
-										 data-th-data-result="${YES_OR_NO}"
+										 data-th-data-result="${SVR_YES_OR_NO}"
 								></select>
 							</div>
 						</div>
