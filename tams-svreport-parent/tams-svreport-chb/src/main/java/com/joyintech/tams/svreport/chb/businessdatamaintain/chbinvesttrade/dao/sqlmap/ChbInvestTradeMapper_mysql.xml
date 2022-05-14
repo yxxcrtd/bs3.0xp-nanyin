@@ -232,7 +232,7 @@
     </select>
     <select id="getCustomerName" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT
-        DISTINCT CUSTOMER_NAME id,
+        DISTINCT CUSTOMER_ID id,
         CUSTOMER_NAME text
         FROM MST_CUSTOMER_INFO
         <where>
