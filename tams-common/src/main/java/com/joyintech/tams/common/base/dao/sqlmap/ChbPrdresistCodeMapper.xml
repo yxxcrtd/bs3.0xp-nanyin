@@ -85,7 +85,7 @@
             sysdate UPDATE_TIME,
             #{createUser,jdbcType=VARCHAR} CREATE_USER,
             sysdate CREATE_TIME
-            form dual
+            from dual
         )b on (a.PRODID = b.PRODID)
         WHEN MATCHED THEN
         UPDATE SET
@@ -95,8 +95,8 @@
             a.UPDATE_USER = b.UPDATE_USER,
             a.UPDATE_TIME = b.UPDATE_TIME
         WHEN NOT MATCHED THEN
-            insert into CHB_PRDRESIST_CODE(PRODID,ORG_CODE,REG_CODE,DEPT_CODE,UPDATE_USER,UPDATE_TIME,CREATE_USER,CREATE_TIME)
-            values(b.PRODID,b.ORG_CODE,b.REG_CODE,b.DEPT_CODE,b.UPDATE_USER,b.UPDATE_TIME,b.CREATE_USER,b.CREATE_TIME)
+            insert (PRODID,ORG_CODE,REG_CODE,DEPT_CODE,UPDATE_USER,UPDATE_TIME,CREATE_USER,CREATE_TIME)
+            values (b.PRODID,b.ORG_CODE,b.REG_CODE,b.DEPT_CODE,b.UPDATE_USER,b.UPDATE_TIME,b.CREATE_USER,b.CREATE_TIME)
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbPrdresistCode" >
         insert into CHB_PRDRESIST_CODE(PRODID, ORG_CODE, PRODNAME, REG_CODE, VDATE, MDATE, 

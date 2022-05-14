@@ -88,7 +88,7 @@
                            sysdate                        UPDATE_TIME,
                            #{createUser,jdbcType=VARCHAR} CREATE_USER,
                            sysdate                        CREATE_TIME
-                        form dual) TEMP
+                        from dual) TEMP
               where not exists(select 1 from CHB_PRDRESIST_CODE where a.PRODID = TEMP.PRODID)
              ) a;
         update CHB_PRDRESIST_CODE a,(
@@ -102,7 +102,7 @@
             sysdate UPDATE_TIME,
             #{createUser,jdbcType=VARCHAR} CREATE_USER,
             sysdate CREATE_TIME
-            form dual) TEMP
+            from dual) TEMP
             ) a
             )b
             set  a.ORG_CODE = b.ORG_CODE,

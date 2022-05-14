@@ -99,7 +99,7 @@
 						<div class="form-inline-wrap" >
 							<label class="layui-form-label form-label-wrap" data-th-text="#{CchbPrdBaseInfo001.manageType}">管理方式</label>
 							<div class="layui-input-inline input-inline">
-								<select  id="manageType" name="manageType"
+								<select  id="manageType" name="manageType" required
 										 data-th-initValue="${entity?.manageType}"
 										 class="layui-input form-input input-select"
 										 data-th-data-result="${SVR_PRO_STYLE}"
@@ -140,7 +140,7 @@
 						<div class="form-inline-wrap">
 							<label class="layui-form-label form-label-wrap" data-th-text="#{CchbPrdBaseInfo001.isConstracte}">是否为结构化（分级）产品</label>
 							<div class="layui-input-inline input-inline">
-								<select  id="isConstracte" name="isConstracte"
+								<select  id="isConstracte" name="isConstracte" required
 										 data-th-initValue="${entity?.isConstracte}"
 										 class="layui-input form-input input-select"
 										 data-th-data-result="${SVR_YES_OR_NO}"
@@ -151,7 +151,7 @@
 
 							<label class="layui-form-label form-label-wrap " data-th-text="#{CchbPrdBaseInfo001.ivstorientation}">产品投资性质</label>
 							<div class="layui-input-inline input-inline">
-								<select  id="ivstorientation" name="ivstorientation"
+								<select  id="ivstorientation" name="ivstorientation" required
 										 data-th-initValue="${entity?.ivstorientation}"
 										 class="layui-input form-input input-select"
 										 data-th-data-result="${INVEST_TYPE}"
@@ -163,7 +163,7 @@
 							<label class="layui-form-label form-label-wrap " data-th-text="#{CchbPrdBaseInfo001.gradProportion}">分级比例</label>
 							<div class="layui-input-inline input-inline">
 								<input type="text" name="gradProportion" id="gradProportion"
-									   data-th-value="${entity?.gradProportion}" required
+									   data-th-value="${entity?.gradProportion}"
 									   data-pattern="###.#####" data-fixtype="5" maxlength="9" onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"
 									   class="layui-input form-input" placeholder="请输入内容"
 									   data-th-placeholder="#{SysCommon.placeholder}" >
@@ -185,7 +185,7 @@
 							<label class="layui-form-label form-label-wrap"data-th-text="#{CchbPrdBaseInfo001.openMode}">开放模式</label>
 							<div class="layui-input-inline input-inline">
 								<select  id="openMode" name="openMode"
-										 data-th-initValue="${entity?.openMode}"
+										 data-th-initValue="${entity?.openMode}" required
 										 class="layui-input form-input input-select"
 										 data-th-data-result="${SVR_OPEN_MODE}"
 								></select>
@@ -217,7 +217,7 @@
 							<label class="layui-form-label form-label-wrap " data-th-text="#{CchbPrdBaseInfo001.operateMode}">产品运作模式</label>
 							<div class="layui-input-inline input-inline">
 								<select  id="operateMode" name="operateMode"
-										 data-th-initValue="${entity?.operateMode}"
+										 data-th-initValue="${entity?.operateMode}" required
 										 class="layui-input form-input input-select"
 										 data-th-data-result="${SVR_OPERATEMODE_DECLARE}"
 								></select>
@@ -246,7 +246,7 @@
 						<div class="form-inline-wrap" >
 							<label class="layui-form-label form-label-wrap" data-th-text="#{CchbPrdBaseInfo001.firstOpenDay}">首次开放周期起始日</label>
 							<div class="layui-input-inline input-inline">
-								<input type="text" id="firstOpenDay" name="firstOpenDay" required
+								<input type="text" id="firstOpenDay" name="firstOpenDay"
 									   data-th-value='${#dates.format(entity?.firstOpenDay,"yyyy-MM-dd")}'
 									   class="layui-input form-input input-dateSelect" />
 							</div>
@@ -268,7 +268,8 @@
 							<label class="layui-form-label form-label-wrap" data-th-text="#{CchbPrdBaseInfo001.avgOpenCount}">平均开放次数（年化）</label>
 							<div class="layui-input-inline input-inline">
 								<input type="text" name="avgOpenCount" id="avgOpenCount"
-									   data-th-value="${entity?.avgOpenCount}" required
+									   data-th-value="${entity?.avgOpenCount}"
+									   data-pattern="######.##" data-fixtype="2" maxlength="6" onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"
 									   class="layui-input form-input" placeholder="请输入内容"
 									   data-th-placeholder="#{SysCommon.placeholder}" >
 							</div>
@@ -298,7 +299,7 @@
 							<div class="form-inline-wrap" >
 								<label class="layui-form-label form-label-wrap" data-th-text="#{CchbPrdBaseInfo001.prodtype}">产品类型</label>
 								<div class="layui-input-inline input-inline">
-									<select  id="prodtype" name="prodtype"
+									<select  id="prodtype" name="prodtype" required
 											 data-th-initValue="${entity?.prodtype}"
 											 class="layui-input form-input input-select"
 											 data-th-data-result="${SVR_PRODTYPE}"
@@ -312,7 +313,7 @@
 											class="layui-input form-input input-select"
 											data-th-placeholder="#{SysCommon.placeholder}"
 											data-th-data-url="@{/chb/businessdatamaintain/chbprdbaseinfo/chbprdbaseinfo001/queryCalendarInfoList}"
-											data-th-initValue='${entity?.calendarId}' required>
+											data-th-initValue='${entity?.calendarId}' >
 									</select>
 								</div>
 							</div>
@@ -333,7 +334,7 @@
 								<label class="layui-form-label form-label-wrap" data-th-text="#{CchbPrdBaseInfo001.remark}">备注</label>
 								<div class="layui-input-inline input-inline">
 									<input type="text" name="remark" id="remark"
-										   data-th-value="${entity?.remark}" required
+										   data-th-value="${entity?.remark}"
 										   class="layui-input form-input" placeholder="请输入内容"
 										   data-th-placeholder="#{SysCommon.placeholder}" >
 								</div>
