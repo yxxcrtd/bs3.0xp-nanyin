@@ -19,12 +19,16 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
+import com.joyintech.tams.common.svreport.base.service.BatchInsertService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.report.interf.common.imp.ImportGenerator;
+import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dao.ChbCalendarInfoMapper;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dto.ChbCalendarInfo001Dto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dto.ChbCalendarInfoDto;
@@ -70,12 +74,14 @@ public class ChbCalendarInfo001Service extends CommonExportService<ChbCalendarIn
     /**
      * 分页大小
      */
-    public static final int PAGE_SIZE = 500;
+    public static final int PAGE_SIZE = 200;
 
     @Resource
     private ChbCalendarInfoMapper chbCalendarInfoMapper;
     @Resource
     private BaseCommonCheckService baseCommonCheckService;
+    @Resource
+    private BatchInsertService batchInsertService;
 
     /**
      * 市场日历信息查询
@@ -226,10 +232,22 @@ public class ChbCalendarInfo001Service extends CommonExportService<ChbCalendarIn
         List<ChbCalendarInfo001Dto> dtoList = this.convertToBean(mapList);
         //按500条分页
         List<List<ChbCalendarInfo001Dto>> partitionList = Lists.partition(dtoList, PAGE_SIZE);
-        //批量入库
-        for (List<ChbCalendarInfo001Dto> list : partitionList) {
-            chbCalendarInfoMapper.insertBatchMstHoliday(list);
+        //小于998条数据，批量分页插入
+        if ( dtoList.size() < 998 ) {
+            //批量入库
+            for (List<ChbCalendarInfo001Dto> list : partitionList) {
+                chbCalendarInfoMapper.insertBatchMstHoliday(list);
+            }
+        } else {
+            //sqlloader插入
+            ImpTable table = new ImpTable(TABLE_NAME);
+            table.setColumns(ImportGenerator.createImpTableColumns(table.getName()));
+            // 临时文件存放目录
+            String tmpPath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+
+            batchInsertService.exeBatchldr(tmpPath, dtoList, table);
         }
+
         return excelValidList;
     }
 
