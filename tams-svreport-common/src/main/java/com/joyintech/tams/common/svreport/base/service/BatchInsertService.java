@@ -218,19 +218,6 @@ public class BatchInsertService {
                     }
                 }
             }
-
-            //临时文件
-            String absoultPath = tmpPath + table.getName() + FileNameUtil.createFileName(".txt");
-            File tmpFile = new SafelyFile(absoultPath);
-            try {
-                FileUtils.writeLines(tmpFile, "UTF-8", content);
-                exeLoadData(tmpPath, table);
-            }catch(Exception e){
-                logger.error(e.getMessage(), e);
-            }finally {
-                // 删除临时文件
-                delete(absoultPath);
-            }
         }else{
             // oracle原逻辑
             if (CollectionUtils.isNotEmpty(content)) {
@@ -310,7 +297,7 @@ public class BatchInsertService {
                 当secure_file_priv的值没有具体值时，表示不对mysqld 的导入|导出做限制
                 查询命令：show global variables like '%secure%';
                 */
-                String sql = "LOAD DATA LOCAL INFILE '"+absoultPath +"' IGNORE INTO TABLE " + table.getName() + " CHARACTER SET utf8 FIELDS TERMINATED  BY '|' LINES TERMINATED BY '\\n' (" + insertColumnName + ") set " + insertColumnNameDeal;
+                String sql = "LOAD DATA LOCAL INFILE '"+absoultPath +"' IGNORE INTO TABLE " + table.getName() + " CHARACTER SET utf8 FIELDS TERMINATED  BY '|' LINES TERMINATED BY '\r\n' (" + insertColumnName + ") set " + insertColumnNameDeal;
                 logger.info("----------------sql:"+sql);
                 fileInputStream = new FileInputStream(file);
                 //批量插入数据。
