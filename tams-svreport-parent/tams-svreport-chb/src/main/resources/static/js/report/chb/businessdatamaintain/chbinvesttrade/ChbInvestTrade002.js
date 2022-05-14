@@ -59,7 +59,8 @@
             $('#amt').blur(function (){
                 $('#cnyAmt').val($('#amt').val());
             })
-
+        }else{
+            $("#cnyAmt").removeAttr("disabled");
         }
     });
 

@@ -237,7 +237,7 @@
         FROM MST_CUSTOMER_INFO
         <where>
             <if test="search !=null and  search !='' ">
-                REG_CODE LIKE CONCAT('%',#{search}, '%')
+                CUSTOMER_NAME LIKE CONCAT('%',#{search}, '%')
             </if>
             <if test="tradeCounter !=null and  tradeCounter !='' ">
                 and CUSTOMER_ID = #{tradeCounter}
