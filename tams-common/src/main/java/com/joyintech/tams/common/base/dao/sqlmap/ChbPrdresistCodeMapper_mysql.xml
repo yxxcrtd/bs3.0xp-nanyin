@@ -85,11 +85,11 @@
                            #{regCode,jdbcType=VARCHAR}    REG_CODE,
                            #{deptCode,jdbcType=VARCHAR}   DEPT_CODE,
                            #{updateUser,jdbcType=VARCHAR} UPDATE_USER,
-                           sysdate                        UPDATE_TIME,
+                           CURRENT_DATE                        UPDATE_TIME,
                            #{createUser,jdbcType=VARCHAR} CREATE_USER,
-                           sysdate                        CREATE_TIME
+                           CURRENT_DATE                        CREATE_TIME
                         from dual) TEMP
-              where not exists(select 1 from CHB_PRDRESIST_CODE where a.PRODID = TEMP.PRODID)
+              where not exists(select 1 from CHB_PRDRESIST_CODE a where a.PRODID = TEMP.PRODID)
              ) a;
         update CHB_PRDRESIST_CODE a,(
             select * from
@@ -99,9 +99,9 @@
             #{regCode,jdbcType=VARCHAR} REG_CODE,
             #{deptCode,jdbcType=VARCHAR} DEPT_CODE,
             #{updateUser,jdbcType=VARCHAR} UPDATE_USER,
-            sysdate UPDATE_TIME,
+            CURRENT_DATE UPDATE_TIME,
             #{createUser,jdbcType=VARCHAR} CREATE_USER,
-            sysdate CREATE_TIME
+            CURRENT_DATE CREATE_TIME
             from dual) TEMP
             ) a
             )b

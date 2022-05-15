@@ -61,6 +61,7 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
             chbPrdresistCodeMapper.insertSelective(code);
         }
         else if(OperationType.MODIFY.equals(type)){
+            entity.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
             chbPrdBaseInfoDao.insert(entity);
         }
     }

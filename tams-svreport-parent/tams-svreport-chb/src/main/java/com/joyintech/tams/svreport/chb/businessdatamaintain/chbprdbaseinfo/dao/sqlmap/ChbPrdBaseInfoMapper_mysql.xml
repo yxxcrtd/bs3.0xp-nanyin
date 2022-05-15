@@ -233,6 +233,8 @@
             CUSTOMER_TYPE,
             ZJXT_FLAG,
             REMARK,
+            CREATE_TIME,
+            CREATE_USER,
             UPDATE_TIME,
             UPDATE_USER,
             STATUS,
@@ -243,7 +245,7 @@
             OPERATE_MODE,
             FIT_CIRCLE_DAYS,
             MANA_CATE_FIT
-        ) a  select * from (
+        )   select * from (
             select TEMP.* from (
             select
             #{produuid,jdbcType=VARCHAR} PRODUUID
@@ -297,7 +299,7 @@
             from DUAL
             )TEMP
             where not EXISTS(
-            select 1 from CHB_PRD_BASEINFO a where a.PROD_ID = b.PROD_ID
+            select 1 from CHB_PRD_BASEINFO a where a.PROD_ID = TEMP.PROD_ID
             )
             ) a;
 
