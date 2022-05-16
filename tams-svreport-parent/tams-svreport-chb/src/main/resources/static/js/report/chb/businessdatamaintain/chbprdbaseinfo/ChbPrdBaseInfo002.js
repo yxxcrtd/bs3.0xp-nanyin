@@ -76,6 +76,9 @@
      * 画面加载完成
      */
     $(function () {
+        if(pageModel === PAGE_MODEL_EDIT){
+            $('#btnSave_wfl').hide();
+        }
         // 绑定按钮事件
         $('#CchbPrdBaseInfo002_btn_submit').click(function() {
             saveOrSubmit("submit");

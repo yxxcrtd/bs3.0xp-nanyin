@@ -363,7 +363,7 @@
                 </foreach>
             </if>
             <if test="tradeCode!=null and tradeCode!=''">
-                and a.TRADE_CODE = #{tradeCode}
+                and a.TRADE_CODE like  '%' || #{tradeCode} || '%'
             </if>
             <if test="status!=null and status!=''">
                 and a.STATUS = #{status}
@@ -378,7 +378,7 @@
                 and a.DEALDATE &lt;= to_date(#{dealDateEnd},'yyyy-mm-dd')
             </if>
         </where>
-
+        order by a.DEALDATE desc,a.PROD_ID asc
 
     </select>
     <select id="selectRivalPartyType" resultType="java.util.Map">

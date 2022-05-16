@@ -33,6 +33,14 @@ $(function() {
                 return getSearchParams();
             }
         },
+        dblclick: function(table, data){
+            data.operateType='detail'
+            Joyin.dialog(JoyinUtil.getLabel("CchbInvestTrade002"),
+                basePath + "/chb/businessdatamaintain/chbinvesttrade/chbinvesttrade002/init",
+                "98%", "95%",data,
+                function(){table.reload();});
+        },
+
         searchOnInit: false,
         cellMinWidth:100 ,
         cols:[
@@ -40,6 +48,7 @@ $(function() {
             ,{field:'prodId',sortable:false,width:100,  title: 'ChbInvestTrade001.prodId'}
             ,{field:'regCode', sortable:false,width:120,  title: 'ChbInvestTrade001.regCode'}
             ,{field:'registBankCode',sortable:false,width:120,title: 'ChbInvestTrade001.registBankCode'}
+            ,{field:'tradeCode',sortable:false,width:120,title: 'ChbInvestTrade001.tradeCode'}
             ,{field:'assetCode', sortable:false,width:180, title: 'ChbInvestTrade001.assetCode'}
             ,{field:'assetName',sortable:false,width:100,title: 'ChbInvestTrade001.assetName'}
             ,{field:'ccyStr', sortable:false, width:100,title: 'ChbInvestTrade001.ccy'}
