@@ -146,10 +146,8 @@
                 #{remark,jdbcType=VARCHAR} REMARK,
                 #{status,jdbcType=VARCHAR} STATUS,
                 #{deptCode,jdbcType=VARCHAR} DEPT_CODE,
-                #{createUser,jdbcType=VARCHAR} CREATE_USER,
-                #{createTime,jdbcType=DATE} CREATE_TIME,
                 #{updateUser,jdbcType=VARCHAR} UPDATE_USER,
-                #{updateTime,jdbcType=DATE} UPDATE_TIME,
+                #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
                 #{dataSource,jdbcType=VARCHAR} DATA_SOURCE,
                 #{num,jdbcType=NUMERIC} NUM,
                 #{assetMethod,jdbcType=VARCHAR} ASSET_METHOD,
@@ -232,12 +230,12 @@
     </select>
     <select id="getCustomerName" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT
-        DISTINCT CUSTOMER_NAME id,
+        DISTINCT CUSTOMER_ID id,
         CUSTOMER_NAME text
         FROM MST_CUSTOMER_INFO
         <where>
             <if test="search !=null and  search !='' ">
-                REG_CODE LIKE CONCAT('%',#{search}, '%')
+                CUSTOMER_NAME LIKE CONCAT('%',#{search}, '%')
             </if>
             <if test="tradeCounter !=null and  tradeCounter !='' ">
                 and CUSTOMER_ID = #{tradeCounter}
@@ -257,9 +255,10 @@
                 and ASSET_CODE = #{assetCode}
             </if>
         </where>
+
     </select>
     <select id="selectProdIdAndRegCodeByProdName" resultType="java.util.Map">
-        SELECT PROD_ID,REG_CODE FROM CHB_PRD_BASEINFO WHERE PROD_NAME=#{prodName}
+        SELECT PROD_ID,REG_CODE FROM CHB_PRD_BASEINFO WHERE PROD_NAME=#{prodName} limit 1
     </select>
     <select id="selectByKey" resultMap="BaseResultMap">
         select
@@ -314,7 +313,7 @@
         </where>
     </select>
     <select id="selectAssetNameByAssetCode" resultType="java.util.Map">
-        SELECT ASSET_NAME FROM CHB_ASSET_INFO where ASSET_CODE = #{assetCode}
+        SELECT ASSET_NAME FROM CHB_ASSET_INFO where ASSET_CODE = #{assetCode} limit 1
     </select>
     <select id="selectAll" resultMap="BaseResultMap">
         select
@@ -372,7 +371,7 @@
                 </foreach>
             </if>
             <if test="tradeCode!=null and tradeCode!=''">
-                and a.TRADE_CODE = #{tradeCode}
+                and a.TRADE_CODE like concat ('%',#{tradeCode},'%')
             </if>
             <if test="status!=null and status!=''">
                 and a.STATUS = #{status}
@@ -386,10 +385,8 @@
             <if test="dealDateEnd!=null and dealDateEnd !=''">
                 and a.DEALDATE &lt;= #{dealDateEnd}
             </if>
-            <if test="dealDateStart==null or dealDateStart ==''">
-                and a.DEALDATE =  DATE_SUB(CURDATE(), INTERVAL 1 DAY)
-            </if>
         </where>
+        order by a.DEALDATE desc,a.PROD_ID asc
     </select>
     <select id="selectRivalPartyType" resultType="java.util.Map">
         select COUNTER_TYPE from CHB_MST_COUNTER_PARTY where COUNTER_ID = #{tradeCounter}

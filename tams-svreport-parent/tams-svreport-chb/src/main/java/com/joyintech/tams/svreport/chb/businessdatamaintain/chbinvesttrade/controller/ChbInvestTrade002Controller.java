@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
 
@@ -49,21 +50,37 @@ public class ChbInvestTrade002Controller extends BaseController {
         String tradeCode = getParam("tradeCode");
         String prodId = getParam("prodId");
         String assetCode = getParam("assetCode");
+        ChbInvestTradeDto dto=null;
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
-            ChbInvestTradeDto dto = chbInvestTradeService.getBussinessEntityByWorkflowId(
+            dto = chbInvestTradeService.getBussinessEntityByWorkflowId(
                     workflowId);
             model.addAttribute("pageModel",dto.getPageModel());
             model.addAttribute(GlobalConstant.ENTITY, dto);
         }
         else if (WorkFlowUtil.isNotFromToDoList() &&StringUtil.isNotEmpty(tradeCode) ) {
             //通过主键查询数据
-            ChbInvestTradeDto dto = null;
+
             try {
                 dto = chbInvestTradeService.selectByKey(tradeCode,prodId,assetCode);
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
             model.addAttribute(GlobalConstant.ENTITY, dto);
+        }
+        if("detail".equals(getParam("operateType"))){
+            model.addAttribute("detail","detail");
+        }
+        if(null !=dto){
+            if(dto.getUnitPriceNet()!=null){
+                dto.setUnitPriceNet(dto.getUnitPriceNet().setScale(4, BigDecimal.ROUND_HALF_UP));
+            }
+            if(dto.getUnitPriceFull()!=null){
+                dto.setUnitPriceFull(dto.getUnitPriceFull().setScale(4,BigDecimal.ROUND_HALF_UP));
+            }
+            if(dto.getEndRate()!=null){
+                dto.setEndRate(dto.getEndRate().setScale(5,BigDecimal.ROUND_HALF_DOWN));
+            }
         }
         model.addAttribute("tradeCode_New",IDGenerator.generate(32));
         //获取本行登记代码

@@ -76,93 +76,41 @@
             #{createTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbPrdresistCode" >
-        insert into CHB_PRDRESIST_CODE
-        <trim prefix="(" suffix=")" suffixOverrides="," >
-            <if test="prodid != null" >
-                PRODID,
-            </if>
-            <if test="orgCode != null" >
-                ORG_CODE,
-            </if>
-            <if test="prodname != null" >
-                PRODNAME,
-            </if>
-            <if test="regCode != null" >
-                REG_CODE,
-            </if>
-            <if test="vdate != null" >
-                VDATE,
-            </if>
-            <if test="mdate != null" >
-                MDATE,
-            </if>
-            <if test="deptCode != null" >
-                DEPT_CODE,
-            </if>
-            <if test="investor != null" >
-                INVESTOR,
-            </if>
-            <if test="remark != null" >
-                REMARK,
-            </if>
-            <if test="updateUser != null" >
-                UPDATE_USER,
-            </if>
-                UPDATE_TIME,
-            <if test="createUser != null" >
-                CREATE_USER,
-            </if>
-                CREATE_TIME,
-            <if test="createDept != null" >
-                CREATE_DEPT,
-            </if>
-            <if test="operateMode != null" >
-                OPERATE_MODE,
-            </if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides="," >
-            <if test="prodid != null" >
-                #{prodid,jdbcType=VARCHAR},
-            </if>
-            <if test="orgCode != null" >
-                #{orgCode,jdbcType=VARCHAR},
-            </if>
-            <if test="prodname != null" >
-                #{prodname,jdbcType=VARCHAR},
-            </if>
-            <if test="regCode != null" >
-                #{regCode,jdbcType=VARCHAR},
-            </if>
-            <if test="vdate != null" >
-                #{vdate,jdbcType=DATE},
-            </if>
-            <if test="mdate != null" >
-                #{mdate,jdbcType=DATE},
-            </if>
-            <if test="deptCode != null" >
-                #{deptCode,jdbcType=VARCHAR},
-            </if>
-            <if test="investor != null" >
-                #{investor,jdbcType=CHAR},
-            </if>
-            <if test="remark != null" >
-                #{remark,jdbcType=VARCHAR},
-            </if>
-            <if test="updateUser != null" >
-                #{updateUser,jdbcType=VARCHAR},
-            </if>
-                NOW(),
-            <if test="createUser != null" >
-                #{createUser,jdbcType=VARCHAR},
-            </if>
-                NOW(),
-            <if test="createDept != null" >
-                #{createDept,jdbcType=VARCHAR},
-            </if>
-            <if test="operateMode != null" >
-                #{operateMode,jdbcType=VARCHAR},
-            </if>
-        </trim>
+        insert into CHB_PRDRESIST_CODE(PRODID, ORG_CODE, REG_CODE, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER,
+                                       CREATE_TIME)
+        select *
+        from (select TEMP.*
+              from (select #{prodid,jdbcType=VARCHAR}     PRODID,
+                           #{orgCode,jdbcType=VARCHAR}    ORG_CODE,
+                           #{regCode,jdbcType=VARCHAR}    REG_CODE,
+                           #{deptCode,jdbcType=VARCHAR}   DEPT_CODE,
+                           #{updateUser,jdbcType=VARCHAR} UPDATE_USER,
+                           CURRENT_DATE                        UPDATE_TIME,
+                           #{createUser,jdbcType=VARCHAR} CREATE_USER,
+                           CURRENT_DATE                        CREATE_TIME
+                        from dual) TEMP
+              where not exists(select 1 from CHB_PRDRESIST_CODE a where a.PRODID = TEMP.PRODID)
+             ) a;
+        update CHB_PRDRESIST_CODE a,(
+            select * from
+            ( select TEMP.* from
+            (select #{prodid,jdbcType=VARCHAR} PRODID,
+            #{orgCode,jdbcType=VARCHAR} ORG_CODE,
+            #{regCode,jdbcType=VARCHAR} REG_CODE,
+            #{deptCode,jdbcType=VARCHAR} DEPT_CODE,
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            CURRENT_DATE UPDATE_TIME,
+            #{createUser,jdbcType=VARCHAR} CREATE_USER,
+            CURRENT_DATE CREATE_TIME
+            from dual) TEMP
+            ) a
+            )b
+            set  a.ORG_CODE = b.ORG_CODE,
+                a.REG_CODE = b.REG_CODE,
+                a.DEPT_CODE = b.DEPT_CODE,
+                a.UPDATE_USER = b.UPDATE_USER,
+                a.UPDATE_TIME = b.UPDATE_TIME
+        where a.PRODID = b.PRODID
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbPrdresistCode" >
         insert into CHB_PRDRESIST_CODE(PRODID, ORG_CODE, PRODNAME, REG_CODE, VDATE, MDATE,

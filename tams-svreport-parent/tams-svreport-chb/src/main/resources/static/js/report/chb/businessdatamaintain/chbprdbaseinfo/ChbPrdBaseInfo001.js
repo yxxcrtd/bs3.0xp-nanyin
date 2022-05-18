@@ -77,7 +77,6 @@ $(function() {
             ,{field:'operation', width:100, title: 'SysCommon.operation',sortable:false, type:'action', buttons: ['edit', 'delt']}
         ]
     });
-
     /**
      * 绑定编辑事件
      */

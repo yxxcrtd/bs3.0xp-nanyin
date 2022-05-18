@@ -2006,30 +2006,39 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                 service.shutdown();
                 mapRegist.clear();
             }
-            // 创建表
-            ImpTable table = new ImpTable("CHB_EQU_HOLD");
-            table.setColumns(ImportGenerator.createImpTableColumns(table.getName()));
-            // 由于DTO中登记银行代码和数据库字段名不匹配，修改登记银行代码的字段名
-            for (ImpColumn column : table.getColumns()) {
-                if (StringUtil.equals(column.getName(), "REGIST_BANK_CODE")) {
-                    column.setValueField("bankCode");
-                }
-            }
-            ImpTable subTable = new ImpTable(CHB_EQU_SUB);
-            subTable.setColumns(ImportGenerator.createImpTableColumns(subTable.getName()));
-            subTable.setSequences(ImportGenerator.createSequence("SUMIT_SEQ", "CHB_SEQUENCE"));
-            // 由于DTO中登记银行代码和数据库字段名不匹配，修改登记银行代码的字段名
-            for (ImpColumn column : subTable.getColumns()) {
-                if (StringUtil.equals(column.getName(), "REGIST_BANK_CODE")) {
-                    column.setValueField("bankCode");
+            if (listN != null && listN.size() > 0) {
+                if(listN.size()<1000){
+                    this.insertBtachInterfEquityInfoByPart(listN);
+                }else{
+                    ImpTable table = new ImpTable("CHB_EQU_HOLD");
+                    table.setColumns(ImportGenerator.createImpTableColumns(table.getName()));
+                    // 由于DTO中登记银行代码和数据库字段名不匹配，修改登记银行代码的字段名
+                    for (ImpColumn column : table.getColumns()) {
+                        if (StringUtil.equals(column.getName(), "REGIST_BANK_CODE")) {
+                            column.setValueField("bankCode");
+                        }
+                    }
+                    batchInsertService.exeBatchldr(tmpPath, listN, table);
                 }
             }
 
-            batchInsertService.exeBatchldr(tmpPath, listN, table);
-            batchInsertService.exeBatchldr(tmpPath, listU, subTable);
+            if (listU != null && listU.size() > 0) {
+                if(listU.size()<1000){
+                    this.insertBatchEquityRegistByPart(listU);
+                }else{
+                    ImpTable subTable = new ImpTable(CHB_EQU_SUB);
+                    subTable.setColumns(ImportGenerator.createImpTableColumns(subTable.getName()));
+                    subTable.setSequences(ImportGenerator.createSequence("SUMIT_SEQ", "CHB_SEQUENCE"));
+                    // 由于DTO中登记银行代码和数据库字段名不匹配，修改登记银行代码的字段名
+                    for (ImpColumn column : subTable.getColumns()) {
+                        if (StringUtil.equals(column.getName(), "REGIST_BANK_CODE")) {
+                            column.setValueField("bankCode");
+                        }
+                    }
 
-
-
+                    batchInsertService.exeBatchldr(tmpPath, listU, subTable);
+                }
+            }
         }
 
         resultMap.put("success", success);
@@ -2088,13 +2097,11 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
         if (success) {
             return "success";
         }
-
         //add by liubin start 当无投资者身份信息供转换时更新监控表异常描述
         monitorInfoDto.setFileHandleResultMsg(this.getMessage("REPORT_FILE_MONITORINFO_NODATA"));
         //add by liubin end
         return "fail";
     }
-
 
     public String imptDB(List<String> content,ImpTable table, String tmpPath) {
         // 系统是否使用的db2数据库

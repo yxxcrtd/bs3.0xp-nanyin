@@ -19,14 +19,18 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
+import com.joyintech.tams.common.svreport.base.service.BatchInsertService;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.report.interf.common.imp.ImportGenerator;
+import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbexchangeinfo.dao.ChbExchangeQuotationInfoMapper;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbexchangeinfo.dto.ChbExchangeQuotationInfoDto;
 
@@ -87,13 +91,15 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
     /**
      * 分页大小
      */
-    public static final int PAGE_SIZE = 500;
+    public static final int PAGE_SIZE = 200;
 
 
     @Resource
     private ChbExchangeQuotationInfoMapper chbExchangeQuotationInfoMapper;
     @Resource
     private BaseCommonCheckService baseCommonCheckService;
+    @Resource
+    private BatchInsertService batchInsertService;
 
 
     /**
@@ -227,12 +233,25 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
         List<ExcelValidDto> excelValidList = baseCommonCheckService.checkDataAll(CHECK_FLAG, mapList, TABLE_NAME, fileName, TABLE_NAME, TABLE_NAME, null, null);
 
         List<ChbExchangeQuotationInfoDto> dtoList = this.convertToBean(mapList);
-        //按500条分页
-        List<List<ChbExchangeQuotationInfoDto>> partitionList = Lists.partition(dtoList, PAGE_SIZE);
-        //批量入库
-        for (List<ChbExchangeQuotationInfoDto> list:partitionList) {
-            chbExchangeQuotationInfoMapper.insertExchargeQuoteInfo(list);
+        //小于998条数据，批量分页插入
+        if ( dtoList.size() < 998 ) {
+            //按200条分页
+            List<List<ChbExchangeQuotationInfoDto>> partitionList = Lists.partition(dtoList, PAGE_SIZE);
+            //批量入库
+            for (List<ChbExchangeQuotationInfoDto> list:partitionList) {
+                chbExchangeQuotationInfoMapper.insertExchargeQuoteInfo(list);
+            }
+        } else {
+            //sqlloader插入
+            ImpTable table = new ImpTable(TABLE_NAME);
+            table.setColumns(ImportGenerator.createImpTableColumns(table.getName()));
+            // 临时文件存放目录
+            String tmpPath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+
+            batchInsertService.exeBatchldr(tmpPath, dtoList, table);
         }
+
+
         return excelValidList;
     }
 

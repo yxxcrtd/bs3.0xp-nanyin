@@ -25,8 +25,41 @@
         $('#regCode').attr("disabled","disabled");
     }
 
+    $('#isConstracte').change(function (){
+        var isConstracte = $('#isConstracte').val();
+        if(isConstracte=='02'){
+            $('#gradProportion').val('').attr('disabled','disabled');
 
+        }else{
+            $('#gradProportion').removeAttr('disabled');
+        }
 
+    });
+    $('#openMode').change(function (){
+        var openMode = $('#openMode').val();
+        if(openMode=='02'){
+            $('#openCircle').val('').trigger('change').attr('disabled','disabled');
+        }else{
+            $('#openCircle').removeAttr('disabled');
+        }
+
+    });
+    $('#openCircle').change(function (){
+        var openCircle = $('#openCircle').val();
+        if(openCircle!='99'){
+            $('#openCircleDays').val('').attr('disabled','disabled');
+        }else{
+            $('#openCircleDays').removeAttr('disabled');
+        }
+    });
+    $('#openBuss').change(function (){
+        var openBuss = $('#openBuss').val();
+        if(openBuss!='99'){
+            $('#openBussRemark').val('').attr('disabled','disabled');
+        }else{
+            $('#openBussRemark').removeAttr('disabled');
+        }
+    });
     function saveOrSubmit(operateType) {
         var object = $.serializeToObject('#submitForm');
         object.operateType = operateType;
@@ -43,6 +76,9 @@
      * 画面加载完成
      */
     $(function () {
+        if(pageModel === PAGE_MODEL_EDIT){
+            $('#btnSave_wfl').hide();
+        }
         // 绑定按钮事件
         $('#CchbPrdBaseInfo002_btn_submit').click(function() {
             saveOrSubmit("submit");

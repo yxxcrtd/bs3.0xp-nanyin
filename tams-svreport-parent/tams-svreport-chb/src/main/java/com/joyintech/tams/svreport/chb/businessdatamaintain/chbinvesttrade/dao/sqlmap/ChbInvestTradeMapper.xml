@@ -245,6 +245,7 @@
             <if test="assetCode !=null and  assetCode !='' ">
                 and ASSET_CODE = #{assetCode}
             </if>
+
         </where>
     </select>
     <select id="selectProdIdAndRegCodeByProdName" resultType="java.util.Map">
@@ -304,7 +305,7 @@
         </where>
     </select>
     <select id="selectAssetNameByAssetCode" resultType="java.util.Map">
-        SELECT ASSET_NAME FROM CHB_ASSET_INFO where ASSET_CODE = #{assetCode}
+        SELECT ASSET_NAME FROM CHB_ASSET_INFO where ASSET_CODE = #{assetCode} and rownum = 1
     </select>
     <select id="selectAll" resultMap="BaseResultMap">
         select
@@ -362,7 +363,7 @@
                 </foreach>
             </if>
             <if test="tradeCode!=null and tradeCode!=''">
-                and a.TRADE_CODE = #{tradeCode}
+                and a.TRADE_CODE like  '%' || #{tradeCode} || '%'
             </if>
             <if test="status!=null and status!=''">
                 and a.STATUS = #{status}
@@ -376,11 +377,8 @@
             <if test="dealDateEnd!=null and dealDateEnd !=''">
                 and a.DEALDATE &lt;= to_date(#{dealDateEnd},'yyyy-mm-dd')
             </if>
-            <if test="dealDateStart==null or dealDateStart ==''">
-                and to_char(a.DEALDATE,'yyyy-mm-dd') = to_char( SYSDATE - 1, 'yyyy-mm-dd' )
-            </if>
         </where>
-
+        order by a.DEALDATE desc,a.PROD_ID asc
 
     </select>
     <select id="selectRivalPartyType" resultType="java.util.Map">
