@@ -18,6 +18,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.common.svreport.base.service.BatchInsertService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -106,6 +108,9 @@ public class SvrProdOpenschFileImpService extends FileImpService {
 	
 	@Autowired
 	private ChbPrdOpenschInterfMapper chbPrdOpenschInterfMapper;
+
+	@Autowired
+	private BatchInsertService batchInsertService;
 	
 	@Override
 	public String importDB(List<Map<String, String>> listData,InterfFile interfFile, String date) {
@@ -158,110 +163,17 @@ public class SvrProdOpenschFileImpService extends FileImpService {
 			deleteData(prodlistE);
 			logger.debug("开放计划数据删除----结束-----:" +  df.format(new Date()));
 			// 数据小于1000直接入库
-			if (listNE.size() <= 50000) {
+			if (listNE.size() <= 1000) {
 				// 插入开放计划
 				insertData(listNE);
 			} else {// 大于1000使用sqlloader入库
-				// 创建表
-				ImpTable table = new ImpTable(InterfDefine.产品开放计划接口数据.getCode());
-				table.setColumns(ImportGenerator.createImpTableColumns(InterfDefine.产品开放计划接口数据.getCode()));
-				// 创建一个线程池
-				if (interfMaxCorePoolSize < 1) {
-					interfMaxCorePoolSize = 20;
-				}
-				ExecutorService service = new JoyinThreadPoolExecutor(interfMaxCorePoolSize);
-				List<Callable<Boolean>> tasks = new ArrayList<>();
-				if (null != listNE) {
-					int start = 0;
-					int end = 0;
-					int size = listNE.size();
-					int max = (int) Math.ceil((double) size / 1000);
-					for (int i = 0; i < max; i++) {
-						start = end;
-						end = Math.min(size, 1000 * (i + 1));
-						List<ChbPrdOpensch> subList = listNE.subList(start, end);
-						logger.debug("生成开放计划qlloader文件"+i);
-						tasks.add(new Callable<Boolean>() {
-							@Override
-							public Boolean call() {
-								logger.debug("开放计划创建文件----开始-----:" +  df.format(new Date()));
-								createDataFile(tmpPath + "/CHB_PRD_OPENSCH/CHB_PRD_OPENSCH", subList, table.getColumns());
-								logger.debug("开放计划创建文件----结束-----:" +  df.format(new Date()));
-								return true;
-							}
-						});
-					}
-				}
-				// 为线程池添加任务
-				List<Future<Boolean>> taskResult;
-				try {
-					taskResult = service.invokeAll(tasks);
-				} catch (InterruptedException e) {
-					logger.error(e.getMessage(), e);
-					return "fail";
-				}
-				for (Future<Boolean> res : taskResult) {
-					try {
-						success = success && res.get();
-					} catch (InterruptedException | ExecutionException e) {
-						logger.error(e.getMessage(), e);
-						return "fail";
-					}
-				}
-				// 任务结束，停止线程池的所有线程
-				service.shutdown();
-				Collection<File> files = FileUtils.listFiles(new SafelyFile(tmpPath+"/CHB_PRD_OPENSCH/"), new String[] { "tmp" }, false);
-				logger.debug("获取开放计划sqlloder文件个数"+files.size());
-				List<String> content = new ArrayList<>(openSchList.size());
-				String result = "";
-				for (File f : files) {
-					if (f.getName().startsWith(InterfDefine.产品开放计划接口数据.getCode())) {
-						try {
-							content.addAll(FileUtils.readLines(f, Charset.forName("UTF-8")));
-							logger.debug("查找开放计划sqlloder文件"+f);
-						} catch (IOException e) {
-							logger.debug("查找开放计划sqlloder文件异常");
-							logger.error(e.getMessage(), e);
-							result = "fail";
-						} finally {
-							f.delete();
-						}
-					}
-				}
-				logger.debug("读取开放计划sqlloder文件共"+content.size()+"条");
-				if("fail".equals(result)){
-					return result;
-				}
-				// 系统是否使用的db2数据库
-				boolean isDB2DataBase = CommonUtil.isDB2DataBase();
-				if (isDB2DataBase) {
-					// db2数据库处理
-					if (CollectionUtils.isNotEmpty(content)) {
-						try {
-							success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/CHB_PRD_OPENSCH/", content,
-									reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "del",
-									reportSqlldrDatabaseName);
-						} catch (IOException | InterruptedException e) {
-							logger.error(e.getMessage(), e);
-							return "fail";
-						}
-					}
-				} else {
-					// oracle原逻辑
-					if (CollectionUtils.isNotEmpty(content)) {
-						try {
-							logger.debug("sqlloader入库开始");
-							success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/CHB_PRD_OPENSCH/", content,
-									reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "txt",
-									reportSqlldrDatabaseName);
-							logger.debug("sqlloader入库结束");
-						} catch (IOException | InterruptedException e) {
-							logger.debug("sqlloader入库报错");
-							logger.error(e.getMessage(), e);
-							return "fail";
-						}
-					}
-				}
+				//sqlloader插入
+				ImpTable table = new ImpTable("CHB_PRD_OPENSCH");
+				table.setColumns(ImportGenerator.createImpTableColumns(table.getName()));
+				// 临时文件存放目录
+				String path = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+
+				batchInsertService.exeBatchldr(path, listNE, table);
 			}
 		}
 		return "success";
