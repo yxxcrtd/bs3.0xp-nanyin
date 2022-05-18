@@ -154,7 +154,7 @@ public class SvrAssetBasisNoBtmFileImpService extends FileImpService{
 		//增量
 			mergeData(assetList); 
 			
-		}else if(listData.size() <= 100000){
+		}else if(listData.size() <= 1000){
 			//增量插入 小于100000正常入库 超过100000条使用sqlldr进行入库
 			try{
 				chbAssetBasisInterfMapper.deleteNoBtmByUpdateTime();
