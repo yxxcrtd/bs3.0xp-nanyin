@@ -309,9 +309,11 @@ public class SvrMstCounterPartFileImpService extends FileImpService {
 	    * @param saveFlag F-当日全删全插，I－增量(默认)
 	    */
 	    private String insert(List<ChbMstCounterParty> mstCountPartInfoList, String saveFlag) {
-	         SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
-	         try {
+
+
                  if (mstCountPartInfoList.size()<1000) {
+                     SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+                     try {
                      int count = 0;
                      logger.debug("交易对手插入开始--------------" + new Date());
                      ChbMstCounterPartyInterfMapper batchMapper = session.getMapper(ChbMstCounterPartyInterfMapper.class);
@@ -339,6 +341,13 @@ public class SvrMstCounterPartFileImpService extends FileImpService {
                      session.commit();
                      // 清理缓存，防止溢出
                      session.clearCache();
+                 }catch(Exception e){
+                     logger.error("数据插入出错:",e.getMessage(),e);
+                     return "fail";
+                 } finally {
+                     session.close();
+                 }
+
                  } else {
                      //sqlloader插入
                      ImpTable table = new ImpTable("CHB_MST_COUNTER_PARTY");
@@ -349,13 +358,7 @@ public class SvrMstCounterPartFileImpService extends FileImpService {
                      batchInsertService.exeBatchldr(tmpPath, mstCountPartInfoList, table);
                  }
 
-	         }catch(Exception e){
-	             logger.error("数据插入出错:",e.getMessage(),e);
-	             return "fail";
-	         }
-	         finally {
-	             session.close();
-	         }
+
 	         logger.debug("交易对手插入结束--------------" + new Date());
 	         return "success";
 	    }
