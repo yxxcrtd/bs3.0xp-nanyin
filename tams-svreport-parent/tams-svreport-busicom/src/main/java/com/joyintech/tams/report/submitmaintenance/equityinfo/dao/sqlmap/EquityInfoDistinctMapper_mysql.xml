@@ -518,7 +518,7 @@
 		FUND_ACC_PLACE 			  as fundAccPlace
 		from CHB_EQU_SUB
 		where SUBMIT_STATUS='01'
-		<foreach collection="newKeyList" item="item" open="AND (REGIST_BANK_CODE,INDENTIFY_MARK) in( values" separator="," close=")">
+		<foreach collection="newKeyList" item="item" open="AND (REGIST_BANK_CODE,INDENTIFY_MARK) in( " separator="," close=")">
 			(#{item.registBankCode},#{item.indentifyMark})
 		</foreach>
 	</select>

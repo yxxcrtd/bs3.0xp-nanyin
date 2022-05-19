@@ -1093,7 +1093,7 @@
 	SELECT * from
 	CHB_INVESTHOLD_INFO_sub ciis
 	where SEND_STATUS='01'
-    <foreach collection="newKeyList" item="item" open="AND (ciis.REGIST_BANK_CODE,ciis.INDENTIFY_MARK,ciis.CCY,ciis.HOLD_DATE,ciis.PRODID) in( values" separator="," close=")">
+    <foreach collection="newKeyList" item="item" open="AND (ciis.REGIST_BANK_CODE,ciis.INDENTIFY_MARK,ciis.CCY,ciis.HOLD_DATE,ciis.PRODID) in( " separator="," close=")">
         (#{item.registBankCode},#{item.indentifyMark},#{item.ccy},#{item.holdDate},#{item.prodid})
     </foreach>
 </select>
@@ -1175,7 +1175,7 @@
 	update CHB_INVESTHOLD_INFO info set info.INDENTIFY_MARK=(select MERGER_INDENTIFY_MARK from CHB_EQU_HOLD_CHECK cc
   		where info.INDENTIFY_MARK=cc.INDENTIFY_MARK or info.INDENTIFY_MARK=cc.ORG_INDENTIFY_MARK )
   	where
-    <foreach collection="newKeyList" item="item" open="(info.REGIST_BANK_CODE,info.INDENTIFY_MARK,info.CCY,info.HOLD_DATE,info.PRODID) in( values" separator="," close=")">
+    <foreach collection="newKeyList" item="item" open="(info.REGIST_BANK_CODE,info.INDENTIFY_MARK,info.CCY,info.HOLD_DATE,info.PRODID) in( " separator="," close=")">
         (#{item.registBankCode},#{item.indentifyMark},#{item.ccy},#{item.holdDate},#{item.prodid})
     </foreach>
 </update>
@@ -1183,7 +1183,7 @@
 	update CHB_INVESTHOLD_INFO_SUB info set info.INDENTIFY_MARK=(select MERGER_INDENTIFY_MARK from CHB_EQU_HOLD_CHECK cc
   		where info.INDENTIFY_MARK=cc.INDENTIFY_MARK or info.INDENTIFY_MARK=cc.ORG_INDENTIFY_MARK )
   	where
-    <foreach collection="newKeyList" item="item" open="(info.REGIST_BANK_CODE,info.INDENTIFY_MARK,info.CCY,info.HOLD_DATE,info.PRODID) in( values" separator="," close=")">
+    <foreach collection="newKeyList" item="item" open="(info.REGIST_BANK_CODE,info.INDENTIFY_MARK,info.CCY,info.HOLD_DATE,info.PRODID) in( " separator="," close=")">
         (#{item.registBankCode},#{item.indentifyMark},#{item.ccy},#{item.holdDate},#{item.prodid})
     </foreach>
 </update>
@@ -1191,7 +1191,7 @@
 	update CHB_INVESTHOLD_INFO_CHECK info set info.MERGER_INDENTIFY_MARK=(select MERGER_INDENTIFY_MARK from CHB_EQU_HOLD_CHECK cc
   		where info.INDENTIFY_MARK=cc.INDENTIFY_MARK or info.INDENTIFY_MARK=cc.ORG_INDENTIFY_MARK )
   	where
-    <foreach collection="newKeyList" item="item" open="(info.REGIST_BANK_CODE,info.INDENTIFY_MARK,info.CCY,info.HOLD_DATE,info.PRODID) in( values" separator="," close=")">
+    <foreach collection="newKeyList" item="item" open="(info.REGIST_BANK_CODE,info.INDENTIFY_MARK,info.CCY,info.HOLD_DATE,info.PRODID) in( " separator="," close=")">
         (#{item.registBankCode},#{item.indentifyMark},#{item.ccy},#{item.holdDate},#{item.prodid})
     </foreach>
 </update>
