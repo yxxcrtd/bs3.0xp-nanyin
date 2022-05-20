@@ -309,7 +309,7 @@ $(function() {
 									sortField:'pmmode'
 								},
 								{
-									title : '实际管理人员名称',
+									title : '实际管理人名称',
 									field : 'mname',
 									width : 200, 
 									sortField:'mname'
