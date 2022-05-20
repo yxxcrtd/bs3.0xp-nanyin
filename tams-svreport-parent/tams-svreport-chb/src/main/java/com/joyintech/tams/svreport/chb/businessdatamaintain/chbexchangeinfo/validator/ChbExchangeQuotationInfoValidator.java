@@ -27,19 +27,20 @@ public class ChbExchangeQuotationInfoValidator implements BeanValidator {
     public List<ValidMessage> valid(Object var1) {
         ChbExchangeQuotationInfoDto dto = (ChbExchangeQuotationInfoDto) var1;
         List<ValidMessage> resultList = new ArrayList(5);
-        if (!this.isNumber(dto.getOpenPrice().toString())) {
+
+        if ( dto.getOpenPrice()!=null && !this.isNumber(dto.getOpenPrice().toString()) ) {
             resultList.add(new ValidMessage("", getMessage("开盘价必须为n（8,5）格式!")));
         }
-        if (!this.isNumber(dto.getClosePrice().toString())) {
+        if (dto.getClosePrice()!=null && !this.isNumber(dto.getClosePrice().toString())) {
             resultList.add(new ValidMessage("", getMessage("收盘价必须为n（8,5）格式!")));
         }
-        if (!this.isNumber(dto.getHighPrice().toString())) {
+        if (dto.getHighPrice()!=null && !this.isNumber(dto.getHighPrice().toString())) {
             resultList.add(new ValidMessage("", getMessage("最高价必须为n（8,5）格式!")));
         }
-        if (!this.isNumber(dto.getLowPrice().toString())) {
+        if (dto.getLowPrice()!=null && !this.isNumber(dto.getLowPrice().toString())) {
             resultList.add(new ValidMessage("", getMessage("最低价必须为n（8,5）格式!")));
         }
-        if (!this.isNumber(dto.getMidPrice().toString())) {
+        if (dto.getMidPrice()!=null && !this.isNumber(dto.getMidPrice().toString())) {
             resultList.add(new ValidMessage("", getMessage("中间价必须为n（8,5）格式!")));
         }
 
