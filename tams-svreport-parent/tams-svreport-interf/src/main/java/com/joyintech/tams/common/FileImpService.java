@@ -1208,129 +1208,129 @@ public abstract class FileImpService extends InterfService{
         }
         return value;
     }
-//    /**
-//     //     *
-//     //     * @param dataList
-//     //     * @param clz
-//     //     * @return
-//     //     */
-//    public List<? extends BaseChbEntity> convertMapToEntity(List<Map<String, String>> dataList, Class clz) {
-//        // 返回对象list
-//        List<BaseChbEntity> rs = new ArrayList<>();
-//
-//        for (Map<String, String> map : dataList) {
-//            BaseChbEntity baseChbEntity = null;
-//            try {
-//                baseChbEntity  = (BaseChbEntity) clz.newInstance();
-//            } catch (InstantiationException e) {
-//                e.printStackTrace();
-//            } catch (IllegalAccessException e) {
-//                e.printStackTrace();
-//            }
-//            for (String key : map.keySet()) {
-//                // 获取map值
-//                String value = map.get(key);
-//                // 判断是mysql数据库时。对空字符串进行加工转为null
-//                if(BaseCommonCheckService.isMYSQLDataBase()){
-//                    if(StringUtil.isEmpty(value)){
-//                        value = null;
-//                    }
-//                }
-//                // 反射通过字段名寻找字段
-//                Field field = ReflectionUtils.findField(clz, subBlank(key.toLowerCase()));
-//
-//                if(field==null){
-//                    continue;
-//                }
-//                field.setAccessible(true);
-//                Type type = field.getGenericType();
-//                if("java.lang.String".equals(type.getTypeName())){
-//                    try {
-//                        field.set(baseChbEntity, value);
-//                    } catch ( IllegalAccessException e) {
-//                        logger.error(e.getMessage(),e);
-//                    }
-//                }else if ("java.math.BigDecimal".equals(type.getTypeName())) {
-//                    try {
-//                        value = valueWipePercent(value);
-//                        //如果是利率带%特殊处理
-//                        if(StringUtil.isNotEmpty(value)){
-//                            int cishu = this.ciShu(value,"%");
-//                            if(cishu==1){
-//                                value = value.replace("%","");
-//                                BigDecimal bd = new BigDecimal(value);
-//                                bd = bd.divide(new BigDecimal(100));
-//                                value = String.valueOf(bd);
-//                            }
-//                        }
-//                        field.set(baseChbEntity ,(value == null || "".equals(value)) ? null : new BigDecimal(value));
-//                    } catch ( IllegalAccessException e) {
-//                        logger.error(e.getMessage(),e);
-//                    }
-//                }
-//                else if ("java.lang.Integer".equals(type.getTypeName())) {
-//                    try {
-//                        value = valueWipePercent(value);
-//                        field.set(baseChbEntity ,(value == null || "".equals(value)) ? null : Integer.valueOf(value));
-//                    } catch (IllegalAccessException e) {
-//                        logger.error(e.getMessage(),e);
-//                    }
-//                }
-//                else if ("java.lang.Short".equals(type.getTypeName())) {
-//                    try {
-//                        value = valueWipePercent(value);
-//                        field.set(baseChbEntity, (value == null || "".equals(value)) ? null : Short.valueOf(value));
-//                    } catch ( IllegalAccessException e) {
-//                        logger.error(e.getMessage(),e);
-//                    }
-//                } else if ("java.lang.Long".equals(type.getTypeName())) {
-//                    try {
-//                        value = valueWipePercent(value);
-//                        field.set(baseChbEntity, (value == null || "".equals(value)) ? null : Long.valueOf(value));
-//                    } catch ( IllegalAccessException e) {
-//                        logger.error(e.getMessage(),e);
-//                    }
-//                } else if ("java.util.Date".equals(type.getTypeName())) {
-//                    if (value != null&&""!=value) {
-//                        try {
-//                            field.set(baseChbEntity, DateUtil.parse(value));
-//                        } catch ( IllegalAccessException e) {
-//                            logger.error(e.getMessage(),e);
-//                        }
-//                    }
-//                } else{
-//                    try {
-//                        field.set(baseChbEntity, value);
-//                    } catch ( IllegalAccessException e) {
-//                        logger.error(e.getMessage(),e);
-//                    }
-//                }
-//            }
-//            // status为空时，有错误数据为A到处理。无错误数据为E有效数据
-//            if(StringUtil.isEmpty(baseChbEntity.getStatus())){
-//                if(StringUtil.isNotEmpty(baseChbEntity.getErrMsg())){
-//                    baseChbEntity.setStatus(DictCodeListExt1.维护数据状态_待处理.getValue());
-//                }else{
-//                    baseChbEntity.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
-//                }
-//            }
-//            // 数据来源为空时默认为I：接口 数据来源不为空以上游传数为准(不可为D)。
-//            if(StringUtil.isEmpty(baseChbEntity.getDataSource())){
-//                baseChbEntity.setDataSource(DictCodeListExt2.数据来源_接口.getValue());
-//            }
-//            // 创建人默认为接口
-//            baseChbEntity.setCreateUser("interf");
-//            baseChbEntity.setUpdateUser("interf");
-//            // 更新人默认为接口接入时间
-//            baseChbEntity.setCreateTime(new Date());
-//            baseChbEntity.setUpdateTime(new Date());
-//            // 创建人
-//            baseChbEntity.setCreateDept(CommonUtil.getDeptCode());
-//
-//            rs.add(baseChbEntity);
-//        }
-//        return rs;
-//    }
+    /**
+     //     *
+     //     * @param dataList
+     //     * @param clz
+     //     * @return
+     //     */
+    public List<? extends BaseChbEntity> convertMapToChbEntity(List<Map<String, String>> dataList, Class clz) {
+        // 返回对象list
+        List<BaseChbEntity> rs = new ArrayList<>();
+
+        for (Map<String, String> map : dataList) {
+            BaseChbEntity baseChbEntity = null;
+            try {
+                baseChbEntity  = (BaseChbEntity) clz.newInstance();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+            for (String key : map.keySet()) {
+                // 获取map值
+                String value = map.get(key);
+                // 判断是mysql数据库时。对空字符串进行加工转为null
+                if(BaseCommonCheckService.isMYSQLDataBase()){
+                    if(StringUtil.isEmpty(value)){
+                        value = null;
+                    }
+                }
+                // 反射通过字段名寻找字段
+                Field field = ReflectionUtils.findField(clz, subBlank(key.toLowerCase()));
+
+                if(field==null){
+                    continue;
+                }
+                field.setAccessible(true);
+                Type type = field.getGenericType();
+                if("java.lang.String".equals(type.getTypeName())){
+                    try {
+                        field.set(baseChbEntity, value);
+                    } catch ( IllegalAccessException e) {
+                        logger.error(e.getMessage(),e);
+                    }
+                }else if ("java.math.BigDecimal".equals(type.getTypeName())) {
+                    try {
+                        value = valueWipePercent(value);
+                        //如果是利率带%特殊处理
+                        if(StringUtil.isNotEmpty(value)){
+                            int cishu = this.ciShu(value,"%");
+                            if(cishu==1){
+                                value = value.replace("%","");
+                                BigDecimal bd = new BigDecimal(value);
+                                bd = bd.divide(new BigDecimal(100));
+                                value = String.valueOf(bd);
+                            }
+                        }
+                        field.set(baseChbEntity ,(value == null || "".equals(value)) ? null : new BigDecimal(value));
+                    } catch ( IllegalAccessException e) {
+                        logger.error(e.getMessage(),e);
+                    }
+                }
+                else if ("java.lang.Integer".equals(type.getTypeName())) {
+                    try {
+                        value = valueWipePercent(value);
+                        field.set(baseChbEntity ,(value == null || "".equals(value)) ? null : Integer.valueOf(value));
+                    } catch (IllegalAccessException e) {
+                        logger.error(e.getMessage(),e);
+                    }
+                }
+                else if ("java.lang.Short".equals(type.getTypeName())) {
+                    try {
+                        value = valueWipePercent(value);
+                        field.set(baseChbEntity, (value == null || "".equals(value)) ? null : Short.valueOf(value));
+                    } catch ( IllegalAccessException e) {
+                        logger.error(e.getMessage(),e);
+                    }
+                } else if ("java.lang.Long".equals(type.getTypeName())) {
+                    try {
+                        value = valueWipePercent(value);
+                        field.set(baseChbEntity, (value == null || "".equals(value)) ? null : Long.valueOf(value));
+                    } catch ( IllegalAccessException e) {
+                        logger.error(e.getMessage(),e);
+                    }
+                } else if ("java.util.Date".equals(type.getTypeName())) {
+                    if (value != null&&""!=value) {
+                        try {
+                            field.set(baseChbEntity, DateUtil.parse(value));
+                        } catch ( IllegalAccessException e) {
+                            logger.error(e.getMessage(),e);
+                        }
+                    }
+                } else{
+                    try {
+                        field.set(baseChbEntity, value);
+                    } catch ( IllegalAccessException e) {
+                        logger.error(e.getMessage(),e);
+                    }
+                }
+            }
+            // status为空时，有错误数据为A到处理。无错误数据为E有效数据
+            if(StringUtil.isEmpty(baseChbEntity.getStatus())){
+                if(StringUtil.isNotEmpty(baseChbEntity.getErrMsg())){
+                    baseChbEntity.setStatus(DictCodeListExt1.维护数据状态_待处理.getValue());
+                }else{
+                    baseChbEntity.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
+                }
+            }
+            // 数据来源为空时默认为I：接口 数据来源不为空以上游传数为准(不可为D)。
+            if(StringUtil.isEmpty(baseChbEntity.getDataSource())){
+                baseChbEntity.setDataSource(DictCodeListExt2.数据来源_接口.getValue());
+            }
+            // 创建人默认为接口
+            baseChbEntity.setCreateUser("interf");
+            baseChbEntity.setUpdateUser("interf");
+            // 更新人默认为接口接入时间
+            baseChbEntity.setCreateTime(new Date());
+            baseChbEntity.setUpdateTime(new Date());
+            // 创建人
+            baseChbEntity.setCreateDept(CommonUtil.getDeptCode());
+
+            rs.add(baseChbEntity);
+        }
+        return rs;
+    }
 ////
 //
     /**
