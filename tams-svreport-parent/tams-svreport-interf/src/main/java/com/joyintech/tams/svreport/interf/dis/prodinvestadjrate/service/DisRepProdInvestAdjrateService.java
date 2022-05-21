@@ -16,6 +16,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.common.svreport.base.service.BatchInsertService;
+import com.joyintech.tams.report.interf.common.imp.ImportGenerator;
+import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +64,9 @@ public class DisRepProdInvestAdjrateService extends FileImpService {
     
     @Autowired
     private DisRepProdInvestAdjrateMapper disRepProdInvestAdjrateMapper;
-    
+
+    @Autowired
+    private BatchInsertService batchInsertService;
     /**
      * {@inheritDoc}
      */
@@ -164,19 +171,21 @@ public class DisRepProdInvestAdjrateService extends FileImpService {
         
         List<DisRepProdInvestAdjrate> newDataList = new ArrayList<DisRepProdInvestAdjrate>();
         newDataList.addAll(dtoList);
-        
-        // 分批存入
-        int part = dataCount / maxDataCountOneTime; // 分批数
-        int insertCount = 0;
-        for (int i = 0; i < part; i++ ) {
-            insertCount += disRepProdInvestAdjrateMapper.insertRepProdInvestAdjrateList(newDataList.subList(0, maxDataCountOneTime));
-            newDataList.subList(0, maxDataCountOneTime).clear();
+        try {
+            //sqlloader插入
+            ImpTable table = new ImpTable("REP_PROD_INVEST_ADJRATE");
+            table.setColumns(ImportGenerator.createImpTableColumns(table.getName()));
+            // 临时文件存放目录
+            String tmpPath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+
+            batchInsertService.exeBatchldr(tmpPath, newDataList, table);
+
+        } catch (Exception e) {
+            logger.error("sqlloader插入异常：{}",e.getMessage(),e);
+            return 0;
         }
-        // 最后剩下的数据
-        if (CollectionUtils.isNotEmpty(newDataList)) {
-            insertCount += disRepProdInvestAdjrateMapper.insertRepProdInvestAdjrateList(newDataList);
-        }
-        return insertCount;
+
+        return dataCount;
     }
 
     /**
