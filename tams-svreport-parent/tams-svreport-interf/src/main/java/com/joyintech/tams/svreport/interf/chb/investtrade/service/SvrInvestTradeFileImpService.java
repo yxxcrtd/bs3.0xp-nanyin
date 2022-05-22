@@ -20,6 +20,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -217,8 +218,11 @@ public class SvrInvestTradeFileImpService  extends FileImpService{
     public String importDB(List<Map<String, String>> investTradeList,InterfFile interfFile, String date) {
         // 数据检查
         // 添加待处理的数据
-        checkData(investTradeList, interfFile.getFilename(), 
-                InterfDefine.投资交易信息接口数据.getCode(), InterfDefine.投资交易信息接口数据.getCode(),BUSSINESSKEY, DUPLICATIED_LIST);
+        // add by wubingbing 20220519 start
+        checkDataCodeCheck(investTradeList, interfFile.getFilename(), ChbCheckTableInfo.投资交易信息表);
+       /* checkData(investTradeList, interfFile.getFilename(),
+                InterfDefine.投资交易信息接口数据.getCode(), InterfDefine.投资交易信息接口数据.getCode(),BUSSINESSKEY, DUPLICATIED_LIST);*/
+        // add by wubingbing 20220519 end
         // 待入库为空则直接返回
         if (CollectionUtils.isEmpty(investTradeList)){
             return "success";
@@ -230,6 +234,29 @@ public class SvrInvestTradeFileImpService  extends FileImpService{
 //            return "fail";
 //        }
 //        String saveFlag = interfConfig.getContentType();
+        String saveResult = saveData(investTradeList,null,interfFile.getDataSource());
+        // 更新系统配置时间
+        ChbInterfUtil.updateInterfTimeBySysdate( InterfDefine.投资交易信息接口数据.getCode());
+        return saveResult;
+    }
+
+    /**
+     * 功能:文件处理方法
+     * 描述：
+     *      1.parseFile --将文件转换为Map<String,String>
+     *      2.checkData --校验数据
+     *      3.saveData --入库
+     * @since 1.7.0
+     * @version 1.7.0
+     * @author：weiyuqiang 2019年5月5日
+     * @see com.joyintech.tams.common.FileImpService#importDB(java.util.List)
+     */
+    @Override
+    public String importDB(List<Map<String, String>> investTradeList,InterfFile interfFile, String date,String coverFlag) {
+        checkDataCodeCheck(investTradeList, interfFile.getFilename(), ChbCheckTableInfo.投资交易信息表,coverFlag);
+        if (CollectionUtils.isEmpty(investTradeList)){
+            return "success";
+        }
         String saveResult = saveData(investTradeList,null,interfFile.getDataSource());
         // 更新系统配置时间
         ChbInterfUtil.updateInterfTimeBySysdate( InterfDefine.投资交易信息接口数据.getCode());

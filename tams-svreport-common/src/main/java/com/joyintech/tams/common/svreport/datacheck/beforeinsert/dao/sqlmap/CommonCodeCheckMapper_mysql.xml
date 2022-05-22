@@ -137,6 +137,16 @@
    	from  CHB_PRD_ISSUE_SUB
    	where  PROD_ID = #{prodId,jdbcType=VARCHAR}
    	</select>
-
-
+    <delete id="deleteChbInvestTradeErrorData">
+        delete from CHB_INVEST_TRADE_ERRODATA where PROD_ID = #{prodId} and TRADE_CODE = #{tradeCode} and ASSET_CODE = #{assetCode}
+    </delete>
+    <delete id="deleteChbPrdBaseInfoErrorData">
+        delete from CHB_PRD_BASEINFO_ERRODATA where PROD_ID = #{prodId}
+    </delete>
+    <select id="checkExistsChbInvestTrade" resultType="java.lang.Integer">
+        select count(*) from CHB_INVEST_TRADE where PROD_ID = #{prodId} and ASSET_CODE = #{assetCode} and TRADE_CODE = #{tradeCode} and DATA_SOURCE !='D' and STATUS = 'E'
+    </select>
+    <select id="checkExistsChbPrdBaseInfo" resultType="java.lang.Integer">
+        select count(*) from CHB_PRD_BASEINFO where PROD_ID = #{prodId} and DATA_SOURCE !='D' and STATUS = 'E'
+    </select>
 </mapper>

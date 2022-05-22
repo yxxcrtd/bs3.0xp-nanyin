@@ -4,7 +4,10 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
@@ -55,16 +58,17 @@ public class ChbPrdBaseInfo002Contreoller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.产品转让类型_中债);
         this.setSelectOptionToModel(model, DictCode.人行客户类型_SVR);
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
-        String prodId = getParam("prodId");
+        String produuid = getParam("produuid");
+        String status = getParam("statusValid");
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
             ChbPrdBaseInfoDto dto = chbPrdBaseInfoService.getBussinessEntityByWorkflowId(
                     workflowId);
             model.addAttribute("pageModel",dto.getPageModel());
             model.addAttribute(GlobalConstant.ENTITY, dto);
         }
-        else if (WorkFlowUtil.isNotFromToDoList() &&StringUtil.isNotEmpty(prodId) ) {
+        else if (WorkFlowUtil.isNotFromToDoList() &&StringUtil.isNotEmpty(produuid) ) {
             //通过主键查询数据
-            ChbPrdBaseInfoDto dto = chbPrdBaseInfoService.selectByKey(prodId);
+            ChbPrdBaseInfoDto dto = chbPrdBaseInfoService.selectByKey(produuid,status);
             model.addAttribute(GlobalConstant.ENTITY, dto);
         }
         //获取本行登记代码
@@ -122,5 +126,15 @@ public class ChbPrdBaseInfo002Contreoller extends BaseController {
         // 流程开始
         String msg = chbPrdBaseInfoService.start(processParameter, dto);
         return new AjaxResult(msg);
+    }
+    /**
+     * 行内标识码
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/getProdInsId")
+    public Page<SelectOptionDto> getProdInsId()
+    {
+        return chbPrdBaseInfoService.getProdInsId(RequestUtil.getPageParam());
     }
 }

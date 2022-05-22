@@ -109,4 +109,11 @@ public interface CommonCodeCheckMapper {
 
     int checkSalerInsNo (String salerInsNo);
 
+    void deleteChbInvestTradeErrorData(@Param("prodId") String prodId,@Param("assetCode") String assetCode, @Param("tradeCode") String tradeCode);
+
+    void deleteChbPrdBaseInfoErrorData(String prodId);
+
+    int checkExistsChbInvestTrade(@Param("prodId") String prodId,@Param("assetCode") String assetCode, @Param("tradeCode") String tradeCode);
+
+    int checkExistsChbPrdBaseInfo(@Param("prodId") String prodId);
 }

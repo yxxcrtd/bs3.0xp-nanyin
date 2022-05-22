@@ -14,6 +14,7 @@ import com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dto.Ch
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbinvesttrade.dto.ChbInvestTradeDto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbinvesttrade.service.ChbInvestTradeService;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbmstbondcreditrating.dto.ChbMstBondCreditRatingDto;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
@@ -25,6 +26,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
@@ -150,6 +152,35 @@ public class ChbInvestTrade001Controller extends BaseController {
         return new AjaxResult(msg);
 
     }
+
+    /**
+     * 导入数据文件之前检查数据
+     *
+     * @param fileName 导入的文件名
+     * @return 处理结果
+     */
+    @ResponseBody
+    @RequestMapping(value = "checkConfirmMsgForImportData", method = RequestMethod.POST)
+    public AjaxResult checkConfirmMsgForImportData(String fileName) throws Exception {
+        return chbInvestTradeService.checkConfirmMsgForImportData(fileName);
+    }
+
+
+    /**
+     * 导入（数据保存）
+     *
+     * @param fileName
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping("importFileSave")
+    public List<ExcelValidDto> importFileSave(String fileName)
+            throws Exception {
+
+        return chbInvestTradeService.importFileSave(fileName);
+    }
+
     /**
      * 导出信息excel
      *

@@ -32,7 +32,9 @@ $(function() {
             }
         },
         cols:[
-            {field:'prodId', sortable:false, width:100, title: 'CchbPrdBaseInfo001.prodId'}
+            {field:'produuid',visible:false}
+            ,{field:'statusValid',visible:false}
+            ,{field:'prodId', sortable:false, width:100, title: 'CchbPrdBaseInfo001.prodId'}
             ,{field:'prodName',sortable:false,width:100,  title: 'CchbPrdBaseInfo001.prodName'}
             ,{field:'regCode', sortable:false,width:100,  title: 'CchbPrdBaseInfo001.regCode'}
             ,{field:'issuePartyId',sortable:false,width:100,title: 'CchbPrdBaseInfo001.issuePartyId'}
@@ -188,22 +190,22 @@ $(function() {
                 options.pageId = "CchbPrdBaseInfo001";
                 options.exts = 'xls|xlsx';
                 Joyin.uploadFile(options,function(fileName) {
-                    Joyin.ajax(basePath + 'chb/businessdatamaintain/chbinvesttrade/CchbPrdBaseInfo001/checkConfirmMsgForImportData', {fileName: fileName,tableName:'CHB_PRD_BASEINFO'}, function(result) {
-                        if ($.isArray(result.joyinMessages) && result.joyinMessages.length > 0) {
-                            var joyinMessages = "";
-                            $.each(result.joyinMessages, function(i, joyinMessage){
-                                joyinMessages += joyinMessage.message + "<br />"
-                            });
-                            Joyin.confirm(joyinMessages, function(){
-                                Joyin.ajax(basePath + 'chb/businessdatamaintain/chbmstbondcreditrating/CchbPrdBaseInfo001/importFileSave', {fileName: fileName,tableName:'CHB_PRD_BASEINFO'},function () {
-                                    table.reload();
-                                });
-                            });
-                        }else{
-                            Joyin.ajax(basePath + 'chb/businessdatamaintain/chbmstbondcreditrating/CchbPrdBaseInfo001/importFileSave', {fileName: fileName,tableName:'CHB_PRD_BASEINFO'},function () {
-                                table.reload();
-                            });
-                        }
+                    Joyin.ajax(basePath + '/chb/businessdatamaintain/chbprdbaseinfo/chbprdbaseinfo001/checkConfirmMsgForImportData', {fileName: fileName,tableName:'CHB_PRD_BASEINFO'}, function(result) {
+                        // if ($.isArray(result.joyinMessages) && result.joyinMessages.length > 0) {
+                        //     var joyinMessages = "";
+                        //     $.each(result.joyinMessages, function(i, joyinMessage){
+                        //         joyinMessages += joyinMessage.message + "<br />"
+                        //     });
+                        //     Joyin.confirm(joyinMessages, function(){
+                        //         Joyin.ajax(basePath + 'chb/businessdatamaintain/chbmstbondcreditrating/CchbPrdBaseInfo001/importFileSave', {fileName: fileName,tableName:'CHB_PRD_BASEINFO'},function () {
+                        //             table.reload();
+                        //         });
+                        //     });
+                        // }else{
+                        //     Joyin.ajax(basePath + 'chb/businessdatamaintain/chbmstbondcreditrating/CchbPrdBaseInfo001/importFileSave', {fileName: fileName,tableName:'CHB_PRD_BASEINFO'},function () {
+                        //         table.reload();
+                        //     });
+                        // }
                     });
                 },function() {
                     table.reload();

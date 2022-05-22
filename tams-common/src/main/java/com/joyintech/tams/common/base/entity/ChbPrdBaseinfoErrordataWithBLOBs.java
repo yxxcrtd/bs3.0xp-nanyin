@@ -1,15 +1,17 @@
 package com.joyintech.tams.common.base.entity;
 
+import java.util.Date;
+
 public class ChbPrdBaseinfoErrordataWithBLOBs extends ChbPrdBaseinfoErrordata {
     /**
      * 募集起始日期
      */
-    private String raiseVdate;
+    private Date raiseVdate;
 
     /**
      * 起息日
      */
-    private String vdate;
+    private Date vdate;
 
     /**
      * 原始数据
@@ -20,12 +22,35 @@ public class ChbPrdBaseinfoErrordataWithBLOBs extends ChbPrdBaseinfoErrordata {
      * 错误信息
      */
     private String errMsg;
+    /**
+     * 产品登记编码
+     */
+    private String regCode;
+    /**
+     * 客户类型
+     */
+    private String customerType;
+    /**
+     * 发行状态
+     */
+    private String issuingStatus;
+    /**
+     * 机构代码
+     */
+    private String orgCode;
+    /**
+     * 部门代码
+     */
+    private String deptCode;
+
+    private String statusValid;
+
 
     /**
      * 取得 募集起始日期
      * @return 募集起始日期
      */
-    public String getRaiseVdate() {
+    public Date getRaiseVdate() {
         return raiseVdate;
     }
 
@@ -33,15 +58,15 @@ public class ChbPrdBaseinfoErrordataWithBLOBs extends ChbPrdBaseinfoErrordata {
      * 设置 募集起始日期
      * @param raiseVdate 募集起始日期
      */
-    public void setRaiseVdate(String raiseVdate) {
-        this.raiseVdate = raiseVdate == null ? null : raiseVdate.trim();
+    public void setRaiseVdate(Date raiseVdate) {
+        this.raiseVdate = raiseVdate == null ? null : raiseVdate;
     }
 
     /**
      * 取得 起息日
      * @return 起息日
      */
-    public String getVdate() {
+    public Date getVdate() {
         return vdate;
     }
 
@@ -49,8 +74,8 @@ public class ChbPrdBaseinfoErrordataWithBLOBs extends ChbPrdBaseinfoErrordata {
      * 设置 起息日
      * @param vdate 起息日
      */
-    public void setVdate(String vdate) {
-        this.vdate = vdate == null ? null : vdate.trim();
+    public void setVdate(Date vdate) {
+        this.vdate = vdate == null ? null : vdate;
     }
 
     /**
@@ -83,5 +108,53 @@ public class ChbPrdBaseinfoErrordataWithBLOBs extends ChbPrdBaseinfoErrordata {
      */
     public void setErrMsg(String errMsg) {
         this.errMsg = errMsg == null ? null : errMsg.trim();
+    }
+
+    public String getRegCode() {
+        return regCode;
+    }
+
+    public void setRegCode(String regCode) {
+        this.regCode = regCode;
+    }
+
+    public String getCustomerType() {
+        return customerType;
+    }
+
+    public void setCustomerType(String customerType) {
+        this.customerType = customerType;
+    }
+
+    public String getIssuingStatus() {
+        return issuingStatus;
+    }
+
+    public void setIssuingStatus(String issuingStatus) {
+        this.issuingStatus = issuingStatus;
+    }
+
+    public String getOrgCode() {
+        return orgCode;
+    }
+
+    public void setOrgCode(String orgCode) {
+        this.orgCode = orgCode;
+    }
+
+    public String getDeptCode() {
+        return deptCode;
+    }
+
+    public void setDeptCode(String deptCode) {
+        this.deptCode = deptCode;
+    }
+
+    public String getStatusValid() {
+        return statusValid;
+    }
+
+    public void setStatusValid(String statusValid) {
+        this.statusValid = statusValid;
     }
 }

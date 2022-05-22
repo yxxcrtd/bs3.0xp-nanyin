@@ -1,5 +1,7 @@
 package com.joyintech.tams.common.base.entity;
 
+import java.util.Date;
+
 public class ChbInvestTradeErrordataWithBLOBs extends ChbInvestTradeErrordata {
     /**
      * 行内资产/负债编码
@@ -9,7 +11,7 @@ public class ChbInvestTradeErrordataWithBLOBs extends ChbInvestTradeErrordata {
     /**
      * 交易日
      */
-    private String dealdate;
+    private Date dealdate;
 
     /**
      * 原始数据
@@ -20,6 +22,14 @@ public class ChbInvestTradeErrordataWithBLOBs extends ChbInvestTradeErrordata {
      * 错误信息
      */
     private String errMsg;
+    /**
+     * 产品登记编码
+     */
+    private String regCode;
+    /**
+     * 交易对手方
+     */
+    private String tradeCounter;
 
     /**
      * 取得 行内资产/负债编码
@@ -41,7 +51,7 @@ public class ChbInvestTradeErrordataWithBLOBs extends ChbInvestTradeErrordata {
      * 取得 交易日
      * @return 交易日
      */
-    public String getDealdate() {
+    public Date getDealdate() {
         return dealdate;
     }
 
@@ -49,8 +59,8 @@ public class ChbInvestTradeErrordataWithBLOBs extends ChbInvestTradeErrordata {
      * 设置 交易日
      * @param dealdate 交易日
      */
-    public void setDealdate(String dealdate) {
-        this.dealdate = dealdate == null ? null : dealdate.trim();
+    public void setDealdate(Date dealdate) {
+        this.dealdate = dealdate == null ? null : dealdate;
     }
 
     /**
@@ -83,5 +93,21 @@ public class ChbInvestTradeErrordataWithBLOBs extends ChbInvestTradeErrordata {
      */
     public void setErrMsg(String errMsg) {
         this.errMsg = errMsg == null ? null : errMsg.trim();
+    }
+
+    public String getRegCode() {
+        return regCode;
+    }
+
+    public void setRegCode(String regCode) {
+        this.regCode = regCode;
+    }
+
+    public String getTradeCounter() {
+        return tradeCounter;
+    }
+
+    public void setTradeCounter(String tradeCounter) {
+        this.tradeCounter = tradeCounter;
     }
 }

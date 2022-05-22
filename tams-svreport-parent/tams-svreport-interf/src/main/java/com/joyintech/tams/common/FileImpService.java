@@ -47,6 +47,7 @@ import com.joyintech.tams.report.interf.common.service.InterfService;
 import com.joyintech.tams.report.interf.common.util.InterfUtil;
 import com.joyintech.tams.report.interf.common.util.SftpUtil;
 import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
@@ -589,7 +590,68 @@ public abstract class FileImpService extends InterfService{
 //        chbInterfErrodataMapper.insert(data);
         return listError;
     }
+    /**
+     * 数据校验
+     * @param infoList 解析的数据list
+     * @param fireName 文件名称
+     * @param interfType 接口类型
+     * @param dataType 检查数据类型
+     * @param checkEuplicatedKeys 重复性检查的keys
+     * @Param bussinessKey 业务主键用于关联错误信息
+     * @return 返回待处理数据
+     */
+    public List<Map<String, String>> checkData(List<ExcelValidDto> excelValidDtoList,boolean deleteFlag, List<Map<String,String>> infoList,String fireName,
+                                               String interfType,String dataType,String bussinessKey,String... checkEuplicatedKeys ){
+        /**start 新增删除逻辑  add  by  dongxiangyang 20201017    */
+        //根据业务主键和类型进行删除
+        List<String>  listMap=infoList.stream().map(map -> {
+            if(StringUtil.isEmpty(bussinessKey) || StringUtil.isEmpty(map.get(bussinessKey))) {
+                StringBuffer keyVFinal = new StringBuffer();
+                for(String key: checkEuplicatedKeys){
+                    keyVFinal.append(map.get(key));
+                    keyVFinal.append("|");
+                }
+                return keyVFinal.toString();
+            }
+            return map.get(bussinessKey);
+        }).collect(Collectors.toList());
+        deletAllErroData(listMap, interfType);
+        /**end 新增删除逻辑  add  by  dongxiangyang 20201017    */
+        List<Map<String, String>> listDupError = DataCheckService.checkDuplicatedData(excelValidDtoList,infoList, checkEuplicatedKeys);
+        //总部或分支机构信息登记表SUB双独立业务主键重复校验特殊处理
+        if(dataType.equals("CHB_SALER_INST_SUB")) {
+            List<Map<String, String>> SalerInsNameListError = DataCheckService.checkDuplicatedData(infoList, new String[]{"SALER_ORG_NAME"});
+            if(SalerInsNameListError.size() != 0){
+                for (Map<String, String> erro : SalerInsNameListError) {
+                    listDupError.add(erro);
+                }
+            }
+        }
+        // add by zhangliang 20210418 TMP调用SUB校验配置 start
+        List<CheckRule> listRules = dataCheckService.queryCheckRules(ChbCheckTableInfo.genDataType(dataType));
+        // add by zhangliang 20210418 TMP调用SUB校验配置 end
+        List<Map<String, String>> listError = DataCheckService.checkDataList(excelValidDtoList,infoList,listRules, deleteFlag);
 
+        // 将重复项入库
+        if (deleteFlag && CollectionUtils.isNotEmpty(listError)){
+            listDupError.addAll(listError);
+        }
+        ChbInterfErrodataWithBLOBs data=null;
+//        StringBuffer bf=null;
+        List<ChbInterfErrodataWithBLOBs> erroList=new ArrayList<ChbInterfErrodataWithBLOBs>();
+        for(Map<String, String> erro:listDupError){
+            data = createChbInterfErrdata(fireName, interfType, erro, bussinessKey, checkEuplicatedKeys);
+            if(data != null) {
+                erroList.add(data);
+            }
+        }
+        if(!erroList.isEmpty()){
+            insertErroData(erroList);
+        }
+//        chbInterfErrodataMapper.deleteByPrimaryKey(data.getDataid());
+//        chbInterfErrodataMapper.insert(data);
+        return listError;
+    }
     /**
      * 根据错误消息创建需要入库的Dto
      *
@@ -672,6 +734,40 @@ public abstract class FileImpService extends InterfService{
 
         return infoList;
     }
+
+    /**
+     * add by wubingbing 20220521
+     * @param infoList
+     * @param fireName
+     * @param checkTableInfo
+     * @param coverFlag
+     * @return
+     */
+    public List<Map<String, String>> checkDataCodeCheck(List<Map<String,String>> infoList, String fireName, ChbCheckTableInfo checkTableInfo,String coverFlag) {
+        // 配置脚本校验
+        checkData(false, infoList, fireName, checkTableInfo.getTableName(), checkTableInfo.getTableName(), checkTableInfo.getBussinessKey(), checkTableInfo.getCheckEuplicatedKeys());
+        // 代码校验
+        commonCodeCheckBatchService.codeCheckCommon(infoList, checkTableInfo, fireName,coverFlag);
+
+        return infoList;
+    }
+    /**
+     * add by wubingbing 20220522
+     * @param infoList
+     * @param fireName
+     * @param checkTableInfo
+     * @param coverFlag
+     * @return
+     */
+    public List<ExcelValidDto> checkImportData(List<ExcelValidDto> excelValidDtoList,List<Map<String,String>> infoList, String fireName, ChbCheckTableInfo checkTableInfo,String coverFlag) {
+        // 配置脚本校验
+        checkData(excelValidDtoList,false, infoList, fireName, checkTableInfo.getTableName(), checkTableInfo.getTableName(), checkTableInfo.getBussinessKey(), checkTableInfo.getCheckEuplicatedKeys());
+        // 代码校验
+        commonCodeCheckBatchService.codeCheckCommon(excelValidDtoList,infoList, checkTableInfo, fireName,coverFlag);
+
+        return excelValidDtoList;
+    }
+
 
     /**
      * 功能:数据入库
@@ -905,6 +1001,25 @@ public abstract class FileImpService extends InterfService{
      * @param fileLists
      */
     public abstract String importDB(List<Map<String, String>> listData,InterfFile interfFile, String date);
+    /**
+     * add by wubingbing 20220522
+     * @param listData
+     * @param date
+     * @return
+     */
+    public List<ExcelValidDto> importDB(List<Map<String, String>> listData, String date){return null;}
+
+    /**
+     * add by wubingbing 20220521
+     * @param listData
+     * @param interfFile
+     * @param date
+     * @param coverFlag 是否覆盖
+     * @return
+     */
+    public  String importDB(List<Map<String, String>> listData,InterfFile interfFile, String date,String coverFlag){
+        return null;
+    }
 
     public void clearFile(InterfFile interfFile){
         // ftp文件移动
