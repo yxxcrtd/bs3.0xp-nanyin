@@ -27,7 +27,6 @@
         <module>tams-disclosure-common</module>
         <module>tams-disclosure-interf</module>
         <module>tams-disclosure-parent</module>
-        <module>tams-invest-common</module>
         <!--        清结算共通包-->
         <module>tams-svreport-common</module>
         <module>tams-svreport-parent</module>
