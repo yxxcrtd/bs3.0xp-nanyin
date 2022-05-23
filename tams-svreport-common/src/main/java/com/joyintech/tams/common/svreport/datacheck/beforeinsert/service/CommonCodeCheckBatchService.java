@@ -238,7 +238,7 @@ public class CommonCodeCheckBatchService {
     private void checkChbInvestTrade(List<ExcelValidDto> list,Map<String, String> map,int i) {
         String var1=map.getOrDefault("ERRMSG", "");
 
-        if("CNY".equals(map.get("CCY"))&&Double.valueOf(map.get("AMT"))!=Double.valueOf(map.get("CNY_AMT"))){
+        if("CNY".equals(map.get("CCY"))&&!Double.valueOf(map.get("AMT")).equals(Double.valueOf(map.get("CNY_AMT")))){
             if(var1.equals("")){
                 list.add (new ExcelValidDto("0未导入",String.valueOf(i+2),var1+"当币种选择人民币时，发生金额应等于折算人民币金额;"));
             }else{
@@ -710,6 +710,13 @@ public class CommonCodeCheckBatchService {
                 insertErroData(erroList);
             }
         }else{
+            Iterator<ChbInvestTradeErrordataWithBLOBs> it = chbInvestTradeErrordataList.iterator();
+            while(it.hasNext()){
+                ChbInvestTradeErrordataWithBLOBs chbInvestTradeErrordataWithBLOBs = it.next();
+                if(chbInvestTradeErrordataWithBLOBs.getErrMsg().substring(0,4).equals("重复数据")){
+                    it.remove();
+                }
+            }
             if(coverFlag.equals("N")){
                 removeExistsChbInvestTrade(chbInvestTradeErrordataList);
             }

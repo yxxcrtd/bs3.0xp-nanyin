@@ -237,8 +237,8 @@
             <if test="search !=null and  search !='' ">
                 CUSTOMER_NAME LIKE CONCAT('%',#{search}, '%')
             </if>
-            <if test="tradeCounter !=null and  tradeCounter !='' ">
-                and CUSTOMER_ID = #{tradeCounter}
+            <if test="initValue != null and initValue != ''">
+                and CUSTOMER_ID = #{initValue}
             </if>
         </where>
     </select>

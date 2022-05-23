@@ -14,6 +14,7 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.dto.ChbPrdBaseInfoDto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.service.ChbPrdBaseInfoService;
+import com.joyintech.tams.svreport.interf.chb.proddeclare.dto.ChbPrdDeclareInfoDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
@@ -136,5 +137,16 @@ public class ChbPrdBaseInfo002Contreoller extends BaseController {
     public Page<SelectOptionDto> getProdInsId()
     {
         return chbPrdBaseInfoService.getProdInsId(RequestUtil.getPageParam());
+    }
+
+    /**
+     * 产品申报信息
+     * @param prodInsId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/selectChbPrdDeclareByProdInsId")
+    public ChbPrdDeclareInfoDto selectChbPrdDeclareByProdInsId(String prodInsId){
+        return chbPrdBaseInfoService.selectChbPrdDeclareByProdInsId(prodInsId);
     }
 }

@@ -27,9 +27,12 @@ import com.joyintech.tams.report.common.dao.ChbInfoMgrResultConfigMapper;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.dao.ChbPrdBaseInfoDao;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.dto.ChbPrdBaseInfoDto;
 import com.joyintech.tams.svreport.chb.common.util.ErrdataConvertUtil;
+import com.joyintech.tams.svreport.interf.chb.proddeclare.dao.ChbPrdDeclareInfoMapper;
+import com.joyintech.tams.svreport.interf.chb.proddeclare.dto.ChbPrdDeclareInfoDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,6 +57,8 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
     private ChbPrdBaseInfoFileImpService chbPrdBaseInfoFileImpService;
     @Autowired
     private ChbInfoMgrResultConfigMapper chbInfoMgrResultConfigMapper;
+    @Autowired
+    private ChbPrdDeclareInfoMapper chbPrdDeclareInfoMapper;
     @Override
     @Transactional
     public void doComplete(ChbPrdBaseInfoDto entity, OperationType type) {
@@ -168,10 +173,20 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
 
             list.add(subMap);
         }
-
+        for (ChbInfoMgrResultConfig config : chbInfoMgrResultConfigList) {
+            if(!StringUtils.isEmpty(config.getResultdictCode())){
+                for (Map<String, String> m : list) {
+                    m.put(config.getRealColumnId(),m.get(config.getRealColumnId()).split(" ")[0]);
+                }
+            }
+        }
         return list;
     }
     public Page<SelectOptionDto> getProdInsId(Map<String, Object> param) {
         return queryForPageForSelectReturn(Integer.parseInt(null == param.get("page")?"1":(String) param.get("page")), Integer.parseInt(null == (String) param.get("length")?"1":(String) param.get("length")),()->chbPrdBaseInfoDao.getProdInsId(param));
+    }
+
+    public ChbPrdDeclareInfoDto selectChbPrdDeclareByProdInsId(String prodInsId) {
+        return chbPrdDeclareInfoMapper.selectByProdInsId(prodInsId);
     }
 }

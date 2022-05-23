@@ -179,7 +179,7 @@
                                data-th-text="#{ChbInvestTrade001.tradeCounter}">交易对手</label>
                         <div class="layui-input-inline input-inline">
                             <select type="text" id="tradeCounter" name="tradeCounter" class="layui-input form-input input-select"
-                                   data-th-data-url='@{/chb/businessdatamaintain/chbinvesttrade/chbinvesttrade001/getCustomerName(tradeCounter=${entity?.tradeCounter})}'
+                                   data-th-data-url='@{/chb/businessdatamaintain/chbinvesttrade/chbinvesttrade001/getCustomerName}'
                                    placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" formatoption = "false"
                                    data-th-initValue="${entity?.tradeCounter}" required>
                             </select>
@@ -286,6 +286,7 @@
                         </div>
                         <input type="hidden"  id="statusValid" name="statusValid" class="layui-input form-input" data-th-value="${entity?.statusValid}">
                         <input type="hidden"  id="tradeSeqno" name="tradeSeqno" class="layui-input form-input" data-th-value="${entity?.tradeSeqno}">
+
                     </div>
                 </div>
             </div>

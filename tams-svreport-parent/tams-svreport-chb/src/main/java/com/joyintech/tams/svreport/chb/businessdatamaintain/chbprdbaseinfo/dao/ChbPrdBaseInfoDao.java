@@ -39,5 +39,5 @@ public interface ChbPrdBaseInfoDao {
 
     void deleteData();
 
-    void getProdInsId(Map<String, Object> param);
+    List<SelectOptionDto> getProdInsId(Map<String, Object> param);
 }

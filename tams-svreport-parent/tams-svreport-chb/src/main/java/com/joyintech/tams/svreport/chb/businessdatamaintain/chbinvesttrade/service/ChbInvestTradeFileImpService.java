@@ -19,6 +19,7 @@ import com.joyintech.tams.svreport.chb.businessdatamaintain.chbinvesttrade.dto.C
 import com.joyintech.tams.svreport.interf.chb.subjectbalance.dao.ChbSubjectBalanceInterfMapper;
 import com.joyintech.tams.svreport.interf.chb.subjectbalance.dto.BokBalance;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -60,7 +61,10 @@ public class ChbInvestTradeFileImpService extends FileImpService {
         String tmpPath =  SvrDataUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY, GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
         //转换实体类
         List<ChbInvestTradeDto> chbInvestTradeDtoList = (List<ChbInvestTradeDto>)convertMapToEntity(listData, ChbInvestTradeDto.class);
-
+        chbInvestTradeDtoList.forEach(e->{
+            e.setCreateUser(CommonUtil.getUserName());
+            e.setUpdateUser(CommonUtil.getUserName());
+        });
         if(InterfConstants.SAVEFLAG_ADD.equals(saveFlag)){
             //增量
             mergeData(chbInvestTradeDtoList);
@@ -156,13 +160,6 @@ public class ChbInvestTradeFileImpService extends FileImpService {
         }
 
         list = checkImportData(list,listData, "CHB_INVEST_TRADE", ChbCheckTableInfo.投资交易信息表,coverFlag);
-        Iterator<Map<String, String>> it = listData.iterator();
-        while(it.hasNext()){
-            Map<String, String> map = it.next();
-            if(StringUtils.isNotEmpty(map.get("ERRMSG"))&&map.get("ERRMSG").substring(0,4).equals("重复数据")){
-                it.remove();
-            }
-        }
         saveData(listData,null,null);
         return list;
     }
