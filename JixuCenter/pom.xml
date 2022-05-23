@@ -31,7 +31,6 @@
 		<!-- <module>JixuDataCenter</module> -->
 		<module>jixu</module>
     	<module>JixuUtil</module>
-    	<module>JixuAdapter</module>
 		<module>JixuApi</module>
 		<module>JixuCommon</module>
     </modules>
