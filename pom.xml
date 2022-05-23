@@ -30,19 +30,13 @@
         <!--        清结算共通包-->
         <module>tams-svreport-common</module>
         <module>tams-svreport-parent</module>
-        <module>tams-valuation-api</module>
-        <module>tams-valuation-common</module>
-        <module>tams-valuation-basicdata</module>
-        <module>tams-valuation-parent</module>
 <!--        <module>tams-valuation-report</module>-->
 
         <!-- 批处理  -->
         <module>tams-disclosure-batch</module>
-        <module>tams-valuation-batch</module>
         <module>tams-svreport-batch</module>
 
         <!-- 接口 -->
-        <module>tams-valuation-interf</module>
 
 		<!--         微服务 -->
         <module>microservice/service-chb</module>
@@ -52,28 +46,17 @@
 <!--         <module>microservice/service-interf</module> -->
         <module>microservice/service-pbc</module>
         <module>microservice/service-svrcom</module>
-        <module>microservice/service-valuation</module>
-        <module>microservice/service-valuation-basicdata</module>
 <!--        <module>microservice/service-exchange</module>-->
 <!--        <module>microservice/service-quote-new</module>-->
 <!--         几许中心包 -->
-        <module>JixuCenter</module>
 
         <module>microservice/tams-service-container-yunying</module>
 
         <module>tams-system/yunying/app</module>
         <module>tams-system/yunying/batch</module>
-
-        <module>tams-common-basicdata</module>
-        <module>microservice/service-common-basicdata</module>
-
         <!-- 组件  -->
         <module>background-component/component-check</module>
         <module>background-component/component-common</module>
         <module>background-component/msg-generate</module>
-        <module>microservice/service-valuation-valmodel</module>
-        <module>microservice/service-valuation-lossmodel</module>
-        <module>tams-valuation-batch-valmodel</module>
-        <module>tams-valuation-batch-lossmodel</module>
     </modules>
 </project>
