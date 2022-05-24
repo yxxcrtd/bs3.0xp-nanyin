@@ -960,7 +960,10 @@
       left join FIN_PRODUCT_ADD AD on D.REP_FINPROD_ID = AD.FINPROD_ID
       where nvl(nvl(D.UPDATE_TIME,D.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd'))> #{updatetime,jdbcType=TIMESTAMP}
     </select>
-   <insert id="mergeInfoList"
+    <select id="selectByProdInsId" resultMap="BaseResultMap">
+       select <include refid="Base_Column_List"/> from CHB_PRD_DECLARE_INFO where PROD_INS_ID = #{prodInsId}
+    </select>
+    <insert id="mergeInfoList"
 		parameterType="com.joyintech.tams.svreport.interf.chb.proddeclare.dto.ChbPrdDeclareInfoDto">
 		MERGE INTO CHB_PRD_DECLARE_INFO CII
 		USING (

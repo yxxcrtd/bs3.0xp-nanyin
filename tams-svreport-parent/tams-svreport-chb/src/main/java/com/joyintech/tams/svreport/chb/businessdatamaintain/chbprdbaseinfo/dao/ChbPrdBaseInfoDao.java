@@ -2,7 +2,9 @@ package com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.dao;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.tams.common.base.entity.ChbPrdBaseinfoErrordataWithBLOBs;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.dto.ChbPrdBaseInfoDto;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -32,4 +34,10 @@ public interface ChbPrdBaseInfoDao {
     List<ChbPrdBaseInfoDto> queryForList(String[] split);
 
     void updateIssuingStatus(ChbPrdBaseInfoDto dto);
+
+    void mergeData(@Param("list") List<ChbPrdBaseInfoDto> subList);
+
+    void deleteData();
+
+    List<SelectOptionDto> getProdInsId(Map<String, Object> param);
 }

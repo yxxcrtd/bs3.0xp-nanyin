@@ -41,10 +41,11 @@ $(function() {
                 function(){table.reload();});
         },
 
-        searchOnInit: false,
-        cellMinWidth:100 ,
+
         cols:[
-            {field:'statusValidStr', sortable:false, width:100, title: 'ChbInvestTrade001.status'}
+            {field:'tradeSeqno',visible:false}
+            ,{field:'statusValid',visible:false}
+            ,{field:'statusValidStr', sortable:false, width:100, title: 'ChbInvestTrade001.status'}
             ,{field:'prodId',sortable:false,width:100,  title: 'ChbInvestTrade001.prodId'}
             ,{field:'regCode', sortable:false,width:120,  title: 'ChbInvestTrade001.regCode'}
             ,{field:'registBankCode',sortable:false,width:120,title: 'ChbInvestTrade001.registBankCode'}
@@ -55,10 +56,10 @@ $(function() {
             ,{field:'amt', sortable:false, width:100,title: 'ChbInvestTrade001.amt'}
             ,{field:'cnyAmt', sortable:false, width:100, title: 'ChbInvestTrade001.cnyAmt'}
             ,{field:'num',sortable:false,   width:50,title: 'ChbInvestTrade001.num'}
-            ,{field:'statusValidStr',sortable:false,width:100, title: 'ChbInvestTrade001.assetMethod'}
+            ,{field:'assetMethodStr',sortable:false,width:100, title: 'ChbInvestTrade001.assetMethod'}
             ,{field:'curAssetTypeStr', sortable:false,width:100,title: 'ChbInvestTrade001.curAssetType'}
 
-            ,{field:'curAssetdetType', sortable:false, width:100, title: 'ChbInvestTrade001.curAssetdetType'}
+            ,{field:'curAssetdetType', sortable:false, width:100, title: '资金流动类型说明'}
             ,{field:'dealdateStr',sortable:false,width:160,  title: 'ChbInvestTrade001.dealdate'}
             ,{field:'tradeCounter',sortable:false,width:180,title: 'ChbInvestTrade001.tradeCounter'}
             ,{field:'rivalPartyTypeStr', sortable:false,width:100, title: 'ChbInvestTrade001.rivalPartyType'}
@@ -150,31 +151,31 @@ $(function() {
         });
       
         /** 事件绑定: 置空按钮 */
-        $("#ChbInvestTrade001_btn_reset").click(function(event){
+        $("#CchbInvestTrade001_btn_reset").click(function(event){
             reset( '#selectArea',table);
         });
 
 
         // 导入按钮
-        $('#ChbInvestTrade001_btn_import').click(function() {
+        $('#CchbInvestTrade001_btn_import').click(function() {
             Joyin.confirm("请确认是否要导入数据？", function() {
                 var options = {};
                 options.pageId = "ChbInvestTrade001";
                 options.exts = 'xls|xlsx';
                 Joyin.uploadFile(options,function(fileName) {
-                    Joyin.ajax(basePath + 'chb/businessdatamaintain/chbinvesttrade/chbinvesttrade001/checkConfirmMsgForImportData', {fileName: fileName,tableName:'CHB_INVEST_TRADE'}, function(result) {
+                    Joyin.ajax(basePath + 'chb/businessdatamaintain/chbinvesttrade/chbinvesttrade001/checkConfirmMsgForImportData', {fileName: fileName}, function(result) {
                         if ($.isArray(result.joyinMessages) && result.joyinMessages.length > 0) {
                             var joyinMessages = "";
                             $.each(result.joyinMessages, function(i, joyinMessage){
                                 joyinMessages += joyinMessage.message + "<br />"
                             });
                             Joyin.confirm(joyinMessages, function(){
-                                Joyin.ajax(basePath + 'chb/businessdatamaintain/chbmstbondcreditrating/ChbInvestTrade001/importFileSave', {fileName: fileName,tableName:'CHB_INVEST_TRADE'},function () {
+                                Joyin.ajax(basePath + '/chb/businessdatamaintain/chbinvesttrade/chbinvesttrade001/importFileSave', {fileName: fileName},function () {
                                     table.reload();
                                 });
                             });
                         }else{
-                            Joyin.ajax(basePath + 'chb/businessdatamaintain/chbmstbondcreditrating/ChbInvestTrade001/importFileSave', {fileName: fileName,tableName:'CHB_INVEST_TRADE'},function () {
+                            Joyin.ajax(basePath + '/chb/businessdatamaintain/chbinvesttrade/chbinvesttrade001/importFileSave', {fileName: fileName},function () {
                                 table.reload();
                             });
                         }

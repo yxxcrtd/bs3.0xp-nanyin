@@ -25,7 +25,7 @@ public interface ChbInvestTradeDao {
 
     Map<String,String> selectProdIdAndRegCodeByProdName(String prodName);
 
-    ChbInvestTradeDto selectByKey(@Param("tradeCode") String tradeCode,@Param("prodId") String prodId,@Param("assetCode") String assetCode);
+    ChbInvestTradeDto selectByKey(@Param("tradeSeqno") String tradeSeqno);
 
     Map<String,String> selectAssetNameByAssetCode(String assetCode);
 
@@ -36,4 +36,10 @@ public interface ChbInvestTradeDao {
     List<ChbInvestTradeDto> selectAll(Map<String, Object> pageParam);
 
     Map<String, String> selectRivalPartyType(String tradeCounter);
+
+    void mergeData(@Param("list") List<ChbInvestTradeDto> subList);
+
+    void deleteData();
+
+    int countDuplicatedData(@Param("list") List<Map<String, String>> list);
 }

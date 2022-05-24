@@ -16,6 +16,16 @@
 				<div class="pro-module-item pro-item-wrap">
 					<div class="layui-form-item">
 						<div class="form-inline-wrap">
+							<label class="layui-form-label form-label-wrap" data-th-text="#{CchbPrdBaseInfo001.prodInsId}">行内标识码</label>
+							<div class="layui-input-inline input-inline">
+								<select type="text" id="prodInsId" name="prodInsId" class="layui-input form-input input-select"
+										data-th-data-url='@{/chb/businessdatamaintain/chbprdbaseinfo/chbprdbaseinfo002/getProdInsId(prodInsId=${entity?.prodInsId})}'
+										placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" formatoption = "false"
+										data-th-initValue="${entity?.prodInsId}" required>
+								</select>
+							</div>
+						</div>
+						<div class="form-inline-wrap">
 							<label class="layui-form-label form-label-wrap" data-th-text="#{CchbPrdBaseInfo001.prodId}">产品代码</label>
 							<div class="layui-input-inline input-inline">
 								<input type="text" name="prodId" id="prodId" required
@@ -40,7 +50,7 @@
 							<label class="layui-form-label form-label-wrap" data-th-text="#{CchbPrdBaseInfo001.regCode}">产品登记编码</label>
 							<div class="layui-input-inline input-inline">
 								<input type="text" name="regCode" id="regCode"
-									   data-th-value="${entity?.regCode}" required
+									   data-th-value="${entity?.regCode}" required disabled
 									   class="layui-input form-input" placeholder="请输入内容"
 									   data-th-placeholder="#{SysCommon.placeholder}" >
 							</div>

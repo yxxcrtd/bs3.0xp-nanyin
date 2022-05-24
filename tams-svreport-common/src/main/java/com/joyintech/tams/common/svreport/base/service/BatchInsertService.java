@@ -175,7 +175,7 @@ public class BatchInsertService {
                 File tmpFile = new SafelyFile(absoultPath);
                 try {
                     FileUtils.writeLines(tmpFile, "UTF-8", content);
-                    exeLoadData(tmpPath, table);
+                    exeLoadData(absoultPath, table);
                 }catch(Exception e){
                     logger.error(e.getMessage(), e);
                 }finally {
@@ -193,7 +193,7 @@ public class BatchInsertService {
                     File tmpFile = new SafelyFile(absoultPath);
                     try {
                         FileUtils.writeLines(tmpFile, "UTF-8", newDataList.subList(0, reportInterfOneTimeSqlLdrDataCount));
-                        exeLoadData(tmpPath, table);
+                        exeLoadData(absoultPath, table);
                     }catch(Exception e){
                         logger.error(e.getMessage(), e);
                     }finally {
@@ -209,7 +209,7 @@ public class BatchInsertService {
                     File tmpFile = new SafelyFile(absoultPath);
                     try {
                         FileUtils.writeLines(tmpFile, "UTF-8", newDataList);
-                        exeLoadData(tmpPath, table);
+                        exeLoadData(absoultPath, table);
                     }catch(Exception e){
                         logger.error(e.getMessage(), e);
                     }finally {
@@ -265,12 +265,8 @@ public class BatchInsertService {
      * @see
      * @since 1.0
      */
-    public void exeLoadData(String tmpPath, ImpTable table) {
+    public void exeLoadData(String absoultPath, ImpTable table) {
 
-        Collection<File> files = FileUtils.listFiles(new File(tmpPath),
-                new String[] {"txt"}, false);
-        String absoultPath = null;
-        logger.info("size:"+files.size());
         List<ImpColumn> array = table.getColumns();
         List<String> colunm = new ArrayList<>();
         List<String> colunmDeal = new ArrayList<>();
@@ -288,26 +284,28 @@ public class BatchInsertService {
         try {
             Class.forName(driverName);
             conn = DriverManager.getConnection(url, userName, password);
-            for (File file : files) {
-                absoultPath = file.getAbsolutePath();
-                /*secure-file-priv特性
-                secure-file-priv参数是用来限制LOAD DATA, SELECT ... OUTFILE, and LOAD_FILE()传到哪个指定目录的
-                secure-file-priv的值为null ，表示限制mysqld 不允许导入|导出
-                当secure_file_priv的值为/tmp/ ，表示限制mysqld 的导入|导出只能发生在/tmp/目录下
-                当secure_file_priv的值没有具体值时，表示不对mysqld 的导入|导出做限制
-                查询命令：show global variables like '%secure%';
-                */
-                String sql = "LOAD DATA LOCAL INFILE '"+absoultPath +"' IGNORE INTO TABLE " + table.getName() + " CHARACTER SET utf8 FIELDS TERMINATED  BY '|' LINES TERMINATED BY '\r\n' (" + insertColumnName + ") set " + insertColumnNameDeal;
-                logger.info("----------------sql:"+sql);
-                fileInputStream = new FileInputStream(file);
-                //批量插入数据。
-                long beginTime = System.currentTimeMillis();
-                int rows = 0;
-                PreparedStatement statement = conn.prepareStatement(sql);
-                rows = bulkLoadFromInputStream(statement, fileInputStream);
-                long endTime = System.currentTimeMillis();
-                logger.info(" LOAD DATA LOCAL INFILE :【插入" + rows + "行数据至MySql中，耗时" + (endTime - beginTime) + "ms。】");
-            }
+            File file = FileUtils.getFile(absoultPath);
+            /*secure-file-priv特性
+            secure-file-priv参数是用来限制LOAD DATA, SELECT ... OUTFILE, and LOAD_FILE()传到哪个指定目录的
+            secure-file-priv的值为null ，表示限制mysqld 不允许导入|导出
+            当secure_file_priv的值为/tmp/ ，表示限制mysqld 的导入|导出只能发生在/tmp/目录下
+            当secure_file_priv的值没有具体值时，表示不对mysqld 的导入|导出做限制
+            查询命令：show global variables like '%secure%';
+            */
+            String line = System.getProperty("os.name").toLowerCase().contains("windows")?"'\r\n'":"'\n'";
+            String sql = "LOAD DATA LOCAL INFILE '"+absoultPath +"' IGNORE INTO TABLE " + table.getName() + " CHARACTER SET utf8 FIELDS TERMINATED  BY '|' LINES TERMINATED BY "+line+" (" + insertColumnName + ") set " + insertColumnNameDeal;
+            String sql1 = "LOAD DATA LOCAL INFILE '"+absoultPath +"' IGNORE INTO TABLE " + table.getName() + " CHARACTER SET utf8 FIELDS TERMINATED  BY '|' LINES TERMINATED BY '\r\n' (" + insertColumnName + ") set " + insertColumnNameDeal;
+
+            logger.info("----------------sql:"+sql);
+            fileInputStream = new FileInputStream(file);
+            //批量插入数据。
+            long beginTime = System.currentTimeMillis();
+            int rows = 0;
+            PreparedStatement statement = conn.prepareStatement(sql);
+            rows = bulkLoadFromInputStream(statement, fileInputStream);
+            long endTime = System.currentTimeMillis();
+            logger.info(" LOAD DATA LOCAL INFILE :【插入" + rows + "行数据至MySql中，耗时" + (endTime - beginTime) + "ms。】");
+
         }catch (Exception e){
             logger.error("LOAD DATA 异常----");
             logger.error(e.getMessage(),e);

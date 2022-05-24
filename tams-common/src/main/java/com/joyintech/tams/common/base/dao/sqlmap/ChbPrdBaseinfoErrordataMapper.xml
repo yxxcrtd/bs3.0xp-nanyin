@@ -13,10 +13,10 @@
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
     </resultMap>
     <resultMap id="ResultMapWithBLOBs" type="com.joyintech.tams.common.base.entity.ChbPrdBaseinfoErrordataWithBLOBs" extends="BaseResultMap" >
-        <result column="RAISE_VDATE" property="raiseVdate" jdbcType="LONGVARCHAR" />
-        <result column="VDATE" property="vdate" jdbcType="LONGVARCHAR" />
-        <result column="ORG_DATA" property="orgData" jdbcType="LONGVARCHAR" />
-        <result column="ERR_MSG" property="errMsg" jdbcType="LONGVARCHAR" />
+        <result column="RAISE_VDATE" property="raiseVdate" jdbcType="DATE" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="ORG_DATA" property="orgData" jdbcType="CLOB" />
+        <result column="ERR_MSG" property="errMsg" jdbcType="CLOB" />
     </resultMap>
     <sql id="Base_Column_List" >
         DATAUUID DATAUUID, PROD_ID PROD_ID, PROD_NAME PROD_NAME, STATUS STATUS, CREATE_USER CREATE_USER, 
@@ -30,14 +30,14 @@
         <include refid="com.joyintech.tams.common.base.dao.ChbPrdBaseinfoErrordataMapper.Base_Column_List" />
         ,
         <include refid="com.joyintech.tams.common.base.dao.ChbPrdBaseinfoErrordataMapper.Blob_Column_List" />
-        from chb_prd_baseinfo_errordata
+        from chb_invest_trade_errodata
     </sql>
     <sql id="Sql_All_Effective_Data" >
         select 
         <include refid="com.joyintech.tams.common.base.dao.ChbPrdBaseinfoErrordataMapper.Base_Column_List" />
         ,
         <include refid="com.joyintech.tams.common.base.dao.ChbPrdBaseinfoErrordataMapper.Blob_Column_List" />
-        from chb_prd_baseinfo_errordata
+        from chb_invest_trade_errodata
         where STATUS = 'E'
     </sql>
     <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
@@ -45,27 +45,28 @@
         <include refid="com.joyintech.tams.common.base.dao.ChbPrdBaseinfoErrordataMapper.Base_Column_List" />
         ,
         <include refid="com.joyintech.tams.common.base.dao.ChbPrdBaseinfoErrordataMapper.Blob_Column_List" />
-        from chb_prd_baseinfo_errordata
+        from chb_invest_trade_errodata
         where DATAUUID = #{datauuid,jdbcType=CHAR}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
-        delete from chb_prd_baseinfo_errordata
+        delete from chb_invest_trade_errodata
         where DATAUUID = #{datauuid,jdbcType=CHAR}
     </delete>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfoErrordataWithBLOBs" >
-        insert into chb_prd_baseinfo_errordata (DATAUUID, PROD_ID, PROD_NAME, 
+        insert into chb_prd_baseinfo_errodata (DATAUUID, PROD_ID, PROD_NAME,REG_CODE,CUSTOMER_TYPE,ISSUING_STATUS,
             STATUS, CREATE_USER, CREATE_DEPT, 
             CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
             RAISE_VDATE, VDATE, ORG_DATA, 
             ERR_MSG)
-        values (#{datauuid,jdbcType=CHAR}, #{prodId,jdbcType=VARCHAR}, #{prodName,jdbcType=VARCHAR}, 
+        values (#{datauuid,jdbcType=CHAR}, #{prodId,jdbcType=VARCHAR}, #{prodName,jdbcType=VARCHAR},
+            #{regCode,jdbcType=VARCHAR},#{customerType,jdbcType=VARCHAR},#{issuingStatus,jdbcType=VARCHAR},
             #{status,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
             #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
             #{raiseVdate,jdbcType=LONGVARCHAR}, #{vdate,jdbcType=LONGVARCHAR}, #{orgData,jdbcType=LONGVARCHAR}, 
             #{errMsg,jdbcType=LONGVARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfoErrordataWithBLOBs" >
-        insert into chb_prd_baseinfo_errordata
+        insert into chb_invest_trade_errodata
         <trim prefix="(" suffix=")" suffixOverrides="," >
             <if test="datauuid != null" >
                 DATAUUID,
@@ -150,17 +151,17 @@
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfoErrordataWithBLOBs" >
-        insert into chb_prd_baseinfo_errordata(DATAUUID, PROD_ID, PROD_NAME, STATUS, CREATE_USER, 
+        insert into chb_invest_trade_errodata(DATAUUID, PROD_ID, PROD_NAME, STATUS, CREATE_USER,
         CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, RAISE_VDATE, VDATE, ORG_DATA, 
         ERR_MSG)
         select DATAUUID, PROD_ID, PROD_NAME, #{status,jdbcType=VARCHAR} STATUS, CREATE_USER, 
             CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, RAISE_VDATE, VDATE, ORG_DATA, 
             ERR_MSG
-             from chb_prd_baseinfo_errordata
+             from chb_invest_trade_errodata
              where STATUS = 'E' and DATAUUID = #{datauuid,jdbcType=CHAR}
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfoErrordataWithBLOBs" >
-        update chb_prd_baseinfo_errordata
+        update chb_invest_trade_errodata
         <set >
             <if test="prodId != null" >
                 PROD_ID = #{prodId,jdbcType=VARCHAR},
@@ -193,7 +194,7 @@
         where DATAUUID = #{datauuid,jdbcType=CHAR}
     </update>
     <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfoErrordataWithBLOBs" >
-        update chb_prd_baseinfo_errordata
+        update chb_invest_trade_errodata
         set PROD_ID = #{prodId,jdbcType=VARCHAR},
             PROD_NAME = #{prodName,jdbcType=VARCHAR},
             STATUS = #{status,jdbcType=VARCHAR},
@@ -206,7 +207,7 @@
         where DATAUUID = #{datauuid,jdbcType=CHAR}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfoErrordata" >
-        update chb_prd_baseinfo_errordata
+        update chb_invest_trade_errodata
         set PROD_ID = #{prodId,jdbcType=VARCHAR},
             PROD_NAME = #{prodName,jdbcType=VARCHAR},
             STATUS = #{status,jdbcType=VARCHAR},

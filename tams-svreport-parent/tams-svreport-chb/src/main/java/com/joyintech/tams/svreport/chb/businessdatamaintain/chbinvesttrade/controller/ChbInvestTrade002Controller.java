@@ -42,7 +42,7 @@ public class ChbInvestTrade002Controller extends BaseController {
     private ChbInvestTradeService chbInvestTradeService;
     @Override
     public String init(Model model) {
-        this.setSelectOptionToModel(model, DictCode.币种);
+        this.setSelectOptionToModel(model, DictCode.币种_中债);
         this.setSelectOptionToModel(model, DictCode.资产计量方式);
         this.setSelectOptionToModel(model, DictCode.资金流动类型);
         this.setSelectOptionToModel(model, DictCode.交易对手类型);
@@ -50,6 +50,8 @@ public class ChbInvestTrade002Controller extends BaseController {
         String tradeCode = getParam("tradeCode");
         String prodId = getParam("prodId");
         String assetCode = getParam("assetCode");
+        String status = getParam("statusValid");
+        String tradeSeqno = getParam("tradeSeqno");
         ChbInvestTradeDto dto=null;
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
             dto = chbInvestTradeService.getBussinessEntityByWorkflowId(
@@ -61,7 +63,7 @@ public class ChbInvestTrade002Controller extends BaseController {
             //通过主键查询数据
 
             try {
-                dto = chbInvestTradeService.selectByKey(tradeCode,prodId,assetCode);
+                dto = chbInvestTradeService.selectByKey(tradeSeqno,status);
             } catch (Exception e) {
                 e.printStackTrace();
             }

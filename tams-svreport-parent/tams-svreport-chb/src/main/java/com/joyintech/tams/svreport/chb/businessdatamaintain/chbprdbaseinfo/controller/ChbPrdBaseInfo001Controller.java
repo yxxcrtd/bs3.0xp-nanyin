@@ -26,6 +26,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
@@ -185,5 +186,15 @@ public class ChbPrdBaseInfo001Controller extends BaseController {
 
     }
 
-
+    /**
+     * 导入数据文件之前检查数据
+     *
+     * @param fileName 导入的文件名
+     * @return 处理结果
+     */
+    @ResponseBody
+    @RequestMapping(value = "checkConfirmMsgForImportData", method = RequestMethod.POST)
+    public AjaxResult checkConfirmMsgForImportData(String fileName) throws Exception  {
+        return chbPrdBaseInfoService.checkConfirmMsgForImportData(fileName);
+    }
 }

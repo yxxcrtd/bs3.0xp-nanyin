@@ -443,7 +443,48 @@
     </select>
 
     <select id="selectAll" resultMap="BaseResultMap">
-        select <include refid="Base_Column_List"/>  from CHB_PRD_BASEINFO
+        select
+        PRODUUID,
+        PROD_ID,
+        PROD_NAME,
+        REG_CODE,
+        ISSUE_PARTY_ID,
+        RAISE_VDATE,
+        RAISE_ENDDATE,
+        VDATE,
+        MDATE,
+        MANAGE_TYPE,
+        IS_CONSTRACTE,
+        GRAD_PROPORTION,
+        YIELD_HIGH,
+        YIELD_LOW,
+        YIELD_REMARK,
+        OPEN_MODE,
+        OPEN_CIRCLE,
+        FIT_CIRCLE_DAYS,
+        OPEN_CIRCLE_DAYS,
+        RULE_COMMENT,
+        FIRST_OPEN_DAY,
+        HOLIDAY_ON_FLAG,
+        AVG_OPEN_COUNT,
+        OPEN_BUSS,
+        OPEN_BUSS_REMARK,
+        PRODTYPE,
+        CALENDAR_ID,
+        BUSI_ACCT_NO,
+        ACCT_NAME,
+        BASIC,
+        TERMINATEDATE,
+        ISSUING_STATUS,
+        FIDUCIARY_DUTY,
+        TRANSFER_TYPE,
+        CUSTOMER_TYPE,
+        ZJXT_FLAG,
+        REMARK,
+        UPDATE_TIME,
+        UPDATE_USER,
+        STATUS,
+        ERR_MSG  from CHB_PRD_BASEINFO a
         <where>
             <if test="customerTypeList != null and customerTypeList.length>0">
                 <foreach collection="customerTypeList" item="item" open="CUSTOMER_TYPE in(" separator="," close=")">
@@ -477,7 +518,85 @@
             <if test="vdateEnd!=null and vdateEnd !=''">
                 and VDATE &lt;= #{vdateEnd}
             </if>
+            and not exists (select 1 from CHB_PRD_BASEINFO_ERRODATA b where a.PROD_ID = b.PROD_ID)
+        </where>
+    union all
+        select
+        DATAUUID PRODUUID,
+        PROD_ID,
+        PROD_NAME,
+        REG_CODE,
+        null ISSUE_PARTY_ID,
+        RAISE_VDATE,
+        null RAISE_ENDDATE,
+        VDATE,
+        null MDATE,
+        null MANAGE_TYPE,
+        null IS_CONSTRACTE,
+        null GRAD_PROPORTION,
+        null YIELD_HIGH,
+        null YIELD_LOW,
+        null YIELD_REMARK,
+        null OPEN_MODE,
+        null OPEN_CIRCLE,
+        null FIT_CIRCLE_DAYS,
+        null OPEN_CIRCLE_DAYS,
+        null RULE_COMMENT,
+        null FIRST_OPEN_DAY,
+        null HOLIDAY_ON_FLAG,
+        null AVG_OPEN_COUNT,
+        null OPEN_BUSS,
+        null OPEN_BUSS_REMARK,
+        null PRODTYPE,
+        null CALENDAR_ID,
+        null BUSI_ACCT_NO,
+        null ACCT_NAME,
+        null BASIC,
+        null TERMINATEDATE,
+        ISSUING_STATUS,
+        null FIDUCIARY_DUTY,
+        null TRANSFER_TYPE,
+        CUSTOMER_TYPE,
+        null ZJXT_FLAG,
+        null REMARK,
+        UPDATE_TIME,
+        UPDATE_USER,
+        STATUS,
+        ERR_MSG
+        from CHB_PRD_BASEINFO_ERRODATA
+        <where>
+            <if test="customerTypeList != null and customerTypeList.length>0">
+                <foreach collection="customerTypeList" item="item" open="CUSTOMER_TYPE in(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="issuingStatusList != null and issuingStatusList.length>0">
+                <foreach collection="issuingStatusList" item="item" open=" and ISSUING_STATUS in(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
 
+            <if test="prodId!=null and prodId!=''">
+                and PROD_ID = #{prodId}
+            </if>
+            <if test="prodName!=null and prodName!=''">
+                and PROD_NAME = #{prodName}
+            </if>
+            <if test="regCode!=null and regCode!=''">
+                and REG_CODE = #{regCode}
+            </if>
+            <if test="raiseVdateStart!=null and raiseVdateStart!=''">
+                and RAISE_VDATE &gt;= #{raiseVdateStart}
+            </if>
+            <if test="draiseVdateEnd!=null and draiseVdateEnd !=''">
+                and RAISE_VDATE &lt;= #{draiseVdateEnd}
+            </if>
+            <if test="vdateStart!=null and vdateStart!=''">
+                and VDATE &gt;= #{vdateStart}
+            </if>
+            <if test="vdateEnd!=null and vdateEnd !=''">
+                and VDATE &lt;= #{vdateEnd}
+            </if>
         </where>
     </select>
     <select id="queryForList" resultMap="BaseResultMap">
@@ -489,6 +608,240 @@
             <foreach collection="array" item="item" open="  PROD_ID in(" separator="," close=")">
                 #{item}
             </foreach>
+        </where>
+    </select>
+
+    <insert id="mergeData">
+        insert into CHB_PRD_BASEINFO (
+        PRODUUID,
+        PROD_ID,
+        PROD_NAME,
+        REG_CODE,
+        ISSUE_PARTY_ID,
+        RAISE_VDATE,
+        RAISE_ENDDATE,
+        VDATE,
+        MDATE,
+        MANAGE_TYPE,
+        IS_CONSTRACTE,
+        GRAD_PROPORTION,
+        YIELD_HIGH,
+        YIELD_LOW,
+        YIELD_REMARK,
+        OPEN_MODE,
+        OPEN_CIRCLE,
+        OPEN_CIRCLE_DAYS,
+        RULE_COMMENT,
+        FIRST_OPEN_DAY,
+        HOLIDAY_ON_FLAG,
+        AVG_OPEN_COUNT,
+        OPEN_BUSS,
+        OPEN_BUSS_REMARK,
+        PRODTYPE,
+        CALENDAR_ID,
+        BUSI_ACCT_NO,
+        ACCT_NAME,
+        BASIC,
+        TERMINATEDATE,
+        ISSUING_STATUS,
+        FIDUCIARY_DUTY,
+        TRANSFER_TYPE,
+        CUSTOMER_TYPE,
+        ZJXT_FLAG,
+        REMARK,
+        CREATE_TIME,
+        CREATE_USER,
+        UPDATE_TIME,
+        UPDATE_USER,
+        STATUS,
+        ERR_MSG,
+        IS_TRANSFER,
+        CASH_MANA_CATE,
+        IVSTORIENTATION,
+        OPERATE_MODE,
+        FIT_CIRCLE_DAYS,
+        MANA_CATE_FIT
+        ) select * from
+        ( select TEMP.* from
+        (
+        <foreach collection="list" item="item" separator="union all">
+            select
+            #{item.produuid,jdbcType=VARCHAR} PRODUUID
+            ,#{item.prodId,jdbcType=VARCHAR} PROD_ID
+            ,#{item.prodName,jdbcType=VARCHAR} PROD_NAME
+            ,#{item.regCode,jdbcType=VARCHAR} REG_CODE
+            ,#{item.issuePartyId,jdbcType=VARCHAR} ISSUE_PARTY_ID
+            ,#{item.raiseVdate,jdbcType=TIMESTAMP} RAISE_VDATE
+            ,#{item.raiseEnddate,jdbcType=TIMESTAMP} RAISE_ENDDATE
+            ,#{item.vdate,jdbcType=TIMESTAMP} VDATE
+            ,#{item.mdate,jdbcType=TIMESTAMP} MDATE
+            ,#{item.manageType,jdbcType=VARCHAR} MANAGE_TYPE
+            ,#{item.isConstracte,jdbcType=VARCHAR} IS_CONSTRACTE
+            ,#{item.gradProportion,jdbcType=DECIMAL} GRAD_PROPORTION
+            ,#{item.yieldHigh,jdbcType=DECIMAL} YIELD_HIGH
+            ,#{item.yieldLow,jdbcType=DECIMAL} YIELD_LOW
+            ,#{item.yieldRemark,jdbcType=VARCHAR} YIELD_REMARK
+            ,#{item.openMode,jdbcType=VARCHAR} OPEN_MODE
+            ,#{item.openCircle,jdbcType=VARCHAR} OPEN_CIRCLE
+            ,#{item.openCircleDays,jdbcType=DECIMAL} OPEN_CIRCLE_DAYS
+            ,#{item.ruleComment,jdbcType=VARCHAR} RULE_COMMENT
+            ,#{item.firstOpenDay,jdbcType=TIMESTAMP} FIRST_OPEN_DAY
+            ,#{item.holidayOnFlag,jdbcType=VARCHAR} HOLIDAY_ON_FLAG
+            ,#{item.avgOpenCount,jdbcType=DECIMAL} AVG_OPEN_COUNT
+            ,#{item.openBuss,jdbcType=VARCHAR} OPEN_BUSS
+            ,#{item.openBussRemark,jdbcType=VARCHAR} OPEN_BUSS_REMARK
+            ,#{item.prodtype,jdbcType=VARCHAR} PRODTYPE
+            ,#{item.calendarId,jdbcType=VARCHAR} CALENDAR_ID
+            ,#{item.busiAcctNo,jdbcType=VARCHAR} BUSI_ACCT_NO
+            ,#{item.acctName,jdbcType=VARCHAR} ACCT_NAME
+            ,#{item.basic,jdbcType=VARCHAR} BASIC
+            ,#{item.terminatedate,jdbcType=TIMESTAMP} TERMINATEDATE
+            ,#{item.issuingStatus,jdbcType=VARCHAR} ISSUING_STATUS
+            ,#{item.fiduciaryDuty,jdbcType=VARCHAR} FIDUCIARY_DUTY
+            ,#{item.transferType,jdbcType=VARCHAR} TRANSFER_TYPE
+            ,#{item.customerType,jdbcType=VARCHAR} CUSTOMER_TYPE
+            ,#{item.zjxtFlag,jdbcType=VARCHAR} ZJXT_FLAG
+            ,#{item.remark,jdbcType=VARCHAR} REMARK
+            ,#{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME
+            ,#{item.createUser,jdbcType=VARCHAR} CREATE_USER
+            ,#{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            ,#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER
+            ,#{item.status,jdbcType=VARCHAR} STATUS
+            ,#{item.errMsg,jdbcType=VARCHAR} ERR_MSG
+            ,#{item.isTransfer,jdbcType=VARCHAR} IS_TRANSFER
+            ,#{item.cashManaCate,jdbcType=VARCHAR} CASH_MANA_CATE
+            ,#{item.ivstorientation,jdbcType=VARCHAR} IVSTORIENTATION
+            ,#{item.operateMode,jdbcType=VARCHAR} OPERATE_MODE
+            ,#{item.fitCircleDays,jdbcType=DECIMAL} FIT_CIRCLE_DAYS
+            ,#{item.manaCateFit,jdbcType=VARCHAR} MANA_CATE_FIT
+            from DUAL
+        </foreach>
+        ) TEMP
+        where not exists (select 1 from CHB_PRD_BASEINFO a where a.PROD_ID = TEMP.TEMP)
+        )a;
+
+        update CHB_PRD_BASEINFO a,(
+        select * from
+        ( select TEMP.* from
+        (
+        <foreach collection="list" item="item" separator="union all">
+            select
+            #{item.produuid,jdbcType=VARCHAR} PRODUUID
+            ,#{item.prodId,jdbcType=VARCHAR} PROD_ID
+            ,#{item.prodName,jdbcType=VARCHAR} PROD_NAME
+            ,#{item.regCode,jdbcType=VARCHAR} REG_CODE
+            ,#{item.issuePartyId,jdbcType=VARCHAR} ISSUE_PARTY_ID
+            ,#{item.raiseVdate,jdbcType=TIMESTAMP} RAISE_VDATE
+            ,#{item.raiseEnddate,jdbcType=TIMESTAMP} RAISE_ENDDATE
+            ,#{item.vdate,jdbcType=TIMESTAMP} VDATE
+            ,#{item.mdate,jdbcType=TIMESTAMP} MDATE
+            ,#{item.manageType,jdbcType=VARCHAR} MANAGE_TYPE
+            ,#{item.isConstracte,jdbcType=VARCHAR} IS_CONSTRACTE
+            ,#{item.gradProportion,jdbcType=DECIMAL} GRAD_PROPORTION
+            ,#{item.yieldHigh,jdbcType=DECIMAL} YIELD_HIGH
+            ,#{item.yieldLow,jdbcType=DECIMAL} YIELD_LOW
+            ,#{item.yieldRemark,jdbcType=VARCHAR} YIELD_REMARK
+            ,#{item.openMode,jdbcType=VARCHAR} OPEN_MODE
+            ,#{item.openCircle,jdbcType=VARCHAR} OPEN_CIRCLE
+            ,#{item.openCircleDays,jdbcType=DECIMAL} OPEN_CIRCLE_DAYS
+            ,#{item.ruleComment,jdbcType=VARCHAR} RULE_COMMENT
+            ,#{item.firstOpenDay,jdbcType=TIMESTAMP} FIRST_OPEN_DAY
+            ,#{item.holidayOnFlag,jdbcType=VARCHAR} HOLIDAY_ON_FLAG
+            ,#{item.avgOpenCount,jdbcType=DECIMAL} AVG_OPEN_COUNT
+            ,#{item.openBuss,jdbcType=VARCHAR} OPEN_BUSS
+            ,#{item.openBussRemark,jdbcType=VARCHAR} OPEN_BUSS_REMARK
+            ,#{item.prodtype,jdbcType=VARCHAR} PRODTYPE
+            ,#{item.calendarId,jdbcType=VARCHAR} CALENDAR_ID
+            ,#{item.busiAcctNo,jdbcType=VARCHAR} BUSI_ACCT_NO
+            ,#{item.acctName,jdbcType=VARCHAR} ACCT_NAME
+            ,#{item.basic,jdbcType=VARCHAR} BASIC
+            ,#{item.terminatedate,jdbcType=TIMESTAMP} TERMINATEDATE
+            ,#{item.issuingStatus,jdbcType=VARCHAR} ISSUING_STATUS
+            ,#{item.fiduciaryDuty,jdbcType=VARCHAR} FIDUCIARY_DUTY
+            ,#{item.transferType,jdbcType=VARCHAR} TRANSFER_TYPE
+            ,#{item.customerType,jdbcType=VARCHAR} CUSTOMER_TYPE
+            ,#{item.zjxtFlag,jdbcType=VARCHAR} ZJXT_FLAG
+            ,#{item.remark,jdbcType=VARCHAR} REMARK
+            ,#{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME
+            ,#{item.createUser,jdbcType=VARCHAR} CREATE_USER
+            ,#{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            ,#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER
+            ,#{item.status,jdbcType=VARCHAR} STATUS
+            ,#{item.errMsg,jdbcType=VARCHAR} ERR_MSG
+            ,#{item.isTransfer,jdbcType=VARCHAR} IS_TRANSFER
+            ,#{item.cashManaCate,jdbcType=VARCHAR} CASH_MANA_CATE
+            ,#{item.ivstorientation,jdbcType=VARCHAR} IVSTORIENTATION
+            ,#{item.operateMode,jdbcType=VARCHAR} OPERATE_MODE
+            ,#{item.fitCircleDays,jdbcType=DECIMAL} FIT_CIRCLE_DAYS
+            ,#{item.manaCateFit,jdbcType=VARCHAR} MANA_CATE_FIT
+            from DUAL
+        </foreach>
+        )TEMP
+        )a
+        )b
+        update set
+        a.PROD_NAME = b.PROD_NAME,
+        a.REG_CODE = b.REG_CODE,
+        a.ISSUE_PARTY_ID = b.ISSUE_PARTY_ID,
+        a.RAISE_VDATE = b.RAISE_VDATE,
+        a.RAISE_ENDDATE = b.RAISE_ENDDATE,
+        a.VDATE = b.VDATE,
+        a.MDATE = b.MDATE,
+        a.MANAGE_TYPE = b.MANAGE_TYPE,
+        a.IS_CONSTRACTE = b.IS_CONSTRACTE,
+        a.GRAD_PROPORTION = b.GRAD_PROPORTION,
+        a.YIELD_HIGH = b.YIELD_HIGH,
+        a.YIELD_LOW = b.YIELD_LOW,
+        a.YIELD_REMARK = b.YIELD_REMARK,
+        a.OPEN_MODE = b.OPEN_MODE,
+        a.OPEN_CIRCLE = b.OPEN_CIRCLE,
+        a.OPEN_CIRCLE_DAYS = b.OPEN_CIRCLE_DAYS,
+        a.RULE_COMMENT = b.RULE_COMMENT,
+        a.FIRST_OPEN_DAY = b.FIRST_OPEN_DAY,
+        a.HOLIDAY_ON_FLAG = b.HOLIDAY_ON_FLAG,
+        a.AVG_OPEN_COUNT = b.AVG_OPEN_COUNT,
+        a.OPEN_BUSS = b.OPEN_BUSS,
+        a.OPEN_BUSS_REMARK = b.OPEN_BUSS_REMARK,
+        a.PRODTYPE = b.PRODTYPE,
+        a.CALENDAR_ID = b.CALENDAR_ID,
+        a.BUSI_ACCT_NO = b.BUSI_ACCT_NO,
+        a.ACCT_NAME = b.ACCT_NAME,
+        a.BASIC = b.BASIC,
+        a.TERMINATEDATE = b.TERMINATEDATE,
+        a.ISSUING_STATUS = b.ISSUING_STATUS,
+        a.FIDUCIARY_DUTY = b.FIDUCIARY_DUTY,
+        a.TRANSFER_TYPE = b.TRANSFER_TYPE,
+        a.CUSTOMER_TYPE = b.CUSTOMER_TYPE,
+        a.ZJXT_FLAG= b.ZJXT_FLAG,
+        a.REMARK = b.REMARK,
+        a.UPDATE_TIME = b.UPDATE_TIME,
+        a.UPDATE_USER = b.UPDATE_USER,
+        a.STATUS = b.STATUS,
+        a.ERR_MSG = b.ERR_MSG,
+        a.IS_TRANSFER = b.IS_TRANSFER,
+        a.CASH_MANA_CATE = b.CASH_MANA_CATE,
+        a.IVSTORIENTATION = b.IVSTORIENTATION,
+        a.OPERATE_MODE = b.OPERATE_MODE,
+        a.FIT_CIRCLE_DAYS = b.FIT_CIRCLE_DAYS,
+        a.MANA_CATE_FIT = b.MANA_CATE_FIT
+       where a.PROD_ID = b.PROD_ID
+    </insert>
+    <delete id="deleteData" >
+        delete from CHB_PRD_BASEINFO
+        where date_format(ifnull(UPDATE_TIME,CREATE_TIME),'%Y-%m-%d') = CURRENT_DATE
+    </delete>
+    <select id="getProdInsId" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        DISTINCT PROD_INS_ID id,
+        PROD_INS_ID text
+        FROM CHB_PRD_DECLARE_INFO
+        <where>
+            <if test="search !=null and  search !='' ">
+                PROD_INS_ID LIKE  concat('%',#{search},'%')
+            </if>
+            <if test="tradeCounter !=null and  tradeCounter !='' ">
+                and PROD_INS_ID = #{prodInsId}
+            </if>
         </where>
     </select>
 </mapper>

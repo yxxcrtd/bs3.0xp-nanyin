@@ -30,14 +30,14 @@
         <include refid="com.joyintech.tams.common.base.dao.ChbInvestTradeErrordataMapper.Base_Column_List" />
         ,
         <include refid="com.joyintech.tams.common.base.dao.ChbInvestTradeErrordataMapper.Blob_Column_List" />
-        from chb_invest_trade_errordata
+        from chb_invest_trade_errodata
     </sql>
     <sql id="Sql_All_Effective_Data" >
         select 
         <include refid="com.joyintech.tams.common.base.dao.ChbInvestTradeErrordataMapper.Base_Column_List" />
         ,
         <include refid="com.joyintech.tams.common.base.dao.ChbInvestTradeErrordataMapper.Blob_Column_List" />
-        from chb_invest_trade_errordata
+        from chb_invest_trade_errodata
         where STATUS = 'E'
     </sql>
     <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
@@ -45,27 +45,27 @@
         <include refid="com.joyintech.tams.common.base.dao.ChbInvestTradeErrordataMapper.Base_Column_List" />
         ,
         <include refid="com.joyintech.tams.common.base.dao.ChbInvestTradeErrordataMapper.Blob_Column_List" />
-        from chb_invest_trade_errordata
+        from chb_invest_trade_errodata
         where DATAUUID = #{datauuid,jdbcType=CHAR}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
-        delete from chb_invest_trade_errordata
+        delete from chb_invest_trade_errodata
         where DATAUUID = #{datauuid,jdbcType=CHAR}
     </delete>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbInvestTradeErrordataWithBLOBs" >
-        insert into chb_invest_trade_errordata (DATAUUID, PROD_ID, TRADE_CODE, 
+        insert into chb_invest_trade_errodata (DATAUUID, PROD_ID, REG_CODE,TRADE_CODE,TRADE_COUNTER
             STATUS, CREATE_USER, CREATE_DEPT, 
             CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
             ASSET_CODE, DEALDATE, ORG_DATA, 
             ERR_MSG)
-        values (#{datauuid,jdbcType=CHAR}, #{prodId,jdbcType=VARCHAR}, #{tradeCode,jdbcType=VARCHAR}, 
-            #{status,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+        values (#{datauuid,jdbcType=CHAR}, #{prodId,jdbcType=VARCHAR},#{regCode,jdbcType=VARCHAR}, #{tradeCode,jdbcType=VARCHAR},
+                #{tradeCounter,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
             #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
-            #{assetCode,jdbcType=LONGVARCHAR}, #{dealdate,jdbcType=LONGVARCHAR}, #{orgData,jdbcType=LONGVARCHAR}, 
+            #{assetCode,jdbcType=LONGVARCHAR}, #{dealdate,jdbcType=DATE}, #{orgData,jdbcType=LONGVARCHAR},
             #{errMsg,jdbcType=LONGVARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbInvestTradeErrordataWithBLOBs" >
-        insert into chb_invest_trade_errordata
+        insert into chb_invest_trade_errodata
         <trim prefix="(" suffix=")" suffixOverrides="," >
             <if test="datauuid != null" >
                 DATAUUID,
@@ -150,17 +150,17 @@
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbInvestTradeErrordataWithBLOBs" >
-        insert into chb_invest_trade_errordata(DATAUUID, PROD_ID, TRADE_CODE, STATUS, CREATE_USER, 
+        insert into chb_invest_trade_errodata(DATAUUID, PROD_ID, TRADE_CODE, STATUS, CREATE_USER,
         CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ASSET_CODE, DEALDATE, ORG_DATA, 
         ERR_MSG)
         select DATAUUID, PROD_ID, TRADE_CODE, #{status,jdbcType=VARCHAR} STATUS, CREATE_USER, 
             CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, ASSET_CODE, DEALDATE, ORG_DATA, 
             ERR_MSG
-             from chb_invest_trade_errordata
+             from chb_invest_trade_errodata
              where STATUS = 'E' and DATAUUID = #{datauuid,jdbcType=CHAR}
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbInvestTradeErrordataWithBLOBs" >
-        update chb_invest_trade_errordata
+        update chb_invest_trade_errodata
         <set >
             <if test="prodId != null" >
                 PROD_ID = #{prodId,jdbcType=VARCHAR},
@@ -193,7 +193,7 @@
         where DATAUUID = #{datauuid,jdbcType=CHAR}
     </update>
     <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.joyintech.tams.common.base.entity.ChbInvestTradeErrordataWithBLOBs" >
-        update chb_invest_trade_errordata
+        update chb_invest_trade_errodata
         set PROD_ID = #{prodId,jdbcType=VARCHAR},
             TRADE_CODE = #{tradeCode,jdbcType=VARCHAR},
             STATUS = #{status,jdbcType=VARCHAR},
@@ -206,7 +206,7 @@
         where DATAUUID = #{datauuid,jdbcType=CHAR}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbInvestTradeErrordata" >
-        update chb_invest_trade_errordata
+        update chb_invest_trade_errodata
         set PROD_ID = #{prodId,jdbcType=VARCHAR},
             TRADE_CODE = #{tradeCode,jdbcType=VARCHAR},
             STATUS = #{status,jdbcType=VARCHAR},
@@ -214,4 +214,5 @@
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
         where DATAUUID = #{datauuid,jdbcType=CHAR}
     </update>
+
 </mapper>
