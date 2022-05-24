@@ -581,6 +581,11 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 
 	        }
 
+			//净值变动
+			if (Objects.equals(DictCodeListExt2.变动类型_净值变动.getValue(),model.getChangeType())) {
+				typeDetail = DictCodeListExt2.变动类型_净值变动.getValue();
+			}
+
 	        // 产品余额份额获取
             List<ChbPrdPosition> list = chbPrdDurationRegMapper.getBalance(model.getProdId(),quotationDate);
         	//产品余额
