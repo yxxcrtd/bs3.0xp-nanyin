@@ -880,7 +880,7 @@
 		<include refid="sendStatusFlag" />
 		SUBMIT_DEADLINE,
 		CHB_SUBMIT_DEADLINE,
-		PROD_ID
+		asset_code
 		FROM  CHB_BOT_AST_POS_SUB
 		WHERE 1=1
 		<if test="createDeptList != null and createDeptList.size>0">
@@ -941,7 +941,7 @@
 		<include refid="sendStatusFlag" />
 		SUBMIT_DEADLINE,
 		CHB_SUBMIT_DEADLINE,
-		PROD_ID
+		asset_code
 		FROM  CHB_ASSET_INFO_SUB
 		WHERE 1=1
 		<if test="createDeptList != null and createDeptList.size>0">
@@ -1062,7 +1062,7 @@
 		<include refid="sendStatusFlag" />
 		SUBMIT_DEADLINE,
 		CHB_SUBMIT_DEADLINE,
-		PROD_ID
+		asset_code
 		FROM  CHB_AST_VAL_SUB
 		WHERE 1=1
 		<if test="createDeptList != null and createDeptList.size>0">
