@@ -64,6 +64,7 @@ public class ChbInvestTradeFileImpService extends FileImpService {
         chbInvestTradeDtoList.forEach(e->{
             e.setCreateUser(CommonUtil.getUserName());
             e.setUpdateUser(CommonUtil.getUserName());
+            e.setDataSource("D");
         });
         if(InterfConstants.SAVEFLAG_ADD.equals(saveFlag)){
             //增量
@@ -73,7 +74,7 @@ public class ChbInvestTradeFileImpService extends FileImpService {
         //增量插入 小于100000正常入库 超过100000条使用sqlldr进行入库
         try{
             //先根据更新日删除当日插入的数据
-            chbInvestTradeDao.deleteData();
+//            chbInvestTradeDao.deleteData();
             insertData(chbInvestTradeDtoList);
         }catch(Exception e){
             logger.error(e.getMessage(),e);

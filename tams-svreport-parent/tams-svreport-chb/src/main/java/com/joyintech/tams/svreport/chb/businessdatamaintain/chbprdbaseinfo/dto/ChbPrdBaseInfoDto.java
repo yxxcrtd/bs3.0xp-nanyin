@@ -25,7 +25,7 @@ import java.util.List;
         ValidateGroupDelete.class })
 public class ChbPrdBaseInfoDto extends ChbPrdBaseinfo implements ProcessEntity {
     /**
-     * 现金管理类产品-是否完全符合
+     * 现金管理类产品-是否_中债完全符合
      */
     private String manaCateFit;
     /**
@@ -165,6 +165,12 @@ public class ChbPrdBaseInfoDto extends ChbPrdBaseinfo implements ProcessEntity {
     public String getRaiseEnddateStr(){
         return DateUtil.format(getRaiseEnddate());
     }
+    public String getRaisePstrdatestr(){
+        return DateUtil.format(getRaisePstrdate());
+    }
+    public String getRaisePenddateStr(){
+        return DateUtil.format(getRaisePenddate());
+    }
     public String getVdateStr(){
         return DateUtil.format(getVdate());
     }
@@ -175,7 +181,7 @@ public class ChbPrdBaseInfoDto extends ChbPrdBaseinfo implements ProcessEntity {
         return SysDataUtil.getNameFromDataDict(DictCode.管理方式_发行登记,getManageType());
     }
     public String getIsConstracteStr(){
-        return SysDataUtil.getNameFromDataDict(DictCode.是否,getIsConstracte());
+        return SysDataUtil.getNameFromDataDict(DictCode.是否_中债,getIsConstracte());
     }
     public String getOpenModeStr(){
         return SysDataUtil.getNameFromDataDict(DictCode.开放模式_中债,getOpenMode());
@@ -184,7 +190,7 @@ public class ChbPrdBaseInfoDto extends ChbPrdBaseinfo implements ProcessEntity {
         return SysDataUtil.getNameFromDataDict(DictCode.规律开放周期,getOpenCircle());
     }
     public String getHolidayOnFlagStr(){
-        return SysDataUtil.getNameFromDataDict(DictCode.是否,getHolidayOnFlag());
+        return SysDataUtil.getNameFromDataDict(DictCode.是否_中债,getHolidayOnFlag());
     }
     public String getOpenBussStr(){
         return SysDataUtil.getNameFromDataDict(DictCode.开放期业务,getOpenBuss());
@@ -208,7 +214,7 @@ public class ChbPrdBaseInfoDto extends ChbPrdBaseinfo implements ProcessEntity {
         return SysDataUtil.getNameFromDataDict(DictCode.人行客户类型_SVR,getCustomerType());
     }
     public String getZjxtFlagStr(){
-        return SysDataUtil.getNameFromDataDict(DictCode.是否,getZjxtFlag());
+        return SysDataUtil.getNameFromDataDict(DictCode.是否_中债,getZjxtFlag());
     }
     public String getFirstOpenDayStr(){
         return DateUtil.format(getFirstOpenDay());
@@ -223,5 +229,12 @@ public class ChbPrdBaseInfoDto extends ChbPrdBaseinfo implements ProcessEntity {
 
     public void setIssuingStatusNew(String issuingStatusNew) {
         this.issuingStatusNew = issuingStatusNew;
+    }
+
+    public String getIsTransferStr(){
+        return SysDataUtil.getNameFromDataDict(DictCode.是否_中债,getIsTransfer());
+    }
+    public String getManaCateFitStr(){
+        return SysDataUtil.getNameFromDataDict(DictCode.是否_中债,getManaCateFit());
     }
 }

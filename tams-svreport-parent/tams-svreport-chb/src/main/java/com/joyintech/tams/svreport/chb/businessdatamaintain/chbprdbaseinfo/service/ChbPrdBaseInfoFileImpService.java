@@ -17,20 +17,23 @@ import com.joyintech.tams.svreport.chb.businessdatamaintain.chbinvesttrade.dao.C
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbinvesttrade.dto.ChbInvestTradeDto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.dao.ChbPrdBaseInfoDao;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.dto.ChbPrdBaseInfoDto;
+import com.joyintech.tams.svreport.interf.chb.proddeclare.dao.ChbPrdDeclareInfoMapper;
+import com.joyintech.tams.svreport.interf.chb.proddeclare.dto.ChbPrdDeclareInfoDto;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author wubingbing
@@ -50,6 +53,8 @@ public class ChbPrdBaseInfoFileImpService extends FileImpService {
 
     @Autowired
     private SqlSessionTemplate template;
+    @Autowired
+    private ChbPrdDeclareInfoMapper chbPrdDeclareInfoMapper;
 
     @Autowired
     private BatchInsertService batchInsertService;
@@ -66,16 +71,21 @@ public class ChbPrdBaseInfoFileImpService extends FileImpService {
             mergeData(chbPrdBaseInfoDtoList);
 
         }
-        //增量插入 小于100000正常入库 超过100000条使用sqlldr进行入库
+
         try{
             //先根据更新日删除当日插入的数据
-            chbPrdBaseInfoDao.deleteData();
+//            chbPrdBaseInfoDao.deleteData();
             insertData(chbPrdBaseInfoDtoList);
         }catch(Exception e){
             logger.error(e.getMessage(),e);
             success = false;
         }
         return success?"success":"fail";
+    }
+
+    @Override
+    public String importDB(List<Map<String, String>> listData, InterfFile interfFile, String date) {
+        return null;
     }
 
     private void insertData(List<ChbPrdBaseInfoDto> list) {
@@ -86,7 +96,12 @@ public class ChbPrdBaseInfoFileImpService extends FileImpService {
         try {
             int count = 0;
             for (ChbPrdBaseInfoDto dto : list) {
-
+                try {
+                    ChbPrdDeclareInfoDto chbPrdDeclareInfoDto = chbPrdDeclareInfoMapper.selectByProdInsId(dto.getProdInsId());
+                    BeanUtils.copyProperties(chbPrdDeclareInfoDto,dto);
+                } catch (BeansException e) {
+                    e.printStackTrace();
+                }
                 batchMapper.insert(dto);
                 count++;
                 if (count % 1000 == 0) {
@@ -139,7 +154,8 @@ public class ChbPrdBaseInfoFileImpService extends FileImpService {
     }
 
     @Override
-    public String importDB(List<Map<String, String>> listData, InterfFile interfFile, String date) {
+    public List<ExcelValidDto> importDB(List<Map<String, String>> listData, String date) {
+        List<ExcelValidDto> list =  new ArrayList<>();
         // 产品基本信息
         ChbInterfConfigDto interfConfig = ChbInterfUtil.queryInterfConfigByInterfid(com.joyintech.tams.common.InterfDefine.产品基本信息接口数据.getCode());
         String coverFlag = "Y";
@@ -148,12 +164,23 @@ public class ChbPrdBaseInfoFileImpService extends FileImpService {
         }else{
             coverFlag = interfConfig.getCoverFlag()==null?"Y":interfConfig.getCoverFlag();
         }
-        checkDataCodeCheck(listData, interfFile.getFilename(), ChbCheckTableInfo.个人发行登记表INFO,coverFlag);
-        if (CollectionUtils.isEmpty(listData)){
-            return "success";
-        }
+        list = checkImportData(list,listData, ChbCheckTableInfo.个人发行登记表INFO.getTableName(), ChbCheckTableInfo.个人发行登记表INFO,coverFlag);
 
-        String saveResult = saveData(listData,null,interfFile.getDataSource());
-        return saveResult;
+        saveData(listData,null,null);
+        return list;
+    }
+
+    @Override
+    protected void checkProdInsId(List<ExcelValidDto> excelValidDtoList, List<Map<String, String>> infoList) {
+        for (int i = 0; i < infoList.size(); i++) {
+            Map<String, String> map = infoList.get(i);
+                if(StringUtils.isEmpty(map.get("PROD_INS_ID"))){
+                }else{
+                    ChbPrdDeclareInfoDto chbPrdDeclareInfoDto = chbPrdDeclareInfoMapper.selectByProdInsId(map.get("PROD_INS_ID"));
+                    if(chbPrdDeclareInfoDto==null){
+                        map.put("ERRMSG","产品不存在对应的申报信息！");
+                    }
+                }
+        }
     }
 }

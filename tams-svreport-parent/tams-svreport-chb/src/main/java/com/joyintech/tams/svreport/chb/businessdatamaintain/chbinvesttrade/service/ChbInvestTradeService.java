@@ -1,21 +1,14 @@
 package com.joyintech.tams.svreport.chb.businessdatamaintain.chbinvesttrade.service;
 
-import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
 import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.ajax.JoyinMessage;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
-import com.joyintech.system.base.entity.SysDatadictListLink;
-import com.joyintech.tams.common.InterfFile;
-import com.joyintech.tams.common.base.dao.ChbInvestTradeErrordataMapper;
 import com.joyintech.tams.common.base.entity.ChbInfoMgrResultConfig;
-import com.joyintech.tams.common.base.entity.ChbInvestTrade;
-import com.joyintech.tams.common.base.entity.ChbInvestTradeErrordataWithBLOBs;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -23,21 +16,19 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.common.dao.ChbInfoMgrResultConfigMapper;
 import com.joyintech.tams.report.common.util.SysDataUtil;
-import com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dto.ChbBokSubjectDto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbinvesttrade.dao.ChbInvestTradeDao;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbinvesttrade.dto.ChbInvestTradeDto;
-import com.joyintech.tams.svreport.chb.businessdatamaintain.chbmstbondcreditrating.dto.ChbMstBondCreditRatingDto;
+import com.joyintech.tams.svreport.chb.businessdatamaintain.chbinvesttrade.errodata.dao.ChbInvestTradeErrodataDao;
+import com.joyintech.tams.svreport.chb.businessdatamaintain.chbinvesttrade.errodata.dto.ChbInvestTradeErrodataWithBLOBsDto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.dao.ChbPrdBaseInfoDao;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.dto.ChbPrdBaseInfoDto;
 import com.joyintech.tams.svreport.chb.common.util.DuplicateDataUtil;
 import com.joyintech.tams.svreport.chb.common.util.ErrdataConvertUtil;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
-import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.aspectj.weaver.ast.Var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,7 +46,7 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
     @Autowired
     private ChbInvestTradeDao chbInvestTradeDao;
     @Autowired
-    private ChbInvestTradeErrordataMapper chbInvestTradeErrordataMapper;
+    private ChbInvestTradeErrodataDao chbInvestTradeErrodataDao;
     @Autowired
     private ChbPrdBaseInfoDao chbPrdBaseInfoDao;
     @Autowired
@@ -78,7 +69,7 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
         else if(OperationType.MODIFY.equals(type)){
             if(StringUtil.equals(DictCodeListExt3.中债数据状态_待处理.getValue(),entity.getStatusValid())){
                 //删除errodata记录
-                chbInvestTradeErrordataMapper.deleteByPrimaryKey(entity.getTradeSeqno());
+                chbInvestTradeErrodataDao.deleteByPrimaryKey(entity.getTradeSeqno());
                 entity.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
                 entity.setDataSource(DictCodeListExt2.数据来源_接口.getValue());
             }
@@ -117,11 +108,11 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
     public ChbInvestTradeDto selectByKey(String tradeSeqno,String status) {
         ChbInvestTradeDto dto = new  ChbInvestTradeDto();
         if(StringUtil.equals(DictCodeListExt3.中债数据状态_待处理.getValue(),status)){
-            ChbInvestTradeErrordataWithBLOBs chbInvestTradeErrordataWithBLOBs = chbInvestTradeErrordataMapper.selectByPrimaryKey(tradeSeqno);
-            if(chbInvestTradeErrordataWithBLOBs!=null){
-                dto = ErrdataConvertUtil.errdataConvert(dto.getClass(),chbInvestTradeErrordataWithBLOBs.getOrgData());
+            ChbInvestTradeErrodataWithBLOBsDto chbInvestTradeErrodataWithBLOBsDto = chbInvestTradeErrodataDao.selectByPrimaryKey(tradeSeqno);
+            if(chbInvestTradeErrodataWithBLOBsDto!=null){
+                dto = ErrdataConvertUtil.errdataConvert(dto.getClass(),chbInvestTradeErrodataWithBLOBsDto.getOrgData());
                 dto.setStatusValid(DictCodeListExt3.中债数据状态_待处理.getValue());
-                dto.setTradeSeqno(chbInvestTradeErrordataWithBLOBs.getDatauuid());
+                dto.setTradeSeqno(chbInvestTradeErrodataWithBLOBsDto.getDatauuid());
                 // 获取产品名称和产品登记编码
                 if(!StringUtils.isEmpty(dto.getProdId())){
                     ChbPrdBaseInfoDto chbPrdBaseInfoDto = chbPrdBaseInfoDao.selectByKey(dto.getProdId());

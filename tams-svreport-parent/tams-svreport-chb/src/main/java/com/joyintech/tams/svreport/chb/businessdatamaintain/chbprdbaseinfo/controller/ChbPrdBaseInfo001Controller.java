@@ -15,6 +15,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbinvesttrade.dto.ChbInvestTradeDto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.dto.ChbPrdBaseInfoDto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.service.ChbPrdBaseInfoService;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
@@ -196,5 +197,19 @@ public class ChbPrdBaseInfo001Controller extends BaseController {
     @RequestMapping(value = "checkConfirmMsgForImportData", method = RequestMethod.POST)
     public AjaxResult checkConfirmMsgForImportData(String fileName) throws Exception  {
         return chbPrdBaseInfoService.checkConfirmMsgForImportData(fileName);
+    }
+    /**
+     * 导入（数据保存）
+     *
+     * @param fileName
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping("importFileSave")
+    public List<ExcelValidDto> importFileSave(String fileName)
+            throws Exception {
+
+        return chbPrdBaseInfoService.importFileSave(fileName);
     }
 }

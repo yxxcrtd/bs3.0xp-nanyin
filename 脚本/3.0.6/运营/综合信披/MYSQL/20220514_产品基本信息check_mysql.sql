@@ -1,5 +1,5 @@
 -- check前置条件
-delete from CHB_DATACHECK_CONDITION_INV where CHECKCONDITIONID like 'CHB_PRD_BASEINFO_CONDITION-CPJB-20220514XX%';
+delete from CHB_DATACHECK_CONDITION_INV where CHECKCONDITIONID like 'CHB_PRD_BASEINFO_CONDITION-CPJBXX-20220514%';
 
 INSERT INTO CHB_DATACHECK_CONDITION_INV VALUES ('CHB_PRD_BASEINFO_CONDITION-CPJBXX-20220514-0001-01','CHB_PRD_BASEINFO-CPJBXX-20220514-0001-17','inArray','isConstracte','==','01','当是否为结构化（分级）产品选择“01 是”时','E');
 INSERT INTO CHB_DATACHECK_CONDITION_INV VALUES ('CHB_PRD_BASEINFO_CONDITION-CPJBXX-20220514-0001-02','CHB_PRD_BASEINFO-CPJBXX-20220514-0001-18','inArray','ivstorientation','==','01','当产品投资性质选择“01 固定收益类”时','E');
@@ -30,8 +30,6 @@ INSERT INTO CHB_DATACHECK_RULE_INV VALUES ('CHB_PRD_BASEINFO-CPJBXX-20220514-000
 
 
 
-INSERT INTO CHB_DATACHECK_RULE_INV VALUES ('CHB_PRD_BASEINFO-CPJBXX-20220514-0001-09','CchbPrdBaseInfo002','isValidDate','raiseVdate',NULL,'yyyy-MM-dd','N','募集起始日期不可为空，且必须为日期格式（YYYY-MM-DD）','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
-INSERT INTO CHB_DATACHECK_RULE_INV VALUES ('CHB_PRD_BASEINFO-CPJBXX-20220514-0001-10','CchbPrdBaseInfo002','isValidDate','raiseEnddate',NULL,'yyyy-MM-dd','N','募集结束日期不可为空，且必须为日期格式（YYYY-MM-DD）','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 INSERT INTO CHB_DATACHECK_RULE_INV VALUES ('CHB_PRD_BASEINFO-CPJBXX-20220514-0001-11','CchbPrdBaseInfo002','isValidDate','vdate',NULL,'yyyy-MM-dd','N','起息日不可为空，且必须为日期格式（YYYY-MM-DD）','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 INSERT INTO CHB_DATACHECK_RULE_INV VALUES ('CHB_PRD_BASEINFO-CPJBXX-20220514-0001-12','CchbPrdBaseInfo002','isValidDate','mdate',NULL,'yyyy-MM-dd','N','到期日不可为空，且必须为日期格式（YYYY-MM-DD）','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 
@@ -69,7 +67,7 @@ INSERT INTO CHB_DATACHECK_RULE_INV VALUES ('CHB_PRD_BASEINFO-CPJBXX-20220514-000
 
 INSERT INTO CHB_DATACHECK_RULE_INV VALUES ('CHB_PRD_BASEINFO-CPJBXX-20220514-0001-40','CchbPrdBaseInfo002','lessThanCharLength','busiAcctNo',NULL,'61','N','资金托管账号不可为空，且不能超过60个字符。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 INSERT INTO CHB_DATACHECK_RULE_INV VALUES ('CHB_PRD_BASEINFO-CPJBXX-20220514-0001-41','CchbPrdBaseInfo002','lessThanCharLength','acctName',NULL,'201','N','资金托管账户不可为空，且不能超过200个字符。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
-INSERT INTO CHB_DATACHECK_RULE_INV VALUES ('CHB_PRD_BASEINFO-CPJBXX-20220514-0001-42','CchbPrdBaseInfo002','inDatadict','basic','==','SVR_BASIS','N','计息基础不可为空，且必须在值域范围内','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+INSERT INTO CHB_DATACHECK_RULE_INV VALUES ('CHB_PRD_BASEINFO-CPJBXX-20220514-0001-42','CchbPrdBaseInfo002','inDatadict','basic','==','SVR_PROD_BASIS','N','计息基础不可为空，且必须在值域范围内','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 INSERT INTO CHB_DATACHECK_RULE_INV VALUES ('CHB_PRD_BASEINFO-CPJBXX-20220514-0001-43','CchbPrdBaseInfo002','isValidDate','terminatedate',NULL,'yyyy-MM-dd','Y','提前终止日必须为日期格式（YYYY-MM-DD）','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 
 INSERT INTO CHB_DATACHECK_RULE_INV VALUES ('CHB_PRD_BASEINFO-CPJBXX-20220514-0001-44','CchbPrdBaseInfo002','inDatadict','isTransfer','==','SVR_YES_OR_NO','Y','是否母行划转产品必须在值域范围内','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
@@ -86,3 +84,9 @@ INSERT INTO CHB_DATACHECK_RULE_INV VALUES ('CHB_PRD_BASEINFO-CPJBXX-20220514-000
 INSERT INTO CHB_DATACHECK_RULE_INV VALUES ('CHB_PRD_BASEINFO-CPJBXX-20220514-0001-53','CchbPrdBaseInfo002','isCustomizedStringForWhitelist','remark',NULL,'^[\\u4e00-\\u9fa5\\ue815-\\ue864\\uff01-\\uff5e\\uffe0-\\uffe5\\u3000-\\u3003\\u3005-\\u3017\\u301d-\\u301e\\u2010\\u2013-\\u2016\\u2018-\\u2019\\u201c-\\u201d\\u2025-\\u2026\\u2030\\u2032-\\u2033\\u2035\\u203b\\u00b7\\u0030-\\u0039\\u0041-\\u005a\\u0061-\\u007a\\u2160-\\u216b\\u0020-\\u0026\\u0028-\\u007B\\u007D\\u007E]{0,}$','Y','备注必须填写白名单中的文字','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 INSERT INTO CHB_DATACHECK_RULE_INV VALUES ('CHB_PRD_BASEINFO-CPJBXX-20220514-0001-54','CchbPrdBaseInfo002','isCustomizedStringForWhitelist','busiAcctNo',NULL,'^[\\u4e00-\\u9fa5\\ue815-\\ue864\\uff01-\\uff5e\\uffe0-\\uffe5\\u3000-\\u3003\\u3005-\\u3017\\u301d-\\u301e\\u2010\\u2013-\\u2016\\u2018-\\u2019\\u201c-\\u201d\\u2025-\\u2026\\u2030\\u2032-\\u2033\\u2035\\u203b\\u00b7\\u0030-\\u0039\\u0041-\\u005a\\u0061-\\u007a\\u2160-\\u216b\\u0020-\\u0026\\u0028-\\u007B\\u007D\\u007E]{0,}$','N','资金托管账号必须填写白名单中的文字','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 INSERT INTO CHB_DATACHECK_RULE_INV VALUES ('CHB_PRD_BASEINFO-CPJBXX-20220514-0001-55','CchbPrdBaseInfo002','isCustomizedStringForWhitelist','acctName',NULL,'^[\\u4e00-\\u9fa5\\ue815-\\ue864\\uff01-\\uff5e\\uffe0-\\uffe5\\u3000-\\u3003\\u3005-\\u3017\\u301d-\\u301e\\u2010\\u2013-\\u2016\\u2018-\\u2019\\u201c-\\u201d\\u2025-\\u2026\\u2030\\u2032-\\u2033\\u2035\\u203b\\u00b7\\u0030-\\u0039\\u0041-\\u005a\\u0061-\\u007a\\u2160-\\u216b\\u0020-\\u0026\\u0028-\\u007B\\u007D\\u007E]{0,}$','N','资金托管账户必须填写白名单中的文字','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+
+INSERT INTO CHB_DATACHECK_RULE_INV VALUES ('CHB_PRD_BASEINFO-CPJBXX-20220514-0001-56','CchbPrdBaseInfo002','compareProperty','vdate','>=','raiseEnddate','N','起息日必须大于等于募集结束日期。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+INSERT INTO CHB_DATACHECK_RULE_INV VALUES ('CHB_PRD_BASEINFO-CPJBXX-20220514-0001-57','CchbPrdBaseInfo002','compareProperty','mdate','>=','vdate','N','到期日必须大于等于起息日','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+INSERT INTO CHB_DATACHECK_RULE_INV VALUES ('CHB_PRD_BASEINFO-CPJBXX-20220514-0001-58','CchbPrdBaseInfo002','compareProperty','raiseEnddate','>=','raiseVdate','N','募集结束日期必须大于等于募集起始日期','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+INSERT INTO CHB_DATACHECK_RULE_INV VALUES ('CHB_PRD_BASEINFO-CPJBXX-20220514-0001-59','CchbPrdBaseInfo002','compareProperty','yieldHigh','>=','yieldLow','N','业绩比较基准上限必须大于等于业绩比较基准下限','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+INSERT INTO CHB_DATACHECK_RULE_INV VALUES ('CHB_PRD_BASEINFO-CPJBXX-20220514-0001-60','CchbPrdBaseInfo002','lessThanCharLength','prodInsId',NULL,'101','N','行内标识码不可为空，且不能超过100个字符。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');

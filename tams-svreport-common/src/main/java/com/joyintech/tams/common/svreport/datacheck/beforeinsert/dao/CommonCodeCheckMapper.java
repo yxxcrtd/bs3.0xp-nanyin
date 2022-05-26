@@ -115,5 +115,5 @@ public interface CommonCodeCheckMapper {
 
     int checkExistsChbInvestTrade(@Param("prodId") String prodId,@Param("assetCode") String assetCode, @Param("tradeCode") String tradeCode);
 
-    int checkExistsChbPrdBaseInfo(@Param("prodId") String prodId);
+    int checkExistsChbPrdBaseInfo(@Param("prodInsId") String prodInsId);
 }

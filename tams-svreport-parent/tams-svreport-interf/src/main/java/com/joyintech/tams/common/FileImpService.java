@@ -617,7 +617,16 @@ public abstract class FileImpService extends InterfService{
         }).collect(Collectors.toList());
         deletAllErroData(listMap, interfType);
         /**end 新增删除逻辑  add  by  dongxiangyang 20201017    */
+        //产品基本信息 检查行内标识码是否存在
+        if(dataType.equals("CHB_PRD_BASEINFO")){
+            checkProdInsId(excelValidDtoList,infoList);
+        }
         List<Map<String, String>> listDupError = DataCheckService.checkDuplicatedData(excelValidDtoList,infoList, checkEuplicatedKeys);
+        //投资交易
+        if(dataType.equals("CHB_INVEST_TRADE")){
+            //行内交易编码不能重复
+            DataCheckService.checkDuplicatedData(excelValidDtoList,infoList, new String[]{"TRADE_CODE"});
+        }
         //总部或分支机构信息登记表SUB双独立业务主键重复校验特殊处理
         if(dataType.equals("CHB_SALER_INST_SUB")) {
             List<Map<String, String>> SalerInsNameListError = DataCheckService.checkDuplicatedData(infoList, new String[]{"SALER_ORG_NAME"});
@@ -627,6 +636,7 @@ public abstract class FileImpService extends InterfService{
                 }
             }
         }
+
         // add by zhangliang 20210418 TMP调用SUB校验配置 start
         List<CheckRule> listRules = dataCheckService.queryCheckRules(ChbCheckTableInfo.genDataType(dataType));
         // add by zhangliang 20210418 TMP调用SUB校验配置 end
@@ -652,6 +662,10 @@ public abstract class FileImpService extends InterfService{
 //        chbInterfErrodataMapper.insert(data);
         return listError;
     }
+
+    protected  void checkProdInsId(List<ExcelValidDto> excelValidDtoList, List<Map<String, String>> infoList) {
+    }
+
     /**
      * 根据错误消息创建需要入库的Dto
      *

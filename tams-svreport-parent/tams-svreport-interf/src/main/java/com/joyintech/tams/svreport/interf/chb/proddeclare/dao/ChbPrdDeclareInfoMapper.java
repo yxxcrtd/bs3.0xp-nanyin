@@ -25,5 +25,5 @@ public interface ChbPrdDeclareInfoMapper {
     List<ChbPrdDeclareInfoDto> selectRepDeclare(@Param("updatetime") Date updatetime);
     int mergeInfoList(@Param("newDataList")List<ChbPrdDeclareInfoDto> insertList);
 
-    ChbPrdDeclareInfoDto selectByProdInsId(String prodInsId);
+    ChbPrdDeclareInfoDto selectByProdInsId(@Param("prodInsId") String prodInsId);
 }

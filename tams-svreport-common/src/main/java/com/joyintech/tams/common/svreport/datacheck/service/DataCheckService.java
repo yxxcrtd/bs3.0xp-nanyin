@@ -240,18 +240,22 @@ public class DataCheckService {
                 }
             }  //循环规则－结束
             if ( legal==false ) {
-                if(StringUtils.isEmpty(x.get("ERRMSG"))){
+                String errmsg = x.get("ERRMSG");
+                if(StringUtils.isEmpty(errmsg)){
                     x.put("ERRMSG", sb.toString());
                     list.add(new ExcelValidDto("0未导入",String.valueOf(i+1),sb.toString()));
-                }else{
-                    String errmsg = x.get("ERRMSG");
+                }else if(errmsg.equals("产品不存在对应的申报信息！")){
                     errmsg +=sb.toString();
                     x.put("ERRMSG", errmsg);
-                    for (ExcelValidDto dto : list) {
-                        if(Integer.valueOf(dto.getRowNum())==i+1){
-                            dto.setErrorInfo(errmsg);
-                            break;
+                    if(list.size()>0){
+                        for (ExcelValidDto excelValidDto : list) {
+                            if(excelValidDto.getRowNum().equals(String.valueOf(i+1))){
+                                excelValidDto.setErrorInfo(errmsg);
+                                break;
+                            }
                         }
+                    }else{
+                        list.add(new ExcelValidDto("0未导入",String.valueOf(i+2),errmsg));
                     }
 
                 }
@@ -552,9 +556,9 @@ public class DataCheckService {
                     }
                 }
                 if(flag){
-                    var1.put("ERRMSG","重复数据;");
-                    com.joyintech.tams.systemtools.dto.ExcelValidDto excelValidDto = new com.joyintech.tams.systemtools.dto.ExcelValidDto("0未导入",String.valueOf(i + 2),"表中数据重复");
-                    excelValidDtoList.add(excelValidDto);
+                    if(StringUtils.isEmpty((String)var1.get("ERRMSG"))){
+                        var1.put("ERRMSG","重复数据;");
+                    }
                     result.add(var1);
                     break;
                 }

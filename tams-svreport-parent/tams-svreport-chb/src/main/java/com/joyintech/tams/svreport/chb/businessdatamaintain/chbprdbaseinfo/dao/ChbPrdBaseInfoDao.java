@@ -2,7 +2,6 @@ package com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.dao;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.tams.common.base.entity.ChbPrdBaseinfoErrordataWithBLOBs;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.dto.ChbPrdBaseInfoDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -16,7 +15,7 @@ import java.util.Map;
  */
 @Repository
 public interface ChbPrdBaseInfoDao {
-    ChbPrdBaseInfoDto selectByKey(String prodId);
+    ChbPrdBaseInfoDto selectByKey(String produuid);
 
     List<SuggestDto> getProdIdAndProdName(Map<String, Object> pageParam);
 
@@ -40,4 +39,8 @@ public interface ChbPrdBaseInfoDao {
     void deleteData();
 
     List<SelectOptionDto> getProdInsId(Map<String, Object> param);
+
+    int countDuplicatedData(List<Map<String, String>> list);
+
+    Integer selectByProdIdKey(String prodId);
 }

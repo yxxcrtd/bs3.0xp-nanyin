@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,23 +55,29 @@ public class ChbPrdBaseInfo002Contreoller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.开放期业务);
         this.setSelectOptionToModel(model, DictCode.产品类型_中债);
         this.setSelectOptionToModel(model, DictCode.报送产品发行状态);
-        this.setSelectOptionToModel(model, DictCode.计息基础_中债);
+        this.setSelectOptionToModel(model, DictCode.计息基础_产品要素维护);
         this.setSelectOptionToModel(model, DictCode.产品受托职责_中债);
         this.setSelectOptionToModel(model, DictCode.产品转让类型_中债);
         this.setSelectOptionToModel(model, DictCode.人行客户类型_SVR);
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         String produuid = getParam("produuid");
         String status = getParam("statusValid");
+        ChbPrdBaseInfoDto dto =null;
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
-            ChbPrdBaseInfoDto dto = chbPrdBaseInfoService.getBussinessEntityByWorkflowId(
+             dto = chbPrdBaseInfoService.getBussinessEntityByWorkflowId(
                     workflowId);
             model.addAttribute("pageModel",dto.getPageModel());
             model.addAttribute(GlobalConstant.ENTITY, dto);
         }
         else if (WorkFlowUtil.isNotFromToDoList() &&StringUtil.isNotEmpty(produuid) ) {
             //通过主键查询数据
-            ChbPrdBaseInfoDto dto = chbPrdBaseInfoService.selectByKey(produuid,status);
+             dto = chbPrdBaseInfoService.selectByKey(produuid,status);
             model.addAttribute(GlobalConstant.ENTITY, dto);
+        }
+        if(null !=dto){
+            if(dto.getAvgOpenCount()!=null){
+                dto.setAvgOpenCount(dto.getAvgOpenCount().setScale(2 ,BigDecimal.ROUND_HALF_UP));
+            }
         }
         //获取本行登记代码
         model.addAttribute("issuePartyId_New", CommonUtil.selectBankCode());
@@ -148,5 +155,15 @@ public class ChbPrdBaseInfo002Contreoller extends BaseController {
     @RequestMapping("/selectChbPrdDeclareByProdInsId")
     public ChbPrdDeclareInfoDto selectChbPrdDeclareByProdInsId(String prodInsId){
         return chbPrdBaseInfoService.selectChbPrdDeclareByProdInsId(prodInsId);
+    }
+    /**
+     * 行内标识码
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/selectByKey")
+    public Integer selectByProdIdKey(String prodId)
+    {
+        return chbPrdBaseInfoService.selectByProdIdKey(prodId);
     }
 }

@@ -21,6 +21,7 @@ import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -253,14 +254,20 @@ public class SvrInvestTradeFileImpService  extends FileImpService{
      */
     @Override
     public String importDB(List<Map<String, String>> investTradeList,InterfFile interfFile, String date,String coverFlag) {
-        checkDataCodeCheck(investTradeList, interfFile.getFilename(), ChbCheckTableInfo.投资交易信息表,coverFlag);
+        checkImportData(new ArrayList<ExcelValidDto>(),investTradeList, interfFile.getFilename(), ChbCheckTableInfo.投资交易信息表,coverFlag);
         if (CollectionUtils.isEmpty(investTradeList)){
             return "success";
         }
-        String saveResult = saveData(investTradeList,null,interfFile.getDataSource());
+        ChbInterfConfigDto interfConfig = ChbInterfUtil.queryInterfConfigByInterfid(InterfDefine.投资交易信息接口数据.getCode());
+        if (interfConfig == null){
+            logger.info("CHB_INTERF_CONFIG表中无配置项！");
+            return "fail";
+        }
+        String saveFlag = interfConfig.getContentType();
+        String result=saveData(investTradeList, saveFlag, interfFile.getDataSource());
         // 更新系统配置时间
         ChbInterfUtil.updateInterfTimeBySysdate( InterfDefine.投资交易信息接口数据.getCode());
-        return saveResult;
+        return result;
     }
 
     /**

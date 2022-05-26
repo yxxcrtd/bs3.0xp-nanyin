@@ -116,7 +116,7 @@ public class ProdInfoFileImpService extends AbstractFileImpService {
 					@Override
 					public Boolean call() throws ParseException {
 						String success = "success";
-						success  = service.importDB(service.copyDataList(dataList),interfFile, currentDate);
+						success  = service.importDB(service.copyDataList(dataList),interfFile, currentDate,interfConfig.getCoverFlag());
 						return "success".equals(success)?true:false;
 					}
 				});

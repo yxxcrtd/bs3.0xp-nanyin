@@ -461,6 +461,10 @@
         </foreach>
         and status = 'E'
     </select>
+    <select id="selectByBusinessKey" resultType="java.lang.Integer">
+        select count(1) from CHB_INVEST_TRADE where PROD_ID = #{prodId} and TRADE_CODE =#{tradeCode} and ASSET_CODE =#{assetCode}
+    </select>
+
     <insert id="mergeData">
         MERGE INTO  CHB_INVEST_TRADE a USING (
         <foreach collection="list" item="item" open="select * from("

@@ -39,25 +39,4 @@ INSERT INTO chb_column_mapping_config values ('CHB_PRD_BASEINFO_CPJBXX_20220519_
 INSERT INTO chb_column_mapping_config values ('CHB_PRD_BASEINFO_CPJBXX_20220519_0037','CHB_PRD_BASEINFO','CUSTOMER_TYPE','客户类型','SVR_CUSTOMER_TYPE',99,'Y','CUSTOMER_TYPE');
 INSERT INTO chb_column_mapping_config values ('CHB_PRD_BASEINFO_CPJBXX_20220519_0038','CHB_PRD_BASEINFO','ZJXT_FLAG','以财产权信托名义开展的资金信托标识','SVR_YES_OR_NO',100,'Y','ZJXT_FLAG');
 INSERT INTO chb_column_mapping_config values ('CHB_PRD_BASEINFO_CPJBXX_20220519_0039','CHB_PRD_BASEINFO','PRODTYPE','产品类型','SVR_PRODTYPE',101,'Y','PRODTYPE');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+INSERT INTO chb_column_mapping_config values ('CHB_PRD_BASEINFO_CPJBXX_20220519_0040','CHB_PRD_BASEINFO','PROD_INS_ID','行内标识码',NULL,102,'Y','PROD_INS_ID');

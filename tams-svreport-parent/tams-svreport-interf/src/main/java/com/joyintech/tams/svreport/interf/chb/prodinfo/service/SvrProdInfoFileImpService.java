@@ -17,6 +17,7 @@ import java.util.concurrent.Future;
 
 import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -630,4 +631,22 @@ public class SvrProdInfoFileImpService extends FileImpService {
 		return result;
 	}
 
+	@Override
+	public String importDB(List<Map<String, String>> listData, InterfFile interfFile, String date, String coverFlag) {
+
+		String result="success";
+		checkImportData(new ArrayList<ExcelValidDto>(),listData, interfFile.getFilename(), ChbCheckTableInfo.个人发行登记表INFO,coverFlag);
+		ChbInterfConfigDto interfConfig = ChbInterfUtil.queryInterfConfigByInterfid(InterfDefine.产品基本信息接口数据.getCode());
+		if (interfConfig == null){
+			logger.info("CHB_INTERF_CONFIG表中无配置项！");
+			return "fail";
+		}
+		String saveFlag = interfConfig.getContentType();
+		if(!listData.isEmpty()){
+			result=saveData(listData, saveFlag, interfFile.getDataSource());
+		}
+		// 更新系统配置时间
+		ChbInterfUtil.updateInterfTimeBySysdate( InterfDefine.产品基本信息接口数据.getCode());
+		return result;
+	}
 }
