@@ -28,7 +28,7 @@ import java.util.List;
  * @创建时间: 2019-01-21
  */
 @TableName("CHB_ASSET_INFO")
-@PageId("AssetInfoDetail002")
+@PageId("AssetInfoRegist002")
 @ValidLogic(targetClass = AssetInfoDetailValidator.class, groups = { ValidateGroupEdit.class,
 		ValidateGroupDelete.class })
 public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,ProcessEntity {
