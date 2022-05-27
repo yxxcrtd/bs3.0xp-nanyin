@@ -773,11 +773,11 @@ public abstract class FileImpService extends InterfService{
      * @param coverFlag
      * @return
      */
-    public List<ExcelValidDto> checkImportData(List<ExcelValidDto> excelValidDtoList,List<Map<String,String>> infoList, String fireName, ChbCheckTableInfo checkTableInfo,String coverFlag) {
+    public List<ExcelValidDto> checkImportData(List<ExcelValidDto> excelValidDtoList,List<Map<String,String>> infoList, String fireName, ChbCheckTableInfo checkTableInfo,String coverFlag,String flag) {
         // 配置脚本校验
         checkData(excelValidDtoList,false, infoList, fireName, checkTableInfo.getTableName(), checkTableInfo.getTableName(), checkTableInfo.getBussinessKey(), checkTableInfo.getCheckEuplicatedKeys());
         // 代码校验
-        commonCodeCheckBatchService.codeCheckCommon(excelValidDtoList,infoList, checkTableInfo, fireName,coverFlag);
+        commonCodeCheckBatchService.codeCheckCommon(excelValidDtoList,infoList, checkTableInfo, fireName,coverFlag,flag);
 
         return excelValidDtoList;
     }
@@ -1015,13 +1015,6 @@ public abstract class FileImpService extends InterfService{
      * @param fileLists
      */
     public abstract String importDB(List<Map<String, String>> listData,InterfFile interfFile, String date);
-    /**
-     * add by wubingbing 20220522
-     * @param listData
-     * @param date
-     * @return
-     */
-    public List<ExcelValidDto> importDB(List<Map<String, String>> listData, String date){return null;}
 
     /**
      * add by wubingbing 20220521

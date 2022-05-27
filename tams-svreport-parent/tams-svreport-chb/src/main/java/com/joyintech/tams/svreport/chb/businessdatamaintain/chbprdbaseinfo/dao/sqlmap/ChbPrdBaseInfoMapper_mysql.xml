@@ -802,6 +802,13 @@
                 (PROD_ID like concat( '%' , #{param} ,'%') OR PROD_NAME like concat('%' , #{param} , '%'))
             </if>
         </where>
+        union all
+        select distinct PROD_ID code,PROD_NAME shortName from CHB_PRD_BASEINFO_ERRODATA
+        <where>
+            <if test="param !=null and  param !='' ">
+                (PROD_ID like concat( '%' , #{param} ,'%') OR PROD_NAME like concat('%' , #{param} , '%'))
+            </if>
+        </where>
     </select>
     <select id="selectRegCodeByProdId" resultType="java.util.Map">
         select REG_CODE, PRODNAME from CHB_PRDRESIST_CODE where  PRODID = #{prodId}

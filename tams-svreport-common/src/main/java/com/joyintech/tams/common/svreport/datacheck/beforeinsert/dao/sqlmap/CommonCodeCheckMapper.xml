@@ -267,10 +267,21 @@
         where SALER_INS_NO = #{salerInsNo,jdbcType=VARCHAR}
         and STATUS = 'E'
     </select>
-    <select id="checkExistsChbInvestTrade" resultType="java.lang.Integer">
-        select count(*) from CHB_INVEST_TRADE where PROD_ID = #{prodId} and ASSET_CODE = #{assetCode} and TRADE_CODE = #{tradeCode} and DATA_SOURCE !='D' and STATUS = 'E'
+
+    <select id="selectChbInvestTradeBusKey" resultType="java.util.Map">
+        select PROD_ID,ASSET_CODE,TRADE_CODE from CHB_INVEST_TRADE where (PROD_ID,ASSET_CODE,TRADE_CODE) in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            (#{item.prodId},#{item.assetCode},#{tradeCode})
+        </foreach>
+        and DATA_SOURCE !='D'
+        and STATUS = 'E'
     </select>
-    <select id="checkExistsChbPrdBaseInfo" resultType="java.lang.Integer">
-        select count(*) from CHB_PRD_BASEINFO where PROD_INS_ID = #{prodInsId} and DATA_SOURCE !='D' and STATUS = 'E'
+    <select id="selectChbPrdBaseInfoBusKey" resultType="java.util.Map">
+        select PROD_ID from CHB_PRD_BASEINFO where PROD_ID  in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item.prodId}
+        </foreach>
+        and DATA_SOURCE !='D'
+        and STATUS = 'E'
     </select>
 </mapper>

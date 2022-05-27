@@ -148,8 +148,8 @@ public class ChbInvestTradeFileImpService extends FileImpService {
         }
     }
 
-    @Override
-    public List<ExcelValidDto> importDB(List<Map<String, String>> listData, String date) {
+
+    public List<ExcelValidDto> importChbInvestTrade(List<Map<String, String>> listData) {
         List<ExcelValidDto> list =  new ArrayList<>();
         // 资产交易信息
         ChbInterfConfigDto interfConfig = ChbInterfUtil.queryInterfConfigByInterfid(com.joyintech.tams.common.InterfDefine.投资交易信息接口数据.getCode());
@@ -160,7 +160,7 @@ public class ChbInvestTradeFileImpService extends FileImpService {
             coverFlag = interfConfig.getCoverFlag()==null?"Y":interfConfig.getCoverFlag();
         }
 
-        list = checkImportData(list,listData, "CHB_INVEST_TRADE", ChbCheckTableInfo.投资交易信息表,coverFlag);
+        list = checkImportData(list,listData, "CHB_INVEST_TRADE", ChbCheckTableInfo.投资交易信息表,coverFlag,"D");
         saveData(listData,null,null);
         return list;
     }

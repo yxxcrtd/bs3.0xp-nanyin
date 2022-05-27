@@ -3,13 +3,9 @@ package com.joyintech.tams.common.svreport.datacheck.beforeinsert.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
-
-import com.joyintech.tams.common.base.entity.ChbBotAstPositionSub;
-import com.joyintech.tams.common.base.entity.ChbPrdDeclareSub;
-import com.joyintech.tams.common.base.entity.ChbPrdIssueSub;
-import com.joyintech.tams.common.base.entity.ChbPrdresistCode;
 
 @Repository
 public interface CommonCodeCheckMapper {
@@ -113,7 +109,8 @@ public interface CommonCodeCheckMapper {
 
     void deleteChbPrdBaseInfoErrorData(String prodId);
 
-    int checkExistsChbInvestTrade(@Param("prodId") String prodId,@Param("assetCode") String assetCode, @Param("tradeCode") String tradeCode);
 
-    int checkExistsChbPrdBaseInfo(@Param("prodInsId") String prodInsId);
+    List<Map<String, String>> selectChbInvestTradeBusKey(@Param("list") List<ChbInvestTradeErrodataWithBLOBs> list);
+
+    List<Map<String, String>> selectChbPrdBaseInfoBusKey(@Param("list") List<ChbPrdBaseinfoErrodataWithBLOBs> list);
 }

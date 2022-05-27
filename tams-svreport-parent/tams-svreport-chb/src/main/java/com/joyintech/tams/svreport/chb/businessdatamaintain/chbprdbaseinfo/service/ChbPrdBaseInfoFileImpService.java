@@ -1,5 +1,6 @@
 package com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.service;
 
+import com.google.common.collect.Lists;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -20,6 +21,7 @@ import com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.dto.C
 import com.joyintech.tams.svreport.interf.chb.proddeclare.dao.ChbPrdDeclareInfoMapper;
 import com.joyintech.tams.svreport.interf.chb.proddeclare.dto.ChbPrdDeclareInfoDto;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -34,6 +36,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author wubingbing
@@ -65,7 +68,20 @@ public class ChbPrdBaseInfoFileImpService extends FileImpService {
         String tmpPath =  SvrDataUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY, GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
         //转换实体类
         List<ChbPrdBaseInfoDto> chbPrdBaseInfoDtoList = (List<ChbPrdBaseInfoDto>)convertMapToEntity(listData, ChbPrdBaseInfoDto.class);
-
+        List<ChbPrdDeclareInfoDto> dtoList = chbPrdDeclareInfoMapper.selectByChbPrdDeclareInfoList( chbPrdBaseInfoDtoList.stream().map(e -> e.getProdInsId()).collect(Collectors.toList()));
+        for (ChbPrdBaseInfoDto chbPrdBaseInfoDto : chbPrdBaseInfoDtoList) {
+            for (ChbPrdDeclareInfoDto chbPrdDeclareInfoDto : dtoList) {
+                if(chbPrdBaseInfoDto.getProdInsId().equals(chbPrdDeclareInfoDto.getProdInsId())){
+                    String prodName = chbPrdBaseInfoDto.getProdName();
+                    BeanUtils.copyProperties(chbPrdDeclareInfoDto,chbPrdBaseInfoDto);
+                    chbPrdBaseInfoDto.setProdName(prodName);
+                    chbPrdBaseInfoDto.setCreateUser(CommonUtil.getUserName());
+                    chbPrdBaseInfoDto.setUpdateUser(CommonUtil.getUserName());
+                    chbPrdBaseInfoDto.setDataSource("D");
+                    break;
+                }
+            }
+        }
         if(InterfConstants.SAVEFLAG_ADD.equals(saveFlag)){
             //增量
             mergeData(chbPrdBaseInfoDtoList);
@@ -96,12 +112,7 @@ public class ChbPrdBaseInfoFileImpService extends FileImpService {
         try {
             int count = 0;
             for (ChbPrdBaseInfoDto dto : list) {
-                try {
-                    ChbPrdDeclareInfoDto chbPrdDeclareInfoDto = chbPrdDeclareInfoMapper.selectByProdInsId(dto.getProdInsId());
-                    BeanUtils.copyProperties(chbPrdDeclareInfoDto,dto);
-                } catch (BeansException e) {
-                    e.printStackTrace();
-                }
+
                 batchMapper.insert(dto);
                 count++;
                 if (count % 1000 == 0) {
@@ -153,8 +164,7 @@ public class ChbPrdBaseInfoFileImpService extends FileImpService {
         }
     }
 
-    @Override
-    public List<ExcelValidDto> importDB(List<Map<String, String>> listData, String date) {
+    public List<ExcelValidDto> importChbPrdBaseInfo(List<Map<String, String>> listData) {
         List<ExcelValidDto> list =  new ArrayList<>();
         // 产品基本信息
         ChbInterfConfigDto interfConfig = ChbInterfUtil.queryInterfConfigByInterfid(com.joyintech.tams.common.InterfDefine.产品基本信息接口数据.getCode());
@@ -164,7 +174,7 @@ public class ChbPrdBaseInfoFileImpService extends FileImpService {
         }else{
             coverFlag = interfConfig.getCoverFlag()==null?"Y":interfConfig.getCoverFlag();
         }
-        list = checkImportData(list,listData, ChbCheckTableInfo.个人发行登记表INFO.getTableName(), ChbCheckTableInfo.个人发行登记表INFO,coverFlag);
+        list = checkImportData(list,listData, ChbCheckTableInfo.个人发行登记表INFO.getTableName(), ChbCheckTableInfo.个人发行登记表INFO,coverFlag,"D");
 
         saveData(listData,null,null);
         return list;
@@ -172,15 +182,22 @@ public class ChbPrdBaseInfoFileImpService extends FileImpService {
 
     @Override
     protected void checkProdInsId(List<ExcelValidDto> excelValidDtoList, List<Map<String, String>> infoList) {
+        List<String> list = infoList.stream().filter(e->StringUtils.isNotEmpty(e.get("PROD_INS_ID"))).map(e -> e.get("PROD_INS_ID")).collect(Collectors.toList());
+        List<ChbPrdDeclareInfoDto> dtoList = chbPrdDeclareInfoMapper.selectByChbPrdDeclareInfoList(list);
+        List<String> prodInsIds = Lists.newArrayList();
+        if(dtoList!=null){
+            prodInsIds = dtoList.stream().map(e->e.getProdInsId()).collect(Collectors.toList());
+        }
         for (int i = 0; i < infoList.size(); i++) {
             Map<String, String> map = infoList.get(i);
-                if(StringUtils.isEmpty(map.get("PROD_INS_ID"))){
-                }else{
-                    ChbPrdDeclareInfoDto chbPrdDeclareInfoDto = chbPrdDeclareInfoMapper.selectByProdInsId(map.get("PROD_INS_ID"));
-                    if(chbPrdDeclareInfoDto==null){
-                        map.put("ERRMSG","产品不存在对应的申报信息！");
-                    }
+            if(StringUtils.isEmpty(map.get("PROD_INS_ID"))){
+            }else{
+                if(!prodInsIds.contains(map.get("PROD_INS_ID"))){
+                    map.put("ERRMSG","产品不存在对应的申报信息！");
+                    excelValidDtoList.add(new ExcelValidDto("0未导入",String.valueOf(i+2),"产品不存在对应的申报信息！"));
                 }
+            }
         }
     }
+
 }

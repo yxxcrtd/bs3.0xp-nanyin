@@ -635,7 +635,7 @@ public class SvrProdInfoFileImpService extends FileImpService {
 	public String importDB(List<Map<String, String>> listData, InterfFile interfFile, String date, String coverFlag) {
 
 		String result="success";
-		checkImportData(new ArrayList<ExcelValidDto>(),listData, interfFile.getFilename(), ChbCheckTableInfo.个人发行登记表INFO,coverFlag);
+		checkImportData(new ArrayList<ExcelValidDto>(),listData, interfFile.getFilename(), ChbCheckTableInfo.个人发行登记表INFO,coverFlag,"I");
 		ChbInterfConfigDto interfConfig = ChbInterfUtil.queryInterfConfigByInterfid(InterfDefine.产品基本信息接口数据.getCode());
 		if (interfConfig == null){
 			logger.info("CHB_INTERF_CONFIG表中无配置项！");

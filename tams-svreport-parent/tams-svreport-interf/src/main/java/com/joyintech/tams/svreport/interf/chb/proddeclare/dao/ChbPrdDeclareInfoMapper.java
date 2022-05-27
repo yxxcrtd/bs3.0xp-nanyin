@@ -21,9 +21,11 @@ public interface ChbPrdDeclareInfoMapper {
     int updateByPrimaryKeySelective(ChbPrdDeclareInfoDto record);
 
     int updateByPrimaryKey(ChbPrdDeclareInfoDto record);
-    
+
     List<ChbPrdDeclareInfoDto> selectRepDeclare(@Param("updatetime") Date updatetime);
     int mergeInfoList(@Param("newDataList")List<ChbPrdDeclareInfoDto> insertList);
 
     ChbPrdDeclareInfoDto selectByProdInsId(@Param("prodInsId") String prodInsId);
+
+    List<ChbPrdDeclareInfoDto> selectByChbPrdDeclareInfoList(@Param("list") List<String> list);
 }

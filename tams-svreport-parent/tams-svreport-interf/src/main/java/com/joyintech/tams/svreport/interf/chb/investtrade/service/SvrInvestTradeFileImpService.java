@@ -254,7 +254,7 @@ public class SvrInvestTradeFileImpService  extends FileImpService{
      */
     @Override
     public String importDB(List<Map<String, String>> investTradeList,InterfFile interfFile, String date,String coverFlag) {
-        checkImportData(new ArrayList<ExcelValidDto>(),investTradeList, interfFile.getFilename(), ChbCheckTableInfo.投资交易信息表,coverFlag);
+        checkImportData(new ArrayList<ExcelValidDto>(),investTradeList, interfFile.getFilename(), ChbCheckTableInfo.投资交易信息表,coverFlag,"I");
         if (CollectionUtils.isEmpty(investTradeList)){
             return "success";
         }

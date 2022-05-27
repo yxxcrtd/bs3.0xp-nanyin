@@ -633,7 +633,7 @@ public class CommonCodeCheckBatchService {
      * @param tableInfo
      * @param fileName
      */
-    public void codeCheckCommon(List<ExcelValidDto> excelValidDtoList,List<Map<String, String>> list, ChbCheckTableInfo tableInfo, String fileName, String coverFlag) {
+    public void codeCheckCommon(List<ExcelValidDto> excelValidDtoList,List<Map<String, String>> list, ChbCheckTableInfo tableInfo, String fileName, String coverFlag,String flag) {
         //错误信息集合
         List<ChbInterfErrodataWithBLOBs> erroList=new ArrayList<ChbInterfErrodataWithBLOBs>();
         // 资产要素错误信息集合
@@ -773,7 +773,7 @@ public class CommonCodeCheckBatchService {
             }
         }else{
             Iterator<ChbInvestTradeErrodataWithBLOBs> it = chbInvestTradeErrordataList.iterator();
-            if(coverFlag.equals("N")){
+            if(!flag.equals("D")&&coverFlag.equals("N")){
                 removeExistsChbInvestTrade(chbInvestTradeErrordataList);
             }
             deleteChbInvestTradeErrorData(chbInvestTradeErrordataList);
@@ -783,7 +783,7 @@ public class CommonCodeCheckBatchService {
         if(StringUtil.isEmptyList(chbPrdBaseinfoErrordataList)){
 
         }else{
-            if(coverFlag.equals("N")){
+            if(!flag.equals("D")&&coverFlag.equals("N")){
                 removeExistsChbPrdBaseInfo(chbPrdBaseinfoErrordataList);
             }
             deleteChbPrdBaseInfoErrorData(chbPrdBaseinfoErrordataList);
@@ -795,14 +795,19 @@ public class CommonCodeCheckBatchService {
         SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
         try {
             CommonCodeCheckMapper batchMapper = session.getMapper(CommonCodeCheckMapper.class);
-            for(int i =chbPrdBaseinfoErrordataList.size()-1;i>=0;i--){
-                ChbPrdBaseinfoErrodataWithBLOBs dto = chbPrdBaseinfoErrordataList.get(i);
-                if(batchMapper.checkExistsChbPrdBaseInfo(dto.getProdInsId())>0){
-
-                    chbPrdBaseinfoErrordataList.remove(i);
+            List<Map<String,String>> list = batchMapper.selectChbPrdBaseInfoBusKey(chbPrdBaseinfoErrordataList);
+            if(list !=null){
+                Iterator<ChbPrdBaseinfoErrodataWithBLOBs> iterator = chbPrdBaseinfoErrordataList.iterator();
+                while (iterator.hasNext()){
+                    ChbPrdBaseinfoErrodataWithBLOBs dto = iterator.next();
+                    for (Map<String, String> map : list) {
+                        if(map.get("PROD_ID").equals(dto.getProdId())){
+                            iterator.remove();
+                            break;
+                        }
+                    }
                 }
             }
-
         }
         catch (Exception e) {
             session.rollback();
@@ -817,13 +822,20 @@ public class CommonCodeCheckBatchService {
         SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
         try {
             CommonCodeCheckMapper batchMapper = session.getMapper(CommonCodeCheckMapper.class);
-            for(int i =chbInvestTradeErrordataList.size()-1;i>=0;i--){
-                ChbInvestTradeErrodataWithBLOBs dto = chbInvestTradeErrordataList.get(i);
-                try {
-                    if(batchMapper.checkExistsChbInvestTrade(dto.getProdId(),dto.getAssetCode(),dto.getTradeCode())>0){
-                        chbInvestTradeErrordataList.remove(i);
+            List<Map<String,String>> list = batchMapper.selectChbInvestTradeBusKey(chbInvestTradeErrordataList);
+            if(list!=null){
+                Iterator<ChbInvestTradeErrodataWithBLOBs> iterator = chbInvestTradeErrordataList.iterator();
+                while (iterator.hasNext()){
+                    ChbInvestTradeErrodataWithBLOBs dto = iterator.next();
+                    for (Map<String, String> e : list) {
+                        if(e.get("PROD_ID").equals(dto.getProdId())
+                                && e.get("ASSET_CODE").equals(dto.getAssetCode())
+                                && e.get("TRADE_CODE").equals(dto.getTradeCode())){
+                            iterator.remove();
+                            break;
+                        }
                     }
-                } catch (Exception e) {
+
                 }
             }
 

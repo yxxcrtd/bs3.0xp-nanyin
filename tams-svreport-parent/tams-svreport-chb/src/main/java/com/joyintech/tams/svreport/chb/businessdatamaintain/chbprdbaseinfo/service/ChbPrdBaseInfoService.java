@@ -90,16 +90,19 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
             chbPrdBaseInfoDao.insert(entity);
         }
         else if(OperationType.MODIFY.equals(type)){
+            String prodName = entity.getProdName();
             String createUser = entity.getCreateUser();
             Date createTime = entity.getCreateTime();
             String updateUser = entity.getUpdateUser();
             Date updateTime = entity.getUpdateTime();
             ChbPrdDeclareInfoDto chbPrdDeclareInfoDto = chbPrdDeclareInfoMapper.selectByProdInsId(entity.getProdInsId());
             BeanUtils.copyProperties(chbPrdDeclareInfoDto,entity);
+            entity.setProdName(prodName);
             entity.setCreateUser(createUser);
             entity.setCreateTime(createTime);
             entity.setUpdateUser(updateUser);
             entity.setUpdateTime(updateTime);
+            entity.setDataSource("D");
             if(StringUtil.equals(DictCodeListExt3.中债数据状态_待处理.getValue(),entity.getStatusValid())){
                 //删除errodata记录
                 chbPrdBaseinfoErrodataDao.deleteByPrimaryKey(entity.getProduuid());
@@ -234,7 +237,7 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
 
     public List<ExcelValidDto> importFileSave(String fileName)throws Exception {
         List<Map<String, String>> list = dataMapAnalysis(fileName);
-        return chbPrdBaseInfoFileImpService.importDB(list,DateUtil.getDate());
+        return chbPrdBaseInfoFileImpService.importChbPrdBaseInfo(list);
     }
 
     public Integer selectByProdIdKey(String prodInsId) {
