@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.common;
 
+import com.google.common.collect.Lists;
 import com.jcraft.jsch.ChannelSftp.LsEntry;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.constant.GlobalConstant;
@@ -19,8 +20,11 @@ import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.ChbFileReadMonitorInfoMapper;
+import com.joyintech.tams.common.base.dao.ChbInvestTradeErrodataMapper;
+import com.joyintech.tams.common.base.dao.ChbPrdBaseinfoErrodataMapper;
 import com.joyintech.tams.common.base.entity.BaseChbEntity;
 import com.joyintech.tams.common.base.entity.ChbFileReadMonitorInfo;
+import com.joyintech.tams.common.base.entity.ChbPrdBaseinfoErrodataWithBLOBs;
 import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
@@ -46,11 +50,14 @@ import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpColumn;
 import com.joyintech.tams.report.interf.common.service.InterfService;
 import com.joyintech.tams.report.interf.common.util.InterfUtil;
 import com.joyintech.tams.report.interf.common.util.SftpUtil;
+import com.joyintech.tams.svreport.interf.chb.proddeclare.dao.ChbPrdDeclareInfoMapper;
+import com.joyintech.tams.svreport.interf.chb.proddeclare.dto.ChbPrdDeclareInfoDto;
 import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.xmlbeans.impl.xb.xsdschema.Public;
@@ -650,7 +657,7 @@ public abstract class FileImpService extends InterfService{
 //        StringBuffer bf=null;
         List<ChbInterfErrodataWithBLOBs> erroList=new ArrayList<ChbInterfErrodataWithBLOBs>();
         for(Map<String, String> erro:listDupError){
-            data = createChbInterfErrdata(fireName, interfType, erro, bussinessKey, checkEuplicatedKeys);
+            data = createChbInterfErrdata(StringUtils.isEmpty(fireName)?interfType:fireName, interfType, erro, bussinessKey, checkEuplicatedKeys);
             if(data != null) {
                 erroList.add(data);
             }
@@ -664,6 +671,43 @@ public abstract class FileImpService extends InterfService{
     }
 
     protected  void checkProdInsId(List<ExcelValidDto> excelValidDtoList, List<Map<String, String>> infoList) {
+
+        SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+        try {
+            logger.debug("校验产品基本信息的行内标识码是否存在开始--------------" + new Date());
+            ChbPrdDeclareInfoMapper batchMapper = session.getMapper(ChbPrdDeclareInfoMapper.class);
+            List<String> list = infoList.stream().filter(e-> StringUtils.isNotEmpty(e.get("PROD_INS_ID"))).map(e -> e.get("PROD_INS_ID")).collect(Collectors.toList());
+
+            List<ChbPrdDeclareInfoDto> dtoList = batchMapper.selectByChbPrdDeclareInfoList(list);
+            List<String> prodInsIds = Lists.newArrayList();
+            if(dtoList!=null){
+                prodInsIds = dtoList.stream().map(e->e.getProdInsId()).collect(Collectors.toList());
+            }
+            for (int i = 0; i < infoList.size(); i++) {
+                Map<String, String> map = infoList.get(i);
+                if(StringUtils.isEmpty(map.get("PROD_INS_ID"))){
+                }else{
+                    if(!prodInsIds.contains(map.get("PROD_INS_ID"))){
+                        map.put("ERRMSG","产品不存在对应的申报信息！");
+                        if(excelValidDtoList!=null){
+                            excelValidDtoList.add(new ExcelValidDto("0未导入",String.valueOf(i+2),"产品不存在对应的申报信息！"));
+                        }
+                    }
+                }
+            }
+
+            session.commit();
+            // 清理缓存，防止溢出
+            session.clearCache();
+        }
+        catch (Exception e) {
+            session.rollback();
+            logger.error("SQL执行异常：", e);
+        }
+        finally {
+            session.close();
+        }
+        logger.debug("校验产品基本信息的行内标识码是否存在结束--------------" + new Date());
     }
 
     /**

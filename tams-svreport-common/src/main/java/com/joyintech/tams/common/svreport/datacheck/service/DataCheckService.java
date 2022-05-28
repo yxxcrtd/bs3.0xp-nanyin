@@ -240,22 +240,27 @@ public class DataCheckService {
                 }
             }  //循环规则－结束
             if ( legal==false ) {
+
                 String errmsg = x.get("ERRMSG");
                 if(StringUtils.isEmpty(errmsg)){
                     x.put("ERRMSG", sb.toString());
-                    list.add(new ExcelValidDto("0未导入",String.valueOf(i+1),sb.toString()));
+                    if(list!=null){
+                        list.add(new ExcelValidDto("0未导入",String.valueOf(i+1),sb.toString()));
+                    }
                 }else if(errmsg.equals("产品不存在对应的申报信息！")){
                     errmsg +=sb.toString();
                     x.put("ERRMSG", errmsg);
-                    if(list.size()>0){
-                        for (ExcelValidDto excelValidDto : list) {
-                            if(excelValidDto.getRowNum().equals(String.valueOf(i+1))){
-                                excelValidDto.setErrorInfo(errmsg);
-                                break;
+                    if(list !=null){
+                        if(list.size()>0){
+                            for (ExcelValidDto excelValidDto : list) {
+                                if(excelValidDto.getRowNum().equals(String.valueOf(i+1))){
+                                    excelValidDto.setErrorInfo(errmsg);
+                                    break;
+                                }
                             }
+                        }else{
+                            list.add(new ExcelValidDto("0未导入",String.valueOf(i+2),errmsg));
                         }
-                    }else{
-                        list.add(new ExcelValidDto("0未导入",String.valueOf(i+2),errmsg));
                     }
 
                 }

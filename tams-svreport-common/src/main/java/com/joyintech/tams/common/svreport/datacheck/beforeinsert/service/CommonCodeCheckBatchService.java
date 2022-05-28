@@ -244,15 +244,17 @@ public class CommonCodeCheckBatchService {
                     if(!dataMap.get("AMT").equals(dataMap.get("CNY_AMT"))){
                         errMsg+="当币种选择人民币时，发生金额必须等于折算人民币金额";
                         dataMap.put("ERRMSG",errMsg);
-                        if(excelValidDtoList.size()>0){
-                            for (ExcelValidDto excelValidDto : excelValidDtoList) {
-                                if(excelValidDto.getRowNum().equals(String.valueOf(i+2))){
-                                    excelValidDto.setErrorInfo(errMsg);
-                                    break;
+                        if(excelValidDtoList !=null){
+                            if(excelValidDtoList.size()>0){
+                                for (ExcelValidDto excelValidDto : excelValidDtoList) {
+                                    if(excelValidDto.getRowNum().equals(String.valueOf(i+2))){
+                                        excelValidDto.setErrorInfo(errMsg);
+                                        break;
+                                    }
                                 }
+                            }else{
+                                excelValidDtoList.add(new ExcelValidDto("0未导入",String.valueOf(i+2),errMsg));
                             }
-                        }else{
-                            excelValidDtoList.add(new ExcelValidDto("0未导入",String.valueOf(i+2),errMsg));
                         }
                     }
                 }
@@ -290,11 +292,11 @@ public class CommonCodeCheckBatchService {
                 }
             }
             if(StringUtils.isEmpty(temp)){
-                if(!temp.equals(errMsg)){
+                if(!temp.equals(errMsg)&&excelValidDtoList!=null){
                     excelValidDtoList.add(new ExcelValidDto("0未导入",String.valueOf((i+2)),errMsg));
                 }
             }else{
-                if(!temp.equals(errMsg)){
+                if(!temp.equals(errMsg) && excelValidDtoList!=null){
                     if(excelValidDtoList.size()>0){
                         for (ExcelValidDto excelValidDto : excelValidDtoList) {
                             if(excelValidDto.getRowNum().equals(String.valueOf((i+2)))){
@@ -683,6 +685,9 @@ public class CommonCodeCheckBatchService {
             }
             // 投资交易
             if(StringUtil.equals(tableInfo.getTableName(),ChbCheckTableInfo.投资交易信息表.getTableName())){
+                if(map.get("ERRMSG").equals("重复数据;")){
+                    continue;
+                }
                 ChbInvestTradeErrodataWithBLOBs ChbInvestTradeErrodataWithBLOBs = createChbInvestTradeErrordata(map);
                 if(ChbInvestTradeErrodataWithBLOBs != null) {
                     chbInvestTradeErrordataList.add(ChbInvestTradeErrodataWithBLOBs);

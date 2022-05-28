@@ -239,7 +239,7 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
     public List<ExcelValidDto> importFileSave(String fileName) throws Exception {
         List<Map<String, String>> list = dataMapAnalysis(fileName);
         List<ExcelValidDto> listExcel = new ArrayList<ExcelValidDto>();
-        svrInvestTradeFileImpService.importDB(listExcel,list,null,null);
+        svrInvestTradeFileImpService.importDB(listExcel,list,new InterfFile(),null);
         return listExcel;
     }
 }

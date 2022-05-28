@@ -260,7 +260,7 @@ public class SvrProdInfoFileImpService extends FileImpService {
 			logger.info("CHB_INTERF_CONFIG表中无配置项！");
 			return "fail";
 		}
-		checkImportData(new ArrayList<ExcelValidDto>(),listData, interfFile.getFilename(), ChbCheckTableInfo.个人发行登记表INFO,interfConfig.getCoverFlag(), listExcel == null? "I" : "D");
+		checkImportData(listExcel,listData, interfFile.getFilename(), ChbCheckTableInfo.个人发行登记表INFO,interfConfig.getCoverFlag(), listExcel == null? "I" : "D");
 
 		String saveFlag = interfConfig.getContentType();
 		String result=saveData(listData, saveFlag, listExcel == null? "I" : "D");

@@ -239,7 +239,7 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
     public List<ExcelValidDto> importFileSave(String fileName)throws Exception {
         List<Map<String, String>> list = dataMapAnalysis(fileName);
         List<ExcelValidDto> listExcel = new ArrayList<ExcelValidDto>();
-        svrProdInfoFileImpService.importDB(listExcel,list,null,null);
+        svrProdInfoFileImpService.importDB(listExcel,list,new InterfFile(),null);
         return listExcel;
     }
 
