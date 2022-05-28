@@ -115,12 +115,12 @@ public class SvrSecRatingFileImpService extends FileImpService {
 	private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	@Override
-	public String saveData(List<Map<String, String>> listData, String saveFlag, String dateSource) {
+	public String saveData(List<Map<String, String>> listData, String saveFlag, String dataSource) {
 		// 解析成功或失败的标识
 		boolean success = true;
 		String tmpPath = SvrDataUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY, GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 		logger.debug("汇率数据转dto---开始-----:" +  df.format(new Date()));
-		List<MstBondCreditRating> listNE = (List<MstBondCreditRating>) convertMapToEntity(listData,MstBondCreditRating.class);
+		List<MstBondCreditRating> listNE = (List<MstBondCreditRating>) convertMapToEntity(listData,MstBondCreditRating.class, dataSource);
 		logger.debug("汇率数据转dto---结束-----:" +  df.format(new Date()));
 		if(!CollectionUtils.isEmpty(listNE)) {
 			// 增量模式根据业务主键更新

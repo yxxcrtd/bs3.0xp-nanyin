@@ -33,6 +33,7 @@ import com.joyintech.tams.svreport.chb.common.util.DuplicateDataUtil;
 import com.joyintech.tams.svreport.chb.common.util.ErrdataConvertUtil;
 import com.joyintech.tams.svreport.interf.chb.proddeclare.dao.ChbPrdDeclareInfoMapper;
 import com.joyintech.tams.svreport.interf.chb.proddeclare.dto.ChbPrdDeclareInfoDto;
+import com.joyintech.tams.svreport.interf.chb.prodinfo.service.SvrProdInfoFileImpService;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -60,7 +61,7 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
     @Autowired
     private ChbPrdresistCodeMapper chbPrdresistCodeMapper;
     @Autowired
-    private ChbPrdBaseInfoFileImpService chbPrdBaseInfoFileImpService;
+    private SvrProdInfoFileImpService svrProdInfoFileImpService;
     @Autowired
     private ChbInfoMgrResultConfigMapper chbInfoMgrResultConfigMapper;
     @Autowired
@@ -237,7 +238,9 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
 
     public List<ExcelValidDto> importFileSave(String fileName)throws Exception {
         List<Map<String, String>> list = dataMapAnalysis(fileName);
-        return chbPrdBaseInfoFileImpService.importChbPrdBaseInfo(list);
+        List<ExcelValidDto> listExcel = new ArrayList<ExcelValidDto>();
+        svrProdInfoFileImpService.importDB(listExcel,list,null,null);
+        return listExcel;
     }
 
     public Integer selectByProdIdKey(String prodInsId) {

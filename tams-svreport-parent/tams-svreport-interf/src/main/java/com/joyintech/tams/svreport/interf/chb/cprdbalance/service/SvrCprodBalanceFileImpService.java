@@ -113,7 +113,7 @@ public class SvrCprodBalanceFileImpService extends FileImpService{
 		// modify by convertMapToEntity yangxianjiu 2022-01-19 start
 //		Map<String,Object> dataMap = convertMapToEntity(posList,dataSource,saveFlag);
 //		List<ChbCprodBalanceDto> list = (List<ChbCprodBalanceDto>) dataMap.get("list");
-		List<ChbCprodBalanceDto> list = (List<ChbCprodBalanceDto>) convertMapToEntity(posList,ChbCprodBalanceDto.class);
+		List<ChbCprodBalanceDto> list = (List<ChbCprodBalanceDto>) convertMapToEntity(posList,ChbCprodBalanceDto.class, dataSource);
 		list.stream().forEach(t->{
 			t.setBalId(IDGenerator.generate(36));
 		});

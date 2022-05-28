@@ -8,6 +8,7 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.InterfFile;
 import com.joyintech.tams.common.base.entity.ChbInfoMgrResultConfig;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import com.joyintech.tams.constant.DictCode;
@@ -24,6 +25,7 @@ import com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.dao.C
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.dto.ChbPrdBaseInfoDto;
 import com.joyintech.tams.svreport.chb.common.util.DuplicateDataUtil;
 import com.joyintech.tams.svreport.chb.common.util.ErrdataConvertUtil;
+import com.joyintech.tams.svreport.interf.chb.investtrade.service.SvrInvestTradeFileImpService;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -50,7 +52,7 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
     @Autowired
     private ChbPrdBaseInfoDao chbPrdBaseInfoDao;
     @Autowired
-    private ChbInvestTradeFileImpService chbInvestTradeFileImpService;
+    private SvrInvestTradeFileImpService svrInvestTradeFileImpService;
     @Autowired
     private ChbInfoMgrResultConfigMapper chbInfoMgrResultConfigMapper;
     @Override
@@ -236,6 +238,8 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
 
     public List<ExcelValidDto> importFileSave(String fileName) throws Exception {
         List<Map<String, String>> list = dataMapAnalysis(fileName);
-        return chbInvestTradeFileImpService.importChbInvestTrade(list);
+        List<ExcelValidDto> listExcel = new ArrayList<ExcelValidDto>();
+        svrInvestTradeFileImpService.importDB(listExcel,list,null,null);
+        return listExcel;
     }
 }

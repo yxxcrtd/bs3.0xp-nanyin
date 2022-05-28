@@ -97,12 +97,12 @@ public class SvrSubjectBalanceFileImpService extends FileImpService{
 	private BatchInsertService batchInsertService;
 
 	@Override
-	public String saveData(List<Map<String, String>> listData, String saveFlag, String dateSource) {
+	public String saveData(List<Map<String, String>> listData, String saveFlag, String dataSource) {
 		boolean success = true;
 		String type = "";
 		String tmpPath =  SvrDataUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY, GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 		//转换实体类
-		List<BokBalance> bokBalanceList = (List<BokBalance>)convertMapToEntity(listData, BokBalance.class);
+		List<BokBalance> bokBalanceList = (List<BokBalance>)convertMapToEntity(listData, BokBalance.class, dataSource);
 		
 		if(InterfConstants.SAVEFLAG_ADD.equals(saveFlag)){
 			//增量

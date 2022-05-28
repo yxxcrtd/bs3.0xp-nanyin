@@ -136,7 +136,7 @@ public class SvrProdOpenschFileImpService extends FileImpService {
 	}
 	
 	@Override
-	public String saveData(List<Map<String, String>> openSchList, String saveFlag,String dateSource) {
+	public String saveData(List<Map<String, String>> openSchList, String saveFlag,String dataSource) {
 		//saveFlag: 0 全量, 1 增量
 		// 解析成功或失败的标识
 		boolean success = true;
@@ -145,7 +145,7 @@ public class SvrProdOpenschFileImpService extends FileImpService {
 		logger.debug("开放计划数据map转dto----开始-----:" +  df.format(new Date()));
 		// modify by convertMapToEntity yangxianjiu 2022-01-19 start
 //		listNE = convertMapToEntity(openSchList,dateSource);
-		List<ChbPrdOpensch> listNE = (List<ChbPrdOpensch>) convertMapToEntity(openSchList,ChbPrdOpensch.class);
+		List<ChbPrdOpensch> listNE = (List<ChbPrdOpensch>) convertMapToEntity(openSchList,ChbPrdOpensch.class, dataSource);
 		listNE.stream().forEach(dto->{
 			dto.setSeqno(IDGenerator.generate(36));//主键
 		});

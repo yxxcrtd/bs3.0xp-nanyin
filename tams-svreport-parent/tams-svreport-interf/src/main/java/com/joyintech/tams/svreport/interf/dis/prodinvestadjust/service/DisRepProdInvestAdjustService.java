@@ -73,7 +73,7 @@ public class DisRepProdInvestAdjustService extends FileImpService {
      * {@inheritDoc}
      */
     @Override
-    public String saveData(List<Map<String, String>> listData, String saveFlag, String dateSource) {
+    public String saveData(List<Map<String, String>> listData, String saveFlag, String dataSource) {
         if (StringUtil.isEmptyList(listData)) {
             logger.info("saveData方法参数listData为空。");
             return "success";
@@ -82,7 +82,7 @@ public class DisRepProdInvestAdjustService extends FileImpService {
         DisRepProdInvestAdjust dto = null;
         List<DisRepProdInvestAdjust> dtoList = new ArrayList<DisRepProdInvestAdjust>();
         // modify by convertMapToEntity yangxianjiu 2022-01-19 start
-        dtoList = (List<DisRepProdInvestAdjust>) convertMapToEntity(listData,DisRepProdInvestAdjust.class);
+        dtoList = (List<DisRepProdInvestAdjust>) convertMapToEntity(listData,DisRepProdInvestAdjust.class, dataSource);
         dtoList.stream().forEach(t->{
             t.setId(IDGenerator.generate());//ID
             t.setInputType("");//导入方法

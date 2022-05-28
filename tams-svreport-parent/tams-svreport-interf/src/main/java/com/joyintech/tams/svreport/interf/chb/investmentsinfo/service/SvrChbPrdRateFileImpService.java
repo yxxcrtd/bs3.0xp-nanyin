@@ -133,11 +133,11 @@ public class SvrChbPrdRateFileImpService extends FileImpService {
 	}
 	
 	@Override
-	public String saveData(List<Map<String, String>> chbPrdRateList, String saveFlag,String dateSource) {
+	public String saveData(List<Map<String, String>> chbPrdRateList, String saveFlag,String dataSource) {
         String tmpPath = SvrDataUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY, GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 		// 解析成功或失败的标识
 		boolean success = true;
-		List<ChbPrdRate> listNE = (List<ChbPrdRate>) convertMapToEntity(chbPrdRateList,ChbPrdRate.class);
+		List<ChbPrdRate> listNE = (List<ChbPrdRate>) convertMapToEntity(chbPrdRateList,ChbPrdRate.class, dataSource);
 		listNE.stream().forEach(t->{
 			t.setSeqno(IDGenerator.generate(36));//主键
 		});
@@ -153,7 +153,7 @@ public class SvrChbPrdRateFileImpService extends FileImpService {
 			}
 		}else if (chbPrdRateList.size() <= 1000) {
 			// 数据小于1000直接入库
-			success = excuteChbPrdRateByStep(dateSource,saveFlag,listNE, null, null, null, null, null);
+			success = excuteChbPrdRateByStep(dataSource,saveFlag,listNE, null, null, null, null, null);
 		} else {
 			// 大于1000使用sqlloader入库
 			try {

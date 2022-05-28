@@ -131,7 +131,7 @@ public class SvrProdPeriodyieldFileImpService extends FileImpService {
 	}
 	
 	@Override
-	public String saveData(List<Map<String, String>> periodyieldList, String saveFlag,String dateSource) {
+	public String saveData(List<Map<String, String>> periodyieldList, String saveFlag,String dataSource) {
         String tmpPath = SvrDataUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY, GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 		// 解析成功或失败的标识
 		boolean success = true;
@@ -139,7 +139,7 @@ public class SvrProdPeriodyieldFileImpService extends FileImpService {
 			logger.debug("报价信息map转dto----开始-----:" +  df.format(new Date()));
 			// modify by convertMapToEntity yangxianjiu 2022-01-19 start
 //			List<ChbPrdPeriodYield> listNE = convertMapToEntity(periodyieldList,dateSource);
-			List<ChbPrdPeriodYield> listNE = (List<ChbPrdPeriodYield>) convertMapToEntity(periodyieldList,ChbPrdPeriodYield.class);
+			List<ChbPrdPeriodYield> listNE = (List<ChbPrdPeriodYield>) convertMapToEntity(periodyieldList,ChbPrdPeriodYield.class, dataSource);
 			listNE.stream().forEach(dto->{
 				dto.setSeqno(IDGenerator.generate(36));
 			});
@@ -150,7 +150,7 @@ public class SvrProdPeriodyieldFileImpService extends FileImpService {
 			}
 		}else if (periodyieldList.size() <= 1000) {
 			// 数据小于1000直接入库
-			success = excuteProdPeriodyieldByStep(dateSource,saveFlag,periodyieldList, null, null, null, null, null);
+			success = excuteProdPeriodyieldByStep(dataSource,saveFlag,periodyieldList, null, null, null, null, null);
 		} else {
 			// 大于1000使用sqlloader入库
 			try {
@@ -172,13 +172,13 @@ public class SvrProdPeriodyieldFileImpService extends FileImpService {
 	 * @Description 收益率入库方式：新增，日全量（根据updatetime，createtime删除数据）
 	 * @version 1.7 2019年5月20日
 	 */
-	private boolean excuteProdPeriodyieldByStep(String dateSource,String saveFlag, List<Map<String, String>> periodyieldList, String type, String[] result,
+	private boolean excuteProdPeriodyieldByStep(String dataSource,String saveFlag, List<Map<String, String>> periodyieldList, String type, String[] result,
 			String tmpPath, ImpTable table, ImpTable subTable) {
 		// 定义新增数据list
 		logger.debug("报价信息map转dto----开始-----:" +  df.format(new Date()));
 		// modify by convertMapToEntity yangxianjiu 2022-01-19 start
 //		List<ChbPrdPeriodYield> listNE = convertMapToEntity(periodyieldList,dateSource);
-		List<ChbPrdPeriodYield> listNE = (List<ChbPrdPeriodYield>) convertMapToEntity(periodyieldList,ChbPrdPeriodYield.class);
+		List<ChbPrdPeriodYield> listNE = (List<ChbPrdPeriodYield>) convertMapToEntity(periodyieldList,ChbPrdPeriodYield.class, dataSource);
 		listNE.stream().forEach(dto->{
 			dto.setSeqno(IDGenerator.generate(36));
 			// 创建部门
@@ -188,7 +188,7 @@ public class SvrProdPeriodyieldFileImpService extends FileImpService {
 			// 机构代码
 			dto.setOrgCode(CommonUtil.getOrgCode());
 			// 数据来源
-			dto.setDataSource(SysDataUtil.getNameFromDataDict(DictCode.数据来源, dateSource));
+			dto.setDataSource(SysDataUtil.getNameFromDataDict(DictCode.数据来源, dataSource));
 		});
 		// modify by convertMapToEntity yangxianjiu 2022-01-19 end
 		logger.debug("报价信息map转dto----开始-----:" +  df.format(new Date()));

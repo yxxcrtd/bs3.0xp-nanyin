@@ -99,7 +99,7 @@ public class ChbProdDeclareFileImpService extends FileImpService{
 		// modify by convertMapToEntity yangxianjiu 2022-01-19 start
 //		Map<String,Object> dataMap = convertMapToEntity(posList,dataSource,saveFlag);
 //		List<ChbPrdDeclareInfoDto> list = (List<ChbPrdDeclareInfoDto>) dataMap.get("list");
-		List<ChbPrdDeclareInfoDto> list = (List<ChbPrdDeclareInfoDto>) convertMapToEntity(posList,ChbPrdDeclareInfoDto.class);
+		List<ChbPrdDeclareInfoDto> list = (List<ChbPrdDeclareInfoDto>) convertMapToEntity(posList,ChbPrdDeclareInfoDto.class, dataSource);
 		list.stream().forEach(dto->{
 //			dto.setDatasource(dataSource);
 			dto.setDeclareUuid(IDGenerator.generate(36));

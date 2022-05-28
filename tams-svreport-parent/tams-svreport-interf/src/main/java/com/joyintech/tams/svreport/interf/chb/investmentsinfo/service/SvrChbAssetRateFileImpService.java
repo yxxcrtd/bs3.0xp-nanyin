@@ -134,13 +134,13 @@ public class SvrChbAssetRateFileImpService extends FileImpService {
 	}
 
 	@Override
-	public String saveData(List<Map<String, String>> chbAssetRateList, String saveFlag,String dateSource) {
+	public String saveData(List<Map<String, String>> chbAssetRateList, String saveFlag,String dataSource) {
 		String tmpPath = SvrDataUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY, GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 		// 解析成功或失败的标识
 		boolean success = true;
 
 		logger.debug("资产利率基本信息map转dto----开始-----:" +  df.format(new Date()));
-		List<ChbAssetRate> listNE = (List<ChbAssetRate>) convertMapToEntity(chbAssetRateList, ChbAssetRate.class);
+		List<ChbAssetRate> listNE = (List<ChbAssetRate>) convertMapToEntity(chbAssetRateList, ChbAssetRate.class, dataSource);
 		listNE.stream().forEach(item->{
 			item.setSeqno(IDGenerator.generate(36));//主键
 		});

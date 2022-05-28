@@ -1024,7 +1024,7 @@ public abstract class FileImpService extends InterfService{
      * @param coverFlag 是否覆盖
      * @return
      */
-    public  String importDB(List<Map<String, String>> listData,InterfFile interfFile, String date,String coverFlag){
+    public  String importDB(List<ExcelValidDto>listExcel, List<Map<String, String>> listData,InterfFile interfFile, String date){
         return null;
     }
 
@@ -1207,7 +1207,7 @@ public abstract class FileImpService extends InterfService{
      * @param clz
      * @return
      */
-    public List<? extends BaseEntity> convertMapToEntity(List<Map<String, String>> dataList, Class clz) {
+    public List<? extends BaseEntity> convertMapToEntity(List<Map<String, String>> dataList, Class clz, String dataSource) {
         // 返回对象list
         List<BaseEntity> rs = new ArrayList<>();
 
@@ -1296,10 +1296,13 @@ public abstract class FileImpService extends InterfService{
                     }
                 }
             }
-            // 创建人
-            baseEntity.setCreateUser("interf");
-            // 更新人
-            baseEntity.setUpdateUser("interf");
+            // 接口时 用户名默认赋值 interf
+            if(!(StringUtil.equals(dataSource, "D") || StringUtil.equals(dataSource, "N"))){
+                // 创建人
+                baseEntity.setCreateUser("interf");
+                // 更新人
+                baseEntity.setUpdateUser("interf");
+            }
             if(baseEntity.getCreateTime() == null){
                 baseEntity.setCreateTime(new Date());
             }
@@ -1308,7 +1311,6 @@ public abstract class FileImpService extends InterfService{
             }
             // 创建人
             baseEntity.setCreateDept(CommonUtil.getDeptCode());
-
             rs.add(baseEntity);
         }
         return rs;

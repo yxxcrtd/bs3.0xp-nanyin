@@ -252,7 +252,7 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
         // 将map转换成dto
         List<ChbAssetInfo> assetInfoList = new ArrayList<>(infoList.size());
         List<String> listCloumn = baseMapper.getTableColumnList(InterfDefine.资产要素信息接口数据.getCode());
-        assetInfoList = (List<ChbAssetInfo>)super.convertMapToEntity(infoList, ChbAssetInfo.class);
+        assetInfoList = (List<ChbAssetInfo>)super.convertMapToEntity(infoList, ChbAssetInfo.class, dataSource);
 
         // 交易对手信息
         List<ChbMstCounterParty> allCounterList = chbMstCounterPartyInterfMapper.selectAllCounterParty();
