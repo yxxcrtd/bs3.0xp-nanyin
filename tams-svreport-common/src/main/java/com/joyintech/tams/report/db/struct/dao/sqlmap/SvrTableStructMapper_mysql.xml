@@ -18,7 +18,7 @@
 <!--            TB.TABLE_SCHEMA = 'zoutest'  AND-->
             TB.TABLE_NAME = '${table}'
             AND TB.TABLE_NAME = COL.TABLE_NAME
-            AND COL.table_schema=database() ORDER BY columnName
+            AND COL.table_schema=database() ORDER BY COL.ORDINAL_POSITION
         </if>
         <if test="databaseType == 'Oracle'">
             SELECT
