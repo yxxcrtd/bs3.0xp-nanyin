@@ -14,6 +14,7 @@ import com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.valid
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -35,7 +36,7 @@ public class ChbPrdBaseInfoDto extends ChbPrdBaseinfo implements ProcessEntity {
     /**
      * 定期开放周期(天)
      */
-    private String fitCircleDays;
+    private BigDecimal fitCircleDays;
     /**
      * 操作类型
      */
@@ -146,11 +147,11 @@ public class ChbPrdBaseInfoDto extends ChbPrdBaseinfo implements ProcessEntity {
         this.issueStatusRemark = issueStatusRemark;
     }
 
-    public String getFitCircleDays() {
+    public BigDecimal getFitCircleDays() {
         return fitCircleDays;
     }
 
-    public void setFitCircleDays(String fitCircleDays) {
+    public void setFitCircleDays(BigDecimal fitCircleDays) {
         this.fitCircleDays = fitCircleDays;
     }
 

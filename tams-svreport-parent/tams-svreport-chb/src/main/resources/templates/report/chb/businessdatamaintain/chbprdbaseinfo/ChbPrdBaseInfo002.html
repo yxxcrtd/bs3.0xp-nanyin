@@ -209,7 +209,7 @@
 							<label class="layui-form-label form-label-wrap " data-th-text="#{CchbPrdBaseInfo001.openCircleDays}">其他规律开放周期（天）</label>
 							<div class="layui-input-inline input-inline">
 								<input type="text" name="openCircleDays" id="openCircleDays"
-									   data-th-value="${entity?.openCircleDays}" maxlength="6" onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"
+									   data-th-value="${entity?.openCircleDays}" maxlength="6" onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
 									   class="layui-input form-input" placeholder="请输入内容"
 									   data-th-placeholder="#{SysCommon.placeholder}" >
 							</div>
@@ -228,7 +228,7 @@
 							<label class="layui-form-label form-label-wrap" data-th-text="#{CchbPrdBaseInfo001.fitCircleDays}">定期开放周期(天)</label>
 							<div class="layui-input-inline input-inline">
 								<input type="text" name="fitCircleDays" id="fitCircleDays"
-									   data-th-value="${entity?.fitCircleDays}" maxlength="4" onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"
+									   data-th-value="${entity?.fitCircleDays}" maxlength="4" onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
 									   class="layui-input form-input" placeholder="请输入内容"
 									   data-th-placeholder="#{SysCommon.placeholder}" >
 							</div>

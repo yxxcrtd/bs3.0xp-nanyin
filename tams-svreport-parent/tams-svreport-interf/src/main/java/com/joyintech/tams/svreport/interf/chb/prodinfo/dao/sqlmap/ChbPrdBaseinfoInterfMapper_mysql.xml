@@ -466,7 +466,8 @@
 		EXC_FIN_SECTOR,IS_SHORT_TERM,SHORT_TERM,IS_FREE_REDEM,
 		CASH_MANA_CATE,YIELD,INVEST_FEE_RATE,CUSTOMER_TYPE,CALENDAR_ID
 		,YIELD_LOW,YIELD_HIGH,YIELD_REMARK,BUSI_ACCT_NO,ACCT_NAME,IS_TRANSFER
-		,IS_FHXGCP,IS_YLLCCP,GRAD_PROPORTION,PRD_SPEC_PROPERTY,ZJXT_FLAG)
+		,IS_FHXGCP,IS_YLLCCP,GRAD_PROPORTION,PRD_SPEC_PROPERTY,ZJXT_FLAG
+		,MANA_CATE_FIT,ISSUE_STATUS_REMARK,FIT_CIRCLE_DAYS)
 		select
 		de.*
 		from
@@ -614,6 +615,10 @@
 			,CAST(#{dto.gradProportion,jdbcType=DECIMAL}  AS DECIMAL(8,5) )GRAD_PROPORTION
 			,#{dto.prdSpecProperty,jdbcType=VARCHAR} PRD_SPEC_PROPERTY
 			,#{dto.zjxtFlag,jdbcType=VARCHAR} ZJXT_FLAG
+			,#{dto.manaCateFit,jdbcType=VARCHAR} MANA_CATE_FIT
+			,#{dto.issueStatusRemark,jdbcType=VARCHAR} ISSUE_STATUS_REMARK
+			,#{dto.fitCircleDays,jdbcType=DECIMAL} FIT_CIRCLE_DAYS
+
 			from dual
 		</foreach>
 		) TEMP where not exists (select 1 from CHB_PRD_BASEINFO CII where CII.PROD_ID = TEMP.PROD_ID)
@@ -764,6 +769,9 @@
 			,CAST(#{dto.gradProportion,jdbcType=DECIMAL}  AS DECIMAL(8,5) )GRAD_PROPORTION
 			,#{dto.prdSpecProperty,jdbcType=VARCHAR} PRD_SPEC_PROPERTY
 			,#{dto.zjxtFlag,jdbcType=VARCHAR} ZJXT_FLAG
+			,#{dto.manaCateFit,jdbcType=VARCHAR} MANA_CATE_FIT
+			,#{dto.issueStatusRemark,jdbcType=VARCHAR} ISSUE_STATUS_REMARK
+			,#{dto.fitCircleDays,jdbcType=DECIMAL} FIT_CIRCLE_DAYS
 			from dual
 		</foreach>
 		) TEMP
@@ -905,6 +913,9 @@
 		,A.GRAD_PROPORTION = B.GRAD_PROPORTION
 		,A.PRD_SPEC_PROPERTY = B.PRD_SPEC_PROPERTY
 		,A.ZJXT_FLAG = B.ZJXT_FLAG
+		,A.MANA_CATE_FIT = B.MANA_CATE_FIT
+		,A.ISSUE_STATUS_REMARK = B.ISSUE_STATUS_REMARK
+		,A.FIT_CIRCLE_DAYS = B.FIT_CIRCLE_DAYS
 		where A.PROD_ID = B.PROD_ID;
 	</insert>
 	<select id="getParentCode" parameterType="java.lang.String" resultType="java.lang.String">

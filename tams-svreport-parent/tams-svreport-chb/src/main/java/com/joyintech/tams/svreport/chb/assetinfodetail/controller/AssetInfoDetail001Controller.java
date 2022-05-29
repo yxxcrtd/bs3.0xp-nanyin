@@ -18,6 +18,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -71,6 +72,9 @@ public class AssetInfoDetail001Controller extends BaseController {
     
     @SuppressWarnings("unused")
 	private Logger logger = LoggerFactory.getLogger(getClass());
+
+	@Value("${spring.pageId}")
+    private String pageId;
     
 	/**
 	 * {@inheritDoc}
