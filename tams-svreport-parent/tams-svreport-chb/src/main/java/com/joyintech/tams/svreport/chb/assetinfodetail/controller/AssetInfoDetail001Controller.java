@@ -100,6 +100,7 @@ public class AssetInfoDetail001Controller extends BaseController {
 			model.addAttribute("searchDataEnd", map.get("searchDataEnd"));
 			model.addAttribute("isMain", "01");
 		}
+		model.addAttribute("file",pageId);
 		super.setSelectOptionToModel(model,DictCode.资产_负债类别, DictCode.资产_负债二级类别,DictCode.资产负债一级类别
 				, DictCode.中债_上游资产一级分类, DictCode.中债_上游资产二级分类,DictCode.中债_上游资产三级分类,DictCode.中债_上游资产四级分类,
 				DictCode.中债_上游资产五级分类, DictCode.中债数据状态);
@@ -177,13 +178,13 @@ public class AssetInfoDetail001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "checkConfirmMsgForImportData", method = RequestMethod.POST)
-	public AjaxResult checkConfirmMsgForImportData(String fileName,String tableName) throws Exception {
-		return assetInfoDetailMService.checkConfirmMsgForImportData(fileName,tableName);
+	public AjaxResult checkConfirmMsgForImportData(String fileName,String pageId) throws Exception {
+		return assetInfoDetailMService.checkConfirmMsgForImportData(fileName,pageId);
 	}
 
 	@ResponseBody
 	@RequestMapping("/importFile")
-	public List<com.joyintech.tams.systemtools.dto.ExcelValidDto> importData(String fileName,String tableName) throws Exception {
-		return this.assetInfoDetailMService.importData(fileName,tableName);
+	public List<com.joyintech.tams.systemtools.dto.ExcelValidDto> importData(String fileName) throws Exception {
+		return this.assetInfoDetailMService.importData(fileName);
 	}
 }

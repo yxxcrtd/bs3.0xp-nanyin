@@ -793,22 +793,7 @@ public abstract class FileImpService extends InterfService{
         return infoList;
     }
 
-    /**
-     * add by wubingbing 20220521
-     * @param infoList
-     * @param fireName
-     * @param checkTableInfo
-     * @param coverFlag
-     * @return
-     */
-    public List<Map<String, String>> checkDataCodeCheck(List<Map<String,String>> infoList, String fireName, ChbCheckTableInfo checkTableInfo,String coverFlag) {
-        // 配置脚本校验
-        checkData(false, infoList, fireName, checkTableInfo.getTableName(), checkTableInfo.getTableName(), checkTableInfo.getBussinessKey(), checkTableInfo.getCheckEuplicatedKeys());
-        // 代码校验
-        commonCodeCheckBatchService.codeCheckCommon(infoList, checkTableInfo, fireName,coverFlag);
 
-        return infoList;
-    }
     /**
      * add by wubingbing 20220522
      * @param infoList

@@ -94,7 +94,11 @@ public class ErrdataConvertUtil {
                             //对于Date类型处理
                         } else if ("java.util.Date".equals(type.getTypeName())) {
                             //对类的实例字段进行赋值
-                            field.set(chbAssetInfo, DateUtil.parse(value.toString()));
+                            try {
+                                field.set(chbAssetInfo, DateUtil.parse(value.toString()));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         } else {
                             //其它类型处理
                             //对类的实例字段进行赋值

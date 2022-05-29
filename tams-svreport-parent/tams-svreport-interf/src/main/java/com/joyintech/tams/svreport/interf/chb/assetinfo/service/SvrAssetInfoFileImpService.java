@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import com.joyintech.tams.svreport.interf.chb.baseinfo.dao.SvrMstCustomerInfoAddImpMapper;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -189,27 +190,22 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
 	 * @see com.joyintech.tams.common.FileImpService#saveDataBySteps(java.util.List)
 	 */
     @Override
-    public String importDB(List<Map<String, String>> assetInfoList,InterfFile interfFile, String date){
-        // 数据检查
-        // 添加待处理的数据
-        checkDataCodeCheck(assetInfoList, interfFile.getFilename(), ChbCheckTableInfo.资产要素登记表INFO);
-//        checkData(assetInfoList, interfFile.getFilename()
-//                , InterfDefine.资产要素信息接口数据.getCode(), InterfDefine.资产要素信息接口数据.getCode(),BUSSINESSKEY, DUPLICATIED_LIST);
-        // 待入库为空则直接返回
+    public String importDB(List<ExcelValidDto> listExcel,List<Map<String, String>> assetInfoList, InterfFile interfFile, String date){
+        ChbInterfConfigDto interfConfig = ChbInterfUtil.queryInterfConfigByInterfid(InterfDefine.资产要素信息接口数据.getCode());
+        if (interfConfig == null){
+            logger.info("CHB_INTERF_CONFIG表中无配置项！");
+            return "fail";
+        }
+        checkImportData(listExcel, assetInfoList, interfFile.getFilename(), ChbCheckTableInfo.资产要素登记表INFO,interfConfig.getCoverFlag(), listExcel == null? "I" : "D");
         if (CollectionUtils.isEmpty(assetInfoList)){
             return "success";
         }
-        // 待处理数据入库
-//        ChbInterfConfigDto interfConfig = ChbInterfUtil.queryInterfConfigByInterfid(InterfDefine.资产要素信息接口数据.getCode());
-//        if (interfConfig == null){
-//            logger.info("CHB_INTERF_CONFIG表中无配置项！");
-//            return "fail";
-//        }
-//        String saveFlag = interfConfig.getContentType();
-        String saveResult = saveData(assetInfoList,null,interfFile.getDataSource());
+        String saveFlag = interfConfig.getContentType();
+        String result=saveData(assetInfoList, saveFlag, listExcel == null? "I" : "D");
         // 更新系统配置时间
         ChbInterfUtil.updateInterfTimeBySysdate( InterfDefine.投资交易信息接口数据.getCode());
-        return saveResult;
+        return result;
+
     }
     
     /**
@@ -232,7 +228,12 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
         }
         return "fail";
     }
-    
+
+    @Override
+    public String importDB(List<Map<String, String>> listData, InterfFile interfFile, String date) {
+        return null;
+    }
+
     /**
      * 功能:批量入库
      * @since 1.7.0

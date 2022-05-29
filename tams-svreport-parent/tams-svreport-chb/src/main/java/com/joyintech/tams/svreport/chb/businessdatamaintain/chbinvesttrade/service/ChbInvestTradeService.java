@@ -229,7 +229,9 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
         for (ChbInfoMgrResultConfig config : chbInfoMgrResultConfigList) {
             if(!StringUtils.isEmpty(config.getResultdictCode())){
                 for (Map<String, String> m : list) {
-                    m.put(config.getRealColumnId(),m.get(config.getRealColumnId()).split(" ")[0]);
+                    if(m.get(config.getRealColumnId())!=null){
+                        m.put(config.getRealColumnId(),m.get(config.getRealColumnId()).split(" ")[0]);
+                    }
                 }
             }
         }

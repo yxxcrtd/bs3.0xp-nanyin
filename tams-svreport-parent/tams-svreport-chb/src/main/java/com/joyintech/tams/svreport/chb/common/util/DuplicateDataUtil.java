@@ -3,6 +3,7 @@ package com.joyintech.tams.svreport.chb.common.util;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jettison.json.JSONObject;
 
 import java.util.*;
@@ -61,5 +62,21 @@ public class DuplicateDataUtil {
             }
         }
 
+    }
+
+    public static boolean checkFileName(String fileName,List<String> list){
+        if(StringUtils.isEmpty(fileName)){
+            return false;
+        }else if(list == null || list.size() <1){
+            return false;
+        }
+        boolean flag = false;
+        for (String var1 : list) {
+            if(fileName.indexOf(var1)>=0){
+                flag = true;
+                break;
+            }
+        }
+        return flag;
     }
 }

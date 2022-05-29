@@ -2064,56 +2064,56 @@
         SELECT
         A.dataStatus ,
         A.ASSET_UUID,
-        A.asset_name,
-        A.asset_code,
+        A.ASSET_NAME,
+        A.ASSET_CODE,
         trim(L.LINKED_ITEM_CODE) asset_type,
-        A.asset_type2,
-        A.org_asset_type1,
-        A.org_asset_type2,
-        A.org_asset_type3,
+        A.ASSET_TYPE2,
+        A.ORG_ASSET_TYPE1,
+        A.ORG_ASSET_TYPE2,
+        A.ORG_ASSET_TYPE3,
         A.vDateStr,
         A.mDateStr,
         A.ERRMSG
 
 
         FROM (
-        SELECT i.status dataStatus ,
+        SELECT i.STATUS dataStatus ,
         i.ASSET_UUID,
-        i.asset_name,
-        i.asset_code,
-        i.asset_type,
-        i.asset_type2,
-        i.org_asset_type1,
-        i.org_asset_type2,
-        i.org_asset_type3,
-        to_char(i.vdate,'yyyy-MM-dd') vDateStr,
-        to_char(i.mdate,'yyyy-MM-dd') mDateStr,
+        i.ASSET_NAME,
+        i.ASSET_CODE,
+        i.ASSET_TYPE,
+        i.ASSET_TYPE2,
+        i.ORG_ASSET_TYPE1,
+        i.ORG_ASSET_TYPE2,
+        i.ORG_ASSET_TYPE3,
+        to_char(i.VDATE,'yyyy-MM-dd') vDateStr,
+        to_char(i.MDATE,'yyyy-MM-dd') mDateStr,
         null   ERRMSG
         FROM chb_asset_info i
         WHERE 1=1
-        and i.status in ('E','D')
+        and i.STATUS in ('E','D')
         <if test="assetCodes != null and assetCodes.length>0">
             <foreach collection="assetCodes" item="item" open=" and ASSET_CODE in(" separator="," close=")">
                 #{item}
             </foreach>
         </if>
         <if test="assetType2s != null and assetType2s.length>0">
-            <foreach collection="assetType2s" item="item" open=" and asset_type2 in(" separator="," close=")">
+            <foreach collection="assetType2s" item="item" open=" and ASSET_TYPE2 in(" separator="," close=")">
                 #{item}
             </foreach>
         </if>
         <if test="orgAssetType1s != null and orgAssetType1s.length>0">
-            <foreach collection="orgAssetType1s" item="item" open=" and org_asset_type1 in(" separator="," close=")">
+            <foreach collection="orgAssetType1s" item="item" open=" and ORG_ASSET_TYPE1 in(" separator="," close=")">
                 #{item}
             </foreach>
         </if>
         <if test="orgAssetType2s != null and orgAssetType2s.length>0">
-            <foreach collection="orgAssetType2s" item="item" open=" and org_asset_type2 in(" separator="," close=")">
+            <foreach collection="orgAssetType2s" item="item" open=" and ORG_ASSET_TYPE2 in(" separator="," close=")">
                 #{item}
             </foreach>
         </if>
         <if test="dataStatus != null and dataStatus != ''">
-            and i.status = #{dataStatus}
+            and i.STATUS = #{dataStatus}
         </if>
 
         <if test="Assetuuid != null and Assetuuid!=''">
@@ -2121,25 +2121,25 @@
         </if>
 
         and not exists (
-            SELECT 1 FROM CHB_ASSET_INFO_ERRODATA IE WHERE IE.asset_code = i.asset_code
+            SELECT 1 FROM CHB_ASSET_INFO_ERRODATA IE WHERE IE.ASSET_CODE = i.ASSET_CODE
         )
 
         UNION ALL
-        SELECT 'A' dataStatus,
+        SELECT 'A' DATASTATUS,
         e.DATAUUID ASSET_UUID,
-        e.asset_name,
-        e.asset_code,
-        e.asset_type,
-        e.asset_type2,
-        e.org_asset_type1,
-        e.org_asset_type2,
-        e.org_asset_type3,
-        e.vdate  vDateStr,
-        e.mdate mDateStr,
+        e.ASSET_NAME,
+        e.ASSET_CODE,
+        e.ASSET_TYPE,
+        e.ASSET_TYPE2,
+        e.ORG_ASSET_TYPE1,
+        e.ORG_ASSET_TYPE2,
+        e.ORG_ASSET_TYPE3,
+        e.VDATE  vDateStr,
+        e.MDATE mDateStr,
         e.ERR_MSG
         FROM CHB_ASSET_INFO_ERRODATA e
         WHERE 1=1
-        and e.status in ('E')
+        and e.STATUS in ('A')
         <if test="assetCodes != null and assetCodes.length>0">
             <foreach collection="assetCodes" item="item" open=" and e.ASSET_CODE in(" separator="," close=")">
                 #{item}
@@ -2147,17 +2147,17 @@
         </if>
 
         <if test="assetType2s != null and assetType2s.length>0">
-            <foreach collection="assetType2s" item="item" open=" and e.asset_type2 in(" separator="," close=")">
+            <foreach collection="assetType2s" item="item" open=" and e.ASSET_TYPE2 in(" separator="," close=")">
                 #{item}
             </foreach>
         </if>
         <if test="orgAssetType1s != null and orgAssetType1s.length>0">
-            <foreach collection="orgAssetType1s" item="item" open=" and e.org_asset_type1 in(" separator="," close=")">
+            <foreach collection="orgAssetType1s" item="item" open=" and e.ORG_ASSET_TYPE1 in(" separator="," close=")">
                 #{item}
             </foreach>
         </if>
         <if test="orgAssetType2s != null and orgAssetType2s.length>0">
-            <foreach collection="orgAssetType2s" item="item" open=" and e.org_asset_type2 in(" separator="," close=")">
+            <foreach collection="orgAssetType2s" item="item" open=" and e.ORG_ASSET_TYPE2 in(" separator="," close=")">
                 #{item}
             </foreach>
         </if>
@@ -2168,7 +2168,7 @@
             AND DATAUUID = #{Assetuuid,jdbcType=VARCHAR}
         </if>
         )  a
-        left join  SYS_DATADICT_LIST_LINK L ON  L.LINKED_DICT_CODE = 'SVR_ASSET_TYPE_FIRST_LEVEL'  AND L.ITEM_CODE = A.asset_type2
+        left join  SYS_DATADICT_LIST_LINK L ON  L.LINKED_DICT_CODE = 'SVR_ASSET_TYPE_FIRST_LEVEL'  AND L.ITEM_CODE = A.ASSET_TYPE2
         WHERE 1=1
         <if test="assetTypes != null and assetTypes.length>0">
             <foreach collection="assetTypes" item="item" open=" and trim(L.LINKED_ITEM_CODE) in(" separator="," close=")">

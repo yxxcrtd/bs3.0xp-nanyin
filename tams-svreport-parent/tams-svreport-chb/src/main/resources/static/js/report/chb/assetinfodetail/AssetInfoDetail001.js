@@ -102,7 +102,7 @@
 		$('#AssetInfoDetail001_btn_import').click(function() {
 			Joyin.confirm("请确认是否要导入数据？", function() {
 				var options = {};
-				options.pageId = 'AssetInfoDetail001_2';
+				options.pageId = file;
 				options.exts = 'zip|xls|xlsx';
 				Joyin.uploadFile(options,function(fileName) {
 					Joyin.ajax(basePath + 'chb/assetinfodetail/AssetInfoDetail001/checkConfirmMsgForImportData', {fileName: fileName,tableName:'CHB_ASSET_INFO'}, function(result) {
