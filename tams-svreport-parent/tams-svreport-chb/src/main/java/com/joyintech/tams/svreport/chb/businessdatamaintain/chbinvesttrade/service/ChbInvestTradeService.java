@@ -67,6 +67,7 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
             entity.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
             entity.setTradeSeqno(IDGenerator.generate(32));
             chbInvestTradeDao.insert(entity);
+            chbInvestTradeErrodataDao.deleteChbInvestTradeErrodata(entity.getProdId(),entity.getTradeCode(),entity.getAssetCode());
         }
         else if(OperationType.MODIFY.equals(type)){
             if(StringUtil.equals(DictCodeListExt3.中债数据状态_待处理.getValue(),entity.getStatusValid())){

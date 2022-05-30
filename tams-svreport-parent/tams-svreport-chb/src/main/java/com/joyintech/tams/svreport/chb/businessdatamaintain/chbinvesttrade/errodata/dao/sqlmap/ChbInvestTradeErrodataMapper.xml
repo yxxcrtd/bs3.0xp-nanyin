@@ -23,6 +23,9 @@
     <delete id="deleteByPrimaryKey">
         delete from CHB_INVEST_TRADE_ERRODATA where DATAUUID = #{tradeSeqno}
     </delete>
+    <delete id="deleteChbInvestTradeErrodata">
+        delete from CHB_INVEST_TRADE_ERRODATA where PROD_ID = #{prodId} and TRADE_CODE = #{tradeCode} and ASSET_CODE = #{assetCode}
+    </delete>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap">
         select * from CHB_INVEST_TRADE_ERRODATA where DATAUUID = #{tradeSeqno}
     </select>

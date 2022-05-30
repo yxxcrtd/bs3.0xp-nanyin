@@ -14,10 +14,13 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import com.joyintech.tams.report.interf.common.constant.InterfConstants;
+import com.joyintech.tams.svreport.interf.chb.proddeclare.dao.ChbPrdDeclareInfoMapper;
+import com.joyintech.tams.svreport.interf.chb.proddeclare.dto.ChbPrdDeclareInfoDto;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
@@ -26,6 +29,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -116,6 +120,9 @@ public class SvrProdInfoFileImpService extends FileImpService {
 	@Autowired
 	private ChbPrdBaseinfoInterfMapper chbPrdBaseinfoInterfMapper;
 
+	@Autowired
+	private ChbPrdDeclareInfoMapper chbPrdDeclareInfoMapper;
+
     @Autowired
     private ChbPrdresistCodeMapper chbPrdresistCodeMapper;
 
@@ -205,6 +212,29 @@ public class SvrProdInfoFileImpService extends FileImpService {
 				GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 		// 转dto
 		List<ChbPrdBaseinfo> chbPrdBaseinfoList  = (List<ChbPrdBaseinfo>) convertMapToEntity(listData,ChbPrdBaseinfo.class, dataSource);
+		chbPrdBaseinfoInterfMapper.deleteByProdid(chbPrdBaseinfoList);
+		List<ChbPrdDeclareInfoDto> chbPrdDeclareInfoDtoList = chbPrdDeclareInfoMapper.selectByChbPrdDeclareInfoList(chbPrdBaseinfoList.stream().map(e -> e.getProdInsId()).collect(Collectors.toList()));
+		for (ChbPrdBaseinfo chbPrdBaseinfo : chbPrdBaseinfoList) {
+			for (ChbPrdDeclareInfoDto chbPrdDeclareInfoDto : chbPrdDeclareInfoDtoList) {
+				if(chbPrdBaseinfo.getProdInsId().equals(chbPrdDeclareInfoDto.getProdInsId())){
+					String prodName = chbPrdBaseinfo.getProdName();
+					Date createTime = chbPrdBaseinfo.getCreateTime();
+					String createUser = chbPrdBaseinfo.getCreateUser();
+					Date updateTime = chbPrdBaseinfo.getUpdateTime();
+					String updateUser = chbPrdBaseinfo.getUpdateUser();
+					String source = chbPrdBaseinfo.getDataSource();
+					BeanUtils.copyProperties(chbPrdDeclareInfoDto,chbPrdBaseinfo);
+					chbPrdBaseinfo.setProdName(prodName);
+					chbPrdBaseinfo.setCreateTime(createTime);
+					chbPrdBaseinfo.setCreateUser(createUser);
+					chbPrdBaseinfo.setUpdateTime(updateTime);
+					chbPrdBaseinfo.setUpdateUser(updateUser);
+					chbPrdBaseinfo.setDataSource(source);
+					chbPrdBaseinfo.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
+					break;
+				}
+			}
+		}
 		// 再加工
 		chbPrdBaseinfoList.stream().forEach(dto->{
 			dto.setProduuid(IDGenerator.generate(36));

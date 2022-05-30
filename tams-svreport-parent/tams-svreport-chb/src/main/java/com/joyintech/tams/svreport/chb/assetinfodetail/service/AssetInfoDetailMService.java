@@ -1,6 +1,7 @@
 package com.joyintech.tams.svreport.chb.assetinfodetail.service;
 
 import com.google.common.collect.Lists;
+import com.joyintech.component.svrreport.chb.dto.ChbAssetInfoDto;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.JoyinMessage;
 import com.joyintech.framework.ajax.MessageType;
@@ -44,6 +45,7 @@ import org.aspectj.weaver.ast.Var;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.beans.PropertyDescriptor;
@@ -90,13 +92,16 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 	@Autowired
 	private BaseCommonCheckService baseCommonCheckService;
 
+	@Value("${spring.pageId}")
+	private String pageId;
+
 	static Map<String,Set<String>> map = null;
 
 	static Map<String,Set<String>> maptwo = null;
 
 	private Map<String,List<String>> propertiesMap = new HashMap<>();
 	{
-		propertiesMap.put("AssetInfoDetail001_3",Lists.newArrayList("资产要素维护信息"));
+		propertiesMap.put("AssetInfoDetail001_3",Lists.newArrayList("资产要素导入"));
 		propertiesMap.put("AssetInfoDetail001_2",Lists.newArrayList("QDII","存款","非标","各类资产其他项","回购","基金","金融衍生品","票据及其他","权益类","债券","资产管理产品"));
 	}
 	/**
@@ -406,9 +411,9 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 	 * @param fileName 导入的文件名
 	 * @return 处理结果
 	 */
-	public AjaxResult checkConfirmMsgForImportData(String fileName,String pageId) throws Exception {
+	public AjaxResult checkConfirmMsgForImportData(String fileName) throws Exception {
 		AjaxResult webResult = new AjaxResult();
-		if (DuplicateDataUtil.checkFileName(fileName,propertiesMap.get(pageId))){
+		if (!DuplicateDataUtil.checkFileName(fileName,propertiesMap.get(pageId))){
 			webResult.setMessage(this.getMessage("ImportFileName"), MessageType.错误消息);
 			return webResult;
 		}
@@ -578,4 +583,16 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		return var2;
 	}
 
+
+	public List<AssetInfoDetailDto> selectAll(Map<String, Object> param) {
+		//获取当前登录用户的机构编码
+		param.put("orgCode", CommonUtil.getTreeInstCode());
+
+		param.put("assetCodes", StringUtil.isNotEmpty(param.get("assetCode"))?(param.get("assetCode").toString().split(",")):null);
+		param.put("assetTypes", StringUtil.isNotEmpty(param.get("assetType"))?(param.get("assetType").toString().split(",")):null);
+		param.put("assetType2s", StringUtil.isNotEmpty(param.get("assetType2"))?(param.get("assetType2").toString().split(",")):null);
+		param.put("orgAssetType1s", StringUtil.isNotEmpty(param.get("orgAssetType1"))?(param.get("orgAssetType1").toString().split(",")):null);
+		param.put("orgAssetType2s", StringUtil.isNotEmpty(param.get("orgAssetType2"))?(param.get("orgAssetType2").toString().split(",")):null);
+		return assetInfoDetailMapper.selectList(param);
+	}
 }

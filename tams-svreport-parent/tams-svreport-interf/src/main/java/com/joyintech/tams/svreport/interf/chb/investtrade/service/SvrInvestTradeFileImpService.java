@@ -212,6 +212,8 @@ public class SvrInvestTradeFileImpService  extends FileImpService{
         List<String> listCloumn = baseMapper.getTableColumnList(InterfDefine.投资交易信息接口数据.getCode());
         // 转dto
         List<ChbInvestTrade> chbInvestTradeList = (List<ChbInvestTrade>)convertMapToEntity(listData, ChbInvestTrade.class, dataSource);
+        // 删除已存在的数据
+        chbInvestTradeInterfMapper.deleteChbInvestTrade(chbInvestTradeList);
         // 再加工
         // 汇率信息放至最外层，每次计算折算人民币，先查rateMap
         Map<String, BigDecimal> rateMap = new HashMap<>();
