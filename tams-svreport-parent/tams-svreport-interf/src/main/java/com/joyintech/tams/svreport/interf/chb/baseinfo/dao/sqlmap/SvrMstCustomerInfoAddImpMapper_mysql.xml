@@ -81,6 +81,14 @@
     from MST_CUSTOMER_INFO_ADD
     where 1=1
   </select>
+
+  <select id="getAllMstCustomerInfoList" parameterType="com.joyintech.tams.common.base.entity.MstCustomerInfo" resultType="com.joyintech.tams.common.base.entity.MstCustomerInfo">
+    SELECT
+    CUSTOMER_ID customerId,
+    CUSTOMER_NAME customerName
+    FROM MST_CUSTOMER_INFO
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from MST_CUSTOMER_INFO_ADD
     where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}

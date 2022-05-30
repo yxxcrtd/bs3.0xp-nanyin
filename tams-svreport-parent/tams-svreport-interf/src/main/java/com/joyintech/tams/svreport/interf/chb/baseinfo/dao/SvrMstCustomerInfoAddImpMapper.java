@@ -3,6 +3,7 @@ package com.joyintech.tams.svreport.interf.chb.baseinfo.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.MstCustomerInfo;
 import com.joyintech.tams.common.base.entity.MstCustomerInfoAddWithBLOBs;
 import org.apache.ibatis.annotations.Param;
 
@@ -36,4 +37,10 @@ public interface SvrMstCustomerInfoAddImpMapper {
      * @return
      */
     List<MstCustomerInfoAdd> getAllMstCustomerInfoInstit();
+
+    /**
+     * 查询所有发行机构信息
+     * @return
+     */
+    List<MstCustomerInfo> getAllMstCustomerInfoList();
 }
