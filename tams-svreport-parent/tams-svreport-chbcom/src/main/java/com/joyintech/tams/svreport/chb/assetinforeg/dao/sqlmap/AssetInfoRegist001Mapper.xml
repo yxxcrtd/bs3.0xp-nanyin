@@ -6124,6 +6124,7 @@
          </foreach>
       </if>
       and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
+	  and SUBMIT_FEEDBACK_STATUS = '03'
     </insert>
     <delete id="deleteLastSubmitRegist" parameterType="java.util.Map">
       delete from CHB_ASSET_INFO_SUB
@@ -6134,6 +6135,7 @@
          </foreach>
       </if>
       and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
+		and SUBMIT_FEEDBACK_STATUS = '03'
     </delete>
     <insert id="insertReportDataFromHis" parameterType="java.util.Map">
       insert into CHB_ASSET_INFO_SUB (
