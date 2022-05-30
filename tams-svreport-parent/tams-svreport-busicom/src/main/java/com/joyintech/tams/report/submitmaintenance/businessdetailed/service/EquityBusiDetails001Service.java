@@ -2499,7 +2499,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                 listNESave.addAll(listNE);
                 listNE.stream().forEach(i->{
                     EquityBusiInfoRegist001Dto copy = new EquityBusiInfoRegist001Dto();
-                    BeanUtil.copyPropertiesIgnoreNull(i,copy);
+                    BeanUtil.copyPropertiesIgnoreNull(copy,i);
                     listNESub.add(copy);
                 });
                 changeStatusValue(listNESub, false, null, equityInfo001Map);
