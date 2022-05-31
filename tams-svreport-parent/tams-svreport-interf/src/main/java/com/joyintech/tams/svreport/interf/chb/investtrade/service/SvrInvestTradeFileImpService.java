@@ -7,13 +7,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -259,10 +253,14 @@ public class SvrInvestTradeFileImpService  extends FileImpService{
             chbInvestTrade.setOrgCode(CommonUtil.getOrgCode());
         });
         if (chbInvestTradeList != null && chbInvestTradeList.size() > 0) {
+            //修改状态改成有效
+            chbInvestTradeList.forEach(e->{
+                if (Objects.equals(DictCodeListExt1.维护数据状态_修改.getValue(),e.getStatus())) {
+                    e.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
+                }
+            });
             if(InterfConstants.SAVEFLAG_ADD.equals(saveFlag)){
                 insertDataMerge(chbInvestTradeList,saveFlag);
-            }else{
-
             }
         }
 
