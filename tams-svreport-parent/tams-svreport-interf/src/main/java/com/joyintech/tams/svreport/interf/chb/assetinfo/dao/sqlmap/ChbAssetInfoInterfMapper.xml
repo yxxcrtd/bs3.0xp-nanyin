@@ -13218,6 +13218,9 @@
                 ,#{item.constracteBusiType,jdbcType=VARCHAR} CONSTRACTE_BUSI_TYPE
                 ,#{item.constracteGrade,jdbcType=VARCHAR} CONSTRACTE_GRADE
                 ,#{item.constracteHeaverTimes,jdbcType=DECIMAL} CONSTRACTE_HEAVER_TIMES
+                ,#{item.profitFlag,jdbcType=VARCHAR} PROFIT_FLAG
+                ,#{item.accountNo,jdbcType=VARCHAR} ACCOUNT_NO
+                ,#{item.creditAssetCode,jdbcType=VARCHAR} CREDIT_ASSET_CODE
                 from dual
             </foreach>
         ) TEMP
@@ -13445,6 +13448,9 @@
             ,CII.CONSTRACTE_BUSI_TYPE	=	TEMP.CONSTRACTE_BUSI_TYPE
             ,CII.CONSTRACTE_GRADE	=	TEMP.CONSTRACTE_GRADE
             ,CII.CONSTRACTE_HEAVER_TIMES	=	TEMP.CONSTRACTE_HEAVER_TIMES
+            ,CII.PROFIT_FLAG	=	TEMP.PROFIT_FLAG
+            ,CII.ACCOUNT_NO	=	TEMP.ACCOUNT_NO
+            ,CII.CREDIT_ASSET_CODE	=	TEMP.CREDIT_ASSET_CODE
         <!-- 未匹配到这插入 -->
         WHEN NOT MATCHED THEN
         INSERT (ASSET_UUID, ASSET_CODE, ASSET_TYPE,
@@ -13556,6 +13562,9 @@
         ,CONSTRACTE_BUSI_TYPE
         ,CONSTRACTE_GRADE
         ,CONSTRACTE_HEAVER_TIMES
+        ,PROFIT_FLAG
+        ,ACCOUNT_NO
+        ,CREDIT_ASSET_CODE
         )
         values(
             TEMP.ASSET_UUID,
@@ -13777,6 +13786,9 @@
             ,TEMP.CONSTRACTE_BUSI_TYPE
             ,TEMP.CONSTRACTE_GRADE
             ,TEMP.CONSTRACTE_HEAVER_TIMES
+            ,TEMP.PROFIT_FLAG
+            ,TEMP.ACCOUNT_NO
+            ,TEMP.CREDIT_ASSET_CODE
         )
     </insert>
 
