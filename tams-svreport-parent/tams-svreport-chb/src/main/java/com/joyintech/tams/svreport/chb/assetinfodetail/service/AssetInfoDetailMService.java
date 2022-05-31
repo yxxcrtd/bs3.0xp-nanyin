@@ -16,6 +16,7 @@ import com.joyintech.system.base.entity.SysDatadictListLink;
 import com.joyintech.tams.common.InterfFile;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.common.base.entity.ChbInfoMgrResultConfig;
+import com.joyintech.tams.common.base.entity.MstCustomerInfo;
 import com.joyintech.tams.common.base.entity.MstCustomerInfoAdd;
 import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
@@ -214,6 +215,19 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		//获取市场机构规模数据
 		Map<String,MstCustomerInfoAdd> orgListMap = institList.stream().collect(
 				Collectors.toMap(MstCustomerInfoAdd::getCustomerId,(p)->p,(key1, key2)->key1));
+
+		List<MstCustomerInfo> customerInfoList = svrMstCustomerInfoAddImpMapper.getAllMstCustomerInfoList();
+		//获取市场机构名称
+		Map<String,MstCustomerInfo> customerInfoMap = new HashMap<>();
+		for(MstCustomerInfo customerInfo:customerInfoList){
+			String customerId = customerInfo.getCustomerId();
+			customerInfoMap.put(customerId,customerInfo);
+		}
+		if(StringUtil.isNotEmpty(dto.getIssuePartyName())){
+			if(customerInfoMap.get(dto.getIssuePartyName()) != null){
+				dto.setIssuePartyName(customerInfoMap.get(dto.getIssuePartyName()).getCustomerName());
+			}
+		}
 
 		/*** 基金类资产数据接入会同步保存mngOrgName字段 **/
 		if(DictCodeListExt2.资产_负债类别_私募基金.getValue().equals(dto.getAssetType())
