@@ -3037,7 +3037,12 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 						if (null != dateStr) {
 							//修改  orcle的拼法 TISHKS-1005 20220330 by wangyaning start
 //							itemMap.put(key, "'" + dateStr +"'");
-							itemMap.put(key, "to_date('" + dateStr +"' , 'yyyy-mm-dd hh24:mi:ss')");
+							if (BaseCommonCheckService.isMYSQLDataBase()){
+								itemMap.put(key, "str_to_date('" + dateStr +"' , '%Y-%m-%d %T')");
+							}else {
+								itemMap.put(key, "to_date('" + dateStr +"' , 'yyyy-mm-dd hh24:mi:ss')");
+							}
+
 							//修改  orcle的拼法 TISHKS-1005 20220330 by wangyaning end
 						} else {
 							itemMap.put(key, null);
