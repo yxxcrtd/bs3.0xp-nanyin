@@ -601,6 +601,7 @@ public class CommonCodeCheckBatchService {
                 removeExistsChbAssetInfoError(chbAssetInfoErrorList);
             }
             deleteAssetInfoErrorDataByAssetCode(chbAssetInfoErrorList);
+            deleteChbAssetInfo(chbAssetInfoErrorList);
             insertChbAssetInfoErroData(chbAssetInfoErrorList);
 
         }
@@ -614,6 +615,7 @@ public class CommonCodeCheckBatchService {
                 removeExistsChbInvestTrade(chbInvestTradeErrordataList);
             }
             deleteChbInvestTradeErrorData(chbInvestTradeErrordataList);
+            deleteChbInvestTrade(chbInvestTradeErrordataList);
             insertChbInvestTradeErroData(chbInvestTradeErrordataList);
         }
         //产品基本信息
@@ -624,7 +626,53 @@ public class CommonCodeCheckBatchService {
                 removeExistsChbPrdBaseInfo(chbPrdBaseinfoErrordataList);
             }
             deleteChbPrdBaseInfoErrorData(chbPrdBaseinfoErrordataList);
+            deleteChbPrdBaseInfo(chbPrdBaseinfoErrordataList);
             insertChbPrdBaseInfoErroData(chbPrdBaseinfoErrordataList);
+        }
+    }
+
+    private void deleteChbAssetInfo(List<ChbAssetInfoErrodataWithBLOBs> chbAssetInfoErrorList) {
+        SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+        try {
+            CommonCodeCheckMapper batchMapper = session.getMapper(CommonCodeCheckMapper.class);
+            batchMapper.deleteChbAssetInfo(chbAssetInfoErrorList);
+        }
+        catch (Exception e) {
+            session.rollback();
+            logger.error("SQL执行异常：", e);
+        }
+        finally {
+            session.close();
+        }
+    }
+
+    private void deleteChbInvestTrade(List<ChbInvestTradeErrodataWithBLOBs> chbInvestTradeErrordataList) {
+        SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+        try {
+            CommonCodeCheckMapper batchMapper = session.getMapper(CommonCodeCheckMapper.class);
+            batchMapper.deleteChbInvestTrade(chbInvestTradeErrordataList);
+        }
+        catch (Exception e) {
+            session.rollback();
+            logger.error("SQL执行异常：", e);
+        }
+        finally {
+            session.close();
+        }
+    }
+
+    private void deleteChbPrdBaseInfo(List<ChbPrdBaseinfoErrodataWithBLOBs> chbPrdBaseinfoErrordataList) {
+        SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+        try {
+            CommonCodeCheckMapper batchMapper = session.getMapper(CommonCodeCheckMapper.class);
+            batchMapper.deleteChbPrdBaseInfo(chbPrdBaseinfoErrordataList);
+        }
+        catch (Exception e) {
+            session.rollback();
+            logger.error("SQL执行异常：", e);
+        }
+        finally {
+            session.close();
         }
     }
 

@@ -222,6 +222,24 @@
     <delete id="deleteChbPrdBaseInfoErrorData">
         delete from CHB_PRD_BASEINFO_ERRODATA where PROD_ID = #{prodId}
     </delete>
+    <delete id="deleteChbPrdBaseInfo" parameterType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfoErrodataWithBLOBs">
+        delete from CHB_PRD_BASEINFO where PROD_ID in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item.prodId}
+        </foreach>
+    </delete>
+    <delete id="deleteChbInvestTrade" parameterType="com.joyintech.tams.common.base.entity.ChbInvestTradeErrodataWithBLOBs">
+        delete from CHB_INVEST_TRADE where (PROD_ID,TRADE_CODE,ASSET_CODE) in
+        <foreach collection="list" item = 'item' open="(" close=")" separator=",">
+            (#{prodId},#{tradeCode},#{assetCode})
+        </foreach>
+    </delete>
+    <delete id="deleteChbAssetInfo" parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfoErrodataWithBLOBs">
+        delete from CHB_ASSET_INFO where ASSET_CODE in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{assetCode}
+        </foreach>
+    </delete>
 
     <select id="checkSalerCredentNo" resultType="integer" parameterType="java.lang.String" >
         select

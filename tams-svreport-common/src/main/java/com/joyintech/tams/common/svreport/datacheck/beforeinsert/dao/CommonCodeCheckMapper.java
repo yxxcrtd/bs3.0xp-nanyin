@@ -115,4 +115,10 @@ public interface CommonCodeCheckMapper {
     List<Map<String, String>> selectChbPrdBaseInfoBusKey(@Param("list") List<ChbPrdBaseinfoErrodataWithBLOBs> list);
 
     List<Map<String, String>> selectChbAssetInfoBusKey(@Param("list") List<ChbAssetInfoErrodataWithBLOBs> list);
+
+    void deleteChbPrdBaseInfo(@Param("list") List<ChbPrdBaseinfoErrodataWithBLOBs> list);
+
+    void deleteChbInvestTrade(@Param("list") List<ChbInvestTradeErrodataWithBLOBs> list);
+
+    void deleteChbAssetInfo(@Param("list") List<ChbAssetInfoErrodataWithBLOBs> list);
 }

@@ -175,4 +175,6 @@ public interface ChbInvestTradeInterfMapper {
 	ChbOrgRegistBankCode selectByRegistBankCode(String registBankCode);
 
     void deleteChbInvestTrade(@Param("list") List<ChbInvestTrade> list);
+
+	void deleteChbInvestTradeErroData(@Param("list") List<ChbInvestTrade> list);
 }

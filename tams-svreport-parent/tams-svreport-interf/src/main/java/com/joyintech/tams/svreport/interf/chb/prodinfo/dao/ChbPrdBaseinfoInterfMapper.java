@@ -25,4 +25,5 @@ public interface ChbPrdBaseinfoInterfMapper {
 
 	String getParentCode(@Param("newFinprodId")String newFinprodId);
 
+	void deleteChbPrdBaseinfoErroData(@Param("list") List<ChbPrdBaseinfo> list);
 }

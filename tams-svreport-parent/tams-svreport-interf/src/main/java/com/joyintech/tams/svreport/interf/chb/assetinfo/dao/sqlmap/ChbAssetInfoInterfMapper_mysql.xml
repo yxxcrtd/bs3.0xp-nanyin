@@ -17040,7 +17040,14 @@
     <delete id="deleteAllChbSecRepayInfoData">
       truncate table CHB_SEC_REPAY_INFO
     </delete>
-
+    <delete id="deleteChbAssetInfoErroData" parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfo">
+        delete from CHB_ASSET_INFO_ERRODATA
+        <where>
+            <foreach collection="list" item="item" index="index" open="ASSET_CODE in (" close=")" separator=",">
+                #{item.assetCode,jdbcType=VARCHAR}
+            </foreach>
+        </where>
+    </delete>
     <insert id="insertChbSecRepayInfoData" parameterType="com.joyintech.tams.common.base.entity.ChbSecRepayInfo" >
         insert into CHB_SEC_REPAY_INFO(SEC_ID,REPAY_DT,SEC_NM,REPAY_RATE,REPAY_NET,TRADE_MARKET,
         REPAY_CYCLE_DAY, REPAY_MODE)

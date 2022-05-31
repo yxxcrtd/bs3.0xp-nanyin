@@ -10,6 +10,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.InterfFile;
 import com.joyintech.tams.common.base.entity.ChbInfoMgrResultConfig;
+import com.joyintech.tams.common.base.entity.ChbInvestTrade;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -25,6 +26,7 @@ import com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.dao.C
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.dto.ChbPrdBaseInfoDto;
 import com.joyintech.tams.svreport.chb.common.util.DuplicateDataUtil;
 import com.joyintech.tams.svreport.chb.common.util.ErrdataConvertUtil;
+import com.joyintech.tams.svreport.interf.chb.investtrade.dao.ChbInvestTradeInterfMapper;
 import com.joyintech.tams.svreport.interf.chb.investtrade.service.SvrInvestTradeFileImpService;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -55,6 +57,8 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
     private SvrInvestTradeFileImpService svrInvestTradeFileImpService;
     @Autowired
     private ChbInfoMgrResultConfigMapper chbInfoMgrResultConfigMapper;
+    @Autowired
+    private ChbInvestTradeInterfMapper chbInvestTradeInterfMapper;
     @Override
     public void doComplete(ChbInvestTradeDto entity, OperationType type) {
         if (OperationType.DELETE.equals(type)) {
@@ -66,8 +70,9 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
             entity.setDataSource(DictCodeListExt2.数据来源_新建导入.getValue());
             entity.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
             entity.setTradeSeqno(IDGenerator.generate(32));
+            List<ChbInvestTrade> chbInvestTrades = Lists.newArrayList((ChbInvestTrade) entity);
+            chbInvestTradeInterfMapper.deleteChbInvestTradeErroData(chbInvestTrades);
             chbInvestTradeDao.insert(entity);
-            chbInvestTradeErrodataDao.deleteChbInvestTradeErrodata(entity.getProdId(),entity.getTradeCode(),entity.getAssetCode());
         }
         else if(OperationType.MODIFY.equals(type)){
             if(StringUtil.equals(DictCodeListExt3.中债数据状态_待处理.getValue(),entity.getStatusValid())){

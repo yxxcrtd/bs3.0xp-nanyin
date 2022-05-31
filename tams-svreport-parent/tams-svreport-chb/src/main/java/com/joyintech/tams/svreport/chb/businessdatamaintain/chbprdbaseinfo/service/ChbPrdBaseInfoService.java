@@ -19,6 +19,7 @@ import com.joyintech.tams.common.InterfFile;
 import com.joyintech.tams.common.base.dao.ChbPrdresistCodeMapper;
 import com.joyintech.tams.common.base.entity.ChbInfoMgrResultConfig;
 
+import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
 import com.joyintech.tams.common.base.entity.ChbPrdresistCode;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -33,6 +34,7 @@ import com.joyintech.tams.svreport.chb.common.util.DuplicateDataUtil;
 import com.joyintech.tams.svreport.chb.common.util.ErrdataConvertUtil;
 import com.joyintech.tams.svreport.interf.chb.proddeclare.dao.ChbPrdDeclareInfoMapper;
 import com.joyintech.tams.svreport.interf.chb.proddeclare.dto.ChbPrdDeclareInfoDto;
+import com.joyintech.tams.svreport.interf.chb.prodinfo.dao.ChbPrdBaseinfoInterfMapper;
 import com.joyintech.tams.svreport.interf.chb.prodinfo.service.SvrProdInfoFileImpService;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
@@ -66,6 +68,8 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
     private ChbInfoMgrResultConfigMapper chbInfoMgrResultConfigMapper;
     @Autowired
     private ChbPrdDeclareInfoMapper chbPrdDeclareInfoMapper;
+    @Autowired
+    private ChbPrdBaseinfoInterfMapper chbPrdBaseinfoInterfMapper;
     @Override
     @Transactional
     public void doComplete(ChbPrdBaseInfoDto entity, OperationType type) {
@@ -88,7 +92,10 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
             entity.setDataSource(DictCodeListExt2.数据来源_新建导入.getValue());
             entity.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
             entity.setProduuid(IDGenerator.generate(32));
+            List<ChbPrdBaseinfo> chbPrdBaseInfoDtos = Lists.newArrayList((ChbPrdBaseinfo) entity);
+            chbPrdBaseinfoInterfMapper.deleteChbPrdBaseinfoErroData(chbPrdBaseInfoDtos);
             chbPrdBaseInfoDao.insert(entity);
+
         }
         else if(OperationType.MODIFY.equals(type)){
             String prodName = entity.getProdName();

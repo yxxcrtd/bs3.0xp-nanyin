@@ -421,6 +421,15 @@
 			PROD_ID = #{prodId,jdbcType=VARCHAR}
 		</where>
 	</delete>
+	<delete id="deleteChbPrdBaseinfoErroData" parameterType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo">
+		delete from CHB_PRD_BASEINFO_ERRODATA
+		<where>
+			<foreach collection="list" item="item" index="index"
+					 open="PROD_ID in (" close=")" separator=",">
+				#{item.prodId,jdbcType=VARCHAR}
+			</foreach>
+		</where>
+	</delete>
 	<insert id="mergeInfoList"
 		parameterType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo">
 		MERGE INTO CHB_PRD_BASEINFO CII

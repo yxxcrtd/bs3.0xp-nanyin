@@ -213,6 +213,7 @@ public class SvrProdInfoFileImpService extends FileImpService {
 		// 转dto
 		List<ChbPrdBaseinfo> chbPrdBaseinfoList  = (List<ChbPrdBaseinfo>) convertMapToEntity(listData,ChbPrdBaseinfo.class, dataSource);
 		chbPrdBaseinfoInterfMapper.deleteByProdid(chbPrdBaseinfoList);
+		chbPrdBaseinfoInterfMapper.deleteChbPrdBaseinfoErroData(chbPrdBaseinfoList);
 		List<ChbPrdDeclareInfoDto> chbPrdDeclareInfoDtoList = chbPrdDeclareInfoMapper.selectByChbPrdDeclareInfoList(chbPrdBaseinfoList.stream().map(e -> e.getProdInsId()).collect(Collectors.toList()));
 		for (ChbPrdBaseinfo chbPrdBaseinfo : chbPrdBaseinfoList) {
 			for (ChbPrdDeclareInfoDto chbPrdDeclareInfoDto : chbPrdDeclareInfoDtoList) {

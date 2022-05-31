@@ -6315,8 +6315,14 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
         </if>
     </where>
     </delete>
-    <delete id="deleteChbInvestTrade">
+    <delete id="deleteChbInvestTrade" parameterType="com.joyintech.tams.common.base.entity.ChbInvestTrade">
         delete from  CHB_INVEST_TRADE  where (PROD_ID,TRADE_CODE,ASSET_CODE) in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            (#{item.prodId},#{item.tradeCode},#{assetCode})
+        </foreach>
+    </delete>
+    <delete id="deleteChbInvestTradeErroData" parameterType="com.joyintech.tams.common.base.entity.ChbInvestTrade">
+        delete from  CHB_INVEST_TRADE_ERRODATA  where (PROD_ID,TRADE_CODE,ASSET_CODE) in
         <foreach collection="list" item="item" open="(" close=")" separator=",">
             (#{item.prodId},#{item.tradeCode},#{assetCode})
         </foreach>
