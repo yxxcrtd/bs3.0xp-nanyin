@@ -803,7 +803,7 @@
         </where>
     </select>
     <select id="selectRegCodeByProdId" resultType="java.util.Map">
-        select REG_CODE, PRODNAME from CHB_PRDRESIST_CODE where  PRODID = #{prodId}
+        select PRODID,REG_CODE, PRODNAME from CHB_PRDRESIST_CODE where  PROD_INS_ID = #{prodId}
 
     </select>
     <select id="queryCalendarInfoList" resultType="com.joyintech.framework.select.SelectOptionDto">

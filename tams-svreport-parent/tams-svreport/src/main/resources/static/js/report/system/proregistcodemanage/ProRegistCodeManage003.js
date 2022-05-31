@@ -9,19 +9,19 @@
             return $.serializeToObject('#informationForm');
         } 
         
-        var prodId =function(){
-        	$('#prodName').val('');        	       	
-        	var prodId = $('#prodId').val();
-        	if(prodId){        		
-        				Joyin.ajax(basePath + "svreport/system/proregistcodemanage/ProRegistCodeManage003/selectInfo",{prodId:prodId},
-                				function(result){
-                			if(result){        				
-                				$('#prodName').val(result.prodName);                				                		    	      		    	    		    	
-                			}
-                	});      	        	
-        	}
-        }
-        
+
+        $('#prodInsId').change(function (){
+            var prodInsId = $('#prodInsId').val();
+            if(prodInsId!=null && prodInsId !=''){
+                Joyin.ajax(basePath+"svreport/system/proregistcodemanage/ProRegistCodeManage003/getProdNameByProdInsId",{prodInsId:prodInsId},function (result){
+                    $('#prodName').val(result);
+                    $('#prodId').val(prodInsId);
+                });
+            }else{
+                $('#prodName').val('');
+                $('#prodId').val('');
+            }
+        });
         /*var regCode = function(){
         	var regCode = $('#regCode').val();
         	if(regCode){
@@ -45,7 +45,7 @@
         	var vDate = $('#vdate').val();
         	var mDate = $('#mdate').val();
         	var prodId = $('#prodId').val();
-        	var regCode = $('#regCode').val();			
+        	var regCode = $('#regCode').val();
             var object = $.serializeToObject('#informationForm');
             object.operateType = operateType;
             object.pageModel = pageModel;

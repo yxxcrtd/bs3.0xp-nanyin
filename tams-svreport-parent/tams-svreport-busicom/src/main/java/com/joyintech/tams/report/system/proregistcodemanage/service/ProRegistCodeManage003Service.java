@@ -7,8 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.svreport.interf.chb.proddeclare.dao.ChbPrdDeclareInfoMapper;
 import com.joyintech.tams.svreport.interf.chb.proddeclare.dto.ChbPrdDeclareInfoDto;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -58,6 +61,8 @@ public class ProRegistCodeManage003Service extends CommonExportService<ProRegist
     @Autowired
     private ChbPrdresistCodeMapper chbPrdresistCodeMapper;
 
+    @Autowired
+    private ChbPrdDeclareInfoMapper chbPrdDeclareInfoMapper;
     /**
      * InvestorsHoldInfo001Service
      */
@@ -80,6 +85,7 @@ public class ProRegistCodeManage003Service extends CommonExportService<ProRegist
     	    record.setVdate(entity.getVdate());
     	    record.setMdate(entity.getMdate());
     	    record.setOperateMode(entity.getOperateMode());
+    	    record.setProdInsId(entity.getProdInsId());
     	   /* if(StringUtil.equals(entity.getOperateMode(), "封闭式净值型")) {   	    	
     	    }else if(StringUtil.equals(entity.getOperateMode(), "封闭式非净值型")) {
     	    	record.setOperateMode("02");
@@ -187,5 +193,18 @@ public class ProRegistCodeManage003Service extends CommonExportService<ProRegist
         webResult.setData(errList);
         return webResult;
     }
-    
+
+    public Page<SelectOptionDto> getProdInsId(Map<String, Object> param) {
+        return queryForPageForSelectReturn(Integer.parseInt(null == param.get("page")?"1":(String) param.get("page")), Integer.parseInt(null == (String) param.get("length")?"1":(String) param.get("length")),()->chbPrdDeclareInfoMapper.getProdInsId(param));
+    }
+
+    public String getProdNameByProdInsId(String prodInsId) {
+        String result ="";
+        try {
+            result= chbPrdDeclareInfoMapper.getProdNameByProdInsId(prodInsId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 }

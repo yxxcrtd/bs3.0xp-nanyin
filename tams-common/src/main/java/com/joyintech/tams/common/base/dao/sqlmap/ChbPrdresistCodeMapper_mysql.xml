@@ -76,28 +76,34 @@
             #{createTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbPrdresistCode" >
-        insert into CHB_PRDRESIST_CODE(PRODID, ORG_CODE, REG_CODE, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER,
+        insert into CHB_PRDRESIST_CODE(PRODID, ORG_CODE, REG_CODE,PROD_INS_ID, PRODNAME,DEPT_CODE,OPERATE_MODE, UPDATE_USER, UPDATE_TIME, CREATE_USER,
                                        CREATE_TIME)
         select *
         from (select TEMP.*
-              from (select #{prodid,jdbcType=VARCHAR}     PRODID,
-                           #{orgCode,jdbcType=VARCHAR}    ORG_CODE,
-                           #{regCode,jdbcType=VARCHAR}    REG_CODE,
-                           #{deptCode,jdbcType=VARCHAR}   DEPT_CODE,
+              from (select #{prodid,jdbcType=VARCHAR} PRODID,
+                           #{orgCode,jdbcType=VARCHAR} ORG_CODE,
+                           #{regCode,jdbcType=VARCHAR} REG_CODE,
+                           #{prodInsId,jdbcType=VARCHAR} PROD_INS_ID,
+                           #{prodname,jdbcType=VARCHAR} PRODNAME,
+                           #{deptCode,jdbcType=VARCHAR} DEPT_CODE,
+                           #{operateMode,jdbcType=VARCHAR} OPERATE_MODE,
                            #{updateUser,jdbcType=VARCHAR} UPDATE_USER,
-                           CURRENT_DATE                        UPDATE_TIME,
+                           CURRENT_DATE UPDATE_TIME,
                            #{createUser,jdbcType=VARCHAR} CREATE_USER,
-                           CURRENT_DATE                        CREATE_TIME
+                           CURRENT_DATE CREATE_TIME
                         from dual) TEMP
-              where not exists(select 1 from CHB_PRDRESIST_CODE a where a.PRODID = TEMP.PRODID)
+              where not exists(select 1 from CHB_PRDRESIST_CODE a where a.PROD_INS_ID = TEMP.PROD_INS_ID)
              ) a;
         update CHB_PRDRESIST_CODE a,(
             select * from
             ( select TEMP.* from
             (select #{prodid,jdbcType=VARCHAR} PRODID,
             #{orgCode,jdbcType=VARCHAR} ORG_CODE,
+            #{prodInsId,jdbcType=VARCHAR} PROD_INS_ID,
+            #{prodname,jdbcType=VARCHAR} PRODNAME,
             #{regCode,jdbcType=VARCHAR} REG_CODE,
             #{deptCode,jdbcType=VARCHAR} DEPT_CODE,
+            #{operateMode,jdbcType=VARCHAR} OPERATE_MODE,
             #{updateUser,jdbcType=VARCHAR} UPDATE_USER,
             CURRENT_DATE UPDATE_TIME,
             #{createUser,jdbcType=VARCHAR} CREATE_USER,
@@ -105,12 +111,15 @@
             from dual) TEMP
             ) a
             )b
-            set  a.ORG_CODE = b.ORG_CODE,
+            set  a.PRODID = b.PRODID,
+                a.ORG_CODE = b.ORG_CODE,
                 a.REG_CODE = b.REG_CODE,
+                a.PRODNAME = b.PRODNAME,
                 a.DEPT_CODE = b.DEPT_CODE,
+                a.OPERATE_MODE = b.OPERATE_MODE,
                 a.UPDATE_USER = b.UPDATE_USER,
                 a.UPDATE_TIME = b.UPDATE_TIME
-        where a.PRODID = b.PRODID
+        where a.PROD_INS_ID = b.PROD_INS_ID
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbPrdresistCode" >
         insert into CHB_PRDRESIST_CODE(PRODID, ORG_CODE, PRODNAME, REG_CODE, VDATE, MDATE,

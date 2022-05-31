@@ -281,6 +281,20 @@
 		</foreach>
 		)
 	</insert>
+	<update id="updateChbPrdresistCodes">
+		<foreach collection="list" item="item" index="index"
+				 separator=";">
+			update CHB_PRDRESIST_CODE
+			<set>
+				<if test="prodId != null">
+					PRODID = #{item.prodId,jdbcType=VARCHAR},
+				</if>
+
+			</set>
+			where PROD_INS_ID = #{item.prodInsId,jdbcType=VARCHAR}
+		</foreach>
+		;
+	</update>
 	<delete id="deleteByDate" parameterType="java.util.Date">
 		delete from CHB_PRD_BASEINFO
 		where ifnull(c.update_time,c.create_time) = #{batchTime,jdbcType=TIMESTAMP}

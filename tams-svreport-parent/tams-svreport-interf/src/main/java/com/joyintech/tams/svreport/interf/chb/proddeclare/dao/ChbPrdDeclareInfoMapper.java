@@ -2,7 +2,9 @@ package com.joyintech.tams.svreport.interf.chb.proddeclare.dao;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+import com.joyintech.framework.select.SelectOptionDto;
 import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.svreport.interf.chb.proddeclare.dto.ChbPrdDeclareInfoDto;
@@ -28,4 +30,8 @@ public interface ChbPrdDeclareInfoMapper {
     ChbPrdDeclareInfoDto selectByProdInsId(@Param("prodInsId") String prodInsId);
 
     List<ChbPrdDeclareInfoDto> selectByChbPrdDeclareInfoList(@Param("list") List<String> list);
+
+    List<SelectOptionDto> getProdInsId(Map<String, Object> param);
+
+    String getProdNameByProdInsId(String prodInsId);
 }

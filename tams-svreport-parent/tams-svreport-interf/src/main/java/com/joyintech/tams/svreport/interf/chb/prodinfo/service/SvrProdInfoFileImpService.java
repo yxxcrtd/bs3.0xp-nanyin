@@ -249,7 +249,8 @@ public class SvrProdInfoFileImpService extends FileImpService {
 			}
 			dto.setDurationflag("03");
 		});
-
+		// 更新产品登记编码表
+		chbPrdBaseinfoInterfMapper.updateChbPrdresistCodes(chbPrdBaseinfoList);
 		if (chbPrdBaseinfoList != null && chbPrdBaseinfoList.size() > 0) {
 			if(InterfConstants.SAVEFLAG_ADD.equals(saveFlag)){
 				insertDataMerge(chbPrdBaseinfoList);

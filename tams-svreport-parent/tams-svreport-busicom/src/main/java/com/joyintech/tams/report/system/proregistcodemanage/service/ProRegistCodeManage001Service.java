@@ -475,6 +475,7 @@ public class ProRegistCodeManage001Service extends CommonExportService<ProRegist
                         StringUtil.joinString(message, GlobalConstant.COMMA)));
             }
             else {
+                entity.setProdInsId(entity.getProdid());
                 entities.add(entity);
             }
         }

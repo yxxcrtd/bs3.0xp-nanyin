@@ -94,7 +94,16 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
             entity.setProduuid(IDGenerator.generate(32));
             List<ChbPrdBaseinfo> chbPrdBaseInfoDtos = Lists.newArrayList((ChbPrdBaseinfo) entity);
             chbPrdBaseinfoInterfMapper.deleteChbPrdBaseinfoErroData(chbPrdBaseInfoDtos);
+            ChbPrdresistCode chbPrdresistCode = new ChbPrdresistCode();
+            chbPrdresistCode.setProdInsId(entity.getProdInsId());
+            chbPrdresistCode.setProdid(entity.getProdId());
+            List<ChbPrdBaseinfo> chbPrdBaseinfoList = Lists.newArrayList(entity);
+                chbPrdBaseinfoInterfMapper.updateChbPrdresistCodes(chbPrdBaseinfoList);
+
             chbPrdBaseInfoDao.insert(entity);
+
+//            chbPrdresistCodeMapper.updateByPrimaryKeySelective()
+
 
         }
         else if(OperationType.MODIFY.equals(type)){

@@ -969,6 +969,23 @@
       #{item}
     </foreach>
   </select>
+  <select id="getProdInsId" resultType="com.joyintech.framework.select.SelectOptionDto">
+    SELECT
+    DISTINCT PROD_INS_ID id,
+    PROD_INS_ID text
+    FROM CHB_PRD_DECLARE_INFO
+    <where>
+      <if test="search !=null and  search !='' ">
+        PROD_INS_ID LIKE concat ('%',#{search},'%')
+      </if>
+      <if test="initValue != null and initValue != ''">
+        and PROD_INS_ID = #{initValue}
+      </if>
+    </where>
+  </select>
+  <select id="getProdNameByProdInsId" resultType="java.lang.String">
+    select PROD_NAME from CHB_PRD_DECLARE_INFO  where PROD_INS_ID = #{prodInsId}
+  </select>
   <insert id="mergeInfoList"
           parameterType="com.joyintech.tams.svreport.interf.chb.proddeclare.dto.ChbPrdDeclareInfoDto">
     insert into CHB_PRD_DECLARE_INFO

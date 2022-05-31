@@ -3,6 +3,8 @@ package com.joyintech.tams.report.system.proregistcodemanage.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -150,5 +152,27 @@ public class ProRegistCodeManage003Controller extends BaseController {
     @RequestMapping("checkInsertData1")
     public AjaxResult checkInsertData1(String prodId,String regCode)  {
         return proRegistCodeManage003Service.checkInsertData1(prodId,regCode);
+    }
+
+    /**
+     * 行内识别码
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/getProdInsId")
+    public Page<SelectOptionDto> getProdInsId()
+    {
+        return proRegistCodeManage003Service.getProdInsId(RequestUtil.getPageParam());
+    }
+
+    /**
+     * 产品名称
+     * @param prodInsId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/getProdNameByProdInsId")
+    public String getProdNameByProdInsId(String prodInsId){
+        return proRegistCodeManage003Service.getProdNameByProdInsId(prodInsId);
     }
 }

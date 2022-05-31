@@ -8,9 +8,9 @@
         $('#prodId').blur(function (){
             if($('#prodInsId').val()=='' && this.value!=''){
                 layer.msg('请先录入对应的行内标识码，以指定申报信息。')
-            }else if($('#regCode').val()!=''&&$('#prodId').val()!=prodNo){
+            }/*else if($('#regCode').val()!=''&&$('#prodId').val()!=prodNo){
                 layer.msg('如果想修改申报时候的行内标识码，请同步维护产品登记编码管理信息！')
-            }
+            }*/
         });
 
     }else{
@@ -44,8 +44,8 @@
                     if(result['REG_CODE']!='' && result['REG_CODE']!=null){
                         $('#regCode').val(result['REG_CODE']);
                         $('#prodName').val(result['PRODNAME']);
-                        $('#prodId').val(prodInsId);
-                        prodNo = prodInsId;
+                        $('#prodId').val(result['PRODID']);
+                        prodNo = result['PRODID'];
                     }else{
                         prodNo = '';
                         $('#regCode').val('');
