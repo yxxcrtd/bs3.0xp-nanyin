@@ -286,7 +286,7 @@
 				 separator=";">
 			update CHB_PRDRESIST_CODE
 			<set>
-				<if test="prodId != null">
+				<if test="item.prodId != null">
 					PRODID = #{item.prodId,jdbcType=VARCHAR},
 				</if>
 
