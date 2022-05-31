@@ -149,10 +149,9 @@ public class PbcPrdBaseinfoSubService extends PbcClassicsSubService<PbcPrdBasein
 		List<PbcPrdBaseinfoSub> issueDeleteDataList = new ArrayList<PbcPrdBaseinfoSub>();
 		// 处理产品发行登记
 		for(PbcPrdBaseinfoSub sub : needRegistSubList){
-			//mod by wangyaning 老人行要从产品要素中直接取inDepCode境内托管机构代码  不走映射
-//			if(sub.getInDepName() != null && inDepCodeMap.containsKey(sub.getInDepName())){
-//				sub.setInDepCode(inDepCodeMap.get(sub.getInDepName()).getObjfield());
-//			}
+			if(sub.getInDepName() != null && inDepCodeMap.containsKey(sub.getInDepName())){
+				sub.setInDepCode(inDepCodeMap.get(sub.getInDepName()).getObjfield());
+			}
 			String pbcProdId;
 			if(pbcProdIdMap.containsKey(sub.getProdId())){
 				pbcProdId=pbcProdIdMap.get(sub.getProdId());
