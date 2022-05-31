@@ -13185,7 +13185,10 @@
         PRIVATE_FLAG,
         CONSTRACTE_BUSI_TYPE,
         CONSTRACTE_GRADE,
-        CONSTRACTE_HEAVER_TIMES
+        CONSTRACTE_HEAVER_TIMES,
+        PROFIT_FLAG,
+        ACCOUNT_NO,
+        CREDIT_ASSET_CODE
         from (
         select
         TEMP.*
@@ -13411,6 +13414,9 @@
             ,#{item.constracteBusiType,jdbcType=VARCHAR} CONSTRACTE_BUSI_TYPE
             ,#{item.constracteGrade,jdbcType=VARCHAR} CONSTRACTE_GRADE
             ,#{item.constracteHeaverTimes,jdbcType=DECIMAL} CONSTRACTE_HEAVER_TIMES
+            ,#{item.profitFlag,jdbcType=VARCHAR} PROFIT_FLAG
+            ,#{item.accountNo,jdbcType=VARCHAR} ACCOUNT_NO
+            ,#{item.creditAssetCode,jdbcType=VARCHAR} CREDIT_ASSET_CODE
             from dual
         </foreach>
         ) TEMP
@@ -13633,6 +13639,9 @@
         ,A.CONSTRACTE_BUSI_TYPE	=	B.CONSTRACTE_BUSI_TYPE
         ,A.CONSTRACTE_GRADE	=	B.CONSTRACTE_GRADE
         ,A.CONSTRACTE_HEAVER_TIMES	=	B.CONSTRACTE_HEAVER_TIMES
+        ,A.PROFIT_FLAG	=	B.PROFIT_FLAG
+        ,A.ACCOUNT_NO	=	B.ACCOUNT_NO
+        ,A.CREDIT_ASSET_CODE	=	B.CREDIT_ASSET_CODE
         <!-- 未匹配到这插入 -->
         where A.ASSET_CODE = B.ASSET_CODE;
 
@@ -14071,7 +14080,10 @@
         PRIVATE_FLAG,
         CONSTRACTE_BUSI_TYPE,
         CONSTRACTE_GRADE,
-        CONSTRACTE_HEAVER_TIMES
+        CONSTRACTE_HEAVER_TIMES,
+        PROFIT_FLAG,
+        ACCOUNT_NO,
+        CREDIT_ASSET_CODE
         from
         (
         select TEMP.* from
@@ -14297,6 +14309,9 @@
             ,#{item.constracteBusiType,jdbcType=VARCHAR} CONSTRACTE_BUSI_TYPE
             ,#{item.constracteGrade,jdbcType=VARCHAR} CONSTRACTE_GRADE
             ,#{item.constracteHeaverTimes,jdbcType=DECIMAL} CONSTRACTE_HEAVER_TIMES
+            ,#{item.profitFlag,jdbcType=VARCHAR} PROFIT_FLAG
+            ,#{item.accountNo,jdbcType=VARCHAR} ACCOUNT_NO
+            ,#{item.creditAssetCode,jdbcType=VARCHAR} CREDIT_ASSET_CODE
             from dual
         </foreach>
         ) TEMP where not exists (select 1 from CHB_ASSET_INFO CII where CII.ASSET_CODE = TEMP.ASSET_CODE)
