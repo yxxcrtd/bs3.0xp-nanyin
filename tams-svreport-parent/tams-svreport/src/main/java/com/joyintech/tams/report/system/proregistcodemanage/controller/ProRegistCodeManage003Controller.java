@@ -144,14 +144,14 @@ public class ProRegistCodeManage003Controller extends BaseController {
     
     @ResponseBody
     @RequestMapping("checkInsertData")
-    public AjaxResult checkInsertData(String prodId,String regCode)  {
-        return proRegistCodeManage003Service.checkInsertData(prodId,regCode);
+    public AjaxResult checkInsertData(String prodInsId,String regCode)  {
+        return proRegistCodeManage003Service.checkInsertData(prodInsId,regCode);
     }
     
     @ResponseBody
     @RequestMapping("checkInsertData1")
-    public AjaxResult checkInsertData1(String prodId,String regCode)  {
-        return proRegistCodeManage003Service.checkInsertData1(prodId,regCode);
+    public AjaxResult checkInsertData1(String prodInsId,String regCode)  {
+        return proRegistCodeManage003Service.checkInsertData1(prodInsId,regCode);
     }
 
     /**

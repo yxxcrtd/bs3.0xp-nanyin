@@ -141,10 +141,10 @@ public class ProRegistCodeManage003Service extends CommonExportService<ProRegist
        }
     
     
-    public AjaxResult checkInsertData(String prodId,String regCode ) {
+    public AjaxResult checkInsertData(String prodInsId,String regCode ) {
     	AjaxResult webResult = new AjaxResult();    
     	ChbPrdresistCode record = new ChbPrdresistCode();
-    	record.setProdid(prodId);
+    	record.setProdInsId(prodInsId);
     	record.setFlag("2");
 		record.setReg_code(regCode);
 		ChbPrdresistCode dto = chbPrdresistCodeMapper.selectByPrimaryKey(record);
@@ -164,12 +164,12 @@ public class ProRegistCodeManage003Service extends CommonExportService<ProRegist
         return webResult;
     }
     
-    public AjaxResult checkInsertData1(String prodId,String regCode ) {
+    public AjaxResult checkInsertData1(String prodInsId,String regCode ) {
     	AjaxResult webResult = new AjaxResult();
         List<ValidMessage> errList = new ArrayList<ValidMessage>();
 
         //从产品申报信息中查询数据
-        ChbPrdDeclareInfoDto dto = proRegistCodeManage001Mapper.selectInfoByProdId(prodId);
+        ChbPrdDeclareInfoDto dto = proRegistCodeManage001Mapper.selectInfoByProdId(prodInsId);
         if(null!=dto){
             if(StringUtil.equals(dto.getRaiseType(), DictCodeListExt2.募集方式_中债_公募.getValue())){
                 //公募产品

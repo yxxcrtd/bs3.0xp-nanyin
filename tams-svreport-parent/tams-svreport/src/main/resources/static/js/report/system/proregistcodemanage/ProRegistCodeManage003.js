@@ -45,6 +45,7 @@
         	var vDate = $('#vdate').val();
         	var mDate = $('#mdate').val();
         	var prodId = $('#prodId').val();
+        	var prodInsId = $('#prodInsId').val();
         	var regCode = $('#regCode').val();
             var object = $.serializeToObject('#informationForm');
             object.operateType = operateType;
@@ -55,18 +56,18 @@
         		return;
         	}
             if(regCode){
-            	Joyin.ajax(basePath + "svreport/system/proregistcodemanage/ProRegistCodeManage003/selectCode",{regCode:regCode},
+            	Joyin.ajax(basePath + "svreport/system/proregistcodemanage/ProRegistCodeManage003/selectCode",{prodInsId:prodInsId,regCode:regCode},
             			function(result){
             		if(result.data){
-            			Joyin.error(JoyinUtil.getMessage("不同的产品代码不能对应同一产品登记编码。"));            			
+            			Joyin.error(JoyinUtil.getMessage("不同的行内标识不能对应同一产品登记编码。"));
             			return;
             		}else{
-            		    Joyin.ajax(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/checkInsertData1', {prodId:prodId,regCode:regCode}, function(result) {
+            		    Joyin.ajax(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/checkInsertData1', {prodInsId:prodInsId,regCode:regCode}, function(result) {
 　　　　　　　　　　　　　　　　  if (result && result.data && result.data[0]) {
                                     Joyin.error(result.data[0].message);
                                     return;
                              }else{
-                                 Joyin.ajax(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/checkInsertData', {prodId:prodId,regCode:regCode}, function(result) {
+                                 Joyin.ajax(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/checkInsertData', {prodInsId:prodInsId,regCode:regCode}, function(result) {
                                      Joyin.ajaxJson(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/check', object, function(result) {
                                          Joyin.confirm(result.data, function() {
                                             if(operateType === 'save') {
@@ -81,7 +82,7 @@
                          }
                       });
             		}
-    			});           	
+    			});
             	/* Joyin.ajax(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/checkInsertData', {prodId:prodId,regCode:regCode}, function(result) {
                      Joyin.ajaxJson(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/check', object, function(result) {
                          Joyin.confirm(result.data, function() {                	

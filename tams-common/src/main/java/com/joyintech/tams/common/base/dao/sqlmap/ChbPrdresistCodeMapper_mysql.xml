@@ -41,8 +41,8 @@
             <if test="reg_code != null  and flag == '1'.toString()" >
                 and REG_CODE = #{reg_code,jdbcType=VARCHAR}
             </if>
-            <if test="prodid != null and flag == '2'.toString()" >
-                and PRODID = #{prodid,jdbcType=VARCHAR}
+            <if test="prodInsId != null and flag == '2'.toString()" >
+                and PROD_INS_ID = #{prodInsId,jdbcType=VARCHAR}
             </if>
         </where>
         <!-- where REG_CODE = #{reg_code,jdbcType=VARCHAR} -->
@@ -141,7 +141,9 @@
             <if test="regCode != null" >
                 REG_CODE = #{regCode,jdbcType=VARCHAR},
             </if>
-            
+            <if test="prodid != null" >
+                PRODID = #{prodid,jdbcType=VARCHAR},
+            </if>
              
             <if test="vdate != null" >
                 VDATE = #{vdate,jdbcType=DATE},
@@ -166,7 +168,7 @@
                 OPERATE_MODE = #{operateMode,jdbcType=VARCHAR}
             </if>
         </set>
-        where PRODID = #{prodid,jdbcType=VARCHAR}
+        where PROD_INS_ID = #{prodInsId,jdbcType=VARCHAR}
        
           
     </update>
