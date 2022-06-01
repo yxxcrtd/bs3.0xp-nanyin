@@ -79,6 +79,8 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
 
         }
         else if (OperationType.NEW.equals(type)) {
+            String prodName = entity.getProdName();
+            String cashManaCate = entity.getCashManaCate();
             String createUser = entity.getCreateUser();
             Date createTime = entity.getCreateTime();
             String updateUser = entity.getUpdateUser();
@@ -89,6 +91,8 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
             entity.setCreateTime(createTime);
             entity.setUpdateUser(updateUser);
             entity.setUpdateTime(updateTime);
+            entity.setProdName(prodName);
+            entity.setCashManaCate(cashManaCate);
             entity.setDataSource(DictCodeListExt2.数据来源_新建导入.getValue());
             entity.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
             entity.setProduuid(IDGenerator.generate(32));
@@ -112,6 +116,7 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
             Date createTime = entity.getCreateTime();
             String updateUser = entity.getUpdateUser();
             Date updateTime = entity.getUpdateTime();
+            String cashManaCate = entity.getCashManaCate();
             ChbPrdDeclareInfoDto chbPrdDeclareInfoDto = chbPrdDeclareInfoMapper.selectByProdInsId(entity.getProdInsId());
             BeanUtils.copyProperties(chbPrdDeclareInfoDto,entity);
             entity.setProdName(prodName);
@@ -119,6 +124,7 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
             entity.setCreateTime(createTime);
             entity.setUpdateUser(updateUser);
             entity.setUpdateTime(updateTime);
+            entity.setCashManaCate(cashManaCate);
             entity.setDataSource("D");
             if(StringUtil.equals(DictCodeListExt3.中债数据状态_待处理.getValue(),entity.getStatusValid())){
                 //删除errodata记录
