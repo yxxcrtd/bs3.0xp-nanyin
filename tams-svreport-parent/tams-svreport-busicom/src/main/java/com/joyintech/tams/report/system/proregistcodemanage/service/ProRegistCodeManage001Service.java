@@ -336,7 +336,7 @@ public class ProRegistCodeManage001Service extends CommonExportService<ProRegist
             // 验证消息
             List<String> message = new ArrayList<>();
             //系统中所有产品代码对应产品登记编码信息
-            Map<String,String> prodIdToRegCodeMap = proRegistCodeManage001Mapper.selectProdInfo().stream().collect(JoyinCollectors.toMap(x->x.get("PRODID"),x->x.get("REGCODE")));
+            Map<String,String> prodIdToRegCodeMap = proRegistCodeManage001Mapper.selectProdInfo().stream().collect(JoyinCollectors.toMap(x->x.get("prodId"),x->x.get("regCode")));
             //产品代码            	//update by leipeng 产品登记编码导入完成后，导入模板理财产品代码为cp002 但是导入库是行内标识码
             /****ZGBSSE-907  产品登记编码管理画面，导入时，理财产品代码长度为100时，报错【产品代码输入的内容超过最大长度限制，最大长度为30】**/
             String error0 =checkCode2(list.get(4), "产品代码", 100, true);
@@ -408,12 +408,12 @@ public class ProRegistCodeManage001Service extends CommonExportService<ProRegist
                 if(isRight){
                     entity.setRegCode(list.get(2));
                     if(prodIdToRegCodeMap.values().contains(list.get(2))){
-                        if(!StringUtil.equals(this.getMapKeyByValue(prodIdToRegCodeMap,list.get(2)),list.get(3))){
+                        if(!StringUtil.equals(this.getMapKeyByValue(prodIdToRegCodeMap,list.get(2)),list.get(4))){
                             message.add("不同的产品代码不能对应同一产品登记编码");
                         }
                     }
                     else if(box.values().contains(list.get(2))){
-                        if(!StringUtil.equals(this.getMapKeyByValue(box,list.get(2)),list.get(3))){
+                        if(!StringUtil.equals(this.getMapKeyByValue(box,list.get(2)),list.get(4))){
                             message.add("不同的产品代码不能对应同一产品登记编码");
                         }
                     }
@@ -454,7 +454,7 @@ public class ProRegistCodeManage001Service extends CommonExportService<ProRegist
 //                    message.add("起息日不能大于到期日！");
 //                }
 //            }
-            List<ProRegistCodeManage001Dto> list1 = proRegistCodeManage001Mapper.queryProdid(list.get(3));
+            List<ProRegistCodeManage001Dto> list1 = proRegistCodeManage001Mapper.queryProdid(list.get(4));
             if (list1.size() != 0 && StringUtil.isEmpty(list.get(2))){
 //                message.add(this.getMessage("系统中存在对应数据，更新数据请输入产品登记编码！"));
                 message.add("系统中存在对应数据，更新数据请输入产品登记编码！");
@@ -475,6 +475,7 @@ public class ProRegistCodeManage001Service extends CommonExportService<ProRegist
                         StringUtil.joinString(message, GlobalConstant.COMMA)));
             }
             else {
+                entity.setProdInsId(entity.getProdid());
                 entities.add(entity);
             }
         }

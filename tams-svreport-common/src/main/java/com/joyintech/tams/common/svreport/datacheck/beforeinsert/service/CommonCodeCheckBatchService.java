@@ -18,7 +18,9 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -143,8 +145,176 @@ public class CommonCodeCheckBatchService {
             }
         }
     }
+    /**
+     * 登记的入库前的代码检查
+     * 只做校验，不做其他处理
+     * @param  list 被检查的数据
+     * @param  tableInfo  检查的表名
+     */
+    public void codeCheckCommonOnly(List<ExcelValidDto> excelValidDtoList,List<Map<String, String>> list, ChbCheckTableInfo tableInfo) {
 
-	/**
+        Set<String> prodRegistCodeList = new HashSet<>();
+        Set<String> prodIdCodeList = new HashSet<>();
+        Set<String > tradeCodeSet = new HashSet<>();
+        Set<String> saleInstSet = new HashSet<>();
+
+        Map<String, List<String>> prodRegistCodeMap = new HashMap<>();
+
+        Map<String,String> detailMap = new HashMap();
+        //循环处理待check数据
+        for (int i = list.size() - 1; i >= 0; i--){
+            Map<String, String> map=list.get(i);
+            switch (tableInfo) {
+                case 从业人员登记表SUB:
+                case 从业人员登记表INFO:
+                    checkEmployeeSubInfo(map);
+                    break;
+                case 资产要素登记表SUB:
+                case 资产要素登记表INFO:
+                case 资产要素登记TMP:
+                    checkAssetSubInfo(map);
+                    break;
+                case 个人发行登记表SUB:
+                case 个人发行登记TMP:
+                    checkPrdoIssue(map, prodRegistCodeList,prodIdCodeList);
+                    break;
+                case 个人发行登记表INFO:
+                    checkChbBaseInfo(excelValidDtoList,map, prodRegistCodeList,prodIdCodeList,i);
+                    break;
+                case 募集总量登记SUB:
+                case 募集总量登记TMP:
+                    checkProdRaisetot(map, prodRegistCodeList);
+                    break;
+                case 底层资产持仓信息登记表SUB:
+                case 底层资产持仓信息登记INFO:
+                case 底层资产持仓信息登记TMP:
+                    checkBotAstPos(map, detailMap);
+                    break;
+                case 投资交易表登记SUB:
+                case 投资交易表登记TMP:
+                    checkInvestTradeInfo(map, prodRegistCodeMap);
+                    break;
+                case 投资交易信息表:
+                    checkChbInvestTrade(excelValidDtoList,map,i);
+                    break;
+                case 资产估值信息登记表SUB:
+                case 资产估值信息登记TMP:
+                    checkAstValInfo(map, list);
+                    break;
+                case 产品存续登记表SUB:
+                case 产品存续登记TMP:
+                    checkProdDeal(map, list);
+                    break;
+                case 个人产品申报登记SUB:
+                case 个人产品申报登记INFO:
+                case 个人产品申报登记TMP:
+                    checkPrdoDeclare(map,detailMap, tableInfo);
+                    break;
+                case 终止登记SUB:
+                case 终止登记TMP:
+                    checkProdEndSubTmp(map,prodRegistCodeList);
+                    break;
+                case 销售结算资金交易信息表INFO:
+                    checkChbSalerStlDea(map, ChbCheckTableInfo.销售结算资金交易信息表INFO.getTableName());
+                    break;
+                case 总部或分支机构信息登记表SUB:
+                    checkSaleInstInfo(map,saleInstSet,ChbCheckTableInfo.总部或分支机构信息登记表SUB.getTableName());
+                case 销售人员身份信息登记表SUB:
+                    checkSalerIdenInfo(map,ChbCheckTableInfo.销售人员身份信息登记表SUB.getTableName());
+                case 销售人员奖惩投诉记录登记表SUB:
+                    checkRewPenaInfo(map,ChbCheckTableInfo.销售人员奖惩投诉记录登记表SUB.getTableName());
+                    break;
+                case 销售人员奖惩投诉记录信息表INFO:
+                    checkRewPenaInfo(map,ChbCheckTableInfo.销售人员奖惩投诉记录信息表INFO.getTableName());
+                case 销售人员身份信息表INFO:
+                    checkSalerIdenInfo(map,ChbCheckTableInfo.销售人员身份信息表INFO.getTableName());
+                case  总部或分支机构信息表INFO:
+                    checkSaleInstInfo(map,saleInstSet,ChbCheckTableInfo.总部或分支机构信息表INFO.getTableName());
+                default:
+                    break;
+            }
+        }
+    }
+
+    private void checkChbInvestTrade(List<ExcelValidDto> excelValidDtoList, Map<String, String> dataMap, int i) {
+        String  errMsg=dataMap.getOrDefault("ERRMSG", "");
+        if(!errMsg.equals("重复数据;")){
+            try {
+                if(dataMap.get("CCY").equals("CNY")){
+                    if(!dataMap.get("AMT").equals(dataMap.get("CNY_AMT"))){
+                        errMsg+="当币种选择人民币时，发生金额必须等于折算人民币金额";
+                        dataMap.put("ERRMSG",errMsg);
+                        if(excelValidDtoList !=null){
+                            if(excelValidDtoList.size()>0){
+                                for (ExcelValidDto excelValidDto : excelValidDtoList) {
+                                    if(excelValidDto.getRowNum().equals(String.valueOf(i+2))){
+                                        excelValidDto.setErrorInfo(errMsg);
+                                        break;
+                                    }
+                                }
+                            }else{
+                                excelValidDtoList.add(new ExcelValidDto("0未导入",String.valueOf(i+2),errMsg));
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+            }
+        }
+    }
+
+
+    private void checkChbBaseInfo(List<ExcelValidDto> excelValidDtoList, Map<String, String> dataMap,Set<String> prodRegistCodeList,Set<String>  prodIdCodeList,int i) {
+        String  errMsg=dataMap.getOrDefault("ERRMSG", "");
+        String temp = errMsg;
+        // 发行机构代码
+        String issuePartyId=dataMap.get("ISSUE_PARTY_ID");
+        // 产品登记编码
+        String prodRegistCode = dataMap.get("REG_CODE");
+        //产品代码
+        String prodId = dataMap.get("PROD_ID");
+        if(errMsg.equals("重复数据;")){
+
+        }else{
+            // 产品登记编码报文内不可重复。
+            if (StringUtil.isNotEmpty(prodRegistCode) && prodRegistCodeList.contains(prodRegistCode)){
+                errMsg +="产品登记编码报文内不可重复[PROD_REGIST_CODE="+prodRegistCode+"];";
+            }
+            else{
+                prodRegistCodeList.add(prodRegistCode);
+            }
+
+            // 银行模式才判断发行机构代码，联社模式不判断
+            if(StringUtil.isNotEmpty(issuePartyId) && StringUtil.equals(SvrDataUtil.getSysParam("AUTHORITY_TYPE"), "01")){
+                // 发行机构代码必须与银行代码相同。
+                if(!StringUtil.equals(CommonUtil.selectBankCode(), issuePartyId)){
+                    errMsg +="发行机构代码必须与银行代码相同[ISSUE_PARTY_ID="+issuePartyId+"];";
+                }
+            }
+            if(StringUtils.isEmpty(temp)){
+                if(!temp.equals(errMsg)&&excelValidDtoList!=null){
+                    excelValidDtoList.add(new ExcelValidDto("0未导入",String.valueOf((i+2)),errMsg));
+                }
+            }else{
+                if(!temp.equals(errMsg) && excelValidDtoList!=null){
+                    if(excelValidDtoList.size()>0){
+                        for (ExcelValidDto excelValidDto : excelValidDtoList) {
+                            if(excelValidDto.getRowNum().equals(String.valueOf((i+2)))){
+                                excelValidDto.setErrorInfo(errMsg);
+                                break;
+                            }
+                        }
+                    }else{
+                        excelValidDtoList.add(new ExcelValidDto("0未导入",String.valueOf(i+2),errMsg));
+                    }
+                }
+            }
+            dataMap.put("ERRMSG", errMsg);
+        }
+    }
+
+
+    /**
 	 * 产品募集总量登记的入库前的代码检查
 	 * @param  list 被检查的数据
 	 * @param  tableInfo  检查的表名
@@ -168,6 +338,10 @@ public class CommonCodeCheckBatchService {
         //销售人员惩奖记录信息
         List<ChbSalerRewPenaErrodataWithBLOBs>  chbSalerRewPenaErrodataList=new ArrayList<ChbSalerRewPenaErrodataWithBLOBs>();
 
+        // 投资交易信息 产品基本信息  add  by  wubingbing 20220518  start
+        List<ChbInvestTradeErrodataWithBLOBs> chbInvestTradeErrordataList = Lists.newArrayList();
+        List<ChbPrdBaseinfoErrodataWithBLOBs> chbPrdBaseinfoErrordataList = Lists.newArrayList();
+        // 投资交易信息 产品基本信息  add  by  wubingbing 20220518  end
         codeCheckCommonOnly(list, tableInfo);
 
         for (int i = list.size() - 1; i >= 0; i--){
@@ -189,7 +363,7 @@ public class CommonCodeCheckBatchService {
 
             if (StringUtil.equals(CacheUtil.getSysParam("INSERT_ERRDATA_MODE"), "02") && StringUtil.equals(tableInfo.getTableName(), ChbCheckTableInfo.资产要素登记表INFO.getTableName())){
                 // 记录资产要素错误信息表
-                ChbAssetInfoErrodataWithBLOBs chbAssetInfoErrodata = createChbAssetInfoInterfErrdata(map);
+                ChbAssetInfoErrodataWithBLOBs chbAssetInfoErrodata = createChbAssetInfoInterfErrdata(map,"");
                 if(chbAssetInfoErrodata != null) {
                     chbAssetInfoErrorList.add(chbAssetInfoErrodata);
                 }
@@ -262,12 +436,543 @@ public class CommonCodeCheckBatchService {
                 deleteAssetInfoErrorDataByAssetCode(chbAssetInfoErrorList);
                 insertChbAssetInfoErroData(chbAssetInfoErrorList);
             }
+        }
+        //投资交易错误信息入库
+        if(StringUtil.isEmptyList(chbInvestTradeErrordataList)){
+            if(!erroList.isEmpty()){
+                insertErroData(erroList);
+            }
+        }else{
+            deleteChbInvestTradeErrorData(chbInvestTradeErrordataList);
+            insertChbInvestTradeErroData(chbInvestTradeErrordataList);
+        }
+        //产品基本信息
+        if(StringUtil.isEmptyList(chbPrdBaseinfoErrordataList)){
 
-
+        }else{
+            deleteChbPrdBaseInfoErrorData(chbPrdBaseinfoErrordataList);
+            insertChbPrdBaseInfoErroData(chbPrdBaseinfoErrordataList);
         }
 	}
 
-	/**
+
+
+    /**
+     * add by wubingbing 20220521
+     * @param list
+     * @param tableInfo
+     * @param fileName
+     */
+    public void codeCheckCommon(List<ExcelValidDto> excelValidDtoList,List<Map<String, String>> list, ChbCheckTableInfo tableInfo, String fileName, String coverFlag,String flag) {
+        //错误信息集合
+        List<ChbInterfErrodataWithBLOBs> erroList=new ArrayList<ChbInterfErrodataWithBLOBs>();
+        // 资产要素错误信息集合
+        List<ChbAssetInfoErrodataWithBLOBs> chbAssetInfoErrorList = new ArrayList<ChbAssetInfoErrodataWithBLOBs>();
+
+        // 资产要素错误信息集合
+        List<ChbSalerStlDeaErrodataWithBLOBs> chbSalerStlDeaErrodataList = new ArrayList<ChbSalerStlDeaErrodataWithBLOBs>();
+
+        //销售人员信息错误集合
+        List<ChbSalerIdenErrodataWithBLOBs>  chbSalerIdenErrodataList= new ArrayList<ChbSalerIdenErrodataWithBLOBs>();
+
+        //总部或分支机构信息
+        List<ChbSalerInstErrodataWithBLOBs>  chbSalerInstErrodataList=new ArrayList<ChbSalerInstErrodataWithBLOBs>();
+
+        //销售人员惩奖记录信息
+        List<ChbSalerRewPenaErrodataWithBLOBs>  chbSalerRewPenaErrodataList=new ArrayList<ChbSalerRewPenaErrodataWithBLOBs>();
+
+        // 投资交易信息 产品基本信息  add  by  wubingbing 20220518  start
+        List<ChbInvestTradeErrodataWithBLOBs> chbInvestTradeErrordataList = Lists.newArrayList();
+        List<ChbPrdBaseinfoErrodataWithBLOBs> chbPrdBaseinfoErrordataList = Lists.newArrayList();
+        // 投资交易信息 产品基本信息  add  by  wubingbing 20220518  end
+        codeCheckCommonOnly(excelValidDtoList,list, tableInfo);
+
+        for (int i = list.size() - 1; i >= 0; i--){
+            Map<String, String> map=list.get(i);
+
+            // add by zhangliang 20210112 没有错误信息时删除key，防止后面错误判断
+            if (map.containsKey("ERRMSG") && StringUtil.isEmpty(map.get("ERRMSG"))){
+                map.remove("ERRMSG");
+            }
+
+            //如果代码错误校验有错误信息
+            ChbInterfErrodataWithBLOBs errodata = createChbInterfErrdata(StringUtil.isNotEmpty(fileName) ? fileName : tableInfo.getTableName(),
+                    tableInfo.getTableName(), map,tableInfo.getBussinessKey(), tableInfo.getCheckEuplicatedKeys());
+
+            if(errodata != null) {
+                erroList.add(errodata);
+                list.remove(i);
+            }
+
+            if (StringUtil.equals(CacheUtil.getSysParam("INSERT_ERRDATA_MODE"), "02") && StringUtil.equals(tableInfo.getTableName(), ChbCheckTableInfo.资产要素登记表INFO.getTableName())){
+                if("重复数据;".equals(map.get("ERRMSG"))){
+                    continue;
+                }
+                // 记录资产要素错误信息表
+                ChbAssetInfoErrodataWithBLOBs chbAssetInfoErrodata = createChbAssetInfoInterfErrdata(map,flag);
+                if(chbAssetInfoErrodata != null) {
+                    chbAssetInfoErrorList.add(chbAssetInfoErrodata);
+                }
+            }
+            // 投资交易
+            if(StringUtil.equals(tableInfo.getTableName(),ChbCheckTableInfo.投资交易信息表.getTableName())){
+                if("重复数据;".equals(map.get("ERRMSG"))){
+                    continue;
+                }
+                ChbInvestTradeErrodataWithBLOBs ChbInvestTradeErrodataWithBLOBs = createChbInvestTradeErrordata(map,flag);
+                if(ChbInvestTradeErrodataWithBLOBs != null) {
+                    chbInvestTradeErrordataList.add(ChbInvestTradeErrodataWithBLOBs);
+                }
+            }
+            // 产品基本信息
+            if(StringUtil.equals(tableInfo.getTableName(),ChbCheckTableInfo.个人发行登记表INFO.getTableName())){
+                if("重复数据;".equals(map.get("ERRMSG"))){
+                    continue;
+                }
+                ChbPrdBaseinfoErrodataWithBLOBs ChbInvestTradeErrodataWithBLOBs = createChbPrdBaseInfoErrordata(map,flag);
+                if(ChbInvestTradeErrodataWithBLOBs != null) {
+                    chbPrdBaseinfoErrordataList.add(ChbInvestTradeErrodataWithBLOBs);
+                }
+            }
+            //销售数据反馈
+            if (StringUtil.equals(tableInfo.getTableName(), ChbCheckTableInfo.销售结算资金交易信息表INFO.getTableName())){
+                // 记录销售数据信息表
+                ChbSalerStlDeaErrodataWithBLOBs ChbSalerStlDeaErrodata = createChbSalerStlDeaErrodata(map);
+                if(ChbSalerStlDeaErrodata != null) {
+                    chbSalerStlDeaErrodataList.add(ChbSalerStlDeaErrodata);
+                }
+            }
+            //销售人员数据
+            if (StringUtil.equals(tableInfo.getTableName(), ChbCheckTableInfo.销售人员身份信息表INFO.getTableName())) {
+                //销售人员信息
+                ChbSalerIdenErrodataWithBLOBs   chbSalerIdenErrodata=createChbSalerInderErrodata(map);
+                if(chbSalerIdenErrodata !=null){
+                    chbSalerIdenErrodataList.add(chbSalerIdenErrodata);
+                }
+            }
+            //总部或分支机构信息
+            if (StringUtil.equals(tableInfo.getTableName(), ChbCheckTableInfo.总部或分支机构信息表INFO.getTableName())) {
+                ChbSalerInstErrodataWithBLOBs   chbSalerIdenErrodata=createChbSalerInstErrodata(map);
+                if(chbSalerIdenErrodata !=null){
+                    chbSalerInstErrodataList.add(chbSalerIdenErrodata);
+                }
+            }
+            //销售人员惩奖记录信息
+            if (StringUtil.equals(tableInfo.getTableName(), ChbCheckTableInfo.销售人员奖惩投诉记录信息表INFO.getTableName())) {
+                ChbSalerRewPenaErrodataWithBLOBs   chbSalerRewPenaErrodata=createChbSalerRewErrodata(map);
+                if(chbSalerRewPenaErrodata !=null){
+                    chbSalerRewPenaErrodataList.add(chbSalerRewPenaErrodata);
+                }
+            }
+
+
+        }
+
+        //错误信息入库
+        if (StringUtil.isEmptyList(chbAssetInfoErrorList)){
+            // 销售错误信息表入库
+            if(!chbSalerStlDeaErrodataList.isEmpty()){
+                deleteChbSalerStlDeaErrodataByTradeNo(chbSalerStlDeaErrodataList);
+                insertChbSalerStlDeaErrodata(chbSalerStlDeaErrodataList);
+            }
+            //销售人员信息错误表入库
+            else if(!chbSalerIdenErrodataList.isEmpty()){
+                deleteChbSalerIdenErrodataByNo(chbSalerIdenErrodataList);
+                insertChbSalerIdenErrodata(chbSalerIdenErrodataList);
+            }
+            //总部或分支机构信息错误表入库
+            else if(!chbSalerInstErrodataList.isEmpty()) {
+                deleteChbSalerInstErrodataByNo(chbSalerInstErrodataList);
+                insertChbSalerInstErrodata(chbSalerInstErrodataList);
+            }
+            //销售人员惩奖记录信息入库
+            else if(!chbSalerRewPenaErrodataList.isEmpty()) {
+                deleteChbSalerRewErrodataByNo(chbSalerRewPenaErrodataList);
+                insertChbSalerRewErrodata(chbSalerRewPenaErrodataList);
+            }
+
+            else if(!erroList.isEmpty()){
+                insertErroData(erroList);
+            }
+
+        }else{
+            // 资产要素错误信息入库
+            if(!flag.equals("D")&&coverFlag.equals("N")){
+                removeExistsChbAssetInfoError(chbAssetInfoErrorList);
+            }
+            deleteAssetInfoErrorDataByAssetCode(chbAssetInfoErrorList);
+            deleteChbAssetInfo(chbAssetInfoErrorList);
+            insertChbAssetInfoErroData(chbAssetInfoErrorList);
+
+        }
+        //投资交易错误信息入库
+        if(StringUtil.isEmptyList(chbInvestTradeErrordataList)){
+            if(!erroList.isEmpty()){
+                insertErroData(erroList);
+            }
+        }else{
+            if(!flag.equals("D")&&coverFlag.equals("N")){
+                removeExistsChbInvestTrade(chbInvestTradeErrordataList);
+            }
+            deleteChbInvestTradeErrorData(chbInvestTradeErrordataList);
+            deleteChbInvestTrade(chbInvestTradeErrordataList);
+            insertChbInvestTradeErroData(chbInvestTradeErrordataList);
+        }
+        //产品基本信息
+        if(StringUtil.isEmptyList(chbPrdBaseinfoErrordataList)){
+
+        }else{
+            if(!flag.equals("D")&&coverFlag.equals("N")){
+                removeExistsChbPrdBaseInfo(chbPrdBaseinfoErrordataList);
+            }
+            deleteChbPrdBaseInfoErrorData(chbPrdBaseinfoErrordataList);
+            deleteChbPrdBaseInfo(chbPrdBaseinfoErrordataList);
+            insertChbPrdBaseInfoErroData(chbPrdBaseinfoErrordataList);
+        }
+    }
+
+    private void deleteChbAssetInfo(List<ChbAssetInfoErrodataWithBLOBs> chbAssetInfoErrorList) {
+        SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+        try {
+            CommonCodeCheckMapper batchMapper = session.getMapper(CommonCodeCheckMapper.class);
+            batchMapper.deleteChbAssetInfo(chbAssetInfoErrorList);
+        }
+        catch (Exception e) {
+            session.rollback();
+            logger.error("SQL执行异常：", e);
+        }
+        finally {
+            session.close();
+        }
+    }
+
+    private void deleteChbInvestTrade(List<ChbInvestTradeErrodataWithBLOBs> chbInvestTradeErrordataList) {
+        SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+        try {
+            CommonCodeCheckMapper batchMapper = session.getMapper(CommonCodeCheckMapper.class);
+            batchMapper.deleteChbInvestTrade(chbInvestTradeErrordataList);
+        }
+        catch (Exception e) {
+            session.rollback();
+            logger.error("SQL执行异常：", e);
+        }
+        finally {
+            session.close();
+        }
+    }
+
+    private void deleteChbPrdBaseInfo(List<ChbPrdBaseinfoErrodataWithBLOBs> chbPrdBaseinfoErrordataList) {
+        SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+        try {
+            CommonCodeCheckMapper batchMapper = session.getMapper(CommonCodeCheckMapper.class);
+            batchMapper.deleteChbPrdBaseInfo(chbPrdBaseinfoErrordataList);
+        }
+        catch (Exception e) {
+            session.rollback();
+            logger.error("SQL执行异常：", e);
+        }
+        finally {
+            session.close();
+        }
+    }
+
+    private void removeExistsChbAssetInfoError(List<ChbAssetInfoErrodataWithBLOBs> chbAssetInfoErrorList) {
+        SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+        try {
+            CommonCodeCheckMapper batchMapper = session.getMapper(CommonCodeCheckMapper.class);
+            List<Map<String,String>> list = batchMapper.selectChbAssetInfoBusKey(chbAssetInfoErrorList);
+            if(list !=null){
+                Iterator<ChbAssetInfoErrodataWithBLOBs> iterator = chbAssetInfoErrorList.iterator();
+                while (iterator.hasNext()){
+                    ChbAssetInfoErrodataWithBLOBs dto = iterator.next();
+                    for (Map<String, String> map : list) {
+                        if(map.get("ASSET_CODE").equals(dto.getAssetCode())){
+                            iterator.remove();
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception e) {
+            session.rollback();
+            logger.error("SQL执行异常：", e);
+        }
+        finally {
+            session.close();
+        }
+    }
+
+    private void removeExistsChbPrdBaseInfo(List<ChbPrdBaseinfoErrodataWithBLOBs> chbPrdBaseinfoErrordataList) {
+        SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+        try {
+            CommonCodeCheckMapper batchMapper = session.getMapper(CommonCodeCheckMapper.class);
+            List<Map<String,String>> list = batchMapper.selectChbPrdBaseInfoBusKey(chbPrdBaseinfoErrordataList);
+            if(list !=null){
+                Iterator<ChbPrdBaseinfoErrodataWithBLOBs> iterator = chbPrdBaseinfoErrordataList.iterator();
+                while (iterator.hasNext()){
+                    ChbPrdBaseinfoErrodataWithBLOBs dto = iterator.next();
+                    for (Map<String, String> map : list) {
+                        if(map.get("PROD_ID").equals(dto.getProdId())){
+                            iterator.remove();
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception e) {
+            session.rollback();
+            logger.error("SQL执行异常：", e);
+        }
+        finally {
+            session.close();
+        }
+    }
+
+    private void removeExistsChbInvestTrade(List<ChbInvestTradeErrodataWithBLOBs> chbInvestTradeErrordataList) {
+        SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+        try {
+            CommonCodeCheckMapper batchMapper = session.getMapper(CommonCodeCheckMapper.class);
+            List<Map<String,String>> list = batchMapper.selectChbInvestTradeBusKey(chbInvestTradeErrordataList);
+            if(list!=null){
+                Iterator<ChbInvestTradeErrodataWithBLOBs> iterator = chbInvestTradeErrordataList.iterator();
+                while (iterator.hasNext()){
+                    ChbInvestTradeErrodataWithBLOBs dto = iterator.next();
+                    for (Map<String, String> e : list) {
+                        if(e.get("PROD_ID").equals(dto.getProdId())
+                                && e.get("ASSET_CODE").equals(dto.getAssetCode())
+                                && e.get("TRADE_CODE").equals(dto.getTradeCode())){
+                            iterator.remove();
+                            break;
+                        }
+                    }
+
+                }
+            }
+
+        }
+        catch (Exception e) {
+            session.rollback();
+            logger.error("SQL执行异常：", e);
+        }
+        finally {
+            session.close();
+        }
+    }
+
+    private void insertChbPrdBaseInfoErroData(List<ChbPrdBaseinfoErrodataWithBLOBs> erroList) {
+        SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+        try {
+            int count = 0;
+            logger.debug("产品基本信息错误信息数据插入开始--------------" + new Date());
+            ChbPrdBaseinfoErrodataMapper batchMapper = session.getMapper(ChbPrdBaseinfoErrodataMapper.class);
+            for(ChbPrdBaseinfoErrodataWithBLOBs single: erroList){
+                batchMapper.insert(single);
+                count ++;
+                // 每20次提交
+                if (count % 20 == 0) {
+                    session.commit();
+                    // 清理缓存，防止溢出
+                    session.clearCache();
+                }
+            }
+            session.commit();
+            // 清理缓存，防止溢出
+            session.clearCache();
+        }
+        catch (Exception e) {
+            session.rollback();
+            logger.error("SQL执行异常：", e);
+        }
+        finally {
+            session.close();
+        }
+        logger.debug("产品基本信息错误信息数据插入结束--------------" + new Date());
+    }
+
+    private void deleteChbPrdBaseInfoErrorData(List<ChbPrdBaseinfoErrodataWithBLOBs> erroList) {
+        SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+        try {
+            int count = 0;
+            logger.debug("投资交易错误信息数据删除开始--------------" + new Date());
+            CommonCodeCheckMapper batchMapper = session.getMapper(CommonCodeCheckMapper.class);
+            for(ChbPrdBaseinfoErrodataWithBLOBs single: erroList){
+                if (StringUtils.isNotEmpty(single.getProdId())){
+                    batchMapper.deleteChbPrdBaseInfoErrorData(single.getProdId());
+                    count ++;
+                }
+                // 每20次提交
+                if (count % 20 == 0) {
+                    session.commit();
+                    // 清理缓存，防止溢出
+                    session.clearCache();
+                }
+            }
+            session.commit();
+            // 清理缓存，防止溢出
+            session.clearCache();
+        }
+        catch (Exception e) {
+            session.rollback();
+            logger.error("SQL执行异常：", e);
+        }
+        finally {
+            session.close();
+        }
+        logger.debug("投资交易错误信息数据删除结束--------------" + new Date());
+    }
+
+    private ChbPrdBaseinfoErrodataWithBLOBs createChbPrdBaseInfoErrordata(Map<String, String> map,String flag) {
+        String msg = map.get("ERRMSG");
+        if (StringUtil.isEmpty(msg)) {
+            return null;
+        }
+        // 拼装错误信息
+        ChbPrdBaseinfoErrodataWithBLOBs chbPrdBaseinfoErrodataWithBLOBs = new ChbPrdBaseinfoErrodataWithBLOBs();
+        // 主键uuid
+        chbPrdBaseinfoErrodataWithBLOBs.setDatauuid(IDGenerator.generate(36));
+        chbPrdBaseinfoErrodataWithBLOBs.setProdId(map.get("PROD_ID"));
+        chbPrdBaseinfoErrodataWithBLOBs.setProdName(map.get("PROD_NAME"));
+        chbPrdBaseinfoErrodataWithBLOBs.setRegCode(map.get("REG_CODE"));
+        chbPrdBaseinfoErrodataWithBLOBs.setCustomerType(map.get("CUSTOMER_TYPE"));
+        chbPrdBaseinfoErrodataWithBLOBs.setIssuingStatus(map.get("ISSUING_STATUS"));
+        try {
+            chbPrdBaseinfoErrodataWithBLOBs.setRaiseVdate(com.joyintech.framework.util.DateUtil.parseDate(map.get("RAISE_VDATE"),"yyyy-MM-dd"));
+        } catch (ParseException e) {
+            chbPrdBaseinfoErrodataWithBLOBs.setRaiseVdate(null);
+        }
+        try {
+            chbPrdBaseinfoErrodataWithBLOBs.setVdate(com.joyintech.framework.util.DateUtil.parseDate(map.get("VDATE"),"yyyy-MM-dd"));
+        } catch (ParseException e) {
+            chbPrdBaseinfoErrodataWithBLOBs.setVdate(null);
+        }
+        chbPrdBaseinfoErrodataWithBLOBs.setProdName(map.get("PROD_NAME"));
+        chbPrdBaseinfoErrodataWithBLOBs.setProdInsId(map.get("PROD_INS_ID"));
+        // 拼接错误字段信息
+        Map<String, String> newMap = new HashMap<>(map);
+        newMap.remove("ERRMSG");
+        chbPrdBaseinfoErrodataWithBLOBs.setOrgData(JsonUtils.object2Json(newMap));
+        // 错误提示信息
+        chbPrdBaseinfoErrodataWithBLOBs.setErrMsg(msg);
+        // 数据状态
+        chbPrdBaseinfoErrodataWithBLOBs.setStatus("A");
+        if(flag.equals("I")){
+            chbPrdBaseinfoErrodataWithBLOBs.setCreateUser("interf");
+            chbPrdBaseinfoErrodataWithBLOBs.setUpdateUser("interf");
+        }else{
+            chbPrdBaseinfoErrodataWithBLOBs.setCreateUser(CommonUtil.getUserName());
+            chbPrdBaseinfoErrodataWithBLOBs.setUpdateUser(CommonUtil.getUserName());
+        }
+        chbPrdBaseinfoErrodataWithBLOBs.setCreateTime(com.joyintech.framework.util.DateUtil.now());
+        chbPrdBaseinfoErrodataWithBLOBs.setUpdateTime(DateUtil.now());
+        return chbPrdBaseinfoErrodataWithBLOBs;
+    }
+
+    private void insertChbInvestTradeErroData(List<ChbInvestTradeErrodataWithBLOBs> erroList) {
+        SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+        try {
+            int count = 0;
+            logger.debug("资产要素登记错误信息数据插入开始--------------" + new Date());
+            ChbInvestTradeErrodataMapper batchMapper = session.getMapper(ChbInvestTradeErrodataMapper.class);
+            for(ChbInvestTradeErrodataWithBLOBs single: erroList){
+                batchMapper.insert(single);
+                count ++;
+                // 每20次提交
+                if (count % 20 == 0) {
+                    session.commit();
+                    // 清理缓存，防止溢出
+                    session.clearCache();
+                }
+            }
+            session.commit();
+            // 清理缓存，防止溢出
+            session.clearCache();
+        }
+        catch (Exception e) {
+            session.rollback();
+            logger.error("SQL执行异常：", e);
+        }
+        finally {
+            session.close();
+        }
+        logger.debug("资产要素登记错误信息数据插入结束--------------" + new Date());
+    }
+
+    private void deleteChbInvestTradeErrorData(List<ChbInvestTradeErrodataWithBLOBs> erroList) {
+        SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+        try {
+            int count = 0;
+            logger.debug("投资交易错误信息数据删除开始--------------" + new Date());
+            CommonCodeCheckMapper batchMapper = session.getMapper(CommonCodeCheckMapper.class);
+            for(ChbInvestTradeErrodataWithBLOBs single: erroList){
+                if (StringUtils.isNotEmpty(single.getProdId())
+                        &&StringUtil.isNotEmpty(single.getAssetCode())
+                        &&StringUtil.isNotEmpty(single.getTradeCode())){
+                    batchMapper.deleteChbInvestTradeErrorData(single.getProdId(),single.getAssetCode(),single.getTradeCode());
+                    count ++;
+                }
+                // 每20次提交
+                if (count % 20 == 0) {
+                    session.commit();
+                    // 清理缓存，防止溢出
+                    session.clearCache();
+                }
+            }
+            session.commit();
+            // 清理缓存，防止溢出
+            session.clearCache();
+        }
+        catch (Exception e) {
+            session.rollback();
+            logger.error("SQL执行异常：", e);
+        }
+        finally {
+            session.close();
+        }
+        logger.debug("投资交易错误信息数据删除结束--------------" + new Date());
+    }
+
+    private ChbInvestTradeErrodataWithBLOBs createChbInvestTradeErrordata(Map<String, String> map,String flag) {
+        String msg = map.get("ERRMSG");
+        if (StringUtil.isEmpty(msg)) {
+            return null;
+        }
+        // 拼装错误信息
+        ChbInvestTradeErrodataWithBLOBs chbInvestTradeErrodataWithBLOBs = new ChbInvestTradeErrodataWithBLOBs();
+        // 主键uuid
+        chbInvestTradeErrodataWithBLOBs.setDatauuid(IDGenerator.generate(36));
+        chbInvestTradeErrodataWithBLOBs.setProdId(map.get("PROD_ID"));
+        chbInvestTradeErrodataWithBLOBs.setRegCode(map.get("REG_CODE"));
+        chbInvestTradeErrodataWithBLOBs.setTradeCounter(map.get("TRADE_COUNTER"));
+        chbInvestTradeErrodataWithBLOBs.setTradeCode(map.get("TRADE_CODE"));
+        chbInvestTradeErrodataWithBLOBs.setAssetCode(map.get("ASSET_CODE"));
+        try {
+            chbInvestTradeErrodataWithBLOBs.setDealdate(com.joyintech.framework.util.DateUtil.parseDate(map.get("DEALDATE"),"yyyy-MM-dd"));
+        } catch (ParseException e) {
+            chbInvestTradeErrodataWithBLOBs.setDealdate(null);
+        }
+        // 拼接错误字段信息
+        Map<String, String> newMap = new HashMap<>(map);
+        newMap.remove("ERRMSG");
+        chbInvestTradeErrodataWithBLOBs.setOrgData(JsonUtils.object2Json(newMap));
+        // 错误提示信息
+        chbInvestTradeErrodataWithBLOBs.setErrMsg(msg);
+        // 数据状态
+        chbInvestTradeErrodataWithBLOBs.setStatus("A");
+        if(flag.equals("I")){
+            chbInvestTradeErrodataWithBLOBs.setCreateUser("interf");
+            chbInvestTradeErrodataWithBLOBs.setUpdateUser("interf");
+        }else{
+            chbInvestTradeErrodataWithBLOBs.setCreateUser(CommonUtil.getUserName());
+            chbInvestTradeErrodataWithBLOBs.setUpdateUser(CommonUtil.getUserName());
+        }
+        chbInvestTradeErrodataWithBLOBs.setCreateTime(com.joyintech.framework.util.DateUtil.now());
+        chbInvestTradeErrodataWithBLOBs.setUpdateTime(DateUtil.now());
+        return chbInvestTradeErrodataWithBLOBs;
+    }
+
+    /**
 	 * 从业人员登记
 	 * @param
 	 */
@@ -2264,7 +2969,7 @@ public class CommonCodeCheckBatchService {
      * @param map 数据
      * @return 需要入库的Dto
      */
-    public ChbAssetInfoErrodataWithBLOBs createChbAssetInfoInterfErrdata(Map<String, String> map) {
+    public ChbAssetInfoErrodataWithBLOBs createChbAssetInfoInterfErrdata(Map<String, String> map,String flag) {
         String msg = map.get("ERRMSG");
         if (StringUtil.isEmpty(msg)) {
             return null;
@@ -2302,9 +3007,14 @@ public class CommonCodeCheckBatchService {
         // 错误提示信息
         chbAssetInfoErrodata.setErrMsg(msg);
         // 数据状态
-        chbAssetInfoErrodata.setStatus("E");
-        chbAssetInfoErrodata.setCreateUser("system");
-        chbAssetInfoErrodata.setUpdateUser("system");
+        chbAssetInfoErrodata.setStatus("A");
+        if(flag.equals("I")){
+            chbAssetInfoErrodata.setCreateUser("interf");
+            chbAssetInfoErrodata.setUpdateUser("interf");
+        }else{
+            chbAssetInfoErrodata.setCreateUser(CommonUtil.getUserName());
+            chbAssetInfoErrodata.setUpdateUser(CommonUtil.getUserName());
+        }
         chbAssetInfoErrodata.setCreateTime(new Date());
         chbAssetInfoErrodata.setUpdateTime(new Date());
 

@@ -116,6 +116,10 @@ public class ProRegistCodeManage002Dto extends BaseEntity implements ProcessEnti
     @DictFormat(DictCode.产品运作模式)
     //@NotEmpty(fieldName="ProRegistCodeManage003.repOperateMode",groups = {ValidateGroupEdit.class})
     private String operateMode;
+    /**
+     * 行内识别码
+     */
+    private String prodInsId;
 
     /**
      * 获取 prodid
@@ -347,5 +351,12 @@ public class ProRegistCodeManage002Dto extends BaseEntity implements ProcessEnti
 	public String getVdateStr(){
         return DateUtil.format(this.getVdate());
     }
-    
+
+    public String getProdInsId() {
+        return prodInsId;
+    }
+
+    public void setProdInsId(String prodInsId) {
+        this.prodInsId = prodInsId;
+    }
 }

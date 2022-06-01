@@ -11,13 +11,19 @@
 package com.joyintech.tams.svreport.chb.assetinfodetail.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.component.svrreport.chb.dto.ChbAssetInfoDto;
+import com.joyintech.framework.util.*;
+import com.joyintech.system.constant.SystemGlobalConstant;
+import com.joyintech.tams.svreport.chb.businessdatamaintain.chbmstbondcreditrating.dto.ChbMstBondCreditRatingDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,11 +40,6 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.ExportUtil;
-import com.joyintech.framework.util.FileNameUtil;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt3;
@@ -71,6 +72,9 @@ public class AssetInfoDetail001Controller extends BaseController {
     
     @SuppressWarnings("unused")
 	private Logger logger = LoggerFactory.getLogger(getClass());
+
+	@Value("${spring.pageId}")
+    private String pageId;
     
 	/**
 	 * {@inheritDoc}
@@ -96,6 +100,7 @@ public class AssetInfoDetail001Controller extends BaseController {
 			model.addAttribute("searchDataEnd", map.get("searchDataEnd"));
 			model.addAttribute("isMain", "01");
 		}
+		model.addAttribute("file",pageId);
 		super.setSelectOptionToModel(model,DictCode.资产_负债类别, DictCode.资产_负债二级类别,DictCode.资产负债一级类别
 				, DictCode.中债_上游资产一级分类, DictCode.中债_上游资产二级分类,DictCode.中债_上游资产三级分类,DictCode.中债_上游资产四级分类,
 				DictCode.中债_上游资产五级分类, DictCode.中债数据状态);
@@ -152,7 +157,26 @@ public class AssetInfoDetail001Controller extends BaseController {
     @SuppressWarnings("unchecked")
 	@RequestMapping(value = ACTION_EXPORT)
     public ResponseEntity<byte[]> export() {
-		return assetInfoDetailMService.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
+    	if("AssetInfoDetail001_3".equals(pageId)){
+			Map<String, Object> params= RequestUtil.getPageParam();
+
+			List<AssetInfoDetailDto> list= assetInfoDetailMService.selectAll(params);
+
+
+			File outFile = assetInfoDetailMService.makeFile(
+					"/com/joyintech/tams/svreport/chb/assetinfodetail/conf/export_conf_multiple.xml",
+					list);
+			return ExportUtil.export(
+					this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS
+							+ DateUtil.format(new Date())
+							+ SystemGlobalConstant.CLOSE_PARENTHESIS
+							+ SystemGlobalConstant.POINT
+							+ FileNameUtil.getFileExtName(outFile),
+					outFile, true);
+
+		}else{
+			return assetInfoDetailMService.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
+		}
     }
       
     /**
@@ -173,13 +197,13 @@ public class AssetInfoDetail001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "checkConfirmMsgForImportData", method = RequestMethod.POST)
-	public AjaxResult checkConfirmMsgForImportData(String fileName,String tableName) throws Exception {
-		return assetInfoDetailMService.checkConfirmMsgForImportData(fileName,tableName);
+	public AjaxResult checkConfirmMsgForImportData(String fileName) throws Exception {
+		return assetInfoDetailMService.checkConfirmMsgForImportData(fileName);
 	}
 
 	@ResponseBody
 	@RequestMapping("/importFile")
-	public List<com.joyintech.tams.systemtools.dto.ExcelValidDto> importData(String fileName,String tableName) throws Exception {
-		return this.assetInfoDetailMService.importData(fileName,tableName);
+	public List<com.joyintech.tams.systemtools.dto.ExcelValidDto> importData(String fileName) throws Exception {
+		return this.assetInfoDetailMService.importData(fileName);
 	}
 }

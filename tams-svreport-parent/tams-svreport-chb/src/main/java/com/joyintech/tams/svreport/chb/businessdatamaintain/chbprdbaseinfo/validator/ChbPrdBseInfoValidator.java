@@ -34,16 +34,6 @@ public class ChbPrdBseInfoValidator implements BeanValidator {
         ChbPrdBaseInfoDto dto = (ChbPrdBaseInfoDto) value;
         List<ValidMessage> resultList = new ArrayList<ValidMessage>();
         if (dto.getOperateType().equals("submit")) {
-            if (!StringUtil.isEmpty(dto.getProdId())
-                    &&!StringUtil.isEmpty(dto.getIssuePartyId())
-                    //新建
-                    &&StringUtil.isEmpty(dto.getStatusValid())) {
-                ChbPrdBaseInfoDto resultDto = chbPrdBaseInfoDao.selectByKey(dto.getProdId());
-                if (null != resultDto) {
-                    resultList.add(new ValidMessage("prodId", "产品借本信息已存在"));
-                }
-            }
-            // add by zhangliang 20210126 中债check调用 start
             resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, null, ValidMessage.class);
             Map<String, Object> errMap = new HashMap<>();
             List<ValidMessage> result = new ArrayList<>();

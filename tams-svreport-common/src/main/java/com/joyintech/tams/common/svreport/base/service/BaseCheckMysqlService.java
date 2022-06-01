@@ -231,6 +231,7 @@ public class BaseCheckMysqlService {
                                 commonCheckDto.setExcelValidDto(dto);
                                 result.add(commonCheckDto);
                                 uniList.add(list.get(j));
+                                break;
                             }
                         }
                     }
@@ -268,6 +269,7 @@ public class BaseCheckMysqlService {
                             commonCheckDto.setExcelValidDto(dto);
                             result.add(commonCheckDto);
                             priList.add(list.get(j));
+                            break;
                         }
                     }
                 }

@@ -38,21 +38,14 @@ public class ChbInvestTradeValidator implements BeanValidator {
             List<ValidMessage> resultList = new ArrayList<ValidMessage>();
             if (!StringUtil.isEmpty(dto.getTradeCode())
                 &&!StringUtil.isEmpty(dto.getProdId())
-                &&!StringUtil.isEmpty(dto.getRegistBankCode())
                 &&!StringUtil.isEmpty(dto.getAssetCode())
                 //新建
                 &&StringUtil.isEmpty(dto.getStatusValid())) {
-                ChbInvestTradeDto resultDto = chbInvestTradeDao.selectByKey(dto.getTradeCode(), dto.getProdId(),  dto.getAssetCode());
-                if (null != resultDto) {
+                int i = chbInvestTradeDao.selectByBusinessKey(dto.getProdId(),dto.getTradeCode(),dto.getAssetCode());
+                if (i>0) {
                     resultList.add(new ValidMessage("assetCode", "投资交易信息已存在"));
                 }
             }
-            if(null !=dto.getUnitPriceFull() && null !=dto.getUnitPriceNet()){
-                if(dto.getUnitPriceFull().compareTo(dto.getUnitPriceNet())<0){
-                    resultList.add(new ValidMessage("unitPriceFull","单位成交价（全价）不能小于单位成交价（净价）"));
-                }
-            }
-            // add by zhangliang 20210126 中债check调用 start
             resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, null, ValidMessage.class);
             Map<String, Object> errMap = new HashMap<>();
             List<ValidMessage> result = new ArrayList<>();
@@ -64,7 +57,6 @@ public class ChbInvestTradeValidator implements BeanValidator {
             });
             resultList.clear();
             resultList.addAll(result);
-            //modify by tuqirong 2022-01-10 end 错误信息去重处理
             return resultList;
         }
         return null;

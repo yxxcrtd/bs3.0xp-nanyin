@@ -11,7 +11,7 @@ $(function() {
             prodName:$('#prodName').val(),
             regCode:$('#regCode').val(),
             raiseVdateStart: $.trim($('#raiseVdate').startDate()),
-            draiseVdateEnd: $.trim($('#raiseVdate').endDate()),
+            raiseVdateEnd: $.trim($('#raiseVdate').endDate()),
             vdateStart: $.trim($('#vdate').startDate()),
             vdateEnd: $.trim($('#vdate').endDate()),
             issuingStatus : $('#issuingStatus').val() == null ? null : $(
@@ -32,7 +32,10 @@ $(function() {
             }
         },
         cols:[
-            {field:'prodId', sortable:false, width:100, title: 'CchbPrdBaseInfo001.prodId'}
+            {field:'produuid',visible:false}
+            ,{field:'statusValid',visible:false}
+            ,{field:'prodId', sortable:false, width:100, title: 'CchbPrdBaseInfo001.prodId'}
+            ,{field:'prodInsId', sortable:false, width:100, title: 'CchbPrdBaseInfo001.prodInsId'}
             ,{field:'prodName',sortable:false,width:100,  title: 'CchbPrdBaseInfo001.prodName'}
             ,{field:'regCode', sortable:false,width:100,  title: 'CchbPrdBaseInfo001.regCode'}
             ,{field:'issuePartyId',sortable:false,width:100,title: 'CchbPrdBaseInfo001.issuePartyId'}
@@ -77,7 +80,6 @@ $(function() {
             ,{field:'operation', width:100, title: 'SysCommon.operation',sortable:false, type:'action', buttons: ['edit', 'delt']}
         ]
     });
-
     /**
      * 绑定编辑事件
      */
@@ -189,19 +191,19 @@ $(function() {
                 options.pageId = "CchbPrdBaseInfo001";
                 options.exts = 'xls|xlsx';
                 Joyin.uploadFile(options,function(fileName) {
-                    Joyin.ajax(basePath + 'chb/businessdatamaintain/chbinvesttrade/CchbPrdBaseInfo001/checkConfirmMsgForImportData', {fileName: fileName,tableName:'CHB_PRD_BASEINFO'}, function(result) {
+                    Joyin.ajax(basePath + '/chb/businessdatamaintain/chbprdbaseinfo/chbprdbaseinfo001/checkConfirmMsgForImportData', {fileName: fileName}, function(result) {
                         if ($.isArray(result.joyinMessages) && result.joyinMessages.length > 0) {
                             var joyinMessages = "";
                             $.each(result.joyinMessages, function(i, joyinMessage){
                                 joyinMessages += joyinMessage.message + "<br />"
                             });
                             Joyin.confirm(joyinMessages, function(){
-                                Joyin.ajax(basePath + 'chb/businessdatamaintain/chbmstbondcreditrating/CchbPrdBaseInfo001/importFileSave', {fileName: fileName,tableName:'CHB_PRD_BASEINFO'},function () {
+                                Joyin.ajax(basePath + '/chb/businessdatamaintain/chbprdbaseinfo/chbprdbaseinfo001/importFileSave', {fileName: fileName},function () {
                                     table.reload();
                                 });
                             });
                         }else{
-                            Joyin.ajax(basePath + 'chb/businessdatamaintain/chbmstbondcreditrating/CchbPrdBaseInfo001/importFileSave', {fileName: fileName,tableName:'CHB_PRD_BASEINFO'},function () {
+                            Joyin.ajax(basePath + '/chb/businessdatamaintain/chbprdbaseinfo/chbprdbaseinfo001/importFileSave', {fileName: fileName},function () {
                                 table.reload();
                             });
                         }

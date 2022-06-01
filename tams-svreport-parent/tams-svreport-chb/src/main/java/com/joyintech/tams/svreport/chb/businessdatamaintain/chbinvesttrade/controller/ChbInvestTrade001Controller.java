@@ -14,6 +14,8 @@ import com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dto.Ch
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbinvesttrade.dto.ChbInvestTradeDto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbinvesttrade.service.ChbInvestTradeService;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbmstbondcreditrating.dto.ChbMstBondCreditRatingDto;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +26,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +47,11 @@ public class ChbInvestTrade001Controller extends BaseController {
     private ChbInvestTradeService chbInvestTradeService;
     @Override
     public String init(Model model) {
+        Date date = DateUtil.platDateFromCache();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        model.addAttribute("sysDate",DateUtil.format(calendar.getTime()));
         this.setSelectOptionToModel(model, DictCode.维护数据状态);
         return super.init(model);
     }
@@ -133,10 +142,45 @@ public class ChbInvestTrade001Controller extends BaseController {
                 + this.getMessage("ChbInvestTrade001.assetCode")
                 + "(" + entity.getAssetCode() + ")");
         processParameter.setWorkFlowParameter(params);
+        dto.getSelectedItem().forEach(e->{
+            e.setCreateUser(CommonUtil.getUserName());
+            e.setCreateTime(DateUtil.now());
+            e.setUpdateUser(CommonUtil.getUserName());
+            e.setUpdateTime(DateUtil.now());
+        });
         String msg = chbInvestTradeService.start(processParameter,dto.getSelectedItem().toArray(new ChbInvestTradeDto[dto.getSelectedItem().size()]));
         return new AjaxResult(msg);
 
     }
+
+    /**
+     * 导入数据文件之前检查数据
+     *
+     * @param fileName 导入的文件名
+     * @return 处理结果
+     */
+    @ResponseBody
+    @RequestMapping(value = "checkConfirmMsgForImportData", method = RequestMethod.POST)
+    public AjaxResult checkConfirmMsgForImportData(String fileName) throws Exception {
+        return chbInvestTradeService.checkConfirmMsgForImportData(fileName);
+    }
+
+
+    /**
+     * 导入（数据保存）
+     *
+     * @param fileName
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping("importFileSave")
+    public List<ExcelValidDto> importFileSave(String fileName)
+            throws Exception {
+
+        return chbInvestTradeService.importFileSave(fileName);
+    }
+
     /**
      * 导出信息excel
      *

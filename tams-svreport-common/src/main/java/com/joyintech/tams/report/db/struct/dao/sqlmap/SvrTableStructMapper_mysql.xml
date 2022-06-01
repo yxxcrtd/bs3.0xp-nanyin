@@ -3,7 +3,6 @@
 <mapper namespace="com.joyintech.tams.report.db.struct.dao.SvrTableStructMapper_mysql">
     <select id="selectTableStruct" parameterType="java.util.Map"
             resultType="com.joyintech.tams.report.db.struct.dto.TableColumn" useCache="false" flushCache="true">
-        <if test="databaseType == 'MYSQL'">
             SELECT DISTINCT
             TB.TABLE_NAME AS tableName,
             COL.COLUMN_NAME AS columnName,
@@ -18,22 +17,6 @@
 <!--            TB.TABLE_SCHEMA = 'zoutest'  AND-->
             TB.TABLE_NAME = '${table}'
             AND TB.TABLE_NAME = COL.TABLE_NAME
-            AND COL.table_schema=database() ORDER BY columnName
-        </if>
-        <if test="databaseType == 'Oracle'">
-            SELECT
-            TABLE_NAME as tableName,
-            COLUMN_NAME as columnName,
-            DATA_TYPE as dataType,
-            DATA_LENGTH as dataLength,
-            NULLABLE as nullable,
-            COLUMN_ID as columnId
-            FROM
-            USER_TAB_COLUMNS
-            WHERE
-            TABLE_NAME = '${table}'
-            ORDER BY
-            COLUMN_ID
-        </if>
+            AND COL.table_schema=database() ORDER BY COL.ORDINAL_POSITION
     </select>
 </mapper>

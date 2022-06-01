@@ -1,6 +1,7 @@
 package com.joyintech.tams.svreport.chb.assetinfodetail.service;
 
 import com.google.common.collect.Lists;
+import com.joyintech.component.svrreport.chb.dto.ChbAssetInfoDto;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.JoyinMessage;
 import com.joyintech.framework.ajax.MessageType;
@@ -12,10 +13,13 @@ import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.system.base.entity.SysDatadictListLink;
+import com.joyintech.tams.common.InterfFile;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.common.base.entity.ChbInfoMgrResultConfig;
+import com.joyintech.tams.common.base.entity.MstCustomerInfo;
 import com.joyintech.tams.common.base.entity.MstCustomerInfoAdd;
 import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -26,8 +30,10 @@ import com.joyintech.tams.svreport.chb.assetinfodetail.dao.AssetInfoDetailMapper
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.util.AssetInfoDetailUtil;
 import com.joyintech.tams.svreport.chb.assetinfodetail.util.ServerMenu;
+import com.joyintech.tams.svreport.chb.common.util.DuplicateDataUtil;
 import com.joyintech.tams.svreport.chb.common.util.asset.RechbAassetInfoUtilService;
 import com.joyintech.tams.svreport.interf.chb.assetinfo.service.ChbAssetInfoInterf;
+import com.joyintech.tams.svreport.interf.chb.assetinfo.service.SvrAssetInfoFileImpService;
 import com.joyintech.tams.svreport.interf.chb.baseinfo.dao.SvrMstCustomerInfoAddImpMapper;
 import com.joyintech.tams.svreport.interf.chb.baseinfo.dao.SvrMstCustomerInfoImpMapper;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
@@ -35,10 +41,12 @@ import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.weaver.ast.Var;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.beans.PropertyDescriptor;
@@ -72,6 +80,8 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 	@Autowired
 	private SvrMstCustomerInfoAddImpMapper svrMstCustomerInfoAddImpMapper;
 
+	@Autowired
+	private SvrAssetInfoFileImpService svrAssetInfoFileImpService;
 
 	@Autowired
 	private SvrMstCustomerInfoImpMapper svrMstCustomerInfoImpMapper;
@@ -83,9 +93,18 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 	@Autowired
 	private BaseCommonCheckService baseCommonCheckService;
 
+	@Value("${spring.pageId}")
+	private String pageId;
+
 	static Map<String,Set<String>> map = null;
 
 	static Map<String,Set<String>> maptwo = null;
+
+	private Map<String,List<String>> propertiesMap = new HashMap<>();
+	{
+		propertiesMap.put("AssetInfoDetail001_3",Lists.newArrayList("资产要素导入"));
+		propertiesMap.put("AssetInfoDetail001_2",Lists.newArrayList("QDII","存款","非标","各类资产其他项","回购","基金","金融衍生品","票据及其他","权益类","债券","资产管理产品"));
+	}
 	/**
 	 *
 	 * 业务画面查询事件
@@ -196,6 +215,19 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		//获取市场机构规模数据
 		Map<String,MstCustomerInfoAdd> orgListMap = institList.stream().collect(
 				Collectors.toMap(MstCustomerInfoAdd::getCustomerId,(p)->p,(key1, key2)->key1));
+
+		List<MstCustomerInfo> customerInfoList = svrMstCustomerInfoAddImpMapper.getAllMstCustomerInfoList();
+		//获取市场机构名称
+		Map<String,MstCustomerInfo> customerInfoMap = new HashMap<>();
+		for(MstCustomerInfo customerInfo:customerInfoList){
+			String customerId = customerInfo.getCustomerId();
+			customerInfoMap.put(customerId,customerInfo);
+		}
+		if(StringUtil.isNotEmpty(dto.getIssuePartyName())){
+			if(customerInfoMap.get(dto.getIssuePartyName()) != null){
+				dto.setIssuePartyName(customerInfoMap.get(dto.getIssuePartyName()).getCustomerName());
+			}
+		}
 
 		/*** 基金类资产数据接入会同步保存mngOrgName字段 **/
 		if(DictCodeListExt2.资产_负债类别_私募基金.getValue().equals(dto.getAssetType())
@@ -393,41 +425,31 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 	 * @param fileName 导入的文件名
 	 * @return 处理结果
 	 */
-	public AjaxResult checkConfirmMsgForImportData(String fileName,String tableName) throws Exception {
+	public AjaxResult checkConfirmMsgForImportData(String fileName) throws Exception {
 		AjaxResult webResult = new AjaxResult();
-		if (fileName.indexOf("资产要素") == -1){
-			webResult.setMessage(this.getMessage("ImportFileName"),MessageType.错误消息);
+		if (!DuplicateDataUtil.checkFileName(fileName,propertiesMap.get(pageId))){
+			webResult.setMessage(this.getMessage("ImportFileName"), MessageType.错误消息);
 			return webResult;
 		}
-		List<Map<String, String>> mapList = dataMapAnalysis(fileName,tableName);
-		int size = mapList.size();
-		List<ExcelValidDto> checkResult = baseCommonCheckService.checkDataAll("D", mapList, tableName, fileName, tableName, tableName, null, null);
-
-		long count = mapList.stream().filter(ele ->null != ele.get("STATUS")&&ele.get("STATUS").equals("A")).count();
-		webResult.setMessage(this.getMessage("ChbImportMessage",mapList.size()-count,size-mapList.size(),count),MessageType.确认消息);
-		int duplicate = 0;
-		//查数据库记录
-		if(!CollectionUtils.isEmpty(mapList)){
-			duplicate = assetInfoDetailMapper.selectValidRecords(mapList);
+		List<Map<String, String>> list = dataMapAnalysis(fileName,ChbCheckTableInfo.资产要素登记表INFO.getTableName());
+		if(list.size()<1){
+			webResult.setMessage("请勿上传空文件", MessageType.错误消息);
+			return webResult;
 		}
-		if(duplicate >0){
-			List<JoyinMessage> joyinMessages = new ArrayList<>();
-			JoyinMessage ms = new JoyinMessage(this.getMessage("ChbImportDuplicateMessage",duplicate), MessageType.确认消息);
-			joyinMessages.add(ms);
-			webResult.setJoyinMessages(joyinMessages);
+		int i = assetInfoDetailMapper.selectValidRecords(list);
+		if(i>0){
+			String[] checkEuplicatedKeys = ChbCheckTableInfo.资产要素登记表INFO.getCheckEuplicatedKeys();
+			int dup = DuplicateDataUtil.countDuplicatedData(list, checkEuplicatedKeys);
+			webResult.setMessage(this.getMessage("SvrDuplicateMessage",dup,i), MessageType.确认消息);
 		}
 		return webResult;
 	}
 
-	public List<ExcelValidDto> importData(String fileName,String tableName) throws Exception{
-		List<Map<String, String>> list = dataMapAnalysis(fileName,tableName);
-		List<ExcelValidDto> checkResult = baseCommonCheckService.checkDataAll("D", list, tableName, fileName, tableName, tableName, null, null);
-		if(!CollectionUtils.isEmpty(list)){
-			List<AssetInfoDetailDto> AssetInfoDetailDtos= converToBean(list);
-			AssetInfoDetailDtos.forEach(e-> assetInfoDetailMapper.batchInsert(Lists.newArrayList(e)));
-		}
-		checkResult.forEach(e->e.setRowNum(String.valueOf(Integer.valueOf(e.getRowNum())+1)));
-		return checkResult;
+	public List<ExcelValidDto> importData(String fileName) throws Exception{
+		List<Map<String, String>> list = dataMapAnalysis(fileName,ChbCheckTableInfo.资产要素登记表INFO.getTableName());
+		List<ExcelValidDto> listExcel = new ArrayList<ExcelValidDto>();
+		svrAssetInfoFileImpService.importDB(listExcel,list,new InterfFile(),null);
+		return listExcel;
 
 	}
 
@@ -454,7 +476,7 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("tableId", tableName);
 		param.put("flag", false);
-		List<ChbInfoMgrResultConfig> chbInfoMgrResultConfigList = chbInfoMgrResultConfigMapper.queryAllchbMgrTableInfo(param);
+		List<ChbInfoMgrResultConfig> chbInfoMgrResultConfigList = chbInfoMgrResultConfigMapper.queryCloumnMapping(param);
 		Map<String,String> map = new HashMap<>();
 		chbInfoMgrResultConfigList.forEach(ele->map.put(ele.getColumnName().trim().replace("（","(").replace("）",")"),ele.getRealColumnId()));
 		List<String> columnList = new ArrayList<>();
@@ -490,136 +512,26 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 				}
 			}
 			subMap.put("ASSET_UUID",IDGenerator.generate(36));
-			subMap.put("TRADE_MARKET",StringUtil.isEmpty(subMap.get("TRADE_MARKET"))?null:subMap.get("TRADE_MARKET").split(" ")[0]);
-			subMap.put("BASIS",StringUtil.isEmpty(subMap.get("BASIS"))?null:subMap.get("BASIS").split(" ")[0]);
-			subMap.put("DEPO_TYPE",StringUtil.isEmpty(subMap.get("DEPO_TYPE"))?null:subMap.get("DEPO_TYPE").split(" ")[0]);
-			subMap.put("ISSUE_MODE",StringUtil.isEmpty(subMap.get("ISSUE_MODE"))?null:subMap.get("ISSUE_MODE").split(" ")[0]);
-			subMap.put("SEC_MAIN_GRADE",StringUtil.isEmpty(subMap.get("SEC_MAIN_GRADE"))?null:subMap.get("SEC_MAIN_GRADE").split(" ")[0]);
-			subMap.put("PARTY_TYPE1",StringUtil.isEmpty(subMap.get("PARTY_TYPE1"))?null:subMap.get("PARTY_TYPE1").split(" ")[0]);
-			subMap.put("PARTY_TYPE3",StringUtil.isEmpty(subMap.get("PARTY_TYPE3"))?null:subMap.get("PARTY_TYPE3").split(" ")[0]);
-			subMap.put("PARTY_TYPE2",StringUtil.isEmpty(subMap.get("PARTY_TYPE2"))?null:subMap.get("PARTY_TYPE2").split(" ")[0]);
+			list.add(subMap);
+		}
+		for (ChbInfoMgrResultConfig config : chbInfoMgrResultConfigList) {
+			if(!StringUtils.isEmpty(config.getResultdictCode())){
+				for (Map<String, String> m : list) {
+					if(m.get(config.getRealColumnId())!=null){
+						m.put(config.getRealColumnId(),m.get(config.getRealColumnId()).split(" ")[0]);
+					}
 
-			subMap.put("REGIST_ORG",StringUtil.isEmpty(subMap.get("REGIST_ORG"))?null:subMap.get("REGIST_ORG").split(" ")[0]);
-			subMap.put("RIVAL_PARTY_TYPE",StringUtil.isEmpty(subMap.get("RIVAL_PARTY_TYPE"))?null:subMap.get("RIVAL_PARTY_TYPE").split(" ")[0]);
-			subMap.put("TARGET_TYPE1",StringUtil.isEmpty(subMap.get("TARGET_TYPE1"))?null:subMap.get("TARGET_TYPE1").split(" ")[0]);
-			subMap.put("PROFIT_TYPE",StringUtil.isEmpty(subMap.get("PROFIT_TYPE"))?null:subMap.get("PROFIT_TYPE").split(" ")[0]);
-			subMap.put("IS_RESALE",StringUtil.isEmpty(subMap.get("IS_RESALE"))?null:subMap.get("IS_RESALE").split(" ")[0]);
-
-			subMap.put("RATE_FLAG",StringUtil.isEmpty(subMap.get("RATE_FLAG"))?null:subMap.get("RATE_FLAG").split(" ")[0]);
-			subMap.put("COUPON_SPECIES",StringUtil.isEmpty(subMap.get("COUPON_SPECIES"))?null:subMap.get("COUPON_SPECIES").split(" ")[0]);
-			subMap.put("INTEREST_RULE_FLAG",StringUtil.isEmpty(subMap.get("INTEREST_RULE_FLAG"))?null:subMap.get("INTEREST_RULE_FLAG").split(" ")[0]);
-
-
-			subMap.put("INTPAY_RULE",StringUtil.isEmpty(subMap.get("INTPAY_RULE"))?null:subMap.get("INTPAY_RULE").split(" ")[0]);
-			subMap.put("FLOAT_FACTOR_FLAG",StringUtil.isEmpty(subMap.get("FLOAT_FACTOR_FLAG"))?null:subMap.get("FLOAT_FACTOR_FLAG").split(" ")[0]);
-			subMap.put("STRUCT_GRADE",StringUtil.isEmpty(subMap.get("STRUCT_GRADE"))?null:subMap.get("STRUCT_GRADE").split(" ")[0]);
-			subMap.put("REPAYMENT_TYPE",StringUtil.isEmpty(subMap.get("REPAYMENT_TYPE"))?null:subMap.get("REPAYMENT_TYPE").split(" ")[0]);
-
-			subMap.put("PERIOD_REPAYMENT_FLAG",StringUtil.isEmpty(subMap.get("PERIOD_REPAYMENT_FLAG"))?null:subMap.get("PERIOD_REPAYMENT_FLAG").split(" ")[0]);
-			subMap.put("FINANCIER_TYPE1",StringUtil.isEmpty(subMap.get("FINANCIER_TYPE1"))?null:subMap.get("FINANCIER_TYPE1").split(" ")[0]);
-			subMap.put("FINANCIER_TYPE2",StringUtil.isEmpty(subMap.get("FINANCIER_TYPE2"))?null:subMap.get("FINANCIER_TYPE2").split(" ")[0]);
-			subMap.put("FINANCIER_TYPE3",StringUtil.isEmpty(subMap.get("FINANCIER_TYPE3"))?null:subMap.get("FINANCIER_TYPE3").split(" ")[0]);
-
-			subMap.put("INDUSTRY_FLAG",StringUtil.isEmpty(subMap.get("INDUSTRY_FLAG"))?null:subMap.get("INDUSTRY_FLAG").split(" ")[0]);
-			subMap.put("GUA_TYPE",StringUtil.isEmpty(subMap.get("GUA_TYPE"))?null:subMap.get("GUA_TYPE").split(" ")[0]);
-			subMap.put("PLEDGE_TYPE",StringUtil.isEmpty(subMap.get("PLEDGE_TYPE"))?null:subMap.get("PLEDGE_TYPE").split(" ")[0]);
-
-			subMap.put("NATURE_GUARANTEE",StringUtil.isEmpty(subMap.get("NATURE_GUARANTEE"))?null:subMap.get("NATURE_GUARANTEE").split(" ")[0]);
-			subMap.put("RELATION_FINAN",StringUtil.isEmpty(subMap.get("RELATION_FINAN"))?null:subMap.get("RELATION_FINAN").split(" ")[0]);
-			subMap.put("FINANCIER_GRADE",StringUtil.isEmpty(subMap.get("FINANCIER_GRADE"))?null:subMap.get("FINANCIER_GRADE").split(" ")[0]);
-
-			subMap.put("OUT_GRADE",StringUtil.isEmpty(subMap.get("OUT_GRADE"))?null:subMap.get("OUT_GRADE").split(" ")[0]);
-			subMap.put("CONTAIN_TYPE",StringUtil.isEmpty(subMap.get("CONTAIN_TYPE"))?null:subMap.get("CONTAIN_TYPE").split(" ")[0]);
-			subMap.put("EXERCISE_TYPE",StringUtil.isEmpty(subMap.get("EXERCISE_TYPE"))?null:subMap.get("EXERCISE_TYPE").split(" ")[0]);
-			subMap.put("PERPETUAL_CLAUSE_TYPE",StringUtil.isEmpty(subMap.get("PERPETUAL_CLAUSE_TYPE"))?null:subMap.get("PERPETUAL_CLAUSE_TYPE").split(" ")[0]);
-
-			subMap.put("DEFERRED_INTEREST_TYPE",StringUtil.isEmpty(subMap.get("DEFERRED_INTEREST_TYPE"))?null:subMap.get("DEFERRED_INTEREST_TYPE").split(" ")[0]);
-			subMap.put("DEFERRED_INTEREST_INT",StringUtil.isEmpty(subMap.get("DEFERRED_INTEREST_INT"))?null:subMap.get("DEFERRED_INTEREST_INT").split(" ")[0]);
-			subMap.put("PART_REDEM_FLAG",StringUtil.isEmpty(subMap.get("PART_REDEM_FLAG"))?null:subMap.get("PART_REDEM_FLAG").split(" ")[0]);
-			subMap.put("IS_RIGHT",StringUtil.isEmpty(subMap.get("IS_RIGHT"))?null:subMap.get("IS_RIGHT").split(" ")[0]);
-
-			subMap.put("IS_RESALE",StringUtil.isEmpty(subMap.get("IS_RESALE"))?null:subMap.get("IS_RESALE").split(" ")[0]);
-			subMap.put("NOTSTAND_SEC_TYPE",StringUtil.isEmpty(subMap.get("NOTSTAND_SEC_TYPE"))?null:subMap.get("NOTSTAND_SEC_TYPE").split(" ")[0]);
-			subMap.put("IS_BZHPJ",StringUtil.isEmpty(subMap.get("IS_BZHPJ"))?null:subMap.get("IS_BZHPJ").split(" ")[0]);
-			subMap.put("SHARES_TYPE",StringUtil.isEmpty(subMap.get("SHARES_TYPE"))?null:subMap.get("SHARES_TYPE").split(" ")[0]);
-
-			subMap.put("INVEST_STAGE",StringUtil.isEmpty(subMap.get("INVEST_STAGE"))?null:subMap.get("INVEST_STAGE").split(" ")[0]);
-			subMap.put("SHARES_TYPE1",StringUtil.isEmpty(subMap.get("SHARES_TYPE1"))?null:subMap.get("SHARES_TYPE1").split(" ")[0]);
-			subMap.put("SHARES_TYPE3",StringUtil.isEmpty(subMap.get("SHARES_TYPE3"))?null:subMap.get("SHARES_TYPE3").split(" ")[0]);
-			subMap.put("SHARES_TYPE2",StringUtil.isEmpty(subMap.get("SHARES_TYPE2"))?null:subMap.get("SHARES_TYPE2").split(" ")[0]);
-
-			subMap.put("IS_PLEDGE",StringUtil.isEmpty(subMap.get("IS_PLEDGE"))?null:subMap.get("IS_PLEDGE").split(" ")[0]);
-			subMap.put("DEPT_EQUITY",StringUtil.isEmpty(subMap.get("DEPT_EQUITY"))?null:subMap.get("DEPT_EQUITY").split(" ")[0]);
-			subMap.put("HOLD_PURPOSE",StringUtil.isEmpty(subMap.get("HOLD_PURPOSE"))?null:subMap.get("HOLD_PURPOSE").split(" ")[0]);
-			subMap.put("FINANCIAL_PRODUCT_FLAG",StringUtil.isEmpty(subMap.get("FINANCIAL_PRODUCT_FLAG"))?null:subMap.get("FINANCIAL_PRODUCT_FLAG").split(" ")[0]);
-
-			subMap.put("FINANCIAL_COMISSUE",StringUtil.isEmpty(subMap.get("FINANCIAL_COMISSUE"))?null:subMap.get("FINANCIAL_COMISSUE").split(" ")[0]);
-			subMap.put("TRU_ACT_TYPE",StringUtil.isEmpty(subMap.get("TRU_ACT_TYPE"))?null:subMap.get("TRU_ACT_TYPE").split(" ")[0]);
-			subMap.put("PRO_PROPERTY",StringUtil.isEmpty(subMap.get("PRO_PROPERTY"))?null:subMap.get("PRO_PROPERTY").split(" ")[0]);
-
-			subMap.put("BUY_STRUCT",StringUtil.isEmpty(subMap.get("BUY_STRUCT"))?null:subMap.get("BUY_STRUCT").split(" ")[0]);
-			subMap.put("MANAGE_TYPE",StringUtil.isEmpty(subMap.get("MANAGE_TYPE"))?null:subMap.get("MANAGE_TYPE").split(" ")[0]);
-			subMap.put("IN_ASSET_TYPE",StringUtil.isEmpty(subMap.get("IN_ASSET_TYPE"))?null:subMap.get("IN_ASSET_TYPE").split(" ")[0]);
-			subMap.put("MONIT_TYPE",StringUtil.isEmpty(subMap.get("MONIT_TYPE"))?null:subMap.get("MONIT_TYPE").split(" ")[0]);
-
-			subMap.put("REGIST_ORG1",StringUtil.isEmpty(subMap.get("REGIST_ORG1"))?null:subMap.get("REGIST_ORG1").split(" ")[0]);
-			subMap.put("PROFIT_FLAG",StringUtil.isEmpty(subMap.get("PROFIT_FLAG"))?null:subMap.get("PROFIT_FLAG").split(" ")[0]);
-			subMap.put("IS_GOVERN_FUND",StringUtil.isEmpty(subMap.get("IS_GOVERN_FUND"))?null:subMap.get("IS_GOVERN_FUND").split(" ")[0]);
-			subMap.put("GOVERN_INVEST_FUND",StringUtil.isEmpty(subMap.get("GOVERN_INVEST_FUND"))?null:subMap.get("GOVERN_INVEST_FUND").split(" ")[0]);
-
-			subMap.put("IS_DEPOSIT_FLAG",StringUtil.isEmpty(subMap.get("IS_DEPOSIT_FLAG"))?null:subMap.get("IS_DEPOSIT_FLAG").split(" ")[0]);
-			subMap.put("BANK_SEC_ZXZQ",StringUtil.isEmpty(subMap.get("BANK_SEC_ZXZQ"))?null:subMap.get("BANK_SEC_ZXZQ").split(" ")[0]);
-			subMap.put("BONDTOSTOCK_FLAG",StringUtil.isEmpty(subMap.get("BONDTOSTOCK_FLAG"))?null:subMap.get("BONDTOSTOCK_FLAG").split(" ")[0]);
-			subMap.put("PRIVATEFUND_FLAG",StringUtil.isEmpty(subMap.get("PRIVATEFUND_FLAG"))?null:subMap.get("PRIVATEFUND_FLAG").split(" ")[0]);
-
-			subMap.put("ISUNLISTED",StringUtil.isEmpty(subMap.get("ISUNLISTED"))?null:subMap.get("ISUNLISTED").split(" ")[0]);
-			subMap.put("PRIVATEPRD_FLAG",StringUtil.isEmpty(subMap.get("PRIVATEPRD_FLAG"))?null:subMap.get("PRIVATEPRD_FLAG").split(" ")[0]);
-			subMap.put("CONSTRACTE_BUSI_TYPE",StringUtil.isEmpty(subMap.get("CONSTRACTE_BUSI_TYPE"))?null:subMap.get("CONSTRACTE_BUSI_TYPE").split(" ")[0]);
-			subMap.put("CONSTRACTE_GRADE",StringUtil.isEmpty(subMap.get("CONSTRACTE_GRADE"))?null:subMap.get("CONSTRACTE_GRADE").split(" ")[0]);
-			subMap.put("PRIVATE_FLAG",StringUtil.isEmpty(subMap.get("PRIVATE_FLAG"))?null:subMap.get("PRIVATE_FLAG").split(" ")[0]);
-			subMap.put("IS_BANK_CAP",StringUtil.isEmpty(subMap.get("IS_BANK_CAP"))?null:subMap.get("IS_BANK_CAP").split(" ")[0]);
-			subMap.put("IS_CONSTRACTE_BUSI",StringUtil.isEmpty(subMap.get("IS_CONSTRACTE_BUSI"))?null:subMap.get("IS_CONSTRACTE_BUSI").split(" ")[0]);
-			subMap.put("ASSET_TYPE2",StringUtil.isEmpty(subMap.get("ASSET_TYPE2"))?null:subMap.get("ASSET_TYPE2").split(" ")[0]);
-			subMap.put("PBC_ASSET_TYPE1",StringUtil.isEmpty(subMap.get("PBC_ASSET_TYPE1"))?null:subMap.get("PBC_ASSET_TYPE1").split(" ")[0]);
-			subMap.put("PBC_ASSET_TYPE2",StringUtil.isEmpty(subMap.get("PBC_ASSET_TYPE2"))?null:subMap.get("PBC_ASSET_TYPE2").split(" ")[0]);
-			subMap.put("PBC_ASSET_TYPE3",StringUtil.isEmpty(subMap.get("PBC_ASSET_TYPE3"))?null:subMap.get("PBC_ASSET_TYPE3").split(" ")[0]);
-			subMap.put("CCY",StringUtil.isEmpty(subMap.get("CCY"))?null:subMap.get("CCY").split(" ")[0]);
-			subMap.put("ORG_ASSET_TYPE2",StringUtil.isEmpty(subMap.get("ORG_ASSET_TYPE2"))?null:subMap.get("ORG_ASSET_TYPE2").split(" ")[0]);
-			subMap.put("ORG_ASSET_TYPE1",StringUtil.isEmpty(subMap.get("ORG_ASSET_TYPE1"))?null:subMap.get("ORG_ASSET_TYPE1").split(" ")[0]);
-			subMap.put("ORG_ASSET_TYPE3",StringUtil.isEmpty(subMap.get("ORG_ASSET_TYPE3"))?null:subMap.get("ORG_ASSET_TYPE3").split(" ")[0]);
-			subMap.put("ORG_ASSET_TYPE4",StringUtil.isEmpty(subMap.get("ORG_ASSET_TYPE4"))?null:subMap.get("ORG_ASSET_TYPE4").split(" ")[0]);
-			subMap.put("ORG_ASSET_TYPE5",StringUtil.isEmpty(subMap.get("ORG_ASSET_TYPE5"))?null:subMap.get("ORG_ASSET_TYPE5").split(" ")[0]);
-			subMap.put("TARGET_TYPE",StringUtil.isEmpty(subMap.get("TARGET_TYPE"))?null:subMap.get("TARGET_TYPE").split(" ")[0]);
-			subMap.put("CHB_SECTYPE",StringUtil.isEmpty(subMap.get("CHB_SECTYPE"))?null:subMap.get("CHB_SECTYPE").split(" ")[0]);
-			subMap.put("INDUSTRY_LEVEL2",StringUtil.isEmpty(subMap.get("INDUSTRY_LEVEL2"))?null:subMap.get("INDUSTRY_LEVEL2").split(" ")[0]);
-			subMap.put("BASIS_TYPE",StringUtil.isEmpty(subMap.get("BASIS_TYPE"))?null:subMap.get("BASIS_TYPE").split(" ")[0]);
-			subMap.put("SPREAD_RATE",StringUtil.isEmpty(subMap.get("SPREAD_RATE"))?null:subMap.get("SPREAD_RATE").split(" ")[0]);
-			subMap.put("INDUSTRY_LEVEL2_TYPE",StringUtil.isEmpty(subMap.get("INDUSTRY_LEVEL2_TYPE"))?null:subMap.get("INDUSTRY_LEVEL2_TYPE").split(" ")[0]);
-			subMap.put("FIN_AREA",StringUtil.isEmpty(subMap.get("FIN_AREA"))?null:subMap.get("FIN_AREA").split(" ")[0]);
-			subMap.put("PRO_INDUSTRY_LEVEL2",StringUtil.isEmpty(subMap.get("PRO_INDUSTRY_LEVEL2"))?null:subMap.get("PRO_INDUSTRY_LEVEL2").split(" ")[0]);
-			subMap.put("INDUSTRY_SHARES2",StringUtil.isEmpty(subMap.get("INDUSTRY_SHARES2"))?null:subMap.get("INDUSTRY_SHARES2").split(" ")[0]);
-			subMap.put("TARGET_TYPE3",StringUtil.isEmpty(subMap.get("TARGET_TYPE3"))?null:subMap.get("TARGET_TYPE3").split(" ")[0]);
-			subMap.put("COUNTRY_AREA",StringUtil.isEmpty(subMap.get("COUNTRY_AREA"))?null:subMap.get("COUNTRY_AREA").split(" ")[0]);
-			subMap.put("PARTY_GRADE",StringUtil.isEmpty(subMap.get("PARTY_GRADE"))?null:subMap.get("PARTY_GRADE").split(" ")[0]);
-			subMap.put("INVEST_TYPE",StringUtil.isEmpty(subMap.get("INVEST_TYPE"))?null:subMap.get("INVEST_TYPE").split(" ")[0]);
-			subMap.put("CAP_USE_INDU_LEVEL2",StringUtil.isEmpty(subMap.get("CAP_USE_INDU_LEVEL2"))?null:subMap.get("CAP_USE_INDU_LEVEL2").split(" ")[0]);
-			subMap.put("PBC_ASSET_TYPE1",StringUtil.isEmpty(subMap.get("PBC_ASSET_TYPE1"))?null:subMap.get("PBC_ASSET_TYPE1").split(" ")[0]);
-			subMap.put("PBC_ASSET_TYPE2",StringUtil.isEmpty(subMap.get("PBC_ASSET_TYPE2"))?null:subMap.get("PBC_ASSET_TYPE2").split(" ")[0]);
-			subMap.put("PBC_ASSET_TYPE3",StringUtil.isEmpty(subMap.get("PBC_ASSET_TYPE3"))?null:subMap.get("PBC_ASSET_TYPE3").split(" ")[0]);
-
+				}
+			}
+		}
+		list.forEach(subMap->{
 			subMap.put("ASSET_TYPE",dictAssetType.get(subMap.get("ASSET_TYPE2")));
-
 			subMap.put("CAP_USE_INDU",dictIndustry.get(subMap.get("CAP_USE_INDU_LEVEL2")));
 			subMap.put("INDUSTRY_SHARES",dictAssetType.get(subMap.get("INDUSTRY_SHARES2")));
 			subMap.put("PRO_INDUSTRY",dictAssetType.get(subMap.get("PRO_INDUSTRY_LEVEL2")));
 			subMap.put("INDUSTRY",dictAssetType.get(subMap.get("INDUSTRY_LEVEL2")));
 			subMap.put("INDUSTRY1",dictAssetType.get(subMap.get("INDUSTRY_LEVEL2_TYPE")));
-
-
-			list.add(subMap);
-		}
-
-
+		});
 		return list;
 	}
 	public List<AssetInfoDetailDto> converToBean(List<Map<String,String>> dataList)
@@ -685,4 +597,16 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		return var2;
 	}
 
+
+	public List<AssetInfoDetailDto> selectAll(Map<String, Object> param) {
+		//获取当前登录用户的机构编码
+		param.put("orgCode", CommonUtil.getTreeInstCode());
+
+		param.put("assetCodes", StringUtil.isNotEmpty(param.get("assetCode"))?(param.get("assetCode").toString().split(",")):null);
+		param.put("assetTypes", StringUtil.isNotEmpty(param.get("assetType"))?(param.get("assetType").toString().split(",")):null);
+		param.put("assetType2s", StringUtil.isNotEmpty(param.get("assetType2"))?(param.get("assetType2").toString().split(",")):null);
+		param.put("orgAssetType1s", StringUtil.isNotEmpty(param.get("orgAssetType1"))?(param.get("orgAssetType1").toString().split(",")):null);
+		param.put("orgAssetType2s", StringUtil.isNotEmpty(param.get("orgAssetType2"))?(param.get("orgAssetType2").toString().split(",")):null);
+		return assetInfoDetailMapper.selectList(param);
+	}
 }

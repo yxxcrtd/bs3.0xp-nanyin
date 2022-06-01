@@ -15,6 +15,8 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbinvesttrade.dto.ChbInvestTradeDto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.dto.ChbPrdBaseInfoDto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.service.ChbPrdBaseInfoService;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
@@ -109,6 +112,12 @@ public class ChbPrdBaseInfo001Controller extends BaseController {
         params.setComment(entity -> this.getMessage("CchbPrdBaseInfo001.prodId") + "("
                 + entity.getProdId() + ")");
         processParameter.setWorkFlowParameter(params);
+        dto.getSelectedItem().forEach(e->{
+            e.setCreateUser(CommonUtil.getUserName());
+            e.setCreateTime(DateUtil.now());
+            e.setUpdateUser(CommonUtil.getUserName());
+            e.setUpdateTime(DateUtil.now());
+        });
         String msg = chbPrdBaseInfoService.start(processParameter,dto.getSelectedItem().toArray(new ChbPrdBaseInfoDto[dto.getSelectedItem().size()]));
         return new AjaxResult(msg);
 
@@ -178,5 +187,29 @@ public class ChbPrdBaseInfo001Controller extends BaseController {
 
     }
 
+    /**
+     * 导入数据文件之前检查数据
+     *
+     * @param fileName 导入的文件名
+     * @return 处理结果
+     */
+    @ResponseBody
+    @RequestMapping(value = "checkConfirmMsgForImportData", method = RequestMethod.POST)
+    public AjaxResult checkConfirmMsgForImportData(String fileName) throws Exception  {
+        return chbPrdBaseInfoService.checkConfirmMsgForImportData(fileName);
+    }
+    /**
+     * 导入（数据保存）
+     *
+     * @param fileName
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping("importFileSave")
+    public List<ExcelValidDto> importFileSave(String fileName)
+            throws Exception {
 
+        return chbPrdBaseInfoService.importFileSave(fileName);
+    }
 }

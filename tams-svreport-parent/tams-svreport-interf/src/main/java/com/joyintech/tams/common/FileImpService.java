@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.common;
 
+import com.google.common.collect.Lists;
 import com.jcraft.jsch.ChannelSftp.LsEntry;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.constant.GlobalConstant;
@@ -19,8 +20,11 @@ import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.ChbFileReadMonitorInfoMapper;
+import com.joyintech.tams.common.base.dao.ChbInvestTradeErrodataMapper;
+import com.joyintech.tams.common.base.dao.ChbPrdBaseinfoErrodataMapper;
 import com.joyintech.tams.common.base.entity.BaseChbEntity;
 import com.joyintech.tams.common.base.entity.ChbFileReadMonitorInfo;
+import com.joyintech.tams.common.base.entity.ChbPrdBaseinfoErrodataWithBLOBs;
 import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
@@ -46,10 +50,14 @@ import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpColumn;
 import com.joyintech.tams.report.interf.common.service.InterfService;
 import com.joyintech.tams.report.interf.common.util.InterfUtil;
 import com.joyintech.tams.report.interf.common.util.SftpUtil;
+import com.joyintech.tams.svreport.interf.chb.proddeclare.dao.ChbPrdDeclareInfoMapper;
+import com.joyintech.tams.svreport.interf.chb.proddeclare.dto.ChbPrdDeclareInfoDto;
 import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.xmlbeans.impl.xb.xsdschema.Public;
@@ -589,6 +597,118 @@ public abstract class FileImpService extends InterfService{
 //        chbInterfErrodataMapper.insert(data);
         return listError;
     }
+    /**
+     * 数据校验
+     * @param infoList 解析的数据list
+     * @param fireName 文件名称
+     * @param interfType 接口类型
+     * @param dataType 检查数据类型
+     * @param checkEuplicatedKeys 重复性检查的keys
+     * @Param bussinessKey 业务主键用于关联错误信息
+     * @return 返回待处理数据
+     */
+    public List<Map<String, String>> checkData(List<ExcelValidDto> excelValidDtoList,boolean deleteFlag, List<Map<String,String>> infoList,String fireName,
+                                               String interfType,String dataType,String bussinessKey,String... checkEuplicatedKeys ){
+        /**start 新增删除逻辑  add  by  dongxiangyang 20201017    */
+        //根据业务主键和类型进行删除
+        List<String>  listMap=infoList.stream().map(map -> {
+            if(StringUtil.isEmpty(bussinessKey) || StringUtil.isEmpty(map.get(bussinessKey))) {
+                StringBuffer keyVFinal = new StringBuffer();
+                for(String key: checkEuplicatedKeys){
+                    keyVFinal.append(map.get(key));
+                    keyVFinal.append("|");
+                }
+                return keyVFinal.toString();
+            }
+            return map.get(bussinessKey);
+        }).collect(Collectors.toList());
+        deletAllErroData(listMap, interfType);
+        /**end 新增删除逻辑  add  by  dongxiangyang 20201017    */
+        //产品基本信息 检查行内标识码是否存在
+        if(dataType.equals("CHB_PRD_BASEINFO")){
+            checkProdInsId(excelValidDtoList,infoList);
+        }
+        List<Map<String, String>> listDupError = DataCheckService.checkDuplicatedData(excelValidDtoList,infoList, checkEuplicatedKeys);
+        //投资交易
+        if(dataType.equals("CHB_INVEST_TRADE")){
+            //行内交易编码不能重复
+            DataCheckService.checkDuplicatedData(excelValidDtoList,infoList, new String[]{"TRADE_CODE"});
+        }
+        //总部或分支机构信息登记表SUB双独立业务主键重复校验特殊处理
+        if(dataType.equals("CHB_SALER_INST_SUB")) {
+            List<Map<String, String>> SalerInsNameListError = DataCheckService.checkDuplicatedData(infoList, new String[]{"SALER_ORG_NAME"});
+            if(SalerInsNameListError.size() != 0){
+                for (Map<String, String> erro : SalerInsNameListError) {
+                    listDupError.add(erro);
+                }
+            }
+        }
+
+        // add by zhangliang 20210418 TMP调用SUB校验配置 start
+        List<CheckRule> listRules = dataCheckService.queryCheckRules(ChbCheckTableInfo.genDataType(dataType));
+        // add by zhangliang 20210418 TMP调用SUB校验配置 end
+        List<Map<String, String>> listError = DataCheckService.checkDataList(excelValidDtoList,infoList,listRules, deleteFlag);
+
+        // 将重复项入库
+        if (deleteFlag && CollectionUtils.isNotEmpty(listError)){
+            listDupError.addAll(listError);
+        }
+        ChbInterfErrodataWithBLOBs data=null;
+//        StringBuffer bf=null;
+        List<ChbInterfErrodataWithBLOBs> erroList=new ArrayList<ChbInterfErrodataWithBLOBs>();
+        for(Map<String, String> erro:listDupError){
+            data = createChbInterfErrdata(StringUtils.isEmpty(fireName)?interfType:fireName, interfType, erro, bussinessKey, checkEuplicatedKeys);
+            if(data != null) {
+                erroList.add(data);
+            }
+        }
+        if(!erroList.isEmpty()){
+            insertErroData(erroList);
+        }
+//        chbInterfErrodataMapper.deleteByPrimaryKey(data.getDataid());
+//        chbInterfErrodataMapper.insert(data);
+        return listError;
+    }
+
+    protected  void checkProdInsId(List<ExcelValidDto> excelValidDtoList, List<Map<String, String>> infoList) {
+
+        SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+        try {
+            logger.debug("校验产品基本信息的行内标识码是否存在开始--------------" + new Date());
+            ChbPrdDeclareInfoMapper batchMapper = session.getMapper(ChbPrdDeclareInfoMapper.class);
+            List<String> list = infoList.stream().filter(e-> StringUtils.isNotEmpty(e.get("PROD_INS_ID"))).map(e -> e.get("PROD_INS_ID")).collect(Collectors.toList());
+
+            List<ChbPrdDeclareInfoDto> dtoList = batchMapper.selectByChbPrdDeclareInfoList(list);
+            List<String> prodInsIds = Lists.newArrayList();
+            if(dtoList!=null){
+                prodInsIds = dtoList.stream().map(e->e.getProdInsId()).collect(Collectors.toList());
+            }
+            for (int i = 0; i < infoList.size(); i++) {
+                Map<String, String> map = infoList.get(i);
+                if(StringUtils.isEmpty(map.get("PROD_INS_ID"))){
+                }else{
+                    if(!prodInsIds.contains(map.get("PROD_INS_ID"))){
+                        map.put("ERRMSG","产品不存在对应的申报信息！");
+                        if(excelValidDtoList!=null){
+                            excelValidDtoList.add(new ExcelValidDto("0未导入",String.valueOf(i+2),"产品不存在对应的申报信息！"));
+                        }
+                    }
+                }
+            }
+
+            session.commit();
+            // 清理缓存，防止溢出
+            session.clearCache();
+        }
+        catch (Exception e) {
+            session.rollback();
+            logger.error("SQL执行异常：", e);
+        }
+        finally {
+            session.close();
+        }
+        logger.debug("校验产品基本信息的行内标识码是否存在结束--------------" + new Date());
+    }
 
     /**
      * 根据错误消息创建需要入库的Dto
@@ -672,6 +792,25 @@ public abstract class FileImpService extends InterfService{
 
         return infoList;
     }
+
+
+    /**
+     * add by wubingbing 20220522
+     * @param infoList
+     * @param fireName
+     * @param checkTableInfo
+     * @param coverFlag
+     * @return
+     */
+    public List<ExcelValidDto> checkImportData(List<ExcelValidDto> excelValidDtoList,List<Map<String,String>> infoList, String fireName, ChbCheckTableInfo checkTableInfo,String coverFlag,String flag) {
+        // 配置脚本校验
+        checkData(excelValidDtoList,false, infoList, fireName, checkTableInfo.getTableName(), checkTableInfo.getTableName(), checkTableInfo.getBussinessKey(), checkTableInfo.getCheckEuplicatedKeys());
+        // 代码校验
+        commonCodeCheckBatchService.codeCheckCommon(excelValidDtoList,infoList, checkTableInfo, fireName,coverFlag,flag);
+
+        return excelValidDtoList;
+    }
+
 
     /**
      * 功能:数据入库
@@ -906,6 +1045,18 @@ public abstract class FileImpService extends InterfService{
      */
     public abstract String importDB(List<Map<String, String>> listData,InterfFile interfFile, String date);
 
+    /**
+     * add by wubingbing 20220521
+     * @param listData
+     * @param interfFile
+     * @param date
+     * @param coverFlag 是否覆盖
+     * @return
+     */
+    public  String importDB(List<ExcelValidDto>listExcel, List<Map<String, String>> listData,InterfFile interfFile, String date){
+        return null;
+    }
+
     public void clearFile(InterfFile interfFile){
         // ftp文件移动
         if (StringUtil.isNotEmpty(interfFile.getRemotePath())) {
@@ -1085,7 +1236,7 @@ public abstract class FileImpService extends InterfService{
      * @param clz
      * @return
      */
-    public List<? extends BaseEntity> convertMapToEntity(List<Map<String, String>> dataList, Class clz) {
+    public List<? extends BaseEntity> convertMapToEntity(List<Map<String, String>> dataList, Class clz, String dataSource) {
         // 返回对象list
         List<BaseEntity> rs = new ArrayList<>();
 
@@ -1174,10 +1325,13 @@ public abstract class FileImpService extends InterfService{
                     }
                 }
             }
-            // 创建人
-            baseEntity.setCreateUser("interf");
-            // 更新人
-            baseEntity.setUpdateUser("interf");
+            // 接口时 用户名默认赋值 interf
+            if(!(StringUtil.equals(dataSource, "D") || StringUtil.equals(dataSource, "N"))){
+                // 创建人
+                baseEntity.setCreateUser("interf");
+                // 更新人
+                baseEntity.setUpdateUser("interf");
+            }
             if(baseEntity.getCreateTime() == null){
                 baseEntity.setCreateTime(new Date());
             }
@@ -1186,7 +1340,6 @@ public abstract class FileImpService extends InterfService{
             }
             // 创建人
             baseEntity.setCreateDept(CommonUtil.getDeptCode());
-
             rs.add(baseEntity);
         }
         return rs;
@@ -1208,129 +1361,129 @@ public abstract class FileImpService extends InterfService{
         }
         return value;
     }
-//    /**
-//     //     *
-//     //     * @param dataList
-//     //     * @param clz
-//     //     * @return
-//     //     */
-//    public List<? extends BaseChbEntity> convertMapToEntity(List<Map<String, String>> dataList, Class clz) {
-//        // 返回对象list
-//        List<BaseChbEntity> rs = new ArrayList<>();
-//
-//        for (Map<String, String> map : dataList) {
-//            BaseChbEntity baseChbEntity = null;
-//            try {
-//                baseChbEntity  = (BaseChbEntity) clz.newInstance();
-//            } catch (InstantiationException e) {
-//                e.printStackTrace();
-//            } catch (IllegalAccessException e) {
-//                e.printStackTrace();
-//            }
-//            for (String key : map.keySet()) {
-//                // 获取map值
-//                String value = map.get(key);
-//                // 判断是mysql数据库时。对空字符串进行加工转为null
-//                if(BaseCommonCheckService.isMYSQLDataBase()){
-//                    if(StringUtil.isEmpty(value)){
-//                        value = null;
-//                    }
-//                }
-//                // 反射通过字段名寻找字段
-//                Field field = ReflectionUtils.findField(clz, subBlank(key.toLowerCase()));
-//
-//                if(field==null){
-//                    continue;
-//                }
-//                field.setAccessible(true);
-//                Type type = field.getGenericType();
-//                if("java.lang.String".equals(type.getTypeName())){
-//                    try {
-//                        field.set(baseChbEntity, value);
-//                    } catch ( IllegalAccessException e) {
-//                        logger.error(e.getMessage(),e);
-//                    }
-//                }else if ("java.math.BigDecimal".equals(type.getTypeName())) {
-//                    try {
-//                        value = valueWipePercent(value);
-//                        //如果是利率带%特殊处理
-//                        if(StringUtil.isNotEmpty(value)){
-//                            int cishu = this.ciShu(value,"%");
-//                            if(cishu==1){
-//                                value = value.replace("%","");
-//                                BigDecimal bd = new BigDecimal(value);
-//                                bd = bd.divide(new BigDecimal(100));
-//                                value = String.valueOf(bd);
-//                            }
-//                        }
-//                        field.set(baseChbEntity ,(value == null || "".equals(value)) ? null : new BigDecimal(value));
-//                    } catch ( IllegalAccessException e) {
-//                        logger.error(e.getMessage(),e);
-//                    }
-//                }
-//                else if ("java.lang.Integer".equals(type.getTypeName())) {
-//                    try {
-//                        value = valueWipePercent(value);
-//                        field.set(baseChbEntity ,(value == null || "".equals(value)) ? null : Integer.valueOf(value));
-//                    } catch (IllegalAccessException e) {
-//                        logger.error(e.getMessage(),e);
-//                    }
-//                }
-//                else if ("java.lang.Short".equals(type.getTypeName())) {
-//                    try {
-//                        value = valueWipePercent(value);
-//                        field.set(baseChbEntity, (value == null || "".equals(value)) ? null : Short.valueOf(value));
-//                    } catch ( IllegalAccessException e) {
-//                        logger.error(e.getMessage(),e);
-//                    }
-//                } else if ("java.lang.Long".equals(type.getTypeName())) {
-//                    try {
-//                        value = valueWipePercent(value);
-//                        field.set(baseChbEntity, (value == null || "".equals(value)) ? null : Long.valueOf(value));
-//                    } catch ( IllegalAccessException e) {
-//                        logger.error(e.getMessage(),e);
-//                    }
-//                } else if ("java.util.Date".equals(type.getTypeName())) {
-//                    if (value != null&&""!=value) {
-//                        try {
-//                            field.set(baseChbEntity, DateUtil.parse(value));
-//                        } catch ( IllegalAccessException e) {
-//                            logger.error(e.getMessage(),e);
-//                        }
-//                    }
-//                } else{
-//                    try {
-//                        field.set(baseChbEntity, value);
-//                    } catch ( IllegalAccessException e) {
-//                        logger.error(e.getMessage(),e);
-//                    }
-//                }
-//            }
-//            // status为空时，有错误数据为A到处理。无错误数据为E有效数据
-//            if(StringUtil.isEmpty(baseChbEntity.getStatus())){
-//                if(StringUtil.isNotEmpty(baseChbEntity.getErrMsg())){
-//                    baseChbEntity.setStatus(DictCodeListExt1.维护数据状态_待处理.getValue());
-//                }else{
-//                    baseChbEntity.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
-//                }
-//            }
-//            // 数据来源为空时默认为I：接口 数据来源不为空以上游传数为准(不可为D)。
-//            if(StringUtil.isEmpty(baseChbEntity.getDataSource())){
-//                baseChbEntity.setDataSource(DictCodeListExt2.数据来源_接口.getValue());
-//            }
-//            // 创建人默认为接口
-//            baseChbEntity.setCreateUser("interf");
-//            baseChbEntity.setUpdateUser("interf");
-//            // 更新人默认为接口接入时间
-//            baseChbEntity.setCreateTime(new Date());
-//            baseChbEntity.setUpdateTime(new Date());
-//            // 创建人
-//            baseChbEntity.setCreateDept(CommonUtil.getDeptCode());
-//
-//            rs.add(baseChbEntity);
-//        }
-//        return rs;
-//    }
+    /**
+     //     *
+     //     * @param dataList
+     //     * @param clz
+     //     * @return
+     //     */
+    public List<? extends BaseChbEntity> convertMapToChbEntity(List<Map<String, String>> dataList, Class clz) {
+        // 返回对象list
+        List<BaseChbEntity> rs = new ArrayList<>();
+
+        for (Map<String, String> map : dataList) {
+            BaseChbEntity baseChbEntity = null;
+            try {
+                baseChbEntity  = (BaseChbEntity) clz.newInstance();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+            for (String key : map.keySet()) {
+                // 获取map值
+                String value = map.get(key);
+                // 判断是mysql数据库时。对空字符串进行加工转为null
+                if(BaseCommonCheckService.isMYSQLDataBase()){
+                    if(StringUtil.isEmpty(value)){
+                        value = null;
+                    }
+                }
+                // 反射通过字段名寻找字段
+                Field field = ReflectionUtils.findField(clz, subBlank(key.toLowerCase()));
+
+                if(field==null){
+                    continue;
+                }
+                field.setAccessible(true);
+                Type type = field.getGenericType();
+                if("java.lang.String".equals(type.getTypeName())){
+                    try {
+                        field.set(baseChbEntity, value);
+                    } catch ( IllegalAccessException e) {
+                        logger.error(e.getMessage(),e);
+                    }
+                }else if ("java.math.BigDecimal".equals(type.getTypeName())) {
+                    try {
+                        value = valueWipePercent(value);
+                        //如果是利率带%特殊处理
+                        if(StringUtil.isNotEmpty(value)){
+                            int cishu = this.ciShu(value,"%");
+                            if(cishu==1){
+                                value = value.replace("%","");
+                                BigDecimal bd = new BigDecimal(value);
+                                bd = bd.divide(new BigDecimal(100));
+                                value = String.valueOf(bd);
+                            }
+                        }
+                        field.set(baseChbEntity ,(value == null || "".equals(value)) ? null : new BigDecimal(value));
+                    } catch ( IllegalAccessException e) {
+                        logger.error(e.getMessage(),e);
+                    }
+                }
+                else if ("java.lang.Integer".equals(type.getTypeName())) {
+                    try {
+                        value = valueWipePercent(value);
+                        field.set(baseChbEntity ,(value == null || "".equals(value)) ? null : Integer.valueOf(value));
+                    } catch (IllegalAccessException e) {
+                        logger.error(e.getMessage(),e);
+                    }
+                }
+                else if ("java.lang.Short".equals(type.getTypeName())) {
+                    try {
+                        value = valueWipePercent(value);
+                        field.set(baseChbEntity, (value == null || "".equals(value)) ? null : Short.valueOf(value));
+                    } catch ( IllegalAccessException e) {
+                        logger.error(e.getMessage(),e);
+                    }
+                } else if ("java.lang.Long".equals(type.getTypeName())) {
+                    try {
+                        value = valueWipePercent(value);
+                        field.set(baseChbEntity, (value == null || "".equals(value)) ? null : Long.valueOf(value));
+                    } catch ( IllegalAccessException e) {
+                        logger.error(e.getMessage(),e);
+                    }
+                } else if ("java.util.Date".equals(type.getTypeName())) {
+                    if (value != null&&""!=value) {
+                        try {
+                            field.set(baseChbEntity, DateUtil.parse(value));
+                        } catch ( IllegalAccessException e) {
+                            logger.error(e.getMessage(),e);
+                        }
+                    }
+                } else{
+                    try {
+                        field.set(baseChbEntity, value);
+                    } catch ( IllegalAccessException e) {
+                        logger.error(e.getMessage(),e);
+                    }
+                }
+            }
+            // status为空时，有错误数据为A到处理。无错误数据为E有效数据
+            if(StringUtil.isEmpty(baseChbEntity.getStatus())){
+                if(StringUtil.isNotEmpty(baseChbEntity.getErrMsg())){
+                    baseChbEntity.setStatus(DictCodeListExt1.维护数据状态_待处理.getValue());
+                }else{
+                    baseChbEntity.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
+                }
+            }
+            // 数据来源为空时默认为I：接口 数据来源不为空以上游传数为准(不可为D)。
+            if(StringUtil.isEmpty(baseChbEntity.getDataSource())){
+                baseChbEntity.setDataSource(DictCodeListExt2.数据来源_接口.getValue());
+            }
+            // 创建人默认为接口
+            baseChbEntity.setCreateUser("interf");
+            baseChbEntity.setUpdateUser("interf");
+            // 更新人默认为接口接入时间
+            baseChbEntity.setCreateTime(new Date());
+            baseChbEntity.setUpdateTime(new Date());
+            // 创建人
+            baseChbEntity.setCreateDept(CommonUtil.getDeptCode());
+
+            rs.add(baseChbEntity);
+        }
+        return rs;
+    }
 ////
 //
     /**
