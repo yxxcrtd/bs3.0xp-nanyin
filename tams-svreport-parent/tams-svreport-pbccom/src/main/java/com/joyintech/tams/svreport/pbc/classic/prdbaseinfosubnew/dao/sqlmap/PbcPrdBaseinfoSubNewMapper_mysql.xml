@@ -868,7 +868,7 @@
         (case TRANSFER_TYPE when '01' then '1' when '99' then '2' else '' end) TRANSFER_TYPE,
         (case cbc.IS_FIN_SUB_COMPANY when '01' then '2' else '1' end) IDENTI_FLAG,
         NOW() STATUS_DATE,
-        (case info.CASH_MANA_CATE when '01' then '2' else '1' end) IS_MARKET_FUND,
+        (case info.CASH_MANA_CATE when '01' then '1' else '2' end) IS_MARKET_FUND,
         info.STATUS,
         info.CREATE_USER,
         info.UPDATE_USER,
