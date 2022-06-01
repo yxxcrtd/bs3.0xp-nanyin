@@ -113,9 +113,7 @@
          */
         $(function () {
             //修改和审批被驳回时，保存按钮隐藏
-            if (pageModel === PAGE_MODEL_EDIT) {
-                $('#btnSave_wfl').hide();
-            }
+            $('#btnSave_wfl').hide();
             // 绑定按钮事件
             $('#CchbInvestTrade002_btn_submit').click(function () {
                 saveOrSubmit("submit");
