@@ -6,6 +6,7 @@
         <id column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
         <result column="PRODNAME" property="prodname" jdbcType="VARCHAR" />
         <result column="REG_CODE" property="regCode" jdbcType="VARCHAR" />
+        <result column="PROD_INS_ID" property="prodInsId" jdbcType="VARCHAR" />
         <result column="VDATE" property="vdate" jdbcType="DATE" />
         <result column="MDATE" property="mdate" jdbcType="DATE" />
         <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
@@ -18,7 +19,7 @@
         <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
-        PRODID PRODID, ORG_CODE ORG_CODE, PRODNAME PRODNAME, REG_CODE REG_CODE, VDATE VDATE, 
+        PRODID PRODID, ORG_CODE ORG_CODE, PRODNAME PRODNAME, REG_CODE REG_CODE, VDATE VDATE, PROD_INS_ID PROD_INS_ID,
         MDATE MDATE, DEPT_CODE DEPT_CODE, INVESTOR INVESTOR, REMARK REMARK, UPDATE_USER UPDATE_USER, 
         UPDATE_TIME UPDATE_TIME, CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, CREATE_DEPT CREATE_DEPT
     </sql>
@@ -51,7 +52,7 @@
     </select>
     <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbPrdresistCodeKey" >
         delete from CHB_PRDRESIST_CODE
-        where PRODID = #{prodid,jdbcType=VARCHAR}
+        where PROD_INS_ID = #{prodInsId,jdbcType=VARCHAR}
           and ORG_CODE = #{orgCode,jdbcType=VARCHAR}
     </delete>
     
@@ -64,12 +65,12 @@
     </delete>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbPrdresistCode" >
         insert into CHB_PRDRESIST_CODE (PRODID, ORG_CODE, PRODNAME, 
-            REG_CODE, VDATE, MDATE, 
+            REG_CODE,PROD_INS_ID, VDATE, MDATE,
             DEPT_CODE, INVESTOR, REMARK, 
             UPDATE_USER, UPDATE_TIME, CREATE_USER, 
             CREATE_TIME, CREATE_DEPT)
         values (#{prodid,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, #{prodname,jdbcType=VARCHAR}, 
-            #{regCode,jdbcType=VARCHAR}, #{vdate,jdbcType=DATE}, #{mdate,jdbcType=DATE}, 
+            #{regCode,jdbcType=VARCHAR}, #{prodInsId,jdbcType=VARCHAR},#{vdate,jdbcType=DATE}, #{mdate,jdbcType=DATE},
             #{deptCode,jdbcType=VARCHAR}, #{investor,jdbcType=CHAR}, #{remark,jdbcType=VARCHAR}, 
             #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, 
             #{createTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR})
@@ -105,14 +106,14 @@
             values (b.PRODID,b.ORG_CODE,b.REG_CODE,b.PROD_INS_ID,b.PRODNAME,b.DEPT_CODE,b.UPDATE_USER,b.UPDATE_TIME,b.CREATE_USER,b.CREATE_TIME)
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbPrdresistCode" >
-        insert into CHB_PRDRESIST_CODE(PRODID, ORG_CODE, PRODNAME, REG_CODE, VDATE, MDATE, 
+        insert into CHB_PRDRESIST_CODE(PRODID, ORG_CODE, PRODNAME, REG_CODE,PROD_INS_ID, VDATE, MDATE,
         DEPT_CODE, INVESTOR, REMARK, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, 
         CREATE_DEPT)
-        select PRODID, ORG_CODE, PRODNAME, REG_CODE, VDATE, MDATE, 
+        select PRODID, ORG_CODE, PRODNAME, REG_CODE, PROD_INS_ID,VDATE, MDATE,
             DEPT_CODE, INVESTOR, REMARK, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_USER, CREATE_TIME, 
             CREATE_DEPT
              from CHB_PRDRESIST_CODE
-             where STATUS = 'E' and PRODID = #{prodid,jdbcType=VARCHAR} and ORG_CODE = #{orgCode,jdbcType=VARCHAR}
+             where STATUS = 'E' and PROD_INS_ID = #{prodInsId,jdbcType=VARCHAR} and ORG_CODE = #{orgCode,jdbcType=VARCHAR}
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbPrdresistCode" >
         update CHB_PRDRESIST_CODE
@@ -216,6 +217,7 @@
         update CHB_PRDRESIST_CODE
         set PRODNAME = #{prodname,jdbcType=VARCHAR},
             REG_CODE = #{regCode,jdbcType=VARCHAR},
+            PRODID = #{prodid,jdbcType=VARCHAR},
             VDATE = #{vdate,jdbcType=DATE},
             MDATE = #{mdate,jdbcType=DATE},
             DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
@@ -223,7 +225,7 @@
             REMARK = #{remark,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-        where PRODID = #{prodid,jdbcType=VARCHAR}
+        where PROD_INS_ID = #{prodInsId,jdbcType=VARCHAR}
           and ORG_CODE = #{orgCode,jdbcType=VARCHAR}
     </update>
 </mapper>
