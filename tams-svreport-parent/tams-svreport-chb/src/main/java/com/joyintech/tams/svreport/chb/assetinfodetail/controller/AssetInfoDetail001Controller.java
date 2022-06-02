@@ -73,9 +73,7 @@ public class AssetInfoDetail001Controller extends BaseController {
     @SuppressWarnings("unused")
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Value("${spring.pageId}")
-    private String pageId;
-    
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -99,6 +97,11 @@ public class AssetInfoDetail001Controller extends BaseController {
 			model.addAttribute("searchDataStart", map.get("searchDataStart"));
 			model.addAttribute("searchDataEnd", map.get("searchDataEnd"));
 			model.addAttribute("isMain", "01");
+		}
+		//默认下载全量模板
+		String pageId = "AssetInfoDetail001_3";
+		if(StringUtil.equals(CacheUtil.getSysParam("CHB_ASSET_INFO_TEMPLATE_FILE"), "01")){
+			pageId = "AssetInfoDetail001_2";
 		}
 		model.addAttribute("file",pageId);
 		super.setSelectOptionToModel(model,DictCode.资产_负债类别, DictCode.资产_负债二级类别,DictCode.资产负债一级类别
@@ -157,7 +160,7 @@ public class AssetInfoDetail001Controller extends BaseController {
     @SuppressWarnings("unchecked")
 	@RequestMapping(value = ACTION_EXPORT)
     public ResponseEntity<byte[]> export() {
-    	if("AssetInfoDetail001_3".equals(pageId)){
+    	if(StringUtil.equals(CacheUtil.getSysParam("CHB_ASSET_INFO_TEMPLATE_FILE"), "02")){
 			Map<String, Object> params= RequestUtil.getPageParam();
 
 			List<AssetInfoDetailDto> list= assetInfoDetailMService.selectAll(params);

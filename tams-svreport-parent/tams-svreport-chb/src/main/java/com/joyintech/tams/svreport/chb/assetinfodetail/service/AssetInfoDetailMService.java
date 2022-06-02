@@ -93,8 +93,6 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 	@Autowired
 	private BaseCommonCheckService baseCommonCheckService;
 
-	@Value("${spring.pageId}")
-	private String pageId;
 
 	static Map<String,Set<String>> map = null;
 
@@ -427,6 +425,10 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 	 */
 	public AjaxResult checkConfirmMsgForImportData(String fileName) throws Exception {
 		AjaxResult webResult = new AjaxResult();
+		String pageId = "AssetInfoDetail001_3";
+		if(StringUtil.equals(CacheUtil.getSysParam("CHB_ASSET_INFO_TEMPLATE_FILE"), "01")){
+			pageId = "AssetInfoDetail001_2";
+		}
 		if (!DuplicateDataUtil.checkFileName(fileName,propertiesMap.get(pageId))){
 			webResult.setMessage(this.getMessage("ImportFileName"), MessageType.错误消息);
 			return webResult;
