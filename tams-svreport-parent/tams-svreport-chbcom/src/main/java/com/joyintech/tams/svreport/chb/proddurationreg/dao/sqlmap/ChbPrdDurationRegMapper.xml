@@ -42,11 +42,13 @@
 		               	ELSE
 		               		NVL(OPEN1.OPEN_VDATE,DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE))
 		               	END OPEN_VDATE,
+		               <!--
 		                case when 
 		                to_char(DEAL.UPDATE_TIME, 'yyyy-MM-dd') != to_char(DEAL.SETTDATE_DATE, 'yyyy-MM-dd') and DEAL.Status='E'
 		                then 'M'
 		                else DEAL.Status
-		                end Status
+		                end Status -->
+		               DEAL.Status Status
 		          FROM CHB_PRD_DEAL DEAL
 		          LEFT JOIN CHB_PRD_OPENSCH OPEN1
 		          ON NVL(DEAL.FPROD_ID,DEAL.PROD_ID) = OPEN1.PROD_ID
