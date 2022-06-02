@@ -561,7 +561,7 @@ public class ViewCompareDetailController extends BaseController {
             if (dataResult.containsKey("PROD_ID")){
                 ChbPrdresistCodeKey key = new ChbPrdresistCodeKey();
                 if (dataResult.get("PROD_ID") != null){
-                    key.setProdid((String)dataResult.get("PROD_ID"));
+                    key.setProdInsId((String)dataResult.get("PROD_ID"));
                     key.setFlag("2");
                     if (dataResult.get("PROD_REG_CODE") == null){
                         // 查询产品登记编码
