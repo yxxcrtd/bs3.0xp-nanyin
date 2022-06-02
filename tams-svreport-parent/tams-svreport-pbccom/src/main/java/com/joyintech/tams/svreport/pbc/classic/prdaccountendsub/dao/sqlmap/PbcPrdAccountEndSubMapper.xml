@@ -262,6 +262,7 @@
 		    A.CREATE_TIME createTime,
 		    A.UPDATE_USER updateUser,
 		    A.UPDATE_TIME updateTime,
+  	        t2.inside_prod_id insideProdId,
 		    t2.PBC_CODE pbcCode,
 		    A.PBC_ACCOUNT_ID pbcAccountIdShow,
 		    B.ACCOUNT_ID accountId

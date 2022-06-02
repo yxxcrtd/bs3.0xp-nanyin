@@ -262,6 +262,7 @@
         A.CREATE_TIME createTime,
         A.UPDATE_USER updateUser,
         A.UPDATE_TIME updateTime,
+        t2.inside_prod_id insideProdId,
         t2.PBC_CODE pbcCode,
         A.PBC_ACCOUNT_ID pbcAccountIdShow,
         B.ACCOUNT_ID accountId
@@ -350,6 +351,9 @@
                 and DATE_FORMAT(A.MDATE,'%Y-%m-%d') &lt;= #{endDate}
             </if>
             <!-- 手工处理传入查询日期 实际到期日 add by gaojian 2019-06-18 end -->
+            <if test="insideProdId !=null and insideProdId!=''">
+                and t2.INSIDE_PROD_ID = #{insideProdId}
+            </if>
         </where>
         <!-- 查询结果默认按照报送截止日升序,数据更新时间降序 add by gaojian 2019-06-25 begin -->
         ORDER BY A.PBC_SUBMIT_DEADLINE ASC, A.UPDATE_TIME DESC

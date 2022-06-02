@@ -580,4 +580,17 @@
             PBC_ACCOUNT_ID = #{item.pbcAccountId,jdbcType=VARCHAR}
         </foreach>
     </select>
+    <select id="queryInsideProdId" resultType="map">
+        select INSIDE_PROD_ID
+        from (
+        select INSIDE_PROD_ID,
+        rank() over (partition by INSIDE_PROD_ID order by ifnull(update_time,create_time) desc) ranknum
+        from PBC_PROD_ASSETPOOL_CODE
+        where STATUS != 'D'
+        <if test="search != null and search !='' ">
+            AND INSIDE_PROD_ID LIKE concat('%', #{search},'%')
+        </if>
+        )tmp
+        where ranknum = 1
+    </select>
 </mapper>
