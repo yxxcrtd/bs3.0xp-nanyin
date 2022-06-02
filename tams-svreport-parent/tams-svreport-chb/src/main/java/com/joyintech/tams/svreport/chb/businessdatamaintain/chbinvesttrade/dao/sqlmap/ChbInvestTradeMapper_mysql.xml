@@ -460,7 +460,7 @@
         order by a.DEALDATE desc,a.PROD_ID asc
     </select>
     <select id="selectRivalPartyType" resultType="java.util.Map">
-        select COUNTER_TYPE from CHB_MST_COUNTER_PARTY where COUNTER_ID = #{tradeCounter}
+        select COUNTER_TYPE2 from CHB_MST_COUNTER_PARTY where COUNTER_ID = #{tradeCounter}
     </select>
     <insert id="mergeData">
         INSERT INTO  CHB_INVEST_TRADE (

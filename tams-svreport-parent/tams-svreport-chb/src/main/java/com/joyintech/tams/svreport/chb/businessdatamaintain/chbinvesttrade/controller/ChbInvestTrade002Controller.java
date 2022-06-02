@@ -45,7 +45,7 @@ public class ChbInvestTrade002Controller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.币种_中债);
         this.setSelectOptionToModel(model, DictCode.资产计量方式);
         this.setSelectOptionToModel(model, DictCode.资金流动类型);
-        this.setSelectOptionToModel(model, DictCode.交易对手类型);
+        this.setSelectOptionToModel(model, DictCode.客户二级类型);
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         String tradeCode = getParam("tradeCode");
         String prodId = getParam("prodId");

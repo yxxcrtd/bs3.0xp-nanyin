@@ -156,7 +156,7 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
         if(null==map){
             map = new HashMap<>();
         }
-        map.put("COUNTER_TYPE", SysDataUtil.getNameFromDataDict(DictCode.对手方类型,map.get("COUNTER_TYPE")));
+        map.put("COUNTER_TYPE", SysDataUtil.getNameFromDataDict(DictCode.客户二级类型,map.get("COUNTER_TYPE2")));
         return map;
     }
 
