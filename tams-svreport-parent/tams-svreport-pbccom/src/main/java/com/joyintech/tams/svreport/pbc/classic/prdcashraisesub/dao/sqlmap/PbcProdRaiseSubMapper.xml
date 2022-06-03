@@ -2028,6 +2028,28 @@
       </if>
       and SEND_STATUS in ('02','03')
     </where>
+    delete from PBC_PROD_RAISING_SUB where EXISTS(
+    select 1 from PBC_PRD_BASEINFO_SUB a left join (
+    SELECT
+    inside_prod_id,
+    pbc_code
+    FROM
+    pbc_prod_assetpool_code
+    WHERE
+    status='E'
+    AND code_type='01'
+    ) t ON t.inside_prod_id=a.PROD_ID where a.PBC_PROD_ID=PBC_PROD_ID
+    <where>
+      <if test="list != null and list.size() >0">
+        <foreach collection="list" open=" and (NVL(t.pbc_code,PBC_PROD_ID),RAISING_DATE) in (" close=")" separator="union all" item="item">
+          select #{item.pbcProdId,jdbcType=CHAR},
+          #{item.raisingDate,jdbcType=CHAR}
+          from dual
+        </foreach>
+      </if>
+      and SEND_STATUS in ('02','03')
+    </where>
+        )
   </delete>
 
   <select id="selectByDimension" parameterType="map" resultMap="BaseResultMap">
