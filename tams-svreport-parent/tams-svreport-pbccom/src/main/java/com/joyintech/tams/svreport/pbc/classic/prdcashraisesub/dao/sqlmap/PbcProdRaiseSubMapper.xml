@@ -2017,17 +2017,6 @@
     )
   </delete>
   <delete id="deleteBatchBySendStatus" parameterType="java.util.List">
-    delete from PBC_PROD_RAISING_SUB
-    <where>
-      <if test="list != null and list.size() >0">
-        <foreach collection="list" open="(PBC_PROD_ID,RAISING_DATE) in (" close=")" separator="union all" item="item">
-          select #{item.pbcProdId,jdbcType=CHAR},
-          #{item.raisingDate,jdbcType=CHAR}
-          from dual
-        </foreach>
-      </if>
-      and SEND_STATUS in ('02','03')
-    </where>
     delete from PBC_PROD_RAISING_SUB where EXISTS(
     select 1 from PBC_PRD_BASEINFO_SUB a left join (
     SELECT
