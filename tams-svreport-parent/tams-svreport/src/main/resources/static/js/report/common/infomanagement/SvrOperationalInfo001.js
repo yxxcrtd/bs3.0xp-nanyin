@@ -466,6 +466,7 @@ function getColumns() {
 					multiple: true,
 					data: initData,
 					allowClear:true,
+					language: 'zh-CN'
 				});
 
 				if(isFromMain == '01'){
