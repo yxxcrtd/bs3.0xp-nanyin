@@ -207,11 +207,7 @@
 		<!-- add by dubaojun 2020-06-13 需要查询业务确认日 start -->
 		IF(DEAL.TRADE_TYPE='04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE) PAY_DATE,
 		<!-- add by dubaojun 2020-06-13 需要查询业务确认日 end -->
-		case when
-		STR_TO_DATE(DEAL.UPDATE_TIME, '%Y-%m-%d') != STR_TO_DATE(DEAL.SETTDATE_DATE, '%Y-%m-%d') and DEAL.Status='E'
-		then 'M'
-		else DEAL.Status
-		end Status
+		DEAL.Status AS Status
 		FROM CHB_PRD_DEAL DEAL
 		left join chb_prd_baseinfo info1
 		on DEAL.PROD_ID = info1.PROD_ID

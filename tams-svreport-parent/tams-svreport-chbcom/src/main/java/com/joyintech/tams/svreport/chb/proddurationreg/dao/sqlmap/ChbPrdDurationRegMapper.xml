@@ -208,11 +208,7 @@
             <!-- add by dubaojun 2020-06-13 需要查询业务确认日 start -->
             DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE) PAY_DATE,
             <!-- add by dubaojun 2020-06-13 需要查询业务确认日 end -->
-		    case when 
-            to_char(DEAL.UPDATE_TIME, 'yyyy-MM-dd') != to_char(DEAL.SETTDATE_DATE, 'yyyy-MM-dd') and DEAL.Status='E'
-            then 'M'
-            else DEAL.Status
-            end Status
+             DEAL.Status AS Status
 			FROM CHB_PRD_DEAL DEAL
 			WHERE ( to_char(DEAL.UPDATE_TIME, 'yyyy-MM-dd') = #{batchDate,jdbcType = VARCHAR} or
 			to_char(DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE), 'yyyy-MM-dd') = #{batchDate,jdbcType = VARCHAR})
