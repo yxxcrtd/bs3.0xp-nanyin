@@ -2850,12 +2850,7 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 									columnData = "'" + userName + "'";
 									// 数据状态改为 M
 								} else if ("STATUS".equals(column)){
-									//产品基本信息表不允许有修改状态
-									if (!Objects.equals(tableName,"CHB_PRD_BASEINFO")) {
-										columnData = "'" + "M" + "'";
-									}else{
-										columnData = "'" + "E" + "'";
-									}
+									columnData = "'" + "M" + "'";
 								} else if(StringUtil.isNotEmpty(columnData)&&columnData.contains("'")){
 									columnData = "'" +columnData.replace("'", "''")+ "'";
 								} else {

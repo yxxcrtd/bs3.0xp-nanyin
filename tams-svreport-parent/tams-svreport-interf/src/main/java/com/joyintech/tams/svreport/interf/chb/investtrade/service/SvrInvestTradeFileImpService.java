@@ -254,12 +254,6 @@ public class SvrInvestTradeFileImpService  extends FileImpService{
             chbInvestTrade.setOrgCode(CommonUtil.getOrgCode());
         });
         if (chbInvestTradeList != null && chbInvestTradeList.size() > 0) {
-            //修改状态改成有效
-            chbInvestTradeList.forEach(e->{
-                if (Objects.equals(DictCodeListExt1.维护数据状态_修改.getValue(),e.getStatus())) {
-                    e.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
-                }
-            });
             if(InterfConstants.SAVEFLAG_ADD.equals(saveFlag)){
                 insertDataMerge(chbInvestTradeList,saveFlag);
             }
