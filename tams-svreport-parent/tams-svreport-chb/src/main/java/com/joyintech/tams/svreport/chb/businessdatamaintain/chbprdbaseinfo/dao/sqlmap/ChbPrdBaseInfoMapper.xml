@@ -864,6 +864,8 @@
         UPDATE_TIME,
         UPDATE_USER,
         STATUS,
+        IS_TRANSFER,
+        MANA_CATE_FIT,
         ERR_MSG
         from chb_prd_baseinfo a
         <where>
@@ -944,6 +946,8 @@
         UPDATE_TIME,
         UPDATE_USER,
         STATUS,
+        null IS_TRANSFER,
+        null MANA_CATE_FIT,
         ERR_MSG
         from CHB_PRD_BASEINFO_ERRODATA
         <where>

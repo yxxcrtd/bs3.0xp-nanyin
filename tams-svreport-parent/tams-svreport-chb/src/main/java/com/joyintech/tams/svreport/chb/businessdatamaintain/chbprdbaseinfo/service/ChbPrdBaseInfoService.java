@@ -210,7 +210,7 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
         com.joyintech.framework.util.ExcelUtil excelUtil = com.joyintech.framework.util.ExcelUtil.build(fileName, null);
 
         List<List<String>> dataList = excelUtil.readToList(0);
-        List<String> headList = dataList.get(1);
+        List<String> headList = dataList.get(0);
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("tableId", "CHB_PRD_BASEINFO");
         param.put("flag", false);
@@ -228,7 +228,7 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
             columnList.add(i,columnName);
         }
         List<Map<String,String>> list = new ArrayList<>();
-        for(int i=2;i<dataList.size();++i){
+        for(int i=1;i<dataList.size();++i){
             Map<String,String> subMap = new HashMap<>();
             List<String> subList = dataList.get(i);
             for(int j=0;j<subList.size();++j){
