@@ -184,7 +184,10 @@ public class SvrInvestTradeFileImpService  extends FileImpService{
             return "success";
         }
         String saveFlag = interfConfig.getContentType();
-        String result=saveData(investTradeList, listExcel == null?saveFlag:InterfConstants.SAVEFLAG_ADD, listExcel == null? "I" : "D");
+        String result= "";
+        if(investTradeList.size()>0){
+            result = saveData(investTradeList, listExcel == null?saveFlag:InterfConstants.SAVEFLAG_ADD, listExcel == null? "I" : "D");
+        }
         // 更新系统配置时间
         ChbInterfUtil.updateInterfTimeBySysdate( InterfDefine.投资交易信息接口数据.getCode());
         return result;

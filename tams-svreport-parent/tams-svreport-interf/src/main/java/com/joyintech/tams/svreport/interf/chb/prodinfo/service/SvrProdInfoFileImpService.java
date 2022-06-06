@@ -295,7 +295,10 @@ public class SvrProdInfoFileImpService extends FileImpService {
 		checkImportData(listExcel,listData, interfFile.getFilename(), ChbCheckTableInfo.个人发行登记表INFO,interfConfig.getCoverFlag(), listExcel == null? "I" : "D");
 
 		String saveFlag = interfConfig.getContentType();
-		String result=saveData(listData, listExcel == null?saveFlag:InterfConstants.SAVEFLAG_ADD, listExcel == null? "I" : "D");
+		String result = "";
+		if(listData.size()>0){
+			result=saveData(listData, listExcel == null?saveFlag:InterfConstants.SAVEFLAG_ADD, listExcel == null? "I" : "D");
+		}
 		// 更新系统配置时间
 		ChbInterfUtil.updateInterfTimeBySysdate( InterfDefine.产品基本信息接口数据.getCode());
 		return result;

@@ -202,7 +202,10 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
             return "success";
         }
         String saveFlag = interfConfig.getContentType();
-        String result=saveData(assetInfoList, listExcel == null?saveFlag: InterfConstants.SAVEFLAG_ADD, listExcel == null? "I" : "D");
+        String result = "";
+        if(assetInfoList.size()>0){
+            result=saveData(assetInfoList, listExcel == null?saveFlag: InterfConstants.SAVEFLAG_ADD, listExcel == null? "I" : "D");
+        }
         // 更新系统配置时间
         ChbInterfUtil.updateInterfTimeBySysdate( InterfDefine.投资交易信息接口数据.getCode());
         return result;
