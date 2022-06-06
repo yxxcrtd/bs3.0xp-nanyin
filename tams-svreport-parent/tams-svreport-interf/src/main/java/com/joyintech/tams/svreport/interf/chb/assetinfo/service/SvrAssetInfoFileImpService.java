@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
+import com.joyintech.tams.report.interf.common.constant.InterfConstants;
 import com.joyintech.tams.svreport.interf.chb.baseinfo.dao.SvrMstCustomerInfoAddImpMapper;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.apache.commons.collections4.CollectionUtils;
@@ -201,7 +202,7 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
             return "success";
         }
         String saveFlag = interfConfig.getContentType();
-        String result=saveData(assetInfoList, saveFlag, listExcel == null? "I" : "D");
+        String result=saveData(assetInfoList, listExcel == null?saveFlag: InterfConstants.SAVEFLAG_ADD, listExcel == null? "I" : "D");
         // 更新系统配置时间
         ChbInterfUtil.updateInterfTimeBySysdate( InterfDefine.投资交易信息接口数据.getCode());
         return result;
