@@ -592,10 +592,17 @@ public class CommonCodeCheckBatchService {
             }
 
             else if(!erroList.isEmpty()){
-                insertErroData(erroList);
+//                insertErroData(erroList);
             }
 
         }else{
+            Iterator<ChbAssetInfoErrodataWithBLOBs> iterator = chbAssetInfoErrorList.iterator();
+            while(iterator.hasNext()){
+                ChbAssetInfoErrodataWithBLOBs bloBs = iterator.next();
+                if(StringUtils.isEmpty(bloBs.getAssetCode())){
+                    iterator.remove();
+                }
+            }
             // 资产要素错误信息入库
             if(!flag.equals("D")&&coverFlag.equals("N")){
                 removeExistsChbAssetInfoError(chbAssetInfoErrorList);
@@ -622,6 +629,13 @@ public class CommonCodeCheckBatchService {
         if(StringUtil.isEmptyList(chbPrdBaseinfoErrordataList)){
 
         }else{
+            Iterator<ChbPrdBaseinfoErrodataWithBLOBs> iterator = chbPrdBaseinfoErrordataList.iterator();
+            while(iterator.hasNext()){
+                ChbPrdBaseinfoErrodataWithBLOBs bloBs = iterator.next();
+                if(StringUtils.isEmpty(bloBs.getProdId())){
+                    iterator.remove();
+                }
+            }
             if(!flag.equals("D")&&coverFlag.equals("N")){
                 removeExistsChbPrdBaseInfo(chbPrdBaseinfoErrordataList);
             }
