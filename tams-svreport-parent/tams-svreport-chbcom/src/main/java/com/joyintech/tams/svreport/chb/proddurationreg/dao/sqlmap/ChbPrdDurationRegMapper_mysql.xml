@@ -81,7 +81,7 @@
 		IFNULL(OPEN1.OPEN_END, YIELD.CHANGE_DATE) OPEN_END,
 		YIELD.CHANGE_DATE PAY_DATE,
 		YIELD.CHANGE_DATE OPEN_VDATE,
-		case when STR_TO_DATE(YIELD.UPDATE_TIME, '%Y-%m-%d') != STR_TO_DATE(YIELD.CHANGE_DATE, '%Y-%m-%d') and YIELD.status='E' then 'M' else YIELD.status end status
+		YIELD.status as status
 		FROM CHB_PRD_PERIODYIELD YIELD
 		<!-- 此处关联开放计划是为了防止倒起息交易的支付日当天有申赎交易，业务开始日需要取开放计划的开始日 start-->
 		LEFT JOIN CHB_PRD_OPENSCH OPEN1
@@ -127,11 +127,7 @@
 		<!-- add by dubaojun 2020-06-13 需要查询业务确认日 end -->
 		FEEINFO.PAY_DATE OPEN_VDATE,
 		<!--IFNULL(OPEN1.OPEN_VDATE,FEEINFO.PAY_DATE) OPEN_VDATE,-->
-		case when
-		STR_TO_DATE(FEEINFO.UPDATE_TIME, '%Y-%m-%d') != STR_TO_DATE(FEEINFO.PAY_DATE, '%Y-%m-%d') and FEEINFO.status='E'
-		then 'M'
-		else FEEINFO.status
-		end status
+		FEEINFO.status as status
 		FROM CHB_PRD_FEE_DEAL FEEINFO
 		<!-- 此处关联开放计划是为了防止倒起息交易的支付日当天有申赎交易，业务开始日需要取开放计划的开始日 start-->
 		LEFT JOIN CHB_PRD_OPENSCH OPEN1
@@ -237,11 +233,7 @@
 		<!-- add by dubaojun 2020-06-13 需要查询业务确认日 start -->
 		YIELD.CHANGE_DATE PAY_DATE,
 		<!-- add by dubaojun 2020-06-13 需要查询业务确认日 end -->
-		case when
-		STR_TO_DATE(YIELD.UPDATE_TIME, '%Y-%m-%d') != STR_TO_DATE(YIELD.CHANGE_DATE, '%Y-%m-%d') and YIELD.status='E'
-		then 'M'
-		else YIELD.status
-		end status
+		 YIELD.status as status
 		FROM CHB_PRD_PERIODYIELD YIELD
 		WHERE (STR_TO_DATE(YIELD.UPDATE_TIME, '%Y-%m-%d') = #{batchDate,jdbcType = VARCHAR} or
 		STR_TO_DATE(YIELD.CHANGE_DATE, '%Y-%m-%d') = #{batchDate,jdbcType = VARCHAR})
@@ -269,11 +261,7 @@
 		<!-- add by dubaojun 2020-06-13 需要查询业务确认日 start -->
 		FEEINFO.PAY_DATE PAY_DATE,
 		<!-- add by dubaojun 2020-06-13 需要查询业务确认日 end -->
-		case when
-		STR_TO_DATE(FEEINFO.UPDATE_TIME, '%Y-%m-%d') != STR_TO_DATE(FEEINFO.PAY_DATE, '%Y-%m-%d') and FEEINFO.status='E'
-		then 'M'
-		else FEEINFO.status
-		end status
+		 FEEINFO.status as status
 		FROM CHB_PRD_FEE_DEAL FEEINFO
 		WHERE ( STR_TO_DATE(FEEINFO.UPDATE_TIME, '%Y-%m-%d') = #{batchDate,jdbcType = VARCHAR} or
 		STR_TO_DATE(FEEINFO.PAY_DATE, '%Y-%m-%d') = #{batchDate,jdbcType = VARCHAR})

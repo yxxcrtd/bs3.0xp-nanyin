@@ -82,7 +82,7 @@
 						NVL(OPEN1.OPEN_END, YIELD.CHANGE_DATE) OPEN_END,
                         YIELD.CHANGE_DATE PAY_DATE,
 						YIELD.CHANGE_DATE OPEN_VDATE,
-		                case when to_char(YIELD.UPDATE_TIME, 'yyyy-MM-dd') != to_char(YIELD.CHANGE_DATE, 'yyyy-MM-dd') and YIELD.status='E' then 'M' else YIELD.status end status
+		                 YIELD.status as status
 		          FROM CHB_PRD_PERIODYIELD YIELD
 		        	<!-- 此处关联开放计划是为了防止倒起息交易的支付日当天有申赎交易，业务开始日需要取开放计划的开始日 start-->
 					LEFT JOIN CHB_PRD_OPENSCH OPEN1
@@ -128,11 +128,7 @@
                         <!-- add by dubaojun 2020-06-13 需要查询业务确认日 end -->
 						FEEINFO.PAY_DATE OPEN_VDATE,
 		                <!--NVL(OPEN1.OPEN_VDATE,FEEINFO.PAY_DATE) OPEN_VDATE,-->
-		                case when 
-		                to_char(FEEINFO.UPDATE_TIME, 'yyyy-MM-dd') != to_char(FEEINFO.PAY_DATE, 'yyyy-MM-dd') and FEEINFO.status='E'
-		                then 'M'
-		                else FEEINFO.status
-		                end status
+		                FEEINFO.status as status
 		          FROM CHB_PRD_FEE_DEAL FEEINFO
 					<!-- 此处关联开放计划是为了防止倒起息交易的支付日当天有申赎交易，业务开始日需要取开放计划的开始日 start-->
 				 	LEFT JOIN CHB_PRD_OPENSCH OPEN1
@@ -234,11 +230,7 @@
             <!-- add by dubaojun 2020-06-13 需要查询业务确认日 start -->
             YIELD.CHANGE_DATE PAY_DATE,
             <!-- add by dubaojun 2020-06-13 需要查询业务确认日 end -->
-		    case when 
-            to_char(YIELD.UPDATE_TIME, 'yyyy-MM-dd') != to_char(YIELD.CHANGE_DATE, 'yyyy-MM-dd') and YIELD.status='E'
-            then 'M'
-            else YIELD.status
-            end status
+		    YIELD.status as status
 			FROM CHB_PRD_PERIODYIELD YIELD
 		    WHERE (to_char(YIELD.UPDATE_TIME, 'yyyy-MM-dd') = #{batchDate,jdbcType = VARCHAR} or
 			to_char(YIELD.CHANGE_DATE, 'yyyy-MM-dd') = #{batchDate,jdbcType = VARCHAR})
@@ -266,11 +258,7 @@
             <!-- add by dubaojun 2020-06-13 需要查询业务确认日 start -->
             FEEINFO.PAY_DATE PAY_DATE,
             <!-- add by dubaojun 2020-06-13 需要查询业务确认日 end -->
-		    case when 
-             to_char(FEEINFO.UPDATE_TIME, 'yyyy-MM-dd') != to_char(FEEINFO.PAY_DATE, 'yyyy-MM-dd') and FEEINFO.status='E'
-             then 'M'
-             else FEEINFO.status
-             end status
+		    FEEINFO.status as status
 			FROM CHB_PRD_FEE_DEAL FEEINFO
 			WHERE ( to_char(FEEINFO.UPDATE_TIME, 'yyyy-MM-dd') = #{batchDate,jdbcType = VARCHAR} or
 			to_char(FEEINFO.PAY_DATE, 'yyyy-MM-dd') = #{batchDate,jdbcType = VARCHAR})

@@ -254,7 +254,7 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
         				valueDeal.setStatus("M");
         			}
         		}else{
-        			valueDeal.setStatus("M");
+        			valueDeal.setStatus("E");
         		}
         	}else{
         		realListMap.put(key, single);
