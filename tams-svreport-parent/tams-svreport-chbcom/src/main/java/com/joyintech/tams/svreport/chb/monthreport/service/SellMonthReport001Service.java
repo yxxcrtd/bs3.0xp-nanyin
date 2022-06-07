@@ -335,6 +335,7 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 						}
 					}
 					data.put("dataList2", tempList);
+					data.put("data", dateTempList);
 				}
 				//分销售渠道
 				if(reporttype.equals("1_3")) {
@@ -366,6 +367,7 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 						}
 					}
 					data.put("dataList3", tempList);
+					data.put("data", dateTempList);
 				}
 		File depositfile = TisUtil.createFile(data, "pbc/" +temp, fileName);
 		return this.priView(depositfile, true,reporttype);

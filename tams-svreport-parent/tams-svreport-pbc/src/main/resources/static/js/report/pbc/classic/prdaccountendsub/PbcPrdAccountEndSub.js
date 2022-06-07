@@ -14,7 +14,7 @@ $(function(){
 			pbcSubmitDeadlineDateStart:$('#pbcSubmitDeadline').startDate(),
 			mdateStart:$('#mdate').startDate(),
 			mdateEnd:$('#mdate').endDate(),
-			insideProdId:$('#insideProdId').val(),
+			accountId:$('#accountId').val(),
 		};
 	}
 	// 定义数据表格
@@ -40,7 +40,6 @@ $(function(){
 				{ field: 'pbcAccountId',visible:false},
 //				{ title: "资产池代码(内部)", field: 'pbcAccountIdShow',width:160,sortField:''},
 //				{ title: "资产池代码(外部)", field: 'pbcCode',width:160,sortField:''},
-				{ title: "内部产品代码", field: 'insideProdId',width:160,sortField:'insideProdId'},
 				{ title: "资产池代码", field: 'pbcAccountIdShow',width:160,sortField:'pbcAccountIdShow'},
 				{ title: "反馈资产池代码", field: 'pbcCode',width:160,sortField:'pbcCode'},
 				{ title: "内部产品代码", field: 'accountId',width:160,sortField:'accountId'},
