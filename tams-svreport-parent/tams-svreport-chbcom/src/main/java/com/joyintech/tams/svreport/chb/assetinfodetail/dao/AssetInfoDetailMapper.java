@@ -77,4 +77,6 @@ public interface AssetInfoDetailMapper {
 	void batchInsert(@Param("list") List<AssetInfoDetailDto> list);
 
 	List<AssetInfoDetailDto> selectList(Map<String, Object> param);
+
+	List<AssetInfoDetailDto> selectBykeys(@Param("list") List<String> list);
 }

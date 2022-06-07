@@ -611,4 +611,8 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		param.put("orgAssetType2s", StringUtil.isNotEmpty(param.get("orgAssetType2"))?(param.get("orgAssetType2").toString().split(",")):null);
 		return assetInfoDetailMapper.selectList(param);
 	}
+
+	public List<AssetInfoDetailDto> selectBykeys(List<String> assetUuids) {
+		return assetInfoDetailMapper.selectBykeys(assetUuids);
+	}
 }

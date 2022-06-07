@@ -15,11 +15,16 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.alibaba.fastjson.JSONArray;
+import com.google.common.collect.Lists;
 import com.joyintech.component.svrreport.chb.dto.ChbAssetInfoDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbmstbondcreditrating.dto.ChbMstBondCreditRatingDto;
+import org.apache.commons.lang3.StringUtils;
+import org.aspectj.weaver.ast.Var;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -162,8 +167,16 @@ public class AssetInfoDetail001Controller extends BaseController {
     public ResponseEntity<byte[]> export() {
     	if(StringUtil.equals(CacheUtil.getSysParam("CHB_ASSET_INFO_TEMPLATE_FILE"), "02")){
 			Map<String, Object> params= RequestUtil.getPageParam();
+			List<AssetInfoDetailDto> list = Lists.newArrayList();
+			if(StringUtils.isNotEmpty((String)params.get("selectData"))){
+				List<Map> selectData = JSONArray.parseArray((String) params.get("selectData"), Map.class);
+				List<String> assetUuids = selectData.stream().map(e -> (String)e.get("assetUuid")).collect(Collectors.toList());
+				list = assetInfoDetailMService.selectBykeys(assetUuids);
 
-			List<AssetInfoDetailDto> list= assetInfoDetailMService.selectAll(params);
+			}else{
+
+				list= assetInfoDetailMService.selectAll(params);
+			}
 
 
 			File outFile = assetInfoDetailMService.makeFile(
