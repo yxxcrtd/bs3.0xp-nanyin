@@ -119,7 +119,7 @@ public class BaseCheckMysqlService {
                                 //负数，负号不计算
                                 if(entry.getValue().contains("-")){
                                     if (entry.getValue().length()-1 > (Integer.valueOf(c.getNumericPrecision())-Integer.valueOf(c.getNumericScale()))) {
-                                        ExcelValidDto dto = new ExcelValidDto("0未导入", String.valueOf(i + 2), c.getColumnComment() + "内容太长了");
+                                        ExcelValidDto dto = new ExcelValidDto("0未导入", String.valueOf(i + 2), c.getColumnComment() + "内容太长");
                                         BaseCommonCheckDto commonCheckDto = new BaseCommonCheckDto();
                                         commonCheckDto.setErrMap(list.get(i));
                                         commonCheckDto.setExcelValidDto(dto);
@@ -131,7 +131,7 @@ public class BaseCheckMysqlService {
                                 }
                                 if(!entry.getValue().contains("-")){
                                     if (entry.getValue().length() > (Integer.valueOf(c.getNumericPrecision())-Integer.valueOf(c.getNumericScale()))) {
-                                        ExcelValidDto dto = new ExcelValidDto("0未导入", String.valueOf(i + 2), c.getColumnComment() + "内容太长了");
+                                        ExcelValidDto dto = new ExcelValidDto("0未导入", String.valueOf(i + 2), c.getColumnComment() + "内容太长");
                                         BaseCommonCheckDto commonCheckDto = new BaseCommonCheckDto();
                                         commonCheckDto.setErrMap(list.get(i));
                                         commonCheckDto.setExcelValidDto(dto);
@@ -146,7 +146,7 @@ public class BaseCheckMysqlService {
                                 //负数，负号不计算
                                 if(entry.getValue().contains("-")){
                                     if (entry.getValue().split("\\.")[0].length()-1 > (Integer.valueOf(c.getNumericPrecision())-Integer.valueOf(c.getNumericScale()))) {
-                                        ExcelValidDto dto = new ExcelValidDto("0未导入", String.valueOf(i + 2), c.getColumnComment() + "内容太长了");
+                                        ExcelValidDto dto = new ExcelValidDto("0未导入", String.valueOf(i + 2), c.getColumnComment() + "内容太长");
                                         BaseCommonCheckDto commonCheckDto = new BaseCommonCheckDto();
                                         commonCheckDto.setErrMap(list.get(i));
                                         commonCheckDto.setExcelValidDto(dto);
@@ -158,7 +158,7 @@ public class BaseCheckMysqlService {
                                 }
                                 if(!entry.getValue().contains("-")){
                                     if (entry.getValue().split("\\.")[0].length() > (Integer.valueOf(c.getNumericPrecision())-Integer.valueOf(c.getNumericScale()))) {
-                                        ExcelValidDto dto = new ExcelValidDto("0未导入", String.valueOf(i + 2), c.getColumnComment() + "内容太长了");
+                                        ExcelValidDto dto = new ExcelValidDto("0未导入", String.valueOf(i + 2), c.getColumnComment() + "内容太长");
                                         BaseCommonCheckDto commonCheckDto = new BaseCommonCheckDto();
                                         commonCheckDto.setErrMap(list.get(i));
                                         commonCheckDto.setExcelValidDto(dto);
@@ -169,7 +169,7 @@ public class BaseCheckMysqlService {
                                     }
                                 }
                                 if (entry.getValue().split("\\.")[1].length() > Integer.valueOf(c.getNumericScale())) {
-                                    ExcelValidDto dto = new ExcelValidDto("0未导入", String.valueOf(i + 2), c.getColumnComment() + "小数位太长了");
+                                    ExcelValidDto dto = new ExcelValidDto("0未导入", String.valueOf(i + 2), c.getColumnComment() + "小数位太长");
                                     BaseCommonCheckDto commonCheckDto = new BaseCommonCheckDto();
                                     commonCheckDto.setErrMap(list.get(i));
                                     commonCheckDto.setExcelValidDto(dto);
