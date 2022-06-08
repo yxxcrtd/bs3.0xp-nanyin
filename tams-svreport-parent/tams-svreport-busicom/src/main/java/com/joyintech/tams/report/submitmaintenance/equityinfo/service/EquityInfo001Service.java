@@ -717,7 +717,20 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
 //            equityInfoMap.put(equityInfo001Dto.getIndentifyMark()+"_"+equityInfo001Dto.getBankCode(),
 //                    equityInfo001Dto);
 //        }
-        Map<String, List<Map<String, String>>>  mst=listType.stream().collect(Collectors.groupingBy(e -> e.get("indentify_mark").toString()));
+        Map<String, List<Map<String, String>>>  mst= new HashMap<>();
+        boolean nullFalg = true;
+        if(!CollectionUtils.isNotEmpty(listType)){
+            nullFalg = false;
+        }
+        for(Map<String,String> key :listType) {
+            String nullFalgKey = key.get("indentify_mark");
+            if (!StringUtil.isNotEmpty(nullFalgKey)) {
+                nullFalg = false;
+            }
+        }
+        if(nullFalg) {
+            mst = listType.stream().collect(Collectors.groupingBy(e -> e.get("indentify_mark").toString()));
+        }
         for (int i = 0; i < equityList.size(); i++ ) {
             EquityInfo001Dto  equityInfo001Dto = equityList.get(i);
             equityInfo001Dto.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
