@@ -22,6 +22,7 @@ import com.google.common.collect.Lists;
 import com.joyintech.component.svrreport.chb.dto.ChbAssetInfoDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.system.constant.SystemGlobalConstant;
+import com.joyintech.tams.svreport.chb.assetinfodetail.util.AssetInfoDetailUtil;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbmstbondcreditrating.dto.ChbMstBondCreditRatingDto;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.weaver.ast.Var;
@@ -77,8 +78,8 @@ public class AssetInfoDetail001Controller extends BaseController {
     
     @SuppressWarnings("unused")
 	private Logger logger = LoggerFactory.getLogger(getClass());
-
-
+	@Autowired
+	private AssetInfoDetailUtil assetInfoDetailUtil;
 	/**
 	 * {@inheritDoc}
 	 */
@@ -177,8 +178,7 @@ public class AssetInfoDetail001Controller extends BaseController {
 
 				list= assetInfoDetailMService.selectAll(params);
 			}
-
-
+			assetInfoDetailUtil.processAssetInfoDetailDtos(list);
 			File outFile = assetInfoDetailMService.makeFile(
 					"/com/joyintech/tams/svreport/chb/assetinfodetail/conf/export_conf_multiple.xml",
 					list);
