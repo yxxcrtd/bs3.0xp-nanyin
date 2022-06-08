@@ -136,6 +136,7 @@
 
     <select id="selectAll" resultType="com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dto.ChbBokSubjectDto">
         select
+        BS.BOOKSET_ID as booksetId,
         BS.SUBJECT_NO as subjectNo,
         BS.SUBJECT_NAME as subjectName,
         BS.FSUBJECT_ID as fsubjectId,
@@ -254,6 +255,7 @@
     </select>
     <select id="selcetByKey" resultType="com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dto.ChbBokSubjectDto">
         select
+            BS.BOOKSET_ID as booksetId,
             BS.SUBJECT_NO as subjectNo,
             BS.SUBJECT_NAME as subjectName,
             BS.FSUBJECT_ID as fsubjectId,

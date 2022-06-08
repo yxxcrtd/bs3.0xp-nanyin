@@ -25,6 +25,7 @@
 		searchOnInit: false,
 		cellMinWidth:100 ,
 		cols: [
+		    {field:'booksetId', visible: false },
 		    {field:'subjectNo', width:100, title: 'ChbBokSubject.subjectNo'}
 		    ,{field:'subjectName', width:150, title: 'ChbBokSubject.subjectName'}
 		    ,{field:'fsubjectId', width:100, title: 'ChbBokSubject.fsubjectId'}
