@@ -123,7 +123,7 @@
             }, {
                 text : '&#xe640;',
                 clas : 'delt2',
-                title : '删除'
+                title : '删除附件'
 
             }, {
                 text : '&#xe601;',
