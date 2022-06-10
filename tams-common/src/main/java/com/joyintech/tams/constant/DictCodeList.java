@@ -2025,6 +2025,7 @@ public enum DictCodeList implements BaseDictCodeList {
 	共通业务类型_科目定义信息(DictCode.共通业务类型,"MST35","科目定义信息"),
 	共通业务类型_投资交易信息(DictCode.共通业务类型,"MST36","投资交易信息"),
 	共通业务类型_产品基本信息(DictCode.共通业务类型,"MST37","产品基本信息"),
+	共通业务类型_产品申报信息(DictCode.共通业务类型,"MST38","产品申报信息"),
 
 
 	;

@@ -23,8 +23,9 @@
 <body>
 <div layout:fragment="content">
     <div class="pro-module-container">
-        <form class="layui-form joyin-form-wrap pro-module-form" id="SvrPerProDeclareInfo002_form">
+        <form class="layui-form joyin-form-wrap pro-module-form" id="submitForm">
             <!-- 隐藏字段 金融产品代码 -->
+            <input type="hidden"  id="statusValid" name="statusValid" class="layui-input form-input" data-th-value="${entity?.statusValid}">
             <input type="text" name="declareUuid" id="declareUuid" data-th-value='${entity?.declareUuid}' hidden>
             <input type="text" name="workflowId" id="workflowId" data-th-value='${entity?.workflowId}' hidden>
             <div class="pro-module-wrap">
@@ -250,10 +251,10 @@
                             <div class="form-inline-wrap">
                                 <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.cmmode}">产品资产配置方式</label>
                                 <div class="layui-input-inline input-inline">
-                                    <input type="text" th:id="cmmode" th:name="cmmode"
-                                           data-th-data-result="${SVR_CMMODE}"
-                                           data-th-initValue="${entity?.cmmode}"
-                                           class="layui-input form-input input-checkbox" data-th-required="true" />
+                                    <input type="text" id="cmmode" name="cmmode" class="layui-input form-input input-select"
+                                           placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                                           data-th-data-result='${SVR_CMMODE}'
+                                           data-th-value="${entity?.cmmode}" required>
                                 </div>
                             </div>
                         </div>
@@ -392,33 +393,32 @@
                             <div class="form-inline-wrap">
                                 <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.raiseCcy}">募集币种</label>
                                 <div class="layui-input-inline input-inline">
-                                    <select th:id="raiseCcy" th:name="raiseCcy"
-                                            class="layui-input form-input input-select"
-                                            data-th-placeholder="#{SysCommon.placeholder}"
-                                            data-th-initValue='${entity?.raiseCcy}?:${repRaiseCcyCNY}' data-th-data-result="${CCY}" required>
-                                    </select>
+                                    <input type="text" id="raiseCcy" name="raiseCcy" class="layui-input form-input input-select"
+                                           placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                                           data-th-data-result='${CCY}'
+                                           data-th-value = "${entity?.raiseCcy}"
+                                           required />
+
                                 </div>
                             </div>
                             <div class="form-inline-wrap">
                                 <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.cashPrinCcy}">兑付本金币种</label>
                                 <div class="layui-input-inline input-inline">
-                                    <select th:id="cashPrinCcy" th:name="cashPrinCcy"
-                                            class="layui-input form-input input-select"
-                                            data-th-data-result="${CCY}" placeholder="请输入内容"
-                                            data-th-initValue="${entity?.cashPrinCcy}?:${repRaiseCcyCNY}"
-                                            data-th-placeholder="#{SysCommon.placeholder}" required>
-                                    </select>
+                                    <input type="text" id="cashPrinCcy" name="cashPrinCcy" class="layui-input form-input input-select"
+                                           placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                                           data-th-data-result='${CCY}'
+                                           data-th-value = "${entity?.cashPrinCcy}"
+                                           required />
                                 </div>
                             </div>
                             <div class="form-inline-wrap">
                                 <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.cashProfCcy}">兑付收益币种</label>
                                 <div class="layui-input-inline input-inline">
-                                    <select th:id="cashProfCcy" th:name="cashProfCcy"
-                                            class="layui-input form-input input-select"
-                                            data-th-data-result="${CCY}" placeholder="请输入内容"
-                                            data-th-initValue="${entiy?.cashProfCcy}?:${repRaiseCcyCNY}"
-                                            data-th-placeholder="#{SysCommon.placeholder}" required>
-                                    </select>
+                                    <input type="text" id="cashProfCcy" name="cashProfCcy" class="layui-input form-input input-select"
+                                           placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                                           data-th-data-result='${CCY}'
+                                           data-th-value = "${entity?.cashProfCcy}"
+                                           required />
                                 </div>
                             </div>
                         </div>
@@ -689,7 +689,6 @@
                 </div>
             </div>
             <div class="text-cerow text-center">
-                <a id="SvrPerProDeclareInfo002_btn_save" class="layui-btn layui-btn-sm btn-save" data-th-text="#{SysCommon.save}">保存</a>
                 <a id="SvrPerProDeclareInfo002_btn_submit" class="layui-btn layui-btn-sm btn-submit" data-th-text="#{SysCommon.submit}">提交</a>
                 <a id="SvrPerProDeclareInfo002_btn_cancel" class="layui-btn layui-btn-sm btn-cancel" data-th-text="#{SysCommon.cancel}">取消</a>
             </div>

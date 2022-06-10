@@ -1303,4 +1303,16 @@
     A.PRD_SPEC_PROPERTY = B.PRD_SPEC_PROPERTY
     WHERE A.PROD_INS_ID = B.PROD_INS_ID
   </insert>
+  <delete id="deleteChbPrdDeclareInfoByKey">
+    delete from CHB_PRD_DECLARE_INFO where PROD_INS_ID in
+    <foreach collection="list" item="item" open="(" close=")" separator=",">
+      #{item.prodInsId}
+    </foreach>
+  </delete>
+  <delete id="deleteChbPrdDeclareInfoErroDataByKey">
+    delete from chb_prd_declare_info_errodata where PROD_INS_ID in
+    <foreach collection="list" item="item" open="(" close=")" separator=",">
+      #{item.prodInsId}
+    </foreach>
+  </delete>
 </mapper>

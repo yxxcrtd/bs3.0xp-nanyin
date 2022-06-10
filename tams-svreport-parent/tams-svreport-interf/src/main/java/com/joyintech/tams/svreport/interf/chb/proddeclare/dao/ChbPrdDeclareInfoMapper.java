@@ -34,4 +34,8 @@ public interface ChbPrdDeclareInfoMapper {
     List<SelectOptionDto> getProdInsId(Map<String, Object> param);
 
     String getProdNameByProdInsId(String prodInsId);
+
+    void deleteChbPrdDeclareInfoByKey(@Param("list") List<ChbPrdDeclareInfoDto> list);
+
+    void deleteChbPrdDeclareInfoErroDataByKey(@Param("list") List<ChbPrdDeclareInfoDto> list);
 }

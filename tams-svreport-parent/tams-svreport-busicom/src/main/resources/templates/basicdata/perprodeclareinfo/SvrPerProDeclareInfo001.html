@@ -11,7 +11,8 @@
         <div class="form-button-area" export="false">
             <a id="SvrPerProDeclareInfo001_btn_add" class="layui-btn layui-btn-sm btn-create" data-th-text="#{SysCommon.create}">新建</a>
             <a id="SvrPerProDeclareInfo001_btn_delete" class="layui-btn layui-btn-sm btn-delete btn-default" data-th-text="#{SysCommon.delete}" style="display: none">删除</a>
-            <a id="SvrPerProDeclareInfo001_btn_import" class="layui-btn layui-btn-sm btn-import"><i class="iconfont icon-import"></i>导入</a>
+            <a id="SvrPerProDeclareInfo001_btn_import" class="layui-btn layui-btn-sm btn-import"><i class="iconfont icon-import"></i>中债模板导入</a>
+            <a id="SvrPerProDeclareInfo001_btn_batchFileUpload" class="layui-btn layui-btn-sm btn-default"><i class="iconfont icon-sent"></i>附件上传</a>
             <a id="SvrPerProDeclareInfo001_btn_export" class="layui-btn layui-btn-sm btn-export"><span>导出</span></a>
         </div>
         <div class='joyin-form-wrap joyin-filter-form condition-area curr-form'>
@@ -74,12 +75,9 @@
                         <label class="layui-form-label form-lable"
                                data-th-text="#{SvrPerProDeclareInfo001.status}">数据状态</label>
                         <div class="layui-input-inline input-inline">
-                            <select id="status" name="status"
-                                    class="input-select"
-                                    placeholder="请选择" allowClear="true"
-                                    data-th-placeholder="#{SysCommon.placeholder}"
-                                    data-th-data-result="${MAINTAIN_STATUS}">
-                            </select>
+                        <input type="text" id="status"
+                               class="layui-input form-input input-select" placeholder="请选择"
+                               data-th-data-result="${MAINTAIN_STATUS}" allowClear="true">
                         </div>
                     </div>
                 </div>

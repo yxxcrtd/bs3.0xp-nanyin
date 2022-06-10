@@ -121,4 +121,10 @@ public interface CommonCodeCheckMapper {
     void deleteChbInvestTrade(@Param("list") List<ChbInvestTradeErrodataWithBLOBs> list);
 
     void deleteChbAssetInfo(@Param("list") List<ChbAssetInfoErrodataWithBLOBs> list);
+
+    List<Map<String, String>> selectChbPrdDeclareInfoBusKey(@Param("list") List<ChbPrdDeclareInfoErrodataWithBLOBs> list);
+
+    void deleteChbPrdDeclareInfoErrorData(String prodInsId);
+
+    void deleteChbPrdDeclareInfo(@Param("list") List<ChbPrdDeclareInfoErrodataWithBLOBs> list);
 }

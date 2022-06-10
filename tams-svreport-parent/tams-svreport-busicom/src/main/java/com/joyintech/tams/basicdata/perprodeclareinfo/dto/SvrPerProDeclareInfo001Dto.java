@@ -2,6 +2,9 @@ package com.joyintech.tams.basicdata.perprodeclareinfo.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.joyintech.background.component.common.pack.common.util.StringUtil;
+import com.joyintech.component.svrreport.chb.contant.DictCodeList;
+import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.json.CustomDateDeserialize;
@@ -12,6 +15,7 @@ import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.basicdata.perprodeclareinfo.validate.SvrPerProDeclareInfoValid;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 import java.math.BigDecimal;
@@ -28,6 +32,7 @@ import java.util.logging.SimpleFormatter;
  * @see SvrPerProDeclareInfo001Dto
  * @since 1.0
  */
+@PageId("SvrPerProDeclareInfo002")
 @ValidLogic(targetClass = SvrPerProDeclareInfoValid.class, groups = {ValidateGroupEdit.class})
 public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEntity {
     /**
@@ -406,11 +411,47 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
      * 产品特殊属性
      */
     private String prdSpecProperty;
+    /**
+     * 错误信息
+     */
+    private String errMsg;
 
+    private String fileNo;
+
+    private BigDecimal fileNum;
+
+    private String tenFile;
+    /**
+     * 有效状态
+     */
+    private String statusValid;
+
+    // updateFlg 02 不展示  01 显示
+    public String getUpdateFlg() {
+        if(!StringUtil.isEmpty(statusValid) && StringUtil.equals(DictCodeList.维护数据状态_删除.getValue(), statusValid)){
+            return "02";
+        }else{
+            return "01";
+        }
+    }
+
+    public String getStatusValidStr() {
+        return com.joyintech.framework.util.SysDataUtil.getNameFromDataDict(DictCode.维护数据状态,
+                getStatusValid());
+    }
+
+    public String getStatusValid() {
+        return statusValid;
+    }
+
+    public void setStatusValid(String statusValid) {
+        this.statusValid = statusValid;
+    }
     /**
      * 取得 null
      * @return null
      */
+    @PrimaryKey(PrimaryKey.Field.PK_1)
     public String getDeclareUuid() {
         return declareUuid;
     }
@@ -1797,5 +1838,37 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
     @Override
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getErrMsg() {
+        return errMsg;
+    }
+
+    public void setErrMsg(String errMsg) {
+        this.errMsg = errMsg;
+    }
+
+    public String getFileNo() {
+        return fileNo;
+    }
+
+    public void setFileNo(String fileNo) {
+        this.fileNo = fileNo;
+    }
+
+    public BigDecimal getFileNum() {
+        return fileNum;
+    }
+
+    public void setFileNum(BigDecimal fileNum) {
+        this.fileNum = fileNum;
+    }
+
+    public String getTenFile() {
+        return tenFile;
+    }
+
+    public void setTenFile(String tenFile) {
+        this.tenFile = tenFile;
     }
 }

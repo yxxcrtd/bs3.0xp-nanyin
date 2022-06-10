@@ -1285,6 +1285,8 @@ public abstract class FileImpService extends InterfService{
                         field.set(baseEntity ,(value == null || "".equals(value)) ? null : new BigDecimal(value));
                     } catch ( IllegalAccessException e) {
                         logger.error(e.getMessage(),e);
+                    }catch ( Exception e) {
+                        logger.error(e.getMessage(),e);
                     }
                 }
                 else if ("java.lang.Integer".equals(type.getTypeName())) {
