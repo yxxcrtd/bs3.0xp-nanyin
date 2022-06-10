@@ -98,24 +98,15 @@
             field : 'fileNo',
             visible : false
         },
-        {
-            title : '操作',
+        {fixed : 'right',field:'action', title: 'SysCommon.operation' , type:'action',buttons: ['edit', 'delt'] , width:50}
+        ,
+        {   fixed : 'right',
+            title : '操作附件',
             field : 'operation',
             type : 'action',
-            width : 200,
+            width : 150,
             buttons : [
                 {
-                    text : '&#xe642;',
-                    clas : 'edit',
-                    title : '编辑'
-
-                },
-                {
-                    text : '&#xe640;',
-                    clas : 'delt',
-                    title : '删除'
-
-                },{
                 text : '&#xe67c;',
                 clas : 'upload',
                 title : '上传'
