@@ -100,9 +100,9 @@ public class PbcExportService extends BaseService<ITableRow>{
 		}
 		if(data.get("report") instanceof Map){
 			Map pbcReport = (Map)data.get("report");
-			if(null!=pbcReport.get("statusDate")){
-				Date statusDate = new Date(Long.parseLong(pbcReport.get("statusDate").toString()));
-				pbcReport.put("enddate", DateUtil.format(statusDate));
+			if(null!=pbcReport.get("enddate")){
+				Date enddate = new Date(Long.parseLong(pbcReport.get("enddate").toString()));
+				pbcReport.put("enddate", DateUtil.format(enddate));
 			}
 			if(!MultilevelDataAuthorityUtil.isEnabled()) {
         		//银行模式
