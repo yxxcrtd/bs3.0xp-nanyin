@@ -251,6 +251,8 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 	private String termDate17;
 	private String assetYield17;
 
+	private String orgData;
+
 	public String getErrMsg() {
 		return errMsg;
 	}
@@ -846,7 +848,6 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 	public String getConstracteGradeStr() {
 		return SysDataUtil.getNameFromDataDict(DictCode.结构化层级, this.getConstracteGrade());
 	}
-
 	public String getAmt01() {
 		return amt01;
 	}
@@ -2214,5 +2215,13 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 
 	public void setAssetYield17(String assetYield17) {
 		this.assetYield17 = assetYield17;
+	}
+
+	public String getOrgData() {
+		return orgData;
+	}
+
+	public void setOrgData(String orgData) {
+		this.orgData = orgData;
 	}
 }

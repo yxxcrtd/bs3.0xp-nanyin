@@ -12,9 +12,7 @@ package com.joyintech.tams.svreport.chb.assetinfodetail.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.alibaba.fastjson.JSONArray;
@@ -22,8 +20,10 @@ import com.google.common.collect.Lists;
 import com.joyintech.component.svrreport.chb.dto.ChbAssetInfoDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.system.constant.SystemGlobalConstant;
+import com.joyintech.tams.common.base.entity.ChbAssetInfoErrodataWithBLOBs;
 import com.joyintech.tams.svreport.chb.assetinfodetail.util.AssetInfoDetailUtil;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbmstbondcreditrating.dto.ChbMstBondCreditRatingDto;
+import com.joyintech.tams.svreport.chb.common.util.ErrdataConvertUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.weaver.ast.Var;
 import org.slf4j.Logger;
@@ -166,33 +166,44 @@ public class AssetInfoDetail001Controller extends BaseController {
     @SuppressWarnings("unchecked")
 	@RequestMapping(value = ACTION_EXPORT)
     public ResponseEntity<byte[]> export() {
-    	if(StringUtil.equals(CacheUtil.getSysParam("CHB_ASSET_INFO_TEMPLATE_FILE"), "02")){
-			Map<String, Object> params= RequestUtil.getPageParam();
-			List<AssetInfoDetailDto> list = Lists.newArrayList();
-			if(StringUtils.isNotEmpty((String)params.get("selectData"))){
-				List<Map> selectData = JSONArray.parseArray((String) params.get("selectData"), Map.class);
-				List<String> assetUuids = selectData.stream().map(e -> (String)e.get("assetUuid")).collect(Collectors.toList());
-				list = assetInfoDetailMService.selectBykeys(assetUuids);
+		Map<String, Object> params= RequestUtil.getPageParam();
+			if(StringUtil.equals(CacheUtil.getSysParam("CHB_ASSET_INFO_TEMPLATE_FILE"), "02")){
+
+				List<AssetInfoDetailDto> list = Lists.newArrayList();
+				if(StringUtils.isNotEmpty((String)params.get("selectData"))){
+					List<Map> selectData = JSONArray.parseArray((String) params.get("selectData"), Map.class);
+					List<String> assetUuids = selectData.stream().map(e -> (String)e.get("assetUuid")).collect(Collectors.toList());
+					list = assetInfoDetailMService.selectBykeys(assetUuids);
+
+				}else{
+
+					list= assetInfoDetailMService.selectAll(params);
+				}
+				int i = 0;
+				Iterator<AssetInfoDetailDto> iterator = list.iterator();
+				while(iterator.hasNext()){
+					AssetInfoDetailDto dto = iterator.next();
+					if(dto.getStatus().equals("A")){
+						iterator.remove();
+						list.add(i,ErrdataConvertUtil.errdataConvert(AssetInfoDetailDto.class, dto.getOrgData()));
+					}
+					i++;
+				}
+				assetInfoDetailUtil.processAssetInfoDetailDtos(list);
+				File outFile = assetInfoDetailMService.makeFile(
+						"/com/joyintech/tams/svreport/chb/assetinfodetail/conf/export_conf_multiple.xml",
+						list);
+				return ExportUtil.export(
+						this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS
+								+ DateUtil.format(new Date())
+								+ SystemGlobalConstant.CLOSE_PARENTHESIS
+								+ SystemGlobalConstant.POINT
+								+ FileNameUtil.getFileExtName(outFile),
+						outFile, true);
 
 			}else{
-
-				list= assetInfoDetailMService.selectAll(params);
+				return assetInfoDetailMService.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
 			}
-			assetInfoDetailUtil.processAssetInfoDetailDtos(list);
-			File outFile = assetInfoDetailMService.makeFile(
-					"/com/joyintech/tams/svreport/chb/assetinfodetail/conf/export_conf_multiple.xml",
-					list);
-			return ExportUtil.export(
-					this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS
-							+ DateUtil.format(new Date())
-							+ SystemGlobalConstant.CLOSE_PARENTHESIS
-							+ SystemGlobalConstant.POINT
-							+ FileNameUtil.getFileExtName(outFile),
-					outFile, true);
-
-		}else{
-			return assetInfoDetailMService.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
-		}
     }
       
     /**

@@ -538,7 +538,7 @@
             FROM  DUAL
         </foreach>
         ) TEMP where not exists (SELECT 1 FROM CHB_INVEST_TRADE a where a.TRADE_CODE = TEMP.TRADE_CODE AND a.PROD_ID = TEMP.PROD_ID AND a.ASSET_CODE = TEMP.ASSET_CODE )
-        ）a;
+        )a;
 
         UPDATE CHB_INVEST_TRADE a,(
         select * from
