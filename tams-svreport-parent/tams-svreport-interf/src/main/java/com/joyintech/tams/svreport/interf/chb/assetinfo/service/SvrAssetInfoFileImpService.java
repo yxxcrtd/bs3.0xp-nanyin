@@ -272,13 +272,13 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
                 (map, item)->map.put(item.getCustomerId(), item.getPartyType1()), (m, n)->m.putAll(n));
 
 
-        //获取市场机构名称
-        List<MstCustomerInfo> customerInfoList = svrMstCustomerInfoAddImpMapper.getAllMstCustomerInfoList();
-        Map<String,MstCustomerInfo> customerInfoMap = new HashMap<>();
-        for(MstCustomerInfo customerInfo:customerInfoList){
-            String customerId = customerInfo.getCustomerId();
-            customerInfoMap.put(customerId,customerInfo);
-        }
+//        //获取市场机构名称
+//        List<MstCustomerInfo> customerInfoList = svrMstCustomerInfoAddImpMapper.getAllMstCustomerInfoList();
+//        Map<String,MstCustomerInfo> customerInfoMap = new HashMap<>();
+//        for(MstCustomerInfo customerInfo:customerInfoList){
+//            String customerId = customerInfo.getCustomerId();
+//            customerInfoMap.put(customerId,customerInfo);
+//        }
 
         for(ChbAssetInfo chbAssetInfo : assetInfoList){
             chbAssetInfo.setAssetUuid(IDGenerator.generate(36));
@@ -291,12 +291,12 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
                 }
             }
 
-            //机构名称处理
-            if(StringUtil.isNotEmpty(chbAssetInfo.getIssuePartyName())){
-                if(customerInfoMap.get(chbAssetInfo.getIssuePartyName()) != null){
-                    chbAssetInfo.setIssuePartyName(customerInfoMap.get(chbAssetInfo.getIssuePartyName()).getCustomerName());
-                }
-            }
+//            //机构名称处理
+//            if(StringUtil.isNotEmpty(chbAssetInfo.getIssuePartyName())){
+//                if(customerInfoMap.get(chbAssetInfo.getIssuePartyName()) != null){
+//                    chbAssetInfo.setIssuePartyName(customerInfoMap.get(chbAssetInfo.getIssuePartyName()).getCustomerName());
+//                }
+//            }
 
             // 映射人行资产一级二级三级分类
             ChbAssetInfoInterf.convertPbcAssetType(chbAssetInfo,counterPartyMap);

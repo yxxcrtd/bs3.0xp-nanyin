@@ -214,18 +214,20 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		Map<String,MstCustomerInfoAdd> orgListMap = institList.stream().collect(
 				Collectors.toMap(MstCustomerInfoAdd::getCustomerId,(p)->p,(key1, key2)->key1));
 
-		List<MstCustomerInfo> customerInfoList = svrMstCustomerInfoAddImpMapper.getAllMstCustomerInfoList();
-		//获取市场机构名称
-		Map<String,MstCustomerInfo> customerInfoMap = new HashMap<>();
-		for(MstCustomerInfo customerInfo:customerInfoList){
-			String customerId = customerInfo.getCustomerId();
-			customerInfoMap.put(customerId,customerInfo);
-		}
-		if(StringUtil.isNotEmpty(dto.getIssuePartyName())){
-			if(customerInfoMap.get(dto.getIssuePartyName()) != null){
-				dto.setIssuePartyName(customerInfoMap.get(dto.getIssuePartyName()).getCustomerName());
-			}
-		}
+		//delete by wyn GDLCJGBS-722 start
+//		List<MstCustomerInfo> customerInfoList = svrMstCustomerInfoAddImpMapper.getAllMstCustomerInfoList();
+//		//获取市场机构名称
+//		Map<String,MstCustomerInfo> customerInfoMap = new HashMap<>();
+//		for(MstCustomerInfo customerInfo:customerInfoList){
+//			String customerId = customerInfo.getCustomerId();
+//			customerInfoMap.put(customerId,customerInfo);
+//		}
+//		if(StringUtil.isNotEmpty(dto.getIssuePartyName())){
+//			if(customerInfoMap.get(dto.getIssuePartyName()) != null){
+//				dto.setIssuePartyName(customerInfoMap.get(dto.getIssuePartyName()).getCustomerName());
+//			}
+//		}
+  //delete by wyn GDLCJGBS-722 end
 
 		/*** 基金类资产数据接入会同步保存mngOrgName字段 **/
 		if(DictCodeListExt2.资产_负债类别_私募基金.getValue().equals(dto.getAssetType())
