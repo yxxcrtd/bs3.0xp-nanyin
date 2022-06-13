@@ -3189,6 +3189,7 @@ public class CommonCodeCheckBatchService {
         // 拼接错误字段信息
         Map<String, String> newMap = new HashMap<>(map);
         newMap.remove("ERRMSG");
+        newMap.remove(null);
         chbAssetInfoErrodata.setOrgData(JsonUtils.object2Json(newMap));
         // 错误提示信息
         chbAssetInfoErrodata.setErrMsg(msg);

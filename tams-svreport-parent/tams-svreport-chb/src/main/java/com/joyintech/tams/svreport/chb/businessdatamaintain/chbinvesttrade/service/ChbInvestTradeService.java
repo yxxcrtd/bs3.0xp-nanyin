@@ -212,13 +212,7 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
             columnName= map.get(temp);
             columnList.add(i,columnName);
         }
-        ArrayList<Object> arrayList = Lists.newArrayList();
-        Set<String> set = map.keySet();
-        for (String s : headList) {
-            if(!set.contains(s)){
-                arrayList.add(s);
-            }
-        }
+
         List<Map<String,String>> list = new ArrayList<>();
         for(int i=1;i<dataList.size();++i){
             Map<String,String> subMap = new HashMap<>();

@@ -222,9 +222,6 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
             String columnName = headList.get(i);
             String temp = columnName.trim().replace("（","(").replace("）",")");
             columnName= map.get(temp);
-            if(StringUtils.isEmpty(columnName)){
-                System.out.println(" ");
-            }
             columnList.add(i,columnName);
         }
         List<Map<String,String>> list = new ArrayList<>();
