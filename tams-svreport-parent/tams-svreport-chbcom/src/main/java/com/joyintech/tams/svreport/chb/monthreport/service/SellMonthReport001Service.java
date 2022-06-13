@@ -203,6 +203,7 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 					}
 				}
 				data.put("dataList2", tempList);
+				data.put("data", dateTempList);
 			}
 				//分销售渠道
 			if(monthReport.getReporttype().equals("1_3")) {
@@ -233,6 +234,7 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 					}
 				}
 				data.put("dataList3", tempList);
+				data.put("data", dateTempList);
 			}
 		}
 		}
