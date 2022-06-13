@@ -108,8 +108,7 @@ public class SvrPerProDeclareInfo002Controller extends BaseController {
         model.addAttribute("repManageMode", this.getParam("repManageMode"));
 
         // 根据登录用户获取发行机构代码
-//        model.addAttribute("SVR_ISSUE_PARTY_ID", CommonUtil.selectBankCode());
-        model.addAttribute("SVR_ISSUE_PARTY_ID", "C188800");
+        model.addAttribute("SVR_ISSUE_PARTY_ID", CommonUtil.selectBankCode());
 
         //是否子公司
         model.addAttribute("svrIsSubsidiary", CacheUtil.getSysParam("SVR_IS_SUBSIDIARY"));

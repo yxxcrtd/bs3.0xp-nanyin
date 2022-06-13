@@ -1,5 +1,6 @@
 package com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.controller;
 
+import com.google.common.collect.Lists;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -162,8 +164,9 @@ public class ChbPrdBaseInfo002Contreoller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/selectByKey")
-    public Integer selectByProdIdKey(String prodId)
+    public List<Map<String,String>> selectByProdIdKey(String prodId)
     {
-        return chbPrdBaseInfoService.selectByProdIdKey(prodId);
+        List<Map<String, String>> list = chbPrdBaseInfoService.selectByProdIdKey(prodId);
+        return list==null? Lists.newArrayList():list;
     }
 }

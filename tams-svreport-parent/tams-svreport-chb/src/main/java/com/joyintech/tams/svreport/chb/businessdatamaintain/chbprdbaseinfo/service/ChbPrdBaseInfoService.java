@@ -267,7 +267,7 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
         return listExcel;
     }
 
-    public Integer selectByProdIdKey(String prodInsId) {
+    public List<Map<String,String>> selectByProdIdKey(String prodInsId) {
         return chbPrdBaseInfoDao.selectByProdIdKey(prodInsId);
     }
 }

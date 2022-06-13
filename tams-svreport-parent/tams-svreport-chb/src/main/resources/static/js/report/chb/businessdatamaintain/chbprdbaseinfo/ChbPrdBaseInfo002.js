@@ -57,9 +57,17 @@
                 if(initProdInsId != prodInsId){
                     // 校验产品是否存在
                     Joyin.ajaxJson(basePath+'/chb/businessdatamaintain/chbprdbaseinfo/chbprdbaseinfo002/selectByKey?prodId='+prodInsId,{},function (result){
-                        if(result>0){
-                            flag = true;
-                            layer.msg('产品已存在、如需修改，请已修改模式进行信息修改！');
+                        if(result !=null &&  result[0]!=null){
+                            if(result[0]['STATUS']=='D'){
+                                Joyin.confirm('存在已删除的产品基本信息，是否覆盖？',function (){
+                                    flag = false;
+                                },function (){},function () {
+                                    flag = true;
+                                })
+                            }else{
+                                flag = true;
+                                layer.msg('产品已存在、如需修改，请已修改模式进行信息修改！');
+                            }
                         }else{
                             flag = false;
                         }

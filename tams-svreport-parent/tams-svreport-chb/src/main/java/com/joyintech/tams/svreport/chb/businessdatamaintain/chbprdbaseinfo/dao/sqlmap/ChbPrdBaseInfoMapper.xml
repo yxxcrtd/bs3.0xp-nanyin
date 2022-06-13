@@ -1606,7 +1606,7 @@
         </foreach>
         and status = 'E'
     </select>
-    <select id="selectByProdIdKey" resultType="java.lang.Integer">
-        select count(1) from CHB_PRD_BASEINFO where PROD_ID = #{prodId}
+    <select id="selectByProdIdKey" resultType="java.util.Map">
+        select PROD_ID,STATUS from CHB_PRD_BASEINFO where PROD_ID = #{prodId}
     </select>
 </mapper>
