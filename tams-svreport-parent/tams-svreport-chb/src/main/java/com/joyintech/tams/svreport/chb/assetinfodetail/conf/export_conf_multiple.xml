@@ -52,7 +52,7 @@
 			<Cell order="48" name="份额面值">prinBaseamt</Cell>
 			<Cell order="49" name=" *起息日">vdate04</Cell>
 			<Cell order="50" name="*到期日">mdate04</Cell>
-			<Cell order="51" name="法定到期日">fmdate</Cell>
+			<Cell order="51" name="法定到期日">fmdateStr</Cell>
 			<Cell order="52" name="*是否有预期收益率">rateFlag04</Cell>
 			<Cell order="53" name="项目收益率(利率)%">assetYield04</Cell>
 			<Cell order="54" name="计息类型">couponSpeciesStr</Cell>
@@ -92,14 +92,14 @@
 			<Cell order="88" name="*资产外部评级">outGrade04</Cell>
 			<Cell order="89" name="含权类型">containTypeStr</Cell>
 			<Cell order="90" name="行权方式">exerciseTypeStr</Cell>
-			<Cell order="91" name="固定行权日">exerciseDate</Cell>
-			<Cell order="92" name="首次行权日期">firstExerciseDate</Cell>
+			<Cell order="91" name="固定行权日">exerciseDateStr</Cell>
+			<Cell order="92" name="首次行权日期">firstExerciseDateStr</Cell>
 			<Cell order="93" name="行权周期">exercisePeriod</Cell>
 			<Cell order="94" name="行权价格">exercisePrice</Cell>
 			<Cell order="95" name="永续条款类型">perpetualClauseTypeStr</Cell>
 			<Cell order="96" name="利息递延条款类型">deferredInterestTypeStr</Cell>
 			<Cell order="97" name="递延利息是否计息">deferredInterestIntStr</Cell>
-			<Cell order="98" name="首次重定价日期">firstReprceDate</Cell>
+			<Cell order="98" name="首次重定价日期">firstReprceDateStr</Cell>
 			<Cell order="99" name="重定价周期">reprceCycle</Cell>
 			<Cell order="100" name="部分赎回标识">partRedemFlagStr</Cell>
 			<Cell order="101" name="部分赎回比例（%）">partRedemRate</Cell>
