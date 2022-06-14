@@ -647,7 +647,7 @@ public abstract class FileImpService extends InterfService{
         // add by zhangliang 20210418 TMP调用SUB校验配置 start
         List<CheckRule> listRules = dataCheckService.queryCheckRules(ChbCheckTableInfo.genDataType(dataType));
         // add by zhangliang 20210418 TMP调用SUB校验配置 end
-        List<Map<String, String>> listError = DataCheckService.checkDataList(excelValidDtoList,infoList,listRules, deleteFlag);
+        List<Map<String, String>> listError = DataCheckService.checkDataList(excelValidDtoList,infoList,listRules, deleteFlag,dataType);
 
         // 将重复项入库
         if (deleteFlag && CollectionUtils.isNotEmpty(listError)){

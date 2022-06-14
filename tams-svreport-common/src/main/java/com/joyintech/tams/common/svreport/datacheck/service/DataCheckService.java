@@ -170,7 +170,7 @@ public class DataCheckService {
      * @see
      * @since 1.0
      */
-    public static List<Map<String, String>> checkDataList(List<ExcelValidDto> list,List<Map<String, String>> listData, List<CheckRule> listRules, boolean removeFlag) {
+    public static List<Map<String, String>> checkDataList(List<ExcelValidDto> list,List<Map<String, String>> listData, List<CheckRule> listRules, boolean removeFlag,String dataType) {
 
         List<Map<String, String>> listError = new ArrayList<Map<String, String>>();
 
@@ -245,7 +245,11 @@ public class DataCheckService {
                 if(StringUtils.isEmpty(errmsg)){
                     x.put("ERRMSG", sb.toString());
                     if(list!=null){
-                        list.add(new ExcelValidDto("0未导入",String.valueOf(i+1),sb.toString()));
+                        if(StringUtil.equals(dataType,"CHB_ASSET_INFO")){
+                            list.add(new ExcelValidDto("0未导入",String.valueOf(i+2),sb.toString()));
+                        }else {
+                            list.add(new ExcelValidDto("0未导入", String.valueOf(i + 1), sb.toString()));
+                        }
                     }
                 }else if(errmsg.equals("产品不存在对应的申报信息！")){
                     errmsg +=sb.toString();
