@@ -528,7 +528,7 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		list.forEach(subMap->{
 			subMap.put("ASSET_TYPE",dictAssetType.get(subMap.get("ASSET_TYPE2")));
 			subMap.put("CAP_USE_INDU",dictIndustry.get(subMap.get("CAP_USE_INDU_LEVEL2")));
-			subMap.put("INDUSTRY_SHARES",dictAssetType.get(subMap.get("INDUSTRY_SHARES2")));
+			subMap.put("INDUSTRY_SHARES",dictIndustry.get(subMap.get("INDUSTRY_SHARES2")));
 			subMap.put("PRO_INDUSTRY",dictAssetType.get(subMap.get("PRO_INDUSTRY_LEVEL2")));
 			subMap.put("INDUSTRY",dictAssetType.get(subMap.get("INDUSTRY_LEVEL2")));
 			subMap.put("INDUSTRY1",dictAssetType.get(subMap.get("INDUSTRY_LEVEL2_TYPE")));
