@@ -1239,9 +1239,8 @@ public abstract class FileImpService extends InterfService{
     public List<? extends BaseEntity> convertMapToEntity(List<Map<String, String>> dataList, Class clz, String dataSource) {
         // 返回对象list
         List<BaseEntity> rs = new ArrayList<>();
-
+        String BaseEntityName = DealBaseEntityName(clz.getName());
         for (Map<String, String> map : dataList) {
-            map.remove(null);
             BaseEntity baseEntity = null;
             try {
                 baseEntity  = (BaseEntity) clz.newInstance();
@@ -1254,7 +1253,13 @@ public abstract class FileImpService extends InterfService{
             for (String key : map.keySet()) {
                 // 空数据和错误数据置为待处理
                 if(key==null||key.equals("ERRMSG")){
-                    baseEntity.setStatus(DictCodeListExt1.维护数据状态_待处理.getValue());
+                    if(!StringUtil.equals(BaseEntityName,"ChbAssetInfo")
+                            && !StringUtil.equals(BaseEntityName,"ChbPrdDeclareInfoDto")
+                            && !StringUtil.equals(BaseEntityName,"ChbPrdBaseinfo")
+                            && !StringUtil.equals(BaseEntityName,"ChbMstCounterParty")
+                            && !StringUtil.equals(BaseEntityName,"ChbInvestTrade")) {
+                        baseEntity.setStatus(DictCodeListExt1.维护数据状态_待处理.getValue());
+                    }
                     continue;
                 }
                 // 获取map值
@@ -1346,6 +1351,18 @@ public abstract class FileImpService extends InterfService{
             rs.add(baseEntity);
         }
         return rs;
+    }
+
+    /**
+     * 截取类名
+     * @param value
+     */
+    public String DealBaseEntityName(String value) {
+        if(StringUtil.isNotEmpty(value)){
+            int index = value.lastIndexOf(".");
+            value = value.substring(index + 1);
+        }
+        return value;
     }
 
     /**
