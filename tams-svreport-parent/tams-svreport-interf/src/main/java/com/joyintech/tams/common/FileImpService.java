@@ -1241,6 +1241,7 @@ public abstract class FileImpService extends InterfService{
         List<BaseEntity> rs = new ArrayList<>();
 
         for (Map<String, String> map : dataList) {
+            map.remove(null);
             BaseEntity baseEntity = null;
             try {
                 baseEntity  = (BaseEntity) clz.newInstance();
