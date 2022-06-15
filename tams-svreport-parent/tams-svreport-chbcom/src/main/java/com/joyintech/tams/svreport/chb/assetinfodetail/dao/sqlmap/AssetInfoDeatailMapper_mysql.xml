@@ -3645,7 +3645,8 @@
         <result property="isDepositFlag" column="IS_DEPOSIT_FLAG" jdbcType="VARCHAR"/>
         <result property="isConstracteBusi" column="IS_CONSTRACTE_BUSI" jdbcType="VARCHAR"/>
         <result property="isBankCap" column="IS_BANK_CAP" jdbcType="VARCHAR"/>
-        <result property="errMsg" column="ERR_MSG" jdbcType="CLOB"/>
+        <result property="errMsg" column="ERR_MSG" jdbcType="VARCHAR"/>
+        <result column="ORG_DATA" property="orgData" jdbcType="VARCHAR" />
     </resultMap>
     <select id="selectList" resultMap="resultMap">
         SELECT
@@ -3911,8 +3912,8 @@
                 #{item}
             </foreach>
         </if>
-        <if test="status !=null and status!=''">
-            and STATUS = #{status}
+        <if test="dataStatus !=null and dataStatus!=''">
+            and STATUS = #{dataStatus}
         </if>
         union all
         SELECT
@@ -3922,8 +3923,8 @@
         ,ASSET_TYPE2
         , null CCY
         , null TRADE_MARKET
-        ,VDATE
-        ,MDATE
+        ,null VDATE
+        ,null MDATE
         ,null DISCOUNT_YIELD
         ,null ASSET_YIELD
         ,null BASIS
@@ -4178,8 +4179,8 @@
                 #{item}
             </foreach>
         </if>
-        <if test="status !=null and status!=''">
-            and STATUS = #{status}
+        <if test="dataStatus !=null and dataStatus!=''">
+            and STATUS = #{dataStatus}
         </if>
     </select>
     <select id="selectBykeys" resultMap="resultMap">
@@ -4432,8 +4433,8 @@
         ,ASSET_TYPE2
         , null CCY
         , null TRADE_MARKET
-        ,VDATE
-        ,MDATE
+        ,null VDATE
+        , null MDATE
         ,null DISCOUNT_YIELD
         ,null ASSET_YIELD
         ,null BASIS

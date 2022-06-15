@@ -179,20 +179,23 @@ public class AssetInfoDetail001Controller extends BaseController {
 
 					list= assetInfoDetailMService.selectAll(params);
 				}
-				int i = 0;
-				Iterator<AssetInfoDetailDto> iterator = list.iterator();
-				while(iterator.hasNext()){
-					AssetInfoDetailDto dto = iterator.next();
-					if(dto.getStatus().equals("A")){
-						iterator.remove();
-						list.add(i,ErrdataConvertUtil.errdataConvert(AssetInfoDetailDto.class, dto.getOrgData()));
+				List<AssetInfoDetailDto> assetInfoDetailDtoList = Lists.newArrayList();
+				if(list.size()>0){
+					for (int k=0;k<list.size();k++) {
+						if(list.get(k).getStatus().equals("A")){
+							AssetInfoDetailDto assetInfoDetailDto = ErrdataConvertUtil.errdataConvert(AssetInfoDetailDto.class, list.get(k).getOrgData());
+							assetInfoDetailDto.setStatus("A");
+							assetInfoDetailDto.setErrMsg(list.get(k).getErrMsg());
+							assetInfoDetailDtoList.add(assetInfoDetailDto);
+						}else{
+							assetInfoDetailDtoList.add(list.get(k));
+						}
 					}
-					i++;
 				}
-				assetInfoDetailUtil.processAssetInfoDetailDtos(list);
+				assetInfoDetailUtil.processAssetInfoDetailDtos(assetInfoDetailDtoList);
 				File outFile = assetInfoDetailMService.makeFile(
 						"/com/joyintech/tams/svreport/chb/assetinfodetail/conf/export_conf_multiple.xml",
-						list);
+						assetInfoDetailDtoList);
 				return ExportUtil.export(
 						this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS
 								+ DateUtil.format(new Date())
