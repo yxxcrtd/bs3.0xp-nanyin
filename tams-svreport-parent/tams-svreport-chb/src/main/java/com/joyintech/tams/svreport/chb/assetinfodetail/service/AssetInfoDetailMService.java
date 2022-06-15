@@ -54,6 +54,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 资产要素登记服务
@@ -521,7 +522,20 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 			if(!StringUtils.isEmpty(config.getResultdictCode())){
 				for (Map<String, String> m : list) {
 					if(m.get(config.getRealColumnId())!=null){
-						m.put(config.getRealColumnId(),m.get(config.getRealColumnId()).split(" ")[0]);
+						if(config.getRealColumnId().equals("TARGET_TYPE3")){
+							try {
+								StringBuffer sb= new StringBuffer();
+								String[] split = m.get(config.getRealColumnId()).split(",");
+								Stream.of(split).forEach(e->sb.append(e.split(" ")[0]).append(","));
+								sb.deleteCharAt(sb.length() - 1);
+								m.put(config.getRealColumnId(),sb.toString());
+							} catch (Exception e) {
+								logger.error(e.getMessage(), e);
+							}
+
+						}else{
+							m.put(config.getRealColumnId(),m.get(config.getRealColumnId()).split(" ")[0]);
+						}
 					}
 
 				}
