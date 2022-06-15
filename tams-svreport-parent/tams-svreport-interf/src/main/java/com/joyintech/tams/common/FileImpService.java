@@ -753,7 +753,9 @@ public abstract class FileImpService extends InterfService{
         errodata.setOrgData(JsonUtils.object2Json(map));
         // 错误提示信息
         errodata.setErrMsg(msg);
-        map.put("ERRMSG",msg);
+        if(StringUtils.isNotEmpty(msg)){
+            map.put("ERRMSG",msg);
+        }
         // 数据状态
         errodata.setStatus("E");
         errodata.setCreateUser("system");
@@ -1329,7 +1331,7 @@ public abstract class FileImpService extends InterfService{
                 } else if ("java.util.Date".equals(type.getTypeName())) {
                     if (value != null&&""!=value) {
                         try {
-                            field.set(baseEntity, DateUtil.parseDate(value,"yyyy-MM-dd"));
+                            field.set(baseEntity, DateUtil.parse(value));
                         } catch ( IllegalAccessException e) {
                             logger.error(e.getMessage(),e);
                         }catch ( Exception e) {

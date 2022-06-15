@@ -170,9 +170,11 @@ public class CommonCodeCheckBatchService {
                     checkEmployeeSubInfo(map);
                     break;
                 case 资产要素登记表SUB:
-                case 资产要素登记表INFO:
                 case 资产要素登记TMP:
                     checkAssetSubInfo(map);
+                    break;
+                case 资产要素登记表INFO:
+                    checkAssetSubInfo(excelValidDtoList,map,i);
                     break;
                 case 个人发行登记表SUB:
                 case 个人发行登记TMP:
@@ -464,6 +466,7 @@ public class CommonCodeCheckBatchService {
      * @param fileName
      */
     public void codeCheckCommon(List<ExcelValidDto> excelValidDtoList,List<Map<String, String>> list, ChbCheckTableInfo tableInfo, String fileName, String coverFlag,String flag) {
+
         //错误信息集合
         List<ChbInterfErrodataWithBLOBs> erroList=new ArrayList<ChbInterfErrodataWithBLOBs>();
         // 资产要素错误信息集合
@@ -486,6 +489,8 @@ public class CommonCodeCheckBatchService {
         List<ChbPrdBaseinfoErrodataWithBLOBs> chbPrdBaseinfoErrordataList = Lists.newArrayList();
         // 投资交易信息 产品基本信息  add  by  wubingbing 20220518  end
         List<ChbPrdDeclareInfoErrodataWithBLOBs> chbPrdDeclareInfoErrodataList = Lists.newArrayList();
+
+
         codeCheckCommonOnly(excelValidDtoList,list, tableInfo);
 
         for (int i = list.size() - 1; i >= 0; i--){
@@ -625,9 +630,7 @@ public class CommonCodeCheckBatchService {
         }
         //投资交易错误信息入库
         if(StringUtil.isEmptyList(chbInvestTradeErrordataList)){
-            if(!erroList.isEmpty()){
-                insertErroData(erroList);
-            }
+
         }else{
             if(!flag.equals("D")&&coverFlag.equals("N")){
                 removeExistsChbInvestTrade(chbInvestTradeErrordataList);
@@ -2216,6 +2219,110 @@ public class CommonCodeCheckBatchService {
         }
 
         dataMap.put("ERRMSG", errMsgBuilder.toString());
+    }
+    public void checkAssetSubInfo(List<ExcelValidDto> excelValidDtoList,Map<String, String> dataMap,int i) {
+        String  temp=dataMap.getOrDefault("ERRMSG", "");
+        StringBuilder errMsgBuilder = new StringBuilder(dataMap.getOrDefault("ERRMSG", ""));
+        // 发行机构代码
+        String issuePartyId = dataMap.get("ISSUE_PARTY_ID");
+        //固定收益部分所占比例
+        String   incomeRatio= dataMap.get("INCOME_RATIO");
+        //衍生金融工具所占比例
+        String   derInstrRatio= dataMap.get("DER_INSTR_RATIO");
+        //二级资产类型
+        String   assetType2=dataMap.get("ASSET_TYPE2");
+        if(temp.equals("重复数据;")){
+
+        }else{
+
+            // 1、发行机构代码必须与银行代码相同。
+            // 银行模式才判断发行机构代码，联社模式不判断
+            if(StringUtil.isNotEmpty(issuePartyId) && StringUtil.equals(SvrDataUtil.getSysParam("AUTHORITY_TYPE"), "01")){
+                if (!StringUtil.equals(CommonUtil.selectBankCode(), issuePartyId)) {
+                    errMsgBuilder.append("发行机构代码必须与银行代码相同[").append("ISSUE_PARTY_ID=").append(issuePartyId).append("];");
+                }
+            }
+            if(StringUtil.equals(assetType2, "1503")){
+                //“固定收益部分所占比例”与“衍生金融工具所占比例”之和需小于等于1
+                if(StringUtil.isNotEmpty(incomeRatio)&&isBigDecimal(incomeRatio)&&
+                        StringUtil.isNotEmpty(derInstrRatio)&&isBigDecimal(derInstrRatio)){
+                    if(new BigDecimal(incomeRatio).add(new BigDecimal(derInstrRatio)).compareTo(new BigDecimal(100))>0){
+                        errMsgBuilder.append("以百分数形式表示的固定收益部分所占比例与衍生金融工具所占比例之和需小于等于100[").append("INCOME_RATIO=").append(incomeRatio).append(",DER_INSTR_RATIO=").append(derInstrRatio).append("];");
+                    }
+                }
+            }
+
+            //投资资产种类及比例要素的判断
+            //投资资产种类及比例要素
+            String   invTypeRat=dataMap.get("FUND_INVEST_ASSET");
+            boolean  flag=true;
+            String  regex="^(100|[1-9]?\\d(\\.\\d\\d?)?)%$|0$";
+            if(StringUtil.isNotEmpty(invTypeRat)){
+                //对于投资资产种类及比例要素按照";"切割成各个单元
+                List<String>  invTaypeRatList=Arrays.asList(invTypeRat.split(GlobalConstant.SEMICOLON));
+                //循环list，对于单元进行处理
+                for(String invTaype:invTaypeRatList){
+                    //按照":"对于单元进行切割
+                    List<String>  invTaypePatten=Arrays.asList(invTaype.split(GlobalConstant.COLON));
+                    //单元切割后，不是2个部分。则格式不通过
+                    if(invTaypePatten!=null&&invTaypePatten.size()!=2){
+                        flag=false;
+                        break;
+                    }else{
+                        //单元切割后是2个部分，获取数值和文字
+                        //数值
+                        String  pattenOne=invTaypePatten.get(0);
+                        if(pattenOne.contains(GlobalConstant.SPLIT)){
+                            //表示为区间
+                            List<String>  pattenOneSection=Arrays.asList(pattenOne.split(GlobalConstant.SPLIT));
+                            //校验区间
+                            if(!pattenOneSection.get(0).matches(regex)||
+                                    !pattenOneSection.get(1).matches(regex)){
+                                flag=false;
+                                break;
+                            }
+                        }else{
+                            //不是区间，单个数字百分号
+                            if(!pattenOne.matches(regex)){
+                                flag=false;
+                                break;
+                            }
+                        }
+                        //文字
+                        //String  pattenTwo=invTaypePatten.get(1);
+                    }
+                }
+            }
+            if(!flag){
+                errMsgBuilder.append("基金投资资产要素格式不对。正确的格式：数字%：文字；数字%-数字%：文字（其中，百分号、冒号、分号、连字号均应为英文标点，文字和数字部分均不得含有英文百分号、冒号、分号、连字号）。其中，数字格式为n..（5，2），且需大于等于0、小于等于100。[FUND_INVEST_ASSET="+dataMap.get("FUND_INVEST_ASSET")+"];");
+            }
+            if(StringUtils.isEmpty(temp)){
+                if(StringUtils.isNotEmpty(errMsgBuilder.toString())&&excelValidDtoList!=null){
+                    excelValidDtoList.add(new ExcelValidDto("0未导入",String.valueOf((i+2)),errMsgBuilder.toString()));
+                }
+            }else{
+                if(StringUtils.isNotEmpty(errMsgBuilder.toString())&& excelValidDtoList!=null){
+                    if(excelValidDtoList.size()>0){
+                        for (ExcelValidDto excelValidDto : excelValidDtoList) {
+                            if(excelValidDto.getRowNum().equals(String.valueOf((i+2)))){
+                                excelValidDto.setErrorInfo(temp+errMsgBuilder.toString());
+                                break;
+                            }
+                        }
+                    }else{
+                        excelValidDtoList.add(new ExcelValidDto("0未导入",String.valueOf(i+2),temp+errMsgBuilder.toString()));
+                    }
+                }
+            }
+            dataMap.put("ERRMSG", temp+errMsgBuilder.toString());
+        }
+        Collections.sort(excelValidDtoList,new Comparator<ExcelValidDto>() {
+                    @Override
+                    public int compare(ExcelValidDto o1, ExcelValidDto o2) {
+                        // o1在前：根据age从小到大进行排序
+                        return Integer.valueOf(o1.getRowNum())-Integer.valueOf(o2.getRowNum());
+                    }
+                });
     }
     
     /**
