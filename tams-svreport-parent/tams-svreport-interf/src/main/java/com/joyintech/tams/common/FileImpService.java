@@ -753,6 +753,7 @@ public abstract class FileImpService extends InterfService{
         errodata.setOrgData(JsonUtils.object2Json(map));
         // 错误提示信息
         errodata.setErrMsg(msg);
+        map.put("ERRMSG",msg);
         // 数据状态
         errodata.setStatus("E");
         errodata.setCreateUser("system");

@@ -104,7 +104,7 @@ public class ErrdataConvertUtil {
                             //对类的实例字段进行赋值
                             field.set(chbAssetInfo, value);
                         }
-                    } catch (IllegalAccessException e) {
+                    } catch (Exception e) {
                         logger.error(e.getMessage(),e);
                         continue;
                     }
