@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.joyintech.system.base.entity.SysDatadictListLink;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import com.joyintech.tams.report.interf.common.constant.InterfConstants;
@@ -280,6 +281,11 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
 //            customerInfoMap.put(customerId,customerInfo);
 //        }
 
+        //获取行业二级分类与一级分类的映射关系
+        List<SysDatadictListLink> industrySharesList = svrMstCustomerInfoAddImpMapper.getAllIndustryShares();
+        Map<String,String> industrySharesMap = industrySharesList.stream().collect(HashMap<String,String>::new,
+                (map, item)->map.put(item.getItemCode(), item.getLinkedItemCode()), (m, n)->m.putAll(n));
+
         for(ChbAssetInfo chbAssetInfo : assetInfoList){
             chbAssetInfo.setAssetUuid(IDGenerator.generate(36));
             // 客户主体类型映射
@@ -288,6 +294,14 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
                 String customerType = chbTypeMappingService.getMappingValue(InterfConstant.MAPPINGCODE_KHZTLX,chbAssetInfo.getCustomerObjType());
                 if (StringUtil.isNotEmpty(customerType)){
                     chbAssetInfo.setCustomerObjType(customerType);
+                }
+            }
+            //处理行业一级分类
+            if(StringUtil.isNotEmpty(chbAssetInfo.getIndustryShares2())){
+                if(!StringUtil.isNotEmpty(chbAssetInfo.getIndustryShares())){
+                    if(industrySharesMap.get(chbAssetInfo.getIndustryShares2()) != null){
+                        chbAssetInfo.setIndustryShares(industrySharesMap.get(chbAssetInfo.getIndustryShares2()));
+                    }
                 }
             }
 
