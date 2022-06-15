@@ -1284,6 +1284,8 @@ public abstract class FileImpService extends InterfService{
                         field.set(baseEntity, value);
                     } catch ( IllegalAccessException e) {
                         logger.error(e.getMessage(),e);
+                    }catch ( Exception e) {
+                        logger.error(e.getMessage(),e);
                     }
                 }else if ("java.math.BigDecimal".equals(type.getTypeName())) {
                     try {
@@ -1301,6 +1303,8 @@ public abstract class FileImpService extends InterfService{
                         field.set(baseEntity ,(value == null || "".equals(value)) ? 0 : Integer.valueOf(value));
                     } catch (IllegalAccessException e) {
                         logger.error(e.getMessage(),e);
+                    }catch ( Exception e) {
+                        logger.error(e.getMessage(),e);
                     }
                 }
                 else if ("java.lang.Short".equals(type.getTypeName())) {
@@ -1309,6 +1313,8 @@ public abstract class FileImpService extends InterfService{
                         field.set(baseEntity, (value == null || "".equals(value)) ? 0 : Short.valueOf(value));
                     } catch ( IllegalAccessException e) {
                         logger.error(e.getMessage(),e);
+                    }catch ( Exception e) {
+                        logger.error(e.getMessage(),e);
                     }
                 } else if ("java.lang.Long".equals(type.getTypeName())) {
                     try {
@@ -1316,12 +1322,16 @@ public abstract class FileImpService extends InterfService{
                         field.set(baseEntity, (value == null || "".equals(value)) ? 0 : Long.valueOf(value));
                     } catch ( IllegalAccessException e) {
                         logger.error(e.getMessage(),e);
+                    }catch ( Exception e) {
+                        logger.error(e.getMessage(),e);
                     }
                 } else if ("java.util.Date".equals(type.getTypeName())) {
                     if (value != null&&""!=value) {
                         try {
-                            field.set(baseEntity, DateUtil.parse(value));
+                            field.set(baseEntity, DateUtil.parseDate(value,"yyyy-MM-dd"));
                         } catch ( IllegalAccessException e) {
+                            logger.error(e.getMessage(),e);
+                        }catch ( Exception e) {
                             logger.error(e.getMessage(),e);
                         }
                     }
