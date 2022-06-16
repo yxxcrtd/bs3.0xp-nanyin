@@ -624,10 +624,30 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		param.put("assetType2s", StringUtil.isNotEmpty(param.get("assetType2"))?(param.get("assetType2").toString().split(",")):null);
 		param.put("orgAssetType1s", StringUtil.isNotEmpty(param.get("orgAssetType1"))?(param.get("orgAssetType1").toString().split(",")):null);
 		param.put("orgAssetType2s", StringUtil.isNotEmpty(param.get("orgAssetType2"))?(param.get("orgAssetType2").toString().split(",")):null);
-		return assetInfoDetailMapper.selectList(param);
+		List<AssetInfoDetailDto> assetInfoList = assetInfoDetailMapper.selectList(param);
+		this.dealAfterSearch(assetInfoList);
+		return assetInfoList;
 	}
 
 	public List<AssetInfoDetailDto> selectBykeys(List<String> assetUuids) {
-		return assetInfoDetailMapper.selectBykeys(assetUuids);
+		List<AssetInfoDetailDto> assetInfoList = assetInfoDetailMapper.selectBykeys(assetUuids);
+		this.dealAfterSearch(assetInfoList);
+		return assetInfoList;
+	}
+
+	/**
+	 * 查询之后处理查询到的数据
+	 * @param assetInfoList
+	 * @return
+	 */
+	public static List<AssetInfoDetailDto> dealAfterSearch(List<AssetInfoDetailDto> assetInfoList) {
+		if (CollectionUtils.isNotEmpty(assetInfoList)) {
+			assetInfoList.forEach(item -> {
+				if(StringUtil.isNotEmpty(item.getInAssetType())){
+					item.setInAssetType(item.getInAssetType() + " " + SysDataUtil.getNameFromDataDict(DictCode.行内资产类别, item.getInAssetType()));
+				}
+			});
+		}
+		return assetInfoList;
 	}
 }
