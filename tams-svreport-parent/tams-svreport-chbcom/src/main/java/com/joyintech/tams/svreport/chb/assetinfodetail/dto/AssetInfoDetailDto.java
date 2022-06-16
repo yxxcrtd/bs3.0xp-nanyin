@@ -17,8 +17,10 @@ import com.joyintech.tams.svreport.chb.assetinfodetail.validator.AssetInfoDetail
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * 描述:CHB_ASSET_INFO_SUB表的实体类,用于前台分类展示
@@ -611,7 +613,13 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 		return SysDataUtil.getNameFromDataDict(DictCode.存款类型, this.getDepoType());
 	}
 	public String getTargetTypeStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.标的类别, this.getTargetType());
+		if(StringUtils.isNotEmpty(this.getTargetType())){
+			StringBuilder sb = new StringBuilder();
+			String[] targetTypes = this.getTargetType().split(",");
+			Stream.of(targetTypes).forEach(e->sb.append(SysDataUtil.getNameFromDataDict(DictCode.标的类别, e)).append(","));
+			return sb.substring(0,sb.lastIndexOf(","));
+		}
+		return null;
 	}
 	public String getChbSectypeStr() {
 		return SysDataUtil.getNameFromDataDict(DictCode.具体类别, this.getChbSectype());
