@@ -2224,7 +2224,7 @@ public class CommonCodeCheckBatchService {
     }
     public void checkAssetSubInfo(List<ExcelValidDto> excelValidDtoList,Map<String, String> dataMap,int i) {
         String  temp=dataMap.getOrDefault("ERRMSG", "");
-        StringBuilder errMsgBuilder = new StringBuilder(dataMap.getOrDefault("ERRMSG", ""));
+        StringBuilder errMsgBuilder = new StringBuilder();
         // 发行机构代码
         String issuePartyId = dataMap.get("ISSUE_PARTY_ID");
         //固定收益部分所占比例
@@ -2300,19 +2300,19 @@ public class CommonCodeCheckBatchService {
             }
             if(StringUtils.isEmpty(temp)){
                 if(StringUtils.isNotEmpty(errMsgBuilder.toString())&&excelValidDtoList!=null){
-                    excelValidDtoList.add(new ExcelValidDto("0未导入",String.valueOf((i+2)),errMsgBuilder.toString()));
+                    excelValidDtoList.add(new ExcelValidDto("0未导入",String.valueOf((i+3)),errMsgBuilder.toString()));
                 }
             }else{
                 if(StringUtils.isNotEmpty(errMsgBuilder.toString())&& excelValidDtoList!=null){
                     if(excelValidDtoList.size()>0){
                         for (ExcelValidDto excelValidDto : excelValidDtoList) {
-                            if(excelValidDto.getRowNum().equals(String.valueOf((i+2)))){
+                            if(excelValidDto.getRowNum().equals(String.valueOf((i+3)))){
                                 excelValidDto.setErrorInfo(temp+errMsgBuilder.toString());
                                 break;
                             }
                         }
                     }else{
-                        excelValidDtoList.add(new ExcelValidDto("0未导入",String.valueOf(i+2),temp+errMsgBuilder.toString()));
+                        excelValidDtoList.add(new ExcelValidDto("0未导入",String.valueOf(i+3),temp+errMsgBuilder.toString()));
                     }
                 }
             }
