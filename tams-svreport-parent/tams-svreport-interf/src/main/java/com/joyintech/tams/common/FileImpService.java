@@ -690,7 +690,7 @@ public abstract class FileImpService extends InterfService{
                     if(!prodInsIds.contains(map.get("PROD_INS_ID"))){
                         map.put("ERRMSG","产品不存在对应的申报信息！");
                         if(excelValidDtoList!=null){
-                            excelValidDtoList.add(new ExcelValidDto("0未导入",String.valueOf(i+2),"产品不存在对应的申报信息！"));
+                                excelValidDtoList.add(new ExcelValidDto("导入成功",String.valueOf(i+2),"产品不存在对应的申报信息！"));
                         }
                     }
                 }

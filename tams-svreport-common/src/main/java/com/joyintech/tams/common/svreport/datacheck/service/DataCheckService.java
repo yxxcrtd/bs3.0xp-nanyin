@@ -246,9 +246,9 @@ public class DataCheckService {
                     x.put("ERRMSG", sb.toString());
                     if(list!=null){
                         if(StringUtil.equals(dataType,"CHB_ASSET_INFO")){
-                            list.add(new ExcelValidDto("0未导入",String.valueOf(i+2),sb.toString()));
-                        }else {
-                            list.add(new ExcelValidDto("0未导入", String.valueOf(i + 1), sb.toString()));
+                                list.add(new ExcelValidDto(" 导入成功",String.valueOf(i+2),sb.toString()));
+                        }else  {
+                                list.add(new ExcelValidDto(" 导入成功", String.valueOf(i + 1), sb.toString()));
                         }
                     }
                 }else if(errmsg.equals("产品不存在对应的申报信息！")){
@@ -262,8 +262,6 @@ public class DataCheckService {
                                     break;
                                 }
                             }
-                        }else{
-                            list.add(new ExcelValidDto("0未导入",String.valueOf(i+2),errmsg));
                         }
                     }
 

@@ -208,9 +208,11 @@ public class CommonCodeCheckBatchService {
                     checkProdDeal(map, list);
                     break;
                 case 个人产品申报登记SUB:
-                case 个人产品申报登记INFO:
                 case 个人产品申报登记TMP:
                     checkPrdoDeclare(map,detailMap, tableInfo);
+                    break;
+                case 个人产品申报登记INFO:
+                    checkPrdoDeclare(excelValidDtoList,map,detailMap, tableInfo,i);
                     break;
                 case 终止登记SUB:
                 case 终止登记TMP:
@@ -255,7 +257,7 @@ public class CommonCodeCheckBatchService {
                                     }
                                 }
                             }else{
-                                excelValidDtoList.add(new ExcelValidDto("0未导入",String.valueOf(i+2),errMsg));
+                                excelValidDtoList.add(new ExcelValidDto("导入成功",String.valueOf(i+2),errMsg));
                             }
                         }
                     }
@@ -263,6 +265,13 @@ public class CommonCodeCheckBatchService {
             } catch (Exception e) {
             }
         }
+        Collections.sort(excelValidDtoList,new Comparator<ExcelValidDto>() {
+            @Override
+            public int compare(ExcelValidDto o1, ExcelValidDto o2) {
+                // o1在前：根据age从小到大进行排序
+                return Integer.valueOf(o1.getRowNum())-Integer.valueOf(o2.getRowNum());
+            }
+        });
     }
 
 
@@ -295,7 +304,7 @@ public class CommonCodeCheckBatchService {
             }
             if(StringUtils.isEmpty(temp)){
                 if(!temp.equals(errMsg)&&excelValidDtoList!=null){
-                    excelValidDtoList.add(new ExcelValidDto("0未导入",String.valueOf((i+2)),errMsg));
+                    excelValidDtoList.add(new ExcelValidDto("导入成功",String.valueOf((i+2)),errMsg));
                 }
             }else{
                 if(!temp.equals(errMsg) && excelValidDtoList!=null){
@@ -306,13 +315,18 @@ public class CommonCodeCheckBatchService {
                                 break;
                             }
                         }
-                    }else{
-                        excelValidDtoList.add(new ExcelValidDto("0未导入",String.valueOf(i+2),errMsg));
                     }
                 }
             }
             dataMap.put("ERRMSG", errMsg);
         }
+        Collections.sort(excelValidDtoList,new Comparator<ExcelValidDto>() {
+            @Override
+            public int compare(ExcelValidDto o1, ExcelValidDto o2) {
+                // o1在前：根据age从小到大进行排序
+                return Integer.valueOf(o1.getRowNum())-Integer.valueOf(o2.getRowNum());
+            }
+        });
     }
 
 
@@ -492,6 +506,7 @@ public class CommonCodeCheckBatchService {
 
 
         codeCheckCommonOnly(excelValidDtoList,list, tableInfo);
+        updateExcelValidDtoList(excelValidDtoList,list,tableInfo);
 
         for (int i = list.size() - 1; i >= 0; i--){
             Map<String, String> map=list.get(i);
@@ -667,6 +682,26 @@ public class CommonCodeCheckBatchService {
             deleteChbPrdDeclareInfoErrorData(chbPrdDeclareInfoErrodataList);
             deleteChbPrdDeclareInfo(chbPrdDeclareInfoErrodataList);
             insertChbPrdDeclareInfoErroData(chbPrdDeclareInfoErrodataList);
+        }
+    }
+
+    private void updateExcelValidDtoList(List<ExcelValidDto> excelValidDtoList, List<Map<String, String>> list, ChbCheckTableInfo tableInfo) {
+        if(excelValidDtoList!=null && excelValidDtoList.size()>0){
+            switch (tableInfo.getTableName()){
+                case "CHB_ASSET_INFO":
+                    for(int i = 0;i<list.size();i++){
+                        if(StringUtils.isEmpty(list.get(i).get("ASSET_CODE"))){
+                            for (ExcelValidDto dto : excelValidDtoList) {
+                                if(dto.getRowNum().equals(String.valueOf(i+3))){
+                                    dto.setValidKey("导入失败");
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    break;
+            }
+
         }
     }
 
@@ -2023,6 +2058,127 @@ public class CommonCodeCheckBatchService {
         dataMap.put("ERRMSG", errMsg);
     }
 
+    /**
+     * 代码检查产品申报登记
+     * @param dataMap
+     */
+    public void checkPrdoDeclare(List<ExcelValidDto> excelValidDtoList,Map<String, String> dataMap,Map<String, String> listMap, ChbCheckTableInfo tableInfo,int i){
+        String  errMsg="";
+        //行内标识码
+        String   prodInsId=dataMap.get("PROD_INS_ID");
+        // 产品名称
+        String prodName = dataMap.get("PROD_NAME");
+        // 产品期次
+        String prodStage = dataMap.get("PROD_STAGE");
+        //发行机构代码
+        String   issuePartyId=dataMap.get("ISSUE_PARTY_ID");
+        //投资资产种类及比例要素
+        String   invTypeRat=dataMap.get("INV_TYPE_RAT");
+        String  temp=dataMap.getOrDefault("ERRMSG", "");
+
+        if(temp.equals("重复数据;")){
+
+        }else {
+            if (StringUtil.isNotEmpty(issuePartyId)) {
+                //发行机构代码必须与银行代码相同。
+                // 银行模式才判断发行机构代码，联社模式不判断
+                if (!StringUtil.equals(CommonUtil.selectBankCode(), issuePartyId)
+                        && StringUtil.equals(SvrDataUtil.getSysParam("AUTHORITY_TYPE"), "01")) {
+                    errMsg += "发行机构代码必须与银行代码相同[ISSUE_PARTY_ID=" + issuePartyId + "];";
+                }
+            }
+
+            // modify by zhangliang 20210419 start
+            if (StringUtil.isNotEmpty(prodInsId) && StringUtil.isNotEmpty(prodName) && StringUtil.isNotEmpty(prodStage)) {
+                List<String> countList = new ArrayList<>();
+                if (tableInfo == ChbCheckTableInfo.个人产品申报登记TMP || tableInfo == ChbCheckTableInfo.个人产品申报登记INFO) {
+                    countList.addAll(commonCodeCheckMapper.genChbPrdDeclareSub1ByProdInsId(tableInfo.getTableName(), prodInsId, prodName, prodStage));
+                }
+                if (tableInfo == ChbCheckTableInfo.个人产品申报登记INFO || tableInfo == ChbCheckTableInfo.个人产品申报登记SUB) {
+                    countList.addAll(commonCodeCheckMapper.genChbPrdDeclareSub1ByProdInsId("CHB_PRD_BASEINFO", prodInsId, prodName, prodStage));
+                }
+                countList.addAll(commonCodeCheckMapper.genChbPrdDeclareSub2ByProdInsId(prodInsId, prodName, prodStage));
+
+                // list  可能是tmp->sub也可能是业务数据维护
+
+
+                String code = listMap.get(prodName + "_" + prodStage);
+                if (null != code || countList.size() > 0) {
+                    errMsg += "产品名称和产品期次不能同时重复[PROD_NAME=" + dataMap.get("PROD_NAME") + ",PROD_STAGE=" + dataMap.get("PROD_STAGE") + "];";
+                } else {
+                    listMap.put(prodName + "_" + prodStage, "1");
+                }
+
+            }
+            //投资资产种类及比例要素的判断
+            boolean flag = true;
+            String regex = "^(100|[1-9]?\\d(\\.\\d\\d?)?)%$|0$";
+            if (StringUtil.isNotEmpty(invTypeRat)) {
+                //对于投资资产种类及比例要素按照";"切割成各个单元
+                List<String> invTaypeRatList = Arrays.asList(invTypeRat.split(GlobalConstant.SEMICOLON));
+                //循环list，对于单元进行处理
+                for (String invTaype : invTaypeRatList) {
+                    //按照":"对于单元进行切割
+                    List<String> invTaypePatten = Arrays.asList(invTaype.split(GlobalConstant.COLON));
+                    //单元切割后，不是2个部分。则格式不通过
+                    if (invTaypePatten != null && invTaypePatten.size() != 2) {
+                        flag = false;
+                        break;
+                    } else {
+                        //单元切割后是2个部分，获取数值和文字
+                        //数值
+                        String pattenOne = invTaypePatten.get(0);
+                        if (pattenOne.contains(GlobalConstant.SPLIT)) {
+                            //表示为区间
+                            List<String> pattenOneSection = Arrays.asList(pattenOne.split(GlobalConstant.SPLIT));
+                            //校验区间
+                            if (!pattenOneSection.get(0).matches(regex) ||
+                                    !pattenOneSection.get(1).matches(regex)) {
+                                flag = false;
+                                break;
+                            }
+                        } else {
+                            //不是区间，单个数字百分号
+                            if (!pattenOne.matches(regex)) {
+                                flag = false;
+                                break;
+                            }
+                        }
+                        //文字
+                        //String  pattenTwo=invTaypePatten.get(1);
+                    }
+                }
+            }
+            if (!flag) {
+                errMsg += "投资资产种类及比例要素格式不对。正确的格式：数字%：文字；数字%-数字%：文字（其中，百分号、冒号、分号、连字号均应为英文标点，文字和数字部分均不得含有英文百分号、冒号、分号、连字号）。其中，数字格式为n..（5，2），且需大于等于0、小于等于100。[INV_TYPE_RAT=" + dataMap.get("INV_TYPE_RAT") + "];";
+            }
+            if (StringUtils.isEmpty(temp)) {
+                if (StringUtils.isNotEmpty(errMsg) && excelValidDtoList != null) {
+                    excelValidDtoList.add(new ExcelValidDto("导入成功", String.valueOf((i + 2)),errMsg));
+                }
+            } else {
+                if (StringUtils.isNotEmpty(errMsg) && excelValidDtoList != null) {
+                    if (excelValidDtoList.size() > 0) {
+                        for (ExcelValidDto excelValidDto : excelValidDtoList) {
+                            if (excelValidDto.getRowNum().equals(String.valueOf((i + 2)))) {
+                                excelValidDto.setErrorInfo(temp + errMsg);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            dataMap.put("ERRMSG", errMsg);
+        }
+        Collections.sort(excelValidDtoList,new Comparator<ExcelValidDto>() {
+            @Override
+            public int compare(ExcelValidDto o1, ExcelValidDto o2) {
+                // o1在前：根据age从小到大进行排序
+                return Integer.valueOf(o1.getRowNum())-Integer.valueOf(o2.getRowNum());
+            }
+        });
+    }
+
     // add by dubaojun 2020-10-12 配置无法实现，代码实现的check start
     /**
      * 代码检查产品交易登记
@@ -2300,7 +2456,7 @@ public class CommonCodeCheckBatchService {
             }
             if(StringUtils.isEmpty(temp)){
                 if(StringUtils.isNotEmpty(errMsgBuilder.toString())&&excelValidDtoList!=null){
-                    excelValidDtoList.add(new ExcelValidDto("0未导入",String.valueOf((i+3)),errMsgBuilder.toString()));
+                        excelValidDtoList.add(new ExcelValidDto("导入成功",String.valueOf((i+3)),errMsgBuilder.toString()));
                 }
             }else{
                 if(StringUtils.isNotEmpty(errMsgBuilder.toString())&& excelValidDtoList!=null){
@@ -2311,8 +2467,6 @@ public class CommonCodeCheckBatchService {
                                 break;
                             }
                         }
-                    }else{
-                        excelValidDtoList.add(new ExcelValidDto("0未导入",String.valueOf(i+3),temp+errMsgBuilder.toString()));
                     }
                 }
             }
