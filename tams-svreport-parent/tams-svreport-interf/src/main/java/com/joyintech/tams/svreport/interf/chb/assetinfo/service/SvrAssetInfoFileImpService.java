@@ -304,7 +304,50 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
                     }
                 }
             }
+            //处理融资人所属行业分类，融资项目所属行业分类 CAPUSEINDULEVEL2
+            if(StringUtil.isNotEmpty(chbAssetInfo.getIndustryLevel2Type())){
+                if(!StringUtil.isNotEmpty(chbAssetInfo.getIndustry1())){
+                    if(industrySharesMap.get(chbAssetInfo.getIndustryLevel2Type()) != null){
+                        chbAssetInfo.setIndustry1(industrySharesMap.get(chbAssetInfo.getIndustryLevel2Type()));
+                    }
+                }
+            }
+            if(StringUtil.isNotEmpty(chbAssetInfo.getProIndustryLevel2())){
+                if(!StringUtil.isNotEmpty(chbAssetInfo.getProIndustry())){
+                    if(industrySharesMap.get(chbAssetInfo.getProIndustryLevel2()) != null){
+                        chbAssetInfo.setProIndustry(industrySharesMap.get(chbAssetInfo.getProIndustryLevel2()));
+                    }
+                }
+            }
+            //处理发行机构所属行业
+            if(StringUtil.isNotEmpty(chbAssetInfo.getIndustryLevel2())){
+                if(!StringUtil.isNotEmpty(chbAssetInfo.getIndustry())){
+                    if(industrySharesMap.get(chbAssetInfo.getIndustryLevel2()) != null){
+                        chbAssetInfo.setIndustry(industrySharesMap.get(chbAssetInfo.getIndustryLevel2()));
+                    }
+                }
+            }
 
+            //处理资金运用行业
+            if(StringUtil.isNotEmpty(chbAssetInfo.getCapUseInduLevel2())){
+                if(!StringUtil.isNotEmpty(chbAssetInfo.getCapUseIndu())){
+                    if(industrySharesMap.get(chbAssetInfo.getCapUseInduLevel2()) != null){
+                        chbAssetInfo.setCapUseIndu(industrySharesMap.get(chbAssetInfo.getCapUseInduLevel2()));
+                    }
+                }
+            }
+
+            //处理基金管理机构名称和基金托管机构名称
+            if(StringUtil.isNotEmpty(chbAssetInfo.getMngOrgName())){
+                if(!StringUtil.isNotEmpty(chbAssetInfo.getManagerId())) {
+                    chbAssetInfo.setManagerId(this.subDictcode(chbAssetInfo.getMngOrgName(), " "));
+                }
+            }
+            if(StringUtil.isNotEmpty(chbAssetInfo.getTruOrgName())){
+                if(!StringUtil.isNotEmpty(chbAssetInfo.getTrusteeId())) {
+                    chbAssetInfo.setTrusteeId(this.subDictcode(chbAssetInfo.getTruOrgName(), " "));
+                }
+            }
 //            //机构名称处理
 //            if(StringUtil.isNotEmpty(chbAssetInfo.getIssuePartyName())){
 //                if(customerInfoMap.get(chbAssetInfo.getIssuePartyName()) != null){
@@ -494,5 +537,16 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
             }
         }
         logger.debug("资产要素信息文件接入-更新:----结束------" );   
+    }
+
+
+    public static String subDictcode(String value, String sign) {
+        if (StringUtil.isNotEmpty(value)) {
+            int i = value.indexOf(sign);
+            if (i > -1) {
+                value = value.substring(0, i);
+            }
+        }
+        return value;
     }
 }
