@@ -3673,6 +3673,7 @@
         <result property="orgData" column="ORG_DATA" jdbcType="CLOB"/>
     </resultMap>
     <select id="selectList" resultMap="resultMap">
+select * from (
         SELECT
         ASSET_UUID
         ,ASSET_CODE
@@ -3916,11 +3917,7 @@
                 #{item}
             </foreach>
         </if>
-        <if test="assetTypes != null">
-            <foreach collection="assetTypes" item="item" open=" and ASSET_TYPE in(" separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
+
         <if test="assetType2s != null">
             <foreach collection="assetType2s" item="item" open=" and ASSET_TYPE2 in(" separator="," close=")">
                 #{item}
@@ -4183,11 +4180,7 @@
                 #{item}
             </foreach>
         </if>
-        <if test="assetTypes != null">
-            <foreach collection="assetTypes" item="item" open=" and ASSET_TYPE in(" separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
+
         <if test="assetType2s != null">
             <foreach collection="assetType2s" item="item" open=" and ASSET_TYPE2 in(" separator="," close=")">
                 #{item}
@@ -4206,6 +4199,15 @@
         <if test="dataStatus !=null and dataStatus!=''">
             and STATUS = #{dataStatus}
         </if>
+        )a
+        left join  SYS_DATADICT_LIST_LINK L ON  L.LINKED_DICT_CODE = 'SVR_ASSET_TYPE_FIRST_LEVEL'  AND L.ITEM_CODE = a.ASSET_TYPE2
+        WHERE 1=1
+        <if test="assetTypes != null and assetTypes.length>0">
+            <foreach collection="assetTypes" item="item" open=" and trim(L.LINKED_ITEM_CODE) in(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        ORDER BY a.status DESC
     </select>
     <select id="selectBykeys" resultMap="resultMap">
         SELECT

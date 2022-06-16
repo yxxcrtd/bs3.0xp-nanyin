@@ -824,6 +824,8 @@ public class CommonCodeCheckBatchService {
         try {
             CommonCodeCheckMapper batchMapper = session.getMapper(CommonCodeCheckMapper.class);
             batchMapper.deleteChbAssetInfo(chbAssetInfoErrorList);
+            session.commit();
+            session.clearCache();
         }
         catch (Exception e) {
             session.rollback();
