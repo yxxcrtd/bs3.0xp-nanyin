@@ -13123,6 +13123,8 @@
         ORG_ASSET_TYPE1,
         ORG_ASSET_TYPE2,
         ORG_ASSET_TYPE3,
+        ORG_ASSET_TYPE4,
+        ORG_ASSET_TYPE5,
         BUY_PLACE,
         ASSET_TYPE3,
         PBC_ASSET_TYPE1,
@@ -13189,7 +13191,6 @@
         ACCOUNT_NO,
         CREDIT_ASSET_CODE,
         IS_CONSTRACTE_BUSI
-
         )
         select
         TEMP.*
@@ -13351,6 +13352,8 @@
             #{item.orgAssetType1,jdbcType=VARCHAR} ORG_ASSET_TYPE1,
             #{item.orgAssetType2,jdbcType=VARCHAR} ORG_ASSET_TYPE2,
             #{item.orgAssetType3,jdbcType=VARCHAR} ORG_ASSET_TYPE3,
+            #{item.orgAssetType4,jdbcType=VARCHAR} ORG_ASSET_TYPE4,
+            #{item.orgAssetType5,jdbcType=VARCHAR} ORG_ASSET_TYPE5,
             #{item.buyPlace,jdbcType=VARCHAR} BUY_PLACE,
             #{item.assetType3,jdbcType=VARCHAR} ASSET_TYPE3,
             #{item.pbcAssetType1,jdbcType=VARCHAR} PBC_ASSET_TYPE1,
@@ -13583,6 +13586,8 @@
             #{item.orgAssetType1,jdbcType=VARCHAR} ORG_ASSET_TYPE1,
             #{item.orgAssetType2,jdbcType=VARCHAR} ORG_ASSET_TYPE2,
             #{item.orgAssetType3,jdbcType=VARCHAR} ORG_ASSET_TYPE3,
+            #{item.orgAssetType4,jdbcType=VARCHAR} ORG_ASSET_TYPE4,
+            #{item.orgAssetType5,jdbcType=VARCHAR} ORG_ASSET_TYPE5,
             #{item.buyPlace,jdbcType=VARCHAR} BUY_PLACE,
             #{item.assetType3,jdbcType=VARCHAR} ASSET_TYPE3,
             #{item.pbcAssetType1,jdbcType=VARCHAR} PBC_ASSET_TYPE1,
@@ -13808,6 +13813,8 @@
         A.ORG_ASSET_TYPE1 = B.ORG_ASSET_TYPE1,
         A.ORG_ASSET_TYPE2 = B.ORG_ASSET_TYPE2,
         A.ORG_ASSET_TYPE3 = B.ORG_ASSET_TYPE3,
+        A.ORG_ASSET_TYPE4 = B.ORG_ASSET_TYPE4,
+        A.ORG_ASSET_TYPE5 = B.ORG_ASSET_TYPE5,
         A.BUY_PLACE = B.BUY_PLACE,
         A.ASSET_TYPE3 = B.ASSET_TYPE3,
         A.PBC_ASSET_TYPE1 = B.PBC_ASSET_TYPE1,
