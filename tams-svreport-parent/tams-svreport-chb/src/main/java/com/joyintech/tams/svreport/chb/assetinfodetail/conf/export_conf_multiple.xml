@@ -308,9 +308,8 @@
 			<Cell order="304" name="结构化业务类型">constracteBusiTypeStr</Cell>
 			<Cell order="305" name="结构化层级">constracteGradeStr</Cell>
 			<Cell order="306" name="结构化杠杆倍数">constracteHeaverTimes</Cell>
-			<Cell order="307" name="*资产/负债一级类别">assetTypeStr</Cell>
-			<Cell order="308" name="数据状态">statusStr</Cell>
-			<Cell order="309" name="错误信息">errMsg</Cell>
+			<Cell order="307" name="数据状态">statusStr</Cell>
+			<Cell order="308" name="错误信息">errMsg</Cell>
 		</Row>
 	</Worksheet>
 </Workbook>

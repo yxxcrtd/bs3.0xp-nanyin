@@ -2882,7 +2882,9 @@ public class AssetInfoDetailUtil {
 
                         case "05":
                             try {
-                                e.setIsResale05(com.joyintech.framework.util.SysDataUtil.getNameFromDataDict(DictCode.是否_中债, e.getIsResale()));
+                                if(StringUtil.isNotEmpty(e.getIsResale())) {
+                                    e.setIsResale05(e.getIsResale() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, e.getIsResale()));
+                                }
                                 if(StringUtil.isNotEmpty(e.getAmt())) {
                                     e.setAmt05(e.getAmt().toString());
                                 }
