@@ -2760,7 +2760,7 @@ public class AssetInfoDetailUtil {
                                 e.setVdate01(DateUtil.format(e.getVdate()));
                                 e.setMdate01(DateUtil.format(e.getMdate()));
                                 if(StringUtil.isNotEmpty(e.getAssetYield())) {
-                                    if(e.getAssetYield().compareTo(new BigDecimal(BigInteger.ZERO))==0) {
+                                    if(e.getAssetYield().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getAssetYield().toString(),"0E-14")) {
                                         e.setAssetYield01("0.00000");
                                     }else{
                                         e.setAssetYield01(e.getAssetYield().setScale(5,BigDecimal.ROUND_HALF_UP).toString());
@@ -2779,7 +2779,7 @@ public class AssetInfoDetailUtil {
                                 e.setMdate02(DateUtil.format(e.getMdate()));
                                 e.setRivalParty02(e.getRivalParty());
                                 if(StringUtil.isNotEmpty(e.getAssetYield())) {
-                                    if(e.getAssetYield().compareTo(new BigDecimal(BigInteger.ZERO))==0) {
+                                    if(e.getAssetYield().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getAssetYield().toString(),"0E-14")) {
                                         e.setAssetYield02("0.00000");
                                     }else{
                                         e.setAssetYield02(e.getAssetYield().setScale(5,BigDecimal.ROUND_HALF_UP).toString());
@@ -2818,7 +2818,7 @@ public class AssetInfoDetailUtil {
                                     e.setRateFlag04(e.getRateFlag() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, e.getRateFlag()));
                                 }
                                 if(StringUtil.isNotEmpty(e.getAssetYield())) {
-                                    if(e.getAssetYield().compareTo(new BigDecimal(BigInteger.ZERO))==0) {
+                                    if(e.getAssetYield().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getAssetYield().toString(),"0E-14")) {
                                         e.setAssetYield04("0.00000");
                                     }else{
                                         e.setAssetYield04(e.getAssetYield().setScale(5,BigDecimal.ROUND_HALF_UP).toString());
@@ -2892,7 +2892,7 @@ public class AssetInfoDetailUtil {
                                     e.setIndustryShares205(e.getIndustryShares2() + " " + SysDataUtil.getNameFromDataDict(DictCode.机构所属行业二级分类, e.getIndustryShares2()));
                                 }
                                 if(StringUtil.isNotEmpty(e.getAssetYield())) {
-                                    if(e.getAssetYield().compareTo(new BigDecimal(BigInteger.ZERO))==0) {
+                                    if(e.getAssetYield().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getAssetYield().toString(),"0E-14")) {
                                         e.setAssetYield05("0.00000");
                                     }else{
                                         e.setAssetYield05(e.getAssetYield().setScale(5,BigDecimal.ROUND_HALF_UP).toString());
@@ -2950,7 +2950,7 @@ public class AssetInfoDetailUtil {
                                 e.setVdate08(DateUtil.format(e.getVdate()));
                                 e.setMdate08(DateUtil.format(e.getMdate()));
                                 if(StringUtil.isNotEmpty(e.getAssetYield())) {
-                                    if(e.getAssetYield().compareTo(new BigDecimal(BigInteger.ZERO))==0) {
+                                    if(e.getAssetYield().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getAssetYield().toString(),"0E-14")) {
                                         e.setAssetYield08("0.00000");
                                     }else{
                                         e.setAssetYield08(e.getAssetYield().setScale(5,BigDecimal.ROUND_HALF_UP).toString());
@@ -2974,7 +2974,7 @@ public class AssetInfoDetailUtil {
                                 e.setMdate09(DateUtil.format(e.getMdate()));
                                 e.setRivalParty09(e.getRivalParty09());
                                 if(StringUtil.isNotEmpty(e.getAssetYield())) {
-                                    if(e.getAssetYield().compareTo(new BigDecimal(BigInteger.ZERO))==0) {
+                                    if(e.getAssetYield().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getAssetYield().toString(),"0E-14")) {
                                         e.setAssetYield09("0.00000");
                                     }else{
                                         e.setAssetYield09(e.getAssetYield().setScale(5,BigDecimal.ROUND_HALF_UP).toString());
@@ -3011,7 +3011,7 @@ public class AssetInfoDetailUtil {
                                 e.setVdate11(DateUtil.format(e.getVdate()));
                                 e.setMdate11(DateUtil.format(e.getMdate()));
                                 if(StringUtil.isNotEmpty(e.getAssetYield())) {
-                                    if(e.getAssetYield().compareTo(new BigDecimal(BigInteger.ZERO))==0) {
+                                    if(e.getAssetYield().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getAssetYield().toString(),"0E-14")) {
                                         e.setAssetYield11("0.00000");
                                     }else{
                                         e.setAssetYield11(e.getAssetYield().setScale(5,BigDecimal.ROUND_HALF_UP).toString());
@@ -3084,10 +3084,14 @@ public class AssetInfoDetailUtil {
                                     e.setTermDate13(e.getTermDate().toString());
                                 }
                                 if(StringUtil.isNotEmpty(e.getAssetValue())) {
-                                    e.setAssetValue13(e.getAssetValue().toString());
+                                    if(e.getAssetValue().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getAssetValue().toString(),"0E-14")) {
+                                        e.setAssetValue13("0.00000");
+                                    }else{
+                                        e.setAssetValue13(e.getAssetValue().toString());
+                                    }
                                 }
                                 if(StringUtil.isNotEmpty(e.getAssetYield())) {
-                                    if(e.getAssetYield().compareTo(new BigDecimal(BigInteger.ZERO))==0) {
+                                    if(e.getAssetYield().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getAssetYield().toString(),"0E-14")) {
                                         e.setAssetYield13("0.00000");
                                     }else{
                                         e.setAssetYield13(e.getAssetYield().setScale(5,BigDecimal.ROUND_HALF_UP).toString());
@@ -3112,7 +3116,7 @@ public class AssetInfoDetailUtil {
                                     e.setRateFlag14(e.getRateFlag() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, e.getRateFlag()));
                                 }
                                 if(StringUtil.isNotEmpty(e.getAssetYield())) {
-                                    if(e.getAssetYield().compareTo(new BigDecimal(BigInteger.ZERO))==0) {
+                                    if(e.getAssetYield().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getAssetYield().toString(),"0E-14")) {
                                         e.setAssetYield14("0.00000");
                                     }else{
                                         e.setAssetYield14(e.getAssetYield().setScale(5,BigDecimal.ROUND_HALF_UP).toString());
@@ -3260,7 +3264,7 @@ public class AssetInfoDetailUtil {
                                     e.setTermDate17(e.getTermDate().toString());
                                 }
                                 if(StringUtil.isNotEmpty(e.getAssetYield())) {
-                                    if(e.getAssetYield().compareTo(new BigDecimal(BigInteger.ZERO))==0) {
+                                    if(e.getAssetYield().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getAssetYield().toString(),"0E-14")) {
                                         e.setAssetYield17("0.00000");
                                     }else{
                                         e.setAssetYield17(e.getAssetYield().setScale(5,BigDecimal.ROUND_HALF_UP).toString());
@@ -3280,10 +3284,14 @@ public class AssetInfoDetailUtil {
                                 e.setVdate18(DateUtil.format(e.getVdate()));
                                 e.setMdate18(DateUtil.format(e.getMdate()));
                                 if(StringUtil.isNotEmpty(e.getAssetValue())) {
-                                    e.setAssetValue18(e.getAssetValue().toString());
+                                    if(e.getAssetValue().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getAssetValue().toString(),"0E-14")) {
+                                        e.setAssetValue18("0.00000");
+                                    }else{
+                                        e.setAssetValue18(e.getAssetValue().toString());
+                                    }
                                 }
                                 if(StringUtil.isNotEmpty(e.getAssetYield())) {
-                                    if(e.getAssetYield().compareTo(new BigDecimal(BigInteger.ZERO))==0) {
+                                    if(e.getAssetYield().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getAssetYield().toString(),"0E-14")) {
                                         e.setAssetYield18("0.00000");
                                     }else{
                                         e.setAssetYield18(e.getAssetYield().setScale(5,BigDecimal.ROUND_HALF_UP).toString());
