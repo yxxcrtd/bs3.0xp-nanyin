@@ -255,7 +255,7 @@
 			<Cell order="251" name="是否为固定收益类">profitFlagStr</Cell>
 			<Cell order="252" name="是否属于政府投资基金">isGovernFundStr</Cell>
 			<Cell order="253" name="政府投资基金投向">governInvestFundStr</Cell>
-			<Cell order="254" name="是否由金融资产投资公司发行">financialComissueL0</Cell>
+			<Cell order="254" name="是否由金融资产投资公司发行">financialComissueL01</Cell>
 			<Cell order="255" name="基金公司名称">fundEnpeName</Cell>
 			<Cell order="256" name="*基金管理机构名称">mngOrgName</Cell>
 			<Cell order="257" name="*基金托管机构名称">truOrgName</Cell>
