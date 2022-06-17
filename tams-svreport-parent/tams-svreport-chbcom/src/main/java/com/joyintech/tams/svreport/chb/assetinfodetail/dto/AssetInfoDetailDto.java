@@ -653,7 +653,7 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 		if(StringUtils.isNotEmpty(this.getTargetType())){
 			StringBuilder sb = new StringBuilder();
 			String[] targetTypes = this.getTargetType().split(",");
-			Stream.of(targetTypes).forEach(e->sb.append(SysDataUtil.getNameFromDataDict(DictCode.标的类别, e)).append(","));
+			Stream.of(targetTypes).forEach(e->sb.append(e + " " + SysDataUtil.getNameFromDataDict(DictCode.标的类别, e)).append(","));
 			return sb.substring(0,sb.lastIndexOf(","));
 		}
 		return null;
