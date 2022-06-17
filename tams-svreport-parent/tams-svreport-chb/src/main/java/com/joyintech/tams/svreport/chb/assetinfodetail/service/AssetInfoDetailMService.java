@@ -495,9 +495,7 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		params.put("linkDictCode", DictCode.资产_负债类别.getValue());
 		List<SysDatadictListLink> listLink = assetInfoDetailMapper.getDataListLinkData(params);
 		listLink.forEach(sysDatadictListLink -> {
-			if(!((String)sysDatadictListLink.getLinkedItemCode()).equals("L01")){
 				dictAssetType.put(sysDatadictListLink.getItemCode(),sysDatadictListLink.getLinkedItemCode());
-			}
 		});
 
 		// 根据机构所属行业二级类别找一级类别
