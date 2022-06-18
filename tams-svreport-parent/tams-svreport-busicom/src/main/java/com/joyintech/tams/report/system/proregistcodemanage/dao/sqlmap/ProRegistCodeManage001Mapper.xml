@@ -129,6 +129,9 @@
 		<if test="prodname != null and prodname != ''">
 			AND PRODID like concat(concat('%', #{prodname}),'%')
 		</if>
+		<if test = "isNotNull">
+			AND (REG_CODE IS NULL or REG_CODE='')
+		</if>
 		ORDER BY UPDATE_TIME DESC,PROD_INS_ID ASC
 
 	</select>
@@ -186,14 +189,15 @@
 	<select id="queryPrdRegList" resultType="com.joyintech.framework.select.SelectOptionDto">
 		SELECT DISTINCT
 		  A.REG_CODE id,
-		  nvl(b.prod_name,a.reg_code) text
-		 FROM CHB_PRDRESIST_CODE A
-		 left join chb_prd_baseinfo b
-		 on b.prod_id = a.PRODID
-		 <where>
-		 	A.REG_CODE is not null
-		 	<if test="search != null and search != ''">
-		 		and A.REG_CODE like concat(concat('%', #{search}),'%') or b.PROD_NAME like concat(concat('%', #{search}),'%')
+		  A.REG_CODE text
+		<!--nvl(b.prod_name,a.reg_code) text-->
+       FROM CHB_PRDRESIST_CODE A
+		<!--left join chb_prd_baseinfo b
+        on b.prod_id = a.PRODID-->
+        <where>
+            A.REG_CODE is not null
+            <if test="search != null and search != ''">
+                and A.REG_CODE like concat(concat('%', #{search}),'%')<!-- or b.PROD_NAME like concat(concat('%', #{search}),'%')-->
 		 	</if>
 		 	<if test="orgCodeList !=null and orgCodeList.size()>0">
 					<!-- 机构代码不为空时 -->

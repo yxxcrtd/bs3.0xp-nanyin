@@ -54,7 +54,6 @@ public class ProRegistCodeManage002Dto extends BaseEntity implements ProcessEnti
      * 产品代码
      */
   @PrimaryKey(Field.PK_1)
-  @NotEmpty(fieldName="ProRegistCodeManage003.finprodMarketId",groups = {ValidateGroupEdit.class})
     private String prodId;
 
     /**
@@ -70,7 +69,7 @@ public class ProRegistCodeManage002Dto extends BaseEntity implements ProcessEnti
     /**
      * 产品名称
      */
-   // @NotEmpty(fieldName="ProRegistCodeManage003.finprodName",groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName="ProRegistCodeManage003.finprodName",groups = {ValidateGroupEdit.class})
     private String prodName;
 
     /**
@@ -119,6 +118,7 @@ public class ProRegistCodeManage002Dto extends BaseEntity implements ProcessEnti
     /**
      * 行内识别码
      */
+    @NotEmpty(fieldName="ProRegistCodeManage003.prodInsId",groups = {ValidateGroupEdit.class})
     private String prodInsId;
 
     /**

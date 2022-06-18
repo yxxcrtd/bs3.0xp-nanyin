@@ -7,9 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import com.joyintech.background.component.common.pack.common.util.BeanUtil;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.entity.ChbPrdresistCodeKey;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.svreport.interf.chb.proddeclare.dao.ChbPrdDeclareInfoMapper;
 import com.joyintech.tams.svreport.interf.chb.proddeclare.dto.ChbPrdDeclareInfoDto;
@@ -206,5 +208,17 @@ public class ProRegistCodeManage003Service extends CommonExportService<ProRegist
             e.printStackTrace();
         }
         return result;
+    }
+
+    public ProRegistCodeManage002Dto selectByProdInsId(String prodInsId) {
+        ChbPrdresistCodeKey key = new ChbPrdresistCodeKey();
+        key.setProdInsId(prodInsId);
+        key.setFlag("2");
+        ChbPrdresistCode  chbPrdresistCode  = chbPrdresistCodeMapper.selectByPrimaryKey(key);
+        ProRegistCodeManage002Dto dto = new ProRegistCodeManage002Dto();
+        if(chbPrdresistCode!=null){
+            BeanUtil.copyPropertiesIgnoreNull(dto,chbPrdresistCode);
+        }
+        return dto;
     }
 }

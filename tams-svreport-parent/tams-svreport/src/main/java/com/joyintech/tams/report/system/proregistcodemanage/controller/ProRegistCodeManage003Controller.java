@@ -6,6 +6,7 @@ import java.util.Map;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -55,12 +56,19 @@ public class ProRegistCodeManage003Controller extends BaseController {
     public String init(Model model) {
     	setSelectOptionToModel(model, new DictCode[] {DictCode.产品运作模式 });
     	// 流程
+                String prodInsId = RequestUtil.getParam("prodInsId");
     			String workflowId = this.getParam("workflowId");
     			if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
     				ProRegistCodeManage002Dto entity = proRegistCodeManage003Service
     						.getBussinessEntityByWorkflowId(workflowId);
     				model.addAttribute(GlobalConstant.ENTITY, entity);
-    			}   			
+    			}else{
+    			    if(StringUtils.isNotEmpty(prodInsId)){
+                        ProRegistCodeManage002Dto entity = proRegistCodeManage003Service.selectByProdInsId(prodInsId);
+                        model.addAttribute(GlobalConstant.ENTITY, entity);
+                        model.addAttribute("pageModel",RequestUtil.getParam("pageModel"));
+                    }
+                }
         return super.init(model);
     }
 

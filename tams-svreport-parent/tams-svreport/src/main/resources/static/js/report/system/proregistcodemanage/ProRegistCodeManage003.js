@@ -95,7 +95,7 @@
                          });
                      });
                    });*/
-            }else{          
+            }else{
             Joyin.ajaxJson(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/check', object, function(result) {
                 Joyin.confirm(result.data, function() {                	
                     if(operateType === 'save') {                    	
