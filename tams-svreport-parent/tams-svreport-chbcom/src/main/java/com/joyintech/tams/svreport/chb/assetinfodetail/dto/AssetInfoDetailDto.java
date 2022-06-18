@@ -455,7 +455,10 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 	}
 
 	public String getDataStatusStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.中债数据状态, this.getDataStatus());
+		if(StringUtil.isNotEmpty(this.getDataStatus())){
+			return this.getDataStatus() + " " + SysDataUtil.getNameFromDataDict(DictCode.中债数据状态, this.getDataStatus());
+		}
+		return this.getDataStatus();
 	}
 
 
@@ -480,30 +483,40 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 	 * @return
 	 */
 	public String getAssetTypeStr() {
-
-		return SysDataUtil.getNameFromDataDict(DictCode.资产_负债类别, this.getAssetType());
+		if(StringUtil.isNotEmpty(this.getAssetType())) {
+			return this.getAssetType() + " " + SysDataUtil.getNameFromDataDict(DictCode.资产负债一级类别, this.getAssetType());
+		}
+		return this.getAssetType();
 	}
 	/**
 	 * 资产_负债二级类别
 	 * @return
 	 */
 	public String getAssetType2Str() {
-
-		return SysDataUtil.getNameFromDataDict(DictCode.资产_负债二级类别, this.getAssetType2());
+		if(StringUtil.isNotEmpty(this.getAssetType2())) {
+			return this.getAssetType2() + " " + SysDataUtil.getNameFromDataDict(DictCode.资产_负债二级类别, this.getAssetType2());
+		}
+		return this.getAssetType2();
 	}
 	/**
 	 * 资产一级类型
 	 * @return
 	 */
 	public String getOrgAssetType1Str() {
-		return SysDataUtil.getNameFromDataDict(DictCode.中债_上游资产一级分类, this.getOrgAssetType1());
+		if(StringUtil.isNotEmpty(this.getOrgAssetType1())) {
+			return this.getOrgAssetType1() + " " + SysDataUtil.getNameFromDataDict(DictCode.中债_上游资产一级分类, this.getOrgAssetType1());
+		}
+		return this.getOrgAssetType1();
 	}
 	/**
 	 * 资产二级类型
 	 * @return
 	 */
 	public String getOrgAssetType2Str() {
-		return SysDataUtil.getNameFromDataDict(DictCode.中债_上游资产二级分类, this.getOrgAssetType2());
+		if(StringUtil.isNotEmpty(this.getOrgAssetType2())) {
+			return this.getOrgAssetType2() + " " + SysDataUtil.getNameFromDataDict(DictCode.中债_上游资产二级分类, this.getOrgAssetType2());
+		}
+		return this.getOrgAssetType2();
 	}
 
 
@@ -576,299 +589,572 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 	}
 
 	public String getStatusStr() {
-		return com.joyintech.tams.report.common.util.SysDataUtil.getNameFromDataDict(DictCode.中债数据状态,getStatus());
+		if(StringUtil.isNotEmpty(this.getStatus())) {
+			return this.getStatus() + " " + SysDataUtil.getNameFromDataDict(DictCode.中债数据状态, getStatus());
+		}
+		return this.getStatus();
 	}
 
 	// updateFlg 02 不展示  01 显示
 	public String getUpdateFlg() {
-		if(!com.joyintech.background.component.common.pack.common.util.StringUtil.isEmpty(dataStatus) && StringUtil.equals(DictCodeListExt3.中债数据状态_删除.getValue(), dataStatus)){
+		if(!StringUtil.isEmpty(dataStatus) && StringUtil.equals(DictCodeListExt3.中债数据状态_删除.getValue(), dataStatus)){
 			return "02";
 		}else{
 			return "01";
 		}
 	}
 	public String getTradeMarketStr(){
-		return SysDataUtil.getNameFromDataDict(DictCode.交易流通场所,getTradeMarket());
+		if(StringUtil.isNotEmpty(getTradeMarket())) {
+			return getTradeMarket() + " " + SysDataUtil.getNameFromDataDict(DictCode.交易流通场所, getTradeMarket());
+		}
+		return getTradeMarket();
 	}
 	/**
 	 * 资产三级类型
 	 * @return
 	 */
 	public String getOrgAssetType3Str() {
-		return SysDataUtil.getNameFromDataDict(DictCode.中债_上游资产三级分类, this.getOrgAssetType3());
+		if(StringUtil.isNotEmpty(this.getOrgAssetType3())) {
+			return this.getOrgAssetType3() + " " + SysDataUtil.getNameFromDataDict(DictCode.中债_上游资产三级分类, this.getOrgAssetType3());
+		}
+		return this.getOrgAssetType3();
 	}
 	public String getOrgAssetType4Str() {
-		return SysDataUtil.getNameFromDataDict(DictCode.中债_上游资产四级分类, this.getOrgAssetType4());
+		if(StringUtil.isNotEmpty(this.getOrgAssetType4())) {
+			return this.getOrgAssetType4() + " " + SysDataUtil.getNameFromDataDict(DictCode.中债_上游资产四级分类, this.getOrgAssetType4());
+		}
+		return this.getOrgAssetType4();
 	}
 	public String getOrgAssetType5Str() {
-		return SysDataUtil.getNameFromDataDict(DictCode.中债_上游资产五级分类, this.getOrgAssetType5());
+		if(StringUtil.isNotEmpty(this.getOrgAssetType5())) {
+			return this.getOrgAssetType5() + " " + SysDataUtil.getNameFromDataDict(DictCode.中债_上游资产五级分类, this.getOrgAssetType5());
+		}
+		return  this.getOrgAssetType5();
 	}
 	public String getCcyStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.币种, this.getCcy());
+		if(StringUtil.isNotEmpty(this.getCcy())) {
+			return this.getCcy() + " " + SysDataUtil.getNameFromDataDict(DictCode.币种, this.getCcy());
+		}
+		return this.getCcy();
 	}
 	public String getbasisStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.计息基础_中债, this.getBasis());
+		if(StringUtil.isNotEmpty(this.getBasis())) {
+			return this.getBasis() + " " + SysDataUtil.getNameFromDataDict(DictCode.计息基础_中债, this.getBasis());
+		}
+		return this.getBasis();
 	}
 	public String getDepoTypeStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.存款类型, this.getDepoType());
+		if(StringUtil.isNotEmpty(this.getDepoType())) {
+			return this.getDepoType() + " " + SysDataUtil.getNameFromDataDict(DictCode.存款类型, this.getDepoType());
+		}
+		return this.getDepoType();
 	}
 	public String getTargetTypeStr() {
 		if(StringUtils.isNotEmpty(this.getTargetType())){
 			StringBuilder sb = new StringBuilder();
 			String[] targetTypes = this.getTargetType().split(",");
-			Stream.of(targetTypes).forEach(e->sb.append(SysDataUtil.getNameFromDataDict(DictCode.标的类别, e)).append(","));
+			Stream.of(targetTypes).forEach(e->sb.append(e + " " + SysDataUtil.getNameFromDataDict(DictCode.标的类别, e)).append(","));
 			return sb.substring(0,sb.lastIndexOf(","));
 		}
 		return null;
 	}
 	public String getChbSectypeStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.具体类别, this.getChbSectype());
+		if(StringUtil.isNotEmpty(this.getChbSectype())) {
+			return this.getChbSectype() + " " + SysDataUtil.getNameFromDataDict(DictCode.具体类别, this.getChbSectype());
+		}
+		return this.getChbSectype();
 	}
 	public String getIssueModeStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.发行方式, this.getIssueMode());
+		if(StringUtil.isNotEmpty(this.getIssueMode())) {
+			return this.getIssueMode() + " " + SysDataUtil.getNameFromDataDict(DictCode.发行方式, this.getIssueMode());
+		}
+		return this.getIssueMode();
 	}
 	public String getSecMainGradeStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.主体评级_中债, this.getSecMainGrade());
+		if(StringUtil.isNotEmpty(this.getSecMainGrade())) {
+			return this.getSecMainGrade() + " " + SysDataUtil.getNameFromDataDict(DictCode.主体评级_中债, this.getSecMainGrade());
+		}
+		return this.getSecMainGrade();
 	}
 	public String getPartyType1Str() {
-		return SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按规模划分, this.getPartyType1());
+		if(StringUtil.isNotEmpty(this.getPartyType1())) {
+			return this.getPartyType1() + " " + SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按规模划分, this.getPartyType1());
+		}
+		return this.getPartyType1();
 	}
 	public String getPartyType2Str() {
-		return SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按经济类型划分, this.getPartyType2());
+		if(StringUtil.isNotEmpty(this.getPartyType2())) {
+			return this.getPartyType2() + " " + SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按经济类型划分, this.getPartyType2());
+		}
+		return this.getPartyType2();
 	}
 	public String getPartyType3Str() {
-		return SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按技术领域划分, this.getPartyType3());
+		if(StringUtil.isNotEmpty(this.getPartyType3())) {
+			return this.getPartyType3() + " " + SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按技术领域划分, this.getPartyType3());
+		}
+		return this.getPartyType3();
 	}
 	public String getIndustryLevel2Str() {
-		return SysDataUtil.getNameFromDataDict(DictCode.机构所属行业二级分类, this.getIndustryLevel2());
+		if(StringUtil.isNotEmpty(this.getIndustryLevel2())) {
+			return this.getIndustryLevel2() + " " + SysDataUtil.getNameFromDataDict(DictCode.机构所属行业二级分类, this.getIndustryLevel2());
+		}
+		return this.getIndustryLevel2();
 	}
 	public String getRegistOrgStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.登记托管机构, this.getRegistOrg());
+		if(StringUtil.isNotEmpty(this.getRegistOrg())) {
+			return this.getRegistOrg() + " " + SysDataUtil.getNameFromDataDict(DictCode.登记托管机构, this.getRegistOrg());
+		}
+		return this.getRegistOrg();
 	}
 	public String getRivalPartyTypeStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.对手方类型, this.getRivalPartyType());
+		if(StringUtil.isNotEmpty(this.getRivalPartyType())) {
+			return this.getRivalPartyType() + " " + SysDataUtil.getNameFromDataDict(DictCode.对手方类型, this.getRivalPartyType());
+		}
+		return this.getRivalPartyType();
 	}
 	public String getTargetType1Str() {
-		return SysDataUtil.getNameFromDataDict(DictCode.回购标的类别, this.getTargetType1());
+		if(StringUtil.isNotEmpty(this.getTargetType1())) {
+			return this.getTargetType1() + " " +  SysDataUtil.getNameFromDataDict(DictCode.回购标的类别, this.getTargetType1());
+		}
+		return this.getTargetType1();
 	}
 	public String getProfitTypeStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.收受益权类型, this.getProfitType());
+		if(StringUtil.isNotEmpty(this.getProfitType())) {
+			return this.getProfitType() + " " +  SysDataUtil.getNameFromDataDict(DictCode.收受益权类型, this.getProfitType());
+		}
+		return this.getProfitType();
 	}
 	public String getIsResaleStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsResale());
+		if(StringUtil.isNotEmpty(this.getIsResale())) {
+			return this.getIsResale() + " " +  SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsResale());
+		}
+		return this.getIsResale();
 	}
 	public String getRateFlagStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getRateFlag());
+		if(StringUtil.isNotEmpty(this.getRateFlag())) {
+			return this.getRateFlag() + " " +  SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getRateFlag());
+		}
+		return this.getRateFlag();
 	}
 	public String getCouponSpeciesStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.计息类型, this.getCouponSpecies());
+		if(StringUtil.isNotEmpty(this.getCouponSpecies())) {
+			return this.getCouponSpecies() + " " +  SysDataUtil.getNameFromDataDict(DictCode.计息类型, this.getCouponSpecies());
+		}
+		return this.getCouponSpecies();
 	}
 	public String getInterestRuleFlagStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getInterestRuleFlag());
+		if(StringUtil.isNotEmpty(this.getInterestRuleFlag())) {
+			return this.getInterestRuleFlag() + " " +  SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getInterestRuleFlag());
+		}
+		return this.getInterestRuleFlag();
 	}
 	public String getIntpayRuleStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.利息分布方式, this.getIntpayRule());
+		if(StringUtil.isNotEmpty(this.getIntpayRule())) {
+			return this.getIntpayRule() + " " +  SysDataUtil.getNameFromDataDict(DictCode.利息分布方式, this.getIntpayRule());
+		}
+		return this.getIntpayRule();
 	}
 	public String getBasisTypeStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.基准利率, this.getBasisType());
+		if(StringUtil.isNotEmpty(this.getBasisType())) {
+			return this.getBasisType() + " " +  SysDataUtil.getNameFromDataDict(DictCode.基准利率, this.getBasisType());
+		}
+		return this.getBasisType();
 	}
 	public String getFloatFactorFlagStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getFloatFactorFlag());
+		if(StringUtil.isNotEmpty(this.getFloatFactorFlag())) {
+			return this.getFloatFactorFlag() + " " +  SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getFloatFactorFlag());
+		}
+		return this.getFloatFactorFlag();
 	}
 	public String getStructGradeStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.结构档次, this.getStructGrade());
+		if(StringUtil.isNotEmpty(this.getStructGrade())) {
+			return this.getStructGrade() + " " +  SysDataUtil.getNameFromDataDict(DictCode.结构档次, this.getStructGrade());
+		}
+		return this.getStructGrade();
 	}
 	public String getRepaymentTypeStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.还本方式, this.getRepaymentType());
+		if(StringUtil.isNotEmpty(this.getRepaymentType())) {
+			return this.getRepaymentType() + " " +  SysDataUtil.getNameFromDataDict(DictCode.还本方式, this.getRepaymentType());
+		}
+		return this.getRepaymentType();
 	}
 	public String getPeriodRepaymentFlagStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.分期还本条款标识, this.getPeriodRepaymentFlag());
+		if(StringUtil.isNotEmpty(this.getPeriodRepaymentFlag())) {
+			return this.getPeriodRepaymentFlag() + " " +  SysDataUtil.getNameFromDataDict(DictCode.分期还本条款标识, this.getPeriodRepaymentFlag());
+		}
+		return this.getPeriodRepaymentFlag();
 	}
 	public String getFinancierType1Str() {
-		return SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按规模划分, this.getFinancierType1());
+		if(StringUtil.isNotEmpty(this.getFinancierType1())) {
+			return this.getFinancierType1() + " " +  SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按规模划分, this.getFinancierType1());
+		}
+		return this.getFinancierType1();
 	}
 	public String getFinancierType2Str() {
-		return SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按经济类型划分, this.getFinancierType2());
+		if(StringUtil.isNotEmpty(this.getFinancierType2())) {
+			return this.getFinancierType2() + " " +  SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按经济类型划分, this.getFinancierType2());
+		}
+		return this.getFinancierType2();
 	}
 	public String getFinancierType3Str() {
-		return SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按技术领域划分, this.getFinancierType3());
+		if(StringUtil.isNotEmpty(this.getFinancierType3())) {
+			return this.getFinancierType3() + " " +  SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按技术领域划分, this.getFinancierType3());
+		}
+		return this.getFinancierType3();
 	}
 	public String getProIndustryLevel2Str() {
-		return SysDataUtil.getNameFromDataDict(DictCode.机构所属行业二级分类, this.getProIndustryLevel2());
+		if(StringUtil.isNotEmpty(this.getProIndustryLevel2())) {
+			return this.getProIndustryLevel2() + " " + SysDataUtil.getNameFromDataDict(DictCode.机构所属行业二级分类, this.getProIndustryLevel2());
+		}
+		return this.getProIndustryLevel2();
 	}
 	public String getIndustryFlagStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIndustryFlag());
+		if(StringUtil.isNotEmpty(this.getIndustryFlag())) {
+			return this.getIndustryFlag() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIndustryFlag());
+		}
+		return this.getIndustryFlag();
 	}
 	public String getMonitTypeStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.重点监控行业和领域类别, this.getMonitType());
+		if(StringUtil.isNotEmpty(this.getMonitType())) {
+			return this.getMonitType() + " " + SysDataUtil.getNameFromDataDict(DictCode.重点监控行业和领域类别, this.getMonitType());
+		}
+		return this.getMonitType();
 	}
 	public String getGuaTypeStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.担保方式, this.getGuaType());
+		if(StringUtil.isNotEmpty(this.getGuaType())) {
+			return this.getGuaType() + " " + SysDataUtil.getNameFromDataDict(DictCode.担保方式, this.getGuaType());
+		}
+		return this.getGuaType();
 	}
 	public String getPledgeTypeStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.抵质押物类型, this.getPledgeType());
+		if(StringUtil.isNotEmpty(this.getPledgeType())) {
+			return this.getPledgeType() + " " + SysDataUtil.getNameFromDataDict(DictCode.抵质押物类型, this.getPledgeType());
+		}
+		return this.getPledgeType();
 	}
 	public String getNatureGuaranteeStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.担保性质, this.getNatureGuarantee());
+		if(StringUtil.isNotEmpty(this.getNatureGuarantee())) {
+			return this.getNatureGuarantee() + " " + SysDataUtil.getNameFromDataDict(DictCode.担保性质, this.getNatureGuarantee());
+		}
+		return this.getNatureGuarantee();
 	}
 	public String getRelationFinanStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.担保人与融资人关系, this.getRelationFinan());
+		if(StringUtil.isNotEmpty(this.getRelationFinan())) {
+			return this.getRelationFinan() + " " + SysDataUtil.getNameFromDataDict(DictCode.担保人与融资人关系, this.getRelationFinan());
+		}
+		return this.getRelationFinan();
 	}
 	public String getFinancierGradeStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.资产评级, this.getFinancierGrade());
+		if(StringUtil.isNotEmpty(this.getFinancierGrade())) {
+			return this.getFinancierGrade() + " " + SysDataUtil.getNameFromDataDict(DictCode.资产评级, this.getFinancierGrade());
+		}
+		return this.getFinancierGrade();
 	}
 	public String getOutGradeStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.资产评级, this.getOutGrade());
+		if(StringUtil.isNotEmpty(this.getOutGrade())) {
+			return this.getOutGrade() + " " + SysDataUtil.getNameFromDataDict(DictCode.资产评级, this.getOutGrade());
+		}
+		return this.getOutGrade();
 	}
 	public String getContainTypeStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.含权类型, this.getContainType());
+		if(StringUtil.isNotEmpty(this.getContainType())) {
+			return this.getContainType() + " " + SysDataUtil.getNameFromDataDict(DictCode.含权类型, this.getContainType());
+		}
+		return this.getContainType();
 	}
 	public String getExerciseTypeStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.资产行权方式, this.getExerciseType());
+		if(StringUtil.isNotEmpty(this.getExerciseType())) {
+			return this.getExerciseType() + " " + SysDataUtil.getNameFromDataDict(DictCode.资产行权方式, this.getExerciseType());
+		}
+		return this.getExerciseType();
 	}
 	public String getPerpetualClauseTypeStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.永续条款类型, this.getPerpetualClauseType());
+		if(StringUtil.isNotEmpty(this.getPerpetualClauseType())) {
+			return this.getPerpetualClauseType() + " " + SysDataUtil.getNameFromDataDict(DictCode.永续条款类型, this.getPerpetualClauseType());
+		}
+		return this.getPerpetualClauseType();
 	}
 	public String getDeferredInterestTypeStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.利息递延条款类型, this.getDeferredInterestType());
+		if(StringUtil.isNotEmpty(this.getDeferredInterestType())) {
+			return this.getDeferredInterestType() + " " + SysDataUtil.getNameFromDataDict(DictCode.利息递延条款类型, this.getDeferredInterestType());
+		}
+		return this.getDeferredInterestType();
 	}
 	public String getDeferredInterestIntStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getDeferredInterestInt());
+		if(StringUtil.isNotEmpty(this.getDeferredInterestInt())) {
+			return this.getDeferredInterestInt() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getDeferredInterestInt());
+		}
+		return this.getDeferredInterestInt();
 	}
 	public String getPartRedemFlagStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getPartRedemFlag());
+		if(StringUtil.isNotEmpty(this.getPartRedemFlag())) {
+			return this.getPartRedemFlag() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getPartRedemFlag());
+		}
+		return this.getPartRedemFlag();
 	}
 	public String getFinAreaStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.行政区划_省市县, this.getFinArea());
+		if(StringUtil.isNotEmpty(this.getFinArea())) {
+			return this.getFinArea() + " " + SysDataUtil.getNameFromDataDict(DictCode.行政区划_省市县, this.getFinArea());
+		}
+		return this.getFinArea();
 	}
 	public String getIsRightStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsRight());
+		if(StringUtil.isNotEmpty(this.getIsRight())) {
+			return this.getIsRight() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsRight());
+		}
+		return this.getIsRight();
 	}
 	public String getNotstandSecTypeStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.票据类信用证类资产类型, this.getNotstandSecType());
+		if(StringUtil.isNotEmpty(this.getNotstandSecType())) {
+			return this.getNotstandSecType() + " " + SysDataUtil.getNameFromDataDict(DictCode.票据类信用证类资产类型, this.getNotstandSecType());
+		}
+		return this.getNotstandSecType();
 	}
 	public String getIsBzhpjStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsBzhpj());
+		if(StringUtil.isNotEmpty(this.getIsBzhpj())) {
+			return this.getIsBzhpj() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsBzhpj());
+		}
+		return this.getIsBzhpj();
 	}
 	public String getIndustryShares2Str() {
-		return SysDataUtil.getNameFromDataDict(DictCode.机构所属行业二级分类, this.getIndustryShares2());
+		if(StringUtil.isNotEmpty(this.getIndustryShares2())) {
+			return this.getIndustryShares2() + " " + SysDataUtil.getNameFromDataDict(DictCode.机构所属行业二级分类, this.getIndustryShares2());
+		}
+		return this.getIndustryShares2();
 	}
 	public String getSharesTypeStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.股票类型, this.getSharesType());
+		if(StringUtil.isNotEmpty(this.getSharesType())) {
+			return this.getSharesType() + " " + SysDataUtil.getNameFromDataDict(DictCode.股票类型, this.getSharesType());
+		}
+		return this.getSharesType();
 	}
 	public String getInvestStageStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.投资阶段, this.getInvestStage());
+		if(StringUtil.isNotEmpty(this.getInvestStage())) {
+			return this.getInvestStage() + " " + SysDataUtil.getNameFromDataDict(DictCode.投资阶段, this.getInvestStage());
+		}
+		return this.getInvestStage();
 	}
 	public String getSharesType1Str() {
-		return SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按规模划分, this.getSharesType1());
+		if(StringUtil.isNotEmpty(this.getSharesType1())) {
+			return this.getSharesType1() + " " + SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按规模划分, this.getSharesType1());
+		}
+		return this.getSharesType1();
 	}
 	public String getSharesType3Str() {
-		return SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按技术领域划分, this.getSharesType3());
+		if(StringUtil.isNotEmpty(this.getSharesType3())) {
+			return this.getSharesType3() + " " + SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按技术领域划分, this.getSharesType3());
+		}
+		return this.getSharesType3();
 	}
 	public String getSharesType2Str() {
-		return SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按经济类型划分, this.getSharesType2());
+		if(StringUtil.isNotEmpty(this.getSharesType2())) {
+			return this.getSharesType2() + " " + SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按经济类型划分, this.getSharesType2());
+		}
+		return this.getSharesType2();
 	}
 	public String getIsPledgeStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsPledge());
+		if(StringUtil.isNotEmpty(this.getIsPledge())) {
+			return this.getIsPledge() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsPledge());
+		}
+		return this.getIsPledge();
 	}
 	public String getDeptEquityStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getDeptEquity());
+		if(StringUtil.isNotEmpty(this.getDeptEquity())) {
+			return this.getDeptEquity() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getDeptEquity());
+		}
+		return this.getDeptEquity();
 	}
 	public String getTargetType3Str() {
-		return SysDataUtil.getNameFromDataDict(DictCode.标的类别, this.getTargetType3());
+		if(StringUtil.isNotEmpty(this.getTargetType3())) {
+			return this.getTargetType3() + " " + SysDataUtil.getNameFromDataDict(DictCode.标的类别, this.getTargetType3());
+		}
+		return this.getTargetType3();
 	}
 	public String getHoldPurposeStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.持有目的, this.getHoldPurpose());
+		if(StringUtil.isNotEmpty(this.getHoldPurpose())) {
+			return this.getHoldPurpose() + " " + SysDataUtil.getNameFromDataDict(DictCode.持有目的, this.getHoldPurpose());
+		}
+		return this.getHoldPurpose();
 	}
 	public String getCountryAreaStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.所属国家或地区, this.getCountryArea());
+		if(StringUtil.isNotEmpty(this.getCountryArea())) {
+			return this.getCountryArea() + " " + SysDataUtil.getNameFromDataDict(DictCode.所属国家或地区, this.getCountryArea());
+		}
+		return this.getCountryArea();
 	}
 	public String getPartyGradeStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.资产评级, this.getPartyGrade());
+		if(StringUtil.isNotEmpty(this.getPartyGrade())) {
+			return this.getPartyGrade() + " " + SysDataUtil.getNameFromDataDict(DictCode.资产评级, this.getPartyGrade());
+		}
+		return this.getPartyGrade();
 	}
 	public String getFinancialProductFlagStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getFinancialProductFlag());
+		if(StringUtil.isNotEmpty(this.getFinancialProductFlag())) {
+			return this.getFinancialProductFlag() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getFinancialProductFlag());
+		}
+		return this.getFinancialProductFlag();
 	}
 	public String getFinancialComissueStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getFinancialComissue());
+		if(StringUtil.isNotEmpty(this.getFinancialComissue())) {
+			return this.getFinancialComissue() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getFinancialComissue());
+		}
+		return this.getFinancialComissue();
 	}
 	public String getTruActTypeStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.资金实际投向, this.getTruActType());
+		if(StringUtil.isNotEmpty(this.getTruActType())) {
+			return this.getTruActType() + " " + SysDataUtil.getNameFromDataDict(DictCode.资金实际投向, this.getTruActType());
+		}
+		return this.getTruActType();
 	}
 	public String getCapUseInduLevel2Str() {
-		return SysDataUtil.getNameFromDataDict(DictCode.机构所属行业二级分类, this.getCapUseInduLevel2());
+		if(StringUtil.isNotEmpty(this.getCapUseInduLevel2())) {
+			return this.getCapUseInduLevel2() + " " + SysDataUtil.getNameFromDataDict(DictCode.机构所属行业二级分类, this.getCapUseInduLevel2());
+		}
+		return this.getCapUseInduLevel2();
 	}
 	public String getProPropertyStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.资管计划属性, this.getProProperty());
+		if(StringUtil.isNotEmpty(this.getProProperty())) {
+			return this.getProProperty() + " " + SysDataUtil.getNameFromDataDict(DictCode.资管计划属性, this.getProProperty());
+		}
+		return this.getProProperty();
 	}
 	public String getBuyStructStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.购买结构, this.getBuyStruct());
+		if(StringUtil.isNotEmpty(this.getBuyStruct())) {
+			return this.getBuyStruct() + " " + SysDataUtil.getNameFromDataDict(DictCode.购买结构, this.getBuyStruct());
+		}
+		return this.getBuyStruct();
 	}
 	public String getManageTypeStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.管理方式, this.getManageType());
+		if(StringUtil.isNotEmpty(this.getManageType())) {
+			return this.getManageType() + " " + SysDataUtil.getNameFromDataDict(DictCode.管理方式, this.getManageType());
+		}
+		return this.getManageType();
 	}
 	public String getInAssetTypeStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.行内资产类别, this.getInAssetType());
+		if(StringUtil.isNotEmpty(this.getInAssetType())) {
+			return this.getInAssetType() + " " + SysDataUtil.getNameFromDataDict(DictCode.行内资产类别, this.getInAssetType());
+		}
+		return this.getInAssetType();
 	}
 	public String getRegistOrg1Str() {
-		return SysDataUtil.getNameFromDataDict(DictCode.登记备案机构, this.getRegistOrg1());
+		if(StringUtil.isNotEmpty(this.getRegistOrg1())) {
+			return this.getRegistOrg1() + " " + SysDataUtil.getNameFromDataDict(DictCode.登记备案机构, this.getRegistOrg1());
+		}
+		return this.getRegistOrg1();
 	}
 	public String getProfitFlagStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getProfitFlag());
+		if(StringUtil.isNotEmpty(this.getProfitFlag())) {
+			return this.getProfitFlag() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getProfitFlag());
+		}
+		return this.getProfitFlag();
 	}
 	public String getIsGovernFundStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsGovernFund());
+		if(StringUtil.isNotEmpty(this.getIsGovernFund())) {
+			return this.getIsGovernFund() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsGovernFund());
+		}
+		return this.getIsGovernFund();
 	}
 	public String getGovernInvestFundStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.政府投资基金投向, this.getGovernInvestFund());
+		if(StringUtil.isNotEmpty(this.getGovernInvestFund())) {
+			return this.getGovernInvestFund() + " " + SysDataUtil.getNameFromDataDict(DictCode.政府投资基金投向, this.getGovernInvestFund());
+		}
+		return this.getGovernInvestFund();
 	}
 	public String getIsDepositFlagStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsDepositFlag());
+		if(StringUtil.isNotEmpty(this.getIsDepositFlag())) {
+			return this.getIsDepositFlag() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsDepositFlag());
+		}
+		return this.getIsDepositFlag();
 	}
 	public String getPppflagStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getPppflag());
+		if(StringUtil.isNotEmpty(this.getPppflag())) {
+			return this.getPppflag() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getPppflag());
+		}
+		return this.getPppflag();
 	}
 	public String getBankSecZxzqStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getBankSecZxzq());
+		if(StringUtil.isNotEmpty(this.getBankSecZxzq())) {
+			return this.getBankSecZxzq() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getBankSecZxzq());
+		}
+		return this.getBankSecZxzq();
 	}
 	public String getIsBankCapStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsBankCap());
+		if(StringUtil.isNotEmpty(this.getIsBankCap())) {
+			return this.getIsBankCap() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsBankCap());
+		}
+		return this.getIsBankCap();
 	}
 	public String getBankCapitalStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.中债月度明细_银行资本补充工具, this.getBankCapital());
+		if(StringUtil.isNotEmpty(this.getBankCapital())) {
+			return this.getBankCapital() + " " + SysDataUtil.getNameFromDataDict(DictCode.中债月度明细_银行资本补充工具, this.getBankCapital());
+		}
+		return this.getBankCapital();
 	}
 	public String getBondtostockFlagStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getBondtostockFlag());
+		if(StringUtil.isNotEmpty(this.getBondtostockFlag())) {
+			return this.getBondtostockFlag() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getBondtostockFlag());
+		}
+		return this.getBondtostockFlag();
 	}
 	public String getPrivatefundFlagStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getPrivatefundFlag());
+		if(StringUtil.isNotEmpty(this.getPrivatefundFlag())) {
+			return this.getPrivatefundFlag() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getPrivatefundFlag());
+		}
+		return this.getPrivatefundFlag();
 	}
 	public String getIsunlistedStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsunlisted());
+		if(StringUtil.isNotEmpty(this.getIsunlisted())) {
+			return this.getIsunlisted() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsunlisted());
+		}
+		return this.getIsunlisted();
 	}
 	public String getPrivateprdFlagStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getPrivateprdFlag());
+		if(StringUtil.isNotEmpty(this.getPrivateprdFlag())) {
+			return this.getPrivateprdFlag() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getPrivateprdFlag());
+		}
+		return this.getPrivateprdFlag();
 	}
 	public String getPrivateFlagStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getPrivateFlag());
+		if(StringUtil.isNotEmpty(this.getPrivateFlag())) {
+			return this.getPrivateFlag() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getPrivateFlag());
+		}
+		return this.getPrivateFlag();
 	}
 	public String getPbcAssetType1Str() {
-		return SysDataUtil.getNameFromDataDict(DictCode.人行资产一级分类, this.getPbcAssetType1());
+		if(StringUtil.isNotEmpty(this.getPbcAssetType1())) {
+			return this.getPbcAssetType1() + " " + SysDataUtil.getNameFromDataDict(DictCode.人行资产一级分类, this.getPbcAssetType1());
+		}
+		return this.getPbcAssetType1();
 	}
 	public String getPbcAssetType2Str() {
-		return SysDataUtil.getNameFromDataDict(DictCode.人行资产二级分类, this.getPbcAssetType2());
+		if(StringUtil.isNotEmpty(this.getPbcAssetType2())) {
+			return this.getPbcAssetType2() + " " + SysDataUtil.getNameFromDataDict(DictCode.人行资产二级分类, this.getPbcAssetType2());
+		}
+		return this.getPbcAssetType2();
 	}
 	public String getPbcAssetType3Str() {
-		return SysDataUtil.getNameFromDataDict(DictCode.人行资产三级分类, this.getPbcAssetType3());
+		if(StringUtil.isNotEmpty(this.getPbcAssetType3())) {
+			return this.getPbcAssetType3() + " " + SysDataUtil.getNameFromDataDict(DictCode.人行资产三级分类, this.getPbcAssetType3());
+		}
+		return this.getPbcAssetType3();
 	}
 	public String getIsConstracteBusiStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsConstracteBusi());
+		if(StringUtil.isNotEmpty(this.getIsConstracteBusi())) {
+			return this.getIsConstracteBusi() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsConstracteBusi());
+		}
+		return this.getIsConstracteBusi();
 	}
 	public String getConstracteBusiTypeStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.结构化业务类型, this.getConstracteBusiType());
+		if(StringUtil.isNotEmpty(this.getConstracteBusiType())) {
+			return this.getConstracteBusiType() + " " + SysDataUtil.getNameFromDataDict(DictCode.结构化业务类型, this.getConstracteBusiType());
+		}
+		return this.getConstracteBusiType();
 	}
 	public String getConstracteGradeStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.结构化层级, this.getConstracteGrade());
+		if(StringUtil.isNotEmpty(this.getConstracteGrade())) {
+			return this.getConstracteGrade() + " " + SysDataUtil.getNameFromDataDict(DictCode.结构化层级, this.getConstracteGrade());
+		}
+		return this.getConstracteGrade();
 	}
 	public String getAmt01() {
 		return amt01;
