@@ -272,14 +272,10 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
         Map<String,String> institMap = institList.stream().collect(HashMap<String,String>::new,
                 (map, item)->map.put(item.getCustomerId(), item.getPartyType1()), (m, n)->m.putAll(n));
 
-
-//        //获取市场机构名称
-//        List<MstCustomerInfo> customerInfoList = svrMstCustomerInfoAddImpMapper.getAllMstCustomerInfoList();
-//        Map<String,MstCustomerInfo> customerInfoMap = new HashMap<>();
-//        for(MstCustomerInfo customerInfo:customerInfoList){
-//            String customerId = customerInfo.getCustomerId();
-//            customerInfoMap.put(customerId,customerInfo);
-//        }
+        //获取融资人信息
+        List<MstCustomerInfo> customerList = svrMstCustomerInfoAddImpMapper.getAllCustomerInfo();
+        Map<String,String> customerMap = customerList.stream().collect(HashMap<String,String>::new,
+                (map, item)->map.put(item.getCustomerName(), item.getCustomerId()), (m, n)->m.putAll(n));
 
         //获取行业二级分类与一级分类的映射关系
         List<SysDatadictListLink> industrySharesList = svrMstCustomerInfoAddImpMapper.getAllIndustryShares();
@@ -296,6 +292,14 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
                     chbAssetInfo.setCustomerObjType(customerType);
                 }
             }
+
+            //处理融资人 FINANCIE
+            if(StringUtil.isNotEmpty(chbAssetInfo.getFinancie())){
+                 if(customerMap.get(chbAssetInfo.getFinancie()) != null){
+                     chbAssetInfo.setFinancie(customerMap.get(chbAssetInfo.getFinancie()));
+                 }
+            }
+
             //处理行业一级分类
             if(StringUtil.isNotEmpty(chbAssetInfo.getIndustryShares2())){
                 if(!StringUtil.isNotEmpty(chbAssetInfo.getIndustryShares())){
@@ -348,12 +352,6 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
                     chbAssetInfo.setTrusteeId(this.subDictcode(chbAssetInfo.getTruOrgName(), " "));
                 }
             }
-//            //机构名称处理
-//            if(StringUtil.isNotEmpty(chbAssetInfo.getIssuePartyName())){
-//                if(customerInfoMap.get(chbAssetInfo.getIssuePartyName()) != null){
-//                    chbAssetInfo.setIssuePartyName(customerInfoMap.get(chbAssetInfo.getIssuePartyName()).getCustomerName());
-//                }
-//            }
 
             // 映射人行资产一级二级三级分类
             ChbAssetInfoInterf.convertPbcAssetType(chbAssetInfo,counterPartyMap);

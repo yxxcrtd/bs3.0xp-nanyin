@@ -82,11 +82,16 @@
     LEFT JOIN MST_CUSTOMER_INFO B ON A.CUSTOMER_ID = B.CUSTOMER_ID
     where 1=1
   </select>
-  <select id="getAllMstCustomerInfoList" parameterType="com.joyintech.tams.common.base.entity.MstCustomerInfo" resultType="com.joyintech.tams.common.base.entity.MstCustomerInfo">
+  <select id="getAllCustomerInfo"  resultType="com.joyintech.tams.common.base.entity.MstCustomerInfo">
     SELECT
-    CUSTOMER_ID customerId,
-    CUSTOMER_NAME customerName
-    FROM MST_CUSTOMER_INFO
+    t1.CUSTOMER_ID as customerId,
+    t1.CUSTOMER_NAME as customerName
+    FROM
+    MST_CUSTOMER_INFO t1
+    INNER JOIN
+    MST_CUSTOMER_INFO_ADD t2
+    ON
+    t1.CUSTOMER_ID = t2.CUSTOMER_ID
   </select>
 
   <select id="getAllIndustryShares"  resultType="com.joyintech.system.base.entity.SysDatadictListLink">

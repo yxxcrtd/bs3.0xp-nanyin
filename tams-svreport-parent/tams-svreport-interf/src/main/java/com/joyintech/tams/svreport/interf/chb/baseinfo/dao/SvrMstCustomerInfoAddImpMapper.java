@@ -43,7 +43,7 @@ public interface SvrMstCustomerInfoAddImpMapper {
      * 查询所有发行机构信息
      * @return
      */
-    List<MstCustomerInfo> getAllMstCustomerInfoList();
+    List<MstCustomerInfo> getAllCustomerInfo();
 
     //获取行业二级分类与一级分类的映射关系
     List<SysDatadictListLink> getAllIndustryShares();
