@@ -163,7 +163,7 @@
         data.pageId='SvrPerProDeclareInfo002';
         Joyin.ajaxJson(basePath + 'basicdata/perprodeclareinfo/SvrPerProDeclareInfo001/check', data, function(result) {
             Joyin.confirm("请确认是否修改?", function(){
-                Joyin.dialog(JoyinUtil.getLabel("SvrPerProDeclareInfo002"),
+                Joyin.dialog(JoyinUtil.getLabel("产品申报信息登记维护编辑"),
                     basePath + "basicdata/perprodeclareinfo/SvrPerProDeclareInfo002/init",
                     "98%", "95%",data,
                     function(){table.reload();});
