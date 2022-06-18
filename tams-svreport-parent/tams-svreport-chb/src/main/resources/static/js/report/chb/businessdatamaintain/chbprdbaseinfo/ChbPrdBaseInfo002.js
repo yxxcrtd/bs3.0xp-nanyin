@@ -88,7 +88,16 @@
         }
         init+=1;
     });
-
+    $("#operateMode").change(function (){
+        var operateMode = $('#operateMode').val();
+        if(operateMode=='01'||operateMode=='02'){
+            $('#openMode').val('').trigger('change').attr('disabled','disabled');
+            $('#openCircle').val('').trigger('change').attr('disabled','disabled');
+        }else{
+            $('#openMode').removeAttr('disabled');
+            $('#openCircle').removeAttr('disabled');
+        }
+    })
     $('#isConstracte').change(function (){
         var isConstracte = $('#isConstracte').val();
         if(isConstracte=='02'){
