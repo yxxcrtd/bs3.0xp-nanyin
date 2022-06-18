@@ -242,28 +242,37 @@ public class CommonCodeCheckBatchService {
 
     private void checkChbInvestTrade(List<ExcelValidDto> excelValidDtoList, Map<String, String> dataMap, int i) {
         String  errMsg=dataMap.getOrDefault("ERRMSG", "");
+        StringBuilder sb = new StringBuilder();
+        String assetCode = dataMap.get("ASSET_CODE");
         if(!errMsg.equals("重复数据;")){
+            if(commonCodeCheckMapper.checkExistsAssetCode(assetCode)<1){
+                sb.append("行内资产/负债编码不存在；");
+            }
             try {
                 if(dataMap.get("CCY").equals("CNY")){
                     if(!dataMap.get("AMT").equals(dataMap.get("CNY_AMT"))){
-                        errMsg+="当币种选择人民币时，发生金额必须等于折算人民币金额";
-                        dataMap.put("ERRMSG",errMsg);
-                        if(excelValidDtoList !=null){
-                            if(excelValidDtoList.size()>0){
-                                for (ExcelValidDto excelValidDto : excelValidDtoList) {
-                                    if(excelValidDto.getRowNum().equals(String.valueOf(i+2))){
-                                        excelValidDto.setErrorInfo(errMsg);
-                                        break;
-                                    }
-                                }
-                            }else{
-                                excelValidDtoList.add(new ExcelValidDto("导入成功",String.valueOf(i+2),errMsg));
-                            }
-                        }
+                        sb.append("当币种选择人民币时，发生金额必须等于折算人民币金额；");
                     }
                 }
             } catch (Exception e) {
             }
+            if(StringUtils.isEmpty(errMsg)){
+                if(StringUtils.isNotEmpty(sb.toString())&&excelValidDtoList!=null){
+                    excelValidDtoList.add(new ExcelValidDto("导入成功",String.valueOf((i+2)),sb.toString()));
+                }
+            }else{
+                if(StringUtils.isNotEmpty(sb.toString())&& excelValidDtoList!=null){
+                    if(excelValidDtoList.size()>0){
+                        for (ExcelValidDto excelValidDto : excelValidDtoList) {
+                            if(excelValidDto.getRowNum().equals(String.valueOf((i+2)))){
+                                excelValidDto.setErrorInfo(errMsg+sb.toString());
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            dataMap.put("ERRMSG",errMsg+sb.toString());
         }
         Collections.sort(excelValidDtoList,new Comparator<ExcelValidDto>() {
             @Override
@@ -647,6 +656,13 @@ public class CommonCodeCheckBatchService {
         if(StringUtil.isEmptyList(chbInvestTradeErrordataList)){
 
         }else{
+            Iterator<ChbInvestTradeErrodataWithBLOBs> iterator = chbInvestTradeErrordataList.iterator();
+            while(iterator.hasNext()){
+                ChbInvestTradeErrodataWithBLOBs next = iterator.next();
+                if(StringUtils.isEmpty(next.getProdId())||StringUtils.isEmpty(next.getAssetCode())||StringUtils.isEmpty(next.getTradeCode())){
+                    iterator.remove();
+                }
+            }
             if(!flag.equals("D")&&coverFlag.equals("N")){
                 removeExistsChbInvestTrade(chbInvestTradeErrordataList);
             }
@@ -700,6 +716,44 @@ public class CommonCodeCheckBatchService {
                         }
                     }
                     break;
+                case "CHB_PRD_BASEINFO":
+                    for(int i = 0;i<list.size();i++){
+                        if(StringUtils.isEmpty(list.get(i).get("PROD_ID"))){
+                            for (ExcelValidDto dto : excelValidDtoList) {
+                                if(dto.getRowNum().equals(String.valueOf(i+2))){
+                                    dto.setValidKey("导入失败");
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case "CHB_PRD_DECLARE_INFO":
+                    for(int i = 0;i<list.size();i++){
+                        if(StringUtils.isEmpty(list.get(i).get("PROD_INS_ID"))){
+                            for (ExcelValidDto dto : excelValidDtoList) {
+                                if(dto.getRowNum().equals(String.valueOf(i+2))){
+                                    dto.setValidKey("导入失败");
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case "CHB_INVEST_TRADE":
+                    for(int i = 0;i<list.size();i++){
+                        if(StringUtils.isEmpty(list.get(i).get("PROD_ID"))||
+                                StringUtils.isEmpty(list.get(i).get("TRADE_CODE"))||
+                                StringUtils.isEmpty(list.get(i).get("ASSET_CODE"))){
+                            for (ExcelValidDto dto : excelValidDtoList) {
+                                if(dto.getRowNum().equals(String.valueOf(i+2))){
+                                    dto.setValidKey("导入失败");
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    break;
             }
 
         }
@@ -740,6 +794,8 @@ public class CommonCodeCheckBatchService {
         try {
             CommonCodeCheckMapper batchMapper = session.getMapper(CommonCodeCheckMapper.class);
             batchMapper.deleteChbPrdDeclareInfo(chbPrdDeclareInfoErrodataList);
+            session.commit();
+            session.clearCache();
         }
         catch (Exception e) {
             session.rollback();
@@ -876,6 +932,8 @@ public class CommonCodeCheckBatchService {
         try {
             CommonCodeCheckMapper batchMapper = session.getMapper(CommonCodeCheckMapper.class);
             batchMapper.deleteChbInvestTrade(chbInvestTradeErrordataList);
+            session.commit();
+            session.clearCache();
         }
         catch (Exception e) {
             session.rollback();
@@ -891,6 +949,8 @@ public class CommonCodeCheckBatchService {
         try {
             CommonCodeCheckMapper batchMapper = session.getMapper(CommonCodeCheckMapper.class);
             batchMapper.deleteChbPrdBaseInfo(chbPrdBaseinfoErrordataList);
+            session.commit();
+            session.clearCache();
         }
         catch (Exception e) {
             session.rollback();
@@ -2168,7 +2228,7 @@ public class CommonCodeCheckBatchService {
                     }
                 }
             }
-            dataMap.put("ERRMSG", errMsg);
+            dataMap.put("ERRMSG", temp+errMsg);
         }
         Collections.sort(excelValidDtoList,new Comparator<ExcelValidDto>() {
             @Override

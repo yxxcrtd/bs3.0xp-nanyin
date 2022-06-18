@@ -202,4 +202,7 @@
         and DATASOURCE !='D'
         and STATUS = 'E'
     </select>
+    <select id="checkExistsAssetCode" resultType="java.lang.Integer">
+        select count(1) from CHB_ASSET_INFO where ASSET_CODE = #{assetCode} and STATUS = 'E'
+    </select>
 </mapper>
