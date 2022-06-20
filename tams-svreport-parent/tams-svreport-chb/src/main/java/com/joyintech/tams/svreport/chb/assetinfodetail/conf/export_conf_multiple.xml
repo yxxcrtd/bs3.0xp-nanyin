@@ -299,7 +299,7 @@
 			<Cell order="295" name="是否投向金融资产投资公司或其附属机构发行的私募股权投资基金">privatefundFlagStr</Cell>
 			<Cell order="296" name="是否政府出资产业投资基金">isunlisted</Cell>
 			<Cell order="297" name="是否投向金融资产投资公司发行的私募资产管理产品">privateprdFlag</Cell>
-			<Cell order="298" name="是否投向地方政府融资平台">privateFlag</Cell>
+			<Cell order="298" name="是否投向地方政府融资平台">privateFlagStr</Cell>
 			<Cell order="299" name="人行资产一级分类">pbcAssetType1Str</Cell>
 			<Cell order="300" name="人行资产二级分类">pbcAssetType2Str</Cell>
 			<Cell order="301" name="人行资产三级分类">pbcAssetType3Str</Cell>
