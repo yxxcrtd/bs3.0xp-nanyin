@@ -150,6 +150,7 @@ $(function() {
             Joyin.exportExcel("export",param);
         }
         else{
+            var sendStatu='';
         	if(flag=="0")
         		{
         		if(expArr.length >1){
@@ -157,6 +158,7 @@ $(function() {
         			return;
         		}
         	for(var i=0;i<expArr.length;i++){
+                sendStatu=expArr[i].sendStatus;
         		if(expArr[i].status=="03"){
         			Joyin.error("只能导出新建或修改状态的数据，请重新选择");
         			return;
@@ -169,14 +171,16 @@ $(function() {
             param.flag = flag;
             param.exportflag = 'exportSelected';
             Joyin.exportExcel('export', param);
-            Joyin.confirm("导出成功，是否自动标识未报送数据的报送状态为“手工处理”？", function() {
-        		//页面添加滚动条
-        		layui.layer.open({type:3});
-        		Joyin.ajaxJson('doManual', param, function() {
-        			table.load();
-        			layui.layer.closeAll();
-        		});
-        	});
+            if(sendStatu=='01'||sendStatu==''){
+                Joyin.confirm("导出成功，是否自动标识未报送数据的报送状态为“手工处理”？", function() {
+                    //页面添加滚动条
+                    layui.layer.open({type:3});
+                    Joyin.ajaxJson('doManual', param, function() {
+                        table.load();
+                        layui.layer.closeAll();
+                    });
+                });
+            }
         }
         
     };
