@@ -7,21 +7,21 @@
      */
         var informationform = function() {
             return $.serializeToObject('#informationForm');
-        } 
-        
-
-        $('#prodInsId').change(function (){
-            var prodInsId = $('#prodInsId').val();
-            if(prodInsId!=null && prodInsId !=''){
-                Joyin.ajax(basePath+"svreport/system/proregistcodemanage/ProRegistCodeManage003/getProdNameByProdInsId",{prodInsId:prodInsId},function (result){
-                    $('#prodName').val(result);
-                    $('#prodId').val(prodInsId);
-                });
-            }else{
-                $('#prodName').val('');
-                $('#prodId').val('');
-            }
-        });
+        }
+        if(pageModel!=2){
+            $('#prodInsId').change(function (){
+                var prodInsId = $('#prodInsId').val();
+                if(prodInsId!=null && prodInsId !=''){
+                    Joyin.ajax(basePath+"svreport/system/proregistcodemanage/ProRegistCodeManage003/getProdNameByProdInsId",{prodInsId:prodInsId},function (result){
+                        $('#prodName').val(result);
+                        $('#prodId').val(prodInsId);
+                    });
+                }else{
+                    $('#prodName').val('');
+                    $('#prodId').val('');
+                }
+            });
+        }
         /*var regCode = function(){
         	var regCode = $('#regCode').val();
         	if(regCode){

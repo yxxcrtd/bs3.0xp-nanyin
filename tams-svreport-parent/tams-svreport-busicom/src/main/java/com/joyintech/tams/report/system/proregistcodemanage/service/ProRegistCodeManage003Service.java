@@ -217,7 +217,12 @@ public class ProRegistCodeManage003Service extends CommonExportService<ProRegist
         ChbPrdresistCode  chbPrdresistCode  = chbPrdresistCodeMapper.selectByPrimaryKey(key);
         ProRegistCodeManage002Dto dto = new ProRegistCodeManage002Dto();
         if(chbPrdresistCode!=null){
-            BeanUtil.copyPropertiesIgnoreNull(dto,chbPrdresistCode);
+            dto.setProdId(chbPrdresistCode.getProdid());
+            dto.setProdName(chbPrdresistCode.getProdname());
+            dto.setProdInsId(chbPrdresistCode.getProdInsId());
+            dto.setRegCode(chbPrdresistCode.getRegCode());
+            dto.setOrgCode(chbPrdresistCode.getOrgCode());
+            dto.setOperateMode(chbPrdresistCode.getOperateMode());
         }
         return dto;
     }

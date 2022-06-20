@@ -343,13 +343,17 @@ public class ProRegistCodeManage001Service extends CommonExportService<ProRegist
             String error0 =checkCode2(list.get(3), "行内标识码", 100, true);
             if (StringUtil.isNotEmpty(error0)) {
                 message.add(error0);
-            }
-            else {
+            }else {
+                if(proRegistCodeManage001Mapper.selectInfoByProdId(list.get(3)) == null){
+                    message.add("行内标识码不存在产品申报表中！");
+                }else{
+                    entity.setProdInsId(list.get(3));
+                }
                 //update by leipeng 产品登记编码导入完成后，导入模板理财产品代码为cp002 但是导入库是行内标识码
-                entity.setProdInsId(list.get(3));
-                Map<String , Object> map =new HashMap<>();
-                map.put("prodInsId",entity.getProdInsId());
-                map.put("orgCode", orgCode);
+
+//                Map<String , Object> map =new HashMap<>();
+//                map.put("prodInsId",entity.getProdInsId());
+//                map.put("orgCode", orgCode);
 //                if(proRegistCodeManage001Mapper.isExist(map)>0||box.containsKey(entity.getProdid())){
 //                    message.add("同一机构中已存在此产品代码");
 //                }
@@ -359,6 +363,9 @@ public class ProRegistCodeManage001Service extends CommonExportService<ProRegist
             }
             if(StringUtils.isNotEmpty(list.get(4))){
                 entity.setProdid(list.get(4));
+            }
+            if(StringUtils.isNotEmpty(list.get(5))){
+                entity.setOperateMode(list.get(5).split(" ")[0]);
             }
             //产品名称
             String error1 =checkCode2(list.get(1), "产品名称", 200, false);
