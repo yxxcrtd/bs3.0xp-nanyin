@@ -9,6 +9,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.InterfFile;
+import com.joyintech.tams.common.base.dao.ChbInvestTradeErrodataMapper;
 import com.joyintech.tams.common.base.entity.ChbInfoMgrResultConfig;
 import com.joyintech.tams.common.base.entity.ChbInvestTrade;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
@@ -59,11 +60,17 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
     private ChbInfoMgrResultConfigMapper chbInfoMgrResultConfigMapper;
     @Autowired
     private ChbInvestTradeInterfMapper chbInvestTradeInterfMapper;
+    @Autowired
+    private ChbInvestTradeErrodataMapper chbInvestTradeErrodataMapper;
     @Override
     public void doComplete(ChbInvestTradeDto entity, OperationType type) {
         if (OperationType.DELETE.equals(type)) {
-            entity.setStatus(DictCodeListExt1.维护数据状态_删除.getValue());
-            chbInvestTradeDao.update(entity);
+            if(StringUtil.equals(DictCodeListExt3.中债数据状态_待处理.getValue(),entity.getStatusValid())){
+                chbInvestTradeErrodataMapper.deleteByPrimaryKey(entity.getTradeSeqno());
+            }else{
+                entity.setStatus(DictCodeListExt1.维护数据状态_删除.getValue());
+                chbInvestTradeDao.update(entity);
+            }
 
         }
         else if (OperationType.NEW.equals(type)) {

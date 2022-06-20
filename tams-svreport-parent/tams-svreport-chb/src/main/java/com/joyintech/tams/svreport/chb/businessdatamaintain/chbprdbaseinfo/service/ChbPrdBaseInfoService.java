@@ -16,6 +16,7 @@ import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.InterfFile;
 
+import com.joyintech.tams.common.base.dao.ChbPrdBaseinfoErrodataMapper;
 import com.joyintech.tams.common.base.dao.ChbPrdresistCodeMapper;
 import com.joyintech.tams.common.base.entity.ChbInfoMgrResultConfig;
 
@@ -70,12 +71,18 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
     private ChbPrdDeclareInfoMapper chbPrdDeclareInfoMapper;
     @Autowired
     private ChbPrdBaseinfoInterfMapper chbPrdBaseinfoInterfMapper;
+    @Autowired
+    private ChbPrdBaseinfoErrodataMapper chbPrdBaseinfoErrodataMapper;
     @Override
     @Transactional
     public void doComplete(ChbPrdBaseInfoDto entity, OperationType type) {
         if (OperationType.DELETE.equals(type)) {
-            entity.setStatus(DictCodeListExt1.维护数据状态_删除.getValue());
-            chbPrdBaseInfoDao.update(entity);
+            if(StringUtil.equals(DictCodeListExt3.中债数据状态_待处理.getValue(),entity.getStatusValid())){
+                chbPrdBaseinfoErrodataMapper.deleteByPrimaryKey(entity.getProduuid());
+            }else{
+                entity.setStatus(DictCodeListExt1.维护数据状态_删除.getValue());
+                chbPrdBaseInfoDao.update(entity);
+            }
 
         }
         else if (OperationType.NEW.equals(type)) {

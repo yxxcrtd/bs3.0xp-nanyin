@@ -233,8 +233,12 @@ public class SvrPerProDeclareInfoService001 extends CommonExportService<SvrPerPr
     @Override
     public void doComplete(SvrPerProDeclareInfo001Dto entity, OperationType type) {
         if (OperationType.DELETE.equals(type)) {
-            entity.setStatus(DictCodeListExt1.维护数据状态_删除.getValue());
-            svrPerProDeclareInfo001Dao.delete(entity);
+            if(StringUtil.equals(DictCodeListExt3.中债数据状态_待处理.getValue(),entity.getStatusValid())){
+                chbPrdDeclareInfoErrodataMapper.deleteByPrimaryKey(entity.getDeclareUuid());
+            }else{
+                entity.setStatus(DictCodeListExt1.维护数据状态_删除.getValue());
+                svrPerProDeclareInfo001Dao.delete(entity);
+            }
 
         }
         else if (OperationType.NEW.equals(type)) {
