@@ -750,6 +750,7 @@ public abstract class FileImpService extends InterfService{
         errodata.setInterfType(interfType);
         // 拼接错误字段信息
         map.remove("ERRMSG");
+        map.remove(null);
         errodata.setOrgData(JsonUtils.object2Json(map));
         // 错误提示信息
         errodata.setErrMsg(msg);
