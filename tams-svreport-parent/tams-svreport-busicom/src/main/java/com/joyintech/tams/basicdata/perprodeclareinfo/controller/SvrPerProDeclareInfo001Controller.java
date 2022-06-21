@@ -1,6 +1,8 @@
 package com.joyintech.tams.basicdata.perprodeclareinfo.controller;
 
 
+import com.alibaba.fastjson.JSONArray;
+import com.google.common.collect.Lists;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
@@ -12,6 +14,7 @@ import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.basicdata.perprodeclareinfo.dto.SvrPerProDeclareInfo001Dto;
 import com.joyintech.tams.basicdata.perprodeclareinfo.service.SvrPerProDeclareInfoService001;
+import com.joyintech.tams.basicdata.perprodeclareinfo.util.ErrdataConvertUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -19,6 +22,7 @@ import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +38,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 产品申报登记信息
@@ -133,13 +138,27 @@ public class SvrPerProDeclareInfo001Controller extends BaseController {
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export()
             throws Exception {
-        String datas = this.getParam("datas");
         Map<String, Object> params= RequestUtil.getPageParam();
-        List<SvrPerProDeclareInfo001Dto> listdto = null ;
-        if (datas == null) {
-              listdto = svrPerProDeclareInfo001Service.queryAllList(params);
-        } else {
-            listdto = JsonUtils.json2List(datas, SvrPerProDeclareInfo001Dto.class);
+        List<SvrPerProDeclareInfo001Dto> list = Lists.newArrayList();
+        if(StringUtils.isNotEmpty((String)params.get("selectData"))){
+            List<Map> selectData = JSONArray.parseArray((String) params.get("selectData"), Map.class);
+            List<String> declareUuids = selectData.stream().map(e -> (String)e.get("declareUuid")).collect(Collectors.toList());
+            list = svrPerProDeclareInfo001Service.selectByKeys(declareUuids);
+        }else {
+            list = svrPerProDeclareInfo001Service.queryAllList(params);
+        }
+        List<SvrPerProDeclareInfo001Dto> listdto = Lists.newArrayList();
+        if(list.size()>0){
+            for (int k=0;k<list.size();k++){
+                if(list.get(k).getStatusValid().equals("A")){
+                    SvrPerProDeclareInfo001Dto dto = ErrdataConvertUtil.errdataConvert(SvrPerProDeclareInfo001Dto.class, list.get(k).getOrgData());
+                    dto.setStatusValid("A");
+                    dto.setErrMsg(list.get(k).getErrMsg());
+                    listdto.add(dto);
+                }else{
+                    listdto.add(list.get(k));
+                }
+            }
         }
         File outFile = svrPerProDeclareInfo001Service.makeFile(
                 "/com/joyintech/tams/basicdata/perprodeclareinfo/conf/export_conf.xml",

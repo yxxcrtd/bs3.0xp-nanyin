@@ -26,4 +26,6 @@ public interface SvrPerProDeclareInfo001Dao {
     Integer selectChbPrdDeclareByProdInsId(String prodInsId);
 
     Integer selectChbPrdDeclareByProdStageAndProdName(@Param("prodStage") String prodStage,@Param("prodName") String prodName);
+
+    List<SvrPerProDeclareInfo001Dto> selectByKeys(@Param("list") List<String> list);
 }

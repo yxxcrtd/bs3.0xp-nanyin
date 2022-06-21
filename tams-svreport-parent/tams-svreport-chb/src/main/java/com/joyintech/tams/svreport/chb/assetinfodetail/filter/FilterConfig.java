@@ -14,7 +14,7 @@ public class FilterConfig {
     public FilterRegistrationBean testFilterRegistration() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(new ParamFilter());
-        registration.addUrlPatterns("/chb/assetinfodetail/AssetInfoDetail001/export");
+        registration.addUrlPatterns("/chb/assetinfodetail/AssetInfoDetail001/export","/basicdata/perprodeclareinfo/SvrPerProDeclareInfo001/export");
         registration.setOrder(1);
         return registration;
     }

@@ -619,4 +619,8 @@ public class SvrPerProDeclareInfoService001 extends CommonExportService<SvrPerPr
     public Integer selectChbPrdDeclareByProdStageAndProdName(String prodStage,String prodName) {
         return svrPerProDeclareInfo001Dao.selectChbPrdDeclareByProdStageAndProdName(prodStage,prodName);
     }
+
+    public List<SvrPerProDeclareInfo001Dto> selectByKeys(List<String> declareUuids) {
+        return svrPerProDeclareInfo001Dao.selectByKeys(declareUuids);
+    }
 }
