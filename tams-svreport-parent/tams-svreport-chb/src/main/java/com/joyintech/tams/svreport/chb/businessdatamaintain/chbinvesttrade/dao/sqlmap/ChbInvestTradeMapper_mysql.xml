@@ -343,7 +343,8 @@
         a.INVEST_APPROVER_NAME,
         a.INVEST_TRADER_ID,
         a.INVEST_TRADER_NAME,
-        a.ERR_MSG,
+        a.ERR_MSG errMsg,
+        null as orgData,
         b.REG_CODE regCode,
         c.ASSET_NAME assetName
         FROM CHB_INVEST_TRADE a
@@ -418,7 +419,8 @@
         null INVEST_APPROVER_NAME,
         null INVEST_TRADER_ID,
         null INVEST_TRADER_NAME,
-        a.ERR_MSG,
+        a.ERR_MSG errMsg,
+        a.ORG_DATA orgData,
         b.REG_CODE regCode,
         c.ASSET_NAME assetName
         from chb_invest_trade_errodata a
@@ -624,5 +626,96 @@
     <select id="selectByBusinessKey" resultType="java.lang.Integer">
         select count(1) from CHB_INVEST_TRADE where PROD_ID = #{prodId} and TRADE_CODE =#{tradeCode} and ASSET_CODE =#{assetCode}
     </select>
-
+    <select id="selectByKeys" resultMap="BaseResultMap">
+        select * from (
+        select
+        a.TRADE_SEQNO,
+        a.TRADE_CODE,
+        a.PROD_ID,
+        a.REGIST_BANK_CODE,
+        a.ASSET_CODE,
+        a.CCY,
+        a.AMT,
+        a.CNY_AMT,
+        a.CUR_ASSET_TYPE,
+        a.CUR_ASSETDET_TYPE,
+        a.DEALDATE,
+        a.TRADE_COUNTER,
+        a.UNIT_PRICE_FULL,
+        a.UNIT_PRICE_NET,
+        a.END_RATE,
+        a.CONTRACT_CODE,
+        a.REMARK,
+        a.STATUS statusValid,
+        a.DEPT_CODE,
+        a.CREATE_USER,
+        a.CREATE_TIME,
+        a.UPDATE_USER,
+        a.UPDATE_TIME,
+        a.DATA_SOURCE,
+        a.NUM,
+        a.ASSET_METHOD,
+        a.RIVAL_PARTY_TYPE,
+        a.INVEST_APPROVER_ID,
+        a.INVEST_APPROVER_NAME,
+        a.INVEST_TRADER_ID,
+        a.INVEST_TRADER_NAME,
+        a.ERR_MSG errMsg,
+        null as orgData,
+        b.REG_CODE regCode,
+        c.ASSET_NAME assetName
+        FROM CHB_INVEST_TRADE a
+        LEFT JOIN CHB_PRD_BASEINFO b ON a.PROD_ID = b.PROD_ID
+        LEFT JOIN CHB_ASSET_INFO c ON a.ASSET_CODE = c.ASSET_CODE
+        where a.TRADE_SEQNO in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        union all
+        select
+        a.DATAUUID TRADE_SEQNO,
+        a.TRADE_CODE,
+        a.PROD_ID,
+        null REGIST_BANK_CODE,
+        a.ASSET_CODE,
+        null CCY,
+        null AMT,
+        null CNY_AMT,
+        null CUR_ASSET_TYPE,
+        null CUR_ASSETDET_TYPE,
+        a.DEALDATE,
+        a.TRADE_COUNTER,
+        null UNIT_PRICE_FULL,
+        null UNIT_PRICE_NET,
+        null END_RATE,
+        null CONTRACT_CODE,
+        null REMARK,
+        a.STATUS statusValid,
+        a.DEPT_CODE,
+        a.CREATE_USER,
+        a.CREATE_TIME,
+        a.UPDATE_USER,
+        a.UPDATE_TIME,
+        null DATA_SOURCE,
+        null NUM,
+        null ASSET_METHOD,
+        null RIVAL_PARTY_TYPE,
+        null INVEST_APPROVER_ID,
+        null INVEST_APPROVER_NAME,
+        null INVEST_TRADER_ID,
+        null INVEST_TRADER_NAME,
+        a.ERR_MSG errMsg,
+        a.ORG_DATA  orgData,
+        b.REG_CODE regCode,
+        c.ASSET_NAME assetName
+        from chb_invest_trade_errodata a
+        LEFT JOIN CHB_PRD_BASEINFO b ON a.PROD_ID = b.PROD_ID
+        LEFT JOIN CHB_ASSET_INFO c ON a.ASSET_CODE = c.ASSET_CODE
+        where a.DATAUUID in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        )a
+        order by a.DEALDATE desc,a.PROD_ID asc
+    </select>
 </mapper>

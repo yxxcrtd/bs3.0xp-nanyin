@@ -274,4 +274,8 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
     public List<Map<String,String>> selectByProdIdKey(String prodInsId) {
         return chbPrdBaseInfoDao.selectByProdIdKey(prodInsId);
     }
+
+    public List<ChbPrdBaseInfoDto> selectByKeys(List<String> produuids) {
+        return chbPrdBaseInfoDao.selectByKeys(produuids);
+    }
 }

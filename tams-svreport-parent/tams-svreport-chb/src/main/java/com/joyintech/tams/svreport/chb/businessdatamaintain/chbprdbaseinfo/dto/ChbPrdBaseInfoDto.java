@@ -66,6 +66,8 @@ public class ChbPrdBaseInfoDto extends ChbPrdBaseinfo implements ProcessEntity {
      */
     private String issuingStatusNew;
 
+    private String orgData;
+
     // updateFlg 02 不展示  01 显示
     public String getUpdateFlg() {
         if(!StringUtil.isEmpty(statusValid) && StringUtil.equals(DictCodeList.维护数据状态_删除.getValue(), statusValid)){
@@ -237,5 +239,13 @@ public class ChbPrdBaseInfoDto extends ChbPrdBaseinfo implements ProcessEntity {
     }
     public String getManaCateFitStr(){
         return SysDataUtil.getNameFromDataDict(DictCode.是否_中债,getManaCateFit());
+    }
+
+    public String getOrgData() {
+        return orgData;
+    }
+
+    public void setOrgData(String orgData) {
+        this.orgData = orgData;
     }
 }

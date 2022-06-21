@@ -27,6 +27,7 @@ public class ChbInvestTradeDto extends ChbInvestTrade implements ProcessEntity {
     private String prodName;
     private String regCode;
     private String assetName;
+    private String orgData;
 
 
     /**
@@ -173,5 +174,13 @@ public class ChbInvestTradeDto extends ChbInvestTrade implements ProcessEntity {
     }
     public String getupdateTimeStr(){
         return DateUtil.formatDateTime(getUpdateTime());
+    }
+
+    public String getOrgData() {
+        return orgData;
+    }
+
+    public void setOrgData(String orgData) {
+        this.orgData = orgData;
     }
 }

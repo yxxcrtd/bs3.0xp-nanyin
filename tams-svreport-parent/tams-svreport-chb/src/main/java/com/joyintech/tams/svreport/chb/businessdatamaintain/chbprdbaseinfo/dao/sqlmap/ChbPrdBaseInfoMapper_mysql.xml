@@ -874,7 +874,9 @@
         STATUS,
         IS_TRANSFER,
         MANA_CATE_FIT,
-        ERR_MSG  from CHB_PRD_BASEINFO a
+        ERR_MSG,
+        null as orgData
+        from CHB_PRD_BASEINFO a
         <where>
             <if test="customerTypeList != null and customerTypeList.length>0">
                 <foreach collection="customerTypeList" item="item" open="CUSTOMER_TYPE in(" separator="," close=")">
@@ -955,7 +957,8 @@
         STATUS,
         null IS_TRANSFER,
         null MANA_CATE_FIT,
-        ERR_MSG
+        ERR_MSG,
+        ORG_DATA orgData
         from CHB_PRD_BASEINFO_ERRODATA
         <where>
             <if test="customerTypeList != null and customerTypeList.length>0">
@@ -1625,5 +1628,110 @@
     </select>
     <select id="selectByProdIdKey" resultType="java.util.Map">
         select PROD_ID,STATUS from CHB_PRD_BASEINFO where PROD_ID = #{prodId}
+    </select>
+    <select id="selectByKeys" resultMap="BaseResultMap">
+        select
+        PRODUUID,
+        PROD_ID,
+        PROD_NAME,
+        REG_CODE,
+        PROD_INS_ID,
+        ISSUE_PARTY_ID,
+        RAISE_VDATE,
+        RAISE_ENDDATE,
+        VDATE,
+        MDATE,
+        MANAGE_TYPE,
+        IS_CONSTRACTE,
+        GRAD_PROPORTION,
+        YIELD_HIGH,
+        YIELD_LOW,
+        YIELD_REMARK,
+        OPEN_MODE,
+        OPEN_CIRCLE,
+        FIT_CIRCLE_DAYS,
+        OPEN_CIRCLE_DAYS,
+        RULE_COMMENT,
+        FIRST_OPEN_DAY,
+        HOLIDAY_ON_FLAG,
+        AVG_OPEN_COUNT,
+        OPEN_BUSS,
+        OPEN_BUSS_REMARK,
+        PRODTYPE,
+        CALENDAR_ID,
+        BUSI_ACCT_NO,
+        ACCT_NAME,
+        BASIC,
+        TERMINATEDATE,
+        ISSUING_STATUS,
+        FIDUCIARY_DUTY,
+        TRANSFER_TYPE,
+        CUSTOMER_TYPE,
+        ZJXT_FLAG,
+        REMARK,
+        UPDATE_TIME,
+        UPDATE_USER,
+        STATUS,
+        IS_TRANSFER,
+        MANA_CATE_FIT,
+        ERR_MSG,
+        null as orgData
+        from chb_prd_baseinfo a
+        where PRODUUID in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        union all
+        select
+        DATAUUID PRODUUID,
+        PROD_ID,
+        PROD_NAME,
+        REG_CODE,
+        null PROD_INS_ID,
+        null ISSUE_PARTY_ID,
+        RAISE_VDATE,
+        null RAISE_ENDDATE,
+        VDATE,
+        null MDATE,
+        null MANAGE_TYPE,
+        null IS_CONSTRACTE,
+        null GRAD_PROPORTION,
+        null YIELD_HIGH,
+        null YIELD_LOW,
+        null YIELD_REMARK,
+        null OPEN_MODE,
+        null OPEN_CIRCLE,
+        null FIT_CIRCLE_DAYS,
+        null OPEN_CIRCLE_DAYS,
+        null RULE_COMMENT,
+        null FIRST_OPEN_DAY,
+        null HOLIDAY_ON_FLAG,
+        null AVG_OPEN_COUNT,
+        null OPEN_BUSS,
+        null OPEN_BUSS_REMARK,
+        null PRODTYPE,
+        null CALENDAR_ID,
+        null BUSI_ACCT_NO,
+        null ACCT_NAME,
+        null BASIC,
+        null TERMINATEDATE,
+        ISSUING_STATUS,
+        null FIDUCIARY_DUTY,
+        null TRANSFER_TYPE,
+        CUSTOMER_TYPE,
+        null ZJXT_FLAG,
+        null REMARK,
+        UPDATE_TIME,
+        UPDATE_USER,
+        STATUS,
+        null IS_TRANSFER,
+        null MANA_CATE_FIT,
+        ERR_MSG,
+        ORG_DATA AS orgData
+        from CHB_PRD_BASEINFO_ERRODATA
+        where DATAUUID in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
     </select>
 </mapper>
