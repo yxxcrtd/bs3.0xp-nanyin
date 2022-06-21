@@ -41,9 +41,8 @@
             <Cell order="37" name="转让类型">transferTypeStr</Cell>
             <Cell order="38" name="客户类型">customerTypeStr</Cell>
             <Cell order="39" name="以财产权信托名义开展的资金信托标识">zjxtFlagStr</Cell>
-            <Cell order="40" name="提前终止日">terminatedateStr</Cell>
-            <Cell order="41" name="数据状态">statusValidStr</Cell>
-            <Cell order="42" name="错误信息">errMsg</Cell>
+            <Cell order="40" name="数据状态">statusValidStr</Cell>
+            <Cell order="41" name="错误信息">errMsg</Cell>
         </Row>
     </Worksheet>
 </Workbook>
