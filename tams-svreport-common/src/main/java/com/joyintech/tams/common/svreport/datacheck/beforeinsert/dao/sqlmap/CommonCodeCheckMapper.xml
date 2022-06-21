@@ -330,4 +330,23 @@
     <select id="checkExistsAssetCode" resultType="java.lang.Integer">
         select count(1) from CHB_ASSET_INFO where ASSET_CODE = #{assetCode} and STATUS = 'E'
     </select>
+
+    <select id="checkInvestTradeCodeOther" resultType="java.lang.Integer">
+        select count(1) from CHB_INVEST_TRADE
+        where
+        PROD_ID = #{prodId}
+        and TRADE_CODE = #{tradeCode}
+        and CUR_ASSET_TYPE = #{curAssetType}
+        and STATUS = 'E'
+    </select>
+
+    <select id="checkInvestTradeCode" resultType="java.lang.Integer">
+        select count(1) from CHB_INVEST_TRADE
+        where
+        PROD_ID = #{prodId}
+        and TRADE_CODE = #{tradeCode}
+        and ASSET_CODE = #{assetCode}
+        and CUR_ASSET_TYPE = #{curAssetType}
+        and STATUS = 'E'
+    </select>
 </mapper>

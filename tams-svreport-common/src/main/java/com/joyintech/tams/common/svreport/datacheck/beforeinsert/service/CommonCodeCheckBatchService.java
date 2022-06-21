@@ -244,9 +244,28 @@ public class CommonCodeCheckBatchService {
         String  errMsg=dataMap.getOrDefault("ERRMSG", "");
         StringBuilder sb = new StringBuilder();
         String assetCode = dataMap.get("ASSET_CODE");
+        String curAssetType = dataMap.get("CUR_ASSET_TYPE");
         if(!errMsg.equals("重复数据;")){
             if(commonCodeCheckMapper.checkExistsAssetCode(assetCode)<1){
                 sb.append("行内资产/负债编码不存在；");
+            }
+            if(StringUtil.equals(curAssetType,"11")||StringUtil.equals(curAssetType,"12")){
+                Map<String, Object> param = new HashMap<>();
+                param.put("prodId",dataMap.get("PROD_ID"));
+                param.put("tradeCode",dataMap.get("TRADE_CODE"));
+                param.put("curAssetType",curAssetType);
+                if(commonCodeCheckMapper.checkInvestTradeCodeOther(param) > 0){
+                    sb.append("当“资金流动类型”选择“11其他收入”“12其他支出”时，“产品登记编码+行内交易编码+资金流动类型”不得同时与已有数据重复；");
+                }
+            }else{
+                Map<String, Object> param = new HashMap<>();
+                param.put("prodId",dataMap.get("PROD_ID"));
+                param.put("tradeCode",dataMap.get("TRADE_CODE"));
+                param.put("assetCode",dataMap.get("ASSET_CODE"));
+                param.put("curAssetType",curAssetType);
+                if(commonCodeCheckMapper.checkInvestTradeCode(param) > 0){
+                    sb.append("当“资金流动类型”选择“11其他收入”“12其他支出”之外的类型时，“产品登记编码+行内交易编码+行内资产/负债编码+资金流动类型”不得同时与已有数据重复；");
+                }
             }
             try {
                 if(dataMap.get("CCY").equals("CNY")){
