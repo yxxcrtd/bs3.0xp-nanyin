@@ -100,6 +100,8 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 
 	// 资产要素表名
 	private static final List<String> CHB_ASSET_INFO_LIST = Arrays.asList("CHB_ASSET_INFO", "CHB_ASSET_INFO_TMP");
+	//业务数据维护表
+	private static final List<String> CHB_INFO_LIST = Arrays.asList("CHB_PRD_BASEINFO","CHB_INVEST_TRADE");
 
 	// 资产要素字段数据临界值（该字段为备注所在的索引值）
 	private static final Integer CAI_BASE_COUNT = 282;
@@ -3025,7 +3027,12 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             					columnData = "'" + userName + "'";
             					// 数据状态改为 M
             				} else if ("STATUS".equals(column)){
-            					columnData = "'" + "M" + "'";
+								if (CHB_INFO_LIST.contains(tableName)) {
+									columnData = "'" + "E" + "'";
+								} else {
+									columnData = "'" + "M" + "'";
+								}
+
             				} else if(StringUtil.isNotEmpty(columnData)&&columnData.contains("'")){
             					columnData = "'" +columnData.replace("'", "''")+ "'";
             				} else {
@@ -3035,7 +3042,12 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
                 		}
             			
             			//增加状态字段的设置
-            			updateMap.put("STATUS", "'" + "M" + "'");  
+						if (CHB_INFO_LIST.contains(tableName)) {
+							updateMap.put("STATUS", "'" + "E" + "'");
+						} else {
+							updateMap.put("STATUS", "'" + "M" + "'");
+						}
+
             			
             			//包含定义的接口名称的时候，这些接口的数据来源导入默认增加datasource为手工处理 2020-07-17 start
             			if(StringUtil.isEmpty(insertMap.get("DATA_SOURCE"))&&

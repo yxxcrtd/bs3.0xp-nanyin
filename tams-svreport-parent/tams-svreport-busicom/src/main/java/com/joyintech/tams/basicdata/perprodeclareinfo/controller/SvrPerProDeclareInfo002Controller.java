@@ -5,17 +5,21 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.basicdata.perprodeclareinfo.dto.SvrPerProDeclareInfo001Dto;
-import com.joyintech.tams.basicdata.perprodeclareinfo.service.SvrPerProDeclareInfo001Service;
+import com.joyintech.tams.basicdata.perprodeclareinfo.service.SvrPerProDeclareInfoService001;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
 import java.util.Map;
 
 /**
@@ -40,7 +45,7 @@ import java.util.Map;
 @RequestMapping("/basicdata/perprodeclareinfo/SvrPerProDeclareInfo002")
 public class SvrPerProDeclareInfo002Controller extends BaseController {
     @Autowired
-    private SvrPerProDeclareInfo001Service svrPerProDeclareInfo001Service;
+    private SvrPerProDeclareInfoService001 svrPerProDeclareInfo001Service;
 
     @Override
     public String init(Model model) {
@@ -112,10 +117,23 @@ public class SvrPerProDeclareInfo002Controller extends BaseController {
 
         // 增加entity
         // 查看模式和修改模式
-        if (StringUtils.equals(this.getParam(GlobalConstant.DETAIL_PAGE_MODEL_KEY), GlobalConstant.DETAIL_PAGE_MODEL_REFERENCE)
-                || StringUtils.equals(this.getParam(GlobalConstant.DETAIL_PAGE_MODEL_KEY), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)) {
-            SvrPerProDeclareInfo001Dto entity = svrPerProDeclareInfo001Service.selectDetail(getParam("declareUuid"));
-            model.addAttribute(GlobalConstant.ENTITY, entity);
+//        if (StringUtils.equals(this.getParam(GlobalConstant.DETAIL_PAGE_MODEL_KEY), GlobalConstant.DETAIL_PAGE_MODEL_REFERENCE)
+//                || StringUtils.equals(this.getParam(GlobalConstant.DETAIL_PAGE_MODEL_KEY), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)) {
+//            SvrPerProDeclareInfo001Dto entity = svrPerProDeclareInfo001Service.selectDetail(getParam("declareUuid"));
+//            model.addAttribute(GlobalConstant.ENTITY, entity);
+//        }
+        String declareUuid = getParam("declareUuid");
+        String status = getParam("statusValid");
+        if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
+            SvrPerProDeclareInfo001Dto dto = svrPerProDeclareInfo001Service.getBussinessEntityByWorkflowId(
+                    workflowId);
+            model.addAttribute("pageModel",dto.getPageModel());
+            model.addAttribute(GlobalConstant.ENTITY, dto);
+        }
+        else if (WorkFlowUtil.isNotFromToDoList() &&StringUtil.isNotEmpty(declareUuid) ) {
+            //通过主键查询数据
+            SvrPerProDeclareInfo001Dto dto = svrPerProDeclareInfo001Service.selectDetail(getParam("declareUuid"),status);
+            model.addAttribute(GlobalConstant.ENTITY, dto);
         }
         return super.init(model);
     }
@@ -147,15 +165,36 @@ public class SvrPerProDeclareInfo002Controller extends BaseController {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
-        Map<String, Object> pageParam = RequestUtil.getPageParam();
-        if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)){
-            svrPerProDeclareInfo001Service.save(dto);
-            return new AjaxResult("保存成功");
-        }
-        if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)){
-            svrPerProDeclareInfo001Service.update(dto);
-            return new AjaxResult("操作成功");
-        }
-        return new AjaxResult("保存失败");
+        // 新建留痕表参数和工作流参数
+        ProcessParameter<SvrPerProDeclareInfo001Dto> processParameter = new ProcessParameter<SvrPerProDeclareInfo001Dto>();
+        WorkFlowParameter<SvrPerProDeclareInfo001Dto> params = new WorkFlowParameter<SvrPerProDeclareInfo001Dto>();
+        params.setPageId("SvrPerProDeclareInfo002");
+        params.setElementId("SvrPerProDeclareInfo002_btn_submit");
+        params.setBusinessCode(item -> item.getProdInsId());
+        params.setBusinessType(DictCodeList.共通业务类型_产品申报信息.getValue());
+        params.setComment(entity -> this.getMessage("SvrPerProDeclareInfo002.prodInsId") + "("
+                + entity.getProdInsId() + ")"
+           );
+        // 塞入工作流参数
+        processParameter.setWorkFlowParameter(params);
+
+        dto.setCreateTime(DateUtil.now());
+        dto.setCreateUser(CommonUtil.getUserName());
+        dto.setUpdateTime(DateUtil.now());
+        dto.setUpdateUser(CommonUtil.getUserName());
+        // 流程开始
+        String msg = svrPerProDeclareInfo001Service.start(processParameter, dto);
+        return new AjaxResult(msg);
     }
+    @RequestMapping("/selectChbPrdDeclareByProdInsId")
+    @ResponseBody
+    public Integer selectChbPrdDeclareByProdInsId(String prodInsId){
+        return svrPerProDeclareInfo001Service.selectChbPrdDeclareByProdInsId(prodInsId);
+    }
+    @RequestMapping("/selectChbPrdDeclareByProdStageAndProdName")
+    @ResponseBody
+    public Integer selectChbPrdDeclareByProdStageAndProdName(String prodStage,String prodName){
+        return svrPerProDeclareInfo001Service.selectChbPrdDeclareByProdStageAndProdName(prodStage,prodName);
+    }
+
 }

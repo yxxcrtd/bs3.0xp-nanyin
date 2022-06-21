@@ -221,15 +221,15 @@
     </select>
     <select id="getCustomerName" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT
-        DISTINCT CUSTOMER_ID id,
-        CUSTOMER_NAME text
-        FROM MST_CUSTOMER_INFO
+        DISTINCT COUNTER_ID id,
+        COUNTER_NAME text
+        FROM CHB_MST_COUNTER_PARTY
         <where>
             <if test="search !=null and  search !='' ">
-                CUSTOMER_NAME LIKE '%' || #{search} || '%'
+                COUNTER_NAME LIKE '%' || #{search} || '%'
             </if>
-            <if test="tradeCounter !=null and  tradeCounter !='' ">
-                and CUSTOMER_ID = #{tradeCounter}
+            <if test="initValue != null and initValue != ''">
+                and COUNTER_ID = #{initValue}
             </if>
         </where>
     </select>
@@ -452,7 +452,7 @@
 
     </select>
     <select id="selectRivalPartyType" resultType="java.util.Map">
-        select COUNTER_TYPE from CHB_MST_COUNTER_PARTY where COUNTER_ID = #{tradeCounter}
+        select COUNTER_TYPE2 from CHB_MST_COUNTER_PARTY where COUNTER_ID = #{tradeCounter}
     </select>
     <select id="countDuplicatedData" resultType="java.lang.Integer">
         select count(*) from CHB_INVEST_TRADE where (PROD_ID,ASSET_CODE,TRADE_CODE) in
@@ -461,6 +461,10 @@
         </foreach>
         and status = 'E'
     </select>
+    <select id="selectByBusinessKey" resultType="java.lang.Integer">
+        select count(1) from CHB_INVEST_TRADE where PROD_ID = #{prodId} and TRADE_CODE =#{tradeCode} and ASSET_CODE =#{assetCode}
+    </select>
+
     <insert id="mergeData">
         MERGE INTO  CHB_INVEST_TRADE a USING (
         <foreach collection="list" item="item" open="select * from("

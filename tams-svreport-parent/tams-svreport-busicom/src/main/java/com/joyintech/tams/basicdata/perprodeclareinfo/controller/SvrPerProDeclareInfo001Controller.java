@@ -11,22 +11,26 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.basicdata.perprodeclareinfo.dto.SvrPerProDeclareInfo001Dto;
-import com.joyintech.tams.basicdata.perprodeclareinfo.service.SvrPerProDeclareInfo001Service;
+import com.joyintech.tams.basicdata.perprodeclareinfo.service.SvrPerProDeclareInfoService001;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.report.common.dto.ExcelValidDto;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
+import com.joyintech.tams.systemtools.util.CommonUtil;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +48,8 @@ import java.util.Map;
 public class SvrPerProDeclareInfo001Controller extends BaseController {
 
     @Autowired
-    private SvrPerProDeclareInfo001Service svrPerProDeclareInfo001Service;
+    private SvrPerProDeclareInfoService001 svrPerProDeclareInfo001Service;
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * 初始化
@@ -74,9 +79,7 @@ public class SvrPerProDeclareInfo001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("queryProdInfo")
     public List<SuggestDto> queryProdInfo(){
-        Map<String, Object> map = new HashMap<>();
-        map.put("prodName",RequestUtil.getPageParam().get("prodName"));
-        return svrPerProDeclareInfo001Service.queryProdInfo(map);
+        return svrPerProDeclareInfo001Service.queryProdInfo(RequestUtil.getPageParam());
     }
 
     /**
@@ -102,24 +105,6 @@ public class SvrPerProDeclareInfo001Controller extends BaseController {
             }
         }
         return ar;
-    }
-
-    /**
-     * 删除
-     * @param dto
-     * @param br
-     * @return
-     * @throws Exception
-     */
-    @ResponseBody
-    @RequestMapping(ACTION_DELETE)
-    public AjaxResult delete(@RequestBody SvrPerProDeclareInfo001Dto dto, BindingResult br)
-            throws Exception {
-        if (!(dto.getSelectedItem().isEmpty())) {
-            svrPerProDeclareInfo001Service.deleteByPrimaryKey(dto);
-            return new AjaxResult("删除成功");
-        }
-        return new AjaxResult("删除失败");
     }
 
     /**
@@ -176,7 +161,7 @@ public class SvrPerProDeclareInfo001Controller extends BaseController {
      */
     @ResponseBody
     @PostMapping("checkConfirmMsgForImportData")
-    public AjaxResult checkConfirmMsgForImportData(String fileName)  {
+    public AjaxResult checkConfirmMsgForImportData(String fileName) throws Exception {
         return svrPerProDeclareInfo001Service.checkConfirmMsgForImportData(fileName);
     }
 
@@ -189,7 +174,64 @@ public class SvrPerProDeclareInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("importData")
-    public List<ExcelValidDto> importFile(String fileName) {
+    public List<ExcelValidDto> importFile(String fileName) throws Exception {
         return svrPerProDeclareInfo001Service.importData(fileName);
+    }
+    /**
+     *  删除
+     * @param dto 页面选中的数据
+     * @param br br
+     * @return 结果
+     * @throws Exception 异常
+     */
+    @ResponseBody
+    @RequestMapping(ACTION_DELETE)
+    public AjaxResult delete(@RequestBody @Validated({
+            ValidateGroupDelete.class}) SvrPerProDeclareInfo001Dto dto, BindingResult br)
+            throws Exception {
+        if (br.hasErrors()) {
+            return new AjaxResult(br);
+        }
+        ProcessParameter<SvrPerProDeclareInfo001Dto> processParameter = new ProcessParameter<SvrPerProDeclareInfo001Dto>();
+        WorkFlowParameter<SvrPerProDeclareInfo001Dto> params = new WorkFlowParameter<SvrPerProDeclareInfo001Dto>();
+        params.setPageId("SvrPerProDeclareInfo002");
+        params.setElementId(dto.getElementId());
+        params.setBusinessCode(item -> item.getProdInsId());
+        params.setBusinessType(DictCodeList.共通业务类型_产品申报信息.getValue());
+        // 设置流程业务说明, entity即传入的dto
+        params.setComment(entity -> this.getMessage("SvrPerProDeclareInfo002.prodInsId") + "("
+                + entity.getProdInsId() + ")"
+        );
+        processParameter.setWorkFlowParameter(params);
+        dto.getSelectedItem().forEach(e->{
+            e.setCreateUser(CommonUtil.getUserName());
+            e.setCreateTime(DateUtil.now());
+            e.setUpdateUser(CommonUtil.getUserName());
+            e.setUpdateTime(DateUtil.now());
+        });
+        String msg = svrPerProDeclareInfo001Service.start(processParameter,dto.getSelectedItem().toArray(new SvrPerProDeclareInfo001Dto[dto.getSelectedItem().size()]));
+        return new AjaxResult(msg);
+
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/deltFile", method = RequestMethod.POST)
+    public AjaxResult deltFile(@RequestParam Map<String, Object> map)  {
+
+        svrPerProDeclareInfo001Service.deltFile(map);
+        return new AjaxResult("删除成功");
+    }
+    @ResponseBody
+    @RequestMapping(value = "/getFileList", method = RequestMethod.POST)
+    public String getFileList(@RequestParam Map<String, Object> map)  {
+        String res;
+        try {
+            res = svrPerProDeclareInfo001Service.getFileList(map);
+        } catch (Exception e) {
+            logger.error(e.getMessage(),e);
+            return null;
+        }
+        return res;
+
     }
 }

@@ -704,7 +704,7 @@
 		SUBMIT_DEADLINE,
 		CHB_SUBMIT_DEADLINE,
 		PROD_ID
-		FROM  CHB_PRD_DECLARE_SUB
+		FROM  CHB_PRD_RAISETOT_SUB
 		WHERE 1=1
 		<if test="createDeptList != null and createDeptList.size>0">
 			<foreach collection="createDeptList" item = "item" open="and CREATE_DEPT in(" separator="," close=")">
@@ -763,7 +763,7 @@
 		SUBMIT_DEADLINE,
 		CHB_SUBMIT_DEADLINE,
 		PROD_ID
-		FROM  CHB_PRD_DECLARE_SUB
+		FROM  CHB_PRD_DEAL_SUB
 		WHERE 1=1
 		<if test="createDeptList != null and createDeptList.size>0">
 			<foreach collection="createDeptList" item = "item" open="and CREATE_DEPT in(" separator="," close=")">
@@ -822,7 +822,7 @@
 		SUBMIT_DEADLINE,
 		CHB_SUBMIT_DEADLINE,
 		PROD_ID
-		FROM  CHB_PRD_DECLARE_SUB
+		FROM  CHB_PRD_END_SUB
 		WHERE 1=1
 		<if test="createDeptList != null and createDeptList.size>0">
 			<foreach collection="createDeptList" item = "item" open="and CREATE_DEPT in(" separator="," close=")">
@@ -880,8 +880,8 @@
 		<include refid="sendStatusFlag" />
 		SUBMIT_DEADLINE,
 		CHB_SUBMIT_DEADLINE,
-		PROD_ID
-		FROM  CHB_PRD_DECLARE_SUB
+		asset_code
+		FROM  CHB_BOT_AST_POS_SUB
 		WHERE 1=1
 		<if test="createDeptList != null and createDeptList.size>0">
 			<foreach collection="createDeptList" item = "item" open="and CREATE_DEPT in(" separator="," close=")">
@@ -941,8 +941,8 @@
 		<include refid="sendStatusFlag" />
 		SUBMIT_DEADLINE,
 		CHB_SUBMIT_DEADLINE,
-		PROD_ID
-		FROM  CHB_PRD_DECLARE_SUB
+		asset_code
+		FROM  CHB_ASSET_INFO_SUB
 		WHERE 1=1
 		<if test="createDeptList != null and createDeptList.size>0">
 			<foreach collection="createDeptList" item = "item" open="and CREATE_DEPT in(" separator="," close=")">
@@ -1004,7 +1004,7 @@
 		SUBMIT_DEADLINE,
 		CHB_SUBMIT_DEADLINE,
 		PROD_ID
-		FROM  CHB_PRD_DECLARE_SUB
+		FROM  CHB_INVEST_TRADE_SUB
 		WHERE 1=1
 		<if test="createDeptList != null and createDeptList.size>0">
 			<foreach collection="createDeptList" item = "item" open="and CREATE_DEPT in(" separator="," close=")">
@@ -1062,8 +1062,8 @@
 		<include refid="sendStatusFlag" />
 		SUBMIT_DEADLINE,
 		CHB_SUBMIT_DEADLINE,
-		PROD_ID
-		FROM  CHB_PRD_DECLARE_SUB
+		asset_code
+		FROM  CHB_AST_VAL_SUB
 		WHERE 1=1
 		<if test="createDeptList != null and createDeptList.size>0">
 			<foreach collection="createDeptList" item = "item" open="and CREATE_DEPT in(" separator="," close=")">

@@ -25,7 +25,8 @@
     // 表格的列
     var tabCols = [
         {field:'declareUuid', title: '主键UUID', visible : false}
-        ,{field:'statusStr', title: 'SvrPerProDeclareInfo001.status', width:90}
+        ,{field:'statusValid', title: '状态', visible : false}
+        ,{field:'statusValidStr', title: 'SvrPerProDeclareInfo001.status', width:90}
         ,{field:'prodName', title: 'SvrPerProDeclareInfo001.prodName', width:100}
         ,{field:'prodInsId', title: 'SvrPerProDeclareInfo001.prodInsId', width:100}
         ,{field:'prodBrand', title: 'SvrPerProDeclareInfo001.prodBrand', width:100}
@@ -90,7 +91,44 @@
         ,{field:'invTypeRat', title: '投资资产种类及比例',width:130}
         ,{field:'yield', title: '业绩比较基准',width:130,type:'number'}
         ,{field:'remark', title: '备注',width:130}
-        ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
+        ,{field:'errMsg', title: '错误信息',width:130}
+        ,{field:'updateTimeStr', width:100, title: '更新时间'}
+        ,{field:'updateUser', width:100, title: '更新人'},
+        {
+            field : 'fileNo',
+            visible : false
+        },
+        {fixed : 'right',field:'action', title: 'SysCommon.operation' , type:'action',buttons: ['edit', 'delt'] , width:50}
+        ,
+        {   fixed : 'right',
+            title : '操作附件',
+            field : 'operation',
+            type : 'action',
+            width : 150,
+            buttons : [
+                {
+                text : '&#xe67c;',
+                clas : 'upload',
+                title : '上传'
+
+            }, {
+                text : '&#xe640;',
+                clas : 'delt2',
+                title : '删除附件'
+
+            }, {
+                text : '&#xe601;',
+                clas : 'download',
+                title : '下载'
+            } , {
+                text : '&#xe615;',
+                clas : 'fileView',
+                title : '查看'
+            },{
+                field: 'sumitSeq',
+                visible:false
+            } ]
+        }
     ];
 
     /**
@@ -124,22 +162,22 @@
         data.operateType = 'edit';
         data.pageId='SvrPerProDeclareInfo002';
         Joyin.ajaxJson(basePath + 'basicdata/perprodeclareinfo/SvrPerProDeclareInfo001/check', data, function(result) {
-            Joyin.dialog(JoyinUtil.getLabel("SvrPerProDeclareInfo001.edit"),
-                basePath + "basicdata/perprodeclareinfo/SvrPerProDeclareInfo002/init",
-                "98%", "95%", {declareUuid : data.declareUuid, pageModel : PAGE_MODEL_EDIT},function(){table.reload();});
-
+            Joyin.confirm("请确认是否修改?", function(){
+                Joyin.dialog(JoyinUtil.getLabel("产品申报信息登记维护编辑"),
+                    basePath + "basicdata/perprodeclareinfo/SvrPerProDeclareInfo002/init",
+                    "98%", "95%",data,
+                    function(){table.reload();});
+            });
         });
     });
+
 
     /**
      * 绑定删除事件
      */
     table.bind('click', '.delt', function(data, index) {
-        if(data.status != "E"){
-            return Joyin.error("只能删除有效数据，请重新选择");
-        }
         var object = {selectedItem: [data], operateType:"delete", declareUuid : data.declareUuid};
-        data.pageId='SvrPerProDeclareInfo001';
+        data.pageId='SvrPerProDeclareInfo002';
         Joyin.ajaxJson(basePath + 'basicdata/perprodeclareinfo/SvrPerProDeclareInfo001/check', data, function(result) {
             Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
                 WorkFlow.doDeleteList(basePath + 'basicdata/perprodeclareinfo/SvrPerProDeclareInfo001/delete', object, "SvrPerProDeclareInfo001_btn_delete", "SvrPerProDeclareInfo002",
@@ -148,6 +186,116 @@
         });
     });
 
+    table.bind('click', '.upload', function(data, index) {
+        var dataArr=[];
+        var dataArrStr;
+        if (data.statusValid != 'E') {
+            Joyin.error("只有有效的记录可以上传！");
+            return;
+        }else{
+            for(var i = 0; i < 1; i++){
+                var dataSrc={
+                    fileNo:data.fileNo,
+                    prodInsId:data.prodInsId,
+
+                }
+                dataArr[i]=dataSrc;
+            }
+        }
+
+        dataArrStr=JSON.stringify(dataArr);
+        Joyin.confirm("请确认是否要导入数据？", function() {
+
+            var flag=false;
+            if(data.fileNo && data.fileNo != null){
+                flag=true;
+            }
+            if(flag){
+                Joyin.confirm('所选产品已存在附件，是否覆盖？',
+                    function(){
+                        Joyin.dialog(JoyinUtil.getLabel("附件上传-修改"), basePath
+                            + "/basicdata/perprodeclareinfo/SvrPerProDeclareInfo003/init", "70%",
+                            "60%", {
+                                pageModel : PAGE_MODEL_NEW,
+                                prodInsId : data.prodInsId,
+                                dataArrStr : dataArrStr
+                            },function(){
+                                table.reload();
+                            });
+                    })
+            }else{
+                Joyin.dialog(JoyinUtil.getLabel("附件上传"), basePath
+                    + "/basicdata/perprodeclareinfo/SvrPerProDeclareInfo003/init", "70%",
+                    "60%", {
+                        pageModel : PAGE_MODEL_NEW,
+                        prodInsId : data.prodInsId,
+                        dataArrStr : dataArrStr
+                    },function(){
+                        table.reload();
+                    });
+            }
+        });
+
+
+    });
+
+
+    table.bind('click', '.download', function(data, index) {
+        if (!data.fileNo || data.fileNo == null) {
+            Joyin.error("未上传附件，不能下载！");
+            return;
+        }
+        parm = {};
+        var url = JoyinUtil.getRealPath('/framework/download/' + data.fileNo);
+        Joyin.ajax(url, parm, function downloadFileByForm() {
+                Joyin.exportExcel('/framework/download/' + data.fileNo, parm);
+            },
+            function errorDownload(){
+                Joyin.error("文件未找到！");
+            }
+        );
+    });
+
+
+
+
+    table.bind('click', '.fileView', function(data, index) {
+
+        $.post('getFileList', {fileNo:data.fileNo}, function(str){
+            layer.open({
+                type: 0,
+                content:decodeURIComponent(str), //注意，如果str是object，那么需要字符拼接。
+                area: ['300px', '300px'],
+                skin: 'layui-layer-lan',
+                offset: 'rb'
+            });
+        });
+
+
+
+    });
+
+    table.bind('click', '.delt2', function(data, index) {
+        if (!data.fileNo || data.fileNo == null) {
+            Joyin.error("未上传附件，不能删除！");
+            return;
+        } else {
+            Joyin.confirm("请确认是否要删除已存在的附件？", function() {
+
+                Joyin.ajax('deltFile', {
+                    declareUuid : data.declareUuid,
+                    fileNo:data.fileNo
+                }, function() {
+                    table.reload();
+                })
+
+
+
+
+
+            });
+        }
+    });
     /**
      * 导出
      */
@@ -168,16 +316,31 @@
         }
     };
 
-    // 附件上传
+    // 导入
     $('#SvrPerProDeclareInfo001_btn_import').click(function() {
-        Joyin.confirm("请确认是否要导入数据？", function () {
+        Joyin.confirm("请确认是否要导入数据？", function() {
             var options = {};
             options.pageId = "SvrPerProDeclareInfo001";
-            Joyin.uploadFile(options, function (fileName) {
-                Joyin.ajax(basePath + 'basicdata/perprodeclareinfo/SvrPerProDeclareInfo001/checkConfirmMsgForImportData', {fileName: fileName}, function () {
-                    Joyin.ajax(basePath + 'basicdata/perprodeclareinfo/SvrPerProDeclareInfo001/importData', {fileName: fileName});
+            options.exts = 'xls|xlsx';
+            Joyin.uploadFile(options,function(fileName) {
+                Joyin.ajax(basePath + 'basicdata/perprodeclareinfo/SvrPerProDeclareInfo001/checkConfirmMsgForImportData', {fileName: fileName}, function(result) {
+                    if ($.isArray(result.joyinMessages) && result.joyinMessages.length > 0) {
+                        var joyinMessages = "";
+                        $.each(result.joyinMessages, function(i, joyinMessage){
+                            joyinMessages += joyinMessage.message + "<br />"
+                        });
+                        Joyin.confirm(joyinMessages, function(){
+                            Joyin.ajax(basePath + 'basicdata/perprodeclareinfo/SvrPerProDeclareInfo001/importData', {fileName: fileName},function () {
+                                table.reload();
+                            });
+                        });
+                    }else{
+                        Joyin.ajax(basePath + 'basicdata/perprodeclareinfo/SvrPerProDeclareInfo001/importData', {fileName: fileName},function () {
+                            table.reload();
+                        });
+                    }
                 });
-            }, function () {
+            },function() {
                 table.reload();
             });
         });
@@ -213,6 +376,12 @@
                 Joyin.error("请从列表中选择数据");
                 return;
             }
+            var deleteFlag = selArr[0].statusValid;
+            for(var i=0;i<selArr.length;i++){
+                 if(selArr[i].statusValid != deleteFlag){
+                        return Joyin.error("只能删除一种数据状态的数据，请重新选择");
+                 }
+            }
             var rowDatas = [];
             var prdRegistCodes = "";
             var declareUuids= "";
@@ -225,11 +394,69 @@
             // console.log(object);
             Joyin.ajaxJson(basePath + 'basicdata/perprodeclareinfo/SvrPerProDeclareInfo001/check', object, function(result) {
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SvrPerProDeclareInfo001.delete")), function(){
-                    WorkFlow.doDeleteList(basePath + 'basicdata/perprodeclareinfo/SvrPerProDeclareInfo001/deleteList', object,"SvrPerProDeclareInfo001_btn_delete", "SvrPerProDeclareInfo002", function(result) {
+                    WorkFlow.doDeleteList(basePath + 'basicdata/perprodeclareinfo/SvrPerProDeclareInfo001/delete', object,"SvrPerProDeclareInfo001_btn_delete", "SvrPerProDeclareInfo002", function(result) {
                         table.reload();
                     });
                 });
             });
         });
+        $('#SvrPerProDeclareInfo001_btn_batchFileUpload').click(function() {
+            var uploadArr = table.getAllCheckedRows();
+            var uploadArrStr=JSON.stringify(uploadArr);
+            var dataArr=[];
+            var dataArrStr;
+            if(!uploadArr || uploadArr.length == 0){
+                Joyin.error("请选择要上传的数据！");
+                return;
+            }else{
+                for(var i = 0; i < uploadArr.length; i++){
+                    if(uploadArr[i].statusValid != 'E'){
+                        Joyin.error("只有有效的数据才能进行上传！");
+                        return;
+                    }
+                    var data={
+                        fileNo:uploadArr[i].fileNo,
+                        prodInsId:uploadArr[i].prodInsId,
+                    }
+                    dataArr[i]=data;
+
+                }
+                dataArrStr=JSON.stringify(dataArr);
+                Joyin.confirm("请确认是否要导入数据？", function() {
+                    var flag=false;
+                    for(var i = 0; i < uploadArr.length; i++){
+                        if(uploadArr[i].fileNo && uploadArr[i].fileNo != null){
+                            flag=true;
+                        }
+                    }
+                    if(flag){
+                        Joyin.confirm('所选产品已存在附件，是否覆盖？',
+                            function(){
+                                Joyin.dialog(JoyinUtil.getLabel("附件上传-修改"), basePath
+                                    + "/basicdata/perprodeclareinfo/SvrPerProDeclareInfo003/init", "70%",
+                                    "60%", {
+                                        pageModel : PAGE_MODEL_NEW,
+                                        prodInsId : uploadArr.prodInsId,
+                                        dataArrStr : dataArrStr
+                                    },function(){
+                                        table.reload();
+                                    });
+                            })
+                    }else{
+                        Joyin.dialog(JoyinUtil.getLabel("附件上传"), basePath
+                            + "/basicdata/perprodeclareinfo/SvrPerProDeclareInfo003/init", "70%",
+                            "60%", {
+                                pageModel : PAGE_MODEL_NEW,
+                                prodInsId : uploadArr.prodInsId,
+                                dataArrStr : dataArrStr
+                            },function(){
+                                table.reload();
+                            });
+                    }
+                });
+//				nineFileUpload();
+            }
+        });
+
     });
 }());

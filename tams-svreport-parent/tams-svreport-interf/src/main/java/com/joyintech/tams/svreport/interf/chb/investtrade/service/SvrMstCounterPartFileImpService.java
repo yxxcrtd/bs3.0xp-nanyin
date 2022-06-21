@@ -260,7 +260,7 @@ public class SvrMstCounterPartFileImpService extends FileImpService {
         // 转换成dto对象
         // modify by convertMapToEntity yangxianjiu 2022-01-19 start
 //        convertMapToEntity(listData, mstCounterPartyList);
-        mstCounterPartyList = (List<ChbMstCounterParty>) convertMapToEntity(listData,ChbMstCounterParty.class);
+        mstCounterPartyList = (List<ChbMstCounterParty>) convertMapToEntity(listData,ChbMstCounterParty.class, dataSource);
         mstCounterPartyList.stream().forEach(dto->{
             // 设置uuid
             dto.setUuid(UUID.randomUUID().toString());

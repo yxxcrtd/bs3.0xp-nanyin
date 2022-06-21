@@ -82,6 +82,29 @@
     LEFT JOIN MST_CUSTOMER_INFO B ON A.CUSTOMER_ID = B.CUSTOMER_ID
     where 1=1
   </select>
+  <select id="getAllCustomerInfo"  resultType="com.joyintech.tams.common.base.entity.MstCustomerInfo">
+    SELECT
+    t1.CUSTOMER_ID as customerId,
+    t1.CUSTOMER_NAME as customerName
+    FROM
+    MST_CUSTOMER_INFO t1
+    INNER JOIN
+    MST_CUSTOMER_INFO_ADD t2
+    ON
+    t1.CUSTOMER_ID = t2.CUSTOMER_ID
+  </select>
+
+  <select id="getAllIndustryShares"  resultType="com.joyintech.system.base.entity.SysDatadictListLink">
+    SELECT
+    DICT_CODE as dictCode,
+    ITEM_CODE as itemCode,
+    LINKED_DICT_CODE as linkedDictCode,
+    LINKED_ITEM_CODE as linkedItemCode
+    FROM SYS_DATADICT_LIST_LINK
+    WHERE 1=1
+      and LINKED_DICT_CODE = 'INSTITUTION_INDUSTRY_FIRST_LEVEL'
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from MST_CUSTOMER_INFO_ADD
     where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}

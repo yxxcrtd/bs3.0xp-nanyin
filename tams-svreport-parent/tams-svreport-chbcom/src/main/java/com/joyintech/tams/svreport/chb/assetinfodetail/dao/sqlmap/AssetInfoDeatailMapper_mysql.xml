@@ -552,6 +552,7 @@
     <resultMap id="BaseResultMapBLOB" type="com.joyintech.tams.common.base.entity.ChbAssetInfoErrodataWithBLOBs" >
         <result column="DATAUUID" property="datauuid" jdbcType="CHAR" />
         <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
+        <result column="ASSET_NAME" property="assetName" jdbcType="VARCHAR" />
         <result column="ASSET_TYPE" property="assetType" jdbcType="VARCHAR" />
         <result column="ASSET_TYPE2" property="assetType2" jdbcType="VARCHAR" />
         <result column="VDATE" property="vdate" jdbcType="VARCHAR" />
@@ -2061,33 +2062,33 @@
         SELECT
         A.dataStatus ,
         A.ASSET_UUID,
-        A.asset_name,
-        A.asset_code,
+        A.ASSET_NAME,
+        A.ASSET_CODE,
         trim(L.LINKED_ITEM_CODE) asset_type,
-        A.asset_type2,
-        A.org_asset_type1,
-        A.org_asset_type2,
-        A.org_asset_type3,
+        A.ASSET_TYPE2,
+        A.ORG_ASSET_TYPE1,
+        A.ORG_ASSET_TYPE2,
+        A.ORG_ASSET_TYPE3,
         A.vDateStr,
         A.mDateStr,
         A.ERRMSG
 
         FROM (
-        SELECT i.status dataStatus ,
+        SELECT i.STATUS dataStatus ,
         i.ASSET_UUID,
-        i.asset_name,
-        i.asset_code,
-        i.asset_type,
-        i.asset_type2,
-        i.org_asset_type1,
-        i.org_asset_type2,
-        i.org_asset_type3,
-        DATE_FORMAT(i.vdate,'%Y-%m-%d') vDateStr,
-        DATE_FORMAT(i.mdate,'%Y-%m-%d') mDateStr,
+        i.ASSET_NAME,
+        i.ASSET_CODE,
+        i.ASSET_TYPE,
+        i.ASSET_TYPE2,
+        i.ORG_ASSET_TYPE1,
+        i.ORG_ASSET_TYPE2,
+        i.ORG_ASSET_TYPE3,
+        DATE_FORMAT(i.VDATE,'%Y-%m-%d') vDateStr,
+        DATE_FORMAT(i.MDATE,'%Y-%m-%d') mDateStr,
         null   ERRMSG
         FROM chb_asset_info i
         WHERE 1=1
-        and i.status in ('E','D')
+        and i.STATUS in ('E','D')
         <if test="assetCodes != null and assetCodes.length>0">
             <foreach collection="assetCodes" item="item" open=" and ASSET_CODE in(" separator="," close=")">
                 #{item}
@@ -2095,22 +2096,22 @@
         </if>
 
         <if test="assetType2s != null and assetType2s.length>0">
-            <foreach collection="assetType2s" item="item" open=" and asset_type2 in(" separator="," close=")">
+            <foreach collection="assetType2s" item="item" open=" and ASSET_TYPE2 in(" separator="," close=")">
                 #{item}
             </foreach>
         </if>
         <if test="orgAssetType1s != null and orgAssetType1s.length>0">
-            <foreach collection="orgAssetType1s" item="item" open=" and org_asset_type1 in(" separator="," close=")">
+            <foreach collection="orgAssetType1s" item="item" open=" and ORG_ASSET_TYPE1 in(" separator="," close=")">
                 #{item}
             </foreach>
         </if>
         <if test="orgAssetType2s != null and orgAssetType2s.length>0">
-            <foreach collection="orgAssetType2s" item="item" open=" and org_asset_type2 in(" separator="," close=")">
+            <foreach collection="orgAssetType2s" item="item" open=" and ORG_ASSET_TYPE2 in(" separator="," close=")">
                 #{item}
             </foreach>
         </if>
         <if test="dataStatus != null and dataStatus != ''">
-            and i.status = #{dataStatus}
+            and i.STATUS = #{dataStatus}
         </if>
 
         <if test="Assetuuid != null and Assetuuid!=''">
@@ -2118,42 +2119,42 @@
         </if>
 
         and not exists (
-        SELECT 1 FROM CHB_ASSET_INFO_ERRODATA IE WHERE IE.asset_code = i.asset_code
+        SELECT 1 FROM CHB_ASSET_INFO_ERRODATA IE WHERE IE.ASSET_CODE = i.ASSET_CODE
         )
 
         UNION ALL
         SELECT 'A' dataStatus,
         e.DATAUUID ASSET_UUID,
-        e.asset_name,
-        e.asset_code,
-        e.asset_type,
-        e.asset_type2,
-        e.org_asset_type1,
-        e.org_asset_type2,
-        e.org_asset_type3,
-        e.vdate  vDateStr,
-        e.mdate mDateStr,
+        e.ASSET_NAME,
+        e.ASSET_CODE,
+        e.ASSET_TYPE,
+        e.ASSET_TYPE2,
+        e.ORG_ASSET_TYPE1,
+        e.ORG_ASSET_TYPE2,
+        e.ORG_ASSET_TYPE3,
+        e.VDATE  vDateStr,
+        e.MDATE mDateStr,
         e.ERR_MSG
         FROM CHB_ASSET_INFO_ERRODATA e
         WHERE 1=1
-        and e.status in ('E')
+        and e.STATUS in ('A')
         <if test="assetCodes != null and assetCodes.length>0">
             <foreach collection="assetCodes" item="item" open=" and e.ASSET_CODE in(" separator="," close=")">
                 #{item}
             </foreach>
         </if>
         <if test="assetType2s != null and assetType2s.length>0">
-            <foreach collection="assetType2s" item="item" open=" and e.asset_type2 in(" separator="," close=")">
+            <foreach collection="assetType2s" item="item" open=" and e.ASSET_TYPE2 in(" separator="," close=")">
                 #{item}
             </foreach>
         </if>
         <if test="orgAssetType1s != null and orgAssetType1s.length>0">
-            <foreach collection="orgAssetType1s" item="item" open=" and e.org_asset_type1 in(" separator="," close=")">
+            <foreach collection="orgAssetType1s" item="item" open=" and e.ORG_ASSET_TYPE1 in(" separator="," close=")">
                 #{item}
             </foreach>
         </if>
         <if test="orgAssetType2s != null and orgAssetType2s.length>0">
-            <foreach collection="orgAssetType2s" item="item" open=" and e.org_asset_type2 in(" separator="," close=")">
+            <foreach collection="orgAssetType2s" item="item" open=" and e.ORG_ASSET_TYPE2 in(" separator="," close=")">
                 #{item}
             </foreach>
         </if>
@@ -2164,7 +2165,7 @@
             AND DATAUUID = #{Assetuuid,jdbcType=VARCHAR}
         </if>
         )  a
-        left join  SYS_DATADICT_LIST_LINK L ON  L.LINKED_DICT_CODE = 'SVR_ASSET_TYPE_FIRST_LEVEL'  AND L.ITEM_CODE = A.asset_type2
+        left join  SYS_DATADICT_LIST_LINK L ON  L.LINKED_DICT_CODE = 'SVR_ASSET_TYPE_FIRST_LEVEL'  AND L.ITEM_CODE = A.ASSET_TYPE2
         WHERE 1=1
         <if test="assetTypes != null and assetTypes.length>0">
             <foreach collection="assetTypes" item="item" open=" and trim(L.LINKED_ITEM_CODE) in(" separator="," close=")">
@@ -3644,88 +3645,248 @@
         <result property="isDepositFlag" column="IS_DEPOSIT_FLAG" jdbcType="VARCHAR"/>
         <result property="isConstracteBusi" column="IS_CONSTRACTE_BUSI" jdbcType="VARCHAR"/>
         <result property="isBankCap" column="IS_BANK_CAP" jdbcType="VARCHAR"/>
-        <result property="errMsg" column="ERR_MSG" jdbcType="CLOB"/>
+        <result property="errMsg" column="ERR_MSG" jdbcType="VARCHAR"/>
+        <result column="ORG_DATA" property="orgData" jdbcType="VARCHAR" />
     </resultMap>
     <select id="selectList" resultMap="resultMap">
+
+    select * from (
         SELECT
-        ASSET_UUID,ASSET_CODE,ASSET_TYPE,
-        ASSET_TYPE2,CCY,TRADE_MARKET,
-        VDATE,MDATE,DISCOUNT_YIELD,
-        ASSET_YIELD,BASIS,AMT,
-        BANK_NAME,IS_STRUCT,TARGET_TYPE,
-        TARGET,ASSET_ID,ASSET_NAME,
-        CHB_SECTYPE,ISSUE_MODE,PARTY_GRADE,
-        PARTY_TYPE1,PARTY_TYPE3,PARTY_TYPE2,
-        INDUSTRY,INDUSTRY_LEVEL2,REGIST_ORG,
-        REGISTORG_COMMENT,RIVAL_PARTY,TARGET_TYPE1,
-        TARGET_AMT,COUNTRY_AREA,PROFIT_TYPE,
-        IS_RESALE,TERM_DATE,RATE_FLAG,
-        INTPAY_CYCLE,REPAY_CMT,BASIS_TYPE,
-        FLOAT_FACTOR,SPREAD_RATE,FINANCIE,
-        FIN_ORG_CODE,FCR_GRADE_IN,FCR_GRADE_OUT,
-        FINANCIER_TYPE1,FINANCIER_TYPE2,FINANCIER_TYPE3,
-        FINANCE_PROJ,INDUSTRY1,INDUSTRY_LEVEL2_TYPE,
-        PRO_INDUSTRY,PRO_INDUSTRY_LEVEL2,INDUSTRY_FLAG,
-        MONIT_TYPE,MON_TYPE_COMM,GUA_TYPE,
-        GUA_TYPE_REMARK,FINANCIER_GRADE,IN_GRADE,
-        OUT_GRADE,CHOSE,CONDITION_CMM,
-        FIN_AREA,TOTAL_FEE_RATE,IS_RIGHT,
-        NOTSTAND_SEC_TYPE,NOTSTAND_SEC_NUM,REMAIN_TERM,
-        MAX_REMAIN_TERM,MIN_REMAIN_TERM,SHARES_TYPE,
-        INDUSTRY_SHARES,INDUSTRY_SHARES2,INVEST_STAGE,
-        SHARES_TYPE1,SHARES_TYPE2,SHARES_TYPE3,
-        IS_PLEDGE,NOM_CAPI,TARGET_TYPE3,
-        ISSUE_PARTY_ID,TERM_MONTH,GUARANTEE_CMT,
-        SPECIAL_CMT,CONTRACT_NAME,INCOME_RATIO,
-        DER_INSTR_RATIO,DER_INSTR_INV_TYPE,DER_INSTR_TARGET,
-        ACCT_MODE,SPECIAL_CMT1,MAX_YIELD,
-        MIN_YIELD,BASIC_PRICE,REG_DATE_PRICE,
-        TRADE_FEE,PARTY_CODE,CHECK_CODE,
-        MANAGER_ID,TRUSTEE_ID,TRU_ACT_TYPE,
-        INVEST_TYPE,CAP_USE_INDU,PLAN_SDATE,
-        PLAN_EDATE,PRO_PROPERTY,MAX_RATE,
-        MIN_RATE,DEBT_SCALE,BUY_STRUCT,
-        MANAGE_TYPE,IS_CTRL_BOTTOM,MGR_FEE_RATE,
-        TRU_FEE_RATE,TRADE_FEE_RATE,AGENCY_FEE_RATE,
-        OTHER_FEE_RATE,ASSET_VALUE,REGIST_ORG1,
-        MNG_ORG_NAME,TRU_ORG_NAME,FUND_INVEST_ASSET,
-        IN_ASSET_TYPE,IN_ASSET_TYPE_CMM,REMARK,
-        IS_UNDER_ASSET,IS_GOVERN_FUND,GOVERN_INVEST_FUND,
-        FUND_ENPE_NAME,TRUSTEE,STATUS,
-        CREATE_USER,CREATE_TIME,UPDATE_USER,
-        UPDATE_TIME,DEPT_CODE,ORG_CODE,
-        DATA_SOURCE,PRIVATEFUND_FLAG,PRIVATEPRD_FLAG,
-        BONDTOSTOCK_FLAG,PPPFLAG,STATUS_DATE,
-        CAP_USE_INDU_LEVEL2,ISSUE_PARTY_NAME,SEC_CREDIT_GRADE_TYPE,
-        SEC_MAIN_GRADE,BLN_AREA,INDUSTRY_PBC,
-        CUSTOMER_OBJ_TYPE,ORG_ASSET_TYPE1,ORG_ASSET_TYPE2,
-        ORG_ASSET_TYPE3,BUY_PLACE,ASSET_CODE_OLD,
-        ASSET_TYPE3,PBC_ASSET_TYPE1,PBC_ASSET_TYPE2,
-        PBC_ASSET_TYPE3,ORG_ASSET_TYPE4,ORG_ASSET_TYPE5,
-        PRIVATE_FLAG,INSTIT_SIZE,TRM_FUND_TYPE,
-        BANK_SEC_CAPITAL,BANK_SEC_PREFER,BANK_SEC_PERPETUAL,
-        DEPO_TYPE,RIVAL_PARTY_TYPE,PRIN_BASEAMT,
-        FMDATE,COUPON_SPECIES,INTEREST_RULE_FLAG,
-        INTPAY_RULE,FLOAT_FACTOR_FLAG,STRUCT_GRADE,
-        REPAYMENT_TYPE,PERIOD_REPAYMENT_FLAG,BASIC_ASSET_TYPE,
-        EXCESS_PROFIT_RATE,PLEDGE_TYPE,PLEDGE_VALUE,
-        NATURE_GUARANTEE,RELATION_FINAN,CONTAIN_TYPE,
-        EXERCISE_TYPE,EXERCISE_DATE,FIRST_EXERCISE_DATE,
-        EXERCISE_PERIOD,EXERCISE_PRICE,PERPETUAL_CLAUSE_TYPE,
-        DEFERRED_INTEREST_TYPE,DEFERRED_INTEREST_INT,FIRST_REPRCE_DATE,
-        REPRCE_CYCLE,PART_REDEM_FLAG,PART_REDEM_RATE,
-        CREDIT_ORG_CODE,CREDIT_ORG_NAME,EQUITY_QUIT,
-        DEPT_EQUITY,HOLD_PURPOSE,FINANCIAL_COMISSUE,
-        IS_CHL,CHB_ISSUER_ID,CHB_MANAGER_ID,
-        CHB_FINANCIER_ID,PERPETUAL_FLAG,OPTION_FLAG,
-        IS_BJSZQ,BANK_SEC_KZZQ,BANK_SEC_ZXZQ,
-        ISUNLISTED,IS_BZHPJ,IS_PERPETUAL,
-        IS_FBZB,CONSTRACTE_BUSI_TYPE,CONSTRACTE_GRADE,
-        CONSTRACTE_HEAVER_TIMES,BANK_CAPITAL,IS_PPN,
-        ORG_ASSET_TYPE_EX,IS_FIN_LICENCE,ACCOUNT_NO,
-        CREDIT_ASSET_CODE,BILL_CODE,FINANCIAL_PRODUCT_FLAG,
-        PROD_REGISTER_CODE,PROFIT_FLAG,IS_DEPOSIT_FLAG,
-        IS_CONSTRACTE_BUSI,IS_BANK_CAP,ERR_MSG
+        ASSET_UUID
+        ,ASSET_CODE
+        ,ASSET_TYPE
+        ,ASSET_TYPE2
+        ,CCY
+        ,TRADE_MARKET
+        ,VDATE
+        ,MDATE
+        ,DISCOUNT_YIELD
+        ,ASSET_YIELD
+        ,BASIS
+        ,AMT
+        ,BANK_NAME
+        ,IS_STRUCT
+        ,TARGET_TYPE
+        ,TARGET
+        ,ASSET_ID
+        ,ASSET_NAME
+        ,CHB_SECTYPE
+        ,ISSUE_MODE
+        ,PARTY_GRADE
+        ,PARTY_TYPE1
+        ,PARTY_TYPE3
+        ,PARTY_TYPE2
+        ,INDUSTRY
+        ,INDUSTRY_LEVEL2
+        ,REGIST_ORG
+        ,REGISTORG_COMMENT
+        ,RIVAL_PARTY
+        ,TARGET_TYPE1
+        ,TARGET_AMT
+        ,COUNTRY_AREA
+        ,PROFIT_TYPE
+        ,IS_RESALE
+        ,TERM_DATE
+        ,RATE_FLAG
+        ,INTPAY_CYCLE
+        ,REPAY_CMT
+        ,BASIS_TYPE
+        ,FLOAT_FACTOR
+        ,SPREAD_RATE
+        ,FINANCIE
+        ,FIN_ORG_CODE
+        ,FCR_GRADE_IN
+        ,FCR_GRADE_OUT
+        ,FINANCIER_TYPE1
+        ,FINANCIER_TYPE2
+        ,FINANCIER_TYPE3
+        ,FINANCE_PROJ
+        ,INDUSTRY1
+        ,INDUSTRY_LEVEL2_TYPE
+        ,PRO_INDUSTRY
+        ,PRO_INDUSTRY_LEVEL2
+        ,INDUSTRY_FLAG
+        ,MONIT_TYPE
+        ,MON_TYPE_COMM
+        ,GUA_TYPE
+        ,GUA_TYPE_REMARK
+        ,FINANCIER_GRADE
+        ,IN_GRADE
+        ,OUT_GRADE
+        ,CHOSE
+        ,CONDITION_CMM
+        ,FIN_AREA
+        ,TOTAL_FEE_RATE
+        ,IS_RIGHT
+        ,NOTSTAND_SEC_TYPE
+        ,NOTSTAND_SEC_NUM
+        ,REMAIN_TERM
+        ,MAX_REMAIN_TERM
+        ,MIN_REMAIN_TERM
+        ,SHARES_TYPE
+        ,INDUSTRY_SHARES
+        ,INDUSTRY_SHARES2
+        ,INVEST_STAGE
+        ,SHARES_TYPE1
+        ,SHARES_TYPE2
+        ,SHARES_TYPE3
+        ,IS_PLEDGE
+        ,NOM_CAPI
+        ,TARGET_TYPE3
+        ,ISSUE_PARTY_ID
+        ,TERM_MONTH
+        ,GUARANTEE_CMT
+        ,SPECIAL_CMT
+        ,CONTRACT_NAME
+        ,INCOME_RATIO
+        ,DER_INSTR_RATIO
+        ,DER_INSTR_INV_TYPE
+        ,DER_INSTR_TARGET
+        ,ACCT_MODE
+        ,SPECIAL_CMT1
+        ,MAX_YIELD
+        ,MIN_YIELD
+        ,BASIC_PRICE
+        ,REG_DATE_PRICE
+        ,TRADE_FEE
+        ,PARTY_CODE
+        ,CHECK_CODE
+        ,MANAGER_ID
+        ,TRUSTEE_ID
+        ,TRU_ACT_TYPE
+        ,INVEST_TYPE
+        ,CAP_USE_INDU
+        ,PLAN_SDATE
+        ,PLAN_EDATE
+        ,PRO_PROPERTY
+        ,MAX_RATE
+        ,MIN_RATE
+        ,DEBT_SCALE
+        ,BUY_STRUCT
+        ,MANAGE_TYPE
+        ,IS_CTRL_BOTTOM
+        ,MGR_FEE_RATE
+        ,TRU_FEE_RATE
+        ,TRADE_FEE_RATE
+        ,AGENCY_FEE_RATE
+        ,OTHER_FEE_RATE
+        ,ASSET_VALUE
+        ,REGIST_ORG1
+        ,MNG_ORG_NAME
+        ,TRU_ORG_NAME
+        ,FUND_INVEST_ASSET
+        ,IN_ASSET_TYPE
+        ,IN_ASSET_TYPE_CMM
+        ,REMARK
+        ,IS_UNDER_ASSET
+        ,IS_GOVERN_FUND
+        ,GOVERN_INVEST_FUND
+        ,FUND_ENPE_NAME
+        ,TRUSTEE
+        ,STATUS
+        ,CREATE_USER
+        ,CREATE_TIME
+        ,UPDATE_USER
+        ,UPDATE_TIME
+        ,DEPT_CODE
+        ,ORG_CODE
+        ,DATA_SOURCE
+        ,PRIVATEFUND_FLAG
+        ,PRIVATEPRD_FLAG
+        ,BONDTOSTOCK_FLAG
+        ,PPPFLAG
+        ,STATUS_DATE
+        ,CAP_USE_INDU_LEVEL2
+        ,ISSUE_PARTY_NAME
+        ,SEC_CREDIT_GRADE_TYPE
+        ,SEC_MAIN_GRADE
+        ,BLN_AREA
+        ,INDUSTRY_PBC
+        ,CUSTOMER_OBJ_TYPE
+        ,ORG_ASSET_TYPE1
+        ,ORG_ASSET_TYPE2
+        ,ORG_ASSET_TYPE3
+        ,BUY_PLACE
+        ,ASSET_CODE_OLD
+        ,ASSET_TYPE3
+        ,PBC_ASSET_TYPE1
+        ,PBC_ASSET_TYPE2
+        ,PBC_ASSET_TYPE3
+        ,ORG_ASSET_TYPE4
+        ,ORG_ASSET_TYPE5
+        ,PRIVATE_FLAG
+        ,INSTIT_SIZE
+        ,TRM_FUND_TYPE
+        ,BANK_SEC_CAPITAL
+        ,BANK_SEC_PREFER
+        ,BANK_SEC_PERPETUAL
+        ,DEPO_TYPE
+        ,RIVAL_PARTY_TYPE
+        ,PRIN_BASEAMT
+        ,FMDATE
+        ,COUPON_SPECIES
+        ,INTEREST_RULE_FLAG
+        ,INTPAY_RULE
+        ,FLOAT_FACTOR_FLAG
+        ,STRUCT_GRADE
+        ,REPAYMENT_TYPE
+        ,PERIOD_REPAYMENT_FLAG
+        ,BASIC_ASSET_TYPE
+        ,EXCESS_PROFIT_RATE
+        ,PLEDGE_TYPE
+        ,PLEDGE_VALUE
+        ,NATURE_GUARANTEE
+        ,RELATION_FINAN
+        ,CONTAIN_TYPE
+        ,EXERCISE_TYPE
+        ,EXERCISE_DATE
+        ,FIRST_EXERCISE_DATE
+        ,EXERCISE_PERIOD
+        ,EXERCISE_PRICE
+        ,PERPETUAL_CLAUSE_TYPE
+        ,DEFERRED_INTEREST_TYPE
+        ,DEFERRED_INTEREST_INT
+        ,FIRST_REPRCE_DATE
+        ,REPRCE_CYCLE
+        ,PART_REDEM_FLAG
+        ,PART_REDEM_RATE
+        ,CREDIT_ORG_CODE
+        ,CREDIT_ORG_NAME
+        ,EQUITY_QUIT
+        ,DEPT_EQUITY
+        ,HOLD_PURPOSE
+        ,FINANCIAL_COMISSUE
+        ,IS_CHL
+        ,CHB_ISSUER_ID
+        ,CHB_MANAGER_ID
+        ,CHB_FINANCIER_ID
+        ,PERPETUAL_FLAG
+        ,OPTION_FLAG
+        ,IS_BJSZQ
+        ,BANK_SEC_KZZQ
+        ,BANK_SEC_ZXZQ
+        ,ISUNLISTED
+        ,IS_BZHPJ
+        ,IS_PERPETUAL
+        ,IS_FBZB
+        ,CONSTRACTE_BUSI_TYPE
+        ,CONSTRACTE_GRADE
+        ,CONSTRACTE_HEAVER_TIMES
+        ,BANK_CAPITAL
+        ,IS_PPN
+        ,ORG_ASSET_TYPE_EX
+        ,IS_FIN_LICENCE
+        ,ACCOUNT_NO
+        ,CREDIT_ASSET_CODE
+        ,BILL_CODE
+        ,FINANCIAL_PRODUCT_FLAG
+        ,PROD_REGISTER_CODE
+        ,PROFIT_FLAG
+        ,IS_DEPOSIT_FLAG
+        ,IS_CONSTRACTE_BUSI
+        ,IS_BANK_CAP
+        ,ERR_MSG
+        ,null as ORG_DATA
         FROM CHB_ASSET_INFO
         WHERE 1=1
         <if test="assetCodes != null">
@@ -3733,11 +3894,7 @@
                 #{item}
             </foreach>
         </if>
-        <if test="assetTypes != null">
-            <foreach collection="assetTypes" item="item" open=" and ASSET_TYPE in(" separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
+
         <if test="assetType2s != null">
             <foreach collection="assetType2s" item="item" open=" and ASSET_TYPE2 in(" separator="," close=")">
                 #{item}
@@ -3753,10 +3910,766 @@
                 #{item}
             </foreach>
         </if>
-        <if test="status !=null and status!=''">
-            and STATUS = #{status}
+        <if test="dataStatus !=null and dataStatus!=''">
+            and STATUS = #{dataStatus}
+        </if>
+        union all
+        SELECT
+        DATAUUID ASSET_UUID
+        ,ASSET_CODE
+        ,ASSET_TYPE
+        ,ASSET_TYPE2
+        , null CCY
+        , null TRADE_MARKET
+        ,null VDATE
+        ,null MDATE
+        ,null DISCOUNT_YIELD
+        ,null ASSET_YIELD
+        ,null BASIS
+        ,null AMT
+        ,null BANK_NAME
+        ,null IS_STRUCT
+        ,null TARGET_TYPE
+        ,null TARGET
+        ,null ASSET_ID
+        ,null ASSET_NAME
+        ,null CHB_SECTYPE
+        ,null ISSUE_MODE
+        ,null PARTY_GRADE
+        ,null PARTY_TYPE1
+        ,null PARTY_TYPE3
+        ,null PARTY_TYPE2
+        ,null INDUSTRY
+        ,null INDUSTRY_LEVEL2
+        ,null REGIST_ORG
+        ,null REGISTORG_COMMENT
+        ,null RIVAL_PARTY
+        ,null TARGET_TYPE1
+        ,null TARGET_AMT
+        ,null COUNTRY_AREA
+        ,null PROFIT_TYPE
+        ,null IS_RESALE
+        ,null TERM_DATE
+        ,null RATE_FLAG
+        ,null INTPAY_CYCLE
+        ,null REPAY_CMT
+        ,null BASIS_TYPE
+        ,null FLOAT_FACTOR
+        ,null SPREAD_RATE
+        ,null FINANCIE
+        ,null FIN_ORG_CODE
+        ,null FCR_GRADE_IN
+        ,null FCR_GRADE_OUT
+        ,null FINANCIER_TYPE1
+        ,null FINANCIER_TYPE2
+        ,null FINANCIER_TYPE3
+        ,null FINANCE_PROJ
+        ,null INDUSTRY1
+        ,null INDUSTRY_LEVEL2_TYPE
+        ,null PRO_INDUSTRY
+        ,null PRO_INDUSTRY_LEVEL2
+        ,null INDUSTRY_FLAG
+        ,null MONIT_TYPE
+        ,null MON_TYPE_COMM
+        ,null GUA_TYPE
+        ,null GUA_TYPE_REMARK
+        ,null FINANCIER_GRADE
+        ,null IN_GRADE
+        ,null OUT_GRADE
+        ,null CHOSE
+        ,null CONDITION_CMM
+        ,null FIN_AREA
+        ,null TOTAL_FEE_RATE
+        ,null IS_RIGHT
+        ,null NOTSTAND_SEC_TYPE
+        ,null NOTSTAND_SEC_NUM
+        ,null REMAIN_TERM
+        ,null MAX_REMAIN_TERM
+        ,null MIN_REMAIN_TERM
+        ,null SHARES_TYPE
+        ,null INDUSTRY_SHARES
+        ,null INDUSTRY_SHARES2
+        ,null INVEST_STAGE
+        ,null SHARES_TYPE1
+        ,null SHARES_TYPE2
+        ,null SHARES_TYPE3
+        ,null IS_PLEDGE
+        ,null NOM_CAPI
+        ,null TARGET_TYPE3
+        ,null ISSUE_PARTY_ID
+        ,null TERM_MONTH
+        ,null GUARANTEE_CMT
+        ,null SPECIAL_CMT
+        ,null CONTRACT_NAME
+        ,null INCOME_RATIO
+        ,null DER_INSTR_RATIO
+        ,null DER_INSTR_INV_TYPE
+        ,null DER_INSTR_TARGET
+        ,null ACCT_MODE
+        ,null SPECIAL_CMT1
+        ,null MAX_YIELD
+        ,null MIN_YIELD
+        ,null BASIC_PRICE
+        ,null REG_DATE_PRICE
+        ,null TRADE_FEE
+        ,null PARTY_CODE
+        ,null CHECK_CODE
+        ,null MANAGER_ID
+        ,null TRUSTEE_ID
+        ,null TRU_ACT_TYPE
+        ,null INVEST_TYPE
+        ,null CAP_USE_INDU
+        ,null PLAN_SDATE
+        ,null PLAN_EDATE
+        ,null PRO_PROPERTY
+        ,null MAX_RATE
+        ,null MIN_RATE
+        ,null DEBT_SCALE
+        ,null BUY_STRUCT
+        ,null MANAGE_TYPE
+        ,null IS_CTRL_BOTTOM
+        ,null MGR_FEE_RATE
+        ,null TRU_FEE_RATE
+        ,null TRADE_FEE_RATE
+        ,null AGENCY_FEE_RATE
+        ,null OTHER_FEE_RATE
+        ,null ASSET_VALUE
+        ,null REGIST_ORG1
+        ,null MNG_ORG_NAME
+        ,null TRU_ORG_NAME
+        ,null FUND_INVEST_ASSET
+        ,null IN_ASSET_TYPE
+        ,null IN_ASSET_TYPE_CMM
+        ,null REMARK
+        ,null IS_UNDER_ASSET
+        ,null IS_GOVERN_FUND
+        ,null GOVERN_INVEST_FUND
+        ,null FUND_ENPE_NAME
+        ,null TRUSTEE
+        ,STATUS
+        ,CREATE_USER
+        ,CREATE_TIME
+        ,UPDATE_USER
+        ,UPDATE_TIME
+        ,DEPT_CODE
+        ,ORG_CODE
+        ,null DATA_SOURCE
+        ,null PRIVATEFUND_FLAG
+        ,null PRIVATEPRD_FLAG
+        ,null BONDTOSTOCK_FLAG
+        ,null PPPFLAG
+        ,null STATUS_DATE
+        ,null CAP_USE_INDU_LEVEL2
+        ,null ISSUE_PARTY_NAME
+        ,null SEC_CREDIT_GRADE_TYPE
+        ,null SEC_MAIN_GRADE
+        ,null BLN_AREA
+        ,null INDUSTRY_PBC
+        ,null CUSTOMER_OBJ_TYPE
+        ,ORG_ASSET_TYPE1
+        ,ORG_ASSET_TYPE2
+        ,ORG_ASSET_TYPE3
+        ,null BUY_PLACE
+        ,null ASSET_CODE_OLD
+        ,null ASSET_TYPE3
+        ,null PBC_ASSET_TYPE1
+        ,null PBC_ASSET_TYPE2
+        ,null PBC_ASSET_TYPE3
+        ,ORG_ASSET_TYPE4
+        ,ORG_ASSET_TYPE5
+        ,null PRIVATE_FLAG
+        ,null INSTIT_SIZE
+        ,null TRM_FUND_TYPE
+        ,null BANK_SEC_CAPITAL
+        ,null BANK_SEC_PREFER
+        ,null BANK_SEC_PERPETUAL
+        ,null DEPO_TYPE
+        ,null RIVAL_PARTY_TYPE
+        ,null PRIN_BASEAMT
+        ,null FMDATE
+        ,null COUPON_SPECIES
+        ,null INTEREST_RULE_FLAG
+        ,null INTPAY_RULE
+        ,null FLOAT_FACTOR_FLAG
+        ,null STRUCT_GRADE
+        ,null REPAYMENT_TYPE
+        ,null PERIOD_REPAYMENT_FLAG
+        ,null BASIC_ASSET_TYPE
+        ,null EXCESS_PROFIT_RATE
+        ,null PLEDGE_TYPE
+        ,null PLEDGE_VALUE
+        ,null NATURE_GUARANTEE
+        ,null RELATION_FINAN
+        ,null CONTAIN_TYPE
+        ,null EXERCISE_TYPE
+        ,null EXERCISE_DATE
+        ,null FIRST_EXERCISE_DATE
+        ,null EXERCISE_PERIOD
+        ,null EXERCISE_PRICE
+        ,null PERPETUAL_CLAUSE_TYPE
+        ,null DEFERRED_INTEREST_TYPE
+        ,null DEFERRED_INTEREST_INT
+        ,null FIRST_REPRCE_DATE
+        ,null REPRCE_CYCLE
+        ,null PART_REDEM_FLAG
+        ,null PART_REDEM_RATE
+        ,null CREDIT_ORG_CODE
+        ,null CREDIT_ORG_NAME
+        ,null EQUITY_QUIT
+        ,null DEPT_EQUITY
+        ,null HOLD_PURPOSE
+        ,null FINANCIAL_COMISSUE
+        ,null IS_CHL
+        ,null CHB_ISSUER_ID
+        ,null CHB_MANAGER_ID
+        ,null CHB_FINANCIER_ID
+        ,null PERPETUAL_FLAG
+        ,null OPTION_FLAG
+        ,null IS_BJSZQ
+        ,null BANK_SEC_KZZQ
+        ,null BANK_SEC_ZXZQ
+        ,null ISUNLISTED
+        ,null IS_BZHPJ
+        ,null IS_PERPETUAL
+        ,null IS_FBZB
+        ,null CONSTRACTE_BUSI_TYPE
+        ,null CONSTRACTE_GRADE
+        ,null CONSTRACTE_HEAVER_TIMES
+        ,null BANK_CAPITAL
+        ,null IS_PPN
+        ,null ORG_ASSET_TYPE_EX
+        ,null IS_FIN_LICENCE
+        ,null ACCOUNT_NO
+        ,null CREDIT_ASSET_CODE
+        ,null BILL_CODE
+        ,null FINANCIAL_PRODUCT_FLAG
+        ,null PROD_REGISTER_CODE
+        ,null PROFIT_FLAG
+        ,null IS_DEPOSIT_FLAG
+        ,null IS_CONSTRACTE_BUSI
+        ,null IS_BANK_CAP
+        ,ERR_MSG
+        ,ORG_DATA
+        FROM chb_asset_info_errodata
+        WHERE 1=1
+        <if test="assetCodes != null">
+            <foreach collection="assetCodes" item="item" open=" and ASSET_CODE in(" separator="," close=")">
+                #{item}
+            </foreach>
         </if>
 
+        <if test="assetType2s != null">
+            <foreach collection="assetType2s" item="item" open=" and ASSET_TYPE2 in(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="orgAssetType1s != null ">
+            <foreach collection="orgAssetType1s" item="item" open=" and ORG_ASSET_TYPE1 in(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="orgAssetType2s != null">
+            <foreach collection="orgAssetType2s" item="item" open=" and ORG_ASSET_TYPE2 in(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="dataStatus !=null and dataStatus!=''">
+            and STATUS = #{dataStatus}
+        </if>
+        )a
+        left join  SYS_DATADICT_LIST_LINK L ON  L.LINKED_DICT_CODE = 'SVR_ASSET_TYPE_FIRST_LEVEL'  AND L.ITEM_CODE = a.ASSET_TYPE2
+        WHERE 1=1
+        <if test="assetTypes != null and assetTypes.length>0">
+            <foreach collection="assetTypes" item="item" open=" and trim(L.LINKED_ITEM_CODE) in(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        ORDER BY a.status DESC
+    </select>
+    <select id="selectBykeys" resultMap="resultMap">
+        SELECT
+        ASSET_UUID
+        ,ASSET_CODE
+        ,ASSET_TYPE
+        ,ASSET_TYPE2
+        ,CCY
+        ,TRADE_MARKET
+        ,VDATE
+        ,MDATE
+        ,DISCOUNT_YIELD
+        ,ASSET_YIELD
+        ,BASIS
+        ,AMT
+        ,BANK_NAME
+        ,IS_STRUCT
+        ,TARGET_TYPE
+        ,TARGET
+        ,ASSET_ID
+        ,ASSET_NAME
+        ,CHB_SECTYPE
+        ,ISSUE_MODE
+        ,PARTY_GRADE
+        ,PARTY_TYPE1
+        ,PARTY_TYPE3
+        ,PARTY_TYPE2
+        ,INDUSTRY
+        ,INDUSTRY_LEVEL2
+        ,REGIST_ORG
+        ,REGISTORG_COMMENT
+        ,RIVAL_PARTY
+        ,TARGET_TYPE1
+        ,TARGET_AMT
+        ,COUNTRY_AREA
+        ,PROFIT_TYPE
+        ,IS_RESALE
+        ,TERM_DATE
+        ,RATE_FLAG
+        ,INTPAY_CYCLE
+        ,REPAY_CMT
+        ,BASIS_TYPE
+        ,FLOAT_FACTOR
+        ,SPREAD_RATE
+        ,FINANCIE
+        ,FIN_ORG_CODE
+        ,FCR_GRADE_IN
+        ,FCR_GRADE_OUT
+        ,FINANCIER_TYPE1
+        ,FINANCIER_TYPE2
+        ,FINANCIER_TYPE3
+        ,FINANCE_PROJ
+        ,INDUSTRY1
+        ,INDUSTRY_LEVEL2_TYPE
+        ,PRO_INDUSTRY
+        ,PRO_INDUSTRY_LEVEL2
+        ,INDUSTRY_FLAG
+        ,MONIT_TYPE
+        ,MON_TYPE_COMM
+        ,GUA_TYPE
+        ,GUA_TYPE_REMARK
+        ,FINANCIER_GRADE
+        ,IN_GRADE
+        ,OUT_GRADE
+        ,CHOSE
+        ,CONDITION_CMM
+        ,FIN_AREA
+        ,TOTAL_FEE_RATE
+        ,IS_RIGHT
+        ,NOTSTAND_SEC_TYPE
+        ,NOTSTAND_SEC_NUM
+        ,REMAIN_TERM
+        ,MAX_REMAIN_TERM
+        ,MIN_REMAIN_TERM
+        ,SHARES_TYPE
+        ,INDUSTRY_SHARES
+        ,INDUSTRY_SHARES2
+        ,INVEST_STAGE
+        ,SHARES_TYPE1
+        ,SHARES_TYPE2
+        ,SHARES_TYPE3
+        ,IS_PLEDGE
+        ,NOM_CAPI
+        ,TARGET_TYPE3
+        ,ISSUE_PARTY_ID
+        ,TERM_MONTH
+        ,GUARANTEE_CMT
+        ,SPECIAL_CMT
+        ,CONTRACT_NAME
+        ,INCOME_RATIO
+        ,DER_INSTR_RATIO
+        ,DER_INSTR_INV_TYPE
+        ,DER_INSTR_TARGET
+        ,ACCT_MODE
+        ,SPECIAL_CMT1
+        ,MAX_YIELD
+        ,MIN_YIELD
+        ,BASIC_PRICE
+        ,REG_DATE_PRICE
+        ,TRADE_FEE
+        ,PARTY_CODE
+        ,CHECK_CODE
+        ,MANAGER_ID
+        ,TRUSTEE_ID
+        ,TRU_ACT_TYPE
+        ,INVEST_TYPE
+        ,CAP_USE_INDU
+        ,PLAN_SDATE
+        ,PLAN_EDATE
+        ,PRO_PROPERTY
+        ,MAX_RATE
+        ,MIN_RATE
+        ,DEBT_SCALE
+        ,BUY_STRUCT
+        ,MANAGE_TYPE
+        ,IS_CTRL_BOTTOM
+        ,MGR_FEE_RATE
+        ,TRU_FEE_RATE
+        ,TRADE_FEE_RATE
+        ,AGENCY_FEE_RATE
+        ,OTHER_FEE_RATE
+        ,ASSET_VALUE
+        ,REGIST_ORG1
+        ,MNG_ORG_NAME
+        ,TRU_ORG_NAME
+        ,FUND_INVEST_ASSET
+        ,IN_ASSET_TYPE
+        ,IN_ASSET_TYPE_CMM
+        ,REMARK
+        ,IS_UNDER_ASSET
+        ,IS_GOVERN_FUND
+        ,GOVERN_INVEST_FUND
+        ,FUND_ENPE_NAME
+        ,TRUSTEE
+        ,STATUS
+        ,CREATE_USER
+        ,CREATE_TIME
+        ,UPDATE_USER
+        ,UPDATE_TIME
+        ,DEPT_CODE
+        ,ORG_CODE
+        ,DATA_SOURCE
+        ,PRIVATEFUND_FLAG
+        ,PRIVATEPRD_FLAG
+        ,BONDTOSTOCK_FLAG
+        ,PPPFLAG
+        ,STATUS_DATE
+        ,CAP_USE_INDU_LEVEL2
+        ,ISSUE_PARTY_NAME
+        ,SEC_CREDIT_GRADE_TYPE
+        ,SEC_MAIN_GRADE
+        ,BLN_AREA
+        ,INDUSTRY_PBC
+        ,CUSTOMER_OBJ_TYPE
+        ,ORG_ASSET_TYPE1
+        ,ORG_ASSET_TYPE2
+        ,ORG_ASSET_TYPE3
+        ,BUY_PLACE
+        ,ASSET_CODE_OLD
+        ,ASSET_TYPE3
+        ,PBC_ASSET_TYPE1
+        ,PBC_ASSET_TYPE2
+        ,PBC_ASSET_TYPE3
+        ,ORG_ASSET_TYPE4
+        ,ORG_ASSET_TYPE5
+        ,PRIVATE_FLAG
+        ,INSTIT_SIZE
+        ,TRM_FUND_TYPE
+        ,BANK_SEC_CAPITAL
+        ,BANK_SEC_PREFER
+        ,BANK_SEC_PERPETUAL
+        ,DEPO_TYPE
+        ,RIVAL_PARTY_TYPE
+        ,PRIN_BASEAMT
+        ,FMDATE
+        ,COUPON_SPECIES
+        ,INTEREST_RULE_FLAG
+        ,INTPAY_RULE
+        ,FLOAT_FACTOR_FLAG
+        ,STRUCT_GRADE
+        ,REPAYMENT_TYPE
+        ,PERIOD_REPAYMENT_FLAG
+        ,BASIC_ASSET_TYPE
+        ,EXCESS_PROFIT_RATE
+        ,PLEDGE_TYPE
+        ,PLEDGE_VALUE
+        ,NATURE_GUARANTEE
+        ,RELATION_FINAN
+        ,CONTAIN_TYPE
+        ,EXERCISE_TYPE
+        ,EXERCISE_DATE
+        ,FIRST_EXERCISE_DATE
+        ,EXERCISE_PERIOD
+        ,EXERCISE_PRICE
+        ,PERPETUAL_CLAUSE_TYPE
+        ,DEFERRED_INTEREST_TYPE
+        ,DEFERRED_INTEREST_INT
+        ,FIRST_REPRCE_DATE
+        ,REPRCE_CYCLE
+        ,PART_REDEM_FLAG
+        ,PART_REDEM_RATE
+        ,CREDIT_ORG_CODE
+        ,CREDIT_ORG_NAME
+        ,EQUITY_QUIT
+        ,DEPT_EQUITY
+        ,HOLD_PURPOSE
+        ,FINANCIAL_COMISSUE
+        ,IS_CHL
+        ,CHB_ISSUER_ID
+        ,CHB_MANAGER_ID
+        ,CHB_FINANCIER_ID
+        ,PERPETUAL_FLAG
+        ,OPTION_FLAG
+        ,IS_BJSZQ
+        ,BANK_SEC_KZZQ
+        ,BANK_SEC_ZXZQ
+        ,ISUNLISTED
+        ,IS_BZHPJ
+        ,IS_PERPETUAL
+        ,IS_FBZB
+        ,CONSTRACTE_BUSI_TYPE
+        ,CONSTRACTE_GRADE
+        ,CONSTRACTE_HEAVER_TIMES
+        ,BANK_CAPITAL
+        ,IS_PPN
+        ,ORG_ASSET_TYPE_EX
+        ,IS_FIN_LICENCE
+        ,ACCOUNT_NO
+        ,CREDIT_ASSET_CODE
+        ,BILL_CODE
+        ,FINANCIAL_PRODUCT_FLAG
+        ,PROD_REGISTER_CODE
+        ,PROFIT_FLAG
+        ,IS_DEPOSIT_FLAG
+        ,IS_CONSTRACTE_BUSI
+        ,IS_BANK_CAP
+        ,ERR_MSG
+        ,null as ORG_DATA
+        FROM CHB_ASSET_INFO
+        WHERE ASSET_UUID in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        union all
+        SELECT
+        DATAUUID ASSET_UUID
+        ,ASSET_CODE
+        ,ASSET_TYPE
+        ,ASSET_TYPE2
+        , null CCY
+        , null TRADE_MARKET
+        ,null VDATE
+        , null MDATE
+        ,null DISCOUNT_YIELD
+        ,null ASSET_YIELD
+        ,null BASIS
+        ,null AMT
+        ,null BANK_NAME
+        ,null IS_STRUCT
+        ,null TARGET_TYPE
+        ,null TARGET
+        ,null ASSET_ID
+        ,null ASSET_NAME
+        ,null CHB_SECTYPE
+        ,null ISSUE_MODE
+        ,null PARTY_GRADE
+        ,null PARTY_TYPE1
+        ,null PARTY_TYPE3
+        ,null PARTY_TYPE2
+        ,null INDUSTRY
+        ,null INDUSTRY_LEVEL2
+        ,null REGIST_ORG
+        ,null REGISTORG_COMMENT
+        ,null RIVAL_PARTY
+        ,null TARGET_TYPE1
+        ,null TARGET_AMT
+        ,null COUNTRY_AREA
+        ,null PROFIT_TYPE
+        ,null IS_RESALE
+        ,null TERM_DATE
+        ,null RATE_FLAG
+        ,null INTPAY_CYCLE
+        ,null REPAY_CMT
+        ,null BASIS_TYPE
+        ,null FLOAT_FACTOR
+        ,null SPREAD_RATE
+        ,null FINANCIE
+        ,null FIN_ORG_CODE
+        ,null FCR_GRADE_IN
+        ,null FCR_GRADE_OUT
+        ,null FINANCIER_TYPE1
+        ,null FINANCIER_TYPE2
+        ,null FINANCIER_TYPE3
+        ,null FINANCE_PROJ
+        ,null INDUSTRY1
+        ,null INDUSTRY_LEVEL2_TYPE
+        ,null PRO_INDUSTRY
+        ,null PRO_INDUSTRY_LEVEL2
+        ,null INDUSTRY_FLAG
+        ,null MONIT_TYPE
+        ,null MON_TYPE_COMM
+        ,null GUA_TYPE
+        ,null GUA_TYPE_REMARK
+        ,null FINANCIER_GRADE
+        ,null IN_GRADE
+        ,null OUT_GRADE
+        ,null CHOSE
+        ,null CONDITION_CMM
+        ,null FIN_AREA
+        ,null TOTAL_FEE_RATE
+        ,null IS_RIGHT
+        ,null NOTSTAND_SEC_TYPE
+        ,null NOTSTAND_SEC_NUM
+        ,null REMAIN_TERM
+        ,null MAX_REMAIN_TERM
+        ,null MIN_REMAIN_TERM
+        ,null SHARES_TYPE
+        ,null INDUSTRY_SHARES
+        ,null INDUSTRY_SHARES2
+        ,null INVEST_STAGE
+        ,null SHARES_TYPE1
+        ,null SHARES_TYPE2
+        ,null SHARES_TYPE3
+        ,null IS_PLEDGE
+        ,null NOM_CAPI
+        ,null TARGET_TYPE3
+        ,null ISSUE_PARTY_ID
+        ,null TERM_MONTH
+        ,null GUARANTEE_CMT
+        ,null SPECIAL_CMT
+        ,null CONTRACT_NAME
+        ,null INCOME_RATIO
+        ,null DER_INSTR_RATIO
+        ,null DER_INSTR_INV_TYPE
+        ,null DER_INSTR_TARGET
+        ,null ACCT_MODE
+        ,null SPECIAL_CMT1
+        ,null MAX_YIELD
+        ,null MIN_YIELD
+        ,null BASIC_PRICE
+        ,null REG_DATE_PRICE
+        ,null TRADE_FEE
+        ,null PARTY_CODE
+        ,null CHECK_CODE
+        ,null MANAGER_ID
+        ,null TRUSTEE_ID
+        ,null TRU_ACT_TYPE
+        ,null INVEST_TYPE
+        ,null CAP_USE_INDU
+        ,null PLAN_SDATE
+        ,null PLAN_EDATE
+        ,null PRO_PROPERTY
+        ,null MAX_RATE
+        ,null MIN_RATE
+        ,null DEBT_SCALE
+        ,null BUY_STRUCT
+        ,null MANAGE_TYPE
+        ,null IS_CTRL_BOTTOM
+        ,null MGR_FEE_RATE
+        ,null TRU_FEE_RATE
+        ,null TRADE_FEE_RATE
+        ,null AGENCY_FEE_RATE
+        ,null OTHER_FEE_RATE
+        ,null ASSET_VALUE
+        ,null REGIST_ORG1
+        ,null MNG_ORG_NAME
+        ,null TRU_ORG_NAME
+        ,null FUND_INVEST_ASSET
+        ,null IN_ASSET_TYPE
+        ,null IN_ASSET_TYPE_CMM
+        ,null REMARK
+        ,null IS_UNDER_ASSET
+        ,null IS_GOVERN_FUND
+        ,null GOVERN_INVEST_FUND
+        ,null FUND_ENPE_NAME
+        ,null TRUSTEE
+        ,STATUS
+        ,CREATE_USER
+        ,CREATE_TIME
+        ,UPDATE_USER
+        ,UPDATE_TIME
+        ,DEPT_CODE
+        ,ORG_CODE
+        ,null DATA_SOURCE
+        ,null PRIVATEFUND_FLAG
+        ,null PRIVATEPRD_FLAG
+        ,null BONDTOSTOCK_FLAG
+        ,null PPPFLAG
+        ,null STATUS_DATE
+        ,null CAP_USE_INDU_LEVEL2
+        ,null ISSUE_PARTY_NAME
+        ,null SEC_CREDIT_GRADE_TYPE
+        ,null SEC_MAIN_GRADE
+        ,null BLN_AREA
+        ,null INDUSTRY_PBC
+        ,null CUSTOMER_OBJ_TYPE
+        ,ORG_ASSET_TYPE1
+        ,ORG_ASSET_TYPE2
+        ,ORG_ASSET_TYPE3
+        ,null BUY_PLACE
+        ,null ASSET_CODE_OLD
+        ,null ASSET_TYPE3
+        ,null PBC_ASSET_TYPE1
+        ,null PBC_ASSET_TYPE2
+        ,null PBC_ASSET_TYPE3
+        ,ORG_ASSET_TYPE4
+        ,ORG_ASSET_TYPE5
+        ,null PRIVATE_FLAG
+        ,null INSTIT_SIZE
+        ,null TRM_FUND_TYPE
+        ,null BANK_SEC_CAPITAL
+        ,null BANK_SEC_PREFER
+        ,null BANK_SEC_PERPETUAL
+        ,null DEPO_TYPE
+        ,null RIVAL_PARTY_TYPE
+        ,null PRIN_BASEAMT
+        ,null FMDATE
+        ,null COUPON_SPECIES
+        ,null INTEREST_RULE_FLAG
+        ,null INTPAY_RULE
+        ,null FLOAT_FACTOR_FLAG
+        ,null STRUCT_GRADE
+        ,null REPAYMENT_TYPE
+        ,null PERIOD_REPAYMENT_FLAG
+        ,null BASIC_ASSET_TYPE
+        ,null EXCESS_PROFIT_RATE
+        ,null PLEDGE_TYPE
+        ,null PLEDGE_VALUE
+        ,null NATURE_GUARANTEE
+        ,null RELATION_FINAN
+        ,null CONTAIN_TYPE
+        ,null EXERCISE_TYPE
+        ,null EXERCISE_DATE
+        ,null FIRST_EXERCISE_DATE
+        ,null EXERCISE_PERIOD
+        ,null EXERCISE_PRICE
+        ,null PERPETUAL_CLAUSE_TYPE
+        ,null DEFERRED_INTEREST_TYPE
+        ,null DEFERRED_INTEREST_INT
+        ,null FIRST_REPRCE_DATE
+        ,null REPRCE_CYCLE
+        ,null PART_REDEM_FLAG
+        ,null PART_REDEM_RATE
+        ,null CREDIT_ORG_CODE
+        ,null CREDIT_ORG_NAME
+        ,null EQUITY_QUIT
+        ,null DEPT_EQUITY
+        ,null HOLD_PURPOSE
+        ,null FINANCIAL_COMISSUE
+        ,null IS_CHL
+        ,null CHB_ISSUER_ID
+        ,null CHB_MANAGER_ID
+        ,null CHB_FINANCIER_ID
+        ,null PERPETUAL_FLAG
+        ,null OPTION_FLAG
+        ,null IS_BJSZQ
+        ,null BANK_SEC_KZZQ
+        ,null BANK_SEC_ZXZQ
+        ,null ISUNLISTED
+        ,null IS_BZHPJ
+        ,null IS_PERPETUAL
+        ,null IS_FBZB
+        ,null CONSTRACTE_BUSI_TYPE
+        ,null CONSTRACTE_GRADE
+        ,null CONSTRACTE_HEAVER_TIMES
+        ,null BANK_CAPITAL
+        ,null IS_PPN
+        ,null ORG_ASSET_TYPE_EX
+        ,null IS_FIN_LICENCE
+        ,null ACCOUNT_NO
+        ,null CREDIT_ASSET_CODE
+        ,null BILL_CODE
+        ,null FINANCIAL_PRODUCT_FLAG
+        ,null PROD_REGISTER_CODE
+        ,null PROFIT_FLAG
+        ,null IS_DEPOSIT_FLAG
+        ,null IS_CONSTRACTE_BUSI
+        ,null IS_BANK_CAP
+        ,ERR_MSG
+        ,ORG_DATA
+        FROM chb_asset_info_errodata
+        WHERE DATAUUID in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
 
     </select>
     <update id="updateBatchNotCheckNull"
@@ -4839,4 +5752,54 @@
         ,CII.ERR_MSG = TEMP.ERR_MSG
        WHERE CII.ASSET_CODE = TEMP.ASSET_CODE
     </insert>
+
+    <select id="getWorkFlowList" resultType="com.joyintech.system.main.dto.WorkFlowInfoDto">
+        SELECT DISTINCT
+        workflowId,
+        processInstanceId,
+        crtDate,
+        businessCode,
+        businessTypeValue,
+        actionType,
+        operator,
+        title,
+        processState
+        FROM
+        (
+        SELECT
+        wlist.SEQ_NO        workflowId,
+        wlist.WORKFLOW_ID   processInstanceId,
+        wlist.CRT_DATE      crtDate,
+        wlist.TRADE_ID      businesscode,
+        wlist.BUSINESS_TYPE businessTypeValue,
+        wlist.ACTION_TYPE   actionType,
+        wlist.CUR_USER      operator,
+        wlist.TITLE         title,
+        wlist.PAGE_ID       pageId,
+        S.SYSTEM_URL        pathPrefix,
+        S.SYSTEM_CODE       systemCode,
+        wlist.PROCESS_STATE processState,
+        wlist.CUR_USER      signUser
+        FROM
+        SYS_WFL_BUSINESS_LIST wlist
+        LEFT JOIN
+        SYS_PAGE P
+        ON
+        P.PAGE_ID = wlist.PAGE_ID
+        LEFT JOIN
+        SYS_CODE_MAPPING S
+        ON
+        S.SYSTEM_CODE = P.SYSTEM_CODE
+        LEFT JOIN
+        SYS_WFL_BUSINESS_NODE wnode
+        ON
+        wlist.WORKFLOW_ID = wnode.WORKFLOW_ID
+        WHERE
+        wnode.WORKFLOW_ID IS NOT NULL
+        and wlist.BUSINESS_TYPE = 'SVR01'
+        and wlist.PROCESS_STATE = 'ING'
+        ORDER BY
+        wlist.CRT_DATE,
+        wlist.SEQ_NO DESC) sub
+    </select>
 </mapper>

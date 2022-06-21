@@ -64,7 +64,7 @@
             <Cell order="60" name="产品增信形式">creditModeStr</Cell>
             <Cell order="61" name="投资资产种类及比例">invTypeRat</Cell>
             <Cell order="62" name="业绩比较基准">yield</Cell>
-            <Cell order="63" name="数据状态">statusStr</Cell>
+            <Cell order="63" name="数据状态">statusValidStr</Cell>
             <Cell order="64" name="备注">remark</Cell>
         </Row>
     </Worksheet>

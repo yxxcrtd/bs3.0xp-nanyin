@@ -83,64 +83,52 @@
 		ORDER BY A .UPDATE_TIME DESC,A .PRODID ASC
 	</select>
 	<select id="queryForPageOld" resultType="com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeManage001Dto">
+
 		SELECT
-		A.PRODID prodId,
-		A.ORG_CODE orgCode,
-		b.PROD_NAME prodName,
-		A.REG_CODE regCode,
-		b.OPERATE_MODE operateMode,
-		DATE_FORMAT(b.VDATE,'%Y-%m-%d') vdate,
-		DATE_FORMAT(b.MDATE,'%Y-%m-%d') mdate,
-		A.INVESTOR investor,
-		A.REMARK remark
-		FROM CHB_PRDRESIST_CODE A
-		left join chb_prd_baseinfo b  on b.prod_id = a.PRODID
+		PRODID prodId,
+		PROD_INS_ID prodInsId,
+		ORG_CODE orgCode,
+		PRODNAME prodName,
+		REG_CODE regCode,
+		OPERATE_MODE operateMode,
+		REMARK remark
+		FROM CHB_PRDRESIST_CODE
 		<where>
-			<if test="prodList != null and prodList.size() > 0">
-				<foreach collection="prodList" item="prodid" open=" A.PRODID IN (" close=")" separator=",">
-					#{prodid,jdbcType=VARCHAR}
-				</foreach>
-			</if>
-			<if test="investorList != null and investorList.size() > 0">
-				<foreach collection="investorList" item="investor" open=" AND INVESTOR IN (" close=")" separator=",">
-					#{investor,jdbcType=VARCHAR}
-				</foreach>
-			</if>
-			<if test="vdateStart != null and vdateStart != ''" >
-				AND DATE_FORMAT(A.VDATE,'%Y-%m-%d') <![CDATA[>=]]> #{vdateStart}
-			</if>
-			<if test="vdateEnd != null and vdateEnd != ''" >
-				AND DATE_FORMAT(A.VDATE,'%Y-%m-%d') <![CDATA[<=]]> #{vdateEnd}
-			</if>
-			<if test="mdateStart != null and mdateStart != ''" >
-				AND DATE_FORMAT(A.MDATE,'%Y-%m-%d') <![CDATA[>=]]> #{mdateStart}
-			</if>
-			<if test="mdateEnd != null and mdateEnd != ''" >
-				AND DATE_FORMAT(A.MDATE,'%Y-%m-%d') <![CDATA[<=]]> #{mdateEnd}
-			</if>
-			<if test="regCodeList != null and regCodeList.size() > 0">
-				<foreach collection="regCodeList" item="regCode" open=" AND A.REG_CODE IN (" close=")" separator=",">
-					#{regCode,jdbcType=VARCHAR}
-				</foreach>
-			</if>
-			<if test="isNotNull == true">
-				AND A.REG_CODE is null or A.REG_CODE=''
-			</if>
-			<!-- dingzhipeng add Start 2017-10-23-->
-			<if test="orgCodeList != null and orgCodeList.size() > 0">
-				<foreach collection="orgCodeList" item="orgCode" open="AND A.ORG_CODE IN (" close=")" separator=",">
-					#{orgCode,jdbcType=VARCHAR}
-				</foreach>
-			</if>
-			<!-- dingzhipeng add end 2017-10-23 -->
-			<!-- 选中导出使用的参数 -->
-			<if test="keys != null and keys.size() > 0">
-				<foreach collection="keys" item="key" open=" AND concat_ws('',concat_ws('',A.ORG_CODE, '|'), A.PRODID) IN (" close=")" separator=",">
-					#{key,jdbcType=VARCHAR}
-				</foreach>
+		<if test="investorList != null and investorList.size() > 0">
+			<foreach collection="investorList" item="investor" open=" AND INVESTOR IN (" close=")" separator=",">
+				#{investor,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+
+		<if test="regCodeList != null and regCodeList.size() > 0">
+			<foreach collection="regCodeList" item="regCode" open=" AND REG_CODE IN (" close=")" separator=",">
+				#{regCode,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+
+		<!-- dingzhipeng add Start 2017-10-23-->
+		<if test="orgCodeList != null and orgCodeList.size() > 0">
+			<foreach collection="orgCodeList" item="orgCode" open="AND ORG_CODE IN (" close=")" separator=",">
+				#{orgCode,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<!-- dingzhipeng add end 2017-10-23 -->
+		<!-- 选中导出使用的参数 -->
+		<if test="keys != null and keys.size() > 0">
+			<foreach collection="keys" item="key" open=" AND ORG_CODE || '|' || PRODID IN (" close=")" separator=",">
+				#{key,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<!-- 输入框值模糊查询 -->
+		<!-- add by 模糊查询 yangxianjiu start end  2021-12-29 -->
+		<if test="prodname != null and prodname != ''">
+			AND PRODID like concat('%', #{prodname},'%')
+		</if>
+			<if test = "isNotNull">
+				AND (REG_CODE IS NULL or REG_CODE='')
 			</if>
 		</where>
-		ORDER BY A .UPDATE_TIME DESC,A .PRODID ASC
+		ORDER BY UPDATE_TIME DESC,PROD_INS_ID ASC
 	</select>
 	<!-- 产品下拉框查询 -->
 	<select id="queryProdList" resultType="com.joyintech.framework.select.SelectOptionDto">
@@ -196,14 +184,15 @@
 	<select id="queryPrdRegList" resultType="com.joyintech.framework.select.SelectOptionDto">
 		SELECT DISTINCT
 		A.REG_CODE id,
-		ifnull(b.prod_name,a.reg_code) text
+		A.REG_CODE text
+		<!--nvl(b.prod_name,a.reg_code) text-->
 		FROM CHB_PRDRESIST_CODE A
-		left join chb_prd_baseinfo b
-		on b.prod_id = a.PRODID
+		<!--left join chb_prd_baseinfo b
+        on b.prod_id = a.PRODID-->
 		<where>
 			A.REG_CODE is not null
 			<if test="search != null and search != ''">
-				and A.REG_CODE like concat_ws('','%', #{search},'%') or b.PROD_NAME like concat_ws('','%', #{search},'%')
+				and A.REG_CODE like concat_ws('','%', #{search},'%') <!-- or b.PROD_NAME like concat(concat('%', #{search}),'%')-->
 			</if>
 			<if test="orgCodeList !=null and orgCodeList.size()>0">
 				<!-- 机构代码不为空时 -->
@@ -301,8 +290,8 @@
 			<if test="regCode != null" >
 				cpc.REG_CODE = #{regCode,jdbcType=VARCHAR}
 			</if>
-			<if test="prodId != null  and prodId !='' " >
-				and cpc.PRODID != #{prodId,jdbcType=VARCHAR}
+			<if test="prodInsId != null  and prodInsId !='' " >
+				and cpc.PROD_INS_ID != #{prodInsId,jdbcType=VARCHAR}
 			</if>
 		</where>
 	</select>

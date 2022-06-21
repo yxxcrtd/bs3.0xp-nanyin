@@ -294,7 +294,6 @@ public class BatchInsertService {
             */
             String line = System.getProperty("os.name").toLowerCase().contains("windows")?"'\r\n'":"'\n'";
             String sql = "LOAD DATA LOCAL INFILE '"+absoultPath +"' IGNORE INTO TABLE " + table.getName() + " CHARACTER SET utf8 FIELDS TERMINATED  BY '|' LINES TERMINATED BY "+line+" (" + insertColumnName + ") set " + insertColumnNameDeal;
-            String sql1 = "LOAD DATA LOCAL INFILE '"+absoultPath +"' IGNORE INTO TABLE " + table.getName() + " CHARACTER SET utf8 FIELDS TERMINATED  BY '|' LINES TERMINATED BY '\r\n' (" + insertColumnName + ") set " + insertColumnNameDeal;
 
             logger.info("----------------sql:"+sql);
             fileInputStream = new FileInputStream(file);

@@ -3,7 +3,49 @@
  * @auth zhangliang
  */
 (function(){
-
+    var existsProdInsId = false;
+    var existsProdStageAndProdName = false;
+    $('#prodInsId').blur(function (){
+        var prodInsId = $('#prodInsId').val();
+        if(prodInsId!='' && prodInsId !=null){
+            Joyin.ajaxJson(basePath+'basicdata/perprodeclareinfo/SvrPerProDeclareInfo002/selectChbPrdDeclareByProdInsId?prodInsId='+prodInsId,{},function (result){
+            if(result>0){
+                Joyin.alert("行内识别已存在",2);
+                existsProdInsId = true;
+            }else{
+                existsProdInsId = false;
+            }
+            })
+        }
+    });
+   $('#prodStage').blur(function (){
+       var prodStage = $('#prodStage').val();
+       var prodName = $('#prodName').val();
+       if(prodStage !=''&&prodStage!=null &&prodName !=''&&prodName!=null){
+           Joyin.ajaxJson(basePath+'basicdata/perprodeclareinfo/SvrPerProDeclareInfo002/selectChbPrdDeclareByProdStageAndProdName?prodStage='+prodStage+'&prodName='+prodName,{},function (result){
+               if(result>0){
+                   Joyin.alert("产品名称和产品期次已存在",2);
+                   existsProdStageAndProdName = true;
+               }else{
+                   existsProdStageAndProdName = false;
+               }
+           })
+       }
+   });
+    $('#prodName').blur(function (){
+        var prodStage = $('#prodStage').val();
+        var prodName = $('#prodName').val();
+        if(prodStage !=''&&prodStage!=null &&prodName !=''&&prodName!=null){
+            Joyin.ajaxJson(basePath+'basicdata/perprodeclareinfo/SvrPerProDeclareInfo002/selectChbPrdDeclareByProdStageAndProdName?prodStage='+prodStage+'&prodName='+prodName,{},function (result){
+                if(result>0){
+                    Joyin.alert("产品名称和产品期次已存在",2);
+                    existsProdStageAndProdName = true;
+                }else{
+                    existsProdStageAndProdName = false;
+                }
+            })
+        }
+    });
     /**
      * 添加必填标志
      */
@@ -40,7 +82,15 @@
      * 保存或提交按钮执行事件
      */
     var onSaveOrSubmitAction = function(operateType){
-        var object = $.serializeToObject('#SvrPerProDeclareInfo002_form',true);
+        if(existsProdInsId){
+            Joyin.alert("行内识别已存在",2);
+            return false;
+        }
+        if(existsProdStageAndProdName){
+            Joyin.alert("产品名称和产品期次已存在",2);
+            return false;
+        }
+        var object = $.serializeToObject('#submitForm',true);
         object.operateType = operateType;
         object.pageModel = pageModel;
         // 产品投资国家或地区
@@ -86,14 +136,21 @@
             return ;
         }
         Joyin.ajaxJson(basePath + 'basicdata/perprodeclareinfo/SvrPerProDeclareInfo002/check',object, function(result) {
-            Joyin.confirm(result.data, function() {
-                if(operateType === 'save') {
-                    WorkFlow.doSaveList(basePath + 'basicdata/perprodeclareinfo/SvrPerProDeclareInfo002/save', object, "SvrPerProDeclareInfo002_btn_save");
-                } else {
-                    WorkFlow.doSubmitList(basePath + 'basicdata/perprodeclareinfo/SvrPerProDeclareInfo002/save', object, "SvrPerProDeclareInfo002_btn_submit");
-                }
-            })
+            // Joyin.confirm(result.data, function() {
+            //     if(operateType === 'save') {
+            //         WorkFlow.doSaveList(basePath + 'basicdata/perprodeclareinfo/SvrPerProDeclareInfo002/save', object, "SvrPerProDeclareInfo002_btn_save");
+            //     } else {
+            //         WorkFlow.doSubmitList(basePath + 'basicdata/perprodeclareinfo/SvrPerProDeclareInfo002/save', object, "SvrPerProDeclareInfo002_btn_submit");
+            //     }
+            // })
+            Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.submit")), function() {
+                WorkFlow.doSubmitList(basePath + 'basicdata/perprodeclareinfo/SvrPerProDeclareInfo002/save', object, "SvrPerProDeclareInfo002_btn_submit");
+            });
+            // Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.submit")), function() {
+            //     WorkFlow.doSubmitList(basePath + 'basicdata/perprodeclareinfo/SvrPerProDeclareInfo002/save', object, "SvrPerProDeclareInfo002_btn_submit");
+            // });
         })
+
     };
 
 
@@ -159,15 +216,15 @@
         }
     });
     // 募集币种联动
-    $("#raiseCcy").change(function(){
-        var repRaiseCcy = $("#raiseCcy").val();
-        if(repRaiseCcy){
-            // 兑付本金币种
-            $("#cashPrinCcy").val(repRaiseCcy).trigger('change');
-            // 兑付收益币种
-            $("#cashProfCcy").val(repRaiseCcy).trigger('change');
-        }
-    });
+    // $("#raiseCcy").change(function(){
+    //     var repRaiseCcy = $("#raiseCcy").val();
+    //     if(repRaiseCcy){
+    //         // 兑付本金币种
+    //         $("#cashPrinCcy").val(repRaiseCcy).trigger('change');
+    //         // 兑付收益币种
+    //         $("#cashProfCcy").val(repRaiseCcy).trigger('change');
+    //     }
+    // });
 
     // 合作模式联动
     $("#contMode").change(function(){
@@ -224,10 +281,10 @@
      * 初始化
      */
     var svrPerProDeclareInfo002Init = function(){
-        // 兑付本金币种
-        $("#cashPrinCcy").attr("disabled",true);
-        // 兑付收益币种
-        $("#cashProfCcy").attr("disabled",true);
+        // // 兑付本金币种
+        // $("#cashPrinCcy").attr("disabled",true);
+        // // 兑付收益币种
+        // $("#cashProfCcy").attr("disabled",true);
         //编辑页面行内标识码不可修改
         if(pageModel == PAGE_MODEL_EDIT){
             $("#prodInsId").attr("disabled",true);
@@ -317,6 +374,7 @@
     };
 
     $(function() {
+        $('#btnSave_wfl').hide();
         star();
         // 产品增信标识
         repCreditFlagChange();

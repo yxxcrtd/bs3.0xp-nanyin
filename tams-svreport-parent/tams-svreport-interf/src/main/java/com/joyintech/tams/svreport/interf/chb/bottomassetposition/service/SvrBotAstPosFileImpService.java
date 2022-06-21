@@ -121,7 +121,7 @@ public class SvrBotAstPosFileImpService extends FileImpService{
 		// modify by convertMapToEntity yangxianjiu 2022-01-19 start
 //		Map<String,Object> dataMap = convertMapToEntity(posList,dataSource,saveFlag);
 //		List<ChbBotAstPosition> list = (List<ChbBotAstPosition>) dataMap.get("list");
-		List<ChbBotAstPosition> list = (List<ChbBotAstPosition>) convertMapToEntity(posList,ChbBotAstPosition.class);
+		List<ChbBotAstPosition> list = (List<ChbBotAstPosition>) convertMapToEntity(posList,ChbBotAstPosition.class, dataSource);
 		list.stream().forEach(dto->{
 			dto.setPosId(IDGenerator.generate(36));
 		});
@@ -346,7 +346,7 @@ public class SvrBotAstPosFileImpService extends FileImpService{
 			//modify by convertMapToEntity yangxianjiu 2022-01-19 start
 //			Map<String,Object> dataMap = convertMapToEntity(posList,dataSource,saveFlag);
 //			List<ChbBotAstPosition> list = (List<ChbBotAstPosition>) dataMap.get("list");
-			List<ChbBotAstPosition> list = (List<ChbBotAstPosition>) convertMapToEntity(posList,ChbBotAstPosition.class);
+			List<ChbBotAstPosition> list = (List<ChbBotAstPosition>) convertMapToEntity(posList,ChbBotAstPosition.class, dataSource);
 			list.stream().forEach(dto->{
 				dto.setPosId(IDGenerator.generate(36));
 			});

@@ -8,9 +8,12 @@ import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.joyintech.system.base.entity.SysDatadictListLink;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
+import com.joyintech.tams.report.interf.common.constant.InterfConstants;
 import com.joyintech.tams.svreport.interf.chb.baseinfo.dao.SvrMstCustomerInfoAddImpMapper;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -189,27 +192,25 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
 	 * @see com.joyintech.tams.common.FileImpService#saveDataBySteps(java.util.List)
 	 */
     @Override
-    public String importDB(List<Map<String, String>> assetInfoList,InterfFile interfFile, String date){
-        // 数据检查
-        // 添加待处理的数据
-        checkDataCodeCheck(assetInfoList, interfFile.getFilename(), ChbCheckTableInfo.资产要素登记表INFO);
-//        checkData(assetInfoList, interfFile.getFilename()
-//                , InterfDefine.资产要素信息接口数据.getCode(), InterfDefine.资产要素信息接口数据.getCode(),BUSSINESSKEY, DUPLICATIED_LIST);
-        // 待入库为空则直接返回
+    public String importDB(List<ExcelValidDto> listExcel,List<Map<String, String>> assetInfoList, InterfFile interfFile, String date){
+        ChbInterfConfigDto interfConfig = ChbInterfUtil.queryInterfConfigByInterfid(InterfDefine.资产要素信息接口数据.getCode());
+        if (interfConfig == null){
+            logger.info("CHB_INTERF_CONFIG表中无配置项！");
+            return "fail";
+        }
+        checkImportData(listExcel, assetInfoList, interfFile.getFilename(), ChbCheckTableInfo.资产要素登记表INFO,interfConfig.getCoverFlag(), listExcel == null? "I" : "D");
         if (CollectionUtils.isEmpty(assetInfoList)){
             return "success";
         }
-        // 待处理数据入库
-//        ChbInterfConfigDto interfConfig = ChbInterfUtil.queryInterfConfigByInterfid(InterfDefine.资产要素信息接口数据.getCode());
-//        if (interfConfig == null){
-//            logger.info("CHB_INTERF_CONFIG表中无配置项！");
-//            return "fail";
-//        }
-//        String saveFlag = interfConfig.getContentType();
-        String saveResult = saveData(assetInfoList,null,interfFile.getDataSource());
+        String saveFlag = interfConfig.getContentType();
+        String result = "";
+        if(assetInfoList.size()>0){
+            result=saveData(assetInfoList, listExcel == null?saveFlag: InterfConstants.SAVEFLAG_ADD, listExcel == null? "I" : "D");
+        }
         // 更新系统配置时间
         ChbInterfUtil.updateInterfTimeBySysdate( InterfDefine.投资交易信息接口数据.getCode());
-        return saveResult;
+        return result;
+
     }
     
     /**
@@ -232,7 +233,12 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
         }
         return "fail";
     }
-    
+
+    @Override
+    public String importDB(List<Map<String, String>> listData, InterfFile interfFile, String date) {
+        return null;
+    }
+
     /**
      * 功能:批量入库
      * @since 1.7.0
@@ -252,8 +258,9 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
         // 将map转换成dto
         List<ChbAssetInfo> assetInfoList = new ArrayList<>(infoList.size());
         List<String> listCloumn = baseMapper.getTableColumnList(InterfDefine.资产要素信息接口数据.getCode());
-        assetInfoList = (List<ChbAssetInfo>)super.convertMapToEntity(infoList, ChbAssetInfo.class);
-
+        assetInfoList = (List<ChbAssetInfo>)super.convertMapToEntity(infoList, ChbAssetInfo.class, dataSource);
+        chbAssetInfoInterfMapper.deleteByAssetCodeList(assetInfoList);
+        chbAssetInfoInterfMapper.deleteChbAssetInfoErroData(assetInfoList);
         // 交易对手信息
         List<ChbMstCounterParty> allCounterList = chbMstCounterPartyInterfMapper.selectAllCounterParty();
         // 交易对手信息
@@ -265,6 +272,16 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
         Map<String,String> institMap = institList.stream().collect(HashMap<String,String>::new,
                 (map, item)->map.put(item.getCustomerId(), item.getPartyType1()), (m, n)->m.putAll(n));
 
+        //获取融资人信息
+        List<MstCustomerInfo> customerList = svrMstCustomerInfoAddImpMapper.getAllCustomerInfo();
+        Map<String,String> customerMap = customerList.stream().collect(HashMap<String,String>::new,
+                (map, item)->map.put(item.getCustomerName(), item.getCustomerId()), (m, n)->m.putAll(n));
+
+        //获取行业二级分类与一级分类的映射关系
+        List<SysDatadictListLink> industrySharesList = svrMstCustomerInfoAddImpMapper.getAllIndustryShares();
+        Map<String,String> industrySharesMap = industrySharesList.stream().collect(HashMap<String,String>::new,
+                (map, item)->map.put(item.getItemCode(), item.getLinkedItemCode()), (m, n)->m.putAll(n));
+
         for(ChbAssetInfo chbAssetInfo : assetInfoList){
             chbAssetInfo.setAssetUuid(IDGenerator.generate(36));
             // 客户主体类型映射
@@ -275,6 +292,67 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
                     chbAssetInfo.setCustomerObjType(customerType);
                 }
             }
+
+            //处理融资人 FINANCIE
+            if(StringUtil.isNotEmpty(chbAssetInfo.getFinancie())){
+                 if(customerMap.get(chbAssetInfo.getFinancie()) != null){
+                     chbAssetInfo.setFinancie(customerMap.get(chbAssetInfo.getFinancie()));
+                 }
+            }
+
+            //处理行业一级分类
+            if(StringUtil.isNotEmpty(chbAssetInfo.getIndustryShares2())){
+                if(!StringUtil.isNotEmpty(chbAssetInfo.getIndustryShares())){
+                    if(industrySharesMap.get(chbAssetInfo.getIndustryShares2()) != null){
+                        chbAssetInfo.setIndustryShares(industrySharesMap.get(chbAssetInfo.getIndustryShares2()));
+                    }
+                }
+            }
+            //处理融资人所属行业分类，融资项目所属行业分类 CAPUSEINDULEVEL2
+            if(StringUtil.isNotEmpty(chbAssetInfo.getIndustryLevel2Type())){
+                if(!StringUtil.isNotEmpty(chbAssetInfo.getIndustry1())){
+                    if(industrySharesMap.get(chbAssetInfo.getIndustryLevel2Type()) != null){
+                        chbAssetInfo.setIndustry1(industrySharesMap.get(chbAssetInfo.getIndustryLevel2Type()));
+                    }
+                }
+            }
+            if(StringUtil.isNotEmpty(chbAssetInfo.getProIndustryLevel2())){
+                if(!StringUtil.isNotEmpty(chbAssetInfo.getProIndustry())){
+                    if(industrySharesMap.get(chbAssetInfo.getProIndustryLevel2()) != null){
+                        chbAssetInfo.setProIndustry(industrySharesMap.get(chbAssetInfo.getProIndustryLevel2()));
+                    }
+                }
+            }
+            //处理发行机构所属行业
+            if(StringUtil.isNotEmpty(chbAssetInfo.getIndustryLevel2())){
+                if(!StringUtil.isNotEmpty(chbAssetInfo.getIndustry())){
+                    if(industrySharesMap.get(chbAssetInfo.getIndustryLevel2()) != null){
+                        chbAssetInfo.setIndustry(industrySharesMap.get(chbAssetInfo.getIndustryLevel2()));
+                    }
+                }
+            }
+
+            //处理资金运用行业
+            if(StringUtil.isNotEmpty(chbAssetInfo.getCapUseInduLevel2())){
+                if(!StringUtil.isNotEmpty(chbAssetInfo.getCapUseIndu())){
+                    if(industrySharesMap.get(chbAssetInfo.getCapUseInduLevel2()) != null){
+                        chbAssetInfo.setCapUseIndu(industrySharesMap.get(chbAssetInfo.getCapUseInduLevel2()));
+                    }
+                }
+            }
+
+            //处理基金管理机构名称和基金托管机构名称
+            if(StringUtil.isNotEmpty(chbAssetInfo.getMngOrgName())){
+                if(!StringUtil.isNotEmpty(chbAssetInfo.getManagerId())) {
+                    chbAssetInfo.setManagerId(this.subDictcode(chbAssetInfo.getMngOrgName(), " "));
+                }
+            }
+            if(StringUtil.isNotEmpty(chbAssetInfo.getTruOrgName())){
+                if(!StringUtil.isNotEmpty(chbAssetInfo.getTrusteeId())) {
+                    chbAssetInfo.setTrusteeId(this.subDictcode(chbAssetInfo.getTruOrgName(), " "));
+                }
+            }
+
             // 映射人行资产一级二级三级分类
             ChbAssetInfoInterf.convertPbcAssetType(chbAssetInfo,counterPartyMap);
 
@@ -457,5 +535,16 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
             }
         }
         logger.debug("资产要素信息文件接入-更新:----结束------" );   
+    }
+
+
+    public static String subDictcode(String value, String sign) {
+        if (StringUtil.isNotEmpty(value)) {
+            int i = value.indexOf(sign);
+            if (i > -1) {
+                value = value.substring(0, i);
+            }
+        }
+        return value;
     }
 }

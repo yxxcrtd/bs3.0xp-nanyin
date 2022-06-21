@@ -128,13 +128,13 @@ public class SvrHolidayFileImpService extends FileImpService {
 	}
 
 	@Override
-	public String saveData(List<Map<String, String>> listData, String saveFlag, String dateSource) {
+	public String saveData(List<Map<String, String>> listData, String saveFlag, String dataSource) {
 		boolean isSucess=false;
 		// 定义新增数据list-验证通过数据
 		List<MstHoliday> listNE = null;
 		logger.info("节假日数据map转dto---开始-----:" +  DateUtil.format(new Date()));
 		if(CollectionUtils.isNotEmpty(listData)){
-			listNE = (List<MstHoliday>) convertMapToEntity(listData, MstHoliday.class);
+			listNE = (List<MstHoliday>) convertMapToEntity(listData, MstHoliday.class, dataSource);
 		}
 		logger.info("节假日数据map转dto---结束-----:" +  DateUtil.format(new Date()));
 

@@ -1266,7 +1266,7 @@
     <select id="selectForPage" resultType="com.joyintech.tams.basicdata.perprodeclareinfo.dto.SvrPerProDeclareInfo001Dto" >
         SELECT
         T1.DECLARE_UUID      AS declareUuid,
-        T1.STATUS            AS status,
+        T1.STATUS            AS statusValid,
         T1.PROD_NAME         AS prodName,
         T1.PROD_INS_ID       AS prodInsId,
         T1.PROD_BRAND        AS prodBrand,
@@ -1311,8 +1311,8 @@
         T1.RAISE_AMT_PLAN    AS raiseAmtPlan,
         T1.RAISE_PSTRDATE    AS raisePstrdate,
         T1.RAISE_PENDDATE    AS raisePenddate,
-        DATE_FORMAT(T1.INVEST_PRIN_DATE,'%Y-%m-%d')  AS investPrinDate,
-        DATE_FORMAT(T1.INVEST_PROF_DATE,'%Y-%m-%d')  AS investProfDate,
+        T1.INVEST_PRIN_DATE  AS investPrinDate,
+        T1.INVEST_PROF_DATE  AS investProfDate,
         T1.SALE_FEE_RATE     AS saleFeeRate,
         T1.INVEST_FEE_RATE   AS investFeeRate,
         T1.IN_DEP_NAME       AS inDepName,
@@ -1331,7 +1331,11 @@
         T1.YIELD             AS yield,
         T1.REMARK            AS remark,
         DATE_FORMAT(T1.UPDATE_TIME,'%Y-%m-%d')  AS updateTime,
-        T1.UPDATE_USER       AS updateUser
+        T1.UPDATE_USER       AS updateUser,
+        T1.ERR_MSG           AS errMsg,
+        T1.FILE_NO           AS fileNo,
+        T1.FILE_NUM          AS fileNum,
+        T1.TEN_FILE          AS tenFile
         FROM
         CHB_PRD_DECLARE_INFO T1
         <where>
@@ -1355,7 +1359,104 @@
                 and T1.RAISE_PSTRDATE &lt;= STR_TO_DATE(#{raisePstrdateEnd},'%Y-%m-%d')
             </if>
         </where>
-        ORDER BY T1.STATUS DESC
+        union all
+        SELECT
+        T1.DATAUUID      AS declareUuid,
+        T1.STATUS            AS statusValid,
+        T1.PROD_NAME         AS prodName,
+        T1.PROD_INS_ID       AS prodInsId,
+        null       AS prodBrand,
+        null AS prdSpecProperty,
+        null        AS prodStage,
+        null    AS issuePartyId,
+        null     AS approverName,
+        null       AS approverId,
+        null     AS designerName,
+        null       AS designerId,
+        null      AS managerName,
+        null        AS managerId,
+        null      AS liaisonName,
+        null      AS liaisonTel,
+        null    AS liaisonMobile,
+        null     AS liaisonEmail,
+        null        AS raiseType,
+        null      AS profitType,
+        null        AS isFhxgcp,
+        T1.TERMTYPE          AS termtype,
+        null    AS excFinSector,
+        null      AS investArae,
+        null    AS investCountry,
+        null   AS finanSerModel,
+        T1.OPERATE_MODE     AS operateMode,
+        null     AS isShortTerm,
+        null        AS shortTerm,
+        null     AS isFreeRedem,
+        null    AS cashManaCate,
+        null            AS cmmode ,
+        null            AS pmmode,
+        null           AS mname ,
+        null       AS pricedMode,
+        null   AS ivstorientation,
+        null         AS contMode,
+        null  AS cooperationName,
+        null         AS saleArea,
+        null         AS raiseCcy,
+        null    AS cashPrinCcy,
+        null    AS cashProfCcy,
+        null    AS saleAmtStr,
+        null    AS raiseAmtPlan,
+        T1.RAISE_PSTRDATE    AS raisePstrdate,
+        null   AS raisePenddate,
+        null  AS investPrinDate,
+        null  AS investProfDate,
+        null    AS saleFeeRate,
+        null  AS investFeeRate,
+        null       AS inDepName,
+        null       AS inDepCode,
+        null      AS outDepCtry,
+        null      AS outDepName,
+        null      AS truFeeRate,
+        null        AS riskLevel,
+        null        AS riskType,
+        null  AS termRightFlag,
+        null   AS cusRedeemFlag,
+        null      AS creditFlag,
+        null     AS creditType,
+        null      AS creditMode,
+        null    AS invTypeRat,
+        null            AS yield,
+        null           AS remark,
+        T1.UPDATE_TIME       AS updateTime,
+        T1.UPDATE_USER       AS updateUser,
+        T1.ERR_MSG           AS errMsg,
+        null           AS fileNo,
+        null        AS fileNum,
+        null          AS tenFile
+
+        FROM
+        CHB_PRD_DECLARE_INFO_ERRODATA T1
+        <where>
+            1=1
+            <if test="prodName != null and prodName != '' ">
+                AND T1.PROD_NAME LIKE concat(concat('%',#{prodName,jdbcType=VARCHAR}),'%')
+            </if>
+            <if test="termtype != null and termtype != ''">
+                AND T1.TERMTYPE = #{termtype}
+            </if>
+            <if test="operateMode != null and operateMode != ''">
+                ANd T1.OPERATE_MODE = #{operateMode}
+            </if>
+            <if test="status != null and status != ''" >
+                AND T1.STATUS = #{status}
+            </if>
+            <if test="raisePstrdateStart != null and raisePstrdateStart != ''">
+                and T1.RAISE_PSTRDATE &gt;= STR_TO_DATE(#{raisePstrdateStart},'%Y-%m-%d')
+            </if>
+            <if test="raisePstrdateEnd != null and raisePstrdateEnd != ''">
+                and T1.RAISE_PSTRDATE &lt;= STR_TO_DATE(#{raisePstrdateEnd},'%Y-%m-%d')
+            </if>
+        </where>
+        ORDER BY statusValid DESC
     </select>
 
     <!-- 新增插入   -->
@@ -2072,8 +2173,8 @@
             T1.RAISE_AMT_PLAN    AS raiseAmtPlan,
             T1.RAISE_PSTRDATE    AS raisePstrdate,
             T1.RAISE_PENDDATE    AS raisePenddate,
-            DATE_FORMAT(T1.INVEST_PRIN_DATE,'%Y-%m-%d')  AS investPrinDate,
-            DATE_FORMAT(T1.INVEST_PROF_DATE,'%Y-%m-%d')  AS investProfDate,
+            T1.INVEST_PRIN_DATE  AS investPrinDate,
+            T1.INVEST_PROF_DATE  AS investProfDate,
             T1.SALE_FEE_RATE     AS saleFeeRate,
             T1.INVEST_FEE_RATE   AS investFeeRate,
             T1.IN_DEP_NAME       AS inDepName,
@@ -2109,10 +2210,10 @@
         FROM
         CHB_PRD_DECLARE_INFO T1
         <where>
-            <if test="prodName != null and prodName != '' ">
-                T1.PROD_NAME LIKE concat(concat('%',#{prodName,jdbcType=VARCHAR}),'%')
+            <if test="param != null and param != '' ">
+                T1.PROD_NAME LIKE concat(concat('%',#{param,jdbcType=VARCHAR}),'%')
                 OR
-                T1.PROD_INS_ID LIKE concat(concat('%',#{prodName,jdbcType=VARCHAR}),'%')
+                T1.PROD_INS_ID LIKE concat(concat('%',#{param,jdbcType=VARCHAR}),'%')
             </if>
         </where>
     </select>

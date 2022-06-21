@@ -278,10 +278,10 @@
                 and STATUS = #{status}
             </if>
             <if test="gradeDateStart!=null and gradeDateStart!=''">
-                and GRADE_DATE &gt;= to_date(#{gradeDateStart},'yyyy-mm-dd')
+                and GRADE_DATE &gt;= STR_TO_DATE(#{gradeDateStart},'%Y-%m-%d')
             </if>
             <if test="gradeDateEnd!=null and gradeDateEnd !=''">
-                and GRADE_DATE &lt;= to_date(#{gradeDateEnd},'yyyy-mm-dd')
+                and GRADE_DATE &lt;= STR_TO_DATE(#{gradeDateEnd},'%Y-%m-%d')
             </if>
         </where>
     </select>

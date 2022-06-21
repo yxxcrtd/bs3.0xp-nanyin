@@ -230,15 +230,15 @@
     </select>
     <select id="getCustomerName" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT
-        DISTINCT CUSTOMER_ID id,
-        CUSTOMER_NAME text
-        FROM MST_CUSTOMER_INFO
+        DISTINCT COUNTER_ID id,
+        COUNTER_NAME text
+        FROM CHB_MST_COUNTER_PARTY
         <where>
             <if test="search !=null and  search !='' ">
-                CUSTOMER_NAME LIKE CONCAT('%',#{search}, '%')
+                COUNTER_NAME LIKE CONCAT('%',#{search},'%')
             </if>
-            <if test="tradeCounter !=null and  tradeCounter !='' ">
-                and CUSTOMER_ID = #{tradeCounter}
+            <if test="initValue != null and initValue != ''">
+                and COUNTER_ID = #{initValue}
             </if>
         </where>
     </select>
@@ -460,7 +460,7 @@
         order by a.DEALDATE desc,a.PROD_ID asc
     </select>
     <select id="selectRivalPartyType" resultType="java.util.Map">
-        select COUNTER_TYPE from CHB_MST_COUNTER_PARTY where COUNTER_ID = #{tradeCounter}
+        select COUNTER_TYPE2 from CHB_MST_COUNTER_PARTY where COUNTER_ID = #{tradeCounter}
     </select>
     <insert id="mergeData">
         INSERT INTO  CHB_INVEST_TRADE (
@@ -538,7 +538,7 @@
             FROM  DUAL
         </foreach>
         ) TEMP where not exists (SELECT 1 FROM CHB_INVEST_TRADE a where a.TRADE_CODE = TEMP.TRADE_CODE AND a.PROD_ID = TEMP.PROD_ID AND a.ASSET_CODE = TEMP.ASSET_CODE )
-        ）a;
+        )a;
 
         UPDATE CHB_INVEST_TRADE a,(
         select * from
@@ -621,4 +621,8 @@
         </foreach>
         and status = 'E'
     </select>
+    <select id="selectByBusinessKey" resultType="java.lang.Integer">
+        select count(1) from CHB_INVEST_TRADE where PROD_ID = #{prodId} and TRADE_CODE =#{tradeCode} and ASSET_CODE =#{assetCode}
+    </select>
+
 </mapper>

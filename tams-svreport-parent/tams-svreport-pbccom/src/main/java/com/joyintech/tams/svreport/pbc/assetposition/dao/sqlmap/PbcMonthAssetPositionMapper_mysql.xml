@@ -912,7 +912,7 @@
         and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
         ) de where 1=1 and my_rank= 1
         ) a
-        on assetinfo.FINANCIE=a.ASSET_CODE
+        on assetinfo.CHB_ISSUER_ID=a.ASSET_CODE
         left join  (
         SELECT asset_code,rating FROM (
         select
@@ -939,7 +939,7 @@
         and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
         ) de  where 1=1 and my_rank= 1
         ) b
-        on assetinfo.FINANCIE=b.ASSET_CODE
+        on assetinfo.CHB_ISSUER_ID=b.ASSET_CODE
       </when>
       <otherwise>
         left join (

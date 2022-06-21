@@ -170,7 +170,7 @@ public class DataCheckService {
      * @see
      * @since 1.0
      */
-    public static List<Map<String, String>> checkDataList(List<ExcelValidDto> list,List<Map<String, String>> listData, List<CheckRule> listRules, boolean removeFlag) {
+    public static List<Map<String, String>> checkDataList(List<ExcelValidDto> list,List<Map<String, String>> listData, List<CheckRule> listRules, boolean removeFlag,String dataType) {
 
         List<Map<String, String>> listError = new ArrayList<Map<String, String>>();
 
@@ -240,17 +240,28 @@ public class DataCheckService {
                 }
             }  //循环规则－结束
             if ( legal==false ) {
-                if(StringUtils.isEmpty(x.get("ERRMSG"))){
+
+                String errmsg = x.get("ERRMSG");
+                if(StringUtils.isEmpty(errmsg)){
                     x.put("ERRMSG", sb.toString());
-                    list.add(new ExcelValidDto("0未导入",String.valueOf(i+1),sb.toString()));
-                }else{
-                    String errmsg = x.get("ERRMSG");
+                    if(list!=null){
+                        if(StringUtil.equals(dataType,"CHB_ASSET_INFO")){
+                                list.add(new ExcelValidDto(" 导入成功",String.valueOf(i+2),sb.toString()));
+                        }else  {
+                                list.add(new ExcelValidDto(" 导入成功", String.valueOf(i + 1), sb.toString()));
+                        }
+                    }
+                }else if(errmsg.equals("产品不存在对应的申报信息！")){
                     errmsg +=sb.toString();
                     x.put("ERRMSG", errmsg);
-                    for (ExcelValidDto dto : list) {
-                        if(Integer.valueOf(dto.getRowNum())==i+1){
-                            dto.setErrorInfo(errmsg);
-                            break;
+                    if(list !=null){
+                        if(list.size()>0){
+                            for (ExcelValidDto excelValidDto : list) {
+                                if(excelValidDto.getRowNum().equals(String.valueOf(i+1))){
+                                    excelValidDto.setErrorInfo(errmsg);
+                                    break;
+                                }
+                            }
                         }
                     }
 
@@ -552,9 +563,9 @@ public class DataCheckService {
                     }
                 }
                 if(flag){
-                    var1.put("ERRMSG","重复数据;");
-                    com.joyintech.tams.systemtools.dto.ExcelValidDto excelValidDto = new com.joyintech.tams.systemtools.dto.ExcelValidDto("0未导入",String.valueOf(i + 2),"表中数据重复");
-                    excelValidDtoList.add(excelValidDto);
+                    if(StringUtils.isEmpty((String)var1.get("ERRMSG"))){
+                        var1.put("ERRMSG","重复数据;");
+                    }
                     result.add(var1);
                     break;
                 }

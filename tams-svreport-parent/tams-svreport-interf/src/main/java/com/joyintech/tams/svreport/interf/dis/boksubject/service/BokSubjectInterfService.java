@@ -48,7 +48,7 @@ public class BokSubjectInterfService extends FileImpService {
 	 * 重写saveData方法 科目表信息入库 listData 费用交易list saveFlag 入库标识
 	 */
 	@Override
-	public String saveData(List<Map<String, String>> listData, String saveFlag, String dateSource) {
+	public String saveData(List<Map<String, String>> listData, String saveFlag, String dataSource) {
 		if (StringUtil.isEmptyList(listData)) {
 			logger.info("saveData方法参数listData为空。");
 			return "success";
@@ -58,7 +58,7 @@ public class BokSubjectInterfService extends FileImpService {
 		List<BokSubject> list = new ArrayList<>();
 		// modify by convertMapToEntity yangxianjiu 2022-01-19 start
 		List<BokSubject> listTemp = new ArrayList<>();
-		list = (List<BokSubject>) convertMapToEntity(listData,BokSubject.class);
+		list = (List<BokSubject>) convertMapToEntity(listData,BokSubject.class, dataSource);
 
 		//add by zhoubin 20220518 start
 		if (list.size()<reportInsertLongCount) {

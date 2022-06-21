@@ -416,7 +416,7 @@ $(function() {
 									sortField:'investProfDate'
 								},
 								{
-									title : '销售手续费%',
+									title : '销售手续费率%',
 									field : 'saleFeeRate',
 									width : 200, 
 									sortField:'saleFeeRate'

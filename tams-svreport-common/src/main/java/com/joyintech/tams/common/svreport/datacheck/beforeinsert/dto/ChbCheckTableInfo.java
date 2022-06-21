@@ -52,7 +52,6 @@ public enum ChbCheckTableInfo {
     个人产品申报登记TMP("CHB_PRD_DECLARE_SUB_TMP", true, "PROD_INS_ID", new String[] {"PROD_INS_ID"}, "CHB_PRD_DECLARE_SUB"),
     终止登记TMP("CHB_PRD_END_SUB_TMP", true, "PROD_ID", new String[] {"PROD_REGIST_CODE"}, "CHB_PRD_END_SUB"),
     资产要素登记TMP("CHB_ASSET_INFO_TMP", true, "ASSET_CODE", new String[] {"ASSET_CODE"}, "CHB_ASSET_INFO_SUB"),
-
     投资交易信息表("CHB_INVEST_TRADE", true, "TRADE_SEQNO", new String[] {"PROD_ID","ASSET_CODE","TRADE_CODE"}, "");
     /**
      * 根据tableName获取枚举对象

@@ -146,7 +146,7 @@ public class SvrChbProdDividendDealFileImpService extends FileImpService{
 		//转换实体类
 		// modify by convertMapToEntity yangxianjiu 2022-01-19 start
 //		convertMapToEntity(listData, assetList, dataSource);
-		assetList = (List<ChbPrdBonusDeal>) convertMapToEntity(listData,ChbPrdBonusDeal.class);
+		assetList = (List<ChbPrdBonusDeal>) convertMapToEntity(listData,ChbPrdBonusDeal.class, dataSource);
 		assetList.stream().forEach(dto->{
 			dto.setSeqno(IDGenerator.generate(36));
 		});

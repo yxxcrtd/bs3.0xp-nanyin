@@ -18,7 +18,9 @@
                             <input type="text" id="subjectNo" name="subjectNo" class="layui-input form-input"
                                    placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
                                    data-th-value="${entity?.subjectNo}" required>
+                            <input type="hidden"  id="booksetId" name="booksetId" class="layui-input form-input" data-th-value="${entity?.booksetId}"/>
                         </div>
+
                     </div>
                     <div class="layui-inline layui-col-md4">
                         <label class="layui-form-label form-lable"
