@@ -3,6 +3,7 @@ package com.joyintech.tams.svreport.chb.assetinfodetail.dao;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.system.base.dao.SysDatadictListLinkMapper;
 import com.joyintech.system.base.entity.SysDatadictListLink;
+import com.joyintech.system.main.dto.WorkFlowInfoDto;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.common.base.entity.ChbAssetInfoErrodataWithBLOBs;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
@@ -79,4 +80,6 @@ public interface AssetInfoDetailMapper {
 	List<AssetInfoDetailDto> selectList(Map<String, Object> param);
 
 	List<AssetInfoDetailDto> selectBykeys(@Param("list") List<String> list);
+
+	List<WorkFlowInfoDto> getWorkFlowList();
 }

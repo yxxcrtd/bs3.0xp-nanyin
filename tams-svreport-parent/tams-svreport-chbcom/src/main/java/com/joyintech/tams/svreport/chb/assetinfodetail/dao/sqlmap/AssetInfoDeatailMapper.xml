@@ -5043,4 +5043,54 @@ select * from (
         </foreach>;
         end;
     </insert>
+
+    <select id="getWorkFlowList" resultType="com.joyintech.system.main.dto.WorkFlowInfoDto">
+        SELECT DISTINCT
+        workflowId,
+        processInstanceId,
+        crtDate,
+        businessCode,
+        businessTypeValue,
+        actionType,
+        operator,
+        title,
+        processState
+        FROM
+        (
+        SELECT
+        wlist.SEQ_NO        workflowId,
+        wlist.WORKFLOW_ID   processInstanceId,
+        wlist.CRT_DATE      crtDate,
+        wlist.TRADE_ID      businesscode,
+        wlist.BUSINESS_TYPE businessTypeValue,
+        wlist.ACTION_TYPE   actionType,
+        wlist.CUR_USER      operator,
+        wlist.TITLE         title,
+        wlist.PAGE_ID       pageId,
+        S.SYSTEM_URL        pathPrefix,
+        S.SYSTEM_CODE       systemCode,
+        wlist.PROCESS_STATE processState,
+        wlist.CUR_USER      signUser
+        FROM
+        SYS_WFL_BUSINESS_LIST wlist
+        LEFT JOIN
+        SYS_PAGE P
+        ON
+        P.PAGE_ID = wlist.PAGE_ID
+        LEFT JOIN
+        SYS_CODE_MAPPING S
+        ON
+        S.SYSTEM_CODE = P.SYSTEM_CODE
+        LEFT JOIN
+        SYS_WFL_BUSINESS_NODE wnode
+        ON
+        wlist.WORKFLOW_ID = wnode.WORKFLOW_ID
+        WHERE
+        wnode.WORKFLOW_ID IS NOT NULL
+        and wlist.BUSINESS_TYPE = 'SVR01'
+        and wlist.PROCESS_STATE = 'ING'
+        ORDER BY
+        wlist.CRT_DATE,
+        wlist.SEQ_NO DESC) sub
+    </select>
 </mapper>
