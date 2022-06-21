@@ -129,4 +129,8 @@ public interface CommonCodeCheckMapper {
     void deleteChbPrdDeclareInfo(@Param("list") List<ChbPrdDeclareInfoErrodataWithBLOBs> list);
 
     int checkExistsAssetCode(String assetCode);
+
+    int checkInvestTradeCodeOther(Map<String, Object> pageParam);
+
+    int checkInvestTradeCode(Map<String, Object> pageParam);
 }
