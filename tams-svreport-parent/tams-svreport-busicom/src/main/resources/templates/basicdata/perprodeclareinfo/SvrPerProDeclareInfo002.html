@@ -69,7 +69,7 @@
                                 <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.prodStage}">产品期次</label>
                                 <div class="layui-input-inline input-inline">
                                     <input type="text" th:id="prodStage" th:name="prodStage"
-                                           class="layui-input form-input text-number"
+                                           class="layui-input form-input" onkeypress="return event.keyCode>=48&&event.keyCode<=57"
                                            data-th-placeholder="#{SysCommon.placeholder}"
                                            data-th-value="${entity?.prodStage}" data-textrange="0" maxlength="4"
                                            data-th-required="true" />

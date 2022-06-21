@@ -419,6 +419,12 @@
         </if>
         ) and rownum = 1
     </select>
+    <select id="selectChbPrdDeclareByProdInsId" resultType="java.lang.Integer">
+        select count(1) from CHB_PRD_DECLARE_INFO where PROD_INS_ID = #{prodInsId}
+    </select>
+    <select id="selectChbPrdDeclareByProdStageAndProdName" resultType="java.lang.Integer">
+        select count(1) from CHB_PRD_DECLARE_INFO where PROD_STAGE = #{prodStage} and PROD_NAME = #{prodName}
+    </select>
     <update id="updateFileNo">
         update CHB_PRD_DECLARE_INFO
         set FILE_NO=#{fileNo},

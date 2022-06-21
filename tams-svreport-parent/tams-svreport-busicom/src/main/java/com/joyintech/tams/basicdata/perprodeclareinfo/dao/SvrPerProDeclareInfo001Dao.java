@@ -22,4 +22,8 @@ public interface SvrPerProDeclareInfo001Dao {
     String selectFileInfo(SvrPerProDeclareInfo001Dto dto);
 
     void updateFileNo(SvrPerProDeclareInfo001Dto perProDeclareRegDto);
+
+    Integer selectChbPrdDeclareByProdInsId(String prodInsId);
+
+    Integer selectChbPrdDeclareByProdStageAndProdName(@Param("prodStage") String prodStage,@Param("prodName") String prodName);
 }

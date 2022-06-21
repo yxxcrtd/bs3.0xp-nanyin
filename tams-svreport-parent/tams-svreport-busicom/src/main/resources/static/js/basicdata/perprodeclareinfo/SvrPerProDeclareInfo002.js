@@ -3,7 +3,49 @@
  * @auth zhangliang
  */
 (function(){
-
+    var existsProdInsId = false;
+    var existsProdStageAndProdName = false;
+    $('#prodInsId').blur(function (){
+        var prodInsId = $('#prodInsId').val();
+        if(prodInsId!='' && prodInsId !=null){
+            Joyin.ajaxJson(basePath+'basicdata/perprodeclareinfo/SvrPerProDeclareInfo002/selectChbPrdDeclareByProdInsId?prodInsId='+prodInsId,{},function (result){
+            if(result>0){
+                Joyin.alert("行内识别已存在",2);
+                existsProdInsId = true;
+            }else{
+                existsProdInsId = false;
+            }
+            })
+        }
+    });
+   $('#prodStage').blur(function (){
+       var prodStage = $('#prodStage').val();
+       var prodName = $('#prodName').val();
+       if(prodStage !=''&&prodStage!=null &&prodName !=''&&prodName!=null){
+           Joyin.ajaxJson(basePath+'basicdata/perprodeclareinfo/SvrPerProDeclareInfo002/selectChbPrdDeclareByProdStageAndProdName?prodStage='+prodStage+'&prodName='+prodName,{},function (result){
+               if(result>0){
+                   Joyin.alert("产品名称和产品期次已存在",2);
+                   existsProdStageAndProdName = true;
+               }else{
+                   existsProdStageAndProdName = false;
+               }
+           })
+       }
+   });
+    $('#prodName').blur(function (){
+        var prodStage = $('#prodStage').val();
+        var prodName = $('#prodName').val();
+        if(prodStage !=''&&prodStage!=null &&prodName !=''&&prodName!=null){
+            Joyin.ajaxJson(basePath+'basicdata/perprodeclareinfo/SvrPerProDeclareInfo002/selectChbPrdDeclareByProdStageAndProdName?prodStage='+prodStage+'&prodName='+prodName,{},function (result){
+                if(result>0){
+                    Joyin.alert("产品名称和产品期次已存在",2);
+                    existsProdStageAndProdName = true;
+                }else{
+                    existsProdStageAndProdName = false;
+                }
+            })
+        }
+    });
     /**
      * 添加必填标志
      */
@@ -40,6 +82,14 @@
      * 保存或提交按钮执行事件
      */
     var onSaveOrSubmitAction = function(operateType){
+        if(existsProdInsId){
+            Joyin.alert("行内识别已存在",2);
+            return false;
+        }
+        if(existsProdStageAndProdName){
+            Joyin.alert("产品名称和产品期次已存在",2);
+            return false;
+        }
         var object = $.serializeToObject('#submitForm',true);
         object.operateType = operateType;
         object.pageModel = pageModel;
@@ -93,7 +143,6 @@
             //         WorkFlow.doSubmitList(basePath + 'basicdata/perprodeclareinfo/SvrPerProDeclareInfo002/save', object, "SvrPerProDeclareInfo002_btn_submit");
             //     }
             // })
-            console.log('+++++>')
             Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.submit")), function() {
                 WorkFlow.doSubmitList(basePath + 'basicdata/perprodeclareinfo/SvrPerProDeclareInfo002/save', object, "SvrPerProDeclareInfo002_btn_submit");
             });

@@ -186,6 +186,15 @@ public class SvrPerProDeclareInfo002Controller extends BaseController {
         String msg = svrPerProDeclareInfo001Service.start(processParameter, dto);
         return new AjaxResult(msg);
     }
-
+    @RequestMapping("/selectChbPrdDeclareByProdInsId")
+    @ResponseBody
+    public Integer selectChbPrdDeclareByProdInsId(String prodInsId){
+        return svrPerProDeclareInfo001Service.selectChbPrdDeclareByProdInsId(prodInsId);
+    }
+    @RequestMapping("/selectChbPrdDeclareByProdStageAndProdName")
+    @ResponseBody
+    public Integer selectChbPrdDeclareByProdStageAndProdName(String prodStage,String prodName){
+        return svrPerProDeclareInfo001Service.selectChbPrdDeclareByProdStageAndProdName(prodStage,prodName);
+    }
 
 }
