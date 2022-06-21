@@ -376,6 +376,12 @@
                 Joyin.error("请从列表中选择数据");
                 return;
             }
+            var deleteFlag = selArr[0].statusValid;
+            for(var i=0;i<selArr.length;i++){
+                 if(selArr[i].statusValid != deleteFlag){
+                        return Joyin.error("只能删除一种数据状态的数据，请重新选择");
+                 }
+            }
             var rowDatas = [];
             var prdRegistCodes = "";
             var declareUuids= "";
