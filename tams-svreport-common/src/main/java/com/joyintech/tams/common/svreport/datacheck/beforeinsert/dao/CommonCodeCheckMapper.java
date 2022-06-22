@@ -3,13 +3,9 @@ package com.joyintech.tams.common.svreport.datacheck.beforeinsert.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
-
-import com.joyintech.tams.common.base.entity.ChbBotAstPositionSub;
-import com.joyintech.tams.common.base.entity.ChbPrdDeclareSub;
-import com.joyintech.tams.common.base.entity.ChbPrdIssueSub;
-import com.joyintech.tams.common.base.entity.ChbPrdresistCode;
 
 @Repository
 public interface CommonCodeCheckMapper {
@@ -109,4 +105,32 @@ public interface CommonCodeCheckMapper {
 
     int checkSalerInsNo (String salerInsNo);
 
+    void deleteChbInvestTradeErrorData(@Param("prodId") String prodId,@Param("assetCode") String assetCode, @Param("tradeCode") String tradeCode);
+
+    void deleteChbPrdBaseInfoErrorData(String prodId);
+
+
+    List<Map<String, String>> selectChbInvestTradeBusKey(@Param("list") List<ChbInvestTradeErrodataWithBLOBs> list);
+
+    List<Map<String, String>> selectChbPrdBaseInfoBusKey(@Param("list") List<ChbPrdBaseinfoErrodataWithBLOBs> list);
+
+    List<Map<String, String>> selectChbAssetInfoBusKey(@Param("list") List<ChbAssetInfoErrodataWithBLOBs> list);
+
+    void deleteChbPrdBaseInfo(@Param("list") List<ChbPrdBaseinfoErrodataWithBLOBs> list);
+
+    void deleteChbInvestTrade(@Param("list") List<ChbInvestTradeErrodataWithBLOBs> list);
+
+    void deleteChbAssetInfo(@Param("list") List<ChbAssetInfoErrodataWithBLOBs> list);
+
+    List<Map<String, String>> selectChbPrdDeclareInfoBusKey(@Param("list") List<ChbPrdDeclareInfoErrodataWithBLOBs> list);
+
+    void deleteChbPrdDeclareInfoErrorData(String prodInsId);
+
+    void deleteChbPrdDeclareInfo(@Param("list") List<ChbPrdDeclareInfoErrodataWithBLOBs> list);
+
+    int checkExistsAssetCode(String assetCode);
+
+    int checkInvestTradeCodeOther(Map<String, Object> pageParam);
+
+    int checkInvestTradeCode(Map<String, Object> pageParam);
 }
