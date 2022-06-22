@@ -34,11 +34,16 @@ $(function() {
             }
         },
         dblclick: function(table, data){
-            data.operateType='detail'
+
             Joyin.dialog(JoyinUtil.getLabel("CchbInvestTrade002"),
                 basePath + "/chb/businessdatamaintain/chbinvesttrade/chbinvesttrade002/init",
-                "98%", "95%",data,
+                "98%", "95%", {
+                    pageModel: PAGE_MODEL_REFERENCE,
+                    tradeSeqno: data.tradeSeqno,
+                    statusValid: data.statusValid
+                },
                 function(){table.reload();});
+
         },
 
 

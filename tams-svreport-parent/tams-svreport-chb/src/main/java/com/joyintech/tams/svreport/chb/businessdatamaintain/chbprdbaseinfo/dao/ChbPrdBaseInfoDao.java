@@ -43,4 +43,6 @@ public interface ChbPrdBaseInfoDao {
     int countDuplicatedData(List<Map<String, String>> list);
 
     List<Map<String,String>> selectByProdIdKey(String prodId);
+
+    List<ChbPrdBaseInfoDto> selectByKeys(@Param("list") List<String> list);
 }
