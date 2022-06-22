@@ -82,4 +82,6 @@ public interface ChbCalendarInfoMapper {
      * @return
      */
     int  selectMstHoliday(@Param("list")List<Map<String, String>> list);
+
+    int countDuplicatedData(@Param("list") List<Map<String, String>> list);
 }

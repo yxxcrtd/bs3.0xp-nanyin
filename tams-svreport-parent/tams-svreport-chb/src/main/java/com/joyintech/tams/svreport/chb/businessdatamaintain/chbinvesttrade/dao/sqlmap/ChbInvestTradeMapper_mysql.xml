@@ -210,7 +210,7 @@
         FROM CHB_PRD_BASEINFO
         <where>
             <if test="search !=null and  search !='' ">
-                PROD_NAME LIKE '%' || #{search} || '%'
+                PROD_NAME LIKE concat('%',#{search},'%')
             </if>
             <if test="prodName !=null and  prodName !='' ">
                 and PROD_NAME = #{prodName}

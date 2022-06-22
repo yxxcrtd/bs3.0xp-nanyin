@@ -317,7 +317,19 @@ public class SvrPerProDeclareInfoService001 extends CommonExportService<SvrPerPr
             if(!StringUtils.isEmpty(config.getResultdictCode())){
                 for (Map<String, String> m : list) {
                     if(m.get(config.getRealColumnId())!=null){
-                        m.put(config.getRealColumnId(),m.get(config.getRealColumnId()).split(" ")[0]);
+                        if(config.getRealColumnId().equals("PRD_SPEC_PROPERTY")){
+                            try {
+                                StringBuffer sb= new StringBuffer();
+                                String[] split = m.get(config.getRealColumnId()).split(",");
+                                Stream.of(split).forEach(e->sb.append(e.split(" ")[0]).append(","));
+                                sb.deleteCharAt(sb.length() - 1);
+                                m.put(config.getRealColumnId(),sb.toString());
+                            } catch (Exception e) {
+                                logger.error(e.getMessage(), e);
+                            }
+                        }else{
+                            m.put(config.getRealColumnId(),m.get(config.getRealColumnId()).split(" ")[0]);
+                        }
                     }
                 }
             }
