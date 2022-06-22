@@ -1,5 +1,7 @@
 package com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.controller;
 
+import com.alibaba.fastjson.JSONArray;
+import com.google.common.collect.Lists;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
@@ -15,10 +17,12 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbinvesttrade.dto.ChbInvestTradeDto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.dto.ChbPrdBaseInfoDto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.service.ChbPrdBaseInfoService;
+import com.joyintech.tams.svreport.chb.common.util.ErrdataConvertUtil;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -34,6 +38,7 @@ import java.io.File;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author wubingbing
@@ -164,19 +169,32 @@ public class ChbPrdBaseInfo001Controller extends BaseController {
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
             throws Exception {
-        /** modify by yanya on 20210209 增加按照选择数据进行导出 start**/
-        String datas = this.getParam("datas");
+
         Map<String, Object> params= RequestUtil.getPageParam();
-        List<ChbPrdBaseInfoDto> list = null;
-        if (StringUtil.isNotEmpty(datas)) {
-            list = JsonUtils.json2List(datas, ChbPrdBaseInfoDto.class);
-        }
-        else {
+        List<ChbPrdBaseInfoDto> list = Lists.newArrayList();
+        if(StringUtils.isNotEmpty((String)params.get("selectData"))) {
+            List<Map> selectData = JSONArray.parseArray((String) params.get("selectData"), Map.class);
+            List<String> produuids = selectData.stream().map(e -> (String)e.get("produuid")).collect(Collectors.toList());
+            list = chbPrdBaseInfoService.selectByKeys(produuids);
+        } {
             list = chbPrdBaseInfoService.selectAll(params);
+        }
+        List<ChbPrdBaseInfoDto> dtoList = Lists.newArrayList();
+        if(list.size()>0){
+            for (int k=0;k<list.size();k++){
+                if(list.get(k).getStatusValid().equals("A")){
+                    ChbPrdBaseInfoDto dto = ErrdataConvertUtil.errdataConvert(ChbPrdBaseInfoDto.class, list.get(k).getOrgData());
+                    dto.setStatusValid("A");
+                    dto.setErrMsg(list.get(k).getErrMsg());
+                    dtoList.add(dto);
+                }else{
+                    dtoList.add(list.get(k));
+                }
+            }
         }
         File outFile = chbPrdBaseInfoService.makeFile(
                 "/com/joyintech/tams/svreport/chb/businessdatamaintain/chbprdbaseinfo/conf/export_conf.xml",
-                list);
+                dtoList);
         return ExportUtil.export(
                 this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS
                         + DateUtil.format(new Date())

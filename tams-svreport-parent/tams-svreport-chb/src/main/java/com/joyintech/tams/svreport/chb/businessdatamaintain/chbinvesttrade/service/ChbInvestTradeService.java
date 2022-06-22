@@ -251,4 +251,8 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
         svrInvestTradeFileImpService.importDB(listExcel,list,new InterfFile(),null);
         return listExcel;
     }
+
+    public List<ChbInvestTradeDto> selectByKeys(List<String> tradeSeqnos) {
+        return chbInvestTradeDao.selectByKeys(tradeSeqnos);
+    }
 }

@@ -1335,7 +1335,8 @@
         T1.ERR_MSG           AS errMsg,
         T1.FILE_NO           AS fileNo,
         T1.FILE_NUM          AS fileNum,
-        T1.TEN_FILE          AS tenFile
+        T1.TEN_FILE          AS tenFile,
+               null          AS orgData
         FROM
         CHB_PRD_DECLARE_INFO T1
         <where>
@@ -1431,8 +1432,8 @@
         T1.ERR_MSG           AS errMsg,
         null           AS fileNo,
         null        AS fileNum,
-        null          AS tenFile
-
+        null          AS tenFile,
+        T1.ORG_DATA   AS orgData
         FROM
         CHB_PRD_DECLARE_INFO_ERRODATA T1
         <where>

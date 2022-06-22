@@ -231,6 +231,7 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
             columnName= map.get(temp);
             columnList.add(i,columnName);
         }
+
         List<Map<String,String>> list = new ArrayList<>();
         for(int i=1;i<dataList.size();++i){
             Map<String,String> subMap = new HashMap<>();
@@ -273,5 +274,9 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
 
     public List<Map<String,String>> selectByProdIdKey(String prodInsId) {
         return chbPrdBaseInfoDao.selectByProdIdKey(prodInsId);
+    }
+
+    public List<ChbPrdBaseInfoDto> selectByKeys(List<String> produuids) {
+        return chbPrdBaseInfoDao.selectByKeys(produuids);
     }
 }

@@ -59,7 +59,7 @@ public class ChbInvestTrade002Controller extends BaseController {
             model.addAttribute("pageModel",dto.getPageModel());
             model.addAttribute(GlobalConstant.ENTITY, dto);
         }
-        else if (WorkFlowUtil.isNotFromToDoList() &&StringUtil.isNotEmpty(tradeCode) ) {
+        else if (WorkFlowUtil.isNotFromToDoList() &&StringUtil.isNotEmpty(tradeSeqno) ) {
             //通过主键查询数据
 
             try {

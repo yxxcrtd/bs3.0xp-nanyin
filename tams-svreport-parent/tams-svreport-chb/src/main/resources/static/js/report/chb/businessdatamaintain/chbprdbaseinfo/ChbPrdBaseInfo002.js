@@ -24,6 +24,7 @@
     var init = 0;
     var initProdInsId = '';
     $('#prodInsId').change(function(){
+
         var prodInsId = $('#prodInsId').val();
         if(init == 0){
             initProdInsId = prodInsId;

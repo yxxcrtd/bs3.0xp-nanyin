@@ -188,4 +188,10 @@
             </foreach>
     </where>
     </select>
+    <select id="countDuplicatedData" resultType="java.lang.Integer">
+        select count(1) from MST_HOLIDAY where (CALENDAR_ID,CDATE) in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            (#{item.CALENDAR_ID},#{item.CDATE})
+        </foreach>
+    </select>
 </mapper>

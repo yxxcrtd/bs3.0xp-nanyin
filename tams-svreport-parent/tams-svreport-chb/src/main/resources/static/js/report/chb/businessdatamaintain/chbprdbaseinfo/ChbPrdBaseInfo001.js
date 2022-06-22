@@ -31,6 +31,16 @@ $(function() {
                 return getSearchParams();
             }
         },
+        dblclick: function (table, data) {
+            Joyin.dialog(JoyinUtil.getLabel("FinStockInfo002.title"),
+                basePath + "/chb/businessdatamaintain/chbprdbaseinfo/chbprdbaseinfo002/init",
+                "99%", "99%", {
+                    pageModel: PAGE_MODEL_REFERENCE,
+                    produuid: data.produuid,
+                    statusValid:data.statusValid
+
+                });
+        },
         cols:[
             {field:'produuid',visible:false}
             ,{field:'statusValid',visible:false}
@@ -98,6 +108,7 @@ $(function() {
      * 绑定删除事件
      */
     table.bind('click', '.delt', function(data, index) {
+        console.log(data)
         var object = {selectedItem: [data], operateType:"delete"};
         Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
             WorkFlow.doDeleteList(basePath + '/chb/businessdatamaintain/chbprdbaseinfo/chbprdbaseinfo001/delete', object, "CchbPrdBaseInfo001_btn_delete", "CchbPrdBaseInfo002",function(){
