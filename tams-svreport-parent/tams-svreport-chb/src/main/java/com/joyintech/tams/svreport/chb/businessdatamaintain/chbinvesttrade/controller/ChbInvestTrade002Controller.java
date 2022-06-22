@@ -6,6 +6,7 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
@@ -157,5 +158,13 @@ public class ChbInvestTrade002Controller extends BaseController {
         // 流程开始
         String msg = chbInvestTradeService.start(processParameter, dto);
         return new AjaxResult(msg);
+    }
+
+    @ResponseBody
+    @RequestMapping("getCnyAmt")
+    public AjaxResult dealCnyAmt(){
+        AjaxResult result  = new AjaxResult();
+        result.setData(chbInvestTradeService.dealCnyAmt(RequestUtil.getPageParam()));
+        return result;
     }
 }

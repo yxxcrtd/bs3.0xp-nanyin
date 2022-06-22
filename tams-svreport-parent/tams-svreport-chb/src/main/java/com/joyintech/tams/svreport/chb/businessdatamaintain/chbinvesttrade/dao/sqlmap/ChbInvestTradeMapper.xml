@@ -605,4 +605,31 @@
         delete from CHB_INVEST_TRADE
         where to_char(nvl(UPDATE_TIME,CREATE_TIME),'yyyy-mm-dd') = to_char(sysdate,'yyyy-mm-dd')
     </delete>
+
+    <select id="getRateNearByDate" resultType="java.math.BigDecimal">
+        select
+        <choose>
+            <when test="pricetype == '01'">
+                cmei.OPEN_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+            </when>
+            <when test="pricetype == '02'">
+                cmei.CLOSE_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+            </when>
+            <when test="pricetype == '03'">
+                cmei.HIGH_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+            </when>
+            <when test="pricetype == '04'">
+                cmei.LOW_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+            </when>
+            <otherwise >
+                cmei.MID_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+            </otherwise>
+        </choose>
+        from MST_EXCHARGE_QUOTE cmei
+        where  cmei.BASIS_CYY= #{CCY_ORIGINAL,jdbcType=VARCHAR}
+        and cmei.QUOT_CYY = #{CCY_CONVERT,jdbcType=VARCHAR}
+        and cmei.DATASOURCE_TYPE = 'SAFE'
+        AND cmei.TRADE_DATE=
+        ( select max(TRADE_DATE) from MST_EXCHARGE_QUOTE  where DATASOURCE_TYPE = 'SAFE' and BASIS_CYY = #{CCY_ORIGINAL,jdbcType=VARCHAR} and QUOT_CYY = #{CCY_CONVERT,jdbcType=VARCHAR} and TRADE_DATE &lt;= #{HOLDDATE,jdbcType=DATE})
+    </select>
 </mapper>

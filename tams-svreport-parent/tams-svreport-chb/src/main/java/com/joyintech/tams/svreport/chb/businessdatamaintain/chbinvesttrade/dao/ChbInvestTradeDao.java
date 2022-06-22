@@ -6,6 +6,7 @@ import com.joyintech.tams.svreport.chb.businessdatamaintain.chbinvesttrade.dto.C
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -44,4 +45,6 @@ public interface ChbInvestTradeDao {
     int countDuplicatedData(@Param("list") List<Map<String, String>> list);
 
     int selectByBusinessKey(@Param("prodId") String prodId,@Param("tradeCode") String tradeCode,@Param("assetCode") String assetCode);
+
+    BigDecimal getRateNearByDate(Map<String, Object> temp);
 }
