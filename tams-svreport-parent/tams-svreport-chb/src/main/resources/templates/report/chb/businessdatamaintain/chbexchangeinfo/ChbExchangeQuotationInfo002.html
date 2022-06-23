@@ -115,6 +115,8 @@
                                    data-th-value="${entity?.quotUnit}" required="required" data-fixtype="2" data-textrange='0'
                                    data-th-placeholder="#{SysCommon.placeholder}">
                         </div>
+                        <input type="hidden"  id="statusValid" name="statusValid" class="layui-input form-input" data-th-value="${entity?.statusValid}">
+                        <input type="hidden"  id="datauuid" name="datauuid" class="layui-input form-input" data-th-value="${entity?.datauuid}">
                         <input id="submitType" name="submitType" type="text"/>
                     </div>
                 </div>

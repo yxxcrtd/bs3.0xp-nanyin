@@ -61,6 +61,7 @@ public class ChbExchangeQuotationInfo002Controller extends BaseController {
         String tradeDate = getParam("tradeDate");
         String datasourceType = getParam("datasourceType");
         String status = getParam("status");
+        String datauuid = getParam("datauuid");
         String workflowId = getParam("workflowId");
         ChbExchangeQuotationInfoDto mstExchangeQuotationInfoDto = null;
         // 修改时
@@ -70,6 +71,7 @@ public class ChbExchangeQuotationInfo002Controller extends BaseController {
             pageParam.put("tradeDate", tradeDate);
             pageParam.put("datasourceType", datasourceType);
             pageParam.put("status", status);
+            pageParam.put("datauuid", datauuid);
             List<ChbExchangeQuotationInfoDto> selectAllList = chbExchangeQuotationInfoService.selectAllList(pageParam);
             if (CollectionUtils.isNotEmpty(selectAllList)) {
                 mstExchangeQuotationInfoDto = selectAllList.get(0);

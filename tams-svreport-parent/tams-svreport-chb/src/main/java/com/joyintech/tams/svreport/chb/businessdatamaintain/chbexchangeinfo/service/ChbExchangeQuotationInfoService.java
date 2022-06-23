@@ -24,18 +24,28 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.InterfFile;
+import com.joyintech.tams.common.base.dao.ChbMstExchangeInfoMapper;
+import com.joyintech.tams.common.base.dao.MstExchargeQuoteErrodataMapper;
+import com.joyintech.tams.common.base.entity.MstExchargeQuoteErrodataWithBLOBs;
 import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
 import com.joyintech.tams.common.svreport.base.service.BatchInsertService;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.service.CommonCodeCheckBatchService;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.interf.common.imp.ImportGenerator;
 import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbexchangeinfo.dao.ChbExchangeQuotationInfoMapper;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbexchangeinfo.dto.ChbExchangeQuotationInfoDto;
 
+import com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.dto.ChbPrdBaseInfoDto;
 import com.joyintech.tams.svreport.chb.common.service.CheckExcelImportService;
+import com.joyintech.tams.svreport.chb.common.util.DuplicateDataUtil;
+import com.joyintech.tams.svreport.chb.common.util.ErrdataConvertUtil;
 import com.joyintech.tams.svreport.chb.common.util.ExcelUtil;
+import com.joyintech.tams.svreport.interf.chb.baseinfo.service.SvrExchangFileImpService;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
@@ -46,10 +56,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -100,6 +113,12 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
     private BaseCommonCheckService baseCommonCheckService;
     @Resource
     private BatchInsertService batchInsertService;
+    @Autowired
+    private SvrExchangFileImpService svrExchangFileImpService;
+    @Autowired
+    private MstExchargeQuoteErrodataMapper mstExchargeQuoteErrodataMapper;
+    @Autowired
+    private CommonCodeCheckBatchService commonCodeCheckBatchService;
 
 
     /**
@@ -123,7 +142,19 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
      * @return 查询结果
      */
     public List<ChbExchangeQuotationInfoDto> selectAllList(Map<String, Object> pageParam) {
-        return chbExchangeQuotationInfoMapper.select(pageParam);
+        ChbExchangeQuotationInfoDto dto = new ChbExchangeQuotationInfoDto();
+        if(pageParam.get("status").equals(DictCodeListExt3.中债数据状态_待处理.getValue())){
+            MstExchargeQuoteErrodataWithBLOBs mstExchargeQuoteErrodataWithBLOBs = mstExchargeQuoteErrodataMapper.selectByPrimaryKey((String) pageParam.get("datauuid"));
+            if(mstExchargeQuoteErrodataWithBLOBs!=null){
+                dto = ErrdataConvertUtil.errdataConvert(dto.getClass(),mstExchargeQuoteErrodataWithBLOBs.getOrgData());
+                dto.setDatauuid(mstExchargeQuoteErrodataWithBLOBs.getDatauuid());
+                dto.setStatusValid(DictCodeListExt3.中债数据状态_待处理.getValue());
+            }
+            return  Lists.newArrayList(dto);
+        }else{
+
+            return chbExchangeQuotationInfoMapper.select(pageParam);
+        }
     }
 
 
@@ -158,61 +189,30 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
      */
     public AjaxResult checkConfirmMsgForImportData(String fileName) {
 
-        logger.info("===========导入校验===========");
         AjaxResult webResult = new AjaxResult();
         // 检查文件名是否包含汇率行情信息
-        if (!fileName.contains("汇率行情信息")) {
+        if (!fileName.contains("汇率行情")) {
             webResult.setMessage(this.getMessage("ImportFileName"), MessageType.错误消息);
             return webResult;
         }
-        List<List<String>> dataList = ExcelUtil.getDataList1(fileName);
-        List<List<String>> tempList = ExcelUtil.getTempList1(fileName);
-        List<String> headList = new ArrayList<>(9);
-        headList.add("货币对");
-        headList.add("交易日期");
-        headList.add("开盘价（元）");
-        headList.add("收盘价（元）");
-        headList.add("中间价（元）");
-        headList.add("最高价（元）");
-        headList.add("最低价（元）");
-        headList.add("报价单位");
-        headList.add("数据来源");
-        //校验文件中列是否一致
-        List<ExcelValidDto> tempCheckResult = ExcelUtil.checkExcelTemp(tempList, headList);
-        if (!StringUtil.isEmptyList(tempCheckResult)) {
-            webResult.setMessage(this.getMessage("ImportFileTemplate"), MessageType.错误消息);
+        List<Map<String, String>> list = Lists.newArrayList();
+        try {
+            list = dataMapAnalysis(fileName);
+        } catch (Exception e) {
+            logger.error("解析导入文件异常:{}", e.getMessage());
+        }
+        if(list.size()<1){
+            webResult.setMessage("请勿上传空文件", MessageType.错误消息);
             return webResult;
         }
-
-        //List<List<String>>转成List<Map<String, String>>
-        List<Map<String, String>> mapList = this.convertMapList(dataList);
-        //check包含DB和业务CHECK
-        List<ExcelValidDto> excelValidList = baseCommonCheckService.checkDataAll(CHECK_FLAG, mapList, TABLE_NAME, fileName, TABLE_NAME, TABLE_NAME, null, null);
-        //总数据
-        int count = mapList.size();
-        //待处理数据
-        long countA = mapList.stream().filter(e -> Objects.equals("A", e.get("STATUS"))).count();
-        //无法接入系统的数据
-        long countR = excelValidList.stream().filter(e -> Objects.equals("0未导入", e.getValidKey())).count();
-        webResult.setMessage(this.getMessage("ChbImportMessage", count - countA, countR, countA), MessageType.确认消息);
-        //按500条分页
-        List<List<Map<String, String>>> partitionList = Lists.partition(mapList, PAGE_SIZE);
-        //数据重复的个数
-        int duplicateCount = 0;
-         for (List<Map<String, String>> list:partitionList) {
-             int i = chbExchangeQuotationInfoMapper.selectExchargeQuoteCount(list);
-             if (i>0){
-                 duplicateCount+=i;
-             }
-         }
-         //存在重复数据提示错误
-         if (duplicateCount>0) {
-             List<JoyinMessage> joyinMessages = new ArrayList<>(1);
-             JoyinMessage ms = new JoyinMessage(this.getMessage("ChbImportDuplicateMessage",duplicateCount), MessageType.确认消息);
-             joyinMessages.add(ms);
-             webResult.setJoyinMessages(joyinMessages);
-         }
+        int i = chbExchangeQuotationInfoMapper.countDuplicatedData(list);
+        if(i>0){
+            String[] checkEuplicatedKeys ={"EXCHARGE_CODE","TRADE_DATE","DATASOURCE_TYPE"};
+            int dup = DuplicateDataUtil.countDuplicatedData(list, checkEuplicatedKeys);
+            webResult.setMessage(this.getMessage("SvrDuplicateMessage",dup,i), MessageType.确认消息);
+        }
         return webResult;
+
     }
 
 
@@ -223,36 +223,16 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
      * @return 导入结果，包含验证内容，如果验证失败，返回message
      */
     public List<ExcelValidDto> importData(String fileName) {
-        //根据文件名获取文件数据
-        List<List<String>> dataList = ExcelUtil.getDataList1(fileName);
 
-        //List<List<String>>转成List<Map<String, String>>
-        List<Map<String, String>> mapList = this.convertMapList(dataList);
-
-        //check包含DB和业务CHECK
-        List<ExcelValidDto> excelValidList = baseCommonCheckService.checkDataAll(CHECK_FLAG, mapList, TABLE_NAME, fileName, TABLE_NAME, TABLE_NAME, null, null);
-
-        List<ChbExchangeQuotationInfoDto> dtoList = this.convertToBean(mapList);
-        //小于998条数据，批量分页插入
-        if ( dtoList.size() < 998 ) {
-            //按200条分页
-            List<List<ChbExchangeQuotationInfoDto>> partitionList = Lists.partition(dtoList, PAGE_SIZE);
-            //批量入库
-            for (List<ChbExchangeQuotationInfoDto> list:partitionList) {
-                chbExchangeQuotationInfoMapper.insertExchargeQuoteInfo(list);
-            }
-        } else {
-            //sqlloader插入
-            ImpTable table = new ImpTable(TABLE_NAME);
-            table.setColumns(ImportGenerator.createImpTableColumns(table.getName()));
-            // 临时文件存放目录
-            String tmpPath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
-
-            batchInsertService.exeBatchldr(tmpPath, dtoList, table);
+        List<Map<String, String>> list = Lists.newArrayList();
+        try {
+            list = dataMapAnalysis(fileName);
+        } catch (Exception e) {
+            logger.error("解析导入文件异常:{}", e.getMessage());
         }
-
-
-        return excelValidList;
+        List<ExcelValidDto> listExcel = new ArrayList<ExcelValidDto>();
+        svrExchangFileImpService.importDB(listExcel,list,new InterfFile(),null);
+        return listExcel;
     }
 
     /**
@@ -323,11 +303,20 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
         List<ChbExchangeQuotationInfoDto> list = new ArrayList<>(1);
         dto.setStatus(DictCodeListExt2.数据状态_有效.getValue());
         if (StringUtil.equals(dto.getOperateType(), DELETE)) {
-            List<ChbExchangeQuotationInfoDto> listDto = new ArrayList<>(1);
-            dto.setStatus(DictCodeListExt2.数据状态_删除.getValue());
-            listDto.add(dto);
-            chbExchangeQuotationInfoMapper.updateExchargeQuoteInfo(listDto);
+            if(StringUtil.equals(DictCodeListExt3.中债数据状态_待处理.getValue(),dto.getStatusValid())){
+                mstExchargeQuoteErrodataMapper.deleteByPrimaryKey(dto.getDatauuid());
+            }else{
+                List<ChbExchangeQuotationInfoDto> listDto = new ArrayList<>(1);
+                dto.setStatus(DictCodeListExt2.数据状态_删除.getValue());
+                listDto.add(dto);
+                chbExchangeQuotationInfoMapper.updateExchargeQuoteInfo(listDto);
+            }
         } else if (StringUtil.equals(dto.getOperateType(), NEW)) {
+            MstExchargeQuoteErrodataWithBLOBs bloBs = new MstExchargeQuoteErrodataWithBLOBs();
+            bloBs.setExchargeCode(dto.getExchargeCode());
+            bloBs.setTradeDate(dto.getTradeDate());
+            bloBs.setDatasourceType(dto.getDatasourceType());
+            commonCodeCheckBatchService.deleteMstExchargeQuoteErrodata(Lists.newArrayList(bloBs));
             //删除状态是已删除的数据
             chbExchangeQuotationInfoMapper.deleteChbExchargeQuoteByKey(dto.getExchargeCode(), dto.getTradeDate(), dto.getDatasourceType(), DictCodeListExt2.数据状态_删除.getValue());
             //设置基本币种，单位币种等
@@ -345,7 +334,19 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
 
         } else {
             list.add(dto);
-            chbExchangeQuotationInfoMapper.updateExchargeQuoteInfo(list);
+            if(StringUtil.equals(DictCodeListExt3.中债数据状态_待处理.getValue(),dto.getStatusValid())){
+                mstExchargeQuoteErrodataMapper.deleteByPrimaryKey(dto.getDatauuid());
+                String exchargeCode = dto.getExchargeCode();
+                if (exchargeCode != null) {
+                    List<String> splitToList = StringUtil.splitToList("/", exchargeCode);
+                    dto.setBasisCyy(splitToList.get(0));
+                    dto.setQuotCyy(splitToList.get(1));
+                }
+                chbExchangeQuotationInfoMapper.insertExchargeQuoteInfo(list);
+            }else{
+                chbExchangeQuotationInfoMapper.updateExchargeQuoteInfo(list);
+            }
+
         }
     }
 
@@ -382,5 +383,46 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
 
         return mapList;
 
+    }
+
+    public List<Map<String,String>> dataMapAnalysis(String flieName)
+            throws Exception {
+        String prefix = CacheUtil.getSysParam(GlobalConstant.COM_PROP_UPLOAD_PATH);
+        if(!StringUtil.startsWith(flieName, prefix)
+                && !StringUtil.startsWith(flieName, prefix.replace("/", File.separator))) {
+            flieName = prefix + File.separator + flieName;
+        }
+        com.joyintech.framework.util.ExcelUtil excelUtil = com.joyintech.framework.util.ExcelUtil.build(flieName, null);
+        List<List<String>> dataList = excelUtil.readToList(0, 1, 0);
+        List<Map<String,String>> list = new ArrayList<>();
+        dataList.forEach(item->{
+            Map<String,String> map = new HashMap<>();
+            map.put("EXCHARGE_CODE", item.get(0));
+            map.put("TRADE_DATE",item.get(1));
+            map.put("OPEN_PRICE", item.get(2));
+            map.put("CLOSE_PRICE", item.get(3));
+            map.put("MID_PRICE", item.get(4));
+            map.put("HIGH_PRICE", item.get(5));
+            map.put("LOW_PRICE", item.get(6));
+            map.put("QUOT_UNIT", item.get(7));
+            map.put("DATASOURCE_TYPE", item.get(8).split(" ")[0]);
+            try {
+                map.put("BASIS_CYY",item.get(0).split("/")[0]);
+                map.put("QUOT_CYY",item.get(0).split("/")[1]);
+            } catch (Exception e) {
+                logger.error("解析导入文件异常:{}", e.getMessage());
+            }
+            list.add(map);
+        });
+
+        return list;
+    }
+
+    public List<ChbExchangeQuotationInfoDto> selectByKeys(List<ChbExchangeQuotationInfoDto> dtoList) {
+        return chbExchangeQuotationInfoMapper.selectByKeys(dtoList);
+    }
+
+    public List<ChbExchangeQuotationInfoDto> selectAll(Map<String, Object> param) {
+        return chbExchangeQuotationInfoMapper.select(param);
     }
 }

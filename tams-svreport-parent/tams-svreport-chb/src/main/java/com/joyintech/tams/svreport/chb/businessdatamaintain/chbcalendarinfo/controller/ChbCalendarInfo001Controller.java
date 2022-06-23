@@ -9,17 +9,24 @@
  */
 package com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.controller;
 
+import com.alibaba.fastjson.JSONArray;
+import com.google.common.collect.Lists;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.*;
+import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dto.ChbCalendarInfo001Dto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dto.ChbCalendarInfoDto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.service.ChbCalendarInfo001Service;
+import com.joyintech.tams.svreport.chb.businessdatamaintain.chbinvesttrade.dto.ChbInvestTradeDto;
+import com.joyintech.tams.svreport.chb.common.util.ErrdataConvertUtil;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,9 +36,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -126,7 +135,56 @@ public class ChbCalendarInfo001Controller extends BaseController {
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export() {
-        return chbTradingCalendarInfo001Service.export(this.getPageId(), RequestUtil.getParameters(getRequest()));
+        Map<String, Object> params= RequestUtil.getPageParam();
+        List<ChbCalendarInfo001Dto> list = Lists.newArrayList();
+        if(StringUtils.isNotEmpty((String)params.get("selectData"))){
+            List<Map> selectData = JSONArray.parseArray((String) params.get("selectData"), Map.class);
+            List<ChbCalendarInfo001Dto> dtoList = selectData.stream().map(e -> {
+                ChbCalendarInfo001Dto dto = new ChbCalendarInfo001Dto();
+                dto.setCalendarId((String) e.get("CALENDAR_ID"));
+                try {
+                    dto.setCdate(DateUtil.parseDate((String) e.get("CDATE"),"yyyy-MM-dd"));
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+                return dto;
+            }).collect(Collectors.toList());
+            list = chbTradingCalendarInfo001Service.selectByKeys(dtoList);
+        }else {
+            if (Objects.equals(params.get("ishDay"), DictCodeList.是否_是.getValue())) {
+                params.put("ishDay", 1);
+            } else if (StringUtil.equals(params.get("ishDay"), DictCodeList.是否_否.getValue())) {
+                params.put("ishDay", 0);
+            }
+            String calendarType = (String) params.get("calendarType");
+            if (StringUtil.isNotEmpty(calendarType)) {
+                params.put("calendarTypeList", StringUtil.split(calendarType, GlobalConstant.COMMA));
+            }
+            list = chbTradingCalendarInfo001Service.selectAll(params);
+        }
+        List<ChbCalendarInfo001Dto> dtoList = Lists.newArrayList();
+        if(list.size()>0){
+            for (int k=0;k<list.size();k++){
+                if(list.get(k).getStatus().equals("A")){
+                    ChbCalendarInfo001Dto chbCalendarInfo001Dto = ErrdataConvertUtil.errdataConvert(ChbCalendarInfo001Dto.class, list.get(k).getOrgData());
+                    chbCalendarInfo001Dto.setStatus("A");
+                    chbCalendarInfo001Dto.setErrMsg(list.get(k).getErrMsg());
+                    dtoList.add(chbCalendarInfo001Dto);
+                }else{
+                    dtoList.add(list.get(k));
+                }
+            }
+        }
+        File outFile = chbTradingCalendarInfo001Service.makeFile(
+                "com/joyintech/tams/svreport/chb/businessdatamaintain/chbcalendarinfo/conf/export_conf.xml",
+                dtoList);
+        return ExportUtil.export(
+                this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS
+                        + DateUtil.format(new Date())
+                        + SystemGlobalConstant.CLOSE_PARENTHESIS
+                        + SystemGlobalConstant.POINT
+                        + FileNameUtil.getFileExtName(outFile),
+                outFile, true);
     }
 
 }

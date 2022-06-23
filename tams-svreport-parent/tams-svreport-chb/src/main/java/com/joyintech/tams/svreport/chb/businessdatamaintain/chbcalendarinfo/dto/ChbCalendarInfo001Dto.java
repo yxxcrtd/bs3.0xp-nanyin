@@ -42,6 +42,7 @@ public class ChbCalendarInfo001Dto extends MstHoliday{
      */
     private String calendarName;
 
+    private String orgData;
 
 
     public String getUpdateTimeStr() {
@@ -134,4 +135,11 @@ public class ChbCalendarInfo001Dto extends MstHoliday{
                 super.getStatus());
     }
 
+    public String getOrgData() {
+        return orgData;
+    }
+
+    public void setOrgData(String orgData) {
+        this.orgData = orgData;
+    }
 }

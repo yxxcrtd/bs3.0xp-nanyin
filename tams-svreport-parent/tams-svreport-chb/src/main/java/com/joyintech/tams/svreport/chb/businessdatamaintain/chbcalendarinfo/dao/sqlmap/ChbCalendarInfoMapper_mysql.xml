@@ -12,7 +12,8 @@
 		T1.UPDATE_USER updateUser,
 		T2.CALENDAR_NAME calendarName,
 		T1.STATUS status,
-		T1.ERR_MSG errMsg
+		T1.ERR_MSG errMsg,
+		 null orgData
 		from
 		MST_HOLIDAY T1
 		left join MST_CALENDAR_INFO T2 on T1.CALENDAR_ID = T2.CALENDAR_ID
@@ -27,10 +28,45 @@
 				and T1.IS_HOLIDAY = #{ishDay}
 			</if>
 			<if test="startDate != null and ! startDate.equals('')">
-				and T1.CDATE &gt;= STR_TO_DATE(#{startDate},'%Y-%m-%d')
+				and T1.CDATE &gt;= #{startDate}
 			</if>
 			<if test="endDate != null and ! endDate.equals('')">
-				and T1.CDATE &lt;= STR_TO_DATE(#{endDate},'%Y-%m-%d')
+				and T1.CDATE &lt;= #{endDate}
+			</if>
+			<if test="status != null and ! status.equals('')">
+				and T1.STATUS = #{status}
+			</if>
+		</where>
+
+		union all
+		SELECT
+		T1.CALENDAR_ID calendarId ,
+		T1.CDATE cdate ,
+		T1.IS_HOLIDAY isHoliday ,
+		T1.UPDATE_TIME  updateTime,
+		T1.UPDATE_USER updateUser,
+		T2.CALENDAR_NAME calendarName,
+		T1.STATUS status,
+		T1.ERR_MSG errMsg,
+		T1.ORG_DATA orgData
+		from
+		MST_HOLIDAY_ERRODATA T1
+		left join MST_CALENDAR_INFO T2 on T1.CALENDAR_ID = T2.CALENDAR_ID
+		<where>
+			<if test="calendarTypeList != null">
+				<foreach collection="calendarTypeList" item="item"
+						 open="T1.CALENDAR_ID in(" close=")" separator=",">
+					#{item}
+				</foreach>
+			</if>
+			<if test='ishDay != null and !ishDay.equals("")'>
+				and T1.IS_HOLIDAY = #{ishDay}
+			</if>
+			<if test="startDate != null and ! startDate.equals('')">
+				and T1.CDATE &gt;= #{startDate}
+			</if>
+			<if test="endDate != null and ! endDate.equals('')">
+				and T1.CDATE &lt;= #{endDate}
 			</if>
 			<if test="status != null and ! status.equals('')">
 				and T1.STATUS = #{status}
@@ -192,5 +228,44 @@
 		<foreach collection="list" item="item" open="(" close=")" separator=",">
 			(#{item.CALENDAR_ID},#{item.CDATE})
 		</foreach>
+	</select>
+	<select id="selectByKeys" resultType="com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dto.ChbCalendarInfo001Dto">
+		SELECT
+		T1.CALENDAR_ID calendarId ,
+		T1.CDATE cdate ,
+		T1.IS_HOLIDAY isHoliday ,
+		T1.UPDATE_TIME  updateTime,
+		T1.UPDATE_USER updateUser,
+		T2.CALENDAR_NAME calendarName,
+		T1.STATUS status,
+		T1.ERR_MSG errMsg,
+		null orgData
+		from
+		MST_HOLIDAY T1
+		left join MST_CALENDAR_INFO T2 on T1.CALENDAR_ID = T2.CALENDAR_ID
+		where (CALENDAR_ID,CDATE) in
+		<foreach collection="list" item="item" open="(" close=")" separator=",">
+			(#{item.calendarId},#{item.cdate})
+		</foreach>
+
+		union all
+		SELECT
+		T1.CALENDAR_ID calendarId ,
+		T1.CDATE cdate ,
+		T1.IS_HOLIDAY isHoliday ,
+		T1.UPDATE_TIME  updateTime,
+		T1.UPDATE_USER updateUser,
+		T2.CALENDAR_NAME calendarName,
+		T1.STATUS status,
+		T1.ERR_MSG errMsg,
+		T1.ORG_DATA orgData
+		from
+		MST_HOLIDAY_ERRODATA T1
+		left join MST_CALENDAR_INFO T2 on T1.CALENDAR_ID = T2.CALENDAR_ID
+		where (CALENDAR_ID,CDATE) in
+		<foreach collection="list" item="item" open="(" close=")" separator=",">
+			(#{item.calendarId},#{item.cdate})
+		</foreach>
+		ORDER BY calendarId ASC,cdate DESC
 	</select>
 </mapper>
