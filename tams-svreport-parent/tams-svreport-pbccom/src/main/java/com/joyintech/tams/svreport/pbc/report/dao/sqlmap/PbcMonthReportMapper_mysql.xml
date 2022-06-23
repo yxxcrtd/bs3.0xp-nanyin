@@ -547,7 +547,7 @@
             <!--             sub.REPORTUUID = #{regist.reportuuid,jdbcType=CHAR} -->
             <!--         </foreach>-->
             <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
-                sub.TERMID = #{regist.termid,jdbcType=CHAR} and REPORTTYPE  = #{regist.reporttype}
+                sub.TERMID = #{regist.termid,jdbcType=CHAR} and sub.PBC_ACCOUNT_ID is null
             </foreach>
         </where>
     </update>
@@ -661,7 +661,7 @@
         where 1 =1
         <if test="registList !=null and registList.size()>0">
             <foreach collection="registList" item="regist" open=" and ((" close="))" separator=") or (">
-                TERMID = #{regist.termid} and REPORTTYPE  = #{regist.reporttype}
+                TERMID = #{regist.termid} and PBC_ACCOUNT_ID is null
                 <if test="null!=regist.orgCode and regist.orgCode != ''">
                     and ORG_CODE = IFNULL(#{regist.orgCode,jdbcType=VARCHAR},'')
                 </if>
