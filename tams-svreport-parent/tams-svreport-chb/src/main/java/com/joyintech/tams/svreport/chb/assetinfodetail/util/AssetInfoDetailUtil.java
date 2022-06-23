@@ -3054,23 +3054,53 @@ public class AssetInfoDetailUtil {
                                     e.setRateFlag12(e.getRateFlag() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, e.getRateFlag()));
                                 }
                                 if(StringUtil.isNotEmpty(e.getMaxRate())) {
-                                    e.setMaxRate12(e.getMaxRate().toString());
+                                    if(e.getMaxRate().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getMaxRate().toString(),"0E-14")) {
+                                        e.setMaxRate12("0.00000");
+                                    }else{
+                                        e.setMaxRate12(e.getMaxRate().setScale(5,BigDecimal.ROUND_HALF_UP).toString());
+                                    }
                                 }
-                                e.setMinRate12(e.getMinRate12());
+                                if(StringUtil.isNotEmpty(e.getMinRate())) {
+                                    if(e.getMinRate().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getMinRate().toString(),"0E-14")) {
+                                        e.setMinRate12("0.00000");
+                                    }else{
+                                        e.setMinRate12(e.getMinRate().setScale(5,BigDecimal.ROUND_HALF_UP).toString());
+                                    }
+                                }
                                 if(StringUtil.isNotEmpty(e.getMgrFeeRate())) {
-                                    e.setMgrFeeRate12(e.getMgrFeeRate().toString());
+                                    if(e.getMgrFeeRate().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getMgrFeeRate().toString(),"0E-14")) {
+                                        e.setMgrFeeRate12("0.00000");
+                                    }else{
+                                        e.setMgrFeeRate12(e.getMgrFeeRate().setScale(5,BigDecimal.ROUND_HALF_UP).toString());
+                                    }
                                 }
                                 if(StringUtil.isNotEmpty(e.getTruFeeRate())) {
-                                    e.setTruFeeRate12(e.getTruFeeRate().toString());
+                                    if(e.getTruFeeRate().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getTruFeeRate().toString(),"0E-14")) {
+                                        e.setTruFeeRate12("0.00000");
+                                    }else{
+                                        e.setTruFeeRate12(e.getTruFeeRate().setScale(5,BigDecimal.ROUND_HALF_UP).toString());
+                                    }
                                 }
                                 if(StringUtil.isNotEmpty(e.getTradeFeeRate())) {
-                                    e.setTradeFeeRate12(e.getTradeFeeRate().toString());
+                                    if(e.getTradeFeeRate().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getTradeFeeRate().toString(),"0E-14")) {
+                                        e.setTradeFeeRate12("0.00000");
+                                    }else{
+                                        e.setTradeFeeRate12(e.getTradeFeeRate().setScale(5,BigDecimal.ROUND_HALF_UP).toString());
+                                    }
                                 }
                                 if(StringUtil.isNotEmpty(e.getAgencyFeeRate())) {
-                                    e.setAgencyFeeRate12(e.getAgencyFeeRate().toString());
+                                    if(e.getAgencyFeeRate().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getAgencyFeeRate().toString(),"0E-14")) {
+                                        e.setAgencyFeeRate12("0.00000");
+                                    }else{
+                                        e.setAgencyFeeRate12(e.getAgencyFeeRate().setScale(5,BigDecimal.ROUND_HALF_UP).toString());
+                                    }
                                 }
                                 if(StringUtil.isNotEmpty(e.getOtherFeeRate())) {
-                                    e.setOtherFeeRate12(e.getOtherFeeRate().toString());
+                                    if(e.getOtherFeeRate().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getOtherFeeRate().toString(),"0E-14")) {
+                                        e.setOtherFeeRate12("0.00000");
+                                    }else{
+                                        e.setOtherFeeRate12(e.getOtherFeeRate().setScale(5,BigDecimal.ROUND_HALF_UP).toString());
+                                    }
                                 }
                             } catch (Exception exception) {
                                 exception.printStackTrace();
