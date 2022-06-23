@@ -13,13 +13,19 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
+import com.google.common.collect.Lists;
 import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.MstExchargeQuoteErrodataWithBLOBs;
+import com.joyintech.tams.common.base.entity.MstHoliday;
 import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
 import com.joyintech.tams.common.svreport.base.service.BatchInsertService;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.service.CommonCodeCheckBatchService;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.interf.common.constant.InterfConstants;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
@@ -111,21 +117,32 @@ public class SvrExchangFileImpService extends FileImpService {
 
 	@Autowired
 	private BatchInsertService batchInsertService;
+	@Autowired
+	private CommonCodeCheckBatchService commonCodeCheckBatchService;
 	
 	@Override
-	public String saveData(List<Map<String, String>> listData, String saveFlag, String dateSource) {
+	public String saveData(List<Map<String, String>> listData, String saveFlag, String dataSource) {
 		// 解析成功或失败的标识
 		boolean success = true;
         String tmpPath = SvrDataUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY, GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 		logger.debug("汇率数据转dto---开始-----:" +  df.format(new Date()));
 		// modify by convertMapToEntity yangnxianjiu 2022-01-19 start
 //		listNE = convertMapToEntity(exchangeList);
-		List<MstExchargeQuote> listNE = this.convertToBean(listData);
+		List<MstExchargeQuote> listNE = (List<MstExchargeQuote>) convertMapToEntity(listData, MstExchargeQuote.class, dataSource);
 		// modify by convertMapToEntity yangnxianjiu 2022-01-19 end
 		logger.debug("汇率数据转dto---结束-----:" +  df.format(new Date()));
 		if(!CollectionUtils.isEmpty(listNE)){
 			// 增量模式根据业务主键更新
 			if(InterfConstants.SAVEFLAG_ADD.equals(saveFlag)){
+				List<MstExchargeQuoteErrodataWithBLOBs> mstExchargeQuoteErrodataList = Lists.newArrayList();
+				listNE.forEach(e->{
+					MstExchargeQuoteErrodataWithBLOBs mstExchargeQuoteErrodataWithBLOBs = new MstExchargeQuoteErrodataWithBLOBs();
+					mstExchargeQuoteErrodataWithBLOBs.setExchargeCode(e.getExchargeCode());
+					mstExchargeQuoteErrodataWithBLOBs.setTradeDate(e.getTradeDate());
+					mstExchargeQuoteErrodataList.add(mstExchargeQuoteErrodataWithBLOBs);
+				});
+				commonCodeCheckBatchService.deleteMstExchargeQuoteErrodata(mstExchargeQuoteErrodataList);
+				chbExchangeImpMapper.deleteExchangeBatch(listNE);
 				mergeExchangeInfo(listNE);
 			}
 			// 全量模式。根据日期全删全插
@@ -133,6 +150,15 @@ public class SvrExchangFileImpService extends FileImpService {
 				Map<Date, List<MstExchargeQuote>> mstExchargeQuoteMap = listNE.stream().collect(JoyinCollectors.groupingBy(MstExchargeQuote::getTradeDate));
 				Set<Date> dateSet = mstExchargeQuoteMap.keySet();
 				deleteAllData(dateSet);
+				List<MstExchargeQuoteErrodataWithBLOBs> mstExchargeQuoteErrodataList = Lists.newArrayList();
+				listNE.forEach(e->{
+					MstExchargeQuoteErrodataWithBLOBs mstExchargeQuoteErrodataWithBLOBs = new MstExchargeQuoteErrodataWithBLOBs();
+					mstExchargeQuoteErrodataWithBLOBs.setExchargeCode(e.getExchargeCode());
+					mstExchargeQuoteErrodataWithBLOBs.setTradeDate(e.getTradeDate());
+					mstExchargeQuoteErrodataList.add(mstExchargeQuoteErrodataWithBLOBs);
+				});
+				commonCodeCheckBatchService.deleteMstExchargeQuoteErrodata(mstExchargeQuoteErrodataList);
+				chbExchangeImpMapper.deleteExchangeBatch(listNE);
 				if (listNE.size() <= 1000) {
 					insertExchangeInfo(listNE);
 				} else {// 大于1000使用sqlloader入库
@@ -184,7 +210,25 @@ public class SvrExchangFileImpService extends FileImpService {
 			return "success";
 		}
 	}
-	
+	@Override
+	public String importDB(List<ExcelValidDto> listExcel, List<Map<String, String>> listData, InterfFile interfFile, String date) {
+
+		ChbInterfConfigDto interfConfig = ChbInterfUtil.queryInterfConfigByInterfid(InterfDefine.汇率信息数据.getCode());
+		if (interfConfig == null){
+			logger.info("CHB_INTERF_CONFIG表中无配置项！");
+			return "fail";
+		}
+		checkImportData(listExcel,listData, interfFile.getFilename(), ChbCheckTableInfo.汇率行情信息,interfConfig.getCoverFlag(), listExcel == null? "I" : "D");
+
+		String saveFlag = interfConfig.getContentType();
+		String result = "";
+		if(listData.size()>0){
+			result=saveData(listData, listExcel == null?saveFlag: InterfConstants.SAVEFLAG_ADD, listExcel == null? "I" : "D");
+		}
+		// 更新系统配置时间
+		ChbInterfUtil.updateInterfTimeBySysdate( InterfDefine.汇率信息数据.getCode());
+		return result;
+	}
 	private void mergeExchangeInfo(List<MstExchargeQuote> listNE) {
 		chbExchangeImpMapper.mergeExchangeData(listNE);
 	}

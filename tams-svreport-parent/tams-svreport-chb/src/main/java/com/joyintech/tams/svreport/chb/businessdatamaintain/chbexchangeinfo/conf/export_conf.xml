@@ -4,7 +4,7 @@
 		<Row>
 			<Cell order="1" name="数据状态">statusValidStr</Cell>
 			<Cell order="2" name="货币对">exchargeCode</Cell>
-			<Cell order="3" name="交易日期">tradeDate</Cell>
+			<Cell order="3" name="交易日期">tradeDateStr</Cell>
 			<Cell order="4" name="开盘价（元）">openPrice</Cell>
 			<Cell order="5" name="收盘价（元）">closePrice</Cell>
 			<Cell order="6" name="中间价（元）">midPrice</Cell>

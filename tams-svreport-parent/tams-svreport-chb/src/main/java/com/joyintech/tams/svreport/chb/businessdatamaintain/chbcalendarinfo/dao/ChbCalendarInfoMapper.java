@@ -14,6 +14,7 @@ package com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dao
 import com.joyintech.tams.common.base.entity.MstCalendarInfo;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dto.ChbCalendarInfo001Dto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dto.ChbCalendarInfoDto;
+import com.joyintech.tams.svreport.chb.businessdatamaintain.chbinvesttrade.dto.ChbInvestTradeDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -84,4 +85,6 @@ public interface ChbCalendarInfoMapper {
     int  selectMstHoliday(@Param("list")List<Map<String, String>> list);
 
     int countDuplicatedData(@Param("list") List<Map<String, String>> list);
+
+    List<ChbCalendarInfo001Dto> selectByKeys(@Param("list") List<ChbCalendarInfo001Dto> list);
 }

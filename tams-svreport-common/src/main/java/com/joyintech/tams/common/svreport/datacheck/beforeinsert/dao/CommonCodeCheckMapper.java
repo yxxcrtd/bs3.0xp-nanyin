@@ -133,4 +133,12 @@ public interface CommonCodeCheckMapper {
     int checkInvestTradeCodeOther(Map<String, Object> pageParam);
 
     int checkInvestTradeCode(Map<String, Object> pageParam);
+
+    void deleteMstHolidayErrodata(@Param("calendarId") String calendarId,@Param("cdate") String cdate);
+
+    void deleteMstHoliday(@Param("list") List<MstHolidayErrodataWithBLOBs> list);
+
+    void deleteMstExchargeQuoteErrodata(@Param("exchargeCode") String exchargeCode, @Param("tradeDate") String tradeDate,@Param("datasourceType") String datasourceType);
+
+    void deleteMstExchargeQuote(@Param("list") List<MstExchargeQuoteErrodataWithBLOBs> list);
 }
