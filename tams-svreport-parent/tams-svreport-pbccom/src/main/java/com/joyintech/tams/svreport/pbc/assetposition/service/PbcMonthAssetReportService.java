@@ -7997,6 +7997,17 @@ public class PbcMonthAssetReportService  extends BaseService{
         }
         // 填报机构名称
         pbcMonthReport.setReportOrgName(CommonUtil.selectBankCode());
+        ChbOrgRegistBankCode bankCode = CommonUtil.getUserBank();
+        String  code=CommonUtil.selectBankCode();
+        String  name=CommonUtil.selectBankCodeName();
+        if(null!=bankCode){
+            code = bankCode.getRegistBankCode();
+            name = bankCode.getBelongInstitutionName();
+        }
+        // 发行机构代码取值
+        pbcMonthReport.setIssuePartyId(code);
+        pbcMonthReport.setIssuePartyName(name);
+        pbcMonthReport.setReportOrgName(name);
         // 社会信用代码
         // pbcMonthReport.setSocialCreditCode(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_SOCIAL_CREDIT_CODE));
         // 金融机构编码
@@ -8881,8 +8892,8 @@ public class PbcMonthAssetReportService  extends BaseService{
                     pbcReport.setDeptCode(deptCode);
 
                     pbcReport.setIssuePartyId(code[0]);
-                    pbcReport.setIssuePartyName(code[1]);
-                    pbcReport.setReportOrgName(code[1]);
+//                    pbcReport.setIssuePartyName(code[1]);
+//                    pbcReport.setReportOrgName(code[1]);
 
                     //TODO hxy
                     //多级法人改造，add 20200620 hxy start 当机构不为空时，去查询机构登记银行代码管理中的登记银行代码
