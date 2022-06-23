@@ -504,8 +504,8 @@ public class PbcMonthAssetReportService  extends BaseService{
                 setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H23000_FJRQYZW, reportType, rateMap, source, null, massageMap);
             }
 
-            if(!PbcMonthReportConstants.PBC_ASSETTYPE1_P14.equals(pos.getAssetType1())){
-
+            if(!PbcMonthReportConstants.PBC_ASSETTYPE1_P14.equals(pos.getAssetType1())&&
+                    !PbcMonthReportConstants.PBC_ASSETTYPE1_P11.equals(pos.getAssetType1())){
                 if(DictCodeListExt3.银行资本补充工具_永续债_债性.getValue().equals(pos.getBankCapital())||
                         DictCodeListExt3.银行资本补充工具_永续债_股性.getValue().equals(pos.getBankCapital())||
                         DictCodeListExt3.银行资本补充工具_二级资本债.getValue().equals(pos.getBankCapital())||
