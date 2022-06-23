@@ -23,6 +23,7 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.InterfFile;
 import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
 import com.joyintech.tams.common.svreport.base.service.BatchInsertService;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
@@ -33,13 +34,16 @@ import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dao.ChbCalendarInfoMapper;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dto.ChbCalendarInfo001Dto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dto.ChbCalendarInfoDto;
+import com.joyintech.tams.svreport.chb.businessdatamaintain.chbinvesttrade.dto.ChbInvestTradeDto;
 import com.joyintech.tams.svreport.chb.common.util.DuplicateDataUtil;
 import com.joyintech.tams.svreport.chb.common.util.ExcelUtil;
+import com.joyintech.tams.svreport.interf.chb.baseinfo.service.SvrHolidayFileImpService;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,6 +67,8 @@ public class ChbCalendarInfo001Service extends CommonExportService<ChbCalendarIn
 
     public static String CONFIG_FILE = "/com/joyintech/tams/svreport/chb/businessdatamaintain/chbcalendarinfo/conf/export_conf.xml";
     private final Logger logger = LoggerFactory.getLogger(ChbCalendarInfo001Service.class);
+    @Autowired
+    private SvrHolidayFileImpService svrHolidayFileImpService;
 
     /**
      * 表名
@@ -205,6 +211,7 @@ public class ChbCalendarInfo001Service extends CommonExportService<ChbCalendarIn
             logger.error("解析导入文件异常:{}", e.getMessage());
         }
         List<ExcelValidDto> listExcel = new ArrayList<ExcelValidDto>();
+        svrHolidayFileImpService.importDB(listExcel,list,new InterfFile(),null);
         return listExcel;
     }
 
@@ -310,5 +317,13 @@ public class ChbCalendarInfo001Service extends CommonExportService<ChbCalendarIn
         });
 
         return list;
+    }
+
+    public List<ChbCalendarInfo001Dto> selectByKeys(List<ChbCalendarInfo001Dto> dtoList) {
+        return chbCalendarInfoMapper.selectByKeys(dtoList);
+    }
+
+    public List<ChbCalendarInfo001Dto> selectAll(Map<String, Object> params) {
+        return chbCalendarInfoMapper.selectInfo(params);
     }
 }

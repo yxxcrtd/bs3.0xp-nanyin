@@ -89,4 +89,7 @@ public interface ChbExchangeQuotationInfoMapper {
      */
     int  selectExchargeQuoteCount(@Param("list")List<Map<String, String>> list);
 
+    int countDuplicatedData(@Param("list") List<Map<String, String>> list);
+
+    List<ChbExchangeQuotationInfoDto> selectByKeys(@Param("list") List<ChbExchangeQuotationInfoDto> list);
 }

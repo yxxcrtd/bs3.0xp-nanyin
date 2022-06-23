@@ -9,7 +9,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Lists;
+import com.joyintech.tams.common.base.entity.ChbInvestTrade;
+import com.joyintech.tams.common.base.entity.MstHolidayErrodataWithBLOBs;
 import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.service.CommonCodeCheckBatchService;
+import com.joyintech.tams.report.interf.common.constant.InterfConstants;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -99,6 +106,8 @@ public class SvrHolidayFileImpService extends FileImpService {
 	private SqlSessionTemplate template;
     @Autowired
     private SvrMstHolidayImpMapper svrMstHolidayImpMapper;
+    @Autowired
+    private CommonCodeCheckBatchService commonCodeCheckBatchService;
 
 	@Override
 	public String importDB(List<Map<String, String>> listData,InterfFile interfFile, String date) {
@@ -126,7 +135,25 @@ public class SvrHolidayFileImpService extends FileImpService {
 			return "success";
 		}
 	}
+	@Override
+	public String importDB(List<ExcelValidDto> listExcel, List<Map<String, String>> listData, InterfFile interfFile, String date) {
 
+		ChbInterfConfigDto interfConfig = ChbInterfUtil.queryInterfConfigByInterfid(InterfDefine.节假日数据.getCode());
+		if (interfConfig == null){
+			logger.info("CHB_INTERF_CONFIG表中无配置项！");
+			return "fail";
+		}
+		checkImportData(listExcel,listData, interfFile.getFilename(), ChbCheckTableInfo.节假日,interfConfig.getCoverFlag(), listExcel == null? "I" : "D");
+
+		String saveFlag = interfConfig.getContentType();
+		String result = "";
+		if(listData.size()>0){
+			result=saveData(listData, listExcel == null?saveFlag: InterfConstants.SAVEFLAG_ADD, listExcel == null? "I" : "D");
+		}
+		// 更新系统配置时间
+		ChbInterfUtil.updateInterfTimeBySysdate( InterfDefine.节假日数据.getCode());
+		return result;
+	}
 	@Override
 	public String saveData(List<Map<String, String>> listData, String saveFlag, String dataSource) {
 		boolean isSucess=false;
@@ -143,6 +170,14 @@ public class SvrHolidayFileImpService extends FileImpService {
 			if(F.equals(saveFlag)){
 				//全量
 			}else{
+				List<MstHolidayErrodataWithBLOBs> errDataList = Lists.newArrayList();
+				listNE.forEach(e->{
+					MstHolidayErrodataWithBLOBs errodataWithBLOBs = new MstHolidayErrodataWithBLOBs();
+					errodataWithBLOBs.setCalendarId(e.getCalendarId());
+					errodataWithBLOBs.setCdate(e.getCdate());
+					errDataList.add(errodataWithBLOBs);
+				});
+				commonCodeCheckBatchService.deleteMstHolidayErrodata(errDataList);
 				//增量
 				isSucess = mergeData(listNE);
 			}
@@ -197,4 +232,5 @@ public class SvrHolidayFileImpService extends FileImpService {
         logger.info("节假日插入结束--------------" + new Date());
         return  isSuccess;
 	}
+
 }

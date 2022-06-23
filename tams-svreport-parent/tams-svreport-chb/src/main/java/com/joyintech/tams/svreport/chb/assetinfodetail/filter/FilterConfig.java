@@ -14,7 +14,10 @@ public class FilterConfig {
     public FilterRegistrationBean testFilterRegistration() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(new ParamFilter());
-        String[] urls = {"/chb/assetinfodetail/AssetInfoDetail001/export","/basicdata/perprodeclareinfo/SvrPerProDeclareInfo001/export","/chb/businessdatamaintain/chbprdbaseinfo/chbprdbaseinfo001/export"};
+        String[] urls = {"/chb/assetinfodetail/AssetInfoDetail001/export"
+                ,"/basicdata/perprodeclareinfo/SvrPerProDeclareInfo001/export"
+                ,"/chb/businessdatamaintain/chbprdbaseinfo/chbprdbaseinfo001/export"
+                ,"/chb/businessdatamaintain/chbexchangeinfo/ChbExchangeQuotationInfo001/export"};
         registration.addUrlPatterns(urls);
         registration.setOrder(1);
         return registration;

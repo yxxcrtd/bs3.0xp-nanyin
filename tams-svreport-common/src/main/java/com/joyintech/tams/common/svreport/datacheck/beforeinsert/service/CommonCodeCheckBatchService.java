@@ -532,7 +532,8 @@ public class CommonCodeCheckBatchService {
         // 投资交易信息 产品基本信息  add  by  wubingbing 20220518  end
         List<ChbPrdDeclareInfoErrodataWithBLOBs> chbPrdDeclareInfoErrodataList = Lists.newArrayList();
 
-
+        List<MstHolidayErrodataWithBLOBs> mstHolidayErrodataList = Lists.newArrayList();
+        List<MstExchargeQuoteErrodataWithBLOBs> mstExchargeQuoteErrodataList = Lists.newArrayList();
         codeCheckCommonOnly(excelValidDtoList,list, tableInfo);
         updateExcelValidDtoList(excelValidDtoList,list,tableInfo);
 
@@ -591,6 +592,26 @@ public class CommonCodeCheckBatchService {
                 ChbPrdDeclareInfoErrodataWithBLOBs chbPrdBaseinfoErrodataWithBLOBs = createChbPrdDeclareInfoErrodata(map,flag);
                 if(chbPrdBaseinfoErrodataWithBLOBs != null) {
                     chbPrdDeclareInfoErrodataList.add(chbPrdBaseinfoErrodataWithBLOBs);
+                }
+            }
+            //交易日历
+            if(StringUtil.equals(tableInfo.getTableName(),ChbCheckTableInfo.节假日.getTableName())){
+                if("重复数据;".equals(map.get("ERRMSG"))){
+                    continue;
+                }
+                MstHolidayErrodataWithBLOBs mstHolidayErrodataWithBLOBs = createMstHolidayErrodata(map,flag);
+                if(mstHolidayErrodataWithBLOBs != null) {
+                    mstHolidayErrodataList.add(mstHolidayErrodataWithBLOBs);
+                }
+            }
+            //汇率行情
+            if(StringUtil.equals(tableInfo.getTableName(),ChbCheckTableInfo.汇率行情信息.getTableName())){
+                if("重复数据;".equals(map.get("ERRMSG"))){
+                    continue;
+                }
+                MstExchargeQuoteErrodataWithBLOBs mstExchargeQuoteErrodataWithBLOBs = createMstExchargeQuoteErrodata(map,flag);
+                if(mstExchargeQuoteErrodataWithBLOBs != null) {
+                    mstExchargeQuoteErrodataList.add(mstExchargeQuoteErrodataWithBLOBs);
                 }
             }
             //销售数据反馈
@@ -718,6 +739,286 @@ public class CommonCodeCheckBatchService {
             deleteChbPrdDeclareInfo(chbPrdDeclareInfoErrodataList);
             insertChbPrdDeclareInfoErroData(chbPrdDeclareInfoErrodataList);
         }
+        //交易日历
+        if(StringUtil.isEmptyList(mstHolidayErrodataList)){
+
+        }else{
+            Iterator<MstHolidayErrodataWithBLOBs> iterator = mstHolidayErrodataList.iterator();
+            while(iterator.hasNext()){
+                MstHolidayErrodataWithBLOBs next = iterator.next();
+                if(StringUtils.isEmpty(next.getCalendarId())||next.getCdate()==null){
+                    iterator.remove();
+                }
+            }
+            deleteMstHolidayErrodata(mstHolidayErrodataList);
+            deleteMstHoliday(mstHolidayErrodataList);
+            insertMstHolidayErrodata(mstHolidayErrodataList);
+        }
+        //汇率行情
+        if(StringUtil.isEmptyList(mstExchargeQuoteErrodataList)){
+
+        }else{
+            Iterator<MstExchargeQuoteErrodataWithBLOBs> iterator = mstExchargeQuoteErrodataList.iterator();
+            while(iterator.hasNext()){
+                MstExchargeQuoteErrodataWithBLOBs next = iterator.next();
+                if(StringUtils.isEmpty(next.getExchargeCode())||next.getTradeDate()==null||StringUtils.isEmpty(next.getDatasourceType())){
+                    iterator.remove();
+                }
+            }
+            deleteMstExchargeQuoteErrodata(mstExchargeQuoteErrodataList);
+            deleteMstExchargeQuote(mstExchargeQuoteErrodataList);
+            insertMstExchargeQuoteErrodata(mstExchargeQuoteErrodataList);
+        }
+    }
+
+    private void insertMstExchargeQuoteErrodata(List<MstExchargeQuoteErrodataWithBLOBs> mstExchargeQuoteErrodataList) {
+        SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+        try {
+            int count = 0;
+            logger.debug("汇率行情信息错误信息数据插入开始--------------" + new Date());
+            MstExchargeQuoteErrodataMapper batchMapper = session.getMapper(MstExchargeQuoteErrodataMapper.class);
+            for(MstExchargeQuoteErrodataWithBLOBs single: mstExchargeQuoteErrodataList){
+                batchMapper.insert(single);
+                count ++;
+                // 每20次提交
+                if (count % 20 == 0) {
+                    session.commit();
+                    // 清理缓存，防止溢出
+                    session.clearCache();
+                }
+            }
+            session.commit();
+            // 清理缓存，防止溢出
+            session.clearCache();
+        }
+        catch (Exception e) {
+            session.rollback();
+            logger.error("SQL执行异常：", e);
+        }
+        finally {
+            session.close();
+        }
+        logger.debug("汇率行情错误信息数据插入结束--------------" + new Date());
+
+    }
+
+    private void deleteMstExchargeQuote(List<MstExchargeQuoteErrodataWithBLOBs> mstExchargeQuoteErrodataList) {
+        SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+        try {
+            CommonCodeCheckMapper batchMapper = session.getMapper(CommonCodeCheckMapper.class);
+            batchMapper.deleteMstExchargeQuote(mstExchargeQuoteErrodataList);
+            session.commit();
+            session.clearCache();
+        }
+        catch (Exception e) {
+            session.rollback();
+            logger.error("SQL执行异常：", e);
+        }
+        finally {
+            session.close();
+        }
+    }
+
+    public void deleteMstExchargeQuoteErrodata(List<MstExchargeQuoteErrodataWithBLOBs> erroList) {
+        SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+        try {
+            int count = 0;
+            logger.debug("汇率行情信息错误信息数据删除开始--------------" + new Date());
+            CommonCodeCheckMapper batchMapper = session.getMapper(CommonCodeCheckMapper.class);
+            for(MstExchargeQuoteErrodataWithBLOBs single: erroList){
+                if (StringUtils.isNotEmpty(single.getExchargeCode())&& single.getTradeDate()!=null){
+                    try {
+                        batchMapper.deleteMstExchargeQuoteErrodata(single.getExchargeCode(), com.joyintech.framework.util.DateUtil.format(single.getTradeDate(),"yyyy-MM-d"),single.getDatasourceType());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    count ++;
+                }
+                // 每20次提交
+                if (count % 20 == 0) {
+                    session.commit();
+                    // 清理缓存，防止溢出
+                    session.clearCache();
+                }
+            }
+            session.commit();
+            // 清理缓存，防止溢出
+            session.clearCache();
+        }
+        catch (Exception e) {
+            session.rollback();
+            logger.error("SQL执行异常：", e);
+        }
+        finally {
+            session.close();
+        }
+        logger.debug("汇率行情信息错误信息数据删除结束--------------" + new Date());
+    }
+
+    private MstExchargeQuoteErrodataWithBLOBs createMstExchargeQuoteErrodata(Map<String, String> map, String flag) {
+        String msg = map.get("ERRMSG");
+        if (StringUtil.isEmpty(msg)) {
+            return null;
+        }
+
+        // 拼装错误信息
+        MstExchargeQuoteErrodataWithBLOBs mstExchargeQuoteErrodataWithBLOBs = new MstExchargeQuoteErrodataWithBLOBs();
+        // 主键uuid
+        mstExchargeQuoteErrodataWithBLOBs.setDatauuid(IDGenerator.generate(36));
+        mstExchargeQuoteErrodataWithBLOBs.setExchargeCode(map.get("EXCHARGE_CODE"));
+
+        try {
+            mstExchargeQuoteErrodataWithBLOBs.setTradeDate(com.joyintech.framework.util.DateUtil.parseDate(map.get("TRADE_DATE"),"yyyy-MM-dd"));
+        } catch (ParseException e) {
+            mstExchargeQuoteErrodataWithBLOBs.setTradeDate(null);
+        }
+        mstExchargeQuoteErrodataWithBLOBs.setDatasourceType(map.get("DATASOURCE_TYPE"));
+        // 拼接错误字段信息
+        Map<String, String> newMap = new HashMap<>(map);
+        newMap.remove("ERRMSG");
+        newMap.remove(null);
+        mstExchargeQuoteErrodataWithBLOBs.setOrgData(JsonUtils.object2Json(newMap));
+        // 错误提示信息
+        mstExchargeQuoteErrodataWithBLOBs.setErrMsg(msg);
+        // 数据状态
+        mstExchargeQuoteErrodataWithBLOBs.setStatus("A");
+        if(flag.equals("I")){
+            mstExchargeQuoteErrodataWithBLOBs.setCreateUser("interf");
+            mstExchargeQuoteErrodataWithBLOBs.setUpdateUser("interf");
+        }else{
+            mstExchargeQuoteErrodataWithBLOBs.setCreateUser(CommonUtil.getUserName());
+            mstExchargeQuoteErrodataWithBLOBs.setUpdateUser(CommonUtil.getUserName());
+        }
+        mstExchargeQuoteErrodataWithBLOBs.setCreateTime(com.joyintech.framework.util.DateUtil.now());
+        mstExchargeQuoteErrodataWithBLOBs.setUpdateTime(DateUtil.now());
+        return mstExchargeQuoteErrodataWithBLOBs;
+    }
+
+    private void insertMstHolidayErrodata(List<MstHolidayErrodataWithBLOBs> erroList) {
+        SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+        try {
+            int count = 0;
+            logger.debug("节假日信息错误信息数据插入开始--------------" + new Date());
+            MstHolidayErrodataMapper batchMapper = session.getMapper(MstHolidayErrodataMapper.class);
+            for(MstHolidayErrodataWithBLOBs single: erroList){
+                batchMapper.insert(single);
+                count ++;
+                // 每20次提交
+                if (count % 20 == 0) {
+                    session.commit();
+                    // 清理缓存，防止溢出
+                    session.clearCache();
+                }
+            }
+            session.commit();
+            // 清理缓存，防止溢出
+            session.clearCache();
+        }
+        catch (Exception e) {
+            session.rollback();
+            logger.error("SQL执行异常：", e);
+        }
+        finally {
+            session.close();
+        }
+        logger.debug("节假日信息错误信息数据插入结束--------------" + new Date());
+
+    }
+
+    private void deleteMstHoliday(List<MstHolidayErrodataWithBLOBs> mstHolidayErrodataList) {
+        SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+        try {
+            CommonCodeCheckMapper batchMapper = session.getMapper(CommonCodeCheckMapper.class);
+            batchMapper.deleteMstHoliday(mstHolidayErrodataList);
+            session.commit();
+            session.clearCache();
+        }
+        catch (Exception e) {
+            session.rollback();
+            logger.error("SQL执行异常：", e);
+        }
+        finally {
+            session.close();
+        }
+    }
+
+    public void deleteMstHolidayErrodata(List<MstHolidayErrodataWithBLOBs> erroList) {
+        SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+        try {
+            int count = 0;
+            logger.debug("节假日信息错误信息数据删除开始--------------" + new Date());
+            CommonCodeCheckMapper batchMapper = session.getMapper(CommonCodeCheckMapper.class);
+            for(MstHolidayErrodataWithBLOBs single: erroList){
+                if (StringUtils.isNotEmpty(single.getCalendarId())&& single.getCdate()!=null){
+                    try {
+                        batchMapper.deleteMstHolidayErrodata(single.getCalendarId(), com.joyintech.framework.util.DateUtil.format(single.getCdate(),"yyyy-MM-d"));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    count ++;
+                }
+                // 每20次提交
+                if (count % 20 == 0) {
+                    session.commit();
+                    // 清理缓存，防止溢出
+                    session.clearCache();
+                }
+            }
+            session.commit();
+            // 清理缓存，防止溢出
+            session.clearCache();
+        }
+        catch (Exception e) {
+            session.rollback();
+            logger.error("SQL执行异常：", e);
+        }
+        finally {
+            session.close();
+        }
+        logger.debug("节假日信息错误信息数据删除结束--------------" + new Date());
+    }
+
+    private MstHolidayErrodataWithBLOBs createMstHolidayErrodata(Map<String, String> map, String flag) {
+        String msg = map.get("ERRMSG");
+        if (StringUtil.isEmpty(msg)) {
+            return null;
+        }
+
+        // 拼装错误信息
+        MstHolidayErrodataWithBLOBs mstHolidayErrodataWithBLOBs = new MstHolidayErrodataWithBLOBs();
+        // 主键uuid
+        mstHolidayErrodataWithBLOBs.setDatauuid(IDGenerator.generate(36));
+        mstHolidayErrodataWithBLOBs.setCalendarId(map.get("CALENDAR_ID"));
+        try {
+            mstHolidayErrodataWithBLOBs.setIsHoliday(Long.valueOf(map.get("IS_HOLIDAY")));
+        } catch (NumberFormatException e) {
+            mstHolidayErrodataWithBLOBs.setIsHoliday(null);
+        }
+        try {
+            mstHolidayErrodataWithBLOBs.setCdate(com.joyintech.framework.util.DateUtil.parseDate(map.get("CDATE"),"yyyy-MM-dd"));
+        } catch (ParseException e) {
+            mstHolidayErrodataWithBLOBs.setCdate(null);
+        }
+        // 拼接错误字段信息
+        Map<String, String> newMap = new HashMap<>(map);
+        newMap.remove("ERRMSG");
+        newMap.remove(null);
+        mstHolidayErrodataWithBLOBs.setOrgData(JsonUtils.object2Json(newMap));
+        // 错误提示信息
+        mstHolidayErrodataWithBLOBs.setErrMsg(msg);
+        // 数据状态
+        mstHolidayErrodataWithBLOBs.setStatus("A");
+        if(flag.equals("I")){
+            mstHolidayErrodataWithBLOBs.setCreateUser("interf");
+            mstHolidayErrodataWithBLOBs.setUpdateUser("interf");
+        }else{
+            mstHolidayErrodataWithBLOBs.setCreateUser(CommonUtil.getUserName());
+            mstHolidayErrodataWithBLOBs.setUpdateUser(CommonUtil.getUserName());
+        }
+        mstHolidayErrodataWithBLOBs.setCreateTime(com.joyintech.framework.util.DateUtil.now());
+        mstHolidayErrodataWithBLOBs.setUpdateTime(DateUtil.now());
+        return mstHolidayErrodataWithBLOBs;
+
     }
 
     private void updateExcelValidDtoList(List<ExcelValidDto> excelValidDtoList, List<Map<String, String>> list, ChbCheckTableInfo tableInfo) {
@@ -768,6 +1069,31 @@ public class CommonCodeCheckBatchService {
                                 if(dto.getRowNum().equals(String.valueOf(i+2))){
                                     dto.setValidKey("导入失败");
                                     break;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case "MST_EXCHARGE_QUOTE":
+                    for(int i = 0;i<list.size();i++){
+                        if(StringUtils.isEmpty(list.get(i).get("EXCHARGE_CODE"))||
+                                StringUtils.isEmpty(list.get(i).get("TRADE_DATE"))||
+                                StringUtils.isEmpty(list.get(i).get("DATASOURCE_TYPE"))){
+                            for (ExcelValidDto dto : excelValidDtoList) {
+                                if(dto.getRowNum().equals(String.valueOf(i+2))){
+                                    dto.setValidKey("导入失败");
+                                    break;
+                                }
+                            }
+                        }else{
+                            try {
+                                com.joyintech.framework.util.DateUtil.parseDate(list.get(i).get("TRADE_DATE"),"yyyy-MM-dd");
+                            } catch (ParseException e) {
+                                for (ExcelValidDto dto : excelValidDtoList) {
+                                    if(dto.getRowNum().equals(String.valueOf(i+2))){
+                                        dto.setValidKey("导入失败");
+                                        break;
+                                    }
                                 }
                             }
                         }
