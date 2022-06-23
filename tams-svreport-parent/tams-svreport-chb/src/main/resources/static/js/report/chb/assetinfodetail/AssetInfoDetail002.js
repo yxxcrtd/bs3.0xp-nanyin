@@ -383,6 +383,13 @@ var QueryFunc=function(){
                 $("#svrBussRepAssetMngProdInfoDto_financialComissue").attr("disabled",false);
                 $("#svrBussRepAssetMngProdInfoDto_content_one_div").show();
             }
+
+            if(repAssetType=='1705'){
+                $("#svrBussRepAssetMngProdInfoDto_financialProductFlag").attr("disabled",false);
+                $("#svrBussRepAssetMngProdInfoDto_financialProductFlag").prop("required",true).trigger('change');
+            }else{
+                $("#svrBussRepAssetMngProdInfoDto_financialProductFlag").attr("disabled",true);
+            }
         }else if(obj["13"].indexOf(repAssetType)>=0){
             //商品类资产
         }else if(obj["14"].indexOf(repAssetType)>=0){

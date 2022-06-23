@@ -55,7 +55,7 @@ public class SvrPerProDeclareInfo002Controller extends BaseController {
                 DictCode.有无, DictCode.是否_中债, DictCode.产品增信机构类型, DictCode.产品增信形式, DictCode.开放期业务, DictCode.规律开放周期,
                 DictCode.资金投向地区, DictCode.产品运作模式, DictCode.目标客户类型, DictCode.排期发行方式, DictCode.开放模式_中债, DictCode.层级类别,
                 DictCode.标的类别, DictCode.境内托管机构名称, DictCode.是否_中债, DictCode.新老产品标记,DictCode.是否_中债_期限, DictCode.产品收益类型, DictCode.产品期限,
-                DictCode.产品运作模式, DictCode.管理模式, DictCode.募集方式_中债, DictCode.投资性质, DictCode.销售区域_中债, DictCode.是否,
+                DictCode.产品运作模式, DictCode.管理模式, DictCode.募集方式_中债, DictCode.投资性质, DictCode.销售区域_中债,
                 DictCode.产品特殊属性
         });
         if (StringUtil.isNotEmpty(this.getParam("SVR_PBC_CUSTTYPE"))) {
