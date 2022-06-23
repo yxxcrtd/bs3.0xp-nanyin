@@ -147,7 +147,7 @@
                         <select th:id="|${entityName}_isPledge|" th:name="|${entityName}.isPledge|"
                                 class="layui-input form-input input-select"
                                 th:initValue='${entity?.isPledge eq null ? "02" : entity?.isPledge}'
-                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required disabled="disabled"
+                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required
                                 data-th-data-result="${SVR_YES_OR_NO}">
                         </select>
                     </div>
