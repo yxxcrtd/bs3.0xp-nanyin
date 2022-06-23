@@ -615,21 +615,17 @@
 		info.vdate,/*起息日*/
 		case
 		when info.terminatecounts>0 then
-		<!--开放式产品只要有到期交易则统计到提前兑付-->
-		case when info.operate_mode in ('03','04') then '02'
-		else
-		case
-		when  info.REALMDATE=info.settdate_date then '01'
-		when info.REALMDATE>info.settdate_date then '02'
+		CASE
+		WHEN  info.REALMDATE=info.settdate_date then '01'
+		WHEN info.REALMDATE>info.settdate_date then '02'
 		else '03'
-		end
 		end
 		else
 		case when
 		INFO.REALMDATE <![CDATA[<=]]> #{reportEndDate,jdbcType=DATE} then '04'
 		else null
 		end
-		end paystatus,/*兑付状态*/
+		END paystatus,/*兑付状态*/
 		case
 		when info.operate_mode in ('03','04') then '0'
 		else  timestampdiff(DAY, info.vdate ,info.mdate)
