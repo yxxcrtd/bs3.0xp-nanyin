@@ -8389,21 +8389,42 @@ public class PbcMonthAssetReportService  extends BaseService{
 
 
         line823000.setTotal(line700000.getTotal().subtract(line810000.getTotal()).subtract(line821000.getTotal()).subtract(line824000.getTotal()));
-        line823000.setCny(line823000.getTotal());
+        //line823000.setCny(line823000.getTotal());
+        line823000.setCny(line700000.getCny().subtract(line810000.getCny()).subtract(line821000.getCny()).subtract(line824000.getCny()));
+        line823000.setUsdToCny(line700000.getUsdToCny().subtract(line810000.getUsdToCny()).subtract(line821000.getUsdToCny()).subtract(line824000.getUsdToCny()));
+        line823000.setEurToCny(line700000.getEurToCny().subtract(line810000.getEurToCny()).subtract(line821000.getEurToCny()).subtract(line824000.getEurToCny()));
+        line823000.setGbpToCny(line700000.getGbpToCny().subtract(line810000.getGbpToCny()).subtract(line821000.getGbpToCny()).subtract(line824000.getGbpToCny()));
+        line823000.setJpyToCny(line700000.getJpyToCny().subtract(line810000.getJpyToCny()).subtract(line821000.getJpyToCny()).subtract(line824000.getJpyToCny()));
+        line823000.setOthToCny(line700000.getOthToCny().subtract(line810000.getOthToCny()).subtract(line821000.getOthToCny()).subtract(line824000.getOthToCny()));
+
         //setAssetDebtDetailValue(line823000, pos.getCcy(), BigDecimal.ZERO, rateMap, pbcReport.getEnddate(),source);
         String ccyAmount823000 = ccy+GlobalConstant.COMMA+line823000.getTotal().setScale(2,RoundingMode.HALF_UP)
                 +GlobalConstant.COMMA+line823000.getTotal().setScale(2,RoundingMode.HALF_UP);
         line823000.setCcyAmount(ccyAmount823000);
         // 820000 权益合计
         line820000.setTotal(line821000.getTotal().add(line824000.getTotal()).add(line823000.getTotal()));
-        line820000.setCny(line820000.getTotal());
+//        line820000.setCny(line820000.getTotal());
+        line820000.setCny(line821000.getCny().add(line824000.getCny()).add(line823000.getCny()));
+        line820000.setUsdToCny(line821000.getUsdToCny().add(line824000.getUsdToCny()).add(line823000.getUsdToCny()));
+        line820000.setEurToCny(line821000.getEurToCny().add(line824000.getEurToCny()).add(line823000.getEurToCny()));
+        line820000.setGbpToCny(line821000.getGbpToCny().add(line824000.getGbpToCny()).add(line823000.getGbpToCny()));
+        line820000.setJpyToCny(line821000.getJpyToCny().add(line824000.getJpyToCny()).add(line823000.getJpyToCny()));
+        line820000.setOthToCny(line821000.getOthToCny().add(line824000.getOthToCny()).add(line823000.getOthToCny()));
+
         //setAssetDebtDetailValue(line820000, ccy, BigDecimal.ZERO, rateMap, pbcReport.getEnddate(),source);
         String ccyAmount820000 = ccy+GlobalConstant.COMMA+line820000.getTotal().setScale(2,RoundingMode.HALF_UP)
                 +GlobalConstant.COMMA+line820000.getTotal().setScale(2,RoundingMode.HALF_UP);
         line820000.setCcyAmount(ccyAmount820000);
         // 800000 负债及权益合计
         line800000.setTotal(line810000.getTotal().add(line820000.getTotal()));
-        line800000.setCny(line800000.getTotal());
+//        line800000.setCny(line800000.getTotal());
+        line800000.setCny(line810000.getCny().add(line820000.getCny()));
+        line800000.setUsdToCny(line810000.getUsdToCny().add(line820000.getUsdToCny()));
+        line800000.setEurToCny(line810000.getEurToCny().add(line820000.getEurToCny()));
+        line800000.setGbpToCny(line810000.getGbpToCny().add(line820000.getGbpToCny()));
+        line800000.setJpyToCny(line810000.getJpyToCny().add(line820000.getJpyToCny()));
+        line800000.setOthToCny(line810000.getOthToCny().add(line820000.getOthToCny()));
+
         //setAssetDebtDetailValue(line800000, ccy, BigDecimal.ZERO, rateMap, pbcReport.getEnddate(),source);
         String ccyAmount800000 = ccy+GlobalConstant.COMMA+line800000.getTotal().setScale(2,RoundingMode.HALF_UP)
                 +GlobalConstant.COMMA+line800000.getTotal().setScale(2,RoundingMode.HALF_UP);
