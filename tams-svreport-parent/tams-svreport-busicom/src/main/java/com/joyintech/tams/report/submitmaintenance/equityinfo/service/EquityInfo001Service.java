@@ -3240,10 +3240,8 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                 }else {
                     if(DictCodeListExt1.维护数据状态_有效.getValue().equals(equityInfo001Dto.getStatus())){
                         BeanUtil.copyPropertiesIgnoreNull(equityInfo001DtoTemp, equityInfo001Dto);
-                        if (BaseCommonCheckService.isMYSQLDataBase() || isDB2DataBase) {
-                            equityInfo001DtoTemp.setSumitSeq(getSequenceStr(sequenceList, index));
-                            index++;
-                        }
+                        equityInfo001DtoTemp.setSumitSeq(getSequenceStr(sequenceList, index));
+                        index++;
                         equityInfo001DtoTemp.setCheckSeqno("0");
                         equityInfo001DtoTemp.setSubmitStatus(DictCodeListExt2.报送状态_未报送.getValue());
                         equityInfo001DtoTemp.setStatus(type);
