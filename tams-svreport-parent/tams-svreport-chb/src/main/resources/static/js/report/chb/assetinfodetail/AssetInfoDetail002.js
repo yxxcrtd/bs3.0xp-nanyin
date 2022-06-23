@@ -387,6 +387,11 @@ var QueryFunc=function(){
             //商品类资产
         }else if(obj["14"].indexOf(repAssetType)>=0){
             //各类资产的其他项
+            $("#svrBussRepOtherInvestTargetInfoDto_relationFinan").trigger("change");
+            $("#svrBussRepOtherInvestTargetInfoDto_guaType").trigger("change");
+            $("#svrBussRepOtherInvestTargetInfoDto_pledgeValue").trigger("change");
+            $("#svrBussRepOtherInvestTargetInfoDto_natureGuarantee").trigger("change");
+            $("#svrBussRepOtherInvestTargetInfoDto_deptEquity").trigger("change");
         }else if(obj["16"].indexOf(repAssetType)>=0){
             //委外投资——协议方式
         }else if(obj["17"].indexOf(repAssetType)>=0){
