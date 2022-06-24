@@ -1,4 +1,12 @@
-
+declare
+num   number;
+begin
+select count(*) into num from user_tables where table_name =upper('MST_HOLIDAY_ERRODATA');
+if   num = 1   then
+          execute immediate 'drop table MST_HOLIDAY_ERRODATA';
+end if;
+end;
+/
 CREATE TABLE "MST_HOLIDAY_ERRODATA" (
   "DATAUUID" CHAR(64 BYTE) NOT NULL,
   "WORKFLOW_ID" VARCHAR2(20 BYTE),

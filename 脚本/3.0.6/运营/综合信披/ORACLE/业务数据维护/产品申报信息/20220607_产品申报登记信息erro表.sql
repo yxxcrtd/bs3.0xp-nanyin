@@ -1,3 +1,12 @@
+declare
+num   number;
+begin
+select count(*) into num from user_tables where table_name =upper('CHB_PRD_DECLARE_INFO_ERRODATA');
+if   num = 1   then
+          execute immediate 'drop table CHB_PRD_DECLARE_INFO_ERRODATA';
+end if;
+end;
+/
 CREATE TABLE "CHB_PRD_DECLARE_INFO_ERRODATA" (
   "DATAUUID" CHAR(64 BYTE) NOT NULL,
   "WORKFLOW_ID" VARCHAR2(20 BYTE),
