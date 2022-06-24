@@ -1,4 +1,5 @@
 -- check校验
+delete from CHB_DATACHECK_RULE_INV where CHECKRULEID like 'MST_BOND_CREDIT_RATING-ZQPJ-20220507%';
 INSERT INTO CHB_DATACHECK_RULE_INV VALUES ('MST_BOND_CREDIT_RATING-ZQPJ-20220507-0001-01','ChbMstBondCreditRating002','isNotEmpty','oCode',NULL,NULL,'N','债券代码不可为空','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 
 INSERT INTO CHB_DATACHECK_RULE_INV VALUES ('MST_BOND_CREDIT_RATING-ZQPJ-20220507-0001-02','ChbMstBondCreditRating002','inDatadict','oType','==','MAIN_GRADE_TYPE','N','评级对象不可为空，且必须在值域范围内','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
