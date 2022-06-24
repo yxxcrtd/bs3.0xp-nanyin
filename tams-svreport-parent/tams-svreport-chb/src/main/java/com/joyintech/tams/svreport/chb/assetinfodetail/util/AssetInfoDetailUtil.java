@@ -10,6 +10,7 @@ import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.system.base.entity.SysDatadictListLink;
+import com.joyintech.tams.common.base.entity.MstCustomerInfo;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
@@ -19,6 +20,7 @@ import com.joyintech.tams.svreport.chb.assetinfodetail.asset.DtoChangeUtil;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dao.AssetInfoDetailMapper;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.*;
+import com.joyintech.tams.svreport.interf.chb.baseinfo.dao.SvrMstCustomerInfoAddImpMapper;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -53,6 +55,8 @@ public class AssetInfoDetailUtil {
 
     @Autowired
     private DataCheckCommonMapper chbDataCheckCommonMapper;
+    @Autowired
+    private SvrMstCustomerInfoAddImpMapper svrMstCustomerInfoAddImpMapper;
 
     private static String ISNUMBER2 = "isNumber2";
 
@@ -3388,6 +3392,37 @@ public class AssetInfoDetailUtil {
                             }
                             break;
                         default:
+                    }
+                }
+            });
+        }
+    }
+
+    //处理查询出的数据
+    public void dealFinancie(List<AssetInfoDetailDto> dealList){
+        //获取托管人，管理人，融资人信息
+        List<MstCustomerInfo> customerList = svrMstCustomerInfoAddImpMapper.getAllCustomerInfo();
+        Map<String,String> customerMap = customerList.stream().collect(HashMap<String,String>::new,
+                (map, item)->map.put(item.getCustomerId(), item.getCustomerName()), (m, n)->m.putAll(n));
+
+        if(dealList !=null && dealList.size()>0){
+            dealList.forEach(e->{
+                //托管人
+                if(StringUtil.isNotEmpty(e.getTrusteeId())){
+                    if(StringUtil.isNotEmpty(customerMap.get(e.getTrusteeId()))) {
+                        e.setTrusteeId(e.getTrusteeId() + " " + customerMap.get(e.getTrusteeId()));
+                    }
+                }
+                //管理人
+                if(StringUtil.isNotEmpty(e.getManagerId())){
+                    if(StringUtil.isNotEmpty(customerMap.get(e.getManagerId()))) {
+                        e.setManagerId(e.getManagerId() + " " + customerMap.get(e.getManagerId()));
+                    }
+                }
+                //融资人
+                if(StringUtil.isNotEmpty(e.getFinancie())){
+                    if(StringUtil.isNotEmpty(customerMap.get(e.getFinancie()))) {
+                        e.setFinancie(e.getFinancie() + " " + customerMap.get(e.getFinancie()));
                     }
                 }
             });
