@@ -20,6 +20,7 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -293,13 +294,9 @@ public class CommonCodeCheckBatchService {
             }
             dataMap.put("ERRMSG",errMsg+sb.toString());
         }
-        Collections.sort(excelValidDtoList,new Comparator<ExcelValidDto>() {
-            @Override
-            public int compare(ExcelValidDto o1, ExcelValidDto o2) {
-                // o1在前：根据age从小到大进行排序
-                return Integer.valueOf(o1.getRowNum())-Integer.valueOf(o2.getRowNum());
-            }
-        });
+        if (CollectionUtils.isNotEmpty(excelValidDtoList)) {
+            this.excelValidListSort(excelValidDtoList);
+        }
     }
 
 
@@ -348,13 +345,9 @@ public class CommonCodeCheckBatchService {
             }
             dataMap.put("ERRMSG", errMsg);
         }
-        Collections.sort(excelValidDtoList,new Comparator<ExcelValidDto>() {
-            @Override
-            public int compare(ExcelValidDto o1, ExcelValidDto o2) {
-                // o1在前：根据age从小到大进行排序
-                return Integer.valueOf(o1.getRowNum())-Integer.valueOf(o2.getRowNum());
-            }
-        });
+        if (CollectionUtils.isNotEmpty(excelValidDtoList)) {
+            this.excelValidListSort(excelValidDtoList);
+        }
     }
 
 
@@ -2576,10 +2569,21 @@ public class CommonCodeCheckBatchService {
             }
             dataMap.put("ERRMSG", temp+errMsg);
         }
+        if (CollectionUtils.isNotEmpty(excelValidDtoList)) {
+            this.excelValidListSort(excelValidDtoList);
+        }
+
+    }
+
+    /**
+     * o1在前：根据age从小到大进行排序
+     * @param excelValidDtoList
+     */
+    private void excelValidListSort(List<ExcelValidDto> excelValidDtoList){
         Collections.sort(excelValidDtoList,new Comparator<ExcelValidDto>() {
             @Override
             public int compare(ExcelValidDto o1, ExcelValidDto o2) {
-                // o1在前：根据age从小到大进行排序
+
                 return Integer.valueOf(o1.getRowNum())-Integer.valueOf(o2.getRowNum());
             }
         });
@@ -2878,13 +2882,9 @@ public class CommonCodeCheckBatchService {
             }
             dataMap.put("ERRMSG", temp+errMsgBuilder.toString());
         }
-        Collections.sort(excelValidDtoList,new Comparator<ExcelValidDto>() {
-                    @Override
-                    public int compare(ExcelValidDto o1, ExcelValidDto o2) {
-                        // o1在前：根据age从小到大进行排序
-                        return Integer.valueOf(o1.getRowNum())-Integer.valueOf(o2.getRowNum());
-                    }
-                });
+        if (CollectionUtils.isNotEmpty(excelValidDtoList)) {
+            this.excelValidListSort(excelValidDtoList);
+        }
     }
     
     /**
