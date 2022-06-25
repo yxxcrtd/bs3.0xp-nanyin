@@ -782,7 +782,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                     //CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理)
                     CommonUtil.getSequenceStr(sequenceList, i)
             );
-            equityInfo001Dto.setType(statusType);
+            equityInfo001Dto.setType(type);
             equityInfo001Dto.setDeptCode(deptCode);
             equityInfo001Dto.setDataSource(DictCodeListExt2.数据来源_EXCEL导入.getValue());
             equityInfo001Dto.setOrgCode(orgCode);
