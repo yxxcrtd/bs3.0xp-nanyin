@@ -9175,11 +9175,13 @@ public class PbcMonthAssetReportService  extends BaseService{
                 || PbcMonthReportConstants.PBC_ASSETTYPE3_J03.equals(pos.getAssetType3())
                 || PbcMonthReportConstants.PBC_ASSETTYPE3_J04.equals(pos.getAssetType3())
         )){
-            // 应付账款的利息值统计到负债：债务工具
-            if (line.getDebtInstrument() != null) {
-                line.setDebtInstrument(line.getDebtInstrument().add(cnyIntAmt));
-            } else {
-                line.setDebtInstrument(cnyIntAmt);
+            if( PbcMonthReportConstants.PBC_ASSETTYPE1_P11.equals(pos.getAssetType1())) {
+                // 应付账款的利息值统计到负债：债务工具
+                if (line.getDebtInstrument() != null) {
+                    line.setDebtInstrument(line.getDebtInstrument().add(cnyIntAmt));
+                } else {
+                    line.setDebtInstrument(cnyIntAmt);
+                }
             }
             if (PbcMonthReportConstants.PBC_ASSETTYPE1_P05.equals(pos.getAssetType1())// 贷款
                     || PbcMonthReportConstants.PBC_ASSETTYPE1_P08.equals(pos.getAssetType1())// 金融衍生品
