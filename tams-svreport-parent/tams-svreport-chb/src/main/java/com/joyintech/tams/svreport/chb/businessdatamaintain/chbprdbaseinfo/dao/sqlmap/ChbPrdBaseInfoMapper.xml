@@ -894,7 +894,7 @@
                 and RAISE_VDATE &gt;= to_date(#{raiseVdateStart},'yyyy-mm-dd')
             </if>
             <if test="raiseVdateEnd!=null and raiseVdateEnd !=''">
-                and RAISE_VDATE &lt;= to_date(#{draisePstrdateEnd},'yyyy-mm-dd')
+                and RAISE_VDATE &lt;= to_date(#{raiseVdateEnd},'yyyy-mm-dd')
             </if>
             <if test="vdateStart!=null and vdateStart!=''">
                 and VDATE &gt;= to_date(#{vdateStart},'yyyy-mm-dd')
@@ -977,7 +977,7 @@
                 and RAISE_VDATE &gt;= to_date(#{raiseVdateStart},'yyyy-mm-dd')
             </if>
             <if test="raiseVdateEnd!=null and raiseVdateEnd !=''">
-                and RAISE_VDATE &lt;= to_date(#{draisePstrdateEnd},'yyyy-mm-dd')
+                and RAISE_VDATE &lt;= to_date(#{raiseVdateEnd},'yyyy-mm-dd')
             </if>
             <if test="vdateStart!=null and vdateStart!=''">
                 and VDATE &gt;= to_date(#{vdateStart},'yyyy-mm-dd')
