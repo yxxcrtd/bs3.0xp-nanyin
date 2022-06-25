@@ -782,7 +782,11 @@
         update CHB_PRD_BASEINFO set STATUS = #{status},UPDATE_TIME = #{updateTime},UPDATE_USER = #{updateUser} where PROD_ID = #{prodId}
     </update>
     <update id="updateIssuingStatus">
-        update CHB_PRD_BASEINFO set ISSUING_STATUS = #{issuingStatusNew},ISSUE_STATUS_REMARK = #{issueStatusRemark} where PROD_ID = #{prodId}
+        update CHB_PRD_BASEINFO set ISSUING_STATUS = #{issuingStatusNew}
+        <if test="issueStatusRemark != null and issueStatusRemark != ''">
+            ,ISSUE_STATUS_REMARK = #{issueStatusRemark}
+        </if>
+        where PROD_ID = #{prodId}
     </update>
     <select id="selectByKey" resultMap="BaseResultMap">
         SELECT <include refid="Base_Column_List"/> ,b.IVSTORIENTATION,b.OPERATE_MODE FROM CHB_PRD_BASEINFO a,CHB_PRD_DECLARE_INFO b  where a.PROD_INS_ID = b.PROD_INS_ID and   a.PRODUUID = #{produuid}
