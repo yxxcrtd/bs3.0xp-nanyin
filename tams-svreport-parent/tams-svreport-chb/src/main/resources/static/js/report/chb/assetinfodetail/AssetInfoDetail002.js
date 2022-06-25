@@ -389,6 +389,7 @@ var QueryFunc=function(){
                 $("#svrBussRepAssetMngProdInfoDto_financialProductFlag").prop("required",true).trigger('change');
             }else{
                 $("#svrBussRepAssetMngProdInfoDto_financialProductFlag").attr("disabled",true);
+                $("#svrBussRepAssetMngProdInfoDto_financialProductFlag").prop("required",false).val('').trigger('change');
             }
         }else if(obj["13"].indexOf(repAssetType)>=0){
             //商品类资产

@@ -335,7 +335,7 @@
         a.INVEST_TRADER_ID,
         a.INVEST_TRADER_NAME,
         a.ERR_MSG errMsg,
-        null orgData
+        null orgData,
         b.REG_CODE regCode,
         c.ASSET_NAME assetName
         FROM CHB_INVEST_TRADE a

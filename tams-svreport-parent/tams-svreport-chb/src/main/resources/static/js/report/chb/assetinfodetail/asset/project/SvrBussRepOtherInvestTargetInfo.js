@@ -127,6 +127,10 @@
         var repAssetType = $('#assetType2').val();
         if(repAssetType=='1299' || repAssetType=='2299' || repAssetType=='1599'){
             getElementById('deptEquity').val('').attr('disabled', true);
+            getElementById('deptEquity').val('').attr('required', false);
+        }else{
+            getElementById('deptEquity').val('').attr('disabled', false);
+            getElementById('deptEquity').val('').attr('required', true);
         }
     }
 

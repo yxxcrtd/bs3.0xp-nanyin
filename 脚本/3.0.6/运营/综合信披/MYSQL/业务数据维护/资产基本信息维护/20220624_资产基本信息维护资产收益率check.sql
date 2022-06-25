@@ -1,6 +1,15 @@
+delete from chb_datacheck_rule_inv where CHECKRULEID in ('ASSET_INFO_DETAIL_RULE_0000-0000-0000-0000-0000-0000-0000-000348','ASSET_INFO_DETAIL_RULE_0000-0000-0000-0000-0000-0000-0000-000354'
+,'ASSET_INFO_DETAIL_RULE_0000-0000-0000-0000-0000-0000-0000-000503','ASSET_INFO_DETAIL_RULE_0000-0000-0000-0000-0000-0000-0000-000505');
 
-delete from chb_datacheck_rule_inv where CHECKRULEID in ('ASSET_INFO_DETAIL_RULE_0000-0000-0000-0000-0000-0000-0000-000503','ASSET_INFO_DETAIL_RULE_0000-0000-0000-0000-0000-0000-0000-000505');
+insert into chb_datacheck_rule_inv (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
+values ('ASSET_INFO_DETAIL_RULE_0000-0000-0000-0000-0000-0000-0000-000348', 'AssetInfoRegist002', 'isNumber2', 'svrBussRepNobleMetalInfoDto.assetYield', null, '8,5', 'Y', '×Ê²úÊÕÒæÂÊ%ÒÔ°Ù·ÖÊıĞÎÊ½±íÊ¾Ê±±ØĞëÎªn(8,5)¸ñÊ½¡£', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 
+insert into chb_datacheck_rule_inv (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
+values ('ASSET_INFO_DETAIL_RULE_0000-0000-0000-0000-0000-0000-0000-000354', 'AssetInfoRegist002', 'isNumber2', 'svrBussRepOthKindInfoDto.assetYield', null, '8,5', 'Y', '×Ê²úÊÕÒæÂÊ%ÒÔ°Ù·ÖÊıĞÎÊ½±íÊ¾Ê±±ØĞëÎªn(8,5)¸ñÊ½¡£', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 
-INSERT INTO chb_datacheck_rule_inv (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS) VALUES ('ASSET_INFO_DETAIL_RULE_0000-0000-0000-0000-0000-0000-0000-000503', 'AssetInfoRegist002', 'compareValueAsNumber', 'svrBussRepNobleMetalInfoDto.assetYield', '>=', '0', 'Y', 'èµ„äº§æ”¶ç›Šç‡%å¿…é¡»å¤§äºç­‰äº0', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
-INSERT INTO chb_datacheck_rule_inv (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS) VALUES ('ASSET_INFO_DETAIL_RULE_0000-0000-0000-0000-0000-0000-0000-000505', 'AssetInfoRegist002', 'compareValueAsNumber', 'svrBussRepOthKindInfoDto.assetYield', '>=', '0', 'Y', 'èµ„äº§æ”¶ç›Šç‡%å¿…é¡»å¤§äºç­‰äº0', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+insert into chb_datacheck_rule_inv (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
+values ('ASSET_INFO_DETAIL_RULE_0000-0000-0000-0000-0000-0000-0000-000503', 'AssetInfoRegist002', 'compareValueAsNumber', 'svrBussRepNobleMetalInfoDto.assetYield', '>=', '0', 'Y', '×Ê²úÊÕÒæÂÊ%±ØĞë´óÓÚµÈÓÚ0', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+
+insert into chb_datacheck_rule_inv (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
+values ('ASSET_INFO_DETAIL_RULE_0000-0000-0000-0000-0000-0000-0000-000505', 'AssetInfoRegist002', 'compareValueAsNumber', 'svrBussRepOthKindInfoDto.assetYield', '>=', '0', 'Y', '×Ê²úÊÕÒæÂÊ%±ØĞë´óÓÚµÈÓÚ0', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+
