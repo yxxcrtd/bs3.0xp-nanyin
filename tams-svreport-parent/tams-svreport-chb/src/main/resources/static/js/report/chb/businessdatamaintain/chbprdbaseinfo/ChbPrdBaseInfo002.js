@@ -36,6 +36,7 @@
                 Joyin.ajaxJson(basePath+'/chb/businessdatamaintain/chbprdbaseinfo/chbprdbaseinfo002/selectChbPrdDeclareByProdInsId?prodInsId='+prodInsId,{},function (result){
                     $('#ivstorientation').val(result.ivstorientation).trigger('change');
                     $('#operateMode').val(result.operateMode).trigger('change');
+                    $('#prodName').val(result.prodName).trigger('change');
                     $('#ivstorientation_div').show();
                     $('#operateMode_div').show();
 
@@ -44,7 +45,6 @@
                 Joyin.ajaxJson(basePath+'/chb/businessdatamaintain/chbprdbaseinfo/chbprdbaseinfo002/selectRegCodeByProdId?prodId='+prodInsId,{},function (result){
                     if(result['REG_CODE']!='' && result['REG_CODE']!=null){
                         $('#regCode').val(result['REG_CODE']);
-                        $('#prodName').val(result['PRODNAME']);
                         $('#prodId').val(result['PRODID']);
                         prodNo = result['PRODID'];
                     }else{
