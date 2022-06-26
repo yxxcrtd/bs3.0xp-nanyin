@@ -65,7 +65,7 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
     @Override
     public void doComplete(ChbInvestTradeDto entity, OperationType type) {
         if (OperationType.DELETE.equals(type)) {
-            if(StringUtil.equals(DictCodeListExt3.中债数据状态_待处理.getValue(),entity.getStatusValid())){
+            if(StringUtil.equals(DictCodeListExt3.中债数据状态_待处理.getValue(),entity.getStatus())){
                 chbInvestTradeErrodataMapper.deleteByPrimaryKey(entity.getTradeSeqno());
             }else{
                 entity.setStatus(DictCodeListExt1.维护数据状态_删除.getValue());
@@ -82,7 +82,7 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
             chbInvestTradeDao.insert(entity);
         }
         else if(OperationType.MODIFY.equals(type)){
-            if(StringUtil.equals(DictCodeListExt3.中债数据状态_待处理.getValue(),entity.getStatusValid())){
+            if(StringUtil.equals(DictCodeListExt3.中债数据状态_待处理.getValue(),entity.getStatus())){
                 //删除errodata记录
                 chbInvestTradeErrodataDao.deleteByPrimaryKey(entity.getTradeSeqno());
                 entity.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
@@ -126,7 +126,7 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
             ChbInvestTradeErrodataWithBLOBsDto chbInvestTradeErrodataWithBLOBsDto = chbInvestTradeErrodataDao.selectByPrimaryKey(tradeSeqno);
             if(chbInvestTradeErrodataWithBLOBsDto!=null){
                 dto = ErrdataConvertUtil.errdataConvert(dto.getClass(),chbInvestTradeErrodataWithBLOBsDto.getOrgData());
-                dto.setStatusValid(DictCodeListExt3.中债数据状态_待处理.getValue());
+                dto.setStatus(DictCodeListExt3.中债数据状态_待处理.getValue());
                 dto.setTradeSeqno(chbInvestTradeErrodataWithBLOBsDto.getDatauuid());
                 // 获取产品名称和产品登记编码
                 if(!StringUtils.isEmpty(dto.getProdId())){

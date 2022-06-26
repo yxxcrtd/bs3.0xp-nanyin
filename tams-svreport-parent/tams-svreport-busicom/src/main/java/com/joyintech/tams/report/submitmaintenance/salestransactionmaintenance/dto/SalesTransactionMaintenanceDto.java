@@ -343,8 +343,8 @@ public class SalesTransactionMaintenanceDto extends BaseEntity  implements Proce
     public String getTradePsName() {
         return this.getTradePs() + " " + SysDataUtil.getNameFromDataDict(DictCode.销售结算资金流动方向, this.getTradePs());
     }
-    public String getDataStatusName() {
-        return SysDataUtil.getNameFromDataDict(DictCode.维护数据状态, this.getDataStatus());
+    public String getStatusStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.维护数据状态, this.getStatus());
     }
     public String getTradeCcyName() {
         return this.getTradeCcy() + " " + SysDataUtil.getNameFromDataDict(DictCode.币种_中债, this.getTradeCcy());

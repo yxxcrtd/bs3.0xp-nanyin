@@ -43,7 +43,7 @@
              { title: "主键uuid",field:'registSeqno',visible:false}
             ,{ title: "置灰控制",field:'disabledThing',visible:false}
             ,{field:'maintainStatusName', title: '报送信息维护状态', width:'150',sortField:'maintainStatus'}
-            ,{field:'dataStatusName', title: '数据状态', width:'150',sortField:'dataStatus'}
+            ,{field:'statusStr', title: '数据状态', width:'150',sortField:'status'}
             ,{field:'institutionCode', title: '提供销售结算资金服务机构代码', width:'150',sortField:'institutionCode'}
             ,{field:'prdRegistCode', title: '产品登记编码', width:'150',sortField:'prdRegistCode'}
             ,{field:'accountNo', title: '销售结算资金账号', width:'150',sortField:'accountNo'}

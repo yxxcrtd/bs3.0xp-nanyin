@@ -40,7 +40,7 @@
         cols:[
              {field:'erroOrInfo', title:'来自erro还是info',visible:false}
             ,{field:'workflowId', title:'错误表的workflowId',visible:false}
-            ,{field:'dataStatusStr', title: '数据状态', width:'150',sortField:'dataStatus'}
+            ,{field:'statusStr', title: '数据状态', width:'150',sortField:'status'}
             ,{field:'salerInstCode', title: '销售机构代码', width:'150',sortField:'salerInstCode'}
             ,{field:'salerName', title: '姓名', width:'150',sortField:'salerName'}
             ,{field:'salerSex', title: '性别', width:'150',sortField:'salerSex'}
