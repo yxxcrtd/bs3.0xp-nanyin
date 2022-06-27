@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,7 @@ public class BusinessHomeMService extends BaseService<ITableRow>{
 
     public AjaxResult getSystemNow(){
         AjaxResult result = new AjaxResult();
-        result.setData(DateUtil.format(iPlatformDate.getSysDate()));
+        result.setData(DateUtil.format(new DateTime(iPlatformDate.getSysDate()).plusDays(-1).toDate()));
         return result;
     }
 
