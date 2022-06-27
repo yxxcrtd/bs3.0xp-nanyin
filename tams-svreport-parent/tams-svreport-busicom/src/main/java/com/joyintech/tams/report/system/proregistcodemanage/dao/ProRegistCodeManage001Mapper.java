@@ -132,4 +132,6 @@ public interface ProRegistCodeManage001Mapper {
     Map<String, Object> selectCode(Map<String, Object> map);
     ChbPrdDeclareInfoDto selectInfoByProdId(String prodId);
 
+    List<Map<String, String>> selectProdBaseInfo();
+
 }
