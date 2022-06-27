@@ -58,8 +58,8 @@ public class SalerRewPenaInfoDto extends ChbSalerRewPenaInfo implements ProcessE
         this.selectedItem = selectedItem;
     }
 
-    public String getDataStatusStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.维护数据状态, this.getDataStatus());
+    public String getStatusStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.维护数据状态, this.getStatus());
     }
 
     public String getSalerRewPenaTyepStr() {

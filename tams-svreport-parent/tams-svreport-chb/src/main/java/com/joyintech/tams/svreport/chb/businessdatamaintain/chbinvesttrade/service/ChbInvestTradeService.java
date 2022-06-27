@@ -12,6 +12,8 @@ import com.joyintech.tams.common.InterfFile;
 import com.joyintech.tams.common.base.dao.ChbInvestTradeErrodataMapper;
 import com.joyintech.tams.common.base.entity.ChbInfoMgrResultConfig;
 import com.joyintech.tams.common.base.entity.ChbInvestTrade;
+import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -39,6 +41,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -65,7 +68,7 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
     @Override
     public void doComplete(ChbInvestTradeDto entity, OperationType type) {
         if (OperationType.DELETE.equals(type)) {
-            if(StringUtil.equals(DictCodeListExt3.中债数据状态_待处理.getValue(),entity.getStatusValid())){
+            if(StringUtil.equals(DictCodeListExt3.中债数据状态_待处理.getValue(),entity.getStatus())){
                 chbInvestTradeErrodataMapper.deleteByPrimaryKey(entity.getTradeSeqno());
             }else{
                 entity.setStatus(DictCodeListExt1.维护数据状态_删除.getValue());
@@ -82,7 +85,7 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
             chbInvestTradeDao.insert(entity);
         }
         else if(OperationType.MODIFY.equals(type)){
-            if(StringUtil.equals(DictCodeListExt3.中债数据状态_待处理.getValue(),entity.getStatusValid())){
+            if(StringUtil.equals(DictCodeListExt3.中债数据状态_待处理.getValue(),entity.getStatus())){
                 //删除errodata记录
                 chbInvestTradeErrodataDao.deleteByPrimaryKey(entity.getTradeSeqno());
                 entity.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
@@ -126,7 +129,7 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
             ChbInvestTradeErrodataWithBLOBsDto chbInvestTradeErrodataWithBLOBsDto = chbInvestTradeErrodataDao.selectByPrimaryKey(tradeSeqno);
             if(chbInvestTradeErrodataWithBLOBsDto!=null){
                 dto = ErrdataConvertUtil.errdataConvert(dto.getClass(),chbInvestTradeErrodataWithBLOBsDto.getOrgData());
-                dto.setStatusValid(DictCodeListExt3.中债数据状态_待处理.getValue());
+                dto.setStatus(DictCodeListExt3.中债数据状态_待处理.getValue());
                 dto.setTradeSeqno(chbInvestTradeErrodataWithBLOBsDto.getDatauuid());
                 // 获取产品名称和产品登记编码
                 if(!StringUtils.isEmpty(dto.getProdId())){
@@ -254,5 +257,17 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
 
     public List<ChbInvestTradeDto> selectByKeys(List<String> tradeSeqnos) {
         return chbInvestTradeDao.selectByKeys(tradeSeqnos);
+    }
+
+    public BigDecimal dealCnyAmt(Map<String, Object> pageParam) {
+        pageParam.put("HOLDDATE",DateUtil.parse(pageParam.get("HOLDDATE").toString()));
+        pageParam.put("CCY_ORIGINAL", pageParam.get("CCY"));
+        pageParam.put("CCY_CONVERT", DictCodeListExt1.币种_中债_人民币.getValue());
+        BigDecimal amount = new BigDecimal(pageParam.get("amount").toString());
+        // 汇率计算规则
+        pageParam.put("pricetype", SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_EXCHANGE_SOURCE));
+        BigDecimal rate = chbInvestTradeDao.getRateNearByDate(pageParam);
+        rate = rate==null?BigDecimal.ZERO:rate;
+        return ArithmeticUtil.multiply(rate,amount);
     }
 }

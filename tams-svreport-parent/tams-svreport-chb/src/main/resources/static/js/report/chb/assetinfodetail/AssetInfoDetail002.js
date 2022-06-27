@@ -345,7 +345,7 @@ var QueryFunc=function(){
                 $("#svrBussRepAssetAstBillInfoDto_notstandSecType").val('05').attr('disabled', true).trigger('change');
                 $("#svrBussRepAssetAstBillInfoDto_content_one_div").hide();
             }else{
-                $("#svrBussRepAssetAstBillInfoDto_notstandSecType").val('').trigger("change");
+
                 $("#svrBussRepAssetAstBillInfoDto_notstandSecType").attr("disabled",false);
                 $("#svrBussRepAssetAstBillInfoDto_content_one_div").show();
             }
@@ -359,11 +359,11 @@ var QueryFunc=function(){
             }
         }else if(obj["07"].indexOf(repAssetType)>=0){
             //金融衍生品
-            if(repAssetType!='1403'){
-                $("#svrBussRepFinanciallInfoDto_holdPurpose").val('99').trigger("change");
-            }else{
-                $("#svrBussRepFinanciallInfoDto_holdPurpose").val('').trigger("change");
-            }
+//            if(repAssetType!='1403'){
+//                $("#svrBussRepFinanciallInfoDto_holdPurpose").val('99').trigger("change");
+//            }else{
+//                $("#svrBussRepFinanciallInfoDto_holdPurpose").val('').trigger("change");
+//            }
         }else if(obj["08"].indexOf(repAssetType)>=0){
             //QDII债券资产
         }else if(obj["09"].indexOf(repAssetType)>=0){
@@ -507,7 +507,14 @@ var QueryFunc=function(){
     var assetVal = function(){
         var repAssetType = $('#assetType2').val();
         $("input[id$='_assetName']").val($('#assetName').val());
-        $("input[id$='_assetId']").val($('#assetCode').val());
+
+        var ids = $("input[id$='_assetId']");
+        $.each(ids,function(index,obj){
+           if(null==obj.value||''==obj.value){
+               obj.value = $('#assetCode').val();
+           }
+        });
+
         if (repAssetType == '1503'){
             $("#svrBussRepQDIIStructureInfoDto_contractName").val($('#assetName').val());
         }else {

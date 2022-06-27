@@ -49,8 +49,8 @@ $(function() {
 
         cols:[
             {field:'tradeSeqno',visible:false}
-            ,{field:'statusValid',visible:false}
-            ,{field:'statusValidStr', sortable:false, width:100, title: 'ChbInvestTrade001.status'}
+            ,{field:'status',visible:false}
+            ,{field:'statusStr', sortable:false, width:100, title: 'ChbInvestTrade001.status'}
             ,{field:'prodId',sortable:false,width:100,  title: 'ChbInvestTrade001.prodId'}
             ,{field:'regCode', sortable:false,width:120,  title: 'ChbInvestTrade001.regCode'}
             ,{field:'registBankCode',sortable:false,width:120,title: 'ChbInvestTrade001.registBankCode'}
