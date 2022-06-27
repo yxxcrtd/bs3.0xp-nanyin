@@ -99,7 +99,7 @@
      * 绑定删除事件
      */
     table.bind('click', '.delt', function(data, index) {
-                    if(data.dataStatus !="E"){
+                    if(data.status !="E"){
                         return Joyin.error("只能删除有效数据，请重新选择");
                     }
         var object = {selectedItem: [data], operateType:"delete"};
@@ -168,7 +168,7 @@
                 return;
             }
             for(var i=0;i<selArr.length;i++){
-                if(selArr[i].dataStatus !="E"){
+                if(selArr[i].status !="E"){
                    return Joyin.error("只能删除有效数据，请重新选择");
                 }
             }
