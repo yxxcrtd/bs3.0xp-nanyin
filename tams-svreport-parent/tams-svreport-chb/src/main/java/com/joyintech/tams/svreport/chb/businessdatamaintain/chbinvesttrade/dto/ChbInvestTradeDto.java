@@ -50,10 +50,31 @@ public class ChbInvestTradeDto extends ChbInvestTrade implements ProcessEntity {
      * 错误信息
      */
     private String errMsg;
+    /**
+     * 有效状态
+     */
+    private String statusValid;
 
-    public String getStatusStr() {
+    public String getStatusValid() {
+        return statusValid;
+    }
+
+    public void setStatusValid(String statusValid) {
+        this.statusValid = statusValid;
+    }
+
+    // updateFlg 02 不展示  01 显示
+    public String getUpdateFlg() {
+        if(!StringUtil.isEmpty(statusValid) && StringUtil.equals(DictCodeList.维护数据状态_删除.getValue(), statusValid)){
+            return "02";
+        }else{
+            return "01";
+        }
+    }
+
+    public String getStatusValidStr() {
         return com.joyintech.framework.util.SysDataUtil.getNameFromDataDict(DictCode.维护数据状态,
-                getStatus());
+                getStatusValid());
     }
 
 
