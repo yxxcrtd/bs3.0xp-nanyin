@@ -395,13 +395,47 @@ var QueryFunc=function(){
             //商品类资产
         }else if(obj["14"].indexOf(repAssetType)>=0){
             //各类资产的其他项
-            $("#svrBussRepOtherInvestTargetInfoDto_relationFinan").trigger("change");
-            $("#svrBussRepOtherInvestTargetInfoDto_guaType").trigger("change");
-            $("#svrBussRepOtherInvestTargetInfoDto_pledgeValue").trigger("change");
-            $("#svrBussRepOtherInvestTargetInfoDto_natureGuarantee").trigger("change");
-            $("#svrBussRepOtherInvestTargetInfoDto_deptEquity").trigger("change");
+
+            //担保人与融资人关系
+            if(repAssetType != '1299' && repAssetType != ''){
+                $("#svrBussRepOtherInvestTargetInfoDto_relationFinan").val('').attr('disabled', true);
+            }else{
+                if( $("#svrBussRepOtherInvestTargetInfoDto_guaType").val()==''){
+                    $("#svrBussRepOtherInvestTargetInfoDto_relationFinan").val('').attr('disabled', true);
+                }
+            }
+
+            //担保方式
+            if(repAssetType =='2299' || repAssetType =='1599' || repAssetType=='1399'){
+                $("#svrBussRepOtherInvestTargetInfoDto_guaType").val('').attr('disabled', true);
+            }else{
+                $("#svrBussRepOtherInvestTargetInfoDto_guaType").val('').attr('disabled', false);
+            }
+
+            //抵质押物价值（元）
+            if(repAssetType != '1299' && repAssetType != ''){
+                $("#svrBussRepOtherInvestTargetInfoDto_pledgeValue").val('').attr('disabled', true);
+            }else{
+                if($("#svrBussRepOtherInvestTargetInfoDto_guaType").val()==''){
+                    $("#svrBussRepOtherInvestTargetInfoDto_pledgeValue").val('').attr('disabled', true);
+                }
+            }
+
+            // 担保性质
+            if(repAssetType != '1299' && repAssetType != ''){
+                $("#svrBussRepOtherInvestTargetInfoDto_natureGuarantee").val('').attr('disabled', true);
+            }else{
+                if($("#svrBussRepOtherInvestTargetInfoDto_guaType").val()==''){
+                    $("#svrBussRepOtherInvestTargetInfoDto_natureGuarantee").val('').attr('disabled', true);
+                }
+            }
+
+            //是否为债转股
+            if(repAssetType=='1299' || repAssetType=='2299' || repAssetType=='1599'){
+                $("#svrBussRepOtherInvestTargetInfoDto_deptEquity").val('').attr('disabled', true);
+            }
         }else if(obj["16"].indexOf(repAssetType)>=0){
-            //委外投资——协议方式
+            //委外投资——协议方式~
         }else if(obj["17"].indexOf(repAssetType)>=0){
             //其他（负债）类资产
         }else if(obj["18"].indexOf(repAssetType)>=0){
