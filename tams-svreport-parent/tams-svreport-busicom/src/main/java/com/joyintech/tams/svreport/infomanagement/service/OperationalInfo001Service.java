@@ -2909,6 +2909,13 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             					}
             					insertMap.put("INDENTIFY_MARK", indentifyMark);
             				}
+							//投资者交易信息是否代销字段处理
+							if (Objects.equals("'是'",insertMap.get("ISAGENCY"))) {
+								insertMap.put("ISAGENCY", "'01'");
+							}
+							if (Objects.equals("'否'",insertMap.get("ISAGENCY"))) {
+								insertMap.put("ISAGENCY", "'02'");
+							}
             			}
                         // add by dubaojun 2020-10-15 删除不存在的字段，防止报错 start
                         Set<String> keySet = new HashSet<>(insertMap.keySet());
@@ -3110,6 +3117,13 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             					}
             					updateMap.put("INDENTIFY_MARK", indentifyMark);
             				}
+							//投资者交易信息是否代销字段处理
+							if (Objects.equals("'是'",insertMap.get("ISAGENCY"))) {
+								insertMap.put("ISAGENCY", "'01'");
+							}
+							if (Objects.equals("'否'",insertMap.get("ISAGENCY"))) {
+								insertMap.put("ISAGENCY", "'02'");
+							}
             			}
                         // add by dubaojun 2020-10-15 删除不存在的字段，防止报错 start
                         keySet = new HashSet<>(updateMap.keySet());
