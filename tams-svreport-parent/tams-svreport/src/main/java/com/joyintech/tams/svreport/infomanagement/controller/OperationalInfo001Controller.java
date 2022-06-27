@@ -53,7 +53,7 @@ public class OperationalInfo001Controller extends BaseController {
 	private OperationalInfoMService operationalInfoMService;
 
 	private static final List<String> LIST_TABLE_NAME = Arrays.asList("CHB_PRD_DECLARE_SUB_TMP","CHB_PRD_ISSUE_SUB_TMP", "CHB_PRD_RAISETOT_SUB_TMP","CHB_PRD_DEAL_SUB_TMP","CHB_PRD_END_SUB_TMP",
-			"CHB_ASSET_INFO_TMP","CHB_BOT_AST_POS_SUB_TMP","CHB_INVEST_TRADE_SUB_TMP","CHB_AST_VAL_SUB_TMP" ,"CHB_EMPLOYEE_INFO","CHB_PRD_STATUS_SUB","CHB_AST_POS_SUB" );
+			"CHB_ASSET_INFO_TMP","CHB_BOT_AST_POS_SUB_TMP","CHB_INVEST_TRADE_SUB_TMP","CHB_AST_VAL_SUB_TMP" ,"CHB_PRD_STATUS_SUB","CHB_AST_POS_SUB" );
 	
 	/**
 	 * 页面初始化
