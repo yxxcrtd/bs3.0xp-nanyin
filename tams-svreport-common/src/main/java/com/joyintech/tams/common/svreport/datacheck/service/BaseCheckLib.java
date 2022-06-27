@@ -193,7 +193,7 @@ public class BaseCheckLib {
             byte[] b_gbk = srcValue.getBytes("GBK");
             return (b_gbk.length < length);
         } catch (UnsupportedEncodingException e) {
-            logger.error(e.getMessage(),e);
+            logger.debug(e.getMessage(),e);
             return false;
         }
     }
@@ -684,7 +684,7 @@ public class BaseCheckLib {
         try {
             return srcValue.matches(format);
         } catch(Exception e) {
-            logger.error(e.getMessage(),e);
+            logger.debug(e.getMessage(),e);
             return false;
         }
     }
@@ -709,7 +709,7 @@ public class BaseCheckLib {
         try {
             ff= srcValue.matches(format);
         } catch(Exception e) {
-            logger.error(e.getMessage(),e);
+            logger.debug(e.getMessage(),e);
             return false;
         }
         //白名单验证不通过后继续检查有没有存在生僻字库中
@@ -1347,7 +1347,7 @@ public class BaseCheckLib {
         try {
             new BigDecimal(str).toString();
         } catch (Exception e) {
-            logger.error("转换数字异常：",e);
+            logger.debug("转换数字异常：",e);
             return false;//异常 说明包含非数字
         }
         return true;
@@ -1362,7 +1362,7 @@ public class BaseCheckLib {
         try {
             DateUtil.parse(str).toString();
         } catch (Exception e) {
-            logger.error("转换日期异常：",e);
+            logger.debug("转换日期异常：",e);
             return false;//异常 说明包含非日期
         }
         return true;
