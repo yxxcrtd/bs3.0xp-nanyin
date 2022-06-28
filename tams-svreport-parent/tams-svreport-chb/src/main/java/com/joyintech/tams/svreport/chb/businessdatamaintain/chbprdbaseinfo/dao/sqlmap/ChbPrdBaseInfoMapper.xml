@@ -789,7 +789,7 @@
         where PROD_ID = #{prodId}
     </update>
     <select id="selectByKey" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/> ,b.IVSTORIENTATION,b.OPERATE_MODE FROM CHB_PRD_BASEINFO a,CHB_PRD_DECLARE_INFO b  where a.PROD_INS_ID = b.PROD_INS_ID and   a.PROD_ID = #{produuid}
+        SELECT <include refid="Base_Column_List"/> ,b.IVSTORIENTATION,b.OPERATE_MODE FROM CHB_PRD_BASEINFO a,CHB_PRD_DECLARE_INFO b  where a.PROD_INS_ID = b.PROD_INS_ID and   a.PRODUUID = #{produuid}
     </select>
     <select id="getProdIdAndProdName" resultType="com.joyintech.framework.select.SuggestDto">
         select distinct PROD_ID code,PROD_NAME shortName from CHB_PRD_BASEINFO
@@ -1719,5 +1719,8 @@
         <foreach collection="list" item="item" open="(" close=")" separator=",">
             #{item}
         </foreach>
+    </select>
+    <select id="selectByProdId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/> FROM CHB_PRD_BASEINFO a WHERE a.PROD_ID = #{prodId}
     </select>
 </mapper>
