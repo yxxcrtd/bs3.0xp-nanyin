@@ -1720,4 +1720,7 @@
             #{item}
         </foreach>
     </select>
+    <select id="selectByProdId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/> FROM CHB_PRD_BASEINFO a WHERE a.PROD_ID = #{prodId}
+    </select>
 </mapper>

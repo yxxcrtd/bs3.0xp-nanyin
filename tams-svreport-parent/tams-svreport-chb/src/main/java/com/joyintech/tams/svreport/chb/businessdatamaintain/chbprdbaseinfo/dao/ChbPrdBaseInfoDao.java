@@ -45,4 +45,6 @@ public interface ChbPrdBaseInfoDao {
     List<Map<String,String>> selectByProdIdKey(String prodId);
 
     List<ChbPrdBaseInfoDto> selectByKeys(@Param("list") List<String> list);
+
+    ChbPrdBaseInfoDto selectByProdId(String prodId);
 }
