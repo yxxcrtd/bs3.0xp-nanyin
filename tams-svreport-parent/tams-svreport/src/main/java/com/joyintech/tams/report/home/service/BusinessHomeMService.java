@@ -33,7 +33,7 @@ public class BusinessHomeMService extends BaseService<ITableRow>{
 
     public AjaxResult getSystemNow(){
         AjaxResult result = new AjaxResult();
-        result.setData(DateUtil.format(new DateTime(iPlatformDate.getSysDate()).plusDays(-1).toDate()));
+        result.setData(DateUtil.format(iPlatformDate.getSysDate()));
         return result;
     }
 

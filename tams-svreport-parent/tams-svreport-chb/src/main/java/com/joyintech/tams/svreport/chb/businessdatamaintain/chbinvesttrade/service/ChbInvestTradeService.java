@@ -133,7 +133,7 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
                 dto.setTradeSeqno(chbInvestTradeErrodataWithBLOBsDto.getDatauuid());
                 // 获取产品名称和产品登记编码
                 if(!StringUtils.isEmpty(dto.getProdId())){
-                    ChbPrdBaseInfoDto chbPrdBaseInfoDto = chbPrdBaseInfoDao.selectByKey(dto.getProdId());
+                    ChbPrdBaseInfoDto chbPrdBaseInfoDto = chbPrdBaseInfoDao.selectByProdId(dto.getProdId());
                     if(chbPrdBaseInfoDto!=null){
                         dto.setProdName(chbPrdBaseInfoDto.getProdName()==null?null:chbPrdBaseInfoDto.getProdName());
                         dto.setRegCode(chbPrdBaseInfoDto.getRegCode()==null?null:chbPrdBaseInfoDto.getRegCode());
