@@ -215,6 +215,9 @@ public class CommonCodeCheckBatchService {
                 case 个人产品申报登记INFO:
                     checkPrdoDeclare(excelValidDtoList,map,detailMap, tableInfo,i);
                     break;
+                case 科目定义:
+                    checkBokSubject(excelValidDtoList,map,i);
+                    break;
                 case 终止登记SUB:
                 case 终止登记TMP:
                     checkProdEndSubTmp(map,prodRegistCodeList);
@@ -239,6 +242,42 @@ public class CommonCodeCheckBatchService {
                     break;
             }
         }
+    }
+
+    private void checkBokSubject(List<ExcelValidDto> excelValidDtoList, Map<String, String> dataMap, int i) {
+        String  errMsg=dataMap.getOrDefault("ERRMSG", "");
+        StringBuilder sb = new StringBuilder();
+        String fsubjectId = dataMap.get("FSUBJECT_ID");
+        if(!errMsg.equals("重复数据;")){
+            if(commonCodeCheckMapper.checkExistsFsubjectId(fsubjectId)<1){
+                sb.append("上级科目号不存在；");
+            }
+
+            if(StringUtils.isEmpty(errMsg)){
+                if(StringUtils.isNotEmpty(sb.toString())&&excelValidDtoList!=null){
+                    excelValidDtoList.add(new ExcelValidDto("导入成功",String.valueOf((i+2)),sb.toString()));
+                }
+            }else{
+                if(StringUtils.isNotEmpty(sb.toString())&& excelValidDtoList!=null){
+                    if(excelValidDtoList.size()>0){
+                        for (ExcelValidDto excelValidDto : excelValidDtoList) {
+                            if(excelValidDto.getRowNum().equals(String.valueOf((i+2)))){
+                                excelValidDto.setErrorInfo(errMsg+sb.toString());
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            dataMap.put("ERRMSG",errMsg+sb.toString());
+        }
+        Collections.sort(excelValidDtoList,new Comparator<ExcelValidDto>() {
+            @Override
+            public int compare(ExcelValidDto o1, ExcelValidDto o2) {
+                // o1在前：根据age从小到大进行排序
+                return Integer.valueOf(o1.getRowNum())-Integer.valueOf(o2.getRowNum());
+            }
+        });
     }
 
     private void checkChbInvestTrade(List<ExcelValidDto> excelValidDtoList, Map<String, String> dataMap, int i) {
@@ -527,6 +566,7 @@ public class CommonCodeCheckBatchService {
 
         List<MstHolidayErrodataWithBLOBs> mstHolidayErrodataList = Lists.newArrayList();
         List<MstExchargeQuoteErrodataWithBLOBs> mstExchargeQuoteErrodataList = Lists.newArrayList();
+        List<BokSubjectErrodataWithBLOBs> bokSubjectErrodataList = Lists.newArrayList();
         codeCheckCommonOnly(excelValidDtoList,list, tableInfo);
         updateExcelValidDtoList(excelValidDtoList,list,tableInfo);
 
@@ -605,6 +645,16 @@ public class CommonCodeCheckBatchService {
                 MstExchargeQuoteErrodataWithBLOBs mstExchargeQuoteErrodataWithBLOBs = createMstExchargeQuoteErrodata(map,flag);
                 if(mstExchargeQuoteErrodataWithBLOBs != null) {
                     mstExchargeQuoteErrodataList.add(mstExchargeQuoteErrodataWithBLOBs);
+                }
+            }
+            //科目定义
+            if(StringUtil.equals(tableInfo.getTableName(),ChbCheckTableInfo.科目定义.getTableName())){
+                if("重复数据;".equals(map.get("ERRMSG"))){
+                    continue;
+                }
+                BokSubjectErrodataWithBLOBs bokSubjectErrodataWithBLOBs = createBokSubjectErrodata(map,flag);
+                if(bokSubjectErrodataWithBLOBs != null) {
+                    bokSubjectErrodataList.add(bokSubjectErrodataWithBLOBs);
                 }
             }
             //销售数据反馈
@@ -762,6 +812,143 @@ public class CommonCodeCheckBatchService {
             deleteMstExchargeQuote(mstExchargeQuoteErrodataList);
             insertMstExchargeQuoteErrodata(mstExchargeQuoteErrodataList);
         }
+        //科目定义
+        if(StringUtil.isEmptyList(bokSubjectErrodataList)){
+
+        }else{
+            Iterator<BokSubjectErrodataWithBLOBs> iterator = bokSubjectErrodataList.iterator();
+            while(iterator.hasNext()){
+                BokSubjectErrodataWithBLOBs next = iterator.next();
+                if(StringUtils.isEmpty(next.getSubjectNo())){
+                    iterator.remove();
+                }
+            }
+            deleteBokSubjectErrodata(bokSubjectErrodataList);
+            deleteBokSubject(bokSubjectErrodataList);
+            insertBokSubjectErrodata(bokSubjectErrodataList);
+        }
+
+    }
+
+    private void insertBokSubjectErrodata(List<BokSubjectErrodataWithBLOBs> bokSubjectErrodataList) {
+        SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+        try {
+            int count = 0;
+            logger.debug("科目定义信息错误信息数据插入开始--------------" + new Date());
+            BokSubjectErrodataMapper batchMapper = session.getMapper(BokSubjectErrodataMapper.class);
+            for(BokSubjectErrodataWithBLOBs single: bokSubjectErrodataList){
+                batchMapper.insert(single);
+                count ++;
+                // 每20次提交
+                if (count % 20 == 0) {
+                    session.commit();
+                    // 清理缓存，防止溢出
+                    session.clearCache();
+                }
+            }
+            session.commit();
+            // 清理缓存，防止溢出
+            session.clearCache();
+        }
+        catch (Exception e) {
+            session.rollback();
+            logger.error("SQL执行异常：", e);
+        }
+        finally {
+            session.close();
+        }
+        logger.debug("科目定义错误信息数据插入结束--------------" + new Date());
+    }
+
+    public void deleteBokSubject(List<BokSubjectErrodataWithBLOBs> bokSubjectErrodataList) {
+        SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+        try {
+            CommonCodeCheckMapper batchMapper = session.getMapper(CommonCodeCheckMapper.class);
+            batchMapper.deleteBokSubject(bokSubjectErrodataList);
+            session.commit();
+            session.clearCache();
+        }
+        catch (Exception e) {
+            session.rollback();
+            logger.error("SQL执行异常：", e);
+        }
+        finally {
+            session.close();
+        }
+    }
+
+    public void deleteBokSubjectErrodata(List<BokSubjectErrodataWithBLOBs> erroList) {
+        SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+        try {
+            int count = 0;
+            logger.debug("科目定义信息错误信息数据删除开始--------------" + new Date());
+            CommonCodeCheckMapper batchMapper = session.getMapper(CommonCodeCheckMapper.class);
+            for(BokSubjectErrodataWithBLOBs single: erroList){
+                if (StringUtils.isNotEmpty(single.getSubjectNo())&&StringUtils.isNotEmpty(single.getBooksetId())){
+                    try {
+                        batchMapper.deleteBokSubjectErrodata(single.getBooksetId(),single.getSubjectNo());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    count ++;
+                }
+                // 每20次提交
+                if (count % 20 == 0) {
+                    session.commit();
+                    // 清理缓存，防止溢出
+                    session.clearCache();
+                }
+            }
+            session.commit();
+            // 清理缓存，防止溢出
+            session.clearCache();
+        }
+        catch (Exception e) {
+            session.rollback();
+            logger.error("SQL执行异常：", e);
+        }
+        finally {
+            session.close();
+        }
+        logger.debug("科目定义信息错误信息数据删除结束--------------" + new Date());
+    }
+
+    private BokSubjectErrodataWithBLOBs createBokSubjectErrodata(Map<String, String> map, String flag) {
+        String msg = map.get("ERRMSG");
+        if (StringUtil.isEmpty(msg)) {
+            return null;
+        }
+
+        // 拼装错误信息
+        BokSubjectErrodataWithBLOBs bokSubjectErrodataWithBLOBs = new BokSubjectErrodataWithBLOBs();
+        // 主键uuid
+        bokSubjectErrodataWithBLOBs.setDatauuid(IDGenerator.generate(36));
+        bokSubjectErrodataWithBLOBs.setSubjectNo(map.get("SUBJECT_NO"));
+        bokSubjectErrodataWithBLOBs.setBooksetId(map.get("BOOKSET_ID"));
+        bokSubjectErrodataWithBLOBs.setSubjectName(map.get("SUBJECT_NAME"));
+        bokSubjectErrodataWithBLOBs.setSubjectType(map.get("SUBJECT_TYPE"));
+        bokSubjectErrodataWithBLOBs.setSubjectLevel(map.get("SUBJECT_LEVEL"));
+        bokSubjectErrodataWithBLOBs.setFsubjectId(map.get("FSUBJECT_ID"));
+        bokSubjectErrodataWithBLOBs.setBalFlag(map.get("BAL_FLAG"));
+        // 拼接错误字段信息
+        Map<String, String> newMap = new HashMap<>(map);
+        newMap.remove("ERRMSG");
+        newMap.remove(null);
+        bokSubjectErrodataWithBLOBs.setOrgData(JsonUtils.object2Json(newMap));
+        // 错误提示信息
+        bokSubjectErrodataWithBLOBs.setErrMsg(msg);
+        // 数据状态
+        bokSubjectErrodataWithBLOBs.setStatus("A");
+        if(flag.equals("I")){
+            bokSubjectErrodataWithBLOBs.setCreateUser("interf");
+            bokSubjectErrodataWithBLOBs.setUpdateUser("interf");
+        }else{
+            bokSubjectErrodataWithBLOBs.setCreateUser(CommonUtil.getUserName());
+            bokSubjectErrodataWithBLOBs.setUpdateUser(CommonUtil.getUserName());
+        }
+        bokSubjectErrodataWithBLOBs.setCreateTime(com.joyintech.framework.util.DateUtil.now());
+        bokSubjectErrodataWithBLOBs.setUpdateTime(DateUtil.now());
+        return bokSubjectErrodataWithBLOBs;
     }
 
     private void insertMstExchargeQuoteErrodata(List<MstExchargeQuoteErrodataWithBLOBs> mstExchargeQuoteErrodataList) {
@@ -819,7 +1006,7 @@ public class CommonCodeCheckBatchService {
             logger.debug("汇率行情信息错误信息数据删除开始--------------" + new Date());
             CommonCodeCheckMapper batchMapper = session.getMapper(CommonCodeCheckMapper.class);
             for(MstExchargeQuoteErrodataWithBLOBs single: erroList){
-                if (StringUtils.isNotEmpty(single.getExchargeCode())&& single.getTradeDate()!=null){
+                if (StringUtils.isNotEmpty(single.getExchargeCode())&& single.getTradeDate()!=null&&StringUtils.isNotEmpty(single.getDatasourceType())){
                     try {
                         batchMapper.deleteMstExchargeQuoteErrodata(single.getExchargeCode(), com.joyintech.framework.util.DateUtil.format(single.getTradeDate(),"yyyy-MM-d"),single.getDatasourceType());
                     } catch (Exception e) {
@@ -918,7 +1105,7 @@ public class CommonCodeCheckBatchService {
 
     }
 
-    private void deleteMstHoliday(List<MstHolidayErrodataWithBLOBs> mstHolidayErrodataList) {
+    public void deleteMstHoliday(List<MstHolidayErrodataWithBLOBs> mstHolidayErrodataList) {
         SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
         try {
             CommonCodeCheckMapper batchMapper = session.getMapper(CommonCodeCheckMapper.class);
@@ -1087,6 +1274,18 @@ public class CommonCodeCheckBatchService {
                                         dto.setValidKey("导入失败");
                                         break;
                                     }
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case "BOK_SUBJECT":
+                    for(int i = 0;i<list.size();i++){
+                        if(StringUtils.isEmpty(list.get(i).get("SUBJECT_NO"))||StringUtils.isEmpty(list.get(i).get("BOOKSET_ID"))){
+                            for (ExcelValidDto dto : excelValidDtoList) {
+                                if(dto.getRowNum().equals(String.valueOf(i+2))){
+                                    dto.setValidKey("导入失败");
+                                    break;
                                 }
                             }
                         }
