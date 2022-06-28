@@ -438,11 +438,17 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 			webResult.setMessage("请勿上传空文件", MessageType.错误消息);
 			return webResult;
 		}
-		int i = assetInfoDetailMapper.selectValidRecords(list);
-		if(i>0){
+		//查过1000条分页查询，按998条分页
+		List<List<Map<String, String>>> partitionList = Lists.partition(list, 998);
+		int count =0;
+		for (List<Map<String, String>> partition:partitionList) {
+			int i =assetInfoDetailMapper.selectValidRecords(partition);
+			count=count+i;
+		}
+		if(count>0){
 			String[] checkEuplicatedKeys = ChbCheckTableInfo.资产要素登记表INFO.getCheckEuplicatedKeys();
 			int dup = DuplicateDataUtil.countDuplicatedData(list, checkEuplicatedKeys);
-			webResult.setMessage(this.getMessage("SvrDuplicateMessage",dup,i), MessageType.确认消息);
+			webResult.setMessage(this.getMessage("SvrDuplicateMessage",dup,count), MessageType.确认消息);
 		}
 		return webResult;
 	}
