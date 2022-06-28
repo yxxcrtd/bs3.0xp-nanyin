@@ -432,7 +432,9 @@ var QueryFunc=function(){
 
             //是否为债转股
             if(repAssetType=='1299' || repAssetType=='2299' || repAssetType=='1599'){
-                $("#svrBussRepOtherInvestTargetInfoDto_deptEquity").val('').attr('disabled', true);
+                $("#svrBussRepOtherInvestTargetInfoDto_deptEquity").val('').attr('disabled', true).prop('required',false).trigger('change');
+            }else{
+                $("#svrBussRepOtherInvestTargetInfoDto_deptEquity").val('').attr('disabled', false).prop('required',true).trigger('change');
             }
         }else if(obj["16"].indexOf(repAssetType)>=0){
             //委外投资——协议方式~
