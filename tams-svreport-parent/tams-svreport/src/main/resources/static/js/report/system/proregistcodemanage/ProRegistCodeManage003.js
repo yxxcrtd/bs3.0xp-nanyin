@@ -68,11 +68,9 @@
                                     Joyin.error(result.data[0].message);
                                     return;
                              }else{
-                                Joyin.ajax(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/selectRegCode?prodInsId='+prodInsId, {}, function(result) {
-                                  if(result!=''&&result!=null){
-                                      Joyin.ajax(basePath+"svreport/system/proregistcodemanage/ProRegistCodeManage003/checkRegCode?regCode="+result,{},function (result){
+                                Joyin.ajax(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/selectRegCode',{prodInsId:prodInsId,regCode:regCode}, function(result) {
                                          if(result>0){
-                                             Joyin.error(JoyinUtil.getMessage("产品登记编码已维护，禁止修改。"));
+                                             Joyin.error(JoyinUtil.getMessage("已经在产品基本信息维护模块中使用了的产品登记编码信息，禁止修改。"));
                                              return false;
                                          }else{
                                              Joyin.ajax(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/checkInsertData', {prodInsId:prodInsId,regCode:regCode}, function(result) {
@@ -88,8 +86,6 @@
                                                  });
                                              });
                                          }
-                                      });
-                                  }
                                 });
 
                          }

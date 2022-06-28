@@ -191,8 +191,8 @@ public class ProRegistCodeManage003Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/selectRegCode")
-    public String selectRegCode(String prodInsId){
-        return proRegistCodeManage003Service.selectRegCode(prodInsId);
+    public int selectRegCode(String prodInsId,String regCode){
+        return proRegistCodeManage003Service.selectRegCode(prodInsId,regCode);
     }
     @ResponseBody
     @RequestMapping("/checkRegCode")

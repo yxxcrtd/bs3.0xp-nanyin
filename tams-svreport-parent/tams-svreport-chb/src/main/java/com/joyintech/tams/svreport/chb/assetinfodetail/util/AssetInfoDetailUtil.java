@@ -3425,6 +3425,12 @@ public class AssetInfoDetailUtil {
                         e.setFinancie(e.getFinancie() + " " + customerMap.get(e.getFinancie()));
                     }
                 }
+                //发行人
+                if(StringUtil.isNotEmpty(e.getChbIssuerId())){
+                    if(StringUtil.isNotEmpty(customerMap.get(e.getChbIssuerId()))) {
+                        e.setChbIssuerId(e.getChbIssuerId() + " " + customerMap.get(e.getChbIssuerId()));
+                    }
+                }
             });
         }
     }

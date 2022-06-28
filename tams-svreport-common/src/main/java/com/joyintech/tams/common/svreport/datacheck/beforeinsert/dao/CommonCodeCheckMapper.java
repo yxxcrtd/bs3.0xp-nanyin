@@ -124,7 +124,7 @@ public interface CommonCodeCheckMapper {
 
     List<Map<String, String>> selectChbPrdDeclareInfoBusKey(@Param("list") List<ChbPrdDeclareInfoErrodataWithBLOBs> list);
 
-    void deleteChbPrdDeclareInfoErrorData(String prodInsId);
+    void deleteChbPrdDeclareInfoErrorData(@Param("prodInsId") String prodInsId);
 
     void deleteChbPrdDeclareInfo(@Param("list") List<ChbPrdDeclareInfoErrodataWithBLOBs> list);
 
