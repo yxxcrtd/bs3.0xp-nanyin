@@ -136,5 +136,5 @@ public interface ProRegistCodeManage001Mapper {
 
     int checkRegCode(String regCode);
 
-    String selectRegCode(String prodInsId);
+    int selectRegCode(@Param("prodInsId")String prodInsId,@Param("regCode")String regCode);
 }
