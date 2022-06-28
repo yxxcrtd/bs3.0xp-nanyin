@@ -226,4 +226,12 @@ public class ProRegistCodeManage003Service extends CommonExportService<ProRegist
         }
         return dto;
     }
+
+    public int checkRegCode(String regCode) {
+        return proRegistCodeManage001Mapper.checkRegCode(regCode);
+    }
+
+    public String selectRegCode(String prodInsId) {
+        return proRegistCodeManage001Mapper.selectRegCode(prodInsId);
+    }
 }

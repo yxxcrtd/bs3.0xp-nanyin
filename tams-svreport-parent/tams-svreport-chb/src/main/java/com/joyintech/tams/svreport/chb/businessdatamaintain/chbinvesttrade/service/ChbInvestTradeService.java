@@ -79,7 +79,7 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
         else if (OperationType.NEW.equals(type)) {
             entity.setDataSource(DictCodeListExt2.数据来源_新建导入.getValue());
             entity.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
-            entity.setTradeSeqno(IDGenerator.generate(32));
+            entity.setTradeSeqno(IDGenerator.generate(36));
             List<ChbInvestTrade> chbInvestTrades = Lists.newArrayList((ChbInvestTrade) entity);
             chbInvestTradeInterfMapper.deleteChbInvestTradeErroData(chbInvestTrades);
             chbInvestTradeDao.insert(entity);

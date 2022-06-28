@@ -25,7 +25,7 @@
         <result property="tradeType" column="TRADE_TYPE" jdbcType="VARCHAR"/>
         <result property="chlAgrtName" column="CHL_AGRT_NAME" jdbcType="VARCHAR"/>
         <result property="isUnderTrade" column="IS_UNDER_TRADE" jdbcType="VARCHAR"/>
-        <result property="status" column="STATUS" jdbcType="VARCHAR"/>
+        <result property="statusValid" column="STATUS" jdbcType="VARCHAR"/>
         <result property="orgCode" column="ORG_CODE" jdbcType="VARCHAR"/>
         <result property="deptCode" column="DEPT_CODE" jdbcType="VARCHAR"/>
         <result property="createUser" column="CREATE_USER" jdbcType="VARCHAR"/>

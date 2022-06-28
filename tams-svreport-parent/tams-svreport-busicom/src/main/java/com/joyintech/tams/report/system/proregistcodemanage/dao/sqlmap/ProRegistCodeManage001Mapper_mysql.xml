@@ -345,7 +345,13 @@
 	</select>
 
 	<select id="selectProdBaseInfo" resultType="map">
-		select PROD_ID prodId , REG_CODE regCode
+		select PROD_INS_ID prodInsId , REG_CODE regCode
 		from CHB_PRD_BASEINFO
+	</select>
+	<select id="checkRegCode" resultType="java.lang.Integer">
+		select count(1) from  CHB_PRD_BASEINFO where REG_CODE = #{regCode}
+	</select>
+	<select id="selectRegCode" resultType="java.lang.String">
+		select REG_CODE from CHB_PRDRESIST_CODE where PROD_INS_ID = #{prodInsId}
 	</select>
 </mapper>
