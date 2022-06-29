@@ -554,6 +554,7 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 			subMap.put("PRO_INDUSTRY",dictAssetType.get(subMap.get("PRO_INDUSTRY_LEVEL2")));
 			subMap.put("INDUSTRY",dictAssetType.get(subMap.get("INDUSTRY_LEVEL2")));
 			subMap.put("INDUSTRY1",dictAssetType.get(subMap.get("INDUSTRY_LEVEL2_TYPE")));
+			subMap.put("CHB_ISSUER_ID",StringUtil.isNotEmpty(subMap.get("CHB_ISSUER_ID"))?subMap.get("CHB_ISSUER_ID").split(" ")[0]:null);
 		});
 		return list;
 	}
