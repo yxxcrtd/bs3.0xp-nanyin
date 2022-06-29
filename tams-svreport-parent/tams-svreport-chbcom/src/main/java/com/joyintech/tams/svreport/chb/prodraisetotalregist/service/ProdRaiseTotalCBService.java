@@ -516,6 +516,17 @@ public class ProdRaiseTotalCBService extends SvrDataStatusUtil {
 			dto.setChbSubmitDeadline(dateList.get(0));
 			dto.setSubmitDeadline(dateList.get(1));
 		}
+		/**add by  dxy    光大个性化需求改造  20220425  start**/
+		if(StringUtil.equals(DictCodeList.是否_中债_是.getValue(),dto.getIsConsign())){
+			StringBuilder errMsgBuilder = new StringBuilder(dto.getRemark()==null?"":dto.getRemark());
+
+			errMsgBuilder.append("该产品通过代理销售机构渠道销售的,理财产品评级应当以代理销售机构最终披露的评级结果为准");
+
+			dto.setRemark(errMsgBuilder.toString());
+		}
+
+		/**add by  dxy    光大个性化需求改造  20220425  end**/
+
 		return dto;
 	}
 
