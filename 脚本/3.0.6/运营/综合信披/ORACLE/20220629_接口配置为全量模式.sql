@@ -1,1 +1,0 @@
-update CHB_INTERF_CONFIG SET content_type = 'I';
