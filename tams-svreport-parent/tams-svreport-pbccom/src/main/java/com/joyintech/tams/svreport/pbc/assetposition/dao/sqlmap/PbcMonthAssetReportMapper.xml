@@ -28,6 +28,8 @@
     <result column="INSTITUTION_CODE" property="institutionCode" jdbcType="VARCHAR" />
     <result column="BANK_CAPITAL" property="bankCapital" jdbcType="VARCHAR" />
     <result column="SHARES_TYPE" property="sharesType" jdbcType="VARCHAR" />
+    <result column="PARTY_TYPE1" property="partyType1" jdbcType="VARCHAR" />
+
   </resultMap>
   <sql id="Base_Column_List" >
     POSUUID, PRODID, ORG_CODE, POSITION_TYPE, CHL_ID, ASSET_CODE, ASSET_TYPE1, ASSET_TYPE2,
@@ -451,10 +453,12 @@
     ASSETINFO.BANK_SEC_PREFER,
     ASSETINFO.IS_PERPETUAL,
     ASSETINFO.BANK_CAPITAL,
-    ASSETINFO.SHARES_TYPE
+    ASSETINFO.SHARES_TYPE,
+    minfo.PARTY_TYPE1
     from PBC_MONTH_ASSET_POSITION PMAP
     left join CHB_ASSET_INFO ASSETINFO
     ON ASSETINFO.ASSET_CODE = PMAP.ASSET_CODE  and  ASSETINFO.status in('E','M')
+    left join MST_CUSTOMER_INFO_ADD minfo on minfo.CUSTOMER_ID =ASSETINFO.CHB_ISSUER_ID
     where TO_CHAR(ENDDATE,'yyyy-MM-dd') = #{bookDate,jdbcType=VARCHAR}
     <if test="prodList !=null">
       <foreach collection="prodList" item="prodid" open="and PRODID in ("

@@ -8333,7 +8333,11 @@ public class PbcMonthAssetReportService  extends BaseService{
                 industryType1 = assetinfo.getIndustryPbc();
             }
         }
-        String  qygm=assetinfo.getInstitSize();
+//        String  qygm=assetinfo.getInstitSize();
+        String  qygm=pos.getPartyType1();
+        if(StringUtils.isEmpty(qygm)){
+            qygm=assetinfo.getInstitSize();
+        }
         if(PbcMonthReportConstants.PBC_INDUSTRY_TYPE1_01.equals(industryType1)&&PbcMonthReportConstants.PBC_INDUSTRY_TYPE1_01.equals(hxl)){
             setCompanyBondValue(pos,qygm,line,cnyAmt);
         }else if(PbcMonthReportConstants.PBC_INDUSTRY_TYPE1_02.equals(industryType1)&&PbcMonthReportConstants.PBC_INDUSTRY_TYPE1_02.equals(hxl)){
