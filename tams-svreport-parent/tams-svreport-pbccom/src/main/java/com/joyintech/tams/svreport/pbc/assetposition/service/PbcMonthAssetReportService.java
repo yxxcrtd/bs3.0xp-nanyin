@@ -537,7 +537,7 @@ public class PbcMonthAssetReportService  extends BaseService{
                 }
                 //h40000	四、债券逆回购和同业拆借 	=“h41000住户+h42000广义政府+h43000非金融企业+h44000银行业存款类机构
                 // +h45000银行业非存款类金融机构+h46000非银行业金融机构+h47000特定目的载体+h48000境外”
-                if(PbcMonthReportConstants.PBC_ASSETTYPE2_R01.equals(pos.getAssetType2())) {
+                if(PbcMonthReportConstants.PBC_ASSETTYPE2_R03.equals(pos.getAssetType2())) {
                     if (PbcMonthReportConstants.PBC_ASSETTYPE3_L01.equals(pos.getAssetType3())) {
                         //h41000	  住户	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“住户”　
                         setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H41000_ZH, reportType, rateMap, source, null, massageMap);
