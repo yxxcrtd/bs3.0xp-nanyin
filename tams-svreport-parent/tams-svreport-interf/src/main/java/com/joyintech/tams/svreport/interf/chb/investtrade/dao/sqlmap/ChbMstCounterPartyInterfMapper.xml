@@ -280,7 +280,7 @@
 		a.UPDATE_TIME=sysdate,a.COUNTER_TYPE1=b.counterType1,
 		a.UPDATE_USER=b.updateUser,
 		a.COUNTER_TYPE2=b.counterType2,a.IS_CENTRAL_COUNTER=b.isCentralCounter,
-		a.STATUS = 'M'
+		a.STATUS = 'E'
 		
 		when not matched then insert (UUID,COUNTER_ID, COUNTER_TYPE,
 		COUNTER_NAME,
@@ -352,7 +352,7 @@
                     IS_CENTRAL_COUNTER = #{item.isCentralCounter,jdbcType=VARCHAR},
                 </if>
                 <if test='item.status != null and item.status != "D"'>
-                    STATUS = 'M',
+                    STATUS = 'E',
                 </if>
                 <if test='item.status != null and item.status == "D"'>
                     STATUS = 'D'    
