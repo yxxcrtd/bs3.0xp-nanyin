@@ -59,8 +59,6 @@ public class CommonCodeCheckBatchService {
      */
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private Map<String,String>  map=new HashMap<>();
-
     /**
      * 登记的入库前的代码检查
      * 只做校验，不做其他处理
@@ -68,6 +66,8 @@ public class CommonCodeCheckBatchService {
      * @param  tableInfo  检查的表名
      */
     public void codeCheckCommonOnly(List<Map<String, String>> list, ChbCheckTableInfo tableInfo) {
+        Map<String,String>  mapLinshi=new HashMap<>();
+
 
         Set<String> prodRegistCodeList = new HashSet<>();
         Set<String> prodIdCodeList = new HashSet<>();
@@ -131,14 +131,14 @@ public class CommonCodeCheckBatchService {
                 case 总部或分支机构信息登记表SUB:
                     checkSaleInstInfo(map,saleInstSet,ChbCheckTableInfo.总部或分支机构信息登记表SUB.getTableName());
                 case 销售人员身份信息登记表SUB:
-                    checkSalerIdenInfo(map,ChbCheckTableInfo.销售人员身份信息登记表SUB.getTableName());
+                    checkSalerIdenInfo(map,ChbCheckTableInfo.销售人员身份信息登记表SUB.getTableName(), mapLinshi);
                 case 销售人员奖惩投诉记录登记表SUB:
                     checkRewPenaInfo(map,ChbCheckTableInfo.销售人员奖惩投诉记录登记表SUB.getTableName());
                     break;
                 case 销售人员奖惩投诉记录信息表INFO:
                     checkRewPenaInfo(map,ChbCheckTableInfo.销售人员奖惩投诉记录信息表INFO.getTableName());
                 case 销售人员身份信息表INFO:
-                    checkSalerIdenInfo(map,ChbCheckTableInfo.销售人员身份信息表INFO.getTableName());
+                    checkSalerIdenInfo(map,ChbCheckTableInfo.销售人员身份信息表INFO.getTableName(), mapLinshi);
                 case  总部或分支机构信息表INFO:
                     checkSaleInstInfo(map,saleInstSet,ChbCheckTableInfo.总部或分支机构信息表INFO.getTableName());
                 default:
@@ -153,6 +153,7 @@ public class CommonCodeCheckBatchService {
      * @param  tableInfo  检查的表名
      */
     public void codeCheckCommonOnly(List<ExcelValidDto> excelValidDtoList,List<Map<String, String>> list, ChbCheckTableInfo tableInfo) {
+        Map<String,String>  mapLinshi=new HashMap<>();
 
         Set<String> prodRegistCodeList = new HashSet<>();
         Set<String> prodIdCodeList = new HashSet<>();
@@ -228,14 +229,14 @@ public class CommonCodeCheckBatchService {
                 case 总部或分支机构信息登记表SUB:
                     checkSaleInstInfo(map,saleInstSet,ChbCheckTableInfo.总部或分支机构信息登记表SUB.getTableName());
                 case 销售人员身份信息登记表SUB:
-                    checkSalerIdenInfo(map,ChbCheckTableInfo.销售人员身份信息登记表SUB.getTableName());
+                    checkSalerIdenInfo(map,ChbCheckTableInfo.销售人员身份信息登记表SUB.getTableName(),mapLinshi);
                 case 销售人员奖惩投诉记录登记表SUB:
                     checkRewPenaInfo(map,ChbCheckTableInfo.销售人员奖惩投诉记录登记表SUB.getTableName());
                     break;
                 case 销售人员奖惩投诉记录信息表INFO:
                     checkRewPenaInfo(map,ChbCheckTableInfo.销售人员奖惩投诉记录信息表INFO.getTableName());
                 case 销售人员身份信息表INFO:
-                    checkSalerIdenInfo(map,ChbCheckTableInfo.销售人员身份信息表INFO.getTableName());
+                    checkSalerIdenInfo(map,ChbCheckTableInfo.销售人员身份信息表INFO.getTableName(),mapLinshi);
                 case  总部或分支机构信息表INFO:
                     checkSaleInstInfo(map,saleInstSet,ChbCheckTableInfo.总部或分支机构信息表INFO.getTableName());
                 default:
@@ -4179,7 +4180,7 @@ public class CommonCodeCheckBatchService {
      * 检查销售人员信息
      * @param dataMap
      */
-    public    void  checkSalerIdenInfo(Map<String, String> dataMap,String tableName){
+    public    void  checkSalerIdenInfo(Map<String, String> dataMap,String tableName,Map<String, String> map){
         String  errMsg = dataMap.getOrDefault("ERRMSG", "");
         // 证件类别
         String rewPenaType = dataMap.get("SALER_CREDENT_TYPE");
