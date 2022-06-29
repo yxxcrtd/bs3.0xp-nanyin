@@ -92,7 +92,7 @@ $(function() {
         data.operateType='edit'
         data.pageModel=PAGE_MODEL_EDIT;
         Joyin.confirm("请确认是否修改?", function(){
-            Joyin.dialog(JoyinUtil.getLabel("CchbInvestTrade002"),
+            Joyin.dialog("投资交易信息修改",
                 basePath + "/chb/businessdatamaintain/chbinvesttrade/chbinvesttrade002/init",
                 "98%", "95%",data,
                 function(){table.reload();});
@@ -130,7 +130,7 @@ $(function() {
     $(function() {
         //新建
         $('#CchbInvestTrade001_btn_add').click(function() {
-            Joyin.dialog(JoyinUtil.getLabel("SysCommon.create")+JoyinUtil.getLabel("CchbInvestTrade002"),
+            Joyin.dialog("投资交易信息新建",
                 basePath + "chb/businessdatamaintain/chbinvesttrade/chbinvesttrade002/init",
                 "95%", "80%", {pageModel:PAGE_MODEL_NEW});
         });

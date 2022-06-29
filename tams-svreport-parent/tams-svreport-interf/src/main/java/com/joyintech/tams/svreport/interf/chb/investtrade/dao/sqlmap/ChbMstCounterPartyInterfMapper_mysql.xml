@@ -382,7 +382,7 @@
 					IS_CENTRAL_COUNTER = #{item.isCentralCounter,jdbcType=VARCHAR},
 				</if>
 				<if test='item.status != null and item.status != "D"'>
-					STATUS = 'M',
+					STATUS = 'E',
 				</if>
 				<if test='item.status != null and item.status == "D"'>
 					STATUS = 'D'

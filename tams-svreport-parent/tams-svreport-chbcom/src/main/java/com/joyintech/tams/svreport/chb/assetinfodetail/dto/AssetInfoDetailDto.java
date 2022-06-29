@@ -19,6 +19,7 @@ import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -2532,4 +2533,9 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 	public void setOrgData(String orgData) {
 		this.orgData = orgData;
 	}
+
+	public String getEquityQuitStr() {
+		return DateUtil.format(super.getEquityQuit());
+	}
+
 }
