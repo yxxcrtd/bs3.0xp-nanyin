@@ -263,7 +263,9 @@
 
     </select>
     <select id="selectProdIdAndRegCodeByProdName" resultType="java.util.Map">
-        SELECT PROD_ID,REG_CODE FROM CHB_PRD_BASEINFO WHERE PROD_NAME=#{prodName} limit 1
+select  a.PRODID as PROD_ID,a.REG_CODE from CHB_PRDRESIST_CODE a
+inner join  CHB_PRD_BASEINFO b on a.PRODID=b.PROD_ID
+where b.PROD_NAME=#{prodName} limit 1
     </select>
     <select id="selectByKey" resultMap="BaseResultMap">
         select
