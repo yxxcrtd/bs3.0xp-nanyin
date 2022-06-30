@@ -40,7 +40,7 @@ public class ChbInvestTradeValidator implements BeanValidator {
                 &&!StringUtil.isEmpty(dto.getProdId())
                 &&!StringUtil.isEmpty(dto.getAssetCode())
                 //新建
-                &&StringUtil.isEmpty(dto.getStatus())) {
+                &&StringUtil.isEmpty(dto.getStatusValid())) {
                 int i = chbInvestTradeDao.selectByBusinessKey(dto.getProdId(),dto.getTradeCode(),dto.getAssetCode());
                 if (i>0) {
                     resultList.add(new ValidMessage("assetCode", "投资交易信息已存在"));
