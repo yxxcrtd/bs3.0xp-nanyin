@@ -67,7 +67,7 @@
                                 })
                             }else{
                                 flag = true;
-                                layer.msg('产品已存在、如需修改，请已修改模式进行信息修改！');
+                                layer.msg('产品已存在、如需修改，请以修改模式进行信息修改！');
                             }
                         }else{
                             flag = false;
@@ -147,7 +147,7 @@
             return;
         }
         if(flag){
-            layer.msg('产品已存在、如需修改，请已修改模式进行信息修改！');
+            layer.msg('产品已存在、如需修改，请以修改模式进行信息修改！');
             return;
         }
         Joyin.ajaxJson(basePath + '/chb/businessdatamaintain/chbprdbaseinfo/chbprdbaseinfo002/check', object, function(result) {
