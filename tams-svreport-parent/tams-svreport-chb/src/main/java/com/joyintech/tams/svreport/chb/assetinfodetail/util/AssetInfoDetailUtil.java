@@ -2840,10 +2840,10 @@ public class AssetInfoDetailUtil {
                                     e.setFinancierType104(e.getFinancierType1() + " " + SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按规模划分, e.getFinancierType1()));
                                 }
                                 if(StringUtil.isNotEmpty(e.getFinancierType2())) {
-                                    e.setFinancierType204(e.getFinancierType2() + " " + SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按经济类型划分, e.getFinancierType2()));
+                                    e.setFinancierType204(e.getFinancierType2() + " " + SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按技术领域划分, e.getFinancierType2()));
                                 }
                                 if(StringUtil.isNotEmpty(e.getFinancierType3())) {
-                                    e.setFinancierType304(e.getFinancierType3() + " " + SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按技术领域划分, e.getFinancierType3()));
+                                    e.setFinancierType304(e.getFinancierType3() + " " + SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按经济类型划分, e.getFinancierType3()));
                                 }
                                 e.setFinanceProj04(e.getFinanceProj());
                                 if(StringUtil.isNotEmpty(e.getIndustryLevel2Type())) {
