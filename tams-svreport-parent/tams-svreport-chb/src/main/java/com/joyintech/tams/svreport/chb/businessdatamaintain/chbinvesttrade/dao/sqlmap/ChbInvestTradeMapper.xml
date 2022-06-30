@@ -26,6 +26,7 @@
         <result property="chlAgrtName" column="CHL_AGRT_NAME" jdbcType="VARCHAR"/>
         <result property="isUnderTrade" column="IS_UNDER_TRADE" jdbcType="VARCHAR"/>
         <result property="statusValid" column="STATUS" jdbcType="VARCHAR"/>
+        <result property="status" column="STATUS" jdbcType="VARCHAR"/>
         <result property="orgCode" column="ORG_CODE" jdbcType="VARCHAR"/>
         <result property="deptCode" column="DEPT_CODE" jdbcType="VARCHAR"/>
         <result property="createUser" column="CREATE_USER" jdbcType="VARCHAR"/>
@@ -62,6 +63,7 @@
                 #{curAssetdetType,jdbcType=VARCHAR} CUR_ASSETDET_TYPE,
                 #{dealdate,jdbcType=DATE} DEALDATE,
                 #{tradeCounter,jdbcType=VARCHAR} TRADE_COUNTER,
+                #{tradeType,jdbcType=VARCHAR} TRADE_TYPE,
                 #{unitPriceFull,jdbcType=NUMERIC} UNIT_PRICE_FULL,
                 #{unitPriceNet,jdbcType=NUMERIC} UNIT_PRICE_NET,
                 #{endRate,jdbcType=NUMERIC} END_RATE,
@@ -95,6 +97,7 @@
                     a.CUR_ASSETDET_TYPE = b.CUR_ASSETDET_TYPE,
                     a.DEALDATE = b.DEALDATE,
                     a.TRADE_COUNTER = b.TRADE_COUNTER,
+                    a.TRADE_TYPE = b.TRADE_TYPE,
                     a.UNIT_PRICE_FULL = b.UNIT_PRICE_FULL,
                     a.UNIT_PRICE_NET = b.UNIT_PRICE_NET,
                     a.END_RATE = b.END_RATE,
@@ -126,6 +129,7 @@
                        CUR_ASSETDET_TYPE,
                        DEALDATE,
                        TRADE_COUNTER,
+                       TRADE_TYPE,
                        UNIT_PRICE_FULL,
                        UNIT_PRICE_NET,
                        END_RATE,
@@ -159,6 +163,7 @@
                            b.CUR_ASSETDET_TYPE,
                            b.DEALDATE,
                            b.TRADE_COUNTER,
+                           b.TRADE_TYPE,
                            b.UNIT_PRICE_FULL,
                            b.UNIT_PRICE_NET,
                            b.END_RATE,

@@ -158,7 +158,7 @@ public class ChbInvestTradeDto extends ChbInvestTrade implements ProcessEntity {
         this.assetName = assetName;
     }
     public String getCcyStr(){
-        return SysDataUtil.getNameFromDataDict(DictCode.币种,getCcy());
+        return SysDataUtil.getNameFromDataDict(DictCode.币种_中债,getCcy());
     }
     public String getAssetMethodStr(){
         return SysDataUtil.getNameFromDataDict(DictCode.资产计量方式,getAssetMethod());
@@ -167,7 +167,7 @@ public class ChbInvestTradeDto extends ChbInvestTrade implements ProcessEntity {
         return SysDataUtil.getNameFromDataDict(DictCode.资金流动类型,getCurAssetType());
     }
     public String getRivalPartyTypeStr(){
-        return SysDataUtil.getNameFromDataDict(DictCode.交易对手类型,getRivalPartyType());
+        return SysDataUtil.getNameFromDataDict(DictCode.对手方类型,getRivalPartyType());
     }
     public String getDealdateStr(){
         return null !=getDealdate()? DateUtil.format(getDealdate()):null;
