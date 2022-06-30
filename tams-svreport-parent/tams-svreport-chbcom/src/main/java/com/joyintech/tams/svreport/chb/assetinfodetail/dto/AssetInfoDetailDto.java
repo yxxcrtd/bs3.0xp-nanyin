@@ -1087,7 +1087,7 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 	}
 	public String getBankCapitalStr() {
 		if(StringUtil.isNotEmpty(this.getBankCapital())) {
-			return this.getBankCapital() + " " + SysDataUtil.getNameFromDataDict(DictCode.中债月度明细_银行资本补充工具, this.getBankCapital());
+			return this.getBankCapital() + " " + SysDataUtil.getNameFromDataDict(DictCode.银行资本补充工具, this.getBankCapital());
 		}
 		return this.getBankCapital();
 	}
