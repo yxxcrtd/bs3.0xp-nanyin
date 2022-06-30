@@ -158,13 +158,10 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
             }
         }else{
              dto = chbPrdBaseInfoDao.selectByKey(produuid);
-             if(dto!=null&&dto.getProdId()!=null){
-                 if(StringUtil.isEmpty(dto.getRegCode())){
-                 Map<String,String> map=chbPrdBaseInfoDao.selectRegCodeByProdId(dto.getProdId());
-                     dto.setRegCode(map.get("REG_CODE"));//从产品登记编码带值
-                 }
-             }
-
+        }
+        if(dto!=null&&dto.getProdId()!=null){
+                Map<String,String> map=chbPrdBaseInfoDao.selectRegCodeByProdId(dto.getProdId());
+                dto.setRegCode(map.get("REG_CODE"));//从产品登记编码带值
         }
         return dto;
     }
