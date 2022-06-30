@@ -343,10 +343,11 @@ where b.PROD_NAME=#{prodName}
         a.INVEST_TRADER_NAME,
         a.ERR_MSG errMsg,
         null orgData,
-        b.REG_CODE regCode,
+        code.REG_CODE regCode,
         c.ASSET_NAME assetName
         FROM CHB_INVEST_TRADE a
         LEFT JOIN CHB_PRD_BASEINFO b ON a.PROD_ID = b.PROD_ID
+        LEFT JOIN CHB_PRDRESIST_CODE code on code.PRODID=b.PROD_ID
         LEFT JOIN CHB_ASSET_INFO c ON a.ASSET_CODE = c.ASSET_CODE
         <where>
             <if test="prodNames != null and prodNames.length>0">
