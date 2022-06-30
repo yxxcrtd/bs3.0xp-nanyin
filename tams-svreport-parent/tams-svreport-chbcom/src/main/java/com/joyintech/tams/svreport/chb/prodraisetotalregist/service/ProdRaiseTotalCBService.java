@@ -559,6 +559,8 @@ public class ProdRaiseTotalCBService extends SvrDataStatusUtil {
 		gendto.setUnlegalTotal(dto.getUnlegalTotal());
 		gendto.setSubscribeCcyAmt(dto.getSubscribeCcyAmt());
 		gendto.setSaleAreaAmt(dto.getSaleAreaAmt());
+		gendto.setAcctName(dto.getAcctName());
+		gendto.setBusiAcctNo(dto.getBusiAcctNo());
 		gendto.setTotalAmt((dto.getTotalAmt()==null?BigDecimal.ZERO:dto.getTotalAmt()).setScale(2, BigDecimal.ROUND_HALF_UP));
 		gendto.setRaiseQty((dto.getRaiseQty()==null?BigDecimal.ZERO:dto.getRaiseQty()).setScale(2, BigDecimal.ROUND_HALF_UP));
 		gendto.setIsConsign(dto.getIsConsign());
