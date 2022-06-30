@@ -74,6 +74,8 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
     private ChbAssetInfoInterfMapper chbAssetInfoInterfMapper;
     @Override
     public void doComplete(ChbInvestTradeDto entity, OperationType type) {
+        //得到交易类型
+        this.setTradeType(entity);
         if (OperationType.DELETE.equals(type)) {
             if(StringUtil.equals(DictCodeListExt3.中债数据状态_待处理.getValue(),entity.getStatus())){
                 chbInvestTradeErrodataMapper.deleteByPrimaryKey(entity.getTradeSeqno());
@@ -89,8 +91,6 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
             entity.setTradeSeqno(IDGenerator.generate(36));
             List<ChbInvestTrade> chbInvestTrades = Lists.newArrayList((ChbInvestTrade) entity);
             chbInvestTradeInterfMapper.deleteChbInvestTradeErroData(chbInvestTrades);
-            //得到交易类型
-            this.setTradeType(entity);
             chbInvestTradeDao.insert(entity);
         }
         else if(OperationType.MODIFY.equals(type)){
