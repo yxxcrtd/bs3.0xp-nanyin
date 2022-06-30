@@ -317,7 +317,10 @@ public class SvrPerProDeclareInfoService001 extends CommonExportService<SvrPerPr
             if(!StringUtils.isEmpty(config.getResultdictCode())){
                 for (Map<String, String> m : list) {
                     if(m.get(config.getRealColumnId())!=null){
-                        if(config.getRealColumnId().equals("PRD_SPEC_PROPERTY")){
+                        if(config.getRealColumnId().equals("PRD_SPEC_PROPERTY")
+                                ||config.getRealColumnId().equals("SALE_AREA")
+                                ||config.getRealColumnId().equals("OUT_DEP_CTRY")
+                                ||config.getRealColumnId().equals("INVEST_COUNTRY")){
                             try {
                                 StringBuffer sb= new StringBuffer();
                                 String[] split = m.get(config.getRealColumnId()).split(",");

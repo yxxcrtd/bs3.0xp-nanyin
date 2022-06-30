@@ -14,7 +14,7 @@
 		BASIS_CYY as basisCyy,
 		QUOT_UNIT as quotUnit,
         STATUS as statusValid,
-		ERR_MSG as errMsg,
+		null as errMsg,
 		INPUT_TYPE as  inputType,
 		CREATE_USER as createUser,
 		CREATE_DEPT as createDept,
@@ -25,8 +25,56 @@
 	<!-- 汇率行情查询 -->
 	<select id="select" resultType="com.joyintech.tams.svreport.chb.businessdatamaintain.chbexchangeinfo.dto.ChbExchangeQuotationInfoDto">
 		select
-		<include refid="BASE_COLUMNS"></include>
+		<include refid="BASE_COLUMNS"/>
+		,null orgData
+		,null datauuid
 		from MST_EXCHARGE_QUOTE
+		<where>
+			<if test="exchargeCodeList != null and exchargeCodeList.size() > 0">
+				<foreach collection="exchargeCodeList" item="exchargeCode" open=" AND EXCHARGE_CODE IN (" close=")" separator=",">
+					#{exchargeCode,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="tradeDateBegin != null and tradeDateBegin != ''">
+				<![CDATA[ and STR_TO_DATE(TRADE_DATE,'%Y-%m-%d') >= #{tradeDateBegin} ]]>
+			</if>
+			<if test="tradeDateEnd != null and tradeDateEnd != ''">
+				<![CDATA[ and STR_TO_DATE(TRADE_DATE,'%Y-%m-%d') <= #{tradeDateEnd} ]]>
+			</if>
+			<if test="tradeDate != null and tradeDate != ''">
+				and STR_TO_DATE(TRADE_DATE,'%Y-%m-%d') = #{tradeDate}
+			</if>
+			<if test="datasourceType != null and datasourceType != ''">
+				and DATASOURCE_TYPE = #{datasourceType}
+			</if>
+			<if test="status != null and status != ''">
+				and STATUS = #{status}
+			</if>
+		</where>
+		union all
+		select
+		EXCHARGE_CODE
+		as exchargeCode,
+		DATASOURCE_TYPE as datasourceType,
+		TRADE_DATE as tradeDate,
+		null as openPrice,
+		null as closePrice,
+		null as midPrice,
+		null as highPrice,
+		null as lowPrice,
+		null as basisCyy,
+		null as quotUnit,
+		STATUS as statusValid,
+		ERR_MSG as errMsg,
+		null as  inputType,
+		CREATE_USER as createUser,
+		CREATE_DEPT as createDept,
+		CREATE_TIME as createTime,
+		UPDATE_USER as updateUser,
+		UPDATE_TIME as updateTime,
+		ORG_DATA as orgData,
+		DATAUUID as datauuid
+		from MST_EXCHARGE_QUOTE_ERRODATA
 		<where>
 			<if test="exchargeCodeList != null and exchargeCodeList.size() > 0">
 				<foreach collection="exchargeCodeList" item="exchargeCode" open=" AND EXCHARGE_CODE IN (" close=")" separator=",">
@@ -289,5 +337,49 @@
 	    </where>
 
 	</select>
-
+	<select id="countDuplicatedData" resultType="java.lang.Integer">
+		select count(1) from MST_EXCHARGE_QUOTE where (EXCHARGE_CODE,TRADE_DATE,DATASOURCE_TYPE) in
+		<foreach collection="list" item="item" open="(" close=")" separator=",">
+			(#{item.EXCHARGE_CODE},#{item.TRADE_DATE},#{item.DATASOURCE_TYPE})
+		</foreach>
+	</select>
+	<select id="selectByKeys"
+			resultType="com.joyintech.tams.svreport.chb.businessdatamaintain.chbexchangeinfo.dto.ChbExchangeQuotationInfoDto">
+		select
+		<include refid="BASE_COLUMNS"/>
+		,NULL orgData
+		from MST_EXCHARGE_QUOTE
+		where (EXCHARGE_CODE,TRADE_DATE,DATASOURCE_TYPE) in
+		<foreach collection="list" item = "item" open="(" close=")" separator=",">
+			(#{item.exchargeCode},#{item.tradeDate},#{item.datasourceType})
+		</foreach>
+		union all
+		select
+		EXCHARGE_CODE
+		as exchargeCode,
+		DATASOURCE_TYPE as datasourceType,
+		TRADE_DATE as tradeDate,
+		null as openPrice,
+		null as closePrice,
+		null as midPrice,
+		null as highPrice,
+		null as lowPrice,
+		null as basisCyy,
+		null as quotUnit,
+		STATUS as statusValid,
+		ERR_MSG as errMsg,
+		null as  inputType,
+		CREATE_USER as createUser,
+		CREATE_DEPT as createDept,
+		CREATE_TIME as createTime,
+		UPDATE_USER as updateUser,
+		UPDATE_TIME as updateTime,
+		ORG_DATA as orgData
+		from MST_EXCHARGE_QUOTE_ERRODATA
+		where (EXCHARGE_CODE,TRADE_DATE,DATASOURCE_TYPE) in
+		<foreach collection="list" item = "item" open="(" close=")" separator=",">
+			(#{item.exchargeCode},#{item.tradeDate},#{item.datasourceType})
+		</foreach>
+		order by tradeDate desc,exchargeCode asc
+	</select>
 </mapper>

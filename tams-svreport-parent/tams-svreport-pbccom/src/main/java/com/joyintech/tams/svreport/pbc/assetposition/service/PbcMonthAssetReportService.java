@@ -504,8 +504,8 @@ public class PbcMonthAssetReportService  extends BaseService{
                 setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H23000_FJRQYZW, reportType, rateMap, source, null, massageMap);
             }
 
-            if(!PbcMonthReportConstants.PBC_ASSETTYPE1_P14.equals(pos.getAssetType1())){
-
+            if(!PbcMonthReportConstants.PBC_ASSETTYPE1_P14.equals(pos.getAssetType1())&&
+                    !PbcMonthReportConstants.PBC_ASSETTYPE1_P11.equals(pos.getAssetType1())){
                 if(DictCodeListExt3.银行资本补充工具_永续债_债性.getValue().equals(pos.getBankCapital())||
                         DictCodeListExt3.银行资本补充工具_永续债_股性.getValue().equals(pos.getBankCapital())||
                         DictCodeListExt3.银行资本补充工具_二级资本债.getValue().equals(pos.getBankCapital())||
@@ -537,7 +537,7 @@ public class PbcMonthAssetReportService  extends BaseService{
                 }
                 //h40000	四、债券逆回购和同业拆借 	=“h41000住户+h42000广义政府+h43000非金融企业+h44000银行业存款类机构
                 // +h45000银行业非存款类金融机构+h46000非银行业金融机构+h47000特定目的载体+h48000境外”
-                if(PbcMonthReportConstants.PBC_ASSETTYPE2_R01.equals(pos.getAssetType2())) {
+                if(PbcMonthReportConstants.PBC_ASSETTYPE2_R03.equals(pos.getAssetType2())) {
                     if (PbcMonthReportConstants.PBC_ASSETTYPE3_L01.equals(pos.getAssetType3())) {
                         //h41000	  住户	统计人行资产二级分类为“拆借和回购”，且人行资产三级分类为“住户”　
                         setAssetReportValue(pos, result, deptMap, PbcReportProperycode.AMT_H41000_ZH, reportType, rateMap, source, null, massageMap);
@@ -7997,6 +7997,17 @@ public class PbcMonthAssetReportService  extends BaseService{
         }
         // 填报机构名称
         pbcMonthReport.setReportOrgName(CommonUtil.selectBankCode());
+        ChbOrgRegistBankCode bankCode = CommonUtil.getUserBank();
+        String  code=CommonUtil.selectBankCode();
+        String  name=CommonUtil.selectBankCodeName();
+        if(null!=bankCode){
+            code = bankCode.getRegistBankCode();
+            name = bankCode.getBelongInstitutionName();
+        }
+        // 发行机构代码取值
+        pbcMonthReport.setIssuePartyId(code);
+        pbcMonthReport.setIssuePartyName(name);
+        pbcMonthReport.setReportOrgName(name);
         // 社会信用代码
         // pbcMonthReport.setSocialCreditCode(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_SOCIAL_CREDIT_CODE));
         // 金融机构编码
@@ -8322,7 +8333,15 @@ public class PbcMonthAssetReportService  extends BaseService{
                 industryType1 = assetinfo.getIndustryPbc();
             }
         }
-        String  qygm=assetinfo.getInstitSize();
+        /**行业一级分类国际组织统计到公共管理、社会保障和社会组织*/
+        if("20".equals(industryType1)){
+            industryType1=PbcMonthReportConstants.PBC_INDUSTRY_TYPE1_19;
+        }
+//        String  qygm=assetinfo.getInstitSize();
+        String  qygm=pos.getPartyType1();
+//        if(StringUtils.isEmpty(qygm)){
+//            qygm=assetinfo.getInstitSize();
+//        }
         if(PbcMonthReportConstants.PBC_INDUSTRY_TYPE1_01.equals(industryType1)&&PbcMonthReportConstants.PBC_INDUSTRY_TYPE1_01.equals(hxl)){
             setCompanyBondValue(pos,qygm,line,cnyAmt);
         }else if(PbcMonthReportConstants.PBC_INDUSTRY_TYPE1_02.equals(industryType1)&&PbcMonthReportConstants.PBC_INDUSTRY_TYPE1_02.equals(hxl)){
@@ -8389,21 +8408,42 @@ public class PbcMonthAssetReportService  extends BaseService{
 
 
         line823000.setTotal(line700000.getTotal().subtract(line810000.getTotal()).subtract(line821000.getTotal()).subtract(line824000.getTotal()));
-        line823000.setCny(line823000.getTotal());
+        //line823000.setCny(line823000.getTotal());
+        line823000.setCny(line700000.getCny().subtract(line810000.getCny()).subtract(line821000.getCny()).subtract(line824000.getCny()));
+        line823000.setUsdToCny(line700000.getUsdToCny().subtract(line810000.getUsdToCny()).subtract(line821000.getUsdToCny()).subtract(line824000.getUsdToCny()));
+        line823000.setEurToCny(line700000.getEurToCny().subtract(line810000.getEurToCny()).subtract(line821000.getEurToCny()).subtract(line824000.getEurToCny()));
+        line823000.setGbpToCny(line700000.getGbpToCny().subtract(line810000.getGbpToCny()).subtract(line821000.getGbpToCny()).subtract(line824000.getGbpToCny()));
+        line823000.setJpyToCny(line700000.getJpyToCny().subtract(line810000.getJpyToCny()).subtract(line821000.getJpyToCny()).subtract(line824000.getJpyToCny()));
+        line823000.setOthToCny(line700000.getOthToCny().subtract(line810000.getOthToCny()).subtract(line821000.getOthToCny()).subtract(line824000.getOthToCny()));
+
         //setAssetDebtDetailValue(line823000, pos.getCcy(), BigDecimal.ZERO, rateMap, pbcReport.getEnddate(),source);
         String ccyAmount823000 = ccy+GlobalConstant.COMMA+line823000.getTotal().setScale(2,RoundingMode.HALF_UP)
                 +GlobalConstant.COMMA+line823000.getTotal().setScale(2,RoundingMode.HALF_UP);
         line823000.setCcyAmount(ccyAmount823000);
         // 820000 权益合计
         line820000.setTotal(line821000.getTotal().add(line824000.getTotal()).add(line823000.getTotal()));
-        line820000.setCny(line820000.getTotal());
+//        line820000.setCny(line820000.getTotal());
+        line820000.setCny(line821000.getCny().add(line824000.getCny()).add(line823000.getCny()));
+        line820000.setUsdToCny(line821000.getUsdToCny().add(line824000.getUsdToCny()).add(line823000.getUsdToCny()));
+        line820000.setEurToCny(line821000.getEurToCny().add(line824000.getEurToCny()).add(line823000.getEurToCny()));
+        line820000.setGbpToCny(line821000.getGbpToCny().add(line824000.getGbpToCny()).add(line823000.getGbpToCny()));
+        line820000.setJpyToCny(line821000.getJpyToCny().add(line824000.getJpyToCny()).add(line823000.getJpyToCny()));
+        line820000.setOthToCny(line821000.getOthToCny().add(line824000.getOthToCny()).add(line823000.getOthToCny()));
+
         //setAssetDebtDetailValue(line820000, ccy, BigDecimal.ZERO, rateMap, pbcReport.getEnddate(),source);
         String ccyAmount820000 = ccy+GlobalConstant.COMMA+line820000.getTotal().setScale(2,RoundingMode.HALF_UP)
                 +GlobalConstant.COMMA+line820000.getTotal().setScale(2,RoundingMode.HALF_UP);
         line820000.setCcyAmount(ccyAmount820000);
         // 800000 负债及权益合计
         line800000.setTotal(line810000.getTotal().add(line820000.getTotal()));
-        line800000.setCny(line800000.getTotal());
+//        line800000.setCny(line800000.getTotal());
+        line800000.setCny(line810000.getCny().add(line820000.getCny()));
+        line800000.setUsdToCny(line810000.getUsdToCny().add(line820000.getUsdToCny()));
+        line800000.setEurToCny(line810000.getEurToCny().add(line820000.getEurToCny()));
+        line800000.setGbpToCny(line810000.getGbpToCny().add(line820000.getGbpToCny()));
+        line800000.setJpyToCny(line810000.getJpyToCny().add(line820000.getJpyToCny()));
+        line800000.setOthToCny(line810000.getOthToCny().add(line820000.getOthToCny()));
+
         //setAssetDebtDetailValue(line800000, ccy, BigDecimal.ZERO, rateMap, pbcReport.getEnddate(),source);
         String ccyAmount800000 = ccy+GlobalConstant.COMMA+line800000.getTotal().setScale(2,RoundingMode.HALF_UP)
                 +GlobalConstant.COMMA+line800000.getTotal().setScale(2,RoundingMode.HALF_UP);
@@ -8860,8 +8900,8 @@ public class PbcMonthAssetReportService  extends BaseService{
                     pbcReport.setDeptCode(deptCode);
 
                     pbcReport.setIssuePartyId(code[0]);
-                    pbcReport.setIssuePartyName(code[1]);
-                    pbcReport.setReportOrgName(code[1]);
+//                    pbcReport.setIssuePartyName(code[1]);
+//                    pbcReport.setReportOrgName(code[1]);
 
                     //TODO hxy
                     //多级法人改造，add 20200620 hxy start 当机构不为空时，去查询机构登记银行代码管理中的登记银行代码
@@ -9013,26 +9053,26 @@ public class PbcMonthAssetReportService  extends BaseService{
 
     }
     private void setCompanyBondValue(PbcMonthAssetPositionDto pos,String qygm,PbcReportCompanyDetailDto line,BigDecimal cnyAmt){
-        // 企业规模 (数据规范化变更)01 中型企业/02 大型企业/03 小型企业/04 微型企业/99 其他
+        // 企业规模 (数据规范化变更)01 中型企业/02 小型企业/03 微型企业/04 大型企业/99 其他
         if (PbcMonthReportConstants.SVR_INSTIT_SIZE_01.equals(qygm)) {
             if (line.getMediumCompanyAmt() != null) {
                 line.setMediumCompanyAmt(line.getMediumCompanyAmt().add(cnyAmt));
             } else {
                 line.setMediumCompanyAmt(cnyAmt);
             }
-        } else if (PbcMonthReportConstants.SVR_INSTIT_SIZE_02.equals(qygm)) {
+        } else if (PbcMonthReportConstants.SVR_INSTIT_SIZE_04.equals(qygm)) {
             if (line.getLargeCompanyAmt() != null) {
                 line.setLargeCompanyAmt(line.getLargeCompanyAmt().add(cnyAmt));
             } else {
                 line.setLargeCompanyAmt(cnyAmt);
             }
-        } else if (PbcMonthReportConstants.SVR_INSTIT_SIZE_03.equals(qygm)) {
+        } else if (PbcMonthReportConstants.SVR_INSTIT_SIZE_02.equals(qygm)) {
             if (line.getSmallCompanyAmt() != null) {
                 line.setSmallCompanyAmt(line.getSmallCompanyAmt().add(cnyAmt));
             } else {
                 line.setSmallCompanyAmt(cnyAmt);
             }
-        } else if (PbcMonthReportConstants.SVR_INSTIT_SIZE_04.equals(qygm)) {
+        } else if (PbcMonthReportConstants.SVR_INSTIT_SIZE_03.equals(qygm)) {
             if (line.getMicroCompanyAmt() != null) {
                 line.setMicroCompanyAmt(line.getMicroCompanyAmt().add(cnyAmt));
             } else {
@@ -9098,11 +9138,13 @@ public class PbcMonthAssetReportService  extends BaseService{
                 && !PbcMonthReportConstants.PBC_ASSETTYPE3_J03.equals(pos.getAssetType3())
                 && !PbcMonthReportConstants.PBC_ASSETTYPE3_J04.equals(pos.getAssetType3())
         ) {
-            // 应收账款的利息值统计到资产：债务工具
-            if (line.getDebtInstrument() != null) {
-                line.setDebtInstrument(line.getDebtInstrument().add(cnyIntAmt));
-            } else {
-                line.setDebtInstrument(cnyIntAmt);
+            if( PbcMonthReportConstants.PBC_ASSETTYPE1_P11.equals(pos.getAssetType1())) {
+                // 应收账款的利息值统计到资产：债务工具
+                if (line.getDebtInstrument() != null) {
+                    line.setDebtInstrument(line.getDebtInstrument().add(cnyIntAmt));
+                } else {
+                    line.setDebtInstrument(cnyIntAmt);
+                }
             }
             if (// PbcMonthReportConstants.PBC_ASSETTYPE1_P01.equals(pos.getAssetType1())// 现金
                 // ||
@@ -9141,11 +9183,13 @@ public class PbcMonthAssetReportService  extends BaseService{
                 || PbcMonthReportConstants.PBC_ASSETTYPE3_J03.equals(pos.getAssetType3())
                 || PbcMonthReportConstants.PBC_ASSETTYPE3_J04.equals(pos.getAssetType3())
         )){
-            // 应付账款的利息值统计到负债：债务工具
-            if (line.getDebtInstrument() != null) {
-                line.setDebtInstrument(line.getDebtInstrument().add(cnyIntAmt));
-            } else {
-                line.setDebtInstrument(cnyIntAmt);
+            if( PbcMonthReportConstants.PBC_ASSETTYPE1_P11.equals(pos.getAssetType1())) {
+                // 应付账款的利息值统计到负债：债务工具
+                if (line.getDebtInstrument() != null) {
+                    line.setDebtInstrument(line.getDebtInstrument().add(cnyIntAmt));
+                } else {
+                    line.setDebtInstrument(cnyIntAmt);
+                }
             }
             if (PbcMonthReportConstants.PBC_ASSETTYPE1_P05.equals(pos.getAssetType1())// 贷款
                     || PbcMonthReportConstants.PBC_ASSETTYPE1_P08.equals(pos.getAssetType1())// 金融衍生品

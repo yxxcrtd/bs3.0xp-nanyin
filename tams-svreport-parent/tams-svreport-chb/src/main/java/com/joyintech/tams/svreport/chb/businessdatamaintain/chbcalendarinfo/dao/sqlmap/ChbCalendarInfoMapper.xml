@@ -191,7 +191,28 @@
     <select id="countDuplicatedData" resultType="java.lang.Integer">
         select count(1) from MST_HOLIDAY where (CALENDAR_ID,CDATE) in
         <foreach collection="list" item="item" open="(" close=")" separator=",">
-            (#{item.CALENDAR_ID},#{item.CDATE})
+            (#{item.CALENDAR_ID},to_date(#{item.CDATE},'yyyy-MM-dd'))
         </foreach>
+    </select>
+    <select id="selectByKeys" resultType="com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dto.ChbCalendarInfo001Dto">
+        SELECT
+        T1.CALENDAR_ID calendarId ,
+        T1.CDATE cdate ,
+        T1.IS_HOLIDAY isHoliday ,
+        T1.UPDATE_TIME  updateTime,
+        T1.UPDATE_USER updateUser,
+        T2.CALENDAR_NAME calendarName,
+        T1.STATUS status,
+        T1.ERR_MSG errMsg,
+        null orgData
+        from
+        MST_HOLIDAY T1
+        left join MST_CALENDAR_INFO T2 on T1.CALENDAR_ID = T2.CALENDAR_ID
+        where (CALENDAR_ID,CDATE) in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            (#{item.calendarId,jdbcType=VARCHAR},#{item.cdate,jdbcType=DATE})
+        </foreach>
+
+        ORDER BY calendarId ASC,cdate DESC
     </select>
 </mapper>

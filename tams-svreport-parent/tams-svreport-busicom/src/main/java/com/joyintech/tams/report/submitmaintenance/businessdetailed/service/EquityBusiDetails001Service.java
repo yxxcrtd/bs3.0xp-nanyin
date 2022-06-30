@@ -2460,12 +2460,10 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                     listNA.add(ibd);
                 } // 原数据没有，新接入数据是“有效”的处理
                 else if (chbEqudet == null && "E".equals(ibd.getStatus())) {
-                    if (BaseCommonCheckService.isMYSQLDataBase()) {
-                        ibd.setSumitSeq(
-                        		//CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理)
-                        		CommonUtil.getSequenceStr(sequenceList,index)
-                            );
-                    }
+                    ibd.setSumitSeq(
+                            //CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理)
+                            CommonUtil.getSequenceStr(sequenceList,index)
+                    );
                     listNE.add(ibd);
                 } // 原数据“待处理”，新接入数据是“待处理”的处理
                 else if ("A".equals(chbEqudet.getStatus()) && "A".equals(ibd.getStatus())) {

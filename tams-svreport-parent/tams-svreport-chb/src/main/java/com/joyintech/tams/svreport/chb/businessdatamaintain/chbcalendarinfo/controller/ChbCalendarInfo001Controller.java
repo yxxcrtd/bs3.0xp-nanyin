@@ -9,17 +9,24 @@
  */
 package com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.controller;
 
+import com.alibaba.fastjson.JSONArray;
+import com.google.common.collect.Lists;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.*;
+import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dto.ChbCalendarInfo001Dto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dto.ChbCalendarInfoDto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.service.ChbCalendarInfo001Service;
+import com.joyintech.tams.svreport.chb.businessdatamaintain.chbinvesttrade.dto.ChbInvestTradeDto;
+import com.joyintech.tams.svreport.chb.common.util.ErrdataConvertUtil;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,9 +36,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**

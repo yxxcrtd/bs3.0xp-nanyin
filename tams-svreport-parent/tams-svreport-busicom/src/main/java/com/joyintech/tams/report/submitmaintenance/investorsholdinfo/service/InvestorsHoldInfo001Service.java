@@ -1039,9 +1039,8 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 						.get(dataKey + GlobalConstant.UNDER_LINE + SEND_STATUS_01).getRegistSeqno());
 
 				// add by etliu 20180829 start
-				if (isDB2DataBase) {
-					chbInvestholdInfoSub.setSumitSeq(chbInvestholdInfoSub.getRegistSeqno());
-				}
+				chbInvestholdInfoSub.setSumitSeq(chbInvestholdInfoSub.getRegistSeqno());
+
 				// add by etliu 20180829 end
 				subListUpdate.add(chbInvestholdInfoSub);
 			} else {
@@ -1054,9 +1053,8 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 				index++;
 				}
 				// add by etliu 20180829 start
-				if (BaseCommonCheckService.isMYSQLDataBase() || isDB2DataBase) {
-					chbInvestholdInfoSub.setSumitSeq(chbInvestholdInfoSub.getRegistSeqno());
-				}
+				chbInvestholdInfoSub.setSumitSeq(chbInvestholdInfoSub.getRegistSeqno());
+
 				// add by etliu 20180829 end
 				subListInsert.add(chbInvestholdInfoSub);
 			}
@@ -1296,9 +1294,8 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 						.get(dataKey + GlobalConstant.UNDER_LINE + SEND_STATUS_01).getRegistSeqno());
 
 				// add by etliu 20180829 start
-				if (isDB2DataBase) {
-				    chbInvestholdInfoSub.setSumitSeq(chbInvestholdInfoSub.getRegistSeqno());
-				}
+				chbInvestholdInfoSub.setSumitSeq(chbInvestholdInfoSub.getRegistSeqno());
+
 				// add by etliu 20180829 end
 				subListUpdate.add(chbInvestholdInfoSub);
 			} else {
@@ -1310,9 +1307,8 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 						);
 				index++;
 				}
-				if (BaseCommonCheckService.isMYSQLDataBase() || isDB2DataBase) {
-				    chbInvestholdInfoSub.setSumitSeq(chbInvestholdInfoSub.getRegistSeqno());
-				}
+				chbInvestholdInfoSub.setSumitSeq(chbInvestholdInfoSub.getRegistSeqno());
+
 				subListInsert.add(chbInvestholdInfoSub);
 				}
 			}

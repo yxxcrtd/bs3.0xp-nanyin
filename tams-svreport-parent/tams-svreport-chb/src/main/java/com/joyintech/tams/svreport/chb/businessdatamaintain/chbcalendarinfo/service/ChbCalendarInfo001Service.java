@@ -23,6 +23,7 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.InterfFile;
 import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
 import com.joyintech.tams.common.svreport.base.service.BatchInsertService;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
@@ -33,13 +34,16 @@ import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dao.ChbCalendarInfoMapper;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dto.ChbCalendarInfo001Dto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dto.ChbCalendarInfoDto;
+import com.joyintech.tams.svreport.chb.businessdatamaintain.chbinvesttrade.dto.ChbInvestTradeDto;
 import com.joyintech.tams.svreport.chb.common.util.DuplicateDataUtil;
 import com.joyintech.tams.svreport.chb.common.util.ExcelUtil;
+import com.joyintech.tams.svreport.interf.chb.baseinfo.service.SvrHolidayFileImpService;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,6 +67,8 @@ public class ChbCalendarInfo001Service extends CommonExportService<ChbCalendarIn
 
     public static String CONFIG_FILE = "/com/joyintech/tams/svreport/chb/businessdatamaintain/chbcalendarinfo/conf/export_conf.xml";
     private final Logger logger = LoggerFactory.getLogger(ChbCalendarInfo001Service.class);
+    @Autowired
+    private SvrHolidayFileImpService svrHolidayFileImpService;
 
     /**
      * 表名
@@ -162,7 +168,7 @@ public class ChbCalendarInfo001Service extends CommonExportService<ChbCalendarIn
      * @param fileName 导入的文件名
      * @return 处理结果
      */
-    public AjaxResult checkConfirmMsgForImportData(String fileName)  {
+    public AjaxResult checkConfirmMsgForImportData(String fileName) {
 
         AjaxResult webResult = new AjaxResult();
         // 检查文件名是否包含汇率行情信息
@@ -170,21 +176,46 @@ public class ChbCalendarInfo001Service extends CommonExportService<ChbCalendarIn
             webResult.setMessage(this.getMessage("ImportFileName"), MessageType.错误消息);
             return webResult;
         }
-        List<Map<String, String>> list = Lists.newArrayList();
-        try {
-            list = dataMapAnalysis(fileName);
-        } catch (Exception e) {
-            logger.error("解析导入文件异常:{}", e.getMessage());
-        }
-        if(list.size()<1){
-            webResult.setMessage("请勿上传空文件", MessageType.错误消息);
+        List<List<String>> dataList = ExcelUtil.getDataList1(fileName);
+        List<List<String>> tempList = ExcelUtil.getTempList1(fileName);
+        List<String> headList = new ArrayList<>(3);
+        headList.add("日期");
+        headList.add("市场日历类型");
+        headList.add("是否节假日");
+        //校验文件中列是否一致
+        List<ExcelValidDto> tempCheckResult = ExcelUtil.checkExcelTemp(tempList, headList);
+        if (!StringUtil.isEmptyList(tempCheckResult)) {
+            webResult.setMessage(this.getMessage("ImportFileTemplate"), MessageType.错误消息);
             return webResult;
         }
-        int i = chbCalendarInfoMapper.countDuplicatedData(list);
-        if(i>0){
-            String[] checkEuplicatedKeys ={"CALENDAR_ID","CDATE"};
-            int dup = DuplicateDataUtil.countDuplicatedData(list, checkEuplicatedKeys);
-            webResult.setMessage(this.getMessage("SvrDuplicateMessage",dup,i), MessageType.确认消息);
+
+        //List<List<String>>转成List<Map<String, String>>
+        List<Map<String, String>> mapList = this.convertMapList(dataList);
+        //check包含DB和业务CHECK
+        List<ExcelValidDto> excelValidList = baseCommonCheckService.checkDataAll(CHECK_FLAG, mapList, TABLE_NAME, fileName, TABLE_NAME, TABLE_NAME, null, null);
+        //总数据
+        int count = mapList.size();
+        //待处理数据
+        long countA = mapList.stream().filter(ele -> Objects.equals("A", ele.get("STATUS"))).count();
+        //无法接入系统的数据
+        long countR = excelValidList.stream().filter(e -> Objects.equals("0未导入", e.getValidKey())).count();
+        webResult.setMessage(this.getMessage("ChbImportMessage", count - countA, countR, countA), MessageType.确认消息);
+        //按500条分页
+        List<List<Map<String, String>>> partitionList = Lists.partition(mapList, PAGE_SIZE);
+        //数据重复的个数
+        int duplicateCount = 0;
+        for (List<Map<String, String>> list : partitionList) {
+            int i = chbCalendarInfoMapper.selectMstHoliday(list);
+            if (i > 0) {
+                duplicateCount += i;
+            }
+        }
+        //存在重复数据提示错误
+        if (duplicateCount > 0) {
+            List<JoyinMessage> joyinMessages = new ArrayList<>(1);
+            JoyinMessage ms = new JoyinMessage(this.getMessage("ChbImportDuplicateMessage", duplicateCount), MessageType.确认消息);
+            joyinMessages.add(ms);
+            webResult.setJoyinMessages(joyinMessages);
         }
         return webResult;
     }
@@ -198,14 +229,35 @@ public class ChbCalendarInfo001Service extends CommonExportService<ChbCalendarIn
      */
     @Transactional(rollbackFor = Exception.class)
     public List<ExcelValidDto> importData(String fileName) throws FileNotFoundException, ParseException {
-        List<Map<String, String>> list = Lists.newArrayList();
-        try {
-            list = dataMapAnalysis(fileName);
-        } catch (Exception e) {
-            logger.error("解析导入文件异常:{}", e.getMessage());
+        //根据文件名获取文件数据
+        List<List<String>> dataList = ExcelUtil.getDataList1(fileName);
+
+        //List<List<String>>转成List<Map<String, String>>
+        List<Map<String, String>> mapList = this.convertMapList(dataList);
+
+        //check包含DB和业务CHECK
+        List<ExcelValidDto> excelValidList = baseCommonCheckService.checkDataAll(CHECK_FLAG, mapList, TABLE_NAME, fileName, TABLE_NAME, TABLE_NAME, null, null);
+
+        List<ChbCalendarInfo001Dto> dtoList = this.convertToBean(mapList);
+        //按500条分页
+        List<List<ChbCalendarInfo001Dto>> partitionList = Lists.partition(dtoList, PAGE_SIZE);
+        //小于998条数据，批量分页插入
+        if ( dtoList.size() < 998 ) {
+            //批量入库
+            for (List<ChbCalendarInfo001Dto> list : partitionList) {
+                chbCalendarInfoMapper.insertBatchMstHoliday(list);
+            }
+        } else {
+            //sqlloader插入
+            ImpTable table = new ImpTable(TABLE_NAME);
+            table.setColumns(ImportGenerator.createImpTableColumns(table.getName()));
+            // 临时文件存放目录
+            String tmpPath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+
+            batchInsertService.exeBatchldr(tmpPath, dtoList, table);
         }
-        List<ExcelValidDto> listExcel = new ArrayList<ExcelValidDto>();
-        return listExcel;
+
+        return excelValidList;
     }
 
 
@@ -310,5 +362,13 @@ public class ChbCalendarInfo001Service extends CommonExportService<ChbCalendarIn
         });
 
         return list;
+    }
+
+    public List<ChbCalendarInfo001Dto> selectByKeys(List<ChbCalendarInfo001Dto> dtoList) {
+        return chbCalendarInfoMapper.selectByKeys(dtoList);
+    }
+
+    public List<ChbCalendarInfo001Dto> selectAll(Map<String, Object> params) {
+        return chbCalendarInfoMapper.selectInfo(params);
     }
 }

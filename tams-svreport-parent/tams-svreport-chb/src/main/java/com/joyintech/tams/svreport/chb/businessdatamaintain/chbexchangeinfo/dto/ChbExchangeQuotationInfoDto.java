@@ -72,6 +72,10 @@ public class ChbExchangeQuotationInfoDto extends ChbExchargeQuote implements Pro
      */
     private String statusValid;
 
+    private String orgData;
+
+    private String datauuid;
+
     // updateFlg 02 不展示  01 显示
     public String getUpdateFlg() {
         if(!StringUtil.isEmpty(statusValid) && StringUtil.equals(DictCodeList.维护数据状态_删除.getValue(), statusValid)){
@@ -186,6 +190,23 @@ public class ChbExchangeQuotationInfoDto extends ChbExchargeQuote implements Pro
         this.elementId = elementId;
     }
 
+    public String getOrgData() {
+        return orgData;
+    }
 
+    public void setOrgData(String orgData) {
+        this.orgData = orgData;
+    }
 
+    public String getTradeDateStr(){
+        return null !=getTradeDate()? com.joyintech.framework.util.DateUtil.format(getTradeDate()):null;
+    }
+
+    public String getDatauuid() {
+        return datauuid;
+    }
+
+    public void setDatauuid(String datauuid) {
+        this.datauuid = datauuid;
+    }
 }
