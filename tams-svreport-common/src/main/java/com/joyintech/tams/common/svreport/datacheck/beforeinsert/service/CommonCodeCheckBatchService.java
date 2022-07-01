@@ -272,13 +272,9 @@ public class CommonCodeCheckBatchService {
             }
             dataMap.put("ERRMSG",errMsg+sb.toString());
         }
-        Collections.sort(excelValidDtoList,new Comparator<ExcelValidDto>() {
-            @Override
-            public int compare(ExcelValidDto o1, ExcelValidDto o2) {
-                // o1在前：根据age从小到大进行排序
-                return Integer.valueOf(o1.getRowNum())-Integer.valueOf(o2.getRowNum());
-            }
-        });
+        if (CollectionUtils.isNotEmpty(excelValidDtoList)) {
+            this.excelValidListSort(excelValidDtoList);
+        }
     }
 
     private void checkChbInvestTrade(List<ExcelValidDto> excelValidDtoList, Map<String, String> dataMap, int i) {
