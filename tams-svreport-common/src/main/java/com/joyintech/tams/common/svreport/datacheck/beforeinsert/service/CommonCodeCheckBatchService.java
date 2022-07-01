@@ -476,59 +476,46 @@ public class CommonCodeCheckBatchService {
                     chbSalerRewPenaErrodataList.add(chbSalerRewPenaErrodata);
                 }
             }
-
-
-            }
+        }
 
 		//错误信息入库
-        if (StringUtil.isEmptyList(chbAssetInfoErrorList)){
-            // 销售错误信息表入库
-            if(!chbSalerStlDeaErrodataList.isEmpty()){
-                deleteChbSalerStlDeaErrodataByTradeNo(chbSalerStlDeaErrodataList);
-                insertChbSalerStlDeaErrodata(chbSalerStlDeaErrodataList);
-            }
-            //销售人员信息错误表入库
-            else if(!chbSalerIdenErrodataList.isEmpty()){
-                deleteChbSalerIdenErrodataByNo(chbSalerIdenErrodataList);
-                insertChbSalerIdenErrodata(chbSalerIdenErrodataList);
-            }
-            //总部或分支机构信息错误表入库
-            else if(!chbSalerInstErrodataList.isEmpty()) {
-                deleteChbSalerInstErrodataByNo(chbSalerInstErrodataList);
-                insertChbSalerInstErrodata(chbSalerInstErrodataList);
-            }
-            //销售人员惩奖记录信息入库
-            else if(!chbSalerRewPenaErrodataList.isEmpty()) {
-                deleteChbSalerRewErrodataByNo(chbSalerRewPenaErrodataList);
-                insertChbSalerRewErrodata(chbSalerRewPenaErrodataList);
-            }
-
-            else if(!erroList.isEmpty()){
-                insertErroData(erroList);
-            }
-
-        }else{
-            // 资产要素错误信息入库
-            if(!chbAssetInfoErrorList.isEmpty()){
-                deleteAssetInfoErrorDataByAssetCode(chbAssetInfoErrorList);
-                insertChbAssetInfoErroData(chbAssetInfoErrorList);
-            }
+        // 资产要素错误信息入库
+        if (! StringUtil.isEmptyList(chbAssetInfoErrorList)){
+            deleteAssetInfoErrorDataByAssetCode(chbAssetInfoErrorList);
+            insertChbAssetInfoErroData(chbAssetInfoErrorList);
+        }
+        // 销售错误信息表入库
+        else if(!chbSalerStlDeaErrodataList.isEmpty()){
+            deleteChbSalerStlDeaErrodataByTradeNo(chbSalerStlDeaErrodataList);
+            insertChbSalerStlDeaErrodata(chbSalerStlDeaErrodataList);
+        }//销售人员信息错误表入库
+        else if(!chbSalerIdenErrodataList.isEmpty()){
+            deleteChbSalerIdenErrodataByNo(chbSalerIdenErrodataList);
+            insertChbSalerIdenErrodata(chbSalerIdenErrodataList);
+        }
+        //总部或分支机构信息错误表入库
+        else if(!chbSalerInstErrodataList.isEmpty()) {
+            deleteChbSalerInstErrodataByNo(chbSalerInstErrodataList);
+            insertChbSalerInstErrodata(chbSalerInstErrodataList);
+        }
+        //销售人员惩奖记录信息入库
+        else if(!chbSalerRewPenaErrodataList.isEmpty()) {
+            deleteChbSalerRewErrodataByNo(chbSalerRewPenaErrodataList);
+            insertChbSalerRewErrodata(chbSalerRewPenaErrodataList);
         }
         //投资交易错误信息入库
-        if(StringUtil.isEmptyList(chbInvestTradeErrordataList)){
-            if(!erroList.isEmpty()){
-                insertErroData(erroList);
-            }
-        }else{
+        else if(!chbInvestTradeErrordataList.isEmpty()) {
             deleteChbInvestTradeErrorData(chbInvestTradeErrordataList);
             insertChbInvestTradeErroData(chbInvestTradeErrordataList);
         }
-        //产品基本信息
-        if(StringUtil.isEmptyList(chbPrdBaseinfoErrordataList)){
-
-        }else{
+        //产品基本信息入库
+        else if(!chbPrdBaseinfoErrordataList.isEmpty()) {
             deleteChbPrdBaseInfoErrorData(chbPrdBaseinfoErrordataList);
             insertChbPrdBaseInfoErroData(chbPrdBaseinfoErrordataList);
+        }
+        // 其它错误信息
+        else if(!erroList.isEmpty()){
+            insertErroData(erroList);
         }
 	}
 
