@@ -3,7 +3,7 @@
  * @auth zhangnian
  */
 (function(){
-    
+
     var getElementById = function(id) {
         return $('#' + entityName_BussRepOtherInvestTargetInfo + '_' + id);
     };
@@ -66,10 +66,16 @@
         }
         if(getElementById('guaType').val()==''){
             getElementById('guaTypeRemark').val('').attr('disabled', true).trigger('change');
+            //当担保方式空值时,需要清空然后置灰
+            getElementById('pledgeType').val('').attr('disabled', true).trigger('change');
+            getElementById('pledgeValue').val('').attr('disabled', true).trigger('change');
+            getElementById('relationFinan').val('').attr('disabled', true).trigger('change');
+            getElementById('natureGuarantee').val('').attr('disabled', true).trigger('change');
         }else{
             getElementById('guaTypeRemark').attr('disabled', false);
         }
     }
+
     $(function() {
         otherrepRateFlagChangeType();
         otherindustryFlagChangeType();
@@ -92,7 +98,6 @@
         getElementById('guaType').change(function(){
             otherbyRepGuaType();
         });
-
     });
 
 }());

@@ -43,7 +43,7 @@
              { title: "主键uuid",field:'registSeqno',visible:false}
             ,{ title: "置灰控制",field:'disabledThing',visible:false}
             ,{field:'maintainStatusName', title: '报送信息维护状态', width:'150',sortField:'maintainStatus'}
-            ,{field:'dataStatusName', title: '数据状态', width:'150',sortField:'dataStatus'}
+            ,{field:'statusValidStr', title: '数据状态', width:'150',sortField:'status'}
             ,{field:'institutionCode', title: '提供销售结算资金服务机构代码', width:'150',sortField:'institutionCode'}
             ,{field:'prdRegistCode', title: '产品登记编码', width:'150',sortField:'prdRegistCode'}
             ,{field:'accountNo', title: '销售结算资金账号', width:'150',sortField:'accountNo'}
@@ -100,15 +100,15 @@
      * 绑定删除事件
      */
     table.bind('click', '.delt', function(data, index) {
-                    if(data.dataStatus !="E"){
+                    if(data.statusValid !="E"){
                         return Joyin.error("只能删除有效数据，请重新选择");
                     }
         var object = {selectedItem: [data], operateType:"delete"};
         Joyin.ajaxJson(basePath + 'report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001/check', object, function(result) {
             Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                WorkFlow.doDeleteList(basePath + 'report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001/delete', object,"SalesTransactionMaintenance001_btn_delete", "SalesTransactionMaintenance002", function(result) {
-                                        table.reload();
-                                    });
+                  Joyin.ajaxJson(basePath + 'report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001/delete', object, function() {
+                         $('#SalesTransactionMaintenance001_btn_search').trigger("click");
+                  });
             });
         });
     });
@@ -177,15 +177,15 @@
                 return;
             }
             for(var i=0;i<selArr.length;i++){
-              if(selArr[i].dataStatus !="E"){
+              if(selArr[i].statusValid !="E"){
                  return Joyin.error("只能删除有效数据，请重新选择");
               }
             }
             var object = {selectedItem: selArr, operateType:"delete"};
             Joyin.ajaxJson(basePath + 'report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001/check', object, function(result) {
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                    WorkFlow.doDeleteList(basePath + 'report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001/delete', object,"SalesTransactionMaintenance001_btn_delete", "SalesTransactionMaintenance002", function(result) {
-                        table.reload();
+                    Joyin.ajaxJson(basePath + 'report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001/delete', object, function() {
+                             $('#SalesTransactionMaintenance001_btn_search').trigger("click");
                     });
                 });
             });

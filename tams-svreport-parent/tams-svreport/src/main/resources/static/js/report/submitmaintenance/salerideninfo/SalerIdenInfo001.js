@@ -40,7 +40,7 @@
         cols:[
              {field:'erroOrInfo', title:'来自erro还是info',visible:false}
             ,{field:'workflowId', title:'错误表的workflowId',visible:false}
-            ,{field:'dataStatusStr', title: '数据状态', width:'150',sortField:'dataStatus'}
+            ,{field:'statusValidStr', title: '数据状态', width:'150',sortField:'statusValid'}
             ,{field:'salerInstCode', title: '销售机构代码', width:'150',sortField:'salerInstCode'}
             ,{field:'salerName', title: '姓名', width:'150',sortField:'salerName'}
             ,{field:'salerSex', title: '性别', width:'150',sortField:'salerSex'}
@@ -107,16 +107,16 @@
      * 绑定删除事件
      */
     table.bind('click', '.delt', function(data, index) {
-                    if(data.dataStatus !="E"){
+                    if(data.statusValid !="E"){
                         return Joyin.error("只能删除有效数据，请重新选择");
                     }
         var object = {selectedItem: [data], operateType:"delete"};
         Joyin.ajaxJson(basePath + 'report/submitmaintenance/salerideninfo/SalerIdenInfo001/check', object, function(result) {
          Joyin.ajaxJson(basePath + 'report/submitmaintenance/salerideninfo/SalerIdenInfo001/deleteCheck', object, function(result1) {
             Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                WorkFlow.doDeleteList(basePath + 'report/submitmaintenance/salerideninfo/SalerIdenInfo001/delete', object,"SalerIdenInfo001_btn_delete", "SalerIdenInfo002", function(result) {
-                                        table.reload();
-                                    });
+                  Joyin.ajaxJson(basePath + 'report/submitmaintenance/salerideninfo/SalerIdenInfo001/delete', object, function() {
+                                     $('#SalerIdenInfo001_btn_search').trigger("click");
+                  });
             });
           });
         });
@@ -188,7 +188,7 @@
                 return;
             }
             for(var i=0;i<selArr.length;i++){
-                if(selArr[i].dataStatus !="E"){
+                if(selArr[i].statusValid !="E"){
                    return Joyin.error("只能删除有效数据，请重新选择");
                 }
             }
@@ -196,8 +196,8 @@
             Joyin.ajaxJson(basePath + 'report/submitmaintenance/salerideninfo/SalerIdenInfo001/check', object, function(result) {
               Joyin.ajaxJson(basePath + 'report/submitmaintenance/salerideninfo/SalerIdenInfo001/deleteCheck', object, function(result1) {
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                    WorkFlow.doDeleteList(basePath + 'report/submitmaintenance/salerideninfo/SalerIdenInfo001/delete', object,"SalerIdenInfo001_btn_delete", "SalerIdenInfo002", function(result) {
-                        table.reload();
+                    Joyin.ajaxJson(basePath + 'report/submitmaintenance/salerideninfo/SalerIdenInfo001/delete', object, function() {
+                                  $('#SalerIdenInfo001_btn_search').trigger("click");
                     });
                 });
               });

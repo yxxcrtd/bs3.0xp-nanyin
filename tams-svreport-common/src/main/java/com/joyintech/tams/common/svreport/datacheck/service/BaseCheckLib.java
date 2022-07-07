@@ -193,7 +193,7 @@ public class BaseCheckLib {
             byte[] b_gbk = srcValue.getBytes("GBK");
             return (b_gbk.length < length);
         } catch (UnsupportedEncodingException e) {
-            logger.error(e.getMessage(),e);
+            logger.debug(e.getMessage(),e);
             return false;
         }
     }
@@ -209,10 +209,12 @@ public class BaseCheckLib {
     public static boolean compareValue(Map<String, String> data, CheckElement rule) {
         boolean r = false;
         String srcValue = data.get(rule.getSrcproperty());
+        srcValue = stripTrailingZeros(srcValue);
         if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
             return true;
 
         String objValue = rule.getObjvalue();
+        objValue = stripTrailingZeros(objValue);
         String compareTo = rule.getCompareto();
         // add by zhangliang 20201023 判断符号如果是!=的场合 start
         // 此处判断是为了处理condition里比较值是空的场合，对于！=也是成立的
@@ -259,6 +261,7 @@ public class BaseCheckLib {
     public static boolean compareProperty(Map<String, String> data, CheckElement rule) {
         boolean r = false;
         String srcValue = data.get(rule.getSrcproperty());
+        srcValue = stripTrailingZeros(srcValue);
         if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
             return true;
 
@@ -272,6 +275,7 @@ public class BaseCheckLib {
         if ( StringUtils.isEmpty(srcValue) )
             return false;
         String objValue = data.get(rule.getObjvalue());
+        objValue = stripTrailingZeros(objValue);
         if ( objValue==null ) objValue="";
 
         switch (compareTo) {
@@ -310,6 +314,7 @@ public class BaseCheckLib {
     public static boolean compareValueAsNumber(Map<String, String> data, CheckElement rule) {
         boolean r = false;
         String srcValue = data.get(rule.getSrcproperty());
+        srcValue = stripTrailingZeros(srcValue);
         if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
             return true;
 
@@ -324,6 +329,7 @@ public class BaseCheckLib {
         if ( StringUtils.isEmpty(srcValue) )
             return false;
         String objValue = rule.getObjvalue();
+        objValue = stripTrailingZeros(objValue);
 
         if (  !isNumeric(srcValue)  || !isNumeric(objValue) ) {
             return false;
@@ -368,6 +374,7 @@ public class BaseCheckLib {
     public static boolean comparePropertyAsNumber(Map<String, String> data, CheckElement rule) {
         boolean r = false;
         String srcValue = data.get(rule.getSrcproperty());
+        srcValue = stripTrailingZeros(srcValue);
         if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
             return true;
 
@@ -382,6 +389,7 @@ public class BaseCheckLib {
         if ( StringUtils.isEmpty(srcValue) )
             return false;
         String objValue = data.get(rule.getObjvalue());
+        objValue = stripTrailingZeros(objValue);
         if ( objValue==null ) objValue="";
 
         if (  !isNumeric(srcValue)  || !isNumeric(objValue) ) {
@@ -613,6 +621,7 @@ public class BaseCheckLib {
     public static boolean isNumber(Map<String, String> data, CheckElement rule) {
 
         String srcValue = data.get(rule.getSrcproperty());
+        srcValue = stripTrailingZeros(srcValue);
         if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
             return true;
         if ( StringUtils.isEmpty(srcValue) )
@@ -645,6 +654,24 @@ public class BaseCheckLib {
      * @see
      * @since 1.0
      */
+
+    //add by lingxq on 2021-05-07 for mysql小数点后自动按照定义的长度补充0，先去0再校验------>>>>>>
+    private static String stripTrailingZeros(String srcValue) {
+        if(!StringUtils.isBlank(srcValue)) {
+            srcValue = srcValue.trim();
+        }
+        if(isNumeric(srcValue)) {
+            BigDecimal value = new BigDecimal(srcValue);
+            BigDecimal noZeros = value.stripTrailingZeros();
+            srcValue = noZeros.toPlainString();
+        }else if(null !=srcValue && srcValue.startsWith("0E-")){
+            double value = new BigDecimal(srcValue).doubleValue();
+            srcValue = Double.toString(value);
+        }
+        return srcValue;
+    }
+    //add by lingxq on 2021-05-07 for mysql小数点后自动按照定义的长度补充0，先去0再校验------<<<<<<<
+
     public static boolean isCustomizedString(Map<String, String> data, CheckElement rule) {
 
         String srcValue = data.get(rule.getSrcproperty());
@@ -657,7 +684,7 @@ public class BaseCheckLib {
         try {
             return srcValue.matches(format);
         } catch(Exception e) {
-            logger.error(e.getMessage(),e);
+            logger.debug(e.getMessage(),e);
             return false;
         }
     }
@@ -682,7 +709,7 @@ public class BaseCheckLib {
         try {
             ff= srcValue.matches(format);
         } catch(Exception e) {
-            logger.error(e.getMessage(),e);
+            logger.debug(e.getMessage(),e);
             return false;
         }
         //白名单验证不通过后继续检查有没有存在生僻字库中
@@ -900,6 +927,7 @@ public class BaseCheckLib {
     public static boolean isNumber2(Map<String, String> data, CheckElement rule) {
 
         String srcValue = data.get(rule.getSrcproperty());
+        srcValue = stripTrailingZeros(srcValue);
         if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
             return true;
         if ( StringUtils.isEmpty(srcValue) )
@@ -1292,16 +1320,22 @@ public class BaseCheckLib {
      * @return
      */
     public static int compareToAll(String srcValue, String objValue) {
+        int data = 0;
         if(StringUtil.isNotEmpty(srcValue) && StringUtil.isNotEmpty(objValue)){
             if(isNumberStr(srcValue) && isNumberStr(objValue)){
-                return new BigDecimal(srcValue).compareTo(new BigDecimal(objValue));
+                data = new BigDecimal(srcValue).compareTo(new BigDecimal(objValue));
             }else if(isDateStr(srcValue) && isDateStr(objValue)){
-                return DateUtil.parse(srcValue).compareTo(DateUtil.parse(objValue));
-            }else{
-                return compareToAll(srcValue, objValue);
+                data = DateUtil.parse(srcValue).compareTo(DateUtil.parse(objValue));
             }
+            //当一个值为空会无穷递归修改
+        }else if(StringUtil.isEmpty(srcValue)){
+            data = -1;
+        }else if(StringUtil.isEmpty(objValue)){
+            data = 1;
+        }else if(StringUtil.isEmpty(objValue)&&StringUtil.isEmpty(srcValue)){
+            data = 0;
         }
-        return compareToAll(srcValue, objValue);
+        return data;
     }
 
     /**
@@ -1313,6 +1347,7 @@ public class BaseCheckLib {
         try {
             new BigDecimal(str).toString();
         } catch (Exception e) {
+            logger.debug("转换数字异常：",e);
             return false;//异常 说明包含非数字
         }
         return true;
@@ -1327,6 +1362,7 @@ public class BaseCheckLib {
         try {
             DateUtil.parse(str).toString();
         } catch (Exception e) {
+            logger.debug("转换日期异常：",e);
             return false;//异常 说明包含非日期
         }
         return true;

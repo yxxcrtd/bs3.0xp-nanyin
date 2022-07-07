@@ -234,6 +234,18 @@ public class PbcMonthAssetPositionDto extends CommonProductRatingDto implements 
      */
     private  String  isPerpetual;
 
+    /**
+     * 市场机构机构规模
+     */
+    private String  partyType1;
+
+    public String getPartyType1() {
+        return partyType1;
+    }
+
+    public void setPartyType1(String partyType1) {
+        this.partyType1 = partyType1;
+    }
 
     public Date getPayDate() {
 		return payDate;
@@ -265,8 +277,27 @@ public class PbcMonthAssetPositionDto extends CommonProductRatingDto implements 
 
 	//  END add by wujian 20200317 多法人改造--单产品报表生成 区分部门
 
-    
-    
+
+    private String bankCapital;
+
+    private String sharesType;
+
+    public String getBankCapital() {
+        return bankCapital;
+    }
+
+    public void setBankCapital(String bankCapital) {
+        this.bankCapital = bankCapital;
+    }
+
+    public String getSharesType() {
+        return sharesType;
+    }
+
+    public void setSharesType(String sharesType) {
+        this.sharesType = sharesType;
+    }
+
     public String getIsChlBtm() {
 		return isChlBtm;
 	}

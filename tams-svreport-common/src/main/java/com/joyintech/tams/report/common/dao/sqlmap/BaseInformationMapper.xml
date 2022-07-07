@@ -273,11 +273,15 @@ select * from (SELECT t.*,ROWNUM ROW_ID FROM ${tableId} t WHERE
 	<insert id="insertData" parameterType="java.util.Map" statementType="STATEMENT">
 		INSERT INTO ${tableId}
 		<foreach collection="map" index="key" item="value" open="(" separator="," close=")">
+			<if test="value!=null">
 				${key}
+			</if>
 		</foreach>
 		VALUES
 		<foreach collection="map" index="key" item="value" open="(" separator="," close=")">
+			<if test="value!=null">
 				${value}
+			</if>
 		</foreach>
 	</insert>
 	
@@ -333,6 +337,15 @@ select * from (SELECT t.*,ROWNUM ROW_ID FROM ${tableId} t WHERE
 				${key} = ${value}
 		</foreach>
 			AND status != 'D'
+		</where>
+	</select>
+
+	<select id="checkNoStatusDataIsExist" parameterType="java.util.Map" statementType="STATEMENT" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM ${tableId}
+		<where>
+			<foreach collection="map" index="key" item="value" separator="AND">
+				${key} = ${value}
+			</foreach>
 		</where>
 	</select>
 	<select id="queryAllColumns" resultType="java.lang.String" parameterType="java.lang.String">

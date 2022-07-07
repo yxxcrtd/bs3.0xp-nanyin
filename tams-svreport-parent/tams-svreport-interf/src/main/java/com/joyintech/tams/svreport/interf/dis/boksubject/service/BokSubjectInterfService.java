@@ -6,6 +6,20 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Lists;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.common.base.entity.BokSubjectErrodataWithBLOBs;
+import com.joyintech.tams.common.base.entity.ChbInterfConfigDto;
+import com.joyintech.tams.common.svreport.base.service.BatchInsertService;
+import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.service.CommonCodeCheckBatchService;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.report.interf.common.constant.InterfConstants;
+import com.joyintech.tams.report.interf.common.imp.ImportGenerator;
+import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +45,10 @@ public class BokSubjectInterfService extends FileImpService {
 
 	@Autowired
 	private DisBokSubjectMapper bokSubjectMapper;
+	@Autowired
+	private BatchInsertService batchInsertService;
+	@Autowired
+	private CommonCodeCheckBatchService commonCodeCheckBatchService;
 	/**
 	 * 长sql最大一次插入或者更新条数
 	 */
@@ -41,7 +59,7 @@ public class BokSubjectInterfService extends FileImpService {
 	 * 重写saveData方法 科目表信息入库 listData 费用交易list saveFlag 入库标识
 	 */
 	@Override
-	public String saveData(List<Map<String, String>> listData, String saveFlag, String dateSource) {
+	public String saveData(List<Map<String, String>> listData, String saveFlag, String dataSource) {
 		if (StringUtil.isEmptyList(listData)) {
 			logger.info("saveData方法参数listData为空。");
 			return "success";
@@ -51,78 +69,36 @@ public class BokSubjectInterfService extends FileImpService {
 		List<BokSubject> list = new ArrayList<>();
 		// modify by convertMapToEntity yangxianjiu 2022-01-19 start
 		List<BokSubject> listTemp = new ArrayList<>();
-		list = (List<BokSubject>) convertMapToEntity(listData,BokSubject.class);
-		list.stream().forEach(dto->{
-			if (listTemp.size() < reportInsertLongCount) {
-				listTemp.add(dto);
-			} else if (listTemp.size() >= reportInsertLongCount) {
-				bokSubjectMapper.insert(listTemp);
-				listTemp.clear();
-				listTemp.add(dto);
-			}
-		});
-		if (CollectionUtils.isNotEmpty(listTemp)) {
-			bokSubjectMapper.insert(listTemp);
-		}
-		// modify by convertMapToEntity yangxianjiu 2022-01-19 end
-		// 循环参数
-//		for (Map<String, String> map : listData) {
-//			BokSubject dto = new BokSubject();
-//			try{
-//                // 兼容老接口PROD_ID
-//                dto.setBooksetId(map.get("PROD_ID"));
-//				if(dto.getBooksetId() == null){
-//					dto.setBooksetId(map.get("BOOKSET_ID"));
-//				}
-//				// 兼容老接口SUBJECT_ID
-//				dto.setSubjectNo(map.get("SUBJECT_ID"));
-//                if(dto.getSubjectNo() == null){
-//                    dto.setSubjectNo(map.get("SUBJECT_NO"));
-//                }
-//				dto.setSubjectName(map.get("SUBJECT_NAME"));
-//				dto.setFsubjectId(map.get("FSUBJECT_ID"));
-//				dto.setSubjectType(map.get("SUBJECT_TYPE"));
-//				dto.setSubjectLevel(DisInterfDecimalUtil.str2Long(map.get("SUBJECT_LEVEL")));
-//				dto.setGenDetsubFlag(map.get("GEN_DETSUB_FLAG"));
-//				dto.setStatus(map.get("STATUS"));
-//				dto.setCreateUser("interf");
-//				dto.setCreateDept(null);
-//				dto.setUpdateUser("interf");
-//			}catch(Exception e){
-//				logger.error("解析数据错误：",e.getMessage(),e);
-//           		return  "fail";
-//			}
-//			try {
-//				if (StringUtil.isNotEmpty(map.get("CREATE_TIME"))) {
-//					dto.setCreateTime(DateUtil.parseDate(map.get("CREATE_TIME"),
-//							new String[] { DateUtil.DEFAULT_DATETIME_FORMAT_ODS }));
-//				} else {
-//					dto.setCreateTime(new Date());
-//				}
-//				if (StringUtil.isNotEmpty(map.get("UPDATE_TIME"))) {
-//					dto.setUpdateTime(DateUtil.parseDate(map.get("UPDATE_TIME"),
-//							new String[] { DateUtil.DEFAULT_DATETIME_FORMAT_ODS }));
-//				} else {
-//					dto.setUpdateTime(new Date());
-//				}
-//			} catch (ParseException e) {
-//				logger.error("transMap2Dto方法转换CreateTime或UpdateTime异常");
-//				logger.error(e.getMessage(),e);
-//           		return  "fail";
-//			}
-//			if (list.size() < reportInsertLongCount) {
-//				list.add(dto);
-//			} else if (list.size() >= reportInsertLongCount) {
-//				bokSubjectMapper.insert(list);
-//				list.clear();
-//				list.add(dto);
-//			}
-//		}
-//		// 如果循环结束，小于最大值
-//		if (CollectionUtils.isNotEmpty(list)) {
-//			bokSubjectMapper.insert(list);
-//		}
+		list = (List<BokSubject>) convertMapToEntity(listData,BokSubject.class, dataSource);
+		List<BokSubjectErrodataWithBLOBs> bokSubjectErrodataList = Lists.newArrayList();
+		list.forEach(e->{
+			e.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
 
+			BokSubjectErrodataWithBLOBs bokSubjectErrodataWithBLOBs = new BokSubjectErrodataWithBLOBs();
+			bokSubjectErrodataWithBLOBs.setBooksetId(e.getBooksetId());
+			bokSubjectErrodataWithBLOBs.setSubjectNo(e.getSubjectNo());
+			bokSubjectErrodataList.add(bokSubjectErrodataWithBLOBs);
+		});
+		commonCodeCheckBatchService.deleteBokSubjectErrodata(bokSubjectErrodataList);
+		//add by zhoubin 20220518 start
+		if (list.size()<reportInsertLongCount) {
+			bokSubjectMapper.insert(list);
+		}else {
+			try {
+				//sqlloader插入
+				ImpTable table = new ImpTable("BOK_SUBJECT");
+				table.setColumns(ImportGenerator.createImpTableColumns(table.getName()));
+				// 临时文件存放目录
+				String tmpPath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+
+				batchInsertService.exeBatchldr(tmpPath, list, table);
+			} catch (Exception e) {
+				logger.error("sqlloader插入失败{}",e.getMessage());
+				return "fail";
+			}
+
+		}
+		//add by zhoubin 20220518 end
 		return "success";
 	}
 
@@ -156,6 +132,26 @@ public class BokSubjectInterfService extends FileImpService {
 	            rs = saveData(listData, null,null);
 	        }
 	        return rs;
+	}
+
+	@Override
+	public String importDB(List<ExcelValidDto> listExcel, List<Map<String, String>> listData, InterfFile interfFile, String date) {
+
+		ChbInterfConfigDto interfConfig = ChbInterfUtil.queryInterfConfigByInterfid(InterfDefine.科目数据.getCode());
+		if (interfConfig == null){
+			logger.info("CHB_INTERF_CONFIG表中无配置项！");
+			return "fail";
+		}
+		checkImportData(listExcel,listData, interfFile.getFilename(), ChbCheckTableInfo.科目定义,interfConfig.getCoverFlag(), listExcel == null? "I" : "D");
+
+		String saveFlag = interfConfig.getContentType();
+		String result = "";
+		if(listData.size()>0){
+			result=saveData(listData, listExcel == null?saveFlag: InterfConstants.SAVEFLAG_ADD, listExcel == null? "I" : "D");
+		}
+		// 更新系统配置时间
+		ChbInterfUtil.updateInterfTimeBySysdate("BOK_SUBJECT");
+		return result;
 	}
 
 }
