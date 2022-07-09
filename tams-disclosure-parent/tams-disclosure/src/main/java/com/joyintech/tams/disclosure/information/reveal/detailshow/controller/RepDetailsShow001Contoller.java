@@ -9,18 +9,29 @@
 */
 package com.joyintech.tams.disclosure.information.reveal.detailshow.controller;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.sql.DataSource;
-
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectDto;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.TreeNode;
+import com.joyintech.framework.util.*;
+import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.entity.RepReveal;
+import com.joyintech.tams.common.util.JacksonUtil;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.service.GetPrdInfoSelectService;
+import com.joyintech.tams.disclosure.busicommon.infodisclosure.repcheck.service.RepCheckInfoService;
+import com.joyintech.tams.disclosure.busicommon.infodisclosure.reportDeal.service.ReportDealService;
+import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.ReportManager;
+import com.joyintech.tams.disclosure.common.common.util.ReportGlobalConstant;
+import com.joyintech.tams.disclosure.information.config.reporttree.service.ReportTreeMenuConfiguration001Service;
+import com.joyintech.tams.disclosure.information.reveal.detailshow.dto.RepDetailsShow001Dto;
+import com.joyintech.tams.disclosure.information.reveal.detailshow.service.RepDetailsShow001Service;
+import com.joyintech.tams.disclosure.information.reveal.detailshow.service.WebOfficeObject;
+import com.joyintech.tams.disclosure.information.reveal.detailshow.service.iMsgServer2015;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,32 +43,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.ajax.MessageType;
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.select.SelectDto;
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.select.TreeNode;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.common.base.entity.RepReveal;
-import com.joyintech.tams.common.util.JacksonUtil;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.service.GetPrdInfoSelectService;
-import com.joyintech.tams.disclosure.busicommon.infodisclosure.repcheck.service.RepCheckInfoService;
-import com.joyintech.tams.disclosure.busicommon.infodisclosure.reportDeal.service.ReportDealService;
-import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.ReportManager;
-import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.ReportInfo;
-import com.joyintech.tams.disclosure.common.common.util.ReportGlobalConstant;
-import com.joyintech.tams.disclosure.information.config.reporttree.service.ReportTreeMenuConfiguration001Service;
-import com.joyintech.tams.disclosure.information.reveal.detailshow.dto.RepDetailsShow001Dto;
-import com.joyintech.tams.disclosure.information.reveal.detailshow.service.RepDetailsShow001Service;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 /**
  * 模板示例<br>
  * 账套管理
@@ -91,6 +84,7 @@ public class RepDetailsShow001Contoller extends BaseController {
     
     @Autowired
 	@Qualifier("masterDataSource") DataSource master;
+
     /**
      * 日志
      */
@@ -195,11 +189,38 @@ public class RepDetailsShow001Contoller extends BaseController {
         RepDetailsShow001Dto dto = repDetailsShow001Service.getRepScreenList(repId);
         return dto;
     }
-    
-    @SuppressWarnings("finally")
-	@RequestMapping("/downFileAndSubmit")
+
+//	@SuppressWarnings("finally")
+//	@RequestMapping("/downFileListAndSubmit")
+//	@ResponseBody
+//	public AjaxResult downFileListAndSubmit(){
+//		AjaxResult value = new AjaxResult();
+//		try {
+//			boolean flag = repDetailsShow001Service.downFileListAndSubmit(RequestUtil.getPageParam());
+//			if(flag){
+//				value.setMessage("生成成功", MessageType.提示消息);
+//			}else{
+//				value.setMessage("生成失败", MessageType.错误消息);
+//			}
+//		}catch (MalformedURLException e) {
+//			value.setMessage("生成失败:"+e.getMessage(), MessageType.错误消息);
+////            logger.error(e.getMessage(),e);
+//			logger.error("error:",e);
+//		}finally{
+//			//return value;
+//		}
+//		return value;
+//	}
+
+
+	/**
+	 * 生成报表
+	 * @return
+	 */
+	@SuppressWarnings("finally")
+	@RequestMapping("/submitWord")
     @ResponseBody
-    public AjaxResult downFileAndSubmit(){
+    public AjaxResult submitWord(){
         AjaxResult value = new AjaxResult();
         List<ValidMessage> checkList = new ArrayList<ValidMessage>();
         try {
@@ -245,7 +266,7 @@ public class RepDetailsShow001Contoller extends BaseController {
 //            			if(checkList.size() == 0){
 //            				
 //            			}
-            			if(!repDetailsShow001Service.downFileAndSubmit(params)){
+            			if(!repDetailsShow001Service.submitWord(params)){
         					flag = false;
         				}
             			
@@ -276,29 +297,6 @@ public class RepDetailsShow001Contoller extends BaseController {
 		return value;
 	}
     
-    @SuppressWarnings("finally")
-	@RequestMapping("/downFileListAndSubmit")
-    @ResponseBody
-    public AjaxResult downFileListAndSubmit(){
-        AjaxResult value = new AjaxResult();
-        try {
-            boolean flag = repDetailsShow001Service.downFileListAndSubmit(RequestUtil.getPageParam());
-            if(flag){
-                value.setMessage("生成成功", MessageType.提示消息);
-            }else{
-                value.setMessage("生成失败", MessageType.错误消息);
-            }
-        }catch (MalformedURLException e) {
-            value.setMessage("生成失败:"+e.getMessage(), MessageType.错误消息);
-//            logger.error(e.getMessage(),e);
-            logger.error("error:",e);
-        }finally{
-            //return value;
-        }
-		return value;
-	}
-    
-    
     /**
      * 导出合并文档
      * 
@@ -310,19 +308,10 @@ public class RepDetailsShow001Contoller extends BaseController {
      */
     @RequestMapping("mergeExport")
     public ResponseEntity<byte[]> mergeExport() throws IOException {
-        return repDetailsShow001Service.mergeExport(RequestUtil.getPageParam());
+        return repDetailsShow001Service.exportReport(RequestUtil.getPageParam());
     }
     
-    /*@RequestMapping("/getProdInfo")
-    @ResponseBody 
-    public String getProdInfo() throws Exception {
-        List<ProdInfoDto>prodInfoList = repDetailsShow001Service.getProdInfo();
-        Map<String,Object> prodMap = new HashMap<String,Object>();
-        prodMap.put("prodInfoList", prodInfoList);
-        String json = JSONObject.toJSONString(prodMap);
-        return json;
-    }*/
-    
+
     /**
      * 
      * 获取查询条数
@@ -346,70 +335,71 @@ public class RepDetailsShow001Contoller extends BaseController {
     		return null;
     	}
     }
-    @SuppressWarnings("finally")
-   	@RequestMapping("/showDetailHtml")
-       @ResponseBody
-       public AjaxResult showDetailHtml(){
-           AjaxResult value = new AjaxResult();
-           try {
-           	Map<String,Object> params = RequestUtil.getPageParam();
-//           	String operateType = params.get("operateType").toString();
-           	RepReveal repReveal = new RepReveal();
-           	if(StringUtil.isNotEmpty(params.get("portnum"))){
-               	repReveal.setProdid(params.get("portnum").toString());
-           	}
-           	if(params.get("startDate") != null) {
-           		repReveal.setStartDate(DateUtil.parse(params.get("startDate").toString()));
-           	}
-           	if(params.get("endDate") != null) {
-           		repReveal.setEndDate(DateUtil.parse(params.get("endDate").toString()));
-           	}
-           	String uri = params.get("uri").toString();
-           	String result = repDetailsShow001Service.showDetailHtml(uri, repReveal);
-           	value.setData(result);
-           	if(StringUtil.isEmpty(result)){
-           		value.setMessage("生成失败", MessageType.错误消息);
-           	}
-
-//           	boolean flag = false;
-//           	boolean confirmFlag = true;
+//    @SuppressWarnings("finally")
+//   	@RequestMapping("/showDetailHtml")
+//       @ResponseBody
+//       public AjaxResult showDetailHtml(){
+//           AjaxResult value = new AjaxResult();
+//           try {
+//           	Map<String,Object> params = RequestUtil.getPageParam();
+////           	String operateType = params.get("operateType").toString();
+//           	RepReveal repReveal = new RepReveal();
+//           	if(StringUtil.isNotEmpty(params.get("portnum"))){
+//               	repReveal.setProdid(params.get("portnum").toString());
+//           	}
+//           	if(params.get("startDate") != null) {
+//           		repReveal.setStartDate(DateUtil.parse(params.get("startDate").toString()));
+//           	}
+//           	if(params.get("endDate") != null) {
+//           		repReveal.setEndDate(DateUtil.parse(params.get("endDate").toString()));
+//           	}
+//           	String uri = params.get("uri").toString();
+//           	String result = repDetailsShow001Service.showDetailHtml(uri, repReveal);
+//           	value.setData(result);
+//           	if(StringUtil.isEmpty(result)){
+//           		value.setMessage("生成失败", MessageType.错误消息);
+//           	}
 //
-//               if(flag){
-//                   value.setMessage("生成成功", MessageType.提示消息);
-//               }else if(confirmFlag) {
-//                   value.setMessage("生成失败", MessageType.错误消息);
-//               }
-           }catch (Exception e) {
-               value.setMessage("生成失败:"+e.getMessage(), MessageType.错误消息);
-               logger.error("error:",e);
-           }
-           finally{
-              // return value;
-           }
-		return value;
-	}
-    
-    @RequestMapping(value="/showDetailHtmlNew", method = RequestMethod.POST)
-	public void showDetailHtmlNew(HttpServletRequest request, HttpServletResponse response) {
-    	Map<String,Object> params = RequestUtil.getPageParam();
-    	if(null!=params.get("endDate")){
-    		Date endDate = DateUtil.parse(params.get("endDate").toString());
-    		params.put("endDate", new java.sql.Date(endDate.getTime()));
-    	}
-    	if(null!=params.get("startDate")){
-    		Date endDate = DateUtil.parse(params.get("startDate").toString());
-    		params.put("startDate", new java.sql.Date(endDate.getTime()));
-    	}
-    	ReportInfo r1 = reportManager.getReportByURI(params.get("uri").toString());
-		
-		reportManager.setDataSource(master);
-		
-//		HashMap<String, Object> parameters1 = new HashMap<String, Object>();
-//		parameters1.put("portnum", "A170A3624");
-		
-		reportManager.genReport(r1, params, request, response);
-	}
-    
+////           	boolean flag = false;
+////           	boolean confirmFlag = true;
+////
+////               if(flag){
+////                   value.setMessage("生成成功", MessageType.提示消息);
+////               }else if(confirmFlag) {
+////                   value.setMessage("生成失败", MessageType.错误消息);
+////               }
+//           }catch (Exception e) {
+//               value.setMessage("生成失败:"+e.getMessage(), MessageType.错误消息);
+//               logger.error("error:",e);
+//           }
+//           finally{
+//              // return value;
+//           }
+//		return value;
+//	}
+//
+//    @RequestMapping(value="/showDetailHtmlNew", method = RequestMethod.POST)
+//	public void showDetailHtmlNew(HttpServletRequest request, HttpServletResponse response) {
+//    	Map<String,Object> params = RequestUtil.getPageParam();
+//    	if(null!=params.get("endDate")){
+//    		Date endDate = DateUtil.parse(params.get("endDate").toString());
+//    		params.put("endDate", new java.sql.Date(endDate.getTime()));
+//    	}
+//    	if(null!=params.get("startDate")){
+//    		Date endDate = DateUtil.parse(params.get("startDate").toString());
+//    		params.put("startDate", new java.sql.Date(endDate.getTime()));
+//    	}
+//    	ReportInfo r1 = reportManager.getReportByURI(params.get("uri").toString());
+//
+//		reportManager.setDataSource(master);
+//
+////		HashMap<String, Object> parameters1 = new HashMap<String, Object>();
+////		parameters1.put("portnum", "A170A3624");
+//
+//		reportManager.genReport(r1, params, request, response);
+//
+//	}
+
     /**
 	 * 查询产品系列下拉框
 	 * 
@@ -429,4 +419,102 @@ public class RepDetailsShow001Contoller extends BaseController {
 	    List<SelectOptionDto> prodSeriesList = selectDto.getOptions();
         return prodSeriesList;
     }
+
+	//chenxc:poi
+	/**
+	 * 实现了两个功能：1.左边树单击，浏览报表的模板（转成html格式）；
+	 * 2.点击预览按钮，生成指定的docx报表数据流，传到前端实现预览功能
+	 * @param request
+	 * @param response
+	 */
+	@RequestMapping(value="/previewReport", method = RequestMethod.POST)
+	public void previewReport(HttpServletRequest request, HttpServletResponse response) {
+		repDetailsShow001Service.previewReport(request,response);
+	}
+
+//	@RequestMapping("/downFileAndExport")
+//	@ResponseBody
+//	public AjaxResult downFileAndExport(){
+//		AjaxResult value = new AjaxResult();
+//		List<ValidMessage> checkList = new ArrayList<ValidMessage>();
+//		try {
+//			List<String> prdList = new ArrayList<>();
+//
+//			Map<String,Object> params = RequestUtil.getPageParam();
+//			//String operateType = params.get("operateType").toString();
+//			String rep_id = params.get("repId").toString();
+//			RepReveal repReveal = new RepReveal();
+//
+//			if(params.get("repId") != null) {
+//				repReveal.setRepId(params.get("repId").toString());
+//			}
+//			if(params.get("portnum") != null) {
+//
+//				if(params.get("portnum").toString().indexOf("[")==0){
+//					//prdList = JSONArray.parseArray(params.get("portnum").toString(),String.class);
+//					prdList =JacksonUtil.toJavaObjectList(params.get("portnum").toString(),String.class);
+//				}else{
+//					prdList.add(params.get("portnum").toString().replace("\"", ""));
+//				}
+//
+////        		repReveal.setProdid(params.get("portnum").toString());
+//			}
+//			if(params.get("startDate") != null) {
+//				repReveal.setStartDate(DateUtil.parse(params.get("startDate").toString()));
+//			}
+//			if(params.get("endDate") != null) {
+//				repReveal.setEndDate(DateUtil.parse(params.get("endDate").toString()));
+//			}
+//
+//			boolean flag = true;
+//			boolean confirmFlag = true;
+//
+//			for (String prd : prdList) {
+//
+//					repReveal.setProdid(prd);
+//					params.put("portnum", prd);
+//					//confirmFlag = reportDealService.selectConfirmStatus(repReveal);
+//					//if(confirmFlag == true) {
+//						reportDealService.updateDataStatus(repReveal);
+////            			checkList = repDetailsShow001Service.getErrorMessage(params);
+////            			if(checkList.size() == 0){
+////
+////            			}
+//
+//					String fileType = params.get("fileType").toString();
+//					flag = repDetailsShow001Service.downFileAndExport(fileType,params);
+//
+////					if(!repDetailsShow001Service.downFileAndSubmitPoi(params)){
+////							flag = false;
+////						}
+//
+//    /*        			else{
+//            				value.setErrorList(checkList);
+//            			}*/
+//
+//					//}else {
+//					//	value.setMessage("存在相同且已确认的报表", MessageType.错误消息);
+//					//}
+//
+//			}
+//			if(flag){
+//				value.setMessage("导出成功", MessageType.提示消息);
+//			}else if(confirmFlag) {
+//				//               value.setMessage("生成失败", MessageType.错误消息);
+//				value.setErrorList(checkList);
+//				repDetailsShow001Service.deleteErrorMsg(rep_id);
+//			}
+//		}catch (Exception e) {
+//			value.setMessage("导出失败:"+e.getMessage(), MessageType.错误消息);
+////            logger.error(e.getMessage(),e);
+//			logger.error("error:",e);
+//		}
+//		finally{
+//			// return value;
+//		}
+//		return value;
+//
+//
+//	}
+
 }

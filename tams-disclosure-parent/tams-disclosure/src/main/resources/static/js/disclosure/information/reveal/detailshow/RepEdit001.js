@@ -1,0 +1,69 @@
+$(function () {
+
+	var tree=$("#typeDatatree");
+	var docW= $(document).width(); 
+	var docH= $(document).height(); 
+	var tabHeadUlH=100;
+	var defaultDateStyle = 'yyyy-MM-dd';
+	var ids = new Array();
+
+	//设置模板的调用参数
+	var modelId;
+	var modelUri;
+	var repId;
+	var repName;
+	var proName;
+	
+	var modelListId;
+	var modelListName;
+
+	var currFilename;
+
+    //预览报表信息
+    var showDetail = function(params){
+        Joyin.ajax('previewReport', {uri:modelId}, function(result) {
+            if ( result ) {
+                //layer.alert(result);
+                WebOfficeObj.ServerUrl = "http://localhost:8081/tamsyy" //服务器地址
+                WebOfficeObj.ShowMenu = 0;
+                WebOfficeObj.ShowToolBar = 0;
+                SetGraySkin();			//设置控件皮肤
+                // alert(result.reportName);
+                currFilename = result.reportName;
+                WebOfficeObj.FileName = result.reportName;
+                WebOfficeObj.FileType = ".docx";
+                WebOfficeObj.SaveServlet = "/disclosure/information/reveal/detailshow/RepEdit001/doWebOffice";
+                WebOfficeObj.WebOpen(true); // 文件在服务器上的相对路径 FileName
+            } else {
+                $("#showtable").html('<h2>无报表内容</h2>');
+            }
+        });
+    }
+
+    //保存文件
+    var saveReport = function(params){
+        WebOfficeObj.ServerUrl = "http://localhost:8081/tamsyy"
+        WebOfficeObj.FileName = "产品说明书.docx";
+        WebOfficeObj.FileType = ".docx";
+        WebOfficeObj.SaveServlet = "/disclosure/information/reveal/detailshow/RepEdit001/doWebOffice";
+        alert(WebOfficeObj.FileName);
+        if (WebOfficeObj.WebSave()){    //交互OfficeServer的OPTION="SAVEFILE"
+            WebOfficeObj.WebClose();
+            WebOfficeObj.Alert("保存成功!");
+        }else{
+            WebOfficeObj.Alert("保存失败");
+        }
+    }
+
+    /**
+     * 画面加载完成
+     */
+    $(function() {
+
+        $('#btnSaveReport').click(function() {
+            saveReport("");
+        });
+
+    });
+
+});

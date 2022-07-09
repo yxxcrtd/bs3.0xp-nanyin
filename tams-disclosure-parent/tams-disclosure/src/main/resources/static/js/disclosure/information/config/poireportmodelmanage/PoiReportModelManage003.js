@@ -47,10 +47,10 @@ function reportGenerate() {
  */
 function checkAllPrpos(obj) {
     for(var p in obj){
-        if(obj[p]==""){
-        	layer.msg("请输入所有条件！");
-        	return false;
-        }
+//        if(obj[p]==""){
+//        	layer.msg("请输入所有条件！");
+//        	return false;
+//        }
     }
     return true;
 }

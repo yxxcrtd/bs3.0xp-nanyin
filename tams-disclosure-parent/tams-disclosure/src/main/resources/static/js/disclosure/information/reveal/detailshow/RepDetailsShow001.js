@@ -167,21 +167,21 @@ $(function () {
                 		repId:treeNode.id,
                 		repName:treeNode.name
                 	};
-                	Joyin.ajax('getRepsearch', 
-                			parms,
-                			function(data) {			
-                				if(data){
-                					 modelId = data.templateId;
-                					 modelUri = data.templatePath;
-                					 repId = data.repId;
-                					 repName = data.reportName;
-                					 showDetail(new Array());
-                					 showSearch(data.repScreenList);
-                				}else{
-                					$("#showtable").html('<h2>无报表内容</h2>');
-                				}
-                				
-                            });
+                Joyin.ajax('getRepsearch',
+                    parms,
+                    function(data) {
+                        if(data){
+                             modelId = data.templateId;
+                             modelUri = data.templatePath;
+                             repId = data.repId;
+                             repName = data.reportName;
+                             showDetail(new Array());
+                             showSearch(data.repScreenList);
+                        }else{
+                            $("#showtable").html('<h2>无报表内容</h2>');
+                        }
+
+                    });
         	}
         }
     }
@@ -223,7 +223,6 @@ $(function () {
     var showDetail = function(params){
         displayMenu();
 		//var params = getSearchParams();
-
     	if(modelListId){
     		Joyin.alert('报表集合不能查询!',2);
 			return;
@@ -305,17 +304,19 @@ $(function () {
 	var toStr = 'src='+basePath+'image'
 	var changeStr= 'src="image'
     if(params&&params.length==0){
-    	Joyin.ajax('showDetailHtmlNew', {uri:modelId}, function(result) {
-			var data =result.replace(new RegExp(changeStr, "g"), toStr);
-			data =data.replace(new RegExp('.png', "g"), '.png&v='+Math.random());
-			$container.html(data);
+			alert("a");
+    	Joyin.ajax('previewReport', {uri:modelId}, function(result) {
+			//var data =result.replace(new RegExp(changeStr, "g"), toStr);
+			//data =data.replace(new RegExp('.png', "g"), '.png&v='+Math.random());
+			$container.html(result);
         });
     }else{
     	params['uri'] = modelId;
-    	Joyin.ajax('showDetailHtmlNew', params, function(result) {
-			var data =result.replace(new RegExp(changeStr, "g"), toStr);
-			data =data.replace(new RegExp('.png', "g"), '.png&v='+Math.random());
-			$container.html(data);
+			alert("b");
+    	Joyin.ajax('previewReport', params, function(result) {
+			//var data =result.replace(new RegExp(changeStr, "g"), toStr);
+			//data =data.replace(new RegExp('.png', "g"), '.png&v='+Math.random());
+			$container.html(result);
         });
     }     
     
@@ -327,15 +328,13 @@ $(function () {
 
 		var params = getSearchParams();
 		
-		if((modelId&&modelUri)){
-    		if(null!=params){
-    			if(!params){
-    				Joyin.alert('参数不能为空！',2);
-        			return;
-        		}
-    		}else{
-    			params = new Array();
-    		}
+		if((modelId&&modelUri)||modelListId){
+            if(!params){
+                Joyin.alert('参数不能为空！',2);
+                return;
+            }
+        }else{
+    	    return;
     	}
 		
 		if(params){
@@ -347,6 +346,7 @@ $(function () {
 			params = new Array();
 			params['data'] = JSON.stringify(getSearchParams());
 			//报表数据结构
+			alert("单表导出");
 	        var report_info = {
 	            uri:modelId,
 	            folderUri:modelUri,
@@ -354,29 +354,24 @@ $(function () {
 	            formatType:type,//下载的格式:供exportReport使用, 支持的格式有pdf,html,xls,xlsx,rtf,csv,xml,docx,odt,ods,jrprint
 	            params:params//运行报表所使用的参数
 	        }
+
 	        var obj = {};
-	        params.name = modelId;
-	        params.fileType = type;
-	        params.code = modelId;
-	        params.repName = repName;
-	        params.url = exportReportPath(report_info);
-//	        obj.name = modelId;
-//	        obj.fileType = type;
-//	        obj.code = modelId;
-//	        obj.repName = repName;
-//	        obj.url = exportReportPath(report_info);
-//            $.each(params, function(k, v){
-//            	obj[k] = v;
-//            });
-	        //运行并产生报表到页面
-//	        if(type=='html'){
-//	        	genReportHtml(report_info);
-//	        }else{
-//		        exportReport(report_info);
-//	        }
+	            params['fileType'] = type;
+	            params['modelId'] = modelId;
+	            params['repId'] = repId;
+	            params['repName'] = repName;
+	            params['prodName'] = proName;
+	            alert(params);
+//	        Joyin.ajax('downFileAndExport',
+//	                		params,
+//	            			function(data) {
+//	                				//layer.alert(data.message);
+//	                        });
+
 	       	Joyin.exportExcel(basePath + 'disclosure/information/config/reportmodelmanage/ReportModelManage001/mergeExport', params);
 //          Joyin.exportExcel(basePath + 'disclosure/information/config/reportmodelmanage/ReportModelManage001/mergeExport', obj);
         }else if(modelListId){
+            alert("多表导出")
         	params = getSearchParams();
         	if("flag" == params){
         		return;
@@ -415,9 +410,14 @@ $(function () {
         return result;
     }
     
+    //编辑报表
+    var editReport = function(params){
+        Joyin.dialog(JoyinUtil.getLabel("编辑报表"),
+            JoyinUtil.getRealPath("/disclosure/information/reveal/detailshow/RepEdit001/init"),
+            "60%","85%","产品说明书.docx",function(){ }
+        );
+    }
 
-    
-    
     var submit = function(type){
         displayMenu();
 		var params = getSearchParams();
@@ -456,7 +456,7 @@ $(function () {
 	            params['prodName'] = proName;
 	            Joyin.ajax('querySameCount',params,function(){
 	            	params['operateType'] = "01";
-	            	Joyin.ajax('downFileAndSubmit', 
+	            	Joyin.ajax('submitWord',
 	                		params,
 	            			function(data) {
 	                				//layer.alert(data.message);
@@ -470,7 +470,7 @@ $(function () {
                 params['prodName'] = proName;
                 params['repName'] = repName;
 
-                Joyin.ajax('downFileListAndSubmit', 
+                Joyin.ajax('submitWord',
                 		params,
             			function(data) {
                 				layer.closeAll('loading');
@@ -497,6 +497,10 @@ $(function () {
     	// 绑定查询按钮事件
         $('#RepDetailsShow001_showDetail').click(function() {
         	showDetail(getSearchParams());
+        });
+
+        $('#btnEditReport').click(function() {
+            editReport("");
         });
 
         // 绑定查询按钮事件

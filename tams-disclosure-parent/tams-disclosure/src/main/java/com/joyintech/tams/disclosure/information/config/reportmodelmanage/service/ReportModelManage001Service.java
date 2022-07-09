@@ -26,6 +26,7 @@ import java.util.zip.ZipOutputStream;
 
 import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.util.ZipFileUtil;
+import com.joyintech.tams.utils.poi.PoiUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,8 +80,7 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
 
     /**
      * <一句话功能简述> 导出估值表
-     * 
-     * @param map
+     *
      * @throws IOException
      * @see
      * @since 1.0
@@ -230,8 +230,7 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
 
         /**
          * 导出合并文件
-         * 
-         * @param val001dto
+         *
          * @return
          * @throws Exception 
          * @see
@@ -258,8 +257,7 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
         
         /**
          * 导出合并文件
-         * 
-         * @param val001dto
+         *
          * @return
          * @throws Exception 
          * @see
@@ -321,12 +319,24 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
                 }
             }else{
             	fileName = buildFileName(reportModelManage001Dto);
+            	//TODO:CHENXC TEST
+                String expSrcFile = "E:/poitest/report/000LYJZ001_产品基本信息.docx";
+                String fileType = reportModelManage001Dto.getParam().get("fileType").toString();
+                if ( "pdf".equals(fileType)) {  //如果导出pdf，则需要先讲word转换成pdf
+                    FileInputStream fis = new FileInputStream(expSrcFile);
+                    String fileNamePdf = expSrcFile.replaceAll(".docx",".pdf");
+                    FileOutputStream fos = new FileOutputStream(fileNamePdf);
+                    PoiUtils.docxToPdf(fis,fos);
+                    expSrcFile = fileNamePdf;
+                }
+                reportModelManage001Dto.setTemLoad(expSrcFile);
             	exportFile=new SafelyFile(reportModelManage001Dto.getTemLoad());///NB/GLJY
+
             }
       
             
 //    		return ExportUtil.export(zipFileName, zipFile, true);
-            return ExportUtil.export(fileName, exportFile, true);
+            return ExportUtil.export(fileName, exportFile, false);
         }
         
         

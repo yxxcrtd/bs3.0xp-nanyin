@@ -336,8 +336,8 @@ spring:
   redis:
     database: 1
     password: joyin!234
-    host: 192.168.60.110
-    port: 6388
+    host: 192.168.60.236
+    port: 6379
     timeout: 20000
   #  redis:
   #    cluster:
@@ -345,16 +345,16 @@ spring:
   redislock:
     redissonEnabled: false
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR30INIT_TEST
-    password: CVR30INIT_TEST
-    reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
+    reportSqlldrDatabaseName: 192.168.60.237:1521/orcl
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+  sqldirurl: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: CVR30INIT_TEST
-  sqldirpassword: CVR30INIT_TEST
+  sqldiruserName: BS30CVR_V306_XP_DEV
+  sqldirpassword: BS30CVR_V306_XP_DEV
 valinterf:
   hostname: localhost
   port: 28080
@@ -374,37 +374,37 @@ shiro:
 
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR30INIT_TEST
-    password: CVR30INIT_TEST
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
 interf:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR30INIT_TEST
-    password: CVR30INIT_TEST
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
   hostname: localhost
   port: 28080
   contextPath: /interf
 stresstest:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR30INIT_TEST
-    password: CVR30INIT_TEST
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
 wind:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR30INIT_TEST
-    password: CVR30INIT_TEST
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
 chbsend:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR30INIT_TEST
-    password: CVR30INIT_TEST
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
 log:
   path: /home/tams/logs/tams
   level: debug
@@ -420,7 +420,7 @@ xinping:
     urlPort: 9191
 tx-lcn:
   client:
-    managerAddress: 192.168.60.110:8070
+    managerAddress: 192.168.60.236:8070
 
 # 场内交易使用配置
 netty:
@@ -487,8 +487,8 @@ spring:
   redis:
     database: 1
     password: joyin!234
-    host: 192.168.70.216
-    port: 6388
+    host: 192.168.60.236
+    port: 6379
     timeout: 20000
   #  redis:
   #    cluster:
@@ -496,16 +496,16 @@ spring:
   redislock:
     redissonEnabled: false
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR30INIT_TEST
-    password: CVR30INIT_TEST
-    reportSqlldrDatabaseName: 192.168.90.5:1521/orcl
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
+    reportSqlldrDatabaseName: 192.168.60.237:1521/orcl
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+  sqldirurl: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: CVR30INIT_TEST
-  sqldirpassword: CVR30INIT_TEST
+  sqldiruserName: BS30CVR_V306_XP_DEV
+  sqldirpassword: BS30CVR_V306_XP_DEV
 valinterf:
   hostname: localhost
   port: 28080
@@ -525,37 +525,37 @@ shiro:
 
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR30INIT_TEST
-    password: CVR30INIT_TEST
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
 interf:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR30INIT_TEST
-    password: CVR30INIT_TEST
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
   hostname: localhost
   port: 28080
   contextPath: /interf
 stresstest:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR30INIT_TEST
-    password: CVR30INIT_TEST
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
 wind:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR30INIT_TEST
-    password: CVR30INIT_TEST
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
 chbsend:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR30INIT_TEST
-    password: CVR30INIT_TEST
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
 log:
   path: /home/tams/logs/tams
   level: debug
@@ -571,7 +571,7 @@ xinping:
     urlPort: 9191
 tx-lcn:
   client:
-    managerAddress: 192.168.70.216:8070
+    managerAddress: 192.168.60.236:8070
 
 # 场内交易使用配置
 netty:
@@ -636,8 +636,8 @@ spring:
   redis:
     database: 1
     password: joyin!234
-    host: 192.168.70.216
-    port: 6388
+    host: 192.168.60.236
+    port: 6379
     timeout: 20000
   #  redis:
   #    cluster:
@@ -645,16 +645,16 @@ spring:
   redislock:
     redissonEnabled: false
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR30INIT_TEST
-    password: CVR30INIT_TEST
-    reportSqlldrDatabaseName: 192.168.90.5:1521/orcl
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
+    reportSqlldrDatabaseName: 192.168.60.237:1521/orcl
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+  sqldirurl: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: CVR30INIT_TEST
-  sqldirpassword: CVR30INIT_TEST
+  sqldiruserName: BS30CVR_V306_XP_DEV
+  sqldirpassword: BS30CVR_V306_XP_DEV
 valinterf:
   hostname: localhost
   port: 28080
@@ -674,37 +674,37 @@ shiro:
 
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR30INIT_TEST
-    password: CVR30INIT_TEST
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
 interf:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR30INIT_TEST
-    password: CVR30INIT_TEST
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
   hostname: localhost
   port: 28080
   contextPath: /interf
 stresstest:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR30INIT_TEST
-    password: CVR30INIT_TEST
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
 wind:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR30INIT_TEST
-    password: CVR30INIT_TEST
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
 chbsend:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR30INIT_TEST
-    password: CVR30INIT_TEST
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
 log:
   path: /home/tams/logs/tams
   level: debug
@@ -720,7 +720,7 @@ xinping:
     urlPort: 9191
 tx-lcn:
   client:
-    managerAddress: 192.168.70.216:8070
+    managerAddress: 192.168.60.236:8070
 
 # 场内交易使用配置
 netty:
@@ -779,29 +779,36 @@ url:
   batch: http://localhost:8084/main/about/refreshCache
 ---
 spring:
-  profiles: CVR30INIT_TEST_P
+  profiles: BS30CVR_V306_XP_DEV_P
   thymeleaf:
     cache: false
   redis:
-    database: 0
-    cluster:
-      nodes: 192.168.90.174:6379,192.168.90.174:6380,192.168.90.174:6381,192.168.90.174:6382,192.168.90.174:6383,192.168.90.174:6384
+    database: 1
+    password: joyin!234
+    host: 192.168.60.236
+    port: 6379
+    timeout: 20000
+
+  #redis:
+  #  database: 0
+  #  cluster:
+  #   nodes: 192.168.90.174:6379,192.168.90.174:6380,192.168.90.174:6381,192.168.90.174:6382,192.168.90.174:6383,192.168.90.174:6384
   #  redis:
   #    cluster:
   #      nodes: 192.168.60.97:6379,192.168.60.97:6380,192.168.60.97:6381,192.168.60.97:6382,192.168.60.97:6383,192.168.60.97:6384
   redislock:
     redissonEnabled: false
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR30INIT_TEST
-    password: CVR30INIT_TEST
-    reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
+    reportSqlldrDatabaseName: 192.168.60.237:1521/orcl
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+  sqldirurl: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: CVR30INIT_TEST
-  sqldirpassword: CVR30INIT_TEST
+  sqldiruserName: BS30CVR_V306_XP_DEV
+  sqldirpassword: BS30CVR_V306_XP_DEV
 valinterf:
   hostname: localhost
   port: 28080
@@ -821,37 +828,37 @@ shiro:
 
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR30INIT_TEST
-    password: CVR30INIT_TEST
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
 interf:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR30INIT_TEST
-    password: CVR30INIT_TEST
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
   hostname: localhost
   port: 28080
   contextPath: /interf
 stresstest:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR30INIT_TEST
-    password: CVR30INIT_TEST
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
 wind:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR30INIT_TEST
-    password: CVR30INIT_TEST
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
 chbsend:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR30INIT_TEST
-    password: CVR30INIT_TEST
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
 log:
   path: /home/tams/logs/tams
   level: debug
@@ -867,7 +874,7 @@ xinping:
     urlPort: 9191
 tx-lcn:
   client:
-    managerAddress: 192.168.90.174:8072
+    managerAddress: 192.168.60.236:8070
 
 # 场内交易使用配置
 netty:
@@ -926,14 +933,14 @@ url:
   batch: http://localhost:8084/main/about/refreshCache
 ---
 spring:
-  profiles: BS303CVR_DEV_TEST01_LY_P
+  profiles: BS30CVR_V306_XP_DEV_P
   thymeleaf:
     cache: false
   redis:
     database: 1
     password: joyin!234
-    host: 192.168.60.110
-    port: 6388
+    host: 192.168.60.236
+    port: 6379
     timeout: 20000
     #  redis:
     #    database: 0
@@ -945,16 +952,16 @@ spring:
   redislock:
     redissonEnabled: false
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS303CVR_DEV_TEST01_LY
-    password: BS303CVR_DEV_TEST01_LY
-    reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
+    reportSqlldrDatabaseName: 192.168.60.237:1521/orcl
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+  sqldirurl: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: BS303CVR_DEV_TEST01_LY
-  sqldirpassword: BS303CVR_DEV_TEST01_LY
+  sqldiruserName: BS30CVR_V306_XP_DEV
+  sqldirpassword: BS30CVR_V306_XP_DEV
 valinterf:
   hostname: localhost
   port: 28080
@@ -974,37 +981,37 @@ shiro:
 
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS303CVR_DEV_TEST01_LY
-    password: BS303CVR_DEV_TEST01_LY
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
 interf:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS303CVR_DEV_TEST01_LY
-    password: BS303CVR_DEV_TEST01_LY
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
   hostname: localhost
   port: 28080
   contextPath: /interf
 stresstest:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS303CVR_DEV_TEST01_LY
-    password: BS303CVR_DEV_TEST01_LY
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
 wind:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS303CVR_DEV_TEST01_LY
-    password: BS303CVR_DEV_TEST01_LY
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
 chbsend:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS303CVR_DEV_TEST01_LY
-    password: BS303CVR_DEV_TEST01_LY
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
 log:
   path: /home/tams/logs/tams
   level: debug
@@ -1020,7 +1027,7 @@ xinping:
     urlPort: 9191
 tx-lcn:
   client:
-    managerAddress: 192.168.60.110:8070
+    managerAddress: 192.168.60.236:8070
 # 场内交易使用配置
 netty:
   port: 9190
@@ -1078,29 +1085,36 @@ url:
   batch: http://localhost:8084/main/about/refreshCache
 ---
 spring:
-  profiles: zgtams218_zztest_LY_P
+  profiles: BS30CVR_V306_XP_DEV_P
   thymeleaf:
     cache: false
   redis:
-    database: 0
-    cluster:
-      nodes: 192.168.90.174:6379,192.168.90.174:6380,192.168.90.174:6381,192.168.90.174:6382,192.168.90.174:6383,192.168.90.174:6384
+    database: 1
+    password: joyin!234
+    host: 192.168.60.236
+    port: 6379
+    timeout: 20000
+
+  #redis:
+  # database: 0
+  #  cluster:
+  #    nodes: 192.168.90.174:6379,192.168.90.174:6380,192.168.90.174:6381,192.168.90.174:6382,192.168.90.174:6383,192.168.90.174:6384
   #  redis:
   #    cluster:
   #      nodes: 192.168.60.97:6379,192.168.60.97:6380,192.168.60.97:6381,192.168.60.97:6382,192.168.60.97:6383,192.168.60.97:6384
   redislock:
     redissonEnabled: false
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: zgtams218_zztest_LY
-    password: zgtams218_zztest_LY
-    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
+    reportSqlldrDatabaseName: 192.168.60.237:1521/orcl
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+  sqldirurl: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: zgtams218_zztest_LY
-  sqldirpassword: zgtams218_zztest_LY
+  sqldiruserName: BS30CVR_V306_XP_DEV
+  sqldirpassword: BS30CVR_V306_XP_DEV
 valinterf:
   hostname: localhost
   port: 28080
@@ -1120,37 +1134,37 @@ shiro:
 
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: zgtams218_zztest_LY
-    password: zgtams218_zztest_LY
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
 interf:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: zgtams218_zztest_LY
-    password: zgtams218_zztest_LY
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
   hostname: localhost
   port: 28080
   contextPath: /interf
 stresstest:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: zgtams218_zztest_LY
-    password: zgtams218_zztest_LY
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
 wind:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: zgtams218_zztest_LY
-    password: zgtams218_zztest_LY
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
 chbsend:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: zgtams218_zztest_LY
-    password: zgtams218_zztest_LY
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
 log:
   path: /home/tams/logs/tams
   level: debug
@@ -1166,7 +1180,7 @@ xinping:
     urlPort: 9191
 tx-lcn:
   client:
-    managerAddress: 192.168.90.174:8072
+    managerAddress: 192.168.60.236:8070
 
 # 场内交易使用配置
 netty:
@@ -1231,22 +1245,22 @@ spring:
   redis:
     database: 1
     password: joyin!234
-    host: 192.168.90.174
+    host: 192.168.60.236
     port: 6379
     timeout: 20000
   redislock:
     redissonEnabled: false
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.194:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR_305_XNYH_DEV
-    password: CVR_305_XNYH_DEV
-    reportSqlldrDatabaseName: 192.168.60.194:1521/orcl
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
+    reportSqlldrDatabaseName: 192.168.60.237:1521/orcl
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.60.194:1521/orcl
+  sqldirurl: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: CVR_305_XNYH_DEV
-  sqldirpassword: CVR_305_XNYH_DEV
+  sqldiruserName: BS30CVR_V306_XP_DEV
+  sqldirpassword: BS30CVR_V306_XP_DEV
 valinterf:
   hostname: localhost
   port: 28080
@@ -1262,41 +1276,41 @@ shiro:
     /TrdLendDuration/selectAllDataList,/TrdBondDuration/findEffectiveData,/TrdExchangeDuration/findAllData,
     /TrdRepoDuration/findFinCashInfo,/TrdRepoDuration/findRepoInfo,/service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig,
     /InterfSysTrdConfig/**,/interf/risk/**,/EtrTradeSysInterf/**,/MstCaptialAccount/**,/MstSaleDepartment/**,/TrdBondInvestTrade/**,/AssetDeclarationCodeMaintenance/**,/ptlmanagementinfo/**,/InterfSysPara/**,/MstMarketCalendarInfo/**,
-    /TrdExchangeWorkflow/**,/invest/trade/api/**
+    /TrdExchangeWorkflow/**,/invest/trade/api/**,/disclosure/information/reveal/detailshow/RepDetailsShow001/doWebOffice
 
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.194:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR_305_XNYH_DEV
-    password: CVR_305_XNYH_DEV
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
 interf:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.194:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR_305_XNYH_DEV
-    password: CVR_305_XNYH_DEV
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
   hostname: localhost
   port: 28080
   contextPath: /interf
 stresstest:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.194:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR_305_XNYH_DEV
-    password: CVR_305_XNYH_DEV
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
 wind:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.194:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR_305_XNYH_DEV
-    password: CVR_305_XNYH_DEV
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
 chbsend:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.194:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR_305_XNYH_DEV
-    password: CVR_305_XNYH_DEV
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
 log:
   path: /home/tams/logs/tams
   level: debug
@@ -1312,7 +1326,7 @@ xinping:
     urlPort: 9191
 tx-lcn:
   client:
-    managerAddress: 192.168.90.174:8070
+    managerAddress: 192.168.60.236:8070
 # 场内交易使用配置
 netty:
   port: 9190
@@ -1376,7 +1390,7 @@ spring:
   redis:
     database: 1
     password: joyin!234
-    host: 192.168.90.174
+    host: 192.168.60.236
     port: 6379
     timeout: 20000
   redislock:
@@ -1385,7 +1399,7 @@ spring:
     url: jdbc:mysql://192.168.60.43:3306/cvr_306_mysql_test?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true
     username: wzc
     password: wzc
-    #reportSqlldrDatabaseName: 192.168.60.194:1521/orcl
+    #reportSqlldrDatabaseName: 192.168.60.237:1521/orcl
 application:
   sqldirurl: jdbc:mysql://192.168.60.43:3306/cvr_306_mysql_test?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true
   driverClassName: com.mysql.jdbc.Driver
@@ -1456,7 +1470,7 @@ xinping:
     urlPort: 9191
 tx-lcn:
   client:
-    managerAddress: 192.168.90.174:8070
+    managerAddress: 192.168.60.236:8070
 # 场内交易使用配置
 netty:
   port: 9190
@@ -1520,8 +1534,8 @@ spring:
   redis:
     database: 1
     password: joyin!234
-    host: 192.168.60.188
-    port: 6388
+    host: 192.168.60.236
+    port: 6379
     timeout: 20000
   redislock:
     redissonEnabled: false
@@ -1529,7 +1543,7 @@ spring:
     url: jdbc:mysql://192.168.60.43:3306/cvr_306_mysql_test?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
     username: wzc
     password: wzc
-    #reportSqlldrDatabaseName: 192.168.60.194:1521/orcl
+    #reportSqlldrDatabaseName: 192.168.60.237:1521/orcl
 application:
   sqldirurl: jdbc:mysql://192.168.60.43:3306/cvr_306_mysql_test?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
   driverClassName: com.mysql.jdbc.Driver
@@ -1600,7 +1614,7 @@ xinping:
     urlPort: 9191
 tx-lcn:
   client:
-    managerAddress: 192.168.60.188:8070
+    managerAddress: 192.168.60.236:8070
 # 场内交易使用配置
 netty:
   port: 9190
@@ -1664,8 +1678,8 @@ spring:
   redis:
     database: 1
     password: joyin!234
-    host: 192.168.60.188
-    port: 6388
+    host: 192.168.60.236
+    port: 6379
     timeout: 20000
   redislock:
     redissonEnabled: false
@@ -1673,7 +1687,7 @@ spring:
     url: jdbc:mysql://192.168.60.43:3306/cvr_30_dev?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&zeroDateTimeBehavior=convertToNull&allowLoadLocalInfile=true
     username: wzc
     password: wzc
-    #reportSqlldrDatabaseName: 192.168.60.194:1521/orcl
+    #reportSqlldrDatabaseName: 192.168.60.237:1521/orcl
 application:
   sqldirurl: jdbc:mysql://192.168.60.43:3306/cvr_30_dev?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&zeroDateTimeBehavior=convertToNull&allowLoadLocalInfile=true
   driverClassName: com.mysql.jdbc.Driver
@@ -1744,7 +1758,7 @@ xinping:
     urlPort: 9191
 tx-lcn:
   client:
-    managerAddress: 192.168.60.188:8070
+    managerAddress: 192.168.60.236:8070
 # 场内交易使用配置
 netty:
   port: 9190
