@@ -1962,6 +1962,10 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     中债数据状态_待处理(DictCode.中债数据状态, "A", "待处理"),
     中债数据状态_删除(DictCode.中债数据状态, "D", "删除"),
     中债数据状态_修改(DictCode.中债数据状态, "M", "修改"),
+
+    信披_数据状态_有效(DictCode.信披_数据状态,"01","有效"),
+    信披_数据状态_删除(DictCode.信披_数据状态,"02","删除"),
+
     ;
     /**
      * 对应于数据字典code
