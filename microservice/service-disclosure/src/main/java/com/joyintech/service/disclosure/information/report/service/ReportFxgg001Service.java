@@ -62,7 +62,7 @@ public class ReportFxgg001Service extends BaseService<ReportFxgg001Dto> {
             holidaysearchparam.put("busi_date", setDate);
             holidaysearchparam.put("is_holiday", "0");
             holidaysearchparam.put("market_code", "01");
-            Date raiseEndDate = reportFxgg001Mapper.queryNextWorkDay(holidaysearchparam);
+            Date raiseEndDate = reportFxgg001Mapper.queryLastWorkDay(holidaysearchparam);
             if (raiseEndDate == null) {
                 raiseEndDate = DateUtil.addDay(setDate, -1);
             }

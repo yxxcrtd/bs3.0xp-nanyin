@@ -32,6 +32,6 @@ public interface ReportFxgg001Mapper {
      * @see
      * @since 1.0
      */
-    Date queryNextWorkDay(Map<String, Object> params);
+    Date queryLastWorkDay(Map<String, Object> params);
 
 }
