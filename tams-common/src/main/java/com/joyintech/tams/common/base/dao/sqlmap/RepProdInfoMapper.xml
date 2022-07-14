@@ -86,6 +86,10 @@
         from REP_PROD_INFO
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
     </select>
+    <select id="selectByPrimaryKey2" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select * from REP_PROD_INFO
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
         delete from REP_PROD_INFO
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
