@@ -3,6 +3,9 @@ package com.joyintech.tams.common.base.entity;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.CustomDateDeserialize;
+import com.joyintech.framework.validation.annotation.NotEmpty;
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+
 import java.util.Date;
 
 public class DisProdAdjust extends BaseEntity {
@@ -80,6 +83,7 @@ public class DisProdAdjust extends BaseEntity {
      * 取得 产品登记编码
      * @return 产品登记编码
      */
+
     public String getProdRegistNo() {
         return prodRegistNo;
     }
