@@ -75,7 +75,7 @@ public class ReportFxgg001Service extends BaseService<ReportFxgg001Dto> {
         BigDecimal raiseAmt = fxgg.getRaiseAmt();
         if (raiseAmt != null) {
             DecimalFormat df = new DecimalFormat("#,###.00");
-            dataMap.put("${raiseAmt}", df.format(new BigDecimal("123456789.0036")));
+            dataMap.put("${raiseAmt}", df.format(raiseAmt));
         } else {
             dataMap.put("${raiseAmt}", BigDecimal.ZERO);
         }
