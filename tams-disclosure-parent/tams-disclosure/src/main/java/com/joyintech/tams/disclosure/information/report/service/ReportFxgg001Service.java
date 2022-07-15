@@ -1,5 +1,5 @@
 
-package com.joyintech.service.disclosure.information.report.service;
+package com.joyintech.tams.disclosure.information.report.service;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -9,9 +9,9 @@ import java.util.Map;
 
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.service.disclosure.information.report.dao.ReportFxgg001Mapper;
-import com.joyintech.service.disclosure.information.report.dto.ReportFxgg001Dto;
 import com.joyintech.tams.disclosure.common.common.service.HolidayService;
+import com.joyintech.tams.disclosure.information.report.dao.ReportFxgg001Mapper;
+import com.joyintech.tams.disclosure.information.report.dto.ReportFxgg001Dto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @see ReportFxgg001Service
  * @since 1.0
  */
-@Service(value="serviceReportFxgg001Service")
+@Service
 @Transactional(rollbackFor = Exception.class)
 public class ReportFxgg001Service extends BaseService<ReportFxgg001Dto> {
 

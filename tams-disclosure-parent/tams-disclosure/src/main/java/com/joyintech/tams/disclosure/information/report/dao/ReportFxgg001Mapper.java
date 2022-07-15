@@ -1,8 +1,8 @@
 
-package com.joyintech.service.disclosure.information.report.dao;
+package com.joyintech.tams.disclosure.information.report.dao;
 import java.util.Map;
 
-import com.joyintech.service.disclosure.information.report.dto.ReportFxgg001Dto;
+import com.joyintech.tams.disclosure.information.report.dto.ReportFxgg001Dto;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
  * @see ReportFxgg001Mapper
  * @since 1.0
  */
-@Repository(value="serviceReportFxgg001Mapper")
+@Repository
 public interface ReportFxgg001Mapper {
     
     /**

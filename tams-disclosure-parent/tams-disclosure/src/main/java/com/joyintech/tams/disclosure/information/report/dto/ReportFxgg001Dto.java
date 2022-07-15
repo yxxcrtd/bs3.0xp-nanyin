@@ -1,5 +1,5 @@
 
-package com.joyintech.service.disclosure.information.report.dto;
+package com.joyintech.tams.disclosure.information.report.dto;
 
 import com.joyintech.framework.base.BaseEntity;
 

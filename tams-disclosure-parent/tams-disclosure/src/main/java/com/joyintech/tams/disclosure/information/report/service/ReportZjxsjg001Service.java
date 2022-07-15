@@ -1,10 +1,10 @@
 
-package com.joyintech.service.disclosure.information.report.service;
+package com.joyintech.tams.disclosure.information.report.service;
 
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.service.disclosure.information.report.dao.ReportZjxsjg001Mapper;
-import com.joyintech.service.disclosure.information.report.dto.ReportZjxsjg001Dto;
+import com.joyintech.tams.disclosure.information.report.dao.ReportZjxsjg001Mapper;
+import com.joyintech.tams.disclosure.information.report.dto.ReportZjxsjg001Dto;
 import com.joyintech.tams.systemtools.service.CommonPlatformDateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ import java.util.Map;
  * @see ReportZjxsjg001Service
  * @since 1.0
  */
-@Service(value="serviceReportZjxsjg001Service")
+@Service
 @Transactional(rollbackFor = Exception.class)
 public class ReportZjxsjg001Service extends BaseService<ReportZjxsjg001Dto> {
 
@@ -59,9 +59,9 @@ public class ReportZjxsjg001Service extends BaseService<ReportZjxsjg001Dto> {
         dataMap.put("${regCode}", zjxsjg.getRegCode());
         Date puDate = commonPlatformDateService.getSysDate();
         if (null != params.get("endDate")) {
-            puDate = new Date((Long)params.get("endDate"));
+            puDate = (java.sql.Date)params.get("endDate");
         }
-        dataMap.put("${puDate}",DateUtil.format(puDate, DateUtil.DEFAULT_DATE_FORMAT_CN));
+        dataMap.put("${pubDate}",DateUtil.format(puDate, DateUtil.DEFAULT_DATE_FORMAT_CN));
         return dataMap;
     }
 }
