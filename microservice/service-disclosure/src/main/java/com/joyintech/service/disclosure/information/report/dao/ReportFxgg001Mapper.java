@@ -1,6 +1,5 @@
 
 package com.joyintech.service.disclosure.information.report.dao;
-import java.util.Date;
 import java.util.Map;
 
 import com.joyintech.service.disclosure.information.report.dto.ReportFxgg001Dto;
@@ -24,14 +23,5 @@ public interface ReportFxgg001Mapper {
      * @since 1.0
      */
     ReportFxgg001Dto queryFxgg(Map<String, Object> params);
-
-    /**
-     * 查询下一个工作日
-     * @param params 参数
-     * @return ReportFxgg001Dto
-     * @see
-     * @since 1.0
-     */
-    Date queryLastWorkDay(Map<String, Object> params);
 
 }

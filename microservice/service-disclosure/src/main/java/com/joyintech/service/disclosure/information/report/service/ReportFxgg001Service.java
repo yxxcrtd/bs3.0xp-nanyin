@@ -11,6 +11,7 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.service.disclosure.information.report.dao.ReportFxgg001Mapper;
 import com.joyintech.service.disclosure.information.report.dto.ReportFxgg001Dto;
+import com.joyintech.tams.disclosure.common.common.service.HolidayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,11 +28,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Service(value="serviceReportFxgg001Service")
 @Transactional(rollbackFor = Exception.class)
 public class ReportFxgg001Service extends BaseService<ReportFxgg001Dto> {
-    
+
     @Autowired
     private ReportFxgg001Mapper reportFxgg001Mapper;
-    
-    
+
+    @Autowired
+    private HolidayService holidayService;
+
    /**
     * 根据产品代码查询公告信息
     * <一句话功能简述>
@@ -62,7 +65,7 @@ public class ReportFxgg001Service extends BaseService<ReportFxgg001Dto> {
             holidaysearchparam.put("busi_date", setDate);
             holidaysearchparam.put("is_holiday", "0");
             holidaysearchparam.put("market_code", "01");
-            Date raiseEndDate = reportFxgg001Mapper.queryLastWorkDay(holidaysearchparam);
+            Date raiseEndDate = holidayService.getLastWorkDay(holidaysearchparam);
             if (raiseEndDate == null) {
                 raiseEndDate = DateUtil.addDay(setDate, -1);
             }

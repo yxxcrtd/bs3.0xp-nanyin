@@ -13,14 +13,4 @@
 		from rep_prod_info rpi
 		where rpi.prod_id = #{prodId,jdbcType=VARCHAR}
 	</select>
-
-	<select id="queryLastWorkDay" resultType="java.util.Date">
-		select busi_date from (
-			select h.busi_date from CHB_MKT_HOLIDAY h
-			where h.busi_date &lt;= #{busi_date}
-			and h.is_holiday = #{is_holiday}
-			and h.market_code = #{market_code}
-			order by h.busi_date desc
-		) where rownum = 1
-	</select>
 </mapper>
