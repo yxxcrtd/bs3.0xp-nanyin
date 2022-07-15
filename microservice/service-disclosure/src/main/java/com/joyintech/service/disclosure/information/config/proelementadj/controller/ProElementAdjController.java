@@ -55,4 +55,13 @@ public class ProElementAdjController extends BaseController {
     public String selectByProdRegistNo(@RequestBody Map<String,Object>map) {
         return proElementAdjService.selectByProdRegistNo(map);
     }
+
+    @PostMapping("getProdId/{page}/{length}")
+    @ResponseBody
+    public Page<SelectOptionDto> getProdId(@RequestBody Map<String, String> map, @PathVariable("page") int page,
+                                             @PathVariable("length") int length)
+            throws Exception {
+        Page<SelectOptionDto> temp = proElementAdjService.getProdId(page, length, map);
+        return temp;
+    }
 }

@@ -22,4 +22,6 @@ public interface ProElementAdjMapper {
     List<SelectOptionDto> getRegistNo(Map<String, String> map);
 
     String selectByProdRegistNo(Map<String, Object> map);
+
+    List<SelectOptionDto> getProdId(Map<String, String> map);
 }

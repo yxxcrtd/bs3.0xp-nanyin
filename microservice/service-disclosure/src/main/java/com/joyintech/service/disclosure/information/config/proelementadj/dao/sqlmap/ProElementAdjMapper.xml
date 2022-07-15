@@ -158,4 +158,13 @@
         from DIS_PROD_ADJUST
         where PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
     </select>
+
+    <select id="getProdId" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        PROD_ID id,
+        PROD_NAME text,
+        PROD_ABBR
+        FROM
+        rep_prod_info
+    </select>
 </mapper>

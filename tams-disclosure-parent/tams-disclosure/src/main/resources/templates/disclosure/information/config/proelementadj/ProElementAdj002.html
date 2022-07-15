@@ -26,7 +26,7 @@
                                 <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
                                     <label class="layui-form-label form-lable" data-th-text="#{ProElementAdj001.prodRegistNo}">产品登记编码</label>
                                     <div class="layui-input-inline input-inline">
-                                        <select type="text" id="prodRegistNo" name="prodRegistNo" formatoption="true" required
+                                        <select type="text" id="prodRegistNo" name="prodRegistNo" formatoption="true" required data-th-formatoption="false"
                                                 class="layui-input form-input input-select"  placeholder="请输入内容" data-th-value='${entity?.prodRegistNo}'
                                                 data-th-data-url="@{/disclosure/information/config/proelementadj/ProElementAdj002/getRegistNo}" allowClear="true">
                                         </select>
@@ -35,9 +35,9 @@
                                 <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
                                     <label class="layui-form-label form-lable" data-th-text="#{ProElementAdj001.prodId}">子产品代码</label>
                                     <div class="layui-input-inline input-inline">
-                                        <select type="text" id="prodId" name="prodId" formatoption="true" required
+                                        <select type="text" id="prodId" name="prodId" formatoption="true" required data-th-formatoption="false"
                                                 class="layui-input form-input input-select"  placeholder="请输入内容" data-th-value='${entity?.prodId}'
-                                                data-th-data-url="@{/invest/basicdata/traderinfo/TraderInfo001/getCustomerName}" allowClear="true">
+                                                data-th-data-url="@{/disclosure/information/config/proelementadj/ProElementAdj002/getProdId}" allowClear="true">
                                         </select>
                                     </div>
                                 </div>

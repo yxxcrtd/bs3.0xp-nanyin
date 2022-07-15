@@ -74,7 +74,10 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
     }
 
 
-
+    public Page<SelectOptionDto> getProdId(Map<String, Object> map) {
+        return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME
+                + "/ProElementAdj/getProdId",map,SelectOptionDto.class);
+    }
     /**
      * 导入check
      * @param fileName

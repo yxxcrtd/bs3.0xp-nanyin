@@ -111,4 +111,14 @@ public class ProElementAdj002Controller extends BaseController {
         Page<SelectOptionDto> temp = proElementAdj001Service.getRegistNo(RequestUtil.getPageParam());
         return temp;
     }
+
+
+
+    @ResponseBody
+    @RequestMapping("/getProdId")
+    public Page<SelectOptionDto> getProdId()
+            throws Exception {
+        Page<SelectOptionDto> temp = proElementAdj001Service.getProdId(RequestUtil.getPageParam());
+        return temp;
+    }
 }

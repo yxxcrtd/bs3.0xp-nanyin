@@ -60,4 +60,8 @@ public class ProElementAdjService extends BaseService<ProElementAdjDto> {
     public String selectByProdRegistNo(Map<String, Object> map) {
         return proElementAdjMapper.selectByProdRegistNo(map);
     }
+
+    public Page<SelectOptionDto> getProdId(int page, int length, Map<String, String> map) {
+        return this.queryForPageForSelectReturn(page, length,()->proElementAdjMapper.getProdId(map));
+    }
 }
