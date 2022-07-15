@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dao.SvrProdFeeDealInterfMapper">
+    <select id="getProdInsId" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        PROD_ID id,
+        PROD_ID text,
+        PROD_NAME object
+        FROM
+        REP_PROD_INFO
+        where
+        1 = 1
+        <if test="search != null and search != ''">
+            and (PROD_ID like
+            concat(concat('%',#{search}),'%')
+            or PROD_NAME like concat(concat('%',#{search}),'%'))
+        </if>
+    </select>
+    <insert id="insertPrdFeeDeal" parameterType="com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto" >
+        INSERT INTO REP_FEE_TRD(PROD_ID,PAY_DATE,FEE_TYPE,
+                                PAID_FEE,ACCRUAL,STATUS,
+								CREATE_USER,CREATE_TIME,CREATE_DEPT,
+                                UPDATE_USER,UPDATE_TIME)
+        values (#{prodId,jdbcType=VARCHAR},#{payDate,jdbcType=VARCHAR},#{feeType,jdbcType=VARCHAR},
+              #{paidFee,jdbcType=DECIMAL},#{accrual,jdbcType=DECIMAL},#{status,jdbcType=VARCHAR},
+              #{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR},
+              #{createUser,jdbcType=VARCHAR},#{updateTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto" >
+        update REP_FEE_TRD
+        <set >
+            <if test="paidFee != null" >
+                PAY_DATE = #{payDate,jdbcType=Date},
+            </if>
+            <if test="feeType != null" >
+                FEE_TYPE = #{feeType,jdbcType=VARCHAR},
+            </if>
+            <if test="paidFee != null" >
+                PAID_FEE = #{paidFee,jdbcType=DECIMAL},
+            </if>
+            <if test="accrual != null" >
+                ACCRUAL = #{accrual,jdbcType=DECIMAL},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                UPDATE_USER = #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where PROD_ID = #{prodId,jdbcType=CHAR}
+          and PAY_DATE = #{opayDate,jdbcType=DATE}
+          and FEE_TYPE = #{ofeeType,jdbcType=CHAR}
+    </update>
+
+    <delete id="delete" parameterType="com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto"  >
+		update REP_FEE_TRD
+		set STATUS = 'D'
+		where PROD_ID = #{prodId,jdbcType=CHAR}
+          and PAY_DATE = #{payDate,jdbcType=DATE}
+          and FEE_TYPE = #{feeType,jdbcType=CHAR}
+	</delete>
+
+    <select id="selectInfo" resultType="com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto" >
+        select rft.PROD_ID prodId,
+               rpi.PROD_NAME prodName,
+               rft.PAY_DATE payDate,
+               rft.FEE_TYPE feeType,
+               rft.PAID_FEE paidFee,
+               rft.ACCRUAL accrual,
+               rft.STATUS status,
+               rft.UPDATE_USER updateUser,
+               rft.UPDATE_TIME updateTime,
+               cie.ERR_MSG errmsg
+        from REP_FEE_TRD rft
+        left join REP_PROD_INFO rpi on rpi.PROD_ID = rft.PROD_ID
+        left join CHB_INTERF_ERRODATA cie on cie.DATAID = rft.PROD_ID and  cie.INTERF_TYPE = 'CHB_PRD_FEE_DEAL'
+        <where>
+            <if test='prodId != null and !prodId.equals("")'>
+                and rft.PROD_ID = #{prodId,jdbcType=VARCHAR}
+            </if>
+            <if test='feeType != null and !feeType.equals("")'>
+                and rft.FEE_TYPE = #{feeType,jdbcType=VARCHAR}
+            </if>
+            <if test="startDate != null and ! startDate.equals('')">
+                and rft.PAY_DATE &gt;= to_date(#{startDate,jdbcType=DATE},'yyyy-MM-dd')
+            </if>
+            <if test="endDate != null and ! endDate.equals('')">
+                and rft.PAY_DATE &lt;= to_date(#{endDate,jdbcType=DATE},'yyyy-MM-dd')
+            </if>
+            <if test="status != null and ! status.equals('')">
+                and rft.STATUS = #{status,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectForExport" resultType="com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto" >
+        select rft.PROD_ID prodId,
+        rpi.PROD_NAME prodName,
+        rft.PAY_DATE payDate,
+        rft.FEE_TYPE feeType,
+        rft.PAID_FEE paidFee,
+        rft.ACCRUAL accrual,
+        rft.STATUS status,
+        rft.UPDATE_USER updateUser,
+        rft.UPDATE_TIME updateTime
+        from REP_FEE_TRD rft
+        left join REP_PROD_INFO rpi on rpi.PROD_ID = rft.PROD_ID
+        <where>
+            <if test="selectData != null and selectData.size()>0">
+                <foreach collection="selectData" item="item" open="(" close=")" separator=") or (">
+                    rft.PROD_ID = #{item.prodId}
+                    and rft.FEE_TYPE = #{item.feeType}
+                    and rft.PAY_DATE = #{item.payDate}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectData" resultType="com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto" >
+        select rft.PROD_ID prodId,
+               rpi.PROD_NAME prodName,
+               rft.PAY_DATE payDate,
+               rft.PAY_DATE opayDate,
+               rft.FEE_TYPE feeType,
+               rft.FEE_TYPE ofeeType,
+               rft.PAID_FEE paidFee,
+               rft.ACCRUAL accrual,
+               rft.STATUS status,
+               rft.UPDATE_USER updateUser,
+               rft.UPDATE_TIME updateTime
+        from REP_FEE_TRD rft
+        left join REP_PROD_INFO rpi on rpi.PROD_ID = rft.PROD_ID
+        where rft.PROD_ID = #{prodId,jdbcType=VARCHAR}
+                and rft.FEE_TYPE = #{feeType,jdbcType=VARCHAR}
+                and rft.PAY_DATE = #{payDate,jdbcType=DATE}
+
+    </select>
+
+    <select id="selectByProdID" resultType="com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto" >
+        select distinct rft.PROD_ID prodId,
+               rpi.PROD_NAME prodName,
+               rft.PAY_DATE payDate,
+               rft.FEE_TYPE feeType,
+               rft.PAID_FEE paidFee,
+               rft.ACCRUAL accrual,
+               rft.STATUS status,
+               rft.UPDATE_USER updateUser,
+               rft.UPDATE_TIME updateTime
+        from REP_FEE_TRD rft
+        left join REP_PROD_INFO rpi on rpi.PROD_ID = rft.PROD_ID
+        where rft.PROD_ID = #{prodId,jdbcType=VARCHAR}
+                and rft.FEE_TYPE = #{feeType,jdbcType=VARCHAR}
+                and rft.PAY_DATE = #{payDate,jdbcType=DATE}
+    </select>
+    <select id="selectProdName" resultType="java.util.Map">
+        SELECT PROD_NAME FROM REP_PROD_INFO WHERE PROD_ID=#{prodId} AND ROWNUM = 1
+    </select>
+    <select id="getFeeTYPE" resultType="java.lang.String">
+        SELECT ITEM_CODE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'FEE_TYPE_REP' and ITEM_VALUE = #{feetype}
+    </select>
+</mapper>
