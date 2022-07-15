@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.joyintech.tams.disclosure.information.report.dao.ReportKfqgg001Mapper">
+
+	<select id="queryKfqgg" resultType="com.joyintech.tams.disclosure.information.report.dto.ReportKfqgg001Dto">
+		select
+			rpi.prod_id prodId,
+			rpi.prod_name prodName,
+		    nvl(rpi.P_PROD_ID,rpi.prod_id) pProdId
+		from rep_prod_info rpi
+		where rpi.prod_id = #{prodId,jdbcType=VARCHAR}
+	</select>
+
+	<select id="queryKfqjh" resultType="java.util.Map">
+		SELECT
+			to_char(open_start_date,'yyyy/MM/dd')     openvdate,
+			to_char(open_end_date,'yyyy/MM/dd')       openedate,
+			to_char(collingoff_period,'yyyy/MM/dd')   collincoffperiod,
+			to_char(auto_redeem_date,'yyyy/MM/dd')    confirmdate
+		FROM
+			dis_prod_plan
+		where PROD_ID = #{prodId,jdbcType=VARCHAR}
+		AND OPEN_START_DATE &lt;= to_date(#{endDate},'yyyy-MM-dd') AND OPEN_START_DATE &gt;= to_date(#{startDate},'yyyy-MM-dd')
+	</select>
+
+</mapper>
