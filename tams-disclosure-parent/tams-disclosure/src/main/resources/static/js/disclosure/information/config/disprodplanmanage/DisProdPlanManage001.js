@@ -1,0 +1,398 @@
+ $(function(){
+	   
+	   var dataVal;
+	   
+	   var getVal = function(){
+		   return evel(dataVal);
+	   }
+	   /**
+	     * 左侧 - 获取查询参数
+	     */
+	    var getSearchKey = function() {
+	        return {
+	        	/*temName:$.trim($('#temName').val()),
+	    		temDescription:$.trim($('#temDescription').val()),
+	    		temLoad:REPORT_SERVER_PATH*/
+
+				dataStatus: $.trim($('#dataStatus').val()),
+				openStartDateBegin: $('#openStartDate').startDate(),
+				openStartDateEnd: $('#openStartDate').endDate(),
+				openEndDateBegin: $('#openEndDate').startDate(),
+				openEndDateEnd: $('#openEndDate').endDate(),
+				operationStartDateBegin: $('#operationStartDate').startDate(),
+				operationStartDateEnd: $('#operationStartDate').endDate(),
+				autoRedeemDateBegin: $('#autoRedeemDate').startDate(),
+				autoRedeemDateEnd: $('#autoRedeemDate').endDate(),
+	        }
+	    };
+	   
+	   //初始化导出表单
+	   var initTable2 = function(){
+			   
+			   dataVal=null;
+			     //目录数据结构
+	           var folder_info = {
+	               folderUri:REPORT_SERVER_PATH,
+	           }
+	           Joyin.ajaxSync('searchReports', folder_info,function(result) {
+	        	   if(result && result.statuCode == 200){
+	        	   var reports = result.data;
+	        	   var datas = new Array();
+	    		   var datesList = new Array();
+	    		   //循环返回的报表，以便取得每个报表的具体信息
+	    		   var temName =$('#temName').val();
+	    		   var temDescription =$('#temDescription').val();	
+	    		   
+	    	       $.each(reports, function(i, rep){
+	    	    		   var s=rep.updateDate.indexOf("T");
+	    		    	   var udate=(rep.updateDate).substring(0,s);
+	    		    	   
+	    		    	   var p=rep.creationDate.indexOf("T");
+	    		    	   var cdate=(rep.creationDate).substring(0,p);
+	    			  datas.push({code:rep.label,name:rep.description,temLoad:REPORT_SERVER_PATH,id:i+1,cdate:cdate,udate:udate});
+	    			 });
+				   datesList = datas;
+	    		   if(datas.length>0){
+	    			   dataTable2.reload({data: datesList});
+	    			   dataTable2.getAllRows();
+	    		   }
+	        	   }
+	        	   });
+	   }
+	   /**
+	    * 查询
+	    */
+	   var search = function(){
+		   
+		   dataVal=null;
+		     //目录数据结构
+           var folder_info = {
+               folderUri:REPORT_SERVER_PATH,
+           }
+           Joyin.ajax('searchReports', folder_info,function(result) {
+        	   if (result && result.statuCode == 200) {
+        	   var reports = result.data;
+        	   var datas = new Array();
+    		   var datesList = new Array();
+    		   //循环返回的报表，以便取得每个报表的具体信息
+    		   var temName =$('#temName').val();
+    		   var temDescription =$('#temDescription').val();	
+    		   
+    	       $.each(reports, function(i, rep){
+    			  datas.push({prodPlanId:rep.prodPlanId,code:rep.label,name:rep.description,temLoad:REPORT_SERVER_PATH,id:i+1,cdate:rep.creationDate,udate:rep.updateDate});
+    			 }); 
+			   datesList = datas;
+    		   if(datas.length>0){
+    			   dataTable.reload({data: datesList});
+    		   }
+        	   }
+        	   });
+	   }
+	   
+	   //下载模板
+	   var download = function(type){
+		var object =null;
+       	var rowArr = dataTable2.getAllCheckedRows();// 所有选中行数据
+       	if(rowArr == null || rowArr.length ==0){
+       		layer.msg("请勾选一个数据！");
+       	}else if(rowArr.length == 1){
+       		
+       		object = rowArr[0].code;
+       		var report_info = {
+                 uri:object,//运行报表的URI
+                 folderUri:REPORT_SERVER_PATH,//运行报表所在目录
+                 downloadName:'report',//希望下载的名字：供exportReport使用
+                 formatType:type,//下载的格式:供exportReport使用, 支持的格式有pdf,html,xls,xlsx,rtf,csv,xml,docx,odt,ods,jrprint
+                 params:{'portnum':1, 'endDate':'2018-03-01', 'startDate':'2018-03-01'},//运行报表所使用的参数
+             }
+       		var obj = {};
+       		obj.name = rowArr[0].name;
+       		obj['data'] = JSON.stringify({'portnum':'A', 'endDate':'2018-03-01', 'startDate':'2018-03-01'});
+       		obj.repName = rowArr[0].name;
+        	obj.fileType = type;
+        	obj.code = rowArr[0].code;
+        	obj.url = exportReportPath(report_info);
+        	Joyin.exportExcel('mergeExport', obj);
+  			   //导出报表
+            //exportReport(report_info);
+         }else if(rowArr.length > 1){
+        	 
+        	 var datas = new Array();
+        	 
+        	 for (var int = 0; int < rowArr.length; int++) {
+        		 var obj = {};
+            		var report_info = {
+                      uri:rowArr[int].code,//运行报表的URI
+                      folderUri:REPORT_SERVER_PATH,//运行报表所在目录
+                      downloadName:'report',//希望下载的名字：供exportReport使用
+                      formatType:type,//下载的格式:供exportReport使用, 支持的格式有pdf,html,xls,xlsx,rtf,csv,xml,docx,odt,ods,jrprint
+                      params:{'portnum':1, 'endDate':'2018-03-01', 'startDate':'2018-03-01'},//运行报表所使用的参数
+                  }
+        		obj.name = rowArr[int].description;
+            	obj['data'] = JSON.stringify({'portnum':'A', 'endDate':'2018-03-01', 'startDate':'2018-03-01'});
+            	obj.fileType = type;
+        		obj.url = exportReportPath(report_info);
+        		obj.code = rowArr[int].code;
+        		datas.push(obj);
+			}
+        	 
+        	 Joyin.exportExcel('exportZip', {datas:JSON.stringify(datas)});
+//        	 Joyin.exportExcel('mergeExport', {datas:JSON.stringify(datas)});
+        	 
+         }	  
+       	$("#toExport").css('display','none');
+     }
+	   
+	   
+	   /**
+	     * 导出
+	     */
+	    var exportExcel = function() {
+	        if (dataTable.getAllRows().length>0) {
+	            var selArr = dataTable.getAllCheckedRows();
+	            var datas = JSON.stringify(selArr);
+	            if (!selArr || selArr.length == 0) {	     
+		        	var paramObj = dataTable.getAllRows();
+		        	var datasAll = JSON.stringify(paramObj);
+		        	 Joyin.exportExcel('export', {
+		        		 datasAll : datasAll
+			            });
+		        } else {
+		            Joyin.exportExcel('export', {
+		                datas : datas
+		            });
+		        }
+	        }
+	        else{
+	        	initTable2();
+	        	var paramObj = dataTable2.getAllRows();
+	        	var datasAll = JSON.stringify(paramObj);
+	        	 Joyin.exportExcel('export', {
+	        		 datasAll : datasAll
+		            });
+	        }
+	        
+	    };
+
+	   
+	   /**
+		 * 定义数据表格
+		 */
+	   var dataTable=$("#dataTable").joyintable({
+	    	data: [],
+		    searchOnInit: true,
+		    page : false,
+	    	cellMinWidth:100 ,
+	    	 cols:[{field:'prodPlanId',title:'主键',width:80,sortable:false,visible:false,align:'center'}
+	    		/*,{field:'prodPlanId',title:'序 号',width:80,sortable:false,align:'center'}*/
+				 ,{field:'prodName',  title: '产品名称',width:250,sortable:false}
+				 ,{field:'prodId',  title: '产品主代码',width:150,sortable:false}
+				 ,{field:'openStartDateStr',  title: '开放起始日',width:100,sortable:false}
+				 ,{field:'openEndDateStr',  title: '开放结束日',width:100,sortable:false}
+				 ,{field:'collingoffPeriodStr',  title: '产品冷静期',width:100,sortable:false}
+				 ,{field:'operationStartDateStr',  title: '运作起始日',width:100,sortable:false}
+				 ,{field:'autoRedeemDateStr',  title: '自动赎回日',width:100,sortable:false}
+				 ,{field:'holdDays',  title: '实际持有天数',width:120,sortable:false}
+				 ,{field:'dataStatusName',title: '数据状态',width:90,sortable:false}
+				 ,{field:'updateDateStr',  title: '更新时间',width:140,sortable:false}
+				 ,{field:'updateUser',  title: '更新人',width:100,sortable:false}
+				 ,{field:'operation',width:20, title: 'SysCommon.operation', type:'action', buttons: ['edit','delt'],
+					 render: function (data, type, row, meta) {
+						 if (row.dataStatus == '02')
+							 return '<i class="btn layui-icon edit edit" title="编辑" data-ignore="false"></i>';
+						 else
+							 return '<i class="btn layui-icon edit edit" title="编辑" data-ignore="false"></i> ' +
+								 '<i class="btn layui-icon delt delt" title="删除" data-ignore="false"></i>';
+					 }
+				 }
+		        ]
+	    });
+	   /**
+	     * 编辑页面
+	     */
+	   dataTable.bind('click', '.edit', function(data, index) {
+	    	data.operateType = "edit";
+	    	Joyin.dialog(JoyinUtil.getLabel("编辑"),
+	                JoyinUtil.getRealPath("/disclosure/information/config/disprodplanmanage/DisProdPlanManage002/init"),
+	                "90%", "90%", {pageModel:PAGE_MODEL_EDIT,prodPlanId:data.prodPlanId},
+	                function(data){
+	                	dataTable.reload();
+	                	dataTable2.reload();
+	                });
+	    });
+	   /**
+	     * 删除页面
+	     */
+	   dataTable.bind('click', '.delt', function(data, index) {
+	        data.operateType = "delete";
+	            Joyin.confirm("确认删除该模板吗？", function(){
+	            	Joyin.ajaxJson('deleteModle', {prodPlanId:data.prodPlanId}, function(result) {
+	            		dataTable.reload();
+	            		dataTable2.reload();
+	 			   });
+	        });
+	    });
+	   /**
+		 * 定义数据表格
+		 */
+	   var dataTable2=$("#dataTable2").joyintable({
+		   ajax: {
+	            url: 'findPage',
+	            type: 'POST',
+	            data: function() {
+	                return getSearchKey();
+	            }
+	        }, 
+		   searchOnInit: false,
+		   rowno : true,
+		   page : true,
+		   cols:[{field:'prodPlanId',title:'主键',width:80,sortable:false,visible:false,align:'center'}
+			   /*,{field:'prodPlanId',title:'序 号',width:80,sortable:false,align:'center'}*/
+			   /*,{field:'prodPlanId',title:'序 号',width:80,sortable:false,align:'center'}*/
+			   ,{field:'prodName',  title: '产品名称',width:250,sortable:false}
+			   ,{field:'prodId',  title: '产品主代码',width:150,sortable:false}
+			   ,{field:'openStartDateStr',  title: '开放起始日',width:100,sortable:false}
+			   ,{field:'openEndDateStr',  title: '开放结束日',width:100,sortable:false}
+			   ,{field:'collingoffPeriodStr',  title: '产品冷静期',width:100,sortable:false}
+			   ,{field:'operationStartDateStr',  title: '运作起始日',width:100,sortable:false}
+			   ,{field:'autoRedeemDateStr',  title: '自动赎回日',width:100,sortable:false}
+			   ,{field:'holdDays',  title: '实际持有天数',width:120,sortable:false}
+			   ,{field:'dataStatusName',title: '数据状态',width:90,sortable:false}
+			   ,{field:'updateDateStr',  title: '更新时间',width:140,sortable:false}
+			   ,{field:'updateUser',  title: '更新人',width:100,sortable:false}
+			   ,{field:'operation',width:20, title: 'SysCommon.operation', type:'action', buttons: ['edit','delt'],
+				   render: function (data, type, row, meta) {
+					   if (row.dataStatus == '02')
+						   return '<i class="btn layui-icon edit edit" title="编辑" data-ignore="false"></i>';
+					   else
+						   return '<i class="btn layui-icon edit edit" title="编辑" data-ignore="false"></i> ' +
+							   '<i class="btn layui-icon delt delt" title="删除" data-ignore="false"></i>';
+				   }
+			   }
+		   ]
+	    });
+	   $("#toExport").css('min-width','50px'); 
+	   $("#toExport").css('left','100px'); 
+	   /**
+	     * 编辑页面
+	     */
+	   dataTable2.bind('click', '.edit', function(data, index) {
+	    	data.operateType = "edit";
+	    	Joyin.dialog(JoyinUtil.getLabel("编辑"),
+	                JoyinUtil.getRealPath("/disclosure/information/config/disprodplanmanage/DisProdPlanManage002/init"),
+	                "40%", "70%", {pageModel:PAGE_MODEL_EDIT,prodPlanId:data.prodPlanId},
+	                function(data){
+	                	dataTable.reload();
+	                	dataTable2.reload();
+	                });
+	    });
+	   /**
+	     * 删除页面
+	     */
+	   dataTable2.bind('click', '.delt', function(data, index) {
+		   if(data.dataStatus == '02'){
+			   Joyin.alert("数据已删除",7,null,null)
+			   return;
+		   }
+
+
+	        data.operateType = "delete";
+		  /* if(data.prodPlanId){
+			   data.prodPlanId = data.prodPlanId.join(",");
+		   }*/
+	            Joyin.confirm("确认删除吗？", function(){
+	            	Joyin.ajaxJson('delete', {prodPlanId:data.prodPlanId}, function(result) {
+	            		dataTable.reload();
+	            		dataTable2.reload();
+	 			   });
+	        });
+	    });
+	   // 配置页面[新建]
+	    var addNew = function(){    	
+	    	Joyin.dialog(JoyinUtil.getLabel('报表产品计划排期'), '/disclosure/information/config/disprodplanmanage/DisProdPlanManage002/init', "40%", "70%",null,
+	    			function(result) {
+	    			dataTable.reload();
+	    			dataTable2.reload();
+	    	}
+	        );
+	    	
+	    };
+	   /**
+	    * 选择模板确认方法
+	    * @returns
+	    */
+	   function modelSelect(){
+		  //var modelSelectParam = dataTable.getAllCheckedRows();
+		  var modelSelectParam = dataTable2.getAllCheckedRows();
+		  if(modelSelectParam.length != 1){
+			  Joyin.alert("请选择一个模板",7,null,null)
+			  return;
+		  }
+		  Joyin.confirm("确认选择该模板", function(){
+			  top.modelSelectParam = modelSelectParam;
+			  Joyin.closeTopWindow();
+			  return modelSelectParam;
+         });
+	   };
+	   $(function(){
+		   // 页面配置调用初始化方法；
+		   if(isModelSelect == 'yes'){
+			   $('#isModelSelect').css("display","block");
+			   $('#oldBtnDiv').css("display","none");
+			   //search();
+			   dataTable2.load();
+		   }
+		   /**
+		    * 模板选择提交
+		    */
+		   $('#DisProdPlanManage001_btn_submit').click(function(){
+			   modelSelect();
+		   });
+		   // 页面调用初始化结束；
+		   /**
+		    * 查询
+		    */
+    	   $('#DisProdPlanManage001_btn_search').click(function() {
+    		   //search();
+    		   dataTable2.load();
+           }); 
+
+    	   /**
+    	    *新建
+    	    */
+    	   $('#DisProdPlanManage001_btn_design').click(function() {
+    		   addNew();
+    	   });
+		   // 导入按钮
+		   $('#DisProdPlanManage001_btn_import').click(function() {
+			   Joyin.confirm("请确认是否要导入数据？", function() {
+				   var options = {};
+				   options.pageId = file;
+				   options.exts = 'xls|xlsx';
+				   Joyin.uploadFile(options,function(fileName) {
+					   Joyin.ajax(basePath + 'chb/assetinfodetail/AssetInfoDetail001/checkConfirmMsgForImportData', {fileName: fileName,tableName:'DIS_PROD_PLAN'}, function(result) {
+						   if ($.isArray(result.joyinMessages) && result.joyinMessages.length > 0) {
+							   var joyinMessages = "";
+							   $.each(result.joyinMessages, function(i, joyinMessage){
+								   joyinMessages += joyinMessage.message + "<br />"
+							   });
+							   Joyin.confirm(joyinMessages, function(){
+								   Joyin.ajax(basePath + 'chb/assetinfodetail/AssetInfoDetail001/importFile', {fileName: fileName,tableName:'DIS_PROD_PLAN'},function () {
+									   table.reload();
+								   });
+							   });
+						   }else{
+							   Joyin.ajax(basePath + 'chb/assetinfodetail/AssetInfoDetail001/importFile', {fileName: fileName,tableName:'DIS_PROD_PLAN'},function () {
+								   table.reload();
+							   });
+						   }
+					   });
+				   },function() {
+					   table.reload();
+				   });
+			   });
+		   });
+    	   
+
+	   });
+   });

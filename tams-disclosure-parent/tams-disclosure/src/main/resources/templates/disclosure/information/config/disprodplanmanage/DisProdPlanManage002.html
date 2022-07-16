@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorator="~{layout/default}">
+<head>
+	<title>新建产品排期计划</title>
+</head>
+<body>
+<div layout:fragment="content">
+	<form class="layui-form joyin-form-wrap" id="submitForm"
+		  style="background: #ffffff; padding: 10px 0;">
+
+		<div class="layui-form-item" style="display: none;">
+<!--			<input id="operateType" name="operateType" class="layui-input form-input" placeholder="请输入"  data-th-value="${entity?.operateType}"> -->
+			<input id="prodPlanId" name="prodPlanId" class="layui-input form-input" placeholder="主键id"  data-th-value="${entity?.prodPlanId}">
+<!--			<input id="priId"  name="priId" class="layui-input form-input" data-th-value="${priId}" placeholder="主键id">-->
+		</div>
+
+		<div class="layui-form-item">
+			<div class="layui-inline layui-col-md9 layui-col-xs9 layui-col-sm9 layui-col-lg91">
+				<label class="layui-form-label form-lable" >产品名称<i class="iconfont must" style="display: inline;">*</i></label>
+				<div class="layui-input-inline input-inline">
+					<select id="finprodId" name="finprodId"
+							class="layui-input form-input input-select" placeholder="请选择"
+							data-url='getPrdInfoSelect' allowClear="true"
+							data-th-initValue='${entity?.prodId}'>
+					</select>
+				</div>
+
+			</div>
+
+		</div>
+		<div class="layui-form-item">
+			<div class="layui-inline layui-col-md9 layui-col-xs9 layui-col-sm9 layui-col-lg91">
+				<label class="layui-form-label form-lable" >
+					产品主代码<i class="iconfont must" style="display: inline;">*</i></label>
+				<div class="layui-input-inline input-inline">
+					<input type="text" id="prodId" name="prodId" placeholder=""
+						   class="layui-input form-input"
+						   data-th-Value="${entity?.prodId}" required disabled="disabled">
+				</div>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<div class="layui-inline layui-col-md9 layui-col-xs9 layui-col-sm9 layui-col-lg91">
+				<label class="layui-form-label form-lable required" >
+					开放起始日<i class="iconfont must" style="display: inline;">*</i>
+				</label>
+				<div class="layui-input-inline input-inline">
+					<input id="openStartDate" name="openStartDate" placeholder="请选择时间" type="datetime"
+						   data-th-Value="${entity?.openStartDateStr}"
+						   class="layui-input form-input input-dateSelect" value="" lay-verify="required"
+						   autocomplete="off" lay-key="1" title="日期格式 [yyyy-MM-dd]">
+					<div class="time-icon"><i class="iconfont icon-date"></i></div>
+				</div>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<div class="layui-inline layui-col-md9 layui-col-xs9 layui-col-sm9 layui-col-lg91">
+				<label class="layui-form-label form-lable" >
+					开放结束日<i class="iconfont must" style="display: inline;">*</i></label>
+				<div class="layui-input-inline input-inline">
+					<input id="openEndDate" name="openEndDate" placeholder="请选择时间" type="datetime"
+						   data-th-Value="${entity?.openEndDateStr}"  required
+						   class="layui-input form-input input-dateSelect" value=""
+						   autocomplete="off" lay-key="2" title="日期格式 [yyyy-MM-dd]">
+					<div class="time-icon"><i class="iconfont icon-date"></i></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="layui-form-item">
+			<div class="layui-inline layui-col-md9 layui-col-xs9 layui-col-sm9 layui-col-lg91">
+				<label class="layui-form-label form-lable" >
+					运作起始日<i class="iconfont must" style="display: inline;">*</i></label>
+				<div class="layui-input-inline input-inline">
+					<input id="operationStartDate" name="operationStartDate" placeholder="请选择时间" type="datetime"
+						   data-th-Value="${entity?.operationStartDateStr}"  required
+						   class="layui-input form-input input-dateSelect" value=""
+						   autocomplete="off" lay-key="4" title="日期格式 [yyyy-MM-dd]">
+					<div class="time-icon"><i class="iconfont icon-date"></i></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="layui-form-item">
+			<div class="layui-inline layui-col-md9 layui-col-xs9 layui-col-sm9 layui-col-lg91">
+				<label class="layui-form-label form-lable" >
+					产品冷静期</label>
+				<div class="layui-input-inline input-inline">
+					<input id="collingoffPeriod" name="collingoffPeriod" placeholder="请选择时间" type="datetime"
+						   data-th-Value="${entity?.collingoffPeriodStr}" required
+						   class="layui-input form-input input-dateSelect" value=""
+						   autocomplete="off" lay-key="3" title="日期格式 [yyyy-MM-dd]">
+					<div class="time-icon"><i class="iconfont icon-date"></i></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="layui-form-item">
+			<div class="layui-inline layui-col-md9 layui-col-xs9 layui-col-sm9 layui-col-lg91">
+				<label class="layui-form-label form-lable" >
+					自动赎回日</label>
+				<div class="layui-input-inline input-inline">
+					<input id="autoRedeemDate" name="autoRedeemDate" placeholder="请选择时间" type="datetime"
+						   data-th-Value="${entity?.autoRedeemDateStr}"
+						   class="layui-input form-input input-dateSelect" value=""
+						   autocomplete="off" lay-key="5" title="日期格式 [yyyy-MM-dd]">
+					<div class="time-icon"><i class="iconfont icon-date"></i></div>
+				</div>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<div class="layui-inline layui-col-md9 layui-col-xs9 layui-col-sm9 layui-col-lg91">
+				<label class="layui-form-label form-lable" >
+					客户实际持有天数</label>
+				<div class="layui-input-inline input-inline">
+					<input type="text" id="holdDays" name="holdDays" placeholder=""
+						   class="layui-input form-input "  lay-verify="integer"
+						   onkeyup="value=value.replace(/[^\d]/g,'')"
+						   data-th-Value="${entity?.holdDays}" >
+
+				</div>
+			</div>
+		</div>
+
+		<div class="layui-col-md11" style="margin: 50px;">
+			<div class="text-center">
+				<a id="DisProdPlanManage002_btn_save"
+				   class="layui-btn layui-btn-sm btn-save"
+				   data-th-text="#{SysCommon.save}">保存</a> <a
+					id="DisProdPlanManage002_btn_cancel"
+					class="layui-btn layui-btn-sm btn-cancel"
+					data-th-text="#{SysCommon.cancel}">取消</a>
+			</div>
+		</div>
+
+	</form>
+
+</div>
+<div layout:fragment="script">
+	<script th:inline="javascript" type="text/javascript">
+		var indexName = /*[[${indexName}]]*/'';
+		var priId = /*[[${priId}]]*/'';
+		//$("#priId").val(priId);
+	</script>
+	<script
+			data-th-src="@{/js/disclosure/information/config/disprodplanmanage/DisProdPlanManage002.js}"
+			type="text/javascript"></script>
+</div>
+</body>
+</html>
