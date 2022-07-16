@@ -132,32 +132,7 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
         return map;
     }
 
-//    /**
-//     * excel导入功能
-//     *
-//     * @param fileName 文件名称
-//     * @return 检验list
-//     * @throws Exception 异常
-//     * @see
-//     * @since 1.0
-//     */
-//    public List<ExcelValidDto> importData(String fileName) {
-//        if(!(fileName.toLowerCase().endsWith(".xls") ||fileName.toLowerCase().endsWith(".xlsx"))) {
-//            List<ExcelValidDto> checkResult = new ArrayList<>();
-//            ExcelValidDto excelValidDto = new ExcelValidDto();
-//            String errorMsg = "模板不是xls或xlsx文件";
-//            excelValidDto.setErrorInfo(errorMsg);
-//            checkResult.add(excelValidDto);
-//            return checkResult;
-//        }
-//        Map<String, Object> param = new HashMap<String, Object>();
-//        param.put("dataList", ExcelUtil.getDataList(fileName));
-//        param.put("fileName", fileName);
-//        return restTemplate.postForList(
-//                ServiceApplication.VALUATION_SERVICE_NAME + "/SvrProdFeeDealInterf/importData",
-//                param,
-//                ExcelValidDto.class);
-//    }
+
 
     /**
      * 导入check
@@ -352,7 +327,6 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
             }
             if (StringUtil.isNotEmpty(rowData.get(1))) {
                 svrProdFeeDealInterfDto.setFeeType(this.getFeeTYPE(rowData.get(1).toString()));
-                svrProdFeeDealInterfDto.setOfeeType(this.getFeeTYPE(rowData.get(1).toString()));
             }
             if (StringUtil.isNotEmpty(rowData.get(2))) {
                 svrProdFeeDealInterfDto.setPaidFee(new BigDecimal(rowData.get(2).toString()));
@@ -362,7 +336,6 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
             }
             if (StringUtil.isNotEmpty(rowData.get(4))) {
                 svrProdFeeDealInterfDto.setPayDate(DateUtil.parse(rowData.get(4).toString()));
-                svrProdFeeDealInterfDto.setOpayDate(DateUtil.parse(rowData.get(4).toString()));
             }
             svrProdFeeDealInterfDto.setStatus("E");
             svrProdFeeDealInterfDtoList.add(svrProdFeeDealInterfDto);

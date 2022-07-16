@@ -6,8 +6,8 @@ var SvrPrdFeeDealInterfCode002 = function() {
         init : function(){
             if(pageModel!=PAGE_MODEL_NEW){
                 $("#prodId").attr('disabled',true);
-                // $("#feeType").attr('disabled',true);
-                // $("#payDate").attr('disabled',true);
+                $("#feeType").attr('disabled',true);
+                $("#payDate").attr('disabled',true);
                 if ($('#feeType').val() === '05'|| $('#feeType').val() === '06' || $('#feeType').val() === '07') {
                     $("#amt").attr("required", "required");
                 } else {
@@ -31,8 +31,6 @@ var SvrPrdFeeDealInterfCode002 = function() {
             param.paidFee = $("#amt").val();
             param.accrual = $("#accrual").val();
             param.payDate = $("#payDate").val();
-            param.ofeeType = $("#ofeeType").val();
-            param.opayDate = $("#opayDate").val();
             Joyin.ajaxJson(basePath + 'disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf002/check',param,function(result){
                 if(result){
                     if(operateType === 'save') {

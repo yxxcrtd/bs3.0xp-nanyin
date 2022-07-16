@@ -32,12 +32,6 @@
         update REP_FEE_TRD
         <set >
             <if test="paidFee != null" >
-                PAY_DATE = #{payDate,jdbcType=Date},
-            </if>
-            <if test="feeType != null" >
-                FEE_TYPE = #{feeType,jdbcType=VARCHAR},
-            </if>
-            <if test="paidFee != null" >
                 PAID_FEE = #{paidFee,jdbcType=DECIMAL},
             </if>
             <if test="accrual != null" >
@@ -54,8 +48,8 @@
             </if>
         </set>
         where PROD_ID = #{prodId,jdbcType=CHAR}
-          and PAY_DATE = #{opayDate,jdbcType=DATE}
-          and FEE_TYPE = #{ofeeType,jdbcType=CHAR}
+          and PAY_DATE = #{payDate,jdbcType=DATE}
+          and FEE_TYPE = #{feeType,jdbcType=CHAR}
     </update>
 
     <delete id="delete" parameterType="com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto"  >
@@ -126,9 +120,7 @@
         select rft.PROD_ID prodId,
                rpi.PROD_NAME prodName,
                rft.PAY_DATE payDate,
-               rft.PAY_DATE opayDate,
                rft.FEE_TYPE feeType,
-               rft.FEE_TYPE ofeeType,
                rft.PAID_FEE paidFee,
                rft.ACCRUAL accrual,
                rft.STATUS status,

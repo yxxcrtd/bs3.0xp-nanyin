@@ -75,10 +75,6 @@ public class SvrProdFeeDealInterfDto extends BaseEntity implements ITableRow, Pr
      */
     private String errmsg;
 
-    private Date opayDate;
-
-    private String ofeeType;
-
     public String getOperateType() {
         return operateType;
     }
@@ -193,19 +189,5 @@ public class SvrProdFeeDealInterfDto extends BaseEntity implements ITableRow, Pr
         return this.getUpdateTime()==null?null: DateUtil.format(this.getUpdateTime(), "yyyyMMddHHmmss");
     }
 
-    public Date getOpayDate() {
-        return opayDate;
-    }
 
-    public void setOpayDate(Date opayDate) {
-        this.opayDate = opayDate;
-    }
-
-    public String getOfeeType() {
-        return ofeeType;
-    }
-
-    public void setOfeeType(String ofeeType) {
-        this.ofeeType = ofeeType;
-    }
 }

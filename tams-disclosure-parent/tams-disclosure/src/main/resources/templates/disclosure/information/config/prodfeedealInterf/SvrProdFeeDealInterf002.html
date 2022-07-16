@@ -7,8 +7,6 @@
 <body>
 <div layout:fragment="content">
     <form class="layui-form joyin-form-wrap pro-module-form" id="submitForm">
-        <input type="hidden" th:value='${#dates.format(entity?.opayDate,"yyyy-MM-dd")}' id="opayDate"/>
-        <input type="hidden" th:value="${entity?.ofeeType}" id="ofeeType"/>
         <div class="layui-form-item">
             <div class="form-inline-wrap">
                 <label class="layui-form-label form-lable">产品主代码</label>
