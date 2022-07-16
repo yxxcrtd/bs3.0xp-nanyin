@@ -49,6 +49,7 @@ spring:
       strategy:
         fixed:
           enabled: true
+      cache: false     
 base:
   datasource:
     type: org.apache.commons.dbcp2.BasicDataSource

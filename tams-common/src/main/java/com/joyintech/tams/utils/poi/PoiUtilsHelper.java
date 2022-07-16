@@ -1,20 +1,28 @@
 package com.joyintech.tams.utils.poi;
 
-import com.joyintech.tams.utils.echarts.EchartsException;
-import org.apache.poi.ooxml.POIXMLDocument;
-import org.apache.poi.util.Units;
-import org.apache.poi.xwpf.usermodel.*;
-
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.poi.ooxml.POIXMLDocument;
+import org.apache.poi.util.Units;
+import org.apache.poi.xwpf.usermodel.Document;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTableCell;
+import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.tams.utils.echarts.EchartsException;
 
 /**
  * 主要功能：实现将docx文档中的参数，用指定的参数集合替换功能
@@ -310,7 +318,12 @@ public class PoiUtilsHelper {
         //填充数据
         for ( String str:cols) {
             String key="${"+str+"}";
-            Object o = params.get(key);
+            Object o = params.get(str);
+            
+            if ( o instanceof Date ) {
+            	o = DateUtil.format((Date)o);
+            }
+            
             text = text.replace(key,o==null?" ":o.toString());
         }
         //System.out.println("普通文本替换后："+text);

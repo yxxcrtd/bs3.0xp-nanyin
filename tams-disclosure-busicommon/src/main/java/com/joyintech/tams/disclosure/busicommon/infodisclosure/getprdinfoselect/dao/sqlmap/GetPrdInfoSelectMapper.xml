@@ -16,7 +16,7 @@
 		and fin_product.P_FINPROD_ID is null
 		/* 多级法人改造    需查询出fin_product.finprod_id字段   add by caojin  2020/6/9    end*/
 	    where STATUS='E'
-	    and p_prod_id is null /*不取子产品*/
+	    /* and p_prod_id is null 不取子产品*/
 	    <if test="search != null and search != ''">
 	    	and (PROD_ID like '%' || #{search, jdbcType=VARCHAR} || '%'
             or PROD_ABBR like '%' || #{search, jdbcType=VARCHAR} || '%')

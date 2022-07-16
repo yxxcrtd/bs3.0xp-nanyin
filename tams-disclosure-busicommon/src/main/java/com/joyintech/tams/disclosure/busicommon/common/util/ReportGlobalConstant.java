@@ -447,7 +447,7 @@ public class ReportGlobalConstant {
     /**
      * poi导出文件存放路径
      */
-    public static final String POI_FILE_EXPORT_PATH = "POI_FILE_EXPORT_PATH";
+    public static final String FILE_EXPORT_PATH = "FILE_EXPORT_PATH";
     
     /**
      * 系统参数：poi导出报表之生成echarts图片工具存放路径

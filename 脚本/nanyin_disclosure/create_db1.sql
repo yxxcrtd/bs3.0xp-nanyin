@@ -1,34 +1,39 @@
+DROP TABLE dis_large_redemption CASCADE CONSTRAINTS;
 CREATE TABLE dis_large_redemption (
-                                      prod_regist_no  VARCHAR2(50) NOT NULL,
-                                      prod_id         VARCHAR2(60),
-                                      is_sales_agency VARCHAR2(10),
-                                      deal_date       DATE,
-                                      trigger_remark  VARCHAR2(512),
-                                      reject_remark   VARCHAR2(512),
-                                      rpt_issue_date  DATE,
-                                      data_status     VARCHAR2(10),
-                                      data_source     VARCHAR2(10),
-                                      create_user     VARCHAR2(20),
-                                      create_time     TIMESTAMP,
-                                      update_user     VARCHAR2(20),
-                                      update_time     TIMESTAMP,
-                                      create_dept     VARCHAR2(32)
+    redemption_id   VARCHAR2(60) NOT NULL,
+    prod_id         VARCHAR2(60) NOT NULL,
+    prod_regist_no  VARCHAR2(50),
+    is_sales_agency VARCHAR2(10),
+    deal_date       DATE,
+    trigger_remark  VARCHAR2(512),
+    reject_remark   VARCHAR2(512),
+    rpt_issue_date  DATE,
+    data_status     VARCHAR2(10),
+    data_source     VARCHAR2(10),
+    create_user     VARCHAR2(20),
+    create_time     TIMESTAMP,
+    update_user     VARCHAR2(20),
+    update_time     TIMESTAMP,
+    create_dept     VARCHAR2(32)
 );
 
 COMMENT ON TABLE dis_large_redemption IS
     '产品巨额赎回信息表';
 
-COMMENT ON COLUMN dis_large_redemption.prod_regist_no IS
-    '产品登记编码';
+COMMENT ON COLUMN dis_large_redemption.redemption_id IS
+    '赎回编号,主键';
 
 COMMENT ON COLUMN dis_large_redemption.prod_id IS
     '子产品代码';
+
+COMMENT ON COLUMN dis_large_redemption.prod_regist_no IS
+    '产品登记编码';
 
 COMMENT ON COLUMN dis_large_redemption.is_sales_agency IS
     '是否有代销机构，数据字典，是否';
 
 COMMENT ON COLUMN dis_large_redemption.deal_date IS
-    '优化起始时间';
+    '赎回日期';
 
 COMMENT ON COLUMN dis_large_redemption.trigger_remark IS
     '触发的情形说明文字';
@@ -60,33 +65,35 @@ COMMENT ON COLUMN dis_large_redemption.update_time IS
 COMMENT ON COLUMN dis_large_redemption.create_dept IS
     '创建部门';
 
-ALTER TABLE dis_large_redemption ADD CONSTRAINT dis_large_redemption_pk PRIMARY KEY ( prod_regist_no );
+ALTER TABLE dis_large_redemption ADD CONSTRAINT dis_large_redemption_pk PRIMARY KEY ( redemption_id );
 
+DROP TABLE dis_nostd_creditor CASCADE CONSTRAINTS;
 CREATE TABLE dis_nostd_creditor (
-                                    nostd_asset_id       VARCHAR2(50) NOT NULL,
-                                    prod_id              VARCHAR2(60) NOT NULL,
-                                    eff_date             DATE,
-                                    eff_end_date         DATE,
-                                    financier            VARCHAR2(128),
-                                    project_name         VARCHAR2(128),
-                                    rem_financing_period VARCHAR2(128),
-                                    income_distribute    VARCHAR2(512),
-                                    trd_construct        VARCHAR2(1024),
-                                    risk_info            VARCHAR2(1024),
-                                    data_status          VARCHAR2(10),
-                                    data_source          VARCHAR2(10),
-                                    create_user          VARCHAR2(20),
-                                    create_time          TIMESTAMP,
-                                    update_user          VARCHAR2(20),
-                                    update_time          TIMESTAMP,
-                                    create_dept          VARCHAR2(32)
+    nostd_asset_id       VARCHAR2(50) NOT NULL,
+    prod_id              VARCHAR2(60) NOT NULL,
+    eff_date             DATE,
+    eff_end_date         DATE,
+    financier            VARCHAR2(128),
+    project_no           VARCHAR2(50),
+    project_name         VARCHAR2(128),
+    rem_financing_period VARCHAR2(128),
+    income_distribute    VARCHAR2(512),
+    trd_construct        VARCHAR2(1024),
+    risk_info            VARCHAR2(1024),
+    data_status          VARCHAR2(10),
+    data_source          VARCHAR2(10),
+    create_user          VARCHAR2(20),
+    create_time          TIMESTAMP,
+    update_user          VARCHAR2(20),
+    update_time          TIMESTAMP,
+    create_dept          VARCHAR2(32)
 );
 
 COMMENT ON TABLE dis_nostd_creditor IS
     '产品投资非标资产明细信息';
 
 COMMENT ON COLUMN dis_nostd_creditor.nostd_asset_id IS
-    '非标资产编号';
+    '非标资产编号，主键';
 
 COMMENT ON COLUMN dis_nostd_creditor.prod_id IS
     '主产品代码';
@@ -99,6 +106,9 @@ COMMENT ON COLUMN dis_nostd_creditor.eff_end_date IS
 
 COMMENT ON COLUMN dis_nostd_creditor.financier IS
     '融资客户';
+
+COMMENT ON COLUMN dis_nostd_creditor.project_no IS
+    '项目编号';
 
 COMMENT ON COLUMN dis_nostd_creditor.project_name IS
     '项目名称';
@@ -138,36 +148,41 @@ COMMENT ON COLUMN dis_nostd_creditor.create_dept IS
 
 ALTER TABLE dis_nostd_creditor ADD CONSTRAINT dis_nostd_creditor_detail_pk PRIMARY KEY ( nostd_asset_id );
 
+DROP TABLE dis_prod_adjust CASCADE CONSTRAINTS;
 CREATE TABLE dis_prod_adjust (
-                                 prod_regist_no    VARCHAR2(50) NOT NULL,
-                                 prod_id           VARCHAR2(60),
-                                 is_sales_agency   VARCHAR2(10),
-                                 prod_adj_remark   NVARCHAR2(1024),
-                                 prod_adj_remark2  NVARCHAR2(1024),
-                                 adj_field         VARCHAR2(512),
-                                 pre_adjust        VARCHAR2(512),
-                                 after_adjust      VARCHAR2(512),
-                                 eff_date          DATE,
-                                 field_adj_remark  VARCHAR2(512),
-                                 field_adj_remark2 VARCHAR2(512),
-                                 rpt_issue_date    DATE,
-                                 data_status       VARCHAR2(10),
-                                 data_source       VARCHAR2(10),
-                                 create_user       VARCHAR2(20),
-                                 create_time       TIMESTAMP,
-                                 update_user       VARCHAR2(20),
-                                 update_time       TIMESTAMP,
-                                 create_dept       VARCHAR2(32)
+    prod_adjust_id    VARCHAR2(60) NOT NULL,
+    prod_id           VARCHAR2(60) NOT NULL,
+    prod_regist_no    VARCHAR2(50),
+    is_sales_agency   VARCHAR2(10),
+    prod_adj_remark   NVARCHAR2(1024),
+    prod_adj_remark2  NVARCHAR2(1024),
+    adj_field         VARCHAR2(512),
+    pre_adjust        VARCHAR2(512),
+    after_adjust      VARCHAR2(512),
+    eff_date          DATE,
+    field_adj_remark  VARCHAR2(512),
+    field_adj_remark2 VARCHAR2(512),
+    rpt_issue_date    DATE,
+    data_status       VARCHAR2(10),
+    data_source       VARCHAR2(10),
+    create_user       VARCHAR2(20),
+    create_time       TIMESTAMP,
+    update_user       VARCHAR2(20),
+    update_time       TIMESTAMP,
+    create_dept       VARCHAR2(32)
 );
 
 COMMENT ON TABLE dis_prod_adjust IS
     '产品要素调整表';
 
-COMMENT ON COLUMN dis_prod_adjust.prod_regist_no IS
-    '产品登记编码';
+COMMENT ON COLUMN dis_prod_adjust.prod_adjust_id IS
+    '产品调整编号，主键';
 
 COMMENT ON COLUMN dis_prod_adjust.prod_id IS
     '子产品代码';
+
+COMMENT ON COLUMN dis_prod_adjust.prod_regist_no IS
+    '产品登记编码';
 
 COMMENT ON COLUMN dis_prod_adjust.is_sales_agency IS
     '是否有代销机构，数据字典，是否';
@@ -220,31 +235,36 @@ COMMENT ON COLUMN dis_prod_adjust.update_time IS
 COMMENT ON COLUMN dis_prod_adjust.create_dept IS
     '创建部门';
 
-ALTER TABLE dis_prod_adjust ADD CONSTRAINT dis_prod_adjust_pk PRIMARY KEY ( prod_regist_no );
+ALTER TABLE dis_prod_adjust ADD CONSTRAINT dis_prod_adjust_pk PRIMARY KEY ( prod_adjust_id );
 
+DROP TABLE dis_prod_asset CASCADE CONSTRAINTS;
 CREATE TABLE dis_prod_asset (
-                                prod_id            VARCHAR2(60) NOT NULL,
-                                fix_pre_ratio      NUMBER(5, 2),
-                                fix_after_ratio    NUMBER(5, 2),
-                                equity_pre_ratio   NUMBER(5, 2),
-                                equity_after_ratio NUMBER(5, 2),
-                                fd_pre_ratio       NUMBER(5, 2),
-                                fd_after_ratio     NUMBER(5, 2),
-                                mix_pre_ratio      NUMBER(5, 2),
-                                mix_after_ratio    NUMBER(5, 2),
-                                eff_date           DATE,
-                                eff_end_date       DATE,
-                                data_status        VARCHAR2(10),
-                                data_source        VARCHAR2(10),
-                                create_user        VARCHAR2(20),
-                                create_time        TIMESTAMP,
-                                update_user        VARCHAR2(20),
-                                update_time        TIMESTAMP,
-                                create_dept        VARCHAR2(32)
+    prod_asset_id      VARCHAR2(60) NOT NULL,
+    prod_id            VARCHAR2(60) NOT NULL,
+    fix_pre_ratio      NUMBER(5, 2),
+    fix_after_ratio    NUMBER(5, 2),
+    equity_pre_ratio   NUMBER(5, 2),
+    equity_after_ratio NUMBER(5, 2),
+    fd_pre_ratio       NUMBER(5, 2),
+    fd_after_ratio     NUMBER(5, 2),
+    mix_pre_ratio      NUMBER(5, 2),
+    mix_after_ratio    NUMBER(5, 2),
+    eff_date           DATE,
+    eff_end_date       DATE,
+    data_status        VARCHAR2(10),
+    data_source        VARCHAR2(10),
+    create_user        VARCHAR2(20),
+    create_time        TIMESTAMP,
+    update_user        VARCHAR2(20),
+    update_time        TIMESTAMP,
+    create_dept        VARCHAR2(32)
 );
 
 COMMENT ON TABLE dis_prod_asset IS
     '产品资产组合表';
+
+COMMENT ON COLUMN dis_prod_asset.prod_asset_id IS
+    '主键编号';
 
 COMMENT ON COLUMN dis_prod_asset.prod_id IS
     '主产品代码';
@@ -283,7 +303,7 @@ COMMENT ON COLUMN dis_prod_asset.data_status IS
     '数据状态';
 
 COMMENT ON COLUMN dis_prod_asset.data_source IS
-    '数据来源';
+    '数据来源，DATA_SOURCE';
 
 COMMENT ON COLUMN dis_prod_asset.create_user IS
     '创建人';
@@ -300,25 +320,26 @@ COMMENT ON COLUMN dis_prod_asset.update_time IS
 COMMENT ON COLUMN dis_prod_asset.create_dept IS
     '创建部门';
 
-ALTER TABLE dis_prod_asset ADD CONSTRAINT dis_prod_asset_pk PRIMARY KEY ( prod_id );
+ALTER TABLE dis_prod_asset ADD CONSTRAINT dis_prod_asset_pk PRIMARY KEY ( prod_asset_id );
 
+DROP TABLE dis_prod_bonusplan CASCADE CONSTRAINTS;
 CREATE TABLE dis_prod_bonusplan (
-                                    bonus_plan_id           VARCHAR2(50) NOT NULL,
-                                    prod_id                 VARCHAR2(60 BYTE) NOT NULL,
-                                    bonus_mode              VARCHAR2(10 BYTE),
-                                    sett_date               DATE,
-                                    payment_date            DATE,
-                                    achievement             NVARCHAR2(256),
-                                    excess_achievement_prop NUMBER(6, 4),
-                                    achievement_basis       NVARCHAR2(128),
-                                    achievement_basis_prop  NUMBER(6, 4),
-                                    data_status             VARCHAR2(10 BYTE),
-                                    data_source             VARCHAR2(10 BYTE),
-                                    create_user             VARCHAR2(20 BYTE) NOT NULL,
-                                    create_time             TIMESTAMP NOT NULL,
-                                    update_user             VARCHAR2(20 BYTE) NOT NULL,
-                                    update_time             TIMESTAMP NOT NULL,
-                                    create_dept             VARCHAR2(32 BYTE)
+    bonus_plan_id           VARCHAR2(50) NOT NULL,
+    prod_id                 VARCHAR2(60 BYTE) NOT NULL,
+    bonus_mode              VARCHAR2(10 BYTE),
+    sett_date               DATE,
+    payment_date            DATE,
+    achievement             NVARCHAR2(256),
+    excess_achievement_prop NUMBER(6, 4),
+    achievement_basis       NVARCHAR2(128),
+    achievement_basis_prop  NUMBER(6, 4),
+    data_status             VARCHAR2(10 BYTE),
+    data_source             VARCHAR2(10 BYTE),
+    create_user             VARCHAR2(20 BYTE),
+    create_time             TIMESTAMP,
+    update_user             VARCHAR2(20 BYTE),
+    update_time             TIMESTAMP,
+    create_dept             VARCHAR2(32 BYTE)
 );
 
 COMMENT ON TABLE dis_prod_bonusplan IS
@@ -331,7 +352,7 @@ COMMENT ON COLUMN dis_prod_bonusplan.prod_id IS
     '产品编号';
 
 COMMENT ON COLUMN dis_prod_bonusplan.bonus_mode IS
-    '分红方式：数据字典code:DIS/BONUS_MODE,01-份额分红后净值为1、02-到期兑付';
+    '分红方式：数据字典code:DIS_BONUS_MODE,01-份额分红后净值为1、02-到期兑付';
 
 COMMENT ON COLUMN dis_prod_bonusplan.sett_date IS
     '收益分配基准日';
@@ -352,7 +373,7 @@ COMMENT ON COLUMN dis_prod_bonusplan.achievement_basis_prop IS
     '业绩比较基准比例';
 
 COMMENT ON COLUMN dis_prod_bonusplan.data_status IS
-    '数据状态：数据字典，系统模块-DIS，字典code：DATA_STATUS:E-有效，D-删除';
+    '数据状态：数据字典，系统模块-DIS，字典code：DIS_DATA_STATUS:E-有效，D-删除';
 
 COMMENT ON COLUMN dis_prod_bonusplan.data_source IS
     '数据来源:数据字典code:DATA_SOURCE';
@@ -372,41 +393,45 @@ COMMENT ON COLUMN dis_prod_bonusplan.update_time IS
 COMMENT ON COLUMN dis_prod_bonusplan.create_dept IS
     '创建部门';
 
-ALTER TABLE dis_prod_bonusplan
-    ADD CONSTRAINT dis_prd_bonus_plan_pk PRIMARY KEY ( bonus_plan_id );
+ALTER TABLE dis_prod_bonusplan ADD CONSTRAINT dis_prd_bonus_plan_pk PRIMARY KEY ( bonus_plan_id );
 
+DROP TABLE dis_prod_feediscount CASCADE CONSTRAINTS;
 CREATE TABLE dis_prod_feediscount (
-                                      prod_regist_no     VARCHAR2(50) NOT NULL,
-                                      prod_id            VARCHAR2(60),
-                                      is_sales_agency    VARCHAR2(10),
-                                      prod_dis_remark    NVARCHAR2(1024),
-                                      feename            VARCHAR2(128),
-                                      pre_feerate        NUMBER(6, 4),
-                                      after_feerate      NUMBER(6, 4),
-                                      start_date         DATE,
-                                      end_date           DATE,
-                                      this_pre_feerate   NUMBER(6, 4),
-                                      this_after_feerate NUMBER(6, 4),
-                                      this_end_feerate   NUMBER(6, 4),
-                                      fee_dis_remark     NVARCHAR2(1024),
-                                      rpt_issue_date     DATE,
-                                      data_status        VARCHAR2(10),
-                                      data_source        VARCHAR2(10),
-                                      create_user        VARCHAR2(20),
-                                      create_time        TIMESTAMP,
-                                      update_user        VARCHAR2(20),
-                                      update_time        TIMESTAMP,
-                                      create_dept        VARCHAR2(32)
+    prod_discount_id   VARCHAR2(60) NOT NULL,
+    prod_id            VARCHAR2(60) NOT NULL,
+    prod_regist_no     VARCHAR2(50),
+    is_sales_agency    VARCHAR2(10),
+    prod_dis_remark    NVARCHAR2(1024),
+    feename            VARCHAR2(128),
+    pre_feerate        NUMBER(6, 4),
+    after_feerate      NUMBER(6, 4),
+    start_date         DATE,
+    end_date           DATE,
+    this_pre_feerate   NUMBER(6, 4),
+    this_after_feerate NUMBER(6, 4),
+    this_end_feerate   NUMBER(6, 4),
+    fee_dis_remark     NVARCHAR2(1024),
+    rpt_issue_date     DATE,
+    data_status        VARCHAR2(10),
+    data_source        VARCHAR2(10),
+    create_user        VARCHAR2(20),
+    create_time        TIMESTAMP,
+    update_user        VARCHAR2(20),
+    update_time        TIMESTAMP,
+    create_dept        VARCHAR2(32)
 );
 
 COMMENT ON TABLE dis_prod_feediscount IS
     '产品费率优惠表';
 
-COMMENT ON COLUMN dis_prod_feediscount.prod_regist_no IS
-    '产品登记编码';
+COMMENT ON COLUMN dis_prod_feediscount.prod_discount_id IS
+    '优惠编号，主键';
 
 COMMENT ON COLUMN dis_prod_feediscount.prod_id IS
     '子产品代码';
+
+COMMENT ON COLUMN dis_prod_feediscount.prod_regist_no IS
+    '产品登记编码';
 
 COMMENT ON COLUMN dis_prod_feediscount.is_sales_agency IS
     '是否有代销机构，数据字典，是否';
@@ -465,20 +490,21 @@ COMMENT ON COLUMN dis_prod_feediscount.update_time IS
 COMMENT ON COLUMN dis_prod_feediscount.create_dept IS
     '创建部门';
 
-ALTER TABLE dis_prod_feediscount ADD CONSTRAINT dis_prod_feediscount_pk PRIMARY KEY ( prod_regist_no );
+ALTER TABLE dis_prod_feediscount ADD CONSTRAINT dis_prod_feediscount_pk PRIMARY KEY ( prod_discount_id );
 
+DROP TABLE dis_prod_nocreate CASCADE CONSTRAINTS;
 CREATE TABLE dis_prod_nocreate (
-                                   prod_regist_no    VARCHAR2(50) NOT NULL,
-                                   nocreate_reason   NVARCHAR2(1024),
-                                   is_sales_agency   VARCHAR2(10),
-                                   report_issue_date DATE,
-                                   data_status       VARCHAR2(10),
-                                   data_source       VARCHAR2(10),
-                                   create_user       VARCHAR2(20),
-                                   create_time       TIMESTAMP,
-                                   update_user       VARCHAR2(20),
-                                   update_time       TIMESTAMP,
-                                   create_dept       VARCHAR2(32)
+    prod_regist_no    VARCHAR2(50) NOT NULL,
+    nocreate_reason   NVARCHAR2(1024),
+    is_sales_agency   VARCHAR2(10),
+    report_issue_date DATE,
+    data_status       VARCHAR2(10),
+    data_source       VARCHAR2(10),
+    create_user       VARCHAR2(20),
+    create_time       TIMESTAMP,
+    update_user       VARCHAR2(20),
+    update_time       TIMESTAMP,
+    create_dept       VARCHAR2(32)
 );
 
 COMMENT ON TABLE dis_prod_nocreate IS
@@ -492,6 +518,9 @@ COMMENT ON COLUMN dis_prod_nocreate.nocreate_reason IS
 
 COMMENT ON COLUMN dis_prod_nocreate.is_sales_agency IS
     '是否有代销机构，数据字典，是否';
+
+COMMENT ON COLUMN dis_prod_nocreate.report_issue_date IS
+    '报表发布日期';
 
 COMMENT ON COLUMN dis_prod_nocreate.data_status IS
     '数据状态';
@@ -516,22 +545,27 @@ COMMENT ON COLUMN dis_prod_nocreate.create_dept IS
 
 ALTER TABLE dis_prod_nocreate ADD CONSTRAINT dis_prod_nocreate_pk PRIMARY KEY ( prod_regist_no );
 
+DROP TABLE dis_prod_partner CASCADE CONSTRAINTS;
 CREATE TABLE dis_prod_partner (
-                                  prod_id      VARCHAR2(60) NOT NULL,
-                                  partner_name VARCHAR2(512),
-                                  eff_date     DATE,
-                                  eff_end_date DATE,
-                                  data_status  VARCHAR2(10),
-                                  data_source  VARCHAR2(10),
-                                  create_user  VARCHAR2(20),
-                                  create_time  TIMESTAMP,
-                                  update_user  VARCHAR2(20),
-                                  update_time  TIMESTAMP,
-                                  create_dept  VARCHAR2(32)
+    prod_partener_id VARCHAR2(60) NOT NULL,
+    prod_id          VARCHAR2(60) NOT NULL,
+    partner_name     VARCHAR2(512),
+    eff_date         DATE,
+    eff_end_date     DATE,
+    data_status      VARCHAR2(10),
+    data_source      VARCHAR2(10),
+    create_user      VARCHAR2(20),
+    create_time      TIMESTAMP,
+    update_user      VARCHAR2(20),
+    update_time      TIMESTAMP,
+    create_dept      VARCHAR2(32)
 );
 
 COMMENT ON TABLE dis_prod_partner IS
     '产品合作机构信息';
+
+COMMENT ON COLUMN dis_prod_partner.prod_partener_id IS
+    '合作机构主键';
 
 COMMENT ON COLUMN dis_prod_partner.prod_id IS
     '主产品代码';
@@ -566,24 +600,25 @@ COMMENT ON COLUMN dis_prod_partner.update_time IS
 COMMENT ON COLUMN dis_prod_partner.create_dept IS
     '创建部门';
 
-ALTER TABLE dis_prod_partner ADD CONSTRAINT dis_prod_partner_pk PRIMARY KEY ( prod_id );
+ALTER TABLE dis_prod_partner ADD CONSTRAINT dis_prod_partner_pk PRIMARY KEY ( prod_partener_id );
 
+DROP TABLE dis_prod_plan CASCADE CONSTRAINTS;
 CREATE TABLE dis_prod_plan (
-                               prod_plan_id         VARCHAR2(60) NOT NULL,
-                               prod_id              VARCHAR2(60 BYTE) NOT NULL,
-                               open_start_date      DATE NOT NULL,
-                               open_end_date        DATE,
-                               collingoff_period    DATE,
-                               operation_start_date DATE,
-                               auto_redeem_date     VARCHAR2(100 BYTE),
-                               hold_days            NUMBER(4),
-                               data_status          VARCHAR2(10 BYTE),
-                               data_source          VARCHAR2(10),
-                               create_user          VARCHAR2(20 BYTE) NOT NULL,
-                               create_time          TIMESTAMP NOT NULL,
-                               update_user          VARCHAR2(20 BYTE) NOT NULL,
-                               update_time          TIMESTAMP NOT NULL,
-                               create_dept          VARCHAR2(32 BYTE)
+    prod_plan_id         VARCHAR2(60) NOT NULL,
+    prod_id              VARCHAR2(60 BYTE) NOT NULL,
+    open_start_date      DATE,
+    open_end_date        DATE,
+    collingoff_period    DATE,
+    operation_start_date DATE,
+    auto_redeem_date     DATE,
+    hold_days            NUMBER(4),
+    data_status          VARCHAR2(10 BYTE),
+    data_source          VARCHAR2(10),
+    create_user          VARCHAR2(20 BYTE),
+    create_time          TIMESTAMP,
+    update_user          VARCHAR2(20 BYTE),
+    update_time          TIMESTAMP,
+    create_dept          VARCHAR2(32 BYTE)
 );
 
 COMMENT ON TABLE dis_prod_plan IS
@@ -602,7 +637,7 @@ COMMENT ON COLUMN dis_prod_plan.open_end_date IS
     '开放期结束日';
 
 COMMENT ON COLUMN dis_prod_plan.collingoff_period IS
-    '查询条件key';
+    '产品冷静期';
 
 COMMENT ON COLUMN dis_prod_plan.operation_start_date IS
     '运营起始日';
@@ -614,10 +649,10 @@ COMMENT ON COLUMN dis_prod_plan.hold_days IS
     '客户持有天数';
 
 COMMENT ON COLUMN dis_prod_plan.data_status IS
-    '数据状态：数据字典，系统模块-DIS，字典code：DATA_STATUS:E-有效，D-删除';
+    '数据状态：数据字典，系统模块-DIS，字典code：DIS_DATA_STATUS:01-有效，02-删除';
 
 COMMENT ON COLUMN dis_prod_plan.data_source IS
-    '数据来源:数据字典code:DATA_SOURCE';
+    '数据来源:数据字典syscode：DIS,code:DATA_SOURCE,';
 
 COMMENT ON COLUMN dis_prod_plan.create_user IS
     '创建人';

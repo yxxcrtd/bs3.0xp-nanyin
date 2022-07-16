@@ -319,8 +319,8 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
                 }
             }else{
             	fileName = buildFileName(reportModelManage001Dto);
-            	//TODO:CHENXC TEST
-                String expSrcFile = "E:/poitest/report/000LYJZ001_产品基本信息.docx";
+            	String reportFileRoot  = CacheUtil.getSysParam(ReportGlobalConstant.FILE_EXPORT_PATH); 
+                String expSrcFile = reportFileRoot+fileName;    //"E:/poitest/report/000LYJZ001_产品基本信息.docx";
                 String fileType = reportModelManage001Dto.getParam().get("fileType").toString();
                 if ( "pdf".equals(fileType)) {  //如果导出pdf，则需要先讲word转换成pdf
                     FileInputStream fis = new FileInputStream(expSrcFile);
@@ -333,7 +333,6 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
             	exportFile=new SafelyFile(reportModelManage001Dto.getTemLoad());///NB/GLJY
 
             }
-      
             
 //    		return ExportUtil.export(zipFileName, zipFile, true);
             return ExportUtil.export(fileName, exportFile, false);

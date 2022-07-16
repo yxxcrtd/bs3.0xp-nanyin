@@ -1,28 +1,49 @@
 package com.joyintech.tams.disclosure.information.reveal.detailshow.service;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
-import com.alibaba.fastjson.JSONArray;
-import com.joyintech.framework.file.SafelyFile;
-import com.joyintech.framework.util.*;
-import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.ReportManager;
-import com.joyintech.tams.utils.poi.PoiUtils;
-import com.joyintech.tams.disclosure.rptdata.RptDataService;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
+import com.alibaba.fastjson.JSONArray;
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.base.intf.DataDict;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.ExportUtil;
+import com.joyintech.framework.util.FileNameUtil;
+import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.RepInfoMapper;
 import com.joyintech.tams.common.base.dao.RepInstallLogDetailMapper;
@@ -32,34 +53,26 @@ import com.joyintech.tams.common.base.entity.RepInfo;
 import com.joyintech.tams.common.base.entity.RepInstallLogDetail;
 import com.joyintech.tams.common.base.entity.RepJobRange;
 import com.joyintech.tams.common.base.entity.RepReveal;
-import com.joyintech.tams.common.base.entity.RepScreen;
-import com.joyintech.tams.common.base.entity.RepTree;
 import com.joyintech.tams.common.util.JacksonUtil;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosuregenandsend.dao.InfoDisclosureGenAndSendMapper;
-import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosuregenandsend.entity.InfoDisclosureGenAndSendEntity;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosuregenandsend.service.InfoDisclosureGenService;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.entity.ProdInfoListEntity;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.entity.RepRuleEntity;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.util.JasparConnectUtilService;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.util.RevealDeadLineService;
+import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.ReportManager;
 import com.joyintech.tams.disclosure.common.common.constant.DisclosureDictCodeList;
-import com.joyintech.tams.disclosure.common.common.util.OfficeMergeUtil;
 import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.dao.RepDetailsShow001Mapper;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.dto.ProdInfoDto;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.dto.RepDetailsShow001Dto;
 import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
+import com.joyintech.tams.disclosure.rptdata.service.RptDataService;
 import com.joyintech.tams.systemtools.util.CommonUtil;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import com.joyintech.tams.utils.poi.PoiUtils;
 
 @SuppressWarnings("unused")
 @Service
@@ -825,11 +838,18 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
      */
     public void previewReport(HttpServletRequest request, HttpServletResponse response) {
         Map<String,Object> params = RequestUtil.getPageParam();
-
+        
         //TODO:如下两项的配置获取
         String imagePath = "E:\\poitest\\template";
-        String templateFile = "E:/poitest/template/产品说明书.docx";
-
+        String templateFile = "";
+        
+        String repId = params.get("uri").toString();
+        params.put("repId", repId);
+        RepInfo repInfo = repInfoMapper.selectByPrimaryKey(repId);
+        if ( repInfo!=null ) {
+            templateFile = repInfo.getTemplatePath()+"/"+repInfo.getTemplateName()+".docx";
+        }
+        
         if ( params.get("elementIdForLog")==null || !params.get("elementIdForLog").equals("RepDetailsShow001_showDetail") ) {  //树单击：显示模板
             //转换成显示内容流
             try {
@@ -841,11 +861,10 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
                 //response.setContentType("application/pdf");
                 //PoiUtils.docxToPdf(fis,response.getOutputStream());
             } catch (IOException e ) {
-                logger.error("报表预览错误.",e);
+                logger.error("报表模板预览错误.",e);
                 e.printStackTrace();
             }
-
-        } else {  //显示指定产品的实际内容
+        } else {  //预览按钮：显示指定产品的实际内容
             if (null != params.get("endDate")) {
                 Date endDate = com.joyintech.framework.util.DateUtil.parse(params.get("endDate").toString());
                 params.put("endDate", new java.sql.Date(endDate.getTime()));
@@ -854,18 +873,15 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
                 Date endDate = com.joyintech.framework.util.DateUtil.parse(params.get("startDate").toString());
                 params.put("startDate", new java.sql.Date(endDate.getTime()));
             }
-            //ReportInfo r1 = reportManager.getReportByURI(params.get("uri").toString());
-            RepInfo repInfo = repInfoMapper.selectByPrimaryKey(params.get("uri").toString());
 
-            //查询实际数据：通过微服务，这里为了测试方便，直接调用busicommon中的类
-            Map<String,Object> dataMap = rptDataService.queryDatas(params.get("uri").toString(),params);
-
-            //报表模板文件url
-            //以下是模拟数据，没有配置初始位置，这里写死
-
-            if ( repInfo!=null ) {
-                templateFile = repInfo.getTemplatePath();
-            }
+            //查询实际数据
+            List<Map<String,Object>> listReports = rptDataService.queryDatas(params);
+            //这里的报表是手工生成，一次就一张报表
+            Map<String,Object> dataMap = null;
+            if ( listReports.size()>0 )
+            	dataMap = listReports.get(0);
+            else
+            	return;
 
             ByteArrayOutputStream os = null;
             InputStream is = null;
@@ -877,11 +893,6 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
                 //将替换后的输出作为输入，转换成html后，发送到response
                 is = new ByteArrayInputStream(os.toByteArray());
                 PoiUtils.docxToHtml(is,response.getOutputStream(), imagePath);
-
-//                FileOutputStream fos = new FileOutputStream("E:/aaa.html");
-//                PoiUtils.docxToHtml(is,fos, imagePath);
-//                System.out.println("ok");
-
             } catch (Exception e ) {
                 e.printStackTrace();
             } finally {
@@ -945,7 +956,7 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
 
             for (String portnum : prdList) {
                 params.put("portnum", portnum);
-                String reportPath = "E:/poitest/report/";
+                String reportPath = CacheUtil.getSysParam(ReportGlobalConstant.FILE_EXPORT_PATH); 
                 String fileName = reportPath + portnum+ GlobalConstant.UNDER_LINE+repInfo.getReportName()+"."+fileType;
                 logger.info("**************************** ");
                 logger.info("fileName = " + fileName);
@@ -959,16 +970,19 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
                         templateFile = repInfo.getTemplatePath();
                     }
                     //以下是模拟数据，没有配置初始位置，这里写死
-                    templateFile="E:/poitest/template/产品说明书.docx";
-
+                    //templateFile="E:/poitest/template/产品说明书.docx";
+                    templateFile = repInfo.getTemplatePath()+"/"+repInfo.getTemplateName()+".docx";
+                    
                     fos = new FileOutputStream(new File(fileName));
                     //查询实际数据：通过微服务，这里为了测试方便，直接调用busicommon中的类
-                    Map<String,Object> dataMap = rptDataService.queryDatas(repId,params);
+                    params.put("repId", repId);
+                    Map<String,Object> dataMap = rptDataService.queryDatas(params).get(0);  //TOD:repId
                     PoiUtils.mergeDocx(templateFile, fos, dataMap);
 
                     fos.flush();
                     fos.close();
                 } catch (Exception e ) {
+                	logger.error("报表生成错误",e);
                     e.printStackTrace();
                 } finally {
                     try {
@@ -983,12 +997,12 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
                 uploadFile.setFileName(fileName);
                 uploadFile.setSrcName(fileName);
 
-                logger.info("生成文件!");
+                logger.info("生成文件成功!");
                 flag = insertRepReveal(params, uploadFile.getFileNo(),uploadFile.getSrcName(),repInfo.getReportName(),repInfo.getReportCategory());
                 logger.info("生成信息主表!");
             }
         } catch (Exception e) {
-            logger.error("error:",e);
+            logger.error("error:报表生成错误.",e);
             flag = false;
         }
         return flag;
@@ -1019,7 +1033,7 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
             String templateFile = repInfo.getTemplatePath()+ repInfo.getTemplateName();
             templateFile = "E:/poitest/template/产品说明书.docx";
 
-            Map<String,Object> dataMap = rptDataService.queryDatas(repId,params);
+            Map<String,Object> dataMap = rptDataService.queryDatas(params).get(0);  //TODO:repId
             if ( fileType.equals("docx")) {
                 FileOutputStream fos = new FileOutputStream(new File(fileName+"."+fileType));
                 PoiUtils.mergeDocx(templateFile, fos, dataMap);
