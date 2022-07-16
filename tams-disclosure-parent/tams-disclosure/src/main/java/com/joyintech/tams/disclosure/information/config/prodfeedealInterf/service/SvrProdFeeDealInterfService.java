@@ -198,6 +198,8 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
 
                     if (!StringUtil.isNotEmpty(rowData.get(0))){
                         errorMsg.append("产品主代码 必填！");
+                    }else if(!this.getProdId(rowData.get(0))){
+                        errorMsg.append("产品主代码未在系统中维护！");
                     }
                     if (!StringUtil.isNotEmpty(rowData.get(1))){
                         errorMsg.append("费用类型 必填！");
@@ -298,6 +300,14 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
     }
 
 
+    public Boolean getProdId(String prodId) {
+        String r = svrProdFeeDealInterfMapper.getProdId(prodId);
+        if(StringUtil.isNotEmpty(r)){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
     public AjaxResult importFile(Map<String, Object> param) {
         AjaxResult ajaxResult = new AjaxResult();

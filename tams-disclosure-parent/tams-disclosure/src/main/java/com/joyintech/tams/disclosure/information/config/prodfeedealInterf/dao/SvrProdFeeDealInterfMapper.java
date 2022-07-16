@@ -30,4 +30,6 @@ public interface SvrProdFeeDealInterfMapper {
     Map<String,String> selectProdName(@Param("prodId")String prodId);
 
     String getFeeTYPE(@Param("feetype") String feetype);
+
+    String getProdId(@Param("prodId") String prodId);
 }

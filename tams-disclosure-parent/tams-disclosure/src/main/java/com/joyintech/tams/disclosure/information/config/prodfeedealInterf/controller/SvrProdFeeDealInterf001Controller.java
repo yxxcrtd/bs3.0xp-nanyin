@@ -157,7 +157,7 @@ public class SvrProdFeeDealInterf001Controller extends BaseController {
                 "/com/joyintech/tams/disclosure/information/config/prodfeedealInterf/conf/export_conf.xml", dtoList);
 
         return ExportUtil.export(
-                "产品交易信息维护" + GlobalConstant.OPEN_PARENTHESIS
+                "产品费用交易信息维护" + GlobalConstant.OPEN_PARENTHESIS
                         + DateUtil.format(new Date()) + GlobalConstant.CLOSE_PARENTHESIS + GlobalConstant.POINT
                         + FileNameUtil.getFileExtName(outFile),
                 outFile, true);

@@ -164,4 +164,7 @@
     <select id="getFeeTYPE" resultType="java.lang.String">
         SELECT ITEM_CODE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'FEE_TYPE_REP' and ITEM_VALUE = #{feetype}
     </select>
+    <select id="getProdId" resultType="java.lang.String">
+        SELECT PROD_ID FROM REP_PROD_INFO WHERE PROD_ID = #{prodId}
+    </select>
 </mapper>
