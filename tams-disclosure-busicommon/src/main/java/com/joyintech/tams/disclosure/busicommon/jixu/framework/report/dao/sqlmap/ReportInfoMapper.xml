@@ -3,8 +3,10 @@
 <mapper namespace="com.joyintech.tams.disclosure.busicommon.jixu.framework.report.dao.ReportInfoMapper">
     <select id="getReportInfoByID" resultType="com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.ReportInfo" parameterType="java.lang.String" >
         select
-        REP_REPORTINFO.*
-        from REP_REPORTINFO
+            REP_REPORTINFO.*,
+            rep_info.report_name reportName
+        from REP_REPORTINFO  REP_REPORTINFO
+        left join rep_info rep_info on REP_REPORTINFO.REPORTID=rep_info.rep_id
         where REPORTID = #{reportID,jdbcType=VARCHAR}
     </select>
     <select id="getReportInfoByURI" resultType="com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.ReportInfo" parameterType="java.lang.String" >
