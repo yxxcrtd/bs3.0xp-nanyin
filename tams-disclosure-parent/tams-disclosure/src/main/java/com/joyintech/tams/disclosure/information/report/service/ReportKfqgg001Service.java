@@ -11,10 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 产品开放期公告/报告
@@ -49,7 +46,7 @@ public class ReportKfqgg001Service extends BaseService<ReportKfqgg001Dto> {
             return dataMap;
         }
         String portnum = params.get("portnum").toString();
-        String endDate = DateUtil.format(new Date((long)params.get("endDate")));
+        String endDate = DateUtil.format((Date)params.get("endDate"));
         Map<String,Object> searchparam = new HashMap<String,Object>();
         searchparam.put("prodId", portnum);
         searchparam.put("endDate", endDate);
@@ -66,8 +63,12 @@ public class ReportKfqgg001Service extends BaseService<ReportKfqgg001Dto> {
         //根据pProdid查询排期表
         searchparam.put("startDate",endDates[0] + "-01-01");
         searchparam.put("endDate",endDates[0] + "-12-31");
+        //如果是分级产品，排期表只存母产品代码的排期数据，所以需要使用父编码（普通产品、子产品该字段有值）
+        searchparam.put("prodId", kfgg.getpProdId());
         List<Map<String,String>> list = reportKfqgg001Mapper.queryKfqjh(searchparam);
-
+        if(list == null){
+            list = new ArrayList<>();
+        }
         dataMap.put("openList", list);
         return dataMap;
     }
