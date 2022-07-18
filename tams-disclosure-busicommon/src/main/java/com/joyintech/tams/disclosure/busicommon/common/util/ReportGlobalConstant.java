@@ -458,4 +458,9 @@ public class ReportGlobalConstant {
      * 系统参数：poi导出报表Echarts临时文件存放路径
      */
     public static final String POI_ECHARTS_TMPFILE_PATH = "POI_ECHARTS_TMPFILE_PATH";
+    
+    /**
+     * 系统参数：报表文件服务器存放路径
+     */
+    public static final String REPORT_FILE_PATH = "REPORT_FILE_PATH";
 }

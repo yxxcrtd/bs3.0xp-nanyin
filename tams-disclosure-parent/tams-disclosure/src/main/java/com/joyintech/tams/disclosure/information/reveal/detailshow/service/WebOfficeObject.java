@@ -50,10 +50,11 @@ public class WebOfficeObject {
 				request.getSession().getServletContext());
 		if ( "LOADFILE".equals(params.get("OPTION").toString()) ) {
 			String fname = params.get("FILENAME").toString();
-			fname = "E:/poitest/template/产品说明书.docx";
+			if ( fname==null || fname.length()<1 ) {
+				fname = "E:/poitest/template/产品说明书.docx";
+			}
 			fileContentStream = new FileInputStream(fname) ;
 		} else{
-
 			// 判断 request 是否有文件上传,即多部分请求
 			if (multipartResolver.isMultipart(request)) {
 				// 转换成多部分request
