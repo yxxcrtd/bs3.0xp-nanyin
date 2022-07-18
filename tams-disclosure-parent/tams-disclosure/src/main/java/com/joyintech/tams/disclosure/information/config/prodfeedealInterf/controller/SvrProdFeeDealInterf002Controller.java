@@ -10,6 +10,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt4;
 import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
 import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.service.SvrProdFeeDealInterfService;
 import com.joyintech.tams.systemtools.util.CommonUtil;
@@ -87,7 +88,7 @@ public class SvrProdFeeDealInterf002Controller extends BaseController {
         params.setPageId("SvrProdFeeDealInterf002");
         params.setElementId(dto.getElementId());
         params.setBusinessCode(dto.getProdId());
-        params.setBusinessType(DictCodeList.共通业务类型_产品费用交易信息维护.getValue());
+        params.setBusinessType(DictCodeListExt4.共通业务类型_产品费用交易信息维护.getValue());
         params.setComment(entity -> "主键流程id" + "(" + entity.getProdId() + ")");
         // 塞入工作流参数
         processParameter.setWorkFlowParameter(params);

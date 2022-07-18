@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.common.base.dao.RepFeeTrdMapper">
+
+    <resultMap type="com.joyintech.tams.common.base.entity.RepFeeTrd" id="BaseResultMap">
+        <result property="prodId" column="PROD_ID" jdbcType="VARCHAR"/>
+        <result property="payDate" column="PAY_DATE" jdbcType="Date"/>
+        <result property="feeType" column="FEE_TYPE" jdbcType="VARCHAR"/>
+        <result property="paidFee" column="PAID_FEE" jdbcType="DECIMAL"/>
+        <result property="accrual" column="ACCRUAL" jdbcType="DECIMAL"/>
+        <result property="createUser" column="CREATE_USER" jdbcType="VARCHAR"/>
+        <result property="createDept" column="CREATE_DEPT" jdbcType="VARCHAR"/>
+        <result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP"/>
+        <result property="updateUser" column="UPDATE_USER" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP"/>
+        <result property="status" column="STATUS" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        PROD_ID,PAY_DATE,FEE_TYPE, PAID_FEE,ACCRUAL,STATUS,
+		 CREATE_USER,CREATE_TIME,CREATE_DEPT, UPDATE_USER,UPDATE_TIME
+    </sql>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from REP_FEE_TRD
+        where PROD_ID = #{id,jdbcType=VARCHAR}
+    </delete>
+    <!--新增所有列-->
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepFeeTrd">
+        INSERT INTO REP_FEE_TRD(PROD_ID,PAY_DATE,FEE_TYPE,
+                                PAID_FEE,ACCRUAL,STATUS,
+								CREATE_USER,CREATE_TIME,CREATE_DEPT,
+                                UPDATE_USER,UPDATE_TIME)
+        values (#{prodId,jdbcType=VARCHAR},#{payDate,jdbcType=VARCHAR},#{feeType,jdbcType=VARCHAR},
+              #{paidFee,jdbcType=DECIMAL},#{accrual,jdbcType=DECIMAL},#{status,jdbcType=VARCHAR},
+              #{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR},
+              #{createUser,jdbcType=VARCHAR},#{updateTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepFeeTrd" >
+        insert into REP_FEE_TRD
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="prodId != null" >
+                PROD_ID,
+            </if>
+            <if test="feeType != null" >
+                FEE_TYPE,
+            </if>
+            <if test="payDate != null" >
+                PAY_DATE,
+            </if>
+            <if test="paidFee != null" >
+                PAID_FEE,
+            </if>
+            <if test="accrual != null" >
+                ACCRUAL,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+
+            <if test="prodId != null" >
+                #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="feeType != null" >
+                #{feeType,jdbcType=VARCHAR},
+            </if>
+            <if test="payDate != null" >
+                #{payDate,jdbcType=DATE},
+            </if>
+            <if test="paidFee != null" >
+                #{paidFee,jdbcType=DECIMAL},
+            </if>
+            <if test="accrual != null" >
+                #{accrual,jdbcType=DECIMAL},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepFeeTrd" >
+        insert into REP_FEE_TRD(PROD_ID,PAY_DATE,FEE_TYPE,
+                                PAID_FEE,ACCRUAL,STATUS,
+								CREATE_USER,CREATE_TIME,CREATE_DEPT,
+                                UPDATE_USER,UPDATE_TIME)
+        select PROD_ID,PAY_DATE,FEE_TYPE,
+                                PAID_FEE,ACCRUAL,STATUS,
+								CREATE_USER,CREATE_TIME,CREATE_DEPT,
+                                UPDATE_USER,UPDATE_TIME
+             from REP_FEE_TRD
+             where STATUS = 1=1 and PROD_ID = #{id,jdbcType=VARCHAR}
+    </insert>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.RepFeeTrdMapper.Base_Column_List" />
+        from REP_FEE_TRD
+        where PROD_ID = #{id,jdbcType=VARCHAR}
+    </select>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepFeeTrd" >
+        update REP_FEE_TRD
+        <set >
+            <if test="feeType != null" >
+                FEE_TYPE = #{paidFee,jdbcType=VARCHAR},
+            </if>
+            <if test="payDate != null" >
+                PAY_DATE = #{paidFee,jdbcType=DATE},
+            </if>
+            <if test="paidFee != null" >
+                PAID_FEE = #{paidFee,jdbcType=DECIMAL},
+            </if>
+            <if test="accrual != null" >
+                ACCRUAL = #{accrual,jdbcType=DECIMAL},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where PROD_ID = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepExpectedLog" >
+        update REP_FEE_TRD
+        set FEE_TYPE = #{feeType,jdbcType=VARCHAR},
+            PAY_DATE = #{payDate,jdbcType=DATE},
+            PAID_FEE = #{paidFee,jdbcType=DECIMAL},
+            ACCRUAL = #{accrual,jdbcType=DECIMAL},
+            STATUS = #{status,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where PROD_ID = #{id,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -12,6 +12,7 @@ import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt4;
 import com.joyintech.tams.disclosure.common.common.dto.ExcelValidDto;
 import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
 import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.service.SvrProdFeeDealInterfService;
@@ -122,7 +123,7 @@ public class SvrProdFeeDealInterf001Controller extends BaseController {
         params.setPageId("SvrProdFeeDealInterf002");
         params.setElementId(dto.getElementId());
         params.setBusinessCode(item->item.getProdId());
-        params.setBusinessType(DictCodeList.共通业务类型_产品费用交易信息维护.getValue());
+        params.setBusinessType(DictCodeListExt4.共通业务类型_产品费用交易信息维护.getValue());
         params.setComment(entity ->  "产品代码" + "(" + entity.getProdId() + ")");
         processParameter.setOperationType(OperationType.DELETE);
         processParameter.setWorkFlowParameter(params);
