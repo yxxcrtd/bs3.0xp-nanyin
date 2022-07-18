@@ -2,8 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.common.base.dao.DisLargeRedemptionMapper" >
     <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.DisLargeRedemption" >
-        <id column="PROD_REGIST_NO" property="prodRegistNo" jdbcType="VARCHAR" />
+        <id column="REDEMPTION_ID" property="redemptionId" jdbcType="VARCHAR" />
         <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="PROD_REGIST_NO" property="prodRegistNo" jdbcType="VARCHAR" />
         <result column="IS_SALES_AGENCY" property="isSalesAgency" jdbcType="VARCHAR" />
         <result column="DEAL_DATE" property="dealDate" jdbcType="DATE" />
         <result column="TRIGGER_REMARK" property="triggerRemark" jdbcType="VARCHAR" />
@@ -18,7 +19,7 @@
         <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
-        PROD_REGIST_NO PROD_REGIST_NO, PROD_ID PROD_ID, IS_SALES_AGENCY IS_SALES_AGENCY, 
+        REDEMPTION_ID REDEMPTION_ID, PROD_ID PROD_ID, PROD_REGIST_NO PROD_REGIST_NO, IS_SALES_AGENCY IS_SALES_AGENCY, 
         DEAL_DATE DEAL_DATE, TRIGGER_REMARK TRIGGER_REMARK, REJECT_REMARK REJECT_REMARK, 
         RPT_ISSUE_DATE RPT_ISSUE_DATE, DATA_STATUS DATA_STATUS, DATA_SOURCE DATA_SOURCE, 
         CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, 
@@ -38,32 +39,37 @@
         select 
         <include refid="com.joyintech.tams.common.base.dao.DisLargeRedemptionMapper.Base_Column_List" />
         from DIS_LARGE_REDEMPTION
-        where PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
+        where REDEMPTION_ID = #{redemptionId,jdbcType=VARCHAR}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
         delete from DIS_LARGE_REDEMPTION
-        where PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
+        where REDEMPTION_ID = #{redemptionId,jdbcType=VARCHAR}
     </delete>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.DisLargeRedemption" >
-        insert into DIS_LARGE_REDEMPTION (PROD_REGIST_NO, PROD_ID, IS_SALES_AGENCY, 
-            DEAL_DATE, TRIGGER_REMARK, REJECT_REMARK, 
-            RPT_ISSUE_DATE, DATA_STATUS, DATA_SOURCE, 
-            CREATE_USER, CREATE_TIME, UPDATE_USER, 
-            UPDATE_TIME, CREATE_DEPT)
-        values (#{prodRegistNo,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{isSalesAgency,jdbcType=VARCHAR}, 
-            #{dealDate,jdbcType=DATE}, #{triggerRemark,jdbcType=VARCHAR}, #{rejectRemark,jdbcType=VARCHAR}, 
-            #{rptIssueDate,jdbcType=DATE}, #{dataStatus,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR}, 
-            #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
-            #{updateTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR})
+        insert into DIS_LARGE_REDEMPTION (REDEMPTION_ID, PROD_ID, PROD_REGIST_NO, 
+            IS_SALES_AGENCY, DEAL_DATE, TRIGGER_REMARK, 
+            REJECT_REMARK, RPT_ISSUE_DATE, DATA_STATUS, 
+            DATA_SOURCE, CREATE_USER, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME, CREATE_DEPT
+            )
+        values (#{redemptionId,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{prodRegistNo,jdbcType=VARCHAR}, 
+            #{isSalesAgency,jdbcType=VARCHAR}, #{dealDate,jdbcType=DATE}, #{triggerRemark,jdbcType=VARCHAR}, 
+            #{rejectRemark,jdbcType=VARCHAR}, #{rptIssueDate,jdbcType=DATE}, #{dataStatus,jdbcType=VARCHAR}, 
+            #{dataSource,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR}
+            )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.DisLargeRedemption" >
         insert into DIS_LARGE_REDEMPTION
         <trim prefix="(" suffix=")" suffixOverrides="," >
-            <if test="prodRegistNo != null" >
-                PROD_REGIST_NO,
+            <if test="redemptionId != null" >
+                REDEMPTION_ID,
             </if>
             <if test="prodId != null" >
                 PROD_ID,
+            </if>
+            <if test="prodRegistNo != null" >
+                PROD_REGIST_NO,
             </if>
             <if test="isSalesAgency != null" >
                 IS_SALES_AGENCY,
@@ -103,11 +109,14 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
-            <if test="prodRegistNo != null" >
-                #{prodRegistNo,jdbcType=VARCHAR},
+            <if test="redemptionId != null" >
+                #{redemptionId,jdbcType=VARCHAR},
             </if>
             <if test="prodId != null" >
                 #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodRegistNo != null" >
+                #{prodRegistNo,jdbcType=VARCHAR},
             </if>
             <if test="isSalesAgency != null" >
                 #{isSalesAgency,jdbcType=VARCHAR},
@@ -148,20 +157,23 @@
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.DisLargeRedemption" >
-        insert into DIS_LARGE_REDEMPTION(PROD_REGIST_NO, PROD_ID, IS_SALES_AGENCY, DEAL_DATE, 
-        TRIGGER_REMARK, REJECT_REMARK, RPT_ISSUE_DATE, DATA_STATUS, DATA_SOURCE, CREATE_USER, 
-        CREATE_TIME, UPDATE_USER, UPDATE_TIME, CREATE_DEPT)
-        select PROD_REGIST_NO, PROD_ID, IS_SALES_AGENCY, DEAL_DATE, 
-            TRIGGER_REMARK, REJECT_REMARK, RPT_ISSUE_DATE, DATA_STATUS, DATA_SOURCE, CREATE_USER, 
-            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_DEPT
+        insert into DIS_LARGE_REDEMPTION(REDEMPTION_ID, PROD_ID, PROD_REGIST_NO, IS_SALES_AGENCY, 
+        DEAL_DATE, TRIGGER_REMARK, REJECT_REMARK, RPT_ISSUE_DATE, DATA_STATUS, DATA_SOURCE, 
+        CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, CREATE_DEPT)
+        select REDEMPTION_ID, PROD_ID, PROD_REGIST_NO, IS_SALES_AGENCY, 
+            DEAL_DATE, TRIGGER_REMARK, REJECT_REMARK, RPT_ISSUE_DATE, DATA_STATUS, DATA_SOURCE, 
+            CREATE_USER, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_DEPT
              from DIS_LARGE_REDEMPTION
-             where 1 = 1 and PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
+             where 1 = 1 and REDEMPTION_ID = #{redemptionId,jdbcType=VARCHAR}
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.DisLargeRedemption" >
         update DIS_LARGE_REDEMPTION
         <set >
             <if test="prodId != null" >
                 PROD_ID = #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodRegistNo != null" >
+                PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR},
             </if>
             <if test="isSalesAgency != null" >
                 IS_SALES_AGENCY = #{isSalesAgency,jdbcType=VARCHAR},
@@ -191,11 +203,12 @@
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
         </set>
-        where PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
+        where REDEMPTION_ID = #{redemptionId,jdbcType=VARCHAR}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.DisLargeRedemption" >
         update DIS_LARGE_REDEMPTION
         set PROD_ID = #{prodId,jdbcType=VARCHAR},
+            PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR},
             IS_SALES_AGENCY = #{isSalesAgency,jdbcType=VARCHAR},
             DEAL_DATE = #{dealDate,jdbcType=DATE},
             TRIGGER_REMARK = #{triggerRemark,jdbcType=VARCHAR},
@@ -205,6 +218,6 @@
             DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-        where PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
+        where REDEMPTION_ID = #{redemptionId,jdbcType=VARCHAR}
     </update>
 </mapper>

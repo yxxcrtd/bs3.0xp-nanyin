@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DisLargeRedemptionMapper {
-    int deleteByPrimaryKey(String prodRegistNo);
+    int deleteByPrimaryKey(String redemptionId);
 
     int insert(DisLargeRedemption record);
 
@@ -13,7 +13,7 @@ public interface DisLargeRedemptionMapper {
 
     int insertBasicByBasicInfo(DisLargeRedemption record);
 
-    DisLargeRedemption selectByPrimaryKey(String prodRegistNo);
+    DisLargeRedemption selectByPrimaryKey(String redemptionId);
 
     int updateByPrimaryKeySelective(DisLargeRedemption record);
 

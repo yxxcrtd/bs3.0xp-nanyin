@@ -3,16 +3,23 @@ package com.joyintech.tams.disclosure.information.config.hugeinfopro.controller;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
+
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.disclosure.information.config.proelementadj.dto.ProElementAdj001Dto;
-import com.joyintech.tams.disclosure.information.config.proelementadj.service.ProElementAdj001Service;
+
+import com.joyintech.tams.disclosure.information.config.hugeinfopro.dto.HugeInfoPro001Dto;
+import com.joyintech.tams.disclosure.information.config.hugeinfopro.service.HugeInfoPro001Service;
+import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -23,14 +30,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 
 @PageId("HugeInfoPro001")
 @Controller
 @RequestMapping("/disclosure/information/config/hugeinfopro/HugeInfoPro001")
 public class HugeInfoPro001Controller extends BaseController {
 
+    /**
+     * logger
+     */
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
-    private ProElementAdj001Service proElementAdj001Service;
+    private HugeInfoPro001Service hugeInfoPro001Service;
 
     @Override
     public String init(Model model){
@@ -41,8 +58,8 @@ public class HugeInfoPro001Controller extends BaseController {
 
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<ProElementAdj001Dto> selectAll(){
-        Page<ProElementAdj001Dto> page = proElementAdj001Service.selectForPage(
+    public Page<HugeInfoPro001Dto> selectAll(){
+        Page<HugeInfoPro001Dto> page = hugeInfoPro001Service.selectForPage(
                 RequestUtil.getParameters(getRequest()));
         return page;
     }
@@ -50,7 +67,7 @@ public class HugeInfoPro001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({
-            ValidateGroupDelete.class}) ProElementAdj001Dto dto, BindingResult result) {
+            ValidateGroupDelete.class}) HugeInfoPro001Dto dto, BindingResult result) {
         return commonCheck(result, dto.getOperateType());
     }
 
@@ -66,22 +83,23 @@ public class HugeInfoPro001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
-    public AjaxResult delete(@RequestBody @Validated({ValidateGroupDelete.class}) ProElementAdj001Dto dto, BindingResult br) throws WorkFlowException {
+    public AjaxResult delete(@RequestBody @Validated({ValidateGroupDelete.class}) HugeInfoPro001Dto dto, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }
-        ProcessParameter<ProElementAdj001Dto> processParameter = new ProcessParameter<ProElementAdj001Dto>();
-        WorkFlowParameter<ProElementAdj001Dto> params = new WorkFlowParameter<ProElementAdj001Dto>();
-        params.setPageId("ProElementAdj002");
+        ProcessParameter<HugeInfoPro001Dto> processParameter = new ProcessParameter<HugeInfoPro001Dto>();
+        WorkFlowParameter<HugeInfoPro001Dto> params = new WorkFlowParameter<HugeInfoPro001Dto>();
+        params.setPageId("HugeInfoPro002");
         params.setElementId(dto.getElementId());
         params.setBusinessCode(item -> item.getProdRegistNo());
-        params.setBusinessType(DictCodeListExt3.共通业务类型_产品要素调整.getValue());
+        params.setBusinessType(DictCodeListExt3.共通业务类型_巨额赎回信息维护.getValue());
         // 设置流程业务说明, entity即传入的dto
         params.setComment(
                 entity -> "产品登记编码"+ "(" + entity.getProdRegistNo()+ ")"
                         +  "-" + "子产品代码"+ "(" + entity.getProdId() + ")");
-        String msg = proElementAdj001Service.start(processParameter,
-                dto.getSelectedItem().toArray(new ProElementAdj001Dto[dto.getSelectedItem().size()]));
+        processParameter.setWorkFlowParameter(params);
+        String msg = hugeInfoPro001Service.start(processParameter,
+                dto.getSelectedItem().toArray(new HugeInfoPro001Dto[dto.getSelectedItem().size()]));
         return new AjaxResult(msg);
     }
 
@@ -95,7 +113,38 @@ public class HugeInfoPro001Controller extends BaseController {
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export(){
-        return proElementAdj001Service.export(this.getPageId(),
+        return hugeInfoPro001Service.export(this.getPageId(),
                 RequestUtil.getParameters(getRequest()));
+    }
+
+
+    @ResponseBody
+    @RequestMapping("checkImportData")
+    public AjaxResult checkImportData(String fileName) {
+        return hugeInfoPro001Service.checkImportData(fileName);
+    }
+
+
+    @ResponseBody
+    @RequestMapping("importFile")
+    public AjaxResult importFile(@RequestBody Map<String, Object> param)  {
+        return hugeInfoPro001Service.importFile(param);
+    }
+
+    @ResponseBody
+    @RequestMapping("getRegistNoList")
+    public Page<SelectOptionDto> getRegistNoList()
+            throws Exception {
+        Page<SelectOptionDto> temp = hugeInfoPro001Service.getRegistNoList(RequestUtil.getPageParam());
+        return temp;
+    }
+
+
+    @ResponseBody
+    @RequestMapping("getProdIdlist")
+    public Page<SelectOptionDto> getProdIdlist()
+            throws Exception {
+        Page<SelectOptionDto> temp = hugeInfoPro001Service.getProdIdlist(RequestUtil.getPageParam());
+        return temp;
     }
 }
