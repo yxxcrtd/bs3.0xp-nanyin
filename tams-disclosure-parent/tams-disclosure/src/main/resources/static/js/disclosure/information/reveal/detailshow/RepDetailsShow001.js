@@ -17,8 +17,7 @@ $(function () {
 	var modelListId;
 	var modelListName;
 	
-	
-	
+	var currReportFile;
 	
 	var listSearch = [{screenType:'03',screenKey:'portnum',screenName:'产品名称'},
 	                  {screenType:'01',screenKey:'startDate',screenName:'开始日期'},
@@ -222,7 +221,6 @@ $(function () {
     //展示报表信息
     var showDetail = function(params){
         displayMenu();
-		//var params = getSearchParams();
     	if(modelListId){
     		Joyin.alert('报表集合不能查询!',2);
 			return;
@@ -242,87 +240,30 @@ $(function () {
     		Joyin.alert('多选产品编码不能预览界面！',2);
 			return;
     	} 
-    	//导出会报错所以暂时屏蔽name
-    	//delete params.portname; 
     	
-        //报表数据结构
-//        var report_info = {
-//            uri:modelId,
-//            folderUri:modelUri,
-//            params:params,//运行报表所使用的参数
-//            formatType:'html',//下载的格式:供exportReport使用, 支持的格式有pdf,html,xls,xlsx,rtf,csv,xml,docx,odt,ods,jrprint
-//            container:'showtable',//生成报表后展示到界面ID 
-//        }
-//       params.uri = modelId;
-//       params.folderUri = modelUri;
-//       params.formatType = 'html';
        $("#showtable").append("加载中");
-//       var report_info = {
-//                    uri:modelId,
-//                    folderUri:modelUri,
-//                    downloadName:'report',//希望下载的名字：供exportReport使用
-//                    formatType:type,//下载的格式:供exportReport使用, 支持的格式有pdf,html,xls,xlsx,rtf,csv,xml,docx,odt,ods,jrprint
-//                    params:params//运行报表所使用的参数
-//                }
-//        		   //运行并产生报表到页面
-//               var url = genReportHtmlUrl(report_info);
-//               var url1 = exportReportPath(report_info);
  	   var $container = $("#showtable");
- 	   	//将返回的HTML报表插入到界面中    	  
-       /*
-       if(params&&params.length==0){
-    	   Joyin.ajax('showDetailHtml', {uri:modelId}, function(result) {
-//   	   		var $container = $("#showtable");
-   	   	//将返回的HTML报表插入到界面中
-   	   		var report = result.data;
-           	var startIndex = report.indexOf("/jasperserver");
-           	var endIndex = report.indexOf(".png");
-           	var subStr = report.substring(startIndex, endIndex);
-           	var repStr = basePath+"/image/disclosure/zxlogo";
-           	var newReport = report.replace(subStr,repStr);
-               $container.html(newReport);
-           });
-       }else{
-    	   params['uri'] = modelId;
-    	   Joyin.ajax('showDetailHtml', params, function(result) {
-//      	   		var $container = $("#showtable");
-      	   	//将返回的HTML报表插入到界面中
-      	   		var report = result.data;
-              	var startIndex = report.indexOf("/jasperserver");
-              	var endIndex = report.indexOf(".png");
-              	var subStr = report.substring(startIndex, endIndex);
-              	var repStr = basePath+"/image/disclosure/zxlogo";
-              	var newReport = report.replace(subStr,repStr);
-                  $container.html(newReport);
-              });
-       }     
-		   //运行并产生报表到页面
-      // genReport(report_info);
-   }  */
- 	   
- 	   
-	var toStr = 'src='+basePath+'image'
-	var changeStr= 'src="image'
-    if(params&&params.length==0){
-			alert("a");
-    	Joyin.ajax('previewReport', {uri:modelId}, function(result) {
-			//var data =result.replace(new RegExp(changeStr, "g"), toStr);
-			//data =data.replace(new RegExp('.png', "g"), '.png&v='+Math.random());
-			$container.html(result);
-        });
-    }else{
-    	params['uri'] = modelId;
-			alert("b");
-    	Joyin.ajax('previewReport', params, function(result) {
-			//var data =result.replace(new RegExp(changeStr, "g"), toStr);
-			//data =data.replace(new RegExp('.png', "g"), '.png&v='+Math.random());
-			$container.html(result);
-        });
-    }     
-    
-		   //运行并产生报表到页面
-   // genReport(report_info);
-}  
+ 	    	   
+		var toStr = 'src='+basePath+'image'
+		var changeStr= 'src="image'
+	    if(params&&params.length==0){
+				alert("a");
+	    	Joyin.ajax('previewReport', {uri:modelId}, function(result) {
+				//var data =result.replace(new RegExp(changeStr, "g"), toStr);
+				//data =data.replace(new RegExp('.png', "g"), '.png&v='+Math.random());
+				$container.html(result);
+	        });
+	    }else{
+	    	params['uri'] = modelId;
+				alert("b");
+	    	Joyin.ajax('previewReport', params, function(result) {
+				//var data =result.replace(new RegExp(changeStr, "g"), toStr);
+				//data =data.replace(new RegExp('.png', "g"), '.png&v='+Math.random());
+				$container.html(result);
+	        });
+	    }     
+	}
+	  
     var exportfile = function(type){
         displayMenu();
 
@@ -368,7 +309,8 @@ $(function () {
 //	                				//layer.alert(data.message);
 //	                        });
 
-	       	Joyin.exportExcel(basePath + 'disclosure/information/config/reportmodelmanage/ReportModelManage001/mergeExport', params);
+	       	Joyin.exportExcel(basePath + '/disclosure/information/config/reportmodelmanage/ReportModelManage001/mergeExport', params);
+//	       	Joyin.exportExcel(basePath + '/disclosure/information/reveal/detailshow/RepDetailsShow001/mergeExport', params);
 //          Joyin.exportExcel(basePath + 'disclosure/information/config/reportmodelmanage/ReportModelManage001/mergeExport', obj);
         }else if(modelListId){
             alert("多表导出")
@@ -412,9 +354,33 @@ $(function () {
     
     //编辑报表
     var editReport = function(params){
+        displayMenu();
+    	if(modelListId){
+    		Joyin.alert('报表集合不能查询!',2);
+			return;
+    	}else if(modelId&&modelUri){
+    		if(!params){
+				Joyin.alert('参数不能为空！',2);
+				return;
+    		}
+    	}else{
+    		return;
+    	}
+    	if(params == "flag") {
+    		return;
+    	}
+    	
+    	if(params.portnum instanceof Array){
+    		Joyin.alert('多选产品编码不能预览界面！',2);
+			return;
+    	} 
+ 	    	   
+		var toStr = 'src='+basePath+'image'
+		var changeStr= 'src="image'
+    
         Joyin.dialog(JoyinUtil.getLabel("编辑报表"),
             JoyinUtil.getRealPath("/disclosure/information/reveal/detailshow/RepEdit001/init"),
-            "60%","85%","产品说明书.docx",function(){ }
+            "60%","85%",params,function(){ }
         );
     }
 
@@ -456,7 +422,7 @@ $(function () {
 	            params['prodName'] = proName;
 	            Joyin.ajax('querySameCount',params,function(){
 	            	params['operateType'] = "01";
-	            	Joyin.ajax('submitWord',
+	            	Joyin.ajax('genReport',
 	                		params,
 	            			function(data) {
 	                				//layer.alert(data.message);
@@ -500,7 +466,7 @@ $(function () {
         });
 
         $('#btnEditReport').click(function() {
-            editReport("");
+            editReport(getSearchParams());
         });
 
         // 绑定查询按钮事件
@@ -509,11 +475,11 @@ $(function () {
         	exportfile("xlsx");
         });
         
-        $('#wordExport').click(function(){
+        $('#btnExportWord').click(function(){
         	exportfile("docx");
         });
         
-        $('#pdfExport').click(function(){
+        $('#btnExportPdf').click(function(){
         	exportfile("pdf");
         });
         
@@ -527,7 +493,7 @@ $(function () {
         	submit("xlsx");
         });
         
-        $('#wordSubimt').click(function(){
+        $('#btnGenReport').click(function(){
         	submit("docx");
         });
         $('#pdfSubimt').click(function(){
