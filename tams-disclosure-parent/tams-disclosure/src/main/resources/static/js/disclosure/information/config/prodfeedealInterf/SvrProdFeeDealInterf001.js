@@ -237,21 +237,15 @@ $(function() {
          */
         var exportExcel = function() {
             var param = getSearchParams();
-            var rows = table.getAllCheckedRows();
-            if(rows.length > 0) {
-                var keyList = [];
-                $.each(rows, function(i, row) {
-                    keyList.push(row.posId);
-                });
-                param.keys = keyList.join(',');
-            }
-            Joyin.exportExcel("export", param);
-            // var param = getSearchParams();
-            // var selArr = table.getAllCheckedRows();
-            // if(selArr.length > 0) {
-            //     param.keyList = JSON.stringify(selArr);
+            // var rows = table.getAllCheckedRows();
+            // if(rows.length > 0) {
+            //     var keyList = [];
+            //     $.each(rows, function(i, row) {
+            //         keyList.push(row.posId);
+            //     });
+            //     param.keys = keyList.join(',');
             // }
-            // Joyin.exportExcel("export", param);
+            Joyin.exportExcel("export", param);
         };
         function init(){
         }
