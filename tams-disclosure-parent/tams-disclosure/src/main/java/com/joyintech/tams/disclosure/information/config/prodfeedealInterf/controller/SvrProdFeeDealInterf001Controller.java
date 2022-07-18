@@ -92,15 +92,15 @@ public class SvrProdFeeDealInterf001Controller extends BaseController {
         return svrProdFeeDealInterfService.selectInfo(param);
     }
 
-    /**
-     * 产品交易信息维护导出查询
-     *
-     * @return 处理结果
-     * @throws Exception 异常
-     */
-    public List<SvrProdFeeDealInterfDto> selectForExport(Map<String, Object> param) {
-        return svrProdFeeDealInterfService.selectForExport(param);
-    }
+//    /**
+//     * 产品交易信息维护导出查询
+//     *
+//     * @return 处理结果
+//     * @throws Exception 异常
+//     */
+//    public List<SvrProdFeeDealInterfDto> selectForExport(Map<String, Object> param) {
+//        return svrProdFeeDealInterfService.selectForExport(param);
+//    }
 
     @ResponseBody
     @RequestMapping("check")
@@ -142,26 +142,28 @@ public class SvrProdFeeDealInterf001Controller extends BaseController {
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export() {
-        Map<String, Object> param = RequestUtil.getParameters(getRequest());
-        if(param.containsKey("selectData")) {
-            String keyList = param.get("selectData").toString();
-            try {
-                List<SvrProdFeeDealInterfDto> investList = JsonUtils.json2List(keyList,
-                        SvrProdFeeDealInterfDto.class);
-                param.put("investList", investList);
-            } catch (IOException e) {
-                logger.error(e.getMessage(), e);
-            }
-        }
-        List<SvrProdFeeDealInterfDto> dtoList = this.svrProdFeeDealInterfService.selectForExport(RequestUtil.getPageParam());
-        File outFile = svrProdFeeDealInterfService.makeFile(
-                "/com/joyintech/tams/disclosure/information/config/prodfeedealInterf/conf/export_conf.xml", dtoList);
-
-        return ExportUtil.export(
-                "产品费用交易信息维护" + GlobalConstant.OPEN_PARENTHESIS
-                        + DateUtil.format(new Date()) + GlobalConstant.CLOSE_PARENTHESIS + GlobalConstant.POINT
-                        + FileNameUtil.getFileExtName(outFile),
-                outFile, true);
+//        Map<String, Object> param = RequestUtil.getParameters(getRequest());
+//        if(param.containsKey("selectData")) {
+//            String keyList = param.get("selectData").toString();
+//            try {
+//                List<SvrProdFeeDealInterfDto> investList = JsonUtils.json2List(keyList,
+//                        SvrProdFeeDealInterfDto.class);
+//                param.put("investList", investList);
+//            } catch (IOException e) {
+//                logger.error(e.getMessage(), e);
+//            }
+//        }
+//        List<SvrProdFeeDealInterfDto> dtoList = this.svrProdFeeDealInterfService.selectForExport(RequestUtil.getPageParam());
+//        File outFile = svrProdFeeDealInterfService.makeFile(
+//                "/com/joyintech/tams/disclosure/information/config/prodfeedealInterf/conf/export_conf.xml", dtoList);
+//
+//        return ExportUtil.export(
+//                "产品费用交易信息维护" + GlobalConstant.OPEN_PARENTHESIS
+//                        + DateUtil.format(new Date()) + GlobalConstant.CLOSE_PARENTHESIS + GlobalConstant.POINT
+//                        + FileNameUtil.getFileExtName(outFile),
+//                outFile, true);
+        return svrProdFeeDealInterfService.export(this.getPageId(),
+                RequestUtil.getParameters(getRequest()));
     }
 
 

@@ -4,7 +4,9 @@ package com.joyintech.tams.disclosure.information.config.prodfeedealInterf.servi
 import com.alibaba.fastjson.JSONArray;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
@@ -13,6 +15,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
 import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dao.SvrProdFeeDealInterfMapper;
 import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
+import com.joyintech.tams.disclosure.information.config.proelementadj.dto.ProElementAdj001Dto;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -94,24 +97,39 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
         return result;
     }
 
-    public List<SvrProdFeeDealInterfDto> selectForExport(Map<String, Object> param) {
-        List<SvrProdFeeDealInterfDto> entityList = new ArrayList<>();
-        if (param.containsKey("selectData")) {
-            String keyList = param.get("selectData").toString();
-            List<SvrProdFeeDealInterfDto> investList = null;
-            try {
-                investList = JsonUtils.json2List(keyList,
-                        SvrProdFeeDealInterfDto.class);
-                entityList = svrProdFeeDealInterfMapper.selectForExport(investList);
-            } catch (IOException e) {
-                logger.error(e.getMessage(), e);
-            }
-        } else {
-            entityList = svrProdFeeDealInterfMapper.selectInfo(param);
-        }
-        return entityList;
+    public Page<SvrProdFeeDealInterfDto> selectForExport(Map<String, Object> param) {
+//        List<SvrProdFeeDealInterfDto> entityList = new ArrayList<>();
+//        if (param.containsKey("selectData")) {
+//            String keyList = param.get("selectData").toString();
+//            List<SvrProdFeeDealInterfDto> investList = null;
+//            try {
+//                investList = JsonUtils.json2List(keyList,
+//                        SvrProdFeeDealInterfDto.class);
+//                entityList = svrProdFeeDealInterfMapper.selectForExport(investList);
+//            } catch (IOException e) {
+//                logger.error(e.getMessage(), e);
+//            }
+//        } else {
+//            entityList = svrProdFeeDealInterfMapper.selectInfo(param);
+//        }
+//        return entityList;
+        Page<SvrProdFeeDealInterfDto> result = queryForPage(() -> svrProdFeeDealInterfMapper.selectInfo(param));
+        return result;
     }
 
+    /**
+     * 导出
+     */
+    @Override
+    protected void buildExportParam(ExportParam exportParam) {
+        exportParam.config(
+                "/com/joyintech/tams/disclosure/information/config/prodfeedealInterf/conf/export_conf.xml").dataSource(
+                DataSourceType.MASERT);
+    }
+    @Override
+    public Page<SvrProdFeeDealInterfDto> selectPageData(Map<String, Object> selectParam) {
+        return selectForExport(selectParam);
+    }
     /**
      * 编辑查看显示查询
      *

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.joyintech.tams.disclosure.information.report.dao.ReportJzcpjzgg001Mapper">
+	<select id="getProdInfo" resultType="java.util.Map">
+		select
+			rpi.prod_id PRODID,
+			case when rpi.IS_GRADE = '01' then
+				 rpi.prod_name ||'（'||rpi.prod_id||'）'
+			else rpi.prod_name end TITLENAME,
+			rpi.prod_name PRODNAME,
+			rpi2.prod_re REGCODE
+		from rep_prod_info rpi
+		    <!--查询母产品数据 -->
+		inner join rep_prod_info rpi2 on rpi.p_prod_id = rpi2.prod_id
+		where rpi.prod_id = #{prodId}
+	</select>
+
+	<select id="getLastValue" resultType="java.util.Map">
+		select * from (
+		  select to_char(t.value_date,'yyyy-MM-dd') VALUEDATE, t.UNIT_VALUE PRDVALUE,t.UNIT_VALUE_T TOTALVALUE,t.UNIT_VALUE SGAMT, t.UNIT_VALUE SHAMT from REP_PROD_INDEX t
+		  where t.prod_id = #{prodId}
+			and t.value_date &lt; #{endDate}
+		    and t.status = 'E'
+			and exists (
+				  select 1 from CHB_MKT_HOLIDAY h where h.market_code = '04'
+					and h.is_holiday = '0'
+					and t.value_date = h.busi_date
+			  )
+		  order by t.value_date desc
+	  ) where rownum = 1
+	</select>
+
+	<select id="getValues" resultType="com.joyintech.tams.disclosure.information.report.dto.ReportGrahDto">
+		select * from (
+		  select to_char(t.value_date,'yyyy-MM-dd') cDate, to_char(nvl(t.UNIT_VALUE,0)) value, to_char(nvl(t.UNIT_VALUE_T,0)) totalValue
+		  from REP_PROD_INDEX t
+		  where t.prod_id = #{prodId}
+			and t.value_date &lt; #{endDate}
+			and t.status = 'E'
+			and exists (
+			  select 1 from CHB_MKT_HOLIDAY h where h.market_code = '04'
+			and h.is_holiday = '0'
+			and t.value_date = h.busi_date
+			  )
+		  order by t.value_date desc
+		) where rownum &lt;= 30
+	</select>
+
+</mapper>

@@ -16,6 +16,8 @@ public class ReportInfo extends BaseEntity{
 	private String user;
 	private String password;
 	private String params;
+
+	private String reportName;
 	
 	
 	public int getId() {
@@ -93,5 +95,13 @@ public class ReportInfo extends BaseEntity{
 	}
 	public void setParams(String params) {
 		this.params = params;
+	}
+
+	public String getReportName() {
+		return reportName;
+	}
+
+	public void setReportName(String reportName) {
+		this.reportName = reportName;
 	}
 }
