@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.disclosure.common.common.dao.HolidayMapper">
 
-	<select id="queryLastWorkDay" resultType="java.util.Date">
+	<select id="getLastWorkDay" resultType="java.util.Date">
 		select busi_date from (
 		  select h.busi_date from CHB_MKT_HOLIDAY h
 		  where h.busi_date &lt; #{busi_date}
