@@ -10,14 +10,26 @@
 <body>
 	<div layout:fragment="content">
 		<div id="oldBtnDiv" class="form-button-area"export="false">
-			<!--<a id="DisProdPlanManage001_btn_import" class="layui-btn layui-btn-sm btn-create">导入</a>-->
+			<a id="DisProdPlanManage001_btn_import" class="layui-btn layui-btn-sm btn-create">导入</a>
 			<a id="DisProdPlanManage001_btn_export" class="layui-btn layui-btn-sm btn-export btn-default">导出</a>
 			<a id="DisProdPlanManage001_btn_design" class="layui-btn layui-btn-sm btn-default"><i class="iconfont icon-add"></i>新建</a>
-        </div>
+			<a id="DisProdPlanManage001_btn_delete" class="layui-btn layui-btn-sm btn-delete" data-th-text="#{SysCommon.delete}">删除</a>
+		</div>
         
 		<div class="joyin-form-wrap joyin-filter-form condition-area">			
             <form class="layui-form" id="searchForm">
                 <div class="layui-form-item">
+					<div class="layui-inline layui-col-md4">
+						<label class="layui-form-label form-lable" >产品名称</label>
+						<div class="layui-input-inline input-inline">
+							<select id="finprodId" name="finprodId"
+									class="layui-input form-input input-select" placeholder="请选择"
+									data-th-data-url='@{/disclosure/information/config/disprodplanmanage/DisProdPlanManage002/getPrdInfoSelect}'
+									allowClear="true"  multiple="multiple" >
+							</select>
+						</div>
+					</div>
+
 					<div class="layui-inline layui-col-md4">
 						<label class="layui-form-label form-lable">开放期起始日</label>
 						<div class="layui-input-inline input-inline">
@@ -27,6 +39,7 @@
 								   allowClear="true">
 						</div>
 					</div>
+
 					<div class="layui-inline layui-col-md4">
 						<label class="layui-form-label form-lable">开放期结束日</label>
 						<div class="layui-input-inline input-inline">
@@ -36,7 +49,8 @@
 								   allowClear="true">
 						</div>
 					</div>
-
+				</div>
+				<div class="layui-form-item">
 					<div class="layui-inline layui-col-md4">
 						<label class="layui-form-label form-lable">运作起始日</label>
 						<div class="layui-input-inline input-inline">
@@ -46,8 +60,7 @@
 								   allowClear="true">
 						</div>
 					</div>
-				</div>
-				<div class="layui-form-item">
+
 					<div class="layui-inline layui-col-md4">
 						<label class="layui-form-label form-lable">自动赎回日</label>
 						<div class="layui-input-inline input-inline">

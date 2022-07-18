@@ -37,4 +37,16 @@ public class GetPrdInfoSelectService extends BaseService {
 		Page<SelectOptionDto> page = this.queryForPage(GetPrdInfoSelectMapper.class, "getCusInfoSelect", paraMap);
 		return page;
 	}
+
+
+	/**
+	 * 获取所有的正常状态的产品信息，包含母产品和子产品，支持根据产品代码和产品名称 进行模糊查询
+	 * 支持筛选只查询 母产品 sonFlag 标识不为空
+	 * @param paraMap
+	 * @return
+	 */
+	public Page<SelectOptionDto> getAllPrdInfoSelect(Map<String, Object> paraMap){
+		Page<SelectOptionDto> page = this.queryForPage(GetPrdInfoSelectMapper.class, "getAllPrdInfoSelect", paraMap);
+		return page;
+	}
 }

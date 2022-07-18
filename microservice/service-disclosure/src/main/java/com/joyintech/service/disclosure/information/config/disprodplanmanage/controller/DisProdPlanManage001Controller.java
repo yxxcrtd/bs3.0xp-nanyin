@@ -17,16 +17,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.service.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage001Dto;
 import com.joyintech.service.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto;
 import com.joyintech.service.disclosure.information.config.disprodplanmanage.service.DisProdPlanManage001Service;
 import com.joyintech.service.disclosure.information.config.disprodplanmanage.service.DisProdPlanManage002Service;
+import com.joyintech.service.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -197,7 +200,24 @@ public class DisProdPlanManage001Controller extends BaseController {
 			dto.setDataStatus(DictCodeListExt3.信披_数据状态_删除.getValue());
 			disProdPlanManage002Service.update(dto);
 		});
-		// disProdPlanManage002Service.delete(param);
-//		return new AjaxResult("删除成功");
+	}
+
+
+	@Transactional
+	@DTXTransaction
+	@PostMapping("/doComplete")
+	public void doComplete(@RequestBody DisProdPlanManage002Dto dto) {
+		String type = dto.getOperationType();
+		if (StringUtil.equals(type, "NEW")) {
+			disProdPlanManage002Service.insert(dto);
+		}
+		else {
+			disProdPlanManage002Service.update(dto);
+		}
+	}
+
+	@PostMapping("/selectByProdId")
+	public DisProdPlanManage002Dto selectByProdId(@RequestBody String prodId) {
+		return disProdPlanManage001Service.selectByProdId(prodId);
 	}
 }

@@ -54,6 +54,64 @@
         <result column="OPERATE_MODE" property="operateMode" jdbcType="VARCHAR" />
         <result column="F_PROD_ID" property="fProdId" jdbcType="VARCHAR" />
     </resultMap>
+
+    <resultMap id="BaseResultMap2" type="com.joyintech.tams.common.base.entity.RepProdInfo" >
+        <id column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="PROD_RE" property="prodRe" jdbcType="VARCHAR" />
+        <result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
+        <result column="PROD_ABBR" property="prodAbbr" jdbcType="VARCHAR" />
+        <result column="RAISE_MIN" property="raiseMin" jdbcType="VARCHAR" />
+        <result column="RAISE_MAX" property="raiseMax" jdbcType="VARCHAR" />
+        <result column="RAISE_STRDATE" property="raiseStrdate" jdbcType="DATE" />
+        <result column="RAISE_ENDDATE" property="raiseEnddate" jdbcType="DATE" />
+        <result column="RAISE_CCY" property="raiseCcy" jdbcType="VARCHAR" />
+        <result column="SET_DATE" property="setDate" jdbcType="DATE" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="FIRST_OPEN_DAY" property="firstOpenDay" jdbcType="DATE" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="ACT_MDATE" property="actMdate" jdbcType="DATE" />
+        <result column="TERM" property="term" jdbcType="VARCHAR" />
+        <result column="WINDUP_DATE" property="windupDate" jdbcType="DATE" />
+        <result column="ISSUE_MODE" property="issueMode" jdbcType="VARCHAR" />
+        <result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR" />
+        <result column="PROD_TYPE" property="prodType" jdbcType="VARCHAR" />
+        <result column="ISSUE_STATUS" property="issueStatus" jdbcType="VARCHAR" />
+        <result column="RAISE_TYPE" property="raiseType" jdbcType="VARCHAR" />
+        <result column="RISK_LEVEL" property="riskLevel" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="RAISE_AMT" property="raiseAmt" jdbcType="DECIMAL" />
+        <result column="OPEN_MODE" property="openMode" jdbcType="VARCHAR" />
+        <result column="INVEST_PROF_DATE" property="investProfDate" jdbcType="VARCHAR" />
+        <result column="INVEST_PRIN_DATE" property="investPrinDate" jdbcType="VARCHAR" />
+        <result column="IS_INDEPE_ACC" property="isIndepeAcc" jdbcType="VARCHAR" />
+        <result column="PROD_INVEST_TYPE" property="prodInvestType" jdbcType="VARCHAR" />
+        <result column="REVEAL_CHANNEL" property="revealChannel" jdbcType="VARCHAR" />
+        <result column="DEAL_CAL" property="dealCal" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="FINA_TYPE" property="finaType" jdbcType="VARCHAR" />
+        <result column="TRU_ACCOUNT" property="truAccount" jdbcType="VARCHAR" />
+        <result column="ACCT_CHNNAME" property="acctChnname" jdbcType="VARCHAR" />
+        <result column="TRU_FEE_RAGE" property="truFeeRage" jdbcType="DECIMAL" />
+        <result column="TRU_ACCOUNT_NUM" property="truAccountNum" jdbcType="VARCHAR" />
+        <result column="TRU_ACCOUNT_NAME" property="truAccountName" jdbcType="VARCHAR" />
+        <result column="PROD_TERM_TYPE" property="prodTermType" jdbcType="VARCHAR" />
+        <result column="BASIS" property="basis" jdbcType="VARCHAR" />
+        <result column="IS_LAYER" property="isLayer" jdbcType="VARCHAR" />
+        <result column="PRO_MANAGER" property="proManager" jdbcType="VARCHAR" />
+        <result column="PRO_CUSTODIAN" property="proCustodian" jdbcType="VARCHAR" />
+        <result column="HUGE_REDEEM_THRESHOLD" property="hugeRedeemThreshold" jdbcType="DECIMAL" />
+        <result column="SALE_AMT_STR" property="saleAmtStr" jdbcType="DECIMAL" />
+        <result column="OPERATE_MODE" property="operateMode" jdbcType="VARCHAR" />
+        <result column="F_PROD_ID" property="fProdId" jdbcType="VARCHAR" />
+
+        <result column="ISSUING_WAY" property="issuingWay" jdbcType="VARCHAR" />
+        <result column="IS_PERIOD" property="isPeriod" jdbcType="VARCHAR" />
+    </resultMap>
+
     <sql id="Base_Column_List" >
         PROD_ID PROD_ID, PROD_RE PROD_RE, PROD_NAME PROD_NAME, PROD_ABBR PROD_ABBR, RAISE_MIN RAISE_MIN, 
         RAISE_MAX RAISE_MAX, RAISE_STRDATE RAISE_STRDATE, RAISE_ENDDATE RAISE_ENDDATE, RAISE_CCY RAISE_CCY, 
@@ -86,7 +144,7 @@
         from REP_PROD_INFO
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
     </select>
-    <select id="selectByPrimaryKey2" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    <select id="selectByPrimaryKey2" resultMap="BaseResultMap2" parameterType="java.lang.String" >
         select * from REP_PROD_INFO
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
     </select>

@@ -102,19 +102,16 @@ public class DisProdPlanManage002Controller extends BaseController {
 	@ResponseBody
 	public Page<SelectOptionDto> getPrdInfoSelect() {
 		Map<String, Object> param= RequestUtil.getPageParam();
-		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getPrdInfoSelect(param);
+		// param.put("sonFlag","1");
+		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getAllPrdInfoSelect(param);
 		return prdInfoSelect;
 	}
-
-	/**
-	 * 分页查询产品下拉框
 
 
 	/**
 	 *
-	 * check
-	 * @param dto 查询产品明细信息
-	 * @return 结果
+	 * 分页查询产品下拉框
+	 * @param
 	 * @see
 	 * @since 1.0
 	 */

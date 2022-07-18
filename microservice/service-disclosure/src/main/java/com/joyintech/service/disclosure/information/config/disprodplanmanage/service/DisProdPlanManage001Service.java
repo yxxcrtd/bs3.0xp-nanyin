@@ -26,7 +26,10 @@ import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.util.*;
 import com.joyintech.service.disclosure.information.config.disprodplanmanage.dao.DisProdPlanManage001Mapper;
 import com.joyintech.service.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage001Dto;
+import com.joyintech.service.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto;
+import com.joyintech.service.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -265,6 +268,14 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
                 dataStatusArr = dataStatus.split(",");
             }
             params.put("dataStatusArr", dataStatusArr);
+
+            String prodId = (String)params.get("prodId");
+            String[] prodIdArr = null;
+            if(StringUtil.isNotEmpty(prodId)){
+                prodIdArr = prodId.split(",");
+            }
+            params.put("prodIdArr", prodIdArr);
+
             Page<DisProdPlanManage001Dto> pages = super.queryForPageForSelectReturn(page, length, () -> disProdPlanManage001Mapper.searchReports(params));
             List<DisProdPlanManage001Dto> list = pages.getRoot();
             // 遍历构造数据
@@ -276,4 +287,15 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
             }
     		return pages;
     	}
+
+
+    /**
+     * 根据产品代码 查询有效的 数据
+     * @param prodId
+     * @return
+     */
+    public DisProdPlanManage002Dto selectByProdId(String prodId) {
+
+        return disProdPlanManage001Mapper.selectByProdId(prodId, DictCodeListExt3.信披_数据状态_有效.getValue());
+    }
 }

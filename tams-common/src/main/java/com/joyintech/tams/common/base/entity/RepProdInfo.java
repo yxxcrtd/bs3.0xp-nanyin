@@ -254,6 +254,32 @@ public class RepProdInfo extends BaseEntity {
     private String fProdId;
 
     /**
+     * 发行方式：无需区分母子产品 01 开放式/02 封闭式
+     */
+    private String issuingWay;
+
+    /**
+     * 是否是客户周期型产品：不区分母子产品 01 是/02 否
+     */
+    private String isPeriod;
+
+    public String getIssuingWay() {
+        return issuingWay;
+    }
+
+    public void setIssuingWay(String issuingWay) {
+        this.issuingWay = issuingWay;
+    }
+
+    public String getIsPeriod() {
+        return isPeriod;
+    }
+
+    public void setIsPeriod(String isPeriod) {
+        this.isPeriod = isPeriod;
+    }
+
+    /**
      * 取得 产品代码
      * @return 产品代码
      */

@@ -10,11 +10,7 @@
 
 package com.joyintech.service.disclosure.information.config.disprodplanmanage.service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -187,7 +183,7 @@ public class DisProdPlanManage002Service extends CommonExportService<RepInfo> {
 	 * @param dto
 	 */
 	public void insert(DisProdPlanManage002Dto dto) {
-		dto.setProdPlanId(disProdPlanManage002Mapper.setId());
+		dto.setProdPlanId(UUID.randomUUID().toString());
 		disProdPlanManage002Mapper.insert(dto);
 		
 	}

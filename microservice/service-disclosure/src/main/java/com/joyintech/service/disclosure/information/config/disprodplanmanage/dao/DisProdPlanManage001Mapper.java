@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.service.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage001Dto;
+import com.joyintech.service.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto;
+import com.joyintech.service.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.joyintech.service.disclosure.information.config.reportpage.dao.ReportPageManage001Mapper;
@@ -30,5 +33,8 @@ import com.joyintech.service.disclosure.information.config.reportpage.dao.Report
 public interface DisProdPlanManage001Mapper {
 
 	List<DisProdPlanManage001Dto> searchReports(Map<String, Object> params);
+
+	DisProdPlanManage002Dto selectByProdId(@Param("prodId") String prodId, @Param("dataStatus")String dataStatus);
+
 
 }

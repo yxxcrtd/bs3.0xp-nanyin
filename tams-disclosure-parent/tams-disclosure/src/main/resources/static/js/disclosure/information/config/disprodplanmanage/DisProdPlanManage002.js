@@ -3,7 +3,14 @@ var upFileName;
 
 // 产品成立日
 var prodSetDate;
+// 募集方式：不区分母子产品 01 公募/02 私募
 var raiseType ;
+// 发行方式：无需区分母子产品 01 开放式/02 封闭式
+var issuingWay ;
+// 是否是客户周期型产品：不区分母子产品 01 是/02 否
+var isPeriod ;
+
+
 
 var laydate = layui.laydate;
 //年月选择器
@@ -30,6 +37,10 @@ $(function() {
 		object.pageModel = pageModel;
 		object.operateType = operateType;
 		object.indexDetail = $('#indexDetail').val();
+
+		object.raiseType = raiseType;
+		object.issuingWay = issuingWay;
+		object.isPeriod = isPeriod;
 		Joyin.ajaxJson(
 			basePath+ 'disclosure/information/config/disprodplanmanage/DisProdPlanManage002/check',object,
 			function(result) {
@@ -74,7 +85,8 @@ $(function() {
 				}else{
 					prodSetDate= new Date(result.setDate).format("yyyy-MM-dd");
 					raiseType = result.raiseType ;
-					console.log(result);
+					issuingWay = result.issuingWay ;
+					isPeriod = result.isPeriod ;
 					// 修改 开放开始日
 					changeOpenStartDate();
 					// 修改 产品冷静期
@@ -83,7 +95,8 @@ $(function() {
 					changeOperationStartDate()
 					// 修改 自动赎回日
 					changeAutoRedeemDate()
-					console.log(prodSetDate);
+					// 修改 客户实际持有天数状态
+					changeHoldDays();
 				}
 
 			});
@@ -116,7 +129,6 @@ $(function() {
 	function changeOpenEndDate(){
 		var openStartDate = $('#openStartDate').val();
 		var openEndDate = $('#openEndDate').val();
-
 		if (openStartDate && openEndDate){
 			var days = (Date.ofDate(openEndDate) - Date.ofDate(openStartDate))/(24*60*60*1000);
 			if(days<0){
@@ -124,7 +136,6 @@ $(function() {
 				$('#openEndDate').val('');
 			}
 		}
-
 	}
 
 	// 修改 产品冷静期
@@ -142,7 +153,7 @@ $(function() {
 					}
 				}
 			}
-
+			$('#collingoffPeriod').attr("disabled",false);
 
 		}else{ //公募
 			$('#collingoffPeriod').attr("disabled",true);
@@ -166,7 +177,7 @@ $(function() {
 	// 修改 自动赎回日
 	function changeAutoRedeemDate(){
 		// 当“是否是开放周期型产品”为“是”时必填，否则置灰不可填，且不能小于该条数据的运作起始日
-		//if(raiseType == '02'){ //私募
+		if(issuingWay !=null && issuingWay =='01' && isPeriod !=null && isPeriod =='01' ){
 			var autoRedeemDate = $('#autoRedeemDate').val();
 			if(prodSetDate != null){
 				if (autoRedeemDate && prodSetDate){
@@ -177,13 +188,28 @@ $(function() {
 					}
 				}
 			}
-
-
-		/*}else{ //公募
-
-		}*/
+			$('#autoRedeemDate').attr("disabled",false);
+		}else{
+			$('#autoRedeemDate').attr("disabled",true);
+		}
 	}
 
+	// 修改 客户实际持有天数
+	function changeHoldDays(){
+		// 当“是否是开放周期型产品”为“是”时必填，否则置灰不可填，且不能小于该条数据的运作起始日
+		if(issuingWay !=null && issuingWay =='01' && isPeriod !=null && isPeriod =='01' ){
+			$('#holdDays').attr("disabled",false);
+		}else{
+			$('#holdDays').attr("disabled",true);
+		}
+	}
+
+	$('#openStartDate').change(function(){
+		changeOpenStartDate();
+	});
+	$('#openEndDate').change(function(){
+		changeOpenEndDate();
+	});
 
 	$('#openStartDate').change(function(){
 		changeOpenStartDate();
@@ -213,7 +239,10 @@ $(function() {
 			saveOrSubmit('submit');
 		});
 
-
+		var finprodId = $('#finprodId').val();
+		if(finprodId !=null && finprodId !='' && finprodId.length>0){
+			finprodIdChange();
+		}
 	});
 });
 

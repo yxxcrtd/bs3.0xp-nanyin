@@ -115,6 +115,19 @@ public class DisProdPlanManage001Dto extends BaseEntity{
 
 	private String holdDaysStr;
 
+	/**
+	 * 产品编号拼接
+	 */
+	private String prodIdArr;
+
+	public String getProdIdArr() {
+		return prodIdArr;
+	}
+
+	public void setProdIdArr(String prodIdArr) {
+		this.prodIdArr = prodIdArr;
+	}
+
 	public String getHoldDaysStr() {
 		return holdDaysStr;
 	}

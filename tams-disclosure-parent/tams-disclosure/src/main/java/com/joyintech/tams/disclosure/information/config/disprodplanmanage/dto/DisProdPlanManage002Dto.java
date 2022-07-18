@@ -57,7 +57,7 @@ public class DisProdPlanManage002Dto extends BaseEntity{
 	/**
 	 * 运营起始日
 	 */
-	@NotEmpty(fieldName = "运营起始日")
+	@NotEmpty(fieldName = "运作起始日")
 	private Date operationStartDate;
 
 	/**
@@ -116,6 +116,83 @@ public class DisProdPlanManage002Dto extends BaseEntity{
 	 * 操作类型
 	 */
 	private String operateType;
+
+
+	private String operationType ;
+
+	/**
+	 * 选中的数据
+	 */
+	private transient List<DisProdPlanManage002Dto> selectedItem;
+	/**
+	 * 元素ID
+	 */
+	private String elementId;
+
+
+	/**
+	 * 发行方式：无需区分母子产品 01 开放式/02 封闭式
+	 */
+	private String issuingWay;
+
+	/**
+	 * 是否是客户周期型产品：不区分母子产品 01 是/02 否
+	 */
+	private String isPeriod;
+
+	/**
+	 * 募集方式
+	 */
+	private String raiseType;
+
+
+	public String getIssuingWay() {
+		return issuingWay;
+	}
+
+	public void setIssuingWay(String issuingWay) {
+		this.issuingWay = issuingWay;
+	}
+
+	public String getIsPeriod() {
+		return isPeriod;
+	}
+
+	public void setIsPeriod(String isPeriod) {
+		this.isPeriod = isPeriod;
+	}
+
+	public String getRaiseType() {
+		return raiseType;
+	}
+
+	public void setRaiseType(String raiseType) {
+		this.raiseType = raiseType;
+	}
+
+	public String getOperationType() {
+		return operationType;
+	}
+
+	public void setOperationType(String operationType) {
+		this.operationType = operationType;
+	}
+
+	public List<DisProdPlanManage002Dto> getSelectedItem() {
+		return selectedItem;
+	}
+
+	public void setSelectedItem(List<DisProdPlanManage002Dto> selectedItem) {
+		this.selectedItem = selectedItem;
+	}
+
+	public String getElementId() {
+		return elementId;
+	}
+
+	public void setElementId(String elementId) {
+		this.elementId = elementId;
+	}
 
 	public String getOperateType() {
 		return operateType;

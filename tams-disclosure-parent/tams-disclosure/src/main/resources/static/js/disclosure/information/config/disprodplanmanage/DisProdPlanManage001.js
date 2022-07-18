@@ -9,11 +9,17 @@
 	     * 左侧 - 获取查询参数
 	     */
 	    var getSearchKey = function() {
+		   var prodId = $('#finprodId').val();
+		   if(prodId && prodId != ''){
+			   prodId = prodId.join(',');
+		   }else {
+			   prodId = null;
+		   }
 	        return {
 	        	/*temName:$.trim($('#temName').val()),
 	    		temDescription:$.trim($('#temDescription').val()),
 	    		temLoad:REPORT_SERVER_PATH*/
-
+				prodId : prodId,
 				dataStatus: $.trim($('#dataStatus').val()),
 				openStartDateBegin: $('#openStartDate').startDate(),
 				openStartDateEnd: $('#openStartDate').endDate(),
@@ -143,36 +149,26 @@
        	$("#toExport").css('display','none');
      }
 	   
-	   
-	   /**
-	     * 导出
-	     */
-	    var exportExcel = function() {
-	        if (dataTable.getAllRows().length>0) {
-	            var selArr = dataTable.getAllCheckedRows();
-	            var datas = JSON.stringify(selArr);
-	            if (!selArr || selArr.length == 0) {	     
-		        	var paramObj = dataTable.getAllRows();
-		        	var datasAll = JSON.stringify(paramObj);
-		        	 Joyin.exportExcel('export', {
-		        		 datasAll : datasAll
-			            });
-		        } else {
-		            Joyin.exportExcel('export', {
-		                datas : datas
-		            });
-		        }
-	        }
-	        else{
-	        	initTable2();
-	        	var paramObj = dataTable2.getAllRows();
-	        	var datasAll = JSON.stringify(paramObj);
-	        	 Joyin.exportExcel('export', {
-	        		 datasAll : datasAll
-		            });
-	        }
-	        
-	    };
+	 /**
+	  * 导出
+	  */
+	 var exportExcel2 = function() {
+		 var selArr = dataTable2.getAllCheckedRows();
+		 var datas = JSON.stringify(selArr);
+		 if (!selArr || selArr.length == 0) {
+			 Joyin.exportExcel('export', {
+				 datasAll : null,
+				 temName:$.trim($('#temName').val()),
+				 temDescription:$.trim($('#temDescription').val()),
+				 temLoad:REPORT_SERVER_PATH
+			 });
+		 } else {
+			 Joyin.exportExcel('export', {
+				 datas : datas
+			 });
+		 }
+
+	 };
 
 	   
 	   /**
@@ -232,6 +228,41 @@
 	 			   });
 	        });
 	    });
+
+	 //删除
+	 $('#DisProdPlanManage001_btn_delete').click(function () {
+
+		 if (dataTable2 != null && dataTable2 != '') {
+			 var selArr = dataTable2.getAllCheckedRows();
+		 }
+		 if (!selArr || selArr.length == 0) {
+			 Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+			 return;
+		 }
+		 var keyIds = null;
+		 selArr.forEach(v => {
+			 if(v.dataStatus == '01'){
+				 if(keyIds == null){
+					 keyIds = v.prodPlanId;
+				 }else{
+					 keyIds = keyIds+","+v.prodPlanId;
+				 }
+			 }
+		 })
+		 if (keyIds ==null) {
+			 Joyin.error(JoyinUtil.getMessage("请选择一条有效的数据"));
+			 return;
+		 }
+		 var object = {prodPlanId: keyIds, operateType: "delete"};
+		 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001", JoyinUtil.getLabel("SysCommon.delete")), function () {
+			 WorkFlow.doDeleteList(basePath + 'disclosure/information/config/disprodplanmanage/DisProdPlanManage001/delete', object,
+				 "DisProdPlanManage001_btn_delete", "DisProdPlanManage001",function(result) {
+					 dataTable.reload();
+					 dataTable2.reload();
+				 })
+		 });
+	 });
+
 	   /**
 		 * 定义数据表格
 		 */
@@ -342,6 +373,12 @@
 			   //search();
 			   dataTable2.load();
 		   }
+
+		   //导出
+		   $('#DisProdPlanManage001_btn_export').click(function () {
+			   exportExcel2();
+		   });
+
 		   /**
 		    * 模板选择提交
 		    */
@@ -365,26 +402,51 @@
     	   });
 		   // 导入按钮
 		   $('#DisProdPlanManage001_btn_import').click(function() {
-			   Joyin.confirm("请确认是否要导入数据？", function() {
-				   var options = {};
-				   options.pageId = file;
-				   options.exts = 'xls|xlsx';
-				   Joyin.uploadFile(options,function(fileName) {
-					   Joyin.ajax(basePath + 'chb/assetinfodetail/AssetInfoDetail001/checkConfirmMsgForImportData', {fileName: fileName,tableName:'DIS_PROD_PLAN'}, function(result) {
-						   if ($.isArray(result.joyinMessages) && result.joyinMessages.length > 0) {
-							   var joyinMessages = "";
-							   $.each(result.joyinMessages, function(i, joyinMessage){
-								   joyinMessages += joyinMessage.message + "<br />"
-							   });
-							   Joyin.confirm(joyinMessages, function(){
-								   Joyin.ajax(basePath + 'chb/assetinfodetail/AssetInfoDetail001/importFile', {fileName: fileName,tableName:'DIS_PROD_PLAN'},function () {
-									   table.reload();
-								   });
-							   });
-						   }else{
-							   Joyin.ajax(basePath + 'chb/assetinfodetail/AssetInfoDetail001/importFile', {fileName: fileName,tableName:'DIS_PROD_PLAN'},function () {
-								   table.reload();
-							   });
+			   Joyin.confirm("请确认是否要导入数据？", function () {
+				   Joyin.uploadFile({pageId:'DisProdPlanManage001'},function(fileName) {
+					   Joyin.ajax(basePath + 'disclosure/information/config/disprodplanmanage/DisProdPlanManage001/checkImportData', {fileName: fileName}, function(checkResult) {
+						   if (checkResult) {
+							   setTimeout( function () {
+									   if(checkResult.data.errorMsg){
+										   Joyin.error(checkResult.data.errorMsg);
+										   return;
+									   }
+									   if (checkResult.data.confirmMsg) {
+										   Joyin.confirm(checkResult.data.confirmMsg, function () {
+											   var data = {
+												   tempList: checkResult.data.correctData
+											   }
+											   Joyin.ajaxJson(basePath + 'disclosure/information/config/disprodplanmanage/DisProdPlanManage001/importFile', data,
+												   function (resultObj) {
+													   if (resultObj.statuCode.toString() === '200') {
+														   /** modify by yanya on 20210329 修正导入逻辑**/
+														   //Joyin.alert("文件导入成功！");
+														   dataTable.reload();
+														   dataTable2.reload();
+														   return;
+													   }
+												   });
+										   },{}, function () {
+											   layui.layer.closeAll()
+											   table.reload();
+										   });
+									   }else {
+										   var data = {
+											   tempList: checkResult.data.correctData
+										   }
+										   Joyin.ajaxJson(basePath + 'disclosure/information/config/disprodplanmanage/DisProdPlanManage001/importFile', data,
+											   function (resultObj) {
+												   if (resultObj.statuCode.toString() === '200') {
+													   /** modify by yanya on 20210329 修正导入逻辑**/
+													   //Joyin.alert("文件导入成功！");
+													   dataTable.reload();
+													   dataTable2.reload();
+													   return;
+												   }
+											   });
+									   }
+								   }
+								   ,1000);
 						   }
 					   });
 				   },function() {

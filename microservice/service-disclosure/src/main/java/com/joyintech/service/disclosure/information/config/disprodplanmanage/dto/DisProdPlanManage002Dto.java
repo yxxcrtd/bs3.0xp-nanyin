@@ -18,6 +18,7 @@ import com.joyintech.framework.json.CustomDateDeserialize;
 import java.util.Date;
 
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.service.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto;
 
 public class DisProdPlanManage002Dto extends BaseEntity{
 	/**
@@ -106,6 +107,41 @@ public class DisProdPlanManage002Dto extends BaseEntity{
 	private String prodName;
 
 	private String dataStatusName;
+
+	private String operationType ;
+
+	/**
+	 * 选中的数据
+	 */
+	private transient List<DisProdPlanManage002Dto> selectedItem;
+	/**
+	 * 元素ID
+	 */
+	private String elementId;
+
+	public String getOperationType() {
+		return operationType;
+	}
+
+	public void setOperationType(String operationType) {
+		this.operationType = operationType;
+	}
+
+	public List<DisProdPlanManage002Dto> getSelectedItem() {
+		return selectedItem;
+	}
+
+	public void setSelectedItem(List<DisProdPlanManage002Dto> selectedItem) {
+		this.selectedItem = selectedItem;
+	}
+
+	public String getElementId() {
+		return elementId;
+	}
+
+	public void setElementId(String elementId) {
+		this.elementId = elementId;
+	}
 
 	public String getOpenStartDateStr() {
 		return openStartDateStr;

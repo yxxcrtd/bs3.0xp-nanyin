@@ -2,8 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.service.disclosure.information.config.disprodplanmanage.dao.DisProdPlanManage001Mapper">
 
-
-
     <select id="searchReports" parameterType="java.util.Map"
             resultType="com.joyintech.service.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage001Dto">
         SELECT
@@ -22,7 +20,7 @@
             TO_CHAR(NVL(dpp.Update_Time,dpp.Create_Time),'yyyy-mm-dd hh24:mi:ss') updateDateStr,
             rpi.prod_name prodName
         FROM DIS_PROD_PLAN dpp
-        JOIN REP_PROD_INFO rpi ON rpi.PROD_ID = dpp.PROD_ID WHERE 1=1
+        LEFT JOIN REP_PROD_INFO rpi ON rpi.PROD_ID = dpp.PROD_ID WHERE 1=1
         <if test="dataStatusArr != null and dataStatusArr.length > 0">
             AND dpp.DATA_STATUS IN
             <foreach item="item" collection="dataStatusArr" index="index"
@@ -30,7 +28,13 @@
                 #{item}
             </foreach>
         </if>
-
+        <if test="prodIdArr != null and prodIdArr.length > 0">
+            AND dpp.PROD_ID IN
+            <foreach item="item" collection="prodIdArr" index="index"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
         <if test="openStartDateBegin !=null and openStartDateBegin !='' ">
             AND to_char(dpp.OPEN_START_DATE,'yyyy-mm-dd') <![CDATA[>=]]> #{openStartDateBegin,jdbcType=VARCHAR}
         </if>
@@ -58,6 +62,24 @@
             AND to_char(dpp.AUTO_REDEEM_DATE,'yyyy-mm-dd') <![CDATA[<=]]> #{autoRedeemDateEnd,jdbcType=VARCHAR}
         </if>
         order by NVL(dpp.UPDATE_TIME,dpp.CREATE_TIME) desc
+    </select>
+
+
+    <select id="selectByProdId"
+            resultType="com.joyintech.service.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto">
+        select
+        PROD_PLAN_ID, PROD_ID, OPEN_START_DATE,
+        OPEN_END_DATE, COLLINGOFF_PERIOD, OPERATION_START_DATE,
+        AUTO_REDEEM_DATE, HOLD_DAYS, DATA_STATUS,
+        DATA_SOURCE, CREATE_USER, CREATE_TIME,
+        UPDATE_USER, UPDATE_TIME, CREATE_DEPT
+        from DIS_PROD_PLAN
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+        <if test="dataStatus !=null and dataStatus !='' ">
+            AND DATA_STATUS = #{dataStatus,jdbcType=VARCHAR}
+        </if>
+        and rownum <![CDATA[<=]]> 1
+
     </select>
 
 </mapper>

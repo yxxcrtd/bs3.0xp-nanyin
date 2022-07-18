@@ -122,28 +122,6 @@ public class DisProdPlanManage001Controller extends BaseController {
 	}
 
 
-	/**
-	 * 导入数据文件之前检查数据
-	 *
-	 * @param fileName 导入的文件名
-	 * @return 处理结果
-	 */
-/*	@ResponseBody
-	@RequestMapping(value = "checkConfirmMsgForImportData", method = RequestMethod.POST)
-	public AjaxResult checkConfirmMsgForImportData(String fileName) throws Exception {
-		return disProdPlanManage001Service.checkConfirmMsgForImportData(fileName);
-	}*/
-
-/*	@ResponseBody
-	@RequestMapping("/importFile")
-	public List<com.joyintech.tams.systemtools.dto.ExcelValidDto> importData(String fileName) throws Exception {
-		return this.disProdPlanManage001Service.importData(fileName);
-	}*/
-
-
-
-
-
 	@SuppressWarnings("finally")
 	@RequestMapping("/searchReports")
 	@ResponseBody
@@ -180,5 +158,26 @@ public class DisProdPlanManage001Controller extends BaseController {
 	public AjaxResult delete(@RequestBody Map<String, Object> param) {
 		disProdPlanManage002Service.delete(param);
 		return new AjaxResult("删除成功");
+	}
+
+
+	/**
+	 * 导入
+	 *
+	 * @param fileName 导入的文件名
+	 * @return 处理结果
+	 * @throws Exception 异常
+	 */
+	@ResponseBody
+	@RequestMapping("checkImportData")
+	public AjaxResult checkImportData(String fileName) {
+		return disProdPlanManage001Service.checkImportData(fileName);
+	}
+
+
+	@ResponseBody
+	@RequestMapping("importFile")
+	public AjaxResult importFile(@RequestBody Map<String, Object> param)  {
+		return disProdPlanManage001Service.importFile(param);
 	}
 }

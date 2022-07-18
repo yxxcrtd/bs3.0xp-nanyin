@@ -1976,6 +1976,9 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     信披_数据来源_客户关系管理系统(DictCode.信披_数据来源,"14","客户关系管理系统"),
     信披_数据来源_核心系统(DictCode.信披_数据来源,"15","核心系统"),
 
+    信披_分红方式_份额分红后净值为1(DictCode.信披_数据状态,"01","份额分红后净值为1"),
+    信披_分红方式_到期兑付(DictCode.信披_数据状态,"02","到期兑付"),
+
     ;
     /**
      * 对应于数据字典code
