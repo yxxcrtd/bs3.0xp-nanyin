@@ -4,7 +4,7 @@
 
     <resultMap type="com.joyintech.tams.common.base.entity.RepFeeTrd" id="BaseResultMap">
         <result property="prodId" column="PROD_ID" jdbcType="VARCHAR"/>
-        <result property="payDate" column="PAY_DATE" jdbcType="Date"/>
+        <result property="payDate" column="PAY_DATE" jdbcType="DATE"/>
         <result property="feeType" column="FEE_TYPE" jdbcType="VARCHAR"/>
         <result property="paidFee" column="PAID_FEE" jdbcType="DECIMAL"/>
         <result property="accrual" column="ACCRUAL" jdbcType="DECIMAL"/>
