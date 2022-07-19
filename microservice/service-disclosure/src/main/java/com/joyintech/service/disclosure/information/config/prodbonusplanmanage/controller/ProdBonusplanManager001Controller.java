@@ -100,8 +100,8 @@ public class ProdBonusplanManager001Controller extends BaseController {
     }
 
     @PostMapping("/delete")
-    public void delete(@RequestBody Map<String, Object> param) {
-        String ids = param.get("bonusPlanId").toString();
+    public void delete(@RequestBody ProdBonusplanDto entity) {
+       /* String ids = entity.getBonusPlanId();
         List<String> idList = new ArrayList();
         if (StringUtils.isNotEmpty(ids)) {
             if (StringUtils.contains(ids, ",")) {
@@ -115,7 +115,16 @@ public class ProdBonusplanManager001Controller extends BaseController {
             dto.setBonusPlanId(i);
             dto.setDataStatus(DictCodeListExt3.信披_数据状态_删除.getValue());
             prodBonusplanManager002Service.update(dto);
-        });
+        });*/
+
+        String bonusPlanId = entity.getBonusPlanId();
+        List<String> idList = new ArrayList();
+        if (StringUtils.isNotEmpty(bonusPlanId)) {
+            ProdBonusplanDto dto = new ProdBonusplanDto();
+            dto.setBonusPlanId(bonusPlanId);
+            dto.setDataStatus(DictCodeListExt3.信披_数据状态_删除.getValue());
+            prodBonusplanManager002Service.update(dto);
+        }
     }
 
 

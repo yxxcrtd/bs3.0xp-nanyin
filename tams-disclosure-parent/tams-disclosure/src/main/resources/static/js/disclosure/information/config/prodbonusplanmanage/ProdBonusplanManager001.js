@@ -143,7 +143,7 @@
 				 ,{field:'operation',width:20, title: 'SysCommon.operation', type:'action', buttons: ['edit','delt'],
 					 render: function (data, type, row, meta) {
 						 if (row.dataStatus == '02')
-							 return '<i class="btn layui-icon edit edit" title="编辑" data-ignore="false"></i>';
+							 return '';
 						 else
 							 return '<i class="btn layui-icon edit edit" title="编辑" data-ignore="false"></i> ' +
 								 '<i class="btn layui-icon delt delt" title="删除" data-ignore="false"></i>';
@@ -208,7 +208,7 @@
 			   ,{field:'operation',width:20, title: 'SysCommon.operation', type:'action', buttons: ['edit','delt'],
 				   render: function (data, type, row, meta) {
 					   if (row.dataStatus == '02')
-						   return '<i class="btn layui-icon edit edit" title="编辑" data-ignore="false"></i>';
+						   return '';
 					   else
 						   return '<i class="btn layui-icon edit edit" title="编辑" data-ignore="false"></i> ' +
 							   '<i class="btn layui-icon delt delt" title="删除" data-ignore="false"></i>';
@@ -239,18 +239,18 @@
 			   Joyin.alert("数据已删除",7,null,null)
 			   return;
 		   }
-	        data.operateType = "delete";
-	            Joyin.confirm("确认删除吗？", function(){
-	            	Joyin.ajaxJson('delete', {bonusPlanId:data.bonusPlanId}, function(result) {
-	            		dataTable.reload();
-	            		dataTable2.reload();
-	 			   });
+			Joyin.confirm("确认删除吗？", function(){
+				var object = {selectedItem: [data], operateType: "delete"};//请求参数
+				var deleteUrl = basePath + 'disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager001/delete';
+				WorkFlow.doDeleteList(deleteUrl, object, "ProdBonusplanManager001_btn_delete", "ProdBonusplanManager002",function(){
+					dataTable.reload();
+					dataTable2.reload();
+				});
 	        });
 	    });
 
 	 //删除
 	 $('#ProdBonusplanManager001_btn_delete').click(function () {
-
 		 if (dataTable2 != null && dataTable2 != '') {
 			 var selArr = dataTable2.getAllCheckedRows();
 		 }
@@ -258,21 +258,18 @@
 			 Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
 			 return;
 		 }
-		 var keyIds = null;
+		 var selArrUseful =[];
 		 selArr.forEach(v => {
 			 if(v.dataStatus == '01'){
-				 if(keyIds == null){
-					 keyIds = v.bonusPlanId;
-				 }else{
-					 keyIds = keyIds+","+v.bonusPlanId;
-				 }
+				 //selArr.remove();
+				 selArrUseful.push(v);
 			 }
 		 })
-		 if (keyIds ==null) {
+		 if (!selArrUseful || selArrUseful.length == 0) {
 			 Joyin.error(JoyinUtil.getMessage("请选择一条有效的数据"));
 			 return;
 		 }
-		 var object = {bonusPlanId: keyIds, operateType: "delete"};
+		 var object = {selectedItem: selArrUseful, operateType: "delete"};//请求参数
 		 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001", JoyinUtil.getLabel("SysCommon.delete")), function () {
 			 WorkFlow.doDeleteList(basePath + 'disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager001/delete', object,
 				 "ProdBonusplanManager001_btn_delete", "ProdBonusplanManager002",function(result) {

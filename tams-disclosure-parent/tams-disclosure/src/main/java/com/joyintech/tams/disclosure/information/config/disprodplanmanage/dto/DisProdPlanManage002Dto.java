@@ -13,72 +13,28 @@ package com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto;
 import java.util.ArrayList;
 import java.util.List;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.json.CustomDateDeserialize;
 import java.util.Date;
 
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
+import com.joyintech.tams.common.base.entity.DisProdPlanInfo;
+import com.joyintech.tams.common.base.entity.ProdBonusplan;
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
+import com.joyintech.workflow.engine.dto.ProcessEntity;
+import org.apache.commons.lang3.StringUtils;
 
-public class DisProdPlanManage002Dto extends BaseEntity{
+@PageId("DisProdPlanManage002")
+public class DisProdPlanManage002Dto extends DisProdPlanInfo implements ITableRow, ProcessEntity {
 	/**
 	 *
 	 */
 	private static final long serialVersionUID = -459083868293354979L;
 	private List<DisProdPlanManage002Dto> addParam=new ArrayList<>();
-	/**
-	 * 产品排期计划编号
-	 */
-	private String prodPlanId;
-
-	/**
-	 * 产品ID
-	 */
-	@NotEmpty(fieldName = "产品主代码")
-	private String prodId;
-
-	/**
-	 * 开放期起始日
-	 */
-	@NotEmpty(fieldName = "开放期起始日")
-	private Date openStartDate;
-
-	/**
-	 * 开放期结束日
-	 */
-	@NotEmpty(fieldName = "开放期结束日")
-	private Date openEndDate;
-
-	/**
-	 * 产品冷静期
-	 */
-	private Date collingoffPeriod;
-
-	/**
-	 * 运营起始日
-	 */
-	@NotEmpty(fieldName = "运作起始日")
-	private Date operationStartDate;
-
-	/**
-	 * 自动赎回日
-	 */
-	private Date autoRedeemDate;
-
-	/**
-	 * 客户持有天数
-	 */
-	private Short holdDays;
-
-	/**
-	 * 数据状态：数据字典，系统模块-DIS，字典code：DATA_STATUS:E-有效，D-删除
-	 */
-	private String dataStatus;
-
-	/**
-	 * 数据来源:数据字典code:DATA_SOURCE
-	 */
-	private String dataSource;
 
 	/**
 	 * 开放期起始日
@@ -145,6 +101,12 @@ public class DisProdPlanManage002Dto extends BaseEntity{
 	 */
 	private String raiseType;
 
+	@Override
+	@PrimaryKey(PrimaryKey.Field.PK_1)
+	public String getProdPlanId() {
+		return super.getProdPlanId();
+	}
+
 
 	public String getIssuingWay() {
 		return issuingWay;
@@ -203,7 +165,13 @@ public class DisProdPlanManage002Dto extends BaseEntity{
 	}
 
 	public String getOpenStartDateStr() {
-		return openStartDateStr;
+		// return openStartDateStr;
+		if(StringUtils.isNotBlank(this.openStartDateStr)){
+			return this.openStartDateStr ;
+		}else{
+			return this.openStartDateStr = this.getOpenStartDate()==null?null: DateUtil.format(this.getOpenStartDate(), "yyyy-MM-dd");
+		}
+
 	}
 
 	public void setOpenStartDateStr(String openStartDateStr) {
@@ -211,7 +179,12 @@ public class DisProdPlanManage002Dto extends BaseEntity{
 	}
 
 	public String getOpenEndDateStr() {
-		return openEndDateStr;
+		if(StringUtils.isNotBlank(this.openEndDateStr)){
+			return this.openEndDateStr ;
+		}else{
+			return this.openEndDateStr = this.getOpenEndDate()==null?null: DateUtil.format(this.getOpenEndDate(), "yyyy-MM-dd");
+		}
+
 	}
 
 	public void setOpenEndDateStr(String openEndDateStr) {
@@ -219,7 +192,13 @@ public class DisProdPlanManage002Dto extends BaseEntity{
 	}
 
 	public String getCollingoffPeriodStr() {
-		return collingoffPeriodStr;
+//		return collingoffPeriodStr;
+		if(StringUtils.isNotBlank(this.collingoffPeriodStr)){
+			return this.collingoffPeriodStr ;
+		}else{
+			return this.collingoffPeriodStr = this.getCollingoffPeriod()==null?null: DateUtil.format(this.getCollingoffPeriod(), "yyyy-MM-dd");
+		}
+
 	}
 
 	public void setCollingoffPeriodStr(String collingoffPeriodStr) {
@@ -227,7 +206,12 @@ public class DisProdPlanManage002Dto extends BaseEntity{
 	}
 
 	public String getOperationStartDateStr() {
-		return operationStartDateStr;
+//		return operationStartDateStr;
+		if(StringUtils.isNotBlank(this.operationStartDateStr)){
+			return this.operationStartDateStr ;
+		}else{
+			return this.operationStartDateStr = this.getOperationStartDate()==null?null: DateUtil.format(this.getOperationStartDate(), "yyyy-MM-dd");
+		}
 	}
 
 	public void setOperationStartDateStr(String operationStartDateStr) {
@@ -235,7 +219,12 @@ public class DisProdPlanManage002Dto extends BaseEntity{
 	}
 
 	public String getAutoRedeemDateStr() {
-		return autoRedeemDateStr;
+		//return autoRedeemDateStr;
+		if(StringUtils.isNotBlank(this.autoRedeemDateStr)){
+			return this.autoRedeemDateStr ;
+		}else{
+			return this.autoRedeemDateStr = this.getAutoRedeemDate()==null?null: DateUtil.format(this.getAutoRedeemDate(), "yyyy-MM-dd");
+		}
 	}
 
 	public void setAutoRedeemDateStr(String autoRedeemDateStr) {
@@ -243,7 +232,12 @@ public class DisProdPlanManage002Dto extends BaseEntity{
 	}
 
 	public String getUpdateDateStr() {
-		return updateDateStr;
+//		return updateDateStr;
+		if(StringUtils.isNotBlank(this.updateDateStr)){
+			return this.updateDateStr ;
+		}else{
+			return this.updateDateStr = this.getUpdateTime()==null?null: DateUtil.format(this.getUpdateTime(), "yyyy-MM-dd hh:mm:ss");
+		}
 	}
 
 	public void setUpdateDateStr(String updateDateStr) {
@@ -266,105 +260,6 @@ public class DisProdPlanManage002Dto extends BaseEntity{
 		this.dataStatusName = dataStatusName;
 	}
 
-	/**
-	 * 取得 产品排期计划编号
-	 * @return 产品排期计划编号
-	 */
-	public String getProdPlanId() {
-		return prodPlanId;
-	}
-
-	/**
-	 * 设置 产品排期计划编号
-	 * @param prodPlanId 产品排期计划编号
-	 */
-	public void setProdPlanId(String prodPlanId) {
-		this.prodPlanId = prodPlanId == null ? null : prodPlanId.trim();
-	}
-
-	/**
-	 * 取得 产品ID
-	 * @return 产品ID
-	 */
-	public String getProdId() {
-		return prodId;
-	}
-
-	/**
-	 * 设置 产品ID
-	 * @param prodId 产品ID
-	 */
-	public void setProdId(String prodId) {
-		this.prodId = prodId == null ? null : prodId.trim();
-	}
-
-	/**
-	 * 取得 开放期起始日
-	 * @return 开放期起始日
-	 */
-	public Date getOpenStartDate() {
-		return openStartDate;
-	}
-
-	/**
-	 * 设置 开放期起始日
-	 * @param openStartDate 开放期起始日
-	 */
-	@JsonDeserialize(using = CustomDateDeserialize.class)
-	public void setOpenStartDate(Date openStartDate) {
-		this.openStartDate = openStartDate;
-	}
-
-	/**
-	 * 取得 开放期结束日
-	 * @return 开放期结束日
-	 */
-	public Date getOpenEndDate() {
-		return openEndDate;
-	}
-
-	/**
-	 * 设置 开放期结束日
-	 * @param openEndDate 开放期结束日
-	 */
-	@JsonDeserialize(using = CustomDateDeserialize.class)
-	public void setOpenEndDate(Date openEndDate) {
-		this.openEndDate = openEndDate;
-	}
-
-	/**
-	 * 取得 查询条件key
-	 * @return 查询条件key
-	 */
-	public Date getCollingoffPeriod() {
-		return collingoffPeriod;
-	}
-
-	/**
-	 * 设置 查询条件key
-	 * @param collingoffPeriod 查询条件key
-	 */
-	@JsonDeserialize(using = CustomDateDeserialize.class)
-	public void setCollingoffPeriod(Date collingoffPeriod) {
-		this.collingoffPeriod = collingoffPeriod;
-	}
-
-	/**
-	 * 取得 运营起始日
-	 * @return 运营起始日
-	 */
-	public Date getOperationStartDate() {
-		return operationStartDate;
-	}
-
-	/**
-	 * 设置 运营起始日
-	 * @param operationStartDate 运营起始日
-	 */
-	@JsonDeserialize(using = CustomDateDeserialize.class)
-	public void setOperationStartDate(Date operationStartDate) {
-		this.operationStartDate = operationStartDate;
-	}
 
 	public List<DisProdPlanManage002Dto> getAddParam() {
 		return addParam;
@@ -372,61 +267,5 @@ public class DisProdPlanManage002Dto extends BaseEntity{
 
 	public void setAddParam(List<DisProdPlanManage002Dto> addParam) {
 		this.addParam = addParam;
-	}
-
-	public Date getAutoRedeemDate() {
-		return autoRedeemDate;
-	}
-
-	public void setAutoRedeemDate(Date autoRedeemDate) {
-		this.autoRedeemDate = autoRedeemDate;
-	}
-
-	/**
-	 * 取得 客户持有天数
-	 * @return 客户持有天数
-	 */
-	public Short getHoldDays() {
-		return holdDays;
-	}
-
-	/**
-	 * 设置 客户持有天数
-	 * @param holdDays 客户持有天数
-	 */
-	public void setHoldDays(Short holdDays) {
-		this.holdDays = holdDays;
-	}
-
-	/**
-	 * 取得 数据状态：数据字典，系统模块-DIS，字典code：DATA_STATUS:E-有效，D-删除
-	 * @return 数据状态：数据字典，系统模块-DIS，字典code：DATA_STATUS:E-有效，D-删除
-	 */
-	public String getDataStatus() {
-		return dataStatus;
-	}
-
-	/**
-	 * 设置 数据状态：数据字典，系统模块-DIS，字典code：DATA_STATUS:E-有效，D-删除
-	 * @param dataStatus 数据状态：数据字典，系统模块-DIS，字典code：DATA_STATUS:E-有效，D-删除
-	 */
-	public void setDataStatus(String dataStatus) {
-		this.dataStatus = dataStatus == null ? null : dataStatus.trim();
-	}
-
-	/**
-	 * 取得 数据来源:数据字典code:DATA_SOURCE
-	 * @return 数据来源:数据字典code:DATA_SOURCE
-	 */
-	public String getDataSource() {
-		return dataSource;
-	}
-
-	/**
-	 * 设置 数据来源:数据字典code:DATA_SOURCE
-	 * @param dataSource 数据来源:数据字典code:DATA_SOURCE
-	 */
-	public void setDataSource(String dataSource) {
-		this.dataSource = dataSource == null ? null : dataSource.trim();
 	}
 }
