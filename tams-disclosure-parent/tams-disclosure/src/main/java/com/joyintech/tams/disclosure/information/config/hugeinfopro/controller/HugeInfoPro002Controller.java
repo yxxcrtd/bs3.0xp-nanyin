@@ -88,6 +88,10 @@ public class HugeInfoPro002Controller extends BaseController {
         ProcessParameter<HugeInfoPro001Dto> processParameter = new ProcessParameter<HugeInfoPro001Dto>();
         WorkFlowParameter<HugeInfoPro001Dto> params = new WorkFlowParameter<HugeInfoPro001Dto>();
 //        String code = bussGetBussinessIdService !=null ? bussGetBussinessIdService.buildBussinessCode(param):IDGenerator .generate();
+        if(StringUtil.equals(dto.getOperateType(),"new")){
+            String code = IDGenerator.generate(36);
+            dto.setRedemptionId(code);
+        }
         String code = IDGenerator.generate(36);
         dto.setRedemptionId(code);
         Date sysDate = com.joyintech.framework.util.DateUtil.platDateFromCache();// 获取平台日期

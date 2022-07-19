@@ -23,6 +23,12 @@ public enum DictCodeListExt4 implements BaseDictCodeList {
     会计分录类型_按科目分录(DictCode.会计分录类型,"01","按科目分录"),
     会计分录类型_按内部科目编码分录(DictCode.会计分录类型,"02","按内部科目编码分录"),
     共通业务类型_产品费用交易信息维护(DictCode.共通业务类型, "SVR11", "产品费用交易信息维护"),
+
+    共通业务类型_产品分红到期计划(DictCode.共通业务类型, "DISBond", "产品分红到期计划"),
+
+    共通业务类型_产品排期计划(DictCode.共通业务类型, "DISPLAN", "产品排期计划"),
+
+
     ;
     /**
      * 对应于数据字典code

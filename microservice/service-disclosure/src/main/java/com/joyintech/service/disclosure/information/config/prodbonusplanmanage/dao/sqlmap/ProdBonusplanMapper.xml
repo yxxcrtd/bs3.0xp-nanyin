@@ -367,6 +367,7 @@
                TO_CHAR(dpb.SETT_DATE, 'yyyy-mm-dd')  ettDateStr,
                TO_CHAR(dpb.PAYMENT_DATE, 'yyyy-mm-dd')   paymentDateStr,
                TO_CHAR(NVL(dpb.Update_Time, dpb.Create_Time), 'yyyy-mm-dd hh24:mi:ss') updateDateStr,
+               TO_CHAR(dpb.SETT_DATE, 'yyyy-mm-dd')  settDateStr,
                rpi.prod_name   prodName
         FROM DIS_PROD_BONUSPLAN dpb
             LEFT JOIN REP_PROD_INFO rpi ON rpi.PROD_ID = dpb.PROD_ID

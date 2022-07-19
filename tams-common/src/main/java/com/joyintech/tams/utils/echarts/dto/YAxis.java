@@ -5,12 +5,13 @@ package com.joyintech.tams.utils.echarts.dto;
  */
 public class YAxis{
 
-	public YAxis(String name,String type,String position,boolean scale,AxisLine axisLine) {
+	public YAxis(String name,String type,String position,boolean scale,String splitNumber,AxisLine axisLine) {
 		setName(name);
 		setType(type);
 		setPosition(position);
 		setScale(scale);
 		setAxisLine(axisLine);
+		setSplitNumber(splitNumber);
 	}
 	/**
 	 * 类型 
@@ -45,6 +46,18 @@ public class YAxis{
 	 * 轴线
 	 */
 	private AxisLine axisLine;
+	/**
+	 * 设置纵坐标显示个数
+	 */
+	private String   splitNumber;
+
+	public String getSplitNumber() {
+		return splitNumber;
+	}
+
+	public void setSplitNumber(String splitNumber) {
+		this.splitNumber = splitNumber;
+	}
 
 	public String getType() {
 		return type;

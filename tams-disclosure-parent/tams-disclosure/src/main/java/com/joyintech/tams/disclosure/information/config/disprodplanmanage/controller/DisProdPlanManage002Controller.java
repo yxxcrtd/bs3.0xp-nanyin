@@ -13,6 +13,7 @@ package com.joyintech.tams.disclosure.information.config.disprodplanmanage.contr
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -24,12 +25,19 @@ import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.DictCodeListExt4;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.service.GetPrdInfoSelectService;
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto;
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.service.DisProdPlanManage002Service;
+import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto;
 import com.joyintech.tams.disclosure.information.config.reportcontentenum.dto.ReportContentEnum001Dto;
+import com.joyintech.tams.systemtools.util.CommonUtil;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +47,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -86,9 +95,23 @@ public class DisProdPlanManage002Controller extends BaseController {
 		this.setSelectOptionToModel(model,DictCode.信披_数据状态);
 		
 		String id = this.getParam("prodPlanId");
-		if (StringUtil.isNotEmpty(id)) {
+		/*if (StringUtil.isNotEmpty(id)) {
+			model.addAttribute("entity", disProdPlanManage002Service.getDisProdPlanManage002Dto(id));
+		}*/
+		String workflowId = getParam("workflowId");
+		// 不来自于代办
+		if (WorkFlowUtil.isNotFromToDoList() &&  StringUtil.isNotEmpty(id)) {
+			// 根据主键获取业务实体
 			model.addAttribute("entity", disProdPlanManage002Service.getDisProdPlanManage002Dto(id));
 		}
+		// 来自代办 现在是不走流程
+		else if (StringUtil.isNotEmpty(workflowId)) {
+			// 根据工作流与留痕处理提供的共通方法获取业务实体
+			DisProdPlanManage002Dto entity = disProdPlanManage002Service.getBussinessEntityByWorkflowId(workflowId);
+			model.addAttribute("entity", entity);
+			model.addAttribute("workflowId", workflowId);
+		}
+
 		return super.init(model);
 	}
 
@@ -199,108 +222,39 @@ public class DisProdPlanManage002Controller extends BaseController {
 			}
 			return result;
 		}
-		
-		/**
-		 * 文件上传
-		 * @param model ModelAndView
-		 * @return 保存文件信息
-		 * @throws Exception
-		 *             异常
-		 * @see
-		 * @since 1.0
-		 */
-		@RequestMapping(value = "/uploadFile")
-		@ResponseBody
-		public AjaxResult uploadFile(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws IOException {
-			 AjaxResult res = new AjaxResult();
-//			 if(request.getParameter("size")>1048576){}
-			 if(StringUtil.isEmpty(this.getParam("folder"))){
-				//进度条消除
-				 disProdPlanManage002Service.removePercent(request);
-				 String sourcePath=this.getParam("fileName");
-				 File sourceFile=new SafelyFile(sourcePath);
-				 if(sourceFile.exists()){
-					 sourceFile.delete();
-				 }
-				 String msg = "请输入上传文件夹,并重新上传文件";
-					res =  new AjaxResult(msg, MessageType.错误消息);
-					return res;
-			 }
-			 String size = this.getParam("size");
-			 //文件大小判断 10M
-			 if(Integer.parseInt(size)>10485760){
-				 //进度条消除
-				 disProdPlanManage002Service.removePercent(request);
-				 String msg = "文件大小不能超过10M";
-					res =  new AjaxResult(msg, MessageType.错误消息);
-					return res;
-			 }else{
-			 try {
-				 disProdPlanManage002Service.readFile(request);
-				} catch (Exception e) {
-					String msg = "上传失败：" + e.getMessage();
-					res =  new AjaxResult(msg, MessageType.错误消息);
-					return res;
-				}}
-			 //判断目标目镜是否存在
-			 String uploadFilePath  = CacheUtil.getSysParam(ReportGlobalConstant.TEMPLATE_FILE_PATH); 
-			 File filepath = new SafelyFile(uploadFilePath);///home/tamsuser/jasper
-		     File filepath2=new SafelyFile(uploadFilePath+this.getParam("folder"));///NB/GLJY
-			 if(!filepath.exists()){
-				 filepath.mkdirs();
-			 }
-			 if(!filepath2.exists()){
-				filepath2.mkdirs();
 
-			 }
-			 else{
-				 String TEMPLATE_DELETE_TYPE  = CacheUtil.getSysParam(ReportGlobalConstant.TEMPLATE_DELETE_TYPE); 
-				 if(null!=TEMPLATE_DELETE_TYPE&&TEMPLATE_DELETE_TYPE.equals(DisclosureDictCodeList.是否_是.getValue())){
-					 FileUtil.deleteDir(filepath2);
-					 filepath2.mkdirs();
-				 }
-				 
-			 }
-			 
-			 
-			 if(filepath.exists()&&filepath.isDirectory()){
-				 
-			//调用解压工具,并解压至指定目录
-			 boolean deczip =  FileUtil.decompressZip(new SafelyFile(this.getParam("fileName")), filepath2.getPath());
-			 
-			 if(!deczip){
-				 String msg = "文件上传并解压失败,请检查文件是否完好!";
-				res =  new AjaxResult(msg, MessageType.错误消息);
-				return res;
-			 }else{
-			 	String msg = "文件上传成功";
-				res =  new AjaxResult(msg, MessageType.提示消息);
-				return res; 
-			 }
-				 
-		 }
-//			 
-			
-			
-			 
-				return res;
+	/**
+	 * 数据保存操作
+	 * @param dto 请求实体类
+	 */
+	@ResponseBody
+	@RequestMapping(OPERATE_TYPE_SAVE)
+	public AjaxResult save(@RequestBody @Validated({
+			ValidateGroupEdit.class}) DisProdPlanManage002Dto dto, BindingResult br)
+			throws Exception {
+		if (br.hasErrors()) {
+			return new AjaxResult(br);
 		}
-		
-		
-		
-		/**
-		 * 下载所有报表文件
-		 * <一句话功能简述>
-		 * <功能详细描述>
-		 * @return
-		 * @throws Exception
-		 */
-		@ResponseBody
-		@RequestMapping("downloadReport")
-		public ResponseEntity<byte[]> downloadReport() throws IOException {
-			
-			
-			return disProdPlanManage002Service.downLoadReportInfo(this.getParam("folder"));
-		}
+		// 新建留痕表参数和工作流参数
+		ProcessParameter<DisProdPlanManage002Dto> processParameter = new ProcessParameter<DisProdPlanManage002Dto>();
+		WorkFlowParameter<DisProdPlanManage002Dto> params = new WorkFlowParameter<DisProdPlanManage002Dto>();
+		params.setPageId("DisProdPlanManage002");
+		params.setElementId(dto.getElementId());
+		params.setBusinessCode(dto.getProdId());
+		params.setBusinessType(DictCodeListExt4.共通业务类型_产品排期计划.getValue());
+		params.setComment(entity -> "产品排期计划-产品代码"+ "(" + entity.getProdId() + ")");
+		// 塞入工作流参数
+		processParameter.setWorkFlowParameter(params);
+
+		Date sysDate = com.joyintech.framework.util.DateUtil.platDateFromCache();// 获取平台日期
+		dto.setCreateTime(sysDate);
+		dto.setUpdateTime(sysDate);
+		dto.setCreateUser(CommonUtil.getUserName());
+		dto.setUpdateUser(CommonUtil.getUserName());
+
+		// 流程开始
+		String msg =disProdPlanManage002Service.start(processParameter, dto);
+		return new AjaxResult(msg);
+	}
 		
 }
