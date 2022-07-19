@@ -1,6 +1,7 @@
 package com.joyintech.tams.disclosure.information.config.proelementadj.dto;
 
 import com.joyintech.framework.annotation.PageId;
+
 import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
@@ -8,6 +9,7 @@ import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.DisProdAdjust;
+
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.disclosure.information.config.proelementadj.validator.ProElementAdjValidator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
@@ -71,8 +73,13 @@ public class ProElementAdj001Dto extends DisProdAdjust implements ITableRow, Pro
     }
 
     @Override
-    @NotEmpty(fieldName = "ProElementAdj001.prodRegistNo", groups = {ValidateGroupEdit.class})
     @PrimaryKey(PrimaryKey.Field.PK_1)
+    public String getProdAdjustId() {
+        return super.getProdAdjustId();
+    }
+
+    @Override
+    @NotEmpty(fieldName = "ProElementAdj001.prodRegistNo", groups = {ValidateGroupEdit.class})
     public String getProdRegistNo() {
         return super.getProdRegistNo();
     }

@@ -52,7 +52,7 @@
          * 定义表头
          */
         cols: [
-            {field:'redemptionId',  visible: false},//数据状态
+            {field:'redemptionId',  visible: false},
             {field:'dataStatusStr',  title: 'ProElementAdj001.dataStatus',sortField:"dataStatus"},//数据状态
             {field:'prodRegistNo',  title: 'ProElementAdj001.prodRegistNo',sortField:"prodRegistNo"},//产品登记编码
             {field:'prodId',  title: 'ProElementAdj001.prodId',sortField:"prodId"}//子产品代码

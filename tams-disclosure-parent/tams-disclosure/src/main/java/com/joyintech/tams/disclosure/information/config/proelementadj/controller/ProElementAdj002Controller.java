@@ -6,6 +6,7 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -46,10 +47,11 @@ public class ProElementAdj002Controller extends BaseController {
         this.setSelectOptionToModel(model, new DictCode[] {DictCode.是否});
         String workflowId = getParam("workflowId");
         String prodRegistNo = getParam("prodRegistNo");
+        String prodAdjustId =getParam("prodAdjustId");
         // 不来自于代办
-        if (WorkFlowUtil.isNotFromToDoList() &&  StringUtil.isNotEmpty(prodRegistNo)) {
+        if (WorkFlowUtil.isNotFromToDoList() &&  StringUtil.isNotEmpty(prodAdjustId)) {
             // 根据主键获取业务实体
-            ProElementAdj001Dto entity = proElementAdj001Service.selectByPrimaryKey(prodRegistNo);
+            ProElementAdj001Dto entity = proElementAdj001Service.selectByPrimaryKey(prodAdjustId);
             model.addAttribute("entity", entity);
         }
         // 来自代办 现在是不走流程
@@ -84,6 +86,8 @@ public class ProElementAdj002Controller extends BaseController {
         }
         ProcessParameter<ProElementAdj001Dto> processParameter = new ProcessParameter<ProElementAdj001Dto>();
         WorkFlowParameter<ProElementAdj001Dto> params = new WorkFlowParameter<ProElementAdj001Dto>();
+        String code = IDGenerator.generate();
+        dto.setProdAdjustId(code);
         params.setPageId(this.getPageId());
         params.setElementId(dto.getElementId());
         params.setBusinessCode(item -> item.getProdRegistNo());
@@ -99,6 +103,18 @@ public class ProElementAdj002Controller extends BaseController {
 
 
 
+
+
+
+//    @ResponseBody
+//    @RequestMapping("/getProdId")
+//    public Page<SelectOptionDto> getProdId()
+//            throws Exception {
+//        Page<SelectOptionDto> temp = proElementAdj001Service.getProdId(RequestUtil.getPageParam());
+//        return temp;
+//    }
+
+
     /**
      * 获取页面下拉选信息(产品登记编码）
      * @return
@@ -106,19 +122,16 @@ public class ProElementAdj002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getRegistNo")
-    public Page<SelectOptionDto> getRegistNo()
+    public List<SelectOptionDto> getRegistNo()
             throws Exception {
-        Page<SelectOptionDto> temp = proElementAdj001Service.getRegistNo(RequestUtil.getPageParam());
-        return temp;
+
+        return proElementAdj001Service.getRegistNo(RequestUtil.getPageParam());
     }
 
 
-
     @ResponseBody
-    @RequestMapping("/getProdId")
-    public Page<SelectOptionDto> getProdId()
-            throws Exception {
-        Page<SelectOptionDto> temp = proElementAdj001Service.getProdId(RequestUtil.getPageParam());
-        return temp;
+    @RequestMapping("getProdId")
+    public List<SelectOptionDto> getProdId() {
+        return proElementAdj001Service.getProdId(RequestUtil.getPageParam());
     }
 }

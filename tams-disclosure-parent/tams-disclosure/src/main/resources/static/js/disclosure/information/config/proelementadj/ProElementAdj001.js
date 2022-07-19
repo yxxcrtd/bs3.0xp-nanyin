@@ -51,18 +51,16 @@
          * 双击查看
          */
         dblclick: function (table, data) {
+            data.pageModel=PAGE_MODEL_REFERENCE;
             Joyin.dialog(JoyinUtil.getLabel("产品要素调整查看"),
                 basePath + "disclosure/information/config/proelementadj/ProElementAdj002/init",
-                "99%", "99%", {
-                    pageModel: PAGE_MODEL_REFERENCE,
-                    // finprodId: data.finprodId,
-                    // finprodMarketId:data.finprodMarketId
-                });
+                "99%", "99%", data,function(){table.reload();});
         },
         /**
          * 定义表头
          */
         cols: [
+            {field:'prodAdjustId',  visible: false},
             {field:'dataStatusStr',  title: 'ProElementAdj001.dataStatus',sortField:"dataStatus"},//数据状态
             {field:'prodRegistNo',  title: 'ProElementAdj001.prodRegistNo',sortField:"prodRegistNo"},//产品登记编码
             {field:'prodId',  title: 'ProElementAdj001.prodId',sortField:"prodId"}//子产品代码
@@ -78,7 +76,15 @@
             ,{field:'rptIssueDate',  title: '报告发布日期',sortField:"rptIssueDate",type:'date'}//报告发布日期
             ,{field:'updateTime',  title: '更新时间',sortField:"updateTime",type:'date'} //更新时间
             ,{field:'updateUser',title:'更新人',sortField:"updateUser"}//更新人
-            ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
+            ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt'],
+                render: function (data, type, row, meta) {
+                    if (row.dataStatus == '02')
+                        return '';
+                    else
+                        return '<i class="btn layui-icon edit edit" title="编辑" data-ignore="false"></i> ' +
+                            '<i class="btn layui-icon delt delt" title="删除" data-ignore="false"></i>';
+                }
+        }
         ]
 
     });

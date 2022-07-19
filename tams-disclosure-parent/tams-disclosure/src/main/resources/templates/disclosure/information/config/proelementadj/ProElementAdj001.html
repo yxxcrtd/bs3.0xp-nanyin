@@ -17,13 +17,14 @@
         </div>
         <div class='joyin-form-wrap joyin-filter-form condition-area'>
             <form class="layui-form" id="searchForm">
+                <input hidden type="text" id="prodAdjustId" data-th-value="${entity?.prodAdjustId}" style="display:none;">
                 <div class="layui-form-item">
                     <div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
                         <label class="layui-form-label form-lable" data-th-text="#{ProElementAdj001.prodRegistNo}">产品登记编码</label>
                         <div class="layui-input-inline input-inline">
-                            <select type="text" id="prodRegistNo" name="prodRegistNo" formatoption="true" multiple
+                            <select type="text" id="prodRegistNo" name="prodRegistNo" formatoption="false" multiple
                                     class="layui-input form-input input-select"  placeholder="请输入内容" data-th-value='${entity?.prodRegistNo}'
-                                    data-th-data-url="@{/invest/basicdata/traderinfo/TraderInfo001/getCustomerName}" allowClear="true">
+                                    data-th-data-url="@{/disclosure/information/config/proelementadj/ProElementAdj001/getRegistNoList}" allowClear="true">
                             </select>
                         </div>
                     </div>
@@ -32,7 +33,7 @@
                         <div class="layui-input-inline input-inline">
                             <select type="text" id="prodId" name="prodId" formatoption="true" multiple
                                     class="layui-input form-input input-select"  placeholder="请输入内容" data-th-value='${entity?.prodId}'
-                                    data-th-data-url="@{/invest/basicdata/traderinfo/TraderInfo001/getCustomerName}" allowClear="true">
+                                    data-th-data-url="@{/disclosure/information/config/proelementadj/ProElementAdj001/getProdIdlist}" allowClear="true">
                             </select>
                         </div>
                     </div>
@@ -48,9 +49,11 @@
                         <div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
                             <label class="layui-form-label form-lable" data-th-text="#{ProElementAdj001.adjField}">调整要素</label>
                             <div class="layui-input-inline input-inline">
-                                <select type="text" id="adjField" name="adjField" formatoption="true" multiple
-                                        class="layui-input form-input input-select"  placeholder="请输入内容" data-th-value='${entity?.adjField}'
-                                        data-th-data-url="@{/invest/basicdata/traderinfo/TraderInfo001/getCustomerName}" allowClear="true">
+                                <select id="adjField" name="adjField" class="input-select"
+                                        data-th-initValue="${entity?.adjField}" formatoption="false" multiple
+                                        data-th-data-url="@{/disclosure/information/config/proelementadj/ProElementAdj001/getAdjF}"
+                                        placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}"
+                                        allowClear="true">
                                 </select>
                             </div>
                         </div>

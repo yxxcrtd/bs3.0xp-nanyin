@@ -2,6 +2,7 @@ package com.joyintech.tams.disclosure.information.config.hugeinfopro.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
@@ -38,6 +39,14 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
 
     public Page<HugeInfoPro001Dto> selectForPage(Map<String, Object> param) {
         Map<String, Object> pageParam = RequestUtil.getPageParam();
+        String prodRegistNo = (String)param.get("prodRegistNo");
+        if(StringUtil.isNotEmpty(prodRegistNo)){
+            param.put("prodRegistNoList", StringUtil.splitToList(GlobalConstant.COMMA,prodRegistNo));
+        }
+        String prodId = (String)param.get("prodId");
+        if(StringUtil.isNotEmpty(prodId)){
+            param.put("prodIdList", StringUtil.splitToList(GlobalConstant.COMMA,prodId));
+        }
         Page<HugeInfoPro001Dto> result = queryForPage(Integer.parseInt((String) param.get("page")), Integer.parseInt((String) param.get("length")), ()
                 -> hugeInfoProMapper.select(param));
         return result;

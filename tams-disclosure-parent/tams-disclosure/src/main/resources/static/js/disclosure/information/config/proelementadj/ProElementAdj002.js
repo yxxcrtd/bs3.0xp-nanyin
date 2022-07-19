@@ -28,7 +28,7 @@ $(function() {
                              WorkFlow.doSaveList(basePath + 'disclosure/information/config/proelementadj/ProElementAdj002/save',
                                      object, "ProElementAdj002_btn_save");
                          } else {
-                             WorkFlow.doSubmitList(basePath  + 'invest/basicdata/traderinfo/TraderInfo002/save',
+                             WorkFlow.doSubmitList(basePath  + 'disclosure/information/config/proelementadj/ProElementAdj002/save',
                                      object, "ProElementAdj002_btn_submit");
                          }
                      });
@@ -67,7 +67,7 @@ $(function() {
 	$(function() {
 		init();
 		// 绑定按钮事件
-		$('#TraderInfo002_btn_save').click(function() {
+		$('#ProElementAdj002_btn_save').click(function() {
 			saveOrSubmit('save');
 		});
 
