@@ -7,9 +7,9 @@ import java.util.Date;
 
 public class DisLargeRedemption extends BaseEntity {
     /**
-     * 产品登记编码
+     * 赎回编号,主键
      */
-    private String prodRegistNo;
+    private String redemptionId;
 
     /**
      * 子产品代码
@@ -17,12 +17,17 @@ public class DisLargeRedemption extends BaseEntity {
     private String prodId;
 
     /**
+     * 产品登记编码
+     */
+    private String prodRegistNo;
+
+    /**
      * 是否有代销机构，数据字典，是否
      */
     private String isSalesAgency;
 
     /**
-     * 优化起始时间
+     * 赎回日期
      */
     private Date dealDate;
 
@@ -52,19 +57,19 @@ public class DisLargeRedemption extends BaseEntity {
     private String dataSource;
 
     /**
-     * 取得 产品登记编码
-     * @return 产品登记编码
+     * 取得 赎回编号,主键
+     * @return 赎回编号,主键
      */
-    public String getProdRegistNo() {
-        return prodRegistNo;
+    public String getRedemptionId() {
+        return redemptionId;
     }
 
     /**
-     * 设置 产品登记编码
-     * @param prodRegistNo 产品登记编码
+     * 设置 赎回编号,主键
+     * @param redemptionId 赎回编号,主键
      */
-    public void setProdRegistNo(String prodRegistNo) {
-        this.prodRegistNo = prodRegistNo == null ? null : prodRegistNo.trim();
+    public void setRedemptionId(String redemptionId) {
+        this.redemptionId = redemptionId == null ? null : redemptionId.trim();
     }
 
     /**
@@ -84,6 +89,22 @@ public class DisLargeRedemption extends BaseEntity {
     }
 
     /**
+     * 取得 产品登记编码
+     * @return 产品登记编码
+     */
+    public String getProdRegistNo() {
+        return prodRegistNo;
+    }
+
+    /**
+     * 设置 产品登记编码
+     * @param prodRegistNo 产品登记编码
+     */
+    public void setProdRegistNo(String prodRegistNo) {
+        this.prodRegistNo = prodRegistNo == null ? null : prodRegistNo.trim();
+    }
+
+    /**
      * 取得 是否有代销机构，数据字典，是否
      * @return 是否有代销机构，数据字典，是否
      */
@@ -100,16 +121,16 @@ public class DisLargeRedemption extends BaseEntity {
     }
 
     /**
-     * 取得 优化起始时间
-     * @return 优化起始时间
+     * 取得 赎回日期
+     * @return 赎回日期
      */
     public Date getDealDate() {
         return dealDate;
     }
 
     /**
-     * 设置 优化起始时间
-     * @param dealDate 优化起始时间
+     * 设置 赎回日期
+     * @param dealDate 赎回日期
      */
     @JsonDeserialize(using = CustomDateDeserialize.class)
     public void setDealDate(Date dealDate) {

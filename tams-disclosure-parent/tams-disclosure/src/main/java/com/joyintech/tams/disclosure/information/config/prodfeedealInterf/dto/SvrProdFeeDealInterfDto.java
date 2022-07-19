@@ -1,13 +1,13 @@
 package com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto;
 
 import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.common.base.entity.RepFeeTrd;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.validator.SvrProdFeeDealInterfValidator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
@@ -19,7 +19,7 @@ import java.util.List;
 
 @PageId("SvrProdFeeDealInterf001")
 @ValidLogic(targetClass = SvrProdFeeDealInterfValidator.class, groups = { ValidateGroupEdit.class, ValidateGroupDelete.class })
-public class SvrProdFeeDealInterfDto extends BaseEntity implements ITableRow, ProcessEntity {
+public class SvrProdFeeDealInterfDto extends RepFeeTrd implements ITableRow, ProcessEntity {
 
     /**
      * 操作类型

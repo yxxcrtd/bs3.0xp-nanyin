@@ -3,19 +3,21 @@ package com.joyintech.tams.disclosure.information.config.proelementadj.service;
 import com.alibaba.fastjson.JSONArray;
 import com.google.common.collect.Maps;
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
+import com.joyintech.tams.disclosure.information.config.hugeinfopro.dto.HugeInfoPro001Dto;
+import com.joyintech.tams.disclosure.information.config.proelementadj.dao.ProElementAdjMapper;
 import com.joyintech.tams.disclosure.information.config.proelementadj.dto.ProElementAdj001Dto;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -31,27 +33,48 @@ import java.util.stream.Collectors;
 @Service
 public class ProElementAdj001Service extends CommonExportService<ProElementAdj001Dto> implements BaseProcessService<ProElementAdj001Dto> {
 
+    @Autowired
+    private ProElementAdjMapper proElementAdjMapper;
 
-    public Page<ProElementAdj001Dto> selectForPage(Map<String, Object> pageParam) {
-        return restTemplate.postForPage(
-                ServiceApplication.VALUATION_SERVICE_NAME + "/ProElementAdj/findPage",
-                pageParam, ProElementAdj001Dto.class);
+    public Page<ProElementAdj001Dto> selectForPage(Map<String, Object> param) {
+        String prodRegistNo = (String)param.get("prodRegistNo");
+        if(StringUtil.isNotEmpty(prodRegistNo)){
+            param.put("prodRegistNoList", StringUtil.splitToList(GlobalConstant.COMMA,prodRegistNo));
+        }
+        String prodId = (String)param.get("prodId");
+        if(StringUtil.isNotEmpty(prodId)){
+            param.put("prodIdList", StringUtil.splitToList(GlobalConstant.COMMA,prodId));
+        }
+        String adjField = (String)param.get("adjField");
+        if(StringUtil.isNotEmpty(adjField)){
+            param.put("adjFieldList", StringUtil.splitToList(GlobalConstant.COMMA,adjField));
+        }
+        Map<String, Object> pageParam = RequestUtil.getPageParam();
+        Page<ProElementAdj001Dto> result = queryForPage(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")), ()
+                -> proElementAdjMapper.select(param));
+        return result;
     }
-
     @Override
-    public void doComplete(ProElementAdj001Dto proElementAdj001Dto, OperationType operationType) {
-        proElementAdj001Dto.setOperateType(operationType.toString());
-        restTemplate.postForObject(
-                ServiceApplication.VALUATION_SERVICE_NAME + "/ProElementAdj/doComplete",
-                proElementAdj001Dto, Integer.class);
+    public void doComplete(ProElementAdj001Dto dto, OperationType operationType) {
+        dto.setUpdateTime(DateUtil.now());
+        dto.setOperateType(operationType.toString());
+        String type = dto.getOperateType();
+        if (StringUtil.equals(type, "DELETE")) {
+            proElementAdjMapper.deleteByKey(dto.getProdAdjustId());
+        }
+        else if (StringUtil.equals(type, "NEW")) {
+            ProElementAdj001Dto proElementAdj001Dto = new ProElementAdj001Dto();
+            BeanUtil.copyPropertiesIgnoreNull(proElementAdj001Dto,dto);
+            proElementAdj001Dto.setDataStatus("01");
+            proElementAdjMapper.insert(proElementAdj001Dto);
+        }
+        else {
+            dto.setDataStatus("01");
+            proElementAdjMapper.updateByKey(dto);
+        }
 
     }
 
-    public ProElementAdj001Dto selectByPrimaryKey(String prodRegistNo) {
-        return restTemplate.postForObject(
-                ServiceApplication.VALUATION_SERVICE_NAME + "/ProElementAdj/selectByPrimaryKey", prodRegistNo,
-                ProElementAdj001Dto.class);
-    }
 
 
     /**
@@ -63,20 +86,50 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
                 "/com/joyintech/tams/disclosure/information/config/proelementadj/config/export_conf.xml").dataSource(
                 DataSourceType.MASERT);
     }
+
     @Override
     public Page<ProElementAdj001Dto> selectPageData(Map<String, Object> selectParam) {
-        return selectForPage(selectParam);
+        return queryForPage(Integer.parseInt(selectParam.get("page").toString()),  Integer.parseInt(selectParam.get("length").toString()), ()
+                -> proElementAdjMapper.select(selectParam));
     }
 
-    public Page<SelectOptionDto> getRegistNo(Map<String, Object> map) {
-        return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME
-                + "/ProElementAdj/getRegistNo",map,SelectOptionDto.class);
+    public ProElementAdj001Dto selectByPrimaryKey(String prodRegistNo) {
+        return proElementAdjMapper.selectByPrimaryKey(prodRegistNo);
     }
 
 
-    public Page<SelectOptionDto> getProdId(Map<String, Object> map) {
-        return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME
-                + "/ProElementAdj/getProdId",map,SelectOptionDto.class);
+
+
+    public List<SelectOptionDto> getRegistNo(Map<String, Object> map) {
+        return proElementAdjMapper.getRegistNo(map);
+    }
+
+    public String selectByProdRegistNo(Map map) {
+        return proElementAdjMapper.selectByProdRegistNo(map);
+    }
+
+//    public Page<SelectOptionDto> getProdId(Map map) {
+//        Map<String, Object> pageParam = RequestUtil.getPageParam();
+//        return this.queryForPageForSelectReturn(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")),()->proElementAdjMapper.getProdId(map));
+//    }
+
+    public List<SelectOptionDto> getProdId(Map<String, Object> map) {
+        return proElementAdjMapper.getProdId(map);
+    }
+    public List<SelectOptionDto> getAdjF(Map<String, Object> map) {
+        return proElementAdjMapper.getAdjF(map);
+    }
+
+    public Page<SelectOptionDto> getRegistNoList(Map map) {
+        Map<String, Object> pageParam = RequestUtil.getPageParam();
+        return this.queryForPageForSelectReturn(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")),()->proElementAdjMapper.getRegistNoList(map));
+
+    }
+
+
+    public Page<SelectOptionDto> getProdIdlist(Map map) {
+        Map<String, Object> pageParam = RequestUtil.getPageParam();
+        return this.queryForPageForSelectReturn(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")),()->proElementAdjMapper.getProdIdlist(map));
     }
     /**
      * 导入check
@@ -235,14 +288,14 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
         List<ProElementAdj001Dto> selectedItem = dto.getSelectedItem();
         List<ProElementAdj001Dto>  existData = new ArrayList<>();
         List<ProElementAdj001Dto>  newData = new ArrayList<>();
-        for (ProElementAdj001Dto temp:selectedItem) {
-            //数据已存在 【产品登记编码 相同】，做更新操作。
-            if (StringUtil.isNotEmpty(this.selectByProdRegistNo(temp.getProdRegistNo()))){
-                existData.add(temp);
-            }else {
-                newData.add(temp);
-            }
-        }
+//        for (ProElementAdj001Dto temp:selectedItem) {
+//            //数据已存在 【产品登记编码 相同】，做更新操作。
+//            if (StringUtil.isNotEmpty(this.selectByProdRegistNo(temp.getProdRegistNo()))){
+//                existData.add(temp);
+//            }else {
+//                newData.add(temp);
+//            }
+//        }
         //更新操作
         for (ProElementAdj001Dto existDataDto : existData) {
             this.doComplete(existDataDto,OperationType.MODIFY);
@@ -319,11 +372,5 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
     }
 
 
-    public String selectByProdRegistNo(String prodRegistNo) {
-        Map<String,Object>map=new HashMap<>();
-        map.put("prodRegistNo", prodRegistNo);
-        return restTemplate.postForObject(
-                ServiceApplication.VALUATION_SERVICE_NAME + "/ProElementAdj/selectByProdRegistNo",
-                map, String.class);
-    }
+
 }

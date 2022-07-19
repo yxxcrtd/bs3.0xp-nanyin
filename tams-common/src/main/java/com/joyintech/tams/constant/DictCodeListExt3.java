@@ -1966,7 +1966,8 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     信披_数据状态_有效(DictCode.信披_数据状态,"01","有效"),
     信披_数据状态_删除(DictCode.信披_数据状态,"02","删除"),
 
-    共通业务类型_产品要素调整(DictCode.共通业务类型,"DIS","产品要素调整"),
+    共通业务类型_产品要素调整(DictCode.共通业务类型,"DISE","产品要素调整"),
+    共通业务类型_巨额赎回信息维护(DictCode.共通业务类型,"DISP","巨额赎回信息维护"),
 
     信披_数据来源_系统新建(DictCode.信披_数据来源,"01","系统新建"),
     信披_数据来源_EXCEL导入(DictCode.信披_数据来源,"02","EXCEL导入"),

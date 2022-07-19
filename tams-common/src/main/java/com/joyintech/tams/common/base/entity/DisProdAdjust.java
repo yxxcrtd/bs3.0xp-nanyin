@@ -3,21 +3,23 @@ package com.joyintech.tams.common.base.entity;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.CustomDateDeserialize;
-import com.joyintech.framework.validation.annotation.NotEmpty;
-import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-
 import java.util.Date;
 
 public class DisProdAdjust extends BaseEntity {
     /**
-     * 产品登记编码
+     * 产品调整编号，主键
      */
-    private String prodRegistNo;
+    private String prodAdjustId;
 
     /**
      * 子产品代码
      */
     private String prodId;
+
+    /**
+     * 产品登记编码
+     */
+    private String prodRegistNo;
 
     /**
      * 是否有代销机构，数据字典，是否
@@ -80,20 +82,19 @@ public class DisProdAdjust extends BaseEntity {
     private String dataSource;
 
     /**
-     * 取得 产品登记编码
-     * @return 产品登记编码
+     * 取得 产品调整编号，主键
+     * @return 产品调整编号，主键
      */
-
-    public String getProdRegistNo() {
-        return prodRegistNo;
+    public String getProdAdjustId() {
+        return prodAdjustId;
     }
 
     /**
-     * 设置 产品登记编码
-     * @param prodRegistNo 产品登记编码
+     * 设置 产品调整编号，主键
+     * @param prodAdjustId 产品调整编号，主键
      */
-    public void setProdRegistNo(String prodRegistNo) {
-        this.prodRegistNo = prodRegistNo == null ? null : prodRegistNo.trim();
+    public void setProdAdjustId(String prodAdjustId) {
+        this.prodAdjustId = prodAdjustId == null ? null : prodAdjustId.trim();
     }
 
     /**
@@ -110,6 +111,22 @@ public class DisProdAdjust extends BaseEntity {
      */
     public void setProdId(String prodId) {
         this.prodId = prodId == null ? null : prodId.trim();
+    }
+
+    /**
+     * 取得 产品登记编码
+     * @return 产品登记编码
+     */
+    public String getProdRegistNo() {
+        return prodRegistNo;
+    }
+
+    /**
+     * 设置 产品登记编码
+     * @param prodRegistNo 产品登记编码
+     */
+    public void setProdRegistNo(String prodRegistNo) {
+        this.prodRegistNo = prodRegistNo == null ? null : prodRegistNo.trim();
     }
 
     /**

@@ -2,8 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.common.base.dao.DisProdAdjustMapper" >
     <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.DisProdAdjust" >
-        <id column="PROD_REGIST_NO" property="prodRegistNo" jdbcType="VARCHAR" />
+        <id column="PROD_ADJUST_ID" property="prodAdjustId" jdbcType="VARCHAR" />
         <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="PROD_REGIST_NO" property="prodRegistNo" jdbcType="VARCHAR" />
         <result column="IS_SALES_AGENCY" property="isSalesAgency" jdbcType="VARCHAR" />
         <result column="PROD_ADJ_REMARK" property="prodAdjRemark" jdbcType="VARCHAR" />
         <result column="PROD_ADJ_REMARK2" property="prodAdjRemark2" jdbcType="VARCHAR" />
@@ -23,7 +24,7 @@
         <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
-        PROD_REGIST_NO PROD_REGIST_NO, PROD_ID PROD_ID, IS_SALES_AGENCY IS_SALES_AGENCY, 
+        PROD_ADJUST_ID PROD_ADJUST_ID, PROD_ID PROD_ID, PROD_REGIST_NO PROD_REGIST_NO, IS_SALES_AGENCY IS_SALES_AGENCY, 
         PROD_ADJ_REMARK PROD_ADJ_REMARK, PROD_ADJ_REMARK2 PROD_ADJ_REMARK2, ADJ_FIELD ADJ_FIELD, 
         PRE_ADJUST PRE_ADJUST, AFTER_ADJUST AFTER_ADJUST, EFF_DATE EFF_DATE, FIELD_ADJ_REMARK FIELD_ADJ_REMARK, 
         FIELD_ADJ_REMARK2 FIELD_ADJ_REMARK2, RPT_ISSUE_DATE RPT_ISSUE_DATE, DATA_STATUS DATA_STATUS, 
@@ -44,36 +45,39 @@
         select 
         <include refid="com.joyintech.tams.common.base.dao.DisProdAdjustMapper.Base_Column_List" />
         from DIS_PROD_ADJUST
-        where PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
+        where PROD_ADJUST_ID = #{prodAdjustId,jdbcType=VARCHAR}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
         delete from DIS_PROD_ADJUST
-        where PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
+        where PROD_ADJUST_ID = #{prodAdjustId,jdbcType=VARCHAR}
     </delete>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.DisProdAdjust" >
-        insert into DIS_PROD_ADJUST (PROD_REGIST_NO, PROD_ID, IS_SALES_AGENCY, 
-            PROD_ADJ_REMARK, PROD_ADJ_REMARK2, ADJ_FIELD, 
-            PRE_ADJUST, AFTER_ADJUST, EFF_DATE, 
-            FIELD_ADJ_REMARK, FIELD_ADJ_REMARK2, RPT_ISSUE_DATE, 
-            DATA_STATUS, DATA_SOURCE, CREATE_USER, 
-            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
-            CREATE_DEPT)
-        values (#{prodRegistNo,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{isSalesAgency,jdbcType=VARCHAR}, 
-            #{prodAdjRemark,jdbcType=VARCHAR}, #{prodAdjRemark2,jdbcType=VARCHAR}, #{adjField,jdbcType=VARCHAR}, 
-            #{preAdjust,jdbcType=VARCHAR}, #{afterAdjust,jdbcType=VARCHAR}, #{effDate,jdbcType=DATE}, 
-            #{fieldAdjRemark,jdbcType=VARCHAR}, #{fieldAdjRemark2,jdbcType=VARCHAR}, #{rptIssueDate,jdbcType=DATE}, 
-            #{dataStatus,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
-            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
-            #{createDept,jdbcType=VARCHAR})
+        insert into DIS_PROD_ADJUST (PROD_ADJUST_ID, PROD_ID, PROD_REGIST_NO, 
+            IS_SALES_AGENCY, PROD_ADJ_REMARK, PROD_ADJ_REMARK2, 
+            ADJ_FIELD, PRE_ADJUST, AFTER_ADJUST, 
+            EFF_DATE, FIELD_ADJ_REMARK, FIELD_ADJ_REMARK2, 
+            RPT_ISSUE_DATE, DATA_STATUS, DATA_SOURCE, 
+            CREATE_USER, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME, CREATE_DEPT)
+        values (#{prodAdjustId,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{prodRegistNo,jdbcType=VARCHAR}, 
+            #{isSalesAgency,jdbcType=VARCHAR}, #{prodAdjRemark,jdbcType=VARCHAR}, #{prodAdjRemark2,jdbcType=VARCHAR}, 
+            #{adjField,jdbcType=VARCHAR}, #{preAdjust,jdbcType=VARCHAR}, #{afterAdjust,jdbcType=VARCHAR}, 
+            #{effDate,jdbcType=DATE}, #{fieldAdjRemark,jdbcType=VARCHAR}, #{fieldAdjRemark2,jdbcType=VARCHAR}, 
+            #{rptIssueDate,jdbcType=DATE}, #{dataStatus,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.DisProdAdjust" >
         insert into DIS_PROD_ADJUST
         <trim prefix="(" suffix=")" suffixOverrides="," >
-            <if test="prodRegistNo != null" >
-                PROD_REGIST_NO,
+            <if test="prodAdjustId != null" >
+                PROD_ADJUST_ID,
             </if>
             <if test="prodId != null" >
                 PROD_ID,
+            </if>
+            <if test="prodRegistNo != null" >
+                PROD_REGIST_NO,
             </if>
             <if test="isSalesAgency != null" >
                 IS_SALES_AGENCY,
@@ -128,11 +132,14 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
-            <if test="prodRegistNo != null" >
-                #{prodRegistNo,jdbcType=VARCHAR},
+            <if test="prodAdjustId != null" >
+                #{prodAdjustId,jdbcType=VARCHAR},
             </if>
             <if test="prodId != null" >
                 #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodRegistNo != null" >
+                #{prodRegistNo,jdbcType=VARCHAR},
             </if>
             <if test="isSalesAgency != null" >
                 #{isSalesAgency,jdbcType=VARCHAR},
@@ -188,22 +195,25 @@
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.DisProdAdjust" >
-        insert into DIS_PROD_ADJUST(PROD_REGIST_NO, PROD_ID, IS_SALES_AGENCY, PROD_ADJ_REMARK, 
-        PROD_ADJ_REMARK2, ADJ_FIELD, PRE_ADJUST, AFTER_ADJUST, EFF_DATE, FIELD_ADJ_REMARK, 
-        FIELD_ADJ_REMARK2, RPT_ISSUE_DATE, DATA_STATUS, DATA_SOURCE, CREATE_USER, CREATE_TIME, 
-        UPDATE_USER, UPDATE_TIME, CREATE_DEPT)
-        select PROD_REGIST_NO, PROD_ID, IS_SALES_AGENCY, PROD_ADJ_REMARK, 
-            PROD_ADJ_REMARK2, ADJ_FIELD, PRE_ADJUST, AFTER_ADJUST, EFF_DATE, FIELD_ADJ_REMARK, 
-            FIELD_ADJ_REMARK2, RPT_ISSUE_DATE, DATA_STATUS, DATA_SOURCE, CREATE_USER, CREATE_TIME, 
-            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_DEPT
+        insert into DIS_PROD_ADJUST(PROD_ADJUST_ID, PROD_ID, PROD_REGIST_NO, IS_SALES_AGENCY, 
+        PROD_ADJ_REMARK, PROD_ADJ_REMARK2, ADJ_FIELD, PRE_ADJUST, AFTER_ADJUST, EFF_DATE, 
+        FIELD_ADJ_REMARK, FIELD_ADJ_REMARK2, RPT_ISSUE_DATE, DATA_STATUS, DATA_SOURCE, CREATE_USER, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME, CREATE_DEPT)
+        select PROD_ADJUST_ID, PROD_ID, PROD_REGIST_NO, IS_SALES_AGENCY, 
+            PROD_ADJ_REMARK, PROD_ADJ_REMARK2, ADJ_FIELD, PRE_ADJUST, AFTER_ADJUST, EFF_DATE, 
+            FIELD_ADJ_REMARK, FIELD_ADJ_REMARK2, RPT_ISSUE_DATE, DATA_STATUS, DATA_SOURCE, CREATE_USER, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_DEPT
              from DIS_PROD_ADJUST
-             where 1 = 1 and PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
+             where 1 = 1 and PROD_ADJUST_ID = #{prodAdjustId,jdbcType=VARCHAR}
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.DisProdAdjust" >
         update DIS_PROD_ADJUST
         <set >
             <if test="prodId != null" >
                 PROD_ID = #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodRegistNo != null" >
+                PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR},
             </if>
             <if test="isSalesAgency != null" >
                 IS_SALES_AGENCY = #{isSalesAgency,jdbcType=VARCHAR},
@@ -248,11 +258,12 @@
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
         </set>
-        where PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
+        where PROD_ADJUST_ID = #{prodAdjustId,jdbcType=VARCHAR}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.DisProdAdjust" >
         update DIS_PROD_ADJUST
         set PROD_ID = #{prodId,jdbcType=VARCHAR},
+            PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR},
             IS_SALES_AGENCY = #{isSalesAgency,jdbcType=VARCHAR},
             PROD_ADJ_REMARK = #{prodAdjRemark,jdbcType=VARCHAR},
             PROD_ADJ_REMARK2 = #{prodAdjRemark2,jdbcType=VARCHAR},
@@ -267,6 +278,6 @@
             DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-        where PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
+        where PROD_ADJUST_ID = #{prodAdjustId,jdbcType=VARCHAR}
     </update>
 </mapper>

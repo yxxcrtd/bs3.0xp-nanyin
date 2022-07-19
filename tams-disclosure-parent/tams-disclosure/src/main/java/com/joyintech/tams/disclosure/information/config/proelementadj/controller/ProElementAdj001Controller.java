@@ -4,6 +4,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -83,6 +85,7 @@ public class ProElementAdj001Controller extends BaseController {
         params.setComment(
                 entity -> "产品登记编码"+ "(" + entity.getProdRegistNo()+ ")"
                         +  "-" + "子产品代码"+ "(" + entity.getProdId() + ")");
+        processParameter.setWorkFlowParameter(params);
         String msg = proElementAdj001Service.start(processParameter,
                 dto.getSelectedItem().toArray(new ProElementAdj001Dto[dto.getSelectedItem().size()]));
         return new AjaxResult(msg);
@@ -120,5 +123,29 @@ public class ProElementAdj001Controller extends BaseController {
     @RequestMapping("importFile")
     public AjaxResult importFile(@RequestBody Map<String, Object> param)  {
         return proElementAdj001Service.importFile(param);
+    }
+
+
+    @ResponseBody
+    @RequestMapping("getRegistNoList")
+    public Page<SelectOptionDto> getRegistNoList()
+            throws Exception {
+        Page<SelectOptionDto> temp = proElementAdj001Service.getRegistNoList(RequestUtil.getPageParam());
+        return temp;
+    }
+
+
+    @ResponseBody
+    @RequestMapping("getProdIdlist")
+    public Page<SelectOptionDto> getProdIdlist()
+            throws Exception {
+        Page<SelectOptionDto> temp = proElementAdj001Service.getProdIdlist(RequestUtil.getPageParam());
+        return temp;
+    }
+
+    @ResponseBody
+    @RequestMapping("getAdjF")
+    public List<SelectOptionDto> getAdjF() {
+        return proElementAdj001Service.getAdjF(RequestUtil.getPageParam());
     }
 }

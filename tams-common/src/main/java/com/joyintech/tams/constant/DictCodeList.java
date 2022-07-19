@@ -2028,7 +2028,7 @@ public enum DictCodeList implements BaseDictCodeList {
 	共通业务类型_产品基本信息(DictCode.共通业务类型,"MST37","产品基本信息"),
 	共通业务类型_产品申报信息(DictCode.共通业务类型,"MST38","产品申报信息"),
 
-	共通业务类型_产品费用交易信息维护(DictCode.共通业务类型, "SVR11", "产品费用交易信息维护"),
+
 
 	;
 	/*字典值已经满了 ，不要添加了*/

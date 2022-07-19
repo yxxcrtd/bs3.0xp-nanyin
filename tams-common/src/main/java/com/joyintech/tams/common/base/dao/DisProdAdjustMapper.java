@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DisProdAdjustMapper {
-    int deleteByPrimaryKey(String prodRegistNo);
+    int deleteByPrimaryKey(String prodAdjustId);
 
     int insert(DisProdAdjust record);
 
@@ -13,7 +13,7 @@ public interface DisProdAdjustMapper {
 
     int insertBasicByBasicInfo(DisProdAdjust record);
 
-    DisProdAdjust selectByPrimaryKey(String prodRegistNo);
+    DisProdAdjust selectByPrimaryKey(String prodAdjustId);
 
     int updateByPrimaryKeySelective(DisProdAdjust record);
 
