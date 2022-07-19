@@ -248,13 +248,14 @@ $(function () {
 		var changeStr= 'src="image'
 	    if(params&&params.length==0){
 				alert("a");
-	    	Joyin.ajax('previewReport', {uri:modelId}, function(result) {
+	    	Joyin.ajax('previewReport', {uri:modelId,repId:repId}, function(result) {
 				//var data =result.replace(new RegExp(changeStr, "g"), toStr);
 				//data =data.replace(new RegExp('.png', "g"), '.png&v='+Math.random());
 				$container.html(result);
 	        });
 	    }else{
 	    	params['uri'] = modelId;
+	    	params['repId']=repId;
 				alert("b");
 	    	Joyin.ajax('previewReport', params, function(result) {
 				//var data =result.replace(new RegExp(changeStr, "g"), toStr);
@@ -284,8 +285,8 @@ $(function () {
 		}
     	
 		if(modelId&&modelUri){
-			params = new Array();
-			params['data'] = JSON.stringify(getSearchParams());
+//			params = new Array();
+			//params['data'] = JSON.stringify(getSearchParams());
 			//报表数据结构
 			alert("单表导出");
 	        var report_info = {
@@ -302,6 +303,7 @@ $(function () {
 	            params['repId'] = repId;
 	            params['repName'] = repName;
 	            params['prodName'] = proName;
+	            //params['portnum'] = 'LEO-001';
 	            alert(params);
 //	        Joyin.ajax('downFileAndExport',
 //	                		params,
@@ -309,8 +311,8 @@ $(function () {
 //	                				//layer.alert(data.message);
 //	                        });
 
-	       	Joyin.exportExcel(basePath + '/disclosure/information/config/reportmodelmanage/ReportModelManage001/mergeExport', params);
-//	       	Joyin.exportExcel(basePath + '/disclosure/information/reveal/detailshow/RepDetailsShow001/mergeExport', params);
+//	       	Joyin.exportExcel(basePath + '/disclosure/information/config/reportmodelmanage/ReportModelManage001/mergeExport', params);
+	       	Joyin.exportExcel(basePath + '/disclosure/information/reveal/detailshow/RepDetailsShow001/mergeExport', params);
 //          Joyin.exportExcel(basePath + 'disclosure/information/config/reportmodelmanage/ReportModelManage001/mergeExport', obj);
         }else if(modelListId){
             alert("多表导出")
@@ -378,6 +380,7 @@ $(function () {
 		var toStr = 'src='+basePath+'image'
 		var changeStr= 'src="image'
     
+    	params['repId'] = repId;
         Joyin.dialog(JoyinUtil.getLabel("编辑报表"),
             JoyinUtil.getRealPath("/disclosure/information/reveal/detailshow/RepEdit001/init"),
             "60%","85%",params,function(){ }

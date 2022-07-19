@@ -36,6 +36,8 @@ import com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.repcheck.service.RepCheckInfoService;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.reportDeal.service.ReportDealService;
 import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.ReportManager;
+import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.dao.ReportInfoMapper;
+import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.ReportInfo;
 import com.joyintech.tams.disclosure.information.config.reporttree.service.ReportTreeMenuConfiguration001Service;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.service.RepDetailsShow001Service;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.service.WebOfficeObject;
@@ -53,6 +55,9 @@ import com.joyintech.tams.disclosure.information.reveal.detailshow.service.WebOf
 @PageId("RepEdit001")
 @RequestMapping("/disclosure/information/reveal/detailshow/RepEdit001")
 public class RepEdit001Contoller extends BaseController {
+	
+	@Autowired
+	private ReportInfoMapper reportInfoMapper;
 	
     @Autowired
     private RepDetailsShow001Service repDetailsShow001Service;
@@ -93,10 +98,16 @@ public class RepEdit001Contoller extends BaseController {
     	String templateName = RequestUtil.getPageParam().get("repName").toString();
     	Date genDate = DateUtil.parse(RequestUtil.getPageParam().get("endDate").toString());
     	String portnum = RequestUtil.getPageParam().get("portnum").toString();
+    	String reportId = RequestUtil.getPageParam().get("repId").toString();
+    	
         model.addAttribute("endDate", DateUtil.parse(RequestUtil.getPageParam().get("endDate").toString()));
         model.addAttribute("repName", RequestUtil.getPageParam().get("repName")); 
         model.addAttribute("portnum", RequestUtil.getPageParam().get("portnum"));
-        editFilename = repDetailsShow001Service.getFilename(templateName, genDate, portnum);
+        model.addAttribute("repId", RequestUtil.getPageParam().get("repId"));
+        
+        ReportInfo reportInfo = reportInfoMapper.getReportInfoByID(reportId);
+        
+        editFilename = repDetailsShow001Service.buildReportFileName(reportInfo, genDate, portnum,".docx");
         
         return super.init(model);
     }
@@ -111,13 +122,13 @@ public class RepEdit001Contoller extends BaseController {
         String mFilePath = editFilename;
 
         try{
-            Map<String,Object> params = JsonUtils.stringToMap(RequestUtil.getPageParam().get("FormData").toString());
+            Map<String,Object> params = JsonUtils.stringToMap( RequestUtil.getPageParam().get("FormData").toString() );
             if(request.getMethod().equalsIgnoreCase("POST"))	{//判断请求方式
                 String mOption = params.get("OPTION").toString();
                 String mFileName = editFilename; //params.get("FILENAME").toString();
                 WebOfficeObject webOfficeObject = new WebOfficeObject();
                 if(mOption.equalsIgnoreCase("LOADFILE")){
-                    webOfficeObject.parse(request);
+                    webOfficeObject.parse(request,mFileName);
 //						System.out.println("ExtParam:"+ExtParam);
 //						if (MsgObj.MsgFileLoad(mFilePath+"\\Document\\" + mFileName)){
 //							MsgObj.MsgTextClear();

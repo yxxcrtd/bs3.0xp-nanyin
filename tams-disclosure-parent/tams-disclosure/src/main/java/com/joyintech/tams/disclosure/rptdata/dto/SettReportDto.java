@@ -4,6 +4,7 @@
 package com.joyintech.tams.disclosure.rptdata.dto;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -14,17 +15,17 @@ public class SettReportDto {
 	
 	private String prodName;  // 产品名称
 	private String prodRe;  // 登记编码
-	private String eDate;  //成立日期
+	private Date eDate;  //成立日期
 	private String trustName; //产品托管人名称
-	private String mDate;  //到期日
+	private Date mDate;  //到期日
 	private Map<String,BigDecimal> mapBalance;  //科目余额
 	private BigDecimal sumAssetAmt;//资产合计
-	private String deposit;  //银行存款
-	private String guarantyAmt;  //保证金
-	private String intAmt;  //应计利息
-	private String sumDebtAmt; //负债合计
-	private String mgrFee;  //管理费
-	private String  floatFee;  //应付管理人业绩报酬
+	private BigDecimal deposit;  //银行存款
+	private BigDecimal guarantyAmt;  //保证金
+	private BigDecimal intAmt;  //应计利息
+	private BigDecimal sumDebtAmt; //负债合计
+	private BigDecimal mgrFee;  //管理费
+	private BigDecimal  floatFee;  //应付管理人业绩报酬
 	private BigDecimal trustFee;  //托管费
 	private BigDecimal saleFee;  //销售费
 	private BigDecimal redemAmt;  //赎回紧额
@@ -32,7 +33,6 @@ public class SettReportDto {
 	private BigDecimal profit;  //应付利润
 	private BigDecimal otherPayAmt;  //其他应付紧额
 	private BigDecimal assetValue;  //资产价值，固定值0
-	
 	public String getProdName() {
 		return prodName;
 	}
@@ -45,10 +45,10 @@ public class SettReportDto {
 	public void setProdRe(String prodRe) {
 		this.prodRe = prodRe;
 	}
-	public String geteDate() {
+	public Date geteDate() {
 		return eDate;
 	}
-	public void seteDate(String eDate) {
+	public void seteDate(Date eDate) {
 		this.eDate = eDate;
 	}
 	public String getTrustName() {
@@ -57,10 +57,10 @@ public class SettReportDto {
 	public void setTrustName(String trustName) {
 		this.trustName = trustName;
 	}
-	public String getmDate() {
+	public Date getmDate() {
 		return mDate;
 	}
-	public void setmDate(String mDate) {
+	public void setmDate(Date mDate) {
 		this.mDate = mDate;
 	}
 	public Map<String, BigDecimal> getMapBalance() {
@@ -75,40 +75,40 @@ public class SettReportDto {
 	public void setSumAssetAmt(BigDecimal sumAssetAmt) {
 		this.sumAssetAmt = sumAssetAmt;
 	}
-	public String getDeposit() {
+	public BigDecimal getDeposit() {
 		return deposit;
 	}
-	public void setDeposit(String deposit) {
+	public void setDeposit(BigDecimal deposit) {
 		this.deposit = deposit;
 	}
-	public String getGuarantyAmt() {
+	public BigDecimal getGuarantyAmt() {
 		return guarantyAmt;
 	}
-	public void setGuarantyAmt(String guarantyAmt) {
+	public void setGuarantyAmt(BigDecimal guarantyAmt) {
 		this.guarantyAmt = guarantyAmt;
 	}
-	public String getIntAmt() {
+	public BigDecimal getIntAmt() {
 		return intAmt;
 	}
-	public void setIntAmt(String intAmt) {
+	public void setIntAmt(BigDecimal intAmt) {
 		this.intAmt = intAmt;
 	}
-	public String getSumDebtAmt() {
+	public BigDecimal getSumDebtAmt() {
 		return sumDebtAmt;
 	}
-	public void setSumDebtAmt(String sumDebtAmt) {
+	public void setSumDebtAmt(BigDecimal sumDebtAmt) {
 		this.sumDebtAmt = sumDebtAmt;
 	}
-	public String getMgrFee() {
+	public BigDecimal getMgrFee() {
 		return mgrFee;
 	}
-	public void setMgrFee(String mgrFee) {
+	public void setMgrFee(BigDecimal mgrFee) {
 		this.mgrFee = mgrFee;
 	}
-	public String getFloatFee() {
+	public BigDecimal getFloatFee() {
 		return floatFee;
 	}
-	public void setFloatFee(String floatFee) {
+	public void setFloatFee(BigDecimal floatFee) {
 		this.floatFee = floatFee;
 	}
 	public BigDecimal getTrustFee() {

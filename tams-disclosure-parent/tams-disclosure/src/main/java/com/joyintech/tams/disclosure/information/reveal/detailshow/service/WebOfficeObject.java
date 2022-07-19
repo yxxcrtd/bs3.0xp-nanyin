@@ -43,17 +43,16 @@ public class WebOfficeObject {
 	 * 后台类解析接口
 	 * @time:2015-01-09
 	 */
-	public void parse(HttpServletRequest request) throws FileUploadException, IOException{
+	public void parse(HttpServletRequest request,String filename) throws FileUploadException, IOException{
 		params = JsonUtils.stringToMap(RequestUtil.getPageParam().get("FormData").toString());
 
 		CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(
 				request.getSession().getServletContext());
 		if ( "LOADFILE".equals(params.get("OPTION").toString()) ) {
-			String fname = params.get("FILENAME").toString();
-			if ( fname==null || fname.length()<1 ) {
-				fname = "E:/poitest/template/产品说明书.docx";
+			if ( filename==null || filename.length()<1 ) {
+				filename = "E:/poitest/template/产品说明书.docx";
 			}
-			fileContentStream = new FileInputStream(fname) ;
+			fileContentStream = new FileInputStream(filename) ;
 		} else{
 			// 判断 request 是否有文件上传,即多部分请求
 			if (multipartResolver.isMultipart(request)) {

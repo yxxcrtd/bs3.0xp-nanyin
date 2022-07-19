@@ -10,34 +10,35 @@
 
 package com.joyintech.service.disclosure.information.config.prodbonusplanmanage.controller;
 
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.ajax.MessageType;
-import com.joyintech.framework.annotation.DTXTransaction;
-import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.export.CommonExportService;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.service.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto;
-import com.joyintech.service.disclosure.information.config.prodbonusplanmanage.service.ProdBonusplanManager001Service;
-import com.joyintech.service.disclosure.information.config.prodbonusplanmanage.service.ProdBonusplanManager002Service;
-import com.joyintech.service.disclosure.information.config.proelementadj.dto.ProElementAdjDto;
-import com.joyintech.tams.constant.DictCodeListExt3;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.annotation.DTXTransaction;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.service.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto;
+import com.joyintech.service.disclosure.information.config.prodbonusplanmanage.service.ProdBonusplanManager001Service;
+import com.joyintech.service.disclosure.information.config.prodbonusplanmanage.service.ProdBonusplanManager002Service;
+import com.joyintech.tams.constant.DictCodeListExt3;
 
 /**
  * 报表模板管理 〈一句话功能简述〉 〈功能详细描述〉

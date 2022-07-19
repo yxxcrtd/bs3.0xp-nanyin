@@ -18,6 +18,7 @@ public class ReportInfo extends BaseEntity{
 	private String params;
 
 	private String reportName;
+	private String reportCategory;
 	
 	
 	public int getId() {
@@ -104,4 +105,11 @@ public class ReportInfo extends BaseEntity{
 	public void setReportName(String reportName) {
 		this.reportName = reportName;
 	}
+	public String getReportCategory() {
+		return reportCategory;
+	}
+	public void setReportCategory(String reportCategory) {
+		this.reportCategory = reportCategory;
+	}
+	
 }

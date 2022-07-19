@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.joyintech.tams.disclosure.common.CollectionUtils;
 import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
@@ -20,7 +19,6 @@ import com.joyintech.tams.disclosure.rptdata.dto.BonusPlanDto;
 import com.joyintech.tams.disclosure.rptdata.dto.BonusReportDto;
 
 @Service(value="bonusReportService")
-@Transactional(rollbackFor = Exception.class)
 public class BonusReportDataService implements IReportDataService{
 	
 	@Autowired
@@ -36,17 +34,6 @@ public class BonusReportDataService implements IReportDataService{
 	
 		List<Map<String,Object>> listResult = new ArrayList<>();
 		
-		paraMap.put("prodId", paraMap.get("prodNum"));
-        paraMap.put("genDate", paraMap.get("endDate"));
-		
-        if ( paraMap.get("prodId")==null ) {
-        	paraMap.put("prodId", "LEO-001");
-        }
-        if ( paraMap.get("genDate")==null ) {
-        	Date genDate = DateUtil.parse("2022-06-30");
-        	paraMap.put("genDate", genDate);
-        }
-        
 		List<BonusReportDto> listReport = bonusReportMapper.selectBonusreport(paraMap);
         
         for ( BonusReportDto report:listReport ) {

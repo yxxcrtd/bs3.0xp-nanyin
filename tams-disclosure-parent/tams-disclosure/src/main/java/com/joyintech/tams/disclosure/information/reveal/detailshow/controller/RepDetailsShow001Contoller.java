@@ -395,4 +395,27 @@ public class RepDetailsShow001Contoller extends BaseController {
         return repDetailsShow001Service.exportReport(RequestUtil.getPageParam());
     }
     
+//	/**
+//	 * 导出合并文档
+//	 * 
+//	 * @return excel
+//	 * @throws Exception
+//	 *             异常
+//	 * @see
+//	 * @since 1.0
+//	 */
+//	@RequestMapping("mergeExport")
+//	public ResponseEntity<byte[]> mergeExport() throws IOException {
+//		Map<String, Object> param = RequestUtil.getPageParam();
+//		ReportModelManage001Dto reportModelManage001Dto = null;
+//		try {
+//			reportModelManage001Dto = (ReportModelManage001Dto) JsonUtils.map2entity(param,
+//					ReportModelManage001Dto.class);
+//		} catch (Exception e) {
+//			logger.error(e.getMessage(),e);
+//			throw new IllegalArgumentException("转换异常");
+//		}
+//		reportModelManage001Dto.setParam(param);
+//		return reportModelManage001Service.mergeExportSingle(reportModelManage001Dto);
+//	}
 }
