@@ -17,7 +17,7 @@
 		</div>
 
 		<div class="layui-form-item">
-			<div class="layui-inline layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11">
+			<!--<div class="layui-inline layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11">
 				<label class="layui-form-label form-lable" >子产品代码<i class="iconfont must" style="display: inline;">*</i></label>
 				<div class="layui-input-inline input-inline">
 					<select id="prodId" name="prodId"
@@ -27,18 +27,39 @@
 							data-th-initValue='${entity?.prodId}'>
 					</select>
 				</div>
+			</div>-->
 
+			<div class="layui-inline layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11">
+				<label class="layui-form-label form-lable" >子产品名称<i class="iconfont must" style="display: inline;">*</i></label>
+				<div class="layui-input-inline input-inline">
+					<select id="prodName" name="prodName"
+							class="layui-input form-input input-select" placeholder="请选择"
+							data-th-data-url='@{/disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager002/getPrdInfoSelect}'
+							allowClear="true"
+							data-th-initValue='${entity?.prodId}'>
+					</select>
+				</div>
 			</div>
 
 		</div>
 		<div class="layui-form-item">
-			<div class="layui-inline layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11">
+			<!--<div class="layui-inline layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11">
 				<label class="layui-form-label form-lable" >
 					产品名称<i class="iconfont must" style="display: inline;">*</i></label>
 				<div class="layui-input-inline input-inline">
 					<input type="text" id="prodName" name="prodName" placeholder=""
 						   class="layui-input form-input"
 						   data-th-Value="${entity?.prodName}" required disabled="disabled">
+				</div>
+			</div>-->
+
+			<div class="layui-inline layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11">
+				<label class="layui-form-label form-lable" >
+					子产品代码<i class="iconfont must" style="display: inline;">*</i></label>
+				<div class="layui-input-inline input-inline">
+					<input type="text" id="prodId" name="prodId" placeholder=""
+						   class="layui-input form-input"
+						   data-th-Value="${entity?.prodId}" required disabled="disabled">
 				</div>
 			</div>
 		</div>
@@ -109,7 +130,7 @@
 						   onkeyup="if(this.value < 0){
 							   this.value= 0;
 						   }else if (value >= 100) {
-							this.value= 100;
+							this.value= 99;
 						  }else{
 							  this.value= value.toString().match(/^\d+(?:\.\d{0,2})?/) // 只能输入小数点后两位
 						   }"
@@ -142,7 +163,7 @@
 						   onkeyup="if(this.value < 0){
 							   this.value= 0;
 						   }else if (value >= 100) {
-							this.value= 100;
+							this.value= 99;
 						  }else{
 							  this.value= value.toString().match(/^\d+(?:\.\d{0,2})?/) // 只能输入小数点后两位
 						   }"
@@ -154,12 +175,9 @@
 
 		<div class="layui-col-md11" style="margin: 50px;">
 			<div class="text-center">
-				<a id="ProdBonusplanManager002_btn_save"
-				   class="layui-btn layui-btn-sm btn-save"
-				   data-th-text="#{SysCommon.save}">保存</a> <a
-					id="ProdBonusplanManager002_btn_cancel"
-					class="layui-btn layui-btn-sm btn-cancel"
-					data-th-text="#{SysCommon.cancel}">取消</a>
+				<a id="ProdBonusplanManager002_btn_save" class="layui-btn layui-btn-sm btn-save" data-th-text="#{SysCommon.save}">保存</a>
+				<a id="ProdBonusplanManager002_btn_submit" class="layui-btn layui-btn-sm btn-submit" data-th-text="#{SysCommon.submit}">提交</a>
+				<a id="ProdBonusplanManager002_btn_cancel"  class="layui-btn layui-btn-sm btn-cancel"  data-th-text="#{SysCommon.cancel}">取消</a>
 			</div>
 		</div>
 

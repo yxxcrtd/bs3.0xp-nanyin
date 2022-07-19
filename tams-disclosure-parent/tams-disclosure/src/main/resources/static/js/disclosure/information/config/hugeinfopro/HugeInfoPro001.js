@@ -232,7 +232,7 @@
         });
         //新建(点击打开新建画面)
         $('#HugeInfoPro001_btn_add').click(function() {
-            Joyin.dialog(JoyinUtil.getLabel("产品要素调整新建"),
+            Joyin.dialog(JoyinUtil.getLabel("巨额赎回信息维护新建"),
                 basePath + "disclosure/information/config/hugeinfopro/HugeInfoPro002/init","100%", "100%", {pageModel:PAGE_MODEL_NEW},
                 function() {
                     table.reload();
