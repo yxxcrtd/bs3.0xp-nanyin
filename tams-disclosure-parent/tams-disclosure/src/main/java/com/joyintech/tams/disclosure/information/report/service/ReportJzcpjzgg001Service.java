@@ -52,11 +52,33 @@ public class ReportJzcpjzgg001Service extends BaseService{
         if (params.get("portnum") == null) {
             return dataMap;
         }
+        //设置报表初始值
+        dataMap.put("TITLENAME", "");
+        dataMap.put("VALUEYEAR", "");
+        dataMap.put("VALUEMONTH", "");
+        dataMap.put("VALUEDAY", "");
+        dataMap.put("PRODNAME", "");
+        dataMap.put("REGCODE", "");
+        dataMap.put("PRODID", "");
+        dataMap.put("valueList", new ArrayList<Map<String,String>>());
+        dataMap.put("${@image:prod_yield_line}", "");
+        dataMap.put("${@image:prod_sevenYield_line}", "");
+        dataMap.put("ANNOUNCEYEAR", "");
+        dataMap.put("ANNOUNCEMONTH", "");
+        dataMap.put("ANNOUNCEDAY", "");
+        
+
         String portnum = params.get("portnum").toString();
         Date endDate = (Date)params.get("endDate");
 
-        //查询产品表相关数据
-        dataMap = reportJzcpjzgg001Mapper.getProdInfo(portnum);
+        /**
+         * 查询产品表相关数据
+         * 返回信息：PRODID，TITLENAME，PRODNAME，REGCODE
+         */
+        Map<String,Object> prodMap = reportJzcpjzgg001Mapper.getProdInfo(portnum);
+        dataMap.putAll(prodMap);
+
+        //设置公告日
         String endDateStr = DateUtil.format(endDate);
         String[] endDateArray = endDateStr.split("-");
         dataMap.put("ANNOUNCEYEAR", endDateArray[0]);
@@ -81,18 +103,12 @@ public class ReportJzcpjzgg001Service extends BaseService{
             Map<String,Object> holidaysearchparam = new HashMap<String,Object>();
             holidaysearchparam.put("busi_date", endDate);
             holidaysearchparam.put("is_holiday", "0");
-            holidaysearchparam.put("market_code", "01");
+            holidaysearchparam.put("market_code", "04");
             Date vDate = holidayService.getLastWorkDay(holidaysearchparam);
-
             if (vDate == null) {
                 vDate = DateUtil.addDay(endDate, -1);
             }
             valueDate = DateUtil.format(vDate);
-            dataMap.put("VALUEDATE","");
-            dataMap.put("PRDVALUE","");
-            dataMap.put("TOTALVALUE","");
-            dataMap.put("SGAMT","");
-            dataMap.put("SHAMT","");
         }
         String[] valueDateArray = valueDate.split("-");
         dataMap.put("VALUEYEAR", valueDateArray[0]);
@@ -169,8 +185,10 @@ public class ReportJzcpjzgg001Service extends BaseService{
         //清空list，重新份额累计净值（元）走势图
         dataList.clear();
         //重新添加标题
+        configMap.put("title.text", "份额累计净值（元）走势图");
+        //添加横纵坐标说明
         dataList.add(single);
-        //份额净值曲线数据
+        //份额累计净值曲线数据
         for (ReportGrahDto grahDto : grahDtoList){
             List<String> row = new ArrayList<>();
             row.add(grahDto.getcDate());
@@ -178,7 +196,7 @@ public class ReportJzcpjzgg001Service extends BaseService{
             dataList.add(row);
         }
 
-        configMap.put("title.text", "份额累计净值（元）走势图");
+
         try {
             EchartsUtils.buildEChartsPicture4ChartType(configMap, dataList, prodTotalvalueLinePathName, EchartsUtils.ECHARTS_图表类型_曲线图, echartsCmdPath);
         } catch (EchartsException e) {
