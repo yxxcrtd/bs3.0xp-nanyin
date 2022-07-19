@@ -24,11 +24,17 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.RepProdInfoMapper;
 import com.joyintech.tams.common.base.entity.DisProdPlan;
 import com.joyintech.tams.common.base.entity.RepProdInfo;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto;
+import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
+import com.joyintech.workflow.engine.constant.OperationType;
+import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipOutputStream;
 import org.slf4j.Logger;
@@ -41,9 +47,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.progressbar.ProgressBarService;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.ExportUtil;
-import com.joyintech.framework.util.FileNameUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.disclosure.common.common.util.ReportGlobalConstant;
 import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
@@ -59,7 +62,7 @@ import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
  */
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class ProdBonusplanManager002Service extends CommonExportService<ProdBonusplanDto> {
+public class ProdBonusplanManager002Service extends CommonExportService<ProdBonusplanDto> implements BaseProcessService<ProdBonusplanDto> {
 
 
     /**
@@ -184,14 +187,14 @@ public class ProdBonusplanManager002Service extends CommonExportService<ProdBonu
     /**
      * 删除
      *
-     * @param param
+     * @param dto
      */
-    public void delete(Map<String, Object> param) {
+    public void delete(ProdBonusplanDto dto) {
 //		ProdBonusplanManager002Mapper.deleteModle(param);
 
         restTemplate.postForObject(
                 ServiceApplication.VALUATION_SERVICE_NAME + "/ProdBonusplanManager001/delete",
-                param, Integer.class);
+                dto, Integer.class);
 
     }
 
@@ -201,4 +204,20 @@ public class ProdBonusplanManager002Service extends CommonExportService<ProdBonu
     }
 
 
+    @Override
+    public void doComplete(ProdBonusplanDto entity, OperationType type) {
+        entity.setOperateType(type.toString());
+        entity.setUpdateTime(DateUtil.now());
+        if (StringUtil.equals(entity.getOperateType(), "NEW")) {
+            entity.setDataStatus(DictCodeListExt3.信披_数据状态_有效.getValue());
+            entity.setDataSource(DictCodeListExt3.信披_数据来源_系统新建.getValue());
+            this.insert(entity);
+        } else if (StringUtil.equals(entity.getOperateType(), "MODIFY")) {
+            this.update(entity);
+        } else if (StringUtil.equals(entity.getOperateType(), "DELETE")) {
+            this.delete(entity);
+
+        }
+
+    }
 }

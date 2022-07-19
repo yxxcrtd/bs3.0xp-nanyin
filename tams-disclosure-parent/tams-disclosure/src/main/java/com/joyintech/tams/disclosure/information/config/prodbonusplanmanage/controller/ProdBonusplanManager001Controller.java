@@ -15,18 +15,29 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.DictCodeListExt4;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.service.GetPrdInfoSelectService;
 import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto;
 import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.service.ProdBonusplanManager001Service;
 import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.service.ProdBonusplanManager002Service;
+import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
+import com.joyintech.tams.disclosure.information.config.proelementadj.dto.ProElementAdj001Dto;
+import com.joyintech.workflow.engine.constant.OperationType;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -152,9 +163,25 @@ public class ProdBonusplanManager001Controller extends BaseController {
 
 	@ResponseBody
 	@RequestMapping("delete")
-	public AjaxResult delete(@RequestBody Map<String, Object> param) {
-		prodBonusplanManager002Service.delete(param);
-		return new AjaxResult("删除成功");
+	public AjaxResult delete(@RequestBody @Validated({
+			ValidateGroupEdit.class}) ProdBonusplanDto dto, BindingResult result) {
+		/*prodBonusplanManager002Service.delete(param);
+		return new AjaxResult("删除成功");*/
+
+		dto.setUpdateUser(LoginUserUtil.getUserName());
+		ProcessParameter<ProdBonusplanDto> processParameter = new ProcessParameter<ProdBonusplanDto>();
+		WorkFlowParameter<ProdBonusplanDto> params = new WorkFlowParameter<ProdBonusplanDto>();
+		params.setPageId("ProdBonusplanManager002");
+		params.setElementId(dto.getElementId());
+		params.setBusinessCode(dto.getBonusPlanId());
+		params.setBusinessType(DictCodeListExt4.共通业务类型_产品分红到期计划.getValue());
+		params.setComment(entity -> "产品分红计划-产品代码"+ "(" + entity.getProdId() + ")");
+		processParameter.setOperationType(OperationType.DELETE);
+		processParameter.setWorkFlowParameter(params);
+		//String msg =prodBonusplanManager002Service.start(processParameter, dto);
+		String msg =prodBonusplanManager002Service.start(processParameter, dto.getSelectedItem().toArray(new ProdBonusplanDto[dto.getSelectedItem().size()]));
+
+		return new AjaxResult(msg);
 	}
 
 

@@ -13,6 +13,7 @@ package com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.con
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -24,17 +25,26 @@ import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.DictCodeListExt4;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.service.GetPrdInfoSelectService;
 import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto;
 import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.service.ProdBonusplanManager002Service;
+import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
+import com.joyintech.tams.disclosure.information.config.proelementadj.dto.ProElementAdj001Dto;
+import com.joyintech.tams.systemtools.util.CommonUtil;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -77,14 +87,23 @@ public class ProdBonusplanManager002Controller extends BaseController {
 
 		this.setSelectOptionToModel(model,DictCode.信披_数据状态);
 		this.setSelectOptionToModel(model, DictCode.信披_分红方式);
+		String workflowId = getParam("workflowId");
 
 		String id = this.getParam("bonusPlanId");
-		if (StringUtil.isNotEmpty(id)) {
-			model.addAttribute("entity", prodBonusplanManager002Service.getProdBonusplanDto(id));
-		}else{
 
-
+		// 不来自于代办
+		if (WorkFlowUtil.isNotFromToDoList() &&  StringUtil.isNotEmpty(id)) {
+			// 根据主键获取业务实体
+			model.addAttribute("entity",  prodBonusplanManager002Service.getProdBonusplanDto(id));
 		}
+		// 来自代办 现在是不走流程
+		else if (StringUtil.isNotEmpty(workflowId)) {
+			// 根据工作流与留痕处理提供的共通方法获取业务实体
+			ProdBonusplanDto entity = prodBonusplanManager002Service.getBussinessEntityByWorkflowId(workflowId);
+			model.addAttribute("entity", entity);
+			model.addAttribute("workflowId", workflowId);
+		}
+
 		return super.init(model);
 	}
 
@@ -97,6 +116,7 @@ public class ProdBonusplanManager002Controller extends BaseController {
 	@RequestMapping("getPrdInfoSelect")
 	@ResponseBody
 	public Page<SelectOptionDto> getPrdInfoSelect() {
+
 		Map<String, Object> param= RequestUtil.getPageParam();
 		param.put("sonFlag","2");
 		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getAllPrdInfoSelect(param);
@@ -195,7 +215,41 @@ public class ProdBonusplanManager002Controller extends BaseController {
 			}
 			return result;
 		}
-		
+
+
+	/**
+	 * 数据保存操作
+	 * @param dto 请求实体类
+	 */
+	@ResponseBody
+	@RequestMapping(OPERATE_TYPE_SAVE)
+	public AjaxResult save(@RequestBody @Validated({
+			ValidateGroupEdit.class}) ProdBonusplanDto dto, BindingResult br)
+			throws Exception {
+		if (br.hasErrors()) {
+			return new AjaxResult(br);
+		}
+		// 新建留痕表参数和工作流参数
+		ProcessParameter<ProdBonusplanDto> processParameter = new ProcessParameter<ProdBonusplanDto>();
+		WorkFlowParameter<ProdBonusplanDto> params = new WorkFlowParameter<ProdBonusplanDto>();
+		params.setPageId("ProdBonusplanManager002");
+		params.setElementId(dto.getElementId());
+		params.setBusinessCode(dto.getProdId());
+		params.setBusinessType(DictCodeListExt4.共通业务类型_产品分红到期计划.getValue());
+		params.setComment(entity -> "分红计划编号-产品代码"+ "(" + entity.getProdId() + ")");
+		// 塞入工作流参数
+		processParameter.setWorkFlowParameter(params);
+
+		Date sysDate = com.joyintech.framework.util.DateUtil.platDateFromCache();// 获取平台日期
+		dto.setCreateTime(sysDate);
+		dto.setUpdateTime(sysDate);
+		dto.setCreateUser(CommonUtil.getUserName());
+		dto.setUpdateUser(CommonUtil.getUserName());
+
+		// 流程开始
+		String msg =prodBonusplanManager002Service.start(processParameter, dto);
+		return new AjaxResult(msg);
+	}
 
 		
 		

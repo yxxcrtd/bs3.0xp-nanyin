@@ -41,7 +41,7 @@ $(function() {
 		object.raiseType = raiseType;
 		object.issuingWay = issuingWay;
 		object.isPeriod = isPeriod;
-		Joyin.ajaxJson(
+		/*Joyin.ajaxJson(
 			basePath+ 'disclosure/information/config/disprodplanmanage/DisProdPlanManage002/check',object,
 			function(result) {
 				Joyin.confirm(
@@ -58,7 +58,25 @@ $(function() {
 							});
 					});
 
+			});*/
+		if (pageModel == PAGE_MODEL_NEW) {
+			object.operateType = 'new';
+		} else if (pageModel == PAGE_MODEL_EDIT) {
+			object.operateType = 'update';
+		}
+		Joyin.ajaxJson(basePath + 'disclosure/information/config/disprodplanmanage/DisProdPlanManage002/check',
+			object, function(result) {
+				Joyin.confirm(result.data, function() {
+					if (operateType === 'save') {
+						WorkFlow.doSaveList(basePath + 'disclosure/information/config/disprodplanmanage/DisProdPlanManage002/save',
+							object, "DisProdPlanManage002_btn_save");
+					} else {
+						WorkFlow.doSubmitList(basePath  + 'disclosure/information/config/disprodplanmanage/DisProdPlanManage002/save',
+							object, "DisProdPlanManage002_btn_submit");
+					}
+				});
 			});
+
 	};
 
 
