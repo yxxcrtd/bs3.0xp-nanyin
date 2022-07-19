@@ -271,6 +271,9 @@ public class EchartsUtils {
 		String yAxis_axisLine_lineStyle_type = obj2str(configMap.get("yAxis.axisLine.lineStyle.type"));
 		if (StringUtils.isEmpty(yAxis_axisLine_lineStyle_type))
 			yAxis_axisLine_lineStyle_type = "solid";// 默认实线
+		String splitNumber = obj2str(configMap.get("yAxis.splitNumber"));
+		if (StringUtils.isEmpty(splitNumber))
+			splitNumber = "7";
 
 		// 数据集合
 		List<Series> seriesList = null;
@@ -293,7 +296,7 @@ public class EchartsUtils {
 		// 纵坐标（展示：折线/面积图、柱状/条形图）
 		if (Arrays.asList(new String[] { ECHARTS_图表类型_曲线图, ECHARTS_图表类型_柱状图 }).contains(series_type)) {
 			List<YAxis> yAxisList = new ArrayList<YAxis>();
-			yAxisList.add(new YAxis(yAxis_name, yAxis_type, yAxis_position,yAxis_scale,
+			yAxisList.add(new YAxis(yAxis_name, yAxis_type, yAxis_position,yAxis_scale,splitNumber,
 					new AxisLine(new LineStyle(yAxis_axisLine_lineStyle_color, yAxis_axisLine_lineStyle_type))));
 			option.setyAxis(yAxisList);
 		}
