@@ -22,7 +22,6 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto;
 import com.joyintech.service.disclosure.information.config.prodbonusplanmanage.service.ProdBonusplanManager001Service;
 import com.joyintech.service.disclosure.information.config.prodbonusplanmanage.service.ProdBonusplanManager002Service;
-import com.joyintech.service.disclosure.information.config.proelementadj.dto.ProElementAdjDto;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

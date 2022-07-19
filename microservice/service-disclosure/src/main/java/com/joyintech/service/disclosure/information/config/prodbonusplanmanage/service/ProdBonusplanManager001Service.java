@@ -17,7 +17,6 @@ import java.util.Map;
 import com.joyintech.framework.util.*;
 import com.joyintech.service.disclosure.information.config.prodbonusplanmanage.dao.ProdBonusplanMapper;
 import com.joyintech.service.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto;
-import com.joyintech.service.disclosure.information.config.proelementadj.dto.ProElementAdjDto;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import org.apache.commons.collections4.CollectionUtils;
