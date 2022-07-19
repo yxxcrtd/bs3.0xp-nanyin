@@ -151,12 +151,12 @@
 
     <select id="getRegistNo" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT
-        PROD_ID id,
-        PROD_RE text,
-        PROD_NAME,
-        PROD_ABBR
+        DISTINCT
+        PROD_RE id,
+        PROD_RE text
         FROM
         rep_prod_info
+        WHERE PROD_RE IS NOT NULL
     </select>
     <select id="selectByProdRegistNo" resultType="java.lang.String">
         select PROD_REGIST_NO
@@ -171,6 +171,11 @@
         PROD_ABBR
         FROM
         rep_prod_info
+        <where>
+            <if test="prodRegistNo != null and !prodRegistNo.equals('')">
+                AND PROD_RE=#{prodRegistNo}
+            </if>
+        </where>
     </select>
     <select id="getRegistNoList" resultType="com.joyintech.framework.select.SelectOptionDto">
           SELECT
