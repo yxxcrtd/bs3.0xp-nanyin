@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.DisProdAssetMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.DisProdAsset" >
+        <id column="PROD_ASSET_ID" property="prodAssetId" jdbcType="VARCHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="FIX_PRE_RATIO" property="fixPreRatio" jdbcType="DECIMAL" />
+        <result column="FIX_AFTER_RATIO" property="fixAfterRatio" jdbcType="DECIMAL" />
+        <result column="EQUITY_PRE_RATIO" property="equityPreRatio" jdbcType="DECIMAL" />
+        <result column="EQUITY_AFTER_RATIO" property="equityAfterRatio" jdbcType="DECIMAL" />
+        <result column="FD_PRE_RATIO" property="fdPreRatio" jdbcType="DECIMAL" />
+        <result column="FD_AFTER_RATIO" property="fdAfterRatio" jdbcType="DECIMAL" />
+        <result column="MIX_PRE_RATIO" property="mixPreRatio" jdbcType="DECIMAL" />
+        <result column="MIX_AFTER_RATIO" property="mixAfterRatio" jdbcType="DECIMAL" />
+        <result column="EFF_DATE" property="effDate" jdbcType="DATE" />
+        <result column="EFF_END_DATE" property="effEndDate" jdbcType="DATE" />
+        <result column="DATA_STATUS" property="dataStatus" jdbcType="VARCHAR" />
+        <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        PROD_ASSET_ID PROD_ASSET_ID, PROD_ID PROD_ID, FIX_PRE_RATIO FIX_PRE_RATIO, FIX_AFTER_RATIO FIX_AFTER_RATIO, 
+        EQUITY_PRE_RATIO EQUITY_PRE_RATIO, EQUITY_AFTER_RATIO EQUITY_AFTER_RATIO, FD_PRE_RATIO FD_PRE_RATIO, 
+        FD_AFTER_RATIO FD_AFTER_RATIO, MIX_PRE_RATIO MIX_PRE_RATIO, MIX_AFTER_RATIO MIX_AFTER_RATIO, 
+        EFF_DATE EFF_DATE, EFF_END_DATE EFF_END_DATE, DATA_STATUS DATA_STATUS, DATA_SOURCE DATA_SOURCE, 
+        CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, 
+        CREATE_DEPT CREATE_DEPT
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.DisProdAssetMapper.Base_Column_List" />
+        from DIS_PROD_ASSET
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.DisProdAssetMapper.Base_Column_List" />
+        from DIS_PROD_ASSET
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.DisProdAssetMapper.Base_Column_List" />
+        from DIS_PROD_ASSET
+        where PROD_ASSET_ID = #{prodAssetId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from DIS_PROD_ASSET
+        where PROD_ASSET_ID = #{prodAssetId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.DisProdAsset" >
+        insert into DIS_PROD_ASSET (PROD_ASSET_ID, PROD_ID, FIX_PRE_RATIO, 
+            FIX_AFTER_RATIO, EQUITY_PRE_RATIO, EQUITY_AFTER_RATIO, 
+            FD_PRE_RATIO, FD_AFTER_RATIO, MIX_PRE_RATIO, 
+            MIX_AFTER_RATIO, EFF_DATE, EFF_END_DATE, 
+            DATA_STATUS, DATA_SOURCE, CREATE_USER, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            CREATE_DEPT)
+        values (#{prodAssetId,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{fixPreRatio,jdbcType=DECIMAL}, 
+            #{fixAfterRatio,jdbcType=DECIMAL}, #{equityPreRatio,jdbcType=DECIMAL}, #{equityAfterRatio,jdbcType=DECIMAL}, 
+            #{fdPreRatio,jdbcType=DECIMAL}, #{fdAfterRatio,jdbcType=DECIMAL}, #{mixPreRatio,jdbcType=DECIMAL}, 
+            #{mixAfterRatio,jdbcType=DECIMAL}, #{effDate,jdbcType=DATE}, #{effEndDate,jdbcType=DATE}, 
+            #{dataStatus,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{createDept,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.DisProdAsset" >
+        insert into DIS_PROD_ASSET
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="prodAssetId != null" >
+                PROD_ASSET_ID,
+            </if>
+            <if test="prodId != null" >
+                PROD_ID,
+            </if>
+            <if test="fixPreRatio != null" >
+                FIX_PRE_RATIO,
+            </if>
+            <if test="fixAfterRatio != null" >
+                FIX_AFTER_RATIO,
+            </if>
+            <if test="equityPreRatio != null" >
+                EQUITY_PRE_RATIO,
+            </if>
+            <if test="equityAfterRatio != null" >
+                EQUITY_AFTER_RATIO,
+            </if>
+            <if test="fdPreRatio != null" >
+                FD_PRE_RATIO,
+            </if>
+            <if test="fdAfterRatio != null" >
+                FD_AFTER_RATIO,
+            </if>
+            <if test="mixPreRatio != null" >
+                MIX_PRE_RATIO,
+            </if>
+            <if test="mixAfterRatio != null" >
+                MIX_AFTER_RATIO,
+            </if>
+            <if test="effDate != null" >
+                EFF_DATE,
+            </if>
+            <if test="effEndDate != null" >
+                EFF_END_DATE,
+            </if>
+            <if test="dataStatus != null" >
+                DATA_STATUS,
+            </if>
+            <if test="dataSource != null" >
+                DATA_SOURCE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="prodAssetId != null" >
+                #{prodAssetId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodId != null" >
+                #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="fixPreRatio != null" >
+                #{fixPreRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="fixAfterRatio != null" >
+                #{fixAfterRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="equityPreRatio != null" >
+                #{equityPreRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="equityAfterRatio != null" >
+                #{equityAfterRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="fdPreRatio != null" >
+                #{fdPreRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="fdAfterRatio != null" >
+                #{fdAfterRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="mixPreRatio != null" >
+                #{mixPreRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="mixAfterRatio != null" >
+                #{mixAfterRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="effDate != null" >
+                #{effDate,jdbcType=DATE},
+            </if>
+            <if test="effEndDate != null" >
+                #{effEndDate,jdbcType=DATE},
+            </if>
+            <if test="dataStatus != null" >
+                #{dataStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="dataSource != null" >
+                #{dataSource,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.DisProdAsset" >
+        insert into DIS_PROD_ASSET(PROD_ASSET_ID, PROD_ID, FIX_PRE_RATIO, FIX_AFTER_RATIO, 
+        EQUITY_PRE_RATIO, EQUITY_AFTER_RATIO, FD_PRE_RATIO, FD_AFTER_RATIO, MIX_PRE_RATIO, 
+        MIX_AFTER_RATIO, EFF_DATE, EFF_END_DATE, DATA_STATUS, DATA_SOURCE, CREATE_USER, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME, CREATE_DEPT)
+        select PROD_ASSET_ID, PROD_ID, FIX_PRE_RATIO, FIX_AFTER_RATIO, 
+            EQUITY_PRE_RATIO, EQUITY_AFTER_RATIO, FD_PRE_RATIO, FD_AFTER_RATIO, MIX_PRE_RATIO, 
+            MIX_AFTER_RATIO, EFF_DATE, EFF_END_DATE, DATA_STATUS, DATA_SOURCE, CREATE_USER, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_DEPT
+             from DIS_PROD_ASSET
+             where 1 = 1 and PROD_ASSET_ID = #{prodAssetId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.DisProdAsset" >
+        update DIS_PROD_ASSET
+        <set >
+            <if test="prodId != null" >
+                PROD_ID = #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="fixPreRatio != null" >
+                FIX_PRE_RATIO = #{fixPreRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="fixAfterRatio != null" >
+                FIX_AFTER_RATIO = #{fixAfterRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="equityPreRatio != null" >
+                EQUITY_PRE_RATIO = #{equityPreRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="equityAfterRatio != null" >
+                EQUITY_AFTER_RATIO = #{equityAfterRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="fdPreRatio != null" >
+                FD_PRE_RATIO = #{fdPreRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="fdAfterRatio != null" >
+                FD_AFTER_RATIO = #{fdAfterRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="mixPreRatio != null" >
+                MIX_PRE_RATIO = #{mixPreRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="mixAfterRatio != null" >
+                MIX_AFTER_RATIO = #{mixAfterRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="effDate != null" >
+                EFF_DATE = #{effDate,jdbcType=DATE},
+            </if>
+            <if test="effEndDate != null" >
+                EFF_END_DATE = #{effEndDate,jdbcType=DATE},
+            </if>
+            <if test="dataStatus != null" >
+                DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="dataSource != null" >
+                DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where PROD_ASSET_ID = #{prodAssetId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.DisProdAsset" >
+        update DIS_PROD_ASSET
+        set PROD_ID = #{prodId,jdbcType=VARCHAR},
+            FIX_PRE_RATIO = #{fixPreRatio,jdbcType=DECIMAL},
+            FIX_AFTER_RATIO = #{fixAfterRatio,jdbcType=DECIMAL},
+            EQUITY_PRE_RATIO = #{equityPreRatio,jdbcType=DECIMAL},
+            EQUITY_AFTER_RATIO = #{equityAfterRatio,jdbcType=DECIMAL},
+            FD_PRE_RATIO = #{fdPreRatio,jdbcType=DECIMAL},
+            FD_AFTER_RATIO = #{fdAfterRatio,jdbcType=DECIMAL},
+            MIX_PRE_RATIO = #{mixPreRatio,jdbcType=DECIMAL},
+            MIX_AFTER_RATIO = #{mixAfterRatio,jdbcType=DECIMAL},
+            EFF_DATE = #{effDate,jdbcType=DATE},
+            EFF_END_DATE = #{effEndDate,jdbcType=DATE},
+            DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
+            DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        where PROD_ASSET_ID = #{prodAssetId,jdbcType=VARCHAR}
+    </update>
+</mapper>
