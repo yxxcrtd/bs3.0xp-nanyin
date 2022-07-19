@@ -463,4 +463,9 @@ public class ReportGlobalConstant {
      * 系统参数：报表文件服务器存放路径
      */
     public static final String REPORT_FILE_PATH = "REPORT_FILE_PATH";
+    
+    /**
+     * 系统参数：报表文件服务器存放路径
+     */
+    public static final String TEMP_FILE_PATH = "TEMP_FILE_PATH";
 }

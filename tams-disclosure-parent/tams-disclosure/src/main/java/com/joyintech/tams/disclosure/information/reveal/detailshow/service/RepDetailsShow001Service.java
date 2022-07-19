@@ -347,16 +347,16 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
         String fileType = params.get("fileType").toString();
         Date genDate = DateUtil.parse(params.get("endDate").toString());
         String prodId = params.get("portnum").toString();
-        String reportFile = this.buildReportFileName(reportInfo, genDate, prodId,".docx");
-        String localFileName = reportInfo.getReportName()+"_"+prodId+"_" + params.get("endDate").toString()+".docx";
+        String reportFile = ReportFileUtil.buildReportFileName(ReportFileUtil.REPORT_TYPE_报表文件,reportInfo, genDate, prodId,ReportFileUtil.FILE_TYPE_DOCX);
+        String localFileName = reportInfo.getReportName()+"_"+prodId+"_" + params.get("endDate").toString()+ReportFileUtil.FILE_TYPE_DOCX;
 
         if ( "pdf".equals(fileType)) {  //如果导出pdf，则需要先讲word转换成pdf
             FileInputStream fis = new FileInputStream(reportFile);
-            String fileNamePdf = this.buildReportFileName(reportInfo, genDate, prodId,".pdf");
+            String fileNamePdf = ReportFileUtil.buildReportFileName(ReportFileUtil.REPORT_TYPE_报表文件,reportInfo, genDate, prodId,ReportFileUtil.FILE_TYPE_PDF);
             FileOutputStream fos = new FileOutputStream(fileNamePdf);
             PoiUtils.docxToPdf(fis,fos);
             reportFile = fileNamePdf;
-            localFileName = reportInfo.getReportName()+"_"+prodId+"_" + params.get("endDate").toString()+".pdf";
+            localFileName = reportInfo.getReportName()+"_"+prodId+"_" + params.get("endDate").toString()+ReportFileUtil.FILE_TYPE_PDF;
         }
 
         File remoteFile = new SafelyFile(reportFile);
@@ -829,7 +829,7 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
      * @param genDate,生成日期，如果为空则为平台日期
      * @return  生成的报表文件路径
      */
-    private String genReportFile(ReportInfo reportInfo,Map<String,Object> dataMap,Date genDate) {
+    private String genReportFile(String reportType,ReportInfo reportInfo,Map<String,Object> dataMap,Date genDate) {
         //TODO:如下通过系统参数配置获取
     	String imagePath = "E:\\poitest\\template";
 
@@ -840,8 +840,8 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
         
         if (genDate==null )  genDate = new Date();
         
-        templateFile = this.buildReportFileName(reportInfo, null, null,".docx");
-        reportFile = this.buildReportFileName(reportInfo, genDate, prodId,".docx");
+        templateFile = ReportFileUtil.buildReportFileName(ReportFileUtil.REPORT_TYPE_模板文件,reportInfo, null, null,ReportFileUtil.FILE_TYPE_DOCX);
+        reportFile = ReportFileUtil.buildReportFileName(reportType,reportInfo, genDate, prodId,ReportFileUtil.FILE_TYPE_DOCX);
 
         FileOutputStream fos = null;
         InputStream is = null;
@@ -885,7 +885,7 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
         
         if ( params.get("elementIdForLog")==null || !params.get("elementIdForLog").equals("RepDetailsShow001_showDetail") ) {  //树单击：显示模板
         	if ( reportInfo!=null ) {
-        		templateFile = buildReportFileName(reportInfo,null,null,".docx");
+        		templateFile = ReportFileUtil.buildReportFileName(ReportFileUtil.REPORT_TYPE_模板文件,reportInfo,null,null,ReportFileUtil.FILE_TYPE_DOCX);
         	}
             //转换成显示内容流
             try {
@@ -929,7 +929,7 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
             	dataMap = new HashMap<>();
 
             //生成服务器报表文件，供编辑、导出功能使用
-            String reportFile = genReportFile(reportInfo,dataMap,(Date)params.get("genDate"));
+            String reportFile = genReportFile(ReportFileUtil.REPORT_TYPE_临时文件,reportInfo,dataMap,(Date)params.get("genDate"));
             
             FileInputStream fis = null;
             try {
@@ -984,7 +984,7 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
             for (String portnum : prdList) {
             	params.put("prodId", portnum);
                 Map<String,Object> dataMap = rptDataService.queryDatas(params).get(0);  
-                String reportFile = this.genReportFile(reportInfo, dataMap,genDate);
+                String reportFile = this.genReportFile(ReportFileUtil.REPORT_TYPE_报表文件,reportInfo, dataMap,genDate);
 
 	            UploadFile uploadFile = new UploadFile();
 	            uploadFile.setFileName(reportFile);
@@ -1141,39 +1141,5 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
 
         return len;
     }
-    
-    /**
-     * 获取模板或者报表文件url
-     * @param fileType
-     * @param templateName
-     * @param genDate
-     * @param portnum
-     * @return
-     */
-    public String buildReportFileName(ReportInfo reportInfo,Date genDate,String portnum,String fileType) {
-    	//String templatePath = CacheUtil.getSysParam(ReportGlobalConstant.TEMPLATE_FILE_PATH);
-    	String reportPatH = CacheUtil.getSysParam(ReportGlobalConstant.REPORT_FILE_PATH);
-    	String filename = "";
-    	if ( genDate==null ) { //模板文件
-    		filename = reportInfo.getRepository() + reportInfo.getFolder() +"/" + reportInfo.getUri() +fileType;
-    	} else {
-    		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    		String dirname = sdf.format(genDate);
-    		StringBuffer sb = new StringBuffer();
-    		sb.append(reportPatH);
-    		sb.append(dirname);
-    		sb.append("/");
-    		sb.append(reportInfo.getReportName());
-    		sb.append("_");
-    		sb.append(portnum);
-    		sb.append(fileType);
-    		//用日期创建路径
-    		File file = new File(sb.toString());
-    		if ( !file.getParentFile().exists() ) {
-    			file.getParentFile().mkdirs();
-    		}
-    		filename = sb.toString();
-    	}
-    	return filename;
-    }
+
 }

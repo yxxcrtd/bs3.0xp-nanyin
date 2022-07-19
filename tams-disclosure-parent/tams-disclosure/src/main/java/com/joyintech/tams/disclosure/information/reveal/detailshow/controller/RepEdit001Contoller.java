@@ -40,6 +40,7 @@ import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.dao.Report
 import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.ReportInfo;
 import com.joyintech.tams.disclosure.information.config.reporttree.service.ReportTreeMenuConfiguration001Service;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.service.RepDetailsShow001Service;
+import com.joyintech.tams.disclosure.information.reveal.detailshow.service.ReportFileUtil;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.service.WebOfficeObject;
 
 /**
@@ -79,7 +80,8 @@ public class RepEdit001Contoller extends BaseController {
     @Autowired
 	@Qualifier("masterDataSource") DataSource master;
 
-    private String editFilename = ""; 
+    private String editFilename = "";
+    private String saveFilename = "";
     /**
      * 日志
      */
@@ -107,8 +109,8 @@ public class RepEdit001Contoller extends BaseController {
         
         ReportInfo reportInfo = reportInfoMapper.getReportInfoByID(reportId);
         
-        editFilename = repDetailsShow001Service.buildReportFileName(reportInfo, genDate, portnum,".docx");
-        
+        editFilename = ReportFileUtil.buildReportFileName(ReportFileUtil.REPORT_TYPE_临时文件,reportInfo, genDate, portnum,ReportFileUtil.FILE_TYPE_DOCX);
+    	saveFilename = ReportFileUtil.buildReportFileName(ReportFileUtil.REPORT_TYPE_报表文件,reportInfo, genDate, portnum,ReportFileUtil.FILE_TYPE_DOCX);
         return super.init(model);
     }
 
@@ -139,8 +141,7 @@ public class RepEdit001Contoller extends BaseController {
 
                 }
                 else if(mOption.equalsIgnoreCase("SAVEFILE")){
-                    String outputFilename = editFilename;
-                    //System.out.println("mFilePath+mFileName = " + mFilePath+"\\Document\\" + mFileName);
+                    String outputFilename = saveFilename;
                     int ret = repDetailsShow001Service.saveFile (request,outputFilename );
                     logger.info(mFileName+"文档已经保存成功");
 
