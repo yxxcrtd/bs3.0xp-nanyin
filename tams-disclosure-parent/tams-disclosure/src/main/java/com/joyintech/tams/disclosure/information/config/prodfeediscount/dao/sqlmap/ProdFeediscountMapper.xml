@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.disclosure.information.config.prodfeediscount.dao.ProdFeediscountMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.disclosure.information.config.prodfeediscount.dto.ProdFeediscountDto" >
+        <id column="PROD_DISCOUNT_ID" property="prodDiscountId" jdbcType="VARCHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="PROD_REGIST_NO" property="prodRegistNo" jdbcType="VARCHAR" />
+        <result column="IS_SALES_AGENCY" property="isSalesAgency" jdbcType="VARCHAR" />
+        <result column="PROD_DIS_REMARK" property="prodDisRemark" jdbcType="VARCHAR" />
+        <result column="FEENAME" property="feename" jdbcType="VARCHAR" />
+        <result column="PRE_FEERATE" property="preFeerate" jdbcType="DECIMAL" />
+        <result column="AFTER_FEERATE" property="afterFeerate" jdbcType="DECIMAL" />
+        <result column="START_DATE" property="startDate" jdbcType="DATE" />
+        <result column="END_DATE" property="endDate" jdbcType="DATE" />
+        <result column="THIS_PRE_FEERATE" property="thisPreFeerate" jdbcType="DECIMAL" />
+        <result column="THIS_AFTER_FEERATE" property="thisAfterFeerate" jdbcType="DECIMAL" />
+        <result column="THIS_END_FEERATE" property="thisEndFeerate" jdbcType="DECIMAL" />
+        <result column="FEE_DIS_REMARK" property="feeDisRemark" jdbcType="VARCHAR" />
+        <result column="RPT_ISSUE_DATE" property="rptIssueDate" jdbcType="DATE" />
+        <result column="DATA_STATUS" property="dataStatus" jdbcType="VARCHAR" />
+        <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        PROD_DISCOUNT_ID PROD_DISCOUNT_ID, PROD_ID PROD_ID, PROD_REGIST_NO PROD_REGIST_NO, 
+        IS_SALES_AGENCY IS_SALES_AGENCY, PROD_DIS_REMARK PROD_DIS_REMARK, FEENAME FEENAME, 
+        PRE_FEERATE PRE_FEERATE, AFTER_FEERATE AFTER_FEERATE, START_DATE START_DATE, END_DATE END_DATE, 
+        THIS_PRE_FEERATE THIS_PRE_FEERATE, THIS_AFTER_FEERATE THIS_AFTER_FEERATE, THIS_END_FEERATE THIS_END_FEERATE, 
+        FEE_DIS_REMARK FEE_DIS_REMARK, RPT_ISSUE_DATE RPT_ISSUE_DATE, DATA_STATUS DATA_STATUS, 
+        DATA_SOURCE DATA_SOURCE, CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME, CREATE_DEPT CREATE_DEPT
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.disclosure.information.config.prodfeediscount.dao.ProdFeediscountMapper.Base_Column_List" />
+        from DIS_PROD_FEEDISCOUNT
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.disclosure.information.config.prodfeediscount.dao.ProdFeediscountMapper.Base_Column_List" />
+        from DIS_PROD_FEEDISCOUNT
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.disclosure.information.config.prodfeediscount.dao.ProdFeediscountMapper.Base_Column_List" />
+        from DIS_PROD_FEEDISCOUNT
+        where PROD_DISCOUNT_ID = #{prodDiscountId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from DIS_PROD_FEEDISCOUNT
+        where PROD_DISCOUNT_ID = #{prodDiscountId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.disclosure.information.config.prodfeediscount.dto.ProdFeediscountDto" >
+        insert into DIS_PROD_FEEDISCOUNT (PROD_DISCOUNT_ID, PROD_ID, PROD_REGIST_NO, 
+            IS_SALES_AGENCY, PROD_DIS_REMARK, FEENAME, 
+            PRE_FEERATE, AFTER_FEERATE, START_DATE, 
+            END_DATE, THIS_PRE_FEERATE, THIS_AFTER_FEERATE, 
+            THIS_END_FEERATE, FEE_DIS_REMARK, RPT_ISSUE_DATE, 
+            DATA_STATUS, DATA_SOURCE, CREATE_USER, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            CREATE_DEPT)
+        values (#{prodDiscountId,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{prodRegistNo,jdbcType=VARCHAR}, 
+            #{isSalesAgency,jdbcType=VARCHAR}, #{prodDisRemark,jdbcType=VARCHAR}, #{feename,jdbcType=VARCHAR}, 
+            #{preFeerate,jdbcType=DECIMAL}, #{afterFeerate,jdbcType=DECIMAL}, #{startDate,jdbcType=DATE}, 
+            #{endDate,jdbcType=DATE}, #{thisPreFeerate,jdbcType=DECIMAL}, #{thisAfterFeerate,jdbcType=DECIMAL}, 
+            #{thisEndFeerate,jdbcType=DECIMAL}, #{feeDisRemark,jdbcType=VARCHAR}, #{rptIssueDate,jdbcType=DATE}, 
+            #{dataStatus,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{createDept,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.disclosure.information.config.prodfeediscount.dto.ProdFeediscountDto" >
+        insert into DIS_PROD_FEEDISCOUNT
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="prodDiscountId != null" >
+                PROD_DISCOUNT_ID,
+            </if>
+            <if test="prodId != null" >
+                PROD_ID,
+            </if>
+            <if test="prodRegistNo != null" >
+                PROD_REGIST_NO,
+            </if>
+            <if test="isSalesAgency != null" >
+                IS_SALES_AGENCY,
+            </if>
+            <if test="prodDisRemark != null" >
+                PROD_DIS_REMARK,
+            </if>
+            <if test="feename != null" >
+                FEENAME,
+            </if>
+            <if test="preFeerate != null" >
+                PRE_FEERATE,
+            </if>
+            <if test="afterFeerate != null" >
+                AFTER_FEERATE,
+            </if>
+            <if test="startDate != null" >
+                START_DATE,
+            </if>
+            <if test="endDate != null" >
+                END_DATE,
+            </if>
+            <if test="thisPreFeerate != null" >
+                THIS_PRE_FEERATE,
+            </if>
+            <if test="thisAfterFeerate != null" >
+                THIS_AFTER_FEERATE,
+            </if>
+            <if test="thisEndFeerate != null" >
+                THIS_END_FEERATE,
+            </if>
+            <if test="feeDisRemark != null" >
+                FEE_DIS_REMARK,
+            </if>
+            <if test="rptIssueDate != null" >
+                RPT_ISSUE_DATE,
+            </if>
+            <if test="dataStatus != null" >
+                DATA_STATUS,
+            </if>
+            <if test="dataSource != null" >
+                DATA_SOURCE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="prodDiscountId != null" >
+                #{prodDiscountId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodId != null" >
+                #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodRegistNo != null" >
+                #{prodRegistNo,jdbcType=VARCHAR},
+            </if>
+            <if test="isSalesAgency != null" >
+                #{isSalesAgency,jdbcType=VARCHAR},
+            </if>
+            <if test="prodDisRemark != null" >
+                #{prodDisRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="feename != null" >
+                #{feename,jdbcType=VARCHAR},
+            </if>
+            <if test="preFeerate != null" >
+                #{preFeerate,jdbcType=DECIMAL},
+            </if>
+            <if test="afterFeerate != null" >
+                #{afterFeerate,jdbcType=DECIMAL},
+            </if>
+            <if test="startDate != null" >
+                #{startDate,jdbcType=DATE},
+            </if>
+            <if test="endDate != null" >
+                #{endDate,jdbcType=DATE},
+            </if>
+            <if test="thisPreFeerate != null" >
+                #{thisPreFeerate,jdbcType=DECIMAL},
+            </if>
+            <if test="thisAfterFeerate != null" >
+                #{thisAfterFeerate,jdbcType=DECIMAL},
+            </if>
+            <if test="thisEndFeerate != null" >
+                #{thisEndFeerate,jdbcType=DECIMAL},
+            </if>
+            <if test="feeDisRemark != null" >
+                #{feeDisRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="rptIssueDate != null" >
+                #{rptIssueDate,jdbcType=DATE},
+            </if>
+            <if test="dataStatus != null" >
+                #{dataStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="dataSource != null" >
+                #{dataSource,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.disclosure.information.config.prodfeediscount.dto.ProdFeediscountDto" >
+        insert into DIS_PROD_FEEDISCOUNT(PROD_DISCOUNT_ID, PROD_ID, PROD_REGIST_NO, IS_SALES_AGENCY, 
+        PROD_DIS_REMARK, FEENAME, PRE_FEERATE, AFTER_FEERATE, START_DATE, END_DATE, THIS_PRE_FEERATE, 
+        THIS_AFTER_FEERATE, THIS_END_FEERATE, FEE_DIS_REMARK, RPT_ISSUE_DATE, DATA_STATUS, 
+        DATA_SOURCE, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, CREATE_DEPT)
+        select PROD_DISCOUNT_ID, PROD_ID, PROD_REGIST_NO, IS_SALES_AGENCY, 
+            PROD_DIS_REMARK, FEENAME, PRE_FEERATE, AFTER_FEERATE, START_DATE, END_DATE, THIS_PRE_FEERATE, 
+            THIS_AFTER_FEERATE, THIS_END_FEERATE, FEE_DIS_REMARK, RPT_ISSUE_DATE, DATA_STATUS, 
+            DATA_SOURCE, CREATE_USER, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_DEPT
+             from DIS_PROD_FEEDISCOUNT
+             where 1 = 1 and PROD_DISCOUNT_ID = #{prodDiscountId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.disclosure.information.config.prodfeediscount.dto.ProdFeediscountDto" >
+        update DIS_PROD_FEEDISCOUNT
+        <set >
+            <if test="prodId != null" >
+                PROD_ID = #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodRegistNo != null" >
+                PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR},
+            </if>
+            <if test="isSalesAgency != null" >
+                IS_SALES_AGENCY = #{isSalesAgency,jdbcType=VARCHAR},
+            </if>
+            <if test="prodDisRemark != null" >
+                PROD_DIS_REMARK = #{prodDisRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="feename != null" >
+                FEENAME = #{feename,jdbcType=VARCHAR},
+            </if>
+            <if test="preFeerate != null" >
+                PRE_FEERATE = #{preFeerate,jdbcType=DECIMAL},
+            </if>
+            <if test="afterFeerate != null" >
+                AFTER_FEERATE = #{afterFeerate,jdbcType=DECIMAL},
+            </if>
+            <if test="startDate != null" >
+                START_DATE = #{startDate,jdbcType=DATE},
+            </if>
+            <if test="endDate != null" >
+                END_DATE = #{endDate,jdbcType=DATE},
+            </if>
+            <if test="thisPreFeerate != null" >
+                THIS_PRE_FEERATE = #{thisPreFeerate,jdbcType=DECIMAL},
+            </if>
+            <if test="thisAfterFeerate != null" >
+                THIS_AFTER_FEERATE = #{thisAfterFeerate,jdbcType=DECIMAL},
+            </if>
+            <if test="thisEndFeerate != null" >
+                THIS_END_FEERATE = #{thisEndFeerate,jdbcType=DECIMAL},
+            </if>
+            <if test="feeDisRemark != null" >
+                FEE_DIS_REMARK = #{feeDisRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="rptIssueDate != null" >
+                RPT_ISSUE_DATE = #{rptIssueDate,jdbcType=DATE},
+            </if>
+            <if test="dataStatus != null" >
+                DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="dataSource != null" >
+                DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where PROD_DISCOUNT_ID = #{prodDiscountId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.disclosure.information.config.prodfeediscount.dto.ProdFeediscountDto" >
+        update DIS_PROD_FEEDISCOUNT
+        set PROD_ID = #{prodId,jdbcType=VARCHAR},
+            PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR},
+            IS_SALES_AGENCY = #{isSalesAgency,jdbcType=VARCHAR},
+            PROD_DIS_REMARK = #{prodDisRemark,jdbcType=VARCHAR},
+            FEENAME = #{feename,jdbcType=VARCHAR},
+            PRE_FEERATE = #{preFeerate,jdbcType=DECIMAL},
+            AFTER_FEERATE = #{afterFeerate,jdbcType=DECIMAL},
+            START_DATE = #{startDate,jdbcType=DATE},
+            END_DATE = #{endDate,jdbcType=DATE},
+            THIS_PRE_FEERATE = #{thisPreFeerate,jdbcType=DECIMAL},
+            THIS_AFTER_FEERATE = #{thisAfterFeerate,jdbcType=DECIMAL},
+            THIS_END_FEERATE = #{thisEndFeerate,jdbcType=DECIMAL},
+            FEE_DIS_REMARK = #{feeDisRemark,jdbcType=VARCHAR},
+            RPT_ISSUE_DATE = #{rptIssueDate,jdbcType=DATE},
+            DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
+            DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        where PROD_DISCOUNT_ID = #{prodDiscountId,jdbcType=VARCHAR}
+    </update>
+
+
+    <select id="searchReports" parameterType="java.util.Map"
+            resultType="com.joyintech.tams.disclosure.information.config.prodfeediscount.dto.ProdFeediscountDto">
+        SELECT
+        dpf.PROD_DISCOUNT_ID,
+        dpf.PROD_ID prodId,
+        dpf.PROD_REGIST_NO  prodRegistNo,
+        dpf.IS_SALES_AGENCY,
+        dpf.PROD_DIS_REMARK,
+        dpf.FEENAME feename,
+        dpf.PRE_FEERATE,
+        dpf.AFTER_FEERATE,
+        dpf.START_DATE startDate,
+        dpf.END_DATE endDate,
+        dpf.THIS_PRE_FEERATE, dpf.THIS_AFTER_FEERATE,
+        dpf.THIS_END_FEERATE, dpf.FEE_DIS_REMARK,
+        dpf.RPT_ISSUE_DATE rptIssueDate,
+        dpf.DATA_STATUS dataStatus , dpf.DATA_SOURCE, dpf.CREATE_USER,
+        dpf.CREATE_TIME,
+        dpf.UPDATE_USER updateUser,
+        dpf.UPDATE_TIME updateTime,
+        dpf.CREATE_DEPT,
+        TO_CHAR(NVL(dpf.Update_Time,dpf.Create_Time),'yyyy-mm-dd hh24:mi:ss') updateDateStr,
+        rpi.prod_name prodName
+        FROM DIS_PROD_FEEDISCOUNT dpf
+        LEFT JOIN REP_PROD_INFO rpi ON rpi.PROD_ID = dpf.PROD_ID WHERE 1=1
+        <if test="dataStatusArr != null and dataStatusArr.length > 0">
+            AND dpf.DATA_STATUS IN
+            <foreach item="item" collection="dataStatusArr" index="index"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="prodIdArr != null and prodIdArr.length > 0">
+            AND dpf.PROD_ID IN
+            <foreach item="item" collection="prodIdArr" index="index"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="prodRegistNoArr != null and prodRegistNoArr.length > 0">
+            AND dpf.PROD_REGIST_NO IN
+            <foreach item="item" collection="prodRegistNoArr" index="index"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="feenameArr != null and feenameArr.length > 0">
+            AND dpf.FEENAME IN
+            <foreach item="item" collection="feenameArr" index="index"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="rptIssueDateStart != null and rptIssueDateStart != ''">
+            <![CDATA[AND  dpf.RPT_ISSUE_DATE >= TO_DATE(#{rptIssueDateStart},'YYYY-MM-DD') ]]>
+        </if>
+        <if test="rptIssueDateEnd != null and rptIssueDateEnd != ''">
+            <![CDATA[AND  dpf.RPT_ISSUE_DATE <= TO_DATE(#{rptIssueDateEnd},'YYYY-MM-DD')]]>
+        </if>
+        order by NVL(dpf.UPDATE_TIME,dpf.CREATE_TIME) desc
+    </select>
+
+
+    <select id="selectByKeyId" resultType="com.joyintech.tams.disclosure.information.config.prodfeediscount.dto.ProdFeediscountDto"
+            parameterType="java.lang.String">
+        select dpf.PROD_DISCOUNT_ID, dpf.PROD_ID, dpf.PROD_REGIST_NO,
+               dpf.IS_SALES_AGENCY, dpf.PROD_DIS_REMARK, dpf.FEENAME,
+               dpf.PRE_FEERATE, dpf.AFTER_FEERATE, dpf.START_DATE,
+               dpf.END_DATE, dpf.THIS_PRE_FEERATE, dpf.THIS_AFTER_FEERATE,
+               dpf.THIS_END_FEERATE, dpf.FEE_DIS_REMARK, dpf.RPT_ISSUE_DATE,
+               dpf.DATA_STATUS, dpf.DATA_SOURCE, dpf.CREATE_USER,
+               dpf.CREATE_TIME, dpf.UPDATE_USER, dpf.UPDATE_TIME,dpf.CREATE_DEPT,
+               rpi.prod_name   prodName
+        FROM DIS_PROD_FEEDISCOUNT dpf
+                 LEFT JOIN REP_PROD_INFO rpi ON rpi.PROD_ID = dpf.PROD_ID
+        WHERE 1 = 1
+          and dpf.PROD_DISCOUNT_ID = #{keyId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectByProdId"
+            resultType="com.joyintech.tams.disclosure.information.config.prodfeediscount.dto.ProdFeediscountDto">
+        select
+        dpf.PROD_DISCOUNT_ID, dpf.PROD_ID, dpf.PROD_REGIST_NO,
+        dpf.IS_SALES_AGENCY, dpf.PROD_DIS_REMARK, dpf.FEENAME,
+        dpf.PRE_FEERATE, dpf.AFTER_FEERATE, dpf.START_DATE,
+        dpf.END_DATE, dpf.THIS_PRE_FEERATE, dpf.THIS_AFTER_FEERATE,
+        dpf.THIS_END_FEERATE, dpf.FEE_DIS_REMARK, dpf.RPT_ISSUE_DATE,
+        dpf.DATA_STATUS, dpf.DATA_SOURCE, dpf.CREATE_USER,
+        dpf.CREATE_TIME, dpf.UPDATE_USER, dpf.UPDATE_TIME,dpf.CREATE_DEPT
+        from DIS_PROD_FEEDISCOUNT dpf
+        where dpf.PROD_ID = #{prodId,jdbcType=VARCHAR}
+        <if test="dataStatus !=null and dataStatus !='' ">
+            AND dpf.DATA_STATUS = #{dataStatus,jdbcType=VARCHAR}
+        </if>
+        and rownum <![CDATA[<=]]> 1
+    </select>
+
+    <select id="getProdFeenameSelect" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+            dpf.FEENAME id,
+            dpf.FEENAME text
+        FROM
+            DIS_PROD_FEEDISCOUNT dpf
+        where  1=1
+        <if test="search != null and search != ''">
+            and (dpf.FEENAME like '%' || #{search, jdbcType=VARCHAR} || '%' )
+        </if>
+        <if test="condition != null and condition != ''">
+            <![CDATA[ ${condition}  ]]>
+        </if>
+
+    </select>
+</mapper>

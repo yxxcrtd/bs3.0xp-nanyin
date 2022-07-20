@@ -1,8 +1,7 @@
 package com.joyintech.tams.common.base.dao;
 
-import org.springframework.stereotype.Repository;
-
 import com.joyintech.tams.common.base.entity.RepProdInfo;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RepProdInfoMapper {
@@ -19,6 +18,4 @@ public interface RepProdInfoMapper {
     int updateByPrimaryKeySelective(RepProdInfo record);
 
     int updateByPrimaryKey(RepProdInfo record);
-
-    RepProdInfo selectByPrimaryKey2(String prodId);
 }

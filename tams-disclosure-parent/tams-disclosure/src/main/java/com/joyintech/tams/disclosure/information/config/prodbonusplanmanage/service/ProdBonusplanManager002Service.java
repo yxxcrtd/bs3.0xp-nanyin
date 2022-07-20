@@ -10,46 +10,29 @@
 
 package com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.service;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-
-import com.joyintech.framework.file.SafelyFile;
-import com.joyintech.framework.util.*;
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.RepProdInfoMapper;
-import com.joyintech.tams.common.base.entity.DisProdPlan;
 import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
 import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto;
-import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.tools.zip.ZipEntry;
-import org.apache.tools.zip.ZipOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.export.CommonExportService;
-import com.joyintech.framework.progressbar.ProgressBarService;
-import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.disclosure.common.common.util.ReportGlobalConstant;
-import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -199,7 +182,7 @@ public class ProdBonusplanManager002Service extends CommonExportService<ProdBonu
     }
 
     public RepProdInfo getPrdInfo(String prodId){
-        RepProdInfo prodInfo =  repProdInfoMapper.selectByPrimaryKey2(prodId);
+        RepProdInfo prodInfo =  repProdInfoMapper.selectByPrimaryKey(prodId);
         return  prodInfo;
     }
 

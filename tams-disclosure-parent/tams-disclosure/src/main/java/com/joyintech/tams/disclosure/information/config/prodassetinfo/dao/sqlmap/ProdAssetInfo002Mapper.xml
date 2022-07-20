@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.information.config.prodassetinfo.dao.ProdAssetInfo002Mapper">
+
+	<update id="updateProdPartner">
+		update DIS_PROD_PARTNER
+        set
+            PROD_ID = #{prodId,jdbcType=VARCHAR},
+            PARTNER_NAME = #{partnerName,jdbcType=VARCHAR},
+            EFF_DATE = #{effDate,jdbcType=DATE},
+            EFF_END_DATE = #{effEndDate,jdbcType=DATE},
+            DATA_STATUS = #{status,jdbcType=VARCHAR},
+            DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+            CREATE_USER = #{createUser,jdbcType=VARCHAR},
+            CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            CREATE_DEPT = #{createDept,jdbcType=VARCHAR}
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+	</update>
+
+	<delete id="deleteProdPartner">
+		delete from DIS_PROD_PARTNER
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+	</delete>
+
+    <select id="selectDetail"
+            resultType="com.joyintech.tams.disclosure.information.config.prodassetinfo.dto.ProdAssetInfoDto">
+		select
+		dpa.PROD_ASSET_ID prodAssetId,
+		dpa.PROD_ID prodId,
+		dpa.FIX_PRE_RATIO fixPreRatio,
+		dpa.FIX_AFTER_RATIO fixAfterRatio,
+		dpa.EQUITY_PRE_RATIO equityPreRatio,
+		dpa.EQUITY_AFTER_RATIO equityAfterRatio,
+		dpa.FD_PRE_RATIO fdPreRatio,
+		dpa.FD_AFTER_RATIO fdAfterRatio,
+		dpa.MIX_PRE_RATIO mixPreRatio,
+		dpa.MIX_AFTER_RATIO mixAfterRatio,
+		dpa.EFF_DATE effDate,
+		dpa.EFF_END_DATE effEndDate,
+		dpa.DATA_STATUS status,
+		dpa.UPDATE_USER updateUser,
+		dpa.UPDATE_TIME updateTime
+		from DIS_PROD_ASSET dpa
+		left join REP_PROD_INFO info on dpa.PROD_ID=info.PROD_ID
+		<where>
+			<if test="prodAssetId != null and prodAssetId != ''">
+				AND	dpa.PROD_ASSET_ID=#{prodAssetId,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	<select id="selectProdAssetInfoByProdId" resultType="com.joyintech.tams.disclosure.information.config.prodassetinfo.dto.ProdAssetInfoDto">
+		select
+		PROD_ASSET_ID prodAssetId,
+		PROD_ID prodId,
+		EFF_DATE effDate,
+		EFF_END_DATE effEndDate
+		from DIS_PROD_ASSET
+		<where>
+			<if test="prodId != null and prodId != ''">
+				AND	PROD_ID=#{prodId,jdbcType=VARCHAR}
+			</if>
+			<if test="status != null and status != ''">
+				AND	DATA_STATUS=#{status,jdbcType=VARCHAR}
+			</if>
+			<if test="prodAssetId != null and prodAssetId != ''">
+				AND	PROD_ASSET_ID!=#{prodAssetId,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+
+</mapper>

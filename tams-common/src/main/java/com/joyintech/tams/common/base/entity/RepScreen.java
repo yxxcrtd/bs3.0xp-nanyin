@@ -1,6 +1,9 @@
 package com.joyintech.tams.common.base.entity;
 
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.systemtools.util.SysDatadictUtil;
 
 public class RepScreen extends BaseEntity {
     /**
@@ -17,6 +20,11 @@ public class RepScreen extends BaseEntity {
      * 查询条件类型
      */
     private String screenType;
+
+    /**
+     * 查询条件类型
+     */
+    private String screenTypeStr;
 
     /**
      * 查询条件key
@@ -42,6 +50,11 @@ public class RepScreen extends BaseEntity {
      * 查询条件顺序
      */
     private Long screenIndex;
+
+    /**
+     * 是否支持多选
+     */
+    private String multiFlag;
 
     /**
      * 取得 主键ID
@@ -169,5 +182,21 @@ public class RepScreen extends BaseEntity {
      */
     public void setScreenIndex(Long screenIndex) {
         this.screenIndex = screenIndex;
+    }
+
+    public String getMultiFlag() {
+        return multiFlag;
+    }
+
+    public void setMultiFlag(String multiFlag) {
+        this.multiFlag = multiFlag;
+    }
+
+    public String getScreenTypeStr() {
+        return  SysDatadictUtil.getNameFromDataDict(DictCode.报表数据格式类型, this.getScreenType());
+    }
+
+    public void setScreenTypeStr(String screenTypeStr) {
+        this.screenTypeStr = screenTypeStr;
     }
 }

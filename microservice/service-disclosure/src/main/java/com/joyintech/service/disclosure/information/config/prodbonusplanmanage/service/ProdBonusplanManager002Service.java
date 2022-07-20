@@ -12,6 +12,7 @@ package com.joyintech.service.disclosure.information.config.prodbonusplanmanage.
 
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.service.disclosure.information.config.prodbonusplanmanage.dao.ProdBonusplanMapper;
 import com.joyintech.service.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto;
 import org.slf4j.Logger;
@@ -87,7 +88,7 @@ public class ProdBonusplanManager002Service extends CommonExportService<ProdBonu
 	 * @param dto
 	 */
 	public void insert(ProdBonusplanDto dto) {
-		dto.setBonusPlanId(UUID.randomUUID().toString());
+		dto.setBonusPlanId(IDGenerator.generate(36));
 		prodBonusplanMapper.insert(dto);
 		
 	}

@@ -16,6 +16,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.disclosure.information.config.reportmodelmanage.dto.ReportParamDto;
+import com.joyintech.tams.systemtools.util.SysDatadictUtil;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -215,31 +219,45 @@ public class ReportPageManage001Service extends CommonExportService<ReportPageMa
      * @param pageParam
      * @return 报表参数配置list
      */
-	public List<Map<String,String>> getReportInputsNew(Map<String, Object> pageParam) {
+	public List<Map<String,Object>> getReportInputsNew(Map<String, Object> pageParam) throws IOException {
 		// 根据报表folder查询报表参数json字符串
 //		ReportPageManage001Dto reportparamsJson = reportPageManage001Mapper.getReportInputsNew(pageParam);
 		ReportPageManage001Dto reportparamsJson =restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME + "/ReportPageManage002/getReportInputsNew",
 				pageParam,ReportPageManage001Dto.class);
-		
-		
-		
-		if(reportparamsJson == null ||  StringUtil.isEmpty(reportparamsJson.getReportparams())){
-			return null;
-		}
-		@SuppressWarnings("unchecked")
-		Map<String, String> reportparamsMaps = JsonUtils.json2Object(reportparamsJson.getReportparams(), Map.class);
-		List<Map<String,String>> result = new ArrayList<Map<String,String>>();
-		Map<String,String> resultMap;
-		for (String key : reportparamsMaps.keySet()) { 
-			resultMap = new HashMap<String,String>();
-			resultMap.put("id", key);
-			if("String".equals(reportparamsMaps.get(key))){
-				resultMap.put("type", "singleValueText");
-			}else if("Date".equals(reportparamsMaps.get(key))){
-				resultMap.put("type", "singleValueDate");
+		List<Map<String,Object>> result = new ArrayList<Map<String,Object>>();
+		if (StringUtil.isNotEmpty(reportparamsJson)) {
+			if (StringUtil.isNotEmpty(reportparamsJson.getReportparams())) {
+				List<ReportParamDto>reportParamList=JsonUtils.json2List(reportparamsJson.getReportparams(),ReportParamDto.class);
+				if(CollectionUtils.isNotEmpty(reportParamList)){
+					for (ReportParamDto reportParamDto : reportParamList) {
+						reportParamDto.setParamTypeStr(SysDatadictUtil.getNameFromDataDict(DictCode.报表数据格式类型, reportParamDto.getParamType()));
+						Map<String, Object> resultMap = JsonUtils.object2Map(reportParamDto);
+						result.add(resultMap);
+					}
+				}
 			}
-			result.add(resultMap);
 		}
+
+
+//
+//
+//		if(reportparamsJson == null ||  StringUtil.isEmpty(reportparamsJson.getReportparams())){
+//			return null;
+//		}
+//		@SuppressWarnings("unchecked")
+//		Map<String, String> reportparamsMaps = JsonUtils.json2Object(reportparamsJson.getReportparams(), Map.class);
+//		List<Map<String,String>> result = new ArrayList<Map<String,String>>();
+//		Map<String,String> resultMap;
+//		for (String key : reportparamsMaps.keySet()) {
+//			resultMap = new HashMap<String,String>();
+//			resultMap.put("id", key);
+//			if("String".equals(reportparamsMaps.get(key))){
+//				resultMap.put("type", "singleValueText");
+//			}else if("Date".equals(reportparamsMaps.get(key))){
+//				resultMap.put("type", "singleValueDate");
+//			}
+//			result.add(resultMap);
+//		}
 		return result;
 		
 	}

@@ -10,24 +10,6 @@
 
 package com.joyintech.service.disclosure.information.config.prodbonusplanmanage.controller;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.DTXTransaction;
@@ -39,6 +21,16 @@ import com.joyintech.service.disclosure.information.config.prodbonusplanmanage.d
 import com.joyintech.service.disclosure.information.config.prodbonusplanmanage.service.ProdBonusplanManager001Service;
 import com.joyintech.service.disclosure.information.config.prodbonusplanmanage.service.ProdBonusplanManager002Service;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 报表模板管理 〈一句话功能简述〉 〈功能详细描述〉
@@ -101,22 +93,15 @@ public class ProdBonusplanManager001Controller extends BaseController {
     }
 
     @PostMapping("/delete")
-    public void delete(@RequestBody Map<String, Object> param) {
-        String ids = param.get("bonusPlanId").toString();
+    public void delete(@RequestBody ProdBonusplanDto entity) {
+        String bonusPlanId = entity.getBonusPlanId();
         List<String> idList = new ArrayList();
-        if (StringUtils.isNotEmpty(ids)) {
-            if (StringUtils.contains(ids, ",")) {
-                idList = Arrays.asList(ids.split(",")).stream().collect(Collectors.toList());
-            } else {
-                idList.add(ids);
-            }
-        }
-        idList.forEach(i -> {
+        if (StringUtils.isNotEmpty(bonusPlanId)) {
             ProdBonusplanDto dto = new ProdBonusplanDto();
-            dto.setBonusPlanId(i);
+            dto.setBonusPlanId(bonusPlanId);
             dto.setDataStatus(DictCodeListExt3.信披_数据状态_删除.getValue());
             prodBonusplanManager002Service.update(dto);
-        });
+        }
     }
 
 

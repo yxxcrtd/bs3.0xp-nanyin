@@ -678,3 +678,8 @@ ALTER TABLE rep_screen add  MULTI_FLAG VARCHAR2(2);
 /**add by zhengxiaolian 20220719 报表模板配置表报表参数字段长度增加 start**/
 ALTER TABLE rep_reportinfo MODIFY REPORTPARAMS VARCHAR2(2000);
 /**add by zhengxiaolian 20220719 报表模板配置表报表参数字段长度增加 end**/
+
+/**add by zhengxiaolian 20220720 报表模板配置表报表参数字段长度增加 start**/
+ALTER TABLE rep_prod_info add ISSUE_STATUS VARCHAR2(2) ;
+comment on column rep_prod_info.ISSUE_STATUS is '发行状态 01 发行成功 02 发行失败 03 确认发行';
+/**add by zhengxiaolian 20220720 报表模板配置表报表参数字段长度增加 end**/

@@ -164,6 +164,8 @@
 	                	dataTable2.reload();
 	                });
 	    });
+
+
 	   /**
 	     * 删除页面
 	     */
@@ -186,7 +188,16 @@
 	            data: function() {
 	                return getSearchKey();
 	            }
-	        }, 
+	        },
+		   /**
+			* 双击查看
+			*/
+		   dblclick: function (dataTable2, data) {
+			   data.pageModel=PAGE_MODEL_REFERENCE;
+			   Joyin.dialog(JoyinUtil.getLabel("查看"),
+				   basePath + "disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager002/init",
+				   "40%", "70%", data,function(){dataTable2.reload();});
+		   },
 		   searchOnInit: false,
 		   rowno : true,
 		   page : true,
@@ -231,6 +242,8 @@
 	                	dataTable2.reload();
 	                });
 	    });
+
+
 	   /**
 	     * 删除页面
 	     */

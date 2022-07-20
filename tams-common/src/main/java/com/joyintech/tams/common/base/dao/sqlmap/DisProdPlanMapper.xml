@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.DisProdPlanMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.DisProdPlanInfo" >
+        <id column="PROD_PLAN_ID" property="prodPlanId" jdbcType="VARCHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="OPEN_START_DATE" property="openStartDate" jdbcType="DATE" />
+        <result column="OPEN_END_DATE" property="openEndDate" jdbcType="DATE" />
+        <result column="COLLINGOFF_PERIOD" property="collingoffPeriod" jdbcType="DATE" />
+        <result column="OPERATION_START_DATE" property="operationStartDate" jdbcType="DATE" />
+        <result column="AUTO_REDEEM_DATE" property="autoRedeemDate" jdbcType="DATE" />
+        <result column="HOLD_DAYS" property="holdDays" jdbcType="DECIMAL" />
+        <result column="DATA_STATUS" property="dataStatus" jdbcType="VARCHAR" />
+        <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        PROD_PLAN_ID PROD_PLAN_ID, PROD_ID PROD_ID, OPEN_START_DATE OPEN_START_DATE, OPEN_END_DATE OPEN_END_DATE, 
+        COLLINGOFF_PERIOD COLLINGOFF_PERIOD, OPERATION_START_DATE OPERATION_START_DATE, AUTO_REDEEM_DATE AUTO_REDEEM_DATE, 
+        HOLD_DAYS HOLD_DAYS, DATA_STATUS DATA_STATUS, DATA_SOURCE DATA_SOURCE, CREATE_USER CREATE_USER, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, CREATE_DEPT CREATE_DEPT
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.DisProdPlanMapper.Base_Column_List" />
+        from DIS_PROD_PLAN
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.DisProdPlanMapper.Base_Column_List" />
+        from DIS_PROD_PLAN
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.DisProdPlanMapper.Base_Column_List" />
+        from DIS_PROD_PLAN
+        where PROD_PLAN_ID = #{prodPlanId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from DIS_PROD_PLAN
+        where PROD_PLAN_ID = #{prodPlanId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.DisProdPlanInfo" >
+        insert into DIS_PROD_PLAN (PROD_PLAN_ID, PROD_ID, OPEN_START_DATE, 
+            OPEN_END_DATE, COLLINGOFF_PERIOD, OPERATION_START_DATE, 
+            AUTO_REDEEM_DATE, HOLD_DAYS, DATA_STATUS, 
+            DATA_SOURCE, CREATE_USER, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME, CREATE_DEPT
+            )
+        values (#{prodPlanId,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{openStartDate,jdbcType=DATE}, 
+            #{openEndDate,jdbcType=DATE}, #{collingoffPeriod,jdbcType=DATE}, #{operationStartDate,jdbcType=DATE}, 
+            #{autoRedeemDate,jdbcType=DATE}, #{holdDays,jdbcType=DECIMAL}, #{dataStatus,jdbcType=VARCHAR}, 
+            #{dataSource,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.DisProdPlanInfo" >
+        insert into DIS_PROD_PLAN
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="prodPlanId != null" >
+                PROD_PLAN_ID,
+            </if>
+            <if test="prodId != null" >
+                PROD_ID,
+            </if>
+            <if test="openStartDate != null" >
+                OPEN_START_DATE,
+            </if>
+            <if test="openEndDate != null" >
+                OPEN_END_DATE,
+            </if>
+            <if test="collingoffPeriod != null" >
+                COLLINGOFF_PERIOD,
+            </if>
+            <if test="operationStartDate != null" >
+                OPERATION_START_DATE,
+            </if>
+            <if test="autoRedeemDate != null" >
+                AUTO_REDEEM_DATE,
+            </if>
+            <if test="holdDays != null" >
+                HOLD_DAYS,
+            </if>
+            <if test="dataStatus != null" >
+                DATA_STATUS,
+            </if>
+            <if test="dataSource != null" >
+                DATA_SOURCE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="prodPlanId != null" >
+                #{prodPlanId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodId != null" >
+                #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="openStartDate != null" >
+                #{openStartDate,jdbcType=DATE},
+            </if>
+            <if test="openEndDate != null" >
+                #{openEndDate,jdbcType=DATE},
+            </if>
+            <if test="collingoffPeriod != null" >
+                #{collingoffPeriod,jdbcType=DATE},
+            </if>
+            <if test="operationStartDate != null" >
+                #{operationStartDate,jdbcType=DATE},
+            </if>
+            <if test="autoRedeemDate != null" >
+                #{autoRedeemDate,jdbcType=DATE},
+            </if>
+            <if test="holdDays != null" >
+                #{holdDays,jdbcType=DECIMAL},
+            </if>
+            <if test="dataStatus != null" >
+                #{dataStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="dataSource != null" >
+                #{dataSource,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.DisProdPlanInfo" >
+        insert into DIS_PROD_PLAN(PROD_PLAN_ID, PROD_ID, OPEN_START_DATE, OPEN_END_DATE, 
+        COLLINGOFF_PERIOD, OPERATION_START_DATE, AUTO_REDEEM_DATE, HOLD_DAYS, DATA_STATUS, 
+        DATA_SOURCE, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, CREATE_DEPT)
+        select PROD_PLAN_ID, PROD_ID, OPEN_START_DATE, OPEN_END_DATE, 
+            COLLINGOFF_PERIOD, OPERATION_START_DATE, AUTO_REDEEM_DATE, HOLD_DAYS, DATA_STATUS, 
+            DATA_SOURCE, CREATE_USER, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_DEPT
+             from DIS_PROD_PLAN
+             where 1 = 1 and PROD_PLAN_ID = #{prodPlanId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.DisProdPlanInfo" >
+        update DIS_PROD_PLAN
+        <set >
+            <if test="prodId != null" >
+                PROD_ID = #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="openStartDate != null" >
+                OPEN_START_DATE = #{openStartDate,jdbcType=DATE},
+            </if>
+            <if test="openEndDate != null" >
+                OPEN_END_DATE = #{openEndDate,jdbcType=DATE},
+            </if>
+            <if test="collingoffPeriod != null" >
+                COLLINGOFF_PERIOD = #{collingoffPeriod,jdbcType=DATE},
+            </if>
+            <if test="operationStartDate != null" >
+                OPERATION_START_DATE = #{operationStartDate,jdbcType=DATE},
+            </if>
+            <if test="autoRedeemDate != null" >
+                AUTO_REDEEM_DATE = #{autoRedeemDate,jdbcType=DATE},
+            </if>
+            <if test="holdDays != null" >
+                HOLD_DAYS = #{holdDays,jdbcType=DECIMAL},
+            </if>
+            <if test="dataStatus != null" >
+                DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="dataSource != null" >
+                DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where PROD_PLAN_ID = #{prodPlanId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.DisProdPlanInfo" >
+        update DIS_PROD_PLAN
+        set PROD_ID = #{prodId,jdbcType=VARCHAR},
+            OPEN_START_DATE = #{openStartDate,jdbcType=DATE},
+            OPEN_END_DATE = #{openEndDate,jdbcType=DATE},
+            COLLINGOFF_PERIOD = #{collingoffPeriod,jdbcType=DATE},
+            OPERATION_START_DATE = #{operationStartDate,jdbcType=DATE},
+            AUTO_REDEEM_DATE = #{autoRedeemDate,jdbcType=DATE},
+            HOLD_DAYS = #{holdDays,jdbcType=DECIMAL},
+            DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
+            DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        where PROD_PLAN_ID = #{prodPlanId,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -10,6 +10,7 @@
 
 package com.joyintech.service.disclosure.information.config.reportmodelmanage.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -18,7 +19,10 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.service.disclosure.information.config.reportmodelmanage.dto.ReportParamDto;
 import org.apache.commons.collections4.CollectionUtils;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,41 +85,15 @@ public class ReportModelManage002Service extends CommonExportService<RepInfo> {
 	 * @param param keyId
 	 * @return
 	 */
-	public List<ReportModelManage002Dto> findParamPage(String repId) {
+	public List<ReportParamDto> findParamPage(String repId) throws IOException {
 		List<String> paramList= reportModelManage002Mapper.findParamPage(repId);
-		List<ReportModelManage002Dto> list=new ArrayList<>();
-			for(String param:paramList){
-				if(StringUtil.isNotEmpty(param)){
-					//去掉参数字符串的{}
-					String params=param.substring(1, param.length()-1);
-					//去掉参数字符串的''
-					String params2=params.replace("'", "");
-					//分割参数字符串
-					String[] params3=params2.split(",");
-					int i=1;
-					for(String para:params3){
-						ReportModelManage002Dto dto=new ReportModelManage002Dto();
-						//设置参数编号
-						dto.setParamNum(i++);
-						//设置参数名称
-						dto.setParamName(para.split(":")[0]);
-						switch (dto.getParamName()){
-							case "portnum":dto.setName("产品名称");break;
-							case "startDate":dto.setName("开始日期");break;
-							case "endDate":dto.setName("结束日期");break;
-							default: break;
-						}
-						//设置参数类型
-						dto.setParamType(para.split(":")[1]);
-						list.add(dto);
-					}
-				}
-				
-				
-				
-			
+		List<ReportParamDto> list=new ArrayList<>();
+		for(String param:paramList){
+			List<ReportParamDto>reportParamList=JsonUtils.json2List(param,ReportParamDto.class);
+			if(CollectionUtils.isNotEmpty(reportParamList)){
+				list.addAll(reportParamList);
+			}
 		}
-	
 		return list;
 	}
 	/**

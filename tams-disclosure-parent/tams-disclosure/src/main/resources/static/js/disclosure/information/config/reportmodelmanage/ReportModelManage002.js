@@ -40,6 +40,11 @@
 						width : 170,
 						fixed : true
 					},{
+						field : 'paramMultiFlag',
+						title : '是否多选',
+						width : 170,
+						fixed : true
+					},{
 						field : 'operation',
 						title : 'SysCommon.operation',
 						type : 'action',
@@ -85,6 +90,15 @@
 			   Joyin.alert("请输入参数类型",7);
 			   return;
 		   }
+
+		   if($('#paramMultiFlag').val()){
+			   param.paramMultiFlag=$('#paramMultiFlag').val();
+		   }
+		   else{
+			   Joyin.alert("请输入参数类型",7);
+			   return;
+		   }
+
 		   var obj = addParam.getAllRows();
 		   var index = 0;
 		   for ( var i in obj) {
@@ -105,6 +119,7 @@
 			var object = $.serializeToObject('#submitForm', true);
 			object.pageModel = pageModel;
 			var addParam = object.addParam;
+			console.log(object.addParam)
 			Joyin.ajaxJson("checkSave",object,function(result) {
 						if (result) {
 							var message = JoyinUtil
