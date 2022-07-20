@@ -272,7 +272,16 @@
 	            data: function() {
 	                return getSearchKey();
 	            }
-	        }, 
+	        },
+		   /**
+			* 双击查看
+			*/
+		   dblclick: function (dataTable2, data) {
+			   data.pageModel=PAGE_MODEL_REFERENCE;
+			   Joyin.dialog(JoyinUtil.getLabel("查看"),
+				   basePath + "disclosure/information/config/disprodplanmanage/DisProdPlanManage002/init",
+				   "40%", "70%", data,function(){dataTable2.reload();});
+		   },
 		   searchOnInit: false,
 		   rowno : true,
 		   page : true,
