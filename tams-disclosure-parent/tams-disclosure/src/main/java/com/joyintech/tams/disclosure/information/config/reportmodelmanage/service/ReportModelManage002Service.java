@@ -24,6 +24,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.tams.disclosure.information.config.reportmodelmanage.dto.ReportParamDto;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipOutputStream;
@@ -108,12 +109,12 @@ public class ReportModelManage002Service extends CommonExportService<RepInfo> {
 	 * @param
 	 * @return
 	 */
-	public List<ReportModelManage002Dto> findParamPage(String repId) {
+	public List<ReportParamDto> findParamPage(String repId) {
 		
 		
 		
 		 return restTemplate.getForList(ServiceApplication.VALUATION_SERVICE_NAME + "/ReportModelManage002/findParamPage?repId="+repId,
-				 ReportModelManage002Dto.class);
+				 ReportParamDto.class);
 //		List<String> paramList= reportModelManage002Mapper.findParamPage(repId);
 //		List<ReportModelManage002Dto> list=new ArrayList<>();
 //			for(String param:paramList){

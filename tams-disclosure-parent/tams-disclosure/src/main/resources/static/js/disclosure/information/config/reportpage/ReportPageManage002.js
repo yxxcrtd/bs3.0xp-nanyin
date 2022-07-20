@@ -42,21 +42,13 @@ var ReportPageManage003 = function(global) {
             {field:'screenIndex',sortable:false,visible: false, title: '参数序号'},
             {field:'screenId',sortable:false,visible: false, title: '主键Id'},
             {field:'repId',sortable:false,visible: false, title: '报表Id'},
-            {field:'screenType',sortable:false,  title: '条件类型',render: function (data, type, row, meta) {
-	            	if(data == '01') {
-	            		return '<span style="disabled:true;">日期</span>';
-	            	}else if(data == '02'){
-	            		return '<span style="disabled:true;">文本</span>';
-	            	}else{
-	            		return '<span style="disabled:true;">参数</span>';
-	            	}
-	            }
-            },
+			{field:'screenType',sortable:false,visible: false, title: '条件类型'},
+            {field:'screenTypeStr',sortable:false,  title: '条件类型'},
             {field:'screenKey',sortable:false, title: '条件Id'},
             {field:'screenName',sortable:false, title: '查询条件'},
             {field:'screenValue',sortable:false, title: '字典代码', edit:true,editOption:{type:'select',result:ADMINISTRATIVE_TYPE1,initValue:"1"}
-            }
-            ,
+            },
+			{field:'multiFlag',sortable:false, title: '是否支持多选'},
             {field:'screenStatus', sortable:false, title: '是否启用',edit:true,editOption:{type:'select',result:effective,initValue:"01"}, render: function (data, type, row, meta) {
             	if(row.screenStatus == 'Y') {
             		return '<span style="disabled:true;" class="layui-badge-rim layui-bg-blue">启用</span>';
@@ -82,27 +74,33 @@ var ReportPageManage003 = function(global) {
 			var control = result.data;
 			var screenType = "02";
 	    	$.each(control, function(i,c){
-	    		var screenName = "产品名称";
-	    		switch(c.type){
-	    		case "singleValueDate":
-	    			screenType = "01";
-	    		  break;
-	    		case "singleValueText":
-	    			screenType = "03";
-	    		  break;
-	    		default:
-	    			screenType = "02";
-	    		}
-	    		
-	    		if(c.id =='endDate'){
-	    			screenName = '结束日期';
-	    		}else if(c.id =='startDate'){
-	    			screenName = '开始日期';
-	    		}
-	    		
-				if(c.id != 'portname'&&c.id != 'rep_id'){
-					table.addRow({screenIndex:i + 1,screenType:screenType,screenKey:c.id,screenName:screenName,screenStatus:'Y'});
-				}
+	    		// var screenName = "产品名称";
+	    		// switch(c.type){
+	    		// case "singleValueDate":
+	    		// 	screenType = "01";
+	    		//   break;
+	    		// case "singleValueText":
+	    		// 	screenType = "03";
+	    		//   break;
+	    		// default:
+	    		// 	screenType = "02";
+	    		// }
+	    		//
+	    		// if(c.id =='endDate'){
+	    		// 	screenName = '结束日期';
+	    		// }else if(c.id =='startDate'){
+	    		// 	screenName = '开始日期';
+	    		// }
+	    		//
+				// if(c.id != 'portname'&&c.id != 'rep_id'){
+				// 	table.addRow({screenIndex:i + 1,screenType:screenType,screenKey:c.id,screenName:screenName,screenStatus:'Y'});
+				// }
+				screenType = c.paramType;
+				screenKey = c.paramName;
+				screenName = c.name;
+				screenTypeStr = c.paramTypeStr;
+				multiFlag = c.paramMultiFlag
+				table.addRow({screenIndex:i + 1,screenType:screenType,screenTypeStr:screenTypeStr,screenKey:screenKey,multiFlag:multiFlag,screenName:screenName,screenStatus:'Y'});
 			});
 		});
     };
@@ -224,23 +222,24 @@ var ReportPageManage003 = function(global) {
 						cols : [ {
 							field : 'ruleType1Name',
 							title : '字段值',
-							fixed : true
+							width : 180
 						}, {
 							field : 'ruleType2Name',
 							title : '比较条件',
-							fixed : true
+							width:160
 						}, {
 							field : 'ruleType3Name',
 							title : '值类型',
-							fixed : true
+							width:160
 						}, {
 							field : 'ruleType4Name',
 							title : '值',
-							fixed : true
+							width:160
 						}, {
 							field : 'operation',
 							title : 'SysCommon.operation',
 							type : 'action',
+							width: 120,
 							buttons : [ 'delt' ]
 						}, {
 							field : 'ruleType1',
@@ -305,7 +304,7 @@ var ReportPageManage003 = function(global) {
 				Joyin.alert("请选择募集方式", 7);
 				return;
 			}
-		} else if (rule.ruleType1 == 'ISSUE_MODE') {
+		} else if (rule.ruleType1 == 'ISSUING_WAY') {
 			if ($('#issueMode').select2('data')[0]) {
 				rule.ruleType4 = $('#issueMode').select2('data')[0].id;
 				rule.ruleType4Name = $('#issueMode').select2('data')[0].text;
@@ -366,7 +365,37 @@ var ReportPageManage003 = function(global) {
 				return;
 			}
 
-		} else {
+		}
+		//modify by zhengxiaolian on 20220719 增加开放频率，是否是客户周期型产品，是否是指数型产品 start
+		else if (rule.ruleType1 == 'OPEN_FREQ') {
+			if ($('#openFreq').select2('data')[0]) {
+				rule.ruleType4 = $('#openFreq').select2('data')[0].id;
+				rule.ruleType4Name = $('#openFreq').select2('data')[0].text;
+			} else {
+				Joyin.alert("开放频率", 7);
+				return;
+			}
+		}
+		else if (rule.ruleType1 == 'IS_INDEX') {
+			if ($('#isIndex').select2('data')[0]) {
+				rule.ruleType4 = $('#isIndex').select2('data')[0].id;
+				rule.ruleType4Name = $('#isIndex').select2('data')[0].text;
+			} else {
+				Joyin.alert("请选择是否是指数型产品", 7);
+				return;
+			}
+		}
+		else if (rule.ruleType1 == 'IS_PERIOD') {
+			if ($('#isPeriod').select2('data')[0]) {
+				rule.ruleType4 = $('#isPeriod').select2('data')[0].id;
+				rule.ruleType4Name = $('#isPeriod').select2('data')[0].text;
+			} else {
+				Joyin.alert("请选择是否是客户周期型产品", 7);
+				return;
+			}
+		}
+		//modify by zhengxiaolian on 20220719 增加开放频率，是否是客户周期型产品，是否是指数型产品 end
+		else {
 			if (rule.ruleType3 == '03') {
 				// 平台日
 				// rule.ruleType4 = rule.ruleType3;
@@ -405,6 +434,11 @@ var ReportPageManage003 = function(global) {
 		if ($('#ruleType3').val()) {
 			ruleType3 = $('#ruleType3').select2('data')[0].id;
 		}
+		//modify by zhengxiaolian on 20220719 增加开放频率，是否是客户周期型产品，是否是指数型产品 start
+		$('#openFreqSelect').hide();
+		$('#isIndexSelect').hide();
+		$('#isPeriodSelect').hide();
+		//modify by zhengxiaolian on 20220719 增加开放频率，是否是客户周期型产品，是否是指数型产品 联动 end
 		if (ruleType1 == 'PROFIT_TYPE') {
 			$('#raiseTypeSelect').hide();
 			$('#chooseDateSelect').hide();
@@ -427,7 +461,7 @@ var ReportPageManage003 = function(global) {
 			$('#prodTypeSelect').hide();
 			$('#finaTypeSelect').hide();
 			$('#prodTermTypeSelect').hide();
-		} else if (ruleType1 == 'ISSUE_MODE') {
+		} else if (ruleType1 == 'ISSUING_WAY') {
 			$('#raiseTypeSelect').hide();
 			$('#chooseDateSelect').hide();
 			$('#profitTypeSelect').hide();
@@ -504,7 +538,52 @@ var ReportPageManage003 = function(global) {
 			$('#prodTypeSelect').hide();
 			$('#finaTypeSelect').hide();
 			$('#prodTermTypeSelect').show();
-		} else {
+		}
+		//modify by zhengxiaolian on 20220719 增加开放频率，是否是客户周期型产品，是否是指数型产品 start
+		else if(ruleType1 == 'OPEN_FREQ'){
+			$('#raiseTypeSelect').hide();
+			$('#chooseDateSelect').hide();
+			$('#profitTypeSelect').hide();
+			$('#issueModeSelect').hide();
+			$('#issueStautsSelect').hide();
+			$('#openModeSelect').hide();
+			$('#isIndepeAccSelect').hide();
+			$('#prodTypeSelect').hide();
+			$('#finaTypeSelect').hide();
+			$('#prodTermTypeSelect').hide();
+			$('#prodSeriesSelect').hide();
+			$('#openFreqSelect').show();
+		}
+		else if(ruleType1 == 'IS_INDEX'){
+			$('#raiseTypeSelect').hide();
+			$('#chooseDateSelect').hide();
+			$('#profitTypeSelect').hide();
+			$('#issueModeSelect').hide();
+			$('#issueStautsSelect').hide();
+			$('#openModeSelect').hide();
+			$('#isIndepeAccSelect').hide();
+			$('#prodTypeSelect').hide();
+			$('#finaTypeSelect').hide();
+			$('#prodTermTypeSelect').hide();
+			$('#prodSeriesSelect').hide();
+			$('#isIndexSelect').show();
+		}
+		else if(ruleType1 == 'IS_PERIOD'){
+			$('#raiseTypeSelect').hide();
+			$('#chooseDateSelect').hide();
+			$('#profitTypeSelect').hide();
+			$('#issueModeSelect').hide();
+			$('#issueStautsSelect').hide();
+			$('#openModeSelect').hide();
+			$('#isIndepeAccSelect').hide();
+			$('#prodTypeSelect').hide();
+			$('#finaTypeSelect').hide();
+			$('#prodTermTypeSelect').hide();
+			$('#prodSeriesSelect').hide();
+			$('#isPeriodSelect').show();
+		}
+		//modify by zhengxiaolian on 20220719 增加开放频率，是否是客户周期型产品，是否是指数型产品 start
+		else {
 			if (ruleType3 == '03' || !$('#ruleType3').val()) {
 				$('#raiseTypeSelect').hide();
 				$('#chooseDateSelect').hide();
@@ -537,6 +616,11 @@ var ReportPageManage003 = function(global) {
 		if ($('#ruleType3').val()) {
 			ruleType3 = $('#ruleType3').select2('data')[0].id;
 		}
+		//modify by zhengxiaolian on 20220719 增加开放频率，是否是客户周期型产品，是否是指数型产品 start
+		$('#openFreqSelect').hide();
+		$('#isIndexSelect').hide();
+		$('#isPeriodSelect').hide();
+		//modify by zhengxiaolian on 20220719 增加开放频率，是否是客户周期型产品，是否是指数型产品 联动 end
 		if (ruleType1 == 'PROFIT_TYPE') {
 			$('#raiseTypeSelect').hide();
 			$('#chooseDateSelect').hide();
@@ -559,7 +643,7 @@ var ReportPageManage003 = function(global) {
 			$('#prodTypeSelect').hide();
 			$('#finaTypeSelect').hide();
 			$('#prodTermTypeSelect').hide();
-		} else if (ruleType1 == 'ISSUE_MODE') {
+		} else if (ruleType1 == 'ISSUING_WAY') {
 			$('#raiseTypeSelect').hide();
 			$('#chooseDateSelect').hide();
 			$('#profitTypeSelect').hide();
@@ -636,7 +720,52 @@ var ReportPageManage003 = function(global) {
 			$('#prodTypeSelect').hide();
 			$('#finaTypeSelect').hide();
 			$('#prodTermTypeSelect').show();
-		} else {
+		}
+		//modify by zhengxiaolian on 20220719 增加开放频率，是否是客户周期型产品，是否是指数型产品 start
+		else if(ruleType1 == 'OPEN_FREQ'){
+			$('#raiseTypeSelect').hide();
+			$('#chooseDateSelect').hide();
+			$('#profitTypeSelect').hide();
+			$('#issueModeSelect').hide();
+			$('#issueStautsSelect').hide();
+			$('#openModeSelect').hide();
+			$('#isIndepeAccSelect').hide();
+			$('#prodTypeSelect').hide();
+			$('#finaTypeSelect').hide();
+			$('#prodTermTypeSelect').hide();
+			$('#prodSeriesSelect').hide();
+			$('#openFreqSelect').show();
+		}
+		else if(ruleType1 == 'IS_INDEX'){
+			$('#raiseTypeSelect').hide();
+			$('#chooseDateSelect').hide();
+			$('#profitTypeSelect').hide();
+			$('#issueModeSelect').hide();
+			$('#issueStautsSelect').hide();
+			$('#openModeSelect').hide();
+			$('#isIndepeAccSelect').hide();
+			$('#prodTypeSelect').hide();
+			$('#finaTypeSelect').hide();
+			$('#prodTermTypeSelect').hide();
+			$('#prodSeriesSelect').hide();
+			$('#isIndexSelect').show();
+		}
+		else if(ruleType1 == 'IS_PERIOD'){
+			$('#raiseTypeSelect').hide();
+			$('#chooseDateSelect').hide();
+			$('#profitTypeSelect').hide();
+			$('#issueModeSelect').hide();
+			$('#issueStautsSelect').hide();
+			$('#openModeSelect').hide();
+			$('#isIndepeAccSelect').hide();
+			$('#prodTypeSelect').hide();
+			$('#finaTypeSelect').hide();
+			$('#prodTermTypeSelect').hide();
+			$('#prodSeriesSelect').hide();
+			$('#isPeriodSelect').show();
+		}
+		//modify by zhengxiaolian on 20220719 增加开放频率，是否是客户周期型产品，是否是指数型产品 start
+		else {
 			if (ruleType3 == '03' || !$('#ruleType3').val()) {
 				$('#raiseTypeSelect').hide();
 				$('#chooseDateSelect').hide();
@@ -697,6 +826,11 @@ var ReportPageManage003 = function(global) {
 		$('#prodTypeSelect').hide();
 		$('#finaTypeSelect').hide();
 		$('#prodTermTypeSelect').hide();
+		//modify by zhengxiaolian on 20220719 增加开放频率，是否是客户周期型产品，是否是指数型产品 start
+		$('#openFreqSelect').hide();
+		$('#isIndexSelect').hide();
+		$('#isPeriodSelect').hide();
+		//modify by zhengxiaolian on 20220719 增加开放频率，是否是客户周期型产品，是否是指数型产品 end
 		//规则增加事件
 		$('#ReportPageManage002_btn_add').click(addrule);
 		//规则1改变事件
@@ -714,6 +848,8 @@ var ReportPageManage003 = function(global) {
     			screenId:RepScreenList[i].screenId,
     			repId:RepScreenList[i].repId,
     			screenType:RepScreenList[i].screenType,
+				screenTypeStr:RepScreenList[i].screenTypeStr,
+				multiFlag:RepScreenList[i].multiFlag,
     			screenKey:RepScreenList[i].screenKey,
     			screenName:RepScreenList[i].screenName,
     			screenValue:RepScreenList[i].screenValue,

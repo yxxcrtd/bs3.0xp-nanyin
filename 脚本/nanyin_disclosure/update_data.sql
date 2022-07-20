@@ -3,7 +3,7 @@
 delete from sys_datadict_list where DICT_CODE='DIS_DATA_TYPE';
 
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('DIS_DATA_TYPE', '01', '产品代码下拉框', 1, '0', 'system', null, sysdate, 'system', sysdate, null);
+values ('DIS_DATA_TYPE', '01', '产品名称下拉框', 1, '0', 'system', null, sysdate, 'system', sysdate, null);
 
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('DIS_DATA_TYPE', '02', '子产品代码下拉框', 2, '0', 'system', null, sysdate, 'system', sysdate, null);
@@ -24,13 +24,10 @@ insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAU
 values ('DIS_DATA_TYPE', '07', '年度选择框', 7, '0', 'system', null, sysdate, 'system', sysdate, null);
 
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('DIS_DATA_TYPE', '08', '产品名称下拉框', 8, '0', 'system', null, sysdate, 'system', sysdate, null);
+values ('DIS_DATA_TYPE', '08', '开始日期', 9, '0', 'system', null, sysdate, 'system', sysdate, null);
 
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('DIS_DATA_TYPE', '09', '开始日期', 9, '0', 'system', null, sysdate, 'system', sysdate, null);
-
-insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('DIS_DATA_TYPE', '10', '结束日期', 10, '0', 'system', null, sysdate, 'system', sysdate, null);
+values ('DIS_DATA_TYPE', '09', '结束日期', 10, '0', 'system', null, sysdate, 'system', sysdate, null);
 -- add by zhengxiaolian 2022-07-19 报表数据格式类型数据字典值更新 end 
 
 -- add by zhengxiaolian 2022-07-19 报表页面管理产品类型数据字典 start 

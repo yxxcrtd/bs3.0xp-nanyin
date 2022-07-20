@@ -52,7 +52,8 @@
 	    screen_Key    screenKey,
 	    screen_Name    screenName,
 	    screen_Value    screenValue,
-	    screen_Status    screenStatus
+	    screen_Status    screenStatus,
+		MULTI_FLAG    multiFlag
 	    from Rep_Screen R
 	    where R.rep_Id = #{repId,jdbcType=VARCHAR}
 	</select>
