@@ -9,48 +9,39 @@
 */
 package com.joyintech.tams.disclosure.information.reveal.detailshow.controller;
 
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.ajax.MessageType;
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.select.SelectDto;
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.select.TreeNode;
-import com.joyintech.framework.util.*;
-import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.common.base.entity.RepReveal;
-import com.joyintech.tams.common.util.JacksonUtil;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.service.GetPrdInfoSelectService;
-import com.joyintech.tams.disclosure.busicommon.infodisclosure.repcheck.service.RepCheckInfoService;
-import com.joyintech.tams.disclosure.busicommon.infodisclosure.reportDeal.service.ReportDealService;
-import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.ReportManager;
-import com.joyintech.tams.disclosure.common.common.util.ReportGlobalConstant;
-import com.joyintech.tams.disclosure.information.config.reporttree.service.ReportTreeMenuConfiguration001Service;
-import com.joyintech.tams.disclosure.information.reveal.detailshow.dto.RepDetailsShow001Dto;
-import com.joyintech.tams.disclosure.information.reveal.detailshow.service.RepDetailsShow001Service;
-import com.joyintech.tams.disclosure.information.reveal.detailshow.service.WebOfficeObject;
-import com.joyintech.tams.disclosure.information.reveal.detailshow.service.iMsgServer2015;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import java.io.IOException;
+import java.util.Date;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.service.GetPrdInfoSelectService;
+import com.joyintech.tams.disclosure.busicommon.infodisclosure.repcheck.service.RepCheckInfoService;
+import com.joyintech.tams.disclosure.busicommon.infodisclosure.reportDeal.service.ReportDealService;
+import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.ReportManager;
+import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.dao.ReportInfoMapper;
+import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.ReportInfo;
+import com.joyintech.tams.disclosure.information.config.reporttree.service.ReportTreeMenuConfiguration001Service;
+import com.joyintech.tams.disclosure.information.reveal.detailshow.service.RepDetailsShow001Service;
+import com.joyintech.tams.disclosure.information.reveal.detailshow.service.ReportFileUtil;
+import com.joyintech.tams.disclosure.information.reveal.detailshow.service.WebOfficeObject;
 
 /**
  * 模板示例<br>
@@ -65,6 +56,9 @@ import java.util.Map;
 @PageId("RepEdit001")
 @RequestMapping("/disclosure/information/reveal/detailshow/RepEdit001")
 public class RepEdit001Contoller extends BaseController {
+	
+	@Autowired
+	private ReportInfoMapper reportInfoMapper;
 	
     @Autowired
     private RepDetailsShow001Service repDetailsShow001Service;
@@ -86,6 +80,8 @@ public class RepEdit001Contoller extends BaseController {
     @Autowired
 	@Qualifier("masterDataSource") DataSource master;
 
+    private String editFilename = "";
+    private String saveFilename = "";
     /**
      * 日志
      */
@@ -99,33 +95,42 @@ public class RepEdit001Contoller extends BaseController {
      * @since 1.0
      */
     public String init(Model model) {
-        model.addAttribute(ReportGlobalConstant.REPORT_SERVER_URL, CacheUtil.getSysParam(ReportGlobalConstant.REPORT_SERVER_URL));
-        model.addAttribute(ReportGlobalConstant.REPORT_SERVER_PATH, CacheUtil.getSysParam(ReportGlobalConstant.REPORT_SERVER_PATH));
-        model.addAttribute(ReportGlobalConstant.REPORT_USERNAME, CacheUtil.getSysParam(ReportGlobalConstant.REPORT_USERNAME));
-        model.addAttribute(ReportGlobalConstant.REPORT_PASSWORD, CacheUtil.getSysParam(ReportGlobalConstant.REPORT_PASSWORD));
-
-        model.addAttribute("cureDate", DateUtil.getCurrentDate());
+    	
+//    	 portnum=LEO-001, endDate=2022-06-30, repName=分红计算清单}
+    	String templateName = RequestUtil.getPageParam().get("repName").toString();
+    	Date genDate = DateUtil.parse(RequestUtil.getPageParam().get("endDate").toString());
+    	String portnum = RequestUtil.getPageParam().get("portnum").toString();
+    	String reportId = RequestUtil.getPageParam().get("repId").toString();
+    	
+        model.addAttribute("endDate", DateUtil.parse(RequestUtil.getPageParam().get("endDate").toString()));
+        model.addAttribute("repName", RequestUtil.getPageParam().get("repName")); 
+        model.addAttribute("portnum", RequestUtil.getPageParam().get("portnum"));
+        model.addAttribute("repId", RequestUtil.getPageParam().get("repId"));
         
-        model.addAttribute("prodInfoList", JsonUtils.object2Json(repDetailsShow001Service.getProdInfo()));
-    	return super.init(model);
+        ReportInfo reportInfo = reportInfoMapper.getReportInfoByID(reportId);
+        
+        editFilename = ReportFileUtil.buildReportFileName(ReportFileUtil.REPORT_TYPE_临时文件,reportInfo, genDate, portnum,ReportFileUtil.FILE_TYPE_DOCX);
+    	saveFilename = ReportFileUtil.buildReportFileName(ReportFileUtil.REPORT_TYPE_报表文件,reportInfo, genDate, portnum,ReportFileUtil.FILE_TYPE_DOCX);
+        return super.init(model);
     }
 
     @RequestMapping(value="/doWebOffice", method = RequestMethod.POST)
     public void doWebOffice(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException	{
-        System.out.println("OfficeServer.service Start");
-        System.out.println("OfficeServer.service --- request.getSession().getId() = " + request.getSession().getId());
-
+        //System.out.println("OfficeServer.service Start");
+        //System.out.println("OfficeServer.service --- request.getSession().getId() = " + request.getSession().getId());
+        
+        
         //TODO:文件操作的根路径,通过系统参数配置实现
-        String mFilePath = "E:/poitest";
+        String mFilePath = editFilename;
 
         try{
-            Map<String,Object> params = JsonUtils.stringToMap(RequestUtil.getPageParam().get("FormData").toString());
+            Map<String,Object> params = JsonUtils.stringToMap( RequestUtil.getPageParam().get("FormData").toString() );
             if(request.getMethod().equalsIgnoreCase("POST"))	{//判断请求方式
                 String mOption = params.get("OPTION").toString();
-                String mFileName = params.get("FILENAME").toString();
+                String mFileName = editFilename; //params.get("FILENAME").toString();
                 WebOfficeObject webOfficeObject = new WebOfficeObject();
                 if(mOption.equalsIgnoreCase("LOADFILE")){
-                    webOfficeObject.parse(request);
+                    webOfficeObject.parse(request,mFileName);
 //						System.out.println("ExtParam:"+ExtParam);
 //						if (MsgObj.MsgFileLoad(mFilePath+"\\Document\\" + mFileName)){
 //							MsgObj.MsgTextClear();
@@ -136,10 +141,9 @@ public class RepEdit001Contoller extends BaseController {
 
                 }
                 else if(mOption.equalsIgnoreCase("SAVEFILE")){
-                    String outputFilename = mFilePath+"\\Document\\" + mFileName;
-                    System.out.println("mFilePath+mFileName = " + mFilePath+"\\Document\\" + mFileName);
+                    String outputFilename = saveFilename;
                     int ret = repDetailsShow001Service.saveFile (request,outputFilename );
-                    System.out.println(mFileName+"文档已经保存成功");
+                    logger.info(mFileName+"文档已经保存成功");
 
                 }else if(mOption.equalsIgnoreCase("SAVEPDF")){
 //					System.out.println(mRecordID+"文档转PDF");
@@ -300,7 +304,7 @@ public class RepEdit001Contoller extends BaseController {
 //						System.out.println("插入图片失败!");                                    //设置错误信息
 //					}
                 }
-                System.out.println("SendPackage");
+                //System.out.println("SendPackage");
 
                 int codec = 0;
                 String htmlHttp="";
@@ -310,8 +314,9 @@ public class RepEdit001Contoller extends BaseController {
                 webOfficeObject.send(response, codec);
             }
         }catch (Exception e) {
+        	logger.error("保存文件错误",e);
             e.printStackTrace();
         }
-        System.out.println("OfficeServer.service End");
+        //System.out.println("OfficeServer.service End");
     }
 }

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.information.config.prodpartner.dao.ProdPartner001Mapper">
+	<insert id="insertBtachEquityInfo">
+		insert into
+		DIS_PROD_PARTNER(PROD_PARTENER_ID,PROD_ID,PARTNER_NAME,EFF_DATE,EFF_END_DATE,DATA_STATUS,DATA_SOURCE,CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME,CREATE_DEPT)
+		select A.* from (
+		<foreach collection="listN" item="item" index="index"
+				 separator="union all">
+			select
+			#{item.prodPartenerId,jdbcType=VARCHAR} PROD_PARTENER_ID,
+			#{item.prodId,jdbcType=VARCHAR} PROD_ID,
+			#{item.partnerName,jdbcType=VARCHAR} PARTNER_NAME,
+			#{item.effDate,jdbcType=DATE} EFF_DATE,
+			#{item.effEndDate,jdbcType=DATE} EFF_END_DATE,
+			#{item.dataStatus,jdbcType=VARCHAR} DATA_STATUS,
+			#{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
+			#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+			#{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+			#{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+			#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT
+			from dual
+		</foreach>
+		)A
+	</insert>
+
+	<delete id="deleteBtachEquityInfo">
+		delete from DIS_PROD_PARTNER
+		where PROD_ID in
+		<foreach collection="listA" item="item" index="index" separator="," open="("
+				 close=")">
+			#{item.prodId,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+
+	<select id="queryProdIdInfo"
+			resultType="com.joyintech.framework.select.SelectOptionDto">
+		select PROD_ID id,
+		nvl(PROD_NAME,PROD_ABBR) text
+		from REP_PROD_INFO
+		where  P_PROD_ID is not null
+		<if test="dataStatus != null and dataStatus != ''">
+			and STATUS=#{dataStatus,jdbcType=VARCHAR}
+		</if>
+		<if test="search != null and search != ''">
+			and (FIN_PRODUCT.FINPROD_MARKET_ID like
+			concat(concat('%',#{search}),'%')
+			or FIN_PRODUCT.FINPROD_NAME like concat(concat('%',#{search}),'%'))
+		</if>
+	</select>
+	<select id="select"
+			resultType="com.joyintech.tams.disclosure.information.config.prodpartner.dto.ProdPartnerDto">
+		select
+			dpp.PROD_PARTENER_ID prodPartenerId,
+			dpp.PROD_ID prodId,
+			info.PROD_NAME prodName,
+			dpp.PARTNER_NAME partnerName,
+			dpp.EFF_DATE effDate,
+			dpp.EFF_END_DATE effEndDate,
+			dpp.DATA_STATUS dataStatus,
+			dpp.UPDATE_USER updateUser,
+			dpp.UPDATE_TIME updateTime,
+			TO_CHAR(dpp.UPDATE_TIME,'YYYY-MM-DD HH24:MI:SS') updateTimeStr
+		from DIS_PROD_PARTNER dpp
+		left join REP_PROD_INFO info on dpp.PROD_ID=info.PROD_ID
+		<where>
+			info.STATUS='E'
+			<if test="prodId != null and prodId.size()>0">
+				AND	dpp.PROD_ID in
+				<foreach collection="prodId" item="item" open="(" close=")"
+						 separator=",">
+					#{item}
+				</foreach>
+			</if>
+			<if test="dataStatus != null and dataStatus != ''">
+				AND	dpp.DATA_STATUS=#{dataStatus,jdbcType=VARCHAR}
+			</if>
+			<if test="effDate != null and effDate != ''">
+				AND dpp.EFF_DATE = to_date(#{effDate,jdbcType=DATE},'yyyy-MM-dd')
+			</if>
+			<if test="effEndDate != null and effEndDate != ''">
+				AND dpp.EFF_END_DATE = to_date(#{effEndDate,jdbcType=DATE},'yyyy-MM-dd')
+			</if>
+		</where>
+	</select>
+	<select id="selectForExport"
+			resultType="com.joyintech.tams.disclosure.information.config.prodpartner.dto.ProdPartnerDto">
+		select
+			dpp.PROD_ID prodId,
+			info.PROD_NAME prodName,
+			dpp.PARTNER_NAME partnerName,
+			dpp.EFF_DATE effDate,
+			dpp.EFF_END_DATE effEndDate,
+			dpp.DATA_STATUS dataStatus,
+			dpp.UPDATE_USER updateUser,
+			TO_CHAR(dpp.UPDATE_TIME,'YYYY-MM-DD HH24:MI:SS') updateTimeStr
+		from DIS_PROD_PARTNER dpp
+		left join REP_PROD_INFO info on dpp.PROD_ID=info.PROD_ID
+		<where>
+			<foreach collection="list" item="dto" open="dpp.PROD_PARTENER_ID in (" close=")" separator=",">
+				#{dto.prodPartenerId}
+			</foreach>
+		</where>
+	</select>
+    <select id="selectByProdId" resultType="java.lang.Integer">
+		select count(1) count from REP_PROD_INFO
+		where PROD_ID=#{prodId,jdbcType=VARCHAR}
+	</select>
+
+
+</mapper>
