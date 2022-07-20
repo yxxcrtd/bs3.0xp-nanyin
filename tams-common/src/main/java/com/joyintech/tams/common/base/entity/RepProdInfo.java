@@ -126,6 +126,34 @@ public class RepProdInfo extends BaseEntity {
     private String prodSeries;
 
     /**
+     * 产品起息日
+     * 这个字段用不上，新的表没有这个字段
+     */
+    private Date vdate;
+
+    /**
+     * 披露渠道
+     * 这个字段用不上，新的表没有这个字段
+     */
+    private String revealChannel;
+
+    public String getRevealChannel() {
+        return revealChannel;
+    }
+
+    public void setRevealChannel(String revealChannel) {
+        this.revealChannel = revealChannel;
+    }
+
+    public Date getVdate() {
+        return vdate;
+    }
+
+    public void setVdate(Date vdate) {
+        this.vdate = vdate;
+    }
+
+    /**
      * 取得 产品代码：子产品代码、母产品代码、普通产品代码
      * @return 产品代码：子产品代码、母产品代码、普通产品代码
      */
