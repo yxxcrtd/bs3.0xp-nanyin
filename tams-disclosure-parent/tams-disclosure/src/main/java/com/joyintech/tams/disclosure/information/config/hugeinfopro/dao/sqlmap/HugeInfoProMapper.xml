@@ -5,16 +5,16 @@
     <select id="select"  resultType="com.joyintech.tams.disclosure.information.config.hugeinfopro.dto.HugeInfoPro001Dto">
        select
         REDEMPTION_ID redemptionId,
-          DATA_STATUS,
-          PROD_REGIST_NO,
-          PROD_ID,
-          IS_SALES_AGENCY,
-          TRIGGER_REMARK,
-          REJECT_REMARK,
-          RPT_ISSUE_DATE,
-          DEAL_DATE,
-          UPDATE_TIME,
-          UPDATE_USER
+          DATA_STATUS dataStatus,
+          PROD_REGIST_NO prodRegistNo,
+          PROD_ID prodId,
+          IS_SALES_AGENCY isSalesAgency,
+          TRIGGER_REMARK triggerRemark,
+          REJECT_REMARK rejectRemark,
+          RPT_ISSUE_DATE rptIssueDate,
+          DEAL_DATE dealDate,
+          UPDATE_TIME updateTime,
+          UPDATE_USER updateUser
        from
           DIS_LARGE_REDEMPTION
     <where>
