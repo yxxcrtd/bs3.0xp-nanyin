@@ -12,18 +12,12 @@ package com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseEntity;
-import com.joyintech.framework.export.paginator.domain.ITableRow;
-import com.joyintech.framework.json.CustomDateDeserialize;
-import java.util.Date;
 
-import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.export.paginator.domain.ITableRow;
+
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.tams.common.base.entity.DisProdPlanInfo;
-import com.joyintech.tams.common.base.entity.ProdBonusplan;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 import org.apache.commons.lang3.StringUtils;

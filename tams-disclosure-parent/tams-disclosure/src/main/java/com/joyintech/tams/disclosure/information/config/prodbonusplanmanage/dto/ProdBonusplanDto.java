@@ -1,29 +1,17 @@
 package com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
-import com.joyintech.framework.json.BigDecimalSerializer;
-import com.joyintech.framework.json.CustomDateDeserialize;
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.common.base.entity.ProdBonusplan;
-import com.joyintech.tams.common.base.entity.RepFeeTrd;
+import com.joyintech.tams.common.base.entity.DisProdBonusplan;
 import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.validator.ProdBonusplanValidator;
-import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.validator.SvrProdFeeDealInterfValidator;
-import com.joyintech.tams.disclosure.information.config.proelementadj.dto.ProElementAdj001Dto;
-import com.joyintech.tams.disclosure.information.config.proelementadj.validator.ProElementAdjValidator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 import org.apache.commons.lang3.StringUtils;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +19,7 @@ import java.util.Map;
 @PageId("ProdBonusplanManager001")
 @ValidLogic(targetClass = ProdBonusplanValidator.class, groups = {ValidateGroupEdit.class,
         ValidateGroupDelete.class})
-public class ProdBonusplanDto extends ProdBonusplan implements ITableRow, ProcessEntity {
+public class ProdBonusplanDto extends DisProdBonusplan implements ITableRow, ProcessEntity {
 
     private Map<String, Object> param;
 

@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,12 +25,10 @@ import javax.servlet.http.HttpServletRequest;
 import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.RepProdInfoMapper;
-import com.joyintech.tams.common.base.entity.DisProdPlan;
 import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dao.DisProdPlanManage002Mapper;
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto;
-import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.commons.collections4.CollectionUtils;
@@ -49,10 +46,8 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.progressbar.ProgressBarService;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.common.base.entity.RepInfo;
 import com.joyintech.tams.disclosure.common.common.util.ReportGlobalConstant;
 import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 /**
@@ -98,7 +93,7 @@ public class DisProdPlanManage002Service extends CommonExportService<DisProdPlan
 
 
     public RepProdInfo getPrdInfo(String prodId) {
-        RepProdInfo prodInfo = repProdInfoMapper.selectByPrimaryKey2(prodId);
+        RepProdInfo prodInfo = repProdInfoMapper.selectByPrimaryKey(prodId);
         return prodInfo;
     }
 

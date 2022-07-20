@@ -14,6 +14,7 @@ import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.service.disclosure.information.config.disprodplanmanage.dao.DisProdPlanManage002Mapper;
 import com.joyintech.service.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto;
 import org.apache.commons.collections4.CollectionUtils;
@@ -183,7 +184,7 @@ public class DisProdPlanManage002Service extends CommonExportService<RepInfo> {
 	 * @param dto
 	 */
 	public void insert(DisProdPlanManage002Dto dto) {
-		dto.setProdPlanId(UUID.randomUUID().toString());
+		dto.setProdPlanId(IDGenerator.generate(36));
 		disProdPlanManage002Mapper.insert(dto);
 		
 	}
