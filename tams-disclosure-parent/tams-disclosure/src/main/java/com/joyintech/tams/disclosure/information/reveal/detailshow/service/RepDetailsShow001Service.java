@@ -74,7 +74,7 @@ import com.joyintech.tams.disclosure.information.reveal.detailshow.dao.RepDetail
 import com.joyintech.tams.disclosure.information.reveal.detailshow.dto.ProdInfoDto;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.dto.RepDetailsShow001Dto;
 import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
-import com.joyintech.tams.disclosure.rptdata.service.RptDataService;
+import com.joyintech.tams.disclosure.rptdata.service.ReportDataService;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.utils.poi.PoiUtils;
 
@@ -123,7 +123,7 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
     private ReportManager reportManager;
 
     @Autowired
-    private RptDataService rptDataService;
+    private ReportDataService rptDataService;
 
     /**
      * 日志

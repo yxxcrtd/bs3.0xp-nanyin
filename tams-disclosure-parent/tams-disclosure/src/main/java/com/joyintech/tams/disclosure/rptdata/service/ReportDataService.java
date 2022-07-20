@@ -14,8 +14,15 @@ import com.joyintech.tams.disclosure.common.DisReportType;
 import com.joyintech.tams.utils.echarts.EchartsException;
 import com.joyintech.tams.utils.echarts.EchartsUtils;
 
+/**
+ * 报表数据获取服务总分发入口服务
+ * @author chenxc
+ * @version 1.0 2022年07月20日
+ * @see 
+ * @since 1.0
+ */
 @Service
-public class RptDataService {
+public class ReportDataService {
 
 	@Autowired
 	private BonusReportDataService bonusReportDataService;
