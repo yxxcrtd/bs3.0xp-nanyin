@@ -11,7 +11,7 @@ import java.util.Map;
  * @author Administrator
  *
  */
-public class SettReportDto {
+public class SettReportDto extends ReportDto {
 	
 	private String prodName;  // 产品名称
 	private String prodRe;  // 登记编码

@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.service.disclosure.information.config.reportmodelmanage.dto.ReportParamDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,12 +88,12 @@ public class ReportModelManage002Controller extends BaseController {
 	 * @return
 	 */
 	 @GetMapping("/findParamPage")
-	public List<ReportModelManage002Dto> findParamPage(String repId) {
+	public List<ReportParamDto> findParamPage(String repId) throws IOException {
 		if (StringUtil.isNotEmpty(repId)) {
 			return reportModelManage002Service.findParamPage(repId);
 		}
 		
-		return new ArrayList<ReportModelManage002Dto>();
+		return new ArrayList<ReportParamDto>();
 	}
 	/**
 	    * 

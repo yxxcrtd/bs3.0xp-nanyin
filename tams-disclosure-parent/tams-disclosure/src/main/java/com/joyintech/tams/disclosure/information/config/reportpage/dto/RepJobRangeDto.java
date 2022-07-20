@@ -15,6 +15,8 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.RepJobRange;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeExt1;
+import com.joyintech.tams.constant.DictCodeListExt5;
 import com.joyintech.tams.disclosure.common.common.constant.DisclosureDictCode;
 
 /**
@@ -86,8 +88,8 @@ public class RepJobRangeDto extends RepJobRange {
             value = backCode(DictCode.募集方式, this.getRuleType4());
 
         }
-        else if (DictCode.发行方式.getValue().equals(key)) {
-            value = backCode(DictCode.发行方式, this.getRuleType4());
+        else if (DictCodeExt1.发行方式_信批.getValue().equals(key)) {
+            value = backCode(DictCodeExt1.发行方式_信批, this.getRuleType4());
 
         }
         else if (DictCode.开放模式.getValue().equals(key)) {
@@ -110,6 +112,15 @@ public class RepJobRangeDto extends RepJobRange {
         }
         else if (DisclosureDictCode.产品期限类型.getValue().equals(key)) {
             value = backCode(DisclosureDictCode.产品期限类型, this.getRuleType4());
+        }
+        else if (DictCodeExt1.开放频率.getValue().equals(key)) {
+            value = backCode(DictCodeExt1.开放频率, this.getRuleType4());
+        }
+        else if (DictCodeExt1.是否是指数型产品.getValue().equals(key)) {
+            value = backCode(DisclosureDictCode.是否, this.getRuleType4());
+        }
+        else if (DictCodeExt1.是否是客户周期型产品.getValue().equals(key)) {
+            value = backCode(DisclosureDictCode.是否, this.getRuleType4());
         }
         return value;
     }

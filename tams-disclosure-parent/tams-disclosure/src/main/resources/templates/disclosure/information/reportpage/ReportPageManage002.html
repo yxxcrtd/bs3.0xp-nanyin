@@ -153,7 +153,7 @@
 								<input id="issueMode" name="issueMode"
 									class="layui-input form-input input-select"
 									placeholder="请选择发行方式" data-th-formatoption="false"
-									data-th-data-result="${ISSUE_TYPE}" allowClear="true">
+									data-th-data-result="${ISSUING_WAY}" allowClear="true">
 								</input>
 							</div>
 							<div id="issueStautsSelect">
@@ -194,6 +194,26 @@
 									placeholder="请选择理财类型" data-th-formatoption="false"
 									data-th-data-result="${FINA_TYPE}" allowClear="true"> </input>
 							</div>
+							<!-- modify by zhengxiaolian on 20220719 增加开放频率，是否是客户周期型产品，是否是指数型产品 start-->
+							<div id="openFreqSelect">
+								<input id="openFreq" name="openFreq"
+									   class="layui-input form-input input-select"
+									   placeholder="请选择开放频率" data-th-formatoption="false"
+									   data-th-data-result="${OPEN_FREQ}" allowClear="true"> </input>
+							</div>
+							<div id="isIndexSelect">
+								<input id="isIndex" name="isIndex"
+									   class="layui-input form-input input-select" placeholder="请选择是否"
+									   data-th-formatoption="false" data-th-data-result="${YES_OR_NO}"
+									   allowClear="true"> </input>
+							</div>
+							<div id="isPeriodSelect">
+								<input id="isPeriod" name="isPeriod"
+									   class="layui-input form-input input-select" placeholder="请选择是否"
+									   data-th-formatoption="false" data-th-data-result="${YES_OR_NO}"
+									   allowClear="true"> </input>
+							</div>
+							<!-- modify by zhengxiaolian on 20220719 增加开放频率，是否是客户周期型产品，是否是指数型产品 end-->
 						</div>
 						<div class="layui-inline" style="margin-left: 10px;">
 							<button type="button" class="layui-btn layui-btn-sm btn-default"

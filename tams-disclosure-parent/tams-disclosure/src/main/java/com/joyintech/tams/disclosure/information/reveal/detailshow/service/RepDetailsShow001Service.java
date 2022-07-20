@@ -74,7 +74,7 @@ import com.joyintech.tams.disclosure.information.reveal.detailshow.dao.RepDetail
 import com.joyintech.tams.disclosure.information.reveal.detailshow.dto.ProdInfoDto;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.dto.RepDetailsShow001Dto;
 import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
-import com.joyintech.tams.disclosure.rptdata.service.RptDataService;
+import com.joyintech.tams.disclosure.rptdata.service.ReportDataService;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.utils.poi.PoiUtils;
 
@@ -123,7 +123,7 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
     private ReportManager reportManager;
 
     @Autowired
-    private RptDataService rptDataService;
+    private ReportDataService rptDataService;
 
     /**
      * 日志
@@ -801,7 +801,10 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
                         ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_是否独立开户.getValue())
                         ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_产品类型.getValue())
                         ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_理财类型.getValue())
-                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_产品期限类型.getValue())){
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_产品期限类型.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_开放频率.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_是否是指数型产品.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_是否是客户周期型产品.getValue())){
                     sb.append(" and ").append(dto.getRuleType1()).append(dto.getRuleType2()).append("'")
                             .append(dto.getRuleType4()).append("'");
                 }else if(StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_起息日.getValue())
