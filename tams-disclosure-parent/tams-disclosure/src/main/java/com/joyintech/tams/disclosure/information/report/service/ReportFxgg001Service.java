@@ -3,18 +3,15 @@ package com.joyintech.tams.disclosure.information.report.service;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.disclosure.common.common.service.HolidayService;
 import com.joyintech.tams.disclosure.information.report.dao.ReportFxgg001Mapper;
 import com.joyintech.tams.disclosure.information.report.dto.ReportFxgg001Dto;
+import com.joyintech.tams.disclosure.rptdata.service.IReportDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 发行公告
@@ -26,8 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @since 1.0
  */
 @Service
-@Transactional(rollbackFor = Exception.class)
-public class ReportFxgg001Service extends BaseService<ReportFxgg001Dto> {
+public class ReportFxgg001Service implements IReportDataService {
 
     @Autowired
     private ReportFxgg001Mapper reportFxgg001Mapper;
@@ -35,27 +31,20 @@ public class ReportFxgg001Service extends BaseService<ReportFxgg001Dto> {
     @Autowired
     private HolidayService holidayService;
 
-   /**
-    * 根据产品代码查询公告信息
-    * <一句话功能简述>
-    * <功能详细描述>
-    * @param params
-    * @return
-    * @throws Exception
-    * @see
-    * @since 1.0
-    */
-    public Map<String, Object> findFxgg(Map<String, Object> params) {
+    @Override
+    public List<Map<String, Object>> queryDatas(Map<String, Object> paraMap) {
         Map<String,Object> dataMap = new HashMap<String,Object>();
-        if (params.get("portnum") == null) {
-            return dataMap;
+        List<Map<String,Object>> result = new ArrayList<>();
+        result.add(dataMap);
+        if (paraMap.get("pprodid") == null) {
+            return result;
         }
-        String prodId = params.get("portnum").toString();
+        String prodId = paraMap.get("pprodid").toString();
         Map<String,Object> searchparam = new HashMap<String,Object>();
         searchparam.put("prodId", prodId);
         ReportFxgg001Dto fxgg = reportFxgg001Mapper.queryFxgg(searchparam);
         if (fxgg == null) {
-            return dataMap;
+            return result;
         }
         dataMap.put("${prodName}", fxgg.getProdName());
         dataMap.put("${regCode}", fxgg.getRegCode());
@@ -82,6 +71,6 @@ public class ReportFxgg001Service extends BaseService<ReportFxgg001Dto> {
         } else {
             dataMap.put("${raiseAmt}", BigDecimal.ZERO);
         }
-        return dataMap;
+        return result;
     }
 }

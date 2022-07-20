@@ -1,21 +1,16 @@
 
 package com.joyintech.tams.disclosure.information.report.service;
-
-import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.disclosure.information.report.dao.ReportBclgg001Mapper;
 import com.joyintech.tams.disclosure.information.report.dto.ReportBclgg001Dto;
-import com.joyintech.tams.disclosure.information.report.dto.ReportFxgg001Dto;
+import com.joyintech.tams.disclosure.rptdata.service.IReportDataService;
 import com.joyintech.tams.systemtools.service.CommonPlatformDateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 不成立公告
@@ -27,8 +22,7 @@ import java.util.Map;
  * @since 1.0
  */
 @Service
-@Transactional(rollbackFor = Exception.class)
-public class ReportBclgg001Service extends BaseService<ReportFxgg001Dto> {
+public class ReportBclgg001Service implements IReportDataService {
 
     @Autowired
     private ReportBclgg001Mapper reportBclgg001Mapper;
@@ -36,27 +30,20 @@ public class ReportBclgg001Service extends BaseService<ReportFxgg001Dto> {
     @Autowired
     private CommonPlatformDateService commonPlatformDateService;
 
-   /**
-    * 根据产品代码查询不成立公告信息
-    * <一句话功能简述>
-    * <功能详细描述>
-    * @param params
-    * @return
-    * @throws Exception
-    * @see
-    * @since 1.0
-    */
-    public Map<String, Object> findBclgg(Map<String, Object> params) {
+    @Override
+    public List<Map<String, Object>> queryDatas(Map<String, Object> paraMap) {
         Map<String,Object> dataMap = new HashMap<String,Object>();
-        if (params.get("portnum") == null) {
-            return dataMap;
+        List<Map<String,Object>> result = new ArrayList<>();
+        result.add(dataMap);
+        if (paraMap.get("pprodid") == null) {
+            return result;
         }
-        String prodId = params.get("portnum").toString();
+        String prodId = paraMap.get("pprodid").toString();
         Map<String,Object> searchparam = new HashMap<String,Object>();
         searchparam.put("prodId", prodId);
         ReportBclgg001Dto bclgg = reportBclgg001Mapper.queryBclgg(searchparam);
         if (bclgg == null) {
-            return dataMap;
+            return result;
         }
         dataMap.put("${prodName}", bclgg.getProdName());
         dataMap.put("${regCode}", bclgg.getRegCode());
@@ -73,10 +60,10 @@ public class ReportBclgg001Service extends BaseService<ReportFxgg001Dto> {
             dataMap.put("${saleString2}", "代销机构及");
         }
         Date puDate = commonPlatformDateService.getSysDate();
-        if (null != params.get("endDate")) {
-            puDate = (java.sql.Date)params.get("endDate");
+        if (null != paraMap.get("startdate")) {
+            puDate = (java.sql.Date)paraMap.get("startdate");
         }
         dataMap.put("${pubDate}",DateUtil.format(puDate, DateUtil.DEFAULT_DATE_FORMAT_CN));
-        return dataMap;
+        return result;
     }
 }
