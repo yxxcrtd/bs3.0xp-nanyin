@@ -291,3 +291,14 @@ insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAU
 values ('ISSUING_WAY', '02', '封闭式', 2, '0', 'system', null, sysdate, 'system', sysdate, null);
 -- add by zhengxiaolian 2022-07-20 	增加数据字典 发行方式 end 
 
+-- add by zhengxiaolian 2022-07-20 报表页面管理 规则设置联动 start 
+delete from sys_datadict_list_link where DICT_CODE='RULE_TYPE2' and LINKED_ITEM_CODE in('ISSUE_MODE','ISSUING_WAY');
+
+delete from sys_datadict_list_link where DICT_CODE='RULE_TYPE3' and LINKED_ITEM_CODE in('ISSUE_MODE','ISSUING_WAY');
+
+INSERT INTO sys_datadict_list_link(DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) 
+VALUES ('RULE_TYPE3', '02', 'RULE_TYPE1', 'ISSUING_WAY', 'system', NULL, sysdate, 'system', sysdate);
+
+INSERT INTO sys_datadict_list_link(DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)  
+VALUES ('RULE_TYPE2', '=', 'RULE_TYPE1', 'ISSUING_WAY', 'system', NULL, sysdate, 'system', sysdate); 
+-- add by zhengxiaolian 2022-07-20 报表页面管理 规则设置联动 end
