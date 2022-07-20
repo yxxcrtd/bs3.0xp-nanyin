@@ -32,6 +32,7 @@ public enum DictCodeListExt4 implements BaseDictCodeList {
 
 
 
+    共通业务类型_投资账户信息维护(DictCode.共通业务类型, "SVR12", "投资账户信息维护"),
     ;
     /**
      * 对应于数据字典code

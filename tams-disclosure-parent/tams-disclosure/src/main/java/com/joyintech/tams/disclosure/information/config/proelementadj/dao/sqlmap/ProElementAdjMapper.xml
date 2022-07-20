@@ -5,21 +5,21 @@
     <select id="select"  resultType="com.joyintech.tams.disclosure.information.config.proelementadj.dto.ProElementAdj001Dto">
        select
           PROD_ADJUST_ID,
-          DATA_STATUS,
-          PROD_REGIST_NO,
-          PROD_ID,
-          IS_SALES_AGENCY,
-          PROD_ADJ_REMARK,
-          PROD_ADJ_REMARK2,
-          ADJ_FIELD,
-          PRE_ADJUST,
-          AFTER_ADJUST,
-          EFF_DATE,
-          FIELD_ADJ_REMARK,
-          FIELD_ADJ_REMARK2,
-          RPT_ISSUE_DATE,
-          UPDATE_TIME,
-          UPDATE_USER
+          DATA_STATUS dataStatus,
+          PROD_REGIST_NO prodRegistNo,
+          PROD_ID prodId,
+          IS_SALES_AGENCY isSalesAgency,
+          PROD_ADJ_REMARK prodAdjRemark,
+          PROD_ADJ_REMARK2 prodAdjRemark2,
+          ADJ_FIELD adjField,
+          PRE_ADJUST preAdjust,
+          AFTER_ADJUST afterAdjust,
+          EFF_DATE effDate,
+          FIELD_ADJ_REMARK fieldAdjRemark,
+          FIELD_ADJ_REMARK2 fieldAdjRemark2,
+          RPT_ISSUE_DATE rptIssueDate,
+          UPDATE_TIME updateTime,
+          UPDATE_USER updateUser
        from
           DIS_PROD_ADJUST
     <where>
