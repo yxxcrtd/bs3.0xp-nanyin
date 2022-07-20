@@ -17,8 +17,16 @@ import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
 import com.joyintech.tams.disclosure.rptdata.dao.BonusReportMapper;
 import com.joyintech.tams.disclosure.rptdata.dto.BonusPlanDto;
 import com.joyintech.tams.disclosure.rptdata.dto.BonusReportDto;
+import com.joyintech.tams.disclosure.rptdata.dto.ReportDto;
 
-@Service(value="bonusReportService")
+/**
+ * 分红计算清单报表数据获取服务
+ * @author chenxc
+ * @version 1.0 2022年07月20日
+ * @see 
+ * @since 1.0
+ */
+@Service
 public class BonusReportDataService implements IReportDataService{
 	
 	@Autowired
