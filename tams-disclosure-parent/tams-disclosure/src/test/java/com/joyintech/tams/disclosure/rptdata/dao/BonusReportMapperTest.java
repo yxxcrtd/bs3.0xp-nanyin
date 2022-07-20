@@ -53,7 +53,7 @@ public class BonusReportMapperTest {
 		Date td = DateUtil.parse("2022-02-10");
 		map.put("genDate",td);
 
-		List<BonusReportDto> list = mapper.selectBonusreport(map);
+		List<BonusReportDto> list = mapper.selectBonusReport(map);
 		for ( BonusReportDto dto:list ) {
 			System.out.println(dto.getProdId()+","+dto.getAchievementBasisProp());
 		}

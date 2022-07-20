@@ -22,8 +22,8 @@ public class MatureReportDto extends ReportDto {
 	private BigDecimal mgrFee;  //固定管理费
 	private BigDecimal  floatFee;  //超额管理费
 	private BigDecimal saleFee;  //销售费
-	private BigDecimal taxFee;  //申购费
-	private BigDecimal redemAmt;  //赎回费
+	private BigDecimal purFee;  //申购费
+	private BigDecimal redemFee;  //赎回费
 	public Integer getRunDays() {
 		return runDays;
 	}
@@ -72,17 +72,17 @@ public class MatureReportDto extends ReportDto {
 	public void setSaleFee(BigDecimal saleFee) {
 		this.saleFee = saleFee;
 	}
-	public BigDecimal getTaxFee() {
-		return taxFee;
+	public BigDecimal getPurFee() {
+		return purFee;
 	}
-	public void setTaxFee(BigDecimal taxFee) {
-		this.taxFee = taxFee;
+	public void setPurFee(BigDecimal purFee) {
+		this.purFee = purFee;
 	}
-	public BigDecimal getRedemAmt() {
-		return redemAmt;
+	public BigDecimal getRedemFee() {
+		return redemFee;
 	}
-	public void setRedemAmt(BigDecimal redemAmt) {
-		this.redemAmt = redemAmt;
+	public void setRedemFee(BigDecimal redemFee) {
+		this.redemFee = redemFee;
 	}
 
 }

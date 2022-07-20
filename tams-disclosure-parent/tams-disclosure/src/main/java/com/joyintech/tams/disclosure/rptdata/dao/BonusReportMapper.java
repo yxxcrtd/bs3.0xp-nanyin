@@ -29,7 +29,7 @@ import com.joyintech.tams.disclosure.rptdata.dto.BonusReportDto;
 @Repository
 public interface BonusReportMapper {
 	
-	List<BonusReportDto> selectBonusreport(Map<String,Object>paras) ;
+	List<BonusReportDto> selectBonusReport(Map<String,Object>paras) ;
 	
 	BonusPlanDto selectLastBonusPlan(Map<String,Object>paras) ;
 }

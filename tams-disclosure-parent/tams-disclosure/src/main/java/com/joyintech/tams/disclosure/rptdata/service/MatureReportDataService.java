@@ -1,26 +1,25 @@
 package com.joyintech.tams.disclosure.rptdata.service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.joyintech.tams.common.base.dao.RepProdInfoMapper;
-import com.joyintech.tams.common.base.entity.BokBalance;
-import com.joyintech.tams.common.base.entity.RepProdInfo;
+import com.joyintech.tams.common.base.entity.RepFeeTrd;
 import com.joyintech.tams.disclosure.common.CollectionUtils;
 import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
 import com.joyintech.tams.disclosure.rptdata.dao.BonusReportMapper;
-import com.joyintech.tams.disclosure.rptdata.dao.SettReportMapper;
-import com.joyintech.tams.disclosure.rptdata.dto.SettReportDto;
+import com.joyintech.tams.disclosure.rptdata.dao.MatureReportMapper;
+import com.joyintech.tams.disclosure.rptdata.dto.BonusPlanDto;
+import com.joyintech.tams.disclosure.rptdata.dto.BonusReportDto;
+import com.joyintech.tams.disclosure.rptdata.dto.MatureReportDto;
 
 /**
  * 到期公告-数据获取服务
@@ -33,14 +32,11 @@ import com.joyintech.tams.disclosure.rptdata.dto.SettReportDto;
 public class MatureReportDataService implements IReportDataService {
 
 	@Autowired
-	private RepProdInfoMapper repProdInfoMapper;
-
+	private MatureReportMapper matureReportMapper;
+	
 	@Autowired
 	private BonusReportMapper bonusReportMapper;
 	
-	@Autowired
-	private SettReportMapper settReportMapper;
-
 	/**
 	 * 日志
 	 */
@@ -51,59 +47,99 @@ public class MatureReportDataService implements IReportDataService {
 
 		List<Map<String, Object>> listResult = new ArrayList<>();
 
-		SettReportDto settReportDto = new SettReportDto();
+		MatureReportDto settReportDto = new MatureReportDto();
 		try {
 			String prodId = (paraMap.get("portnum") == null ? null : paraMap.get("portnum").toString());
 			Date genDate = (paraMap.get("endDate") == null ? new Date()
 					: DateUtil.parse(paraMap.get("endDate").toString()));
-
-			// 查找产品
-			RepProdInfo prodInfo = null;
-			Map<String, BigDecimal> mapBalance = new HashMap<String, BigDecimal>();
-
-			if (prodId != null) {
-				prodInfo = repProdInfoMapper.selectByPrimaryKey(prodId);
-				BokBalance balance = new BokBalance();
-				balance.setBooksetId(prodId);
-				balance.setBalanceDate(genDate);
-				List<BokBalance> listBalance = settReportMapper.select(balance);
-
-				// 将list转诚map,空值统一转化为0
-				mapBalance = listBalance.stream().map(x -> {
-					if (x.getbAmt() == null)
-						x.setbAmt(BigDecimal.ZERO);
-					return x;
-				}).collect(Collectors.toMap(BokBalance::getSubjectNo, BokBalance::getbAmt, (key1, key2) -> key2));
-
-				settReportDto.setProdName(prodInfo.getProdName());
-				settReportDto.setProdRe(prodInfo.getProdRe());
-				settReportDto.seteDate(prodInfo.getSetDate());
-				settReportDto.setTrustName(prodInfo.getAcctChnname());
-				settReportDto.setmDate(prodInfo.getMdate());
-
-				settReportDto.setDeposit(mapBalance.get("100201")); // 银行存款
-				settReportDto.setGuarantyAmt(mapBalance.get("103106")); // 保证金
-				settReportDto.setIntAmt(mapBalance.get("10020601")); // 应计利息
-				settReportDto.setSumAssetAmt(
-						mapBalance.get("100201").add(mapBalance.get("103106")).add(mapBalance.get("10020601")));// 资产合计
-
-				settReportDto.setMgrFee(mapBalance.get("220601")); // 管理费
-				settReportDto.setFloatFee(mapBalance.get("220602")); // 应付管理人业绩报酬
-				settReportDto.setTrustFee(mapBalance.get("2207")); // 托管费
-				settReportDto.setSaleFee(mapBalance.get("2208")); // 销售费
-				settReportDto.setRedemAmt(mapBalance.get("2203")); // 赎回紧额
-				settReportDto.setTaxFee(mapBalance.get("2221")); // 税费
-				settReportDto.setProfit(mapBalance.get("2232")); // 应付利润
-				settReportDto.setOtherPayAmt(mapBalance.get("2241")); // 其他应付紧额
-				settReportDto.setAssetValue(BigDecimal.ZERO); // 资产价值，固定值0
-
-				settReportDto.setSumDebtAmt(mapBalance.get("220601").add(mapBalance.get("220602"))
-						.add(mapBalance.get("2207")).add(mapBalance.get("2208")).add(mapBalance.get("2203"))
-						.add(mapBalance.get("2221")).add(mapBalance.get("2232")).add(mapBalance.get("2241"))); // 负债合计
-				listResult.add(CollectionUtils.bean2Map(settReportDto));
+			
+			List<BonusReportDto> listBonusReport = matureReportMapper.selectBonusPlan(paraMap);
+			if ( listBonusReport!=null && listBonusReport.size()>0 ) {
+				BonusReportDto bonus = listBonusReport.get(0);
+				settReportDto.setProdName(bonus.getProdName());
+				settReportDto.setProdId(bonus.getProdId());
+				settReportDto.setProdRe(bonus.getProdRe());
+				settReportDto.seteDate(bonus.getEDate());
 			}
+
+			//累计净值：分红计算清单：历史累计分红
+			//参考年化收益率：分红计算清单：本期清单年化收益率
+			//客户收益：分红计算清单：历史累计应分配金额
+			BigDecimal accuValue = BigDecimal.ONE;
+			BigDecimal yearYield = BigDecimal.ZERO;
+			BigDecimal custProfit = BigDecimal.ZERO;
+			for ( BonusReportDto report:listBonusReport ) {  //计算每次分红的累计值
+	        	//上一分配基准日
+	        	if ( "01".equals(report.getIssuingWay()) ) {  //开放式
+	        		BonusPlanDto plan = bonusReportMapper.selectLastBonusPlan(paraMap);
+	        		if ( plan==null  ) { //第一个计划
+	        			report.setLastSettDate(report.getEDate());
+	        		} else {
+	        			report.setLastSettDate(plan.getSettDate());
+	        		}
+	        	} else {
+	        		report.setLastSettDate(report.getEDate());
+	        	}
+	        	
+	        	Date settDate = DateUtil.parse("2020-01-01");
+
+	        	//运行天数
+	        	if ( report.getLastSettDate().compareTo(report.getEDate())==0 ){
+	        		report.setRunDays( DateUtil.getBetweenDayNumber(report.getSettDate(),report.getLastSettDate())+1);
+	        	} else {
+	        		report.setRunDays( DateUtil.getBetweenDayNumber(report.getSettDate(),report.getLastSettDate()));
+	        	}
+	        	
+	        	//可供分配利润
+	        	report.setDistributableProfit(report.getAssetsValue().subtract(report.getCapital()));
+	
+	        	//业绩比较基准收益
+	        	report.setAchievementBasisProfit(report.getCapital().multiply(report.getAchievementBasisProp()));
+	        	
+	        	//超出收益
+	        	report.setExcessProfit(report.getDistributableProfit().subtract(report.getAchievementBasisProfit()));
+	        	
+	        	//业绩报酬
+	        	report.setFloatFee(report.getExcessProfit().multiply(report.getExcessAchievementProp()));
+	        	
+	        	//应分配利润
+	        	report.setDistributedProfit(report.getDistributableProfit().subtract(report.getFloatFee()));
+	        	
+	        	//单位分红
+	        	report.setUnitProfit(report.getDistributedProfit().divide(report.getCapital(),4,RoundingMode.HALF_UP));
+	        	//年化收益率
+	        	report.setYearYield(report.getUnitProfit().multiply(new BigDecimal(365)).divide(  new BigDecimal(report.getRunDays()),4,RoundingMode.HALF_UP  ));
+
+	        	accuValue = accuValue.add(report.getUnitProfit());
+	        	custProfit = custProfit.add(report.getDistributedProfit());
+	        	if ( report.getSettDate().compareTo(settDate)>0 ) //取最近的分红计划的年化收益率
+	        		yearYield = report.getYearYield(); 
+		        	
+			}
+			settReportDto.setSumValueAmt(accuValue);
+			settReportDto.setRefYearYield(yearYield);
+			settReportDto.setCustProfit(custProfit);
+			
+			//查询所有相关费用，通过主产品查找，如果是子产品id，还要找到主产品id
+			List<RepFeeTrd> listFee = matureReportMapper.selectFees(paraMap);
+			for ( RepFeeTrd fee:listFee ) {
+				if ("01".equals(fee.getFeeType()) ) {
+					settReportDto.setTrustFee(fee.getAccrual());
+				} else if ("02".equals(fee.getFeeType()) ) {
+					settReportDto.setMgrFee(fee.getAccrual());
+				} else if ("03".equals(fee.getFeeType()) ) {
+					settReportDto.setFloatFee(fee.getAccrual());
+				} else if ("04".equals(fee.getFeeType()) ) {
+					settReportDto.setSaleFee(fee.getAccrual());
+				} else if ("05".equals(fee.getFeeType()) ) {
+					settReportDto.setPurFee(fee.getAccrual());
+				} else if ("06".equals(fee.getFeeType()) ) {
+					settReportDto.setRedemFee(fee.getAccrual());
+				}
+			}
+			listResult.add(CollectionUtils.bean2Map(settReportDto));
 		} catch (Exception e) {
-			logger.error("清算报表数据错误", e);
+			logger.error("到期报表数据错误", e);
 			e.printStackTrace();
 		}
 

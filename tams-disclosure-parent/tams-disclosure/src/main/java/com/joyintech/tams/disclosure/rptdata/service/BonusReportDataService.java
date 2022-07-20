@@ -42,7 +42,7 @@ public class BonusReportDataService implements IReportDataService{
 	
 		List<Map<String,Object>> listResult = new ArrayList<>();
 		
-		List<BonusReportDto> listReport = bonusReportMapper.selectBonusreport(paraMap);
+		List<BonusReportDto> listReport = bonusReportMapper.selectBonusReport(paraMap);
         
         for ( BonusReportDto report:listReport ) {
 
