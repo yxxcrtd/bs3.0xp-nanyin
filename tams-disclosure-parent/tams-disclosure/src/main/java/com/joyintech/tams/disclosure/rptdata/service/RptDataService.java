@@ -20,6 +20,9 @@ public class RptDataService {
 	@Autowired
 	private BonusReportDataService bonusReportDataService;
 	
+	@Autowired
+	private SettReportDataService settReportDataService;
+	
     public List<Map<String,Object>> queryTestDatas(Map<String,Object> params) {
         Map<String,Object> dataMap = new HashMap<String,Object>();
         dataMap.put("${prodName}", "得利宝8号");
@@ -136,8 +139,8 @@ public class RptDataService {
     	String rptType = "";
     	IReportDataService service = null;
     	
-    	if ( params.get("repId")!=null ) {
-    		rptType = params.get("repId").toString();
+    	if ( params.get("uri")!=null ) {
+    		rptType = params.get("uri").toString();
     	} else {
     		return new ArrayList<>();
     	}
@@ -146,13 +149,15 @@ public class RptDataService {
 //		params.put("genDate",td);
 //		params.put("prodId","LEO-001");
 		
-    	if ( rptType.equals(DisReportType.RPTTYPE_TEST) ) {
+    	if ( rptType.equals(DisReportType.TEST) ) {
             return queryTestDatas(params);
         }
 
     	//分红计算清单
-        if (rptType.equals(DisReportType.RPTTYPE_FHJSQD) ) {
+        if (rptType.equals(DisReportType.FHJSQD) ) {
             service = bonusReportDataService;
+        } else if (rptType.equals(DisReportType.QSBG) ) {  //清算报告
+                service = settReportDataService;
         }
         
         return service.queryDatas(params);

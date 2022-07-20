@@ -10,248 +10,95 @@ import java.util.Date;
 
 public class RepProdInfo extends BaseEntity {
     /**
-     * 产品代码
+     * 产品代码：子产品代码、母产品代码、普通产品代码
      */
     private String prodId;
 
     /**
-     * 产品登记编码
-     */
-    private String prodRe;
-
-    /**
-     * 产品名称
+     * 产品名称：子产品名称、母产品名称、普通产品名称
      */
     private String prodName;
 
     /**
-     * 产品简称
-     */
-    private String prodAbbr;
-
-    /**
-     * 募集下限
-     */
-    private String raiseMin;
-
-    /**
-     * 募集上限
-     */
-    private String raiseMax;
-
-    /**
-     * 募集开始日
-     */
-    private Date raiseStrdate;
-
-    /**
-     * 募集结束日
-     */
-    private Date raiseEnddate;
-
-    /**
-     * 募集币种
-     */
-    private String raiseCcy;
-
-    /**
-     * 产品成立日
+     * 成立日期：子产品成立日期、母产品成立日期、普通产品成立日期
      */
     private Date setDate;
 
     /**
-     * 产品起息日
-     */
-    private Date vdate;
-
-    /**
-     * 首次开放日
-     */
-    private Date firstOpenDay;
-
-    /**
-     * 产品到期日
-     */
-    private Date mdate;
-
-    /**
-     * 实际到期日
-     */
-    private Date actMdate;
-
-    /**
-     * 产品期限
-     */
-    private String term;
-
-    /**
-     * 产品清盘日
-     */
-    private Date windupDate;
-
-    /**
-     * 发行方式
-     */
-    private String issueMode;
-
-    /**
-     * 收益类型
-     */
-    private String profitType;
-
-    /**
-     * 产品类型
-     */
-    private String prodType;
-
-    /**
-     * 发行状态
-     */
-    private String issueStatus;
-
-    /**
-     * 募集方式
-     */
-    private String raiseType;
-
-    /**
-     * 产品风险等级
-     */
-    private String riskLevel;
-
-    /**
-     * 募集金额
+     * 募集金额：子产品或母产品募集金额、普通产品募集金额
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal raiseAmt;
 
     /**
-     * 开放模式
+     * 产品简称：母产品简称/普通产品的产品简称，子产品为空
      */
-    private String openMode;
+    private String prodAbbr;
 
     /**
-     * 投资收益到账日
+     * 产品登记编码：母产品产品登记编码、普通产品产品登记编码，子产品为空
      */
-    private String investProfDate;
+    private String prodRe;
 
     /**
-     * 投资本金到账日
+     * 母产品代码：当为子产品时填写母产品代码。母产品、普通产品为空
      */
-    private String investPrinDate;
+    private String pProdId;
 
     /**
-     * 是否独立开户
+     * 募集开始日：母产品募集开始日，子产品为空
      */
-    private String isIndepeAcc;
+    private Date raiseStrdate;
 
     /**
-     * 投资范围/投资性质
+     * 募集结束日：母产品募集结束日，子产品为空
      */
-    private String prodInvestType;
+    private Date raiseEnddate;
 
     /**
-     * 披露渠道
+     * 到期日：母产品到期日、普通产品到期日，子产品为空
      */
-    private String revealChannel;
+    private Date mdate;
 
     /**
-     * 交易日历
+     * 募集方式：不区分母子产品 01 公募/02 私募
      */
-    private String dealCal;
+    private String raiseType;
 
     /**
-     * 理财类型
-     */
-    private String finaType;
-
-    /**
-     * 托管人账号
-     */
-    private String truAccount;
-
-    /**
-     * 托管人名称
-     */
-    private String acctChnname;
-
-    /**
-     * 托管费率
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal truFeeRage;
-
-    /**
-     * 托管账户账号
-     */
-    private String truAccountNum;
-
-    /**
-     * 托管账户户名
-     */
-    private String truAccountName;
-
-    /**
-     * 产品期限类型
-     */
-    private String prodTermType;
-
-    /**
-     * 计息基础
-     */
-    private String basis;
-
-    /**
-     * 投资性质
-     */
-    private String natureInvest;
-
-    /**
-     * 销售对象
-     */
-    private String targetSale;
-
-    /**
-     * 是否分层
-     */
-    private String isLayer;
-
-    /**
-     * 业绩比较基准
+     * 母产品业绩比较基准：产品说明书中的业绩比较基准，子产品为空
      */
     private String performCompare;
 
     /**
-     * 管理人
+     * 是否是客户周期型产品：不区分母子产品 01 是/02 否
      */
-    private String proManager;
+    private String isPeriod;
 
     /**
-     * null
+     * 是否是分级产品：不区分母子产品 01 是/02 否
      */
-    private String proCustodian;
+    private String isGrade;
 
     /**
-     * 巨额赎回阀值
+     * 是否是指数型产品：不区分母子产品 01 是/02 否
      */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal hugeRedeemThreshold;
+    private String isIndex;
 
     /**
-     * 起点销售金额
+     * 母产品开放频率，子产品为空 01 日开/02 频率在半年（不含）以内/03 频率在半年以上
      */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal saleAmtStr;
+    private String openFreq;
 
     /**
-     * 产品运作模式
+     * 投资性质：无需区分母子产品 01固定收益类/02权益类/03商品及金融衍生品类/04 混合类
      */
-    private String operateMode;
+    private String natureInvest;
 
     /**
-     * 源系统金融产品代码
+     * 产品类型（枚举值调整）：无需区分母子产品 N 净值/M 货币
      */
-    private String fProdId;
+    private String prodType;
 
     /**
      * 发行方式：无需区分母子产品 01 开放式/02 封闭式
@@ -259,183 +106,96 @@ public class RepProdInfo extends BaseEntity {
     private String issuingWay;
 
     /**
-     * 是否是客户周期型产品：不区分母子产品 01 是/02 否
+     * 产品托管人名称：无需区分母子产品
      */
-    private String isPeriod;
+    private String acctChnname;
 
-    public String getIssuingWay() {
-        return issuingWay;
+    /**
+     * 产品运作方式：无需区分母子产品 01 封闭式净值型/02 封闭式非净值型/03 开放式净值型/04 开放式非净值型
+     */
+    private String profitType;
+
+    /**
+     * 母产品状态：子产品为空 01 运行中/02 已到期/03 已销户，用于按照产品树结构选定适用产品
+     */
+    private String pdStatus;
+
+    /**
+     * 母产品系列：子产品为空 用于按照产品树结构选定适用产品，要给出估值账套分类中的三级“产品系列”
+     */
+    private String prodSeries;
+
+    /**
+     * 产品起息日
+     * 这个字段用不上，新的表没有这个字段
+     */
+    private Date vdate;
+
+    /**
+     * 披露渠道
+     * 这个字段用不上，新的表没有这个字段
+     */
+    private String revealChannel;
+
+    public String getRevealChannel() {
+        return revealChannel;
     }
 
-    public void setIssuingWay(String issuingWay) {
-        this.issuingWay = issuingWay;
+    public void setRevealChannel(String revealChannel) {
+        this.revealChannel = revealChannel;
     }
 
-    public String getIsPeriod() {
-        return isPeriod;
+    public Date getVdate() {
+        return vdate;
     }
 
-    public void setIsPeriod(String isPeriod) {
-        this.isPeriod = isPeriod;
+    public void setVdate(Date vdate) {
+        this.vdate = vdate;
     }
 
     /**
-     * 取得 产品代码
-     * @return 产品代码
+     * 取得 产品代码：子产品代码、母产品代码、普通产品代码
+     * @return 产品代码：子产品代码、母产品代码、普通产品代码
      */
     public String getProdId() {
         return prodId;
     }
 
     /**
-     * 设置 产品代码
-     * @param prodId 产品代码
+     * 设置 产品代码：子产品代码、母产品代码、普通产品代码
+     * @param prodId 产品代码：子产品代码、母产品代码、普通产品代码
      */
     public void setProdId(String prodId) {
         this.prodId = prodId == null ? null : prodId.trim();
     }
 
     /**
-     * 取得 产品登记编码
-     * @return 产品登记编码
-     */
-    public String getProdRe() {
-        return prodRe;
-    }
-
-    /**
-     * 设置 产品登记编码
-     * @param prodRe 产品登记编码
-     */
-    public void setProdRe(String prodRe) {
-        this.prodRe = prodRe == null ? null : prodRe.trim();
-    }
-
-    /**
-     * 取得 产品名称
-     * @return 产品名称
+     * 取得 产品名称：子产品名称、母产品名称、普通产品名称
+     * @return 产品名称：子产品名称、母产品名称、普通产品名称
      */
     public String getProdName() {
         return prodName;
     }
 
     /**
-     * 设置 产品名称
-     * @param prodName 产品名称
+     * 设置 产品名称：子产品名称、母产品名称、普通产品名称
+     * @param prodName 产品名称：子产品名称、母产品名称、普通产品名称
      */
     public void setProdName(String prodName) {
         this.prodName = prodName == null ? null : prodName.trim();
     }
 
     /**
-     * 取得 产品简称
-     * @return 产品简称
-     */
-    public String getProdAbbr() {
-        return prodAbbr;
-    }
-
-    /**
-     * 设置 产品简称
-     * @param prodAbbr 产品简称
-     */
-    public void setProdAbbr(String prodAbbr) {
-        this.prodAbbr = prodAbbr == null ? null : prodAbbr.trim();
-    }
-
-    /**
-     * 取得 募集下限
-     * @return 募集下限
-     */
-    public String getRaiseMin() {
-        return raiseMin;
-    }
-
-    /**
-     * 设置 募集下限
-     * @param raiseMin 募集下限
-     */
-    public void setRaiseMin(String raiseMin) {
-        this.raiseMin = raiseMin == null ? null : raiseMin.trim();
-    }
-
-    /**
-     * 取得 募集上限
-     * @return 募集上限
-     */
-    public String getRaiseMax() {
-        return raiseMax;
-    }
-
-    /**
-     * 设置 募集上限
-     * @param raiseMax 募集上限
-     */
-    public void setRaiseMax(String raiseMax) {
-        this.raiseMax = raiseMax == null ? null : raiseMax.trim();
-    }
-
-    /**
-     * 取得 募集开始日
-     * @return 募集开始日
-     */
-    public Date getRaiseStrdate() {
-        return raiseStrdate;
-    }
-
-    /**
-     * 设置 募集开始日
-     * @param raiseStrdate 募集开始日
-     */
-    @JsonDeserialize(using = CustomDateDeserialize.class)
-    public void setRaiseStrdate(Date raiseStrdate) {
-        this.raiseStrdate = raiseStrdate;
-    }
-
-    /**
-     * 取得 募集结束日
-     * @return 募集结束日
-     */
-    public Date getRaiseEnddate() {
-        return raiseEnddate;
-    }
-
-    /**
-     * 设置 募集结束日
-     * @param raiseEnddate 募集结束日
-     */
-    @JsonDeserialize(using = CustomDateDeserialize.class)
-    public void setRaiseEnddate(Date raiseEnddate) {
-        this.raiseEnddate = raiseEnddate;
-    }
-
-    /**
-     * 取得 募集币种
-     * @return 募集币种
-     */
-    public String getRaiseCcy() {
-        return raiseCcy;
-    }
-
-    /**
-     * 设置 募集币种
-     * @param raiseCcy 募集币种
-     */
-    public void setRaiseCcy(String raiseCcy) {
-        this.raiseCcy = raiseCcy == null ? null : raiseCcy.trim();
-    }
-
-    /**
-     * 取得 产品成立日
-     * @return 产品成立日
+     * 取得 成立日期：子产品成立日期、母产品成立日期、普通产品成立日期
+     * @return 成立日期：子产品成立日期、母产品成立日期、普通产品成立日期
      */
     public Date getSetDate() {
         return setDate;
     }
 
     /**
-     * 设置 产品成立日
-     * @param setDate 产品成立日
+     * 设置 成立日期：子产品成立日期、母产品成立日期、普通产品成立日期
+     * @param setDate 成立日期：子产品成立日期、母产品成立日期、普通产品成立日期
      */
     @JsonDeserialize(using = CustomDateDeserialize.class)
     public void setSetDate(Date setDate) {
@@ -443,50 +203,114 @@ public class RepProdInfo extends BaseEntity {
     }
 
     /**
-     * 取得 产品起息日
-     * @return 产品起息日
+     * 取得 募集金额：子产品或母产品募集金额、普通产品募集金额
+     * @return 募集金额：子产品或母产品募集金额、普通产品募集金额
      */
-    public Date getVdate() {
-        return vdate;
+    public BigDecimal getRaiseAmt() {
+        return raiseAmt;
     }
 
     /**
-     * 设置 产品起息日
-     * @param vdate 产品起息日
+     * 设置 募集金额：子产品或母产品募集金额、普通产品募集金额
+     * @param raiseAmt 募集金额：子产品或母产品募集金额、普通产品募集金额
+     */
+    public void setRaiseAmt(BigDecimal raiseAmt) {
+        this.raiseAmt = raiseAmt;
+    }
+
+    /**
+     * 取得 产品简称：母产品简称/普通产品的产品简称，子产品为空
+     * @return 产品简称：母产品简称/普通产品的产品简称，子产品为空
+     */
+    public String getProdAbbr() {
+        return prodAbbr;
+    }
+
+    /**
+     * 设置 产品简称：母产品简称/普通产品的产品简称，子产品为空
+     * @param prodAbbr 产品简称：母产品简称/普通产品的产品简称，子产品为空
+     */
+    public void setProdAbbr(String prodAbbr) {
+        this.prodAbbr = prodAbbr == null ? null : prodAbbr.trim();
+    }
+
+    /**
+     * 取得 产品登记编码：母产品产品登记编码、普通产品产品登记编码，子产品为空
+     * @return 产品登记编码：母产品产品登记编码、普通产品产品登记编码，子产品为空
+     */
+    public String getProdRe() {
+        return prodRe;
+    }
+
+    /**
+     * 设置 产品登记编码：母产品产品登记编码、普通产品产品登记编码，子产品为空
+     * @param prodRe 产品登记编码：母产品产品登记编码、普通产品产品登记编码，子产品为空
+     */
+    public void setProdRe(String prodRe) {
+        this.prodRe = prodRe == null ? null : prodRe.trim();
+    }
+
+    /**
+     * 取得 母产品代码：当为子产品时填写母产品代码。母产品、普通产品为空
+     * @return 母产品代码：当为子产品时填写母产品代码。母产品、普通产品为空
+     */
+    public String getpProdId() {
+        return pProdId;
+    }
+
+    /**
+     * 设置 母产品代码：当为子产品时填写母产品代码。母产品、普通产品为空
+     * @param pProdId 母产品代码：当为子产品时填写母产品代码。母产品、普通产品为空
+     */
+    public void setpProdId(String pProdId) {
+        this.pProdId = pProdId == null ? null : pProdId.trim();
+    }
+
+    /**
+     * 取得 募集开始日：母产品募集开始日，子产品为空
+     * @return 募集开始日：母产品募集开始日，子产品为空
+     */
+    public Date getRaiseStrdate() {
+        return raiseStrdate;
+    }
+
+    /**
+     * 设置 募集开始日：母产品募集开始日，子产品为空
+     * @param raiseStrdate 募集开始日：母产品募集开始日，子产品为空
      */
     @JsonDeserialize(using = CustomDateDeserialize.class)
-    public void setVdate(Date vdate) {
-        this.vdate = vdate;
+    public void setRaiseStrdate(Date raiseStrdate) {
+        this.raiseStrdate = raiseStrdate;
     }
 
     /**
-     * 取得 首次开放日
-     * @return 首次开放日
+     * 取得 募集结束日：母产品募集结束日，子产品为空
+     * @return 募集结束日：母产品募集结束日，子产品为空
      */
-    public Date getFirstOpenDay() {
-        return firstOpenDay;
+    public Date getRaiseEnddate() {
+        return raiseEnddate;
     }
 
     /**
-     * 设置 首次开放日
-     * @param firstOpenDay 首次开放日
+     * 设置 募集结束日：母产品募集结束日，子产品为空
+     * @param raiseEnddate 募集结束日：母产品募集结束日，子产品为空
      */
     @JsonDeserialize(using = CustomDateDeserialize.class)
-    public void setFirstOpenDay(Date firstOpenDay) {
-        this.firstOpenDay = firstOpenDay;
+    public void setRaiseEnddate(Date raiseEnddate) {
+        this.raiseEnddate = raiseEnddate;
     }
 
     /**
-     * 取得 产品到期日
-     * @return 产品到期日
+     * 取得 到期日：母产品到期日、普通产品到期日，子产品为空
+     * @return 到期日：母产品到期日、普通产品到期日，子产品为空
      */
     public Date getMdate() {
         return mdate;
     }
 
     /**
-     * 设置 产品到期日
-     * @param mdate 产品到期日
+     * 设置 到期日：母产品到期日、普通产品到期日，子产品为空
+     * @param mdate 到期日：母产品到期日、普通产品到期日，子产品为空
      */
     @JsonDeserialize(using = CustomDateDeserialize.class)
     public void setMdate(Date mdate) {
@@ -494,564 +318,210 @@ public class RepProdInfo extends BaseEntity {
     }
 
     /**
-     * 取得 实际到期日
-     * @return 实际到期日
-     */
-    public Date getActMdate() {
-        return actMdate;
-    }
-
-    /**
-     * 设置 实际到期日
-     * @param actMdate 实际到期日
-     */
-    @JsonDeserialize(using = CustomDateDeserialize.class)
-    public void setActMdate(Date actMdate) {
-        this.actMdate = actMdate;
-    }
-
-    /**
-     * 取得 产品期限
-     * @return 产品期限
-     */
-    public String getTerm() {
-        return term;
-    }
-
-    /**
-     * 设置 产品期限
-     * @param term 产品期限
-     */
-    public void setTerm(String term) {
-        this.term = term == null ? null : term.trim();
-    }
-
-    /**
-     * 取得 产品清盘日
-     * @return 产品清盘日
-     */
-    public Date getWindupDate() {
-        return windupDate;
-    }
-
-    /**
-     * 设置 产品清盘日
-     * @param windupDate 产品清盘日
-     */
-    @JsonDeserialize(using = CustomDateDeserialize.class)
-    public void setWindupDate(Date windupDate) {
-        this.windupDate = windupDate;
-    }
-
-    /**
-     * 取得 发行方式
-     * @return 发行方式
-     */
-    public String getIssueMode() {
-        return issueMode;
-    }
-
-    /**
-     * 设置 发行方式
-     * @param issueMode 发行方式
-     */
-    public void setIssueMode(String issueMode) {
-        this.issueMode = issueMode == null ? null : issueMode.trim();
-    }
-
-    /**
-     * 取得 收益类型
-     * @return 收益类型
-     */
-    public String getProfitType() {
-        return profitType;
-    }
-
-    /**
-     * 设置 收益类型
-     * @param profitType 收益类型
-     */
-    public void setProfitType(String profitType) {
-        this.profitType = profitType == null ? null : profitType.trim();
-    }
-
-    /**
-     * 取得 产品类型
-     * @return 产品类型
-     */
-    public String getProdType() {
-        return prodType;
-    }
-
-    /**
-     * 设置 产品类型
-     * @param prodType 产品类型
-     */
-    public void setProdType(String prodType) {
-        this.prodType = prodType == null ? null : prodType.trim();
-    }
-
-    /**
-     * 取得 发行状态
-     * @return 发行状态
-     */
-    public String getIssueStatus() {
-        return issueStatus;
-    }
-
-    /**
-     * 设置 发行状态
-     * @param issueStatus 发行状态
-     */
-    public void setIssueStatus(String issueStatus) {
-        this.issueStatus = issueStatus == null ? null : issueStatus.trim();
-    }
-
-    /**
-     * 取得 募集方式
-     * @return 募集方式
+     * 取得 募集方式：不区分母子产品 01 公募/02 私募
+     * @return 募集方式：不区分母子产品 01 公募/02 私募
      */
     public String getRaiseType() {
         return raiseType;
     }
 
     /**
-     * 设置 募集方式
-     * @param raiseType 募集方式
+     * 设置 募集方式：不区分母子产品 01 公募/02 私募
+     * @param raiseType 募集方式：不区分母子产品 01 公募/02 私募
      */
     public void setRaiseType(String raiseType) {
         this.raiseType = raiseType == null ? null : raiseType.trim();
     }
 
     /**
-     * 取得 产品风险等级
-     * @return 产品风险等级
-     */
-    public String getRiskLevel() {
-        return riskLevel;
-    }
-
-    /**
-     * 设置 产品风险等级
-     * @param riskLevel 产品风险等级
-     */
-    public void setRiskLevel(String riskLevel) {
-        this.riskLevel = riskLevel == null ? null : riskLevel.trim();
-    }
-
-    /**
-     * 取得 募集金额
-     * @return 募集金额
-     */
-    public BigDecimal getRaiseAmt() {
-        return raiseAmt;
-    }
-
-    /**
-     * 设置 募集金额
-     * @param raiseAmt 募集金额
-     */
-    public void setRaiseAmt(BigDecimal raiseAmt) {
-        this.raiseAmt = raiseAmt;
-    }
-
-    /**
-     * 取得 开放模式
-     * @return 开放模式
-     */
-    public String getOpenMode() {
-        return openMode;
-    }
-
-    /**
-     * 设置 开放模式
-     * @param openMode 开放模式
-     */
-    public void setOpenMode(String openMode) {
-        this.openMode = openMode == null ? null : openMode.trim();
-    }
-
-    /**
-     * 取得 投资收益到账日
-     * @return 投资收益到账日
-     */
-    public String getInvestProfDate() {
-        return investProfDate;
-    }
-
-    /**
-     * 设置 投资收益到账日
-     * @param investProfDate 投资收益到账日
-     */
-    public void setInvestProfDate(String investProfDate) {
-        this.investProfDate = investProfDate == null ? null : investProfDate.trim();
-    }
-
-    /**
-     * 取得 投资本金到账日
-     * @return 投资本金到账日
-     */
-    public String getInvestPrinDate() {
-        return investPrinDate;
-    }
-
-    /**
-     * 设置 投资本金到账日
-     * @param investPrinDate 投资本金到账日
-     */
-    public void setInvestPrinDate(String investPrinDate) {
-        this.investPrinDate = investPrinDate == null ? null : investPrinDate.trim();
-    }
-
-    /**
-     * 取得 是否独立开户
-     * @return 是否独立开户
-     */
-    public String getIsIndepeAcc() {
-        return isIndepeAcc;
-    }
-
-    /**
-     * 设置 是否独立开户
-     * @param isIndepeAcc 是否独立开户
-     */
-    public void setIsIndepeAcc(String isIndepeAcc) {
-        this.isIndepeAcc = isIndepeAcc == null ? null : isIndepeAcc.trim();
-    }
-
-    /**
-     * 取得 投资范围/投资性质
-     * @return 投资范围/投资性质
-     */
-    public String getProdInvestType() {
-        return prodInvestType;
-    }
-
-    /**
-     * 设置 投资范围/投资性质
-     * @param prodInvestType 投资范围/投资性质
-     */
-    public void setProdInvestType(String prodInvestType) {
-        this.prodInvestType = prodInvestType == null ? null : prodInvestType.trim();
-    }
-
-    /**
-     * 取得 披露渠道
-     * @return 披露渠道
-     */
-    public String getRevealChannel() {
-        return revealChannel;
-    }
-
-    /**
-     * 设置 披露渠道
-     * @param revealChannel 披露渠道
-     */
-    public void setRevealChannel(String revealChannel) {
-        this.revealChannel = revealChannel == null ? null : revealChannel.trim();
-    }
-
-    /**
-     * 取得 交易日历
-     * @return 交易日历
-     */
-    public String getDealCal() {
-        return dealCal;
-    }
-
-    /**
-     * 设置 交易日历
-     * @param dealCal 交易日历
-     */
-    public void setDealCal(String dealCal) {
-        this.dealCal = dealCal == null ? null : dealCal.trim();
-    }
-
-    /**
-     * 取得 理财类型
-     * @return 理财类型
-     */
-    public String getFinaType() {
-        return finaType;
-    }
-
-    /**
-     * 设置 理财类型
-     * @param finaType 理财类型
-     */
-    public void setFinaType(String finaType) {
-        this.finaType = finaType == null ? null : finaType.trim();
-    }
-
-    /**
-     * 取得 托管人账号
-     * @return 托管人账号
-     */
-    public String getTruAccount() {
-        return truAccount;
-    }
-
-    /**
-     * 设置 托管人账号
-     * @param truAccount 托管人账号
-     */
-    public void setTruAccount(String truAccount) {
-        this.truAccount = truAccount == null ? null : truAccount.trim();
-    }
-
-    /**
-     * 取得 托管人名称
-     * @return 托管人名称
-     */
-    public String getAcctChnname() {
-        return acctChnname;
-    }
-
-    /**
-     * 设置 托管人名称
-     * @param acctChnname 托管人名称
-     */
-    public void setAcctChnname(String acctChnname) {
-        this.acctChnname = acctChnname == null ? null : acctChnname.trim();
-    }
-
-    /**
-     * 取得 托管费率
-     * @return 托管费率
-     */
-    public BigDecimal getTruFeeRage() {
-        return truFeeRage;
-    }
-
-    /**
-     * 设置 托管费率
-     * @param truFeeRage 托管费率
-     */
-    public void setTruFeeRage(BigDecimal truFeeRage) {
-        this.truFeeRage = truFeeRage;
-    }
-
-    /**
-     * 取得 托管账户账号
-     * @return 托管账户账号
-     */
-    public String getTruAccountNum() {
-        return truAccountNum;
-    }
-
-    /**
-     * 设置 托管账户账号
-     * @param truAccountNum 托管账户账号
-     */
-    public void setTruAccountNum(String truAccountNum) {
-        this.truAccountNum = truAccountNum == null ? null : truAccountNum.trim();
-    }
-
-    /**
-     * 取得 托管账户户名
-     * @return 托管账户户名
-     */
-    public String getTruAccountName() {
-        return truAccountName;
-    }
-
-    /**
-     * 设置 托管账户户名
-     * @param truAccountName 托管账户户名
-     */
-    public void setTruAccountName(String truAccountName) {
-        this.truAccountName = truAccountName == null ? null : truAccountName.trim();
-    }
-
-    /**
-     * 取得 产品期限类型
-     * @return 产品期限类型
-     */
-    public String getProdTermType() {
-        return prodTermType;
-    }
-
-    /**
-     * 设置 产品期限类型
-     * @param prodTermType 产品期限类型
-     */
-    public void setProdTermType(String prodTermType) {
-        this.prodTermType = prodTermType == null ? null : prodTermType.trim();
-    }
-
-    /**
-     * 取得 计息基础
-     * @return 计息基础
-     */
-    public String getBasis() {
-        return basis;
-    }
-
-    /**
-     * 设置 计息基础
-     * @param basis 计息基础
-     */
-    public void setBasis(String basis) {
-        this.basis = basis == null ? null : basis.trim();
-    }
-
-    /**
-     * 取得 投资性质
-     * @return 投资性质
-     */
-    public String getNatureInvest() {
-        return natureInvest;
-    }
-
-    /**
-     * 设置 投资性质
-     * @param natureInvest 投资性质
-     */
-    public void setNatureInvest(String natureInvest) {
-        this.natureInvest = natureInvest == null ? null : natureInvest.trim();
-    }
-
-    /**
-     * 取得 销售对象
-     * @return 销售对象
-     */
-    public String getTargetSale() {
-        return targetSale;
-    }
-
-    /**
-     * 设置 销售对象
-     * @param targetSale 销售对象
-     */
-    public void setTargetSale(String targetSale) {
-        this.targetSale = targetSale == null ? null : targetSale.trim();
-    }
-
-    /**
-     * 取得 是否分层
-     * @return 是否分层
-     */
-    public String getIsLayer() {
-        return isLayer;
-    }
-
-    /**
-     * 设置 是否分层
-     * @param isLayer 是否分层
-     */
-    public void setIsLayer(String isLayer) {
-        this.isLayer = isLayer == null ? null : isLayer.trim();
-    }
-
-    /**
-     * 取得 业绩比较基准
-     * @return 业绩比较基准
+     * 取得 母产品业绩比较基准：产品说明书中的业绩比较基准，子产品为空
+     * @return 母产品业绩比较基准：产品说明书中的业绩比较基准，子产品为空
      */
     public String getPerformCompare() {
         return performCompare;
     }
 
     /**
-     * 设置 业绩比较基准
-     * @param performCompare 业绩比较基准
+     * 设置 母产品业绩比较基准：产品说明书中的业绩比较基准，子产品为空
+     * @param performCompare 母产品业绩比较基准：产品说明书中的业绩比较基准，子产品为空
      */
     public void setPerformCompare(String performCompare) {
         this.performCompare = performCompare == null ? null : performCompare.trim();
     }
 
     /**
-     * 取得 管理人
-     * @return 管理人
+     * 取得 是否是客户周期型产品：不区分母子产品 01 是/02 否
+     * @return 是否是客户周期型产品：不区分母子产品 01 是/02 否
      */
-    public String getProManager() {
-        return proManager;
+    public String getIsPeriod() {
+        return isPeriod;
     }
 
     /**
-     * 设置 管理人
-     * @param proManager 管理人
+     * 设置 是否是客户周期型产品：不区分母子产品 01 是/02 否
+     * @param isPeriod 是否是客户周期型产品：不区分母子产品 01 是/02 否
      */
-    public void setProManager(String proManager) {
-        this.proManager = proManager == null ? null : proManager.trim();
+    public void setIsPeriod(String isPeriod) {
+        this.isPeriod = isPeriod == null ? null : isPeriod.trim();
     }
 
     /**
-     * 取得 null
-     * @return null
+     * 取得 是否是分级产品：不区分母子产品 01 是/02 否
+     * @return 是否是分级产品：不区分母子产品 01 是/02 否
      */
-    public String getProCustodian() {
-        return proCustodian;
+    public String getIsGrade() {
+        return isGrade;
     }
 
     /**
-     * 设置 null
-     * @param proCustodian null
+     * 设置 是否是分级产品：不区分母子产品 01 是/02 否
+     * @param isGrade 是否是分级产品：不区分母子产品 01 是/02 否
      */
-    public void setProCustodian(String proCustodian) {
-        this.proCustodian = proCustodian == null ? null : proCustodian.trim();
+    public void setIsGrade(String isGrade) {
+        this.isGrade = isGrade == null ? null : isGrade.trim();
     }
 
     /**
-     * 取得 巨额赎回阀值
-     * @return 巨额赎回阀值
+     * 取得 是否是指数型产品：不区分母子产品 01 是/02 否
+     * @return 是否是指数型产品：不区分母子产品 01 是/02 否
      */
-    public BigDecimal getHugeRedeemThreshold() {
-        return hugeRedeemThreshold;
+    public String getIsIndex() {
+        return isIndex;
     }
 
     /**
-     * 设置 巨额赎回阀值
-     * @param hugeRedeemThreshold 巨额赎回阀值
+     * 设置 是否是指数型产品：不区分母子产品 01 是/02 否
+     * @param isIndex 是否是指数型产品：不区分母子产品 01 是/02 否
      */
-    public void setHugeRedeemThreshold(BigDecimal hugeRedeemThreshold) {
-        this.hugeRedeemThreshold = hugeRedeemThreshold;
+    public void setIsIndex(String isIndex) {
+        this.isIndex = isIndex == null ? null : isIndex.trim();
     }
 
     /**
-     * 取得 起点销售金额
-     * @return 起点销售金额
+     * 取得 母产品开放频率，子产品为空 01 日开/02 频率在半年（不含）以内/03 频率在半年以上
+     * @return 母产品开放频率，子产品为空 01 日开/02 频率在半年（不含）以内/03 频率在半年以上
      */
-    public BigDecimal getSaleAmtStr() {
-        return saleAmtStr;
+    public String getOpenFreq() {
+        return openFreq;
     }
 
     /**
-     * 设置 起点销售金额
-     * @param saleAmtStr 起点销售金额
+     * 设置 母产品开放频率，子产品为空 01 日开/02 频率在半年（不含）以内/03 频率在半年以上
+     * @param openFreq 母产品开放频率，子产品为空 01 日开/02 频率在半年（不含）以内/03 频率在半年以上
      */
-    public void setSaleAmtStr(BigDecimal saleAmtStr) {
-        this.saleAmtStr = saleAmtStr;
+    public void setOpenFreq(String openFreq) {
+        this.openFreq = openFreq == null ? null : openFreq.trim();
     }
 
     /**
-     * 取得 产品运作模式
-     * @return 产品运作模式
+     * 取得 投资性质：无需区分母子产品 01固定收益类/02权益类/03商品及金融衍生品类/04 混合类
+     * @return 投资性质：无需区分母子产品 01固定收益类/02权益类/03商品及金融衍生品类/04 混合类
      */
-    public String getOperateMode() {
-        return operateMode;
+    public String getNatureInvest() {
+        return natureInvest;
     }
 
     /**
-     * 设置 产品运作模式
-     * @param operateMode 产品运作模式
+     * 设置 投资性质：无需区分母子产品 01固定收益类/02权益类/03商品及金融衍生品类/04 混合类
+     * @param natureInvest 投资性质：无需区分母子产品 01固定收益类/02权益类/03商品及金融衍生品类/04 混合类
      */
-    public void setOperateMode(String operateMode) {
-        this.operateMode = operateMode == null ? null : operateMode.trim();
+    public void setNatureInvest(String natureInvest) {
+        this.natureInvest = natureInvest == null ? null : natureInvest.trim();
     }
 
     /**
-     * 取得 源系统金融产品代码
-     * @return 源系统金融产品代码
+     * 取得 产品类型（枚举值调整）：无需区分母子产品 N 净值/M 货币
+     * @return 产品类型（枚举值调整）：无需区分母子产品 N 净值/M 货币
      */
-    public String getfProdId() {
-        return fProdId;
+    public String getProdType() {
+        return prodType;
     }
 
     /**
-     * 设置 源系统金融产品代码
-     * @param fProdId 源系统金融产品代码
+     * 设置 产品类型（枚举值调整）：无需区分母子产品 N 净值/M 货币
+     * @param prodType 产品类型（枚举值调整）：无需区分母子产品 N 净值/M 货币
      */
-    public void setfProdId(String fProdId) {
-        this.fProdId = fProdId == null ? null : fProdId.trim();
+    public void setProdType(String prodType) {
+        this.prodType = prodType == null ? null : prodType.trim();
+    }
+
+    /**
+     * 取得 发行方式：无需区分母子产品 01 开放式/02 封闭式
+     * @return 发行方式：无需区分母子产品 01 开放式/02 封闭式
+     */
+    public String getIssuingWay() {
+        return issuingWay;
+    }
+
+    /**
+     * 设置 发行方式：无需区分母子产品 01 开放式/02 封闭式
+     * @param issuingWay 发行方式：无需区分母子产品 01 开放式/02 封闭式
+     */
+    public void setIssuingWay(String issuingWay) {
+        this.issuingWay = issuingWay == null ? null : issuingWay.trim();
+    }
+
+    /**
+     * 取得 产品托管人名称：无需区分母子产品
+     * @return 产品托管人名称：无需区分母子产品
+     */
+    public String getAcctChnname() {
+        return acctChnname;
+    }
+
+    /**
+     * 设置 产品托管人名称：无需区分母子产品
+     * @param acctChnname 产品托管人名称：无需区分母子产品
+     */
+    public void setAcctChnname(String acctChnname) {
+        this.acctChnname = acctChnname == null ? null : acctChnname.trim();
+    }
+
+    /**
+     * 取得 产品运作方式：无需区分母子产品 01 封闭式净值型/02 封闭式非净值型/03 开放式净值型/04 开放式非净值型
+     * @return 产品运作方式：无需区分母子产品 01 封闭式净值型/02 封闭式非净值型/03 开放式净值型/04 开放式非净值型
+     */
+    public String getProfitType() {
+        return profitType;
+    }
+
+    /**
+     * 设置 产品运作方式：无需区分母子产品 01 封闭式净值型/02 封闭式非净值型/03 开放式净值型/04 开放式非净值型
+     * @param profitType 产品运作方式：无需区分母子产品 01 封闭式净值型/02 封闭式非净值型/03 开放式净值型/04 开放式非净值型
+     */
+    public void setProfitType(String profitType) {
+        this.profitType = profitType == null ? null : profitType.trim();
+    }
+
+    /**
+     * 取得 母产品状态：子产品为空 01 运行中/02 已到期/03 已销户，用于按照产品树结构选定适用产品
+     * @return 母产品状态：子产品为空 01 运行中/02 已到期/03 已销户，用于按照产品树结构选定适用产品
+     */
+    public String getPdStatus() {
+        return pdStatus;
+    }
+
+    /**
+     * 设置 母产品状态：子产品为空 01 运行中/02 已到期/03 已销户，用于按照产品树结构选定适用产品
+     * @param pdStatus 母产品状态：子产品为空 01 运行中/02 已到期/03 已销户，用于按照产品树结构选定适用产品
+     */
+    public void setPdStatus(String pdStatus) {
+        this.pdStatus = pdStatus == null ? null : pdStatus.trim();
+    }
+
+    /**
+     * 取得 母产品系列：子产品为空 用于按照产品树结构选定适用产品，要给出估值账套分类中的三级“产品系列”
+     * @return 母产品系列：子产品为空 用于按照产品树结构选定适用产品，要给出估值账套分类中的三级“产品系列”
+     */
+    public String getProdSeries() {
+        return prodSeries;
+    }
+
+    /**
+     * 设置 母产品系列：子产品为空 用于按照产品树结构选定适用产品，要给出估值账套分类中的三级“产品系列”
+     * @param prodSeries 母产品系列：子产品为空 用于按照产品树结构选定适用产品，要给出估值账套分类中的三级“产品系列”
+     */
+    public void setProdSeries(String prodSeries) {
+        this.prodSeries = prodSeries == null ? null : prodSeries.trim();
     }
 }

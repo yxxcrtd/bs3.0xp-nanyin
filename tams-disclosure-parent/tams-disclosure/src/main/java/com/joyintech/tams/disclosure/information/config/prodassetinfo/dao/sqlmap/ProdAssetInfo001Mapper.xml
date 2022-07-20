@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.information.config.prodassetinfo.dao.ProdAssetInfo001Mapper">
+	<insert id="insertBtachEquityInfo">
+		insert into DIS_PROD_ASSET(
+			PROD_ASSET_ID,
+			PROD_ID,
+			FIX_PRE_RATIO,
+			FIX_AFTER_RATIO,
+			EQUITY_PRE_RATIO,
+			EQUITY_AFTER_RATIO,
+			FD_PRE_RATIO,
+			FD_AFTER_RATIO,
+			MIX_PRE_RATIO,
+			MIX_AFTER_RATIO,
+			EFF_DATE,
+			EFF_END_DATE,
+			DATA_STATUS,
+			DATA_SOURCE,
+			CREATE_USER,
+			CREATE_TIME,
+			UPDATE_USER,
+			UPDATE_TIME,
+			CREATE_DEPT
+		)
+		select A.* from (
+		<foreach collection="listN" item="item" index="index"
+				 separator="union all">
+			select
+			#{item.prodAssetId,jdbcType=VARCHAR} PROD_ASSET_ID,
+			#{item.prodId,jdbcType=VARCHAR} PROD_ID,
+			#{item.fixPreRatio,jdbcType=DECIMAL} FIX_PRE_RATIO,
+			#{item.fixAfterRatio,jdbcType=DECIMAL} FIX_AFTER_RATIO,
+			#{item.equityPreRatio,jdbcType=DECIMAL} EQUITY_PRE_RATIO,
+			#{item.equityAfterRatio,jdbcType=DECIMAL} EQUITY_AFTER_RATIO,
+			#{item.fdPreRatio,jdbcType=DECIMAL} FD_PRE_RATIO,
+			#{item.fdAfterRatio,jdbcType=DECIMAL} FD_AFTER_RATIO,
+			#{item.mixPreRatio,jdbcType=DECIMAL} MIX_PRE_RATIO,
+			#{item.mixAfterRatio,jdbcType=DECIMAL} MIX_AFTER_RATIO,
+			#{item.effDate,jdbcType=DATE} EFF_DATE,
+			#{item.effEndDate,jdbcType=DATE} EFF_END_DATE,
+			#{item.dataStatus,jdbcType=VARCHAR} DATA_STATUS,
+			#{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
+			#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+			#{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+			#{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+			#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT
+			from dual
+		</foreach>
+		)A
+	</insert>
+
+	<delete id="deleteBtachEquityInfo">
+		delete from DIS_PROD_PARTNER
+		where PROD_ID in
+		<foreach collection="listA" item="item" index="index" separator="," open="("
+				 close=")">
+			#{item.prodId,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+
+	<select id="queryProdIdInfo"
+			resultType="com.joyintech.framework.select.SelectOptionDto">
+		select PROD_ID id,
+		nvl(PROD_NAME,PROD_ABBR) text
+		from REP_PROD_INFO
+		where  P_PROD_ID is not null
+		<if test="dataStatus != null and dataStatus != ''">
+			and STATUS=#{dataStatus,jdbcType=VARCHAR}
+		</if>
+		<if test="search != null and search != ''">
+			and (FIN_PRODUCT.FINPROD_MARKET_ID like
+			concat(concat('%',#{search}),'%')
+			or FIN_PRODUCT.FINPROD_NAME like concat(concat('%',#{search}),'%'))
+		</if>
+	</select>
+	<select id="select"
+			resultType="com.joyintech.tams.disclosure.information.config.prodassetinfo.dto.ProdAssetInfoDto">
+		select
+			dpa.PROD_ASSET_ID prodAssetId,
+			dpa.PROD_ID prodId,
+			info.PROD_NAME prodName,
+			dpa.FIX_PRE_RATIO fixPreRatio,
+			dpa.FIX_AFTER_RATIO fixAfterRatio,
+			dpa.EQUITY_PRE_RATIO equityPreRatio,
+			dpa.EQUITY_AFTER_RATIO equityAfterRatio,
+			dpa.FD_PRE_RATIO fdPreRatio,
+			dpa.FD_AFTER_RATIO fdAfterRatio,
+			dpa.MIX_PRE_RATIO mixPreRatio,
+			dpa.MIX_AFTER_RATIO mixAfterRatio,
+			dpa.EFF_DATE effDate,
+			dpa.EFF_END_DATE effEndDate,
+			dpa.DATA_STATUS dataStatus,
+			dpa.UPDATE_USER updateUser,
+			dpa.UPDATE_TIME updateTime,
+			TO_CHAR(dpa.UPDATE_TIME,'YYYY-MM-DD HH24:MI:SS') updateTimeStr
+		from DIS_PROD_ASSET dpa
+		left join REP_PROD_INFO info on dpa.PROD_ID=info.PROD_ID
+		<where>
+			info.STATUS='E'
+			<if test="prodId != null and prodId.size()>0">
+				AND	dpa.PROD_ID in
+				<foreach collection="prodId" item="item" open="(" close=")"
+						 separator=",">
+					#{item}
+				</foreach>
+			</if>
+			<if test="dataStatus != null and dataStatus != ''">
+				AND	dpa.DATA_STATUS=#{dataStatus,jdbcType=VARCHAR}
+			</if>
+			<if test="effdateStart != null and effdateStart != ''">
+				and dpa.EFF_DATE &gt;= to_date(#{effdateStart},
+				'yyyy-MM-dd')
+			</if>
+			<if test="effdateEnd != null and effdateEnd != ''">
+				and dpa.EFF_DATE &lt;= to_date(#{effdateEnd},
+				'yyyy-MM-dd')
+			</if>
+			<if test="effEndDateStart != null and effEndDateStart != ''">
+				and dpa.EFF_END_DATE &gt;= to_date(#{effEndDateStart},
+				'yyyy-MM-dd')
+			</if>
+			<if test="effEndDateEnd != null and effEndDateEnd != ''">
+				and dpa.EFF_END_DATE &lt;= to_date(#{effEndDateEnd},
+				'yyyy-MM-dd')
+			</if>
+		</where>
+	</select>
+	<select id="selectForExport"
+			resultType="com.joyintech.tams.disclosure.information.config.prodassetinfo.dto.ProdAssetInfoDto">
+		select
+		dpa.PROD_ASSET_ID prodAssetId,
+		dpa.PROD_ID prodId,
+		info.PROD_NAME prodName,
+		dpa.FIX_PRE_RATIO fixPreRatio,
+		dpa.FIX_AFTER_RATIO fixAfterRatio,
+		dpa.EQUITY_PRE_RATIO equityPreRatio,
+		dpa.EQUITY_AFTER_RATIO equityAfterRatio,
+		dpa.FD_PRE_RATIO fdPreRatio,
+		dpa.FD_AFTER_RATIO fdAfterRatio,
+		dpa.MIX_PRE_RATIO mixPreRatio,
+		dpa.MIX_AFTER_RATIO mixAfterRatio,
+		dpa.EFF_DATE effDate,
+		dpa.EFF_END_DATE effEndDate,
+		dpa.DATA_STATUS dataStatus,
+		dpa.UPDATE_USER updateUser,
+		dpa.UPDATE_TIME updateTime,
+		TO_CHAR(dpa.UPDATE_TIME,'YYYY-MM-DD HH24:MI:SS') updateTimeStr
+		from DIS_PROD_ASSET dpa
+		left join REP_PROD_INFO info on dpa.PROD_ID=info.PROD_ID
+		<where>
+			<foreach collection="list" item="dto" open="dpp.PROD_ASSET_ID in (" close=")" separator=",">
+				#{dto.prodAssetId}
+			</foreach>
+		</where>
+	</select>
+    <select id="selectByProdId" resultType="java.lang.Integer">
+		select count(1) count from REP_PROD_INFO
+		where PROD_ID=#{prodId,jdbcType=VARCHAR}
+	</select>
+
+
+</mapper>

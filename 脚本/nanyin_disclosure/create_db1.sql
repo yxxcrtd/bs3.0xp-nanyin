@@ -670,3 +670,11 @@ COMMENT ON COLUMN dis_prod_plan.create_dept IS
     '创建部门';
 
 ALTER TABLE dis_prod_plan ADD CONSTRAINT dis_prod_plan_pk PRIMARY KEY ( prod_plan_id );
+
+/**add by zhengxiaolian 查询信息配置表增加字段 20220719 start**/
+ALTER TABLE rep_screen add  MULTI_FLAG VARCHAR2(2);
+/**add by zhengxiaolian 查询信息配置表增加字段 20220719 end**/
+
+/**add by zhengxiaolian 20220719 报表模板配置表报表参数字段长度增加 start**/
+ALTER TABLE rep_reportinfo MODIFY REPORTPARAMS VARCHAR2(2000);
+/**add by zhengxiaolian 20220719 报表模板配置表报表参数字段长度增加 end**/
