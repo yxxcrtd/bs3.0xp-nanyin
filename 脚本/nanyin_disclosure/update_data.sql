@@ -49,6 +49,11 @@ values ('ReportPageManage002', '999999', 'PROD_TYPE', '04', null, null, 'system'
 -- add by zhengxiaolian 2022-07-19 报表页面管理产品类型数据字典 end 
 
 -- add by zhengxiaolian 2022-07-19 开放频率数据字典 start 
+delete from sys_datadict where DICT_CODE='OPEN_FREQ' ;
+
+insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('OPEN_FREQ', 'DIS', '开放频率', null, '02', 'system', null, sysdate, 'system', sysdate);
+
 delete from sys_datadict_list where DICT_CODE='OPEN_FREQ' ;
 
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
@@ -58,7 +63,7 @@ insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAU
 values ('OPEN_FREQ', '02', '频率在半年（不含）以内', 2, '0', 'system', null, sysdate, 'system', sysdate, null);
 
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('OPEN_FREQ', '03', '频率在半年以上', 4, '0', 'system', null, sysdate, 'system', sysdate, null);
+values ('OPEN_FREQ', '03', '频率在半年以上', 3, '0', 'system', null, sysdate, 'system', sysdate, null);
 -- add by zhengxiaolian 2022-07-19 开放频率数据字典 end 
 
 -- add by zhengxiaolian 2022-07-19 作业规则1增加开放频率，是否是客户周期型产品，是否是指数型产品 start
@@ -263,4 +268,26 @@ values ('ReportPageManage002', '999999', 'ISSUE_STATUS', '02', null, null, 'syst
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('ReportPageManage002', '999999', 'ISSUE_STATUS', '03', null, null, 'system', null, sysdate, 'system', sysdate, null);
 -- add by zhengxiaolian 2022-07-20 报表页面管理 发行状态枚举值调整 end 
+
+-- add by zhengxiaolian 2022-07-20 	作业规则1 数据字典调整 start 
+delete from sys_datadict_list where DICT_CODE='RULE_TYPE1' and ITEM_CODE  in('ISSUE_MODE','ISSUING_WAY');
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('RULE_TYPE1', 'ISSUING_WAY', '发行方式', 10, '0', 'system', null, sysdate, 'system', sysdate, null);
+-- add by zhengxiaolian 2022-07-20 	作业规则1 数据字典调整 end 
+
+-- add by zhengxiaolian 2022-07-20 	增加数据字典 发行方式 start 
+delete from sys_datadict where DICT_CODE='ISSUING_WAY' ;
+
+insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ISSUING_WAY', 'DIS', '发行方式', null, '02', 'system', null, sysdate, 'system', sysdate);
+
+delete from sys_datadict_list where DICT_CODE='ISSUING_WAY';
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ISSUING_WAY', '01', '开放式', 1, '0', 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ISSUING_WAY', '02', '封闭式', 2, '0', 'system', null, sysdate, 'system', sysdate, null);
+-- add by zhengxiaolian 2022-07-20 	增加数据字典 发行方式 end 
 
