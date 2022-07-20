@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.information.config.profailureinfo.dao.ProFailureInfoMapper">
+
+    <select id="select"  resultType="com.joyintech.tams.disclosure.information.config.profailureinfo.dto.ProFailureInfo001Dto">
+       select
+          PROD_REGIST_NO prodRegistNo,
+          DATA_STATUS dataStatus,
+          NOCREATE_REASON nocreateReason,
+          REPORT_ISSUE_DATE reportIssueDate,
+          IS_SALES_AGENCY isSalesAgency,
+          DATA_SOURCE,
+          UPDATE_TIME updateTime,
+          UPDATE_USER updateUser
+       from
+        DIS_PROD_NOCREATE
+    <where>
+        <if test="prodRegistNoList != null and prodRegistNoList.size() > 0">
+            AND PROD_REGIST_NO in
+            <foreach collection="prodRegistNoList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="prodIdList != null and prodIdList.size() > 0">
+            AND PROD_ID in
+            <foreach collection="prodIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="dataStatus != null and !dataStatus.equals('')">
+            AND DATA_STATUS=#{dataStatus}
+        </if>
+        <if test="reportIssueDateStart != null and reportIssueDateStart != ''">
+            <![CDATA[AND  REPORT_ISSUE_DATE >= TO_DATE(#{reportIssueDateStart},'YYYY-MM-DD') ]]>
+        </if>
+        <if test="reportIssueDateEnd != null and reportIssueDateEnd != ''">
+            <![CDATA[AND  REPORT_ISSUE_DATE <= TO_DATE(#{reportIssueDateEnd},'YYYY-MM-DD')]]>
+        </if>
+    </where>
+    </select>
+   <select id="selectByPrimaryKey"
+           resultType="com.joyintech.tams.disclosure.information.config.profailureinfo.dto.ProFailureInfo001Dto">
+      select
+          PROD_REGIST_NO prodRegistNo,
+          DATA_STATUS dataStatus,
+          NOCREATE_REASON nocreateReason,
+          REPORT_ISSUE_DATE reportIssueDate,
+          IS_SALES_AGENCY isSalesAgency,
+          DATA_SOURCE,
+          UPDATE_TIME,
+          UPDATE_USER
+      from DIS_PROD_NOCREATE
+      where PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
+   </select>
+
+    <delete id="deleteByKey">
+        update DIS_PROD_NOCREATE set DATA_STATUS = '02'
+        where PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
+    </delete>
+
+    <insert id="insert">
+        insert into DIS_PROD_NOCREATE (PROD_REGIST_NO, NOCREATE_REASON, IS_SALES_AGENCY,
+            REPORT_ISSUE_DATE, DATA_STATUS, DATA_SOURCE,
+            CREATE_USER, CREATE_TIME, UPDATE_USER,
+            UPDATE_TIME, CREATE_DEPT)
+        values (#{prodRegistNo,jdbcType=VARCHAR}, #{nocreateReason,jdbcType=VARCHAR}, #{isSalesAgency,jdbcType=VARCHAR},
+            #{reportIssueDate,jdbcType=DATE}, #{dataStatus,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR},
+            #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+            #{updateTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="updateByKey">
+        update DIS_PROD_NOCREATE
+        <set >
+            <if test="nocreateReason != null" >
+                NOCREATE_REASON = #{nocreateReason,jdbcType=VARCHAR},
+            </if>
+            <if test="isSalesAgency != null" >
+                IS_SALES_AGENCY = #{isSalesAgency,jdbcType=VARCHAR},
+            </if>
+            <if test="reportIssueDate != null" >
+                REPORT_ISSUE_DATE = #{reportIssueDate,jdbcType=DATE},
+            </if>
+            <if test="dataStatus != null" >
+                DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="dataSource != null" >
+                DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
+    </update>
+
+
+    <select id="getRegistNo" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        DISTINCT
+        PROD_RE id,
+        PROD_RE text
+        FROM
+        rep_prod_info
+        WHERE PROD_RE IS NOT NULL
+    </select>
+    <select id="selectByProdRegistNo" resultType="java.lang.String">
+        select PROD_REGIST_NO
+        from DIS_PROD_ADJUST
+        where PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getProdId" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        PROD_ID id,
+        PROD_NAME text,
+        PROD_ABBR
+        FROM
+        rep_prod_info
+        <where>
+            <if test="prodRegistNo != null and !prodRegistNo.equals('')">
+                AND PROD_RE=#{prodRegistNo}
+            </if>
+        </where>
+    </select>
+    <select id="getRegistNoList" resultType="com.joyintech.framework.select.SelectOptionDto">
+          SELECT
+             PROD_REGIST_NO id,
+             PROD_REGIST_NO text
+        FROM
+             DIS_PROD_ADJUST
+    </select>
+    <select id="getProdIdlist" resultType="com.joyintech.framework.select.SelectOptionDto">
+             SELECT
+        d.PROD_ID id,
+        r.PROD_NAME text,
+        r.PROD_ABBR
+        FROM
+        DIS_PROD_ADJUST d left join rep_prod_info r
+        on d.PROD_ID = r.PROD_ID
+    </select>
+    <select id="getRePord" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select
+        dp.PROD_REGIST_NO id,
+         rp.PROD_NAME text
+        from DIS_PROD_NOCREATE dp
+        left join REP_PROD_INFO  rp
+        on dp.PROD_REGIST_NO = rp.PROD_RE
+    </select>
+
+</mapper>
