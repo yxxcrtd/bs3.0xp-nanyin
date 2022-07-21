@@ -11,9 +11,7 @@ import com.joyintech.tams.disclosure.information.config.prodpartner.service.Prod
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class ProdPartnerInfoValidator implements BeanValidator {
@@ -31,40 +29,87 @@ public class ProdPartnerInfoValidator implements BeanValidator {
             //删除check
 
         }else{
-                //保存check
-                /*if (prodPartner002Service.checkPartnerExistByProdId(dto.getProdId()) > 0) {
-                    resultList.add(new ValidMessage("该产品已经维护了合作机构！"));
-                }*/
-                if(DateUtil.compareDate(platDate,dto.getEffDate())>0){
-                    resultList.add(new ValidMessage("生效日要大于等于平台日期！"));
+            if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)){
+                //新建check
+                if(StringUtil.isNotEmpty(dto.getEffDate())){
+                    if(DateUtil.compareDate(platDate,dto.getEffDate())>0){
+                        resultList.add(new ValidMessage("生效日要大于等于平台日期！"));
+                    }
                 }
-                if(DateUtil.compareDate(platDate,dto.getEffEndDate())>0){
-                    resultList.add(new ValidMessage("生效日截止日期要大于等于平台日期！"));
+                if(StringUtil.isNotEmpty(dto.getEffEndDate())){
+                    if(DateUtil.compareDate(platDate,dto.getEffEndDate())>0){
+                        resultList.add(new ValidMessage("生效日截止日期要大于等于平台日期！"));
+                    }
                 }
                 //生效日截止日期要大于等于生效日
-                if(DateUtil.compareDate(dto.getEffDate(),dto.getEffEndDate())>0){
-                    resultList.add(new ValidMessage("生效日截止日期要大于等于生效日！"));
+                if(StringUtil.isNotEmpty(dto.getEffDate()) && StringUtil.isNotEmpty(dto.getEffEndDate())){
+                    if(DateUtil.compareDate(dto.getEffDate(),dto.getEffEndDate())>0){
+                        resultList.add(new ValidMessage("生效日截止日期要大于等于生效日！"));
+                    }
                 }
-                //校验同一个产品不能有两条数据的生效区间范围有重叠
-                //查询产品所有的合作机构数据
-                List<ProdPartnerDto> prodPartnerDtoList=prodPartner002Service.checkPartnerExistByProdId(dto.getProdId());
-                if(prodPartnerDtoList.size()>0){
-                    for (ProdPartnerDto partnerDto : prodPartnerDtoList) {
-                        if(!((DateUtil.compareDate(dto.getEffDate(),partnerDto.getEffDate())<0 && DateUtil.compareDate(dto.getEffEndDate(),partnerDto.getEffDate())<0)
-                        || (DateUtil.compareDate(dto.getEffDate(),partnerDto.getEffEndDate())>0 && DateUtil.compareDate(dto.getEffEndDate(),partnerDto.getEffEndDate())>0))){
-                            resultList.add(new ValidMessage("生效区间范围有重叠！"+"{"+DateUtil.format(partnerDto.getEffDate(),"yyyyMMdd")
-                                    +"-"+DateUtil.format(partnerDto.getEffEndDate(),"yyyyMMdd")+"}"));
-                            break;
+            }else{
+                /**编辑：
+                 * 若平台日＜生效日，则生效日和生效截止日期都可以修改
+                 * 若生效日≤平台日＜生效截止日期，则生效日不能修改，生效截止日期可以修改
+                 * 若生效截止日期≤平台日，则生效日和生效截止日期都不不能修改
+                 */
+                Map<String,Object> map=new HashMap<>();
+                map.put("prodPartenerId",dto.getProdPartenerId());
+                //根据主键查询被修改的数据
+                List<ProdPartnerDto> prodPartnerDtoList=prodPartner002Service.checkPartnerExistByProdId(map);
+                if(!prodPartnerDtoList.isEmpty()){
+                    ProdPartnerDto partnerDto = prodPartnerDtoList.get(0);
+                    if(DateUtil.compareDate(partnerDto.getEffDate(),platDate)>0){
+                        //生效日和生效截止日都是大于平台日的，前台都可以修改，要加校验
+                        if(StringUtil.isNotEmpty(dto.getEffDate())){
+                            if(DateUtil.compareDate(platDate,dto.getEffDate())>0){
+                                resultList.add(new ValidMessage("生效日要大于等于平台日期！"));
+                            }
+                        }
+                        if(StringUtil.isNotEmpty(dto.getEffEndDate())){
+                            if(DateUtil.compareDate(platDate,dto.getEffEndDate())>0){
+                                resultList.add(new ValidMessage("生效日截止日期要大于等于平台日期！"));
+                            }
+                        }
+                        //生效日截止日期要大于等于生效日
+                        if(StringUtil.isNotEmpty(dto.getEffDate()) && StringUtil.isNotEmpty(dto.getEffEndDate())){
+                            if(DateUtil.compareDate(dto.getEffDate(),dto.getEffEndDate())>0){
+                                resultList.add(new ValidMessage("生效日截止日期要大于等于生效日！"));
+                            }
+                        }
+                    }else if(DateUtil.compareDate(partnerDto.getEffEndDate(),platDate)>0){
+                        //前台生效截止日可修改，要检验生效截止日
+                        if(StringUtil.isNotEmpty(dto.getEffEndDate())){
+                            if(DateUtil.compareDate(platDate,dto.getEffEndDate())>0){
+                                resultList.add(new ValidMessage("生效日截止日期要大于等于平台日期！"));
+                            }
+                        }
+                        //生效日截止日期要大于等于生效日
+                        if(StringUtil.isNotEmpty(dto.getEffDate()) && StringUtil.isNotEmpty(dto.getEffEndDate())){
+                            if(DateUtil.compareDate(dto.getEffDate(),dto.getEffEndDate())>0){
+                                resultList.add(new ValidMessage("生效日截止日期要大于等于生效日！"));
+                            }
                         }
                     }
                 }
-            //编辑check
-            if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)) {
-                if (DateUtil.compareDate(dto.getEffDate(),platDate)<=0) {
-                    resultList.add(new ValidMessage("生效日小于等于平台日！"));
-                }
-                if (DateUtil.compareDate(dto.getEffEndDate(),platDate)<=0) {
-                    resultList.add(new ValidMessage("生效截止日小于等于平台日！"));
+
+            }
+            //校验同一个产品不能有两条数据的生效区间范围有重叠
+            //查询产品所有的合作机构数据
+            Map<String,Object> map=new HashMap<>();
+            map.put("prodId",dto.getProdId());
+            if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)){
+                map.put("excludeId",dto.getProdPartenerId());
+            }
+            List<ProdPartnerDto> prodPartnerDtoList=prodPartner002Service.checkPartnerExistByProdId(map);
+            if(prodPartnerDtoList.size()>0){
+                for (ProdPartnerDto partnerDto : prodPartnerDtoList) {
+                    if(!((DateUtil.compareDate(dto.getEffDate(),partnerDto.getEffDate())<0 && DateUtil.compareDate(dto.getEffEndDate(),partnerDto.getEffDate())<0)
+                            || (DateUtil.compareDate(dto.getEffDate(),partnerDto.getEffEndDate())>0 && DateUtil.compareDate(dto.getEffEndDate(),partnerDto.getEffEndDate())>0))){
+                        resultList.add(new ValidMessage("生效区间范围有重叠！"+"{"+DateUtil.format(partnerDto.getEffDate(),"yyyyMMdd")
+                                +"-"+DateUtil.format(partnerDto.getEffEndDate(),"yyyyMMdd")+"}"));
+                        break;
+                    }
                 }
             }
         }
