@@ -70,4 +70,83 @@
 			and p_prod_id is not null
 		</if>
 	</select>
+
+	<select id="getPProdIdList" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select
+		distinct RPI.P_PROD_ID id,
+		RPI.PROD_ABBR text
+		from
+		REP_PROD_INFO RPI
+		<if test="flag != null and flag != '' and flag == '01'">
+			inner join DIS_PROD_FEEDISCOUNT DPF on DPF.prod_id=RPI.prod_id
+		</if>
+		<if test="flag != null and flag != '' and flag == '02'">
+			inner join DIS_PROD_ADJUST DPA on DPA.prod_id=RPI.prod_id and DPA.DATA_STATUS='01'
+		</if>
+		<if test="flag != null and flag != '' and flag == '03'">
+			inner join DIS_LARGE_REDEMPTION DLR on DLR.prod_id=RPI.prod_id and DLR.STATUS='01'
+		</if>
+		where RPI.STATUS='E'
+		<if test="search != null and search != ''">
+			and (RPI.P_PROD_ID like '%' || #{search, jdbcType=VARCHAR} || '%'
+			or RPI.PROD_ABBR like '%' || #{search, jdbcType=VARCHAR} || '%')
+		</if>
+		<if test="condition != null and condition != ''">
+			<![CDATA[ ${condition}  ]]>
+		</if>
+	</select>
+
+	<select id="getProdIdList" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select
+		distinct PROD_ID id,
+		PROD_ABBR text
+		from
+		REP_PROD_INFO
+		where STATUS='E'
+		/* and p_prod_id is null 不取子产品*/
+		<if test="search != null and search != ''">
+			and (PROD_ID like '%' || #{search, jdbcType=VARCHAR} || '%'
+			or PROD_ABBR like '%' || #{search, jdbcType=VARCHAR} || '%')
+		</if>
+		<if test="pprodid != null and pprodid != ''">
+			and P_PROD_ID=#{pprodid}
+		</if>
+		<if test="condition != null and condition != ''">
+			<![CDATA[ ${condition}  ]]>
+		</if>
+	</select>
+
+	<select id="getFeeNameList" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select
+		distinct DPF.PROD_DISCOUNT_ID id,
+		DPF.FEENAME text
+		from
+		DIS_PROD_FEEDISCOUNT DPF
+		left join REP_PROD_INFO RPI on DPF.prod_id=RPI.prod_id
+		where STATUS='E'
+		<if test="search != null and search != ''">
+			and (DPF.PROD_DISCOUNT_ID like '%' || #{search, jdbcType=VARCHAR} || '%'
+			or DPF.FEENAME like '%' || #{search, jdbcType=VARCHAR} || '%')
+		</if>
+		<if test="pprodid != null and pprodid != ''">
+			and RPI.P_PROD_ID=#{pprodid}
+		</if>
+	</select>
+
+	<select id="getElementNameList" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select
+		distinct DPA.PROD_ID id,
+		DPA.ADJ_FIELD text
+		from
+		DIS_PROD_ADJUST DPA
+		left join REP_PROD_INFO RPI on DPA.prod_id=RPI.prod_id
+		where DPA.DATA_STATUS='01'
+		<if test="search != null and search != ''">
+			and (DPA.PROD_ID like '%' || #{search, jdbcType=VARCHAR} || '%'
+			or DPA.ADJ_FIELD like '%' || #{search, jdbcType=VARCHAR} || '%')
+		</if>
+		<if test="pprodid != null and pprodid != ''">
+			and RPI.P_PROD_ID=#{pprodid}
+		</if>
+	</select>
 </mapper>

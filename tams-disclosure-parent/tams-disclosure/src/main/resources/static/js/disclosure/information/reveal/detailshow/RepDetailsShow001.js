@@ -36,22 +36,18 @@ $(function () {
 	    		var getVal = $('#'+ids[i].key).val();
 	    		if(getKey !='indexId'){
 	    			if(getVal){
-	    				obj[getKey] = getVal;
-	    				if(getKey == 'portnum'){
-	    					for (var int = 0; int < prodArray.length; int++) {
-	    						if(prodArray[int].id == getVal){
-	    							obj['portname'] = prodArray[int].text;
-	    							proName = prodArray[int].text;
-	    							break;
-	    						}
-	    					}
-	    				}
+						if(ids[i].multiFlag==='Y'){
+							obj[getKey]=getVal.join(",");
+						}else{
+							obj[getKey] = getVal;
+						}
+
 	    			}else{
 	    				return null;
 	    			}
 	    		}
         	}
-    		if(obj.startDate){
+    		if(obj.startDate&&obj.endDate){
     			if(obj.startDate>obj.endDate){
     				Joyin.alert('开始日不能大于结束日！',2);
     				return "flag";
@@ -79,7 +75,7 @@ $(function () {
 			//产品名称下拉框
 			if(data[i].screenType==='01'){
 				SearchHtml+= '<select id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" class="layui-input form-input input-select" placeholder="请选择" data-url="getPProdIdList"'
-					+'parentIds="repId" allowClear="true"';
+					+'parentIds="repId,prodid" allowClear="true"';
 				if(data[i].multiFlag==='Y'){
 					SearchHtml+= 'multiple="true">' +'</select>';
 				}else{
@@ -89,7 +85,7 @@ $(function () {
 			//子产品代码下拉框
 			else if(data[i].screenType==='02'){
 				SearchHtml+= '<select id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" class="layui-input form-input input-select" placeholder="请选择" data-url="getProdIdList"'
-					+'parentIds="repId,prodName" allowClear="true"';
+					+'parentIds="repId,pprodid" allowClear="true"';
 				if(data[i].multiFlag==='Y'){
 					SearchHtml+= 'multiple="true">' +'</select>';
 				}else{
@@ -99,7 +95,7 @@ $(function () {
 			//费率名称下拉框
 			else if(data[i].screenType==='03'){
 				SearchHtml+= '<select id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" class="layui-input form-input input-select" placeholder="请选择" data-url="getFeeNameList"'
-					+'parentIds="repId" allowClear="true"';
+					+'parentIds="repId,pprodid" allowClear="true" formatoption="false"';
 				if(data[i].multiFlag==='Y'){
 					SearchHtml+= 'multiple="true">' +'</select>';
 				}else{
@@ -109,7 +105,7 @@ $(function () {
 			//要素名称下拉框
 			else if(data[i].screenType==='04'){
 				SearchHtml+= '<select id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" class="layui-input form-input input-select" placeholder="请选择" data-url="getElementNameList"'
-					+'parentIds="repId" allowClear="true"';
+					+'parentIds="repId,pprodid" allowClear="true"';
 				if(data[i].multiFlag==='Y'){
 					SearchHtml+= 'multiple="true">' +'</select>';
 				}else{
@@ -138,7 +134,7 @@ $(function () {
 			else if(data[i].screenType==='09'){
 				SearchHtml+= '<input type="text" id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" placeholder="请选择日期" class="layui-input form-input input-dateSelect" />';
 			}
-			ids.push({key:data[i].screenKey,type:data[i].screenType});
+			ids.push({key:data[i].screenKey,type:data[i].screenType,multiFlag:data[i].multiFlag});
 			SearchHtml +='</div></div>';
 
 		}
@@ -167,16 +163,7 @@ $(function () {
 			}
 		}
 	}
-    
-    var getOpt = function(type){
-    	
-    	var option = "";
-    	for(var i = 0 ; i<prodArray.length;i++){
-    		option +='<option value ="'+prodArray[i].id+'">'+prodArray[i].text+'</option>';
-    	}
-    	return option;
-    }
-    
+
   //树单击事件
     var zTreeOnClick = function(event, treeId, treeNode, clickFlag){
     	
@@ -285,6 +272,7 @@ $(function () {
 	    }else{
 	    	params['uri'] = modelId;
 	    	params['repId']=repId;
+			console.log(params)
 				alert("b");
 	    	Joyin.ajax('previewReport', params, function(result) {
 				//var data =result.replace(new RegExp(changeStr, "g"), toStr);
