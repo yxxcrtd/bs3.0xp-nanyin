@@ -46,7 +46,6 @@ public class ProElementAdj002Controller extends BaseController {
     public String init(Model model) {
         this.setSelectOptionToModel(model, new DictCode[] {DictCode.是否});
         String workflowId = getParam("workflowId");
-        String prodRegistNo = getParam("prodRegistNo");
         String prodAdjustId =getParam("prodAdjustId");
         // 不来自于代办
         if (WorkFlowUtil.isNotFromToDoList() &&  StringUtil.isNotEmpty(prodAdjustId)) {
