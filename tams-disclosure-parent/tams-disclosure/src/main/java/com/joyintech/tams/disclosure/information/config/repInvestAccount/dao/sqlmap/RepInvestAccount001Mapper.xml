@@ -49,7 +49,49 @@
     </select>
 
     <insert id="insert" parameterType="com.joyintech.tams.disclosure.information.config.repInvestAccount.dto.RepInvestAccountDto" >
-        INSERT INTO REP_INVEST_ACCOUNT(PROD_ID,ACCOUNT_TYPE,ACCOUNT_NUM,
+        MERGE INTO REP_INVEST_ACCOUNT RIA
+        USING (
+            SELECT #{prodId,jdbcType=VARCHAR} PROD_ID,
+            #{accountType,jdbcType=VARCHAR} ACCOUNT_TYPE,
+            #{accountNum,jdbcType=VARCHAR} ACCOUNT_NUM,
+            #{accountName,jdbcType=VARCHAR} ACCOUNT_NAME,
+            #{accountOpener,jdbcType=VARCHAR} ACCOUNT_OPENER,
+            #{status,jdbcType=VARCHAR} STATUS,
+            #{createUser,jdbcType=VARCHAR} CREATE_USER,
+            #{createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+            #{createDept,jdbcType=VARCHAR} CREATE_DEPT,
+            #{createUser,jdbcType=VARCHAR} UPDATE_USER,
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            FROM
+            DUAL
+        ) TEMP
+        <!-- 业务主键匹配 -->
+        ON(RIA.PROD_ID = TEMP.PROD_ID
+        )
+        <!-- 匹配到则更新 -->
+        WHEN MATCHED THEN UPDATE
+        SET
+        RIA.ACCOUNT_TYPE = TEMP.ACCOUNT_TYPE,
+        RIA.ACCOUNT_NUM = TEMP.ACCOUNT_NUM,
+        RIA.ACCOUNT_NAME = TEMP.ACCOUNT_NAME,
+        RIA.ACCOUNT_OPENER = TEMP.ACCOUNT_OPENER,
+        RIA.CREATE_TIME = TEMP.CREATE_TIME,
+        RIA.UPDATE_TIME = TEMP.UPDATE_TIME,
+        RIA.CREATE_DEPT = TEMP.CREATE_DEPT,
+        RIA.CREATE_USER = TEMP.CREATE_USER,
+        RIA.UPDATE_USER = TEMP.UPDATE_USER,
+        RIA.STATUS = TEMP.STATUS
+        <!-- 未匹配到则插入 -->
+        WHEN NOT MATCHED THEN INSERT (ACCOUNT_TYPE,ACCOUNT_NUM,
+        ACCOUNT_NAME,ACCOUNT_OPENER,STATUS,
+        CREATE_USER,CREATE_TIME,CREATE_DEPT,
+        UPDATE_USER,UPDATE_TIME)
+        VALUES( TEMP.ACCOUNT_TYPE,TEMP.ACCOUNT_NUM,
+        TEMP.ACCOUNT_NAME,TEMP.ACCOUNT_OPENER,TEMP.STATUS,
+        TEMP.CREATE_USER,TEMP.CREATE_TIME,TEMP.CREATE_DEPT,
+        TEMP.UPDATE_USER,TEMP.UPDATE_TIME)
+
+<!--        INSERT INTO REP_INVEST_ACCOUNT(PROD_ID,ACCOUNT_TYPE,ACCOUNT_NUM,
                                 ACCOUNT_NAME,ACCOUNT_OPENER,STATUS,
 								CREATE_USER,CREATE_TIME,CREATE_DEPT,
                                 UPDATE_USER,UPDATE_TIME)
@@ -57,7 +99,7 @@
               #{accountName,jdbcType=VARCHAR},#{accountOpener,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR},
               #{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR},
               #{createUser,jdbcType=VARCHAR},#{updateTime,jdbcType=TIMESTAMP}
-        )
+        )-->
     </insert>
     <update id="update" parameterType="com.joyintech.tams.disclosure.information.config.repInvestAccount.dto.RepInvestAccountDto" >
     update REP_INVEST_ACCOUNT
@@ -96,7 +138,7 @@
     <select id="selectByProdID" resultType="com.joyintech.tams.disclosure.information.config.repInvestAccount.dto.RepInvestAccountDto" >
         select distinct ric.*
         from REP_INVEST_ACCOUNT ric
-        where ric.PROD_ID = #{prodId,jdbcType=VARCHAR}
+        where ric.PROD_ID = #{prodId,jdbcType=VARCHAR} and ric.STATUS = 'E'
     </select>
 
     <select id="getProdId" resultType="java.lang.String">
