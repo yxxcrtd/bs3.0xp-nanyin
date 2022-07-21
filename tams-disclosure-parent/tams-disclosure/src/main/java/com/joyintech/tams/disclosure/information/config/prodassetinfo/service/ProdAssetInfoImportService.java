@@ -1,5 +1,8 @@
 package com.joyintech.tams.disclosure.information.config.prodassetinfo.service;
 
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.JoyinMessage;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.DictCodeListExt3;
@@ -17,6 +20,7 @@ import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,6 +41,30 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
 
     @Autowired
     private ProdAssetInfo001Mapper prodAssetInfo001Mapper;
+
+    /**
+     * 导入check
+     * @param fileName
+     * @return
+     */
+    public AjaxResult checkImportData(String fileName) throws FileNotFoundException, ParseException {
+        AjaxResult wr = new AjaxResult();
+        List<JoyinMessage> joyinMessages = new ArrayList<>();
+        //获取系统参数：单次导入的最大条数 todo:添加系统参数
+        int maxCount = CacheUtil.getSysParam("SEND_CB_MAX_DATA_COUNT")==null?50000:Integer.parseInt(CacheUtil.getSysParam("SEND_CB_MAX_DATA_COUNT"));
+        //todo:数据量较大时，操作耗时时间过长
+        ExcelUtil excelUtil = ExcelUtil.build(FileNameUtil.getUploadFilePath(fileName),
+                null);
+        List<List<String>> dataList = excelUtil.readToList(0, 1, 0);
+        //校验导入文件条数是否大于50000
+        if(dataList.size()>maxCount){
+            JoyinMessage ms = new JoyinMessage("导入数据超过"+maxCount+"条，可能导致系统较慢，是否确认导入？",
+                    MessageType.确认消息);
+            joyinMessages.add(ms);
+        }
+        wr.setJoyinMessages(joyinMessages);
+        return wr;
+    }
 
     /**
      * excel导入功能
@@ -121,7 +151,7 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
             //验证比例值是否合法
             for (int index = 1; index < list.size()-2; index++){
                 if(StringUtil.isNotEmpty(list.get(index))){
-                    if(!checkIsLegalNumber(list.get(index).trim())){
+                    if(!isBigDecimal(list.get(index).trim())){
                         ExcelValidDto dto = new ExcelValidDto(list.get(index), String.valueOf(i + 2),
                                 fildsStr[index]+"字段数据格式不正确！");
                         excelValidDtolist.add(dto);
@@ -129,7 +159,7 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
                 }
             }
             //验证穿透前，穿透后资产占比总和是否>100
-            if(checkIsLegalNumber(list.get(1).trim()) && checkIsLegalNumber(list.get(3).trim()) && checkIsLegalNumber(list.get(5).trim()) && checkIsLegalNumber(list.get(7).trim())){
+            if(isBigDecimal(list.get(1).trim()) && isBigDecimal(list.get(3).trim()) && isBigDecimal(list.get(5).trim()) && isBigDecimal(list.get(7).trim())){
                 if(ArithmeticUtil.doAdd(new BigDecimal(list.get(1).trim()),new BigDecimal(list.get(3).trim()),new BigDecimal(list.get(5).trim()),new BigDecimal(list.get(7).trim())).compareTo(new BigDecimal(100))>0){
                     ExcelValidDto dto = new ExcelValidDto(list.get(0), String.valueOf(i + 2),
                             "穿透前资产占比总和大于100");
@@ -137,7 +167,7 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
                 }
             }
 
-            if(checkIsLegalNumber(list.get(2).trim()) && checkIsLegalNumber(list.get(4).trim()) && checkIsLegalNumber(list.get(6).trim()) && checkIsLegalNumber(list.get(8).trim())){
+            if(isBigDecimal(list.get(2).trim()) && isBigDecimal(list.get(4).trim()) && isBigDecimal(list.get(6).trim()) && isBigDecimal(list.get(8).trim())){
                 if(ArithmeticUtil.doAdd(new BigDecimal(list.get(2).trim()),new BigDecimal(list.get(4).trim()),new BigDecimal(list.get(6).trim()),new BigDecimal(list.get(8).trim())).compareTo(new BigDecimal(100))>0){
                     ExcelValidDto dto = new ExcelValidDto(list.get(0), String.valueOf(i + 2),
                             "穿透后资产占比总和大于100");
@@ -149,7 +179,7 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
             Date sysDate = DateUtil.platDateFromCache();
             // 验证生效日
             if(StringUtil.isNotEmpty(list.get(9))){
-                if(!checkIsLegalDate(list.get(9))){
+                if(!DateUtil.isDateStr(list.get(9))){
                     ExcelValidDto dto = new ExcelValidDto(list.get(9), String.valueOf(i + 2),
                             this.getMessage("MST_INFO_E_0001"));
                     excelValidDtolist.add(dto);
@@ -164,16 +194,39 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
             }
             //验证生效日截止日
             if(StringUtil.isNotEmpty(list.get(10))){
-                if(!checkIsLegalDate(list.get(10))){
+                if(!DateUtil.isDateStr(list.get(10))){
                     ExcelValidDto dto = new ExcelValidDto(list.get(10), String.valueOf(i + 2),
                             this.getMessage("MST_INFO_E_0001"));
                     excelValidDtolist.add(dto);
                 }else{
-                    // 验证生效日是否大于等于平台日期
                     if (DateUtil.compareDate(sysDate, sdf.parse(list.get(10))) > 0) {
                         ExcelValidDto dto = new ExcelValidDto(list.get(10), String.valueOf(i + 2),
                                 this.getMessage("BUSS_COM_E_0004", "生效日", "平台日期"));
                         excelValidDtolist.add(dto);
+                    }else{
+                        if(DateUtil.isDateStr(list.get(9))){
+                            Date effEndDate=sdf.parse(list.get(10).trim());
+                            Date effDate=sdf.parse(list.get(9).trim());
+                            if(DateUtil.compareDate(effDate, effEndDate) > 0){
+                                ExcelValidDto dto = new ExcelValidDto(list.get(10), String.valueOf(i + 2),
+                                        this.getMessage("BUSS_COM_E_0004", "生效日截止日", "生效日"));
+                                excelValidDtolist.add(dto);
+                            }else{
+                                //校验同一产品生效区间是否重叠
+                                if(StringUtil.isNotEmpty(list.get(0))){
+                                    List<ProdAssetInfoDto> dtos = prodAssetInfo001Mapper.selectAssetInfoByProdId(list.get(0).trim());
+                                    for (ProdAssetInfoDto dto : dtos) {
+                                        if(!((DateUtil.compareDate(effDate,dto.getEffDate())<0 && DateUtil.compareDate(effEndDate,dto.getEffDate())<0)
+                                                || (DateUtil.compareDate(effDate,dto.getEffEndDate())>0 && DateUtil.compareDate(effEndDate,dto.getEffEndDate())>0))){
+                                            excelValidDtolist.add(new ExcelValidDto(list.get(0), String.valueOf(i+2),
+                                                    "生效区间重叠！<br/> 系统中已存在的生效区间:"+DateUtil.format(dto.getEffDate(),"yyyyMMdd")
+                                                            +"-"+DateUtil.format(dto.getEffEndDate(),"yyyyMMdd")));
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -212,12 +265,12 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
      * @param numberStr
      * @return
      */
-    private boolean checkIsLegalNumber(String numberStr) {
-        try{
-            new BigDecimal(numberStr);
+    public static boolean isBigDecimal(String numberStr) {
+        Pattern NUMERIC_PATTERN = Pattern.compile("^(\\-|\\+)?\\d+(\\.\\d+)?$");
+        Matcher m = NUMERIC_PATTERN.matcher(numberStr);
+        if (m.find()) {
             return true;
-        } catch (Exception e) {
-            logger.error(e.getMessage(),e);
+        }else{
             return false;
         }
     }
@@ -249,22 +302,6 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
         return prodAssetInfoDto;
     }
 
-    /**
-     * 使用日期格式化捕获异常来判断日期格式是否合法
-     * 目标格式：yyyy-MM-dd
-     * @param dateStr
-     * @return
-     */
-    private boolean checkIsLegalDate(String dateStr) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        try{
-            Date date = sdf.parse(dateStr);
-            return true;
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
 
     /**
      * 检查导入文件中的产品主代码是否存在

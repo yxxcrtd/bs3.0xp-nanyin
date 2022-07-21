@@ -42,4 +42,6 @@ public interface ProdAssetInfo002Mapper extends DisProdAssetMapper {
     int updateProdPartner(ProdAssetInfoDto dto);
 
     int deleteProdPartner(ProdAssetInfoDto dto);
+
+    int deleteProdAssetByPrimaryKey(String prodAssetId);
 }

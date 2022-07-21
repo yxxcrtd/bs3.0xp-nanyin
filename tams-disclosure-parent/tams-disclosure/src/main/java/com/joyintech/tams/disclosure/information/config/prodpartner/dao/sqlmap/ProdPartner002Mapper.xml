@@ -19,10 +19,10 @@
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
 	</update>
 
-	<delete id="deleteProdPartner">
-		delete from DIS_PROD_PARTNER
-        where PROD_ID = #{prodId,jdbcType=VARCHAR}
-	</delete>
+	<update id="deleteProdPartnerByPrimaryKey">
+		update DIS_PROD_PARTNER set DATA_STATUS='02'
+        where PROD_PARTENER_ID = #{prodPartenerId,jdbcType=VARCHAR}
+	</update>
 
     <select id="selectDetail"
             resultType="com.joyintech.tams.disclosure.information.config.prodpartner.dto.ProdPartnerDto">
@@ -58,6 +58,12 @@
 			</if>
 			<if test="status != null and status != ''">
 				AND	DATA_STATUS=#{status,jdbcType=VARCHAR}
+			</if>
+			<if test="prodPartenerId != null and prodPartenerId != ''">
+				AND	PROD_PARTENER_ID=#{prodPartenerId,jdbcType=VARCHAR}
+			</if>
+			<if test="excludeId != null and excludeId != ''">
+				AND	PROD_PARTENER_ID!=#{excludeId,jdbcType=VARCHAR}
 			</if>
 		</where>
 	</select>

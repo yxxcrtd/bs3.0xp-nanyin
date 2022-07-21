@@ -59,7 +59,7 @@ public class ProdAssetInfo002Service extends CommonExportService<ProdAssetInfoDt
 
         if (OperationType.DELETE.equals(type)) {
             //删除
-            prodAssetInfo002Mapper.deleteByPrimaryKey(dto.getProdAssetId());
+            prodAssetInfo002Mapper.deleteProdAssetByPrimaryKey(dto.getProdAssetId());
         }
         else if (OperationType.NEW.equals(type)) {//新建
             //数据状态
@@ -79,11 +79,7 @@ public class ProdAssetInfo002Service extends CommonExportService<ProdAssetInfoDt
      * @param dto
      * @return
      */
-    public List<ProdAssetInfoDto> selectProdAssetInfoByProdId(ProdAssetInfoDto dto) {
-        Map<String,Object> param=new HashMap<>();
-        param.put("prodId",dto.getProdId());
-        //修改时，不查询被修改的数据
-        param.put("prodAssetId",dto.getProdAssetId());
+    public List<ProdAssetInfoDto> selectProdAssetInfoByProdId(Map<String,Object> param) {
         param.put("status",DictCodeListExt3.信披_数据状态_有效.getValue());
         return prodAssetInfo002Mapper.selectProdAssetInfoByProdId(param);
     }

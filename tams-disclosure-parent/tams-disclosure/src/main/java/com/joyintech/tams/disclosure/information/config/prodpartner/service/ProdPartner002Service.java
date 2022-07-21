@@ -64,7 +64,7 @@ public class ProdPartner002Service extends CommonExportService<ProdPartnerDto>
 
         if (OperationType.DELETE.equals(type)) {
             //删除
-            prodPartner002Mapper.deleteByPrimaryKey(dto.getProdPartenerId());
+            prodPartner002Mapper.deleteProdPartnerByPrimaryKey(dto.getProdPartenerId());
         }
         else if (OperationType.NEW.equals(type)) {//新建
             //数据状态
@@ -81,12 +81,10 @@ public class ProdPartner002Service extends CommonExportService<ProdPartnerDto>
 
     /**
      * 查询产品所有的合作机构信息
-     * @param prodId
+     * @param param
      * @return
      */
-    public List<ProdPartnerDto> checkPartnerExistByProdId(String prodId) {
-        Map<String,Object> param=new HashMap<>();
-        param.put("prodId",prodId);
+    public List<ProdPartnerDto> checkPartnerExistByProdId(Map<String, Object> param) {
         param.put("status",DictCodeListExt3.信披_数据状态_有效.getValue());
         return prodPartner002Mapper.selectPartnerByProdId(param);
     }

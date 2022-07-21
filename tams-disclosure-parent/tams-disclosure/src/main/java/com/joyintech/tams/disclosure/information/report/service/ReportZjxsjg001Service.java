@@ -20,7 +20,7 @@ import java.util.*;
  * @see ReportZjxsjg001Service
  * @since 1.0
  */
-@Service
+@Service("reportZjxsjg001Service")
 public class ReportZjxsjg001Service implements IReportDataService {
 
     @Autowired
@@ -31,26 +31,26 @@ public class ReportZjxsjg001Service implements IReportDataService {
     
     @Override
     public List<Map<String, Object>> queryDatas(Map<String, Object> paraMap) {
-        Map<String,Object> dataMap = new HashMap<String,Object>();
+        Map<String,Object> dataMap = new HashMap<>();
         List<Map<String,Object>> result = new ArrayList<>();
         result.add(dataMap);
         if (paraMap.get("pprodid") == null) {
             return result;
         }
         String prodId = paraMap.get("pprodid").toString();
-        Map<String,Object> searchparam = new HashMap<String,Object>();
+        Map<String,Object> searchparam = new HashMap<>();
         searchparam.put("prodId", prodId);
         ReportZjxsjg001Dto zjxsjg = reportZjxsjg001Mapper.queryZjxsjg(searchparam);
         if (zjxsjg == null) {
             return result;
         }
-        dataMap.put("${prodName}", zjxsjg.getProdName());
-        dataMap.put("${regCode}", zjxsjg.getRegCode());
-        Date puDate = commonPlatformDateService.getSysDate();
-        if (null != paraMap.get("endDate")) {
-            puDate = (java.sql.Date)paraMap.get("endDate");
+        dataMap.put("prodName", zjxsjg.getProdName());
+        dataMap.put("regCode", zjxsjg.getRegCode());
+        String pubDateStr = commonPlatformDateService.getSysDateStr();
+        if (null != paraMap.get("enddate")) {
+            pubDateStr = (String)paraMap.get("enddate");
         }
-        dataMap.put("${pubDate}",DateUtil.format(puDate, DateUtil.DEFAULT_DATE_FORMAT_CN));
+        dataMap.put("pubDate",DateUtil.format(DateUtil.parse(pubDateStr), DateUtil.DEFAULT_DATE_FORMAT_CN));
         return result;
     }
 }
