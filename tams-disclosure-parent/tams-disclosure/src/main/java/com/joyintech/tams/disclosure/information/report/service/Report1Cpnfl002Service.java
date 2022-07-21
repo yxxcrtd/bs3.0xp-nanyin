@@ -94,13 +94,13 @@ public class Report1Cpnfl002Service implements IReportDataService {
                 DecimalFormat df = new DecimalFormat("0.00%");
                 // 本次优惠前费率
                 feemap.put("thisPreFeerate", x.getThisPreFeerate() == null ? GlobalConstant.SPLIT :
-                        df.format(x.getThisPreFeerate().multiply(new BigDecimal(100))));
+                        df.format(x.getThisPreFeerate()));
                 // 本次优惠后费率
                 feemap.put("thisAfterFeerate", x.getThisAfterFeerate() == null ? GlobalConstant.SPLIT :
-                        df.format(x.getThisAfterFeerate().multiply(new BigDecimal(100))));
+                        df.format(x.getThisAfterFeerate()));
                 // 本次优惠结束后费率
                 feemap.put("thisEndFeerate", x.getThisEndFeerate() == null ? GlobalConstant.SPLIT :
-                        df.format(x.getThisEndFeerate().multiply(new BigDecimal(100))));
+                        df.format(x.getThisEndFeerate()));
                 feelist.add(feemap);
             });
             dataMap.put("feelist", feelist);

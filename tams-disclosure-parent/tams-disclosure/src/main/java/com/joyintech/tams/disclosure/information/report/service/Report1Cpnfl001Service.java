@@ -90,10 +90,10 @@ public class Report1Cpnfl001Service implements IReportDataService {
                 DecimalFormat df = new DecimalFormat("0.00%");
                 // 优惠前费率
                 feemap.put("preFeerate", x.getPreFeerate() == null ? GlobalConstant.SPLIT :
-                        df.format(x.getPreFeerate().multiply(new BigDecimal(100))));
+                        df.format(x.getPreFeerate()));
                 // 优惠后费率
                 feemap.put("afterFeerate", x.getAfterFeerate() == null ? GlobalConstant.SPLIT :
-                        df.format(x.getAfterFeerate().multiply(new BigDecimal(100))));
+                        df.format(x.getAfterFeerate()));
                 // 优惠起始时间
                 feemap.put("startDate", x.getStartDate() == null ? GlobalConstant.SPLIT :
                         DateUtil.format(x.getStartDate()));

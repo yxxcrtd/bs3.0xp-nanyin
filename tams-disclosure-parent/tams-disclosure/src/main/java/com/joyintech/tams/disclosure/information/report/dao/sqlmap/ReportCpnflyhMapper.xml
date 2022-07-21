@@ -35,7 +35,8 @@
 			rpi.prod_id prod_id,
 			rpi.prod_re reg_code,
 			rpi.raise_type raise_type,
-			max(dpf.fee_dis_remark) remark
+			max(dpf.fee_dis_remark) remark,
+		    max(dpf.feename) feename
 		from rep_prod_info rpi
 		inner join dis_prod_feediscount dpf
 		on rpi.prod_re = dpf.prod_regist_no
@@ -51,6 +52,7 @@
 		</if>
 		group by
 		rpi.prod_id,
+		rpi.prod_re,
 		rpi.raise_type
 	</select>
 

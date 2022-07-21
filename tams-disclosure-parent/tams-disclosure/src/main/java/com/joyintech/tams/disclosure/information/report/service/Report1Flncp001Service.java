@@ -65,7 +65,7 @@ public class Report1Flncp001Service implements IReportDataService {
             return result;
         }
         // 费用名称
-        dataMap.put("feeName", feename);
+        dataMap.put("feeName", cpnflDto.getFeename());
         // 优惠说明
         dataMap.put("remark", cpnflDto.getRemark());
         // 设置公告、报告字样
@@ -75,31 +75,31 @@ public class Report1Flncp001Service implements IReportDataService {
         // 发布日期
         dataMap.put("pubDate",DateUtil.format(DateUtil.parse(pubDateStr), DateUtil.DEFAULT_DATE_FORMAT_CN));
         // 费率优惠明细
-        List<ReportProdfeeDto> prodfeeDtos = reportCpflyhMapper.qureyFeelist(searchparam);
+        List<ReportProdfeeDto> prodfeeDtos = reportCpflyhMapper.qureyProdlist(searchparam);
         if (prodfeeDtos != null && prodfeeDtos.size() > 0) {
-            List<Map<String, Object>> feelist = new ArrayList<>();
+            List<Map<String, Object>> prodlist = new ArrayList<>();
             prodfeeDtos.forEach(x -> {
-                Map<String, Object> feemap = new HashMap<>();
+                Map<String, Object> prodmap = new HashMap<>();
                 // 产品名称
-                feemap.put("prodName", StringUtil.isBlank(x.getProdName()) ? GlobalConstant.SPLIT : x.getProdName());
+                prodmap.put("prodName", StringUtil.isBlank(x.getProdName()) ? GlobalConstant.SPLIT : x.getProdName());
                 // 内部销售代码
-                feemap.put("prodId", StringUtil.isBlank(x.getProdId()) ? GlobalConstant.SPLIT : x.getProdId());
+                prodmap.put("prodId", StringUtil.isBlank(x.getProdId()) ? GlobalConstant.SPLIT : x.getProdId());
                 DecimalFormat df = new DecimalFormat("0.00%");
                 // 优惠前费率
-                feemap.put("preFeerate", x.getPreFeerate() == null ? GlobalConstant.SPLIT :
-                        df.format(x.getPreFeerate().multiply(new BigDecimal(100))));
+                prodmap.put("preFeerate", x.getPreFeerate() == null ? GlobalConstant.SPLIT :
+                        df.format(x.getPreFeerate()));
                 // 优惠后费率
-                feemap.put("afterFeerate", x.getAfterFeerate() == null ? GlobalConstant.SPLIT :
-                        df.format(x.getAfterFeerate().multiply(new BigDecimal(100))));
+                prodmap.put("afterFeerate", x.getAfterFeerate() == null ? GlobalConstant.SPLIT :
+                        df.format(x.getAfterFeerate()));
                 // 优惠起始时间
-                feemap.put("startDate", x.getStartDate() == null ? GlobalConstant.SPLIT :
+                prodmap.put("startDate", x.getStartDate() == null ? GlobalConstant.SPLIT :
                         DateUtil.format(x.getStartDate()));
                 // 优惠结束时间
-                feemap.put("endDate", x.getEndDate() == null ? GlobalConstant.SPLIT :
+                prodmap.put("endDate", x.getEndDate() == null ? GlobalConstant.SPLIT :
                         DateUtil.format(x.getEndDate()));
-                feelist.add(feemap);
+                prodlist.add(prodmap);
             });
-            dataMap.put("feelist", feelist);
+            dataMap.put("prodlist", prodlist);
         }
         return result;
     }

@@ -33,6 +33,11 @@ public class Report1FlncpDto extends BaseEntity {
      */
     private String remark;
 
+    /**
+     * 费用名称
+     */
+    private String feename;
+
     public String getProdId() {
         return prodId;
     }
@@ -63,5 +68,13 @@ public class Report1FlncpDto extends BaseEntity {
 
     public void setRegCode(String regCode) {
         this.regCode = regCode;
+    }
+
+    public String getFeename() {
+        return feename;
+    }
+
+    public void setFeename(String feename) {
+        this.feename = feename;
     }
 }
