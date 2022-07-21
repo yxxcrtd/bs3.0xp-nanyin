@@ -86,8 +86,10 @@ public class ProElementAdj002Controller extends BaseController {
         }
         ProcessParameter<ProElementAdj001Dto> processParameter = new ProcessParameter<ProElementAdj001Dto>();
         WorkFlowParameter<ProElementAdj001Dto> params = new WorkFlowParameter<ProElementAdj001Dto>();
-        String code = IDGenerator.generate();
-        dto.setProdAdjustId(code);
+        if(StringUtil.equals(dto.getOperateType(),"new")){
+            String code = IDGenerator.generate(36);
+            dto.setProdAdjustId(code);
+        }
         params.setPageId(this.getPageId());
         params.setElementId(dto.getElementId());
         params.setBusinessCode(item -> item.getProdRegistNo());
