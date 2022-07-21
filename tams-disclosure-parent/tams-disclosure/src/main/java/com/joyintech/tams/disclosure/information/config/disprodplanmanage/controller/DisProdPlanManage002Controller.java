@@ -133,20 +133,6 @@ public class DisProdPlanManage002Controller extends BaseController {
 		return  disProdPlanManage002Service.getPrdInfo(finprodId);
 	}
 
-
-	/**
-	 * 根据主键id查询模板参数
-	 * @return
-	 */
-	@RequestMapping("/findParamPage")
-	@ResponseBody
-	public List<DisProdPlanManage002Dto> findParamPage() {
-		if (StringUtil.isNotEmpty(this.getParam("repId"))) {
-			return disProdPlanManage002Service.findParamPage(this.getParam("repId"));
-		}
-		
-		return new ArrayList<DisProdPlanManage002Dto>();
-	}
 	/**
 	    * 
 	    * check
