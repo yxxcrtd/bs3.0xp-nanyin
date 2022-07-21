@@ -10,6 +10,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
 import com.joyintech.tams.disclosure.information.config.hugeinfopro.dto.HugeInfoPro001Dto;
 import com.joyintech.tams.disclosure.information.config.proelementadj.dao.ProElementAdjMapper;
@@ -137,7 +138,8 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
      * @return
      */
     public AjaxResult checkImportData(String fileName) {
-//        List<String> findList =  this.queryFinprod(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());
+        List<String> findProdRegistNoList =  this.getRegistNo(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());
+        List<String> findProdList =  this.getProdId(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());
         List<List<String>> objects = ExcelUtil.getTempList(fileName);
         if (objects.size() - 1 > 50000) {
             Map<String, Object> resultMap = new HashMap<>();
@@ -172,14 +174,17 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
                     if (!StringUtil.isNotEmpty(rowData.get(0))){
                         errorMsg.append("数据状态 必填！");
                     }
-//                    else if(!findList.contains(rowData.get(0))){
-//                        errorMsg.append("基金代码不存在！");
-//                    }
                     if (!StringUtil.isNotEmpty(rowData.get(1))){
                         errorMsg.append("产品登记编码 必填！");
                     }
+                    else if(!findProdRegistNoList.contains(rowData.get(1))){
+                        errorMsg.append("产品登记编码未在产品基本信息表中维护！");
+                    }
                     if (!StringUtil.isNotEmpty(rowData.get(2))){
                         errorMsg.append("子产品代码 必填！");
+                    }
+                    else if(!findProdList.contains(rowData.get(2))){
+                        errorMsg.append("子产品代码未在产品基本信息表中维护！");
                     }
                     if (!StringUtil.isNotEmpty(rowData.get(3))){
                         errorMsg.append("是否有代销机构 必填！");
@@ -288,18 +293,22 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
         List<ProElementAdj001Dto> selectedItem = dto.getSelectedItem();
         List<ProElementAdj001Dto>  existData = new ArrayList<>();
         List<ProElementAdj001Dto>  newData = new ArrayList<>();
-//        for (ProElementAdj001Dto temp:selectedItem) {
-//            //数据已存在 【产品登记编码 相同】，做更新操作。
+        for (ProElementAdj001Dto temp:selectedItem) {
+            //数据已存在 【产品登记编码 相同】，做更新操作。
 //            if (StringUtil.isNotEmpty(this.selectByProdRegistNo(temp.getProdRegistNo()))){
 //                existData.add(temp);
 //            }else {
 //                newData.add(temp);
 //            }
-//        }
-        //更新操作
-        for (ProElementAdj001Dto existDataDto : existData) {
-            this.doComplete(existDataDto,OperationType.MODIFY);
+            temp.setDataStatus(DictCodeListExt3.信披_数据状态_有效.getValue());
+            temp.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
+            temp.setProdAdjustId(IDGenerator.generate(36));
+            newData.add(temp);
         }
+        //更新操作
+//        for (ProElementAdj001Dto existDataDto : existData) {
+//            this.doComplete(existDataDto,OperationType.MODIFY);
+//        }
         //插入操作
         for (ProElementAdj001Dto newDataDto : newData
         ) {
@@ -312,7 +321,7 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
 
     public ProElementAdj001Dto getValNetAssetQuotationInfoListData(String tempList) {
         ProElementAdj001Dto dto = new ProElementAdj001Dto();
-        // 行情信息列表
+        // 产品要素调整信息列表
         List<ProElementAdj001Dto> proElementAdj001DtoList = new ArrayList<>();
         dto.setSelectedItem(proElementAdj001DtoList);
         JSONArray objects = JSONArray.parseArray(tempList);
