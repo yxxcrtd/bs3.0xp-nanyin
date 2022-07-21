@@ -14,18 +14,18 @@ import com.alibaba.fastjson.JSONArray;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.util.JasparConnectUtilService;
 import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
+import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dao.DisProdPlanManage001Mapper;
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage001Dto;
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,88 +56,77 @@ import java.util.Map;
 @Transactional(rollbackFor = Exception.class)
 public class DisProdPlanManage001Service extends CommonExportService<DisProdPlanManage001Dto> {
 
-
-    //    @Autowired
-//    private RepInfoMapper repInfoMapper;
-//    @Autowired
-//    private ReportModelManage001Mapper reportModelManage001Mapper;
     @Autowired
-    private JasparConnectUtilService jasparConnectUtilService;
+    private DisProdPlanManage001Mapper disProdPlanManage001Mapper;
+
+    @Autowired
+    DisProdPlanManage002Service disProdPlanManage002Service;
+
     /**
      * 日志
      */
     private Logger logger = LoggerFactory.getLogger(DisProdPlanManage001Service.class);
 
 
-    public List<Map<String, String>> searchReports(Map<String, Object> params) throws IOException, SAXException, ParserConfigurationException {
-        //后台批处理报表地址单独啦出来
-        String serverUrl = CacheUtil.getSysParam(ReportGlobalConstant.REPORT_SERVER_URL);
-        //用户名
-        String serverUser = CacheUtil.getSysParam(ReportGlobalConstant.REPORT_USERNAME);
-        //密码
-        String serverPwd = CacheUtil.getSysParam(ReportGlobalConstant.REPORT_PASSWORD);
-        //路径
-        String path = params.get("folderUri").toString();
-
-        String url = jasparConnectUtilService.getReportsUrl(serverUrl, serverUser, serverPwd, path);
-        //
-        List<Map<String, String>> result = jasparConnectUtilService.connectJasparAndGenXML(url, false);
+    public List<DisProdPlanManage001Dto> searchReportsNew(Map<String,Object> params){
+        List<DisProdPlanManage001Dto> result = disProdPlanManage001Mapper.searchReports(params);
+        // 遍历构造数据
+        if(CollectionUtils.isNotEmpty(result)){
+            result.stream().forEach(item -> {
+                item.setDataStatusName(SysDataUtil.getNameFromDataDict(DictCode.信披_数据状态, item.getDataStatus()));
+            });
+        }
         return result;
     }
 
-    public List<DisProdPlanManage001Dto> searchReportsNew(Map<String, Object> params) {
 
-        List<DisProdPlanManage001Dto> result = restTemplate.postForList(
-                ServiceApplication.VALUATION_SERVICE_NAME + "/DisProdPlanManage001/findAll",
-                params, DisProdPlanManage001Dto.class);
-
-
-        return result;
-    }
 
     /**
      * 指标库查询service <一句话功能简述> <功能详细描述>
      *
-     * @param pageParam
+     * @param params
      * @return
      */
-    public Page<DisProdPlanManage001Dto> findByPage(Map<String, Object> pageParam) {
-//    		return super.queryForPage(() -> reportModelManage001Mapper.searchReports(pageParam));
-
-        return restTemplate.postForPage(
-
-                ServiceApplication.VALUATION_SERVICE_NAME + "/DisProdPlanManage001/findPage",
-                pageParam, DisProdPlanManage001Dto.class);
-
-
+    public Page<DisProdPlanManage001Dto> findByPage(Map<String, Object>  params)
+    {
+        String dataStatus = (String)params.get("dataStatus");
+        String[] dataStatusArr = null;
+        if(StringUtil.isNotEmpty(dataStatus)){
+            dataStatusArr = dataStatus.split(",");
+        }
+        params.put("dataStatusArr", dataStatusArr);
+        String prodId = (String)params.get("prodId");
+        String[] prodIdArr = null;
+        if(StringUtil.isNotEmpty(prodId)){
+            prodIdArr = prodId.split(",");
+        }
+        params.put("prodIdArr", prodIdArr);
+        Page<DisProdPlanManage001Dto> pages = super.queryForPageForSelectReturn(
+                Integer.parseInt((String) params.get("page")),
+                Integer.parseInt((String) params.get("length"))
+                , () -> disProdPlanManage001Mapper.searchReports(params));
+        List<DisProdPlanManage001Dto> list = pages.getRoot();
+        // 遍历构造数据
+        if(CollectionUtils.isNotEmpty(list)){
+            list.stream().forEach(item -> {
+                item.setDataStatusName(SysDataUtil.getNameFromDataDict(DictCode.信披_数据状态, item.getDataStatus()));
+            });
+            pages.setRoot(list);
+        }
+        return pages;
     }
 
-    /**
-     *  todo
-     * @param
-     * @return
-     */
-    public void doComplete(DisProdPlanManage002Dto dto, OperationType operationType) {
-        dto.setOperationType(operationType.toString());
-        restTemplate.postForObject(
-                ServiceApplication.VALUATION_SERVICE_NAME + "/DisProdPlanManage001/doComplete",
-                dto, Integer.class);
 
-    }
 
     /**
-     *  todo
+     * 根据产品代码 查询有效的 数据
      * @param prodId
      * @return
      */
-    public String selectByProdId(String prodId) {
-        Map<String,Object>map=new HashMap<>();
-        map.put("prodId", prodId);
-        return restTemplate.postForObject(
-                ServiceApplication.VALUATION_SERVICE_NAME + "/DisProdPlanManage001/selectByProdId",
-                map, String.class);
-    }
+    public DisProdPlanManage002Dto selectByProdId(String prodId) {
 
+        return disProdPlanManage001Mapper.selectByProdId(prodId, DictCodeListExt3.信披_数据状态_有效.getValue());
+    }
 
     /**
      * 导入check
@@ -280,12 +269,14 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
         }
         //更新操作
         for (DisProdPlanManage002Dto existDataDto : existData) {
-            this.doComplete(existDataDto, OperationType.MODIFY);
+            // this.doComplete(existDataDto, OperationType.MODIFY);
+            disProdPlanManage002Service.update(existDataDto);
         }
         //插入操作
         for (DisProdPlanManage002Dto newDataDto : newData
         ) {
-            this.doComplete(newDataDto, OperationType.NEW);
+           // this.doComplete(newDataDto, OperationType.NEW);
+            disProdPlanManage002Service.insert(newDataDto);
         }
         ajaxResult.setStatuCode(HttpStatus.OK.value());
         return ajaxResult;

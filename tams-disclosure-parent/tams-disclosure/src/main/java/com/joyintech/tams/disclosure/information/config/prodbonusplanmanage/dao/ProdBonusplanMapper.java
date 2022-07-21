@@ -8,12 +8,12 @@
  * 系统名称：中信银行资管系统
  */
 
-package com.joyintech.service.disclosure.information.config.prodbonusplanmanage.dao;
+package com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dao;
 
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.service.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto;
+import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
