@@ -39,5 +39,5 @@ public interface ProdPartner002Mapper extends DisProdPartnerMapper {
 
     int updateProdPartner(ProdPartnerDto dto);
 
-    int deleteProdPartner(ProdPartnerDto dto);
+    int deleteProdPartnerByPrimaryKey(String prodPartenerId);
 }
