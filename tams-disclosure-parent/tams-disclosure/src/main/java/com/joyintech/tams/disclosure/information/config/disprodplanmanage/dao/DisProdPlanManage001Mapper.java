@@ -10,26 +10,28 @@
 
 package com.joyintech.tams.disclosure.information.config.disprodplanmanage.dao;
 
-import java.util.List;
-import java.util.Map;
-
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage001Dto;
+import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import com.joyintech.tams.disclosure.information.config.reportmodelmanage.ReportModelManage001Dto;
-import com.joyintech.tams.disclosure.information.config.reportpage.dao.ReportPageManage001Mapper;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 〈一句话功能简述〉 〈功能详细描述〉
  * 
  * @author jiangsucheng
  * @version 1.0 2018年11月7日
- * @see ReportPageManage001Mapper
+ * @see
  * @since 1.0
  */
 @Repository
 public interface DisProdPlanManage001Mapper {
 
 	List<DisProdPlanManage001Dto> searchReports(Map<String, Object> params);
+
+	DisProdPlanManage002Dto selectByProdId(@Param("prodId") String prodId, @Param("dataStatus")String dataStatus);
+
 
 }

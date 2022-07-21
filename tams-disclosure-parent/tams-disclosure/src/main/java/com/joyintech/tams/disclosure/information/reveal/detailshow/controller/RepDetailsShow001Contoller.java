@@ -106,7 +106,7 @@ public class RepDetailsShow001Contoller extends BaseController {
 
         model.addAttribute("cureDate", DateUtil.getCurrentDate());
         
-        model.addAttribute("prodInfoList", JsonUtils.object2Json(repDetailsShow001Service.getProdInfo()));
+        //model.addAttribute("prodInfoList", JsonUtils.object2Json(repDetailsShow001Service.getProdInfo()));
     	return super.init(model);
     }
     
@@ -125,7 +125,7 @@ public class RepDetailsShow001Contoller extends BaseController {
 	        //param.put("checkFor", "01");
 	        //CheckConfirmMessage msg=repCheckInfoService.check(param);
 	    }
-		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getPrdInfoSelect(param);
+		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getPProdIdList(param);
         return prdInfoSelect;
     }
 	/**
@@ -466,7 +466,7 @@ public class RepDetailsShow001Contoller extends BaseController {
 	@ResponseBody
 	public Page<SelectOptionDto> getProdIdList(){
 		Map<String, Object> param=RequestUtil.getPageParam();
-		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getPrdInfoSelect(param);
+		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getProdIdList(param);
 		return prdInfoSelect;
 	}
 
@@ -483,8 +483,8 @@ public class RepDetailsShow001Contoller extends BaseController {
 	@ResponseBody
 	public Page<SelectOptionDto> getFeeNameList(){
 		Map<String, Object> param=RequestUtil.getPageParam();
-		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getPrdInfoSelect(param);
-		return prdInfoSelect;
+		Page<SelectOptionDto> feeNameList = getPrdInfoSelectService.getFeeNameList(param);
+		return feeNameList;
 	}
 
 	/**
@@ -500,8 +500,8 @@ public class RepDetailsShow001Contoller extends BaseController {
 	@ResponseBody
 	public Page<SelectOptionDto> getElementNameList(){
 		Map<String, Object> param=RequestUtil.getPageParam();
-		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getPrdInfoSelect(param);
-		return prdInfoSelect;
+		Page<SelectOptionDto> elementNameList = getPrdInfoSelectService.getElementNameList(param);
+		return elementNameList;
 	}
 
 }

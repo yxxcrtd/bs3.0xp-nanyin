@@ -10,11 +10,12 @@
 
 package com.joyintech.tams.disclosure.information.config.disprodplanmanage.dao;
 
+import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto;
+import org.springframework.stereotype.Repository;
+
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto;
-import org.springframework.stereotype.Repository;
 
 
 
@@ -23,7 +24,7 @@ import org.springframework.stereotype.Repository;
  * 
  * @author longhao
  * @version 1.0 2018年11月7日
- * @see DisProdPlanManage001Mapper
+ * @see
  * @since 1.0
  */
 @Repository
@@ -51,10 +52,10 @@ public interface DisProdPlanManage002Mapper {
 	List<String> findParamPage(String keyId);
 	/**
 	 * 通过repId查询报表模板
-	 * @param code
+	 * @param
 	 * @return
 	 */
-	DisProdPlanManage002Dto getReportModelManage002Dto(String code);
+	DisProdPlanManage002Dto getDisProdPlanManage002Dto(String code);
 	/**
 	 * 查询模板是否已存在
 	 * @param dto
@@ -80,9 +81,7 @@ public interface DisProdPlanManage002Mapper {
 	 * 删除
 	 * @param param
 	 */
-	void deleteModle(Map<String, Object> param);
-	
+	void delete(Map<String, Object> param);
 
-	
 
 }

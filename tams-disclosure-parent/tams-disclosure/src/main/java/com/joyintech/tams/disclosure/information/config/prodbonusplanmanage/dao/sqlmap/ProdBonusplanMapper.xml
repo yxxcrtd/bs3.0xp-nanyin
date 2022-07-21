@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.joyintech.service.disclosure.information.config.prodbonusplanmanage.dao.ProdBonusplanMapper">
+<mapper namespace="com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dao.ProdBonusplanMapper">
     <resultMap id="BaseResultMap"
-               type="com.joyintech.service.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto">
+               type="com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto">
         <id column="BONUS_PLAN_ID" property="bonusPlanId" jdbcType="VARCHAR"/>
         <result column="PROD_ID" property="prodId" jdbcType="VARCHAR"/>
         <result column="BONUS_MODE" property="bonusMode" jdbcType="VARCHAR"/>
@@ -22,7 +22,7 @@
     </resultMap>
 
     <resultMap id="BaseResultMap2"
-               type="com.joyintech.service.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto">
+               type="com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto">
         <id column="BONUS_PLAN_ID" property="bonusPlanId" jdbcType="VARCHAR"/>
         <result column="PROD_ID" property="prodId" jdbcType="VARCHAR"/>
         <result column="BONUS_MODE" property="bonusMode" jdbcType="VARCHAR"/>
@@ -57,19 +57,19 @@
     <sql id="Sql_All_Data">
         select
         <include
-                refid="com.joyintech.service.disclosure.information.config.prodbonusplanmanage.dao.ProdBonusplanMapper.Base_Column_List"/>
+                refid="com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dao.ProdBonusplanMapper.Base_Column_List"/>
         from DIS_PROD_BONUSPLAN
     </sql>
     <sql id="Sql_All_Effective_Data">
         select
         <include
-                refid="com.joyintech.service.disclosure.information.config.prodbonusplanmanage.dao.ProdBonusplanMapper.Base_Column_List"/>
+                refid="com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dao.ProdBonusplanMapper.Base_Column_List"/>
         from DIS_PROD_BONUSPLAN
     </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
         select
         <include
-                refid="com.joyintech.service.disclosure.information.config.prodbonusplanmanage.dao.ProdBonusplanMapper.Base_Column_List"/>
+                refid="com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dao.ProdBonusplanMapper.Base_Column_List"/>
         from DIS_PROD_BONUSPLAN
         where BONUS_PLAN_ID = #{bonusPlanId,jdbcType=VARCHAR}
     </select>
@@ -79,7 +79,7 @@
         where BONUS_PLAN_ID = #{bonusPlanId,jdbcType=VARCHAR}
     </delete>
     <insert id="insert"
-            parameterType="com.joyintech.service.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto">
+            parameterType="com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto">
         insert into DIS_PROD_BONUSPLAN (BONUS_PLAN_ID, PROD_ID, BONUS_MODE,
                                         SETT_DATE, PAYMENT_DATE, ACHIEVEMENT,
                                         EXCESS_ACHIEVEMENT_PROP, ACHIEVEMENT_BASIS,
@@ -95,7 +95,7 @@
                 #{updateTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective"
-            parameterType="com.joyintech.service.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto">
+            parameterType="com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto">
         insert into DIS_PROD_BONUSPLAN
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="bonusPlanId != null">
@@ -199,7 +199,7 @@
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo"
-            parameterType="com.joyintech.service.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto">
+            parameterType="com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto">
         insert into DIS_PROD_BONUSPLAN(BONUS_PLAN_ID, PROD_ID, BONUS_MODE, SETT_DATE, PAYMENT_DATE,
                                        ACHIEVEMENT, EXCESS_ACHIEVEMENT_PROP, ACHIEVEMENT_BASIS, ACHIEVEMENT_BASIS_PROP,
                                        DATA_STATUS, DATA_SOURCE, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME,
@@ -226,7 +226,7 @@
           and BONUS_PLAN_ID = #{bonusPlanId,jdbcType=VARCHAR}
     </insert>
     <update id="updateByPrimaryKeySelective"
-            parameterType="com.joyintech.service.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto">
+            parameterType="com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto">
         update DIS_PROD_BONUSPLAN
         <set>
             <if test="prodId != null">
@@ -269,7 +269,7 @@
         where BONUS_PLAN_ID = #{bonusPlanId,jdbcType=VARCHAR}
     </update>
     <update id="updateByPrimaryKey"
-            parameterType="com.joyintech.service.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto">
+            parameterType="com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto">
         update DIS_PROD_BONUSPLAN
         set PROD_ID                 = #{prodId,jdbcType=VARCHAR},
             BONUS_MODE              = #{bonusMode,jdbcType=VARCHAR},
@@ -293,7 +293,7 @@
 
 
     <select id="searchReports" parameterType="java.util.Map"
-            resultType="com.joyintech.service.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto">
+            resultType="com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto">
         SELECT
         dpb.BONUS_PLAN_ID, dpb.PROD_ID, dpb.BONUS_MODE,
         dpb.SETT_DATE, dpb.PAYMENT_DATE, dpb.ACHIEVEMENT,
@@ -376,7 +376,7 @@
     </select>
 
     <select id="selectByProdId"
-            resultType="com.joyintech.service.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto">
+            resultType="com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto">
         select
         dpb.BONUS_PLAN_ID, dpb.PROD_ID, dpb.BONUS_MODE,
         dpb.SETT_DATE, dpb.PAYMENT_DATE, dpb.ACHIEVEMENT,
