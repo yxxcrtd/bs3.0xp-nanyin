@@ -337,3 +337,14 @@ values ('REP_PROD_TYPE', '02', '普通产品', 2, '0', 'system', null, sysdate, 
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('REP_PROD_TYPE', '03', '子产品', 3, '0', 'system', null, sysdate, 'system', sysdate, null);
 -- add by zhengxiaolian 2022-07-22 	增加数据字典 信批产品类别 end
+
+-- add by zhengxiaolian 2022-07-22  报表规则设置 日历类型枚举值调整 start 
+delete from sys_page_dictlist where page_id='ReportRule002' and DICT_ID='BATCH_QUARTZ_SKIP_HOLIDAY_MARKET_CAL_TYPE';
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ReportRule002', '999999', 'BATCH_QUARTZ_SKIP_HOLIDAY_MARKET_CAL_TYPE', '01', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ReportRule002', '999999', 'BATCH_QUARTZ_SKIP_HOLIDAY_MARKET_CAL_TYPE', '04', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+-- add by zhengxiaolian 2022-07-22  报表规则设置 日历类型枚举值调整 end 
