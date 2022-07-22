@@ -683,3 +683,8 @@ ALTER TABLE rep_reportinfo MODIFY REPORTPARAMS VARCHAR2(2000);
 ALTER TABLE rep_prod_info add ISSUE_STATUS VARCHAR2(2) ;
 comment on column rep_prod_info.ISSUE_STATUS is '发行状态 01 发行成功 02 发行失败 03 确认发行';
 /**add by zhengxiaolian 20220720 产品基本信息表增加发行状态字段 end**/
+
+/**add by zhengxiaolian 20220722 产品基本信息表增加信批产品类别字段 start**/
+ALTER TABLE rep_prod_info add REP_PROD_TYPE VARCHAR2(2) ;
+comment on column rep_prod_info.REP_PROD_TYPE is '信批产品类别 01 母产品 02 普通产品 03 子产品';
+/**add by zhengxiaolian 20220722 产品基本信息表增加信批产品类别字段 end**/
