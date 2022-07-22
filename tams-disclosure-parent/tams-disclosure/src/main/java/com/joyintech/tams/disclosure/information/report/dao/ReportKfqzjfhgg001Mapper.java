@@ -2,11 +2,11 @@
 package com.joyintech.tams.disclosure.information.report.dao;
 
 import com.joyintech.tams.common.base.entity.DisProdPlanInfo;
-import com.joyintech.tams.disclosure.information.report.dto.ReportBonusReportDto;
 import com.joyintech.tams.disclosure.information.report.dto.ReportCommonProdDto;
+import com.joyintech.tams.disclosure.information.report.dto.ReportKfqHisBonusDto;
+import com.joyintech.tams.disclosure.information.report.dto.ReportKfqOpenPlanDto;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -23,9 +23,9 @@ public interface ReportKfqzjfhgg001Mapper {
 
     ReportCommonProdDto getProdInfo(Map<String,Object> searchParam);
 
-    ReportBonusReportDto getBonusInfo(Map<String, Object> searchParam);
+    List<ReportKfqHisBonusDto> getHisBonusReportList(Map<String, Object> searchParam);
 
-    DisProdPlanInfo getNextOpenPlan(Map<String, Object> searchParam);
+    List<ReportKfqOpenPlanDto> getOpenPlanList(Map<String, Object> searchParam);
 
-    ReportBonusReportDto getLastBonusInfo(Map<String, Object> searchParam);
+    ReportKfqOpenPlanDto getLastBonusInfo(Map<String, Object> searchParam);
 }

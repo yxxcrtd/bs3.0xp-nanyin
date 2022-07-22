@@ -1,13 +1,14 @@
 package com.joyintech.tams.disclosure.information.report.dto;
 
+import java.util.List;
+
 /**
  * 开放、净值及分红公告
  * zhengbaosheng
  */
 public class ReportKfqzjfhgg001Dto {
     /**
-     * 标题名：普通产品：产品名称
-     *       分级产品：产品名称+（子产品代码）
+     * 标题名：普通产品：产品名称 分级产品：产品名称+（子产品代码）
      */
     private String titleName;
     /**
@@ -51,49 +52,17 @@ public class ReportKfqzjfhgg001Dto {
      */
     private String payDate;
     /**
-     *后续申购/赎回起止日
-     */
-    private String nextRange;
-    /**
-     *后续申购/赎回确认日
-     */
-    private String nextMdate;
-    /**
-     *后续赎回资金到账日
-     */
-    private String nextSetday;
-    /**
-     *当期申购/赎回确认日
-     */
-    private String curMdate;
-    /**
-     *当期期末每份额净值（元）
-     */
-    private String munitValue;
-    /**
-     *当期每份额累计净值（元）
-     */
-    private String munitValueT;
-    /**
-     *当期赎回价格（元/份）
-     */
-    private String redValue;
-    /**
-     *当期申购价格（元/份）
-     */
-    private String subValue;
-    /**
-     *当期年化收益率
-     */
-    private String yield;
-    /**
-     *当期当期封闭期
-     */
-    private String curRange;
-    /**
      *公告日：XXXX年XX月XX日
      */
     private String announceT;
+    /**
+     * 后续开放期安排
+     */
+    private List<ReportKfqOpenPlanDto> openPlanList;
+    /**
+     * 历史净值数据
+     */
+    private List<ReportKfqHisBonusDto> list;
 
     public String getTitleName() {
         return titleName;
@@ -183,91 +152,27 @@ public class ReportKfqzjfhgg001Dto {
         this.payDate = payDate;
     }
 
-    public String getNextRange() {
-        return nextRange;
-    }
-
-    public void setNextRange(String nextRange) {
-        this.nextRange = nextRange;
-    }
-
-    public String getNextMdate() {
-        return nextMdate;
-    }
-
-    public void setNextMdate(String nextMdate) {
-        this.nextMdate = nextMdate;
-    }
-
-    public String getNextSetday() {
-        return nextSetday;
-    }
-
-    public void setNextSetday(String nextSetday) {
-        this.nextSetday = nextSetday;
-    }
-
-    public String getCurMdate() {
-        return curMdate;
-    }
-
-    public void setCurMdate(String curMdate) {
-        this.curMdate = curMdate;
-    }
-
-    public String getMunitValue() {
-        return munitValue;
-    }
-
-    public void setMunitValue(String munitValue) {
-        this.munitValue = munitValue;
-    }
-
-    public String getMunitValueT() {
-        return munitValueT;
-    }
-
-    public void setMunitValueT(String munitValueT) {
-        this.munitValueT = munitValueT;
-    }
-
-    public String getRedValue() {
-        return redValue;
-    }
-
-    public void setRedValue(String redValue) {
-        this.redValue = redValue;
-    }
-
-    public String getSubValue() {
-        return subValue;
-    }
-
-    public void setSubValue(String subValue) {
-        this.subValue = subValue;
-    }
-
-    public String getYield() {
-        return yield;
-    }
-
-    public void setYield(String yield) {
-        this.yield = yield;
-    }
-
-    public String getCurRange() {
-        return curRange;
-    }
-
-    public void setCurRange(String curRange) {
-        this.curRange = curRange;
-    }
-
     public String getAnnounceT() {
         return announceT;
     }
 
     public void setAnnounceT(String announceT) {
         this.announceT = announceT;
+    }
+
+    public List<ReportKfqOpenPlanDto> getOpenPlanList() {
+        return openPlanList;
+    }
+
+    public void setOpenPlanList(List<ReportKfqOpenPlanDto> openPlanList) {
+        this.openPlanList = openPlanList;
+    }
+
+    public List<ReportKfqHisBonusDto> getList() {
+        return list;
+    }
+
+    public void setList(List<ReportKfqHisBonusDto> list) {
+        this.list = list;
     }
 }
