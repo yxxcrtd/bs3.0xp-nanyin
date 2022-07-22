@@ -84,7 +84,7 @@
 			inner join DIS_PROD_ADJUST DPA on DPA.PROD_REGIST_NO=RPI.PROD_RE and DPA.DATA_STATUS='01'
 		</if>
 		<if test="flag != null and flag != '' and flag == '03'">
-			inner join DIS_LARGE_REDEMPTION DLR on DLR.PROD_REGIST_NO=RPI.PROD_RE and DLR.STATUS='01'
+			inner join DIS_LARGE_REDEMPTION DLR on DLR.PROD_REGIST_NO=RPI.PROD_RE and DLR.DATA_STATUS='01'
 		</if>
 		where RPI.STATUS='E'
 		and rep_prod_type in ('01','02')
