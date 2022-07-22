@@ -35,3 +35,4 @@ tams-integration/*
 /maven_2.1.2/
 *.rebel.xml.bak
 cache/*
+/tams-codegenerator/

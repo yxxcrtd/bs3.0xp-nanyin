@@ -3,7 +3,6 @@ package com.joyintech.tams.disclosure.rptdata.service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -12,12 +11,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.joyintech.tams.common.base.entity.DisProdBonusplan;
 import com.joyintech.tams.disclosure.common.CollectionUtils;
 import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
 import com.joyintech.tams.disclosure.rptdata.dao.BonusReportMapper;
-import com.joyintech.tams.disclosure.rptdata.dto.BonusPlanDto;
 import com.joyintech.tams.disclosure.rptdata.dto.BonusReportDto;
-import com.joyintech.tams.disclosure.rptdata.dto.ReportDto;
 
 /**
  * 分红计算清单报表数据获取服务
@@ -48,7 +46,7 @@ public class BonusReportDataService implements IReportDataService{
 
         	//上一分配基准日
         	if ( "01".equals(report.getIssuingWay()) ) {  //开放式
-        		BonusPlanDto plan = bonusReportMapper.selectLastBonusPlan(paraMap);
+        		DisProdBonusplan plan = bonusReportMapper.selectLastBonusPlan(paraMap);
         		if ( plan==null  ) { //第一个计划
         			report.setLastSettDate(report.getEDate());
         		} else {

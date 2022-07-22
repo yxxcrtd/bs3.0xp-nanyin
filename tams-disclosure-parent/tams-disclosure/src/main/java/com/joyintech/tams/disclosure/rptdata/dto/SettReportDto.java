@@ -8,8 +8,10 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * @author Administrator
- *
+ * 清算报表实体类
+ * @author chenxc
+ * @version 1.0 2022年07月20日
+ * @since 1.0
  */
 public class SettReportDto extends ReportDto {
 	
