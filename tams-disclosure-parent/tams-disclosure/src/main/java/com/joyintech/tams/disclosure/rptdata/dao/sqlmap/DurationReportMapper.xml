@@ -69,7 +69,7 @@
 		    </if>
     </select>
     
-    <select id="selectProdAssetDetail" resultType="com.joyintech.tams.common.base.entity.RepAseetsComb">
+    <select id="selectProdAssetDetail" resultType="com.joyintech.tams.common.base.entity.RepAssetsComb">
 		select rac.PROD_ID
 			,rac.PUB_DATE
 			,rac.ASSETS_CODE
