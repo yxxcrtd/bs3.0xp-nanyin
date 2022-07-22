@@ -110,7 +110,7 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                     }
                     //封装当前收益分配基准日数据
                     //开放起始日
-                    reportKfqzjfhgg001Dto.setSubDateT(DateUtil.format(reportKfqHisBonusDto.getOperationStartDate(),DateUtil.ABB_DATE_FORMAT_CN));
+                    reportKfqzjfhgg001Dto.setSubDateT(DateUtil.format(reportKfqHisBonusDto.getOpenStartDate(),DateUtil.ABB_DATE_FORMAT_CN));
                     //应分配分红金额 = 产品资产净值 - 期末余额
                     BigDecimal distributableProfit = reportKfqHisBonusDto.getAssetsValue().subtract(reportKfqHisBonusDto.getCapital());
                     //单位分红应分配分红金额/产品期末余额（份额）
@@ -129,17 +129,17 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                         //封闭期：【上一收益分配基准日+1工作日至当前收益分配基准日】；若产品是第一次分红，则取子产品成立日至当前收益分配基准日
                         long runday = 1;
                         //每份额累计净值（元） = 若产品是第一次分红，则本字段值=1.000+本次分红方案(结果保留四位小数)；若产品不是第一次分红，则本字段值=子产品上一个收益分配基准日的产品累计单位净值+本次分红方案（结果保留四位小数）
-                        //根据赎回确认日查询上一次分红计划
-                        searchParam.put("baseDate",bonusDto.getAutoRedeemDate());
+                        //根据开放结束日查询上一次分红计划
+                        searchParam.put("baseDate",bonusDto.getOpenEndDate());
                         ReportKfqHisBonusDto lastBonus = reportKfqzjfhgg001Mapper.getLastBonusInfo(searchParam);
 
                         if(lastBonus.getLastUnitValueT() != null){
                             bonusDto.setMunitValueT(bonusDto.getLastUnitValueT().add(new BigDecimal(unitProfitStr)).toString());
                             //周期运营开始日 = 周期赎回日 - 周期起始日
-                            runday = DateUtil.getBetweenDayNumber(bonusDto.getOperationStartDate(),bonusDto.getAutoRedeemDate());
+                            runday = DateUtil.getBetweenDayNumber(bonusDto.getOpenStartDate(),bonusDto.getOpenEndDate());
                         }else{
                             bonusDto.setMunitValueT((new BigDecimal("1").add(new BigDecimal(unitProfitStr)).toString()));
-                            runday = DateUtil.getBetweenDayNumber(reportCommonProdDto.getSetDate(),bonusDto.getAutoRedeemDate());
+                            runday = DateUtil.getBetweenDayNumber(reportCommonProdDto.getSetDate(),bonusDto.getOpenEndDate());
                         }
                         //计算年化收益率
                         bonusDto.setYield(new BigDecimal(unitProfitStr).multiply(new BigDecimal(365).divide(new BigDecimal(runday),4,RoundingMode.HALF_UP )).toString());

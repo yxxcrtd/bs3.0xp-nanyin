@@ -12,9 +12,9 @@ public class ReportKfqHisBonusDto {
     /**期末余额**/
     private BigDecimal capital;
     /*运营起始日--周期开始日*/
-    private Date operationStartDate;
+    private Date openStartDate;
     /*赎回确认日--基准日*/
-    private Date autoRedeemDate;
+    private Date openEndDate;
     /*红利发放日*/
     private Date paymentDate;
     /*上次收益分配基准日*/
@@ -56,20 +56,20 @@ public class ReportKfqHisBonusDto {
         this.capital = capital;
     }
 
-    public Date getOperationStartDate() {
-        return operationStartDate;
+    public Date getOpenStartDate() {
+        return openStartDate;
     }
 
-    public void setOperationStartDate(Date operationStartDate) {
-        this.operationStartDate = operationStartDate;
+    public void setOpenStartDate(Date openStartDate) {
+        this.openStartDate = openStartDate;
     }
 
-    public Date getAutoRedeemDate() {
-        return autoRedeemDate;
+    public Date getOpenEndDate() {
+        return openEndDate;
     }
 
-    public void setAutoRedeemDate(Date autoRedeemDate) {
-        this.autoRedeemDate = autoRedeemDate;
+    public void setOpenEndDate(Date openEndDate) {
+        this.openEndDate = openEndDate;
     }
 
     public Date getPaymentDate() {

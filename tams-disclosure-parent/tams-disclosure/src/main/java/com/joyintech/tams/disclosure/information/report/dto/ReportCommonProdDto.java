@@ -21,10 +21,6 @@ public class ReportCommonProdDto {
      */
     private String prodId;
     /**
-     * 父代码或普通产品代码
-     */
-    private String pprodId;
-    /**
      * 成立日
      */
     private Date setDate;
@@ -57,18 +53,9 @@ public class ReportCommonProdDto {
         this.prodId = prodId;
     }
 
-    public String getPprodId() {
-        return pprodId;
-    }
-
-    public void setPprodId(String pprodId) {
-        this.pprodId = pprodId;
-    }
-
     public Date getSetDate() {
         return setDate;
     }
-
     public void setSetDate(Date setDate) {
         this.setDate = setDate;
     }
