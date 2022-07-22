@@ -19,11 +19,6 @@ public class Report1FlncpDto extends BaseEntity {
     private String prodId;
 
     /**
-     * 产品登记编码
-     */
-    private String regCode;
-
-    /**
      * 募集方式
      */
     private String raiseType;
@@ -60,14 +55,6 @@ public class Report1FlncpDto extends BaseEntity {
 
     public void setRemark(String remark) {
         this.remark = remark;
-    }
-
-    public String getRegCode() {
-        return regCode;
-    }
-
-    public void setRegCode(String regCode) {
-        this.regCode = regCode;
     }
 
     public String getFeename() {

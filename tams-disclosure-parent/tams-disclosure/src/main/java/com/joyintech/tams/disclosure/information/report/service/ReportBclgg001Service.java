@@ -52,10 +52,12 @@ public class ReportBclgg001Service implements IReportDataService {
         // 设置公告、报告字样
         reportCommonService.setPubString(bclgg.getRaiseType(), dataMap);
         // 设置是否有代销机构字样
-        reportCommonService.setSaleString(prodId, dataMap);
+        List<String> prodIds = new ArrayList<>();
+        prodIds.add(prodId);
+        reportCommonService.setSaleString(prodIds, dataMap);
         String pubDateStr = commonPlatformDateService.getSysDateStr();
-        if (null != paraMap.get("startdate")) {
-            pubDateStr = (String)paraMap.get("startdate");
+        if (null != paraMap.get("enddate")) {
+            pubDateStr = (String)paraMap.get("enddate");
         }
         dataMap.put("pubDate",DateUtil.format(DateUtil.parse(pubDateStr), DateUtil.DEFAULT_DATE_FORMAT_CN));
         return result;
