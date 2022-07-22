@@ -186,12 +186,11 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                 }
                 reportKfqzjfhgg001Dto.setAnnounceT(DateUtil.format(announceDate,DateUtil.ABB_DATE_FORMAT_CN));
             }
+            resultMap.add(CollectionUtils.bean2Map(reportKfqzjfhgg001Dto));
             logger.info("开放、净值及分红公告【{}】生成成功", JsonUtils.object2Json(paraMap));
         } catch (Exception e) {
             logger.error("开放、净值及分红公告【{}】生成异常", JsonUtils.object2Json(paraMap), e);
         }
-
-        resultMap.add(CollectionUtils.bean2Map(reportKfqzjfhgg001Dto));
         return resultMap;
     }
 }
