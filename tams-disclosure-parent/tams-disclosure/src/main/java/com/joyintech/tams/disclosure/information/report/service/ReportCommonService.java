@@ -23,6 +23,8 @@ public class ReportCommonService {
     private static final String PUBSTRING_GONGGAO = "特此公告。";
     private static final String SALE_STRING_1 = "本理财产品代销机构或";
     private static final String SALE_STRING_2 = "代销机构及";
+    private static final String RAISETYPE_GM = "公募";
+    private static final String RAISETYPE_SM = "私募";
 
     /**
      * 根据募集方式设置公告、报告字样
@@ -34,19 +36,21 @@ public class ReportCommonService {
         if (StringUtil.equals(raiseType, DictCodeListExt2.募集方式_中债_公募.getValue())) {
             dataMap.put("pubType", PUBTYPE_GONGGAO);
             dataMap.put("pubString", PUBSTRING_GONGGAO);
+            dataMap.put("raiseType", RAISETYPE_GM);
         } else if (StringUtil.equals(raiseType, DictCodeListExt2.募集方式_中债_私募.getValue())) {
             dataMap.put("pubType", PUBTYPE_BAOGAO);
             dataMap.put("pubString", "");
+            dataMap.put("raiseType", RAISETYPE_SM);
         }
     }
 
     /**
      * 根据产品代码查询关联代销机构设置是否有代销相关字样
-     * @param prodId 产品代码
+     * @param prodIds 产品代码集合
      * @param dataMap 数据集
      * @return 数据集
      */
-    public void setSaleString(String prodId, Map<String, Object> dataMap) {
+    public void setSaleString(List<String> prodIds, Map<String, Object> dataMap) {
         // TODO:根据产品代码查询代销机构关联表，判断是否存在代销
         boolean isSalesAgency = true;
         if (isSalesAgency) {

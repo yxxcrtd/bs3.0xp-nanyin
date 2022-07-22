@@ -56,8 +56,8 @@ public class Report1Flncp001Service implements IReportDataService {
             searchparam.put("prodlist", prodlist);
         }
         String pubDateStr = commonPlatformDateService.getSysDateStr();
-        if (null != paraMap.get("startdate")) {
-            pubDateStr = paraMap.get("startdate").toString();
+        if (null != paraMap.get("enddate")) {
+            pubDateStr = paraMap.get("enddate").toString();
         }
         searchparam.put("rptIssueDate", DateUtil.parse(pubDateStr));
         Report1FlncpDto cpnflDto = reportCpflyhMapper.query1Flncp(searchparam);
@@ -71,7 +71,7 @@ public class Report1Flncp001Service implements IReportDataService {
         // 设置公告、报告字样
         reportCommonService.setPubString(cpnflDto.getRaiseType(), dataMap);
         // 设置是否有代销机构字样
-        reportCommonService.setSaleString(cpnflDto.getProdId(), dataMap);
+        reportCommonService.setSaleString(StringUtil.splitToList(GlobalConstant.COMMA, cpnflDto.getProdId()), dataMap);
         // 发布日期
         dataMap.put("pubDate",DateUtil.format(DateUtil.parse(pubDateStr), DateUtil.DEFAULT_DATE_FORMAT_CN));
         // 费率优惠明细

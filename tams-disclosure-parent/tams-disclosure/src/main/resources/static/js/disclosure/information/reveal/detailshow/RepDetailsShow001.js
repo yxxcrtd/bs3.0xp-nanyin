@@ -105,7 +105,7 @@ $(function () {
 			//要素名称下拉框
 			else if(data[i].screenType==='04'){
 				SearchHtml+= '<select id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" class="layui-input form-input input-select" placeholder="请选择" data-url="getElementNameList"'
-					+'parentIds="repId,pprodid" allowClear="true"';
+					+'parentIds="repId,pprodid" allowClear="true" formatoption="false"';
 				if(data[i].multiFlag==='Y'){
 					SearchHtml+= 'multiple="true">' +'</select>';
 				}else{

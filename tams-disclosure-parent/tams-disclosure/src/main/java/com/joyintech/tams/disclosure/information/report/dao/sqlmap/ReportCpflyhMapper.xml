@@ -32,11 +32,10 @@
 
 	<select id="query1Flncp" resultType="com.joyintech.tams.disclosure.information.report.dto.Report1FlncpDto">
 		select
-			rpi.prod_id prod_id,
-			rpi.prod_re reg_code,
+			listagg(rpi.prod_id, ',') within group(order by rpi.prod_id) prod_id,
 			rpi.raise_type raise_type,
 			max(dpf.fee_dis_remark) remark,
-		    max(dpf.feename) feename
+		    dpf.feename feename
 		from rep_prod_info rpi
 		inner join dis_prod_feediscount dpf
 		on rpi.prod_re = dpf.prod_regist_no
@@ -51,9 +50,8 @@
 			</foreach>
 		</if>
 		group by
-		rpi.prod_id,
-		rpi.prod_re,
-		rpi.raise_type
+		rpi.raise_type,
+		dpf.feename
 	</select>
 
 	<select id="qureyFeelist" resultType="com.joyintech.tams.disclosure.information.report.dto.ReportProdfeeDto">
