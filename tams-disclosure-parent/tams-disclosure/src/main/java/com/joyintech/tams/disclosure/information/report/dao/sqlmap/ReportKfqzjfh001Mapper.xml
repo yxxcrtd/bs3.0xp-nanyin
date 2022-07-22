@@ -28,56 +28,46 @@
 		  and rpi.status = 'E'
 	</select>
 
-	<select id="getBonusInfo" resultType="com.joyintech.tams.disclosure.information.report.dto.ReportBonusReportDto">
-		SELECT
-		PINDEX.ASSETS_VALUE  /**资产净值**/
-		,PINDEX.CAPITAL            /**期末余额**/
-		,PINDEX.UNIT_VALUE    /**单位净值**/
-		,PLAN.SETT_DATE      /**本期收益结算日**/
-		,PLAN.PAYMENT_DATE /*红利发放日*/
-		,PLAN.ACHIEVEMENT_BASIS   /**业绩基准**/
-		,PLAN.ACHIEVEMENT_BASIS_PROP  /**业绩基准比例**/
-		,PLAN.EXCESS_ACHIEVEMENT_PROP   /**超额收益收取比例**/
-		,DPP.OPERATION_START_DATE /*开放起始日*/
-		,DPP.AUTO_REDEEM_DATE /*开放结束日*/
-		FROM REP_PROD_INFO INFO
-		LEFT JOIN REP_PROD_INDEX PINDEX ON PINDEX.PROD_ID=NVL(INFO.P_PROD_ID,INFO.PROD_ID) AND PINDEX.STATUS='E' AND PINDEX.VALUE_DATE=TO_DATE(#{baseDate},'yyyy-MM-dd')
-		LEFT JOIN DIS_PROD_BONUSPLAN PLAN ON PLAN.PROD_ID=NVL(INFO.P_PROD_ID,INFO.PROD_ID) AND PLAN.DATA_STATUS='E' AND PLAN.SETT_DATE=TO_DATE(#{baseDate},'yyyy-MM-dd')
-		LEFT JOIN DIS_PROD_PLAN DPP ON DPP.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID) AND DPP.AUTO_REDEEM_DATE=TO_DATE(#{baseDate},'yyyy-MM-dd')
-		WHERE INFO.STATUS='E'
-		AND INFO.PROD_ID=#{prodId,jdbcType=VARCHAR}
-	</select>
-
-	<select id="getNextOpenPlan" resultType="com.joyintech.tams.common.base.entity.DisProdPlanInfo">
-		SELECT * FROM (
-			SELECT DPP.OPERATION_START_DATE,DPP.AUTO_REDEEM_DATE
-			FROM REP_PROD_INFO INFO,DIS_PROD_PLAN DPP
-			WHERE INFO.STATUS = 'E'
-			AND DPP.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID)
-			AND DPP.AUTO_REDEEM_DATE>TO_DATE(#{baseDate},'yyyy-MM-dd')
-			AND INFO.PROD_ID = #{prodId,jdbcType=VARCHAR}
-		    ORDER BY DPP.AUTO_REDEEM_DATE
-		) WHERE ROWNUM = 1
-	</select>
-
-	<select id="getLastBonusInfo" resultType="com.joyintech.tams.disclosure.information.report.dto.ReportBonusReportDto">
-		SELECT PINDEX.UNIT_VALUE_T as unitValue, DPB.SETT_DATE settDate
-		FROM REP_PROD_INFO INFO,REP_PROD_INDEX PINDEX,DIS_PROD_BONUSPLAN DPB
-		WHERE INFO.STATUS = 'E'
-		  AND PINDEX.STATUS = 'E'
-		  AND DPB.DATA_STATUS = 'E'
-		  AND PINDEX.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID)
-		  AND DPB.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID)
-		  AND INFO.PROD_ID = #{prodId,jdbcType=VARCHAR}
-		  AND PINDEX.VALUE_DATE = DPB.SETT_DATE
+	<select id="getLastBonusInfo" resultType="com.joyintech.tams.disclosure.information.report.dto.ReportKfqOpenPlanDto">
+		SELECT DPB.SETT_DATE lastSettDate FROM
+			DIS_PROD_BONUSPLAN DPB
+		WHERE DPB.DATA_STATUS = 'E'
+		  AND DPB.PROD_ID = #{prodId,jdbcType=VARCHAR}
 		  AND DPB.SETT_DATE = (
-				select SETT_DATE from (
-				  select h.SETT_DATE from DIS_PROD_BONUSPLAN h
-				  where h.SETT_DATE &lt; TO_DATE(#{baseDate},'yyyy-MM-dd')
-					and h.DATA_STATUS = 'E'
-				  order by h.busi_date
-			  ) where rownum = 1
+			  select max(h.SETT_DATE) from DIS_PROD_BONUSPLAN h
+			  where h.SETT_DATE &lt; TO_DATE(#{baseDate},'yyyy-MM-dd')
+				and h.PROD_ID = #{prodId,jdbcType=VARCHAR}
+				and h.DATA_STATUS = 'E'
 			)
+	</select>
+
+	<select id="getOpenPlanList" resultType="com.joyintech.tams.disclosure.information.report.dto.ReportKfqOpenPlanDto">
+		SELECT * FROM (
+			  SELECT TO_CHAR(DPP.OPERATION_START_DATE,'yyyy-MM-dd')||'至'||TO_CHAR(DPP.AUTO_REDEEM_DATE,'yyyy-MM-dd') nextRange,TO_CHAR(DPP.AUTO_REDEEM_DATE,'yyyy-MM-dd') nextMdate
+			  FROM REP_PROD_INFO INFO,DIS_PROD_PLAN DPP
+			  WHERE INFO.STATUS = 'E'
+				AND DPP.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID)
+				AND DPP.AUTO_REDEEM_DATE>TO_DATE(#{baseDate},'yyyy-MM-dd')
+				AND INFO.PROD_ID = #{prodId,jdbcType=VARCHAR}
+			  ORDER BY DPP.AUTO_REDEEM_DATE
+		  ) WHERE ROWNUM = 1
+	</select>
+
+	<select id="getHisBonusReportList" resultType="com.joyintech.tams.disclosure.information.report.dto.ReportKfqHisBonusDto">
+		SELECT
+			PINDEX.ASSETS_VALUE  /**资产净值**/
+			 ,PINDEX.CAPITAL            /**期末余额**/
+			 ,PLAN.PAYMENT_DATE /*红利发放日*/
+			 ,DPP.OPERATION_START_DATE /*开放起始日*/
+			 ,DPP.AUTO_REDEEM_DATE /*开放结束日*/
+			,TO_CHAR(DPP.AUTO_REDEEM_DATE,'yyyy-MM-dd') curBaseDate
+			,TO_CHAR(DPP.OPERATION_START_DATE,'yyyy-MM-dd')||'至'||TO_CHAR(DPP.AUTO_REDEEM_DATE,'yyyy-MM-dd') curRange
+		FROM REP_PROD_INFO INFO
+		 INNER JOIN DIS_PROD_PLAN DPP ON DPP.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID) AND DPP.AUTO_REDEEM_DATE &lt;=TO_DATE(#{baseDate},'yyyy-MM-dd')
+		 LEFT JOIN REP_PROD_INDEX PINDEX ON PINDEX.PROD_ID=NVL(INFO.P_PROD_ID,INFO.PROD_ID) AND PINDEX.STATUS='E' AND PINDEX.VALUE_DATE=DPP.AUTO_REDEEM_DATE
+		 LEFT JOIN DIS_PROD_BONUSPLAN PLAN ON PLAN.PROD_ID=NVL(INFO.P_PROD_ID,INFO.PROD_ID) AND PLAN.DATA_STATUS='E' AND PLAN.SETT_DATE=DPP.AUTO_REDEEM_DATE
+		WHERE INFO.STATUS='E'
+		  AND INFO.PROD_ID=#{prodId,jdbcType=VARCHAR}
 	</select>
 
 </mapper>
