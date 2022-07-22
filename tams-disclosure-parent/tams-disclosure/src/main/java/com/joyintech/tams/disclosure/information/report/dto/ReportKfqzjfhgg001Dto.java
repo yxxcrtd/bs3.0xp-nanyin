@@ -58,7 +58,7 @@ public class ReportKfqzjfhgg001Dto {
     /**
      * 后续开放期安排
      */
-    private List<ReportKfqOpenPlanDto> openPlanList;
+    private List<ReportOpenPlanDto> openPlanList;
     /**
      * 历史净值数据
      */
@@ -160,11 +160,11 @@ public class ReportKfqzjfhgg001Dto {
         this.announceT = announceT;
     }
 
-    public List<ReportKfqOpenPlanDto> getOpenPlanList() {
+    public List<ReportOpenPlanDto> getOpenPlanList() {
         return openPlanList;
     }
 
-    public void setOpenPlanList(List<ReportKfqOpenPlanDto> openPlanList) {
+    public void setOpenPlanList(List<ReportOpenPlanDto> openPlanList) {
         this.openPlanList = openPlanList;
     }
 

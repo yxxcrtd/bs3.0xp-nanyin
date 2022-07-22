@@ -4,7 +4,7 @@ package com.joyintech.tams.disclosure.information.report.dao;
 import com.joyintech.tams.common.base.entity.DisProdPlanInfo;
 import com.joyintech.tams.disclosure.information.report.dto.ReportCommonProdDto;
 import com.joyintech.tams.disclosure.information.report.dto.ReportKfqHisBonusDto;
-import com.joyintech.tams.disclosure.information.report.dto.ReportKfqOpenPlanDto;
+import com.joyintech.tams.disclosure.information.report.dto.ReportOpenPlanDto;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public interface ReportKfqzjfhgg001Mapper {
 
     List<ReportKfqHisBonusDto> getHisBonusReportList(Map<String, Object> searchParam);
 
-    List<ReportKfqOpenPlanDto> getOpenPlanList(Map<String, Object> searchParam);
+    List<ReportOpenPlanDto> getOpenPlanList(Map<String, Object> searchParam);
 
-    ReportKfqOpenPlanDto getLastBonusInfo(Map<String, Object> searchParam);
+    ReportKfqHisBonusDto getLastBonusInfo(Map<String, Object> searchParam);
 }

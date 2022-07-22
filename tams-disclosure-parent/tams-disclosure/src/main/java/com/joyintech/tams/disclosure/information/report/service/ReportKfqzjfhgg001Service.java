@@ -11,8 +11,9 @@ import com.joyintech.tams.disclosure.common.common.service.HolidayService;
 import com.joyintech.tams.disclosure.information.report.dao.ReportKfqzjfhgg001Mapper;
 import com.joyintech.tams.disclosure.information.report.dto.ReportCommonProdDto;
 import com.joyintech.tams.disclosure.information.report.dto.ReportKfqHisBonusDto;
-import com.joyintech.tams.disclosure.information.report.dto.ReportKfqOpenPlanDto;
+import com.joyintech.tams.disclosure.information.report.dto.ReportOpenPlanDto;
 import com.joyintech.tams.disclosure.information.report.dto.ReportKfqzjfhgg001Dto;
+import com.joyintech.tams.disclosure.information.report.dto.ReportOpenPlanDto;
 import com.joyintech.tams.disclosure.rptdata.service.IReportDataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,7 +85,7 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                 //根据产品代码查询产品信息
                 ReportCommonProdDto reportCommonProdDto = reportKfqzjfhgg001Mapper.getProdInfo(searchParam);
                 //查询后续开放计划  根据产品排期表，展示“申购/赎回确认日”大于当前收益分配基准日的下一个开放周期的信息；若当前已处于最后一个产品周期，则正常生成表格，表格内容置空，由业务老师手工调整
-                List<ReportKfqOpenPlanDto> openPlanList = reportKfqzjfhgg001Mapper.getOpenPlanList(searchParam);
+                List<ReportOpenPlanDto> openPlanList = reportKfqzjfhgg001Mapper.getOpenPlanList(searchParam);
                 //查询“申购/赎回确认日”小于等于当前收益分配基准日的过去所有历史数据
                 List<ReportKfqHisBonusDto> list = reportKfqzjfhgg001Mapper.getHisBonusReportList(searchParam);
                 //标题
@@ -130,9 +131,9 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                         //每份额累计净值（元） = 若产品是第一次分红，则本字段值=1.000+本次分红方案(结果保留四位小数)；若产品不是第一次分红，则本字段值=子产品上一个收益分配基准日的产品累计单位净值+本次分红方案（结果保留四位小数）
                         //根据赎回确认日查询上一次分红计划
                         searchParam.put("baseDate",bonusDto.getAutoRedeemDate());
-                        ReportKfqOpenPlanDto lastBonus = reportKfqzjfhgg001Mapper.getLastBonusInfo(searchParam);
+                        ReportKfqHisBonusDto lastBonus = reportKfqzjfhgg001Mapper.getLastBonusInfo(searchParam);
 
-                        if(bonusDto.getLastUnitValueT() != null){
+                        if(lastBonus.getLastUnitValueT() != null){
                             bonusDto.setMunitValueT(bonusDto.getLastUnitValueT().add(new BigDecimal(unitProfitStr)).toString());
                             //周期运营开始日 = 周期赎回日 - 周期起始日
                             runday = DateUtil.getBetweenDayNumber(bonusDto.getOperationStartDate(),bonusDto.getAutoRedeemDate());
@@ -150,7 +151,7 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                 reportKfqzjfhgg001Dto.setList(list);
                 //后续开放计划
                 if(openPlanList != null && openPlanList.size()>0){
-                    for(ReportKfqOpenPlanDto openPlanDto:openPlanList){
+                    for(ReportOpenPlanDto openPlanDto:openPlanList){
                         //后续赎回资金到账日
                         //查询申购/赎回确认日的下一工作日
                         searchParam.put("busi_date", DateUtil.parse(openPlanDto.getNextMdate()));
@@ -164,7 +165,7 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                     }
                 }else{
                     openPlanList = new ArrayList<>();
-                    ReportKfqOpenPlanDto openPlanDto = new ReportKfqOpenPlanDto();
+                    ReportOpenPlanDto openPlanDto = new ReportOpenPlanDto();
                     //后续排期计划为空的话，需要置空由业务老师手工维护
                     //后续申购/赎回起止日
                     openPlanDto.setNextRange("XXXX-XX-XX至XXXX-XX-XX");

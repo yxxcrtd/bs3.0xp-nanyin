@@ -28,7 +28,7 @@
 		  and rpi.status = 'E'
 	</select>
 
-	<select id="getLastBonusInfo" resultType="com.joyintech.tams.disclosure.information.report.dto.ReportKfqOpenPlanDto">
+	<select id="getLastBonusInfo" resultType="com.joyintech.tams.disclosure.information.report.dto.ReportKfqHisBonusDto">
 		SELECT DPB.SETT_DATE lastSettDate FROM
 			DIS_PROD_BONUSPLAN DPB
 		WHERE DPB.DATA_STATUS = 'E'
@@ -41,7 +41,7 @@
 			)
 	</select>
 
-	<select id="getOpenPlanList" resultType="com.joyintech.tams.disclosure.information.report.dto.ReportKfqOpenPlanDto">
+	<select id="getOpenPlanList" resultType="com.joyintech.tams.disclosure.information.report.dto.ReportOpenPlanDto">
 		SELECT * FROM (
 			  SELECT TO_CHAR(DPP.OPERATION_START_DATE,'yyyy-MM-dd')||'至'||TO_CHAR(DPP.AUTO_REDEEM_DATE,'yyyy-MM-dd') nextRange,TO_CHAR(DPP.AUTO_REDEEM_DATE,'yyyy-MM-dd') nextMdate
 			  FROM REP_PROD_INFO INFO,DIS_PROD_PLAN DPP
