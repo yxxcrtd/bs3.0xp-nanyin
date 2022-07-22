@@ -30,6 +30,8 @@ public enum DictCodeExt1 implements BaseDictCode {
 
     开放频率("OPEN_FREQ"),
 
+    信批产品类别("REP_PROD_TYPE"),
+
     ;
     private String value;
 

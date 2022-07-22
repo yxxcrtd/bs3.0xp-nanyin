@@ -23,6 +23,13 @@ public enum DictCodeListExt5 implements BaseDictCodeList {
     发行方式_开放式(DictCodeExt1.发行方式_信批, "01", "开放式"),
 
     发行方式_封闭式(DictCodeExt1.发行方式_信批, "02", "封闭式"),
+
+    信批产品类别_母产品(DictCodeExt1.信批产品类别, "01", "母产品"),
+
+    信批产品类别_普通产品(DictCodeExt1.信批产品类别, "02", "普通产品"),
+
+    信批产品类别_子产品(DictCodeExt1.信批产品类别, "03", "子产品"),
+
     ;
     /**
      * 对应于数据字典code
