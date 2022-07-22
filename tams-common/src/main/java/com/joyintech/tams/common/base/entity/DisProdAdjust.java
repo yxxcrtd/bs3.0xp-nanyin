@@ -82,6 +82,11 @@ public class DisProdAdjust extends BaseEntity {
     private String dataSource;
 
     /**
+     * 调整原因
+     */
+    private String adjReason;
+
+    /**
      * 取得 产品调整编号，主键
      * @return 产品调整编号，主键
      */
@@ -321,5 +326,21 @@ public class DisProdAdjust extends BaseEntity {
      */
     public void setDataSource(String dataSource) {
         this.dataSource = dataSource == null ? null : dataSource.trim();
+    }
+
+    /**
+     * 取得 调整原因
+     * @return 调整原因
+     */
+    public String getAdjReason() {
+        return adjReason;
+    }
+
+    /**
+     * 设置 调整原因
+     * @param adjReason 调整原因
+     */
+    public void setAdjReason(String adjReason) {
+        this.adjReason = adjReason == null ? null : adjReason.trim();
     }
 }
