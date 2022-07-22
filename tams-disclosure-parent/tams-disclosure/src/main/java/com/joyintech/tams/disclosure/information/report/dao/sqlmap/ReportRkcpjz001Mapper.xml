@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.joyintech.tams.disclosure.information.report.dao.ReportRkcpjz001Mapper">
+	<select id="getProdInfo" resultType="com.joyintech.tams.disclosure.information.report.dto.ReportRkcpjz001Dto">
+		/*
+			TITLENAME:标题名(普通产品取产品名称 ,分级产品取 母产品名称+（子产品代码）)
+		  	PRODNAME：产品名称（普通产品取产品名称 ,分级产品取母产品名称）
+			PRODID：产品代码（普通产品取产品代码 ,分级产品取子产品代码）
+			REGCODE：产品登记编码（普通产品取产品登记编码 ,分级产品取母产品登记编码）
+		*/
+		SELECT
+			RPI.PROD_ID prodId,
+			CASE WHEN RPI.IS_GRADE = '01' THEN
+					 RPI2.PROD_NAME ||'（'||RPI.PROD_ID||'）'
+				 ELSE RPI.PROD_NAME END titleName,
+			CASE WHEN RPI.IS_GRADE = '01' THEN
+					 RPI2.PROD_NAME ||RPI.PROD_NAME
+				 ELSE RPI.PROD_NAME END prodName,
+			NVL(RPI2.PROD_RE,RPI.PROD_RE) regCode
+		FROM REP_PROD_INFO RPI
+			LEFT JOIN REP_PROD_INFO RPI2 ON RPI.P_PROD_ID = RPI2.PROD_ID AND RPI2.STATUS = 'E'
+		WHERE RPI.PROD_ID = #{prodId}
+		  AND RPI.STATUS = 'E'
+	</select>
+
+	<select id="getXgxValueList" resultType="com.joyintech.tams.disclosure.information.report.dto.ReportValueDto">
+		SELECT TO_CHAR(T.VALUE_DATE,'yyyy-MM-dd') valueDate,
+			   TO_CHAR(NVL(T.W_YIELD,0),'FM9999999999999999.0000')  wYield,
+			   TO_CHAR(ROUND(NVL(T.YIELD_7,0) * 100,4),'FM9999999999999999.0000') yield7 ,
+			   '1.0000' unitValue,
+			   '1.0000' unitValueT,
+			   '1.0000' subValue,
+			   '1.0000' redValue
+		FROM REP_PROD_INFO INFO
+			INNER JOIN REP_PROD_INDEX PRI ON PRI.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID) AND PRI.STATUS = 'E'
+		WHERE INFO.PROD_ID = #{prodId}
+		  AND PRI.VALUE_DATE &lt;= #{edate}
+		  AND PRI.VALUE_DATE >= #{vdate}
+		ORDER BY PRI.VALUE_DATE DESC
+	</select>
+
+	<select id="getJzxValueList" resultType="com.joyintech.tams.disclosure.information.report.dto.ReportValueDto">
+		SELECT TO_CHAR(T.VALUE_DATE,'yyyy-MM-dd') valueDate,
+			   TO_CHAR(NVL(T.W_YIELD,0),'FM9999999999999999.0000')  wYield,
+			   TO_CHAR(ROUND(NVL(T.YIELD_7,0) * 100,4),'FM9999999999999999.0000') yield7 ,
+			   '1.0000' unitValue,
+			   '1.0000' unitValueT,
+			   '1.0000' subValue,
+			   '1.0000' redValue
+		FROM REP_PROD_INFO INFO
+			INNER JOIN REP_PROD_INDEX PRI ON PRI.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID) AND PRI.STATUS = 'E'
+		WHERE INFO.PROD_ID = #{prodId}
+		  AND PRI.VALUE_DATE = TO_DATE(#{valueDate},'yyyy-MM-dd')
+		ORDER BY PRI.VALUE_DATE DESC
+	</select>
+
+	<select id="getValues" resultType="com.joyintech.tams.disclosure.information.report.dto.ReportGrahDto">
+		SELECT * FROM (
+		  SELECT TO_CHAR(PRI.VALUE_DATE,'YYYY-MM-DD') cDate,
+		/*净值型产品需要查询单位净值跟单位累计净值*/
+		<if test="rptType != NULL AND rptType !='' AND rptType == 'RKCPJZ_GMJZXCP'">
+		         TO_CHAR(NVL(PRI.UNIT_VALUE,0),'FM9999999999999999.0000') value,
+		   		 TO_CHAR(NVL(PRI.UNIT_VALUE_T,0),'FM9999999999999999.0000') totalValue
+		</if>
+		/*现管型产品需要查询万份收益跟七日年化收益率*/
+		<if test="rptType != NULL AND rptType !='' AND rptType == 'RKCPJZ_GMXGL'">
+			to_char(nvl(t.W_YIELD,0),'FM9999999999999999.0000') value,
+			to_char(round(nvl(t.YIELD_7,0) * 100,4),'FM9999999999999999.0000') totalValue
+		</if>
+		  FROM REP_PROD_INFO INFO
+		INNER JOIN REP_PROD_INDEX PRI ON PRI.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID) AND PRI.STATUS = 'E'
+		  WHERE INFO.PROD_ID = #{prodId}
+			AND PRI.VALUE_DATE &lt;=  TO_DATE(#{valueDate},'yyyy-MM-dd')
+			AND PRI.STATUS = 'E'
+		  	/*净值型产品需要查询工作日的净值数据*/
+			<if test="rptType != NULL AND rptType !='' AND rptType == 'RKCPJZ_GMJZXCP'">
+				AND EXISTS (
+				SELECT 1 FROM CHB_MKT_HOLIDAY H WHERE H.MARKET_CODE = '04'
+				AND H.IS_HOLIDAY = '0'
+				AND PRI.VALUE_DATE = H.BUSI_DATE
+				)
+			</if>
+		  ORDER BY PRI.VALUE_DATE DESC
+		) WHERE ROWNUM &lt;= 30
+	</select>
+
+</mapper>
