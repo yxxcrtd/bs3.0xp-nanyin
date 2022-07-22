@@ -44,10 +44,11 @@ public class DurationReportDataService implements IReportDataService {
 		List<Map<String, Object>> listResult = new ArrayList<>();
 
 		try {
-			//报告参数
+			//报告参数整理
 			int year = (int)paraMap.get("year");
 			int quarter= (int)paraMap.get("quarter");
 			Date currDate = (Date)(paraMap.get("platformDate"));
+			paraMap.put("prodId",paraMap.get("pprodid"));   //定期报告维度：母产品或者单产品
 			
 			//报表基本参数
 			DurationReportDto reportDto= durationReportMapper.selectProdInfo(paraMap);
