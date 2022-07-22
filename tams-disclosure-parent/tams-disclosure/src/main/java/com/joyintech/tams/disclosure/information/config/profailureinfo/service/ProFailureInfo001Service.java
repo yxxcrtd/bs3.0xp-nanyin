@@ -1,6 +1,7 @@
 package com.joyintech.tams.disclosure.information.config.profailureinfo.service;
 
 import com.alibaba.fastjson.JSONArray;
+import com.google.common.collect.Maps;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
@@ -9,6 +10,8 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.disclosure.information.config.proelementadj.dao.ProElementAdjMapper;
 import com.joyintech.tams.disclosure.information.config.profailureinfo.dao.ProFailureInfoMapper;
 import com.joyintech.tams.disclosure.information.config.profailureinfo.dto.ProFailureInfo001Dto;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
@@ -23,12 +26,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo001Dto> implements BaseProcessService<ProFailureInfo001Dto> {
 
     @Autowired
     private ProFailureInfoMapper proFailureInfoMapper;
+
+    @Autowired
+    private ProElementAdjMapper proElementAdjMapper;
 
     public Page<ProFailureInfo001Dto> selectForPage(Map<String, Object> param) {
         String prodId = (String)param.get("prodRegistNo");
@@ -90,8 +97,8 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
         return proFailureInfoMapper.getRegistNo(map);
     }
 
-    public String selectByProdRegistNo(Map map) {
-        return proFailureInfoMapper.selectByProdRegistNo(map);
+    public String selectByProdRegistNo(String prodRegistNo) {
+        return proFailureInfoMapper.selectByProdRegistNo(prodRegistNo);
     }
 
 //    public Page<SelectOptionDto> getProdId(Map map) {
@@ -121,7 +128,7 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
      * @return
      */
     public AjaxResult checkImportData(String fileName) {
-//        List<String> findList =  this.queryFinprod(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());
+        List<String> findList =  proElementAdjMapper.getRegistNo(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());
         List<List<String>> objects = ExcelUtil.getTempList(fileName);
         if (objects.size() - 1 > 50000) {
             Map<String, Object> resultMap = new HashMap<>();
@@ -156,11 +163,11 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
                     if (!StringUtil.isNotEmpty(rowData.get(0))){
                         errorMsg.append("数据状态 必填！");
                     }
-//                    else if(!findList.contains(rowData.get(0))){
-//                        errorMsg.append("基金代码不存在！");
-//                    }
                     if (!StringUtil.isNotEmpty(rowData.get(1))){
                         errorMsg.append("产品登记编码 必填！");
+                    }
+                    else if(!findList.contains(rowData.get(1))){
+                        errorMsg.append("产品登记编码不存在！");
                     }
                     if (!StringUtil.isNotEmpty(rowData.get(2))){
                         errorMsg.append("不成立原因 必填！");
@@ -242,14 +249,16 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
         List<ProFailureInfo001Dto> selectedItem = dto.getSelectedItem();
         List<ProFailureInfo001Dto>  existData = new ArrayList<>();
         List<ProFailureInfo001Dto>  newData = new ArrayList<>();
-//        for (ProFailureInfo001Dto temp:selectedItem) {
-//            //数据已存在 【产品登记编码 相同】，做更新操作。
-//            if (StringUtil.isNotEmpty(this.selectByProdRegistNo(temp.getProdRegistNo()))){
-//                existData.add(temp);
-//            }else {
-//                newData.add(temp);
-//            }
-//        }
+        for (ProFailureInfo001Dto temp:selectedItem) {
+            //数据已存在 【产品登记编码 相同】，做更新操作。
+            if (StringUtil.isNotEmpty(this.selectByProdRegistNo(temp.getProdRegistNo()))){
+                existData.add(temp);
+            }else {
+                temp.setDataStatus(DictCodeListExt3.信披_数据状态_有效.getValue());
+                temp.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
+                newData.add(temp);
+            }
+        }
         //更新操作
         for (ProFailureInfo001Dto existDataDto : existData) {
             this.doComplete(existDataDto,OperationType.MODIFY);

@@ -79,6 +79,7 @@ public class ProFailureInfo002Controller extends BaseController {
         if (result.hasErrors()) {
             return new AjaxResult();
         }
+        dto.setDataSource(DictCodeListExt3.信披_数据来源_系统新建.getValue());
         ProcessParameter<ProFailureInfo001Dto> processParameter = new ProcessParameter<ProFailureInfo001Dto>();
         WorkFlowParameter<ProFailureInfo001Dto> params = new WorkFlowParameter<ProFailureInfo001Dto>();
         params.setPageId(this.getPageId());

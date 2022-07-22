@@ -195,6 +195,7 @@
     </select>
     <select id="getAdjF" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT
+            distinct
              ADJ_FIELD id,
              ADJ_FIELD text
         FROM

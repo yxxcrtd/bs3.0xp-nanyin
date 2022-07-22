@@ -91,9 +91,8 @@ public class HugeInfoPro002Controller extends BaseController {
         if(StringUtil.equals(dto.getOperateType(),"new")){
             String code = IDGenerator.generate(36);
             dto.setRedemptionId(code);
+            dto.setDataSource(DictCodeListExt3.信披_数据来源_系统新建.getValue());
         }
-        String code = IDGenerator.generate(36);
-        dto.setRedemptionId(code);
         Date sysDate = com.joyintech.framework.util.DateUtil.platDateFromCache();// 获取平台日期
         dto.setCreateTime(sysDate);
         dto.setUpdateTime(sysDate);

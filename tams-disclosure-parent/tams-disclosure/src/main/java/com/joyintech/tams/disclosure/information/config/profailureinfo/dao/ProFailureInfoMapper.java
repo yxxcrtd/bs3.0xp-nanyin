@@ -22,7 +22,7 @@ public interface ProFailureInfoMapper {
 
     List<SelectOptionDto> getRegistNo(Map<String, Object> map);
 
-    String selectByProdRegistNo(Map<String, Object> map);
+    String selectByProdRegistNo(String prodRegistNo);
 
     List<SelectOptionDto> getProdId(Map<String, Object> map);
 

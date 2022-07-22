@@ -46,7 +46,6 @@ public class ProElementAdj002Controller extends BaseController {
     public String init(Model model) {
         this.setSelectOptionToModel(model, new DictCode[] {DictCode.是否});
         String workflowId = getParam("workflowId");
-        String prodRegistNo = getParam("prodRegistNo");
         String prodAdjustId =getParam("prodAdjustId");
         // 不来自于代办
         if (WorkFlowUtil.isNotFromToDoList() &&  StringUtil.isNotEmpty(prodAdjustId)) {
@@ -86,8 +85,11 @@ public class ProElementAdj002Controller extends BaseController {
         }
         ProcessParameter<ProElementAdj001Dto> processParameter = new ProcessParameter<ProElementAdj001Dto>();
         WorkFlowParameter<ProElementAdj001Dto> params = new WorkFlowParameter<ProElementAdj001Dto>();
-        String code = IDGenerator.generate();
-        dto.setProdAdjustId(code);
+        if(StringUtil.equals(dto.getOperateType(),"new")){
+            String code = IDGenerator.generate(36);
+            dto.setProdAdjustId(code);
+            dto.setDataSource(DictCodeListExt3.信披_数据来源_系统新建.getValue());
+        }
         params.setPageId(this.getPageId());
         params.setElementId(dto.getElementId());
         params.setBusinessCode(item -> item.getProdRegistNo());

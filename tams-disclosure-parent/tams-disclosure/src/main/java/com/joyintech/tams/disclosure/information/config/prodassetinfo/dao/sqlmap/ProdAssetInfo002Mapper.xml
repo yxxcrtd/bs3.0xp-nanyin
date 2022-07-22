@@ -65,10 +65,18 @@
 				AND	DATA_STATUS=#{status,jdbcType=VARCHAR}
 			</if>
 			<if test="prodAssetId != null and prodAssetId != ''">
-				AND	PROD_ASSET_ID!=#{prodAssetId,jdbcType=VARCHAR}
+				AND	PROD_ASSET_ID=#{prodAssetId,jdbcType=VARCHAR}
+			</if>
+			<if test="excludeId != null and excludeId != ''">
+				AND	PROD_ASSET_ID!=#{excludeId,jdbcType=VARCHAR}
 			</if>
 		</where>
 	</select>
+
+	<update id="deleteProdAssetByPrimaryKey">
+		update DIS_PROD_ASSET set DATA_STATUS='02'
+        where PROD_ASSET_ID = #{prodAssetId,jdbcType=VARCHAR}
+	</update>
 
 
 </mapper>
