@@ -124,7 +124,7 @@
 		from
 		DIS_PROD_FEEDISCOUNT DPF
 		left join REP_PROD_INFO RPI on DPF.prod_id=RPI.prod_id
-		where STATUS='E'
+		where DPF.DATA_STATUS='01'
 		<if test="search != null and search != ''">
 			and (DPF.PROD_DISCOUNT_ID like '%' || #{search, jdbcType=VARCHAR} || '%'
 			or DPF.FEENAME like '%' || #{search, jdbcType=VARCHAR} || '%')
@@ -136,7 +136,7 @@
 
 	<select id="getElementNameList" resultType="com.joyintech.framework.select.SelectOptionDto">
 		select
-		distinct DPA.PROD_ID id,
+		distinct DPA.PROD_ADJUST_ID id,
 		DPA.ADJ_FIELD text
 		from
 		DIS_PROD_ADJUST DPA
