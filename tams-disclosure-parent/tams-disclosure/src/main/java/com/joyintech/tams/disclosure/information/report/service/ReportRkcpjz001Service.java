@@ -4,6 +4,7 @@ package com.joyintech.tams.disclosure.information.report.service;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.disclosure.common.CollectionUtils;
 import com.joyintech.tams.disclosure.common.DisReportType;
 import com.joyintech.tams.disclosure.common.common.service.HolidayService;
 import com.joyintech.tams.disclosure.information.report.dao.ReportRkcpjz001Mapper;
@@ -99,6 +100,8 @@ public class ReportRkcpjz001Service implements IReportDataService {
                 }
                 reportRkcpjz001Dto.setList(list);
 
+                dataMap = CollectionUtils.bean2Map(reportRkcpjz001Dto);
+
                 //近一个月（工作日）份额净值走势图或近一个月(自然日)万份收益走势图
                 String imagePath1 = tmpImagePath+"image1"+"_"+prodId+"_"+valueDate;
                 //近一个月（工作日）份额累计净值走势图或近一个月份(自然日)七日年化收益率走势图
@@ -184,6 +187,7 @@ public class ReportRkcpjz001Service implements IReportDataService {
                 prodTotalValueChart.put("content", imagePath2 + ".png");
                 dataMap.put("${@image:image2}", prodTotalValueChart);
             }
+            resultMap.add(dataMap);
             logger.info("日开产品净值公告（公募净值型产品）【{}】生成成功", JsonUtils.object2Json(paraMap));
         } catch (Exception e) {
             logger.error("日开产品净值公告（公募净值型产品）【{}】生成异常", JsonUtils.object2Json(paraMap), e);
