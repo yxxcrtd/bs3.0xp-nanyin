@@ -688,3 +688,8 @@ comment on column rep_prod_info.ISSUE_STATUS is '发行状态 01 发行成功 02
 ALTER TABLE rep_prod_info add REP_PROD_TYPE VARCHAR2(2) ;
 comment on column rep_prod_info.REP_PROD_TYPE is '信批产品类别 01 母产品 02 普通产品 03 子产品';
 /**add by zhengxiaolian 20220722 产品基本信息表增加信批产品类别字段 end**/
+
+/**add by zhengxiaolian 20220722 作业规则表增加日历类型字段 start**/
+ALTER TABLE rep_rule add MARKET_CODE VARCHAR2(2) ;
+comment on column rep_rule.MARKET_CODE is '日历类型：01 中国法定节假日/04 上交所';
+/**add by zhengxiaolian 20220722 作业规则表增加日历类型字段 end**/
