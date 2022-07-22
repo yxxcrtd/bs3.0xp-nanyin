@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.DisNostdCreditorMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.DisNostdCreditor" >
+        <id column="NOSTD_ASSET_ID" property="nostdAssetId" jdbcType="VARCHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="EFF_DATE" property="effDate" jdbcType="DATE" />
+        <result column="EFF_END_DATE" property="effEndDate" jdbcType="DATE" />
+        <result column="FINANCIER" property="financier" jdbcType="VARCHAR" />
+        <result column="PROJECT_NO" property="projectNo" jdbcType="VARCHAR" />
+        <result column="PROJECT_NAME" property="projectName" jdbcType="VARCHAR" />
+        <result column="REM_FINANCING_PERIOD" property="remFinancingPeriod" jdbcType="VARCHAR" />
+        <result column="INCOME_DISTRIBUTE" property="incomeDistribute" jdbcType="VARCHAR" />
+        <result column="TRD_CONSTRUCT" property="trdConstruct" jdbcType="VARCHAR" />
+        <result column="RISK_INFO" property="riskInfo" jdbcType="VARCHAR" />
+        <result column="DATA_STATUS" property="dataStatus" jdbcType="VARCHAR" />
+        <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        NOSTD_ASSET_ID NOSTD_ASSET_ID, PROD_ID PROD_ID, EFF_DATE EFF_DATE, EFF_END_DATE EFF_END_DATE, 
+        FINANCIER FINANCIER, PROJECT_NO PROJECT_NO, PROJECT_NAME PROJECT_NAME, REM_FINANCING_PERIOD REM_FINANCING_PERIOD, 
+        INCOME_DISTRIBUTE INCOME_DISTRIBUTE, TRD_CONSTRUCT TRD_CONSTRUCT, RISK_INFO RISK_INFO, 
+        DATA_STATUS DATA_STATUS, DATA_SOURCE DATA_SOURCE, CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, CREATE_DEPT CREATE_DEPT
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.DisNostdCreditorMapper.Base_Column_List" />
+        from DIS_NOSTD_CREDITOR
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.DisNostdCreditorMapper.Base_Column_List" />
+        from DIS_NOSTD_CREDITOR
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.DisNostdCreditorMapper.Base_Column_List" />
+        from DIS_NOSTD_CREDITOR
+        where NOSTD_ASSET_ID = #{nostdAssetId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from DIS_NOSTD_CREDITOR
+        where NOSTD_ASSET_ID = #{nostdAssetId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.DisNostdCreditor" >
+        insert into DIS_NOSTD_CREDITOR (NOSTD_ASSET_ID, PROD_ID, EFF_DATE, 
+            EFF_END_DATE, FINANCIER, PROJECT_NO, 
+            PROJECT_NAME, REM_FINANCING_PERIOD, INCOME_DISTRIBUTE, 
+            TRD_CONSTRUCT, RISK_INFO, DATA_STATUS, 
+            DATA_SOURCE, CREATE_USER, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME, CREATE_DEPT
+            )
+        values (#{nostdAssetId,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{effDate,jdbcType=DATE}, 
+            #{effEndDate,jdbcType=DATE}, #{financier,jdbcType=VARCHAR}, #{projectNo,jdbcType=VARCHAR}, 
+            #{projectName,jdbcType=VARCHAR}, #{remFinancingPeriod,jdbcType=VARCHAR}, #{incomeDistribute,jdbcType=VARCHAR}, 
+            #{trdConstruct,jdbcType=VARCHAR}, #{riskInfo,jdbcType=VARCHAR}, #{dataStatus,jdbcType=VARCHAR}, 
+            #{dataSource,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.DisNostdCreditor" >
+        insert into DIS_NOSTD_CREDITOR
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="nostdAssetId != null" >
+                NOSTD_ASSET_ID,
+            </if>
+            <if test="prodId != null" >
+                PROD_ID,
+            </if>
+            <if test="effDate != null" >
+                EFF_DATE,
+            </if>
+            <if test="effEndDate != null" >
+                EFF_END_DATE,
+            </if>
+            <if test="financier != null" >
+                FINANCIER,
+            </if>
+            <if test="projectNo != null" >
+                PROJECT_NO,
+            </if>
+            <if test="projectName != null" >
+                PROJECT_NAME,
+            </if>
+            <if test="remFinancingPeriod != null" >
+                REM_FINANCING_PERIOD,
+            </if>
+            <if test="incomeDistribute != null" >
+                INCOME_DISTRIBUTE,
+            </if>
+            <if test="trdConstruct != null" >
+                TRD_CONSTRUCT,
+            </if>
+            <if test="riskInfo != null" >
+                RISK_INFO,
+            </if>
+            <if test="dataStatus != null" >
+                DATA_STATUS,
+            </if>
+            <if test="dataSource != null" >
+                DATA_SOURCE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="nostdAssetId != null" >
+                #{nostdAssetId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodId != null" >
+                #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="effDate != null" >
+                #{effDate,jdbcType=DATE},
+            </if>
+            <if test="effEndDate != null" >
+                #{effEndDate,jdbcType=DATE},
+            </if>
+            <if test="financier != null" >
+                #{financier,jdbcType=VARCHAR},
+            </if>
+            <if test="projectNo != null" >
+                #{projectNo,jdbcType=VARCHAR},
+            </if>
+            <if test="projectName != null" >
+                #{projectName,jdbcType=VARCHAR},
+            </if>
+            <if test="remFinancingPeriod != null" >
+                #{remFinancingPeriod,jdbcType=VARCHAR},
+            </if>
+            <if test="incomeDistribute != null" >
+                #{incomeDistribute,jdbcType=VARCHAR},
+            </if>
+            <if test="trdConstruct != null" >
+                #{trdConstruct,jdbcType=VARCHAR},
+            </if>
+            <if test="riskInfo != null" >
+                #{riskInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="dataStatus != null" >
+                #{dataStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="dataSource != null" >
+                #{dataSource,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.DisNostdCreditor" >
+        insert into DIS_NOSTD_CREDITOR(NOSTD_ASSET_ID, PROD_ID, EFF_DATE, EFF_END_DATE, FINANCIER, 
+        PROJECT_NO, PROJECT_NAME, REM_FINANCING_PERIOD, INCOME_DISTRIBUTE, TRD_CONSTRUCT, 
+        RISK_INFO, DATA_STATUS, DATA_SOURCE, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+        CREATE_DEPT)
+        select NOSTD_ASSET_ID, PROD_ID, EFF_DATE, EFF_END_DATE, FINANCIER, 
+            PROJECT_NO, PROJECT_NAME, REM_FINANCING_PERIOD, INCOME_DISTRIBUTE, TRD_CONSTRUCT, 
+            RISK_INFO, DATA_STATUS, DATA_SOURCE, CREATE_USER, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
+            CREATE_DEPT
+             from DIS_NOSTD_CREDITOR
+             where 1 = 1 and NOSTD_ASSET_ID = #{nostdAssetId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.DisNostdCreditor" >
+        update DIS_NOSTD_CREDITOR
+        <set >
+            <if test="prodId != null" >
+                PROD_ID = #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="effDate != null" >
+                EFF_DATE = #{effDate,jdbcType=DATE},
+            </if>
+            <if test="effEndDate != null" >
+                EFF_END_DATE = #{effEndDate,jdbcType=DATE},
+            </if>
+            <if test="financier != null" >
+                FINANCIER = #{financier,jdbcType=VARCHAR},
+            </if>
+            <if test="projectNo != null" >
+                PROJECT_NO = #{projectNo,jdbcType=VARCHAR},
+            </if>
+            <if test="projectName != null" >
+                PROJECT_NAME = #{projectName,jdbcType=VARCHAR},
+            </if>
+            <if test="remFinancingPeriod != null" >
+                REM_FINANCING_PERIOD = #{remFinancingPeriod,jdbcType=VARCHAR},
+            </if>
+            <if test="incomeDistribute != null" >
+                INCOME_DISTRIBUTE = #{incomeDistribute,jdbcType=VARCHAR},
+            </if>
+            <if test="trdConstruct != null" >
+                TRD_CONSTRUCT = #{trdConstruct,jdbcType=VARCHAR},
+            </if>
+            <if test="riskInfo != null" >
+                RISK_INFO = #{riskInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="dataStatus != null" >
+                DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="dataSource != null" >
+                DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where NOSTD_ASSET_ID = #{nostdAssetId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.DisNostdCreditor" >
+        update DIS_NOSTD_CREDITOR
+        set PROD_ID = #{prodId,jdbcType=VARCHAR},
+            EFF_DATE = #{effDate,jdbcType=DATE},
+            EFF_END_DATE = #{effEndDate,jdbcType=DATE},
+            FINANCIER = #{financier,jdbcType=VARCHAR},
+            PROJECT_NO = #{projectNo,jdbcType=VARCHAR},
+            PROJECT_NAME = #{projectName,jdbcType=VARCHAR},
+            REM_FINANCING_PERIOD = #{remFinancingPeriod,jdbcType=VARCHAR},
+            INCOME_DISTRIBUTE = #{incomeDistribute,jdbcType=VARCHAR},
+            TRD_CONSTRUCT = #{trdConstruct,jdbcType=VARCHAR},
+            RISK_INFO = #{riskInfo,jdbcType=VARCHAR},
+            DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
+            DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        where NOSTD_ASSET_ID = #{nostdAssetId,jdbcType=VARCHAR}
+    </update>
+</mapper>

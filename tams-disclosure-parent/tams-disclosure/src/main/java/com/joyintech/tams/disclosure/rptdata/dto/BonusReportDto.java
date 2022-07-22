@@ -7,8 +7,10 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * @author Administrator
- *
+ * 分红报告实体类
+ * @author chenxc
+ * @version 1.0 2022年07月20日
+ * @since 1.0
  */
 public class BonusReportDto {
 	

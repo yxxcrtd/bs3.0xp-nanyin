@@ -12,12 +12,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.joyintech.tams.common.base.entity.DisProdBonusplan;
 import com.joyintech.tams.common.base.entity.RepFeeTrd;
 import com.joyintech.tams.disclosure.common.CollectionUtils;
 import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
 import com.joyintech.tams.disclosure.rptdata.dao.BonusReportMapper;
 import com.joyintech.tams.disclosure.rptdata.dao.MatureReportMapper;
-import com.joyintech.tams.disclosure.rptdata.dto.BonusPlanDto;
 import com.joyintech.tams.disclosure.rptdata.dto.BonusReportDto;
 import com.joyintech.tams.disclosure.rptdata.dto.MatureReportDto;
 
@@ -71,7 +71,7 @@ public class MatureReportDataService implements IReportDataService {
 			for ( BonusReportDto report:listBonusReport ) {  //计算每次分红的累计值
 	        	//上一分配基准日
 	        	if ( "01".equals(report.getIssuingWay()) ) {  //开放式
-	        		BonusPlanDto plan = bonusReportMapper.selectLastBonusPlan(paraMap);
+	        		DisProdBonusplan plan = bonusReportMapper.selectLastBonusPlan(paraMap);
 	        		if ( plan==null  ) { //第一个计划
 	        			report.setLastSettDate(report.getEDate());
 	        		} else {

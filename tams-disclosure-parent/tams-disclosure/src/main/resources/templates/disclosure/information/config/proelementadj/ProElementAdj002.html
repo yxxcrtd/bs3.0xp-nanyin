@@ -28,7 +28,7 @@
                                     <label class="layui-form-label form-lable" data-th-text="#{ProElementAdj001.prodRegistNo}">产品登记编码</label>
                                     <div class="layui-input-inline input-inline">
                                         <select id="prodRegistNo" name="prodRegistNo" class="input-select"
-                                                data-th-initValue="${entity?.prodRegistNo}"
+                                                data-th-initValue="${entity?.prodRegistNo}" data-th-formatoption="false"
                                                 data-th-data-url="@{/disclosure/information/config/proelementadj/ProElementAdj002/getRegistNo}"
                                                 placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}"
                                                 allowClear="true" required>
@@ -47,11 +47,13 @@
                                     </div>
                                 </div>
                                 <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-                                    <label class="layui-form-label form-lable" data-th-text="#{ProElementAdj001.isSalesAgency}">是否有代销机构</label>
+                                    <label class="layui-form-label form-label-wrap"
+                                           data-th-text="调整此产品要素原因">调整此产品要素原因</label>
                                     <div class="layui-input-inline input-inline">
-                                        <select id="isSalesAgency" name="isSalesAgency" class="layui-input form-input input-select" data-th-initValue="${entity?.isSalesAgency}" allowClear="true" required
-                                                data-th-data-result="${YES_OR_NO}" searchable="false" data-th-placeholder="#{SysCommon.placeholder}">
-                                        </select>
+                                        <input type="text" maxlength="500" id="adjReason" name="adjReason"
+                                               class="layui-input form-input" placeholder="请输入内容"
+                                               data-th-placeholder="#{SysCommon.placeholder}"
+                                               data-th-value="${entity?.adjReason}">
                                     </div>
                                 </div>
                             </div>
@@ -61,7 +63,7 @@
                                            data-th-text="#{ProElementAdj001.prodAdjRemark}">描述文字1</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" maxlength="500" id="prodAdjRemark" name="prodAdjRemark"
-                                               class="layui-input form-input" placeholder="请输入内容" required
+                                               class="layui-input form-input" placeholder="请输入内容"
                                                data-th-placeholder="#{SysCommon.placeholder}"
                                                data-th-value="${entity?.prodAdjRemark}">
                                     </div>
@@ -71,7 +73,7 @@
                                            data-th-text="#{ProElementAdj001.prodAdjRemark2}">描述文字2</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" maxlength="500" id="prodAdjRemark2" name="prodAdjRemark2"
-                                               class="layui-input form-input" placeholder="请输入内容" required
+                                               class="layui-input form-input" placeholder="请输入内容"
                                                data-th-placeholder="#{SysCommon.placeholder}"
                                                data-th-value="${entity?.prodAdjRemark}">
                                     </div>
@@ -124,10 +126,20 @@
                             <div class="layui-form-item">
                                 <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
                                     <label class="layui-form-label form-label-wrap"
+                                           data-th-text="#{ProElementAdj001.adjReason}">对此要素调整（原因）</label>
+                                    <div class="layui-input-inline input-inline">
+                                        <input type="text" maxlength="500" id="adjReason" name="adjReason"
+                                               class="layui-input form-input" placeholder="请输入内容"
+                                               data-th-placeholder="#{SysCommon.placeholder}"
+                                               data-th-value="${entity?.adjReason}">
+                                    </div>
+                                </div>
+                                <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
+                                    <label class="layui-form-label form-label-wrap"
                                            data-th-text="#{ProElementAdj002.fieldAdjRemark}">调整此要素（补充说明文1）</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" maxlength="500" id="fieldAdjRemark" name="fieldAdjRemark"
-                                               class="layui-input form-input" placeholder="请输入内容" required
+                                               class="layui-input form-input" placeholder="请输入内容"
                                                data-th-placeholder="#{SysCommon.placeholder}"
                                                data-th-value="${entity?.fieldAdjRemark}">
                                     </div>
@@ -137,11 +149,13 @@
                                            data-th-text="#{ProElementAdj002.fieldAdjRemark2}">调整此要素（补充说明文2）</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" maxlength="500" id="fieldAdjRemark2" name="fieldAdjRemark2"
-                                               class="layui-input form-input" placeholder="请输入内容" required
+                                               class="layui-input form-input" placeholder="请输入内容"
                                                data-th-placeholder="#{SysCommon.placeholder}"
                                                data-th-value="${entity?.fieldAdjRemark2}">
                                     </div>
                                 </div>
+                            </div>
+                            <div class="layui-form-item">
                                 <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
                                     <label class="layui-form-label form-label-wrap"
                                            data-th-text="#{ProElementAdj002.rptIssueDate}">报告发布日期</label>

@@ -39,6 +39,9 @@ public class ReportDataService {
 	private NostdReportDataService nostdReportDataService;
 
 	@Autowired
+	private DurationReportDataService durationReportDataService;
+	
+	@Autowired
 	private ReportFxgg001Service reportFxgg001Service;
 
 	@Autowired
@@ -197,6 +200,8 @@ public class ReportDataService {
 		} else if (rptType.equals(DisReportType.DQGG_GM)) { // 到期公告
 			service = matureReportDataService;
 		} else if (rptType.equals(DisReportType.TZTZFBZCGG)) { // 非标调整公告
+			service = nostdReportDataService;
+		} else if (rptType.equals(DisReportType.JDBG_ZSX)) { // 定期公告-季度报告指数型
 			service = nostdReportDataService;
 		} else if (rptType.equals(DisReportType.FXGG)) { // 发行公告
 			service = reportFxgg001Service;

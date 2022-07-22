@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RepRelDealMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepRelDeal" >
+        <id column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="PUB_DATE" property="pubDate" jdbcType="DATE" />
+        <result column="BANK_TRANS_AMT" property="bankTransAmt" jdbcType="DECIMAL" />
+        <result column="ORG_TRANS_AMT" property="orgTransAmt" jdbcType="DECIMAL" />
+        <result column="INVEST_TRANS_AMT" property="investTransAmt" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        PROD_ID PROD_ID, PUB_DATE PUB_DATE, BANK_TRANS_AMT BANK_TRANS_AMT, ORG_TRANS_AMT ORG_TRANS_AMT, 
+        INVEST_TRANS_AMT INVEST_TRANS_AMT, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, STATUS STATUS
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepRelDealMapper.Base_Column_List" />
+        from REP_REL_DEAL
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepRelDealMapper.Base_Column_List" />
+        from REP_REL_DEAL
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepRelDealMapper.Base_Column_List" />
+        from REP_REL_DEAL
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from REP_REL_DEAL
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepRelDeal" >
+        insert into REP_REL_DEAL (PROD_ID, PUB_DATE, BANK_TRANS_AMT, 
+            ORG_TRANS_AMT, INVEST_TRANS_AMT, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME, STATUS)
+        values (#{prodId,jdbcType=VARCHAR}, #{pubDate,jdbcType=DATE}, #{bankTransAmt,jdbcType=DECIMAL}, 
+            #{orgTransAmt,jdbcType=DECIMAL}, #{investTransAmt,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepRelDeal" >
+        insert into REP_REL_DEAL
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="prodId != null" >
+                PROD_ID,
+            </if>
+            <if test="pubDate != null" >
+                PUB_DATE,
+            </if>
+            <if test="bankTransAmt != null" >
+                BANK_TRANS_AMT,
+            </if>
+            <if test="orgTransAmt != null" >
+                ORG_TRANS_AMT,
+            </if>
+            <if test="investTransAmt != null" >
+                INVEST_TRANS_AMT,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="prodId != null" >
+                #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="pubDate != null" >
+                #{pubDate,jdbcType=DATE},
+            </if>
+            <if test="bankTransAmt != null" >
+                #{bankTransAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="orgTransAmt != null" >
+                #{orgTransAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="investTransAmt != null" >
+                #{investTransAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepRelDeal" >
+        insert into REP_REL_DEAL(PROD_ID, PUB_DATE, BANK_TRANS_AMT, ORG_TRANS_AMT, INVEST_TRANS_AMT, 
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, STATUS)
+        select PROD_ID, PUB_DATE, BANK_TRANS_AMT, ORG_TRANS_AMT, INVEST_TRANS_AMT, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, #{status,jdbcType=VARCHAR} STATUS
+             from REP_REL_DEAL
+             where STATUS = 'E' and PROD_ID = #{prodId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepRelDeal" >
+        update REP_REL_DEAL
+        <set >
+            <if test="pubDate != null" >
+                PUB_DATE = #{pubDate,jdbcType=DATE},
+            </if>
+            <if test="bankTransAmt != null" >
+                BANK_TRANS_AMT = #{bankTransAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="orgTransAmt != null" >
+                ORG_TRANS_AMT = #{orgTransAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="investTransAmt != null" >
+                INVEST_TRANS_AMT = #{investTransAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepRelDeal" >
+        update REP_REL_DEAL
+        set PUB_DATE = #{pubDate,jdbcType=DATE},
+            BANK_TRANS_AMT = #{bankTransAmt,jdbcType=DECIMAL},
+            ORG_TRANS_AMT = #{orgTransAmt,jdbcType=DECIMAL},
+            INVEST_TRANS_AMT = #{investTransAmt,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            STATUS = #{status,jdbcType=VARCHAR}
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+    </update>
+</mapper>
