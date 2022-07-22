@@ -67,7 +67,8 @@ $(function() {
             title : '费用金额'
         }, {
             field : 'payDateStr',width:'10%',
-            title : '支付日'
+            title : '支付日',
+            sortField : 'PAY_DATE'
         }, {
             field : 'accrual',width:'10%',
             title : '自成立以来发生额（贷方）'
