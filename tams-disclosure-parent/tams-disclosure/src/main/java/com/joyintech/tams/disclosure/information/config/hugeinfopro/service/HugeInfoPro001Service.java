@@ -156,7 +156,7 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
                         errorMsg.append("子产品代码 必填！");
                     }
                     else if(!findProdList.contains(rowData.get(2))){
-                        errorMsg.append("子产品代码息表中维护！");
+                        errorMsg.append("子产品代码未在产品基本信息表中维护！");
                     }
                     if (!StringUtil.isNotEmpty(rowData.get(3))){
                         errorMsg.append("巨额赎回日期 必填！");
