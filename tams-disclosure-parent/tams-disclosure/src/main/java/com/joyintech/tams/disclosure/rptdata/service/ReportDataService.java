@@ -202,7 +202,7 @@ public class ReportDataService {
 		} else if (rptType.equals(DisReportType.TZTZFBZCGG)) { // 非标调整公告
 			service = nostdReportDataService;
 		} else if (rptType.equals(DisReportType.JDBG_ZSX)) { // 定期公告-季度报告指数型
-			service = nostdReportDataService;
+			service = durationReportDataService;
 		} else if (rptType.equals(DisReportType.FXGG)) { // 发行公告
 			service = reportFxgg001Service;
 		} else if (rptType.equals(DisReportType.CPBCLGG_GM) || rptType.equals(DisReportType.CPBCLBG_SM)) { // 产品不成立公告、报告

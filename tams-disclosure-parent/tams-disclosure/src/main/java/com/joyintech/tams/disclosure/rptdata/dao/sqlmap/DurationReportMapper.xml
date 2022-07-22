@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.joyintech.tams.disclosure.rptdata.dao.BonusReportMapper">
+<mapper namespace="com.joyintech.tams.disclosure.rptdata.dao.DurationReportMapper">
     
    <select id="selectProdInfo" resultType="com.joyintech.tams.disclosure.rptdata.dto.DurationReportDto">
 		select 
@@ -15,7 +15,7 @@
 		from REP_PROD_INFO info
 		left join REP_PROD_INDEX PINDEX ON INFO.PROD_ID=PINDEX.PROD_ID AND PINDEX.STATUS='E' and #{reportDate,jdbcType=DATE}=pindex.VALUE_DATE
 		left join DIS_PROD_PARTNER PARTNER ON INFO.PROD_ID=PARTNER.PROD_ID AND #{reportDate,jdbcType=DATE} between partner.EFF_DATE and partner.EFF_END_DATE
-		where (INFO.P_PROD_ID IS NULL or info.PROD_ID=info.P_PROD_ID)  /**母产品或者单产品**/
+		where REP_PROD_TYPE in ('01','02')  /**母产品或者单产品**/
 		AND info.STATUS='E'
 		<if test="prodId!=null">
 			AND info.PROD_ID=#{prodId,jdbcType=VARCHAR}
@@ -31,7 +31,7 @@
 		left join REP_PROD_INDEX rindex on info.PROD_ID=rindex.PROD_ID and rindex.VALUE_DATE=#{reportDate,jdbcType=DATE}
 		where 1=1
 		<if test="prodId!=null">
-		    and PROD_ID=#{prodId,jdbcType=VARCHAR}
+		    and info.PROD_ID=#{prodId,jdbcType=VARCHAR}
 		</if>
     </select>
     
@@ -78,7 +78,7 @@
 			,rac.PD_PROP
 		from REP_ASSETS_COMB rac
 		where
-		rac.DATA_STATUS='E'
+		rac.STATUS='E'
 		<if test="prodId!=null">
 		    and rac.PROD_ID=#{prodId,jdbcType=VARCHAR}
 		</if>
@@ -95,7 +95,7 @@
 			,accts.ACCOUNT_OPENER
 		from REP_INVEST_ACCOUNT accts
 		where
-			accts.DATA_STATUS='E'
+			accts.STATUS='E'
 		<if test="prodId!=null">
 		    and accts.PROD_ID=#{prodId,jdbcType=VARCHAR}
 		</if>
@@ -109,7 +109,7 @@
 			,deal.INVEST_TRANS_AMT
 		from REP_REL_DEAL deal
 		where 
-			deal.DATA_STATUS='E'
+			deal.STATUS='E'
 			<if test="prodId!=null">
 			    and deal.PROD_ID=#{prodId,jdbcType=VARCHAR}
 			</if>

@@ -26,7 +26,7 @@ public class DurationUtil {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
 		Date sDate = getQuarterStart(year,season);
 		dur = sdf.format(sDate);
-		if ( sDate.compareTo(startDate)<0 ) {
+		if ( startDate!=null && sDate.compareTo(startDate)<0 ) {
 			dur = sdf.format(startDate);
 		}
 		Date eDate = getQuarterEnd(year,season);
@@ -38,16 +38,16 @@ public class DurationUtil {
 		Calendar eDate = Calendar.getInstance();
 		switch (quarter ) {
 		case 1:
-			eDate.set(year, 3, 31);
+			eDate.set(year, 2, 31);
 			break;
 		case 2:
-			eDate.set(year, 6, 30);
+			eDate.set(year, 5, 30);
 			break;
 		case 3:
-			eDate.set(year, 9, 30);
+			eDate.set(year, 8, 30);
 			break;
 		case 4:
-			eDate.set(year, 12, 31);
+			eDate.set(year, 11, 31);
 			break;
 		}
 		
@@ -58,16 +58,16 @@ public class DurationUtil {
 		Calendar sDate = Calendar.getInstance();
 		switch (quarter ) {
 		case 1:
-			sDate.set(year, 1, 1);
+			sDate.set(year, 0, 1);
 			break;
 		case 2:
-			sDate.set(year, 4, 1);
+			sDate.set(year, 3, 1);
 			break;
 		case 3:
-			sDate.set(year, 7, 1);
+			sDate.set(year, 6, 1);
 			break;
 		case 4:
-			sDate.set(year, 10, 1);
+			sDate.set(year, 9, 1);
 			break;
 		}
 		
