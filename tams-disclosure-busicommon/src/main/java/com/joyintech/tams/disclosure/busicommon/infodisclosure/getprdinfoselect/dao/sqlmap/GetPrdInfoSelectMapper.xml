@@ -78,15 +78,16 @@
 		from
 		REP_PROD_INFO RPI
 		<if test="flag != null and flag != '' and flag == '01'">
-			inner join DIS_PROD_FEEDISCOUNT DPF on DPF.prod_id=RPI.prod_id
+			inner join DIS_PROD_FEEDISCOUNT DPF on DPF.PROD_REGIST_NO=RPI.PROD_RE and DPF.DATA_STATUS='01'
 		</if>
 		<if test="flag != null and flag != '' and flag == '02'">
-			inner join DIS_PROD_ADJUST DPA on DPA.prod_id=RPI.prod_id and DPA.DATA_STATUS='01'
+			inner join DIS_PROD_ADJUST DPA on DPA.PROD_REGIST_NO=RPI.PROD_RE and DPA.DATA_STATUS='01'
 		</if>
 		<if test="flag != null and flag != '' and flag == '03'">
-			inner join DIS_LARGE_REDEMPTION DLR on DLR.prod_id=RPI.prod_id and DLR.STATUS='01'
+			inner join DIS_LARGE_REDEMPTION DLR on DLR.PROD_REGIST_NO=RPI.PROD_RE and DLR.STATUS='01'
 		</if>
 		where RPI.STATUS='E'
+		and rep_prod_type in ('01','02')
 		<if test="search != null and search != ''">
 			and (RPI.P_PROD_ID like '%' || #{search, jdbcType=VARCHAR} || '%'
 			or RPI.PROD_ABBR like '%' || #{search, jdbcType=VARCHAR} || '%')
@@ -103,7 +104,7 @@
 		from
 		REP_PROD_INFO
 		where STATUS='E'
-		/* and p_prod_id is null 不取子产品*/
+		and rep_prod_type in ('02','03')
 		<if test="search != null and search != ''">
 			and (PROD_ID like '%' || #{search, jdbcType=VARCHAR} || '%'
 			or PROD_ABBR like '%' || #{search, jdbcType=VARCHAR} || '%')
