@@ -2,6 +2,7 @@ package com.joyintech.tams.disclosure.rptdata.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,15 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.joyintech.tams.common.base.entity.DisProdAsset;
-import com.joyintech.tams.common.base.entity.RepAssetsComb;
-import com.joyintech.tams.common.base.entity.RepIndexSub;
-import com.joyintech.tams.common.base.entity.RepInvestAccount;
-import com.joyintech.tams.common.base.entity.RepProdIndex;
-import com.joyintech.tams.common.base.entity.RepRelDeal;
 import com.joyintech.tams.disclosure.common.CollectionUtils;
 import com.joyintech.tams.disclosure.common.DurationUtil;
-import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
 import com.joyintech.tams.disclosure.rptdata.dao.DurationReportMapper;
 import com.joyintech.tams.disclosure.rptdata.dto.DurationReportDto;
 
@@ -64,16 +58,6 @@ public class DurationReportDataService implements IReportDataService {
 				e.printStackTrace();
 			}
 
-
-			//报表时间信息
-			try {
-				reportDto.setReportDate(reportDate);
-				reportDto.setGenDate(currDate);
-			} catch ( Exception e ) {
-				logger.error("报表区间数据错误.");
-				e.printStackTrace();
-			}
-			
 			//报表基本产品信息
 			try {
 				reportDto= durationReportMapper.selectProdInfo(paraMap);
@@ -83,10 +67,25 @@ public class DurationReportDataService implements IReportDataService {
 				e.printStackTrace();				
 			}
 			
+			//报表时间信息
+			try {
+				reportDto.setYear(year);
+				reportDto.setQuarter(quarter);
+				reportDto.setReportDate(reportDate);
+				reportDto.setGenDate(currDate);
+			} catch ( Exception e ) {
+				logger.error("报表区间数据错误.");
+				e.printStackTrace();
+			}
+			
 			//财务指标
 			try {
-				List<RepProdIndex> listFinIndex = durationReportMapper.selectFinIndex(paraMap);
-				reportDto.setListFinIndex(listFinIndex);
+				List<Map<String,Object>> listFinIndex = durationReportMapper.selectFinIndex(paraMap);
+				//只有一条数据
+				if ( listFinIndex!=null && listFinIndex.size()>0 )
+					reportDto.setFinIndex(listFinIndex.get(0));
+				else
+					reportDto.setFinIndex(new HashMap<>());
 			} catch (Exception e) {
 				logger.error("报表财务指标信息错误.");
 				e.printStackTrace();				
@@ -97,15 +96,16 @@ public class DurationReportDataService implements IReportDataService {
 			
 			//报告指标
 			try {
-				List<RepIndexSub> listRepIndex = durationReportMapper.selectReportIndex (paraMap);
-				for ( RepIndexSub idx:listRepIndex ) {
-					if ( "jdbb_tzclhyzfx".equals(idx.getPriId() ) ) {
-						reportDto.setProdOperating(idx.getIndexValue());
-					}
-					else if ( "jdbb_ldxfxfx".equals(idx.getPriId()) ) {
-						reportDto.setProdRisk(idx.getIndexValue());
-					}
+				List<Map<String,Object>> listRepIndex = durationReportMapper.selectReportIndex (paraMap);  //一般只有一条
+				if ( listRepIndex!=null && listRepIndex.size()>0 ) {
+					Map<String,Object> idx = listRepIndex.get(0);
+					reportDto.setProdOperating(idx.get("jdbb_tzclhyzfx").toString());
+					reportDto.setProdRisk(idx.get("jdbb_ldxfxfx").toString());
+				} else {
+					reportDto.setProdOperating("");
+					reportDto.setProdRisk("");
 				}
+					
 			} catch (Exception e) {
 				logger.error("报表指标参数信息错误.");
 				e.printStackTrace();				
@@ -113,11 +113,11 @@ public class DurationReportDataService implements IReportDataService {
 			
 			//产品资产组合
 			try {
-				List<DisProdAsset> listAssetComb = durationReportMapper.selectProdAssetComb (paraMap);
+				List<Map<String,Object>> listAssetComb = durationReportMapper.selectProdAssetComb (paraMap);
 				if ( listAssetComb!=null && listAssetComb.size()>0 )
 					reportDto.setProdAssetComb(listAssetComb.get(0));
 				else
-					reportDto.setProdAssetComb(new DisProdAsset());
+					reportDto.setProdAssetComb(new HashMap<>());
 			} catch (Exception e) {
 						logger.error("报表产品资产组合信息错误.");
 						e.printStackTrace();				
@@ -125,7 +125,7 @@ public class DurationReportDataService implements IReportDataService {
 			
 			try {
 				//产品资产明细
-				List<RepAssetsComb> listAssetDetail = durationReportMapper.selectProdAssetDetail (paraMap);
+				List<Map<String,Object>> listAssetDetail = durationReportMapper.selectProdAssetDetail (paraMap);
 				reportDto.setListAssetsDetail(listAssetDetail);
 			}  catch (Exception e) {
 				logger.error("报表产品资产投资明细信息错误.");
@@ -134,7 +134,7 @@ public class DurationReportDataService implements IReportDataService {
 			
 			//产品投资账户
 			try {
-				List<RepInvestAccount> listInvestAccts = durationReportMapper.selectAccts (paraMap);
+				List<Map<String,Object>> listInvestAccts = durationReportMapper.selectAccts (paraMap);
 				reportDto.setListAccts(listInvestAccts);
 			}  catch (Exception e) {
 				logger.error("报表投资账户信息错误.");
@@ -143,8 +143,13 @@ public class DurationReportDataService implements IReportDataService {
 			
 			//关联交易
 			try {
-				List<RepRelDeal> listRelDeal = durationReportMapper.selectRelDeals (paraMap);
-				reportDto.setListRelDeal(listRelDeal);
+				List<Map<String,Object>> listRelDeal = durationReportMapper.selectRelDeals (paraMap);
+				if ( listRelDeal!=null && listRelDeal.size()>0 ) {
+					reportDto.setRepRelDeal(listRelDeal.get(0));
+				} else {
+					reportDto.setRepRelDeal(new HashMap<>());
+				}
+				
 			} catch (Exception e) {
 				logger.error("报表关联交易信息错误.");
 				e.printStackTrace();				

@@ -315,17 +315,23 @@ public class PoiUtilsHelper {
             cols.add(m.group(1));
         }
 
-        //填充数据
-        for ( String str:cols) {
-            String key="${"+str+"}";
-            Object o = params.get(str);
-            
-            if ( o instanceof Date ) {
-            	o = DateUtil.format((Date)o);
-            }
-            
-            text = text.replace(key,o==null?" ":o.toString());
-        }
+		//填充数据
+		for ( String str:cols) {
+			String key="${"+str+"}";
+			String[] props = str.split("\\.");
+			Object v = null;
+			Map<String,Object> itrMap = params;
+			for ( String prop:props ) {
+				v = itrMap.get(prop);
+				if( v instanceof Map ) {
+					itrMap = (Map)v;
+				} else {
+					break;
+				}
+			}
+			//Object o = params.get(str);
+			text = text.replace(key,v==null?" ":v.toString());
+		}
         //System.out.println("普通文本替换后："+text);
         return text;
     }

@@ -30,7 +30,7 @@ public class DurationUtil {
 			dur = sdf.format(startDate);
 		}
 		Date eDate = getQuarterEnd(year,season);
-		dur = dur+" - " + eDate.getTime();
+		dur = dur+" - " + sdf.format(eDate.getTime());
 		return dur;
 	}
 

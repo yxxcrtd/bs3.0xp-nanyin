@@ -22,7 +22,7 @@ public class ReportDto {
 	private String prodName;  // 产品名称
 	private Date eDate;  //成立日期
 	private Date mDate;  //到期日
-	private String prodManage; //管理人
+	private String prodManager; //管理人
 	private String prodTruster; //托管人
 	
 	private Date reportDate;  //报告的数据统计日期
@@ -83,11 +83,11 @@ public class ReportDto {
 	public void setProdTruster(String prodTruster) {
 		this.prodTruster = prodTruster;
 	}
-	public String getProdManage() {
-		return prodManage;
+	public String getProdManager() {
+		return prodManager;
 	}
-	public void setProdManage(String prodManage) {
-		this.prodManage = prodManage;
+	public void setProdManager(String prodManager) {
+		this.prodManager = prodManager;
 	}
 
 }

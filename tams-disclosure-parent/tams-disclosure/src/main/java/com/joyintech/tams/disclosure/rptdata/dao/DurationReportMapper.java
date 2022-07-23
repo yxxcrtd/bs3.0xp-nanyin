@@ -35,21 +35,21 @@ public interface DurationReportMapper {
 	
 	DurationReportDto selectProdInfo(Map<String,Object> paras);
 	
-	List<RepProdIndex> selectFinIndex(Map<String,Object>paras) ;
+	List<Map<String,Object>> selectFinIndex(Map<String,Object>paras) ;
 	
 	/**
 	 * 查询业绩基准
 	 * TODO:条件不具备，需要需求确认
 	 */
-	List<RepFeeTrd> selectAchievementBasis(Map<String,Object>paras);
+	List<Map<String,Object>> selectAchievementBasis(Map<String,Object>paras);
 	
-	List<RepIndexSub> selectReportIndex ( Map<String,Object>paras );
+	List<Map<String,Object>> selectReportIndex ( Map<String,Object>paras );
 	
-	List<DisProdAsset> selectProdAssetComb ( Map<String,Object>paras );
+	List<Map<String,Object>> selectProdAssetComb ( Map<String,Object>paras );
 	
-	List<RepAssetsComb> selectProdAssetDetail ( Map<String,Object>paras );
+	List<Map<String,Object>> selectProdAssetDetail ( Map<String,Object>paras );
 	
-	List<RepInvestAccount> selectAccts ( Map<String,Object>paras );
+	List<Map<String,Object>> selectAccts ( Map<String,Object>paras );
 	
-	List<RepRelDeal> selectRelDeals ( Map<String,Object>paras );
+	List<Map<String,Object>> selectRelDeals ( Map<String,Object>paras );
 }
