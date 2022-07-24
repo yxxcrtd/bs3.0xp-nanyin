@@ -12,7 +12,7 @@
 	  	) where rownum = 1
 	</select>
 
-	<select id="queryNextWorkDay" resultType="java.util.Date">
+	<select id="getNextWorkDay" resultType="java.util.Date">
 		select busi_date from (
 		  select h.busi_date from CHB_MKT_HOLIDAY h
 		  where h.busi_date &gt; #{busi_date}

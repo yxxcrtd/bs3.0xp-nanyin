@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.rptdata.dao.DurationReportMapper">
+    
+   <select id="selectProdInfo" resultType="com.joyintech.tams.disclosure.rptdata.dto.DurationReportDto">
+		select 
+		    info.PROD_ID
+		    ,INFO.PROD_NAME
+			,INFO.PROD_RE
+			,INFO.PROFIT_TYPE   /**运作方式**/
+		    ,INFO.SET_DATE   eDate /**成立日**/
+		    ,'南银理财有限责任公司' prodManager  /**管理人**/
+		    ,ACCT_CHNNAME  prodTruster /**托管人**/
+			,PINDEX.CAPITAL    /**期末余额**/
+		    ,PARTNER.PARTNER_NAME partner /**合作机构**/
+		from REP_PROD_INFO info
+		left join REP_PROD_INDEX PINDEX ON INFO.PROD_ID=PINDEX.PROD_ID AND PINDEX.STATUS='E' and #{reportDate,jdbcType=DATE}=pindex.VALUE_DATE
+		left join DIS_PROD_PARTNER PARTNER ON INFO.PROD_ID=PARTNER.PROD_ID AND #{reportDate,jdbcType=DATE} between partner.EFF_DATE and partner.EFF_END_DATE
+		where REP_PROD_TYPE in ('01','02')  /**母产品或者单产品**/
+		AND info.STATUS='E'
+		<if test="prodId!=null">
+			AND info.PROD_ID=#{prodId,jdbcType=VARCHAR}
+		</if>
+    </select>
+    
+    <select id="selectFinIndex" resultType="Map">
+		select
+			rownum 
+			,info.PROD_ID 
+		    ,rindex.ASSETS_VALUE
+		    ,rindex.UNIT_VALUE
+		    ,rindex.UNIT_VALUE_T
+		from REP_PROD_INFO info
+		left join REP_PROD_INDEX rindex on info.PROD_ID=rindex.PROD_ID and rindex.VALUE_DATE=#{reportDate,jdbcType=DATE}
+		where 1=1
+		<if test="prodId!=null">
+		    and info.PROD_ID=#{prodId,jdbcType=VARCHAR}
+		</if>
+    </select>
+    
+    <select id="selectReportIndex" resultType="Map">
+		select 
+			rownum
+			,rindex.PRI_ID
+			,rindex.INDEX_NAME
+			,rindex.INDEX_VALUE
+		from REP_INDEX_SUB rindex
+		where
+		    AUDIT_STATUS='E'
+		    <if test="indexId!=null">
+		    	and rindex.PRI_ID=#{indexId,jdbcType}
+		    </if>
+			<if test="reportDate!=null">
+		    	and INDEX_DATE<![CDATA[<]]>#{reportDate,jdbcType=DATE}
+		    </if>
+    </select>
+
+    <select id="selectProdAssetComb" resultType="Map">
+		select 
+			rownum
+			,dpa.PROD_ID
+			,dpa.FIX_PRE_RATIO
+		    ,dpa.FIX_AFTER_RATIO
+		    ,dpa.EQUITY_PRE_RATIO
+		    ,dpa.EQUITY_AFTER_RATIO
+		    ,dpa.FD_PRE_RATIO
+		    ,dpa.FD_AFTER_RATIO
+		    ,dpa.MIX_PRE_RATIO
+		    ,dpa.MIX_AFTER_RATIO
+		from DIS_PROD_ASSET dpa
+		where
+			dpa.DATA_STATUS='01'
+			<if test="prodId!=null">
+			    and PROD_ID=#{prodId,jdbcType=VARCHAR}
+			</if>
+			<if test="reportDate!=null">
+		    	and #{reportDate,jdbcType=DATE} between dpa.EFF_DATE and dpa.EFF_END_DATE
+		    </if>
+    </select>
+    
+    <select id="selectProdAssetDetail" resultType="Map">
+		select 
+			rownum
+			,rac.PROD_ID
+			,rac.PUB_DATE
+			,rac.ASSETS_CODE
+			,rac.ASSETS_NAME
+			,rac.FAIR_VALUE
+			,rac.PD_PROP
+		from REP_ASSETS_COMB rac
+		where
+		rac.STATUS='E'
+		<if test="prodId!=null">
+		    and rac.PROD_ID=#{prodId,jdbcType=VARCHAR}
+		</if>
+		<if test="reportDate!=null">
+	    	and rac.PUB_DATE = #{reportDate,jdbcType=DATE}
+	    </if>
+    </select>    
+    
+    <select id="selectAccts" resultType="Map">
+		select 
+			rownum
+			,accts.PROD_ID
+			,accts.ACCOUNT_TYPE
+			,accts.ACCOUNT_NUM
+			,accts.ACCOUNT_NAME
+			,accts.ACCOUNT_OPENER
+		from REP_INVEST_ACCOUNT accts
+		where
+			accts.STATUS='E'
+		<if test="prodId!=null">
+		    and accts.PROD_ID=#{prodId,jdbcType=VARCHAR}
+		</if>
+    </select>   
+    
+    <select id="selectRelDeals" resultType="Map">
+		select rownum
+			,deal.PROD_ID
+			,deal.PUB_DATE
+			,deal.BANK_TRANS_AMT
+			,deal.ORG_TRANS_AMT
+			,deal.INVEST_TRANS_AMT
+		from REP_REL_DEAL deal
+		where 
+			deal.STATUS='E'
+			<if test="prodId!=null">
+			    and deal.PROD_ID=#{prodId,jdbcType=VARCHAR}
+			</if>
+			<if test="reportDate!=null">
+		    	and deal.PUB_DATE = #{reportDate,jdbcType=DATE}
+			</if>
+    </select>   
+    
+</mapper>

@@ -2,9 +2,9 @@
 package com.joyintech.tams.disclosure.information.report.dao;
 
 import com.joyintech.tams.disclosure.information.report.dto.ReportKfqgg001Dto;
+import com.joyintech.tams.disclosure.information.report.dto.ReportOpenPlanDto;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +25,7 @@ public interface ReportKfqgg001Mapper {
      * @see
      * @since 1.0
      */
-    ReportKfqgg001Dto queryKfqgg(Map<String, Object> params);
+    ReportKfqgg001Dto getProdInfo(Map<String, Object> params);
 
-    List<Map<String,String>> queryKfqjh(Map<String, Object> params);
+    List<ReportOpenPlanDto> getOpenPlan(Map<String, Object> searchparam);
 }

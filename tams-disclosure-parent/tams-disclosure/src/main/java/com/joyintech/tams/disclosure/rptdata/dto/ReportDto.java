@@ -14,15 +14,21 @@ import java.util.Date;
  */
 
 public class ReportDto {
+	
+	
+	
 	private String prodId;         //产品代码
 	private String prodRe;  // 登记编码
 	private String prodName;  // 产品名称
 	private Date eDate;  //成立日期
 	private Date mDate;  //到期日
-
+	private String prodManager; //管理人
+	private String prodTruster; //托管人
+	
 	private Date reportDate;  //报告的数据统计日期
-	private Date signDate;  //报告生成日期/签字日期
-	private Date DisDate;  //报告披露日期
+	private Date genDate;  //报告生成日期/签字日期
+	private Date disDate;  //报告披露日期
+	
 	public String getProdId() {
 		return prodId;
 	}
@@ -59,16 +65,29 @@ public class ReportDto {
 	public void setReportDate(Date reportDate) {
 		this.reportDate = reportDate;
 	}
-	public Date getSignDate() {
-		return signDate;
+	public Date getGenDate() {
+		return genDate;
 	}
-	public void setSignDate(Date signDate) {
-		this.signDate = signDate;
+	public void setGenDate(Date genDate) {
+		this.genDate = genDate;
 	}
 	public Date getDisDate() {
-		return DisDate;
+		return disDate;
 	}
 	public void setDisDate(Date disDate) {
-		DisDate = disDate;
+		this.disDate = disDate;
 	}
+	public String getProdTruster() {
+		return prodTruster;
+	}
+	public void setProdTruster(String prodTruster) {
+		this.prodTruster = prodTruster;
+	}
+	public String getProdManager() {
+		return prodManager;
+	}
+	public void setProdManager(String prodManager) {
+		this.prodManager = prodManager;
+	}
+
 }

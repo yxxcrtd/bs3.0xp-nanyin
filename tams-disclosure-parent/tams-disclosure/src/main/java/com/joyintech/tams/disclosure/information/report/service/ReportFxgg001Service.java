@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
  * @see ReportFxgg001Service
  * @since 1.0
  */
-@Service
+@Service("reportFxgg001Service")
 public class ReportFxgg001Service implements IReportDataService {
 
     @Autowired
@@ -33,24 +33,24 @@ public class ReportFxgg001Service implements IReportDataService {
 
     @Override
     public List<Map<String, Object>> queryDatas(Map<String, Object> paraMap) {
-        Map<String,Object> dataMap = new HashMap<String,Object>();
+        Map<String,Object> dataMap = new HashMap<>();
         List<Map<String,Object>> result = new ArrayList<>();
         result.add(dataMap);
         if (paraMap.get("pprodid") == null) {
             return result;
         }
         String prodId = paraMap.get("pprodid").toString();
-        Map<String,Object> searchparam = new HashMap<String,Object>();
+        Map<String,Object> searchparam = new HashMap<>();
         searchparam.put("prodId", prodId);
         ReportFxgg001Dto fxgg = reportFxgg001Mapper.queryFxgg(searchparam);
         if (fxgg == null) {
             return result;
         }
-        dataMap.put("${prodName}", fxgg.getProdName());
-        dataMap.put("${regCode}", fxgg.getRegCode());
+        dataMap.put("prodName", fxgg.getProdName());
+        dataMap.put("regCode", fxgg.getRegCode());
         Date setDate = fxgg.getSetDate();
         if (setDate != null) {
-            Map<String,Object> holidaysearchparam = new HashMap<String,Object>();
+            Map<String,Object> holidaysearchparam = new HashMap<>();
             holidaysearchparam.put("busi_date", setDate);
             holidaysearchparam.put("is_holiday", "0");
             holidaysearchparam.put("market_code", "01");
@@ -58,18 +58,18 @@ public class ReportFxgg001Service implements IReportDataService {
             if (raiseEndDate == null) {
                 raiseEndDate = DateUtil.addDay(setDate, -1);
             }
-            dataMap.put("${raiseEndDate}", DateUtil.format(raiseEndDate, DateUtil.DEFAULT_DATE_FORMAT_CN));
-            dataMap.put("${setDate}",DateUtil.format(setDate, DateUtil.DEFAULT_DATE_FORMAT_CN));
+            dataMap.put("raiseEndDate", DateUtil.format(raiseEndDate, DateUtil.DEFAULT_DATE_FORMAT_CN));
+            dataMap.put("setDate",DateUtil.format(setDate, DateUtil.DEFAULT_DATE_FORMAT_CN));
         } else {
-            dataMap.put("${raiseEndDate}", "XXXX年X月XX日");
-            dataMap.put("${setDate}", "XXXX年X月XX日");
+            dataMap.put("raiseEndDate", "XXXX年X月XX日");
+            dataMap.put("setDate", "XXXX年X月XX日");
         }
         BigDecimal raiseAmt = fxgg.getRaiseAmt();
         if (raiseAmt != null) {
             DecimalFormat df = new DecimalFormat("#,###.00");
-            dataMap.put("${raiseAmt}", df.format(raiseAmt));
+            dataMap.put("raiseAmt", df.format(raiseAmt));
         } else {
-            dataMap.put("${raiseAmt}", BigDecimal.ZERO);
+            dataMap.put("raiseAmt", BigDecimal.ZERO);
         }
         return result;
     }

@@ -30,6 +30,40 @@ public enum DictCodeExt1 implements BaseDictCode {
 
     开放频率("OPEN_FREQ"),
 
+    信批产品类别("REP_PROD_TYPE"),
+
+    /**
+     * 信披_产品运作方式
+     */
+    信披_产品运作方式("DIS_PROFIT_TYPE"),
+
+    /**
+     * 信披_产品状态
+     */
+    信披_产品状态("DIS_PROD_STATUS"),
+
+    /**
+     * 信披_是否是分级产品
+     */
+    信披_是否是分级产品("GRADE_PROD_TYPE"),
+
+    /**
+     * 信披_募集方式
+     */
+    信披_募集方式("DIS_RAISE_TYPE"),
+
+
+    /**
+     * 信披_产品类型
+     */
+    信披_产品类型("DIS_PROD_TYPE"),
+
+    /**
+     * 信披_投资性质
+     */
+    信披_投资性质("DIS_INVEST_TYPE"),
+
+
     ;
     private String value;
 

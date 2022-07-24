@@ -30,9 +30,12 @@ public enum DictCodeListExt4 implements BaseDictCodeList {
 
     共通业务类型_产品费率优惠(DictCode.共通业务类型, "DISFEEDISCOUNT", "产品费率优惠"),
 
-
+    共通业务类型_产品基本信息(DictCode.共通业务类型, "DISPROD", "产品基本信息"),
 
     共通业务类型_投资账户信息维护(DictCode.共通业务类型, "SVR12", "投资账户信息维护"),
+
+
+
     ;
     /**
      * 对应于数据字典code

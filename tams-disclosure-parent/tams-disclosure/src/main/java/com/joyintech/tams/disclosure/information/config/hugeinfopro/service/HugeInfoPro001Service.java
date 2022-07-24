@@ -1,6 +1,7 @@
 package com.joyintech.tams.disclosure.information.config.hugeinfopro.service;
 
 import com.alibaba.fastjson.JSONArray;
+import com.google.common.collect.Maps;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
@@ -9,9 +10,11 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.disclosure.information.config.hugeinfopro.dao.HugeInfoProMapper;
 import com.joyintech.tams.disclosure.information.config.hugeinfopro.dto.HugeInfoPro001Dto;
 import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
+import com.joyintech.tams.disclosure.information.config.proelementadj.dao.ProElementAdjMapper;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -27,6 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto> implements BaseProcessService<HugeInfoPro001Dto> {
@@ -37,6 +41,8 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
     @Autowired
     private HugeInfoProMapper hugeInfoProMapper;
 
+    @Autowired
+    private ProElementAdjMapper proElementAdjMapper;
     public Page<HugeInfoPro001Dto> selectForPage(Map<String, Object> param) {
         Map<String, Object> pageParam = RequestUtil.getPageParam();
         String prodRegistNo = (String)param.get("prodRegistNo");
@@ -105,8 +111,8 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
      * @return
      */
     public AjaxResult checkImportData(String fileName) {
-//        List<String> findList =  this.queryFinprod(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());
-        List<List<String>> objects = ExcelUtil.getTempList(fileName);
+        List<String> findProdRegistNoList =  proElementAdjMapper.getRegistNo(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());
+        List<String> findProdList =  proElementAdjMapper.getProdId(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());        List<List<String>> objects = ExcelUtil.getTempList(fileName);
         if (objects.size() - 1 > 50000) {
             Map<String, Object> resultMap = new HashMap<>();
             resultMap.put("errorMsg", "单次最多导入50000条。");
@@ -140,14 +146,17 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
                     if (!StringUtil.isNotEmpty(rowData.get(0))){
                         errorMsg.append("数据状态 必填！");
                     }
-//                    else if(!findList.contains(rowData.get(0))){
-//                        errorMsg.append("基金代码不存在！");
-//                    }
                     if (!StringUtil.isNotEmpty(rowData.get(1))){
                         errorMsg.append("产品登记编码 必填！");
                     }
+                    else if(!findProdRegistNoList.contains(rowData.get(1))){
+                        errorMsg.append("产品登记编码未在产品基本信息表中维护！");
+                    }
                     if (!StringUtil.isNotEmpty(rowData.get(2))){
                         errorMsg.append("子产品代码 必填！");
+                    }
+                    else if(!findProdList.contains(rowData.get(2))){
+                        errorMsg.append("子产品代码未在产品基本信息表中维护！");
                     }
                     if (!StringUtil.isNotEmpty(rowData.get(3))){
                         errorMsg.append("巨额赎回日期 必填！");
@@ -237,21 +246,26 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
         List<HugeInfoPro001Dto> selectedItem = dto.getSelectedItem();
         List<HugeInfoPro001Dto>  existData = new ArrayList<>();
         List<HugeInfoPro001Dto>  newData = new ArrayList<>();
-//        for (HugeInfoPro001Dto temp:selectedItem) {
-            //数据已存在 【产品登记编码 相同】，做更新操作。
+        for (HugeInfoPro001Dto temp:selectedItem) {
+//            数据已存在 【产品登记编码 相同】，做更新操作。
 //            if (StringUtil.isNotEmpty(this.selectByProdRegistNo(temp.getProdRegistNo()))){
 //                existData.add(temp);
 //            }else {
 //                newData.add(temp);
 //            }
-//        }
-        //更新操作
-        for (HugeInfoPro001Dto existDataDto : existData) {
-            this.doComplete(existDataDto,OperationType.MODIFY);
+            temp.setDataStatus(DictCodeListExt3.信披_数据状态_有效.getValue());
+            temp.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
+            temp.setRedemptionId(IDGenerator.generate(36));
+            newData.add(temp);
         }
+        //更新操作
+//        for (HugeInfoPro001Dto existDataDto : newData) {
+//            this.doComplete(existDataDto,OperationType.MODIFY);
+//        }
         //插入操作
         for (HugeInfoPro001Dto newDataDto : newData
         ) {
+
             this.doComplete(newDataDto,OperationType.NEW);
         }
         ajaxResult.setStatuCode(HttpStatus.OK.value());

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.disclosure.information.report.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +37,36 @@ public class ReportDataService {
 
 	@Autowired
 	private NostdReportDataService nostdReportDataService;
+
+	@Autowired
+	private DurationReportDataService durationReportDataService;
+	
+	@Autowired
+	private ReportFxgg001Service reportFxgg001Service;
+
+	@Autowired
+	private ReportZjxsjg001Service reportZjxsjg001Service;
+
+	@Autowired
+	private ReportBclgg001Service reportBclgg001Service;
+
+	@Autowired
+	private Report1Cpnfl001Service report1Cpnfl001Service;
+
+	@Autowired
+	private Report1Cpnfl002Service report1Cpnfl002Service;
+
+	@Autowired
+	private Report1Flncp001Service report1Flncp001Service;
+
+	@Autowired
+	private Report1Flncp002Service report1Flncp002Service;
+
+	@Autowired
+	private Report1Cpnys001Service report1Cpnys001Service;
+
+	@Autowired
+	private Report1Ysncp001Service report1Ysncp001Service;
 
 	public List<Map<String, Object>> queryTestDatas(Map<String, Object> params) {
 		Map<String, Object> dataMap = new HashMap<String, Object>();
@@ -176,7 +207,28 @@ public class ReportDataService {
 			service = matureReportDataService;
 		} else if (rptType.equals(DisReportType.TZTZFBZCGG)) { // 非标调整公告
 			service = nostdReportDataService;
+		} else if (rptType.equals(DisReportType.JDBG_ZSX)) { // 定期公告-季度报告指数型
+			service = durationReportDataService;
+		} else if (rptType.equals(DisReportType.FXGG)) { // 发行公告
+			service = reportFxgg001Service;
+		} else if (rptType.equals(DisReportType.CPBCLGG_GM) || rptType.equals(DisReportType.CPBCLBG_SM)) { // 产品不成立公告、报告
+			service = reportBclgg001Service;
+		} else if (rptType.equals(DisReportType.ZJCPXSJGGG)) { // 增加产品销售机构公告
+			service = reportZjxsjg001Service;
+		} else if (rptType.equals(DisReportType.DCPDFLMB1_GM) || rptType.equals(DisReportType.DCPDFLMB1_SM)) { // 单产品多费率模板1
+			service = report1Cpnfl001Service;
+		} else if (rptType.equals(DisReportType.DCPDFLMB2_GM) || rptType.equals(DisReportType.DCPDFLMB2_SM)) { // 单产品多费率模板2
+			service = report1Cpnfl002Service;
+		} else if (rptType.equals(DisReportType.DFLDCPMB1_GM) || rptType.equals(DisReportType.DFLDCPMB1_SM)) { // 单费率多产品模板1
+			service = report1Flncp001Service;
+		} else if (rptType.equals(DisReportType.DFLDCPMB2_GM) || rptType.equals(DisReportType.DFLDCPMB2_SM)) { // 单费率多产品模板2
+			service = report1Flncp002Service;
+		} else if (rptType.equals(DisReportType.DCPDYSTZMB_GM) || rptType.equals(DisReportType.DCPDYSTZMB_SM)) { // 单产品多要素调整模板
+			service = report1Cpnys001Service;
+		} else if (rptType.equals(DisReportType.DYSDCPTZMB_GM) || rptType.equals(DisReportType.DYSDCPTZMB)) { // 单要素多产品调整模板
+			service = report1Ysncp001Service;
 		}
+
 
 		return service.queryDatas(params);
 	}

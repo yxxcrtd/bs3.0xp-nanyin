@@ -299,3 +299,52 @@ VALUES ('RULE_TYPE3', '02', 'RULE_TYPE1', 'ISSUING_WAY', 'system', NULL, sysdate
 INSERT INTO sys_datadict_list_link(DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)  
 VALUES ('RULE_TYPE2', '=', 'RULE_TYPE1', 'ISSUING_WAY', 'system', NULL, sysdate, 'system', sysdate); 
 -- add by zhengxiaolian 2022-07-20 报表页面管理 规则设置联动 end
+
+-- add by zhengxiaolian 2022-07-20 	数据字典 募集方式修改 start 
+delete from sys_datadict_list where DICT_CODE='RAISE_TYPE';
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('RAISE_TYPE', '01', '公募', 1, '0', 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('RAISE_TYPE', '02', '私募', 2, '0', 'system', null, sysdate, 'system', sysdate, null);
+-- add by zhengxiaolian 2022-07-20 	数据字典 募集方式修改 end 
+
+-- add by zhengxiaolian 2022-07-20 	数据字典 募集方式修改 start 
+delete from sys_datadict_list where DICT_CODE='BASIS_DATE_TYPE';
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('BASIS_DATE_TYPE', '01', '公募', 1, '0', 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('BASIS_DATE_TYPE', '02', '私募', 2, '0', 'system', null, sysdate, 'system', sysdate, null);
+-- add by zhengxiaolian 2022-07-20 	数据字典 募集方式修改 end
+
+-- add by zhengxiaolian 2022-07-22 	增加数据字典 信批产品类别 start
+delete from sys_datadict where DICT_CODE='REP_PROD_TYPE' ;
+
+insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REP_PROD_TYPE', 'DIS', '信批产品类别', null, '02', 'system', null, sysdate, 'system', sysdate);
+
+delete from sys_datadict_list where DICT_CODE='REP_PROD_TYPE';
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('REP_PROD_TYPE', '01', '母产品', 1, '0', 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('REP_PROD_TYPE', '02', '普通产品', 2, '0', 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('REP_PROD_TYPE', '03', '子产品', 3, '0', 'system', null, sysdate, 'system', sysdate, null);
+-- add by zhengxiaolian 2022-07-22 	增加数据字典 信批产品类别 end
+
+-- add by zhengxiaolian 2022-07-22  报表规则设置 日历类型枚举值调整 start 
+delete from sys_page_dictlist where page_id='ReportRule002' and DICT_ID='BATCH_QUARTZ_SKIP_HOLIDAY_MARKET_CAL_TYPE';
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ReportRule002', '999999', 'BATCH_QUARTZ_SKIP_HOLIDAY_MARKET_CAL_TYPE', '01', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ReportRule002', '999999', 'BATCH_QUARTZ_SKIP_HOLIDAY_MARKET_CAL_TYPE', '04', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+-- add by zhengxiaolian 2022-07-22  报表规则设置 日历类型枚举值调整 end 

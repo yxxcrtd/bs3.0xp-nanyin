@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.information.report.dao.ReportCpystzMapper">
+
+	<select id="query1Cpnys" resultType="com.joyintech.tams.disclosure.information.report.dto.Report1CpnysDto">
+		select * from (
+			select
+				rpi.prod_id prod_id,
+				rpi.prod_name prod_name,
+				rpi.prod_re reg_code,
+				rpi.raise_type raise_type,
+				dpa.adj_reason adjustReason,
+				dpa.prod_adj_remark remark1,
+				dpa.prod_adj_remark2 remark2
+			from rep_prod_info rpi
+			inner join dis_prod_adjust dpa
+			on rpi.prod_re = dpa.prod_regist_no
+			AND dpa.rpt_issue_date = #{rptIssueDate}
+			where rpi.prod_id = #{prodId,jdbcType=VARCHAR}
+			<if test="fieldlist != null and fieldlist.size() > 0">
+				AND dpa.adj_field in (
+				select distinct adj_field from dis_prod_adjust t where t.prod_adjust_id in
+				<foreach collection="fieldlist" item="item" open="(" close=")" separator=",">
+					#{item,jdbcType=VARCHAR}
+				</foreach>)
+			</if>
+			order by dpa.eff_date
+		) where rownum = 1
+	</select>
+
+	<select id="query1Ysncp" resultType="com.joyintech.tams.disclosure.information.report.dto.Report1YsncpDto">
+		select
+			listagg(rpi.prod_id, ',') within group(order by rpi.prod_id) prod_id,
+			dpa.adj_field adj_field,
+			rpi.raise_type raise_type,
+			min(dpa.eff_date) eff_date,
+			max(dpa.adj_reason) adjustReason,
+			max(dpa.prod_adj_remark) remark1,
+			max(dpa.prod_adj_remark2) remark2
+		from rep_prod_info rpi
+		inner join dis_prod_adjust dpa
+		on rpi.prod_re = dpa.prod_regist_no
+		AND dpa.rpt_issue_date = #{rptIssueDate}
+		where dpa.adj_field = (select adj_field
+			from dis_prod_adjust t
+			where t.prod_adjust_id = #{adjField,jdbcType=VARCHAR})
+		<if test="prodlist != null and prodlist.size() > 0">
+			AND rpi.prod_id in
+			<foreach collection="prodlist" item="item" open="(" close=")" separator=",">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		group by
+		dpa.adj_field,
+		rpi.raise_type
+	</select>
+
+	<select id="qureyFieldlist" resultType="com.joyintech.tams.disclosure.information.report.dto.ReportProdadjDto">
+		select
+			dpa.PROD_ID,
+			dpa.ADJ_FIELD,
+			dpa.PRE_ADJUST,
+			dpa.AFTER_ADJUST,
+			dpa.EFF_DATE
+		from dis_prod_adjust dpa
+		where dpa.prod_regist_no = #{regCode,jdbcType=VARCHAR}
+		AND dpa.rpt_issue_date = #{rptIssueDate}
+		<if test="fieldlist != null and fieldlist.size() > 0">
+			AND dpa.adj_field in (
+			select distinct adj_field from dis_prod_adjust t where t.prod_adjust_id in
+			<foreach collection="fieldlist" item="item" open="(" close=")" separator=",">
+				#{item,jdbcType=VARCHAR}
+			</foreach>)
+		</if>
+		order by dpa.EFF_DATE
+	</select>
+
+	<select id="qureyProdlist" resultType="com.joyintech.tams.disclosure.information.report.dto.ReportProdadjDto">
+		select
+			rpi.PROD_NAME,
+			dpa.PROD_ID,
+			dpa.ADJ_FIELD,
+			dpa.PRE_ADJUST,
+			dpa.AFTER_ADJUST,
+			dpa.EFF_DATE
+		from dis_prod_adjust dpa
+		inner join rep_prod_info rpi
+		on rpi.prod_re = dpa.prod_regist_no
+		where dpa.adj_field = (select adj_field
+			from dis_prod_adjust t
+			where t.prod_adjust_id = #{adjField,jdbcType=VARCHAR})
+		<if test="prodlist != null and prodlist.size() > 0">
+			AND rpi.prod_id in
+			<foreach collection="prodlist" item="item" open="(" close=")" separator=",">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		AND dpa.rpt_issue_date = #{rptIssueDate}
+		order by dpa.EFF_DATE
+	</select>
+</mapper>

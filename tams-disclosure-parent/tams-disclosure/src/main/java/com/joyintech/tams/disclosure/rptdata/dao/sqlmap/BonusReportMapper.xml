@@ -26,7 +26,7 @@
 		</if>
     </select>
     
-    <select id="selectLastBonusPlan" resultType="com.joyintech.tams.disclosure.rptdata.dto.BonusPlanDto">
+    <select id="selectLastBonusPlan" resultType="com.joyintech.tams.common.base.entity.DisProdBonusplan">
 	    SELECT T.* FROM 
 	    	(SELECT BONUS_PLAN_ID
 	    	,SETT_DATE

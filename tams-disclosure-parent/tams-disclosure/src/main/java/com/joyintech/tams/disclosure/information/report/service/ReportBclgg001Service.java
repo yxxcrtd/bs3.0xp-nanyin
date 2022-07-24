@@ -1,8 +1,6 @@
 
 package com.joyintech.tams.disclosure.information.report.service;
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.disclosure.information.report.dao.ReportBclgg001Mapper;
 import com.joyintech.tams.disclosure.information.report.dto.ReportBclgg001Dto;
 import com.joyintech.tams.disclosure.rptdata.service.IReportDataService;
@@ -21,7 +19,7 @@ import java.util.*;
  * @see ReportBclgg001Service
  * @since 1.0
  */
-@Service
+@Service("reportBclgg001Service")
 public class ReportBclgg001Service implements IReportDataService {
 
     @Autowired
@@ -30,40 +28,38 @@ public class ReportBclgg001Service implements IReportDataService {
     @Autowired
     private CommonPlatformDateService commonPlatformDateService;
 
+    @Autowired
+    private ReportCommonService reportCommonService;
+
     @Override
     public List<Map<String, Object>> queryDatas(Map<String, Object> paraMap) {
-        Map<String,Object> dataMap = new HashMap<String,Object>();
+        Map<String,Object> dataMap = new HashMap<>();
         List<Map<String,Object>> result = new ArrayList<>();
         result.add(dataMap);
         if (paraMap.get("pprodid") == null) {
             return result;
         }
         String prodId = paraMap.get("pprodid").toString();
-        Map<String,Object> searchparam = new HashMap<String,Object>();
+        Map<String,Object> searchparam = new HashMap<>();
         searchparam.put("prodId", prodId);
         ReportBclgg001Dto bclgg = reportBclgg001Mapper.queryBclgg(searchparam);
         if (bclgg == null) {
             return result;
         }
-        dataMap.put("${prodName}", bclgg.getProdName());
-        dataMap.put("${regCode}", bclgg.getRegCode());
-        dataMap.put("${nocreateReson}", bclgg.getNocreateReason());
-        String raiseType = bclgg.getRaiseType();
-        if (StringUtil.equals(raiseType, DictCodeListExt2.募集方式_中债_公募.getValue())) {
-            dataMap.put("${pubType}", "公告");
-            dataMap.put("${pubString}", "特此公告。");
-        } else if (StringUtil.equals(raiseType, DictCodeListExt2.募集方式_中债_私募.getValue())) {
-            dataMap.put("${pubType}", "报告");
+        dataMap.put("prodName", bclgg.getProdName());
+        dataMap.put("regCode", bclgg.getRegCode());
+        dataMap.put("nocreateReson", bclgg.getNocreateReason());
+        // 设置公告、报告字样
+        reportCommonService.setPubString(bclgg.getRaiseType(), dataMap);
+        // 设置是否有代销机构字样
+        List<String> prodIds = new ArrayList<>();
+        prodIds.add(prodId);
+        reportCommonService.setSaleString(prodIds, dataMap);
+        String pubDateStr = commonPlatformDateService.getSysDateStr();
+        if (null != paraMap.get("enddate")) {
+            pubDateStr = (String)paraMap.get("enddate");
         }
-        if (StringUtil.equals(bclgg.getIsSalesAgency(), DictCodeListExt2.是否_是.getValue())) {
-            dataMap.put("${saleString1}", "本理财产品代销机构或");
-            dataMap.put("${saleString2}", "代销机构及");
-        }
-        Date puDate = commonPlatformDateService.getSysDate();
-        if (null != paraMap.get("startdate")) {
-            puDate = (java.sql.Date)paraMap.get("startdate");
-        }
-        dataMap.put("${pubDate}",DateUtil.format(puDate, DateUtil.DEFAULT_DATE_FORMAT_CN));
+        dataMap.put("pubDate",DateUtil.format(DateUtil.parse(pubDateStr), DateUtil.DEFAULT_DATE_FORMAT_CN));
         return result;
     }
 }

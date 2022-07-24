@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.joyintech.tams.disclosure.information.report.dao.ReportKfqzjfhgg001Mapper">
+
+	<select id="getProdInfo" resultType="com.joyintech.tams.disclosure.information.report.dto.ReportCommonProdDto">
+		/*
+			TITLENAME:标题名(普通产品取产品名称 ,分级产品取 母产品名称+（子产品代码）)
+		  	PRODNAME：【分级产品取“产品名称+子产品名称”；普通产品取“产品名称”】
+			PRODID：产品代码（普通产品取产品代码 ,分级产品取子产品代码）
+			REGCODE：产品登记编码（普通产品取产品登记编码 ,分级产品取母产品登记编码）
+			SETDATE：产品成立日期
+		*/
+		SELECT
+			RPI.PROD_ID prodId,
+			CASE WHEN RPI.IS_GRADE = '01' THEN
+					  RPI2.PROD_NAME ||'（'||RPI.PROD_ID||'）'
+				 ELSE RPI.PROD_NAME END titleName,
+			CASE WHEN RPI.IS_GRADE = '01' THEN
+					  RPI2.PROD_NAME ||RPI.PROD_NAME
+				 ELSE RPI.PROD_NAME END prodName,
+			NVL(RPI2.PROD_RE,RPI.PROD_RE) regCode,
+		    RPI.SET_DATE setDate
+		FROM REP_PROD_INFO RPI
+		 LEFT JOIN REP_PROD_INFO RPI2 ON RPI.P_PROD_ID = RPI2.PROD_ID AND RPI2.STATUS = 'E'
+		WHERE RPI.PROD_ID = #{prodId}
+		  AND RPI.STATUS = 'E'
+	</select>
+
+	<select id="getLastBonusInfo" resultType="com.joyintech.tams.disclosure.information.report.dto.ReportKfqHisBonusDto">
+		SELECT DPB.SETT_DATE lastSettDate FROM
+			DIS_PROD_BONUSPLAN DPB
+		WHERE DPB.DATA_STATUS = 'E'
+		  AND DPB.PROD_ID = #{prodId,jdbcType=VARCHAR}
+		  AND DPB.SETT_DATE = (
+			  select max(h.SETT_DATE) from DIS_PROD_BONUSPLAN h
+			  where h.SETT_DATE &lt; TO_DATE(#{baseDate},'yyyy-MM-dd')
+				and h.PROD_ID = #{prodId,jdbcType=VARCHAR}
+				and h.DATA_STATUS = 'E'
+			)
+	</select>
+
+	<select id="getOpenPlanList" resultType="com.joyintech.tams.disclosure.information.report.dto.ReportOpenPlanDto">
+		SELECT * FROM (
+			  SELECT TO_CHAR(DPP.OPEN_START_DATE,'yyyy-MM-dd')||'至'||TO_CHAR(DPP.OPEN_END_DATE,'yyyy-MM-dd') nextRange,TO_CHAR(DPP.OPEN_END_DATE,'yyyy-MM-dd') nextMdate
+			  FROM REP_PROD_INFO INFO,DIS_PROD_PLAN DPP
+			  WHERE INFO.STATUS = 'E'
+				AND DPP.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID)
+				AND DPP.OPEN_END_DATE>TO_DATE(#{baseDate},'yyyy-MM-dd')
+				AND INFO.PROD_ID = #{prodId,jdbcType=VARCHAR}
+			  ORDER BY DPP.OPEN_END_DATE
+		  ) WHERE ROWNUM = 1
+	</select>
+
+	<select id="getHisBonusReportList" resultType="com.joyintech.tams.disclosure.information.report.dto.ReportKfqHisBonusDto">
+		SELECT
+			PINDEX.ASSETS_VALUE  /**资产净值**/
+			 ,PINDEX.CAPITAL            /**期末余额**/
+			 ,PLAN.PAYMENT_DATE /*红利发放日*/
+			 ,DPP.OPEN_START_DATE  /*开放起始日*/
+			 ,DPP.OPEN_END_DATE  /*开放结束日*/
+			,TO_CHAR(DPP.OPEN_END_DATE,'yyyy-MM-dd') curBaseDate
+			,TO_CHAR(DPP.OPEN_START_DATE,'yyyy-MM-dd')||'至'||TO_CHAR(DPP.OPEN_END_DATE,'yyyy-MM-dd') curRange
+		FROM REP_PROD_INFO INFO
+		 INNER JOIN DIS_PROD_PLAN DPP ON DPP.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID) AND DPP.OPEN_END_DATE &lt;=TO_DATE(#{baseDate},'yyyy-MM-dd')
+		 LEFT JOIN REP_PROD_INDEX PINDEX ON PINDEX.PROD_ID=NVL(INFO.P_PROD_ID,INFO.PROD_ID) AND PINDEX.STATUS='E' AND PINDEX.VALUE_DATE=DPP.OPEN_END_DATE
+		 LEFT JOIN DIS_PROD_BONUSPLAN PLAN ON PLAN.PROD_ID=NVL(INFO.P_PROD_ID,INFO.PROD_ID) AND PLAN.DATA_STATUS='E' AND PLAN.SETT_DATE=DPP.OPEN_END_DATE
+		WHERE INFO.STATUS='E'
+		  AND INFO.PROD_ID=#{prodId,jdbcType=VARCHAR}
+	</select>
+
+</mapper>

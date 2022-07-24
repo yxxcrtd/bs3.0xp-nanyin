@@ -88,6 +88,7 @@ public class ProElementAdj002Controller extends BaseController {
         if(StringUtil.equals(dto.getOperateType(),"new")){
             String code = IDGenerator.generate(36);
             dto.setProdAdjustId(code);
+            dto.setDataSource(DictCodeListExt3.信披_数据来源_系统新建.getValue());
         }
         params.setPageId(this.getPageId());
         params.setElementId(dto.getElementId());
