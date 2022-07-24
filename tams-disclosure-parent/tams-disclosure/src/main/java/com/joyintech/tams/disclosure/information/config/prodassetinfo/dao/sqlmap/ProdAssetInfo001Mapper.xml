@@ -65,7 +65,7 @@
 		select PROD_ID id,
 		nvl(PROD_NAME,PROD_ABBR) text
 		from REP_PROD_INFO
-		where  P_PROD_ID is not null
+		where  (P_PROD_ID is null or PROD_ID=P_PROD_ID)
 		<if test="dataStatus != null and dataStatus != ''">
 			and STATUS=#{dataStatus,jdbcType=VARCHAR}
 		</if>
