@@ -93,10 +93,10 @@ public class Report1Flncp001Service implements IReportDataService {
                         df.format(x.getAfterFeerate()));
                 // 优惠起始时间
                 prodmap.put("startDate", x.getStartDate() == null ? GlobalConstant.SPLIT :
-                        DateUtil.format(x.getStartDate()));
+                        DateUtil.format(x.getStartDate(), DateUtil.DEFAULT_DATE_FORMAT_CN));
                 // 优惠结束时间
                 prodmap.put("endDate", x.getEndDate() == null ? GlobalConstant.SPLIT :
-                        DateUtil.format(x.getEndDate()));
+                        DateUtil.format(x.getEndDate(), DateUtil.DEFAULT_DATE_FORMAT_CN));
                 prodlist.add(prodmap);
             });
             dataMap.put("prodlist", prodlist);

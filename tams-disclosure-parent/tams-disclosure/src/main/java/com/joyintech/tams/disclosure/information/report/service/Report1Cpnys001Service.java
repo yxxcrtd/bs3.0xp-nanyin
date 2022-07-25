@@ -97,7 +97,7 @@ public class Report1Cpnys001Service implements IReportDataService {
                 fieldmap.put("afterAdjust", StringUtil.isBlank(x.getAfterAdjust()) ? GlobalConstant.SPLIT : x.getAfterAdjust());
                 // 生效时间
                 fieldmap.put("effDate", x.getEffDate() == null ? GlobalConstant.SPLIT :
-                        DateUtil.format(x.getEffDate()));
+                        DateUtil.format(x.getEffDate(), DateUtil.DEFAULT_DATE_FORMAT_CN));
                 fieldlist.add(fieldmap);
             });
             dataMap.put("fieldlist", fieldlist);

@@ -14,11 +14,12 @@
         <result property="updateUser" column="UPDATE_USER" jdbcType="VARCHAR"/>
         <result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP"/>
         <result property="status" column="STATUS" jdbcType="VARCHAR"/>
+        <result property="errorMsg" column="ERRORMSG" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List" >
         PROD_ID,PAY_DATE,FEE_TYPE, PAID_FEE,ACCRUAL,STATUS,
-		 CREATE_USER,CREATE_TIME,CREATE_DEPT, UPDATE_USER,UPDATE_TIME
+		 CREATE_USER,CREATE_TIME,CREATE_DEPT, UPDATE_USER,UPDATE_TIME,ERRORMSG
     </sql>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
         delete from REP_FEE_TRD
@@ -29,11 +30,11 @@
         INSERT INTO REP_FEE_TRD(PROD_ID,PAY_DATE,FEE_TYPE,
                                 PAID_FEE,ACCRUAL,STATUS,
 								CREATE_USER,CREATE_TIME,CREATE_DEPT,
-                                UPDATE_USER,UPDATE_TIME)
+                                UPDATE_USER,UPDATE_TIME,ERRORMSG)
         values (#{prodId,jdbcType=VARCHAR},#{payDate,jdbcType=VARCHAR},#{feeType,jdbcType=VARCHAR},
               #{paidFee,jdbcType=DECIMAL},#{accrual,jdbcType=DECIMAL},#{status,jdbcType=VARCHAR},
               #{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR},
-              #{createUser,jdbcType=VARCHAR},#{updateTime,jdbcType=TIMESTAMP}
+              #{createUser,jdbcType=VARCHAR},#{updateTime,jdbcType=TIMESTAMP},#{errorMsg,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -73,6 +74,9 @@
             <if test="updateTime != null" >
                 UPDATE_TIME,
             </if>
+            <if test="errorMsg != null" >
+                ERRORMSG,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
 
@@ -109,17 +113,20 @@
             <if test="updateTime != null" >
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="errorMsg != null" >
+                #{errorMsg,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepFeeTrd" >
         insert into REP_FEE_TRD(PROD_ID,PAY_DATE,FEE_TYPE,
                                 PAID_FEE,ACCRUAL,STATUS,
 								CREATE_USER,CREATE_TIME,CREATE_DEPT,
-                                UPDATE_USER,UPDATE_TIME)
+                                UPDATE_USER,UPDATE_TIME,ERRORMSG)
         select PROD_ID,PAY_DATE,FEE_TYPE,
                                 PAID_FEE,ACCRUAL,STATUS,
 								CREATE_USER,CREATE_TIME,CREATE_DEPT,
-                                UPDATE_USER,UPDATE_TIME
+                                UPDATE_USER,UPDATE_TIME,ERRORMSG
              from REP_FEE_TRD
              where STATUS = 1=1 and PROD_ID = #{id,jdbcType=VARCHAR}
     </insert>
@@ -152,6 +159,9 @@
             </if>
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="errorMsg != null" >
+                ERRORMSG = #{errorMsg,jdbcType=VARCHAR},
             </if>
         </set>
         where PROD_ID = #{id,jdbcType=VARCHAR}

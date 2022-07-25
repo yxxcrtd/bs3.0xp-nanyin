@@ -59,7 +59,8 @@ $(function() {
             $('#prodName').val('');
         }
     });
-    $('#accountType').val('托管账户');
+    debugger;
+    $('#accountType').val("A01").trigger("change");;
 
 });
 

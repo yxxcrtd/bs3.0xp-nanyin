@@ -33,7 +33,10 @@ public class RepFeeTrd extends BaseEntity {
      * 数据状态
      */
     private String status;
-
+    /**
+     * 错误信息
+     */
+    private String errorMsg;
 
     public String getProdId() {
         return prodId;
@@ -76,13 +79,22 @@ public class RepFeeTrd extends BaseEntity {
     }
 
 
+    @Override
     public String getStatus() {
         return status;
     }
 
+    @Override
     public void setStatus(String status) {
         this.status = status;
     }
 
+    public String getErrorMsg() {
+        return errorMsg;
+    }
+
+    public void setErrorMsg(String errorMsg) {
+        this.errorMsg = errorMsg;
+    }
 }
 

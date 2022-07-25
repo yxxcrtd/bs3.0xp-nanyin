@@ -72,6 +72,9 @@ public class ReportDataService {
 	private ReportJesh001Service reportJesh001Service;
 
 	@Autowired
+	private ReportDlxsjgmdgg001Service reportDlxsjgmdgg001Service;
+
+	@Autowired
 	private ReportKfqgg001Service reportKfqgg001Service;
 
 	@Autowired
@@ -82,6 +85,9 @@ public class ReportDataService {
 
 	@Autowired
 	private ReportKfqzjfhgg001Service reportKfqzjfhgg001Service;
+
+	@Autowired
+	private ReportKfjzgg001Service reportKfjzgg001Service;
 
 	public List<Map<String, Object>> queryTestDatas(Map<String, Object> params) {
 		Map<String, Object> dataMap = new HashMap<String, Object>();
@@ -244,14 +250,18 @@ public class ReportDataService {
 			service = report1Ysncp001Service;
 		} else if (rptType.equals(DisReportType.JESHGG_GM) || rptType.equals(DisReportType.JESHGBG_SM)) { // 巨额赎回模板
 			service = reportJesh001Service;
+		} else if (rptType.equals(DisReportType.DLXSJGMDGG)) { // 代理销售机构名单公告
+			service = reportDlxsjgmdgg001Service;
 		} else if (rptType.equals(DisReportType.CPKFQGG) || rptType.equals(DisReportType.CPKFQBG)) { // 产品开放期公告（公募）、产品开放期报告（私募）
 			service = reportKfqgg001Service;
-		}else if (rptType.equals(DisReportType.RKCPJZ_GMXGL) || rptType.equals(DisReportType.RKCPJZ_GMJZXCP)) { // 日开产品净值公告（公募净值型产品）、日开产品净值公告（公募现管类产品）
+		} else if (rptType.equals(DisReportType.RKCPJZ_GMXGL) || rptType.equals(DisReportType.RKCPJZ_GMJZXCP)) { // 日开产品净值公告（公募净值型产品）、日开产品净值公告（公募现管类产品）
 			service = reportRkcpjz001Service;
-		}else if (rptType.equals(DisReportType.ZQXCPKFGG_GMCP) || rptType.equals(DisReportType.ZQXCPKFGG_GMCPDSH)) { // 周期型产品开放公告（公募产品）、周期型产品开放公告（公募产品-单赎回）
+		} else if (rptType.equals(DisReportType.ZQXCPKFGG_GMCP) || rptType.equals(DisReportType.ZQXCPKFGG_GMCPDSH)) { // 周期型产品开放公告（公募产品）、周期型产品开放公告（公募产品-单赎回）
 			service = reportZqxkfgg001Service;
-		}else if (rptType.equals(DisReportType.KFJZJFHGG_BNYS) || rptType.equals(DisReportType.KFJZJFHGG_BNYN)) { // 开放、净值及分红公告（公募&开放频率在半年以上）、开放、净值及分红公告（公募&开放频率在半年（不含）以内）
+		} else if (rptType.equals(DisReportType.KFJZJFHGG_BNYS) || rptType.equals(DisReportType.KFJZJFHGG_BNYN)) { // 开放、净值及分红公告（公募&开放频率在半年以上）、开放、净值及分红公告（公募&开放频率在半年（不含）以内）
 			service = reportKfqzjfhgg001Service;
+		}else if (rptType.equals(DisReportType.KFJJZGG_GM) || rptType.equals(DisReportType.KFJJZGG_SM)) { // 开放、净值及分红公告（公募&开放频率在半年以上）、开放、净值及分红公告（公募&开放频率在半年（不含）以内）
+			service = reportKfjzgg001Service;
 		}
 
 

@@ -34,36 +34,20 @@ public class ReportOpenPlanDto {
     private String unitValueT;
     /*赎回确认单位净值（元)/赎回价格（元/份）*/
     private String redValue;
+    /*申购价格（元/份）*/
+    private String subValue;
+    /*年化收益率*/
+    private String yield;
+    /*本期封闭期*/
+    private String range;
+    /*资金到账日*/
+    private String settDate;
 
     private BigDecimal aboveAmt;
 
     private BigDecimal affirmAmt;
 
     private BigDecimal affirmNum;
-
-    public BigDecimal getAboveAmt() {
-        return aboveAmt;
-    }
-
-    public void setAboveAmt(BigDecimal aboveAmt) {
-        this.aboveAmt = aboveAmt;
-    }
-
-    public BigDecimal getAffirmAmt() {
-        return affirmAmt;
-    }
-
-    public void setAffirmAmt(BigDecimal affirmAmt) {
-        this.affirmAmt = affirmAmt;
-    }
-
-    public BigDecimal getAffirmNum() {
-        return affirmNum;
-    }
-
-    public void setAffirmNum(BigDecimal affirmNum) {
-        this.affirmNum = affirmNum;
-    }
 
     public String getNextRange() {
         return nextRange;
@@ -159,5 +143,61 @@ public class ReportOpenPlanDto {
 
     public void setRedValue(String redValue) {
         this.redValue = redValue;
+    }
+
+    public String getSubValue() {
+        return subValue;
+    }
+
+    public void setSubValue(String subValue) {
+        this.subValue = subValue;
+    }
+
+    public String getYield() {
+        return yield;
+    }
+
+    public void setYield(String yield) {
+        this.yield = yield;
+    }
+
+    public String getRange() {
+        return range;
+    }
+
+    public void setRange(String range) {
+        this.range = range;
+    }
+
+    public String getSettDate() {
+        return settDate;
+    }
+
+    public void setSettDate(String settDate) {
+        this.settDate = settDate;
+    }
+
+    public BigDecimal getAboveAmt() {
+        return aboveAmt;
+    }
+
+    public void setAboveAmt(BigDecimal aboveAmt) {
+        this.aboveAmt = aboveAmt;
+    }
+
+    public BigDecimal getAffirmAmt() {
+        return affirmAmt;
+    }
+
+    public void setAffirmAmt(BigDecimal affirmAmt) {
+        this.affirmAmt = affirmAmt;
+    }
+
+    public BigDecimal getAffirmNum() {
+        return affirmNum;
+    }
+
+    public void setAffirmNum(BigDecimal affirmNum) {
+        this.affirmNum = affirmNum;
     }
 }
