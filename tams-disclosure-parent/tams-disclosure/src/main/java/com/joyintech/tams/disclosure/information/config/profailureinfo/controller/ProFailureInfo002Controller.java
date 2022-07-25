@@ -12,6 +12,7 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.disclosure.information.config.profailureinfo.dto.ProFailureInfo001Dto;
 import com.joyintech.tams.disclosure.information.config.profailureinfo.service.ProFailureInfo001Service;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Date;
 import java.util.List;
 
 @PageId("ProFailureInfo002")
@@ -79,6 +81,11 @@ public class ProFailureInfo002Controller extends BaseController {
         if (result.hasErrors()) {
             return new AjaxResult();
         }
+        Date sysDate = com.joyintech.framework.util.DateUtil.platDateFromCache();// 获取平台日期
+        dto.setCreateTime(sysDate);
+        dto.setUpdateTime(sysDate);
+        dto.setCreateUser(CommonUtil.getUserName());
+        dto.setUpdateUser(CommonUtil.getUserName());
         dto.setDataSource(DictCodeListExt3.信披_数据来源_系统新建.getValue());
         ProcessParameter<ProFailureInfo001Dto> processParameter = new ProcessParameter<ProFailureInfo001Dto>();
         WorkFlowParameter<ProFailureInfo001Dto> params = new WorkFlowParameter<ProFailureInfo001Dto>();

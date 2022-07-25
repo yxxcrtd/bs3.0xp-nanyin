@@ -14,6 +14,7 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.disclosure.information.config.proelementadj.dao.ProElementAdjMapper;
 import com.joyintech.tams.disclosure.information.config.profailureinfo.dao.ProFailureInfoMapper;
 import com.joyintech.tams.disclosure.information.config.profailureinfo.dto.ProFailureInfo001Dto;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -22,10 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -148,9 +146,9 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
             wr.setData(resultMap);
             return wr;
         } else {
-            if (null == objects.get(0) || objects.get(0).size() != 6) {
+            if (null == objects.get(0) || objects.get(0).size() != 3) {
                 Map<String, Object> resultMap = new HashMap<>();
-                resultMap.put("errorMsg", "数据格式错误，数据格式需要6列。");
+                resultMap.put("errorMsg", "数据格式错误，数据格式需要3列。");
                 AjaxResult wr = new AjaxResult();
                 wr.setData(resultMap);
                 return wr;
@@ -160,30 +158,20 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
                     StringBuilder errorMsg = new StringBuilder("");
                     List<String> rowData = objects.get(i);
 
+
                     if (!StringUtil.isNotEmpty(rowData.get(0))){
-                        errorMsg.append("数据状态 必填！");
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(1))){
                         errorMsg.append("产品登记编码 必填！");
                     }
-                    else if(!findList.contains(rowData.get(1))){
+                    else if(!findList.contains(rowData.get(0))){
                         errorMsg.append("产品登记编码不存在！");
                     }
-                    if (!StringUtil.isNotEmpty(rowData.get(2))){
+                    if (!StringUtil.isNotEmpty(rowData.get(1))){
                         errorMsg.append("不成立原因 必填！");
                     }
-                    if (!StringUtil.isNotEmpty(rowData.get(3))){
+                    if (!StringUtil.isNotEmpty(rowData.get(2))){
                         errorMsg.append("报告发布日期 必填！");
-                    }else if(!this.isDateStr(rowData.get(3))){
+                    }else if(!this.isDateStr(rowData.get(2))){
                         errorMsg.append("报告发布日期 格式不正确！");
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(4))){
-                        errorMsg.append("更新时间 必填！");
-                    }else if(!this.isDateStr(rowData.get(4))){
-                        errorMsg.append("更新时间 格式不正确！");
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(5))){
-                        errorMsg.append("更新人 必填！");
                     }
                     if (StringUtil.isNotEmpty(errorMsg.toString())){
                         errorMsg.append("<br />");
@@ -244,6 +232,7 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
 
     public AjaxResult importFile(Map<String, Object> param) {
         AjaxResult ajaxResult = new AjaxResult();
+        Date sysDate = com.joyintech.framework.util.DateUtil.platDateFromCache();
         String tempList = (String) param.get("tempList");
         ProFailureInfo001Dto dto = getValNetAssetQuotationInfoListData(tempList);
         List<ProFailureInfo001Dto> selectedItem = dto.getSelectedItem();
@@ -256,6 +245,8 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
             }else {
                 temp.setDataStatus(DictCodeListExt3.信披_数据状态_有效.getValue());
                 temp.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
+                temp.setUpdateTime(sysDate);
+                temp.setUpdateUser(CommonUtil.getUserName());
                 newData.add(temp);
             }
         }
@@ -284,22 +275,13 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
             JSONArray rowData = JSONArray.parseArray(((JSONArray) objects.get(i)).toJSONString());
             ProFailureInfo001Dto ProFailureInfo001Dto = new ProFailureInfo001Dto();
             if (StringUtil.isNotEmpty(rowData.get(0))) {
-                ProFailureInfo001Dto.setDataStatus(rowData.get(0).toString());
+                ProFailureInfo001Dto.setProdRegistNo(rowData.get(0).toString());
             }
             if (StringUtil.isNotEmpty(rowData.get(1))) {
-                ProFailureInfo001Dto.setProdRegistNo(rowData.get(1).toString());
+                ProFailureInfo001Dto.setNocreateReason(rowData.get(1).toString());
             }
             if (StringUtil.isNotEmpty(rowData.get(2))) {
-                ProFailureInfo001Dto.setNocreateReason(rowData.get(2).toString());
-            }
-            if (StringUtil.isNotEmpty(rowData.get(3))) {
-                ProFailureInfo001Dto.setReportIssueDate(DateUtil.parse(rowData.get(3).toString()));
-            }
-            if (StringUtil.isNotEmpty(rowData.get(4))) {
-                ProFailureInfo001Dto.setUpdateTime(DateUtil.parse(rowData.get(4).toString()));
-            }
-            if (StringUtil.isNotEmpty(rowData.get(5))) {
-                ProFailureInfo001Dto.setUpdateUser(rowData.get(5).toString());
+                ProFailureInfo001Dto.setReportIssueDate(DateUtil.parse(rowData.get(2).toString()));
             }
             ProFailureInfo001DtoList.add(ProFailureInfo001Dto);
         }
