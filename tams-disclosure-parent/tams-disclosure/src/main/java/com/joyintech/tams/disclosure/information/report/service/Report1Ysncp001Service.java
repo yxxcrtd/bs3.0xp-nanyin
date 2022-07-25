@@ -98,7 +98,7 @@ public class Report1Ysncp001Service implements IReportDataService {
                 prodmap.put("afterAdjust", StringUtil.isBlank(x.getAfterAdjust()) ? GlobalConstant.SPLIT : x.getAfterAdjust());
                 // 生效时间
                 prodmap.put("effDate", x.getEffDate() == null ? GlobalConstant.SPLIT :
-                        DateUtil.format(x.getEffDate()));
+                        DateUtil.format(x.getEffDate(), DateUtil.DEFAULT_DATE_FORMAT_CN));
                 prodlist.add(prodmap);
             });
             dataMap.put("prodlist", prodlist);

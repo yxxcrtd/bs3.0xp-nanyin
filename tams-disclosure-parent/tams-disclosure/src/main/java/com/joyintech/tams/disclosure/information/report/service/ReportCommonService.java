@@ -2,6 +2,8 @@
 package com.joyintech.tams.disclosure.information.report.service;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.disclosure.information.report.dao.ReportDlxsjgmdggMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -25,6 +27,8 @@ public class ReportCommonService {
     private static final String SALE_STRING_2 = "代销机构及";
     private static final String RAISETYPE_GM = "公募";
     private static final String RAISETYPE_SM = "私募";
+    @Autowired
+    private ReportDlxsjgmdggMapper reportDlxsjgmdggMapper;
 
     /**
      * 根据募集方式设置公告、报告字样
@@ -51,9 +55,16 @@ public class ReportCommonService {
      * @return 数据集
      */
     public void setSaleString(List<String> prodIds, Map<String, Object> dataMap) {
-        // TODO:根据产品代码查询代销机构关联表，判断是否存在代销
-        boolean isSalesAgency = true;
-        if (isSalesAgency) {
+        if (null == prodIds || prodIds.size() <= 0) {
+            dataMap.put("saleString1", "");
+            dataMap.put("saleString2", "");
+            return;
+        }
+        //根据产品代码查询是否存在关联代销机构
+        Map<String,Object> param = new HashMap<>();
+        param.put("prodlist", prodIds);
+        Integer count = reportDlxsjgmdggMapper.queryProdAgency(param);
+        if (count != 0) {
             dataMap.put("saleString1", SALE_STRING_1);
             dataMap.put("saleString2", SALE_STRING_2);
         } else {
