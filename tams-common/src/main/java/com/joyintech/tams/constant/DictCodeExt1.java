@@ -68,7 +68,10 @@ public enum DictCodeExt1 implements BaseDictCode {
      */
     信披_代销机构_维护类型("DIS_SALEAGENCY_MAINTENANCE_TYPE"),
 
-
+    /**
+     * 托管账户
+     */
+    托管账户("ACCOUNT_TYPE"),
     ;
     private String value;
 

@@ -273,7 +273,7 @@ public class RepInvestAccountService extends CommonExportService<RepInvestAccoun
             if (StringUtil.isNotEmpty(rowData.get(3))) {
                 repInvestAccountDto.setAccountOpener(rowData.get(3).toString());
             }
-            repInvestAccountDto.setAccountType("托管账户");
+            repInvestAccountDto.setAccountType("A01");
             repInvestAccountDto.setStatus("E");
             repInvestAccountDtoList.add(repInvestAccountDto);
         }

@@ -26,10 +26,9 @@
                ric.STATUS status,
                ric.UPDATE_USER updateUser,
                ric.UPDATE_TIME updateTime,
-               cie.ERR_MSG errmsg
+               ric.ERRORMSG errmsg
         from REP_INVEST_ACCOUNT ric
         left join REP_PROD_INFO rpi on rpi.PROD_ID = ric.PROD_ID
-        left join CHB_INTERF_ERRODATA cie on cie.DATAID = ric.PROD_ID and  cie.INTERF_TYPE = 'REP_INVEST_ACCOUNT'
         <where>
             <if test="prodList != null  and prodIds!= ''">
                 <foreach collection="prodList" item="item" open="and ric.PROD_ID in(" separator="," close=")">
@@ -109,7 +108,8 @@
     ACCOUNT_OPENER = #{accountOpener,jdbcType=VARCHAR},
     STATUS = #{status,jdbcType=VARCHAR},
     UPDATE_USER = #{createUser,jdbcType=VARCHAR},
-    UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+    ERRORMSG = #{errmsg,jdbcType=VARCHAR}
     where PROD_ID = #{prodId,jdbcType=VARCHAR}
     </update>
     <delete id="delete" parameterType="com.joyintech.tams.disclosure.information.config.repInvestAccount.dto.RepInvestAccountDto"  >

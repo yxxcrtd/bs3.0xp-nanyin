@@ -10,6 +10,7 @@ import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.RepInvestAccount;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeExt1;
 import com.joyintech.tams.disclosure.information.config.repInvestAccount.validator.RepInvestAccountValidator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
@@ -179,6 +180,9 @@ public class RepInvestAccountDto extends RepInvestAccount implements ITableRow, 
 
     public String getStatusStr(){
         return SysDataUtil.getNameFromDataDict(DictCode.维护数据状态, this.getStatus());
+    }
+    public String getAccountTypeStr(){
+        return SysDataUtil.getNameFromDataDict(DictCodeExt1.托管账户, this.getAccountType());
     }
 
     public String getUpdateTimeStr() {

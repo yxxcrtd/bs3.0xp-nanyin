@@ -51,8 +51,9 @@ $(function() {
             field : 'prodName',width:'10%',
             title : '产品名称'
         }, {
-            field : 'accountType',width:'10%',
-            title : '账户类型'
+            field : 'accountTypeStr',width:'10%',
+            title : '账户类型',
+            sortField : 'accountType'
         }, {
             field : 'accountNum',width:'10%',
             title : '账号'
@@ -64,8 +65,7 @@ $(function() {
             title : '开户单位'
         }, {
             field : 'errmsg',width:'10%',
-            title : '错误信息',
-            sortable: false
+            title : '错误信息'
         }, {
             field : 'updateTime',width:'10%',
             title : '更新时间',

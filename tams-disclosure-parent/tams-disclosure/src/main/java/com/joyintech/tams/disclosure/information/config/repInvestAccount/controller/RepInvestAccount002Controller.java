@@ -7,6 +7,8 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeExt1;
 import com.joyintech.tams.constant.DictCodeListExt4;
 import com.joyintech.tams.disclosure.information.config.repInvestAccount.dto.RepInvestAccountDto;
 import com.joyintech.tams.disclosure.information.config.repInvestAccount.service.RepInvestAccountService;
@@ -49,7 +51,7 @@ public class RepInvestAccount002Controller extends BaseController {
                 model.addAttribute(GlobalConstant.ENTITY, page);
             }
         }
-
+        this.setSelectOptionToModel(model, DictCodeExt1.托管账户);
         return super.init(model);
     }
 
