@@ -9,10 +9,10 @@ import com.joyintech.framework.base.BaseEntity;
  * 〈功能详细描述〉
  * @author huwei
  * @version 1.0 2022年07月14日
- * @see ReportZjxsjg001Dto
+ * @see ReportZjxsjgDto
  * @since 1.0
  */
-public class ReportZjxsjg001Dto extends BaseEntity {
+public class ReportZjxsjgDto extends BaseEntity {
     /**
      * 产品代码
      */

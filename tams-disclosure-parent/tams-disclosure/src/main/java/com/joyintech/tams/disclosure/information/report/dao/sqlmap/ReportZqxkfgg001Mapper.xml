@@ -24,18 +24,18 @@
 		FROM REP_PROD_INFO RPI
 		/*查询普通产品或者母产品数据  P_PROD_ID:母产品代码：当为子产品时填写母产品代码。普通产品为自己的产品代码。母产品为空*/
 		 LEFT JOIN REP_PROD_INFO RPI2 ON RPI.P_PROD_ID = RPI2.PROD_ID AND RPI2.STATUS = 'E'
-		WHERE RPI.PROD_ID = #{PRODID}
+		WHERE RPI.PROD_ID = #{prodId}
 		  AND RPI.STATUS = 'E'
 	</select>
 
 	<select id="getOpenList"  resultType="com.joyintech.tams.disclosure.information.report.dto.ReportOpenPlanDto">
 		SELECT * FROM (
 			SELECT
-				TO_CHAR(OPEN_START_DATE,'YYYY/MM/DD') openStartDate
-				,TO_CHAR(OPEN_END_DATE,'YYYY/MM/DD')  openEndDate
-				,TO_CHAR(OPERATION_START_DATE,'YYYY-MM-DD')   operationStartDate
-				,TO_CHAR(AUTO_REDEEM_DATE,'YYYY-MM-DD')    autoRedeemDate
-				,TO_CHAR(HOLD_DAYS) holdDays
+				TO_CHAR(DPP.OPEN_START_DATE,'YYYY/MM/DD') openStartDate
+				,TO_CHAR(DPP.OPEN_END_DATE,'YYYY/MM/DD')  openEndDate
+				,TO_CHAR(DPP.OPERATION_START_DATE,'YYYY-MM-DD')   operationStartDate
+				,TO_CHAR(DPP.AUTO_REDEEM_DATE,'YYYY-MM-DD')    autoRedeemDate
+				,TO_CHAR(DPP.HOLD_DAYS) holdDays
 			FROM
 				REP_PROD_INFO INFO
 				INNER JOIN DIS_PROD_PLAN DPP ON DPP.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID) AND DPP.OPERATION_START_DATE > TO_DATE(#{announceDate},'yyyy-MM-dd')
@@ -48,22 +48,22 @@
 
 	<select id="getOpenHisList" resultType="com.joyintech.tams.disclosure.information.report.dto.ReportOpenPlanDto">
 		SELECT
-				TO_CHAR(T.OPERATION_START_DATE,'YYYY-MM-DD')   operationStartDate,
-				TO_CHAR(T.AUTO_REDEEM_DATE,'YYYY-MM-DD')    autoRedeemDate,
-				TO_CHAR(HOLD_DAYS) holdDays,
+				TO_CHAR(DPP.OPERATION_START_DATE,'YYYY-MM-DD')   operationStartDate,
+				TO_CHAR(DPP.AUTO_REDEEM_DATE,'YYYY-MM-DD')    autoRedeemDate,
+				TO_CHAR(DPP.HOLD_DAYS) holdDays,
 		       /*超额业绩报酬*/
-				ABOVE_AMT aboveAmt,
+				NVL(RFF.ABOVE_AMT,0) aboveAmt,
 		  		/*超额业绩报酬-确认金额*/
-				NVL(T2.AFFIRM_AMT,0) affirmAmt,
+				NVL(RFF.AFFIRM_AMT,0) affirmAmt,
 				/*超额业绩报酬-确认份额*/
-				NVL(T2.AFFIRM_NUM,0) affirmNum
+				NVL(RFF.AFFIRM_NUM,0) affirmNum
 		FROM
 			REP_PROD_INFO INFO
 			INNER JOIN DIS_PROD_PLAN DPP ON DPP.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID) AND  DPP.OPERATION_START_DATE &lt;= TO_DATE(#{announceDate},'yyyy-MM-dd')
 			/*
 				查询根据自动赎回日查询超额业绩报酬
 			*/
-			LEFT JOIN REP_FLOAT_FEE RFF ON RFF.status = 'E' AND RFF.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID) AND DPP.AUTO_REDEEM_DATE = RFF.AFFIRM_DATE
+			LEFT JOIN REP_FLOAT_FEE RFF ON RFF.status = 'E' AND RFF.PROD_ID = INFO.PROD_ID AND DPP.AUTO_REDEEM_DATE = RFF.AFFIRM_DATE
 		where
 		   INFO.STATUS = 'E'
 		   AND INFO.PROD_ID = #{prodId,jdbcType=VARCHAR}
@@ -71,10 +71,10 @@
  	</select>
 
 	<select id="getValueInfo" resultType="com.joyintech.tams.disclosure.information.report.dto.ReportValueDto">
-		SELECT  TO_CHAR(NVL(T.UNIT_VALUE_T,0),'FM9999999999999999.0000')  unitValue,
-			   TO_CHAR(NVL(T.UNIT_VALUE,0),'FM9999999999999999.0000') unitValueT ,
+		SELECT  TO_CHAR(NVL(PRI.UNIT_VALUE_T,0),'FM9999999999999999.0000')  unitValue,
+			   TO_CHAR(NVL(PRI.UNIT_VALUE,0),'FM9999999999999999.0000') unitValueT
 		FROM REP_PROD_INFO INFO
-				 INNER JOIN REP_PROD_INDEX PRI ON PRI.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID) AND PRI.STATUS = 'E'
+				 INNER JOIN REP_PROD_INDEX PRI ON PRI.PROD_ID = INFO.PROD_ID AND PRI.STATUS = 'E'
 		WHERE INFO.PROD_ID = #{prodId}
 		  AND PRI.VALUE_DATE = #{lastWorkDay}
 	</select>

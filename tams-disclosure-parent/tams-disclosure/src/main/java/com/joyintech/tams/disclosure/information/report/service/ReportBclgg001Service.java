@@ -1,8 +1,8 @@
 
 package com.joyintech.tams.disclosure.information.report.service;
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.tams.disclosure.information.report.dao.ReportBclgg001Mapper;
-import com.joyintech.tams.disclosure.information.report.dto.ReportBclgg001Dto;
+import com.joyintech.tams.disclosure.information.report.dao.ReportBclggMapper;
+import com.joyintech.tams.disclosure.information.report.dto.ReportBclggDto;
 import com.joyintech.tams.disclosure.rptdata.service.IReportDataService;
 import com.joyintech.tams.systemtools.service.CommonPlatformDateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ import java.util.*;
 public class ReportBclgg001Service implements IReportDataService {
 
     @Autowired
-    private ReportBclgg001Mapper reportBclgg001Mapper;
+    private ReportBclggMapper reportBclggMapper;
 
     @Autowired
     private CommonPlatformDateService commonPlatformDateService;
@@ -42,7 +42,7 @@ public class ReportBclgg001Service implements IReportDataService {
         String prodId = paraMap.get("pprodid").toString();
         Map<String,Object> searchparam = new HashMap<>();
         searchparam.put("prodId", prodId);
-        ReportBclgg001Dto bclgg = reportBclgg001Mapper.queryBclgg(searchparam);
+        ReportBclggDto bclgg = reportBclggMapper.queryBclgg(searchparam);
         if (bclgg == null) {
             return result;
         }

@@ -10,6 +10,7 @@ import com.joyintech.tams.disclosure.information.report.dao.ReportZqxkfgg001Mapp
 import com.joyintech.tams.disclosure.information.report.dto.ReportOpenPlanDto;
 import com.joyintech.tams.disclosure.information.report.dto.ReportValueDto;
 import com.joyintech.tams.disclosure.information.report.dto.ReportZqxkfgg001Dto;
+import com.joyintech.tams.disclosure.information.report.util.ReportCollectionUtils;
 import com.joyintech.tams.disclosure.rptdata.service.IReportDataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,6 +69,10 @@ public class ReportZqxkfgg001Service implements IReportDataService {
                 searchparam.put("announceDate",announceDate);
                 //查询产品信息
                 reportZqxkfgg001Dto = reportZqxkfgg001Mapper.getProdInfo(searchparam);
+                if(reportZqxkfgg001Dto.getSetDate() != null){
+                    reportZqxkfgg001Dto.setSetDateT(DateUtil.format(reportZqxkfgg001Dto.getSetDate(),DateUtil.DEFAULT_DATE_FORMAT_CN));
+                }
+                reportZqxkfgg001Dto.setAnnounceT(DateUtil.format(DateUtil.parse(announceDate),DateUtil.DEFAULT_DATE_FORMAT_CN));
                 //查询后续申购赎回安排：根据产品排期计划展示当前“运作起始日”之后的未来6个开放周期（运作起始日大于当前运作起始日）】
                 // 注：若产品临近到期后续已没有6个开放周期，则有几个周期展示几个周期；若产品已处于最后一个周期，则表格对应内容置空，业务老师手工维护
                 List<ReportOpenPlanDto> openList = reportZqxkfgg001Mapper.getOpenList(searchparam);
@@ -139,14 +144,14 @@ public class ReportZqxkfgg001Service implements IReportDataService {
                                 redValue = null;
                             }
                         }
-                        reportOpenPlanDto.setRedValue(String.valueOf(redValue));
+                        reportOpenPlanDto.setRedValue(redValue == null ? "" : String.valueOf(redValue));
                         reportOpenPlanDto.setUnitValue(String.valueOf(unitValue));
                         reportOpenPlanDto.setUnitValueT(String.valueOf(unitValueT));
                     }
                     reportZqxkfgg001Dto.setOpenHisList(openHisList);
                 }
             }
-            resultMap.add(CollectionUtils.bean2Map(reportZqxkfgg001Dto));
+            resultMap.add(ReportCollectionUtils.bean2Map(reportZqxkfgg001Dto));
             logger.info("周期型产品开放公告【{}】生成成功", JsonUtils.object2Json(paraMap));
         } catch (Exception e) {
             logger.error("周期型产品开放公告【{}】生成异常", JsonUtils.object2Json(paraMap), e);

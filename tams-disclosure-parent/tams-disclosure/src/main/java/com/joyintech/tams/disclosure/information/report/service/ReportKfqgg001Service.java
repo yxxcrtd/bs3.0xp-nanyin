@@ -4,12 +4,13 @@ package com.joyintech.tams.disclosure.information.report.service;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.disclosure.common.CollectionUtils;
 import com.joyintech.tams.disclosure.information.report.dao.ReportKfqgg001Mapper;
 import com.joyintech.tams.disclosure.information.report.dto.ReportKfqgg001Dto;
-import com.joyintech.tams.disclosure.information.report.dto.ReportKfqzjfhgg001Dto;
 import com.joyintech.tams.disclosure.information.report.dto.ReportOpenPlanDto;
+import com.joyintech.tams.disclosure.information.report.util.ReportCollectionUtils;
 import com.joyintech.tams.disclosure.rptdata.service.IReportDataService;
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.BeanUtilsBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +70,7 @@ public class ReportKfqgg001Service implements IReportDataService {
                 List<ReportOpenPlanDto> openList = reportKfqgg001Mapper.getOpenPlan(searchparam);
                 reportKfqgg001Dto.setOpenList(openList);
             }
-            resultMap.add(CollectionUtils.bean2Map(reportKfqgg001Dto));
+            resultMap.add(ReportCollectionUtils.bean2Map(reportKfqgg001Dto));
             logger.info("产品开放期公告/报告【{}】生成成功", JsonUtils.object2Json(paraMap));
         } catch (Exception e) {
             logger.error("产品开放期公告/报告【{}】生成异常", JsonUtils.object2Json(paraMap), e);

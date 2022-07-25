@@ -1,7 +1,7 @@
 
 package com.joyintech.tams.disclosure.information.report.dao;
 
-import com.joyintech.tams.disclosure.information.report.dto.ReportBclgg001Dto;
+import com.joyintech.tams.disclosure.information.report.dto.ReportBclggDto;
 import org.springframework.stereotype.Repository;
 
 import java.util.Map;
@@ -10,11 +10,11 @@ import java.util.Map;
  * 
  * @author chenggaoling
  * @version 1.0 2022年07月14日
- * @see ReportBclgg001Mapper
+ * @see ReportBclggMapper
  * @since 1.0
  */
 @Repository
-public interface ReportBclgg001Mapper {
+public interface ReportBclggMapper {
     
     /**
      * 根据产品代码查询不成立公告
@@ -23,6 +23,6 @@ public interface ReportBclgg001Mapper {
      * @see
      * @since 1.0
      */
-    ReportBclgg001Dto queryBclgg(Map<String, Object> params);
+    ReportBclggDto queryBclgg(Map<String, Object> params);
 
 }

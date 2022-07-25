@@ -98,9 +98,17 @@ public class DurationReportDataService implements IReportDataService {
 			try {
 				List<Map<String,Object>> listRepIndex = durationReportMapper.selectReportIndex (paraMap);  //一般只有一条
 				if ( listRepIndex!=null && listRepIndex.size()>0 ) {
-					Map<String,Object> idx = listRepIndex.get(0);
-					reportDto.setProdOperating(idx.get("jdbb_tzclhyzfx").toString());
-					reportDto.setProdRisk(idx.get("jdbb_ldxfxfx").toString());
+					for ( Map<String,Object> item:listRepIndex ) {
+						if ( "jdbb_tzclhyzfx".equals(item.get("PRI_ID").toString() ) ) {
+								reportDto.setProdOperating( item.get("INDEX_VALUE").toString() );
+						}
+						if ( "jdbb_ldxfxfx".equals(item.get("PRI_ID").toString()) ) {
+							reportDto.setProdRisk(item.get("INDEX_VALUE").toString() );
+						}
+					}
+//					Map<String,Object> idx = listRepIndex.get(0);
+//					reportDto.setProdOperating(idx.get("jdbb_tzclhyzfx").toString());
+//					reportDto.setProdRisk(idx.get("jdbb_ldxfxfx").toString());
 				} else {
 					reportDto.setProdOperating("");
 					reportDto.setProdRisk("");

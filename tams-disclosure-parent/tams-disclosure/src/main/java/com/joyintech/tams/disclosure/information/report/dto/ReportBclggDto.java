@@ -3,19 +3,16 @@ package com.joyintech.tams.disclosure.information.report.dto;
 
 import com.joyintech.framework.base.BaseEntity;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
 /**
  * 不成立公告
  * 〈一句话功能简述〉
  * 〈功能详细描述〉
  * @author huwei
  * @version 1.0 2022年07月14日
- * @see ReportBclgg001Dto
+ * @see ReportBclggDto
  * @since 1.0
  */
-public class ReportBclgg001Dto extends BaseEntity {
+public class ReportBclggDto extends BaseEntity {
     /**
      * 产品代码
      */

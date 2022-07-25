@@ -2,8 +2,8 @@
 package com.joyintech.tams.disclosure.information.report.service;
 
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.tams.disclosure.information.report.dao.ReportZjxsjg001Mapper;
-import com.joyintech.tams.disclosure.information.report.dto.ReportZjxsjg001Dto;
+import com.joyintech.tams.disclosure.information.report.dao.ReportZjxsjgMapper;
+import com.joyintech.tams.disclosure.information.report.dto.ReportZjxsjgDto;
 import com.joyintech.tams.disclosure.rptdata.service.IReportDataService;
 import com.joyintech.tams.systemtools.service.CommonPlatformDateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class ReportZjxsjg001Service implements IReportDataService {
     private CommonPlatformDateService commonPlatformDateService;
 
     @Autowired
-    private ReportZjxsjg001Mapper reportZjxsjg001Mapper;
+    private ReportZjxsjgMapper reportZjxsjgMapper;
     
     @Override
     public List<Map<String, Object>> queryDatas(Map<String, Object> paraMap) {
@@ -40,7 +40,7 @@ public class ReportZjxsjg001Service implements IReportDataService {
         String prodId = paraMap.get("pprodid").toString();
         Map<String,Object> searchparam = new HashMap<>();
         searchparam.put("prodId", prodId);
-        ReportZjxsjg001Dto zjxsjg = reportZjxsjg001Mapper.queryZjxsjg(searchparam);
+        ReportZjxsjgDto zjxsjg = reportZjxsjgMapper.queryZjxsjg(searchparam);
         if (zjxsjg == null) {
             return result;
         }

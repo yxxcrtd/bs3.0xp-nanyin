@@ -14,6 +14,7 @@ import com.joyintech.tams.disclosure.information.report.dto.ReportKfqHisBonusDto
 import com.joyintech.tams.disclosure.information.report.dto.ReportOpenPlanDto;
 import com.joyintech.tams.disclosure.information.report.dto.ReportKfqzjfhgg001Dto;
 import com.joyintech.tams.disclosure.information.report.dto.ReportOpenPlanDto;
+import com.joyintech.tams.disclosure.information.report.util.ReportCollectionUtils;
 import com.joyintech.tams.disclosure.rptdata.service.IReportDataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,7 +75,7 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
             //产品代码：子产品代码为空的话，取父产品代码
             String prodId =  (paraMap.get("prodid") == null ? (String)paraMap.get("pprodid") : (String)paraMap.get("prodid"));
             //日期
-            String baseDate = (String)paraMap.get("startdate");
+            String baseDate = (String)paraMap.get("enddate");
             //判断是开放、净值及分红公告（公募&开放频率在半年（不含）以内） 还是 开放、净值及分红公告（公募&开放频率在半年以上） 的模板
             String rptType = (String)paraMap.get("uri");
 
@@ -111,6 +112,9 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                     //封装当前收益分配基准日数据
                     //开放起始日
                     reportKfqzjfhgg001Dto.setSubDateT(DateUtil.format(reportKfqHisBonusDto.getOpenStartDate(),DateUtil.ABB_DATE_FORMAT_CN));
+                    //基准日
+                    reportKfqzjfhgg001Dto.setBaseDateT(DateUtil.format(reportKfqHisBonusDto.getSettDate(),DateUtil.ABB_DATE_FORMAT_CN));
+                    reportKfqzjfhgg001Dto.setBaseDate(DateUtil.format(reportKfqHisBonusDto.getSettDate()));
                     //应分配分红金额 = 产品资产净值 - 期末余额
                     BigDecimal distributableProfit = reportKfqHisBonusDto.getAssetsValue().subtract(reportKfqHisBonusDto.getCapital());
                     //单位分红应分配分红金额/产品期末余额（份额）
@@ -128,21 +132,29 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                     for(ReportKfqHisBonusDto bonusDto : list){
                         //封闭期：【上一收益分配基准日+1工作日至当前收益分配基准日】；若产品是第一次分红，则取子产品成立日至当前收益分配基准日
                         long runday = 1;
-                        //每份额累计净值（元） = 若产品是第一次分红，则本字段值=1.000+本次分红方案(结果保留四位小数)；若产品不是第一次分红，则本字段值=子产品上一个收益分配基准日的产品累计单位净值+本次分红方案（结果保留四位小数）
+                        //每份额累计净值（元） = 若产品是第一次分红，则本字段值=1.000+本次分红方案(结果保留四位小数)；
+                        // 若产品不是第一次分红，则本字段值=子产品上一个收益分配基准日的产品累计单位净值+本次分红方案（结果保留四位小数）
                         //根据开放结束日查询上一次分红计划
                         searchParam.put("baseDate",bonusDto.getOpenEndDate());
                         ReportKfqHisBonusDto lastBonus = reportKfqzjfhgg001Mapper.getLastBonusInfo(searchParam);
-
-                        if(lastBonus.getLastUnitValueT() != null){
+                        //封闭期
+                        String curRange = "";
+                        if(lastBonus != null && lastBonus.getLastUnitValueT() != null){
                             bonusDto.setMunitValueT(bonusDto.getLastUnitValueT().add(new BigDecimal(unitProfitStr)).toString());
                             //周期运营开始日 = 周期赎回日 - 周期起始日
                             runday = DateUtil.getBetweenDayNumber(bonusDto.getOpenStartDate(),bonusDto.getOpenEndDate());
+                            //当前封闭期 = 上一收益分配基准日+1工作日至当前收益分配基准日
+                            curRange = DateUtil.format(bonusDto.getOpenStartDate()) + "至" + DateUtil.format(bonusDto.getOpenEndDate());
                         }else{
                             bonusDto.setMunitValueT((new BigDecimal("1").add(new BigDecimal(unitProfitStr)).toString()));
                             runday = DateUtil.getBetweenDayNumber(reportCommonProdDto.getSetDate(),bonusDto.getOpenEndDate());
+                            //若产品是第一次分红，则取子产品成立日至当前收益分配基准日
+                            curRange = DateUtil.format(reportCommonProdDto.getSetDate()) + "至" + DateUtil.format(bonusDto.getOpenEndDate());
                         }
+                        //设置历史净值当前封闭期
+                        bonusDto.setCurRange(curRange);
                         //计算年化收益率
-                        bonusDto.setYield(new BigDecimal(unitProfitStr).multiply(new BigDecimal(365).divide(new BigDecimal(runday),4,RoundingMode.HALF_UP )).toString());
+                        bonusDto.setYield(new BigDecimal(unitProfitStr).multiply(new BigDecimal(365).divide(new BigDecimal(runday),4,RoundingMode.HALF_UP )).setScale(4,RoundingMode.HALF_UP ).toString());
                         bonusDto.setMunitValue("1.0000");
                         bonusDto.setRedValue("1.0000");
                         bonusDto.setSubValue("1.0000");
@@ -186,7 +198,7 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                 }
                 reportKfqzjfhgg001Dto.setAnnounceT(DateUtil.format(announceDate,DateUtil.ABB_DATE_FORMAT_CN));
             }
-            resultMap.add(CollectionUtils.bean2Map(reportKfqzjfhgg001Dto));
+            resultMap.add(ReportCollectionUtils.bean2Map(reportKfqzjfhgg001Dto));
             logger.info("开放、净值及分红公告【{}】生成成功", JsonUtils.object2Json(paraMap));
         } catch (Exception e) {
             logger.error("开放、净值及分红公告【{}】生成异常", JsonUtils.object2Json(paraMap), e);
