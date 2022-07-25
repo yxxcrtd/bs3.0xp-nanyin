@@ -347,4 +347,62 @@ values ('ReportRule002', '999999', 'BATCH_QUARTZ_SKIP_HOLIDAY_MARKET_CAL_TYPE', 
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('ReportRule002', '999999', 'BATCH_QUARTZ_SKIP_HOLIDAY_MARKET_CAL_TYPE', '04', null, null, 'system', null, sysdate, 'system', sysdate, null);
 
--- add by zhengxiaolian 2022-07-22  报表规则设置 日历类型枚举值调整 end 
+-- add by zhengxiaolian 2022-07-22  报表规则设置 日历类型枚举值调整 end
+
+-- add by sunjie 20220725 产品要素调整 start
+-- 产品要素调整 菜单页面 配置
+delete from SYS_MENU where MENU_ID = '%REPORT_006_004_002%';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_006_004_002', 'DIS', null, 'REPORT_006_004', 'ProElementAdj001', 2, '02', '产品要素调整', 'system', null, sysdate, 'system', sysdate);
+delete from SYS_PAGE where PAGE_ID like '%ProElementAdj00%';
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('ProElementAdj002', 'DIS', '/disclosure/information/config/proelementadj/ProElementAdj002', 'disclosure/information/config/proelementadj/ProElementAdj002', null, null, null, '02', '01', '产品要素调整新建', 'system', null,sysdate, 'system', sysdate);
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('ProElementAdj001', 'DIS', '/disclosure/information/config/proelementadj/ProElementAdj001', 'disclosure/information/config/proelementadj/ProElementAdj001', 'REPORT_006_004_002', null, null, '02', '01', '产品要素调整', 'system', null, sysdate, 'system',sysdate);
+
+-- 页面控件流程配置
+delete from SYS_WFL_BUSINESS_MODULE where PAGE_ID like '%ProElementAdj00%';
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('ProElementAdj002', 'ProElementAdj001_btn_delete', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('ProElementAdj002', 'ProElementAdj002_btn_save', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('ProElementAdj002', 'ProElementAdj002_btn_submit', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+
+-- 业务类型数据字典配置
+delete from SYS_DATADICT_LIST where DICT_CODE ='COMMON_BUSINESS_TYPE' and ITEM_CODE = 'DISE';
+INSERT INTO SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('COMMON_BUSINESS_TYPE', 'DISE', '产品要素调整', 353, '0', 'system', null, sysdate, 'system', sysdate, null);
+-- add by sunjie 20220725 产品要素调整 end
+
+-- add by sunjie 20220725 巨额赎回信息 start
+-- 巨额赎回信息 菜单页面 配置
+delete from SYS_MENU where MENU_ID = 'REPORT_006_004_003';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_006_004_003', 'DIS', null, 'REPORT_006_004', 'HugeInfoPro001', 2, '03', '巨额赎回信息维护', 'system', null,sysdate, 'system', sysdate);
+delete from SYS_PAGE where PAGE_ID like '%HugeInfoPro00%';
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('HugeInfoPro001', 'DIS', '/disclosure/information/config/hugeinfopro/HugeInfoPro001', 'disclosure/information/config/hugeinfopro/HugeInfoPro001', 'REPORT_006_004_003', null, null, '02', '01', '巨额赎回信息维护', 'system', null, sysdate, 'system', sysdate);
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('HugeInfoPro002', 'DIS', '/disclosure/information/config/hugeinfopro/HugeInfoPro002', 'disclosure/information/config/hugeinfopro/HugeInfoPro002', null, null, null, '02', '01', '巨额赎回信息新建', 'system', null, sysdate, 'system', sysdate);
+
+-- 页面控件流程配置
+delete from SYS_WFL_BUSINESS_MODULE where PAGE_ID like '%HugeInfoPro00%';
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('HugeInfoPro002', 'HugeInfoPro001_btn_delete', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('HugeInfoPro002', 'HugeInfoPro002_btn_save', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('HugeInfoPro002', 'HugeInfoPro002_btn_submit', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+
+-- 业务类型数据字典配置
+delete from SYS_DATADICT_LIST where DICT_CODE ='COMMON_BUSINESS_TYPE' and ITEM_CODE = 'DISP';
+INSERT INTO SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('COMMON_BUSINESS_TYPE', 'DISP', '巨额赎回信息维护', 298, '0', 'system', null, sysdate, 'system', sysdate, null);
+-- add by sunjie 20220725 巨额赎回信息 end
+
+-- add by sunjie 20220725 产品不成立信息 start
+-- 产品不成立信息 菜单页面 配置
+delete from SYS_MENU where MENU_ID = 'REPORT_006_004_014';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_006_004_014', 'DIS', null, 'REPORT_006_004', 'ProFailureInfo001', 12, '02', '产品不成立信息维护', 'system', null, sysdate, 'system', sysdate);
+delete from SYS_PAGE where PAGE_ID like '%ProFailureInfo00%';
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('ProFailureInfo001', 'DIS', '/disclosure/information/config/profailureinfo/ProFailureInfo001', 'disclosure/information/config/profailureinfo/ProFailureInfo001', 'REPORT_006_004_014', null, null, '02', '01', '产品不成立信息维护', 'system', null, sysdate, 'system', sysdate);
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('ProFailureInfo002', 'DIS', '/disclosure/information/config/profailureinfo/ProFailureInfo002', 'disclosure/information/config/profailureinfo/ProFailureInfo002', null, null, null, '02', '01', '产品不成立信息新建', 'system', null, sysdate, 'system', sysdate);
+
+-- 页面控件流程配置
+delete from SYS_WFL_BUSINESS_MODULE where PAGE_ID like '%ProFailureInfo00%';
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('ProFailureInfo002', 'ProFailureInfo001_btn_delete', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('ProFailureInfo002', 'ProFailureInfo002_btn_save', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('ProFailureInfo002', 'ProFailureInfo002_btn_submit', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+
+-- 业务类型数据字典配置
+delete from SYS_DATADICT_LIST where DICT_CODE ='COMMON_BUSINESS_TYPE' and ITEM_CODE = 'DISF';
+INSERT INTO SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('COMMON_BUSINESS_TYPE', 'DISF', '产品不成立信息维护', 355, '0', 'system', null, sysdate, 'system', sysdate, null);
+-- add by sunjie 20220725 产品不成立信息 end
+
