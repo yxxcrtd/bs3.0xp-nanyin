@@ -11,6 +11,7 @@ import com.joyintech.tams.disclosure.information.report.dao.ReportRkcpjz001Mappe
 import com.joyintech.tams.disclosure.information.report.dto.ReportGrahDto;
 import com.joyintech.tams.disclosure.information.report.dto.ReportRkcpjz001Dto;
 import com.joyintech.tams.disclosure.information.report.dto.ReportValueDto;
+import com.joyintech.tams.disclosure.information.report.util.ReportCollectionUtils;
 import com.joyintech.tams.disclosure.rptdata.service.IReportDataService;
 import com.joyintech.tams.utils.echarts.EchartsUtils;
 import org.slf4j.Logger;
@@ -69,7 +70,7 @@ public class ReportRkcpjz001Service implements IReportDataService {
                 //净值日
                 reportRkcpjz001Dto.setValueDate(valueDate);
                 //查询公告日 公告日=净值日期+1工作日
-                searchparam.put("busi_date", valueDate);
+                searchparam.put("busi_date", DateUtil.parse(valueDate));
                 searchparam.put("is_holiday", "0");
                 searchparam.put("market_code", "04");
                 Date announceDate = holidayService.getNextWorkDay(searchparam);
@@ -85,14 +86,14 @@ public class ReportRkcpjz001Service implements IReportDataService {
                     searchparam.put("busi_date", announceDate);
                     searchparam.put("is_holiday", "0");
                     searchparam.put("market_code", "04");
-                    Date vDate = holidayService.getLastWorkDay(searchparam);
-                    if (vDate == null) {
-                        vDate = DateUtil.addDay(announceDate, -1);
+                    Date vdate = holidayService.getLastWorkDay(searchparam);
+                    if (vdate == null) {
+                        vdate = DateUtil.addDay(announceDate, -1);
                     }
                     //前第一个工作日-1自然日
                     Date edate = DateUtil.addDay(announceDate, -1);
                     searchparam.put("prodId", prodId);
-                    searchparam.put("vDate", vDate);
+                    searchparam.put("vdate", vdate);
                     searchparam.put("edate", edate);
                     list = reportRkcpjz001Mapper.getXgxValueList(searchparam);
                 }else{//净值型产品：展示一条：今日份额净值及申购赎回价格
@@ -100,7 +101,7 @@ public class ReportRkcpjz001Service implements IReportDataService {
                 }
                 reportRkcpjz001Dto.setList(list);
 
-                dataMap = CollectionUtils.bean2Map(reportRkcpjz001Dto);
+                dataMap = ReportCollectionUtils.bean2Map(reportRkcpjz001Dto);
 
                 //近一个月（工作日）份额净值走势图或近一个月(自然日)万份收益走势图
                 String imagePath1 = tmpImagePath+"image1"+"_"+prodId+"_"+valueDate;

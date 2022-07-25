@@ -15,6 +15,8 @@ public class ReportKfqHisBonusDto {
     private Date openStartDate;
     /*赎回确认日--基准日*/
     private Date openEndDate;
+    /*基准日*/
+    private Date settDate;
     /*红利发放日*/
     private Date paymentDate;
     /*上次收益分配基准日*/
@@ -150,5 +152,13 @@ public class ReportKfqHisBonusDto {
 
     public void setCurRange(String curRange) {
         this.curRange = curRange;
+    }
+
+    public Date getSettDate() {
+        return settDate;
+    }
+
+    public void setSettDate(Date settDate) {
+        this.settDate = settDate;
     }
 }
