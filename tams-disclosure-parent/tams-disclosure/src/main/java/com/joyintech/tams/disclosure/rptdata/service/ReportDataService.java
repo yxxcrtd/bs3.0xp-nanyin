@@ -68,6 +68,9 @@ public class ReportDataService {
 	@Autowired
 	private Report1Ysncp001Service report1Ysncp001Service;
 
+	@Autowired
+	private ReportJesh001Service reportJesh001Service;
+
 	public List<Map<String, Object>> queryTestDatas(Map<String, Object> params) {
 		Map<String, Object> dataMap = new HashMap<String, Object>();
 		dataMap.put("${prodName}", "得利宝8号");
@@ -227,6 +230,8 @@ public class ReportDataService {
 			service = report1Cpnys001Service;
 		} else if (rptType.equals(DisReportType.DYSDCPTZMB_GM) || rptType.equals(DisReportType.DYSDCPTZMB)) { // 单要素多产品调整模板
 			service = report1Ysncp001Service;
+		} else if (rptType.equals(DisReportType.JESHGG_GM) || rptType.equals(DisReportType.JESHGBG_SM)) { // 巨额赎回模板
+			service = reportJesh001Service;
 		}
 
 

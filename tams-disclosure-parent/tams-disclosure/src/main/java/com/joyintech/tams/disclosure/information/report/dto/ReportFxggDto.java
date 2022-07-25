@@ -12,10 +12,10 @@ import java.util.Date;
  * 〈功能详细描述〉
  * @author huwei
  * @version 1.0 2022年07月14日
- * @see ReportFxgg001Dto
+ * @see ReportFxggDto
  * @since 1.0
  */
-public class ReportFxgg001Dto extends BaseEntity {
+public class ReportFxggDto extends BaseEntity {
     /**
      * 产品代码
      */

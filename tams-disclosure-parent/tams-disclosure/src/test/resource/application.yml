@@ -1,0 +1,34 @@
+server:
+  port: 8081
+spring:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    username: BS30CVR_V306_XP_DEV
+    password: BS30CVR_V306_XP_DEV
+log:
+  path: /home/tams/logs/tams
+  level: debug
+application:
+  menuType: hover
+  sysCode: REP
+  menuPosition: top #菜单默认位置（设置主题后失效），支持left和top两种
+  pageStep: 100 #数据表格页码步长
+  #mainPage: disclosure/myHome
+  logoAbout: /image/disclosure/logo-about.png
+  logo: /image/disclosure/logo.png
+  sessionTimeout: 1800000 #超时自动退出
+  interfMaxCorePoolSize: 20 #上游接口解析读取文件处理最大线程数
+  maxDataCountOneTimeForInvestholdInfo : 50 #上游接口解析读取文件处理中持有信息批量查询单次最大查询主键数（江苏银行50）
+  reportInterfIsNeedOkFile: 1 #上游接口解析读取文件处理中，是否需要.ok传输完成标志文件（1：需要 0：不需要）
+  reportInterfOkFileExtension: ok #上游接口解析读取文件处理中，传输完成标志文件的扩展名（默认为ok）
+  reportInsertCount: 15 #数据批量一次性insert条数
+  reportSelectOrDeleteCount: 50 #数据批量一次查询或者删除条数
+  reportSelectOrDeleteCountForShenFen: 100 #数据批量一次查询或者删除条数(身份信息用)
+  reportInsertLongCount: 10 #数据批量一次性insert条数(单条数据字段较多)
+  reportInterfFileEncoding: UTF-8 #上游接口文件编码格式
+  reportInterfOneTimeDataCount: 1000 #上游接口解析读取文件处理,单线程处理数据条数
+  reportInterfOneTimeSqlLdrDataCount: 200000 #上游接口解析读取文件处理,单次sqlldr处理最大数据条数
+  reportInterfOneTimeSqlLdrCommitCount: 10000 #上游接口解析读取文件处理,单次sqlldr处理单次提交数
+  reportInterfSplitCharacter: '|' #上游txt文件解析分割符
+  reportCbFeedBackHandleCountOneTime: 10000 #中债反馈文件内容单次处理数据条数

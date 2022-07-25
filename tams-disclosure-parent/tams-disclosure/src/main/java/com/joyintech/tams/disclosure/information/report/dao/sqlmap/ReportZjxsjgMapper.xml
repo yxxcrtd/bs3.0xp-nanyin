@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper
-	namespace="com.joyintech.tams.disclosure.information.report.dao.ReportZjxsjg001Mapper">
+	namespace="com.joyintech.tams.disclosure.information.report.dao.ReportZjxsjgMapper">
 
-	<select id="queryZjxsjg" resultType="com.joyintech.tams.disclosure.information.report.dto.ReportZjxsjg001Dto">
+	<select id="queryZjxsjg" resultType="com.joyintech.tams.disclosure.information.report.dto.ReportZjxsjgDto">
 		select
 			rpi.prod_id prod_id,
 			rpi.prod_name prod_name,

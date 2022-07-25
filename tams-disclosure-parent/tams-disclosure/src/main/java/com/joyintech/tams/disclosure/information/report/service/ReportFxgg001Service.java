@@ -7,8 +7,8 @@ import java.util.*;
 
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.disclosure.common.common.service.HolidayService;
-import com.joyintech.tams.disclosure.information.report.dao.ReportFxgg001Mapper;
-import com.joyintech.tams.disclosure.information.report.dto.ReportFxgg001Dto;
+import com.joyintech.tams.disclosure.information.report.dao.ReportFxggMapper;
+import com.joyintech.tams.disclosure.information.report.dto.ReportFxggDto;
 import com.joyintech.tams.disclosure.rptdata.service.IReportDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service;
 public class ReportFxgg001Service implements IReportDataService {
 
     @Autowired
-    private ReportFxgg001Mapper reportFxgg001Mapper;
+    private ReportFxggMapper reportFxggMapper;
 
     @Autowired
     private HolidayService holidayService;
@@ -42,7 +42,7 @@ public class ReportFxgg001Service implements IReportDataService {
         String prodId = paraMap.get("pprodid").toString();
         Map<String,Object> searchparam = new HashMap<>();
         searchparam.put("prodId", prodId);
-        ReportFxgg001Dto fxgg = reportFxgg001Mapper.queryFxgg(searchparam);
+        ReportFxggDto fxgg = reportFxggMapper.queryFxgg(searchparam);
         if (fxgg == null) {
             return result;
         }
