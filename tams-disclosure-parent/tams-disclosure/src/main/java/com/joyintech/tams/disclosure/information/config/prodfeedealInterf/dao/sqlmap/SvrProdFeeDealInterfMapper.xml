@@ -89,6 +89,7 @@
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
+                ERRORMSG = #{errmsg,jdbcType=VARCHAR},
         </set>
         where PROD_ID = #{prodId,jdbcType=CHAR}
           and PAY_DATE = #{payDate,jdbcType=DATE}
@@ -113,10 +114,9 @@
                rft.STATUS status,
                rft.UPDATE_USER updateUser,
                rft.UPDATE_TIME updateTime,
-               cie.ERR_MSG errmsg
+               rft.ERRORMSG errmsg
         from REP_FEE_TRD rft
         left join REP_PROD_INFO rpi on rpi.PROD_ID = rft.PROD_ID
-        left join CHB_INTERF_ERRODATA cie on cie.DATAID = rft.PROD_ID and  cie.INTERF_TYPE = 'CHB_PRD_FEE_DEAL'
         <where>
             <if test='prodId != null and !prodId.equals("")'>
                 and rft.PROD_ID = #{prodId,jdbcType=VARCHAR}
@@ -145,7 +145,8 @@
         rft.ACCRUAL accrual,
         rft.STATUS status,
         rft.UPDATE_USER updateUser,
-        rft.UPDATE_TIME updateTime
+        rft.UPDATE_TIME updateTime,
+        rft.ERRORMSG errmsg
         from REP_FEE_TRD rft
         left join REP_PROD_INFO rpi on rpi.PROD_ID = rft.PROD_ID
         <where>

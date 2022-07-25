@@ -29,7 +29,7 @@ public class RepInvestAccount extends BaseEntity {
      */
     private String status;
     /**
-     * 数据状态
+     * 错误信息
      */
     private String errorMsg;
 

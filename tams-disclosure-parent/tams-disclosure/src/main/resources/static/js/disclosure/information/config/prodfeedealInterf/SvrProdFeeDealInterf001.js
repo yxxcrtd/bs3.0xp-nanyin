@@ -74,8 +74,7 @@ $(function() {
             title : '自成立以来发生额（贷方）'
         }, {
             field : 'errmsg',width:'10%',
-            title : '错误信息',
-            sortable: false
+            title : '错误信息'
         }, {
             field : 'updateTime',width:'10%',
             title : '更新时间',
