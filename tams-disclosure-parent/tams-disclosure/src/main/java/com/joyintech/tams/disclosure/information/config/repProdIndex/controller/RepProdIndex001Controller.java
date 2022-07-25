@@ -96,7 +96,7 @@ public class RepProdIndex001Controller extends BaseController {
         params.setPageId("RepProdIndex002");
         params.setElementId(dto.getElementId());
         params.setBusinessCode(item->item.getProdId());
-        params.setBusinessType(DictCodeListExt4.共通业务类型_投资账户信息维护.getValue());
+        params.setBusinessType(DictCodeListExt4.共通业务类型_产品基础指标信息维护.getValue());
         params.setComment(entity ->  "子产品代码" + "(" + entity.getProdId() + ")");
         processParameter.setOperationType(OperationType.DELETE);
         processParameter.setWorkFlowParameter(params);

@@ -110,7 +110,7 @@ public class RepProdIndex002Controller extends BaseController {
         params.setPageId("RepProdIndex002");
         params.setElementId(dto.getElementId());
         params.setBusinessCode(dto.getProdId());
-        params.setBusinessType(DictCodeListExt4.共通业务类型_投资账户信息维护.getValue());
+        params.setBusinessType(DictCodeListExt4.共通业务类型_产品基础指标信息维护.getValue());
         params.setComment(entity -> "主键流程id" + "(" + entity.getProdId() + ")");
         // 塞入工作流参数
         processParameter.setWorkFlowParameter(params);
