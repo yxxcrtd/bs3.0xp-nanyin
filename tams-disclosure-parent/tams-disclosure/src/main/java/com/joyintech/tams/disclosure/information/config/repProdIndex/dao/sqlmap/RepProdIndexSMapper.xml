@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.information.config.repProdIndex.dao.RepProdIndexSMapper">
+    <select id="getProdId" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        PROD_ID id,
+        PROD_NAME text
+        FROM
+        REP_PROD_INFO
+        where (P_PROD_ID is not null or PROD_ID != P_PROD_ID)
+<!--         REP_PROD_TYPE = '03'-->
+
+        <if test="search != null and search != ''">
+            and (PROD_ID like
+            concat(concat('%',#{search}),'%')
+            or PROD_NAME like concat(concat('%',#{search}),'%'))
+        </if>
+    </select>
+    <select id="getProdId2" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        PROD_ID id,
+        PROD_ID text
+        FROM
+        REP_PROD_INFO
+        where (P_PROD_ID is not null or PROD_ID != P_PROD_ID)
+        <!--         REP_PROD_TYPE = '03'-->
+
+        <if test="search != null and search != ''">
+            and (PROD_ID like
+            concat(concat('%',#{search}),'%')
+            or PROD_NAME like concat(concat('%',#{search}),'%'))
+        </if>
+    </select>
+
+    <select id="selectInfo" resultType="com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto" >
+        select
+        T.PROD_ID prodId,
+        rpi.PROD_NAME prodName,
+        T.VALUE_DATE valueDate,
+        T.ASSETS_VALUE assetsValue,
+        T.CAPITAL capital,
+        T.UNIT_VALUE unitValue,
+        T.UNIT_VALUE_T unitValueT,
+        T.W_YIELD wYield,
+        T.YIELD_7 yield7,
+        T.STATUS status,
+        rpi.P_PROD_ID pProdId,
+        T2.P_ASSETS pAssets,
+        T2.ASSETS_VALUE pAssetsValue,
+        T2.CAPITAL pCapital,
+        T2.UNIT_VALUE pUnitValue,
+        T2.UNIT_VALUE_T pUnitValueT,
+        T2.W_YIELD pWYield,
+        T2.YIELD_7 pYield7,
+        T.UPDATE_USER updateUser,
+        T.UPDATE_TIME updateTime,
+        T.ERRORMSG errorMsg
+        from REP_PROD_INDEX T
+        left join REP_PROD_INFO rpi on rpi.PROD_ID = T.PROD_ID
+        left join REP_PROD_INDEX T2 on rpi.P_PROD_ID = T2.PROD_ID and T.VALUE_DATE = T2.VALUE_DATE
+        where rpi.P_PROD_ID is not null
+            <if test='prodId != null and !prodId.equals("")'>
+                and T.PROD_ID = #{prodId,jdbcType=VARCHAR}
+            </if>
+            <if test="startDate != null and ! startDate.equals('')">
+                and T.VALUE_DATE &gt;= to_date(#{startDate,jdbcType=DATE},'yyyy-MM-dd')
+            </if>
+            <if test="endDate != null and ! endDate.equals('')">
+                and T.VALUE_DATE &lt;= to_date(#{endDate,jdbcType=DATE},'yyyy-MM-dd')
+            </if>
+            <if test="status != null and ! status.equals('')">
+                and T.STATUS = #{status,jdbcType=VARCHAR}
+            </if>
+    </select>
+    <delete id="delete" parameterType="com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto"  >
+		update REP_PROD_INDEX
+		set STATUS = 'D'
+		where PROD_ID = #{prodId,jdbcType=VARCHAR}
+          and VALUE_DATE = #{valueDate,jdbcType=DATE}
+	</delete>
+    <delete id="delete2" parameterType="com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto"  >
+		update REP_PROD_INDEX
+		set STATUS = 'D'
+		where PROD_ID = #{pProdId,jdbcType=VARCHAR}
+          and VALUE_DATE = #{valueDate,jdbcType=DATE}
+	</delete>
+    <update id="update" parameterType="com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto" >
+    update REP_PROD_INDEX
+    set
+    ASSETS_VALUE = #{assetsValue,jdbcType=DECIMAL},
+    CAPITAL = #{capital,jdbcType=DECIMAL},
+    UNIT_VALUE = #{unitValue,jdbcType=DECIMAL},
+    UNIT_VALUE_T = #{unitValueT,jdbcType=DECIMAL},
+    W_YIELD = #{wYield,jdbcType=DECIMAL},
+    YIELD_7 = #{yield7,jdbcType=DECIMAL},
+    STATUS = #{status,jdbcType=VARCHAR},
+    UPDATE_USER = #{createUser,jdbcType=VARCHAR},
+    UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+    ERRORMSG = #{errorMsg,jdbcType=VARCHAR}
+    where PROD_ID = #{prodId,jdbcType=VARCHAR}
+    and VALUE_DATE = #{valueDate,jdbcType=DATE}
+    </update>
+    <update id="update2" parameterType="com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto" >
+
+    update REP_PROD_INDEX
+    set  P_ASSETS = #{pAssets,jdbcType=DECIMAL},
+    ASSETS_VALUE = #{pAssetsValue,jdbcType=DECIMAL},
+    CAPITAL = #{pCapital,jdbcType=DECIMAL},
+    UNIT_VALUE = #{pUnitValue,jdbcType=DECIMAL},
+    UNIT_VALUE_T = #{pUnitValueT,jdbcType=DECIMAL},
+    W_YIELD = #{pWYield,jdbcType=DECIMAL},
+    YIELD_7 = #{pYield7,jdbcType=DECIMAL},
+    STATUS = #{status,jdbcType=VARCHAR},
+    UPDATE_USER = #{createUser,jdbcType=VARCHAR},
+    UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+    ERRORMSG = #{errorMsg,jdbcType=VARCHAR}
+    where PROD_ID = #{pProdId,jdbcType=VARCHAR}
+    and VALUE_DATE = #{valueDate,jdbcType=DATE}
+    </update>
+
+    <insert id="insert" parameterType="com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto" >
+        MERGE INTO REP_PROD_INDEX RIA
+        USING (
+            SELECT #{prodId,jdbcType=VARCHAR} PROD_ID,
+            #{valueDate,jdbcType=DATE} VALUE_DATE,
+            #{assetsValue,jdbcType=DECIMAL} ASSETS_VALUE,
+            #{capital,jdbcType=DECIMAL} CAPITAL,
+            #{unitValue,jdbcType=DECIMAL} UNIT_VALUE,
+            #{unitValueT,jdbcType=DECIMAL} UNIT_VALUE_T,
+            #{wYield,jdbcType=DECIMAL} W_YIELD,
+            #{yield7,jdbcType=DECIMAL} YIELD_7,
+            #{status,jdbcType=VARCHAR} STATUS,
+            #{createUser,jdbcType=VARCHAR} CREATE_USER,
+            #{createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+            #{createDept,jdbcType=VARCHAR} CREATE_DEPT,
+            #{createUser,jdbcType=VARCHAR} UPDATE_USER,
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            FROM
+            DUAL
+        ) TEMP
+        <!-- 业务主键匹配 -->
+        ON(RIA.PROD_ID = TEMP.PROD_ID
+        and RIA.VALUE_DATE = TEMP.VALUE_DATE
+        )
+        <!-- 匹配到则更新 -->
+        WHEN MATCHED THEN UPDATE
+        SET
+        RIA.ASSETS_VALUE = TEMP.ASSETS_VALUE,
+        RIA.CAPITAL = TEMP.CAPITAL,
+        RIA.UNIT_VALUE = TEMP.UNIT_VALUE,
+        RIA.UNIT_VALUE_T = TEMP.UNIT_VALUE_T,
+        RIA.W_YIELD = TEMP.W_YIELD,
+        RIA.YIELD_7 = TEMP.YIELD_7,
+        RIA.CREATE_TIME = TEMP.CREATE_TIME,
+        RIA.UPDATE_TIME = TEMP.UPDATE_TIME,
+        RIA.CREATE_DEPT = TEMP.CREATE_DEPT,
+        RIA.CREATE_USER = TEMP.CREATE_USER,
+        RIA.UPDATE_USER = TEMP.UPDATE_USER,
+        RIA.STATUS = TEMP.STATUS
+        <!-- 未匹配到则插入 -->
+        WHEN NOT MATCHED THEN INSERT(PROD_ID,VALUE_DATE,ASSETS_VALUE,
+                                     CAPITAL,UNIT_VALUE,UNIT_VALUE_T,
+                                     W_YIELD,YIELD_7,CREATE_TIME,
+                                     UPDATE_TIME,CREATE_DEPT,CREATE_USER,
+                                     UPDATE_USER,STATUS)
+        VALUES(TEMP.PROD_ID,TEMP.VALUE_DATE,TEMP.ASSETS_VALUE,
+        TEMP.CAPITAL,TEMP.UNIT_VALUE,TEMP.UNIT_VALUE_T,
+        TEMP.W_YIELD,TEMP.YIELD_7,TEMP.CREATE_TIME,
+        TEMP.UPDATE_TIME,TEMP.CREATE_DEPT,TEMP.CREATE_USER,
+        TEMP.UPDATE_USER,TEMP.STATUS)
+    </insert>
+    <insert id="insert2" parameterType="com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto" >
+
+
+        MERGE INTO REP_PROD_INDEX RIA
+        USING (
+        SELECT #{pProdId,jdbcType=VARCHAR} PROD_ID,
+        #{valueDate,jdbcType=DATE} VALUE_DATE,
+        #{pAssets,jdbcType=DECIMAL} P_ASSETS,
+        #{pAssetsValue,jdbcType=DECIMAL} ASSETS_VALUE,
+        #{pCapital,jdbcType=DECIMAL} CAPITAL,
+        #{pUnitValue,jdbcType=DECIMAL} UNIT_VALUE,
+        #{pUnitValueT,jdbcType=DECIMAL} UNIT_VALUE_T,
+        #{pWYield,jdbcType=DECIMAL} W_YIELD,
+        #{pYield7,jdbcType=DECIMAL} YIELD_7,
+        #{status,jdbcType=VARCHAR} STATUS,
+        #{createUser,jdbcType=VARCHAR} CREATE_USER,
+        #{createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+        #{createDept,jdbcType=VARCHAR} CREATE_DEPT,
+        #{createUser,jdbcType=VARCHAR} UPDATE_USER,
+        #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+        FROM
+        DUAL
+        ) TEMP
+        <!-- 业务主键匹配 -->
+        ON(RIA.PROD_ID = TEMP.PROD_ID
+        and RIA.VALUE_DATE = TEMP.VALUE_DATE
+        )
+        <!-- 匹配到则更新 -->
+        WHEN MATCHED THEN UPDATE
+        SET
+        RIA.ASSETS_VALUE = TEMP.ASSETS_VALUE,
+        RIA.CAPITAL = TEMP.CAPITAL,
+        RIA.P_ASSETS = TEMP.P_ASSETS,
+        RIA.UNIT_VALUE = TEMP.UNIT_VALUE,
+        RIA.UNIT_VALUE_T = TEMP.UNIT_VALUE_T,
+        RIA.W_YIELD = TEMP.W_YIELD,
+        RIA.YIELD_7 = TEMP.YIELD_7,
+        RIA.CREATE_TIME = TEMP.CREATE_TIME,
+        RIA.UPDATE_TIME = TEMP.UPDATE_TIME,
+        RIA.CREATE_DEPT = TEMP.CREATE_DEPT,
+        RIA.CREATE_USER = TEMP.CREATE_USER,
+        RIA.UPDATE_USER = TEMP.UPDATE_USER,
+        RIA.STATUS = TEMP.STATUS
+        <!-- 未匹配到则插入 -->
+        WHEN NOT MATCHED THEN INSERT(PROD_ID,VALUE_DATE,ASSETS_VALUE,
+                                     CAPITAL,UNIT_VALUE,UNIT_VALUE_T,
+                                     W_YIELD,YIELD_7,CREATE_TIME,
+                                     UPDATE_TIME,CREATE_DEPT,CREATE_USER,
+                                     UPDATE_USER,STATUS,P_ASSETS)
+        VALUES(TEMP.PROD_ID,TEMP.VALUE_DATE,TEMP.ASSETS_VALUE,
+        TEMP.CAPITAL,TEMP.UNIT_VALUE,TEMP.UNIT_VALUE_T,
+        TEMP.W_YIELD,TEMP.YIELD_7,TEMP.CREATE_TIME,
+        TEMP.UPDATE_TIME,TEMP.CREATE_DEPT,TEMP.CREATE_USER,
+        TEMP.UPDATE_USER,TEMP.STATUS,TEMP.P_ASSETS)
+    </insert>
+
+    <select id="selectProdInfo" resultType="com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto" >
+        SELECT T1.P_PROD_ID pProdId,
+        T1.PROD_NAME prodName,
+        T2.IS_GRADE isGrade,
+        T2.PROD_TYPE prodType
+        from REP_PROD_INFO T1
+        left join REP_PROD_INFO T2 on T1.P_PROD_ID = T2.PROD_ID
+        where T1.PROD_ID = #{prodId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectByProdIDAndValueDate" resultType="com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto" >
+        SELECT T1.*
+        from REP_PROD_INDEX T1
+        where T1.PROD_ID = #{prodId,jdbcType=VARCHAR}
+        and T1.VALUE_DATE = #{valueDate,jdbcType=DATE}
+    </select>
+
+    <select id="selectPProdInfo" resultType="com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto" >
+        SELECT T1.*
+        from REP_PROD_INDEX T1
+        where T1.PROD_ID = #{pProdId,jdbcType=VARCHAR}
+        and T1.VALUE_DATE = #{valueDate,jdbcType=DATE}
+        and T1.P_ASSETS = #{pAssets,jdbcType=DECIMAL}
+        and T1.ASSETS_VALUE = #{pAssetsValue,jdbcType=DECIMAL}
+        and T1.CAPITAL = #{pCapital,jdbcType=DECIMAL}
+        and T1.UNIT_VALUE = #{pUnitValue,jdbcType=DECIMAL}
+        and T1.UNIT_VALUE_T = #{pUnitValueT,jdbcType=DECIMAL}
+        and T1.W_YIELD = #{pWYield,jdbcType=DECIMAL}
+        and T1.YIELD_7 = #{pYield7,jdbcType=DECIMAL}
+    </select>
+
+    <select id="selectPProd" resultType="com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto" >
+        SELECT T1.*
+        from REP_PROD_INDEX T1
+        where T1.PROD_ID = #{pProdId,jdbcType=VARCHAR}
+        and T1.VALUE_DATE = #{valueDate,jdbcType=DATE}
+    </select>
+    <select id="selectData" resultType="com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto" >
+        select
+        T.PROD_ID prodId,
+        rpi.PROD_NAME prodName,
+        T.VALUE_DATE valueDate,
+        T.ASSETS_VALUE assetsValue,
+        T.CAPITAL capital,
+        T.UNIT_VALUE unitValue,
+        T.UNIT_VALUE_T unitValueT,
+        T.W_YIELD wYield,
+        T.YIELD_7 yield7,
+        T.STATUS status,
+        rpi.P_PROD_ID pProdId,
+        T2.P_ASSETS pAssets,
+        T2.ASSETS_VALUE pAssetsValue,
+        T2.CAPITAL pCapital,
+        T2.UNIT_VALUE pUnitValue,
+        T2.UNIT_VALUE_T pUnitValueT,
+        T2.W_YIELD pWYield,
+        T2.YIELD_7 pYield7,
+        rpi2.IS_GRADE isGrade,
+        rpi2.PROD_TYPE prodType
+        from REP_PROD_INDEX T
+        left join REP_PROD_INFO rpi on rpi.PROD_ID = T.PROD_ID
+        left join REP_PROD_INFO rpi2 on rpi2.PROD_ID = rpi.P_PROD_ID
+        left join REP_PROD_INDEX T2 on rpi.P_PROD_ID = T2.PROD_ID and T.VALUE_DATE = T2.VALUE_DATE
+        where T.PROD_ID = #{prodId,jdbcType=VARCHAR}
+                and T.VALUE_DATE = #{valueDate,jdbcType=DATE}
+    </select>
+    <select id="selectExits" resultType="java.lang.Integer">
+        select count(T.PROD_ID)
+        from REP_PROD_INDEX T
+        left join REP_PROD_INFO rpi on rpi.PROD_ID = T.PROD_ID
+        where rpi.P_PROD_ID = #{pProdId,jdbcType=VARCHAR}
+        and T.STATUS != 'D'
+    </select>
+    <select id="selectProdId" resultType="java.lang.String">
+        SELECT PROD_ID FROM REP_PROD_INFO WHERE PROD_ID = #{prodId}
+    </select>
+</mapper>
