@@ -52,6 +52,8 @@ public enum DictCodeExt1 implements BaseDictCode {
      */
     信披_募集方式("DIS_RAISE_TYPE"),
 
+    信披_发行状态("DIS_ISSUE_STATUS"),
+
 
     /**
      * 信披_产品类型
@@ -72,6 +74,12 @@ public enum DictCodeExt1 implements BaseDictCode {
      * 托管账户
      */
     托管账户("ACCOUNT_TYPE"),
+
+    /**
+     * 行情代码
+     */
+    行情代码("QUOTA_CODE"),
+
     ;
     private String value;
 

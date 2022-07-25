@@ -395,7 +395,7 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
         ProdFeediscountDto dto = new ProdFeediscountDto();
         // 行情信息列表
         List<ProdFeediscountDto> prodBonusplanDtoList = new ArrayList<>();
-        dto.setSelectedItem(prodBonusplanDtoList);
+       // dto.setSelectedItem(prodBonusplanDtoList);
         JSONArray objects = JSONArray.parseArray(tempList);
 
         for (int i = 0; i < objects.size(); i++) {
@@ -428,7 +428,6 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
             if (StringUtil.isNotEmpty(rowData.get(7))) {
                 feediscountDto.setEndDate(DateUtil.parse(rowData.get(7).toString()));
             }
-
 
             if (StringUtil.isNotEmpty(rowData.get(8))) {
                 feediscountDto.setThisPreFeerate(new BigDecimal(rowData.get(8).toString()));
