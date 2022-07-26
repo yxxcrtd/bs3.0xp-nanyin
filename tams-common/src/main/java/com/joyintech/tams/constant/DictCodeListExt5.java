@@ -62,6 +62,9 @@ public enum DictCodeListExt5 implements BaseDictCodeList {
     行情代码_沪深300指数收益率(DictCodeExt1.行情代码,"03","沪深300指数收益率"),
     行情代码_中债新综合财富指数(DictCodeExt1.行情代码,"04","中债新综合财富指数（1-3年）收益率"),
 
+    维护类型_代销机构(DictCodeExt1.信披_代销机构_维护类型,"01","代销机构"),
+    维护类型_理财产品(DictCodeExt1.信披_代销机构_维护类型,"02","理财产品"),
+
     ;
     /**
      * 对应于数据字典code
