@@ -126,7 +126,15 @@ $(function() {
             field : 'updateUser',width:'10%',
             title : '更新人'
         },
-            { field:'operation',width:'10%', title: '操作', type:'action', buttons: ['edit', 'delt']}]
+            { field:'operation',width:'10%', title: '操作', type:'action', buttons: ['edit', 'delt'],
+                render: function (data, type, row, meta) {
+                    if (row.status == 'D')
+                        return '';
+                    else
+                        return '<i class="btn layui-icon edit edit" title="编辑" data-ignore="false"></i> ' +
+                            '<i class="btn layui-icon delt delt" title="删除" data-ignore="false"></i>';
+                }
+            }]
     });
 
     /**
