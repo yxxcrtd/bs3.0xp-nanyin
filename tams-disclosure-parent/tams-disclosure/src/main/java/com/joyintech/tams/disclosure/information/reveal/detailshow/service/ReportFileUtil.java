@@ -40,6 +40,10 @@ public class ReportFileUtil {
     	String filename = "";
     	if ( REPORT_TYPE_模板文件.equals(reportType) )  { //模板文件
     		filename = reportInfo.getRepository() + reportInfo.getFolder() +"/" + reportInfo.getUri() +fileType;
+        	File f = new File(filename);
+        	if ( !f.exists() ) 
+        		filename = reportInfo.getRepository() + reportInfo.getFolder() +"/" + "ERROR" +fileType;
+
     	} else {
     		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     		String dirname = sdf.format(genDate);

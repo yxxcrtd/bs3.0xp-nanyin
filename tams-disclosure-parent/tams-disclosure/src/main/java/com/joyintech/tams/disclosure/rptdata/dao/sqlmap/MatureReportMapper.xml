@@ -8,7 +8,7 @@
 			,INFO.PROD_RE
 		    ,INFO.ISSUING_WAY
 			,INFO.PROD_ID
-		    ,INFO.SET_DATE EDATE   /**产品成立日期**/
+		    ,INFO.SET_DATE EDATE /**产品成立日期**/
 		    ,PINDEX.ASSETS_VALUE  /**资产净值**/
 			,PINDEX.CAPITAL            /**期末余额**/
 			,PINDEX.UNIT_VALUE    /**单位净值**/
@@ -21,17 +21,19 @@
 		LEFT JOIN REP_PROD_INFO INFO ON PLAN.PROD_ID=INFO.PROD_ID AND INFO.STATUS='E' 
 		WHERE 1=1
 		AND PLAN.DATA_STATUS='01'
-		<if test="prodId!=null">
-			AND PLAN.PROD_ID=#{prodId,jdbcType=VARCHAR}
+		<if test="prodid!=null">
+			AND PLAN.PROD_ID=#{prodid,jdbcType=VARCHAR}
 		</if>
+		order by plan.sett_date desc 
     </select>
     
     <select id="selectFees" resultType="com.joyintech.tams.common.base.entity.RepFeeTrd">
 	    SELECT FEE_TYPE,ACCRUAL 
 	    FROM REP_FEE_TRD 
 	    WHERE 1=1
-	    <if test="prodId!=null">
-	            AND PROD_ID=#{PROD_ID,jdbcType=VARCHAR}
+	    and STATUS='E'
+	    <if test="prodid!=null">
+	            AND PROD_ID=#{prodid,jdbcType=VARCHAR}
 		</if>
     </select>
     

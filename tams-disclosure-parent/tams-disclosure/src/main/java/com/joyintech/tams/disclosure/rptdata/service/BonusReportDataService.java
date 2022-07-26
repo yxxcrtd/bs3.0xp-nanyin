@@ -53,16 +53,16 @@ public class BonusReportDataService implements IReportDataService {
 				if ("01".equals(report.getIssuingWay())) { // 开放式
 					DisProdBonusplan plan = bonusReportMapper.selectLastBonusPlan(paraMap);
 					if (plan == null) { // 第一个计划
-						report.setLastSettDate(report.getEDate());
+						report.setLastSettDate(report.geteDate());
 					} else {
 						report.setLastSettDate(plan.getSettDate());
 					}
 				} else {
-					report.setLastSettDate(report.getEDate());
+					report.setLastSettDate(report.geteDate());
 				}
 
 				// 运行天数
-				if (report.getLastSettDate().compareTo(report.getEDate()) == 0) {
+				if (report.getLastSettDate().compareTo(report.geteDate()) == 0) {
 					report.setRunDays(DateUtil.getBetweenDayNumber(report.getSettDate(), report.getLastSettDate()) + 1);
 				} else {
 					report.setRunDays(DateUtil.getBetweenDayNumber(report.getSettDate(), report.getLastSettDate()));

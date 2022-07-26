@@ -35,11 +35,11 @@
         </dependency>
 
         <!-- 中债三期 -->
-        <dependency>
+<!--         <dependency>
             <groupId>com.joyintech</groupId>
             <artifactId>service-chb3</artifactId>
             <version>3.1.0</version>
-        </dependency>
+        </dependency> -->
 
         <!-- 信批服务 -->
         <dependency>
@@ -50,11 +50,11 @@
 
 
         <!-- 人行报表服务 -->
-        <dependency>
+<!--         <dependency>
             <groupId>com.joyintech</groupId>
             <artifactId>service-pbc</artifactId>
             <version>3.1.0</version>
-        </dependency>
+        </dependency> -->
 
         <!-- 中债共通服务 -->
         <dependency>

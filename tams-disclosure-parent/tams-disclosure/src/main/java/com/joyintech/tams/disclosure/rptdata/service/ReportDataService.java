@@ -224,7 +224,7 @@ public class ReportDataService {
 			service = bonusReportDataService;
 		} else if (rptType.equals(DisReportType.QSBG)) { // 清算报告
 			service = settReportDataService;
-		} else if (rptType.equals(DisReportType.DQGG_GM)) { // 到期公告
+		} else if (rptType.equals(DisReportType.DQGG_GM) || rptType.equals(DisReportType.DQGBG_SM)) { // 到期公告
 			service = matureReportDataService;
 		} else if (rptType.equals(DisReportType.TZTZFBZCGG)) { // 非标调整公告
 			service = nostdReportDataService;

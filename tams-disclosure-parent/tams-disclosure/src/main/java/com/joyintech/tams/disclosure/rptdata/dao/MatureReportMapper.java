@@ -20,7 +20,7 @@ import com.joyintech.tams.disclosure.rptdata.dto.BonusReportDto;
 
 /**
  * 到期报告
- * @author leipeng
+ * @author chenxc
  * @version 1.0 2018年8月2日
  * @see MatureReportMapper
  * @since 1.0

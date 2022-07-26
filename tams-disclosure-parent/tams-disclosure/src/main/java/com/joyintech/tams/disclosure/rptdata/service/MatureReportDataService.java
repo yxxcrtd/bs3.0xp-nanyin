@@ -12,6 +12,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.joyintech.tams.common.base.dao.ChbMktHolidayMapper;
+import com.joyintech.tams.common.base.entity.ChbMktHoliday;
+import com.joyintech.tams.common.base.entity.ChbMktHolidayKey;
 import com.joyintech.tams.common.base.entity.DisProdBonusplan;
 import com.joyintech.tams.common.base.entity.RepFeeTrd;
 import com.joyintech.tams.disclosure.common.CollectionUtils;
@@ -37,6 +40,9 @@ public class MatureReportDataService implements IReportDataService {
 	@Autowired
 	private BonusReportMapper bonusReportMapper;
 	
+	@Autowired
+	private ChbMktHolidayMapper chbMktHolidayMapper;
+	
 	/**
 	 * 日志
 	 */
@@ -47,19 +53,32 @@ public class MatureReportDataService implements IReportDataService {
 
 		List<Map<String, Object>> listResult = new ArrayList<>();
 
-		MatureReportDto settReportDto = new MatureReportDto();
+		MatureReportDto matureReportDto = new MatureReportDto();
 		try {
-			String prodId = (paraMap.get("portnum") == null ? null : paraMap.get("portnum").toString());
+//			String prodId = (paraMap.get("portnum") == null ? null : paraMap.get("portnum").toString());
 			Date genDate = (paraMap.get("endDate") == null ? new Date()
 					: DateUtil.parse(paraMap.get("endDate").toString()));
 			
 			List<BonusReportDto> listBonusReport = matureReportMapper.selectBonusPlan(paraMap);
-			if ( listBonusReport!=null && listBonusReport.size()>0 ) {
-				BonusReportDto bonus = listBonusReport.get(0);
-				settReportDto.setProdName(bonus.getProdName());
-				settReportDto.setProdId(bonus.getProdId());
-				settReportDto.setProdRe(bonus.getProdRe());
-				settReportDto.seteDate(bonus.getEDate());
+			if ( listBonusReport!=null && listBonusReport.size()>0 ) {   //取最新的分红计划，做到期信息
+				BonusReportDto dto = listBonusReport.get(0);
+				matureReportDto.setProdName(dto.getProdName());
+				matureReportDto.setProdId(dto.getProdId());
+				matureReportDto.setProdRe(dto.getProdRe());
+				matureReportDto.seteDate(dto.geteDate());
+				
+				if ( "02".equals(dto.getBonusMode()) ) {  //分红方式==到期兑付
+					matureReportDto.setmDate(DateUtil.addDay(dto.getSettDate(),1));
+				} else {
+					matureReportDto.setmDate(dto.getSettDate());
+				}
+				
+				//签字日期：收益分配基准日+1工作日
+				matureReportDto.setGenDate(getNextWorkDate(dto.getSettDate()));
+				
+	        	//期限天数
+				matureReportDto.setRunDays( DateUtil.getBetweenDayNumber(dto.geteDate(),dto.getmDate()));
+				
 			}
 
 			//累计净值：分红计算清单：历史累计分红
@@ -73,18 +92,18 @@ public class MatureReportDataService implements IReportDataService {
 	        	if ( "01".equals(report.getIssuingWay()) ) {  //开放式
 	        		DisProdBonusplan plan = bonusReportMapper.selectLastBonusPlan(paraMap);
 	        		if ( plan==null  ) { //第一个计划
-	        			report.setLastSettDate(report.getEDate());
+	        			report.setLastSettDate(report.geteDate());
 	        		} else {
 	        			report.setLastSettDate(plan.getSettDate());
 	        		}
 	        	} else {
-	        		report.setLastSettDate(report.getEDate());
+	        		report.setLastSettDate(report.geteDate());
 	        	}
 	        	
 	        	Date settDate = DateUtil.parse("2020-01-01");
 
 	        	//运行天数
-	        	if ( report.getLastSettDate().compareTo(report.getEDate())==0 ){
+	        	if ( report.getLastSettDate().compareTo(report.geteDate())==0 ){
 	        		report.setRunDays( DateUtil.getBetweenDayNumber(report.getSettDate(),report.getLastSettDate())+1);
 	        	} else {
 	        		report.setRunDays( DateUtil.getBetweenDayNumber(report.getSettDate(),report.getLastSettDate()));
@@ -116,34 +135,59 @@ public class MatureReportDataService implements IReportDataService {
 	        		yearYield = report.getYearYield(); 
 		        	
 			}
-			settReportDto.setSumValueAmt(accuValue);
-			settReportDto.setRefYearYield(yearYield);
-			settReportDto.setCustProfit(custProfit);
+			matureReportDto.setSumValueAmt(accuValue);
+			matureReportDto.setRefYearYield(yearYield);
+			matureReportDto.setCustProfit(custProfit);
 			
 			//查询所有相关费用，通过主产品查找，如果是子产品id，还要找到主产品id
 			List<RepFeeTrd> listFee = matureReportMapper.selectFees(paraMap);
+			matureReportDto.setPurFee(BigDecimal.ZERO);
+			matureReportDto.setRedemFee(BigDecimal.ZERO);
 			for ( RepFeeTrd fee:listFee ) {
 				if ("01".equals(fee.getFeeType()) ) {
-					settReportDto.setTrustFee(fee.getAccrual());
+					matureReportDto.setTrustFee(fee.getAccrual());
 				} else if ("02".equals(fee.getFeeType()) ) {
-					settReportDto.setMgrFee(fee.getAccrual());
+					matureReportDto.setMgrFee(fee.getAccrual());
 				} else if ("03".equals(fee.getFeeType()) ) {
-					settReportDto.setFloatFee(fee.getAccrual());
+					matureReportDto.setFloatFee(fee.getAccrual());
 				} else if ("04".equals(fee.getFeeType()) ) {
-					settReportDto.setSaleFee(fee.getAccrual());
+					matureReportDto.setSaleFee(fee.getAccrual());
 				} else if ("05".equals(fee.getFeeType()) ) {
-					settReportDto.setPurFee(fee.getAccrual());
+					matureReportDto.setPurFee(fee.getAccrual());
 				} else if ("06".equals(fee.getFeeType()) ) {
-					settReportDto.setRedemFee(fee.getAccrual());
+					matureReportDto.setRedemFee(fee.getAccrual());
 				}
 			}
-			listResult.add(CollectionUtils.bean2Map(settReportDto));
+			listResult.add(CollectionUtils.bean2Map(matureReportDto));
 		} catch (Exception e) {
 			logger.error("到期报表数据错误", e);
 			e.printStackTrace();
 		}
 
 		return listResult;
+	}
+	
+	/**
+	 * 下一个工作日，不包含当日
+	 * @param currDate
+	 * @return
+	 */
+	private Date getNextWorkDate(Date currDate ) {
+		ChbMktHolidayKey key = new ChbMktHolidayKey();
+		Date iDate = currDate;
+		do {
+			iDate = DateUtil.addDay(iDate, 1);
+			key.setBusiDate(iDate);
+			key.setMarketCode("01");
+			ChbMktHoliday holiday = chbMktHolidayMapper.selectByPrimaryKey(key);
+			if ( holiday==null ) {
+				return iDate;
+			}
+			if ( "0".equals(holiday.getIsHoliday()) ) {  //工作日
+				return iDate;
+			}
+		} while (true);
+
 	}
 
 }
