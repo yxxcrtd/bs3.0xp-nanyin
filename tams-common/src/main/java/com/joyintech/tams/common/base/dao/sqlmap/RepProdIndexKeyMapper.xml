@@ -43,10 +43,12 @@
         <include refid="com.joyintech.tams.common.base.dao.RepProdInfoMapper.Base_Column_List" />
         from REP_PROD_INDEX
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
+        and VALUE_DATE = #{valueDate,jdbcType=DATE}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
         delete from REP_PROD_INDEX
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
+        and VALUE_DATE = #{valueDate,jdbcType=DATE}
     </delete>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepProdIndexKey" >
         insert into REP_PROD_INDEX (PROD_ID,VALUE_DATE,P_ASSETS,
@@ -176,15 +178,12 @@
                                     #{status,jdbcType=VARCHAR} STATUS,CREATE_USER, CREATE_DEPT,
                                     CREATE_TIME,#{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,#{errorMsg,jdbcType=VARCHAR} ERRORMSG
              from REP_PROD_INDEX
-             where STATUS = 'E' and PROD_ID = #{prodId,jdbcType=VARCHAR}
+             where STATUS = 'E' and PROD_ID = #{prodId,jdbcType=VARCHAR} and VALUE_DATE = #{valueDate,jdbcType=DATE}
     </insert>
 
     <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepProdIndexKey" >
         update REP_PROD_INDEX
         <set >
-            <if test="valueDate != null" >
-                VALUE_DATE = #{valueDate,jdbcType=DATE},
-            </if>
             <if test="pAssets != null" >
                 P_ASSETS = #{pAssets,jdbcType=DECIMAL},
             </if>
@@ -220,11 +219,11 @@
             </if>
         </set>
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
+        and VALUE_DATE = #{valueDate,jdbcType=DATE}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepProdIndexKey" >
         update REP_REL_DEAL
-        set VALUE_DATE = #{valueDate,jdbcType=DATE},
-            P_ASSETS = #{pAssets,jdbcType=DECIMAL},
+        set P_ASSETS = #{pAssets,jdbcType=DECIMAL},
             ASSETS_VALUE = #{assetsValue,jdbcType=DECIMAL},
             CAPITAL = #{capital,jdbcType=DECIMAL},
             UNIT_VALUE = #{unitValue,jdbcType=DECIMAL},
@@ -235,6 +234,7 @@
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             STATUS = #{status,jdbcType=VARCHAR},
             ERRORMSG = #{errorMsg,jdbcType=VARCHAR}
-        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+            where PROD_ID = #{prodId,jdbcType=VARCHAR}
+            and VALUE_DATE = #{valueDate,jdbcType=DATE}
     </update>
 </mapper>
