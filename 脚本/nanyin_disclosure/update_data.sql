@@ -310,15 +310,15 @@ insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAU
 values ('RAISE_TYPE', '02', '私募', 2, '0', 'system', null, sysdate, 'system', sysdate, null);
 -- add by zhengxiaolian 2022-07-20 	数据字典 募集方式修改 end 
 
--- add by zhengxiaolian 2022-07-20 	数据字典 募集方式修改 start 
-delete from sys_datadict_list where DICT_CODE='BASIS_DATE_TYPE';
+-- add by zhengxiaolian 2022-07-22 	数据字典 基准日新增枚举值 start 
+delete from sys_datadict_list where DICT_CODE='BASIS_DATE_TYPE' and ITEM_CODE in ('14','15');
 
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('BASIS_DATE_TYPE', '01', '公募', 1, '0', 'system', null, sysdate, 'system', sysdate, null);
+values ('BASIS_DATE_TYPE', '14', '当期收益分配基准日', 14, '0', 'system', null, sysdate, 'system', sysdate, null);
 
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('BASIS_DATE_TYPE', '02', '私募', 2, '0', 'system', null, sysdate, 'system', sysdate, null);
--- add by zhengxiaolian 2022-07-20 	数据字典 募集方式修改 end
+values ('BASIS_DATE_TYPE', '15', '自动赎回日', 15, '0', 'system', null, sysdate, 'system', sysdate, null);
+-- add by zhengxiaolian 2022-07-22 	数据字典 基准日新增枚举值 end
 
 -- add by zhengxiaolian 2022-07-22 	增加数据字典 信批产品类别 start
 delete from sys_datadict where DICT_CODE='REP_PROD_TYPE' ;
