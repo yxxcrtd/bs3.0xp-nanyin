@@ -55,6 +55,10 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
 
     /***add by liepeng 20191106 start**/
 	 基准日_巨额赎回调整日(DictCode.基准日,"12","分红确认日"),
+
+    基准日_当期收益分配基准日(DictCode.基准日,"14","当期收益分配基准日"),
+
+    基准日_自动赎回日(DictCode.基准日,"15","自动赎回日"),
 	   基准日_募集上线调整日(DictCode.基准日,"13","分红确认日"),
 	   披露发送标识_发送状态(DictCode.披露发送标识,"01","发送状态"),
 	   披露发送标识_反馈状态(DictCode.披露发送标识,"02","反馈状态"),

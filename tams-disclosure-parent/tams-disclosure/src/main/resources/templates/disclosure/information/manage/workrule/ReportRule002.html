@@ -78,6 +78,20 @@
 						</div>
 						<div class="layui-form-item">
 							<div class="layui-inline layui-col-md4">
+								<label class="layui-form-label form-lable" style="width: 100px"> 日历类型
+									<i class="iconfont must" style="display: inline;">*</i>
+								</label>
+								<div class="layui-input-inline input-inline">
+									<input id="marketCode" name="marketCode"
+										   class="layui-input form-input input-select"
+										   data-th-formatoption="false"
+										   data-th-data-result="${BATCH_QUARTZ_SKIP_HOLIDAY_MARKET_CAL_TYPE}" allowClear="true"
+										   placeholder="请输入内容" data-th-Value="${entity?.marketCode}">
+								</div>
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<div class="layui-inline layui-col-md4">
 								<label class="layui-form-label form-lable" style="width: 100px"> 
 									基准日 <i class="iconfont must" style="display: inline;">*</i>
 								</label>

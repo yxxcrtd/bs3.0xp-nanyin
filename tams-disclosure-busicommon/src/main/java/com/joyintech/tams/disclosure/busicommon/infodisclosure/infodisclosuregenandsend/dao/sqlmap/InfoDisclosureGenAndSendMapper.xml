@@ -28,20 +28,21 @@
 			info.REPORT_TYPE reportType,
 			info.REP_ORDER repOrder,
 			info.REPORT_CATEGORY reportCategory,
-			prod.OPEN_MODE openMode,
+			null openMode,
 			prod.PROD_TYPE prodType,
-			prod.ISSUE_MODE issueMode,
-			prod.ACT_MDATE actMdate,
+			null issueMode,
+			null actMdate,
 			prod.SET_DATE setDate,
-			prod.VDATE vdate,
+			null vdate,
 			prod.MDATE mdate,
-			prod.TERM term,
-			prod.WINDUP_DATE windupDate,
+			null term,
+			null windupDate,
 			prod.PROFIT_TYPE profitType,
 			prod.RAISE_TYPE raiseType,
-			nvl(prod.RAISE_MIN,0) raiseMin,
-    		nvl(prod.RAISE_MAX,0) raiseMax,
-    		nvl(prod.RAISE_AMT,0) raiseAmt
+			0 raiseMin,
+			0 raiseMax,
+    		nvl(prod.RAISE_AMT,0) raiseAmt,
+			rule.MARKET_CODE marketCode
 		FROM
 			REP_INSTALL_FILE files
 			LEFT JOIN REP_INFO info
@@ -49,6 +50,8 @@
 			left join REP_PROD_INFO prod
 			on files.PRODID = prod.PROD_ID
 			and prod.STATUS = 'E'
+			left join rep_rule rule
+			on rule.REP_ID=files.REP_ID
 			order by JOB_SEQ desc
 		<!-- WHERE
 		files.EXEC_STATUS IN ('01','02') -->

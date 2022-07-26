@@ -59,7 +59,7 @@ public class RevealDeadLineService {
 			}
 			else {
 				//若map中有，则直接在map中取值，否则查询工作日，并放入map中
-				String key = DateUtil.format(basisDate) + GlobalConstant.VERTICAL_LINE + repRule.getRevealType()
+				String key = repRule.getMarketCode() + GlobalConstant.VERTICAL_LINE + DateUtil.format(basisDate) + GlobalConstant.VERTICAL_LINE + repRule.getRevealType()
 					+ GlobalConstant.VERTICAL_LINE + repRule.getRevealValue();
 				if(dateMap.get(key)!=null){
 					date = dateMap.get(key);
@@ -67,11 +67,11 @@ public class RevealDeadLineService {
 				else{
 				    String dates = DateUtil.format(basisDate);
 				    if(days>0){
-				    	holidaymarket001Dto = chbDeadLineMapper.getChbDeadline(DisclosureDictCodeList.交易市场_中国法定节假日.getValue(),
+				    	holidaymarket001Dto = chbDeadLineMapper.getChbDeadline(repRule.getMarketCode(),
 			                       dates, repRule.getRevealType() , days);
 				    }
 				    else{
-				    	holidaymarket001Dto = chbDeadLineMapper.getChbDeadlineZero(DisclosureDictCodeList.交易市场_中国法定节假日.getValue(),
+				    	holidaymarket001Dto = chbDeadLineMapper.getChbDeadlineZero(repRule.getMarketCode(),
 			                       dates, repRule.getRevealType());
 				    }
 				    if(holidaymarket001Dto != null){
@@ -124,7 +124,7 @@ public class RevealDeadLineService {
 			}
 			else {
 				//若map中有，则直接在map中取值，否则查询工作日，并放入map中
-				String key = DateUtil.format(basisDate) + GlobalConstant.VERTICAL_LINE + repRule.getMakeType()
+				String key = repRule.getMarketCode()+ GlobalConstant.VERTICAL_LINE +DateUtil.format(basisDate) + GlobalConstant.VERTICAL_LINE + repRule.getMakeType()
 					+ GlobalConstant.VERTICAL_LINE + repRule.getMakeValue();
 				if(dateMap.get(key)!=null){
 					date = dateMap.get(key);
@@ -132,11 +132,11 @@ public class RevealDeadLineService {
 				else{
 				    String dates = DateUtil.format(basisDate);
 				    if(days>0){
-				    	holidaymarket001Dto = chbDeadLineMapper.getChbDeadline(DisclosureDictCodeList.交易市场_中国法定节假日.getValue(),
+				    	holidaymarket001Dto = chbDeadLineMapper.getChbDeadline(repRule.getMarketCode(),
 			                       dates, repRule.getMakeType() , days);
 				    }
 				    else{
-				    	holidaymarket001Dto = chbDeadLineMapper.getChbDeadlineZero(DisclosureDictCodeList.交易市场_中国法定节假日.getValue(),
+				    	holidaymarket001Dto = chbDeadLineMapper.getChbDeadlineZero(repRule.getMarketCode(),
 			                       dates, repRule.getMakeType());
 				    }
 				    if(holidaymarket001Dto != null){
@@ -177,7 +177,7 @@ public class RevealDeadLineService {
 			}
 			else {
 				//若map中有，则直接在map中取值，否则查询工作日，并放入map中
-				String key = DateUtil.format(sysDate) + GlobalConstant.VERTICAL_LINE + repRule.getMakeType()
+				String key = repRule.getMarketCode()+ GlobalConstant.VERTICAL_LINE +DateUtil.format(sysDate) + GlobalConstant.VERTICAL_LINE + repRule.getMakeType()
 					+ GlobalConstant.VERTICAL_LINE + repRule.getMakeValue();
 				Date date ;
 				if(dateMap.get(key)!=null){
@@ -186,11 +186,11 @@ public class RevealDeadLineService {
 				else{
 				    String dates = DateUtil.format(sysDate);
 				    if(days>0){
-				    	holidaymarket001Dto = chbDeadLineMapper.getInfoDeadline(DisclosureDictCodeList.交易市场_中国法定节假日.getValue(),
+				    	holidaymarket001Dto = chbDeadLineMapper.getInfoDeadline(repRule.getMarketCode(),
 			                       dates, repRule.getMakeType() , days);
 				    }
 				    else{
-				    	holidaymarket001Dto = chbDeadLineMapper.getInfoDeadlineZero(DisclosureDictCodeList.交易市场_中国法定节假日.getValue(),
+				    	holidaymarket001Dto = chbDeadLineMapper.getInfoDeadlineZero(repRule.getMarketCode(),
 			                       dates, repRule.getMakeType());
 				    }
 				    if(holidaymarket001Dto != null){
@@ -207,8 +207,8 @@ public class RevealDeadLineService {
 				listDate.add(date);
 				//若类型为生产时点后的，若后一天日节假日，则取出前面的节假日
 				if(StringUtil.equals(DictCodeListExt2.基准区分_基准日后.getValue(), repRule.getMakeType())){
-					if(date!=null&&!this.isWorkDay(DateUtil.addDay(date, 1), DisclosureDictCodeList.交易市场_中国法定节假日.getValue())){
-						holidaymarket001Dto = chbDeadLineMapper.getChbDeadline(DisclosureDictCodeList.交易市场_中国法定节假日.getValue(),
+					if(date!=null&&!this.isWorkDay(DateUtil.addDay(date, 1), repRule.getMarketCode())){
+						holidaymarket001Dto = chbDeadLineMapper.getChbDeadline(repRule.getMarketCode(),
 								DateUtil.format(date), repRule.getMakeType() , 1);
 						if(holidaymarket001Dto!=null){
 							Date busiDate = DateUtil.addDay(holidaymarket001Dto.getBusiDate(), -1);
@@ -221,8 +221,8 @@ public class RevealDeadLineService {
 				}
 				//若类型为生产时点前的，若前一天日节假日，则取出前面的节假日
 				else{
-					if(date!=null&&!this.isWorkDay(DateUtil.addDay(date, -1), DisclosureDictCodeList.交易市场_中国法定节假日.getValue())){
-						holidaymarket001Dto = chbDeadLineMapper.getChbDeadline(DisclosureDictCodeList.交易市场_中国法定节假日.getValue(),
+					if(date!=null&&!this.isWorkDay(DateUtil.addDay(date, -1), repRule.getMarketCode())){
+						holidaymarket001Dto = chbDeadLineMapper.getChbDeadline(repRule.getMarketCode(),
 								DateUtil.format(date), repRule.getMakeType() , 1);
 						if(holidaymarket001Dto!=null){
 							Date busiDate = DateUtil.addDay(holidaymarket001Dto.getBusiDate(), 1);
@@ -270,7 +270,7 @@ public class RevealDeadLineService {
 			}
 			else {
 				//若map中有，则直接在map中取值，否则查询工作日，并放入map中
-				String key = DateUtil.format(sysDate) + GlobalConstant.VERTICAL_LINE + repRule.getMakeType()
+				String key = repRule.getMarketCode()+ GlobalConstant.VERTICAL_LINE +DateUtil.format(sysDate) + GlobalConstant.VERTICAL_LINE + repRule.getMakeType()
 					+ GlobalConstant.VERTICAL_LINE + repRule.getMakeValue();
 				Date date ;
 				if(dateMap.get(key)!=null){
@@ -279,11 +279,11 @@ public class RevealDeadLineService {
 				else{
 				    String dates = DateUtil.format(sysDate);
 				    if(days>0){
-				    	holidaymarket001Dto = chbDeadLineMapper.getInfoDeadline(DisclosureDictCodeList.交易市场_中国法定节假日.getValue(),
+				    	holidaymarket001Dto = chbDeadLineMapper.getInfoDeadline(repRule.getMarketCode(),
 			                       dates, repRule.getMakeType() , days);
 				    }
 				    else{
-				    	holidaymarket001Dto = chbDeadLineMapper.getInfoDeadlineZero(DisclosureDictCodeList.交易市场_中国法定节假日.getValue(),
+				    	holidaymarket001Dto = chbDeadLineMapper.getInfoDeadlineZero(repRule.getMarketCode(),
 			                       dates, repRule.getMakeType());
 				    }
 				    if(holidaymarket001Dto != null){
@@ -300,8 +300,8 @@ public class RevealDeadLineService {
 				listDate.add(date);
 				//若类型为生产时点后的，若后一天日节假日，则取出前面的节假日
 				if(StringUtil.equals(DictCodeListExt2.基准区分_基准日后.getValue(), repRule.getMakeType())){
-					if(date!=null&&!this.isWorkDay(DateUtil.addDay(date, 1), DisclosureDictCodeList.交易市场_中国法定节假日.getValue())){
-						holidaymarket001Dto = chbDeadLineMapper.getChbDeadline(DisclosureDictCodeList.交易市场_中国法定节假日.getValue(),
+					if(date!=null&&!this.isWorkDay(DateUtil.addDay(date, 1), repRule.getMarketCode())){
+						holidaymarket001Dto = chbDeadLineMapper.getChbDeadline(repRule.getMarketCode(),
 								DateUtil.format(date), repRule.getMakeType() , 1);
 						if(holidaymarket001Dto!=null){
 							Date busiDate = DateUtil.addDay(holidaymarket001Dto.getBusiDate(), -1);
@@ -314,8 +314,8 @@ public class RevealDeadLineService {
 				}
 				//若类型为生产时点前的，若前一天日节假日，则取出前面的节假日
 				else{
-					if(date!=null&&!this.isWorkDay(DateUtil.addDay(date, -1), DisclosureDictCodeList.交易市场_中国法定节假日.getValue())){
-						holidaymarket001Dto = chbDeadLineMapper.getChbDeadline(DisclosureDictCodeList.交易市场_中国法定节假日.getValue(),
+					if(date!=null&&!this.isWorkDay(DateUtil.addDay(date, -1), repRule.getMarketCode())){
+						holidaymarket001Dto = chbDeadLineMapper.getChbDeadline(repRule.getMarketCode(),
 								DateUtil.format(date), repRule.getMakeType() , 1);
 						if(holidaymarket001Dto!=null){
 							Date busiDate = DateUtil.addDay(holidaymarket001Dto.getBusiDate(), 1);
@@ -355,7 +355,7 @@ public class RevealDeadLineService {
 			}
 			else {
 				//若map中有，则直接在map中取值，否则查询工作日，并放入map中
-				String key = DateUtil.format(sysDate) + GlobalConstant.VERTICAL_LINE + repRule.getMakeType()
+				String key = repRule.getMarketCode()+ GlobalConstant.VERTICAL_LINE +DateUtil.format(sysDate) + GlobalConstant.VERTICAL_LINE + repRule.getMakeType()
 					+ GlobalConstant.VERTICAL_LINE + repRule.getMakeValue();
 				Date date ;
 				if(dateMap.get(key)!=null){
@@ -364,11 +364,11 @@ public class RevealDeadLineService {
 				else{
 				    String dates = DateUtil.format(sysDate);
 				    if(days>0){
-				    	holidaymarket001Dto = chbDeadLineMapper.getInfoDeadline(DisclosureDictCodeList.交易市场_中国法定节假日.getValue(),
+				    	holidaymarket001Dto = chbDeadLineMapper.getInfoDeadline(repRule.getMarketCode(),
 			                       dates, repRule.getMakeType() , days);
 				    }
 				    else{
-				    	holidaymarket001Dto = chbDeadLineMapper.getInfoDeadlineZero(DisclosureDictCodeList.交易市场_中国法定节假日.getValue(),
+				    	holidaymarket001Dto = chbDeadLineMapper.getInfoDeadlineZero(repRule.getMarketCode(),
 			                       dates, repRule.getMakeType());
 				    }
 				    if(holidaymarket001Dto != null){
@@ -385,8 +385,8 @@ public class RevealDeadLineService {
 				listDate.add(date);
 				//若类型为生产时点后的，若后一天日节假日，则取出前面的节假日
 				if(StringUtil.equals(DisclosureDictCodeList.生成时点类型_后.getValue(), repRule.getMakeType())){
-					if(date!=null&&!this.isWorkDay(DateUtil.addDay(date, 1), DisclosureDictCodeList.交易市场_中国法定节假日.getValue())){
-						holidaymarket001Dto = chbDeadLineMapper.getChbDeadline(DisclosureDictCodeList.交易市场_中国法定节假日.getValue(),
+					if(date!=null&&!this.isWorkDay(DateUtil.addDay(date, 1), repRule.getMarketCode())){
+						holidaymarket001Dto = chbDeadLineMapper.getChbDeadline(repRule.getMarketCode(),
 								DateUtil.format(date), repRule.getMakeType() , 1);
 						if(holidaymarket001Dto!=null){
 							Date busiDate = DateUtil.addDay(holidaymarket001Dto.getBusiDate(), -1);
@@ -399,8 +399,8 @@ public class RevealDeadLineService {
 				}
 				//若类型为生产时点前的，若前一天日节假日，则取出前面的节假日
 				else{
-					if(date!=null&&!this.isWorkDay(DateUtil.addDay(date, -1), DisclosureDictCodeList.交易市场_中国法定节假日.getValue())){
-						holidaymarket001Dto = chbDeadLineMapper.getChbDeadline(DisclosureDictCodeList.交易市场_中国法定节假日.getValue(),
+					if(date!=null&&!this.isWorkDay(DateUtil.addDay(date, -1), repRule.getMarketCode())){
+						holidaymarket001Dto = chbDeadLineMapper.getChbDeadline(repRule.getMarketCode(),
 								DateUtil.format(date), repRule.getMakeType() , 1);
 						if(holidaymarket001Dto!=null){
 							Date busiDate = DateUtil.addDay(holidaymarket001Dto.getBusiDate(), 1);
@@ -441,7 +441,7 @@ public class RevealDeadLineService {
 			}
 			else {
 				//若map中有，则直接在map中取值，否则查询工作日，并放入map中
-				String key = DateUtil.format(sysDate) + GlobalConstant.VERTICAL_LINE + repRule.getMakeType()
+				String key = repRule.getMarketCode()+ GlobalConstant.VERTICAL_LINE +DateUtil.format(sysDate) + GlobalConstant.VERTICAL_LINE + repRule.getMakeType()
 					+ GlobalConstant.VERTICAL_LINE + repRule.getMakeValue();
 				Date date ;
 				if(dateMap.get(key)!=null){
@@ -450,11 +450,11 @@ public class RevealDeadLineService {
 				else{
 				    String dates = DateUtil.format(sysDate);
 				    if(days>0){
-				    	holidaymarket001Dto = chbDeadLineMapper.getInfoDeadline(DisclosureDictCodeList.交易市场_中国法定节假日.getValue(),
+				    	holidaymarket001Dto = chbDeadLineMapper.getInfoDeadline(repRule.getMarketCode(),
 			                       dates, repRule.getMakeType() , days);
 				    }
 				    else{
-				    	holidaymarket001Dto = chbDeadLineMapper.getInfoDeadlineZero(DisclosureDictCodeList.交易市场_中国法定节假日.getValue(),
+				    	holidaymarket001Dto = chbDeadLineMapper.getInfoDeadlineZero(repRule.getMarketCode(),
 			                       dates, repRule.getMakeType());
 				    }
 				    if(holidaymarket001Dto != null){
@@ -471,8 +471,8 @@ public class RevealDeadLineService {
 				listDate.add(date);
 				//若类型为生产时点后的，若后一天日节假日，则取出前面的节假日
 				if(StringUtil.equals(DisclosureDictCodeList.生成时点类型_后.getValue(), repRule.getMakeType())){
-					if(date!=null&&!this.isWorkDay(DateUtil.addDay(date, 1), DisclosureDictCodeList.交易市场_中国法定节假日.getValue())){
-						holidaymarket001Dto = chbDeadLineMapper.getChbDeadline(DisclosureDictCodeList.交易市场_中国法定节假日.getValue(),
+					if(date!=null&&!this.isWorkDay(DateUtil.addDay(date, 1), repRule.getMarketCode())){
+						holidaymarket001Dto = chbDeadLineMapper.getChbDeadline(repRule.getMarketCode(),
 								DateUtil.format(date), repRule.getMakeType() , 1);
 						if(holidaymarket001Dto!=null){
 							Date busiDate = DateUtil.addDay(holidaymarket001Dto.getBusiDate(), -1);
@@ -485,8 +485,8 @@ public class RevealDeadLineService {
 				}
 				//若类型为生产时点前的，若前一天日节假日，则取出前面的节假日
 				else{
-					if(date!=null&&!this.isWorkDay(DateUtil.addDay(date, -1), DisclosureDictCodeList.交易市场_中国法定节假日.getValue())){
-						holidaymarket001Dto = chbDeadLineMapper.getChbDeadline(DisclosureDictCodeList.交易市场_中国法定节假日.getValue(),
+					if(date!=null&&!this.isWorkDay(DateUtil.addDay(date, -1), repRule.getMarketCode())){
+						holidaymarket001Dto = chbDeadLineMapper.getChbDeadline(repRule.getMarketCode(),
 								DateUtil.format(date), repRule.getMakeType() , 1);
 						if(holidaymarket001Dto!=null){
 							Date busiDate = DateUtil.addDay(holidaymarket001Dto.getBusiDate(), 1);
@@ -512,5 +512,263 @@ public class RevealDeadLineService {
 		   //Date openDate = chbDeadLineMapper.getOpenRevealDate(prodId, date, repRule.getBasisDateType());
 		   return null;
 	   }
+
+	public Date isCanGenDQSYFP(RepRuleEntity repRule, Map<String, Date> dateMap, Date sysDate, String prodId){
+		int days = Integer.parseInt(repRule.getMakeValue());
+		//日期list
+		List<Date> listDate = new ArrayList<Date>();
+		//披露截止日期
+		ChbDeadLine001Dto holidaymarket001Dto = new ChbDeadLine001Dto();
+		if(StringUtil.equals(DisclosureDictCodeList.日期类型_自然日.getValue(), repRule.getMakeDateType())){
+			if(StringUtil.equals(DisclosureDictCodeList.生成时点类型_后.getValue(), repRule.getMakeType())){
+				days = -1*days;
+			}
+			listDate.add(DateUtil.addDay(sysDate, days));
+		}
+		else {
+			//若map中有，则直接在map中取值，否则查询工作日，并放入map中
+			String key = repRule.getMarketCode()+ GlobalConstant.VERTICAL_LINE +DateUtil.format(sysDate) + GlobalConstant.VERTICAL_LINE + repRule.getMakeType()
+					+ GlobalConstant.VERTICAL_LINE + repRule.getMakeValue();
+			Date date ;
+			if(dateMap.get(key)!=null){
+				date = dateMap.get(key);
+			}
+			else{
+				String dates = DateUtil.format(sysDate);
+				if(days>0){
+					holidaymarket001Dto = chbDeadLineMapper.getInfoDeadline(repRule.getMarketCode(),
+							dates, repRule.getMakeType() , days);
+				}
+				else{
+					holidaymarket001Dto = chbDeadLineMapper.getInfoDeadlineZero(repRule.getMarketCode(),
+							dates, repRule.getMakeType());
+				}
+				if(holidaymarket001Dto != null){
+					date = holidaymarket001Dto.getBusiDate();
+				}
+				else{
+					if(StringUtil.equals(DisclosureDictCodeList.生成时点类型_后.getValue(), repRule.getMakeType())){
+						days = -1*days;
+					}
+					date = DateUtil.addDay(sysDate, days);
+				}
+				dateMap.put(key, date);
+			}
+			listDate.add(date);
+			//若类型为生产时点后的，若后一天日节假日，则取出前面的节假日
+			if(StringUtil.equals(DisclosureDictCodeList.生成时点类型_后.getValue(), repRule.getMakeType())){
+				if(date!=null&&!this.isWorkDay(DateUtil.addDay(date, 1), repRule.getMarketCode())){
+					holidaymarket001Dto = chbDeadLineMapper.getChbDeadline(repRule.getMarketCode(),
+							DateUtil.format(date), repRule.getMakeType() , 1);
+					if(holidaymarket001Dto!=null){
+						Date busiDate = DateUtil.addDay(holidaymarket001Dto.getBusiDate(), -1);
+						while(DateUtil.compareDate(busiDate, date)>0){
+							listDate.add(busiDate);
+							busiDate = DateUtil.addDay(busiDate, -1);
+						}
+					}
+				}
+			}
+			//若类型为生产时点前的，若前一天日节假日，则取出前面的节假日
+			else{
+				if(date!=null&&!this.isWorkDay(DateUtil.addDay(date, -1), repRule.getMarketCode())){
+					holidaymarket001Dto = chbDeadLineMapper.getChbDeadline(repRule.getMarketCode(),
+							DateUtil.format(date), repRule.getMakeType() , 1);
+					if(holidaymarket001Dto!=null){
+						Date busiDate = DateUtil.addDay(holidaymarket001Dto.getBusiDate(), 1);
+						while(DateUtil.compareDate(busiDate, date)<0){
+							listDate.add(busiDate);
+							busiDate = DateUtil.addDay(busiDate, 1);
+						}
+					}
+				}
+			}
+		}
+		//将传入加减个规则日期获取基准日
+//		   Date openDate = null;
+		for (Date execDate : listDate) {
+			//修改查询
+			if(execDate!=null){
+				Date openDate = chbDeadLineMapper.getDQSYFPDate(prodId, execDate);
+				if(openDate!=null){
+					return openDate;
+				}
+			}
+		}
+		//Date openDate = chbDeadLineMapper.getOpenRevealDate(prodId, date, repRule.getBasisDateType());
+		return null;
+	}
+
+	public Date isCanGenZDSH(RepRuleEntity repRule, Map<String, Date> dateMap, Date sysDate, String prodId){
+		int days = Integer.parseInt(repRule.getMakeValue());
+		//日期list
+		List<Date> listDate = new ArrayList<Date>();
+		//披露截止日期
+		ChbDeadLine001Dto holidaymarket001Dto = new ChbDeadLine001Dto();
+		if(StringUtil.equals(DisclosureDictCodeList.日期类型_自然日.getValue(), repRule.getMakeDateType())){
+			if(StringUtil.equals(DisclosureDictCodeList.生成时点类型_后.getValue(), repRule.getMakeType())){
+				days = -1*days;
+			}
+			listDate.add(DateUtil.addDay(sysDate, days));
+		}
+		else {
+			//若map中有，则直接在map中取值，否则查询工作日，并放入map中
+			String key = repRule.getMarketCode()+ GlobalConstant.VERTICAL_LINE +DateUtil.format(sysDate) + GlobalConstant.VERTICAL_LINE + repRule.getMakeType()
+					+ GlobalConstant.VERTICAL_LINE + repRule.getMakeValue();
+			Date date ;
+			if(dateMap.get(key)!=null){
+				date = dateMap.get(key);
+			}
+			else{
+				String dates = DateUtil.format(sysDate);
+				if(days>0){
+					holidaymarket001Dto = chbDeadLineMapper.getInfoDeadline(repRule.getMarketCode(),
+							dates, repRule.getMakeType() , days);
+				}
+				else{
+					holidaymarket001Dto = chbDeadLineMapper.getInfoDeadlineZero(repRule.getMarketCode(),
+							dates, repRule.getMakeType());
+				}
+				if(holidaymarket001Dto != null){
+					date = holidaymarket001Dto.getBusiDate();
+				}
+				else{
+					if(StringUtil.equals(DisclosureDictCodeList.生成时点类型_后.getValue(), repRule.getMakeType())){
+						days = -1*days;
+					}
+					date = DateUtil.addDay(sysDate, days);
+				}
+				dateMap.put(key, date);
+			}
+			listDate.add(date);
+			//若类型为生产时点后的，若后一天日节假日，则取出前面的节假日
+			if(StringUtil.equals(DisclosureDictCodeList.生成时点类型_后.getValue(), repRule.getMakeType())){
+				if(date!=null&&!this.isWorkDay(DateUtil.addDay(date, 1), repRule.getMarketCode())){
+					holidaymarket001Dto = chbDeadLineMapper.getChbDeadline(repRule.getMarketCode(),
+							DateUtil.format(date), repRule.getMakeType() , 1);
+					if(holidaymarket001Dto!=null){
+						Date busiDate = DateUtil.addDay(holidaymarket001Dto.getBusiDate(), -1);
+						while(DateUtil.compareDate(busiDate, date)>0){
+							listDate.add(busiDate);
+							busiDate = DateUtil.addDay(busiDate, -1);
+						}
+					}
+				}
+			}
+			//若类型为生产时点前的，若前一天日节假日，则取出前面的节假日
+			else{
+				if(date!=null&&!this.isWorkDay(DateUtil.addDay(date, -1), repRule.getMarketCode())){
+					holidaymarket001Dto = chbDeadLineMapper.getChbDeadline(repRule.getMarketCode(),
+							DateUtil.format(date), repRule.getMakeType() , 1);
+					if(holidaymarket001Dto!=null){
+						Date busiDate = DateUtil.addDay(holidaymarket001Dto.getBusiDate(), 1);
+						while(DateUtil.compareDate(busiDate, date)<0){
+							listDate.add(busiDate);
+							busiDate = DateUtil.addDay(busiDate, 1);
+						}
+					}
+				}
+			}
+		}
+		//将传入加减个规则日期获取基准日
+//		   Date openDate = null;
+		for (Date execDate : listDate) {
+			//修改查询
+			if(execDate!=null){
+				Date openDate = chbDeadLineMapper.getZDSHDate(prodId, execDate);
+				if(openDate!=null){
+					return openDate;
+				}
+			}
+		}
+		//Date openDate = chbDeadLineMapper.getOpenRevealDate(prodId, date, repRule.getBasisDateType());
+		return null;
+	}
+
+	public Date isCanGenCLR(RepRuleEntity repRule, Map<String, Date> dateMap, Date sysDate, String prodId){
+		int days = Integer.parseInt(repRule.getMakeValue());
+		//日期list
+		List<Date> listDate = new ArrayList<Date>();
+		//披露截止日期
+		ChbDeadLine001Dto holidaymarket001Dto = new ChbDeadLine001Dto();
+		if(StringUtil.equals(DisclosureDictCodeList.日期类型_自然日.getValue(), repRule.getMakeDateType())){
+			if(StringUtil.equals(DisclosureDictCodeList.生成时点类型_后.getValue(), repRule.getMakeType())){
+				days = -1*days;
+			}
+			listDate.add(DateUtil.addDay(sysDate, days));
+		}
+		else {
+			//若map中有，则直接在map中取值，否则查询工作日，并放入map中
+			String key = repRule.getMarketCode()+ GlobalConstant.VERTICAL_LINE +DateUtil.format(sysDate) + GlobalConstant.VERTICAL_LINE + repRule.getMakeType()
+					+ GlobalConstant.VERTICAL_LINE + repRule.getMakeValue();
+			Date date ;
+			if(dateMap.get(key)!=null){
+				date = dateMap.get(key);
+			}
+			else{
+				String dates = DateUtil.format(sysDate);
+				if(days>0){
+					holidaymarket001Dto = chbDeadLineMapper.getInfoDeadline(repRule.getMarketCode(),
+							dates, repRule.getMakeType() , days);
+				}
+				else{
+					holidaymarket001Dto = chbDeadLineMapper.getInfoDeadlineZero(repRule.getMarketCode(),
+							dates, repRule.getMakeType());
+				}
+				if(holidaymarket001Dto != null){
+					date = holidaymarket001Dto.getBusiDate();
+				}
+				else{
+					if(StringUtil.equals(DisclosureDictCodeList.生成时点类型_后.getValue(), repRule.getMakeType())){
+						days = -1*days;
+					}
+					date = DateUtil.addDay(sysDate, days);
+				}
+				dateMap.put(key, date);
+			}
+			listDate.add(date);
+			//若类型为生产时点后的，若后一天日节假日，则取出前面的节假日
+			if(StringUtil.equals(DisclosureDictCodeList.生成时点类型_后.getValue(), repRule.getMakeType())){
+				if(date!=null&&!this.isWorkDay(DateUtil.addDay(date, 1), repRule.getMarketCode())){
+					holidaymarket001Dto = chbDeadLineMapper.getChbDeadline(repRule.getMarketCode(),
+							DateUtil.format(date), repRule.getMakeType() , 1);
+					if(holidaymarket001Dto!=null){
+						Date busiDate = DateUtil.addDay(holidaymarket001Dto.getBusiDate(), -1);
+						while(DateUtil.compareDate(busiDate, date)>0){
+							listDate.add(busiDate);
+							busiDate = DateUtil.addDay(busiDate, -1);
+						}
+					}
+				}
+			}
+			//若类型为生产时点前的，若前一天日节假日，则取出前面的节假日
+			else{
+				if(date!=null&&!this.isWorkDay(DateUtil.addDay(date, -1), repRule.getMarketCode())){
+					holidaymarket001Dto = chbDeadLineMapper.getChbDeadline(repRule.getMarketCode(),
+							DateUtil.format(date), repRule.getMakeType() , 1);
+					if(holidaymarket001Dto!=null){
+						Date busiDate = DateUtil.addDay(holidaymarket001Dto.getBusiDate(), 1);
+						while(DateUtil.compareDate(busiDate, date)<0){
+							listDate.add(busiDate);
+							busiDate = DateUtil.addDay(busiDate, 1);
+						}
+					}
+				}
+			}
+		}
+		//将传入加减个规则日期获取基准日
+//		   Date openDate = null;
+		for (Date execDate : listDate) {
+			//修改查询
+			if(execDate!=null){
+				Date openDate = chbDeadLineMapper.getCLRDate(prodId, execDate);
+				if(openDate!=null){
+					return openDate;
+				}
+			}
+		}
+		//Date openDate = chbDeadLineMapper.getOpenRevealDate(prodId, date, repRule.getBasisDateType());
+		return null;
+	}
 	   	   
 }

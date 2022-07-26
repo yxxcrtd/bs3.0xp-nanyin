@@ -81,7 +81,8 @@ public class RepCheckInfoService {
      * @since 1.0
      */
     public String replaceForString(String sql, String reg, String replacement) {
-        return sql.replaceAll(Pattern.quote("\\$" + reg.trim() + ""), "'" + replacement + "'");
+        //return sql.replaceAll(Pattern.quote("\\$" + reg.trim() + ""), "'" + replacement + "'");
+        return sql.replaceAll("\\$" + reg.trim() + "", "'" + replacement + "'");
     }
 
     /**
