@@ -1,21 +1,14 @@
 
 package com.joyintech.tams.disclosure.information.report.service;
-
-import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.disclosure.information.report.dao.ReportBclgg001Mapper;
-import com.joyintech.tams.disclosure.information.report.dto.ReportBclgg001Dto;
-import com.joyintech.tams.disclosure.information.report.dto.ReportFxgg001Dto;
+import com.joyintech.tams.disclosure.information.report.dao.ReportBclggMapper;
+import com.joyintech.tams.disclosure.information.report.dto.ReportBclggDto;
+import com.joyintech.tams.disclosure.rptdata.service.IReportDataService;
 import com.joyintech.tams.systemtools.service.CommonPlatformDateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 不成立公告
@@ -26,57 +19,47 @@ import java.util.Map;
  * @see ReportBclgg001Service
  * @since 1.0
  */
-@Service
-@Transactional(rollbackFor = Exception.class)
-public class ReportBclgg001Service extends BaseService<ReportFxgg001Dto> {
+@Service("reportBclgg001Service")
+public class ReportBclgg001Service implements IReportDataService {
 
     @Autowired
-    private ReportBclgg001Mapper reportBclgg001Mapper;
+    private ReportBclggMapper reportBclggMapper;
 
     @Autowired
     private CommonPlatformDateService commonPlatformDateService;
 
-   /**
-    * 根据产品代码查询不成立公告信息
-    * <一句话功能简述>
-    * <功能详细描述>
-    * @param params
-    * @return
-    * @throws Exception
-    * @see
-    * @since 1.0
-    */
-    public Map<String, Object> findBclgg(Map<String, Object> params) {
-        Map<String,Object> dataMap = new HashMap<String,Object>();
-        if (params.get("portnum") == null) {
-            return dataMap;
+    @Autowired
+    private ReportCommonService reportCommonService;
+
+    @Override
+    public List<Map<String, Object>> queryDatas(Map<String, Object> paraMap) {
+        Map<String,Object> dataMap = new HashMap<>();
+        List<Map<String,Object>> result = new ArrayList<>();
+        result.add(dataMap);
+        if (paraMap.get("pprodid") == null) {
+            return result;
         }
-        String prodId = params.get("portnum").toString();
-        Map<String,Object> searchparam = new HashMap<String,Object>();
+        String prodId = paraMap.get("pprodid").toString();
+        Map<String,Object> searchparam = new HashMap<>();
         searchparam.put("prodId", prodId);
-        ReportBclgg001Dto bclgg = reportBclgg001Mapper.queryBclgg(searchparam);
+        ReportBclggDto bclgg = reportBclggMapper.queryBclgg(searchparam);
         if (bclgg == null) {
-            return dataMap;
+            return result;
         }
-        dataMap.put("${prodName}", bclgg.getProdName());
-        dataMap.put("${regCode}", bclgg.getRegCode());
-        dataMap.put("${nocreateReson}", bclgg.getNocreateReason());
-        String raiseType = bclgg.getRaiseType();
-        if (StringUtil.equals(raiseType, DictCodeListExt2.募集方式_中债_公募.getValue())) {
-            dataMap.put("${pubType}", "公告");
-            dataMap.put("${pubString}", "特此公告。");
-        } else if (StringUtil.equals(raiseType, DictCodeListExt2.募集方式_中债_私募.getValue())) {
-            dataMap.put("${pubType}", "报告");
+        dataMap.put("prodName", bclgg.getProdName());
+        dataMap.put("regCode", bclgg.getRegCode());
+        dataMap.put("nocreateReson", bclgg.getNocreateReason());
+        // 设置公告、报告字样
+        reportCommonService.setPubString(bclgg.getRaiseType(), dataMap);
+        // 设置是否有代销机构字样
+        List<String> prodIds = new ArrayList<>();
+        prodIds.add(prodId);
+        reportCommonService.setSaleString(prodIds, dataMap);
+        String pubDateStr = commonPlatformDateService.getSysDateStr();
+        if (null != paraMap.get("enddate")) {
+            pubDateStr = (String)paraMap.get("enddate");
         }
-        if (StringUtil.equals(bclgg.getIsSalesAgency(), DictCodeListExt2.是否_是.getValue())) {
-            dataMap.put("${saleString1}", "本理财产品代销机构或");
-            dataMap.put("${saleString2}", "代销机构及");
-        }
-        Date puDate = commonPlatformDateService.getSysDate();
-        if (null != params.get("endDate")) {
-            puDate = (java.sql.Date)params.get("endDate");
-        }
-        dataMap.put("${pubDate}",DateUtil.format(puDate, DateUtil.DEFAULT_DATE_FORMAT_CN));
-        return dataMap;
+        dataMap.put("pubDate",DateUtil.format(DateUtil.parse(pubDateStr), DateUtil.DEFAULT_DATE_FORMAT_CN));
+        return result;
     }
 }

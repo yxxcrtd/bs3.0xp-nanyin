@@ -199,12 +199,12 @@
 			</div> -->
 
 			<div class="layui-form-item">
-				<div class="layui-inline layui-col-md8">
+				<div class="layui-inline layui-col-md8" style="width: 100%;">
 					<label class="layui-form-label form-lable" style="width: 180px;">
 						<i class="iconfont must" style="display: inline;">*</i> 指标值
 					</label>
 					<div class="layui-input-inline input-inline">
-						<textarea id="indexValue" name="indexValue"
+						<textarea id="indexValue" name="indexValue" style="min-height: 180px!important;;"
 							data-th-text="${entity?.indexValue}" class="layui-textarea"
 							placeholder="请输入内容"
 							data-th-placeholder="#{SysCommon.placeholder}"></textarea>

@@ -10,7 +10,10 @@
 
 package com.joyintech.tams.disclosure.rptdata.dao;
 
-import org.apache.ibatis.annotations.Mapper;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.stereotype.Repository;
 
 import com.joyintech.tams.common.base.entity.BokBalance;
@@ -23,5 +26,7 @@ import com.joyintech.tams.common.base.entity.BokBalance;
  * @since 1.0
  */
 @Repository
-public interface SettReportMapper extends tk.mybatis.mapper.common.Mapper<BokBalance>{
+public interface SettReportMapper{
+	public List<BokBalance> selectBokBalance(Map<String,Object> params );
+	
 }

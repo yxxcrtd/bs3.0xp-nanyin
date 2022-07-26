@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.joyintech.tams.disclosure.information.report.dao.ReportKfjzgg001Mapper">
+
+	<select id="getProdInfo" resultType="com.joyintech.tams.disclosure.information.report.dto.ReportKfjzgg001Dto">
+		/*
+			TITLENAME:标题名(普通产品取产品名称 ,分级产品取 母产品名称+（子产品代码）)
+		  	PRODNAME：【分级产品取“产品名称+子产品名称”；普通产品取“产品名称”】
+			PRODID：产品代码（普通产品取产品代码 ,分级产品取子产品代码）
+			REGCODE：产品登记编码（普通产品取产品登记编码 ,分级产品取母产品登记编码）
+			SETDATE：产品成立日期
+		*/
+		SELECT
+			RPI.PROD_ID prodId,
+			CASE WHEN RPI.IS_GRADE = '01' THEN
+					  RPI2.PROD_NAME ||'（'||RPI.PROD_ID||'）'
+				 ELSE RPI.PROD_NAME END titleName,
+			CASE WHEN RPI.IS_GRADE = '01' THEN
+					  RPI2.PROD_NAME ||RPI.PROD_NAME
+				 ELSE RPI.PROD_NAME END prodName,
+			RPI2.PROD_RE regCode,
+		    RPI.SET_DATE setDate
+		FROM REP_PROD_INFO RPI
+		/*查询普通产品或者母产品数据  P_PROD_ID:母产品代码：当为子产品时填写母产品代码。普通产品为自己的产品代码。母产品为空*/
+		 LEFT JOIN REP_PROD_INFO RPI2 ON RPI.P_PROD_ID = RPI2.PROD_ID AND RPI2.STATUS = 'E'
+		WHERE RPI.PROD_ID = #{prodId}
+		  AND RPI.STATUS = 'E'
+	</select>
+
+	<select id="getOpenList"  resultType="com.joyintech.tams.disclosure.information.report.dto.ReportOpenPlanDto">
+		SELECT
+			TO_CHAR(DPP.OPEN_START_DATE,'YYYY-MM-DD') openStartDate
+			,TO_CHAR(DPP.OPEN_END_DATE,'YYYY-MM-DD')  openEndDate
+			,TO_CHAR(DPP.COLLINGOFF_PERIOD,'YYYY-MM-DD')    collingoffPeriod
+			,TO_CHAR(DPP.OPEN_END_DATE+1,'YYYY-MM-DD')  settDate
+		FROM
+			REP_PROD_INFO INFO
+			INNER JOIN DIS_PROD_PLAN DPP ON DPP.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID) AND DPP.OPEN_END_DATE > TO_DATE(#{openEndDateStr},'yyyy-MM-dd')
+			WHERE
+				INFO.STATUS = 'E'
+			AND INFO.PROD_ID = #{prodId,jdbcType=VARCHAR}
+		ORDER BY DPP.OPERATION_START_DATE
+	</select>
+
+	<select id="getOpenHisList" resultType="com.joyintech.tams.disclosure.information.report.dto.ReportOpenPlanDto">
+		SELECT * FROM (
+			SELECT
+					TO_CHAR(DPP.OPEN_START_DATE,'YYYY-MM-DD')  openStartDate
+					,TO_CHAR(DPP.OPEN_END_DATE,'YYYY-MM-DD')  openEndDate
+					,TO_CHAR(ROUND(NVL(PRI.UNIT_VALUE,0),4),'FM9999999999999990.0000')  unitValue
+					,TO_CHAR(ROUND(NVL(PRI.UNIT_VALUE_T,0),4),'FM9999999999999990.0000')  unitValueT
+					,TO_CHAR(ROUND(NVL(PRI.UNIT_VALUE,0),4),'FM9999999999999990.0000')  redValue
+					,TO_CHAR(ROUND(NVL(PRI.UNIT_VALUE,0),4),'FM9999999999999990.0000')  subValue
+			FROM
+				REP_PROD_INFO INFO
+				INNER JOIN DIS_PROD_PLAN DPP ON DPP.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID) AND  DPP.OPEN_END_DATE &lt;= TO_DATE(#{openEndDateStr},'yyyy-MM-dd')
+				INNER JOIN REP_PROD_INDEX PRI ON PRI.PROD_ID =INFO.PROD_ID AND PRI.STATUS = 'E' AND PRI.VALUE_DATE = DPP.OPEN_END_DATE
+			where
+			   INFO.STATUS = 'E'
+			   AND INFO.PROD_ID = #{prodId,jdbcType=VARCHAR}
+			ORDER BY DPP.OPEN_END_DATE DESC
+		) WHERE ROWNUM &lt;= 3
+ 	</select>
+
+	<select id="getLastOpenPlan" resultType="com.joyintech.tams.disclosure.information.report.dto.ReportOpenPlanDto">
+		SELECT
+			TO_CHAR(DPP.OPERATION_START_DATE,'YYYY-MM-DD')  operationStartDate
+			 ,TO_CHAR(ROUND(NVL(PRI.UNIT_VALUE,0),4),'FM9999999999999990.0000')  unitValue
+			 ,TO_CHARROUND((NVL(PRI.UNIT_VALUE_T,0),4),'FM9999999999999990.0000')  unitValueT
+			FROM
+			REP_PROD_INFO INFO
+			INNER JOIN DIS_PROD_PLAN DPP ON DPP.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID)
+			INNER JOIN REP_PROD_INDEX PRI ON PRI.PROD_ID=INFO.PROD_ID AND PRI.STATUS='E' AND PRI.VALUE_DATE=DPP.OPEN_END_DATE
+		WHERE INFO.PROD_ID = #{prodId,jdbcType=VARCHAR}
+		  AND INFO.STATUS = 'E'
+		  AND DPP.OPEN_END_DATE = (
+			select max(H.OPEN_END_DATE) from
+				REP_PROD_INFO INFO2
+			    INNER JOIN DIS_PROD_PLAN H ON H.PROD_ID = NVL(INFO2.P_PROD_ID,INFO2.PROD_ID) AND H.OPEN_END_DATE &lt; TO_DATE(#{openEndDateStr},'yyyy-MM-dd')
+		    WHERE INFO2.PROD_ID = #{prodId,jdbcType=VARCHAR} AND INFO2.STATUS = 'E'
+		)
+	</select>
+
+</mapper>

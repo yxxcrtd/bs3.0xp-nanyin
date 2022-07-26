@@ -27,7 +27,6 @@ import com.joyintech.tams.disclosure.busicommon.infodisclosure.repcheck.service.
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.reportDeal.service.ReportDealService;
 import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.ReportManager;
 import com.joyintech.tams.disclosure.common.common.util.ReportGlobalConstant;
-import com.joyintech.tams.disclosure.information.config.reportmodelmanage.ReportModelManage001Dto;
 import com.joyintech.tams.disclosure.information.config.reporttree.service.ReportTreeMenuConfiguration001Service;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.dto.RepDetailsShow001Dto;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.service.RepDetailsShow001Service;
@@ -107,7 +106,7 @@ public class RepDetailsShow001Contoller extends BaseController {
 
         model.addAttribute("cureDate", DateUtil.getCurrentDate());
         
-        model.addAttribute("prodInfoList", JsonUtils.object2Json(repDetailsShow001Service.getProdInfo()));
+        //model.addAttribute("prodInfoList", JsonUtils.object2Json(repDetailsShow001Service.getProdInfo()));
     	return super.init(model);
     }
     
@@ -117,16 +116,16 @@ public class RepDetailsShow001Contoller extends BaseController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping("getPrdInfoSelect")
+	@RequestMapping("getPProdIdList")
 	@ResponseBody
-    public Page<SelectOptionDto> getPrdInfoSelect(){
+    public Page<SelectOptionDto> getPProdIdList(){
 	    Map<String, Object> param=RequestUtil.getPageParam();
 	    if(param.get("repId")!=null){
 	        repDetailsShow001Service.getRandgeRule(param);
 	        //param.put("checkFor", "01");
 	        //CheckConfirmMessage msg=repCheckInfoService.check(param);
 	    }
-		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getPrdInfoSelect(param);
+		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getPProdIdList(param);
         return prdInfoSelect;
     }
 	/**
@@ -326,12 +325,12 @@ public class RepDetailsShow001Contoller extends BaseController {
         	String operateType = params.get("operateType").toString();
         	String rep_id = params.get("rep_id").toString();
         	RepReveal repReveal = new RepReveal();
-        	
+
         	if(params.get("repId") != null) {
         		repReveal.setRepId(params.get("repId").toString());
         	}
         	if(params.get("portnum") != null) {
-        		
+
         		if(params.get("portnum").toString().indexOf("[")==0){
         			//prdList = JSONArray.parseArray(params.get("portnum").toString(),String.class);
         			prdList =JacksonUtil.toJavaObjectList(params.get("portnum").toString(),String.class);
@@ -339,7 +338,7 @@ public class RepDetailsShow001Contoller extends BaseController {
         			prdList.add(params.get("portnum").toString().replace("\"", ""));
         		}
         	}
-        	
+
         	if(params.get("startDate") != null) {
         		Date sDate = DateUtil.parse(params.get("startDate").toString());
         		params.put("startDate",sDate);   //参数转成日期类型
@@ -352,7 +351,7 @@ public class RepDetailsShow001Contoller extends BaseController {
 
         	boolean flag = true;
         	boolean confirmFlag = true;
-        	
+
         	for (String prd : prdList) {
         		if("01".equals(operateType)){
         			repReveal.setProdid(prd);
@@ -383,7 +382,7 @@ public class RepDetailsShow001Contoller extends BaseController {
 
     /**
      * 导出合并文档
-     * 
+     *
      * @return excel
      * @throws Exception
      *             异常
@@ -394,10 +393,10 @@ public class RepDetailsShow001Contoller extends BaseController {
     public ResponseEntity<byte[]> mergeExport() throws IOException {
         return repDetailsShow001Service.exportReport(RequestUtil.getPageParam());
     }
-    
+
 //	/**
 //	 * 导出合并文档
-//	 * 
+//	 *
 //	 * @return excel
 //	 * @throws Exception
 //	 *             异常
@@ -418,4 +417,91 @@ public class RepDetailsShow001Contoller extends BaseController {
 //		reportModelManage001Dto.setParam(param);
 //		return reportModelManage001Service.mergeExportSingle(reportModelManage001Dto);
 //	}
+
+	/**
+	 *
+	 * 获取系统枚举参数
+	 * <功能详细描述>
+	 * @param
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	@RequestMapping("getHalfYear")
+	@ResponseBody
+	public List<SelectOptionDto> getHalfYear(){
+		SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.半年, null);
+		List<SelectOptionDto> list = selectDto.getOptions();
+		return list;
+	}
+
+
+	/**
+	 *
+	 * 获取季度枚举值
+	 * <功能详细描述>
+	 * @param
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	@RequestMapping("getQuarter")
+	@ResponseBody
+	public List<SelectOptionDto> getQuarter(){
+		SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.季度, null);
+		List<SelectOptionDto> list = selectDto.getOptions();
+		return list;
+	}
+
+	/**
+	 *
+	 * 获取子产品代码下拉框
+	 * <功能详细描述>
+	 * @param
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	@RequestMapping("getProdIdList")
+	@ResponseBody
+	public Page<SelectOptionDto> getProdIdList(){
+		Map<String, Object> param=RequestUtil.getPageParam();
+		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getProdIdList(param);
+		return prdInfoSelect;
+	}
+
+	/**
+	 *
+	 * 获取费率名称下拉框
+	 * <功能详细描述>
+	 * @param
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	@RequestMapping("getFeeNameList")
+	@ResponseBody
+	public Page<SelectOptionDto> getFeeNameList(){
+		Map<String, Object> param=RequestUtil.getPageParam();
+		Page<SelectOptionDto> feeNameList = getPrdInfoSelectService.getFeeNameList(param);
+		return feeNameList;
+	}
+
+	/**
+	 *
+	 * 获取要素名称下拉框
+	 * <功能详细描述>
+	 * @param
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	@RequestMapping("getElementNameList")
+	@ResponseBody
+	public Page<SelectOptionDto> getElementNameList(){
+		Map<String, Object> param=RequestUtil.getPageParam();
+		Page<SelectOptionDto> elementNameList = getPrdInfoSelectService.getElementNameList(param);
+		return elementNameList;
+	}
+
 }

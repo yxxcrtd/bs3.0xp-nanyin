@@ -29,6 +29,11 @@ public class RepRule extends BaseEntity {
     private String rcfType;
 
     /**
+     * 日历类型：01 中国法定节假日/04 上交所
+     */
+    private String marketCode;
+
+    /**
      * 频率频率值
      */
     private String rcfValue;
@@ -547,5 +552,13 @@ public class RepRule extends BaseEntity {
      */
     public void setDetail(String detail) {
         this.detail = detail == null ? null : detail.trim();
+    }
+
+    public String getMarketCode() {
+        return marketCode;
+    }
+
+    public void setMarketCode(String marketCode) {
+        this.marketCode = marketCode;
     }
 }

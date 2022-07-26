@@ -9,7 +9,7 @@
         FROM
         REP_PROD_INFO
         where
-        1 = 1
+        (P_PROD_ID is null or PROD_ID=P_PROD_ID)
         <if test="search != null and search != ''">
             and (PROD_ID like
             concat(concat('%',#{search}),'%')
@@ -17,15 +17,58 @@
         </if>
     </select>
     <insert id="insertPrdFeeDeal" parameterType="com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto" >
-        INSERT INTO REP_FEE_TRD(PROD_ID,PAY_DATE,FEE_TYPE,
+        MERGE INTO REP_FEE_TRD RIA
+        USING (
+        SELECT #{prodId,jdbcType=VARCHAR} PROD_ID,
+        #{payDate,jdbcType=DATE} PAY_DATE,
+        #{feeType,jdbcType=VARCHAR} FEE_TYPE,
+        #{paidFee,jdbcType=DECIMAL} PAID_FEE,
+        #{accrual,jdbcType=DECIMAL} ACCRUAL,
+        #{status,jdbcType=VARCHAR} STATUS,
+        #{createUser,jdbcType=VARCHAR} CREATE_USER,
+        #{createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+        #{createDept,jdbcType=VARCHAR} CREATE_DEPT,
+        #{createUser,jdbcType=VARCHAR} UPDATE_USER,
+        #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+        FROM
+        DUAL
+        ) TEMP
+        <!-- 业务主键匹配 -->
+        ON(RIA.PROD_ID = TEMP.PROD_ID
+        and RIA.PAY_DATE = TEMP.PAY_DATE
+        and RIA.FEE_TYPE = TEMP.FEE_TYPE
+        )
+        <!-- 匹配到则更新 -->
+        WHEN MATCHED THEN UPDATE
+        SET
+        RIA.PAID_FEE = TEMP.PAID_FEE,
+        RIA.ACCRUAL = TEMP.ACCRUAL,
+        RIA.CREATE_TIME = TEMP.CREATE_TIME,
+        RIA.UPDATE_TIME = TEMP.UPDATE_TIME,
+        RIA.CREATE_DEPT = TEMP.CREATE_DEPT,
+        RIA.CREATE_USER = TEMP.CREATE_USER,
+        RIA.UPDATE_USER = TEMP.UPDATE_USER,
+        RIA.STATUS = TEMP.STATUS
+        <!-- 未匹配到则插入 -->
+        WHEN NOT MATCHED THEN INSERT (PROD_ID,PAY_DATE,FEE_TYPE,
+        PAID_FEE,ACCRUAL,STATUS,
+        CREATE_USER,CREATE_TIME,CREATE_DEPT,
+        UPDATE_USER,UPDATE_TIME)
+        VALUES(TEMP.PROD_ID,TEMP.PAY_DATE,TEMP.FEE_TYPE,
+        TEMP.PAID_FEE,TEMP.ACCRUAL,TEMP.STATUS,
+        TEMP.CREATE_USER,TEMP.CREATE_TIME,TEMP.CREATE_DEPT,
+        TEMP.UPDATE_USER,TEMP.UPDATE_TIME)
+
+
+<!--        INSERT INTO REP_FEE_TRD(PROD_ID,PAY_DATE,FEE_TYPE,
                                 PAID_FEE,ACCRUAL,STATUS,
 								CREATE_USER,CREATE_TIME,CREATE_DEPT,
                                 UPDATE_USER,UPDATE_TIME)
-        values (#{prodId,jdbcType=VARCHAR},#{payDate,jdbcType=VARCHAR},#{feeType,jdbcType=VARCHAR},
+        values (#{prodId,jdbcType=VARCHAR},#{payDate,jdbcType=DATE},#{feeType,jdbcType=VARCHAR},
               #{paidFee,jdbcType=DECIMAL},#{accrual,jdbcType=DECIMAL},#{status,jdbcType=VARCHAR},
               #{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR},
               #{createUser,jdbcType=VARCHAR},#{updateTime,jdbcType=TIMESTAMP}
-        )
+        )-->
     </insert>
 
     <update id="update" parameterType="com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto" >
@@ -46,6 +89,7 @@
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
+                ERRORMSG = #{errmsg,jdbcType=VARCHAR},
         </set>
         where PROD_ID = #{prodId,jdbcType=CHAR}
           and PAY_DATE = #{payDate,jdbcType=DATE}
@@ -70,10 +114,9 @@
                rft.STATUS status,
                rft.UPDATE_USER updateUser,
                rft.UPDATE_TIME updateTime,
-               cie.ERR_MSG errmsg
+               rft.ERRORMSG errmsg
         from REP_FEE_TRD rft
         left join REP_PROD_INFO rpi on rpi.PROD_ID = rft.PROD_ID
-        left join CHB_INTERF_ERRODATA cie on cie.DATAID = rft.PROD_ID and  cie.INTERF_TYPE = 'CHB_PRD_FEE_DEAL'
         <where>
             <if test='prodId != null and !prodId.equals("")'>
                 and rft.PROD_ID = #{prodId,jdbcType=VARCHAR}
@@ -102,7 +145,8 @@
         rft.ACCRUAL accrual,
         rft.STATUS status,
         rft.UPDATE_USER updateUser,
-        rft.UPDATE_TIME updateTime
+        rft.UPDATE_TIME updateTime,
+        rft.ERRORMSG errmsg
         from REP_FEE_TRD rft
         left join REP_PROD_INFO rpi on rpi.PROD_ID = rft.PROD_ID
         <where>
@@ -149,6 +193,7 @@
         where rft.PROD_ID = #{prodId,jdbcType=VARCHAR}
                 and rft.FEE_TYPE = #{feeType,jdbcType=VARCHAR}
                 and rft.PAY_DATE = #{payDate,jdbcType=DATE}
+                and rft.STATUS = 'E'
     </select>
     <select id="selectProdName" resultType="java.util.Map">
         SELECT PROD_NAME FROM REP_PROD_INFO WHERE PROD_ID=#{prodId} AND ROWNUM = 1

@@ -19,7 +19,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.hibernate.validator.internal.metadata.aggregated.rule.ParallelMethodsMustNotDefineParameterConstraints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +31,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import com.alibaba.fastjson.JSONArray;
-import com.ibm.icu.text.SimpleDateFormat;
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.base.intf.DataDict;
 import com.joyintech.framework.constant.GlobalConstant;
@@ -42,7 +40,6 @@ import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.ExportUtil;
-import com.joyintech.framework.util.FileNameUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -58,7 +55,6 @@ import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.common.util.JacksonUtil;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosuregenandsend.dao.InfoDisclosureGenAndSendMapper;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosuregenandsend.service.InfoDisclosureGenService;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.entity.ProdInfoListEntity;
@@ -74,7 +70,8 @@ import com.joyintech.tams.disclosure.information.reveal.detailshow.dao.RepDetail
 import com.joyintech.tams.disclosure.information.reveal.detailshow.dto.ProdInfoDto;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.dto.RepDetailsShow001Dto;
 import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
-import com.joyintech.tams.disclosure.rptdata.service.RptDataService;
+import com.joyintech.tams.disclosure.rptdata.service.ReportDataService;
+import com.joyintech.tams.systemtools.service.CommonPlatformDateService;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.utils.poi.PoiUtils;
 
@@ -123,7 +120,10 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
     private ReportManager reportManager;
 
     @Autowired
-    private RptDataService rptDataService;
+    private ReportDataService rptDataService;
+    
+    @Autowired
+    private CommonPlatformDateService commonPlatformDateService;
 
     /**
      * 日志
@@ -801,7 +801,10 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
                         ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_是否独立开户.getValue())
                         ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_产品类型.getValue())
                         ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_理财类型.getValue())
-                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_产品期限类型.getValue())){
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_产品期限类型.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_开放频率.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_是否是指数型产品.getValue())
+                        ||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_是否是客户周期型产品.getValue())){
                     sb.append(" and ").append(dto.getRuleType1()).append(dto.getRuleType2()).append("'")
                             .append(dto.getRuleType4()).append("'");
                 }else if(StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_起息日.getValue())
@@ -897,28 +900,30 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
                 e.printStackTrace();
             }
         } else {  //预览按钮：显示指定产品的实际内容
-            if (null != params.get("endDate")) {
-                Date endDate = com.joyintech.framework.util.DateUtil.parse(params.get("endDate").toString());
-                params.put("endDate", new java.sql.Date(endDate.getTime()));
-            }
-            if (null != params.get("startDate")) {
-                Date endDate = com.joyintech.framework.util.DateUtil.parse(params.get("startDate").toString());
-                params.put("startDate", new java.sql.Date(endDate.getTime()));
-            }
+//            if (null != params.get("endDate")) {
+//                Date endDate = com.joyintech.framework.util.DateUtil.parse(params.get("endDate").toString());
+//                params.put("endDate", new java.sql.Date(endDate.getTime()));
+//            }
+//            if (null != params.get("startDate")) {
+//                Date endDate = com.joyintech.framework.util.DateUtil.parse(params.get("startDate").toString());
+//                params.put("startDate", new java.sql.Date(endDate.getTime()));
+//            }
+//
+//            params.put("prodId", params.get("portnum"));
+//            params.put("genDate", params.get("endDate"));
+//    		
+//            //TODO：调试临时写死的参数
+//            if ( params.get("prodId")==null ) {
+//            	params.put("prodId", "LEO-001");
+//            }
+//            
+//            if ( params.get("genDate")==null ) {
+//            	Date genDate = DateUtil.parse("2022-06-30");
+//            	params.put("genDate", genDate);
+//            }
 
-            params.put("prodId", params.get("portnum"));
-            params.put("genDate", params.get("endDate"));
-    		
-            //TODO：调试临时写死的参数
-            if ( params.get("prodId")==null ) {
-            	params.put("prodId", "LEO-001");
-            }
-            
-            if ( params.get("genDate")==null ) {
-            	Date genDate = DateUtil.parse("2022-06-30");
-            	params.put("genDate", genDate);
-            }
-
+        	params.put("platformDate", commonPlatformDateService.getSysDate());
+        	
             //查询实际数据
             List<Map<String,Object>> listReports = rptDataService.queryDatas(params);
             //这里的报表是手工生成，一次就一张报表

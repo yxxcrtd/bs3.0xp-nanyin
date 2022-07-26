@@ -21,6 +21,7 @@ import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 
+import com.ibm.icu.text.SimpleDateFormat;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.utils.echarts.EchartsException;
 
@@ -225,8 +226,13 @@ public class PoiUtilsHelper {
                         cell.removeParagraph(0);
                     Object o = data.get(cols.get(j));
                     String cellString="";
-                    if ( o!=null )
+                    if ( o!=null ) {
+                        if ( o instanceof Date  ) {
+                        	SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
+                        	o = sdf.format(o);
+                        }
                         cellString = o.toString();
+                    }
                     if (cellString==null) cellString="";
                     cell.setText(cellString);
                 }
@@ -279,6 +285,10 @@ public class PoiUtilsHelper {
                 for ( String str:cols) {
                     String key=str.substring(str.indexOf('.')+1);
                     Object o = data.get(key);
+                    if ( o instanceof Date  ) {
+                    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
+                    	o = sdf.format(o);
+                    }
                     str1 = str1.replace("${"+str+"}",o==null?"":o.toString());
                 }
                 value.append(str1);
@@ -315,17 +325,27 @@ public class PoiUtilsHelper {
             cols.add(m.group(1));
         }
 
-        //填充数据
-        for ( String str:cols) {
-            String key="${"+str+"}";
-            Object o = params.get(str);
-            
-            if ( o instanceof Date ) {
-            	o = DateUtil.format((Date)o);
+		//填充数据
+		for ( String str:cols) {
+			String key="${"+str+"}";
+			String[] props = str.split("\\.");
+			Object v = null;
+			Map<String,Object> itrMap = params;
+			for ( String prop:props ) {
+				v = itrMap.get(prop);
+				if( v instanceof Map ) {
+					itrMap = (Map)v;
+				} else {
+					break;
+				}
+			}
+			//Object o = params.get(str);
+            if ( v instanceof Date  ) {
+            	SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
+            	v = sdf.format(v);
             }
-            
-            text = text.replace(key,o==null?" ":o.toString());
-        }
+			text = text.replace(key,v==null?" ":v.toString());
+		}
         //System.out.println("普通文本替换后："+text);
         return text;
     }

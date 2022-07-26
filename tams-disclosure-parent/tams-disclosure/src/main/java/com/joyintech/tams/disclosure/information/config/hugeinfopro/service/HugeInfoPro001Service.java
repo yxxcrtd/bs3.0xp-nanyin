@@ -1,6 +1,7 @@
 package com.joyintech.tams.disclosure.information.config.hugeinfopro.service;
 
 import com.alibaba.fastjson.JSONArray;
+import com.google.common.collect.Maps;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
@@ -9,9 +10,12 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.disclosure.information.config.hugeinfopro.dao.HugeInfoProMapper;
 import com.joyintech.tams.disclosure.information.config.hugeinfopro.dto.HugeInfoPro001Dto;
 import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
+import com.joyintech.tams.disclosure.information.config.proelementadj.dao.ProElementAdjMapper;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -23,10 +27,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto> implements BaseProcessService<HugeInfoPro001Dto> {
@@ -37,6 +39,8 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
     @Autowired
     private HugeInfoProMapper hugeInfoProMapper;
 
+    @Autowired
+    private ProElementAdjMapper proElementAdjMapper;
     public Page<HugeInfoPro001Dto> selectForPage(Map<String, Object> param) {
         Map<String, Object> pageParam = RequestUtil.getPageParam();
         String prodRegistNo = (String)param.get("prodRegistNo");
@@ -105,8 +109,8 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
      * @return
      */
     public AjaxResult checkImportData(String fileName) {
-//        List<String> findList =  this.queryFinprod(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());
-        List<List<String>> objects = ExcelUtil.getTempList(fileName);
+        List<String> findProdRegistNoList =  proElementAdjMapper.getRegistNo(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());
+        List<String> findProdList =  proElementAdjMapper.getProdId(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());        List<List<String>> objects = ExcelUtil.getTempList(fileName);
         if (objects.size() - 1 > 50000) {
             Map<String, Object> resultMap = new HashMap<>();
             resultMap.put("errorMsg", "单次最多导入50000条。");
@@ -125,9 +129,9 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
             wr.setData(resultMap);
             return wr;
         } else {
-            if (null == objects.get(0) || objects.get(0).size() != 9) {
+            if (null == objects.get(0) || objects.get(0).size() != 6) {
                 Map<String, Object> resultMap = new HashMap<>();
-                resultMap.put("errorMsg", "数据格式错误，数据格式需要9列。");
+                resultMap.put("errorMsg", "数据格式错误，数据格式需要6列。");
                 AjaxResult wr = new AjaxResult();
                 wr.setData(resultMap);
                 return wr;
@@ -138,40 +142,32 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
                     List<String> rowData = objects.get(i);
 
                     if (!StringUtil.isNotEmpty(rowData.get(0))){
-                        errorMsg.append("数据状态 必填！");
-                    }
-//                    else if(!findList.contains(rowData.get(0))){
-//                        errorMsg.append("基金代码不存在！");
-//                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(1))){
                         errorMsg.append("产品登记编码 必填！");
                     }
-                    if (!StringUtil.isNotEmpty(rowData.get(2))){
+                    else if(!findProdRegistNoList.contains(rowData.get(0))){
+                        errorMsg.append("产品登记编码未在产品基本信息表中维护！");
+                    }
+                    if (!StringUtil.isNotEmpty(rowData.get(1))){
                         errorMsg.append("子产品代码 必填！");
                     }
-                    if (!StringUtil.isNotEmpty(rowData.get(3))){
+                    else if(!findProdList.contains(rowData.get(1))){
+                        errorMsg.append("子产品代码未在产品基本信息表中维护！");
+                    }
+                    if (!StringUtil.isNotEmpty(rowData.get(2))){
                         errorMsg.append("巨额赎回日期 必填！");
-                    }else if(!this.isDateStr(rowData.get(3))){
+                    }else if(!this.isDateStr(rowData.get(2))){
                         errorMsg.append("巨额赎回日期 格式不正确！");
                     }
-                    if (!StringUtil.isNotEmpty(rowData.get(4))){
+                    if (!StringUtil.isNotEmpty(rowData.get(3))){
                         errorMsg.append("触发的情形说明文字 必填！");
                     }
-                    if (!StringUtil.isNotEmpty(rowData.get(5))){
+                    if (!StringUtil.isNotEmpty(rowData.get(4))){
                         errorMsg.append("拒绝赎回说明（文字） 必填！");
                     }
-                    if (!StringUtil.isNotEmpty(rowData.get(6))){
+                    if (!StringUtil.isNotEmpty(rowData.get(5))){
                         errorMsg.append("报告发布日期 必填！");
-                    }else if(!this.isDateStr(rowData.get(6))){
+                    }else if(!this.isDateStr(rowData.get(5))){
                         errorMsg.append("报告发布日期 格式不正确！");
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(7))){
-                        errorMsg.append("更新时间 必填！");
-                    }else if(!this.isDateStr(rowData.get(7))){
-                        errorMsg.append("更新时间 格式不正确！");
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(8))){
-                        errorMsg.append("更新人 必填！");
                     }
                     if (StringUtil.isNotEmpty(errorMsg.toString())){
                         errorMsg.append("<br />");
@@ -232,26 +228,34 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
 
     public AjaxResult importFile(Map<String, Object> param) {
         AjaxResult ajaxResult = new AjaxResult();
+        Date sysDate = com.joyintech.framework.util.DateUtil.platDateFromCache();
         String tempList = (String) param.get("tempList");
         HugeInfoPro001Dto dto = getValNetAssetQuotationInfoListData(tempList);
         List<HugeInfoPro001Dto> selectedItem = dto.getSelectedItem();
         List<HugeInfoPro001Dto>  existData = new ArrayList<>();
         List<HugeInfoPro001Dto>  newData = new ArrayList<>();
-//        for (HugeInfoPro001Dto temp:selectedItem) {
-            //数据已存在 【产品登记编码 相同】，做更新操作。
+        for (HugeInfoPro001Dto temp:selectedItem) {
+//            数据已存在 【产品登记编码 相同】，做更新操作。
 //            if (StringUtil.isNotEmpty(this.selectByProdRegistNo(temp.getProdRegistNo()))){
 //                existData.add(temp);
 //            }else {
 //                newData.add(temp);
 //            }
-//        }
-        //更新操作
-        for (HugeInfoPro001Dto existDataDto : existData) {
-            this.doComplete(existDataDto,OperationType.MODIFY);
+            temp.setDataStatus(DictCodeListExt3.信披_数据状态_有效.getValue());
+            temp.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
+            temp.setUpdateTime(sysDate);
+            temp.setUpdateUser(CommonUtil.getUserName());
+            temp.setRedemptionId(IDGenerator.generate(36));
+            newData.add(temp);
         }
+        //更新操作
+//        for (HugeInfoPro001Dto existDataDto : newData) {
+//            this.doComplete(existDataDto,OperationType.MODIFY);
+//        }
         //插入操作
         for (HugeInfoPro001Dto newDataDto : newData
         ) {
+
             this.doComplete(newDataDto,OperationType.NEW);
         }
         ajaxResult.setStatuCode(HttpStatus.OK.value());
@@ -270,31 +274,22 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
             JSONArray rowData = JSONArray.parseArray(((JSONArray) objects.get(i)).toJSONString());
             HugeInfoPro001Dto hugeInfoPro001Dto = new HugeInfoPro001Dto();
             if (StringUtil.isNotEmpty(rowData.get(0))) {
-                hugeInfoPro001Dto.setDataStatus(rowData.get(0).toString());
+                hugeInfoPro001Dto.setProdRegistNo(rowData.get(0).toString());
             }
             if (StringUtil.isNotEmpty(rowData.get(1))) {
-                hugeInfoPro001Dto.setProdRegistNo(rowData.get(1).toString());
+                hugeInfoPro001Dto.setProdId(rowData.get(1).toString());
             }
             if (StringUtil.isNotEmpty(rowData.get(2))) {
-                hugeInfoPro001Dto.setProdId(rowData.get(2).toString());
+                hugeInfoPro001Dto.setDealDate(DateUtil.parse(rowData.get(2).toString()));
             }
             if (StringUtil.isNotEmpty(rowData.get(3))) {
-                hugeInfoPro001Dto.setDealDate(DateUtil.parse(rowData.get(3).toString()));
+                hugeInfoPro001Dto.setTriggerRemark(rowData.get(3).toString());
             }
             if (StringUtil.isNotEmpty(rowData.get(4))) {
-                hugeInfoPro001Dto.setTriggerRemark(rowData.get(4).toString());
+                hugeInfoPro001Dto.setRejectRemark(rowData.get(4).toString());
             }
             if (StringUtil.isNotEmpty(rowData.get(5))) {
-                hugeInfoPro001Dto.setRejectRemark(rowData.get(5).toString());
-            }
-            if (StringUtil.isNotEmpty(rowData.get(6))) {
-                hugeInfoPro001Dto.setRptIssueDate(DateUtil.parse(rowData.get(6).toString()));
-            }
-            if (StringUtil.isNotEmpty(rowData.get(7))) {
-                hugeInfoPro001Dto.setUpdateTime(DateUtil.parse(rowData.get(7).toString()));
-            }
-            if (StringUtil.isNotEmpty(rowData.get(8))) {
-                hugeInfoPro001Dto.setUpdateUser(rowData.get(8).toString());
+                hugeInfoPro001Dto.setRptIssueDate(DateUtil.parse(rowData.get(5).toString()));
             }
             hugeInfoPro001DtoList.add(hugeInfoPro001Dto);
         }

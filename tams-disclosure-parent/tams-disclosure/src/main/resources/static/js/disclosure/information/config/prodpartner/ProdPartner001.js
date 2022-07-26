@@ -43,7 +43,14 @@ $(function(){
               ,{field:'effEndDateStr',width:'10%' , sortField:"effEndDate", title: '生效截止日期',type:'date'}
               ,{field: 'updateTime', type: 'datetime',width:'15%', sortable:false,title: "更新时间"}
               ,{field:'updateUser', width:'10%', sortField:'updateUser', title: '更新人'}
-              ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
+              ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt'],
+                 render: function (data, type, row, meta) {
+                     if (row.dataStatus == '02')
+                         return '';
+                     else
+                         return '<i class="btn layui-icon edit edit" title="编辑" data-ignore="false"></i> ' +
+                             '<i class="btn layui-icon delt delt" title="删除" data-ignore="false"></i>';
+                 }}
           ]
     });
         
@@ -107,13 +114,15 @@ $(function(){
         $('#ProdPartner001_btn_import').click(function() {
             Joyin.confirm(JoyinUtil.getLabel("请确认是否要导入数据？"), function() {
                 Joyin.uploadFile(function(fileName) {
-                    Joyin.ajax(basePath +"disclosure/information/config/prodpartner/ProdPartner001/importFile", {
-                        fileName : fileName
-                    },function(result){
-                        if(!result || !($.isArray(result) && result.length > 0)) {
-                            layui.layer.closeAll()
-                            table.reload();
-                        }
+                    Joyin.ajax(basePath + 'disclosure/information/config/prodpartner/ProdPartner001/checkImportData', {fileName: fileName}, function(checkResult) {
+                                Joyin.ajax(basePath +"disclosure/information/config/prodpartner/ProdPartner001/importFile", {
+                                    fileName : fileName
+                                },function(result){
+                                    if(!result || !($.isArray(result) && result.length > 0)) {
+                                        layui.layer.closeAll()
+                                        table.reload();
+                                    }
+                                });
                     });
                 });
             });
@@ -132,6 +141,12 @@ $(function(){
             if (!selArr || selArr.length == 0) {
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
                 return;
+            }
+            for(var i=0;i<selArr.length;i++){
+                if(selArr[i].dataStatus=='02'){
+                    Joyin.error("请选择有效状态的数据进行删除");
+                    return;
+                }
             }
             var object = {
                 selectedItem : selArr,

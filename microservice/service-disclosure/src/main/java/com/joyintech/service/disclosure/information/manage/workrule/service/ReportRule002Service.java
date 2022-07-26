@@ -137,6 +137,9 @@ public class ReportRule002Service extends CommonExportService<ReportRule001Dto> 
 		if (StringUtil.isEmpty(dto.getRcfType())) {
 			checkList.add(new ValidMessage("披露频率类型不能为空"));
 		}
+		if (StringUtil.isEmpty(dto.getMarketCode())) {
+			checkList.add(new ValidMessage("日历类型不能为空"));
+		}
 		if (StringUtil.isEmpty(dto.getBasisDateType())) {
 			checkList.add(new ValidMessage("基准日类型不能为空"));
 		}

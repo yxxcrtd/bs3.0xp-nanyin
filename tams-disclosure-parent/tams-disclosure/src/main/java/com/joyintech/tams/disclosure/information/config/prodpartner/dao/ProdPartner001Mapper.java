@@ -62,7 +62,7 @@ public interface ProdPartner001Mapper extends DisProdPartnerMapper {
      * @param prodId
      * @return
      */
-    int selectByProdId(String prodId);
+    List<ProdPartnerDto> selectPartnerByProdId(String prodId);
 
     /**
      *
@@ -85,4 +85,6 @@ public interface ProdPartner001Mapper extends DisProdPartnerMapper {
      * @since 1.0
      */
     int deleteBtachEquityInfo(@Param("listA") List<ProdPartnerDto> listA);
+
+    int selectByProdId(String prodId);
 }

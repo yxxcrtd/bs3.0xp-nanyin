@@ -678,3 +678,72 @@ ALTER TABLE rep_screen add  MULTI_FLAG VARCHAR2(2);
 /**add by zhengxiaolian 20220719 报表模板配置表报表参数字段长度增加 start**/
 ALTER TABLE rep_reportinfo MODIFY REPORTPARAMS VARCHAR2(2000);
 /**add by zhengxiaolian 20220719 报表模板配置表报表参数字段长度增加 end**/
+
+/**add by zhengxiaolian 20220720 产品基本信息表增加发行状态字段 start**/
+ALTER TABLE rep_prod_info add ISSUE_STATUS VARCHAR2(2) ;
+comment on column rep_prod_info.ISSUE_STATUS is '发行状态 01 发行成功 02 发行失败 03 确认发行';
+/**add by zhengxiaolian 20220720 产品基本信息表增加发行状态字段 end**/
+
+/**add by zhengxiaolian 20220722 产品基本信息表增加信批产品类别字段 start**/
+ALTER TABLE rep_prod_info add REP_PROD_TYPE VARCHAR2(2) ;
+comment on column rep_prod_info.REP_PROD_TYPE is '信批产品类别 01 母产品 02 普通产品 03 子产品';
+/**add by zhengxiaolian 20220722 产品基本信息表增加信批产品类别字段 end**/
+
+/**add by zhengxiaolian 20220722 作业规则表增加日历类型字段 start**/
+ALTER TABLE rep_rule add MARKET_CODE VARCHAR2(2) ;
+comment on column rep_rule.MARKET_CODE is '日历类型：01 中国法定节假日/04 上交所';
+/**add by zhengxiaolian 20220722 作业规则表增加日历类型字段 end**/
+
+
+/**add by dingrui 20220726 产品基本信息表增加发行状态备注字段 start**/
+alter table REP_PROD_INFO add (ISSUE_STATUS_REMARK varchar2(600) default null null);
+comment on column REP_PROD_INFO.ISSUE_STATUS_REMARK is '发行状态备注';
+/**add by dingrui 20220726 产品基本信息表增加信批产品类别字段 end**/
+
+
+/**add by dingrui 20220726 新增 业绩基准变更表 start **/
+DROP TABLE REP_PROD_BASIC_CHANGE CASCADE CONSTRAINTS;
+create table REP_PROD_BASIC_CHANGE
+(
+    basic_change_id VARCHAR2(60) not null,
+    prod_id         VARCHAR2(60),
+    quota_code      VARCHAR2(2),
+    ratio           NUMBER(6,4),
+    data_status     VARCHAR2(10),
+    data_source     VARCHAR2(10),
+    create_user     VARCHAR2(20),
+    create_time     TIMESTAMP(6),
+    update_user     VARCHAR2(20),
+    update_time     TIMESTAMP(6),
+    create_dept     VARCHAR2(32)
+);
+-- Add comments to the table
+comment on table REP_PROD_BASIC_CHANGE
+  is '业绩基准变更表';
+-- Add comments to the columns
+comment on column REP_PROD_BASIC_CHANGE.basic_change_id
+  is '业绩基准变更表主键id';
+comment on column REP_PROD_BASIC_CHANGE.prod_id
+  is '产品代码';
+comment on column REP_PROD_BASIC_CHANGE.quota_code
+  is '行情代码';
+comment on column REP_PROD_BASIC_CHANGE.ratio
+  is '系数';
+comment on column REP_PROD_BASIC_CHANGE.data_status
+  is '数据状态：数据字典，系统模块-DIS，字典code：DIS_DATA_STATUS:01-有效，02-删除';
+comment on column REP_PROD_BASIC_CHANGE.data_source
+  is '数据来源:数据字典syscode：DIS,code:DATA_SOURCE,';
+comment on column REP_PROD_BASIC_CHANGE.create_user
+  is '创建人';
+comment on column REP_PROD_BASIC_CHANGE.create_time
+  is '创建时间';
+comment on column REP_PROD_BASIC_CHANGE.update_user
+  is '更新人';
+comment on column REP_PROD_BASIC_CHANGE.update_time
+  is '更新时间';
+comment on column REP_PROD_BASIC_CHANGE.create_dept
+  is '创建部门';
+-- Create/Recreate primary, unique and foreign key constraints
+alter table REP_PROD_BASIC_CHANGE
+    add constraint P_BASIC_CHANGE_ID primary key (BASIC_CHANGE_ID);
+/**add by dingrui 20220726 产品基本信息表增加信批产品类别字段 end**/

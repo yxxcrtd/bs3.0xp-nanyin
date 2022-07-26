@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.disclosure.rptdata.dao.BonusReportMapper">
     
-   <select id="selectBonusreport" resultType="com.joyintech.tams.disclosure.rptdata.dto.BonusReportDto">
+   <select id="selectBonusReport" resultType="com.joyintech.tams.disclosure.rptdata.dto.BonusReportDto">
 		SELECT 
 		    INFO.PROD_NAME
 			,INFO.PROD_RE
@@ -17,16 +17,16 @@
 			,PLAN.ACHIEVEMENT_BASIS_PROP  /**业绩基准比例**/
 			,PLAN.EXCESS_ACHIEVEMENT_PROP   /**超额收益收取比例**/
 		FROM REP_PROD_INFO INFO
-		LEFT JOIN REP_PROD_INDEX PINDEX ON INFO.PROD_ID=PINDEX.PROD_ID AND PINDEX.STATUS='E'
-		LEFT JOIN DIS_PROD_BONUSPLAN PLAN ON INFO.PROD_ID=PLAN.PROD_ID AND PLAN.DATA_STATUS='01' AND PLAN.SETT_DATE=#{genDate,jdbcType=DATE}
-		WHERE INFO.P_PROD_ID IS NOT NULL  /**子产品**/
+		LEFT JOIN REP_PROD_INDEX PINDEX ON INFO.PROD_ID=PINDEX.PROD_ID AND PINDEX.STATUS='E' and #{reportDate,jdbcType=DATE}=pindex.VALUE_DATE
+		LEFT JOIN DIS_PROD_BONUSPLAN PLAN ON INFO.PROD_ID=PLAN.PROD_ID AND PLAN.DATA_STATUS='01' AND PLAN.SETT_DATE=#{reportDate,jdbcType=DATE}
+		where info.REP_PROD_TYPE in ('02','03')   /**单产品或者子产品**/
 		AND INFO.STATUS='E'
 		<if test="prodId!=null">
 			AND INFO.PROD_ID=#{prodId,jdbcType=VARCHAR}
 		</if>
     </select>
     
-    <select id="selectLastBonusPlan" resultType="com.joyintech.tams.disclosure.rptdata.dto.BonusPlanDto">
+    <select id="selectLastBonusPlan" resultType="com.joyintech.tams.common.base.entity.DisProdBonusplan">
 	    SELECT T.* FROM 
 	    	(SELECT BONUS_PLAN_ID
 	    	,SETT_DATE

@@ -3,18 +3,15 @@ package com.joyintech.tams.disclosure.information.report.service;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.disclosure.common.common.service.HolidayService;
-import com.joyintech.tams.disclosure.information.report.dao.ReportFxgg001Mapper;
-import com.joyintech.tams.disclosure.information.report.dto.ReportFxgg001Dto;
+import com.joyintech.tams.disclosure.information.report.dao.ReportFxggMapper;
+import com.joyintech.tams.disclosure.information.report.dto.ReportFxggDto;
+import com.joyintech.tams.disclosure.rptdata.service.IReportDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 发行公告
@@ -25,43 +22,35 @@ import org.springframework.transaction.annotation.Transactional;
  * @see ReportFxgg001Service
  * @since 1.0
  */
-@Service
-@Transactional(rollbackFor = Exception.class)
-public class ReportFxgg001Service extends BaseService<ReportFxgg001Dto> {
+@Service("reportFxgg001Service")
+public class ReportFxgg001Service implements IReportDataService {
 
     @Autowired
-    private ReportFxgg001Mapper reportFxgg001Mapper;
+    private ReportFxggMapper reportFxggMapper;
 
     @Autowired
     private HolidayService holidayService;
 
-   /**
-    * 根据产品代码查询公告信息
-    * <一句话功能简述>
-    * <功能详细描述>
-    * @param params
-    * @return
-    * @throws Exception
-    * @see
-    * @since 1.0
-    */
-    public Map<String, Object> findFxgg(Map<String, Object> params) {
-        Map<String,Object> dataMap = new HashMap<String,Object>();
-        if (params.get("portnum") == null) {
-            return dataMap;
+    @Override
+    public List<Map<String, Object>> queryDatas(Map<String, Object> paraMap) {
+        Map<String,Object> dataMap = new HashMap<>();
+        List<Map<String,Object>> result = new ArrayList<>();
+        result.add(dataMap);
+        if (paraMap.get("pprodid") == null) {
+            return result;
         }
-        String prodId = params.get("portnum").toString();
-        Map<String,Object> searchparam = new HashMap<String,Object>();
+        String prodId = paraMap.get("pprodid").toString();
+        Map<String,Object> searchparam = new HashMap<>();
         searchparam.put("prodId", prodId);
-        ReportFxgg001Dto fxgg = reportFxgg001Mapper.queryFxgg(searchparam);
+        ReportFxggDto fxgg = reportFxggMapper.queryFxgg(searchparam);
         if (fxgg == null) {
-            return dataMap;
+            return result;
         }
-        dataMap.put("${prodName}", fxgg.getProdName());
-        dataMap.put("${regCode}", fxgg.getRegCode());
+        dataMap.put("prodName", fxgg.getProdName());
+        dataMap.put("regCode", fxgg.getRegCode());
         Date setDate = fxgg.getSetDate();
         if (setDate != null) {
-            Map<String,Object> holidaysearchparam = new HashMap<String,Object>();
+            Map<String,Object> holidaysearchparam = new HashMap<>();
             holidaysearchparam.put("busi_date", setDate);
             holidaysearchparam.put("is_holiday", "0");
             holidaysearchparam.put("market_code", "01");
@@ -69,19 +58,19 @@ public class ReportFxgg001Service extends BaseService<ReportFxgg001Dto> {
             if (raiseEndDate == null) {
                 raiseEndDate = DateUtil.addDay(setDate, -1);
             }
-            dataMap.put("${raiseEndDate}", DateUtil.format(raiseEndDate, DateUtil.DEFAULT_DATE_FORMAT_CN));
-            dataMap.put("${setDate}",DateUtil.format(setDate, DateUtil.DEFAULT_DATE_FORMAT_CN));
+            dataMap.put("raiseEndDate", DateUtil.format(raiseEndDate, DateUtil.DEFAULT_DATE_FORMAT_CN));
+            dataMap.put("setDate",DateUtil.format(setDate, DateUtil.DEFAULT_DATE_FORMAT_CN));
         } else {
-            dataMap.put("${raiseEndDate}", "XXXX年X月XX日");
-            dataMap.put("${setDate}", "XXXX年X月XX日");
+            dataMap.put("raiseEndDate", "XXXX年X月XX日");
+            dataMap.put("setDate", "XXXX年X月XX日");
         }
         BigDecimal raiseAmt = fxgg.getRaiseAmt();
         if (raiseAmt != null) {
             DecimalFormat df = new DecimalFormat("#,###.00");
-            dataMap.put("${raiseAmt}", df.format(raiseAmt));
+            dataMap.put("raiseAmt", df.format(raiseAmt));
         } else {
-            dataMap.put("${raiseAmt}", BigDecimal.ZERO);
+            dataMap.put("raiseAmt", BigDecimal.ZERO);
         }
-        return dataMap;
+        return result;
     }
 }

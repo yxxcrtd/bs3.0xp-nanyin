@@ -10,7 +10,8 @@
         	SCREEN_NAME,
             SCREEN_TYPE,
             SCREEN_VALUE,
-            SCREEN_STATUS
+            SCREEN_STATUS,
+            MULTI_FLAG
         FROM REP_SCREEN 
        	where REP_ID = #{repId}
        	AND SCREEN_STATUS = 'Y'

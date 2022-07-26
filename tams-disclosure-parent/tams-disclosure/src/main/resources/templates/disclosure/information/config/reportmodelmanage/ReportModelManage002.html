@@ -145,6 +145,13 @@
 				                   </select>
 								</div>
 								<div class="layui-input-inline input-inline"
+									 style="width: 15% !important;">
+									<select id="paramMultiFlag" name="paramMultiFlag" class="layui-input form-input input-select"
+											placeholder="是否支持多选" data-th-data-result="${YES_OR_NO}" allowClear="true"
+									>
+									</select>
+								</div>
+								<div class="layui-input-inline input-inline"
 									style="width: 5% !important;">
 									<a id="ReportModelManage002_btn_paramAdd"
 										class="layui-btn layui-btn-sm btn-download">参数增加
@@ -226,9 +233,11 @@
 	</div>
 </body>
 <div layout:fragment="script">
-         <script
-        data-th-src="@{/js/disclosure/information/config/reportmodelmanage/ReportModelManage002.js}"
-        type="text/javascript"></script>  
+	<script th:inline="javascript" type="text/javascript">
+		const YES_OR_NO_YES = /*[[${YES_OR_NO_YES}]]*/'';
+		const YES_OR_NO_NO = /*[[${YES_OR_NO_NO}]]*/'';
+	</script>
+    <script  data-th-src="@{/js/disclosure/information/config/reportmodelmanage/ReportModelManage002.js}" type="text/javascript"></script>
 </div>
 
 </html>

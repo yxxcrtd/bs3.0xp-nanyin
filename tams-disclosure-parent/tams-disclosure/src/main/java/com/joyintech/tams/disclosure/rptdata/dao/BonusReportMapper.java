@@ -10,13 +10,12 @@
 
 package com.joyintech.tams.disclosure.rptdata.dao;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
-import com.joyintech.tams.disclosure.rptdata.dto.BonusPlanDto;
+import com.joyintech.tams.common.base.entity.DisProdBonusplan;
 import com.joyintech.tams.disclosure.rptdata.dto.BonusReportDto;
 
 /**
@@ -29,7 +28,7 @@ import com.joyintech.tams.disclosure.rptdata.dto.BonusReportDto;
 @Repository
 public interface BonusReportMapper {
 	
-	List<BonusReportDto> selectBonusreport(Map<String,Object>paras) ;
+	List<BonusReportDto> selectBonusReport(Map<String,Object>paras) ;
 	
-	BonusPlanDto selectLastBonusPlan(Map<String,Object>paras) ;
+	DisProdBonusplan selectLastBonusPlan(Map<String,Object>paras) ;
 }

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RepInvestAccountMapper">
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepInvestAccount" >
+        <id column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="ACCOUNT_TYPE" property="accountType" jdbcType="VARCHAR" />
+        <result column="ACCOUNT_NUM" property="accountNum" jdbcType="VARCHAR" />
+        <result column="ACCOUNT_NAME" property="accountName" jdbcType="VARCHAR" />
+        <result column="ACCOUNT_OPENER" property="accountOpener" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="ERRORMSG" property="errorMsg" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        PROD_ID,ACCOUNT_TYPE,ACCOUNT_NUM,ACCOUNT_NAME,ACCOUNT_OPENER,STATUS
+        ,CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME,CREATE_DEPT,ERRORMSG
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.RepInvestAccountMapper.Base_Column_List" />
+        from REP_INVEST_ACCOUNT
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.RepInvestAccountMapper.Base_Column_List" />
+        from REP_INVEST_ACCOUNT
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.RepInvestAccountMapper.Base_Column_List" />
+        from REP_INVEST_ACCOUNT
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from REP_INVEST_ACCOUNT
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepInvestAccount" >
+        insert into REP_INVEST_ACCOUNT (PROD_ID,ACCOUNT_TYPE,ACCOUNT_NUM,
+                                        ACCOUNT_NAME,ACCOUNT_OPENER,STATUS,
+                                        CREATE_USER,CREATE_TIME,UPDATE_USER,
+                                        UPDATE_TIME,CREATE_DEPT,ERRORMSG)
+        values (#{prodId,jdbcType=VARCHAR}, #{accountType,jdbcType=VARCHAR},#{accountNum,jdbcType=VARCHAR},
+                #{accountName,jdbcType=VARCHAR}, #{accountOpener,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR},
+                #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+                #{updateTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR}, #{errorMsg,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepInvestAccount" >
+        insert into REP_INVEST_ACCOUNT
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="prodId != null" >
+                PROD_ID,
+            </if>
+            <if test="accountType != null" >
+                ACCOUNT_TYPE,
+            </if>
+            <if test="accountNum != null" >
+                ACCOUNT_NUM,
+            </if>
+            <if test="accountName != null" >
+                ACCOUNT_NAME,
+            </if>
+            <if test="accountOpener != null" >
+                ACCOUNT_OPENER,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="errorMsg != null" >
+                ERRORMSG,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="prodId != null" >
+                #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="accountType != null" >
+                #{accountType,jdbcType=VARCHAR},
+            </if>
+            <if test="accountNum != null" >
+                #{accountNum,jdbcType=VARCHAR},
+            </if>
+            <if test="accountName != null" >
+                #{accountName,jdbcType=VARCHAR},
+            </if>
+            <if test="accountOpener != null" >
+                #{accountOpener,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="errorMsg != null" >
+                #{errorMsg,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepInvestAccount" >
+        insert into REP_INVEST_ACCOUNT(PROD_ID,ACCOUNT_TYPE,ACCOUNT_NUM,
+                                        ACCOUNT_NAME,ACCOUNT_OPENER,STATUS,
+                                        CREATE_USER,CREATE_TIME,UPDATE_USER,
+                                        UPDATE_TIME,CREATE_DEPT,ERRORMSG)
+        select PROD_ID,ACCOUNT_TYPE,ACCOUNT_NUM,
+                                        ACCOUNT_NAME,ACCOUNT_OPENER,STATUS,
+                                        CREATE_USER,CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER,
+                                        #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,CREATE_DEPT,ERRORMSG
+             from REP_INVEST_ACCOUNT
+             where 1 = 1 and PROD_ID = #{prodId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepInvestAccount" >
+        update DIS_PROD_ADJUST
+        <set >
+            <if test="accountType != null" >
+                ACCOUNT_TYPE = #{accountType,jdbcType=VARCHAR},
+            </if>
+            <if test="accountNum != null" >
+                ACCOUNT_NUM = #{accountNum,jdbcType=VARCHAR},
+            </if>
+            <if test="accountName != null" >
+                ACCOUNT_NAME = #{accountName,jdbcType=VARCHAR},
+            </if>
+            <if test="accountOpener != null" >
+                ACCOUNT_OPENER = #{accountOpener,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="errorMsg != null" >
+                ERRORMSG = #{errorMsg,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepInvestAccount" >
+        update DIS_PROD_ADJUST
+        set ACCOUNT_TYPE = #{accountType,jdbcType=VARCHAR},
+            ACCOUNT_NUM = #{accountNum,jdbcType=VARCHAR},
+            ACCOUNT_NAME = #{accountName,jdbcType=VARCHAR},
+            ACCOUNT_OPENER = #{accountOpener,jdbcType=VARCHAR},
+            STATUS = #{status,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            ERRORMSG = #{errorMsg,jdbcType=VARCHAR}
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+    </update>
+</mapper>

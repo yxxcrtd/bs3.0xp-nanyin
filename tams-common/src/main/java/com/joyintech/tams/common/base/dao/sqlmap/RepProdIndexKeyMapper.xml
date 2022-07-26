@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RepProdIndexKeyMapper">
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepProdIndexKey" >
+        <id column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="VALUE_DATE" property="valueDate" jdbcType="DATE" />
+        <result column="P_ASSETS" property="pAssets" jdbcType="DECIMAL" />
+        <result column="ASSETS_VALUE" property="assetsValue" jdbcType="DECIMAL" />
+        <result column="CAPITAL" property="capital" jdbcType="DECIMAL" />
+        <result column="UNIT_VALUE" property="unitValue" jdbcType="DECIMAL" />
+        <result column="UNIT_VALUE_T" property="unitValueT" jdbcType="DECIMAL" />
+        <result column="W_YIELD" property="wYield" jdbcType="DECIMAL" />
+        <result column="YIELD_7" property="yield7" jdbcType="DECIMAL" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="ERRORMSG" property="errorMsg" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        PROD_ID PROD_ID,VALUE_DATE VALUE_DATE,P_ASSETS P_ASSETS,
+        ASSETS_VALUE ASSETS_VALUE,CAPITAL CAPITAL,UNIT_VALUE UNIT_VALUE,
+        UNIT_VALUE_T UNIT_VALUE_T,W_YIELD W_YIELD,YIELD_7 YIELD_7,
+        STATUS STATUS,CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT,
+        CREATE_TIME CREATE_TIME,UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME,ERRORMSG ERRORMSG
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.RepProdIndexKeyMapper.Base_Column_List" />
+        from REP_PROD_INDEX
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.RepProdIndexKeyMapper.Base_Column_List" />
+        from REP_PROD_INDEX
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.RepProdInfoMapper.Base_Column_List" />
+        from REP_PROD_INDEX
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+        and VALUE_DATE = #{valueDate,jdbcType=DATE}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from REP_PROD_INDEX
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+        and VALUE_DATE = #{valueDate,jdbcType=DATE}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepProdIndexKey" >
+        insert into REP_PROD_INDEX (PROD_ID,VALUE_DATE,P_ASSETS,
+                                    ASSETS_VALUE,CAPITAL,UNIT_VALUE,
+                                    UNIT_VALUE_T,W_YIELD,YIELD_7,
+                                    STATUS,CREATE_USER, CREATE_DEPT,
+                                    CREATE_TIME,UPDATE_USER, UPDATE_TIME,ERRORMSG)
+        values (#{prodId,jdbcType=VARCHAR}, #{valueDate,jdbcType=DATE},#{pAssets,jdbcType=DECIMAL},
+            #{assetsValue,jdbcType=DECIMAL},#{capital,jdbcType=DECIMAL},#{unitValue,jdbcType=DECIMAL},
+            #{unitValueT,jdbcType=DECIMAL},#{wYield,jdbcType=DECIMAL},#{yield7,jdbcType=DECIMAL},
+            #{status,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},#{createDept,jdbcType=VARCHAR},
+            #{createTime,jdbcType=TIMESTAMP},#{updateUser,jdbcType=VARCHAR},#{updateTime,jdbcType=TIMESTAMP},#{errorMsg,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepProdIndexKey" >
+        insert into REP_PROD_INDEX
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="prodId != null" >
+                PROD_ID,
+            </if>
+            <if test="valueDate != null" >
+                VALUE_DATE,
+            </if>
+            <if test="pAssets != null" >
+                P_ASSETS,
+            </if>
+            <if test="assetsValue != null" >
+                ASSETS_VALUE,
+            </if>
+            <if test="capital != null" >
+                CAPITAL,
+            </if>
+            <if test="unitValue != null" >
+                UNIT_VALUE,
+            </if>
+            <if test="unitValueT != null" >
+                UNIT_VALUE_T,
+            </if>
+            <if test="wYield != null" >
+                W_YIELD,
+            </if>
+            <if test="yield7 != null" >
+                YIELD_7,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="errorMsg != null" >
+                ERRORMSG,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="prodId != null" >
+                #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="valueDate != null" >
+                #{valueDate,jdbcType=DATE},
+            </if>
+            <if test="pAssets != null" >
+                #{pAssets,jdbcType=DECIMAL},
+            </if>
+            <if test="assetsValue != null" >
+                #{assetsValue,jdbcType=DECIMAL},
+            </if>
+            <if test="capital != null" >
+                #{capital,jdbcType=DECIMAL},
+            </if>
+            <if test="unitValue != null" >
+                #{unitValue,jdbcType=DECIMAL},
+            </if>
+            <if test="unitValueT != null" >
+                #{unitValueT,jdbcType=DECIMAL},
+            </if>
+            <if test="wYield != null" >
+                #{wYield,jdbcType=DECIMAL},
+            </if>
+            <if test="yield7 != null" >
+                #{yield7,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="errorMsg != null" >
+                #{errorMsg,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepProdIndexKey" >
+        insert into REP_PROD_INDEX (PROD_ID,VALUE_DATE,P_ASSETS,
+                                    ASSETS_VALUE,CAPITAL,UNIT_VALUE,
+                                    UNIT_VALUE_T,W_YIELD,YIELD_7,
+                                    STATUS,CREATE_USER, CREATE_DEPT,
+                                    CREATE_TIME,UPDATE_USER, UPDATE_TIME,ERRORMSG)
+        select PROD_ID,VALUE_DATE,P_ASSETS,
+                                    ASSETS_VALUE,CAPITAL,UNIT_VALUE,
+                                    UNIT_VALUE_T,W_YIELD,YIELD_7,
+                                    #{status,jdbcType=VARCHAR} STATUS,CREATE_USER, CREATE_DEPT,
+                                    CREATE_TIME,#{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,#{errorMsg,jdbcType=VARCHAR} ERRORMSG
+             from REP_PROD_INDEX
+             where STATUS = 'E' and PROD_ID = #{prodId,jdbcType=VARCHAR} and VALUE_DATE = #{valueDate,jdbcType=DATE}
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepProdIndexKey" >
+        update REP_PROD_INDEX
+        <set >
+            <if test="pAssets != null" >
+                P_ASSETS = #{pAssets,jdbcType=DECIMAL},
+            </if>
+            <if test="assetsValue != null" >
+                ASSETS_VALUE = #{assetsValue,jdbcType=DECIMAL},
+            </if>
+            <if test="capital != null" >
+                CAPITAL = #{capital,jdbcType=DECIMAL},
+            </if>
+            <if test="unitValue != null" >
+                UNIT_VALUE = #{unitValue,jdbcType=DECIMAL},
+            </if>
+            <if test="unitValueT != null" >
+                UNIT_VALUE_T = #{unitValueT,jdbcType=DECIMAL},
+            </if>
+            <if test="wYield != null" >
+                W_YIELD = #{wYield,jdbcType=DECIMAL},
+            </if>
+            <if test="yield7 != null" >
+                YIELD_7 = #{yield7,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="errorMsg != null" >
+                ERRORMSG = #{errorMsg,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+        and VALUE_DATE = #{valueDate,jdbcType=DATE}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepProdIndexKey" >
+        update REP_REL_DEAL
+        set P_ASSETS = #{pAssets,jdbcType=DECIMAL},
+            ASSETS_VALUE = #{assetsValue,jdbcType=DECIMAL},
+            CAPITAL = #{capital,jdbcType=DECIMAL},
+            UNIT_VALUE = #{unitValue,jdbcType=DECIMAL},
+            UNIT_VALUE_T = #{unitValueT,jdbcType=DECIMAL},
+            W_YIELD = #{wYield,jdbcType=DECIMAL},
+            YIELD_7 = #{yield7,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            STATUS = #{status,jdbcType=VARCHAR},
+            ERRORMSG = #{errorMsg,jdbcType=VARCHAR}
+            where PROD_ID = #{prodId,jdbcType=VARCHAR}
+            and VALUE_DATE = #{valueDate,jdbcType=DATE}
+    </update>
+</mapper>

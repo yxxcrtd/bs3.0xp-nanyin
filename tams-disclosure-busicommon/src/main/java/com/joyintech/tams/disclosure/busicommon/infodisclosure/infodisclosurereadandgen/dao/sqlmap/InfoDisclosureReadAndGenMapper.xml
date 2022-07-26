@@ -15,7 +15,7 @@
 		FROM
 		REP_JOB job
 		where job.START_DATE &lt;= #{executeDateStr, jdbcType=VARCHAR}
-		and (job.END_DATE is null or job.END_DATE >=#{executeDateStr, jdbcType=VARCHAR})
+		and (job.END_DATE is null or job.END_DATE &gt;= #{executeDateStr, jdbcType=VARCHAR})
 	</select>
 	<select id="getRepJobRangeList" resultType="com.joyintech.tams.common.base.entity.RepJobRange">
 		SELECT
@@ -59,6 +59,7 @@
 		rule.IS_CONFIRM isConfirm,
 		rule.IS_REVEAL isReveal,
 		rule.DETAIL detail,
+		rule.MARKET_CODE marketCode,
 		info.REPORT_CATEGORY reportCategory
 		FROM REP_RULE rule
 		LEFT JOIN REP_INFO info
@@ -71,28 +72,27 @@
     	PROD_RE prodRe,
     	PROD_NAME prodName,
     	PROD_ABBR prodAbbr,
-    	RAISE_MIN raiseMin,
-    	RAISE_MAX raiseMax,
+    	0 raiseMin,
+    	0 raiseMax,
     	RAISE_STRDATE raiseStrdate,
     	RAISE_ENDDATE raiseEnddate,
-    	RAISE_CCY raiseCcy,
+    	null raiseCcy,
     	SET_DATE setDate,
-    	VDATE vdate,
-    	FIRST_OPEN_DAY firstOpenDay,
+		null vdate,
+		null firstOpenDay,
     	MDATE mdate,
-    	ACT_MDATE actMdate,
-    	TERM term,
-    	WINDUP_DATE windupDate,
-    	ISSUE_MODE issueMode,
+    	MDATE actMdate,
+		null term,
+		null windupDate,
+		null issueMode,
     	PROFIT_TYPE profitType,
     	PROD_TYPE prodType,
     	ISSUE_STATUS issueStatus,
     	RAISE_TYPE raiseType,
-    	RISK_LEVEL riskLevel,
-    	REVEAL_CHANNEL revealChannel
+		null riskLevel,
+		null revealChannel
 		FROM REP_PROD_INFO 
     	where 1=1 ${sqlVal}
-    		and p_prod_id is null /*不取子产品*/
     		AND STATUS = 'E'
     		AND NOT EXISTS(select  1 FROM REP_JOB_EXCLUDE_PRO pro 
     		WHERE pro.PROD_ID=REP_PROD_INFO.PROD_ID and pro.JOB_ID=#{jobId, jdbcType=VARCHAR})

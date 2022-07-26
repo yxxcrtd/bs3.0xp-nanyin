@@ -47,12 +47,12 @@
             SCREEN_KEY, SCREEN_NAME, SCREEN_VALUE, 
             SCREEN_STATUS, CREATE_USER, CREATE_TIME, 
             UPDATE_USER, UPDATE_TIME, CREATE_DEPT, 
-            SCREEN_INDEX)
+            SCREEN_INDEX,MULTI_FLAG)
         values (#{screenId,jdbcType=VARCHAR}, #{repId,jdbcType=VARCHAR}, #{screenType,jdbcType=VARCHAR}, 
             #{screenKey,jdbcType=VARCHAR}, #{screenName,jdbcType=VARCHAR}, #{screenValue,jdbcType=VARCHAR}, 
             #{screenStatus,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
             #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR}, 
-            #{screenIndex,jdbcType=DECIMAL})
+            #{screenIndex,jdbcType=DECIMAL},#{multiFlag,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepScreen" >
         insert into REP_SCREEN

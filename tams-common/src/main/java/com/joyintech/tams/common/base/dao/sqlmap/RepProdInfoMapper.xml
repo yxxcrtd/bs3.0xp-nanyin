@@ -31,6 +31,7 @@
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
         <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="ISSUE_STATUS" property="issueStatus" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         PROD_ID PROD_ID, PROD_NAME PROD_NAME, SET_DATE SET_DATE, RAISE_AMT RAISE_AMT, PROD_ABBR PROD_ABBR, 
@@ -39,7 +40,8 @@
         IS_GRADE IS_GRADE, IS_INDEX IS_INDEX, OPEN_FREQ OPEN_FREQ, NATURE_INVEST NATURE_INVEST, 
         PROD_TYPE PROD_TYPE, ISSUING_WAY ISSUING_WAY, ACCT_CHNNAME ACCT_CHNNAME, PROFIT_TYPE PROFIT_TYPE, 
         PD_STATUS PD_STATUS, PROD_SERIES PROD_SERIES, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
-        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, STATUS STATUS
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, STATUS STATUS, 
+        ISSUE_STATUS ISSUE_STATUS
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -72,7 +74,8 @@
             ISSUING_WAY, ACCT_CHNNAME, PROFIT_TYPE, 
             PD_STATUS, PROD_SERIES, CREATE_USER, 
             CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-            UPDATE_TIME, STATUS)
+            UPDATE_TIME, STATUS, ISSUE_STATUS
+            )
         values (#{prodId,jdbcType=VARCHAR}, #{prodName,jdbcType=VARCHAR}, #{setDate,jdbcType=DATE}, 
             #{raiseAmt,jdbcType=DECIMAL}, #{prodAbbr,jdbcType=VARCHAR}, #{prodRe,jdbcType=VARCHAR}, 
             #{pProdId,jdbcType=VARCHAR}, #{raiseStrdate,jdbcType=DATE}, #{raiseEnddate,jdbcType=DATE}, 
@@ -82,7 +85,8 @@
             #{issuingWay,jdbcType=VARCHAR}, #{acctChnname,jdbcType=VARCHAR}, #{profitType,jdbcType=VARCHAR}, 
             #{pdStatus,jdbcType=VARCHAR}, #{prodSeries,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
             #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
-            #{updateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR})
+            #{updateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}, #{issueStatus,jdbcType=VARCHAR}
+            )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepProdInfo" >
         insert into REP_PROD_INFO
@@ -174,6 +178,9 @@
             <if test="status != null" >
                 STATUS,
             </if>
+            <if test="issueStatus != null" >
+                ISSUE_STATUS,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="prodId != null" >
@@ -263,6 +270,9 @@
             <if test="status != null" >
                 #{status,jdbcType=VARCHAR},
             </if>
+            <if test="issueStatus != null" >
+                #{issueStatus,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepProdInfo" >
@@ -270,12 +280,12 @@
         P_PROD_ID, RAISE_STRDATE, RAISE_ENDDATE, MDATE, RAISE_TYPE, PERFORM_COMPARE, IS_PERIOD, 
         IS_GRADE, IS_INDEX, OPEN_FREQ, NATURE_INVEST, PROD_TYPE, ISSUING_WAY, ACCT_CHNNAME, 
         PROFIT_TYPE, PD_STATUS, PROD_SERIES, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-        UPDATE_TIME, STATUS)
+        UPDATE_TIME, STATUS, ISSUE_STATUS)
         select PROD_ID, PROD_NAME, SET_DATE, RAISE_AMT, PROD_ABBR, PROD_RE, 
             P_PROD_ID, RAISE_STRDATE, RAISE_ENDDATE, MDATE, RAISE_TYPE, PERFORM_COMPARE, IS_PERIOD, 
             IS_GRADE, IS_INDEX, OPEN_FREQ, NATURE_INVEST, PROD_TYPE, ISSUING_WAY, ACCT_CHNNAME, 
             PROFIT_TYPE, PD_STATUS, PROD_SERIES, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
-            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, #{status,jdbcType=VARCHAR} STATUS
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, #{status,jdbcType=VARCHAR} STATUS, ISSUE_STATUS
              from REP_PROD_INFO
              where STATUS = 'E' and PROD_ID = #{prodId,jdbcType=VARCHAR}
     </insert>
@@ -357,6 +367,9 @@
             <if test="status != null" >
                 STATUS = #{status,jdbcType=VARCHAR},
             </if>
+            <if test="issueStatus != null" >
+                ISSUE_STATUS = #{issueStatus,jdbcType=VARCHAR},
+            </if>
         </set>
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
     </update>
@@ -386,7 +399,8 @@
             PROD_SERIES = #{prodSeries,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-            STATUS = #{status,jdbcType=VARCHAR}
+            STATUS = #{status,jdbcType=VARCHAR},
+            ISSUE_STATUS = #{issueStatus,jdbcType=VARCHAR}
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
     </update>
 </mapper>

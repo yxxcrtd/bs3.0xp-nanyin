@@ -5,21 +5,22 @@
     <select id="select"  resultType="com.joyintech.tams.disclosure.information.config.proelementadj.dto.ProElementAdj001Dto">
        select
           PROD_ADJUST_ID,
-          DATA_STATUS,
-          PROD_REGIST_NO,
-          PROD_ID,
-          IS_SALES_AGENCY,
-          PROD_ADJ_REMARK,
-          PROD_ADJ_REMARK2,
-          ADJ_FIELD,
-          PRE_ADJUST,
-          AFTER_ADJUST,
-          EFF_DATE,
-          FIELD_ADJ_REMARK,
-          FIELD_ADJ_REMARK2,
-          RPT_ISSUE_DATE,
-          UPDATE_TIME,
-          UPDATE_USER
+          ADJ_REASON adjReason,
+          DATA_STATUS dataStatus,
+          PROD_REGIST_NO prodRegistNo,
+          PROD_ID prodId,
+          IS_SALES_AGENCY isSalesAgency,
+          PROD_ADJ_REMARK prodAdjRemark,
+          PROD_ADJ_REMARK2 prodAdjRemark2,
+          ADJ_FIELD adjField,
+          PRE_ADJUST preAdjust,
+          AFTER_ADJUST afterAdjust,
+          EFF_DATE effDate,
+          FIELD_ADJ_REMARK fieldAdjRemark,
+          FIELD_ADJ_REMARK2 fieldAdjRemark2,
+          RPT_ISSUE_DATE rptIssueDate,
+          UPDATE_TIME updateTime,
+          UPDATE_USER updateUser
        from
           DIS_PROD_ADJUST
     <where>
@@ -58,7 +59,7 @@
    <select id="selectByPrimaryKey"
            resultType="com.joyintech.tams.disclosure.information.config.proelementadj.dto.ProElementAdj001Dto">
       select
-      PROD_ADJUST_ID,
+      PROD_ADJUST_ID, ADJ_REASON,
         PROD_REGIST_NO , PROD_ID , IS_SALES_AGENCY ,
         PROD_ADJ_REMARK , PROD_ADJ_REMARK2 , ADJ_FIELD ,
         PRE_ADJUST , AFTER_ADJUST , EFF_DATE , FIELD_ADJ_REMARK ,
@@ -77,20 +78,22 @@
     </delete>
 
     <insert id="insert">
-        insert into DIS_PROD_ADJUST (PROD_ADJUST_ID, PROD_ID, PROD_REGIST_NO,
+         insert into DIS_PROD_ADJUST (PROD_ADJUST_ID, PROD_ID, PROD_REGIST_NO,
             IS_SALES_AGENCY, PROD_ADJ_REMARK, PROD_ADJ_REMARK2,
             ADJ_FIELD, PRE_ADJUST, AFTER_ADJUST,
             EFF_DATE, FIELD_ADJ_REMARK, FIELD_ADJ_REMARK2,
             RPT_ISSUE_DATE, DATA_STATUS, DATA_SOURCE,
             CREATE_USER, CREATE_TIME, UPDATE_USER,
-            UPDATE_TIME, CREATE_DEPT)
+            UPDATE_TIME, CREATE_DEPT, ADJ_REASON
+            )
         values (#{prodAdjustId,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{prodRegistNo,jdbcType=VARCHAR},
             #{isSalesAgency,jdbcType=VARCHAR}, #{prodAdjRemark,jdbcType=VARCHAR}, #{prodAdjRemark2,jdbcType=VARCHAR},
             #{adjField,jdbcType=VARCHAR}, #{preAdjust,jdbcType=VARCHAR}, #{afterAdjust,jdbcType=VARCHAR},
             #{effDate,jdbcType=DATE}, #{fieldAdjRemark,jdbcType=VARCHAR}, #{fieldAdjRemark2,jdbcType=VARCHAR},
             #{rptIssueDate,jdbcType=DATE}, #{dataStatus,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR},
             #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
-            #{updateTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR})
+            #{updateTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR}, #{adjReason,jdbcType=VARCHAR}
+            )
     </insert>
 
     <update id="updateByKey">
@@ -144,6 +147,9 @@
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="adjReason != null" >
+                ADJ_REASON = #{adjReason,jdbcType=VARCHAR},
+            </if>
         </set>
         where PROD_ADJUST_ID = #{prodAdjustId,jdbcType=VARCHAR}
     </update>
@@ -195,6 +201,7 @@
     </select>
     <select id="getAdjF" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT
+            distinct
              ADJ_FIELD id,
              ADJ_FIELD text
         FROM

@@ -619,7 +619,7 @@ public class InfoDisclosureReadAndGenDetailService{
 			    dateMap.put("endDate", DateUtil.addDay(basicDate, -1));
 			}
 			else if(StringUtil.equals(DictCodeListExt2.取数范围_上一工作日.getValue(), repRule.getDataRange())){
-				ChbDeadLine001Dto  chbDeadLine001Dto = chbDeadLineMapper.getChbDeadline(DisclosureDictCodeList.交易市场_中国法定节假日.getValue(),
+				ChbDeadLine001Dto  chbDeadLine001Dto = chbDeadLineMapper.getChbDeadline(repRule.getMarketCode(),
 						DateUtil.format(basicDate), DictCodeListExt2.基准区分_基准日前.getValue(), 1);
 				if(chbDeadLine001Dto != null){
 //					repInstallFile.setEndDate(chbDeadLine001Dto.getBusiDate());
@@ -637,7 +637,7 @@ public class InfoDisclosureReadAndGenDetailService{
 			else if(StringUtil.equals(DictCodeListExt2.取数范围_上月末最后一工作日.getValue(), repRule.getDataRange())){
 				//首先获取本月初时间
 				Date firstDayOfMonth = DateUtil.getFirstDay(basicDate);
-				ChbDeadLine001Dto  chbDeadLine001Dto = chbDeadLineMapper.getChbDeadline(DisclosureDictCodeList.交易市场_中国法定节假日.getValue(),
+				ChbDeadLine001Dto  chbDeadLine001Dto = chbDeadLineMapper.getChbDeadline(repRule.getMarketCode(),
 						DateUtil.format(firstDayOfMonth), DictCodeListExt2.基准区分_基准日前.getValue(), 1);
 				if(chbDeadLine001Dto != null){
 //					repInstallFile.setEndDate(chbDeadLine001Dto.getBusiDate());

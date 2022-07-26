@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dao.ProdBonusplanMapper">
+    <resultMap id="BaseResultMap"
+               type="com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto">
+        <id column="BONUS_PLAN_ID" property="bonusPlanId" jdbcType="VARCHAR"/>
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR"/>
+        <result column="BONUS_MODE" property="bonusMode" jdbcType="VARCHAR"/>
+        <result column="SETT_DATE" property="settDate" jdbcType="DATE"/>
+        <result column="PAYMENT_DATE" property="paymentDate" jdbcType="DATE"/>
+        <result column="ACHIEVEMENT" property="achievement" jdbcType="VARCHAR"/>
+        <result column="EXCESS_ACHIEVEMENT_PROP" property="excessAchievementProp" jdbcType="DECIMAL"/>
+        <result column="ACHIEVEMENT_BASIS" property="achievementBasis" jdbcType="VARCHAR"/>
+        <result column="ACHIEVEMENT_BASIS_PROP" property="achievementBasisProp" jdbcType="DECIMAL"/>
+        <result column="DATA_STATUS" property="dataStatus" jdbcType="VARCHAR"/>
+        <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR"/>
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR"/>
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR"/>
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="BaseResultMap2"
+               type="com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto">
+        <id column="BONUS_PLAN_ID" property="bonusPlanId" jdbcType="VARCHAR"/>
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR"/>
+        <result column="BONUS_MODE" property="bonusMode" jdbcType="VARCHAR"/>
+        <result column="SETT_DATE" property="settDate" jdbcType="DATE"/>
+        <result column="PAYMENT_DATE" property="paymentDate" jdbcType="DATE"/>
+        <result column="ACHIEVEMENT" property="achievement" jdbcType="VARCHAR"/>
+        <result column="EXCESS_ACHIEVEMENT_PROP" property="excessAchievementProp" jdbcType="DECIMAL"/>
+        <result column="ACHIEVEMENT_BASIS" property="achievementBasis" jdbcType="VARCHAR"/>
+        <result column="ACHIEVEMENT_BASIS_PROP" property="achievementBasisProp" jdbcType="DECIMAL"/>
+        <result column="DATA_STATUS" property="dataStatus" jdbcType="VARCHAR"/>
+        <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR"/>
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR"/>
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR"/>
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR"/>
+
+        <result column="settDateStr" property="settDateStr" jdbcType="VARCHAR"/>
+        <result column="paymentDateStr" property="paymentDateStr" jdbcType="VARCHAR"/>
+        <result column="updateDateStr" property="updateDateStr" jdbcType="VARCHAR"/>
+        <result column="prodName" property="prodName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        BONUS_PLAN_ID
+        BONUS_PLAN_ID, PROD_ID PROD_ID, BONUS_MODE BONUS_MODE, SETT_DATE SETT_DATE,
+        PAYMENT_DATE PAYMENT_DATE, ACHIEVEMENT ACHIEVEMENT, EXCESS_ACHIEVEMENT_PROP EXCESS_ACHIEVEMENT_PROP,
+        ACHIEVEMENT_BASIS ACHIEVEMENT_BASIS, ACHIEVEMENT_BASIS_PROP ACHIEVEMENT_BASIS_PROP,
+        DATA_STATUS DATA_STATUS, DATA_SOURCE DATA_SOURCE, CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME,
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, CREATE_DEPT CREATE_DEPT
+    </sql>
+    <sql id="Sql_All_Data">
+        select
+        <include
+                refid="com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dao.ProdBonusplanMapper.Base_Column_List"/>
+        from DIS_PROD_BONUSPLAN
+    </sql>
+    <sql id="Sql_All_Effective_Data">
+        select
+        <include
+                refid="com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dao.ProdBonusplanMapper.Base_Column_List"/>
+        from DIS_PROD_BONUSPLAN
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include
+                refid="com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dao.ProdBonusplanMapper.Base_Column_List"/>
+        from DIS_PROD_BONUSPLAN
+        where BONUS_PLAN_ID = #{bonusPlanId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete
+        from DIS_PROD_BONUSPLAN
+        where BONUS_PLAN_ID = #{bonusPlanId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert"
+            parameterType="com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto">
+        insert into DIS_PROD_BONUSPLAN (BONUS_PLAN_ID, PROD_ID, BONUS_MODE,
+                                        SETT_DATE, PAYMENT_DATE, ACHIEVEMENT,
+                                        EXCESS_ACHIEVEMENT_PROP, ACHIEVEMENT_BASIS,
+                                        ACHIEVEMENT_BASIS_PROP, DATA_STATUS, DATA_SOURCE,
+                                        CREATE_USER, CREATE_TIME, UPDATE_USER,
+                                        UPDATE_TIME, CREATE_DEPT)
+        values (#{bonusPlanId,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{bonusMode,jdbcType=VARCHAR},
+                #{settDate,jdbcType=DATE}, #{paymentDate,jdbcType=DATE}, #{achievement,jdbcType=VARCHAR},
+                #{excessAchievementProp,jdbcType=DECIMAL}, #{achievementBasis,jdbcType=VARCHAR},
+                #{achievementBasisProp,jdbcType=DECIMAL}, #{dataStatus,jdbcType=VARCHAR},
+                #{dataSource,jdbcType=VARCHAR},
+                #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+                #{updateTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective"
+            parameterType="com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto">
+        insert into DIS_PROD_BONUSPLAN
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bonusPlanId != null">
+                BONUS_PLAN_ID,
+            </if>
+            <if test="prodId != null">
+                PROD_ID,
+            </if>
+            <if test="bonusMode != null">
+                BONUS_MODE,
+            </if>
+            <if test="settDate != null">
+                SETT_DATE,
+            </if>
+            <if test="paymentDate != null">
+                PAYMENT_DATE,
+            </if>
+            <if test="achievement != null">
+                ACHIEVEMENT,
+            </if>
+            <if test="excessAchievementProp != null">
+                EXCESS_ACHIEVEMENT_PROP,
+            </if>
+            <if test="achievementBasis != null">
+                ACHIEVEMENT_BASIS,
+            </if>
+            <if test="achievementBasisProp != null">
+                ACHIEVEMENT_BASIS_PROP,
+            </if>
+            <if test="dataStatus != null">
+                DATA_STATUS,
+            </if>
+            <if test="dataSource != null">
+                DATA_SOURCE,
+            </if>
+            <if test="createUser != null">
+                CREATE_USER,
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null">
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null">
+                UPDATE_TIME,
+            </if>
+            <if test="createDept != null">
+                CREATE_DEPT,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bonusPlanId != null">
+                #{bonusPlanId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodId != null">
+                #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="bonusMode != null">
+                #{bonusMode,jdbcType=VARCHAR},
+            </if>
+            <if test="settDate != null">
+                #{settDate,jdbcType=DATE},
+            </if>
+            <if test="paymentDate != null">
+                #{paymentDate,jdbcType=DATE},
+            </if>
+            <if test="achievement != null">
+                #{achievement,jdbcType=VARCHAR},
+            </if>
+            <if test="excessAchievementProp != null">
+                #{excessAchievementProp,jdbcType=DECIMAL},
+            </if>
+            <if test="achievementBasis != null">
+                #{achievementBasis,jdbcType=VARCHAR},
+            </if>
+            <if test="achievementBasisProp != null">
+                #{achievementBasisProp,jdbcType=DECIMAL},
+            </if>
+            <if test="dataStatus != null">
+                #{dataStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="dataSource != null">
+                #{dataSource,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null">
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null">
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createDept != null">
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo"
+            parameterType="com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto">
+        insert into DIS_PROD_BONUSPLAN(BONUS_PLAN_ID, PROD_ID, BONUS_MODE, SETT_DATE, PAYMENT_DATE,
+                                       ACHIEVEMENT, EXCESS_ACHIEVEMENT_PROP, ACHIEVEMENT_BASIS, ACHIEVEMENT_BASIS_PROP,
+                                       DATA_STATUS, DATA_SOURCE, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME,
+                                       CREATE_DEPT)
+        select BONUS_PLAN_ID,
+               PROD_ID,
+               BONUS_MODE,
+               SETT_DATE,
+               PAYMENT_DATE,
+               ACHIEVEMENT,
+               EXCESS_ACHIEVEMENT_PROP,
+               ACHIEVEMENT_BASIS,
+               ACHIEVEMENT_BASIS_PROP,
+               DATA_STATUS,
+               DATA_SOURCE,
+               CREATE_USER,
+               CREATE_TIME,
+               #{updateUser,jdbcType=VARCHAR}   UPDATE_USER,
+               #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+               CREATE_DEPT
+
+        from DIS_PROD_BONUSPLAN
+        where 1 = 1
+          and BONUS_PLAN_ID = #{bonusPlanId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto">
+        update DIS_PROD_BONUSPLAN
+        <set>
+            <if test="prodId != null">
+                PROD_ID = #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="bonusMode != null">
+                BONUS_MODE = #{bonusMode,jdbcType=VARCHAR},
+            </if>
+            <if test="settDate != null">
+                SETT_DATE = #{settDate,jdbcType=DATE},
+            </if>
+            <if test="paymentDate != null">
+                PAYMENT_DATE = #{paymentDate,jdbcType=DATE},
+            </if>
+            <if test="achievement != null">
+                ACHIEVEMENT = #{achievement,jdbcType=VARCHAR},
+            </if>
+            <if test="excessAchievementProp != null">
+                EXCESS_ACHIEVEMENT_PROP = #{excessAchievementProp,jdbcType=DECIMAL},
+            </if>
+            <if test="achievementBasis != null">
+                ACHIEVEMENT_BASIS = #{achievementBasis,jdbcType=VARCHAR},
+            </if>
+            <if test="achievementBasisProp != null">
+                ACHIEVEMENT_BASIS_PROP = #{achievementBasisProp,jdbcType=DECIMAL},
+            </if>
+            <if test="dataStatus != null">
+                DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="dataSource != null">
+                DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null">
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where BONUS_PLAN_ID = #{bonusPlanId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey"
+            parameterType="com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto">
+        update DIS_PROD_BONUSPLAN
+        set PROD_ID                 = #{prodId,jdbcType=VARCHAR},
+            BONUS_MODE              = #{bonusMode,jdbcType=VARCHAR},
+            SETT_DATE               = #{settDate,jdbcType=DATE},
+            PAYMENT_DATE            = #{paymentDate,jdbcType=DATE},
+            ACHIEVEMENT             = #{achievement,jdbcType=VARCHAR},
+            EXCESS_ACHIEVEMENT_PROP = #{excessAchievementProp,jdbcType=DECIMAL},
+            ACHIEVEMENT_BASIS       = #{achievementBasis,jdbcType=VARCHAR},
+            ACHIEVEMENT_BASIS_PROP  = #{achievementBasisProp,jdbcType=DECIMAL},
+            DATA_STATUS             = #{dataStatus,jdbcType=VARCHAR},
+            DATA_SOURCE             = #{dataSource,jdbcType=VARCHAR},
+            UPDATE_USER             = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME             = #{updateTime,jdbcType=TIMESTAMP},
+            where BONUS_PLAN_ID = #{bonusPlanId,jdbcType=VARCHAR}
+    </update>
+
+    <select id="setId" resultType="java.lang.String">
+        select max(BONUS_PLAN_ID) + 1
+        from DIS_PROD_BONUSPLAN
+    </select>
+
+
+    <select id="searchReports" parameterType="java.util.Map"
+            resultType="com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto">
+        SELECT
+        dpb.BONUS_PLAN_ID, dpb.PROD_ID, dpb.BONUS_MODE,
+        dpb.SETT_DATE, dpb.PAYMENT_DATE, dpb.ACHIEVEMENT,
+        dpb.EXCESS_ACHIEVEMENT_PROP, dpb.ACHIEVEMENT_BASIS,
+        dpb.ACHIEVEMENT_BASIS_PROP, dpb.DATA_STATUS, dpb.DATA_SOURCE,
+        dpb.CREATE_USER, dpb.CREATE_TIME, dpb.UPDATE_USER,
+        dpb.UPDATE_TIME, dpb.CREATE_DEPT,
+        TO_CHAR(dpb.SETT_DATE,'yyyy-mm-dd') settDateStr,
+        TO_CHAR(dpb.PAYMENT_DATE,'yyyy-mm-dd') paymentDateStr,
+        TO_CHAR(NVL(dpb.Update_Time,dpb.Create_Time),'yyyy-mm-dd hh24:mi:ss') updateDateStr,
+        rpi.prod_name prodName
+        FROM DIS_PROD_BONUSPLAN dpb
+        LEFT JOIN REP_PROD_INFO rpi ON rpi.PROD_ID = dpb.PROD_ID WHERE 1=1
+        <if test="dataStatusArr != null and dataStatusArr.length > 0">
+            AND dpb.DATA_STATUS IN
+            <foreach item="item" collection="dataStatusArr" index="index"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="prodIdArr != null and prodIdArr.length > 0">
+            AND dpb.PROD_ID IN
+            <foreach item="item" collection="prodIdArr" index="index"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="bonusModeArr != null and bonusModeArr.length > 0">
+            AND dpb.BONUS_MODE IN
+            <foreach item="item" collection="bonusModeArr" index="index"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="settDateBegin !=null and settDateBegin !='' ">
+            AND to_char(dpb.SETT_DATE,'yyyy-mm-dd') <![CDATA[>=]]> #{settDateBegin,jdbcType=VARCHAR}
+        </if>
+        <if test="settDateEnd !=null and settDateEnd !='' ">
+            AND to_char(dpb.SETT_DATE,'yyyy-mm-dd') <![CDATA[<=]]> #{settDateEnd,jdbcType=VARCHAR}
+        </if>
+
+        <if test="paymentDateBegin !=null and paymentDateBegin !='' ">
+            AND to_char(dpb.PAYMENT_DATE,'yyyy-mm-dd') <![CDATA[>=]]> #{paymentDateBegin,jdbcType=VARCHAR}
+        </if>
+        <if test="paymentDateEnd !=null and paymentDateEnd !='' ">
+            AND to_char(dpb.PAYMENT_DATE,'yyyy-mm-dd') <![CDATA[<=]]> #{paymentDateEnd,jdbcType=VARCHAR}
+        </if>
+
+        order by NVL(dpb.UPDATE_TIME,dpb.CREATE_TIME) desc
+
+    </select>
+
+
+    <select id="selectByBonusPlanId" resultMap="BaseResultMap2" parameterType="java.lang.String">
+        select dpb.BONUS_PLAN_ID,
+               dpb.PROD_ID,
+               dpb.BONUS_MODE,
+               dpb.SETT_DATE,
+               dpb.PAYMENT_DATE,
+               dpb.ACHIEVEMENT,
+               dpb.EXCESS_ACHIEVEMENT_PROP,
+               dpb.ACHIEVEMENT_BASIS,
+               dpb.ACHIEVEMENT_BASIS_PROP,
+               dpb.DATA_STATUS,
+               dpb.DATA_SOURCE,
+               dpb.CREATE_USER,
+               dpb.CREATE_TIME,
+               dpb.UPDATE_USER,
+               dpb.UPDATE_TIME,
+               dpb.CREATE_DEPT,
+               TO_CHAR(dpb.SETT_DATE, 'yyyy-mm-dd')  ettDateStr,
+               TO_CHAR(dpb.PAYMENT_DATE, 'yyyy-mm-dd')   paymentDateStr,
+               TO_CHAR(NVL(dpb.Update_Time, dpb.Create_Time), 'yyyy-mm-dd hh24:mi:ss') updateDateStr,
+               TO_CHAR(dpb.SETT_DATE, 'yyyy-mm-dd')  settDateStr,
+               rpi.prod_name   prodName
+        FROM DIS_PROD_BONUSPLAN dpb
+            LEFT JOIN REP_PROD_INFO rpi ON rpi.PROD_ID = dpb.PROD_ID
+        WHERE 1 = 1
+          and dpb.BONUS_PLAN_ID = #{bonusPlanId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectByProdId"
+            resultType="com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto">
+        select
+        dpb.BONUS_PLAN_ID, dpb.PROD_ID, dpb.BONUS_MODE,
+        dpb.SETT_DATE, dpb.PAYMENT_DATE, dpb.ACHIEVEMENT,
+        dpb.EXCESS_ACHIEVEMENT_PROP, dpb.ACHIEVEMENT_BASIS,
+        dpb.ACHIEVEMENT_BASIS_PROP, dpb.DATA_STATUS, dpb.DATA_SOURCE,
+        dpb.CREATE_USER, dpb.CREATE_TIME, dpb.UPDATE_USER,
+        dpb.UPDATE_TIME, dpb.CREATE_DEPT
+        from DIS_PROD_BONUSPLAN dpb
+        where dpb.PROD_ID = #{prodId,jdbcType=VARCHAR}
+        <if test="dataStatus !=null and dataStatus !='' ">
+            AND dpb.DATA_STATUS = #{dataStatus,jdbcType=VARCHAR}
+        </if>
+        and rownum <![CDATA[<=]]> 1
+    </select>
+
+</mapper>

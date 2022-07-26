@@ -24,4 +24,12 @@ public interface GetPrdInfoSelectMapper {
 	 */
 	List<SelectOptionDto> getAllPrdInfoSelect(Map<String, Object> paraMap);
 
+	List<SelectOptionDto> getPProdIdList(Map<String, Object> paraMap);
+
+	List<SelectOptionDto> getProdIdList(Map<String, Object> paraMap);
+
+	List<SelectOptionDto> getFeeNameList(Map<String, Object> paraMap);
+
+	List<SelectOptionDto> getElementNameList(Map<String, Object> paraMap);
+
 }

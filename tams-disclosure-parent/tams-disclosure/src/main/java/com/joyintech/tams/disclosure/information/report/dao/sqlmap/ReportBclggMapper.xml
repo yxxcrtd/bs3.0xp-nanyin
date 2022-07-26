@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.information.report.dao.ReportBclggMapper">
+
+	<select id="queryBclgg" resultType="com.joyintech.tams.disclosure.information.report.dto.ReportBclggDto">
+		select
+			rpi.prod_id prod_id,
+			rpi.prod_name prod_name,
+			rpi.prod_re reg_code,
+			rpi.raise_type raise_type,
+			noc.nocreate_reason nocreate_reason,
+			noc.is_sales_agency is_sales_agency
+		from rep_prod_info rpi
+		inner join dis_prod_nocreate noc
+		on rpi.prod_re = noc.prod_regist_no
+		where rpi.prod_id = #{prodId,jdbcType=VARCHAR}
+	</select>
+</mapper>

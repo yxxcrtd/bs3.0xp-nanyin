@@ -11,21 +11,21 @@ public interface ChbMktHolidayMapper {
 
     int deleteByWorkflowId(String workflowId);
 
+    int updateByWorkflowIdSelective(ChbMktHoliday record);
+
+    int updateByWorkflowId(ChbMktHoliday record);
+
+    int insertBasicByWorkflowId(Map paraMap);
+
     int insert(ChbMktHoliday record);
 
     int insertSelective(ChbMktHoliday record);
 
     int insertBasicByBasicInfo(ChbMktHoliday record);
 
-    int insertBasicByWorkflowId(Map paraMap);
-
     ChbMktHoliday selectByPrimaryKey(ChbMktHolidayKey key);
 
     int updateByPrimaryKeySelective(ChbMktHoliday record);
-
-    int updateByWorkflowIdSelective(ChbMktHoliday record);
-
-    int updateByWorkflowId(ChbMktHoliday record);
 
     int updateByPrimaryKey(ChbMktHoliday record);
 }

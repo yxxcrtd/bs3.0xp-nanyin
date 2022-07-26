@@ -65,14 +65,14 @@
 		select PROD_ID id,
 		nvl(PROD_NAME,PROD_ABBR) text
 		from REP_PROD_INFO
-		where  P_PROD_ID is not null
+		where  (P_PROD_ID is null or PROD_ID=P_PROD_ID)
 		<if test="dataStatus != null and dataStatus != ''">
 			and STATUS=#{dataStatus,jdbcType=VARCHAR}
 		</if>
 		<if test="search != null and search != ''">
-			and (FIN_PRODUCT.FINPROD_MARKET_ID like
+			and (PROD_ID like
 			concat(concat('%',#{search}),'%')
-			or FIN_PRODUCT.FINPROD_NAME like concat(concat('%',#{search}),'%'))
+			or PROD_NAME like concat(concat('%',#{search}),'%'))
 		</if>
 	</select>
 	<select id="select"
@@ -158,6 +158,26 @@
     <select id="selectByProdId" resultType="java.lang.Integer">
 		select count(1) count from REP_PROD_INFO
 		where PROD_ID=#{prodId,jdbcType=VARCHAR}
+	</select>
+    <select id="selectAssetInfoByProdId"
+            resultType="com.joyintech.tams.disclosure.information.config.prodassetinfo.dto.ProdAssetInfoDto">
+		select
+			dpa.PROD_ASSET_ID prodAssetId,
+			dpa.PROD_ID prodId,
+			dpa.FIX_PRE_RATIO fixPreRatio,
+			dpa.FIX_AFTER_RATIO fixAfterRatio,
+			dpa.EQUITY_PRE_RATIO equityPreRatio,
+			dpa.EQUITY_AFTER_RATIO equityAfterRatio,
+			dpa.FD_PRE_RATIO fdPreRatio,
+			dpa.FD_AFTER_RATIO fdAfterRatio,
+			dpa.MIX_PRE_RATIO mixPreRatio,
+			dpa.MIX_AFTER_RATIO mixAfterRatio,
+			dpa.EFF_DATE effDate,
+			dpa.EFF_END_DATE effEndDate,
+			dpa.DATA_STATUS dataStatus
+		from DIS_PROD_ASSET dpa
+		where DATA_STATUS='01'
+		and PROD_ID=#{prodId,jdbcType=VARCHAR}
 	</select>
 
 

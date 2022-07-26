@@ -22,7 +22,11 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.alibaba.fastjson.JSONObject;
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.disclosure.information.config.reportmodelmanage.dto.ReportParamDto;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,11 +79,13 @@ public class ReportModelManage002Controller extends BaseController {
 	@Override
 	public String init(Model model) {
 		model.addAttribute("dataSource", reportModelManage002Service.getDataSource());
-		model.addAttribute("createWay", reportModelManage002Service.getCreateWay());
+		//model.addAttribute("createWay", reportModelManage002Service.getCreateWay());
 		model.addAttribute("reportWarehouse", CacheUtil.getSysParam( ReportGlobalConstant.TEMPLATE_FILE_PATH));
 		model.addAttribute("userName", "");
 		model.addAttribute("passWord", "");
-		this.setSelectOptionToModel(model,DictCode.报表数据格式类型);
+		model.addAttribute("YES_OR_NO_YES", DictCodeListExt1.是否_是.getValue());
+		model.addAttribute("YES_OR_NO_NO", DictCodeListExt1.是否_否.getValue());
+		this.setSelectOptionToModel(model,DictCode.报表数据格式类型,DictCode.是否);
 		
 		String id = this.getParam("keyId");
 		if (StringUtil.isNotEmpty(id)) {
@@ -93,12 +99,12 @@ public class ReportModelManage002Controller extends BaseController {
 	 */
 	@RequestMapping("/findParamPage")
 	@ResponseBody
-	public List<ReportModelManage002Dto> findParamPage() {
+	public List<ReportParamDto> findParamPage() {
 		if (StringUtil.isNotEmpty(this.getParam("repId"))) {
 			return reportModelManage002Service.findParamPage(this.getParam("repId"));
 		}
 		
-		return new ArrayList<ReportModelManage002Dto>();
+		return new ArrayList<ReportParamDto>();
 	}
 	/**
 	    * 
@@ -132,15 +138,23 @@ public class ReportModelManage002Controller extends BaseController {
 			String datas = this.getParam("object");
 			String addParam = this.getParam("addParam");
 			ReportModelManage002Dto dto = JsonUtils.json2Object(datas, ReportModelManage002Dto.class);
-			List<ReportModelManage002Dto> addParamList = JsonUtils.json2List(addParam, ReportModelManage002Dto.class);
-			if(null!=addParamList&&addParamList.size()!=0){
-				//讲模板参数拼接成指定格式
-				String reportParams ="{";
-				for(ReportModelManage002Dto dto2:addParamList){
-					reportParams=reportParams+dto2.getParamName()+":'"+dto2.getParamType()+"',";		
-				}
-				reportParams=reportParams.substring(0, reportParams.length()-1)+"}";
-				dto.setReportParams(reportParams);
+			List<ReportParamDto> addParamList = JsonUtils.json2List(addParam, ReportParamDto.class);
+//			if(null!=addParamList&&addParamList.size()!=0){
+//				//讲模板参数拼接成指定格式
+//				String reportParams ="{";
+//				for(ReportModelManage002Dto dto2:addParamList){
+//					reportParams=reportParams+dto2.getParamName()+":'"+dto2.getParamType()+"',";
+//				}
+//				reportParams=reportParams.substring(0, reportParams.length()-1)+"}";
+//				dto.setReportParams(reportParams);
+//			}
+
+			if(CollectionUtils.isNotEmpty(addParamList)){
+//				JSONObject jSONObject=new JSONObject();
+//				for (ReportParamDto reportParamDto:addParamList) {
+//					jSONObject.put(reportParamDto.getParamName(),reportParamDto);
+//				}
+				dto.setReportParams(JsonUtils.object2Json(addParamList));
 			}
 			try {
 				if (this.getPageModel().equals(GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {

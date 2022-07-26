@@ -91,17 +91,8 @@ public class InfoDisclosureGenAndSendMainService extends AutoSendCBBaseService{
 
     	logInfoBatchStart();
     	//获取需要自动披露的披露列表
-    	boolean isWork = false;
-    	String holidayIsWork = CacheUtil.getSysParam(ReportGlobalConstant.HOLIDAY_IS_WORK);
-    	if(StringUtil.equals(holidayIsWork, DictCodeList.是否_是.getValue())){
-    		isWork = true;
-    	}
-    	else{
-    		Date execDate = DateUtil.parse(executeDateStr);
-			if(revealDeadLineService.isWorkDay(execDate, DisclosureDictCodeList.交易市场_中国法定节假日.getValue())){
-				isWork = true;
-			}
-    	}
+    	boolean isWork = true;
+		String holidayIsWork = CacheUtil.getSysParam(ReportGlobalConstant.HOLIDAY_IS_WORK);
     	if(isWork){
     		//1.首先从组装批处理信息表中查询出所有需要执行的数据
     		List<InfoDisclosureGenAndSendEntity> repFileList = infoDisclosureGenAndSendMapper.getAllRepInstallFileList(); // sql内新增了POI报表信息查询  zhangyf 20200319
@@ -124,6 +115,20 @@ public class InfoDisclosureGenAndSendMainService extends AutoSendCBBaseService{
             	String jobSeq = "";
             	Date dateStr = null;
         		for (InfoDisclosureGenAndSendEntity infoDisclosureGenAndSendEntity : repFileList) {
+					//在这里加上具体每个作业的工作日判断 add by zhengxiaolian
+					isWork = false;
+					if(StringUtil.equals(holidayIsWork, DictCodeList.是否_是.getValue())){
+						isWork = true;
+					}
+					else{
+						Date execDate = DateUtil.parse(executeDateStr);
+						if(revealDeadLineService.isWorkDay(execDate, infoDisclosureGenAndSendEntity.getMarketCode())){
+							isWork = true;
+						}
+					}
+					if (!isWork) {
+					    continue;
+					}
         			if(!StringUtil.equals(jobSeq,infoDisclosureGenAndSendEntity.getJobSeq())){
         				if(StringUtil.isNotEmpty(jobSeq)){
         					//更新日志主表

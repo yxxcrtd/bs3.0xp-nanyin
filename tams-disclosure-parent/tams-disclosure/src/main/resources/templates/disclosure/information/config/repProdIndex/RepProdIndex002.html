@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{layout/default}">
+<head>
+    <title data-th-text="投资账户信息维护-新建">投资账户信息维护-新建</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <form class="layui-form joyin-form-wrap pro-module-form" id="submitForm">
+        <input type="text" id="isGrade" name="isGrade" data-th-value='${entity?.isGrade}' hidden>
+        <input type="text" id="prodType" name="prodType" data-th-value='${entity?.prodType}' hidden>
+        <div class="layui-form-item">
+            <div class="form-inline-wrap">
+                <label class="layui-form-label form-lable" data-th-text="子产品代码">子产品代码</label>
+                <div class="layui-input-inline input-inline">
+                    <select id="prodId" name="prodId" class="input-select"
+                            data-th-initValue="${entity?.prodId}"
+                            data-th-data-url="@{/disclosure/information/config/repProdIndex/RepProdIndex002/queryProdIdInfo2}"
+                            placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}"
+                            allowClear="true"
+                            formatoption="false" required>
+                    </select>
+                </div>
+            </div>
+            <div class="form-inline-wrap">
+                <label class="layui-form-label form-lable" data-th-text="产品名称">产品名称</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="prodName" name="prodName"
+                           class="layui-input form-input" placeholder="请选择"
+                           data-th-value="${entity?.prodName}" disabled="disabled" required>
+                </div>
+            </div>
+            <div class="form-inline-wrap">
+                <label class="layui-form-label form-lable" data-th-text="产品主代码">产品主代码</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="pProdId" name="pProdId"
+                           class="layui-input form-input" placeholder="请选择"
+                           data-th-value="${entity?.pProdId}" disabled="disabled" required>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="form-inline-wrap">
+                <label class="layui-form-label form-label-wrap"
+                       th:text="日期">日期</label>
+                <div class="layui-input-inline input-inline">
+                    <input required type="text" id="valueDate" name="valueDate"
+                           class="layui-input form-input input-dateSelect" placeholder="请输入内容"
+                           data-th-placeholder="#{SysCommon.placeholder}"
+                           data-th-value='${#dates.format(entity?.valueDate,"yyyy-MM-dd")}'
+                           >
+                </div>
+            </div>
+            <div class="form-inline-wrap">
+                <label class="layui-form-label form-lable" data-th-text="子产品资产净值">子产品资产净值</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="assetsValue" name="assetsValue" data-th-value='${entity?.assetsValue}'
+                           class="layui-input form-input text-number" data-textrange='2' data-fixtype='2' maxlength=17
+                           placeholder="请输入内容" required>
+                </div>
+            </div>
+            <div class="form-inline-wrap">
+                <label class="layui-form-label form-lable" data-th-text="子产品实收资本">子产品实收资本</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="capital" name="capital" data-th-value='${entity?.capital}'
+                           class="layui-input form-input text-number" data-textrange='2' data-fixtype='2' maxlength=17
+                           placeholder="请输入内容" required>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="form-inline-wrap">
+                <label class="layui-form-label form-lable" data-th-text="子产品单位净值">子产品单位净值</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="unitValue" name="unitValue" data-th-value='${entity?.unitValue}'
+                           class="layui-input form-input text-number" data-textrange='4' data-fixtype='2' maxlength=10
+                           placeholder="请输入内容" required>
+                </div>
+            </div>
+            <div class="form-inline-wrap">
+                <label class="layui-form-label form-lable" data-th-text="子产品单位累计净值">子产品单位累计净值</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="unitValueT" name="unitValueT" data-th-value='${entity?.unitValueT}'
+                           class="layui-input form-input text-number" data-textrange='4' data-fixtype='2' maxlength=10
+                           placeholder="请输入内容" required>
+                </div>
+            </div>
+            <div class="form-inline-wrap">
+                <label class="layui-form-label form-lable" data-th-text="子产品万份收益">子产品万份收益</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="wYield" name="wYield" data-th-value='${entity?.wYield}'
+                           class="layui-input form-input text-number" data-textrange='4' data-fixtype='2' maxlength=7
+                           placeholder="请输入内容">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="form-inline-wrap">
+                <label class="layui-form-label form-lable" data-th-text="子产品七日年化收益率">子产品七日年化收益率</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="yield7" name="yield7" data-th-value='${entity?.yield7}'
+                           class="layui-input form-input text-number" data-textrange='4' data-fixtype='2' maxlength=7
+                           placeholder="请输入内容">
+                </div>
+            </div>
+            <div class="form-inline-wrap">
+                <label class="layui-form-label form-lable" data-th-text="母产品总资产">母产品总资产</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="pAssets" name="pAssets" data-th-value='${entity?.pAssets}'
+                           class="layui-input form-input text-number" data-textrange='2' data-fixtype='2' maxlength=17
+                           placeholder="请输入内容" required>
+                </div>
+            </div>
+            <div class="form-inline-wrap">
+                <label class="layui-form-label form-lable" data-th-text="母产品资产净值">母产品资产净值</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="pAssetsValue" name="pAssetsValue" data-th-value='${entity?.pAssetsValue}'
+                           class="layui-input form-input text-number" data-textrange='2' data-fixtype='2' maxlength=17
+                           placeholder="请输入内容" required>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="form-inline-wrap">
+                <label class="layui-form-label form-lable" data-th-text="母产品实收资本">母产品实收资本</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="pCapital" name="pCapital" data-th-value='${entity?.pCapital}'
+                           class="layui-input form-input text-number" data-textrange='2' data-fixtype='2' maxlength=17
+                           placeholder="请输入内容" required>
+                </div>
+            </div>
+            <div class="form-inline-wrap">
+                <label class="layui-form-label form-lable" data-th-text="母产品单位净值">母产品单位净值</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="pUnitValue" name="pUnitValue" data-th-value='${entity?.pUnitValue}'
+                           class="layui-input form-input text-number" data-textrange='4' data-fixtype='2' maxlength=10
+                           placeholder="请输入内容" required>
+                </div>
+            </div>
+            <div class="form-inline-wrap">
+                <label class="layui-form-label form-lable" data-th-text="母产品单位累计净值">母产品单位累计净值</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="pUnitValueT" name="pUnitValueT" data-th-value='${entity?.pUnitValueT}'
+                           class="layui-input form-input text-number" data-textrange='4' data-fixtype='2' maxlength=10
+                           placeholder="请输入内容" required>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="form-inline-wrap">
+                <label class="layui-form-label form-lable" data-th-text="母产品万份收益">母产品万份收益</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="pWYield" name="pWYield" data-th-value='${entity?.pWYield}'
+                           class="layui-input form-input text-number" data-textrange='4' data-fixtype='2' maxlength=7
+                           placeholder="请输入内容">
+                </div>
+            </div>
+            <div class="form-inline-wrap">
+                <label class="layui-form-label form-lable" data-th-text="母产品七日年化收益率">母产品七日年化收益率</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="pYield7" name="pYield7" data-th-value='${entity?.pYield7}'
+                           class="layui-input form-input text-number" data-textrange='4' data-fixtype='2' maxlength=7
+                           placeholder="请输入内容">
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11" style="margin:50px;">
+        <div class="text-center">
+            <a id="RepProdIndex002_btn_save" class="layui-btn layui-btn-sm btn-save" data-th-text="#{SysCommon.save}">保存</a>
+            <a id="RepProdIndex002_btn_submit" class="layui-btn layui-btn-sm btn-submit" data-th-text="#{SysCommon.submit}">提交</a>
+            <a id="RepProdIndex002_btn_cancel" class="layui-btn layui-btn-sm btn-cancel" data-th-text="#{SysCommon.cancel}">取消</a>
+        </div>
+    </div>
+</div>
+<div layout:fragment="script">
+    <script data-th-src="@{/js/disclosure/information/config/repProdIndex/RepProdIndex002.js}" type="text/javascript"></script>
+</div>
+</body>
+
+</html>

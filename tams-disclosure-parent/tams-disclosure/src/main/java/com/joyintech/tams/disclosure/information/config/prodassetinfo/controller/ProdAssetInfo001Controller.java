@@ -43,7 +43,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -153,6 +155,20 @@ public class ProdAssetInfo001Controller extends BaseController{
             //todo:框架中导出的excel文件与需求中的不符
             return prodAssetInfo001Service.export(this.getPageId(),param);
         }
+    }
+
+
+    /**
+     * 导入check：单次导入数据量
+     *
+     * @param fileName 导入的文件名
+     * @return 处理结果
+     * @throws Exception 异常
+     */
+    @ResponseBody
+    @RequestMapping("checkImportData")
+    public AjaxResult checkImportData(String fileName) throws FileNotFoundException, ParseException {
+        return prodAssetInfoImportService.checkImportData(fileName);
     }
 
     /**

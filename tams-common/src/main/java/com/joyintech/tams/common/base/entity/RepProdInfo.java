@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.json.CustomDateDeserialize;
+import com.joyintech.framework.validation.annotation.NotEmpty;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -12,57 +14,68 @@ public class RepProdInfo extends BaseEntity {
     /**
      * 产品代码：子产品代码、母产品代码、普通产品代码
      */
+    @NotEmpty(fieldName = "子产品代码")
     private String prodId;
 
     /**
      * 产品名称：子产品名称、母产品名称、普通产品名称
      */
+    @NotEmpty(fieldName = "子产品名称")
     private String prodName;
 
     /**
      * 成立日期：子产品成立日期、母产品成立日期、普通产品成立日期
      */
+    @NotEmpty(fieldName = "子产品成立日")
     private Date setDate;
 
     /**
      * 募集金额：子产品或母产品募集金额、普通产品募集金额
      */
+    @NotEmpty(fieldName = "募集金额")
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal raiseAmt;
 
     /**
      * 产品简称：母产品简称/普通产品的产品简称，子产品为空
      */
+    @NotEmpty(fieldName = "产品简称")
     private String prodAbbr;
 
     /**
      * 产品登记编码：母产品产品登记编码、普通产品产品登记编码，子产品为空
      */
+    @NotEmpty(fieldName = "产品登记编码")
     private String prodRe;
 
     /**
      * 母产品代码：当为子产品时填写母产品代码。母产品、普通产品为空
      */
+    @NotEmpty(fieldName = "产品主代码")
     private String pProdId;
 
     /**
      * 募集开始日：母产品募集开始日，子产品为空
      */
+    @NotEmpty(fieldName = "募集开始日")
     private Date raiseStrdate;
 
     /**
      * 募集结束日：母产品募集结束日，子产品为空
      */
+    @NotEmpty(fieldName = "募集结束日")
     private Date raiseEnddate;
 
     /**
      * 到期日：母产品到期日、普通产品到期日，子产品为空
      */
+    @NotEmpty(fieldName = "产品到期日")
     private Date mdate;
 
     /**
      * 募集方式：不区分母子产品 01 公募/02 私募
      */
+    @NotEmpty(fieldName = "募集方式")
     private String raiseType;
 
     /**
@@ -73,16 +86,19 @@ public class RepProdInfo extends BaseEntity {
     /**
      * 是否是客户周期型产品：不区分母子产品 01 是/02 否
      */
+    @NotEmpty(fieldName = "是否是客户周期型产品")
     private String isPeriod;
 
     /**
      * 是否是分级产品：不区分母子产品 01 是/02 否
      */
+    @NotEmpty(fieldName = "是否是分级产品")
     private String isGrade;
 
     /**
      * 是否是指数型产品：不区分母子产品 01 是/02 否
      */
+    @NotEmpty(fieldName = "是否是指数型产品")
     private String isIndex;
 
     /**
@@ -93,49 +109,122 @@ public class RepProdInfo extends BaseEntity {
     /**
      * 投资性质：无需区分母子产品 01固定收益类/02权益类/03商品及金融衍生品类/04 混合类
      */
+    @NotEmpty(fieldName = "投资性质")
     private String natureInvest;
 
     /**
      * 产品类型（枚举值调整）：无需区分母子产品 N 净值/M 货币
      */
+    @NotEmpty(fieldName = "产品类型")
     private String prodType;
 
     /**
      * 发行方式：无需区分母子产品 01 开放式/02 封闭式
      */
+    @NotEmpty(fieldName = "发行方式")
     private String issuingWay;
 
     /**
      * 产品托管人名称：无需区分母子产品
      */
+    @NotEmpty(fieldName = "产品托管人名称")
     private String acctChnname;
 
     /**
      * 产品运作方式：无需区分母子产品 01 封闭式净值型/02 封闭式非净值型/03 开放式净值型/04 开放式非净值型
      */
+    @NotEmpty(fieldName = "")
     private String profitType;
 
     /**
      * 母产品状态：子产品为空 01 运行中/02 已到期/03 已销户，用于按照产品树结构选定适用产品
      */
+    @NotEmpty(fieldName = "产品状态")
     private String pdStatus;
 
     /**
      * 母产品系列：子产品为空 用于按照产品树结构选定适用产品，要给出估值账套分类中的三级“产品系列”
      */
+    @NotEmpty(fieldName = "产品系列")
     private String prodSeries;
 
     /**
-     * 产品起息日
-     * 这个字段用不上，新的表没有这个字段
+     * 发行状态 01 发行成功 02 发行失败 03 确认发行
      */
-    private Date vdate;
+    private String issueStatus;
 
     /**
-     * 披露渠道
-     * 这个字段用不上，新的表没有这个字段
+     * 信批产品类别 01 母产品 02 普通产品 03 子产品
      */
-    private String revealChannel;
+    private String repProdType;
+
+
+    /**
+     * 固定持有天数
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal holdday;
+
+    /**
+     * 托管部门
+     */
+    @NotEmpty(fieldName = "托管部门")
+    private String trustpart;
+
+    /**
+     * 错误信息
+     */
+    private String errormsg;
+
+    /**
+     *  发行状态备注
+     */
+    private String issueStatusRemark;
+
+
+    private Date vdate;
+
+    private String revealChannel ;
+
+    public String getIssueStatusRemark() {
+        return issueStatusRemark;
+    }
+
+    public void setIssueStatusRemark(String issueStatusRemark) {
+        this.issueStatusRemark = issueStatusRemark;
+    }
+
+    public String getTrustpart() {
+        return trustpart;
+    }
+
+    public void setTrustpart(String trustpart) {
+        this.trustpart = trustpart;
+    }
+
+    public String getErrormsg() {
+        return errormsg;
+    }
+
+    public void setErrormsg(String errormsg) {
+        this.errormsg = errormsg;
+    }
+
+    public BigDecimal getHoldday() {
+        return holdday;
+    }
+
+    public void setHoldday(BigDecimal holdday) {
+        this.holdday = holdday;
+    }
+
+    public String getRepProdType() {
+        return repProdType;
+    }
+
+    public void setRepProdType(String repProdType) {
+        this.repProdType = repProdType;
+    }
 
     public String getRevealChannel() {
         return revealChannel;
@@ -523,5 +612,21 @@ public class RepProdInfo extends BaseEntity {
      */
     public void setProdSeries(String prodSeries) {
         this.prodSeries = prodSeries == null ? null : prodSeries.trim();
+    }
+
+    /**
+     * 取得 发行状态 01 发行成功 02 发行失败 03 确认发行
+     * @return 发行状态 01 发行成功 02 发行失败 03 确认发行
+     */
+    public String getIssueStatus() {
+        return issueStatus;
+    }
+
+    /**
+     * 设置 发行状态 01 发行成功 02 发行失败 03 确认发行
+     * @param issueStatus 发行状态 01 发行成功 02 发行失败 03 确认发行
+     */
+    public void setIssueStatus(String issueStatus) {
+        this.issueStatus = issueStatus == null ? null : issueStatus.trim();
     }
 }

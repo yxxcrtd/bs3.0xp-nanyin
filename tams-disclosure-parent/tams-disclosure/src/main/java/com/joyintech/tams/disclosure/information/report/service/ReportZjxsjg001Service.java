@@ -1,18 +1,15 @@
 
 package com.joyintech.tams.disclosure.information.report.service;
 
-import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.tams.disclosure.information.report.dao.ReportZjxsjg001Mapper;
-import com.joyintech.tams.disclosure.information.report.dto.ReportZjxsjg001Dto;
+import com.joyintech.tams.disclosure.information.report.dao.ReportZjxsjgMapper;
+import com.joyintech.tams.disclosure.information.report.dto.ReportZjxsjgDto;
+import com.joyintech.tams.disclosure.rptdata.service.IReportDataService;
 import com.joyintech.tams.systemtools.service.CommonPlatformDateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 增加销售机构公告
@@ -23,45 +20,37 @@ import java.util.Map;
  * @see ReportZjxsjg001Service
  * @since 1.0
  */
-@Service
-@Transactional(rollbackFor = Exception.class)
-public class ReportZjxsjg001Service extends BaseService<ReportZjxsjg001Dto> {
+@Service("reportZjxsjg001Service")
+public class ReportZjxsjg001Service implements IReportDataService {
 
     @Autowired
     private CommonPlatformDateService commonPlatformDateService;
 
     @Autowired
-    private ReportZjxsjg001Mapper reportZjxsjg001Mapper;
+    private ReportZjxsjgMapper reportZjxsjgMapper;
     
-   /**
-    * 根据产品代码查询公告信息
-    * <一句话功能简述>
-    * <功能详细描述>
-    * @param params
-    * @return
-    * @throws Exception
-    * @see
-    * @since 1.0
-    */
-    public Map<String, Object> findZjxsjg(Map<String, Object> params) {
-        Map<String,Object> dataMap = new HashMap<String,Object>();
-        if (params.get("portnum") == null) {
-            return dataMap;
+    @Override
+    public List<Map<String, Object>> queryDatas(Map<String, Object> paraMap) {
+        Map<String,Object> dataMap = new HashMap<>();
+        List<Map<String,Object>> result = new ArrayList<>();
+        result.add(dataMap);
+        if (paraMap.get("pprodid") == null) {
+            return result;
         }
-        String prodId = params.get("portnum").toString();
-        Map<String,Object> searchparam = new HashMap<String,Object>();
+        String prodId = paraMap.get("pprodid").toString();
+        Map<String,Object> searchparam = new HashMap<>();
         searchparam.put("prodId", prodId);
-        ReportZjxsjg001Dto zjxsjg = reportZjxsjg001Mapper.queryZjxsjg(searchparam);
+        ReportZjxsjgDto zjxsjg = reportZjxsjgMapper.queryZjxsjg(searchparam);
         if (zjxsjg == null) {
-            return dataMap;
+            return result;
         }
-        dataMap.put("${prodName}", zjxsjg.getProdName());
-        dataMap.put("${regCode}", zjxsjg.getRegCode());
-        Date puDate = commonPlatformDateService.getSysDate();
-        if (null != params.get("endDate")) {
-            puDate = (java.sql.Date)params.get("endDate");
+        dataMap.put("prodName", zjxsjg.getProdName());
+        dataMap.put("regCode", zjxsjg.getRegCode());
+        String pubDateStr = commonPlatformDateService.getSysDateStr();
+        if (null != paraMap.get("enddate")) {
+            pubDateStr = (String)paraMap.get("enddate");
         }
-        dataMap.put("${pubDate}",DateUtil.format(puDate, DateUtil.DEFAULT_DATE_FORMAT_CN));
-        return dataMap;
+        dataMap.put("pubDate",DateUtil.format(DateUtil.parse(pubDateStr), DateUtil.DEFAULT_DATE_FORMAT_CN));
+        return result;
     }
 }

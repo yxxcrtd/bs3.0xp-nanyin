@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="ProFailureInfo.xlsx" name="产品要素调整信息">
+    <Worksheet javaBean="com.joyintech.tams.disclosure.information.config.profailureinfo.dto.ProFailureInfo001Dto">
+        <Row>
+            <Cell order="1" name="产品登记编码">prodRegistNo</Cell>
+            <Cell order="2" name="不成立原因">nocreateReason</Cell>
+            <Cell order="3" name="报告发布日期">reportIssueDate</Cell>
+        </Row>
+    </Worksheet>
+</Workbook>

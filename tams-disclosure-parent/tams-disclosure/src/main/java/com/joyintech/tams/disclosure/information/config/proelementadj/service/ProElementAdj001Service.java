@@ -10,10 +10,12 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
 import com.joyintech.tams.disclosure.information.config.hugeinfopro.dto.HugeInfoPro001Dto;
 import com.joyintech.tams.disclosure.information.config.proelementadj.dao.ProElementAdjMapper;
 import com.joyintech.tams.disclosure.information.config.proelementadj.dto.ProElementAdj001Dto;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -23,10 +25,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -137,7 +136,8 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
      * @return
      */
     public AjaxResult checkImportData(String fileName) {
-//        List<String> findList =  this.queryFinprod(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());
+        List<String> findProdRegistNoList =  this.getRegistNo(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());
+        List<String> findProdList =  this.getProdId(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());
         List<List<String>> objects = ExcelUtil.getTempList(fileName);
         if (objects.size() - 1 > 50000) {
             Map<String, Object> resultMap = new HashMap<>();
@@ -157,9 +157,9 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
             wr.setData(resultMap);
             return wr;
         } else {
-            if (null == objects.get(0) || objects.get(0).size() != 15) {
+            if (null == objects.get(0) || objects.get(0).size() != 13) {
                 Map<String, Object> resultMap = new HashMap<>();
-                resultMap.put("errorMsg", "数据格式错误，数据格式需要15列。");
+                resultMap.put("errorMsg", "数据格式错误，数据格式需要13列。");
                 AjaxResult wr = new AjaxResult();
                 wr.setData(resultMap);
                 return wr;
@@ -169,40 +169,44 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
                     StringBuilder errorMsg = new StringBuilder("");
                     List<String> rowData = objects.get(i);
 
+
                     if (!StringUtil.isNotEmpty(rowData.get(0))){
-                        errorMsg.append("数据状态 必填！");
-                    }
-//                    else if(!findList.contains(rowData.get(0))){
-//                        errorMsg.append("基金代码不存在！");
-//                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(1))){
                         errorMsg.append("产品登记编码 必填！");
                     }
-                    if (!StringUtil.isNotEmpty(rowData.get(2))){
+                    else if(!findProdRegistNoList.contains(rowData.get(0))){
+                        errorMsg.append("产品登记编码未在产品基本信息表中维护！");
+                    }
+                    if (!StringUtil.isNotEmpty(rowData.get(1))){
                         errorMsg.append("子产品代码 必填！");
                     }
-                    if (!StringUtil.isNotEmpty(rowData.get(3))){
-                        errorMsg.append("是否有代销机构 必填！");
+                    else if(!findProdList.contains(rowData.get(1))){
+                        errorMsg.append("子产品代码未在产品基本信息表中维护！");
                     }
-                    if (!StringUtil.isNotEmpty(rowData.get(4))){
+                    if (!StringUtil.isNotEmpty(rowData.get(2))){
+                        errorMsg.append("调整此产品要素原因 必填！");
+                    }
+                    if (!StringUtil.isNotEmpty(rowData.get(3))){
                         errorMsg.append("此产品要素调整描述文字1 必填！");
                     }
-                    if (!StringUtil.isNotEmpty(rowData.get(5))){
+                    if (!StringUtil.isNotEmpty(rowData.get(4))){
                         errorMsg.append("此产品要素调整描述文字2 必填！");
                     }
-                    if (!StringUtil.isNotEmpty(rowData.get(6))){
+                    if (!StringUtil.isNotEmpty(rowData.get(5))){
                         errorMsg.append("调整要素 必填！");
                     }
-                    if (!StringUtil.isNotEmpty(rowData.get(7))){
+                    if (!StringUtil.isNotEmpty(rowData.get(6))){
                         errorMsg.append("调整前 必填！");
                     }
-                    if (!StringUtil.isNotEmpty(rowData.get(8))){
+                    if (!StringUtil.isNotEmpty(rowData.get(7))){
                         errorMsg.append("调整后 必填！");
                     }
-                    if (!StringUtil.isNotEmpty(rowData.get(9))){
+                    if (!StringUtil.isNotEmpty(rowData.get(8))){
                         errorMsg.append("生效时间 必填！");
-                    }else if(!this.isDateStr(rowData.get(9))){
+                    }else if(!this.isDateStr(rowData.get(8))){
                         errorMsg.append("生效时间 格式不正确！");
+                    }
+                    if (!StringUtil.isNotEmpty(rowData.get(9))){
+                        errorMsg.append("对此要素调整(原因) 必填！");
                     }
                     if (!StringUtil.isNotEmpty(rowData.get(10))){
                         errorMsg.append("调整此要素（补充说明文1） 必填！");
@@ -215,15 +219,6 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
                     }else if(!this.isDateStr(rowData.get(12))){
                         errorMsg.append("报告发布日期 格式不正确！");
                     }
-                    if (!StringUtil.isNotEmpty(rowData.get(13))){
-                        errorMsg.append("更新时间 必填！");
-                    }else if(!this.isDateStr(rowData.get(13))){
-                        errorMsg.append("更新时间 格式不正确！");
-                    }
-                    if (!StringUtil.isNotEmpty(rowData.get(14))){
-                        errorMsg.append("更新人 必填！");
-                    }
-
                     if (StringUtil.isNotEmpty(errorMsg.toString())){
                         errorMsg.append("<br />");
                         returnerrorMsg.append("第"+(i+1)+"行数据："+errorMsg.toString());
@@ -283,23 +278,30 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
 
     public AjaxResult importFile(Map<String, Object> param) {
         AjaxResult ajaxResult = new AjaxResult();
+        Date sysDate = com.joyintech.framework.util.DateUtil.platDateFromCache();
         String tempList = (String) param.get("tempList");
         ProElementAdj001Dto dto = getValNetAssetQuotationInfoListData(tempList);
         List<ProElementAdj001Dto> selectedItem = dto.getSelectedItem();
         List<ProElementAdj001Dto>  existData = new ArrayList<>();
         List<ProElementAdj001Dto>  newData = new ArrayList<>();
-//        for (ProElementAdj001Dto temp:selectedItem) {
-//            //数据已存在 【产品登记编码 相同】，做更新操作。
+        for (ProElementAdj001Dto temp:selectedItem) {
+            //数据已存在 【产品登记编码 相同】，做更新操作。
 //            if (StringUtil.isNotEmpty(this.selectByProdRegistNo(temp.getProdRegistNo()))){
 //                existData.add(temp);
 //            }else {
 //                newData.add(temp);
 //            }
-//        }
-        //更新操作
-        for (ProElementAdj001Dto existDataDto : existData) {
-            this.doComplete(existDataDto,OperationType.MODIFY);
+            temp.setDataStatus(DictCodeListExt3.信披_数据状态_有效.getValue());
+            temp.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
+            temp.setUpdateTime(sysDate);
+            temp.setUpdateUser(CommonUtil.getUserName());
+            temp.setProdAdjustId(IDGenerator.generate(36));
+            newData.add(temp);
         }
+        //更新操作
+//        for (ProElementAdj001Dto existDataDto : existData) {
+//            this.doComplete(existDataDto,OperationType.MODIFY);
+//        }
         //插入操作
         for (ProElementAdj001Dto newDataDto : newData
         ) {
@@ -312,7 +314,7 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
 
     public ProElementAdj001Dto getValNetAssetQuotationInfoListData(String tempList) {
         ProElementAdj001Dto dto = new ProElementAdj001Dto();
-        // 行情信息列表
+        // 产品要素调整信息列表
         List<ProElementAdj001Dto> proElementAdj001DtoList = new ArrayList<>();
         dto.setSelectedItem(proElementAdj001DtoList);
         JSONArray objects = JSONArray.parseArray(tempList);
@@ -321,34 +323,34 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
             JSONArray rowData = JSONArray.parseArray(((JSONArray) objects.get(i)).toJSONString());
             ProElementAdj001Dto proElementAdj001Dto = new ProElementAdj001Dto();
             if (StringUtil.isNotEmpty(rowData.get(0))) {
-                proElementAdj001Dto.setDataStatus(rowData.get(0).toString());
+                proElementAdj001Dto.setProdRegistNo(rowData.get(0).toString());
             }
             if (StringUtil.isNotEmpty(rowData.get(1))) {
-                proElementAdj001Dto.setProdRegistNo(rowData.get(1).toString());
+                proElementAdj001Dto.setProdId(rowData.get(1).toString());
             }
             if (StringUtil.isNotEmpty(rowData.get(2))) {
-                proElementAdj001Dto.setProdId(rowData.get(2).toString());
+                proElementAdj001Dto.setAdjReason(rowData.get(2).toString());
             }
             if (StringUtil.isNotEmpty(rowData.get(3))) {
-                proElementAdj001Dto.setIsSalesAgency(rowData.get(3).toString());
+                proElementAdj001Dto.setProdAdjRemark(rowData.get(3).toString());
             }
             if (StringUtil.isNotEmpty(rowData.get(4))) {
-                proElementAdj001Dto.setProdAdjRemark(rowData.get(4).toString());
+                proElementAdj001Dto.setProdAdjRemark2(rowData.get(4).toString());
             }
             if (StringUtil.isNotEmpty(rowData.get(5))) {
-                proElementAdj001Dto.setProdAdjRemark2(rowData.get(5).toString());
+                proElementAdj001Dto.setAdjField(rowData.get(5).toString());
             }
             if (StringUtil.isNotEmpty(rowData.get(6))) {
-                proElementAdj001Dto.setAdjField(rowData.get(6).toString());
+                proElementAdj001Dto.setPreAdjust(rowData.get(6).toString());
             }
             if (StringUtil.isNotEmpty(rowData.get(7))) {
-                proElementAdj001Dto.setPreAdjust(rowData.get(7).toString());
+                proElementAdj001Dto.setAfterAdjust(rowData.get(7).toString());
             }
             if (StringUtil.isNotEmpty(rowData.get(8))) {
-                proElementAdj001Dto.setAfterAdjust(rowData.get(8).toString());
+                proElementAdj001Dto.setEffDate(DateUtil.parse(rowData.get(8).toString()));
             }
             if (StringUtil.isNotEmpty(rowData.get(9))) {
-                proElementAdj001Dto.setEffDate(DateUtil.parse(rowData.get(9).toString()));
+                proElementAdj001Dto.setAdjReason(rowData.get(9).toString());
             }
             if (StringUtil.isNotEmpty(rowData.get(10))) {
                 proElementAdj001Dto.setFieldAdjRemark(rowData.get(10).toString());
@@ -358,12 +360,6 @@ public class ProElementAdj001Service extends CommonExportService<ProElementAdj00
             }
             if (StringUtil.isNotEmpty(rowData.get(12))) {
                 proElementAdj001Dto.setRptIssueDate(DateUtil.parse(rowData.get(12).toString()));
-            }
-            if (StringUtil.isNotEmpty(rowData.get(13))) {
-                proElementAdj001Dto.setUpdateTime(DateUtil.parse(rowData.get(13).toString()));
-            }
-            if (StringUtil.isNotEmpty(rowData.get(14))) {
-                proElementAdj001Dto.setUpdateUser(rowData.get(14).toString());
             }
             proElementAdj001DtoList.add(proElementAdj001Dto);
         }

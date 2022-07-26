@@ -36,118 +36,134 @@ $(function () {
 	    		var getVal = $('#'+ids[i].key).val();
 	    		if(getKey !='indexId'){
 	    			if(getVal){
-	    				obj[getKey] = getVal;
-	    				if(getKey == 'portnum'){
-	    					for (var int = 0; int < prodArray.length; int++) {
-	    						if(prodArray[int].id == getVal){
-	    							obj['portname'] = prodArray[int].text;
-	    							proName = prodArray[int].text;
-	    							break;
-	    						}
-	    					}
-	    				}
+						if(ids[i].multiFlag==='Y'){
+							obj[getKey]=getVal.join(",");
+						}else{
+							obj[getKey] = getVal;
+						}
+
 	    			}else{
 	    				return null;
 	    			}
 	    		}
         	}
-    		if(obj.startDate){
+    		if(obj.startDate&&obj.endDate){
     			if(obj.startDate>obj.endDate){
     				Joyin.alert('开始日不能大于结束日！',2);
     				return "flag";
     			}
     		}
     	}
+		console.log(obj);
     	return obj;
     };
 
     
   //展示报表查询条件
-    var showSearch = function(data){
-    	
-    	//拼接查询条件
-    	var SearchHtml = '<input type="hidden" name="repId" id="repId" value="'+repId+'" />'
-    	                 +'<input type="hidden" name="repName" id="repName" value="'+repName+'" />'
-    	                 +'<div class="layui-form-item">';
-    	for (var i = 0; i < data.length; i++) {
-    		if(data[i].screenKey != 'indexId') {
-    			SearchHtml +='<div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">'
-    				+'<label class="layui-form-label form-lable" style="width: 100px">'+data[i].screenName+'</label>'
-    				+'<div class="layui-input-inline input-inline" data-th-formatoption="false" style="width: 60%!important;">';
-    		}
-    		//如果类型是日期的
-    		if(data[i].screenType=='01'){
-    			SearchHtml+= '<input type="text" id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" placeholder="请选择日期" class="layui-input form-input input-dateSelect" />';
-    		//文本框
-    		}else if(data[i].screenType=='02'){
-    			SearchHtml+= '<input type="text" id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" placeholder="请输入名称" class="layui-input form-input"/>';
-    		//下拉框
-    		}else if(data[i].screenType=='03'){
-    			if(data[i].screenKey != 'indexId') {
-    				SearchHtml+= '<select id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" class="layui-input form-input input-select" placeholder="请选择" data-url="getPrdInfoSelect"'
-    				+'parentIds="repId" allowClear="true">'
-    				+'</select>';
-    			}
-    		}
-    		//下拉框，客户名称 zhangyf 20190426
-    		else if(data[i].screenType=='04'){
-    			if(data[i].screenKey != 'indexId') {
-    				SearchHtml+= '<select id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" class="layui-input form-input input-select" placeholder="请选择" data-url="getCusInfoSelect"'
-    				+'parentIds="repId" allowClear="true">'
-    				+'</select>';
-    			}
-    		}
-    		//多选产品下拉框 leipeng 20200401
-    		else if(data[i].screenType=='05'){
-    			if(data[i].screenKey != 'indexId') {
-    				SearchHtml+= '<select id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" class="layui-input form-input input-select" placeholder="请选择" data-url="getPrdInfoSelect"'
-    				+'parentIds="repId" allowClear="true" multiple="true">'
-    				+'</select>';
-    			}
-    		}
-    		else if(data[i].screenType=='06'){
-    			if(data[i].screenKey != 'indexId') {
-    				SearchHtml+= '<select id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" class="layui-input form-input input-select" placeholder="请选择" data-url="getProdSeriesList"'
-    				+'parentIds="repId" allowClear="true">'
-    				+'</select>';
-    			}
-    		}
-			ids.push({key:data[i].screenKey,type:data[i].screenType});
-    		SearchHtml +='</div></div>';
-    		
+	var showSearch = function(data){
+
+		//拼接查询条件
+		var SearchHtml = '<input type="hidden" name="repId" id="repId" value="'+repId+'" />'
+			+'<input type="hidden" name="repName" id="repName" value="'+repName+'" />'
+			+'<div class="layui-form-item">';
+		for (var i = 0; i < data.length; i++) {
+			if(data[i].screenKey != 'indexId') {
+				SearchHtml +='<div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">'
+					+'<label class="layui-form-label form-lable" style="width: 100px">'+data[i].screenName+'</label>'
+					+'<div class="layui-input-inline input-inline" data-th-formatoption="false" style="width: 60%!important;">';
+			}
+			//产品名称下拉框
+			if(data[i].screenType==='01'){
+				SearchHtml+= '<select id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" class="layui-input form-input input-select" placeholder="请选择" data-url="getPProdIdList"'
+					+'parentIds="repId,prodid" allowClear="true"';
+				if(data[i].multiFlag==='Y'){
+					SearchHtml+= 'multiple="true">' +'</select>';
+				}else{
+					SearchHtml+= '>' +'</select>';
+				}
+			}
+			//子产品代码下拉框
+			else if(data[i].screenType==='02'){
+				SearchHtml+= '<select id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" class="layui-input form-input input-select" placeholder="请选择" data-url="getProdIdList"'
+					+'parentIds="repId,pprodid" allowClear="true"';
+				if(data[i].multiFlag==='Y'){
+					SearchHtml+= 'multiple="true">' +'</select>';
+				}else{
+					SearchHtml+= '>' +'</select>';
+				}
+			}
+			//费率名称下拉框
+			else if(data[i].screenType==='03'){
+				SearchHtml+= '<select id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" class="layui-input form-input input-select" placeholder="请选择" data-url="getFeeNameList"'
+					+'parentIds="repId,pprodid" allowClear="true" formatoption="false"';
+				if(data[i].multiFlag==='Y'){
+					SearchHtml+= 'multiple="true">' +'</select>';
+				}else{
+					SearchHtml+= '>' +'</select>';
+				}
+			}
+			//要素名称下拉框
+			else if(data[i].screenType==='04'){
+				SearchHtml+= '<select id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" class="layui-input form-input input-select" placeholder="请选择" data-url="getElementNameList"'
+					+'parentIds="repId,pprodid" allowClear="true" formatoption="false"';
+				if(data[i].multiFlag==='Y'){
+					SearchHtml+= 'multiple="true">' +'</select>';
+				}else{
+					SearchHtml+= '>' +'</select>';
+				}
+			}
+			//季度选择框
+			else if(data[i].screenType==='05'){
+				SearchHtml+= '<select id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" class="layui-input form-input input-select" placeholder="请选择" data-url="getQuarter"'
+					+'parentIds="repId" allowClear="true">' +'</select>';
+			}
+			//半年度选择框
+			else if(data[i].screenType==='06'){
+				SearchHtml+= '<select id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" class="layui-input form-input input-select" placeholder="请选择" data-url="getHalfYear"'
+					+'parentIds="repId" allowClear="true">' +'</select>';
+			}
+			//年度选择框
+			else if(data[i].screenType==='07'){
+				SearchHtml+= '<input type="text" id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" placeholder="请选择日期" class="layui-input form-input input-dateSelect" />';
+			}
+			//开始日期
+			else if(data[i].screenType==='08'){
+				SearchHtml+= '<input type="text" id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" placeholder="请选择日期" class="layui-input form-input input-dateSelect" />';
+			}
+			//结束日期
+			else if(data[i].screenType==='09'){
+				SearchHtml+= '<input type="text" id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" placeholder="请选择日期" class="layui-input form-input input-dateSelect" />';
+			}
+			ids.push({key:data[i].screenKey,type:data[i].screenType,multiFlag:data[i].multiFlag});
+			SearchHtml +='</div></div>';
+
 		}
-    	SearchHtml += '</div>';
-    	$('#showSearch').html(SearchHtml);
-    	
-    	
-    	for(var i in ids){
-    		//日期类型(单选)
-    		if(ids[i].type=='01'){
-        		$('#'+ids[i].key+'').textDate(false, defaultDateStyle);
-                if(ids[i].key == 'startDate'){
-                	$('#'+ids[i].key+'').val(cureDate);
-                }else{
-                	$('#'+ids[i].key+'').val(cureDate);
-                }
-        	//文本框
-    		}else if(ids[i].type=='02'){
-        		
-    		//下拉框
-    		}else if(ids[i].type=='03' || ids[i].type=='04' ||ids[i].type=='05' || ids[i].type=='06'){
-        		$('#'+ids[i].key+'').textSelect();
-    		}
-    	}
-    }
-    
-    var getOpt = function(type){
-    	
-    	var option = "";
-    	for(var i = 0 ; i<prodArray.length;i++){
-    		option +='<option value ="'+prodArray[i].id+'">'+prodArray[i].text+'</option>';
-    	}
-    	return option;
-    }
-    
+		SearchHtml += '</div>';
+		$('#showSearch').html(SearchHtml);
+
+		var laydate = layui.laydate;
+		laydate.render({
+			elem: '#year',
+			type: 'year',
+			format: 'yyyy'
+		});
+
+		for(var i in ids){
+			//日期类型(单选)
+			if(ids[i].type==='08'||ids[i].type==='09'){
+				$('#'+ids[i].key+'').textDate(false, defaultDateStyle);
+				if(ids[i].key === 'startDate'){
+					$('#'+ids[i].key+'').val(cureDate);
+				}else{
+					$('#'+ids[i].key+'').val(cureDate);
+				}
+				//文本框
+			} else {
+				$('#'+ids[i].key+'').textSelect();
+			}
+		}
+	}
+
   //树单击事件
     var zTreeOnClick = function(event, treeId, treeNode, clickFlag){
     	
@@ -256,6 +272,7 @@ $(function () {
 	    }else{
 	    	params['uri'] = modelId;
 	    	params['repId']=repId;
+			console.log(params)
 				alert("b");
 	    	Joyin.ajax('previewReport', params, function(result) {
 				//var data =result.replace(new RegExp(changeStr, "g"), toStr);

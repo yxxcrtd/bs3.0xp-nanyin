@@ -1,65 +1,16 @@
-
 package com.joyintech.tams.disclosure.information.report.dto;
 
-import com.joyintech.framework.base.BaseEntity;
-
-import java.math.BigDecimal;
-import java.util.Date;
+import java.util.List;
 
 /**
- * 产品开放期公告/报告
- * 〈一句话功能简述〉
- * 〈功能详细描述〉
- * @author zhengbaosheng
- * @version 1.0 2022年07月14日
- * @see ReportKfqgg001Dto
- * @since 1.0
+ * 1.1.3.产品开放期公告/报告
  */
-public class ReportKfqgg001Dto extends BaseEntity {
-    /**
-     * 产品代码
-     */
-    private String prodId;
-    /**
-     * 产品名称
-     */
+public class ReportKfqgg001Dto {
+    /**/
     private String prodName;
-    /**
-     * 公告年度
-     */
-    private String announceYear;
-
-    /**
-     * 公告月
-     */
-    private String announceMonth;
-
-    /**
-     * 公告日
-     */
-    private String announceDay;
-
-    /**
-     *
-     * @return
-     */
-    private String pProdId;
-
-    public String getpProdId() {
-        return pProdId;
-    }
-
-    public void setpProdId(String pProdId) {
-        this.pProdId = pProdId;
-    }
-
-    public String getProdId() {
-        return prodId;
-    }
-
-    public void setProdId(String prodId) {
-        this.prodId = prodId;
-    }
+    private String year;
+    private String plateDate;
+    private List<ReportOpenPlanDto> openList;
 
     public String getProdName() {
         return prodName;
@@ -69,27 +20,27 @@ public class ReportKfqgg001Dto extends BaseEntity {
         this.prodName = prodName;
     }
 
-    public String getAnnounceYear() {
-        return announceYear;
+    public String getYear() {
+        return year;
     }
 
-    public void setAnnounceYear(String announceYear) {
-        this.announceYear = announceYear;
+    public void setYear(String year) {
+        this.year = year;
     }
 
-    public String getAnnounceMonth() {
-        return announceMonth;
+    public String getPlateDate() {
+        return plateDate;
     }
 
-    public void setAnnounceMonth(String announceMonth) {
-        this.announceMonth = announceMonth;
+    public void setPlateDate(String plateDate) {
+        this.plateDate = plateDate;
     }
 
-    public String getAnnounceDay() {
-        return announceDay;
+    public List<ReportOpenPlanDto> getOpenList() {
+        return openList;
     }
 
-    public void setAnnounceDay(String announceDay) {
-        this.announceDay = announceDay;
+    public void setOpenList(List<ReportOpenPlanDto> openList) {
+        this.openList = openList;
     }
 }

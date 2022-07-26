@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.constant.DictCodeExt1;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,6 +85,7 @@ public class ReportPageManage002Controller extends BaseController {
         this.setSelectOptionToModel(model, DisclosureDictCode.产品类型);
         this.setSelectOptionToModel(model, DisclosureDictCode.理财类型);
         this.setSelectOptionToModel(model, DisclosureDictCode.产品期限类型);
+        this.setSelectOptionToModel(model, DictCodeExt1.发行方式_信批);
         model.addAttribute("templatePath",getParam("templatePath"));
         model.addAttribute("templateId",getParam("templateId"));
         model.addAttribute("templateName",getParam("templateName"));
@@ -147,7 +149,7 @@ public class ReportPageManage002Controller extends BaseController {
         AjaxResult value = new AjaxResult();
         try {
 //        	List<Map<String,String>> result = reportPageManage001Service.getReportInputs(RequestUtil.getPageParam());
-        	List<Map<String,String>> result = reportPageManage001Service.getReportInputsNew(RequestUtil.getPageParam());
+        	List<Map<String,Object>> result = reportPageManage001Service.getReportInputsNew(RequestUtil.getPageParam());
         	value.setData(result);
         }catch (Exception e) {
             value.setMessage("查询报表模板:"+e.getMessage(), MessageType.错误消息);

@@ -8,10 +8,12 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * @author Administrator
- *
+ * 清算报表实体类
+ * @author chenxc
+ * @version 1.0 2022年07月20日
+ * @since 1.0
  */
-public class SettReportDto {
+public class SettReportDto extends ReportDto {
 	
 	private String prodName;  // 产品名称
 	private String prodRe;  // 登记编码
@@ -33,6 +35,9 @@ public class SettReportDto {
 	private BigDecimal profit;  //应付利润
 	private BigDecimal otherPayAmt;  //其他应付紧额
 	private BigDecimal assetValue;  //资产价值，固定值0
+	
+	private Date signDate; //报告签字日期
+	
 	public String getProdName() {
 		return prodName;
 	}
@@ -152,6 +157,12 @@ public class SettReportDto {
 	}
 	public void setAssetValue(BigDecimal assetValue) {
 		this.assetValue = assetValue;
+	}
+	public Date getSignDate() {
+		return signDate;
+	}
+	public void setSignDate(Date signDate) {
+		this.signDate = signDate;
 	}
 	
 }

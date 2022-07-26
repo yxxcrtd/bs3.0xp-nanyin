@@ -7,19 +7,18 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * @author Administrator
- *
+ * 分红报告实体类
+ * @author chenxc
+ * @version 1.0 2022年07月20日
+ * @since 1.0
  */
-public class BonusReportDto {
+public class BonusReportDto  extends ReportDto {
 	
-	private String prodName;        //产品名称
-	private String prodRe;        //产品登记编码
-	private String prodId;         //销售代码
 	private String issuingWay;        //开放模式
+	private String bonusMode;     //分红模式
 	private BigDecimal assetsValue;        //产品资产净值
 	private BigDecimal capital;        //产品期末余额（份额））
 	private BigDecimal unitValue;        //产品单位净值
-	private Date eDate;        //成立日
 	private Date lastSettDate;        //上一收益分配基准日
 	private Date settDate;        //本期收益分配基准日
 	private Integer runDays;          //运行天数
@@ -33,31 +32,18 @@ public class BonusReportDto {
 	private BigDecimal distributedProfit;        //应分配分红金额
 	private BigDecimal unitProfit;        //单位分红
 	private BigDecimal yearYield;        //年化收益率
-	private BigDecimal genDate;        //生成日期
-	
-	public String getProdName() {
-		return prodName;
-	}
-	public void setProdName(String prodName) {
-		this.prodName = prodName;
-	}
-	public String getProdRe() {
-		return prodRe;
-	}
-	public void setProdRe(String prodRe) {
-		this.prodRe = prodRe;
-	}
-	public String getProdId() {
-		return prodId;
-	}
-	public void setProdId(String prodId) {
-		this.prodId = prodId;
-	}
+
 	public String getIssuingWay() {
 		return issuingWay;
 	}
 	public void setIssuingWay(String issuingWay) {
 		this.issuingWay = issuingWay;
+	}
+	public String getBonusMode() {
+		return bonusMode;
+	}
+	public void setBonusMode(String bonusMode) {
+		this.bonusMode = bonusMode;
 	}
 	public BigDecimal getAssetsValue() {
 		return assetsValue;
@@ -76,12 +62,6 @@ public class BonusReportDto {
 	}
 	public void setUnitValue(BigDecimal unitValue) {
 		this.unitValue = unitValue;
-	}
-	public Date getEDate() {
-		return eDate;
-	}
-	public void setEDate(Date setDate) {
-		this.eDate = setDate;
 	}
 	public Date getLastSettDate() {
 		return lastSettDate;
@@ -160,12 +140,6 @@ public class BonusReportDto {
 	}
 	public void setYearYield(BigDecimal yearYield) {
 		this.yearYield = yearYield;
-	}
-	public BigDecimal getGenDate() {
-		return genDate;
-	}
-	public void setGenDate(BigDecimal genDate) {
-		this.genDate = genDate;
 	}
 	
 }

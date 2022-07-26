@@ -39,14 +39,14 @@
 		select PROD_ID id,
 		nvl(PROD_NAME,PROD_ABBR) text
 		from REP_PROD_INFO
-		where  P_PROD_ID is not null
+		where  (P_PROD_ID is null or PROD_ID=P_PROD_ID)
 		<if test="dataStatus != null and dataStatus != ''">
 			and STATUS=#{dataStatus,jdbcType=VARCHAR}
 		</if>
 		<if test="search != null and search != ''">
-			and (FIN_PRODUCT.FINPROD_MARKET_ID like
+			and (PROD_ID like
 			concat(concat('%',#{search}),'%')
-			or FIN_PRODUCT.FINPROD_NAME like concat(concat('%',#{search}),'%'))
+			or PROD_NAME like concat(concat('%',#{search}),'%'))
 		</if>
 	</select>
 	<select id="select"
@@ -103,9 +103,23 @@
 			</foreach>
 		</where>
 	</select>
-    <select id="selectByProdId" resultType="java.lang.Integer">
-		select count(1) count from REP_PROD_INFO
-		where PROD_ID=#{prodId,jdbcType=VARCHAR}
+    <select id="selectPartnerByProdId" resultType="com.joyintech.tams.disclosure.information.config.prodpartner.dto.ProdPartnerDto">
+		select
+			dpp.PROD_PARTENER_ID prodPartenerId,
+			dpp.PROD_ID prodId,
+			dpp.PARTNER_NAME partnerName,
+			dpp.EFF_DATE effDate,
+			dpp.EFF_END_DATE effEndDate,
+			dpp.DATA_STATUS dataStatus
+		from DIS_PROD_PARTNER dpp
+		where dpp.DATA_STATUS='01'
+		and dpp.PROD_ID=#{prodId,jdbcType=VARCHAR}
+	</select>
+	<select id="selectByProdId" resultType="java.lang.Integer">
+		select count(1) count
+		from REP_PROD_INFO
+		where P_PROD_ID is null
+		and PROD_ID=#{prodId,jdbcType=VARCHAR}
 	</select>
 
 
