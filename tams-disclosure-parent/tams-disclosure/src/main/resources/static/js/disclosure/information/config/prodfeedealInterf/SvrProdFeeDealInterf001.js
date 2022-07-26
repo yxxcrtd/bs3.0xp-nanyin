@@ -199,7 +199,8 @@ $(function() {
                                     if (checkResult.data.confirmMsg) {
                                         Joyin.confirm(checkResult.data.confirmMsg, function () {
                                             var data = {
-                                                tempList: checkResult.data.correctData
+                                                tempList: checkResult.data.correctData,
+                                                flag: true
                                             }
                                             Joyin.ajaxJson(basePath + 'disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf001/importFile', data,
                                                 function (resultObj) {
@@ -209,12 +210,22 @@ $(function() {
                                                     }
                                                 });
                                         },{}, function () {
-                                            layui.layer.closeAll()
-                                            table.reload();
+                                            var data = {
+                                                tempList: checkResult.data.correctData,
+                                                flag: false
+                                            }
+                                            Joyin.ajaxJson(basePath + 'disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf001/importFile', data,
+                                                function (resultObj) {
+                                                    if (resultObj.statuCode.toString() === '200') {
+                                                        table.reload();
+                                                        return;
+                                                    }
+                                                });
                                         });
                                     }else {
                                         var data = {
-                                            tempList: checkResult.data.correctData
+                                            tempList: checkResult.data.correctData,
+                                            flag: true
                                         }
                                         Joyin.ajaxJson(basePath + 'disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf001/importFile', data,
                                             function (resultObj) {

@@ -259,14 +259,34 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
                 }
             }
         }
-        if (repeatNum > 0){
-            totalMsg += "导入文件存在"+String.valueOf(repeatNum)+"条数据重复，重复数据不导入，是否确认？";
-        }
+//        if (repeatNum > 0){
+//            totalMsg += "导入文件存在"+String.valueOf(repeatNum)+"条数据重复，重复数据不导入，是否确认？";
+//        }
         Map<String, Object> resultMap = new HashMap<>();
-        if (StringUtil.isNotBlank(totalMsg)) {
-            resultMap.put("confirmMsg", totalMsg);
-        }
+//        if (StringUtil.isNotBlank(totalMsg)) {
+//            resultMap.put("confirmMsg", totalMsg);
+//        }
         resultMap.put("correctData", JsonUtils.object2Json(jsonArrays));
+        String tempList = (String) resultMap.get("correctData");
+        SvrProdFeeDealInterfDto dto = getValNetAssetQuotationInfoListData(tempList);
+        List<SvrProdFeeDealInterfDto> selectedItem = dto.getSelectedItem();
+        List<SvrProdFeeDealInterfDto>  existData = new ArrayList<>();
+        List<SvrProdFeeDealInterfDto>  newData = new ArrayList<>();
+        for (SvrProdFeeDealInterfDto temp:selectedItem) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("prodId",temp.getProdId());
+            map.put("feeType",temp.getFeeType());
+            map.put("payDate",temp.getPayDate());
+            if (StringUtil.isNotEmpty(this.selectData(map))){
+                existData.add(temp);
+            }else {
+                newData.add(temp);
+            }
+        }
+        if(existData.size() > 0){
+            resultMap.put("confirmMsg", "有重复信息，是否覆盖？");
+        }
+
         AjaxResult wr = new AjaxResult();
         wr.setData(resultMap);
         return wr;
@@ -305,6 +325,7 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
     public AjaxResult importFile(Map<String, Object> param) {
         AjaxResult ajaxResult = new AjaxResult();
         String tempList = (String) param.get("tempList");
+        Boolean flag = (Boolean) param.get("flag");
         SvrProdFeeDealInterfDto dto = getValNetAssetQuotationInfoListData(tempList);
         List<SvrProdFeeDealInterfDto> selectedItem = dto.getSelectedItem();
         List<SvrProdFeeDealInterfDto>  existData = new ArrayList<>();
@@ -321,9 +342,12 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
             }
         }
         //更新操作
-        for (SvrProdFeeDealInterfDto existDataDto : existData) {
-            this.doComplete(existDataDto,OperationType.MODIFY);
+        if(flag){
+            for (SvrProdFeeDealInterfDto existDataDto : existData) {
+                this.doComplete(existDataDto,OperationType.MODIFY);
+            }
         }
+
         //插入操作
         for (SvrProdFeeDealInterfDto newDataDto : newData) {
             this.doComplete(newDataDto,OperationType.NEW);
