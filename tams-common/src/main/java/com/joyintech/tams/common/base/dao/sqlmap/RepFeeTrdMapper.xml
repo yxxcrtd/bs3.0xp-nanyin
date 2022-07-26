@@ -23,7 +23,8 @@
     </sql>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
         delete from REP_FEE_TRD
-        where PROD_ID = #{id,jdbcType=VARCHAR}
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+          and PAY_DATE = #{payDate,jdbcType=DATE}
     </delete>
     <!--新增所有列-->
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepFeeTrd">
@@ -128,22 +129,22 @@
 								CREATE_USER,CREATE_TIME,CREATE_DEPT,
                                 UPDATE_USER,UPDATE_TIME,ERRORMSG
              from REP_FEE_TRD
-             where STATUS = 1=1 and PROD_ID = #{id,jdbcType=VARCHAR}
+             where STATUS = 'E'
+             and PROD_ID = #{prodId,jdbcType=VARCHAR}
+             and PAY_DATE = #{payDate,jdbcType=DATE}
     </insert>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
         select
         <include refid="com.joyintech.tams.common.base.dao.RepFeeTrdMapper.Base_Column_List" />
         from REP_FEE_TRD
-        where PROD_ID = #{id,jdbcType=VARCHAR}
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+        and PAY_DATE = #{payDate,jdbcType=DATE}
     </select>
     <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepFeeTrd" >
         update REP_FEE_TRD
         <set >
             <if test="feeType != null" >
                 FEE_TYPE = #{paidFee,jdbcType=VARCHAR},
-            </if>
-            <if test="payDate != null" >
-                PAY_DATE = #{paidFee,jdbcType=DATE},
             </if>
             <if test="paidFee != null" >
                 PAID_FEE = #{paidFee,jdbcType=DECIMAL},
@@ -164,17 +165,18 @@
                 ERRORMSG = #{errorMsg,jdbcType=VARCHAR},
             </if>
         </set>
-        where PROD_ID = #{id,jdbcType=VARCHAR}
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+        and PAY_DATE = #{payDate,jdbcType=DATE}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepExpectedLog" >
         update REP_FEE_TRD
         set FEE_TYPE = #{feeType,jdbcType=VARCHAR},
-            PAY_DATE = #{payDate,jdbcType=DATE},
             PAID_FEE = #{paidFee,jdbcType=DECIMAL},
             ACCRUAL = #{accrual,jdbcType=DECIMAL},
             STATUS = #{status,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
-        where PROD_ID = #{id,jdbcType=VARCHAR}
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+        and PAY_DATE = #{payDate,jdbcType=DATE}
     </update>
 </mapper>

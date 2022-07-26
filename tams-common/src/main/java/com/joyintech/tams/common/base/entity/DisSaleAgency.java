@@ -7,14 +7,14 @@ import java.util.Date;
 
 public class DisSaleAgency extends BaseEntity {
     /**
+     * 代销机构uuid
+     */
+    private String sequenceNo;
+
+    /**
      * 代销机构名称
      */
     private String agencyName;
-
-    /**
-     * 代销机构id
-     */
-    private String agencyId;
 
     /**
      * 协议起始时间
@@ -25,6 +25,22 @@ public class DisSaleAgency extends BaseEntity {
      * 协议终止时间
      */
     private Date agreementMdate;
+
+    /**
+     * 取得 代销机构uuid
+     * @return 代销机构uuid
+     */
+    public String getSequenceNo() {
+        return sequenceNo;
+    }
+
+    /**
+     * 设置 代销机构uuid
+     * @param sequenceNo 代销机构uuid
+     */
+    public void setSequenceNo(String sequenceNo) {
+        this.sequenceNo = sequenceNo == null ? null : sequenceNo.trim();
+    }
 
     /**
      * 取得 代销机构名称
@@ -40,22 +56,6 @@ public class DisSaleAgency extends BaseEntity {
      */
     public void setAgencyName(String agencyName) {
         this.agencyName = agencyName == null ? null : agencyName.trim();
-    }
-
-    /**
-     * 取得 代销机构id
-     * @return 代销机构id
-     */
-    public String getAgencyId() {
-        return agencyId;
-    }
-
-    /**
-     * 设置 代销机构id
-     * @param agencyId 代销机构id
-     */
-    public void setAgencyId(String agencyId) {
-        this.agencyId = agencyId == null ? null : agencyId.trim();
     }
 
     /**

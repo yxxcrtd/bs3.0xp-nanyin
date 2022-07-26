@@ -51,7 +51,7 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
         AjaxResult wr = new AjaxResult();
         List<JoyinMessage> joyinMessages = new ArrayList<>();
         //获取系统参数：单次导入的最大条数 todo:添加系统参数
-        int maxCount = CacheUtil.getSysParam("SEND_CB_MAX_DATA_COUNT")==null?50000:Integer.parseInt(CacheUtil.getSysParam("SEND_CB_MAX_DATA_COUNT"));
+        int maxCount = CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT")==null?50000:Integer.parseInt(CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT"));
         //todo:数据量较大时，操作耗时时间过长
         ExcelUtil excelUtil = ExcelUtil.build(FileNameUtil.getUploadFilePath(fileName),
                 null);

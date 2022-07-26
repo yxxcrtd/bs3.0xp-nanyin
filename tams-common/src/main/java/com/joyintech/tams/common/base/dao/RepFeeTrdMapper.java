@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RepFeeTrdMapper {
-    int deleteByPrimaryKey(String id);
+    int deleteByPrimaryKey(RepFeeTrd record);
 
     int insert(RepFeeTrd record);
 
@@ -13,7 +13,7 @@ public interface RepFeeTrdMapper {
 
     int insertBasicByBasicInfo(RepFeeTrd record);
 
-    RepFeeTrd selectByPrimaryKey(String id);
+    RepFeeTrd selectByPrimaryKey(RepFeeTrd record);
 
     int updateByPrimaryKeySelective(RepFeeTrd record);
 

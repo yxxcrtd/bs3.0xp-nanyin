@@ -2,84 +2,84 @@ package com.joyintech.tams.common.base.entity;
 
 public class ChbMktHoliday extends ChbMktHolidayKey {
     /**
-     * 是否节假日
+     * 是否节假日：0 工作日/1 节假日
      */
     private String isHoliday;
 
     /**
-     * 工作流代码
+     * null
      */
     private String workflowId;
 
     /**
-     * 部门代码
+     * null
      */
     private String deptCode;
 
     /**
-     * 经办人
+     * null
      */
     private String agent;
 
     /**
-     * 取得 是否节假日
-     * @return 是否节假日
+     * 取得 是否节假日：0 工作日/1 节假日
+     * @return 是否节假日：0 工作日/1 节假日
      */
     public String getIsHoliday() {
         return isHoliday;
     }
 
     /**
-     * 设置 是否节假日
-     * @param isHoliday 是否节假日
+     * 设置 是否节假日：0 工作日/1 节假日
+     * @param isHoliday 是否节假日：0 工作日/1 节假日
      */
     public void setIsHoliday(String isHoliday) {
         this.isHoliday = isHoliday == null ? null : isHoliday.trim();
     }
 
     /**
-     * 取得 工作流代码
-     * @return 工作流代码
+     * 取得 null
+     * @return null
      */
     public String getWorkflowId() {
         return workflowId;
     }
 
     /**
-     * 设置 工作流代码
-     * @param workflowId 工作流代码
+     * 设置 null
+     * @param workflowId null
      */
     public void setWorkflowId(String workflowId) {
         this.workflowId = workflowId == null ? null : workflowId.trim();
     }
 
     /**
-     * 取得 部门代码
-     * @return 部门代码
+     * 取得 null
+     * @return null
      */
     public String getDeptCode() {
         return deptCode;
     }
 
     /**
-     * 设置 部门代码
-     * @param deptCode 部门代码
+     * 设置 null
+     * @param deptCode null
      */
     public void setDeptCode(String deptCode) {
         this.deptCode = deptCode == null ? null : deptCode.trim();
     }
 
     /**
-     * 取得 经办人
-     * @return 经办人
+     * 取得 null
+     * @return null
      */
     public String getAgent() {
         return agent;
     }
 
     /**
-     * 设置 经办人
-     * @param agent 经办人
+     * 设置 null
+     * @param agent null
      */
     public void setAgent(String agent) {
         this.agent = agent == null ? null : agent.trim();

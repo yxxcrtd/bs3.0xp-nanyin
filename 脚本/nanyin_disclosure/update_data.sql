@@ -351,7 +351,7 @@ values ('ReportRule002', '999999', 'BATCH_QUARTZ_SKIP_HOLIDAY_MARKET_CAL_TYPE', 
 
 -- add by sunjie 20220725 产品要素调整 start
 -- 产品要素调整 菜单页面 配置
-delete from SYS_MENU where MENU_ID = '%REPORT_006_004_002%';
+delete from SYS_MENU where MENU_ID = 'REPORT_006_004_002';
 INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_006_004_002', 'DIS', null, 'REPORT_006_004', 'ProElementAdj001', 2, '02', '产品要素调整', 'system', null, sysdate, 'system', sysdate);
 delete from SYS_PAGE where PAGE_ID like '%ProElementAdj00%';
 INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('ProElementAdj002', 'DIS', '/disclosure/information/config/proelementadj/ProElementAdj002', 'disclosure/information/config/proelementadj/ProElementAdj002', null, null, null, '02', '01', '产品要素调整新建', 'system', null,sysdate, 'system', sysdate);
