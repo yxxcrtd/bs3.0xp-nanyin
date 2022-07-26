@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RepProdIndexKeyMapper {
-    int deleteByPrimaryKey(String prodId);
+    int deleteByPrimaryKey(RepProdIndexKey record);
 
     int insert(RepProdIndexKey record);
 
@@ -14,7 +14,7 @@ public interface RepProdIndexKeyMapper {
 
     int insertBasicByBasicInfo(RepProdIndexKey record);
 
-    RepProdIndexKey selectByPrimaryKey(String prodId);
+    RepProdIndexKey selectByPrimaryKey(RepProdIndexKey record);
 
     int updateByPrimaryKeySelective(RepProdIndexKey record);
 
