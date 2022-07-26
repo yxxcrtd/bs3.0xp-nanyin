@@ -47,6 +47,59 @@
         delete from CHB_MKT_HOLIDAY
         where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
     </delete>
+    <insert id="insertBasicByWorkflowId" parameterType="java.util.Map" >
+        insert into CHB_MKT_HOLIDAY(BUSI_DATE, MARKET_CODE, IS_HOLIDAY, WORKFLOW_ID, STATUS, 
+        DEPT_CODE, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, CREATE_DEPT, AGENT
+        )
+        select BUSI_DATE, MARKET_CODE, IS_HOLIDAY, #{newWorkflowId,jdbcType=VARCHAR} WORKFLOW_ID, #{status,jdbcType=VARCHAR} STATUS, 
+            DEPT_CODE, CREATE_USER, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_DEPT, AGENT
+            
+             from CHB_MKT_HOLIDAY
+             where STATUS = 'E' and WORKFLOW_ID = #{oldWorkflowId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.ChbMktHoliday" >
+        update CHB_MKT_HOLIDAY
+        <set >
+            <if test="busiDate != null" >
+                BUSI_DATE = #{busiDate,jdbcType=DATE},
+            </if>
+            <if test="marketCode != null" >
+                MARKET_CODE = #{marketCode,jdbcType=VARCHAR},
+            </if>
+            <if test="isHoliday != null" >
+                IS_HOLIDAY = #{isHoliday,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="agent != null" >
+                AGENT = #{agent,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.ChbMktHoliday" >
+        update CHB_MKT_HOLIDAY
+        set 
+        BUSI_DATE = #{busiDate,jdbcType=DATE},
+        MARKET_CODE = #{marketCode,jdbcType=VARCHAR},
+        IS_HOLIDAY = #{isHoliday,jdbcType=VARCHAR},
+        STATUS = #{status,jdbcType=VARCHAR},
+        DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        AGENT = #{agent,jdbcType=VARCHAR}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbMktHoliday" >
         insert into CHB_MKT_HOLIDAY (BUSI_DATE, MARKET_CODE, IS_HOLIDAY, 
             WORKFLOW_ID, STATUS, DEPT_CODE, 
@@ -148,16 +201,6 @@
              from CHB_MKT_HOLIDAY
              where STATUS = 'E' and BUSI_DATE = #{busiDate,jdbcType=DATE} and MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
     </insert>
-    <insert id="insertBasicByWorkflowId" parameterType="java.util.Map" >
-        insert into CHB_MKT_HOLIDAY(BUSI_DATE, MARKET_CODE, IS_HOLIDAY, WORKFLOW_ID, STATUS, 
-        DEPT_CODE, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, CREATE_DEPT, AGENT
-        )
-        select BUSI_DATE, MARKET_CODE, IS_HOLIDAY, #{newWorkflowId,jdbcType=VARCHAR} WORKFLOW_ID, #{status,jdbcType=VARCHAR} STATUS, 
-            DEPT_CODE, CREATE_USER, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_DEPT, AGENT
-            
-             from CHB_MKT_HOLIDAY
-             where STATUS = 'E' and WORKFLOW_ID = #{oldWorkflowId,jdbcType=VARCHAR}
-    </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbMktHoliday" >
         update CHB_MKT_HOLIDAY
         <set >
@@ -185,49 +228,6 @@
         </set>
         where BUSI_DATE = #{busiDate,jdbcType=DATE}
           and MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
-    </update>
-    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.ChbMktHoliday" >
-        update CHB_MKT_HOLIDAY
-        <set >
-            <if test="busiDate != null" >
-                BUSI_DATE = #{busiDate,jdbcType=DATE},
-            </if>
-            <if test="marketCode != null" >
-                MARKET_CODE = #{marketCode,jdbcType=VARCHAR},
-            </if>
-            <if test="isHoliday != null" >
-                IS_HOLIDAY = #{isHoliday,jdbcType=VARCHAR},
-            </if>
-            <if test="status != null" >
-                STATUS = #{status,jdbcType=VARCHAR},
-            </if>
-            <if test="deptCode != null" >
-                DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
-            </if>
-            <if test="updateUser != null" >
-                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            </if>
-            <if test="updateTime != null" >
-                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="agent != null" >
-                AGENT = #{agent,jdbcType=VARCHAR},
-            </if>
-        </set>
-        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
-    </update>
-    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.ChbMktHoliday" >
-        update CHB_MKT_HOLIDAY
-        set 
-        BUSI_DATE = #{busiDate,jdbcType=DATE},
-        MARKET_CODE = #{marketCode,jdbcType=VARCHAR},
-        IS_HOLIDAY = #{isHoliday,jdbcType=VARCHAR},
-        STATUS = #{status,jdbcType=VARCHAR},
-        DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
-        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-        AGENT = #{agent,jdbcType=VARCHAR}
-        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbMktHoliday" >
         update CHB_MKT_HOLIDAY

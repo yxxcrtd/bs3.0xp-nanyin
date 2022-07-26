@@ -12,7 +12,7 @@ import java.util.Date;
  * @version 1.0 2022年07月20日
  * @since 1.0
  */
-public class BonusReportDto {
+public class BonusReportDto  extends ReportDto {
 	
 	private String prodName;        //产品名称
 	private String prodRe;        //产品登记编码
@@ -35,7 +35,7 @@ public class BonusReportDto {
 	private BigDecimal distributedProfit;        //应分配分红金额
 	private BigDecimal unitProfit;        //单位分红
 	private BigDecimal yearYield;        //年化收益率
-	private BigDecimal genDate;        //生成日期
+
 	
 	public String getProdName() {
 		return prodName;
@@ -162,12 +162,6 @@ public class BonusReportDto {
 	}
 	public void setYearYield(BigDecimal yearYield) {
 		this.yearYield = yearYield;
-	}
-	public BigDecimal getGenDate() {
-		return genDate;
-	}
-	public void setGenDate(BigDecimal genDate) {
-		this.genDate = genDate;
 	}
 	
 }

@@ -10,7 +10,7 @@ public class ChbMktHolidayKey extends BaseEntity {
     private Date busiDate;
 
     /**
-     * 交易市场
+     * 日历类型：01 中国法定节假日/04 上交所
      */
     private String marketCode;
 
@@ -31,16 +31,16 @@ public class ChbMktHolidayKey extends BaseEntity {
     }
 
     /**
-     * 取得 交易市场
-     * @return 交易市场
+     * 取得 日历类型：01 中国法定节假日/04 上交所
+     * @return 日历类型：01 中国法定节假日/04 上交所
      */
     public String getMarketCode() {
         return marketCode;
     }
 
     /**
-     * 设置 交易市场
-     * @param marketCode 交易市场
+     * 设置 日历类型：01 中国法定节假日/04 上交所
+     * @param marketCode 日历类型：01 中国法定节假日/04 上交所
      */
     public void setMarketCode(String marketCode) {
         this.marketCode = marketCode == null ? null : marketCode.trim();

@@ -35,6 +35,9 @@ public class SettReportDto extends ReportDto {
 	private BigDecimal profit;  //应付利润
 	private BigDecimal otherPayAmt;  //其他应付紧额
 	private BigDecimal assetValue;  //资产价值，固定值0
+	
+	private Date signDate; //报告签字日期
+	
 	public String getProdName() {
 		return prodName;
 	}
@@ -154,6 +157,12 @@ public class SettReportDto extends ReportDto {
 	}
 	public void setAssetValue(BigDecimal assetValue) {
 		this.assetValue = assetValue;
+	}
+	public Date getSignDate() {
+		return signDate;
+	}
+	public void setSignDate(Date signDate) {
+		this.signDate = signDate;
 	}
 	
 }
