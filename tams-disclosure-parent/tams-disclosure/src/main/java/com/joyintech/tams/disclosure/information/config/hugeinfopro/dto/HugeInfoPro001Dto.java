@@ -82,7 +82,7 @@ public class HugeInfoPro001Dto extends DisLargeRedemption implements ITableRow, 
     }
 
     @Override
-    @NotEmpty(fieldName = "ProElementAdj001.isSalesAgency", groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName = "巨额赎回日期", groups = {ValidateGroupEdit.class})
     public Date getDealDate() {
         return super.getDealDate();
     }
