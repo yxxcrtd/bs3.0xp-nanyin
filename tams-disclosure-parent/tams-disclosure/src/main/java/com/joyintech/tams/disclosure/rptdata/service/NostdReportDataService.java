@@ -46,10 +46,12 @@ public class NostdReportDataService implements IReportDataService {
 		List<Map<String, Object>> listResult = new ArrayList<>();
 
 		try {
-			String prodId = paraMap.get("prodId").toString();
+			String prodId = paraMap.get("pprodid").toString();
 			RepProdInfo prodInfo = repProdInfoMapper.selectByPrimaryKey(prodId);
-
-			listResult.add(CollectionUtils.bean2Map(prodInfo));
+			Map<String,Object> dataMap = new HashMap<>();
+			dataMap.put("reportDate", paraMap.get("enddate"));
+			dataMap.putAll(CollectionUtils.bean2Map(prodInfo));
+			listResult.add(dataMap);
 		} catch (Exception e) {
 			logger.error("调整投资非标准化债权类资产公告数据错误.", e);
 			e.printStackTrace();

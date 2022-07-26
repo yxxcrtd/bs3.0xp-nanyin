@@ -15,6 +15,8 @@ import java.util.Map;
  */
 public class MatureReportDto extends ReportDto {
 
+	private String issuingWay;        //开放模式
+	
 	private Integer runDays;  //期限天数
 	private BigDecimal sumValueAmt;//累计净值
 	private BigDecimal refYearYield;  //参考年化收益率
@@ -26,6 +28,13 @@ public class MatureReportDto extends ReportDto {
 	private BigDecimal saleFee;  //销售费
 	private BigDecimal purFee;  //申购费
 	private BigDecimal redemFee;  //赎回费
+	
+	public String getIssuingWay() {
+		return issuingWay;
+	}
+	public void setIssuingWay(String issuingWay) {
+		this.issuingWay = issuingWay;
+	}
 	public Integer getRunDays() {
 		return runDays;
 	}
