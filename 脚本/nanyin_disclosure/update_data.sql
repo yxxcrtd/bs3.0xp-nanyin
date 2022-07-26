@@ -506,3 +506,15 @@ delete from SYS_DATADICT_LIST where DICT_CODE = 'ACCOUNT_TYPE';
 INSERT INTO SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('ACCOUNT_TYPE', 'A01', '托管账户', 1, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
 
 -- add by shengning 20220725 产品基础指标信息维护 end
+
+-- add by zhengxiaolian 2022-07-26 报表页面管理规则联动 start
+delete from sys_datadict_list_link where DICT_CODE='RULE_TYPE2' and LINKED_ITEM_CODE  ='REP_PROD_TYPE';
+
+delete from sys_datadict_list_link where DICT_CODE='RULE_TYPE3' and LINKED_ITEM_CODE ='REP_PROD_TYPE';
+
+INSERT INTO sys_datadict_list_link(DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('RULE_TYPE2', '02', 'RULE_TYPE1', 'REP_PROD_TYPE', 'admin', NULL, sysdate, 'admin', sysdate);
+
+INSERT INTO sys_datadict_list_link(DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('RULE_TYPE3', '02', 'RULE_TYPE1', 'REP_PROD_TYPE', 'admin', NULL, sysdate, 'admin', sysdate);
+-- add by zhengxiaolian 2022-07-26 报表页面管理规则联动 end
