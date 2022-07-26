@@ -230,6 +230,57 @@ public class InfoDiscGenFileDetailService {
 				}
 			}
 		}
+		else if (StringUtil.equals(DictCodeListExt3.基准日_当期收益分配基准日.getValue(), repRule.getBasisDateType())) {
+			ProdInfoListEntity prodInfo = null;
+			for (ProdInfoListEntity prodInfoListEntity : prodList) {
+				prodInfo = new ProdInfoListEntity();
+				//基准日
+				Date openDate = revealDeadLineService.isCanGenDQSYFP(repRule, dateMap, executeDateStr, prodInfoListEntity.getProdId());
+				if(openDate!=null){
+					prodInfoListEntity.setBasisDate(openDate);
+					//获取开始日结束日方法
+					infoDisclosureReadAndGenDetailService.getDataBeginAndEndDate(repRule, openDate, dateMap);
+					//获取披露截止日
+					prodInfoListEntity.setRevDeadDate(revealDeadLineService.getRevDeadlineByMark(openDate, repRule, dateMap));
+					BeanUtil.copyPropertiesIgnoreNull(prodInfo, prodInfoListEntity);
+					list.add(prodInfo);
+				}
+			}
+		}
+		else if (StringUtil.equals(DictCodeListExt3.基准日_自动赎回日.getValue(), repRule.getBasisDateType())) {
+			ProdInfoListEntity prodInfo = null;
+			for (ProdInfoListEntity prodInfoListEntity : prodList) {
+				prodInfo = new ProdInfoListEntity();
+				//基准日
+				Date openDate = revealDeadLineService.isCanGenZDSH(repRule, dateMap, executeDateStr, prodInfoListEntity.getProdId());
+				if(openDate!=null){
+					prodInfoListEntity.setBasisDate(openDate);
+					//获取开始日结束日方法
+					infoDisclosureReadAndGenDetailService.getDataBeginAndEndDate(repRule, openDate, dateMap);
+					//获取披露截止日
+					prodInfoListEntity.setRevDeadDate(revealDeadLineService.getRevDeadlineByMark(openDate, repRule, dateMap));
+					BeanUtil.copyPropertiesIgnoreNull(prodInfo, prodInfoListEntity);
+					list.add(prodInfo);
+				}
+			}
+		}
+		else if (StringUtil.equals(DictCodeListExt2.基准日_成立日.getValue(), repRule.getBasisDateType())) {
+			ProdInfoListEntity prodInfo = null;
+			for (ProdInfoListEntity prodInfoListEntity : prodList) {
+				prodInfo = new ProdInfoListEntity();
+				//基准日
+				Date openDate = revealDeadLineService.isCanGenCLR(repRule, dateMap, executeDateStr, prodInfoListEntity.getProdId());
+				if(openDate!=null){
+					prodInfoListEntity.setBasisDate(openDate);
+					//获取开始日结束日方法
+					infoDisclosureReadAndGenDetailService.getDataBeginAndEndDate(repRule, openDate, dateMap);
+					//获取披露截止日
+					prodInfoListEntity.setRevDeadDate(revealDeadLineService.getRevDeadlineByMark(openDate, repRule, dateMap));
+					BeanUtil.copyPropertiesIgnoreNull(prodInfo, prodInfoListEntity);
+					list.add(prodInfo);
+				}
+			}
+		}
 		else{
 			ProdInfoListEntity prodInfo = null;
 			for (ProdInfoListEntity prodInfoListEntity : prodList) {
@@ -246,7 +297,7 @@ public class InfoDiscGenFileDetailService {
 						isGen = true;
 					}
 				}
-				else if(revealDeadLineService.isWorkDay(executeDateStr, DisclosureDictCodeList.交易市场_中国法定节假日.getValue())){
+				else if(revealDeadLineService.isWorkDay(executeDateStr, repRule.getMarketCode())){
 					isGen = revealDeadLineService.isCanGen(revDeadDate, repRule, dateMap, executeDateStr);
 				}
 				prodInfoListEntity.setBasisDate(revDeadDate);

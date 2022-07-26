@@ -130,6 +130,11 @@ public class RepRuleEntity {
      * 说明
      */
     private String detail;
+
+    /**
+     * 日历类型：01 中国法定节假日/04 上交所
+     */
+    private String marketCode;
     /**
      * 报表类型
      */
@@ -557,5 +562,12 @@ public class RepRuleEntity {
 	public void setReportCategory(String reportCategory) {
 		this.reportCategory = reportCategory;
 	}
-    
+
+    public String getMarketCode() {
+        return marketCode;
+    }
+
+    public void setMarketCode(String marketCode) {
+        this.marketCode = marketCode;
+    }
 }

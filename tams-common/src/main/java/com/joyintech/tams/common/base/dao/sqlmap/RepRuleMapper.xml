@@ -33,6 +33,7 @@
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
         <result column="DETAIL" property="detail" jdbcType="VARCHAR" />
+        <result column="MARKET_CODE" property="marketCode" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         ID ID, RULE_NAME RULE_NAME, REP_NAME REP_NAME, REP_ID REP_ID, RCF_TYPE RCF_TYPE, 
@@ -42,7 +43,7 @@
         DATA_RANGE DATA_RANGE, DATA_BEGIN DATA_BEGIN, DATA_END DATA_END, DATA_VALUE DATA_VALUE, 
         FILE_OUT_TYPE FILE_OUT_TYPE, REVEAL_CHANNEL REVEAL_CHANNEL, FTP_ID FTP_ID, IS_REVEAL IS_REVEAL, 
         IS_CONFIRM IS_CONFIRM, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
-        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, DETAIL DETAIL
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, DETAIL DETAIL,MARKET_CODE MARKET_CODE
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -75,7 +76,7 @@
             REVEAL_CHANNEL, FTP_ID, IS_REVEAL, 
             IS_CONFIRM, CREATE_USER, CREATE_DEPT, 
             CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
-            DETAIL)
+            DETAIL,MARKET_CODE)
         values (#{id,jdbcType=VARCHAR}, #{ruleName,jdbcType=VARCHAR}, #{repName,jdbcType=VARCHAR}, 
             #{repId,jdbcType=VARCHAR}, #{rcfType,jdbcType=VARCHAR}, #{rcfValue,jdbcType=VARCHAR}, 
             #{basisDateType,jdbcType=VARCHAR}, #{makeType,jdbcType=VARCHAR}, #{makeValue,jdbcType=VARCHAR}, 
@@ -86,7 +87,7 @@
             #{revealChannel,jdbcType=VARCHAR}, #{ftpId,jdbcType=VARCHAR}, #{isReveal,jdbcType=VARCHAR}, 
             #{isConfirm,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
             #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
-            #{detail,jdbcType=VARCHAR})
+            #{detail,jdbcType=VARCHAR},#{marketCode,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepRule" >
         insert into REP_RULE
@@ -184,6 +185,9 @@
             <if test="detail != null" >
                 DETAIL,
             </if>
+            <if test="marketCode != null" >
+                MARKET_CODE,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="id != null" >
@@ -279,6 +283,9 @@
             <if test="detail != null" >
                 #{detail,jdbcType=VARCHAR},
             </if>
+            <if test="marketCode != null" >
+                #{marketCode},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepRule" >
@@ -286,12 +293,12 @@
         MAKE_TYPE, MAKE_VALUE, MAKE_DATE_TYPE, MAKE_TIME, REVEAL_TYPE, REVEAL_VALUE, REVEAL_DATE_TYPE, 
         REVEAL_TIME, DATA_TYPE, DATA_RANGE, DATA_BEGIN, DATA_END, DATA_VALUE, FILE_OUT_TYPE, 
         REVEAL_CHANNEL, FTP_ID, IS_REVEAL, IS_CONFIRM, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
-        UPDATE_USER, UPDATE_TIME, DETAIL)
+        UPDATE_USER, UPDATE_TIME, DETAIL,MARKET_CODE)
         select ID, RULE_NAME, REP_NAME, REP_ID, RCF_TYPE, RCF_VALUE, BASIS_DATE_TYPE, 
             MAKE_TYPE, MAKE_VALUE, MAKE_DATE_TYPE, MAKE_TIME, REVEAL_TYPE, REVEAL_VALUE, REVEAL_DATE_TYPE, 
             REVEAL_TIME, DATA_TYPE, DATA_RANGE, DATA_BEGIN, DATA_END, DATA_VALUE, FILE_OUT_TYPE, 
             REVEAL_CHANNEL, FTP_ID, IS_REVEAL, IS_CONFIRM, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
-            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, DETAIL
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, DETAIL,MARKET_CODE
              from REP_RULE
              where 1 = 1 and ID = #{id,jdbcType=VARCHAR}
     </insert>
@@ -379,6 +386,9 @@
             <if test="detail != null" >
                 DETAIL = #{detail,jdbcType=VARCHAR},
             </if>
+            <if test="marketCode != null" >
+                MARKET_CODE = #{marketCode,jdbcType=VARCHAR},
+            </if>
         </set>
         where ID = #{id,jdbcType=VARCHAR}
     </update>
@@ -410,7 +420,8 @@
             IS_CONFIRM = #{isConfirm,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-            DETAIL = #{detail,jdbcType=VARCHAR}
+            DETAIL = #{detail,jdbcType=VARCHAR},
+            MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
         where ID = #{id,jdbcType=VARCHAR}
     </update>
 </mapper>

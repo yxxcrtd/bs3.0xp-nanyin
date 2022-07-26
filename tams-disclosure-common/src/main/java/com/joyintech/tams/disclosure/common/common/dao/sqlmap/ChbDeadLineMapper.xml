@@ -37,9 +37,7 @@
 	       SELECT
 		  A.BUSI_DATE busiDate,
 		  A.MARKET_CODE marketCode,
-		  A.IS_HOLIDAY isHoliday,
-		  A.STATUS status,
-		  A.DEPT_CODE deptCode
+		  A.IS_HOLIDAY isHoliday
 		 FROM CHB_MKT_HOLIDAY A
 		 <where>
 		 	<if test="type !=null and type == '01'.toString()">
@@ -49,7 +47,6 @@
 	           	A.BUSI_DATE &gt; to_date(#{holidayDate},&apos;yyyy-MM-dd&apos;)
 	         	</if>
 		 	AND A.MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
-		 	AND A.STATUS = 'E'
 		 	AND A.IS_HOLIDAY = '1'
 		 </where>
 		 	<if test="type !=null and type == '01'.toString()">
@@ -69,9 +66,7 @@
 	       SELECT
 		  A.BUSI_DATE busiDate,
 		  A.MARKET_CODE marketCode,
-		  A.IS_HOLIDAY isHoliday,
-		  A.STATUS status,
-		  A.DEPT_CODE deptCode
+		  A.IS_HOLIDAY isHoliday
 		 FROM CHB_MKT_HOLIDAY A
 		 <where>
 	        <if test="type !=null and type == '01'.toString()">
@@ -81,7 +76,6 @@
 	           	A.BUSI_DATE &gt;= to_date(#{holidayDate},&apos;yyyy-MM-dd&apos;)
 	         	</if>
 		 	AND A.MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
-		 	AND A.STATUS = 'E'
 		 	AND A.IS_HOLIDAY = '1'
 		 </where>
 		 	<if test="type !=null and type == '01'.toString()">
@@ -98,9 +92,7 @@
     	select 
         BUSI_DATE busiDate,
     	MARKET_CODE marketCode,
-    	IS_HOLIDAY isHoliday,
-    	WORKFLOW_ID workflowId,
-    	STATUS status
+    	IS_HOLIDAY isHoliday
         from CHB_MKT_HOLIDAY
         where BUSI_DATE = #{busiDate,jdbcType=DATE}
           and MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
@@ -139,25 +131,25 @@
     <select id="getOpenRevealDate" parameterType="string" resultType="java.util.Date">
   		 select 
   		 <if test="basisDateType !=null and basisDateType == '04'">
-	     	OPEN_DATE_END
+			 OPEN_END_DATE
 	     </if>
 	     <if test="basisDateType !=null and basisDateType == '08'">
-	        OPEN_DATE_STR
+			 OPEN_START_DATE
 	     </if>
 	     <if test="basisDateType !=null and basisDateType == '09'">
-	        OPEN_VDATE   
+			 OPERATION_START_DATE
 	     </if>
-	     from REP_PRD_OPEN_SCHE
+	     from DIS_PROD_PLAN
 	     where PROD_ID = #{prodId, jdbcType=VARCHAR}
-	     AND STATUS = 'E'
+	     AND DATA_STATUS = '01'
 	     <if test="basisDateType !=null and basisDateType == '04'">
-	     	AND OPEN_DATE_END = #{sysDate, jdbcType=DATE}
+	     	AND OPEN_END_DATE = #{sysDate, jdbcType=DATE}
 	     </if>
 	     <if test="basisDateType !=null and basisDateType == '08'">
-	        AND OPEN_DATE_STR = #{sysDate, jdbcType=DATE}
+	        AND OPEN_START_DATE = #{sysDate, jdbcType=DATE}
 	     </if>
 	     <if test="basisDateType !=null and basisDateType == '09'">
-	        AND OPEN_VDATE = #{sysDate, jdbcType=DATE}    
+	        AND OPERATION_START_DATE = #{sysDate, jdbcType=DATE}
 	     </if>
   </select>
   
@@ -189,9 +181,7 @@
 	       SELECT
 		  A.BUSI_DATE busiDate,
 		  A.MARKET_CODE marketCode,
-		  A.IS_HOLIDAY isHoliday,
-		  A.STATUS status,
-		  A.DEPT_CODE deptCode
+		  A.IS_HOLIDAY isHoliday
 		 FROM CHB_MKT_HOLIDAY A
 		 <where>
 		 	<if test="type !=null and type == '01'.toString()">
@@ -201,7 +191,6 @@
 	           	A.BUSI_DATE &lt; to_date(#{holidayDate},&apos;yyyy-MM-dd&apos;)
 	         	</if>
 		 	AND A.MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
-		 	AND A.STATUS = 'E'
 		 	AND A.IS_HOLIDAY = '1'
 		 </where>
 		 	<if test="type !=null and type == '01'.toString()">
@@ -221,9 +210,7 @@
 	       SELECT
 		  A.BUSI_DATE busiDate,
 		  A.MARKET_CODE marketCode,
-		  A.IS_HOLIDAY isHoliday,
-		  A.STATUS status,
-		  A.DEPT_CODE deptCode
+		  A.IS_HOLIDAY isHoliday
 		 FROM CHB_MKT_HOLIDAY A
 		 <where>
 	        <if test="type !=null and type == '02'.toString()">
@@ -233,7 +220,6 @@
 	           	A.BUSI_DATE &gt;= to_date(#{holidayDate},&apos;yyyy-MM-dd&apos;)
 	         	</if>
 		 	AND A.MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
-		 	AND A.STATUS = 'E'
 		 	AND A.IS_HOLIDAY = '1'
 		 </where>
 		 	<if test="type !=null and type == '02'.toString()">
@@ -246,4 +232,47 @@
 		 )deadline1
 		 where deadline1.num = 1
     </select>
+
+	<!-- 查询当期收益分配基准日 -->
+	<select id="getDQSYFPDate" resultType="java.util.Date">
+		SELECT DISTINCT T.SETT_DATE
+		FROM DIS_PROD_BONUSPLAN T
+		WHERE
+			BONUS_MODE='01'
+		  AND SETT_DATE = #{sysDate, jdbcType=DATE}
+		  AND PROD_ID= #{prodId, jdbcType=VARCHAR}
+	</select>
+
+	<!-- 查询自动赎回日 -->
+	<select id="getZDSHDate" resultType="java.util.Date">
+		SELECT DISTINCT T.AUTO_REDEEM_DATE
+		FROM DIS_PROD_PLAN T
+		WHERE
+			1=1
+		  AND AUTO_REDEEM_DATE = #{sysDate, jdbcType=DATE}
+		  AND PROD_ID= #{prodId, jdbcType=VARCHAR}
+		  AND EXISTS(
+				SELECT 1 FROM DIS_PROD_PLAN T1
+				WHERE
+				    T1.AUTO_REDEEM_DATE &gt; #{sysDate, jdbcType=DATE}
+				    AND T1.PROD_ID= #{prodId, jdbcType=VARCHAR}
+				    AND T.AUTO_REDEEM_DATE!=T1.OPERATION_START_DATE
+			)
+	</select>
+
+	<!-- 查询成立日 -->
+	<select id="getCLRDate" resultType="java.util.Date">
+		SELECT DISTINCT T.SET_DATE
+		FROM REP_PROD_INFO T
+		LEFT JOIN REP_PROD_INFO T1 ON T1.P_PROD_ID=T.PROD_ID
+		WHERE
+			1=1
+		  AND T1.SET_DATE = #{sysDate, jdbcType=DATE}
+		  AND T.PROD_ID= #{prodId, jdbcType=VARCHAR}
+		  AND not EXISTS(
+				select * from REP_PROD_INFO t2
+		      	where t2.P_PROD_ID=T.PROD_ID
+		      	and t2.SET_DATE &lt; #{sysDate, jdbcType=DATE}
+			)
+	</select>
 </mapper>
