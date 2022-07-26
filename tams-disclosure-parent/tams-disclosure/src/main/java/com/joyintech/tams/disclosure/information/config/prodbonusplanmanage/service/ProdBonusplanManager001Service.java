@@ -181,6 +181,10 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
 
                     if (!StringUtil.isNotEmpty(rowData.get(0))) {
                         errorMsg.append("子产品代码 必填！");
+                    }else{
+                        //不存在 校验 TODO
+
+
                     }
                     if (!StringUtil.isNotEmpty(rowData.get(1))) {
                         errorMsg.append("分红方式 必填！");
@@ -307,7 +311,7 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
         ProdBonusplanDto dto = new ProdBonusplanDto();
         // 行情信息列表
         List<ProdBonusplanDto> prodBonusplanDtoList = new ArrayList<>();
-        dto.setSelectedItem(prodBonusplanDtoList);
+       // dto.setSelectedItem(prodBonusplanDtoList);
         JSONArray objects = JSONArray.parseArray(tempList);
 
         for (int i = 0; i < objects.size(); i++) {
