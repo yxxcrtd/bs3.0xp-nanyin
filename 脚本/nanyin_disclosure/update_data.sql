@@ -482,7 +482,7 @@ VALUES ('REPORT_006_004_017', 'SVR', null, 'REPORT_006_004', 'RepProdIndex001', 
 
 delete from SYS_PAGE where PAGE_ID = 'RepProdIndex001';
 INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-VALUES ('RepProdIndex001', 'SVR', '/disclosure/information/config/repProdIndex/RepProdIndex001', 'disclosure/information/config/repProdIndex/RepProdIndex001', 'REPORT_006_004_012', null, null, '02', '01', '产品基础指标信息维护', 'system', null,SYSDATE, 'system', SYSDATE);
+VALUES ('RepProdIndex001', 'SVR', '/disclosure/information/config/repProdIndex/RepProdIndex001', 'disclosure/information/config/repProdIndex/RepProdIndex001', 'REPORT_006_004_017', null, null, '02', '01', '产品基础指标信息维护', 'system', null,SYSDATE, 'system', SYSDATE);
 
 delete from SYS_PAGE where PAGE_ID = 'RepProdIndex002';
 INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
