@@ -91,7 +91,9 @@ public class DisNostdCreditor extends BaseEntity{
     public void setEffEndDate(Date effEndDate) { this.effEndDate = effEndDate; }
     public String getDataStatus() { return dataStatus; }
     public void setDataStatus(String dataStatus) { this.dataStatus = dataStatus == null ? null : dataStatus.trim(); }
-    public String getFinancier() { return financier; }
+    public String getFinancier() {
+        return financier;
+    }
     public void setFinancier(String financier) { this.financier = financier == null ? null : financier.trim(); }
     public String getProjectNo() { return projectNo; }
     public void setProjectNo(String projectNo) { this.projectNo = projectNo == null ? null : projectNo.trim(); }

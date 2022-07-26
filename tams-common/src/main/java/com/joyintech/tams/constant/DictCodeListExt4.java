@@ -29,7 +29,7 @@ public enum DictCodeListExt4 implements BaseDictCodeList {
     共通业务类型_产品排期计划(DictCode.共通业务类型, "DISPLAN", "产品排期计划"),
 
     共通业务类型_产品费率优惠(DictCode.共通业务类型, "DISFEEDISCOUNT", "产品费率优惠"),
-
+    共通业务类型_非标债权类资产明细维护(DictCode.共通业务类型, "DISNOSTD", "非标债权类资产明细维护"),
 
 
     ;

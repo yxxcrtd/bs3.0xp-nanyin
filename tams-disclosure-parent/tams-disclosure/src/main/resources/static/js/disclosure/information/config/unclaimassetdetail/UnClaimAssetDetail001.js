@@ -1,0 +1,153 @@
+/**
+ * 非标债权类资产明细维护查询
+ */
+(function(){
+    /**
+     * 获取查询参数
+     */
+    var getSearchParams = function() {
+        return {
+            prodId: $('#prodId').val()==null?null:$('#prodId').val().join(","),
+            effDate: $('#effDate').val(),
+            effEndDate : $('#effEndDate').val(),
+            dataStatus:$('#dataStatus').val()
+        }
+    };
+    // 新建
+    function showDialog() {
+        Joyin.dialog(JoyinUtil.getLabel('UnClaimAssetDetail002'), basePath +'/disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail002/init', '98%', '95%', {pageModel:PAGE_MODEL_NEW},function(){
+            table.reload();
+        });
+
+    }
+
+    /**
+     * 定义数据表格
+     */
+    var table=$("#dataTable").joyintable({
+        ajax: {
+            url: 'findPage',
+            type: 'POST',
+            data: function() {
+                return getSearchParams();
+            }
+        },
+        dblclick:function(table, data) {
+            data.pageModel=PAGE_MODEL_REFERENCE;
+            Joyin.dialog(JoyinUtil.getLabel("UnClaimAssetDetail002.reference"),
+                JoyinUtil.getRealPath("disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail002/init"),
+                "95%", "95%",data,function(){table.reload();});
+        },
+
+        cols:[
+            {field:'nostdAssetId', visible: false},
+            {field:'dataStatusStr', title: 'UnClaimAssetDetail002.dataStatus',width:150},
+            {field:'prodId', title: 'UnClaimAssetDetail002.prodId', width:150},
+            {field:'prodName', title: 'UnClaimAssetDetail002.prodName',width:150},
+            {field:'effDateStr', title: 'UnClaimAssetDetail002.effDate',  width:150,type:'date'}
+            ,{field:'effEndDateStr', title: 'UnClaimAssetDetail002.effEndDate', width:150,type:'date'}
+            ,{field:'updateTime',type: 'datetime', title: 'UnClaimAssetDetail002.updateTime', width:150}
+            ,{field:'updateUser', title: 'UnClaimAssetDetail002.updateUser', width:150}
+            ,{field:'operation', title: '操作' , type:'action',buttons: ['edit', 'delt'] , width:150}
+        ],
+    });
+    /**
+     * 导出
+     */
+    var exportExcel = function() {
+        if (table != null && table != '') {
+            var selArr = table.getAllCheckedRows();
+        }
+        var param = getSearchParams();
+        if (!selArr || selArr.length == 0) {
+        } else {
+            param.keyList = JSON.stringify(selArr);
+        }
+        Joyin.exportExcel('export', param);
+    };
+
+
+     /**
+     * 绑定编辑事件
+     */
+    table.bind('click', '.edit', function(data, index) {
+        data.pageModel = PAGE_MODEL_EDIT;
+
+        Joyin.dialog(JoyinUtil.getLabel("编辑"),
+            basePath + "disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail002/init",
+            "95%", "90%", {pageModel:PAGE_MODEL_EDIT,
+                nostdAssetId:data.nostdAssetId},function(){table.reload();})
+    });
+    /**
+     * 绑定删除事件
+     */
+    table.bind('click', '.delt', function(data, index) {
+        var object = {selectedItem: [data], operateType:"delete"};
+        // Joyin.ajaxJson(basePath + 'disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail001/check', object, function(result) {
+            Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
+                WorkFlow.doDeleteList(basePath + 'disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail001/delete', object, "UnClaimAssetDetail001_btn_delete", "UnClaimAssetDetail002",function(){
+                    table.reload();
+                });
+            });
+        // });
+    });
+
+    $(function () {
+        // 绑定按钮事件
+        $('#UnClaimAssetDetail001_btn_search').click(function() {
+            table.load();
+            $('#UnClaimAssetDetail001_btn_delete').show();
+        });
+        $('#UnClaimAssetDetail001_btn_export').click(function() {
+            exportExcel();
+        });
+        $('#UnClaimAssetDetail001_btn_add').click(function() {
+            showDialog();
+        });
+        $('#UnClaimAssetDetail001_btn_delete').click(function() {
+            if(table!=null && table!=''){
+                var selArr = table.getAllCheckedRows();
+            }
+            if (!selArr || selArr.length == 0) {
+                Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+                return;
+            }
+            for(var i=0;i<selArr.length;i++){
+                if(selArr[i].dataStatus=='02'){
+                    Joyin.error("请选择有效状态的数据进行删除");
+                    return;
+                }
+            }
+            var object = {
+                selectedItem: selArr,
+                operateType:"delete"
+            };
+
+            // Joyin.ajaxJson(basePath + 'disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail001/check', object, function(result) {
+                Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
+                    WorkFlow.doDeleteList(basePath + 'disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail001/delete', object, "UnClaimAssetDetail001_btn_delete", "UnClaimAssetDetail002",function(){
+                    });
+                });
+            // });
+        });
+
+        // 导入按钮点击事件
+        $('#UnClaimAssetDetail001_btn_import').click(function() {
+            Joyin.confirm(JoyinUtil.getLabel("请确认是否要导入数据？"), function() {
+                Joyin.uploadFile(function(fileName) {
+                    Joyin.ajax(basePath + 'disclosure/information/config/unclaimassetdetail/UnClaimAssetdetail001/checkImportData', {fileName: fileName}, function(checkResult) {
+                        Joyin.ajax(basePath +"disclosure/information/config/unclaimassetdetail/UnClaimAssetdetail001/importFile", {
+                            fileName : fileName
+                        },function(result){
+                            if(!result || !($.isArray(result) && result.length > 0)) {
+                                layui.layer.closeAll()
+                                table.reload();
+                            }
+                        });
+                    });
+                });
+            });
+        });
+
+    });
+}());

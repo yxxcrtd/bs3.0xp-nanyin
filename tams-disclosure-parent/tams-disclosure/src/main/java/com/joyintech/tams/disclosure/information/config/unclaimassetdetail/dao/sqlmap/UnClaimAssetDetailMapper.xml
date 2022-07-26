@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dao.UnClaimAssetDetailMapper" >
+<!--    /**-->
+<!--    *页面查询方法-->
+<!--    * @param pageParam-->
+<!--    * @return-->
+<!--    */-->
+<!--    List<UnClaimAssetDetailDto> selectForPage(Map<String, Object> pageParam);-->
+<select id="selectForPage" resultType="com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto">
+    SELECT
+        DNDC.NOSTD_ASSET_ID nostdAssetId,
+        DNDC.PROD_ID prodId,
+        RPI.PROD_NAME prodName,
+        DNDC.FINANCIER financier,
+        DNDC.PROJECT_NO projectNo,
+        DNDC.PROJECT_NAME projectName,
+        DNDC.REM_FINANCING_PERIOD remFinancingPeriod,
+        DNDC.INCOME_DISTRIBUTE incomeDistribute,
+        DNDC.TRD_CONSTRUCT trdConstruct,
+        DNDC.RISK_INFO riskInfo,
+        DNDC.DATA_STATUS dataStatus,
+        DNDC.DATA_SOURCE dataSource,
+        DNDC.EFF_DATE effDate,
+        DNDC.EFF_END_DATE effEndDate,
+        DNDC.UPDATE_TIME updateTime,
+        DNDC.UPDATE_USER  updateUser,
+        TO_CHAR(DNDC.UPDATE_TIME,'YYYY-MM-DD HH24:MI:SS') updateTimeStr
+    FROM DIS_NOSTD_CREDITOR DNDC
+    LEFT JOIN REP_PROD_INFO RPI
+    on DNDC.PROD_ID = RPI.PROD_ID
+    <where> RPI.STATUS = 'E'
+        <if test="dataStatus != null and dataStatus != ''">
+        AND DNDC.DATA_STATUS = #{dataStatus,jdbcType=VARCHAR}
+        </if>
+        <if test="effDate != null and effDate != ''">
+            <![CDATA[AND  DNDC.EFF_DATE >= TO_DATE(#{effDate},'YYYY-MM-DD') ]]>
+        </if>
+        <if test="effEndDate != null and effEndDate != ''">
+            <![CDATA[AND  DNDC.EFF_END_DATE <= TO_DATE(#{effEndDate},'YYYY-MM-DD')]]>
+        </if>
+        <if test="prodId != null and !prodId.equals('')">
+            AND DNDC.PROD_ID in
+            <foreach collection="prodId" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+    </where>
+</select>
+<!--产品代码产品名称模糊查询-->
+    <select id="getProdInfo" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select PROD_ID id,
+        nvl(PROD_NAME,PROD_ABBR) text
+        from REP_PROD_INFO
+        where  P_PROD_ID is not null
+        <if test="dataStatus != null and dataStatus != ''">
+            and STATUS=#{dataStatus,jdbcType=VARCHAR}
+        </if>
+        <if test="search != null and search != ''">
+            and (FIN_PRODUCT.FINPROD_MARKET_ID like
+            concat(concat('%',#{search}),'%')
+            or FIN_PRODUCT.FINPROD_NAME like concat(concat('%',#{search}),'%'))
+        </if>
+    </select>
+
+    <select id="selectForExport"
+            resultType="com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto">
+        select
+        DNDC.PROD_ID prodId,
+        RIP.PROD_NAME prodName,
+        DNDC.EFF_DATE effDate,
+        DNDC.EFF_END_DATE effEndDate,
+        DNDC.DATA_STATUS dataStatus,
+        DNDC.UPDATE_USER updateUser,
+        TO_CHAR(DNDC.UPDATE_TIME,'YYYY-MM-DD HH24:MI:SS') updateTimeStr
+        from DIS_NOSTD_CREDITOR DNDC
+        left join REP_PROD_INFO RIP on dpp.PROD_ID=RIP.PROD_ID
+        <where>
+            <foreach collection="list" item="dto" open="DNDC.NOSTD_ASSET_ID in (" close=")" separator=",">
+                #{dto.nostdAssetId}
+            </foreach>
+        </where>
+    </select>
+    <select id="selectByProdId" resultType="java.lang.Integer">
+		select count(1) count from REP_PROD_INFO
+		where PROD_ID=#{prodId,jdbcType=VARCHAR}
+	</select>
+    <select id="selectDetail"
+            resultType="com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto">
+        select
+        DNDC.NOSTD_ASSET_ID         nostdAssetId,
+        DNDC.PROD_ID                prodId,
+        RPI.PROD_NAME               prodName,
+        DNDC.EFF_DATE               effDate,
+        DNDC.EFF_END_DATE           effEndDate,
+        DNDC.FINANCIER              financier,
+        DNDC.PROJECT_NO             projectNo,
+        DNDC.PROJECT_NAME           projectName,
+        DNDC.REM_FINANCING_PERIOD   remFinancingPeriod,
+        DNDC.INCOME_DISTRIBUTE      incomeDistribute,
+        DNDC.TRD_CONSTRUCT          trdConstruct,
+        DNDC.RISK_INFO              riskInfo,
+        DNDC.DATA_STATUS            dataStatus,
+        DNDC.DATA_SOURCE            dataSource,
+        DNDC.UPDATE_TIME            updateTime,
+        DNDC.UPDATE_USER            updateUser
+        FROM DIS_NOSTD_CREDITOR DNDC
+        LEFT JOIN  REP_PROD_INFO RPI
+        on DNDC.PROD_ID = RPI.PROD_ID
+        <where>
+            <if test="nostdAssetId != null and nostdAssetId != ''">
+            	AND DNDC.NOSTD_ASSET_ID = #{nostdAssetId,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+    <select id="selectDetailList" resultType="com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto">
+        select
+        DNDC.NOSTD_ASSET_ID         nostdAssetId,
+        DNDC.PROD_ID                prodId,
+        RPI.PROD_NAME               prodName,
+        DNDC.EFF_DATE               effDate,
+        DNDC.EFF_END_DATE           effEndDate,
+        DNDC.FINANCIER              financier,
+        DNDC.PROJECT_NO             projectNo,
+        DNDC.PROJECT_NAME           projectName,
+        DNDC.REM_FINANCING_PERIOD   remFinancingPeriod,
+        DNDC.INCOME_DISTRIBUTE      incomeDistribute,
+        DNDC.TRD_CONSTRUCT          trdConstruct,
+        DNDC.RISK_INFO              riskInfo,
+        DNDC.DATA_STATUS            dataStatus,
+        DNDC.DATA_SOURCE            dataSource,
+        DNDC.UPDATE_TIME            updateTime,
+        DNDC.UPDATE_USER            updateUser
+        FROM DIS_NOSTD_CREDITOR DNDC
+        LEFT JOIN  REP_PROD_INFO RPI
+        on DNDC.PROD_ID = RPI.PROD_ID
+        <where>
+            <if test="nostdAssetId != null and nostdAssetId != ''">
+                AND DNDC.NOSTD_ASSET_ID = #{nostdAssetId,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+    <select id="checkNostdExistByProdId" resultType="com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto">
+        select
+        NOSTD_ASSET_ID         nostdAssetId,
+        PROD_ID                prodId,
+        EFF_DATE               effDate,
+        EFF_END_DATE           effEndDate,
+        FINANCIER              financier,
+        PROJECT_NO             projectNo,
+        PROJECT_NAME           projectName,
+        REM_FINANCING_PERIOD   remFinancingPeriod,
+        INCOME_DISTRIBUTE      incomeDistribute,
+        TRD_CONSTRUCT          trdConstruct,
+        RISK_INFO              riskInfo
+        from DIS_NOSTD_CREDITOR
+        <where>
+            <if test="prodId != null and prodId != ''">
+                AND	PROD_ID=#{prodId,jdbcType=VARCHAR}
+            </if>
+            <if test="status != null and status != ''">
+                AND	DATA_STATUS=#{status,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+    <select id="selectNostdByProdId" resultType="com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto">
+        select
+        NOSTD_ASSET_ID         nostdAssetId,
+        PROD_ID                prodId,
+        EFF_DATE               effDate,
+        EFF_END_DATE           effEndDate,
+        FINANCIER              financier,
+        PROJECT_NO             projectNo,
+        PROJECT_NAME           projectName,
+        REM_FINANCING_PERIOD   remFinancingPeriod,
+        INCOME_DISTRIBUTE      incomeDistribute,
+        TRD_CONSTRUCT          trdConstruct,
+        RISK_INFO              riskInfo
+        from DIS_NOSTD_CREDITOR
+        where DATA_STATUS='01'
+		and PROD_ID=#{prodId,jdbcType=VARCHAR}
+    </select>
+
+    <delete id="deleteByKey">
+        update DIS_NOSTD_CREDITOR set DATA_STATUS = '02'
+        where nostdAssetId = #{nostdAssetId,jdbcType=VARCHAR}
+    </delete>
+
+    <insert id="insert" parameterType="com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto">
+        insert into DIS_NOSTD_CREDITOR ( NOSTD_ASSET_ID,PROD_ID,EFF_DATE,EFF_END_DATE,FINANCIER,
+         PROJECT_NO,PROJECT_NAME,REM_FINANCING_PERIOD,INCOME_DISTRIBUTE,
+        TRD_CONSTRUCT,RISK_INFO ,DATA_STATUS,
+        DATA_SOURCE,CREATE_USER ,CREATE_TIME,UPDATE_USER,
+         UPDATE_TIME,CREATE_DEPT)
+        values (#{nostdAssetId,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{effDate,jdbcType=DATE}, #{effEndDate,jdbcType=DATE},
+        #{financier,jdbcType=VARCHAR},#{projectNo,jdbcType=VARCHAR},#{projectName,jdbcType=VARCHAR}, #{remFinancingPeriod,jdbcType=VARCHAR}, #{incomeDistribute,jdbcType=VARCHAR},
+            #{trdConstruct,jdbcType=VARCHAR}, #{riskInfo,jdbcType=VARCHAR},
+            #{dataStatus,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
+            #{createDept,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="updateByKey">
+        update DIS_NOSTD_CREDITOR
+        <set >
+            <if test="prodId != null" >
+                PROD_ID = #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="effDate != null" >
+                EFF_DATE = #{effDate,jdbcType=DATE},
+            </if>
+            <if test="effEndDate != null" >
+                EFF_END_DATE = #{effEndDate,jdbcType=DATE},
+            </if>
+            <if test="financier != null" >
+                FINANCIER = #{financier,jdbcType=VARCHAR},
+            </if>
+            <if test="projectNo != null" >
+                PROJECT_NO = #{projectNo,jdbcType=VARCHAR},
+            </if>
+            <if test="projectName != null" >
+                PROJECT_NAME = #{projectName,jdbcType=VARCHAR},
+            </if>
+            <if test="remFinancingPeriod != null" >
+                REM_FINANCING_PERIOD = #{remFinancingPeriod,jdbcType=VARCHAR},
+            </if>
+            <if test="incomeDistribute != null" >
+                INCOME_DISTRIBUTE = #{incomeDistribute,jdbcType=VARCHAR},
+            </if>
+            <if test="trdConstruct != null" >
+                TRD_CONSTRUCT = #{trdConstruct,jdbcType=VARCHAR},
+            </if>
+            <if test="riskInfo != null" >
+                RISK_INFO = #{riskInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="dataStatus != null" >
+                DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="dataSource != null" >
+                DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER = #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME = #{createTime,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where NOSTD_ASSET_ID = #{nostdAssetId,jdbcType=VARCHAR}
+    </update>
+
+    <insert id="insertBtachEquityInfo">
+        insert into
+        DIS_NOSTD_CREDITOR(NOSTD_ASSET_ID,PROD_ID,EFF_DATE,EFF_END_DATE,FINANCIER,
+        PROJECT_NO, PROJECT_NAME,REM_FINANCING_PERIOD,INCOME_DISTRIBUTE,
+        TRD_CONSTRUCT,RISK_INFO ,DATA_STATUS,
+        DATA_SOURCE,CREATE_USER ,CREATE_TIME,UPDATE_USER,
+        UPDATE_TIME,CREATE_DEPT)
+        select A.* from (
+        <foreach collection="listN" item="item" index="index"
+                 separator="union all">
+            select
+            #{item.nostdAssetID,jdbcType=VARCHAR} NOSTD_ASSET_ID,
+            #{item.prodId,jdbcType=VARCHAR} PROD_ID,
+            #{item.effDate,jdbcType=DATE} EFF_DATE,
+            #{item.effEndDate,jdbcType=DATE} EFF_END_DATE,
+            #{item.dataStatus,jdbcType=VARCHAR} FINANCIER,
+            #{item.projectNo,jdbcType=VARCHAR} PROJECT_NO,
+            #{item.projectName,jdbcType=VARCHAR} PROJECT_NAME,
+            #{item.remFinancingPeriod,jdbcType=VARCHAR} REM_FINANCING_PERIOD,
+            #{item.incomeDistribute,jdbcType=VARCHAR} INCOME_DISTRIBUTE,
+            #{item.trdConstruct,jdbcType=VARCHAR} TRD_CONSTRUCT,
+            #{item.riskInfo,jdbcType=VARCHAR} RISK_INFO,
+            #{item.dataStatus,jdbcType=VARCHAR} DATA_STATUS,
+            #{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+            #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+            #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT
+            from dual
+        </foreach>
+        )A
+    </insert>
+
+    <delete id="deleteBtachEquityInfo">
+        delete from DIS_NOSTD_CREDITOR
+        where PROD_ID in
+        <foreach collection="listA" item="item" index="index" separator="," open="("
+                 close=")">
+            #{item.prodId,jdbcType=VARCHAR}
+        </foreach>
+    </delete>
+
+
+</mapper>
