@@ -92,6 +92,9 @@ public class ReportDataService {
 	@Autowired
 	private ReportMzjz001Service reportMzjz001Service;
 
+	@Autowired
+	private ReportJzfhbg001Service reportJzfhbg001Service;
+
 	public List<Map<String, Object>> queryTestDatas(Map<String, Object> params) {
 		Map<String, Object> dataMap = new HashMap<String, Object>();
 		dataMap.put("${prodName}", "得利宝8号");
@@ -267,6 +270,8 @@ public class ReportDataService {
 			service = reportKfjzgg001Service;
 		}else if (rptType.equals(DisReportType.MZJZGG) || rptType.equals(DisReportType.MZJJBG)) { // 每周净值公告（公募）/（私募）
 			service = reportMzjz001Service;
+		}else if (rptType.equals(DisReportType.JZJFHBG_SMFB) || rptType.equals(DisReportType.JZJFHBG_SMKF)) { // 净值及分红报告（私募封闭式）/净值及分红报告（私募开放式）
+			service = reportJzfhbg001Service;
 		}
 
 
