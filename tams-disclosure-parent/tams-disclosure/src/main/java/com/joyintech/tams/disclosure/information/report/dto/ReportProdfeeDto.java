@@ -3,7 +3,6 @@ package com.joyintech.tams.disclosure.information.report.dto;
 
 import com.joyintech.framework.base.BaseEntity;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -31,11 +30,11 @@ public class ReportProdfeeDto extends BaseEntity {
     /**
      * 优惠先费率
      */
-    private BigDecimal preFeerate;
+    private String preFeerate;
     /**
      * 优惠后费率
      */
-    private BigDecimal afterFeerate;
+    private String afterFeerate;
     /**
      * 优惠开始时间
      */
@@ -47,15 +46,15 @@ public class ReportProdfeeDto extends BaseEntity {
     /**
      * 本次优惠前费率
      */
-    private BigDecimal thisPreFeerate;
+    private String thisPreFeerate;
     /**
      * 本期优惠后费率
      */
-    private BigDecimal thisAfterFeerate;
+    private String thisAfterFeerate;
     /**
      * 本次优惠结束后费率
      */
-    private BigDecimal thisEndFeerate;
+    private String thisEndFeerate;
 
     public String getProdId() {
         return prodId;
@@ -81,19 +80,19 @@ public class ReportProdfeeDto extends BaseEntity {
         this.feename = feename;
     }
 
-    public BigDecimal getPreFeerate() {
+    public String getPreFeerate() {
         return preFeerate;
     }
 
-    public void setPreFeerate(BigDecimal preFeerate) {
+    public void setPreFeerate(String preFeerate) {
         this.preFeerate = preFeerate;
     }
 
-    public BigDecimal getAfterFeerate() {
+    public String getAfterFeerate() {
         return afterFeerate;
     }
 
-    public void setAfterFeerate(BigDecimal afterFeerate) {
+    public void setAfterFeerate(String afterFeerate) {
         this.afterFeerate = afterFeerate;
     }
 
@@ -113,27 +112,27 @@ public class ReportProdfeeDto extends BaseEntity {
         this.endDate = endDate;
     }
 
-    public BigDecimal getThisPreFeerate() {
+    public String getThisPreFeerate() {
         return thisPreFeerate;
     }
 
-    public void setThisPreFeerate(BigDecimal thisPreFeerate) {
+    public void setThisPreFeerate(String thisPreFeerate) {
         this.thisPreFeerate = thisPreFeerate;
     }
 
-    public BigDecimal getThisAfterFeerate() {
+    public String getThisAfterFeerate() {
         return thisAfterFeerate;
     }
 
-    public void setThisAfterFeerate(BigDecimal thisAfterFeerate) {
+    public void setThisAfterFeerate(String thisAfterFeerate) {
         this.thisAfterFeerate = thisAfterFeerate;
     }
 
-    public BigDecimal getThisEndFeerate() {
+    public String getThisEndFeerate() {
         return thisEndFeerate;
     }
 
-    public void setThisEndFeerate(BigDecimal thisEndFeerate) {
+    public void setThisEndFeerate(String thisEndFeerate) {
         this.thisEndFeerate = thisEndFeerate;
     }
 }

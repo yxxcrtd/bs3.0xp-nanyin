@@ -54,7 +54,7 @@ public class ReportDlxsjgmdgg001Service implements IReportDataService {
         holidaysearchparam.put("market_code", "01");
         Date pubDate = holidayService.getNextWorkDay(holidaysearchparam);
         if (pubDate == null) {
-            pubDate = DateUtil.addDay(curDate, -1);
+            pubDate = DateUtil.addDay(curDate, 1);
         }
         dataMap.put("pubDate",DateUtil.format(pubDate, DateUtil.DEFAULT_DATE_FORMAT_CN));
         return result;

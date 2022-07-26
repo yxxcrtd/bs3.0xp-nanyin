@@ -84,13 +84,10 @@ public class Report1Flncp001Service implements IReportDataService {
                 prodmap.put("prodName", StringUtil.isBlank(x.getProdName()) ? GlobalConstant.SPLIT : x.getProdName());
                 // 内部销售代码
                 prodmap.put("prodId", StringUtil.isBlank(x.getProdId()) ? GlobalConstant.SPLIT : x.getProdId());
-                DecimalFormat df = new DecimalFormat("0.00%");
                 // 优惠前费率
-                prodmap.put("preFeerate", x.getPreFeerate() == null ? GlobalConstant.SPLIT :
-                        df.format(x.getPreFeerate()));
+                prodmap.put("preFeerate", StringUtil.isBlank(x.getPreFeerate()) ? GlobalConstant.SPLIT : x.getPreFeerate());
                 // 优惠后费率
-                prodmap.put("afterFeerate", x.getAfterFeerate() == null ? GlobalConstant.SPLIT :
-                        df.format(x.getAfterFeerate()));
+                prodmap.put("afterFeerate", StringUtil.isBlank(x.getAfterFeerate()) ? GlobalConstant.SPLIT : x.getAfterFeerate());
                 // 优惠起始时间
                 prodmap.put("startDate", x.getStartDate() == null ? GlobalConstant.SPLIT :
                         DateUtil.format(x.getStartDate(), DateUtil.DEFAULT_DATE_FORMAT_CN));
