@@ -62,11 +62,11 @@ $(function() {
         }, {
             field : 'assetsValue',width:'10%',
             title : '子产品资产净值',
-            type : 'number',digit:4
+            type : 'number',digit:2
         }, {
             field : 'capital',width:'10%',
             title : '子产品实收资本',
-            type : 'number',digit:4
+            type : 'number',digit:2
         }, {
             field : 'unitValue',width:'10%',
             title : '子产品单位净值',
@@ -86,15 +86,15 @@ $(function() {
         }, {
             field : 'pAssets',width:'10%',
             title : '母产品总资产',
-            type : 'number',digit:4
+            type : 'number',digit:2
         }, {
             field : 'pAssetsValue',width:'10%',
             title : '母产品资产净值',
-            type : 'number',digit:4
+            type : 'number',digit:2
         }, {
             field : 'pCapital',width:'10%',
             title : '母产品实收资本',
-            type : 'number',digit:4
+            type : 'number',digit:2
         }, {
             field : 'pUnitValue',width:'10%',
             title : '母产品单位净值',
@@ -126,7 +126,15 @@ $(function() {
             field : 'updateUser',width:'10%',
             title : '更新人'
         },
-            { field:'operation',width:'10%', title: '操作', type:'action', buttons: ['edit', 'delt']}]
+            { field:'operation',width:'10%', title: '操作', type:'action', buttons: ['edit', 'delt'],
+                render: function (data, type, row, meta) {
+                    if (row.status == 'D')
+                        return '';
+                    else
+                        return '<i class="btn layui-icon edit edit" title="编辑" data-ignore="false"></i> ' +
+                            '<i class="btn layui-icon delt delt" title="删除" data-ignore="false"></i>';
+                }
+            }]
     });
 
     /**

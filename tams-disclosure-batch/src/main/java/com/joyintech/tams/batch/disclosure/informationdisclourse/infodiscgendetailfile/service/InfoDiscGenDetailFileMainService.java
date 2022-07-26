@@ -45,8 +45,9 @@ public class InfoDiscGenDetailFileMainService  extends AutoSendCBBaseService{
     	    	try{
     	    	  //后期待完善后添加具体适配器可执行逻辑
 //    	            boolean runFlag = infoDiscGenFileDetailService.checkDateisReady(DateUtil.format(infoDisclosureReadAndGenEntity.getExecDate()));
-    	            boolean runFlag = infoDiscGenFileDetailService.checkDateisReadyNew(infoDisclosureReadAndGenEntity,DateUtil.format(infoDisclosureReadAndGenEntity.getExecDate()));
-    	            Map<String,Date> dateMap = new HashMap<String,Date>();
+    	            //boolean runFlag = infoDiscGenFileDetailService.checkDateisReadyNew(infoDisclosureReadAndGenEntity,DateUtil.format(infoDisclosureReadAndGenEntity.getExecDate()));
+					boolean runFlag=true;
+					Map<String,Date> dateMap = new HashMap<String,Date>();
     	            if(runFlag){
     	            	
     	            	//执行完成后将主表的状态修改为执行中

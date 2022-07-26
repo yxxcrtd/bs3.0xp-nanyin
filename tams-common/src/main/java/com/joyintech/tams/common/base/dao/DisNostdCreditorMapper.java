@@ -19,3 +19,4 @@ public interface DisNostdCreditorMapper {
 
     int updateByPrimaryKey(DisNostdCreditor record);
 }
+

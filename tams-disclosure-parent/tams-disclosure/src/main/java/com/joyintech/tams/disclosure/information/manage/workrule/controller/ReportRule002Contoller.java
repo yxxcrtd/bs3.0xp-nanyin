@@ -85,6 +85,7 @@ public class ReportRule002Contoller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.时点类型);
         this.setSelectOptionToModel(model, DictCode.基准区分);
         this.setSelectOptionToModel(model, DictCode.确认类型);
+		this.setSelectOptionToModel(model, DictCode.节假日信息);
         
         // 获取披露渠道
 		model.addAttribute("channelList", JsonUtils.objectArray2Json(reportRule002Service.getRevealChannel().toArray()));

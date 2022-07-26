@@ -219,6 +219,11 @@ public class InfoDisclosureGenAndSendEntity {
     private String raiseType;
 
     /**
+     * 日历代码
+     */
+    private String marketCode;
+
+    /**
      * 获取 term
      * 
      * @return term.
@@ -857,4 +862,11 @@ public class InfoDisclosureGenAndSendEntity {
         this.raiseAmt = raiseAmt;
     }
 
+    public String getMarketCode() {
+        return marketCode;
+    }
+
+    public void setMarketCode(String marketCode) {
+        this.marketCode = marketCode;
+    }
 }

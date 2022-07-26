@@ -93,16 +93,12 @@ public class Report1Cpnfl002Service implements IReportDataService {
                 feemap.put("prodId", StringUtil.isBlank(x.getProdId()) ? GlobalConstant.SPLIT : x.getProdId());
                 // 费用名称
                 feemap.put("feename", StringUtil.isBlank(x.getFeename()) ? GlobalConstant.SPLIT : x.getFeename());
-                DecimalFormat df = new DecimalFormat("0.00%");
                 // 本次优惠前费率
-                feemap.put("thisPreFeerate", x.getThisPreFeerate() == null ? GlobalConstant.SPLIT :
-                        df.format(x.getThisPreFeerate()));
+                feemap.put("thisPreFeerate", StringUtil.isBlank(x.getThisPreFeerate()) ? GlobalConstant.SPLIT : x.getThisPreFeerate());
                 // 本次优惠后费率
-                feemap.put("thisAfterFeerate", x.getThisAfterFeerate() == null ? GlobalConstant.SPLIT :
-                        df.format(x.getThisAfterFeerate()));
+                feemap.put("thisAfterFeerate", StringUtil.isBlank(x.getThisAfterFeerate()) ? GlobalConstant.SPLIT : x.getThisAfterFeerate());
                 // 本次优惠结束后费率
-                feemap.put("thisEndFeerate", x.getThisEndFeerate() == null ? GlobalConstant.SPLIT :
-                        df.format(x.getThisEndFeerate()));
+                feemap.put("thisEndFeerate", StringUtil.isBlank(x.getThisEndFeerate()) ? GlobalConstant.SPLIT : x.getThisEndFeerate());
                 feelist.add(feemap);
             });
             dataMap.put("feelist", feelist);

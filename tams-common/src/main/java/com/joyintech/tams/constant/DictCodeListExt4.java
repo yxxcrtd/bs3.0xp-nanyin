@@ -35,6 +35,7 @@ public enum DictCodeListExt4 implements BaseDictCodeList {
     共通业务类型_投资账户信息维护(DictCode.共通业务类型, "SVR12", "投资账户信息维护"),
 
     共通业务类型_产品基础指标信息维护(DictCode.共通业务类型, "SVR13", "产品基础指标信息维护"),
+    共通业务类型_非标债权类资产明细维护(DictCode.共通业务类型, "DISNOSTD", "非标债权类资产明细维护"),
 
 
     ;

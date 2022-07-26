@@ -86,16 +86,12 @@ public class Report1Flncp002Service implements IReportDataService {
                 prodmap.put("prodId", StringUtil.isBlank(x.getProdId()) ? GlobalConstant.SPLIT : x.getProdId());
                 // 费用名称
                 prodmap.put("feename", cpnflDto.getFeename());
-                DecimalFormat df = new DecimalFormat("0.00%");
                 // 本次优惠前费率
-                prodmap.put("thisPreFeerate", x.getThisPreFeerate() == null ? GlobalConstant.SPLIT :
-                        df.format(x.getThisPreFeerate()));
+                prodmap.put("thisPreFeerate", StringUtil.isBlank(x.getThisPreFeerate()) ? GlobalConstant.SPLIT : x.getThisPreFeerate());
                 // 本次优惠后费率
-                prodmap.put("thisAfterFeerate", x.getThisAfterFeerate() == null ? GlobalConstant.SPLIT :
-                        df.format(x.getThisAfterFeerate()));
+                prodmap.put("thisAfterFeerate", StringUtil.isBlank(x.getThisAfterFeerate()) ? GlobalConstant.SPLIT : x.getThisAfterFeerate());
                 // 本次优惠结束后费率
-                prodmap.put("thisEndFeerate", x.getThisEndFeerate() == null ? GlobalConstant.SPLIT :
-                        df.format(x.getThisEndFeerate()));
+                prodmap.put("thisEndFeerate", StringUtil.isBlank(x.getThisEndFeerate()) ? GlobalConstant.SPLIT : x.getThisEndFeerate());
                 prodlist.add(prodmap);
             });
             dataMap.put("prodlist", prodlist);

@@ -59,8 +59,7 @@ $(function() {
             $('#prodName').val('');
         }
     });
-    debugger;
-    $('#accountType').val("A01").trigger("change");;
+    $('#accountType').val("A01").trigger("change");
 
 });
 

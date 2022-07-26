@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{layout/default}">
+<head>
+    <title>非标债权类资产信息新建</title>
+    <style>
+        .mst-lable{
+            width: 20%;
+        }
+    </style>
+</head>
+<body>
+<div class='container' layout:fragment="content">
+    <style type="text/css">
+        .layui-table {
+            width: 100% !important;
+        }
+
+        .trast-list-left {
+            float: left;
+            width: 60%;
+        }
+
+        .trast-list-right {
+            float: left;
+            width: 30%;
+            position: relative;
+        }
+
+        .trast-list-left .layui-table-view {
+            height: 200px !important;
+        }
+
+        .trast-list-left .layui-table-view .layui-table-box .layui-table-body {
+            height: 156px !important;
+        }
+
+        .trast-list-show {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+        }
+
+        .trast-icon-wrap {
+            text-align: right;
+        }
+
+        .trast-icon-wrap i {
+            color: #666;
+            background: #d9ecff;
+            font-size: 25px;
+        }
+
+        .trast-print-wrap {
+            border: 1px solid #ddd;
+        }
+
+        .trast-print-wrap h3 {
+            padding: 10px 0 10px 10px;
+            border-bottom: 1px solid #ddd;
+            color: #999;
+        }
+
+        .trast-print-wrap ul {
+            padding: 0 10px 10px 10px;
+        }
+
+        .trast-print-wrap ul li {
+            padding-top: 10px;
+        }
+
+        .trast-print-wrap ul li a {
+            color: #999;
+        }
+
+        table thead tr th {
+            background-color: #d9ecff;
+        }
+
+        .ptl-table .layui-table-view .layui-table-box .layui-table-header table thead tr th
+        {
+            padding: 1px 0;
+            text-align: center;
+        }
+
+        .ptl-table .layui-table-view .layui-table-box .layui-table-body {
+            height: 504px !important;
+        }
+
+        .input-radio-inline .layui-form-radio {
+            margin: 0;
+        }
+
+        .input-radio-inline .layui-form-radio .layui-icon {
+            color: #6d9ed9;
+            font-size: 18px;
+        }
+    </style>
+    <div class="pro-module-container" style="margin-bottom: 20px;" id="content_div">
+        <form class="layui-form joyin-form-wrap pro-module-form" id="submitForm">
+            <div class="pro-module-wrapper pro-module-base step" title="基本信息">
+                <div class="pro-module-wrap">
+                    <div class="pro-module">
+                        <h3 class="pro-module-title">
+                            <span class="title-des">基本信息</span>（<span class="star-sign">*</span>必填）<i
+                                class="iconfont icon-arrow-down pro-down-icon"></i>
+                        </h3>
+                        <div class="pro-module-item pro-item-wrap">
+                            <div class="layui-form-item">
+                                <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
+                                    <input type="text" id="nostdAssetId" name="nostdAssetId" class="layui-input form-input" data-th-value="${entity?.nostdAssetId}" style = "display: none">
+                                    <label class="layui-form-label form-lable mst-lable">产品名称</label>
+                                    <div class="layui-input-inline input-inline">
+                                        <select id="prodName" name="prodName"
+                                                class="layui-input form-input input-select"
+                                                data-th-data-url="@{/disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail001/getProdInfo}"
+                                                required="required" allowClear="true" placeholder="请输入内容"
+                                                data-th-placeholder="#{SysCommon.placeholder}" searchable="true"
+                                                data-th-initValue='${entity?.prodId}'>
+                                        </select>
+                                    </div>
+                                </div>
+
+
+                                <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
+                                    <label class="layui-form-label form-lable mst-lable">产品主代码</label>
+                                    <div class="layui-input-inline input-inline">
+                                        <input type="text" class="layui-input form-input"
+                                               data-th-placeholder="#{SysCommon.placeholder}" id="prodId"
+                                               name="prodId" data-th-value="${entity?.prodId}" disabled required="required"/>
+                                    </div>
+                                </div>
+
+
+                                <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
+                                    <label class="layui-form-label form-lable mst-lable">生效日</label>
+                                    <div class="layui-input-inline input-inline">
+                                        <input id="effDate" name="effDate"
+                                               class="layui-input form-input input-dateSelect" required="required"
+                                               data-th-value='${#dates.format(entity?.effDate,"yyyy-MM-dd")}'
+                                               placeholder="请选择时间">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <div class="layui-inline layui-col-xs6 layui-col-sm6 layui-col-md6 layui-col-lg6S">
+                                    <label class="layui-form-label form-lable mst-lable">生效日截止日期</label>
+                                    <div class="layui-input-inline input-inline">
+                                        <input id="effEndDate" name="effEndDate"
+                                               class="layui-input form-input input-dateSelect" required="required"
+                                               data-th-value='${#dates.format(entity?.effEndDate,"yyyy-MM-dd")}'
+                                               placeholder="请选择时间">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pro-module">
+                        <h3 class="pro-module-title">
+                            <span class="title-des">非标资产明细</span>（<span class="star-sign">*</span>必填）<i
+                                class="iconfont icon-arrow-down pro-down-icon"></i>
+                        </h3>
+                        <div class="pro-module-item pro-item-wrap">
+                                <div>
+                                    <table id="unclaimTable" class="layui-table"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+        <div class="layui-col-md10" style="margin:30px 0;">
+            <div class="text-center">
+                <a id="UnClaimAssetDetail002_btn_save" class="layui-btn layui-btn-sm btn-save"
+                   data-th-text="#{SysCommon.save}">保存</a>
+                <a id="UnClaimAssetDetail002_btn_submit"
+                   class="layui-btn layui-btn-sm btn-submit" data-th-text="#{SysCommon.submit}">提交</a>
+                <a id="UnClaimAssetDetail002_btn_cancel"
+                   class="layui-btn layui-btn-sm btn-cancel" data-th-text="#{SysCommon.cancel}">取消</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div layout:fragment="script">
+        <script data-th-inline="javascript" type="text/javascript">
+            var uncliamList = /*[[${uncliamList}]]*/'';
+            // 处理日期
+            if (uncliamList) {
+                $.each(uncliamList, function(index, rowData) {
+                    if (rowData.effDate) {
+                        rowData.effDate = new Date(rowData.effDate).getTime();
+                    }
+                    if (rowData.effEndDate) {
+                        rowData.effEndDate = new Date(rowData.effEndDate).getTime();
+                    }
+                });
+            }
+        </script>
+    <script data-th-src="@{/js/disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail002.js}"
+            type="text/javascript"></script>
+</div>
+</body>
+</html>

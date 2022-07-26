@@ -89,6 +89,12 @@ public class ReportDataService {
 	@Autowired
 	private ReportKfjzgg001Service reportKfjzgg001Service;
 
+	@Autowired
+	private ReportMzjz001Service reportMzjz001Service;
+
+	@Autowired
+	private ReportJzfhbg001Service reportJzfhbg001Service;
+
 	public List<Map<String, Object>> queryTestDatas(Map<String, Object> params) {
 		Map<String, Object> dataMap = new HashMap<String, Object>();
 		dataMap.put("${prodName}", "得利宝8号");
@@ -224,7 +230,7 @@ public class ReportDataService {
 			service = bonusReportDataService;
 		} else if (rptType.equals(DisReportType.QSBG)) { // 清算报告
 			service = settReportDataService;
-		} else if (rptType.equals(DisReportType.DQGG_GM)) { // 到期公告
+		} else if (rptType.equals(DisReportType.DQGG_GM) || rptType.equals(DisReportType.DQGBG_SM)) { // 到期公告
 			service = matureReportDataService;
 		} else if (rptType.equals(DisReportType.TZTZFBZCGG)) { // 非标调整公告
 			service = nostdReportDataService;
@@ -262,6 +268,10 @@ public class ReportDataService {
 			service = reportKfqzjfhgg001Service;
 		}else if (rptType.equals(DisReportType.KFJJZGG_GM) || rptType.equals(DisReportType.KFJJZGG_SM)) { // 开放、净值及分红公告（公募&开放频率在半年以上）、开放、净值及分红公告（公募&开放频率在半年（不含）以内）
 			service = reportKfjzgg001Service;
+		}else if (rptType.equals(DisReportType.MZJZGG) || rptType.equals(DisReportType.MZJJBG)) { // 每周净值公告（公募）/（私募）
+			service = reportMzjz001Service;
+		}else if (rptType.equals(DisReportType.JZJFHBG_SMFB) || rptType.equals(DisReportType.JZJFHBG_SMKF)) { // 净值及分红报告（私募封闭式）/净值及分红报告（私募开放式）
+			service = reportJzfhbg001Service;
 		}
 
 
