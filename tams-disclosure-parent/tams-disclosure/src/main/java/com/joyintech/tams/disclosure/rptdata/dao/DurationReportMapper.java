@@ -15,13 +15,8 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
-import com.joyintech.tams.common.base.entity.DisProdAsset;
-import com.joyintech.tams.common.base.entity.RepFeeTrd;
-import com.joyintech.tams.common.base.entity.RepIndexSub;
-import com.joyintech.tams.common.base.entity.RepInvestAccount;
-import com.joyintech.tams.common.base.entity.RepProdIndex;
-import com.joyintech.tams.common.base.entity.RepRelDeal;
-import com.joyintech.tams.common.base.entity.RepAssetsComb;
+import com.joyintech.tams.common.base.entity.RepProdBasicChange;
+import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.disclosure.rptdata.dto.DurationReportDto;
 
 /**
@@ -35,13 +30,14 @@ public interface DurationReportMapper {
 	
 	DurationReportDto selectProdInfo(Map<String,Object> paras);
 	
+	List<RepProdInfo> selectProdChildren(Map<String,Object> paras );
+	
 	List<Map<String,Object>> selectFinIndex(Map<String,Object>paras) ;
 	
 	/**
 	 * 查询业绩基准
-	 * TODO:条件不具备，需要需求确认
 	 */
-	List<Map<String,Object>> selectAchievementBasis(Map<String,Object>paras);
+	List<RepProdBasicChange> selectAchievementBasis(String prodId);
 	
 	List<Map<String,Object>> selectReportIndex ( Map<String,Object>paras );
 	
@@ -52,4 +48,8 @@ public interface DurationReportMapper {
 	List<Map<String,Object>> selectAccts ( Map<String,Object>paras );
 	
 	List<Map<String,Object>> selectRelDeals ( Map<String,Object>paras );
+	
+	List<Map<String,Object>>selectOtherFee(Map<String,Object>paras );
+	
+
 }
