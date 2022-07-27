@@ -10,6 +10,7 @@ import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
@@ -45,11 +46,19 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
      * @see
      * @since 1.0
      */
-    public List<SelectOptionDto> queryProdIdInfo(Map<String, Object> map) {
-        return repProdIndexSMapper.getProdId(map);
+    public Page<SelectOptionDto> queryProdIdInfo(Map<String, Object> map) {
+//        return repProdIndexSMapper.getProdId(map);
+        Map<String, Object> pageParam = RequestUtil.getPageParam();
+        Page<SelectOptionDto> result = queryForPageForSelectReturn(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")), ()
+                -> repProdIndexSMapper.getProdId(map));
+        return result;
     }
-    public List<SelectOptionDto> queryProdIdInfo2(Map<String, Object> map) {
-        return repProdIndexSMapper.getProdId2(map);
+    public Page<SelectOptionDto> queryProdIdInfo2(Map<String, Object> map) {
+//        return repProdIndexSMapper.getProdId2(map);
+        Map<String, Object> pageParam = RequestUtil.getPageParam();
+        Page<SelectOptionDto> result = queryForPageForSelectReturn(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")), ()
+                -> repProdIndexSMapper.getProdId2(map));
+        return result;
     }
 
     public Page<RepProdIndexDto> selectInfo(Map<String, Object> param) {

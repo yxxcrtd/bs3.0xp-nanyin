@@ -64,7 +64,7 @@ public class RepProdIndex001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("queryProdIdInfo")
-    public List<SelectOptionDto> queryProdIdInfo() {
+    public Page<SelectOptionDto> queryProdIdInfo() {
         return repProdIndexService.queryProdIdInfo(RequestUtil.getPageParam());
     }
 

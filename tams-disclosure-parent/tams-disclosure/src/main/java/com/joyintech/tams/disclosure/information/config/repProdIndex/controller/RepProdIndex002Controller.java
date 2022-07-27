@@ -4,6 +4,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
@@ -73,7 +74,7 @@ public class RepProdIndex002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("queryProdIdInfo2")
-    public List<SelectOptionDto> queryProdIdInfo2() {
+    public Page<SelectOptionDto> queryProdIdInfo2() {
         return repProdIndexService.queryProdIdInfo2(RequestUtil.getPageParam());
     }
 

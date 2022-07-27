@@ -53,8 +53,19 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
      * @see
      * @since 1.0
      */
-    public List<SelectOptionDto> queryProdIdInfo(Map<String, Object> map) {
-        return svrProdFeeDealInterfMapper.getProdInsId(map);
+    public Page<SelectOptionDto> queryProdIdInfo(Map<String, Object> map) {
+//        return svrProdFeeDealInterfMapper.getProdInsId(map);
+        Map<String, Object> pageParam = RequestUtil.getPageParam();
+        Page<SelectOptionDto> result = queryForPageForSelectReturn(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")), ()
+                -> svrProdFeeDealInterfMapper.getProdInsId(map));
+        return result;
+    }
+
+    public Page<SelectOptionDto> queryProdIdInfo2(Map<String, Object> map) {
+        Map<String, Object> pageParam = RequestUtil.getPageParam();
+        Page<SelectOptionDto> result = queryForPageForSelectReturn(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")), ()
+                -> svrProdFeeDealInterfMapper.getProdInsId2(map));
+        return result;
     }
 
     /**
@@ -206,7 +217,7 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
                             rowData.get(1).trim().equals("管理费（超额）")||
                             rowData.get(1).trim().equals("销售费")) &&
                             (!StringUtil.isNotEmpty(rowData.get(3)))){
-                        errorMsg.append("当费用类型为“托管费”“管理费（固定）”“管理费（赎回）”“销售费”时费用金额不能为空!");
+                        errorMsg.append("当费用类型为“托管费”“管理费（固定）”“管理费（超额）”“销售费”时自成立以来发生额（贷方）不可为空!");
                     }
                     if (!StringUtil.isNotEmpty(rowData.get(4))){
                         errorMsg.append("支付日 必填！");
@@ -259,19 +270,18 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
                 }
             }
         }
-//        if (repeatNum > 0){
-//            totalMsg += "导入文件存在"+String.valueOf(repeatNum)+"条数据重复，重复数据不导入，是否确认？";
-//        }
+        if (repeatNum > 0){
+            totalMsg += "导入文件存在"+String.valueOf(repeatNum)+"条数据重复，重复数据不导入，是否确认？";
+        }
         Map<String, Object> resultMap = new HashMap<>();
-//        if (StringUtil.isNotBlank(totalMsg)) {
-//            resultMap.put("confirmMsg", totalMsg);
-//        }
+        if (StringUtil.isNotBlank(totalMsg)) {
+            resultMap.put("confirmMsg", totalMsg);
+        }
         resultMap.put("correctData", JsonUtils.object2Json(jsonArrays));
         String tempList = (String) resultMap.get("correctData");
         SvrProdFeeDealInterfDto dto = getValNetAssetQuotationInfoListData(tempList);
         List<SvrProdFeeDealInterfDto> selectedItem = dto.getSelectedItem();
         List<SvrProdFeeDealInterfDto>  existData = new ArrayList<>();
-        List<SvrProdFeeDealInterfDto>  newData = new ArrayList<>();
         for (SvrProdFeeDealInterfDto temp:selectedItem) {
             Map<String, Object> map = new HashMap<>();
             map.put("prodId",temp.getProdId());
@@ -279,12 +289,10 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
             map.put("payDate",temp.getPayDate());
             if (StringUtil.isNotEmpty(this.selectData(map))){
                 existData.add(temp);
-            }else {
-                newData.add(temp);
             }
         }
         if(existData.size() > 0){
-            resultMap.put("confirmMsg", "有重复信息，是否覆盖？");
+            resultMap.put("confirmMsg2", "有重复信息，是否覆盖？");
         }
 
         AjaxResult wr = new AjaxResult();
@@ -325,7 +333,6 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
     public AjaxResult importFile(Map<String, Object> param) {
         AjaxResult ajaxResult = new AjaxResult();
         String tempList = (String) param.get("tempList");
-        Boolean flag = (Boolean) param.get("flag");
         SvrProdFeeDealInterfDto dto = getValNetAssetQuotationInfoListData(tempList);
         List<SvrProdFeeDealInterfDto> selectedItem = dto.getSelectedItem();
         List<SvrProdFeeDealInterfDto>  existData = new ArrayList<>();
@@ -342,10 +349,8 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
             }
         }
         //更新操作
-        if(flag){
-            for (SvrProdFeeDealInterfDto existDataDto : existData) {
-                this.doComplete(existDataDto,OperationType.MODIFY);
-            }
+        for (SvrProdFeeDealInterfDto existDataDto : existData) {
+            this.doComplete(existDataDto,OperationType.MODIFY);
         }
 
         //插入操作

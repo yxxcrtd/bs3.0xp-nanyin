@@ -75,7 +75,7 @@ public class SvrProdFeeDealInterf001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("queryProdIdInfo")
-    public List<SelectOptionDto> queryProdIdInfo() {
+    public Page<SelectOptionDto> queryProdIdInfo() {
         return svrProdFeeDealInterfService.queryProdIdInfo(RequestUtil.getPageParam());
     }
 
