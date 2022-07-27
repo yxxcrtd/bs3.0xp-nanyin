@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RepExtConusMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepExtConus" >
+        <id column="DATA_DATE" property="dataDate" jdbcType="DATE" />
+        <id column="DATA_TYPE" property="dataType" jdbcType="VARCHAR" />
+        <result column="MARKET_INFO" property="marketInfo" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        DATA_DATE DATA_DATE, DATA_TYPE DATA_TYPE, MARKET_INFO MARKET_INFO, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, 
+        STATUS STATUS
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepExtConusMapper.Base_Column_List" />
+        from REP_EXT_CONUS
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepExtConusMapper.Base_Column_List" />
+        from REP_EXT_CONUS
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.RepExtConusKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepExtConusMapper.Base_Column_List" />
+        from REP_EXT_CONUS
+        where DATA_DATE = #{dataDate,jdbcType=DATE}
+          and DATA_TYPE = #{dataType,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepExtConusKey" >
+        delete from REP_EXT_CONUS
+        where DATA_DATE = #{dataDate,jdbcType=DATE}
+          and DATA_TYPE = #{dataType,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepExtConus" >
+        insert into REP_EXT_CONUS (DATA_DATE, DATA_TYPE, MARKET_INFO, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME, STATUS
+            )
+        values (#{dataDate,jdbcType=DATE}, #{dataType,jdbcType=VARCHAR}, #{marketInfo,jdbcType=DECIMAL}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepExtConus" >
+        insert into REP_EXT_CONUS
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="dataDate != null" >
+                DATA_DATE,
+            </if>
+            <if test="dataType != null" >
+                DATA_TYPE,
+            </if>
+            <if test="marketInfo != null" >
+                MARKET_INFO,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="dataDate != null" >
+                #{dataDate,jdbcType=DATE},
+            </if>
+            <if test="dataType != null" >
+                #{dataType,jdbcType=VARCHAR},
+            </if>
+            <if test="marketInfo != null" >
+                #{marketInfo,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepExtConus" >
+        insert into REP_EXT_CONUS(DATA_DATE, DATA_TYPE, MARKET_INFO, CREATE_USER, CREATE_DEPT, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME, STATUS)
+        select DATA_DATE, DATA_TYPE, MARKET_INFO, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, #{status,jdbcType=VARCHAR} STATUS
+             from REP_EXT_CONUS
+             where STATUS = 'E' and DATA_DATE = #{dataDate,jdbcType=DATE} and DATA_TYPE = #{dataType,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepExtConus" >
+        update REP_EXT_CONUS
+        <set >
+            <if test="marketInfo != null" >
+                MARKET_INFO = #{marketInfo,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where DATA_DATE = #{dataDate,jdbcType=DATE}
+          and DATA_TYPE = #{dataType,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepExtConus" >
+        update REP_EXT_CONUS
+        set MARKET_INFO = #{marketInfo,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            STATUS = #{status,jdbcType=VARCHAR}
+        where DATA_DATE = #{dataDate,jdbcType=DATE}
+          and DATA_TYPE = #{dataType,jdbcType=VARCHAR}
+    </update>
+</mapper>

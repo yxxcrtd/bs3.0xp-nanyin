@@ -25,6 +25,7 @@ public class DurationReportDto extends ReportDto {
 
 	private Integer runDays;  //期限天数
 	private String profitType; //运作方式
+	private String issuingWay;  //发行方式：01开放，02封闭
 	
 	private BigDecimal capital; //期末产品份额
 	private String partner; //合作机构
@@ -39,12 +40,17 @@ public class DurationReportDto extends ReportDto {
 	private String duration; //报表区间
 	
 	
-	private Map<String,Object> finIndex;  //财务指标：资产净值，份额净值，份合累计净值
+	private List<Map<String,Object>> listFinIndex;  //财务指标：资产净值，份额净值，份合累计净值
 	
 	private List<Map<String,Object>> listAchieveBasis;   //TODO:业绩基准，实体类还未定义，暂时以map定义
 	
-	private String prodOperating;  //报告期内产品的投资策略和运作分析，从报告指标表中获取;
-	private String prodRisk;   //报告期内产品的流动性风险分析
+//	private String prodOperating;  
+//	private String prodRisk;  
+	private String tzclhyzfx;  //报告期内产品的投资策略和运作分析，从报告指标表中获取;
+	private String ldxfxfx;    //报告期内产品的流动性风险分析
+	private String tgrbg1;   //报告期内托管人遵规守信情况声明
+	private String tgrbg2;   //托管人对报告期内投资运作遵规守信、净值计算、利润分配等情况的说明
+	private String tgrbg3;   //托管人对本年度报告中财务信息等内容的真实、准确和完整发表意见
 
 	private Map<String,Object> prodAssetComb;  //产品资产组合汇总情况
 	
@@ -55,6 +61,14 @@ public class DurationReportDto extends ReportDto {
 	private List<Map<String,Object>> listAccts; //投资账户信息
 
 	private Map<String,Object> repRelDeal;  //关联交易，一个产品1日就一条数据
+
+	public String getIssuingWay() {
+		return issuingWay;
+	}
+
+	public void setIssuingWay(String issuingWay) {
+		this.issuingWay = issuingWay;
+	}
 
 	public Integer getRunDays() {
 		return runDays;
@@ -152,28 +166,52 @@ public class DurationReportDto extends ReportDto {
 		this.listAchieveBasis = listAchieveBasis;
 	}
 
-	public String getProdOperating() {
-		return prodOperating;
+	public String getTzclhyzfx() {
+		return tzclhyzfx;
 	}
 
-	public void setProdOperating(String prodOperating) {
-		this.prodOperating = prodOperating;
+	public void setTzclhyzfx(String tzclhyzfx) {
+		this.tzclhyzfx = tzclhyzfx;
 	}
 
-	public String getProdRisk() {
-		return prodRisk;
+	public String getLdxfxfx() {
+		return ldxfxfx;
 	}
 
-	public void setProdRisk(String prodRisk) {
-		this.prodRisk = prodRisk;
+	public void setLdxfxfx(String ldxfxfx) {
+		this.ldxfxfx = ldxfxfx;
 	}
 
-	public Map<String, Object> getFinIndex() {
-		return finIndex;
+	public String getTgrbg1() {
+		return tgrbg1;
 	}
 
-	public void setFinIndex(Map<String, Object> finIndex) {
-		this.finIndex = finIndex;
+	public void setTgrbg1(String tgrbg1) {
+		this.tgrbg1 = tgrbg1;
+	}
+
+	public String getTgrbg2() {
+		return tgrbg2;
+	}
+
+	public void setTgrbg2(String tgrbg2) {
+		this.tgrbg2 = tgrbg2;
+	}
+
+	public String getTgrbg3() {
+		return tgrbg3;
+	}
+
+	public void setTgrbg3(String tgrbg3) {
+		this.tgrbg3 = tgrbg3;
+	}
+
+	public List<Map<String, Object>> getListFinIndex() {
+		return listFinIndex;
+	}
+
+	public void setListFinIndex(List<Map<String, Object>> listFinIndex) {
+		this.listFinIndex = listFinIndex;
 	}
 
 	public Map<String, Object> getProdAssetComb() {

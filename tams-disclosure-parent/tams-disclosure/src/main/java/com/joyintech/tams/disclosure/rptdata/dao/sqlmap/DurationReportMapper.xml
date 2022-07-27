@@ -7,6 +7,7 @@
 		info.PROD_ID
 		,INFO.PROD_NAME
 		,INFO.PROD_RE
+		,INFO.ISSUING_WAY
 		,INFO.PROFIT_TYPE   /**运作方式**/
 		,INFO.SET_DATE   eDate /**成立日**/
 		,'南银理财有限责任公司' prodManager  /**管理人**/
@@ -18,8 +19,24 @@
 		left join DIS_PROD_PARTNER PARTNER ON INFO.PROD_ID=PARTNER.PROD_ID AND #{reportDate,jdbcType=DATE} between partner.EFF_DATE and partner.EFF_END_DATE
 		where REP_PROD_TYPE in ('01','02')  /**母产品或者单产品**/
 		AND info.STATUS='E'
-		<if test="prodId!=null">
-			AND info.PROD_ID=#{prodId,jdbcType=VARCHAR}
+		<if test="pprodid!=null">
+			AND info.P_PROD_ID=#{pprodid,jdbcType=VARCHAR}
+		</if>
+	</select>
+
+	<select id="selectProdChildren" resultType="com.joyintech.tams.common.base.entity.RepProdInfo">
+		select
+		info.PROD_ID
+		,INFO.PROD_NAME
+		,INFO.PROD_RE
+		,INFO.ISSUING_WAY
+		,INFO.PROFIT_TYPE   /**运作方式**/
+		,INFO.SET_DATE    /**成立日**/
+		from REP_PROD_INFO info
+		where REP_PROD_TYPE in ('02','03')  /**母产品或者单产品**/
+		AND info.STATUS='E'
+		<if test="pprodid!=null">
+			AND info.P_PROD_ID=#{pprodid,jdbcType=VARCHAR}
 		</if>
 	</select>
 
@@ -30,11 +47,29 @@
 		,rindex.ASSETS_VALUE
 		,rindex.UNIT_VALUE
 		,rindex.UNIT_VALUE_T
+		,bal.OTHER_FEE
 		from REP_PROD_INFO info
 		left join REP_PROD_INDEX rindex on info.PROD_ID=rindex.PROD_ID and rindex.VALUE_DATE=#{reportDate,jdbcType=DATE}
+		left join (
+			SELECT 
+			    bb.BOOKSET_ID
+			    ,bb.BALANCE_DATE
+			    ,nvl(sum(TDY_O_D_AMT),0) OTHER_FEE
+			from BOK_BALANCE bb
+			WHERE 1=1
+			    AND bb.STATUS='E'
+			    and bb.SUBJECT_NO in ( '6407','6605' )
+				<if test="reportDate!=null">
+					and bb.BALANCE_DATE=#{reportDate,jdbcType=DATE}
+				</if>
+			group by bb.BOOKSET_ID,bb.BALANCE_DATE
+		) bal
+		on info.PROD_ID=bal.BOOKSET_ID		
 		where 1=1
-		<if test="prodId!=null">
-			and info.PROD_ID=#{prodId,jdbcType=VARCHAR}
+		and info.STATUS='E'
+		and info.REP_PROD_TYPE in ('02','03')  /**单产品或者子产品**/
+		<if test="pprodid!=null">
+			and info.P_PROD_ID=#{pprodid,jdbcType=VARCHAR}
 		</if>
 	</select>
 
@@ -121,6 +156,7 @@
 		,deal.BANK_TRANS_AMT
 		,deal.ORG_TRANS_AMT
 		,deal.INVEST_TRANS_AMT
+		,deal.RELATEAMOUNT
 		from REP_REL_DEAL deal
 		where
 		deal.STATUS='E'
@@ -132,4 +168,49 @@
 		</if>
 	</select>
 
+   <select id="selectOtherFee" resultType="com.joyintech.tams.common.base.entity.BokBalance">
+		select 
+			info.PROD_ID, 
+			bal.* 
+        from REP_PROD_INFO info			
+		left join (
+			SELECT 
+			    bb.BOOKSET_ID
+			    ,bb.BALANCE_DATE
+			    ,nvl(sum(TDY_O_D_AMT),0) OTHER_FEE
+			from BOK_BALANCE bb
+			WHERE 1=1
+			    AND bb.STATUS='E'
+			    and bb.SUBJECT_NO in ( '6407','6605' )
+				<if test="reportDate!=null">
+					and bb.BALANCE_DATE=#{reportDate,jdbcType=DATE}
+				</if>
+			group by bb.BOOKSET_ID,bb.BALANCE_DATE
+		) bal
+		on info.PROD_ID=bal.BOOKSET_ID
+		where 1=1
+		and info.STATUS='E'
+		<if test="pprodid!=null">
+			and info.P_PROD_ID=#{pprodid,jdbcType=VARCHAR}
+		</if>
+    </select>
+    
+    <select id="selectAchievementBasis" resultType="com.joyintech.tams.common.base.entity.RepProdBasicChange">
+	    select basis.PROD_ID
+		    ,basis.EFF_DATE EFF_DATE
+		    ,basis.DATA_TYPE
+		    ,basis.PROPORTION
+		    ,basis.GROUP_ID
+		    ,basis.STATUS
+		from REP_PROD_INFO info
+		left join REP_PROD_BASIC_CHANGE basis on info.PROD_ID=basis.PROD_ID
+		where 1=1
+		and info.STATUS='E' 
+		and info.REP_PROD_TYPE in ('02','03')  /**单产品或者子产品**/
+		<if test="pprodid!=null">
+			and info.P_PROD_ID=#{pprodid,jdbcType=VARCHAR}
+		</if>
+		order by basis.EFF_DATE
+    </select>
+    
 </mapper>
