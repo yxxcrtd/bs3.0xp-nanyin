@@ -145,13 +145,13 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
                     if (!StringUtil.isNotEmpty(rowData.get(0))){
                         errorMsg.append("产品登记编码 必填！");
                     }
-                    else if(!findProdRegistNoList.contains(rowData.get(0))){
+                    else if(!findProdRegistNoList.contains(rowData.get(0).trim())){
                         errorMsg.append("产品登记编码未在产品基本信息表中维护！");
                     }
                     if (!StringUtil.isNotEmpty(rowData.get(1))){
                         errorMsg.append("子产品代码 必填！");
                     }
-                    else if(!findProdList.contains(rowData.get(1))){
+                    else if(!findProdList.contains(rowData.get(1).trim())){
                         errorMsg.append("子产品代码未在产品基本信息表中维护！");
                     }
                     if (!StringUtil.isNotEmpty(rowData.get(2))){

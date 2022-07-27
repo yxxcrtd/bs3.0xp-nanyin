@@ -167,30 +167,30 @@ public class SubBalanceInfoPro001Service extends CommonExportService<SubBalanceI
                 for (int i = 1; i < objects.size(); i++) {
                     StringBuilder errorMsg = new StringBuilder("");
                     List<String> rowData = objects.get(i);
-                    if (!StringUtil.isNotEmpty(rowData.get(0))){
+                    if (!StringUtil.isNotEmpty(rowData.get(0).trim())){
                         errorMsg.append("产品主代码 必填！");
                     }
-                    else if(!findList.contains(rowData.get(0))){
+                    else if(!findList.contains(rowData.get(0).trim())){
                         errorMsg.append("产品主代码 在产品基本信息表中没有维护！");
                     }
-                    if (!StringUtil.isNotEmpty(rowData.get(1))){
+                    if (!StringUtil.isNotEmpty(rowData.get(1).trim())){
                         errorMsg.append("余额日期 必填！");
-                    }else if(!this.isDateStr(rowData.get(1))){
+                    }else if(!this.isDateStr(rowData.get(1).trim())){
                         errorMsg.append("余额日期 格式不正确！");
                     }
                     else if (rowData.get(1).compareTo(DateUtil.format(DateUtil.platDateFromCache())) > 0){
                         errorMsg.append("余额日期 不能大于平台日！");
                     }
-                    if (!StringUtil.isNotEmpty(rowData.get(2))){
+                    if (!StringUtil.isNotEmpty(rowData.get(2).trim())){
                         errorMsg.append("科目号 必填！");
                     }
-                    if (!StringUtil.isNotEmpty(rowData.get(3))){
+                    if (!StringUtil.isNotEmpty(rowData.get(3).trim())){
                         errorMsg.append("原币币种 必填！");
                     }
-                    if (!StringUtil.isNotEmpty(rowData.get(4))){
+                    if (!StringUtil.isNotEmpty(rowData.get(4).trim())){
                         errorMsg.append("原币余额 必填！");
                     }
-                    if (!StringUtil.isNotEmpty(rowData.get(5))){
+                    if (!StringUtil.isNotEmpty(rowData.get(5).trim())){
                         errorMsg.append("原币发生额（借方） 必填！");
                     }
                     if (StringUtil.isNotEmpty(errorMsg.toString())){
