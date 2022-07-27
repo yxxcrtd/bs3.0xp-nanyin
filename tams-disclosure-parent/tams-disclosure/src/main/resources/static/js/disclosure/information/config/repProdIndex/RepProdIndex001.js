@@ -149,7 +149,7 @@ $(function() {
          */
         $('#RepProdIndex001_btn_search').click(function() {
             if( $('#prodId').val() == null ||  $('#prodId').val() == ''){
-                Joyin.alert('产品名称不能为空！');
+                Joyin.error('产品名称不能为空！');
                 return;
             }
             table.load();
