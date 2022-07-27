@@ -61,11 +61,8 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
         return result;
     }
 
-    public Page<SelectOptionDto> queryProdIdInfo2(Map<String, Object> map) {
-        Map<String, Object> pageParam = RequestUtil.getPageParam();
-        Page<SelectOptionDto> result = queryForPageForSelectReturn(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")), ()
-                -> svrProdFeeDealInterfMapper.getProdInsId2(map));
-        return result;
+    public List<SelectOptionDto> queryProdIdInfo2(Map<String, Object> map) {
+        return svrProdFeeDealInterfMapper.getProdInsId2(map);
     }
 
     /**

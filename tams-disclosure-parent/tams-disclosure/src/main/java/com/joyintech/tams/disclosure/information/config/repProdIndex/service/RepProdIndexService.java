@@ -53,12 +53,8 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
                 -> repProdIndexSMapper.getProdId(map));
         return result;
     }
-    public Page<SelectOptionDto> queryProdIdInfo2(Map<String, Object> map) {
-//        return repProdIndexSMapper.getProdId2(map);
-        Map<String, Object> pageParam = RequestUtil.getPageParam();
-        Page<SelectOptionDto> result = queryForPageForSelectReturn(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")), ()
-                -> repProdIndexSMapper.getProdId2(map));
-        return result;
+    public List<SelectOptionDto> queryProdIdInfo2(Map<String, Object> map) {
+        return repProdIndexSMapper.getProdId2(map);
     }
 
     public Page<RepProdIndexDto> selectInfo(Map<String, Object> param) {

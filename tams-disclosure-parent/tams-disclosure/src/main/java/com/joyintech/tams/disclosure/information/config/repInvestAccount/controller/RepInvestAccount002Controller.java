@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -59,7 +60,7 @@ public class RepInvestAccount002Controller extends BaseController {
 
     @ResponseBody
     @RequestMapping("queryProdIdInfo2")
-    public Page<SelectOptionDto> queryProdIdInfo2() {
+    public List<SelectOptionDto> queryProdIdInfo2() {
         return repInvestAccountService.queryProdIdInfo2(RequestUtil.getPageParam());
     }
 
