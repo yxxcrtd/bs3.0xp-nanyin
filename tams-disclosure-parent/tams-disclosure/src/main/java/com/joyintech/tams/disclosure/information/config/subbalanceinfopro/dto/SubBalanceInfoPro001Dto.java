@@ -11,6 +11,7 @@ import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.BokBalance;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.disclosure.information.config.proelementadj.validator.ProElementAdjValidator;
+import com.joyintech.tams.disclosure.information.config.subbalanceinfopro.validator.SubBalanceInfoProValidator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
@@ -18,7 +19,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @PageId("SubBalanceInfoPro002")
-@ValidLogic(targetClass = ProElementAdjValidator.class, groups = {ValidateGroupEdit.class,
+@ValidLogic(targetClass = SubBalanceInfoProValidator.class, groups = {ValidateGroupEdit.class,
         ValidateGroupDelete.class})
 public class SubBalanceInfoPro001Dto extends BokBalance implements ITableRow, ProcessEntity {
     /**
