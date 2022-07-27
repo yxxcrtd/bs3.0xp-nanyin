@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.common.base.dao.RepFloatFeeMapper">
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepFloatFee" >
+        <id column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="P_PROD_ID" property="pProdId" jdbcType="VARCHAR" />
+        <result column="AFFIRM_DATE" property="affirmDate" jdbcType="DATE" />
+        <result column="BUSINESS_CODE" property="businessCode" jdbcType="VARCHAR" />
+        <result column="AFFIRM_NUM" property="affirmNum" jdbcType="DECIMAL" />
+        <result column="AFFIRM_AMT" property="affirmAmt" jdbcType="DECIMAL" />
+        <result column="ABOVE_AMT" property="aboveAmt" jdbcType="DECIMAL" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="ERRORMSG" property="errorMsg" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        PROD_ID PROD_ID,P_PROD_ID P_PROD_ID,AFFIRM_DATE AFFIRM_DATE,
+        BUSINESS_CODE BUSINESS_CODE,AFFIRM_NUM AFFIRM_NUM,AFFIRM_AMT AFFIRM_AMT,
+        ABOVE_AMT ABOVE_AMT,STATUS STATUS,CREATE_USER CREATE_USER,
+        CREATE_DEPT CREATE_DEPT,CREATE_TIME CREATE_TIME,UPDATE_USER UPDATE_USER,
+        UPDATE_TIME UPDATE_TIME,ERRORMSG ERRORMSG
+    </sql>
+
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.RepFloatFeeMapper.Base_Column_List" />
+        from REP_FLOAT_FEE
+    </sql>
+
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.RepFloatFeeMapper.Base_Column_List" />
+        from REP_FLOAT_FEE
+        where STATUS = 'E'
+    </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.RepFloatFeeMapper.Base_Column_List" />
+        from REP_FLOAT_FEE
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+          and AFFIRM_DATE = #{affirmDate,jdbcType=DATE}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepFloatFee" >
+        delete from REP_FLOAT_FEE
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+          and AFFIRM_DATE = #{affirmDate,jdbcType=DATE}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepFloatFee" >
+        insert into REP_FLOAT_FEE (PROD_ID,P_PROD_ID,AFFIRM_DATE,
+        BUSINESS_CODE,AFFIRM_NUM,AFFIRM_AMT,
+        ABOVE_AMT,STATUS,CREATE_USER,
+        CREATE_DEPT,CREATE_TIME,UPDATE_USER,
+        UPDATE_TIME,ERRORMSG
+            )
+        values (#{prodId,jdbcType=VARCHAR}, #{pProdId,jdbcType=VARCHAR}, #{affirmDate,jdbcType=DATE},
+            #{businessCode,jdbcType=VARCHAR}, #{affirmNum,jdbcType=DECIMAL}, #{affirmAmt,jdbcType=DECIMAL},
+            #{aboveAmt,jdbcType=DECIMAL}, #{status,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+            #{updateTime,jdbcType=TIMESTAMP}, #{errorMsg,jdbcType=VARCHAR}
+            )
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepFloatFee" >
+        insert into REP_FLOAT_FEE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="prodId != null" >
+                PROD_ID,
+            </if>
+            <if test="pProdId != null" >
+                P_PROD_ID,
+            </if>
+            <if test="affirmDate != null" >
+                AFFIRM_DATE,
+            </if>
+            <if test="businessCode != null" >
+                BUSINESS_CODE,
+            </if>
+            <if test="affirmNum != null" >
+                AFFIRM_NUM,
+            </if>
+            <if test="affirmAmt != null" >
+                AFFIRM_AMT,
+            </if>
+            <if test="aboveAmt != null" >
+                ABOVE_AMT,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="errorMsg != null" >
+                ERRORMSG,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="prodId != null" >
+                #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="pProdId != null" >
+                #{pProdId,jdbcType=VARCHAR},
+            </if>
+            <if test="affirmDate != null" >
+                #{affirmDate,jdbcType=DATE},
+            </if>
+            <if test="businessCode != null" >
+                #{businessCode,jdbcType=VARCHAR},
+            </if>
+            <if test="affirmNum != null" >
+                #{affirmNum,jdbcType=DECIMAL},
+            </if>
+            <if test="affirmAmt != null" >
+                #{affirmAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="aboveAmt != null" >
+                #{aboveAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="errorMsg != null" >
+                #{errorMsg,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepFloatFee" >
+        insert into REP_FLOAT_FEE(PROD_ID,P_PROD_ID,AFFIRM_DATE,
+        BUSINESS_CODE,AFFIRM_NUM,AFFIRM_AMT,
+        ABOVE_AMT,STATUS,CREATE_USER,
+        CREATE_DEPT,CREATE_TIME,UPDATE_USER,
+        UPDATE_TIME,ERRORMSG)
+        select PROD_ID,P_PROD_ID,AFFIRM_DATE,
+        BUSINESS_CODE,AFFIRM_NUM,AFFIRM_AMT,
+        ABOVE_AMT,#{status,jdbcType=VARCHAR} STATUS,CREATE_USER,
+        CREATE_DEPT,CREATE_TIME,#{updateUser,jdbcType=VARCHAR} UPDATE_USER,,
+        #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,ERRORMSG
+          from REP_FLOAT_FEE
+          where STATUS = 'E'
+          and PROD_ID = #{prodId,jdbcType=VARCHAR}
+          and AFFIRM_DATE = #{affirmDate,jdbcType=DATE}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepFloatFee" >
+        update REP_FLOAT_FEE
+        <set >
+            <if test="pProdId != null" >
+                P_PROD_ID = #{pProdId,jdbcType=VARCHAR},
+            </if>
+            <if test="businessCode != null" >
+                BUSINESS_CODE = #{businessCode,jdbcType=VARCHAR},
+            </if>
+            <if test="affirmNum != null" >
+                AFFIRM_NUM = #{affirmNum,jdbcType=DECIMAL},
+            </if>
+            <if test="affirmAmt != null" >
+                AFFIRM_AMT = #{affirmAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="aboveAmt != null" >
+                ABOVE_AMT = #{aboveAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="errorMsg != null" >
+                ERRORMSG = #{errorMsg,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+        and AFFIRM_DATE = #{affirmDate,jdbcType=DATE}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepFloatFee" >
+        update REP_FLOAT_FEE
+        set P_PROD_ID = #{pProdId,jdbcType=VARCHAR},
+            BUSINESS_CODE = #{businessCode,jdbcType=VARCHAR},
+            AFFIRM_NUM = #{affirmNum,jdbcType=DECIMAL},
+            AFFIRM_AMT = #{affirmAmt,jdbcType=DECIMAL},
+            ABOVE_AMT = #{aboveAmt,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            ERRORMSG = #{errorMsg,jdbcType=VARCHAR},
+            STATUS = #{status,jdbcType=VARCHAR}
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+        and AFFIRM_DATE = #{affirmDate,jdbcType=DATE}
+    </update>
+</mapper>
