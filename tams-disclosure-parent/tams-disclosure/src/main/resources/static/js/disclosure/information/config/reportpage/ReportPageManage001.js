@@ -59,7 +59,20 @@ $(function() {
                 	}
                 }
             },
-            {field:'operation',width:20, title: 'SysCommon.operation', type:'action', buttons: ['edit','delt']}
+            // {field:'operation',width:20, title: 'SysCommon.operation', type:'action', buttons: ['edit','delt']}
+            {field:'operation',width:60, title: 'SysCommon.operation', type:'action',
+                render : function(data, type, row, meta){
+                    var html = "";
+                    if(purviewElements.indexOf('_edit')!=-1){
+                        html += "<i class='iconfont icon-edit edit' title ='编辑'></i>";
+                    }
+                    if(purviewElements.indexOf('_manual')!=-1){
+                        html +="<i class = 'iconfont icon-delete delt' title='删除'></i>";
+                    }
+                    html +="<i class = 'iconfont icon-send view' title='预览'></i>";
+                    return html;
+                }
+            }
         ]
     });
     /**
@@ -84,6 +97,26 @@ $(function() {
  			   });
         });
     });
+
+    table.bind('click', '.view', function(data, index) {
+        loadView(data)
+    });
+
+    /**
+     * 预览
+     */
+    function loadView(data){
+        var templateId = data.templateId;
+        if(!templateId){
+            Joyin.alert("请选择模板");
+            return;
+        }
+        Joyin.dialog(JoyinUtil.getLabel('预览'), basePath + 'disclosure/information/reveal/detailshow/RepDetailsShow002/init',
+            '95%', '95%', {repId:data.repId,repName:data.reportName},function() {
+            });
+
+    };
+
     // 配置页面[新建]
     var addNew = function(){
     	//var modelName =     	

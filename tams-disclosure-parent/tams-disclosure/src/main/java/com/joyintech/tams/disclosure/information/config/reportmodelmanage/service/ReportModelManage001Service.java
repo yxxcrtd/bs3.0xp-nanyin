@@ -17,15 +17,17 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.util.ZipFileUtil;
+import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.dao.ReportInfoMapper;
+import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.ReportInfo;
+import com.joyintech.tams.disclosure.information.reveal.detailshow.service.ReportFileUtil;
+import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
+import com.joyintech.tams.utils.poi.PoiUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,6 +74,9 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
 //    private ReportModelManage001Mapper reportModelManage001Mapper;
     @Autowired
     private JasparConnectUtilService jasparConnectUtilService;
+
+    @Autowired
+    private ReportInfoMapper reportInfoMapper;
         /**
          * 日志
          */
@@ -402,4 +407,36 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
     		
     		
     	}
+
+    public ResponseEntity<byte[]> exportReport(Map<String,Object> params) throws IOException {
+
+        if ( params==null || params.size()==0) {
+            return null;
+        }
+        String fileType = params.get("fileType").toString();
+        String reportId = params.get("repId").toString();   //报表编号
+        ReportInfo reportInfo = reportInfoMapper.getReportInfoByID(reportId);
+
+        String reportFile = ReportFileUtil.buildReportFileName(ReportFileUtil.REPORT_TYPE_模板文件,reportInfo,null,null,ReportFileUtil.FILE_TYPE_DOCX);
+        String localFileName = reportInfo.getReportName()+ReportFileUtil.FILE_TYPE_DOCX;
+
+
+        if ( "pdf".equals(fileType)) {  //如果导出pdf，则需要先讲word转换成pdf
+            FileInputStream fis = new FileInputStream(reportFile);
+            String fileNamePdf = ReportFileUtil.buildReportFileName(ReportFileUtil.REPORT_TYPE_模板文件,reportInfo, null, null,ReportFileUtil.FILE_TYPE_PDF);
+            FileOutputStream fos = new FileOutputStream(fileNamePdf);
+            PoiUtils.docxToPdf(fis,fos);
+            reportFile = fileNamePdf;
+            localFileName = reportInfo.getReportName()+ReportFileUtil.FILE_TYPE_PDF;
+        }
+
+        File remoteFile = new SafelyFile(reportFile);
+
+        if(!remoteFile.exists()){
+            remoteFile.createNewFile();
+        }
+
+        return ExportUtil.export(localFileName, remoteFile, false);
+
+    }
 }

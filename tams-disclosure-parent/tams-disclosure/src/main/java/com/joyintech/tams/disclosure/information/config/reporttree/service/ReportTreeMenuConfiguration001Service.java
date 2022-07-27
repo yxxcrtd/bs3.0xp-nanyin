@@ -323,7 +323,7 @@ public class ReportTreeMenuConfiguration001Service extends CommonExportService<R
             
             
             
-            if(pNodeList != null && pNodeList.size() <=1){
+            if(pNodeList != null && pNodeList.size() <1){
                 return new AjaxResult("至少要保留一个根节点，故不能删除该节点！", MessageType.错误消息);
             }
         }

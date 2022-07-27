@@ -11,72 +11,110 @@ $(function () {
 
     
   //展示报表查询条件
-    var showSearch = function(data){
-    	//拼接查询条件
-    	var SearchHtml = '<div class="layui-form-item">';
-    	for (var i = 0; i < data.length; i++) {
-    		
-			if(data[i].screenStatus=='Y'){
-				SearchHtml +='<div class="layui-inline layui-col-md4">'
-					+'<label class="layui-form-label form-lable">'+data[i].screenName+'</label>'
-						+'<div class="layui-input-inline input-inline">'
-				//如果类型是日期的
-				if(data[i].screenType=='01'){
-					SearchHtml+= '<input type="text" id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" placeholder="请选择日期" class="layui-input form-input input-dateSelect"   />';
-				//文本框
-				}else if(data[i].screenType=='02'){
-					SearchHtml+= '<input type="text" id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" placeholder="请输入名称" class="layui-input form-input"   />';
-				//下拉框
-				}else if(data[i].screenType=='03'){
-					
-					SearchHtml+= '<select id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" class="layui-input form-input input-select" placeholder="请选择"'
-			            	+'allowClear="true">'
-			            		+'<option value =""></option>'
-			            		+getOpt(data[i].screenValue)
-			            	+'</select>';
-			
+	var showSearch = function(data){
+
+		//拼接查询条件
+		var SearchHtml = '<input type="hidden" name="repId" id="repId" value="'+repId+'" />'
+			+'<input type="hidden" name="repName" id="repName" value="'+repName+'" />'
+			+'<div class="layui-form-item">';
+		for (var i = 0; i < data.length; i++) {
+			if(data[i].screenKey != 'indexId') {
+				SearchHtml +='<div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">'
+					+'<label class="layui-form-label form-lable" style="width: 100px">'+data[i].screenName+'</label>'
+					+'<div class="layui-input-inline input-inline" data-th-formatoption="false" style="width: 60%!important;">';
+			}
+			//产品名称下拉框
+			if(data[i].screenType==='01'){
+				SearchHtml+= '<select id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" class="layui-input form-input input-select" placeholder="请选择" data-url="getPProdIdList"'
+					+'parentIds="repId,prodid" allowClear="true"';
+				if(data[i].multiFlag==='Y'){
+					SearchHtml+= 'multiple="true">' +'</select>';
+				}else{
+					SearchHtml+= '>' +'</select>';
 				}
-				ids.push({key:data[i].screenKey,type:data[i].screenType});
-				SearchHtml +='</div></div>';
+			}
+			//子产品代码下拉框
+			else if(data[i].screenType==='02'){
+				SearchHtml+= '<select id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" class="layui-input form-input input-select" placeholder="请选择" data-url="getProdIdList"'
+					+'parentIds="repId,pprodid" allowClear="true"';
+				if(data[i].multiFlag==='Y'){
+					SearchHtml+= 'multiple="true">' +'</select>';
+				}else{
+					SearchHtml+= '>' +'</select>';
+				}
+			}
+			//费率名称下拉框
+			else if(data[i].screenType==='03'){
+				SearchHtml+= '<select id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" class="layui-input form-input input-select" placeholder="请选择" data-url="getFeeNameList"'
+					+'parentIds="repId,pprodid" allowClear="true" formatoption="false"';
+				if(data[i].multiFlag==='Y'){
+					SearchHtml+= 'multiple="true">' +'</select>';
+				}else{
+					SearchHtml+= '>' +'</select>';
+				}
+			}
+			//要素名称下拉框
+			else if(data[i].screenType==='04'){
+				SearchHtml+= '<select id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" class="layui-input form-input input-select" placeholder="请选择" data-url="getElementNameList"'
+					+'parentIds="repId,pprodid" allowClear="true" formatoption="false"';
+				if(data[i].multiFlag==='Y'){
+					SearchHtml+= 'multiple="true">' +'</select>';
+				}else{
+					SearchHtml+= '>' +'</select>';
+				}
+			}
+			//季度选择框
+			else if(data[i].screenType==='05'){
+				SearchHtml+= '<select id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" class="layui-input form-input input-select" placeholder="请选择" data-url="getQuarter"'
+					+'parentIds="repId" allowClear="true">' +'</select>';
+			}
+			//半年度选择框
+			else if(data[i].screenType==='06'){
+				SearchHtml+= '<select id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" class="layui-input form-input input-select" placeholder="请选择" data-url="getHalfYear"'
+					+'parentIds="repId" allowClear="true">' +'</select>';
+			}
+			//年度选择框
+			else if(data[i].screenType==='07'){
+				SearchHtml+= '<input type="text" id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" placeholder="请选择日期" class="layui-input form-input input-dateSelect" />';
+			}
+			//开始日期
+			else if(data[i].screenType==='08'){
+				SearchHtml+= '<input type="text" id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" placeholder="请选择日期" class="layui-input form-input input-dateSelect" />';
+			}
+			//结束日期
+			else if(data[i].screenType==='09'){
+				SearchHtml+= '<input type="text" id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" placeholder="请选择日期" class="layui-input form-input input-dateSelect" />';
+			}
+			ids.push({key:data[i].screenKey,type:data[i].screenType,multiFlag:data[i].multiFlag});
+			SearchHtml +='</div></div>';
+
+		}
+		SearchHtml += '</div>';
+		$('#showSearch').html(SearchHtml);
+
+		var laydate = layui.laydate;
+		laydate.render({
+			elem: '#year',
+			type: 'year',
+			format: 'yyyy'
+		});
+
+		for(var i in ids){
+			//日期类型(单选)
+			if(ids[i].type==='08'||ids[i].type==='09'){
+				$('#'+ids[i].key+'').textDate(false, defaultDateStyle);
+				if(ids[i].key === 'startDate'){
+					$('#'+ids[i].key+'').val(cureDate);
+				}else{
+					$('#'+ids[i].key+'').val(cureDate);
+				}
+				//文本框
+			} else {
+				$('#'+ids[i].key+'').textSelect();
 			}
 		}
-    	SearchHtml += '</div>';
-    	$('#showSearch').html(SearchHtml);
-    	
-    	
-    	for(var i in ids){
-    		//日期类型(单选)
-    		if(ids[i].type=='01'){
-        		$('#'+ids[i].key+'').textDate(false, defaultDateStyle);
-        	//文本框
-    		}else if(ids[i].type=='02'){
-        		
-    		//下拉框
-    		}else if(ids[i].type=='03'){
-        		$('#'+ids[i].key+'').textSelect();
-    		}
-    	}
-    }
-    
-    var getOpt = function(type){
-    	var option = "";
-    	option +='<option value ="1">产品001</option>'
-		    	+'<option value ="2">产品002</option>'
-		    	+'<option value ="3">产品003</option>'
-		    	+'<option value ="4">产品004</option>'
-		    	+'<option value ="5">产品005</option>'
-		    	+'<option value ="6">产品006</option>'
-		    	+'<option value ="7">产品007</option>'
-		    	+'<option value ="8">产品008</option>'
-		    	+'<option value ="9">产品009</option>'
-		    	+'<option value ="10">产品010</option>'
-		    	+'<option value ="11">产品011</option>'
-		    	+'<option value ="12">产品012</option>';
-    	
-    	return option;
-    }
-    
-    
+	}
+
     //展示报表信息
     var showDetail = function(params){
         //报表数据结构
@@ -92,37 +130,21 @@ $(function () {
  	   	//将返回的HTML报表插入到界面中    	  
        var $container = $("#showtable");
        if(params&&params.length==0){
-    	Joyin.ajax(basePath + 'disclosure/information/reveal/detailshow/RepDetailsShow001/showDetailHtmlNew', {uri:modelId}, function(result) {
-//   	   		var $container = $("#showtable");
-   	   	//将返回的HTML报表插入到界面中
-   	   		/*
-    		var report = result.data;
-   	   		var report = result;
-           	var startIndex = report.indexOf("/jasperserver");
-           	var endIndex = report.indexOf(".png");
-           	var subStr = report.substring(startIndex, endIndex);
-           	var repStr = basePath+"/image/disclosure/zxlogo";
-           	var newReport = report.replace(subStr,repStr);
-               $container.html(newReport);
-             */
-    		var toStr = 'src='+basePath+'image'
-    		var changeStr= 'src="image'
-			var data =result.replace(new RegExp(changeStr, "g"), toStr);
-			$container.html(data);	
-           });
+		   Joyin.ajax('previewReport', {uri:modelId,repId:repId}, function(result) {
+			   //var data =result.replace(new RegExp(changeStr, "g"), toStr);
+			   //data =data.replace(new RegExp('.png', "g"), '.png&v='+Math.random());
+			   $container.html(result);
+		   });
        }else{
-    	   params['uri'] = modelId;
-    	   Joyin.ajax(basePath + 'disclosure/information/reveal/detailshow/RepDetailsShow001/showDetailHtml', params, function(result) {
-//      	   		var $container = $("#showtable");
-      	   	//将返回的HTML报表插入到界面中
-      	   		var report = result.data;
-              	var startIndex = report.indexOf("/jasperserver");
-              	var endIndex = report.indexOf(".png");
-              	var subStr = report.substring(startIndex, endIndex);
-              	var repStr = basePath+"/image/disclosure/zxlogo";
-              	var newReport = report.replace(subStr,repStr);
-                  $container.html(newReport);
-              });
+		   params['uri'] = modelId;
+		   params['repId']=repId;
+		   console.log(params)
+		   alert("b");
+		   Joyin.ajax('previewReport', params, function(result) {
+			   //var data =result.replace(new RegExp(changeStr, "g"), toStr);
+			   //data =data.replace(new RegExp('.png', "g"), '.png&v='+Math.random());
+			   $container.html(result);
+		   });
        }   
    }  
     
@@ -137,6 +159,24 @@ $(function () {
      * 画面加载完成
      */
     $(function() {
-    	showView(parent.window.getSelectData());
+    	//showView(parent.window.getSelectData());
+		var parms = {
+			repId:repId,
+			repName:repName
+		};
+		Joyin.ajax('getRepsearch',
+			parms,
+			function(data) {
+				if(data){
+					modelId = data.templateId;
+					modelUri = data.templatePath;
+					repId = data.repId;
+					repName = data.reportName;
+					showDetail(new Array());
+					showSearch(data.repScreenList);
+				}else{
+					$("#showtable").html('<h2>无报表内容</h2>');
+				}
+			});
     });
 });

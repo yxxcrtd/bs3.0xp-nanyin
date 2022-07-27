@@ -14,15 +14,16 @@
 			to_char(CREATE_TIME,'yyyy-mm-dd') creationDate,
 			to_char(CREATE_TIME,'yyyy-mm-dd') cdate,
 			FOLDER uri,
-			FOLDER  as temLoad		
-			FROM rep_reportinfo		WHERE 1=1 
+			FOLDER  as temLoad,
+			REPORTID repId
+			FROM rep_reportinfo	rr	WHERE 1=1
         <if test="temName!=null and temName!=''">
-			and URI like concat(concat('%',#{temName,jdbcType=VARCHAR}),'%')
+			and rr.URI like concat(concat('%',#{temName,jdbcType=VARCHAR}),'%')
 		</if>
         <if test="temDescription!=null and temDescription!=''">
-			and REPORTDESC like concat(concat('%',#{temDescription,jdbcType=VARCHAR}),'%')
+			and rr.URIREPORTDESC like concat(concat('%',#{temDescription,jdbcType=VARCHAR}),'%')
 		</if>
-		order by uri,NVL(UPDATE_TIME,CREATE_TIME)  desc
+		order by rr.URI asc
 	</select>
 
 </mapper>
