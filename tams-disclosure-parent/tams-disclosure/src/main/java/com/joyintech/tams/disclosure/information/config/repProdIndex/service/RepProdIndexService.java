@@ -453,7 +453,6 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
     public AjaxResult importFile(Map<String, Object> param) {
         AjaxResult ajaxResult = new AjaxResult();
         String tempList = (String) param.get("tempList");
-        Boolean flag = (Boolean) param.get("flag");
         RepProdIndexDto dto = getValNetAssetQuotationInfoListData(tempList);
         List<RepProdIndexDto> selectedItem = dto.getSelectedItem();
         List<RepProdIndexDto>  existData = new ArrayList<>();
@@ -469,10 +468,8 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
             }
         }
         //更新操作
-        if(flag){
-            for (RepProdIndexDto existDataDto : existData) {
-                this.doComplete(existDataDto,OperationType.MODIFY);
-            }
+        for (RepProdIndexDto existDataDto : existData) {
+            this.doComplete(existDataDto,OperationType.MODIFY);
         }
 
         //插入操作

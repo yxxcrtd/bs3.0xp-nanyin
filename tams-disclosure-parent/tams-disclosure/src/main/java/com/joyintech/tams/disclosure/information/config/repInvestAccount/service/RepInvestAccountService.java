@@ -250,7 +250,6 @@ public class RepInvestAccountService extends CommonExportService<RepInvestAccoun
     public AjaxResult importFile(Map<String, Object> param) {
         AjaxResult ajaxResult = new AjaxResult();
         String tempList = (String) param.get("tempList");
-        Boolean flag = (Boolean) param.get("flag");
         RepInvestAccountDto dto = getValNetAssetQuotationInfoListData(tempList);
         List<RepInvestAccountDto> selectedItem = dto.getSelectedItem();
         List<RepInvestAccountDto>  existData = new ArrayList<>();
@@ -265,10 +264,8 @@ public class RepInvestAccountService extends CommonExportService<RepInvestAccoun
             }
         }
         //更新操作
-        if(flag){
-            for (RepInvestAccountDto existDataDto : existData) {
-                this.doComplete(existDataDto,OperationType.MODIFY);
-            }
+        for (RepInvestAccountDto existDataDto : existData) {
+            this.doComplete(existDataDto,OperationType.MODIFY);
         }
 
         //插入操作
