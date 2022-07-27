@@ -13,6 +13,8 @@
 		from rep_prod_info rpi
 		inner join dis_prod_nocreate noc
 		on rpi.prod_re = noc.prod_regist_no
+		and noc.data_status = 'E'
 		where rpi.prod_id = #{prodId,jdbcType=VARCHAR}
+		  and rpi.status = 'E'
 	</select>
 </mapper>
