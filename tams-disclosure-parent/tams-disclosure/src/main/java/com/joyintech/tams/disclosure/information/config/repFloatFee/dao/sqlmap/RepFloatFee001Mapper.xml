@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.information.config.repFloatFee.dao.RepFloatFee001Mapper">
+    <select id="getProdId" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        PROD_ID id,
+        PROD_NAME text
+        FROM
+        REP_PROD_INFO
+        where P_PROD_ID is not null
+        <!--         REP_PROD_TYPE = '03'-->
+        <if test="search != null and search != ''">
+            and (PROD_ID like
+            concat(concat('%',#{search}),'%')
+            or PROD_NAME like concat(concat('%',#{search}),'%'))
+        </if>
+    </select>
+    <select id="getProdId2" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        PROD_ID id,
+        PROD_ID text
+        FROM
+        REP_PROD_INFO
+        where P_PROD_ID is not null
+        <!--         REP_PROD_TYPE = '03'-->
+        <if test="search != null and search != ''">
+            and (PROD_ID like
+            concat(concat('%',#{search}),'%')
+            or PROD_NAME like concat(concat('%',#{search}),'%'))
+        </if>
+    </select>
+    <insert id="insert" parameterType="com.joyintech.tams.disclosure.information.config.repFloatFee.dto.RepFloatFeeDto" >
+        MERGE INTO REP_FLOAT_FEE RFF
+        USING (
+        SELECT #{prodId,jdbcType=VARCHAR} PROD_ID,
+        #{pProdId,jdbcType=VARCHAR} P_PROD_ID,
+        #{affirmDate,jdbcType=DATE} AFFIRM_DATE,
+        #{businessCode,jdbcType=VARCHAR} BUSINESS_CODE,
+        #{affirmNum,jdbcType=DECIMAL} AFFIRM_NUM,
+        #{affirmAmt,jdbcType=DECIMAL} AFFIRM_AMT,
+        #{aboveAmt,jdbcType=DECIMAL} ABOVE_AMT,
+        #{status,jdbcType=VARCHAR} STATUS,
+        #{createUser,jdbcType=VARCHAR} CREATE_USER,
+        #{createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+        #{createDept,jdbcType=VARCHAR} CREATE_DEPT,
+        #{createUser,jdbcType=VARCHAR} UPDATE_USER,
+        #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+        FROM
+        DUAL
+        ) TEMP
+        <!-- 业务主键匹配 -->
+        ON(RFF.PROD_ID = TEMP.PROD_ID
+        and RFF.AFFIRM_DATE = TEMP.AFFIRM_DATE
+        )
+        <!-- 匹配到则更新 -->
+        WHEN MATCHED THEN UPDATE
+        SET
+        RFF.P_PROD_ID = TEMP.P_PROD_ID,
+        RFF.BUSINESS_CODE = TEMP.BUSINESS_CODE,
+        RFF.AFFIRM_NUM = TEMP.AFFIRM_NUM,
+        RFF.AFFIRM_AMT = TEMP.AFFIRM_AMT,
+        RFF.ABOVE_AMT = TEMP.ABOVE_AMT,
+        RFF.CREATE_TIME = TEMP.CREATE_TIME,
+        RFF.UPDATE_TIME = TEMP.UPDATE_TIME,
+        RFF.CREATE_DEPT = TEMP.CREATE_DEPT,
+        RFF.CREATE_USER = TEMP.CREATE_USER,
+        RFF.UPDATE_USER = TEMP.UPDATE_USER,
+        RFF.STATUS = TEMP.STATUS
+        <!-- 未匹配到则插入 -->
+        WHEN NOT MATCHED THEN INSERT (PROD_ID,P_PROD_ID,AFFIRM_DATE,
+                                      BUSINESS_CODE,AFFIRM_NUM,AFFIRM_AMT,
+                                      ABOVE_AMT,STATUS,CREATE_USER,
+                                      CREATE_TIME,CREATE_DEPT,UPDATE_USER,
+                                      UPDATE_TIME)
+        VALUES(TEMP.PROD_ID,TEMP.P_PROD_ID,TEMP.AFFIRM_DATE,
+        TEMP.BUSINESS_CODE,TEMP.AFFIRM_NUM,TEMP.AFFIRM_AMT,
+        TEMP.ABOVE_AMT,TEMP.STATUS,TEMP.CREATE_USER,
+        TEMP.CREATE_TIME,TEMP.CREATE_DEPT,TEMP.UPDATE_USER,
+        TEMP.UPDATE_TIME)
+
+    </insert>
+
+    <delete id="delete" parameterType="com.joyintech.tams.disclosure.information.config.repFloatFee.dto.RepFloatFeeDto"  >
+		update REP_FLOAT_FEE
+		set STATUS = 'D'
+		where PROD_ID = #{prodId,jdbcType=CHAR}
+          and AFFIRM_DATE = #{affirmDate,jdbcType=DATE}
+	</delete>
+
+    <update id="update" parameterType="com.joyintech.tams.disclosure.information.config.repFloatFee.dto.RepFloatFeeDto" >
+            update REP_FLOAT_FEE
+            set P_PROD_ID = #{pProdId,jdbcType=VARCHAR},
+                BUSINESS_CODE = #{businessCode,jdbcType=VARCHAR},
+                AFFIRM_NUM = #{affirmNum,jdbcType=DECIMAL},
+                AFFIRM_AMT = #{affirmAmt,jdbcType=DECIMAL},
+                ABOVE_AMT = #{aboveAmt,jdbcType=DECIMAL},
+                STATUS = #{status,jdbcType=VARCHAR},
+                UPDATE_USER = #{createUser,jdbcType=VARCHAR},
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+                ERRORMSG = #{errorMsg,jdbcType=VARCHAR}
+    where PROD_ID = #{prodId,jdbcType=VARCHAR}
+    and AFFIRM_DATE = #{affirmDate,jdbcType=DATE}
+    </update>
+
+    <select id="selectInfo" resultType="com.joyintech.tams.disclosure.information.config.repFloatFee.dto.RepFloatFeeDto" >
+        select
+        T.PROD_ID prodId,
+        rpi.PROD_NAME prodName,
+        T.AFFIRM_DATE affirmDate,
+        T.BUSINESS_CODE businessCode,
+        T.AFFIRM_NUM affirmNum,
+        T.AFFIRM_AMT affirmAmt,
+        T.ABOVE_AMT aboveAmt,
+        T.STATUS status,
+        T.UPDATE_USER updateUser,
+        T.UPDATE_TIME updateTime,
+        T.ERRORMSG errorMsg
+        from REP_FLOAT_FEE T
+        left join REP_PROD_INFO rpi on rpi.PROD_ID = T.PROD_ID
+        <where>
+            <if test="prodList != null  and prodIds!= ''">
+                <foreach collection="prodList" item="item" open="and T.PROD_ID in(" separator="," close=")">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="startDate != null and ! startDate.equals('')">
+                and T.AFFIRM_DATE &gt;= to_date(#{startDate,jdbcType=DATE},'yyyy-MM-dd')
+            </if>
+            <if test="endDate != null and ! endDate.equals('')">
+                and T.AFFIRM_DATE &lt;= to_date(#{endDate,jdbcType=DATE},'yyyy-MM-dd')
+            </if>
+            <if test="status != null and ! status.equals('')">
+                and T.STATUS = #{status,jdbcType=VARCHAR}
+            </if>
+        </where>
+
+    </select>
+
+    <select id="selectData" resultType="com.joyintech.tams.disclosure.information.config.repFloatFee.dto.RepFloatFeeDto" >
+        select
+        T.PROD_ID prodId,
+        rpi.PROD_NAME prodName,
+        T.AFFIRM_DATE affirmDate,
+        T.BUSINESS_CODE businessCode,
+        T.AFFIRM_NUM affirmNum,
+        T.AFFIRM_AMT affirmAmt,
+        T.ABOVE_AMT aboveAmt
+        from REP_FLOAT_FEE T
+        left join REP_PROD_INFO rpi on rpi.PROD_ID = T.PROD_ID
+        where T.PROD_ID = #{prodId,jdbcType=VARCHAR}
+        and T.AFFIRM_DATE = #{affirmDate,jdbcType=DATE}
+    </select>
+
+    <select id="selectProdName" resultType="java.util.Map">
+        SELECT PROD_NAME FROM REP_PROD_INFO WHERE PROD_ID=#{prodId} AND ROWNUM = 1
+    </select>
+
+    <select id="selectByProdIdAndDate" resultType="com.joyintech.tams.disclosure.information.config.repFloatFee.dto.RepFloatFeeDto" >
+        select T.*
+        from REP_FLOAT_FEE T
+        where T.PROD_ID = #{prodId,jdbcType=VARCHAR}
+                and T.AFFIRM_DATE = #{affirmDate,jdbcType=DATE}
+                and T.STATUS = 'E'
+    </select>
+
+    <select id="selectByProdId" resultType="java.lang.String">
+        SELECT PROD_ID FROM REP_PROD_INFO WHERE PROD_ID = #{prodId}
+    </select>
+</mapper>
