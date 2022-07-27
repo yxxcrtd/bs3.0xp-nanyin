@@ -15,8 +15,10 @@
 			from rep_prod_info rpi
 			inner join dis_prod_adjust dpa
 			on rpi.prod_re = dpa.prod_regist_no
+			and dpa.data_status = 'E'
 			AND dpa.rpt_issue_date = #{rptIssueDate}
 			where rpi.prod_id = #{prodId,jdbcType=VARCHAR}
+			and rpi.status = 'E'
 			<if test="fieldlist != null and fieldlist.size() > 0">
 				AND dpa.adj_field in (
 				select distinct adj_field from dis_prod_adjust t where t.prod_adjust_id in
@@ -40,10 +42,12 @@
 		from rep_prod_info rpi
 		inner join dis_prod_adjust dpa
 		on rpi.prod_re = dpa.prod_regist_no
+		and dpa.data_status = 'E'
 		AND dpa.rpt_issue_date = #{rptIssueDate}
 		where dpa.adj_field = (select adj_field
 			from dis_prod_adjust t
 			where t.prod_adjust_id = #{adjField,jdbcType=VARCHAR})
+		and rpi.status = 'E'
 		<if test="prodlist != null and prodlist.size() > 0">
 			AND rpi.prod_id in
 			<foreach collection="prodlist" item="item" open="(" close=")" separator=",">
@@ -65,6 +69,7 @@
 		from dis_prod_adjust dpa
 		where dpa.prod_regist_no = #{regCode,jdbcType=VARCHAR}
 		AND dpa.rpt_issue_date = #{rptIssueDate}
+		and dpa.data_status = 'E'
 		<if test="fieldlist != null and fieldlist.size() > 0">
 			AND dpa.adj_field in (
 			select distinct adj_field from dis_prod_adjust t where t.prod_adjust_id in
@@ -86,9 +91,11 @@
 		from dis_prod_adjust dpa
 		inner join rep_prod_info rpi
 		on rpi.prod_re = dpa.prod_regist_no
+		and rpi.status = 'E'
 		where dpa.adj_field = (select adj_field
 			from dis_prod_adjust t
 			where t.prod_adjust_id = #{adjField,jdbcType=VARCHAR})
+		and dpa.data_status = 'E'
 		<if test="prodlist != null and prodlist.size() > 0">
 			AND rpi.prod_id in
 			<foreach collection="prodlist" item="item" open="(" close=")" separator=",">

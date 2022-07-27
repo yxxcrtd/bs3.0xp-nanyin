@@ -37,7 +37,9 @@ public class RepProdIndexValidator implements BeanValidator {
                 errorList.add(new ValidMessage("", "子产品资产净值需要大于0!"));
             }
             if(dto.getCapital()== null){
-                errorList.add(new ValidMessage("", "子产品资产净值不能为空!"));
+                errorList.add(new ValidMessage("", "子产品实收资本不能为空!"));
+            }else if(dto.getCapital().compareTo(new BigDecimal(0))<=0){
+                errorList.add(new ValidMessage("", "子产品实收资本需要大于0!"));
             }
             if(dto.getUnitValue()== null){
                 errorList.add(new ValidMessage("", "子产品单位净值不能为空!"));
@@ -71,6 +73,8 @@ public class RepProdIndexValidator implements BeanValidator {
             }
             if(dto.getpCapital()== null){
                 errorList.add(new ValidMessage("", "母产品实收资本不能为空!"));
+            }else if(dto.getpCapital().compareTo(new BigDecimal(0))<=0){
+                errorList.add(new ValidMessage("", "母产品实收资本需要大于0!"));
             }
             if(dto.getpUnitValue()== null){
                 errorList.add(new ValidMessage("", "母产品单位净值不能为空!"));

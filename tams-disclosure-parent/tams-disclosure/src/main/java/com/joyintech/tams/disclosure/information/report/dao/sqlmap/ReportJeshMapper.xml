@@ -16,7 +16,9 @@
 		inner join dis_large_redemption dlr
 		on rpi.prod_re = dlr.prod_regist_no
 		AND dlr.rpt_issue_date = #{rptIssueDate}
+		and dlr.data_status = 'E'
 		where rpi.prod_id = #{prodId,jdbcType=VARCHAR}
+		and rpi.status = 'E'
 		group by
 			rpi.prod_id,
 			rpi.prod_name,

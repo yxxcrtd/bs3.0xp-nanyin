@@ -10,5 +10,6 @@
 			rpi.prod_re reg_code
 		from rep_prod_info rpi
 		where rpi.prod_id = #{prodId,jdbcType=VARCHAR}
+		and rpi.status = 'E'
 	</select>
 </mapper>
