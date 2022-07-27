@@ -187,10 +187,9 @@ $(function() {
         // });
         $('#SvrProdFeeDealInterf001_btn_import').click(function() {
             Joyin.confirm("请确认是否要导入数据？", function () {
-                Joyin.uploadFile({pageId:'SvrProdFeeDealInterf'},function(fileName) {
+                Joyin.uploadFile(function(fileName) {
                     Joyin.ajax(basePath + 'disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf001/checkImportData', {fileName: fileName}, function(checkResult) {
                         if (checkResult) {
-                            debugger;
                             setTimeout( function () {
                                     if(checkResult.data.errorMsg){
                                         Joyin.error(checkResult.data.errorMsg);
@@ -198,42 +197,68 @@ $(function() {
                                     }
                                     if (checkResult.data.confirmMsg) {
                                         Joyin.confirm(checkResult.data.confirmMsg, function () {
-                                            var data = {
-                                                tempList: checkResult.data.correctData,
-                                                flag: true
-                                            }
-                                            Joyin.ajaxJson(basePath + 'disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf001/importFile', data,
-                                                function (resultObj) {
-                                                    if (resultObj.statuCode.toString() === '200') {
-                                                        table.reload();
-                                                        return;
+                                            if (checkResult.data.confirmMsg2) {
+                                                Joyin.confirm(checkResult.data.confirmMsg2, function () {
+                                                    var data = {
+                                                        tempList: checkResult.data.correctData
                                                     }
+                                                    Joyin.ajaxJson(basePath + 'disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf001/importFile', data,
+                                                        function (resultObj) {
+                                                            if (resultObj.statuCode.toString() === '200') {
+                                                                table.reload();
+                                                                return;
+                                                            }
+                                                        });
+                                                },{}, function () {
+                                                    layui.layer.closeAll()
+                                                    table.reload();
                                                 });
+                                            }else{
+                                                var data = {
+                                                    tempList: checkResult.data.correctData
+                                                }
+                                                Joyin.ajaxJson(basePath + 'disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf001/importFile', data,
+                                                    function (resultObj) {
+                                                        if (resultObj.statuCode.toString() === '200') {
+                                                            table.reload();
+                                                            return;
+                                                        }
+                                                    });
+                                            }
+
                                         },{}, function () {
-                                            var data = {
-                                                tempList: checkResult.data.correctData,
-                                                flag: false
-                                            }
-                                            Joyin.ajaxJson(basePath + 'disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf001/importFile', data,
-                                                function (resultObj) {
-                                                    if (resultObj.statuCode.toString() === '200') {
-                                                        table.reload();
-                                                        return;
-                                                    }
-                                                });
+                                            layui.layer.closeAll()
+                                            table.reload();
                                         });
                                     }else {
-                                        var data = {
-                                            tempList: checkResult.data.correctData,
-                                            flag: true
-                                        }
-                                        Joyin.ajaxJson(basePath + 'disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf001/importFile', data,
-                                            function (resultObj) {
-                                                if (resultObj.statuCode.toString() === '200') {
-                                                    table.reload();
-                                                    return;
+                                        if (checkResult.data.confirmMsg2) {
+                                            Joyin.confirm(checkResult.data.confirmMsg2, function () {
+                                                var data = {
+                                                    tempList: checkResult.data.correctData
                                                 }
+                                                Joyin.ajaxJson(basePath + 'disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf001/importFile', data,
+                                                    function (resultObj) {
+                                                        if (resultObj.statuCode.toString() === '200') {
+                                                            table.reload();
+                                                            return;
+                                                        }
+                                                    });
+                                            },{}, function () {
+                                                layui.layer.closeAll()
+                                                table.reload();
                                             });
+                                        }else{
+                                            var data = {
+                                                tempList: checkResult.data.correctData
+                                            }
+                                            Joyin.ajaxJson(basePath + 'disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf001/importFile', data,
+                                                function (resultObj) {
+                                                    if (resultObj.statuCode.toString() === '200') {
+                                                        table.reload();
+                                                        return;
+                                                    }
+                                                });
+                                        }
                                     }
                                 }
                                 ,1000);
