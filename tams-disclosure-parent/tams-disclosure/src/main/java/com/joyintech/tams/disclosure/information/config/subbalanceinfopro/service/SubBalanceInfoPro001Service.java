@@ -178,6 +178,9 @@ public class SubBalanceInfoPro001Service extends CommonExportService<SubBalanceI
                     }else if(!this.isDateStr(rowData.get(1))){
                         errorMsg.append("余额日期 格式不正确！");
                     }
+                    else if (rowData.get(1).compareTo(DateUtil.format(DateUtil.platDateFromCache())) > 0){
+                        errorMsg.append("余额日期 不能大于平台日！");
+                    }
                     if (!StringUtil.isNotEmpty(rowData.get(2))){
                         errorMsg.append("科目号 必填！");
                     }

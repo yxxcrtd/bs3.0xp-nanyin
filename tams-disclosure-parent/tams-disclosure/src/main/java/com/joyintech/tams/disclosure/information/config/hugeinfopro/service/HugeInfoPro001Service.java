@@ -110,7 +110,8 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
      */
     public AjaxResult checkImportData(String fileName) {
         List<String> findProdRegistNoList =  proElementAdjMapper.getRegistNo(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());
-        List<String> findProdList =  proElementAdjMapper.getProdId(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());        List<List<String>> objects = ExcelUtil.getTempList(fileName);
+        List<String> findProdList =  proElementAdjMapper.getProdId(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());
+        List<List<String>> objects = ExcelUtil.getTempList(fileName);
         if (objects.size() - 1 > 50000) {
             Map<String, Object> resultMap = new HashMap<>();
             resultMap.put("errorMsg", "单次最多导入50000条。");
