@@ -46,11 +46,8 @@ public class RepInvestAccountService extends CommonExportService<RepInvestAccoun
                 -> repInvestAccountMapper.getProdInsId(map));
         return result;
     }
-    public Page<SelectOptionDto> queryProdIdInfo2(Map<String, Object> map) {
-        Map<String, Object> pageParam = RequestUtil.getPageParam();
-        Page<SelectOptionDto> result = queryForPageForSelectReturn(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")), ()
-                -> repInvestAccountMapper.getProdInsId2(map));
-        return result;
+    public List<SelectOptionDto> queryProdIdInfo2(Map<String, Object> map) {
+        return repInvestAccountMapper.getProdInsId2(map);
     }
     /**
      * 投资账户信息查询 <功能详细描述>
