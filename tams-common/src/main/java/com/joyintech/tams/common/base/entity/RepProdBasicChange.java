@@ -1,135 +1,45 @@
 package com.joyintech.tams.common.base.entity;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.joyintech.framework.base.BaseEntity;
-import com.joyintech.framework.json.BigDecimalSerializer;
-import java.math.BigDecimal;
-
-public class RepProdBasicChange extends BaseEntity {
+public class RepProdBasicChange extends RepProdBasicChangeKey {
     /**
-     * 业绩基准变更表主键id
+     * 指数权重：存储结构为a%
      */
-    private String basicChangeId;
+    private String proportion;
 
     /**
-     * 产品代码
+     * 组ID
      */
-    private String prodId;
+    private String groupId;
 
     /**
-     * 行情代码
+     * 取得 指数权重：存储结构为a%
+     * @return 指数权重：存储结构为a%
      */
-    private String quotaCode;
-
-    /**
-     * 系数
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal ratio;
-
-    /**
-     * 数据状态：数据字典，系统模块-DIS，字典code：DIS_DATA_STATUS:01-有效，02-删除
-     */
-    private String dataStatus;
-
-    /**
-     * 数据来源:数据字典syscode：DIS,code:DATA_SOURCE,
-     */
-    private String dataSource;
-
-    /**
-     * 取得 业绩基准变更表主键id
-     * @return 业绩基准变更表主键id
-     */
-    public String getBasicChangeId() {
-        return basicChangeId;
+    public String getProportion() {
+        return proportion;
     }
 
     /**
-     * 设置 业绩基准变更表主键id
-     * @param basicChangeId 业绩基准变更表主键id
+     * 设置 指数权重：存储结构为a%
+     * @param proportion 指数权重：存储结构为a%
      */
-    public void setBasicChangeId(String basicChangeId) {
-        this.basicChangeId = basicChangeId == null ? null : basicChangeId.trim();
+    public void setProportion(String proportion) {
+        this.proportion = proportion == null ? null : proportion.trim();
     }
 
     /**
-     * 取得 产品代码
-     * @return 产品代码
+     * 取得 组ID
+     * @return 组ID
      */
-    public String getProdId() {
-        return prodId;
+    public String getGroupId() {
+        return groupId;
     }
 
     /**
-     * 设置 产品代码
-     * @param prodId 产品代码
+     * 设置 组ID
+     * @param groupId 组ID
      */
-    public void setProdId(String prodId) {
-        this.prodId = prodId == null ? null : prodId.trim();
-    }
-
-    /**
-     * 取得 行情代码
-     * @return 行情代码
-     */
-    public String getQuotaCode() {
-        return quotaCode;
-    }
-
-    /**
-     * 设置 行情代码
-     * @param quotaCode 行情代码
-     */
-    public void setQuotaCode(String quotaCode) {
-        this.quotaCode = quotaCode == null ? null : quotaCode.trim();
-    }
-
-    /**
-     * 取得 系数
-     * @return 系数
-     */
-    public BigDecimal getRatio() {
-        return ratio;
-    }
-
-    /**
-     * 设置 系数
-     * @param ratio 系数
-     */
-    public void setRatio(BigDecimal ratio) {
-        this.ratio = ratio;
-    }
-
-    /**
-     * 取得 数据状态：数据字典，系统模块-DIS，字典code：DIS_DATA_STATUS:01-有效，02-删除
-     * @return 数据状态：数据字典，系统模块-DIS，字典code：DIS_DATA_STATUS:01-有效，02-删除
-     */
-    public String getDataStatus() {
-        return dataStatus;
-    }
-
-    /**
-     * 设置 数据状态：数据字典，系统模块-DIS，字典code：DIS_DATA_STATUS:01-有效，02-删除
-     * @param dataStatus 数据状态：数据字典，系统模块-DIS，字典code：DIS_DATA_STATUS:01-有效，02-删除
-     */
-    public void setDataStatus(String dataStatus) {
-        this.dataStatus = dataStatus == null ? null : dataStatus.trim();
-    }
-
-    /**
-     * 取得 数据来源:数据字典syscode：DIS,code:DATA_SOURCE,
-     * @return 数据来源:数据字典syscode：DIS,code:DATA_SOURCE,
-     */
-    public String getDataSource() {
-        return dataSource;
-    }
-
-    /**
-     * 设置 数据来源:数据字典syscode：DIS,code:DATA_SOURCE,
-     * @param dataSource 数据来源:数据字典syscode：DIS,code:DATA_SOURCE,
-     */
-    public void setDataSource(String dataSource) {
-        this.dataSource = dataSource == null ? null : dataSource.trim();
+    public void setGroupId(String groupId) {
+        this.groupId = groupId == null ? null : groupId.trim();
     }
 }

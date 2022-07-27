@@ -39,6 +39,8 @@ public interface DisProdBaseInfoMapper  {
 
     List<ProdInfoDto> queryForList(String[] split);
 
+    List<ProdInfoDto> selectListByPprodId(@Param("prodId") String prodId);
 
+    int updateRaiseAmtByPprodId(ProdInfoDto record);
 
 }
