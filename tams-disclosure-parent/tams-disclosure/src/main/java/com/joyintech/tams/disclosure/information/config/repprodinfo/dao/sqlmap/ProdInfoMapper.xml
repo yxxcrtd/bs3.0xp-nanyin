@@ -1,90 +1,90 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.joyintech.tams.disclosure.information.config.repprodinfo.dao.DisProdBaseInfoMapper" >
-    <resultMap id="BaseResultMap" type="com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto" >
-        <id column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
-        <result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
-        <result column="SET_DATE" property="setDate" jdbcType="DATE" />
-        <result column="RAISE_AMT" property="raiseAmt" jdbcType="DECIMAL" />
-        <result column="PROD_ABBR" property="prodAbbr" jdbcType="VARCHAR" />
-        <result column="PROD_RE" property="prodRe" jdbcType="VARCHAR" />
-        <result column="P_PROD_ID" property="pProdId" jdbcType="VARCHAR" />
-        <result column="RAISE_STRDATE" property="raiseStrdate" jdbcType="DATE" />
-        <result column="RAISE_ENDDATE" property="raiseEnddate" jdbcType="DATE" />
-        <result column="MDATE" property="mdate" jdbcType="DATE" />
-        <result column="RAISE_TYPE" property="raiseType" jdbcType="VARCHAR" />
-        <result column="PERFORM_COMPARE" property="performCompare" jdbcType="VARCHAR" />
-        <result column="IS_PERIOD" property="isPeriod" jdbcType="VARCHAR" />
-        <result column="IS_GRADE" property="isGrade" jdbcType="VARCHAR" />
-        <result column="IS_INDEX" property="isIndex" jdbcType="VARCHAR" />
-        <result column="OPEN_FREQ" property="openFreq" jdbcType="VARCHAR" />
-        <result column="NATURE_INVEST" property="natureInvest" jdbcType="VARCHAR" />
-        <result column="PROD_TYPE" property="prodType" jdbcType="VARCHAR" />
-        <result column="ISSUING_WAY" property="issuingWay" jdbcType="VARCHAR" />
-        <result column="ACCT_CHNNAME" property="acctChnname" jdbcType="VARCHAR" />
-        <result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR" />
-        <result column="PD_STATUS" property="pdStatus" jdbcType="VARCHAR" />
-        <result column="PROD_SERIES" property="prodSeries" jdbcType="VARCHAR" />
-        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
-        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
-        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
-        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
-        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
-        <result column="STATUS" property="status" jdbcType="VARCHAR" />
-        <result column="ISSUE_STATUS" property="issueStatus" jdbcType="VARCHAR" />
-        <result column="REP_PROD_TYPE" property="repProdType" jdbcType="VARCHAR" />
-        <result column="HOLDDAY" property="holdday" jdbcType="DECIMAL" />
-        <result column="TRUSTPART" property="trustpart" jdbcType="VARCHAR" />
-        <result column="ERRORMSG" property="errormsg" jdbcType="VARCHAR" />
-        <result column="ISSUE_STATUS_REMARK" property="issueStatusRemark" jdbcType="VARCHAR" />
+<mapper namespace="com.joyintech.tams.disclosure.information.config.repprodinfo.dao.DisProdBaseInfoMapper">
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto">
+        <id column="PROD_ID" property="prodId" jdbcType="VARCHAR"/>
+        <result column="PROD_NAME" property="prodName" jdbcType="VARCHAR"/>
+        <result column="SET_DATE" property="setDate" jdbcType="DATE"/>
+        <result column="RAISE_AMT" property="raiseAmt" jdbcType="DECIMAL"/>
+        <result column="PROD_ABBR" property="prodAbbr" jdbcType="VARCHAR"/>
+        <result column="PROD_RE" property="prodRe" jdbcType="VARCHAR"/>
+        <result column="P_PROD_ID" property="pProdId" jdbcType="VARCHAR"/>
+        <result column="RAISE_STRDATE" property="raiseStrdate" jdbcType="DATE"/>
+        <result column="RAISE_ENDDATE" property="raiseEnddate" jdbcType="DATE"/>
+        <result column="MDATE" property="mdate" jdbcType="DATE"/>
+        <result column="RAISE_TYPE" property="raiseType" jdbcType="VARCHAR"/>
+        <result column="PERFORM_COMPARE" property="performCompare" jdbcType="VARCHAR"/>
+        <result column="IS_PERIOD" property="isPeriod" jdbcType="VARCHAR"/>
+        <result column="IS_GRADE" property="isGrade" jdbcType="VARCHAR"/>
+        <result column="IS_INDEX" property="isIndex" jdbcType="VARCHAR"/>
+        <result column="OPEN_FREQ" property="openFreq" jdbcType="VARCHAR"/>
+        <result column="NATURE_INVEST" property="natureInvest" jdbcType="VARCHAR"/>
+        <result column="PROD_TYPE" property="prodType" jdbcType="VARCHAR"/>
+        <result column="ISSUING_WAY" property="issuingWay" jdbcType="VARCHAR"/>
+        <result column="ACCT_CHNNAME" property="acctChnname" jdbcType="VARCHAR"/>
+        <result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR"/>
+        <result column="PD_STATUS" property="pdStatus" jdbcType="VARCHAR"/>
+        <result column="PROD_SERIES" property="prodSeries" jdbcType="VARCHAR"/>
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR"/>
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR"/>
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR"/>
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="STATUS" property="status" jdbcType="VARCHAR"/>
+        <result column="ISSUE_STATUS" property="issueStatus" jdbcType="VARCHAR"/>
+        <result column="REP_PROD_TYPE" property="repProdType" jdbcType="VARCHAR"/>
+        <result column="HOLDDAY" property="holdday" jdbcType="DECIMAL"/>
+        <result column="TRUSTPART" property="trustpart" jdbcType="VARCHAR"/>
+        <result column="ERRORMSG" property="errormsg" jdbcType="VARCHAR"/>
+        <result column="ISSUE_STATUS_REMARK" property="issueStatusRemark" jdbcType="VARCHAR"/>
     </resultMap>
 
     <!-- 普通产品返回结果  -->
-    <sql id="Common_PROD_Base_Column_List" >
+    <sql id="Common_PROD_Base_Column_List">
         rpi.PROD_ID PROD_ID,
-            rpi.PROD_NAME PROD_NAME,
-            rpi.SET_DATE SET_DATE,
-            rpi.RAISE_AMT RAISE_AMT,
-            rpi.PROD_ABBR PROD_ABBR,
-            rpi.PROD_RE PROD_RE,
-            rpi.P_PROD_ID P_PROD_ID,
+        rpi.PROD_NAME PROD_NAME,
+        rpi.SET_DATE SET_DATE,
+        rpi.RAISE_AMT RAISE_AMT,
+        rpi.PROD_ABBR PROD_ABBR,
+        rpi.PROD_RE PROD_RE,
+        rpi.P_PROD_ID P_PROD_ID,
 
-            rpi.RAISE_STRDATE RAISE_STRDATE,
-            rpi.RAISE_ENDDATE RAISE_ENDDATE,
-            rpi.MDATE MDATE,
-            rpi.RAISE_TYPE RAISE_TYPE,
-            rpi.PERFORM_COMPARE PERFORM_COMPARE,
-            rpi.IS_PERIOD IS_PERIOD,
-            rpi.IS_GRADE IS_GRADE,
-            rpi.IS_INDEX IS_INDEX,
-            rpi.OPEN_FREQ OPEN_FREQ,
-            rpi.NATURE_INVEST NATURE_INVEST,
-            rpi.PROD_TYPE PROD_TYPE,
-            rpi.ISSUING_WAY ISSUING_WAY,
-            rpi.ACCT_CHNNAME ACCT_CHNNAME,
-            rpi.PROFIT_TYPE PROFIT_TYPE,
-            rpi.PD_STATUS PD_STATUS,
-            rpi.PROD_SERIES PROD_SERIES,
+        rpi.RAISE_STRDATE RAISE_STRDATE,
+        rpi.RAISE_ENDDATE RAISE_ENDDATE,
+        rpi.MDATE MDATE,
+        rpi.RAISE_TYPE RAISE_TYPE,
+        rpi.PERFORM_COMPARE PERFORM_COMPARE,
+        rpi.IS_PERIOD IS_PERIOD,
+        rpi.IS_GRADE IS_GRADE,
+        rpi.IS_INDEX IS_INDEX,
+        rpi.OPEN_FREQ OPEN_FREQ,
+        rpi.NATURE_INVEST NATURE_INVEST,
+        rpi.PROD_TYPE PROD_TYPE,
+        rpi.ISSUING_WAY ISSUING_WAY,
+        rpi.ACCT_CHNNAME ACCT_CHNNAME,
+        rpi.PROFIT_TYPE PROFIT_TYPE,
+        rpi.PD_STATUS PD_STATUS,
+        rpi.PROD_SERIES PROD_SERIES,
 
-            rpi.CREATE_USER CREATE_USER,
-            rpi.CREATE_DEPT CREATE_DEPT,
-            rpi.CREATE_TIME CREATE_TIME,
-            rpi.UPDATE_USER UPDATE_USER,
-            rpi.UPDATE_TIME UPDATE_TIME,
-            rpi.STATUS STATUS,
-            rpi.ISSUE_STATUS ISSUE_STATUS,
-            rpi.REP_PROD_TYPE REP_PROD_TYPE,
-            rpi.HOLDDAY HOLDDAY,
-            rpi.TRUSTPART TRUSTPART,
-            rpi.ERRORMSG ERRORMSG,
+        rpi.CREATE_USER CREATE_USER,
+        rpi.CREATE_DEPT CREATE_DEPT,
+        rpi.CREATE_TIME CREATE_TIME,
+        rpi.UPDATE_USER UPDATE_USER,
+        rpi.UPDATE_TIME UPDATE_TIME,
+        rpi.STATUS STATUS,
+        rpi.ISSUE_STATUS ISSUE_STATUS,
+        rpi.REP_PROD_TYPE REP_PROD_TYPE,
+        rpi.HOLDDAY HOLDDAY,
+        rpi.TRUSTPART TRUSTPART,
+        rpi.ERRORMSG ERRORMSG,
 
-            rpi.prod_name as pProdName ,
-            rpi.set_date as pSetDate
+        rpi.prod_name as pProdName ,
+        rpi.set_date as pSetDate
     </sql>
 
     <!-- 子产品返回结果 -->
-    <sql id="Son_PROD_Base_Column_List" >
-        rpi.PROD_ID PROD_ID,
+    <sql id="Son_PROD_Base_Column_List">
+            rpi.PROD_ID PROD_ID,
             rpi.PROD_NAME PROD_NAME,
             rpi.SET_DATE SET_DATE,
             rpi.RAISE_AMT RAISE_AMT,
@@ -96,7 +96,7 @@
             prpi.RAISE_ENDDATE RAISE_ENDDATE,
             prpi.MDATE MDATE,
             prpi.RAISE_TYPE RAISE_TYPE,
-            prpi.PERFORM_COMPARE PERFORM_COMPARE,
+            rpi.PERFORM_COMPARE PERFORM_COMPARE,
             prpi.IS_PERIOD IS_PERIOD,
             prpi.IS_GRADE IS_GRADE,
             prpi.IS_INDEX IS_INDEX,
@@ -125,8 +125,9 @@
             prpi.set_date as pSetDate
     </sql>
 
-    <sql id="Base_Column_List" >
-        PROD_ID PROD_ID, PROD_NAME PROD_NAME, SET_DATE SET_DATE, RAISE_AMT RAISE_AMT, PROD_ABBR PROD_ABBR, 
+    <sql id="Base_Column_List">
+        PROD_ID
+        PROD_ID, PROD_NAME PROD_NAME, SET_DATE SET_DATE, RAISE_AMT RAISE_AMT, PROD_ABBR PROD_ABBR,
         PROD_RE PROD_RE, P_PROD_ID P_PROD_ID, RAISE_STRDATE RAISE_STRDATE, RAISE_ENDDATE RAISE_ENDDATE, 
         MDATE MDATE, RAISE_TYPE RAISE_TYPE, PERFORM_COMPARE PERFORM_COMPARE, IS_PERIOD IS_PERIOD, 
         IS_GRADE IS_GRADE, IS_INDEX IS_INDEX, OPEN_FREQ OPEN_FREQ, NATURE_INVEST NATURE_INVEST, 
@@ -137,28 +138,32 @@
         ERRORMSG ERRORMSG, ISSUE_STATUS_REMARK ISSUE_STATUS_REMARK
     </sql>
 
-    <sql id="Sql_All_Data" >
+    <sql id="Sql_All_Data">
         select
-        <include refid="com.joyintech.tams.disclosure.information.config.repprodinfo.dao.DisProdBaseInfoMapper.Base_Column_List" />
+        <include
+                refid="com.joyintech.tams.disclosure.information.config.repprodinfo.dao.DisProdBaseInfoMapper.Base_Column_List"/>
         from REP_PROD_INFO
     </sql>
-    <sql id="Sql_All_Effective_Data" >
+    <sql id="Sql_All_Effective_Data">
         select
-        <include refid="com.joyintech.tams.disclosure.information.config.repprodinfo.dao.DisProdBaseInfoMapper.Base_Column_List" />
+        <include
+                refid="com.joyintech.tams.disclosure.information.config.repprodinfo.dao.DisProdBaseInfoMapper.Base_Column_List"/>
         from REP_PROD_INFO
         where STATUS = 'E'
     </sql>
-    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
         select
-        <include refid="com.joyintech.tams.disclosure.information.config.repprodinfo.dao.DisProdBaseInfoMapper.Base_Column_List" />
+        <include
+                refid="com.joyintech.tams.disclosure.information.config.repprodinfo.dao.DisProdBaseInfoMapper.Base_Column_List"/>
         from REP_PROD_INFO
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
     </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
-        delete from REP_PROD_INFO
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete
+        from REP_PROD_INFO
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
     </delete>
-    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepProdInfo" >
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepProdInfo">
         insert into REP_PROD_INFO (PROD_ID, PROD_NAME, SET_DATE,
                                    RAISE_AMT, PROD_ABBR, PROD_RE,
                                    P_PROD_ID, RAISE_STRDATE, RAISE_ENDDATE,
@@ -184,452 +189,526 @@
                 #{repProdType,jdbcType=VARCHAR}, #{holdday,jdbcType=DECIMAL}, #{trustpart,jdbcType=VARCHAR},
                 #{errormsg,jdbcType=VARCHAR}, #{issueStatusRemark,jdbcType=VARCHAR})
     </insert>
-    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepProdInfo" >
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepProdInfo">
         insert into REP_PROD_INFO
-        <trim prefix="(" suffix=")" suffixOverrides="," >
-            <if test="prodId != null" >
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="prodId != null">
                 PROD_ID,
             </if>
-            <if test="prodName != null" >
+            <if test="prodName != null">
                 PROD_NAME,
             </if>
-            <if test="setDate != null" >
+            <if test="setDate != null">
                 SET_DATE,
             </if>
-            <if test="raiseAmt != null" >
+            <if test="raiseAmt != null">
                 RAISE_AMT,
             </if>
-            <if test="prodAbbr != null" >
+            <if test="prodAbbr != null">
                 PROD_ABBR,
             </if>
-            <if test="prodRe != null" >
+            <if test="prodRe != null">
                 PROD_RE,
             </if>
-            <if test="pProdId != null" >
+            <if test="pProdId != null">
                 P_PROD_ID,
             </if>
-            <if test="raiseStrdate != null" >
+            <if test="raiseStrdate != null">
                 RAISE_STRDATE,
             </if>
-            <if test="raiseEnddate != null" >
+            <if test="raiseEnddate != null">
                 RAISE_ENDDATE,
             </if>
-            <if test="mdate != null" >
+            <if test="mdate != null">
                 MDATE,
             </if>
-            <if test="raiseType != null" >
+            <if test="raiseType != null">
                 RAISE_TYPE,
             </if>
-            <if test="performCompare != null" >
+            <if test="performCompare != null">
                 PERFORM_COMPARE,
             </if>
-            <if test="isPeriod != null" >
+            <if test="isPeriod != null">
                 IS_PERIOD,
             </if>
-            <if test="isGrade != null" >
+            <if test="isGrade != null">
                 IS_GRADE,
             </if>
-            <if test="isIndex != null" >
+            <if test="isIndex != null">
                 IS_INDEX,
             </if>
-            <if test="openFreq != null" >
+            <if test="openFreq != null">
                 OPEN_FREQ,
             </if>
-            <if test="natureInvest != null" >
+            <if test="natureInvest != null">
                 NATURE_INVEST,
             </if>
-            <if test="prodType != null" >
+            <if test="prodType != null">
                 PROD_TYPE,
             </if>
-            <if test="issuingWay != null" >
+            <if test="issuingWay != null">
                 ISSUING_WAY,
             </if>
-            <if test="acctChnname != null" >
+            <if test="acctChnname != null">
                 ACCT_CHNNAME,
             </if>
-            <if test="profitType != null" >
+            <if test="profitType != null">
                 PROFIT_TYPE,
             </if>
-            <if test="pdStatus != null" >
+            <if test="pdStatus != null">
                 PD_STATUS,
             </if>
-            <if test="prodSeries != null" >
+            <if test="prodSeries != null">
                 PROD_SERIES,
             </if>
-            <if test="createUser != null" >
+            <if test="createUser != null">
                 CREATE_USER,
             </if>
-            <if test="createDept != null" >
+            <if test="createDept != null">
                 CREATE_DEPT,
             </if>
-            <if test="createTime != null" >
+            <if test="createTime != null">
                 CREATE_TIME,
             </if>
-            <if test="updateUser != null" >
+            <if test="updateUser != null">
                 UPDATE_USER,
             </if>
-            <if test="updateTime != null" >
+            <if test="updateTime != null">
                 UPDATE_TIME,
             </if>
-            <if test="status != null" >
+            <if test="status != null">
                 STATUS,
             </if>
-            <if test="issueStatus != null" >
+            <if test="issueStatus != null">
                 ISSUE_STATUS,
             </if>
-            <if test="repProdType != null" >
+            <if test="repProdType != null">
                 REP_PROD_TYPE,
             </if>
-            <if test="holdday != null" >
+            <if test="holdday != null">
                 HOLDDAY,
             </if>
-            <if test="trustpart != null" >
+            <if test="trustpart != null">
                 TRUSTPART,
             </if>
-            <if test="errormsg != null" >
+            <if test="errormsg != null">
                 ERRORMSG,
             </if>
-            <if test="issueStatusRemark != null" >
+            <if test="issueStatusRemark != null">
                 ISSUE_STATUS_REMARK,
             </if>
         </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides="," >
-            <if test="prodId != null" >
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="prodId != null">
                 #{prodId,jdbcType=VARCHAR},
             </if>
-            <if test="prodName != null" >
+            <if test="prodName != null">
                 #{prodName,jdbcType=VARCHAR},
             </if>
-            <if test="setDate != null" >
+            <if test="setDate != null">
                 #{setDate,jdbcType=DATE},
             </if>
-            <if test="raiseAmt != null" >
+            <if test="raiseAmt != null">
                 #{raiseAmt,jdbcType=DECIMAL},
             </if>
-            <if test="prodAbbr != null" >
+            <if test="prodAbbr != null">
                 #{prodAbbr,jdbcType=VARCHAR},
             </if>
-            <if test="prodRe != null" >
+            <if test="prodRe != null">
                 #{prodRe,jdbcType=VARCHAR},
             </if>
-            <if test="pProdId != null" >
+            <if test="pProdId != null">
                 #{pProdId,jdbcType=VARCHAR},
             </if>
-            <if test="raiseStrdate != null" >
+            <if test="raiseStrdate != null">
                 #{raiseStrdate,jdbcType=DATE},
             </if>
-            <if test="raiseEnddate != null" >
+            <if test="raiseEnddate != null">
                 #{raiseEnddate,jdbcType=DATE},
             </if>
-            <if test="mdate != null" >
+            <if test="mdate != null">
                 #{mdate,jdbcType=DATE},
             </if>
-            <if test="raiseType != null" >
+            <if test="raiseType != null">
                 #{raiseType,jdbcType=VARCHAR},
             </if>
-            <if test="performCompare != null" >
+            <if test="performCompare != null">
                 #{performCompare,jdbcType=VARCHAR},
             </if>
-            <if test="isPeriod != null" >
+            <if test="isPeriod != null">
                 #{isPeriod,jdbcType=VARCHAR},
             </if>
-            <if test="isGrade != null" >
+            <if test="isGrade != null">
                 #{isGrade,jdbcType=VARCHAR},
             </if>
-            <if test="isIndex != null" >
+            <if test="isIndex != null">
                 #{isIndex,jdbcType=VARCHAR},
             </if>
-            <if test="openFreq != null" >
+            <if test="openFreq != null">
                 #{openFreq,jdbcType=VARCHAR},
             </if>
-            <if test="natureInvest != null" >
+            <if test="natureInvest != null">
                 #{natureInvest,jdbcType=VARCHAR},
             </if>
-            <if test="prodType != null" >
+            <if test="prodType != null">
                 #{prodType,jdbcType=VARCHAR},
             </if>
-            <if test="issuingWay != null" >
+            <if test="issuingWay != null">
                 #{issuingWay,jdbcType=VARCHAR},
             </if>
-            <if test="acctChnname != null" >
+            <if test="acctChnname != null">
                 #{acctChnname,jdbcType=VARCHAR},
             </if>
-            <if test="profitType != null" >
+            <if test="profitType != null">
                 #{profitType,jdbcType=VARCHAR},
             </if>
-            <if test="pdStatus != null" >
+            <if test="pdStatus != null">
                 #{pdStatus,jdbcType=VARCHAR},
             </if>
-            <if test="prodSeries != null" >
+            <if test="prodSeries != null">
                 #{prodSeries,jdbcType=VARCHAR},
             </if>
-            <if test="createUser != null" >
+            <if test="createUser != null">
                 #{createUser,jdbcType=VARCHAR},
             </if>
-            <if test="createDept != null" >
+            <if test="createDept != null">
                 #{createDept,jdbcType=VARCHAR},
             </if>
-            <if test="createTime != null" >
+            <if test="createTime != null">
                 #{createTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="updateUser != null" >
+            <if test="updateUser != null">
                 #{updateUser,jdbcType=VARCHAR},
             </if>
-            <if test="updateTime != null" >
+            <if test="updateTime != null">
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="status != null" >
+            <if test="status != null">
                 #{status,jdbcType=VARCHAR},
             </if>
-            <if test="issueStatus != null" >
+            <if test="issueStatus != null">
                 #{issueStatus,jdbcType=VARCHAR},
             </if>
-            <if test="repProdType != null" >
+            <if test="repProdType != null">
                 #{repProdType,jdbcType=VARCHAR},
             </if>
-            <if test="holdday != null" >
+            <if test="holdday != null">
                 #{holdday,jdbcType=DECIMAL},
             </if>
-            <if test="trustpart != null" >
+            <if test="trustpart != null">
                 #{trustpart,jdbcType=VARCHAR},
             </if>
-            <if test="errormsg != null" >
+            <if test="errormsg != null">
                 #{errormsg,jdbcType=VARCHAR},
             </if>
-            <if test="issueStatusRemark != null" >
+            <if test="issueStatusRemark != null">
                 #{issueStatusRemark,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
-    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepProdInfo" >
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepProdInfo">
         insert into REP_PROD_INFO(PROD_ID, PROD_NAME, SET_DATE, RAISE_AMT, PROD_ABBR, PROD_RE,
-                                  P_PROD_ID, RAISE_STRDATE, RAISE_ENDDATE, MDATE, RAISE_TYPE, PERFORM_COMPARE, IS_PERIOD,
+                                  P_PROD_ID, RAISE_STRDATE, RAISE_ENDDATE, MDATE, RAISE_TYPE, PERFORM_COMPARE,
+                                  IS_PERIOD,
                                   IS_GRADE, IS_INDEX, OPEN_FREQ, NATURE_INVEST, PROD_TYPE, ISSUING_WAY, ACCT_CHNNAME,
-                                  PROFIT_TYPE, PD_STATUS, PROD_SERIES, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER,
-                                  UPDATE_TIME, STATUS, ISSUE_STATUS, REP_PROD_TYPE, HOLDDAY, TRUSTPART, ERRORMSG, ISSUE_STATUS_REMARK
-        )
-        select PROD_ID, PROD_NAME, SET_DATE, RAISE_AMT, PROD_ABBR, PROD_RE,
-               P_PROD_ID, RAISE_STRDATE, RAISE_ENDDATE, MDATE, RAISE_TYPE, PERFORM_COMPARE, IS_PERIOD,
-               IS_GRADE, IS_INDEX, OPEN_FREQ, NATURE_INVEST, PROD_TYPE, ISSUING_WAY, ACCT_CHNNAME,
-               PROFIT_TYPE, PD_STATUS, PROD_SERIES, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER,
-               #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, #{status,jdbcType=VARCHAR} STATUS, ISSUE_STATUS, REP_PROD_TYPE, HOLDDAY, TRUSTPART, ERRORMSG, ISSUE_STATUS_REMARK
+                                  PROFIT_TYPE, PD_STATUS, PROD_SERIES, CREATE_USER, CREATE_DEPT, CREATE_TIME,
+                                  UPDATE_USER,
+                                  UPDATE_TIME, STATUS, ISSUE_STATUS, REP_PROD_TYPE, HOLDDAY, TRUSTPART, ERRORMSG,
+                                  ISSUE_STATUS_REMARK)
+        select PROD_ID,
+               PROD_NAME,
+               SET_DATE,
+               RAISE_AMT,
+               PROD_ABBR,
+               PROD_RE,
+               P_PROD_ID,
+               RAISE_STRDATE,
+               RAISE_ENDDATE,
+               MDATE,
+               RAISE_TYPE,
+               PERFORM_COMPARE,
+               IS_PERIOD,
+               IS_GRADE,
+               IS_INDEX,
+               OPEN_FREQ,
+               NATURE_INVEST,
+               PROD_TYPE,
+               ISSUING_WAY,
+               ACCT_CHNNAME,
+               PROFIT_TYPE,
+               PD_STATUS,
+               PROD_SERIES,
+               CREATE_USER,
+               CREATE_DEPT,
+               CREATE_TIME,
+               #{updateUser,jdbcType=VARCHAR}   UPDATE_USER,
+               #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+               #{status,jdbcType=VARCHAR}       STATUS,
+               ISSUE_STATUS,
+               REP_PROD_TYPE,
+               HOLDDAY,
+               TRUSTPART,
+               ERRORMSG,
+               ISSUE_STATUS_REMARK
 
         from REP_PROD_INFO
-        where STATUS = 'E' and PROD_ID = #{prodId,jdbcType=VARCHAR}
+        where STATUS = 'E'
+          and PROD_ID = #{prodId,jdbcType=VARCHAR}
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepProdInfo" >
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepProdInfo">
         update REP_PROD_INFO
-        <set >
-            <if test="prodName != null" >
+        <set>
+            <if test="prodName != null">
                 PROD_NAME = #{prodName,jdbcType=VARCHAR},
             </if>
-            <if test="setDate != null" >
+            <if test="setDate != null">
                 SET_DATE = #{setDate,jdbcType=DATE},
             </if>
-            <if test="raiseAmt != null" >
+            <if test="raiseAmt != null">
                 RAISE_AMT = #{raiseAmt,jdbcType=DECIMAL},
             </if>
-            <if test="prodAbbr != null" >
+            <if test="prodAbbr != null">
                 PROD_ABBR = #{prodAbbr,jdbcType=VARCHAR},
             </if>
-            <if test="prodRe != null" >
+            <if test="prodRe != null">
                 PROD_RE = #{prodRe,jdbcType=VARCHAR},
             </if>
-            <if test="pProdId != null" >
+            <if test="pProdId != null">
                 P_PROD_ID = #{pProdId,jdbcType=VARCHAR},
             </if>
-            <if test="raiseStrdate != null" >
+            <if test="raiseStrdate != null">
                 RAISE_STRDATE = #{raiseStrdate,jdbcType=DATE},
             </if>
-            <if test="raiseEnddate != null" >
+            <if test="raiseEnddate != null">
                 RAISE_ENDDATE = #{raiseEnddate,jdbcType=DATE},
             </if>
-            <if test="mdate != null" >
+            <if test="mdate != null">
                 MDATE = #{mdate,jdbcType=DATE},
             </if>
-            <if test="raiseType != null" >
+            <if test="raiseType != null">
                 RAISE_TYPE = #{raiseType,jdbcType=VARCHAR},
             </if>
-            <if test="performCompare != null" >
+            <if test="performCompare != null">
                 PERFORM_COMPARE = #{performCompare,jdbcType=VARCHAR},
             </if>
-            <if test="isPeriod != null" >
+            <if test="isPeriod != null">
                 IS_PERIOD = #{isPeriod,jdbcType=VARCHAR},
             </if>
-            <if test="isGrade != null" >
+            <if test="isGrade != null">
                 IS_GRADE = #{isGrade,jdbcType=VARCHAR},
             </if>
-            <if test="isIndex != null" >
+            <if test="isIndex != null">
                 IS_INDEX = #{isIndex,jdbcType=VARCHAR},
             </if>
-            <if test="openFreq != null" >
+            <if test="openFreq != null">
                 OPEN_FREQ = #{openFreq,jdbcType=VARCHAR},
             </if>
-            <if test="natureInvest != null" >
+            <if test="natureInvest != null">
                 NATURE_INVEST = #{natureInvest,jdbcType=VARCHAR},
             </if>
-            <if test="prodType != null" >
+            <if test="prodType != null">
                 PROD_TYPE = #{prodType,jdbcType=VARCHAR},
             </if>
-            <if test="issuingWay != null" >
+            <if test="issuingWay != null">
                 ISSUING_WAY = #{issuingWay,jdbcType=VARCHAR},
             </if>
-            <if test="acctChnname != null" >
+            <if test="acctChnname != null">
                 ACCT_CHNNAME = #{acctChnname,jdbcType=VARCHAR},
             </if>
-            <if test="profitType != null" >
+            <if test="profitType != null">
                 PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
             </if>
-            <if test="pdStatus != null" >
+            <if test="pdStatus != null">
                 PD_STATUS = #{pdStatus,jdbcType=VARCHAR},
             </if>
-            <if test="prodSeries != null" >
+            <if test="prodSeries != null">
                 PROD_SERIES = #{prodSeries,jdbcType=VARCHAR},
             </if>
-            <if test="updateUser != null" >
+            <if test="updateUser != null">
                 UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             </if>
-            <if test="updateTime != null" >
+            <if test="updateTime != null">
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="status != null" >
+            <if test="status != null">
                 STATUS = #{status,jdbcType=VARCHAR},
             </if>
-            <if test="issueStatus != null" >
+            <if test="issueStatus != null">
                 ISSUE_STATUS = #{issueStatus,jdbcType=VARCHAR},
             </if>
-            <if test="repProdType != null" >
+            <if test="repProdType != null">
                 REP_PROD_TYPE = #{repProdType,jdbcType=VARCHAR},
             </if>
-            <if test="holdday != null" >
+            <if test="holdday != null">
                 HOLDDAY = #{holdday,jdbcType=DECIMAL},
             </if>
-            <if test="trustpart != null" >
+            <if test="trustpart != null">
                 TRUSTPART = #{trustpart,jdbcType=VARCHAR},
             </if>
-            <if test="errormsg != null" >
+            <if test="errormsg != null">
                 ERRORMSG = #{errormsg,jdbcType=VARCHAR},
             </if>
-            <if test="issueStatusRemark != null" >
+            <if test="issueStatusRemark != null">
                 ISSUE_STATUS_REMARK = #{issueStatusRemark,jdbcType=VARCHAR},
             </if>
         </set>
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepProdInfo" >
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepProdInfo">
         update REP_PROD_INFO
-        set PROD_NAME = #{prodName,jdbcType=VARCHAR},
-            SET_DATE = #{setDate,jdbcType=DATE},
-            RAISE_AMT = #{raiseAmt,jdbcType=DECIMAL},
-            PROD_ABBR = #{prodAbbr,jdbcType=VARCHAR},
-            PROD_RE = #{prodRe,jdbcType=VARCHAR},
-            P_PROD_ID = #{pProdId,jdbcType=VARCHAR},
-            RAISE_STRDATE = #{raiseStrdate,jdbcType=DATE},
-            RAISE_ENDDATE = #{raiseEnddate,jdbcType=DATE},
-            MDATE = #{mdate,jdbcType=DATE},
-            RAISE_TYPE = #{raiseType,jdbcType=VARCHAR},
-            PERFORM_COMPARE = #{performCompare,jdbcType=VARCHAR},
-            IS_PERIOD = #{isPeriod,jdbcType=VARCHAR},
-            IS_GRADE = #{isGrade,jdbcType=VARCHAR},
-            IS_INDEX = #{isIndex,jdbcType=VARCHAR},
-            OPEN_FREQ = #{openFreq,jdbcType=VARCHAR},
-            NATURE_INVEST = #{natureInvest,jdbcType=VARCHAR},
-            PROD_TYPE = #{prodType,jdbcType=VARCHAR},
-            ISSUING_WAY = #{issuingWay,jdbcType=VARCHAR},
-            ACCT_CHNNAME = #{acctChnname,jdbcType=VARCHAR},
-            PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
-            PD_STATUS = #{pdStatus,jdbcType=VARCHAR},
-            PROD_SERIES = #{prodSeries,jdbcType=VARCHAR},
-            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-            STATUS = #{status,jdbcType=VARCHAR},
-            ISSUE_STATUS = #{issueStatus,jdbcType=VARCHAR},
-            REP_PROD_TYPE = #{repProdType,jdbcType=VARCHAR},
-            HOLDDAY = #{holdday,jdbcType=DECIMAL},
-            TRUSTPART = #{trustpart,jdbcType=VARCHAR},
-            ERRORMSG = #{errormsg,jdbcType=VARCHAR},
+        set PROD_NAME           = #{prodName,jdbcType=VARCHAR},
+            SET_DATE            = #{setDate,jdbcType=DATE},
+            RAISE_AMT           = #{raiseAmt,jdbcType=DECIMAL},
+            PROD_ABBR           = #{prodAbbr,jdbcType=VARCHAR},
+            PROD_RE             = #{prodRe,jdbcType=VARCHAR},
+            P_PROD_ID           = #{pProdId,jdbcType=VARCHAR},
+            RAISE_STRDATE       = #{raiseStrdate,jdbcType=DATE},
+            RAISE_ENDDATE       = #{raiseEnddate,jdbcType=DATE},
+            MDATE               = #{mdate,jdbcType=DATE},
+            RAISE_TYPE          = #{raiseType,jdbcType=VARCHAR},
+            PERFORM_COMPARE     = #{performCompare,jdbcType=VARCHAR},
+            IS_PERIOD           = #{isPeriod,jdbcType=VARCHAR},
+            IS_GRADE            = #{isGrade,jdbcType=VARCHAR},
+            IS_INDEX            = #{isIndex,jdbcType=VARCHAR},
+            OPEN_FREQ           = #{openFreq,jdbcType=VARCHAR},
+            NATURE_INVEST       = #{natureInvest,jdbcType=VARCHAR},
+            PROD_TYPE           = #{prodType,jdbcType=VARCHAR},
+            ISSUING_WAY         = #{issuingWay,jdbcType=VARCHAR},
+            ACCT_CHNNAME        = #{acctChnname,jdbcType=VARCHAR},
+            PROFIT_TYPE         = #{profitType,jdbcType=VARCHAR},
+            PD_STATUS           = #{pdStatus,jdbcType=VARCHAR},
+            PROD_SERIES         = #{prodSeries,jdbcType=VARCHAR},
+            UPDATE_USER         = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME         = #{updateTime,jdbcType=TIMESTAMP},
+            STATUS              = #{status,jdbcType=VARCHAR},
+            ISSUE_STATUS        = #{issueStatus,jdbcType=VARCHAR},
+            REP_PROD_TYPE       = #{repProdType,jdbcType=VARCHAR},
+            HOLDDAY             = #{holdday,jdbcType=DECIMAL},
+            TRUSTPART           = #{trustpart,jdbcType=VARCHAR},
+            ERRORMSG            = #{errormsg,jdbcType=VARCHAR},
             ISSUE_STATUS_REMARK = #{issueStatusRemark,jdbcType=VARCHAR}
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
     </update>
 
 
-
     <select id="searchProdList" parameterType="java.util.Map"
             resultType="com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto">
         select * from (
-            select  <include refid="Common_PROD_Base_Column_List" />
-            from rep_prod_info rpi
-            where rpi.status ='E' and rpi.rep_prod_type ='02'
+        select
+        <include refid="Common_PROD_Base_Column_List"/>
+        from rep_prod_info rpi
+        where 1=1 and rpi.rep_prod_type ='02'
         UNION ALL
-            select  <include refid="Son_PROD_Base_Column_List" />
-            from rep_prod_info rpi
-                left join rep_prod_info prpi on prpi.prod_id = rpi.p_prod_id
-            where rpi.status ='E' and rpi.rep_prod_type ='03'
+        select
+        <include refid="Son_PROD_Base_Column_List"/>
+        from rep_prod_info rpi
+        left join rep_prod_info prpi on prpi.prod_id = rpi.p_prod_id
+        where 1=1 and rpi.rep_prod_type ='03'
         ) temp
         where 1=1
-        <if test="dataStatusArr != null and dataStatusArr.length > 0">
+
+        <if test="prodId != null and prodId.length > 0">
+            AND temp.PROD_ID LIKE concat('%',concat(#{prodId,jdbcType=VARCHAR},'%'))
+        </if>
+        <if test="prodName != null and prodName.length > 0">
+            AND temp.PROD_NAME LIKE concat('%',concat(#{prodName,jdbcType=VARCHAR},'%'))
+        </if>
+
+        <if test="dataStatusArr != null and dataStatusArr.size > 0">
             AND temp.STATUS IN
             <foreach item="item" collection="dataStatusArr" index="index"
                      open="(" separator="," close=")">
                 #{item}
             </foreach>
         </if>
-        <if test="prodIdArr != null and prodIdArr.length > 0">
-            AND temp.PROD_ID IN
-            <foreach item="item" collection="prodIdArr" index="index"
+        <if test="prodReNoArr != null and prodReNoArr.size > 0">
+            AND temp.PROD_RE IN
+            <foreach item="item" collection="prodReNoArr" index="index"
                      open="(" separator="," close=")">
                 #{item}
             </foreach>
         </if>
-        <if test="prodRegistNoArr != null and prodRegistNoArr.length > 0">
-            AND temp.PROD_REGIST_NO IN
-            <foreach item="item" collection="prodRegistNoArr" index="index"
+
+        <if test="raiseTypeArr != null and raiseTypeArr.size > 0">
+            AND temp.RAISE_TYPE IN
+            <foreach item="item" collection="raiseTypeArr" index="index"
                      open="(" separator="," close=")">
                 #{item}
             </foreach>
         </if>
-        <if test="rptIssueDateStart != null and rptIssueDateStart != ''">
-            <![CDATA[AND  temp.RPT_ISSUE_DATE >= TO_DATE(#{rptIssueDateStart},'YYYY-MM-DD') ]]>
+        <if test="isGradeArr != null and isGradeArr.size > 0">
+            AND temp.is_grade IN
+            <foreach item="item" collection="isGradeArr" index="index"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
         </if>
-        <if test="rptIssueDateEnd != null and rptIssueDateEnd != ''">
-            <![CDATA[AND  temp.RPT_ISSUE_DATE <= TO_DATE(#{rptIssueDateEnd},'YYYY-MM-DD')]]>
+        <if test="profitTypeArr != null and profitTypeArr.size > 0">
+            AND temp.PROFIT_TYPE IN
+            <foreach item="item" collection="profitTypeArr" index="index"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="raiseStrdateStart != null and raiseStrdateStart != ''">
+            <![CDATA[AND  temp.RAISE_STRDATE >= TO_DATE(#{raiseStrdateStart},'YYYY-MM-DD') ]]>
+        </if>
+        <if test="raiseStrdateEnd != null and raiseStrdateEnd != ''">
+            <![CDATA[AND  temp.RAISE_STRDATE <= TO_DATE(#{raiseStrdateEnd},'YYYY-MM-DD')]]>
+        </if>
+
+        <if test="raiseEnddateStart != null and raiseEnddateStart != ''">
+            <![CDATA[AND  temp.RAISE_ENDDATE >= TO_DATE(#{raiseStrdateStart},'YYYY-MM-DD') ]]>
+        </if>
+        <if test="raiseEnddateEnd != null and raiseEnddateEnd != ''">
+            <![CDATA[AND  temp.RAISE_ENDDATE <= TO_DATE(#{raiseStrdateEnd},'YYYY-MM-DD')]]>
+        </if>
+
+        <if test="setDateStart != null and setDateStart != ''">
+            <![CDATA[AND  temp.SET_DATE >= TO_DATE(#{setDateStart},'YYYY-MM-DD') ]]>
+        </if>
+        <if test="setDateEnd != null and setDateEnd != ''">
+            <![CDATA[AND  temp.SET_DATE <= TO_DATE(#{setDateEnd},'YYYY-MM-DD')]]>
         </if>
         order by NVL(temp.UPDATE_TIME,temp.CREATE_TIME) desc
     </select>
 
 
     <!-- 查询普通产品信息 -->
-    <select id="selectByCommonProdId" resultType="com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto"
-            parameterType="java.lang.String" >
+    <select id="selectByCommonProdId"
+            resultType="com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto"
+            parameterType="java.lang.String">
         select
-         <include refid="Common_PROD_Base_Column_List" />
+        <include refid="Common_PROD_Base_Column_List"/>
         from REP_PROD_INFO rpi
-        where  PROD_ID = #{prodId,jdbcType=VARCHAR}
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
     </select>
 
     <!-- 查询子产品明细信息 -->
-    <select id="selectBySonProdId" resultType="com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto"
-            parameterType="java.lang.String" >
+    <select id="selectBySonProdId"
+            resultType="com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto"
+            parameterType="java.lang.String">
         select
-         <include refid="Son_PROD_Base_Column_List" />
+        <include refid="Son_PROD_Base_Column_List"/>
         from REP_PROD_INFO rpi
-            left join rep_prod_info prpi on prpi.prod_id = rpi.p_prod_id
-        where  rpi.PROD_ID = #{prodId,jdbcType=VARCHAR}
+        left join rep_prod_info prpi on prpi.prod_id = rpi.p_prod_id
+        where rpi.PROD_ID = #{prodId,jdbcType=VARCHAR}
     </select>
 
     <!-- 查询正常状态的产品信息 -->
-    <select id="selectByProdStatus" resultType="com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto"
-            parameterType="java.lang.String" >
+    <select id="selectByProdStatus"
+            resultType="com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto"
+            parameterType="java.lang.String">
         select *
         from REP_PROD_INFO
-        where  PROD_ID = #{prodId,jdbcType=VARCHAR}
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
         <if test="status != null and status != ''">
             and status = #{status,jdbcType=VARCHAR}
         </if>
     </select>
 
     <select id="queryForList" resultMap="BaseResultMap">
-        select  PROD_ID,
+        select PROD_ID,
         PROD_NAME,
         SET_DATE ,
         ISSUE_STATUS,
@@ -650,6 +729,27 @@
             ,ISSUE_STATUS_REMARK = #{issueStatusRemark}
         </if>
         where PROD_ID = #{prodId}
+    </update>
+
+    <!-- 查询母产品下所有的子产品信息 -->
+    <select id="selectListByPprodId" resultMap="BaseResultMap">
+        select *
+        from REP_PROD_INFO
+        <where>
+            P_PROD_ID =#{prodId}
+            and status ='E'
+        </where>
+    </select>
+
+    <!-- 更新母产品下所有的子产品信息的募集金额 -->
+    <update id="updateRaiseAmtByPprodId" parameterType="com.joyintech.tams.common.base.entity.RepProdInfo">
+        update REP_PROD_INFO
+        <set>
+            <if test="raiseAmt != null">
+                RAISE_AMT = #{raiseAmt,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where P_PROD_ID = #{pProdId,jdbcType=VARCHAR}
     </update>
 
 </mapper>

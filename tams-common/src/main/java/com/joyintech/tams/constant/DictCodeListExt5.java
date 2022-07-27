@@ -65,6 +65,11 @@ public enum DictCodeListExt5 implements BaseDictCodeList {
     维护类型_代销机构(DictCodeExt1.信披_代销机构_维护类型,"01","代销机构"),
     维护类型_理财产品(DictCodeExt1.信披_代销机构_维护类型,"02","理财产品"),
 
+
+    开放频率_日开(DictCodeExt1.开放频率,"01","日开"),
+    开放频率_频率在半年以内(DictCodeExt1.开放频率,"02","频率在半年（不含）以内"),
+    开放频率_频率在半年以上(DictCodeExt1.开放频率,"03","频率在半年以上"),
+
     ;
     /**
      * 对应于数据字典code

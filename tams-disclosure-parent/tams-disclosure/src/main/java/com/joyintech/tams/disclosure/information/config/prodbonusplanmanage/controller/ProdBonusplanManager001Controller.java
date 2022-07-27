@@ -90,7 +90,7 @@ public class ProdBonusplanManager001Controller extends BaseController {
 	@Override
 	public String init(Model model) {
 
-		this.setSelectOptionToModel(model, DictCode.信披_数据状态);
+		this.setSelectOptionToModel(model, DictCode.信披_数据状态ED);
 		this.setSelectOptionToModel(model, DictCode.信披_分红方式);
 		return super.init(model);
 	}

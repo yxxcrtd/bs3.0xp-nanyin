@@ -78,7 +78,7 @@ public class ProdFeediscount002Controller extends BaseController {
     private Logger logger = LoggerFactory.getLogger(ProdFeediscount002Controller.class);
 	@Override
 	public String init(Model model) {
-		this.setSelectOptionToModel(model,DictCode.信披_数据状态);
+		this.setSelectOptionToModel(model,DictCode.信披_数据状态ED);
 		this.setSelectOptionToModel(model, DictCode.信披_分红方式);
 		String workflowId = getParam("workflowId");
 		String id = this.getParam("prodDiscountId");
@@ -186,7 +186,7 @@ public class ProdFeediscount002Controller extends BaseController {
 			ProdFeediscountDto dto = JsonUtils.json2Object(datas, ProdFeediscountDto.class);
 			try {
 				if (this.getPageModel().equals(GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
-					dto.setDataStatus(DictCodeListExt3.信披_数据状态_有效.getValue());
+					dto.setDataStatus(DictCodeListExt3.信披_数据状态_有效E.getValue());
 					dto.setDataSource(DictCodeListExt3.信披_数据来源_系统新建.getValue());
 					prodFeediscountService.insert(dto);
 				}

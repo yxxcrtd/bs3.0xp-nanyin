@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="~{layout/default}">
 <meta charset="UTF-8">
-<title data-th-text="#{ProdInfo001}">产品基本信息</title>
+<title data-th-text="">产品基本信息</title>
 </head>
 <body>
 <div layout:fragment="content">
@@ -22,39 +22,38 @@
                 <div class="layui-inline layui-col-md4">
                     <label class="layui-form-label form-lable" >产品主代码</label>
                     <div class="layui-input-inline input-inline">
-                        <input type="text" id="prodId"
-                               class="layui-input form-input input-lenovoselect " placeholder="请输入内容"
-                               data-th-placeholder="#{SysCommon.placeholder}"
-                               data-th-data-url="@{/chb/businessdatamaintain/chbprdbaseinfo/chbprdbaseinfo001/getProdIdAndProdName}"
-                               data-idfield="code" data-keyfield="code"
-                               data-th-data-effectivefieldsalias='|{"code":"#{ProdInfo001.prodId}","shortName":"#{ProdInfo001.prodName}"}|'>
+                        <input type="text" id="prodId" class="layui-input form-input input-lenovoselect " placeholder="请输入内容">
                     </div>
                 </div>
                 <div class="layui-inline layui-col-md4">
                     <label class="layui-form-label form-lable" >产品名称</label>
                     <div class="layui-input-inline input-inline">
                         <input type="text" id="prodName"
-                               class="layui-input form-input input-lenovoselect " placeholder="请输入内容"
-                               data-th-placeholder="#{SysCommon.placeholder}"
-                               data-th-data-url="@{/chb/businessdatamaintain/chbprdbaseinfo/chbprdbaseinfo001/getProdIdAndProdName}"
-                               data-idfield="shortName" data-keyfield="shortName"
-                               data-th-data-effectivefieldsalias='|{"code":"#{ProdInfo001.prodId}","shortName":"#{ProdInfo001.prodName}"}|'>
+                               class="layui-input form-input input-lenovoselect " placeholder="请输入内容" >
                     </div>
                 </div>
                 <div class="layui-inline layui-col-xs4 layui-col-md4  layui-col-sm4 layui-col-lg4">
-                    <label class="layui-form-label form-lable" >产品登记编码</label>
+                   <!-- <label class="layui-form-label form-lable" >产品登记编码</label>
                     <div class="layui-input-inline input-inline">
                         <input type="text" id="regCode"
                                class="layui-input form-input" placeholder="请选择"
                                allowClear="true">
+                    </div>-->
+                    <label class="layui-form-label form-lable" >产品登记编码</label>
+                    <div class="layui-input-inline input-inline">
+                        <select type="text" id="prodRegistNo" name="prodRegistNo" formatoption="false" multiple
+                                class="layui-input form-input input-select"  placeholder="请输入内容" data-th-value='${entity?.prodRegistNo}'
+                                data-th-data-url="@{/disclosure/information/config/repprodinfo/ProdInfoCommon/getRegistNoList}" allowClear="true">
+                        </select>
                     </div>
+
                 </div>
             </div>
             <div class="layui-form-item">
                 <div class="layui-inline layui-col-md4">
                     <label class="layui-form-label form-lable">募集起始日期</label>
                     <div class="layui-input-inline input-inline">
-                        <input type="text" id="raiseVdate"
+                        <input type="text" id="raiseStrdate"
                                class="layui-input form-input input-dateRangeSelect">
                     </div>
                 </div>
@@ -69,7 +68,7 @@
                     <label class="layui-form-label form-lable" >募集方式</label>
                     <div class="layui-input-inline input-inline">
                         <select id="raiseType"  class="input-select" multiple="true"
-                                data-th-data-result="${RAISE_TYPE}" placeholder="请选择" allowClear="true">
+                                data-th-data-result="${DIS_RAISE_TYPE}" placeholder="请选择" allowClear="true">
                         </select>
                     </div>
                 </div>
@@ -79,7 +78,7 @@
                     <label class="layui-form-label form-lable" >是否是分级产品</label>
                     <div class="layui-input-inline input-inline">
                         <select id="isGrade"  class="input-select" multiple="true"
-                                data-th-data-result="${GRADE_PROD_TYPE}" placeholder="请选择" allowClear="true">
+                                data-th-data-result="${YES_NO}" placeholder="请选择" allowClear="true">
                         </select>
                     </div>
                 </div>
@@ -97,7 +96,7 @@
                     <label class="layui-form-label form-lable" >数据状态</label>
                     <div class="layui-input-inline input-inline">
                         <select id="status"  class="input-select" multiple="true"
-                                data-th-data-result="${SVR_STATUS}" placeholder="请选择" allowClear="true">
+                                data-th-data-result="${DIS_DATA_STATUS_ED}" placeholder="请选择" allowClear="true">
                         </select>
                     </div>
                 </div>
