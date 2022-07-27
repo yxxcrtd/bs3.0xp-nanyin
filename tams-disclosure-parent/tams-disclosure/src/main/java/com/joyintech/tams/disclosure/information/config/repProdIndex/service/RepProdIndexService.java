@@ -154,7 +154,7 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
         }else {
             if (null == objects.get(0) || objects.get(0).size() != 16) {
                 Map<String, Object> resultMap = new HashMap<>();
-                resultMap.put("errorMsg", "数据格式错误，数据格式需要4列。");
+                resultMap.put("errorMsg", "数据格式错误，数据格式需要16列。");
                 AjaxResult wr = new AjaxResult();
                 wr.setData(resultMap);
                 return wr;
@@ -348,11 +348,12 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
                             errorMsg.append("母产品七日年化收益率 不应填值！");
                         }
                     }
-                    RepProdIndexDto repProdIndexDto2 = this.selectPProdInfo(dto2);
-                    RepProdIndexDto repProdIndexDto3 = this.selectPProd(dto2);
-                    if(repProdIndexDto2 == null && repProdIndexDto3 != null){
-                        errorMsg.append("对于分级产品，每个子产品数据同一天的“母产品总资产“母产品资产净值”“母产品实收资本”“母产品单位净值”“母产品单位累计净值”“母产品万份收益”“母产品七日年化收益率”需要分别相等!！");
-                    }
+                    if(StringUtil.isNotEmpty(dto1.getIsGrade()) && dto1.getIsGrade().equals("01")){
+                        RepProdIndexDto repProdIndexDto2 = this.selectPProdInfo(dto2);
+                        RepProdIndexDto repProdIndexDto3 = this.selectPProd(dto2);
+                        if(repProdIndexDto2 == null && repProdIndexDto3 != null){
+                            errorMsg.append("对于分级产品，每个子产品数据同一天的“母产品总资产“母产品资产净值”“母产品实收资本”“母产品单位净值”“母产品单位累计净值”“母产品万份收益”“母产品七日年化收益率”需要分别相等!！");
+                        }                    }
                     if (StringUtil.isNotEmpty(errorMsg.toString())){
                         errorMsg.append("<br />");
                         returnerrorMsg.append("第"+(i+1)+"行数据："+errorMsg.toString());
@@ -393,6 +394,21 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
             resultMap.put("confirmMsg", totalMsg);
         }
         resultMap.put("correctData", JsonUtils.object2Json(jsonArrays));
+        String tempList = (String) resultMap.get("correctData");
+        RepProdIndexDto dto = getValNetAssetQuotationInfoListData(tempList);
+        List<RepProdIndexDto> selectedItem = dto.getSelectedItem();
+        List<RepProdIndexDto>  existData = new ArrayList<>();
+        for (RepProdIndexDto temp:selectedItem) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("prodId",temp.getProdId());
+            map.put("valueDate",temp.getValueDate());
+            if (StringUtil.isNotEmpty(this.selectData(map))){
+                existData.add(temp);
+            }
+        }
+        if(existData.size() > 0){
+            resultMap.put("confirmMsg2", "有重复信息，是否覆盖？");
+        }
         AjaxResult wr = new AjaxResult();
         wr.setData(resultMap);
         return wr;
@@ -432,6 +448,7 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
     public AjaxResult importFile(Map<String, Object> param) {
         AjaxResult ajaxResult = new AjaxResult();
         String tempList = (String) param.get("tempList");
+        Boolean flag = (Boolean) param.get("flag");
         RepProdIndexDto dto = getValNetAssetQuotationInfoListData(tempList);
         List<RepProdIndexDto> selectedItem = dto.getSelectedItem();
         List<RepProdIndexDto>  existData = new ArrayList<>();
@@ -447,9 +464,12 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
             }
         }
         //更新操作
-        for (RepProdIndexDto existDataDto : existData) {
-            this.doComplete(existDataDto,OperationType.MODIFY);
+        if(flag){
+            for (RepProdIndexDto existDataDto : existData) {
+                this.doComplete(existDataDto,OperationType.MODIFY);
+            }
         }
+
         //插入操作
         for (RepProdIndexDto newDataDto : newData) {
             this.doComplete(newDataDto,OperationType.NEW);
@@ -479,40 +499,40 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
                 repProdIndexDto.setAssetsValue(new BigDecimal(rowData.get(3).toString()));
             }
             if (StringUtil.isNotEmpty(rowData.get(4))) {
-                repProdIndexDto.setCapital(new BigDecimal(rowData.get(3).toString()));
+                repProdIndexDto.setCapital(new BigDecimal(rowData.get(4).toString()));
             }
             if (StringUtil.isNotEmpty(rowData.get(5))) {
-                repProdIndexDto.setUnitValue(new BigDecimal(rowData.get(3).toString()));
+                repProdIndexDto.setUnitValue(new BigDecimal(rowData.get(5).toString()));
             }
             if (StringUtil.isNotEmpty(rowData.get(6))) {
-                repProdIndexDto.setUnitValueT(new BigDecimal(rowData.get(3).toString()));
+                repProdIndexDto.setUnitValueT(new BigDecimal(rowData.get(6).toString()));
             }
             if (StringUtil.isNotEmpty(rowData.get(7))) {
-                repProdIndexDto.setwYield(new BigDecimal(rowData.get(3).toString()));
+                repProdIndexDto.setwYield(new BigDecimal(rowData.get(7).toString()));
             }
             if (StringUtil.isNotEmpty(rowData.get(8))) {
-                repProdIndexDto.setYield7(new BigDecimal(rowData.get(3).toString()));
+                repProdIndexDto.setYield7(new BigDecimal(rowData.get(8).toString()));
             }
             if (StringUtil.isNotEmpty(rowData.get(9))) {
-                repProdIndexDto.setpAssets(new BigDecimal(rowData.get(3).toString()));
+                repProdIndexDto.setpAssets(new BigDecimal(rowData.get(9).toString()));
             }
             if (StringUtil.isNotEmpty(rowData.get(10))) {
-                repProdIndexDto.setpAssetsValue(new BigDecimal(rowData.get(3).toString()));
+                repProdIndexDto.setpAssetsValue(new BigDecimal(rowData.get(10).toString()));
             }
             if (StringUtil.isNotEmpty(rowData.get(11))) {
-                repProdIndexDto.setpCapital(new BigDecimal(rowData.get(3).toString()));
+                repProdIndexDto.setpCapital(new BigDecimal(rowData.get(11).toString()));
             }
             if (StringUtil.isNotEmpty(rowData.get(12))) {
-                repProdIndexDto.setpUnitValue(new BigDecimal(rowData.get(3).toString()));
+                repProdIndexDto.setpUnitValue(new BigDecimal(rowData.get(12).toString()));
             }
             if (StringUtil.isNotEmpty(rowData.get(13))) {
-                repProdIndexDto.setpUnitValueT(new BigDecimal(rowData.get(3).toString()));
+                repProdIndexDto.setpUnitValueT(new BigDecimal(rowData.get(13).toString()));
             }
             if (StringUtil.isNotEmpty(rowData.get(14))) {
-                repProdIndexDto.setpWYield(new BigDecimal(rowData.get(3).toString()));
+                repProdIndexDto.setpWYield(new BigDecimal(rowData.get(14).toString()));
             }
-            if (StringUtil.isNotEmpty(rowData.get(3))) {
-                repProdIndexDto.setpYield7(new BigDecimal(rowData.get(3).toString()));
+            if (StringUtil.isNotEmpty(rowData.get(15))) {
+                repProdIndexDto.setpYield7(new BigDecimal(rowData.get(15).toString()));
             }
             repProdIndexDto.setStatus("E");
             repProdIndexDtoList.add(repProdIndexDto);

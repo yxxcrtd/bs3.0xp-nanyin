@@ -518,3 +518,7 @@ VALUES ('RULE_TYPE2', '02', 'RULE_TYPE1', 'REP_PROD_TYPE', 'admin', NULL, sysdat
 INSERT INTO sys_datadict_list_link(DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 VALUES ('RULE_TYPE3', '02', 'RULE_TYPE1', 'REP_PROD_TYPE', 'admin', NULL, sysdate, 'admin', sysdate);
 -- add by zhengxiaolian 2022-07-26 报表页面管理规则联动 end
+
+-- add by zhengxiaolian 2022-07-27 	报表模板路径修改 start
+update sys_para a set a.param_value='/joyintech' where a.para_code='TEMPLATE_FILE_PATH';
+-- add by zhengxiaolian 2022-07-27 	报表模板路径修改 end
