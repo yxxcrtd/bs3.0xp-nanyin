@@ -1,9 +1,11 @@
 
 package com.joyintech.tams.disclosure.information.report.service;
 
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
 import com.joyintech.tams.disclosure.common.CollectionUtils;
 import com.joyintech.tams.disclosure.common.DisReportType;
 import com.joyintech.tams.disclosure.common.common.service.HolidayService;
@@ -48,8 +50,10 @@ public class ReportRkcpjz001Service implements IReportDataService {
     public List<Map<String, Object>> queryDatas(Map<String, Object> paraMap) {
         logger.info("日开产品净值公告（公募净值型产品）【{}】开始生成", JsonUtils.object2Json(paraMap));
         //phantomjs、生成图片临时路径:  TODO　后续更改成系统参数获取
-        String echartsCmdPath = "D:\\soft\\phantomjs-2.1.1-windows\\bin\\";
-        String tmpImagePath = "e:\\poitest\\temp\\";
+//        String echartsCmdPath = "D:\\soft\\phantomjs-2.1.1-windows\\bin\\";
+        String echartsCmdPath = CacheUtil.getSysParam(ReportGlobalConstant.POI_ECHARTS_PIC_EXPORT_PATH);
+        String tmpImagePath = CacheUtil.getSysParam(ReportGlobalConstant.POI_ECHARTS_TMPFILE_PATH);
+//        String tmpImagePath = "e:\\poitest\\temp\\";
 
         List<Map<String, Object>> resultMap = new ArrayList<>();
         Map<String, Object> dataMap = new HashMap<>();
