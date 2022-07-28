@@ -130,7 +130,7 @@ public class ProdPartnerDto extends DisProdPartner implements ProcessEntity{
 	}
 
 	public String getStatusStr(){
-		return SysDataUtil.getNameFromDataDict(DictCode.信披_数据状态, super.getDataStatus());
+		return SysDataUtil.getNameFromDataDict(DictCode.信披_数据状态ED, super.getDataStatus());
 	}
 
 	public String getEffDateStr(){

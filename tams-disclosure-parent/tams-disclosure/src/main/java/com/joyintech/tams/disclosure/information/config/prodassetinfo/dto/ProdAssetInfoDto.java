@@ -169,7 +169,7 @@ public class ProdAssetInfoDto extends DisProdAsset implements ProcessEntity{
 	}
 
 	public String getStatusStr(){
-		return SysDataUtil.getNameFromDataDict(DictCode.信披_数据状态, super.getDataStatus());
+		return SysDataUtil.getNameFromDataDict(DictCode.信披_数据状态ED, super.getDataStatus());
 	}
 
 	public String getEffDateStr(){

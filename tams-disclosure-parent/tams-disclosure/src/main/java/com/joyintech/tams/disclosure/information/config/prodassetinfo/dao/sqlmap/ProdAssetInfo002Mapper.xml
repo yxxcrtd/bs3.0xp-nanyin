@@ -74,7 +74,7 @@
 	</select>
 
 	<update id="deleteProdAssetByPrimaryKey">
-		update DIS_PROD_ASSET set DATA_STATUS='02'
+		update DIS_PROD_ASSET set DATA_STATUS='D'
         where PROD_ASSET_ID = #{prodAssetId,jdbcType=VARCHAR}
 	</update>
 
