@@ -79,4 +79,27 @@
 		  AND PRI.VALUE_DATE = #{lastWorkDay}
 	</select>
 
+	<select id="checkGenerateFlag" resultType="com.joyintech.tams.common.base.entity.DisProdPlanInfo">
+		SELECT
+			DPP.OPERATION_START_DATE,
+			DPP.AUTO_REDEEM_DATE,
+			DPP.HOLD_DAYS
+		FROM
+			REP_PROD_INFO INFO
+			INNER JOIN DIS_PROD_PLAN DPP ON DPP.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID)
+		where
+			INFO.STATUS = 'E'
+		  AND INFO.PROD_ID = #{prodId,jdbcType=VARCHAR}
+		<if test="rptType != NULL and rptType.equals('ZQXCPKFGG_GMCPDSH')">
+			AND  DPP.AUTO_REDEEM_DATE = TO_DATE(#{announceDate},'yyyy-MM-dd')
+			AND NOT EXISTS (
+			    SELECT 1 FROM DIS_PROD_PLAN DPP1 WHERE DPP1.PROD_ID = DPP.PROD_ID AND DPP1.OPERATION_START_DATE = DPP.AUTO_REDEEM_DATE
+			)
+		</if>
+		<if test="rptType != NULL and rptType.equals('ZQXCPKFGG_GMCP')">
+			AND DPP.OPERATION_START_DATE = TO_DATE(#{announceDate},'yyyy-MM-dd')
+		</if>
+		order by DPP.OPERATION_START_DATE desc
+	</select>
+
 </mapper>
