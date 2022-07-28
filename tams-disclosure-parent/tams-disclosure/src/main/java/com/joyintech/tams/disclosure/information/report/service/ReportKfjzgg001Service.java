@@ -4,6 +4,7 @@ package com.joyintech.tams.disclosure.information.report.service;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.DisProdBonusplan;
 import com.joyintech.tams.disclosure.common.DisReportType;
 import com.joyintech.tams.disclosure.common.common.service.HolidayService;
 import com.joyintech.tams.disclosure.information.report.dao.ReportKfjzgg001Mapper;
@@ -67,78 +68,91 @@ public class ReportKfjzgg001Service implements IReportDataService {
                 Map<String, Object> searchparam = new HashMap<>();
                 searchparam.put("prodId",prodId);
                 searchparam.put("openEndDateStr",openEndDateStr);
-                //查询产品信息
-                reportKfjzgg001Dto = reportKfjzgg001Mapper.getProdInfo(searchparam);
-                if(reportKfjzgg001Dto.getSetDate() != null){
-                    reportKfjzgg001Dto.setSetDateT(DateUtil.format(reportKfjzgg001Dto.getSetDate(),DateUtil.DEFAULT_DATE_FORMAT_CN));
-                }
-                //查询后续申购赎回安排：根据产品排期表，展示“申购/赎回确认日”大于当前开放结束日的下一个开放周期的信息；
-                // 若当前已是产品的最后一个开放周期，后续没一个开放周期了，则正常生成表格，表格内容置空，由业务老师手工调整
-                List<ReportOpenPlanDto> openList = reportKfjzgg001Mapper.getOpenList(searchparam);
-                if(openList == null || openList.size() == 0){
-                    openList = new ArrayList<>();
-                    ReportOpenPlanDto reportOpenPlanDto = new ReportOpenPlanDto();
-                    reportOpenPlanDto.setOpenStartDate("XXXX-XX-XX");
-                    reportOpenPlanDto.setOpenEndDate("XXXX-XX-XX");
-                    reportOpenPlanDto.setCollingoffPeriod("XXXX-XX-XX");
-                    reportOpenPlanDto.setSettDate("XXXX-XX-XX");
-                    openList.add(reportOpenPlanDto);
-                }
-                reportKfjzgg001Dto.setOpenPlanList(openList);
 
-                //查询历史开放信息
-                List<ReportOpenPlanDto> openHisList = reportKfjzgg001Mapper.getOpenHisList(searchparam);
-                int times = 0;
-                String timesStr = "";
-                if (openHisList != null) {
-                    //当前净值数据
-                    ReportOpenPlanDto curOpenPlanDto = openHisList.get(0);
-                    //如果是私募的话，只展示当前数据
-                    if(StringUtil.equals(rptType, DisReportType.KFJJZGG_SM)){
-                        openHisList = new ArrayList<>();
-                        openHisList.add(curOpenPlanDto);
-                    }else{
-                        //如果是公募的话，需要展示近三期数据
-                        times = openHisList.size();
-                        switch (times){
-                            case 0:timesStr = ""; break;
-                            case 1:timesStr = "一"; break;
-                            case 2:timesStr = "二"; break;
-                            case 3:timesStr = "三"; break;
-                            default: timesStr = "";
-                        }
-                        reportKfjzgg001Dto.setTimes(timesStr);
+                //根据产品分红到期计划表及产品排期计划表判断：若某个开放结束日不需要分红（开放结束日不是该产品的收益分配基准日），则需要生成在运作起始日生成公告；
+                //是否生成报表规则：
+                boolean generateFlag = false;
+                DisProdBonusplan bonusplan = reportKfjzgg001Mapper.checkGenerateFlag(searchparam);
+                if(bonusplan == null){
+                    generateFlag = true;
+                }
+                if(generateFlag){
+                    //查询产品信息
+                    reportKfjzgg001Dto = reportKfjzgg001Mapper.getProdInfo(searchparam);
+                    if(reportKfjzgg001Dto.getSetDate() != null){
+                        reportKfjzgg001Dto.setSetDateT(DateUtil.format(reportKfjzgg001Dto.getSetDate(),DateUtil.DEFAULT_DATE_FORMAT_CN));
                     }
-                    //设置返回对象开放开始日
-                    reportKfjzgg001Dto.setOpenStartDateT(DateUtil.format(DateUtil.parse(curOpenPlanDto.getOpenStartDate()),DateUtil.DEFAULT_DATE_FORMAT_CN));
-                    //设置返回对象开放结束日
-                    reportKfjzgg001Dto.setOpenEndDateT(DateUtil.format(DateUtil.parse(curOpenPlanDto.getOpenEndDate()),DateUtil.DEFAULT_DATE_FORMAT_CN));
-                    //根据每个区间去查各区间的净值数据
-                    for(ReportOpenPlanDto reportOpenPlanDto :openHisList){
-                        //查询上一开放结束日的净值数据
-                        searchparam.put("openEndDateStr",reportOpenPlanDto.getOpenEndDate());
-                        ReportOpenPlanDto lastOpenPlanDto = reportKfjzgg001Mapper.getLastOpenPlan(searchparam);
-                        if(lastOpenPlanDto != null){
-                            //本期封闭期 = 上一开放周期的运作起始日-当前开放周期的开放结束日
-                            reportOpenPlanDto.setRange(lastOpenPlanDto.getOperationStartDate() + "至" + reportOpenPlanDto.getOpenEndDate());
-                            //运行天数
-                            long runday = DateUtil.getBetweenDayNumber(lastOpenPlanDto.getOperationStartDate(),reportOpenPlanDto.getOpenEndDate());
-                            //计算年化收益率 = 当前开放结束日累计净值-上一开放结束日累计净值）/上一开放结束日单位净值 /本期天数*365
-                            reportOpenPlanDto.setYield(new BigDecimal(reportOpenPlanDto.getUnitValueT()).subtract(new BigDecimal(lastOpenPlanDto.getUnitValueT())).divide(new BigDecimal(lastOpenPlanDto.getUnitValueT())).divide(new BigDecimal(runday)).multiply(new BigDecimal(365)).setScale(4,BigDecimal.ROUND_HALF_UP).toString());
-                        }
+                    //查询后续申购赎回安排：根据产品排期表，展示“申购/赎回确认日”大于当前开放结束日的下一个开放周期的信息；
+                    // 若当前已是产品的最后一个开放周期，后续没一个开放周期了，则正常生成表格，表格内容置空，由业务老师手工调整
+                    List<ReportOpenPlanDto> openList = reportKfjzgg001Mapper.getOpenList(searchparam);
+                    if(openList == null || openList.size() == 0){
+                        openList = new ArrayList<>();
+                        ReportOpenPlanDto reportOpenPlanDto = new ReportOpenPlanDto();
+                        reportOpenPlanDto.setOpenStartDate("XXXX-XX-XX");
+                        reportOpenPlanDto.setOpenEndDate("XXXX-XX-XX");
+                        reportOpenPlanDto.setCollingoffPeriod("XXXX-XX-XX");
+                        reportOpenPlanDto.setSettDate("XXXX-XX-XX");
+                        openList.add(reportOpenPlanDto);
                     }
-                    reportKfjzgg001Dto.setHisValueList(openHisList);
+                    reportKfjzgg001Dto.setOpenPlanList(openList);
+
+                    //查询历史开放信息
+                    List<ReportOpenPlanDto> openHisList = reportKfjzgg001Mapper.getOpenHisList(searchparam);
+                    int times = 0;
+                    String timesStr = "";
+                    if (openHisList != null) {
+                        //当前净值数据
+                        ReportOpenPlanDto curOpenPlanDto = openHisList.get(0);
+                        //如果是私募的话，只展示当前数据
+                        if(StringUtil.equals(rptType, DisReportType.KFJJZGG_SM)){
+                            openHisList = new ArrayList<>();
+                            openHisList.add(curOpenPlanDto);
+                        }else{
+                            //如果是公募的话，需要展示近三期数据
+                            times = openHisList.size();
+                            switch (times){
+                                case 0:timesStr = ""; break;
+                                case 1:timesStr = "一"; break;
+                                case 2:timesStr = "二"; break;
+                                case 3:timesStr = "三"; break;
+                                default: timesStr = "";
+                            }
+                            reportKfjzgg001Dto.setTimes(timesStr);
+                        }
+                        //设置返回对象开放开始日
+                        reportKfjzgg001Dto.setOpenStartDateT(DateUtil.format(DateUtil.parse(curOpenPlanDto.getOpenStartDate()),DateUtil.DEFAULT_DATE_FORMAT_CN));
+                        //设置返回对象开放结束日
+                        reportKfjzgg001Dto.setOpenEndDateT(DateUtil.format(DateUtil.parse(curOpenPlanDto.getOpenEndDate()),DateUtil.DEFAULT_DATE_FORMAT_CN));
+                        //根据每个区间去查各区间的净值数据
+                        for(ReportOpenPlanDto reportOpenPlanDto :openHisList){
+                            //查询上一开放结束日的净值数据
+                            searchparam.put("openEndDateStr",reportOpenPlanDto.getOpenEndDate());
+                            ReportOpenPlanDto lastOpenPlanDto = reportKfjzgg001Mapper.getLastOpenPlan(searchparam);
+                            if(lastOpenPlanDto != null){
+                                //本期封闭期 = 上一开放周期的运作起始日-当前开放周期的开放结束日
+                                reportOpenPlanDto.setRange(lastOpenPlanDto.getOperationStartDate() + "至" + reportOpenPlanDto.getOpenEndDate());
+                                //运行天数
+                                long runday = DateUtil.getBetweenDayNumber(lastOpenPlanDto.getOperationStartDate(),reportOpenPlanDto.getOpenEndDate());
+                                //计算年化收益率 = 当前开放结束日累计净值-上一开放结束日累计净值）/上一开放结束日单位净值 /本期天数*365
+                                reportOpenPlanDto.setYield(new BigDecimal(reportOpenPlanDto.getUnitValueT()).subtract(new BigDecimal(lastOpenPlanDto.getUnitValueT())).divide(new BigDecimal(lastOpenPlanDto.getUnitValueT())).divide(new BigDecimal(runday)).multiply(new BigDecimal(365)).setScale(4,BigDecimal.ROUND_HALF_UP).toString());
+                            }
+                        }
+                        reportKfjzgg001Dto.setHisValueList(openHisList);
+                    }
+
+                    //披露日 = 开放结束日 + 1 工作日
+                    searchparam.put("busi_date", DateUtil.parse(openEndDateStr));
+                    searchparam.put("is_holiday", "0");
+                    searchparam.put("market_code", "04");
+                    Date accountDate = holidayService.getNextWorkDay(searchparam);
+                    if (accountDate == null) {
+                        accountDate = DateUtil.addDay(DateUtil.parse(openEndDateStr), 1);
+                    }
+                    reportKfjzgg001Dto.setAnnounceT(DateUtil.format(accountDate));
+                }else{
+                    logger.warn("开放及净值公告（公募）/（私募）；不符合【根据产品分红到期计划表及产品排期计划表判断：若某个开放结束日不需要分红（开放结束日不是该产品的收益分配基准日），则需要生成在运作起始日生成公告】【{}】",JsonUtils.object2Json(paraMap));
                 }
 
-                //披露日 = 开放结束日 + 1 工作日
-                searchparam.put("busi_date", DateUtil.parse(openEndDateStr));
-                searchparam.put("is_holiday", "0");
-                searchparam.put("market_code", "04");
-                Date accountDate = holidayService.getNextWorkDay(searchparam);
-                if (accountDate == null) {
-                    accountDate = DateUtil.addDay(DateUtil.parse(openEndDateStr), 1);
-                }
-                reportKfjzgg001Dto.setAnnounceT(DateUtil.format(accountDate));
             }
             resultMap.add(ReportCollectionUtils.bean2Map(reportKfjzgg001Dto));
             logger.info("开放及净值公告（公募）/（私募）【{}】生成成功", JsonUtils.object2Json(paraMap));
