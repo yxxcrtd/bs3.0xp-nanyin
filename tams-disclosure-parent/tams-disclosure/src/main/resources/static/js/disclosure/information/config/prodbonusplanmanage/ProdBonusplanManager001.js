@@ -142,7 +142,7 @@
 				 ,{field:'updateUser',  title: '更新人',width:100,sortable:false}
 				 ,{field:'operation',width:20, title: 'SysCommon.operation', type:'action', buttons: ['edit','delt'],
 					 render: function (data, type, row, meta) {
-						 if (row.dataStatus == '02')
+						 if (row.dataStatus == 'D')
 							 return '';
 						 else
 							 return '<i class="btn layui-icon edit edit" title="编辑" data-ignore="false"></i> ' +
@@ -218,7 +218,7 @@
 			   ,{field:'updateUser',  title: '更新人',width:100,sortable:false}
 			   ,{field:'operation',width:20, title: 'SysCommon.operation', type:'action', buttons: ['edit','delt'],
 				   render: function (data, type, row, meta) {
-					   if (row.dataStatus == '02')
+					   if (row.dataStatus == 'D')
 						   return '';
 					   else
 						   return '<i class="btn layui-icon edit edit" title="编辑" data-ignore="false"></i> ' +
@@ -248,7 +248,7 @@
 	     * 删除页面
 	     */
 	   dataTable2.bind('click', '.delt', function(data, index) {
-		   if(data.dataStatus == '02'){
+		   if(data.dataStatus == 'D'){
 			   Joyin.alert("数据已删除",7,null,null)
 			   return;
 		   }
@@ -273,7 +273,7 @@
 		 }
 		 var selArrUseful =[];
 		 selArr.forEach(v => {
-			 if(v.dataStatus == '01'){
+			 if(v.dataStatus == 'E'){
 				 //selArr.remove();
 				 selArrUseful.push(v);
 			 }

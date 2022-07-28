@@ -11,6 +11,8 @@ import java.util.Map;
 public interface RepInvestAccount001Mapper {
     List<SelectOptionDto> getProdInsId(Map<String, Object> paramMap);
 
+    List<SelectOptionDto> getProdInsId2(Map<String, Object> paramMap);
+
     List<RepInvestAccountDto> selectInfo(Map<String, Object> param);
 
     int insert(RepInvestAccountDto record);

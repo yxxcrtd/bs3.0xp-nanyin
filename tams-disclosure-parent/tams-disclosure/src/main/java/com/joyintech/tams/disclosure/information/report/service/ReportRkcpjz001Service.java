@@ -1,9 +1,11 @@
 
 package com.joyintech.tams.disclosure.information.report.service;
 
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
 import com.joyintech.tams.disclosure.common.CollectionUtils;
 import com.joyintech.tams.disclosure.common.DisReportType;
 import com.joyintech.tams.disclosure.common.common.service.HolidayService;
@@ -47,9 +49,11 @@ public class ReportRkcpjz001Service implements IReportDataService {
     @Override
     public List<Map<String, Object>> queryDatas(Map<String, Object> paraMap) {
         logger.info("日开产品净值公告（公募净值型产品）【{}】开始生成", JsonUtils.object2Json(paraMap));
-        //phantomjs、生成图片临时路径:  TODO　后续更改成系统参数获取
-        String echartsCmdPath = "D:\\soft\\phantomjs-2.1.1-windows\\bin\\";
-        String tmpImagePath = "e:\\poitest\\temp\\";
+        //phantomjs、生成图片临时路径:
+//        String echartsCmdPath = "D:\\soft\\phantomjs-2.1.1-windows\\bin\\";
+        String echartsCmdPath = CacheUtil.getSysParam(ReportGlobalConstant.POI_ECHARTS_PIC_EXPORT_PATH);
+        String tmpImagePath = CacheUtil.getSysParam(ReportGlobalConstant.POI_ECHARTS_TMPFILE_PATH);
+//        String tmpImagePath = "e:\\poitest\\temp\\";
 
         List<Map<String, Object>> resultMap = new ArrayList<>();
         Map<String, Object> dataMap = new HashMap<>();
@@ -63,8 +67,8 @@ public class ReportRkcpjz001Service implements IReportDataService {
 
             if(StringUtil.isNotEmpty(prodId)&&StringUtil.isNotEmpty(valueDate)){
                 Map<String, Object> searchparam = new HashMap<>();
-                searchparam.put("prodId",prodId);
-                searchparam.put("valueDate",valueDate);
+                searchparam.put("prodId", prodId);
+                searchparam.put("valueDate", valueDate);
                 //查询产品信息
                 ReportRkcpjz001Dto reportRkcpjz001Dto = reportRkcpjz001Mapper.getProdInfo(searchparam);
                 //净值日
@@ -77,11 +81,11 @@ public class ReportRkcpjz001Service implements IReportDataService {
                 if (announceDate == null) {
                     announceDate = DateUtil.addDay(DateUtil.parse(valueDate), 1);
                 }
-                reportRkcpjz001Dto.setAnnounceT(DateUtil.format(announceDate,DateUtil.ABB_DATE_FORMAT_CN));
+                reportRkcpjz001Dto.setAnnounceT(DateUtil.format(announceDate, DateUtil.ABB_DATE_FORMAT_CN));
 
                 //查询净值数据:现管型产品需要展示多条净值数据： 根据上交所日历判断，对于每周第一个工作日生成的净值公告，此部分需要披露自上一工作日至当前第一个工作日-1自然日的净值信息
                 List<ReportValueDto> list = new ArrayList<>();
-                if(StringUtil.equals(rptType, DisReportType.RKCPJZ_GMXGL)){
+                if (StringUtil.equals(rptType, DisReportType.RKCPJZ_GMXGL)) {
                     //查询公告日上一工作日
                     searchparam.put("busi_date", announceDate);
                     searchparam.put("is_holiday", "0");
@@ -96,23 +100,26 @@ public class ReportRkcpjz001Service implements IReportDataService {
                     searchparam.put("vdate", vdate);
                     searchparam.put("edate", edate);
                     list = reportRkcpjz001Mapper.getXgxValueList(searchparam);
-                }else{//净值型产品：展示一条：今日份额净值及申购赎回价格
+                } else {//净值型产品：展示一条：今日份额净值及申购赎回价格
                     list = reportRkcpjz001Mapper.getJzxValueList(searchparam);
                 }
-                reportRkcpjz001Dto.setList(list);
+                //当日净值不为空
+                if (list != null && list.size() > 0) {
+                    reportRkcpjz001Dto.setList(list);
+                    dataMap = ReportCollectionUtils.bean2Map(reportRkcpjz001Dto);
+                }else{//若取不到所需的净值数据，需要在【报表数据校验】处给出提示，例：2022年7月19日对2022年7月18日的净值信息进行披露时，若7月18日的净值信息还未接入进系统，需要在【报表数据校验】处给出提示
 
-                dataMap = ReportCollectionUtils.bean2Map(reportRkcpjz001Dto);
-
+                }
                 //近一个月（工作日）份额净值走势图或近一个月(自然日)万份收益走势图
-                String imagePath1 = tmpImagePath+"image1"+"_"+prodId+"_"+valueDate;
+                String imagePath1 = tmpImagePath + "image1" + "_" + prodId + "_" + valueDate;
                 //近一个月（工作日）份额累计净值走势图或近一个月份(自然日)七日年化收益率走势图
-                String imagePath2 = tmpImagePath+"image2"+"_"+prodId+"_"+valueDate;
+                String imagePath2 = tmpImagePath + "image2" + "_" + prodId + "_" + valueDate;
                 //折线图配置信息
                 Map<String, Object> configMap = new HashMap<>();
                 configMap.put("series.type", "bar");
-                if(StringUtil.equals(rptType, DisReportType.RKCPJZ_GMXGL)){
+                if (StringUtil.equals(rptType, DisReportType.RKCPJZ_GMXGL)) {
                     configMap.put("title.text", "万份收益（元）走势图");
-                }else{
+                } else {
                     configMap.put("title.text", "份额净值（元）走势图");
                 }
                 configMap.put("title.left", "center");
@@ -132,7 +139,7 @@ public class ReportRkcpjz001Service implements IReportDataService {
                 configMap.put("yAxis.splitNumber", "30");//设置y轴最多显示个数，不一定会显示
 
 
-                searchparam.put("rptType",rptType);
+                searchparam.put("rptType", rptType);
                 //曲线图数据对象
                 List<List<String>> dataList = new ArrayList<>();
                 //查询小于等于当前最新净值日期的过去30个工作日的单位净值折线图   份额净值
@@ -164,9 +171,9 @@ public class ReportRkcpjz001Service implements IReportDataService {
                 //清空list，重新绘制份额累计净值（元）走势图
                 dataList.clear();
                 //重新添加标题
-                if(StringUtil.equals(rptType, DisReportType.RKCPJZ_GMXGL)){
+                if (StringUtil.equals(rptType, DisReportType.RKCPJZ_GMXGL)) {
                     configMap.put("title.text", "七日年化收益率（%）走势图");
-                }else{
+                } else {
                     configMap.put("title.text", "份额累计净值（元）走势图");
                 }
                 //添加横纵坐标说明

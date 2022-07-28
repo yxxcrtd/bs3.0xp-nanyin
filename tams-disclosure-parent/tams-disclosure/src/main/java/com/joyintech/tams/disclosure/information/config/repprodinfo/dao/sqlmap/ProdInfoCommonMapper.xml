@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.disclosure.information.config.repprodinfo.dao.DisProdInfoCommonMapper" >
+    <!--<resultMap id="BaseResultMap" type="com.joyintech.framework.select.SelectOptionDto" >
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="text" property="text" jdbcType="VARCHAR" />
+        <result column="SET_DATE" property="setDate" jdbcType="DATE" />
+    </resultMap>-->
+
+    <!-- 获取产品登记编码 -->
+    <select id="getRegistNo" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+            DISTINCT
+            PROD_RE id,
+            PROD_RE text
+        FROM
+            rep_prod_info
+        WHERE PROD_RE IS NOT NULL
+    </select>
+
+    <!-- 根据产品登记编码 获取产品主代码和产品名称,支持联动 -->
+    <select id="getProdIdAndNameByRegistNo" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        PROD_ID id,
+        PROD_NAME text,
+        PROD_ABBR
+        FROM
+        rep_prod_info
+        <where>
+            <if test="prodRegistNo != null and !prodRegistNo.equals('')">
+                AND PROD_RE=#{prodRegistNo}
+            </if>
+        </where>
+    </select>
+
+
+
+</mapper>

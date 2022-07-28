@@ -9,16 +9,15 @@ $(function() {
         return {
             prodId:$('#prodId').val(),
             prodName:$('#prodName').val(),
-
-            /*regCode:$('#regCode').val(),
-            raiseVdateStart: $.trim($('#raiseVdate').startDate()),
-            raiseVdateEnd: $.trim($('#raiseVdate').endDate()),
-            vdateStart: $.trim($('#vdate').startDate()),
-            vdateEnd: $.trim($('#vdate').endDate()),
-            issuingStatus : $('#issuingStatus').val() == null ? null : $(
-                '#issuingStatus').val().join(","),
-            customerType : $('#customerType').val() == null ? null : $(
-                '#customerType').val().join(","),*/
+            raiseStrdateStart: $.trim($('#raiseStrdate').startDate()),
+            raiseStrdateEnd: $.trim($('#raiseStrdate').endDate()),
+            setDateStart: $.trim($('#setDate').startDate()),
+            setDateEnd: $.trim($('#setDate').endDate()),
+            prodRegistNo:$('#prodRegistNo').val() == null ? null : $('#prodRegistNo').val().join(","),
+            status : $('#status').val() == null ? null : $('#status').val().join(","),
+            raiseType:$('#raiseType').val() == null ? null : $('#raiseType').val().join(","),
+            isGrade:$('#isGrade').val() == null ? null : $('#isGrade').val().join(","),
+            profitType:$('#profitType').val() == null ? null : $('#profitType').val().join(",")
         };
     };
     /**
@@ -112,7 +111,6 @@ $(function() {
         var paramObj = getSearchParams();
         Joyin.exportExcel('export', paramObj);
     };
-``
 
     var reset = function(conditionArea,table){
         $(conditionArea).find("input").val("");
@@ -149,7 +147,7 @@ $(function() {
                             // 跳转发行状态管理页面
                             Joyin.dialog(JoyinUtil.getLabel("发行状态管理"),
                                 JoyinUtil.getRealPath("disclosure/information/config/repprodinfo/ProdInfo003/init"),
-                                "70%", "80%",{prodIdStr : prodIdStr.substring(0, prodIdStr.length - 1)},function(){table.reload();}
+                                "70%", "90%",{prodIdStr : prodIdStr.substring(0, prodIdStr.length - 1)},function(){table.reload();}
                             );
                         });
                     }else{

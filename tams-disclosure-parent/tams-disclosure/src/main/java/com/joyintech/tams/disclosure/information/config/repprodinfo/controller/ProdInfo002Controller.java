@@ -15,11 +15,10 @@ import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdBasicChangeDto;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.service.ProdBasicChangeService;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.service.ProdInfoService;
@@ -27,6 +26,7 @@ import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,10 +40,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 报表模板管理新建
@@ -96,16 +95,17 @@ public class ProdInfo002Controller extends BaseController {
         // 不来自于代办
         if (WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(id)) {
             // 根据主键获取业务实体
+            ProdInfoDto dto = new ProdInfoDto();
             if (StringUtils.equals(DictCodeListExt5.信批产品类别_普通产品.getValue(), repProdType)) {
-                model.addAttribute("entity", prodInfoService.selectByCommonProdId(id));
+                dto = prodInfoService.selectByCommonProdId(id);
             } else if (StringUtils.equals(DictCodeListExt5.信批产品类别_子产品.getValue(), repProdType)) {
-                model.addAttribute("entity", prodInfoService.selectBySonProdId(id));
+                dto = prodInfoService.selectBySonProdId(id);
             } else {
-                model.addAttribute("entity", prodInfoService.selectByProdId(id));
+                dto = prodInfoService.selectByProdId(id);
             }
-
             //业绩基准变更
-            model.addAttribute("basicChangeList", prodBasicChangeService.selectListByProdId(id));
+            dto.setBasicChangeList(prodBasicChangeService.selectListByProdId(id));
+            model.addAttribute("entity", dto);
 
         }
         // 来自代办 现在是不走流程
@@ -158,51 +158,48 @@ public class ProdInfo002Controller extends BaseController {
         String operateType = dto.getOperateType();
         String pageModel = dto.getPageModel();
         if (StringUtil.equals(pageModel, GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {//新增
-            ProdInfoDto existDto = prodInfoService.selectByProdStatus(dto.getpProdId());
+            ProdInfoDto existDto = prodInfoService.selectByProdStatus(dto.getProdId());
             if (existDto != null) {
                 return new AjaxResult("子产品代码已存在", MessageType.错误消息);
             }
+            if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), dto.getIsGrade())
+                    && StringUtils.equals(dto.getProdId(), dto.getpProdId())) {
+                return new AjaxResult("分级产品，子产品代码和产品主代码不能一样", MessageType.错误消息);
+            }
+            if (StringUtils.equals(DictCodeListExt1.是或否_否.getValue(), dto.getIsGrade())
+                    && !StringUtils.equals(dto.getProdId(), dto.getpProdId())) {
+                return new AjaxResult("非分级产品，子产品代码和产品主代码需要一致", MessageType.错误消息);
+            }
+
         } else if (StringUtil.equals(pageModel, GlobalConstant.DETAIL_PAGE_MODEL_EDIT)) {//修改
 
         }
+        if (StringUtils.equals(DictCodeListExt5.信披募集方式_公募.getValue(), dto.getRaiseType())
+                && dto.getProdRe().length() != 14) {
+            return new AjaxResult("募集方式为公募,产品登记编码为14位", MessageType.错误消息);
+        }
+        if (StringUtils.equals(DictCodeListExt5.信披募集方式_私募.getValue(), dto.getRaiseType())
+                && dto.getProdRe().length() != 15) {
+            return new AjaxResult("募集方式为私募,产品登记编码为15位", MessageType.错误消息);
+        }
+
+        if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), dto.getIsIndex())) {
+            if (CollectionUtils.isEmpty(dto.getBasicChangeList())) {
+                return new AjaxResult("行情代码或系数不能为空", MessageType.错误消息);
+            }
+            Set<String> setChangeDto = new HashSet<>();
+            for (ProdBasicChangeDto i : dto.getBasicChangeList()) {
+                if (StringUtils.isBlank(i.getDataType()) || StringUtils.isBlank(i.getProportion())) {
+                    return new AjaxResult("行情代码或系数不能为空", MessageType.错误消息);
+                } else {
+                    setChangeDto.add(i.getDataType());
+                }
+            }
+            if (setChangeDto.size() != dto.getBasicChangeList().size()) {
+                return new AjaxResult("行情代码重复", MessageType.错误消息);
+            }
+        }
         return commonCheck(bindingResult, operateType);
-    }
-
-
-    /**
-     * 保存 <一句话功能简述> <功能详细描述>
-     *
-     * @return
-     * @throws IOException
-     */
-    @RequestMapping("insert")
-    @ResponseBody
-    public AjaxResult insert() throws IOException {
-        AjaxResult result = new AjaxResult();
-        List<ValidMessage> checkList = new ArrayList<ValidMessage>();
-        String datas = this.getParam("object");
-        String addParam = this.getParam("addParam");
-        ProdInfoDto dto = JsonUtils.json2Object(datas, ProdInfoDto.class);
-        try {
-            if (this.getPageModel().equals(GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
-                dto.setStatus(DictCodeListExt3.中债数据状态_有效.getValue());
-                //	dto.setDataSource(DictCodeListExt3.信披_数据来源_系统新建.getValue());
-                prodInfoService.insert(dto);
-            }
-            if (this.getPageModel().equals(GlobalConstant.DETAIL_PAGE_MODEL_EDIT)) {
-                prodInfoService.update(dto);
-            }
-        } catch (Exception e) {
-            logger.error("error:", e);
-            result = new AjaxResult("保存失败", MessageType.错误消息);
-            return result;
-        }
-        if (null != checkList && checkList.size() != 0) {
-            result.setErrorList(checkList);
-        } else {
-            result = new AjaxResult("保存成功", MessageType.提示消息);
-        }
-        return result;
     }
 
 

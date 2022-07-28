@@ -9,6 +9,7 @@ import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.disclosure.information.config.repInvestAccount.dao.RepInvestAccount001Mapper;
 import com.joyintech.tams.disclosure.information.config.repInvestAccount.dto.RepInvestAccountDto;
@@ -38,8 +39,15 @@ public class RepInvestAccountService extends CommonExportService<RepInvestAccoun
      * @see
      * @since 1.0
      */
-    public List<SelectOptionDto> queryProdIdInfo(Map<String, Object> map) {
-        return repInvestAccountMapper.getProdInsId(map);
+    public Page<SelectOptionDto> queryProdIdInfo(Map<String, Object> map) {
+//        return repInvestAccountMapper.getProdInsId(map);
+        Map<String, Object> pageParam = RequestUtil.getPageParam();
+        Page<SelectOptionDto> result = queryForPageForSelectReturn(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")), ()
+                -> repInvestAccountMapper.getProdInsId(map));
+        return result;
+    }
+    public List<SelectOptionDto> queryProdIdInfo2(Map<String, Object> map) {
+        return repInvestAccountMapper.getProdInsId2(map);
     }
     /**
      * 投资账户信息查询 <功能详细描述>
@@ -211,6 +219,21 @@ public class RepInvestAccountService extends CommonExportService<RepInvestAccoun
             resultMap.put("confirmMsg", totalMsg);
         }
         resultMap.put("correctData", JsonUtils.object2Json(jsonArrays));
+
+        String tempList = (String) resultMap.get("correctData");
+        RepInvestAccountDto dto = getValNetAssetQuotationInfoListData(tempList);
+        List<RepInvestAccountDto> selectedItem = dto.getSelectedItem();
+        List<RepInvestAccountDto>  existData = new ArrayList<>();
+        for (RepInvestAccountDto temp:selectedItem) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("prodId",temp.getProdId());
+            if (StringUtil.isNotEmpty(this.selectData(map))){
+                existData.add(temp);
+            }
+        }
+        if(existData.size() > 0){
+            resultMap.put("confirmMsg2", "有重复信息，是否覆盖？");
+        }
         AjaxResult wr = new AjaxResult();
         wr.setData(resultMap);
         return wr;
@@ -244,6 +267,7 @@ public class RepInvestAccountService extends CommonExportService<RepInvestAccoun
         for (RepInvestAccountDto existDataDto : existData) {
             this.doComplete(existDataDto,OperationType.MODIFY);
         }
+
         //插入操作
         for (RepInvestAccountDto newDataDto : newData) {
             this.doComplete(newDataDto,OperationType.NEW);

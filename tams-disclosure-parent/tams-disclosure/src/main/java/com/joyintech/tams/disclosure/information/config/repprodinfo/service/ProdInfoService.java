@@ -12,6 +12,7 @@ package com.joyintech.tams.disclosure.information.config.repprodinfo.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.*;
@@ -72,22 +73,6 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         return result;
     }
 
-    /**
-     * 分页查询费率名称下拉
-     *
-     * @param
-     * @return
-     * @throws Exception
-     */
-/*    public Page<SelectOptionDto> getProdFeenameSelect(Map map) {
-        Map<String, Object> pageParam = RequestUtil.getPageParam();
-        return this.queryForPageForSelectReturn(
-                Integer.parseInt((String) pageParam.get("page")),
-                Integer.parseInt((String) pageParam.get("length")),
-                ()->prodInfoMapper.getProdFeenameSelect(map));
-
-    }*/
-
 
     /**
      * 分页查询
@@ -103,24 +88,30 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
      */
     public Page<ProdInfoDto> findByPage(Map<String, Object> params)
     {
-        String dataStatus = (String)params.get("dataStatus");
-        String[] dataStatusArr = null;
-        if(StringUtil.isNotEmpty(dataStatus)){
-            dataStatusArr = dataStatus.split(",");
+        String status = (String)params.get("status");
+        if(StringUtil.isNotEmpty(status)){
+            params.put("dataStatusArr", StringUtil.splitToList(GlobalConstant.COMMA,status));
         }
-        params.put("dataStatusArr", dataStatusArr);
-        String prodId = (String)params.get("prodId");
-        String[] prodIdArr = null;
-        if(StringUtil.isNotEmpty(prodId)){
-            prodIdArr = prodId.split(",");
-        }
-        params.put("prodIdArr", prodIdArr);
+
         String prodRegistNo = (String)params.get("prodRegistNo");
-        String[] prodRegistNoArr = null;
         if(StringUtil.isNotEmpty(prodRegistNo)){
-            prodRegistNoArr = prodRegistNo.split(",");
+            params.put("prodReNoArr", StringUtil.splitToList(GlobalConstant.COMMA,prodRegistNo));
         }
-        params.put("prodRegistNoArr", prodRegistNoArr);
+
+        String raiseType = (String)params.get("raiseType");
+        if(StringUtil.isNotEmpty(raiseType)){
+            params.put("raiseTypeArr", StringUtil.splitToList(GlobalConstant.COMMA,raiseType));
+        }
+
+        String isGrade = (String)params.get("isGrade");
+        if(StringUtil.isNotEmpty(isGrade)){
+            params.put("isGradeArr", StringUtil.splitToList(GlobalConstant.COMMA,isGrade));
+        }
+
+        String profitType = (String)params.get("profitType");
+        if(StringUtil.isNotEmpty(profitType)){
+            params.put("profitTypeArr", StringUtil.splitToList(GlobalConstant.COMMA,profitType));
+        }
 
         Page<ProdInfoDto> pages = super.queryForPageForSelectReturn(Integer.parseInt((String) params.get("page")),
                 Integer.parseInt((String) params.get("length")),
@@ -168,6 +159,16 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
     }
 
     /**
+     *  查询母产品下所有的子产品信息
+     * @param prodId
+     * @return
+     */
+    public List<ProdInfoDto> selectListByPprodId(String prodId) {
+        // return  prodInfoMapper.selectByProdId(prodId,DictCodeListExt3.信披_数据状态_有效.getValue());
+        return prodInfoMapper.selectListByPprodId(prodId);
+    }
+
+    /**
      * 保存check
      *
      * @param dto
@@ -198,7 +199,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
     public void insert(ProdInfoDto dto) {
         dto.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
         dto.setIssueStatus(DictCodeListExt1.发行状态_确认发行.getValue());
-        if(StringUtils.equals(DictCodeListExt1.是或否_是.getValue(),dto.getProdType())){//是分级产品，子产品
+        if(StringUtils.equals(DictCodeListExt1.是或否_是.getValue(),dto.getIsGrade())){//是分级产品，子产品
             //保存母产品信息，判断母产品是否已存在
             ProdInfoDto existppDto = prodInfoMapper.selectByPrimaryKey(dto.getpProdId());
             if(existppDto == null ){
@@ -215,7 +216,6 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             }
             //保存子产品信息
             dto.setRepProdType(DictCodeListExt5.信批产品类别_子产品.getValue());
-
             /*dto.setProdAbbr(null);
             dto.setProdRe(null);
             dto.setRaiseStrdate(null);
@@ -235,12 +235,14 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             dto.setProdSeries(null);*/
 
         }else{//普通产品
-            //TODO  信批产品类别 01 母产品 02 普通产品 03 子产品
             dto.setRepProdType(DictCodeListExt5.信批产品类别_普通产品.getValue());
-
         }
-       // dto.setProdDiscountId(IDGenerator.generate(36));
         prodInfoMapper.insert(dto);
+
+        //插入业绩比较基准信息，若“是否指数型产品”为“是”，则需要对录入的产品业绩比较基准进行截取
+        if(StringUtils.equals(DictCodeListExt1.是或否_是.getValue(),dto.getIsIndex()) && StringUtils.isNotEmpty(dto.getPerformCompare())) {
+            prodBasicChangeService.insertProdBasicChangeFromExcel(dto.getPerformCompare(),dto.getProdId());
+        }
     }
 
     /**
@@ -250,9 +252,11 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
      * @return
      */
     public void update(ProdInfoDto dto) {
-        if(StringUtils.equals(DictCodeListExt1.是或否_是.getValue(),dto.getProdType())) {//是分级产品，子产品
+        prodInfoMapper.updateByPrimaryKeySelective(dto);
+
+        if(StringUtils.equals(DictCodeListExt1.是或否_是.getValue(),dto.getIsGrade())) {//是分级产品，子产品
             // 更新母产品信息
-            ProdInfoDto ppDto = new ProdInfoDto();
+            /*ProdInfoDto ppDto = new ProdInfoDto();
             BeanUtils.copyProperties(dto, ppDto);
             ppDto.setProdId(ppDto.getpProdId());
             ppDto.setProdName(ppDto.getpProdName());
@@ -260,30 +264,15 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             ppDto.setpProdId(null);
             ppDto.setpProdName(null);
             ppDto.setpSetDate(null);
-            if(StringUtils.equals("false",dto.getSynchFlag())){
-                ppDto.setRaiseAmt(null);//不同步对母产品下其余子产品的产品募集金额的值进行调整
+            ppDto.setRepProdType(DictCodeListExt5.信批产品类别_母产品.getValue());*/
+            ProdInfoDto ppDto = prodInfoMapper.selectByPrimaryKey(dto.getpProdId());
+            if(dto.isSynchFlag()){ // 则同步对母产品下其余子产品的产品募集金额的值进行调整
+                ppDto.setRaiseAmt(dto.getRaiseAmt());
+                prodInfoMapper.updateRaiseAmtByPprodId(dto);
             }
+            // 更新母产品信息
             prodInfoMapper.updateByPrimaryKeySelective(ppDto);
-            // 更新子产品信息
-            /*dto.setProdAbbr(null);
-            dto.setProdRe(null);
-            dto.setRaiseStrdate(null);
-            dto.setRaiseEnddate(null);
-            dto.setMdate(null);
-            dto.setRaiseType(null);
-            dto.setIsPeriod(null);
-            dto.setIsGrade(null);
-            dto.setIsIndex(null);
-            dto.setOpenFreq(null);
-            dto.setNatureInvest(null);
-            dto.setProdType(null);
-            dto.setIssuingWay(null);
-            dto.setAcctChnname(null);
-            dto.setProfitType(null);
-            dto.setPdStatus(null); //产品状态
-            dto.setProdSeries(null);//产品系列*/
         }
-        prodInfoMapper.updateByPrimaryKeySelective(dto);
 
     }
 
@@ -447,6 +436,19 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                     }
                     if (StringUtil.isEmpty(rowData.get(26))){
                         errorMsg.append("托管部门 必填！");
+                    }
+
+                    // 现管类产品校验
+                    if(StringUtils.equals(DictCodeListExt5.信披产品类型_现管类产品.getCodeName(),rowData.get(15))){
+                        if(!StringUtils.equals(DictCodeListExt5.发行方式_开放式.getCodeName(),rowData.get(16))){
+                            errorMsg.append("产品类型为“现管类产品”时，发行方式为“开放式”！ ");
+                        }
+                        if(!StringUtils.equals(DictCodeListExt5.开放频率_日开.getCodeName(),rowData.get(17))){
+                            errorMsg.append("产品类型为“现管类产品”时，开放频率为“日开”！ ");
+                        }
+                        if(!StringUtils.equals(DictCodeListExt5.产品运作方式_开放式非净值型.getCodeName(),rowData.get(19))){
+                            errorMsg.append("产品类型为“现管类产品”时，产品运作方式为“开放式非净值型”！ ");
+                        }
                     }
                     if (StringUtil.isNotEmpty(errorMsg.toString())){
                         errorMsg.append("<br />");
@@ -674,11 +676,11 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
            /* entity.setDataSource(DictCodeListExt3.信披_数据来源_系统新建.getValue());*/
             this.insert(entity);
             // 更新行情代码信息
-            prodBasicChangeService.updateProdBasicChangeList(entity.getBasicChangeList(),entity.getProdId());
+            prodBasicChangeService.updateProdBasicChangeList(entity.getBasicChangeList(),entity.getProdId(),entity.getIsIndex());
         } else if (StringUtil.equals(entity.getOperateType(), "MODIFY")) {
             this.update(entity);
             // 更新行情代码信息
-            prodBasicChangeService.updateProdBasicChangeList(entity.getBasicChangeList(),entity.getProdId());
+            prodBasicChangeService.updateProdBasicChangeList(entity.getBasicChangeList(),entity.getProdId(),entity.getIsIndex());
         } else if (StringUtil.equals(entity.getOperateType(), "DELETE")) {
             this.delete(entity);
         }

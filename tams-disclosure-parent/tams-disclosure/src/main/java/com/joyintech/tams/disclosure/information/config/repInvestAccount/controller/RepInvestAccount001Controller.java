@@ -62,7 +62,7 @@ public class RepInvestAccount001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("queryProdIdInfo")
-    public List<SelectOptionDto> queryProdIdInfo() {
+    public Page<SelectOptionDto> queryProdIdInfo() {
         return repInvestAccountService.queryProdIdInfo(RequestUtil.getPageParam());
     }
 

@@ -87,6 +87,8 @@ public class ProdInfoDto extends RepProdInfo implements ITableRow, ProcessEntity
 
     private String isIndexName;
 
+    private String natureInvestName;
+
 
     private String raiseStrdateStr;
 
@@ -123,8 +125,25 @@ public class ProdInfoDto extends RepProdInfo implements ITableRow, ProcessEntity
      *  true 同步更新母产品信息
      *  false 不同步母产品信息
      */
-    private String synchFlag ;
+    private boolean isSynchFlag = false;
 
+
+    public String getNatureInvestName() {
+       // return natureInvestName;
+        return SysDataUtil.getNameFromDataDict(DictCodeExt1.信披_投资性质,getNatureInvest());
+    }
+
+    public void setNatureInvestName(String natureInvestName) {
+        this.natureInvestName = natureInvestName;
+    }
+
+    public boolean isSynchFlag() {
+        return isSynchFlag;
+    }
+
+    public void setSynchFlag(boolean synchFlag) {
+        isSynchFlag = synchFlag;
+    }
 
     public List<ProdBasicChangeDto> getBasicChangeList() {
         return basicChangeList;
@@ -160,13 +179,6 @@ public class ProdInfoDto extends RepProdInfo implements ITableRow, ProcessEntity
         this.pageModel = pageModel;
     }
 
-    public String getSynchFlag() {
-        return synchFlag;
-    }
-
-    public void setSynchFlag(String synchFlag) {
-        this.synchFlag = synchFlag;
-    }
 
     public String getMdateStr() {
         if(StringUtils.isNotBlank(this.mdateStr)){

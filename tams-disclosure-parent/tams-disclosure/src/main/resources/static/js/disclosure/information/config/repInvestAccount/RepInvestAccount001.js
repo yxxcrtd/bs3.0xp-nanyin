@@ -128,12 +128,12 @@ $(function() {
                 var selArr = table.getAllCheckedRows();
             }
             if (!selArr || selArr.length == 0) {
-                Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+                Joyin.error(JoyinUtil.getMessage("请至少选择一条记录"));
                 return;
             }
             for(var i=0;i<selArr.length;i++){
                 if(selArr[i].status =="D"){
-                    return Joyin.error("只能删除有效数据，请重新选择");
+                    return Joyin.error("不能删除已删除的数据，请重新选择");
                 }
                 // selArr[i].operateType =  "delete";
             }
@@ -167,7 +167,6 @@ $(function() {
                 Joyin.uploadFile(function(fileName) {
                     Joyin.ajax(basePath + 'disclosure/information/config/repInvestAccount/RepInvestAccount001/checkImportData', {fileName: fileName}, function(checkResult) {
                         if (checkResult) {
-                            debugger;
                             setTimeout( function () {
                                     if(checkResult.data.errorMsg){
                                         Joyin.error(checkResult.data.errorMsg);
@@ -175,6 +174,57 @@ $(function() {
                                     }
                                     if (checkResult.data.confirmMsg) {
                                         Joyin.confirm(checkResult.data.confirmMsg, function () {
+                                            if (checkResult.data.confirmMsg2) {
+                                                Joyin.confirm(checkResult.data.confirmMsg2, function () {
+                                                    var data = {
+                                                        tempList: checkResult.data.correctData
+                                                    }
+                                                    Joyin.ajaxJson(basePath + 'disclosure/information/config/repInvestAccount/RepInvestAccount001/importFile', data,
+                                                        function (resultObj) {
+                                                            if (resultObj.statuCode.toString() === '200') {
+                                                                table.reload();
+                                                                return;
+                                                            }
+                                                        });
+                                                },{}, function () {
+                                                    layui.layer.closeAll()
+                                                    table.reload();
+                                                });
+                                            }else{
+                                                var data = {
+                                                    tempList: checkResult.data.correctData
+                                                }
+                                                Joyin.ajaxJson(basePath + 'disclosure/information/config/repInvestAccount/RepInvestAccount001/importFile', data,
+                                                    function (resultObj) {
+                                                        if (resultObj.statuCode.toString() === '200') {
+                                                            table.reload();
+                                                            return;
+                                                        }
+                                                    });
+                                            }
+
+                                        },{}, function () {
+                                            layui.layer.closeAll()
+                                            table.reload();
+                                        });
+                                    }else {
+                                        if (checkResult.data.confirmMsg2) {
+                                            Joyin.confirm(checkResult.data.confirmMsg2, function () {
+                                                var data = {
+                                                    tempList: checkResult.data.correctData
+                                                }
+                                                Joyin.ajaxJson(basePath + 'disclosure/information/config/repInvestAccount/RepInvestAccount001/importFile', data,
+                                                    function (resultObj) {
+                                                        if (resultObj.statuCode.toString() === '200') {
+                                                            table.reload();
+                                                            return;
+                                                        }
+                                                    });
+                                            },{}, function () {
+                                                layui.layer.closeAll()
+                                                table.reload();
+                                            });
+                                        }else{
                                             var data = {
                                                 tempList: checkResult.data.correctData
                                             }
@@ -185,21 +235,7 @@ $(function() {
                                                         return;
                                                     }
                                                 });
-                                        },{}, function () {
-                                            layui.layer.closeAll()
-                                            table.reload();
-                                        });
-                                    }else {
-                                        var data = {
-                                            tempList: checkResult.data.correctData
                                         }
-                                        Joyin.ajaxJson(basePath + 'disclosure/information/config/repInvestAccount/RepInvestAccount001/importFile', data,
-                                            function (resultObj) {
-                                                if (resultObj.statuCode.toString() === '200') {
-                                                    table.reload();
-                                                    return;
-                                                }
-                                            });
                                     }
                                 }
                                 ,1000);

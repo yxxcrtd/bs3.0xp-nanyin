@@ -7,6 +7,98 @@
 </head>
 <body>
 <div layout:fragment="content">
+    <style type="text/css">
+        /*.layui-table {
+            width: 120% !important;
+        }*/
+        .layui-form-item select2-container--open{
+            width: 400px;
+            z-index: 3;
+            max-width: 400px;
+        }
+       /* .trast-list-left {
+            float: left;
+            width: 60%;
+        }
+
+        .trast-list-right {
+            float: left;
+            width: 30%;
+            position: relative;
+        }
+
+        .trast-list-left .layui-table-view {
+            height: 200px !important;
+        }*/
+
+       /* .trast-list-left .layui-table-view .layui-table-box .layui-table-body {
+            height: 156px !important;
+        }
+
+        .trast-list-show {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+        }
+
+        .trast-icon-wrap {
+            text-align: right;
+        }*/
+
+/*        .trast-icon-wrap i {
+            color: #666;
+            background: #d9ecff;
+            font-size: 25px;
+        }
+
+        .trast-print-wrap {
+            border: 1px solid #ddd;
+        }
+
+        .trast-print-wrap h3 {
+            padding: 10px 0 10px 10px;
+            border-bottom: 1px solid #ddd;
+            color: #999;
+        }
+
+        .trast-print-wrap ul {
+            padding: 0 10px 10px 10px;
+        }
+
+        .trast-print-wrap ul li {
+            padding-top: 10px;
+        }
+
+        .trast-print-wrap ul li a {
+            color: #999;
+        }
+
+        table thead tr th {
+            background-color: #d9ecff;
+        }
+
+        .ptl-table .layui-table-view .layui-table-box .layui-table-header table thead tr th
+        {
+            padding: 1px 0;
+            text-align: center;
+        }
+
+        .ptl-table .layui-table-view .layui-table-box .layui-table-body {
+            height: 504px !important;
+        }
+
+        .input-radio-inline .layui-form-radio {
+            margin: 0;
+        }
+
+        .input-radio-inline .layui-form-radio .layui-icon {
+            color: #6d9ed9;
+            font-size: 18px;
+        }*/
+    </style>
+
+
+
     <form class="layui-form joyin-form-wrap pro-module-form" id="submitForm">
         <div class="pro-module-wrap" id="prodView">
             <div class="pro-module">
@@ -19,12 +111,13 @@
                         <input type="hidden" id="issueStatus" name="issueStatus" class="layui-input form-input" placeholder="发行状态"  data-th-value="${entity?.issueStatus}">
                         <input type="hidden" id="repProdType" name="repProdType" class="layui-input form-input" placeholder="信批产品类别"  data-th-value="${entity?.repProdType}">
                         <input type="hidden" id="pdStatus2" name="pdStatus2" class="layui-input form-input" placeholder=""  data-th-value="${entity?.pdStatus}">
+                        <input type="hidden" id="oldRaiseAmt" name="oldRaiseAmt" class="layui-input form-input" placeholder=""  data-th-value="${entity?.raiseAmt}">
 
                         <div class="form-inline-wrap">
                             <label class="layui-form-label form-label-wrap">子产品代码</label>
                             <div class="layui-input-inline input-inline">
                                 <input type="text" name="prodId" id="prodId"
-                                       maxlength="200"  required
+                                       maxlength="30"  required
                                        data-th-value="${entity?.prodId}"
                                        class="layui-input form-input" placeholder="请输入内容"
                                        data-th-placeholder="#{SysCommon.placeholder}">
@@ -65,7 +158,7 @@
                             <div class="layui-input-inline input-inline">
                                 <input type="text" name="prodSeries" id="prodSeries"
                                        data-th-value="${entity?.prodSeries}"
-                                       maxlength="200"  required
+                                       maxlength="100"  required
                                        class="layui-input form-input" placeholder="请输入内容"
                                        data-th-placeholder="#{SysCommon.placeholder}">
                             </div>
@@ -87,7 +180,7 @@
                             <label class="layui-form-label form-label-wrap">产品简称</label>
                             <div class="layui-input-inline input-inline">
                                 <input type="text" name="prodAbbr" id="prodAbbr"
-                                       maxlength="200"  required
+                                       maxlength="100"  required
                                        data-th-value="${entity?.prodAbbr}"
                                        class="layui-input form-input" placeholder="请输入内容"
                                        data-th-placeholder="#{SysCommon.placeholder}">
@@ -136,10 +229,14 @@
                     <div class="form-inline-wrap">
                         <label class="layui-form-label form-label-wrap">产品募集金额</label>
                         <div class="layui-input-inline input-inline">
-                            <input type="number" name="raiseAmt" id="raiseAmt"
+                            <input class="layui-input form-input text-number" name="raiseAmt" id="raiseAmt"
                                    data-th-value="${entity?.raiseAmt}"
-                                   maxlength="15"  required
-                                   class="layui-input form-input" placeholder="请输入内容"
+                                   maxlength="15"  required  placeholder="请输入内容"
+                                   onkeyup="if(this.value < 0){
+                                                   this.value= 0;
+                                               }else{
+                                                  this.value= value.toString().match(/^\d+(?:\.\d{0,4})?/) // 只能输入小数点后4位
+                                               }"
                                    data-th-placeholder="#{SysCommon.placeholder}">
                         </div>
                     </div>
@@ -181,7 +278,7 @@
                         <div class="layui-input-inline input-inline">
                             <select id="prodType" name="prodType" required
                                     data-th-initValue="${entity?.prodType}"
-                                    placeholder="请选择"
+                                    placeholder="请选择"   childrenIds="profitType"
                                     class="layui-input form-input input-select"
                                     data-th-data-result="${DIS_PROD_TYPE}"
                             ></select>
@@ -191,8 +288,8 @@
                         <label class="layui-form-label form-label-wrap">发行方式</label>
                         <div class="layui-input-inline input-inline">
                             <select id="issuingWay" name="issuingWay"  required
-                                    data-th-initValue="${entity?.issuingWay==null?'01':entity?.issuingWay}" placeholder="请选择"
-                                    class="layui-input form-input input-select"
+                                    data-th-initValue="${entity?.issuingWay}" placeholder="请选择"
+                                    class="layui-input form-input input-select"  childrenIds="profitType"
                                     data-th-data-result="${ISSUING_WAY}">
                             </select>
                         </div>
@@ -203,8 +300,8 @@
                             <select id="openFreq" name="openFreq" placeholder="请选择"
                                     data-th-initValue="${entity?.openFreq}"
                                     class="layui-input form-input input-select"
-                                    data-th-data-result="${OPEN_FREQ}"
-                            ></select>
+                                    data-th-data-result="${OPEN_FREQ}">
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -216,6 +313,11 @@
                             <input type="number" name="holdday" id="holdday"
                                    data-th-value="${entity?.holdday}" maxlength="5"
                                    class="layui-input form-input" placeholder="请输入内容"
+                                   onkeyup="if(this.value < 0){
+                                                   this.value= 0;
+                                               }else{
+                                                  this.value= value.toString().match(/^\d+(?:\.\d{0,4})?/) // 只能输入小数点后4位
+                                               }"
                                    data-th-placeholder="#{SysCommon.placeholder}">
                         </div>
                     </div>
@@ -227,7 +329,9 @@
                                     data-th-initValue="${entity?.profitType}"  placeholder="请选择"
                                     class="layui-input form-input input-select"
                                     data-th-data-result="${DIS_PROFIT_TYPE}"
+                                    parentIds="issuingWay,prodType"
                             ></select>
+
                         </div>
                     </div>
                     <div class="form-inline-wrap">
@@ -284,6 +388,7 @@
                             <input type="text" name="acctChnname" id="acctChnname"
                                    data-th-value="${entity?.acctChnname}" required
                                    class="layui-input form-input" placeholder="请输入内容"
+                                   maxlength="50"
                                    data-th-placeholder="#{SysCommon.placeholder}">
                         </div>
                     </div>
@@ -294,6 +399,7 @@
                                    data-th-initValue="${entity?.trustpart==null?'南京银行资产托管部':entity?.trustpart}"
                                    data-th-value="${entity?.trustpart==null?'南京银行资产托管部':entity?.trustpart}"
                                    class="layui-input form-input" placeholder="请输入内容"
+                                   maxlength="100"
                                    data-th-placeholder="#{SysCommon.placeholder}">
                         </div>
                     </div>
@@ -317,8 +423,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="layui-form-item">
-                        <div class="form-inline-wrap">
+                    <div class="layui-form-item" id="performDiv" >
+                        <div class="form-inline-wrap" >
                             <div class="layui-input-inline input-inline" style="padding-left:15%;">
                                  <table id="mockTradeTable" class="layui-table"></table>
                             </div>
@@ -341,7 +447,7 @@
 <div layout:fragment="script">
     <script data-th-inline="javascript" type="text/javascript">
         var issuePartyId_New = [[${issuePartyId_New}]];
-        var basicChangeList = [[${basicChangeList}]];
+        var basicChangeList = [[${entity?.basicChangeList}]];
         var QUOTA_CODE = [[${QUOTA_CODE}]];
 
     </script>

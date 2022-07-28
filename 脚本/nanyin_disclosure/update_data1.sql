@@ -365,3 +365,64 @@ insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAU
 values ('QUOTA_CODE', '04', '中债新综合财富指数（1-3年）收益率', 4, '0', 'system', null, sysdate, 'system', sysdate, null);
 
 -- add by dingrui 20220726  end
+
+
+
+-- add by dingrui 20220727  start
+-- 新增"信披数据状态"字典信息
+insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('DIS_DATA_STATUS_ED', 'DIS', '信披数据状态', 'DIS_DATA_STATUS_ED', '02', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('DIS_DATA_STATUS_ED', 'E', '有效', 1, '0', 'system', null, sysdate, 'system', sysdate, null);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('DIS_DATA_STATUS_ED', 'D', '删除', 2, '0', 'system', null, sysdate, 'system', sysdate, null);
+
+
+
+-- 新增"发行方式与产品运作方式联动"字典信息
+delete  from SYS_DATADICT_LIST_LINK where DICT_CODE = 'DIS_PROFIT_TYPE' and ITEM_CODE = '01' and LINKED_DICT_CODE = 'ISSUING_WAY' and LINKED_ITEM_CODE = '01';
+delete  from SYS_DATADICT_LIST_LINK where DICT_CODE = 'DIS_PROFIT_TYPE' and ITEM_CODE = '02' and LINKED_DICT_CODE = 'ISSUING_WAY' and LINKED_ITEM_CODE = '01';
+delete  from SYS_DATADICT_LIST_LINK where DICT_CODE = 'DIS_PROFIT_TYPE' and ITEM_CODE = '03' and LINKED_DICT_CODE = 'ISSUING_WAY' and LINKED_ITEM_CODE = '02';
+delete  from SYS_DATADICT_LIST_LINK where DICT_CODE = 'DIS_PROFIT_TYPE' and ITEM_CODE = '04' and LINKED_DICT_CODE = 'ISSUING_WAY' and LINKED_ITEM_CODE = '02';
+INSERT INTO SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('DIS_PROFIT_TYPE', '01', 'ISSUING_WAY', '01', 'system', null, sysdate, 'system', sysdate);
+INSERT INTO SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('DIS_PROFIT_TYPE', '02', 'ISSUING_WAY', '01', 'system', null, sysdate, 'system', sysdate);
+INSERT INTO SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('DIS_PROFIT_TYPE', '03', 'ISSUING_WAY', '02', 'system', null, sysdate, 'system', sysdate);
+INSERT INTO SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('DIS_PROFIT_TYPE', '04', 'ISSUING_WAY', '02', 'system', null, sysdate, 'system', sysdate);
+
+-- 新增"产品类型与产品运作方式联动"字典信息
+delete  from SYS_DATADICT_LIST_LINK where DICT_CODE = 'DIS_PROFIT_TYPE' and ITEM_CODE = '01' and LINKED_DICT_CODE = 'DIS_PROD_TYPE' and LINKED_ITEM_CODE = 'N';
+delete  from SYS_DATADICT_LIST_LINK where DICT_CODE = 'DIS_PROFIT_TYPE' and ITEM_CODE = '02' and LINKED_DICT_CODE = 'DIS_PROD_TYPE' and LINKED_ITEM_CODE = 'N';
+delete  from SYS_DATADICT_LIST_LINK where DICT_CODE = 'DIS_PROFIT_TYPE' and ITEM_CODE = '02' and LINKED_DICT_CODE = 'DIS_PROD_TYPE' and LINKED_ITEM_CODE = 'M';
+INSERT INTO SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('DIS_PROFIT_TYPE', '01', 'DIS_PROD_TYPE', 'N', 'system', null, sysdate, 'system', sysdate);
+INSERT INTO SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('DIS_PROFIT_TYPE', '02', 'DIS_PROD_TYPE', 'N', 'system', null, sysdate, 'system', sysdate);
+INSERT INTO SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('DIS_PROFIT_TYPE', '02', 'DIS_PROD_TYPE', 'M', 'system', null, sysdate, 'system', sysdate);
+
+-- add by dingrui 20220727  end
+
+-- add by sunjie 20220728 start
+-- 科目余额信息 菜单页面脚本
+delete from SYS_MENU where MENU_ID = 'REPORT_006_004_020';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_006_004_020', 'DIS', null, 'REPORT_006_004', 'SubBalanceInfoPro001', 2, '03', '科目余额信息维护', 'system', null,sysdate, 'system', sysdate);
+delete from SYS_PAGE where PAGE_ID like '%SubBalanceInfoPro00%';
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('SubBalanceInfoPro001', 'DIS', '/disclosure/information/config/subbalanceinfopro/SubBalanceInfoPro001', 'disclosure/information/config/subbalanceinfopro/SubBalanceInfoPro001', 'REPORT_006_004_020', null, null, '02', '01', '科目余额信息维护', 'system', null, sysdate, 'system', sysdate);
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('SubBalanceInfoPro002', 'DIS', '/disclosure/information/config/subbalanceinfopro/SubBalanceInfoPro002', 'disclosure/information/config/subbalanceinfopro/SubBalanceInfoPro002', null, null, null, '02', '01', '科目余额信息新建', 'system', null, sysdate, 'system', sysdate);
+
+-- 科目余额信息 页面控件流程模板设置
+delete from SYS_WFL_BUSINESS_MODULE where PAGE_ID like '%SubBalanceInfoPro00%';
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('SubBalanceInfoPro002', 'SubBalanceInfoPro001_btn_delete', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('SubBalanceInfoPro002', 'SubBalanceInfoPro002_btn_save', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('SubBalanceInfoPro002', 'SubBalanceInfoPro002_btn_submit', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+
+-- 科目余额信息 业务数据字典增加
+delete from SYS_DATADICT_LIST where DICT_CODE ='COMMON_BUSINESS_TYPE' and ITEM_CODE = 'DISK';
+INSERT INTO SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('COMMON_BUSINESS_TYPE', 'DISK', '科目余额信息维护', 356, '0', 'system', null, sysdate, 'system', sysdate, null);
+
+--  add by sunjie 20220728 end

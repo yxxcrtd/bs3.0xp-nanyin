@@ -522,3 +522,38 @@ VALUES ('RULE_TYPE3', '02', 'RULE_TYPE1', 'REP_PROD_TYPE', 'admin', NULL, sysdat
 -- add by zhengxiaolian 2022-07-27 	报表模板路径修改 start
 update sys_para a set a.param_value='/joyintech' where a.para_code='TEMPLATE_FILE_PATH';
 -- add by zhengxiaolian 2022-07-27 	报表模板路径修改 end
+
+
+-- add by shengning 20220727 产品超额业绩报酬信息维护 start
+-- 产品超额业绩报酬信息维护 菜单页面 配置
+delete from SYS_MENU where MENU_ID = 'REPORT_006_004_022';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('REPORT_006_004_022', 'SVR', null, 'REPORT_006_004', 'RepFloatFee001', 11, '02', '产品超额业绩报酬信息维护', 'system', null, sysdate, 'system', sysdate);
+
+delete from SYS_PAGE where PAGE_ID = 'RepFloatFee001';
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('RepFloatFee001', 'SVR', '/disclosure/information/config/repFloatFee/RepFloatFee001', 'disclosure/information/config/repFloatFee/RepFloatFee001', 'REPORT_006_004_022', null, null, '02', '01', '产品超额业绩报酬信息维护', 'system', null,SYSDATE, 'system', SYSDATE);
+
+delete from SYS_PAGE where PAGE_ID = 'RepFloatFee002';
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('RepFloatFee002', 'SVR', '/disclosure/information/config/repFloatFee/RepFloatFee002', 'disclosure/information/config/repFloatFee/RepFloatFee002',null, null, null, '02', '01', '产品超额业绩报酬信息维护编辑', 'system', null,SYSDATE, 'system', SYSDATE);
+
+-- 页面控件流程配置
+delete from SYS_WFL_BUSINESS_MODULE where PAGE_ID = 'RepFloatFee002';
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('RepFloatFee002', 'RepFloatFee002_btn_submit', 'oneApproval', 'system', '0001',SYSDATE, 'system', SYSDATE);
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('RepFloatFee002', 'RepFloatFee002_btn_save', 'oneApproval', 'system', '0001', SYSDATE, 'system', SYSDATE);
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('RepFloatFee002', 'RepFloatFee001_btn_delete', 'oneApproval', 'system', '0001', SYSDATE, 'system', SYSDATE);
+
+-- 业务类型数据字典配置
+
+DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'COMMON_BUSINESS_TYPE' and ITEM_CODE = 'SVR14';
+INSERT INTO SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+VALUES ('COMMON_BUSINESS_TYPE', 'SVR14', '产品超额业绩报酬信息维护', 1400, '0', 'system', null, sysdate, 'system',sysdate, null);
+
+--业务代码数据字典配置
+delete from SYS_DATADICT where DICT_CODE = 'BUSINESS_CODE';
+INSERT INTO SYS_DATADICT (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('BUSINESS_CODE', 'REP', '业务代码', null, '02', 'system', null, SYSDATE, 'system', SYSDATE);
+delete from SYS_DATADICT_LIST where DICT_CODE = 'BUSINESS_CODE';
+INSERT INTO SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('BUSINESS_CODE', '03', '赎回', 1, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+
+-- add by shengning 20220727 产品超额业绩报酬信息维护 end

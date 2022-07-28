@@ -159,13 +159,13 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
                     List<String> rowData = objects.get(i);
 
 
-                    if (!StringUtil.isNotEmpty(rowData.get(0))){
+                    if (!StringUtil.isNotEmpty(rowData.get(0).trim())){
                         errorMsg.append("产品登记编码 必填！");
                     }
-                    else if(!findList.contains(rowData.get(0))){
+                    else if(!findList.contains(rowData.get(0).trim())){
                         errorMsg.append("产品登记编码不存在！");
                     }
-                    if (!StringUtil.isNotEmpty(rowData.get(1))){
+                    if (!StringUtil.isNotEmpty(rowData.get(1).trim())){
                         errorMsg.append("不成立原因 必填！");
                     }
                     if (!StringUtil.isNotEmpty(rowData.get(2))){

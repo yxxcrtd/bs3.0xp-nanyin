@@ -4,6 +4,8 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -60,6 +63,12 @@ public class SvrProdFeeDealInterf002Controller extends BaseController {
         }
 
         return super.init(model);
+    }
+
+    @ResponseBody
+    @RequestMapping("queryProdIdInfo2")
+    public List<SelectOptionDto> queryProdIdInfo() {
+        return svrProdFeeDealInterfService.queryProdIdInfo2(RequestUtil.getPageParam());
     }
 
     @ResponseBody

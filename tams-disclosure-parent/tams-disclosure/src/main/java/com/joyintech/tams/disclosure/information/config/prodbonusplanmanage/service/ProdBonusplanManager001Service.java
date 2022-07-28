@@ -71,7 +71,7 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
         // 遍历构造数据
         if (CollectionUtils.isNotEmpty(result)) {
             result.stream().forEach(item -> {
-                item.setDataStatusName(SysDataUtil.getNameFromDataDict(DictCode.信披_数据状态, item.getDataStatus()));
+                item.setDataStatusName(SysDataUtil.getNameFromDataDict(DictCode.信披_数据状态ED, item.getDataStatus()));
                 item.setBonusModeName(SysDataUtil.getNameFromDataDict(DictCode.信披_分红方式, item.getBonusMode()));
             });
         }
@@ -119,7 +119,7 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
         // 遍历构造数据
         if (CollectionUtils.isNotEmpty(list)) {
             list.stream().forEach(item -> {
-                item.setDataStatusName(SysDataUtil.getNameFromDataDict(DictCode.信披_数据状态, item.getDataStatus()));
+                item.setDataStatusName(SysDataUtil.getNameFromDataDict(DictCode.信披_数据状态ED, item.getDataStatus()));
                 item.setBonusModeName(SysDataUtil.getNameFromDataDict(DictCode.信披_分红方式, item.getBonusMode()));
 
             });
@@ -136,7 +136,7 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
      * @return
      */
     public ProdBonusplanDto selectByProdId(String prodId) {
-        return prodBonusplanMapper.selectByProdId(prodId, DictCodeListExt3.信披_数据状态_有效.getValue());
+        return prodBonusplanMapper.selectByProdId(prodId, DictCodeListExt3.信披_数据状态_有效E.getValue());
     }
 
 
@@ -286,7 +286,7 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
             if (StringUtil.isNotEmpty(this.selectByProdId(temp.getProdId()))) {
                 existData.add(temp);
             } else {
-                temp.setDataStatus(DictCodeListExt3.信披_数据状态_有效.getValue());
+                temp.setDataStatus(DictCodeListExt3.信披_数据状态_有效E.getValue());
                 temp.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
                 newData.add(temp);
             }

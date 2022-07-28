@@ -149,7 +149,7 @@ $(function() {
          */
         $('#RepProdIndex001_btn_search').click(function() {
             if( $('#prodId').val() == null ||  $('#prodId').val() == ''){
-                Joyin.alert('产品名称不能为空！');
+                Joyin.error('产品名称不能为空！');
                 return;
             }
             table.load();
@@ -180,12 +180,12 @@ $(function() {
                 var selArr = table.getAllCheckedRows();
             }
             if (!selArr || selArr.length == 0) {
-                Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+                Joyin.error(JoyinUtil.getMessage("请至少选择一条记录"));
                 return;
             }
             for(var i=0;i<selArr.length;i++){
                 if(selArr[i].status =="D"){
-                    return Joyin.error("只能删除有效数据，请重新选择");
+                    return Joyin.error("不能删除已删除的数据，请重新选择");
                 }
                 // selArr[i].operateType =  "delete";
             }
@@ -229,8 +229,7 @@ $(function() {
                                             if (checkResult.data.confirmMsg2) {
                                                 Joyin.confirm(checkResult.data.confirmMsg2, function () {
                                                     var data = {
-                                                        tempList: checkResult.data.correctData,
-                                                        flag: true
+                                                        tempList: checkResult.data.correctData
                                                     }
                                                     Joyin.ajaxJson(basePath + 'disclosure/information/config/repProdIndex/RepProdIndex001/importFile', data,
                                                         function (resultObj) {
@@ -240,22 +239,12 @@ $(function() {
                                                             }
                                                         });
                                                 },{}, function () {
-                                                    var data = {
-                                                        tempList: checkResult.data.correctData,
-                                                        flag: false
-                                                    }
-                                                    Joyin.ajaxJson(basePath + 'disclosure/information/config/repProdIndex/RepProdIndex001/importFile', data,
-                                                        function (resultObj) {
-                                                            if (resultObj.statuCode.toString() === '200') {
-                                                                table.reload();
-                                                                return;
-                                                            }
-                                                        });
+                                                    layui.layer.closeAll()
+                                                    table.reload();
                                                 });
                                             }else{
                                                 var data = {
-                                                    tempList: checkResult.data.correctData,
-                                                    flag: true
+                                                    tempList: checkResult.data.correctData
                                                 }
                                                 Joyin.ajaxJson(basePath + 'disclosure/information/config/repProdIndex/RepProdIndex001/importFile', data,
                                                     function (resultObj) {
@@ -274,8 +263,7 @@ $(function() {
                                         if (checkResult.data.confirmMsg2) {
                                             Joyin.confirm(checkResult.data.confirmMsg2, function () {
                                                 var data = {
-                                                    tempList: checkResult.data.correctData,
-                                                    flag: true
+                                                    tempList: checkResult.data.correctData
                                                 }
                                                 Joyin.ajaxJson(basePath + 'disclosure/information/config/repProdIndex/RepProdIndex001/importFile', data,
                                                     function (resultObj) {
@@ -285,22 +273,12 @@ $(function() {
                                                         }
                                                     });
                                             },{}, function () {
-                                                var data = {
-                                                    tempList: checkResult.data.correctData,
-                                                    flag: false
-                                                }
-                                                Joyin.ajaxJson(basePath + 'disclosure/information/config/repProdIndex/RepProdIndex001/importFile', data,
-                                                    function (resultObj) {
-                                                        if (resultObj.statuCode.toString() === '200') {
-                                                            table.reload();
-                                                            return;
-                                                        }
-                                                    });
+                                                layui.layer.closeAll()
+                                                table.reload();
                                             });
                                         }else{
                                             var data = {
-                                                tempList: checkResult.data.correctData,
-                                                flag: true
+                                                tempList: checkResult.data.correctData
                                             }
                                             Joyin.ajaxJson(basePath + 'disclosure/information/config/repProdIndex/RepProdIndex001/importFile', data,
                                                 function (resultObj) {

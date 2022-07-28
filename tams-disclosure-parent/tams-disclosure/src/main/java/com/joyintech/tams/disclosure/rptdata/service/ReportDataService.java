@@ -6,12 +6,32 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.tams.disclosure.information.report.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.tams.common.base.dao.ChbMktHolidayMapper;
+import com.joyintech.tams.common.base.entity.ChbMktHoliday;
+import com.joyintech.tams.common.base.entity.ChbMktHolidayKey;
 import com.joyintech.tams.disclosure.common.DisReportType;
+import com.joyintech.tams.disclosure.information.report.service.Report1Cpnfl001Service;
+import com.joyintech.tams.disclosure.information.report.service.Report1Cpnfl002Service;
+import com.joyintech.tams.disclosure.information.report.service.Report1Cpnys001Service;
+import com.joyintech.tams.disclosure.information.report.service.Report1Flncp001Service;
+import com.joyintech.tams.disclosure.information.report.service.Report1Flncp002Service;
+import com.joyintech.tams.disclosure.information.report.service.Report1Ysncp001Service;
+import com.joyintech.tams.disclosure.information.report.service.ReportBclgg001Service;
+import com.joyintech.tams.disclosure.information.report.service.ReportDlxsjgmdgg001Service;
+import com.joyintech.tams.disclosure.information.report.service.ReportFxgg001Service;
+import com.joyintech.tams.disclosure.information.report.service.ReportJesh001Service;
+import com.joyintech.tams.disclosure.information.report.service.ReportJzfhbg001Service;
+import com.joyintech.tams.disclosure.information.report.service.ReportKfjzgg001Service;
+import com.joyintech.tams.disclosure.information.report.service.ReportKfqgg001Service;
+import com.joyintech.tams.disclosure.information.report.service.ReportKfqzjfhgg001Service;
+import com.joyintech.tams.disclosure.information.report.service.ReportMzjz001Service;
+import com.joyintech.tams.disclosure.information.report.service.ReportRkcpjz001Service;
+import com.joyintech.tams.disclosure.information.report.service.ReportZjxsjg001Service;
+import com.joyintech.tams.disclosure.information.report.service.ReportZqxkfgg001Service;
 import com.joyintech.tams.utils.echarts.EchartsException;
 import com.joyintech.tams.utils.echarts.EchartsUtils;
 
@@ -94,7 +114,7 @@ public class ReportDataService {
 
 	@Autowired
 	private ReportJzfhbg001Service reportJzfhbg001Service;
-
+	
 	public List<Map<String, Object>> queryTestDatas(Map<String, Object> params) {
 		Map<String, Object> dataMap = new HashMap<String, Object>();
 		dataMap.put("${prodName}", "得利宝8号");
@@ -234,7 +254,10 @@ public class ReportDataService {
 			service = matureReportDataService;
 		} else if (rptType.equals(DisReportType.TZTZFBZCGG)) { // 非标调整公告
 			service = nostdReportDataService;
-		} else if (rptType.equals(DisReportType.JDBG_ZSX)) { // 定期公告-季度报告指数型
+		} else if (rptType.equals(DisReportType.JDBG_ZSX) || rptType.equals(DisReportType.JDBG_FZSX)
+				|| rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX)
+				|| rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX)
+				) { // 定期公告-季度/半年度/年度报告指数型和非指数型
 			service = durationReportDataService;
 		} else if (rptType.equals(DisReportType.FXGG)) { // 发行公告
 			service = reportFxgg001Service;
@@ -274,7 +297,7 @@ public class ReportDataService {
 			service = reportJzfhbg001Service;
 		}
 
-
 		return service.queryDatas(params);
 	}
+	
 }
