@@ -20,9 +20,10 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
 
 import com.ibm.icu.text.SimpleDateFormat;
-import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.tams.utils.echarts.EchartsException;
 
 /**
@@ -52,7 +53,6 @@ public class PoiUtilsHelper {
             while (itParagraph.hasNext()) {                                       //遍历段落
                 XWPFParagraph paragraph = (XWPFParagraph) itParagraph.next();
                 List<XWPFRun> runs = paragraph.getRuns();                         //取出段落中的runs
-                //System.out.println("============");
                 int idx = 0;
                 String paracode="";
                 for (int i = 0; i < runs.size(); i++) {                           //遍历runs，每个run才是word中操作的最小单元
@@ -60,13 +60,10 @@ public class PoiUtilsHelper {
                     if (run==null ) continue;
                     idx = i;
                     String oneparaString = run.getText(run.getTextPosition());  //getTextPosition: 取纯文本的起始位置，本行代码取出本run中的纯文本信息（不含控制符信息）
-                    //System.out.println("oneparaString======="+oneparaString);
                     if ( oneparaString==null ) continue;
 
                     //判断获取的参数是否完整
                     paracode+=oneparaString;
-//					if ( paracode.equals("<"))
-//						System.out.println("hhhhhhhh");
                     if ( paracodeIsComplete(paracode)==false ) {  //删除不完整的变量设置，如${xx，但后续没有 }，或者<，后续没有>
                         run.setText("", 0);
                         continue;
@@ -74,7 +71,6 @@ public class PoiUtilsHelper {
 
                     if ( paracode==null ) continue;
 
-                    //System.out.println("替换前："+paracode);
                     if ( paracode!=null && paracode.indexOf("<foreach:")!=-1) {
                         startflag = true;
                         endflag = false;
@@ -99,7 +95,6 @@ public class PoiUtilsHelper {
                     }
 
                     if ( paracode!=null && paracode.length()>0 ) {
-
                         //先判断是否是图片标志
                         String re = "\\$\\{@image:([^\\}]+)\\}";
                         Pattern p = Pattern.compile(re);
@@ -114,57 +109,44 @@ public class PoiUtilsHelper {
                                 updateImage(run, (Map) params.get(key));
                             }
                         } else {
-
                             //1.替换普通文本，如：本理财产品名称为${prodName}
                             paracode = updateTextForPlain(paracode, params);
                             //System.out.println("替换后："+paracode);
                             run.setText(paracode, 0);
                         }
-
                         paracode = "";
                     }
                 }
-                //System.out.println("============");
-
             }
 
-            // 替换表格中的指定文字
-            Iterator<XWPFTable> itTable = document.getTablesIterator();
-            while (itTable.hasNext()) {
-                XWPFTable table = (XWPFTable) itTable.next();
-                int rcount = table.getNumberOfRows();
-                String keystring = table.getRow(1).getCell(0).getText().trim();
-                if ( keystring!=null && keystring.length()>8) {
-                    if ( keystring.substring(1,8)!=null && keystring.substring(1,8).equals("foreach") ) {  //4.特殊的循环表，根据数据条数，动态创建表的行
-                        if ( updateTableForList(table,params)<0)
-                            return false;
-                        continue;
-                    }
-                }
-                for (int i = 0; i < rcount; i++) {
-                    XWPFTableRow row = table.getRow(i);
-                    List<XWPFTableCell> cells = row.getTableCells();
-                    for (XWPFTableCell cell : cells) {
-                        String cellTextString = cell.getText();
-
-                        //5.表格中的集合数据：表格中的一个单元格，填写集合数据
-                        if ( cellTextString.indexOf("<foreach:")!=-1&& cellTextString.indexOf("</foreach>")!=-1)  {
-                            String value = updateTextForList(cellTextString,params);
-                            cell.removeParagraph(0);
-                            cell.setText(value);
-                        } else {  //3.普通表格，根据单元格，直接填写变量
-                            cellTextString = updateTextForPlain(cellTextString,params);
-//							for (Entry<String, Object> e : params.entrySet()) {
-//								if (cellTextString.contains(e.getKey()) && e.getValue()!=null)
-//									cellTextString = cellTextString.replace(
-//											e.getKey(), e.getValue().toString());
-//							}
-                            cell.removeParagraph(0);
-                            cell.setText(cellTextString);
-                        }
-                    }
-                }
-            }
+			// 处理表格
+			Iterator<XWPFTable> itTable = document.getTablesIterator();
+			while (itTable.hasNext()) {
+				XWPFTable table = (XWPFTable) itTable.next();
+				int rcount = table.getNumberOfRows();
+				
+				//4.特殊的循环表，根据数据条数，动态创建表的行
+				String rulestr = table.getRow(0).getCell(0).getText().trim();
+				PoiTableRule rule = JsonUtils.json2Object(rulestr, PoiTableRule.class);
+				if ( rule!=null && rule.getForeach()!=null && rule.getForeach().length()>0 ) {
+					updateTableForListEx(table,params,rule);
+				}
+				
+				//普通表
+				for (int i = 0; i < rcount; i++) {
+					XWPFTableRow row = table.getRow(i);
+					if ( row==null ) continue;
+					List<XWPFTableCell> cells = row.getTableCells();
+					for (XWPFTableCell cell : cells) {
+						String cellTextString = cell.getText();
+						cellTextString = updateTextForPlain(cellTextString,params);
+						if ( cell.getParagraphs().size()>0 ) 
+							cell.removeParagraph(0);
+						cell.setText(cellTextString);
+					}
+				}
+			}
+			
             document.write(os);
             return true;
         } catch (Exception e) {
@@ -174,6 +156,7 @@ public class PoiUtilsHelper {
     }
 
     /**
+     * @deprecated，不再支持，请使用updateTableForListEx方法替换
      * 表格中第一行、第二行填写规则，根据数据集合条数，动态创建表的行数，并填充数据
      * 模板设置如下格式：
      资产类型	上限	下限	备注
@@ -246,6 +229,7 @@ public class PoiUtilsHelper {
     }
 
     /**
+     * @deprecated，不再支持
      * 替换集合文本
      * 例如：<foreach:mylist>债券名称：${mylist.aa},债券费用：${mylist.bb}测试,${mylist.cc},${mylist.dd}</foreach>
      * @param rule
@@ -253,7 +237,6 @@ public class PoiUtilsHelper {
      * @return
      */
     private static String updateTextForList(String rule,Map<String, Object> params) {
-        //System.out.println("rule----------"+rule);
         StringBuilder value = new StringBuilder();
 
         int beginIndex = rule.indexOf(':');
@@ -264,9 +247,6 @@ public class PoiUtilsHelper {
         rule = rule.substring(beginIndex,endIndex);
         @SuppressWarnings("unchecked")
         List<Map<String,Object>> list = (List<Map<String,Object>>)params.get(listname);
-
-//		if ( list==null )
-//			return rule;
 
         //获取明细列的规则
         List<String> cols = new ArrayList<String>();
@@ -302,10 +282,141 @@ public class PoiUtilsHelper {
             value.append(str1);
             value.append(";");
         }
-        //System.out.println("value---------"+value.toString());
         return value.toString();
     }
 
+	/**
+	 * 根据规则动态解析表
+	 * @param table  指定的表
+	 * @param mapDatas  指定的数据
+	 * @param rule {foreach:"listFinIndex",loopmode:"row",fields:["inxNo","empName","empAge","empAmt"],startRow:2,startCol:0}
+	 * @return
+	 */
+	private static int updateTableForListEx (XWPFTable table,Map<String, Object> mapDatas,PoiTableRule rule) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
+		//规则行，取出list名称
+		String listname = rule.getForeach();
+		List<Map<String,Object>> listData = (List<Map<String,Object>>)mapDatas.get(listname);
+
+		//行循环模式
+		if ( PoiTableRule.loopMode_Row.equals(rule.getLoopMode()) ) {
+			table.removeRow(0);  //删除规则行1
+			int rowNo = rule.getStartRow()-1;
+			for ( int i=0;i<listData.size();i++ ) {
+				Map<String,Object> data = listData.get(i);
+				XWPFTableRow dataRow = table.getRow(rowNo);
+				if (dataRow==null)  {
+					dataRow = table.createRow();
+				}
+				List<XWPFTableCell> cells = dataRow.getTableCells();
+				for ( int j=0;j<rule.getFields().size();j++ ) {
+					String f = rule.getFields().get(j);
+					Object o = (f==null?"null":data.get(f));
+					if ( o!=null && o instanceof Date ) {
+						o=sdf.format(o);
+					}
+					String content = (o==null?"":o.toString());
+					
+					XWPFTableCell cell = null;
+					if ( j<cells.size() ) {
+						cell = cells.get(j);
+					} else {
+						cell = dataRow.createCell();
+					}
+					if ( cell.getParagraphs().size()>0 ) 
+						cell.removeParagraph(0);					
+					cell.setText(content);
+				}
+				rowNo++;
+			}
+		}
+		
+		//列循环模式
+		if ( PoiTableRule.loopMode_Col.equals(rule.getLoopMode()) ) {
+			Iterator itr = listData.iterator();
+			int colNo = rule.getStartCol();   //列号
+			int initWidth = table.getRow(rule.getStartRow()).getCell(rule.getStartCol()-1).getWidth()/100;
+			int newColWidth = (100-initWidth)/(listData.size()+1);
+			while ( itr.hasNext() ) {
+				Map<String,Object> data = (Map)itr.next();  //取出一条数据
+				for ( int rowNo=0;rowNo<table.getNumberOfRows();rowNo++ ) {  //
+					XWPFTableRow dataRow = table.getRow(rowNo);
+					List<XWPFTableCell> cells = dataRow.getTableCells();  
+					XWPFTableCell cell = null;           //取出该行的相应单元格
+					if ( colNo<cells.size() ) {
+						cell = cells.get(colNo);
+						cell.setWidth(newColWidth+"%");
+					} else {
+						cell = dataRow.createCell();
+						cell.setWidth( newColWidth+"%" );
+					}
+					
+					//填充数据
+					if ( rowNo>=rule.getStartRow() ) {  //从指定的行开始填写数据
+						String content = "";      //取出各字段
+						int fieldNo = rowNo-rule.getStartRow();
+						try {
+							String f = rule.getFields().get(fieldNo);
+							Object o = (f==null?"null":data.get(f));
+							if ( o!=null && o instanceof Date ) {
+								o=sdf.format(o);
+							}
+							content = (o==null?"":o.toString());							
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						if ( cell.getParagraphs().size()>0 ) 
+							cell.removeParagraph(0);
+						cell.setText(content);
+					}
+				}
+				colNo++;  //每循环一条数据，列号增加1
+			}				
+			mergeCellsHorizontal(table,1,rule.getStartCol(),listData.size());
+			table.removeRow(0);  //删除规则行1
+		}
+		return listData==null?0:listData.size();
+	}
+	
+	/**
+	 * 合并单元格：横向合并
+	 * @param table
+	 * @param row
+	 * @param fromCell
+	 * @param toCell
+	 */
+	public  static void mergeCellsHorizontal(XWPFTable table, int row, int fromCell, int toCell) {  
+        for (int cellIndex = fromCell; cellIndex <= toCell; cellIndex++) {  
+            XWPFTableCell cell = table.getRow(row).getCell(cellIndex);  
+            if ( cellIndex == fromCell ) {  
+                // The first merged cell is set with RESTART merge value  
+                cell.getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);  
+            } else {  
+                // Cells which join (merge) the first one, are set with CONTINUE  
+                cell.getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);  
+            }  
+        }  
+    }  
+	
+	/**
+	 * 合并单元格：纵向合并，即word表格跨行并单元格
+	 * @param table
+	 * @param col  指定列
+	 * @param fromRow 开始行
+	 * @param toRow  结束行。
+	 */
+    public void mergeColumn(XWPFTable table, int col, int fromRow, int toRow) {
+        for (int rowIndex = fromRow; rowIndex <= toRow; rowIndex++) {
+            XWPFTableCell cell = table.getRow(rowIndex).getCell(col);
+            if (rowIndex == fromRow) {
+                cell.getCTTc().addNewTcPr().addNewVMerge().setVal(STMerge.RESTART);
+            } else {
+                cell.getCTTc().addNewTcPr().addNewVMerge().setVal(STMerge.CONTINUE);
+            }
+        }
+    }
+    
+    
     /**
      * 替换普通的文本
      * 例如：本理财产品名称为${prodName}
