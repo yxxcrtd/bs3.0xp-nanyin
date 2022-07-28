@@ -161,10 +161,10 @@ insert into REP_SCREEN values ('100000064','CP_001_003_002','01','pprodid','产�
 insert into REP_SCREEN values ('100000065','CP_001_003_002','02','prodid','子产品代码','','Y','system',to_date('2022/07/20','yyyy/mm/dd'),'system',to_date('2022/07/20', 'yyyy/mm/dd'),'','3','N');
 insert into REP_SCREEN values ('100000066','CP_001_004_001','01','pprodid','产品名称','','Y','system',to_date('2022/07/20','yyyy/mm/dd'),'system',to_date('2022/07/20', 'yyyy/mm/dd'),'','1','N');
 insert into REP_SCREEN values ('100000067','CP_001_004_001','09','enddate','公告日期','','Y','system',to_date('2022/07/20','yyyy/mm/dd'),'system',to_date('2022/07/20', 'yyyy/mm/dd'),'','2','N');
-insert into REP_SCREEN values ('100000068','CP_001_004_002','01','pprodid','产品名称','','Y','system',to_date('2022/07/20','yyyy/mm/dd'),'system',to_date('2022/07/20', 'yyyy/mm/dd'),'','3','N');
-insert into REP_SCREEN values ('100000069','CP_001_004_002','08','enddate','产品发布日期','','Y','system',to_date('2022/07/20','yyyy/mm/dd'),'system',to_date('2022/07/20', 'yyyy/mm/dd'),'','1','N');
-insert into REP_SCREEN values ('100000070','CP_001_004_003','01','pprodid','产品名称','','Y','system',to_date('2022/07/20','yyyy/mm/dd'),'system',to_date('2022/07/20', 'yyyy/mm/dd'),'','2','N');
-insert into REP_SCREEN values ('100000071','CP_001_004_003','08','enddate','产品发布日期','','Y','system',to_date('2022/07/20','yyyy/mm/dd'),'system',to_date('2022/07/20', 'yyyy/mm/dd'),'','3','N');
+insert into REP_SCREEN values ('100000068','CP_001_004_002','01','pprodid','产品名称','','Y','system',to_date('2022/07/20','yyyy/mm/dd'),'system',to_date('2022/07/20', 'yyyy/mm/dd'),'','1','N');
+insert into REP_SCREEN values ('100000069','CP_001_004_002','08','enddate','产品发布日期','','Y','system',to_date('2022/07/20','yyyy/mm/dd'),'system',to_date('2022/07/20', 'yyyy/mm/dd'),'','2','N');
+insert into REP_SCREEN values ('100000070','CP_001_004_003','01','pprodid','产品名称','','Y','system',to_date('2022/07/20','yyyy/mm/dd'),'system',to_date('2022/07/20', 'yyyy/mm/dd'),'','1','N');
+insert into REP_SCREEN values ('100000071','CP_001_004_003','08','enddate','产品发布日期','','Y','system',to_date('2022/07/20','yyyy/mm/dd'),'system',to_date('2022/07/20', 'yyyy/mm/dd'),'','2','N');
 insert into REP_SCREEN values ('100000072','CP_001_004_004','01','pprodid','产品名称','','Y','system',to_date('2022/07/20','yyyy/mm/dd'),'system',to_date('2022/07/20', 'yyyy/mm/dd'),'','1','N');
 insert into REP_SCREEN values ('100000073','CP_001_004_004','08','enddate','发布日期','','Y','system',to_date('2022/07/20','yyyy/mm/dd'),'system',to_date('2022/07/20', 'yyyy/mm/dd'),'','2','N');
 insert into REP_SCREEN values ('100000074','CP_001_004_004','03','feename','费率名称','','Y','system',to_date('2022/07/20','yyyy/mm/dd'),'system',to_date('2022/07/20', 'yyyy/mm/dd'),'','3','Y');
