@@ -91,7 +91,7 @@ public class RepProdIndexValidator implements BeanValidator {
             if(dto.getIsGrade().equals("01")){
                 RepProdIndexDto repProdIndexDto2 = repProdIndexService.selectPProdInfo(dto);
                 RepProdIndexDto repProdIndexDto3 = repProdIndexService.selectPProd(dto);
-                if(repProdIndexDto2 == null && repProdIndexDto3 != null){
+                if(repProdIndexDto2 == null && repProdIndexDto3 != null && StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)){
                     errorList.add(new ValidMessage("", "对于分级产品，每个子产品数据同一天的“母产品总资产“母产品资产净值”“母产品实收资本”“母产品单位净值”“母产品单位累计净值”“母产品万份收益”“母产品七日年化收益率”需要分别相等!"));
                 }
             }
