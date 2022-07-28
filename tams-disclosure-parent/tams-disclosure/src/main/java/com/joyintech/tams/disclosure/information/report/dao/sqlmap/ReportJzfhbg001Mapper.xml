@@ -59,4 +59,16 @@
 		  ) WHERE ROWNUM = 1
 	</select>
 
+	<select id="checkGenerateFlag" resultType="com.joyintech.tams.common.base.entity.DisProdBonusplan">
+		SELECT
+				,PLAN.SETT_DATE /*基准日*/
+				,PLAN.PAYMENT_DATE /*红利发放日*/
+		FROM REP_PROD_INFO INFO
+			INNER JOIN DIS_PROD_BONUSPLAN PLAN ON PLAN.PROD_ID=INFO.PROD_ID AND PLAN.DATA_STATUS='E'
+			AND PLAN.SETT_DATE=TO_DATE(#{settDate},'yyyy-MM-dd')
+			AND PLAN.BONUS_MODE = '01'
+		WHERE INFO.STATUS='E'
+		  AND INFO.PROD_ID=#{prodId,jdbcType=VARCHAR}
+	</select>
+
 </mapper>

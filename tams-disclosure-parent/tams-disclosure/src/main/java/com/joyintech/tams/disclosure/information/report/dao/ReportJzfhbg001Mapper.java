@@ -57,4 +57,6 @@ public interface ReportJzfhbg001Mapper {
      * @return
      */
     List<ReportOpenPlanDto> getOpenPlanList(Map<String, Object> searchParam);
+
+    DisProdBonusplan checkGenerateFlag(Map<String, Object> searchParam);
 }
