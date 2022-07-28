@@ -103,25 +103,25 @@ public class ReportRkcpjz001Service implements IReportDataService {
                 } else {//净值型产品：展示一条：今日份额净值及申购赎回价格
                     list = reportRkcpjz001Mapper.getJzxValueList(searchparam);
                 }
-                //当日净值不为空
-                if (list != null && list.size() > 0) {
-                    reportRkcpjz001Dto.setList(list);
-                    dataMap = ReportCollectionUtils.bean2Map(reportRkcpjz001Dto);
-                }else{//若取不到所需的净值数据，需要在【报表数据校验】处给出提示，例：2022年7月19日对2022年7月18日的净值信息进行披露时，若7月18日的净值信息还未接入进系统，需要在【报表数据校验】处给出提示
+                //若取不到所需的净值数据，需要在【报表数据校验】处给出提示，例：2022年7月19日对2022年7月18日的净值信息进行披露时，若7月18日的净值信息还未接入进系统，需要在【报表数据校验】处给出提示
+                if (list == null || list.size() ==0) {
 
                 }
+                reportRkcpjz001Dto.setList(list);
+                dataMap = ReportCollectionUtils.bean2Map(reportRkcpjz001Dto);
                 //近一个月（工作日）份额净值走势图或近一个月(自然日)万份收益走势图
                 String imagePath1 = tmpImagePath + "image1" + "_" + prodId + "_" + valueDate;
                 //近一个月（工作日）份额累计净值走势图或近一个月份(自然日)七日年化收益率走势图
                 String imagePath2 = tmpImagePath + "image2" + "_" + prodId + "_" + valueDate;
                 //折线图配置信息
                 Map<String, Object> configMap = new HashMap<>();
-                configMap.put("series.type", "bar");
+                configMap.put("series.type", "line");
                 if (StringUtil.equals(rptType, DisReportType.RKCPJZ_GMXGL)) {
                     configMap.put("title.text", "万份收益（元）走势图");
                 } else {
                     configMap.put("title.text", "份额净值（元）走势图");
                 }
+                configMap.put("series.symbol","rect");
                 configMap.put("title.left", "center");
                 configMap.put("title.top", "");
                 configMap.put("title.textStyle.fontSize", "10");
@@ -132,8 +132,8 @@ public class ReportRkcpjz001Service implements IReportDataService {
                 configMap.put("legend.bottom", "1%");
                 configMap.put("xAxis.type", "category");
                 configMap.put("xAxis.boundaryGap", "");
-                configMap.put("xAxis.axisLabel.rotate", 40);//设置x轴转的角度
-                configMap.put("xAxis.axisLabel.interval", 0);//设置x轴数据全部显示
+                configMap.put("xAxis.axisLabel.rotate", "30");//设置x轴转的角度
+                configMap.put("xAxis.axisLabel.interval", 1);//设置x轴数据隔天显示
                 configMap.put("yAxis.type", "value");
                 configMap.put("yAxis.position", "left");
                 configMap.put("yAxis.splitNumber", "30");//设置y轴最多显示个数，不一定会显示
@@ -142,7 +142,18 @@ public class ReportRkcpjz001Service implements IReportDataService {
                 searchparam.put("rptType", rptType);
                 //曲线图数据对象
                 List<List<String>> dataList = new ArrayList<>();
-                //查询小于等于当前最新净值日期的过去30个工作日的单位净值折线图   份额净值
+
+
+                //查询小于等于当前最新净值日期的过去30个自然日的万分收益
+                if (StringUtil.equals(rptType, DisReportType.RKCPJZ_GMJZXCP)) {
+                    //关联节假日表，查询小于等于当前净值日其的过去30个工作日
+                    searchparam.put("is_holiday", "0");
+                }
+                searchparam.put("busi_date", valueDate);
+                searchparam.put("market_code", "04");
+                //如果是现管类产品，需要查询小于等于当前净值日的过去30个自然日数据
+                List<Date> queryDateList =reportRkcpjz001Mapper.getValueDayList(searchparam);
+                searchparam.put("dateList",queryDateList);
                 List<ReportGrahDto> grahDtoList = reportRkcpjz001Mapper.getValues(searchparam);
                 //排序
                 grahDtoList = grahDtoList.stream().sorted(Comparator.comparing(ReportGrahDto::getcDate)).collect(Collectors.toList());
@@ -159,6 +170,10 @@ public class ReportRkcpjz001Service implements IReportDataService {
                     row.add(grahDto.getValue());
                     dataList.add(row);
                 }
+               /* List<String> lastNode = new ArrayList<>();
+                lastNode.add(Date);
+                lastNode.add("");
+                dataList.add(lastNode);*/
                 EchartsUtils.buildEChartsPicture4ChartType(configMap, dataList, imagePath1, EchartsUtils.ECHARTS_图表类型_曲线图, echartsCmdPath);
 
                 Map<String, Object> prodValueChart = new HashMap<String, Object>();
@@ -173,6 +188,7 @@ public class ReportRkcpjz001Service implements IReportDataService {
                 //重新添加标题
                 if (StringUtil.equals(rptType, DisReportType.RKCPJZ_GMXGL)) {
                     configMap.put("title.text", "七日年化收益率（%）走势图");
+                    configMap.put("yAxis.axisLabel.formatter", "{value}%");
                 } else {
                     configMap.put("title.text", "份额累计净值（元）走势图");
                 }

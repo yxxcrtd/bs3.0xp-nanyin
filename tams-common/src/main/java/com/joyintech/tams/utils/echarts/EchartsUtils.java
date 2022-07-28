@@ -249,7 +249,12 @@ public class EchartsUtils {
 		String xAxis_axisLabel_rotate = obj2str(configMap.get("xAxis.axisLabel.rotate"));
 		if (StringUtils.isEmpty(xAxis_axisLabel_rotate))
 			xAxis_axisLabel_rotate = "";// 默认不设置
-		
+		//设置X轴的刻度
+		int xAxis_axisLabel_interval = 0;
+		if(configMap.get("xAxis.axisLabel.interval") != null){
+			xAxis_axisLabel_interval = (Integer) configMap.get("xAxis.axisLabel.interval");
+		}
+
 		Object[] xAxis_data = null;
 		if (StringUtil.isNotEmpty(dataMap.get("xAxis.data")) && (dataMap.get("xAxis.data") instanceof Object[]))
 			xAxis_data = (Object[]) dataMap.get("xAxis.data");
@@ -274,6 +279,10 @@ public class EchartsUtils {
 		String splitNumber = obj2str(configMap.get("yAxis.splitNumber"));
 		if (StringUtils.isEmpty(splitNumber))
 			splitNumber = "7";
+		//纵坐标显示刻度
+		String yAxis_axisLabel_formatter = obj2str(configMap.get("yAxis.axisLabel.formatter"));
+		if (StringUtils.isEmpty(yAxis_axisLabel_formatter))
+			yAxis_axisLabel_formatter = "{value}";// 默认为空
 
 		// 数据集合
 		List<Series> seriesList = null;
@@ -291,13 +300,17 @@ public class EchartsUtils {
 		}
 		// 横坐标（展示：折线/面积图、柱状/条形图）
 		if (Arrays.asList(new String[] { ECHARTS_图表类型_曲线图, ECHARTS_图表类型_柱状图 }).contains(series_type)) {
-			option.setxAxis(new XAxis(xAxis_name, xAxis_type, xAxis_boundaryGap, new AxisLabel(xAxis_axisLabel_rotate),xAxis_data));
+			option.setxAxis(new XAxis(xAxis_name, xAxis_type, xAxis_boundaryGap, new AxisLabel(xAxis_axisLabel_rotate,xAxis_axisLabel_interval),xAxis_data));
 		}
 		// 纵坐标（展示：折线/面积图、柱状/条形图）
 		if (Arrays.asList(new String[] { ECHARTS_图表类型_曲线图, ECHARTS_图表类型_柱状图 }).contains(series_type)) {
 			List<YAxis> yAxisList = new ArrayList<YAxis>();
+			AxisLabel axisLabel = new AxisLabel();
+			if(StringUtil.isNotEmpty(axisLabel)){
+				axisLabel.setFormatter(yAxis_axisLabel_formatter);
+			}
 			yAxisList.add(new YAxis(yAxis_name, yAxis_type, yAxis_position,yAxis_scale,splitNumber,
-					new AxisLine(new LineStyle(yAxis_axisLine_lineStyle_color, yAxis_axisLine_lineStyle_type))));
+					new AxisLine(new LineStyle(yAxis_axisLine_lineStyle_color, yAxis_axisLine_lineStyle_type)),axisLabel));
 			option.setyAxis(yAxisList);
 		}
 		// 数据集合
