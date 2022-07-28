@@ -180,12 +180,12 @@ $(function() {
                 var selArr = table.getAllCheckedRows();
             }
             if (!selArr || selArr.length == 0) {
-                Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+                Joyin.error(JoyinUtil.getMessage("请至少选择一条记录"));
                 return;
             }
             for(var i=0;i<selArr.length;i++){
                 if(selArr[i].status =="D"){
-                    return Joyin.error("只能删除有效数据，请重新选择");
+                    return Joyin.error("不能删除已删除的数据，请重新选择");
                 }
                 // selArr[i].operateType =  "delete";
             }
