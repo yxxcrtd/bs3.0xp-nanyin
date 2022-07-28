@@ -63,7 +63,6 @@
 			LEFT JOIN DIS_PROD_PLAN DPP ON DPP.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID) AND DPP.OPEN_END_DATE =PRI.VALUE_DATE
 		WHERE INFO.PROD_ID = #{prodId}
 		  AND PRI.VALUE_DATE = TO_DATE(#{valueDate},'yyyy-MM-dd')
-		ORDER BY PRI.VALUE_DATE DESC
 	</select>
 
 	<select id="getValues" resultType="com.joyintech.tams.disclosure.information.report.dto.ReportGrahDto">
