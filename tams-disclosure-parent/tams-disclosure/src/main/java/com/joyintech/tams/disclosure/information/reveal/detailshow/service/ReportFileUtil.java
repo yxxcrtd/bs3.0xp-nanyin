@@ -4,9 +4,9 @@
 package com.joyintech.tams.disclosure.information.reveal.detailshow.service;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.ibm.icu.text.SimpleDateFormat;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
 import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.ReportInfo;
