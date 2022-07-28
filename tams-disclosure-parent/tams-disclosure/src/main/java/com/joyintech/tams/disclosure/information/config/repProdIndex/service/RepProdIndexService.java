@@ -181,7 +181,7 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
                         errorMsg.append("产品主代码 必填！");
                     }else if(!this.selectProdId(rowData.get(1))){
                         errorMsg.append("产品主代码未在系统中维护！");
-                    }else if(!dto1.getpProdId().equals(rowData.get(1))){
+                    }else if(StringUtil.isNotEmpty(dto1.getpProdId()) && !(dto1.getpProdId().equals(rowData.get(1)))){
                         errorMsg.append("产品主代码不是产品子代码的母产品代码！");
                     }else{
                         dto2.setpProdId(rowData.get(1));
