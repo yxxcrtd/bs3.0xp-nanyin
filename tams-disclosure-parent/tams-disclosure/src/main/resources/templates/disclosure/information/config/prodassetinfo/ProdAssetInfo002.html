@@ -4,8 +4,8 @@
 <head>
 <title>产品资产组合新建</title>
     <style>
-        .mst-lable{
-            width: 20%;
+        .form-inline-wrap{
+            width: 49%;
         }
     </style>
 </head>
@@ -19,30 +19,32 @@
                             <div class="pro-module-item">
                                 <input type="text" id="prodAssetId" name="prodAssetId" class="layui-input form-input" data-th-value="${entity?.prodAssetId}" style = "display: none">
                                 <div class="layui-form-item">
-                                    <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-                                        <label class="layui-form-label form-lable">产品名称</label>
-                                        <div class="layui-input-inline input-inline">
-                                            <select id="prodName" name="prodName"
-                                                    class="layui-input form-input input-select"
-                                                    data-th-data-url="@{/disclosure/information/config/prodassetinfo/ProdAssetInfo001/queryProdIdInfo}"
-                                                    required="required" allowClear="true" placeholder="请输入内容"
-                                                    data-th-placeholder="#{SysCommon.placeholder}" searchable="true"
-                                                    data-th-initValue='${entity?.prodId}'>
-                                            </select>
-                                        </div>
+                                        <div class="form-inline-wrap">
+                                            <label class="layui-form-label form-label-wrap mst-lable">产品名称</label>
+                                            <div class="layui-input-inline input-inline">
+                                                <select id="prodName" name="prodName"
+                                                        class="layui-input form-input input-select"
+                                                        data-th-data-url="@{/disclosure/information/config/prodassetinfo/ProdAssetInfo001/queryProdIdInfo}"
+                                                        required="required" allowClear="true" placeholder="请输入内容"
+                                                        data-th-placeholder="#{SysCommon.placeholder}" searchable="true"
+                                                        data-th-initValue='${entity?.prodId}'>
+                                                </select>
+                                            </div>
                                     </div>
 
-                                    <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-                                        <label class="layui-form-label form-lable">产品主代码</label>
+                                    <div class="form-inline-wrap">
+                                        <label class="layui-form-label form-label-wrap mst-lable">产品主代码</label>
                                         <div class="layui-input-inline input-inline">
                                             <input type="text" class="layui-input form-input"
                                                    data-th-placeholder="#{SysCommon.placeholder}" id="prodId"
                                                    name="prodId" data-th-value="${entity?.prodId}" disabled required="required"/>
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-                                        <label class="layui-form-label form-lable">穿透前固定收益类资产占总资产比例</label>
+                                <div class="layui-form-item">
+                                    <div class="form-inline-wrap">
+                                        <label class="layui-form-label form-label-wrap mst-lable">穿透前固定收益类资产占总资产比例</label>
                                         <div class="layui-input-inline input-inline">
                                             <input type="text" id="fixPreRatio" name="fixPreRatio"
                                                    class="layui-input form-input text-number" placeholder="请输入内容"
@@ -50,10 +52,8 @@
                                                    data-th-value='${entity?.fixPreRatio}' data-textrange="2" maxlength="10">
                                         </div>
                                     </div>
-                                </div>
-                                <div class="layui-form-item">
-                                    <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-                                        <label class="layui-form-label form-lable">穿透后固定收益类资产占总资产比例</label>
+                                    <div class="form-inline-wrap">
+                                        <label class="layui-form-label form-label-wrap mst-lable">穿透后固定收益类资产占总资产比例</label>
                                         <div class="layui-input-inline input-inline">
                                             <input type="text" id="fixAfterRatio" name="fixAfterRatio"
                                                    class="layui-input form-input text-number" placeholder="请输入内容"
@@ -61,8 +61,12 @@
                                                    data-th-value='${entity?.fixAfterRatio}' data-textrange="2" maxlength="10">
                                         </div>
                                     </div>
-                                    <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-                                        <label class="layui-form-label form-lable">穿透前权益类资产占总资产比例</label>
+                                </div>
+
+
+                                <div class="layui-form-item">
+                                    <div class="form-inline-wrap">
+                                        <label class="layui-form-label form-label-wrap mst-lable">穿透前权益类资产占总资产比例</label>
                                         <div class="layui-input-inline input-inline">
                                             <input type="text" id="equityPreRatio" name="equityPreRatio"
                                                    class="layui-input form-input text-number" placeholder="请输入内容"
@@ -70,8 +74,8 @@
                                                    data-th-value='${entity?.equityPreRatio}' data-textrange="2" maxlength="10">
                                         </div>
                                     </div>
-                                    <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-                                        <label class="layui-form-label form-lable">穿透后权益类资产占总资产比例</label>
+                                    <div class="form-inline-wrap">
+                                        <label class="layui-form-label form-label-wrap mst-lable">穿透后权益类资产占总资产比例</label>
                                         <div class="layui-input-inline input-inline">
                                             <input type="text" id="equityAfterRatio" name="equityAfterRatio"
                                                    class="layui-input form-input text-number" placeholder="请输入内容"
@@ -82,8 +86,8 @@
                                 </div>
 
                                 <div class="layui-form-item">
-                                    <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-                                        <label class="layui-form-label form-lable">穿透前商品及金融衍生品类资产占总资产比例</label>
+                                    <div class="form-inline-wrap">
+                                        <label class="layui-form-label form-label-wrap mst-lable">穿透前商品及金融衍生品类资产占总资产比例</label>
                                         <div class="layui-input-inline input-inline">
                                             <input type="text" id="fdPreRatio" name="fdPreRatio"
                                                    class="layui-input form-input text-number" placeholder="请输入内容"
@@ -91,8 +95,8 @@
                                                    data-th-value='${entity?.fdPreRatio}' data-textrange="2" maxlength="10">
                                         </div>
                                     </div>
-                                    <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-                                        <label class="layui-form-label form-lable">穿透后商品及金融衍生品类资产占总资产比例</label>
+                                    <div class="form-inline-wrap">
+                                        <label class="layui-form-label form-label-wrap mst-lable">穿透后商品及金融衍生品类资产占总资产比例</label>
                                         <div class="layui-input-inline input-inline">
                                             <input type="text" id="fdAfterRatio" name="fdAfterRatio"
                                                    class="layui-input form-input text-number" placeholder="请输入内容"
@@ -100,8 +104,11 @@
                                                    data-th-value='${entity?.fdAfterRatio}' data-textrange="2" maxlength="10">
                                         </div>
                                     </div>
-                                    <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-                                        <label class="layui-form-label form-lable">穿透前混合类资产占总资产比例</label>
+                                </div>
+
+                                <div class="layui-form-item">
+                                    <div class="form-inline-wrap">
+                                        <label class="layui-form-label form-label-wrap mst-lable">穿透前混合类资产占总资产比例</label>
                                         <div class="layui-input-inline input-inline">
                                             <input type="text" id="mixPreRatio" name="mixPreRatio"
                                                    class="layui-input form-input text-number" placeholder="请输入内容"
@@ -109,11 +116,8 @@
                                                    data-th-value='${entity?.mixPreRatio}' data-textrange="2" maxlength="10">
                                         </div>
                                     </div>
-                                </div>
-
-                                <div class="layui-form-item">
-                                    <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-                                        <label class="layui-form-label form-lable">穿透后混合类资产占总资产比例</label>
+                                    <div class="form-inline-wrap">
+                                        <label class="layui-form-label form-label-wrap mst-lable">穿透后混合类资产占总资产比例</label>
                                         <div class="layui-input-inline input-inline">
                                             <input type="text" id="mixAfterRatio" name="mixAfterRatio"
                                                    class="layui-input form-input text-number" placeholder="请输入内容"
@@ -121,8 +125,11 @@
                                                    data-th-value='${entity?.mixAfterRatio}' data-textrange="2" maxlength="10">
                                         </div>
                                     </div>
-                                    <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-                                        <label class="layui-form-label form-lable">生效日</label>
+                                </div>
+
+                                <div class="layui-form-item">
+                                    <div class="form-inline-wrap">
+                                        <label class="layui-form-label form-label-wrap mst-lable">生效日</label>
                                         <div class="layui-input-inline input-inline">
                                             <input id="effDate" name="effDate"
                                                    class="layui-input form-input input-dateSelect" required="required"
@@ -130,8 +137,8 @@
                                                    placeholder="请选择时间">
                                         </div>
                                     </div>
-                                    <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4">
-                                        <label class="layui-form-label form-lable">生效日截止日期</label>
+                                    <div class="form-inline-wrap">
+                                        <label class="layui-form-label form-label-wrap mst-lable">生效日截止日期</label>
                                         <div class="layui-input-inline input-inline">
                                             <input id="effEndDate" name="effEndDate"
                                                    class="layui-input form-input input-dateSelect" required="required"
