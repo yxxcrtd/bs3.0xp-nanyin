@@ -6,6 +6,7 @@ import com.joyintech.tams.disclosure.information.report.dto.ReportRkcpjz001Dto;
 import com.joyintech.tams.disclosure.information.report.dto.ReportValueDto;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -28,4 +29,6 @@ public interface ReportRkcpjz001Mapper {
     List<ReportValueDto> getXgxValueList(Map<String, Object> searchparam);
 
     List<ReportValueDto> getJzxValueList(Map<String, Object> searchparam);
+
+    List<Date> getValueDayList(Map<String, Object> searchparam);
 }

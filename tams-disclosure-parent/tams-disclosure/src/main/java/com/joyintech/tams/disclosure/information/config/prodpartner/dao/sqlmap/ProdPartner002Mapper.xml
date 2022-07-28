@@ -20,7 +20,7 @@
 	</update>
 
 	<update id="deleteProdPartnerByPrimaryKey">
-		update DIS_PROD_PARTNER set DATA_STATUS='02'
+		update DIS_PROD_PARTNER set DATA_STATUS='D'
         where PROD_PARTENER_ID = #{prodPartenerId,jdbcType=VARCHAR}
 	</update>
 

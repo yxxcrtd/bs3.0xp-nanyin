@@ -28,7 +28,7 @@ $(function(){
          */
         dblclick:function(table, data) {
             data.pageModel=PAGE_MODEL_REFERENCE;
-            Joyin.dialog(JoyinUtil.getLabel("ProdPartner001"),
+            Joyin.dialog(JoyinUtil.getLabel("合作机构信息查看"),
                     JoyinUtil.getRealPath("disclosure/information/config/prodpartner/ProdPartner002/init"),
                     "98%", "95%", data,
                     function(){table.reload();});
