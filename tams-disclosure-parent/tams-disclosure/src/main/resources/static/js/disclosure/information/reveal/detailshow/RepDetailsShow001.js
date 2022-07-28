@@ -263,7 +263,6 @@ $(function () {
 		var toStr = 'src='+basePath+'image'
 		var changeStr= 'src="image'
 	    if(params&&params.length==0){
-				alert("a");
 	    	Joyin.ajax('previewReport', {uri:modelId,repId:repId}, function(result) {
 				//var data =result.replace(new RegExp(changeStr, "g"), toStr);
 				//data =data.replace(new RegExp('.png', "g"), '.png&v='+Math.random());
@@ -273,7 +272,6 @@ $(function () {
 	    	params['uri'] = modelId;
 	    	params['repId']=repId;
 			console.log(params)
-				alert("b");
 	    	Joyin.ajax('previewReport', params, function(result) {
 				//var data =result.replace(new RegExp(changeStr, "g"), toStr);
 				//data =data.replace(new RegExp('.png', "g"), '.png&v='+Math.random());
@@ -408,16 +406,16 @@ $(function () {
         displayMenu();
 		var params = getSearchParams();
 		
-		params['portnum'] = JSON.stringify(params['portnum']);
-		
-    	if((modelId&&modelUri)||modelListId){
-    		if(!params){
+		//params['portnum'] = JSON.stringify(params['portnum']);
+
+		if(modelId&&modelUri){
+			if(!params){
 				Joyin.alert('参数不能为空！',2);
-    			return;
-    		}
-    	}else{
-    		return;
-    	}
+				return;
+			}
+		}else{
+			return;
+		}
     	var uuid = 'pageid' + randomString(10, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
 		params.rep_id=uuid;
     	//导出会报错所以暂时屏蔽name
