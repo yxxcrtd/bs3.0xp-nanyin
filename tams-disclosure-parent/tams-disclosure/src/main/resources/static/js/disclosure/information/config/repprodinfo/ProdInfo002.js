@@ -24,6 +24,7 @@
         $("#pProdId").attr("disabled", "disabled");
         $("#profitType").attr("disabled", "disabled");
 
+        showHidePerformDiv(isIndexUpdate);
 
     }
     var init = 0;
@@ -102,26 +103,35 @@
         object.pageModel = pageModel;
         object.basicChangeList = mockTradeTable.getAllRows();
         if (pageModel == PAGE_MODEL_EDIT) { //修改 ，判断募集金额是否改变
-            var oldRaiseAmt = $('#oldRaiseAmt').val();
-            var raiseAmt = object.raiseAmt;
+            var oldRaiseAmt = $("#oldRaiseAmt").val();
+
+            var raiseAmt = String(object.raiseAmt);
+            console.log(oldRaiseAmt);
+            console.log(raiseAmt);
             if (raiseAmt != oldRaiseAmt) {
                 Joyin.confirm("是否同步修改其余子产品的产品募集金额？", function () {
                     object.synchFlag = true;
-                    doSaveOrSubmit(object);
+                    doSaveOrSubmit(object,operateType);
                 },null, function () {
-                    doSaveOrSubmit(object);
+                    doSaveOrSubmit(object,operateType);
                 });
+            }else{
+                doSaveOrSubmit(object,operateType);
             }
         } else {//新增操作
-            doSaveOrSubmit(object);
+            doSaveOrSubmit(object,operateType);
         }
     };
 
-    function doSaveOrSubmit(object) {
+    function doSaveOrSubmit(object,operateType) {
         Joyin.ajaxJson(basePath + 'disclosure/information/config/repprodinfo/ProdInfo002/check', object, function (result) {
             //提交工作流
-            Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001", JoyinUtil.getLabel("SysCommon.submit")), function () {
-                WorkFlow.doSubmitList(basePath + 'disclosure/information/config/repprodinfo/ProdInfo002/save', object, "ProdInfo002_btn_submit");
+            Joyin.confirm(result.data, function() {
+                if (operateType === 'save') {
+                    WorkFlow.doSaveList(basePath + 'disclosure/information/config/repprodinfo/ProdInfo002/save', object, "ProdInfo002_btn_save");
+                } else {
+                    WorkFlow.doSubmitList(basePath + 'disclosure/information/config/repprodinfo/ProdInfo002/save', object, "ProdInfo002_btn_submit");
+                }
             });
         });
     }
@@ -133,10 +143,15 @@
         if (pageModel === PAGE_MODEL_EDIT) {
             $('#btnSave_wfl').hide();
         }
+
         // 绑定按钮事件
         $('#ProdInfo002_btn_submit').click(function () {
             saveOrSubmit("submit");
         });
+        $('#ProdInfo002_btn_save').click(function () {
+            saveOrSubmit("save");
+        });
+
         $("#raiseStrdate").change(function () {
             changeRaisetDate();
         });
