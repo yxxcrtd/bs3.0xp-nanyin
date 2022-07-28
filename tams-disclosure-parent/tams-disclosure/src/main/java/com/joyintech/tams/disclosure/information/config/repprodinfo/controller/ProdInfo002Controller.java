@@ -158,7 +158,7 @@ public class ProdInfo002Controller extends BaseController {
         String operateType = dto.getOperateType();
         String pageModel = dto.getPageModel();
         if (StringUtil.equals(pageModel, GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {//新增
-            ProdInfoDto existDto = prodInfoService.selectByProdStatus(dto.getpProdId());
+            ProdInfoDto existDto = prodInfoService.selectByProdStatus(dto.getProdId());
             if (existDto != null) {
                 return new AjaxResult("子产品代码已存在", MessageType.错误消息);
             }
