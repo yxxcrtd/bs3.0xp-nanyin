@@ -41,7 +41,7 @@
                ric.STATUS status,
                ric.UPDATE_USER updateUser,
                ric.UPDATE_TIME updateTime,
-               ric.ERRORMSG errmsg
+               ric.ERRORMSG errormsg
         from REP_INVEST_ACCOUNT ric
         left join REP_PROD_INFO rpi on rpi.PROD_ID = ric.PROD_ID
         <where>
@@ -124,7 +124,7 @@
     STATUS = #{status,jdbcType=VARCHAR},
     UPDATE_USER = #{createUser,jdbcType=VARCHAR},
     UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-    ERRORMSG = #{errmsg,jdbcType=VARCHAR}
+    ERRORMSG = #{errormsg,jdbcType=VARCHAR}
     where PROD_ID = #{prodId,jdbcType=VARCHAR}
     </update>
     <delete id="delete" parameterType="com.joyintech.tams.disclosure.information.config.repInvestAccount.dto.RepInvestAccountDto"  >

@@ -13,7 +13,7 @@
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
         <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
-        <result column="ERRORMSG" property="errorMsg" jdbcType="VARCHAR" />
+        <result column="ERRORMSG" property="errormsg" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         PROD_ID,ACCOUNT_TYPE,ACCOUNT_NUM,ACCOUNT_NAME,ACCOUNT_OPENER,STATUS
@@ -47,7 +47,7 @@
         values (#{prodId,jdbcType=VARCHAR}, #{accountType,jdbcType=VARCHAR},#{accountNum,jdbcType=VARCHAR},
                 #{accountName,jdbcType=VARCHAR}, #{accountOpener,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR},
                 #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
-                #{updateTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR}, #{errorMsg,jdbcType=VARCHAR})
+                #{updateTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR}, #{errormsg,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepInvestAccount" >
         insert into REP_INVEST_ACCOUNT
@@ -85,7 +85,7 @@
             <if test="createDept != null" >
                 CREATE_DEPT,
             </if>
-            <if test="errorMsg != null" >
+            <if test="errormsg != null" >
                 ERRORMSG,
             </if>
         </trim>
@@ -123,8 +123,8 @@
             <if test="createDept != null" >
                 #{createDept,jdbcType=VARCHAR},
             </if>
-            <if test="errorMsg != null" >
-                #{errorMsg,jdbcType=VARCHAR},
+            <if test="errormsg != null" >
+                #{errormsg,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -164,8 +164,8 @@
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="errorMsg != null" >
-                ERRORMSG = #{errorMsg,jdbcType=VARCHAR},
+            <if test="errormsg != null" >
+                ERRORMSG = #{errormsg,jdbcType=VARCHAR},
             </if>
         </set>
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
@@ -179,7 +179,7 @@
             STATUS = #{status,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-            ERRORMSG = #{errorMsg,jdbcType=VARCHAR}
+            ERRORMSG = #{errormsg,jdbcType=VARCHAR}
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
     </update>
 </mapper>
