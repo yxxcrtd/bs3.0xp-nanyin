@@ -31,8 +31,7 @@
 	<select id="getOpenList"  resultType="com.joyintech.tams.disclosure.information.report.dto.ReportOpenPlanDto">
 		SELECT * FROM (
 			SELECT
-				TO_CHAR(DPP.OPEN_START_DATE,'YYYY/MM/DD') openStartDate
-				,TO_CHAR(DPP.OPEN_END_DATE,'YYYY/MM/DD')  openEndDate
+				TO_CHAR(DPP.OPEN_START_DATE,'YYYY/MM/DD') ||'-'||TO_CHAR(DPP.OPEN_END_DATE,'YYYY/MM/DD')  openDurationDate
 				,TO_CHAR(DPP.OPERATION_START_DATE,'YYYY-MM-DD')   operationStartDate
 				,TO_CHAR(DPP.AUTO_REDEEM_DATE,'YYYY-MM-DD')    autoRedeemDate
 				,TO_CHAR(DPP.HOLD_DAYS) holdDays

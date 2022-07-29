@@ -92,6 +92,7 @@ public class ReportKfjzgg001Service implements IReportDataService {
                         reportOpenPlanDto.setOpenEndDate("XXXX-XX-XX");
                         reportOpenPlanDto.setCollingoffPeriod("XXXX-XX-XX");
                         reportOpenPlanDto.setSettDate("XXXX-XX-XX");
+                        reportOpenPlanDto.setOpenDurationDate("XXXX-XX-XX至XXXX-XX-XX");
                         openList.add(reportOpenPlanDto);
                     }
                     reportKfjzgg001Dto.setOpenPlanList(openList);
