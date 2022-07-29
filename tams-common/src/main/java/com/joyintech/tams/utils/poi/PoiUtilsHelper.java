@@ -297,7 +297,8 @@ public class PoiUtilsHelper {
 		//规则行，取出list名称
 		String listname = rule.getForeach();
 		List<Map<String,Object>> listData = (List<Map<String,Object>>)mapDatas.get(listname);
-
+		if ( listData==null || listData.size()<1 ) 
+			return -1;
 		//行循环模式
 		if ( PoiTableRule.loopMode_Row.equals(rule.getLoopMode()) ) {
 			table.removeRow(0);  //删除规则行1

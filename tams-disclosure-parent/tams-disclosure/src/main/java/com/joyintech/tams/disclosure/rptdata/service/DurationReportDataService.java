@@ -17,10 +17,17 @@ import com.joyintech.tams.common.base.dao.ChbMktHolidayMapper;
 import com.joyintech.tams.common.base.dao.RepExtConusMapper;
 import com.joyintech.tams.common.base.entity.ChbMktHoliday;
 import com.joyintech.tams.common.base.entity.ChbMktHolidayKey;
+import com.joyintech.tams.common.base.entity.DisNostdCreditor;
+import com.joyintech.tams.common.base.entity.DisProdAsset;
+import com.joyintech.tams.common.base.entity.RepAssetsComb;
 import com.joyintech.tams.common.base.entity.RepExtConus;
 import com.joyintech.tams.common.base.entity.RepExtConusKey;
+import com.joyintech.tams.common.base.entity.RepIndexSub;
+import com.joyintech.tams.common.base.entity.RepInvestAccount;
 import com.joyintech.tams.common.base.entity.RepProdBasicChange;
+import com.joyintech.tams.common.base.entity.RepProdIndex;
 import com.joyintech.tams.common.base.entity.RepProdInfo;
+import com.joyintech.tams.common.base.entity.RepRelDeal;
 import com.joyintech.tams.disclosure.common.CollectionUtils;
 import com.joyintech.tams.disclosure.common.DisReportType;
 import com.joyintech.tams.disclosure.common.DurationUtil;
@@ -102,6 +109,20 @@ public class DurationReportDataService implements IReportDataService {
 				reportDto.setQuarter(quarter);
 				reportDto.setReportDate(reportDate);
 				reportDto.setGenDate(currDate);
+				
+				if ( rptType.equals(DisReportType.JDBG_ZSX) || rptType.equals(DisReportType.JDBG_FZSX)) {  //季报
+					reportDto.setDuration(DurationUtil.getQuarterDuration(year, quarter, reportDto.geteDate()));
+					reportDto.setDurStartDate(DurationUtil.getQuarterStart(year, quarter));
+					reportDto.setDurEndDate(DurationUtil.getQuarterEnd(year, quarter));
+				} else if ( rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX) ) {  //半年报
+					reportDto.setDuration(DurationUtil.getHalfYearDuration(year, halfYear, reportDto.geteDate()));
+					reportDto.setDurStartDate(DurationUtil.getHalfYearStart(year, halfYear));
+					reportDto.setDurEndDate(DurationUtil.getHalfYearEnd(year, halfYear));
+				} else if ( rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX) ) { //年报  
+					reportDto.setDuration(DurationUtil.getYearDuration(year, reportDto.geteDate()));
+					reportDto.setDurStartDate(DurationUtil.getYearStart(year));
+					reportDto.setDurEndDate(DurationUtil.getYearEnd(year));
+				}						
 			} catch ( Exception e ) {
 				logger.error("报表区间数据错误.");
 				e.printStackTrace();
@@ -109,7 +130,11 @@ public class DurationReportDataService implements IReportDataService {
 			
 			//财务指标：子产品维度
 			try {
-				List<Map<String,Object>> listFinIndex = durationReportMapper.selectFinIndex(paraMap);
+				List<RepProdIndex> listDto = durationReportMapper.selectFinIndex(paraMap);
+				List<Map<String,Object>> listFinIndex = new ArrayList<>();
+				listDto.forEach(item->{
+					listFinIndex.add(CollectionUtils.bean2Map(item));
+				});
 				reportDto.setListFinIndex(listFinIndex);
 			} catch (Exception e) {
 				logger.error("报表财务指标信息错误.");
@@ -128,9 +153,9 @@ public class DurationReportDataService implements IReportDataService {
 					Date durEndDate = DurationUtil.getQuarterEnd(year, quarter);
 					mapChild.put("achieveBasis",this.calcAchivementBasis(child,durStartDate,durEndDate) );
 				} else if ( rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX) ) {  //半年报
-					mapChild.put("duration",DurationUtil.getHalfYearDuration(year, quarter, child.getSetDate()));
-					Date durStartDate = DurationUtil.getHalfYearStart(year, quarter);
-					Date durEndDate = DurationUtil.getHalfYearEnd(year, quarter);
+					mapChild.put("duration",DurationUtil.getHalfYearDuration(year, halfYear, child.getSetDate()));
+					Date durStartDate = DurationUtil.getHalfYearStart(year, halfYear);
+					Date durEndDate = DurationUtil.getHalfYearEnd(year, halfYear);
 					mapChild.put("achieveBasis",this.calcAchivementBasis(child,durStartDate,durEndDate) );
 				} else if ( rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX) ) { //年报  
 					mapChild.put("duration",DurationUtil.getYearDuration(year, child.getSetDate()));
@@ -144,27 +169,50 @@ public class DurationReportDataService implements IReportDataService {
 			
 			//报告指标
 			try {
-				List<Map<String,Object>> listRepIndex = durationReportMapper.selectReportIndex (paraMap);  //一般只有一条
+				List<RepIndexSub> listRepIndex = durationReportMapper.selectReportIndex (paraMap);  //一般只有一条
 				if ( listRepIndex!=null && listRepIndex.size()>0 ) {
-					for ( Map<String,Object> item:listRepIndex ) {
-						if ( "tzclhyzfx".equals(item.get("PRI_ID").toString() ) ) {
-							reportDto.setTzclhyzfx( item.get("INDEX_VALUE").toString() );
+					for ( RepIndexSub item:listRepIndex ) {
+						if ( "tzclhyzfx".equals(item.getPriId()) ) {
+							reportDto.setTzclhyzfx( item.getIndexValue() );
 						}
-						if ( "ldxfxfx".equals(item.get("PRI_ID").toString()) ) {
-							reportDto.setLdxfxfx(item.get("INDEX_VALUE").toString() );
+						if ( "ldxfxfx".equals(item.getPriId()) ) {
+							reportDto.setLdxfxfx( item.getIndexValue() );
 						}
-						if ( "tgrbg1".equals(item.get("PRI_ID").toString() ) ) {
-							reportDto.setTgrbg1( item.get("INDEX_VALUE").toString() );
+						if ( "tgrbg1".equals(item.getPriId()) ) {
+							reportDto.setTgrbg1( item.getIndexValue() );
 						}
-						if ( "tgrbg2".equals(item.get("PRI_ID").toString()) ) {
-							reportDto.setTgrbg2(item.get("INDEX_VALUE").toString() );
+						if ( "tgrbg2".equals(item.getPriId()) ) {
+							reportDto.setTgrbg2( item.getIndexValue() );
 						}
-						if ( "tgrbg3".equals(item.get("PRI_ID").toString()) ) {
-							reportDto.setTgrbg3(item.get("INDEX_VALUE").toString() );
+						if ( "tgrbg3".equals(item.getPriId()) ) {
+							reportDto.setTgrbg3( item.getIndexValue() );
 						}												
 					}
 				} 
-					
+				
+				//报告期内产品的业绩表现
+				//1.1净值型产品：取“产品基础指标表”半年末/年末最后一天的产品单位净值，保留4位小数；
+				//1.2现管类产品：固定为1.0000】元。
+				//2.产品是分级产品：
+				//本产品Z10002【子产品代码1】份额净值为1.0108【产品基础指标：子产品1期末单位净值，保留4位小数】元,Z10030【子产品代码2】份额净值为1.0109【子产品2期末单位净值，保留4位小数】元。】
+				try {
+					String perVal = "份额净值为"+String.valueOf(BigDecimal.ONE);
+					if ( "01".equals(reportDto.getProdType()) ) { //净值型
+						perVal = "份额净值为"+reportDto.getListFinIndex().get(0).get("unitValue").toString();
+						if ( !"02".equals(reportDto.getRepProdType()) ) {  //母产品，循环每个子产品
+							perVal = "";
+							for ( Map<String,Object> map:reportDto.getListFinIndex() ) {
+								perVal += map.get("prodId")+"份额净值为"+map.get("achieveBasis").toString()+"\n";
+							}
+						}
+					}
+					reportDto.setYjbx(perVal);
+				} catch (Exception e ) {
+					logger.error("报表业绩表现数据错误。",e);
+					e.printStackTrace();
+					reportDto.setYjbx("");
+				}
+				
 			} catch (Exception e) {
 				logger.error("报表指标参数信息错误.");
 				e.printStackTrace();				
@@ -172,9 +220,9 @@ public class DurationReportDataService implements IReportDataService {
 			
 			//产品资产组合
 			try {
-				List<Map<String,Object>> listAssetComb = durationReportMapper.selectProdAssetComb (paraMap);
+				List<DisProdAsset> listAssetComb = durationReportMapper.selectProdAssetComb (paraMap);	
 				if ( listAssetComb!=null && listAssetComb.size()>0 )
-					reportDto.setProdAssetComb(listAssetComb.get(0));
+					reportDto.setProdAssetComb( CollectionUtils.bean2Map(listAssetComb.get(0)));
 				else
 					reportDto.setProdAssetComb(new HashMap<>());
 			} catch (Exception e) {
@@ -184,18 +232,40 @@ public class DurationReportDataService implements IReportDataService {
 			
 			//产品资产明细
 			try {
-				List<Map<String,Object>> listAssetDetail = durationReportMapper.selectProdAssetDetail (paraMap);
+				List<RepAssetsComb> listDto = durationReportMapper.selectProdAssetDetail (paraMap);
+				List<Map<String,Object>> listAssetDetail = new ArrayList<>();
+				int i=1;
+				listDto.forEach(item->{
+					listAssetDetail.add(CollectionUtils.bean2Map(item));
+				});		
 				reportDto.setListAssetsDetail(listAssetDetail);
 			}  catch (Exception e) {
 				logger.error("报表产品资产投资明细信息错误.");
 				e.printStackTrace();				
 			}
 
-			//TODO:非标资产
-
+			//非标资产
+			try {
+				List<DisNostdCreditor> listDto = durationReportMapper.selectNostdCreditor (paraMap);
+				List<Map<String,Object>> listNostds = new ArrayList<>();
+				int i=1;
+				listDto.forEach(item->{
+					listNostds.add(CollectionUtils.bean2Map(item));
+				});						
+				reportDto.setListNostds(listNostds);
+			} catch (Exception e) {
+				logger.error("产品投资非标资产明细信息数据错误。");
+				e.printStackTrace();				
+			}
+			
 			//产品投资账户
 			try {
-				List<Map<String,Object>> listInvestAccts = durationReportMapper.selectAccts (paraMap);
+				List<RepInvestAccount> listDto = durationReportMapper.selectAccts (paraMap);
+				List<Map<String,Object>> listInvestAccts = new ArrayList<>();
+				int i=1;
+				listDto.forEach(item->{
+					listInvestAccts.add(CollectionUtils.bean2Map(item));
+				});			
 				reportDto.setListAccts(listInvestAccts);
 			}  catch (Exception e) {
 				logger.error("报表投资账户信息错误.");
@@ -204,9 +274,9 @@ public class DurationReportDataService implements IReportDataService {
 			
 			//关联交易
 			try {
-				List<Map<String,Object>> listRelDeal = durationReportMapper.selectRelDeals (paraMap);
+				List<RepRelDeal> listRelDeal = durationReportMapper.selectRelDeals (paraMap);
 				if ( listRelDeal!=null && listRelDeal.size()>0 ) {
-					reportDto.setRepRelDeal(listRelDeal.get(0));
+					reportDto.setRepRelDeal(CollectionUtils.bean2Map(listRelDeal.get(0)));
 				} else {
 					reportDto.setRepRelDeal(new HashMap<>());
 				}

@@ -114,7 +114,7 @@
                 if (checkResult) {
                     setTimeout( function () {
                             if(checkResult.data.errorMsg){
-                                error1(checkResult.data.errorMsg);
+                                Joyin.error(checkResult.data.errorMsg);
                                 return;
                             }
                             if (checkResult.data.confirmMsg) {
@@ -211,8 +211,13 @@
                 var selArr = table.getAllCheckedRows();
             }
             if (!selArr || selArr.length == 0) {
-                Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+                Joyin.error(JoyinUtil.getMessage("请至少选择一条记录！"));
                 return;
+            }
+            for(var i=0;i<selArr.length;i++){
+                if(selArr[i].status =="D"){
+                    return Joyin.error("只能删除有效数据，请重新选择");
+                }
             }
             var object = {selectedItem: selArr, operateType: "delete"};
             Joyin.ajaxJson(basePath + 'disclosure/information/config/subbalanceinfopro/SubBalanceInfoPro001/check', object, function (result) {

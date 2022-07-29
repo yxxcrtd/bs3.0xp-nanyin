@@ -10,6 +10,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.disclosure.information.config.proelementadj.dao.ProElementAdjMapper;
 import com.joyintech.tams.disclosure.information.config.profailureinfo.dao.ProFailureInfoMapper;
@@ -56,11 +57,11 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
         else if (StringUtil.equals(type, "NEW")) {
             ProFailureInfo001Dto proFailureInfo001Dto = new ProFailureInfo001Dto();
             BeanUtil.copyPropertiesIgnoreNull(proFailureInfo001Dto,dto);
-            proFailureInfo001Dto.setDataStatus("01");
+            proFailureInfo001Dto.setDataStatus("E");
             proFailureInfoMapper.insert(proFailureInfo001Dto);
         }
         else {
-            dto.setDataStatus("01");
+            dto.setDataStatus("E");
             proFailureInfoMapper.updateByKey(dto);
         }
 
@@ -243,7 +244,7 @@ public class ProFailureInfo001Service extends CommonExportService<ProFailureInfo
             if (StringUtil.isNotEmpty(this.selectByProdRegistNo(temp.getProdRegistNo()))){
                 existData.add(temp);
             }else {
-                temp.setDataStatus(DictCodeListExt3.信披_数据状态_有效.getValue());
+                temp.setDataStatus(DictCodeListExt1.维护数据状态_有效.getValue());
                 temp.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
                 temp.setUpdateTime(sysDate);
                 temp.setUpdateUser(CommonUtil.getUserName());

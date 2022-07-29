@@ -7,6 +7,7 @@ import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.common.base.entity.RepProdIndex;
 import com.joyintech.tams.common.base.entity.RepProdIndexKey;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.disclosure.information.config.repProdIndex.validator.RepProdIndexValidator;
@@ -18,7 +19,7 @@ import java.util.Date;
 import java.util.List;
 @PageId("RepProdIndex002")
 @ValidLogic(targetClass = RepProdIndexValidator.class, groups = { ValidateGroupEdit.class, ValidateGroupDelete.class })
-public class RepProdIndexDto extends RepProdIndexKey implements ITableRow, ProcessEntity {
+public class RepProdIndexDto extends RepProdIndex implements ITableRow, ProcessEntity {
     /**
      * 操作类型
      */
@@ -36,51 +37,11 @@ public class RepProdIndexDto extends RepProdIndexKey implements ITableRow, Proce
      */
     private transient List<RepProdIndexDto> selectedItem;
 
-    /**
-     * 产品代码
-     */
-    @PrimaryKey(PrimaryKey.Field.PK_1)
-    private String prodId;
-    /**
-     * 产品名称
-     */
-    private String prodName;
-    /**
-     * 日期
-     */
-    private Date valueDate;
-    /**
-     * 母产品总资产：母产品的总资产余额，子产品为空
-     */
-    private BigDecimal pAssets;
-    /**
-     * 产品资产净值
-     */
-    private BigDecimal assetsValue;
-    /**
-     * 产品实收资本
-     */
-    private BigDecimal capital;
-    /**
-     * 产品单位净值：若产品为现管类产品，此处填写1.0000
-     */
-    private BigDecimal unitValue;
-    /**
-     * 产品单位累计净值：若产品为现管类产品，此处填写1.0000
-     */
-    private BigDecimal unitValueT;
-    /**
-     * 产品万份收益：现管类产品填写，非现管类产品置空
-     */
-    private BigDecimal wYield;
-    /**
-     * 产品七日年化收益率：现管类产品填写，非现管类产品置空，存储的是不乘以100
-     */
-    private BigDecimal yield7;
-    /**
-     * 数据状态
-     */
-    private String status;
+//    /**
+//     * 产品代码
+//     */
+//    @PrimaryKey(PrimaryKey.Field.PK_1)
+//    private String prodId;
 
     /**
      * 母产品资产净值
@@ -112,10 +73,7 @@ public class RepProdIndexDto extends RepProdIndexKey implements ITableRow, Proce
      */
     private String pProdId;
 
-    /**
-     * 错误信息
-     */
-    private String errorMsg;
+
 
     /**
      * 是否是分级产品：01 是/02 否
@@ -161,112 +119,11 @@ public class RepProdIndexDto extends RepProdIndexKey implements ITableRow, Proce
     }
 
     @Override
+    @PrimaryKey(PrimaryKey.Field.PK_1)
     public String getProdId() {
-        return prodId;
+        return super.getProdId();
     }
 
-    @Override
-    public void setProdId(String prodId) {
-        this.prodId = prodId;
-    }
-
-    public String getProdName() {
-        return prodName;
-    }
-
-    public void setProdName(String prodName) {
-        this.prodName = prodName;
-    }
-
-    @Override
-    public Date getValueDate() {
-        return valueDate;
-    }
-
-    @Override
-    public void setValueDate(Date valueDate) {
-        this.valueDate = valueDate;
-    }
-
-    @Override
-    public BigDecimal getpAssets() {
-        return pAssets;
-    }
-
-    @Override
-    public void setpAssets(BigDecimal pAssets) {
-        this.pAssets = pAssets;
-    }
-
-    @Override
-    public BigDecimal getAssetsValue() {
-        return assetsValue;
-    }
-
-    @Override
-    public void setAssetsValue(BigDecimal assetsValue) {
-        this.assetsValue = assetsValue;
-    }
-
-    @Override
-    public BigDecimal getCapital() {
-        return capital;
-    }
-
-    @Override
-    public void setCapital(BigDecimal capital) {
-        this.capital = capital;
-    }
-
-    @Override
-    public BigDecimal getUnitValue() {
-        return unitValue;
-    }
-
-    @Override
-    public void setUnitValue(BigDecimal unitValue) {
-        this.unitValue = unitValue;
-    }
-
-    @Override
-    public BigDecimal getUnitValueT() {
-        return unitValueT;
-    }
-
-    @Override
-    public void setUnitValueT(BigDecimal unitValueT) {
-        this.unitValueT = unitValueT;
-    }
-
-    @Override
-    public BigDecimal getwYield() {
-        return wYield;
-    }
-
-    @Override
-    public void setwYield(BigDecimal wYield) {
-        this.wYield = wYield;
-    }
-
-    @Override
-    public BigDecimal getYield7() {
-        return yield7;
-    }
-
-    @Override
-    public void setYield7(BigDecimal yield7) {
-        this.yield7 = yield7;
-    }
-
-    @Override
-    public String getStatus() {
-        return status;
-    }
-
-    @Override
-    public void setStatus(String status) {
-        this.status = status;
-    }
 
     public BigDecimal getpAssetsValue() {
         return pAssetsValue;
@@ -324,15 +181,7 @@ public class RepProdIndexDto extends RepProdIndexKey implements ITableRow, Proce
         this.pProdId = pProdId;
     }
 
-    @Override
-    public String getErrorMsg() {
-        return errorMsg;
-    }
 
-    @Override
-    public void setErrorMsg(String errorMsg) {
-        this.errorMsg = errorMsg;
-    }
 
     public String getIsGrade() {
         return isGrade;

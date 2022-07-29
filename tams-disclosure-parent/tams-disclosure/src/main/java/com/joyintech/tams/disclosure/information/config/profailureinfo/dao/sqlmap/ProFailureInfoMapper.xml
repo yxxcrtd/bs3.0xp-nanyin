@@ -54,7 +54,7 @@
    </select>
 
     <delete id="deleteByKey">
-        update DIS_PROD_NOCREATE set DATA_STATUS = '02'
+        update DIS_PROD_NOCREATE set DATA_STATUS = 'D'
         where PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
     </delete>
 
