@@ -7,20 +7,20 @@ import java.util.List;
 
 @Repository
 public interface ProdBasicChangeMapper {
-    int deleteByPrimaryKey(ProdBasicChangeDto key);
+
+    int deleteByPrimaryKey(String uuid);
 
     int insert(ProdBasicChangeDto record);
 
     int insertSelective(ProdBasicChangeDto record);
 
-    int insertHisByBasicInfo(ProdBasicChangeDto record);
+    int insertBasicByBasicInfo(ProdBasicChangeDto record);
 
-    ProdBasicChangeDto selectByPrimaryKey(ProdBasicChangeDto key);
+    ProdBasicChangeDto selectByPrimaryKey(String uuid);
 
     int updateByPrimaryKeySelective(ProdBasicChangeDto record);
 
     int updateByPrimaryKey(ProdBasicChangeDto record);
-
 
     List<ProdBasicChangeDto> selectListByProdId(String prodId);
 

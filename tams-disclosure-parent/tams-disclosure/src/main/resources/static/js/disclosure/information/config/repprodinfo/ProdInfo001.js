@@ -182,7 +182,7 @@ $(function() {
             }
             var selArrUseful =[];
             selArr.forEach(v => {
-                if(v.dataStatus == 'E'){
+                if(v.status == 'E'){
                     selArrUseful.push(v);
                 }
             })

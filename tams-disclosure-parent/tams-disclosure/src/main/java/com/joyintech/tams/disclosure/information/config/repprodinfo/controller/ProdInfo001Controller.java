@@ -67,7 +67,7 @@ public class ProdInfo001Controller extends BaseController {
         this.setSelectOptionToModel(model, DictCodeExt1.信披_募集方式);
         this.setSelectOptionToModel(model, DictCode.是或否);
         this.setSelectOptionToModel(model, DictCodeExt1.信披_产品运作方式);
-        this.setSelectOptionToModel(model, DictCode.信披_数据状态ED);
+        this.setSelectOptionToModel(model, DictCode.维护数据状态);
 
         return super.init(model);
     }

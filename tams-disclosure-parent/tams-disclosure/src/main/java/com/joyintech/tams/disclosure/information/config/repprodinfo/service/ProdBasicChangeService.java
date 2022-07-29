@@ -110,6 +110,7 @@ public class ProdBasicChangeService {
      */
     public void insertProdBasicChange(ProdBasicChangeDto dto,String prodId,String groupId ) {
         Date platDate = commonPlatformDateService.getSysDate(); //平台日
+        dto.setUuid(IDGenerator.generate());
         dto.setStatus(DictCodeListExt3.信披_数据状态_有效E.getValue());
         dto.setProdId(prodId);
         dto.setGroupId(groupId);

@@ -407,7 +407,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                     /*if (StringUtil.isEmpty(rowData.get(18))){
                         errorMsg.append("固定持有天数 必填！");
                     }*/
-                    if (StringUtil.isNotEmpty(rowData.get(18)) && !isNumber(rowData.get(11))){
+                    if (StringUtil.isNotEmpty(rowData.get(18)) && !isNumber(rowData.get(18))){
                         errorMsg.append("固定持有天数 格式不正确，请输入数字！");
                     }
                     if (StringUtil.isEmpty(rowData.get(19))){

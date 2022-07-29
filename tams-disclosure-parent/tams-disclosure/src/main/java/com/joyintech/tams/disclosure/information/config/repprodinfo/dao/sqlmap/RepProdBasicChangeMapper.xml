@@ -2,9 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.disclosure.information.config.repprodinfo.dao.ProdBasicChangeMapper" >
     <resultMap id="BaseResultMap" type="com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdBasicChangeDto" >
-        <id column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
-        <id column="EFF_DATE" property="effDate" jdbcType="DATE" />
-        <id column="DATA_TYPE" property="dataType" jdbcType="VARCHAR" />
+        <id column="UUID" property="uuid" jdbcType="CHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="EFF_DATE" property="effDate" jdbcType="DATE" />
+        <result column="DATA_TYPE" property="dataType" jdbcType="VARCHAR" />
         <result column="PROPORTION" property="proportion" jdbcType="VARCHAR" />
         <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
         <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
@@ -15,9 +16,9 @@
         <result column="GROUP_ID" property="groupId" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
-        PROD_ID PROD_ID, EFF_DATE EFF_DATE, DATA_TYPE DATA_TYPE, PROPORTION PROPORTION, CREATE_USER CREATE_USER,
-        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME,
-        STATUS STATUS, GROUP_ID GROUP_ID
+        UUID UUID, PROD_ID PROD_ID, EFF_DATE EFF_DATE, DATA_TYPE DATA_TYPE, PROPORTION PROPORTION, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME, STATUS STATUS, GROUP_ID GROUP_ID
     </sql>
     <sql id="Sql_All_Data" >
         select
@@ -30,33 +31,34 @@
         from REP_PROD_BASIC_CHANGE
         where STATUS = 'E'
     </sql>
-    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdBasicChangeDto" >
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
         select
         <include refid="com.joyintech.tams.disclosure.information.config.repprodinfo.dao.ProdBasicChangeMapper.Base_Column_List" />
         from REP_PROD_BASIC_CHANGE
-        where PROD_ID = #{prodId,jdbcType=VARCHAR}
-        and EFF_DATE = #{effDate,jdbcType=DATE}
-        and DATA_TYPE = #{dataType,jdbcType=VARCHAR}
+        where UUID = #{uuid,jdbcType=CHAR}
     </select>
-    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdBasicChangeDto" >
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
         delete from REP_PROD_BASIC_CHANGE
-        where PROD_ID = #{prodId,jdbcType=VARCHAR}
-          and EFF_DATE = #{effDate,jdbcType=DATE}
-          and DATA_TYPE = #{dataType,jdbcType=VARCHAR}
+        where UUID = #{uuid,jdbcType=CHAR}
     </delete>
     <insert id="insert" parameterType="com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdBasicChangeDto" >
-        insert into REP_PROD_BASIC_CHANGE (PROD_ID, EFF_DATE, DATA_TYPE,
-                                         PROPORTION, CREATE_USER, CREATE_DEPT,
-                                         CREATE_TIME, UPDATE_USER, UPDATE_TIME,
-                                         STATUS, GROUP_ID)
-        values (#{prodId,jdbcType=VARCHAR}, #{effDate,jdbcType=DATE}, #{dataType,jdbcType=VARCHAR},
-                #{proportion,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
-                #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
-                #{status,jdbcType=VARCHAR}, #{groupId,jdbcType=VARCHAR})
+        insert into REP_PROD_BASIC_CHANGE (UUID, PROD_ID, EFF_DATE,
+                                           DATA_TYPE, PROPORTION, CREATE_USER,
+                                           CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+                                           UPDATE_TIME, STATUS, GROUP_ID
+        )
+        values (#{uuid,jdbcType=CHAR}, #{prodId,jdbcType=VARCHAR}, #{effDate,jdbcType=DATE},
+                #{dataType,jdbcType=VARCHAR}, #{proportion,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
+                #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+                #{updateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}, #{groupId,jdbcType=VARCHAR}
+               )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdBasicChangeDto" >
         insert into REP_PROD_BASIC_CHANGE
         <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="uuid != null" >
+                UUID,
+            </if>
             <if test="prodId != null" >
                 PROD_ID,
             </if>
@@ -92,6 +94,9 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="uuid != null" >
+                #{uuid,jdbcType=CHAR},
+            </if>
             <if test="prodId != null" >
                 #{prodId,jdbcType=VARCHAR},
             </if>
@@ -127,17 +132,28 @@
             </if>
         </trim>
     </insert>
-    <insert id="insertHisByBasicInfo" parameterType="com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdBasicChangeDto" >
-        insert into REP_PROD_BASIC_CHANGE(PROD_ID, EFF_DATE, DATA_TYPE, PROPORTION, CREATE_USER,
-                                        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, STATUS, GROUP_ID)
-        select PROD_ID, EFF_DATE, DATA_TYPE, PROPORTION, CREATE_USER,
-               CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, STATUS, GROUP_ID
-        from PERFORM_COMPARE
-        where STATUS = 'E' and PROD_ID = #{prodId,jdbcType=VARCHAR} and EFF_DATE = #{effDate,jdbcType=DATE} and DATA_TYPE = #{dataType,jdbcType=VARCHAR}
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdBasicChangeDto" >
+        insert into REP_PROD_BASIC_CHANGE(UUID, PROD_ID, EFF_DATE, DATA_TYPE, PROPORTION,
+                                          CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, STATUS, GROUP_ID
+        )
+        select UUID, PROD_ID, EFF_DATE, DATA_TYPE, PROPORTION,
+               CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, #{status,jdbcType=VARCHAR} STATUS, GROUP_ID
+
+        from REP_PROD_BASIC_CHANGE
+        where STATUS = 'E' and UUID = #{uuid,jdbcType=CHAR}
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdBasicChangeDto" >
         update REP_PROD_BASIC_CHANGE
         <set >
+            <if test="prodId != null" >
+                PROD_ID = #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="effDate != null" >
+                EFF_DATE = #{effDate,jdbcType=DATE},
+            </if>
+            <if test="dataType != null" >
+                DATA_TYPE = #{dataType,jdbcType=VARCHAR},
+            </if>
             <if test="proportion != null" >
                 PROPORTION = #{proportion,jdbcType=VARCHAR},
             </if>
@@ -154,20 +170,19 @@
                 GROUP_ID = #{groupId,jdbcType=VARCHAR},
             </if>
         </set>
-        where PROD_ID = #{prodId,jdbcType=VARCHAR}
-        and EFF_DATE = #{effDate,jdbcType=DATE}
-        and DATA_TYPE = #{dataType,jdbcType=VARCHAR}
+        where UUID = #{uuid,jdbcType=CHAR}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdBasicChangeDto" >
         update REP_PROD_BASIC_CHANGE
-        set PROPORTION = #{proportion,jdbcType=VARCHAR},
+        set PROD_ID = #{prodId,jdbcType=VARCHAR},
+            EFF_DATE = #{effDate,jdbcType=DATE},
+            DATA_TYPE = #{dataType,jdbcType=VARCHAR},
+            PROPORTION = #{proportion,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             STATUS = #{status,jdbcType=VARCHAR},
             GROUP_ID = #{groupId,jdbcType=VARCHAR}
-        where PROD_ID = #{prodId,jdbcType=VARCHAR}
-          and EFF_DATE = #{effDate,jdbcType=DATE}
-          and DATA_TYPE = #{dataType,jdbcType=VARCHAR}
+        where UUID = #{uuid,jdbcType=CHAR}
     </update>
 
 
