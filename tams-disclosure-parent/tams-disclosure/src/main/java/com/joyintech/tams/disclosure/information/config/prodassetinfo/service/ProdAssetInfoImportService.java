@@ -298,7 +298,7 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
         prodAssetInfoDto.setCreateDept(CommonUtil.getDeptCode());
         prodAssetInfoDto.setUpdateUser(CommonUtil.getUserName());
         prodAssetInfoDto.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
-        prodAssetInfoDto.setDataStatus(DictCodeListExt3.信披_数据状态_有效.getValue());
+        prodAssetInfoDto.setDataStatus(DictCodeListExt3.信披_数据状态_有效E.getValue());
         return prodAssetInfoDto;
     }
 

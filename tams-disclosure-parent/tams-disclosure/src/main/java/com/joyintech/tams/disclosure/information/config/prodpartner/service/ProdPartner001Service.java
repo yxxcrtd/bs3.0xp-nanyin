@@ -349,7 +349,7 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
             prodPartnerDto.setPartnerName(list.get(1).trim());
             prodPartnerDto.setEffDate(DateUtil.parse(list.get(2).trim()));
             prodPartnerDto.setEffEndDate(DateUtil.parse(list.get(3).trim()));
-            prodPartnerDto.setDataStatus(DictCodeListExt3.信披_数据状态_有效.getValue());
+            prodPartnerDto.setDataStatus(DictCodeListExt3.信披_数据状态_有效E.getValue());
             prodPartnerDto.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
             prodPartnerDto.setCreateDept(CommonUtil.getDeptCode());
             prodPartnerDto.setCreateUser(CommonUtil.getUserName());

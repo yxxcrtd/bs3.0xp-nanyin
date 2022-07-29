@@ -278,7 +278,7 @@ public class ProdAssetInfo001Service extends CommonExportService<ProdAssetInfoDt
 //            prodPartnerDto.setPartnerName(list.get(1));
             prodPartnerDto.setEffDate(DateUtil.parse(list.get(2)));
             prodPartnerDto.setEffEndDate(DateUtil.parse(list.get(3)));
-            prodPartnerDto.setDataStatus(DictCodeListExt3.信披_数据状态_有效.getValue());
+            prodPartnerDto.setDataStatus(DictCodeListExt3.信披_数据状态_有效E.getValue());
             prodPartnerDto.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
             returnInfoList.add(prodPartnerDto);
         }
