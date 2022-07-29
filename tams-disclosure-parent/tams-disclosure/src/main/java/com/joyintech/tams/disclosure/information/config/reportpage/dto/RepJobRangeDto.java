@@ -122,6 +122,9 @@ public class RepJobRangeDto extends RepJobRange {
         else if (DictCodeExt1.是否是客户周期型产品.getValue().equals(key)) {
             value = backCode(DisclosureDictCode.是否, this.getRuleType4());
         }
+        else if (DictCodeExt1.信批产品类别.getValue().equals(key)) {
+            value = backCode(DictCodeExt1.信批产品类别, this.getRuleType4());
+        }
         return value;
     }
 

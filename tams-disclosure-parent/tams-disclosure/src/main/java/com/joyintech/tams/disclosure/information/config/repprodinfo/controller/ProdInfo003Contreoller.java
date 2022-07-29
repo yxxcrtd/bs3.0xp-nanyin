@@ -9,7 +9,6 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeExt1;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto;

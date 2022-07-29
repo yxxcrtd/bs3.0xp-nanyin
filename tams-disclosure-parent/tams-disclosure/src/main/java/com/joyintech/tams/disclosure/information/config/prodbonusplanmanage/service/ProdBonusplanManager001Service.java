@@ -22,6 +22,8 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dao.ProdBonusplanMapper;
 import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto;
+import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto;
+import com.joyintech.tams.disclosure.information.config.repprodinfo.service.ProdInfoService;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -56,6 +58,9 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
 
     @Autowired
     private ProdBonusplanManager002Service prodBonusplanManager002Service;
+
+    @Autowired
+    private ProdInfoService prodInfoService ;
 
 
     /**
@@ -182,8 +187,14 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
                     if (!StringUtil.isNotEmpty(rowData.get(0))) {
                         errorMsg.append("子产品代码 必填！");
                     }else{
-                        //不存在 校验 TODO
-
+                        //不存在 校验
+                        ProdInfoDto prodInfo = prodInfoService.selectByProdStatus(rowData.get(0));
+                        if(prodInfo == null){
+                            errorMsg.append("子产品代码 不存在");
+                        }
+                        /*if (StringUtil.isNotEmpty(this.selectByProdId(rowData.get(0)))) {
+                            errorMsg.append("子产品代码已存在，继续录入会覆盖历史数据");
+                        }   */
 
                     }
                     if (!StringUtil.isNotEmpty(rowData.get(1))) {

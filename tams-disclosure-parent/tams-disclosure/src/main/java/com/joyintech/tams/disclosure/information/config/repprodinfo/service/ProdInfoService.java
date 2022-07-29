@@ -17,8 +17,6 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.common.base.dao.RepProdInfoMapper;
-import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.common.util.SysCommDataUtil;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dao.DisProdBaseInfoMapper;
@@ -146,7 +144,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
      * @return
      */
     public ProdInfoDto selectBySonProdId(String prodId) {
-        return prodInfoMapper.selectByCommonProdId(prodId);
+        return prodInfoMapper.selectBySonProdId(prodId);
     }
 
     /**
@@ -206,9 +204,9 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                 ProdInfoDto ppDto = new ProdInfoDto();
                 BeanUtils.copyProperties(dto, ppDto);
                 ppDto.setRepProdType(DictCodeListExt5.信批产品类别_母产品.getValue());
-                ppDto.setProdId(ppDto.getpProdId());
-                ppDto.setProdName(ppDto.getpProdName());
-                ppDto.setpSetDate(ppDto.getpSetDate());
+                ppDto.setProdId(dto.getpProdId());
+                ppDto.setProdName(dto.getpProdName());
+                ppDto.setSetDate(dto.getpSetDate());
                 ppDto.setpProdId(null);
                 ppDto.setpProdName(null);
                 ppDto.setpSetDate(null);

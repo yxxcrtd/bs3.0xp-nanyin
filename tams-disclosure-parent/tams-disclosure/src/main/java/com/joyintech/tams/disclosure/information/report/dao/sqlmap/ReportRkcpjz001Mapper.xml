@@ -27,7 +27,7 @@
 	<select id="getXgxValueList" resultType="com.joyintech.tams.disclosure.information.report.dto.ReportValueDto">
 		SELECT TO_CHAR(PRI.VALUE_DATE,'yyyy-MM-dd') valueDate,
 			   TO_CHAR(ROUND(NVL(PRI.W_YIELD,0),4),'FM9999999999999990.0000')  wYield,
-			   TO_CHAR(ROUND(NVL(PRI.YIELD_7,0) * 100,4),'FM9999999999999990.0000') yield7 ,
+			   TO_CHAR(ROUND(NVL(PRI.YIELD_7,0) * 100,4),'FM9999999999999990.0000')||'%' yield7 ,
 			   '1.0000' unitValue,
 			   '1.0000' unitValueT,
 			   '1.0000' subValue,
@@ -63,12 +63,10 @@
 			LEFT JOIN DIS_PROD_PLAN DPP ON DPP.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID) AND DPP.OPEN_END_DATE =PRI.VALUE_DATE
 		WHERE INFO.PROD_ID = #{prodId}
 		  AND PRI.VALUE_DATE = TO_DATE(#{valueDate},'yyyy-MM-dd')
-		ORDER BY PRI.VALUE_DATE DESC
 	</select>
 
 	<select id="getValues" resultType="com.joyintech.tams.disclosure.information.report.dto.ReportGrahDto">
-		SELECT * FROM (
-		  SELECT TO_CHAR(PRI.VALUE_DATE,'YYYY-MM-DD') cDate,
+		SELECT TO_CHAR(PRI.VALUE_DATE,'YYYY-MM-DD') cDate,
 		/*净值型产品需要查询单位净值跟单位累计净值*/
 		<if test="rptType != NULL and rptType.equals('RKCPJZ_GMJZXCP')">
 		         TO_CHAR(ROUND(NVL(PRI.UNIT_VALUE,0),4),'FM9999999999999990.0000') value,
@@ -82,7 +80,6 @@
 		  FROM REP_PROD_INFO INFO
 		INNER JOIN REP_PROD_INDEX PRI ON PRI.PROD_ID = INFO.PROD_ID AND PRI.STATUS = 'E'
 		  WHERE INFO.PROD_ID = #{prodId}
-			AND PRI.VALUE_DATE &lt;=  TO_DATE(#{valueDate},'yyyy-MM-dd')
 			AND PRI.STATUS = 'E'
 		  	/*净值型产品需要查询工作日的净值数据*/
 			<if test="rptType != NULL and rptType.equals('RKCPJZ_GMJZXCP')">
@@ -92,7 +89,24 @@
 				AND PRI.VALUE_DATE = H.BUSI_DATE
 				)
 			</if>
+			<if test="dateList != null and dateList.size()>0">
+				<foreach collection="dateList" item="item" open="and PRI.VALUE_DATE in(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
 		  ORDER BY PRI.VALUE_DATE DESC
+	</select>
+
+
+	<select id="getValueDayList" resultType="java.util.Date">
+		SELECT * FROM (
+			select h.busi_date from CHB_MKT_HOLIDAY h
+			where h.busi_date &lt;= to_date(#{busi_date},'yyyy-MM-dd')
+			  and h.market_code = #{market_code}
+			<if test="is_holiday != null and is_holiday != ''">
+				and h.is_holiday = #{is_holiday}
+			</if>
+			order by h.busi_date desc
 		) WHERE ROWNUM &lt;= 30
 	</select>
 

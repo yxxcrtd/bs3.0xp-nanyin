@@ -48,7 +48,7 @@ $(function(){
          */
         dblclick:function(table, data) {
             data.pageModel=PAGE_MODEL_REFERENCE;
-            Joyin.dialog(JoyinUtil.getLabel("ProdAssetInfo001"),
+            Joyin.dialog(JoyinUtil.getLabel("产品资产组合情况查看"),
                     JoyinUtil.getRealPath("disclosure/information/config/prodassetinfo/ProdAssetInfo002/init"),
                     "98%", "95%", data,
                     function(){table.reload();});

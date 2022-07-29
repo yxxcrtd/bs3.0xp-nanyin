@@ -81,7 +81,7 @@ public class ProdPartner001Controller extends BaseController{
     @Override
     @RequestMapping(PAGE_INIT)
     public String init(Model model){
-        this.setSelectOptionToModel(model, DictCode.信披_数据状态 );
+        this.setSelectOptionToModel(model, DictCode.信披_数据状态ED );
         return super.init(model);
     }
 

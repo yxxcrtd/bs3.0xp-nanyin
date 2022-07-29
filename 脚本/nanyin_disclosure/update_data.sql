@@ -557,3 +557,11 @@ delete from SYS_DATADICT_LIST where DICT_CODE = 'BUSINESS_CODE';
 INSERT INTO SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('BUSINESS_CODE', '03', '赎回', 1, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
 
 -- add by shengning 20220727 产品超额业绩报酬信息维护 end
+
+
+-- add by zhengxiaolian 2022-07-28 作业规则1增加信批产品类别 start
+delete from sys_datadict_list where DICT_CODE='RULE_TYPE1' and ITEM_CODE in('REP_PROD_TYPE');
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('RULE_TYPE1', 'REP_PROD_TYPE', '信批产品类别', 16, '0', 'system', null, sysdate, 'system', sysdate, null);
+-- add by zhengxiaolian 2022-07-28 作业规则1增加信批产品类别 end

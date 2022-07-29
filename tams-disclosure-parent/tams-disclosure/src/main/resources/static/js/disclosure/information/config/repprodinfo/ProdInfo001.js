@@ -143,13 +143,7 @@ $(function() {
                         prodIdStr = prodIdStr + v.prodId + ",";
                     });
                     if(confirmFlag){
-                        Joyin.confirm("只有发行状态为确认发行的数据才能处理", function () {
-                            // 跳转发行状态管理页面
-                            Joyin.dialog(JoyinUtil.getLabel("发行状态管理"),
-                                JoyinUtil.getRealPath("disclosure/information/config/repprodinfo/ProdInfo003/init"),
-                                "70%", "90%",{prodIdStr : prodIdStr.substring(0, prodIdStr.length - 1)},function(){table.reload();}
-                            );
-                        });
+                        Joyin.confirm("只有发行状态为确认发行的数据才能处理");
                     }else{
                         // 跳转发行状态管理页面
                         Joyin.dialog(JoyinUtil.getLabel("发行状态管理"),
@@ -183,9 +177,20 @@ $(function() {
                 var selArr = table.getAllCheckedRows();
             }
             if (!selArr || selArr.length == 0) {
-                Joyin.error(JoyinUtil.getMessage("没有选中数据"));
+                Joyin.error(JoyinUtil.getMessage("请至少选择一条记录"));
                 return;
             }
+            var selArrUseful =[];
+            selArr.forEach(v => {
+                if(v.dataStatus == 'E'){
+                    selArrUseful.push(v);
+                }
+            })
+            if (!selArrUseful || selArrUseful.length == 0) {
+                Joyin.error(JoyinUtil.getMessage("请选择一条有效的数据"));
+                return;
+            }
+
             var object = {selectedItem: selArr, operateType:"delete"};
             Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
                 WorkFlow.doDeleteList(basePath + 'disclosure/information/config/repprodinfo/ProdInfo001/delete', object, "ProdInfo001_btn_delete", "ProdInfo002",function(){

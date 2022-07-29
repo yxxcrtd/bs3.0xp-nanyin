@@ -1,6 +1,7 @@
 
 package com.joyintech.tams.disclosure.information.report.dao;
 
+import com.joyintech.tams.common.base.entity.DisProdPlanInfo;
 import com.joyintech.tams.disclosure.information.report.dto.ReportOpenPlanDto;
 import com.joyintech.tams.disclosure.information.report.dto.ReportValueDto;
 import com.joyintech.tams.disclosure.information.report.dto.ReportZqxkfgg001Dto;
@@ -36,4 +37,6 @@ public interface ReportZqxkfgg001Mapper {
     List<ReportOpenPlanDto>  getOpenHisList(Map<String, Object> searchParam);
 
     ReportValueDto getValueInfo(Map<String, Object> searchparam);
+
+    DisProdPlanInfo checkGenerateFlag(Map<String, Object> searchparam);
 }

@@ -161,10 +161,10 @@ insert into REP_SCREEN values ('100000064','CP_001_003_002','01','pprodid','产�
 insert into REP_SCREEN values ('100000065','CP_001_003_002','02','prodid','子产品代码','','Y','system',to_date('2022/07/20','yyyy/mm/dd'),'system',to_date('2022/07/20', 'yyyy/mm/dd'),'','3','N');
 insert into REP_SCREEN values ('100000066','CP_001_004_001','01','pprodid','产品名称','','Y','system',to_date('2022/07/20','yyyy/mm/dd'),'system',to_date('2022/07/20', 'yyyy/mm/dd'),'','1','N');
 insert into REP_SCREEN values ('100000067','CP_001_004_001','09','enddate','公告日期','','Y','system',to_date('2022/07/20','yyyy/mm/dd'),'system',to_date('2022/07/20', 'yyyy/mm/dd'),'','2','N');
-insert into REP_SCREEN values ('100000068','CP_001_004_002','01','pprodid','产品名称','','Y','system',to_date('2022/07/20','yyyy/mm/dd'),'system',to_date('2022/07/20', 'yyyy/mm/dd'),'','3','N');
-insert into REP_SCREEN values ('100000069','CP_001_004_002','08','enddate','产品发布日期','','Y','system',to_date('2022/07/20','yyyy/mm/dd'),'system',to_date('2022/07/20', 'yyyy/mm/dd'),'','1','N');
-insert into REP_SCREEN values ('100000070','CP_001_004_003','01','pprodid','产品名称','','Y','system',to_date('2022/07/20','yyyy/mm/dd'),'system',to_date('2022/07/20', 'yyyy/mm/dd'),'','2','N');
-insert into REP_SCREEN values ('100000071','CP_001_004_003','08','enddate','产品发布日期','','Y','system',to_date('2022/07/20','yyyy/mm/dd'),'system',to_date('2022/07/20', 'yyyy/mm/dd'),'','3','N');
+insert into REP_SCREEN values ('100000068','CP_001_004_002','01','pprodid','产品名称','','Y','system',to_date('2022/07/20','yyyy/mm/dd'),'system',to_date('2022/07/20', 'yyyy/mm/dd'),'','1','N');
+insert into REP_SCREEN values ('100000069','CP_001_004_002','08','enddate','产品发布日期','','Y','system',to_date('2022/07/20','yyyy/mm/dd'),'system',to_date('2022/07/20', 'yyyy/mm/dd'),'','2','N');
+insert into REP_SCREEN values ('100000070','CP_001_004_003','01','pprodid','产品名称','','Y','system',to_date('2022/07/20','yyyy/mm/dd'),'system',to_date('2022/07/20', 'yyyy/mm/dd'),'','1','N');
+insert into REP_SCREEN values ('100000071','CP_001_004_003','08','enddate','产品发布日期','','Y','system',to_date('2022/07/20','yyyy/mm/dd'),'system',to_date('2022/07/20', 'yyyy/mm/dd'),'','2','N');
 insert into REP_SCREEN values ('100000072','CP_001_004_004','01','pprodid','产品名称','','Y','system',to_date('2022/07/20','yyyy/mm/dd'),'system',to_date('2022/07/20', 'yyyy/mm/dd'),'','1','N');
 insert into REP_SCREEN values ('100000073','CP_001_004_004','08','enddate','发布日期','','Y','system',to_date('2022/07/20','yyyy/mm/dd'),'system',to_date('2022/07/20', 'yyyy/mm/dd'),'','2','N');
 insert into REP_SCREEN values ('100000074','CP_001_004_004','03','feename','费率名称','','Y','system',to_date('2022/07/20','yyyy/mm/dd'),'system',to_date('2022/07/20', 'yyyy/mm/dd'),'','3','Y');
@@ -271,6 +271,7 @@ insert into rep_tree values ('CP_001_007_001','CP_001_007','分红计算清单',
 
 -- 报表作业范围
 delete from REP_JOB_RANGE;
+
 insert into REP_JOB_RANGE values ('D0000000000000000001','CP_001_001_001','02','RAISE_TYPE','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000002','CP_001_001_001','02','ISSUE_STATUS','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000003','CP_001_001_001','02','REP_PROD_TYPE','!=','02','03','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
@@ -281,11 +282,11 @@ insert into REP_JOB_RANGE values ('D0000000000000000007','CP_001_002_002','02','
 insert into REP_JOB_RANGE values ('D0000000000000000008','CP_001_002_003','02','RAISE_TYPE','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000009','CP_001_002_003','02','OPEN_FREQ','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000010','CP_001_002_003','02','PROD_TYPE','=','02','04','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
-insert into REP_JOB_RANGE values ('D0000000000000000011','CP_001_002_003','02','REP_PROD_TYPE','!=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
+insert into REP_JOB_RANGE values ('D0000000000000000011','CP_001_002_003','02','REP_PROD_TYPE','!=','02','03','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000012','CP_001_002_004','02','RAISE_TYPE','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000013','CP_001_002_004','02','OPEN_FREQ','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000014','CP_001_002_004','02','PROD_TYPE','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
-insert into REP_JOB_RANGE values ('D0000000000000000015','CP_001_002_004','02','REP_PROD_TYPE','!=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
+insert into REP_JOB_RANGE values ('D0000000000000000015','CP_001_002_004','02','REP_PROD_TYPE','!=','02','03','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000016','CP_001_002_005','02','OPEN_FREQ','!=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000017','CP_001_002_005','02','RAISE_TYPE','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000018','CP_001_002_005','02','REP_PROD_TYPE','!=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));

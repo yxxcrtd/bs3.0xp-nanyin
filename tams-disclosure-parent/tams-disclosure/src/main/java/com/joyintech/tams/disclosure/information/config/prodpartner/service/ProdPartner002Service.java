@@ -68,7 +68,7 @@ public class ProdPartner002Service extends CommonExportService<ProdPartnerDto>
         }
         else if (OperationType.NEW.equals(type)) {//新建
             //数据状态
-            dto.setDataStatus(DictCodeListExt3.信披_数据状态_有效.getValue());
+            dto.setDataStatus(DictCodeListExt3.信披_数据状态_有效E.getValue());
             //数据来源
             dto.setDataSource(DictCodeListExt3.信披_数据来源_系统新建.getValue());
             prodPartner002Mapper.insert(dto);
@@ -85,7 +85,7 @@ public class ProdPartner002Service extends CommonExportService<ProdPartnerDto>
      * @return
      */
     public List<ProdPartnerDto> checkPartnerExistByProdId(Map<String, Object> param) {
-        param.put("status",DictCodeListExt3.信披_数据状态_有效.getValue());
+        param.put("status",DictCodeListExt3.信披_数据状态_有效E.getValue());
         return prodPartner002Mapper.selectPartnerByProdId(param);
     }
 }
