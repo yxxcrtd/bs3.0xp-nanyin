@@ -43,6 +43,11 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
     private ProdAssetInfo001Mapper prodAssetInfo001Mapper;
 
     /**
+     * 当在做导入前的check就是判断业务数据是否需要覆盖的时候在webresult的data中塞入这个值可以不会弹框两次
+     */
+    private static final String NO_INFO_SHOWOUT = "noInfoShowOut";
+
+    /**
      * 导入check
      * @param fileName
      * @return
@@ -61,6 +66,8 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
             JoyinMessage ms = new JoyinMessage("导入数据超过"+maxCount+"条，可能导致系统较慢，是否确认导入？",
                     MessageType.确认消息);
             joyinMessages.add(ms);
+        }else{
+            wr.setData(NO_INFO_SHOWOUT);
         }
         wr.setJoyinMessages(joyinMessages);
         return wr;
@@ -201,7 +208,7 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
                 }else{
                     if (DateUtil.compareDate(sysDate, sdf.parse(list.get(10))) > 0) {
                         ExcelValidDto dto = new ExcelValidDto(list.get(10), String.valueOf(i + 2),
-                                this.getMessage("BUSS_COM_E_0004", "生效日", "平台日期"));
+                                this.getMessage("BUSS_COM_E_0004", "生效日截止日", "平台日期"));
                         excelValidDtolist.add(dto);
                     }else{
                         if(DateUtil.isDateStr(list.get(9))){
@@ -232,7 +239,7 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
             }
             //数据格式校验都通过后，转成目标bean
             if(StringUtil.isEmptyList(excelValidDtolist)){
-                entities.add(convertToBean(list));
+                entities.add(convertToBean(list,i));
             }
             checkContextResult.addAll(excelValidDtolist);
         }
@@ -242,15 +249,15 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
             for (String key : map.keySet()) {
                 List<ProdAssetInfoDto> prodAssetInfoDtoList = map.get(key);
                 if(prodAssetInfoDtoList.size()>1){
-                    for(int m=0;m<prodAssetInfoDtoList.size()-1;m++){
+                    loop:for(int m=0;m<prodAssetInfoDtoList.size()-1;m++){
                         ProdAssetInfoDto dto1 = prodAssetInfoDtoList.get(m);
                         for(int n=m+1;n<prodAssetInfoDtoList.size();n++){
                             ProdAssetInfoDto dto2 = prodAssetInfoDtoList.get(n);
                             if(!((DateUtil.compareDate(dto2.getEffDate(),dto1.getEffDate())<0 && DateUtil.compareDate(dto2.getEffEndDate(),dto1.getEffDate())<0)
                                     || (DateUtil.compareDate(dto2.getEffDate(),dto1.getEffEndDate())>0 && DateUtil.compareDate(dto2.getEffEndDate(),dto1.getEffEndDate())>0))){
-                                checkContextResult.add(new ExcelValidDto(key+"("+DateUtil.format(dto1.getEffDate())+"~"+DateUtil.format(dto1.getEffEndDate())+")",null,"生效区间范围有重叠"));
-                                checkContextResult.add(new ExcelValidDto(key+"("+DateUtil.format(dto2.getEffDate())+"~"+DateUtil.format(dto2.getEffEndDate())+")",null,"生效区间范围有重叠"));
-                                break;
+                                checkContextResult.add(new ExcelValidDto(key, dto1.getExcelRowNum(),
+                                        "文件中同一产品生效区间有重叠：第"+dto1.getExcelRowNum()+"行和第"+dto2.getExcelRowNum()+"行"));
+                                break loop;
                             }
                         }
                     }
@@ -280,7 +287,7 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
      * @param list
      * @return
      */
-    private ProdAssetInfoDto convertToBean(List<String> list) {
+    private ProdAssetInfoDto convertToBean(List<String> list,int excelRowNum) {
         ProdAssetInfoDto prodAssetInfoDto=new ProdAssetInfoDto();
         prodAssetInfoDto.setProdAssetId(IDGenerator.generate(36));
         prodAssetInfoDto.setProdId(list.get(0).trim());
@@ -299,6 +306,7 @@ public class ProdAssetInfoImportService extends CommonExportService<ProdAssetInf
         prodAssetInfoDto.setUpdateUser(CommonUtil.getUserName());
         prodAssetInfoDto.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
         prodAssetInfoDto.setDataStatus(DictCodeListExt3.信披_数据状态_有效E.getValue());
+        prodAssetInfoDto.setExcelRowNum(String.valueOf(excelRowNum+2));
         return prodAssetInfoDto;
     }
 
