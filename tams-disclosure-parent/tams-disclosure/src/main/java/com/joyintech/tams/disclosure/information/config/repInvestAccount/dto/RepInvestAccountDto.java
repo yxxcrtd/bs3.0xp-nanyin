@@ -68,7 +68,7 @@ public class RepInvestAccountDto extends RepInvestAccount implements ITableRow, 
     /**
      * 错误信息
      */
-    private String errmsg;
+    private String errormsg;
 
     private String oaccountNum;
 
@@ -163,11 +163,11 @@ public class RepInvestAccountDto extends RepInvestAccount implements ITableRow, 
     }
 
     public String getErrmsg() {
-        return errmsg;
+        return errormsg;
     }
 
     public void setErrmsg(String errmsg) {
-        this.errmsg = errmsg;
+        this.errormsg = errmsg;
     }
 
     public String getOaccountNum() {
