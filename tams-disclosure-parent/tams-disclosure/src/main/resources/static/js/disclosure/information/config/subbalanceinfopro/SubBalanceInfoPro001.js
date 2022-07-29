@@ -114,7 +114,7 @@
                 if (checkResult) {
                     setTimeout( function () {
                             if(checkResult.data.errorMsg){
-                                error1(checkResult.data.errorMsg);
+                                Joyin.error(checkResult.data.errorMsg);
                                 return;
                             }
                             if (checkResult.data.confirmMsg) {
