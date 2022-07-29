@@ -61,7 +61,7 @@
             ,{field:'updateUser',title:'更新人',sortField:"updateUser"}//更新人
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt'],
                 render: function (data, type, row, meta) {
-                    if (row.dataStatus == '02')
+                    if (row.dataStatus == 'D')
                         return '';
                     else
                         return '<i class="btn layui-icon edit edit" title="编辑" data-ignore="false"></i> ' +
