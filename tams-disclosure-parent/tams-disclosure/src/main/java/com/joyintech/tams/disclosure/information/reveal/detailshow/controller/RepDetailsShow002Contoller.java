@@ -85,7 +85,7 @@ public class RepDetailsShow002Contoller extends BaseController {
 
     @RequestMapping(value="/previewReport", method = RequestMethod.POST)
     public void previewReport(HttpServletRequest request, HttpServletResponse response) {
-        repDetailsShow001Service.previewReport(request,response);
+        repDetailsShow001Service.previewReport(RequestUtil.getPageParam(),response);
     }
 
     /**
