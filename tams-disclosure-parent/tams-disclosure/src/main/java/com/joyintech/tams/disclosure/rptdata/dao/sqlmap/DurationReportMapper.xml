@@ -9,9 +9,11 @@
 		,INFO.PROD_RE
 		,INFO.ISSUING_WAY
 		,INFO.PROFIT_TYPE   /**运作方式**/
+		,info.PROD_TYPE  /**产品类型**/
 		,INFO.SET_DATE   eDate /**成立日**/
 		,'南银理财有限责任公司' prodManager  /**管理人**/
-		,ACCT_CHNNAME  prodTruster /**托管人**/
+		,info.ACCT_CHNNAME  prodTruster /**托管人**/
+		,info.REP_PROD_TYPE  /**信披产品类型，母子产品，单产品**/
 		,PINDEX.CAPITAL    /**期末余额**/
 		,PARTNER.PARTNER_NAME partner /**合作机构**/
 		from REP_PROD_INFO info
@@ -40,9 +42,9 @@
 		</if>
 	</select>
 
-	<select id="selectFinIndex" resultType="Map">
+	<select id="selectFinIndex" resultType="com.joyintech.tams.common.base.entity.RepProdIndex">
 		select
-		rownum
+		rownum personalField
 		,info.PROD_ID
 		,rindex.ASSETS_VALUE
 		,rindex.UNIT_VALUE
@@ -73,9 +75,9 @@
 		</if>
 	</select>
 
-	<select id="selectReportIndex" resultType="Map">
+	<select id="selectReportIndex" resultType="com.joyintech.tams.common.base.entity.RepIndexSub">
 		select
-		rownum
+		rownum personalField
 		,rindex.PRI_ID
 		,rindex.INDEX_NAME
 		,rindex.INDEX_VALUE
@@ -90,9 +92,9 @@
 		</if>
 	</select>
 
-	<select id="selectProdAssetComb" resultType="Map">
+	<select id="selectProdAssetComb" resultType="com.joyintech.tams.common.base.entity.DisProdAsset">
 		select
-		rownum
+		rownum personalField
 		,dpa.PROD_ID
 		,dpa.FIX_PRE_RATIO
 		,dpa.FIX_AFTER_RATIO
@@ -105,17 +107,17 @@
 		from DIS_PROD_ASSET dpa
 		where
 		dpa.DATA_STATUS='01'
-		<if test="prodId!=null">
-			and PROD_ID=#{prodId,jdbcType=VARCHAR}
+		<if test="prodid!=null">
+			and PROD_ID=#{prodid,jdbcType=VARCHAR}
 		</if>
 		<if test="reportDate!=null">
 			and #{reportDate,jdbcType=DATE} between dpa.EFF_DATE and dpa.EFF_END_DATE
 		</if>
 	</select>
 
-	<select id="selectProdAssetDetail" resultType="Map">
+	<select id="selectProdAssetDetail" resultType="com.joyintech.tams.common.base.entity.RepAssetsComb">
 		select
-		rownum
+		rownum personalField
 		,rac.PROD_ID
 		,rac.PUB_DATE
 		,rac.ASSETS_CODE
@@ -125,17 +127,17 @@
 		from REP_ASSETS_COMB rac
 		where
 		rac.STATUS='E'
-		<if test="prodId!=null">
-			and rac.PROD_ID=#{prodId,jdbcType=VARCHAR}
+		<if test="prodid!=null">
+			and rac.PROD_ID=#{prodid,jdbcType=VARCHAR}
 		</if>
 		<if test="reportDate!=null">
 			and rac.PUB_DATE = #{reportDate,jdbcType=DATE}
 		</if>
 	</select>
 
-	<select id="selectAccts" resultType="Map">
+	<select id="selectAccts" resultType="com.joyintech.tams.common.base.entity.RepInvestAccount">
 		select
-		rownum
+		rownum personalField
 		,accts.PROD_ID
 		,accts.ACCOUNT_TYPE
 		,accts.ACCOUNT_NUM
@@ -144,13 +146,13 @@
 		from REP_INVEST_ACCOUNT accts
 		where
 		accts.STATUS='E'
-		<if test="prodId!=null">
-			and accts.PROD_ID=#{prodId,jdbcType=VARCHAR}
+		<if test="prodid!=null">
+			and accts.PROD_ID=#{prodid,jdbcType=VARCHAR}
 		</if>
 	</select>
 
-	<select id="selectRelDeals" resultType="Map">
-		select rownum
+	<select id="selectRelDeals" resultType="com.joyintech.tams.common.base.entity.RepRelDeal">
+		select rownum personalField
 		,deal.PROD_ID
 		,deal.PUB_DATE
 		,deal.BANK_TRANS_AMT
@@ -160,8 +162,8 @@
 		from REP_REL_DEAL deal
 		where
 		deal.STATUS='E'
-		<if test="prodId!=null">
-			and deal.PROD_ID=#{prodId,jdbcType=VARCHAR}
+		<if test="prodid!=null">
+			and deal.PROD_ID=#{prodid,jdbcType=VARCHAR}
 		</if>
 		<if test="reportDate!=null">
 			and deal.PUB_DATE = #{reportDate,jdbcType=DATE}
@@ -211,6 +213,26 @@
 			and info.P_PROD_ID=#{pprodid,jdbcType=VARCHAR}
 		</if>
 		order by basis.EFF_DATE
+    </select>
+    
+    <select id="selectNostdCreditor" resultType="com.joyintech.tams.common.base.entity.DisNostdCreditor">
+    	select 
+    		rownum personalField
+    		,NOSTD_ASSET_ID
+			,FINANCIER
+			,PROJECT_NO
+			,PROJECT_NAME
+			,REM_FINANCING_PERIOD
+			,INCOME_DISTRIBUTE
+			,TRD_CONSTRUCT
+			,RISK_INFO
+		from DIS_NOSTD_CREDITOR 
+		where 
+	    	DATA_STATUS='E'
+			and #{reportDate,jdbcType=DATE} between EFF_DATE and EFF_END_DATE
+			<if test="prodid!=null">
+				PROD_ID=#{prodid,jdbcType=VARCHAR}
+			</if>
     </select>
     
 </mapper>

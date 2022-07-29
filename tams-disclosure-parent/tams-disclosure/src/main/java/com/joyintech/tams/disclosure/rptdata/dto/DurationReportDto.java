@@ -24,6 +24,7 @@ import com.joyintech.tams.common.base.entity.RepRelDeal;
 public class DurationReportDto extends ReportDto {
 
 	private Integer runDays;  //期限天数
+	private String prodType; //产品类型：无需区分母子产品 01 净值型/04 现金管理类
 	private String profitType; //运作方式
 	private String issuingWay;  //发行方式：01开放，02封闭
 	
@@ -44,14 +45,13 @@ public class DurationReportDto extends ReportDto {
 	
 	private List<Map<String,Object>> listAchieveBasis;   //TODO:业绩基准，实体类还未定义，暂时以map定义
 	
-//	private String prodOperating;  
-//	private String prodRisk;  
 	private String tzclhyzfx;  //报告期内产品的投资策略和运作分析，从报告指标表中获取;
 	private String ldxfxfx;    //报告期内产品的流动性风险分析
 	private String tgrbg1;   //报告期内托管人遵规守信情况声明
 	private String tgrbg2;   //托管人对报告期内投资运作遵规守信、净值计算、利润分配等情况的说明
 	private String tgrbg3;   //托管人对本年度报告中财务信息等内容的真实、准确和完整发表意见
-
+	private String yjbx;       //报告期内产品的业绩表现
+	
 	private Map<String,Object> prodAssetComb;  //产品资产组合汇总情况
 	
 	private List<Map<String,Object>> listAssetsDetail;  //报告期末按公允价值占产品资产净值比例大小排序的前十名资产投资明细,REP_ASSETS_COMB
@@ -76,6 +76,14 @@ public class DurationReportDto extends ReportDto {
 
 	public void setRunDays(Integer runDays) {
 		this.runDays = runDays;
+	}
+
+	public String getProdType() {
+		return prodType;
+	}
+
+	public void setProdType(String prodType) {
+		this.prodType = prodType;
 	}
 
 	public String getProfitType() {
@@ -204,6 +212,14 @@ public class DurationReportDto extends ReportDto {
 
 	public void setTgrbg3(String tgrbg3) {
 		this.tgrbg3 = tgrbg3;
+	}
+
+	public String getYjbx() {
+		return yjbx;
+	}
+
+	public void setYjbx(String yjbx) {
+		this.yjbx = yjbx;
 	}
 
 	public List<Map<String, Object>> getListFinIndex() {
