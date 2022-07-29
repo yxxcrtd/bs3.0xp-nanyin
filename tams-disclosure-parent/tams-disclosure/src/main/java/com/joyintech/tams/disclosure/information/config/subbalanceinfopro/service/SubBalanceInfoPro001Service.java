@@ -71,6 +71,7 @@ public class SubBalanceInfoPro001Service extends CommonExportService<SubBalanceI
         }
         else {
             dto.setStatus("E");
+            dto.setErrormsg("");
             subBalanceInfoProMapper.updateByKey(dto);
         }
 
