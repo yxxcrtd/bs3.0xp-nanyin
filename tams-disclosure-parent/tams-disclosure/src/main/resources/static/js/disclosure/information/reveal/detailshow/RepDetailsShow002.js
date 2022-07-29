@@ -9,6 +9,8 @@ $(function () {
 	var modelId;
 	var modelUri;
 
+	var repId;
+	var repName;
     
   //展示报表查询条件
 	var showSearch = function(data){
@@ -130,14 +132,14 @@ $(function () {
  	   	//将返回的HTML报表插入到界面中    	  
        var $container = $("#showtable");
        if(params&&params.length==0){
-		   Joyin.ajax('previewReport', {uri:modelId,repId:repId}, function(result) {
+		   Joyin.ajax('previewReport', {uri:modelId,repid:repId}, function(result) {
 			   //var data =result.replace(new RegExp(changeStr, "g"), toStr);
 			   //data =data.replace(new RegExp('.png', "g"), '.png&v='+Math.random());
 			   $container.html(result);
 		   });
        }else{
 		   params['uri'] = modelId;
-		   params['repId']=repId;
+		   params['repid']=repId;
 		   console.log(params)
 		   alert("b");
 		   Joyin.ajax('previewReport', params, function(result) {
