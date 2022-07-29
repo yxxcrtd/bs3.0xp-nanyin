@@ -13,11 +13,16 @@
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
         <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="RELATEAMOUNT" property="relateamount" jdbcType="DECIMAL" />
+        <result column="EFFDATE" property="effdate" jdbcType="DATE" />
+        <result column="EFFDELIDATE" property="effdelidate" jdbcType="DATE" />
+        <result column="ERRORMSG" property="errormsg" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         PROD_ID PROD_ID, PUB_DATE PUB_DATE, BANK_TRANS_AMT BANK_TRANS_AMT, ORG_TRANS_AMT ORG_TRANS_AMT, 
         INVEST_TRANS_AMT INVEST_TRANS_AMT, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
-        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, STATUS STATUS
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, STATUS STATUS, 
+        RELATEAMOUNT RELATEAMOUNT, EFFDATE EFFDATE, EFFDELIDATE EFFDELIDATE, ERRORMSG ERRORMSG
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -44,11 +49,15 @@
         insert into REP_REL_DEAL (PROD_ID, PUB_DATE, BANK_TRANS_AMT, 
             ORG_TRANS_AMT, INVEST_TRANS_AMT, CREATE_USER, 
             CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-            UPDATE_TIME, STATUS)
+            UPDATE_TIME, STATUS, RELATEAMOUNT, 
+            EFFDATE, EFFDELIDATE, ERRORMSG
+            )
         values (#{prodId,jdbcType=VARCHAR}, #{pubDate,jdbcType=DATE}, #{bankTransAmt,jdbcType=DECIMAL}, 
             #{orgTransAmt,jdbcType=DECIMAL}, #{investTransAmt,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, 
             #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
-            #{updateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR})
+            #{updateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}, #{relateamount,jdbcType=DECIMAL}, 
+            #{effdate,jdbcType=DATE}, #{effdelidate,jdbcType=DATE}, #{errormsg,jdbcType=VARCHAR}
+            )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepRelDeal" >
         insert into REP_REL_DEAL
@@ -86,6 +95,18 @@
             <if test="status != null" >
                 STATUS,
             </if>
+            <if test="relateamount != null" >
+                RELATEAMOUNT,
+            </if>
+            <if test="effdate != null" >
+                EFFDATE,
+            </if>
+            <if test="effdelidate != null" >
+                EFFDELIDATE,
+            </if>
+            <if test="errormsg != null" >
+                ERRORMSG,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="prodId != null" >
@@ -121,13 +142,27 @@
             <if test="status != null" >
                 #{status,jdbcType=VARCHAR},
             </if>
+            <if test="relateamount != null" >
+                #{relateamount,jdbcType=DECIMAL},
+            </if>
+            <if test="effdate != null" >
+                #{effdate,jdbcType=DATE},
+            </if>
+            <if test="effdelidate != null" >
+                #{effdelidate,jdbcType=DATE},
+            </if>
+            <if test="errormsg != null" >
+                #{errormsg,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepRelDeal" >
         insert into REP_REL_DEAL(PROD_ID, PUB_DATE, BANK_TRANS_AMT, ORG_TRANS_AMT, INVEST_TRANS_AMT, 
-        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, STATUS)
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, STATUS, RELATEAMOUNT, 
+        EFFDATE, EFFDELIDATE, ERRORMSG)
         select PROD_ID, PUB_DATE, BANK_TRANS_AMT, ORG_TRANS_AMT, INVEST_TRANS_AMT, 
-            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, #{status,jdbcType=VARCHAR} STATUS
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, #{status,jdbcType=VARCHAR} STATUS, RELATEAMOUNT, 
+            EFFDATE, EFFDELIDATE, ERRORMSG
              from REP_REL_DEAL
              where STATUS = 'E' and PROD_ID = #{prodId,jdbcType=VARCHAR}
     </insert>
@@ -155,6 +190,18 @@
             <if test="status != null" >
                 STATUS = #{status,jdbcType=VARCHAR},
             </if>
+            <if test="relateamount != null" >
+                RELATEAMOUNT = #{relateamount,jdbcType=DECIMAL},
+            </if>
+            <if test="effdate != null" >
+                EFFDATE = #{effdate,jdbcType=DATE},
+            </if>
+            <if test="effdelidate != null" >
+                EFFDELIDATE = #{effdelidate,jdbcType=DATE},
+            </if>
+            <if test="errormsg != null" >
+                ERRORMSG = #{errormsg,jdbcType=VARCHAR},
+            </if>
         </set>
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
     </update>
@@ -166,7 +213,11 @@
             INVEST_TRANS_AMT = #{investTransAmt,jdbcType=DECIMAL},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-            STATUS = #{status,jdbcType=VARCHAR}
+            STATUS = #{status,jdbcType=VARCHAR},
+            RELATEAMOUNT = #{relateamount,jdbcType=DECIMAL},
+            EFFDATE = #{effdate,jdbcType=DATE},
+            EFFDELIDATE = #{effdelidate,jdbcType=DATE},
+            ERRORMSG = #{errormsg,jdbcType=VARCHAR}
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
     </update>
 </mapper>
