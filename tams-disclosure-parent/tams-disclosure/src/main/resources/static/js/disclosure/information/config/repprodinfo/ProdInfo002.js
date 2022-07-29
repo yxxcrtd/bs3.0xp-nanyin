@@ -292,7 +292,7 @@
         if (isIndex == '02') {
             $("#performCompare").attr("disabled", false);
         } else {
-            $("#performCompare").attr("");
+            $("#performCompare").val("");
             $("#performCompare").attr("disabled", true);
         }
     }
