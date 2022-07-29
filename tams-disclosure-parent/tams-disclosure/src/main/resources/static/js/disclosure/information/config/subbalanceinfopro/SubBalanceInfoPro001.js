@@ -211,7 +211,7 @@
                 var selArr = table.getAllCheckedRows();
             }
             if (!selArr || selArr.length == 0) {
-                Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+                Joyin.error(JoyinUtil.getMessage("请至少选择一条记录！"));
                 return;
             }
             for(var i=0;i<selArr.length;i++){
