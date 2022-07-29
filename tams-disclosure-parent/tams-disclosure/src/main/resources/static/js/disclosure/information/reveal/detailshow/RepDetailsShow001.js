@@ -179,8 +179,8 @@ $(function () {
 				$("#showtable").html('<h2>报表集合无法查询,目前仅提供word的生成及导出</h2>');
         	}else{
         		var parms = {
-						repid:treeNode.id,
-                		repname:treeNode.name
+						repId:treeNode.id,
+                		repName:treeNode.name
                 	};
                 Joyin.ajax('getRepsearch',
                     parms,

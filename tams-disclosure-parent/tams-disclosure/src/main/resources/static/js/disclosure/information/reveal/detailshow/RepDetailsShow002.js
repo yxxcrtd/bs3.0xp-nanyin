@@ -10,7 +10,7 @@ $(function () {
 	var modelUri;
 
 	var repId;
-
+	var repName;
     
   //展示报表查询条件
 	var showSearch = function(data){
@@ -163,7 +163,7 @@ $(function () {
     $(function() {
     	//showView(parent.window.getSelectData());
 		var parms = {
-			repid:repId,
+			repId:repId,
 			repName:repName
 		};
 		Joyin.ajax('getRepsearch',
