@@ -179,8 +179,8 @@ $(function () {
 				$("#showtable").html('<h2>报表集合无法查询,目前仅提供word的生成及导出</h2>');
         	}else{
         		var parms = {
-                		repId:treeNode.id,
-                		repName:treeNode.name
+						repid:treeNode.id,
+                		repname:treeNode.name
                 	};
                 Joyin.ajax('getRepsearch',
                     parms,
@@ -263,14 +263,14 @@ $(function () {
 		var toStr = 'src='+basePath+'image'
 		var changeStr= 'src="image'
 	    if(params&&params.length==0){
-	    	Joyin.ajax('previewReport', {uri:modelId,repId:repId}, function(result) {
+	    	Joyin.ajax('previewReport', {uri:modelId,repid:repId}, function(result) {
 				//var data =result.replace(new RegExp(changeStr, "g"), toStr);
 				//data =data.replace(new RegExp('.png', "g"), '.png&v='+Math.random());
 				$container.html(result);
 	        });
 	    }else{
 	    	params['uri'] = modelId;
-	    	params['repId']=repId;
+	    	params['repid']=repId;
 			console.log(params)
 	    	Joyin.ajax('previewReport', params, function(result) {
 				//var data =result.replace(new RegExp(changeStr, "g"), toStr);
@@ -315,9 +315,9 @@ $(function () {
 	        var obj = {};
 	            params['fileType'] = type;
 	            params['modelId'] = modelId;
-	            params['repId'] = repId;
-	            params['repName'] = repName;
-	            params['prodName'] = proName;
+	            params['repid'] = repId;
+	            params['repname'] = repName;
+	            params['prodname'] = proName;
 	            //params['portnum'] = 'LEO-001';
 	            alert(params);
 //	        Joyin.ajax('downFileAndExport',
@@ -345,10 +345,10 @@ $(function () {
         	}
         	
         	if(type=='docx'){
-        		params['fileType'] = type;
-                params['repId'] = modelListId;
-                params['prodName'] = proName;
-                params['repName'] = repName;
+        		params['filetype'] = type;
+                params['repid'] = modelListId;
+                params['prodname'] = proName;
+                params['repname'] = repName;
 
                 Joyin.exportExcel('mergeExport', params);
         	}else{
@@ -395,7 +395,7 @@ $(function () {
 		var toStr = 'src='+basePath+'image'
 		var changeStr= 'src="image'
     
-    	params['repId'] = repId;
+    	params['repid'] = repId;
         Joyin.dialog(JoyinUtil.getLabel("编辑报表"),
             JoyinUtil.getRealPath("/disclosure/information/reveal/detailshow/RepEdit001/init"),
             "60%","85%",params,function(){ }
@@ -433,11 +433,11 @@ $(function () {
 //                var url = exportReportPath(report_info);
                 
 //	        	params['url'] = url;
-	            params['fileType'] = type;
-	            params['modelId'] = modelId;
-	            params['repId'] = repId;
-	            params['repName'] = repName;
-	            params['prodName'] = proName;
+	            params['filetype'] = type;
+	            params['modelid'] = modelId;
+	            params['repid'] = repId;
+	            params['repname'] = repName;
+	            params['prodname'] = proName;
 	            Joyin.ajax('querySameCount',params,function(){
 	            	params['operateType'] = "01";
 	            	Joyin.ajax('genReport',
@@ -449,10 +449,10 @@ $(function () {
         }else if(modelListId){
         	if(type=='docx'){
         		layer.load();
-        		params['fileType'] = type;
-                params['repId'] = modelListId;
-                params['prodName'] = proName;
-                params['repName'] = repName;
+        		params['filetype'] = type;
+                params['repid'] = modelListId;
+                params['prodname'] = proName;
+                params['repname'] = repName;
 
                 Joyin.ajax('submitWord',
                 		params,
