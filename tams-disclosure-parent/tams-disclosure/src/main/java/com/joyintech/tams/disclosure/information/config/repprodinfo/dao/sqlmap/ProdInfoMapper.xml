@@ -106,7 +106,7 @@
             prpi.ISSUING_WAY ISSUING_WAY,
             prpi.ACCT_CHNNAME ACCT_CHNNAME,
             prpi.PROFIT_TYPE PROFIT_TYPE,
-            prpi.PD_STATUS PD_STATUS,
+            rpi.PD_STATUS PD_STATUS,
             prpi.PROD_SERIES PROD_SERIES,
 
             rpi.CREATE_USER CREATE_USER,

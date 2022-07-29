@@ -111,7 +111,7 @@
                         <input type="hidden" id="issueStatus" name="issueStatus" class="layui-input form-input" placeholder="发行状态"  data-th-value="${entity?.issueStatus}">
                         <input type="hidden" id="repProdType" name="repProdType" class="layui-input form-input" placeholder="信批产品类别"  data-th-value="${entity?.repProdType}">
                         <input type="hidden" id="pdStatus2" name="pdStatus2" class="layui-input form-input" placeholder=""  data-th-value="${entity?.pdStatus}">
-                        <input type="hidden" id="oldRaiseAmt" name="oldRaiseAmt" class="layui-input form-input" placeholder=""  data-th-value="${entity?.raiseAmt}">
+                        <input type="hidden" id="oldRaiseAmt" name="oldRaiseAmt" class="layui-input form-input text-number" placeholder=""  data-th-value="${entity?.raiseAmt}">
 
                         <div class="form-inline-wrap">
                             <label class="layui-form-label form-label-wrap">子产品代码</label>
@@ -146,11 +146,23 @@
                         <div class="form-inline-wrap">
                             <label class="layui-form-label form-label-wrap">产品状态</label>
                             <div class="layui-input-inline input-inline">
-                                <select id="pdStatus" name="pdStatus" required placeholder="请选择"
-                                        data-th-initValue="${entity?.pdStatus}"
-                                        class="layui-input form-input input-select"
-                                        data-th-data-result="${DIS_PROD_STATUS}"
-                                ></select>
+
+
+                                <div th:if="${entity?.pdStatus==null}">
+                                    <select id="pdStatus" name="pdStatus" required placeholder="请选择"
+                                            data-th-initValue="${entity?.pdStatus==null?'01':entity?.pdStatus}"
+                                            class="layui-input form-input input-select" disabled
+                                            data-th-data-result="${DIS_PROD_STATUS}">
+                                    </select>
+                                </div>
+                                <div th:if="${entity?.pdStatus !=null}">
+                                    <select id="pdStatus" name="pdStatus" required placeholder="请选择"
+                                            data-th-initValue="${entity?.pdStatus==null?'01':entity?.pdStatus}"
+                                            class="layui-input form-input input-select"
+                                            data-th-data-result="${DIS_PROD_STATUS}">
+                                    </select>
+                                </div>
+
                             </div>
                         </div>
                         <div class="form-inline-wrap">
@@ -439,6 +451,7 @@
     </form>
     <div class="layui-col-md11" style="margin: 10px;">
         <div class="text-center">
+            <a id="ProdInfo002_btn_save" class="layui-btn layui-btn-sm btn-save" data-th-text="#{SysCommon.save}">保存</a>
             <a id="ProdInfo002_btn_submit" class="layui-btn layui-btn-sm btn-submit">提交</a>
             <a id="ProdInfo002_btn_cancel" class="layui-btn layui-btn-sm btn-cancel">取消</a>
         </div>
@@ -449,6 +462,7 @@
         var issuePartyId_New = [[${issuePartyId_New}]];
         var basicChangeList = [[${entity?.basicChangeList}]];
         var QUOTA_CODE = [[${QUOTA_CODE}]];
+        var isIndexUpdate = [[${entity?.isIndex}]];
 
     </script>
     <script data-th-src="@{/js/disclosure/information/config/repprodinfo/ProdInfo002.js}"
