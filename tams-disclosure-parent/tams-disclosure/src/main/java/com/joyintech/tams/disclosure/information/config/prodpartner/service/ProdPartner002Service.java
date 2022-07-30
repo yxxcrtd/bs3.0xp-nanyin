@@ -64,7 +64,7 @@ public class ProdPartner002Service extends CommonExportService<ProdPartnerDto>
 
         if (OperationType.DELETE.equals(type)) {
             //删除
-            prodPartner002Mapper.deleteProdPartnerByPrimaryKey(dto.getProdPartenerId());
+            prodPartner002Mapper.deleteProdPartnerByPrimaryKey(dto);
         }
         else if (OperationType.NEW.equals(type)) {//新建
             //数据状态
