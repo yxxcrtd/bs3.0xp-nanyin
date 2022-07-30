@@ -440,6 +440,8 @@ insert into REP_JOB values ('100000022','清算报告','01','0 0 5 * * ? *','每
 insert into REP_JOB values ('100000023','分红计算清单','01','0 0 5 * * ? *','每年每月每日5时0分','2022-07-23','','D0000000000000000023','system','',to_date('2022/07/23','yyyy/MM/dd'),'system',to_date('2022/07/23','yyyy/MM/dd'),'Y');
 
 -- 校验
+
+delete from REP_CHECK;
 declare v_clob clob :='select 1 from dual
 where 
 date$qryEndDate=(
@@ -539,6 +541,8 @@ date$qryEndDate=(
 
 
 -- 校验关系
+
+delete from REP_CHECK_RELATION;
 insert into REP_CHECK_RELATION values ('1001','CP_001_002_005','1001','04','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd'));
 insert into REP_CHECK_RELATION values ('1002','CP_001_002_006','1002','04','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd'));
 insert into REP_CHECK_RELATION values ('1003','CP_001_002_015','1003','04','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd'));
