@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.DisSaleAgencyMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.DisSaleAgency" >
+        <id column="SEQUENCE_NO" property="sequenceNo" jdbcType="VARCHAR" />
+        <result column="AGENCY_NAME" property="agencyName" jdbcType="VARCHAR" />
+        <result column="AGREEMENT_VDATE" property="agreementVdate" jdbcType="DATE" />
+        <result column="AGREEMENT_MDATE" property="agreementMdate" jdbcType="DATE" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQUENCE_NO SEQUENCE_NO, AGENCY_NAME AGENCY_NAME, AGREEMENT_VDATE AGREEMENT_VDATE, 
+        AGREEMENT_MDATE AGREEMENT_MDATE, CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, CREATE_DEPT CREATE_DEPT
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.DisSaleAgencyMapper.Base_Column_List" />
+        from DIS_SALE_AGENCY
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.DisSaleAgencyMapper.Base_Column_List" />
+        from DIS_SALE_AGENCY
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.DisSaleAgencyMapper.Base_Column_List" />
+        from DIS_SALE_AGENCY
+        where SEQUENCE_NO = #{sequenceNo,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from DIS_SALE_AGENCY
+        where SEQUENCE_NO = #{sequenceNo,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.DisSaleAgency" >
+        insert into DIS_SALE_AGENCY (SEQUENCE_NO, AGENCY_NAME, AGREEMENT_VDATE, 
+            AGREEMENT_MDATE, CREATE_USER, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME, CREATE_DEPT
+            )
+        values (#{sequenceNo,jdbcType=VARCHAR}, #{agencyName,jdbcType=VARCHAR}, #{agreementVdate,jdbcType=DATE}, 
+            #{agreementMdate,jdbcType=DATE}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.DisSaleAgency" >
+        insert into DIS_SALE_AGENCY
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="sequenceNo != null" >
+                SEQUENCE_NO,
+            </if>
+            <if test="agencyName != null" >
+                AGENCY_NAME,
+            </if>
+            <if test="agreementVdate != null" >
+                AGREEMENT_VDATE,
+            </if>
+            <if test="agreementMdate != null" >
+                AGREEMENT_MDATE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="sequenceNo != null" >
+                #{sequenceNo,jdbcType=VARCHAR},
+            </if>
+            <if test="agencyName != null" >
+                #{agencyName,jdbcType=VARCHAR},
+            </if>
+            <if test="agreementVdate != null" >
+                #{agreementVdate,jdbcType=DATE},
+            </if>
+            <if test="agreementMdate != null" >
+                #{agreementMdate,jdbcType=DATE},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.DisSaleAgency" >
+        insert into DIS_SALE_AGENCY(SEQUENCE_NO, AGENCY_NAME, AGREEMENT_VDATE, AGREEMENT_MDATE, 
+        CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, CREATE_DEPT)
+        select SEQUENCE_NO, AGENCY_NAME, AGREEMENT_VDATE, AGREEMENT_MDATE, 
+            CREATE_USER, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_DEPT
+             from DIS_SALE_AGENCY
+             where 1 = 1 and SEQUENCE_NO = #{sequenceNo,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.DisSaleAgency" >
+        update DIS_SALE_AGENCY
+        <set >
+            <if test="agencyName != null" >
+                AGENCY_NAME = #{agencyName,jdbcType=VARCHAR},
+            </if>
+            <if test="agreementVdate != null" >
+                AGREEMENT_VDATE = #{agreementVdate,jdbcType=DATE},
+            </if>
+            <if test="agreementMdate != null" >
+                AGREEMENT_MDATE = #{agreementMdate,jdbcType=DATE},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where SEQUENCE_NO = #{sequenceNo,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.DisSaleAgency" >
+        update DIS_SALE_AGENCY
+        set AGENCY_NAME = #{agencyName,jdbcType=VARCHAR},
+            AGREEMENT_VDATE = #{agreementVdate,jdbcType=DATE},
+            AGREEMENT_MDATE = #{agreementMdate,jdbcType=DATE},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where SEQUENCE_NO = #{sequenceNo,jdbcType=VARCHAR}
+    </update>
+</mapper>
