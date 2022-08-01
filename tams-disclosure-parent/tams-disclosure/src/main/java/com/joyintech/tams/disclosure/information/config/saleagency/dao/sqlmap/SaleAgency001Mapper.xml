@@ -29,6 +29,23 @@
 		</if>
 		</where>
 	</select>
+
+	<select id="queryProdSeries"
+			resultType="com.joyintech.framework.select.SelectOptionDto">
+		select
+		distinct
+		PROD_SERIES id,
+		PROD_SERIES text
+		from
+		REP_PROD_INFO
+		where (P_PROD_ID is null or PROD_ID=P_PROD_ID)
+		and status='E' and PROD_SERIES is not null
+		<if test="search != null and search != ''">
+			and PROD_SERIES like concat(concat('%',#{search}),'%')
+		</if>
+	</select>
+
+
 	<select id="select"
 			resultMap="BaseResultMap">
 		select

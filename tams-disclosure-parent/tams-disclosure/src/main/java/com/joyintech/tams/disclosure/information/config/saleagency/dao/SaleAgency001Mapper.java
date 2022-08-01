@@ -71,4 +71,11 @@ public interface SaleAgency001Mapper extends DisSaleAgencyMapper {
      * @return
      */
     List<TreeNode> selectProdInfo();
+
+    /**
+     * 查询系统中已经维护的产品系列
+     * @param map
+     * @return
+     */
+    List<SelectOptionDto> queryProdSeries(Map<String, Object> map);
 }

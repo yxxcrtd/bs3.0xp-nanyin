@@ -90,7 +90,7 @@ public class SaleAgency001Controller extends BaseController{
     }
 
     /**
-     * 产品主代码联想下拉框
+     * 代销机构联想下拉框
      *
      * @return 产品代码列表
      * @see
@@ -100,6 +100,19 @@ public class SaleAgency001Controller extends BaseController{
     @RequestMapping("querySaleAgency")
     public List<SelectOptionDto> queryProdIdInfo() {
         return saleAgency001Service.querySaleAgency(RequestUtil.getPageParam());
+    }
+
+    /**
+     * 产品系列下拉框
+     *
+     * @return 产品代码列表
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("queryProdSeries")
+    public List<SelectOptionDto> queryProdSeries() {
+        return saleAgency001Service.queryProdSeries(RequestUtil.getPageParam());
     }
 
     /**
