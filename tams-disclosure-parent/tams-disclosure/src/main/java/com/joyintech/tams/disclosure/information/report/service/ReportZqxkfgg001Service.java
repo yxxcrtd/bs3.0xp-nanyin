@@ -76,13 +76,14 @@ public class ReportZqxkfgg001Service implements IReportDataService {
                 searchparam.put("announceDate", announceDate);
                 searchparam.put("rptType",rptType);
                 //是否生成报表规则：
-                boolean generateFlag = false;
+                boolean generateFlag = true;
+                /*boolean generateFlag = false;
                 //判断产品当前日期是否允许生成报表
                 DisProdPlanInfo planInfo = reportZqxkfgg001Mapper.checkGenerateFlag(searchparam);
 
                 if(planInfo != null){
                     generateFlag = true;
-                }
+                }*/
 
                 if (generateFlag) {
                     //查询产品信息
