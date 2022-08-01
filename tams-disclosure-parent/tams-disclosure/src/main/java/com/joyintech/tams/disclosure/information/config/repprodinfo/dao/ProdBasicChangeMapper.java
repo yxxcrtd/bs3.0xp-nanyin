@@ -27,4 +27,7 @@ public interface ProdBasicChangeMapper {
     int deleteByProdId(String prodId);
 
 
+    int updateByGroupId(ProdBasicChangeDto record);
+
+
 }

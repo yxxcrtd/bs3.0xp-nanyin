@@ -70,7 +70,15 @@ $(function() {
             ,{field:'errormsg', sortable:false, width:100, title: '错误信息'}
             ,{field:'updateDateStr', sortable:false, width:100, title: '更新时间'}
             ,{field:'updateUser', sortable:false, width:100, title: '更新人'}
-            ,{field:'operation', width:100, title: 'SysCommon.operation',sortable:false, type:'action', buttons: ['edit', 'delt']}
+            ,{field:'operation', width:100, title: 'SysCommon.operation',sortable:false, type:'action',
+                buttons: ['edit', 'delt'],render: function (data, type, row, meta) {
+                    if (row.status == 'D')
+                        return '';
+                    else
+                        return '<i class="btn layui-icon edit edit" title="编辑" data-ignore="false"></i> ' +
+                            '<i class="btn layui-icon delt delt" title="删除" data-ignore="false"></i>';
+                }
+            }
         ]
     });
     /**
@@ -88,10 +96,11 @@ $(function() {
                     function(){table.reload();});
             });
         }else{
-            data.pageModel=PAGE_MODEL_REFERENCE;
+           /* data.pageModel=PAGE_MODEL_REFERENCE;
             Joyin.dialog(JoyinUtil.getLabel("查看"),
                 basePath + "disclosure/information/config/repprodinfo/ProdInfo002/init",
-                "99%", "95%", data);
+                "99%", "95%", data);*/
+             Joyin.error("当前产品不能修改 !");
         }
     });
 
@@ -151,8 +160,6 @@ $(function() {
                             "70%", "80%",{prodIdStr : prodIdStr.substring(0, prodIdStr.length - 1)},function(){table.reload();}
                         );
                     }
-
-
                     //});
                 }else{
                     Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));

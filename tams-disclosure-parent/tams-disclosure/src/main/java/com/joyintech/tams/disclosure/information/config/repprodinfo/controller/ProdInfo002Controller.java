@@ -15,6 +15,7 @@ import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.*;
@@ -104,7 +105,7 @@ public class ProdInfo002Controller extends BaseController {
                 dto = prodInfoService.selectByProdId(id);
             }
             //业绩基准变更
-            dto.setBasicChangeList(prodBasicChangeService.selectListByProdId(id));
+            dto.setBasicChangeList(prodBasicChangeService.selectListByProdId(dto.getpProdId()));
             model.addAttribute("entity", dto);
 
         }
@@ -182,6 +183,24 @@ public class ProdInfo002Controller extends BaseController {
                 && dto.getProdRe().length() != 15) {
             return new AjaxResult("募集方式为私募,产品登记编码为15位", MessageType.错误消息);
         }
+        if (DateUtil.compareDate(dto.getRaiseEnddate(),dto.getRaiseStrdate()) < 0
+                || DateUtil.compareDate(dto.getRaiseEnddate(),dto.getSetDate()) > 0
+                || DateUtil.compareDate(dto.getRaiseEnddate(),dto.getpSetDate()) > 0) {
+            return new AjaxResult("募集结束日必须大于等于募集开始日，且必须小于子产品成立日期和产品成立日期！", MessageType.错误消息);
+        }
+
+        if (StringUtils.equals(DictCodeListExt5.发行方式_开放式.getValue(), dto.getIssuingWay())
+                && StringUtils.isBlank(dto.getOpenFreq())) {
+            return new AjaxResult("发行方式为开放式，开放频率必填", MessageType.错误消息);
+        }
+
+        if (StringUtils.equals(DictCodeListExt5.信披产品类型_净值型产品.getValue(), dto.getProdType())
+                && StringUtils.isNotEmpty( dto.getOpenFreq())
+                && StringUtils.equals(DictCodeListExt5.开放频率_日开.getValue(), dto.getOpenFreq())
+                && dto.getHoldday() == null) {
+            return new AjaxResult("开放频率为日开且产品类型为净值型,固定持有天数必填", MessageType.错误消息);
+        }
+
 
         if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), dto.getIsIndex())) {
             if (CollectionUtils.isEmpty(dto.getBasicChangeList())) {
