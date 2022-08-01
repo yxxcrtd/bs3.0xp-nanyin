@@ -254,7 +254,8 @@ public class InfoDisclosureGenService {
 		// 文件失败即为失败.不再提供不完整文件
 		UploadFile fileInfo;
 		try {
-			String fileName=infoDisclosureGenAndSendEntity.getProdid() + GlobalConstant.UNDER_LINE + infoDisclosureGenAndSendEntity.getRepName();
+			String fileName=infoDisclosureGenAndSendEntity.getProdid() + GlobalConstant.UNDER_LINE + infoDisclosureGenAndSendEntity.getRepName()
+					+GlobalConstant.UNDER_LINE+DateUtil.getNewSysDate();
 			fileInfo = jasparConnectUtilService.connectJasparAndDownload(url,fileName,
 					infoDisclosureGenAndSendEntity.getFileType(), infoDisclosureGenAndSendEntity.getTemplateId(),
 					infoDisclosureGenAndSendEntity.getProdid(),getParams(infoDisclosureGenAndSendEntity,screenList,execDate));

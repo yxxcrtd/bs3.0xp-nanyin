@@ -83,6 +83,9 @@ public class RepEdit001Contoller extends BaseController {
 
     @Autowired
     private CommonPlatformDateService commonPlatformDateService;
+
+    @Autowired
+    private RepDetailsShow001Service repDetailsShow001Service;
     
     private String editFilename = "";
     private String saveFilename = "";
@@ -98,6 +101,7 @@ public class RepEdit001Contoller extends BaseController {
      * @see
      * @since 1.0
      */
+    @Override
     public String init(Model model) {
     	
     	String templateName = RequestUtil.getPageParam().get("repName")==null?"":RequestUtil.getPageParam().get("repName").toString();
@@ -382,5 +386,6 @@ public class RepEdit001Contoller extends BaseController {
         os.flush();
 
         return len;
-    }    
+    }
+
 }

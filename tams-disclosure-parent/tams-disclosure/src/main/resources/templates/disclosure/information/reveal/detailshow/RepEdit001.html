@@ -73,7 +73,7 @@
             }
 		}
 		catch(e){
-		    WebOfficeObj.Alert(e.description);
+		    //WebOfficeObj.Alert(e.description);
 	    }
 	}
 
@@ -129,7 +129,7 @@
 		window.close();
         }else
         {
-            WebOfficeObj.Alert(WebOfficeObj.Status);
+            //WebOfficeObj.Alert(WebOfficeObj.Status);
             StatusMsg(WebOfficeObj.Status);
         }
 	}
@@ -152,7 +152,7 @@
 	}
 	//关闭控件
 	function OnUnLoad() {
-	    WebOfficeObj.Alert("close 控件");
+	    //WebOfficeObj.Alert("close 控件");
 		WebOfficeObj.WebClose();
 	}
 
@@ -167,10 +167,10 @@
 	  if (info==null){return false}
 		WebOfficeObj.WebSetMsgByName("TESTINFO",info);  //USERNAME在后获取
 		if(WebOfficeObj.WebSendMessage()) {  		// 交互信息为INPORTTEXT
-		  WebOfficeObj.Alert(WebOfficeObj.WebGetMsgByName("RETURNINFO")); //USERNAME值为对应后台的key
+		  //WebOfficeObj.Alert(WebOfficeObj.WebGetMsgByName("RETURNINFO")); //USERNAME值为对应后台的key
 		} else
 		{
-			WebOfficeObj.Alert("客户端Web发送数据包命令没有合适的处理函数");
+			//WebOfficeObj.Alert("客户端Web发送数据包命令没有合适的处理函数");
 		}
 		WebOfficeObj.HidePlugin(1);
 	}

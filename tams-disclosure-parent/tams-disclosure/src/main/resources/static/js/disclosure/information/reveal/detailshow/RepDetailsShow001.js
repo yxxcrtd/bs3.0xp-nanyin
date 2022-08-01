@@ -267,6 +267,7 @@ $(function () {
 				//var data =result.replace(new RegExp(changeStr, "g"), toStr);
 				//data =data.replace(new RegExp('.png', "g"), '.png&v='+Math.random());
 				$container.html(result);
+
 	        });
 	    }else{
 	    	params['uri'] = modelId;

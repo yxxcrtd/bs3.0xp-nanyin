@@ -136,6 +136,7 @@ public class PoiReportService {
 			List<Map<String, Object>> listReports = reportDataService.queryDatas(params);
 			if (listReports.size() > 0) {
 				dataMap = listReports.get(0);
+				dataMap.put("prodId",params.get("prodId"));
 			} else {
 				logger.error("生成报表失败!没有找到数据。");
 				dataMap = new HashMap<>();
