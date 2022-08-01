@@ -28,7 +28,7 @@ public class SaleAgencyValidator implements BeanValidator {
         SaleAgencyDto dto = (SaleAgencyDto)value;
         Date platDate = DateUtil.platDateFromCache();
         List<ValidMessage> resultList = new ArrayList<ValidMessage>();
-        if (StringUtil.equals(dto.getPageModel(), "delete")) {
+        if (StringUtil.equals(dto.getOperateType(), "delete")) {
             //删除check
 
         }else{
