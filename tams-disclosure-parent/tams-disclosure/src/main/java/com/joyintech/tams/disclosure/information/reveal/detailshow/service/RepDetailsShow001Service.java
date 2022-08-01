@@ -927,7 +927,14 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
             	dataMap = new HashMap<>();
 
             //生成服务器报表文件，供编辑、导出功能使用
-            String reportFile = genReportFile(REPORT_TYPE_临时文件,reportInfo,dataMap,(Date)params.get("reportDate"));
+            Date rdate = null;
+            try {
+            	if (params.get("reportDate")!=null )
+            		rdate = DateUtil.parse(params.get("reportDate").toString());
+            } catch (Exception e ) {
+            	logger.error("获取报表日期错误",e);
+            }
+            String reportFile = genReportFile(REPORT_TYPE_临时文件,reportInfo,dataMap,rdate);
             
             FileInputStream fis = null;
             try {
