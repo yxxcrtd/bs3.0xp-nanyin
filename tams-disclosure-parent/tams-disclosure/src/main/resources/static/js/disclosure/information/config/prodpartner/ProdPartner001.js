@@ -83,7 +83,9 @@ $(function(){
 
     /*文件导出*/
     var exportExcel = function() {
-    	if (table != null && table != '') {
+        var paramObj = getSearchParams();
+        Joyin.exportExcel('export', paramObj);
+    	/*if (table != null && table != '') {
             var selArr = table.getAllCheckedRows();
          }
     	var param = getSearchParams();
@@ -91,7 +93,7 @@ $(function(){
          } else {
         	 param.keyList = JSON.stringify(selArr);
          }
-        Joyin.exportExcel('export', param);
+        Joyin.exportExcel('export', param);*/
     };
 
     $(function() {
