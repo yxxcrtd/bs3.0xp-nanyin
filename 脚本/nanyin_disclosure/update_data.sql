@@ -623,3 +623,31 @@ values ('InfoCompliance002', 'InfoCompliance002_btn_save', 'fiveprocess', 'syste
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
 values ('InfoCompliance002', 'InfoCompliance002_btn_submit', 'fiveprocess', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
 /**信披合规留痕管理 add cuiwei 2022-08-01 end**/
+
+
+-- add by shengning 20220801 关联交易情况维护 start
+-- 关联交易情况维护 菜单页面 配置
+delete from SYS_MENU where MENU_ID = 'REPORT_006_004_023';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('REPORT_006_004_023', 'SVR', null, 'REPORT_006_004', 'RepRelDeal001', 11, '02', '关联交易情况维护', 'system', null, sysdate, 'system', sysdate);
+
+delete from SYS_PAGE where PAGE_ID = 'RepRelDeal001';
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('RepRelDeal001', 'SVR', '/disclosure/information/config/repRelDeal/RepRelDeal001', 'disclosure/information/config/repRelDeal/RepRelDeal001', 'REPORT_006_004_023', null, null, '02', '01', '关联交易情况维护', 'system', null,SYSDATE, 'system', SYSDATE);
+
+delete from SYS_PAGE where PAGE_ID = 'RepRelDeal002';
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('RepRelDeal002', 'SVR', '/disclosure/information/config/repRelDeal/RepRelDeal002', 'disclosure/information/config/repRelDeal/RepRelDeal002',null, null, null, '02', '01', '关联交易情况维护编辑', 'system', null,SYSDATE, 'system', SYSDATE);
+
+-- 页面控件流程配置
+delete from SYS_WFL_BUSINESS_MODULE where PAGE_ID = 'RepRelDeal002';
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('RepRelDeal002', 'RepRelDeal002_btn_submit', 'oneApproval', 'system', '0001',SYSDATE, 'system', SYSDATE);
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('RepRelDeal002', 'RepRelDeal002_btn_save', 'oneApproval', 'system', '0001', SYSDATE, 'system', SYSDATE);
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('RepRelDeal002', 'RepRelDeal001_btn_delete', 'oneApproval', 'system', '0001', SYSDATE, 'system', SYSDATE);
+
+-- 业务类型数据字典配置
+DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'COMMON_BUSINESS_TYPE' and ITEM_CODE = 'SVR15';
+INSERT INTO SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+VALUES ('COMMON_BUSINESS_TYPE', 'SVR15', '关联交易情况维护', 1400, '0', 'system', null, sysdate, 'system',sysdate, null);
+
+-- add by shengning 20220801 关联交易情况维护 end
