@@ -36,7 +36,7 @@
 		  AND INFO.PROD_ID = #{prodId,jdbcType=VARCHAR}
 		  AND DPB.SETT_DATE = (
 			  select max(h.SETT_DATE) from DIS_PROD_BONUSPLAN h
-			  where h.SETT_DATE &lt; TO_DATE(#{baseDate},'yyyy-MM-dd')
+			  where h.SETT_DATE &lt; #{baseDate}
 				and h.PROD_ID = #{prodId,jdbcType=VARCHAR}
 				and h.DATA_STATUS = 'E'
 			)
@@ -74,7 +74,7 @@
 
 	<select id="checkGenerateFlag" resultType="com.joyintech.tams.common.base.entity.DisProdBonusplan">
 		SELECT
-			 ,PLAN.SETT_DATE /*基准日*/
+			 PLAN.SETT_DATE /*基准日*/
 			 ,PLAN.PAYMENT_DATE /*红利发放日*/
 		FROM REP_PROD_INFO INFO
 		 INNER JOIN DIS_PROD_BONUSPLAN PLAN ON PLAN.PROD_ID=INFO.PROD_ID AND PLAN.DATA_STATUS='E'

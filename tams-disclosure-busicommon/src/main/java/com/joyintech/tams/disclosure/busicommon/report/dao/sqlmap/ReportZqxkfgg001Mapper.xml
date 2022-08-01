@@ -51,11 +51,11 @@
 				TO_CHAR(DPP.AUTO_REDEEM_DATE,'YYYY-MM-DD')    autoRedeemDate,
 				TO_CHAR(DPP.HOLD_DAYS) holdDays,
 		       /*超额业绩报酬*/
-				NVL(RFF.ABOVE_AMT,0) aboveAmt,
+				RFF.ABOVE_AMT aboveAmt,
 		  		/*超额业绩报酬-确认金额*/
-				NVL(RFF.AFFIRM_AMT,0) affirmAmt,
+				RFF.AFFIRM_AMT affirmAmt,
 				/*超额业绩报酬-确认份额*/
-				NVL(RFF.AFFIRM_NUM,0) affirmNum
+				RFF.AFFIRM_NUM affirmNum
 		FROM
 			REP_PROD_INFO INFO
 			INNER JOIN DIS_PROD_PLAN DPP ON DPP.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID) AND  DPP.OPERATION_START_DATE &lt;= TO_DATE(#{announceDate},'yyyy-MM-dd')

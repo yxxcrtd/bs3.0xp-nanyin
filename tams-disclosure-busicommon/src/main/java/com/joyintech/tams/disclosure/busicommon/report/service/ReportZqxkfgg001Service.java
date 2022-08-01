@@ -78,13 +78,14 @@ public class ReportZqxkfgg001Service implements IReportDataService {
                 searchparam.put("announceDate", announceDate);
                 searchparam.put("rptType",rptType);
                 //是否生成报表规则：
-                boolean generateFlag = false;
+                boolean generateFlag = true;
+                /*boolean generateFlag = false;
                 //判断产品当前日期是否允许生成报表
                 DisProdPlanInfo planInfo = reportZqxkfgg001Mapper.checkGenerateFlag(searchparam);
 
                 if(planInfo != null){
                     generateFlag = true;
-                }
+                }*/
 
                 if (generateFlag) {
                     //查询产品信息
@@ -152,7 +153,7 @@ public class ReportZqxkfgg001Service implements IReportDataService {
                                 //自动赎回日小于平台日
                                 if (autoRedeemDate.compareTo(plateDate) < 0) {
                                     //超额业绩报酬为0  赎回确认单位净值=申购确认单位净值
-                                    if (aboveAmt != null && aboveAmt.compareTo(BigDecimal.ZERO) == 1) {
+                                    if ((aboveAmt != null && aboveAmt.compareTo(BigDecimal.ZERO) == 1)||aboveAmt == null) {
                                         redValue = unitValue;
                                     } else {
                                         if (affirmAmt != null && affirmNum != null) {

@@ -74,11 +74,12 @@ public class ReportKfjzgg001Service implements IReportDataService {
 
                 //根据产品分红到期计划表及产品排期计划表判断：若某个开放结束日不需要分红（开放结束日不是该产品的收益分配基准日），则需要生成在运作起始日生成公告；
                 //是否生成报表规则：
-                boolean generateFlag = false;
+                boolean generateFlag = true;
+                /*boolean generateFlag = false;
                 DisProdBonusplan bonusplan = reportKfjzgg001Mapper.checkGenerateFlag(searchparam);
                 if(bonusplan == null){
                     generateFlag = true;
-                }
+                }*/
                 if(generateFlag){
                     //查询产品信息
                     reportKfjzgg001Dto = reportKfjzgg001Mapper.getProdInfo(searchparam);

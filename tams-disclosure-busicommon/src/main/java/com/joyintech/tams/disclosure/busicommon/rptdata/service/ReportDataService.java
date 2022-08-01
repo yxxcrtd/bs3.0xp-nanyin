@@ -5,28 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.disclosure.busicommon.report.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.tams.disclosure.busicommon.poireport.dto.DisReportType;
-//import com.joyintech.tams.disclosure.information.report.service.Report1Cpnfl001Service;
-//import com.joyintech.tams.disclosure.information.report.service.Report1Cpnfl002Service;
-//import com.joyintech.tams.disclosure.information.report.service.Report1Cpnys001Service;
-//import com.joyintech.tams.disclosure.information.report.service.Report1Flncp001Service;
-//import com.joyintech.tams.disclosure.information.report.service.Report1Flncp002Service;
-//import com.joyintech.tams.disclosure.information.report.service.Report1Ysncp001Service;
-//import com.joyintech.tams.disclosure.information.report.service.ReportBclgg001Service;
-//import com.joyintech.tams.disclosure.information.report.service.ReportDlxsjgmdgg001Service;
-//import com.joyintech.tams.disclosure.information.report.service.ReportFxgg001Service;
-//import com.joyintech.tams.disclosure.information.report.service.ReportJesh001Service;
-//import com.joyintech.tams.disclosure.information.report.service.ReportJzfhbg001Service;
-//import com.joyintech.tams.disclosure.information.report.service.ReportKfjzgg001Service;
-//import com.joyintech.tams.disclosure.information.report.service.ReportKfqgg001Service;
-//import com.joyintech.tams.disclosure.information.report.service.ReportKfqzjfhgg001Service;
-//import com.joyintech.tams.disclosure.information.report.service.ReportMzjz001Service;
-//import com.joyintech.tams.disclosure.information.report.service.ReportRkcpjz001Service;
-//import com.joyintech.tams.disclosure.information.report.service.ReportZjxsjg001Service;
-//import com.joyintech.tams.disclosure.information.report.service.ReportZqxkfgg001Service;
 import com.joyintech.tams.utils.echarts.EchartsException;
 import com.joyintech.tams.utils.echarts.EchartsUtils;
 
@@ -56,59 +39,59 @@ public class ReportDataService {
 	@Autowired
 	private DurationReportDataService durationReportDataService;
 	
-//	@Autowired
-//	private ReportFxgg001Service reportFxgg001Service;
-//
-//	@Autowired
-//	private ReportZjxsjg001Service reportZjxsjg001Service;
-//
-//	@Autowired
-//	private ReportBclgg001Service reportBclgg001Service;
-//
-//	@Autowired
-//	private Report1Cpnfl001Service report1Cpnfl001Service;
-//
-//	@Autowired
-//	private Report1Cpnfl002Service report1Cpnfl002Service;
-//
-//	@Autowired
-//	private Report1Flncp001Service report1Flncp001Service;
-//
-//	@Autowired
-//	private Report1Flncp002Service report1Flncp002Service;
-//
-//	@Autowired
-//	private Report1Cpnys001Service report1Cpnys001Service;
-//
-//	@Autowired
-//	private Report1Ysncp001Service report1Ysncp001Service;
-//
-//	@Autowired
-//	private ReportJesh001Service reportJesh001Service;
-//
-//	@Autowired
-//	private ReportDlxsjgmdgg001Service reportDlxsjgmdgg001Service;
-//
-//	@Autowired
-//	private ReportKfqgg001Service reportKfqgg001Service;
-//
-//	@Autowired
-//	private ReportRkcpjz001Service reportRkcpjz001Service;
-//
-//	@Autowired
-//	private ReportZqxkfgg001Service reportZqxkfgg001Service;
-//
-//	@Autowired
-//	private ReportKfqzjfhgg001Service reportKfqzjfhgg001Service;
-//
-//	@Autowired
-//	private ReportKfjzgg001Service reportKfjzgg001Service;
-//
-//	@Autowired
-//	private ReportMzjz001Service reportMzjz001Service;
-//
-//	@Autowired
-//	private ReportJzfhbg001Service reportJzfhbg001Service;
+	@Autowired
+	private ReportFxgg001Service reportFxgg001Service;
+
+	@Autowired
+	private ReportZjxsjg001Service reportZjxsjg001Service;
+
+	@Autowired
+	private ReportBclgg001Service reportBclgg001Service;
+
+	@Autowired
+	private Report1Cpnfl001Service report1Cpnfl001Service;
+
+	@Autowired
+	private Report1Cpnfl002Service report1Cpnfl002Service;
+
+	@Autowired
+	private Report1Flncp001Service report1Flncp001Service;
+
+	@Autowired
+	private Report1Flncp002Service report1Flncp002Service;
+
+	@Autowired
+	private Report1Cpnys001Service report1Cpnys001Service;
+
+	@Autowired
+	private Report1Ysncp001Service report1Ysncp001Service;
+
+	@Autowired
+	private ReportJesh001Service reportJesh001Service;
+
+	@Autowired
+	private ReportDlxsjgmdgg001Service reportDlxsjgmdgg001Service;
+
+	@Autowired
+	private ReportKfqgg001Service reportKfqgg001Service;
+
+	@Autowired
+	private ReportRkcpjz001Service reportRkcpjz001Service;
+
+	@Autowired
+	private ReportZqxkfgg001Service reportZqxkfgg001Service;
+
+	@Autowired
+	private ReportKfqzjfhgg001Service reportKfqzjfhgg001Service;
+
+	@Autowired
+	private ReportKfjzgg001Service reportKfjzgg001Service;
+
+	@Autowired
+	private ReportMzjz001Service reportMzjz001Service;
+
+	@Autowired
+	private ReportJzfhbg001Service reportJzfhbg001Service;
 	
 	public List<Map<String, Object>> queryTestDatas(Map<String, Object> params) {
 		Map<String, Object> dataMap = new HashMap<String, Object>();
@@ -254,42 +237,42 @@ public class ReportDataService {
 				|| rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX)
 				) { // 定期公告-季度/半年度/年度报告指数型和非指数型
 			service = durationReportDataService;
-//		} else if (rptType.equals(DisReportType.FXGG)) { // 发行公告
-//			service = reportFxgg001Service;
-//		} else if (rptType.equals(DisReportType.CPBCLGG_GM) || rptType.equals(DisReportType.CPBCLBG_SM)) { // 产品不成立公告、报告
-//			service = reportBclgg001Service;
-//		} else if (rptType.equals(DisReportType.ZJCPXSJGGG)) { // 增加产品销售机构公告
-//			service = reportZjxsjg001Service;
-//		} else if (rptType.equals(DisReportType.DCPDFLMB1_GM) || rptType.equals(DisReportType.DCPDFLMB1_SM)) { // 单产品多费率模板1
-//			service = report1Cpnfl001Service;
-//		} else if (rptType.equals(DisReportType.DCPDFLMB2_GM) || rptType.equals(DisReportType.DCPDFLMB2_SM)) { // 单产品多费率模板2
-//			service = report1Cpnfl002Service;
-//		} else if (rptType.equals(DisReportType.DFLDCPMB1_GM) || rptType.equals(DisReportType.DFLDCPMB1_SM)) { // 单费率多产品模板1
-//			service = report1Flncp001Service;
-//		} else if (rptType.equals(DisReportType.DFLDCPMB2_GM) || rptType.equals(DisReportType.DFLDCPMB2_SM)) { // 单费率多产品模板2
-//			service = report1Flncp002Service;
-//		} else if (rptType.equals(DisReportType.DCPDYSTZMB_GM) || rptType.equals(DisReportType.DCPDYSTZMB_SM)) { // 单产品多要素调整模板
-//			service = report1Cpnys001Service;
-//		} else if (rptType.equals(DisReportType.DYSDCPTZMB_GM) || rptType.equals(DisReportType.DYSDCPTZMB)) { // 单要素多产品调整模板
-//			service = report1Ysncp001Service;
-//		} else if (rptType.equals(DisReportType.JESHGG_GM) || rptType.equals(DisReportType.JESHGBG_SM)) { // 巨额赎回模板
-//			service = reportJesh001Service;
-//		} else if (rptType.equals(DisReportType.DLXSJGMDGG)) { // 代理销售机构名单公告
-//			service = reportDlxsjgmdgg001Service;
-//		} else if (rptType.equals(DisReportType.CPKFQGG) || rptType.equals(DisReportType.CPKFQBG)) { // 产品开放期公告（公募）、产品开放期报告（私募）
-//			service = reportKfqgg001Service;
-//		} else if (rptType.equals(DisReportType.RKCPJZ_GMXGL) || rptType.equals(DisReportType.RKCPJZ_GMJZXCP)) { // 日开产品净值公告（公募净值型产品）、日开产品净值公告（公募现管类产品）
-//			service = reportRkcpjz001Service;
-//		} else if (rptType.equals(DisReportType.ZQXCPKFGG_GMCP) || rptType.equals(DisReportType.ZQXCPKFGG_GMCPDSH)) { // 周期型产品开放公告（公募产品）、周期型产品开放公告（公募产品-单赎回）
-//			service = reportZqxkfgg001Service;
-//		} else if (rptType.equals(DisReportType.KFJZJFHGG_BNYS) || rptType.equals(DisReportType.KFJZJFHGG_BNYN)) { // 开放、净值及分红公告（公募&开放频率在半年以上）、开放、净值及分红公告（公募&开放频率在半年（不含）以内）
-//			service = reportKfqzjfhgg001Service;
-//		}else if (rptType.equals(DisReportType.KFJJZGG_GM) || rptType.equals(DisReportType.KFJJZGG_SM)) { // 开放、净值及分红公告（公募&开放频率在半年以上）、开放、净值及分红公告（公募&开放频率在半年（不含）以内）
-//			service = reportKfjzgg001Service;
-//		}else if (rptType.equals(DisReportType.MZJZGG) || rptType.equals(DisReportType.MZJJBG)) { // 每周净值公告（公募）/（私募）
-//			service = reportMzjz001Service;
-//		}else if (rptType.equals(DisReportType.JZJFHBG_SMFB) || rptType.equals(DisReportType.JZJFHBG_SMKF)) { // 净值及分红报告（私募封闭式）/净值及分红报告（私募开放式）
-//			service = reportJzfhbg001Service;
+		} else if (rptType.equals(DisReportType.FXGG)) { // 发行公告
+			service = reportFxgg001Service;
+		} else if (rptType.equals(DisReportType.CPBCLGG_GM) || rptType.equals(DisReportType.CPBCLBG_SM)) { // 产品不成立公告、报告
+			service = reportBclgg001Service;
+		} else if (rptType.equals(DisReportType.ZJCPXSJGGG)) { // 增加产品销售机构公告
+			service = reportZjxsjg001Service;
+		} else if (rptType.equals(DisReportType.DCPDFLMB1_GM) || rptType.equals(DisReportType.DCPDFLMB1_SM)) { // 单产品多费率模板1
+			service = report1Cpnfl001Service;
+		} else if (rptType.equals(DisReportType.DCPDFLMB2_GM) || rptType.equals(DisReportType.DCPDFLMB2_SM)) { // 单产品多费率模板2
+			service = report1Cpnfl002Service;
+		} else if (rptType.equals(DisReportType.DFLDCPMB1_GM) || rptType.equals(DisReportType.DFLDCPMB1_SM)) { // 单费率多产品模板1
+			service = report1Flncp001Service;
+		} else if (rptType.equals(DisReportType.DFLDCPMB2_GM) || rptType.equals(DisReportType.DFLDCPMB2_SM)) { // 单费率多产品模板2
+			service = report1Flncp002Service;
+		} else if (rptType.equals(DisReportType.DCPDYSTZMB_GM) || rptType.equals(DisReportType.DCPDYSTZMB_SM)) { // 单产品多要素调整模板
+			service = report1Cpnys001Service;
+		} else if (rptType.equals(DisReportType.DYSDCPTZMB_GM) || rptType.equals(DisReportType.DYSDCPTZMB)) { // 单要素多产品调整模板
+			service = report1Ysncp001Service;
+		} else if (rptType.equals(DisReportType.JESHGG_GM) || rptType.equals(DisReportType.JESHGBG_SM)) { // 巨额赎回模板
+			service = reportJesh001Service;
+		} else if (rptType.equals(DisReportType.DLXSJGMDGG)) { // 代理销售机构名单公告
+			service = reportDlxsjgmdgg001Service;
+		} else if (rptType.equals(DisReportType.CPKFQGG) || rptType.equals(DisReportType.CPKFQBG)) { // 产品开放期公告（公募）、产品开放期报告（私募）
+			service = reportKfqgg001Service;
+		} else if (rptType.equals(DisReportType.RKCPJZ_GMXGL) || rptType.equals(DisReportType.RKCPJZ_GMJZXCP)) { // 日开产品净值公告（公募净值型产品）、日开产品净值公告（公募现管类产品）
+			service = reportRkcpjz001Service;
+		} else if (rptType.equals(DisReportType.ZQXCPKFGG_GMCP) || rptType.equals(DisReportType.ZQXCPKFGG_GMCPDSH)) { // 周期型产品开放公告（公募产品）、周期型产品开放公告（公募产品-单赎回）
+			service = reportZqxkfgg001Service;
+		} else if (rptType.equals(DisReportType.KFJZJFHGG_BNYS) || rptType.equals(DisReportType.KFJZJFHGG_BNYN)) { // 开放、净值及分红公告（公募&开放频率在半年以上）、开放、净值及分红公告（公募&开放频率在半年（不含）以内）
+			service = reportKfqzjfhgg001Service;
+		}else if (rptType.equals(DisReportType.KFJJZGG_GM) || rptType.equals(DisReportType.KFJJZGG_SM)) { // 开放、净值及分红公告（公募&开放频率在半年以上）、开放、净值及分红公告（公募&开放频率在半年（不含）以内）
+			service = reportKfjzgg001Service;
+		}else if (rptType.equals(DisReportType.MZJZGG) || rptType.equals(DisReportType.MZJJBG)) { // 每周净值公告（公募）/（私募）
+			service = reportMzjz001Service;
+		}else if (rptType.equals(DisReportType.JZJFHBG_SMFB) || rptType.equals(DisReportType.JZJFHBG_SMKF)) { // 净值及分红报告（私募封闭式）/净值及分红报告（私募开放式）
+			service = reportJzfhbg001Service;
 		}
 
 		return service.queryDatas(params);

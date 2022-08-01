@@ -88,13 +88,14 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                 searchParam.put("baseDate",baseDate);
                 //根据产品分红到期计划表，当分红方式为“份额分红后净值为1”时，在对应的收益分配基准日日终生成此公告；
                 //是否生成报表规则：
-                boolean generateFlag = false;
+                boolean generateFlag = true;
+                /*boolean generateFlag = false;
 
                 DisProdBonusplan bonusplan = reportKfqzjfhgg001Mapper.checkGenerateFlag(searchParam);
 
                 if(bonusplan != null){
                     generateFlag = true;
-                }
+                }*/
 
                 if(generateFlag){
                     //根据产品代码查询产品信息
@@ -154,7 +155,7 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                             //封闭期
                             String curRange = "";
                             if(lastBonus != null && lastBonus.getLastUnitValueT() != null){
-                                bonusDto.setMunitValueT(bonusDto.getLastUnitValueT().add(new BigDecimal(unitProfitStr)).toString());
+                                bonusDto.setMunitValueT(lastBonus.getLastUnitValueT().add(new BigDecimal(unitProfitStr)).toString());
                                 //周期运营开始日 = 周期赎回日 - 周期起始日
                                 runday = DateUtil.getBetweenDayNumber(bonusDto.getOpenStartDate(),bonusDto.getOpenEndDate());
                                 //当前封闭期 = 上一收益分配基准日+1工作日至当前收益分配基准日

@@ -77,13 +77,14 @@ public class ReportJzfhbg001Service implements IReportDataService {
                 searchParam.put("settDate", settDateStr);
                 //根据产品分红到期计划表，当分红方式为“份额分红后净值为1”时，在对应的收益分配基准日日终生成此公告；
                 //是否生成报表规则：
-                boolean generateFlag = false;
+                boolean generateFlag = true;
+                /*boolean generateFlag = false;
 
                 DisProdBonusplan bonusplan1 = reportJzfhbg001Mapper.checkGenerateFlag(searchParam);
 
                 if (bonusplan1 != null) {
                     generateFlag = true;
-                }
+                }*/
                 if (generateFlag) {
                     //查询产品相关信息
                     reportJzfhbg001Dto = reportJzfhbg001Mapper.getProdInfo(searchParam);
