@@ -150,7 +150,7 @@ public class ReportZqxkfgg001Service implements IReportDataService {
                                 //自动赎回日小于平台日
                                 if (autoRedeemDate.compareTo(plateDate) < 0) {
                                     //超额业绩报酬为0  赎回确认单位净值=申购确认单位净值
-                                    if (aboveAmt != null && aboveAmt.compareTo(BigDecimal.ZERO) == 1) {
+                                    if ((aboveAmt != null && aboveAmt.compareTo(BigDecimal.ZERO) == 1)||aboveAmt == null) {
                                         redValue = unitValue;
                                     } else {
                                         if (affirmAmt != null && affirmNum != null) {
