@@ -14,7 +14,7 @@
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
         <result column="STATUS" property="status" jdbcType="VARCHAR" />
-        <result column="RELATEAMOUNT" property="relateamount" jdbcType="DECIMAL" />
+        <result column="RELATEAMOUNT" property="relateamount" jdbcType="VARCHAR" />
         <result column="EFFDATE" property="effdate" jdbcType="DATE" />
         <result column="EFFDELIDATE" property="effdelidate" jdbcType="DATE" />
         <result column="ERRORMSG" property="errormsg" jdbcType="VARCHAR" />
@@ -56,7 +56,7 @@
         values (#{uuid,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{pubDate,jdbcType=DATE}, #{bankTransAmt,jdbcType=DECIMAL},
             #{orgTransAmt,jdbcType=DECIMAL}, #{investTransAmt,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, 
             #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
-            #{updateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}, #{relateamount,jdbcType=DECIMAL}, 
+            #{updateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}, #{relateamount,jdbcType=VARCHAR},
             #{effdate,jdbcType=DATE}, #{effdelidate,jdbcType=DATE}, #{errormsg,jdbcType=VARCHAR}
             )
     </insert>
@@ -150,7 +150,7 @@
                 #{status,jdbcType=VARCHAR},
             </if>
             <if test="relateamount != null" >
-                #{relateamount,jdbcType=DECIMAL},
+                #{relateamount,jdbcType=VARCHAR},
             </if>
             <if test="effdate != null" >
                 #{effdate,jdbcType=DATE},
@@ -201,7 +201,7 @@
                 STATUS = #{status,jdbcType=VARCHAR},
             </if>
             <if test="relateamount != null" >
-                RELATEAMOUNT = #{relateamount,jdbcType=DECIMAL},
+                RELATEAMOUNT = #{relateamount,jdbcType=VARCHAR},
             </if>
             <if test="effdate != null" >
                 EFFDATE = #{effdate,jdbcType=DATE},
@@ -225,7 +225,7 @@
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             STATUS = #{status,jdbcType=VARCHAR},
-            RELATEAMOUNT = #{relateamount,jdbcType=DECIMAL},
+            RELATEAMOUNT = #{relateamount,jdbcType=VARCHAR},
             EFFDATE = #{effdate,jdbcType=DATE},
             EFFDELIDATE = #{effdelidate,jdbcType=DATE},
             ERRORMSG = #{errormsg,jdbcType=VARCHAR}
