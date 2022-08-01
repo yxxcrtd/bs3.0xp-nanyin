@@ -64,7 +64,7 @@ $(function() {
             field : 'accountOpener',width:'10%',
             title : '开户单位'
         }, {
-            field : 'errmsg',width:'10%',
+            field : 'errormsg',width:'10%',
             title : '错误信息'
         }, {
             field : 'updateTime',width:'10%',
