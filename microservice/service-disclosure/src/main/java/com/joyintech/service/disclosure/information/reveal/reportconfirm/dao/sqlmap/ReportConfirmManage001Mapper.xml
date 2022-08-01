@@ -49,7 +49,12 @@
 			/* 多级法人改造    需查询出fin_product.finprod_id字段   add by caojin  2020/6/9    start*/
 			,fp.finprod_id finprodId
 			/* 多级法人改造    需查询出fin_product.finprod_id字段   add by caojin  2020/6/9    end*/
+            ,decode(REVEAL.REVEAL_STATUS,'01',decode(REVEAL.IS_REVEAL,'01',T2.REAL_NAME,'系统自动披露'),null) revealUser
 		FROM REP_REVEAL REVEAL
+		left join (SELECT * FROM(
+		SELECT ROW_NUMBER()over(PARTITION by su.USER_NAME,su.REAL_NAME ORDER BY su.USER_NAME DESC) as ronum,su.USER_NAME,su.REAL_NAME
+		FROM SYS_USER su
+		) T where T.ronum = 1) T2 on REVEAL.REVEAL_USER = T2.USER_NAME
 		left join rep_info info on REVEAL.rep_id = info.rep_id
 		left join rep_ftp_path rfp on REVEAL.REPORT_CATEGORY = rfp.ID
 		/* 多级法人改造    需查询出fin_product.finprod_id字段   add by caojin  2020/6/9    start*/
