@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.infoCompliance.dao.InfoComplianceMapper">
+
+	<select id="findPage" resultType="com.joyintech.tams.disclosure.infoCompliance.dto.InfoComplianceDto">
+		SELECT
+		rownum indexNo,
+		seqno,
+		infoType,
+		sd1.item_value infoTypeText,
+		infoName,
+		su.real_name approveUser,
+		infoStatus,
+		sd2.item_value infoStatusText,
+		infoDevStatus,
+		sd3.item_value infoDevStatusText,
+		to_char(updateTime,'yyyy/MM/dd hh24:mi') updateTimeText
+		FROM (
+		  SELECT
+		  info.seqno seqno,
+		  info.info_type infoType,
+		  info.info_name infoName,
+		  DECODE(info.info_status,NULL,info.create_user,s1.hi_user) userName,
+		  info.info_status infoStatus,
+		  info.info_dev_status infoDevStatus,
+		  info.UPDATE_TIME updateTime
+		  FROM INFO_COMPLIANCE info
+		  LEFT JOIN (
+			   select s1.seq_no,s1.hi_user,row_number() over(partition by seq_no order by his_no desc) his_no
+			   from sys_wfl_business_node s1
+		  )s1 ON info.workflow_id = s1.seq_no and s1.his_no = 1 and info.info_status !='02'
+		  WHERE 1=1
+		  <if test="infoType != null and !infoType.equals('')">
+			AND INFO_TYPE = #{infoType,jdbcType=VARCHAR}
+		  </if>
+		  <if test="infoName != null and !infoName.equals('')">
+			AND INFO_NAME LIKE concat(concat('%',#{infoName,jdbcType=VARCHAR}),'%')
+		  </if>
+		  <if test="infoStatus != null and !infoStatus.equals('')">
+			AND INFO_STATUS = #{infoStatus,jdbcType=VARCHAR}
+		  </if>
+		  order by info.update_time asc
+		) t1 left join sys_datadict_list sd1 ON sd1.dict_code ='INFO_TYPE' AND t1.infotype = sd1.item_code
+		left join sys_datadict_list sd2 ON sd2.dict_code = 'INFO_STATUS' AND t1.infostatus = sd2.item_code
+		left join sys_datadict_list sd3 ON sd3.dict_code = 'INFO_DEV_STATUS' AND t1.infodevstatus = sd3.item_code
+		left join sys_user su on t1.username = su.user_name
+	</select>
+
+	<insert id="saveInfoCompliance" parameterType="com.joyintech.tams.disclosure.infoCompliance.dto.InfoComplianceDto">
+		 insert into INFO_COMPLIANCE (SEQNO, INFO_TYPE, INFO_NAME,
+            INFO_STATUS,INFO_DEV_STATUS, REMARK,
+            CREATE_USER, CREATE_DEPT, CREATE_TIME,
+            UPDATE_USER, UPDATE_TIME,WORKFLOW_ID)
+        values (#{seqno,jdbcType=VARCHAR}, #{infoType,jdbcType=VARCHAR}, #{infoName,jdbcType=DATE},
+            #{infoStatus,jdbcType=DATE},#{infoDevStatus,jdbcType=DATE}, #{remark,jdbcType=VARCHAR},
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},#{workflowId,jdbcType=VARCHAR})
+	</insert>
+
+	<select id="queryInfoCompliance" parameterType="java.lang.String" resultType="com.joyintech.tams.disclosure.infoCompliance.dto.InfoComplianceDto">
+		SELECT
+		SEQNO seqno,
+		INFO_TYPE infoType,
+		INFO_NAME infoName,
+		INFO_STATUS infoStatus,
+		INFO_DEV_STATUS infoDevStatus,
+		CREATE_USER createUser,
+		REMARK remark,
+		WORKFLOW_ID workflowId
+		FROM INFO_COMPLIANCE
+		<where>
+			<if test="workflowId != null and !workflowId.equals('')">
+				AND WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
+			</if>
+			<if test="seqno !=null and !seqno.equals('')">
+				AND SEQNO = #{seqno,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	
+	<delete id="deleteInfoCompliance" parameterType="java.lang.String">
+		delete from INFO_COMPLIANCE
+		where 1 = 1
+		<if test="seqno != null">
+			AND seqno = #{seqno,jdbcType=VARCHAR}
+		</if>
+		<if test="workflowId != null">
+			AND WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
+		</if>
+	</delete>
+	
+	<update id="updateInfoCompliance" parameterType="com.joyintech.tams.disclosure.infoCompliance.dto.InfoComplianceDto">
+		UPDATE INFO_COMPLIANCE
+		<set>
+			<if test="infoDevStatus != null and !infoDevStatus.equals('')">
+				INFO_DEV_STATUS = #{infoDevStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="infoStatus != null and !infoStatus.equals('')">
+				INFO_STATUS = #{infoStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateUser != null">
+				UPDATE_USER = #{updateUser,jdbcType=VARCHAR}
+			</if>
+		</set>
+		WHERE SEQNO = #{seqno,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="selectProcInstIid" parameterType="java.lang.String" resultType="java.lang.String">
+		select WORKFLOW_ID from SYS_WFL_BUSINESS_LIST
+		where seq_no = #{seqNo,jdbcType=VARCHAR}
+	</select>
+
+	<update id="updateUplodFile" parameterType="com.joyintech.tams.disclosure.infoCompliance.dto.UploadFileDto" >
+		update SYS_UPLOAD_FILE_INFO
+		<set >
+			<if test="fileType != null" >
+				FILE_TYPE = #{fileType,jdbcType=VARCHAR},
+			</if>
+			<if test="businessId != null" >
+				BUSINESS_ID = #{businessId,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="getFileByBusinessCode" parameterType="java.lang.String" resultType="com.joyintech.tams.disclosure.infoCompliance.dto.UploadFileDto">
+		SELECT s1.SEQ_NO as seqNo, s1.FILE_NAME as fileName,
+		s1.PATH as "path", s1.BUSINESS_ID as businessId,s1.SEQ_NO fileNo,to_char(s1.CREATE_TIME,'yyyy/MM/dd hh24:mi') createTimeText,
+        s2.real_name uploadUser
+		FROM SYS_UPLOAD_FILE_INFO s1
+        LEFT JOIN SYS_USER s2 ON s1.create_user = s2.user_name
+		WHERE BUSINESS_ID = #{businessId,jdbcType=VARCHAR}
+		AND FILE_TYPE = #{fileType,jdbcType=VARCHAR}
+	</select>
+
+</mapper>
