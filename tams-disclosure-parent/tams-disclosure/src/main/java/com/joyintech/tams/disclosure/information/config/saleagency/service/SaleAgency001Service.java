@@ -180,4 +180,27 @@ public class SaleAgency001Service extends CommonExportService<SaleAgencyDto>
     public List<SelectOptionDto> queryProdSeries(Map<String, Object> map) {
         return saleAgency001Mapper.queryProdSeries(map);
     }
+
+    public List<SaleAgencyDto> findAll(Map<String, Object> parameters) {
+        //代销机构
+        if(StringUtil.isNotEmpty(parameters.get("agencyId"))){
+            parameters.put("agencyId",StringUtil.splitToList(null,parameters.get("agencyId").toString()));
+        }else{
+            parameters.put("agencyId",new ArrayList<>());
+        }
+        //产品系类
+        if(StringUtil.isNotEmpty(parameters.get("prodSeries"))){
+            parameters.put("prodSeries",StringUtil.splitToList(null,parameters.get("prodSeries").toString()));
+        }else{
+            parameters.put("prodSeries",new ArrayList<>());
+        }
+        List<SaleAgencyDto> saleAgencyDtos = saleAgency001Mapper.select(parameters);
+        for (SaleAgencyDto saleAgencyDto : saleAgencyDtos) {
+            if(!StringUtil.isEmptyList(saleAgencyDto.getProdSaleAgencyDtoList())){
+                String prodSeries=saleAgencyDto.getProdSaleAgencyDtoList().stream().map(ProdSaleAgencyDto::getProdSeries).distinct().collect(Collectors.joining(","));
+                saleAgencyDto.setProdSeriesStr(prodSeries);
+            }
+        }
+        return saleAgencyDtos;
+    }
 }

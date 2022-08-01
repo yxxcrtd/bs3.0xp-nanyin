@@ -15,6 +15,7 @@ import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
@@ -76,6 +77,9 @@ public class SaleAgency001Controller extends BaseController{
 
     @Autowired
     private SaleAgency002Service saleAgency002Service;
+
+    @Autowired
+    private CommonExportService commonExportService;
 
     /**
      * 
@@ -213,26 +217,22 @@ public class SaleAgency001Controller extends BaseController{
     public ResponseEntity<byte[]> export() {
         Map<String, Object> param = RequestUtil.getParameters(getRequest());
         Date sysDate = DateUtil.platDateFromCache()==null?new Date():DateUtil.platDateFromCache();//平台日期
+        List<SaleAgencyDto> saleAgencyDtoList=new ArrayList<>();
         if(param.containsKey("keyList")){
-            //导出选中行
             String keyList = param.get("keyList").toString();
             try {
-                List<SaleAgencyDto> saleAgencyDtoList = JsonUtils.json2List(keyList,SaleAgencyDto.class);
-                param.put("investList", saleAgencyDtoList);
+                saleAgencyDtoList=JsonUtils.json2List(keyList,SaleAgencyDto.class);
             } catch (IOException e) {
                 logger.error(e.getMessage(),e);
             }
-            List<SaleAgencyDto> dtoList = saleAgency001Service.selectForExport(param);
-            File outFile = saleAgency001Service.makeFile(
-                    "/com/joyintech/tams/disclosure/information/config/saleagency/conf/export_conf.xml", dtoList);
-            return ExportUtil.export(
-                    DictCodeListExt4.共通业务类型_代销机构维护.getCodeName() + GlobalConstant.UNDER_LINE
-                            + DateUtil.format(sysDate,"yyyyMMdd") +"."+ FileNameUtil.getFileExtName(outFile),
-                    outFile, true);
         }else{
-            //todo:框架中导出的excel文件与需求中的不符
-            return saleAgency001Service.export(this.getPageId(),param);
+            saleAgencyDtoList = saleAgency001Service.findAll(RequestUtil.getParameters(getRequest()));
         }
+        File outFile = commonExportService.makeFile(
+                "/com/joyintech/tams/disclosure/information/config/saleagency/conf/export_conf.xml", saleAgencyDtoList);
+        String exportFileName=DictCodeListExt4.共通业务类型_代销机构维护.getCodeName() + GlobalConstant.UNDER_LINE
+                + DateUtil.format(sysDate,"yyyyMMdd") +"."+ FileNameUtil.getFileExtName(outFile);
+        return ExportUtil.export(exportFileName, outFile, true);
     }
 
 }
