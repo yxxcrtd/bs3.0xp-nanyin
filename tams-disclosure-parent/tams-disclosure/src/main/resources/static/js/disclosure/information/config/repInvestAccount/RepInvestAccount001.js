@@ -64,7 +64,7 @@ $(function() {
             field : 'accountOpener',width:'10%',
             title : '开户单位'
         }, {
-            field : 'errmsg',width:'10%',
+            field : 'errormsg',width:'10%',
             title : '错误信息'
         }, {
             field : 'updateTime',width:'10%',
@@ -172,6 +172,79 @@ $(function() {
                                         Joyin.error(checkResult.data.errorMsg);
                                         return;
                                     }
+                                if (checkResult.data.confirmMsg3) {
+                                    Joyin.confirm(checkResult.data.confirmMsg3, function () {
+                                        if (checkResult.data.confirmMsg) {
+                                            Joyin.confirm(checkResult.data.confirmMsg, function () {
+                                                if (checkResult.data.confirmMsg2) {
+                                                    Joyin.confirm(checkResult.data.confirmMsg2, function () {
+                                                        var data = {
+                                                            tempList: checkResult.data.correctData
+                                                        }
+                                                        Joyin.ajaxJson(basePath + 'disclosure/information/config/repInvestAccount/RepInvestAccount001/importFile', data,
+                                                            function (resultObj) {
+                                                                if (resultObj.statuCode.toString() === '200') {
+                                                                    table.reload();
+                                                                    return;
+                                                                }
+                                                            });
+                                                    },{}, function () {
+                                                        layui.layer.closeAll()
+                                                        table.reload();
+                                                    });
+                                                }else{
+                                                    var data = {
+                                                        tempList: checkResult.data.correctData
+                                                    }
+                                                    Joyin.ajaxJson(basePath + 'disclosure/information/config/repInvestAccount/RepInvestAccount001/importFile', data,
+                                                        function (resultObj) {
+                                                            if (resultObj.statuCode.toString() === '200') {
+                                                                table.reload();
+                                                                return;
+                                                            }
+                                                        });
+                                                }
+
+                                            },{}, function () {
+                                                layui.layer.closeAll()
+                                                table.reload();
+                                            });
+                                        }else {
+                                            if (checkResult.data.confirmMsg2) {
+                                                Joyin.confirm(checkResult.data.confirmMsg2, function () {
+                                                    var data = {
+                                                        tempList: checkResult.data.correctData
+                                                    }
+                                                    Joyin.ajaxJson(basePath + 'disclosure/information/config/repInvestAccount/RepInvestAccount001/importFile', data,
+                                                        function (resultObj) {
+                                                            if (resultObj.statuCode.toString() === '200') {
+                                                                table.reload();
+                                                                return;
+                                                            }
+                                                        });
+                                                },{}, function () {
+                                                    layui.layer.closeAll()
+                                                    table.reload();
+                                                });
+                                            }else{
+                                                var data = {
+                                                    tempList: checkResult.data.correctData
+                                                }
+                                                Joyin.ajaxJson(basePath + 'disclosure/information/config/repInvestAccount/RepInvestAccount001/importFile', data,
+                                                    function (resultObj) {
+                                                        if (resultObj.statuCode.toString() === '200') {
+                                                            table.reload();
+                                                            return;
+                                                        }
+                                                    });
+                                            }
+                                        }
+
+                                    },{}, function () {
+                                        layui.layer.closeAll()
+                                        table.reload();
+                                    });
+                                }else{
                                     if (checkResult.data.confirmMsg) {
                                         Joyin.confirm(checkResult.data.confirmMsg, function () {
                                             if (checkResult.data.confirmMsg2) {
@@ -237,6 +310,7 @@ $(function() {
                                                 });
                                         }
                                     }
+                                }
                                 }
                                 ,1000);
                         }

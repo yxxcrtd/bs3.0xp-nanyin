@@ -91,11 +91,11 @@ public class RepInvestAccount extends BaseEntity {
         this.status = status;
     }
 
-    public String getErrorMsg() {
+    public String getErrormsg() {
         return errormsg;
     }
 
-    public void setErrorMsg(String errorMsg) {
+    public void setErrormsg(String errorMsg) {
         this.errormsg = errorMsg;
     }
 }

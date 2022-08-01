@@ -10,17 +10,18 @@
 package com.joyintech.tams.batch.disclosure.informationdisclourse.informationdisclosuregenandsend.service;
 
 import java.beans.IntrospectionException;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
-import com.joyintech.tams.disclosure.common.framework.thread.JoyinThreadPoolExecutor;
-import jdk.internal.org.xml.sax.SAXException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.executor.ExecutorException;
 import org.slf4j.Logger;
@@ -44,11 +45,9 @@ import com.joyintech.tams.disclosure.busicommon.infodisclosure.repcheck.entity.C
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.repcheck.service.RepCheckInfoService;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.util.RevealDeadLineService;
 import com.joyintech.tams.disclosure.common.common.constant.BatchBeanName;
-import com.joyintech.tams.disclosure.common.common.constant.DisclosureDictCodeList;
 import com.joyintech.tams.disclosure.common.common.util.ReportGlobalConstant;
+import com.joyintech.tams.disclosure.common.framework.thread.JoyinThreadPoolExecutor;
 import com.joyintech.tools.collectors.JoyinCollectors;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * 信息披露生成报表并发送service

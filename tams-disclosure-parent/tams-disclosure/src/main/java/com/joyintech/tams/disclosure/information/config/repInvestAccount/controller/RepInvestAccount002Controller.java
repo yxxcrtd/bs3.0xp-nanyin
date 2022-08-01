@@ -97,7 +97,7 @@ public class RepInvestAccount002Controller extends BaseController {
         params.setElementId(dto.getElementId());
         params.setBusinessCode(dto.getProdId());
         params.setBusinessType(DictCodeListExt4.共通业务类型_投资账户信息维护.getValue());
-        params.setComment(entity -> "主键流程id" + "(" + entity.getProdId() + ")");
+        params.setComment(entity -> "产品主代码" + "(" + entity.getProdId() + ")");
         // 塞入工作流参数
         processParameter.setWorkFlowParameter(params);
 

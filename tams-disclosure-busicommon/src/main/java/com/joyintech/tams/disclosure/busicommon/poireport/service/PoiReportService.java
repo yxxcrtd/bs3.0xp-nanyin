@@ -138,7 +138,9 @@ public class PoiReportService {
 				dataMap = listReports.get(0);
 			} else {
 				logger.error("生成报表失败!没有找到数据。");
-				throw new Exception("生成报表失败!没有找到数据。");
+				dataMap = new HashMap<>();
+				dataMap.put("prodId", params.get("prodId"));
+				//throw new Exception("生成报表失败!没有找到数据。");
 			}
 		}
 		
@@ -151,7 +153,7 @@ public class PoiReportService {
 			uploadFile.setFileNo(IDGenerator.generate());
 			logger.info("生成文件成功!" + reportFile);
 
-			// 创建工作流，TODO:报表分类
+			// 创建工作流
 			boolean flag = insertRepReveal(params, uploadFile.getFileNo(), uploadFile.getSrcName(),
 					reportInfo.getReportName(), reportInfo.getReportCategory());
 			if (flag == false) {
@@ -173,18 +175,17 @@ public class PoiReportService {
 	 */
 	public String genReportFile(String reportType, ReportInfo reportInfo, Map<String, Object> dataMap,
 			Date reportDate) {
-		// TODO:如下通过系统参数配置获取
-		String imagePath = "E:\\poitest\\template";
-		String templateFile = "E:/poitest/template";
-		String reportFile = "E:/poitest/report";
-		if (reportDate == null)
-			reportDate = commonPlatformDateService.getSysDate();
+		String imagePath = "";
+		String templateFile = "";
+		String reportFile = "";
 
 		templateFile = buildReportFileName(REPORT_TYPE_模板文件, reportInfo, null, null, FILE_TYPE_DOCX);
 		if ( dataMap==null || dataMap.size()<1 ) {
 			return templateFile;
 		}
 		
+		if (reportDate == null)
+			reportDate = commonPlatformDateService.getSysDate();
 		String prodId = (dataMap.get("prodId") == null ? "" : dataMap.get("prodId").toString());
 		reportFile = buildReportFileName(reportType, reportInfo, reportDate, prodId, FILE_TYPE_DOCX);
 
