@@ -171,7 +171,7 @@ public class PoiReportService {
 	 * @param genDate,生成日期，如果为空则为平台日期
 	 * @return 生成的报表文件路径
 	 */
-	private String genReportFile(String reportType, ReportInfo reportInfo, Map<String, Object> dataMap,
+	public String genReportFile(String reportType, ReportInfo reportInfo, Map<String, Object> dataMap,
 			Date reportDate) {
 		// TODO:如下通过系统参数配置获取
 		String imagePath = "E:\\poitest\\template";

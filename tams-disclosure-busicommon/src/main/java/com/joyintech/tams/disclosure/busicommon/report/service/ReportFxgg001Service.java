@@ -6,6 +6,7 @@ import java.text.DecimalFormat;
 import java.util.*;
 
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.disclosure.common.common.service.HolidayService;
 import com.joyintech.tams.disclosure.busicommon.report.dao.ReportFxggMapper;
 import com.joyintech.tams.disclosure.busicommon.report.dto.ReportFxggDto;
@@ -36,10 +37,17 @@ public class ReportFxgg001Service implements IReportDataService {
         Map<String,Object> dataMap = new HashMap<>();
         List<Map<String,Object>> result = new ArrayList<>();
         result.add(dataMap);
-        if (paraMap.get("pprodid") == null) {
+        String prodId="";
+        if(StringUtil.equals("batch",paraMap.get("opttype"))){
+            prodId= paraMap.get("prodid").toString();
+            //paraMap.get("enddate")
+        }else {
+            prodId= paraMap.get("pprodid").toString();
+        }
+        if (!StringUtil.isNotEmpty(prodId)) {
             return result;
         }
-        String prodId = paraMap.get("pprodid").toString();
+
         Map<String,Object> searchparam = new HashMap<>();
         searchparam.put("prodId", prodId);
         ReportFxggDto fxgg = reportFxggMapper.queryFxgg(searchparam);

@@ -10,15 +10,16 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.sql.DataSource;
 import javax.xml.parsers.ParserConfigurationException;
 
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.disclosure.busicommon.poireport.service.PoiReportService;
+import com.joyintech.tams.disclosure.busicommon.rptdata.service.ReportDataService;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +66,12 @@ public class JasparConnectUtilService {
 
 	@Autowired
 	private RepInfoMapper repInfoMapper;
+
+	@Autowired
+	private ReportDataService rptDataService;
+
+	@Autowired
+	private PoiReportService poiReportService;
 	/**
 	 * 日志
 	 */
@@ -147,44 +154,56 @@ public class JasparConnectUtilService {
 	
 	public UploadFile connectJasparAndDownload(String strUrl, String fileName,
 			String fileType, String repId, String prodId,Map<String,Object> params) {
-		if(null!=params.get("endDate")){
-    		Date endDate = DateUtil.parse(params.get("endDate").toString());
-    		params.put("endDate", new java.sql.Date(endDate.getTime()));
+		if(null!=params.get("enddate")){
+    		Date endDate = DateUtil.parse(params.get("enddate").toString());
+    		params.put("enddate", new java.sql.Date(endDate.getTime()));
     	}
-    	if(null!=params.get("startDate")){
-    		Date endDate = DateUtil.parse(params.get("startDate").toString());
-    		params.put("startDate", new java.sql.Date(endDate.getTime()));
+    	if(null!=params.get("startdate")){
+    		Date endDate = DateUtil.parse(params.get("startdate").toString());
+    		params.put("startdate", new java.sql.Date(endDate.getTime()));
     	}
 		// 通过REP_ID获取TEMPLATE_ID
 //		RepInfo repInfo = repInfoMapper.selectByPrimaryKey(repId);
 		String templateId = repId;
 		ReportInfo r1 = reportManager.getReportByURI(templateId);
 		reportManager.setDataSource(master);
-		String path = FileNameUtil.createUploadFilePath("");
+		String path = CacheUtil.getSysParam("REPORT_FILE_PATH");
 		File filepath = new SafelyFile(path);
 		if(!filepath.exists()){
 			filepath.mkdirs();
 		}
 		String filePathName = prodId + GlobalConstant.UNDER_LINE + repId + GlobalConstant.UNDER_LINE 
 				+ DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;
-		reportManager.exportReport(r1, params, fileType, path+ File.separator+filePathName);
+
+		//reportManager.exportReport(r1, params, fileType, path+ File.separator+filePathName);
+		//Todo:
+		params.put("uri",r1.getUri());
+		List<Map<String,Object>> listReports = rptDataService.queryDatas(params);
+		Map<String,Object> dataMap = new HashMap<>();
+		if (CollectionUtils.isNotEmpty(listReports)){
+			dataMap = listReports.get(0);
+		}
+
+		String reportFile = poiReportService.genReportFile(PoiReportService.REPORT_TYPE_报表文件, r1, dataMap, (Date) params.get("execDate"));
+
 		fileName =fileName+GlobalConstant.POINT+fileType;
-		File localFile = new SafelyFile(path+ File.separator+filePathName);
-		logger.info("UploadFile fileName= "  + path+ File.separator+filePathName);
-		UploadFile uploadFile = new UploadFile(fileName, IDGenerator.generate(),
-                localFile);
+
+		//String reportFile="";
+		File localFile = new SafelyFile(reportFile);
+		logger.info("UploadFile fileName= "  + reportFile);
+		UploadFile uploadFile = new UploadFile(fileName, IDGenerator.generate(), localFile);
 		
 		//存入SYS_UPLOAD_FILE_INFO表
         if(null != fileAttachmentProcess) {
             fileAttachmentProcess.upload(uploadFile);
         }
         
-      //add by leipeng 上传文件处理
-        SysUploadFileInfo sysUploadFileInfo = new SysUploadFileInfo();
-        sysUploadFileInfo.setSeqNo(uploadFile.getFileNo());
-        sysUploadFileInfo.setFileName(FileNameUtil.formatFileName(uploadFile.getTargetFile().getName()));
-        sysUploadFileInfo.setPath(uploadFile.getTargetFile().getPath());
-        joyinDFSTemplate.upload(sysUploadFileInfo);
+//      //add by leipeng 上传文件处理
+//        SysUploadFileInfo sysUploadFileInfo = new SysUploadFileInfo();
+//        sysUploadFileInfo.setSeqNo(uploadFile.getFileNo());
+//        sysUploadFileInfo.setFileName(FileNameUtil.formatFileName(uploadFile.getTargetFile().getName()));
+//        sysUploadFileInfo.setPath(uploadFile.getTargetFile().getPath());
+//        joyinDFSTemplate.upload(sysUploadFileInfo);
         
 		return uploadFile;
 		
