@@ -1,409 +1,406 @@
+/**
+ * 
+ */
 package com.joyintech.tams.disclosure.busicommon.poireport.service;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
-import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.deepoove.poi.XWPFTemplate;
-import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.config.Configure.ConfigureBuilder;
-import com.deepoove.poi.data.MiniTableRenderData;
-import com.deepoove.poi.data.PictureRenderData;
-import com.deepoove.poi.data.RowRenderData;
-import com.deepoove.poi.util.BytePictureUtils;
+import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.FileNameUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.SpringContextUtil;
+import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.disclosure.busicommon.common.constants.GlobalConstant;
+import com.joyintech.tams.common.base.dao.RepInstallLogDetailMapper;
+import com.joyintech.tams.common.base.dao.RepProdInfoMapper;
+import com.joyintech.tams.common.base.dao.RepRevealMapper;
+import com.joyintech.tams.common.base.entity.RepInstallLogDetail;
+import com.joyintech.tams.common.base.entity.RepProdInfo;
+import com.joyintech.tams.common.base.entity.RepReveal;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
+import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.entity.RepRuleEntity;
+import com.joyintech.tams.disclosure.busicommon.infodisclosure.util.RevealDeadLineService;
+import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.dao.ReportInfoMapper;
+import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.ReportInfo;
 import com.joyintech.tams.disclosure.busicommon.poireport.dao.PoiReportMapper;
-import com.joyintech.tams.disclosure.busicommon.poireport.dto.DisPoiQueryDto;
-import com.joyintech.tams.disclosure.busicommon.poireport.dto.DisPoiSubDto;
-import com.joyintech.tams.disclosure.busicommon.poireport.dto.DisPoiTabDto;
-import com.joyintech.tams.disclosure.busicommon.poireport.echarts.service.EchartsPictureService;
-import com.joyintech.tams.disclosure.busicommon.poireport.util.TableRenderPolicy;
+import com.joyintech.tams.disclosure.busicommon.rptdata.service.ReportDataService;
+import com.joyintech.tams.disclosure.common.common.constant.DisclosureDictCodeList;
+import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
+import com.joyintech.tams.systemtools.service.CommonPlatformDateService;
+import com.joyintech.tams.systemtools.util.CommonUtil;
+import com.joyintech.tams.utils.poi.PoiUtils;
 
 /**
- * poi生成报表service
+ * poi报表生成服务<br>
  * 
- * @author zhangyf
+ * @author chenxc
+ * @version 1.0 2022年08月01日
+ * @since 1.0
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class PoiReportService {
 
-	private Logger logger = LoggerFactory.getLogger(PoiReportService.class);
-			
+	@Autowired
+	private ReportInfoMapper reportInfoMapper;
+
+	@Autowired
+	private CommonPlatformDateService commonPlatformDateService;
+
+	@Autowired
+	private ReportDataService reportDataService;
+
+	@Autowired
+	private RepProdInfoMapper repProdInfoMapper;
+
+	@Autowired
+	private RepRevealMapper repRevealMapper;
+
 	@Autowired
 	private PoiReportMapper poiReportMapper;
 	
 	@Autowired
-	private EchartsPictureService echartsPictureService;
+	private RevealDeadLineService revealDeadLineService;
 	
 	/**
-	 * 生成报表-统一入口
-	 * 
-	 * @param tabNum 报表id
-	 * @param params 报表参数
-	 * @return 生成的文件
-	 * @throws IOException 
+	 * 日志详情表mapper
 	 */
-	@SuppressWarnings("unchecked")
-	public File createReport(String tabNum, Map<String, Object> params) throws IOException{
-		// 报表业务数据集合
-		Map<String, Object> reportDataMap = new HashMap<>();
+	@Autowired
+	private RepInstallLogDetailMapper repInstallLogDetailMapper;
 
-		// 1.获取主、子表信息
-		// 主表信息
-		DisPoiTabDto disPoiTab = poiReportMapper.selectTabInfoByTabNum(tabNum);
-		if (null == disPoiTab) {
-			return null;
-		}
-		// 主表拥有的子表集合
-		List<DisPoiSubDto> subList = poiReportMapper.selectSubListByTabNum(tabNum);
-
-		// 2.获取子表业务数据 - 图表部分优先处理
-		// eCharts子表id及其配置
-		Map<String,Map<String, Object>> subIdAndConfig = new HashMap<>();
-		for (DisPoiSubDto sub : subList) {
-			// word文档
-			if (StringUtil.equals(DictCodeListExt3.poi模板类型_WORD.getValue(), sub.getSubType())) {
-				// 图表
-				if (StringUtil.equals(DictCodeListExt3.poi表格类型_图表.getValue(), sub.getSubFormType())) {
-					// 图表业务参数
-					List<List<String>> dataList = buildTableDataForColumns(sub, params);
-					if (CollectionUtils.isEmpty(dataList)) {
-						logger.debug("未查询到子表数据，主表id=" + tabNum + ",子表id=" + sub.getId());
-						continue;
-					}
-					// 图表配置参数
-					Map<String, Object> configMap = new HashMap<>();
-					if (StringUtil.isNotEmpty(sub.getSubChartConf())) {
-						try {
-							configMap = JsonUtils.json2Object(sub.getSubChartConf(), Map.class);
-						} catch (Exception e) {
-							logger.error("图表配置参数错误，不符合json格式，将按照默认参数配置。主表id=" + tabNum + ",子表id=" + sub.getId());
-						}
-					}
-					// poi导出报表Echarts临时文件存放路径
-					String echartsTmpfilePath = CacheUtil.getSysParam(ReportGlobalConstant.POI_ECHARTS_TMPFILE_PATH);
-					if (!StringUtil.isNotEmpty(echartsTmpfilePath)) {
-						logger.error("poi导出报表Echarts临时文件存放路径未配置：" + ReportGlobalConstant.POI_ECHARTS_TMPFILE_PATH);
-						break;
-					}
-					// 图表文件名(不带后缀名)
-					String picPathName = echartsTmpfilePath + "pictures" + File.separator + DateUtil.format(new Date(), DateUtil.DATETIME_FORMAT_WITH_SSS_YEAR1);
-					// [图表渲染].统一入口
-					echartsPictureService.buildEChartsPicture4ChartType(configMap, dataList, picPathName, sub.getSubChartType());
-					configMap.put("picPathName", picPathName + ".png");
-					subIdAndConfig.put(sub.getId(), configMap);
-				}
-			}
-		}
-
-		// 2.获取子表业务数据 - 非图表部分的处理
-		for (DisPoiSubDto sub : subList) {
-			// word文档
-			if (StringUtil.equals(DictCodeListExt3.poi模板类型_WORD.getValue(), sub.getSubType())) {
-				// 单列表
-				if (StringUtil.equals(DictCodeListExt3.poi表格类型_单表.getValue(), sub.getSubFormType())) {
-					// [表格渲染].单列表入口
-					MiniTableRenderData mini = buildTableDataForColumn(sub, params);
-					if (null == mini) {
-						// 默认文本
-						// reportDataMap.put(sub.getId(),sub.getSubDefualt());
-					} else {
-						reportDataMap.put(sub.getId(), mini);
-					}
-				}
-				// 多列表
-				else if (StringUtil.equals(DictCodeListExt3.poi表格类型_多列表.getValue(), sub.getSubFormType())) {
-					// [表格渲染].多列表入口
-					List<List<String>> dataList = buildTableDataForColumns(sub, params);
-					if (CollectionUtils.isEmpty(dataList)) {
-						// 默认文本
-						// reportDataMap.put(sub.getId(),sub.getSubDefualt());
-					} else {
-						reportDataMap.put(sub.getId(), dataList);
-					}
-				}
-			}
-		}
-				
-		// 3.获取主表业务数据
-		Map<String, String> tabDataMap = this.queryBusiDataMapWithSql(tabNum, params,
-				DictCodeListExt3.poi关联类型_主表.getValue());
-		if (null != tabDataMap) {
-			reportDataMap.putAll(tabDataMap);
-		}
-		
-		// 4.检查图片是否生成完成，完成后存入数据集合
-		if (subIdAndConfig != null && !subIdAndConfig.isEmpty()) {
-			for (String subid : subIdAndConfig.keySet()) {
-				// 图表配置参数
-				Map<String, Object> configMap = subIdAndConfig.get(subid);
-				if (StringUtils.isEmpty(configMap.get("picPathName"))) {
-					continue;
-				}
-				File echartsPicture = new SafelyFile(configMap.get("picPathName").toString());
-				int waitTimes = 10;
-				while (echartsPicture.exists() && echartsPicture.length() == 0 && 0 < waitTimes) {
-					try {
-						logger.debug("等待生成echarts图片1000毫秒");
-						Thread.sleep(1000);
-					} catch (InterruptedException e) {
-						logger.error(e.getMessage(),e);
-					}
-					waitTimes--;
-				}
-				if (echartsPicture.exists()) {
-					// 图片设置宽、高默认为700、300
-					int height = configMap.get("picture.height") == null ? 300 : (int) configMap.get("picture.height");
-					int width = configMap.get("picture.width") == null ? 700 : (int) configMap.get("picture.width");
-					// 保存图片字节到数据集合
-					reportDataMap.put(subid, new PictureRenderData(width, height, ".png", BytePictureUtils.getLocalByteArray(echartsPicture)));
-					// 删除图片文件
-					echartsPicture.delete();
-				}else {
-					logger.error("poi报表Echarts图片不存在，主表id=" + tabNum + "，子表id=" + subid + "，图片=" + echartsPicture.getPath());
-				}
-			}
-		}
-		
-		// 5.获取模板并进行渲染
-		// 绑定模板
-		ConfigureBuilder builder = Configure.newBuilder();
-		builder.addPlugin('!', new TableRenderPolicy());
-		XWPFTemplate template = XWPFTemplate.compile(disPoiTab.getTempPath() + disPoiTab.getTempName(),
-				builder.build());
-		// 模板绑定数据
-		template.render(reportDataMap);
-
-		// 6.获取生成的文件并反馈文件
-		// 文件后缀名
-		String tempSuffix = disPoiTab.getTempName().substring(disPoiTab.getTempName().lastIndexOf("."));
-		// 文件全路径名
-		String path = FileNameUtil.createUploadFilePath("");
-		File pathFile = new SafelyFile(path);
-		if(!pathFile.exists()) {
-			pathFile.mkdirs();
-		}
-		String filename = path + disPoiTab.getTabName()
-				+ GlobalConstant.UNDER_LINE + DateUtil.format(new Date(), DateUtil.DATETIME_FORMAT_WITH_SSS_YEAR1) + tempSuffix;
-		// 生成文件
-		template.writeToFile(filename);
-		File report = new SafelyFile(filename);
-		return report;
-	}
-	
 	/**
-	 * 获取业务数据map
-	 * 
-	 * @param tabNum 报表id
-	 * @param params 报表参数
-	 * @return 业务数据map
+	 * 日志
 	 */
-	public Map<String, String> queryBusiDataMapWithSql(String tabNum,Map<String, Object> params,String poiType) {
-		Map<String, String> dataMap = new HashMap<>();
-		// 查询sql集合
-		List<DisPoiQueryDto> sqlList = poiReportMapper.selectSqlList(tabNum, poiType);
-		if (CollectionUtils.isEmpty(sqlList)) {
-			return dataMap;
-		}
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-		// 组装业务sql
-		String sql = sqlList.get(0).getPoiSql();
+	public final static String REPORT_TYPE_模板文件 = "REPORT_TYPE_M";
+	public final static String REPORT_TYPE_临时文件 = "REPORT_TYPE_T";
+	public final static String REPORT_TYPE_报表文件 = "REPORT_TYPE_E";
 
-		// 替换sql参数
-		if(StringUtil.isNotEmpty(sql)) {
-			sql = replaceSqlParams(sql, params);
-		}
-		
-		//执行业务sql，获取数据
-		dataMap = poiReportMapper.selectMap(sql);
-		return dataMap;
-	}
-	
+	public final static String FILE_TYPE_DOCX = ".docx";
+	public final static String FILE_TYPE_PDF = ".pdf";
+
 	/**
-	 * sql查询子表业务数据
+	 *
+	 * 生成报表：创建服务器文件，创建工作流进行报表确认
 	 * 
-	 * @param subId 子表id
-	 * @param params 报表参数
-	 * @return 子表业务数据list
-	 */
-	public List<List<String>> querySubBusiDataListWithSql(String subId, Map<String, Object> params) {
-		List<List<String>> rows = new ArrayList<>();
-		// 查询sql集合
-		List<DisPoiQueryDto> sqlList = poiReportMapper.selectSqlList(subId, DictCodeListExt3.poi关联类型_子表.getValue());
-		if (CollectionUtils.isEmpty(sqlList)) {
-			return rows;
-		}
-
-		// 组装业务sql
-		String sql = "";
-		for (int i = 0; i < sqlList.size(); i++) {
-			if(StringUtil.isNotEmpty(sql)) {
-				sql += " union all ";
-			}
-			sql += sqlList.get(i).getPoiSql();
-		}
-
-		// 替换sql参数
-		if(StringUtil.isNotEmpty(sql)) {
-			sql = replaceSqlParams(sql, params);
-		}
-		rows = getQuery(sql);
-		return rows;
-	}
-	
-	/**
-	 * sql查询结果
-	 * 
-	 * @param sql
 	 * @return
+	 * @throws Exception
+	 * @throws MalformedURLException
+	 * @throws IOException
+	 * @see
+	 * @since 1.0
 	 */
-	public List<List<String>> getQuery(String sql) {
-		// 表格数据
-		List<List<String>> rows = new ArrayList<>();
-		JdbcTemplate jdbcTemplate = (JdbcTemplate) SpringContextUtil.getBean(JdbcTemplate.class);
-		Connection conn = null;
-		PreparedStatement ps = null;
+	public String genReport(Map<String, Object> params, String reportFileType) throws Exception {
+
+		ReportInfo reportInfo = null;
 		try {
-			conn = jdbcTemplate.getDataSource().getConnection();
-			ps = conn.prepareStatement(sql);
-		} catch (SQLException e1) {
-			logger.error(e1.getMessage(),e1);
-		}
-		ResultSet rs = null;
-		try {
-			if(ps != null){
-				rs = ps.executeQuery();
-				// 子表的一行数据
-				List<String> row = new ArrayList<>();
-				while (rs != null && rs.next()) {
-					row = new ArrayList<>();
-					// 遍历获取每列数据
-					for (int i = 1; i < 50; i++) {
-						try {
-							// 遍历超越列数则异常，跳出for循环
-							row.add(rs.getString(i)==null?"":rs.getString(i));
-						} catch (Exception e) {
-							break;
-						}
-					}
-					rows.add(row);
-				}
+			String repId = params.get("repid").toString();
+			reportInfo = reportInfoMapper.getReportInfoByID(repId);
+			if (!StringUtil.isNotEmpty(reportInfo)) {
+				throw new Exception("生成报表失败!没有找到模板。");
 			}
-		} catch (SQLException e1) {
-			logger.error(e1.getMessage(),e1);
+		} catch (Exception e) {
+			logger.error("生成报表失败!没有找到模板。");
+			throw new Exception("生成报表失败!没有找到模板。");
+		}
+
+		Date reportDate = null;
+		try {
+			if (params.get("reportDate") != null)
+				reportDate = DateUtil.parse(params.get("reportDate").toString());
+		} catch (Exception e) {
+			logger.error("获取报表日期错误", e);
+		}
+		
+		//查询数据
+		Map<String, Object> dataMap = null;
+		if ( REPORT_TYPE_模板文件.equals(reportFileType) ) {  //模板文件
+			dataMap = new HashMap<>();
+		} else {		//生成报表文件：临时文件或者正式文件
+			List<Map<String, Object>> listReports = reportDataService.queryDatas(params);
+			if (listReports.size() > 0) {
+				dataMap = listReports.get(0);
+			} else {
+				logger.error("生成报表失败!没有找到数据。");
+				throw new Exception("生成报表失败!没有找到数据。");
+			}
+		}
+		
+		String reportFile = this.genReportFile(reportFileType, reportInfo, dataMap, reportDate);
+
+		if (REPORT_TYPE_报表文件.equals(reportFileType)) {
+			UploadFile uploadFile = new UploadFile();
+			uploadFile.setFileName(reportFile);
+			uploadFile.setSrcName(reportFile);
+			uploadFile.setFileNo(IDGenerator.generate());
+			logger.info("生成文件成功!" + reportFile);
+
+			// 创建工作流，TODO:报表分类
+			boolean flag = insertRepReveal(params, uploadFile.getFileNo(), uploadFile.getSrcName(),
+					reportInfo.getReportName(), reportInfo.getReportCategory());
+			if (flag == false) {
+				logger.error("生成信息主表错误!");
+			}
+		}
+
+		return reportFile;
+
+	}
+
+	/**
+	 * 生成服务器上的word报表文件
+	 * 
+	 * @param repId：REP_INFO表的rep_id字段，报表类型编号，如OTHER_FHJSQD：分红计算清单
+	 * @param dataMap，报表变量数据集合
+	 * @param genDate,生成日期，如果为空则为平台日期
+	 * @return 生成的报表文件路径
+	 */
+	public String genReportFile(String reportType, ReportInfo reportInfo, Map<String, Object> dataMap,
+			Date reportDate) {
+		// TODO:如下通过系统参数配置获取
+		String imagePath = "E:\\poitest\\template";
+		String templateFile = "E:/poitest/template";
+		String reportFile = "E:/poitest/report";
+		if (reportDate == null)
+			reportDate = commonPlatformDateService.getSysDate();
+
+		templateFile = buildReportFileName(REPORT_TYPE_模板文件, reportInfo, null, null, FILE_TYPE_DOCX);
+		if ( dataMap==null || dataMap.size()<1 ) {
+			return templateFile;
+		}
+		
+		String prodId = (dataMap.get("prodId") == null ? "" : dataMap.get("prodId").toString());
+		reportFile = buildReportFileName(reportType, reportInfo, reportDate, prodId, FILE_TYPE_DOCX);
+
+		FileOutputStream fos = null;
+		InputStream is = null;
+		try {
+			// 替换参数
+			fos = new FileOutputStream(reportFile);
+			PoiUtils.mergeDocx(templateFile, fos, dataMap);
+		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
-			if(null != ps) {
-				try {
-					ps.close();
-				} catch (SQLException e) {
-					logger.error(e.getMessage(),e);
+			try {
+				if (fos != null) {
+					fos.flush();
+					fos.close();
 				}
-			}
-			if (null != conn) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-					logger.error(e.getMessage(),e);
+				if (is != null) {
+					is.close();
 				}
-			}
-			if (null != rs) {
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					logger.error(e.getMessage(),e);
-				}
+			} catch (IOException e) {
+				logger.error("生成报表文件错误.", e);
+				e.printStackTrace();
 			}
 		}
-		return rows;
+		return reportFile;
 	}
+
 	/**
-	 * 替换sql中参数
 	 * 
-	 * @param sql
-	 * @param params 报表参数
-	 * @return 替换参数后可执行的sql
+	 * 生成功能入库操作 <功能详细描述>
+	 * 
+	 * @param params
+	 * @param fileKey
+	 * @param fileName
+	 * @return
+	 * @see
+	 * @since 1.0
 	 */
-	private String replaceSqlParams(String sql, Map<String, Object> params) {
-		for (String key : params.keySet()) {
-			sql = sql.replaceAll(Pattern.quote("@" + key.trim()), "'" + params.get(key) + "'");
+	private boolean insertRepReveal(Map<String, Object> params, String fileKey, String fileName, String ReportName,
+			String reportCategory) {
+		RepReveal repReveal = new RepReveal();
+		// 将待组装数据成日志信息
+		RepInstallLogDetail repInstallLogDetail = new RepInstallLogDetail();
+
+		repReveal.setRepId(params.get("repid").toString());
+		repReveal.setSysFilepath(fileKey);
+		repReveal.setSysFilename(fileName);
+		repReveal.setReportName(ReportName);
+		if (StringUtil.isNotEmpty(params.get("prodId"))) {
+			repReveal.setProdid(params.get("prodId").toString());
+			// 查询产品名称的全称
+			// String prodName =
+			// repDetailsShow001Mapper.getProdName(params.get("prodName").toString());
+			String prodName = params.get("prodName").toString();
+//           repReveal.setProdName(params.get("prodName").toString());
+			repReveal.setProdName(prodName);
 		}
-		return sql;
+		if (StringUtil.isNotEmpty(params.get("startDate"))) {
+			repReveal.setStartDate(DateUtil.parse(params.get("startDate").toString()));
+		}
+		if (StringUtil.isNotEmpty(params.get("endDate"))) {
+			repReveal.setEndDate(DateUtil.parse(params.get("endDate").toString()));
+		}
+		// 获取产品信息
+		String portnum = params.get("prodId") == null ? "" : params.get("prodId").toString();
+		RepProdInfo prodInfo = repProdInfoMapper.selectByPrimaryKey(portnum);
+
+		// TODO:规则信息，重新编写
+		// 获取规则信息
+       List<RepRuleEntity> repRule = poiReportMapper.getRuleInfo(params.get("repId").toString());
+       if(null!=repRule&&repRule.size()==1){
+           Date basiDate = getBasisDate(prodInfo, repRule.get(0));
+           
+           Date revealEndDate = null;
+           if(StringUtil.isNotEmpty(basiDate)) {
+               revealEndDate = revealDeadLineService.getRevDeadlineByMark(basiDate, repRule.get(0), new HashMap<String, Date>());
+               // 设置披露截止日
+               repReveal.setRevealEndDate(revealEndDate);
+           }else{
+               repReveal.setRevealEndDate(new Date());
+           }
+       }else{
+           repReveal.setRevealEndDate(new Date());
+       }
+
+//       RepInfo repInfo = repInfoMapper.selectByPrimaryKey(repReveal.getRepId());
+
+//       if(StringUtil.isNotEmpty(repInfo)&&StringUtil.isNotEmpty(repInfo.getTemplateId())){
+//           String temllateId = repInfo.getTemplateId();
+//           if(temllateId.equals("CLGG_zx")){
+//               repReveal.setEndDate(prodInfo.getVdate());
+//           }else if(temllateId.equals("DQGGHB_zx")||temllateId.equals("DQGGJZ_zx")||temllateId.equals("DQGGYQ_zx")){
+//               repReveal.setEndDate(prodInfo.getMdate());
+//           }
+//       }
+
+		repReveal.setEndDate(params.get("endDate") == null ? null : DateUtil.parse(params.get("endDate").toString()));
+
+		// 获取披露渠道
+		if (null != prodInfo) {
+			repReveal.setRevealChannel(prodInfo.getRevealChannel());
+		}
+
+		repReveal.setId(IDGenerator.generate());
+		repReveal.setConfirmStatus(DictCodeListExt1.披露确认状态_未确认.getValue());
+		repReveal.setRevealStatus(DictCodeListExt2.披露状态_未披露.getValue());
+		repReveal.setStatus(DisclosureDictCodeList.数据状态_有效.getValue());
+		// 系统生成确认方式和披露方式设置为手动
+		repReveal.setIsConfirm(DictCodeListExt1.确认类型_手动.getValue());
+		repReveal.setIsReveal(DictCodeListExt2.披露方式_手动.getValue());
+		repReveal.setReportCategory(reportCategory);
+		repRevealMapper.insert(repReveal);
+
+		// 插入日志
+		// 主键 id
+		repInstallLogDetail.setId(IDGenerator.generate());
+		// 执行状态
+		repInstallLogDetail.setExecStatus(DisclosureDictCodeList.日志状态_生成成功.getValue());
+		// 报表编号
+		repInstallLogDetail.setRepId(repReveal.getRepId());
+		// 报表名称
+		repInstallLogDetail.setRepName(repReveal.getReportName());
+		// 产品编号
+		repInstallLogDetail.setProdid(repReveal.getProdid());
+		// 文件类型
+		repInstallLogDetail
+				.setFileType(repReveal.getSysFilename().substring(repReveal.getSysFilename().lastIndexOf(".") + 1));
+		// 产品名称
+		repInstallLogDetail.setProdName(repReveal.getProdName());
+		// 开始日
+		repInstallLogDetail.setStartDate(repReveal.getStartDate());
+		// 结束日日
+		repInstallLogDetail.setEndDate(repReveal.getEndDate());
+		// 披露渠道
+		repInstallLogDetail.setRevealChannel(repReveal.getRevealChannel());
+		// 披露截止日
+		repInstallLogDetail.setRevealEndDate(repReveal.getRevealEndDate());
+		// 是否自动确认
+		repInstallLogDetail.setIsConfirm(repReveal.getIsConfirm());
+		// 是否自动披露
+		repInstallLogDetail.setIsReveal(repReveal.getIsConfirm());
+		// 设置数据状态
+		repInstallLogDetail.setStatus(DisclosureDictCodeList.数据状态_有效.getValue());
+		// 更新日志表
+		repInstallLogDetailMapper.insert(repInstallLogDetail);
+		return true;
 	}
-	
+
 	/**
-	 * [表格渲染].多列表入口
+	 * 获取模板或者报表文件url
 	 * 
-	 * @param subId 子表id
-	 * @param params 报表参数
+	 * @param reportType：M-模板文件，T-临时文件，E-正式文件
+	 * @param reportInfo                      模板信息
+	 * @param reportDate                      生成日期
+	 * @param reportDate                      报表日期
+	 * @param portnum                         关键字
+	 * @param fileType
 	 * @return
 	 */
-	private List<List<String>> buildTableDataForColumns(DisPoiSubDto sub, Map<String, Object> params) {
-		return this.querySubBusiDataListWithSql(sub.getId(),params);
+	public String buildReportFileName(String reportType, ReportInfo reportInfo, Date reportDate, String portnum,
+			String fileType) {
+		// String templatePath =
+		// CacheUtil.getSysParam(ReportGlobalConstant.TEMPLATE_FILE_PATH);
+		String reportPath = CacheUtil.getSysParam(ReportGlobalConstant.REPORT_FILE_PATH);
+		String tempPath = CacheUtil.getSysParam(ReportGlobalConstant.TEMP_FILE_PATH);
+		String filename = "";
+		if (REPORT_TYPE_模板文件.equals(reportType)) { // 模板文件
+			filename = reportInfo.getRepository() + reportInfo.getFolder() + "/" + reportInfo.getUri() + fileType;
+			File f = new File(filename);
+			if (!f.exists())
+				filename = reportInfo.getRepository() + reportInfo.getFolder() + "/" + "ERROR" + fileType;
+
+		} else {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date genDate = commonPlatformDateService.getSysDate();
+			String dirname = sdf.format(genDate);
+			StringBuffer sb = new StringBuffer();
+			if (REPORT_TYPE_临时文件.equals(reportType)) {
+				sb.append(tempPath);
+			} else { // 正式文件
+				sb.append(reportPath);
+			}
+			sb.append(dirname);
+			sb.append("/");
+			sb.append(reportInfo.getReportName());
+			sb.append("_");
+			sb.append(portnum);
+			sb.append("_");
+			sb.append(sdf.format(reportDate));
+			sb.append(fileType);
+			// 用日期创建路径
+			File file = new File(sb.toString());
+			if (!file.getParentFile().exists()) {
+				file.getParentFile().mkdirs();
+			}
+			filename = sb.toString();
+		}
+		return filename;
 	}
 	
-	/**
-	 * [表格渲染].单列表入口
-	 * 
-	 * @param subId 子表id
-	 * @param params 报表参数
-	 * @return
+    /**
+	 * 获取基准日
+	 * @param prodInfoListEntity 产品相关
+	 * @param repRule 规则表
+	 * @return 返回基准日 
 	 */
-	private MiniTableRenderData buildTableDataForColumn(DisPoiSubDto sub, Map<String, Object> params) {
-		Map<String, String> dataMap = this.queryBusiDataMapWithSql(sub.getId(), params, DictCodeListExt3.poi关联类型_子表.getValue());
-		if (null == dataMap || dataMap.isEmpty()) {
-			return null;
+	private Date getBasisDate(RepProdInfo prodInfo, RepRuleEntity repRule){
+		if(StringUtil.equals(DictCodeListExt2.基准日_募集起始日.getValue(), repRule.getBasisDateType())
+				||StringUtil.equals(DictCodeListExt2.基准日_实际到期日.getValue(), repRule.getBasisDateType())){
+			try {
+				return (Date)CommonUtil.getValueByClassNameObject(prodInfo, CommonUtil.dealString(repRule.getBasisDateType(),true), RepProdInfo.class);
+			} catch (Exception e) {
+				logger.error("error:",e);
+			}
 		}
-		MiniTableRenderData mini = new MiniTableRenderData(null, this.getTableWidth(sub.getSubWidth()));
-		List<RowRenderData> singData = new ArrayList<>();
-		for (Map.Entry<String, String> m : dataMap.entrySet()) {
-			singData.add(RowRenderData.build(m.getKey(), m.getValue()));
-		}
-		mini.setDatas(singData);
-		return mini;
-	}
-	
-	/**
-	 * 获取子表宽度
-	 * 
-	 * @param widthFlag poipoi表格宽度(N-窄边距,M-适中边距,E-宽边距)
-	 * @return
-	 */
-	private float getTableWidth(String widthFlag) {
-		float width;
-		if (StringUtil.equals(DictCodeListExt3.poi表格宽度_窄边距.getValue(), widthFlag))
-			width = MiniTableRenderData.WIDTH_A4_NARROW_FULL;
-		else if (StringUtil.equals(DictCodeListExt3.poi表格宽度_适中边距.getValue(), widthFlag))
-			width = MiniTableRenderData.WIDTH_A4_MEDIUM_FULL;
-		else if (StringUtil.equals(DictCodeListExt3.poi表格宽度_宽边距.getValue(), widthFlag))
-			width = MiniTableRenderData.WIDTH_A4_EXTEND_FULL;
-		else
-			width = MiniTableRenderData.WIDTH_A4_FULL;
-		return width;
+		return null;
 	}
 }

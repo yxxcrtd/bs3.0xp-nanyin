@@ -141,7 +141,7 @@
 	     </if>
 	     from DIS_PROD_PLAN
 	     where PROD_ID = #{prodId, jdbcType=VARCHAR}
-	     AND DATA_STATUS = '01'
+	     AND DATA_STATUS = 'E'
 	     <if test="basisDateType !=null and basisDateType == '04'">
 	     	AND OPEN_END_DATE = #{sysDate, jdbcType=DATE}
 	     </if>
@@ -191,7 +191,7 @@
 	           	A.BUSI_DATE &lt; to_date(#{holidayDate},&apos;yyyy-MM-dd&apos;)
 	         	</if>
 		 	AND A.MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
-		 	AND A.IS_HOLIDAY = '1'
+		 	AND A.IS_HOLIDAY = '0'
 		 </where>
 		 	<if test="type !=null and type == '01'.toString()">
 	           	order by A.BUSI_DATE asc
@@ -220,7 +220,7 @@
 	           	A.BUSI_DATE &gt;= to_date(#{holidayDate},&apos;yyyy-MM-dd&apos;)
 	         	</if>
 		 	AND A.MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
-		 	AND A.IS_HOLIDAY = '1'
+		 	AND A.IS_HOLIDAY = '0'
 		 </where>
 		 	<if test="type !=null and type == '02'.toString()">
 	           	order by A.BUSI_DATE desc
@@ -254,7 +254,7 @@
 		  AND EXISTS(
 				SELECT 1 FROM DIS_PROD_PLAN T1
 				WHERE
-				    T1.AUTO_REDEEM_DATE &gt; #{sysDate, jdbcType=DATE}
+					T1.OPEN_START_DATE > T.OPEN_START_DATE
 				    AND T1.PROD_ID= #{prodId, jdbcType=VARCHAR}
 				    AND T.AUTO_REDEEM_DATE!=T1.OPERATION_START_DATE
 			)

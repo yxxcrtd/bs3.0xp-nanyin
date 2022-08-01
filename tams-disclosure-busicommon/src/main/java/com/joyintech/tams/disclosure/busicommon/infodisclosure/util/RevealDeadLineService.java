@@ -98,7 +98,7 @@ public class RevealDeadLineService {
 	   public boolean isWorkDay(Date date, String markCode){
 		   boolean isWork = false;
 		   ChbMktHoliday chbMktHoliday = chbDeadLineMapper.selectChbMktHolidayByKey(markCode, date);
-		   if(chbMktHoliday!=null&&"1".equals(chbMktHoliday.getIsHoliday())){
+		   if(chbMktHoliday!=null&&"0".equals(chbMktHoliday.getIsHoliday())){
 			   isWork = true;
 		   }
 		   return isWork;

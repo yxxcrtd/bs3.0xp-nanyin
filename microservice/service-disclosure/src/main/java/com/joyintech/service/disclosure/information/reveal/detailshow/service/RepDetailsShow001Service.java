@@ -255,7 +255,7 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
 //            String fileName = rep.getReportName() + GlobalConstant.POINT + Type;
             
             try {
-            	UploadFile uploadFile = jasparConnectUtilService.connectJasparAndDownload(strUrl, rep.getReportName(), Type, rep.getTemplateId(), protNum,infoDisclosureGenService.getParams(entity,screenList));
+            	UploadFile uploadFile = jasparConnectUtilService.connectJasparAndDownload(strUrl, rep.getReportName(), Type, rep.getTemplateId(), protNum,infoDisclosureGenService.getParams(entity,screenList,new Date()));
 //                URLConnection conn = url.openConnection();
 //                // 防止屏蔽程序抓取而返回403错误
 //                conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");

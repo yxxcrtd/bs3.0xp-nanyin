@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.joyintech.tams.disclosure.busicommon.report.dao.ReportMzjz001Mapper">
+
+	<select id="getProdInfo" resultType="com.joyintech.tams.disclosure.busicommon.report.dto.ReportMzjz001Dto">
+		/*
+			TITLENAME:标题名(普通产品取产品名称 ,分级产品取 母产品名称+（子产品代码）)
+		  	PRODNAME：【分级产品取“产品名称+子产品名称”；普通产品取“产品名称”】
+			PRODID：产品代码（普通产品取产品代码 ,分级产品取子产品代码）
+			REGCODE：产品登记编码（普通产品取产品登记编码 ,分级产品取母产品登记编码）
+			SETDATE：产品成立日期
+		*/
+		SELECT
+			RPI.PROD_ID prodId,
+			CASE WHEN RPI.IS_GRADE = '01' THEN
+					 RPI2.PROD_NAME ||'（'||RPI.PROD_ID||'）'
+				 ELSE RPI.PROD_NAME END titleName,
+			CASE WHEN RPI.IS_GRADE = '01' THEN
+					 RPI2.PROD_NAME ||RPI.PROD_NAME
+				 ELSE RPI.PROD_NAME END prodName,
+			RPI2.PROD_RE regCode,
+			RPI.SET_DATE setDate,
+			RPI2.MDATE mDate,
+			TO_CHAR(ROUND(NVL(PINDEX.UNIT_VALUE,0),4),'FM9999999999999990.0000') unitValue,
+			TO_CHAR(ROUND(NVL(PINDEX.UNIT_VALUE_T,0),4),'FM9999999999999990.0000') unitValueT,
+			TO_CHAR(ROUND(NVL(PINDEX.ASSETS_VALUE,0),4),'FM9999999999999990.00') assetsValue
+		FROM REP_PROD_INFO RPI
+		 /*查询普通产品或者母产品数据  P_PROD_ID:母产品代码：当为子产品时填写母产品代码。普通产品为自己的产品代码。母产品为空*/
+		 LEFT JOIN REP_PROD_INFO RPI2 ON RPI.P_PROD_ID = RPI2.PROD_ID AND RPI2.STATUS = 'E'
+		 LEFT JOIN REP_PROD_INDEX PINDEX ON PINDEX.PROD_ID =RPI.PROD_ID AND PINDEX.STATUS = 'E' AND PINDEX.VALUE_DATE = TO_DATE(#{valueDate},'yyyy-MM-dd')
+		WHERE RPI.PROD_ID = #{prodId}
+		  AND RPI.STATUS = 'E'
+	</select>
+
+</mapper>
