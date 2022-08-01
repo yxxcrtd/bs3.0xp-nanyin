@@ -17,6 +17,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 import com.joyintech.tams.disclosure.common.framework.thread.JoyinThreadPoolExecutor;
 import jdk.internal.org.xml.sax.SAXException;
@@ -108,8 +109,15 @@ public class InfoDisclosureGenAndSendMainService extends AutoSendCBBaseService{
     	if(isWork){
     		//1.首先从组装批处理信息表中查询出所有需要执行的数据
     		List<InfoDisclosureGenAndSendEntity> repFileList = infoDisclosureGenAndSendMapper.getAllRepInstallFileList(); // sql内新增了POI报表信息查询  zhangyf 20200319
-        	if(CollectionUtils.isNotEmpty(repFileList)){
-        		//系统中配置的文件服务器ip
+
+
+			if(CollectionUtils.isNotEmpty(repFileList)){
+				List<String>tmpList=repFileList.stream().distinct().map(InfoDisclosureGenAndSendEntity::getJobSeq).collect(Collectors.toList());
+
+				List<String>joblist=tmpList.stream().distinct().collect(Collectors.toList());
+
+
+				//系统中配置的文件服务器ip
         	    //后台批处理报表地址单独啦出来
         		String serverUrl = CacheUtil.getSysParam(ReportGlobalConstant.REPORT_BATCH_SERVER_URL);
         		//用户名
@@ -181,7 +189,10 @@ public class InfoDisclosureGenAndSendMainService extends AutoSendCBBaseService{
 				}
 
         		//日志主表
-        		this.insertLog(jobSeq, dateStr);
+				for(String seq:joblist){
+					this.insertLog(seq, dateStr);
+				}
+
         	}
         	else{
         		logger.info("无信息披露信息需要生成");
@@ -210,13 +221,13 @@ public class InfoDisclosureGenAndSendMainService extends AutoSendCBBaseService{
 			if (!isWork) {
 				continue;
 			}
-			if(!StringUtil.equals(jobSeq,infoDisclosureGenAndSendEntity.getJobSeq())){
-				if(StringUtil.isNotEmpty(jobSeq)){
-					//更新日志主表
-					this.insertLog(jobSeq, DateUtil.parse(executeDateStr));
-				}
-				jobSeq = infoDisclosureGenAndSendEntity.getJobSeq();
-			}
+//			if(!StringUtil.equals(jobSeq,infoDisclosureGenAndSendEntity.getJobSeq())){
+//				if(StringUtil.isNotEmpty(jobSeq)){
+//					//更新日志主表
+//					this.insertLog(jobSeq, DateUtil.parse(executeDateStr));
+//				}
+//				jobSeq = infoDisclosureGenAndSendEntity.getJobSeq();
+//			}
 			infoDisclosureGenAndSendEntity.setCheckFor(DictCodeListExt2.校验位置_必要数据.getValue());
 			CheckConfirmMessage ccm = repCheckInfoService.check(infoDisclosureGenAndSendEntity,infoDisclosureGenAndSendEntity.getClass());
 			if (ccm != null && ccm.isFlag()) {
