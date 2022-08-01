@@ -174,6 +174,8 @@ public class RepInvestAccountService extends CommonExportService<RepInvestAccoun
                     }
                     if (!StringUtil.isNotEmpty(rowData.get(1))){
                         errorMsg.append("账号 必填！");
+                    }else if(rowData.get(1).length() > 20){
+                        errorMsg.append("账号不得超过20个字符！");
                     }
                     if (!StringUtil.isNotEmpty(rowData.get(2))){
                         errorMsg.append("账户名称 必填！");
