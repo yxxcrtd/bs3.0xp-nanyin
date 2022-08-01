@@ -3,6 +3,7 @@ package com.joyintech.tams.utils.poi;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -22,7 +23,6 @@ import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
 
-import com.ibm.icu.text.SimpleDateFormat;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.tams.utils.echarts.EchartsException;
 
