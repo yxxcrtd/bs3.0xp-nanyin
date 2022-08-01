@@ -171,4 +171,13 @@ public class SaleAgency001Service extends CommonExportService<SaleAgencyDto>
         }
         return new ArrayList<SaleAgencyDto>();
     }
+
+    /**
+     * 查询系统中已经维护的产品系列
+     * @param map
+     * @return
+     */
+    public List<SelectOptionDto> queryProdSeries(Map<String, Object> map) {
+        return saleAgency001Mapper.queryProdSeries(map);
+    }
 }

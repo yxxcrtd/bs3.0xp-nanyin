@@ -28,7 +28,7 @@ public class SaleAgencyValidator implements BeanValidator {
         SaleAgencyDto dto = (SaleAgencyDto)value;
         Date platDate = DateUtil.platDateFromCache();
         List<ValidMessage> resultList = new ArrayList<ValidMessage>();
-        if (StringUtil.equals(dto.getOperateType(), "delete")) {
+        if (StringUtil.equals(dto.getPageModel(), "delete")) {
             //删除check
 
         }else{
@@ -53,7 +53,7 @@ public class SaleAgencyValidator implements BeanValidator {
                         resultList.add(new ValidMessage("agreementMdate","协议终止时间要大于等于协议起始时间！"));
                     }
                 }
-                if(StringUtil.equals(dto.getOperateType(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)){
+                if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)){
                     //代销机构不能重复
                     if(saleAgency002Service.checkNameIsRepeat(dto.getAgencyName())){
                         resultList.add(new ValidMessage("代销机构已存在，请确认！"));

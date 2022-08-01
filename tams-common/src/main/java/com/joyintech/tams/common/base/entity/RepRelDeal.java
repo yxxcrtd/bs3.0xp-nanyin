@@ -10,6 +10,11 @@ import java.util.Date;
 
 public class RepRelDeal extends BaseEntity {
     /**
+     * 主键
+     */
+    private String uuid;
+
+    /**
      * 产品主代码
      */
     private String prodId;
@@ -40,8 +45,7 @@ public class RepRelDeal extends BaseEntity {
     /**
      * 关联方提供服务的交易金额
      */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal relateamount;
+    private String relateamount;
 
     /**
      * 生效日期
@@ -57,6 +61,22 @@ public class RepRelDeal extends BaseEntity {
      * 错误信息
      */
     private String errormsg;
+
+    /**
+     * 取得 主键
+     * @return 主键
+     */
+    public String getUuid() {
+        return uuid;
+    }
+
+    /**
+     * 设置 主键
+     * @param uuid 主键
+     */
+    public void setUuid(String uuid) {
+        this.uuid = uuid == null ? null : uuid.trim();
+    }
 
     /**
      * 取得 产品主代码
@@ -143,7 +163,7 @@ public class RepRelDeal extends BaseEntity {
      * 取得 关联方提供服务的交易金额
      * @return 关联方提供服务的交易金额
      */
-    public BigDecimal getRelateamount() {
+    public String getRelateamount() {
         return relateamount;
     }
 
@@ -151,7 +171,7 @@ public class RepRelDeal extends BaseEntity {
      * 设置 关联方提供服务的交易金额
      * @param relateamount 关联方提供服务的交易金额
      */
-    public void setRelateamount(BigDecimal relateamount) {
+    public void setRelateamount(String relateamount) {
         this.relateamount = relateamount;
     }
 
