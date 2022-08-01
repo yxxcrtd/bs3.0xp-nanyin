@@ -49,6 +49,7 @@
 		SELECT * FROM (
 			  SELECT TO_CHAR(DPP.OPEN_START_DATE,'yyyy-MM-dd') openStartDate,
 			         TO_CHAR(DPP.OPEN_END_DATE,'yyyy-MM-dd') openEndDate,
+					 TO_CHAR(DPP.OPEN_START_DATE,'yyyy-MM-dd') openStartDate||'至'||TO_CHAR(DPP.OPEN_END_DATE,'yyyy-MM-dd') openDurationDate,
 			         TO_CHAR(DPP.COLLINGOFF_PERIOD,'yyyy-MM-dd') collingoffPeriod
 			  FROM REP_PROD_INFO INFO,DIS_PROD_PLAN DPP
 			  WHERE INFO.STATUS = 'E'

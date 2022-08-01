@@ -12,27 +12,7 @@ public class DisProdAgency extends BaseEntity {
      * 产品代码
      */
     private String prodId;
-	
-	 /**
-     * 代销机构名称
-     */
-    private String agencyName;
 
-    /**
-     * 取得 代销机构名称
-     * @return 代销机构名称
-     */
-    public String getAgencyName() {
-        return agencyName;
-    }
-
-    /**
-     * 设置 代销机构名称
-     * @param agencyName 代销机构名称
-     */
-    public void setAgencyName(String agencyName) {
-        this.agencyName = agencyName == null ? null : agencyName.trim();
-    }
 
     /**
      * 取得 代销机构id,与DIS_SALE_AGENCY表的SEQUENCE_NO关联

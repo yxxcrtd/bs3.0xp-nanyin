@@ -97,8 +97,7 @@ public class ReportZqxkfgg001Service implements IReportDataService {
                     if (openList == null || openList.size() == 0) {
                         openList = new ArrayList<>();
                         ReportOpenPlanDto reportOpenPlanDto = new ReportOpenPlanDto();
-                        reportOpenPlanDto.setOpenStartDate("XXXX/XX/XX");
-                        reportOpenPlanDto.setOpenEndDate("XXXX/XX/XX");
+                        reportOpenPlanDto.setOpenDurationDate("XXXX/XX/XX-XXXX/XX/XX");
                         reportOpenPlanDto.setOperationStartDate("XXXX-XX-XX");
                         reportOpenPlanDto.setAutoRedeemDate("XXXX-XX-XX");
                         reportOpenPlanDto.setHoldDays("XXX");

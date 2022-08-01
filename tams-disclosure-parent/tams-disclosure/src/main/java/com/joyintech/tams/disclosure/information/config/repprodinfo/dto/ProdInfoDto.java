@@ -343,7 +343,7 @@ public class ProdInfoDto extends RepProdInfo implements ITableRow, ProcessEntity
         if(StringUtils.isNotBlank(this.statusName)){
             return this.statusName ;
         }else{
-            return this.statusName = SysDataUtil.getNameFromDataDict(DictCode.中债数据状态, this.getStatus());
+            return this.statusName = SysDataUtil.getNameFromDataDict(DictCode.维护数据状态, this.getStatus());
         }
     }
 

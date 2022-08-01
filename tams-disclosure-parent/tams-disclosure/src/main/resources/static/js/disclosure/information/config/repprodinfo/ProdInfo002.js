@@ -176,7 +176,7 @@
             var prodType = $('#prodType').select2('data')[0].id;
             prodTypeGlobal = prodType;
             //若产品类型为“现管类产品”，"发行方式"默认为“开放式”，且不允许修改
-            if (prodType != null && prodType == 'M') {
+            if (prodType != null && prodType == '04') {
                 $("#issuingWay").textSelect('setValue', '01');
                 $("#issuingWay").attr("disabled", true);
                 //当“发行方式”为“开放式”时必填，否则开放频率 置灰不可填,“现管类产品”，此处默认为“日开”，开放频率 且不允许修改
@@ -228,7 +228,7 @@
         // 修改固定持有天数
         function changeHoldday() {
             //当产品的开放频率为“日开”且“产品类型”为“净值型”时必填，否则不可填
-            if (openFreqGlobal && openFreqGlobal && openFreqGlobal == '01' && prodTypeGlobal == 'N') {
+            if (openFreqGlobal && openFreqGlobal && openFreqGlobal == '01' && prodTypeGlobal == '01') {
                 $("#holdday").attr("disabled", false);
             } else {
                 $("#holdday").attr("");

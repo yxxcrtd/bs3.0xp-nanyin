@@ -187,6 +187,7 @@ public class ReportJzfhbg001Service implements IReportDataService {
                             openPlanDto.setOpenStartDate("XXXX-XX-XX");
                             //申购/赎回确认日
                             openPlanDto.setOpenEndDate("XXXX-XX-XX");
+                            openPlanDto.setOpenDurationDate("XXXX-XX-XX至XXXX-XX-XX");
                             //申购冷静期
                             openPlanDto.setCollingoffPeriod("XXXX-XX-XX");
                             //赎回资金到账日

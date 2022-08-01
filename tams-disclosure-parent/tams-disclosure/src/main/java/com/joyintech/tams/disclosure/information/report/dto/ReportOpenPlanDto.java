@@ -49,6 +49,17 @@ public class ReportOpenPlanDto {
 
     private BigDecimal affirmNum;
 
+    /*申购起止日*/
+    private String openDurationDate;
+
+    public String getOpenDurationDate() {
+        return openDurationDate;
+    }
+
+    public void setOpenDurationDate(String openDurationDate) {
+        this.openDurationDate = openDurationDate;
+    }
+
     public String getNextRange() {
         return nextRange;
     }

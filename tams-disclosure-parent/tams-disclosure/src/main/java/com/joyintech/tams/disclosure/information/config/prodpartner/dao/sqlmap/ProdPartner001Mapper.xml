@@ -118,7 +118,7 @@
 	<select id="selectByProdId" resultType="java.lang.Integer">
 		select count(1) count
 		from REP_PROD_INFO
-		where P_PROD_ID is null
+		where (P_PROD_ID is null or PROD_ID=P_PROD_ID)
 		and PROD_ID=#{prodId,jdbcType=VARCHAR}
 	</select>
 

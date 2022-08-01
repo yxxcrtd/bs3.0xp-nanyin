@@ -59,7 +59,7 @@ public class ProdAssetInfo002Service extends CommonExportService<ProdAssetInfoDt
 
         if (OperationType.DELETE.equals(type)) {
             //删除
-            prodAssetInfo002Mapper.deleteProdAssetByPrimaryKey(dto.getProdAssetId());
+            prodAssetInfo002Mapper.deleteProdAssetByPrimaryKey(dto);
         }
         else if (OperationType.NEW.equals(type)) {//新建
             //数据状态

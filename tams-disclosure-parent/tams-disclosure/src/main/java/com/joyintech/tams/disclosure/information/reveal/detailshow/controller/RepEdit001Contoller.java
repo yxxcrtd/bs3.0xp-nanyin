@@ -40,8 +40,8 @@ import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.dao.Report
 import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.ReportInfo;
 import com.joyintech.tams.disclosure.information.config.reporttree.service.ReportTreeMenuConfiguration001Service;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.service.RepDetailsShow001Service;
-import com.joyintech.tams.disclosure.information.reveal.detailshow.service.ReportFileUtil;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.service.WebOfficeObject;
+import com.joyintech.tams.systemtools.service.CommonPlatformDateService;
 
 /**
  * 模板示例<br>
@@ -80,6 +80,9 @@ public class RepEdit001Contoller extends BaseController {
     @Autowired
 	@Qualifier("masterDataSource") DataSource master;
 
+    @Autowired
+    private CommonPlatformDateService commonPlatformDateService;
+    
     private String editFilename = "";
     private String saveFilename = "";
     /**
@@ -96,21 +99,20 @@ public class RepEdit001Contoller extends BaseController {
      */
     public String init(Model model) {
     	
-//    	 portnum=LEO-001, endDate=2022-06-30, repName=分红计算清单}
-    	String templateName = RequestUtil.getPageParam().get("repName").toString();
-    	Date genDate = DateUtil.parse(RequestUtil.getPageParam().get("endDate").toString());
-    	String portnum = RequestUtil.getPageParam().get("portnum").toString();
-    	String reportId = RequestUtil.getPageParam().get("repId").toString();
+    	String templateName = RequestUtil.getPageParam().get("repName")==null?"":RequestUtil.getPageParam().get("repName").toString();
+    	Date reportDate = RequestUtil.getPageParam().get("enddate")==null?commonPlatformDateService.getSysDate():DateUtil.parse(RequestUtil.getPageParam().get("enddate").toString());
+    	 String portnum = RequestUtil.getPageParam().get("prodid")==null?RequestUtil.getPageParam().get("pprodid").toString():RequestUtil.getPageParam().get("prodid").toString();
+    	String reportId = RequestUtil.getPageParam().get("repid")==null?"":RequestUtil.getPageParam().get("repid").toString();
     	
-        model.addAttribute("endDate", DateUtil.parse(RequestUtil.getPageParam().get("endDate").toString()));
-        model.addAttribute("repName", RequestUtil.getPageParam().get("repName")); 
-        model.addAttribute("portnum", RequestUtil.getPageParam().get("portnum"));
-        model.addAttribute("repId", RequestUtil.getPageParam().get("repId"));
+        model.addAttribute("endDate", reportDate);
+        model.addAttribute("repName", templateName); 
+        model.addAttribute("portnum", portnum);
+        model.addAttribute("reportId", reportId);
         
         ReportInfo reportInfo = reportInfoMapper.getReportInfoByID(reportId);
         
-        editFilename = ReportFileUtil.buildReportFileName(ReportFileUtil.REPORT_TYPE_临时文件,reportInfo, genDate, portnum,ReportFileUtil.FILE_TYPE_DOCX);
-    	saveFilename = ReportFileUtil.buildReportFileName(ReportFileUtil.REPORT_TYPE_报表文件,reportInfo, genDate, portnum,ReportFileUtil.FILE_TYPE_DOCX);
+        editFilename = repDetailsShow001Service.buildReportFileName(repDetailsShow001Service.REPORT_TYPE_临时文件,reportInfo, reportDate, portnum,repDetailsShow001Service.FILE_TYPE_DOCX);
+    	saveFilename = repDetailsShow001Service.buildReportFileName(repDetailsShow001Service.REPORT_TYPE_报表文件,reportInfo, reportDate, portnum,repDetailsShow001Service.FILE_TYPE_DOCX);
         return super.init(model);
     }
 

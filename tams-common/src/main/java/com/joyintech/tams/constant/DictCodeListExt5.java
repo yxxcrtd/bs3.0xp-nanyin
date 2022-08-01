@@ -45,8 +45,8 @@ public enum DictCodeListExt5 implements BaseDictCodeList {
     信披募集方式_公募(DictCodeExt1.信披_募集方式,"01","公募"),
     信披募集方式_私募(DictCodeExt1.信披_募集方式,"02","私募"),
 
-    信披产品类型_净值型产品(DictCodeExt1.信披_产品类型,"N","净值型产品"),
-    信披产品类型_现管类产品(DictCodeExt1.信披_产品类型,"M","现管类产品"),
+    信披产品类型_净值型产品(DictCodeExt1.信披_产品类型,"01","净值型产品"),
+    信披产品类型_现管类产品(DictCodeExt1.信披_产品类型,"04","现管类产品"),
 
     信披投资性质_固定收益类(DictCodeExt1.信披_投资性质,"01","固定收益类"),
     信披投资性质_权益类(DictCodeExt1.信披_投资性质,"02","权益类"),

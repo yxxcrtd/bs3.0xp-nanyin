@@ -702,50 +702,7 @@ comment on column REP_PROD_INFO.ISSUE_STATUS_REMARK is '发行状态备注';
 
 
 /**add by dingrui 20220726 新增 业绩基准变更表 start **/
-DROP TABLE REP_PROD_BASIC_CHANGE CASCADE CONSTRAINTS;
-create table REP_PROD_BASIC_CHANGE
-(
-    basic_change_id VARCHAR2(60) not null,
-    prod_id         VARCHAR2(60),
-    quota_code      VARCHAR2(2),
-    ratio           NUMBER(6,4),
-    data_status     VARCHAR2(10),
-    data_source     VARCHAR2(10),
-    create_user     VARCHAR2(20),
-    create_time     TIMESTAMP(6),
-    update_user     VARCHAR2(20),
-    update_time     TIMESTAMP(6),
-    create_dept     VARCHAR2(32)
-);
--- Add comments to the table
-comment on table REP_PROD_BASIC_CHANGE
-  is '业绩基准变更表';
--- Add comments to the columns
-comment on column REP_PROD_BASIC_CHANGE.basic_change_id
-  is '业绩基准变更表主键id';
-comment on column REP_PROD_BASIC_CHANGE.prod_id
-  is '产品代码';
-comment on column REP_PROD_BASIC_CHANGE.quota_code
-  is '行情代码';
-comment on column REP_PROD_BASIC_CHANGE.ratio
-  is '系数';
-comment on column REP_PROD_BASIC_CHANGE.data_status
-  is '数据状态：数据字典，系统模块-DIS，字典code：DIS_DATA_STATUS:01-有效，02-删除';
-comment on column REP_PROD_BASIC_CHANGE.data_source
-  is '数据来源:数据字典syscode：DIS,code:DATA_SOURCE,';
-comment on column REP_PROD_BASIC_CHANGE.create_user
-  is '创建人';
-comment on column REP_PROD_BASIC_CHANGE.create_time
-  is '创建时间';
-comment on column REP_PROD_BASIC_CHANGE.update_user
-  is '更新人';
-comment on column REP_PROD_BASIC_CHANGE.update_time
-  is '更新时间';
-comment on column REP_PROD_BASIC_CHANGE.create_dept
-  is '创建部门';
--- Create/Recreate primary, unique and foreign key constraints
-alter table REP_PROD_BASIC_CHANGE
-    add constraint P_BASIC_CHANGE_ID primary key (BASIC_CHANGE_ID);
+
 /**add by dingrui 20220726 产品基本信息表增加信批产品类别字段 end**/
 
 
@@ -818,4 +775,35 @@ CREATE TABLE DIS_SALE_AGENCY (
    COMMENT ON COLUMN DIS_PROD_AGENCY.CREATE_DEPT IS '创建部门';
 
    /**add by 周强 20220728 代销机构相关表结构 end**/
+/**add by 崔伟 20220801 1.1.1信批合规留痕管理 start**/
+DROP TABLE INFO_COMPLIANCE;
+CREATE TABLE INFO_COMPLIANCE(
+    SEQNO VARCHAR2(32) PRIMARY KEY,
+    INFO_TYPE VARCHAR(2) NOT NULL ENABLE,
+    INFO_NAME VARCHAR2(150) NOT NULL ENABLE,
+    INFO_STATUS VARCHAR(2),
+    INFO_DEV_STATUS VARCHAR(2),
+    REMARK VARCHAR2(1500),
+    WORKFLOW_ID VARCHAR2(32), 
+    CREATE_USER VARCHAR2(20) NOT NULL ENABLE, 
+    CREATE_DEPT VARCHAR2(32), 
+    CREATE_TIME TIMESTAMP (6) NOT NULL ENABLE, 
+    UPDATE_USER VARCHAR2(20) NOT NULL ENABLE, 
+    UPDATE_TIME TIMESTAMP (6) NOT NULL ENABLE
+);
+COMMENT ON TABLE INFO_COMPLIANCE IS '信批合规留痕表';
+COMMENT ON COLUMN INFO_COMPLIANCE.SEQNO IS '主键';
+COMMENT ON COLUMN INFO_COMPLIANCE.INFO_TYPE IS '类型:01模板;02信批报表';
+COMMENT ON COLUMN INFO_COMPLIANCE.INFO_STATUS IS '审批状态:01待复核;02审核通过';
+COMMENT ON COLUMN INFO_COMPLIANCE.INFO_DEV_STATUS IS '开发状态:01待开发;02需修改;03终止';
+COMMENT ON COLUMN INFO_COMPLIANCE.REMARK IS '备注';
+COMMENT ON COLUMN INFO_COMPLIANCE.WORKFLOW_ID IS '流程ID';
+COMMENT ON COLUMN INFO_COMPLIANCE.CREATE_USER IS '创建人';
+COMMENT ON COLUMN INFO_COMPLIANCE.CREATE_TIME IS '创建时间';
+COMMENT ON COLUMN INFO_COMPLIANCE.UPDATE_USER IS '更新人';
+COMMENT ON COLUMN INFO_COMPLIANCE.UPDATE_TIME IS '更新时间';
+COMMENT ON COLUMN INFO_COMPLIANCE.CREATE_DEPT IS '创建部门';
+
+alter table sys_upload_file_info add file_type varchar2(2);
+/**add by 崔伟 20220801 1.1.1信批合规留痕管理 end**/
 
