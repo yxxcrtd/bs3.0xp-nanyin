@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.busicommon.report.dao.ReportDlxsjgmdggMapper">
+
+	<select id="queryDlxsjmd" resultType="java.lang.String">
+		select
+			listagg(dsa.agency_name, '、') within group(order by dsa.agency_name) saleOrgName
+		from dis_sale_agency dsa
+		where dsa.AGREEMENT_VDATE &lt;= #{curDate}
+		and dsa.AGREEMENT_MDATE &gt; #{curDate}
+	</select>
+
+	<select id="queryProdAgency" resultType="java.lang.Integer">
+		select
+			count(1)
+		from dis_prod_agency dpa
+		where 1=1
+		<if test="prodlist != null and prodlist.size() > 0">
+			AND dpa.prod_id in
+			<foreach collection="prodlist" item="item" open="(" close=")" separator=",">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+	</select>
+</mapper>

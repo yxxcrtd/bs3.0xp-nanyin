@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.busicommon.report.dao.ReportCpflyhMapper">
+
+	<select id="query1Cpnfl" resultType="com.joyintech.tams.disclosure.busicommon.report.dto.Report1CpnflDto">
+		select
+			rpi.prod_id prod_id,
+			rpi.prod_name prod_name,
+			rpi.prod_re reg_code,
+			listagg(dpf.prod_id, '、') within group(order by dpf.prod_id) saleCode,
+    		listagg(dpf.feename, '、') within group(order by dpf.prod_id) feeName,
+			rpi.raise_type raise_type,
+			max(dpf.prod_dis_remark) remark
+		from rep_prod_info rpi
+		inner join dis_prod_feediscount dpf
+		on rpi.prod_re = dpf.prod_regist_no
+		and dpf.data_status = 'E'
+		AND dpf.rpt_issue_date = #{rptIssueDate}
+		where rpi.prod_id = #{prodId,jdbcType=VARCHAR}
+		and rpi.status = 'E'
+		<if test="feelist != null and feelist.size() > 0">
+			AND dpf.feename in (
+			select distinct feename from dis_prod_feediscount t where t.prod_discount_id in
+			<foreach collection="feelist" item="item" open="(" close=")" separator=",">
+				#{item,jdbcType=VARCHAR}
+			</foreach>)
+		</if>
+		group by
+			rpi.prod_id,
+			rpi.prod_name,
+			rpi.prod_re,
+			rpi.raise_type
+	</select>
+
+	<select id="query1Flncp" resultType="com.joyintech.tams.disclosure.busicommon.report.dto.Report1FlncpDto">
+		select
+			listagg(rpi.prod_id, ',') within group(order by rpi.prod_id) prod_id,
+			rpi.raise_type raise_type,
+			max(dpf.fee_dis_remark) remark,
+		    dpf.feename feename
+		from rep_prod_info rpi
+		inner join dis_prod_feediscount dpf
+		on rpi.prod_re = dpf.prod_regist_no
+		and dpf.data_status = 'E'
+		AND dpf.rpt_issue_date = #{rptIssueDate}
+		where dpf.feename = (select feename
+			from dis_prod_feediscount t
+			where t.prod_discount_id = #{feename,jdbcType=VARCHAR})
+		and rpi.status = 'E'
+		<if test="prodlist != null and prodlist.size() > 0">
+			AND rpi.prod_id in
+			<foreach collection="prodlist" item="item" open="(" close=")" separator=",">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		group by
+		rpi.raise_type,
+		dpf.feename
+	</select>
+
+	<select id="qureyFeelist" resultType="com.joyintech.tams.disclosure.busicommon.report.dto.ReportProdfeeDto">
+		select
+			dpf.PROD_ID,
+			dpf.FEENAME,
+			dpf.PRE_FEERATE,
+			dpf.AFTER_FEERATE,
+			dpf.START_DATE,
+			dpf.END_DATE,
+			dpf.THIS_PRE_FEERATE,
+			dpf.THIS_AFTER_FEERATE,
+			dpf.THIS_END_FEERATE
+		from dis_prod_feediscount dpf
+		where dpf.prod_regist_no = #{regCode,jdbcType=VARCHAR}
+		AND dpf.rpt_issue_date = #{rptIssueDate}
+		and dpf.data_status = 'E'
+		<if test="feelist != null and feelist.size() > 0">
+			AND dpf.feename in (
+			select distinct feename from dis_prod_feediscount t where t.prod_discount_id in
+			<foreach collection="feelist" item="item" open="(" close=")" separator=",">
+				#{item,jdbcType=VARCHAR}
+			</foreach>)
+		</if>
+		order by dpf.prod_id
+	</select>
+
+	<select id="qureyProdlist" resultType="com.joyintech.tams.disclosure.busicommon.report.dto.ReportProdfeeDto">
+		select
+		    rpi.PROD_NAME,
+			dpf.PROD_ID,
+			dpf.PRE_FEERATE,
+			dpf.AFTER_FEERATE,
+			dpf.START_DATE,
+			dpf.END_DATE,
+			dpf.THIS_PRE_FEERATE,
+			dpf.THIS_AFTER_FEERATE,
+			dpf.THIS_END_FEERATE
+		from dis_prod_feediscount dpf
+		inner join rep_prod_info rpi
+		on rpi.prod_re = dpf.prod_regist_no
+		and rpi.status = 'E'
+		where dpf.feename = (select feename
+			from dis_prod_feediscount t
+			where t.prod_discount_id = #{feename,jdbcType=VARCHAR})
+		and dpf.data_status = 'E'
+		<if test="prodlist != null and prodlist.size() > 0">
+			AND rpi.prod_id in
+			<foreach collection="prodlist" item="item" open="(" close=")" separator=",">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		AND dpf.rpt_issue_date = #{rptIssueDate}
+		order by rpi.prod_id
+	</select>
+</mapper>

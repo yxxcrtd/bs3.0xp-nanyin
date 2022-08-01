@@ -308,8 +308,20 @@ public class RepDetailsShow001Contoller extends BaseController {
 	@RequestMapping(value="/previewReport", method = RequestMethod.POST)
 	public void previewReport(HttpServletRequest request, HttpServletResponse response) {
 		Map<String,Object> params = RequestUtil.getPageParam();
-        params.put("reportId", params.get("repid"));
-        params.put("reportDate", params.get("enddate"));
+    	params.put("modelId", params.get("modelid"));
+    	params.put("prodId", params.get("prodid"));
+    	params.put("pprodId", params.get("pprodid"));
+    	params.put("prodName", params.get("prodname"));
+    	params.put("repId", params.get("repid"));
+    	params.put("reportId", params.get("repid"));
+    	params.put("endDate", params.get("enddate"));
+    	params.put("repName",params.get("repname"));
+    	params.put("reportDate", params.get("enddate"));
+    	if ( params.get("uri")==null )
+    		params.put("uri",params.get("modelid"));
+    	if (params.get("prodId")==null )
+    		params.put("prodId",params.get("pprodId"));
+        
 		repDetailsShow001Service.previewReport(params,response);
 	}
 
@@ -332,6 +344,7 @@ public class RepDetailsShow001Contoller extends BaseController {
         	params.put("reportId", params.get("repid"));
         	params.put("endDate", params.get("enddate"));
         	params.put("repName",params.get("repname"));
+        	params.put("reportDate", params.get("enddate"));        	
         	if ( params.get("uri")==null )
         		params.put("uri",params.get("modelid"));
         	if (params.get("prodId")==null )
@@ -380,36 +393,13 @@ public class RepDetailsShow001Contoller extends BaseController {
     	params.put("reportId", params.get("repid"));
     	params.put("endDate", params.get("enddate"));
     	params.put("repName",params.get("repname"));
+    	params.put("reportDate", params.get("enddate"));
     	if ( params.get("uri")==null )
     		params.put("uri",params.get("modelid"));
     	if (params.get("prodId")==null )
     		params.put("prodId",params.get("pprodId"));
         return repDetailsShow001Service.exportReport(params);
     }
-
-//	/**
-//	 * 导出合并文档
-//	 *
-//	 * @return excel
-//	 * @throws Exception
-//	 *             异常
-//	 * @see
-//	 * @since 1.0
-//	 */
-//	@RequestMapping("mergeExport")
-//	public ResponseEntity<byte[]> mergeExport() throws IOException {
-//		Map<String, Object> param = RequestUtil.getPageParam();
-//		ReportModelManage001Dto reportModelManage001Dto = null;
-//		try {
-//			reportModelManage001Dto = (ReportModelManage001Dto) JsonUtils.map2entity(param,
-//					ReportModelManage001Dto.class);
-//		} catch (Exception e) {
-//			logger.error(e.getMessage(),e);
-//			throw new IllegalArgumentException("转换异常");
-//		}
-//		reportModelManage001Dto.setParam(param);
-//		return reportModelManage001Service.mergeExportSingle(reportModelManage001Dto);
-//	}
 
 	/**
 	 *
