@@ -12,6 +12,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
 import com.joyintech.tams.disclosure.information.config.proelementadj.dao.ProElementAdjMapper;
 import com.joyintech.tams.disclosure.information.config.profailureinfo.dao.ProFailureInfoMapper;
 import com.joyintech.tams.disclosure.information.config.profailureinfo.dto.ProFailureInfo001Dto;
@@ -95,7 +96,7 @@ public class SubBalanceInfoPro001Service extends CommonExportService<SubBalanceI
                 -> subBalanceInfoProMapper.select(selectParam));
     }
 
-    public SubBalanceInfoPro001Dto selectByPrimaryKey(HashMap map) {
+    public SubBalanceInfoPro001Dto selectByPrimaryKey(Map map) {
         return subBalanceInfoProMapper.selectByPrimaryKey(map);
     }
 
@@ -234,10 +235,28 @@ public class SubBalanceInfoPro001Service extends CommonExportService<SubBalanceI
             resultMap.put("confirmMsg", totalMsg);
         }
         resultMap.put("correctData", JsonUtils.object2Json(jsonArrays));
+        String tempList = (String) resultMap.get("correctData");
+        SubBalanceInfoPro001Dto dto = getValNetAssetQuotationInfoListData(tempList);
+        List<SubBalanceInfoPro001Dto> selectedItem = dto.getSelectedItem();
+        List<SubBalanceInfoPro001Dto>  existData = new ArrayList<>();
+        for (SubBalanceInfoPro001Dto temp:selectedItem) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("booksetId",temp.getBooksetId());
+            map.put("balanceDate",temp.getBalanceDateStr());
+            map.put("subjectNo",temp.getSubjectNo());
+            if (StringUtil.isNotEmpty(this.selectByPrimaryKey(map))){
+                existData.add(temp);
+            }
+        }
+        if(existData.size() > 0){
+            resultMap.put("confirmMsg2", "有重复信息，是否覆盖？");
+        }
         AjaxResult wr = new AjaxResult();
         wr.setData(resultMap);
         return wr;
     }
+
+
 
     public static boolean isDateStr(String str) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -259,12 +278,27 @@ public class SubBalanceInfoPro001Service extends CommonExportService<SubBalanceI
         List<SubBalanceInfoPro001Dto> selectedItem = dto.getSelectedItem();
         List<SubBalanceInfoPro001Dto>  existData = new ArrayList<>();
         List<SubBalanceInfoPro001Dto>  newData = new ArrayList<>();
+//        for (SubBalanceInfoPro001Dto temp:selectedItem) {
+//            //数据已存在 【校验产品主代码+科目号+余额日期 相同】，做更新操作。
+//            if (StringUtil.isNotEmpty(this.selectByProdRegistNo(temp.getSubjectNo()))){
+//                existData.add(temp);
+//            }else {
+//                temp.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
+//                temp.setUpdateTime(sysDate);
+//                temp.setUpdateUser(CommonUtil.getUserName());
+//                newData.add(temp);
+//            }
+//        }
+
         for (SubBalanceInfoPro001Dto temp:selectedItem) {
-            //数据已存在 【校验产品主代码+科目号+余额日期 相同】，做更新操作。
-            //todo 校验产品主代码+科目号+余额日期
-            if (StringUtil.isNotEmpty(this.selectByProdRegistNo(temp.getSubjectNo()))){
+            Map<String, Object> map = new HashMap<>();
+            map.put("booksetId",temp.getBooksetId());
+            map.put("balanceDate",temp.getBalanceDateStr());
+            map.put("subjectNo",temp.getSubjectNo());
+            if (StringUtil.isNotEmpty(this.selectByPrimaryKey(map))){
                 existData.add(temp);
-            }else {
+            }
+           else {
                 temp.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
                 temp.setUpdateTime(sysDate);
                 temp.setUpdateUser(CommonUtil.getUserName());

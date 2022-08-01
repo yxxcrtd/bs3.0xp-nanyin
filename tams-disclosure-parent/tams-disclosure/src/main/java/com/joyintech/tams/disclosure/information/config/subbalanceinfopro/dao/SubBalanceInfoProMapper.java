@@ -2,6 +2,7 @@ package com.joyintech.tams.disclosure.information.config.subbalanceinfopro.dao;
 
 
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
 import com.joyintech.tams.disclosure.information.config.subbalanceinfopro.dto.SubBalanceInfoPro001Dto;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +14,7 @@ import java.util.Map;
 public interface SubBalanceInfoProMapper {
     List<SubBalanceInfoPro001Dto> select(Map<String, Object> pageParam);
 
-    SubBalanceInfoPro001Dto selectByPrimaryKey(HashMap map);
+    SubBalanceInfoPro001Dto selectByPrimaryKey(Map map);
 
     int deleteByKey(SubBalanceInfoPro001Dto dto);
 
@@ -37,4 +38,6 @@ public interface SubBalanceInfoProMapper {
     HashMap findProdName(String booksetId);
 
     List<SelectOptionDto> findSubjectNo(Map<String, Object> pageParam);
+
+
 }
