@@ -55,6 +55,7 @@ $(function(){
         },
          cols:[
                {field:'prodAssetId', visible: false}
+               ,{field:'dataStatus', visible: false}
               ,{field:'statusStr', width:'10%', sortField:'dataStatus', title: '数据状态'}
               ,{field:'prodId', width:'10%', sortField:'prodId', title: '产品主代码'}
               ,{field:'prodName', width:'10%', sortField:'prodName', title: '产品名称'}
@@ -221,8 +222,15 @@ $(function(){
                 var selArr = table.getAllCheckedRows();
             }
             if (!selArr || selArr.length == 0) {
-                Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+                Joyin.error("请至少选择一条记录");
                 return;
+            }
+            for(var i=0,row;i<selArr.length;i++){
+                var row=selArr[i];
+                if(row.dataStatus!='E'){
+                    Joyin.error("请选择有效的数据进行删除!");
+                    return;
+                }
             }
             var object = {
                 selectedItem : selArr,
