@@ -298,6 +298,7 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
 	        fis = new FileInputStream(reportFile);
 	        PoiUtils.docxToHtml(fis,response.getOutputStream(), imagePath);
         } catch (Exception e ) {
+        	logger.error("查询数据错误。",e);
             e.printStackTrace();
         } finally {
             try {
