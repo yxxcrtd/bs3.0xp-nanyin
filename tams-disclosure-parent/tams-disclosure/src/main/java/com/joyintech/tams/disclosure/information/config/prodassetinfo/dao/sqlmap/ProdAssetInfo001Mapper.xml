@@ -176,7 +176,7 @@
 			dpa.EFF_END_DATE effEndDate,
 			dpa.DATA_STATUS dataStatus
 		from DIS_PROD_ASSET dpa
-		where DATA_STATUS='01'
+		where DATA_STATUS='E'
 		and PROD_ID=#{prodId,jdbcType=VARCHAR}
 	</select>
 
