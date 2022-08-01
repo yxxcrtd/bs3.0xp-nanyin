@@ -70,6 +70,11 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
      */
     public static final String EXCEL_XLSX = "xlsx";
 
+    /**
+     * 当在做导入前的check就是判断业务数据是否需要覆盖的时候在webresult的data中塞入这个值可以不会弹框两次
+     */
+    private static final String NO_INFO_SHOWOUT = "noInfoShowOut";
+
 
     /**
      * 根据产品代码或产品名称模糊查询联系下拉框
@@ -169,6 +174,8 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
             JoyinMessage ms = new JoyinMessage("导入数据超过"+maxCount+"条，可能导致系统较慢，是否确认导入？",
                     MessageType.确认消息);
             joyinMessages.add(ms);
+        }else{
+            wr.setData(NO_INFO_SHOWOUT);
         }
         wr.setJoyinMessages(joyinMessages);
         return wr;
@@ -282,14 +289,15 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
                 for (String key : map.keySet()) {
                     List<ProdPartnerDto> prodPartnerDtoList = map.get(key);
                     if(prodPartnerDtoList.size()>1){
-                        for(int m=0;m<prodPartnerDtoList.size()-1;m++){
+                        loop:for(int m=0;m<prodPartnerDtoList.size()-1;m++){
                             ProdPartnerDto dto1 = prodPartnerDtoList.get(m);
                             for(int n=m+1;n<prodPartnerDtoList.size();n++){
                                 ProdPartnerDto dto2 = prodPartnerDtoList.get(n);
                                 if(!((DateUtil.compareDate(dto2.getEffDate(),dto1.getEffDate())<0 && DateUtil.compareDate(dto2.getEffEndDate(),dto1.getEffDate())<0)
                                         || (DateUtil.compareDate(dto2.getEffDate(),dto1.getEffEndDate())>0 && DateUtil.compareDate(dto2.getEffEndDate(),dto1.getEffEndDate())>0))){
-                                    excelValidDtolist.add(new ExcelValidDto(key, StringUtil.EMPTY,
-                                            "文件中同一产品生效区间有重叠！"));
+                                    excelValidDtolist.add(new ExcelValidDto(key, dto1.getExcelRowNum(),
+                                            "文件中同一产品生效区间有重叠：第"+dto1.getExcelRowNum()+"行和第"+dto2.getExcelRowNum()+"行"));
+                                    break loop;
                                 }
                             }
                         }
@@ -354,6 +362,7 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
             prodPartnerDto.setCreateDept(CommonUtil.getDeptCode());
             prodPartnerDto.setCreateUser(CommonUtil.getUserName());
             prodPartnerDto.setUpdateUser(CommonUtil.getUserName());
+            prodPartnerDto.setExcelRowNum(String.valueOf(i+1));
             returnInfoList.add(prodPartnerDto);
         }
         return returnInfoList;

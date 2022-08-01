@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{layout/default}">
+<head>
+    <title>代销机构产品关联关系维护</title>
+    <style>
+        .mst-lable{
+            width: 20%;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <div>
+        <form class="layui-form joyin-form-wrap" id="submitForm">
+<!--            <div class="pro-module-wrapper pro-module-base">-->
+<!--                <div class="pro-module-wrap">-->
+<!--                    <div class="pro-module">-->
+                        <div class="layui-form-item">
+                            <div >
+                                <input type="text" id="sequenceNo" name="sequenceNo" class="layui-input form-input" data-th-value="${entity?.sequenceNo}" style = "display: none">
+                                <label class="layui-form-label form-lable mst-lable">维护类型</label>
+                                <div class="layui-input-inline input-inline">
+                                    <select id="maintenanceType" required="required"
+                                            name="maintenanceType"
+                                            class="input-select"
+                                            data-th-data-result='${DIS_SALEAGENCY_MAINTENANCE_TYPE}'
+                                            placeholder="请选择"
+                                            data-th-initvalue="${entity?.maintenanceType}"
+                                            allowClear="true"
+                                            data-th-placeholder="#{SysCommon.selectplaceholder}">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+<!--                    </div>-->
+<!--                </div>-->
+                <div id="maintenanceType_agency_div" class="pro-module-wrap">
+                    <div class="layui-form-item">
+                        <div>
+                            <label class="layui-form-label form-lable mst-lable">代销机构</label>
+                            <div class="layui-input-inline input-inline">
+							<textarea th:id="agencyName" th:name="agencyName"
+                                      class="layui-input form-input layui-textarea"
+                                      required="required" placeholder="请输入" maxlength=200
+                                      data-th-text="${entity?.agencyName}"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div >
+                            <label class="layui-form-label form-lable mst-lable">协议起始时间</label>
+                            <div class="layui-input-inline input-inline">
+                                <input id="agreementVdate" name="agreementVdate"
+                                       class="layui-input form-input input-dateSelect" required="required"
+                                       data-th-value='${#dates.format(entity?.agreementVdate,"yyyy-MM-dd")}'
+                                       placeholder="请选择时间">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div >
+                            <label class="layui-form-label form-lable mst-lable">协议终止时间</label>
+                            <div class="layui-input-inline input-inline">
+                                <input id="agreementMdate" name="agreementMdate"
+                                       class="layui-input form-input input-dateSelect" required="required"
+                                       data-th-value='${#dates.format(entity?.agreementMdate,"yyyy-MM-dd")}'
+                                       placeholder="请选择时间">
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!--<div class="layui-form-item">
+                        <div>
+                            <label class="layui-form-label form-lable mst-lable">产品名称</label>
+                            &lt;!&ndash;<div class="layui-form-item">
+                                <div class="layui-input-block input-inline rsk-tree" style="margin-left:14.2%;" id="singleTree"></div>
+                            </div>&ndash;&gt;
+                            <div class="layui-input-inline input-inline">
+                                <select id="prodIds" name="prodIds"
+                                        class="layui-input form-input input-select"
+                                        data-th-data-url="@{/disclosure/information/config/saleagency/SaleAgency002/queryProdIdInfo}"
+                                        required="required" allowClear="true" placeholder="请输入内容" multiple="true"
+                                        data-th-placeholder="#{SysCommon.placeholder}" searchable="true"
+                                        data-th-initValue='${entity?.prodIds}'>
+                                </select>
+                            </div>
+                        </div>
+                    </div>-->
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label form-lable mst-lable">产品名称</label>
+                        <div class="layui-input-block input-inline">
+                            <input type="checkbox" lay-skin="switch" data-th-lay-text="#{SystemActorRole001.expandAll}" id="expandAll" data-ignore=true>
+                            <div th:if="${entity} != null" class="layui-input" style="border: 1px solid #dbdbdb; scroll-y: auto; scroll-x: hidden; height: 219px; overflow-y: scroll;" id='tree'  data-th-url='|@{/disclosure/information/config/saleagency/SaleAgency002/getAllProdIds}?agencyId=${entity?.sequenceNo}&workflowId=${entity?.workflowId}'>
+                            </div>
+                            <div th:if="${entity} == null" class="layui-input" style="border: 1px solid #dbdbdb; scroll-y: auto; scroll-x: hidden; height: 219px; overflow-y: scroll;" id='tree' data-th-url='|@{/disclosure/information/config/saleagency/SaleAgency002/getAllProdIds}'>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="maintenanceType_prod_div" class="pro-module-wrap">
+                    <div class="layui-form-item">
+                        <div>
+                            <label class="layui-form-label form-lable mst-lable">产品名称</label>
+                            <div class="layui-input-inline input-inline">
+                                <select id="prodName" name="prodName"
+                                        class="layui-input form-input input-select"
+                                        data-th-data-url="@{/disclosure/information/config/saleagency/SaleAgency002/queryProdIdInfo}"
+                                        required="required" allowClear="true" placeholder="请输入内容"
+                                        data-th-placeholder="#{SysCommon.placeholder}" searchable="true"
+                                        data-th-initValue='${entity?.prodId}'>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div >
+                            <label class="layui-form-label form-lable mst-lable">产品代码</label>
+                            <div class="layui-input-inline input-inline">
+                                <input type="text" class="layui-input form-input"
+                                       data-th-placeholder="#{SysCommon.placeholder}" id="prodId"
+                                       name="prodId" data-th-value="${entity?.prodId}" disabled required="required"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div>
+                            <label class="layui-form-label form-label-wrap mst-lable">代销机构</label>
+                            <div class="layui-input-inline input-inline">
+                                <select type="text" name="agencyIds" id="agencyIds"
+                                        class="layui-input form-input input-select" allowClear="true"
+                                        placeholder="请输入内容"
+                                        data-th-placeholder="#{SysCommon.placeholder}"
+                                        formatoption=true multiple="true" required="required"
+                                        data-th-initValue='${entity?.agencyIds}'
+                                        data-th-data-url="@{/disclosure/information/config/saleagency/SaleAgency001/querySaleAgency}">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-col-md10" style="margin:30px 0;">
+                    <div class="text-center">
+                        <a id="SaleAgency002_btn_save"
+                           class="layui-btn layui-btn-sm btn-save"
+                           data-th-text="#{SysCommon.save}">保存</a> <a
+                            id="SaleAgency002_btn_submit"
+                            class="layui-btn layui-btn-sm btn-submit"
+                            data-th-text="#{SysCommon.submit}">提交</a> <a
+                            id="SaleAgency002_btn_btn_cancel"
+                            class="layui-btn layui-btn-sm btn-cancel"
+                            data-th-text="#{SysCommon.cancel}">取消</a>
+                    </div>
+                </div>
+<!--            </div>-->
+        </form>
+    </div>
+</div>
+<div layout:fragment="script">
+    <script
+            data-th-src="@{/js/disclosure/information/config/saleagency/SaleAgency002.js}"></script>
+</div>
+</body>
+
+</html>

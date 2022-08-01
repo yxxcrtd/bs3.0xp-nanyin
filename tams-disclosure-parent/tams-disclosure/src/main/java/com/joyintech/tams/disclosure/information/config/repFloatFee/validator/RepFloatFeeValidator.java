@@ -32,7 +32,7 @@ public class RepFloatFeeValidator implements BeanValidator {
                 errorList.add(new ValidMessage("", "产品名称不能为空"));
             }
             if(dto.getAffirmDate()== null){
-                errorList.add(new ValidMessage("", "支付日不能为空"));
+                errorList.add(new ValidMessage("", "确认日不能为空"));
             }else{
                 Date platDate = DateUtil.platDateFromCache();
                 if(DateUtil.compareDate(dto.getAffirmDate(), platDate) > 0){

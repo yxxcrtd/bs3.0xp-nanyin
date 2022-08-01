@@ -114,15 +114,15 @@ $(function(){
         $('#ProdPartner001_btn_import').click(function() {
             Joyin.confirm(JoyinUtil.getLabel("请确认是否要导入数据？"), function() {
                 Joyin.uploadFile(function(fileName) {
-                    Joyin.ajax(basePath + 'disclosure/information/config/prodpartner/ProdPartner001/checkImportData', {fileName: fileName}, function(checkResult) {
-                                Joyin.ajax(basePath +"disclosure/information/config/prodpartner/ProdPartner001/importFile", {
-                                    fileName : fileName
-                                },function(result){
-                                    if(!result || !($.isArray(result) && result.length > 0)) {
-                                        layui.layer.closeAll()
-                                        table.reload();
-                                    }
-                                });
+                    Joyin.ajax(basePath + 'disclosure/information/config/prodpartner/ProdPartner001/checkImportData', {fileName: fileName}, function() {
+                        Joyin.ajax(basePath +"disclosure/information/config/prodpartner/ProdPartner001/importFile", {
+                            fileName : fileName
+                        },function(result){
+                            if(!result || !($.isArray(result) && result.length > 0)) {
+                                layui.layer.closeAll()
+                                table.reload();
+                            }
+                        });
                     });
                 });
             });

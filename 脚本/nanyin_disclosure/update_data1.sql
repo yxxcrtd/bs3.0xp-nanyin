@@ -451,3 +451,53 @@ values ('DIS_PROD_TYPE', '01', '净值型产品', 1, '0', 'system', null, sysdat
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('DIS_PROD_TYPE', '04', '现管类产品', 2, '0', 'system', null, sysdate, 'system', sysdate, null);
 --  add by dingrui 20220728 end
+
+
+-- add by zhouqiang 2022-07-31 代销机构维护相关脚本 start
+
+--共通业务类型添加：代销机构维护
+delete from SYS_DATADICT_LIST where DICT_CODE='COMMON_BUSINESS_TYPE' and ITEM_CODE='DISAGENCY';
+Insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_VALUE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE)
+values ('COMMON_BUSINESS_TYPE','DISAGENCY','代销机构维护',300,'0','system',null,sysdate,'system',sysdate,null);
+
+--代销机构页面菜单配置
+delete from SYS_MENU where MENU_ID='REPORT_006_004_018' and SYSTEM_CODE='DIS';
+delete from SYS_PAGE where PAGE_ID in('SaleAgency001','SaleAgency002');
+Insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+values ('REPORT_006_004_018','DIS',null,'REPORT_006_004','SaleAgency001',18,'02','代销机构维护','system',null,sysdate,'system',sysdate);
+Insert into SYS_PAGE (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+values ('SaleAgency001','DIS','/disclosure/information/config/saleagency/SaleAgency001','disclosure/information/config/saleagency/SaleAgency001','REPORT_006_004_018',null,null,'02','01','代销机构维护','system',null,sysdate,'system',sysdate);
+Insert into SYS_PAGE (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+values ('SaleAgency002','DIS','/disclosure/information/config/saleagency/SaleAgency002','disclosure/information/config/saleagency/SaleAgency002',null,null,null,'02','01','代销机构产品关联关系维护','system',null,sysdate,'system',sysdate);
+
+--添加维护类型数据字典
+delete from SYS_DATADICT where DICT_CODE='DIS_SALEAGENCY_MAINTENANCE_TYPE' and SYSTEM_CODE='DIS';
+delete from SYS_DATADICT_LIST where DICT_CODE='DIS_SALEAGENCY_MAINTENANCE_TYPE';
+Insert into SYS_DATADICT (DICT_CODE,SYSTEM_CODE,DICT_CNNAME,DICT_ENNAME,UPDATE_FLG,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+values ('DIS_SALEAGENCY_MAINTENANCE_TYPE','DIS','维护类型','DIS_SALEAGENCY_MAINTENANCE_TYPE','02','system',null,sysdate,'system',sysdate);
+Insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_VALUE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE)
+values ('DIS_SALEAGENCY_MAINTENANCE_TYPE','01','代销机构',1,'0','system',null,sysdate,'system',sysdate,null);
+Insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_VALUE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE)
+values ('DIS_SALEAGENCY_MAINTENANCE_TYPE','02','理财产品',2,'0','system',null,sysdate,'system',sysdate,null);
+
+--页面流程配置
+delete from SYS_WFL_BUSINESS_MODULE where PAGE_ID='SaleAgency002';
+Insert into SYS_WFL_BUSINESS_MODULE (PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE,IS_SEND_UORG) values ('SaleAgency002','SaleAgency001_btn_delete','oneApproval','system','0001',sysdate,'system',sysdate,'ALL','02');
+Insert into SYS_WFL_BUSINESS_MODULE (PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE,IS_SEND_UORG) values ('SaleAgency002','SaleAgency002_btn_save','oneApproval','system','0001',sysdate,'system',sysdate,'ALL','02');
+Insert into SYS_WFL_BUSINESS_MODULE (PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE,IS_SEND_UORG) values ('SaleAgency002','SaleAgency002_btn_submit','oneApproval','system','0001',sysdate,'system',sysdate,'ALL','02');
+-- add by zhouqiang 2022-07-31 代销机构维护相关脚本 end
+
+
+-- add by dingrui 2022-08-01  start
+-- "产品类型"与“发行方式”联动 字典信息
+delete  from SYS_DATADICT_LIST_LINK where DICT_CODE = 'DIS_PROFIT_TYPE' and ITEM_CODE = '01' and LINKED_DICT_CODE = 'DIS_PROD_TYPE' and LINKED_ITEM_CODE = 'N';
+delete  from SYS_DATADICT_LIST_LINK where DICT_CODE = 'DIS_PROFIT_TYPE' and ITEM_CODE = '02' and LINKED_DICT_CODE = 'DIS_PROD_TYPE' and LINKED_ITEM_CODE = 'N';
+delete  from SYS_DATADICT_LIST_LINK where DICT_CODE = 'DIS_PROFIT_TYPE' and ITEM_CODE = '02' and LINKED_DICT_CODE = 'DIS_PROD_TYPE' and LINKED_ITEM_CODE = 'M';
+
+INSERT INTO SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('DIS_PROFIT_TYPE', '01', 'DIS_PROD_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
+INSERT INTO SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('DIS_PROFIT_TYPE', '02', 'DIS_PROD_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
+INSERT INTO SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('DIS_PROFIT_TYPE', '02', 'DIS_PROD_TYPE', '04', 'system', null, sysdate, 'system', sysdate);
+-- add by dingrui 2022-08-01  end

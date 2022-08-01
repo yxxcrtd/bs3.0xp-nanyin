@@ -3,6 +3,8 @@ package com.joyintech.tams.common.base.entity;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.CustomDateDeserialize;
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
+
 import java.util.Date;
 
 public class DisSaleAgency extends BaseEntity {
@@ -14,6 +16,7 @@ public class DisSaleAgency extends BaseEntity {
     /**
      * 代销机构名称
      */
+    @PrimaryKey(value = PrimaryKey.Field.PK_1)
     private String agencyName;
 
     /**
