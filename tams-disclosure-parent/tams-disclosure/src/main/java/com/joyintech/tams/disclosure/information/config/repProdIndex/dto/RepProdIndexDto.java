@@ -42,6 +42,10 @@ public class RepProdIndexDto extends RepProdIndex implements ITableRow, ProcessE
 //     */
 //    @PrimaryKey(PrimaryKey.Field.PK_1)
 //    private String prodId;
+    /**
+     * 产品名称
+     */
+    private String prodName;
 
     /**
      * 母产品资产净值
@@ -208,5 +212,13 @@ public class RepProdIndexDto extends RepProdIndex implements ITableRow, ProcessE
     }
     public String getUpdateTimeStr() {
         return this.getUpdateTime()==null?null: DateUtil.format(this.getUpdateTime(), "yyyyMMddHHmm");
+    }
+
+    public String getProdName() {
+        return prodName;
+    }
+
+    public void setProdName(String prodName) {
+        this.prodName = prodName;
     }
 }
