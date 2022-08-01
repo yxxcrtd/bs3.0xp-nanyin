@@ -6,17 +6,14 @@
     <title>新建产品基本信息</title>
 </head>
 <body>
-<div layout:fragment="content">
+
+<div class="container" layout:fragment="content">
     <style type="text/css">
-        /*.layui-table {
-            width: 120% !important;
-        }*/
-        .layui-form-item select2-container--open{
-            width: 400px;
-            z-index: 3;
-            max-width: 400px;
+        .layui-table {
+            width: 100% !important;
         }
-       /* .trast-list-left {
+
+        .trast-list-left {
             float: left;
             width: 60%;
         }
@@ -29,9 +26,9 @@
 
         .trast-list-left .layui-table-view {
             height: 200px !important;
-        }*/
+        }
 
-       /* .trast-list-left .layui-table-view .layui-table-box .layui-table-body {
+        .trast-list-left .layui-table-view .layui-table-box .layui-table-body {
             height: 156px !important;
         }
 
@@ -43,9 +40,9 @@
 
         .trast-icon-wrap {
             text-align: right;
-        }*/
+        }
 
-/*        .trast-icon-wrap i {
+        .trast-icon-wrap i {
             color: #666;
             background: #d9ecff;
             font-size: 25px;
@@ -84,7 +81,7 @@
         }
 
         .ptl-table .layui-table-view .layui-table-box .layui-table-body {
-            height: 504px !important;
+            height: 300px !important;
         }
 
         .input-radio-inline .layui-form-radio {
@@ -94,9 +91,8 @@
         .input-radio-inline .layui-form-radio .layui-icon {
             color: #6d9ed9;
             font-size: 18px;
-        }*/
+        }
     </style>
-
 
 
     <form class="layui-form joyin-form-wrap pro-module-form" id="submitForm">
@@ -112,6 +108,9 @@
                         <input type="hidden" id="repProdType" name="repProdType" class="layui-input form-input" placeholder="信批产品类别"  data-th-value="${entity?.repProdType}">
                         <input type="hidden" id="pdStatus2" name="pdStatus2" class="layui-input form-input" placeholder=""  data-th-value="${entity?.pdStatus}">
                         <input type="hidden" id="oldRaiseAmt" name="oldRaiseAmt" class="layui-input form-input text-number" placeholder=""  data-th-value="${entity?.raiseAmt}">
+                        <input type="hidden" id="prodTypeGlobal" name="prodTypeGlobal" class="layui-input form-input" placeholder="产品类型"  data-th-value="${entity?.prodType}">
+                        <input type="hidden" id="openFreqGlobal" name="openFreqGlobal" class="layui-input form-input" placeholder="开放频率"  data-th-value="${entity?.openFreq}">
+
 
                         <div class="form-inline-wrap">
                             <label class="layui-form-label form-label-wrap">子产品代码</label>
@@ -423,7 +422,7 @@
                 <h3 class="pro-module-title">
                     <span class="title-des">业绩比较基准</span>
                 </h3>
-                <div class="pro-module-item pro-item-wrap">
+                <div class="pro-module-item">
                     <div class="layui-form-item">
                         <div class="form-inline-wrap">
                             <label class="layui-form-label form-label-wrap">产品业绩比较基准</label>
@@ -435,12 +434,15 @@
                             </div>
                         </div>
                     </div>
-                    <div class="layui-form-item" id="performDiv" >
+                    <!--<div class="layui-form-item" id="performDiv" >
                         <div class="form-inline-wrap" >
                             <div class="layui-input-inline input-inline" style="padding-left:15%;">
                                  <table id="mockTradeTable" class="layui-table"></table>
                             </div>
                         </div>
+                    </div>-->
+                    <div class="layui-form-item" id="performDiv">
+                        <table id="mockTradeTable" class="layui-table"></table>
                     </div>
 
                 </div>

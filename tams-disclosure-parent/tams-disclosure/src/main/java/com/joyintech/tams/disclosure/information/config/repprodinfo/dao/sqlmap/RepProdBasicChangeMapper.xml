@@ -187,6 +187,14 @@
 
 
 
+    <update id="updateByGroupId" parameterType="com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdBasicChangeDto" >
+        update REP_PROD_BASIC_CHANGE
+        set STATUS = #{status,jdbcType=VARCHAR}
+        where GROUP_ID = #{groupId,jdbcType=CHAR} and PROD_ID = #{prodId,jdbcType=VARCHAR}
+    </update>
+
+
+
     <!-- 根据prodId进行删除  -->
     <delete id="deleteByProdId" parameterType="java.lang.String" >
         delete from REP_PROD_BASIC_CHANGE
