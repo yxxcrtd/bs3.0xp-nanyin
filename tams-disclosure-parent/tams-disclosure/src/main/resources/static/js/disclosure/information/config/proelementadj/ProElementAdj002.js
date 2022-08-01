@@ -59,7 +59,10 @@ $(function() {
 	 * 页面初始化
 	 */
 	var init = function() {
-
+		if (pageModel == PAGE_MODEL_EDIT){
+			$('#prodRegistNo').prop("disabled",true);
+			$('#prodId').prop("disabled",true);
+		}
 	};
 	/**
 	 * 画面加载完成
