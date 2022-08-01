@@ -287,18 +287,29 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
                         dto2.setpUnitValueT(new BigDecimal(rowData.get(13)));
                     }
                     if(StringUtil.isNotEmpty(dto1.getIsGrade()) && dto1.getIsGrade().equals("02")){
-                        if(new BigDecimal(rowData.get(10)).compareTo(new BigDecimal(rowData.get(3))) != 0){
-                            errorMsg.append("子产品资产净值应与母产品资产净值相等!");
+                        if(StringUtil.isNotEmpty(rowData.get(10)) && StringUtil.isNotEmpty(rowData.get(3))){
+                            if(new BigDecimal(rowData.get(10)).compareTo(new BigDecimal(rowData.get(3))) != 0){
+                                errorMsg.append("子产品资产净值应与母产品资产净值相等!");
+                            }
                         }
-                        if(new BigDecimal(rowData.get(11)).compareTo(new BigDecimal(rowData.get(4))) != 0){
-                            errorMsg.append("子产品实收资本应与母产品实收资本相等!");
+
+                        if(StringUtil.isNotEmpty(rowData.get(11)) && StringUtil.isNotEmpty(rowData.get(4))){
+                            if(new BigDecimal(rowData.get(11)).compareTo(new BigDecimal(rowData.get(4))) != 0){
+                                errorMsg.append("子产品实收资本应与母产品实收资本相等!");
+                            }
                         }
-                        if(new BigDecimal(rowData.get(12)).compareTo(new BigDecimal(rowData.get(5))) != 0){
-                            errorMsg.append("子产品单位净值应与母产品单位净值相等!");
+
+                        if(StringUtil.isNotEmpty(rowData.get(12)) && StringUtil.isNotEmpty(rowData.get(5))){
+                            if(new BigDecimal(rowData.get(12)).compareTo(new BigDecimal(rowData.get(5))) != 0){
+                                errorMsg.append("子产品单位净值应与母产品单位净值相等!");
+                            }
                         }
-                        if(new BigDecimal(rowData.get(13)).compareTo(new BigDecimal(rowData.get(6))) != 0){
-                            errorMsg.append("子产品单位累计净值应与母产品单位累计净值相等!");
+                        if(StringUtil.isNotEmpty(rowData.get(13)) && StringUtil.isNotEmpty(rowData.get(6))){
+                            if(new BigDecimal(rowData.get(13)).compareTo(new BigDecimal(rowData.get(6))) != 0){
+                                errorMsg.append("子产品单位累计净值应与母产品单位累计净值相等!");
+                            }
                         }
+
                     }else{
                         if(StringUtil.isNotEmpty(dto1.getProdType()) && dto1.getProdType().equals("M")){
                             if(new BigDecimal(rowData.get(12)).compareTo(new BigDecimal(1)) != 0){

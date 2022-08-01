@@ -2,7 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.common.base.dao.RepRelDealMapper" >
     <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepRelDeal" >
-        <id column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <id column="UUID" property="uuid" jdbcType="VARCHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
         <result column="PUB_DATE" property="pubDate" jdbcType="DATE" />
         <result column="BANK_TRANS_AMT" property="bankTransAmt" jdbcType="DECIMAL" />
         <result column="ORG_TRANS_AMT" property="orgTransAmt" jdbcType="DECIMAL" />
@@ -19,7 +20,7 @@
         <result column="ERRORMSG" property="errormsg" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
-        PROD_ID PROD_ID, PUB_DATE PUB_DATE, BANK_TRANS_AMT BANK_TRANS_AMT, ORG_TRANS_AMT ORG_TRANS_AMT, 
+        UUID UUID,PROD_ID PROD_ID, PUB_DATE PUB_DATE, BANK_TRANS_AMT BANK_TRANS_AMT, ORG_TRANS_AMT ORG_TRANS_AMT,
         INVEST_TRANS_AMT INVEST_TRANS_AMT, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
         CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, STATUS STATUS, 
         RELATEAMOUNT RELATEAMOUNT, EFFDATE EFFDATE, EFFDELIDATE EFFDELIDATE, ERRORMSG ERRORMSG
@@ -39,20 +40,20 @@
         select 
         <include refid="com.joyintech.tams.common.base.dao.RepRelDealMapper.Base_Column_List" />
         from REP_REL_DEAL
-        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+        where UUID = #{uuid,jdbcType=VARCHAR}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
         delete from REP_REL_DEAL
-        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+        where UUID = #{uuid,jdbcType=VARCHAR}
     </delete>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepRelDeal" >
-        insert into REP_REL_DEAL (PROD_ID, PUB_DATE, BANK_TRANS_AMT, 
+        insert into REP_REL_DEAL (UUID, PROD_ID, PUB_DATE, BANK_TRANS_AMT,
             ORG_TRANS_AMT, INVEST_TRANS_AMT, CREATE_USER, 
             CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
             UPDATE_TIME, STATUS, RELATEAMOUNT, 
             EFFDATE, EFFDELIDATE, ERRORMSG
             )
-        values (#{prodId,jdbcType=VARCHAR}, #{pubDate,jdbcType=DATE}, #{bankTransAmt,jdbcType=DECIMAL}, 
+        values (#{uuid,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{pubDate,jdbcType=DATE}, #{bankTransAmt,jdbcType=DECIMAL},
             #{orgTransAmt,jdbcType=DECIMAL}, #{investTransAmt,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, 
             #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
             #{updateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}, #{relateamount,jdbcType=DECIMAL}, 
@@ -62,6 +63,9 @@
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepRelDeal" >
         insert into REP_REL_DEAL
         <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="uuid != null" >
+                UUID,
+            </if>
             <if test="prodId != null" >
                 PROD_ID,
             </if>
@@ -109,6 +113,9 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="uuid != null" >
+                #{uuid,jdbcType=VARCHAR},
+            </if>
             <if test="prodId != null" >
                 #{prodId,jdbcType=VARCHAR},
             </if>
@@ -157,18 +164,21 @@
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepRelDeal" >
-        insert into REP_REL_DEAL(PROD_ID, PUB_DATE, BANK_TRANS_AMT, ORG_TRANS_AMT, INVEST_TRANS_AMT, 
+        insert into REP_REL_DEAL(UUID, PROD_ID, PUB_DATE, BANK_TRANS_AMT, ORG_TRANS_AMT, INVEST_TRANS_AMT,
         CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, STATUS, RELATEAMOUNT, 
         EFFDATE, EFFDELIDATE, ERRORMSG)
-        select PROD_ID, PUB_DATE, BANK_TRANS_AMT, ORG_TRANS_AMT, INVEST_TRANS_AMT, 
+        select UUID, PROD_ID, PUB_DATE, BANK_TRANS_AMT, ORG_TRANS_AMT, INVEST_TRANS_AMT,
             CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, #{status,jdbcType=VARCHAR} STATUS, RELATEAMOUNT, 
             EFFDATE, EFFDELIDATE, ERRORMSG
              from REP_REL_DEAL
-             where STATUS = 'E' and PROD_ID = #{prodId,jdbcType=VARCHAR}
+             where STATUS = 'E' and UUID = #{uuid,jdbcType=VARCHAR}
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepRelDeal" >
         update REP_REL_DEAL
         <set >
+            <if test="prodId != null" >
+                PROD_ID = #{prodId,jdbcType=VARCHAR},
+            </if>
             <if test="pubDate != null" >
                 PUB_DATE = #{pubDate,jdbcType=DATE},
             </if>
@@ -203,11 +213,12 @@
                 ERRORMSG = #{errormsg,jdbcType=VARCHAR},
             </if>
         </set>
-        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+        where UUID = #{uuid,jdbcType=VARCHAR}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepRelDeal" >
         update REP_REL_DEAL
-        set PUB_DATE = #{pubDate,jdbcType=DATE},
+        set PROD_ID = #{prodId,jdbcType=DATE},
+            PUB_DATE = #{pubDate,jdbcType=DATE},
             BANK_TRANS_AMT = #{bankTransAmt,jdbcType=DECIMAL},
             ORG_TRANS_AMT = #{orgTransAmt,jdbcType=DECIMAL},
             INVEST_TRANS_AMT = #{investTransAmt,jdbcType=DECIMAL},
@@ -218,6 +229,6 @@
             EFFDATE = #{effdate,jdbcType=DATE},
             EFFDELIDATE = #{effdelidate,jdbcType=DATE},
             ERRORMSG = #{errormsg,jdbcType=VARCHAR}
-        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+        where UUID = #{uuid,jdbcType=VARCHAR}
     </update>
 </mapper>
