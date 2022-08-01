@@ -83,6 +83,7 @@ $(function () {
                 },
                 {field:'revealChannelName', title: '披露渠道',width:100, sort: true,sortField:"revealChannel"},
                 {field:'isRevealName', title: '披露方式',width:100, sort: true,sortField:"isReveal"},
+                {field:'revealUser', title: '披露人',width:100, sort: true,sortField:"revealUser"},
                 {field:'annex', title: '附件',width:100, sort: true
                 	,render: function (data, type, row, meta) {
                           return '<a href="'+JoyinUtil.getRealPath('/framework/download/' + row.annexPath)+ '">'+ data +'</a>'

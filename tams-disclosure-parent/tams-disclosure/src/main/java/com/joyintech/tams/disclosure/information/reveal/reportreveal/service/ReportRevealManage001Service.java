@@ -81,7 +81,7 @@ public class ReportRevealManage001Service extends CommonExportService<ReportConf
      */
     @Override
     public void doComplete(ReportConfirmManage001Dto entity, OperationType type) {
-        entity.setRevealUser(SecurityUtil.getLoginUser().getUserName());
+//        entity.setRevealUser(SecurityUtil.getLoginUser().getUserName());
         restTemplate.postForObject(
             ServiceApplication.VALUATION_SERVICE_NAME + "/ReportRevealManage001/doComplete/" + type.name(), entity,
             AjaxResult.class);

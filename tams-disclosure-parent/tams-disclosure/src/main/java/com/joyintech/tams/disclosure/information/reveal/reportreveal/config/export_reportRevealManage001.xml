@@ -16,7 +16,8 @@
 			<Cell order="12" name="披露时间">revealDateStr</Cell>
 			<Cell order="13" name="披露渠道">revealChannelName</Cell>
 			<Cell order="14" name="披露方式">isRevealName</Cell>
-			<Cell order="15" name="附件">annex</Cell>
+			<Cell order="15" name="披露方式">revealUser</Cell>
+			<Cell order="16" name="附件">annex</Cell>
 		</Row>
 	</Worksheet>
 </Workbook>
