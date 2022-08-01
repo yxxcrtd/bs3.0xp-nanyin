@@ -565,3 +565,61 @@ delete from sys_datadict_list where DICT_CODE='RULE_TYPE1' and ITEM_CODE in('REP
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('RULE_TYPE1', 'REP_PROD_TYPE', '信批产品类别', 16, '0', 'system', null, sysdate, 'system', sysdate, null);
 -- add by zhengxiaolian 2022-07-28 作业规则1增加信批产品类别 end
+
+/**信披合规留痕管理 add cuiwei 2022-08-01 start**/
+delete from sys_menu where menu_id in('REPORT_006_005','REPORT_006_005_001');
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_006_005', 'DIS', null, 'REPORT_006', null, 5, '02', '信批合规管理', 'system', null, sysdate, 'system', sysdate);
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_006_005_001', 'DIS', null, 'REPORT_006_005', 'InfoCompliance001', 1, '02', '信批合规管理', 'system', null, sysdate, 'system', sysdate);
+
+delete from sys_page where page_id in ('InfoCompliance001','InfoCompliance002','InfoCompliance003');
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('InfoCompliance001', 'DIS', '/disclosure/infoCompliance/infoCompliance001', 'disclosure/infoCompliance/infoCompliance001', 'REPORT_006_005_001', null, null, '02', '01', '信批合规管理', 'system', null, sysdate, 'system', sysdate);
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('InfoCompliance002', 'DIS', '/disclosure/infoCompliance/infoCompliance002', 'disclosure/infoCompliance/infoCompliance002', '', null, null, '02', '01', '信批合规新建', 'system', null, sysdate, 'system', sysdate);
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('InfoCompliance003', 'DIS', '/disclosure/infoCompliance/infoCompliance003', 'disclosure/infoCompliance/infoCompliance003', '', null, null, '02', '01', '开发状态修改', 'system', null, sysdate, 'system', sysdate);
+
+delete from sys_page where page_id in ('UploadFile001','UploadFile002');
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('UploadFile001', 'DIS', '/disclosure/infoCompliance/uploadFile001', 'disclosure/infoCompliance/uploadFile001', '', null, null, '02', '01', '报表/模板附件', 'system', null, sysdate, 'system', sysdate);
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('UploadFile002', 'DIS', '/disclosure/infoCompliance/uploadFile002', 'disclosure/infoCompliance/uploadFile002', '', null, null, '02', '01', '其他附件', 'system', null, sysdate, 'system', sysdate);
+
+delete from sys_datadict where DICT_CODE IN('INFO_TYPE','INFO_STATUS','INFO_DEV_STATUS');
+insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('INFO_TYPE', 'DIS', '模板类型', '', '02', 'system', null, sysdate, 'system', sysdate);
+insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('INFO_STATUS', 'DIS', '当前状态', '', '02', 'system', null, sysdate, 'system', sysdate);
+insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('INFO_DEV_STATUS', 'DIS', '开发状态', '', '02', 'system', null, sysdate, 'system', sysdate);
+
+delete from sys_datadict_list where DICT_CODE IN ('INFO_TYPE','INFO_STATUS','INFO_DEV_STATUS');
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('INFO_TYPE', '01', '模板', 1, '0', 'system', null, sysdate, 'system', sysdate);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('INFO_TYPE', '02', '信披报表', 1, '0', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('INFO_STATUS', '01', '待复核', 1, '0', 'system', null, sysdate, 'system', sysdate);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('INFO_STATUS', '02', '审核通过', 1, '0', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('INFO_DEV_STATUS', '01', '待开发', 1, '0', 'system', null, sysdate, 'system', sysdate);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('INFO_DEV_STATUS', '02', '需修改', 1, '0', 'system', null, sysdate, 'system', sysdate);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('INFO_DEV_STATUS', '03', '终止', 1, '0', 'system', null, sysdate, 'system', sysdate);
+
+delete from sys_datadict where DICT_CODE IN('COMMON_BUSINESS_TYPE') AND ITEM_CODE='COMPLIANCE';
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('COMMON_BUSINESS_TYPE', 'COMPLIANCE', '合规留痕管理', 1002, '0', 'system', null, sysdate, 'system', sysdate);
+
+delete from sys_wfl_business_module where page_id ='InfoCompliance002';
+insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
+values ('InfoCompliance002', 'InfoCompliance002_btn_save', 'fiveprocess', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
+values ('InfoCompliance002', 'InfoCompliance002_btn_submit', 'fiveprocess', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+/**信披合规留痕管理 add cuiwei 2022-08-01 end**/
