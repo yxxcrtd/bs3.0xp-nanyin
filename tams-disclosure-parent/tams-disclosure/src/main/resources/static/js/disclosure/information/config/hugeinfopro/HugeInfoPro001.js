@@ -162,6 +162,7 @@
     // });
 
 
+
     $('#HugeInfoPro001_btn_import').click(function() {
         Joyin.confirm("请确认是否要导入数据？", function () {
             Joyin.uploadFile({pageId:'HugeInfoPro'},function(fileName) {
@@ -174,6 +175,57 @@
                                 }
                                 if (checkResult.data.confirmMsg) {
                                     Joyin.confirm(checkResult.data.confirmMsg, function () {
+                                        if (checkResult.data.confirmMsg2) {
+                                            Joyin.confirm(checkResult.data.confirmMsg2, function () {
+                                                var data = {
+                                                    tempList: checkResult.data.correctData
+                                                }
+                                                Joyin.ajaxJson(basePath + 'disclosure/information/config/hugeinfopro/HugeInfoPro001/importFile', data,
+                                                    function (resultObj) {
+                                                        if (resultObj.statuCode.toString() === '200') {
+                                                            table.reload();
+                                                            return;
+                                                        }
+                                                    });
+                                            },{}, function () {
+                                                layui.layer.closeAll()
+                                                table.reload();
+                                            });
+                                        }else{
+                                            var data = {
+                                                tempList: checkResult.data.correctData
+                                            }
+                                            Joyin.ajaxJson(basePath + 'disclosure/information/config/hugeinfopro/HugeInfoPro001/importFile', data,
+                                                function (resultObj) {
+                                                    if (resultObj.statuCode.toString() === '200') {
+                                                        table.reload();
+                                                        return;
+                                                    }
+                                                });
+                                        }
+
+                                    },{}, function () {
+                                        layui.layer.closeAll()
+                                        table.reload();
+                                    });
+                                }else {
+                                    if (checkResult.data.confirmMsg2) {
+                                        Joyin.confirm(checkResult.data.confirmMsg2, function () {
+                                            var data = {
+                                                tempList: checkResult.data.correctData
+                                            }
+                                            Joyin.ajaxJson(basePath + 'disclosure/information/config/hugeinfopro/HugeInfoPro001/importFile', data,
+                                                function (resultObj) {
+                                                    if (resultObj.statuCode.toString() === '200') {
+                                                        table.reload();
+                                                        return;
+                                                    }
+                                                });
+                                        },{}, function () {
+                                            layui.layer.closeAll()
+                                            table.reload();
+                                        });
+                                    }else{
                                         var data = {
                                             tempList: checkResult.data.correctData
                                         }
@@ -184,21 +236,7 @@
                                                     return;
                                                 }
                                             });
-                                    },{}, function () {
-                                        layui.layer.closeAll()
-                                        table.reload();
-                                    });
-                                }else {
-                                    var data = {
-                                        tempList: checkResult.data.correctData
                                     }
-                                    Joyin.ajaxJson(basePath + 'disclosure/information/config/hugeinfopro/HugeInfoPro001/importFile', data,
-                                        function (resultObj) {
-                                            if (resultObj.statuCode.toString() === '200') {
-                                                table.reload();
-                                                return;
-                                            }
-                                        });
                                 }
                             }
                             ,1000);
@@ -209,6 +247,7 @@
             });
         });
     });
+
 
 
     var error1= function(message, callback) {

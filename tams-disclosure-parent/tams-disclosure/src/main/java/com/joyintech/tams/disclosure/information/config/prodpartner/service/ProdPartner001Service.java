@@ -452,6 +452,15 @@ public class ProdPartner001Service extends CommonExportService<ProdPartnerDto>
         prodPartner001Mapper.insertBtachEquityInfo(list);
     }
 
+    public List<ProdPartnerDto> findAll(Map<String, Object> parameters) {
+        if(StringUtil.isNotEmpty(parameters.get("prodId"))){
+            parameters.put("prodId",StringUtil.splitToList(null,parameters.get("prodId").toString()));
+        }else{
+            parameters.put("prodId",new ArrayList<>());
+        }
+        return prodPartner001Mapper.select(parameters);
+    }
+
     /**
      * 更新数据 <功能详细描述>
      *

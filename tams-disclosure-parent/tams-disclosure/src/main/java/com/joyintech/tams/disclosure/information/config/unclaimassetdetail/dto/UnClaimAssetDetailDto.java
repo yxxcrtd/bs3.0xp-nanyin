@@ -46,6 +46,7 @@ public class UnClaimAssetDetailDto extends DisNostdCreditor implements ITableRow
      */
     private String prodName;
 
+
     /**
      * 更新时间str
      * @return
@@ -61,12 +62,13 @@ public class UnClaimAssetDetailDto extends DisNostdCreditor implements ITableRow
     }
 
     /**
-     * 选中的记录
+     * 该产品下非标资产列表
      */
-    private transient List<UnClaimAssetDetailDto> uncliamList;
-
-
-
+    private  List<UnClaimAssetDetailDto> unclaimList;
+    /**
+     * 选中的数据
+     */
+    private transient List<UnClaimAssetDetailDto> selectedItem;
 
     public String getOperateType() {
         return operateType;
@@ -101,7 +103,7 @@ public class UnClaimAssetDetailDto extends DisNostdCreditor implements ITableRow
     }
 //    获取数据状态枚举
     public String getDataStatusStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.信披_数据状态,this.getDataStatus());
+        return SysDataUtil.getNameFromDataDict(DictCode.维护数据状态,this.getDataStatus());
     }
 
 
@@ -114,16 +116,19 @@ public class UnClaimAssetDetailDto extends DisNostdCreditor implements ITableRow
         this.prodName = prodName;
     }
 
-    /**
-     * 取得选择的数据
-     *
-     * @return list
-     */
-    public List<UnClaimAssetDetailDto> getUncliamList() {
-        return uncliamList;
+    public List<UnClaimAssetDetailDto> getUnclaimList() {
+        return unclaimList;
     }
 
-    public void setUncliamList(List<UnClaimAssetDetailDto> uncliamList) {
-        this.uncliamList = uncliamList;
+    public void setUnclaimList(List<UnClaimAssetDetailDto> unclaimList) {
+        this.unclaimList = unclaimList;
+    }
+
+    public List<UnClaimAssetDetailDto> getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(List<UnClaimAssetDetailDto> selectedItem) {
+        this.selectedItem = selectedItem;
     }
 }

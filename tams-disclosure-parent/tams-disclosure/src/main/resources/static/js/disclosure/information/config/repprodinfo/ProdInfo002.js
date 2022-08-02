@@ -1,8 +1,9 @@
 (function () {
 
+    var laydate = layui.laydate;
     var prodIdInit = $('#prodId').val();
-    var openFreqGlobal;
-    var prodTypeGlobal;
+    var openFreqGlobal = $('#openFreqGlobal').val();
+    var prodTypeGlobal = $('#prodTypeGlobal').val();
     var prodNo = '';
     var flag = false;
     if ('' == prodIdInit || null == prodIdInit) {
@@ -22,10 +23,21 @@
         $("#isGrade").attr("disabled", "disabled");
         $("#prodRe").attr("disabled", "disabled");
         $("#pProdId").attr("disabled", "disabled");
-        $("#profitType").attr("disabled", "disabled");
+        //$("#profitType").attr("disabled", "disabled");
+
+        var prodType = prodTypeGlobal;
+        //若产品类型为“现管类产品”，"发行方式"默认为“开放式”，且不允许修改
+        if (prodType != null && prodType == '04') {
+            $("#issuingWay").attr("disabled", true);
+            $("#openFreq").attr("disabled", true);
+            $("#profitType").attr("disabled", true);
+        } else {
+            $("#issuingWay").attr("disabled", false);
+            $("#openFreq").attr("disabled", false);
+            $("#profitType").attr("disabled", false);
+        }
 
         showHidePerformDiv(isIndexUpdate);
-
     }
     var init = 0;
     var initProdInsId = '';
@@ -139,7 +151,7 @@
     /**
      * 画面加载完成
      */
-    $(function () {
+    var data = $(function () {
         if (pageModel === PAGE_MODEL_EDIT) {
             $('#btnSave_wfl').hide();
         }
@@ -173,6 +185,10 @@
 
         //修改 产品类型
         $("#prodType").change(function () {
+            changeProdType();
+        });
+
+        function changeProdType(){
             var prodType = $('#prodType').select2('data')[0].id;
             prodTypeGlobal = prodType;
             //若产品类型为“现管类产品”，"发行方式"默认为“开放式”，且不允许修改
@@ -191,7 +207,7 @@
                 $("#profitType").attr("disabled", false);
                 changeHoldday();
             }
-        });
+        }
 
         // 修改发行方式
         $("#issuingWay").change(function () {
@@ -200,10 +216,11 @@
             //若产品类型为“现管类产品”，"发行方式"默认为“开放式”，且不允许修改
             if (issuingWay != null && issuingWay == '01') {
                 //当“发行方式”为“开放式”时开放频率必填，否则置灰不可填
-                $("#openFreq").attr("disabled", true);
-
-            } else {
                 $("#openFreq").attr("disabled", false);
+            } else {
+               // $("#openFreq").val();
+                $("#openFreq").textSelect('setValue', '99');
+                $("#openFreq").attr("disabled", true);
             }
         });
 
@@ -225,16 +242,54 @@
 
         });
 
+        // 修改 是否分级产品
+        $("#isGrade").change(function () {
+            var isGrade = $('#isGrade').select2('data')[0].id;
+            generatepProdName(isGrade);
+        });
+
+        // 子产品名称修改后的事件
+        $("#prodName").blur(function(){
+            var isGrade = $('#isGrade').val();
+            generatepProdName(isGrade);
+        });
+
+        // 子产品成立时间 修改事件
+        $("#setDate").change(function(){
+            var isGrade = $('#isGrade').val();
+            generatepProdName(isGrade);
+        });
+
+        // 非分级产品（普通产品），自动填充产品名称和产品成立日期
+        function generatepProdName(isGrade){
+            //当“是否分级产品”为“否”时
+            if(isGrade && isGrade == '02' ){
+                $("#pProdName").attr("disabled", true);
+                $("#pSetDate").attr("disabled", true);
+                var prodName = $('#prodName').val(); //pSetDate
+                var setDate = $('#setDate').val();
+                $("#pProdName").val(prodName);
+                laydate.render({
+                    elem: '#pSetDate'
+                    ,value: setDate //必须遵循format参数设定的格式
+                });
+            }else{
+                $("#pProdName").attr("disabled", false);
+                $("#pSetDate").attr("disabled", false);
+            }
+        }
+
         // 修改固定持有天数
         function changeHoldday() {
             //当产品的开放频率为“日开”且“产品类型”为“净值型”时必填，否则不可填
-            if (openFreqGlobal && openFreqGlobal && openFreqGlobal == '01' && prodTypeGlobal == '01') {
+            if (openFreqGlobal && prodTypeGlobal && openFreqGlobal == '01' && prodTypeGlobal == '01') {
                 $("#holdday").attr("disabled", false);
             } else {
-                $("#holdday").attr("");
+                $("#holdday").val("");
                 $("#holdday").attr("disabled", true);
             }
         }
+
 
 
     });
@@ -248,18 +303,24 @@
         page: false,
         height: '225px',
         cols: [
-            {
+            /*{
                 field: 'dataType', sortable: false, width: 400, align: 'center', title: '行情代码', edit: true,
                 editOption: {
                     type: 'select', formatoption: true, multiple: false, searchable: true, result: QUOTA_CODE
+                }
+            }*/
+            {
+                field: 'dataType', edit: true, sortable: false, width:260, title: '行情代码',  align: 'center',
+                editOption: {
+                    type: 'select', multiple: false, searchable: true, result: QUOTA_CODE
                 }
             }
             , {
                 field: 'proportion',
                 sortable: false,
-                title: '系数',
-                width: 300,
-                align: 'center',
+                title: '系数(%)',
+                width: 100,
+                align: 'left',
                 edit: true,
                 type: 'number',
                 digit: 2
@@ -281,6 +342,7 @@
         //  当“是否是指数型产品”为“是”时显示
         if (isIndex && isIndex == '01') {
             $("#performDiv").show();
+            $("#performCompare").attr("disabled", true);
         } else {
             $("#performDiv").hide();
         }
@@ -301,8 +363,6 @@
     function changeMDate() {
         // 分级产品
         var isGrade = $('#isGrade').val();
-
-
         var pSetDate = $('#pSetDate').val();
         var mdate = $('#mdate').val();
         var setDate = $('#setDate').val();

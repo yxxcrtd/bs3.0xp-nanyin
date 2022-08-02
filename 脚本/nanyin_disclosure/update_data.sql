@@ -613,7 +613,7 @@ values ('INFO_DEV_STATUS', '02', '需修改', 1, '0', 'system', null, sysdate, '
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('INFO_DEV_STATUS', '03', '终止', 1, '0', 'system', null, sysdate, 'system', sysdate);
 
-delete from sys_datadict where DICT_CODE IN('COMMON_BUSINESS_TYPE') AND ITEM_CODE='COMPLIANCE';
+delete from sys_datadict_list where DICT_CODE IN('COMMON_BUSINESS_TYPE') AND ITEM_CODE='COMPLIANCE';
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('COMMON_BUSINESS_TYPE', 'COMPLIANCE', '合规留痕管理', 1002, '0', 'system', null, sysdate, 'system', sysdate);
 
@@ -651,3 +651,26 @@ INSERT INTO SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAU
 VALUES ('COMMON_BUSINESS_TYPE', 'SVR15', '关联交易情况维护', 1400, '0', 'system', null, sysdate, 'system',sysdate, null);
 
 -- add by shengning 20220801 关联交易情况维护 end
+
+-- add by zhengxiaolian 20220801 报表编辑页面脚本 start
+delete from sys_page where page_id='RepEdit001';
+
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('RepEdit001', 'DIS', '/disclosure/information/reveal/detailshow/RepEdit001', 'disclosure/information/reveal/detailshow/RepEdit001', null, null, null, '02', '02', '报表编辑', 'system', null, '07-7月 -22 06.39.05.966000 下午', 'system', '07-7月 -22 06.39.14.306000 下午');
+
+-- add by zhengxiaolian 20220801 报表编辑页面脚本 start
+
+--add by zhengbs 20220802 poi脚本 start
+/*phantomjs-2.1.1 的安装路径 poi导出报表之生成echarts图片工具存放路径*/
+update sys_para set param_value = '/home/phantomjs-2.1.1-linux-x86_64/bin/' where para_code = 'POI_ECHARTS_PIC_EXPORT_PATH';
+/*poi导出报表Echarts临时文件存放路径*/
+update sys_para set param_value = '/home/bs3.0/yy/app/poi/echartstmp/' where para_code = 'POI_ECHARTS_PIC_EXPORT_PATH';
+/*apache服务器的安装*/
+DELETE FROM sys_para WHERE PARA_CODE = 'POI_APACHE_PATH';
+INSERT INTO sys_para ("SYSTEM_CODE", "PARA_CODE", "PARAM_VALUE", "DATA_TYPE", "DATA_SCOPE", "REMARK", "CREATE_USER", "CREATE_DEPT", "CREATE_TIME", "UPDATE_USER", "UPDATE_TIME", "INSTITUTION_CODE", "UPDATE_FLG")
+VALUES ('DIS', 'POI_APACHE_PATH', '/home/httpd24/htdocs/images', NULL, NULL, 'POI_APACHE服务器存放路径', 'system', NULL, sysdate, 'system', sysdate, NULL, '01');
+
+DELETE FROM sys_para WHERE PARA_CODE = 'POI_APACHE_ADDRESS';
+INSERT INTO sys_para ("SYSTEM_CODE", "PARA_CODE", "PARAM_VALUE", "DATA_TYPE", "DATA_SCOPE", "REMARK", "CREATE_USER", "CREATE_DEPT", "CREATE_TIME", "UPDATE_USER", "UPDATE_TIME", "INSTITUTION_CODE", "UPDATE_FLG")
+VALUES ('DIS', 'POI_APACHE_ADDRESS', '192.168.60.236', NULL, NULL, 'POI_APACHE服务器ip地址', 'system', NULL, sysdate, 'system', sysdate, NULL, '01');
+--add by zhengbs 20220802 poi脚本 end

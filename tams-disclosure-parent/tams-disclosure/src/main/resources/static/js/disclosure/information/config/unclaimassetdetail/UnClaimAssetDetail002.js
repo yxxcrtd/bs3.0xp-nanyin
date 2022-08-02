@@ -28,7 +28,7 @@
         var object = $.serializeToObject('#submitForm');
         object.pageModel = pageModel;
         object.operateType = operateType;
-        object.uncliamList = unclaimTable.getAllRows();
+        object.unclaimList = unclaimTable.getAllRows();
         Joyin.ajaxJson(basePath + 'disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail002/check', object, function(result) {
             Joyin.confirm(result.data, function() {
                 if(operateType === 'save') {
@@ -44,18 +44,23 @@
     // 非标资产明细列表
     var unclaimTable = $("#unclaimTable").joyintable({
         // ajax: {
-        //     url: 'selectDetailList',
-        //     type: 'POST',
-        //     data: {nostdAssetId: $("#nostdAssetId").val()
-        //     }
-        // },
-        data: uncliamList == null ? [] : uncliamList,
+        //             url: 'selectDetailList',
+        //             type: 'POST',
+        //             data: {prodId: $("#prodId").val().trim(),effDate: $("#effDate").val(),effEndDate : $('#effEndDate').val(),
+        //                 dataStatus:$('#dataStatus').val()
+        //             }
+        //         },
+        data: unclaimList == null ? null: unclaimList,
         searchOnInit: true,
         checkbox: false,
         page: false,
         height: '225px',
         cols: [
-            { field: 'projectNo', edit: false, sortable: false, width: 120, title: '序号'}
+            //列表中的序号，为当前非标明细表中所查到所有非标的数量加上当前列表的行数
+            { field: 'projectNo', edit: false,editoption:{
+                type:'select',id:'projectNo',showField:'id',formatoption:true,
+                url: JoyinUtil.getRealPath('/invest/basicdata/msttradeopponent/MstTradeOpponent002/getAccount')},
+                sortable: false, width: 120, title: '序号'}
             , { field: 'financier',sortable: false, width: 120, title: '融资客户',edit: true, type: 'text' }
             , { field: 'projectName',sortable: false, title: '项目名称', width: 150, edit: true, type: 'text'}
             , { field: 'remFinancingPeriod', sortable: false, title: '剩余融资期限', width: 150, edit: true, type: 'text'}
@@ -64,7 +69,7 @@
             , { field: 'riskInfo', sortable: false, title: '风险状况', width: 120, edit: true, type: 'text'}
             , { field: 'operation', sortable: false, title: 'SysCommon.operation', type: 'action', buttons: ['delt'] }
         ],
-        addbtn: true,
+        addbtn: pageModel == PAGE_MODEL_REFERENCE ? false:true,
         done: function () {
             this.bind('click', '.delt', function (data, index) {
                 var object = { selectedItem: [data], operateType: "delete" };

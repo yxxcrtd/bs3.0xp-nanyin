@@ -1,9 +1,7 @@
 package com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dao;
 
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.select.SuggestDto;
 
-import com.joyintech.tams.common.base.dao.DisNostdCreditorMapper;
 import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -14,11 +12,13 @@ import java.util.Map;
 @Repository
 public interface UnClaimAssetDetailMapper  {
     /**
-     *页面查询方法
+     * 页面查询方法
      * @param pageParam
      * @return
      */
     List<UnClaimAssetDetailDto> selectForPage(Map<String, Object> pageParam);
+
+
 
     /**
      * 获取产品代码和名称联想文本框
@@ -42,10 +42,15 @@ public interface UnClaimAssetDetailMapper  {
      */
     int selectByProdId(String prodId);
 
+    /**
+     * 查询当前系统维护的非标资产的数量
+     * @return
+     */
+    int selectNostdCount();
 
     /**
      *
-     * 双击查看，修改
+     * 双击查看，编辑
      * @param map
      * @return
      */
@@ -53,7 +58,7 @@ public interface UnClaimAssetDetailMapper  {
 
     /**
      *
-     * 新建修改非标资产明细列表查询
+     * 编辑查看非标资产明细列表查询方法
      * @param map
      * @return
      */
@@ -89,8 +94,24 @@ public interface UnClaimAssetDetailMapper  {
      */
     int deleteBtachEquityInfo(@Param("listA") List<UnClaimAssetDetailDto> listA);
 
-    int deleteByKey(String nostdAssetId);
-    int insert(UnClaimAssetDetailDto unClaimAssetDetailDto);
+    /**
+     * 逻辑删除
+     * @param record
+     * @return
+     */
+    int deleteOnStatus(UnClaimAssetDetailDto record);
 
-    int updateByKey(UnClaimAssetDetailDto dto);
+    /**
+     * 物理删除（以产品维度，删除多个非标资产）
+     * @param record
+     * @return
+     */
+    int deleteOnReal(UnClaimAssetDetailDto record);
+
+
+    int insert(UnClaimAssetDetailDto record);
+
+    int updateByKey(UnClaimAssetDetailDto record);
+
+
 }

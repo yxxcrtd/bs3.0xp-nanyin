@@ -12,6 +12,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt4;
+import com.joyintech.tams.disclosure.information.config.repFloatFee.dto.RepFloatFeeDto;
 import com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto;
 import com.joyintech.tams.disclosure.information.config.repProdIndex.service.RepProdIndexService;
 import com.joyintech.tams.systemtools.util.CommonUtil;
@@ -125,5 +126,16 @@ public class RepProdIndex002Controller extends BaseController {
         // 流程开始
         String msg = repProdIndexService.start(processParameter, dto);
         return new AjaxResult(msg);
+    }
+
+    @ResponseBody
+    @RequestMapping("checkExistData")
+    public Boolean checkExistData(@RequestBody RepProdIndexDto dto){
+        RepProdIndexDto repProdIndexDto = repProdIndexService.checkExistData(dto);
+        if(repProdIndexDto == null){
+            return false;
+        }else{
+            return true;
+        }
     }
 }

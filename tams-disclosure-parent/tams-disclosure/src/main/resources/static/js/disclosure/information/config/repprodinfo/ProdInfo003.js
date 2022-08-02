@@ -16,7 +16,9 @@
         loadonce: true,
         rowno: true,
         cols:[
-			{field:'prodId', sortable:false, width:100, title: '子产品代码'}
+            {field:'prodId', visible:false, title: '子产品代码'}
+            ,{field:'prodId', visible:false, title: '子产品代码'}
+			,{field:'prodId', sortable:false, width:100, title: '子产品代码'}
 			,{field:'prodName',sortable:false,width:100,  title: '产品名称'}
 			,{field:'issueStatusStr', sortable:false, width:100,title: '发行状态'}
 			,{field:'issuingStatusNew', title: '新发行状态', width:100, edit : true, editOption:{type:'select',result: ISSUE_STATUS}}

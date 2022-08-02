@@ -61,4 +61,7 @@ public interface ProdBonusplanMapper {
 	 */
 	ProdBonusplanDto selectByProdId(@Param("prodId") String prodId, @Param("dataStatus")String dataStatus);
 
+
+	ProdBonusplanDto selectByCondition(ProdBonusplanDto record);
+
 }

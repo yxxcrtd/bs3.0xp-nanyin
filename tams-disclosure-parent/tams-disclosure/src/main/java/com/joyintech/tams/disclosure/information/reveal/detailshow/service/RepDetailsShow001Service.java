@@ -340,7 +340,9 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
 
         String fileType = params.get("fileType").toString();
         Date genDate = DateUtil.parse(params.get("endDate").toString());
-        String prodId = params.get("prodId").toString();
+        String prodId = "";
+        if (params.get("prodId") != null )
+            prodId = params.get("prodId").toString();
         String reportFile = poiReportService.buildReportFileName(PoiReportService.REPORT_TYPE_报表文件,reportInfo, genDate, prodId,PoiReportService.FILE_TYPE_DOCX);
         String localFileName = reportInfo.getReportName()+"_"+prodId+"_" + params.get("endDate").toString()+PoiReportService.FILE_TYPE_DOCX;
 

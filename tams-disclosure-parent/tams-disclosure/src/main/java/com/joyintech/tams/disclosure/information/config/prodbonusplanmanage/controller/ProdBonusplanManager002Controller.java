@@ -24,15 +24,19 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.DictCodeListExt4;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.service.GetPrdInfoSelectService;
 import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto;
+import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.service.ProdBonusplanManager001Service;
 import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.service.ProdBonusplanManager002Service;
+import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +72,10 @@ public class ProdBonusplanManager002Controller extends BaseController {
 
     @Autowired
     ProdBonusplanManager002Service prodBonusplanManager002Service;
+
+
+    @Autowired
+    ProdBonusplanManager001Service prodBonusplanManager001Service;
 
     @Autowired
     private GetPrdInfoSelectService getPrdInfoSelectService;
@@ -119,6 +127,23 @@ public class ProdBonusplanManager002Controller extends BaseController {
     }
 
     /**
+     * 分页查询产品下拉框
+     *
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("getPrdInfoSelect2")
+    @ResponseBody
+    public Page<SelectOptionDto> getPrdInfoSelect2() {
+
+        Map<String, Object> param = RequestUtil.getPageParam();
+        param.put("sonFlag", "2");
+        Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getAllPrdInfoSelect2(param);
+        return prdInfoSelect;
+    }
+
+
+    /**
      * check
      *
      * @param prodId 查询产品明细信息
@@ -156,6 +181,18 @@ public class ProdBonusplanManager002Controller extends BaseController {
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Valid ProdBonusplanDto dto, BindingResult bindingResult) {
         String operateType = dto.getOperateType();
+        String pageModel = dto.getPageModel();
+        if (StringUtil.equals(pageModel, GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {//新增
+            ProdBonusplanDto existDto = prodBonusplanManager001Service.selectByProdId(dto.getProdId());
+            if(StringUtils.equals(DictCodeListExt3.信披_分红方式_到期兑付.getValue(),dto.getBonusMode())
+                && existDto !=null ){
+                return new AjaxResult("当分红方式选择到期兑付时，一个子产品代码只能有一条数据", MessageType.错误消息);
+            }
+            ProdBonusplanDto existDto2 = prodBonusplanManager002Service.selectByCondition(dto);
+            if(existDto2 != null){
+                return new AjaxResult("“子产品代码+产品名称+分红方式+收益分配基准日”不得同时与已有数据重复", MessageType.错误消息);
+            }
+        }
         return commonCheck(bindingResult, operateType);
     }
 

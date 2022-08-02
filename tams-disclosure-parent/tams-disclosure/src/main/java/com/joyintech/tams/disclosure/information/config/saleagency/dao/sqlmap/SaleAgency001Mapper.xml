@@ -15,6 +15,16 @@
 		<result column="updateTimeStr" property="updateTimeStr" jdbcType="VARCHAR" />
 		<collection property="prodSaleAgencyDtoList"  column="SEQUENCE_NO" ofType="com.joyintech.tams.disclosure.information.config.saleagency.dto.ProdSaleAgencyDto" select="com.joyintech.tams.disclosure.information.config.saleagency.dao.SaleAgency002Mapper.selectProdByAgencyId"/>
 	</resultMap>
+	<insert id="insertEX" parameterType="com.joyintech.tams.disclosure.information.config.saleagency.dto.SaleAgencyDto" >
+        insert into DIS_SALE_AGENCY (SEQUENCE_NO, AGENCY_NAME, AGREEMENT_VDATE,
+            AGREEMENT_MDATE, CREATE_USER, CREATE_TIME,
+            UPDATE_USER, UPDATE_TIME, CREATE_DEPT
+            )
+        values (#{sequenceNo,jdbcType=VARCHAR}, #{agencyName,jdbcType=VARCHAR}, #{agreementVdate,jdbcType=DATE},
+            #{agreementMdate,jdbcType=DATE}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+            #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR}
+            )
+    </insert>
 
 	<select id="querySaleAgency"
 			resultType="com.joyintech.framework.select.SelectOptionDto">

@@ -3,18 +3,13 @@ package com.joyintech.tams.disclosure.information.config.unclaimassetdetail.serv
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.JoyinMessage;
 import com.joyintech.framework.ajax.MessageType;
-import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
-import com.joyintech.tams.disclosure.information.config.hugeinfopro.dto.HugeInfoPro001Dto;
 import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dao.UnClaimAssetDetailMapper;
 import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
@@ -31,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.FileNotFoundException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -67,10 +61,13 @@ public class UnClaimAssetDetail001Service extends CommonExportService<UnClaimAss
         }else{
             pageParam.remove("prodId");
         }
+
         Page<UnClaimAssetDetailDto> page = super.queryForPage(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")), ()
                 -> unClaimAssetDetailMapper.selectForPage(pageParam));
         return page;
     }
+
+
 
     @Override
     public Page<UnClaimAssetDetailDto> selectPageData(Map<String, Object> selectParam) {

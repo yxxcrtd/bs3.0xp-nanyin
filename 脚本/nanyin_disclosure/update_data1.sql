@@ -501,3 +501,54 @@ VALUES ('DIS_PROFIT_TYPE', '02', 'DIS_PROD_TYPE', '01', 'system', null, sysdate,
 INSERT INTO SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 VALUES ('DIS_PROFIT_TYPE', '02', 'DIS_PROD_TYPE', '04', 'system', null, sysdate, 'system', sysdate);
 -- add by dingrui 2022-08-01  end
+
+commit ;
+
+<!--  add  信息披露->非标债权类资产明细维护  by  marui start -->
+-- 菜单配置
+delete from SYS_MENU where PAGE_ID = 'UnClaimAssetDetail001';
+insert into SYS_MENU  (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+values ('REPORT_006_004_004','DIS','','REPORT_006_004','UnClaimAssetDetail001','4','02','非标债权类资产明细维护','system','',sysdate, 'system',sysdate);
+
+-- 画面配置
+delete  from sys_page where PAGE_ID in ('UnClaimAssetDetail001','UnClaimAssetDetail002');
+insert into SYS_PAGE (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+values ('UnClaimAssetDetail001','DIS','/disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail001','disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail001','REPORT_006_004_004','','','02','01','非标债权类资产维护','system','',sysdate, 'system',sysdate);
+insert into SYS_PAGE (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+values ('UnClaimAssetDetail002','DIS','/disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail002','disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail002','','','','02','01','非标债权类资产维护新建','system','',sysdate, 'system',sysdate);
+
+-- 流程配置
+delete from sys_wfl_business_module where PAGE_ID = 'UnClaimAssetDetail002';
+insert into sys_wfl_business_module (PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE,IS_SEND_UORG)
+values ('UnClaimAssetDetail002','UnClaimAssetDetail001_btn_delete','oneApproval','system','',sysdate,'system',sysdate,'ALL','02');
+insert into sys_wfl_business_module (PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE,IS_SEND_UORG)
+values ('UnClaimAssetDetail002','UnClaimAssetDetail002_btn_save','oneApproval','system','',sysdate,'system',sysdate,'ALL','02');
+insert into sys_wfl_business_module (PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE,IS_SEND_UORG)
+values ('UnClaimAssetDetail002','UnClaimAssetDetail002_btn_submit','oneApproval','system','',sysdate,'system',sysdate,'ALL','02');
+
+-- "共通业务类型" 字典信息
+delete from SYS_DATADICT_LIST where DICT_CODE='COMMON_BUSINESS_TYPE' and ITEM_CODE in('DISNOSTD');
+INSERT INTO SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+VALUES ('COMMON_BUSINESS_TYPE', 'DISNOSTD', '非标债权类资产明细维护', 298, '0', 'system', null, sysdate, 'system', sysdate, null);
+
+--  add 信息披露->非标债权类资产明细维护  by marui  end
+
+
+
+-- add by dingrui 2022-08-02  start
+-- 新增 "产品分红到期计划" 画面
+DELETE FROM SYS_PAGE WHERE PAGE_ID IN ('ProdBonusplanManager001');
+INSERT INTO SYS_PAGE
+(PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES('ProdBonusplanManager001', 'DIS', '/disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager001',
+       'disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager001', 'REPORT_006_004_001', NULL, NULL,
+       '02', '01', '产品分红到期计划', 'system', NULL, sysdate, 'system', sysdate);
+
+DELETE FROM SYS_PAGE WHERE PAGE_ID IN ('ProdBonusplanManager002');
+INSERT INTO SYS_PAGE
+(PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES('ProdBonusplanManager002', 'DIS', '/disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager002',
+       'disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager002', '', NULL, NULL,
+       '02', '01', '产品分红到期计划新增', 'system', NULL, sysdate, 'system', sysdate);
+-- add by dingrui 2022-08-02  end
+commit ;

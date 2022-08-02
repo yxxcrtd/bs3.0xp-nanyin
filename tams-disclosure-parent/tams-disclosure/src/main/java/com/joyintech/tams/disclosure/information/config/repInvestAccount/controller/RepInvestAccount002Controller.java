@@ -14,6 +14,7 @@ import com.joyintech.tams.constant.DictCodeExt1;
 import com.joyintech.tams.constant.DictCodeListExt4;
 import com.joyintech.tams.disclosure.information.config.repInvestAccount.dto.RepInvestAccountDto;
 import com.joyintech.tams.disclosure.information.config.repInvestAccount.service.RepInvestAccountService;
+import com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
@@ -111,4 +112,15 @@ public class RepInvestAccount002Controller extends BaseController {
         String msg = repInvestAccountService.start(processParameter, dto);
         return new AjaxResult(msg);
     }
+    @ResponseBody
+    @RequestMapping("checkExistData")
+    public Boolean checkExistData(@RequestBody RepInvestAccountDto dto){
+        RepInvestAccountDto repInvestAccountDto = repInvestAccountService.checkExistData(dto);
+        if(repInvestAccountDto == null){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
 }

@@ -96,7 +96,7 @@
             prpi.RAISE_ENDDATE RAISE_ENDDATE,
             prpi.MDATE MDATE,
             prpi.RAISE_TYPE RAISE_TYPE,
-            rpi.PERFORM_COMPARE PERFORM_COMPARE,
+            prpi.PERFORM_COMPARE PERFORM_COMPARE,
             prpi.IS_PERIOD IS_PERIOD,
             prpi.IS_GRADE IS_GRADE,
             prpi.IS_INDEX IS_INDEX,
@@ -106,7 +106,7 @@
             prpi.ISSUING_WAY ISSUING_WAY,
             prpi.ACCT_CHNNAME ACCT_CHNNAME,
             prpi.PROFIT_TYPE PROFIT_TYPE,
-            rpi.PD_STATUS PD_STATUS,
+            prpi.PD_STATUS PD_STATUS,
             prpi.PROD_SERIES PROD_SERIES,
 
             rpi.CREATE_USER CREATE_USER,
@@ -117,6 +117,7 @@
             rpi.STATUS STATUS,
             rpi.ISSUE_STATUS ISSUE_STATUS,
             rpi.REP_PROD_TYPE REP_PROD_TYPE,
+
             rpi.HOLDDAY HOLDDAY,
             rpi.TRUSTPART TRUSTPART,
             rpi.ERRORMSG ERRORMSG,
@@ -712,7 +713,10 @@
         PROD_NAME,
         SET_DATE ,
         ISSUE_STATUS,
-        ISSUE_STATUS_REMARK
+        ISSUE_STATUS_REMARK,
+        REP_PROD_TYPE,
+        P_PROD_ID,
+        IS_GRADE
         from REP_PROD_INFO
         <where>
             <foreach collection="array" item="item" open="and  PROD_ID in(" separator="," close=")">

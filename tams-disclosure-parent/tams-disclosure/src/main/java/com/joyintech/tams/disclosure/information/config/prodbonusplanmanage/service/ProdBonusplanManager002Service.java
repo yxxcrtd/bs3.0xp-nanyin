@@ -87,6 +87,26 @@ public class ProdBonusplanManager002Service extends CommonExportService<ProdBonu
         return dto;
     }
 
+    /**
+     * 根据主键
+     * @param keyId
+     * @return
+     */
+    public ProdBonusplanDto selectByPrimaryKey(String keyId) {
+        ProdBonusplanDto dto = prodBonusplanMapper.selectByPrimaryKey(keyId);
+        return dto;
+    }
+
+    /**
+     * 根据主键
+     * @param entity
+     * @return
+     */
+    public ProdBonusplanDto selectByCondition(ProdBonusplanDto entity) {
+        ProdBonusplanDto dto = prodBonusplanMapper.selectByCondition(entity);
+        return dto;
+    }
+
 
     /**
      * 插入数据

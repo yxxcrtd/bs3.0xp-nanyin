@@ -219,4 +219,13 @@
     <select id="getProdId" resultType="java.lang.String">
         SELECT PROD_ID FROM REP_PROD_INFO WHERE PROD_ID = #{prodId}
     </select>
+
+    <select id="checkExistData" resultType="com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto" >
+        select distinct T.*
+        from REP_FEE_TRD T
+        where T.PROD_ID = #{prodId,jdbcType=CHAR}
+          and T.PAY_DATE = #{payDate,jdbcType=DATE}
+          and T.FEE_TYPE = #{feeType,jdbcType=CHAR}
+          and T.STATUS = 'D'
+    </select>
 </mapper>

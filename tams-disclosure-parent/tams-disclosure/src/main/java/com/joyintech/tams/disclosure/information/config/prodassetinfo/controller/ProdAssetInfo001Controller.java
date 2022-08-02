@@ -13,6 +13,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
@@ -46,6 +47,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -74,6 +76,9 @@ public class ProdAssetInfo001Controller extends BaseController{
 
     @Autowired
     private ProdAssetInfo002Service prodAssetInfo002Service;
+
+    @Autowired
+    private CommonExportService commonExportService;
 
     /**
      * 导入数据service注入
@@ -135,26 +140,23 @@ public class ProdAssetInfo001Controller extends BaseController{
     public ResponseEntity<byte[]> export() {
         Map<String, Object> param = RequestUtil.getParameters(getRequest());
         Date sysDate = DateUtil.platDateFromCache()==null?new Date():DateUtil.platDateFromCache();//平台日期
+        List<ProdAssetInfoDto> prodAssetInfoDtos=new ArrayList<>();
         if(param.containsKey("keyList")){
             //导出选中行
             String keyList = param.get("keyList").toString();
             try {
-                List<ProdAssetInfoDto> prodAssetInfoDtos = JsonUtils.json2List(keyList,ProdAssetInfoDto.class);
-                param.put("investList", prodAssetInfoDtos);
+                prodAssetInfoDtos = JsonUtils.json2List(keyList,ProdAssetInfoDto.class);
             } catch (IOException e) {
                 logger.error(e.getMessage(),e);
             }
-            List<ProdAssetInfoDto> dtoList = prodAssetInfo001Service.selectForExport(param);
-            File outFile = prodAssetInfo001Service.makeFile(
-                    "/com/joyintech/tams/disclosure/information/config/prodassetinfo/conf/export_conf.xml", dtoList);
-            return ExportUtil.export(
-                    DictCodeListExt3.共通业务类型_产品资产组合情况维护.getCodeName() + GlobalConstant.UNDER_LINE
-                            + DateUtil.format(sysDate,"yyyyMMdd") +"."+ FileNameUtil.getFileExtName(outFile),
-                    outFile, true);
         }else{
-            //todo:框架中导出的excel文件与需求中的不符
-            return prodAssetInfo001Service.export(this.getPageId(),param);
+            prodAssetInfoDtos = prodAssetInfo001Service.findAll(RequestUtil.getParameters(getRequest()));
         }
+        File outFile = commonExportService.makeFile(
+                "/com/joyintech/tams/disclosure/information/config/prodassetinfo/conf/export_conf.xml", prodAssetInfoDtos);
+        String exportFileName=DictCodeListExt3.共通业务类型_产品资产组合情况维护.getCodeName() + GlobalConstant.UNDER_LINE
+                + DateUtil.format(sysDate,"yyyyMMdd") +"."+ FileNameUtil.getFileExtName(outFile);
+        return ExportUtil.export(exportFileName, outFile, true);
     }
 
 

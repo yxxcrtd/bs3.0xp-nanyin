@@ -71,6 +71,29 @@
 		</if>
 	</select>
 
+
+	<!-- 获取所有的正常状态的产品信息，包含母产品和子产品，支持根据产品代码和产品名称 进行模糊查询-->
+	<select id="getAllPrdInfoSelect2" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select distinct
+		PROD_ID text,
+		PROD_NAME id
+		from
+		REP_PROD_INFO
+		where STATUS='E'
+		<if test="search != null and search != ''">
+			and (PROD_ID like '%' || #{search, jdbcType=VARCHAR} || '%'
+			or PROD_NAME like '%' || #{search, jdbcType=VARCHAR} || '%')
+		</if>
+		<!-- 只取母产品 -->
+		<if test="sonFlag != null and sonFlag != '' and sonFlag == '1'.toString() ">
+			and p_prod_id is null
+		</if>
+		<!-- 只取子产品 -->
+		<if test="sonFlag != null and sonFlag != '' and sonFlag == '2'.toString() ">
+			and p_prod_id is not null
+		</if>
+	</select>
+
 	<select id="getPProdIdList" resultType="com.joyintech.framework.select.SelectOptionDto">
 		select
 		distinct RPI.PROD_ID id,
@@ -78,13 +101,13 @@
 		from
 		REP_PROD_INFO RPI
 		<if test="flag != null and flag != '' and flag == '01'">
-			inner join DIS_PROD_FEEDISCOUNT DPF on DPF.PROD_REGIST_NO=RPI.PROD_RE and DPF.DATA_STATUS='01'
+			inner join DIS_PROD_FEEDISCOUNT DPF on DPF.PROD_REGIST_NO=RPI.PROD_RE and DPF.DATA_STATUS='E'
 		</if>
 		<if test="flag != null and flag != '' and flag == '02'">
-			inner join DIS_PROD_ADJUST DPA on DPA.PROD_REGIST_NO=RPI.PROD_RE and DPA.DATA_STATUS='01'
+			inner join DIS_PROD_ADJUST DPA on DPA.PROD_REGIST_NO=RPI.PROD_RE and DPA.DATA_STATUS='E'
 		</if>
 		<if test="flag != null and flag != '' and flag == '03'">
-			inner join DIS_LARGE_REDEMPTION DLR on DLR.PROD_REGIST_NO=RPI.PROD_RE and DLR.DATA_STATUS='01'
+			inner join DIS_LARGE_REDEMPTION DLR on DLR.PROD_REGIST_NO=RPI.PROD_RE and DLR.DATA_STATUS='E'
 		</if>
 		where RPI.STATUS='E'
 		and rep_prod_type in ('01','02')
@@ -124,7 +147,7 @@
 		from
 		DIS_PROD_FEEDISCOUNT DPF
 		left join REP_PROD_INFO RPI on DPF.prod_id=RPI.prod_id
-		where DPF.DATA_STATUS='01'
+		where DPF.DATA_STATUS='E'
 		<if test="search != null and search != ''">
 			and (DPF.PROD_DISCOUNT_ID like '%' || #{search, jdbcType=VARCHAR} || '%'
 			or DPF.FEENAME like '%' || #{search, jdbcType=VARCHAR} || '%')
@@ -141,7 +164,7 @@
 		from
 		DIS_PROD_ADJUST DPA
 		left join REP_PROD_INFO RPI on DPA.prod_id=RPI.prod_id
-		where DPA.DATA_STATUS='01'
+		where DPA.DATA_STATUS='E'
 		<if test="search != null and search != ''">
 			and (DPA.PROD_ID like '%' || #{search, jdbcType=VARCHAR} || '%'
 			or DPA.ADJ_FIELD like '%' || #{search, jdbcType=VARCHAR} || '%')

@@ -23,6 +23,10 @@ $(function () {
 	                  {screenType:'01',screenKey:'startDate',screenName:'开始日期'},
 	                  {screenType:'01',screenKey:'endDate',screenName:'结束日期'},
 	                  {screenType:'06',screenKey:'prodSeriesNum',screenName:'产品系列'}]
+
+	var previewFlag=false;
+
+	var backParam;
 	
 	/**
      * 获取查询参数
@@ -255,8 +259,8 @@ $(function () {
     	if(params.portnum instanceof Array){
     		Joyin.alert('多选产品编码不能预览界面！',2);
 			return;
-    	} 
-    	
+    	}
+
        $("#showtable").append("加载中");
  	   var $container = $("#showtable");
  	    	   
@@ -267,6 +271,7 @@ $(function () {
 				//var data =result.replace(new RegExp(changeStr, "g"), toStr);
 				//data =data.replace(new RegExp('.png', "g"), '.png&v='+Math.random());
 				$container.html(result);
+
 	        });
 	    }else{
 	    	params['uri'] = modelId;
@@ -276,11 +281,17 @@ $(function () {
 				//var data =result.replace(new RegExp(changeStr, "g"), toStr);
 				//data =data.replace(new RegExp('.png', "g"), '.png&v='+Math.random());
 				$container.html(result);
+				previewFlag=true;
 	        });
 	    }     
 	}
 	  
     var exportfile = function(type){
+		if(!previewFlag){
+			Joyin.alert('导出之前请先预览报表！',2);
+			return;
+		}
+
         displayMenu();
 
 		var params = getSearchParams();
@@ -297,6 +308,15 @@ $(function () {
 		if(params){
 			//导出会报错所以暂时屏蔽name
 			delete params.portname; 
+		}
+
+		if(backParam !=null){
+			for ( var key in params) {
+				if(params[key]!==backParam[key]){
+					Joyin.alert('页面参数发生变化，请新重新预览',2);
+					return;
+				}
+			}
 		}
     	
 		if(modelId&&modelUri){
@@ -371,6 +391,11 @@ $(function () {
     
     //编辑报表
     var editReport = function(params){
+		if(!previewFlag){
+			Joyin.alert('编辑之前请先预览报表！',2);
+			return;
+		}
+
         displayMenu();
     	if(modelListId){
     		Joyin.alert('报表集合不能查询!',2);
@@ -386,23 +411,42 @@ $(function () {
     	if(params == "flag") {
     		return;
     	}
-    	
+
     	if(params.portnum instanceof Array){
     		Joyin.alert('多选产品编码不能预览界面！',2);
 			return;
-    	} 
- 	    	   
-		var toStr = 'src='+basePath+'image'
-		var changeStr= 'src="image'
+    	}
+
+		//判断这一次的参数和上一次是否一样，不一样要给出提示
+		if(backParam !=null){
+			for ( var key in params) {
+				if(params[key]!==backParam[key]){
+					Joyin.alert('页面参数发生变化，请新重新预览',2);
+					return;
+				}
+			}
+		}
     
     	params['repid'] = repId;
-        Joyin.dialog(JoyinUtil.getLabel("编辑报表"),
-            JoyinUtil.getRealPath("/disclosure/information/reveal/detailshow/RepEdit001/init"),
-            "60%","85%",params,function(){ }
-        );
+
+		//编辑之前需要判断改报表是否已确认或者在流程中
+
+		Joyin.ajaxJson(basePath + 'disclosure/information/reveal/detailshow/RepDetailsShow001/check',params, function(result) {
+			Joyin.dialog(JoyinUtil.getLabel("编辑报表"),
+				JoyinUtil.getRealPath("/disclosure/information/reveal/detailshow/RepEdit001/init"),
+				"60%","85%",params,function(){ }
+			);
+		});
+
+
     }
 
     var submit = function(type){
+		if(!previewFlag){
+			Joyin.alert('生成之前请先预览报表！',2);
+			return;
+		}
+
         displayMenu();
 		var params = getSearchParams();
 		
@@ -416,6 +460,15 @@ $(function () {
 		}else{
 			return;
 		}
+		if(backParam !=null){
+			for ( var key in params) {
+				if(params[key]!==backParam[key]){
+					Joyin.alert('页面参数发生变化，请新重新预览',2);
+					return;
+				}
+			}
+		}
+
     	var uuid = 'pageid' + randomString(10, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
 		params.rep_id=uuid;
     	//导出会报错所以暂时屏蔽name
@@ -480,6 +533,7 @@ $(function () {
     	
     	// 绑定查询按钮事件
         $('#RepDetailsShow001_showDetail').click(function() {
+			backParam=getSearchParams();
         	showDetail(getSearchParams());
         });
 

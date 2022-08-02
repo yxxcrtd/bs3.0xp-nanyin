@@ -152,15 +152,8 @@ $(function(){
 
     /*文件导出*/
     var exportExcel = function() {
-    	if (table != null && table != '') {
-            var selArr = table.getAllCheckedRows();
-         }
-    	var param = getSearchParams();
-         if (!selArr || selArr.length == 0) {
-         } else {
-        	 param.keyList = JSON.stringify(selArr);
-         }
-        Joyin.exportExcel('export', param);
+        var paramObj = getSearchParams();
+        Joyin.exportExcel('export', paramObj);
     };
 
     $(function() {

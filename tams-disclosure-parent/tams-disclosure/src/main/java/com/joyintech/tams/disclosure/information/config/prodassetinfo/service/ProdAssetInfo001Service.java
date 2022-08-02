@@ -486,4 +486,13 @@ public class ProdAssetInfo001Service extends CommonExportService<ProdAssetInfoDt
                         + "/ProdPartner001/updateBtachEquityInfo",
                 list, Integer.class);
     }
+
+    public List<ProdAssetInfoDto> findAll(Map<String, Object> parameters) {
+        if(StringUtil.isNotEmpty(parameters.get("prodId"))){
+            parameters.put("prodId",StringUtil.splitToList(null,parameters.get("prodId").toString()));
+        }else{
+            parameters.put("prodId",new ArrayList<>());
+        }
+        return prodAssetInfo001Mapper.select(parameters);
+    }
 }
