@@ -21,6 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.joyintech.framework.base.dto.UploadFile;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
@@ -83,6 +86,9 @@ public class PoiReportService {
 	@Autowired
 	private RepInstallLogDetailMapper repInstallLogDetailMapper;
 
+	@Autowired
+	private FileAttachmentProcess fileAttachmentProcess;
+	
 	/**
 	 * 日志
 	 */
@@ -147,14 +153,21 @@ public class PoiReportService {
 		if ( dataMap.get("reportDate")!=null ) 
 			reportDate = (Date)dataMap.get("reportDate");
 		String reportFile = this.genReportFile(reportFileType, reportInfo, dataMap, reportDate);
+		logger.info("生成文件成功!" + reportFile);
 
 		if (REPORT_TYPE_报表文件.equals(reportFileType)) {
-			UploadFile uploadFile = new UploadFile();
-			uploadFile.setFileName(reportFile);
-			uploadFile.setSrcName(reportFile);
-			uploadFile.setFileNo(IDGenerator.generate());
-			logger.info("生成文件成功!" + reportFile);
-
+			File localFile = new SafelyFile(reportFile);
+			String fileName = dataMap.get("prodId") 
+					+ GlobalConstant.UNDER_LINE +reportInfo.getReportName() 
+					+ GlobalConstant.UNDER_LINE 
+					+ DateUtil.getNewSysDate()
+					+ FILE_TYPE_DOCX;
+			UploadFile uploadFile = new UploadFile(fileName, IDGenerator.generate(), localFile);
+			logger.info("UploadFile fileName= "  + reportFile);
+			
+	        if(null != fileAttachmentProcess) {
+	            fileAttachmentProcess.upload(uploadFile);
+	        }
 			// 创建工作流
 			boolean flag = insertRepReveal(params, uploadFile.getFileNo(), uploadFile.getSrcName(),
 					reportInfo.getReportName(), reportInfo.getReportCategory());

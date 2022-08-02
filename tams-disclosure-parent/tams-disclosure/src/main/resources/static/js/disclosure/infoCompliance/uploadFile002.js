@@ -339,6 +339,9 @@ $(function ($) {
                                     removeFileFromServer(ff.fileNo, function() {
                                         deleteFile(index); // 删除对应的文件
                                         $(tr).remove();
+                                        $("#fileUploader tbody tr").each(function (index,item){
+                                            $(item).children(":first").html(index+1);
+                                        });
                                     });
                                 }
                                 else {

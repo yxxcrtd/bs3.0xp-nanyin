@@ -39,7 +39,7 @@
             ,{field:'infoStatusText', width:200, title: '当前状态', sortable:false}
         	,{field:'infoDevStatusText', width:200, title: '开发状态', sortable:false}
         	,{field:'updateTimeText', width:200, title: '更新时间',sortable:false}
-        	,{field:'operation', width:200, title: '操作',type:'action',buttons:['delt']}
+        	//,{field:'operation', width:200, title: '操作',type:'action',buttons:['delt']}
         ],
         checkbox:true,
         progressBar: true
@@ -101,6 +101,8 @@
             exportExcel();
         });
         table.load();
+
+        $('.form-button-area').find('.btn-select-wrapper').attr('style','display:none');
 
     });
 }());
