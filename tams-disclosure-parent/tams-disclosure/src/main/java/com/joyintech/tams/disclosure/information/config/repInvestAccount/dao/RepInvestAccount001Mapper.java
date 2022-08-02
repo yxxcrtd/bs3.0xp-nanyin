@@ -28,4 +28,6 @@ public interface RepInvestAccount001Mapper {
     RepInvestAccountDto selectByProdID(RepInvestAccountDto record);
 
     String getProdId(@Param("prodId") String prodId);
+
+    RepInvestAccountDto checkExistData(RepInvestAccountDto record);
 }
