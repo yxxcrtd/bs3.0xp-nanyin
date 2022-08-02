@@ -143,7 +143,7 @@
             AGREEMENT_VDATE = #{agreementVdate,jdbcType=DATE},
             AGREEMENT_MDATE = #{agreementMdate,jdbcType=DATE},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+            UPDATE_TIME = #{createTime,jdbcType=TIMESTAMP}
         where SEQUENCE_NO = #{sequenceNo,jdbcType=VARCHAR}
     </update>
 </mapper>

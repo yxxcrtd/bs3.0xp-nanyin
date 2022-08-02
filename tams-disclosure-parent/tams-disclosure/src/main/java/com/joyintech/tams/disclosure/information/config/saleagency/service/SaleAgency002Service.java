@@ -163,7 +163,7 @@ public class SaleAgency002Service extends CommonExportService<SaleAgencyDto>
             disSaleAgency.setCreateUser(CommonUtil.getUserName());
             disSaleAgency.setCreateDept(CommonUtil.getDeptCode());
             disSaleAgency.setUpdateUser(CommonUtil.getUserName());
-            saleAgency001Mapper.insert(disSaleAgency);
+            saleAgency001Mapper.insertEX(disSaleAgency);
             //产品代销机构关联dto
             List<DisProdAgency> disProdAgencyList=new ArrayList<>();
             if(dto.getNodes()!=null &&dto.getNodes().size()>0){

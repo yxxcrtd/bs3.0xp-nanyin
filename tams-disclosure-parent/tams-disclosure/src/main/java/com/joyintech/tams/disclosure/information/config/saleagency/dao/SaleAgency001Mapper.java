@@ -14,6 +14,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.TreeNode;
 import com.joyintech.tams.common.base.dao.DisProdPartnerMapper;
 import com.joyintech.tams.common.base.dao.DisSaleAgencyMapper;
+import com.joyintech.tams.common.base.entity.DisSaleAgency;
 import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.disclosure.information.config.prodpartner.dto.ProdPartnerDto;
 import com.joyintech.tams.disclosure.information.config.saleagency.dto.ProdSaleAgencyDto;
@@ -78,4 +79,6 @@ public interface SaleAgency001Mapper extends DisSaleAgencyMapper {
      * @return
      */
     List<SelectOptionDto> queryProdSeries(Map<String, Object> map);
+
+    int insertEX(DisSaleAgency disSaleAgency);
 }
