@@ -32,6 +32,7 @@ import com.joyintech.tams.disclosure.information.reveal.detailshow.dto.RepDetail
 import com.joyintech.tams.disclosure.information.reveal.detailshow.service.RepDetailsShow001Service;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.service.WebOfficeObject;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.service.iMsgServer2015;
+import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManageParamDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -47,11 +50,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
+import javax.validation.Valid;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 /**
  * 模板示例<br>
  * 账套管理
@@ -353,7 +355,9 @@ public class RepDetailsShow001Contoller extends BaseController {
         	boolean flag = false;
         	boolean confirmFlag = true;
         	RepReveal repReveal = new RepReveal();
-        	String prodId = params.get("pprodid").toString();
+			String prodId = "";
+			if (params.get("pprodid")!=null )
+				prodId = params.get("pprodid").toString();
         	if(params.get("repid") != null) {
         		repReveal.setRepId(params.get("repid").toString());
         	}
@@ -485,6 +489,18 @@ public class RepDetailsShow001Contoller extends BaseController {
 		Map<String, Object> param=RequestUtil.getPageParam();
 		Page<SelectOptionDto> elementNameList = getPrdInfoSelectService.getElementNameList(param);
 		return elementNameList;
+	}
+
+	@ResponseBody
+	@RequestMapping("check")
+	public AjaxResult check(@RequestBody Map<String, Object> param) {
+		AjaxResult webResult = new AjaxResult();
+
+//		ValidMessage message = new ValidMessage();
+//		message.setMessage("存在流程中的数据");
+//		webResult.setErrorList(Arrays.asList(message));
+
+		return webResult;
 	}
 
 }

@@ -555,4 +555,8 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
         dto.setSelectedItem(repProdIndexDtoList);
         return dto;
     }
+
+    public RepProdIndexDto checkExistData(RepProdIndexDto dto) {
+        return repProdIndexSMapper.checkExistData(dto);
+    }
 }

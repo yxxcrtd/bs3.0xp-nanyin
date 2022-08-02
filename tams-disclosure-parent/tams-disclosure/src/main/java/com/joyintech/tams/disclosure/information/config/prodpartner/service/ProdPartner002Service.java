@@ -71,7 +71,7 @@ public class ProdPartner002Service extends CommonExportService<ProdPartnerDto>
             dto.setDataStatus(DictCodeListExt3.信披_数据状态_有效E.getValue());
             //数据来源
             dto.setDataSource(DictCodeListExt3.信披_数据来源_系统新建.getValue());
-            prodPartner002Mapper.insert(dto);
+            prodPartner002Mapper.insertProdPartner(dto);
         }
         else {
             //更新

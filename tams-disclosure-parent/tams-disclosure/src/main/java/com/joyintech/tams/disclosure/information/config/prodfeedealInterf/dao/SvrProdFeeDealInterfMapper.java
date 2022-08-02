@@ -2,6 +2,7 @@ package com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dao;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
+import com.joyintech.tams.disclosure.information.config.repFloatFee.dto.RepFloatFeeDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -34,4 +35,6 @@ public interface SvrProdFeeDealInterfMapper {
     String getFeeTYPE(@Param("feetype") String feetype);
 
     String getProdId(@Param("prodId") String prodId);
+
+    SvrProdFeeDealInterfDto checkExistData(SvrProdFeeDealInterfDto record);
 }

@@ -240,6 +240,7 @@
         from REP_PROD_INDEX T1
         where T1.PROD_ID = #{prodId,jdbcType=VARCHAR}
         and T1.VALUE_DATE = #{valueDate,jdbcType=DATE}
+        and T1.STATUS != 'D'
     </select>
 
     <select id="selectPProdInfo" resultType="com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto" >
@@ -254,6 +255,7 @@
         and T1.UNIT_VALUE_T = #{pUnitValueT,jdbcType=DECIMAL}
         and T1.W_YIELD = #{pWYield,jdbcType=DECIMAL}
         and T1.YIELD_7 = #{pYield7,jdbcType=DECIMAL}
+        and T1.STATUS != 'D'
     </select>
 
     <select id="selectPProd" resultType="com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto" >
@@ -261,6 +263,7 @@
         from REP_PROD_INDEX T1
         where T1.PROD_ID = #{pProdId,jdbcType=VARCHAR}
         and T1.VALUE_DATE = #{valueDate,jdbcType=DATE}
+        and T1.STATUS != 'D'
     </select>
     <select id="selectData" resultType="com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto" >
         select
@@ -300,5 +303,13 @@
     </select>
     <select id="selectProdId" resultType="java.lang.String">
         SELECT PROD_ID FROM REP_PROD_INFO WHERE PROD_ID = #{prodId}
+    </select>
+
+    <select id="checkExistData" resultType="com.joyintech.tams.disclosure.information.config.repProdIndex.dto.RepProdIndexDto" >
+        select distinct T.*
+        from REP_PROD_INDEX T
+        where T.PROD_ID = #{prodId,jdbcType=VARCHAR}
+          and T.VALUE_DATE = #{valueDate,jdbcType=DATE}
+          and T.STATUS = 'D'
     </select>
 </mapper>

@@ -22,12 +22,28 @@ var RepInvestAccount002 = function() {
             param.prodId = $("#prodId").val();
             Joyin.ajaxJson(basePath + 'disclosure/information/config/repInvestAccount/RepInvestAccount002/check',param,function(result){
                 if(result){
-                    if(operateType === 'save') {
-                        WorkFlow.doSaveList(basePath + 'disclosure/information/config/repInvestAccount/RepInvestAccount002/save', param, "RepInvestAccount002_btn_save");
-                    }
-                    else {
-                        WorkFlow.doSubmitList(basePath + 'disclosure/information/config/repInvestAccount/RepInvestAccount002/save', param, "RepInvestAccount002_btn_submit");
-                    }
+                    Joyin.ajaxJson(basePath + 'disclosure/information/config/repInvestAccount/RepInvestAccount002/checkExistData', param, function(checkResult) {
+
+                        if(checkResult){
+                            Joyin.confirm("有已删除的数据，是否覆盖", function () {
+                                if(operateType === 'save') {
+                                    WorkFlow.doSaveList(basePath + 'disclosure/information/config/repInvestAccount/RepInvestAccount002/save', param, "RepInvestAccount002_btn_save");
+                                }
+                                else {
+                                    WorkFlow.doSubmitList(basePath + 'disclosure/information/config/repInvestAccount/RepInvestAccount002/save', param, "RepInvestAccount002_btn_submit");
+                                }
+                            },{}, function () {
+                            });
+                        }else{
+                            if(operateType === 'save') {
+                                WorkFlow.doSaveList(basePath + 'disclosure/information/config/repInvestAccount/RepInvestAccount002/save', param, "RepInvestAccount002_btn_save");
+                            }
+                            else {
+                                WorkFlow.doSubmitList(basePath + 'disclosure/information/config/repInvestAccount/RepInvestAccount002/save', param, "RepInvestAccount002_btn_submit");
+                            }
+                        }
+                    })
+
                 }
             })
         },

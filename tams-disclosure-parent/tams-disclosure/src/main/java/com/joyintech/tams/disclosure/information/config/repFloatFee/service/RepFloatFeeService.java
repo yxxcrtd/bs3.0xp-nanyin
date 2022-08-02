@@ -11,6 +11,7 @@ import com.joyintech.framework.util.*;
 import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
 import com.joyintech.tams.disclosure.information.config.repFloatFee.dao.RepFloatFee001Mapper;
 import com.joyintech.tams.disclosure.information.config.repFloatFee.dto.RepFloatFeeDto;
+import com.joyintech.tams.disclosure.information.config.repInvestAccount.dto.RepInvestAccountDto;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -343,5 +344,9 @@ public class RepFloatFeeService extends CommonExportService<RepFloatFeeDto> impl
         }
         ajaxResult.setStatuCode(HttpStatus.OK.value());
         return ajaxResult;
+    }
+
+    public RepFloatFeeDto checkExistData(RepFloatFeeDto dto) {
+        return repFloatFee001Mapper.checkExistData(dto);
     }
 }

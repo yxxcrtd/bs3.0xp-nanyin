@@ -14,6 +14,7 @@ import com.joyintech.tams.constant.DictCodeExt1;
 import com.joyintech.tams.constant.DictCodeListExt4;
 import com.joyintech.tams.disclosure.information.config.repFloatFee.dto.RepFloatFeeDto;
 import com.joyintech.tams.disclosure.information.config.repFloatFee.service.RepFloatFeeService;
+import com.joyintech.tams.disclosure.information.config.repInvestAccount.dto.RepInvestAccountDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
@@ -122,5 +123,16 @@ public class RepFloatFee002Controller extends BaseController {
     @RequestMapping("/selectProdName")
     public  Map<String, String> selectProdName(String prodId){
         return repFloatFeeService.selectProdName(prodId);
+    }
+
+    @ResponseBody
+    @RequestMapping("checkExistData")
+    public Boolean checkExistData(@RequestBody RepFloatFeeDto dto){
+        RepFloatFeeDto repFloatFeeDto = repFloatFeeService.checkExistData(dto);
+        if(repFloatFeeDto == null){
+            return false;
+        }else{
+            return true;
+        }
     }
 }

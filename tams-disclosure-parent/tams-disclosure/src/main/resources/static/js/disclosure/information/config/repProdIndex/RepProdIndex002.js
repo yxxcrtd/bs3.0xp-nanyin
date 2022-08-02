@@ -35,15 +35,33 @@ var RepProdIndex002 = function() {
             param.prodType = $("#prodType").val();
             Joyin.ajaxJson(basePath + 'disclosure/information/config/repProdIndex/RepProdIndex002/check',param,function(result){
                 if(result){
-                    if($('#isGrade').val() == "01" && pageModel === PAGE_MODEL_EDIT){
-                        Joyin.alert('修改后的母产品信息会同步至母产品下其它子产品数据中！');
-                    }
-                    if(operateType === 'save') {
-                        WorkFlow.doSaveList(basePath + 'disclosure/information/config/repProdIndex/RepProdIndex002/save', param, "RepProdIndex002_btn_save");
-                    }
-                    else {
-                        WorkFlow.doSubmitList(basePath + 'disclosure/information/config/repProdIndex/RepProdIndex002/save', param, "RepProdIndex002_btn_submit");
-                    }
+                    Joyin.ajaxJson(basePath + 'disclosure/information/config/repProdIndex/RepProdIndex002/checkExistData', param, function(checkResult) {
+                        if(checkResult){
+                            Joyin.confirm("有已删除的数据，是否覆盖", function () {
+                                if($('#isGrade').val() == "01" && pageModel === PAGE_MODEL_EDIT){
+                                    Joyin.alert('修改后的母产品信息会同步至母产品下其它子产品数据中！');
+                                }
+                                if(operateType === 'save') {
+                                    WorkFlow.doSaveList(basePath + 'disclosure/information/config/repProdIndex/RepProdIndex002/save', param, "RepProdIndex002_btn_save");
+                                }
+                                else {
+                                    WorkFlow.doSubmitList(basePath + 'disclosure/information/config/repProdIndex/RepProdIndex002/save', param, "RepProdIndex002_btn_submit");
+                                }
+                            },{}, function () {
+                            });
+                        }else{
+                            if($('#isGrade').val() == "01" && pageModel === PAGE_MODEL_EDIT){
+                                Joyin.alert('修改后的母产品信息会同步至母产品下其它子产品数据中！');
+                            }
+                            if(operateType === 'save') {
+                                WorkFlow.doSaveList(basePath + 'disclosure/information/config/repProdIndex/RepProdIndex002/save', param, "RepProdIndex002_btn_save");
+                            }
+                            else {
+                                WorkFlow.doSubmitList(basePath + 'disclosure/information/config/repProdIndex/RepProdIndex002/save', param, "RepProdIndex002_btn_submit");
+                            }
+                        }
+                    })
+
                 }
             })
         },
