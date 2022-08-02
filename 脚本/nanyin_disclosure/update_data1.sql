@@ -504,7 +504,7 @@ VALUES ('DIS_PROFIT_TYPE', '02', 'DIS_PROD_TYPE', '04', 'system', null, sysdate,
 
 commit ;
 
-<!--  add  信息披露->非标债权类资产明细维护  by  marui start -->
+--  add  信息披露->非标债权类资产明细维护  by  marui start
 -- 菜单配置
 delete from SYS_MENU where PAGE_ID = 'UnClaimAssetDetail001';
 insert into SYS_MENU  (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
