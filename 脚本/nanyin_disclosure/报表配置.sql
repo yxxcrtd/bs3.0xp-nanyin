@@ -293,10 +293,8 @@ insert into REP_JOB_RANGE values ('D0000000000000000020','CP_001_002_006','02','
 insert into REP_JOB_RANGE values ('D0000000000000000021','CP_001_002_006','02','REP_PROD_TYPE','!=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000022','CP_001_002_007','02','RAISE_TYPE','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000023','CP_001_002_007','02','IS_PERIOD','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
-insert into REP_JOB_RANGE values ('D0000000000000000024','CP_001_002_007','02','REP_PROD_TYPE','!=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000025','CP_001_002_008','02','RAISE_TYPE','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000026','CP_001_002_008','02','IS_PERIOD','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
-insert into REP_JOB_RANGE values ('D0000000000000000027','CP_001_002_008','02','REP_PROD_TYPE','!=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000028','CP_001_002_009','02','RAISE_TYPE','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000029','CP_001_002_009','02','ISSUING_WAY','=','02','02','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
 insert into REP_JOB_RANGE values ('D0000000000000000030','CP_001_002_009','02','PROD_TYPE','=','02','01','system','',to_date('2022/7/20','yyyy/MM/dd'),'system',to_date('2022/7/20','yyyy/MM/dd'));
@@ -620,3 +618,14 @@ insert into REP_CHECK_RELATION values ('1005','CP_001_002_017','1003','04','E','
 insert into REP_CHECK_RELATION values ('1006','CP_001_002_018','1004','04','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd'));
 insert into REP_CHECK_RELATION values ('1007','CP_001_002_019','1003','04','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd'));
 insert into REP_CHECK_RELATION values ('1008','CP_001_002_020','1004','04','E','system','',to_date('2022/07/26','yyyy/MM/dd'),'system',to_date('2022/07/26','yyyy/MM/dd'));
+
+
+-- 披露地址表
+delete from REP_FTP_PATH;
+insert into REP_FTP_PATH values ('01','发行公告','sftpuser','sftpuser','/home/weblogic/xp_file/pl/02','22','192.168.70.237','system','',to_date('2019/05/24','yyyy/mm/dd'),'system',to_date('2019/05/24', 'yyyy/mm/dd'),'sftpRevealZZInterf','');
+insert into REP_FTP_PATH values ('02','运行公告','sftpuser','sftpuser','/home/weblogic/xp_file/pl/04','22','192.168.70.237','system','',to_date('2019/05/24','yyyy/mm/dd'),'system',to_date('2019/05/24', 'yyyy/mm/dd'),'sftpRevealZZInterf','');
+insert into REP_FTP_PATH values ('03','到期公告','sftpuser','sftpuser','/home/weblogic/xp_file/pl/07','22','192.168.70.237','system','',to_date('2019/05/24','yyyy/mm/dd'),'system',to_date('2019/05/24', 'yyyy/mm/dd'),'sftpRevealZZInterf','');
+insert into REP_FTP_PATH values ('04','临时公告','sftpuser','sftpuser','/home/weblogic/xp_file/pl/08','22','192.168.70.237','system','',to_date('2019/05/24','yyyy/mm/dd'),'system',to_date('2019/05/24', 'yyyy/mm/dd'),'sftpRevealZZInterf','');
+insert into REP_FTP_PATH values ('05','销售公告','sftpuser','sftpuser','/home/weblogic/xp_file/pl/06','22','192.168.70.237','system','',to_date('2019/05/24','yyyy/mm/dd'),'system',to_date('2019/05/24', 'yyyy/mm/dd'),'sftpRevealZZInterf','');
+insert into REP_FTP_PATH values ('06','托管公告','sftpuser','sftpuser','/home/weblogic/xp_file/pl/03','22','192.168.70.237','system','',to_date('2019/05/24','yyyy/mm/dd'),'system',to_date('2019/05/24', 'yyyy/mm/dd'),'sftpRevealZZInterf','');
+insert into REP_FTP_PATH values ('07','其他报告 ','sftpuser','sftpuser','/home/weblogic/xp_file/pl/09','22','192.168.70.237','system','',to_date('2019/05/24','yyyy/mm/dd'),'system',to_date('2019/05/24', 'yyyy/mm/dd'),'sftpRevealZZInterf','');
