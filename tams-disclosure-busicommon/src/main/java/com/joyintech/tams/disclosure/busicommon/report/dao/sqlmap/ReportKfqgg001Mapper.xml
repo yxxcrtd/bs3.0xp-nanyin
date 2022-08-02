@@ -30,7 +30,8 @@
 			DPP.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID)
 			AND INFO.STATUS = 'E'
 			AND INFO.PROD_ID = #{prodId,jdbcType=VARCHAR}
-		AND OPERATION_START_DATE &lt;= TO_DATE(#{endDate},'yyyy-MM-dd') AND OPERATION_START_DATE &gt;= TO_DATE(#{startDate},'yyyy-MM-dd')
+		AND DPP.OPERATION_START_DATE &lt;= TO_DATE(#{endDate},'yyyy-MM-dd') AND DPP.OPERATION_START_DATE &gt;= TO_DATE(#{startDate},'yyyy-MM-dd')
+		ORDER BY DPP.OPERATION_START_DATE
 	</select>
 
 </mapper>
