@@ -116,7 +116,7 @@ public class RepEdit001Contoller extends BaseController {
         
         ReportInfo reportInfo = reportInfoMapper.getReportInfoByID(reportId);
         //reportDate = DateUtil.parse("2023-03-01");
-        editFilename = poiReportService.buildReportFileName(PoiReportService.REPORT_TYPE_临时文件,reportInfo, reportDate, portnum,PoiReportService.FILE_TYPE_DOCX);
+        editFilename = poiReportService.buildReportFileName(PoiReportService.REPORT_TYPE_报表文件,reportInfo, reportDate, portnum,PoiReportService.FILE_TYPE_DOCX);
     	saveFilename = poiReportService.buildReportFileName(PoiReportService.REPORT_TYPE_报表文件,reportInfo, reportDate, portnum,PoiReportService.FILE_TYPE_DOCX);
         return super.init(model);
     }

@@ -323,7 +323,7 @@ $(function () {
 //			params = new Array();
 			//params['data'] = JSON.stringify(getSearchParams());
 			//报表数据结构
-			alert("单表导出");
+			//alert("单表导出");
 	        var report_info = {
 	            uri:modelId,
 	            folderUri:modelUri,
@@ -339,7 +339,7 @@ $(function () {
 	            params['repname'] = repName;
 	            params['prodname'] = proName;
 	            //params['portnum'] = 'LEO-001';
-	            alert(params);
+	            //alert(params);
 //	        Joyin.ajax('downFileAndExport',
 //	                		params,
 //	            			function(data) {
@@ -350,7 +350,7 @@ $(function () {
 	       	Joyin.exportExcel(basePath + '/disclosure/information/reveal/detailshow/RepDetailsShow001/mergeExport', params);
 //          Joyin.exportExcel(basePath + 'disclosure/information/config/reportmodelmanage/ReportModelManage001/mergeExport', obj);
         }else if(modelListId){
-            alert("多表导出")
+            //alert("多表导出")
         	params = getSearchParams();
         	if("flag" == params){
         		return;
