@@ -424,7 +424,7 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
         }
 
         int maxCount = CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT")==null?50000:Integer.parseInt(CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT"));
-        if (objects.size() - 1 > 2) {
+        if (objects.size() - 1 > maxCount) {
             resultMap.put("confirmMsg3", "导入数据超过"+maxCount+"条，可能导致系统较慢，是否确认导入？");
         }
         AjaxResult wr = new AjaxResult();
