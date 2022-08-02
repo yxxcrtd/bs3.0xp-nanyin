@@ -71,6 +71,29 @@
 		</if>
 	</select>
 
+
+	<!-- 获取所有的正常状态的产品信息，包含母产品和子产品，支持根据产品代码和产品名称 进行模糊查询-->
+	<select id="getAllPrdInfoSelect2" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select distinct
+		PROD_ID text,
+		PROD_NAME id
+		from
+		REP_PROD_INFO
+		where STATUS='E'
+		<if test="search != null and search != ''">
+			and (PROD_ID like '%' || #{search, jdbcType=VARCHAR} || '%'
+			or PROD_NAME like '%' || #{search, jdbcType=VARCHAR} || '%')
+		</if>
+		<!-- 只取母产品 -->
+		<if test="sonFlag != null and sonFlag != '' and sonFlag == '1'.toString() ">
+			and p_prod_id is null
+		</if>
+		<!-- 只取子产品 -->
+		<if test="sonFlag != null and sonFlag != '' and sonFlag == '2'.toString() ">
+			and p_prod_id is not null
+		</if>
+	</select>
+
 	<select id="getPProdIdList" resultType="com.joyintech.framework.select.SelectOptionDto">
 		select
 		distinct RPI.PROD_ID id,
