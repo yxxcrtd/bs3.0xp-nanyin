@@ -155,12 +155,10 @@ public class JasparConnectUtilService {
 	public UploadFile connectJasparAndDownload(String strUrl, String fileName,
 			String fileType, String repId, String prodId,Map<String,Object> params) {
 		if(null!=params.get("enddate")){
-    		Date endDate = DateUtil.parse(params.get("enddate").toString());
-    		params.put("enddate", new java.sql.Date(endDate.getTime()));
+    		params.put("enddate", params.get("enddate").toString());
     	}
     	if(null!=params.get("startdate")){
-    		Date endDate = DateUtil.parse(params.get("startdate").toString());
-    		params.put("startdate", new java.sql.Date(endDate.getTime()));
+    		params.put("startdate", params.get("startdate").toString());
     	}
 		// 通过REP_ID获取TEMPLATE_ID
 //		RepInfo repInfo = repInfoMapper.selectByPrimaryKey(repId);
