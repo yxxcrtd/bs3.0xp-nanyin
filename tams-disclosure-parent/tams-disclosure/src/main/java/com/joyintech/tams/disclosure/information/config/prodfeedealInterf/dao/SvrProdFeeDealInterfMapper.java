@@ -12,6 +12,8 @@ import java.util.Map;
 public interface SvrProdFeeDealInterfMapper {
     List<SelectOptionDto> getProdInsId(Map<String, Object> paramMap);
 
+    List<SelectOptionDto> getProdInsId2(Map<String, Object> paramMap);
+
     int insertPrdFeeDeal(SvrProdFeeDealInterfDto record);
 
     int update(SvrProdFeeDealInterfDto record);

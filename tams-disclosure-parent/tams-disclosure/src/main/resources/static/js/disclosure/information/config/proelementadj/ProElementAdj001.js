@@ -175,6 +175,23 @@
         });
     });
 
+
+    var error1= function(message, callback) {
+        var index = layer.alert(message, {
+            icon: 2,
+            closeBtn: 0,
+            area: ["500px", "200px"],
+            maxHeight: 230
+            // 按钮
+        }, function () {
+            assertClick();
+            layer.close(index);
+            if (callback && typeof callback === "function") {
+                callback();
+            }
+        });
+        return index;
+    }
     /**
      * 导出选中的表格数据
      */
@@ -212,6 +229,11 @@
             if (!selArr || selArr.length == 0) {
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
                 return;
+            }
+            for(var i=0;i<selArr.length;i++){
+                if(selArr[i].dataStatus =="02"){
+                    return Joyin.error("只能删除有效数据，请重新选择");
+                }
             }
             var object = {selectedItem: selArr, operateType: "delete"};
             Joyin.ajaxJson(basePath + 'disclosure/information/config/proelementadj/ProElementAdj001/check', object, function (result) {

@@ -4,6 +4,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
@@ -111,7 +112,7 @@ public class RepProdIndex002Controller extends BaseController {
         params.setElementId(dto.getElementId());
         params.setBusinessCode(dto.getProdId());
         params.setBusinessType(DictCodeListExt4.共通业务类型_产品基础指标信息维护.getValue());
-        params.setComment(entity -> "主键流程id" + "(" + entity.getProdId() + ")");
+        params.setComment(entity -> "子产品代码" + "(" + entity.getProdId() + ")");
         // 塞入工作流参数
         processParameter.setWorkFlowParameter(params);
 

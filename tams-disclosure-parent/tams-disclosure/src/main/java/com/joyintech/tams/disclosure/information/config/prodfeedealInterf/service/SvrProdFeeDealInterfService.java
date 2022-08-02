@@ -8,10 +8,7 @@ import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
 import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dao.SvrProdFeeDealInterfMapper;
 import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
@@ -53,8 +50,16 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
      * @see
      * @since 1.0
      */
-    public List<SelectOptionDto> queryProdIdInfo(Map<String, Object> map) {
-        return svrProdFeeDealInterfMapper.getProdInsId(map);
+    public Page<SelectOptionDto> queryProdIdInfo(Map<String, Object> map) {
+//        return svrProdFeeDealInterfMapper.getProdInsId(map);
+        Map<String, Object> pageParam = RequestUtil.getPageParam();
+        Page<SelectOptionDto> result = queryForPageForSelectReturn(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")), ()
+                -> svrProdFeeDealInterfMapper.getProdInsId(map));
+        return result;
+    }
+
+    public List<SelectOptionDto> queryProdIdInfo2(Map<String, Object> map) {
+        return svrProdFeeDealInterfMapper.getProdInsId2(map);
     }
 
     /**
@@ -159,13 +164,6 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
      */
     public AjaxResult checkImportData(String fileName) {
         List<List<String>> objects = ExcelUtil.getTempList(fileName);
-        if (objects.size() - 1 > 50000) {
-            Map<String, Object> resultMap = new HashMap<>();
-            resultMap.put("errorMsg", "单次最多导入50000条。");
-            AjaxResult wr = new AjaxResult();
-            wr.setData(resultMap);
-            return wr;
-        }
         String totalMsg = "";
         List<List<String>> jsonArrays = new ArrayList<>();
         // 重复数据
@@ -206,7 +204,7 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
                             rowData.get(1).trim().equals("管理费（超额）")||
                             rowData.get(1).trim().equals("销售费")) &&
                             (!StringUtil.isNotEmpty(rowData.get(3)))){
-                        errorMsg.append("当费用类型为“托管费”“管理费（固定）”“管理费（赎回）”“销售费”时费用金额不能为空!");
+                        errorMsg.append("当费用类型为“托管费”“管理费（固定）”“管理费（超额）”“销售费”时自成立以来发生额（贷方）不可为空!");
                     }
                     if (!StringUtil.isNotEmpty(rowData.get(4))){
                         errorMsg.append("支付日 必填！");
@@ -267,6 +265,26 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
             resultMap.put("confirmMsg", totalMsg);
         }
         resultMap.put("correctData", JsonUtils.object2Json(jsonArrays));
+        String tempList = (String) resultMap.get("correctData");
+        SvrProdFeeDealInterfDto dto = getValNetAssetQuotationInfoListData(tempList);
+        List<SvrProdFeeDealInterfDto> selectedItem = dto.getSelectedItem();
+        List<SvrProdFeeDealInterfDto>  existData = new ArrayList<>();
+        for (SvrProdFeeDealInterfDto temp:selectedItem) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("prodId",temp.getProdId());
+            map.put("feeType",temp.getFeeType());
+            map.put("payDate",temp.getPayDate());
+            if (StringUtil.isNotEmpty(this.selectData(map))){
+                existData.add(temp);
+            }
+        }
+        if(existData.size() > 0){
+            resultMap.put("confirmMsg2", "有重复信息，是否覆盖？");
+        }
+        int maxCount = CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT")==null?50000:Integer.parseInt(CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT"));
+        if (objects.size() - 1 > maxCount) {
+            resultMap.put("confirmMsg3", "导入数据超过"+maxCount+"条，可能导致系统较慢，是否确认导入？");
+        }
         AjaxResult wr = new AjaxResult();
         wr.setData(resultMap);
         return wr;
@@ -324,6 +342,7 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
         for (SvrProdFeeDealInterfDto existDataDto : existData) {
             this.doComplete(existDataDto,OperationType.MODIFY);
         }
+
         //插入操作
         for (SvrProdFeeDealInterfDto newDataDto : newData) {
             this.doComplete(newDataDto,OperationType.NEW);

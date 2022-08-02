@@ -13,6 +13,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
@@ -44,10 +45,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 合作机构信息维护
@@ -73,6 +71,9 @@ public class ProdPartner001Controller extends BaseController{
 
     @Autowired
     private ProdPartner002Service prodPartner002Service;
+
+    @Autowired
+    private CommonExportService commonExportService;
     /**
      * 
      * {@inheritDoc}
@@ -81,7 +82,7 @@ public class ProdPartner001Controller extends BaseController{
     @Override
     @RequestMapping(PAGE_INIT)
     public String init(Model model){
-        this.setSelectOptionToModel(model, DictCode.信披_数据状态 );
+        this.setSelectOptionToModel(model, DictCode.信披_数据状态ED );
         return super.init(model);
     }
 
@@ -128,26 +129,22 @@ public class ProdPartner001Controller extends BaseController{
     public ResponseEntity<byte[]> export() {
         Map<String, Object> param = RequestUtil.getParameters(getRequest());
         Date sysDate = DateUtil.platDateFromCache()==null?new Date():DateUtil.platDateFromCache();//平台日期
+        List<ProdPartnerDto> prodPartner001DtoList=new ArrayList<>();
         if(param.containsKey("keyList")){
-            //导出选中行
             String keyList = param.get("keyList").toString();
             try {
-                List<ProdPartnerDto> prodPartner001DtoList = JsonUtils.json2List(keyList,ProdPartnerDto.class);
-                param.put("investList", prodPartner001DtoList);
+                prodPartner001DtoList=JsonUtils.json2List(keyList,ProdPartnerDto.class);
             } catch (IOException e) {
                 logger.error(e.getMessage(),e);
             }
-            List<ProdPartnerDto> dtoList = prodPartner001Service.selectForExport(param);
-            File outFile = prodPartner001Service.makeFile(
-                    "/com/joyintech/tams/disclosure/information/config/prodpartner/conf/export_conf.xml", dtoList);
-            return ExportUtil.export(
-                    DictCodeListExt3.共通业务类型_合作机构信息维护.getCodeName() + GlobalConstant.UNDER_LINE
-                            + DateUtil.format(sysDate,"yyyyMMdd") +"."+ FileNameUtil.getFileExtName(outFile),
-                    outFile, true);
         }else{
-            //todo:框架中导出的excel文件与需求中的不符
-            return prodPartner001Service.export(this.getPageId(),param);
+            prodPartner001DtoList = prodPartner001Service.findAll(RequestUtil.getParameters(getRequest()));
         }
+        File outFile = commonExportService.makeFile(
+                "/com/joyintech/tams/disclosure/information/config/prodpartner/conf/export_conf.xml", prodPartner001DtoList);
+        String exportFileName=DictCodeListExt3.共通业务类型_合作机构信息维护.getCodeName() + GlobalConstant.UNDER_LINE
+                + DateUtil.format(sysDate,"yyyyMMdd") +"."+ FileNameUtil.getFileExtName(outFile);
+        return ExportUtil.export(exportFileName, outFile, true);
     }
 
     /**

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.information.config.saleagency.dao.SaleAgency002Mapper">
+	<insert id="insertBtachProdAgency" parameterType="java.util.List">
+		insert into DIS_PROD_AGENCY (AGENCY_ID,PROD_ID,
+		CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME, CREATE_DEPT)
+		select A.* from (
+		<foreach collection="list" item="item" index="index" separator="union all">
+			select
+			#{item.agencyId,jdbcType=VARCHAR} AGENCY_ID,
+			#{item.prodId,jdbcType=VARCHAR} PROD_ID,
+			#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+			#{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+			#{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+			#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT
+			from dual
+		</foreach>
+		)A
+	</insert>
+    <delete id="deleteByAgencyId">
+		delete from DIS_PROD_AGENCY
+		where AGENCY_ID=#{sequenceNo,jdbcType=VARCHAR}
+	</delete>
+
+    <select id="querySaleAgency"
+			resultType="com.joyintech.framework.select.SelectOptionDto">
+		select AGENCY_ID id,
+		AGENCY_NAME text
+		from DIS_SALE_AGENCY
+		<where>
+		<if test="search != null and search != ''">
+			and (AGENCY_ID like
+			concat(concat('%',#{search}),'%')
+			or AGENCY_NAME like concat(concat('%',#{search}),'%'))
+		</if>
+		</where>
+	</select>
+	<select id="select"
+			resultType="com.joyintech.tams.disclosure.information.config.saleagency.dto.ProdSaleAgencyDto">
+		select
+			AGENCY_ID agencyId,
+			AGENCY_NAME agencyName,
+			PROD_ID prodId,
+			PROD_NAME prodName,
+			PROD_SERIES prodSeries,
+			UPDATE_USER updateUser,
+			UPDATE_TIME updateTime,
+			TO_CHAR(UPDATE_TIME,'YYYY-MM-DD HH24:MI:SS') updateTimeStr
+		from DIS_PROD_AGENCY
+		<where>
+			<if test="agencyId != null and agencyId.size()>0">
+				AND	AGENCY_ID in
+				<foreach collection="agencyId" item="item" open="(" close=")"
+						 separator=",">
+					#{item}
+				</foreach>
+			</if>
+			<if test="prodSeries != null and prodSeries.size()>0">
+				AND	PROD_SERIES in
+				<foreach collection="prodSeries" item="item" open="(" close=")"
+						 separator=",">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</select>
+	<select id="selectForExport"
+			resultType="com.joyintech.tams.disclosure.information.config.prodpartner.dto.ProdPartnerDto">
+		select
+			dpp.PROD_ID prodId,
+			info.PROD_NAME prodName,
+			dpp.PARTNER_NAME partnerName,
+			dpp.EFF_DATE effDate,
+			dpp.EFF_END_DATE effEndDate,
+			dpp.DATA_STATUS dataStatus,
+			dpp.UPDATE_USER updateUser,
+			TO_CHAR(dpp.UPDATE_TIME,'YYYY-MM-DD HH24:MI:SS') updateTimeStr
+		from DIS_PROD_PARTNER dpp
+		left join REP_PROD_INFO info on dpp.PROD_ID=info.PROD_ID
+		<where>
+			<foreach collection="list" item="dto" open="dpp.PROD_PARTENER_ID in (" close=")" separator=",">
+				#{dto.prodPartenerId}
+			</foreach>
+		</where>
+	</select>
+
+	<select id="selectByProdId" resultType="java.lang.Integer">
+		select count(1) count
+		from REP_PROD_INFO
+		where P_PROD_ID is null
+		and PROD_ID=#{prodId,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectProdByAgencyId" resultType="com.joyintech.tams.disclosure.information.config.saleagency.dto.ProdSaleAgencyDto">
+		select
+		dpa.AGENCY_ID agencyId,
+		info.PROD_SERIES prodSeries,
+		dpa.PROD_ID prodId
+		from DIS_PROD_AGENCY dpa
+		left join rep_prod_info info on dpa.PROD_ID=info.PROD_ID
+		where dpa.AGENCY_ID=#{agencyId,jdbcType=VARCHAR}
+	</select>
+    <select id="selectSaleAgencyByName" resultType="java.lang.Integer">
+		select count(1) count
+		from DIS_SALE_AGENCY
+		where AGENCY_NAME=#{agencyName,jdbcType=VARCHAR}
+	</select>
+
+	<select id="queryProdIdInfo"
+			resultType="com.joyintech.framework.select.SelectOptionDto">
+		select PROD_ID id,
+		nvl(PROD_NAME,PROD_ABBR) text
+		from REP_PROD_INFO
+		where  (P_PROD_ID is null or PROD_ID=P_PROD_ID)
+		<if test="dataStatus != null and dataStatus != ''">
+			and STATUS=#{dataStatus,jdbcType=VARCHAR}
+		</if>
+		<if test="search != null and search != ''">
+			and (PROD_ID like
+			concat(concat('%',#{search}),'%')
+			or PROD_NAME like concat(concat('%',#{search}),'%'))
+		</if>
+	</select>
+	<select id="selectAllProdSeries" resultType="java.lang.String">
+		select
+		distinct PROD_SERIES
+		from REP_PROD_INFO
+		<where>
+			STATUS='E'
+			<if test="prodStatus != null and prodStatus != ''">
+				and PD_STATUS=#{prodStatus,jdbcType=VARCHAR}
+			</if>
+			<if test="issueType != null and issueType != ''">
+				and ISSUING_WAY=#{issueType,jdbcType=VARCHAR}
+			</if>
+		</where>
+		order by PROD_SERIES
+	</select>
+	<select id="selectAgencyByProdId"
+			resultType="com.joyintech.tams.disclosure.information.config.saleagency.dto.ProdSaleAgencyDto">
+		select
+		dpa.AGENCY_ID agencyId,
+		dsa.AGENCY_NAME agencyName
+		from
+		DIS_PROD_AGENCY dpa left join DIS_SALE_AGENCY dsa on dpa.AGENCY_ID=dsa.SEQUENCE_NO
+		where dpa.PROD_ID=#{prodId,jdbcType=VARCHAR}
+	</select>
+
+
+</mapper>

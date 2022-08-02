@@ -163,7 +163,7 @@ public class ReportModelManage001Controller extends BaseController {
 			throw new IllegalArgumentException("转换异常");
 		}
 		reportModelManage001Dto.setParam(param);
-		return reportModelManage001Service.mergeExportSingle(reportModelManage001Dto);
+		return reportModelManage001Service.exportReport(param);
 	}
 
 	@SuppressWarnings("finally")

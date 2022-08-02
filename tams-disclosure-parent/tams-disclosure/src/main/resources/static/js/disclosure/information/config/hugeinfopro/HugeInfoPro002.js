@@ -40,7 +40,15 @@ $(function() {
 	 * 页面初始化
 	 */
 	var init = function() {
-
+		$('#prodId').change(function () {
+			var prodId = $('#prodId').val();
+			var data = $('#prodId').select2("data")[0].object;
+			$('#prodRegistNo').textSelect('setValue',data);
+		});
+		if (pageModel == PAGE_MODEL_EDIT){
+			$('#prodRegistNo').prop("disabled",true);
+			$('#prodId').prop("disabled",true);
+		}
 	};
 	/**
 	 * 画面加载完成

@@ -7,9 +7,7 @@ import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.disclosure.information.config.repInvestAccount.dao.RepInvestAccount001Mapper;
 import com.joyintech.tams.disclosure.information.config.repInvestAccount.dto.RepInvestAccountDto;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
@@ -38,8 +36,15 @@ public class RepInvestAccountService extends CommonExportService<RepInvestAccoun
      * @see
      * @since 1.0
      */
-    public List<SelectOptionDto> queryProdIdInfo(Map<String, Object> map) {
-        return repInvestAccountMapper.getProdInsId(map);
+    public Page<SelectOptionDto> queryProdIdInfo(Map<String, Object> map) {
+//        return repInvestAccountMapper.getProdInsId(map);
+        Map<String, Object> pageParam = RequestUtil.getPageParam();
+        Page<SelectOptionDto> result = queryForPageForSelectReturn(Integer.parseInt((String) pageParam.get("page")), Integer.parseInt((String) pageParam.get("length")), ()
+                -> repInvestAccountMapper.getProdInsId(map));
+        return result;
+    }
+    public List<SelectOptionDto> queryProdIdInfo2(Map<String, Object> map) {
+        return repInvestAccountMapper.getProdInsId2(map);
     }
     /**
      * 投资账户信息查询 <功能详细描述>
@@ -129,13 +134,6 @@ public class RepInvestAccountService extends CommonExportService<RepInvestAccoun
      */
     public AjaxResult checkImportData(String fileName) {
         List<List<String>> objects = ExcelUtil.getTempList(fileName);
-        if (objects.size() - 1 > 50000) {
-            Map<String, Object> resultMap = new HashMap<>();
-            resultMap.put("errorMsg", "单次最多导入50000条。");
-            AjaxResult wr = new AjaxResult();
-            wr.setData(resultMap);
-            return wr;
-        }
         String totalMsg = "";
         List<List<String>> jsonArrays = new ArrayList<>();
         // 重复数据
@@ -166,6 +164,8 @@ public class RepInvestAccountService extends CommonExportService<RepInvestAccoun
                     }
                     if (!StringUtil.isNotEmpty(rowData.get(1))){
                         errorMsg.append("账号 必填！");
+                    }else if(rowData.get(1).length() > 20){
+                        errorMsg.append("账号不得超过20个字符！");
                     }
                     if (!StringUtil.isNotEmpty(rowData.get(2))){
                         errorMsg.append("账户名称 必填！");
@@ -211,6 +211,25 @@ public class RepInvestAccountService extends CommonExportService<RepInvestAccoun
             resultMap.put("confirmMsg", totalMsg);
         }
         resultMap.put("correctData", JsonUtils.object2Json(jsonArrays));
+
+        String tempList = (String) resultMap.get("correctData");
+        RepInvestAccountDto dto = getValNetAssetQuotationInfoListData(tempList);
+        List<RepInvestAccountDto> selectedItem = dto.getSelectedItem();
+        List<RepInvestAccountDto>  existData = new ArrayList<>();
+        for (RepInvestAccountDto temp:selectedItem) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("prodId",temp.getProdId());
+            if (StringUtil.isNotEmpty(this.selectData(map))){
+                existData.add(temp);
+            }
+        }
+        if(existData.size() > 0){
+            resultMap.put("confirmMsg2", "有重复信息，是否覆盖？");
+        }
+        int maxCount = CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT")==null?50000:Integer.parseInt(CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT"));
+        if (objects.size() - 1 > maxCount) {
+            resultMap.put("confirmMsg3", "导入数据超过"+maxCount+"条，可能导致系统较慢，是否确认导入？");
+        }
         AjaxResult wr = new AjaxResult();
         wr.setData(resultMap);
         return wr;
@@ -244,6 +263,7 @@ public class RepInvestAccountService extends CommonExportService<RepInvestAccoun
         for (RepInvestAccountDto existDataDto : existData) {
             this.doComplete(existDataDto,OperationType.MODIFY);
         }
+
         //插入操作
         for (RepInvestAccountDto newDataDto : newData) {
             this.doComplete(newDataDto,OperationType.NEW);

@@ -10,6 +10,7 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeExt1;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.service.ProdInfoService;
@@ -63,23 +64,13 @@ public class ProdInfo001Controller extends BaseController {
     }*/
     @Override
     public String init(Model model) {
-        this.setSelectOptionToModel(model, DictCode.人行客户类型_SVR);
-        this.setSelectOptionToModel(model, DictCode.报送产品发行状态);
+        this.setSelectOptionToModel(model, DictCodeExt1.信披_募集方式);
+        this.setSelectOptionToModel(model, DictCode.是或否);
+        this.setSelectOptionToModel(model, DictCodeExt1.信披_产品运作方式);
+        this.setSelectOptionToModel(model, DictCode.维护数据状态);
+
         return super.init(model);
     }
-
-    /**
-     * 交易日历下拉框查询
-     *
-     * @return 交易日历
-     * @see
-     * @since 1.0
-     */
-/*    @ResponseBody
-    @RequestMapping("queryCalendarInfoList")
-    public Page<SelectOptionDto> queryCalendarInfoList(){
-        return prodInfoService.queryCalendarInfoList(RequestUtil.getPageParam());
-    }*/
 
     /**
      * 检索页面列表

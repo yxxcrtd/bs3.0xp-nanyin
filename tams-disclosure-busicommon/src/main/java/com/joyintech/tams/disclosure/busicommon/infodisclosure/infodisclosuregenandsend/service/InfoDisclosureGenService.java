@@ -87,8 +87,7 @@ public class InfoDisclosureGenService {
     @Autowired
     private RepCheckInfoService repCheckInfoService;
 
-	public void genDetail(InfoDisclosureGenAndSendEntity infoDisclosureGenAndSendEntity, String serverUrl,
-			String serverUser, String serverPwd, Map<String, List<RepScreen>> equityInfo001Map) {
+	public void genDetail(InfoDisclosureGenAndSendEntity infoDisclosureGenAndSendEntity, Map<String, List<RepScreen>> equityInfo001Map,Date execDate) {
 		String exeStatus = DictCodeListExt2.执行结果_失败.getValue();
 		String execDetail = "";
 		// 将查询出的配置转换成披露dto及日志详情dto
@@ -120,27 +119,31 @@ public class InfoDisclosureGenService {
 							// Field field =
 							// ReflectionUtils.findField(infoDisclosureGenAndSendEntity.getClass(),
 							// repScreen.getScreenKey());
-							if (StringUtil.equals("portnum", repScreen.getScreenKey())) {
+							if (StringUtil.equals("prodid", repScreen.getScreenKey())) {
 								if (StringUtil.isEmpty(infoDisclosureGenAndSendEntity.getProdid())) {
 									execDetail = "报表参数不完整";
 								}
-								;
-							} else if (StringUtil.equals("startDate", repScreen.getScreenKey())) {
+							}
+							else if (StringUtil.equals("pprodid", repScreen.getScreenKey())) {
+								if (StringUtil.isEmpty(infoDisclosureGenAndSendEntity.getProdid())) {
+									execDetail = "报表参数不完整";
+								}
+							}
+							else if (StringUtil.equals("startDate", repScreen.getScreenKey())) {
 								if (infoDisclosureGenAndSendEntity.getStartDate() == null) {
 									execDetail = "报表参数不完整";
 								}
-								;
-							} else if (StringUtil.equals("endDate", repScreen.getScreenKey())) {
+							}
+							else if (StringUtil.equals("endDate", repScreen.getScreenKey())) {
 								if (infoDisclosureGenAndSendEntity.getEndDate() == null) {
 									execDetail = "报表参数不完整";
 								}
-								;
 							}
 						}
 						if (StringUtil.isEmpty(execDetail)) {
 							// 获取连接url
-							String url = getAllUrl(serverUrl, serverUser, serverPwd, infoDisclosureGenAndSendEntity,
-									true, screenList, repInstallLogDetail.getId());
+//							String url = getAllUrl(serverUrl, serverUser, serverPwd, infoDisclosureGenAndSendEntity,
+//									true, screenList, repInstallLogDetail.getId());
 							logger.info(
 									"=====生成报表开始======" + com.joyintech.framework.util.DateUtil.getCurrentDateTime());
 							//添加报表名称处理逻辑  leipeng
@@ -149,37 +152,10 @@ public class InfoDisclosureGenService {
 								infoDisclosureGenAndSendEntity.setProdid("");
 							}
 							
-							genFlag = gentFile(infoDisclosureGenAndSendEntity, url,screenList);
+							genFlag = gentFile(infoDisclosureGenAndSendEntity, null,screenList,execDate);
 							logger.info(
 									"=====生成报表结束======" + com.joyintech.framework.util.DateUtil.getCurrentDateTime());
 
-							// if(!genFlag){
-							// logger.info("文件生成失败.尝试生成不完整报表文件!");
-							// url = getAllUrl(serverUrl, serverUser, serverPwd,
-							// infoDisclosureGenAndSendEntity,false,screenList);
-							// logger.info("=====生成报表开始======"+com.joyintech.framework.util.DateUtil.getCurrentDateTime());
-							// genFlag =
-							// gentFile(infoDisclosureGenAndSendEntity, url);
-							// logger.info("=====生成报表结束======"+com.joyintech.framework.util.DateUtil.getCurrentDateTime());
-							// if(genFlag){
-							// logger.info("尝试生成不完整报表文件成功!确认及披露方式变为手动");
-							// repReveal.setIsConfirm(ReportDictCodeList.确认方式_手动.getValue());
-							// repReveal.setIsReveal(ReportDictCodeList.确认方式_手动.getValue());
-							// exeStatus =
-							// ReportDictCodeList.执行结果_报表不完整.getValue();
-							// }else{
-							// throw new Exception("报表生成失败!");
-							// }
-							// }
-							// else{
-							//
-							// }
-							// 只有生成生工才往披露表中插入数据
-							
-							
-							
-							
-							
 							if (genFlag) {
 								exeStatus = DictCodeListExt2.执行结果_成功.getValue();
 								repReveal.setId(IDGenerator.generate());
@@ -272,18 +248,17 @@ public class InfoDisclosureGenService {
 	 * @return
 	 * @throws MalformedURLException
 	 */
-	public Boolean gentFile(InfoDisclosureGenAndSendEntity infoDisclosureGenAndSendEntity, String url,List<RepScreen> screenList)
+	public Boolean gentFile(InfoDisclosureGenAndSendEntity infoDisclosureGenAndSendEntity, String url,List<RepScreen> screenList,Date execDate)
 			 {
 		boolean flag = false;
 		// 文件失败即为失败.不再提供不完整文件
 		UploadFile fileInfo;
 		try {
-			fileInfo = jasparConnectUtilService.connectJasparAndDownload(url,
-					infoDisclosureGenAndSendEntity.getProdid() + GlobalConstant.UNDER_LINE
-							+ infoDisclosureGenAndSendEntity.getRepName(),
+			String fileName=infoDisclosureGenAndSendEntity.getProdid() + GlobalConstant.UNDER_LINE + infoDisclosureGenAndSendEntity.getRepName()
+					+GlobalConstant.UNDER_LINE+DateUtil.getNewSysDate();
+			fileInfo = jasparConnectUtilService.connectJasparAndDownload(url,fileName,
 					infoDisclosureGenAndSendEntity.getFileType(), infoDisclosureGenAndSendEntity.getTemplateId(),
-					infoDisclosureGenAndSendEntity.getProdid()
-					,getParams(infoDisclosureGenAndSendEntity,screenList));
+					infoDisclosureGenAndSendEntity.getProdid(),getParams(infoDisclosureGenAndSendEntity,screenList,execDate));
 			infoDisclosureGenAndSendEntity.setFileName(fileInfo.getSrcName());
 			infoDisclosureGenAndSendEntity.setFilePathSeqno(fileInfo.getFileNo());
 			infoDisclosureGenAndSendEntity.setLocalPath(fileInfo.getTargetFile().getPath());
@@ -756,20 +731,26 @@ public class InfoDisclosureGenService {
 	 * @param screenList 含有参数
 	 * @return 参数map
 	 */
-	public Map<String,Object> getParams(InfoDisclosureGenAndSendEntity infoDisclosureGenAndSendEntity,List<RepScreen> screenList) {
+	public Map<String,Object> getParams(InfoDisclosureGenAndSendEntity infoDisclosureGenAndSendEntity,List<RepScreen> screenList,Date execDate ) {
 		Map<String,Object> params = new HashMap<String,Object>();
 		for (RepScreen repScreen : screenList) {
 			// Field field =
 			// ReflectionUtils.findField(infoDisclosureGenAndSendEntity.getClass(),
 			// repScreen.getScreenKey());
-			if (StringUtil.equals("portnum", repScreen.getScreenKey())) {
-				params.put("portnum", infoDisclosureGenAndSendEntity.getProdid());
-			} else if (StringUtil.equals("startDate", repScreen.getScreenKey())) {
-				params.put("startDate", DateUtil.format(infoDisclosureGenAndSendEntity.getStartDate()));
-			} else if (StringUtil.equals("endDate", repScreen.getScreenKey())) {
-				params.put("endDate", DateUtil.format(infoDisclosureGenAndSendEntity.getEndDate()));
+			if (StringUtil.equals("pprodid", repScreen.getScreenKey())) {
+				params.put("prodid", infoDisclosureGenAndSendEntity.getProdid());
 			}
-		}		
+			else if (StringUtil.equals("prodid", repScreen.getScreenKey())) {
+				params.put("prodid", infoDisclosureGenAndSendEntity.getProdid());
+			}
+			else if (StringUtil.equals("startdate", repScreen.getScreenKey())) {
+				params.put("startdate", DateUtil.format(infoDisclosureGenAndSendEntity.getStartDate()));
+			} else if (StringUtil.equals("enddate", repScreen.getScreenKey())) {
+				params.put("enddate", DateUtil.format(infoDisclosureGenAndSendEntity.getEndDate()));
+			}
+		}
+		params.put("execDate", execDate);
+		params.put("opttype", "batch");
 		return params;
 	}
 }

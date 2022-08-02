@@ -482,7 +482,7 @@ VALUES ('REPORT_006_004_017', 'SVR', null, 'REPORT_006_004', 'RepProdIndex001', 
 
 delete from SYS_PAGE where PAGE_ID = 'RepProdIndex001';
 INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-VALUES ('RepProdIndex001', 'SVR', '/disclosure/information/config/repProdIndex/RepProdIndex001', 'disclosure/information/config/repProdIndex/RepProdIndex001', 'REPORT_006_004_012', null, null, '02', '01', '产品基础指标信息维护', 'system', null,SYSDATE, 'system', SYSDATE);
+VALUES ('RepProdIndex001', 'SVR', '/disclosure/information/config/repProdIndex/RepProdIndex001', 'disclosure/information/config/repProdIndex/RepProdIndex001', 'REPORT_006_004_017', null, null, '02', '01', '产品基础指标信息维护', 'system', null,SYSDATE, 'system', SYSDATE);
 
 delete from SYS_PAGE where PAGE_ID = 'RepProdIndex002';
 INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
@@ -518,3 +518,144 @@ VALUES ('RULE_TYPE2', '02', 'RULE_TYPE1', 'REP_PROD_TYPE', 'admin', NULL, sysdat
 INSERT INTO sys_datadict_list_link(DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 VALUES ('RULE_TYPE3', '02', 'RULE_TYPE1', 'REP_PROD_TYPE', 'admin', NULL, sysdate, 'admin', sysdate);
 -- add by zhengxiaolian 2022-07-26 报表页面管理规则联动 end
+
+-- add by zhengxiaolian 2022-07-27 	报表模板路径修改 start
+update sys_para a set a.param_value='/joyintech' where a.para_code='TEMPLATE_FILE_PATH';
+-- add by zhengxiaolian 2022-07-27 	报表模板路径修改 end
+
+
+-- add by shengning 20220727 产品超额业绩报酬信息维护 start
+-- 产品超额业绩报酬信息维护 菜单页面 配置
+delete from SYS_MENU where MENU_ID = 'REPORT_006_004_022';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('REPORT_006_004_022', 'SVR', null, 'REPORT_006_004', 'RepFloatFee001', 11, '02', '产品超额业绩报酬信息维护', 'system', null, sysdate, 'system', sysdate);
+
+delete from SYS_PAGE where PAGE_ID = 'RepFloatFee001';
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('RepFloatFee001', 'SVR', '/disclosure/information/config/repFloatFee/RepFloatFee001', 'disclosure/information/config/repFloatFee/RepFloatFee001', 'REPORT_006_004_022', null, null, '02', '01', '产品超额业绩报酬信息维护', 'system', null,SYSDATE, 'system', SYSDATE);
+
+delete from SYS_PAGE where PAGE_ID = 'RepFloatFee002';
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('RepFloatFee002', 'SVR', '/disclosure/information/config/repFloatFee/RepFloatFee002', 'disclosure/information/config/repFloatFee/RepFloatFee002',null, null, null, '02', '01', '产品超额业绩报酬信息维护编辑', 'system', null,SYSDATE, 'system', SYSDATE);
+
+-- 页面控件流程配置
+delete from SYS_WFL_BUSINESS_MODULE where PAGE_ID = 'RepFloatFee002';
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('RepFloatFee002', 'RepFloatFee002_btn_submit', 'oneApproval', 'system', '0001',SYSDATE, 'system', SYSDATE);
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('RepFloatFee002', 'RepFloatFee002_btn_save', 'oneApproval', 'system', '0001', SYSDATE, 'system', SYSDATE);
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('RepFloatFee002', 'RepFloatFee001_btn_delete', 'oneApproval', 'system', '0001', SYSDATE, 'system', SYSDATE);
+
+-- 业务类型数据字典配置
+
+DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'COMMON_BUSINESS_TYPE' and ITEM_CODE = 'SVR14';
+INSERT INTO SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+VALUES ('COMMON_BUSINESS_TYPE', 'SVR14', '产品超额业绩报酬信息维护', 1400, '0', 'system', null, sysdate, 'system',sysdate, null);
+
+--业务代码数据字典配置
+delete from SYS_DATADICT where DICT_CODE = 'BUSINESS_CODE';
+INSERT INTO SYS_DATADICT (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('BUSINESS_CODE', 'REP', '业务代码', null, '02', 'system', null, SYSDATE, 'system', SYSDATE);
+delete from SYS_DATADICT_LIST where DICT_CODE = 'BUSINESS_CODE';
+INSERT INTO SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('BUSINESS_CODE', '03', '赎回', 1, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+
+-- add by shengning 20220727 产品超额业绩报酬信息维护 end
+
+
+-- add by zhengxiaolian 2022-07-28 作业规则1增加信批产品类别 start
+delete from sys_datadict_list where DICT_CODE='RULE_TYPE1' and ITEM_CODE in('REP_PROD_TYPE');
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('RULE_TYPE1', 'REP_PROD_TYPE', '信批产品类别', 16, '0', 'system', null, sysdate, 'system', sysdate, null);
+-- add by zhengxiaolian 2022-07-28 作业规则1增加信批产品类别 end
+
+/**信披合规留痕管理 add cuiwei 2022-08-01 start**/
+delete from sys_menu where menu_id in('REPORT_006_005','REPORT_006_005_001');
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_006_005', 'DIS', null, 'REPORT_006', null, 5, '02', '信批合规管理', 'system', null, sysdate, 'system', sysdate);
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_006_005_001', 'DIS', null, 'REPORT_006_005', 'InfoCompliance001', 1, '02', '信批合规管理', 'system', null, sysdate, 'system', sysdate);
+
+delete from sys_page where page_id in ('InfoCompliance001','InfoCompliance002','InfoCompliance003');
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('InfoCompliance001', 'DIS', '/disclosure/infoCompliance/infoCompliance001', 'disclosure/infoCompliance/infoCompliance001', 'REPORT_006_005_001', null, null, '02', '01', '信批合规管理', 'system', null, sysdate, 'system', sysdate);
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('InfoCompliance002', 'DIS', '/disclosure/infoCompliance/infoCompliance002', 'disclosure/infoCompliance/infoCompliance002', '', null, null, '02', '01', '信批合规新建', 'system', null, sysdate, 'system', sysdate);
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('InfoCompliance003', 'DIS', '/disclosure/infoCompliance/infoCompliance003', 'disclosure/infoCompliance/infoCompliance003', '', null, null, '02', '01', '开发状态修改', 'system', null, sysdate, 'system', sysdate);
+
+delete from sys_page where page_id in ('UploadFile001','UploadFile002');
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('UploadFile001', 'DIS', '/disclosure/infoCompliance/uploadFile001', 'disclosure/infoCompliance/uploadFile001', '', null, null, '02', '01', '报表/模板附件', 'system', null, sysdate, 'system', sysdate);
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('UploadFile002', 'DIS', '/disclosure/infoCompliance/uploadFile002', 'disclosure/infoCompliance/uploadFile002', '', null, null, '02', '01', '其他附件', 'system', null, sysdate, 'system', sysdate);
+
+delete from sys_datadict where DICT_CODE IN('INFO_TYPE','INFO_STATUS','INFO_DEV_STATUS');
+insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('INFO_TYPE', 'DIS', '模板类型', '', '02', 'system', null, sysdate, 'system', sysdate);
+insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('INFO_STATUS', 'DIS', '当前状态', '', '02', 'system', null, sysdate, 'system', sysdate);
+insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('INFO_DEV_STATUS', 'DIS', '开发状态', '', '02', 'system', null, sysdate, 'system', sysdate);
+
+delete from sys_datadict_list where DICT_CODE IN ('INFO_TYPE','INFO_STATUS','INFO_DEV_STATUS');
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('INFO_TYPE', '01', '模板', 1, '0', 'system', null, sysdate, 'system', sysdate);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('INFO_TYPE', '02', '信披报表', 1, '0', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('INFO_STATUS', '01', '待复核', 1, '0', 'system', null, sysdate, 'system', sysdate);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('INFO_STATUS', '02', '审核通过', 1, '0', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('INFO_DEV_STATUS', '01', '待开发', 1, '0', 'system', null, sysdate, 'system', sysdate);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('INFO_DEV_STATUS', '02', '需修改', 1, '0', 'system', null, sysdate, 'system', sysdate);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('INFO_DEV_STATUS', '03', '终止', 1, '0', 'system', null, sysdate, 'system', sysdate);
+
+delete from sys_datadict_list where DICT_CODE IN('COMMON_BUSINESS_TYPE') AND ITEM_CODE='COMPLIANCE';
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('COMMON_BUSINESS_TYPE', 'COMPLIANCE', '合规留痕管理', 1002, '0', 'system', null, sysdate, 'system', sysdate);
+
+delete from sys_wfl_business_module where page_id ='InfoCompliance002';
+insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
+values ('InfoCompliance002', 'InfoCompliance002_btn_save', 'fiveprocess', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
+values ('InfoCompliance002', 'InfoCompliance002_btn_submit', 'fiveprocess', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
+/**信披合规留痕管理 add cuiwei 2022-08-01 end**/
+
+
+-- add by shengning 20220801 关联交易情况维护 start
+-- 关联交易情况维护 菜单页面 配置
+delete from SYS_MENU where MENU_ID = 'REPORT_006_004_023';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('REPORT_006_004_023', 'SVR', null, 'REPORT_006_004', 'RepRelDeal001', 11, '02', '关联交易情况维护', 'system', null, sysdate, 'system', sysdate);
+
+delete from SYS_PAGE where PAGE_ID = 'RepRelDeal001';
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('RepRelDeal001', 'SVR', '/disclosure/information/config/repRelDeal/RepRelDeal001', 'disclosure/information/config/repRelDeal/RepRelDeal001', 'REPORT_006_004_023', null, null, '02', '01', '关联交易情况维护', 'system', null,SYSDATE, 'system', SYSDATE);
+
+delete from SYS_PAGE where PAGE_ID = 'RepRelDeal002';
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('RepRelDeal002', 'SVR', '/disclosure/information/config/repRelDeal/RepRelDeal002', 'disclosure/information/config/repRelDeal/RepRelDeal002',null, null, null, '02', '01', '关联交易情况维护编辑', 'system', null,SYSDATE, 'system', SYSDATE);
+
+-- 页面控件流程配置
+delete from SYS_WFL_BUSINESS_MODULE where PAGE_ID = 'RepRelDeal002';
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('RepRelDeal002', 'RepRelDeal002_btn_submit', 'oneApproval', 'system', '0001',SYSDATE, 'system', SYSDATE);
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('RepRelDeal002', 'RepRelDeal002_btn_save', 'oneApproval', 'system', '0001', SYSDATE, 'system', SYSDATE);
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('RepRelDeal002', 'RepRelDeal001_btn_delete', 'oneApproval', 'system', '0001', SYSDATE, 'system', SYSDATE);
+
+-- 业务类型数据字典配置
+DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'COMMON_BUSINESS_TYPE' and ITEM_CODE = 'SVR15';
+INSERT INTO SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+VALUES ('COMMON_BUSINESS_TYPE', 'SVR15', '关联交易情况维护', 1400, '0', 'system', null, sysdate, 'system',sysdate, null);
+
+-- add by shengning 20220801 关联交易情况维护 end
+
+-- add by zhengxiaolian 20220801 报表编辑页面脚本 start
+delete from sys_page where page_id='RepEdit001';
+
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('RepEdit001', 'DIS', '/disclosure/information/reveal/detailshow/RepEdit001', 'disclosure/information/reveal/detailshow/RepEdit001', null, null, null, '02', '02', '报表编辑', 'system', null, '07-7月 -22 06.39.05.966000 下午', 'system', '07-7月 -22 06.39.14.306000 下午');
+
+-- add by zhengxiaolian 20220801 报表编辑页面脚本 start

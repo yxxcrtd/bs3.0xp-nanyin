@@ -675,29 +675,34 @@ public class InfoDisclosureReadAndGenDetailService{
 		StringBuffer sqlVal = new StringBuffer();
 		
 		//通过规则id组装并查询产品信息方法
-		for (RepJobRange repJobRange : repJobRangeList) {
-			String val = repJobRange.getRuleType4();
-			//当为like时增加%
-			if(StringUtil.equals("like", repJobRange.getRuleType2().toLowerCase())){
-				val = ReportGlobalConstant.SIGN_MARK +ReportGlobalConstant.PERCENT_SIGN
-						+ val + ReportGlobalConstant.PERCENT_SIGN + ReportGlobalConstant.SIGN_MARK ;
+		for(RepJobRange dto: repJobRangeList){
+			if(StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_募集方式.getValue())
+					||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_发行方式.getValue())
+					||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_发行状态.getValue())
+					||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_开放模式.getValue())
+					||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_是否独立开户.getValue())
+					||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_产品类型.getValue())
+					||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_理财类型.getValue())
+					||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_产品期限类型.getValue())
+					||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_开放频率.getValue())
+					||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_是否是指数型产品.getValue())
+					||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_是否是客户周期型产品.getValue())
+					||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_信批产品类别.getValue())){
+				sqlVal.append(" and ").append(dto.getRuleType1()).append(dto.getRuleType2()).append("'")
+						.append(dto.getRuleType4()).append("'");
+			}else if(StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_起息日.getValue())
+					||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_到期日.getValue())
+					||StringUtil.equals(dto.getRuleType1(),DictCodeListExt2.作业规则1_清盘日.getValue())){
+				String sysDate=DateUtil.getCurrentDate();
+				if(dto.getRuleType4()==null||StringUtil.isEmpty(dto.getRuleType4())){
+					sqlVal.append(" and ").append("to_char(").append(dto.getRuleType1()).append(",'yyyy-mm-dd')").append(dto.getRuleType2()).append("'")
+							.append(sysDate).append("'");
+				}
+				else{
+					sqlVal.append(" and ").append("to_char(").append(dto.getRuleType1()).append(",'yyyy-mm-dd')").append(dto.getRuleType2()).append("'")
+							.append(dto.getRuleType4()).append("'");
+				}
 			}
-			//日期增加to_date
-			else if(StringUtil.equals(DictCodeListExt2.作业规则1_起息日.getValue(), repJobRange.getRuleType1())||
-					StringUtil.equals(DictCodeListExt2.作业规则1_到期日.getValue(), repJobRange.getRuleType1())
-					||StringUtil.equals(DictCodeListExt2.作业规则1_清盘日.getValue(),repJobRange.getRuleType1())){
-			  //目前仅考虑平台日
-			    val = "to_date" + GlobalConstant.OPEN_PARENTHESIS +  ReportGlobalConstant.SIGN_MARK 
-                    + DateUtil.format(executeDateStr) + ReportGlobalConstant.SIGN_MARK  + GlobalConstant.COMMA + "'yyyy-MM-dd'" + GlobalConstant.CLOSE_PARENTHESIS;
-			    
-//				val = "to_date" + GlobalConstant.OPEN_PARENTHESIS +  ReportGlobalConstant.SIGN_MARK 
-//						+ val  + ReportGlobalConstant.SIGN_MARK  + GlobalConstant.COMMA + "'yyyy-MM-dd'" + GlobalConstant.CLOSE_PARENTHESIS;
-			}
-			else{
-				val =  ReportGlobalConstant.SIGN_MARK + val  + ReportGlobalConstant.SIGN_MARK ;
-			}
-			sqlVal.append("and ").append(repJobRange.getRuleType1()).append(StringUtil.SPACE)
-					.append(repJobRange.getRuleType2()).append(StringUtil.SPACE).append(val);
 		}
 		//通过组装的条件，查询产品相关内容
 		List<ProdInfoListEntity> prodList = infoDisclosureReadAndGenMapper.getProdList(sqlVal.toString(), jobId);

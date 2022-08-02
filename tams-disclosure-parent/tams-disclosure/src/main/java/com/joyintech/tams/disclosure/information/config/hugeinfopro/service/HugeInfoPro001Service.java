@@ -110,7 +110,8 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
      */
     public AjaxResult checkImportData(String fileName) {
         List<String> findProdRegistNoList =  proElementAdjMapper.getRegistNo(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());
-        List<String> findProdList =  proElementAdjMapper.getProdId(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());        List<List<String>> objects = ExcelUtil.getTempList(fileName);
+        List<String> findProdList =  proElementAdjMapper.getProdId(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());
+        List<List<String>> objects = ExcelUtil.getTempList(fileName);
         if (objects.size() - 1 > 50000) {
             Map<String, Object> resultMap = new HashMap<>();
             resultMap.put("errorMsg", "单次最多导入50000条。");
@@ -144,13 +145,13 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
                     if (!StringUtil.isNotEmpty(rowData.get(0))){
                         errorMsg.append("产品登记编码 必填！");
                     }
-                    else if(!findProdRegistNoList.contains(rowData.get(0))){
+                    else if(!findProdRegistNoList.contains(rowData.get(0).trim())){
                         errorMsg.append("产品登记编码未在产品基本信息表中维护！");
                     }
                     if (!StringUtil.isNotEmpty(rowData.get(1))){
                         errorMsg.append("子产品代码 必填！");
                     }
-                    else if(!findProdList.contains(rowData.get(1))){
+                    else if(!findProdList.contains(rowData.get(1).trim())){
                         errorMsg.append("子产品代码未在产品基本信息表中维护！");
                     }
                     if (!StringUtil.isNotEmpty(rowData.get(2))){

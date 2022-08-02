@@ -126,7 +126,7 @@
 	<delete id="deleteById" parameterType="java.lang.String" >
 		delete from REP_TREE
         where TREE_ID = #{Id,jdbcType=VARCHAR}
-        <if test="PId != null">
+        <if test="PId != null and PId !='' ">
 				AND P_ID = #{PId,jdbcType=VARCHAR}
 		</if>
 	</delete>
@@ -147,7 +147,7 @@
 			AND REPORT_NAME LIKE '%' || #{reportName,jdbcType=VARCHAR}
 			|| '%'
 		</if>
-		ORDER BY REP_ORDER
+		ORDER BY REP_INFO.CREATE_TIME desc
 	</select>
 	<insert id="getAddAll">
 		insert into REP_TREE

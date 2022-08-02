@@ -1339,6 +1339,8 @@ public enum DictCodeListExt2 implements BaseDictCodeList {
     作业规则1_开放频率(DictCode.作业规则1,"OPEN_FREQ","开放频率"),
     作业规则1_是否是指数型产品(DictCode.作业规则1,"IS_INDEX","是否是指数型产品"),
     作业规则1_是否是客户周期型产品(DictCode.作业规则1,"IS_PERIOD","是否是客户周期型产品"),
+
+    作业规则1_信批产品类别(DictCode.作业规则1,"REP_PROD_TYPE","信批产品类别"),
     基准日_平台日(DictCode.基准日,"01","平台日"),
     基准日_募集起始日(DictCode.基准日,"RAISE_STRDATE","募集起始日"),
     基准日_实际到期日(DictCode.基准日,"ACT_MDATE","实际到期日"),

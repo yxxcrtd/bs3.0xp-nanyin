@@ -31,7 +31,7 @@ public class RepInvestAccount extends BaseEntity {
     /**
      * 错误信息
      */
-    private String errorMsg;
+    private String errormsg;
 
     public String getProdId() {
         return prodId;
@@ -91,11 +91,11 @@ public class RepInvestAccount extends BaseEntity {
         this.status = status;
     }
 
-    public String getErrorMsg() {
-        return errorMsg;
+    public String getErrormsg() {
+        return errormsg;
     }
 
-    public void setErrorMsg(String errorMsg) {
-        this.errorMsg = errorMsg;
+    public void setErrormsg(String errorMsg) {
+        this.errormsg = errorMsg;
     }
 }

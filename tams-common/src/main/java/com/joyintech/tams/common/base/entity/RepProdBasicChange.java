@@ -1,15 +1,15 @@
 package com.joyintech.tams.common.base.entity;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.joyintech.framework.base.BaseEntity;
-import com.joyintech.framework.json.BigDecimalSerializer;
-import java.math.BigDecimal;
+import com.joyintech.framework.json.CustomDateDeserialize;
+import java.util.Date;
 
 public class RepProdBasicChange extends BaseEntity {
     /**
-     * 业绩基准变更表主键id
+     * 主键
      */
-    private String basicChangeId;
+    private String uuid;
 
     /**
      * 产品代码
@@ -17,40 +17,39 @@ public class RepProdBasicChange extends BaseEntity {
     private String prodId;
 
     /**
-     * 行情代码
+     * 生效日
      */
-    private String quotaCode;
+    private Date effDate;
 
     /**
-     * 系数
+     * 指数code
      */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal ratio;
+    private String dataType;
 
     /**
-     * 数据状态：数据字典，系统模块-DIS，字典code：DIS_DATA_STATUS:01-有效，02-删除
+     * 指数权重：存储结构为a%
      */
-    private String dataStatus;
+    private String proportion;
 
     /**
-     * 数据来源:数据字典syscode：DIS,code:DATA_SOURCE,
+     * 组ID
      */
-    private String dataSource;
+    private String groupId;
 
     /**
-     * 取得 业绩基准变更表主键id
-     * @return 业绩基准变更表主键id
+     * 取得 主键
+     * @return 主键
      */
-    public String getBasicChangeId() {
-        return basicChangeId;
+    public String getUuid() {
+        return uuid;
     }
 
     /**
-     * 设置 业绩基准变更表主键id
-     * @param basicChangeId 业绩基准变更表主键id
+     * 设置 主键
+     * @param uuid 主键
      */
-    public void setBasicChangeId(String basicChangeId) {
-        this.basicChangeId = basicChangeId == null ? null : basicChangeId.trim();
+    public void setUuid(String uuid) {
+        this.uuid = uuid == null ? null : uuid.trim();
     }
 
     /**
@@ -70,66 +69,67 @@ public class RepProdBasicChange extends BaseEntity {
     }
 
     /**
-     * 取得 行情代码
-     * @return 行情代码
+     * 取得 生效日
+     * @return 生效日
      */
-    public String getQuotaCode() {
-        return quotaCode;
+    public Date getEffDate() {
+        return effDate;
     }
 
     /**
-     * 设置 行情代码
-     * @param quotaCode 行情代码
+     * 设置 生效日
+     * @param effDate 生效日
      */
-    public void setQuotaCode(String quotaCode) {
-        this.quotaCode = quotaCode == null ? null : quotaCode.trim();
+    @JsonDeserialize(using = CustomDateDeserialize.class)
+    public void setEffDate(Date effDate) {
+        this.effDate = effDate;
     }
 
     /**
-     * 取得 系数
-     * @return 系数
+     * 取得 指数code
+     * @return 指数code
      */
-    public BigDecimal getRatio() {
-        return ratio;
+    public String getDataType() {
+        return dataType;
     }
 
     /**
-     * 设置 系数
-     * @param ratio 系数
+     * 设置 指数code
+     * @param dataType 指数code
      */
-    public void setRatio(BigDecimal ratio) {
-        this.ratio = ratio;
+    public void setDataType(String dataType) {
+        this.dataType = dataType == null ? null : dataType.trim();
     }
 
     /**
-     * 取得 数据状态：数据字典，系统模块-DIS，字典code：DIS_DATA_STATUS:01-有效，02-删除
-     * @return 数据状态：数据字典，系统模块-DIS，字典code：DIS_DATA_STATUS:01-有效，02-删除
+     * 取得 指数权重：存储结构为a%
+     * @return 指数权重：存储结构为a%
      */
-    public String getDataStatus() {
-        return dataStatus;
+    public String getProportion() {
+        return proportion;
     }
 
     /**
-     * 设置 数据状态：数据字典，系统模块-DIS，字典code：DIS_DATA_STATUS:01-有效，02-删除
-     * @param dataStatus 数据状态：数据字典，系统模块-DIS，字典code：DIS_DATA_STATUS:01-有效，02-删除
+     * 设置 指数权重：存储结构为a%
+     * @param proportion 指数权重：存储结构为a%
      */
-    public void setDataStatus(String dataStatus) {
-        this.dataStatus = dataStatus == null ? null : dataStatus.trim();
+    public void setProportion(String proportion) {
+        this.proportion = proportion == null ? null : proportion.trim();
     }
 
     /**
-     * 取得 数据来源:数据字典syscode：DIS,code:DATA_SOURCE,
-     * @return 数据来源:数据字典syscode：DIS,code:DATA_SOURCE,
+     * 取得 组ID
+     * @return 组ID
      */
-    public String getDataSource() {
-        return dataSource;
+    public String getGroupId() {
+        return groupId;
     }
 
     /**
-     * 设置 数据来源:数据字典syscode：DIS,code:DATA_SOURCE,
-     * @param dataSource 数据来源:数据字典syscode：DIS,code:DATA_SOURCE,
+     * 设置 组ID
+     * @param groupId 组ID
      */
-    public void setDataSource(String dataSource) {
-        this.dataSource = dataSource == null ? null : dataSource.trim();
+    public void setGroupId(String groupId) {
+        this.groupId = groupId == null ? null : groupId.trim();
     }
 }

@@ -200,6 +200,7 @@
        		obj.repName = rowArr[0].name;
         	obj.fileType = type;
         	obj.code = rowArr[0].code;
+			obj.repId = rowArr[0].repId;
         	obj.url = exportReportPath(report_info);
         	Joyin.exportExcel('mergeExport', obj);
   			   //导出报表
@@ -222,6 +223,7 @@
             	obj.fileType = type;
         		obj.url = exportReportPath(report_info);
         		obj.code = rowArr[int].code;
+				obj.repId = rowArr[int].repId;
         		datas.push(obj);
 			}
         	 
@@ -340,7 +342,9 @@
 		    searchOnInit: false,
 		    rowno : true,
 		    page : true,
-	    	cols:[{field:'keyId',title:'主键',width:80,sortable:false,visible:false,align:'center'}
+	    	cols:[
+				{field:'keyId',title:'主键',width:80,sortable:false,visible:false,align:'center'},
+				{field:'repId',visible:false,align:'center'}
 	            ,{field:'code',title: '模板英文名',width:250,sortable:true}
 		        ,{field:'name',  title: '模板中文名',width:350,sortable:true}
 		        ,{field:'temLoad',  title: '模板路径',width:150,sortable:true}

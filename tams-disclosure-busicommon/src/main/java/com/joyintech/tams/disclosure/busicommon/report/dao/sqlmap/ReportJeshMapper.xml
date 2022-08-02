@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.busicommon.report.dao.ReportJeshMapper">
+
+	<select id="queryJesh" resultType="com.joyintech.tams.disclosure.busicommon.report.dto.ReportJeshDto">
+		select
+			rpi.prod_id prod_id,
+			rpi.prod_name prod_name,
+			rpi.prod_re reg_code,
+			listagg(dlr.prod_id, '、') within group(order by dlr.prod_id) saleCode,
+			rpi.raise_type raise_type,
+			max(dlr.trigger_remark) redRemark,
+			max(dlr.reject_remark) refRemark,
+			min(deal_date) redDate
+		from rep_prod_info rpi
+		inner join dis_large_redemption dlr
+		on rpi.prod_re = dlr.prod_regist_no
+		AND dlr.rpt_issue_date = #{rptIssueDate}
+		and dlr.data_status = 'E'
+		where rpi.prod_id = #{prodId,jdbcType=VARCHAR}
+		and rpi.status = 'E'
+		group by
+			rpi.prod_id,
+			rpi.prod_name,
+			rpi.prod_re,
+			rpi.raise_type
+	</select>
+</mapper>

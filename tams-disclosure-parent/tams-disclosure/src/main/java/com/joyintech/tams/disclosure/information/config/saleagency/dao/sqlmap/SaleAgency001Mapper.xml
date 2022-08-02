@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.information.config.saleagency.dao.SaleAgency001Mapper">
+
+	<resultMap type="com.joyintech.tams.disclosure.information.config.saleagency.dto.SaleAgencyDto" id="BaseResultMap">
+		<id column="SEQUENCE_NO" property="sequenceNo" jdbcType="VARCHAR" />
+		<result column="AGENCY_NAME" property="agencyName" jdbcType="VARCHAR" />
+		<result column="AGREEMENT_VDATE" property="agreementVdate" jdbcType="DATE" />
+		<result column="AGREEMENT_MDATE" property="agreementMdate" jdbcType="DATE" />
+		<result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+		<result column="updateTimeStr" property="updateTimeStr" jdbcType="VARCHAR" />
+		<collection property="prodSaleAgencyDtoList"  column="SEQUENCE_NO" ofType="com.joyintech.tams.disclosure.information.config.saleagency.dto.ProdSaleAgencyDto" select="com.joyintech.tams.disclosure.information.config.saleagency.dao.SaleAgency002Mapper.selectProdByAgencyId"/>
+	</resultMap>
+
+	<select id="querySaleAgency"
+			resultType="com.joyintech.framework.select.SelectOptionDto">
+		select SEQUENCE_NO id,
+		AGENCY_NAME text
+		from DIS_SALE_AGENCY
+		<where>
+		<if test="search != null and search != ''">
+			and (SEQUENCE_NO like
+			concat(concat('%',#{search}),'%')
+			or AGENCY_NAME like concat(concat('%',#{search}),'%'))
+		</if>
+		</where>
+	</select>
+
+	<select id="queryProdSeries"
+			resultType="com.joyintech.framework.select.SelectOptionDto">
+		select
+		distinct
+		PROD_SERIES id,
+		PROD_SERIES text
+		from
+		REP_PROD_INFO
+		where (P_PROD_ID is null or PROD_ID=P_PROD_ID)
+		and status='E' and PROD_SERIES is not null
+		<if test="search != null and search != ''">
+			and PROD_SERIES like concat(concat('%',#{search}),'%')
+		</if>
+	</select>
+
+
+	<select id="select"
+			resultMap="BaseResultMap">
+		select
+		distinct
+			dsa.SEQUENCE_NO,
+			dsa.AGENCY_NAME,
+			dsa.AGREEMENT_VDATE,
+			dsa.AGREEMENT_MDATE,
+			dsa.UPDATE_USER,
+			dsa.UPDATE_TIME,
+			TO_CHAR(dsa.UPDATE_TIME,'YYYY-MM-DD HH24:MI:SS') updateTimeStr
+		from DIS_SALE_AGENCY dsa
+		left join DIS_PROD_AGENCY dpa on dpa.AGENCY_ID=dsa.SEQUENCE_NO
+		left join rep_prod_info info on dpa.PROD_ID=info.PROD_ID
+		<where>
+			<if test="agencyId != null and agencyId.size()>0">
+				AND	dsa.SEQUENCE_NO in
+				<foreach collection="agencyId" item="item" open="(" close=")"
+						 separator=",">
+					#{item}
+				</foreach>
+			</if>
+			<if test="prodSeries != null and prodSeries.size()>0">
+				AND	info.PROD_SERIES in
+				<foreach collection="prodSeries" item="item" open="(" close=")"
+						 separator=",">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</select>
+
+	<select id="selectByProdId" resultType="java.lang.Integer">
+		select count(1) count
+		from REP_PROD_INFO
+		where P_PROD_ID is null
+		and PROD_ID=#{prodId,jdbcType=VARCHAR}
+	</select>
+	<select id="selectProdByAgencyId"
+			resultType="com.joyintech.tams.disclosure.information.config.saleagency.dto.ProdSaleAgencyDto">
+		select
+			AGENCY_ID agencyId,
+			PROD_ID prodId
+		from DIS_PROD_AGENCY
+		where AGENCY_ID=#{sequenceNo,jdbcType=VARCHAR}
+	</select>
+	<select id="selectProdInfo" resultType="com.joyintech.framework.select.TreeNode">
+		select
+			PROD_ID id,
+			PROD_NAME name,
+			case PD_STATUS
+			when '01' then
+			  (case ISSUING_WAY
+				when '01' then '0101' || PROD_SERIES
+				when '02' then '0102' || PROD_SERIES
+				 else '' end
+				  )
+			when '02' then
+			  (case ISSUING_WAY
+				when '01' then '0201' || PROD_SERIES
+				when '02' then '0202' || PROD_SERIES
+				 else '' end
+				  )
+			when '03' then
+			  (case ISSUING_WAY
+				when '01' then '0301' || PROD_SERIES
+				when '02' then '0301' || PROD_SERIES
+				 else '' end
+				  )
+			else '' end pid
+			from
+			REP_PROD_INFO
+			where (P_PROD_ID is null or PROD_ID=P_PROD_ID)
+			and status='E'
+	</select>
+
+
+</mapper>

@@ -4,6 +4,21 @@
     <select id="getProdInsId" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT
         PROD_ID id,
+        PROD_NAME text,
+        PROD_NAME object
+        FROM
+        REP_PROD_INFO
+        where
+        (P_PROD_ID is null or PROD_ID=P_PROD_ID)
+        <if test="search != null and search != ''">
+            and (PROD_ID like
+            concat(concat('%',#{search}),'%')
+            or PROD_NAME like concat(concat('%',#{search}),'%'))
+        </if>
+    </select>
+    <select id="getProdInsId2" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        PROD_ID id,
         PROD_ID text,
         PROD_NAME object
         FROM
@@ -26,7 +41,7 @@
                ric.STATUS status,
                ric.UPDATE_USER updateUser,
                ric.UPDATE_TIME updateTime,
-               ric.ERRORMSG errmsg
+               ric.ERRORMSG errormsg
         from REP_INVEST_ACCOUNT ric
         left join REP_PROD_INFO rpi on rpi.PROD_ID = ric.PROD_ID
         <where>
@@ -109,7 +124,7 @@
     STATUS = #{status,jdbcType=VARCHAR},
     UPDATE_USER = #{createUser,jdbcType=VARCHAR},
     UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-    ERRORMSG = #{errmsg,jdbcType=VARCHAR}
+    ERRORMSG = #{errormsg,jdbcType=VARCHAR}
     where PROD_ID = #{prodId,jdbcType=VARCHAR}
     </update>
     <delete id="delete" parameterType="com.joyintech.tams.disclosure.information.config.repInvestAccount.dto.RepInvestAccountDto"  >

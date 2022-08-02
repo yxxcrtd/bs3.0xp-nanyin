@@ -4,6 +4,8 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -63,6 +66,12 @@ public class SvrProdFeeDealInterf002Controller extends BaseController {
     }
 
     @ResponseBody
+    @RequestMapping("queryProdIdInfo2")
+    public List<SelectOptionDto> queryProdIdInfo() {
+        return svrProdFeeDealInterfService.queryProdIdInfo2(RequestUtil.getPageParam());
+    }
+
+    @ResponseBody
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({
             ValidateGroupEdit.class}) SvrProdFeeDealInterfDto dto,
@@ -89,7 +98,7 @@ public class SvrProdFeeDealInterf002Controller extends BaseController {
         params.setElementId(dto.getElementId());
         params.setBusinessCode(dto.getProdId());
         params.setBusinessType(DictCodeListExt4.共通业务类型_产品费用交易信息维护.getValue());
-        params.setComment(entity -> "主键流程id" + "(" + entity.getProdId() + ")");
+        params.setComment(entity -> "产品代码" + "(" + entity.getProdId() + ")");
         // 塞入工作流参数
         processParameter.setWorkFlowParameter(params);
 

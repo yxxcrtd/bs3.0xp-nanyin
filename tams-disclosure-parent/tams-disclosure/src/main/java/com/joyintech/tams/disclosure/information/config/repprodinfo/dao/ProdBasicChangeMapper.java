@@ -7,7 +7,8 @@ import java.util.List;
 
 @Repository
 public interface ProdBasicChangeMapper {
-    int deleteByPrimaryKey(String basicChangeId);
+
+    int deleteByPrimaryKey(String uuid);
 
     int insert(ProdBasicChangeDto record);
 
@@ -15,16 +16,18 @@ public interface ProdBasicChangeMapper {
 
     int insertBasicByBasicInfo(ProdBasicChangeDto record);
 
-    ProdBasicChangeDto selectByPrimaryKey(String basicChangeId);
+    ProdBasicChangeDto selectByPrimaryKey(String uuid);
 
     int updateByPrimaryKeySelective(ProdBasicChangeDto record);
 
     int updateByPrimaryKey(ProdBasicChangeDto record);
 
-
     List<ProdBasicChangeDto> selectListByProdId(String prodId);
 
     int deleteByProdId(String prodId);
+
+
+    int updateByGroupId(ProdBasicChangeDto record);
 
 
 }

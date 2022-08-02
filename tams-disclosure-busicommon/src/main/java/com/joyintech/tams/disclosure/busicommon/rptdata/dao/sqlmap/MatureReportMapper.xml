@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.busicommon.rptdata.dao.MatureReportMapper">
+    
+   <select id="selectBonusPlan" resultType="com.joyintech.tams.disclosure.busicommon.rptdata.dto.BonusReportDto">
+		SELECT 
+		    INFO.PROD_NAME
+			,INFO.PROD_RE
+		    ,INFO.ISSUING_WAY
+			,INFO.PROD_ID
+		    ,INFO.SET_DATE EDATE /**产品成立日期**/
+		    ,PINDEX.ASSETS_VALUE  /**资产净值**/
+			,PINDEX.CAPITAL            /**期末余额**/
+			,PINDEX.UNIT_VALUE    /**单位净值**/
+            ,PLAN.SETT_DATE      /**本期收益结算日**/			
+		    ,PLAN.ACHIEVEMENT_BASIS   /**业绩基准**/
+			,PLAN.ACHIEVEMENT_BASIS_PROP  /**业绩基准比例**/
+			,PLAN.EXCESS_ACHIEVEMENT_PROP   /**超额收益收取比例**/
+		FROM DIS_PROD_BONUSPLAN PLAN
+		LEFT JOIN REP_PROD_INDEX PINDEX ON PLAN.PROD_ID=PINDEX.PROD_ID  AND PLAN.SETT_DATE=PINDEX.VALUE_DATE AND PINDEX.STATUS='E'
+		LEFT JOIN REP_PROD_INFO INFO ON PLAN.PROD_ID=INFO.PROD_ID AND INFO.STATUS='E' 
+		WHERE 1=1
+		AND PLAN.DATA_STATUS='01'
+		<if test="prodid!=null">
+			AND PLAN.PROD_ID=#{prodid,jdbcType=VARCHAR}
+		</if>
+		order by plan.sett_date desc 
+    </select>
+    
+    <select id="selectFees" resultType="com.joyintech.tams.common.base.entity.RepFeeTrd">
+	    SELECT FEE_TYPE,ACCRUAL 
+	    FROM REP_FEE_TRD 
+	    WHERE 1=1
+	    and STATUS='E'
+	    <if test="prodid!=null">
+	            AND PROD_ID=#{prodid,jdbcType=VARCHAR}
+		</if>
+    </select>
+    
+</mapper>

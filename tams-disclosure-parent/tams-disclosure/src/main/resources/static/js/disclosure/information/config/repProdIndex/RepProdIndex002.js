@@ -35,6 +35,9 @@ var RepProdIndex002 = function() {
             param.prodType = $("#prodType").val();
             Joyin.ajaxJson(basePath + 'disclosure/information/config/repProdIndex/RepProdIndex002/check',param,function(result){
                 if(result){
+                    if($('#isGrade').val() == "01" && pageModel === PAGE_MODEL_EDIT){
+                        Joyin.alert('修改后的母产品信息会同步至母产品下其它子产品数据中！');
+                    }
                     if(operateType === 'save') {
                         WorkFlow.doSaveList(basePath + 'disclosure/information/config/repProdIndex/RepProdIndex002/save', param, "RepProdIndex002_btn_save");
                     }
@@ -51,90 +54,90 @@ var RepProdIndex002 = function() {
     };
 }();
 
-var assetsValueChange = function(){
+var pAssetsValueChange = function(){
     if($('#isGrade').val() == "02"){
-        $('#pAssetsValue').val($('#assetsValue').val()).trigger("blur");
-        $("#pAssetsValue").attr('disabled',true);
+        $('#assetsValue').val($('#pAssetsValue').val()).trigger("blur");
+        $("#assetsValue").attr('disabled',true);
     }else{
-        $("#pAssetsValue").attr('disabled',false);
+        $("#assetsValue").attr('disabled',false);
     }
 }
 
-var capitalChange = function(){
+var pCapitalChange = function(){
     if($('#isGrade').val() == "02"){
-        $('#pCapital').val($('#capital').val()).trigger("blur");
-        $("#pCapital").attr('disabled',true);
+        $('#capital').val($('#pCapital').val()).trigger("blur");
+        $("#capital").attr('disabled',true);
     }else{
-        $('#pCapital').val('').trigger("blur");
-        $("#pCapital").attr('disabled',false);
+        // $('#capital').val('').trigger("blur");
+        $("#capital").attr('disabled',false);
     }
 }
 
-var unitValueChange = function(){
+var pUnitValueChange = function(){
     if($('#isGrade').val() == "02"){
-        $('#pUnitValue').val($('#unitValue').val()).trigger("blur");
-        $("#pUnitValue").attr('disabled',true);
+        $('#unitValue').val($('#pUnitValue').val()).trigger("blur");
+        $("#unitValue").attr('disabled',true);
     }else{
         if($('#prodType').val() == "M"){
-            $('#pUnitValue').val('1.0000').trigger("blur");;
-            $("#pUnitValue").attr('disabled',true);
+            $('#unitValue').val('1.0000').trigger("blur");;
+            $("#unitValue").attr('disabled',true);
         }else{
-            $('#pUnitValue').val('');
-            $("#pUnitValue").attr('disabled',false);
+            // $('#unitValue').val('');
+            $("#unitValue").attr('disabled',false);
         }
     }
 }
 
-var unitValueTChange = function(){
+var pUnitValueTChange = function(){
     if($('#isGrade').val() == "02"){
-        $('#pUnitValueT').val($('#unitValueT').val()).trigger("blur");
-        $("#pUnitValueT").attr('disabled',true);
+        $('#unitValueT').val($('#pUnitValueT').val()).trigger("blur");
+        $("#unitValueT").attr('disabled',true);
     }else{
         if($('#prodType').val() == "M"){
-            $('#pUnitValueT').val('1.0000').trigger("blur");;
-            $("#pUnitValueT").attr('disabled',true);
+            $('#unitValueT').val('1.0000').trigger("blur");;
+            $("#unitValueT").attr('disabled',true);
         }else{
-            $('#pUnitValueT').val('');
-            $("#pUnitValueT").attr('disabled',false);
+            // $('#unitValueT').val('');
+            $("#unitValueT").attr('disabled',false);
         }
     }
 }
 
-var wYieldChange = function(){
+var pWYieldChange = function(){
     if($('#prodType').val() == "N"){
-        $('#pWYield').val('');
-        $("#pWYield").attr('disabled',true);
-        $('#pWYield').removeAttr("required");
+        $('#wYield').val('');
+        $("#wYield").attr('disabled',true);
+        $('#wYield').removeAttr("required");
     }else if($('#prodType').val() == "M"){
         if($('#isGrade').val() == "02"){
-            $('#pWYield').val($('#wYield').val()).trigger("blur");
-            $("#pWYield").attr('disabled',true);
+            $('#wYield').val($('#pWYield').val()).trigger("blur");
+            $("#wYield").attr('disabled',true);
         }else{
-            $("#pWYield").attr('disabled',false);
+            $("#wYield").attr('disabled',false);
         }
-        $("#pWYield").attr("required", "required");
+        $("#wYield").attr("required", "required");
     }else{
 
-        $('#pWYield').removeAttr("required");
+        $('#wYield').removeAttr("required");
     }
     star();
 }
 
-var yield7Change = function(){
+var pYield7Change = function(){
     if($('#prodType').val() == "N"){
-        $('#pYield7').val('');
-        $("#pYield7").attr('disabled',true);
-        $('#pYield7').removeAttr("required");
+        $('#yield7').val('');
+        $("#yield7").attr('disabled',true);
+        $('#yield7').removeAttr("required");
     }else if($('#prodType').val() == "M"){
         if($('#isGrade').val() == "02"){
-            $('#pYield7').val($('#yield7').val()).trigger("blur");
-            $("#pYield7").attr('disabled',true);
+            $('#yield7').val($('#pYield7').val()).trigger("blur");
+            $("#yield7").attr('disabled',true);
         }else{
-            $("#pYield7").attr('disabled',false);
+            $("#yield7").attr('disabled',false);
         }
-        $("#pYield7").attr("required", "required");
+        $("#yield7").attr("required", "required");
     }else{
-        $('#pYield7').removeAttr("required");
+        $('#yield7').removeAttr("required");
     }
     star();
 }
@@ -157,31 +160,74 @@ $(function() {
         if('' != prodId && null != prodId){
             Joyin.ajaxJson(basePath+'disclosure/information/config/repProdIndex/RepProdIndex002/selectProdInfo?prodId='+prodId,{},function (result){
                 if(result){
-                    debugger;
                     $('#prodName').val(result.prodName);
                     $('#isGrade').val(result.isGrade);
                     $('#prodType').val(result.prodType);
                     $('#pProdId').val(result.pProdId);
                     if(result.prodType == "M"){
-                        $('#unitValue').val('1.0000').trigger('change');
-                        $("#unitValue").attr('disabled',true);
-                        $('#unitValueT').val('1.0000').trigger('change');
-                        $("#unitValueT").attr('disabled',true);
-                        $("#wYield").attr('disabled',false);
-                        $("#wYield").attr("required", "required").trigger('change');
-                        $("#yield7").attr('disabled',false);
-                        $("#yield7").attr("required", "required").trigger('change');
+                        $('#pUnitValue').val('1.0000').trigger('change');
+                        $("#pUnitValue").attr('disabled',true);
+                        $('#pUnitValueT').val('1.0000').trigger('change');
+                        $("#pUnitValueT").attr('disabled',true);
+                        $("#pWYield").attr('disabled',false);
+                        $("#pWYield").attr("required", "required").trigger('change');
+                        $("#pYield7").attr('disabled',false);
+                        $("#pYield7").attr("required", "required").trigger('change');
                     }else{
-                        $('#unitValue').val('').trigger('change');
-                        $("#unitValue").attr('disabled',false);
-                        $('#unitValueT').val('').trigger('change');
-                        $("#unitValueT").attr('disabled',false);
-                        $('#wYield').removeAttr("required");
-                        $('#wYield').val('').trigger('change');
-                        $("#wYield").attr('disabled',true);
-                        $('#yield7').removeAttr("required");
-                        $('#yield7').val('').trigger('change');
-                        $("#yield7").attr('disabled',true);
+                        $('#pUnitValue').val('').trigger('change');
+                        $("#pUnitValue").attr('disabled',false);
+                        $('#pUnitValueT').val('').trigger('change');
+                        $("#pUnitValueT").attr('disabled',false);
+                        $('#pWYield').removeAttr("required");
+                        $('#pWYield').val('').trigger('change');
+                        $("#pWYield").attr('disabled',true);
+                        $('#pYield7').removeAttr("required");
+                        $('#pYield7').val('').trigger('change');
+                        $("#pYield7").attr('disabled',true);
+                    }
+
+                    if(result.isGrade == "02"){
+                        $('#assetsValue').val($('#pAssetsValue').val()).trigger("blur");
+                        $("#assetsValue").attr('disabled',true);
+                        $('#capital').val($('#pCapital').val()).trigger("blur");
+                        $("#capital").attr('disabled',true);
+                        $('#unitValue').val($('#pUnitValue').val()).trigger("blur");
+                        $("#unitValue").attr('disabled',true);
+                        $('#unitValueT').val($('#pUnitValueT').val()).trigger("blur");
+                        $("#unitValueT").attr('disabled',true);
+                    }else{
+                        $("#assetsValue").attr('disabled',false);
+                        $("#capital").attr('disabled',false);
+                        if(result.prodType == "M"){
+                            $('#unitValue').val('1.0000').trigger("blur");;
+                            $("#unitValue").attr('disabled',true);
+                            $('#unitValueT').val('1.0000').trigger("blur");;
+                            $("#unitValueT").attr('disabled',true);
+                        }else{
+                            $('#unitValue').val('');
+                            $("#unitValue").attr('disabled',false);
+                            $('#unitValueT').val('');
+                            $("#unitValueT").attr('disabled',false);
+                        }
+
+                        if(result.prodType == "N"){
+                            $('#wYield').removeAttr("required");
+                            $('#wYield').val('').trigger('change');
+                            $("#wYield").attr('disabled',true);
+                            $('#yield7').removeAttr("required");
+                            $('#yield7').val('').trigger('change');
+                            $("#yield7").attr('disabled',true);
+                        }else if(result.prodType == "M"){
+                            if(result.isGrade == "02"){
+                                $('#wYield').val($('#pWYield').val()).trigger("blur");
+                                $("#wYield").attr('disabled',true);
+                                $('#yield7').val($('#pYield7').val()).trigger("blur");
+                                $("#yield7").attr('disabled',true);
+                            }else{
+                                $("#wYield").attr('disabled',false);
+                                $("#yield7").attr('disabled',false);
+                            }
+                        }
                     }
                     star();
                 }
@@ -192,72 +238,72 @@ $(function() {
             $('#prodType').val('');
         }
     });
-    $('#assetsValue').change(assetsValueChange);
-    $('#capital').change(capitalChange);
-    $('#unitValue').change(unitValueChange);
-    $('#unitValueT').change(unitValueTChange);
-    $('#wYield').change(wYieldChange);
-    $('#yield7').change(yield7Change);
+    $('#pAssetsValue').change(pAssetsValueChange);
+    $('#pCapital').change(pCapitalChange);
+    $('#pUnitValue').change(pUnitValueChange);
+    $('#pUnitValueT').change(pUnitValueTChange);
+    $('#pWYield').change(pWYieldChange);
+    $('#pYield7').change(pYield7Change);
 debugger;
     if(pageModel!=PAGE_MODEL_NEW){
         if($('#prodType').val() == "M"){
-            $("#unitValue").attr('disabled',true);
-            $("#unitValueT").attr('disabled',true);
-            $("#wYield").attr('disabled',false);
-            $("#wYield").attr("required", "required").trigger('change');
-            $("#yield7").attr('disabled',false);
-            $("#yield7").attr("required", "required").trigger('change');
+            $("#pUnitValue").attr('disabled',true);
+            $("#pUnitValueT").attr('disabled',true);
+            $("#pWYield").attr('disabled',false);
+            $("#pWYield").attr("required", "required");
+            $("#pYield7").attr('disabled',false);
+            $("#pYield7").attr("required", "required");
         }else{
-            $("#unitValue").attr('disabled',false);
-            $("#unitValueT").attr('disabled',false);
-            $('#wYield').removeAttr("required");
-            $("#wYield").attr('disabled',true);
-            $('#yield7').removeAttr("required");
-            $("#yield7").attr('disabled',true);
+            $("#pUnitValue").attr('disabled',false);
+            $("#pUnitValueT").attr('disabled',false);
+            $('#pWYield').removeAttr("required");
+            $("#pWYield").attr('disabled',true);
+            $('#pYield7').removeAttr("required");
+            $("#pYield7").attr('disabled',true);
         };
 
         if($('#isGrade').val() == "02"){
-            $("#pAssetsValue").attr('disabled',true);
-            $("#pCapital").attr('disabled',true);
-            $("#pUnitValue").attr('disabled',true);
-            $("#pUnitValueT").attr('disabled',true);
+            $("#assetsValue").attr('disabled',true);
+            $("#capital").attr('disabled',true);
+            $("#unitValue").attr('disabled',true);
+            $("#unitValueT").attr('disabled',true);
         }else{
-            $("#pAssetsValue").attr('disabled',false);
-            $("#pCapital").attr('disabled',false);
+            $("#assetsValue").attr('disabled',false);
+            $("#capital").attr('disabled',false);
             if($('#prodType').val() == "M"){
-                $("#pUnitValue").attr('disabled',true);
-                $("#pUnitValueT").attr('disabled',true);
+                $("#unitValue").attr('disabled',true);
+                $("#unitValueT").attr('disabled',true);
             }else{
-                $("#pUnitValue").attr('disabled',false);
-                $("#pUnitValueT").attr('disabled',false);
+                $("#unitValue").attr('disabled',false);
+                $("#unitValueT").attr('disabled',false);
             }
         };
         if($('#prodType').val() == "N"){
-            $("#pWYield").attr('disabled',true);
-            $('#pWYield').removeAttr("required");
+            $("#wYield").attr('disabled',true);
+            $('#wYield').removeAttr("required");
         }else if($('#prodType').val() == "M"){
             if($('#isGrade').val() == "02"){
-                $("#pWYield").attr('disabled',true);
+                $("#wYield").attr('disabled',true);
             }else{
-                $("#pWYield").attr('disabled',false);
+                $("#wYield").attr('disabled',false);
             }
-            $("#pWYield").attr("required", "required");
+            $("#wYield").attr("required", "required");
         }else{
 
-            $('#pWYield').removeAttr("required");
+            $('#wYield').removeAttr("required");
         };
         if($('#prodType').val() == "N"){
-            $("#pYield7").attr('disabled',true);
-            $('#pYield7').removeAttr("required");
+            $("#yield7").attr('disabled',true);
+            $('#yield7').removeAttr("required");
         }else if($('#prodType').val() == "M"){
             if($('#isGrade').val() == "02"){
-                $("#pYield7").attr('disabled',true);
+                $("#yield7").attr('disabled',true);
             }else{
-                $("#pYield7").attr('disabled',false);
+                $("#yield7").attr('disabled',false);
             }
-            $("#pYield7").attr("required", "required");
+            $("#yield7").attr("required", "required");
         }else{
-            $('#pYield7').removeAttr("required");
+            $('#yield7').removeAttr("required");
         }
         star();
     }

@@ -45,8 +45,8 @@ public enum DictCodeListExt5 implements BaseDictCodeList {
     信披募集方式_公募(DictCodeExt1.信披_募集方式,"01","公募"),
     信披募集方式_私募(DictCodeExt1.信披_募集方式,"02","私募"),
 
-    信披产品类型_净值型产品(DictCodeExt1.信披_产品类型,"N","净值型产品"),
-    信披产品类型_现管类产品(DictCodeExt1.信披_产品类型,"M","现管类产品"),
+    信披产品类型_净值型产品(DictCodeExt1.信披_产品类型,"01","净值型产品"),
+    信披产品类型_现管类产品(DictCodeExt1.信披_产品类型,"04","现管类产品"),
 
     信披投资性质_固定收益类(DictCodeExt1.信披_投资性质,"01","固定收益类"),
     信披投资性质_权益类(DictCodeExt1.信披_投资性质,"02","权益类"),
@@ -61,6 +61,14 @@ public enum DictCodeListExt5 implements BaseDictCodeList {
     行情代码_中债新综合全价指数收益率(DictCodeExt1.行情代码,"02","中债新综合全价指数收益率"),
     行情代码_沪深300指数收益率(DictCodeExt1.行情代码,"03","沪深300指数收益率"),
     行情代码_中债新综合财富指数(DictCodeExt1.行情代码,"04","中债新综合财富指数（1-3年）收益率"),
+
+    维护类型_代销机构(DictCodeExt1.信披_代销机构_维护类型,"01","代销机构"),
+    维护类型_理财产品(DictCodeExt1.信披_代销机构_维护类型,"02","理财产品"),
+
+
+    开放频率_日开(DictCodeExt1.开放频率,"01","日开"),
+    开放频率_频率在半年以内(DictCodeExt1.开放频率,"02","频率在半年（不含）以内"),
+    开放频率_频率在半年以上(DictCodeExt1.开放频率,"03","频率在半年以上"),
 
     ;
     /**

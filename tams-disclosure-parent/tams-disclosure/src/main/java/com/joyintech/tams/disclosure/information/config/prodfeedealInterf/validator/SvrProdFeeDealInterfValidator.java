@@ -79,7 +79,7 @@ public class SvrProdFeeDealInterfValidator implements BeanValidator {
                 }
             }else if(dto.getFeeType().equals("01")||dto.getFeeType().equals("02")||dto.getFeeType().equals("03")||dto.getFeeType().equals("04")){
                 if(dto.getAccrual() == null){
-                    errorList.add(new ValidMessage("", "当费用类型选择“申购费”“赎回费”“客户收益”时自成立以来发生额（贷方）不可为空"));
+                    errorList.add(new ValidMessage("", "当费用类型选择“托管费”“管理费（固定）”“管理费（超额）”“销售费”时自成立以来发生额（贷方）不可为空"));
                 }
             }
             if(dto.getPayDate()== null){

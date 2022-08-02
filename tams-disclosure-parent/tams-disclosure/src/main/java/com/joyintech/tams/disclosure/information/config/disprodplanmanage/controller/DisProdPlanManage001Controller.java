@@ -91,7 +91,7 @@ public class DisProdPlanManage001Controller extends BaseController {
 				CacheUtil.getSysParam(ReportGlobalConstant.REPORT_PASSWORD));
 
 		model.addAttribute("isModelSelect", isModelSelect);*/
-        this.setSelectOptionToModel(model, DictCode.信披_数据状态);
+        this.setSelectOptionToModel(model, DictCode.信披_数据状态ED);
         return super.init(model);
     }
 

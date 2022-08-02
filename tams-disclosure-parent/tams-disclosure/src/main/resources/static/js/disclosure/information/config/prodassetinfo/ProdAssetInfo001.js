@@ -48,13 +48,14 @@ $(function(){
          */
         dblclick:function(table, data) {
             data.pageModel=PAGE_MODEL_REFERENCE;
-            Joyin.dialog(JoyinUtil.getLabel("ProdAssetInfo001"),
+            Joyin.dialog(JoyinUtil.getLabel("产品资产组合情况查看"),
                     JoyinUtil.getRealPath("disclosure/information/config/prodassetinfo/ProdAssetInfo002/init"),
                     "98%", "95%", data,
                     function(){table.reload();});
         },
          cols:[
                {field:'prodAssetId', visible: false}
+               ,{field:'dataStatus', visible: false}
               ,{field:'statusStr', width:'10%', sortField:'dataStatus', title: '数据状态'}
               ,{field:'prodId', width:'10%', sortField:'prodId', title: '产品主代码'}
               ,{field:'prodName', width:'10%', sortField:'prodName', title: '产品名称'}
@@ -112,7 +113,7 @@ $(function(){
               ,{field:'updateUser', width:'10%', sortField:'updateUser', title: '更新人'}
               ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt'],
                  render: function (data, type, row, meta) {
-                     if (row.dataStatus == '02')
+                     if (row.dataStatus == 'D')
                          return '';
                      else
                          return '<i class="btn layui-icon edit edit" title="编辑" data-ignore="false"></i> ' +
@@ -151,15 +152,8 @@ $(function(){
 
     /*文件导出*/
     var exportExcel = function() {
-    	if (table != null && table != '') {
-            var selArr = table.getAllCheckedRows();
-         }
-    	var param = getSearchParams();
-         if (!selArr || selArr.length == 0) {
-         } else {
-        	 param.keyList = JSON.stringify(selArr);
-         }
-        Joyin.exportExcel('export', param);
+        var paramObj = getSearchParams();
+        Joyin.exportExcel('export', paramObj);
     };
 
     $(function() {
@@ -221,8 +215,15 @@ $(function(){
                 var selArr = table.getAllCheckedRows();
             }
             if (!selArr || selArr.length == 0) {
-                Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+                Joyin.error("请至少选择一条记录");
                 return;
+            }
+            for(var i=0,row;i<selArr.length;i++){
+                var row=selArr[i];
+                if(row.dataStatus!='E'){
+                    Joyin.error("请选择有效的数据进行删除!");
+                    return;
+                }
             }
             var object = {
                 selectedItem : selArr,

@@ -135,7 +135,7 @@ public class DisProdPlanManage002Service extends CommonExportService<DisProdPlan
         if (StringUtils.isNotEmpty(keyId)) {
             DisProdPlanManage002Dto dto = new DisProdPlanManage002Dto();
             dto.setProdPlanId(keyId);
-            dto.setDataStatus(DictCodeListExt3.信披_数据状态_删除.getValue());
+            dto.setDataStatus(DictCodeListExt3.信披_数据状态_删除D.getValue());
             this.update(dto);
         }
     }
@@ -146,7 +146,7 @@ public class DisProdPlanManage002Service extends CommonExportService<DisProdPlan
         entity.setOperateType(type.toString());
         entity.setUpdateTime(DateUtil.now());
         if (StringUtil.equals(entity.getOperateType(), "NEW")) {
-            entity.setDataStatus(DictCodeListExt3.信披_数据状态_有效.getValue());
+            entity.setDataStatus(DictCodeListExt3.信披_数据状态_有效E.getValue());
             entity.setDataSource(DictCodeListExt3.信披_数据来源_系统新建.getValue());
             this.insert(entity);
         } else if (StringUtil.equals(entity.getOperateType(), "MODIFY")) {

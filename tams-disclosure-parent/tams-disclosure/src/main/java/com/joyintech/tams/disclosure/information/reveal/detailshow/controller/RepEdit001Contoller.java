@@ -9,8 +9,13 @@
 */
 package com.joyintech.tams.disclosure.information.reveal.detailshow.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -24,24 +29,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.service.GetPrdInfoSelectService;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.repcheck.service.RepCheckInfoService;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.reportDeal.service.ReportDealService;
 import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.ReportManager;
 import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.dao.ReportInfoMapper;
 import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.ReportInfo;
+import com.joyintech.tams.disclosure.busicommon.poireport.service.PoiReportService;
 import com.joyintech.tams.disclosure.information.config.reporttree.service.ReportTreeMenuConfiguration001Service;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.service.RepDetailsShow001Service;
-import com.joyintech.tams.disclosure.information.reveal.detailshow.service.ReportFileUtil;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.service.WebOfficeObject;
+import com.joyintech.tams.systemtools.service.CommonPlatformDateService;
 
 /**
  * 模板示例<br>
@@ -61,25 +73,20 @@ public class RepEdit001Contoller extends BaseController {
 	private ReportInfoMapper reportInfoMapper;
 	
     @Autowired
-    private RepDetailsShow001Service repDetailsShow001Service;
-    
-    @Autowired
-    private ReportTreeMenuConfiguration001Service reportTreeMenuConfiguration001Service;
+    private PoiReportService poiReportService;
     
     @Autowired
     ReportDealService reportDealService;
     
     @Autowired
-	private GetPrdInfoSelectService getPrdInfoSelectService;
-    
-    @Autowired
-	private ReportManager reportManager;
-    @Autowired
-    private RepCheckInfoService repCheckInfoService;
-    
-    @Autowired
 	@Qualifier("masterDataSource") DataSource master;
 
+    @Autowired
+    private CommonPlatformDateService commonPlatformDateService;
+
+    @Autowired
+    private RepDetailsShow001Service repDetailsShow001Service;
+    
     private String editFilename = "";
     private String saveFilename = "";
     /**
@@ -94,23 +101,23 @@ public class RepEdit001Contoller extends BaseController {
      * @see
      * @since 1.0
      */
+    @Override
     public String init(Model model) {
     	
-//    	 portnum=LEO-001, endDate=2022-06-30, repName=分红计算清单}
-    	String templateName = RequestUtil.getPageParam().get("repName").toString();
-    	Date genDate = DateUtil.parse(RequestUtil.getPageParam().get("endDate").toString());
-    	String portnum = RequestUtil.getPageParam().get("portnum").toString();
-    	String reportId = RequestUtil.getPageParam().get("repId").toString();
+    	String templateName = RequestUtil.getPageParam().get("repName")==null?"":RequestUtil.getPageParam().get("repName").toString();
+    	Date reportDate = RequestUtil.getPageParam().get("enddate")==null?commonPlatformDateService.getSysDate():DateUtil.parse(RequestUtil.getPageParam().get("enddate").toString());
+    	 String portnum = RequestUtil.getPageParam().get("prodid")==null?RequestUtil.getPageParam().get("pprodid").toString():RequestUtil.getPageParam().get("prodid").toString();
+    	String reportId = RequestUtil.getPageParam().get("repid")==null?"":RequestUtil.getPageParam().get("repid").toString();
     	
-        model.addAttribute("endDate", DateUtil.parse(RequestUtil.getPageParam().get("endDate").toString()));
-        model.addAttribute("repName", RequestUtil.getPageParam().get("repName")); 
-        model.addAttribute("portnum", RequestUtil.getPageParam().get("portnum"));
-        model.addAttribute("repId", RequestUtil.getPageParam().get("repId"));
+        model.addAttribute("endDate", reportDate);
+        model.addAttribute("repName", templateName); 
+        model.addAttribute("portnum", portnum);
+        model.addAttribute("reportId", reportId);
         
         ReportInfo reportInfo = reportInfoMapper.getReportInfoByID(reportId);
         
-        editFilename = ReportFileUtil.buildReportFileName(ReportFileUtil.REPORT_TYPE_临时文件,reportInfo, genDate, portnum,ReportFileUtil.FILE_TYPE_DOCX);
-    	saveFilename = ReportFileUtil.buildReportFileName(ReportFileUtil.REPORT_TYPE_报表文件,reportInfo, genDate, portnum,ReportFileUtil.FILE_TYPE_DOCX);
+        editFilename = poiReportService.buildReportFileName(PoiReportService.REPORT_TYPE_临时文件,reportInfo, reportDate, portnum,PoiReportService.FILE_TYPE_DOCX);
+    	saveFilename = poiReportService.buildReportFileName(PoiReportService.REPORT_TYPE_报表文件,reportInfo, reportDate, portnum,PoiReportService.FILE_TYPE_DOCX);
         return super.init(model);
     }
 
@@ -142,7 +149,7 @@ public class RepEdit001Contoller extends BaseController {
                 }
                 else if(mOption.equalsIgnoreCase("SAVEFILE")){
                     String outputFilename = saveFilename;
-                    int ret = repDetailsShow001Service.saveFile (request,outputFilename );
+                    int ret = this.saveFile (request,outputFilename );
                     logger.info(mFileName+"文档已经保存成功");
 
                 }else if(mOption.equalsIgnoreCase("SAVEPDF")){
@@ -319,4 +326,66 @@ public class RepEdit001Contoller extends BaseController {
         }
         //System.out.println("OfficeServer.service End");
     }
+    
+    public int saveFile (HttpServletRequest request,String outputFilename ) throws IOException{
+        int ret = 0;
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(
+                request.getSession().getServletContext());
+        // 判断 request 是否有文件上传,即多部分请求
+        if (multipartResolver.isMultipart(request)) {
+            // 转换成多部分request
+            MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest)request;
+            // 取得request中的所有文件名
+            Iterator<String> iter = multiRequest.getFileNames();
+            while (iter.hasNext()) {
+                // 取得上传文件
+                MultipartFile file = multiRequest.getFile(iter.next());
+                if (file != null) {
+                    // 取得当前上传文件的文件名称
+                    String myFileName = StringUtil.trim(file.getOriginalFilename());
+                    //String filePath = System.getProperty("user.home");
+                    // 如果名称不为空,说明该文件存在，否则说明该文件不存在
+                    if (StringUtil.isNotEmpty(myFileName)) {
+                        // 文件存储到服务器之前调用监听器
+
+                        File localFile = new SafelyFile(outputFilename);
+                        File dir = localFile.getParentFile();
+                        if (!dir.exists()) {
+                            dir.mkdirs();
+                        }
+                        if (!localFile.exists()) {
+                            localFile.createNewFile();
+                        }
+                        // file.transferTo(localFile);
+                        ret = FileCopyUtils.copy(file.getInputStream(), new FileOutputStream(localFile));
+                        //PoiUtils.copy(file.getName(), localFile.getName());
+
+//                        UploadFile fileInfo = new UploadFile(myFileName, IDGenerator.generate(),
+//                                localFile);
+//                        fileInfo.setFileName(localFile.getPath());
+//                        if(null != fileAttachmentProcess) {
+//                            fileAttachmentProcess.upload(fileInfo);
+//                        }
+                    }
+                }
+            }
+        }
+//        progressBarService.updatePercent(pageId, ProgressBarService.FILE_UPLOAD_ID, 0.5D, true);
+        return  ret;
+    }
+    
+    public int loadFile (HttpServletResponse response,String inputFilename) throws IOException {
+        FileInputStream fis = new FileInputStream(inputFilename);
+        OutputStream os = response.getOutputStream();
+        int len = 0;
+        byte[] buffer = new byte[1024];
+        while ( (len = fis.read(buffer))!=-1 ) {
+            os.write(buffer,0,len);
+        }
+        fis.close();
+        os.flush();
+
+        return len;
+    }
+
 }

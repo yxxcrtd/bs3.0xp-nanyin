@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="SaleAgency001.xlsx" name="代销机构维护">
+    <Worksheet javaBean="com.joyintech.tams.disclosure.information.config.saleagency.dto.SaleAgencyDto">
+        <Row>
+            <Cell order="1" name="代销机构">agencyName</Cell>
+            <Cell order="2" name="协议起始时间">agreementVdateStr</Cell>
+            <Cell order="3" name="协议终止时间">agreementMdateStr</Cell>
+            <Cell order="4" name="产品系列">prodSeriesStr</Cell>
+            <Cell order="5" name="更新人">updateUser</Cell>
+            <Cell order="6" name="更新时间">updateTimeStr</Cell>
+        </Row>
+    </Worksheet>
+</Workbook>

@@ -28,7 +28,7 @@ $(function(){
          */
         dblclick:function(table, data) {
             data.pageModel=PAGE_MODEL_REFERENCE;
-            Joyin.dialog(JoyinUtil.getLabel("ProdPartner001"),
+            Joyin.dialog(JoyinUtil.getLabel("合作机构信息查看"),
                     JoyinUtil.getRealPath("disclosure/information/config/prodpartner/ProdPartner002/init"),
                     "98%", "95%", data,
                     function(){table.reload();});
@@ -45,7 +45,7 @@ $(function(){
               ,{field:'updateUser', width:'10%', sortField:'updateUser', title: '更新人'}
               ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt'],
                  render: function (data, type, row, meta) {
-                     if (row.dataStatus == '02')
+                     if (row.dataStatus == 'D')
                          return '';
                      else
                          return '<i class="btn layui-icon edit edit" title="编辑" data-ignore="false"></i> ' +
@@ -83,7 +83,9 @@ $(function(){
 
     /*文件导出*/
     var exportExcel = function() {
-    	if (table != null && table != '') {
+        var paramObj = getSearchParams();
+        Joyin.exportExcel('export', paramObj);
+    	/*if (table != null && table != '') {
             var selArr = table.getAllCheckedRows();
          }
     	var param = getSearchParams();
@@ -91,7 +93,7 @@ $(function(){
          } else {
         	 param.keyList = JSON.stringify(selArr);
          }
-        Joyin.exportExcel('export', param);
+        Joyin.exportExcel('export', param);*/
     };
 
     $(function() {
@@ -114,15 +116,15 @@ $(function(){
         $('#ProdPartner001_btn_import').click(function() {
             Joyin.confirm(JoyinUtil.getLabel("请确认是否要导入数据？"), function() {
                 Joyin.uploadFile(function(fileName) {
-                    Joyin.ajax(basePath + 'disclosure/information/config/prodpartner/ProdPartner001/checkImportData', {fileName: fileName}, function(checkResult) {
-                                Joyin.ajax(basePath +"disclosure/information/config/prodpartner/ProdPartner001/importFile", {
-                                    fileName : fileName
-                                },function(result){
-                                    if(!result || !($.isArray(result) && result.length > 0)) {
-                                        layui.layer.closeAll()
-                                        table.reload();
-                                    }
-                                });
+                    Joyin.ajax(basePath + 'disclosure/information/config/prodpartner/ProdPartner001/checkImportData', {fileName: fileName}, function() {
+                        Joyin.ajax(basePath +"disclosure/information/config/prodpartner/ProdPartner001/importFile", {
+                            fileName : fileName
+                        },function(result){
+                            if(!result || !($.isArray(result) && result.length > 0)) {
+                                layui.layer.closeAll()
+                                table.reload();
+                            }
+                        });
                     });
                 });
             });

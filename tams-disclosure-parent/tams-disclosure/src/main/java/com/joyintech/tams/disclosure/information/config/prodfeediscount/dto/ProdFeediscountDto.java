@@ -114,7 +114,7 @@ public class ProdFeediscountDto extends DisProdFeediscount implements ITableRow,
         if(StringUtils.isNotBlank(this.dataStatusName)){
             return this.dataStatusName ;
         }else{
-            return this.dataStatusName = SysDataUtil.getNameFromDataDict(DictCode.信披_数据状态, this.getDataStatus());
+            return this.dataStatusName = SysDataUtil.getNameFromDataDict(DictCode.信披_数据状态ED, this.getDataStatus());
         }
     }
 

@@ -9,16 +9,15 @@ $(function() {
         return {
             prodId:$('#prodId').val(),
             prodName:$('#prodName').val(),
-
-            /*regCode:$('#regCode').val(),
-            raiseVdateStart: $.trim($('#raiseVdate').startDate()),
-            raiseVdateEnd: $.trim($('#raiseVdate').endDate()),
-            vdateStart: $.trim($('#vdate').startDate()),
-            vdateEnd: $.trim($('#vdate').endDate()),
-            issuingStatus : $('#issuingStatus').val() == null ? null : $(
-                '#issuingStatus').val().join(","),
-            customerType : $('#customerType').val() == null ? null : $(
-                '#customerType').val().join(","),*/
+            raiseStrdateStart: $.trim($('#raiseStrdate').startDate()),
+            raiseStrdateEnd: $.trim($('#raiseStrdate').endDate()),
+            setDateStart: $.trim($('#setDate').startDate()),
+            setDateEnd: $.trim($('#setDate').endDate()),
+            prodRegistNo:$('#prodRegistNo').val() == null ? null : $('#prodRegistNo').val().join(","),
+            status : $('#status').val() == null ? null : $('#status').val().join(","),
+            raiseType:$('#raiseType').val() == null ? null : $('#raiseType').val().join(","),
+            isGrade:$('#isGrade').val() == null ? null : $('#isGrade').val().join(","),
+            profitType:$('#profitType').val() == null ? null : $('#profitType').val().join(",")
         };
     };
     /**
@@ -71,7 +70,15 @@ $(function() {
             ,{field:'errormsg', sortable:false, width:100, title: '错误信息'}
             ,{field:'updateDateStr', sortable:false, width:100, title: '更新时间'}
             ,{field:'updateUser', sortable:false, width:100, title: '更新人'}
-            ,{field:'operation', width:100, title: 'SysCommon.operation',sortable:false, type:'action', buttons: ['edit', 'delt']}
+            ,{field:'operation', width:100, title: 'SysCommon.operation',sortable:false, type:'action',
+                buttons: ['edit', 'delt'],render: function (data, type, row, meta) {
+                    if (row.status == 'D')
+                        return '';
+                    else
+                        return '<i class="btn layui-icon edit edit" title="编辑" data-ignore="false"></i> ' +
+                            '<i class="btn layui-icon delt delt" title="删除" data-ignore="false"></i>';
+                }
+            }
         ]
     });
     /**
@@ -89,10 +96,11 @@ $(function() {
                     function(){table.reload();});
             });
         }else{
-            data.pageModel=PAGE_MODEL_REFERENCE;
+           /* data.pageModel=PAGE_MODEL_REFERENCE;
             Joyin.dialog(JoyinUtil.getLabel("查看"),
                 basePath + "disclosure/information/config/repprodinfo/ProdInfo002/init",
-                "99%", "95%", data);
+                "99%", "95%", data);*/
+             Joyin.error("当前产品不能修改 !");
         }
     });
 
@@ -112,7 +120,6 @@ $(function() {
         var paramObj = getSearchParams();
         Joyin.exportExcel('export', paramObj);
     };
-``
 
     var reset = function(conditionArea,table){
         $(conditionArea).find("input").val("");
@@ -145,13 +152,7 @@ $(function() {
                         prodIdStr = prodIdStr + v.prodId + ",";
                     });
                     if(confirmFlag){
-                        Joyin.confirm("只有发行状态为确认发行的数据才能处理", function () {
-                            // 跳转发行状态管理页面
-                            Joyin.dialog(JoyinUtil.getLabel("发行状态管理"),
-                                JoyinUtil.getRealPath("disclosure/information/config/repprodinfo/ProdInfo003/init"),
-                                "70%", "80%",{prodIdStr : prodIdStr.substring(0, prodIdStr.length - 1)},function(){table.reload();}
-                            );
-                        });
+                        Joyin.confirm("只有发行状态为确认发行的数据才能处理");
                     }else{
                         // 跳转发行状态管理页面
                         Joyin.dialog(JoyinUtil.getLabel("发行状态管理"),
@@ -159,8 +160,6 @@ $(function() {
                             "70%", "80%",{prodIdStr : prodIdStr.substring(0, prodIdStr.length - 1)},function(){table.reload();}
                         );
                     }
-
-
                     //});
                 }else{
                     Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
@@ -185,9 +184,20 @@ $(function() {
                 var selArr = table.getAllCheckedRows();
             }
             if (!selArr || selArr.length == 0) {
-                Joyin.error(JoyinUtil.getMessage("没有选中数据"));
+                Joyin.error(JoyinUtil.getMessage("请至少选择一条记录"));
                 return;
             }
+            var selArrUseful =[];
+            selArr.forEach(v => {
+                if(v.status == 'E'){
+                    selArrUseful.push(v);
+                }
+            })
+            if (!selArrUseful || selArrUseful.length == 0) {
+                Joyin.error(JoyinUtil.getMessage("请选择一条有效的数据"));
+                return;
+            }
+
             var object = {selectedItem: selArr, operateType:"delete"};
             Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
                 WorkFlow.doDeleteList(basePath + 'disclosure/information/config/repprodinfo/ProdInfo001/delete', object, "ProdInfo001_btn_delete", "ProdInfo002",function(){

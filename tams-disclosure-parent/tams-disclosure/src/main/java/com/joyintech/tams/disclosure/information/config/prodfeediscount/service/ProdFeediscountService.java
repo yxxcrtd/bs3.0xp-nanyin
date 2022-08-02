@@ -146,7 +146,7 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
      * @return
      */
     public ProdFeediscountDto selectByProdId(String prodId) {
-        return  prodFeediscountMapper.selectByProdId(prodId,DictCodeListExt3.信披_数据状态_有效.getValue());
+        return  prodFeediscountMapper.selectByProdId(prodId,DictCodeListExt3.信披_数据状态_有效E.getValue());
     }
 
     /**
@@ -211,7 +211,7 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
         if (StringUtils.isNotEmpty(bonusPlanId)) {
             ProdFeediscountDto dto = new ProdFeediscountDto();
             dto.setProdDiscountId(bonusPlanId);
-            dto.setDataStatus(DictCodeListExt3.信披_数据状态_删除.getValue());
+            dto.setDataStatus(DictCodeListExt3.信披_数据状态_删除D.getValue());
             this.update(dto);
         }
     }
@@ -369,7 +369,7 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
            /* if (StringUtil.isNotEmpty(this.selectByProdId(temp.getProdId()))){
                 existData.add(temp);
             }else {*/
-                temp.setDataStatus(DictCodeListExt3.信披_数据状态_有效.getValue());
+                temp.setDataStatus(DictCodeListExt3.信披_数据状态_有效E.getValue());
                 temp.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
                 newData.add(temp);
            // }
@@ -455,7 +455,7 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
         entity.setOperateType(type.toString());
         entity.setUpdateTime(DateUtil.now());
         if (StringUtil.equals(entity.getOperateType(), "NEW")) {
-            entity.setDataStatus(DictCodeListExt3.信披_数据状态_有效.getValue());
+            entity.setDataStatus(DictCodeListExt3.信披_数据状态_有效E.getValue());
             entity.setDataSource(DictCodeListExt3.信披_数据来源_系统新建.getValue());
             this.insert(entity);
         } else if (StringUtil.equals(entity.getOperateType(), "MODIFY")) {

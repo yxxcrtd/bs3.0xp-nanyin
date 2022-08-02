@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.joyintech.tams.disclosure.busicommon.report.dao.ReportRkcpjz001Mapper">
+	<select id="getProdInfo" resultType="com.joyintech.tams.disclosure.busicommon.report.dto.ReportRkcpjz001Dto">
+		/*
+			TITLENAME:标题名(普通产品取产品名称 ,分级产品取 母产品名称+（子产品代码）)
+		  	PRODNAME：产品名称（普通产品取产品名称 ,分级产品取母产品名称）
+			PRODID：产品代码（普通产品取产品代码 ,分级产品取子产品代码）
+			REGCODE：产品登记编码（普通产品取产品登记编码 ,分级产品取母产品登记编码）
+		*/
+		SELECT
+			RPI.PROD_ID prodId,
+			CASE WHEN RPI.IS_GRADE = '01' THEN
+					 RPI2.PROD_NAME ||'（'||RPI.PROD_ID||'）'
+				 ELSE RPI.PROD_NAME END titleName,
+			CASE WHEN RPI.IS_GRADE = '01' THEN
+					 RPI2.PROD_NAME ||RPI.PROD_NAME
+				 ELSE RPI.PROD_NAME END prodName,
+			NVL(RPI2.PROD_RE,RPI.PROD_RE) regCode
+		FROM REP_PROD_INFO RPI
+			LEFT JOIN REP_PROD_INFO RPI2 ON RPI.P_PROD_ID = RPI2.PROD_ID AND RPI2.STATUS = 'E'
+		WHERE RPI.PROD_ID = #{prodId}
+		  AND RPI.STATUS = 'E'
+	</select>
+
+	<select id="getXgxValueList" resultType="com.joyintech.tams.disclosure.busicommon.report.dto.ReportValueDto">
+		SELECT TO_CHAR(PRI.VALUE_DATE,'yyyy-MM-dd') valueDate,
+			   TO_CHAR(ROUND(NVL(PRI.W_YIELD,0),4),'FM9999999999999990.0000')  wYield,
+			   TO_CHAR(ROUND(NVL(PRI.YIELD_7,0) * 100,4),'FM9999999999999990.0000')||'%' yield7 ,
+			   '1.0000' unitValue,
+			   '1.0000' unitValueT,
+			   '1.0000' subValue,
+			   '1.0000' redValue
+		FROM REP_PROD_INFO INFO
+			INNER JOIN REP_PROD_INDEX PRI ON PRI.PROD_ID = INFO.PROD_ID AND PRI.STATUS = 'E'
+		WHERE INFO.PROD_ID = #{prodId}
+		  AND PRI.VALUE_DATE &lt;= #{edate}
+		  AND PRI.VALUE_DATE >= #{vdate}
+		ORDER BY PRI.VALUE_DATE DESC
+	</select>
+
+	<select id="getJzxValueList" resultType="com.joyintech.tams.disclosure.busicommon.report.dto.ReportValueDto">
+		SELECT TO_CHAR(PRI.VALUE_DATE,'yyyy-MM-dd') valueDate,
+			   TO_CHAR(ROUND(NVL(PRI.UNIT_VALUE,0),4),'FM9999999999999990.0000')  unitValue,
+			   TO_CHAR(ROUND(NVL(PRI.UNIT_VALUE_T,0),4),'FM9999999999999990.0000') unitValueT,
+			   TO_CHAR(ROUND(NVL(PRI.UNIT_VALUE,0),4),'FM9999999999999990.0000') subValue,
+		       /*需要结合产品基本信息中“固定持有天数“字段进行判断：
+				（1）固定持有天数为0（即日申季赎、日申月赎产品），需要根据产品排期表判断，当前最新净值日期是否是该产品某开放周期的“开放期结束日”，
+		         	如果是的话，则当前的净值信息赎回价格=申购价格；若最新净值日期不是某一周期的“开放期结束日”，则赎回价格字段置空；
+				（2）固定持有天数不等于0（产品成立超过固定持有天数后，后续每一天都可以进行赎回），自”子产品成立日+固定持有天数-1“后的净值公告赎回价格=申购价格；在此之前生成的净值公告，赎回价格置空*/
+			   CASE WHEN nvl(INFO.HOLDDAY,0) = 0 THEN
+			       CASE WHEN DPP.PROD_PLAN_ID IS NOT NULL THEN
+						TO_CHAR(ROUND(NVL(PRI.UNIT_VALUE,0),4),'FM9999999999999990.0000')
+			       ELSE NULL END
+			   ELSE
+			       CASE WHEN TO_DATE(#{valueDate},'yyyy-MM-dd') = (INFO.SET_DATE + nvl(INFO.HOLDDAY,0) - 1) THEN
+						TO_CHAR(ROUND(NVL(PRI.UNIT_VALUE,0),4),'FM9999999999999990.0000')
+			       ELSE NULL END
+			   END AS  redValue
+		FROM REP_PROD_INFO INFO
+			INNER JOIN REP_PROD_INDEX PRI ON PRI.PROD_ID =INFO.PROD_ID AND PRI.STATUS = 'E'
+			LEFT JOIN DIS_PROD_PLAN DPP ON DPP.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID) AND DPP.OPEN_END_DATE =PRI.VALUE_DATE
+		WHERE INFO.PROD_ID = #{prodId}
+		  AND PRI.VALUE_DATE = TO_DATE(#{valueDate},'yyyy-MM-dd')
+	</select>
+
+	<select id="getValues" resultType="com.joyintech.tams.disclosure.busicommon.report.dto.ReportGrahDto">
+		SELECT TO_CHAR(PRI.VALUE_DATE,'YYYY-MM-DD') cDate,
+		/*净值型产品需要查询单位净值跟单位累计净值*/
+		<if test="rptType != NULL and rptType.equals('RKCPJZ_GMJZXCP')">
+		         TO_CHAR(ROUND(NVL(PRI.UNIT_VALUE,0),4),'FM9999999999999990.0000') value,
+		   		 TO_CHAR(ROUND(NVL(PRI.UNIT_VALUE_T,0),4),'FM9999999999999990.0000') totalValue
+		</if>
+		/*现管型产品需要查询万份收益跟七日年化收益率*/
+		<if test="rptType != NULL and rptType.equals('RKCPJZ_GMXGL')">
+			to_char(ROUND(nvl(PRI.W_YIELD,0),4),'FM9999999999999990.0000') value,
+			to_char(ROUND(nvl(PRI.YIELD_7,0) * 100,4),'FM9999999999999990.0000') totalValue
+		</if>
+		  FROM REP_PROD_INFO INFO
+		INNER JOIN REP_PROD_INDEX PRI ON PRI.PROD_ID = INFO.PROD_ID AND PRI.STATUS = 'E'
+		  WHERE INFO.PROD_ID = #{prodId}
+			AND PRI.STATUS = 'E'
+		  	/*净值型产品需要查询工作日的净值数据*/
+			<if test="rptType != NULL and rptType.equals('RKCPJZ_GMJZXCP')">
+				AND EXISTS (
+				SELECT 1 FROM CHB_MKT_HOLIDAY H WHERE H.MARKET_CODE = '04'
+				AND H.IS_HOLIDAY = '0'
+				AND PRI.VALUE_DATE = H.BUSI_DATE
+				)
+			</if>
+			<if test="dateList != null and dateList.size()>0">
+				<foreach collection="dateList" item="item" open="and PRI.VALUE_DATE in(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		  ORDER BY PRI.VALUE_DATE DESC
+	</select>
+
+
+	<select id="getValueDayList" resultType="java.util.Date">
+		SELECT * FROM (
+			select h.busi_date from CHB_MKT_HOLIDAY h
+			where h.busi_date &lt;= to_date(#{busi_date},'yyyy-MM-dd')
+			  and h.market_code = #{market_code}
+			<if test="is_holiday != null and is_holiday != ''">
+				and h.is_holiday = #{is_holiday}
+			</if>
+			order by h.busi_date desc
+		) WHERE ROWNUM &lt;= 30
+	</select>
+
+</mapper>

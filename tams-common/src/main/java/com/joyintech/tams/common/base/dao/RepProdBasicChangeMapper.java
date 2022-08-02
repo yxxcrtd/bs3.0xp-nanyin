@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RepProdBasicChangeMapper {
-    int deleteByPrimaryKey(String basicChangeId);
+    int deleteByPrimaryKey(String uuid);
 
     int insert(RepProdBasicChange record);
 
@@ -13,7 +13,7 @@ public interface RepProdBasicChangeMapper {
 
     int insertBasicByBasicInfo(RepProdBasicChange record);
 
-    RepProdBasicChange selectByPrimaryKey(String basicChangeId);
+    RepProdBasicChange selectByPrimaryKey(String uuid);
 
     int updateByPrimaryKeySelective(RepProdBasicChange record);
 

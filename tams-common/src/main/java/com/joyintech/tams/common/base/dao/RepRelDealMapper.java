@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RepRelDealMapper {
-    int deleteByPrimaryKey(String prodId);
+    int deleteByPrimaryKey(String uuid);
 
     int insert(RepRelDeal record);
 
@@ -13,7 +13,7 @@ public interface RepRelDealMapper {
 
     int insertBasicByBasicInfo(RepRelDeal record);
 
-    RepRelDeal selectByPrimaryKey(String prodId);
+    RepRelDeal selectByPrimaryKey(String uuid);
 
     int updateByPrimaryKeySelective(RepRelDeal record);
 

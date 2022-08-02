@@ -22,6 +22,8 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dao.ProdBonusplanMapper;
 import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto;
+import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto;
+import com.joyintech.tams.disclosure.information.config.repprodinfo.service.ProdInfoService;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -57,6 +59,9 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
     @Autowired
     private ProdBonusplanManager002Service prodBonusplanManager002Service;
 
+    @Autowired
+    private ProdInfoService prodInfoService ;
+
 
     /**
      * 日志
@@ -71,7 +76,7 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
         // 遍历构造数据
         if (CollectionUtils.isNotEmpty(result)) {
             result.stream().forEach(item -> {
-                item.setDataStatusName(SysDataUtil.getNameFromDataDict(DictCode.信披_数据状态, item.getDataStatus()));
+                item.setDataStatusName(SysDataUtil.getNameFromDataDict(DictCode.信披_数据状态ED, item.getDataStatus()));
                 item.setBonusModeName(SysDataUtil.getNameFromDataDict(DictCode.信披_分红方式, item.getBonusMode()));
             });
         }
@@ -119,7 +124,7 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
         // 遍历构造数据
         if (CollectionUtils.isNotEmpty(list)) {
             list.stream().forEach(item -> {
-                item.setDataStatusName(SysDataUtil.getNameFromDataDict(DictCode.信披_数据状态, item.getDataStatus()));
+                item.setDataStatusName(SysDataUtil.getNameFromDataDict(DictCode.信披_数据状态ED, item.getDataStatus()));
                 item.setBonusModeName(SysDataUtil.getNameFromDataDict(DictCode.信披_分红方式, item.getBonusMode()));
 
             });
@@ -136,7 +141,7 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
      * @return
      */
     public ProdBonusplanDto selectByProdId(String prodId) {
-        return prodBonusplanMapper.selectByProdId(prodId, DictCodeListExt3.信披_数据状态_有效.getValue());
+        return prodBonusplanMapper.selectByProdId(prodId, DictCodeListExt3.信披_数据状态_有效E.getValue());
     }
 
 
@@ -182,8 +187,14 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
                     if (!StringUtil.isNotEmpty(rowData.get(0))) {
                         errorMsg.append("子产品代码 必填！");
                     }else{
-                        //不存在 校验 TODO
-
+                        //不存在 校验
+                        ProdInfoDto prodInfo = prodInfoService.selectByProdStatus(rowData.get(0));
+                        if(prodInfo == null){
+                            errorMsg.append("子产品代码 不存在");
+                        }
+                        /*if (StringUtil.isNotEmpty(this.selectByProdId(rowData.get(0)))) {
+                            errorMsg.append("子产品代码已存在，继续录入会覆盖历史数据");
+                        }   */
 
                     }
                     if (!StringUtil.isNotEmpty(rowData.get(1))) {
@@ -286,7 +297,7 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
             if (StringUtil.isNotEmpty(this.selectByProdId(temp.getProdId()))) {
                 existData.add(temp);
             } else {
-                temp.setDataStatus(DictCodeListExt3.信披_数据状态_有效.getValue());
+                temp.setDataStatus(DictCodeListExt3.信披_数据状态_有效E.getValue());
                 temp.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
                 newData.add(temp);
             }

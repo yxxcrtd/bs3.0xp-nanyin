@@ -4,6 +4,8 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -53,6 +56,12 @@ public class RepInvestAccount002Controller extends BaseController {
         }
         this.setSelectOptionToModel(model, DictCodeExt1.托管账户);
         return super.init(model);
+    }
+
+    @ResponseBody
+    @RequestMapping("queryProdIdInfo2")
+    public List<SelectOptionDto> queryProdIdInfo2() {
+        return repInvestAccountService.queryProdIdInfo2(RequestUtil.getPageParam());
     }
 
     @ResponseBody
@@ -88,7 +97,7 @@ public class RepInvestAccount002Controller extends BaseController {
         params.setElementId(dto.getElementId());
         params.setBusinessCode(dto.getProdId());
         params.setBusinessType(DictCodeListExt4.共通业务类型_投资账户信息维护.getValue());
-        params.setComment(entity -> "主键流程id" + "(" + entity.getProdId() + ")");
+        params.setComment(entity -> "产品主代码" + "(" + entity.getProdId() + ")");
         // 塞入工作流参数
         processParameter.setWorkFlowParameter(params);
 

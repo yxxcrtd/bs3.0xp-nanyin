@@ -307,7 +307,22 @@ public class RepDetailsShow001Contoller extends BaseController {
 	 */
 	@RequestMapping(value="/previewReport", method = RequestMethod.POST)
 	public void previewReport(HttpServletRequest request, HttpServletResponse response) {
-		repDetailsShow001Service.previewReport(request,response);
+		Map<String,Object> params = RequestUtil.getPageParam();
+    	params.put("modelId", params.get("modelid"));
+    	params.put("prodId", params.get("prodid"));
+    	params.put("pprodId", params.get("pprodid"));
+    	params.put("prodName", params.get("prodname"));
+    	params.put("repId", params.get("repid"));
+    	params.put("reportId", params.get("repid"));
+    	params.put("endDate", params.get("enddate"));
+    	params.put("repName",params.get("repname"));
+    	params.put("reportDate", params.get("enddate"));
+    	if ( params.get("uri")==null )
+    		params.put("uri",params.get("modelid"));
+    	if (params.get("prodId")==null )
+    		params.put("prodId",params.get("pprodId"));
+        
+		repDetailsShow001Service.previewReport(params,response);
 	}
 
 	/**
@@ -318,61 +333,39 @@ public class RepDetailsShow001Contoller extends BaseController {
     @ResponseBody
     public AjaxResult genReport(){
         AjaxResult value = new AjaxResult();
-        List<ValidMessage> checkList = new ArrayList<ValidMessage>();
         try {
-        	List<String> prdList = new ArrayList<>();
+        	//对参数进行修正，防止前台传入的参数错误或者变量大小写错误
         	Map<String,Object> params = RequestUtil.getPageParam();
-        	String operateType = params.get("operateType").toString();
-        	String rep_id = params.get("rep_id").toString();
-        	RepReveal repReveal = new RepReveal();
-
-        	if(params.get("repId") != null) {
-        		repReveal.setRepId(params.get("repId").toString());
-        	}
-        	if(params.get("portnum") != null) {
-
-        		if(params.get("portnum").toString().indexOf("[")==0){
-        			//prdList = JSONArray.parseArray(params.get("portnum").toString(),String.class);
-        			prdList =JacksonUtil.toJavaObjectList(params.get("portnum").toString(),String.class);
-        		}else{
-        			prdList.add(params.get("portnum").toString().replace("\"", ""));
-        		}
-        	}
-
-        	if(params.get("startDate") != null) {
-        		Date sDate = DateUtil.parse(params.get("startDate").toString());
-        		params.put("startDate",sDate);   //参数转成日期类型
-        	}
-        	if(params.get("endDate") != null) {
-        		Date eDate = DateUtil.parse(params.get("endDate").toString());
-        		repReveal.setEndDate(eDate);
-        		params.put("endDate",eDate);  //参数转成日期类型
-        	}
-
-        	boolean flag = true;
+        	params.put("modelId", params.get("modelid"));
+        	params.put("prodId", params.get("prodid"));
+        	params.put("pprodId", params.get("pprodid"));
+        	params.put("prodName", params.get("prodname"));
+        	params.put("repId", params.get("repid"));
+        	params.put("reportId", params.get("repid"));
+        	params.put("endDate", params.get("enddate"));
+        	params.put("repName",params.get("repname"));
+        	params.put("reportDate", params.get("enddate"));        	
+        	if ( params.get("uri")==null )
+        		params.put("uri",params.get("modelid"));
+        	if (params.get("prodId")==null )
+        		params.put("prodId",params.get("pprodId"));
+        	
+        	boolean flag = false;
         	boolean confirmFlag = true;
-
-        	for (String prd : prdList) {
-        		if("01".equals(operateType)){
-        			repReveal.setProdid(prd);
-        			params.put("portnum", prd);
-            		confirmFlag = reportDealService.selectConfirmStatus(repReveal);
-            		if(confirmFlag == true) {
-            			reportDealService.updateDataStatus(repReveal);
-            			if(!repDetailsShow001Service.genReport(params)){
-        					flag = false;
-        				}
-            		}else {
-            			value.setMessage("存在相同且已确认的报表", MessageType.错误消息);
-            		}
-            	}
-			}
-            if(flag){
-                value.setMessage("生成成功", MessageType.提示消息);
-            }else if(confirmFlag) {
-                value.setErrorList(checkList);
-                repDetailsShow001Service.deleteErrorMsg(rep_id);
-            }
+        	RepReveal repReveal = new RepReveal();
+        	String prodId = params.get("pprodid").toString();
+        	if(params.get("repid") != null) {
+        		repReveal.setRepId(params.get("repid").toString());
+        	}
+			repReveal.setProdid(prodId);
+			confirmFlag = reportDealService.selectConfirmStatus(repReveal);  
+    		if(confirmFlag == true) {  //检查通过：不存在相同的已确认的报告
+    			reportDealService.updateDataStatus(repReveal);
+    			repDetailsShow001Service.genReport(params);
+   				value.setMessage("生成成功", MessageType.提示消息);
+    		}else {
+    			value.setMessage("存在相同且已确认的报表", MessageType.错误消息);
+    		}
         }catch (Exception e) {
             value.setMessage("生成失败:"+e.getMessage(), MessageType.错误消息);
             logger.error("error:",e);
@@ -391,32 +384,22 @@ public class RepDetailsShow001Contoller extends BaseController {
      */
     @RequestMapping("mergeExport")
     public ResponseEntity<byte[]> mergeExport() throws IOException {
-        return repDetailsShow001Service.exportReport(RequestUtil.getPageParam());
+    	Map<String,Object> params = RequestUtil.getPageParam();
+    	params.put("modelId", params.get("modelid"));
+    	params.put("prodId", params.get("prodid"));
+    	params.put("pprodId", params.get("pprodid"));
+    	params.put("prodName", params.get("prodname"));
+    	params.put("repId", params.get("repid"));
+    	params.put("reportId", params.get("repid"));
+    	params.put("endDate", params.get("enddate"));
+    	params.put("repName",params.get("repname"));
+    	params.put("reportDate", params.get("enddate"));
+    	if ( params.get("uri")==null )
+    		params.put("uri",params.get("modelid"));
+    	if (params.get("prodId")==null )
+    		params.put("prodId",params.get("pprodId"));
+        return repDetailsShow001Service.exportReport(params);
     }
-
-//	/**
-//	 * 导出合并文档
-//	 *
-//	 * @return excel
-//	 * @throws Exception
-//	 *             异常
-//	 * @see
-//	 * @since 1.0
-//	 */
-//	@RequestMapping("mergeExport")
-//	public ResponseEntity<byte[]> mergeExport() throws IOException {
-//		Map<String, Object> param = RequestUtil.getPageParam();
-//		ReportModelManage001Dto reportModelManage001Dto = null;
-//		try {
-//			reportModelManage001Dto = (ReportModelManage001Dto) JsonUtils.map2entity(param,
-//					ReportModelManage001Dto.class);
-//		} catch (Exception e) {
-//			logger.error(e.getMessage(),e);
-//			throw new IllegalArgumentException("转换异常");
-//		}
-//		reportModelManage001Dto.setParam(param);
-//		return reportModelManage001Service.mergeExportSingle(reportModelManage001Dto);
-//	}
 
 	/**
 	 *

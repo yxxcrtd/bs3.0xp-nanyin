@@ -61,6 +61,20 @@ public class ProdAssetInfoDto extends DisProdAsset implements ProcessEntity{
 	 */
 	private String updateTimeStr;
 
+	/**
+	 * 导入时记录excel中的行号
+	 * @return
+	 */
+	private String excelRowNum;
+
+	public String getExcelRowNum() {
+		return excelRowNum;
+	}
+
+	public void setExcelRowNum(String excelRowNum) {
+		this.excelRowNum = excelRowNum;
+	}
+
 	public String getOperateType() {
 		return operateType;
 	}
@@ -169,7 +183,7 @@ public class ProdAssetInfoDto extends DisProdAsset implements ProcessEntity{
 	}
 
 	public String getStatusStr(){
-		return SysDataUtil.getNameFromDataDict(DictCode.信披_数据状态, super.getDataStatus());
+		return SysDataUtil.getNameFromDataDict(DictCode.信披_数据状态ED, super.getDataStatus());
 	}
 
 	public String getEffDateStr(){

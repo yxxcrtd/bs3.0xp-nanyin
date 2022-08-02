@@ -80,7 +80,7 @@ public class DisProdPlanManage002Controller extends BaseController {
 	@Override
 	public String init(Model model) {
 
-		this.setSelectOptionToModel(model,DictCode.信披_数据状态);
+		this.setSelectOptionToModel(model,DictCode.信披_数据状态ED);
 		
 		String id = this.getParam("prodPlanId");
 		/*if (StringUtil.isNotEmpty(id)) {
@@ -176,7 +176,7 @@ public class DisProdPlanManage002Controller extends BaseController {
 			DisProdPlanManage002Dto dto = JsonUtils.json2Object(datas, DisProdPlanManage002Dto.class);
 			try {
 				if (this.getPageModel().equals(GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
-					dto.setDataStatus(DictCodeListExt3.信披_数据状态_有效.getValue());
+					dto.setDataStatus(DictCodeListExt3.信披_数据状态_有效E.getValue());
 					dto.setDataSource(DictCodeListExt3.信披_数据来源_系统新建.getValue());
 					disProdPlanManage002Service.insert(dto);
 				}

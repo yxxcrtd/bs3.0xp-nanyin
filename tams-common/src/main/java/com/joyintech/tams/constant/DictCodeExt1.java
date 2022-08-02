@@ -80,6 +80,11 @@ public enum DictCodeExt1 implements BaseDictCode {
      */
     行情代码("QUOTA_CODE"),
 
+    /**
+     * 业务代码
+     */
+    业务代码("BUSINESS_CODE"),
+
     ;
     private String value;
 

@@ -12,12 +12,12 @@ package com.joyintech.tams.disclosure.information.config.repprodinfo.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.common.base.dao.RepProdInfoMapper;
-import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.common.util.SysCommDataUtil;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.disclosure.information.config.repprodinfo.dao.DisProdBaseInfoMapper;
@@ -60,33 +60,16 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
 
 
     @Autowired
-    ProdBasicChangeService prodBasicChangeService ;
+    ProdBasicChangeService prodBasicChangeService;
 
     @Autowired
     private DisProdBaseInfoMapper prodInfoMapper;
 
 
-
-    public List<ProdInfoDto> findAll(Map<String,Object> params) {
+    public List<ProdInfoDto> findAll(Map<String, Object> params) {
         List<ProdInfoDto> result = prodInfoMapper.searchProdList(params);
         return result;
     }
-
-    /**
-     * 分页查询费率名称下拉
-     *
-     * @param
-     * @return
-     * @throws Exception
-     */
-/*    public Page<SelectOptionDto> getProdFeenameSelect(Map map) {
-        Map<String, Object> pageParam = RequestUtil.getPageParam();
-        return this.queryForPageForSelectReturn(
-                Integer.parseInt((String) pageParam.get("page")),
-                Integer.parseInt((String) pageParam.get("length")),
-                ()->prodInfoMapper.getProdFeenameSelect(map));
-
-    }*/
 
 
     /**
@@ -101,26 +84,31 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
      * @param params
      * @return
      */
-    public Page<ProdInfoDto> findByPage(Map<String, Object> params)
-    {
-        String dataStatus = (String)params.get("dataStatus");
-        String[] dataStatusArr = null;
-        if(StringUtil.isNotEmpty(dataStatus)){
-            dataStatusArr = dataStatus.split(",");
+    public Page<ProdInfoDto> findByPage(Map<String, Object> params) {
+        String status = (String) params.get("status");
+        if (StringUtil.isNotEmpty(status)) {
+            params.put("dataStatusArr", StringUtil.splitToList(GlobalConstant.COMMA, status));
         }
-        params.put("dataStatusArr", dataStatusArr);
-        String prodId = (String)params.get("prodId");
-        String[] prodIdArr = null;
-        if(StringUtil.isNotEmpty(prodId)){
-            prodIdArr = prodId.split(",");
+
+        String prodRegistNo = (String) params.get("prodRegistNo");
+        if (StringUtil.isNotEmpty(prodRegistNo)) {
+            params.put("prodReNoArr", StringUtil.splitToList(GlobalConstant.COMMA, prodRegistNo));
         }
-        params.put("prodIdArr", prodIdArr);
-        String prodRegistNo = (String)params.get("prodRegistNo");
-        String[] prodRegistNoArr = null;
-        if(StringUtil.isNotEmpty(prodRegistNo)){
-            prodRegistNoArr = prodRegistNo.split(",");
+
+        String raiseType = (String) params.get("raiseType");
+        if (StringUtil.isNotEmpty(raiseType)) {
+            params.put("raiseTypeArr", StringUtil.splitToList(GlobalConstant.COMMA, raiseType));
         }
-        params.put("prodRegistNoArr", prodRegistNoArr);
+
+        String isGrade = (String) params.get("isGrade");
+        if (StringUtil.isNotEmpty(isGrade)) {
+            params.put("isGradeArr", StringUtil.splitToList(GlobalConstant.COMMA, isGrade));
+        }
+
+        String profitType = (String) params.get("profitType");
+        if (StringUtil.isNotEmpty(profitType)) {
+            params.put("profitTypeArr", StringUtil.splitToList(GlobalConstant.COMMA, profitType));
+        }
 
         Page<ProdInfoDto> pages = super.queryForPageForSelectReturn(Integer.parseInt((String) params.get("page")),
                 Integer.parseInt((String) params.get("length")),
@@ -129,9 +117,9 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
     }
 
 
-
     /**
-     *  查询产品明细信息
+     * 查询产品明细信息
+     *
      * @param prodId
      * @return
      */
@@ -141,7 +129,8 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
     }
 
     /**
-     *  查询产品明细信息-普通产品
+     * 查询产品明细信息-普通产品
+     *
      * @param prodId
      * @return
      */
@@ -150,21 +139,34 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
     }
 
     /**
-     *  查询产品明细信息-子产品
+     * 查询产品明细信息-子产品
+     *
      * @param prodId
      * @return
      */
     public ProdInfoDto selectBySonProdId(String prodId) {
-        return prodInfoMapper.selectByCommonProdId(prodId);
+        return prodInfoMapper.selectBySonProdId(prodId);
     }
 
     /**
-     *  查询正常状态的产品明细信息
+     * 查询正常状态的产品明细信息
+     *
      * @param prodId
      * @return
      */
     public ProdInfoDto selectByProdStatus(String prodId) {
-        return prodInfoMapper.selectByProdStatus(prodId,"E");
+        return prodInfoMapper.selectByProdStatus(prodId, "E");
+    }
+
+    /**
+     * 查询母产品下所有的子产品信息
+     *
+     * @param prodId
+     * @return
+     */
+    public List<ProdInfoDto> selectListByPprodId(String prodId) {
+        // return  prodInfoMapper.selectByProdId(prodId,DictCodeListExt3.信披_数据状态_有效.getValue());
+        return prodInfoMapper.selectListByPprodId(prodId);
     }
 
     /**
@@ -188,34 +190,39 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
     }
 
 
-
-
     /**
      * 插入数据
      * TODO 新增的几个字段还需要再进行处理 ，暂时还没有加到数据库中
+     *
      * @param dto
      */
     public void insert(ProdInfoDto dto) {
         dto.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
         dto.setIssueStatus(DictCodeListExt1.发行状态_确认发行.getValue());
-        if(StringUtils.equals(DictCodeListExt1.是或否_是.getValue(),dto.getProdType())){//是分级产品，子产品
+        if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), dto.getIsGrade())) {//是分级产品，子产品
             //保存母产品信息，判断母产品是否已存在
             ProdInfoDto existppDto = prodInfoMapper.selectByPrimaryKey(dto.getpProdId());
-            if(existppDto == null ){
+            if (existppDto == null) {
                 ProdInfoDto ppDto = new ProdInfoDto();
                 BeanUtils.copyProperties(dto, ppDto);
                 ppDto.setRepProdType(DictCodeListExt5.信批产品类别_母产品.getValue());
-                ppDto.setProdId(ppDto.getpProdId());
-                ppDto.setProdName(ppDto.getpProdName());
-                ppDto.setpSetDate(ppDto.getpSetDate());
+                ppDto.setProdId(dto.getpProdId());
+                ppDto.setProdName(dto.getpProdName());
+                ppDto.setSetDate(dto.getpSetDate());
                 ppDto.setpProdId(null);
                 ppDto.setpProdName(null);
                 ppDto.setpSetDate(null);
+                //插入业绩比较基准信息，若“是否指数型产品”为“是”，则需要对录入的产品业绩比较基准进行截取
+                if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), ppDto.getIsIndex()) && StringUtils.isNotEmpty(ppDto.getPerformCompare())) {
+                    if (prodBasicChangeService.insertProdBasicChangeFromExcel(ppDto.getPerformCompare(), ppDto.getProdId())) {
+                        //成功之后清空产品业绩比较基准
+                        ppDto.setPerformCompare(null);
+                    }
+                }
                 prodInfoMapper.insert(ppDto);
             }
             //保存子产品信息
             dto.setRepProdType(DictCodeListExt5.信批产品类别_子产品.getValue());
-
             /*dto.setProdAbbr(null);
             dto.setProdRe(null);
             dto.setRaiseStrdate(null);
@@ -234,13 +241,12 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             dto.setPdStatus(null);
             dto.setProdSeries(null);*/
 
-        }else{//普通产品
-            //TODO  信批产品类别 01 母产品 02 普通产品 03 子产品
+        } else {//普通产品
             dto.setRepProdType(DictCodeListExt5.信批产品类别_普通产品.getValue());
-
         }
-       // dto.setProdDiscountId(IDGenerator.generate(36));
         prodInfoMapper.insert(dto);
+
+
     }
 
     /**
@@ -250,7 +256,10 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
      * @return
      */
     public void update(ProdInfoDto dto) {
-        if(StringUtils.equals(DictCodeListExt1.是或否_是.getValue(),dto.getProdType())) {//是分级产品，子产品
+        dto.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
+        prodInfoMapper.updateByPrimaryKeySelective(dto);
+
+        if (StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), dto.getIsGrade())) {//是分级产品，子产品
             // 更新母产品信息
             ProdInfoDto ppDto = new ProdInfoDto();
             BeanUtils.copyProperties(dto, ppDto);
@@ -260,30 +269,15 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             ppDto.setpProdId(null);
             ppDto.setpProdName(null);
             ppDto.setpSetDate(null);
-            if(StringUtils.equals("false",dto.getSynchFlag())){
-                ppDto.setRaiseAmt(null);//不同步对母产品下其余子产品的产品募集金额的值进行调整
+            ppDto.setRepProdType(DictCodeListExt5.信批产品类别_母产品.getValue());
+            // ProdInfoDto ppDto = prodInfoMapper.selectByPrimaryKey(dto.getpProdId());
+            if (dto.isSynchFlag()) { // 则同步对母产品下其余子产品的产品募集金额的值进行调整
+                //ppDto.setRaiseAmt(dto.getRaiseAmt());
+                prodInfoMapper.updateRaiseAmtByPprodId(dto);
             }
+            // 更新母产品信息
             prodInfoMapper.updateByPrimaryKeySelective(ppDto);
-            // 更新子产品信息
-            /*dto.setProdAbbr(null);
-            dto.setProdRe(null);
-            dto.setRaiseStrdate(null);
-            dto.setRaiseEnddate(null);
-            dto.setMdate(null);
-            dto.setRaiseType(null);
-            dto.setIsPeriod(null);
-            dto.setIsGrade(null);
-            dto.setIsIndex(null);
-            dto.setOpenFreq(null);
-            dto.setNatureInvest(null);
-            dto.setProdType(null);
-            dto.setIssuingWay(null);
-            dto.setAcctChnname(null);
-            dto.setProfitType(null);
-            dto.setPdStatus(null); //产品状态
-            dto.setProdSeries(null);//产品系列*/
         }
-        prodInfoMapper.updateByPrimaryKeySelective(dto);
 
     }
 
@@ -302,14 +296,15 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         }
     }
 
-    public ProdInfoDto getPrdInfo(String prodId){
-        ProdInfoDto prodInfo =  prodInfoMapper.selectByPrimaryKey(prodId);
-        return  prodInfo;
+    public ProdInfoDto getPrdInfo(String prodId) {
+        ProdInfoDto prodInfo = prodInfoMapper.selectByPrimaryKey(prodId);
+        return prodInfo;
     }
 
 
     /**
      * 导入check
+     *
      * @param fileName
      * @return
      */
@@ -340,79 +335,108 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                 AjaxResult wr = new AjaxResult();
                 wr.setData(resultMap);
                 return wr;
-            }else {
+            } else {
                 StringBuilder returnerrorMsg = new StringBuilder("");
                 for (int i = 1; i < objects.size(); i++) {
                     StringBuilder errorMsg = new StringBuilder("");
                     List<String> rowData = objects.get(i);
-                    if (StringUtil.isEmpty(rowData.get(0))){
+                    if (StringUtil.isEmpty(rowData.get(0))) {
                         errorMsg.append("子产品代码 必填！");
                     }
 
-/*                    ProdInfoDto prodInfo = this.selectByProdStatus(rowData.get(0));
-                    if(prodInfo != null){
-                        errorMsg.append("子产品代码 已存在，当前数据导入之后会被过滤");
-                    }*/
+                    ProdInfoDto prodInfo = this.selectByProdId(rowData.get(0));
+                    if (prodInfo != null) {
+                        errorMsg.append("子产品代码 已存在");
+                    }
 
-                    if (StringUtil.isEmpty(rowData.get(1))){
+                    if (StringUtil.isEmpty(rowData.get(1))) {
                         errorMsg.append("子产品名称 必填！");
                     }
-                    if (StringUtil.isEmpty(rowData.get(2))){
+                    if (StringUtil.isEmpty(rowData.get(2))) {
                         errorMsg.append("子产品成立日期 必填！");
-                    }else if (!this.isDateStr(rowData.get(2))){
+                    } else if (!this.isDateStr(rowData.get(2))) {
                         errorMsg.append("子产品成立日期 格式不正确！");
                     }
-                    if (StringUtil.isEmpty(rowData.get(3))){
+                    if (StringUtil.isEmpty(rowData.get(3))) {
                         errorMsg.append("产品状态 必填！");
                     }
-                    if (StringUtil.isEmpty(rowData.get(4))){
+                    if (StringUtil.isEmpty(rowData.get(4))) {
                         errorMsg.append("产品系列 必填！");
                     }
-                    if (StringUtil.isEmpty(rowData.get(5))){
+                    if (StringUtil.isEmpty(rowData.get(5))) {
                         errorMsg.append("产品名称 必填！");
                     }
-                    if (StringUtil.isEmpty(rowData.get(6))){
+                    if (StringUtil.isEmpty(rowData.get(6))) {
                         errorMsg.append("产品简称 必填！");
                     }
-                    if (StringUtil.isEmpty(rowData.get(7))){
+                    if (StringUtil.isEmpty(rowData.get(7))) {
                         errorMsg.append("产品登记编码 必填！");
                     }
-                    if (StringUtil.isEmpty(rowData.get(8))){
+                    if (StringUtil.isEmpty(rowData.get(8))) {
                         errorMsg.append("产品主代码 必填！");
                     }
-                    if (StringUtil.isEmpty(rowData.get(9))){//
+                    if (StringUtil.isEmpty(rowData.get(9))) {//
                         errorMsg.append("募集起始日期 必填！");
-                    }else if (!this.isDateStr(rowData.get(9))){
+                    } else if (!this.isDateStr(rowData.get(9))) {
                         errorMsg.append("募集起始日期 格式不正确！");
                     }
-                    if (StringUtil.isEmpty(rowData.get(10))){
+                    if (StringUtil.isEmpty(rowData.get(10))) {
                         errorMsg.append("募集结束日期 必填！");
-                    }else if (!this.isDateStr(rowData.get(10))){
+                    } else if (!this.isDateStr(rowData.get(10))) {
                         errorMsg.append("募集结束日期 格式不正确！");
                     }
-                    if (StringUtil.isEmpty(rowData.get(11))){
+                    if (StringUtil.isEmpty(rowData.get(11))) {
                         errorMsg.append("产品募集金额 必填！");
-                    }else if (!isNumber(rowData.get(11))){
+                    } else if (!isNumber(rowData.get(11))) {
                         errorMsg.append("产品募集金额 格式不正确！");
                     }
-                    if (StringUtil.isEmpty(rowData.get(12))){
+                    if (StringUtil.isEmpty(rowData.get(12))) {
                         errorMsg.append("产品成立日期 必填！");
-                    }else if (!this.isDateStr(rowData.get(12))){
+                    } else if (!this.isDateStr(rowData.get(12))) {
                         errorMsg.append("产品成立日期 格式不正确！");
                     }
-                    if (StringUtil.isEmpty(rowData.get(13))){
+                    if (StringUtil.isEmpty(rowData.get(13))) {
                         errorMsg.append("产品到期日期 必填！");
-                    }else if (!this.isDateStr(rowData.get(13))){
+                    } else if (!this.isDateStr(rowData.get(13))) {
                         errorMsg.append("产品到期日期 格式不正确！");
                     }
-                    if (StringUtil.isEmpty(rowData.get(14))){
+                    if (StringUtil.isEmpty(rowData.get(14))) {
                         errorMsg.append("募集方式 必填！");
                     }
-                    if (StringUtil.isEmpty(rowData.get(15))){
+
+                    if (DateUtil.compareDate(rowData.get(10),rowData.get(9)) < 0
+                            || DateUtil.compareDate(rowData.get(10),rowData.get(2)) > 0
+                            || DateUtil.compareDate(rowData.get(10),rowData.get(12)) > 0) {
+                        errorMsg.append("募集结束日必须大于等于募集开始日，且必须小于子产品成立日期和产品成立日期！");
+                    }
+                    if (DateUtil.compareDate(rowData.get(13),rowData.get(2)) < 0
+                            || DateUtil.compareDate(rowData.get(13),rowData.get(12)) < 0 ) {
+                        errorMsg.append("产品到期日期必须大于产品成立日期及子产品成立日期！");
+                    }
+
+                    if (StringUtils.equals(DictCodeListExt5.信披募集方式_公募.getCodeName(), rowData.get(14))
+                            && rowData.get(7).length() != 14) {
+                        errorMsg.append("募集方式为公募,产品登记编码为14位");
+                    }
+                    if (StringUtils.equals(DictCodeListExt5.信披募集方式_私募.getCodeName(), rowData.get(14))
+                            && rowData.get(7).length() != 15) {
+                        errorMsg.append("募集方式为私募,产品登记编码为15位");
+                    }
+
+                    if (StringUtil.isEmpty(rowData.get(15))) {
                         errorMsg.append("产品类型 必填！");
                     }
-                    if (StringUtil.isEmpty(rowData.get(16))){
+                    if (StringUtil.isEmpty(rowData.get(16))) {
                         errorMsg.append("发行方式 必填！");
+                    }
+
+                    if (StringUtils.equals(DictCodeListExt5.发行方式_开放式.getCodeName(), rowData.get(16))
+                            && StringUtils.isBlank(rowData.get(17))) {
+                        errorMsg.append("发行方式为开放式，开放频率必填！");
+                    }
+                    if (!StringUtils.equals(DictCodeListExt5.发行方式_开放式.getCodeName(), rowData.get(16))
+                            && StringUtils.isNotBlank(rowData.get(17))) {
+                        errorMsg.append("发行方式不是开放式，开放频率不需要填写！");
                     }
                     /*if (StringUtil.isEmpty(rowData.get(17))){
                         errorMsg.append("开放频率 必填！");
@@ -420,40 +444,99 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                     /*if (StringUtil.isEmpty(rowData.get(18))){
                         errorMsg.append("固定持有天数 必填！");
                     }*/
-                    if (StringUtil.isNotEmpty(rowData.get(18)) && !isNumber(rowData.get(11))){
+                    if (StringUtils.equals(DictCodeListExt5.信披产品类型_净值型产品.getCodeName(), rowData.get(15))
+                            && StringUtils.isNotEmpty(rowData.get(17))
+                            && StringUtils.equals(DictCodeListExt5.开放频率_日开.getCodeName(), rowData.get(17))
+                            && StringUtils.isBlank(rowData.get(18))) {
+                        errorMsg.append("开放频率为日开且产品类型为净值型,固定持有天数必填");
+                    } /*else {
+                        errorMsg.append("开放频率不为日开且产品类型不为净值型,固定持有天数不需要填写");
+                    }*/
+
+                    /*if (!StringUtils.equals(DictCodeListExt5.信披产品类型_净值型产品.getCodeName(), rowData.get(15))
+                            || (StringUtils.isNotEmpty(rowData.get(17)) && !StringUtils.equals(DictCodeListExt5.开放频率_日开.getCodeName(), rowData.get(17)))
+                            && StringUtils.isNotEmpty(rowData.get(18))) {
+                        errorMsg.append("开放频率不为日开或产品类型不为净值型,固定持有天数不需要填写");
+                    }*/
+
+                    if (StringUtil.isNotEmpty(rowData.get(18)) && !isNumber(rowData.get(18))) {
                         errorMsg.append("固定持有天数 格式不正确，请输入数字！");
                     }
-                    if (StringUtil.isEmpty(rowData.get(19))){
+                    if (StringUtil.isEmpty(rowData.get(19))) {
                         errorMsg.append("产品运作方式 必填！");
                     }
-                    if (StringUtil.isEmpty(rowData.get(20))){
+                    if (StringUtils.equals(DictCodeListExt5.发行方式_开放式.getCodeName(), rowData.get(16))
+                            && !StringUtils.equals(DictCodeListExt5.产品运作方式_开放式净值型.getCodeName(), rowData.get(19))
+                            && !StringUtils.equals(DictCodeListExt5.产品运作方式_开放式非净值型.getCodeName(), rowData.get(19))) {
+                        errorMsg.append("发行方式为开放式，产品运作方式只能选择“开放式净值型”或“开放式非净值型”！");
+
+                    }
+                    if (StringUtils.equals(DictCodeListExt5.发行方式_封闭式.getCodeName(), rowData.get(16))
+                            && !StringUtils.equals(DictCodeListExt5.产品运作方式_封闭式净值型.getCodeName(), rowData.get(19))
+                            && !StringUtils.equals(DictCodeListExt5.产品运作方式_封闭式非净值型.getCodeName(), rowData.get(19))) {
+                        errorMsg.append("若发行方式为封闭式，“产品运作方式只能选择“封闭式净值型”或“封闭式非净值型 ！");
+
+                    }
+
+
+                    if (StringUtil.isEmpty(rowData.get(20))) {
                         errorMsg.append("是否是客户周期型产品 必填！");
                     }
 
-                    if (StringUtil.isEmpty(rowData.get(21))){
+                    if (StringUtil.isEmpty(rowData.get(21))) {
                         errorMsg.append("是否是分级产品 必填！");
                     }
-                    if (StringUtil.isEmpty(rowData.get(22))){
+
+                    if (StringUtils.equals(DictCodeListExt1.是或否_是.getCodeName(), rowData.get(21))
+                            && StringUtils.equals(rowData.get(0), rowData.get(8))) {
+                        return new AjaxResult("分级产品，子产品代码和产品主代码不能一样", MessageType.错误消息);
+                    }
+                    if (StringUtils.equals(DictCodeListExt1.是或否_否.getCodeName(), rowData.get(21))){
+                        if (!StringUtils.equals(rowData.get(0), rowData.get(8))) {
+                            return new AjaxResult("非分级产品，子产品代码和产品主代码需要一致", MessageType.错误消息);
+                        }
+                        if (!StringUtils.equals(rowData.get(1), rowData.get(5))) {
+                            return new AjaxResult("非分级产品，子产品名称和产品名称需要一致", MessageType.错误消息);
+                        }
+                        if (!StringUtils.equals(rowData.get(2), rowData.get(12))) {
+                            return new AjaxResult("非分级产品，子产品成立日期和产品成立日期需要一致", MessageType.错误消息);
+                        }
+                    }
+
+                    if (StringUtil.isEmpty(rowData.get(22))) {
                         errorMsg.append("是否是指数型产品 必填！");
                     }
                    /* if (StringUtil.isEmpty(rowData.get(23))){
                         errorMsg.append("产品业绩比较基准 必填！");
                     }*/
-                    if (StringUtil.isEmpty(rowData.get(24))){
+                    if (StringUtil.isEmpty(rowData.get(24))) {
                         errorMsg.append("投资性质 必填！");
                     }
-                    if (StringUtil.isEmpty(rowData.get(25))){
+                    if (StringUtil.isEmpty(rowData.get(25))) {
                         errorMsg.append("产品托管人名称 必填！");
                     }
-                    if (StringUtil.isEmpty(rowData.get(26))){
+                    if (StringUtil.isEmpty(rowData.get(26))) {
                         errorMsg.append("托管部门 必填！");
                     }
-                    if (StringUtil.isNotEmpty(errorMsg.toString())){
+
+                    // 现管类产品校验
+                    if (StringUtils.equals(DictCodeListExt5.信披产品类型_现管类产品.getCodeName(), rowData.get(15))) {
+                        if (!StringUtils.equals(DictCodeListExt5.发行方式_开放式.getCodeName(), rowData.get(16))) {
+                            errorMsg.append("产品类型为“现管类产品”时，发行方式为“开放式”！ ");
+                        }
+                        if (!StringUtils.equals(DictCodeListExt5.开放频率_日开.getCodeName(), rowData.get(17))) {
+                            errorMsg.append("产品类型为“现管类产品”时，开放频率为“日开”！ ");
+                        }
+                        if (!StringUtils.equals(DictCodeListExt5.产品运作方式_开放式非净值型.getCodeName(), rowData.get(19))) {
+                            errorMsg.append("产品类型为“现管类产品”时，产品运作方式为“开放式非净值型”！ ");
+                        }
+                    }
+                    if (StringUtil.isNotEmpty(errorMsg.toString())) {
                         errorMsg.append("<br />");
-                        returnerrorMsg.append("第"+(i+1)+"行数据："+errorMsg.toString());
+                        returnerrorMsg.append("第" + (i + 1) + "行数据：" + errorMsg.toString());
                     }
                 }
-                if (StringUtil.isNotEmpty(returnerrorMsg.toString())){
+                if (StringUtil.isNotEmpty(returnerrorMsg.toString())) {
                     Map<String, Object> resultMap = new HashMap<>();
                     resultMap.put("errorMsg", returnerrorMsg.toString());
                     AjaxResult wr = new AjaxResult();
@@ -472,16 +555,16 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                             break;
                         }
                     }
-                    if (isRepeat){
+                    if (isRepeat) {
                         repeatNum++;
-                    }else {
+                    } else {
                         jsonArrays.add(list1);
                     }
                 }
             }
         }
-        if (repeatNum > 0){
-            totalMsg += "导入文件存在"+String.valueOf(repeatNum)+"条数据重复，重复数据不导入，是否确认？";
+        if (repeatNum > 0) {
+            totalMsg += "导入文件存在" + String.valueOf(repeatNum) + "条数据重复，重复数据不导入，是否确认？";
         }
         Map<String, Object> resultMap = new HashMap<>();
         if (StringUtil.isNotBlank(totalMsg)) {
@@ -504,7 +587,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         }
     }
 
-    public static boolean isNumber(String str){
+    public static boolean isNumber(String str) {
         String reg = "^[0-9]+(.[0-9]+)?$";
         return str.matches(reg);
     }
@@ -514,12 +597,12 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         String tempList = (String) param.get("tempList");
         ProdInfoDto dto = getValNetAssetQuotationInfoListData(tempList);
         List<ProdInfoDto> selectedItem = dto.getSelectedItem();
-        List<ProdInfoDto>  existData = new ArrayList<>();
-        List<ProdInfoDto>  newData = new ArrayList<>();
-        for (ProdInfoDto temp:selectedItem) {
+        List<ProdInfoDto> existData = new ArrayList<>();
+        List<ProdInfoDto> newData = new ArrayList<>();
+        for (ProdInfoDto temp : selectedItem) {
             //数据已存在 【产品编码 相同】，数据被过滤。
             ProdInfoDto prodInfo = this.selectByProdStatus(temp.getProdId());
-            if(prodInfo == null){
+            if (prodInfo == null) {
                 temp.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
                 newData.add(temp);
             }
@@ -540,122 +623,133 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
     }
 
 
-
     public ProdInfoDto getValNetAssetQuotationInfoListData(String tempList) {
         ProdInfoDto dto = new ProdInfoDto();
         // 行情信息列表
         List<ProdInfoDto> prodBonusplanDtoList = new ArrayList<>();
-       // dto.setSelectedItem(prodBonusplanDtoList);
+        // dto.setSelectedItem(prodBonusplanDtoList);
         JSONArray objects = JSONArray.parseArray(tempList);
 
         for (int i = 0; i < objects.size(); i++) {
             JSONArray rowData = JSONArray.parseArray(((JSONArray) objects.get(i)).toJSONString());
             ProdInfoDto prodDto = new ProdInfoDto();
-            if (StringUtil.isNotEmpty(rowData.get(0))){
+            if (StringUtil.isNotEmpty(rowData.get(0))) {
                 //子产品代码
                 prodDto.setProdId(rowData.get(0).toString());
             }
-            if (StringUtil.isNotEmpty(rowData.get(1))){
+            if (StringUtil.isNotEmpty(rowData.get(1))) {
                 //子产品名称
                 prodDto.setProdName(rowData.get(1).toString());
             }
-            if (StringUtil.isNotEmpty(rowData.get(2))){
+            if (StringUtil.isNotEmpty(rowData.get(2))) {
                 //子产品成立日期
                 prodDto.setSetDate(DateUtil.parse(rowData.get(2).toString()));
             }
-            if (StringUtil.isNotEmpty(rowData.get(3))){
+            if (StringUtil.isNotEmpty(rowData.get(3))) {
                 //产品状态
-                prodDto.setPdStatus(SysCommDataUtil.getCodeFromDataDictByName(DictCodeExt1.信披_产品状态,rowData.get(3).toString()));
+                prodDto.setPdStatus(SysCommDataUtil.getCodeFromDataDictByName(DictCodeExt1.信披_产品状态, rowData.get(3).toString()));
             }
-            if (StringUtil.isNotEmpty(rowData.get(4))){
+            if (StringUtil.isNotEmpty(rowData.get(4))) {
                 //产品系列
                 prodDto.setProdSeries(rowData.get(4).toString());
             }
-            if (StringUtil.isNotEmpty(rowData.get(5))){
+            if (StringUtil.isNotEmpty(rowData.get(5))) {
                 //产品名称
                 prodDto.setpProdName(rowData.get(5).toString());
             }
-            if (StringUtil.isNotEmpty(rowData.get(6))){
+            if (StringUtil.isNotEmpty(rowData.get(6))) {
                 //产品简称
                 prodDto.setProdAbbr(rowData.get(6).toString());
             }
-            if (StringUtil.isNotEmpty(rowData.get(7))){
+            if (StringUtil.isNotEmpty(rowData.get(7))) {
                 //产品登记编码
                 prodDto.setProdRe(rowData.get(7).toString());
             }
-            if (StringUtil.isNotEmpty(rowData.get(8))){
+            if (StringUtil.isNotEmpty(rowData.get(8))) {
                 //产品主代码
                 prodDto.setpProdId(rowData.get(8).toString());
             }
-            if (StringUtil.isNotEmpty(rowData.get(9))){//
+            if (StringUtil.isNotEmpty(rowData.get(9))) {//
                 //募集起始日期
                 prodDto.setRaiseStrdate(DateUtil.parse(rowData.get(9).toString()));
             }
-            if (StringUtil.isNotEmpty(rowData.get(10))){
+            if (StringUtil.isNotEmpty(rowData.get(10))) {
                 //募集结束日期
                 prodDto.setRaiseEnddate(DateUtil.parse(rowData.get(10).toString()));
             }
-            if (StringUtil.isNotEmpty(rowData.get(11))){
+            if (StringUtil.isNotEmpty(rowData.get(11))) {
                 //产品募集金额
                 prodDto.setRaiseAmt(new BigDecimal(rowData.get(11).toString()));
             }
-            if (StringUtil.isNotEmpty(rowData.get(12))){
+            if (StringUtil.isNotEmpty(rowData.get(12))) {
                 //产品成立日期
                 prodDto.setpSetDate(DateUtil.parse(rowData.get(12).toString()));
             }
-            if (StringUtil.isNotEmpty(rowData.get(13))){
+            if (StringUtil.isNotEmpty(rowData.get(13))) {
                 //产品到期日期
                 prodDto.setMdate(DateUtil.parse(rowData.get(13).toString()));
             }
-            if (StringUtil.isNotEmpty(rowData.get(14))){
+            if (StringUtil.isNotEmpty(rowData.get(14))) {
                 //募集方式
-                prodDto.setRaiseType(SysCommDataUtil.getCodeFromDataDictByName(DictCodeExt1.信披_募集方式,rowData.get(14).toString()));
+                prodDto.setRaiseType(SysCommDataUtil.getCodeFromDataDictByName(DictCodeExt1.信披_募集方式, rowData.get(14).toString()));
             }
-            if (StringUtil.isNotEmpty(rowData.get(15))){
+            if (StringUtil.isNotEmpty(rowData.get(15))) {
                 //产品类型
-                prodDto.setProdType(SysCommDataUtil.getCodeFromDataDictByName(DictCodeExt1.信披_产品类型,rowData.get(15).toString()));
+                prodDto.setProdType(SysCommDataUtil.getCodeFromDataDictByName(DictCodeExt1.信披_产品类型, rowData.get(15).toString()));
             }
-            if (StringUtil.isNotEmpty(rowData.get(16))){
+            if (StringUtil.isNotEmpty(rowData.get(16))) {
                 //发行方式
-                prodDto.setIssuingWay(SysCommDataUtil.getCodeFromDataDictByName(DictCodeExt1.发行方式_信批,rowData.get(16).toString()));
+                prodDto.setIssuingWay(SysCommDataUtil.getCodeFromDataDictByName(DictCodeExt1.发行方式_信批, rowData.get(16).toString()));
             }
-            if (StringUtil.isNotEmpty(rowData.get(17))){
+            if (StringUtil.isNotEmpty(rowData.get(17))) {
                 //开放频率
-                prodDto.setOpenFreq(SysCommDataUtil.getCodeFromDataDictByName(DictCodeExt1.开放频率,rowData.get(17).toString()));
+                prodDto.setOpenFreq(SysCommDataUtil.getCodeFromDataDictByName(DictCodeExt1.开放频率, rowData.get(17).toString()));
+                if (!StringUtils.equals(DictCodeListExt5.发行方式_开放式.getCodeName(), rowData.get(16).toString())) {
+                    // 发行方式不为开放式，开放频率不必填");
+                    prodDto.setOpenFreq(null);
+                }
             }
-            if (StringUtil.isNotEmpty(rowData.get(18))){
+            if (StringUtil.isNotEmpty(rowData.get(18))) {
                 //固定持有天数
                 prodDto.setHoldday(new BigDecimal(rowData.get(18).toString()));
+                // 固定持有天数”字段，当产品的开放频率为“日开”且“产品类型”为“净值型”时必填，否则不可填
+                if (!StringUtils.equals(DictCodeListExt5.信披产品类型_净值型产品.getCodeName(), rowData.get(15).toString())
+                        && StringUtil.isNotEmpty(rowData.get(17))
+                        && !StringUtils.equals(DictCodeListExt5.开放频率_日开.getCodeName(), rowData.get(17).toString())
+                        && StringUtil.isNotEmpty(rowData.get(18))) {
+                    prodDto.setHoldday(null);
+                }
+
             }
-            if (StringUtil.isNotEmpty(rowData.get(19))){
+            if (StringUtil.isNotEmpty(rowData.get(19))) {
                 //产品运作方式
-                prodDto.setProfitType(SysCommDataUtil.getCodeFromDataDictByName(DictCodeExt1.信披_产品运作方式,rowData.get(19).toString()));
+                prodDto.setProfitType(SysCommDataUtil.getCodeFromDataDictByName(DictCodeExt1.信披_产品运作方式, rowData.get(19).toString()));
             }
-            if (StringUtil.isNotEmpty(rowData.get(20))){
+            if (StringUtil.isNotEmpty(rowData.get(20))) {
                 //是否是客户周期型产品
-                prodDto.setIsPeriod(SysCommDataUtil.getCodeFromDataDictByName(DictCode.是或否,rowData.get(20).toString()));
+                prodDto.setIsPeriod(SysCommDataUtil.getCodeFromDataDictByName(DictCode.是或否, rowData.get(20).toString()));
             }
-            if (StringUtil.isNotEmpty(rowData.get(21))){
+            if (StringUtil.isNotEmpty(rowData.get(21))) {
                 //是否是分级产品
-                prodDto.setIsGrade(SysCommDataUtil.getCodeFromDataDictByName(DictCode.是或否,rowData.get(21).toString()));
+                prodDto.setIsGrade(SysCommDataUtil.getCodeFromDataDictByName(DictCode.是或否, rowData.get(21).toString()));
             }
-            if (StringUtil.isNotEmpty(rowData.get(22))){
+            if (StringUtil.isNotEmpty(rowData.get(22))) {
                 //是否是指数型产品
-                prodDto.setIsIndex(SysCommDataUtil.getCodeFromDataDictByName(DictCode.是或否,rowData.get(22).toString()));
+                prodDto.setIsIndex(SysCommDataUtil.getCodeFromDataDictByName(DictCode.是或否, rowData.get(22).toString()));
             }
-            if (StringUtil.isNotEmpty(rowData.get(23))){
+            if (StringUtil.isNotEmpty(rowData.get(23))) {
                 //产品业绩比较基准
                 prodDto.setPerformCompare(rowData.get(23).toString());
             }
-            if (StringUtil.isNotEmpty(rowData.get(24))){
+            if (StringUtil.isNotEmpty(rowData.get(24))) {
                 //投资性质
-                prodDto.setNatureInvest(SysCommDataUtil.getCodeFromDataDictByName(DictCodeExt1.信披_投资性质,rowData.get(24).toString()));
+                prodDto.setNatureInvest(SysCommDataUtil.getCodeFromDataDictByName(DictCodeExt1.信披_投资性质, rowData.get(24).toString()));
             }
-            if (StringUtil.isNotEmpty(rowData.get(25))){
+            if (StringUtil.isNotEmpty(rowData.get(25))) {
                 //产品托管人名称
                 prodDto.setAcctChnname(rowData.get(25).toString());
             }
-            if (StringUtil.isNotEmpty(rowData.get(26))){
+            if (StringUtil.isNotEmpty(rowData.get(26))) {
                 //托管部门
                 prodDto.setTrustpart(rowData.get(26).toString());
             }
@@ -671,14 +765,14 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         entity.setUpdateTime(DateUtil.now());
         entity.setStatus(null);
         if (StringUtil.equals(entity.getOperateType(), "NEW")) {
-           /* entity.setDataSource(DictCodeListExt3.信披_数据来源_系统新建.getValue());*/
+            /* entity.setDataSource(DictCodeListExt3.信披_数据来源_系统新建.getValue());*/
             this.insert(entity);
             // 更新行情代码信息
-            prodBasicChangeService.updateProdBasicChangeList(entity.getBasicChangeList(),entity.getProdId());
+            prodBasicChangeService.updateProdBasicChangeList(entity.getBasicChangeList(), entity.getpProdId(), entity.getIsIndex());
         } else if (StringUtil.equals(entity.getOperateType(), "MODIFY")) {
             this.update(entity);
             // 更新行情代码信息
-            prodBasicChangeService.updateProdBasicChangeList(entity.getBasicChangeList(),entity.getProdId());
+            prodBasicChangeService.updateProdBasicChangeList(entity.getBasicChangeList(), entity.getpProdId(), entity.getIsIndex());
         } else if (StringUtil.equals(entity.getOperateType(), "DELETE")) {
             this.delete(entity);
         }
@@ -686,6 +780,15 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
 
 
     public void updateIssuingStatus(ProdInfoDto dto) {
+        //如果子产品发布状态为发布成功，则更新母产品的发布状态为:发布成功
+        if (StringUtils.equals(DictCodeListExt5.信批产品类别_子产品.getValue(), dto.getRepProdType())
+                && StringUtils.equals(DictCodeListExt1.发行状态_确认发行.getValue(), dto.getIssueStatus())) {
+            ProdInfoDto ppdto = prodInfoMapper.selectByPrimaryKey(dto.getpProdId());
+            if (!StringUtils.equals(DictCodeListExt1.发行状态_确认发行.getValue(), ppdto.getIssueStatus())) {
+                ppdto.setIssueStatus(DictCodeListExt1.发行状态_确认发行.getValue());
+                prodInfoMapper.updateIssuingStatus(ppdto);
+            }
+        }
         prodInfoMapper.updateIssuingStatus(dto);
     }
 

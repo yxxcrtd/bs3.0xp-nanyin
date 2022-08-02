@@ -10,6 +10,11 @@ import java.util.Date;
 
 public class RepRelDeal extends BaseEntity {
     /**
+     * 主键
+     */
+    private String uuid;
+
+    /**
      * 产品主代码
      */
     private String prodId;
@@ -36,6 +41,42 @@ public class RepRelDeal extends BaseEntity {
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal investTransAmt;
+
+    /**
+     * 关联方提供服务的交易金额
+     */
+    private String relateamount;
+
+    /**
+     * 生效日期
+     */
+    private Date effdate;
+
+    /**
+     * 生效截止日期
+     */
+    private Date effdelidate;
+
+    /**
+     * 错误信息
+     */
+    private String errormsg;
+
+    /**
+     * 取得 主键
+     * @return 主键
+     */
+    public String getUuid() {
+        return uuid;
+    }
+
+    /**
+     * 设置 主键
+     * @param uuid 主键
+     */
+    public void setUuid(String uuid) {
+        this.uuid = uuid == null ? null : uuid.trim();
+    }
 
     /**
      * 取得 产品主代码
@@ -116,5 +157,71 @@ public class RepRelDeal extends BaseEntity {
      */
     public void setInvestTransAmt(BigDecimal investTransAmt) {
         this.investTransAmt = investTransAmt;
+    }
+
+    /**
+     * 取得 关联方提供服务的交易金额
+     * @return 关联方提供服务的交易金额
+     */
+    public String getRelateamount() {
+        return relateamount;
+    }
+
+    /**
+     * 设置 关联方提供服务的交易金额
+     * @param relateamount 关联方提供服务的交易金额
+     */
+    public void setRelateamount(String relateamount) {
+        this.relateamount = relateamount;
+    }
+
+    /**
+     * 取得 生效日期
+     * @return 生效日期
+     */
+    public Date getEffdate() {
+        return effdate;
+    }
+
+    /**
+     * 设置 生效日期
+     * @param effdate 生效日期
+     */
+    @JsonDeserialize(using = CustomDateDeserialize.class)
+    public void setEffdate(Date effdate) {
+        this.effdate = effdate;
+    }
+
+    /**
+     * 取得 生效截止日期
+     * @return 生效截止日期
+     */
+    public Date getEffdelidate() {
+        return effdelidate;
+    }
+
+    /**
+     * 设置 生效截止日期
+     * @param effdelidate 生效截止日期
+     */
+    @JsonDeserialize(using = CustomDateDeserialize.class)
+    public void setEffdelidate(Date effdelidate) {
+        this.effdelidate = effdelidate;
+    }
+
+    /**
+     * 取得 错误信息
+     * @return 错误信息
+     */
+    public String getErrormsg() {
+        return errormsg;
+    }
+
+    /**
+     * 设置 错误信息
+     * @param errormsg 错误信息
+     */
+    public void setErrormsg(String errormsg) {
+        this.errormsg = errormsg == null ? null : errormsg.trim();
     }
 }

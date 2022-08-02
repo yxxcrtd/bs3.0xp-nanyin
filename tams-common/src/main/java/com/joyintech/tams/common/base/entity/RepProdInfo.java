@@ -133,7 +133,7 @@ public class RepProdInfo extends BaseEntity {
     /**
      * 产品运作方式：无需区分母子产品 01 封闭式净值型/02 封闭式非净值型/03 开放式净值型/04 开放式非净值型
      */
-    @NotEmpty(fieldName = "")
+    @NotEmpty(fieldName = "产品运作方式")
     private String profitType;
 
     /**

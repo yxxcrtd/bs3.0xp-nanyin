@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.information.config.repRelDeal.dao.RepRelDeal001Mapper">
+    <select id="getProdInsId" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        PROD_ID id,
+        PROD_NAME text
+        FROM
+        REP_PROD_INFO
+        where
+        (P_PROD_ID is null or P_PROD_ID = PROD_ID)
+        <if test="search != null and search != ''">
+            and (PROD_ID like
+            concat(concat('%',#{search}),'%')
+            or PROD_NAME like concat(concat('%',#{search}),'%'))
+        </if>
+    </select>
+    <select id="selectInfo" resultType="com.joyintech.tams.disclosure.information.config.repRelDeal.dto.RepRelDealDto" >
+        select T1.PROD_ID prodId,
+        T1.UUID uuid,
+        T2.PROD_NAME prodName,
+        T1.PUB_DATE pubDate,
+        T1.BANK_TRANS_AMT bankTransAmt,
+        T1.ORG_TRANS_AMT orgTransAmt,
+        T1.INVEST_TRANS_AMT investTransAmt,
+        T1.RELATEAMOUNT relateamount,
+        T1.EFFDATE effdate,
+        T1.EFFDELIDATE effdelidate,
+        T1.STATUS status,
+        T1.UPDATE_USER updateUser,
+        T1.UPDATE_TIME updateTime,
+        T1.ERRORMSG errormsg
+        from REP_REL_DEAL T1
+        left join REP_PROD_INFO T2 on T2.PROD_ID = T1.PROD_ID
+        <where>
+            <if test="prodList != null  and prodIds!= ''">
+                <foreach collection="prodList" item="item" open="and T1.PROD_ID in(" separator="," close=")">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="status != null and ! status.equals('')">
+                and T1.STATUS = #{status,jdbcType=VARCHAR}
+            </if>
+            <if test="startEffdate != null and ! startEffdate.equals('')">
+                and T1.EFFDATE &gt;= to_date(#{startEffdate,jdbcType=DATE},'yyyy-MM-dd')
+            </if>
+            <if test="endEffdate != null and ! endEffdate.equals('')">
+                and T1.EFFDATE &lt;= to_date(#{endEffdate,jdbcType=DATE},'yyyy-MM-dd')
+            </if>
+            <if test="startEffdelidate != null and ! startEffdelidate.equals('')">
+                and T1.EFFDELIDATE &gt;= to_date(#{startEffdelidate,jdbcType=DATE},'yyyy-MM-dd')
+            </if>
+            <if test="endEffdelidate != null and ! endEffdelidate.equals('')">
+                and T1.EFFDELIDATE &lt;= to_date(#{endEffdelidate,jdbcType=DATE},'yyyy-MM-dd')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectData" resultType="com.joyintech.tams.disclosure.information.config.repRelDeal.dto.RepRelDealDto" >
+        select
+        T1.UUID uuid,
+        T1.PROD_ID prodId,
+        T1.BANK_TRANS_AMT bankTransAmt,
+        T1.ORG_TRANS_AMT orgTransAmt,
+        T1.INVEST_TRANS_AMT investTransAmt,
+        T1.RELATEAMOUNT relateamount,
+        T1.EFFDATE effdate,
+        T1.EFFDELIDATE effdelidate
+        from REP_REL_DEAL T1
+        where T1.UUID = #{uuid,jdbcType=VARCHAR}
+    </select>
+
+    <insert id="insert" parameterType="com.joyintech.tams.disclosure.information.config.repRelDeal.dto.RepRelDealDto" >
+<!--        MERGE INTO REP_REL_DEAL RRD-->
+<!--        USING (-->
+<!--        SELECT #{prodId,jdbcType=VARCHAR} PROD_ID,-->
+<!--        #{pubDate,jdbcType=DATE} PUB_DATE,-->
+<!--        #{bankTransAmt,jdbcType=DECIMAL} BANK_TRANS_AMT,-->
+<!--        #{orgTransAmt,jdbcType=DECIMAL} ORG_TRANS_AMT,-->
+<!--        #{investTransAmt,jdbcType=DECIMAL} INVEST_TRANS_AMT,-->
+<!--        #{relateamount,jdbcType=VARCHAR} RELATEAMOUNT,-->
+<!--        #{effdate,jdbcType=DATE} EFFDATE,-->
+<!--        #{effdelidate,jdbcType=DATE} EFFDELIDATE,-->
+<!--        #{status,jdbcType=VARCHAR} STATUS,-->
+<!--        #{createUser,jdbcType=VARCHAR} CREATE_USER,-->
+<!--        #{createTime,jdbcType=TIMESTAMP} CREATE_TIME,-->
+<!--        #{createDept,jdbcType=VARCHAR} CREATE_DEPT,-->
+<!--        #{createUser,jdbcType=VARCHAR} UPDATE_USER,-->
+<!--        #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME-->
+<!--        FROM-->
+<!--        DUAL-->
+<!--        ) TEMP-->
+<!--        &lt;!&ndash; 业务主键匹配 &ndash;&gt;-->
+<!--        ON(RRD.PROD_ID = TEMP.PROD_ID-->
+<!--        and RRD.EFFDATE = TEMP.EFFDATE-->
+<!--        )-->
+<!--        &lt;!&ndash; 匹配到则更新 &ndash;&gt;-->
+<!--        WHEN MATCHED THEN UPDATE-->
+<!--        SET-->
+<!--        RRD.PUB_DATE = TEMP.PUB_DATE,-->
+<!--        RRD.BANK_TRANS_AMT = TEMP.BANK_TRANS_AMT,-->
+<!--        RRD.ORG_TRANS_AMT = TEMP.ORG_TRANS_AMT,-->
+<!--        RRD.INVEST_TRANS_AMT = TEMP.INVEST_TRANS_AMT,-->
+<!--        RRD.RELATEAMOUNT = TEMP.RELATEAMOUNT,-->
+<!--        RRD.EFFDELIDATE = TEMP.EFFDELIDATE,-->
+<!--        RRD.CREATE_TIME = TEMP.CREATE_TIME,-->
+<!--        RRD.UPDATE_TIME = TEMP.UPDATE_TIME,-->
+<!--        RRD.CREATE_DEPT = TEMP.CREATE_DEPT,-->
+<!--        RRD.CREATE_USER = TEMP.CREATE_USER,-->
+<!--        RRD.UPDATE_USER = TEMP.UPDATE_USER,-->
+<!--        RRD.STATUS = TEMP.STATUS-->
+<!--        &lt;!&ndash; 未匹配到则插入 &ndash;&gt;-->
+<!--        WHEN NOT MATCHED THEN INSERT(PROD_ID,PUB_DATE,BANK_TRANS_AMT,-->
+<!--        ORG_TRANS_AMT,INVEST_TRANS_AMT,RELATEAMOUNT,-->
+<!--        EFFDATE,EFFDELIDATE,CREATE_TIME,-->
+<!--        UPDATE_TIME,CREATE_DEPT,CREATE_USER,-->
+<!--        UPDATE_USER,STATUS)-->
+<!--        VALUES(TEMP.PROD_ID,TEMP.PUB_DATE,TEMP.BANK_TRANS_AMT,-->
+<!--        TEMP.ORG_TRANS_AMT,TEMP.INVEST_TRANS_AMT,TEMP.RELATEAMOUNT,-->
+<!--        TEMP.EFFDATE,TEMP.EFFDELIDATE,TEMP.CREATE_TIME,-->
+<!--        TEMP.UPDATE_TIME,TEMP.CREATE_DEPT,TEMP.CREATE_USER,-->
+<!--        TEMP.UPDATE_USER,TEMP.STATUS)-->
+
+        insert into REP_REL_DEAL (PROD_ID,PUB_DATE,BANK_TRANS_AMT,
+        ORG_TRANS_AMT,INVEST_TRANS_AMT,RELATEAMOUNT,
+        EFFDATE,EFFDELIDATE,CREATE_TIME,
+        UPDATE_TIME,CREATE_DEPT,CREATE_USER,
+        UPDATE_USER,STATUS,UUID)
+        values (#{prodId,jdbcType=VARCHAR},#{pubDate,jdbcType=DATE},#{bankTransAmt,jdbcType=DECIMAL},
+        #{orgTransAmt,jdbcType=DECIMAL},#{investTransAmt,jdbcType=DECIMAL},#{relateamount,jdbcType=VARCHAR},
+        #{effdate,jdbcType=DATE},#{effdelidate,jdbcType=DATE},#{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP},#{createDept,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},
+        #{createUser,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR},#{uuid,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="update" parameterType="com.joyintech.tams.disclosure.information.config.repRelDeal.dto.RepRelDealDto" >
+    update REP_REL_DEAL
+    set PROD_ID = #{prodId,jdbcType=VARCHAR},
+    PUB_DATE = #{pubDate,jdbcType=DATE},
+    BANK_TRANS_AMT = #{bankTransAmt,jdbcType=DECIMAL},
+    ORG_TRANS_AMT = #{orgTransAmt,jdbcType=DECIMAL},
+    INVEST_TRANS_AMT = #{investTransAmt,jdbcType=DECIMAL},
+    RELATEAMOUNT = #{relateamount,jdbcType=VARCHAR},
+    EFFDATE = #{effdate,jdbcType=DATE},
+    EFFDELIDATE = #{effdelidate,jdbcType=DATE},
+    STATUS = #{status,jdbcType=VARCHAR},
+    UPDATE_USER = #{createUser,jdbcType=VARCHAR},
+    UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+    ERRORMSG = #{errormsg,jdbcType=VARCHAR}
+    where UUID = #{uuid,jdbcType=VARCHAR}
+    </update>
+
+    <delete id="delete" parameterType="com.joyintech.tams.disclosure.information.config.repRelDeal.dto.RepRelDealDto"  >
+		update REP_REL_DEAL
+		set STATUS = 'D'
+		where UUID = #{uuid,jdbcType=VARCHAR}
+	</delete>
+    <select id="selectExist" resultType="com.joyintech.tams.disclosure.information.config.repRelDeal.dto.RepRelDealDto" >
+        select *
+        from REP_REL_DEAL
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+        and STATUS not in ('D')
+        and (
+        (EFFDATE &lt;= #{effdate,jdbcType=DATE} and EFFDELIDATE &gt;= #{effdelidate,jdbcType=DATE})
+        or (EFFDATE &gt;= #{effdate,jdbcType=DATE} and EFFDATE &lt;= #{effdelidate,jdbcType=DATE})
+        or (EFFDELIDATE &gt;= #{effdate,jdbcType=DATE} and EFFDELIDATE &lt;= #{effdelidate,jdbcType=DATE})
+        )
+        <if test="uuid != null and ! uuid.equals('')">
+            and UUID != #{uuid,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <select id="selectPProdId" resultType="java.lang.String">
+        SELECT PROD_ID FROM REP_PROD_INFO WHERE (P_PROD_ID is null or P_PROD_ID = PROD_ID) and PROD_ID = #{prodId}
+    </select>
+
+    <select id="selectExistInfo" resultType="com.joyintech.tams.disclosure.information.config.repRelDeal.dto.RepRelDealDto" >
+        select *
+        from REP_REL_DEAL
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+        and STATUS not in ('D')
+    </select>
+
+    <select id="selectData2" resultType="com.joyintech.tams.disclosure.information.config.repRelDeal.dto.RepRelDealDto" >
+        select
+        T1.UUID uuid,
+        T1.PROD_ID prodId,
+        T1.BANK_TRANS_AMT bankTransAmt,
+        T1.ORG_TRANS_AMT orgTransAmt,
+        T1.INVEST_TRANS_AMT investTransAmt,
+        T1.RELATEAMOUNT relateamount,
+        T1.EFFDATE effdate,
+        T1.EFFDELIDATE effdelidate
+        from REP_REL_DEAL T1
+        where T1.PROD_ID = #{prodId,jdbcType=VARCHAR}
+        and T1.EFFDATE = #{effdate,jdbcType=DATE}
+        and T1.EFFDELIDATE = #{effdelidate,jdbcType=DATE}
+    </select>
+
+    <insert id="importInfo" parameterType="com.joyintech.tams.disclosure.information.config.repRelDeal.dto.RepRelDealDto" >
+            MERGE INTO REP_REL_DEAL RRD
+            USING (
+            SELECT #{uuid,jdbcType=VARCHAR} UUID,
+            #{prodId,jdbcType=VARCHAR} PROD_ID,
+            #{pubDate,jdbcType=DATE} PUB_DATE,
+            #{bankTransAmt,jdbcType=DECIMAL} BANK_TRANS_AMT,
+            #{orgTransAmt,jdbcType=DECIMAL} ORG_TRANS_AMT,
+            #{investTransAmt,jdbcType=DECIMAL} INVEST_TRANS_AMT,
+            #{relateamount,jdbcType=VARCHAR} RELATEAMOUNT,
+            #{effdate,jdbcType=DATE} EFFDATE,
+            #{effdelidate,jdbcType=DATE} EFFDELIDATE,
+            #{status,jdbcType=VARCHAR} STATUS,
+            #{createUser,jdbcType=VARCHAR} CREATE_USER,
+            #{createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+            #{createDept,jdbcType=VARCHAR} CREATE_DEPT,
+            #{createUser,jdbcType=VARCHAR} UPDATE_USER,
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            FROM
+            DUAL
+            ) TEMP
+            <!-- 业务主键匹配 -->
+            ON(RRD.PROD_ID = TEMP.PROD_ID
+            and RRD.EFFDATE = TEMP.EFFDATE
+            and RRD.EFFDELIDATE = TEMP.EFFDELIDATE
+            and RRD.STATUS = 'E'
+            )
+            <!-- 匹配到则更新 -->
+            WHEN MATCHED THEN UPDATE
+            SET
+            RRD.PUB_DATE = TEMP.PUB_DATE,
+            RRD.BANK_TRANS_AMT = TEMP.BANK_TRANS_AMT,
+            RRD.ORG_TRANS_AMT = TEMP.ORG_TRANS_AMT,
+            RRD.INVEST_TRANS_AMT = TEMP.INVEST_TRANS_AMT,
+            RRD.RELATEAMOUNT = TEMP.RELATEAMOUNT,
+            RRD.UPDATE_TIME = TEMP.UPDATE_TIME,
+            RRD.UPDATE_USER = TEMP.UPDATE_USER,
+            RRD.ERRORMSG = ''
+            <!-- 未匹配到则插入 -->
+            WHEN NOT MATCHED THEN INSERT(UUID,PROD_ID,PUB_DATE,BANK_TRANS_AMT,
+            ORG_TRANS_AMT,INVEST_TRANS_AMT,RELATEAMOUNT,
+            EFFDATE,EFFDELIDATE,CREATE_TIME,
+            UPDATE_TIME,CREATE_DEPT,CREATE_USER,
+            UPDATE_USER,STATUS)
+            VALUES(TEMP.UUID,TEMP.PROD_ID,TEMP.PUB_DATE,TEMP.BANK_TRANS_AMT,
+            TEMP.ORG_TRANS_AMT,TEMP.INVEST_TRANS_AMT,TEMP.RELATEAMOUNT,
+            TEMP.EFFDATE,TEMP.EFFDELIDATE,TEMP.CREATE_TIME,
+            TEMP.UPDATE_TIME,TEMP.CREATE_DEPT,TEMP.CREATE_USER,
+            TEMP.UPDATE_USER,TEMP.STATUS)
+    </insert>
+</mapper>

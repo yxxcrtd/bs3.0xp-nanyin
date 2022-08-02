@@ -62,7 +62,7 @@ public class RepInvestAccount001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("queryProdIdInfo")
-    public List<SelectOptionDto> queryProdIdInfo() {
+    public Page<SelectOptionDto> queryProdIdInfo() {
         return repInvestAccountService.queryProdIdInfo(RequestUtil.getPageParam());
     }
 
@@ -101,7 +101,7 @@ public class RepInvestAccount001Controller extends BaseController {
         params.setElementId(dto.getElementId());
         params.setBusinessCode(item->item.getProdId());
         params.setBusinessType(DictCodeListExt4.共通业务类型_投资账户信息维护.getValue());
-        params.setComment(entity ->  "产品代码" + "(" + entity.getProdId() + ")");
+        params.setComment(entity ->  "产品主代码" + "(" + entity.getProdId() + ")");
         processParameter.setOperationType(OperationType.DELETE);
         processParameter.setWorkFlowParameter(params);
         String msg =repInvestAccountService.start(processParameter, dto.getSelectedItem().toArray(new RepInvestAccountDto[dto.getSelectedItem().size()]));

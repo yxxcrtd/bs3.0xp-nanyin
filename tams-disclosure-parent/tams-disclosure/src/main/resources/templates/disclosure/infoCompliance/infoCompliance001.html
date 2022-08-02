@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{layout/default}">
+<head>
+    <title data-th-text="#{SysActionLog001}">行为日志</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="form-button-area">
+        <a id="infoCompliance001_btn_add" class="layui-btn layui-btn-sm btn-create" data-th-text="#{SysCommon.create}">新建</a>
+        <a id="infoCompliance001_btn_update" class="layui-btn layui-btn-sm btn-update">修改开发状态</a>
+    </div>
+    <div class="joyin-form-wrap joyin-filter-form condition-area">
+        <form class="layui-form" id="searchForm">
+            <div class="layui-form-item">
+                <div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">
+                    <label class="layui-form-label form-lable">类型</label>
+                    <div class="layui-input-inline input-inline">
+                        <select id="infoType" name="infoType" class="layui-input form-input input-select"
+                                data-th-placeholder="#{SysCommon.placeholder}" data-th-data-result="${INFO_TYPE}" allowClear="true">
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">
+                    <label class="layui-form-label form-lable">报表/模板名称</label>
+                    <div class="layui-input-inline input-inline">
+                        <input type="text" name ="infoName" id="infoName" data-th-placeholder="#{SysCommon.placeholder}"
+                        class="layui-input form-input"/>
+                    </div>
+                </div>
+                <div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">
+                    <label class="layui-form-label form-lable">当前状态</label>
+                    <div class="layui-input-inline input-inline">
+                        <select id="infoStatus" name="infoStatus" class="layui-input form-input input-select"
+                               data-th-placeholder="#{SysCommon.placeholder}" data-th-data-result="${INFO_STATUS}" allowClear="true">
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div>
+        <table class="layui-table" id="dataTable"></table>
+    </div>
+</div>
+<div layout:fragment="script">
+    <script data-th-src="@{/js/disclosure/infoCompliance/infoCompliance001.js}" type="text/javascript"></script>
+</div>
+</body>
+
+</html>
