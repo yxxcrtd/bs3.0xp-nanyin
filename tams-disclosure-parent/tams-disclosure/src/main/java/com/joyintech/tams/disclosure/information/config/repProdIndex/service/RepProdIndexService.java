@@ -207,7 +207,7 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
                     }else if(!this.isBigDecimal(rowData.get(5))){
                         errorMsg.append("子产品单位净值 格式不正确！");
                     }else{
-                        if(StringUtil.isNotEmpty(dto1.getProdType()) && dto1.getProdType().equals("M")){
+                        if(StringUtil.isNotEmpty(dto1.getProdType()) && dto1.getProdType().equals("04")){
                             if(new BigDecimal(rowData.get(5)).compareTo(new BigDecimal(1)) != 0){
                                 errorMsg.append("产品类型为“现管类产品”时，子产品单位净值默认为1.0000!");
                             }
@@ -218,13 +218,13 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
                     }else if(!this.isBigDecimal(rowData.get(6))){
                         errorMsg.append("子产品单位累计净值 格式不正确！");
                     }else{
-                        if(StringUtil.isNotEmpty(dto1.getProdType()) && dto1.getProdType().equals("M")){
+                        if(StringUtil.isNotEmpty(dto1.getProdType()) && dto1.getProdType().equals("04")){
                             if(new BigDecimal(rowData.get(6)).compareTo(new BigDecimal(1)) != 0){
                                 errorMsg.append("产品类型为“现管类产品”时，子产品单位累计净值默认为1.0000!");
                             }
                         }
                     }
-                    if(StringUtil.isNotEmpty(dto1.getProdType()) && dto1.getProdType().equals("M")){
+                    if(StringUtil.isNotEmpty(dto1.getProdType()) && dto1.getProdType().equals("04")){
                         if (!StringUtil.isNotEmpty(rowData.get(7))){
                             errorMsg.append("子产品万份收益 必填！");
                         }else if(!this.isBigDecimal(rowData.get(7))){
@@ -235,7 +235,7 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
                         }else if(!this.isBigDecimal(rowData.get(8))){
                             errorMsg.append("子产品七日年化收益率 格式不正确！");
                         }
-                    }else if(StringUtil.isNotEmpty(dto1.getProdType()) && dto1.getProdType().equals("N")){
+                    }else if(StringUtil.isNotEmpty(dto1.getProdType()) && dto1.getProdType().equals("01")){
                         if (StringUtil.isNotEmpty(rowData.get(7))){
                             errorMsg.append("子产品万份收益 不应填值！");
                         }
@@ -308,7 +308,7 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
                         }
 
                     }else{
-                        if(StringUtil.isNotEmpty(dto1.getProdType()) && dto1.getProdType().equals("M")){
+                        if(StringUtil.isNotEmpty(dto1.getProdType()) && dto1.getProdType().equals("04")){
                             if(new BigDecimal(rowData.get(12)).compareTo(new BigDecimal(1)) != 0){
                                 errorMsg.append("产品类型为“现管类产品”时，母产品单位净值默认为1.0000!");
                             }
@@ -317,7 +317,7 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
                             }
                         }
                     }
-                    if(StringUtil.isNotEmpty(dto1.getProdType()) && dto1.getProdType().equals("M")){
+                    if(StringUtil.isNotEmpty(dto1.getProdType()) && dto1.getProdType().equals("04")){
                         if(StringUtil.isNotEmpty(dto1.getIsGrade()) && dto1.getIsGrade().equals("02")){
                             if (!StringUtil.isNotEmpty(rowData.get(14))){
                                 errorMsg.append("母产品万份收益 必填！");
@@ -353,7 +353,7 @@ public class RepProdIndexService extends CommonExportService<RepProdIndexDto> im
                                 dto2.setpYield7(new BigDecimal(rowData.get(15)));
                             }
                         }
-                    }else if(StringUtil.isNotEmpty(dto1.getProdType()) && dto1.getProdType().equals("N")){
+                    }else if(StringUtil.isNotEmpty(dto1.getProdType()) && dto1.getProdType().equals("01")){
                         if (StringUtil.isNotEmpty(rowData.get(7))){
                             errorMsg.append("母产品万份收益 不应填值！");
                         }
