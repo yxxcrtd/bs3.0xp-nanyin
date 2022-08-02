@@ -165,8 +165,7 @@
         WHERE PROD_RE IS NOT NULL
             <if test="search != null and search != ''">
                 and (PROD_RE like
-                concat(concat('%',#{search}),'%')
-                --                      or PROD_NAME like concat(concat('%',#{search}),'%'))
+                concat(concat('%',#{search}),'%'))
             </if>
 
     </select>
