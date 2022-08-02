@@ -158,6 +158,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
         return prodInfoMapper.selectByProdStatus(prodId, "E");
     }
 
+
     /**
      * 查询母产品下所有的子产品信息
      *
@@ -342,11 +343,11 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                     List<String> rowData = objects.get(i);
                     if (StringUtil.isEmpty(rowData.get(0))) {
                         errorMsg.append("子产品代码 必填！");
-                    }
-
-                    ProdInfoDto prodInfo = this.selectByProdId(rowData.get(0));
-                    if (prodInfo != null) {
-                        errorMsg.append("子产品代码 已存在");
+                    }else{
+                        ProdInfoDto prodInfo = this.selectByProdId(rowData.get(0));
+                        if (prodInfo != null) {
+                            errorMsg.append("子产品代码 已存在");
+                        }
                     }
 
                     if (StringUtil.isEmpty(rowData.get(1))) {

@@ -2,6 +2,18 @@
  * 交易商新建
  */
 $(function() {
+
+
+	var prodDiscountId = $('#prodDiscountId').val();
+	var flag = false;
+	if ('' == prodDiscountId || null == prodDiscountId) {
+
+	} else {
+		//修改页面
+		$("#prodRegistNo").attr("disabled", "disabled");
+		$("#prodId").attr("disabled", "disabled");
+	}
+
 	/**
 	 * 保存或提交
 	 * 
