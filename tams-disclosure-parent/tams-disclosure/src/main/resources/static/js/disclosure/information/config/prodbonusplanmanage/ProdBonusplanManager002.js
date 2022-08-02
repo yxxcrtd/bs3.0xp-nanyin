@@ -5,6 +5,17 @@ var upFileName;
 var prodSetDate;
 var raiseType ;
 $(function() {
+	var bonusPlanId = $('#bonusPlanId').val();
+	if ('' == bonusPlanId || null == bonusPlanId) {
+
+	} else {
+		//修改页面
+		$("#finProdId").attr("disabled", true);
+		$("#bonusMode").attr("disabled", true);
+		$("#settDate").attr("disabled", true);
+
+	}
+
 
 	var gradeChange = function() {
 		btnShow();
@@ -48,7 +59,9 @@ $(function() {
 
 
 	function prodIdChange() {
-		var prodId = $('#prodName').select2('data')[0].id;
+		var prodName = $('#finProdId').select2('data')[0].id;
+		var prodId = $('#finProdId').select2('data')[0].text;
+		$('#prodName').val(prodName);
 		$('#prodId').val(prodId);
 	}
 
@@ -77,8 +90,9 @@ $(function() {
 		var settDate = $('#settDate').val();
 		var paymentDate = $('#paymentDate').val();
 		if (settDate < platDate){
-			Joyin.error('到期日小于平台日，无法修改到期日！', function () {
+			Joyin.error('收益分配基准日必须大于平台日', function () {
 				// table.renderRow(data.LAY_TABLE_INDEX);
+				$('#settDate').val('');
 				return;
 			});
 		}
@@ -114,7 +128,7 @@ $(function() {
 
 	$(function() {
 		// 规则1改变事件
-		$('#prodName').change(prodIdChange);
+		$('#finProdId').change(prodIdChange);
 		// 绑定按钮事件
 		$('#ProdBonusplanManager002_btn_save').click(function() {
 			saveOrSubmit('save');

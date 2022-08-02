@@ -502,20 +502,6 @@ INSERT INTO SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINK
 VALUES ('DIS_PROFIT_TYPE', '02', 'DIS_PROD_TYPE', '04', 'system', null, sysdate, 'system', sysdate);
 -- add by dingrui 2022-08-01  end
 
--- add by dingrui 2022-08-01  start
--- "产品类型"与字典信息
-delete  from SYS_DATADICT_LIST_LINK where DICT_CODE = 'DIS_PROFIT_TYPE' and ITEM_CODE = '01' and LINKED_DICT_CODE = 'DIS_PROD_TYPE' and LINKED_ITEM_CODE = 'N';
-delete  from SYS_DATADICT_LIST_LINK where DICT_CODE = 'DIS_PROFIT_TYPE' and ITEM_CODE = '02' and LINKED_DICT_CODE = 'DIS_PROD_TYPE' and LINKED_ITEM_CODE = 'N';
-delete  from SYS_DATADICT_LIST_LINK where DICT_CODE = 'DIS_PROFIT_TYPE' and ITEM_CODE = '02' and LINKED_DICT_CODE = 'DIS_PROD_TYPE' and LINKED_ITEM_CODE = 'M';
-
-INSERT INTO SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-VALUES ('DIS_PROFIT_TYPE', '01', 'DIS_PROD_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
-INSERT INTO SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-VALUES ('DIS_PROFIT_TYPE', '02', 'DIS_PROD_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
-
-INSERT INTO SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-VALUES ('DIS_PROFIT_TYPE', '02', 'DIS_PROD_TYPE', '04', 'system', null, sysdate, 'system', sysdate);
--- add by dingrui 2022-08-01  end
 commit ;
 
 <!--  add  信息披露->非标债权类资产明细维护  by  marui start -->
@@ -545,4 +531,24 @@ delete from SYS_DATADICT_LIST where DICT_CODE='COMMON_BUSINESS_TYPE' and ITEM_CO
 INSERT INTO SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 VALUES ('COMMON_BUSINESS_TYPE', 'DISNOSTD', '非标债权类资产明细维护', 298, '0', 'system', null, sysdate, 'system', sysdate, null);
 
-<!--  add 信息披露->非标债权类资产明细维护  by marui  end-->
+--  add 信息披露->非标债权类资产明细维护  by marui  end
+
+
+
+-- add by dingrui 2022-08-02  start
+-- 新增 "产品分红到期计划" 画面
+DELETE FROM SYS_PAGE WHERE PAGE_ID IN ('ProdBonusplanManager001');
+INSERT INTO SYS_PAGE
+(PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES('ProdBonusplanManager001', 'DIS', '/disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager001',
+       'disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager001', 'REPORT_006_004_001', NULL, NULL,
+       '02', '01', '产品分红到期计划', 'system', NULL, sysdate, 'system', sysdate);
+
+DELETE FROM SYS_PAGE WHERE PAGE_ID IN ('ProdBonusplanManager002');
+INSERT INTO SYS_PAGE
+(PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES('ProdBonusplanManager002', 'DIS', '/disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager002',
+       'disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager002', '', NULL, NULL,
+       '02', '01', '产品分红到期计划新增', 'system', NULL, sysdate, 'system', sysdate);
+-- add by dingrui 2022-08-02  end
+commit ;

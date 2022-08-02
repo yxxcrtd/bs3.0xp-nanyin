@@ -10,7 +10,7 @@ import com.joyintech.framework.validation.annotation.NotEmpty;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class DisProdBonusplan extends BaseEntity {
+public class    DisProdBonusplan extends BaseEntity {
 
     /**
      * 分红计划编号

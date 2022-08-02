@@ -59,6 +59,56 @@ public class ProdBonusplanDto extends DisProdBonusplan implements ITableRow, Pro
      */
     private String elementId;
 
+    private String pageModel;
+
+    private String settDateBegin ;
+
+    private String settDateEnd;
+
+    private String paymentDateBegin ;
+
+    private String paymentDateEnd;
+
+    public String getSettDateBegin() {
+        return settDateBegin;
+    }
+
+    public void setSettDateBegin(String settDateBegin) {
+        this.settDateBegin = settDateBegin;
+    }
+
+    public String getSettDateEnd() {
+        return settDateEnd;
+    }
+
+    public void setSettDateEnd(String settDateEnd) {
+        this.settDateEnd = settDateEnd;
+    }
+
+    public String getPaymentDateBegin() {
+        return paymentDateBegin;
+    }
+
+    public void setPaymentDateBegin(String paymentDateBegin) {
+        this.paymentDateBegin = paymentDateBegin;
+    }
+
+    public String getPaymentDateEnd() {
+        return paymentDateEnd;
+    }
+
+    public void setPaymentDateEnd(String paymentDateEnd) {
+        this.paymentDateEnd = paymentDateEnd;
+    }
+
+    public String getPageModel() {
+        return pageModel;
+    }
+
+    public void setPageModel(String pageModel) {
+        this.pageModel = pageModel;
+    }
+
     public List<ProdBonusplanDto> getSelectedItem() {
         return selectedItem;
     }

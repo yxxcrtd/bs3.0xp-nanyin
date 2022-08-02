@@ -12,6 +12,7 @@ package com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.ser
 
 import com.alibaba.fastjson.JSONArray;
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.DateUtil;
@@ -58,6 +59,9 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
 
     @Autowired
     private ProdBonusplanManager002Service prodBonusplanManager002Service;
+
+    @Autowired
+    private ProdBonusplanManager001Service prodBonusplanManager001Service;
 
     @Autowired
     private ProdInfoService prodInfoService ;
@@ -183,6 +187,7 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
                 for (int i = 1; i < objects.size(); i++) {
                     StringBuilder errorMsg = new StringBuilder("");
                     List<String> rowData = objects.get(i);
+                    ProdBonusplanDto dto = new ProdBonusplanDto();
 
                     if (!StringUtil.isNotEmpty(rowData.get(0))) {
                         errorMsg.append("子产品代码 必填！");
@@ -192,10 +197,11 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
                         if(prodInfo == null){
                             errorMsg.append("子产品代码 不存在");
                         }
+
                         /*if (StringUtil.isNotEmpty(this.selectByProdId(rowData.get(0)))) {
                             errorMsg.append("子产品代码已存在，继续录入会覆盖历史数据");
                         }   */
-
+                        dto.setProdId(rowData.get(0));
                     }
                     if (!StringUtil.isNotEmpty(rowData.get(1))) {
                         errorMsg.append("分红方式 必填！");
@@ -204,11 +210,20 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
                             && !StringUtils.equals(DictCodeListExt3.信披_分红方式_份额分红后净值为1.getValue(), rowData.get(1))
                             && !StringUtils.equals(DictCodeListExt3.信披_分红方式_到期兑付.getValue(), rowData.get(1))) {
                         errorMsg.append("分红方式值 不正确！");
+                    }else if (StringUtils.equals(DictCodeListExt3.信披_分红方式_份额分红后净值为1.getCodeName(), rowData.get(1).toString())
+                            || StringUtils.equals(DictCodeListExt3.信披_分红方式_份额分红后净值为1.getValue(), rowData.get(1).toString())) {
+                        dto.setBonusMode(DictCodeListExt3.信披_分红方式_份额分红后净值为1.getValue());
+                    } else if (StringUtils.equals(DictCodeListExt3.信披_分红方式_到期兑付.getCodeName(), rowData.get(1).toString())
+                            || StringUtils.equals(DictCodeListExt3.信披_分红方式_到期兑付.getValue(), rowData.get(1).toString())) {
+                        dto.setBonusMode(DictCodeListExt3.信披_分红方式_到期兑付.getValue());
                     }
                     if (!StringUtil.isNotEmpty(rowData.get(2))) {
                         errorMsg.append("收益分配基准日 必填！");
                     } else if (!this.isDateStr(rowData.get(2))) {
                         errorMsg.append("收益分配基准日 格式不正确！");
+                    }else{
+                        dto.setSettDate(DateUtil.parse(rowData.get(2).toString()));
+                        dto.setSettDateStr(rowData.get(2));
                     }
                     if (!StringUtil.isNotEmpty(rowData.get(3))) {
                         errorMsg.append("现金红利发放日 必填！");
@@ -227,6 +242,21 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
                     if (!StringUtil.isNotEmpty(rowData.get(7))) {
                         errorMsg.append("业绩比较基准比例 必填！");
                     }
+
+                    ProdBonusplanDto existDto = prodBonusplanManager001Service.selectByProdId(rowData.get(0));
+                    if(StringUtils.equals(DictCodeListExt3.信披_分红方式_到期兑付.getCodeName(),rowData.get(1))
+                            && existDto !=null ){
+                        return new AjaxResult("当分红方式选择到期兑付时，一个子产品代码只能有一条数据", MessageType.错误消息);
+                    }
+                    if(StringUtils.isNotEmpty(dto.getProdId())
+                            && StringUtils.isNotEmpty(dto.getBonusMode())
+                            && StringUtils.isNotEmpty(dto.getSettDateStr())){
+                        ProdBonusplanDto existDto2 = prodBonusplanManager002Service.selectByCondition(dto);
+                        if(existDto2 != null){
+                            return new AjaxResult("“子产品代码+产品名称+分红方式+收益分配基准日”不得同时与已有数据重复", MessageType.错误消息);
+                        }
+                    }
+
 
                     if (StringUtil.isNotEmpty(errorMsg.toString())) {
                         errorMsg.append("<br />");

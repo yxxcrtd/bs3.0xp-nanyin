@@ -782,11 +782,11 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
     public void updateIssuingStatus(ProdInfoDto dto) {
         //如果子产品发布状态为发布成功，则更新母产品的发布状态为:发布成功
         if (StringUtils.equals(DictCodeListExt5.信批产品类别_子产品.getValue(), dto.getRepProdType())
-                && StringUtils.equals(DictCodeListExt1.发行状态_确认发行.getValue(), dto.getIssueStatus())) {
+                && StringUtils.equals(DictCodeListExt1.发行状态_发行成功.getValue(), dto.getIssuingStatusNew())) {
             ProdInfoDto ppdto = prodInfoMapper.selectByPrimaryKey(dto.getpProdId());
-            if (!StringUtils.equals(DictCodeListExt1.发行状态_确认发行.getValue(), ppdto.getIssueStatus())) {
-                ppdto.setIssueStatus(DictCodeListExt1.发行状态_确认发行.getValue());
-                prodInfoMapper.updateIssuingStatus(ppdto);
+            if (!StringUtils.equals(DictCodeListExt1.发行状态_发行成功.getValue(), ppdto.getIssueStatus())) {
+                ppdto.setIssueStatus(DictCodeListExt1.发行状态_发行成功.getValue());
+                prodInfoMapper.updateByPrimaryKey(ppdto);
             }
         }
         prodInfoMapper.updateIssuingStatus(dto);
