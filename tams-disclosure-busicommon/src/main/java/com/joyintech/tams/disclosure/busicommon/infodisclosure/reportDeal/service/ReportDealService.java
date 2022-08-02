@@ -27,7 +27,7 @@ public class ReportDealService {
     public int updateDataStatus(RepReveal repReveal){
     	return reportDealMapper.updateDataStatus(repReveal); 
     }
-    
+
     /**
      * 查询相同报表数据数据是否为已确定
      * @param RepReveal repReveal
@@ -42,6 +42,18 @@ public class ReportDealService {
     	}
     	return confirmFlag;
     }
+
+	/**
+	 * 查询是否在流程中
+	 * @param repReveal
+	 */
+	public boolean ckeckWflStatus(RepReveal repReveal){
+		int size = reportDealMapper.ckeckWflStatus(repReveal);
+		if(size > 0) {
+			return true;
+		}
+		return false;
+	}
     
 
     /**
