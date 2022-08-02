@@ -42,7 +42,7 @@ public class SettReportDataService implements IReportDataService {
 	private SettReportMapper settReportMapper;
 	
 	@Autowired
-	private ChbMktHolidayMapper chbMktHolidayMapper;
+	private HolidayService holidayService;
 
 	/**
 	 * 日志
@@ -60,8 +60,13 @@ public class SettReportDataService implements IReportDataService {
 			if ( prodId==null ) {
 				prodId = (paraMap.get("pprodid") == null ? null : paraMap.get("pprodid").toString());
 			}
-			Date reportDate = (paraMap.get("platformDate") == null ? new Date():(Date)paraMap.get("platformDate"));
+			Date reportDate = new Date();
+			if ( paraMap.get("platformDate") != null ) {
+				reportDate = holidayService.getPreWorkDate((Date)paraMap.get("platformDate"));
+			}
 
+			//reportDate = DateUtil.parse("2023-03-01");
+			
 			// 查找产品
 			RepProdInfo prodInfo = null;
 			Map<String, BigDecimal> mapBalance = new HashMap<String, BigDecimal>();
@@ -80,7 +85,8 @@ public class SettReportDataService implements IReportDataService {
 						x.setoAmt(BigDecimal.ZERO);
 					return x;
 				}).collect(Collectors.toMap(BokBalance::getSubjectNo, BokBalance::getoAmt, (key1, key2) -> key2));
-
+				settReportDto.setReportDate(reportDate);
+				settReportDto.setProdId(prodInfo.getProdId());
 				settReportDto.setProdName(prodInfo.getProdName());
 				settReportDto.setProdRe(prodInfo.getProdRe());
 				settReportDto.seteDate(prodInfo.getSetDate());
@@ -90,63 +96,153 @@ public class SettReportDataService implements IReportDataService {
 				//签字日期
 				Date signDate = DateUtil.addDay(prodInfo.getMdate(),1);
 				try {
-					signDate = this.getLastWordDateOfWeek(DateUtil.addDay(prodInfo.getMdate(),1));
+					signDate = holidayService.getLastWordDateOfWeek(DateUtil.addDay(prodInfo.getMdate(),1));
 				} catch( Exception e ) {
 					logger.error("获取签字日期错误.");
 				}
 				settReportDto.setSignDate(signDate);  //产品到期日+1工作日所在周的最后一个工作日
 				
-				settReportDto.setDeposit(mapBalance.get("100201")); // 银行存款
-				settReportDto.setGuarantyAmt(mapBalance.get("103106")); // 保证金
-				settReportDto.setIntAmt(mapBalance.get("10020601")); // 应计利息
-				settReportDto.setSumAssetAmt(
-						mapBalance.get("100201").add(mapBalance.get("103106")).add(mapBalance.get("10020601")));// 资产合计
+				BigDecimal sumAssetAmt = BigDecimal.ZERO;
+				// 银行存款
+				BigDecimal amt = mapBalance.get("100201");
+				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
+					settReportDto.setDeposit(amt.toString()); // 银行存款
+					sumAssetAmt = sumAssetAmt.add(amt);
+				} else {
+					settReportDto.setDeposit("-");  
+				}
+				//settReportDto.setDeposit(mapBalance.get("100201")==null?"-":mapBalance.get("100201").toString()); // 银行存款
+				
+				// 保证金
+				amt = mapBalance.get("103106");
+				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
+					settReportDto.setGuarantyAmt(amt.toString()); // 银行存款
+					sumAssetAmt = sumAssetAmt.add(amt);
+				} else {
+					settReportDto.setGuarantyAmt("-");  
+				}
+				//settReportDto.setGuarantyAmt(mapBalance.get("103106")); // 保证金
 
-				settReportDto.setMgrFee(mapBalance.get("220601")); // 管理费
-				settReportDto.setFloatFee(mapBalance.get("220602")); // 应付管理人业绩报酬
-				settReportDto.setTrustFee(mapBalance.get("2207")); // 托管费
-				settReportDto.setSaleFee(mapBalance.get("2208")); // 销售费
-				settReportDto.setRedemAmt(mapBalance.get("2203")); // 赎回紧额
-				settReportDto.setTaxFee(mapBalance.get("2221")); // 税费
-				settReportDto.setProfit(mapBalance.get("2232")); // 应付利润
-				settReportDto.setOtherPayAmt(mapBalance.get("2241")); // 其他应付紧额
-				settReportDto.setAssetValue(BigDecimal.ZERO); // 资产价值，固定值0
+				// 应计利息
+				amt = mapBalance.get("10020601");
+				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
+					settReportDto.setIntAmt(amt.toString()); // 银行存款
+					sumAssetAmt = sumAssetAmt.add(amt);
+				} else {
+					settReportDto.setIntAmt("-");  
+				}
+				//settReportDto.setIntAmt(mapBalance.get("10020601")); // 应计利息
+				
+				// 资产合计
+				if ( sumAssetAmt!=null &&  sumAssetAmt.compareTo(BigDecimal.ZERO)!=0 ) {
+					settReportDto.setSumAssetAmt(sumAssetAmt.toString()); // 银行存款
+				} else {
+					settReportDto.setSumAssetAmt("-");  
+				}
+				//settReportDto.setSumAssetAmt(amt.toString());
 
-				settReportDto.setSumDebtAmt(mapBalance.get("220601").add(mapBalance.get("220602"))
-						.add(mapBalance.get("2207")).add(mapBalance.get("2208")).add(mapBalance.get("2203"))
-						.add(mapBalance.get("2221")).add(mapBalance.get("2232")).add(mapBalance.get("2241"))); // 负债合计
+				// 管理费
+				BigDecimal sumDebtAmt = BigDecimal.ZERO;
+				amt = mapBalance.get("220601");
+				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
+					settReportDto.setMgrFee(amt.toString()); // 银行存款
+					sumDebtAmt = sumDebtAmt.add(amt);
+				} else {
+					settReportDto.setMgrFee("-");  
+				}
+				//settReportDto.setMgrFee(mapBalance.get("220601")); // 管理费
+				
+				// 应付管理人业绩报酬
+				amt = mapBalance.get("220602");
+				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
+					settReportDto.setFloatFee(amt.toString()); 
+					sumDebtAmt = sumDebtAmt.add(amt);
+				} else {
+					settReportDto.setFloatFee("-");  
+				}
+				// settReportDto.setFloatFee(mapBalance.get("220602"));
+				
+				// 应付托管费
+				amt = mapBalance.get("2207");
+				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
+					settReportDto.setTrustFee(amt.toString()); 
+					sumDebtAmt = sumDebtAmt.add(amt);
+				} else {
+					settReportDto.setTrustFee("-");  
+				}
+				// settReportDto.setTrustFee(mapBalance.get("2207")); // 托管费
+				
+				//  销售费
+				amt = mapBalance.get("2208");
+				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
+					settReportDto.setSaleFee(amt.toString()); // 银行存款
+					sumDebtAmt = sumDebtAmt.add(amt);
+				} else {
+					settReportDto.setSaleFee("-");  
+				}
+				//settReportDto.setSaleFee(mapBalance.get("2208")); // 销售费
+				
+				// 应付赎回款
+				amt = mapBalance.get("2203");
+				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
+					settReportDto.setRedemAmt(amt.toString()); // 银行存款
+					sumDebtAmt = sumDebtAmt.add(amt);
+				} else {
+					settReportDto.setRedemAmt("-");  
+				}
+				//settReportDto.setPayAmt(mapBalance.get("2203")==null?BigDecimal.ZERO:mapBalance.get("2203")); // 应付款回款
+				
+				// 税费
+				amt = mapBalance.get("2221");
+				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
+					settReportDto.setTaxFee(amt.toString()); // 银行存款
+					sumDebtAmt = sumDebtAmt.add(amt);
+				} else {
+					settReportDto.setTaxFee("-");  
+				}
+				//settReportDto.setTaxFee(mapBalance.get("2221")); 
+				
+				// 应付利润
+				amt = mapBalance.get("2232");
+				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
+					settReportDto.setProfit(amt.toString()); 
+					sumDebtAmt = sumDebtAmt.add(amt);
+				} else {
+					settReportDto.setProfit("-");  
+				}
+				//settReportDto.setProfit(mapBalance.get("2232"));
+				
+				// 其他应付款
+				amt = mapBalance.get("2241");
+				if ( amt!=null &&  amt.compareTo(BigDecimal.ZERO)!=0 ) {
+					settReportDto.setOtherPayAmt(amt.toString()); // 银行存款
+					sumDebtAmt = sumDebtAmt.add(amt);
+				} else {
+					settReportDto.setOtherPayAmt("-");  
+				}
+				//settReportDto.setOtherPayAmt(mapBalance.get("2241"));
+				
+				settReportDto.setAssetValue("-"); // 资产价值，固定值0
+
+//				settReportDto.setSumDebtAmt(mapBalance.get("220601").add(mapBalance.get("220602"))
+//						.add(mapBalance.get("2207")).add(mapBalance.get("2208")).add(mapBalance.get("2203"))
+//						.add(mapBalance.get("2221")).add(mapBalance.get("2232")).add(mapBalance.get("2241"))); 
+				// 负债合计
+				if ( sumDebtAmt!=null &&  sumDebtAmt.compareTo(BigDecimal.ZERO)!=0 ) {
+					settReportDto.setSumDebtAmt(sumDebtAmt.toString()); // 银行存款
+				} else {
+					settReportDto.setSumDebtAmt("-");  
+				}
+				
 				listResult.add(CollectionUtils.bean2Map(settReportDto));
 			}
 		} catch (Exception e) {
 			logger.error("清算报表数据错误", e);
-			e.printStackTrace();
+			listResult.add(CollectionUtils.bean2Map(settReportDto));
+			//e.printStackTrace();
 		}
 
 		return listResult;
-	}
-	
-	private Date getLastWordDateOfWeek(Date currDate) {
-		//找到本周日
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(currDate);
-		cal.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);//周日
-		try {
-			//从周日向前，找到第一个工作日
-			Date iDate = cal.getTime();
-			
-			ChbMktHolidayKey key = new ChbMktHolidayKey();
-			do {
-				key.setBusiDate(iDate);
-				key.setMarketCode("01");
-				ChbMktHoliday holiday = chbMktHolidayMapper.selectByPrimaryKey(key);
-				if ( "0".equals(holiday.getIsHoliday()) )  //工作日
-					break;
-				iDate = DateUtil.addDay(iDate, -1);
-			} while (true);
-			return iDate;
-		} catch (Exception e ) {
-			return DateUtil.addDay(cal.getTime(),-1);  //异常则返回本周五
-		}
 	}
 
 }

@@ -51,7 +51,7 @@ public class DurationReportDataService implements IReportDataService {
 	private RepExtConusMapper repExtConusMapper;
 	
 	@Autowired
-	private ChbMktHolidayMapper chbMktHolidayMapper;
+	private HolidayService holidayService;
 	
 	/**
 	 * 日志
@@ -333,7 +333,7 @@ public class DurationReportDataService implements IReportDataService {
 				for (RepProdBasicChange basis:listEffBasis ) {
 					RepExtConusKey key = new RepExtConusKey();
 					key.setDataType(basis.getDataType());
-					key.setDataDate(this.getPreWorkDate(sDate));
+					key.setDataDate(holidayService.getPreWorkDate(sDate));
 					RepExtConus sConus = repExtConusMapper.selectByPrimaryKey(key);
 					key.setDataDate(eDate);
 					RepExtConus eConus = repExtConusMapper.selectByPrimaryKey(key);
@@ -347,26 +347,4 @@ public class DurationReportDataService implements IReportDataService {
 		return basisValue;
 	}
 	
-	/**
-	 * 获取前一个工作日，不包含当日
-	 * @param currDate
-	 * @return
-	 */
-	private Date getPreWorkDate(Date currDate ) {
-		ChbMktHolidayKey key = new ChbMktHolidayKey();
-		Date iDate = currDate;
-		do {
-			iDate = DateUtil.addDay(iDate, -1);
-			key.setBusiDate(iDate);
-			key.setMarketCode("01");
-			ChbMktHoliday holiday = chbMktHolidayMapper.selectByPrimaryKey(key);
-			if ( holiday==null ) {
-				return iDate;
-			}
-			if ( "0".equals(holiday.getIsHoliday()) ) {  //工作日
-				return iDate;
-			}
-		} while (true);
-
-	}
 }
