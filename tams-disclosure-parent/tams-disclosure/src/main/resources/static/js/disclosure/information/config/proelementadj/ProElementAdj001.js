@@ -62,8 +62,8 @@
         cols: [
             {field:'prodAdjustId',  visible: false},
             {field:'dataStatusStr',  title: 'ProElementAdj001.dataStatus',sortField:"dataStatus"},//数据状态
-            {field:'prodRegistNo',  title: 'ProElementAdj001.prodRegistNo',sortField:"prodRegistNo"},//产品登记编码
-            {field:'prodId',  title: 'ProElementAdj001.prodId',sortField:"prodId"}//子产品代码
+            {field:'prodRegistNo',  title: 'ProElementAdj001.prodRegistNo',sortField:"prodRegistNo" ,width: 160},//产品登记编码
+            {field:'prodId',  title: 'ProElementAdj001.prodId',sortField:"prodId",width: 160}//子产品代码
             ,{field:'adjReason',  title: '调整此产品要素原因',sortField:"adjReason"} //调整此产品要素原因
             ,{field:'prodAdjRemark',  title: 'ProElementAdj001.prodAdjRemark',sortField:"prodAdjRemark"} //此产品要素调整（补充性）描述文字1
             ,{field:'prodAdjRemark2',  title: 'ProElementAdj001.prodAdjRemark2',sortField:"prodAdjRemark2"} //此产品要素调整（补充性）描述文字2
