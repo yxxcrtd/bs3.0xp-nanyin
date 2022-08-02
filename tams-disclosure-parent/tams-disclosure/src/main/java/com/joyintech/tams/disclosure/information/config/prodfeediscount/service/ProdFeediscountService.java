@@ -13,7 +13,9 @@ package com.joyintech.tams.disclosure.information.config.prodfeediscount.service
 import com.alibaba.fastjson.JSONArray;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
@@ -21,8 +23,11 @@ import com.joyintech.tams.common.base.dao.RepProdInfoMapper;
 import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.dao.GetPrdInfoSelectMapper;
+import com.joyintech.tams.disclosure.information.config.hugeinfopro.dto.HugeInfoPro001Dto;
 import com.joyintech.tams.disclosure.information.config.prodfeediscount.dao.ProdFeediscountMapper;
 import com.joyintech.tams.disclosure.information.config.prodfeediscount.dto.ProdFeediscountDto;
+import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto;
+import com.joyintech.tams.disclosure.information.config.repprodinfo.service.ProdInfoService;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -64,6 +69,9 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
 
     @Autowired
     private ProdFeediscountMapper prodFeediscountMapper;
+
+    @Autowired
+    ProdInfoService prodInfoService ;
 
 
 
@@ -133,8 +141,8 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
         }
         params.put("feenameArr", feenameArr);
 
-        Page<ProdFeediscountDto> pages = super.queryForPageForSelectReturn(Integer.parseInt((String) params.get("page")),
-                Integer.parseInt((String) params.get("length")),
+            Page<ProdFeediscountDto> pages = super.queryForPageForSelectReturn(Integer.parseInt( params.get("page").toString()),
+                Integer.parseInt(params.get("length").toString()),
                 () -> prodFeediscountMapper.searchReports(params));
         return pages;
     }
@@ -147,6 +155,40 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
      */
     public ProdFeediscountDto selectByProdId(String prodId) {
         return  prodFeediscountMapper.selectByProdId(prodId,DictCodeListExt3.信披_数据状态_有效E.getValue());
+    }
+
+    /**
+     * 导出
+     */
+    @Override
+    protected void buildExportParam(ExportParam exportParam) {
+        exportParam.config(
+                "/com/joyintech/tams/disclosure/information/config/prodfeediscount/export_prodfeediscount001.xml").dataSource(
+                DataSourceType.MASERT);
+    }
+
+    @Override
+    public Page<ProdFeediscountDto> selectPageData(Map<String, Object> selectParam) {
+        /*queryForPage(Integer.parseInt(selectParam.get("page").toString()),  Integer.parseInt(selectParam.get("length").toString()), ()
+                -> hugeInfoProMapper.select(selectParam));*/
+        return this.findByPage(selectParam);
+    }
+
+
+    public Page<SelectOptionDto> getRegistNoList(Map map) {
+        Map<String, Object> pageParam = RequestUtil.getPageParam();
+        return this.queryForPageForSelectReturn(Integer.parseInt((String) pageParam.get("page")),
+                Integer.parseInt((String) pageParam.get("length")),
+                ()->prodFeediscountMapper.getRegistNoList(map));
+
+    }
+
+
+    public Page<SelectOptionDto> getProdIdlist(Map map) {
+        Map<String, Object> pageParam = RequestUtil.getPageParam();
+        return this.queryForPageForSelectReturn(Integer.parseInt((String) pageParam.get("page")),
+                Integer.parseInt((String) pageParam.get("length")),
+                ()->prodFeediscountMapper.getProdIdlist(map));
     }
 
     /**
@@ -265,6 +307,11 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
                     }
                     if (!StringUtil.isNotEmpty(rowData.get(1))){
                         errorMsg.append("子产品代码 必填！");
+                    }else{
+                        ProdInfoDto prodInfo = prodInfoService.selectByProdStatus(rowData.get(1));
+                        if(prodInfo == null){
+                            errorMsg.append("子产品代码 不存在");
+                        }
                     }
                     if (!StringUtil.isNotEmpty(rowData.get(3))){
                         errorMsg.append("优惠的费用 必填！");
@@ -295,6 +342,14 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
                     }else if(!this.isDateStr(rowData.get(12))){
                         errorMsg.append("报告发布日期 格式不正确！");
                     }
+
+                    if (StringUtil.isNotEmpty(rowData.get(6)) && this.isDateStr(rowData.get(6))
+                        && StringUtil.isNotEmpty(rowData.get(7)) && this.isDateStr(rowData.get(7))){
+                        if (DateUtil.compareDate(rowData.get(7),rowData.get(6)) < 0) {
+                            errorMsg.append("优惠截止时间必须大于优惠起始时间");
+                        }
+                    }
+
                     if (StringUtil.isNotEmpty(errorMsg.toString())){
                         errorMsg.append("<br />");
                         returnerrorMsg.append("第"+(i+1)+"行数据："+errorMsg.toString());

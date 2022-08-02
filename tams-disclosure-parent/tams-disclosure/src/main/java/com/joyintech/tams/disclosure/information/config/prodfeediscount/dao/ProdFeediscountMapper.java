@@ -46,4 +46,9 @@ public interface ProdFeediscountMapper {
 
     List<SelectOptionDto> getProdFeenameSelect(Map<String, String> map);
 
+
+    List<SelectOptionDto> getRegistNoList(Map<String, String> map);
+
+    List<SelectOptionDto> getProdIdlist(Map<String, String> map);
+
 }

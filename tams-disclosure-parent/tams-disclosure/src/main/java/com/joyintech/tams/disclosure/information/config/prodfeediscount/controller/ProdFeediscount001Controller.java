@@ -89,7 +89,7 @@ public class ProdFeediscount001Controller extends BaseController {
 	 * @throws Exception*/
 
 	@SuppressWarnings("unchecked")
-	@RequestMapping(ACTION_EXPORT)
+/*	@RequestMapping(ACTION_EXPORT)
 	public ResponseEntity<byte[]> export() throws IOException {
 		// Map<String, Object> paraMap = RequestUtil.getPageParam();
 		String datas = this.getParam("datas");
@@ -111,6 +111,12 @@ public class ProdFeediscount001Controller extends BaseController {
                              + FileNameUtil.getFileExtName(outFile);
         }
 		return ExportUtil.export(exportFileName, outFile, true);
+	}*/
+
+	@RequestMapping("export")
+	public ResponseEntity<byte[]> export(){
+		return prodFeediscountService.export(this.getPageId(),
+				RequestUtil.getParameters(getRequest()));
 	}
 
 
@@ -222,5 +228,23 @@ public class ProdFeediscount001Controller extends BaseController {
 	@RequestMapping("importFile")
 	public AjaxResult importFile(@RequestBody Map<String, Object> param)  {
 		return prodFeediscountService.importFile(param);
+	}
+
+
+	@ResponseBody
+	@RequestMapping("getRegistNoList")
+	public Page<SelectOptionDto> getRegistNoList()
+			throws Exception {
+		Page<SelectOptionDto> temp = prodFeediscountService.getRegistNoList(RequestUtil.getPageParam());
+		return temp;
+	}
+
+
+	@ResponseBody
+	@RequestMapping("getProdIdlist")
+	public Page<SelectOptionDto> getProdIdlist()
+			throws Exception {
+		Page<SelectOptionDto> temp = prodFeediscountService.getProdIdlist(RequestUtil.getPageParam());
+		return temp;
 	}
 }
