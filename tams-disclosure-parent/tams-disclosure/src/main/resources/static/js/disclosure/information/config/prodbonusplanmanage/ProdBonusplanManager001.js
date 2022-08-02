@@ -98,7 +98,7 @@
 	 /**
 	  * 导出
 	  */
-	 var exportExcel2 = function() {
+/*	 var exportExcel2 = function() {
 		 var selArr = dataTable2.getAllCheckedRows();
 		 var datas = JSON.stringify(selArr);
 		 if (!selArr || selArr.length == 0) {
@@ -114,6 +114,13 @@
 			 });
 		 }
 
+	 };*/
+	 /**
+	  * 导出选中的表格数据
+	  */
+	 var exportExcel2 = function() {
+		 var paramObj = getSearchKey();//请求参数json格式
+		 Joyin.exportExcel('export', paramObj);//导出（共通）
 	 };
 
 
@@ -128,7 +135,7 @@
 	    	cellMinWidth:100 ,
 	    	 cols:[{field:'bonusPlanId',title:'主键',width:80,sortable:false,visible:false,align:'center'}
 	    		/*,{field:'bonusPlanId',title:'序 号',width:80,sortable:false,align:'center'}*/
-				 ,{field:'prodId',  title: '子产品主代码',width:150,sortable:false}
+				 ,{field:'prodId',  title: '子产品代码',width:150,sortable:false}
 				 ,{field:'prodName',  title: '产品名称',width:250,sortable:false}
 				 ,{field:'settDateStr',  title: '收益分配基准日',width:150,sortable:false}
 				 ,{field:'paymentDateStr',  title: '现金红利发放日',width:150,sortable:false}
@@ -204,11 +211,11 @@
 		   cols:[{field:'bonusPlanId',title:'主键',width:80,sortable:false,visible:false,align:'center'}
 			   /*,{field:'bonusPlanId',title:'序 号',width:80,sortable:false,align:'center'}*/
 			   /*,{field:'bonusPlanId',title:'序 号',width:80,sortable:false,align:'center'}*/
-			   ,{field:'prodId',  title: '子产品主代码',width:150,sortable:false}
+			   ,{field:'prodId',  title: '子产品代码',width:150,sortable:false}
 			   ,{field:'prodName',  title: '产品名称',width:250,sortable:false}
-			   ,{field:'settDateStr',  title: '收益分配基准日',width:150,sortable:false}
-			   ,{field:'paymentDateStr',  title: '现金红利发放日',width:150,sortable:false}
-			   ,{field:'achievement',  title: '业绩报酬',width:100,sortable:false}
+			   ,{field:'settDateStr',  title: '收益分配基准日',sortField:"settDateStr",width:150}
+			   ,{field:'paymentDateStr',  title: '现金红利发放日',sortField:"paymentDateStr", width:150}
+			   ,{field:'achievement',  title: '业绩报酬',width:100,sortField:"achievement"}
 			   ,{field:'excessAchievementProp',  title: '超额业绩报酬收取比例（%）',width:200,sortable:false}
 			   ,{field:'achievementBasis',  title: '业绩比较基准',width:120,sortable:false}
 			   ,{field:'achievementBasisProp',  title: '业绩比较基准比例（%）',width:200,sortable:false}

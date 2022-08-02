@@ -13,7 +13,9 @@ package com.joyintech.tams.disclosure.information.config.disprodplanmanage.servi
 import com.alibaba.fastjson.JSONArray;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt3;
@@ -23,6 +25,7 @@ import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dao.DisProdPlanManage001Mapper;
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage001Dto;
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto;
+import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import org.apache.commons.collections4.CollectionUtils;
@@ -102,8 +105,8 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
         }
         params.put("prodIdArr", prodIdArr);
         Page<DisProdPlanManage001Dto> pages = super.queryForPageForSelectReturn(
-                Integer.parseInt((String) params.get("page")),
-                Integer.parseInt((String) params.get("length"))
+                Integer.parseInt(params.get("page").toString()),
+                Integer.parseInt(params.get("length").toString())
                 , () -> disProdPlanManage001Mapper.searchReports(params));
         List<DisProdPlanManage001Dto> list = pages.getRoot();
         // 遍历构造数据
@@ -116,7 +119,22 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
         return pages;
     }
 
+    /**
+     * 导出
+     */
+    @Override
+    protected void buildExportParam(ExportParam exportParam) {
+        exportParam.config(
+                "/com/joyintech/tams/disclosure/information/config/disprodplanmanage/export_disprodplanmanage001.xml").dataSource(
+                DataSourceType.MASERT);
+    }
 
+    @Override
+    public Page<DisProdPlanManage001Dto> selectPageData(Map<String, Object> selectParam) {
+        /*queryForPage(Integer.parseInt(selectParam.get("page").toString()),  Integer.parseInt(selectParam.get("length").toString()), ()
+                -> hugeInfoProMapper.select(selectParam));*/
+        return this.findByPage(selectParam);
+    }
 
     /**
      * 根据产品代码 查询有效的 数据
@@ -193,6 +211,7 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
                     if (StringUtil.isNotEmpty(rowData.get(6)) && !StringUtils.isNumeric(rowData.get(6))) {
                         errorMsg.append("客户实际持有天数 必须为数字！");
                     }
+
                     if (StringUtil.isNotEmpty(errorMsg.toString())) {
                         errorMsg.append("<br />");
                         returnerrorMsg.append("第" + (i + 1) + "行数据：" + errorMsg.toString());
