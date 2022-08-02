@@ -15,6 +15,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt4;
 import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
 import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.service.SvrProdFeeDealInterfService;
+import com.joyintech.tams.disclosure.information.config.repFloatFee.dto.RepFloatFeeDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
@@ -117,5 +118,16 @@ public class SvrProdFeeDealInterf002Controller extends BaseController {
     @RequestMapping("/selectProdName")
     public  Map<String, String> selectProdName(String prodId){
         return svrProdFeeDealInterfService.selectProdName(prodId);
+    }
+
+    @ResponseBody
+    @RequestMapping("checkExistData")
+    public Boolean checkExistData(@RequestBody SvrProdFeeDealInterfDto dto){
+        SvrProdFeeDealInterfDto svrProdFeeDealInterfDto = svrProdFeeDealInterfService.checkExistData(dto);
+        if(svrProdFeeDealInterfDto == null){
+            return false;
+        }else{
+            return true;
+        }
     }
 }

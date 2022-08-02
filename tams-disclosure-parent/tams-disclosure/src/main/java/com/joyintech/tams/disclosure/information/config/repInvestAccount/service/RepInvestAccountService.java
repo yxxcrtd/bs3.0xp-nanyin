@@ -300,4 +300,8 @@ public class RepInvestAccountService extends CommonExportService<RepInvestAccoun
         dto.setSelectedItem(repInvestAccountDtoList);
         return dto;
     }
+
+    public RepInvestAccountDto checkExistData(RepInvestAccountDto dto) {
+        return repInvestAccountMapper.checkExistData(dto);
+    }
 }

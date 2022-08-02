@@ -163,6 +163,12 @@
         FROM
         rep_prod_info
         WHERE PROD_RE IS NOT NULL
+            <if test="search != null and search != ''">
+                and (PROD_RE like
+                concat(concat('%',#{search}),'%')
+                --                      or PROD_NAME like concat(concat('%',#{search}),'%'))
+            </if>
+
     </select>
     <select id="selectByProdRegistNo" resultType="java.lang.String">
         select PROD_REGIST_NO
@@ -174,7 +180,7 @@
         SELECT
         PROD_ID id,
         PROD_NAME text,
-        PROD_ABBR
+        PROD_RE object
         FROM
         rep_prod_info
         <where>
@@ -189,6 +195,7 @@
              PROD_REGIST_NO text
         FROM
              DIS_PROD_ADJUST
+
     </select>
     <select id="getProdIdlist" resultType="com.joyintech.framework.select.SelectOptionDto">
              SELECT

@@ -21,7 +21,7 @@
 	    		temDescription:$.trim($('#temDescription').val()),
 	    		temLoad:REPORT_SERVER_PATH*/
 				prodId : prodId,
-				dataStatus: $.trim($('#dataStatus').val()),
+					dataStatus: $.trim($('#dataStatus').val()),
 				bonusMode: $.trim($('#bonusMode').val()),
 				settDateBegin: $('#settDate').startDate(),
 				settDateEnd: $('#settDate').endDate(),
@@ -196,7 +196,7 @@
 			   data.pageModel=PAGE_MODEL_REFERENCE;
 			   Joyin.dialog(JoyinUtil.getLabel("查看"),
 				   basePath + "disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager002/init",
-				   "40%", "70%", data,function(){dataTable2.reload();});
+				   "50%", "90%", data,function(){dataTable2.reload();});
 		   },
 		   searchOnInit: false,
 		   rowno : true,
@@ -236,7 +236,7 @@
 	    	data.operateType = "edit";
 	    	Joyin.dialog(JoyinUtil.getLabel("编辑"),
 	                JoyinUtil.getRealPath("/disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager002/init"),
-	                "40%", "70%", {pageModel:PAGE_MODEL_EDIT,bonusPlanId:data.bonusPlanId},
+	                "50%", "90%", {pageModel:PAGE_MODEL_EDIT,bonusPlanId:data.bonusPlanId},
 	                function(data){
 	                	dataTable.reload();
 	                	dataTable2.reload();
@@ -294,7 +294,7 @@
 
 	   // 配置页面[新建]
 	    var addNew = function(){    	
-	    	Joyin.dialog(JoyinUtil.getLabel('新增产品分红到期计划'), '/disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager002/init', "40%", "70%",null,
+	    	Joyin.dialog(JoyinUtil.getLabel('新增产品分红到期计划'), '/disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager002/init', "50%", "90%",null,
 	    			function(result) {
 	    			dataTable.reload();
 	    			dataTable2.reload();

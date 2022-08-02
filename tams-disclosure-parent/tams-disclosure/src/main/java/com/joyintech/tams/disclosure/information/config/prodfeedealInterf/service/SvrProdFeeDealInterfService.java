@@ -13,6 +13,7 @@ import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
 import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dao.SvrProdFeeDealInterfMapper;
 import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
 import com.joyintech.tams.disclosure.information.config.proelementadj.dto.ProElementAdj001Dto;
+import com.joyintech.tams.disclosure.information.config.repFloatFee.dto.RepFloatFeeDto;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -383,5 +384,9 @@ public class SvrProdFeeDealInterfService extends CommonExportService<SvrProdFeeD
 
     public String getFeeTYPE(String feetype) {
         return svrProdFeeDealInterfMapper.getFeeTYPE(feetype);
+    }
+
+    public SvrProdFeeDealInterfDto checkExistData(SvrProdFeeDealInterfDto dto) {
+        return svrProdFeeDealInterfMapper.checkExistData(dto);
     }
 }

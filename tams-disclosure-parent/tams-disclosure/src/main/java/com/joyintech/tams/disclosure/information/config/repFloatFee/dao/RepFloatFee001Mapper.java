@@ -3,6 +3,7 @@ package com.joyintech.tams.disclosure.information.config.repFloatFee.dao;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
 import com.joyintech.tams.disclosure.information.config.repFloatFee.dto.RepFloatFeeDto;
+import com.joyintech.tams.disclosure.information.config.repInvestAccount.dto.RepInvestAccountDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -30,4 +31,6 @@ public interface RepFloatFee001Mapper {
     RepFloatFeeDto selectByProdIdAndDate(RepFloatFeeDto record);
 
     String selectByProdId(@Param("prodId") String prodId);
+
+    RepFloatFeeDto checkExistData(RepFloatFeeDto record);
 }
