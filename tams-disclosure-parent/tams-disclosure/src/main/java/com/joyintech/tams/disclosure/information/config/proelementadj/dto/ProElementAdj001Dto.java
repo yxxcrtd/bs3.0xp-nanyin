@@ -65,9 +65,6 @@ public class ProElementAdj001Dto extends DisProdAdjust implements ITableRow, Pro
         this.elementId = elementId;
     }
 
-//    public String getDataStatusStr(){
-//        return SysDataUtil.getNameFromDataDict(DictCode.信披_数据状态,super.getDataStatus());
-//    }
     public String getIsSalesAgencyStr(){
         return SysDataUtil.getNameFromDataDict(DictCode.是否,super.getIsSalesAgency());
     }
@@ -90,18 +87,6 @@ public class ProElementAdj001Dto extends DisProdAdjust implements ITableRow, Pro
         return super.getProdId();
     }
 
-
-//    @Override
-//    @NotEmpty(fieldName = "ProElementAdj001.prodAdjRemark", groups = {ValidateGroupEdit.class})
-//    public String getProdAdjRemark() {
-//        return super.getProdAdjRemark();
-//    }
-//
-//    @Override
-//    @NotEmpty(fieldName = "ProElementAdj001.prodAdjRemark2", groups = {ValidateGroupEdit.class})
-//    public String getProdAdjRemark2() {
-//        return super.getProdAdjRemark2();
-//    }
 
     @Override
     @NotEmpty(fieldName = "ProElementAdj001.adjField", groups = {ValidateGroupEdit.class})
@@ -127,17 +112,6 @@ public class ProElementAdj001Dto extends DisProdAdjust implements ITableRow, Pro
         return super.getEffDate();
     }
 
-//    @Override
-//    @NotEmpty(fieldName = "ProElementAdj002.fieldAdjRemark", groups = {ValidateGroupEdit.class})
-//    public String getFieldAdjRemark() {
-//        return super.getFieldAdjRemark();
-//    }
-//
-//    @Override
-//    @NotEmpty(fieldName = "ProElementAdj002.fieldAdjRemark2", groups = {ValidateGroupEdit.class})
-//    public String getFieldAdjRemark2() {
-//        return super.getFieldAdjRemark2();
-//    }
 
     @Override
     @NotEmpty(fieldName = "ProElementAdj001.rptIssueDate", groups = {ValidateGroupEdit.class})
