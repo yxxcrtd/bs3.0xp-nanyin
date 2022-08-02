@@ -1,5 +1,6 @@
 package com.joyintech.tams.utils.poi;
 
+import com.joyintech.framework.util.CacheUtil;
 import fr.opensagres.poi.xwpf.converter.core.ImageManager;
 import fr.opensagres.poi.xwpf.converter.pdf.PdfConverter;
 import fr.opensagres.poi.xwpf.converter.pdf.PdfOptions;
@@ -29,9 +30,10 @@ public class PoiUtils {
 //        File imageFolderFile = new File(imagePath);
 //        XHTMLOptions options = XHTMLOptions.create().URIResolver(new FileURIResolver(imageFolderFile));
 //        options.setExtractor(new FileImageExtractor(imageFolderFile));
+        String tmpImagePath = CacheUtil.getSysParam("POI_APACHE_PATH");
 
         XHTMLOptions options = XHTMLOptions.create();
-        options.setImageManager( new ImageManager( new File("D:\\devtools\\Apache24\\htdocs\\image"),"")  {
+        options.setImageManager( new ImageManager( new File(tmpImagePath),"")  {
             String upload = null;
 
             @Override
@@ -40,11 +42,11 @@ public class PoiUtils {
                 try {
                     imagePath = imagePath.split("/")[2];
                     //imagePath = imagePath.substring(imagePath.indexOf("."));
-                    String outfile = "D:\\devtools\\Apache24\\htdocs\\image\\" + imagePath;
+                    String outfile = tmpImagePath+File.separator + imagePath;
                     fos = new FileOutputStream(outfile);
                     fos.write(imageData);
                     fos.close();
-                    upload = "http://localhost/image/" + imagePath;
+                    upload = "http://localhost/images/" + imagePath;
                 }catch (Exception e) {
                     e.printStackTrace();
                 } finally {
