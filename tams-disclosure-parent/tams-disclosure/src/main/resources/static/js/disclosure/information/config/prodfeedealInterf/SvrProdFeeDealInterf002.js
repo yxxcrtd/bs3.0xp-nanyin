@@ -1,5 +1,5 @@
 /**
- * ²úÆ··ÑÓÃĞÅÏ¢Î¬»¤´úÂëĞÂ½¨ĞŞ¸Ä»­Ãæ
+ * äº§å“è´¹ç”¨ä¿¡æ¯ç»´æŠ¤ä»£ç æ–°å»ºä¿®æ”¹ç”»é¢
  */
 var SvrPrdFeeDealInterfCode002 = function() {
     return{
@@ -33,12 +33,27 @@ var SvrPrdFeeDealInterfCode002 = function() {
             param.payDate = $("#payDate").val();
             Joyin.ajaxJson(basePath + 'disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf002/check',param,function(result){
                 if(result){
-                    if(operateType === 'save') {
-                        WorkFlow.doSaveList(basePath + 'disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf002/save', param, "SvrProdFeeDealInterf002_btn_save");
-                    }
-                    else {
-                        WorkFlow.doSubmitList(basePath + 'disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf002/save', param, "SvrProdFeeDealInterf002_btn_submit");
-                    }
+                    Joyin.ajaxJson(basePath + 'disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf002/checkExistData', param, function(checkResult) {
+                        if(checkResult){
+                            Joyin.confirm("æœ‰å·²åˆ é™¤çš„æ•°æ®ï¼Œæ˜¯å¦è¦†ç›–", function () {
+                                if(operateType === 'save') {
+                                    WorkFlow.doSaveList(basePath + 'disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf002/save', param, "SvrProdFeeDealInterf002_btn_save");
+                                }
+                                else {
+                                    WorkFlow.doSubmitList(basePath + 'disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf002/save', param, "SvrProdFeeDealInterf002_btn_submit");
+                                }
+                            },{}, function () {
+                            });
+                        }else{
+                            if(operateType === 'save') {
+                                WorkFlow.doSaveList(basePath + 'disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf002/save', param, "SvrProdFeeDealInterf002_btn_save");
+                            }
+                            else {
+                                WorkFlow.doSubmitList(basePath + 'disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf002/save', param, "SvrProdFeeDealInterf002_btn_submit");
+                            }
+                        }
+                    })
+
                 }
             })
         },
@@ -86,11 +101,11 @@ $(function() {
 });
 
 /**
- * »­ĞÇĞÇ
+ * ç”»æ˜Ÿæ˜Ÿ
  */
 function star() {
-    // ¼ÓºìĞÇĞÇ
-    // ²éÕÒlabel
+    // åŠ çº¢æ˜Ÿæ˜Ÿ
+    // æŸ¥æ‰¾label
     var _findPrevLabel = function(element, level) {
         var $el = element.prev();
         if (!$el.is('label') && level > 0) {
@@ -102,7 +117,7 @@ function star() {
         return $el;
     };
 
-    // ·Ç²é¿´Ä£Ê½
+    // éæŸ¥çœ‹æ¨¡å¼
     if (typeof pageModel !== 'undefined'
         && (pageModel === PAGE_MODEL_EDIT || pageModel === PAGE_MODEL_NEW)) {
         $('.must').each(function() {
