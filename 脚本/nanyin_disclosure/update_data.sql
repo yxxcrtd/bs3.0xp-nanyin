@@ -613,7 +613,7 @@ values ('INFO_DEV_STATUS', '02', '需修改', 1, '0', 'system', null, sysdate, '
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('INFO_DEV_STATUS', '03', '终止', 1, '0', 'system', null, sysdate, 'system', sysdate);
 
-delete from sys_datadict where DICT_CODE IN('COMMON_BUSINESS_TYPE') AND ITEM_CODE='COMPLIANCE';
+delete from sys_datadict_list where DICT_CODE IN('COMMON_BUSINESS_TYPE') AND ITEM_CODE='COMPLIANCE';
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('COMMON_BUSINESS_TYPE', 'COMPLIANCE', '合规留痕管理', 1002, '0', 'system', null, sysdate, 'system', sysdate);
 
