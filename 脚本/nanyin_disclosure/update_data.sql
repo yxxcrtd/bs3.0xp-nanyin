@@ -599,7 +599,7 @@ delete from sys_datadict_list where DICT_CODE IN ('INFO_TYPE','INFO_STATUS','INF
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('INFO_TYPE', '01', '模板', 1, '0', 'system', null, sysdate, 'system', sysdate);
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('INFO_TYPE', '02', '信披报表', 1, '0', 'system', null, sysdate, 'system', sysdate);
+values ('INFO_TYPE', '02', '临时公告', 1, '0', 'system', null, sysdate, 'system', sysdate);
 
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('INFO_STATUS', '01', '待复核', 1, '0', 'system', null, sysdate, 'system', sysdate);
