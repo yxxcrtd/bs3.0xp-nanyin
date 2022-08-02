@@ -43,10 +43,15 @@ public class Report1Cpnys001Service implements IReportDataService {
         Map<String,Object> dataMap = new HashMap<>();
         List<Map<String,Object>> result = new ArrayList<>();
         result.add(dataMap);
-        if (paraMap.get("pprodid") == null) {
+        String prodId = "";
+        if (StringUtil.equals("batch", paraMap.get("opttype"))) {
+            prodId = (String)paraMap.get("prodid");
+        } else {
+            prodId = (String)paraMap.get("pprodid");
+        }
+        if (StringUtil.isBlank(prodId)) {
             return result;
         }
-        String prodId = paraMap.get("pprodid").toString();
         Map<String,Object> searchparam = new HashMap<>();
         searchparam.put("prodId", prodId);
         if (null != paraMap.get("elementname")) {

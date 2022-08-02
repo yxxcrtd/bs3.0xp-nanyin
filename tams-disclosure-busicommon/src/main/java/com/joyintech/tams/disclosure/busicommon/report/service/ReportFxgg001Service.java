@@ -37,17 +37,15 @@ public class ReportFxgg001Service implements IReportDataService {
         Map<String,Object> dataMap = new HashMap<>();
         List<Map<String,Object>> result = new ArrayList<>();
         result.add(dataMap);
-        String prodId="";
-        if(StringUtil.equals("batch",paraMap.get("opttype"))){
-            prodId= paraMap.get("prodid").toString();
-            //paraMap.get("enddate")
-        }else {
-            prodId= paraMap.get("pprodid").toString();
+        String prodId = "";
+        if (StringUtil.equals("batch", paraMap.get("opttype"))) {
+            prodId = (String)paraMap.get("prodid");
+        } else {
+            prodId = (String)paraMap.get("pprodid");
         }
-        if (!StringUtil.isNotEmpty(prodId)) {
+        if (StringUtil.isBlank(prodId)) {
             return result;
         }
-
         Map<String,Object> searchparam = new HashMap<>();
         searchparam.put("prodId", prodId);
         ReportFxggDto fxgg = reportFxggMapper.queryFxgg(searchparam);
