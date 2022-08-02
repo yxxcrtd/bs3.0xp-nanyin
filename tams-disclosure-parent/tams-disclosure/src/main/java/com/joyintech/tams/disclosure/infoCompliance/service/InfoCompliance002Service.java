@@ -57,6 +57,14 @@ public class InfoCompliance002Service extends BaseService<InfoComplianceDto> imp
 
     }
 
+    /**
+     *  流程中保存按钮
+     * */
+    @Override
+    public void doUpdate(InfoComplianceDto dto){
+        doInsert(dto, null);
+    }
+
     @Override
     public void doComplete(InfoComplianceDto dto, OperationType operationType) {
         //审核状态设置为 审核通过
