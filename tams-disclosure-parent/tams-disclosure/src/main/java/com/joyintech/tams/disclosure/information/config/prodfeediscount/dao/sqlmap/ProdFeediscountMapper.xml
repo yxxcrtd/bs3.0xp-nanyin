@@ -419,4 +419,35 @@
         </if>
 
     </select>
+
+
+    <select id="getRegistNoList" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+            DISTINCT
+            PROD_REGIST_NO id,
+            PROD_REGIST_NO text
+        FROM
+            DIS_PROD_FEEDISCOUNT
+        where  1=1
+        <if test="search != null and search != ''">
+            and (PROD_REGIST_NO like
+            concat(concat('%',#{search}),'%'))
+        </if>
+    </select>
+    <select id="getProdIdlist" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+            DISTINCT
+            d.PROD_ID id,
+            r.PROD_NAME text,
+            r.PROD_ABBR
+        FROM
+            DIS_PROD_FEEDISCOUNT d left join rep_prod_info r
+                                        on d.PROD_ID = r.PROD_ID
+        where  1=1
+        <if test="search != null and search != ''">
+            and (r.PROD_ID like concat(concat('%',#{search}),'%')
+            or r.PROD_NAME like concat(concat('%',#{search}),'%'))
+        </if>
+    </select>
+
 </mapper>

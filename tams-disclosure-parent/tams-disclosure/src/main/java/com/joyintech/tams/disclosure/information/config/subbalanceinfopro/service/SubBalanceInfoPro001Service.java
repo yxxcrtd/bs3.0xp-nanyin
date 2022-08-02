@@ -30,6 +30,8 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -203,9 +205,17 @@ public class SubBalanceInfoPro001Service extends CommonExportService<SubBalanceI
                     }
                     if (!StringUtil.isNotEmpty(rowData.get(4).trim())){
                         errorMsg.append("原币余额 必填！");
+                    }else if(!this.isBigDecimal(rowData.get(4))){
+                        errorMsg.append("原币余额 格式不正确！");
+                    }else if(new BigDecimal(rowData.get(4)).compareTo(new BigDecimal(0))<0){
+                        errorMsg.append("原币余额需要大于等于0!");
                     }
                     if (!StringUtil.isNotEmpty(rowData.get(5).trim())){
                         errorMsg.append("原币发生额（借方） 必填！");
+                    }else if(!this.isBigDecimal(rowData.get(5))){
+                        errorMsg.append("原币发生额（借方） 格式不正确！");
+                    }else if(new BigDecimal(rowData.get(5)).compareTo(new BigDecimal(0))<0){
+                        errorMsg.append("原币发生额（借方）需要大于等于0!");
                     }
                     if (StringUtil.isNotEmpty(errorMsg.toString())){
                         errorMsg.append("<br />");
@@ -268,7 +278,15 @@ public class SubBalanceInfoPro001Service extends CommonExportService<SubBalanceI
         return wr;
     }
 
-
+    public static boolean isBigDecimal(String str) {
+        Pattern NUMERIC_PATTERN = Pattern.compile("^(\\-|\\+)?\\d+(\\.\\d+)?$");
+        Matcher m = NUMERIC_PATTERN.matcher(str);
+        if (m.find()) {
+            return true;
+        }else{
+            return false;
+        }
+    }
 
     public static boolean isDateStr(String str) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
