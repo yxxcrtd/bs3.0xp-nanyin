@@ -1,6 +1,7 @@
 
 package com.joyintech.tams.disclosure.busicommon.report.service;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.disclosure.busicommon.report.dao.ReportBclggMapper;
 import com.joyintech.tams.disclosure.busicommon.report.dto.ReportBclggDto;
 import com.joyintech.tams.disclosure.busicommon.rptdata.service.IReportDataService;
@@ -36,10 +37,15 @@ public class ReportBclgg001Service implements IReportDataService {
         Map<String,Object> dataMap = new HashMap<>();
         List<Map<String,Object>> result = new ArrayList<>();
         result.add(dataMap);
-        if (paraMap.get("pprodid") == null) {
+        String prodId = "";
+        if (StringUtil.equals("batch", paraMap.get("opttype"))) {
+            prodId = (String)paraMap.get("prodid");
+        } else {
+            prodId = (String)paraMap.get("pprodid");
+        }
+        if (StringUtil.isBlank(prodId)) {
             return result;
         }
-        String prodId = paraMap.get("pprodid").toString();
         Map<String,Object> searchparam = new HashMap<>();
         searchparam.put("prodId", prodId);
         ReportBclggDto bclgg = reportBclggMapper.queryBclgg(searchparam);

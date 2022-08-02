@@ -45,7 +45,7 @@
 			AND END_DATE = #{endDate,jdbcType=DATE}
 		</if>
 		AND STATUS='E'
-		AND CONFIRM_STATUS='01'
+		AND CONFIRM_STATUS='1'
     </select>
     <select id="selectData" resultType="com.joyintech.tams.common.base.entity.RepReveal">
 	 	SELECT 
@@ -86,4 +86,32 @@
 		AND rild.EXEC_STATUS='02'
 		AND to_char(rild.REVEAL_END_DATE,'yyyy-mm-dd') = #{data,jdbcType=VARCHAR})
 	 </select>
+
+	<select id="ckeckWflStatus" parameterType="com.joyintech.tams.common.base.entity.RepReveal" resultType="java.lang.Integer">
+		select
+			count(1)
+		from
+			sys_data_process_mark pm
+				inner join rep_reveal rr on pm.business_data_pk1 = rr.id
+		where
+			pm.page_id = 'ReportConfirmManage001'
+		  and pm.status in ('A', 'U', 'P')
+		<if test="repId !=null and repId != ''">
+			AND rr.REP_ID = #{repId,jdbcType=VARCHAR}
+		</if>
+		<if test="reportName !=null and reportName != ''">
+			AND rr.REPORT_NAME = #{reportName,jdbcType=VARCHAR}
+		</if>
+		<if test="prodid !=null and prodid != ''">
+			AND rr.PRODID = #{prodid,jdbcType=VARCHAR}
+		</if>
+		<if test="startDate !=null">
+			AND rr.START_DATE = #{startDate,jdbcType=DATE}
+		</if>
+		<if test="endDate !=null">
+			AND rr.END_DATE = #{endDate,jdbcType=DATE}
+		</if>
+		AND rr.STATUS='E'
+		AND rr.CONFIRM_STATUS='0'
+	</select>
 </mapper>

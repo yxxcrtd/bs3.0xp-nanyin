@@ -101,7 +101,17 @@ public class DisProdPlanManage001Controller extends BaseController {
      * @return
      * @throws Exception
      */
-    @SuppressWarnings("unchecked")
+    /**
+     * 导出 <一句话功能简述> <功能详细描述>
+     *
+     * @return
+     * @throws Exception*/
+    @RequestMapping("export")
+    public ResponseEntity<byte[]> export(){
+        return disProdPlanManage001Service.export(this.getPageId(),
+                RequestUtil.getParameters(getRequest()));
+    }
+/*    @SuppressWarnings("unchecked")
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export() throws IOException {
         // Map<String, Object> paraMap = RequestUtil.getPageParam();
@@ -124,7 +134,7 @@ public class DisProdPlanManage001Controller extends BaseController {
                     + FileNameUtil.getFileExtName(outFile);
         }
         return ExportUtil.export(exportFileName, outFile, true);
-    }
+    }*/
 
 
     @SuppressWarnings("finally")

@@ -510,13 +510,7 @@ public class RepDetailsShow001Contoller extends BaseController {
 	@ResponseBody
 	@RequestMapping("check")
 	public AjaxResult check(@RequestBody Map<String, Object> param) {
-		AjaxResult webResult = new AjaxResult();
-
-//		ValidMessage message = new ValidMessage();
-//		message.setMessage("存在流程中的数据");
-//		webResult.setErrorList(Arrays.asList(message));
-
-		return webResult;
+		return repDetailsShow001Service.check(param);
 	}
 
 }
