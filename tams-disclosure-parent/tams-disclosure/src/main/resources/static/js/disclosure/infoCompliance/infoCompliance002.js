@@ -58,6 +58,9 @@
 
             }
             object.uploadFileList = FileCommon.getUploadFileInfo();
+        } else {
+            Joyin.error("报表/模板附件必须上传!");
+            return;
         }
 
         if(FileCommon2 && FileCommon2.getUploadFileInfo().length >0) {

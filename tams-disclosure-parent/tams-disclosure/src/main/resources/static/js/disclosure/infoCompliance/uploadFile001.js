@@ -72,6 +72,7 @@ $(function ($) {
             Joyin.ajax(JoyinUtil.getRealPath('framework/remove/' + fileNo), {}, callback);
         });
     };
+    var rownum = 0;
 
     $.fn.uploadFile = function () {
         var upload = layui.upload;
@@ -164,8 +165,9 @@ $(function ($) {
                 if(muit && type == 'list') {
                     for(var i = 0; i < initFiles.length; i++) {
                         var file = initFiles[i];
+                        rownum ++;
                         var tr = $(['<tr id="upload-'+ file.fileNo +'">',
-                            ,'<td>'+(i+1)+'</td>'
+                            ,'<td>'+rownum+'</td>'
                             ,'<td><div class="layui-table-cell">'
                             ,'<a href="'
                             , JoyinUtil.getRealPath('/framework/download/' + file.fileNo)
@@ -174,12 +176,14 @@ $(function ($) {
                             ,'</a></div></td>'
                             ,'<td style="display: none">'+ (file.size/1014).toFixed(1) +'kb</td>'
                             ,'<td>'+file.uploadUser+'</td>'
+                            ,'<td>上传成功</td>'
                             ,'<td>'+file.createTimeText+'</td>'
                             ,(disabled ? '' : '<td><button data-no="' + file.fileNo + '" class="layui-btn layui-btn-mini layui-btn-danger file-delete">删除</button></td>')
                             ,'</tr>'].join(''));
                         tr.find('.file-delete').on('click', function(){
                             var _btn = $(this), fileNo = _btn.data('no');
                             removeFileFromServer(fileNo, function() {
+                                debugger;
                                 var tmpFiles = [];
                                 _.each(initFiles, function(f) {
                                     if(f.fileNo !== fileNo) {
@@ -188,6 +192,10 @@ $(function ($) {
                                 });
                                 initFiles = tmpFiles;
                                 _btn.parents('tr').remove();
+                                $("#fileUploader tbody tr").each(function (index,item){
+                                    $(item).children(":first").html(index+1);
+                                });
+                                rownum --;
                             });
                             return false;
                         });
@@ -289,7 +297,7 @@ $(function ($) {
                 });
                 return tmpArray;
             });
-            var rownum = 0;
+
             var _upload = upload.render({
                 elem: elem
                 , accept: 'file'
@@ -337,14 +345,19 @@ $(function ($) {
                                 var ff = $(tr).data('file');
                                 if(ff) {
                                     removeFileFromServer(ff.fileNo, function() {
+                                        debugger;
                                         deleteFile(index); // 删除对应的文件
                                         $(tr).remove();
+                                        $("#fileUploader tbody tr").each(function (index,item){
+                                            $(item).children(":first").html(index+1);
+                                        });
                                     });
                                 }
                                 else {
                                     deleteFile(index); // 删除对应的文件
                                     $(tr).remove();
                                 }
+
                                 return false;
                             });
                             fileListView.append(tr);
