@@ -3,14 +3,19 @@
       layout:decorator="~{layout/default}">
 <head>
     <title data-th-text="关联交易情况维护-新建">关联交易情况维护-新建</title>
+    <style>
+        .mst-lable{
+            width: 30%;
+        }
+    </style>
 </head>
 <body>
 <div layout:fragment="content">
     <form class=" layui-form joyin-form-wrap pro-module-form" id="submitForm">
         <input type="text" id="uuid" name="uuid" data-th-value='${entity?.uuid}' hidden>
         <div class="layui-form-item">
-            <div class="form-inline-wrap">
-                <label class="layui-form-label form-label-wrap" data-th-text="产品名称">产品名称</label>
+            <div >
+                <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;" data-th-text="产品名称">产品名称</label>
                 <div class="layui-input-inline input-inline">
                     <select id="prodId" name="prodId" class="input-select"
                             data-th-initValue="${entity?.prodId}"
@@ -20,9 +25,11 @@
                     </select>
                 </div>
             </div>
-            <div class="form-inline-wrap">
-                <label class="layui-form-label form-label-wrap" data-th-text="产品主代码">产品主代码</label>
-                <div class="layui-input-inline input-inline">
+        </div>
+        <div class="layui-form-item">
+            <div >
+                <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;" data-th-text="产品主代码">产品主代码</label>
+                <div class="layui-input-inline input-inline" >
                     <input type="text" id="prodName" name="prodName"
                            class="layui-input form-input" placeholder="请选择"
                            data-th-value="${entity?.prodId}" disabled="disabled" required>
@@ -30,17 +37,19 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <div class="form-inline-wrap">
-                <label class="layui-form-label form-label-wrap" data-th-text="期间投资关联机构发行证券交易金额">期间投资关联机构发行证券交易金额</label>
+            <div >
+                <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;" data-th-text="期间投资关联机构发行证券交易金额">期间投资关联机构发行证券交易金额</label>
                 <div class="layui-input-inline input-inline" >
                     <input type="text" id="bankTransAmt" name="bankTransAmt" data-th-value='${entity?.bankTransAmt}'
                            class="layui-input form-input text-number" data-textrange='2' data-fixtype='2' maxlength=17
                            placeholder="请输入内容" required>
                 </div>
             </div>
-            <div class="form-inline-wrap">
-                <label class="layui-form-label form-label-wrap" th:utext="期间投资关联机构承销证券交易金额">期间投资关联机构承销证券交易金额</label>
-                <div class="layui-input-inline input-inline">
+        </div>
+        <div class="layui-form-item">
+            <div >
+                <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;" data-th-text="期间投资关联机构承销证券交易金额">期间投资关联机构承销证券交易金额</label>
+                <div class="layui-input-inline input-inline" >
                     <input type="text" id="orgTransAmt" name="orgTransAmt" data-th-value='${entity?.orgTransAmt}'
                            class="layui-input form-input text-number" data-textrange='2' data-fixtype='2' maxlength=17
                            placeholder="请输入内容" required>
@@ -48,16 +57,18 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <div class="form-inline-wrap">
-                <label class="layui-form-label form-label-wrap" data-th-text="期间关联方作为交易对手的投融资业务的交易金额">期间关联方作为交易对手的投融资业务的交易金额</label>
-                <div class="layui-input-inline input-inline">
+            <div >
+                <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;" data-th-text="期间关联方作为交易对手的投融资业务的交易金额">期间关联方作为交易对手的投融资业务的交易金额</label>
+                <div class="layui-input-inline input-inline" >
                     <input type="text" id="investTransAmt" name="investTransAmt" data-th-value='${entity?.investTransAmt}'
                            class="layui-input form-input text-number" data-textrange='2' data-fixtype='2' maxlength=17
                            placeholder="请输入内容" required>
                 </div>
             </div>
-            <div class="form-inline-wrap">
-                <label class="layui-form-label form-label-wrap" data-th-text="关联方提供服务的交易金额">关联方提供服务的交易金额</label>
+        </div>
+        <div class="layui-form-item">
+            <div >
+                <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;" data-th-text="关联方提供服务的交易金额">关联方提供服务的交易金额</label>
                 <div class="layui-input-inline input-inline">
                     <input type="text" maxlength="500" id="relateamount" name="relateamount"
                            class="layui-input form-input" placeholder="请输入内容"
@@ -67,20 +78,22 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <div class="form-inline-wrap">
-                <label class="layui-form-label form-label-wrap"
+            <div >
+                <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;"
                        th:text="生效日">生效日</label>
-                <div class="layui-input-inline input-inline">
+                <div class="layui-input-inline input-inline" >
                     <input required type="text" id="effdate" name="effdate"
                            class="layui-input form-input input-dateSelect" placeholder="请选择时间"
                            th:placeholder="#{SysCommon.placeholder}"
                            th:value='${#dates.format(entity?.effdate,"yyyy-MM-dd")}'>
                 </div>
             </div>
-            <div class="form-inline-wrap">
-                <label class="layui-form-label form-label-wrap"
+        </div>
+        <div class="layui-form-item">
+            <div >
+                <label class="layui-form-label form-label-wrap mst-lable" style="width: 30% !important;"
                        th:text="生效截止日期">生效截止日期</label>
-                <div class="layui-input-inline input-inline">
+                <div class="layui-input-inline input-inline" >
                     <input required type="text" id="effdelidate" name="effdelidate"
                            class="layui-input form-input input-dateSelect" placeholder="请选择时间"
                            th:placeholder="#{SysCommon.placeholder}"
