@@ -21,20 +21,20 @@ public class SettReportDto extends ReportDto {
 	private String trustName; //产品托管人名称
 	private Date mDate;  //到期日
 	private Map<String,BigDecimal> mapBalance;  //科目余额
-	private BigDecimal sumAssetAmt;//资产合计
-	private BigDecimal deposit;  //银行存款
-	private BigDecimal guarantyAmt;  //保证金
-	private BigDecimal intAmt;  //应计利息
-	private BigDecimal sumDebtAmt; //负债合计
-	private BigDecimal mgrFee;  //管理费
-	private BigDecimal  floatFee;  //应付管理人业绩报酬
-	private BigDecimal trustFee;  //托管费
-	private BigDecimal saleFee;  //销售费
-	private BigDecimal redemAmt;  //赎回紧额
-	private BigDecimal taxFee;  //税费
-	private BigDecimal profit;  //应付利润
-	private BigDecimal otherPayAmt;  //其他应付紧额
-	private BigDecimal assetValue;  //资产价值，固定值0
+	private String sumAssetAmt;//资产合计
+	private String deposit;  //银行存款
+	private String guarantyAmt;  //保证金
+	private String intAmt;  //应计利息
+	private String sumDebtAmt; //负债合计
+	private String mgrFee;  //管理费
+	private String  floatFee;  //应付管理人业绩报酬
+	private String trustFee;  //托管费
+	private String saleFee;  //销售费
+	private String redemAmt;  //应付赎回款
+	private String taxFee;  //税费
+	private String profit;  //应付利润
+	private String otherPayAmt;  //其他应付紧额
+	private String assetValue;  //资产价值，固定值0
 	
 	private Date signDate; //报告签字日期
 	
@@ -74,88 +74,88 @@ public class SettReportDto extends ReportDto {
 	public void setMapBalance(Map<String, BigDecimal> mapBalance) {
 		this.mapBalance = mapBalance;
 	}
-	public BigDecimal getSumAssetAmt() {
+	public String getSumAssetAmt() {
 		return sumAssetAmt;
 	}
-	public void setSumAssetAmt(BigDecimal sumAssetAmt) {
+	public void setSumAssetAmt(String sumAssetAmt) {
 		this.sumAssetAmt = sumAssetAmt;
 	}
-	public BigDecimal getDeposit() {
+	public String getDeposit() {
 		return deposit;
 	}
-	public void setDeposit(BigDecimal deposit) {
+	public void setDeposit(String deposit) {
 		this.deposit = deposit;
 	}
-	public BigDecimal getGuarantyAmt() {
+	public String getGuarantyAmt() {
 		return guarantyAmt;
 	}
-	public void setGuarantyAmt(BigDecimal guarantyAmt) {
+	public void setGuarantyAmt(String guarantyAmt) {
 		this.guarantyAmt = guarantyAmt;
 	}
-	public BigDecimal getIntAmt() {
+	public String getIntAmt() {
 		return intAmt;
 	}
-	public void setIntAmt(BigDecimal intAmt) {
+	public void setIntAmt(String intAmt) {
 		this.intAmt = intAmt;
 	}
-	public BigDecimal getSumDebtAmt() {
+	public String getSumDebtAmt() {
 		return sumDebtAmt;
 	}
-	public void setSumDebtAmt(BigDecimal sumDebtAmt) {
+	public void setSumDebtAmt(String sumDebtAmt) {
 		this.sumDebtAmt = sumDebtAmt;
 	}
-	public BigDecimal getMgrFee() {
+	public String getMgrFee() {
 		return mgrFee;
 	}
-	public void setMgrFee(BigDecimal mgrFee) {
+	public void setMgrFee(String mgrFee) {
 		this.mgrFee = mgrFee;
 	}
-	public BigDecimal getFloatFee() {
+	public String getFloatFee() {
 		return floatFee;
 	}
-	public void setFloatFee(BigDecimal floatFee) {
+	public void setFloatFee(String floatFee) {
 		this.floatFee = floatFee;
 	}
-	public BigDecimal getTrustFee() {
+	public String getTrustFee() {
 		return trustFee;
 	}
-	public void setTrustFee(BigDecimal trustFee) {
+	public void setTrustFee(String trustFee) {
 		this.trustFee = trustFee;
 	}
-	public BigDecimal getSaleFee() {
+	public String getSaleFee() {
 		return saleFee;
 	}
-	public void setSaleFee(BigDecimal saleFee) {
+	public void setSaleFee(String saleFee) {
 		this.saleFee = saleFee;
 	}
-	public BigDecimal getRedemAmt() {
+	public String getRedemAmt() {
 		return redemAmt;
 	}
-	public void setRedemAmt(BigDecimal redemAmt) {
+	public void setRedemAmt(String redemAmt) {
 		this.redemAmt = redemAmt;
 	}
-	public BigDecimal getTaxFee() {
+	public String getTaxFee() {
 		return taxFee;
 	}
-	public void setTaxFee(BigDecimal taxFee) {
+	public void setTaxFee(String taxFee) {
 		this.taxFee = taxFee;
 	}
-	public BigDecimal getProfit() {
+	public String getProfit() {
 		return profit;
 	}
-	public void setProfit(BigDecimal profit) {
+	public void setProfit(String profit) {
 		this.profit = profit;
 	}
-	public BigDecimal getOtherPayAmt() {
+	public String getOtherPayAmt() {
 		return otherPayAmt;
 	}
-	public void setOtherPayAmt(BigDecimal otherPayAmt) {
+	public void setOtherPayAmt(String otherPayAmt) {
 		this.otherPayAmt = otherPayAmt;
 	}
-	public BigDecimal getAssetValue() {
+	public String getAssetValue() {
 		return assetValue;
 	}
-	public void setAssetValue(BigDecimal assetValue) {
+	public void setAssetValue(String assetValue) {
 		this.assetValue = assetValue;
 	}
 	public Date getSignDate() {

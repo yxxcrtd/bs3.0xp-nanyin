@@ -68,35 +68,38 @@ public class BonusReportDataService implements IReportDataService {
 					report.setRunDays(DateUtil.getBetweenDayNumber(report.getSettDate(), report.getLastSettDate()));
 				}
 
-				// 可供分配利润
-				report.setDistributableProfit(report.getAssetsValue().subtract(report.getCapital()));
-
-				// 业绩比较基准收益
-				report.setAchievementBasisProfit(report.getCapital().multiply(report.getAchievementBasisProp()));
-
-				// 超出收益
-				report.setExcessProfit(report.getDistributableProfit().subtract(report.getAchievementBasisProfit()));
-
-				// 业绩报酬
-				report.setFloatFee(report.getExcessProfit().multiply(report.getExcessAchievementProp()));
-
-				// 应分配利润
-				report.setDistributedProfit(report.getDistributableProfit().subtract(report.getFloatFee()));
-
-				// 单位分红
-				report.setUnitProfit(
-						report.getDistributedProfit().divide(report.getCapital(), 4, RoundingMode.HALF_UP));
-
-				// 年化收益率
-				report.setYearYield(report.getUnitProfit().multiply(new BigDecimal(365))
-						.divide(new BigDecimal(report.getRunDays()), 4, RoundingMode.HALF_UP));
-
+				try {
+					// 可供分配利润
+					report.setDistributableProfit(report.getAssetsValue().subtract(report.getCapital()));
+	
+					// 业绩比较基准收益
+					report.setAchievementBasisProfit(report.getCapital().multiply(report.getAchievementBasisProp()));
+	
+					// 超出收益
+					report.setExcessProfit(report.getDistributableProfit().subtract(report.getAchievementBasisProfit()));
+	
+					// 业绩报酬
+					report.setFloatFee(report.getExcessProfit().multiply(report.getExcessAchievementProp()));
+	
+					// 应分配利润
+					report.setDistributedProfit(report.getDistributableProfit().subtract(report.getFloatFee()));
+	
+					// 单位分红
+					report.setUnitProfit(
+							report.getDistributedProfit().divide(report.getCapital(), 4, RoundingMode.HALF_UP));
+	
+					// 年化收益率
+					report.setYearYield(report.getUnitProfit().multiply(new BigDecimal(365))
+							.divide(new BigDecimal(report.getRunDays()), 4, RoundingMode.HALF_UP));
+				} catch(Exception e) {
+					logger.error("获取分红计算清单异常。",e);
+				}
+				
 				listResult.add(CollectionUtils.bean2Map(report));
 
 			}
 		} catch (Exception e) {
 			logger.error("报表数据错误", e);
-			e.printStackTrace();
 		}
 		return listResult;
 	}

@@ -2,6 +2,7 @@ package com.joyintech.tams.disclosure.information.config.hugeinfopro.dto;
 
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
@@ -112,5 +113,12 @@ public class HugeInfoPro001Dto extends DisLargeRedemption implements ITableRow, 
     }
     public String getIsSalesAgencyStr(){
         return SysDataUtil.getNameFromDataDict(DictCode.是否,super.getIsSalesAgency());
+    }
+
+    public String getDealDateStr() {
+        return super.getDealDate()==null?null: DateUtil.format(super.getDealDate(), "yyyy-MM-dd");
+    }
+    public String getRptIssueDateStr() {
+        return super.getRptIssueDate()==null?null: DateUtil.format(super.getRptIssueDate(), "yyyy-MM-dd");
     }
 }

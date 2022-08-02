@@ -15,7 +15,7 @@ spring:
   thymeleaf:
     cache: false
   profiles:
-    active: CVR_305_XNYH_DEV_P
+    active: CVR_305_XNYH_TEST_P
   application:
     name: tamsyy-serverREPORT#0426
     dfstype: 2
@@ -479,10 +479,9 @@ workflow:
 url:
   batch: http://localhost:8084/main/about/refreshCache
 
-
 ---
 spring:
-  profiles: test
+  profiles: CVR_305_XNYH_TEST_P
   thymeleaf:
     cache: false
   redis:
@@ -491,22 +490,19 @@ spring:
     host: 192.168.60.236
     port: 6379
     timeout: 20000
-  #  redis:
-  #    cluster:
-  #      nodes: 192.168.60.97:6379,192.168.60.97:6380,192.168.60.97:6381,192.168.60.97:6382,192.168.60.97:6383,192.168.60.97:6384
   redislock:
     redissonEnabled: false
   datasource:
     url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
+    username: BS30CVR_V306_XP_TEST
+    password: BS30CVR_V306_XP_TEST
     reportSqlldrDatabaseName: 192.168.60.237:1521/orcl
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: BS30CVR_V306_XP_DEV
-  sqldirpassword: BS30CVR_V306_XP_DEV
+  sqldiruserName: BS30CVR_V306_XP_TEST
+  sqldirpassword: BS30CVR_V306_XP_TEST
 valinterf:
   hostname: localhost
   port: 28080
@@ -522,20 +518,20 @@ shiro:
     /TrdLendDuration/selectAllDataList,/TrdBondDuration/findEffectiveData,/TrdExchangeDuration/findAllData,
     /TrdRepoDuration/findFinCashInfo,/TrdRepoDuration/findRepoInfo,/service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig,
     /InterfSysTrdConfig/**,/interf/risk/**,/EtrTradeSysInterf/**,/MstCaptialAccount/**,/MstSaleDepartment/**,/TrdBondInvestTrade/**,/AssetDeclarationCodeMaintenance/**,/ptlmanagementinfo/**,/InterfSysPara/**,/MstMarketCalendarInfo/**,
-    /TrdExchangeWorkflow/**,/invest/trade/api/**
+    /TrdExchangeWorkflow/**,/invest/trade/api/**,/disclosure/information/reveal/detailshow/RepEdit001/doWebOffice
 
 base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
+    username: BS30CVR_V306_XP_TEST
+    password: BS30CVR_V306_XP_TEST
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
+    username: BS30CVR_V306_XP_TEST
+    password: BS30CVR_V306_XP_TEST
   hostname: localhost
   port: 28080
   contextPath: /interf
@@ -549,14 +545,14 @@ wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
+    username: BS30CVR_V306_XP_TEST
+    password: BS30CVR_V306_XP_TEST
 chbsend:
   datasource:
     url: jdbc:oracle:thin:@//192.168.60.237:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30CVR_V306_XP_DEV
-    password: BS30CVR_V306_XP_DEV
+    username: BS30CVR_V306_XP_TEST
+    password: BS30CVR_V306_XP_TEST
 log:
   path: /home/tams/logs/tams
   level: debug
@@ -573,7 +569,6 @@ xinping:
 tx-lcn:
   client:
     managerAddress: 192.168.60.236:8070
-
 # 场内交易使用配置
 netty:
   port: 9190
@@ -629,6 +624,7 @@ workflow:
 #清除 批处理 缓存的配置，添加此配置后可登录批处理地址http://localhost:8084进行批处理缓存更新
 url:
   batch: http://localhost:8084/main/about/refreshCache
+
 ---
 spring:
   profiles: local   #本地启动应用建议修改这块启动

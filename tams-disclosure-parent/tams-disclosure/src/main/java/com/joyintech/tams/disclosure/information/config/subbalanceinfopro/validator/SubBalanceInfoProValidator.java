@@ -27,9 +27,8 @@ public class SubBalanceInfoProValidator implements BeanValidator {
             map.put("balanceDate",dto.getBalanceDateStr());
             map.put("subjectNo",dto.getSubjectNo());
             SubBalanceInfoPro001Dto subBalanceInfoPro001Dto = subBalanceInfoPro001Service.selectByPrimaryKey(map);
-            if (subBalanceInfoPro001Dto!=null){
+            if (subBalanceInfoPro001Dto!=null && StringUtil.equals(subBalanceInfoPro001Dto.getStatus(),"E")){
                 errorList.add(new ValidMessage("", "“产品主代码+科目号+余额日期”不能同时与已有数据重复"));
-
             }
         }
         return errorList;

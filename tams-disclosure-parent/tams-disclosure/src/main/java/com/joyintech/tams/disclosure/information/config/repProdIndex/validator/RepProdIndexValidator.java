@@ -47,7 +47,7 @@ public class RepProdIndexValidator implements BeanValidator {
             if(dto.getUnitValueT()== null){
                 errorList.add(new ValidMessage("", "子产品单位累计净值不能为空!"));
             }
-            if(dto.getProdType().equals("M")){
+            if(dto.getProdType().equals("04")){
                 if(dto.getwYield()== null){
                     errorList.add(new ValidMessage("", "子产品万份收益不能为空!"));
                 }

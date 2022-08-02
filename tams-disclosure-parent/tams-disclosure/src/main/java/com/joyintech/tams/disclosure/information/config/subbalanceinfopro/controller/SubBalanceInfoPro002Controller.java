@@ -10,6 +10,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
 import com.joyintech.tams.disclosure.information.config.profailureinfo.dto.ProFailureInfo001Dto;
 import com.joyintech.tams.disclosure.information.config.profailureinfo.service.ProFailureInfo001Service;
 import com.joyintech.tams.disclosure.information.config.subbalanceinfopro.dto.SubBalanceInfoPro001Dto;
@@ -151,6 +152,22 @@ public class SubBalanceInfoPro002Controller extends BaseController {
     public HashMap  findProdName(@RequestBody String booksetId){
         HashMap map = new HashMap();
         return subBalanceInfoPro001Service.findProdName(booksetId);
+    }
+
+
+    @ResponseBody
+    @RequestMapping("checkExistData")
+    public Boolean checkExistData(@RequestBody SubBalanceInfoPro001Dto dto){
+        HashMap map =new HashMap();
+        map.put("booksetId",dto.getBooksetId());
+        map.put("balanceDate",dto.getBalanceDateStr());
+        map.put("subjectNo",dto.getSubjectNo());
+        SubBalanceInfoPro001Dto subBalanceInfoPro001Dto = subBalanceInfoPro001Service.selectByPrimaryKey(map);
+        if(subBalanceInfoPro001Dto != null && StringUtil.equals(subBalanceInfoPro001Dto.getStatus(),"D")){
+            return true;
+        }else{
+            return false;
+        }
     }
 
 

@@ -144,7 +144,8 @@ public class PoiReportService {
 				//throw new Exception("生成报表失败!没有找到数据。");
 			}
 		}
-		
+		if ( dataMap.get("reportDate")!=null ) 
+			reportDate = (Date)dataMap.get("reportDate");
 		String reportFile = this.genReportFile(reportFileType, reportInfo, dataMap, reportDate);
 
 		if (REPORT_TYPE_报表文件.equals(reportFileType)) {
