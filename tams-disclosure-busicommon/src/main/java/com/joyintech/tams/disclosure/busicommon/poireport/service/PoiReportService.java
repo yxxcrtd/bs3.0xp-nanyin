@@ -102,62 +102,65 @@ public class PoiReportService {
 	public final static String FILE_TYPE_PDF = ".pdf";
 
 	/**
-	 *
 	 * 生成报表：创建服务器文件，创建工作流进行报表确认
-	 * 
+	 * @param params
+	 * @param reportFileType
+	 * @param opType：报表生成类型：preview--预览，gen--生成
 	 * @return
 	 * @throws Exception
-	 * @throws MalformedURLException
-	 * @throws IOException
-	 * @see
-	 * @since 1.0
 	 */
-	public String genReport(Map<String, Object> params, String reportFileType) throws Exception {
+	public String genReport(Map<String, Object> params, String reportFileType,String opType) throws Exception {
 
-		ReportInfo reportInfo = null;
-		try {
-			String repId = params.get("repid").toString();
-			reportInfo = reportInfoMapper.getReportInfoByID(repId);
-			if (!StringUtil.isNotEmpty(reportInfo)) {
+			String reportFile = "";
+			ReportInfo reportInfo = null;
+			String prodId = "";
+			
+			try {
+				String repId = params.get("repid").toString();
+				reportInfo = reportInfoMapper.getReportInfoByID(repId);
+				if (!StringUtil.isNotEmpty(reportInfo)) {
+					throw new Exception("生成报表失败!没有找到模板。");
+				}
+			} catch (Exception e) {
+				logger.error("生成报表失败!没有找到模板。");
 				throw new Exception("生成报表失败!没有找到模板。");
 			}
-		} catch (Exception e) {
-			logger.error("生成报表失败!没有找到模板。");
-			throw new Exception("生成报表失败!没有找到模板。");
-		}
-
-		Date reportDate = null;
-		try {
-			if (params.get("reportDate") != null)
-				reportDate = DateUtil.parse(params.get("reportDate").toString());
-		} catch (Exception e) {
-			logger.error("获取报表日期错误", e);
-		}
-		
-		//查询数据
-		Map<String, Object> dataMap = null;
-		if ( REPORT_TYPE_模板文件.equals(reportFileType) ) {  //模板文件
-			dataMap = new HashMap<>();
-		} else {		//生成报表文件：临时文件或者正式文件
-			List<Map<String, Object>> listReports = reportDataService.queryDatas(params);
-			if (listReports.size() > 0) {
-				dataMap = listReports.get(0);
-				dataMap.put("prodId",params.get("prodId"));
-			} else {
-				logger.error("生成报表失败!没有找到数据。");
-				dataMap = new HashMap<>();
-				dataMap.put("prodId", params.get("prodId"));
-				//throw new Exception("生成报表失败!没有找到数据。");
+	
+			Date reportDate = null;
+			try {
+				if (params.get("reportDate") != null)
+					reportDate = DateUtil.parse(params.get("reportDate").toString());
+			} catch (Exception e) {
+				logger.error("获取报表日期错误", e);
 			}
-		}
-		if ( dataMap.get("reportDate")!=null ) 
-			reportDate = (Date)dataMap.get("reportDate");
-		String reportFile = this.genReportFile(reportFileType, reportInfo, dataMap, reportDate);
-		logger.info("生成文件成功!" + reportFile);
-
-		if (REPORT_TYPE_报表文件.equals(reportFileType)) {
+			
+		if ( "preview".equals(opType) ) {  //预览：生成报表文件
+			//查询数据
+			Map<String, Object> dataMap = null;
+			if ( REPORT_TYPE_模板文件.equals(reportFileType) ) {  //模板文件
+				dataMap = new HashMap<>();
+			} else {		//生成报表文件：临时文件或者正式文件
+				List<Map<String, Object>> listReports = reportDataService.queryDatas(params);
+				if (listReports.size() > 0) {
+					dataMap = listReports.get(0);
+					dataMap.put("prodId",params.get("prodId"));
+				} else {
+					logger.error("生成报表失败!没有找到数据。");
+					dataMap = new HashMap<>();
+					dataMap.put("prodId", params.get("prodId"));
+					//throw new Exception("生成报表失败!没有找到数据。");
+				}
+			}
+			if ( dataMap.get("reportDate")!=null ) 
+				reportDate = (Date)dataMap.get("reportDate");
+			
+			reportFile = this.genReportFile(reportFileType, reportInfo, dataMap, reportDate);
+			logger.info("生成文件成功!" + reportFile);
+		} else if (opType.equals("gen")) {  //直接使用预览的文件
+			prodId = params.get("prodId").toString();
+			reportFile = buildReportFileName(REPORT_TYPE_报表文件, reportInfo, reportDate, prodId, FILE_TYPE_DOCX);
 			File localFile = new SafelyFile(reportFile);
-			String fileName = dataMap.get("prodId") 
+			String fileName = prodId
 					+ GlobalConstant.UNDER_LINE +reportInfo.getReportName() 
 					+ GlobalConstant.UNDER_LINE 
 					+ DateUtil.getNewSysDate()

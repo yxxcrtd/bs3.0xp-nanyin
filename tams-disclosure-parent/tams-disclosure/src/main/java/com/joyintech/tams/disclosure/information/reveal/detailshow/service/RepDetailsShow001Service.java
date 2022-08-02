@@ -295,10 +295,10 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
         FileInputStream fis = null;
         try {
 	        if ( params.get("elementIdForLog")==null || !params.get("elementIdForLog").equals("RepDetailsShow001_showDetail") ) {  //树单击：显示模板
-	        	reportFile = poiReportService.genReport(params,PoiReportService.REPORT_TYPE_模板文件);
+	        	reportFile = poiReportService.genReport(params,PoiReportService.REPORT_TYPE_模板文件,"preview");
 	        } else {  //预览按钮：显示指定产品的实际内容
 	        	params.put("platformDate", commonPlatformDateService.getSysDate());
-	            reportFile = poiReportService.genReport(params,PoiReportService.REPORT_TYPE_临时文件);
+	            reportFile = poiReportService.genReport(params,PoiReportService.REPORT_TYPE_报表文件,"preview");
 	        }
 	
 	        //将生成的文件作为输入，转换成html后，发送到response
@@ -326,7 +326,7 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
      * @author chenxc
      */
     public void genReport(Map<String,Object> params) throws Exception {
-    	poiReportService.genReport(params,PoiReportService.REPORT_TYPE_报表文件);
+    	poiReportService.genReport(params,PoiReportService.REPORT_TYPE_报表文件,"gen");
     }
 
     /**
@@ -346,12 +346,18 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
         ReportInfo reportInfo = reportInfoMapper.getReportInfoByID(reportId);
 
         String fileType = params.get("fileType").toString();
-        Date genDate = DateUtil.parse(params.get("endDate").toString());
+        
+        Date genDate = commonPlatformDateService.getSysDate();
+        if (params.get("reportDate")!=null )
+        	genDate = DateUtil.parse(params.get("reportDate").toString());
+        if (params.get("endDate")!=null )
+        	genDate = DateUtil.parse(params.get("endDate").toString());
+ 
         String prodId = "";
         if (params.get("prodId") != null )
             prodId = params.get("prodId").toString();
         String reportFile = poiReportService.buildReportFileName(PoiReportService.REPORT_TYPE_报表文件,reportInfo, genDate, prodId,PoiReportService.FILE_TYPE_DOCX);
-        String localFileName = reportInfo.getReportName()+"_"+prodId+"_" + params.get("endDate").toString()+PoiReportService.FILE_TYPE_DOCX;
+        String localFileName = reportInfo.getReportName()+"_"+prodId+"_" + genDate.toString()+PoiReportService.FILE_TYPE_DOCX;
 
         if ( "pdf".equals(fileType)) {  //如果导出pdf，则需要先讲word转换成pdf
             FileInputStream fis = new FileInputStream(reportFile);
@@ -359,7 +365,7 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
             FileOutputStream fos = new FileOutputStream(fileNamePdf);
             PoiUtils.docxToPdf(fis,fos);
             reportFile = fileNamePdf;
-            localFileName = reportInfo.getReportName()+"_"+prodId+"_" + params.get("endDate").toString()+PoiReportService.FILE_TYPE_PDF;
+            localFileName = reportInfo.getReportName()+"_"+prodId+"_" + params.get("reportDate").toString()+PoiReportService.FILE_TYPE_PDF;
         }
 
         File remoteFile = new SafelyFile(reportFile);
