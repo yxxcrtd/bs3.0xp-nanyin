@@ -664,7 +664,7 @@ values ('RepEdit001', 'DIS', '/disclosure/information/reveal/detailshow/RepEdit0
 /*phantomjs-2.1.1 的安装路径 poi导出报表之生成echarts图片工具存放路径*/
 update sys_para set param_value = '/home/phantomjs-2.1.1-linux-x86_64/bin/' where para_code = 'POI_ECHARTS_PIC_EXPORT_PATH';
 /*poi导出报表Echarts临时文件存放路径*/
-update sys_para set param_value = '/home/bs3.0/yy/app/poi/echartstmp/' where para_code = 'POI_ECHARTS_PIC_EXPORT_PATH';
+update sys_para set param_value = '/home/bs3.0/yy/app/poi/echartstmp/' where para_code = 'POI_ECHARTS_TMPFILE_PATH';
 /*apache服务器的安装*/
 DELETE FROM sys_para WHERE PARA_CODE = 'POI_APACHE_PATH';
 INSERT INTO sys_para ("SYSTEM_CODE", "PARA_CODE", "PARAM_VALUE", "DATA_TYPE", "DATA_SCOPE", "REMARK", "CREATE_USER", "CREATE_DEPT", "CREATE_TIME", "UPDATE_USER", "UPDATE_TIME", "INSTITUTION_CODE", "UPDATE_FLG")
