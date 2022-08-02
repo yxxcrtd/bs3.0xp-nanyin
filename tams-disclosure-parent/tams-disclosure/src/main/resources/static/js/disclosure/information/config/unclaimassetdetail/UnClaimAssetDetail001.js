@@ -72,11 +72,12 @@
      */
     table.bind('click', '.edit', function(data, index) {
         data.pageModel = PAGE_MODEL_EDIT;
-
         Joyin.dialog(JoyinUtil.getLabel("编辑"),
             basePath + "disclosure/information/config/unclaimassetdetail/UnClaimAssetDetail002/init",
-            "95%", "90%", {pageModel:PAGE_MODEL_EDIT,
-                nostdAssetId:data.nostdAssetId},function(){table.reload();})
+            "95%", "90%", data,
+            // {pageModel:PAGE_MODEL_EDIT,
+            //     prodId:data.prodId,effDate:data.effDate,effEndDate:data.effEndDate},
+            function(){table.reload();})
     });
     /**
      * 绑定删除事件

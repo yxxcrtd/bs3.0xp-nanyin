@@ -107,7 +107,7 @@
                         </h3>
                         <div class="pro-module-item pro-item-wrap">
                             <div class="layui-form-item">
-                                <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
+                                <div class="layui-inline layui-col-xs6 layui-col-sm6 layui-col-md6 layui-col-lg6">
                                     <input type="text" id="nostdAssetId" name="nostdAssetId" class="layui-input form-input" data-th-value="${entity?.nostdAssetId}" style = "display: none">
                                     <label class="layui-form-label form-lable mst-lable">产品名称</label>
                                     <div class="layui-input-inline input-inline">
@@ -121,8 +121,7 @@
                                     </div>
                                 </div>
 
-
-                                <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
+                                <div class="layui-inline layui-col-xs6 layui-col-sm6 layui-col-md6 layui-col-lg6">
                                     <label class="layui-form-label form-lable mst-lable">产品主代码</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" class="layui-input form-input"
@@ -130,9 +129,10 @@
                                                name="prodId" data-th-value="${entity?.prodId}" disabled required="required"/>
                                     </div>
                                 </div>
+                            </div>
 
-
-                                <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
+                            <div class="layui-form-item">
+                                <div class="layui-inline layui-col-xs6 layui-col-sm6 layui-col-md6 layui-col-lg6">
                                     <label class="layui-form-label form-lable mst-lable">生效日</label>
                                     <div class="layui-input-inline input-inline">
                                         <input id="effDate" name="effDate"
@@ -141,10 +141,8 @@
                                                placeholder="请选择时间">
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="layui-form-item">
-                                <div class="layui-inline layui-col-xs6 layui-col-sm6 layui-col-md6 layui-col-lg6S">
+                                <div class="layui-inline layui-col-xs6 layui-col-sm6 layui-col-md6 layui-col-lg6">
                                     <label class="layui-form-label form-lable mst-lable">生效日截止日期</label>
                                     <div class="layui-input-inline input-inline">
                                         <input id="effEndDate" name="effEndDate"
@@ -186,10 +184,11 @@
 </div>
 <div layout:fragment="script">
         <script data-th-inline="javascript" type="text/javascript">
-            var uncliamList = /*[[${uncliamList}]]*/'';
+            var entity = /*[[${entity}]]*/''
+            var unclaimList = /*[[${unclaimList}]]*/'';
             // 处理日期
-            if (uncliamList) {
-                $.each(uncliamList, function(index, rowData) {
+            if (unclaimList) {
+                $.each(unclaimList, function(index, rowData) {
                     if (rowData.effDate) {
                         rowData.effDate = new Date(rowData.effDate).getTime();
                     }

@@ -8,11 +8,9 @@ import com.joyintech.framework.base.intf.IDictCode;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.DictCodeListExt4;
 import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.dto.UnClaimAssetDetailDto;
 import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.service.UnClaimAssetDetail001Service;
@@ -20,7 +18,6 @@ import com.joyintech.tams.disclosure.information.config.unclaimassetdetail.servi
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
-import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +53,7 @@ public class UnClaimAssetDetail001Controller extends BaseController {
     /**
      * 初始化数据字典下拉框
      */
-    private static final IDictCode[] DICT_CODES = new DictCode[] {DictCode.信披_数据状态};
+    private static final IDictCode[] DICT_CODES = new DictCode[] {DictCode.维护数据状态};
 
     /**
      * UnClaimAssetDetail001画面初始化
@@ -110,11 +107,11 @@ public class UnClaimAssetDetail001Controller extends BaseController {
         params.setBusinessType(DictCodeListExt4.共通业务类型_非标债权类资产明细维护.getValue());
         // 设置流程业务说明, entity即传入的dto
         params.setComment(entity -> SpringContextUtil.getTextValue("产品主代码") + "(" + entity.getProdId() + ")" + "-"
-                + SpringContextUtil.getTextValue("非标资产编号") + "("+entity.getNostdAssetId()+")" + "-"
-                + this.getMessage("生效日")+ "("+DateUtil.format(entity.getEffDate()) + ")");
+                + SpringContextUtil.getTextValue("生效日") + "("+entity.getEffDate()+")" + "-"
+                + SpringContextUtil.getTextValue("生效截止日期") + "("+entity.getEffEndDate()+")" );
         processParameter.setWorkFlowParameter(params);
         String msg = unClaimAssetDetail002Service.start(processParameter,
-                dto.getUncliamList().toArray(new UnClaimAssetDetailDto[dto.getUncliamList().size()]));
+                dto.getSelectedItem().toArray(new UnClaimAssetDetailDto[dto.getSelectedItem().size()]));
         return new AjaxResult(msg);
     }
     /**
