@@ -15,6 +15,7 @@ import com.joyintech.tams.disclosure.information.config.hugeinfopro.dao.HugeInfo
 import com.joyintech.tams.disclosure.information.config.hugeinfopro.dto.HugeInfoPro001Dto;
 import com.joyintech.tams.disclosure.information.config.prodfeedealInterf.dto.SvrProdFeeDealInterfDto;
 import com.joyintech.tams.disclosure.information.config.proelementadj.dao.ProElementAdjMapper;
+import com.joyintech.tams.disclosure.information.config.subbalanceinfopro.dto.SubBalanceInfoPro001Dto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -210,13 +211,33 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
             resultMap.put("confirmMsg", totalMsg);
         }
         resultMap.put("correctData", JsonUtils.object2Json(jsonArrays));
+        String tempList = (String) resultMap.get("correctData");
+        HugeInfoPro001Dto dto = getValNetAssetQuotationInfoListData(tempList);
+        List<HugeInfoPro001Dto> selectedItem = dto.getSelectedItem();
+        List<HugeInfoPro001Dto>  existData = new ArrayList<>();
+        for (HugeInfoPro001Dto temp:selectedItem) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("prodId",temp.getProdId());
+            map.put("dealDate",DateUtil.format(temp.getDealDate()));
+            if (StringUtil.isNotEmpty(this.selectByBusPK(map))){
+                existData.add(temp);
+            }
+        }
+        if(existData.size() > 0){
+            resultMap.put("confirmMsg2", "有重复信息，是否覆盖？");
+        }
         AjaxResult wr = new AjaxResult();
         wr.setData(resultMap);
         return wr;
     }
 
+
+    public HugeInfoPro001Dto selectByBusPK(Map map) {
+        return hugeInfoProMapper.selectByBusPK(map);
+    }
+
     public static boolean isDateStr(String str) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         try {
             format.setLenient(false);
             format.parse(str);
@@ -242,17 +263,28 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
 //            }else {
 //                newData.add(temp);
 //            }
-            temp.setDataStatus(DictCodeListExt3.信披_数据状态_有效.getValue());
-            temp.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
-            temp.setUpdateTime(sysDate);
-            temp.setUpdateUser(CommonUtil.getUserName());
-            temp.setRedemptionId(IDGenerator.generate(36));
-            newData.add(temp);
+            Map<String, Object> map = new HashMap<>();
+            map.put("prodId", temp.getProdId());
+            map.put("dealDate", DateUtil.format(temp.getDealDate()));
+            if (StringUtil.isNotEmpty(this.selectByBusPK(map))) {
+                existData.add(temp);
+            } else {
+                temp.setDataStatus(DictCodeListExt3.信披_数据状态_有效.getValue());
+                temp.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
+                temp.setUpdateTime(sysDate);
+                temp.setUpdateUser(CommonUtil.getUserName());
+                temp.setRedemptionId(IDGenerator.generate(36));
+                newData.add(temp);
+            }
         }
         //更新操作
-//        for (HugeInfoPro001Dto existDataDto : newData) {
+        for (HugeInfoPro001Dto existDataDto : existData) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("prodId", existDataDto.getProdId());
+            map.put("dealDate", DateUtil.format(existDataDto.getDealDate()));
+            hugeInfoProMapper.updateByBusKey(existDataDto);
 //            this.doComplete(existDataDto,OperationType.MODIFY);
-//        }
+        }
         //插入操作
         for (HugeInfoPro001Dto newDataDto : newData
         ) {

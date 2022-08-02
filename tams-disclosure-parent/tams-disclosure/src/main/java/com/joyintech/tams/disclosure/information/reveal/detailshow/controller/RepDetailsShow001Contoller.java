@@ -355,7 +355,9 @@ public class RepDetailsShow001Contoller extends BaseController {
         	boolean flag = false;
         	boolean confirmFlag = true;
         	RepReveal repReveal = new RepReveal();
-        	String prodId = params.get("pprodid").toString();
+			String prodId = "";
+			if (params.get("pprodid")!=null )
+				prodId = params.get("pprodid").toString();
         	if(params.get("repid") != null) {
         		repReveal.setRepId(params.get("repid").toString());
         	}

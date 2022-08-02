@@ -118,13 +118,13 @@ public class RepRelDealService extends CommonExportService<RepRelDealDto> implem
      */
     public AjaxResult checkImportData(String fileName) {
         List<List<String>> objects = ExcelUtil.getTempList(fileName);
-        if (objects.size() - 1 > 50000) {
-            Map<String, Object> resultMap = new HashMap<>();
-            resultMap.put("errorMsg", "单次最多导入50000条。");
-            AjaxResult wr = new AjaxResult();
-            wr.setData(resultMap);
-            return wr;
-        }
+//        if (objects.size() - 1 > 50000) {
+//            Map<String, Object> resultMap = new HashMap<>();
+//            resultMap.put("errorMsg", "单次最多导入50000条。");
+//            AjaxResult wr = new AjaxResult();
+//            wr.setData(resultMap);
+//            return wr;
+//        }
         String totalMsg = "";
         List<List<String>> jsonArrays = new ArrayList<>();
         // 重复数据
@@ -201,24 +201,29 @@ public class RepRelDealService extends CommonExportService<RepRelDealDto> implem
                         }
                     }
 
-                    if(StringUtil.isNotEmpty(rowData.get(0)) && StringUtil.isNotEmpty(rowData.get(5)) && StringUtil.isNotEmpty(rowData.get(6))){
+                    if(StringUtil.isNotEmpty(rowData.get(0)) && StringUtil.isNotEmpty(rowData.get(5)) && StringUtil.isNotEmpty(rowData.get(6))
+                       && this.isDateStr(rowData.get(5).trim()) && this.isDateStr(rowData.get(6).trim())){
+
                         Date effdate=DateUtil.parse(rowData.get(5).toString().trim());
                         Date effdelidate=DateUtil.parse(rowData.get(6).toString().trim());
-                        RepRelDealDto map = new RepRelDealDto();
-                        map.setProdId(rowData.get(0).trim());
-                        map.setEffdate(effdate);
-                        map.setEffdelidate(effdelidate);
-                        List<RepRelDealDto> dtos = repRelDeal001Mapper.selectExistInfo(map);
-                        for (RepRelDealDto dto : dtos) {
-                            if(!((DateUtil.compareDate(effdate,dto.getEffdate())<0 && DateUtil.compareDate(effdelidate,dto.getEffdate())<0)
-                                    || (DateUtil.compareDate(effdate,dto.getEffdelidate())>0 && DateUtil.compareDate(effdelidate,dto.getEffdelidate())>0)
-                                    || (DateUtil.compareDate(effdate,dto.getEffdate())==0 && DateUtil.compareDate(effdelidate,dto.getEffdelidate())==0)
-                            )){
-                                errorMsg.append("生效区间重叠！ 系统中已存在的生效区间:"+DateUtil.format(dto.getEffdate(),"yyyy-MM-dd")
-                                        +"-"+DateUtil.format(dto.getEffdelidate(),"yyyy-MM-dd"));
-                                break;
+                        if(DateUtil.compareDate(effdelidate,effdate) >= 0){
+                            RepRelDealDto map = new RepRelDealDto();
+                            map.setProdId(rowData.get(0).trim());
+                            map.setEffdate(effdate);
+                            map.setEffdelidate(effdelidate);
+                            List<RepRelDealDto> dtos = repRelDeal001Mapper.selectExistInfo(map);
+                            for (RepRelDealDto dto : dtos) {
+                                if(!((DateUtil.compareDate(effdate,dto.getEffdate())<0 && DateUtil.compareDate(effdelidate,dto.getEffdate())<0)
+                                        || (DateUtil.compareDate(effdate,dto.getEffdelidate())>0 && DateUtil.compareDate(effdelidate,dto.getEffdelidate())>0)
+                                        || (DateUtil.compareDate(effdate,dto.getEffdate())==0 && DateUtil.compareDate(effdelidate,dto.getEffdelidate())==0)
+                                )){
+                                    errorMsg.append("生效区间重叠！ 系统中已存在的生效区间:"+DateUtil.format(dto.getEffdate(),"yyyy-MM-dd")
+                                            +"-"+DateUtil.format(dto.getEffdelidate(),"yyyy-MM-dd"));
+                                    break;
+                                }
                             }
                         }
+
                     }
                     if (StringUtil.isNotEmpty(errorMsg.toString())){
                         errorMsg.append("<br />");
@@ -307,6 +312,10 @@ public class RepRelDealService extends CommonExportService<RepRelDealDto> implem
         }
         if(existData.size() > 0){
             resultMap.put("confirmMsg2", "有重复信息，是否覆盖？");
+        }
+        int maxCount = CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT")==null?50000:Integer.parseInt(CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT"));
+        if (objects.size() - 1 > maxCount) {
+            resultMap.put("confirmMsg3", "导入数据超过"+maxCount+"条，可能导致系统较慢，是否确认导入？");
         }
         AjaxResult wr = new AjaxResult();
         wr.setData(resultMap);

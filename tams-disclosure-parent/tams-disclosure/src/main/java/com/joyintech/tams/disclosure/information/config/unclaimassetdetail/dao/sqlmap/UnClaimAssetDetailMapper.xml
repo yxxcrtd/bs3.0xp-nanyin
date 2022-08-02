@@ -85,14 +85,14 @@
         select PROD_ID id,
         nvl(PROD_NAME,PROD_ABBR) text
         from REP_PROD_INFO
-        where  P_PROD_ID is not null
+        where  (P_PROD_ID is null or P_PROD_ID = PROD_ID)
         <if test="dataStatus != null and dataStatus != ''">
             and STATUS=#{dataStatus,jdbcType=VARCHAR}
         </if>
         <if test="search != null and search != ''">
-            and (FIN_PRODUCT.FINPROD_MARKET_ID like
+            and (PROD_ID like
             concat(concat('%',#{search}),'%')
-            or FIN_PRODUCT.FINPROD_NAME like concat(concat('%',#{search}),'%'))
+            or PROD_NAME like concat(concat('%',#{search}),'%'))
         </if>
     </select>
 <!--查询导出-->

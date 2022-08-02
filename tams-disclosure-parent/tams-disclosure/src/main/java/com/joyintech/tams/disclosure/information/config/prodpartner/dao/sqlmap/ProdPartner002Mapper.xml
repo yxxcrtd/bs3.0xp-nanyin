@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.disclosure.information.config.prodpartner.dao.ProdPartner002Mapper">
+    <insert id="insertProdPartner">
+		insert into DIS_PROD_PARTNER (PROD_PARTENER_ID, PROD_ID, PARTNER_NAME,
+            EFF_DATE, EFF_END_DATE, DATA_STATUS,
+            DATA_SOURCE, CREATE_USER, CREATE_TIME,
+            UPDATE_USER, UPDATE_TIME, CREATE_DEPT
+            )
+        values (#{prodPartenerId,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{partnerName,jdbcType=VARCHAR},
+            #{effDate,jdbcType=DATE}, #{effEndDate,jdbcType=DATE}, #{dataStatus,jdbcType=VARCHAR},
+            #{dataSource,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+            #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR}
+            )
+	</insert>
 
-	<update id="updateProdPartner">
+    <update id="updateProdPartner">
 		update DIS_PROD_PARTNER
         set
             PROD_ID = #{prodId,jdbcType=VARCHAR},
