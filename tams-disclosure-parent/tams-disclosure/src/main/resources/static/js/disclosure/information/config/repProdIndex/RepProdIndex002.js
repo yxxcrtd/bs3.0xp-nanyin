@@ -96,7 +96,7 @@ var pUnitValueChange = function(){
         $('#unitValue').val($('#pUnitValue').val()).trigger("blur");
         $("#unitValue").attr('disabled',true);
     }else{
-        if($('#prodType').val() == "M"){
+        if($('#prodType').val() == "04"){
             $('#unitValue').val('1.0000').trigger("blur");;
             $("#unitValue").attr('disabled',true);
         }else{
@@ -111,7 +111,7 @@ var pUnitValueTChange = function(){
         $('#unitValueT').val($('#pUnitValueT').val()).trigger("blur");
         $("#unitValueT").attr('disabled',true);
     }else{
-        if($('#prodType').val() == "M"){
+        if($('#prodType').val() == "04"){
             $('#unitValueT').val('1.0000').trigger("blur");;
             $("#unitValueT").attr('disabled',true);
         }else{
@@ -122,11 +122,11 @@ var pUnitValueTChange = function(){
 }
 
 var pWYieldChange = function(){
-    if($('#prodType').val() == "N"){
+    if($('#prodType').val() == "01"){
         $('#wYield').val('');
         $("#wYield").attr('disabled',true);
         $('#wYield').removeAttr("required");
-    }else if($('#prodType').val() == "M"){
+    }else if($('#prodType').val() == "04"){
         if($('#isGrade').val() == "02"){
             $('#wYield').val($('#pWYield').val()).trigger("blur");
             $("#wYield").attr('disabled',true);
@@ -142,11 +142,11 @@ var pWYieldChange = function(){
 }
 
 var pYield7Change = function(){
-    if($('#prodType').val() == "N"){
+    if($('#prodType').val() == "01"){
         $('#yield7').val('');
         $("#yield7").attr('disabled',true);
         $('#yield7').removeAttr("required");
-    }else if($('#prodType').val() == "M"){
+    }else if($('#prodType').val() == "04"){
         if($('#isGrade').val() == "02"){
             $('#yield7').val($('#pYield7').val()).trigger("blur");
             $("#yield7").attr('disabled',true);
@@ -182,7 +182,7 @@ $(function() {
                     $('#isGrade').val(result.isGrade);
                     $('#prodType').val(result.prodType);
                     $('#pProdId').val(result.pProdId);
-                    if(result.prodType == "M"){
+                    if(result.prodType == "04"){
                         $('#pUnitValue').val('1.0000').trigger('change');
                         $("#pUnitValue").attr('disabled',true);
                         $('#pUnitValueT').val('1.0000').trigger('change');
@@ -216,7 +216,7 @@ $(function() {
                     }else{
                         $("#assetsValue").attr('disabled',false);
                         $("#capital").attr('disabled',false);
-                        if(result.prodType == "M"){
+                        if(result.prodType == "04"){
                             $('#unitValue').val('1.0000').trigger("blur");;
                             $("#unitValue").attr('disabled',true);
                             $('#unitValueT').val('1.0000').trigger("blur");;
@@ -228,14 +228,14 @@ $(function() {
                             $("#unitValueT").attr('disabled',false);
                         }
 
-                        if(result.prodType == "N"){
+                        if(result.prodType == "01"){
                             $('#wYield').removeAttr("required");
                             $('#wYield').val('').trigger('change');
                             $("#wYield").attr('disabled',true);
                             $('#yield7').removeAttr("required");
                             $('#yield7').val('').trigger('change');
                             $("#yield7").attr('disabled',true);
-                        }else if(result.prodType == "M"){
+                        }else if(result.prodType == "04"){
                             if(result.isGrade == "02"){
                                 $('#wYield').val($('#pWYield').val()).trigger("blur");
                                 $("#wYield").attr('disabled',true);
@@ -264,7 +264,7 @@ $(function() {
     $('#pYield7').change(pYield7Change);
 debugger;
     if(pageModel!=PAGE_MODEL_NEW){
-        if($('#prodType').val() == "M"){
+        if($('#prodType').val() == "04"){
             $("#pUnitValue").attr('disabled',true);
             $("#pUnitValueT").attr('disabled',true);
             $("#pWYield").attr('disabled',false);
@@ -288,7 +288,7 @@ debugger;
         }else{
             $("#assetsValue").attr('disabled',false);
             $("#capital").attr('disabled',false);
-            if($('#prodType').val() == "M"){
+            if($('#prodType').val() == "04"){
                 $("#unitValue").attr('disabled',true);
                 $("#unitValueT").attr('disabled',true);
             }else{
@@ -296,10 +296,10 @@ debugger;
                 $("#unitValueT").attr('disabled',false);
             }
         };
-        if($('#prodType').val() == "N"){
+        if($('#prodType').val() == "01"){
             $("#wYield").attr('disabled',true);
             $('#wYield').removeAttr("required");
-        }else if($('#prodType').val() == "M"){
+        }else if($('#prodType').val() == "04"){
             if($('#isGrade').val() == "02"){
                 $("#wYield").attr('disabled',true);
             }else{
@@ -310,10 +310,10 @@ debugger;
 
             $('#wYield').removeAttr("required");
         };
-        if($('#prodType').val() == "N"){
+        if($('#prodType').val() == "01"){
             $("#yield7").attr('disabled',true);
             $('#yield7').removeAttr("required");
-        }else if($('#prodType').val() == "M"){
+        }else if($('#prodType').val() == "04"){
             if($('#isGrade').val() == "02"){
                 $("#yield7").attr('disabled',true);
             }else{
