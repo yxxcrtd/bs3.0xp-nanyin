@@ -66,7 +66,7 @@ public class ProdAssetInfo002Service extends CommonExportService<ProdAssetInfoDt
             dto.setDataStatus(DictCodeListExt3.信披_数据状态_有效E.getValue());
             //数据来源
             dto.setDataSource(DictCodeListExt3.信披_数据来源_系统新建.getValue());
-            prodAssetInfo002Mapper.insert(dto);
+            prodAssetInfo002Mapper.insertProdAssetInfo(dto);
         }
         else {
             //更新
