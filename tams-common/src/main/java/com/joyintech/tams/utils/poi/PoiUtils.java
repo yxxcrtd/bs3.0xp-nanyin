@@ -30,7 +30,10 @@ public class PoiUtils {
 //        File imageFolderFile = new File(imagePath);
 //        XHTMLOptions options = XHTMLOptions.create().URIResolver(new FileURIResolver(imageFolderFile));
 //        options.setExtractor(new FileImageExtractor(imageFolderFile));
+        //服务器安装apache目录
         String tmpImagePath = CacheUtil.getSysParam("POI_APACHE_PATH");
+        //安装apache服务器的ip
+        String apacheAddress = CacheUtil.getSysParam("POI_APACHE_ADDRESS");
 
         XHTMLOptions options = XHTMLOptions.create();
         options.setImageManager( new ImageManager( new File(tmpImagePath),"")  {
@@ -46,7 +49,7 @@ public class PoiUtils {
                     fos = new FileOutputStream(outfile);
                     fos.write(imageData);
                     fos.close();
-                    upload = "http://localhost/images/" + imagePath;
+                    upload = "http://"+apacheAddress+"/images/" + imagePath;
                 }catch (Exception e) {
                     e.printStackTrace();
                 } finally {

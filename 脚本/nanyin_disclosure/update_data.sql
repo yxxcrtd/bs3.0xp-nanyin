@@ -669,4 +669,8 @@ update sys_para set param_value = '/home/bs3.0/yy/app/poi/echartstmp/' where par
 DELETE FROM sys_para WHERE PARA_CODE = 'POI_APACHE_PATH';
 INSERT INTO sys_para ("SYSTEM_CODE", "PARA_CODE", "PARAM_VALUE", "DATA_TYPE", "DATA_SCOPE", "REMARK", "CREATE_USER", "CREATE_DEPT", "CREATE_TIME", "UPDATE_USER", "UPDATE_TIME", "INSTITUTION_CODE", "UPDATE_FLG")
 VALUES ('DIS', 'POI_APACHE_PATH', '/home/httpd24/htdocs/images', NULL, NULL, 'POI_APACHE服务器存放路径', 'system', NULL, sysdate, 'system', sysdate, NULL, '01');
+
+DELETE FROM sys_para WHERE PARA_CODE = 'POI_APACHE_ADDRESS';
+INSERT INTO sys_para ("SYSTEM_CODE", "PARA_CODE", "PARAM_VALUE", "DATA_TYPE", "DATA_SCOPE", "REMARK", "CREATE_USER", "CREATE_DEPT", "CREATE_TIME", "UPDATE_USER", "UPDATE_TIME", "INSTITUTION_CODE", "UPDATE_FLG")
+VALUES ('DIS', 'POI_APACHE_ADDRESS', '192.168.60.236', NULL, NULL, 'POI_APACHE服务器ip地址', 'system', NULL, sysdate, 'system', sysdate, NULL, '01');
 --add by zhengbs 20220802 poi脚本 end
