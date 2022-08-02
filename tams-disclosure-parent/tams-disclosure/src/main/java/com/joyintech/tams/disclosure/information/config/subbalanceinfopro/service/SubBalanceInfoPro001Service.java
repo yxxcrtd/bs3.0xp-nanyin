@@ -65,10 +65,22 @@ public class SubBalanceInfoPro001Service extends CommonExportService<SubBalanceI
             subBalanceInfoProMapper.deleteByKey(dto);
         }
         else if (StringUtil.equals(type, "NEW")) {
-            SubBalanceInfoPro001Dto subBalanceInfoPro001Dto = new SubBalanceInfoPro001Dto();
-            BeanUtil.copyPropertiesIgnoreNull(subBalanceInfoPro001Dto,dto);
-            subBalanceInfoPro001Dto.setStatus("E");
-            subBalanceInfoProMapper.insert(subBalanceInfoPro001Dto);
+            HashMap map =new HashMap();
+            map.put("booksetId",dto.getBooksetId());
+            map.put("balanceDate",dto.getBalanceDateStr());
+            map.put("subjectNo",dto.getSubjectNo());
+            SubBalanceInfoPro001Dto dto1 = subBalanceInfoProMapper.selectByPrimaryKey(map);
+            if (dto1!=null){
+                dto.setStatus("E");
+                dto.setErrormsg("");
+                subBalanceInfoProMapper.updateByKey(dto);
+            }
+            else {
+                SubBalanceInfoPro001Dto subBalanceInfoPro001Dto = new SubBalanceInfoPro001Dto();
+                BeanUtil.copyPropertiesIgnoreNull(subBalanceInfoPro001Dto, dto);
+                subBalanceInfoPro001Dto.setStatus("E");
+                subBalanceInfoProMapper.insert(subBalanceInfoPro001Dto);
+            }
         }
         else {
             dto.setStatus("E");
