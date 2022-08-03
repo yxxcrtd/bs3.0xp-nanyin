@@ -581,4 +581,10 @@ VALUES('DisProdPlanManage002', 'DIS', '/disclosure/information/config/disprodpla
 -- add by sunjie 20220803 隐藏主动提醒脚本 start
 update sys_para set PARAM_VALUE = '02' where PARA_CODE = 'is_show_remind';
 -- add by sunjie 20220803 隐藏主动提醒脚本 end
+
+-- add by sunjie 20220803 数据状态下拉框枚举值 start
+delete from SYS_PAGE_DICTLIST where PAGE_ID like '%ProElementAdj00%' and DICT_ID = 'MAINTAIN_STATUS';
+INSERT INTO SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('ProElementAdj001', '999999', 'MAINTAIN_STATUS', 'D', null, null, 'system', null, sysdate, 'system', sysdate, null);
+INSERT INTO SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('ProElementAdj001', '999999', 'MAINTAIN_STATUS', 'E', null, null, 'system', null, sysdate, 'system', sysdate, null);
+-- add by sunjie 20220803 数据状态下拉框枚举值 end
 commit ;
