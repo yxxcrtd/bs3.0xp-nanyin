@@ -297,7 +297,7 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
 	        if ( params.get("elementIdForLog")==null || !params.get("elementIdForLog").equals("RepDetailsShow001_showDetail") ) {  //树单击：显示模板
 	        	reportFile = poiReportService.genReport(params,PoiReportService.REPORT_TYPE_模板文件,"preview");
 	        } else {  //预览按钮：显示指定产品的实际内容
-	        	params.put("platformDate", commonPlatformDateService.getSysDate());
+	        	//params.put("platformDate", commonPlatformDateService.getSysDate());
 	            reportFile = poiReportService.genReport(params,PoiReportService.REPORT_TYPE_报表文件,"preview");
 	        }
 	
@@ -356,16 +356,16 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
         String prodId = "";
         if (params.get("prodId") != null )
             prodId = params.get("prodId").toString();
-        String reportFile = poiReportService.buildReportFileName(PoiReportService.REPORT_TYPE_报表文件,reportInfo, genDate, prodId,PoiReportService.FILE_TYPE_DOCX);
+        String reportFile = poiReportService.buildReportFileName(PoiReportService.REPORT_TYPE_报表文件,reportInfo, params,PoiReportService.FILE_TYPE_DOCX);
         String localFileName = reportInfo.getReportName()+"_"+prodId+"_" + DateUtil.format(genDate)+PoiReportService.FILE_TYPE_DOCX;
 
         if ( "pdf".equals(fileType)) {  //如果导出pdf，则需要先讲word转换成pdf
             FileInputStream fis = new FileInputStream(reportFile);
-            String fileNamePdf = poiReportService.buildReportFileName(PoiReportService.REPORT_TYPE_报表文件,reportInfo, genDate, prodId,PoiReportService.FILE_TYPE_PDF);
+            String fileNamePdf = poiReportService.buildReportFileName(PoiReportService.REPORT_TYPE_报表文件,reportInfo, params,PoiReportService.FILE_TYPE_PDF);
             FileOutputStream fos = new FileOutputStream(fileNamePdf);
             PoiUtils.docxToPdf(fis,fos);
             reportFile = fileNamePdf;
-            localFileName = reportInfo.getReportName()+"_"+prodId+"_" + params.get("reportDate").toString()+PoiReportService.FILE_TYPE_PDF;
+            localFileName = reportInfo.getReportName()+"_"+prodId+"_" +DateUtil.format(genDate)+PoiReportService.FILE_TYPE_PDF;
         }
 
         File remoteFile = new SafelyFile(reportFile);

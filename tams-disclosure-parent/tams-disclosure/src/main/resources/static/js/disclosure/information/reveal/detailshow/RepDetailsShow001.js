@@ -338,6 +338,7 @@ $(function () {
 	            params['repid'] = repId;
 	            params['repname'] = repName;
 	            params['prodname'] = proName;
+	            params['uri'] = modelId;
 	            //params['portnum'] = 'LEO-001';
 	            //alert(params);
 //	        Joyin.ajax('downFileAndExport',
@@ -428,6 +429,7 @@ $(function () {
 		}
     
     	params['repid'] = repId;
+    	params['uri'] = modelId;
 
 		//编辑之前需要判断改报表是否已确认或者在流程中
 
