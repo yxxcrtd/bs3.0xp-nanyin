@@ -577,4 +577,8 @@ VALUES('DisProdPlanManage002', 'DIS', '/disclosure/information/config/disprodpla
        '', NULL, NULL, '02', '01', '产品排期计划新增', 'system', NULL, sysdate, 'system', sysdate);
 -- add by dingrui 2022-08-03  end
 
+
+-- add by sunjie 20220803 隐藏主动提醒脚本 start
+update sys_para set PARAM_VALUE = '02' where PARA_CODE = 'is_show_remind';
+-- add by sunjie 20220803 隐藏主动提醒脚本 end
 commit ;
