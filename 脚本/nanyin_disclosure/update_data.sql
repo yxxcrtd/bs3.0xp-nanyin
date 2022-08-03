@@ -728,3 +728,18 @@ values ('ReportPageManage002', '999999', 'RULE_TYPE1', 'REP_PROD_TYPE', null, nu
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('ReportPageManage002', '999999', 'RULE_TYPE1', 'ISSUING_WAY', null, null, 'system', null, sysdate, 'system', sysdate, null);
 --add by zhengxiaolian 20220803 页面规则设置枚举值修改
+
+-- add by zhengxiaolian 2022-08-03 数据字典中文调整 start
+delete from sys_datadict_list where DICT_CODE='RULE_TYPE1' and ITEM_CODE in('IS_INDEX','IS_PERIOD');
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('RULE_TYPE1', 'IS_INDEX', '是否指数型产品', 16, '0', 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('RULE_TYPE1', 'IS_PERIOD', '是否客户周期型产品', 17, '0', 'system', null, sysdate, 'system', sysdate, null);
+
+delete from sys_datadict where DICT_CODE='REP_PROD_TYPE' ;
+
+insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REP_PROD_TYPE', 'DIS', '信披产品类别', null, '02', 'system', null, sysdate, 'system', sysdate);
+-- add by zhengxiaolian 2022-08-03 数据字典中文调整，是否是指数型产品 end
