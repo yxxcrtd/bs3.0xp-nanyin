@@ -705,26 +705,26 @@ values ('ReportWorkManage002', '999999', 'RULE_TYPE1', 'ISSUING_WAY', null, null
 delete from sys_page_dictlist where PAGE_ID='ReportPageManage002' and DICT_ID='RULE_TYPE1';
 
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('ReportWorkManage002', '999999', 'RULE_TYPE1', 'RAISE_TYPE', null, null, 'system', null, sysdate, 'system', sysdate, null);
+values ('ReportPageManage002', '999999', 'RULE_TYPE1', 'RAISE_TYPE', null, null, 'system', null, sysdate, 'system', sysdate, null);
 
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('ReportWorkManage002', '999999', 'RULE_TYPE1', 'PROD_TYPE', null, null, 'system', null, sysdate, 'system', sysdate, null);
+values ('ReportPageManage002', '999999', 'RULE_TYPE1', 'PROD_TYPE', null, null, 'system', null, sysdate, 'system', sysdate, null);
 
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('ReportWorkManage002', '999999', 'RULE_TYPE1', 'OPEN_FREQ', null, null, 'system', null, sysdate, 'system', sysdate, null);
+values ('ReportPageManage002', '999999', 'RULE_TYPE1', 'OPEN_FREQ', null, null, 'system', null, sysdate, 'system', sysdate, null);
 
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('ReportWorkManage002', '999999', 'RULE_TYPE1', 'IS_PERIOD', null, null, 'system', null, sysdate, 'system', sysdate, null);
+values ('ReportPageManage002', '999999', 'RULE_TYPE1', 'IS_PERIOD', null, null, 'system', null, sysdate, 'system', sysdate, null);
 
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('ReportWorkManage002', '999999', 'RULE_TYPE1', 'IS_INDEX', null, null, 'system', null, sysdate, 'system', sysdate, null);
+values ('ReportPageManage002', '999999', 'RULE_TYPE1', 'IS_INDEX', null, null, 'system', null, sysdate, 'system', sysdate, null);
 
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('ReportWorkManage002', '999999', 'RULE_TYPE1', 'ISSUE_STATUS', null, null, 'system', null, sysdate, 'system', sysdate, null);
+values ('ReportPageManage002', '999999', 'RULE_TYPE1', 'ISSUE_STATUS', null, null, 'system', null, sysdate, 'system', sysdate, null);
 
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('ReportWorkManage002', '999999', 'RULE_TYPE1', 'REP_PROD_TYPE', null, null, 'system', null, sysdate, 'system', sysdate, null);
+values ('ReportPageManage002', '999999', 'RULE_TYPE1', 'REP_PROD_TYPE', null, null, 'system', null, sysdate, 'system', sysdate, null);
 
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('ReportWorkManage002', '999999', 'RULE_TYPE1', 'ISSUING_WAY', null, null, 'system', null, sysdate, 'system', sysdate, null);
+values ('ReportPageManage002', '999999', 'RULE_TYPE1', 'ISSUING_WAY', null, null, 'system', null, sysdate, 'system', sysdate, null);
 --add by zhengxiaolian 20220803 页面规则设置枚举值修改
