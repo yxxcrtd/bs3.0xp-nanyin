@@ -59,10 +59,26 @@ public class ReportKfqgg001Service implements IReportDataService {
             if(StringUtil.isNotEmpty(prodId)&&StringUtil.isNotEmpty(year)){
                 Map<String, Object> searchparam = new HashMap<>();
                 searchparam.put("prodId", prodId);
-                searchparam.put("startDate", year + "-01-01");
-                searchparam.put("endDate", year + "-12-31");
                 //查询产品相关信息
                 reportKfqgg001Dto =  reportKfqgg001Mapper.getProdInfo(searchparam);
+                //startDate需要考虑子产品成立日
+                //由于共用一个母产品排期计划，所以需要考虑子产品的产品成立日、产品到期日
+                String startDate = year + "-01-01";
+                String endDate = year + "-12-31";
+                if(reportKfqgg001Dto != null){
+                    if(reportKfqgg001Dto.getSetDate() != null){
+                        if(DateUtil.compareDate(DateUtil.parseDate(startDate),reportKfqgg001Dto.getSetDate())<0){
+                            startDate = DateUtil.format(reportKfqgg001Dto.getSetDate());
+                        }
+                    }
+                    if(reportKfqgg001Dto.getmDate() != null){
+                        if(DateUtil.compareDate(DateUtil.parseDate(endDate),reportKfqgg001Dto.getmDate())>0){
+                            endDate = DateUtil.format(reportKfqgg001Dto.getmDate());
+                        }
+                    }
+                }
+                searchparam.put("startDate", startDate);
+                searchparam.put("endDate", endDate);
                 //设置年份
                 reportKfqgg001Dto.setYear(year);
                 //设置公告日 = 平台日
