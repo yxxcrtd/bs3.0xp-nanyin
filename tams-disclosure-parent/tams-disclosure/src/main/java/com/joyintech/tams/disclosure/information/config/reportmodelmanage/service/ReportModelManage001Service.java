@@ -418,7 +418,7 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
         ReportInfo reportInfo = reportInfoMapper.getReportInfoByID(reportId);
 
         String reportFile = ReportFileUtil.buildReportFileName(ReportFileUtil.REPORT_TYPE_模板文件,reportInfo,null,null,ReportFileUtil.FILE_TYPE_DOCX);
-        String localFileName = reportInfo.getReportName()+ReportFileUtil.FILE_TYPE_DOCX;
+        String localFileName = reportInfo.getUri()+ReportFileUtil.FILE_TYPE_DOCX;
 
 
         if ( "pdf".equals(fileType)) {  //如果导出pdf，则需要先讲word转换成pdf
@@ -427,7 +427,7 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
             FileOutputStream fos = new FileOutputStream(fileNamePdf);
             PoiUtils.docxToPdf(fis,fos);
             reportFile = fileNamePdf;
-            localFileName = reportInfo.getReportName()+ReportFileUtil.FILE_TYPE_PDF;
+            localFileName = reportInfo.getUri()+ReportFileUtil.FILE_TYPE_PDF;
         }
 
         File remoteFile = new SafelyFile(reportFile);

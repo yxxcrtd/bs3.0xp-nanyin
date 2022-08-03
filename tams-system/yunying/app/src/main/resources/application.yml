@@ -329,6 +329,16 @@ application:
 #交易压力测试性能优化开关
 flag: false
 
+#minio配置
+#minio配置
+minio:
+  enable: true #是否开启minio
+  endpoint: http://192.168.60.236:9000
+  access-key: y1L6NNis5mxTOy4J #不建议使用默认的minioadmin，而是使用Service Account生成的key
+  secret-key: tOeYGGXnFC96THlgjlyCmn9YrFWYyCB9 #同access-key
+  bucket: nyxpyy #此处为了预览，建议bucket设置为public
+  read-path: http://192.168.60.236:9000
+
 ---
 spring:
   profiles: allinone
