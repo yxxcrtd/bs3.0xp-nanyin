@@ -3,30 +3,36 @@
 <mapper namespace="com.joyintech.tams.disclosure.information.config.repFloatFee.dao.RepFloatFee001Mapper">
     <select id="getProdId" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT
-        PROD_ID id,
-        PROD_NAME text
+        T1.PROD_ID id,
+        nvl(T3.PROD_NAME,T2.PROD_NAME || '(' || T1.PROD_NAME || ')') text
         FROM
-        REP_PROD_INFO
-        where P_PROD_ID is not null
+        REP_PROD_INFO T1
+        left join REP_PROD_INFO T2 on T1.P_PROD_ID = T2.PROD_ID and T2.REP_PROD_TYPE = '01'
+        left join REP_PROD_INFO T3 on T1.PROD_ID = T3.PROD_ID and T3.REP_PROD_TYPE = '02'
+        where T1.P_PROD_ID is not null
+        and T1.STATUS not in ('D')
         <!--         REP_PROD_TYPE = '03'-->
         <if test="search != null and search != ''">
-            and (PROD_ID like
+            and (T1.PROD_ID like
             concat(concat('%',#{search}),'%')
-            or PROD_NAME like concat(concat('%',#{search}),'%'))
+            or nvl(T3.PROD_NAME,T2.PROD_NAME || '(' || T1.PROD_NAME || ')') like concat(concat('%',#{search}),'%'))
         </if>
     </select>
     <select id="getProdId2" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT
-        PROD_ID id,
-        PROD_ID text
+        T1.PROD_ID id,
+        T1.PROD_ID text
         FROM
-        REP_PROD_INFO
-        where P_PROD_ID is not null
+        REP_PROD_INFO T1
+        left join REP_PROD_INFO T2 on T1.P_PROD_ID = T2.PROD_ID and T2.REP_PROD_TYPE = '01'
+        left join REP_PROD_INFO T3 on T1.PROD_ID = T3.PROD_ID and T3.REP_PROD_TYPE = '02'
+        where T1.P_PROD_ID is not null
+        and T1.STATUS not in ('D')
         <!--         REP_PROD_TYPE = '03'-->
         <if test="search != null and search != ''">
-            and (PROD_ID like
+            and (T1.PROD_ID like
             concat(concat('%',#{search}),'%')
-            or PROD_NAME like concat(concat('%',#{search}),'%'))
+            or nvl(T3.PROD_NAME,T2.PROD_NAME || '(' || T1.PROD_NAME || ')') like concat(concat('%',#{search}),'%'))
         </if>
     </select>
     <insert id="insert" parameterType="com.joyintech.tams.disclosure.information.config.repFloatFee.dto.RepFloatFeeDto" >
@@ -152,7 +158,11 @@
     </select>
 
     <select id="selectProdName" resultType="java.util.Map">
-        SELECT PROD_NAME FROM REP_PROD_INFO WHERE PROD_ID=#{prodId} AND ROWNUM = 1
+        SELECT nvl(T3.PROD_NAME,T2.PROD_NAME || '(' || T1.PROD_NAME || ')') PROD_NAME
+        FROM REP_PROD_INFO T1
+        left join REP_PROD_INFO T2 on T1.P_PROD_ID = T2.PROD_ID and T2.REP_PROD_TYPE = '01'
+        left join REP_PROD_INFO T3 on T1.PROD_ID = T3.PROD_ID and T3.REP_PROD_TYPE = '02'
+        WHERE T1.PROD_ID=#{prodId}
     </select>
 
     <select id="selectByProdIdAndDate" resultType="com.joyintech.tams.disclosure.information.config.repFloatFee.dto.RepFloatFeeDto" >
