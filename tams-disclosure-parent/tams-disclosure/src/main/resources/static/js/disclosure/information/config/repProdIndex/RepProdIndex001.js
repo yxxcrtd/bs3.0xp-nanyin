@@ -10,7 +10,7 @@ $(function() {
         var startDate=$('#valueDate').startDate();
         var endDate=$('#valueDate').endDate();
         return {
-            prodId : $('#prodId').val(),
+            prodId :  $('#prodId').val() == null ? null : $('#prodId').val().join(","),
             status : $('#status').val(),
             startDate : startDate,
             endDate : endDate

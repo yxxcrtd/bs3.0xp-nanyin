@@ -59,9 +59,11 @@
         left join REP_PROD_INFO rpi on rpi.PROD_ID = T.PROD_ID
         left join REP_PROD_INDEX T2 on rpi.P_PROD_ID = T2.PROD_ID and T.VALUE_DATE = T2.VALUE_DATE
         where rpi.P_PROD_ID is not null
-            <if test='prodId != null and !prodId.equals("")'>
-                and T.PROD_ID = #{prodId,jdbcType=VARCHAR}
-            </if>
+        <if test="prodList != null  and prodIds!= ''">
+            <foreach collection="prodList" item="item" open="and T.PROD_ID in(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
             <if test="startDate != null and ! startDate.equals('')">
                 and T.VALUE_DATE &gt;= to_date(#{startDate,jdbcType=DATE},'yyyy-MM-dd')
             </if>
