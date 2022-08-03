@@ -365,17 +365,18 @@ public class RepDetailsShow001Contoller extends BaseController {
 
         	boolean flag = false;
         	boolean confirmFlag = true;
-        	RepReveal repReveal = new RepReveal();
-			String prodId = "";
-			if (params.get("pprodid")!=null )
-				prodId = params.get("pprodid").toString();
-        	if(params.get("repid") != null) {
-        		repReveal.setRepId(params.get("repid").toString());
-        	}
-			repReveal.setProdid(prodId);
+//        	RepReveal repReveal = new RepReveal();
+//			String prodId = "";
+//			if (params.get("pprodid")!=null )
+//				prodId = params.get("pprodid").toString();
+//        	if(params.get("repid") != null) {
+//        		repReveal.setRepId(params.get("repid").toString());
+//        	}
+//			repReveal.setProdid(prodId);
+        	RepReveal repReveal = repDetailsShow001Service.getRepReveal(params);
 			confirmFlag = reportDealService.selectConfirmStatus(repReveal);  
     		if(confirmFlag == true) {  //检查通过：不存在相同的已确认的报告
-    			reportDealService.updateDataStatus(repReveal);
+    			reportDealService.updateDataStatus(repReveal);  //逻辑删除已生成未确认的
     			repDetailsShow001Service.genReport(params);
    				value.setMessage("生成成功", MessageType.提示消息);
     		}else {
