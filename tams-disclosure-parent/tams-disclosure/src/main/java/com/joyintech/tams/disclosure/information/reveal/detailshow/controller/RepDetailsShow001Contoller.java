@@ -375,7 +375,7 @@ public class RepDetailsShow001Contoller extends BaseController {
 			repReveal.setProdid(prodId);
 			confirmFlag = reportDealService.selectConfirmStatus(repReveal);  
     		if(confirmFlag == true) {  //检查通过：不存在相同的已确认的报告
-    			reportDealService.updateDataStatus(repReveal);
+    			reportDealService.updateDataStatus(repReveal);  //逻辑删除已生成未确认的
     			repDetailsShow001Service.genReport(params);
    				value.setMessage("生成成功", MessageType.提示消息);
     		}else {

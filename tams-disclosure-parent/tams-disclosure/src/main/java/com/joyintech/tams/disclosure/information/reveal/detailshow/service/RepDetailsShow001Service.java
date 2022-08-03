@@ -378,19 +378,27 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
         
     }
 
-    public AjaxResult check(Map<String, Object> param){
-        AjaxResult result = new AjaxResult();
-        List<ValidMessage> messages = new ArrayList<>();
+    public RepReveal getRepReveal(Map<String, Object> param) {
+    	RepReveal repReveal = new RepReveal();
+    	
         String repId=(String)param.get("repid");
-        ReportInfo reportInfo = reportInfoMapper.getReportInfoByID(repId);
-        String rptType="";
-        if(StringUtil.isNotEmpty(reportInfo)){
-            rptType=reportInfo.getUri();
-        }
-        RepReveal repReveal = new RepReveal();
+        repReveal.setRepId(repId);
+        String rptType= param.get("modelid").toString();
+    	
+//        ReportInfo reportInfo = reportInfoMapper.getReportInfoByID(repId);
+//        String rptType="";
+//        if(StringUtil.isNotEmpty(reportInfo)){
+//            rptType=reportInfo.getUri();
+//        }
+
+        repReveal.setRepId(repId);
+        //repReveal.setProdid(prodId);
+        //repReveal.setStartDate();
+        //repReveal.setEndDate(endDate);
+        
         // 分红计算清单
         if (rptType.equals(DisReportType.FHJSQD)) {
-
+        	
         } else if (rptType.equals(DisReportType.QSBG)) { // 清算报告
 
         } else if (rptType.equals(DisReportType.DQGG_GM) || rptType.equals(DisReportType.DQGBG_SM)) { // 到期公告
@@ -405,10 +413,7 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
         } else if (rptType.equals(DisReportType.FXGG)) { // 发行公告
             //根据repID和prodid来判断数据有没有确认过，有没有流程中的数据
             String prodId=(String)param.get("pprodid");
-
-            repReveal.setRepId(repId);
             repReveal.setProdid(prodId);
-
         } else if (rptType.equals(DisReportType.CPBCLGG_GM) || rptType.equals(DisReportType.CPBCLBG_SM)) { // 产品不成立公告、报告
 
         } else if (rptType.equals(DisReportType.ZJCPXSJGGG)) { // 增加产品销售机构公告
@@ -444,6 +449,13 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
         }else if (rptType.equals(DisReportType.JZJFHBG_SMFB) || rptType.equals(DisReportType.JZJFHBG_SMKF)) { // 净值及分红报告（私募封闭式）/净值及分红报告（私募开放式）
 
         }
+        return repReveal;
+    }
+    
+    public AjaxResult check(Map<String, Object> param){
+        AjaxResult result = new AjaxResult();
+        List<ValidMessage> messages = new ArrayList<>();
+        RepReveal repReveal = getRepReveal(param);
 
         if(!reportDealService.selectConfirmStatus(repReveal)){
             //存在已确认的数据

@@ -134,12 +134,12 @@ public class PoiReportService {
 				logger.error("获取报表日期错误", e);
 			}
 			
-		if ( "preview".equals(opType) ) {  //预览：生成报表文件
+		if ( "preview".equals(opType) ) {  //预览，同时生成报表文件
 			//查询数据
 			Map<String, Object> dataMap = null;
 			if ( REPORT_TYPE_模板文件.equals(reportFileType) ) {  //模板文件
 				dataMap = new HashMap<>();
-			} else {		//生成报表文件：临时文件或者正式文件
+			} else {		//生成报表文件：正式文件
 				List<Map<String, Object>> listReports = reportDataService.queryDatas(params);
 				if (listReports.size() > 0) {
 					dataMap = listReports.get(0);
@@ -199,7 +199,11 @@ public class PoiReportService {
 
 		templateFile = buildReportFileName(REPORT_TYPE_模板文件, reportInfo, null, null, FILE_TYPE_DOCX);
 		if ( dataMap==null || dataMap.size()<1 ) {
-			return templateFile;
+			//初始化参数，换个文件名称
+			File f = new File(templateFile);
+			return f.getParent() + "/blank/"+f.getName();
+			
+			//return templateFile;
 		}
 		
 		if (reportDate == null)
