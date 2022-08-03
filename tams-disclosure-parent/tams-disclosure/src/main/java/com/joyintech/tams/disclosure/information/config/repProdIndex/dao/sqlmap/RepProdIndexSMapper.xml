@@ -263,8 +263,18 @@
         and T1.CAPITAL = #{pCapital,jdbcType=DECIMAL}
         and T1.UNIT_VALUE = #{pUnitValue,jdbcType=DECIMAL}
         and T1.UNIT_VALUE_T = #{pUnitValueT,jdbcType=DECIMAL}
-        and T1.W_YIELD = #{pWYield,jdbcType=DECIMAL}
-        and T1.YIELD_7 = #{pYield7,jdbcType=DECIMAL}
+        <if test="pWYield != null and ! pWYield.equals('')">
+            and T1.W_YIELD = #{pWYield,jdbcType=DECIMAL}
+        </if>
+        <if test="pWYield == null ">
+            and T1.W_YIELD is null
+        </if>
+        <if test="pYield7 != null and ! pYield7.equals('')">
+            and T1.YIELD_7 = #{pYield7,jdbcType=DECIMAL}
+        </if>
+        <if test="pYield7 == null ">
+            and T1.YIELD_7 is null
+        </if>
         and T1.STATUS != 'D'
     </select>
 
