@@ -22,6 +22,16 @@ var laydate = layui.laydate;
 
 $(function() {
 
+	var prodPlanId = $('#prodPlanId').val();
+	var flag = false;
+	if ('' == prodPlanId || null == prodPlanId) {
+
+	} else {
+		//修改页面
+		// $("#prodRegistNo").attr("disabled", "disabled");
+		$("#finprodId").attr("disabled", "disabled");
+	}
+
 	var gradeChange = function() {
 		btnShow();
 	};
@@ -93,6 +103,12 @@ $(function() {
 	function finprodIdChange() {
 		var finprodId = $('#finprodId').select2('data')[0].id;
 		$('#prodId').val(finprodId);
+
+		/*var prodName = $('#finProdId').select2('data')[0].id;
+		var prodId = $('#finProdId').select2('data')[0].text;
+		$('#prodName').val(prodName);
+		$('#prodId').val(prodId);*/
+
 		Joyin.ajax(basePath + 'disclosure/information/config/disprodplanmanage/DisProdPlanManage002/getPrdInfo',
 			{
 				"finprodId":finprodId
@@ -110,9 +126,9 @@ $(function() {
 					// 修改 产品冷静期
 					changeCollingoffPeriod();
 					// 修改 运作起始日
-					changeOperationStartDate()
+					changeOperationStartDate();
 					// 修改 自动赎回日
-					changeAutoRedeemDate()
+					changeAutoRedeemDate();
 					// 修改 客户实际持有天数状态
 					changeHoldDays();
 				}

@@ -12,13 +12,16 @@ package com.joyintech.tams.disclosure.information.config.disprodplanmanage.servi
 
 import com.alibaba.fastjson.JSONArray;
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.DictCodeListExt5;
 import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.util.JasparConnectUtilService;
 import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
@@ -26,6 +29,8 @@ import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dao.Di
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage001Dto;
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto;
 import com.joyintech.tams.disclosure.information.config.prodbonusplanmanage.dto.ProdBonusplanDto;
+import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto;
+import com.joyintech.tams.disclosure.information.config.repprodinfo.service.ProdInfoService;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import org.apache.commons.collections4.CollectionUtils;
@@ -65,16 +70,19 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
     @Autowired
     DisProdPlanManage002Service disProdPlanManage002Service;
 
+    @Autowired
+    ProdInfoService prodInfoService;
+
     /**
      * 日志
      */
     private Logger logger = LoggerFactory.getLogger(DisProdPlanManage001Service.class);
 
 
-    public List<DisProdPlanManage001Dto> searchReportsNew(Map<String,Object> params){
+    public List<DisProdPlanManage001Dto> searchReportsNew(Map<String, Object> params) {
         List<DisProdPlanManage001Dto> result = disProdPlanManage001Mapper.searchReports(params);
         // 遍历构造数据
-        if(CollectionUtils.isNotEmpty(result)){
+        if (CollectionUtils.isNotEmpty(result)) {
             result.stream().forEach(item -> {
                 item.setDataStatusName(SysDataUtil.getNameFromDataDict(DictCode.信披_数据状态ED, item.getDataStatus()));
             });
@@ -83,24 +91,22 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
     }
 
 
-
     /**
      * 指标库查询service <一句话功能简述> <功能详细描述>
      *
      * @param params
      * @return
      */
-    public Page<DisProdPlanManage001Dto> findByPage(Map<String, Object>  params)
-    {
-        String dataStatus = (String)params.get("dataStatus");
+    public Page<DisProdPlanManage001Dto> findByPage(Map<String, Object> params) {
+        String dataStatus = (String) params.get("dataStatus");
         String[] dataStatusArr = null;
-        if(StringUtil.isNotEmpty(dataStatus)){
+        if (StringUtil.isNotEmpty(dataStatus)) {
             dataStatusArr = dataStatus.split(",");
         }
         params.put("dataStatusArr", dataStatusArr);
-        String prodId = (String)params.get("prodId");
+        String prodId = (String) params.get("prodId");
         String[] prodIdArr = null;
-        if(StringUtil.isNotEmpty(prodId)){
+        if (StringUtil.isNotEmpty(prodId)) {
             prodIdArr = prodId.split(",");
         }
         params.put("prodIdArr", prodIdArr);
@@ -110,7 +116,7 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
                 , () -> disProdPlanManage001Mapper.searchReports(params));
         List<DisProdPlanManage001Dto> list = pages.getRoot();
         // 遍历构造数据
-        if(CollectionUtils.isNotEmpty(list)){
+        if (CollectionUtils.isNotEmpty(list)) {
             list.stream().forEach(item -> {
                 item.setDataStatusName(SysDataUtil.getNameFromDataDict(DictCode.信披_数据状态ED, item.getDataStatus()));
             });
@@ -138,6 +144,7 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
 
     /**
      * 根据产品代码 查询有效的 数据
+     *
      * @param prodId
      * @return
      */
@@ -154,13 +161,14 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
      */
     public AjaxResult checkImportData(String fileName) {
         List<List<String>> objects = ExcelUtil.getTempList(fileName);
-        if (objects.size() - 1 > 50000) {
+        /*if (objects.size() - 1 > 50000) {
             Map<String, Object> resultMap = new HashMap<>();
             resultMap.put("errorMsg", "单次最多导入50000条。");
             AjaxResult wr = new AjaxResult();
             wr.setData(resultMap);
             return wr;
-        }
+        }*/
+
         String totalMsg = "";
         List<List<String>> jsonArrays = new ArrayList<>();
         // 重复数据
@@ -183,13 +191,18 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
                 for (int i = 1; i < objects.size(); i++) {
                     StringBuilder errorMsg = new StringBuilder("");
                     List<String> rowData = objects.get(i);
-
+                    ProdInfoDto prodInfo = new ProdInfoDto();
                     if (!StringUtil.isNotEmpty(rowData.get(0))) {
                         errorMsg.append("产品主代码 必填！");
+                    } else {
+                        prodInfo = prodInfoService.selectByProdStatus(rowData.get(0));
+                        if (prodInfo == null) {
+                            errorMsg.append("产品主代码 不存在");
+                        }
                     }
                     if (!StringUtil.isNotEmpty(rowData.get(1))) {
                         errorMsg.append("开放期起始日 必填！");
-                    }else if (!this.isDateStr(rowData.get(2))) {
+                    } else if (!this.isDateStr(rowData.get(2))) {
                         errorMsg.append("开放期起始日 格式不正确！");
                     }
                     if (!StringUtil.isNotEmpty(rowData.get(2))) {
@@ -212,6 +225,34 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
                         errorMsg.append("客户实际持有天数 必须为数字！");
                     }
 
+                    if (prodInfo != null && StringUtils.isNotBlank(prodInfo.getIsPeriod())
+                            && StringUtils.equals(DictCodeListExt1.是或否_是.getValue(), prodInfo.getIsPeriod())) {
+                        if (StringUtils.isBlank(rowData.get(5))) {
+                            errorMsg.append("客户周期型产品,自动赎回日必填！");
+                        } else if (StringUtils.isNotBlank(rowData.get(5))
+                                && StringUtils.isNotBlank(rowData.get(4))
+                                && DateUtil.compareDate(rowData.get(5), rowData.get(4)) < 0) {
+                            errorMsg.append("自动赎回日不能小于运作起始日！");
+                        }
+                        if (StringUtil.isEmpty(rowData.get(6))) {
+                            errorMsg.append("客户周期型产品,客户实际持有天数必填！");
+                        }
+                    }
+
+                    if (prodInfo != null &&  StringUtils.isNotBlank(prodInfo.getRaiseType())
+                            && StringUtils.equals(DictCodeListExt5.信披募集方式_私募.getValue(), prodInfo.getRaiseType())) {
+                        if (StringUtils.isBlank(rowData.get(3))) {
+                            errorMsg.append("募集方式为私募,产品冷静期必填！");
+                        }
+                        // 开放结束日＜产品冷静期＜运作起始日
+                        if (DateUtil.compareDate(rowData.get(3), rowData.get(2)) <= 0) {
+                            errorMsg.append("产品冷静期必须大于开放结束日！");
+                        }
+                        if (DateUtil.compareDate(rowData.get(4), rowData.get(3)) <= 0) {
+                            errorMsg.append("产品冷静期必须小于运作起始日！");
+                        }
+                    }
+
                     if (StringUtil.isNotEmpty(errorMsg.toString())) {
                         errorMsg.append("<br />");
                         returnerrorMsg.append("第" + (i + 1) + "行数据：" + errorMsg.toString());
@@ -228,14 +269,14 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
                 for (int i = objects.size() - 1; i >= 1; i--) {
                     List<String> list1 = objects.get(i);
                     Boolean isRepeat = false;
-                    for (int k = i - 1; k >= 1; k--) {
+                    /*for (int k = i - 1; k >= 1; k--) {
                         List<String> list2 = objects.get(k);
                         //子产品代码，相同时为重复数据
                         if ((StringUtil.equals(list1.get(0), list2.get(0)))) {
                             isRepeat = true;
                             break;
                         }
-                    }
+                    }*/
                     if (isRepeat) {
                         repeatNum++;
                     } else {
@@ -252,6 +293,10 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
             resultMap.put("confirmMsg", totalMsg);
         }
         resultMap.put("correctData", JsonUtils.object2Json(jsonArrays));
+        int maxCount = CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT")==null?50000:Integer.parseInt(CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT"));
+        if (objects.size() - 1 > maxCount) {
+            resultMap.put("confirmMsg3", "导入数据超过"+maxCount+"条，可能导致系统较慢，是否确认导入？");
+        }
         AjaxResult wr = new AjaxResult();
         wr.setData(resultMap);
         return wr;
@@ -278,13 +323,13 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
         List<DisProdPlanManage002Dto> newData = new ArrayList<>();
         for (DisProdPlanManage002Dto temp : selectedItem) {
             //数据已存在 【产品编码 相同】，做更新操作。
-            if (StringUtil.isNotEmpty(this.selectByProdId(temp.getProdId()))) {
+            /*if (StringUtil.isNotEmpty(this.selectByProdId(temp.getProdId()))) {
                 existData.add(temp);
-            } else {
+            } else {*/
                 temp.setDataStatus(DictCodeListExt3.信披_数据状态_有效E.getValue());
                 temp.setDataSource(DictCodeListExt3.信披_数据来源_EXCEL导入.getValue());
                 newData.add(temp);
-            }
+           // }
         }
         //更新操作
         for (DisProdPlanManage002Dto existDataDto : existData) {
@@ -294,7 +339,7 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
         //插入操作
         for (DisProdPlanManage002Dto newDataDto : newData
         ) {
-           // this.doComplete(newDataDto, OperationType.NEW);
+            // this.doComplete(newDataDto, OperationType.NEW);
             disProdPlanManage002Service.insert(newDataDto);
         }
         ajaxResult.setStatuCode(HttpStatus.OK.value());
@@ -331,7 +376,7 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
                 disProdPlanManage002Dto.setAutoRedeemDate(DateUtil.parse(rowData.get(5).toString()));
             }
             if (StringUtil.isNotEmpty(rowData.get(6))) {
-                disProdPlanManage002Dto.setHoldDays((short)Integer.parseInt(rowData.get(6).toString()));
+                disProdPlanManage002Dto.setHoldDays((short) Integer.parseInt(rowData.get(6).toString()));
             }
             disProdPlanManage002DtoList.add(disProdPlanManage002Dto);
         }

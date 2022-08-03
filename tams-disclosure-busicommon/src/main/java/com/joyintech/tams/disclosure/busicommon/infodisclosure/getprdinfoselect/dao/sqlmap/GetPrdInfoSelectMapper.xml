@@ -94,6 +94,27 @@
 		</if>
 	</select>
 
+
+	<!-- 查询母产品和普通产品的产品代码和产品名称 -->
+	<select id="getMontherAndCommonProdId" resultType="com.joyintech.framework.select.SelectOptionDto">
+		SELECT
+		PROD_ID id,
+		PROD_NAME text,
+		PROD_RE object
+		FROM
+		rep_prod_info
+		<where>
+			STATUS = 'E' AND REP_PROD_TYPE != '03'
+			<if test="prodRegistNo != null and !prodRegistNo.equals('')">
+				AND PROD_RE=#{prodRegistNo}
+			</if>
+			<if test="search != null and search != ''">
+				and (PROD_ID like concat(concat('%',#{search}),'%')
+				or PROD_NAME like concat(concat('%',#{search}),'%'))
+			</if>
+		</where>
+	</select>
+
 	<select id="getPProdIdList" resultType="com.joyintech.framework.select.SelectOptionDto">
 		select
 		distinct RPI.PROD_ID id,
