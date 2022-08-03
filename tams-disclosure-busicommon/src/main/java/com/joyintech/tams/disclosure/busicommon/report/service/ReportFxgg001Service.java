@@ -7,6 +7,7 @@ import java.util.*;
 
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.disclosure.common.common.service.HolidayService;
 import com.joyintech.tams.disclosure.busicommon.report.dao.ReportFxggMapper;
 import com.joyintech.tams.disclosure.busicommon.report.dto.ReportFxggDto;
@@ -78,5 +79,12 @@ public class ReportFxgg001Service implements IReportDataService {
             dataMap.put("raiseAmt", BigDecimal.ZERO);
         }
         return result;
+    }
+
+    public RepReveal getRepReveal(Map<String, Object> paraMap) {
+        RepReveal repReveal = new RepReveal();
+        String prodId = (String)paraMap.get("pprodid");
+        repReveal.setProdid(prodId);
+        return repReveal;
     }
 }

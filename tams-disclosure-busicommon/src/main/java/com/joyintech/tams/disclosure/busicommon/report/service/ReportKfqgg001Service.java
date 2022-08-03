@@ -4,6 +4,7 @@ package com.joyintech.tams.disclosure.busicommon.report.service;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.disclosure.busicommon.report.dao.ReportKfqgg001Mapper;
 import com.joyintech.tams.disclosure.busicommon.report.dto.ReportKfqgg001Dto;
 import com.joyintech.tams.disclosure.busicommon.report.dto.ReportOpenPlanDto;
@@ -76,5 +77,14 @@ public class ReportKfqgg001Service implements IReportDataService {
             logger.error("产品开放期公告/报告【{}】生成异常", JsonUtils.object2Json(paraMap), e);
         }
         return resultMap;
+    }
+
+    public RepReveal getRepReveal(Map<String, Object> paraMap) {
+        RepReveal repReveal = new RepReveal();
+        String prodId = (String)paraMap.get("pprodid");
+        Date enddate = DateUtil.parse((String)paraMap.get("enddate"));
+        repReveal.setProdid(prodId);
+        repReveal.setEndDate(enddate);
+        return repReveal;
     }
 }

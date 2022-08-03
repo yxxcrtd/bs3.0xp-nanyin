@@ -3,6 +3,7 @@ package com.joyintech.tams.disclosure.busicommon.report.service;
 
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.disclosure.busicommon.report.dao.ReportZjxsjgMapper;
 import com.joyintech.tams.disclosure.busicommon.report.dto.ReportZjxsjgDto;
 import com.joyintech.tams.disclosure.busicommon.rptdata.service.IReportDataService;
@@ -58,5 +59,14 @@ public class ReportZjxsjg001Service implements IReportDataService {
         }
         dataMap.put("pubDate",DateUtil.format(DateUtil.parse(pubDateStr), DateUtil.DEFAULT_DATE_FORMAT_CN));
         return result;
+    }
+
+    public RepReveal getRepReveal(Map<String, Object> paraMap) {
+        RepReveal repReveal = new RepReveal();
+        String prodId = (String)paraMap.get("pprodid");
+        Date enddate = DateUtil.parse((String)paraMap.get("enddate"));
+        repReveal.setProdid(prodId);
+        repReveal.setEndDate(enddate);
+        return repReveal;
     }
 }
