@@ -52,7 +52,7 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
         if(StringUtil.isNotEmpty(prodId)){
             param.put("prodIdList", StringUtil.splitToList(GlobalConstant.COMMA,prodId));
         }
-        Page<HugeInfoPro001Dto> result = queryForPage(Integer.parseInt((String) param.get("page")), Integer.parseInt((String) param.get("length")), ()
+        Page<HugeInfoPro001Dto> result = queryForPage(Integer.parseInt(param.get("page").toString()), Integer.parseInt(param.get("length").toString()), ()
                 -> hugeInfoProMapper.select(param));
         return result;
     }
@@ -98,8 +98,7 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
     }
     @Override
     public Page<HugeInfoPro001Dto> selectPageData(Map<String, Object> selectParam) {
-        return queryForPage(Integer.parseInt(selectParam.get("page").toString()),  Integer.parseInt(selectParam.get("length").toString()), ()
-                -> hugeInfoProMapper.select(selectParam));
+        return this.selectForPage(selectParam);
     }
 
 
@@ -281,7 +280,7 @@ public class HugeInfoPro001Service extends CommonExportService<HugeInfoPro001Dto
         for (HugeInfoPro001Dto existDataDto : existData) {
             Map<String, Object> map = new HashMap<>();
             map.put("prodId", existDataDto.getProdId());
-            map.put("dealDate", DateUtil.format(existDataDto.getDealDate()));
+            map.put("dealDate", existDataDto.getDealDate());
             hugeInfoProMapper.updateByBusKey(existDataDto);
 //            this.doComplete(existDataDto,OperationType.MODIFY);
         }

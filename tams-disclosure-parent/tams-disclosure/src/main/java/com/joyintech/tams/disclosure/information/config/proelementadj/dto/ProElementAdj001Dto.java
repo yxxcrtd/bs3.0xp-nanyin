@@ -118,4 +118,9 @@ public class ProElementAdj001Dto extends DisProdAdjust implements ITableRow, Pro
     public Date getRptIssueDate() {
         return super.getRptIssueDate();
     }
+
+
+    public String getDataStatusStr(){
+        return SysDataUtil.getNameFromDataDict(DictCode.维护数据状态,super.getDataStatus());
+    }
 }
