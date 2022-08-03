@@ -81,8 +81,8 @@ public class ReportKfqgg001Service implements IReportDataService {
 
     public RepReveal getRepReveal(Map<String, Object> paraMap) {
         RepReveal repReveal = new RepReveal();
-        String prodId = (String)paraMap.get("pprodid");
-        Date enddate = DateUtil.parse((String)paraMap.get("enddate"));
+        String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
+        Date enddate = DateUtil.platDateFromCache();
         repReveal.setProdid(prodId);
         repReveal.setEndDate(enddate);
         return repReveal;
