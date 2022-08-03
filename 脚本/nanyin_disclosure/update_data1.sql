@@ -551,4 +551,30 @@ VALUES('ProdBonusplanManager002', 'DIS', '/disclosure/information/config/prodbon
        'disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager002', '', NULL, NULL,
        '02', '01', '产品分红到期计划新增', 'system', NULL, sysdate, 'system', sysdate);
 -- add by dingrui 2022-08-02  end
+
+
+-- add by dingrui 2022-08-03  start
+-- 新增"产品排期计划" 菜单
+DELETE FROM SYS_MENU WHERE SYS_MENU.MENU_ID = 'REPORT_006_004' AND SYS_MENU.REMARK = '信披数据维护';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('REPORT_006_004', 'DIS', null, 'REPORT_006', '', 1, '02', '信披数据维护', 'system', null, SYSDATE, 'system', SYSDATE);
+
+DELETE FROM SYS_MENU WHERE SYS_MENU.MENU_ID = 'REPORT_006_004_001' AND SYS_MENU.REMARK = '产品计划排期';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('REPORT_006_004_001', 'DIS', null, 'REPORT_006_004', 'DisProdPlanManage001', 1, '02', '产品排期计划', 'system', null, SYSDATE, 'system', SYSDATE);
+
+-- 新增 "产品排期计划" 画面
+DELETE FROM SYS_PAGE WHERE PAGE_ID IN ('DisProdPlanManage001');
+INSERT INTO SYS_PAGE
+(PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES('DisProdPlanManage001', 'DIS', '/disclosure/information/config/disprodplanmanage/DisProdPlanManage001', 'disclosure/information/config/disprodplanmanage/DisProdPlanManage001',
+       'REPORT_006_004_001', NULL, NULL, '02', '01', '产品排期计划', 'system', NULL, sysdate, 'system', sysdate);
+
+DELETE FROM SYS_PAGE WHERE PAGE_ID IN ('DisProdPlanManage002');
+INSERT INTO SYS_PAGE
+(PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES('DisProdPlanManage002', 'DIS', '/disclosure/information/config/disprodplanmanage/DisProdPlanManage002', 'disclosure/information/config/disprodplanmanage/DisProdPlanManage002',
+       '', NULL, NULL, '02', '01', '产品排期计划新增', 'system', NULL, sysdate, 'system', sysdate);
+-- add by dingrui 2022-08-03  end
+
 commit ;
