@@ -124,7 +124,7 @@ public class SvrProdFeeDealInterf001Controller extends BaseController {
         params.setElementId(dto.getElementId());
         params.setBusinessCode(item->item.getProdId());
         params.setBusinessType(DictCodeListExt4.共通业务类型_产品费用交易信息维护.getValue());
-        params.setComment(entity ->  "产品代码" + "(" + entity.getProdId() + ")");
+        params.setComment(entity ->  "产品主代码" + "(" + entity.getProdId() + ")");
         processParameter.setOperationType(OperationType.DELETE);
         processParameter.setWorkFlowParameter(params);
         String msg =svrProdFeeDealInterfService.start(processParameter, dto.getSelectedItem().toArray(new SvrProdFeeDealInterfDto[dto.getSelectedItem().size()]));
