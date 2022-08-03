@@ -3,6 +3,7 @@ package com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import org.springframework.stereotype.Service;
 
@@ -49,6 +50,20 @@ public class GetPrdInfoSelectService extends BaseService {
 	 */
 	public Page<SelectOptionDto> getAllPrdInfoSelect(Map<String, Object> paraMap){
 		Page<SelectOptionDto> page = this.queryForPage(GetPrdInfoSelectMapper.class, "getAllPrdInfoSelect", paraMap);
+		return page;
+	}
+
+	/**
+	 * 查询母产品和普通产品的产品代码和产品名称
+	 * @param
+	 * @return
+	 */
+	public Page<SelectOptionDto> getMontherAndCommonProdId(Map<String, Object> paraMap) {
+		/*Map<String, Object> pageParam = RequestUtil.getPageParam();
+		return this.queryForPageForSelectReturn(Integer.parseInt(pageParam.get("page").toString())
+				, Integer.parseInt(pageParam.get("length").toString())
+				,()->commonMapper.getMontherAndCommonProdId(pageParam));*/
+		Page<SelectOptionDto> page = this.queryForPage(GetPrdInfoSelectMapper.class, "getMontherAndCommonProdId", paraMap);
 		return page;
 	}
 

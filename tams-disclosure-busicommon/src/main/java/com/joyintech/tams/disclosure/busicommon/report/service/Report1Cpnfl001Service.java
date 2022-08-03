@@ -1,10 +1,8 @@
 
 package com.joyintech.tams.disclosure.busicommon.report.service;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.joyintech.tams.common.base.entity.RepReveal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -111,5 +109,14 @@ public class Report1Cpnfl001Service implements IReportDataService {
             dataMap.put("feelist", feelist);
         }
         return result;
+    }
+
+    public RepReveal getRepReveal(Map<String, Object> paraMap) {
+        RepReveal repReveal = new RepReveal();
+        String prodId = (String)paraMap.get("pprodid");
+        Date enddate = DateUtil.parse((String)paraMap.get("enddate"));
+        repReveal.setProdid(prodId);
+        repReveal.setEndDate(enddate);
+        return repReveal;
     }
 }

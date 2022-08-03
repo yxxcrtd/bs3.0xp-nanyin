@@ -3,6 +3,7 @@ package com.joyintech.tams.disclosure.busicommon.rptdata.service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -12,10 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.tams.common.base.entity.DisProdBonusplan;
+import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.disclosure.busicommon.common.util.CollectionUtils;
-import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
 import com.joyintech.tams.disclosure.busicommon.rptdata.dao.BonusReportMapper;
 import com.joyintech.tams.disclosure.busicommon.rptdata.dto.BonusReportDto;
+import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
 
 /**
  * 分红计算清单报表数据获取服务
@@ -43,11 +45,11 @@ public class BonusReportDataService implements IReportDataService {
 		List<Map<String, Object>> listResult = new ArrayList<>();
 		try {
 			// 参数
-			paraMap.put("reportDate", DateUtil.parse(paraMap.get("enddate").toString()));
+			paraMap.put("reportDate", DateUtil.parse(paraMap.get("reportDate").toString()));
 
 			List<BonusReportDto> listReport = bonusReportMapper.selectBonusReport(paraMap);
 
-			for (BonusReportDto report : listReport) {
+			for (BonusReportDto report : listReport) {  //指定产品后，只有一条数据
 
 				// 上一分配基准日
 				if ("01".equals(report.getIssuingWay())) { // 开放式
@@ -104,4 +106,29 @@ public class BonusReportDataService implements IReportDataService {
 		return listResult;
 	}
 
+	public RepReveal getRepReveal(Map<String, Object> paraMap) {
+		RepReveal repReveal = new RepReveal();
+		repReveal.setRepId(paraMap.get("repId").toString());
+		repReveal.setProdid(paraMap.get("prodId").toString());
+		
+//		paraMap.put("reportDate", DateUtil.parse(paraMap.get("reportDate").toString()));
+//		List<BonusReportDto> listReport = bonusReportMapper.selectBonusReport(paraMap);
+//
+//		BonusReportDto report =  listReport.get(0); //指定产品后，只有一条数据
+//
+//			// 上一分配基准日
+//			if ("01".equals(report.getIssuingWay())) { // 开放式
+//				DisProdBonusplan plan = bonusReportMapper.selectLastBonusPlan(paraMap);
+//				if (plan == null) { // 第一个计划
+//					repReveal.setStartDate(report.geteDate());
+//				} else {
+//					repReveal.setStartDate(plan.getSettDate());
+//				}
+//			} else {
+//				repReveal.setStartDate(report.geteDate());
+//			}
+			repReveal.setEndDate( DateUtil.parse(paraMap.get("reportDate").toString()) );
+			return repReveal;
+	}
+	
 }

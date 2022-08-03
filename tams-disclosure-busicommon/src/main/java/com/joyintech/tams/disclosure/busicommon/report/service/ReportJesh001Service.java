@@ -3,6 +3,7 @@ package com.joyintech.tams.disclosure.busicommon.report.service;
 
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.disclosure.busicommon.report.dao.ReportJeshMapper;
 import com.joyintech.tams.disclosure.busicommon.report.dto.ReportJeshDto;
 import com.joyintech.tams.disclosure.busicommon.rptdata.service.IReportDataService;
@@ -10,10 +11,7 @@ import com.joyintech.tams.systemtools.service.CommonPlatformDateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 巨额赎回公告/报告模板
@@ -86,5 +84,14 @@ public class ReportJesh001Service implements IReportDataService {
         // 发布日期
         dataMap.put("pubDate",DateUtil.format(DateUtil.parse(pubDateStr), DateUtil.DEFAULT_DATE_FORMAT_CN));
         return result;
+    }
+
+    public RepReveal getRepReveal(Map<String, Object> paraMap) {
+        RepReveal repReveal = new RepReveal();
+        String prodId = (String)paraMap.get("pprodid");
+        Date enddate = DateUtil.parse((String)paraMap.get("enddate"));
+        repReveal.setProdid(prodId);
+        repReveal.setEndDate(enddate);
+        return repReveal;
     }
 }
