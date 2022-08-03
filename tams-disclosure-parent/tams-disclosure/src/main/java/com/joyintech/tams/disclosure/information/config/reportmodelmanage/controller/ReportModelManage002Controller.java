@@ -86,7 +86,8 @@ public class ReportModelManage002Controller extends BaseController {
 		model.addAttribute("YES_OR_NO_YES", DictCodeListExt1.是否_是.getValue());
 		model.addAttribute("YES_OR_NO_NO", DictCodeListExt1.是否_否.getValue());
 		this.setSelectOptionToModel(model,DictCode.报表数据格式类型,DictCode.是否);
-		
+
+		model.addAttribute("repId", this.getParam("repId"));
 		String id = this.getParam("keyId");
 		if (StringUtil.isNotEmpty(id)) {
 			model.addAttribute("entity", reportModelManage002Service.getReportModelManage002Dto(id));
@@ -302,7 +303,7 @@ public class ReportModelManage002Controller extends BaseController {
 		public ResponseEntity<byte[]> downloadReport() throws IOException {
 			
 			
-			return reportModelManage002Service.downLoadReportInfo(this.getParam("folder"));
+			return reportModelManage002Service.downLoadReportInfo(this.getParam("folder"),this.getParam("repId"));
 		}
 		
 }
