@@ -394,7 +394,7 @@ public class PoiReportService {
 			}
 			sb.append(dirname);
 			sb.append("/");
-			sb.append(reportInfo.getReportName());
+			sb.append(reportInfo.getUri());  // .getReportName()，避免linux中文
 			sb.append("_");
 			sb.append(portnum);
 			sb.append("_");

@@ -3,6 +3,7 @@ package com.joyintech.tams.disclosure.busicommon.rptdata.service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +45,7 @@ public class BonusReportDataService implements IReportDataService {
 		List<Map<String, Object>> listResult = new ArrayList<>();
 		try {
 			// 参数
-			//paraMap.put("reportDate", DateUtil.parse(paraMap.get("enddate").toString()));
+			paraMap.put("reportDate", DateUtil.parse(paraMap.get("reportDate").toString()));
 
 			List<BonusReportDto> listReport = bonusReportMapper.selectBonusReport(paraMap);
 
@@ -110,22 +111,23 @@ public class BonusReportDataService implements IReportDataService {
 		repReveal.setRepId(paraMap.get("repId").toString());
 		repReveal.setProdid(paraMap.get("prodId").toString());
 		
-		List<BonusReportDto> listReport = bonusReportMapper.selectBonusReport(paraMap);
-
-		BonusReportDto report =  listReport.get(0); //指定产品后，只有一条数据
-
-			// 上一分配基准日
-			if ("01".equals(report.getIssuingWay())) { // 开放式
-				DisProdBonusplan plan = bonusReportMapper.selectLastBonusPlan(paraMap);
-				if (plan == null) { // 第一个计划
-					repReveal.setStartDate(report.geteDate());
-				} else {
-					repReveal.setStartDate(plan.getSettDate());
-				}
-			} else {
-				repReveal.setStartDate(report.geteDate());
-			}
-			repReveal.setEndDate(DateUtil.parse(paraMap.get("reportDate").toString()));
+//		paraMap.put("reportDate", DateUtil.parse(paraMap.get("reportDate").toString()));
+//		List<BonusReportDto> listReport = bonusReportMapper.selectBonusReport(paraMap);
+//
+//		BonusReportDto report =  listReport.get(0); //指定产品后，只有一条数据
+//
+//			// 上一分配基准日
+//			if ("01".equals(report.getIssuingWay())) { // 开放式
+//				DisProdBonusplan plan = bonusReportMapper.selectLastBonusPlan(paraMap);
+//				if (plan == null) { // 第一个计划
+//					repReveal.setStartDate(report.geteDate());
+//				} else {
+//					repReveal.setStartDate(plan.getSettDate());
+//				}
+//			} else {
+//				repReveal.setStartDate(report.geteDate());
+//			}
+			repReveal.setEndDate( DateUtil.parse(paraMap.get("reportDate").toString()) );
 			return repReveal;
 	}
 	
