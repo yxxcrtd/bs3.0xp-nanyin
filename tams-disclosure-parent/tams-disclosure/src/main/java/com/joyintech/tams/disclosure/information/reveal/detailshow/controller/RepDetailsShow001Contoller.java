@@ -313,24 +313,8 @@ public class RepDetailsShow001Contoller extends BaseController {
 	 */
 	@RequestMapping(value="/previewReport", method = RequestMethod.POST)
 	public void previewReport(HttpServletRequest request, HttpServletResponse response) {
-    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Map<String,Object> params = RequestUtil.getPageParam();
-    	params.put("modelId", params.get("modelid"));
-    	params.put("prodId", params.get("prodid"));
-    	params.put("pprodId", params.get("pprodid"));
-    	params.put("prodName", params.get("prodname"));
-    	params.put("repId", params.get("repid"));
-    	params.put("reportId", params.get("repid"));
-    	params.put("endDate", params.get("enddate"));
-    	params.put("repName",params.get("repname"));
-    	params.put("reportDate", params.get("enddate"));
-    	if ( params.get("uri")==null )
-    		params.put("uri",params.get("modelid"));
-    	if (params.get("prodId")==null )
-    		params.put("prodId",params.get("pprodId"));
-        if ( params.get("reportDate")==null ) {
-        	params.put("reportDate", sdf.format(commonPlatformDateService.getSysDate()));
-        }
+		doParams(params);
 		repDetailsShow001Service.previewReport(params,response);
 	}
 
@@ -344,24 +328,8 @@ public class RepDetailsShow001Contoller extends BaseController {
         AjaxResult value = new AjaxResult();
         try {
         	//对参数进行修正，防止前台传入的参数错误或者变量大小写错误
-        	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         	Map<String,Object> params = RequestUtil.getPageParam();
-        	params.put("modelId", params.get("modelid"));
-        	params.put("prodId", params.get("prodid"));
-        	params.put("pprodId", params.get("pprodid"));
-        	params.put("prodName", params.get("prodname"));
-        	params.put("repId", params.get("repid"));
-        	params.put("reportId", params.get("repid"));
-        	params.put("endDate", params.get("enddate"));
-        	params.put("repName",params.get("repname"));
-        	params.put("reportDate", params.get("enddate"));        	
-        	if ( params.get("uri")==null )
-        		params.put("uri",params.get("modelid"));
-        	if (params.get("prodId")==null )
-        		params.put("prodId",params.get("pprodId"));
-            if ( params.get("reportDate")==null ) {
-            	params.put("reportDate", sdf.format(commonPlatformDateService.getSysDate()));
-            }
+    		doParams(params);
 
         	boolean flag = false;
         	boolean confirmFlag = true;
@@ -400,24 +368,8 @@ public class RepDetailsShow001Contoller extends BaseController {
      */
     @RequestMapping("mergeExport")
     public ResponseEntity<byte[]> mergeExport() throws IOException {
-    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     	Map<String,Object> params = RequestUtil.getPageParam();
-    	params.put("modelId", params.get("modelid"));
-    	params.put("prodId", params.get("prodid"));
-    	params.put("pprodId", params.get("pprodid"));
-    	params.put("prodName", params.get("prodname"));
-    	params.put("repId", params.get("repid"));
-    	params.put("reportId", params.get("repid"));
-    	params.put("endDate", params.get("enddate"));
-    	params.put("repName",params.get("repname"));
-    	params.put("reportDate", params.get("enddate"));
-    	if ( params.get("uri")==null )
-    		params.put("uri",params.get("modelid"));
-    	if (params.get("prodId")==null )
-    		params.put("prodId",params.get("pprodId"));
-        if ( params.get("reportDate")==null ) {
-        	params.put("reportDate", sdf.format(commonPlatformDateService.getSysDate()));
-        }
+		doParams(params);
 
         return repDetailsShow001Service.exportReport(params);
     }
@@ -514,4 +466,20 @@ public class RepDetailsShow001Contoller extends BaseController {
 		return repDetailsShow001Service.check(param);
 	}
 
+	public void doParams(Map<String,Object> params) {
+		params.put("modelId", params.get("modelId")==null?params.get("modelid"):params.get("modelId"));
+		params.put("pprodId", params.get("pprodId")==null?params.get("pprodid"):params.get("pprodId"));
+		params.put("prodId", params.get("prodId")==null?params.get("prodid"):params.get("prodId"));
+		params.put("prodId", params.get("prodId")==null?params.get("pprodid"):params.get("prodId"));
+		params.put("prodName", params.get("prodName")==null?params.get("prodname"):params.get("prodName"));
+		params.put("repId", params.get("repId")==null?params.get("repid"):params.get("repId"));
+		params.put("reportId", params.get("reportId")==null?params.get("repid"):params.get("reportId"));
+		params.put("endDate", params.get("endDate")==null?params.get("enddate"):params.get("endDate"));
+		params.put("repName", params.get("repName")==null?params.get("repname"):params.get("repName"));
+		params.put("endDate", params.get("endDate")==null?params.get("enddate"):params.get("endDate"));
+		params.put("reportDate", params.get("reportDate")==null?params.get("endDate"):params.get("reportDate"));
+		params.put("uri", params.get("uri")==null?params.get("modelid"):params.get("uri"));
+		params.put("platformDate", params.get("platformDate")==null? DateUtil.format(commonPlatformDateService.getSysDate()):params.get("platformDate"));
+	}
+	
 }

@@ -17,6 +17,7 @@ import com.joyintech.tams.common.base.entity.ChbMktHoliday;
 import com.joyintech.tams.common.base.entity.ChbMktHolidayKey;
 import com.joyintech.tams.common.base.entity.DisProdBonusplan;
 import com.joyintech.tams.common.base.entity.RepFeeTrd;
+import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.disclosure.busicommon.common.util.CollectionUtils;
 import com.joyintech.tams.disclosure.busicommon.rptdata.dao.BonusReportMapper;
 import com.joyintech.tams.disclosure.busicommon.rptdata.dao.MatureReportMapper;
@@ -42,7 +43,7 @@ public class MatureReportDataService implements IReportDataService {
 	
 	@Autowired
 	private ChbMktHolidayMapper chbMktHolidayMapper;
-	
+
 	/**
 	 * 日志
 	 */
@@ -56,8 +57,8 @@ public class MatureReportDataService implements IReportDataService {
 		MatureReportDto matureReportDto = new MatureReportDto();
 		try {
 //			String prodId = (paraMap.get("portnum") == null ? null : paraMap.get("portnum").toString());
-			Date genDate = (paraMap.get("endDate") == null ? new Date()
-					: DateUtil.parse(paraMap.get("endDate").toString()));
+//			Date genDate = (paraMap.get("endDate") == null ? new Date()
+//					: DateUtil.parse(paraMap.get("endDate").toString()));
 			
 			List<BonusReportDto> listBonusReport = matureReportMapper.selectBonusPlan(paraMap);
 			if ( listBonusReport!=null && listBonusReport.size()>0 ) {   //取最新的分红计划，做到期信息
@@ -68,13 +69,13 @@ public class MatureReportDataService implements IReportDataService {
 				matureReportDto.seteDate(dto.geteDate());
 				
 				if ( "02".equals(dto.getBonusMode()) ) {  //分红方式==到期兑付
-					matureReportDto.setmDate(DateUtil.addDay(dto.getSettDate(),1));
+					matureReportDto.setmDate( getNextWorkDate(dto.getSettDate()) );
 				} else {
 					matureReportDto.setmDate(dto.getSettDate());
 				}
 				
 				//签字日期：收益分配基准日+1工作日
-				matureReportDto.setGenDate(getNextWorkDate(dto.getSettDate()));
+				matureReportDto.setGenDate(matureReportDto.getmDate());
 				
 	        	//期限天数
 				matureReportDto.setRunDays( DateUtil.getBetweenDayNumber(dto.geteDate(),dto.getmDate()));
@@ -188,6 +189,21 @@ public class MatureReportDataService implements IReportDataService {
 			}
 		} while (true);
 
+	}
+	
+	public RepReveal getRepReveal(Map<String, Object> paraMap) {
+		RepReveal repReveal = new RepReveal();
+		repReveal.setRepId(paraMap.get("repId").toString());
+		repReveal.setProdid(paraMap.get("prodId").toString());
+		
+		Date eDate = DateUtil.parse(paraMap.get("platformDate").toString());
+		List<BonusReportDto> listBonusReport = matureReportMapper.selectBonusPlan(paraMap);
+		if ( listBonusReport!=null && listBonusReport.size()>0 ) {   //取最新的分红计划，做到期信息
+			BonusReportDto dto = listBonusReport.get(0);
+			eDate = dto.getSettDate();
+		}
+		repReveal.setEndDate(eDate);
+		return repReveal;
 	}
 
 }

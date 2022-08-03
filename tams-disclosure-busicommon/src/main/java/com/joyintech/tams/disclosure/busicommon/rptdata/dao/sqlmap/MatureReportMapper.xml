@@ -20,9 +20,9 @@
 		LEFT JOIN REP_PROD_INDEX PINDEX ON PLAN.PROD_ID=PINDEX.PROD_ID  AND PLAN.SETT_DATE=PINDEX.VALUE_DATE AND PINDEX.STATUS='E'
 		LEFT JOIN REP_PROD_INFO INFO ON PLAN.PROD_ID=INFO.PROD_ID AND INFO.STATUS='E' 
 		WHERE 1=1
-		AND PLAN.DATA_STATUS='01'
-		<if test="prodid!=null">
-			AND PLAN.PROD_ID=#{prodid,jdbcType=VARCHAR}
+		AND PLAN.DATA_STATUS='E'
+		<if test="prodId!=null">
+			AND PLAN.PROD_ID=#{prodId,jdbcType=VARCHAR}
 		</if>
 		order by plan.sett_date desc 
     </select>

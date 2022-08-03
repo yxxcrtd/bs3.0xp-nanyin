@@ -357,7 +357,7 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
         if (params.get("prodId") != null )
             prodId = params.get("prodId").toString();
         String reportFile = poiReportService.buildReportFileName(PoiReportService.REPORT_TYPE_报表文件,reportInfo, genDate, prodId,PoiReportService.FILE_TYPE_DOCX);
-        String localFileName = reportInfo.getReportName()+"_"+prodId+"_" + genDate.toString()+PoiReportService.FILE_TYPE_DOCX;
+        String localFileName = reportInfo.getReportName()+"_"+prodId+"_" + DateUtil.format(genDate)+PoiReportService.FILE_TYPE_DOCX;
 
         if ( "pdf".equals(fileType)) {  //如果导出pdf，则需要先讲word转换成pdf
             FileInputStream fis = new FileInputStream(reportFile);
