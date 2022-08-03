@@ -52,6 +52,21 @@ public class ProdInfoCommonontroller extends BaseController {
     }
 
 
+    /**
+     * 查询母产品和普通产品的产品代码和产品名称
+     *
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping("getMontherAndCommonProdId")
+    public Page<SelectOptionDto> getMontherAndCommonProdId()
+            throws Exception {
+        Page<SelectOptionDto> temp = (Page<SelectOptionDto>) prodInfoCommonService.getMontherAndCommonProdId();
+        return temp;
+    }
+
+
     /*    *//**
      * 根据产品登记编码 获取产品主代码和产品名称,支持联动
      * @return

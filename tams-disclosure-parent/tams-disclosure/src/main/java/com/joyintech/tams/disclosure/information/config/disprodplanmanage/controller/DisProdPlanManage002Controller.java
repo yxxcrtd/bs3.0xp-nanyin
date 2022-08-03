@@ -28,6 +28,9 @@ import com.joyintech.tams.constant.*;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.service.GetPrdInfoSelectService;
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto;
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.service.DisProdPlanManage002Service;
+import com.joyintech.tams.disclosure.information.config.repprodinfo.dto.ProdInfoDto;
+import com.joyintech.tams.disclosure.information.config.repprodinfo.service.ProdInfoCommonService;
+import com.joyintech.tams.disclosure.information.config.repprodinfo.service.ProdInfoService;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
@@ -73,6 +76,13 @@ public class DisProdPlanManage002Controller extends BaseController {
 	@Autowired
 	private GetPrdInfoSelectService getPrdInfoSelectService;
 
+	@Autowired
+	private ProdInfoService prodInfoService ;
+
+	@Autowired
+	private ProdInfoCommonService prodInfoCommonService;
+
+
 	/**
      * 日志
      */
@@ -89,8 +99,11 @@ public class DisProdPlanManage002Controller extends BaseController {
 		String workflowId = getParam("workflowId");
 		// 不来自于代办
 		if (WorkFlowUtil.isNotFromToDoList() &&  StringUtil.isNotEmpty(id)) {
+			DisProdPlanManage002Dto dto = disProdPlanManage002Service.getDisProdPlanManage002Dto(id);
+			ProdInfoDto prodInfoDto = prodInfoService.selectByProdId(dto.getProdId());
+			dto.setProdName(prodInfoDto.getProdName());
 			// 根据主键获取业务实体
-			model.addAttribute("entity", disProdPlanManage002Service.getDisProdPlanManage002Dto(id));
+			model.addAttribute("entity", dto);
 		}
 		// 来自代办 现在是不走流程
 		else if (StringUtil.isNotEmpty(workflowId)) {
@@ -115,6 +128,21 @@ public class DisProdPlanManage002Controller extends BaseController {
 		Map<String, Object> param= RequestUtil.getPageParam();
 		// param.put("sonFlag","1");
 		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getAllPrdInfoSelect(param);
+		return prdInfoSelect;
+	}
+
+	/**
+	 * 查询母产品和普通产品的产品代码和产品名称
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	@ResponseBody
+	@RequestMapping("getMontherAndCommonProdId")
+	public Page<SelectOptionDto> getMontherAndCommonProdId() {
+		Map<String, Object> param= RequestUtil.getPageParam();
+		// param.put("sonFlag","1");
+		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getMontherAndCommonProdId(param);
 		return prdInfoSelect;
 	}
 
@@ -171,7 +199,7 @@ public class DisProdPlanManage002Controller extends BaseController {
 		if(StringUtils.isNotBlank(dto.getRaiseType() )
 				&& StringUtils.equals(DictCodeListExt5.信披募集方式_私募.getValue(), dto.getRaiseType())){
 			if(StringUtils.isBlank(dto.getCollingoffPeriodStr())){
-				return new AjaxResult("若募集方式为私募,产品冷静期必填！", MessageType.错误消息);
+				return new AjaxResult("募集方式为私募,产品冷静期必填！", MessageType.错误消息);
 			}
 			// 开放结束日＜产品冷静期＜运作起始日
 			if(DateUtil.compareDate(dto.getCollingoffPeriod(),dto.getOpenEndDate()) <= 0 ){

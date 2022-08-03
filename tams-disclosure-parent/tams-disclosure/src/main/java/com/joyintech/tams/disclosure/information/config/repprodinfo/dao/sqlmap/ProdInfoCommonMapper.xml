@@ -15,7 +15,11 @@
             PROD_RE text
         FROM
             rep_prod_info
-        WHERE PROD_RE IS NOT NULL
+        WHERE PROD_RE IS NOT NULL and STATUS = 'E'
+        <if test="search != null and search != ''">
+            and (PROD_RE like
+            concat(concat('%',#{search}),'%'))
+        </if>
     </select>
 
     <!-- 根据产品登记编码 获取产品主代码和产品名称,支持联动 -->
@@ -27,12 +31,35 @@
         FROM
         rep_prod_info
         <where>
+             STATUS = 'E'
             <if test="prodRegistNo != null and !prodRegistNo.equals('')">
                 AND PROD_RE=#{prodRegistNo}
+            </if>
+            <if test="search != null and search != ''">
+                and (PROD_ID like concat(concat('%',#{search}),'%')
+                or PROD_NAME like concat(concat('%',#{search}),'%'))
             </if>
         </where>
     </select>
 
-
+    <!-- 查询母产品和普通产品的产品代码和产品名称 -->
+    <select id="getMontherAndCommonProdId" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        PROD_ID id,
+        PROD_NAME text,
+        PROD_RE object
+        FROM
+        rep_prod_info
+        <where>
+            STATUS = 'E' AND REP_PROD_TYPE != '03'
+            <if test="prodRegistNo != null and !prodRegistNo.equals('')">
+                AND PROD_RE=#{prodRegistNo}
+            </if>
+            <if test="search != null and search != ''">
+                and (PROD_ID like concat(concat('%',#{search}),'%')
+                or PROD_NAME like concat(concat('%',#{search}),'%'))
+            </if>
+        </where>
+    </select>
 
 </mapper>

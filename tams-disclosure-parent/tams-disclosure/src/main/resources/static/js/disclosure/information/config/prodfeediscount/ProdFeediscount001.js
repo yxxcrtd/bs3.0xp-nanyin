@@ -74,7 +74,7 @@
             , {field:'feeDisRemark',  title: '对此费率优惠调整描述文字',sortField:"feeDisRemark",width:200,sortable:false}
             ,{field:'rptIssueDate',  title: '报告发布日期',sortField:"rptIssueDate",type:'date',width:120}
             ,{field:'dataStatusName',  title: '数据状态',sortField:"dataStatus",width:100}
-            ,{field:'updateTime',  title: '更新时间',sortField:"updateTime",type:'date',width:120}
+            ,{field:'updateDateStr',  title: '更新时间',sortField:"updateTime",type:'date',width:180}
             ,{field:'updateUser',title:'更新人',sortField:"updateUser",width:80 }
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt'],
                 render: function (data, type, row, meta) {

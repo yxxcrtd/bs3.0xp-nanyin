@@ -46,6 +46,19 @@ public class ProdInfoCommonService extends CommonExportService<ProdInfoDto> {
     }
 
 
+    /**
+     * 查询母产品和普通产品的产品代码和产品名称
+     * @param
+     * @return
+     */
+    public Page<SelectOptionDto> getMontherAndCommonProdId() {
+        Map<String, Object> pageParam = RequestUtil.getPageParam();
+        return this.queryForPageForSelectReturn(Integer.parseInt(pageParam.get("page").toString())
+                , Integer.parseInt(pageParam.get("length").toString())
+                ,()->commonMapper.getMontherAndCommonProdId(pageParam));
+    }
+
+
 
 
 }

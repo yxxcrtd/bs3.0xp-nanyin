@@ -56,7 +56,12 @@ public class ProdFeediscountDto extends DisProdFeediscount implements ITableRow,
 
 
     public String getUpdateDateStr() {
-        return updateDateStr;
+       // return updateDateStr;
+        if(StringUtils.isNotBlank(this.updateDateStr)){
+            return this.updateDateStr ;
+        }else{
+            return this.updateDateStr = this.getUpdateTime()==null?null: DateUtil.format(this.getUpdateTime(), "yyyy-MM-dd hh:mm:ss");
+        }
     }
 
     public void setUpdateDateStr(String updateDateStr) {
