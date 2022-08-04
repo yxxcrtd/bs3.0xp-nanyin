@@ -406,6 +406,8 @@ public class MinioTemplate {
         if(pathUrl.indexOf("://") < 0){ //解决linux使用File获取的名称http://变成http:/问题
             pathUrl.replace(":/","://");
         }
+        if(logger.isDebugEnabled())
+            logger.debug("转化后文件名为:{}",pathUrl);
         return pathUrl;
     }
 }
