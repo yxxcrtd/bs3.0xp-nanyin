@@ -63,9 +63,7 @@ public class ReportDlxsjgmdgg001Service implements IReportDataService {
 
     public RepReveal getRepReveal(Map<String, Object> paraMap) {
         RepReveal repReveal = new RepReveal();
-        String prodId = (String)paraMap.get("pprodid");
         Date enddate = DateUtil.parse((String)paraMap.get("enddate"));
-        repReveal.setProdid(prodId);
         repReveal.setEndDate(enddate);
         return repReveal;
     }

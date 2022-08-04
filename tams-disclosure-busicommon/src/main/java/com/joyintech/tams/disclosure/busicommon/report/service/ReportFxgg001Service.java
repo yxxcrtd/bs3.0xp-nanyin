@@ -83,8 +83,12 @@ public class ReportFxgg001Service implements IReportDataService {
 
     public RepReveal getRepReveal(Map<String, Object> paraMap) {
         RepReveal repReveal = new RepReveal();
-        String prodId = (String)paraMap.get("pprodid");
+        String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
         repReveal.setProdid(prodId);
+        Map<String,Object> searchparam = new HashMap<>();
+        searchparam.put("prodId", prodId);
+        ReportFxggDto fxgg = reportFxggMapper.queryFxgg(searchparam);
+        repReveal.setEndDate(fxgg.getSetDate());
         return repReveal;
     }
 }

@@ -106,7 +106,7 @@ public class Report1Ysncp001Service implements IReportDataService {
 
     public RepReveal getRepReveal(Map<String, Object> paraMap) {
         RepReveal repReveal = new RepReveal();
-        String prodId = (String)paraMap.get("pprodid");
+        String prodId = (String)paraMap.get("elementname");
         Date enddate = DateUtil.parse((String)paraMap.get("enddate"));
         repReveal.setProdid(prodId);
         repReveal.setEndDate(enddate);
