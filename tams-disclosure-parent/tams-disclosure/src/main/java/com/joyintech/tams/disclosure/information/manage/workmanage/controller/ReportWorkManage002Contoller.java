@@ -96,6 +96,7 @@ public class ReportWorkManage002Contoller extends BaseController {
 		this.setSelectOptionToModel(model, DictCode.产品收益标识);
 		this.setSelectOptionToModel(model, DictCode.目标客户类型);
 		this.setSelectOptionToModel(model, DictCodeExt1.信批产品类别);
+		this.setSelectOptionToModel(model, DictCodeExt1.开放频率);
 		model.addAttribute("REPORTTPLID_LIST", JsonUtils.objectArray2Json(this.getRepRule().toArray()));
 		// 入账日期默认为系统平台日
 		model.addAttribute("sysDate", DateUtil.format(baseCommonService.getSysDate(), "yyyy-MM-dd"));
