@@ -71,4 +71,12 @@ public interface FileRemoteService {
      * @return java.lang.String
      **/
     String getRemoteFilePathName(String localPathFile);
+    /**
+     * @Author ZY22350
+     * @Description //远程文件名获取简短文件路径
+     * @Date 17:03 2022/8/4
+     * @Param [remoteFilePath]
+     * @return java.lang.String
+     **/
+    String getSimpleFilePathName(String remoteFilePath);
 }

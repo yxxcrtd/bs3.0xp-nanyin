@@ -1,6 +1,8 @@
 package com.joyintech.tams.disclosure.information.reveal.reportconfirm.service;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -9,7 +11,12 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import com.jcraft.jsch.JSchException;
+import com.joyintech.framework.base.dto.UploadFile;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.framework.listener.FileAttachmentProcess;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.oss.service.FileRemoteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +26,6 @@ import org.springframework.stereotype.Service;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.progressbar.ProgressBarService;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.ExportUtil;
-import com.joyintech.framework.util.FileNameUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
 import com.joyintech.tams.disclosure.information.config.reportcontentenum.util.SftpTools;
@@ -46,6 +48,10 @@ public class ReportConfirmManage003Service extends CommonExportService<BokFileTr
 
     @Autowired
     private ReportConfirmManage001Mapper reportConfirmManage001Mapper;
+    @Autowired
+    private FileRemoteService minioFileRemoteService;
+    @Autowired
+    private FileAttachmentProcess fileAttachmentProcess;
 
     /**
      * 日志
@@ -332,6 +338,69 @@ public class ReportConfirmManage003Service extends CommonExportService<BokFileTr
             num = reportConfirmManage001Mapper.updateRepRevealAnnexById(dto);
         }
         return num;
+    }
+
+
+    public int uploadOtherFile2Oss(HttpServletRequest request){
+
+        String option = request.getParameter("option");
+        // 文件本地路径
+        String filePath = request.getParameter("fileName");
+        //进行文本路径转化
+        String newfilePath = filePath.replace(":\\","://");
+        newfilePath = newfilePath.replace("\\","/");
+        String basePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_UPLOAD_PATH);
+        if(StringUtil.isNotEmpty(basePath)){
+            newfilePath = newfilePath.replace(basePath,"");
+        }
+        String id = request.getParameter("id");
+        String fileRealName = request.getParameter("srcName");
+        if(logger.isDebugEnabled()){
+            logger.debug("上传文件开始,上传类型:{},附件名称:{}",option,fileRealName);
+        }
+        FileInputStream fis = null;
+        String realPath = "";
+        try {
+            fis = new FileInputStream(filePath);
+            realPath = minioFileRemoteService.uploadFile(newfilePath,fis);
+        }catch(Exception e){
+            logger.error("上传文件失败",e);
+            return -1;
+        }finally{
+            if(fis != null ){
+                try{
+                    fis.close();
+                }catch (IOException e){
+                    logger.error("关闭流异常",e);
+                }
+            }
+        }
+        File localFile = new SafelyFile(realPath);
+        String fileNo = IDGenerator.generate();
+        UploadFile uploadFile = new UploadFile(fileRealName, fileNo,localFile);
+        uploadFile.setFileName(localFile.getPath());
+        //存入SYS_UPLOAD_FILE_INFO表
+        if(null != fileAttachmentProcess) {
+            fileAttachmentProcess.upload(uploadFile);
+        }
+
+        return updateRep(id,fileNo,fileRealName,option);
+    }
+
+    private int updateRep(String id,String filePath,String fileName,String option){
+        ReportConfirmManage001Dto dto = new ReportConfirmManage001Dto();
+        dto.setId(id);
+        dto.setTime(new Date());
+        if (StringUtil.equals("1", option)) {
+            dto.setFilename(fileName);
+            dto.setFilepath(filePath);
+
+            return reportConfirmManage001Mapper.updateRepRevealById(dto);
+        }else {
+            dto.setAnnex(fileName);
+            dto.setAnnexPath(filePath);
+            return reportConfirmManage001Mapper.updateRepRevealAnnexById(dto);
+        }
     }
 
     /**

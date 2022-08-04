@@ -18,6 +18,7 @@ import java.util.Map;
 
 import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.util.ZipFileUtil;
+import com.joyintech.tams.common.oss.service.FileRemoteService;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipOutputStream;
 import org.aspectj.util.FileUtil;
@@ -69,6 +70,8 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 
     @Autowired
     private FileAttachmentProcess fileAttachmentProcess;
+    @Autowired
+    private FileRemoteService minioFileRemoteService;
 
     /**
      * 日志
@@ -151,6 +154,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
         File zipFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
         ZipOutputStream zipOut = null;
         OutputStream toClient=null;
+        String tempDir = CacheUtil.getSysParam(GlobalConstant.COM_PROP_UPLOAD_PATH);
         if (StringUtil.isNotEmpty(reportList)) {
             String basePath = CacheUtil.getSysParam(KEY_REPORT_DOWNLOAD_PATH);
             // 需要层级。01：是，02：否
@@ -187,21 +191,18 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 
                         if (StringUtil.isNotEmpty(report.getFilepath())) {
                             downloadPathPeople = this.getReportPath(report.getFilepath());
-                            File downloadFilePeopleTmp = new SafelyFile(downloadPathPeople);
-                            downloadFilePeople = new SafelyFile(getEncodeFileName(
-                                downloadFilePeopleTmp.getParent() + File.separator + report.getFilename()));
-                            FileUtil.copyFile(downloadFilePeopleTmp, downloadFilePeople);
+                            downloadFilePeople = fileCopy(tempDir,downloadPathPeople,downloadFilePeople,report.getFilename());
                         }
                         // 获取报表下载路径
                         String downloadPath = null;
                         File downloadFile = null;
                         if (StringUtil.isNotEmpty(report.getSysFilepath())) {
                             downloadPath = this.getReportPath(report.getSysFilepath());
-
-                            File downloadFileTmp = new SafelyFile(downloadPath);
-                            downloadFile = new SafelyFile(
-                                downloadFileTmp.getParent() + File.separator + report.getSysFilename());
-                            FileUtil.copyFile(downloadFileTmp, downloadFile);
+                            downloadFile = fileCopy(tempDir,downloadPath,downloadFile,report.getSysFilename());
+//                            File downloadFileTmp = new SafelyFile(downloadPath);
+//                            downloadFile = new SafelyFile(
+//                                downloadFileTmp.getParent() + File.separator + report.getSysFilename());
+//                            FileUtil.copyFile(downloadFileTmp, downloadFile);
                         }
 
                         // 第一层目录
@@ -363,22 +364,23 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                         File downloadFilePeople = null;
                         if (StringUtil.isNotEmpty(report.getFilepath())) {
                             downloadPathPeople = this.getReportPath(report.getFilepath());
-                            File downloadFilePeopleTmp = new SafelyFile(downloadPathPeople);
-                            downloadFilePeople = new SafelyFile(getEncodeFileName(
-                                downloadFilePeopleTmp.getParent() + File.separator + report.getFilename()));
-                            FileUtil.copyFile(downloadFilePeopleTmp, downloadFilePeople);
+//                            File downloadFilePeopleTmp = new SafelyFile(downloadPathPeople);
+//                            downloadFilePeople = new SafelyFile(getEncodeFileName(
+//                                downloadFilePeopleTmp.getParent() + File.separator + report.getFilename()));
+//                            FileUtil.copyFile(downloadFilePeopleTmp, downloadFilePeople);
+                            downloadFilePeople = fileCopy(tempDir,downloadPathPeople,downloadFilePeople,report.getFilename());
                         }
                         // 获取报表下载路径（系统生成）
                         String downloadPath = null;
                         File downloadFile = null;
                         if (StringUtil.isNotEmpty(report.getSysFilepath())) {
                             downloadPath = this.getReportPath(report.getSysFilepath());
-
-                            File downloadFileTmp = new SafelyFile(downloadPath);
-
-                            downloadFile = new SafelyFile(getEncodeFileName(downloadFileTmp.getParent() + File.separator + report.getProdName()
-                                                    + report.getSysFilename()));
-                            FileUtil.copyFile(downloadFileTmp, downloadFile);
+                            downloadFile = fileCopy(tempDir,downloadPath,downloadFile,report.getSysFilename());
+//                            File downloadFileTmp = new SafelyFile(downloadPath);
+//
+//                            downloadFile = new SafelyFile(getEncodeFileName(downloadFileTmp.getParent() + File.separator + report.getProdName()
+//                                                    + report.getSysFilename()));
+//                            FileUtil.copyFile(downloadFileTmp, downloadFile);
                         }
                         // 需要系统文件
                         if (StringUtil.equals(CacheUtil.getSysParam(ReportGlobalConstant.IS_NEED_SYSFILE), "01")) {
@@ -729,4 +731,49 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
         }
     }
 
-}
+    private File fileCopy(String basePath,String filePath,File newFile,String filename) throws IOException {
+        if(filePath.startsWith("http:")) {
+            byte[] bytes = minioFileRemoteService.downloadFile(filePath);
+            if(bytes !=null) {
+                if(newFile == null) {
+                    File downloadFilePeopleTmp = new SafelyFile(minioFileRemoteService.getSimpleFilePathName(filePath));
+                    newFile = new SafelyFile(getEncodeFileName(basePath+File.separator+
+                            downloadFilePeopleTmp.getParent() + File.separator + filename));
+                    File parentFile = new File(newFile.getParent());
+                    if(!parentFile.exists()){
+                        parentFile.mkdirs();
+                    }
+                }
+                FileOutputStream fos = null;
+                try {
+                    fos = new FileOutputStream(newFile);
+                    fos.write(bytes);
+                    fos.flush();
+                }catch(Exception e){
+                    logger.error("远程文件写入本地文件异常",e);
+                }finally{
+                    if(fos != null){
+                        try{
+                            fos.close();
+                        }catch(IOException e){
+                            logger.error("关闭流异常",e);
+                        }
+                    }
+                }
+            }
+        }else{
+            File downloadFilePeopleTmp = new SafelyFile(filePath);
+            if(newFile == null) {
+                newFile = new SafelyFile(getEncodeFileName(
+                        downloadFilePeopleTmp.getParent() + File.separator + filename));
+            }
+            try {
+                FileUtil.copyFile(downloadFilePeopleTmp, newFile);
+            }catch(Exception e){
+                logger.error("本地文件Copy异常",e);
+            }
+        }
+        return newFile;
+
+
+    }}

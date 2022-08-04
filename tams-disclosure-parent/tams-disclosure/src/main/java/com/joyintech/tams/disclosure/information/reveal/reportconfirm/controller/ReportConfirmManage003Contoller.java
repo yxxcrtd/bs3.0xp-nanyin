@@ -166,8 +166,9 @@ public class ReportConfirmManage003Contoller extends BaseController {
 //			res =  new AjaxResult(msg, MessageType.错误消息);
 //			return res;
 //		}
-	    int num = reportConfirmManage003Service.updateRepRevealById(request);
-	    
+//	    int num = reportConfirmManage003Service.updateRepRevealById(request);
+
+		int num = reportConfirmManage003Service.uploadOtherFile2Oss(request);
     	if(num>0){
     		res = new AjaxResult(getMessage("EXCELIMP_E_0020"), MessageType.提示消息);
     	}else {

@@ -96,4 +96,9 @@ public class MinioFileRemoteService implements FileRemoteService {
             logger.debug("minio获取远程文件全路径名为:{}",remoteFilePathName);
        return remoteFilePathName;
     }
+
+    @Override
+    public String getSimpleFilePathName(String remoteFilePath) {
+        return minioTemplate.convertSimpleFilePathName(remoteFilePath);
+    }
 }

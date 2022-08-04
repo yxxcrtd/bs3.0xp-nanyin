@@ -376,4 +376,20 @@ public class MinioTemplate {
         }
         return null;
     }
+    /**
+     * @Author ZY22350
+     * @Description //获取文件对象名称
+     * @Date 17:06 2022/8/4
+     * @Param [remoteFileName]
+     * @return java.lang.String
+     **/
+    public String convertSimpleFilePathName(String remoteFileName){
+        remoteFileName = remoteFileName.replace(":\\","://");
+        remoteFileName = remoteFileName.replace("\\","/");
+        String key = remoteFileName.replace(minioProperties.getEndpoint() + "/", "");
+        int index = key.indexOf(separator);
+        String bucket = key.substring(0, index);
+        String filePath = key.substring(index + 1);
+        return filePath;
+    }
 }
