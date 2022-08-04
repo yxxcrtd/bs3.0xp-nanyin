@@ -5,7 +5,9 @@ import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class InfoComplianceDto extends BaseEntity implements ProcessEntity {
 
@@ -71,6 +73,8 @@ public class InfoComplianceDto extends BaseEntity implements ProcessEntity {
     private String operationType;
 
     private String elementId;
+
+    private String comment;
 
     public String getInfoType() {
         return infoType;
@@ -207,4 +211,13 @@ public class InfoComplianceDto extends BaseEntity implements ProcessEntity {
     public void setUploadFileList2(List<UploadFileDto> uploadFileList2) {
         this.uploadFileList2 = uploadFileList2;
     }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
 }

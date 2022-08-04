@@ -27,7 +27,7 @@
     </style>
     <div class="pro-module">
         <h3 class="pro-module-title">
-            <span class="title-des">报表/模板附件</span>
+            <span class="title-des">报表/模板附件<i class="iconfont must" style="display: inline;">*</i></span>
             <a class="layui-btn layui-btn-sm btn-create" id="multFileBtn"><i class="iconfont icon-found"></i><span>新增附件</span></a>
             <i class="iconfont icon-arrow-down pro-down-icon"></i>
         </h3>
@@ -35,15 +35,41 @@
             <div class="layui-form-item" style="padding: 10px 10px 0 10px;text-align:center;">
                 <div class="show">
                     <div id="fileUploader" class="upload" th:disabled="${pageModel} eq ${pageModelReference}" th:data-data='${attachmentFiles}'
-                         data-option="{muiltiple: true, autoUpload: true, type: 'list'}">
+                         data-option="{muiltiple: true, autoUpload: true, type: 'list','fileUploader':'fileUploader'}">
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<script data-th-inline="javascript" type="text/javascript">
-    var entityName_fileCommon = /*[[${entityName}]]*/'fielArea1';
+<script type="text/javascript">
+    var FileCommon = function() {
+        return {
+
+            /**
+             * 获取上传文件信息事件
+             */
+            getUploadFileInfo : function() {
+                var fun = $('#fileUploader').data('getSelectedFiles');
+                if(typeof fun === 'function') {
+                    return fun();
+                }
+                return [];
+            }
+        };
+    }();
+
+    $(function() {
+        $('#multFileBtn').click(function() {
+            if(FileCommon.getUploadFileInfo().length >=5){
+                Joyin.error("最大上传5个附件。");
+                return;
+            } else {
+                $('.mult-file-btn', '#FileCommon_DIV').trigger('click');
+            }
+        });
+
+    });
 </script>
 <script data-th-src="@{/js/disclosure/infoCompliance/uploadFile001.js}" type="text/javascript"></script>
 </body>

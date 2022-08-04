@@ -25,7 +25,7 @@
             Joyin.dialog("合规留痕管理查看",
                     basePath + "disclosure/infoCompliance/infoCompliance002/init",
                     "90%", "90%", {pageModel:PAGE_MODEL_REFERENCE,
-                    seqno:data.seqno},function(){table.reload();});
+                    seqno:data.seqno,'viewFlag':'view'},function(){});
         },
         cols:[
              {field:'seqno',visible:false}
@@ -35,7 +35,7 @@
         	,{field:'indexNo', width:120, title: '序号'}
         	,{field:'infoTypeText', width:120, title: '类型'}
         	,{field:'infoName', width:600, title: '模板/报表名称'}
-        	,{field:'approveUser', width:200, title: '当前处理人', sortable:false}
+        	//,{field:'approveUser', width:200, title: '当前处理人', sortable:false}
             ,{field:'infoStatusText', width:200, title: '当前状态', sortable:false}
         	,{field:'infoDevStatusText', width:200, title: '开发状态', sortable:false}
         	,{field:'updateTimeText', width:200, title: '更新时间',sortable:false}
