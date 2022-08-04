@@ -166,6 +166,8 @@ public class MinioTemplate {
         if (logger.isDebugEnabled()) {
             logger.debug("minio删除文件开始，文件名:{}", pathUrl);
         }
+        //针对转化文件夹分隔符进行转化处理
+        pathUrl = systemDiffConvertPath(pathUrl);
         String key = pathUrl.replace(minioProperties.getEndpoint() + "/", "");
         int index = key.indexOf(separator);
         String bucket = key.substring(0, index);
@@ -196,8 +198,7 @@ public class MinioTemplate {
             logger.debug("minio下载文件开始，文件名:{}", pathUrl);
         }
         //针对转化文件夹分隔符进行转化处理
-        pathUrl = pathUrl.replace(":\\","://");
-        pathUrl = pathUrl.replace("\\","/");
+        pathUrl = systemDiffConvertPath(pathUrl);
         String key = pathUrl.replace(minioProperties.getEndpoint() + "/", "");
         int index = key.indexOf(separator);
         String bucket = key.substring(0, index);
@@ -384,12 +385,27 @@ public class MinioTemplate {
      * @return java.lang.String
      **/
     public String convertSimpleFilePathName(String remoteFileName){
-        remoteFileName = remoteFileName.replace(":\\","://");
-        remoteFileName = remoteFileName.replace("\\","/");
+        remoteFileName = systemDiffConvertPath(remoteFileName);
         String key = remoteFileName.replace(minioProperties.getEndpoint() + "/", "");
         int index = key.indexOf(separator);
         String bucket = key.substring(0, index);
         String filePath = key.substring(index + 1);
         return filePath;
+    }
+    /**
+     * @Author ZY22350
+     * @Description //不同操作系统文件转化后路径问题处理
+     * @Date 21:32 2022/8/4
+     * @Param [filePath]
+     * @return java.lang.String
+     **/
+    private String systemDiffConvertPath(String filePath){
+        //针对转化文件夹分隔符进行转化处理
+        String pathUrl = filePath.replace(":\\","://");
+        pathUrl = pathUrl.replace("\\","/");
+        if(pathUrl.indexOf("://") < 0){ //解决linux使用File获取的名称http://变成http:/问题
+            pathUrl.replace(":/","://");
+        }
+        return pathUrl;
     }
 }
