@@ -449,5 +449,64 @@
             or r.PROD_NAME like concat(concat('%',#{search}),'%'))
         </if>
     </select>
-
+    <select id="selectData"
+            resultType="com.joyintech.tams.disclosure.information.config.prodfeediscount.dto.ProdFeediscountDto">
+        select *
+        from DIS_PROD_FEEDISCOUNT
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+            and PROD_REGIST_NO = #{prodRegistNo,jdbcType=VARCHAR}
+            and START_DATE = #{startDate,jdbcType=DATE}
+            and END_DATE = #{endDate,jdbcType=DATE}
+            and RPT_ISSUE_DATE = #{rptIssueDate,jdbcType=DATE}
+            and FEENAME = #{feename,jdbcType=VARCHAR}
+            and DATA_STATUS = 'E'
+        <if test="isSalesAgency != null" >
+            and IS_SALES_AGENCY = #{isSalesAgency,jdbcType=VARCHAR}
+        </if>
+        <if test="isSalesAgency == null" >
+            and IS_SALES_AGENCY is null
+        </if>
+        <if test="prodDisRemark != null" >
+            and PROD_DIS_REMARK = #{prodDisRemark,jdbcType=VARCHAR}
+        </if>
+        <if test="prodDisRemark == null" >
+            and PROD_DIS_REMARK is null
+        </if>
+        <if test="preFeerate != null" >
+            and PRE_FEERATE = #{preFeerate,jdbcType=DECIMAL}
+        </if>
+        <if test="preFeerate == null" >
+            and PRE_FEERATE is null
+        </if>
+        <if test="afterFeerate != null" >
+            and AFTER_FEERATE = #{afterFeerate,jdbcType=DECIMAL}
+        </if>
+        <if test="afterFeerate == null" >
+            and AFTER_FEERATE is null
+        </if>
+        <if test="thisPreFeerate != null" >
+            and THIS_PRE_FEERATE = #{thisPreFeerate,jdbcType=DECIMAL}
+        </if>
+        <if test="thisPreFeerate == null" >
+            and THIS_PRE_FEERATE is null
+        </if>
+        <if test="thisAfterFeerate != null" >
+            and THIS_AFTER_FEERATE = #{thisAfterFeerate,jdbcType=DECIMAL}
+        </if>
+        <if test="thisAfterFeerate == null" >
+            and THIS_AFTER_FEERATE is null
+        </if>
+        <if test="thisEndFeerate != null" >
+            and THIS_END_FEERATE = #{thisEndFeerate,jdbcType=DECIMAL}
+        </if>
+        <if test="thisEndFeerate == null" >
+            and THIS_END_FEERATE is null
+        </if>
+        <if test="feeDisRemark != null" >
+            and FEE_DIS_REMARK = #{feeDisRemark,jdbcType=VARCHAR}
+        </if>
+        <if test="feeDisRemark == null" >
+            and FEE_DIS_REMARK is null
+        </if>
+    </select>
 </mapper>
