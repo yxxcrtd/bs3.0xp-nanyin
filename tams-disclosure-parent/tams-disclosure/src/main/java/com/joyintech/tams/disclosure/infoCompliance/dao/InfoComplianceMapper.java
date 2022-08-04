@@ -1,5 +1,6 @@
 package com.joyintech.tams.disclosure.infoCompliance.dao;
 
+import com.joyintech.tams.disclosure.infoCompliance.dto.InfoComplianceCommentDto;
 import com.joyintech.tams.disclosure.infoCompliance.dto.InfoComplianceDto;
 import com.joyintech.tams.disclosure.infoCompliance.dto.UploadFileDto;
 import org.apache.ibatis.annotations.Param;
@@ -26,5 +27,11 @@ public interface InfoComplianceMapper {
     void updateUplodFile(UploadFileDto dto);
 
     //根据文件类型和fileType查询文件
-    List<UploadFileDto> getFileByBusinessCode(@Param("businessId")String businessId,@Param("fileType")String fileType);
+    List<UploadFileDto> getFileByBusinessCode(Map<String,String> param);
+
+    void saveInfoComplianceComment(InfoComplianceCommentDto commentDto);
+
+    void relationFileAndComment(InfoComplianceCommentDto commentDto);
+
+    List<InfoComplianceCommentDto> getInfoComplianceComment(String infoSeqno);
 }

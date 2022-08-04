@@ -131,16 +131,63 @@
         });
 
         var pageModel = $("#pageModel").val();
-        //新建页面隐藏批注
-        if(pageModel==='0'){
+        var viewFlag = $("#viewFlag").val();
+
+        //修建,修改
+        if(pageModel==='0' || pageModel === '1'){
             $("#commentDiv").hide();
+            $("#upLoadDiv3").hide();
         } else if(pageModel==='2'){
             debugger;
-            $("#commentDiv").show();
-            setTimeout(function(){
-                debugger;
-                $("#commentRemark").attr("disabled",false);
-            },5000);
+            //查看界面,不显示上传审批意见
+            if(viewFlag !='view'){
+                $("#commentDiv").show();
+                $("#upLoadDiv3").show();
+            } else{
+                $("#commentDiv").hide();
+                $("#upLoadDiv3").hide();
+            }
+
+            var seqno =  $("#seqno").val();
+            Joyin.ajax(basePath + 'disclosure/infoCompliance/infoCompliance002/getCommentList', {seqno:seqno}, function(result) {
+                console.log(result);
+                var commentList = $("#commentList");
+                for(var i=0; i<result.length;i++){
+                    debugger;
+                    var obj = result[i];
+                    var comment = obj.comment;
+                    var fileList = obj.fileList;
+                    console.log(result);
+                    var div = $('<div class="upload layui-upload"></div>');
+                    var h3 = $('<h3 class="pro-module-title"><span class="title-des"></span>修订后<i class="iconfont must" style="display: inline;">*</i></h3>');
+                    var table = $('<table class="layui-table"></table>');
+                    var remark = $(['<div class="layui-form-item">'
+                        ,'<label style="float: left">备注<i class="iconfont must" style="display: inline;">*</i></label>'
+                        ,'<div class="layui-input-inline input-inline" style="margin:0 10px;width: 80%!important;">'
+                        ,'<textarea id="remark" name="remark" maxlength="500" class="layui-textarea" disabled="" autocomplete="off">'+comment+'</textarea>'
+                        ,'</div></div>'
+                    ].join(''));
+
+                    for (var i1=0; i1<fileList.length;i1++){
+                        var file = fileList[i1];
+                        var tr = $(['<tr id="upload-'+ file.fileNo +'">'
+                            ,'<td>'+(i1+1)+'</td>'
+                            ,'<td><div class="layui-table-cell">'
+                            ,'<a href="'
+                            , JoyinUtil.getRealPath('/framework/download/' + file.fileNo)
+                            ,'">'
+                            ,file.fileName
+                            ,'</a></div></td>'
+                            ,'<td>'+file.uploadUser+'</td>'
+                            ,'<td>上传成功</td>'
+                            ,'<td>'+file.createTimeText+'</td>'
+                            ,'</tr>'].join(''));
+                        table.append(tr);
+                    }
+                    div.append(h3).append(table).append(remark);
+                    commentList.append(div);
+                }
+            });
         }
 
     });

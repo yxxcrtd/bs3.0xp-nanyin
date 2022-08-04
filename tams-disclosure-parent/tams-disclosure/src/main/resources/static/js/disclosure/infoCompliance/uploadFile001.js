@@ -1,35 +1,3 @@
-/**
- * 附件信息--共通业务组件js
- * @auth zhangnian
- */
-var FileCommon = function() {
-    return {
-
-        /**
-         * 获取上传文件信息事件
-         */
-        getUploadFileInfo : function() {
-            var fun = $('#fileUploader').data('getSelectedFiles');
-            if(typeof fun === 'function') {
-                return fun();
-            }
-            return [];
-        }
-    };
-}();
-
-$(function() {
-    $('#multFileBtn').click(function() {
-        if(FileCommon.getUploadFileInfo().length >=5){
-            Joyin.error("最大上传5个附件。");
-            return;
-        } else {
-            $('.mult-file-btn', '#FileCommon_DIV').trigger('click');
-        }
-    });
-
-});
-
 Date.prototype.format = function(format)
 {
     var o = {
@@ -96,8 +64,10 @@ $(function ($) {
             } catch (e) {
                 options = {};
             }
+            debugger;
             options = options || {};
-            var url = options.url || JoyinUtil.getRealPath('disclosure/infoCompliance/uploadFile001/uploadFile');
+            var businessId = $(this).next('#businessId').val();
+            var url = options.url || JoyinUtil.getRealPath('disclosure/infoCompliance/uploadFile001/uploadFile?businessId='+businessId);
             var allowfiletype = options.allowFileType || ''/* || 'doc/docx/xls/xlsx/ppt'*/; // 允许任何类型的文件
             var showdelete = options.showDelete;
             var inline = options.inline;
@@ -112,6 +82,7 @@ $(function ($) {
             var _this = this;
             var elemId = $(this).attr('id');
             var uploadBtn, width, height, fileListView;
+            var fileUploader = options.fileUploader;
 
             if(typeof callback === 'string') {
                 callback = eval(callback);
@@ -123,7 +94,7 @@ $(function ($) {
                     ,$thead = $('<thead><tr><th>文件名</th><th>大小</th><th>状态</th>' + (disabled ? '' : '<th>操作</th>') + '</tr></thead>')
                     ,$thr = $('<tr></tr>')
                     ,$tbody = $('<tbody></tbody>')
-                    ,$action = $('<button type="button" class="mult-file-btn layui-btn layui-btn-normal">选择多文件</button>')
+                    ,$action = $('<button type="button" data-ignore="true" class="mult-file-btn layui-btn layui-btn-normal">选择多文件</button>')
                     ,$bindAction = $('<button type="button" class="mult-file-btn layui-btn">开始上传</button>');
                 $table.append($thead.append($thr)).append($tbody);
                 if(!disabled) {
@@ -178,7 +149,7 @@ $(function ($) {
                             ,'<td>'+file.uploadUser+'</td>'
                             ,'<td>上传成功</td>'
                             ,'<td>'+file.createTimeText+'</td>'
-                            ,(disabled ? '' : '<td><button data-no="' + file.fileNo + '" class="layui-btn layui-btn-mini layui-btn-danger file-delete">删除</button></td>')
+                            ,(disabled ? '' : '<td><button data-ignore="true" data-no="' + file.fileNo + '" class="layui-btn layui-btn-mini layui-btn-danger file-delete">删除</button></td>')
                             ,'</tr>'].join(''));
                         tr.find('.file-delete').on('click', function(){
                             var _btn = $(this), fileNo = _btn.data('no');
@@ -192,7 +163,7 @@ $(function ($) {
                                 });
                                 initFiles = tmpFiles;
                                 _btn.parents('tr').remove();
-                                $("#fileUploader tbody tr").each(function (index,item){
+                                $("#"+fileUploader+" tbody tr").each(function (index,item){
                                     $(item).children(":first").html(index+1);
                                 });
                                 rownum --;
@@ -328,7 +299,7 @@ $(function ($) {
                                 ,'<td>'+ $('#realName').val() +'</td>'
                                 ,'<td>等待上传</td>'
                                 ,'<td class="layui-hide">'+ file.size +'</td>'
-                                ,'<td>'+ new Date().format('yyyy-MM-dd hh:mm:ss') +'</td>'
+                                ,'<td>'+ new Date().format('yyyy-MM-dd hh:mm') +'</td>'
                                 ,'<td>'
                                 ,'<button class="layui-btn layui-btn-mini file-reload layui-hide">重传</button>'
                                 ,'<button class="layui-btn layui-btn-mini layui-btn-danger file-delete">删除</button>'
@@ -348,7 +319,7 @@ $(function ($) {
                                         debugger;
                                         deleteFile(index); // 删除对应的文件
                                         $(tr).remove();
-                                        $("#fileUploader tbody tr").each(function (index,item){
+                                        $("#"+fileUploader+" tbody tr").each(function (index,item){
                                             $(item).children(":first").html(index+1);
                                         });
                                     });

@@ -36,7 +36,6 @@ public class InfoCompliance003Controller extends BaseController {
     @Autowired
     private InfoCompliance002Service infoCompliance002Service;
 
-
     @Override
     @RequestMapping(PAGE_INIT)
     public String init(Model model) {

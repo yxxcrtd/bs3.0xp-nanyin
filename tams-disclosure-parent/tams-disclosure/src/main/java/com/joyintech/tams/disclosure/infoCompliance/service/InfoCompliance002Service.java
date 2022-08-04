@@ -1,12 +1,21 @@
 package com.joyintech.tams.disclosure.infoCompliance.service;
 
+import com.google.json.JsonSanitizer;
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.base.entity.ProcessMark;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.disclosure.infoCompliance.dao.InfoComplianceMapper;
+import com.joyintech.tams.disclosure.infoCompliance.dto.InfoComplianceCommentDto;
 import com.joyintech.tams.disclosure.infoCompliance.dto.InfoComplianceDto;
 import com.joyintech.tams.disclosure.infoCompliance.dto.UploadFileDto;
+import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
+import com.joyintech.workflow.engine.constant.ProcessType;
 import com.joyintech.workflow.engine.entity.FlowEntity;
+import com.joyintech.workflow.engine.entity.WorkflowEntity;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import com.joyintech.workflow.engine.service.BusinessService;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +30,8 @@ public class InfoCompliance002Service extends BaseService<InfoComplianceDto> imp
 
     @Autowired
     private InfoComplianceMapper infoComplianceMapper;
+
+    private ProcessType processType = ProcessType.SAVE;
 
 
     @Override
@@ -62,7 +73,18 @@ public class InfoCompliance002Service extends BaseService<InfoComplianceDto> imp
      * */
     @Override
     public void doUpdate(InfoComplianceDto dto){
-        doInsert(dto, null);
+        //从待办下发起提交和保存
+        if(ProcessType.SAVE.equals(processType)){
+            doInsert(dto, null);
+        } else if(ProcessType.SUBMIT.equals(processType)){
+            //复核人向下流转流程
+            //保存修订意见
+            String infoSeqno = dto.getSeqno();
+            InfoComplianceCommentDto commentDto = new InfoComplianceCommentDto(IDGenerator.generate(),infoSeqno,dto.getComment());
+            infoComplianceMapper.saveInfoComplianceComment(commentDto);
+            //修订意见与修订附件关联
+            infoComplianceMapper.relationFileAndComment(commentDto);
+        }
     }
 
     @Override
@@ -91,18 +113,38 @@ public class InfoCompliance002Service extends BaseService<InfoComplianceDto> imp
         return infoComplianceMapper.selectProcInstIid(seqNo);
     }
 
-    public List<UploadFileDto> getFileByBusinessCode(String businessId,String fileType){
-        return infoComplianceMapper.getFileByBusinessCode(businessId,fileType);
+    public List<UploadFileDto> getFileByBusinessCode(Map<String,String> param){
+        return infoComplianceMapper.getFileByBusinessCode(param);
     }
 
     /**
      *  流程中需要增加批注,不能进行批量审批
      **/
     @Override
-    public String checkForSubmit(FlowEntity entity, boolean isMutiApproval) {
+    public String checkForSubmit(FlowEntity entity, boolean isMutiApproval)  {
         if (isMutiApproval) {
             return "合规留痕管理不能批量审批";
         }
+        try{
+            if(ProcessType.SUBMIT.equals(entity.getProcessType())){
+                processType = entity.getProcessType();
+                FlowEntity flowEntity = WorkflowContext.getProcessService().getRuntimeEntity(entity.getProcessInstanceId());
+                BusinessService<WorkflowEntity> businessService = WorkflowContext.getBusinessService(flowEntity.getBusinessService());
+                Class<?> clz = WorkFlowUtil.getClassByBusinessServiceName(flowEntity.getBusinessService());
+                ProcessMark businessEntity = WorkFlowUtil.getBusinessObjectFromRequest(clz, true);
+                Object a = JsonUtils.OBJECT_MAPPER.readValue(JsonSanitizer.sanitize(businessEntity.getBusinessData()), GenericsUtils.getSuperClassGenricType(ProxyUtil.getTargetClass(businessService.getClass())));
+                InfoComplianceDto infoDto = (InfoComplianceDto)a;
+                if(StringUtil.isEmpty(infoDto.getComment())){
+                    return "修订意见不能为空!";
+                }
+            }
+        } catch (Exception e){
+
+        }
         return null;
+    }
+
+    public List<InfoComplianceCommentDto> getInfoComplianceComment(String infoSeqno){
+        return infoComplianceMapper.getInfoComplianceComment(infoSeqno);
     }
 }

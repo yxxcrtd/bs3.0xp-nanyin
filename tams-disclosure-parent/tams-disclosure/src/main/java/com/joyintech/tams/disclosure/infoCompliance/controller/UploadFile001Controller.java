@@ -12,6 +12,7 @@ import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.disclosure.infoCompliance.dao.InfoComplianceMapper;
 import com.joyintech.tams.disclosure.infoCompliance.dto.UploadFileDto;
 import com.joyintech.tams.disclosure.infoCompliance.service.InfoCompliance002Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +29,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @PageId("UploadFile001")
@@ -54,6 +53,9 @@ public class UploadFile001Controller extends BaseController {
     @Autowired
     private InfoCompliance002Service infoCompliance002Service;
 
+    @Autowired
+    private InfoComplianceMapper infoComplianceMapper;
+
 
     @Override
     public String init(Model model) {
@@ -63,9 +65,12 @@ public class UploadFile001Controller extends BaseController {
         String COPY_FLAG = getParam("COPY_FLAG");
 
         if(StringUtil.isNotEmpty(businessId)){
-            List<UploadFileDto> files = infoCompliance002Service.getFileByBusinessCode(businessId,fileType);
+            Map<String,String> param = new HashMap<String,String>();
+            param.put("businessId",businessId);
+            param.put("fileType",fileType);
+            List<UploadFileDto> files = infoCompliance002Service.getFileByBusinessCode(param);
             model.addAttribute("attachmentFiles", JsonUtils.object2Json(files));
-            if(null != fileAttachmentProcess && StringUtil.isNotEmpty(businessId) && !StringUtil.equals(DictCodeList.是否_是.getValue(), COPY_FLAG)) {
+            if(null != fileAttachmentProcess && !StringUtil.equals(DictCodeList.是否_是.getValue(), COPY_FLAG)) {
                 List<UploadFile> files2 = fileAttachmentProcess.fetchByBusinessCode(businessId);
                 for(UploadFileDto dto:files){
                     for(UploadFile dto2:files2){
@@ -77,8 +82,7 @@ public class UploadFile001Controller extends BaseController {
             }
             model.addAttribute("attachmentFiles", JsonUtils.object2Json(files));
         }
-        // 画面参数设置
-        //model.addAttribute("entityName", StringUtil.defaultString(this.getParam("entityName"), "svrFileCommonDto"));
+        model.addAttribute("businessId",businessId);
         return super.init(model);
     }
 
@@ -157,6 +161,14 @@ public class UploadFile001Controller extends BaseController {
                     });
                 }
 
+                String businessId = request.getParameter("businessId");
+                if(StringUtil.isNotEmpty(businessId)){
+                    UploadFileDto sysFile = new UploadFileDto();
+                    sysFile.setBusinessId(businessId);
+                    sysFile.setSeqNo(fileInfo.getFileNo());
+                    sysFile.setFileType("03");
+                    infoComplianceMapper.updateUplodFile(sysFile);
+                }
                 result.add(fileInfo);
             }
         } else {
