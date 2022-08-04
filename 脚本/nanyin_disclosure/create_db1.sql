@@ -831,3 +831,63 @@ COMMENT ON COLUMN INFO_COMPLIANCE_COMMENT.UPDATE_TIME IS '更新时间';
 COMMENT ON COLUMN INFO_COMPLIANCE_COMMENT.CREATE_DEPT IS '创建部门';
 /**add by 崔伟 20220801 1.1.1信批合规留痕管理 end**/
 
+
+
+/**add by 丁锐 20220804   报表数据校验信息  start**/
+DROP TABLE REP_REPORT_CHECK;
+create table REP_REPORT_CHECK
+(
+    report_check_id VARCHAR2(60) not null,
+    report_type     VARCHAR2(2),
+    report_name     VARCHAR2(200),
+    prod_name       VARCHAR2(200),
+    prod_id         VARCHAR2(60),
+    check_date      DATE,
+    errormsg        VARCHAR2(500),
+    data_status     VARCHAR2(10),
+    data_source     VARCHAR2(10),
+    create_user     VARCHAR2(20),
+    create_time     TIMESTAMP(6),
+    update_user     VARCHAR2(20),
+    update_time     TIMESTAMP(6),
+    create_dept     VARCHAR2(32),
+    tips            VARCHAR2(2)
+);
+-- Add comments to the table
+comment on table REP_REPORT_CHECK
+  is '报表数据校验信息';
+-- Add comments to the columns
+comment on column REP_REPORT_CHECK.report_check_id
+  is '报表数据校验主键';
+comment on column REP_REPORT_CHECK.report_type
+  is '报表类别';
+comment on column REP_REPORT_CHECK.report_name
+  is '报表名称';
+comment on column REP_REPORT_CHECK.prod_name
+  is '产品名称';
+comment on column REP_REPORT_CHECK.prod_id
+  is '产品代码';
+comment on column REP_REPORT_CHECK.check_date
+  is '检查日期';
+comment on column REP_REPORT_CHECK.errormsg
+  is '错误信息';
+comment on column REP_REPORT_CHECK.data_status
+  is '数据状态';
+comment on column REP_REPORT_CHECK.data_source
+  is '数据来源';
+comment on column REP_REPORT_CHECK.create_user
+  is '创建人';
+comment on column REP_REPORT_CHECK.create_time
+  is '创建时间';
+comment on column REP_REPORT_CHECK.update_user
+  is '更新人';
+comment on column REP_REPORT_CHECK.update_time
+  is '更新时间';
+comment on column REP_REPORT_CHECK.create_dept
+  is '创建部门';
+comment on column REP_REPORT_CHECK.tips
+  is '是否提示（01 是；02否，默认是）';
+-- Create/Recreate primary, unique and foreign key constraints
+alter table REP_REPORT_CHECK
+    add constraint PK_REP_REPORTCHECK primary key (REPORT_CHECK_ID);
+/**add by 丁锐 20220804   报表数据校验信息  end**/

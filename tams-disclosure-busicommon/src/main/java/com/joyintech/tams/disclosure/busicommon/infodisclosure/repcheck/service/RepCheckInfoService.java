@@ -557,15 +557,12 @@ public class RepCheckInfoService {
             }
             List<RepCheckInfoDto> rciList = this.getCheckInfo(param);
             for (RepCheckInfoDto dto : rciList) {
-                if (StringUtil.equals(dto.getBaseDataType(),
-                    DictCodeListExt2.基础数据类型_产品信息.getValue())) {
+                if (StringUtil.equals(dto.getBaseDataType(), DictCodeListExt2.基础数据类型_产品信息.getValue())) {
                     Object obj = CommonUtil.getValueByClassName(info, dto.getQueryConten(), T);
                     // 数据校验
                     this.singleCheck(msg, obj, dto, info, T);
                     return msg;
-                }
-                else if (StringUtil.equals(dto.getBaseDataType(),
-                    DictCodeListExt2.基础数据类型_sql.getValue())) {
+                } else if (StringUtil.equals(dto.getBaseDataType(), DictCodeListExt2.基础数据类型_sql.getValue())) {
                     List<Object> list = this.sqlCheck(dto, info, T);
                     if (!StringUtil.isEmptyList(list)) {
                         for (Object obj : list) {
@@ -579,12 +576,32 @@ public class RepCheckInfoService {
 
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             msg.setFlag(false);
             msg.setMsg("阀值校验出现异常,请联系管理员!");
             logger.error(e.getMessage(),e);
+        }finally {
+            //将数据 插入到报表数据检查信息表里面
+            // 判断报表数据检查 是否有当前这个报表的数据
+            boolean existCheckFlag= false ;// TODO 巴啦啦小魔仙
+
+            // 当前检查异常，但是报表检查表有数据，将数据状态改成 删除
+            if(msg.isFlag() && existCheckFlag){
+
+
+            }
+            // 当前检查异常，报表检查表有数据，更新异常原因
+            if(!msg.isFlag() && existCheckFlag){
+
+            }
+            // 当前检查异常，报表检查表没有数据，新增一条异常的报表检查数据
+            if(!msg.isFlag() && !existCheckFlag){
+
+            }
+
+
         }
         return msg;
     }
+
 }

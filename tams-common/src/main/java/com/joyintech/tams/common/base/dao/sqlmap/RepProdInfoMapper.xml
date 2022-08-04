@@ -32,6 +32,47 @@
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
         <result column="STATUS" property="status" jdbcType="VARCHAR" />
         <result column="ISSUE_STATUS" property="issueStatus" jdbcType="VARCHAR" />
+        <result column="REP_PROD_TYPE" property="repProdType" jdbcType="VARCHAR" />
+        <result column="HOLDDAY" property="holdday" jdbcType="DECIMAL" />
+        <result column="TRUSTPART" property="trustpart" jdbcType="VARCHAR" />
+        <result column="ERRORMSG" property="errormsg" jdbcType="VARCHAR" />
+        <result column="ISSUE_STATUS_REMARK" property="issueStatusRemark" jdbcType="VARCHAR" />
+        <result column="RAISE_MIN" property="raiseMin" jdbcType="VARCHAR" />
+        <result column="RAISE_MAX" property="raiseMax" jdbcType="VARCHAR" />
+        <result column="RAISE_CCY" property="raiseCcy" jdbcType="VARCHAR" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="FIRST_OPEN_DAY" property="firstOpenDay" jdbcType="DATE" />
+        <result column="ACT_MDATE" property="actMdate" jdbcType="DATE" />
+        <result column="TERM" property="term" jdbcType="VARCHAR" />
+        <result column="WINDUP_DATE" property="windupDate" jdbcType="DATE" />
+        <result column="ISSUE_MODE" property="issueMode" jdbcType="VARCHAR" />
+        <result column="RISK_LEVEL" property="riskLevel" jdbcType="VARCHAR" />
+        <result column="OPEN_MODE" property="openMode" jdbcType="VARCHAR" />
+        <result column="INVEST_PROF_DATE" property="investProfDate" jdbcType="VARCHAR" />
+        <result column="INVEST_PRIN_DATE" property="investPrinDate" jdbcType="VARCHAR" />
+        <result column="IS_INDEPE_ACC" property="isIndepeAcc" jdbcType="VARCHAR" />
+        <result column="PROD_INVEST_TYPE" property="prodInvestType" jdbcType="VARCHAR" />
+        <result column="REVEAL_CHANNEL" property="revealChannel" jdbcType="VARCHAR" />
+        <result column="DEAL_CAL" property="dealCal" jdbcType="VARCHAR" />
+        <result column="FINA_TYPE" property="finaType" jdbcType="VARCHAR" />
+        <result column="TRU_ACCOUNT" property="truAccount" jdbcType="VARCHAR" />
+        <result column="TRU_FEE_RAGE" property="truFeeRage" jdbcType="DECIMAL" />
+        <result column="TRU_ACCOUNT_NUM" property="truAccountNum" jdbcType="VARCHAR" />
+        <result column="TRU_ACCOUNT_NAME" property="truAccountName" jdbcType="VARCHAR" />
+        <result column="PROD_TERM_TYPE" property="prodTermType" jdbcType="VARCHAR" />
+        <result column="BASIS" property="basis" jdbcType="VARCHAR" />
+        <result column="TARGET_SALE" property="targetSale" jdbcType="VARCHAR" />
+        <result column="IS_LAYER" property="isLayer" jdbcType="VARCHAR" />
+        <result column="PRO_MANAGER" property="proManager" jdbcType="VARCHAR" />
+        <result column="PRO_CUSTODIAN" property="proCustodian" jdbcType="VARCHAR" />
+        <result column="HUGE_REDEEM_THRESHOLD" property="hugeRedeemThreshold" jdbcType="DECIMAL" />
+        <result column="SALE_AMT_STR" property="saleAmtStr" jdbcType="DECIMAL" />
+        <result column="OPERATE_MODE" property="operateMode" jdbcType="VARCHAR" />
+        <result column="F_PROD_ID" property="fProdId" jdbcType="VARCHAR" />
+        <result column="PRODPROFITFLAG" property="prodprofitflag" jdbcType="VARCHAR" />
+        <result column="SALETARGET_DECLARE" property="saletargetDeclare" jdbcType="VARCHAR" />
+        <result column="BONUS_MODE" property="bonusMode" jdbcType="VARCHAR" />
+        <result column="LOWEST_AMT" property="lowestAmt" jdbcType="DECIMAL" />
     </resultMap>
     <sql id="Base_Column_List" >
         PROD_ID PROD_ID, PROD_NAME PROD_NAME, SET_DATE SET_DATE, RAISE_AMT RAISE_AMT, PROD_ABBR PROD_ABBR, 
@@ -41,7 +82,18 @@
         PROD_TYPE PROD_TYPE, ISSUING_WAY ISSUING_WAY, ACCT_CHNNAME ACCT_CHNNAME, PROFIT_TYPE PROFIT_TYPE, 
         PD_STATUS PD_STATUS, PROD_SERIES PROD_SERIES, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
         CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, STATUS STATUS, 
-        ISSUE_STATUS ISSUE_STATUS
+        ISSUE_STATUS ISSUE_STATUS, REP_PROD_TYPE REP_PROD_TYPE, HOLDDAY HOLDDAY, TRUSTPART TRUSTPART, 
+        ERRORMSG ERRORMSG, ISSUE_STATUS_REMARK ISSUE_STATUS_REMARK, RAISE_MIN RAISE_MIN, 
+        RAISE_MAX RAISE_MAX, RAISE_CCY RAISE_CCY, VDATE VDATE, FIRST_OPEN_DAY FIRST_OPEN_DAY, 
+        ACT_MDATE ACT_MDATE, TERM TERM, WINDUP_DATE WINDUP_DATE, ISSUE_MODE ISSUE_MODE, RISK_LEVEL RISK_LEVEL, 
+        OPEN_MODE OPEN_MODE, INVEST_PROF_DATE INVEST_PROF_DATE, INVEST_PRIN_DATE INVEST_PRIN_DATE, 
+        IS_INDEPE_ACC IS_INDEPE_ACC, PROD_INVEST_TYPE PROD_INVEST_TYPE, REVEAL_CHANNEL REVEAL_CHANNEL, 
+        DEAL_CAL DEAL_CAL, FINA_TYPE FINA_TYPE, TRU_ACCOUNT TRU_ACCOUNT, TRU_FEE_RAGE TRU_FEE_RAGE, 
+        TRU_ACCOUNT_NUM TRU_ACCOUNT_NUM, TRU_ACCOUNT_NAME TRU_ACCOUNT_NAME, PROD_TERM_TYPE PROD_TERM_TYPE, 
+        BASIS BASIS, TARGET_SALE TARGET_SALE, IS_LAYER IS_LAYER, PRO_MANAGER PRO_MANAGER, 
+        PRO_CUSTODIAN PRO_CUSTODIAN, HUGE_REDEEM_THRESHOLD HUGE_REDEEM_THRESHOLD, SALE_AMT_STR SALE_AMT_STR, 
+        OPERATE_MODE OPERATE_MODE, F_PROD_ID F_PROD_ID, PRODPROFITFLAG PRODPROFITFLAG, SALETARGET_DECLARE SALETARGET_DECLARE, 
+        BONUS_MODE BONUS_MODE, LOWEST_AMT LOWEST_AMT
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -74,8 +126,21 @@
             ISSUING_WAY, ACCT_CHNNAME, PROFIT_TYPE, 
             PD_STATUS, PROD_SERIES, CREATE_USER, 
             CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-            UPDATE_TIME, STATUS, ISSUE_STATUS
-            )
+            UPDATE_TIME, STATUS, ISSUE_STATUS, 
+            REP_PROD_TYPE, HOLDDAY, TRUSTPART, 
+            ERRORMSG, ISSUE_STATUS_REMARK, RAISE_MIN, 
+            RAISE_MAX, RAISE_CCY, VDATE, 
+            FIRST_OPEN_DAY, ACT_MDATE, TERM, 
+            WINDUP_DATE, ISSUE_MODE, RISK_LEVEL, 
+            OPEN_MODE, INVEST_PROF_DATE, INVEST_PRIN_DATE, 
+            IS_INDEPE_ACC, PROD_INVEST_TYPE, REVEAL_CHANNEL, 
+            DEAL_CAL, FINA_TYPE, TRU_ACCOUNT, 
+            TRU_FEE_RAGE, TRU_ACCOUNT_NUM, TRU_ACCOUNT_NAME, 
+            PROD_TERM_TYPE, BASIS, TARGET_SALE, 
+            IS_LAYER, PRO_MANAGER, PRO_CUSTODIAN, 
+            HUGE_REDEEM_THRESHOLD, SALE_AMT_STR, OPERATE_MODE, 
+            F_PROD_ID, PRODPROFITFLAG, SALETARGET_DECLARE, 
+            BONUS_MODE, LOWEST_AMT)
         values (#{prodId,jdbcType=VARCHAR}, #{prodName,jdbcType=VARCHAR}, #{setDate,jdbcType=DATE}, 
             #{raiseAmt,jdbcType=DECIMAL}, #{prodAbbr,jdbcType=VARCHAR}, #{prodRe,jdbcType=VARCHAR}, 
             #{pProdId,jdbcType=VARCHAR}, #{raiseStrdate,jdbcType=DATE}, #{raiseEnddate,jdbcType=DATE}, 
@@ -85,8 +150,21 @@
             #{issuingWay,jdbcType=VARCHAR}, #{acctChnname,jdbcType=VARCHAR}, #{profitType,jdbcType=VARCHAR}, 
             #{pdStatus,jdbcType=VARCHAR}, #{prodSeries,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
             #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
-            #{updateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}, #{issueStatus,jdbcType=VARCHAR}
-            )
+            #{updateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}, #{issueStatus,jdbcType=VARCHAR}, 
+            #{repProdType,jdbcType=VARCHAR}, #{holdday,jdbcType=DECIMAL}, #{trustpart,jdbcType=VARCHAR}, 
+            #{errormsg,jdbcType=VARCHAR}, #{issueStatusRemark,jdbcType=VARCHAR}, #{raiseMin,jdbcType=VARCHAR}, 
+            #{raiseMax,jdbcType=VARCHAR}, #{raiseCcy,jdbcType=VARCHAR}, #{vdate,jdbcType=DATE}, 
+            #{firstOpenDay,jdbcType=DATE}, #{actMdate,jdbcType=DATE}, #{term,jdbcType=VARCHAR}, 
+            #{windupDate,jdbcType=DATE}, #{issueMode,jdbcType=VARCHAR}, #{riskLevel,jdbcType=VARCHAR}, 
+            #{openMode,jdbcType=VARCHAR}, #{investProfDate,jdbcType=VARCHAR}, #{investPrinDate,jdbcType=VARCHAR}, 
+            #{isIndepeAcc,jdbcType=VARCHAR}, #{prodInvestType,jdbcType=VARCHAR}, #{revealChannel,jdbcType=VARCHAR}, 
+            #{dealCal,jdbcType=VARCHAR}, #{finaType,jdbcType=VARCHAR}, #{truAccount,jdbcType=VARCHAR}, 
+            #{truFeeRage,jdbcType=DECIMAL}, #{truAccountNum,jdbcType=VARCHAR}, #{truAccountName,jdbcType=VARCHAR}, 
+            #{prodTermType,jdbcType=VARCHAR}, #{basis,jdbcType=VARCHAR}, #{targetSale,jdbcType=VARCHAR}, 
+            #{isLayer,jdbcType=VARCHAR}, #{proManager,jdbcType=VARCHAR}, #{proCustodian,jdbcType=VARCHAR}, 
+            #{hugeRedeemThreshold,jdbcType=DECIMAL}, #{saleAmtStr,jdbcType=DECIMAL}, #{operateMode,jdbcType=VARCHAR}, 
+            #{fProdId,jdbcType=VARCHAR}, #{prodprofitflag,jdbcType=VARCHAR}, #{saletargetDeclare,jdbcType=VARCHAR}, 
+            #{bonusMode,jdbcType=VARCHAR}, #{lowestAmt,jdbcType=DECIMAL})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepProdInfo" >
         insert into REP_PROD_INFO
@@ -181,6 +259,129 @@
             <if test="issueStatus != null" >
                 ISSUE_STATUS,
             </if>
+            <if test="repProdType != null" >
+                REP_PROD_TYPE,
+            </if>
+            <if test="holdday != null" >
+                HOLDDAY,
+            </if>
+            <if test="trustpart != null" >
+                TRUSTPART,
+            </if>
+            <if test="errormsg != null" >
+                ERRORMSG,
+            </if>
+            <if test="issueStatusRemark != null" >
+                ISSUE_STATUS_REMARK,
+            </if>
+            <if test="raiseMin != null" >
+                RAISE_MIN,
+            </if>
+            <if test="raiseMax != null" >
+                RAISE_MAX,
+            </if>
+            <if test="raiseCcy != null" >
+                RAISE_CCY,
+            </if>
+            <if test="vdate != null" >
+                VDATE,
+            </if>
+            <if test="firstOpenDay != null" >
+                FIRST_OPEN_DAY,
+            </if>
+            <if test="actMdate != null" >
+                ACT_MDATE,
+            </if>
+            <if test="term != null" >
+                TERM,
+            </if>
+            <if test="windupDate != null" >
+                WINDUP_DATE,
+            </if>
+            <if test="issueMode != null" >
+                ISSUE_MODE,
+            </if>
+            <if test="riskLevel != null" >
+                RISK_LEVEL,
+            </if>
+            <if test="openMode != null" >
+                OPEN_MODE,
+            </if>
+            <if test="investProfDate != null" >
+                INVEST_PROF_DATE,
+            </if>
+            <if test="investPrinDate != null" >
+                INVEST_PRIN_DATE,
+            </if>
+            <if test="isIndepeAcc != null" >
+                IS_INDEPE_ACC,
+            </if>
+            <if test="prodInvestType != null" >
+                PROD_INVEST_TYPE,
+            </if>
+            <if test="revealChannel != null" >
+                REVEAL_CHANNEL,
+            </if>
+            <if test="dealCal != null" >
+                DEAL_CAL,
+            </if>
+            <if test="finaType != null" >
+                FINA_TYPE,
+            </if>
+            <if test="truAccount != null" >
+                TRU_ACCOUNT,
+            </if>
+            <if test="truFeeRage != null" >
+                TRU_FEE_RAGE,
+            </if>
+            <if test="truAccountNum != null" >
+                TRU_ACCOUNT_NUM,
+            </if>
+            <if test="truAccountName != null" >
+                TRU_ACCOUNT_NAME,
+            </if>
+            <if test="prodTermType != null" >
+                PROD_TERM_TYPE,
+            </if>
+            <if test="basis != null" >
+                BASIS,
+            </if>
+            <if test="targetSale != null" >
+                TARGET_SALE,
+            </if>
+            <if test="isLayer != null" >
+                IS_LAYER,
+            </if>
+            <if test="proManager != null" >
+                PRO_MANAGER,
+            </if>
+            <if test="proCustodian != null" >
+                PRO_CUSTODIAN,
+            </if>
+            <if test="hugeRedeemThreshold != null" >
+                HUGE_REDEEM_THRESHOLD,
+            </if>
+            <if test="saleAmtStr != null" >
+                SALE_AMT_STR,
+            </if>
+            <if test="operateMode != null" >
+                OPERATE_MODE,
+            </if>
+            <if test="fProdId != null" >
+                F_PROD_ID,
+            </if>
+            <if test="prodprofitflag != null" >
+                PRODPROFITFLAG,
+            </if>
+            <if test="saletargetDeclare != null" >
+                SALETARGET_DECLARE,
+            </if>
+            <if test="bonusMode != null" >
+                BONUS_MODE,
+            </if>
+            <if test="lowestAmt != null" >
+                LOWEST_AMT,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="prodId != null" >
@@ -273,6 +474,129 @@
             <if test="issueStatus != null" >
                 #{issueStatus,jdbcType=VARCHAR},
             </if>
+            <if test="repProdType != null" >
+                #{repProdType,jdbcType=VARCHAR},
+            </if>
+            <if test="holdday != null" >
+                #{holdday,jdbcType=DECIMAL},
+            </if>
+            <if test="trustpart != null" >
+                #{trustpart,jdbcType=VARCHAR},
+            </if>
+            <if test="errormsg != null" >
+                #{errormsg,jdbcType=VARCHAR},
+            </if>
+            <if test="issueStatusRemark != null" >
+                #{issueStatusRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="raiseMin != null" >
+                #{raiseMin,jdbcType=VARCHAR},
+            </if>
+            <if test="raiseMax != null" >
+                #{raiseMax,jdbcType=VARCHAR},
+            </if>
+            <if test="raiseCcy != null" >
+                #{raiseCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="vdate != null" >
+                #{vdate,jdbcType=DATE},
+            </if>
+            <if test="firstOpenDay != null" >
+                #{firstOpenDay,jdbcType=DATE},
+            </if>
+            <if test="actMdate != null" >
+                #{actMdate,jdbcType=DATE},
+            </if>
+            <if test="term != null" >
+                #{term,jdbcType=VARCHAR},
+            </if>
+            <if test="windupDate != null" >
+                #{windupDate,jdbcType=DATE},
+            </if>
+            <if test="issueMode != null" >
+                #{issueMode,jdbcType=VARCHAR},
+            </if>
+            <if test="riskLevel != null" >
+                #{riskLevel,jdbcType=VARCHAR},
+            </if>
+            <if test="openMode != null" >
+                #{openMode,jdbcType=VARCHAR},
+            </if>
+            <if test="investProfDate != null" >
+                #{investProfDate,jdbcType=VARCHAR},
+            </if>
+            <if test="investPrinDate != null" >
+                #{investPrinDate,jdbcType=VARCHAR},
+            </if>
+            <if test="isIndepeAcc != null" >
+                #{isIndepeAcc,jdbcType=VARCHAR},
+            </if>
+            <if test="prodInvestType != null" >
+                #{prodInvestType,jdbcType=VARCHAR},
+            </if>
+            <if test="revealChannel != null" >
+                #{revealChannel,jdbcType=VARCHAR},
+            </if>
+            <if test="dealCal != null" >
+                #{dealCal,jdbcType=VARCHAR},
+            </if>
+            <if test="finaType != null" >
+                #{finaType,jdbcType=VARCHAR},
+            </if>
+            <if test="truAccount != null" >
+                #{truAccount,jdbcType=VARCHAR},
+            </if>
+            <if test="truFeeRage != null" >
+                #{truFeeRage,jdbcType=DECIMAL},
+            </if>
+            <if test="truAccountNum != null" >
+                #{truAccountNum,jdbcType=VARCHAR},
+            </if>
+            <if test="truAccountName != null" >
+                #{truAccountName,jdbcType=VARCHAR},
+            </if>
+            <if test="prodTermType != null" >
+                #{prodTermType,jdbcType=VARCHAR},
+            </if>
+            <if test="basis != null" >
+                #{basis,jdbcType=VARCHAR},
+            </if>
+            <if test="targetSale != null" >
+                #{targetSale,jdbcType=VARCHAR},
+            </if>
+            <if test="isLayer != null" >
+                #{isLayer,jdbcType=VARCHAR},
+            </if>
+            <if test="proManager != null" >
+                #{proManager,jdbcType=VARCHAR},
+            </if>
+            <if test="proCustodian != null" >
+                #{proCustodian,jdbcType=VARCHAR},
+            </if>
+            <if test="hugeRedeemThreshold != null" >
+                #{hugeRedeemThreshold,jdbcType=DECIMAL},
+            </if>
+            <if test="saleAmtStr != null" >
+                #{saleAmtStr,jdbcType=DECIMAL},
+            </if>
+            <if test="operateMode != null" >
+                #{operateMode,jdbcType=VARCHAR},
+            </if>
+            <if test="fProdId != null" >
+                #{fProdId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodprofitflag != null" >
+                #{prodprofitflag,jdbcType=VARCHAR},
+            </if>
+            <if test="saletargetDeclare != null" >
+                #{saletargetDeclare,jdbcType=VARCHAR},
+            </if>
+            <if test="bonusMode != null" >
+                #{bonusMode,jdbcType=VARCHAR},
+            </if>
+            <if test="lowestAmt != null" >
+                #{lowestAmt,jdbcType=DECIMAL},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepProdInfo" >
@@ -280,12 +604,24 @@
         P_PROD_ID, RAISE_STRDATE, RAISE_ENDDATE, MDATE, RAISE_TYPE, PERFORM_COMPARE, IS_PERIOD, 
         IS_GRADE, IS_INDEX, OPEN_FREQ, NATURE_INVEST, PROD_TYPE, ISSUING_WAY, ACCT_CHNNAME, 
         PROFIT_TYPE, PD_STATUS, PROD_SERIES, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-        UPDATE_TIME, STATUS, ISSUE_STATUS)
+        UPDATE_TIME, STATUS, ISSUE_STATUS, REP_PROD_TYPE, HOLDDAY, TRUSTPART, ERRORMSG, ISSUE_STATUS_REMARK, 
+        RAISE_MIN, RAISE_MAX, RAISE_CCY, VDATE, FIRST_OPEN_DAY, ACT_MDATE, TERM, WINDUP_DATE, 
+        ISSUE_MODE, RISK_LEVEL, OPEN_MODE, INVEST_PROF_DATE, INVEST_PRIN_DATE, IS_INDEPE_ACC, 
+        PROD_INVEST_TYPE, REVEAL_CHANNEL, DEAL_CAL, FINA_TYPE, TRU_ACCOUNT, TRU_FEE_RAGE, 
+        TRU_ACCOUNT_NUM, TRU_ACCOUNT_NAME, PROD_TERM_TYPE, BASIS, TARGET_SALE, IS_LAYER, 
+        PRO_MANAGER, PRO_CUSTODIAN, HUGE_REDEEM_THRESHOLD, SALE_AMT_STR, OPERATE_MODE, F_PROD_ID, 
+        PRODPROFITFLAG, SALETARGET_DECLARE, BONUS_MODE, LOWEST_AMT)
         select PROD_ID, PROD_NAME, SET_DATE, RAISE_AMT, PROD_ABBR, PROD_RE, 
             P_PROD_ID, RAISE_STRDATE, RAISE_ENDDATE, MDATE, RAISE_TYPE, PERFORM_COMPARE, IS_PERIOD, 
             IS_GRADE, IS_INDEX, OPEN_FREQ, NATURE_INVEST, PROD_TYPE, ISSUING_WAY, ACCT_CHNNAME, 
             PROFIT_TYPE, PD_STATUS, PROD_SERIES, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
-            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, #{status,jdbcType=VARCHAR} STATUS, ISSUE_STATUS
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, #{status,jdbcType=VARCHAR} STATUS, ISSUE_STATUS, REP_PROD_TYPE, HOLDDAY, TRUSTPART, ERRORMSG, ISSUE_STATUS_REMARK, 
+            RAISE_MIN, RAISE_MAX, RAISE_CCY, VDATE, FIRST_OPEN_DAY, ACT_MDATE, TERM, WINDUP_DATE, 
+            ISSUE_MODE, RISK_LEVEL, OPEN_MODE, INVEST_PROF_DATE, INVEST_PRIN_DATE, IS_INDEPE_ACC, 
+            PROD_INVEST_TYPE, REVEAL_CHANNEL, DEAL_CAL, FINA_TYPE, TRU_ACCOUNT, TRU_FEE_RAGE, 
+            TRU_ACCOUNT_NUM, TRU_ACCOUNT_NAME, PROD_TERM_TYPE, BASIS, TARGET_SALE, IS_LAYER, 
+            PRO_MANAGER, PRO_CUSTODIAN, HUGE_REDEEM_THRESHOLD, SALE_AMT_STR, OPERATE_MODE, F_PROD_ID, 
+            PRODPROFITFLAG, SALETARGET_DECLARE, BONUS_MODE, LOWEST_AMT
              from REP_PROD_INFO
              where STATUS = 'E' and PROD_ID = #{prodId,jdbcType=VARCHAR}
     </insert>
@@ -370,6 +706,129 @@
             <if test="issueStatus != null" >
                 ISSUE_STATUS = #{issueStatus,jdbcType=VARCHAR},
             </if>
+            <if test="repProdType != null" >
+                REP_PROD_TYPE = #{repProdType,jdbcType=VARCHAR},
+            </if>
+            <if test="holdday != null" >
+                HOLDDAY = #{holdday,jdbcType=DECIMAL},
+            </if>
+            <if test="trustpart != null" >
+                TRUSTPART = #{trustpart,jdbcType=VARCHAR},
+            </if>
+            <if test="errormsg != null" >
+                ERRORMSG = #{errormsg,jdbcType=VARCHAR},
+            </if>
+            <if test="issueStatusRemark != null" >
+                ISSUE_STATUS_REMARK = #{issueStatusRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="raiseMin != null" >
+                RAISE_MIN = #{raiseMin,jdbcType=VARCHAR},
+            </if>
+            <if test="raiseMax != null" >
+                RAISE_MAX = #{raiseMax,jdbcType=VARCHAR},
+            </if>
+            <if test="raiseCcy != null" >
+                RAISE_CCY = #{raiseCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="vdate != null" >
+                VDATE = #{vdate,jdbcType=DATE},
+            </if>
+            <if test="firstOpenDay != null" >
+                FIRST_OPEN_DAY = #{firstOpenDay,jdbcType=DATE},
+            </if>
+            <if test="actMdate != null" >
+                ACT_MDATE = #{actMdate,jdbcType=DATE},
+            </if>
+            <if test="term != null" >
+                TERM = #{term,jdbcType=VARCHAR},
+            </if>
+            <if test="windupDate != null" >
+                WINDUP_DATE = #{windupDate,jdbcType=DATE},
+            </if>
+            <if test="issueMode != null" >
+                ISSUE_MODE = #{issueMode,jdbcType=VARCHAR},
+            </if>
+            <if test="riskLevel != null" >
+                RISK_LEVEL = #{riskLevel,jdbcType=VARCHAR},
+            </if>
+            <if test="openMode != null" >
+                OPEN_MODE = #{openMode,jdbcType=VARCHAR},
+            </if>
+            <if test="investProfDate != null" >
+                INVEST_PROF_DATE = #{investProfDate,jdbcType=VARCHAR},
+            </if>
+            <if test="investPrinDate != null" >
+                INVEST_PRIN_DATE = #{investPrinDate,jdbcType=VARCHAR},
+            </if>
+            <if test="isIndepeAcc != null" >
+                IS_INDEPE_ACC = #{isIndepeAcc,jdbcType=VARCHAR},
+            </if>
+            <if test="prodInvestType != null" >
+                PROD_INVEST_TYPE = #{prodInvestType,jdbcType=VARCHAR},
+            </if>
+            <if test="revealChannel != null" >
+                REVEAL_CHANNEL = #{revealChannel,jdbcType=VARCHAR},
+            </if>
+            <if test="dealCal != null" >
+                DEAL_CAL = #{dealCal,jdbcType=VARCHAR},
+            </if>
+            <if test="finaType != null" >
+                FINA_TYPE = #{finaType,jdbcType=VARCHAR},
+            </if>
+            <if test="truAccount != null" >
+                TRU_ACCOUNT = #{truAccount,jdbcType=VARCHAR},
+            </if>
+            <if test="truFeeRage != null" >
+                TRU_FEE_RAGE = #{truFeeRage,jdbcType=DECIMAL},
+            </if>
+            <if test="truAccountNum != null" >
+                TRU_ACCOUNT_NUM = #{truAccountNum,jdbcType=VARCHAR},
+            </if>
+            <if test="truAccountName != null" >
+                TRU_ACCOUNT_NAME = #{truAccountName,jdbcType=VARCHAR},
+            </if>
+            <if test="prodTermType != null" >
+                PROD_TERM_TYPE = #{prodTermType,jdbcType=VARCHAR},
+            </if>
+            <if test="basis != null" >
+                BASIS = #{basis,jdbcType=VARCHAR},
+            </if>
+            <if test="targetSale != null" >
+                TARGET_SALE = #{targetSale,jdbcType=VARCHAR},
+            </if>
+            <if test="isLayer != null" >
+                IS_LAYER = #{isLayer,jdbcType=VARCHAR},
+            </if>
+            <if test="proManager != null" >
+                PRO_MANAGER = #{proManager,jdbcType=VARCHAR},
+            </if>
+            <if test="proCustodian != null" >
+                PRO_CUSTODIAN = #{proCustodian,jdbcType=VARCHAR},
+            </if>
+            <if test="hugeRedeemThreshold != null" >
+                HUGE_REDEEM_THRESHOLD = #{hugeRedeemThreshold,jdbcType=DECIMAL},
+            </if>
+            <if test="saleAmtStr != null" >
+                SALE_AMT_STR = #{saleAmtStr,jdbcType=DECIMAL},
+            </if>
+            <if test="operateMode != null" >
+                OPERATE_MODE = #{operateMode,jdbcType=VARCHAR},
+            </if>
+            <if test="fProdId != null" >
+                F_PROD_ID = #{fProdId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodprofitflag != null" >
+                PRODPROFITFLAG = #{prodprofitflag,jdbcType=VARCHAR},
+            </if>
+            <if test="saletargetDeclare != null" >
+                SALETARGET_DECLARE = #{saletargetDeclare,jdbcType=VARCHAR},
+            </if>
+            <if test="bonusMode != null" >
+                BONUS_MODE = #{bonusMode,jdbcType=VARCHAR},
+            </if>
+            <if test="lowestAmt != null" >
+                LOWEST_AMT = #{lowestAmt,jdbcType=DECIMAL},
+            </if>
         </set>
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
     </update>
@@ -400,7 +859,48 @@
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             STATUS = #{status,jdbcType=VARCHAR},
-            ISSUE_STATUS = #{issueStatus,jdbcType=VARCHAR}
+            ISSUE_STATUS = #{issueStatus,jdbcType=VARCHAR},
+            REP_PROD_TYPE = #{repProdType,jdbcType=VARCHAR},
+            HOLDDAY = #{holdday,jdbcType=DECIMAL},
+            TRUSTPART = #{trustpart,jdbcType=VARCHAR},
+            ERRORMSG = #{errormsg,jdbcType=VARCHAR},
+            ISSUE_STATUS_REMARK = #{issueStatusRemark,jdbcType=VARCHAR},
+            RAISE_MIN = #{raiseMin,jdbcType=VARCHAR},
+            RAISE_MAX = #{raiseMax,jdbcType=VARCHAR},
+            RAISE_CCY = #{raiseCcy,jdbcType=VARCHAR},
+            VDATE = #{vdate,jdbcType=DATE},
+            FIRST_OPEN_DAY = #{firstOpenDay,jdbcType=DATE},
+            ACT_MDATE = #{actMdate,jdbcType=DATE},
+            TERM = #{term,jdbcType=VARCHAR},
+            WINDUP_DATE = #{windupDate,jdbcType=DATE},
+            ISSUE_MODE = #{issueMode,jdbcType=VARCHAR},
+            RISK_LEVEL = #{riskLevel,jdbcType=VARCHAR},
+            OPEN_MODE = #{openMode,jdbcType=VARCHAR},
+            INVEST_PROF_DATE = #{investProfDate,jdbcType=VARCHAR},
+            INVEST_PRIN_DATE = #{investPrinDate,jdbcType=VARCHAR},
+            IS_INDEPE_ACC = #{isIndepeAcc,jdbcType=VARCHAR},
+            PROD_INVEST_TYPE = #{prodInvestType,jdbcType=VARCHAR},
+            REVEAL_CHANNEL = #{revealChannel,jdbcType=VARCHAR},
+            DEAL_CAL = #{dealCal,jdbcType=VARCHAR},
+            FINA_TYPE = #{finaType,jdbcType=VARCHAR},
+            TRU_ACCOUNT = #{truAccount,jdbcType=VARCHAR},
+            TRU_FEE_RAGE = #{truFeeRage,jdbcType=DECIMAL},
+            TRU_ACCOUNT_NUM = #{truAccountNum,jdbcType=VARCHAR},
+            TRU_ACCOUNT_NAME = #{truAccountName,jdbcType=VARCHAR},
+            PROD_TERM_TYPE = #{prodTermType,jdbcType=VARCHAR},
+            BASIS = #{basis,jdbcType=VARCHAR},
+            TARGET_SALE = #{targetSale,jdbcType=VARCHAR},
+            IS_LAYER = #{isLayer,jdbcType=VARCHAR},
+            PRO_MANAGER = #{proManager,jdbcType=VARCHAR},
+            PRO_CUSTODIAN = #{proCustodian,jdbcType=VARCHAR},
+            HUGE_REDEEM_THRESHOLD = #{hugeRedeemThreshold,jdbcType=DECIMAL},
+            SALE_AMT_STR = #{saleAmtStr,jdbcType=DECIMAL},
+            OPERATE_MODE = #{operateMode,jdbcType=VARCHAR},
+            F_PROD_ID = #{fProdId,jdbcType=VARCHAR},
+            PRODPROFITFLAG = #{prodprofitflag,jdbcType=VARCHAR},
+            SALETARGET_DECLARE = #{saletargetDeclare,jdbcType=VARCHAR},
+            BONUS_MODE = #{bonusMode,jdbcType=VARCHAR},
+            LOWEST_AMT = #{lowestAmt,jdbcType=DECIMAL}
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
     </update>
 </mapper>
