@@ -85,6 +85,12 @@ public enum DictCodeExt1 implements BaseDictCode {
      */
     业务代码("BUSINESS_CODE"),
 
+
+    /**
+     * 信披报表类别
+     */
+    信披报表类别("DIS_REPORT_STYLE"),
+
     ;
     private String value;
 

@@ -195,8 +195,7 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
                     if (!StringUtil.isNotEmpty(rowData.get(0))) {
                         errorMsg.append("产品主代码 必填！");
                     } else {
-                        prodInfo = prodInfoService.selectByProdStatus(rowData.get(0));
-                        if (prodInfo == null) {
+                        if (!this.getProdId(rowData.get(0))) {
                             errorMsg.append("产品主代码 不存在");
                         }
                     }
@@ -384,4 +383,12 @@ public class DisProdPlanManage001Service extends CommonExportService<DisProdPlan
         return dto;
     }
 
+    public Boolean getProdId(String prodId) {
+        String r = disProdPlanManage001Mapper.getProdId(prodId);
+        if(StringUtil.isNotEmpty(r)){
+            return true;
+        }else{
+            return false;
+        }
+    }
 }

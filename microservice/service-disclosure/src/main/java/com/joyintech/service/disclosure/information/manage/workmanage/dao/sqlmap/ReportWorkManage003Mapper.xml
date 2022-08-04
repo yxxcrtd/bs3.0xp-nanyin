@@ -5,18 +5,17 @@
 		SELECT Row_Number() OVER (ORDER BY PROD_ID desc) as id,PROD_ID as prodId,nvl(PROD_ABBR,PROD_NAME) as prodName
         FROM REP_PROD_INFO
         where 1=1
-        and p_prod_id is null /*不取子产品*/
         <if test="condition != null and condition != ''">
 			<![CDATA[ ${condition}  ]]>
 		</if>
-		<if test="chooseProdId != null and chooseProdId.length > 0">
+		<if test="chooseProdId != null and chooseProdId.size() > 0">
 	 		AND PROD_ID NOT IN
 			<foreach item="item" collection="chooseProdId" index="index"
 				open="(" separator="," close=")">
 				#{item}
 			</foreach>
 		</if>
-		<if test="prodIds != null and prodIds.length > 0">
+		<if test="prodIds != null and prodIds.size() > 0">
 	 		AND PROD_ID NOT IN
 			<foreach item="item" collection="prodIds" index="index"
 				open="(" separator="," close=")">

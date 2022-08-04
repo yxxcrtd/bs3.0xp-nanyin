@@ -158,7 +158,7 @@ $(function() {
         //新建点击事件
         $('#RepProdIndex001_btn_add').click(function() {
             var data={operateType:"add", pageModel:PAGE_MODEL_NEW};
-            Joyin.dialog('产品基础指标信息维护-新建',basePath+'disclosure/information/config/repProdIndex/RepProdIndex002/init', '90%', '80%',data,function(){table.reload();});
+            Joyin.dialog('产品基础指标信息维护新建',basePath+'disclosure/information/config/repProdIndex/RepProdIndex002/init', '90%', '80%',data,function(){table.reload();});
         });
 
         // 行内删除按钮点击事件
@@ -206,7 +206,7 @@ $(function() {
                 prodId: data.prodId,
                 valueDate: data.valueDateStr,
                 operateType: PAGE_MODEL_EDIT};//请求参数
-            Joyin.dialog(JoyinUtil.getLabel("产品基础指标信息维护-编辑"),
+            Joyin.dialog(JoyinUtil.getLabel("产品基础指标信息维护编辑"),
                 JoyinUtil.getRealPath("disclosure/information/config/repProdIndex/RepProdIndex002/init"),
                 "90%", "80%", object,
                 function(data){

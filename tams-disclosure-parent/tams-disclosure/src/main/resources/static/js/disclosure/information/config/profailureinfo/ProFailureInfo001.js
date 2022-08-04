@@ -44,7 +44,7 @@
          */
         dblclick: function (table, data) {
             data.pageModel=PAGE_MODEL_REFERENCE;
-            Joyin.dialog(JoyinUtil.getLabel("产品不成立信息查看"),
+            Joyin.dialog(JoyinUtil.getLabel("产品不成立信息维护查看"),
                 basePath + "disclosure/information/config/profailureinfo/ProFailureInfo002/init",
                 "99%", "99%", data,function(){table.reload();});
         },
@@ -77,7 +77,7 @@
     table.bind('click', '.edit', function(data, index) {
         data.pageModel = PAGE_MODEL_EDIT;
         Joyin.ajaxJson(basePath + 'disclosure/information/config/profailureinfo/ProFailureInfo001/check', data, function(editResult){
-            Joyin.dialog(JoyinUtil.getLabel("产品不成立信息编辑"),
+            Joyin.dialog(JoyinUtil.getLabel("产品不成立信息维护编辑"),
                 basePath + "disclosure/information/config/profailureinfo/ProFailureInfo002/init",
                 "95%", "90%",data,function() {
                     table.reload();
@@ -180,7 +180,7 @@
         });
         //新建(点击打开新建画面)
         $('#ProFailureInfo001_btn_add').click(function() {
-            Joyin.dialog(JoyinUtil.getLabel("产品不成立信息新建"),
+            Joyin.dialog(JoyinUtil.getLabel("产品不成立信息维护新建"),
                 basePath + "disclosure/information/config/profailureinfo/ProFailureInfo002/init","100%", "100%", {pageModel:PAGE_MODEL_NEW},
                 function() {
                     table.reload();

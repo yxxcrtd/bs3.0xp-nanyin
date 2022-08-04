@@ -443,7 +443,7 @@ $(function() {
 				Joyin.alert("请选择募集方式",7);
 				return;
 			}
-		} else if (rule.ruleType1 == 'ISSUE_MODE') {
+		} else if (rule.ruleType1 == 'ISSUING_WAY') {
 			if($('#issueMode').select2('data')[0]){
 				rule.ruleType4 = $('#issueMode').select2('data')[0].id;
 				rule.ruleType4Name = $('#issueMode').select2('data')[0].text;
@@ -624,7 +624,7 @@ $(function() {
 			$('#prodTermTypeSelect').hide();
 			$('#prodproFitflagSelect').hide();
 			$('#saletargetDeclareSelect').hide();
-		} else if (ruleType1 == 'ISSUE_MODE') {
+		} else if (ruleType1 == 'ISSUING_WAY') {
 			$('#raiseTypeSelect').hide();
 			$('#chooseDateSelect').hide();
 			$('#profitTypeSelect').hide();

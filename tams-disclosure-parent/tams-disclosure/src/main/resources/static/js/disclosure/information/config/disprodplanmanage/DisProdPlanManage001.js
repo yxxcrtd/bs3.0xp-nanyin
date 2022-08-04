@@ -282,7 +282,7 @@
 			*/
 		   dblclick: function (dataTable2, data) {
 			   data.pageModel=PAGE_MODEL_REFERENCE;
-			   Joyin.dialog(JoyinUtil.getLabel("查看"),
+			   Joyin.dialog(JoyinUtil.getLabel("产品排期计划查看"),
 				   basePath + "disclosure/information/config/disprodplanmanage/DisProdPlanManage002/init",
 				   "60%", "90%", data,function(){dataTable2.reload();});
 		   },
@@ -292,17 +292,17 @@
 		   cols:[{field:'prodPlanId',title:'主键',width:80,sortable:false,visible:false,align:'center'}
 			   /*,{field:'prodPlanId',title:'序 号',width:80,sortable:false,align:'center'}*/
 			   /*,{field:'prodPlanId',title:'序 号',width:80,sortable:false,align:'center'}*/
-			   ,{field:'prodName',  title: '产品名称',width:250,sortable:false}
-			   ,{field:'prodId',  title: '产品主代码',width:150,sortable:false}
-			   ,{field:'openStartDateStr',  title: '开放起始日',width:100,sortable:false}
-			   ,{field:'openEndDateStr',  title: '开放结束日',width:100,sortable:false}
-			   ,{field:'collingoffPeriodStr',  title: '产品冷静期',width:100,sortable:false}
-			   ,{field:'operationStartDateStr',  title: '运作起始日',width:100,sortable:false}
-			   ,{field:'autoRedeemDateStr',  title: '自动赎回日',width:100,sortable:false}
-			   ,{field:'holdDays',  title: '实际持有天数',width:120,sortable:false}
-			   ,{field:'dataStatusName',title: '数据状态',width:90,sortable:false}
-			   ,{field:'updateDateStr',  title: '更新时间',width:140,sortable:false}
-			   ,{field:'updateUser',  title: '更新人',width:100,sortable:false}
+			   ,{field:'prodName',  title: '产品名称',width:250}
+			   ,{field:'prodId',  title: '产品主代码',width:150,sortField:'prod_id'}
+			   ,{field:'openStartDateStr',  title: '开放起始日',width:100,sortField:'openStartDateStr'}
+			   ,{field:'openEndDateStr',  title: '开放结束日',width:100,sortField:'openEndDateStr'}
+			   ,{field:'collingoffPeriodStr',  title: '产品冷静期',width:100,sortField:'collingoffPeriodStr'}
+			   ,{field:'operationStartDateStr',  title: '运作起始日',width:100,sortField:'operationStartDateStr'}
+			   ,{field:'autoRedeemDateStr',  title: '自动赎回日',width:100,sortField:'autoRedeemDateStr'}
+			   ,{field:'holdDays',  title: '实际持有天数',width:120}
+			   ,{field:'dataStatusName',title: '数据状态',width:90,sortField:'dataStatus'}
+			   ,{field:'updateDateStr',  title: '更新时间',width:140,sortField:'updateDateStr'}
+			   ,{field:'updateUser',  title: '更新人',width:100}
 			   ,{field:'operation',width:20, title: 'SysCommon.operation', type:'action', buttons: ['edit','delt'],
 				   render: function (data, type, row, meta) {
 					   if (row.dataStatus == 'D')
@@ -321,7 +321,7 @@
 	     */
 	   dataTable2.bind('click', '.edit', function(data, index) {
 	    	data.operateType = "edit";
-	    	Joyin.dialog(JoyinUtil.getLabel("编辑"),
+	    	Joyin.dialog(JoyinUtil.getLabel("产品排期计划编辑"),
 	                JoyinUtil.getRealPath("/disclosure/information/config/disprodplanmanage/DisProdPlanManage002/init"),
 	                "60%", "90%", {pageModel:PAGE_MODEL_EDIT,prodPlanId:data.prodPlanId},
 	                function(data){
@@ -351,7 +351,7 @@
 	    });
 	   // 配置页面[新建]
 	    var addNew = function(){    	
-	    	Joyin.dialog(JoyinUtil.getLabel('产品排期计划'), '/disclosure/information/config/disprodplanmanage/DisProdPlanManage002/init', "60%", "90%",null,
+	    	Joyin.dialog(JoyinUtil.getLabel('产品排期计划新建'), '/disclosure/information/config/disprodplanmanage/DisProdPlanManage002/init', "60%", "90%",null,
 	    			function(result) {
 	    			dataTable.reload();
 	    			dataTable2.reload();

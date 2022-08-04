@@ -70,6 +70,16 @@ public enum DictCodeListExt5 implements BaseDictCodeList {
     开放频率_频率在半年以内(DictCodeExt1.开放频率,"02","频率在半年（不含）以内"),
     开放频率_频率在半年以上(DictCodeExt1.开放频率,"03","频率在半年以上"),
 
+
+    信披报表类别_发行公告(DictCodeExt1.信披报表类别,"01","发行公告"),
+    信披报表类别_运行公告(DictCodeExt1.信披报表类别,"02","运行公告"),
+    信披报表类别_到期公告(DictCodeExt1.信披报表类别,"03","到期公告"),
+    信披报表类别_临时公告(DictCodeExt1.信披报表类别,"04","临时公告"),
+    信披报表类别_销售公告(DictCodeExt1.信披报表类别,"05","销售公告"),
+    信披报表类别_托管公告(DictCodeExt1.信披报表类别,"06","托管公告"),
+
+    信披报表类别_其他公告(DictCodeExt1.信披报表类别,"99","其他公告"),
+
     ;
     /**
      * 对应于数据字典code

@@ -509,4 +509,7 @@
             and FEE_DIS_REMARK is null
         </if>
     </select>
+    <select id="getProdId" resultType="java.lang.String">
+        SELECT PROD_ID FROM REP_PROD_INFO WHERE PROD_ID = #{prodId} AND REP_PROD_TYPE != '01'
+    </select>
 </mapper>

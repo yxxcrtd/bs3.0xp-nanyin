@@ -272,13 +272,13 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
     public AjaxResult checkImportData(String fileName) {
 //        List<String> findList =  this.queryFinprod(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());
         List<List<String>> objects = ExcelUtil.getTempList(fileName);
-        if (objects.size() - 1 > 50000) {
-            Map<String, Object> resultMap = new HashMap<>();
-            resultMap.put("errorMsg", "单次最多导入50000条。");
-            AjaxResult wr = new AjaxResult();
-            wr.setData(resultMap);
-            return wr;
-        }
+//        if (objects.size() - 1 > 50000) {
+//            Map<String, Object> resultMap = new HashMap<>();
+//            resultMap.put("errorMsg", "单次最多导入50000条。");
+//            AjaxResult wr = new AjaxResult();
+//            wr.setData(resultMap);
+//            return wr;
+//        }
         String totalMsg = "";
         List<List<String>> jsonArrays = new ArrayList<>();
         // 重复数据
@@ -308,8 +308,11 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
                     if (!StringUtil.isNotEmpty(rowData.get(1))){
                         errorMsg.append("子产品代码 必填！");
                     }else{
-                        ProdInfoDto prodInfo = prodInfoService.selectByProdStatus(rowData.get(1));
-                        if(prodInfo == null){
+//                        ProdInfoDto prodInfo = prodInfoService.selectByProdStatus(rowData.get(1));
+//                        if(prodInfo == null){
+//                            errorMsg.append("子产品代码 不存在");
+//                        }
+                        if (!this.getProdId(rowData.get(1))) {
                             errorMsg.append("子产品代码 不存在");
                         }
                     }
@@ -364,12 +367,24 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
                 }
                 //第一行【i=0】为表头，所以不操作。
                 for (int i = objects.size() - 1; i >= 1; i--) {
-                    /*List<String> list1 = objects.get(i);
+                    List<String> list1 = objects.get(i);
                     Boolean isRepeat = false;
                     for (int k = i - 1; k >= 1; k--) {
                         List<String> list2 = objects.get(k);
                         //子产品代码，相同时为重复数据
-                        if ((StringUtil.equals(list1.get(0), list2.get(0)))) {
+                        if ((StringUtil.equals(list1.get(0), list2.get(0)))
+                         && (StringUtil.equals(list1.get(1), list2.get(1)))
+                                && (StringUtil.equals(list1.get(2), list2.get(2)))
+                                && (StringUtil.equals(list1.get(3), list2.get(3)))
+                                && (StringUtil.equals(list1.get(4), list2.get(4)))
+                                && (StringUtil.equals(list1.get(5), list2.get(5)))
+                                && (StringUtil.equals(list1.get(6), list2.get(6)))
+                                && (StringUtil.equals(list1.get(7), list2.get(7)))
+                                && (StringUtil.equals(list1.get(8), list2.get(8)))
+                                && (StringUtil.equals(list1.get(9), list2.get(9)))
+                                && (StringUtil.equals(list1.get(10), list2.get(10)))
+                                && (StringUtil.equals(list1.get(11), list2.get(11)))
+                                && (StringUtil.equals(list1.get(12), list2.get(12))) ) {
                             isRepeat = true;
                             break;
                         }
@@ -378,8 +393,8 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
                         repeatNum++;
                     }else {
                         jsonArrays.add(list1);
-                    }*/
-                    jsonArrays.add(objects.get(i));
+                    }
+//                    jsonArrays.add(objects.get(i));
                 }
             }
         }
@@ -403,6 +418,10 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
         }
         if(existData.size() > 0){
             resultMap.put("errorMsg", "不可创建重复数据!");
+        }
+        int maxCount = CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT")==null?50000:Integer.parseInt(CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT"));
+        if (objects.size() - 1 > maxCount) {
+            resultMap.put("confirmMsg3", "导入数据超过"+maxCount+"条，可能导致系统较慢，是否确认导入？");
         }
         AjaxResult wr = new AjaxResult();
         wr.setData(resultMap);
@@ -534,6 +553,20 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
     }
 
     public ProdFeediscountDto selectData(ProdFeediscountDto dto) {
-        return prodFeediscountMapper.selectData(dto);
+        List<ProdFeediscountDto> list = prodFeediscountMapper.selectData(dto);
+        if(list.size()>0){
+            return list.get(0);
+        }else{
+            return null;
+        }
+    }
+
+    public Boolean getProdId(String prodId) {
+        String r = prodFeediscountMapper.getProdId(prodId);
+        if(StringUtil.isNotEmpty(r)){
+            return true;
+        }else{
+            return false;
+        }
     }
 }

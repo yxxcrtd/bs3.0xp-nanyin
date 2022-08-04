@@ -587,4 +587,66 @@ delete from SYS_PAGE_DICTLIST where PAGE_ID like '%ProElementAdj00%' and DICT_ID
 INSERT INTO SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('ProElementAdj001', '999999', 'MAINTAIN_STATUS', 'D', null, null, 'system', null, sysdate, 'system', sysdate, null);
 INSERT INTO SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('ProElementAdj001', '999999', 'MAINTAIN_STATUS', 'E', null, null, 'system', null, sysdate, 'system', sysdate, null);
 -- add by sunjie 20220803 数据状态下拉框枚举值 end
+
+
+
+
+-- add by dingrui 20220804 报表数据校验信息 start
+-- 新增"报表数据校验" 菜单
+
+DELETE FROM SYS_MENU WHERE SYS_MENU.MENU_ID = 'REPORT_006_003_005' AND SYS_MENU.REMARK = '报表数据校验';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('REPORT_006_003_005', 'DIS', null, 'REPORT_006_003', 'ReportCheck001', 5, '02', '报表数据校验', 'system', null, SYSDATE, 'system', SYSDATE);
+
+-- 新增 "报表数据校验" 画面
+DELETE FROM SYS_PAGE WHERE PAGE_ID IN ('ReportCheck001');
+INSERT INTO SYS_PAGE
+(PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES('ReportCheck001', 'DIS', '/disclosure/information/config/repreportcheck/ReportCheck001', 'disclosure/information/config/repreportcheck/ReportCheck001',
+       'REPORT_006_003_005', NULL, NULL, '02', '01', '报表数据校验', 'system', NULL, sysdate, 'system', sysdate);
+
+DELETE FROM SYS_PAGE WHERE PAGE_ID IN ('ReportCheck002');
+INSERT INTO SYS_PAGE
+(PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES('ReportCheck002', 'DIS', '/disclosure/information/config/repreportcheck/ReportCheck002', 'disclosure/information/config/repreportcheck/ReportCheck002',
+       '', NULL, NULL, '02', '01', '指标阀值配置', 'system', NULL, sysdate, 'system', sysdate);
+
+
+-- 新增"报表数据校验" 画面按钮
+delete from SYS_PAGE_ELEMENT where PAGE_ID = 'ReportCheck001';
+insert into Sys_Page_Element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('ReportCheck001', 'ReportCheck001_btn_export', '01', '01', null, '导出', 'system', null, sysdate, 'system', sysdate, 'COM', null);
+insert into Sys_Page_Element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('ReportCheck001', 'ReportCheck001_btn_tips', '01', '02', null, '不再提示', 'system', null, sysdate, 'system', sysdate, 'C', null);
+insert into Sys_Page_Element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('ReportCheck001', 'ReportCheck001_btn_search', '01', '01', null, '查询', 'system', null, sysdate, 'system', sysdate, 'COM', null);
+insert into Sys_Page_Element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('ReportCheck001', 'ReportCheck001_btn_set', '01', '01', null, '指标阀值配置', 'system', null, sysdate, 'system', sysdate, 'C', null);
+insert into Sys_Page_Element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('ReportCheck001', 'ReportCheck001_btn_filter', '01', '02', null, '筛选', 'system', null, sysdate, 'system', sysdate, 'C', null);
+
+
+-- 新增"报表数据类别"字典信息
+insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('DIS_REPORT_STYLE', 'DIS', '报表数据类别', 'DIS_REPORT_STYLE', '02', 'system', null, sysdate, 'system', sysdate);
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('DIS_REPORT_STYLE', '01', '发行公告', 1, '0', 'system', null, sysdate, 'system', sysdate, null);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('DIS_REPORT_STYLE', '02', '运行公告', 2, '0', 'system', null, sysdate, 'system', sysdate, null);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('DIS_REPORT_TYPE', '03', '到期公告', 3, '0', 'system', null, sysdate, 'system', sysdate, null);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('DIS_REPORT_TYPE', '04', '临时公告', 4, '0', 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('DIS_REPORT_TYPE', '05', '销售公告', 5, '0', 'system', null, sysdate, 'system', sysdate, null);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('DIS_REPORT_TYPE', '06', '托管公告', 6, '0', 'system', null, sysdate, 'system', sysdate, null);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('DIS_REPORT_TYPE', '99', '其他公告', 7, '0', 'system', null, sysdate, 'system', sysdate, null);
+
+-- add by dingrui 20220804 报表数据校验信息 end
+
+
 commit ;

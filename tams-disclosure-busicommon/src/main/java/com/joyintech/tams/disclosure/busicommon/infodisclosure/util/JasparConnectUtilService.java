@@ -181,6 +181,7 @@ public class JasparConnectUtilService {
 		if (CollectionUtils.isNotEmpty(listReports)){
 			dataMap = listReports.get(0);
 		}
+		dataMap.put("uri",r1.getUri());
 
 		String reportFile = poiReportService.genReportFile(PoiReportService.REPORT_TYPE_报表文件, r1, dataMap, (Date) params.get("execDate"));
 
