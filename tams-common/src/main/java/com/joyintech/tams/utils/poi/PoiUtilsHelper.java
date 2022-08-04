@@ -4,6 +4,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,13 +18,18 @@ import java.util.regex.Pattern;
 import org.apache.poi.ooxml.POIXMLDocument;
 import org.apache.poi.util.Units;
 import org.apache.poi.xwpf.usermodel.Document;
+import org.apache.poi.xwpf.usermodel.TableRowAlign;
 import org.apache.poi.xwpf.usermodel.TextAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
+import org.apache.poi.xwpf.usermodel.XWPFTableCell.XWPFVertAlign;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
 import org.springframework.util.CollectionUtils;
 
@@ -66,6 +73,37 @@ public class PoiUtilsHelper {
 			Iterator<XWPFTable> itTable = document.getTablesIterator();
 			while (itTable.hasNext()) {
 				XWPFTable table = (XWPFTable) itTable.next();
+
+				//////////////////////设置新增的表格边框，搞了很久，终于搞定2022-08-04/////////////////////////////////////////
+				table.setTableAlignment(TableRowAlign.CENTER);
+				CTTblBorders borders = table.getCTTbl().getTblPr().addNewTblBorders();
+				// 设置内边框样式，默认单实线
+				// 设置上下左右外边框
+				String bolderType = "single";
+				CTBorder lBorder = borders.addNewLeft();
+				lBorder.setVal(STBorder.Enum.forString(bolderType));
+				lBorder.setSz(new BigInteger("1"));
+				lBorder.setColor("000000");
+
+				CTBorder rBorder = borders.addNewRight();
+				rBorder.setVal(STBorder.Enum.forString(bolderType));
+				rBorder.setSz(new BigInteger("1"));
+				rBorder.setColor("000000");
+
+				CTBorder tBorder = borders.addNewTop();
+				tBorder.setVal(STBorder.Enum.forString(bolderType));
+				tBorder.setSz(new BigInteger("1"));
+				tBorder.setColor("000000");
+
+				CTBorder bBorder = borders.addNewBottom();
+				bBorder.setVal(STBorder.Enum.forString(bolderType));
+				bBorder.setSz(new BigInteger("1"));
+				bBorder.setColor("000000");
+				    
+				///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				
+				
+				
 				int rcount = table.getNumberOfRows();
 				
 				//2.1：特殊的循环表，根据数据条数，动态创建表的行，合并或者拆分行等
@@ -151,12 +189,12 @@ public class PoiUtilsHelper {
 						break;
 					}
 				}
-	            if ( v instanceof Date  ) {
+	            if ( v!=null && v instanceof Date  ) {
 	            	SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
 	            	v = sdf.format(v);
 	            }
-	            if ( v instanceof BigDecimal  ) {
-	            	v = ((BigDecimal) v).toPlainString();
+	            if ( v!=null && v instanceof BigDecimal  ) {
+	            	v = ((BigDecimal) v).setScale(2, RoundingMode.HALF_DOWN);
 	            }
 
 				text = text.replace(key,v==null?" ":v.toString());
@@ -345,6 +383,7 @@ public class PoiUtilsHelper {
 					String content = (o==null?"":o.toString());
 					
 					XWPFTableCell cell = dataRow.createCell();
+					cell.setVerticalAlignment(XWPFVertAlign.CENTER);
 					XWPFParagraph paragraph = cell.addParagraph();
 					paragraph.setAlignment(styleRow.getCell(j).getParagraphs().get(0).getAlignment());
 					paragraph.setVerticalAlignment(TextAlignment.CENTER);  //没有效果
@@ -379,7 +418,7 @@ public class PoiUtilsHelper {
 						cell = dataRow.createCell();
 						cell.setWidth( newColWidth+"%" );
 					}
-
+					cell.setVerticalAlignment(XWPFVertAlign.CENTER);
 					//填充数据
 					if ( rowNo>=rule.getStartRow() ) {  //从指定的行开始填写数据
 						String content = "";      //取出各字段

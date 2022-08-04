@@ -162,7 +162,10 @@ public class PoiReportService {
 			reportFile = this.genOssReportFile(reportFileType, reportInfo, dataMap, params);
 			logger.info("生成文件成功!" + reportFile);
 		} else if (opType.equals("gen")) {  //直接使用预览的文件
-			prodId = params.get("prodId").toString();
+			if ( params.get("prodId")!=null )
+				prodId = params.get("prodId").toString();
+			else
+				prodId = "无";
 			reportFile = getRomteFilePath(REPORT_TYPE_报表文件, reportInfo, params, FILE_TYPE_DOCX);
 			File localFile = new SafelyFile(reportFile);
 			String fileName = prodId
