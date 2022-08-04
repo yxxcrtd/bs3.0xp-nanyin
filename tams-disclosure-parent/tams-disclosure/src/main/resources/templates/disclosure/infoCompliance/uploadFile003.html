@@ -1,0 +1,80 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <style>
+        .upload .layui-table th{
+            padding: 6px 15px;
+        }
+        .upload .layui-table td{
+            padding: 2px 15px;
+        }
+        /*.upload{
+            height: 200px;
+            overflow: auto;
+            }*/
+    </style>
+</head>
+<body>
+<div id="FileCommon_DIV3" class="pro-module-wrap" data-ignore="true">
+    <style>
+        .mult-file-btn {
+            display: none;
+        }
+        .show{
+            overflow: auto;
+            max-height: 200px;
+        }
+    </style>
+    <div class="pro-module" data-ignore="true">
+        <h3 class="pro-module-title" data-ignore="true">
+            <span class="title-des" data-ignore="true">修订后</span>
+            <a class="layui-btn layui-btn-sm btn-create" data-ignore="true" id="multFileBtn3"><i data-ignore="true" class="iconfont icon-found"></i><span data-ignore="true">新增附件</span></a>
+            <i class="iconfont icon-arrow-down pro-down-icon" data-ignore="true"></i>
+        </h3>
+        <div class="pro-module-item" data-ignore="true">
+            <div data-ignore="true" class="layui-form-item" style="padding: 10px 10px 0 10px;text-align:center;">
+                <div data-ignore="true" class="show">
+                    <div data-ignore="true" id="fileUploader3" class="upload" th:data-data='${attachmentFiles}'
+                         data-option="{muiltiple: true, autoUpload: true, type: 'list','fileUploader':'fileUploader3'}">
+                    </div>
+                    <input type="hidden" id="businessId" name="businessId" data-th-value="${businessId}">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script data-th-src="@{/js/disclosure/infoCompliance/uploadFile001.js}" type="text/javascript">
+</script>
+<script data-th-src="@{/js/disclosure/infoCompliance/layui-special.js}" type="text/javascript">
+</script>
+<script type="text/javascript">
+    var FileCommon3 = function() {
+        return {
+
+            /**
+             * 获取上传文件信息事件
+             */
+            getUploadFileInfo : function() {
+                var fun = $('#fileUploader3').data('getSelectedFiles');
+                if(typeof fun === 'function') {
+                    return fun();
+                }
+                return [];
+            }
+        };
+    }();
+
+    $(function() {
+        $('#multFileBtn3').click(function() {
+            if(FileCommon3.getUploadFileInfo().length >=5){
+                Joyin.error("最大上传5个附件。");
+                return;
+            } else {
+                $('.mult-file-btn', '#FileCommon_DIV3').trigger('click');
+            }
+        });
+
+    });
+</script>
+</body>
+</html>
