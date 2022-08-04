@@ -609,10 +609,10 @@
         where 1=1
 
         <if test="prodId != null and prodId.length > 0">
-            AND temp.P_PROD_ID LIKE concat('%',concat(#{prodId,jdbcType=VARCHAR},'%'))
+            AND  temp.P_PROD_ID LIKE concat('%',concat(#{prodId,jdbcType=VARCHAR},'%'))
         </if>
         <if test="prodName != null and prodName.length > 0">
-            AND temp.PROD_NAME LIKE concat('%',concat(#{prodName,jdbcType=VARCHAR},'%'))
+            AND  temp.pProdName LIKE concat('%',concat(#{prodId,jdbcType=VARCHAR},'%'))
         </if>
 
         <if test="dataStatusArr != null and dataStatusArr.size > 0">
