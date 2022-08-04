@@ -282,7 +282,7 @@
 			*/
 		   dblclick: function (dataTable2, data) {
 			   data.pageModel=PAGE_MODEL_REFERENCE;
-			   Joyin.dialog(JoyinUtil.getLabel("查看"),
+			   Joyin.dialog(JoyinUtil.getLabel("产品排期计划查看"),
 				   basePath + "disclosure/information/config/disprodplanmanage/DisProdPlanManage002/init",
 				   "60%", "90%", data,function(){dataTable2.reload();});
 		   },
@@ -321,7 +321,7 @@
 	     */
 	   dataTable2.bind('click', '.edit', function(data, index) {
 	    	data.operateType = "edit";
-	    	Joyin.dialog(JoyinUtil.getLabel("编辑"),
+	    	Joyin.dialog(JoyinUtil.getLabel("产品排期计划编辑"),
 	                JoyinUtil.getRealPath("/disclosure/information/config/disprodplanmanage/DisProdPlanManage002/init"),
 	                "60%", "90%", {pageModel:PAGE_MODEL_EDIT,prodPlanId:data.prodPlanId},
 	                function(data){
@@ -351,7 +351,7 @@
 	    });
 	   // 配置页面[新建]
 	    var addNew = function(){    	
-	    	Joyin.dialog(JoyinUtil.getLabel('产品排期计划'), '/disclosure/information/config/disprodplanmanage/DisProdPlanManage002/init', "60%", "90%",null,
+	    	Joyin.dialog(JoyinUtil.getLabel('产品排期计划新建'), '/disclosure/information/config/disprodplanmanage/DisProdPlanManage002/init', "60%", "90%",null,
 	    			function(result) {
 	    			dataTable.reload();
 	    			dataTable2.reload();

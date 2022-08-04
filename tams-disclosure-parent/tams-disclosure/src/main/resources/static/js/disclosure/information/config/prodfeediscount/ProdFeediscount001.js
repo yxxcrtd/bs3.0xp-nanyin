@@ -239,7 +239,7 @@
         });
         //新建(点击打开新建画面)
         $('#ProdFeediscount001_btn_add').click(function() {
-            Joyin.dialog(JoyinUtil.getLabel("产品要素调整新建"),
+            Joyin.dialog(JoyinUtil.getLabel("产品费率优惠新建"),
                 basePath + "disclosure/information/config/prodfeediscount/ProdFeediscount002/init",
                 "100%", "100%", {pageModel:PAGE_MODEL_NEW},
                 function() {
