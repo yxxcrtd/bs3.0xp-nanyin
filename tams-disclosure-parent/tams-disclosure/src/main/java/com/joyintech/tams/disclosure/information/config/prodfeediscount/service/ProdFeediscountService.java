@@ -272,13 +272,13 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
     public AjaxResult checkImportData(String fileName) {
 //        List<String> findList =  this.queryFinprod(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());
         List<List<String>> objects = ExcelUtil.getTempList(fileName);
-        if (objects.size() - 1 > 50000) {
-            Map<String, Object> resultMap = new HashMap<>();
-            resultMap.put("errorMsg", "单次最多导入50000条。");
-            AjaxResult wr = new AjaxResult();
-            wr.setData(resultMap);
-            return wr;
-        }
+//        if (objects.size() - 1 > 50000) {
+//            Map<String, Object> resultMap = new HashMap<>();
+//            resultMap.put("errorMsg", "单次最多导入50000条。");
+//            AjaxResult wr = new AjaxResult();
+//            wr.setData(resultMap);
+//            return wr;
+//        }
         String totalMsg = "";
         List<List<String>> jsonArrays = new ArrayList<>();
         // 重复数据
@@ -403,6 +403,10 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
         }
         if(existData.size() > 0){
             resultMap.put("errorMsg", "不可创建重复数据!");
+        }
+        int maxCount = CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT")==null?50000:Integer.parseInt(CacheUtil.getSysParam("IMPORT_EXCEL_ROW_COUNT"));
+        if (objects.size() - 1 > maxCount) {
+            resultMap.put("confirmMsg3", "导入数据超过"+maxCount+"条，可能导致系统较慢，是否确认导入？");
         }
         AjaxResult wr = new AjaxResult();
         wr.setData(resultMap);

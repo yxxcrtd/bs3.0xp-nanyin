@@ -133,6 +133,45 @@
                                 Joyin.error(checkResult.data.errorMsg);
                                 return;
                             }
+                        if (checkResult.data.confirmMsg3) {
+                            Joyin.confirm(checkResult.data.confirmMsg3, function () {
+                                if (checkResult.data.confirmMsg) {
+                                    Joyin.confirm(checkResult.data.confirmMsg, function () {
+                                        var data = {
+                                            tempList: checkResult.data.correctData
+                                        }
+                                        Joyin.ajaxJson(basePath + 'disclosure/information/config/prodfeediscount/ProdFeediscount001/importFile', data,
+                                            function (resultObj) {
+                                                if (resultObj.statuCode.toString() === '200') {
+                                                    /** modify by yanya on 20210329 修正导入逻辑**/
+                                                    //Joyin.alert("文件导入成功！");
+                                                    table.reload();
+                                                    return;
+                                                }
+                                            });
+                                    },{}, function () {
+                                        layui.layer.closeAll()
+                                        table.reload();
+                                    });
+                                }else {
+                                    var data = {
+                                        tempList: checkResult.data.correctData
+                                    }
+                                    Joyin.ajaxJson(basePath + 'disclosure/information/config/prodfeediscount/ProdFeediscount001/importFile', data,
+                                        function (resultObj) {
+                                            if (resultObj.statuCode.toString() === '200') {
+                                                /** modify by yanya on 20210329 修正导入逻辑**/
+                                                //Joyin.alert("文件导入成功！");
+                                                table.reload();
+                                                return;
+                                            }
+                                        });
+                                }
+                            },{}, function () {
+                                layui.layer.closeAll()
+                                table.reload();
+                            });
+                        }else{
                             if (checkResult.data.confirmMsg) {
                                 Joyin.confirm(checkResult.data.confirmMsg, function () {
                                     var data = {
@@ -165,6 +204,8 @@
                                         }
                                     });
                             }
+                        }
+
                         }
                         ,1000);
                 }
