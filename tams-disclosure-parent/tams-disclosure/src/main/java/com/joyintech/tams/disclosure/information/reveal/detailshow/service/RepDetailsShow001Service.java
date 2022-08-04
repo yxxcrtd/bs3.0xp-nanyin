@@ -1,12 +1,6 @@
 package com.joyintech.tams.disclosure.information.reveal.detailshow.service;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -292,7 +286,8 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
     public void previewReport(Map<String,Object> params, HttpServletResponse response) {
         String imagePath = "";
         String reportFile = "";
-        FileInputStream fis = null;
+//        FileInputStream fis = null;
+        ByteArrayInputStream bis = null;
         try {
 	        if ( params.get("elementIdForLog")==null || !params.get("elementIdForLog").equals("RepDetailsShow001_showDetail") ) {  //树单击：显示模板
 	        	reportFile = poiReportService.genReport(params,PoiReportService.REPORT_TYPE_模板文件,"preview");
@@ -302,18 +297,32 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
 	        }
 	
 	        //将生成的文件作为输入，转换成html后，发送到response
-	        fis = new FileInputStream(reportFile);
-	        PoiUtils.docxToHtml(fis,response.getOutputStream(), imagePath);
+//	        fis = new FileInputStream(reportFile);
+//	        PoiUtils.docxToHtml(fis,response.getOutputStream(), imagePath);
+            byte[] bytes = poiReportService.getFileByteArray(reportFile);
+            if(bytes != null) {
+                bis = new ByteArrayInputStream(bytes);
+
+//                PoiUtils.docxToHtml(fis, response.getOutputStream(), imagePath);
+                PoiUtils.docxToHtml(bis,response.getOutputStream(),imagePath);
+            }
         } catch (Exception e ) {
         	logger.error("查询数据错误。",e);
             e.printStackTrace();
         } finally {
-            try {
-                if ( fis!=null ) {
-                    fis.close();
+//            try {
+//                if ( fis!=null ) {
+//                    fis.close();
+//                }
+//            } catch (IOException e ) {
+//                e.printStackTrace();
+//            }
+            if(bis != null){
+                try{
+                    bis.close();
+                }catch(IOException e){
+                    logger.error("关闭输入字节流异常",e);
                 }
-            } catch (IOException e ) {
-                e.printStackTrace();
             }
         }
 
@@ -356,16 +365,47 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
         String prodId = "";
         if (params.get("prodId") != null )
             prodId = params.get("prodId").toString();
-        String reportFile = poiReportService.buildReportFileName(PoiReportService.REPORT_TYPE_报表文件,reportInfo, params,PoiReportService.FILE_TYPE_DOCX);
+//        String reportFile = poiReportService.buildReportFileName(PoiReportService.REPORT_TYPE_报表文件,reportInfo, params,PoiReportService.FILE_TYPE_DOCX);
+        String reportFile = poiReportService.getRomteFilePath(PoiReportService.REPORT_TYPE_报表文件,reportInfo, params,PoiReportService.FILE_TYPE_DOCX);
         String localFileName = reportInfo.getReportName()+"_"+prodId+"_" + DateUtil.format(genDate)+PoiReportService.FILE_TYPE_DOCX;
 
         if ( "pdf".equals(fileType)) {  //如果导出pdf，则需要先讲word转换成pdf
-            FileInputStream fis = new FileInputStream(reportFile);
+//            FileInputStream fis = new FileInputStream(reportFile);
+            ByteArrayInputStream bis = null;
+            byte[] bytes = poiReportService.getFileByteArray(reportFile);
+            if(bytes!=null){
+                bis = new ByteArrayInputStream(bytes);
+            }
             String fileNamePdf = poiReportService.buildReportFileName(PoiReportService.REPORT_TYPE_报表文件,reportInfo, params,PoiReportService.FILE_TYPE_PDF);
             FileOutputStream fos = new FileOutputStream(fileNamePdf);
-            PoiUtils.docxToPdf(fis,fos);
+//            PoiUtils.docxToPdf(fis,fos);
+            PoiUtils.docxToPdf(bis,fos);
             reportFile = fileNamePdf;
             localFileName = reportInfo.getReportName()+"_"+prodId+"_" +DateUtil.format(genDate)+PoiReportService.FILE_TYPE_PDF;
+        }else{
+           String  localReportFile = poiReportService.buildReportFileName(PoiReportService.REPORT_TYPE_报表文件,reportInfo, params,PoiReportService.FILE_TYPE_DOCX);
+           FileOutputStream fos = null;
+           byte[] bytes = poiReportService.getFileByteArray(reportFile);
+           if(bytes !=null){
+               try{
+                   fos = new FileOutputStream(localReportFile);
+                   fos.write(bytes);
+               }catch(Exception e){
+                   logger.error("写本地副本发生异常",e);
+                   throw new FileNotFoundException("本地文件写入失败");
+               }finally{
+                   if(fos!=null){
+                       try {
+                           fos.close();
+                       }catch (IOException e){
+                           logger.error("关闭输出文件流异常",e);
+                       }
+                   }
+               }
+               reportFile = localReportFile;
+           }else{
+               throw new FileNotFoundException("远程下载文件失败");
+           }
         }
 
         File remoteFile = new SafelyFile(reportFile);
@@ -374,7 +414,7 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
         	remoteFile.createNewFile();
         }
 
-        return ExportUtil.export(localFileName, remoteFile, false);
+        return ExportUtil.export(localFileName, remoteFile, true);
         
     }
 

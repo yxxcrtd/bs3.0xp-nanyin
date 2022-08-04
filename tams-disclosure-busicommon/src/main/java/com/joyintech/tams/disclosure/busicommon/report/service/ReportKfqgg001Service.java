@@ -67,12 +67,12 @@ public class ReportKfqgg001Service implements IReportDataService {
                 String endDate = year + "-12-31";
                 if(reportKfqgg001Dto != null){
                     if(reportKfqgg001Dto.getSetDate() != null){
-                        if(DateUtil.compareDate(DateUtil.parseDate(startDate),reportKfqgg001Dto.getSetDate())<0){
+                        if(DateUtil.compareDate(DateUtil.parseDate(startDate,"yyyy-MM-dd"),reportKfqgg001Dto.getSetDate())<0){
                             startDate = DateUtil.format(reportKfqgg001Dto.getSetDate());
                         }
                     }
                     if(reportKfqgg001Dto.getmDate() != null){
-                        if(DateUtil.compareDate(DateUtil.parseDate(endDate),reportKfqgg001Dto.getmDate())>0){
+                        if(DateUtil.compareDate(DateUtil.parseDate(endDate,"yyyy-MM-dd"),reportKfqgg001Dto.getmDate())>0){
                             endDate = DateUtil.format(reportKfqgg001Dto.getmDate());
                         }
                     }

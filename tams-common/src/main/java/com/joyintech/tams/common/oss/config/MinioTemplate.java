@@ -10,23 +10,20 @@
  */
 package com.joyintech.tams.common.oss.config;
 
+import io.minio.GetObjectArgs;
+import io.minio.MinioClient;
+import io.minio.PutObjectArgs;
+import io.minio.RemoveObjectArgs;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
-import io.minio.GetObjectArgs;
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
-import io.minio.RemoveObjectArgs;
 
 /**
  * 〈Minio操作模板〉<br>
@@ -144,12 +141,14 @@ public class MinioTemplate {
             minioClient.putObject(putObjectArgs);
             StringBuilder urlPath = new StringBuilder(minioProperties.getReadPath());
             urlPath.append(separator + minioProperties.getBucket());
-            urlPath.append(separator);
+            if(!filePath.startsWith(separator)) {
+                urlPath.append(separator);
+            }
             urlPath.append(filePath);
             return urlPath.toString();
         } catch (Exception ex) {
             logger.error("上传文件异常", ex);
-            throw new RuntimeException("上传文件失败");
+            throw new RuntimeException("上传文件失败",ex);
         }
     }
 
@@ -196,6 +195,9 @@ public class MinioTemplate {
         if (logger.isDebugEnabled()) {
             logger.debug("minio下载文件开始，文件名:{}", pathUrl);
         }
+        //针对转化文件夹分隔符进行转化处理
+        pathUrl = pathUrl.replace(":\\","://");
+        pathUrl = pathUrl.replace("\\","/");
         String key = pathUrl.replace(minioProperties.getEndpoint() + "/", "");
         int index = key.indexOf(separator);
         String bucket = key.substring(0, index);
@@ -348,5 +350,30 @@ public class MinioTemplate {
                 }
             }
         }
+    }
+    /**
+     * @Author ZY22350
+     * @Description //通过文件相关名称获取远程服务生成的文件全路径名
+     * @Date 13:55 2022/8/3
+     * @Param [prefix, fileName, autoDatePath]
+     * @return java.lang.String
+     **/
+    public String convertFilePathName(String prefix,String fileName,boolean autoDatePath){
+        if(!StringUtils.isBlank(fileName)){
+            String filePath = "";
+            if (autoDatePath) {
+                filePath = builderDateFilePath(prefix, fileName);
+            } else {
+                filePath = builderFilePath(prefix, fileName);
+            }
+            StringBuilder urlPath = new StringBuilder(minioProperties.getReadPath());
+            urlPath.append(separator + minioProperties.getBucket());
+            if(!filePath.startsWith(separator)) {
+                urlPath.append(separator);
+            }
+            urlPath.append(filePath);
+            return urlPath.toString();
+        }
+        return null;
     }
 }

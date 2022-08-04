@@ -18,11 +18,13 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
+import com.joyintech.tams.common.oss.service.FileRemoteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,7 +88,10 @@ public class RepEdit001Contoller extends BaseController {
 
     @Autowired
     private RepDetailsShow001Service repDetailsShow001Service;
-    
+
+    @Resource
+    private FileRemoteService minioFileRemoteService;
+
     private String editFilename = "";
     private String saveFilename = "";
     /**
@@ -131,8 +136,8 @@ public class RepEdit001Contoller extends BaseController {
         
         ReportInfo reportInfo = reportInfoMapper.getReportInfoByID(reportId);
         //reportDate = DateUtil.parse("2023-03-01");
-        editFilename = poiReportService.buildReportFileName(PoiReportService.REPORT_TYPE_报表文件,reportInfo, params,PoiReportService.FILE_TYPE_DOCX);
-    	saveFilename = poiReportService.buildReportFileName(PoiReportService.REPORT_TYPE_报表文件,reportInfo, params,PoiReportService.FILE_TYPE_DOCX);
+        editFilename = poiReportService.getRomteFilePath(PoiReportService.REPORT_TYPE_报表文件,reportInfo, params,PoiReportService.FILE_TYPE_DOCX);
+    	saveFilename = poiReportService.buildOssReportFileName(PoiReportService.REPORT_TYPE_报表文件,reportInfo, params,PoiReportService.FILE_TYPE_DOCX);
         return super.init(model);
     }
 
@@ -152,7 +157,7 @@ public class RepEdit001Contoller extends BaseController {
                 String mFileName = editFilename; //params.get("FILENAME").toString();
                 WebOfficeObject webOfficeObject = new WebOfficeObject();
                 if(mOption.equalsIgnoreCase("LOADFILE")){
-                    webOfficeObject.parse(request,mFileName);
+                    webOfficeObject.parse(request,mFileName,poiReportService);
 //						System.out.println("ExtParam:"+ExtParam);
 //						if (MsgObj.MsgFileLoad(mFilePath+"\\Document\\" + mFileName)){
 //							MsgObj.MsgTextClear();
@@ -363,16 +368,18 @@ public class RepEdit001Contoller extends BaseController {
                     if (StringUtil.isNotEmpty(myFileName)) {
                         // 文件存储到服务器之前调用监听器
 
-                        File localFile = new SafelyFile(outputFilename);
-                        File dir = localFile.getParentFile();
-                        if (!dir.exists()) {
-                            dir.mkdirs();
-                        }
-                        if (!localFile.exists()) {
-                            localFile.createNewFile();
-                        }
+//                        File localFile = new SafelyFile(outputFilename);
+//                        File dir = localFile.getParentFile();
+//                        if (!dir.exists()) {
+//                            dir.mkdirs();
+//                        }
+//                        if (!localFile.exists()) {
+//                            localFile.createNewFile();
+//                        }
+                        String remoteFilePath = minioFileRemoteService.uploadFile(outputFilename,file.getInputStream());
+                        ret = StringUtil.isNotEmpty(remoteFilePath)?1:-1;
                         // file.transferTo(localFile);
-                        ret = FileCopyUtils.copy(file.getInputStream(), new FileOutputStream(localFile));
+//                        ret = FileCopyUtils.copy(file.getInputStream(), new FileOutputStream(localFile));
                         //PoiUtils.copy(file.getName(), localFile.getName());
 
 //                        UploadFile fileInfo = new UploadFile(myFileName, IDGenerator.generate(),

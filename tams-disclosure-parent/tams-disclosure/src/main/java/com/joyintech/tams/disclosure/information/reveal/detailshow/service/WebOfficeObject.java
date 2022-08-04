@@ -4,6 +4,7 @@ import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.disclosure.busicommon.poireport.service.PoiReportService;
 import net.sf.json.JSONObject;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
@@ -43,7 +44,7 @@ public class WebOfficeObject {
 	 * 后台类解析接口
 	 * @time:2015-01-09
 	 */
-	public void parse(HttpServletRequest request,String filename) throws FileUploadException, IOException{
+	public void parse(HttpServletRequest request, String filename, PoiReportService poiReportService) throws FileUploadException, IOException{
 		params = JsonUtils.stringToMap(RequestUtil.getPageParam().get("FormData").toString());
 
 		CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(
@@ -52,7 +53,12 @@ public class WebOfficeObject {
 			if ( filename==null || filename.length()<1 ) {
 				filename = "E:/poitest/template/产品说明书.docx";
 			}
-			fileContentStream = new FileInputStream(filename) ;
+			if(filename.startsWith("http:")){
+				byte[] bytes = poiReportService.getFileByteArray(filename);
+				fileContentStream = new ByteArrayInputStream(bytes);
+			}else {
+				fileContentStream = new FileInputStream(filename);
+			}
 		} else{
 			// 判断 request 是否有文件上传,即多部分请求
 			if (multipartResolver.isMultipart(request)) {

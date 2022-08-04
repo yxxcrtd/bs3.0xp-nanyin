@@ -3,10 +3,7 @@
  */
 package com.joyintech.tams.disclosure.busicommon.poireport.service;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -14,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.oss.service.FileRemoteService;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +48,8 @@ import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
 import com.joyintech.tams.systemtools.service.CommonPlatformDateService;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.utils.poi.PoiUtils;
+
+import javax.annotation.Resource;
 
 /**
  * poi报表生成服务<br>
@@ -90,6 +91,8 @@ public class PoiReportService {
 
 	@Autowired
 	private FileAttachmentProcess fileAttachmentProcess;
+	@Resource
+	private FileRemoteService minioFileRemoteService;
 	
 	/**
 	 * 日志
@@ -156,11 +159,11 @@ public class PoiReportService {
 			if ( dataMap.get("reportDate")!=null ) 
 				reportDate = (Date)dataMap.get("reportDate");
 			
-			reportFile = this.genReportFile(reportFileType, reportInfo, dataMap, params);
+			reportFile = this.genOssReportFile(reportFileType, reportInfo, dataMap, params);
 			logger.info("生成文件成功!" + reportFile);
 		} else if (opType.equals("gen")) {  //直接使用预览的文件
 			prodId = params.get("prodId").toString();
-			reportFile = buildReportFileName(REPORT_TYPE_报表文件, reportInfo, params, FILE_TYPE_DOCX);
+			reportFile = getRomteFilePath(REPORT_TYPE_报表文件, reportInfo, params, FILE_TYPE_DOCX);
 			File localFile = new SafelyFile(reportFile);
 			String fileName = prodId
 					+ GlobalConstant.UNDER_LINE +reportInfo.getReportName() 
@@ -551,4 +554,157 @@ public class PoiReportService {
 		params.put("platformDate", params.get("platformDate")==null? DateUtil.format(commonPlatformDateService.getSysDate()):params.get("platformDate"));
     	return reportDataService.getRepReveal(params);
     }
+	/**
+	 * @Author ZY22350
+	 * @Description //获取远程文件地址
+	 * @Date 15:08 2022/8/3
+	 * @Param [reportType, reportInfo, reportDate, portnum, fileType]
+	 * @return java.lang.String
+	 **/
+	public String getRomteFilePath(String reportType, ReportInfo reportInfo, Map<String,Object> param,
+								   String fileType){
+		String localFilePath = this.buildOssReportFileName(reportType,reportInfo,param,fileType);
+		return minioFileRemoteService.getRemoteFilePathName(localFilePath);
+	}
+	/**
+	 * @Author ZY22350
+	 * @Description //创建OSS文件名称，其中针对模板暂时不处理
+	 * @Date 14:14 2022/8/3
+	 * @Param [reportType, reportInfo, reportDate, portnum, fileType]
+	 * @return java.lang.String
+	 **/
+	public String buildOssReportFileName(String reportType, ReportInfo reportInfo, Map<String,Object> params,String fileType) {
+		String filename = "";
+		if (REPORT_TYPE_模板文件.equals(reportType)) { // 模板文件
+			filename = reportInfo.getRepository() + reportInfo.getFolder() + "/" + reportInfo.getUri() + fileType;
+			File f = new File(filename);
+			if (!f.exists())
+				filename = reportInfo.getRepository() + reportInfo.getFolder() + "/" + "ERROR" + fileType;
+
+		} else {
+			RepReveal repReveal = reportDataService.getRepReveal(params);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date genDate = commonPlatformDateService.getSysDate();
+			String dirname = sdf.format(genDate);
+			StringBuffer sb = new StringBuffer();
+			sb.append(dirname);
+			sb.append("/");
+			sb.append(reportInfo.getUri());  // .getReportName()，避免linux中文
+			sb.append("_");
+			sb.append(repReveal.getProdid());
+			sb.append("_");
+			sb.append(sdf.format(repReveal.getEndDate()));
+			sb.append(fileType);
+			filename = sb.toString();
+		}
+		return filename;
+
+	}
+
+	/**
+	 * @Author ZY22350
+	 * @Description //报表文件OSS生成
+	 * @Date 14:26 2022/8/3
+	 * @Param [reportType, reportInfo, dataMap, reportDate]
+	 * @return java.lang.String
+	 **/
+	public String genOssReportFile(String reportType, ReportInfo reportInfo, Map<String, Object> dataMap, Map<String,Object> params) {
+		String templateFile = "";
+		templateFile = buildOssReportFileName(REPORT_TYPE_模板文件, reportInfo, dataMap, FILE_TYPE_DOCX);
+		if (dataMap == null || dataMap.size() < 1) {
+			//初始化参数，换个文件名称
+			File f = new File(templateFile);
+			return f.getParent() + "/blank/"+f.getName();
+//			return templateFile;
+		}
+		String realFilePath = "";
+//		if (reportDate == null)
+//			reportDate = commonPlatformDateService.getSysDate();
+//		String prodId = (dataMap.get("prodId") == null ? "" : dataMap.get("prodId").toString());
+		String localPathFile = buildOssReportFileName(reportType, reportInfo, params, FILE_TYPE_DOCX);
+		ByteArrayOutputStream bos = null;
+		ByteArrayInputStream is = null;
+		try {
+			bos = new ByteArrayOutputStream();
+			// 替换参数
+			PoiUtils.mergeDocx(templateFile, bos, dataMap);
+			is = new ByteArrayInputStream(bos.toByteArray());
+			//上传问题到minio服务器
+			realFilePath = minioFileRemoteService.uploadFile(localPathFile, is);
+		} catch (Exception e) {
+			logger.error("生成报表文件异常", e);
+		} finally {
+			if (bos != null) {
+				try {
+					bos.close();
+				} catch (IOException e) {
+					logger.error("关闭字节输出流异常", e);
+				}
+			}
+			if (is != null) {
+				try {
+					is.close();
+				} catch (IOException e) {
+					logger.error("关闭字节输入流异常", e);
+				}
+			}
+		}
+		return realFilePath;
+	}
+	/**
+	 * @Author ZY22350
+	 * @Description //读取文件为字节流，如果是http:开头，判断为远程调用，使用minio读取
+	 * @Date 14:52 2022/8/3
+	 * @Param [filePath]
+	 * @return byte[]
+	 **/
+	public byte[] getFileByteArray(String filePath){
+
+		if(logger.isDebugEnabled())
+			logger.debug("读取文件字节流,文件为:{}",filePath);
+
+		if(StringUtils.isBlank(filePath)){
+			return null;
+		}
+		if(filePath.startsWith("http:")){
+			return minioFileRemoteService.downloadFile(filePath);
+		}else{
+			FileInputStream fis = null;
+			ByteArrayOutputStream bos = null;
+			try{
+				fis = new FileInputStream(filePath);
+				bos = new ByteArrayOutputStream();
+				byte[] buff = new byte[1024];
+				int rc = 0;
+				while (true) {
+					try {
+						if (!((rc = fis.read(buff, 0, 1024)) > 0))
+							break;
+					} catch (IOException e) {
+						logger.error("读取文件流异常", e);
+					}
+					bos.write(buff, 0, rc);
+				}
+				return bos.toByteArray();
+			}catch(Exception e){
+				logger.error("读取本地文件报错",e);
+			}finally {
+				if(bos!=null){
+					try {
+						bos.close();
+					}catch(IOException e){
+						logger.error("关闭输出字节流异常",e);
+					}
+				}
+				if(fis != null){
+					try{
+						fis.close();
+					}catch(IOException e){
+						logger.error("关闭文件输入流异常",e);
+					}
+				}
+			}
+		}
+		return null;
+	}
 }

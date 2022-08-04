@@ -10,10 +10,7 @@
 
 package com.joyintech.tams.disclosure.information.reveal.reportconfirm.controller;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -23,6 +20,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import com.joyintech.tams.disclosure.busicommon.poireport.service.PoiReportService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -104,6 +102,8 @@ public class ReportConfirmManage001Contoller extends BaseController {
      */
     @Autowired(required = false)
     private FileAttachmentProcess fileAttachmentProcess;
+	@Autowired
+	private PoiReportService poiReportService;
     /**
      * 重写init方法，加载页面
      * {@inheritDoc}
@@ -490,11 +490,20 @@ public class ReportConfirmManage001Contoller extends BaseController {
         File targetFile = attachment.getTargetFile();
 		InputStream in = null;
         try {
-			if (!targetFile.exists()) {
-				throw new BusinessException("文件[" +targetFile.getPath() + "]不存在！");
-			}
-			else {
-				in = new FileInputStream(targetFile);
+			if(targetFile.getPath().startsWith("http:")){
+				byte[] bytes = poiReportService.getFileByteArray(targetFile.getPath());
+				if(bytes == null){
+					throw new BusinessException("文件[" +targetFile.getPath() + "]不存在！");
+				}else{
+					in = new ByteArrayInputStream(bytes);
+				}
+
+			}else {
+				if (!targetFile.exists()) {
+					throw new BusinessException("文件[" + targetFile.getPath() + "]不存在！");
+				} else {
+					in = new FileInputStream(targetFile);
+				}
 			}
 			return ExportUtil.export(targetFileName, in);
 		}finally {
