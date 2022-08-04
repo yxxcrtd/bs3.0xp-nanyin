@@ -45,7 +45,7 @@ public class BonusReportDataService implements IReportDataService {
 		List<Map<String, Object>> listResult = new ArrayList<>();
 		try {
 			// 参数
-			paraMap.put("reportDate", DateUtil.parse(paraMap.get("reportDate").toString()));
+			paraMap.put("queryDate", DateUtil.parse(paraMap.get("reportDate").toString()));
 
 			List<BonusReportDto> listReport = bonusReportMapper.selectBonusReport(paraMap);
 
