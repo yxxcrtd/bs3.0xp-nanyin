@@ -143,7 +143,7 @@
 					});
 	    }
 	    var downloadReport = function(){
-	    	Joyin.exportExcel('downloadReport', {folder:$.trim($('#folder').val())});   
+	    	Joyin.exportExcel('downloadReport', {repId:repId,folder:$.trim($('#folder').val())});
 		  }
 	    
 /*		$("#uploadReport").css('width','200px');

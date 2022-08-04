@@ -37,4 +37,7 @@ public interface ReportDealMapper {
    List<RepReveal> selectData(Map<String, Object> paraMap);
 
    List<RepReveal> selectDataByRevEndDate(Map<String, Object> paraMap);
+
+   int ckeckWflStatus(RepReveal repReveal);
+
 }

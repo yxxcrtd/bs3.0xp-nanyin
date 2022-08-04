@@ -167,10 +167,10 @@ public class ProdInfo002Controller extends BaseController {
                     && StringUtils.equals(dto.getProdId(), dto.getpProdId())) {
                 return new AjaxResult("分级产品，子产品代码和产品主代码不能一样", MessageType.错误消息);
             }
-            if (StringUtils.equals(DictCodeListExt1.是或否_否.getValue(), dto.getIsGrade())
+            /*if (StringUtils.equals(DictCodeListExt1.是或否_否.getValue(), dto.getIsGrade())
                     && !StringUtils.equals(dto.getProdId(), dto.getpProdId())) {
                 return new AjaxResult("非分级产品，子产品代码和产品主代码需要一致", MessageType.错误消息);
-            }
+            }*/
 
         } else if (StringUtil.equals(pageModel, GlobalConstant.DETAIL_PAGE_MODEL_EDIT)) {//修改
 

@@ -438,6 +438,7 @@ var ReportPageManage003 = function(global) {
 		$('#openFreqSelect').hide();
 		$('#isIndexSelect').hide();
 		$('#isPeriodSelect').hide();
+		$('#repProdTypeSelect').hide();
 		//modify by zhengxiaolian on 20220719 增加开放频率，是否是客户周期型产品，是否是指数型产品 联动 end
 		if (ruleType1 == 'PROFIT_TYPE') {
 			$('#raiseTypeSelect').hide();
@@ -581,6 +582,21 @@ var ReportPageManage003 = function(global) {
 			$('#prodTermTypeSelect').hide();
 			$('#prodSeriesSelect').hide();
 			$('#isPeriodSelect').show();
+		}
+		else if(ruleType1 == 'REP_PROD_TYPE'){
+			$('#raiseTypeSelect').hide();
+			$('#chooseDateSelect').hide();
+			$('#profitTypeSelect').hide();
+			$('#issueModeSelect').hide();
+			$('#issueStautsSelect').hide();
+			$('#openModeSelect').hide();
+			$('#isIndepeAccSelect').hide();
+			$('#prodTypeSelect').hide();
+			$('#finaTypeSelect').hide();
+			$('#prodTermTypeSelect').hide();
+			$('#prodSeriesSelect').hide();
+			$('#isPeriodSelect').hide();
+			$('#repProdTypeSelect').show();
 		}
 		//modify by zhengxiaolian on 20220719 增加开放频率，是否是客户周期型产品，是否是指数型产品 start
 		else {
@@ -620,6 +636,7 @@ var ReportPageManage003 = function(global) {
 		$('#openFreqSelect').hide();
 		$('#isIndexSelect').hide();
 		$('#isPeriodSelect').hide();
+		$('#repProdTypeSelect').hide();
 		//modify by zhengxiaolian on 20220719 增加开放频率，是否是客户周期型产品，是否是指数型产品 联动 end
 		if (ruleType1 == 'PROFIT_TYPE') {
 			$('#raiseTypeSelect').hide();
@@ -763,6 +780,21 @@ var ReportPageManage003 = function(global) {
 			$('#prodTermTypeSelect').hide();
 			$('#prodSeriesSelect').hide();
 			$('#isPeriodSelect').show();
+		}
+		else if(ruleType1 == 'REP_PROD_TYPE'){
+			$('#raiseTypeSelect').hide();
+			$('#chooseDateSelect').hide();
+			$('#profitTypeSelect').hide();
+			$('#issueModeSelect').hide();
+			$('#issueStautsSelect').hide();
+			$('#openModeSelect').hide();
+			$('#isIndepeAccSelect').hide();
+			$('#prodTypeSelect').hide();
+			$('#finaTypeSelect').hide();
+			$('#prodTermTypeSelect').hide();
+			$('#prodSeriesSelect').hide();
+			$('#isPeriodSelect').hide();
+			$('#repProdTypeSelect').show();
 		}
 		//modify by zhengxiaolian on 20220719 增加开放频率，是否是客户周期型产品，是否是指数型产品 start
 		else {
@@ -830,6 +862,7 @@ var ReportPageManage003 = function(global) {
 		$('#openFreqSelect').hide();
 		$('#isIndexSelect').hide();
 		$('#isPeriodSelect').hide();
+		$('#repProdTypeSelect').hide();
 		//modify by zhengxiaolian on 20220719 增加开放频率，是否是客户周期型产品，是否是指数型产品 end
 		//规则增加事件
 		$('#ReportPageManage002_btn_add').click(addrule);

@@ -47,7 +47,7 @@
 	           	A.BUSI_DATE &gt; to_date(#{holidayDate},&apos;yyyy-MM-dd&apos;)
 	         	</if>
 		 	AND A.MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
-		 	AND A.IS_HOLIDAY = '1'
+		 	AND A.IS_HOLIDAY = '0'
 		 </where>
 		 	<if test="type !=null and type == '01'.toString()">
 	           	order by A.BUSI_DATE desc
@@ -76,7 +76,7 @@
 	           	A.BUSI_DATE &gt;= to_date(#{holidayDate},&apos;yyyy-MM-dd&apos;)
 	         	</if>
 		 	AND A.MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
-		 	AND A.IS_HOLIDAY = '1'
+		 	AND A.IS_HOLIDAY = '0'
 		 </where>
 		 	<if test="type !=null and type == '01'.toString()">
 	           	order by A.BUSI_DATE desc

@@ -28,6 +28,7 @@ import com.joyintech.tams.common.base.entity.RepProdBasicChange;
 import com.joyintech.tams.common.base.entity.RepProdIndex;
 import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.common.base.entity.RepRelDeal;
+import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.disclosure.busicommon.common.util.CollectionUtils;
 import com.joyintech.tams.disclosure.busicommon.common.util.DurationUtil;
 import com.joyintech.tams.disclosure.busicommon.poireport.dto.DisReportType;
@@ -96,7 +97,10 @@ public class DurationReportDataService implements IReportDataService {
 
 			//报表基本产品信息，母产品维度
 			try {
-				reportDto= durationReportMapper.selectProdInfo(paraMap);
+				DurationReportDto dto= durationReportMapper.selectProdInfo(paraMap);
+				if ( dto!=null ) {
+					reportDto = dto; 
+				}
 			} catch (Exception e) {
 				logger.error("报表产品基本信息错误.");
 				e.printStackTrace();				
@@ -124,8 +128,7 @@ public class DurationReportDataService implements IReportDataService {
 					reportDto.setDurEndDate(DurationUtil.getYearEnd(year));
 				}						
 			} catch ( Exception e ) {
-				logger.error("报表区间数据错误.");
-				e.printStackTrace();
+				logger.error("报表区间数据错误.",e);
 			}
 			
 			//财务指标：子产品维度
@@ -347,4 +350,36 @@ public class DurationReportDataService implements IReportDataService {
 		return basisValue;
 	}
 	
+	public RepReveal getRepReveal(Map<String, Object> paraMap) {
+		RepReveal repReveal = new RepReveal();
+
+		//报告参数整理
+		int year = 2022;
+		int quarter = 2;
+		int halfYear =1;
+		Date sDate = new Date();
+		Date eDate = new Date();
+		
+		String rptType = paraMap.get("uri").toString();
+		try {
+			year = Integer.parseInt(paraMap.get("year").toString());
+
+			if ( rptType.equals(DisReportType.JDBG_ZSX) || rptType.equals(DisReportType.JDBG_FZSX)) {  //季报
+				sDate = DurationUtil.getQuarterStart(year, quarter);
+				eDate = DurationUtil.getQuarterEnd(year, quarter);
+			} else if ( rptType.equals(DisReportType.BNDBG_ZSX) || rptType.equals(DisReportType.BNDBG_FZSX) ) {  //半年报
+				sDate = DurationUtil.getHalfYearStart(year, halfYear);
+				eDate = DurationUtil.getHalfYearEnd(year, halfYear);
+			} else if ( rptType.equals(DisReportType.NDBG_ZSX) || rptType.equals(DisReportType.NDBG_FZSX) ) { //年报  
+				sDate = DurationUtil.getYearStart(year);
+				eDate = DurationUtil.getYearEnd(year);
+			}						
+		} catch ( Exception e ) {
+			logger.error("报表区间数据错误.");
+			e.printStackTrace();
+		}
+		repReveal.setStartDate(sDate);
+		repReveal.setEndDate(eDate);
+		return repReveal;
+	}
 }

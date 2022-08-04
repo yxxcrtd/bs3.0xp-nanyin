@@ -664,7 +664,7 @@ values ('RepEdit001', 'DIS', '/disclosure/information/reveal/detailshow/RepEdit0
 /*phantomjs-2.1.1 的安装路径 poi导出报表之生成echarts图片工具存放路径*/
 update sys_para set param_value = '/home/phantomjs-2.1.1-linux-x86_64/bin/' where para_code = 'POI_ECHARTS_PIC_EXPORT_PATH';
 /*poi导出报表Echarts临时文件存放路径*/
-update sys_para set param_value = '/home/bs3.0/yy/app/poi/echartstmp/' where para_code = 'POI_ECHARTS_PIC_EXPORT_PATH';
+update sys_para set param_value = '/home/bs3.0/yy/app/poi/echartstmp/' where para_code = 'POI_ECHARTS_TMPFILE_PATH';
 /*apache服务器的安装*/
 DELETE FROM sys_para WHERE PARA_CODE = 'POI_APACHE_PATH';
 INSERT INTO sys_para ("SYSTEM_CODE", "PARA_CODE", "PARAM_VALUE", "DATA_TYPE", "DATA_SCOPE", "REMARK", "CREATE_USER", "CREATE_DEPT", "CREATE_TIME", "UPDATE_USER", "UPDATE_TIME", "INSTITUTION_CODE", "UPDATE_FLG")
@@ -674,3 +674,133 @@ DELETE FROM sys_para WHERE PARA_CODE = 'POI_APACHE_ADDRESS';
 INSERT INTO sys_para ("SYSTEM_CODE", "PARA_CODE", "PARAM_VALUE", "DATA_TYPE", "DATA_SCOPE", "REMARK", "CREATE_USER", "CREATE_DEPT", "CREATE_TIME", "UPDATE_USER", "UPDATE_TIME", "INSTITUTION_CODE", "UPDATE_FLG")
 VALUES ('DIS', 'POI_APACHE_ADDRESS', '192.168.60.236', NULL, NULL, 'POI_APACHE服务器ip地址', 'system', NULL, sysdate, 'system', sysdate, NULL, '01');
 --add by zhengbs 20220802 poi脚本 end
+
+--add by zhengxiaolian 20220803 页面规则设置枚举值修改
+delete from sys_page_dictlist where PAGE_ID='ReportWorkManage002' and DICT_ID='RULE_TYPE1';
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ReportWorkManage002', '999999', 'RULE_TYPE1', 'RAISE_TYPE', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ReportWorkManage002', '999999', 'RULE_TYPE1', 'PROD_TYPE', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ReportWorkManage002', '999999', 'RULE_TYPE1', 'OPEN_FREQ', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ReportWorkManage002', '999999', 'RULE_TYPE1', 'IS_PERIOD', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ReportWorkManage002', '999999', 'RULE_TYPE1', 'IS_INDEX', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ReportWorkManage002', '999999', 'RULE_TYPE1', 'ISSUE_STATUS', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ReportWorkManage002', '999999', 'RULE_TYPE1', 'REP_PROD_TYPE', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ReportWorkManage002', '999999', 'RULE_TYPE1', 'ISSUING_WAY', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+delete from sys_page_dictlist where PAGE_ID='ReportPageManage002' and DICT_ID='RULE_TYPE1';
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ReportPageManage002', '999999', 'RULE_TYPE1', 'RAISE_TYPE', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ReportPageManage002', '999999', 'RULE_TYPE1', 'PROD_TYPE', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ReportPageManage002', '999999', 'RULE_TYPE1', 'OPEN_FREQ', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ReportPageManage002', '999999', 'RULE_TYPE1', 'IS_PERIOD', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ReportPageManage002', '999999', 'RULE_TYPE1', 'IS_INDEX', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ReportPageManage002', '999999', 'RULE_TYPE1', 'ISSUE_STATUS', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ReportPageManage002', '999999', 'RULE_TYPE1', 'REP_PROD_TYPE', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ReportPageManage002', '999999', 'RULE_TYPE1', 'ISSUING_WAY', null, null, 'system', null, sysdate, 'system', sysdate, null);
+--add by zhengxiaolian 20220803 页面规则设置枚举值修改
+
+-- add by zhengxiaolian 2022-08-03 数据字典中文调整 start
+delete from sys_datadict_list where DICT_CODE='RULE_TYPE1' and ITEM_CODE in('IS_INDEX','IS_PERIOD');
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('RULE_TYPE1', 'IS_INDEX', '是否指数型产品', 16, '0', 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('RULE_TYPE1', 'IS_PERIOD', '是否客户周期型产品', 17, '0', 'system', null, sysdate, 'system', sysdate, null);
+
+delete from sys_datadict where DICT_CODE='REP_PROD_TYPE' ;
+
+insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REP_PROD_TYPE', 'DIS', '信披产品类别', null, '02', 'system', null, sysdate, 'system', sysdate);
+-- add by zhengxiaolian 2022-08-03 数据字典中文调整，是否是指数型产品 end
+
+-- add by zhengxiaolian 2022-08-04 运作起始日中文调整 start
+update sys_datadict_list a set a.item_value='运作起始日' where a.dict_code='BASIS_DATE_TYPE' and a.item_code='09';
+-- add by zhengxiaolian 2022-08-04 运作起始日中文调整 end
+
+
+-- add by zhengxiaolian 2022-08-03 数据字典信披产品类别 中文调整 start
+delete from sys_datadict_list where DICT_CODE='RULE_TYPE1' and ITEM_CODE in('REP_PROD_TYPE');
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('RULE_TYPE1', 'REP_PROD_TYPE', '信披产品类别', 18, '0', 'system', null, sysdate, 'system', sysdate, null);
+-- add by zhengxiaolian 2022-08-03 数据字典信披产品类别 中文调整 end
+
+
+-- add by zhengxiaolian 2022-08-04 报表作业管理 枚举值调整 start
+delete from sys_page_dictlist where page_id='ReportWorkManage002' and DICT_ID='ISSUE_STATUS';
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ReportWorkManage002', '999999', 'ISSUE_STATUS', '01', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ReportWorkManage002', '999999', 'ISSUE_STATUS', '02', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ReportWorkManage002', '999999', 'ISSUE_STATUS', '03', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+delete from sys_page_dictlist where page_id='ReportWorkManage002' and DICT_ID='PROD_TYPE';
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ReportWorkManage002', '999999', 'PROD_TYPE', '01', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ReportWorkManage002', '999999', 'PROD_TYPE', '04', null, null, 'system', null, sysdate, 'system', sysdate, null);
+
+delete from sys_page_dictlist where page_id='ReportWorkManage002' and DICT_ID='RULE_TYPE2' and DICT_ITEM_VAL='!=';
+
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('ReportWorkManage002', '999999', 'RULE_TYPE2', '!=', null, null, 'system', null, sysdate, 'system', sysdate, null);
+-- add by zhengxiaolian 2022-08-04 报表作业管理 枚举值调整 end
+
+-- add by zhengxiaolian 2022-07-20 报表页面管理 规则设置联动 start
+delete from sys_datadict_list_link where DICT_CODE='RULE_TYPE2' and LINKED_ITEM_CODE in('REP_PROD_TYPE');
+
+delete from sys_datadict_list_link where DICT_CODE='RULE_TYPE3' and LINKED_ITEM_CODE in('REP_PROD_TYPE');
+
+INSERT INTO sys_datadict_list_link(DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('RULE_TYPE3', '02', 'RULE_TYPE1', 'REP_PROD_TYPE', 'system', NULL, sysdate, 'system', sysdate);
+
+INSERT INTO sys_datadict_list_link(DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('RULE_TYPE2', '=', 'RULE_TYPE1', 'REP_PROD_TYPE', 'system', NULL, sysdate, 'system', sysdate);
+
+INSERT INTO sys_datadict_list_link(DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('RULE_TYPE2', '!=', 'RULE_TYPE1', 'REP_PROD_TYPE', 'system', NULL, sysdate, 'system', sysdate);
+-- add by zhengxiaolian 2022-07-20 报表页面管理 规则设置联动 end
+
+-- add by zhengxiaolian 2022-08-04 	作业规则2增加枚举值 start
+delete from sys_datadict_list where DICT_CODE='RULE_TYPE2' and ITEM_CODE in('!=');
+
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('RULE_TYPE2', '!=', '!=', 6, '0', 'system', null, sysdate, 'system', sysdate, null);
+-- add by zhengxiaolian 2022-08-04 	作业规则2增加枚举值 end

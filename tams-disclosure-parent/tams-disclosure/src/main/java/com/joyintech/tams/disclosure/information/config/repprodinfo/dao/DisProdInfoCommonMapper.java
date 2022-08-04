@@ -24,6 +24,12 @@ public interface DisProdInfoCommonMapper {
      */
     List<SelectOptionDto> getProdIdAndNameByRegistNo(Map<String, Object> map);
 
+    /**
+     * 查询母产品和普通产品的产品代码和产品名称
+     * @param map
+     * @return
+     */
+    List<SelectOptionDto> getMontherAndCommonProdId(Map<String, Object> map);
 
 
 }

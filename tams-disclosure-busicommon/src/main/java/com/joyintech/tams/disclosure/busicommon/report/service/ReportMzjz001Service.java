@@ -4,6 +4,7 @@ package com.joyintech.tams.disclosure.busicommon.report.service;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.disclosure.common.common.service.HolidayService;
 import com.joyintech.tams.disclosure.busicommon.report.dao.ReportMzjz001Mapper;
 import com.joyintech.tams.disclosure.busicommon.report.dto.ReportMzjz001Dto;
@@ -90,5 +91,14 @@ public class ReportMzjz001Service implements IReportDataService {
             logger.error("每周净值公告（公募）/（私募）【{}】生成异常", JsonUtils.object2Json(paraMap), e);
         }
         return resultMap;
+    }
+
+    public RepReveal getRepReveal(Map<String, Object> paraMap) {
+        RepReveal repReveal = new RepReveal();
+        String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
+        Date enddate = DateUtil.parse((String)paraMap.get("enddate"));
+        repReveal.setProdid(prodId);
+        repReveal.setEndDate(enddate);
+        return repReveal;
     }
 }

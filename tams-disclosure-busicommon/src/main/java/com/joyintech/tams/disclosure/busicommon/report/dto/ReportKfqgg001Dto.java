@@ -1,5 +1,6 @@
 package com.joyintech.tams.disclosure.busicommon.report.dto;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -10,6 +11,25 @@ public class ReportKfqgg001Dto {
     private String prodName;
     private String year;
     private String plateDate;
+    private Date setDate;
+    private Date mDate;
+
+    public Date getmDate() {
+        return mDate;
+    }
+
+    public void setmDate(Date mDate) {
+        this.mDate = mDate;
+    }
+
+    public Date getSetDate() {
+        return setDate;
+    }
+
+    public void setSetDate(Date setDate) {
+        this.setDate = setDate;
+    }
+
     private List<ReportOpenPlanDto> openList;
 
     public String getProdName() {

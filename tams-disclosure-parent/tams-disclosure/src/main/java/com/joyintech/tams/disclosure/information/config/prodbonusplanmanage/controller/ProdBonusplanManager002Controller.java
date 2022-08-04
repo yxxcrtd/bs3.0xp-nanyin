@@ -192,6 +192,7 @@ public class ProdBonusplanManager002Controller extends BaseController {
             if(existDto2 != null){
                 return new AjaxResult("“子产品代码+产品名称+分红方式+收益分配基准日”不得同时与已有数据重复", MessageType.错误消息);
             }
+
         }
         return commonCheck(bindingResult, operateType);
     }

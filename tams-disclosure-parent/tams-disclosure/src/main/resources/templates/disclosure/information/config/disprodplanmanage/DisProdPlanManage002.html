@@ -20,12 +20,15 @@
 			<div class="layui-inline layui-col-md9 layui-col-xs9 layui-col-sm9 layui-col-lg91">
 				<label class="layui-form-label form-lable" >产品名称<i class="iconfont must" style="display: inline;">*</i></label>
 				<div class="layui-input-inline input-inline">
+
 					<select id="finprodId" name="finprodId"
 							class="layui-input form-input input-select" placeholder="请选择"
-							data-th-data-url='@{/disclosure/information/config/disprodplanmanage/DisProdPlanManage002/getPrdInfoSelect}'
+							data-th-data-url='@{/disclosure/information/config/disprodplanmanage/DisProdPlanManage002/getMontherAndCommonProdId}'
 							allowClear="true"
 							data-th-initValue='${entity?.prodId}'>
 					</select>
+					<!--data-th-data-url='@{/disclosure/information/config/repprodinfo/ProdInfoCommon/getMontherAndCommonProdId}'-->
+
 				</div>
 
 			</div>

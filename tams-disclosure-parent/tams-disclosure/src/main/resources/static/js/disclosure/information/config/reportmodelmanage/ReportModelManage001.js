@@ -362,7 +362,7 @@
 	    	data.operateType = "edit";
 	    	Joyin.dialog(JoyinUtil.getLabel("编辑"),
 	                JoyinUtil.getRealPath("/disclosure/information/config/reportmodelmanage/ReportModelManage002/init"),
-	                "90%", "90%", {pageModel:PAGE_MODEL_EDIT,keyId:data.keyId},
+	                "90%", "90%", {pageModel:PAGE_MODEL_EDIT,keyId:data.keyId,repId:data.repId},
 	                function(data){
 	                	dataTable.reload();
 	                	dataTable2.reload();

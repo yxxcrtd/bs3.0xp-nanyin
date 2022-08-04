@@ -1,6 +1,7 @@
 package com.joyintech.tams.disclosure.busicommon.rptdata.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +13,10 @@ import org.springframework.stereotype.Service;
 
 import com.joyintech.tams.common.base.dao.RepProdInfoMapper;
 import com.joyintech.tams.common.base.entity.RepProdInfo;
+import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.disclosure.busicommon.common.util.CollectionUtils;
+import com.joyintech.tams.disclosure.busicommon.rptdata.dto.BonusReportDto;
+import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
 
 /**
  * 非标债权调整公告-数据获取服务
@@ -42,7 +46,7 @@ public class NostdReportDataService implements IReportDataService {
 			String prodId = paraMap.get("pprodid").toString();
 			RepProdInfo prodInfo = repProdInfoMapper.selectByPrimaryKey(prodId);
 			Map<String,Object> dataMap = new HashMap<>();
-			dataMap.put("reportDate", paraMap.get("enddate"));
+			dataMap.put("reportDate", DateUtil.parse(paraMap.get("enddate").toString()));
 			dataMap.putAll(CollectionUtils.bean2Map(prodInfo));
 			listResult.add(dataMap);
 		} catch (Exception e) {
@@ -53,4 +57,13 @@ public class NostdReportDataService implements IReportDataService {
 		return listResult;
 	}
 
+	public RepReveal getRepReveal(Map<String, Object> paraMap) {
+		RepReveal repReveal = new RepReveal();
+		repReveal.setRepId(paraMap.get("repId").toString());
+		repReveal.setProdid(paraMap.get("prodId").toString());
+		
+		Date eDate = DateUtil.parse(paraMap.get("reportDate").toString());
+		repReveal.setEndDate(eDate);
+		return repReveal;
+	}
 }

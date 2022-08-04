@@ -524,6 +524,35 @@ $(function() {
 			}
 			
 		}
+		//modify by zhengxiaolian on 20220719 增加开放频率，是否是客户周期型产品，是否是指数型产品 start
+		else if (rule.ruleType1 == 'OPEN_FREQ') {
+			if ($('#openFreq').select2('data')[0]) {
+				rule.ruleType4 = $('#openFreq').select2('data')[0].id;
+				rule.ruleType4Name = $('#openFreq').select2('data')[0].text;
+			} else {
+				Joyin.alert("开放频率", 7);
+				return;
+			}
+		}
+		else if (rule.ruleType1 == 'IS_INDEX') {
+			if ($('#isIndex').select2('data')[0]) {
+				rule.ruleType4 = $('#isIndex').select2('data')[0].id;
+				rule.ruleType4Name = $('#isIndex').select2('data')[0].text;
+			} else {
+				Joyin.alert("请选择是否是指数型产品", 7);
+				return;
+			}
+		}
+		else if (rule.ruleType1 == 'IS_PERIOD') {
+			if ($('#isPeriod').select2('data')[0]) {
+				rule.ruleType4 = $('#isPeriod').select2('data')[0].id;
+				rule.ruleType4Name = $('#isPeriod').select2('data')[0].text;
+			} else {
+				Joyin.alert("请选择是否是客户周期型产品", 7);
+				return;
+			}
+		}
+		//modify by zhengxiaolian on 20220719 增加开放频率，是否是客户周期型产品，是否是指数型产品 end
 		else {
 			if (rule.ruleType3 == '03') {
 				// 平台日
@@ -565,6 +594,10 @@ $(function() {
 		if ($('#ruleType3').val()) {
 			ruleType3 = $('#ruleType3').select2('data')[0].id;
 		}
+		$('#openFreqSelect').hide();
+		$('#isIndexSelect').hide();
+		$('#isPeriodSelect').hide();
+		$('#repProdTypeSelect').hide();
 		if (ruleType1 == 'PROFIT_TYPE') {
 			$('#raiseTypeSelect').hide();
 			$('#chooseDateSelect').hide();
@@ -709,6 +742,65 @@ $(function() {
 			$('#prodproFitflagSelect').hide();
 			$('#saletargetDeclareSelect').show();
 		}
+		//modify by zhengxiaolian on 20220719 增加开放频率，是否是客户周期型产品，是否是指数型产品 start
+		else if(ruleType1 == 'OPEN_FREQ'){
+			$('#raiseTypeSelect').hide();
+			$('#chooseDateSelect').hide();
+			$('#profitTypeSelect').hide();
+			$('#issueModeSelect').hide();
+			$('#issueStautsSelect').hide();
+			$('#openModeSelect').hide();
+			$('#isIndepeAccSelect').hide();
+			$('#prodTypeSelect').hide();
+			$('#finaTypeSelect').hide();
+			$('#prodTermTypeSelect').hide();
+			$('#prodSeriesSelect').hide();
+			$('#openFreqSelect').show();
+		}
+		else if(ruleType1 == 'IS_INDEX'){
+			$('#raiseTypeSelect').hide();
+			$('#chooseDateSelect').hide();
+			$('#profitTypeSelect').hide();
+			$('#issueModeSelect').hide();
+			$('#issueStautsSelect').hide();
+			$('#openModeSelect').hide();
+			$('#isIndepeAccSelect').hide();
+			$('#prodTypeSelect').hide();
+			$('#finaTypeSelect').hide();
+			$('#prodTermTypeSelect').hide();
+			$('#prodSeriesSelect').hide();
+			$('#isIndexSelect').show();
+		}
+		else if(ruleType1 == 'IS_PERIOD'){
+			$('#raiseTypeSelect').hide();
+			$('#chooseDateSelect').hide();
+			$('#profitTypeSelect').hide();
+			$('#issueModeSelect').hide();
+			$('#issueStautsSelect').hide();
+			$('#openModeSelect').hide();
+			$('#isIndepeAccSelect').hide();
+			$('#prodTypeSelect').hide();
+			$('#finaTypeSelect').hide();
+			$('#prodTermTypeSelect').hide();
+			$('#prodSeriesSelect').hide();
+			$('#isPeriodSelect').show();
+		}
+		else if(ruleType1 == 'REP_PROD_TYPE'){
+			$('#raiseTypeSelect').hide();
+			$('#chooseDateSelect').hide();
+			$('#profitTypeSelect').hide();
+			$('#issueModeSelect').hide();
+			$('#issueStautsSelect').hide();
+			$('#openModeSelect').hide();
+			$('#isIndepeAccSelect').hide();
+			$('#prodTypeSelect').hide();
+			$('#finaTypeSelect').hide();
+			$('#prodTermTypeSelect').hide();
+			$('#prodSeriesSelect').hide();
+			$('#isPeriodSelect').hide();
+			$('#repProdTypeSelect').show();
+		}
+		//modify by zhengxiaolian on 20220719 增加开放频率，是否是客户周期型产品，是否是指数型产品 start
 		else {
 			if (ruleType3 == '03' || !$('#ruleType3').val()) {
 				$('#raiseTypeSelect').hide();
@@ -743,6 +835,204 @@ $(function() {
 		var ruleId = $('#ruleId').select2('data')[0].col;
 		$('#repName').val(ruleId);
 	}
+
+	function ruleType3Change() {
+		var ruleType1 = $('#ruleType1').select2('data')[0].id;
+		var ruleType3;
+		if ($('#ruleType3').val()) {
+			ruleType3 = $('#ruleType3').select2('data')[0].id;
+		}
+		//modify by zhengxiaolian on 20220719 增加开放频率，是否是客户周期型产品，是否是指数型产品 start
+		$('#openFreqSelect').hide();
+		$('#isIndexSelect').hide();
+		$('#isPeriodSelect').hide();
+		$('#repProdTypeSelect').hide();
+		//modify by zhengxiaolian on 20220719 增加开放频率，是否是客户周期型产品，是否是指数型产品 联动 end
+		if (ruleType1 == 'PROFIT_TYPE') {
+			$('#raiseTypeSelect').hide();
+			$('#chooseDateSelect').hide();
+			$('#profitTypeSelect').show();
+			$('#issueModeSelect').hide();
+			$('#issueStautsSelect').hide();
+			$('#openModeSelect').hide();
+			$('#isIndepeAccSelect').hide();
+			$('#prodTypeSelect').hide();
+			$('#finaTypeSelect').hide();
+			$('#prodTermTypeSelect').hide();
+		} else if (ruleType1 == 'RAISE_TYPE') {
+			$('#raiseTypeSelect').show();
+			$('#chooseDateSelect').hide();
+			$('#profitTypeSelect').hide();
+			$('#issueModeSelect').hide();
+			$('#issueStautsSelect').hide();
+			$('#openModeSelect').hide();
+			$('#isIndepeAccSelect').hide();
+			$('#prodTypeSelect').hide();
+			$('#finaTypeSelect').hide();
+			$('#prodTermTypeSelect').hide();
+		} else if (ruleType1 == 'ISSUING_WAY') {
+			$('#raiseTypeSelect').hide();
+			$('#chooseDateSelect').hide();
+			$('#profitTypeSelect').hide();
+			$('#issueModeSelect').show();
+			$('#issueStautsSelect').hide();
+			$('#openModeSelect').hide();
+			$('#isIndepeAccSelect').hide();
+			$('#prodTypeSelect').hide();
+			$('#finaTypeSelect').hide();
+			$('#prodTermTypeSelect').hide();
+		} else if (ruleType1 == 'ISSUE_STATUS') {
+			$('#raiseTypeSelect').hide();
+			$('#chooseDateSelect').hide();
+			$('#profitTypeSelect').hide();
+			$('#issueModeSelect').hide();
+			$('#issueStautsSelect').show();
+			$('#openModeSelect').hide();
+			$('#isIndepeAccSelect').hide();
+			$('#prodTypeSelect').hide();
+			$('#finaTypeSelect').hide();
+			$('#prodTermTypeSelect').hide();
+		} else if (ruleType1 == 'OPEN_MODE') {
+			$('#raiseTypeSelect').hide();
+			$('#chooseDateSelect').hide();
+			$('#profitTypeSelect').hide();
+			$('#issueModeSelect').hide();
+			$('#issueStautsSelect').hide();
+			$('#openModeSelect').show();
+			$('#isIndepeAccSelect').hide();
+			$('#prodTypeSelect').hide();
+			$('#finaTypeSelect').hide();
+			$('#prodTermTypeSelect').hide();
+		} else if (ruleType1 == 'IS_INDEPE_ACC') {
+			$('#raiseTypeSelect').hide();
+			$('#chooseDateSelect').hide();
+			$('#profitTypeSelect').hide();
+			$('#issueModeSelect').hide();
+			$('#issueStautsSelect').hide();
+			$('#openModeSelect').hide();
+			$('#isIndepeAccSelect').show();
+			$('#prodTypeSelect').hide();
+			$('#finaTypeSelect').hide();
+			$('#prodTermTypeSelect').hide();
+		} else if (ruleType1 == 'PROD_TYPE') {
+			$('#raiseTypeSelect').hide();
+			$('#chooseDateSelect').hide();
+			$('#profitTypeSelect').hide();
+			$('#issueModeSelect').hide();
+			$('#issueStautsSelect').hide();
+			$('#openModeSelect').hide();
+			$('#isIndepeAccSelect').hide();
+			$('#prodTypeSelect').show();
+			$('#finaTypeSelect').hide();
+			$('#prodTermTypeSelect').hide();
+		} else if (ruleType1 == 'FINA_TYPE') {
+			$('#raiseTypeSelect').hide();
+			$('#chooseDateSelect').hide();
+			$('#profitTypeSelect').hide();
+			$('#issueModeSelect').hide();
+			$('#issueStautsSelect').hide();
+			$('#openModeSelect').hide();
+			$('#isIndepeAccSelect').hide();
+			$('#prodTypeSelect').hide();
+			$('#finaTypeSelect').show();
+			$('#prodTermTypeSelect').hide();
+		} else if (ruleType1 == 'PROD_TERM_TYPE') {
+			$('#raiseTypeSelect').hide();
+			$('#chooseDateSelect').hide();
+			$('#profitTypeSelect').hide();
+			$('#issueModeSelect').hide();
+			$('#issueStautsSelect').hide();
+			$('#openModeSelect').hide();
+			$('#isIndepeAccSelect').hide();
+			$('#prodTypeSelect').hide();
+			$('#finaTypeSelect').hide();
+			$('#prodTermTypeSelect').show();
+		}
+		//modify by zhengxiaolian on 20220719 增加开放频率，是否是客户周期型产品，是否是指数型产品 start
+		else if(ruleType1 == 'OPEN_FREQ'){
+			$('#raiseTypeSelect').hide();
+			$('#chooseDateSelect').hide();
+			$('#profitTypeSelect').hide();
+			$('#issueModeSelect').hide();
+			$('#issueStautsSelect').hide();
+			$('#openModeSelect').hide();
+			$('#isIndepeAccSelect').hide();
+			$('#prodTypeSelect').hide();
+			$('#finaTypeSelect').hide();
+			$('#prodTermTypeSelect').hide();
+			$('#prodSeriesSelect').hide();
+			$('#openFreqSelect').show();
+		}
+		else if(ruleType1 == 'IS_INDEX'){
+			$('#raiseTypeSelect').hide();
+			$('#chooseDateSelect').hide();
+			$('#profitTypeSelect').hide();
+			$('#issueModeSelect').hide();
+			$('#issueStautsSelect').hide();
+			$('#openModeSelect').hide();
+			$('#isIndepeAccSelect').hide();
+			$('#prodTypeSelect').hide();
+			$('#finaTypeSelect').hide();
+			$('#prodTermTypeSelect').hide();
+			$('#prodSeriesSelect').hide();
+			$('#isIndexSelect').show();
+		}
+		else if(ruleType1 == 'IS_PERIOD'){
+			$('#raiseTypeSelect').hide();
+			$('#chooseDateSelect').hide();
+			$('#profitTypeSelect').hide();
+			$('#issueModeSelect').hide();
+			$('#issueStautsSelect').hide();
+			$('#openModeSelect').hide();
+			$('#isIndepeAccSelect').hide();
+			$('#prodTypeSelect').hide();
+			$('#finaTypeSelect').hide();
+			$('#prodTermTypeSelect').hide();
+			$('#prodSeriesSelect').hide();
+			$('#isPeriodSelect').show();
+		}
+		else if(ruleType1 == 'REP_PROD_TYPE'){
+			$('#raiseTypeSelect').hide();
+			$('#chooseDateSelect').hide();
+			$('#profitTypeSelect').hide();
+			$('#issueModeSelect').hide();
+			$('#issueStautsSelect').hide();
+			$('#openModeSelect').hide();
+			$('#isIndepeAccSelect').hide();
+			$('#prodTypeSelect').hide();
+			$('#finaTypeSelect').hide();
+			$('#prodTermTypeSelect').hide();
+			$('#prodSeriesSelect').hide();
+			$('#isPeriodSelect').hide();
+			$('#repProdTypeSelect').show();
+		}
+		//modify by zhengxiaolian on 20220719 增加开放频率，是否是客户周期型产品，是否是指数型产品 start
+		else {
+			if (ruleType3 == '03' || !$('#ruleType3').val()) {
+				$('#raiseTypeSelect').hide();
+				$('#chooseDateSelect').hide();
+				$('#profitTypeSelect').hide();
+				$('#issueModeSelect').hide();
+				$('#issueStautsSelect').hide();
+				$('#openModeSelect').hide();
+				$('#isIndepeAccSelect').hide();
+				$('#prodTypeSelect').hide();
+				$('#finaTypeSelect').hide();
+				$('#prodTermTypeSelect').hide();
+			} else {
+				$('#raiseTypeSelect').hide();
+				$('#chooseDateSelect').show();
+				$('#profitTypeSelect').hide();
+				$('#issueModeSelect').hide();
+				$('#issueStautsSelect').hide();
+				$('#openModeSelect').hide();
+				$('#isIndepeAccSelect').hide();
+				$('#prodTypeSelect').hide();
+				$('#finaTypeSelect').hide();
+				$('#prodTermTypeSelect').hide();
+			}
+		}
+	}
 	/**
 	 * 画面加载完成
 	 */
@@ -759,6 +1049,10 @@ $(function() {
 		$('#prodTermTypeSelect').hide();
 		$('#prodproFitflagSelect').hide();
 		$('#saletargetDeclareSelect').hide();
+		$('#openFreqSelect').hide();
+		$('#isIndexSelect').hide();
+		$('#isPeriodSelect').hide();
+		$('#repProdTypeSelect').hide();
 		//预览产品列表点击事件
 		$('#ReportWorkManage002_btn_previewProdList').click(previewProdSelect);
 		//规则增加事件
@@ -766,7 +1060,7 @@ $(function() {
 		//规则1改变事件
 		$('#ruleType1').change(ruleType1Change);
 		//规则3改变事件
-		$('#ruleType3').change(ruleType1Change);
+		$('#ruleType3').change(ruleType3Change);
 		//规则名称改变事件
 		$('#ruleId').change(ruleChange);
 		//保存绑定点击事件

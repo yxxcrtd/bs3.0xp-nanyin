@@ -504,7 +504,7 @@ VALUES ('DIS_PROFIT_TYPE', '02', 'DIS_PROD_TYPE', '04', 'system', null, sysdate,
 
 commit ;
 
-<!--  add  信息披露->非标债权类资产明细维护  by  marui start -->
+--  add  信息披露->非标债权类资产明细维护  by  marui start
 -- 菜单配置
 delete from SYS_MENU where PAGE_ID = 'UnClaimAssetDetail001';
 insert into SYS_MENU  (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
@@ -551,4 +551,40 @@ VALUES('ProdBonusplanManager002', 'DIS', '/disclosure/information/config/prodbon
        'disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager002', '', NULL, NULL,
        '02', '01', '产品分红到期计划新增', 'system', NULL, sysdate, 'system', sysdate);
 -- add by dingrui 2022-08-02  end
+
+
+-- add by dingrui 2022-08-03  start
+-- 新增"产品排期计划" 菜单
+DELETE FROM SYS_MENU WHERE SYS_MENU.MENU_ID = 'REPORT_006_004' AND SYS_MENU.REMARK = '信披数据维护';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('REPORT_006_004', 'DIS', null, 'REPORT_006', '', 1, '02', '信披数据维护', 'system', null, SYSDATE, 'system', SYSDATE);
+
+DELETE FROM SYS_MENU WHERE SYS_MENU.MENU_ID = 'REPORT_006_004_001' AND SYS_MENU.REMARK = '产品计划排期';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('REPORT_006_004_001', 'DIS', null, 'REPORT_006_004', 'DisProdPlanManage001', 1, '02', '产品排期计划', 'system', null, SYSDATE, 'system', SYSDATE);
+
+-- 新增 "产品排期计划" 画面
+DELETE FROM SYS_PAGE WHERE PAGE_ID IN ('DisProdPlanManage001');
+INSERT INTO SYS_PAGE
+(PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES('DisProdPlanManage001', 'DIS', '/disclosure/information/config/disprodplanmanage/DisProdPlanManage001', 'disclosure/information/config/disprodplanmanage/DisProdPlanManage001',
+       'REPORT_006_004_001', NULL, NULL, '02', '01', '产品排期计划', 'system', NULL, sysdate, 'system', sysdate);
+
+DELETE FROM SYS_PAGE WHERE PAGE_ID IN ('DisProdPlanManage002');
+INSERT INTO SYS_PAGE
+(PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES('DisProdPlanManage002', 'DIS', '/disclosure/information/config/disprodplanmanage/DisProdPlanManage002', 'disclosure/information/config/disprodplanmanage/DisProdPlanManage002',
+       '', NULL, NULL, '02', '01', '产品排期计划新增', 'system', NULL, sysdate, 'system', sysdate);
+-- add by dingrui 2022-08-03  end
+
+
+-- add by sunjie 20220803 隐藏主动提醒脚本 start
+update sys_para set PARAM_VALUE = '02' where PARA_CODE = 'is_show_remind';
+-- add by sunjie 20220803 隐藏主动提醒脚本 end
+
+-- add by sunjie 20220803 数据状态下拉框枚举值 start
+delete from SYS_PAGE_DICTLIST where PAGE_ID like '%ProElementAdj00%' and DICT_ID = 'MAINTAIN_STATUS';
+INSERT INTO SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('ProElementAdj001', '999999', 'MAINTAIN_STATUS', 'D', null, null, 'system', null, sysdate, 'system', sysdate, null);
+INSERT INTO SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('ProElementAdj001', '999999', 'MAINTAIN_STATUS', 'E', null, null, 'system', null, sysdate, 'system', sysdate, null);
+-- add by sunjie 20220803 数据状态下拉框枚举值 end
 commit ;

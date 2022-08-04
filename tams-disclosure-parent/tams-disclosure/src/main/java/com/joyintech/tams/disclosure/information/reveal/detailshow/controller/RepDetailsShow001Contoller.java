@@ -9,6 +9,27 @@
 */
 package com.joyintech.tams.disclosure.information.reveal.detailshow.controller;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
@@ -17,8 +38,10 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.TreeNode;
-import com.joyintech.framework.util.*;
-import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.common.util.JacksonUtil;
 import com.joyintech.tams.constant.DictCode;
@@ -30,29 +53,7 @@ import com.joyintech.tams.disclosure.common.common.util.ReportGlobalConstant;
 import com.joyintech.tams.disclosure.information.config.reporttree.service.ReportTreeMenuConfiguration001Service;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.dto.RepDetailsShow001Dto;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.service.RepDetailsShow001Service;
-import com.joyintech.tams.disclosure.information.reveal.detailshow.service.WebOfficeObject;
-import com.joyintech.tams.disclosure.information.reveal.detailshow.service.iMsgServer2015;
-import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManageParamDto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.sql.DataSource;
-import javax.validation.Valid;
-import java.io.IOException;
-import java.util.*;
+import com.joyintech.tams.systemtools.service.CommonPlatformDateService;
 
 /**
  * 模板示例<br>
@@ -87,6 +88,9 @@ public class RepDetailsShow001Contoller extends BaseController {
     
     @Autowired
 	@Qualifier("masterDataSource") DataSource master;
+    
+    @Autowired
+    private CommonPlatformDateService commonPlatformDateService;
 
     /**
      * 日志
@@ -310,20 +314,7 @@ public class RepDetailsShow001Contoller extends BaseController {
 	@RequestMapping(value="/previewReport", method = RequestMethod.POST)
 	public void previewReport(HttpServletRequest request, HttpServletResponse response) {
 		Map<String,Object> params = RequestUtil.getPageParam();
-    	params.put("modelId", params.get("modelid"));
-    	params.put("prodId", params.get("prodid"));
-    	params.put("pprodId", params.get("pprodid"));
-    	params.put("prodName", params.get("prodname"));
-    	params.put("repId", params.get("repid"));
-    	params.put("reportId", params.get("repid"));
-    	params.put("endDate", params.get("enddate"));
-    	params.put("repName",params.get("repname"));
-    	params.put("reportDate", params.get("enddate"));
-    	if ( params.get("uri")==null )
-    		params.put("uri",params.get("modelid"));
-    	if (params.get("prodId")==null )
-    		params.put("prodId",params.get("pprodId"));
-        
+		doParams(params);
 		repDetailsShow001Service.previewReport(params,response);
 	}
 
@@ -338,33 +329,22 @@ public class RepDetailsShow001Contoller extends BaseController {
         try {
         	//对参数进行修正，防止前台传入的参数错误或者变量大小写错误
         	Map<String,Object> params = RequestUtil.getPageParam();
-        	params.put("modelId", params.get("modelid"));
-        	params.put("prodId", params.get("prodid"));
-        	params.put("pprodId", params.get("pprodid"));
-        	params.put("prodName", params.get("prodname"));
-        	params.put("repId", params.get("repid"));
-        	params.put("reportId", params.get("repid"));
-        	params.put("endDate", params.get("enddate"));
-        	params.put("repName",params.get("repname"));
-        	params.put("reportDate", params.get("enddate"));        	
-        	if ( params.get("uri")==null )
-        		params.put("uri",params.get("modelid"));
-        	if (params.get("prodId")==null )
-        		params.put("prodId",params.get("pprodId"));
-        	
+    		doParams(params);
+
         	boolean flag = false;
         	boolean confirmFlag = true;
-        	RepReveal repReveal = new RepReveal();
-			String prodId = "";
-			if (params.get("pprodid")!=null )
-				prodId = params.get("pprodid").toString();
-        	if(params.get("repid") != null) {
-        		repReveal.setRepId(params.get("repid").toString());
-        	}
-			repReveal.setProdid(prodId);
+//        	RepReveal repReveal = new RepReveal();
+//			String prodId = "";
+//			if (params.get("pprodid")!=null )
+//				prodId = params.get("pprodid").toString();
+//        	if(params.get("repid") != null) {
+//        		repReveal.setRepId(params.get("repid").toString());
+//        	}
+//			repReveal.setProdid(prodId);
+        	RepReveal repReveal = repDetailsShow001Service.getRepReveal(params);
 			confirmFlag = reportDealService.selectConfirmStatus(repReveal);  
     		if(confirmFlag == true) {  //检查通过：不存在相同的已确认的报告
-    			reportDealService.updateDataStatus(repReveal);
+    			reportDealService.updateDataStatus(repReveal);  //逻辑删除已生成未确认的
     			repDetailsShow001Service.genReport(params);
    				value.setMessage("生成成功", MessageType.提示消息);
     		}else {
@@ -389,19 +369,8 @@ public class RepDetailsShow001Contoller extends BaseController {
     @RequestMapping("mergeExport")
     public ResponseEntity<byte[]> mergeExport() throws IOException {
     	Map<String,Object> params = RequestUtil.getPageParam();
-    	params.put("modelId", params.get("modelid"));
-    	params.put("prodId", params.get("prodid"));
-    	params.put("pprodId", params.get("pprodid"));
-    	params.put("prodName", params.get("prodname"));
-    	params.put("repId", params.get("repid"));
-    	params.put("reportId", params.get("repid"));
-    	params.put("endDate", params.get("enddate"));
-    	params.put("repName",params.get("repname"));
-    	params.put("reportDate", params.get("enddate"));
-    	if ( params.get("uri")==null )
-    		params.put("uri",params.get("modelid"));
-    	if (params.get("prodId")==null )
-    		params.put("prodId",params.get("pprodId"));
+		doParams(params);
+
         return repDetailsShow001Service.exportReport(params);
     }
 
@@ -494,13 +463,23 @@ public class RepDetailsShow001Contoller extends BaseController {
 	@ResponseBody
 	@RequestMapping("check")
 	public AjaxResult check(@RequestBody Map<String, Object> param) {
-		AjaxResult webResult = new AjaxResult();
-
-//		ValidMessage message = new ValidMessage();
-//		message.setMessage("存在流程中的数据");
-//		webResult.setErrorList(Arrays.asList(message));
-
-		return webResult;
+		return repDetailsShow001Service.check(param);
 	}
 
+	public void doParams(Map<String,Object> params) {
+		params.put("modelId", params.get("modelId")==null?params.get("modelid"):params.get("modelId"));
+		params.put("pprodId", params.get("pprodId")==null?params.get("pprodid"):params.get("pprodId"));
+		params.put("prodId", params.get("prodId")==null?params.get("prodid"):params.get("prodId"));
+		params.put("prodId", params.get("prodId")==null?params.get("pprodid"):params.get("prodId"));
+		params.put("prodName", params.get("prodName")==null?params.get("prodname"):params.get("prodName"));
+		params.put("repId", params.get("repId")==null?params.get("repid"):params.get("repId"));
+		params.put("reportId", params.get("reportId")==null?params.get("repid"):params.get("reportId"));
+		params.put("endDate", params.get("endDate")==null?params.get("enddate"):params.get("endDate"));
+		params.put("repName", params.get("repName")==null?params.get("repname"):params.get("repName"));
+		params.put("endDate", params.get("endDate")==null?params.get("enddate"):params.get("endDate"));
+		params.put("reportDate", params.get("reportDate")==null?params.get("endDate"):params.get("reportDate"));
+		params.put("uri", params.get("uri")==null?params.get("modelid"):params.get("uri"));
+		params.put("platformDate", params.get("platformDate")==null? DateUtil.format(commonPlatformDateService.getSysDate()):params.get("platformDate"));
+	}
+	
 }

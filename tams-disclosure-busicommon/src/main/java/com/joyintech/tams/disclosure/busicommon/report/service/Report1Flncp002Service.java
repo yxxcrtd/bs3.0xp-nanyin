@@ -3,6 +3,7 @@ package com.joyintech.tams.disclosure.busicommon.report.service;
 
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.disclosure.busicommon.common.constants.GlobalConstant;
 import com.joyintech.tams.disclosure.busicommon.report.dao.ReportCpflyhMapper;
 import com.joyintech.tams.disclosure.busicommon.report.dto.Report1FlncpDto;
@@ -14,10 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 一费率多产品费率优惠公告/报告模板1
@@ -97,5 +95,14 @@ public class Report1Flncp002Service implements IReportDataService {
             dataMap.put("prodlist", prodlist);
         }
         return result;
+    }
+
+    public RepReveal getRepReveal(Map<String, Object> paraMap) {
+        RepReveal repReveal = new RepReveal();
+        String prodId = (String)paraMap.get("feename");
+        Date enddate = DateUtil.parse((String)paraMap.get("enddate"));
+        repReveal.setProdid(prodId);
+        repReveal.setEndDate(enddate);
+        return repReveal;
     }
 }

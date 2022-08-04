@@ -2,6 +2,8 @@
 package com.joyintech.tams.disclosure.busicommon.report.service;
 
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.disclosure.busicommon.report.dao.ReportJeshMapper;
 import com.joyintech.tams.disclosure.busicommon.report.dto.ReportJeshDto;
 import com.joyintech.tams.disclosure.busicommon.rptdata.service.IReportDataService;
@@ -9,10 +11,7 @@ import com.joyintech.tams.systemtools.service.CommonPlatformDateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 巨额赎回公告/报告模板
@@ -40,10 +39,15 @@ public class ReportJesh001Service implements IReportDataService {
         Map<String,Object> dataMap = new HashMap<>();
         List<Map<String,Object>> result = new ArrayList<>();
         result.add(dataMap);
-        if (paraMap.get("pprodid") == null) {
+        String prodId = "";
+        if (StringUtil.equals("batch", paraMap.get("opttype"))) {
+            prodId = (String)paraMap.get("prodid");
+        } else {
+            prodId = (String)paraMap.get("pprodid");
+        }
+        if (StringUtil.isBlank(prodId)) {
             return result;
         }
-        String prodId = paraMap.get("pprodid").toString();
         Map<String,Object> searchparam = new HashMap<>();
         searchparam.put("prodId", prodId);
         String pubDateStr = commonPlatformDateService.getSysDateStr();
@@ -80,5 +84,14 @@ public class ReportJesh001Service implements IReportDataService {
         // 发布日期
         dataMap.put("pubDate",DateUtil.format(DateUtil.parse(pubDateStr), DateUtil.DEFAULT_DATE_FORMAT_CN));
         return result;
+    }
+
+    public RepReveal getRepReveal(Map<String, Object> paraMap) {
+        RepReveal repReveal = new RepReveal();
+        String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
+        Date enddate = DateUtil.parse((String)paraMap.get("enddate"));
+        repReveal.setProdid(prodId);
+        repReveal.setEndDate(enddate);
+        return repReveal;
     }
 }

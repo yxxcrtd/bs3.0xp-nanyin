@@ -24,7 +24,10 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.dao.ReportInfoMapper;
+import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.ReportInfo;
 import com.joyintech.tams.disclosure.information.config.reportmodelmanage.dto.ReportParamDto;
+import com.joyintech.tams.disclosure.information.reveal.detailshow.service.ReportFileUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipOutputStream;
@@ -69,6 +72,9 @@ public class ReportModelManage002Service extends CommonExportService<RepInfo> {
     
     @Autowired
 	private ProgressBarService progressBarService;
+
+	@Autowired
+	private ReportInfoMapper reportInfoMapper;
         /**
          * 日志
          */
@@ -266,26 +272,21 @@ public class ReportModelManage002Service extends CommonExportService<RepInfo> {
 	 * @return
 	 * @throws IOException
 	 */
-	public ResponseEntity<byte[]> downLoadReportInfo(String filenpath) throws IOException{
-		String uploadFilePath  = CacheUtil.getSysParam(ReportGlobalConstant.TEMPLATE_FILE_PATH); 
-		File filepath=new SafelyFile(uploadFilePath+filenpath);///NB/GLJY
-		//检查文件夹是否存在
-		String zipFileName = FileNameUtil.createFileName("zip");
-		File zipFile = new SafelyFile(uploadFilePath + File.separator + zipFileName);
-		ZipOutputStream  zipOut =null;
-		try{
-			if(filepath.exists()){
-				zipOut = new ZipOutputStream(new FileOutputStream(zipFile));
-				zipOut.setEncoding("gbk");
-				compressFile2(zipOut, filepath,filepath.getName());
-			}
-		}finally {
-			if(zipOut != null){
-				zipOut.close();
-			}
+	public ResponseEntity<byte[]> downLoadReportInfo(String filenpath,String repId) throws IOException{
+		String uploadFilePath  = CacheUtil.getSysParam(ReportGlobalConstant.TEMPLATE_FILE_PATH);
+
+		ReportInfo reportInfo = reportInfoMapper.getReportInfoByID(repId);
+
+		String reportFile=uploadFilePath+filenpath+"/"+reportInfo.getUri()+ ReportFileUtil.FILE_TYPE_DOCX;
+		String localFileName = reportInfo.getUri()+ReportFileUtil.FILE_TYPE_DOCX;
+
+		File remoteFile = new SafelyFile(reportFile);
+
+		if(!remoteFile.exists()){
+			remoteFile.createNewFile();
 		}
 
-		return ExportUtil.export(zipFileName, zipFile, true);
+		return ExportUtil.export(localFileName, remoteFile, false);
 
 	}
 	

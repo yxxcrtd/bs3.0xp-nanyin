@@ -4,6 +4,7 @@ package com.joyintech.tams.disclosure.busicommon.report.service;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.disclosure.busicommon.report.dao.ReportKfqgg001Mapper;
 import com.joyintech.tams.disclosure.busicommon.report.dto.ReportKfqgg001Dto;
 import com.joyintech.tams.disclosure.busicommon.report.dto.ReportOpenPlanDto;
@@ -58,10 +59,26 @@ public class ReportKfqgg001Service implements IReportDataService {
             if(StringUtil.isNotEmpty(prodId)&&StringUtil.isNotEmpty(year)){
                 Map<String, Object> searchparam = new HashMap<>();
                 searchparam.put("prodId", prodId);
-                searchparam.put("startDate", year + "-01-01");
-                searchparam.put("endDate", year + "-12-31");
                 //查询产品相关信息
                 reportKfqgg001Dto =  reportKfqgg001Mapper.getProdInfo(searchparam);
+                //startDate需要考虑子产品成立日
+                //由于共用一个母产品排期计划，所以需要考虑子产品的产品成立日、产品到期日
+                String startDate = year + "-01-01";
+                String endDate = year + "-12-31";
+                if(reportKfqgg001Dto != null){
+                    if(reportKfqgg001Dto.getSetDate() != null){
+                        if(DateUtil.compareDate(DateUtil.parseDate(startDate),reportKfqgg001Dto.getSetDate())<0){
+                            startDate = DateUtil.format(reportKfqgg001Dto.getSetDate());
+                        }
+                    }
+                    if(reportKfqgg001Dto.getmDate() != null){
+                        if(DateUtil.compareDate(DateUtil.parseDate(endDate),reportKfqgg001Dto.getmDate())>0){
+                            endDate = DateUtil.format(reportKfqgg001Dto.getmDate());
+                        }
+                    }
+                }
+                searchparam.put("startDate", startDate);
+                searchparam.put("endDate", endDate);
                 //设置年份
                 reportKfqgg001Dto.setYear(year);
                 //设置公告日 = 平台日
@@ -76,5 +93,14 @@ public class ReportKfqgg001Service implements IReportDataService {
             logger.error("产品开放期公告/报告【{}】生成异常", JsonUtils.object2Json(paraMap), e);
         }
         return resultMap;
+    }
+
+    public RepReveal getRepReveal(Map<String, Object> paraMap) {
+        RepReveal repReveal = new RepReveal();
+        String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
+        Date enddate = DateUtil.platDateFromCache();
+        repReveal.setProdid(prodId);
+        repReveal.setEndDate(enddate);
+        return repReveal;
     }
 }

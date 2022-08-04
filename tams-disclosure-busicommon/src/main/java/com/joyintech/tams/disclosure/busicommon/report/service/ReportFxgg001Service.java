@@ -7,6 +7,7 @@ import java.util.*;
 
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.disclosure.common.common.service.HolidayService;
 import com.joyintech.tams.disclosure.busicommon.report.dao.ReportFxggMapper;
 import com.joyintech.tams.disclosure.busicommon.report.dto.ReportFxggDto;
@@ -37,17 +38,15 @@ public class ReportFxgg001Service implements IReportDataService {
         Map<String,Object> dataMap = new HashMap<>();
         List<Map<String,Object>> result = new ArrayList<>();
         result.add(dataMap);
-        String prodId="";
-        if(StringUtil.equals("batch",paraMap.get("opttype"))){
-            prodId= paraMap.get("prodid").toString();
-            //paraMap.get("enddate")
-        }else {
-            prodId= paraMap.get("pprodid").toString();
+        String prodId = "";
+        if (StringUtil.equals("batch", paraMap.get("opttype"))) {
+            prodId = (String)paraMap.get("prodid");
+        } else {
+            prodId = (String)paraMap.get("pprodid");
         }
-        if (!StringUtil.isNotEmpty(prodId)) {
+        if (StringUtil.isBlank(prodId)) {
             return result;
         }
-
         Map<String,Object> searchparam = new HashMap<>();
         searchparam.put("prodId", prodId);
         ReportFxggDto fxgg = reportFxggMapper.queryFxgg(searchparam);
@@ -80,5 +79,16 @@ public class ReportFxgg001Service implements IReportDataService {
             dataMap.put("raiseAmt", BigDecimal.ZERO);
         }
         return result;
+    }
+
+    public RepReveal getRepReveal(Map<String, Object> paraMap) {
+        RepReveal repReveal = new RepReveal();
+        String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
+        repReveal.setProdid(prodId);
+        Map<String,Object> searchparam = new HashMap<>();
+        searchparam.put("prodId", prodId);
+        ReportFxggDto fxgg = reportFxggMapper.queryFxgg(searchparam);
+        repReveal.setEndDate(fxgg.getSetDate());
+        return repReveal;
     }
 }

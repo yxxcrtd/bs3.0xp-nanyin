@@ -109,6 +109,21 @@ public class RepEdit001Contoller extends BaseController {
     	 String portnum = RequestUtil.getPageParam().get("prodid")==null?RequestUtil.getPageParam().get("pprodid").toString():RequestUtil.getPageParam().get("prodid").toString();
     	String reportId = RequestUtil.getPageParam().get("repid")==null?"":RequestUtil.getPageParam().get("repid").toString();
     	
+    	Map<String,Object> params = RequestUtil.getPageParam();
+		params.put("modelId", params.get("modelId")==null?params.get("modelid"):params.get("modelId"));
+		params.put("pprodId", params.get("pprodId")==null?params.get("pprodid"):params.get("pprodId"));
+		params.put("prodId", params.get("prodId")==null?params.get("prodid"):params.get("prodId"));
+		params.put("prodId", params.get("prodId")==null?params.get("pprodid"):params.get("prodId"));
+		params.put("prodName", params.get("prodName")==null?params.get("prodname"):params.get("prodName"));
+		params.put("repId", params.get("repId")==null?params.get("repid"):params.get("repId"));
+		params.put("reportId", params.get("reportId")==null?params.get("repid"):params.get("reportId"));
+		params.put("endDate", params.get("endDate")==null?params.get("enddate"):params.get("endDate"));
+		params.put("repName", params.get("repName")==null?params.get("repname"):params.get("repName"));
+		params.put("endDate", params.get("endDate")==null?params.get("enddate"):params.get("endDate"));
+		params.put("reportDate", params.get("reportDate")==null?params.get("endDate"):params.get("reportDate"));
+		params.put("uri", params.get("uri")==null?params.get("modelid"):params.get("uri"));
+		params.put("platformDate", params.get("platformDate")==null? DateUtil.format(commonPlatformDateService.getSysDate()):params.get("platformDate"));
+    	
         model.addAttribute("endDate", reportDate);
         model.addAttribute("repName", templateName); 
         model.addAttribute("portnum", portnum);
@@ -116,8 +131,8 @@ public class RepEdit001Contoller extends BaseController {
         
         ReportInfo reportInfo = reportInfoMapper.getReportInfoByID(reportId);
         //reportDate = DateUtil.parse("2023-03-01");
-        editFilename = poiReportService.buildReportFileName(PoiReportService.REPORT_TYPE_临时文件,reportInfo, reportDate, portnum,PoiReportService.FILE_TYPE_DOCX);
-    	saveFilename = poiReportService.buildReportFileName(PoiReportService.REPORT_TYPE_报表文件,reportInfo, reportDate, portnum,PoiReportService.FILE_TYPE_DOCX);
+        editFilename = poiReportService.buildReportFileName(PoiReportService.REPORT_TYPE_报表文件,reportInfo, params,PoiReportService.FILE_TYPE_DOCX);
+    	saveFilename = poiReportService.buildReportFileName(PoiReportService.REPORT_TYPE_报表文件,reportInfo, params,PoiReportService.FILE_TYPE_DOCX);
         return super.init(model);
     }
 

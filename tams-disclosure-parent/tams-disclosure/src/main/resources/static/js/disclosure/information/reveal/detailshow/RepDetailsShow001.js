@@ -33,6 +33,7 @@ $(function () {
      */
     var getSearchParams = function() {
     	var obj = {};
+		console.log(ids);
     	obj['repName'] = $('#repName').val();
     	if(ids.length>0){
     		for(var i in ids){
@@ -46,8 +47,6 @@ $(function () {
 							obj[getKey] = getVal;
 						}
 
-	    			}else{
-	    				return null;
 	    			}
 	    		}
         	}
@@ -58,7 +57,7 @@ $(function () {
     			}
     		}
     	}
-		console.log(obj);
+
     	return obj;
     };
 
@@ -81,9 +80,9 @@ $(function () {
 				SearchHtml+= '<select id="'+data[i].screenKey+'" name="'+data[i].screenKey+'" class="layui-input form-input input-select" placeholder="请选择" data-url="getPProdIdList"'
 					+'parentIds="repId,prodid" allowClear="true"';
 				if(data[i].multiFlag==='Y'){
-					SearchHtml+= 'multiple="true">' +'</select>';
+					SearchHtml+= 'multiple="true" >' +'</select>';
 				}else{
-					SearchHtml+= '>' +'</select>';
+					SearchHtml+= 'onchange=pprodIdChange()>' +'</select>';
 				}
 			}
 			//子产品代码下拉框
@@ -103,7 +102,7 @@ $(function () {
 				if(data[i].multiFlag==='Y'){
 					SearchHtml+= 'multiple="true">' +'</select>';
 				}else{
-					SearchHtml+= '>' +'</select>';
+					SearchHtml+= 'onchange=feeNameChange()>' +'</select>';
 				}
 			}
 			//要素名称下拉框
@@ -113,7 +112,7 @@ $(function () {
 				if(data[i].multiFlag==='Y'){
 					SearchHtml+= 'multiple="true">' +'</select>';
 				}else{
-					SearchHtml+= '>' +'</select>';
+					SearchHtml+= 'onchange=elementNameChange()>' +'</select>';
 				}
 			}
 			//季度选择框
@@ -194,7 +193,7 @@ $(function () {
                              modelUri = data.templatePath;
                              repId = data.repId;
                              repName = data.reportName;
-                             showDetail(new Array());
+                             //showDetail(new Array());
                              showSearch(data.repScreenList);
                         }else{
                             $("#showtable").html('<h2>无报表内容</h2>');
@@ -245,10 +244,230 @@ $(function () {
     		Joyin.alert('报表集合不能查询!',2);
 			return;
     	}else if(modelId&&modelUri){
-    		if(!params){
-				Joyin.alert('参数不能为空！',2);
-				return;
-    		}
+			if(modelId==="CPKFQGG"||modelId==='CPKFQBG'){
+				if (params['prodid']===null||params['prodid']===undefined) {
+					Joyin.alert('子产品代码必填!',2);
+					return;
+				}
+				if (params['year']===null||params['year']===undefined) {
+					Joyin.alert('生成年度必填!',2);
+					return;
+				}
+			}
+			if(modelId==="RKCPJZ_GMXGL"||modelId==='RKCPJZ_GMJZXCP'||modelId==="MZJZGG"||modelId==='MZJJBG'){
+				if (params['prodid']===null||params['prodid']===undefined) {
+					Joyin.alert('子产品代码必填!',2);
+					return;
+				}
+				if (params['enddate']===null||params['enddate']===undefined) {
+					Joyin.alert('净值日期必填!',2);
+					return;
+				}
+			}
+			if(modelId==="ZQXCPKFGG_GMCP"||modelId==='ZQXCPKFGG_GMCPDSH'){
+				if (params['prodid']===null||params['prodid']===undefined) {
+					Joyin.alert('子产品代码必填!',2);
+					return;
+				}
+				if (params['enddate']===null||params['enddate']===undefined) {
+					Joyin.alert('净值日期必填!',2);
+					return;
+				}
+			}
+			if(modelId==="KFJZJFHGG_BNYS"||modelId==='KFJZJFHGG_BNYN'||modelId==="JZJFHBG_SMFB"||modelId==='JZJFHBG_SMKF'){
+				if (params['prodid']===null||params['prodid']===undefined) {
+					Joyin.alert('子产品代码必填!',2);
+					return;
+				}
+				if (params['enddate']===null||params['enddate']===undefined) {
+					Joyin.alert('收益分配基准日必填!',2);
+					return;
+				}
+			}
+			if(modelId==="KFJJZGG_GM"||modelId==='KFJJZGG_GM'){
+				if (params['prodid']===null||params['prodid']===undefined) {
+					Joyin.alert('子产品代码必填!',2);
+					return;
+				}
+				if (params['enddate']===null||params['enddate']===undefined) {
+					Joyin.alert('本期开放结束日必填!',2);
+					return;
+				}
+			}
+			if(modelId==="KFJJZGG_GM"||modelId==='KFJJZGG_GM'){
+				if (params['prodid']===null||params['prodid']===undefined) {
+					Joyin.alert('子产品代码必填!',2);
+					return;
+				}
+				if (params['enddate']===null||params['enddate']===undefined) {
+					Joyin.alert('本期开放结束日必填!',2);
+					return;
+				}
+			}
+			if(modelId==="JDBG_ZSX"||modelId==='JDBG_FZSX'){
+				if (params['pprodid']===null||params['pprodid']===undefined) {
+					Joyin.alert('产品代码必填!',2);
+					return;
+				}
+				if (params['year']===null||params['year']===undefined) {
+					Joyin.alert('报告年度必填!',2);
+					return;
+				}
+				if (params['quarter']===null||params['quarter']===undefined) {
+					Joyin.alert('报告季度必填!',2);
+					return;
+				}
+			}
+			if(modelId==="BNDBG_ZSX"||modelId==='BNDBG_FZSX'){
+				if (params['pprodid']===null||params['pprodid']===undefined) {
+					Joyin.alert('产品名称必填!',2);
+					return;
+				}
+				if (params['year']===null||params['year']===undefined) {
+					Joyin.alert('报告年度必填!',2);
+					return;
+				}
+				if (params['halfyear']===null||params['halfyear']===undefined) {
+					Joyin.alert('报告（半）年度必填!',2);
+					return;
+				}
+			}
+			if(modelId==="NDBG_ZSX"||modelId==='NDBG_FZSX'){
+				if (params['pprodid']===null||params['pprodid']===undefined) {
+					Joyin.alert('产品名称必填!',2);
+					return;
+				}
+				if (params['year']===null||params['year']===undefined) {
+					Joyin.alert('报告年度必填!',2);
+					return;
+				}
+			}
+			if(modelId==="TZTZFBZCGG"){
+				if (params['pprodid']===null||params['pprodid']===undefined) {
+					Joyin.alert('产品名称必填!',2);
+					return;
+				}
+				if (params['enddate']===null||params['enddate']===undefined) {
+					Joyin.alert('公告日期必填!',2);
+					return;
+				}
+			}
+			if(modelId==="DQGG_GM"||modelId==="DQGBG_SM"){
+				if (params['pprodid']===null||params['pprodid']===undefined) {
+					Joyin.alert('产品名称必填!',2);
+					return;
+				}
+				if (params['prodid']===null||params['prodid']===undefined) {
+					Joyin.alert('子产品代码必填!',2);
+					return;
+				}
+			}
+			if(modelId==="ZJCPXSJGGG"){
+				if (params['pprodid']===null||params['pprodid']===undefined) {
+					Joyin.alert('产品名称必填!',2);
+					return;
+				}
+				if (params['enddate']===null||params['enddate']===undefined) {
+					Joyin.alert('公告日期必填!',2);
+					return;
+				}
+			}
+			if(modelId==="CPBCLGG_GM"||modelId==="CPBCLBG_SM"){
+				if (params['pprodid']===null||params['pprodid']===undefined) {
+					Joyin.alert('产品名称必填!',2);
+					return;
+				}
+				if (params['enddate']===null||params['enddate']===undefined) {
+					Joyin.alert('产品发布日期必填!',2);
+					return;
+				}
+			}
+			if(modelId==="CPBCLGG_GM"||modelId==="CPBCLBG_SM"){
+				if (params['pprodid']===null||params['pprodid']===undefined) {
+					Joyin.alert('产品名称必填!',2);
+					return;
+				}
+				if (params['enddate']===null||params['enddate']===undefined) {
+					Joyin.alert('产品发布日期必填!',2);
+					return;
+				}
+			}
+			if(modelId==="DCPDFLMB1_GM"||modelId==="DCPDFLMB1_SM"||modelId==="DCPDFLMB2_GM"||modelId==="DCPDFLMB2_SM"){
+				if (params['pprodid']===null||params['pprodid']===undefined) {
+					Joyin.alert('产品名称必填!',2);
+					return;
+				}
+				if (params['enddate']===null||params['enddate']===undefined) {
+					Joyin.alert('发布日期必填!',2);
+					return;
+				}
+				if (params['feename']===null||params['feename']===undefined) {
+					Joyin.alert('费率名称必填!',2);
+					return;
+				}
+			}
+			if(modelId==="DFLDCPMB1_GM"||modelId==="DFLDCPMB1_SM"||modelId==="DFLDCPMB2_GM"||modelId==="DFLDCPMB2_SM"){
+				if (params['feename']===null||params['feename']===undefined) {
+					Joyin.alert('费率名称必填!',2);
+					return;
+				}
+				if (params['pprodid']===null||params['pprodid']===undefined) {
+					Joyin.alert('产品名称必填!',2);
+					return;
+				}
+				if (params['enddate']===null||params['enddate']===undefined) {
+					Joyin.alert('发布日期必填!',2);
+					return;
+				}
+			}
+			if(modelId==="DCPDYSTZMB_GM"||modelId==="DCPDYSTZMB_SM"){
+				if (params['elementname']===null||params['elementname']===undefined) {
+					Joyin.alert('要素名称必填!',2);
+					return;
+				}
+				if (params['pprodid']===null||params['pprodid']===undefined) {
+					Joyin.alert('产品名称必填!',2);
+					return;
+				}
+				if (params['enddate']===null||params['enddate']===undefined) {
+					Joyin.alert('发布日期必填!',2);
+					return;
+				}
+			}
+			if(modelId==="JESHGG_GM"||modelId==="JESHGBG_SM"){
+				if (params['pprodid']===null||params['pprodid']===undefined) {
+					Joyin.alert('产品名称必填!',2);
+					return;
+				}
+				if (params['enddate']===null||params['enddate']===undefined) {
+					Joyin.alert('发布日期必填!',2);
+					return;
+				}
+			}
+			if(modelId==="DLXSJGMDGG"){
+				if (params['enddate']===null||params['enddate']===undefined) {
+					Joyin.alert('发布日期必填!',2);
+					return;
+				}
+			}
+			if(modelId==="QSBG"){
+				if (params['pprodid']===null||params['pprodid']===undefined) {
+					Joyin.alert('产品名称必填!',2);
+					return;
+				}
+			}
+			if(modelId==="FHJSQD"){
+				if (params['prodid']===null||params['prodid']===undefined) {
+					Joyin.alert('子产品代码必填!',2);
+					return;
+				}
+				if (params['enddate']===null||params['enddate']===undefined) {
+					Joyin.alert('收益分配基准日!',2);
+					return;
+				}
+			}
+
+
     	}else{
     		return;
     	}
@@ -323,7 +542,7 @@ $(function () {
 //			params = new Array();
 			//params['data'] = JSON.stringify(getSearchParams());
 			//报表数据结构
-			alert("单表导出");
+			//alert("单表导出");
 	        var report_info = {
 	            uri:modelId,
 	            folderUri:modelUri,
@@ -338,8 +557,9 @@ $(function () {
 	            params['repid'] = repId;
 	            params['repname'] = repName;
 	            params['prodname'] = proName;
+	            params['uri'] = modelId;
 	            //params['portnum'] = 'LEO-001';
-	            alert(params);
+	            //alert(params);
 //	        Joyin.ajax('downFileAndExport',
 //	                		params,
 //	            			function(data) {
@@ -350,7 +570,7 @@ $(function () {
 	       	Joyin.exportExcel(basePath + '/disclosure/information/reveal/detailshow/RepDetailsShow001/mergeExport', params);
 //          Joyin.exportExcel(basePath + 'disclosure/information/config/reportmodelmanage/ReportModelManage001/mergeExport', obj);
         }else if(modelListId){
-            alert("多表导出")
+            //alert("多表导出")
         	params = getSearchParams();
         	if("flag" == params){
         		return;
@@ -428,6 +648,7 @@ $(function () {
 		}
     
     	params['repid'] = repId;
+    	params['uri'] = modelId;
 
 		//编辑之前需要判断改报表是否已确认或者在流程中
 
@@ -440,6 +661,8 @@ $(function () {
 
 
     }
+
+
 
     var submit = function(type){
 		if(!previewFlag){
@@ -589,6 +812,8 @@ $(function () {
     		},5000);
         });
 
+
+
         
         
         //失去焦点事件
@@ -617,3 +842,19 @@ function serachKey(){
 		reportCode: $('#reportCode').val()
  	});
 }
+
+function pprodIdChange(){
+	$('#prodid').val("").trigger("change");
+	$('#feename').val("").trigger("change");
+	$('#elementname').val("").trigger("change");
+}
+
+function feeNameChange(){
+	$('#pprodid').val("").trigger("change");
+}
+
+function elementNameChange(){
+	$('#pprodid').val("").trigger("change");
+}
+
+

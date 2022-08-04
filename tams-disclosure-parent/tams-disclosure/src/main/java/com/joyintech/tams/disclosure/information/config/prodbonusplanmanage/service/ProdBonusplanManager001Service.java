@@ -14,7 +14,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
@@ -121,8 +123,8 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
         }
         params.put("prodIdArr", prodIdArr);
         Page<ProdBonusplanDto> pages = super.queryForPageForSelectReturn(
-                Integer.parseInt((String) params.get("page")),
-                Integer.parseInt((String) params.get("length")),
+                Integer.parseInt( params.get("page").toString()),
+                Integer.parseInt(params.get("length").toString()),
                 () -> prodBonusplanMapper.searchReports(params));
         List<ProdBonusplanDto> list = pages.getRoot();
         // 遍历构造数据
@@ -137,6 +139,23 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
         return pages;
     }
 
+
+    /**
+     * 导出
+     */
+    @Override
+    protected void buildExportParam(ExportParam exportParam) {
+        exportParam.config(
+                "/com/joyintech/tams/disclosure/information/config/prodbonusplanmanage/export_prodbonusplanmanager001.xml").dataSource(
+                DataSourceType.MASERT);
+    }
+
+    @Override
+    public Page<ProdBonusplanDto> selectPageData(Map<String, Object> selectParam) {
+        /*queryForPage(Integer.parseInt(selectParam.get("page").toString()),  Integer.parseInt(selectParam.get("length").toString()), ()
+                -> hugeInfoProMapper.select(selectParam));*/
+        return this.findByPage(selectParam);
+    }
 
     /**
      * todo

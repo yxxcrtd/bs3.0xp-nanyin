@@ -1,10 +1,8 @@
 
 package com.joyintech.tams.disclosure.busicommon.report.service;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.joyintech.tams.common.base.entity.RepReveal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,10 +41,15 @@ public class Report1Cpnfl001Service implements IReportDataService {
         Map<String,Object> dataMap = new HashMap<>();
         List<Map<String,Object>> result = new ArrayList<>();
         result.add(dataMap);
-        if (paraMap.get("pprodid") == null) {
+        String prodId = "";
+        if (StringUtil.equals("batch", paraMap.get("opttype"))) {
+            prodId = (String)paraMap.get("prodid");
+        } else {
+            prodId = (String)paraMap.get("pprodid");
+        }
+        if (StringUtil.isBlank(prodId)) {
             return result;
         }
-        String prodId = paraMap.get("pprodid").toString();
         Map<String,Object> searchparam = new HashMap<>();
         searchparam.put("prodId", prodId);
         if (null != paraMap.get("feename")) {
@@ -106,5 +109,14 @@ public class Report1Cpnfl001Service implements IReportDataService {
             dataMap.put("feelist", feelist);
         }
         return result;
+    }
+
+    public RepReveal getRepReveal(Map<String, Object> paraMap) {
+        RepReveal repReveal = new RepReveal();
+        String prodId = (paraMap.get("prodid") == null ? (String) paraMap.get("pprodid") : (String) paraMap.get("prodid"));
+        Date enddate = DateUtil.parse((String)paraMap.get("enddate"));
+        repReveal.setProdid(prodId);
+        repReveal.setEndDate(enddate);
+        return repReveal;
     }
 }

@@ -86,6 +86,7 @@ public class ReportPageManage002Controller extends BaseController {
         this.setSelectOptionToModel(model, DisclosureDictCode.理财类型);
         this.setSelectOptionToModel(model, DisclosureDictCode.产品期限类型);
         this.setSelectOptionToModel(model, DictCodeExt1.发行方式_信批);
+        this.setSelectOptionToModel(model, DictCodeExt1.信批产品类别);
         model.addAttribute("templatePath",getParam("templatePath"));
         model.addAttribute("templateId",getParam("templateId"));
         model.addAttribute("templateName",getParam("templateName"));

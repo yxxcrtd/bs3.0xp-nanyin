@@ -73,7 +73,7 @@
 
 
     <delete id="deleteByKey">
-        update DIS_PROD_ADJUST set DATA_STATUS = '02'
+        update DIS_PROD_ADJUST set DATA_STATUS = 'D'
         where PROD_ADJUST_ID = #{prodAdjustId,jdbcType=VARCHAR}
     </delete>
 
@@ -183,7 +183,7 @@
         FROM
         rep_prod_info
         <where>
-             REP_PROD_TYPE = '03'
+             REP_PROD_TYPE in ('02','03')
             <if test="prodRegistNo != null and !prodRegistNo.equals('')">
                 AND PROD_RE=#{prodRegistNo}
             </if>

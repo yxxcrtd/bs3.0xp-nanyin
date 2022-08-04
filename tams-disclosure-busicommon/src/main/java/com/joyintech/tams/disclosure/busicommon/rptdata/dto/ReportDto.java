@@ -24,10 +24,13 @@ public class ReportDto {
 	private String prodManager; //管理人
 	private String prodTruster; //托管人
 	
-	private Date reportDate;  //报告的数据统计日期
-	private Date genDate;  //报告生成日期/签字日期
-	private Date disDate;  //报告披露日期
+	private Date startDate;  // 周期开始日
+	private Date endDate;  //周期结束日
 	
+	private Date reportDate;  //报告日期，传入的参数：前台传入的日期
+	private Date genDate;  //报告生成日期，平台日，无平台日就是系统日
+	private Date signDate;  //签字日期，报表的落款日期
+	private Date disDate;  //报告披露日期
 	public String getRepProdType() {
 		return repProdType;
 	}
@@ -64,6 +67,30 @@ public class ReportDto {
 	public void setmDate(Date mDate) {
 		this.mDate = mDate;
 	}
+	public String getProdManager() {
+		return prodManager;
+	}
+	public void setProdManager(String prodManager) {
+		this.prodManager = prodManager;
+	}
+	public String getProdTruster() {
+		return prodTruster;
+	}
+	public void setProdTruster(String prodTruster) {
+		this.prodTruster = prodTruster;
+	}
+	public Date getStartDate() {
+		return startDate;
+	}
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+	public Date getEndDate() {
+		return endDate;
+	}
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
 	public Date getReportDate() {
 		return reportDate;
 	}
@@ -76,23 +103,17 @@ public class ReportDto {
 	public void setGenDate(Date genDate) {
 		this.genDate = genDate;
 	}
+	public Date getSignDate() {
+		return signDate;
+	}
+	public void setSignDate(Date signDate) {
+		this.signDate = signDate;
+	}
 	public Date getDisDate() {
 		return disDate;
 	}
 	public void setDisDate(Date disDate) {
 		this.disDate = disDate;
 	}
-	public String getProdTruster() {
-		return prodTruster;
-	}
-	public void setProdTruster(String prodTruster) {
-		this.prodTruster = prodTruster;
-	}
-	public String getProdManager() {
-		return prodManager;
-	}
-	public void setProdManager(String prodManager) {
-		this.prodManager = prodManager;
-	}
-
+	
 }
