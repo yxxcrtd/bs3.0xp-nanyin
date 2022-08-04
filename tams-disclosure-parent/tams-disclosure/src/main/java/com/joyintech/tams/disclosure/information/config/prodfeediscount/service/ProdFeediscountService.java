@@ -391,6 +391,19 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
             resultMap.put("confirmMsg", totalMsg);
         }
         resultMap.put("correctData", JsonUtils.object2Json(jsonArrays));
+
+        String tempList = (String) resultMap.get("correctData");
+        ProdFeediscountDto dto = getValNetAssetQuotationInfoListData(tempList);
+        List<ProdFeediscountDto> selectedItem = dto.getSelectedItem();
+        List<ProdFeediscountDto>  existData = new ArrayList<>();
+        for (ProdFeediscountDto temp:selectedItem) {
+            if (StringUtil.isNotEmpty(this.selectData(temp))){
+                existData.add(temp);
+            }
+        }
+        if(existData.size() > 0){
+            resultMap.put("errorMsg", "不可创建重复数据!");
+        }
         AjaxResult wr = new AjaxResult();
         wr.setData(resultMap);
         return wr;
@@ -518,5 +531,9 @@ public class ProdFeediscountService extends CommonExportService<ProdFeediscountD
         } else if (StringUtil.equals(entity.getOperateType(), "DELETE")) {
             this.delete(entity);
         }
+    }
+
+    public ProdFeediscountDto selectData(ProdFeediscountDto dto) {
+        return prodFeediscountMapper.selectData(dto);
     }
 }
