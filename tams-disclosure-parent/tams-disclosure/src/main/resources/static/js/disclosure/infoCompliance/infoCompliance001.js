@@ -53,7 +53,7 @@
      *  点击新建菜单,进入新建界面
      **/
     $("#infoCompliance001_btn_add").click(function(){
-        Joyin.dialog("信披单据合规新建",basePath+"disclosure/infoCompliance/infoCompliance002/init","80%","80%",{pageModel:PAGE_MODEL_NEW},
+        Joyin.dialog("合规留痕新建",basePath+"disclosure/infoCompliance/infoCompliance002/init","80%","80%",{pageModel:PAGE_MODEL_NEW},
             function(){
                 table.reload();
             }
@@ -67,7 +67,7 @@
             if(infoStatus != '02'){
                 Joyin.error("数据状态不是审核通过,不能修改!");
             } else {
-                Joyin.dialog("开发状态管理",basePath+"disclosure/infoCompliance/infoCompliance003/init","70%","70%",
+                Joyin.dialog("合规留痕查看",basePath+"disclosure/infoCompliance/infoCompliance003/init","70%","70%",
                     {seqno:selRows[0].seqno},function () {
                         table.reload();
                     })
