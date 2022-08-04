@@ -23,7 +23,7 @@
 
 
 
-    <dependencies>
+	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -35,6 +35,12 @@
 			<groupId>com.joyintech</groupId>
 			<artifactId>tams-service-container-yunying</artifactId>
 			<version>3.0.1</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>okhttp</artifactId>
+					<groupId>com.squareup.okhttp3</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -43,34 +49,116 @@
 		<dependency>
 			<groupId>com.joyintech</groupId>
 			<artifactId>framework-web</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>spring-cloud-starter-eureka</artifactId>
+					<groupId>org.springframework.cloud</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>okhttp</artifactId>
+					<groupId>com.squareup.okhttp3</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.carrotsearch.thirdparty</groupId>
+			<artifactId>simple-xml-safe</artifactId>
+			<version>2.7.1</version>
+		</dependency>
+		<dependency>
+			<artifactId>spring-cloud-starter-eureka</artifactId>
+			<groupId>org.springframework.cloud</groupId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.codehaus.woodstox</groupId>
+					<artifactId>woodstox-core-asl</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.woodstox</groupId>
+			<artifactId>woodstox-core</artifactId>
+			<version>5.3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.woodstox</groupId>
+			<artifactId>stax2-api</artifactId>
+			<version>4.2.1</version>
+		</dependency>
+		<dependency>
+			<artifactId>okhttp</artifactId>
+			<groupId>com.squareup.okhttp3</groupId>
+			<version>4.8.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.joyintech</groupId>
 			<artifactId>framework-core</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>okhttp</artifactId>
+					<groupId>com.squareup.okhttp3</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.joyintech</groupId>
 			<artifactId>framework-data</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>okhttp</artifactId>
+					<groupId>com.squareup.okhttp3</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.joyintech</groupId>
 			<artifactId>framework-log</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>okhttp</artifactId>
+					<groupId>com.squareup.okhttp3</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.joyintech</groupId>
 			<artifactId>framework-security</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>okhttp</artifactId>
+					<groupId>com.squareup.okhttp3</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.joyintech</groupId>
 			<artifactId>joyintech-tools</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>okhttp</artifactId>
+					<groupId>com.squareup.okhttp3</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.joyintech</groupId>
 			<artifactId>joyintech-system</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>okhttp</artifactId>
+					<groupId>com.squareup.okhttp3</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.joyintech</groupId>
 			<artifactId>joyintech-workflow</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>okhttp</artifactId>
+					<groupId>com.squareup.okhttp3</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<!-- 中债画面端 -->
 		<dependency>
@@ -81,6 +169,10 @@
 				<exclusion>
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-starter-tomcat</artifactId>
+				</exclusion>
+				<exclusion>
+					<artifactId>okhttp</artifactId>
+					<groupId>com.squareup.okhttp3</groupId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -94,6 +186,10 @@
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-starter-tomcat</artifactId>
 				</exclusion>
+				<exclusion>
+					<artifactId>okhttp</artifactId>
+					<groupId>com.squareup.okhttp3</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
@@ -106,7 +202,7 @@
 			<artifactId>spring-boot-devtools</artifactId>
 			<optional>true</optional>
 		</dependency>
-		
+
 	</dependencies>
 
 	<build>
@@ -144,7 +240,7 @@
 					</execution>
 				</executions>
 			</plugin>
-						
+
 		</plugins>
 		<resources>
 			<resource>

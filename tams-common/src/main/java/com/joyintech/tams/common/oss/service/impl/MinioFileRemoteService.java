@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -41,6 +42,14 @@ public class MinioFileRemoteService implements FileRemoteService {
         }catch(Exception e){
             logger.error("file:{},上传发生异常",filePathName,e);
 
+        }finally{
+            if(fis != null){
+                try {
+                    fis.close();
+                }catch(IOException e){
+                    logger.error("关闭流发生异常",e);
+                }
+            }
         }
         return null;
 
@@ -76,5 +85,15 @@ public class MinioFileRemoteService implements FileRemoteService {
         if(logger.isDebugEnabled())
             logger.debug("minio操作下载文件，{}",pathFile);
         return minioTemplate.downLoadFile(pathFile);
+    }
+
+    @Override
+    public String getRemoteFilePathName(String localPathFile) {
+        if(logger.isDebugEnabled())
+            logger.debug("minio远程获取本地文件{},远程文件路径",localPathFile);
+       String remoteFilePathName = minioTemplate.convertFilePathName(null,localPathFile,false);
+        if(logger.isDebugEnabled())
+            logger.debug("minio获取远程文件全路径名为:{}",remoteFilePathName);
+       return remoteFilePathName;
     }
 }
