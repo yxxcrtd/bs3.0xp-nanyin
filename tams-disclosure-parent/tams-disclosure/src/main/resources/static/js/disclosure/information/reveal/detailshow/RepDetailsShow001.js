@@ -185,6 +185,8 @@ $(function () {
 						repId:treeNode.id,
                 		repName:treeNode.name
                 	};
+				$("#showtable").append("加载中");
+				var $container = $("#showtable");
                 Joyin.ajax('getRepsearch',
                     parms,
                     function(data) {
@@ -193,7 +195,11 @@ $(function () {
                              modelUri = data.templatePath;
                              repId = data.repId;
                              repName = data.reportName;
-                             //showDetail(new Array());
+
+							Joyin.ajax('previewReport', {uri:modelId,repid:repId}, function(result) {
+								$container.html(result);
+
+							});
                              showSearch(data.repScreenList);
                         }else{
                             $("#showtable").html('<h2>无报表内容</h2>');

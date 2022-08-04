@@ -293,7 +293,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
             ProdInfoDto dto = new ProdInfoDto();
             dto.setProdId(keyId);
             dto.setStatus(DictCodeListExt1.维护数据状态_删除.getValue());
-            this.update(dto);
+            prodInfoMapper.updateByPrimaryKeySelective(dto);
         }
     }
 
@@ -345,7 +345,7 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
                         errorMsg.append("子产品代码 必填！");
                     }else{
                         ProdInfoDto prodInfo = this.selectByProdId(rowData.get(0));
-                        if (prodInfo != null) {
+                        if (prodInfo != null && StringUtils.equals(DictCodeListExt1.维护数据状态_有效.getValue(),prodInfo.getStatus())) {
                             errorMsg.append("子产品代码 已存在");
                         }
                     }

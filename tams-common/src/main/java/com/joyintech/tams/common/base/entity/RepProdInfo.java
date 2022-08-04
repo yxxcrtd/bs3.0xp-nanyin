@@ -182,9 +182,462 @@ public class RepProdInfo extends BaseEntity {
     private String issueStatusRemark;
 
 
+
+    /**
+     * 募集下限
+     */
+    private String raiseMin;
+
+    /**
+     * 募集上限
+     */
+    private String raiseMax;
+
+    /**
+     * 募集币种
+     */
+    private String raiseCcy;
+
+    /**
+     * 产品起息日
+     */
     private Date vdate;
 
-    private String revealChannel ;
+    /**
+     * 首次开放日
+     */
+    private Date firstOpenDay;
+
+    /**
+     * 实际到期日
+     */
+    private Date actMdate;
+
+    /**
+     * 产品期限
+     */
+    private String term;
+
+    /**
+     * 产品清盘日
+     */
+    private Date windupDate;
+
+    /**
+     * 发行方式
+     */
+    private String issueMode;
+
+    /**
+     * 产品风险等级
+     */
+    private String riskLevel;
+
+    /**
+     * 开放模式
+     */
+    private String openMode;
+
+    /**
+     * 投资收益到账日
+     */
+    private String investProfDate;
+
+    /**
+     * 投资本金到账日
+     */
+    private String investPrinDate;
+
+    /**
+     * 是否独立开户
+     */
+    private String isIndepeAcc;
+
+    /**
+     * null
+     */
+    private String prodInvestType;
+
+    /**
+     * 披露渠道
+     */
+    private String revealChannel;
+
+    /**
+     * 交易日历
+     */
+    private String dealCal;
+
+    /**
+     * 理财类型
+     */
+    private String finaType;
+
+    /**
+     * 托管人账号
+     */
+    private String truAccount;
+
+    /**
+     * 托管费率
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal truFeeRage;
+
+    /**
+     * 托管账户账号
+     */
+    private String truAccountNum;
+
+    /**
+     * 托管账户户名
+     */
+    private String truAccountName;
+
+    /**
+     * 产品期限类型
+     */
+    private String prodTermType;
+
+    /**
+     * 计息基础
+     */
+    private String basis;
+
+    /**
+     * 销售对象
+     */
+    private String targetSale;
+
+    /**
+     * 是否分层
+     */
+    private String isLayer;
+
+    /**
+     * null
+     */
+    private String proManager;
+
+    /**
+     * null
+     */
+    private String proCustodian;
+
+    /**
+     * 巨额赎回阀值
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal hugeRedeemThreshold;
+
+    /**
+     * null
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal saleAmtStr;
+
+    /**
+     * null
+     */
+    private String operateMode;
+
+    /**
+     * null
+     */
+    private String fProdId;
+
+    /**
+     * 产品收益标识
+     */
+    private String prodprofitflag;
+
+    /**
+     * 目标客户类型
+     */
+    private String saletargetDeclare;
+
+    /**
+     * 分红方式:数据字典BONUS_MODE
+     */
+    private String bonusMode;
+
+    /**
+     * 最少追加金额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal lowestAmt;
+
+    public String getRaiseMin() {
+        return raiseMin;
+    }
+
+    public void setRaiseMin(String raiseMin) {
+        this.raiseMin = raiseMin;
+    }
+
+    public String getRaiseMax() {
+        return raiseMax;
+    }
+
+    public void setRaiseMax(String raiseMax) {
+        this.raiseMax = raiseMax;
+    }
+
+    public String getRaiseCcy() {
+        return raiseCcy;
+    }
+
+    public void setRaiseCcy(String raiseCcy) {
+        this.raiseCcy = raiseCcy;
+    }
+
+    public Date getFirstOpenDay() {
+        return firstOpenDay;
+    }
+
+    public void setFirstOpenDay(Date firstOpenDay) {
+        this.firstOpenDay = firstOpenDay;
+    }
+
+    public Date getActMdate() {
+        return actMdate;
+    }
+
+    public void setActMdate(Date actMdate) {
+        this.actMdate = actMdate;
+    }
+
+    public String getTerm() {
+        return term;
+    }
+
+    public void setTerm(String term) {
+        this.term = term;
+    }
+
+    public Date getWindupDate() {
+        return windupDate;
+    }
+
+    public void setWindupDate(Date windupDate) {
+        this.windupDate = windupDate;
+    }
+
+    public String getIssueMode() {
+        return issueMode;
+    }
+
+    public void setIssueMode(String issueMode) {
+        this.issueMode = issueMode;
+    }
+
+    public String getRiskLevel() {
+        return riskLevel;
+    }
+
+    public void setRiskLevel(String riskLevel) {
+        this.riskLevel = riskLevel;
+    }
+
+    public String getOpenMode() {
+        return openMode;
+    }
+
+    public void setOpenMode(String openMode) {
+        this.openMode = openMode;
+    }
+
+    public String getInvestProfDate() {
+        return investProfDate;
+    }
+
+    public void setInvestProfDate(String investProfDate) {
+        this.investProfDate = investProfDate;
+    }
+
+    public String getInvestPrinDate() {
+        return investPrinDate;
+    }
+
+    public void setInvestPrinDate(String investPrinDate) {
+        this.investPrinDate = investPrinDate;
+    }
+
+    public String getIsIndepeAcc() {
+        return isIndepeAcc;
+    }
+
+    public void setIsIndepeAcc(String isIndepeAcc) {
+        this.isIndepeAcc = isIndepeAcc;
+    }
+
+    public String getProdInvestType() {
+        return prodInvestType;
+    }
+
+    public void setProdInvestType(String prodInvestType) {
+        this.prodInvestType = prodInvestType;
+    }
+
+    public String getDealCal() {
+        return dealCal;
+    }
+
+    public void setDealCal(String dealCal) {
+        this.dealCal = dealCal;
+    }
+
+    public String getFinaType() {
+        return finaType;
+    }
+
+    public void setFinaType(String finaType) {
+        this.finaType = finaType;
+    }
+
+    public String getTruAccount() {
+        return truAccount;
+    }
+
+    public void setTruAccount(String truAccount) {
+        this.truAccount = truAccount;
+    }
+
+    public BigDecimal getTruFeeRage() {
+        return truFeeRage;
+    }
+
+    public void setTruFeeRage(BigDecimal truFeeRage) {
+        this.truFeeRage = truFeeRage;
+    }
+
+    public String getTruAccountNum() {
+        return truAccountNum;
+    }
+
+    public void setTruAccountNum(String truAccountNum) {
+        this.truAccountNum = truAccountNum;
+    }
+
+    public String getTruAccountName() {
+        return truAccountName;
+    }
+
+    public void setTruAccountName(String truAccountName) {
+        this.truAccountName = truAccountName;
+    }
+
+    public String getProdTermType() {
+        return prodTermType;
+    }
+
+    public void setProdTermType(String prodTermType) {
+        this.prodTermType = prodTermType;
+    }
+
+    public String getBasis() {
+        return basis;
+    }
+
+    public void setBasis(String basis) {
+        this.basis = basis;
+    }
+
+    public String getTargetSale() {
+        return targetSale;
+    }
+
+    public void setTargetSale(String targetSale) {
+        this.targetSale = targetSale;
+    }
+
+    public String getIsLayer() {
+        return isLayer;
+    }
+
+    public void setIsLayer(String isLayer) {
+        this.isLayer = isLayer;
+    }
+
+    public String getProManager() {
+        return proManager;
+    }
+
+    public void setProManager(String proManager) {
+        this.proManager = proManager;
+    }
+
+    public String getProCustodian() {
+        return proCustodian;
+    }
+
+    public void setProCustodian(String proCustodian) {
+        this.proCustodian = proCustodian;
+    }
+
+    public BigDecimal getHugeRedeemThreshold() {
+        return hugeRedeemThreshold;
+    }
+
+    public void setHugeRedeemThreshold(BigDecimal hugeRedeemThreshold) {
+        this.hugeRedeemThreshold = hugeRedeemThreshold;
+    }
+
+    public BigDecimal getSaleAmtStr() {
+        return saleAmtStr;
+    }
+
+    public void setSaleAmtStr(BigDecimal saleAmtStr) {
+        this.saleAmtStr = saleAmtStr;
+    }
+
+    public String getOperateMode() {
+        return operateMode;
+    }
+
+    public void setOperateMode(String operateMode) {
+        this.operateMode = operateMode;
+    }
+
+    public String getfProdId() {
+        return fProdId;
+    }
+
+    public void setfProdId(String fProdId) {
+        this.fProdId = fProdId;
+    }
+
+    public String getProdprofitflag() {
+        return prodprofitflag;
+    }
+
+    public void setProdprofitflag(String prodprofitflag) {
+        this.prodprofitflag = prodprofitflag;
+    }
+
+    public String getSaletargetDeclare() {
+        return saletargetDeclare;
+    }
+
+    public void setSaletargetDeclare(String saletargetDeclare) {
+        this.saletargetDeclare = saletargetDeclare;
+    }
+
+    public String getBonusMode() {
+        return bonusMode;
+    }
+
+    public void setBonusMode(String bonusMode) {
+        this.bonusMode = bonusMode;
+    }
+
+    public BigDecimal getLowestAmt() {
+        return lowestAmt;
+    }
+
+    public void setLowestAmt(BigDecimal lowestAmt) {
+        this.lowestAmt = lowestAmt;
+    }
 
     public String getIssueStatusRemark() {
         return issueStatusRemark;

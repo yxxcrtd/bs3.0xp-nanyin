@@ -136,4 +136,20 @@
         delete from DIS_PROD_PLAN where PROD_PLAN_ID=#{prodPlanId,jdbcType=VARCHAR}
     </delete>
 
+    <!-- 查询母产品和普通产品的产品代码和产品名称 -->
+    <select id="getMontherAndCommonProdId" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        PROD_ID id,
+        PROD_NAME text,
+        PROD_RE object
+        FROM
+        rep_prod_info
+        <where>
+            STATUS = 'E' AND REP_PROD_TYPE != '03' AND ISSUING_WAY = '01'
+            <if test="search != null and search != ''">
+                and (PROD_ID like concat(concat('%',#{search}),'%')
+                or PROD_NAME like concat(concat('%',#{search}),'%'))
+            </if>
+        </where>
+    </select>
 </mapper>
