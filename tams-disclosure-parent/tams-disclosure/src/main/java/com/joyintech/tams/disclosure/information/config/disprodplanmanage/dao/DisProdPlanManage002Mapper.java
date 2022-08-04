@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.disclosure.information.config.disprodplanmanage.dao;
 
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto;
 import org.springframework.stereotype.Repository;
 
@@ -83,5 +84,5 @@ public interface DisProdPlanManage002Mapper {
 	 */
 	void delete(Map<String, Object> param);
 
-
+	List<SelectOptionDto> getMontherAndCommonProdId(Map<String, Object> paraMap);
 }
