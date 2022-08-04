@@ -33,7 +33,7 @@ $(function() {
          */
         dblclick: function (table, data) {
             debugger;
-            Joyin.dialog(JoyinUtil.getLabel("产品交易信息维护查看"),
+            Joyin.dialog(JoyinUtil.getLabel("产品费用交易信息维护查看"),
                 basePath + "disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf002/init",
                 "100%", "100%", {
                     pageModel: PAGE_MODEL_REFERENCE,
@@ -115,7 +115,7 @@ $(function() {
         //新建点击事件
         $('#SvrProdFeeDealInterf001_btn_add').click(function() {
             var data={operateType:"add", pageModel:PAGE_MODEL_NEW};
-            Joyin.dialog('产品费用交易信息-新建',basePath+'disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf002/init', '100%', '100%',data,function(){table.reload();});
+            Joyin.dialog('产品费用交易信息维护新建',basePath+'disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf002/init', '100%', '100%',data,function(){table.reload();});
         });
 
         // 行内删除按钮点击事件
@@ -164,7 +164,7 @@ $(function() {
                 feeType: data.feeType,
                 payDate: data.payDateStr,
                 operateType: PAGE_MODEL_EDIT};//请求参数
-            Joyin.dialog(JoyinUtil.getLabel("产品费用交易信息-编辑"),
+            Joyin.dialog(JoyinUtil.getLabel("产品费用交易信息维护编辑"),
                 JoyinUtil.getRealPath("disclosure/information/config/prodfeedealInterf/SvrProdFeeDealInterf002/init"),
                 "100%", "100%", object,
                 function(data){

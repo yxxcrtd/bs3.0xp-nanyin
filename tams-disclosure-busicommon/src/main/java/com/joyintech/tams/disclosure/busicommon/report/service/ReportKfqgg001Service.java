@@ -68,7 +68,8 @@ public class ReportKfqgg001Service implements IReportDataService {
                 if(reportKfqgg001Dto != null){
                     if(reportKfqgg001Dto.getSetDate() != null){
                         if(DateUtil.compareDate(DateUtil.parseDate(startDate,"yyyy-MM-dd"),reportKfqgg001Dto.getSetDate())<0){
-                            startDate = DateUtil.format(reportKfqgg001Dto.getSetDate());
+                            //需要取产品成立日之后的排期计划  所以 开始日 = 成立日 + 1
+                            startDate =DateUtil.addDay(DateUtil.format(reportKfqgg001Dto.getSetDate()),1) ;
                         }
                     }
                     if(reportKfqgg001Dto.getmDate() != null){

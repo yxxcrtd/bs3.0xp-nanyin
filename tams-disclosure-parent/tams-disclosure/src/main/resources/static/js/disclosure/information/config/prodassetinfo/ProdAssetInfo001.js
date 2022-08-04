@@ -48,7 +48,7 @@ $(function(){
          */
         dblclick:function(table, data) {
             data.pageModel=PAGE_MODEL_REFERENCE;
-            Joyin.dialog(JoyinUtil.getLabel("产品资产组合情况查看"),
+            Joyin.dialog(JoyinUtil.getLabel("产品资产组合情况维护查看"),
                     JoyinUtil.getRealPath("disclosure/information/config/prodassetinfo/ProdAssetInfo002/init"),
                     "98%", "95%", data,
                     function(){table.reload();});
@@ -129,7 +129,7 @@ $(function(){
      */
     table.bind('click', '.edit', function(data, index) {
         data.pageModel = PAGE_MODEL_EDIT;
-        Joyin.dialog(JoyinUtil.getLabel("编辑"),
+        Joyin.dialog(JoyinUtil.getLabel("产品资产组合情况维护编辑"),
                     basePath + "disclosure/information/config/prodassetinfo/ProdAssetInfo002/init",
                     "95%", "90%", {pageModel:PAGE_MODEL_EDIT,
                 prodAssetId:data.prodAssetId},function(){table.reload();})
@@ -206,7 +206,7 @@ $(function(){
 
         $('#ProdAssetInfo001_btn_add').click(
                 function() {
-                    Joyin.dialog(JoyinUtil.getLabel("产品资产组合新建"), basePath
+                    Joyin.dialog(JoyinUtil.getLabel("产品资产组合情况维护新建"), basePath
                             + "/disclosure/information/config/prodassetinfo/ProdAssetInfo002/init",
                             "100%", "90%", {pageModel : PAGE_MODEL_NEW},function(){table.reload();});
                 });
