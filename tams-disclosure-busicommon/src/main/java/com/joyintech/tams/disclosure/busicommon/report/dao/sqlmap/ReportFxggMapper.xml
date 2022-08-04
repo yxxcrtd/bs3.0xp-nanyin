@@ -3,7 +3,7 @@
 <mapper
 	namespace="com.joyintech.tams.disclosure.busicommon.report.dao.ReportFxggMapper">
 
-	<select id="queryFxgg" resultType="com.joyintech.tams.disclosure.busicommon.report.dto.ReportFxggDto">
+	<select id="queryFxgg" resultType="com.joyintech.tams.disclosure.busicommon.report.dto.ReportFxggDto" useCache="false" flushCache="true">
 		select
 			rpi.prod_id prod_id,
 			rpi.prod_name prod_name,
