@@ -51,4 +51,5 @@ public interface ProdFeediscountMapper {
 
     List<SelectOptionDto> getProdIdlist(Map<String, String> map);
 
+    ProdFeediscountDto selectData(ProdFeediscountDto record);
 }

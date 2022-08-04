@@ -743,3 +743,7 @@ delete from sys_datadict where DICT_CODE='REP_PROD_TYPE' ;
 insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('REP_PROD_TYPE', 'DIS', '信披产品类别', null, '02', 'system', null, sysdate, 'system', sysdate);
 -- add by zhengxiaolian 2022-08-03 数据字典中文调整，是否是指数型产品 end
+
+-- add by zhengxiaolian 2022-08-04 运作起始日中文调整 start
+update sys_datadict_list a set a.item_value='运作起始日' where a.dict_code='BASIS_DATE_TYPE' and a.item_code='09';
+-- add by zhengxiaolian 2022-08-04 运作起始日中文调整 end
