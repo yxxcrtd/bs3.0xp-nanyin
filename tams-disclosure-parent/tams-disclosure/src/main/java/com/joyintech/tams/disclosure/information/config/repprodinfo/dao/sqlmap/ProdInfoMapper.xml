@@ -703,6 +703,7 @@
         select *
         from REP_PROD_INFO
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
+        and REP_PROD_TYPE != '03'
         <if test="status != null and status != ''">
             and status = #{status,jdbcType=VARCHAR}
         </if>
