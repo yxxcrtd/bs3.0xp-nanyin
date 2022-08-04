@@ -267,6 +267,8 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
                             && existDto !=null ){
                         return new AjaxResult("当分红方式选择到期兑付时，一个子产品代码只能有一条数据", MessageType.错误消息);
                     }
+
+                    //
                     if(StringUtils.isNotEmpty(dto.getProdId())
                             && StringUtils.isNotEmpty(dto.getBonusMode())
                             && StringUtils.isNotEmpty(dto.getSettDateStr())){
@@ -275,7 +277,6 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
                             return new AjaxResult("“子产品代码+产品名称+分红方式+收益分配基准日”不得同时与已有数据重复", MessageType.错误消息);
                         }
                     }
-
 
                     if (StringUtil.isNotEmpty(errorMsg.toString())) {
                         errorMsg.append("<br />");
@@ -293,14 +294,14 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
                 for (int i = objects.size() - 1; i >= 1; i--) {
                     List<String> list1 = objects.get(i);
                     Boolean isRepeat = false;
-                    for (int k = i - 1; k >= 1; k--) {
+                    /*for (int k = i - 1; k >= 1; k--) {
                         List<String> list2 = objects.get(k);
                         //子产品代码，相同时为重复数据
                         if ((StringUtil.equals(list1.get(0), list2.get(0)))) {
                             isRepeat = true;
                             break;
                         }
-                    }
+                    }*/
                     if (isRepeat) {
                         repeatNum++;
                     } else {
