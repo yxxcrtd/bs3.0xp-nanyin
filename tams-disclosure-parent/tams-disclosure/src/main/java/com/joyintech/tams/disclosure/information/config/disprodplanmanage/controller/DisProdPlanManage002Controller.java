@@ -142,7 +142,8 @@ public class DisProdPlanManage002Controller extends BaseController {
 	public Page<SelectOptionDto> getMontherAndCommonProdId() {
 		Map<String, Object> param= RequestUtil.getPageParam();
 		// param.put("sonFlag","1");
-		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getMontherAndCommonProdId(param);
+//		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getMontherAndCommonProdId(param);
+		Page<SelectOptionDto> prdInfoSelect = disProdPlanManage002Service.getMontherAndCommonProdId(param);
 		return prdInfoSelect;
 	}
 

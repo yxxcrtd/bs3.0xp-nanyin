@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{layout/default}">
+<html>
+<html>
+<head>
+    <title data-th-text="">报表数据校验</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class='layui-fluid'>
+        <div class="layui-col-xs12 layui-col-md12 layui-col-sm12 layui-col-lg12 form-button-area" style="margin:10px;">
+            <a id="ReportCheck001_btn_tips" class="layui-btn layui-btn-sm btn-create"  >不再提示</a>
+            <a id="ReportCheck001_btn_set" class="layui-btn layui-btn-sm btn-create">指标阀值配置</a>
+           <!-- <a id="ReportCheck001_btn_export" class="layui-btn layui-btn-sm">
+                <i class="iconfont icon-import"></i><span>导出</span>
+            </a>-->
+        </div>
+        <div class='joyin-form-wrap joyin-filter-form condition-area'>
+            <form class="layui-form" id="searchForm">
+                <input hidden type="text" id="prodDiscountId" data-th-value="${entity?.prodDiscountId}" style="display:none;">
+                <div class="layui-form-item">
+                    <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
+                        <label class="layui-form-label form-lable" >检查日期</label>
+                        <div class="layui-input-inline input-inline">
+                            <input  id="checkDate" name="checkDate" class="layui-input form-input input-dateRangeSelect" placeholder="请选择、支持区间" data-th-placeholder="#{SysCommon.dateInterval}">
+                        </div>
+                    </div>
+
+                    <div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
+                        <label class="layui-form-label form-lable" >产品</label>
+                        <div class="layui-input-inline input-inline">
+                            <select type="text" id="prodId" name="prodId" formatoption="true" multiple
+                                    class="layui-input form-input input-select"  placeholder="请输入内容" data-th-value='${entity?.prodId}'
+                                    data-th-data-url="@{/disclosure/information/config/proelementadj/ProElementAdj001/getProdIdlist}" allowClear="true">
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
+                        <label class="layui-form-label form-lable" >报表类别</label>
+                        <div class="layui-input-inline input-inline">
+                            <select id="reportType" name="reportType" class="layui-input form-input input-select" allowClear="true" multiple
+                                    data-th-data-result="${DIS_REPORT_STYLE}" searchable="false" data-th-placeholder="#{SysCommon.placeholder}">
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+        <div>
+            <table class="layui-table" id="dataTable"></table>
+        </div>
+    </div>
+</div>
+<div layout:fragment="script">
+    <script data-th-src="@{/js/disclosure/information/config/repreportcheck/ReportCheck001.js}" type="text/javascript"></script>
+</div>
+</body>
+</html>

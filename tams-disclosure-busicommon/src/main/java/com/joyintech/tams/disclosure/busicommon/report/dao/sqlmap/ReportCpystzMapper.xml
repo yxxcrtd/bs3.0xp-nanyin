@@ -37,8 +37,8 @@
 			rpi.raise_type raise_type,
 			min(dpa.eff_date) eff_date,
 			max(dpa.adj_reason) adjustReason,
-			max(dpa.prod_adj_remark) remark1,
-			max(dpa.prod_adj_remark2) remark2
+			max(dpa.field_adj_remark) remark1,
+			max(dpa.field_adj_remark2) remark2
 		from rep_prod_info rpi
 		inner join dis_prod_adjust dpa
 		on rpi.prod_re = dpa.prod_regist_no

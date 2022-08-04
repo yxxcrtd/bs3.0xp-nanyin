@@ -12,6 +12,8 @@ package com.joyintech.tams.disclosure.information.config.disprodplanmanage.servi
 
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
@@ -19,6 +21,7 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.RepProdInfoMapper;
 import com.joyintech.tams.common.base.entity.RepProdInfo;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.dao.GetPrdInfoSelectMapper;
 import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dao.DisProdPlanManage002Mapper;
 import com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto;
@@ -154,5 +157,11 @@ public class DisProdPlanManage002Service extends CommonExportService<DisProdPlan
         } else if (StringUtil.equals(entity.getOperateType(), "DELETE")) {
             this.delete(entity);
         }
+    }
+
+    public Page<SelectOptionDto> getMontherAndCommonProdId(Map<String, Object> paraMap) {
+        Page<SelectOptionDto> page = queryForPageForSelectReturn(()
+                -> disProdPlanManage002Mapper.getMontherAndCommonProdId(paraMap));
+        return page;
     }
 }
