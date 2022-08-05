@@ -402,7 +402,7 @@ public class MinioTemplate {
         if(logger.isDebugEnabled())
             logger.debug("转化后文件名为:{}",pathUrl);
 
-        if(upload){
+        if(upload && pathUrl.startsWith("http:")){
             String key = pathUrl.replace(minioProperties.getEndpoint() + "/", "");
             int index = key.indexOf(separator);
             return key.substring(index + 1);

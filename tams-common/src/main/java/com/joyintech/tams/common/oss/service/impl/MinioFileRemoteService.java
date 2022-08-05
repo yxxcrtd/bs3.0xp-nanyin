@@ -197,7 +197,9 @@ public class MinioFileRemoteService implements FileRemoteService {
         ByteArrayInputStream bis  = null;
         try{
             bis = new ByteArrayInputStream(bytes);
-            return uploadFile(file,bis);
+            UploadFile newFile = uploadFile(file,bis);
+
+            return newFile;
         }catch(Exception e){
             logger.error("上传新文件发生异常",e);
         }finally {
