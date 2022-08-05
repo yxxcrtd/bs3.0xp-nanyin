@@ -359,29 +359,22 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
         String prodId = "";
         if (params.get("prodId") != null )
             prodId = params.get("prodId").toString();
-//        String reportFile = poiReportService.buildReportFileName(PoiReportService.REPORT_TYPE_报表文件,reportInfo, params,PoiReportService.FILE_TYPE_DOCX);
-//        String reportFile = poiReportService.getRomteFilePath(reportInfo, params,ReportFileService.FILE_TYPE_DOCX);
         String reportFile = reportFileService.getTempOSSReportFileName(reportId, genDate, params, ReportFileService.FILE_TYPE_DOCX);
         String localFileName = reportInfo.getReportName()+"_"+prodId+"_" + DateUtil.format(genDate)+ReportFileService.FILE_TYPE_DOCX;
 
         if ( "pdf".equals(fileType)) {  //如果导出pdf，则需要先讲word转换成pdf
-//            FileInputStream fis = new FileInputStream(reportFile);
             ByteArrayInputStream bis = null;
             byte[] bytes = poiReportService.getFileByteArray(reportFile);
             if(bytes!=null){
                 bis = new ByteArrayInputStream(bytes);
             }
-            //String fileNamePdf = poiReportService.buildReportFileName(ReportFileService.REPORT_TYPE_报表文件,reportInfo, params,ReportFileService.FILE_TYPE_PDF);
-
             String fileNamePdf = reportFileService.getReportFileName(reportId,genDate,params,ReportFileService.FILE_TYPE_PDF);
 
             FileOutputStream fos = new FileOutputStream(fileNamePdf);
-//            PoiUtils.docxToPdf(fis,fos);
             PoiUtils.docxToPdf(bis,fos);
             reportFile = fileNamePdf;
             localFileName = reportInfo.getReportName()+"_"+prodId+"_" +DateUtil.format(genDate)+ReportFileService.FILE_TYPE_PDF;
         }else{
-           //String  localReportFile = poiReportService.buildReportFileName(ReportFileService.REPORT_TYPE_报表文件,reportInfo, params,ReportFileService.FILE_TYPE_DOCX);
         	String  localReportFile = reportFileService.getReportFileName(reportId,genDate,params,ReportFileService.FILE_TYPE_DOCX);
         	FileOutputStream fos = null;
            byte[] bytes = poiReportService.getFileByteArray(reportFile);
@@ -464,9 +457,10 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
 	public void collateParams(Map<String,Object> params) {
 		//如下传入参数标准化
 		params.put("modelId", params.get("modelId")==null?params.get("modelid"):params.get("modelId"));
+		params.put("prodid", params.get("prodid")==null?params.get("pprodid"):params.get("prodid"));  //单产品只传了pprodid
+		params.put("prodname", params.get("prodname")==null?params.get("pprodname"):params.get("prodname"));  //单产品只传了pprodid
 		params.put("pprodId", params.get("pprodId")==null?params.get("pprodid"):params.get("pprodId"));
 		params.put("prodId", params.get("prodId")==null?params.get("prodid"):params.get("prodId"));
-		params.put("prodId", params.get("prodId")==null?params.get("pprodid"):params.get("prodId"));
 		params.put("prodName", params.get("prodName")==null?params.get("prodname"):params.get("prodName"));
 		params.put("repId", params.get("repId")==null?params.get("repid"):params.get("repId"));
 		params.put("reportId", params.get("reportId")==null?params.get("repid"):params.get("reportId"));
