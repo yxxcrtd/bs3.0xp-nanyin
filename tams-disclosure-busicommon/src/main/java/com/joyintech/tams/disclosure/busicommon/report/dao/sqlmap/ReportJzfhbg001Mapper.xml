@@ -40,6 +40,9 @@
 		SELECT * FROM DIS_PROD_BONUSPLAN DPB WHERE DPB.DATA_STATUS = 'E' AND DPB.PROD_ID = #{prodId} AND DPB.SETT_DATE = (
 			select max(h.SETT_DATE) from DIS_PROD_BONUSPLAN h
 			where h.SETT_DATE &lt; TO_DATE(#{settDate},'yyyy-MM-dd')
+			<if test="setDate != null">
+				  and h.SETT_DATE > #{setDate}
+			</if>
 			  and h.PROD_ID = #{prodId,jdbcType=VARCHAR}
 			  and h.DATA_STATUS = 'E'
 		)

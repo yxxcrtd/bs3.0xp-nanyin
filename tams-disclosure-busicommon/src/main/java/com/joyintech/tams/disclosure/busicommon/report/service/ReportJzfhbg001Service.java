@@ -90,7 +90,11 @@ public class ReportJzfhbg001Service implements IReportDataService {
                     //查询产品相关信息
                     reportJzfhbg001Dto = reportJzfhbg001Mapper.getProdInfo(searchParam);
                     //设置产品成立日
-                    reportJzfhbg001Dto.setSetDateT(DateUtil.format(reportJzfhbg001Dto.getSetDate(), DateUtil.ABB_DATE_FORMAT_CN));
+                    if(reportJzfhbg001Dto.getSetDate() != null){
+                        reportJzfhbg001Dto.setSetDateT(DateUtil.format(reportJzfhbg001Dto.getSetDate(), DateUtil.ABB_DATE_FORMAT_CN));
+                        searchParam.put("setDate",reportJzfhbg001Dto.getSetDate());
+                    }
+
                     //查询收益分配基准日的产品分红到期表
                     DisProdBonusplan bonusplan = reportJzfhbg001Mapper.getBonusPlanBySettDate(searchParam);
 
