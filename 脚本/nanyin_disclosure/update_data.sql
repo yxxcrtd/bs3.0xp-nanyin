@@ -806,3 +806,7 @@ delete from sys_datadict_list where DICT_CODE='RULE_TYPE2' and ITEM_CODE in('!='
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('RULE_TYPE2', '!=', '!=', 6, '0', 'system', null, sysdate, 'system', sysdate, null);
 -- add by zhengxiaolian 2022-08-04 	作业规则2增加枚举值 end
+
+-- add by zhengxiaolian 2022-08-05 	模板启用管理 start
+update sys_menu a set a.remark='模板启用管理' where a.page_id='ReportPageManage001';
+-- add by zhengxiaolian 2022-08-05 	模板启用管理 end
