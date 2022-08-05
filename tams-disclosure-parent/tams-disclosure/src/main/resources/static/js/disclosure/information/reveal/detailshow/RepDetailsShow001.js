@@ -33,7 +33,6 @@ $(function () {
      */
     var getSearchParams = function() {
     	var obj = {};
-		console.log(ids);
     	obj['repName'] = $('#repName').val();
     	if(ids.length>0){
     		for(var i in ids){
@@ -49,6 +48,12 @@ $(function () {
 
 	    			}
 	    		}
+				if(getKey==='prodid'){
+					obj['prodname']=$('#'+ids[i].key).text();
+				}
+				if(getKey==='pprodid'){
+					obj['pprodname']=$('#'+ids[i].key).text();
+				}
         	}
     		if(obj.startDate&&obj.endDate){
     			if(obj.startDate>obj.endDate){
@@ -57,7 +62,7 @@ $(function () {
     			}
     		}
     	}
-
+		console.log(obj)
     	return obj;
     };
 
