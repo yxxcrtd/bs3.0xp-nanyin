@@ -807,7 +807,7 @@ COMMENT ON COLUMN INFO_COMPLIANCE.CREATE_DEPT IS '创建部门';
 alter table sys_upload_file_info drop column file_type;
 alter table sys_upload_file_info drop column seqno_comment;
 alter table sys_upload_file_info add file_type varchar2(2);
-alter table sys_upload_file_info add seqno_comment varchar2(2);
+alter table sys_upload_file_info add seqno_comment varchar2(32);
 
 drop table INFO_COMPLIANCE_COMMENT;
 CREATE TABLE INFO_COMPLIANCE_COMMENT(
