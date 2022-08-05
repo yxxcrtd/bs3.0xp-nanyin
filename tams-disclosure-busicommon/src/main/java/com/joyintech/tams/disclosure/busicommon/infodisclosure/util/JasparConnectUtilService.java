@@ -7,28 +7,30 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 import javax.xml.parsers.ParserConfigurationException;
 
-import com.joyintech.framework.file.SafelyFile;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.tams.disclosure.busicommon.poireport.service.PoiReportService;
-import com.joyintech.tams.disclosure.busicommon.rptdata.service.ReportDataService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.xml.sax.SAXException;
 
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.listener.FileAttachmentProcess;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.FileNameUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
@@ -38,10 +40,12 @@ import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosuregenandsend.service.InfoDisclosureGenService;
 import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.ReportManager;
 import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.ReportInfo;
+import com.joyintech.tams.disclosure.busicommon.poireport.service.PoiReportService;
+import com.joyintech.tams.disclosure.busicommon.poireport.service.ReportFileService;
+import com.joyintech.tams.disclosure.busicommon.rptdata.service.ReportDataService;
 import com.joyintech.tams.disclosure.common.common.util.ReportGlobalConstant;
 import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
-import org.xml.sax.SAXException;
 
 /**
  * jaspar连接公共类
@@ -71,7 +75,7 @@ public class JasparConnectUtilService {
 	private ReportDataService rptDataService;
 
 	@Autowired
-	private PoiReportService poiReportService;
+	private ReportFileService reportFileService;
 	/**
 	 * 日志
 	 */
@@ -183,7 +187,8 @@ public class JasparConnectUtilService {
 		}
 		dataMap.put("uri",r1.getUri());
 
-		String reportFile = poiReportService.genReportFile(PoiReportService.REPORT_TYPE_报表文件, r1, dataMap, (Date) params.get("execDate"));
+		//TODO:zhengxiaolian
+		String reportFile = reportFileService.getReportFileName(r1.getReportID(),(Date) params.get("execDate") ,dataMap,ReportFileService.FILE_TYPE_DOCX );
 
 		fileName =fileName+GlobalConstant.POINT+fileType;
 
