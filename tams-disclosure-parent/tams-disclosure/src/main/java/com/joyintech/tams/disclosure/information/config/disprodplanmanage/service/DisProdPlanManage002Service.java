@@ -164,4 +164,8 @@ public class DisProdPlanManage002Service extends CommonExportService<DisProdPlan
                 -> disProdPlanManage002Mapper.getMontherAndCommonProdId(paraMap));
         return page;
     }
+
+    public List<DisProdPlanManage002Dto> checkInfo(DisProdPlanManage002Dto dto){
+        return disProdPlanManage002Mapper.checkInfo(dto);
+    }
 }
