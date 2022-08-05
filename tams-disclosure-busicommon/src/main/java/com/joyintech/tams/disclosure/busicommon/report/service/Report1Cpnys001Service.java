@@ -105,6 +105,7 @@ public class Report1Cpnys001Service implements IReportDataService {
             });
             dataMap.put("fieldlist", fieldlist);
         }
+        dataMap.put("enddate",pubDateStr);
         return result;
     }
 
