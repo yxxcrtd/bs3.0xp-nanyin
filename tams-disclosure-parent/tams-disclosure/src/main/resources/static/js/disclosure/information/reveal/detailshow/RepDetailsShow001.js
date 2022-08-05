@@ -222,7 +222,6 @@ $(function () {
 		modelUri = null;
 		repId = null;
 		repName = null;
-		proName = null;
     	ids = new Array();
 		$("#showtable").html('');
 		showSearch(new Array());
@@ -567,7 +566,6 @@ $(function () {
 	            params['modelId'] = modelId;
 	            params['repid'] = repId;
 	            params['repname'] = repName;
-	            params['prodname'] = proName;
 	            params['uri'] = modelId;
 	            //params['portnum'] = 'LEO-001';
 	            //alert(params);
@@ -598,7 +596,6 @@ $(function () {
         	if(type=='docx'){
         		params['filetype'] = type;
                 params['repid'] = modelListId;
-                params['prodname'] = proName;
                 params['repname'] = repName;
 
                 Joyin.exportExcel('mergeExport', params);
@@ -724,7 +721,6 @@ $(function () {
 	            params['modelid'] = modelId;
 	            params['repid'] = repId;
 	            params['repname'] = repName;
-	            params['prodname'] = proName;
 				params['uri'] = modelId;
 				params['flag']="02";
 				Joyin.ajaxJson(basePath + 'disclosure/information/reveal/detailshow/RepDetailsShow001/check',params, function(result) {
@@ -740,7 +736,6 @@ $(function () {
         		layer.load();
         		params['filetype'] = type;
                 params['repid'] = modelListId;
-                params['prodname'] = proName;
                 params['repname'] = repName;
 
                 Joyin.ajax('submitWord',
