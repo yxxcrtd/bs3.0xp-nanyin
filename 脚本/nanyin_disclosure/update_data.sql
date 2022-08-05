@@ -809,4 +809,5 @@ values ('RULE_TYPE2', '!=', '!=', 6, '0', 'system', null, sysdate, 'system', sys
 
 -- add by zhengxiaolian 2022-08-05 	模板启用管理 start
 update sys_menu a set a.remark='模板启用管理' where a.page_id='ReportPageManage001';
+update sys_page a set a.remark='模板启用管理' where a.page_id='ReportPageManage001';
 -- add by zhengxiaolian 2022-08-05 	模板启用管理 end
