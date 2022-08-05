@@ -75,8 +75,6 @@ public class ReportFileService {
 				File f = new File(templateFile);
 				if ( !f.exists() ) { 
 					templateFile = reportInfo.getRepository() + reportInfo.getFolder() +"/" + "ERROR" +fileType;
-				} else { //初始化参数，换个文件名称
-					templateFile = f.getParent() + "/blank/"+f.getName();
 				}
 			}
 		} catch (Exception e) {
@@ -111,7 +109,7 @@ public class ReportFileService {
 	 * @Param
 	 * @return temp/2022-08-05/A2002xxxx.docx
 	 **/
-	private String getTempSimpleReportFileName(String repId,Date genDate,Map<String,Object> params,String fileType){
+	public String getTempSimpleReportFileName(String repId,Date genDate,Map<String,Object> params,String fileType){
 		String prefix = "temp";
 		String tempFilePathName = "";
 		String simpleFileName = getSimpleReportFileName(repId,genDate,params,fileType);

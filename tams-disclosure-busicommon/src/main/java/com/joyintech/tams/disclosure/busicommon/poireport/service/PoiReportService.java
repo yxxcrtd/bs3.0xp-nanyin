@@ -102,13 +102,6 @@ public class PoiReportService {
 	 */
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-//	public final static String REPORT_TYPE_模板文件 = "REPORT_TYPE_M";
-//	public final static String REPORT_TYPE_临时文件 = "REPORT_TYPE_T";
-//	public final static String REPORT_TYPE_报表文件 = "REPORT_TYPE_E";
-//
-//	public final static String FILE_TYPE_DOCX = ".docx";
-//	public final static String FILE_TYPE_PDF = ".pdf";
-
 	/**
 	 * 生成报表：创建服务器文件，创建工作流进行报表确认
 	 * @param params
@@ -121,7 +114,7 @@ public class PoiReportService {
 		String fileType = ".docx";
 		String templateFile = reportFileService.getTemplateFile(repId, fileType);
 
-		//初始化参数，换个文件名称
+		//初始化参数，用xxx替换参数变量，文件已静态编辑好，存在放开模板的.../blank/目录，直接换个文件名称
 		File f = new File(templateFile);
 		return f.getParent() + "/blank/"+f.getName();
 	}
@@ -194,9 +187,10 @@ public class PoiReportService {
 			String reportFile = "";
 			ReportInfo reportInfo = null;
 			String prodId = "";
-			
+			String repId = "";
+			Date genDate = (Date)params.get("reportDate");
 			try {
-				String repId = params.get("repid").toString();
+				repId = params.get("repid").toString();
 				reportInfo = reportInfoMapper.getReportInfoByID(repId);
 				if (!StringUtil.isNotEmpty(reportInfo)) {
 					throw new Exception("生成报表失败!没有找到模板。");
@@ -214,15 +208,18 @@ public class PoiReportService {
 //				logger.error("获取报表日期错误", e);
 //			}
 
-			reportFile = getRomteFilePath(reportInfo, params, ReportFileService.FILE_TYPE_DOCX);
+			reportFile = reportFileService.getSimpleReportFileName(repId, genDate, params, ReportFileService.FILE_TYPE_DOCX);
+			String tempRemoteFileName = reportFileService.getTempOSSReportFileName(repId, genDate, params, ReportFileService.FILE_TYPE_DOCX);
+			//getRomteFilePath(reportInfo, params, ReportFileService.FILE_TYPE_DOCX);
 			
 			File localFile = new SafelyFile(reportFile);
 			String fileName = reportFile;
 			UploadFile uploadFile = new UploadFile(fileName, IDGenerator.generate(), localFile);
 			logger.info("UploadFile fileName= "  + reportFile);
-	        if(null != fileAttachmentProcess) {
-	            fileAttachmentProcess.upload(uploadFile);
-	        }
+//	        if(null != fileAttachmentProcess) {
+//	            fileAttachmentProcess.upload(uploadFile);
+//	        }
+			minioFileRemoteService.tempFileCopy(tempRemoteFileName, uploadFile);
 	        
 			// 创建工作流
 			boolean flag = insertRepReveal(params, uploadFile.getFileNo(), uploadFile.getSrcName(),
@@ -614,7 +611,7 @@ public class PoiReportService {
 		} else {
 			genDate = (Date)params.get("platformDate");
 		}
-		String localPathFile = reportFileService.getReportFileName(repId, genDate, params, ReportFileService.FILE_TYPE_DOCX); 
+		String localPathFile = reportFileService.getTempSimpleReportFileName(repId, genDate, params, ReportFileService.FILE_TYPE_DOCX); 
 		ByteArrayOutputStream bos = null;
 		ByteArrayInputStream is = null;
 		String realFilePath = "";

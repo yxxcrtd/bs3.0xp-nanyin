@@ -292,30 +292,24 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
 //        FileInputStream fis = null;
         ByteArrayInputStream bis = null;
         try {
-	        if ( params.get("elementIdForLog")==null || !params.get("elementIdForLog").equals("RepDetailsShow001_showDetail") ) {  //树单击：显示模板
+	        if ( params.get("elementIdForLog")==null || !params.get("elementIdForLog").equals("RepDetailsShow001_showDetail") ) {  
+	        	//树单击：初始化报表，即报表模板中的变量全部用xxx代替
 	    		String repId = params.get("repId").toString();
 	        	reportFile = poiReportService.initReport(repId);
-	        } else {  //预览按钮：显示指定产品的实际内容
+	        } else {  //预览按钮：显示指定产品的实际内容，生成了一个临时文件f1
 	            reportFile = poiReportService.previewReport(params);
 	        }
-	
+	        
+	        //将生成的文件作为输入，转换成html后，发送到response
             byte[] bytes = poiReportService.getFileByteArray(reportFile);
             if(bytes != null) {
                 bis = new ByteArrayInputStream(bytes);
-	            //将生成的文件作为输入，转换成html后，发送到response
 	            PoiUtils.docxToHtml(bis,response.getOutputStream(),imagePath);
             }
         } catch (Exception e ) {
         	logger.error("查询数据错误。",e);
             e.printStackTrace();
         } finally {
-//            try {
-//                if ( fis!=null ) {
-//                    fis.close();
-//                }
-//            } catch (IOException e ) {
-//                e.printStackTrace();
-//            }
             if(bis != null){
                 try{
                     bis.close();
@@ -365,7 +359,8 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
         if (params.get("prodId") != null )
             prodId = params.get("prodId").toString();
 //        String reportFile = poiReportService.buildReportFileName(PoiReportService.REPORT_TYPE_报表文件,reportInfo, params,PoiReportService.FILE_TYPE_DOCX);
-        String reportFile = poiReportService.getRomteFilePath(reportInfo, params,ReportFileService.FILE_TYPE_DOCX);
+//        String reportFile = poiReportService.getRomteFilePath(reportInfo, params,ReportFileService.FILE_TYPE_DOCX);
+        String reportFile = reportFileService.getTempOSSReportFileName(reportId, genDate, params, ReportFileService.FILE_TYPE_DOCX);
         String localFileName = reportInfo.getReportName()+"_"+prodId+"_" + DateUtil.format(genDate)+ReportFileService.FILE_TYPE_DOCX;
 
         if ( "pdf".equals(fileType)) {  //如果导出pdf，则需要先讲word转换成pdf
