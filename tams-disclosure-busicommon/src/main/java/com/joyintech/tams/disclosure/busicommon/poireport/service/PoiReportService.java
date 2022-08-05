@@ -148,7 +148,7 @@ public class PoiReportService {
 			Date reportDate = null;
 			try {
 				if (params.get("reportDate") != null)
-					reportDate = DateUtil.parse(params.get("reportDate").toString());
+					reportDate = (Date)params.get("reportDate");
 			} catch (Exception e) {
 				logger.error("获取报表日期错误", e);
 			}

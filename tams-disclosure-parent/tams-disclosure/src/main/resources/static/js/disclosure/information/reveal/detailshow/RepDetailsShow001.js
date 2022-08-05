@@ -33,7 +33,6 @@ $(function () {
      */
     var getSearchParams = function() {
     	var obj = {};
-		console.log(ids);
     	obj['repName'] = $('#repName').val();
     	if(ids.length>0){
     		for(var i in ids){
@@ -49,6 +48,12 @@ $(function () {
 
 	    			}
 	    		}
+				if(getKey==='prodid'){
+					obj['prodname']=$('#'+ids[i].key).text();
+				}
+				if(getKey==='pprodid'){
+					obj['pprodname']=$('#'+ids[i].key).text();
+				}
         	}
     		if(obj.startDate&&obj.endDate){
     			if(obj.startDate>obj.endDate){
@@ -57,7 +62,7 @@ $(function () {
     			}
     		}
     	}
-
+		console.log(obj)
     	return obj;
     };
 
@@ -217,7 +222,6 @@ $(function () {
 		modelUri = null;
 		repId = null;
 		repName = null;
-		proName = null;
     	ids = new Array();
 		$("#showtable").html('');
 		showSearch(new Array());
@@ -562,7 +566,6 @@ $(function () {
 	            params['modelId'] = modelId;
 	            params['repid'] = repId;
 	            params['repname'] = repName;
-	            params['prodname'] = proName;
 	            params['uri'] = modelId;
 	            //params['portnum'] = 'LEO-001';
 	            //alert(params);
@@ -593,7 +596,6 @@ $(function () {
         	if(type=='docx'){
         		params['filetype'] = type;
                 params['repid'] = modelListId;
-                params['prodname'] = proName;
                 params['repname'] = repName;
 
                 Joyin.exportExcel('mergeExport', params);
@@ -657,7 +659,9 @@ $(function () {
     	params['uri'] = modelId;
 		params['flag']="01";
 		//编辑之前需要判断改报表是否已确认或者在流程中
-
+		var webRoot=document.location.href;
+		webRoot=webRoot.substring(0,webRoot.indexOf('disclosure'));	
+		params['webRoot']=webRoot;
 		Joyin.ajaxJson(basePath + 'disclosure/information/reveal/detailshow/RepDetailsShow001/check',params, function(result) {
 			Joyin.dialog(JoyinUtil.getLabel("编辑报表"),
 				JoyinUtil.getRealPath("/disclosure/information/reveal/detailshow/RepEdit001/init"),
@@ -719,7 +723,6 @@ $(function () {
 	            params['modelid'] = modelId;
 	            params['repid'] = repId;
 	            params['repname'] = repName;
-	            params['prodname'] = proName;
 				params['uri'] = modelId;
 				params['flag']="02";
 				Joyin.ajaxJson(basePath + 'disclosure/information/reveal/detailshow/RepDetailsShow001/check',params, function(result) {
@@ -735,7 +738,6 @@ $(function () {
         		layer.load();
         		params['filetype'] = type;
                 params['repid'] = modelListId;
-                params['prodname'] = proName;
                 params['repname'] = repName;
 
                 Joyin.ajax('submitWord',
