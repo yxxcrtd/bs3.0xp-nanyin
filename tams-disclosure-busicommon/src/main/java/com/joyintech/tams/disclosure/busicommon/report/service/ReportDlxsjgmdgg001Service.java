@@ -58,6 +58,7 @@ public class ReportDlxsjgmdgg001Service implements IReportDataService {
             pubDate = DateUtil.addDay(curDate, 1);
         }
         dataMap.put("pubDate",DateUtil.format(pubDate, DateUtil.DEFAULT_DATE_FORMAT_CN));
+        dataMap.put("enddate",curDateStr);
         return result;
     }
 
