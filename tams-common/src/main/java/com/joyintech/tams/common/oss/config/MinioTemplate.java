@@ -10,10 +10,7 @@
  */
 package com.joyintech.tams.common.oss.config;
 
-import io.minio.GetObjectArgs;
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
-import io.minio.RemoveObjectArgs;
+import io.minio.*;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -134,6 +131,7 @@ public class MinioTemplate {
         } else {
             filePath = builderFilePath(prefix, fileName);
         }
+        filePath = systemDiffConvertPath(filePath,true);
         try {
             PutObjectArgs putObjectArgs = PutObjectArgs.builder().object(filePath)
                     .contentType(ViewContentTypeEnum.getContentType(fileName)).bucket(minioProperties.getBucket())
@@ -167,7 +165,7 @@ public class MinioTemplate {
             logger.debug("minio删除文件开始，文件名:{}", pathUrl);
         }
         //针对转化文件夹分隔符进行转化处理
-        pathUrl = systemDiffConvertPath(pathUrl);
+        pathUrl = systemDiffConvertPath(pathUrl,false);
         String key = pathUrl.replace(minioProperties.getEndpoint() + "/", "");
         int index = key.indexOf(separator);
         String bucket = key.substring(0, index);
@@ -198,8 +196,8 @@ public class MinioTemplate {
             logger.debug("minio下载文件开始，文件名:{}", pathUrl);
         }
         //针对转化文件夹分隔符进行转化处理
-        pathUrl = systemDiffConvertPath(pathUrl);
-        String key = pathUrl.replace(minioProperties.getEndpoint() + "/", "");
+        pathUrl = systemDiffConvertPath(pathUrl,false);
+        String key = pathUrl.replace(minioProperties.getEndpoint() + separator, "");
         int index = key.indexOf(separator);
         String bucket = key.substring(0, index);
         String filePath = key.substring(index + 1);
@@ -385,12 +383,7 @@ public class MinioTemplate {
      * @return java.lang.String
      **/
     public String convertSimpleFilePathName(String remoteFileName){
-        remoteFileName = systemDiffConvertPath(remoteFileName);
-        String key = remoteFileName.replace(minioProperties.getEndpoint() + "/", "");
-        int index = key.indexOf(separator);
-        String bucket = key.substring(0, index);
-        String filePath = key.substring(index + 1);
-        return filePath;
+        return systemDiffConvertPath(remoteFileName,true);
     }
     /**
      * @Author ZY22350
@@ -399,16 +392,23 @@ public class MinioTemplate {
      * @Param [filePath]
      * @return java.lang.String
      **/
-    private String systemDiffConvertPath(String filePath){
+    private String systemDiffConvertPath(String filePath,boolean upload){
         //针对转化文件夹分隔符进行转化处理
         String pathUrl = filePath.replace(":\\","://");
-        pathUrl = pathUrl.replace("\\","/");
+        pathUrl = pathUrl.replace("\\",separator);
         if(pathUrl.indexOf("http://") < 0){ //解决linux使用File获取的名称http://变成http:/问题
             pathUrl = pathUrl.replace("http:/","http://");
         }
         if(logger.isDebugEnabled())
             logger.debug("转化后文件名为:{}",pathUrl);
-        return pathUrl;
+
+        if(upload){
+            String key = pathUrl.replace(minioProperties.getEndpoint() + "/", "");
+            int index = key.indexOf(separator);
+            return key.substring(index + 1);
+        }else {
+            return pathUrl;
+        }
     }
 
 }

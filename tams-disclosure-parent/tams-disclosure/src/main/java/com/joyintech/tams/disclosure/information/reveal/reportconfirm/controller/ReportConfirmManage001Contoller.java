@@ -20,6 +20,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import com.joyintech.tams.common.oss.service.FileRemoteService;
 import com.joyintech.tams.disclosure.busicommon.poireport.service.PoiReportService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,6 +105,8 @@ public class ReportConfirmManage001Contoller extends BaseController {
     private FileAttachmentProcess fileAttachmentProcess;
 	@Autowired
 	private PoiReportService poiReportService;
+	@Autowired
+	private FileRemoteService minioFileRemoteService;
     /**
      * 重写init方法，加载页面
      * {@inheritDoc}
@@ -491,7 +494,8 @@ public class ReportConfirmManage001Contoller extends BaseController {
 		InputStream in = null;
         try {
 			if(targetFile.getPath().startsWith("http:")){
-				byte[] bytes = poiReportService.getFileByteArray(targetFile.getPath());
+				byte[] bytes = minioFileRemoteService.getFile2ByteArray(targetFile.getPath());
+//				byte[] bytes = poiReportService.getFileByteArray(targetFile.getPath());
 				if(bytes == null){
 					throw new BusinessException("文件[" +targetFile.getPath() + "]不存在！");
 				}else{

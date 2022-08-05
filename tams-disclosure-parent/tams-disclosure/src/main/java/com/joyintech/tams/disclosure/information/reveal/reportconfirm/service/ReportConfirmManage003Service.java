@@ -359,10 +359,12 @@ public class ReportConfirmManage003Service extends CommonExportService<BokFileTr
             logger.debug("上传文件开始,上传类型:{},附件名称:{}",option,fileRealName);
         }
         FileInputStream fis = null;
-        String realPath = "";
+        String fileNo = IDGenerator.generate();
         try {
             fis = new FileInputStream(filePath);
-            realPath = minioFileRemoteService.uploadFile(newfilePath,fis);
+            File localFile = new SafelyFile(newfilePath);
+            UploadFile uploadFile = new UploadFile(fileRealName, fileNo,localFile);
+            minioFileRemoteService.uploadFile(uploadFile,fis);
         }catch(Exception e){
             logger.error("上传文件失败",e);
             return -1;
@@ -375,15 +377,6 @@ public class ReportConfirmManage003Service extends CommonExportService<BokFileTr
                 }
             }
         }
-        File localFile = new SafelyFile(realPath);
-        String fileNo = IDGenerator.generate();
-        UploadFile uploadFile = new UploadFile(fileRealName, fileNo,localFile);
-        uploadFile.setFileName(localFile.getPath());
-        //存入SYS_UPLOAD_FILE_INFO表
-        if(null != fileAttachmentProcess) {
-            fileAttachmentProcess.upload(uploadFile);
-        }
-
         return updateRep(id,fileNo,fileRealName,option);
     }
 

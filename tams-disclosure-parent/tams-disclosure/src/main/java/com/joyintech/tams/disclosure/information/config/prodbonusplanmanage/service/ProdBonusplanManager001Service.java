@@ -362,10 +362,14 @@ public class ProdBonusplanManager001Service extends CommonExportService<ProdBonu
         List<ProdBonusplanDto> newData = new ArrayList<>();
         for (ProdBonusplanDto temp : selectedItem) {
             //数据已存在 【产品编码 相同】，做更新操作。
-            if(StringUtils.isNotEmpty(dto.getProdId())
-                    && StringUtils.isNotEmpty(dto.getBonusMode())
-                    && StringUtils.isNotEmpty(dto.getSettDateStr())){
-                ProdBonusplanDto existDto2 = prodBonusplanManager002Service.selectByCondition(dto);
+            if(StringUtils.isNotEmpty(temp.getProdId())
+                    && StringUtils.isNotEmpty(temp.getBonusMode())
+                    && StringUtils.isNotEmpty(temp.getSettDateStr())){
+                ProdBonusplanDto dto2  = new ProdBonusplanDto();
+                dto2.setProdId(temp.getProdId());
+                dto2.setBonusPlanId(temp.getBonusMode());
+                dto2.setSettDateStr(temp.getSettDateStr());
+                ProdBonusplanDto existDto2 = prodBonusplanManager002Service.selectByCondition(dto2);
                 if(StringUtil.isNotEmpty(existDto2)){
                     //return new AjaxResult("“子产品代码+产品名称+分红方式+收益分配基准日”不得同时与已有数据重复", MessageType.错误消息);
                     temp.setBonusPlanId(existDto2.getBonusPlanId());
