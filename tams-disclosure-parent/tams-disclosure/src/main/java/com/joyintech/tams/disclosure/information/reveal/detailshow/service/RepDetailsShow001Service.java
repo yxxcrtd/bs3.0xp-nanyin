@@ -1,21 +1,22 @@
 package com.joyintech.tams.disclosure.information.reveal.detailshow.service;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.tams.common.base.entity.RepReveal;
+import com.joyintech.tams.disclosure.busicommon.infodisclosure.reportDeal.service.ReportDealService;
+import com.joyintech.tams.disclosure.busicommon.poireport.dto.DisReportType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +75,7 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
 
     @Autowired
     private ReportFileService reportFileService;
-    
+
     /**
      * 日志
      */
@@ -298,7 +299,7 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
 	        } else {  //预览按钮：显示指定产品的实际内容
 	            reportFile = poiReportService.previewReport(params);
 	        }
-	
+
             byte[] bytes = poiReportService.getFileByteArray(reportFile);
             if(bytes != null) {
                 bis = new ByteArrayInputStream(bytes);
@@ -376,9 +377,9 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
                 bis = new ByteArrayInputStream(bytes);
             }
             //String fileNamePdf = poiReportService.buildReportFileName(ReportFileService.REPORT_TYPE_报表文件,reportInfo, params,ReportFileService.FILE_TYPE_PDF);
-            
+
             String fileNamePdf = reportFileService.getReportFileName(reportId,genDate,params,ReportFileService.FILE_TYPE_PDF);
-            
+
             FileOutputStream fos = new FileOutputStream(fileNamePdf);
 //            PoiUtils.docxToPdf(fis,fos);
             PoiUtils.docxToPdf(bis,fos);
@@ -426,18 +427,31 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
         List<ValidMessage> messages = new ArrayList<>();
         RepReveal repReveal = poiReportService.getRepReveal(param);
 
+        if(StringUtil.equals("01",(String)param.get("flag"))){
+            if(reportDealService.checkSameReport(repReveal)){
+                result.setMessage("存在相同的报表,是否继续编辑?", MessageType.确认消息);
+                return result;
+            }
+        }else if(StringUtil.equals("02",(String)param.get("flag"))){
+            if(reportDealService.checkSameReport(repReveal)){
+                result.setMessage("存在相同的报表,是否继续生成?", MessageType.确认消息);
+                return result;
+            }
+        }
+
         if(!reportDealService.selectConfirmStatus(repReveal)){
             //存在已确认的数据
-            messages.add(new ValidMessage("报表已确认！"));
+            messages.add(new ValidMessage("当前信披单据已确认，不支持重新生成"));
+            result.setErrorList(messages);
+            return result;
         }
         //判断数据是否在流程中
         if(reportDealService.ckeckWflStatus(repReveal)){
             messages.add(new ValidMessage("存在流程中的报表！"));
+            result.setErrorList(messages);
+            return result;
         }
 
-        if(!StringUtil.isEmptyList(messages)) {
-            result.setErrorList(messages);
-        }
         return result;
 
     }
@@ -445,7 +459,7 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
     public RepReveal getRepReveal(Map<String, Object> param) {
     	return poiReportService.getRepReveal(param);
     }
-    
+
     /**
      * 一个特殊的方法，用于校验整理前台传入的参数，并进行标准化
      * 命名标准：采用小写开头每个单词大写开头发样式，如endDate
@@ -464,11 +478,11 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
 		params.put("endDate", params.get("endDate")==null?params.get("enddate"):params.get("endDate"));
 		params.put("repName", params.get("repName")==null?params.get("repname"):params.get("repName"));
 		params.put("uri", params.get("uri")==null?params.get("modelid"):params.get("uri"));
-		
+
 		//以下新增参数
 		if ( params.get("endDate")!=null )
 			params.put("reportDate", DateUtil.parse(params.get("endDate").toString()) );
 		params.put("platformDate", commonPlatformDateService.getSysDate());
 	}
-	
+
 }
