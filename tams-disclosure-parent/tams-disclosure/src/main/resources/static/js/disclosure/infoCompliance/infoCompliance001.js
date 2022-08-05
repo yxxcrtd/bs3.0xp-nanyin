@@ -34,7 +34,7 @@
             ,{field:'infoDevStatus', visible:false}
         	,{field:'indexNo', width:120, title: '序号'}
         	,{field:'infoTypeText', width:120, title: '类型'}
-        	,{field:'infoName', width:600, title: '模板/报表名称'}
+        	,{field:'infoName', width:600, title: '报表/模板名称'}
         	//,{field:'approveUser', width:200, title: '当前处理人', sortable:false}
             ,{field:'infoStatusText', width:200, title: '当前状态', sortable:false}
         	,{field:'infoDevStatusText', width:200, title: '开发状态', sortable:false}
@@ -100,7 +100,7 @@
         $('#SysActionLog001_btn_export').click(function() {
             exportExcel();
         });
-        table.load();
+        //table.load();
 
         $('.form-button-area').find('.btn-select-wrapper').attr('style','display:none');
 
