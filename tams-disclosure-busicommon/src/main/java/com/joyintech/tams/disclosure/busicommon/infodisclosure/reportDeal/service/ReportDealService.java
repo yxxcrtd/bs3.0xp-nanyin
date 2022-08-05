@@ -43,6 +43,14 @@ public class ReportDealService {
     	return confirmFlag;
     }
 
+	public boolean checkSameReport(RepReveal repReveal){
+		int size = reportDealMapper.checkSameReport(repReveal);
+		if(size > 0) {
+			return true;
+		}
+		return false;
+	}
+
 	/**
 	 * 查询是否在流程中
 	 * @param repReveal
