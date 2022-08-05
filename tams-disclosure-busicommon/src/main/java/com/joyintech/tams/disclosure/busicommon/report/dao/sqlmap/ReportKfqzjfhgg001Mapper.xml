@@ -70,6 +70,7 @@
 		 LEFT JOIN DIS_PROD_BONUSPLAN PLAN ON PLAN.PROD_ID=INFO.PROD_ID AND PLAN.DATA_STATUS='E' AND PLAN.SETT_DATE=DPP.OPEN_END_DATE
 		WHERE INFO.STATUS='E'
 		  AND INFO.PROD_ID=#{prodId,jdbcType=VARCHAR}
+		ORDER BY DPP.OPEN_END_DATE DESC
 	</select>
 
 	<select id="checkGenerateFlag" resultType="com.joyintech.tams.common.base.entity.DisProdBonusplan">
