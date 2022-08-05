@@ -132,7 +132,36 @@ $(function() {
 					// 修改 客户实际持有天数状态
 					changeHoldDays();
 				}
-
+				if(pageModel == PAGE_MODEL_EDIT){
+					if($('#openStartDate').val() != '' && $('#openStartDate').val() != null
+						&& $('#openEndDate').val() != '' && $('#openEndDate').val() != null
+						&& $('#operationStartDate').val() != '' && $('#operationStartDate').val() != null){
+						if($('#openStartDate').val() < platDate
+							&& $('#openEndDate').val() > platDate
+							&& $('#operationStartDate').val() > platDate){
+							$("#openStartDate").attr("disabled",true);
+						}else if($('#openEndDate').val() < platDate
+							&& $('#operationStartDate').val() > platDate){
+							$("#openStartDate").attr("disabled",true);
+							$("#openEndDate").attr("disabled",true);
+						}else if($('#operationStartDate').val() < platDate){
+							$("#openStartDate").attr("disabled",true);
+							$("#openEndDate").attr("disabled",true);
+							$("#operationStartDate").attr("disabled",true);
+							$("#collingoffPeriod").attr("disabled",true);
+						}
+					}
+					if($('#autoRedeemDate').val() != '' && $('#autoRedeemDate').val() != null){
+						if($('#autoRedeemDate').val() < platDate){
+							$("#openStartDate").attr("disabled",true);
+							$("#openEndDate").attr("disabled",true);
+							$("#operationStartDate").attr("disabled",true);
+							$("#collingoffPeriod").attr("disabled",true);
+							$("#autoRedeemDate").attr("disabled",true);
+							$("#holdDays").attr("disabled",true);
+						}
+					}
+				}
 			});
 
 	}
@@ -154,7 +183,7 @@ $(function() {
 		if (openStartDate && openEndDate){
 			var days = (Date.ofDate(openEndDate) - Date.ofDate(openStartDate))/(24*60*60*1000);
 			if(days<0){
-				Joyin.error(JoyinUtil.getMessage("开放结束日必须小于开放开始日", JoyinUtil.getLabel("DisProdPlanManage002.openEndDate")));
+				Joyin.error(JoyinUtil.getMessage("开放结束日不能小于开放开始日", JoyinUtil.getLabel("DisProdPlanManage002.openEndDate")));
 				$('#openEndDate').val('');
 			}
 		}
@@ -192,6 +221,15 @@ $(function() {
 		}else{ //公募
 			$('#collingoffPeriod').attr("disabled",true);
 		}
+		// if(pageModel == PAGE_MODEL_EDIT){
+		// 	if($('#operationStartDate').val() < platDate){
+		// 		$("#openStartDate").attr("disabled",true);
+		// 		$("#openEndDate").attr("disabled",true);
+		// 		$("#operationStartDate").attr("disabled",true);
+		// 		$("#collingoffPeriod").attr("disabled",true);
+		// 	}
+		// }
+
 	}
 
 	// 修改 运作起始日
@@ -224,18 +262,45 @@ $(function() {
 			}
 			$('#autoRedeemDate').attr("disabled",false);
 		}else{
+			$('#autoRedeemDate').val('');
 			$('#autoRedeemDate').attr("disabled",true);
 		}
+		// if(pageModel == PAGE_MODEL_EDIT){
+		// 	if($('#autoRedeemDate').val() != '' && $('#autoRedeemDate').val() != null){
+		// 		if($('#autoRedeemDate').val() < platDate){
+		// 			$("#openStartDate").attr("disabled",true);
+		// 			$("#openEndDate").attr("disabled",true);
+		// 			$("#operationStartDate").attr("disabled",true);
+		// 			$("#collingoffPeriod").attr("disabled",true);
+		// 			$("#autoRedeemDate").attr("disabled",true);
+		// 			$("#holdDays").attr("disabled",true);
+		// 		}
+		// 	}
+		// }
 	}
 
 	// 修改 客户实际持有天数
 	function changeHoldDays(){
+		debugger;
 		// 当“是否是开放周期型产品”为“是”时必填，否则置灰不可填，且不能小于该条数据的运作起始日
 		if(issuingWay !=null && issuingWay =='01' && isPeriod !=null && isPeriod =='01' ){
 			$('#holdDays').attr("disabled",false);
 		}else{
+			$('#holdDays').val('');
 			$('#holdDays').attr("disabled",true);
 		}
+		// if(pageModel == PAGE_MODEL_EDIT){
+		// 	if($('#autoRedeemDate').val() != '' && $('#autoRedeemDate').val() != null){
+		// 		if($('#autoRedeemDate').val() < platDate){
+		// 			$("#openStartDate").attr("disabled",true);
+		// 			$("#openEndDate").attr("disabled",true);
+		// 			$("#operationStartDate").attr("disabled",true);
+		// 			$("#collingoffPeriod").attr("disabled",true);
+		// 			$("#autoRedeemDate").attr("disabled",true);
+		// 			$("#holdDays").attr("disabled",true);
+		// 		}
+		// 	}
+		// }
 	}
 
 	$('#openStartDate').change(function(){
@@ -276,6 +341,36 @@ $(function() {
 		var finprodId = $('#finprodId').val();
 		if(finprodId !=null && finprodId !='' && finprodId.length>0){
 			finprodIdChange();
+		}
+		if(pageModel == PAGE_MODEL_EDIT){
+			if($('#openStartDate').val() != '' && $('#openStartDate').val() != null
+				&& $('#openEndDate').val() != '' && $('#openEndDate').val() != null
+				&& $('#operationStartDate').val() != '' && $('#operationStartDate').val() != null){
+				if($('#openStartDate').val() < platDate
+					&& $('#openEndDate').val() > platDate
+					&& $('#operationStartDate').val() > platDate){
+					$("#openStartDate").attr("disabled",true);
+				}else if($('#openEndDate').val() < platDate
+					&& $('#operationStartDate').val() > platDate){
+					$("#openStartDate").attr("disabled",true);
+					$("#openEndDate").attr("disabled",true);
+				}else if($('#operationStartDate').val() < platDate){
+					$("#openStartDate").attr("disabled",true);
+					$("#openEndDate").attr("disabled",true);
+					$("#operationStartDate").attr("disabled",true);
+					$("#collingoffPeriod").attr("disabled",true);
+				}
+			}
+			if($('#autoRedeemDate').val() != '' && $('#autoRedeemDate').val() != null){
+				if($('#autoRedeemDate').val() < platDate){
+					$("#openStartDate").attr("disabled",true);
+					$("#openEndDate").attr("disabled",true);
+					$("#operationStartDate").attr("disabled",true);
+					$("#collingoffPeriod").attr("disabled",true);
+					$("#autoRedeemDate").attr("disabled",true);
+					$("#holdDays").attr("disabled",true);
+				}
+			}
 		}
 	});
 });

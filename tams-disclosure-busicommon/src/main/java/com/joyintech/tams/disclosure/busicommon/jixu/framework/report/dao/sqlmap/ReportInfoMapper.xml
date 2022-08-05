@@ -5,7 +5,8 @@
         select
             REP_REPORTINFO.*,
             rep_info.report_name reportName,
-            rep_info.report_category reportCategory
+            rep_info.report_category reportCategory,
+            rep_info.FILE_NAME
         from REP_REPORTINFO  REP_REPORTINFO
         left join rep_info rep_info on REP_REPORTINFO.REPORTID=rep_info.rep_id
         where REPORTID = #{reportID,jdbcType=VARCHAR}

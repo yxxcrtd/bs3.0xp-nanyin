@@ -351,7 +351,7 @@
 	    });
 	   // 配置页面[新建]
 	    var addNew = function(){    	
-	    	Joyin.dialog(JoyinUtil.getLabel('产品排期计划新建'), '/disclosure/information/config/disprodplanmanage/DisProdPlanManage002/init', "60%", "90%",null,
+	    	Joyin.dialog(JoyinUtil.getLabel('产品排期计划新建'), '/disclosure/information/config/disprodplanmanage/DisProdPlanManage002/init', "60%", "90%",{pageModel:PAGE_MODEL_NEW},
 	    			function(result) {
 	    			dataTable.reload();
 	    			dataTable2.reload();

@@ -144,12 +144,27 @@
         PROD_RE object
         FROM
         rep_prod_info
-        <where>
+        where
             STATUS = 'E' AND REP_PROD_TYPE != '03' AND ISSUING_WAY = '01'
             <if test="search != null and search != ''">
                 and (PROD_ID like concat(concat('%',#{search}),'%')
                 or PROD_NAME like concat(concat('%',#{search}),'%'))
             </if>
-        </where>
+            <if test="initValue != null and initValue != ''">
+                and (PROD_ID like concat(concat('%',#{initValue}),'%')
+                or PROD_NAME like concat(concat('%',#{initValue}),'%'))
+            </if>
+
+    </select>
+
+    <select id="checkInfo"
+            resultType="com.joyintech.tams.disclosure.information.config.disprodplanmanage.dto.DisProdPlanManage002Dto">
+        select *
+        from DIS_PROD_PLAN
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+        and OPERATION_START_DATE = #{operationStartDate,jdbcType=DATE}
+        <if test="prodPlanId != null and prodPlanId != ''">
+            and PROD_PLAN_ID != #{prodPlanId,jdbcType=VARCHAR}
+        </if>
     </select>
 </mapper>

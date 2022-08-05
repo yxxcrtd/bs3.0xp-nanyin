@@ -144,7 +144,7 @@
 	<select id="getProdIdList" resultType="com.joyintech.framework.select.SelectOptionDto">
 		select
 		distinct PROD_ID id,
-		PROD_ABBR text
+		PROD_NAME text
 		from
 		REP_PROD_INFO
 		where STATUS='E'

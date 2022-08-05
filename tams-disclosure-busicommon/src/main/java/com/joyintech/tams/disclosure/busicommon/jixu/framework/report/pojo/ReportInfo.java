@@ -19,6 +19,7 @@ public class ReportInfo extends BaseEntity{
 
 	private String reportName;
 	private String reportCategory;
+	private String fileName;
 	
 	
 	public int getId() {
@@ -110,6 +111,12 @@ public class ReportInfo extends BaseEntity{
 	}
 	public void setReportCategory(String reportCategory) {
 		this.reportCategory = reportCategory;
+	}
+	public String getFileName() {
+		return fileName;
+	}
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 	
 }

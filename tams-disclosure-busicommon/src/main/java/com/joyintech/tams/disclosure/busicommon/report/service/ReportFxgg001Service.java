@@ -78,6 +78,7 @@ public class ReportFxgg001Service implements IReportDataService {
         } else {
             dataMap.put("raiseAmt", BigDecimal.ZERO);
         }
+        dataMap.put("enddate",DateUtil.format(setDate));
         return result;
     }
 

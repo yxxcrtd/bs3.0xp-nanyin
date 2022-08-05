@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.reportDeal.service.ReportDealService;
 import com.joyintech.tams.disclosure.busicommon.poireport.dto.DisReportType;
@@ -22,11 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
+import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.intf.DataDict;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.file.SafelyFile;
@@ -36,12 +34,15 @@ import com.joyintech.framework.util.ExportUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.entity.RepJobRange;
+import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.common.util.JacksonUtil;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.disclosure.busicommon.infodisclosure.reportDeal.service.ReportDealService;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.util.RevealDeadLineService;
 import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.dao.ReportInfoMapper;
 import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.ReportInfo;
 import com.joyintech.tams.disclosure.busicommon.poireport.service.PoiReportService;
+import com.joyintech.tams.disclosure.busicommon.poireport.service.ReportFileService;
 import com.joyintech.tams.disclosure.common.common.util.ServiceApplication;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.dao.RepDetailsShow001Mapper;
 import com.joyintech.tams.disclosure.information.reveal.detailshow.dto.ProdInfoDto;
@@ -71,6 +72,9 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
 
     @Autowired
     private ReportDealService reportDealService;
+
+    @Autowired
+    private ReportFileService reportFileService;
 
     /**
      * 日志
@@ -289,34 +293,24 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
 //        FileInputStream fis = null;
         ByteArrayInputStream bis = null;
         try {
-	        if ( params.get("elementIdForLog")==null || !params.get("elementIdForLog").equals("RepDetailsShow001_showDetail") ) {  //树单击：显示模板
-	        	reportFile = poiReportService.genReport(params,PoiReportService.REPORT_TYPE_模板文件,"preview");
-	        } else {  //预览按钮：显示指定产品的实际内容
-	        	//params.put("platformDate", commonPlatformDateService.getSysDate());
-	            reportFile = poiReportService.genReport(params,PoiReportService.REPORT_TYPE_报表文件,"preview");
+	        if ( params.get("elementIdForLog")==null || !params.get("elementIdForLog").equals("RepDetailsShow001_showDetail") ) {  
+	        	//树单击：初始化报表，即报表模板中的变量全部用xxx代替
+	    		String repId = params.get("repId").toString();
+	        	reportFile = poiReportService.initReport(repId);
+	        } else {  //预览按钮：显示指定产品的实际内容，生成了一个临时文件f1
+	            reportFile = poiReportService.previewReport(params);
 	        }
-	
+	        
 	        //将生成的文件作为输入，转换成html后，发送到response
-//	        fis = new FileInputStream(reportFile);
-//	        PoiUtils.docxToHtml(fis,response.getOutputStream(), imagePath);
             byte[] bytes = poiReportService.getFileByteArray(reportFile);
             if(bytes != null) {
                 bis = new ByteArrayInputStream(bytes);
-
-//                PoiUtils.docxToHtml(fis, response.getOutputStream(), imagePath);
-                PoiUtils.docxToHtml(bis,response.getOutputStream(),imagePath);
+	            PoiUtils.docxToHtml(bis,response.getOutputStream(),imagePath);
             }
         } catch (Exception e ) {
         	logger.error("查询数据错误。",e);
             e.printStackTrace();
         } finally {
-//            try {
-//                if ( fis!=null ) {
-//                    fis.close();
-//                }
-//            } catch (IOException e ) {
-//                e.printStackTrace();
-//            }
             if(bis != null){
                 try{
                     bis.close();
@@ -335,7 +329,7 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
      * @author chenxc
      */
     public void genReport(Map<String,Object> params) throws Exception {
-    	poiReportService.genReport(params,PoiReportService.REPORT_TYPE_报表文件,"gen");
+    	poiReportService.genReport(params);
     }
 
     /**
@@ -366,8 +360,9 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
         if (params.get("prodId") != null )
             prodId = params.get("prodId").toString();
 //        String reportFile = poiReportService.buildReportFileName(PoiReportService.REPORT_TYPE_报表文件,reportInfo, params,PoiReportService.FILE_TYPE_DOCX);
-        String reportFile = poiReportService.getRomteFilePath(PoiReportService.REPORT_TYPE_报表文件,reportInfo, params,PoiReportService.FILE_TYPE_DOCX);
-        String localFileName = reportInfo.getReportName()+"_"+prodId+"_" + DateUtil.format(genDate)+PoiReportService.FILE_TYPE_DOCX;
+//        String reportFile = poiReportService.getRomteFilePath(reportInfo, params,ReportFileService.FILE_TYPE_DOCX);
+        String reportFile = reportFileService.getTempOSSReportFileName(reportId, genDate, params, ReportFileService.FILE_TYPE_DOCX);
+        String localFileName = reportInfo.getReportName()+"_"+prodId+"_" + DateUtil.format(genDate)+ReportFileService.FILE_TYPE_DOCX;
 
         if ( "pdf".equals(fileType)) {  //如果导出pdf，则需要先讲word转换成pdf
 //            FileInputStream fis = new FileInputStream(reportFile);
@@ -376,15 +371,19 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
             if(bytes!=null){
                 bis = new ByteArrayInputStream(bytes);
             }
-            String fileNamePdf = poiReportService.buildReportFileName(PoiReportService.REPORT_TYPE_报表文件,reportInfo, params,PoiReportService.FILE_TYPE_PDF);
+            //String fileNamePdf = poiReportService.buildReportFileName(ReportFileService.REPORT_TYPE_报表文件,reportInfo, params,ReportFileService.FILE_TYPE_PDF);
+
+            String fileNamePdf = reportFileService.getReportFileName(reportId,genDate,params,ReportFileService.FILE_TYPE_PDF);
+
             FileOutputStream fos = new FileOutputStream(fileNamePdf);
 //            PoiUtils.docxToPdf(fis,fos);
             PoiUtils.docxToPdf(bis,fos);
             reportFile = fileNamePdf;
-            localFileName = reportInfo.getReportName()+"_"+prodId+"_" +DateUtil.format(genDate)+PoiReportService.FILE_TYPE_PDF;
+            localFileName = reportInfo.getReportName()+"_"+prodId+"_" +DateUtil.format(genDate)+ReportFileService.FILE_TYPE_PDF;
         }else{
-           String  localReportFile = poiReportService.buildReportFileName(PoiReportService.REPORT_TYPE_报表文件,reportInfo, params,PoiReportService.FILE_TYPE_DOCX);
-           FileOutputStream fos = null;
+           //String  localReportFile = poiReportService.buildReportFileName(ReportFileService.REPORT_TYPE_报表文件,reportInfo, params,ReportFileService.FILE_TYPE_DOCX);
+        	String  localReportFile = reportFileService.getReportFileName(reportId,genDate,params,ReportFileService.FILE_TYPE_DOCX);
+        	FileOutputStream fos = null;
            byte[] bytes = poiReportService.getFileByteArray(reportFile);
            if(bytes !=null){
                try{
@@ -423,18 +422,31 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
         List<ValidMessage> messages = new ArrayList<>();
         RepReveal repReveal = poiReportService.getRepReveal(param);
 
+        if(StringUtil.equals("01",(String)param.get("flag"))){
+            if(reportDealService.checkSameReport(repReveal)){
+                result.setMessage("存在相同的报表,是否继续编辑?", MessageType.确认消息);
+                return result;
+            }
+        }else if(StringUtil.equals("02",(String)param.get("flag"))){
+            if(reportDealService.checkSameReport(repReveal)){
+                result.setMessage("存在相同的报表,是否继续生成?", MessageType.确认消息);
+                return result;
+            }
+        }
+
         if(!reportDealService.selectConfirmStatus(repReveal)){
             //存在已确认的数据
-            messages.add(new ValidMessage("报表已确认！"));
+            messages.add(new ValidMessage("当前信披单据已确认，不支持重新生成"));
+            result.setErrorList(messages);
+            return result;
         }
         //判断数据是否在流程中
         if(reportDealService.ckeckWflStatus(repReveal)){
             messages.add(new ValidMessage("存在流程中的报表！"));
+            result.setErrorList(messages);
+            return result;
         }
 
-        if(!StringUtil.isEmptyList(messages)) {
-            result.setErrorList(messages);
-        }
         return result;
 
     }
@@ -442,4 +454,30 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
     public RepReveal getRepReveal(Map<String, Object> param) {
     	return poiReportService.getRepReveal(param);
     }
+
+    /**
+     * 一个特殊的方法，用于校验整理前台传入的参数，并进行标准化
+     * 命名标准：采用小写开头每个单词大写开头发样式，如endDate
+     * 类型标准：传入的参数全部是string类型，新增的变量按照实际需要进行类型转换
+     * @param params
+     */
+	public void collateParams(Map<String,Object> params) {
+		//如下传入参数标准化
+		params.put("modelId", params.get("modelId")==null?params.get("modelid"):params.get("modelId"));
+		params.put("pprodId", params.get("pprodId")==null?params.get("pprodid"):params.get("pprodId"));
+		params.put("prodId", params.get("prodId")==null?params.get("prodid"):params.get("prodId"));
+		params.put("prodId", params.get("prodId")==null?params.get("pprodid"):params.get("prodId"));
+		params.put("prodName", params.get("prodName")==null?params.get("prodname"):params.get("prodName"));
+		params.put("repId", params.get("repId")==null?params.get("repid"):params.get("repId"));
+		params.put("reportId", params.get("reportId")==null?params.get("repid"):params.get("reportId"));
+		params.put("endDate", params.get("endDate")==null?params.get("enddate"):params.get("endDate"));
+		params.put("repName", params.get("repName")==null?params.get("repname"):params.get("repName"));
+		params.put("uri", params.get("uri")==null?params.get("modelid"):params.get("uri"));
+
+		//以下新增参数
+		if ( params.get("endDate")!=null )
+			params.put("reportDate", DateUtil.parse(params.get("endDate").toString()) );
+		params.put("platformDate", commonPlatformDateService.getSysDate());
+	}
+
 }

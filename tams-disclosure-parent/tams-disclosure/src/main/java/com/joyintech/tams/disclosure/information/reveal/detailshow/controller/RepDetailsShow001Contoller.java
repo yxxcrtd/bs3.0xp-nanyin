@@ -314,12 +314,12 @@ public class RepDetailsShow001Contoller extends BaseController {
 	@RequestMapping(value="/previewReport", method = RequestMethod.POST)
 	public void previewReport(HttpServletRequest request, HttpServletResponse response) {
 		Map<String,Object> params = RequestUtil.getPageParam();
-		doParams(params);
+		repDetailsShow001Service.collateParams(params);
 		repDetailsShow001Service.previewReport(params,response);
 	}
 
 	/**
-	 * 生成报表：（1）生成服务器文件，如果有就覆盖，（2）创建生成报表的工作流
+	 * 生成报表：（1）根据预览或者编辑生成的文件，生成正式的待确认的文件，（2）创建生成报表确认数据；
 	 * @return
 	 */
 	@RequestMapping("/genReport")
@@ -329,18 +329,9 @@ public class RepDetailsShow001Contoller extends BaseController {
         try {
         	//对参数进行修正，防止前台传入的参数错误或者变量大小写错误
         	Map<String,Object> params = RequestUtil.getPageParam();
-    		doParams(params);
+        	repDetailsShow001Service.collateParams(params);
 
-        	boolean flag = false;
         	boolean confirmFlag = true;
-//        	RepReveal repReveal = new RepReveal();
-//			String prodId = "";
-//			if (params.get("pprodid")!=null )
-//				prodId = params.get("pprodid").toString();
-//        	if(params.get("repid") != null) {
-//        		repReveal.setRepId(params.get("repid").toString());
-//        	}
-//			repReveal.setProdid(prodId);
         	RepReveal repReveal = repDetailsShow001Service.getRepReveal(params);
 			confirmFlag = reportDealService.selectConfirmStatus(repReveal);  
     		if(confirmFlag == true) {  //检查通过：不存在相同的已确认的报告
@@ -369,8 +360,7 @@ public class RepDetailsShow001Contoller extends BaseController {
     @RequestMapping("mergeExport")
     public ResponseEntity<byte[]> mergeExport() throws IOException {
     	Map<String,Object> params = RequestUtil.getPageParam();
-		doParams(params);
-
+    	repDetailsShow001Service.collateParams(params);
         return repDetailsShow001Service.exportReport(params);
     }
 
@@ -464,22 +454,6 @@ public class RepDetailsShow001Contoller extends BaseController {
 	@RequestMapping("check")
 	public AjaxResult check(@RequestBody Map<String, Object> param) {
 		return repDetailsShow001Service.check(param);
-	}
-
-	public void doParams(Map<String,Object> params) {
-		params.put("modelId", params.get("modelId")==null?params.get("modelid"):params.get("modelId"));
-		params.put("pprodId", params.get("pprodId")==null?params.get("pprodid"):params.get("pprodId"));
-		params.put("prodId", params.get("prodId")==null?params.get("prodid"):params.get("prodId"));
-		params.put("prodId", params.get("prodId")==null?params.get("pprodid"):params.get("prodId"));
-		params.put("prodName", params.get("prodName")==null?params.get("prodname"):params.get("prodName"));
-		params.put("repId", params.get("repId")==null?params.get("repid"):params.get("repId"));
-		params.put("reportId", params.get("reportId")==null?params.get("repid"):params.get("reportId"));
-		params.put("endDate", params.get("endDate")==null?params.get("enddate"):params.get("endDate"));
-		params.put("repName", params.get("repName")==null?params.get("repname"):params.get("repName"));
-		params.put("endDate", params.get("endDate")==null?params.get("enddate"):params.get("endDate"));
-		params.put("reportDate", params.get("reportDate")==null?params.get("endDate"):params.get("reportDate"));
-		params.put("uri", params.get("uri")==null?params.get("modelid"):params.get("uri"));
-		params.put("platformDate", params.get("platformDate")==null? DateUtil.format(commonPlatformDateService.getSysDate()):params.get("platformDate"));
 	}
 	
 }

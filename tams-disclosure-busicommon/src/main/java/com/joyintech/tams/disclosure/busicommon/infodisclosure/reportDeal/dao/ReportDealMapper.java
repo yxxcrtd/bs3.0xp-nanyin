@@ -40,4 +40,6 @@ public interface ReportDealMapper {
 
    int ckeckWflStatus(RepReveal repReveal);
 
+   int checkSameReport(RepReveal repReveal);
+
 }

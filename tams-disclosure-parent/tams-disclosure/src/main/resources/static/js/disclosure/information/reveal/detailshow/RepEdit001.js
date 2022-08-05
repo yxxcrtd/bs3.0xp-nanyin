@@ -5,6 +5,8 @@ $(function () {
 	var docH= $(document).height(); 
 	var tabHeadUlH=100;
 	var defaultDateStyle = 'yyyy-MM-dd';
+	var webRoot=document.location.href;
+	webRoot=webroot.substring(0,webroot.indexOf('index.html'));				
 	var ids = new Array();
 
 	//设置模板的调用参数
@@ -19,12 +21,12 @@ $(function () {
 
 	var currFilename;
 
-    //预览报表信息
+    //预览报表信息，用插件编辑器打开word文档，本项目是用html打开，没有用到这个方法
     var showDetail = function(params){
         Joyin.ajax('previewReport', {uri:modelId}, function(result) {
             if ( result ) {
                 //layer.alert(result);
-                WebOfficeObj.ServerUrl = "http://localhost:8081/tamsyy" //服务器地址
+                WebOfficeObj.ServerUrl = webRoot //服务器地址
                 WebOfficeObj.ShowMenu = 0;
                 WebOfficeObj.ShowToolBar = 0;
                 SetGraySkin();			//设置控件皮肤
@@ -42,7 +44,7 @@ $(function () {
 
     //保存文件
     var saveReport = function(params){
-        WebOfficeObj.ServerUrl = "http://localhost:8081/tamsyy"
+        WebOfficeObj.ServerUrl = webRoot
         WebOfficeObj.FileName = "产品说明书.docx";
         WebOfficeObj.FileType = ".docx";
         WebOfficeObj.SaveServlet = "/disclosure/information/reveal/detailshow/RepEdit001/doWebOffice";

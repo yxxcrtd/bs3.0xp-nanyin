@@ -374,41 +374,9 @@
 										   Joyin.error(checkResult.data.errorMsg);
 										   return;
 									   }
-									   if (checkResult.data.confirmMsg) {
-										   Joyin.confirm(checkResult.data.confirmMsg, function () {
-											   var data = {
-												   tempList: checkResult.data.correctData
-											   }
-											   Joyin.ajaxJson(basePath + 'disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager001/importFile', data,
-												   function (resultObj) {
-													   if (resultObj.statuCode.toString() === '200') {
-														   /** modify by yanya on 20210329 修正导入逻辑**/
-														   //Joyin.alert("文件导入成功！");
-														   dataTable.reload();
-														   dataTable2.reload();
-														   return;
-													   }
-												   });
-										   },{}, function () {
-											   layui.layer.closeAll()
-											   dataTable.reload();
-											   dataTable2.reload();
-										   });
-									   }else {
-										   var data = {
-											   tempList: checkResult.data.correctData
-										   }
-										   Joyin.ajaxJson(basePath + 'disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager001/importFile', data,
-											   function (resultObj) {
-												   if (resultObj.statuCode.toString() === '200') {
-													   /** modify by yanya on 20210329 修正导入逻辑**/
-													   //Joyin.alert("文件导入成功！");
-													   dataTable.reload();
-													   dataTable2.reload();
-													   return;
-												   }
-											   });
-									   }
+										// confirmMsg校验--> confirmMsg2校验-->提交  ,三层嵌套
+									   confirmMsg2ImportExcel(checkResult);
+
 								   }
 								   ,1000);
 						   }
@@ -418,6 +386,54 @@
 				   });
 			   });
 		   });
+
+
+		   // 导入 confirmMsg 校验
+		   function confirmMsgImportExcel(checkResult){
+			   if (checkResult.data.confirmMsg) {
+				   Joyin.confirm(checkResult.data.confirmMsg, function () {
+					   confirmMsg2ImportExcel(checkResult)
+				   },{}, function () {
+					   layui.layer.closeAll();
+					   dataTable.reload();
+					   dataTable2.reload();
+				   });
+			   }else {
+				   confirmMsg2ImportExcel(checkResult);
+			   }
+		   }
+
+		   // 导入 confirmMsg2 校验 数据重复校验
+		   function confirmMsg2ImportExcel(checkResult){
+			   if (checkResult.data.confirmMsg2) {
+				   Joyin.confirm(checkResult.data.confirmMsg2, function () {
+					   commitImportExcel(checkResult);
+				   }, {}, function () {
+					   layui.layer.closeAll();
+					   dataTable.reload();
+					   dataTable2.reload();
+				   });
+			   }else{
+				   commitImportExcel(checkResult);
+			   }
+		   }
+
+		   // 提交导入方法
+		   function commitImportExcel(checkResult){
+			   var data = {
+				   tempList: checkResult.data.correctData
+			   }
+			   Joyin.ajaxJson(basePath + 'disclosure/information/config/prodbonusplanmanage/ProdBonusplanManager001/importFile', data,
+				   function (resultObj) {
+					   if (resultObj.statuCode.toString() === '200') {
+						   /** modify by yanya on 20210329 修正导入逻辑**/
+						   //Joyin.alert("文件导入成功！");
+						   dataTable.reload();
+						   dataTable2.reload();
+						   return;
+					   }
+				   });
+		   };
     	   
 
 	   });
