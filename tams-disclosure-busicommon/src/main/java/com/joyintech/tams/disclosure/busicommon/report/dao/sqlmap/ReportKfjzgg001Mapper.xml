@@ -29,19 +29,21 @@
 	</select>
 
 	<select id="getOpenList"  resultType="com.joyintech.tams.disclosure.busicommon.report.dto.ReportOpenPlanDto">
-		SELECT
-			TO_CHAR(DPP.OPEN_START_DATE,'YYYY-MM-DD') openStartDate
-		    ,TO_CHAR(DPP.OPEN_START_DATE,'YYYY-MM-DD')||'至'||TO_CHAR(DPP.OPEN_END_DATE,'YYYY-MM-DD') openDurationDate
-			,TO_CHAR(DPP.OPEN_END_DATE,'YYYY-MM-DD')  openEndDate
-			,TO_CHAR(DPP.COLLINGOFF_PERIOD,'YYYY-MM-DD')    collingoffPeriod
-			,TO_CHAR(DPP.OPEN_END_DATE+1,'YYYY-MM-DD')  settDate
-		FROM
-			REP_PROD_INFO INFO
-			INNER JOIN DIS_PROD_PLAN DPP ON DPP.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID) AND DPP.OPEN_END_DATE > TO_DATE(#{openEndDateStr},'yyyy-MM-dd')
-			WHERE
-				INFO.STATUS = 'E'
-			AND INFO.PROD_ID = #{prodId,jdbcType=VARCHAR}
-		ORDER BY DPP.OPERATION_START_DATE
+		SELECT * FROM (
+			SELECT
+				TO_CHAR(DPP.OPEN_START_DATE,'YYYY-MM-DD') openStartDate
+				,TO_CHAR(DPP.OPEN_START_DATE,'YYYY-MM-DD')||'至'||TO_CHAR(DPP.OPEN_END_DATE,'YYYY-MM-DD') openDurationDate
+				,TO_CHAR(DPP.OPEN_END_DATE,'YYYY-MM-DD')  openEndDate
+				,TO_CHAR(DPP.COLLINGOFF_PERIOD,'YYYY-MM-DD')    collingoffPeriod
+				,TO_CHAR(DPP.OPEN_END_DATE+1,'YYYY-MM-DD')  settDate
+			FROM
+				REP_PROD_INFO INFO
+				INNER JOIN DIS_PROD_PLAN DPP ON DPP.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID) AND DPP.OPEN_END_DATE > TO_DATE(#{openEndDateStr},'yyyy-MM-dd')
+				WHERE
+					INFO.STATUS = 'E'
+				AND INFO.PROD_ID = #{prodId,jdbcType=VARCHAR}
+			ORDER BY DPP.OPERATION_START_DATE
+		  ) WHERE ROWNUM = 1
 	</select>
 
 	<select id="getOpenHisList" resultType="com.joyintech.tams.disclosure.busicommon.report.dto.ReportOpenPlanDto">
