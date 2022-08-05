@@ -490,17 +490,17 @@ public class ProdInfoService extends CommonExportService<ProdInfoDto> implements
 
                     if (StringUtils.equals(DictCodeListExt1.是或否_是.getCodeName(), rowData.get(21))
                             && StringUtils.equals(rowData.get(0), rowData.get(8))) {
-                        return new AjaxResult("分级产品，子产品代码和产品主代码不能一样", MessageType.错误消息);
+                        errorMsg.append("分级产品，子产品代码和产品主代码不能一样");
                     }
                     if (StringUtils.equals(DictCodeListExt1.是或否_否.getCodeName(), rowData.get(21))){
                         /*if (!StringUtils.equals(rowData.get(0), rowData.get(8))) {
                             return new AjaxResult("非分级产品，子产品代码和产品主代码需要一致", MessageType.错误消息);
                         }*/
                         if (!StringUtils.equals(rowData.get(1), rowData.get(5))) {
-                            return new AjaxResult("非分级产品，子产品名称和产品名称需要一致", MessageType.错误消息);
+                            errorMsg.append("非分级产品，子产品名称和产品名称需要一致");
                         }
                         if (!StringUtils.equals(rowData.get(2), rowData.get(12))) {
-                            return new AjaxResult("非分级产品，子产品成立日期和产品成立日期需要一致", MessageType.错误消息);
+                            errorMsg.append("非分级产品，子产品成立日期和产品成立日期需要一致");
                         }
                     }
 
