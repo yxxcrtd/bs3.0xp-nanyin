@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.joyintech.tams.common.oss.service.FileRemoteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,8 @@ import com.joyintech.tams.disclosure.busicommon.common.util.ReportGlobalConstant
 import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.dao.ReportInfoMapper;
 import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.ReportInfo;
 import com.joyintech.tams.systemtools.service.CommonPlatformDateService;
+
+import javax.annotation.Resource;
 
 /**
  * poi报表生成的文件命名服务<br>
@@ -40,6 +43,8 @@ public class ReportFileService {
 	@Autowired
 	private CommonPlatformDateService commonPlatformDateService;
 
+	@Resource
+	private FileRemoteService minioFileRemoteService;
 	/**
 	 * 日志
 	 */
@@ -51,6 +56,8 @@ public class ReportFileService {
 
 	public final static String FILE_TYPE_DOCX = ".docx";
 	public final static String FILE_TYPE_PDF = ".pdf";
+	//OSS专用文件夹分隔符
+	public final static String SEPARATOR = "/";
 
 	/**
 	 * 获取报表的模板文件
@@ -77,13 +84,45 @@ public class ReportFileService {
 		}
 		return templateFile;
 	}
-	
+	/**
+	 * @Author ZY22350
+	 * @Description //获取正式报表文件OSS文件名-单纯获取文件名，而非上传文件，切记
+	 * @Date 10:51 2022/8/5
+	 * @Param [repId, genDate, params, fileType]
+	 * @return java.lang.String
+	 **/
 	public String getOSSReportFileName(String repId,Date genDate,Map<String,Object> params,String fileType) {
-		return getSimpleReportFileName(repId,genDate,params,fileType);
+		return minioFileRemoteService.getRemoteFilePathName(getSimpleReportFileName(repId,genDate,params,fileType));
 	}
-	
+	/**
+	 * @Author Administrator
+	 * @Description //获取报表文件OSS临时文件名-单纯获取文件名，而非上传文件，切记
+	 * @Date 10:50 2022/8/5
+	 * @Param [repId, genDate, params, fileType]
+	 * @return java.lang.String
+	 **/
 	public String getTempOSSReportFileName(String repId,Date genDate,Map<String,Object> params,String fileType) {
-		return getSimpleReportFileName(repId,genDate,params,fileType);
+		return minioFileRemoteService.getRemoteFilePathName(getTempSimpleReportFileName(repId,genDate,params,fileType));
+	}
+	/**
+	 * @Author ZY22350
+	 * @Description //获取临时文件相对路径
+	 * @Date 10:48 2022/8/5
+	 * @Param
+	 * @return temp/2022-08-05/A2002xxxx.docx
+	 **/
+	private String getTempSimpleReportFileName(String repId,Date genDate,Map<String,Object> params,String fileType){
+		String prefix = "temp";
+		String tempFilePathName = "";
+		String simpleFileName = getSimpleReportFileName(repId,genDate,params,fileType);
+		if(StringUtil.isBlank(simpleFileName)){
+			throw new NullPointerException("获取文件名为空");
+		}
+		tempFilePathName = simpleFileName.startsWith(SEPARATOR) ?prefix + simpleFileName:prefix + SEPARATOR + simpleFileName;
+		if(logger.isDebugEnabled())
+			logger.debug("生成临时文件相对路径为:{}",tempFilePathName);
+
+		return tempFilePathName;
 	}
 	
 	/**
@@ -94,8 +133,7 @@ public class ReportFileService {
 	 * @param fileType,.docx,.pdf
 	 * @return eg:/2022-08-22/A001产品发行公告.docx
 	 */
-    private String getSimpleReportFileName(String repId,Date genDate,Map<String,Object> params,String fileType) {
-    	String reportPath = "";//  CacheUtil.getSysParam(ReportGlobalConstant.REPORT_FILE_PATH);
+    public String getSimpleReportFileName(String repId,Date genDate,Map<String,Object> params,String fileType) {
 
 		ReportInfo reportInfo = null;
 		try {
@@ -114,9 +152,8 @@ public class ReportFileService {
     	String filename = replacePara(reportInfo.getFileName(),params);
     	
    		StringBuffer sb = new StringBuffer();
-		sb.append(reportPath);
 		sb.append(dirname);
-		sb.append("/");
+		sb.append(SEPARATOR);
 		sb.append(filename);
 		sb.append(fileType);
 		return sb.toString();
