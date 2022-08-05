@@ -655,7 +655,7 @@ $(function () {
     
     	params['repid'] = repId;
     	params['uri'] = modelId;
-
+		params['flag']="01";
 		//编辑之前需要判断改报表是否已确认或者在流程中
 
 		Joyin.ajaxJson(basePath + 'disclosure/information/reveal/detailshow/RepDetailsShow001/check',params, function(result) {
@@ -720,7 +720,9 @@ $(function () {
 	            params['repid'] = repId;
 	            params['repname'] = repName;
 	            params['prodname'] = proName;
-	            Joyin.ajax('querySameCount',params,function(){
+				params['uri'] = modelId;
+				params['flag']="02";
+				Joyin.ajaxJson(basePath + 'disclosure/information/reveal/detailshow/RepDetailsShow001/check',params, function(result) {
 	            	params['operateType'] = "01";
 	            	Joyin.ajax('genReport',
 	                		params,

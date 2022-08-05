@@ -108,6 +108,7 @@ public class Report1Cpnfl001Service implements IReportDataService {
             });
             dataMap.put("feelist", feelist);
         }
+        dataMap.put("enddate",pubDateStr);
         return result;
     }
 

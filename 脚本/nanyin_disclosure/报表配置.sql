@@ -496,7 +496,7 @@ insert into REP_JOB values ('100000020','到期公告（公募）','01','0 0 5 *
 insert into REP_JOB values ('100000021','到期报告（私募）','01','0 0 5 * * ? *','每年每月每日5时0分','2022-07-23','','D0000000000000000021','system','',to_date('2022/07/23','yyyy/MM/dd'),'system',to_date('2022/07/23','yyyy/MM/dd'),'Y');
 insert into REP_JOB values ('100000022','清算报告','01','0 0 5 * * ? *','每年每月每日5时0分','2022-07-23','','D0000000000000000022','system','',to_date('2022/07/23','yyyy/MM/dd'),'system',to_date('2022/07/23','yyyy/MM/dd'),'Y');
 insert into REP_JOB values ('100000023','分红计算清单','01','0 0 5 * * ? *','每年每月每日5时0分','2022-07-23','','D0000000000000000023','system','',to_date('2022/07/23','yyyy/MM/dd'),'system',to_date('2022/07/23','yyyy/MM/dd'),'Y');
-insert into REP_JOB values ('100000024','代理销售机构名单公告','01','0 0 5 * * ? *','每年每月每日5时0分','2022-07-23','','D0000000000000000024','system','',to_date('2022/07/23','yyyy/MM/dd'),'system',to_date('2022/07/23','yyyy/MM/dd'),'Y');
+insert into REP_JOB values ('100000024','代理销售机构名单公告','01','0 0 5 * * ? *','每年每月每日5时0分','2022-07-23','','D0000000000000000024','system','',to_date('2022/07/23','yyyy/MM/dd'),'system',to_date('2022/07/23','yyyy/MM/dd'),'N');
 
 -- 校验
 

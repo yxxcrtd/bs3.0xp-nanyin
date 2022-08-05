@@ -47,6 +47,7 @@
 			from dis_prod_feediscount t
 			where t.prod_discount_id = #{feename,jdbcType=VARCHAR})
 		and rpi.status = 'E'
+		and rpi.raise_type = #{raiseType,jdbcType=VARCHAR})
 		<if test="prodlist != null and prodlist.size() > 0">
 			AND rpi.prod_id in
 			<foreach collection="prodlist" item="item" open="(" close=")" separator=",">
