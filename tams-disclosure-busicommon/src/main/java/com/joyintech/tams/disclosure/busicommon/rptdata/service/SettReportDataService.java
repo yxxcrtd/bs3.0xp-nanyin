@@ -255,7 +255,7 @@ public class SettReportDataService implements IReportDataService {
 		
 		Date eDate = new Date();
 		if ( paraMap.get("platformDate") != null ) {
-			eDate = holidayService.getPreWorkDate(DateUtil.parse(paraMap.get("platformDate").toString()) );
+			eDate = holidayService.getPreWorkDate((Date)paraMap.get("platformDate"));
 		}
 		repReveal.setEndDate(eDate);
 		return repReveal;
