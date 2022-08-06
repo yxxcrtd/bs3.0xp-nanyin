@@ -101,6 +101,11 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                 if(generateFlag){
                     //根据产品代码查询产品信息
                     ReportCommonProdDto reportCommonProdDto = reportKfqzjfhgg001Mapper.getProdInfo(searchParam);
+                    //设置产品成立日
+                    if(reportCommonProdDto.getSetDate() != null){
+                        reportKfqzjfhgg001Dto.setSetDateT(DateUtil.format(reportCommonProdDto.getSetDate(), DateUtil.ABB_DATE_FORMAT_CN));
+                        searchParam.put("setDate",reportCommonProdDto.getSetDate());
+                    }
                     //查询后续开放计划  根据产品排期表，展示“申购/赎回确认日”大于当前收益分配基准日的下一个开放周期的信息；若当前已处于最后一个产品周期，则正常生成表格，表格内容置空，由业务老师手工调整
                     List<ReportOpenPlanDto> openPlanList = reportKfqzjfhgg001Mapper.getOpenPlanList(searchParam);
                     //查询“申购/赎回确认日”小于等于当前收益分配基准日的过去所有历史数据
@@ -115,8 +120,6 @@ public class ReportKfqzjfhgg001Service implements IReportDataService {
                     reportKfqzjfhgg001Dto.setRegCode(reportCommonProdDto.getRegCode());
                     //内部销售代码
                     reportKfqzjfhgg001Dto.setProdId(reportCommonProdDto.getProdId());
-                    //成立日
-                    reportKfqzjfhgg001Dto.setSetDateT(DateUtil.format(reportCommonProdDto.getSetDate(),DateUtil.ABB_DATE_FORMAT_CN));
                     //历史净值及分红信息
                     if(list != null && list.size()>0){
                         ReportKfqHisBonusDto reportKfqHisBonusDto = list.get(0);

@@ -59,6 +59,9 @@
 		FROM
 			REP_PROD_INFO INFO
 			INNER JOIN DIS_PROD_PLAN DPP ON DPP.PROD_ID = NVL(INFO.P_PROD_ID,INFO.PROD_ID) AND  DPP.OPERATION_START_DATE &lt;= TO_DATE(#{announceDate},'yyyy-MM-dd')
+			<if test="setDate != null">
+				AND DPP.OPERATION_START_DATE > #{setDate}
+			</if>
 			/*
 				查询根据自动赎回日查询超额业绩报酬
 			*/

@@ -443,6 +443,18 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
             return result;
         }
 
+        if(StringUtil.equals("01",(String)param.get("flag"))){
+            if(reportDealService.checkSameReport(repReveal)){
+                result.setMessage("存在相同的报表,是否继续编辑?", MessageType.确认消息);
+                return result;
+            }
+        }else if(StringUtil.equals("02",(String)param.get("flag"))){
+            if(reportDealService.checkSameReport(repReveal)){
+                result.setMessage("存在相同的报表,是否继续生成?", MessageType.确认消息);
+                return result;
+            }
+        }
+
         return result;
 
     }

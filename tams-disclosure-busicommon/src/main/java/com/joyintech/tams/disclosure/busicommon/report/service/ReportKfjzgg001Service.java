@@ -86,6 +86,8 @@ public class ReportKfjzgg001Service implements IReportDataService {
                     reportKfjzgg001Dto = reportKfjzgg001Mapper.getProdInfo(searchparam);
                     if(reportKfjzgg001Dto.getSetDate() != null){
                         reportKfjzgg001Dto.setSetDateT(DateUtil.format(reportKfjzgg001Dto.getSetDate(),DateUtil.DEFAULT_DATE_FORMAT_CN));
+                        //需要增加产品成立日的过滤条件（子产品在没成立前查不到母产品历史净值数据）
+                        searchparam.put("setDate",reportKfjzgg001Dto.getSetDate());
                     }
                     //查询后续申购赎回安排：根据产品排期表，展示“申购/赎回确认日”大于当前开放结束日的下一个开放周期的信息；
                     // 若当前已是产品的最后一个开放周期，后续没一个开放周期了，则正常生成表格，表格内容置空，由业务老师手工调整
@@ -106,7 +108,7 @@ public class ReportKfjzgg001Service implements IReportDataService {
                     List<ReportOpenPlanDto> openHisList = reportKfjzgg001Mapper.getOpenHisList(searchparam);
                     int times = 0;
                     String timesStr = "";
-                    if (openHisList != null) {
+                    if (openHisList != null && openHisList.size()>0) {
                         //当前净值数据
                         ReportOpenPlanDto curOpenPlanDto = openHisList.get(0);
                         //如果是私募的话，只展示当前数据
