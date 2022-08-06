@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.tams.common.oss.service.FileRemoteService;
 import org.apache.commons.io.FileUtils;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
@@ -86,6 +87,8 @@ public class ReportConfirmManage003Contoller extends BaseController {
 	
 	@Autowired
     private JoyinDFSTemplate joyinDFSTemplate;
+	@Autowired
+	private FileRemoteService minioFileRemoteService;
 	
 	/**
      * 进度条组件
@@ -232,16 +235,20 @@ public class ReportConfirmManage003Contoller extends BaseController {
 					}
 					String localFileName = getLocalFileName(listFileName.get(i));
 					File file = new SafelyFile(localFileName);
-					String uploadFilePath = dealUploadFilePath(localFileName);
+//					String uploadFilePath = dealUploadFilePath(localFileName);
+					String uploadFilePath = dealUploadFileOssPath(localFileName);
 					File localFile = new SafelyFile(uploadFilePath);
 					//读取、写入文件
 					FileInputStream fis = null;
-					FileOutputStream fos = null;
+//					FileOutputStream fos = null;
+					String fileno = IDGenerator.generate();
+					UploadFile uploadFile = new UploadFile(localFileName,fileno,localFile);
 					try {
 						 fis = new FileInputStream(listFileName.get(i));
-						 fos = new FileOutputStream(uploadFilePath);
+//						 fos = new FileOutputStream(uploadFilePath);
+						 uploadFile = minioFileRemoteService.uploadFile(uploadFile,fis);
 //            		copyFile(file.getInputStream(), new FileOutputStream(localFile), file.getSize(), pageId);		
-						copyFile(fis, fos, file.length(), pageId);		
+//						copyFile(fis, fos, file.length(), pageId);
 					} finally {
 						try {
 							if(fis!=null)
@@ -249,10 +256,10 @@ public class ReportConfirmManage003Contoller extends BaseController {
 								fis.close();
 							}
 
-							if(fos!=null)
-							{
-								fos.close();
-							}
+//							if(fos!=null)
+//							{
+//								fos.close();
+//							}
 
 						}
 						catch (Exception e)
@@ -262,26 +269,27 @@ public class ReportConfirmManage003Contoller extends BaseController {
 
 					}
 					
-					String  uuid = IDGenerator.generate();
-					
-					UploadFile uploadFile = new UploadFile(localFileName,uuid,localFile);
-					uploadFile.setFileName(localFile.getPath());
-					//存入SYS_UPLOAD_FILE_INFO表
-					if(null != fileAttachmentProcess) {
-						fileAttachmentProcess.upload(uploadFile);
-					}
-					
-					//add by leipeng 上传文件处理
-			        SysUploadFileInfo sysUploadFileInfo = new SysUploadFileInfo();
-			        sysUploadFileInfo.setSeqNo(uploadFile.getFileNo());
-			        sysUploadFileInfo.setFileName(FileNameUtil.formatFileName(uploadFile.getTargetFile().getName()));
-			        sysUploadFileInfo.setPath(uploadFile.getTargetFile().getPath());
-			        joyinDFSTemplate.upload(sysUploadFileInfo);
-					
+//					String  uuid = IDGenerator.generate();
+//
+//					UploadFile uploadFile = new UploadFile(localFileName,uuid,localFile);
+//					uploadFile.setFileName(localFile.getPath());
+//					//存入SYS_UPLOAD_FILE_INFO表
+//					if(null != fileAttachmentProcess) {
+//						fileAttachmentProcess.upload(uploadFile);
+//					}
+//
+//					//add by leipeng 上传文件处理
+//			        SysUploadFileInfo sysUploadFileInfo = new SysUploadFileInfo();
+//			        sysUploadFileInfo.setSeqNo(uploadFile.getFileNo());
+//			        sysUploadFileInfo.setFileName(FileNameUtil.formatFileName(uploadFile.getTargetFile().getName()));
+//			        sysUploadFileInfo.setPath(uploadFile.getTargetFile().getPath());
+//			        joyinDFSTemplate.upload(sysUploadFileInfo);
+//
 					//更新数据库中信息
 					RepReveal repReveal1= updateRepRevealInfo(arr);
 					RepReveal repReveal = new RepReveal();
-					repReveal.setFilepath(uuid);
+//					repReveal.setFilepath(uuid);
+					repReveal.setFilepath(fileno);
 					repReveal.setFilename(localFileName);
 					repReveal.setTime(DateUtil.parse(DateUtil.getCurrentDate()));
 					repReveal.setProdid(repReveal1.getProdid());
@@ -312,6 +320,17 @@ public class ReportConfirmManage003Contoller extends BaseController {
 		}
         value.setErrorList(checkList);
 		return value;
+	}
+	/**
+	 * @Author ZY22350
+	 * @Description //去掉本地上传路径信息
+	 * @Date 15:09 2022/8/6
+	 * @Param [fileName]
+	 * @return java.lang.String
+	 **/
+	private String dealUploadFileOssPath(String fileName){
+		String fileAllPath = dealUploadFilePath(fileName);
+		return fileAllPath.replace(CacheUtil.getSysParam(GlobalConstant.COM_PROP_UPLOAD_PATH),"");
 	}
 	
 	/**
