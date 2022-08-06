@@ -487,6 +487,9 @@ public class RepDetailsShow001Service extends CommonExportService<RepDetailsShow
 		if ( params.get("endDate")!=null )
 			params.put("reportDate", DateUtil.parse(params.get("endDate").toString()) );
 		params.put("platformDate", commonPlatformDateService.getSysDate());
+		logger.debug("传入参数---------------------------------------<<<");
+		logger.debug(params.toString());
+		logger.debug("传入参数--------------------------------------->>>");
 	}
 
 }
