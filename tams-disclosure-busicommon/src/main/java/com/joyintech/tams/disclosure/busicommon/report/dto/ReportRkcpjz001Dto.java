@@ -18,6 +18,16 @@ public class ReportRkcpjz001Dto {
     private String prodId;
     /*公告日*/
     private String announceT;
+    /*增加公告期*/
+    private String enddate;
+
+    public String getEnddate() {
+        return enddate;
+    }
+
+    public void setEnddate(String enddate) {
+        this.enddate = enddate;
+    }
     /*净值信息*/
     private List<ReportValueDto> list;
 

@@ -2,7 +2,8 @@ $(function () {
     /**
      * 获取查询参数
      */
-	
+	var editFlag;
+
     var getSearchParams = function() {
     	
     	
@@ -72,12 +73,15 @@ $(function () {
            //修改
                 {field:'filename', title: '手动上传',width:300,sort: true
                 	,render: function (data, type, row, meta) {
-                		var str = '<div style="width:210px;height:28px; overflow:hidden;float:left">'+'<a href="'+JoyinUtil.getRealPath('/disclosure/information/reveal/reportconfirm/ReportConfirmManage001/downLoad?'+'sysFilepath='+row.filepath+'&prodId='+row.prodid+'&reportDate='+row.reportDate+'&reportName='+row.reportName)+ '">' + data + '</a>'+'</div>';
-                		//'<a href="'+JoyinUtil.getRealPath('/framework/download/' + row.filepath)+ '">'+ data +'</a>'+'</div>';
-                		if(row.filename != null && row.filename != "" && row.confirmStatus == '0'){
-                			str += '<div style="width:50px;height:28px;float:right;">'+'<a href=\'javascript:redirectUrl3("'+row.id+'","'+1+'","'+row.seqno+'","'+row.prodid+'")\' style="margin-left: 5px;"><i class="iconfont icon-delete" style="color: #d81e06;" title="删除文件"></i></a>'+'</div>';
-                		}
-                	    return str;
+						if(editFlag==='true'){
+							var str = '<div style="width:210px;height:28px; overflow:hidden;float:left">'+'<a href="'+JoyinUtil.getRealPath('/disclosure/information/reveal/reportconfirm/ReportConfirmManage001/downLoad?'+'sysFilepath='+row.filepath+'&prodId='+row.prodid+'&reportDate='+row.reportDate+'&reportName='+row.reportName)+ '">' + data + '</a>'+'</div>';
+							//'<a href="'+JoyinUtil.getRealPath('/framework/download/' + row.filepath)+ '">'+ data +'</a>'+'</div>';
+							if(row.filename != null && row.filename != "" && row.confirmStatus == '0'){
+								str += '<div style="width:50px;height:28px;float:right;">'+'<a href=\'javascript:redirectUrl3("'+row.id+'","'+1+'","'+row.seqno+'","'+row.prodid+'")\' style="margin-left: 5px;"><i class="iconfont icon-delete" style="color: #d81e06;" title="删除文件"></i></a>'+'</div>';
+							}
+							return str;
+						}
+
                    }
                 },
 //                {field:'perUploadId', title: '人工上传id',sort: true,visible:false},
@@ -92,12 +96,15 @@ $(function () {
                 {field:'annexPath', title: '路径',visible:false},
                 {field:'annex', title: '附件',width:300, sort: true
                 	,render: function (data, type, row, meta) {
-                		var str = '<div style="width:210px;height:28px; overflow:hidden;float:left">'+'<a style="width:100%" href="'+JoyinUtil.getRealPath('/disclosure/information/reveal/reportconfirm/ReportConfirmManage001/downLoad?'+'sysFilepath='+row.annexPath+'&prodId='+row.prodid+'&reportDate='+row.reportDate+'&reportName='+row.reportName )+ '">'+ data +'</a>'+'</div>';
-                 	   		//str += '<a class="fileclass"  href=\'javascript:deletFile("'+3+'","'+row.id+'")\'><i title="删除文件"  visibility="hidden" class="iconfont icon-cloud-upload1"></i></a>'; 
-                		if(row.annex != null && row.annex != "" && row.confirmStatus == '0'){
-                			str += '<div style="width:50px;height:28px;float:right;">'+'<a href=\'javascript:redirectUrl3("'+row.id+'","'+2+'","'+row.seqno+'","'+row.prodid+'")\' style="margin-left: 5px;"><i class="iconfont icon-delete" style="color: #d81e06;" title="删除附件"></i></a>'+'</div>';
-                		}
-                        return str;   
+						if(editFlag==='true'){
+							var str = '<div style="width:210px;height:28px; overflow:hidden;float:left">'+'<a style="width:100%" href="'+JoyinUtil.getRealPath('/disclosure/information/reveal/reportconfirm/ReportConfirmManage001/downLoad?'+'sysFilepath='+row.annexPath+'&prodId='+row.prodid+'&reportDate='+row.reportDate+'&reportName='+row.reportName )+ '">'+ data +'</a>'+'</div>';
+							//str += '<a class="fileclass"  href=\'javascript:deletFile("'+3+'","'+row.id+'")\'><i title="删除文件"  visibility="hidden" class="iconfont icon-cloud-upload1"></i></a>';
+							if(row.annex != null && row.annex != "" && row.confirmStatus == '0'){
+								str += '<div style="width:50px;height:28px;float:right;">'+'<a href=\'javascript:redirectUrl3("'+row.id+'","'+2+'","'+row.seqno+'","'+row.prodid+'")\' style="margin-left: 5px;"><i class="iconfont icon-delete" style="color: #d81e06;" title="删除附件"></i></a>'+'</div>';
+							}
+							return str;
+						}
+
                    }
                 },
              
@@ -105,23 +112,25 @@ $(function () {
                 {field:'operation', title: '操作',fixed : 'right',width:80,
                 	render : function(data, type, row, meta){
                        //console.log(row);
-                	   var str = "";
-                	   if(row.confirmStatus != '1') {
-                		   //update by yantianyuan 二级法人按钮改造 start
-                		   if(purviewElements.indexOf('_manual')!=-1){
-                			   str = '<a id="jumpTab" style="color: green;" href=\'javascript:redirectUrl2("'+row.id+'","'+1+'","'+row.seqno+'","'+row.prodid+'")\'><i title="上传披露文档" class="iconfont icon-upload manual"></i></a>';
-                    		   str += '&nbsp;&nbsp;&nbsp;&nbsp;';
-                		   }
-                		   if(purviewElements.indexOf('_batch')!=-1){
-                			   str += '<a id="jumpTab" href=\'javascript:redirectUrl2("'+row.id+'","'+2+'","'+row.seqno+'","'+row.prodid+'")\'><i title="上传附件" class="iconfont icon-cloud-upload1 batch"></i></a>';
-                		   }
+					   if(editFlag==='true'){
+						   var str = "";
+						   if(row.confirmStatus != '1') {
+							   //update by yantianyuan 二级法人按钮改造 start
+							   if(purviewElements.indexOf('_manual')!=-1){
+								   str = '<a id="jumpTab" style="color: green;" href=\'javascript:redirectUrl2("'+row.id+'","'+1+'","'+row.seqno+'","'+row.prodid+'")\'><i title="上传披露文档" class="iconfont icon-upload manual"></i></a>';
+								   str += '&nbsp;&nbsp;&nbsp;&nbsp;';
+							   }
+							   if(purviewElements.indexOf('_batch')!=-1){
+								   str += '<a id="jumpTab" href=\'javascript:redirectUrl2("'+row.id+'","'+2+'","'+row.seqno+'","'+row.prodid+'")\'><i title="上传附件" class="iconfont icon-cloud-upload1 batch"></i></a>';
+							   }
 //                		   str = '<a id="jumpTab" style="color: green;" href=\'javascript:redirectUrl2("'+row.id+'","'+1+'","'+row.seqno+'","'+row.prodid+'")\'><i title="上传披露文档" class="iconfont icon-upload"></i></a>';
 //                		   str += '&nbsp;&nbsp;&nbsp;&nbsp;';
 //                		   str += '<a id="jumpTab" href=\'javascript:redirectUrl2("'+row.id+'","'+2+'","'+row.seqno+'","'+row.prodid+'")\'><i title="上传附件" class="iconfont icon-cloud-upload1"></i></a>';
-                		 //update by yantianyuan 二级法人按钮改造 end
-                           return str;
-                	   }
-              
+							   //update by yantianyuan 二级法人按钮改造 end
+							   return str;
+						   }
+					   }
+					   return ""
                 	} 
                    
                 }
@@ -668,6 +677,7 @@ $(function () {
     $(function() {
     	var searchDateStart = $('#searchDateStart').val();
     	var searchDateEnd = $('#searchDateEnd').val();
+		editFlag=$('#editFlag').val();
     	if($('#confromPage').val() == '01'){
     		if(searchDateEnd && searchDateStart) {
     			$('#revealEndDate').val(searchDateStart + ' - ' + searchDateEnd);

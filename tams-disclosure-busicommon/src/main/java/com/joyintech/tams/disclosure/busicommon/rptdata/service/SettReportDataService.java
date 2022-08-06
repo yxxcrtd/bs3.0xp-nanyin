@@ -65,7 +65,7 @@ public class SettReportDataService implements IReportDataService {
 			}
 			Date reportDate = new Date();
 			if ( paraMap.get("platformDate") != null ) {
-				reportDate = holidayService.getPreWorkDate(DateUtil.parse(paraMap.get("platformDate").toString()));
+				reportDate = holidayService.getPreWorkDate((Date)paraMap.get("platformDate"));
 			}
 
 			//reportDate = DateUtil.parse("2023-03-01");
@@ -255,7 +255,7 @@ public class SettReportDataService implements IReportDataService {
 		
 		Date eDate = new Date();
 		if ( paraMap.get("platformDate") != null ) {
-			eDate = holidayService.getPreWorkDate(DateUtil.parse(paraMap.get("platformDate").toString()) );
+			eDate = holidayService.getPreWorkDate((Date)paraMap.get("platformDate"));
 		}
 		repReveal.setEndDate(eDate);
 		return repReveal;

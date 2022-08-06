@@ -158,6 +158,15 @@ threadpool:
   keepAliveSeconds: 60 #线程池维护线程所允许的空闲时间（秒）
   namePrefix: batch-thread- #线程池中的线程的名称前缀
 
+#minio配置
+minio:
+  enable: true #是否开启minio
+  endpoint: http://192.168.60.236:9000
+  access-key: y1L6NNis5mxTOy4J #不建议使用默认的minioadmin，而是使用Service Account生成的key
+  secret-key: tOeYGGXnFC96THlgjlyCmn9YrFWYyCB9 #同access-key
+  bucket: nyxpyy #此处为了预览，建议bucket设置为public
+  read-path: http://192.168.60.236:9000
+
 ---
 spring:
   profiles: allinone
@@ -248,7 +257,14 @@ tx-lcn:
   logger:
     enabled: true # 开启日志数据库记录存储
     onlyError: true
-
+#minio配置
+minio:
+  enable: true #是否开启minio
+  endpoint: http://192.168.60.236:9000
+  access-key: y1L6NNis5mxTOy4J #不建议使用默认的minioadmin，而是使用Service Account生成的key
+  secret-key: tOeYGGXnFC96THlgjlyCmn9YrFWYyCB9 #同access-key
+  bucket: nyxpyy #此处为了预览，建议bucket设置为public
+  read-path: http://192.168.60.236:9000
 ---
 spring:
   profiles: test
@@ -339,7 +355,14 @@ tx-lcn:
   logger:
     enabled: true # 开启日志数据库记录存储
     onlyError: true
-
+#minio配置
+minio:
+  enable: true #是否开启minio
+  endpoint: http://192.168.60.236:9000
+  access-key: y1L6NNis5mxTOy4J #不建议使用默认的minioadmin，而是使用Service Account生成的key
+  secret-key: tOeYGGXnFC96THlgjlyCmn9YrFWYyCB9 #同access-key
+  bucket: nyxpyy #此处为了预览，建议bucket设置为public
+  read-path: http://192.168.60.236:9000
 ---
 spring:
   profiles: local    #本地启动应用建议修改这块配置启动
@@ -430,6 +453,14 @@ tx-lcn:
   logger:
     enabled: true # 开启日志数据库记录存储
     onlyError: true
+#minio配置
+minio:
+  enable: true #是否开启minio
+  endpoint: http://192.168.60.236:9000
+  access-key: y1L6NNis5mxTOy4J #不建议使用默认的minioadmin，而是使用Service Account生成的key
+  secret-key: tOeYGGXnFC96THlgjlyCmn9YrFWYyCB9 #同access-key
+  bucket: nyxpyy #此处为了预览，建议bucket设置为public
+  read-path: http://192.168.60.236:9000
 ---
 spring:
   profiles: CVR30INIT_TEST_P
@@ -518,6 +549,14 @@ tx-lcn:
   logger:
     enabled: true # 开启日志数据库记录存储
     onlyError: true
+#minio配置
+minio:
+  enable: true #是否开启minio
+  endpoint: http://192.168.60.236:9000
+  access-key: y1L6NNis5mxTOy4J #不建议使用默认的minioadmin，而是使用Service Account生成的key
+  secret-key: tOeYGGXnFC96THlgjlyCmn9YrFWYyCB9 #同access-key
+  bucket: nyxpyy #此处为了预览，建议bucket设置为public
+  read-path: http://192.168.60.236:9000
 ---
 spring:
   profiles: BS303CVR_DEV_TEST01_LY_P
@@ -608,6 +647,14 @@ tx-lcn:
   logger:
     enabled: true # 开启日志数据库记录存储
     onlyError: true
+#minio配置
+minio:
+  enable: true #是否开启minio
+  endpoint: http://192.168.60.236:9000
+  access-key: y1L6NNis5mxTOy4J #不建议使用默认的minioadmin，而是使用Service Account生成的key
+  secret-key: tOeYGGXnFC96THlgjlyCmn9YrFWYyCB9 #同access-key
+  bucket: nyxpyy #此处为了预览，建议bucket设置为public
+  read-path: http://192.168.60.236:9000
 ---
 spring:
   profiles: BS303CVR_DEV_TEST01_LY_P
@@ -698,6 +745,14 @@ tx-lcn:
   logger:
     enabled: true # 开启日志数据库记录存储
     onlyError: true
+#minio配置
+minio:
+  enable: true #是否开启minio
+  endpoint: http://192.168.60.236:9000
+  access-key: y1L6NNis5mxTOy4J #不建议使用默认的minioadmin，而是使用Service Account生成的key
+  secret-key: tOeYGGXnFC96THlgjlyCmn9YrFWYyCB9 #同access-key
+  bucket: nyxpyy #此处为了预览，建议bucket设置为public
+  read-path: http://192.168.60.236:9000
 ---
 spring:
   profiles: CVR_305_XNYH_DEV_P
@@ -782,6 +837,14 @@ tx-lcn:
   logger:
     enabled: true # 开启日志数据库记录存储
     onlyError: true
+#minio配置
+minio:
+  enable: true #是否开启minio
+  endpoint: http://192.168.60.236:9000
+  access-key: y1L6NNis5mxTOy4J #不建议使用默认的minioadmin，而是使用Service Account生成的key
+  secret-key: tOeYGGXnFC96THlgjlyCmn9YrFWYyCB9 #同access-key
+  bucket: nyxpyy #此处为了预览，建议bucket设置为public
+  read-path: http://192.168.60.236:9000
 ---
 spring:
   profiles: cvr_306_mysql_test_P_P
@@ -870,6 +933,14 @@ tx-lcn:
   logger:
     enabled: true # 开启日志数据库记录存储
     onlyError: true
+#minio配置
+minio:
+  enable: true #是否开启minio
+  endpoint: http://192.168.60.236:9000
+  access-key: y1L6NNis5mxTOy4J #不建议使用默认的minioadmin，而是使用Service Account生成的key
+  secret-key: tOeYGGXnFC96THlgjlyCmn9YrFWYyCB9 #同access-key
+  bucket: nyxpyy #此处为了预览，建议bucket设置为public
+  read-path: http://192.168.60.236:9000
 ---
 spring:
   profiles: cvr_30_dev_P
@@ -958,3 +1029,11 @@ tx-lcn:
   logger:
     enabled: true # 开启日志数据库记录存储
     onlyError: true
+#minio配置
+minio:
+  enable: true #是否开启minio
+  endpoint: http://192.168.60.236:9000
+  access-key: y1L6NNis5mxTOy4J #不建议使用默认的minioadmin，而是使用Service Account生成的key
+  secret-key: tOeYGGXnFC96THlgjlyCmn9YrFWYyCB9 #同access-key
+  bucket: nyxpyy #此处为了预览，建议bucket设置为public
+  read-path: http://192.168.60.236:9000

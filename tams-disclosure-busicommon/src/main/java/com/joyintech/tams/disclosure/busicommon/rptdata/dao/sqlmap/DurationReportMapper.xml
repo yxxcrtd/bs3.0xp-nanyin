@@ -231,7 +231,7 @@
 	    	DATA_STATUS='E'
 			and #{reportDate,jdbcType=DATE} between EFF_DATE and EFF_END_DATE
 			<if test="prodid!=null">
-				PROD_ID=#{prodid,jdbcType=VARCHAR}
+				and PROD_ID=#{prodid,jdbcType=VARCHAR}
 			</if>
     </select>
     

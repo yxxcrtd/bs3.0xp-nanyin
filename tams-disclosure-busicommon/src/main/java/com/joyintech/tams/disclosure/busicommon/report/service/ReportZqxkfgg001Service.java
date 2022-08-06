@@ -93,6 +93,7 @@ public class ReportZqxkfgg001Service implements IReportDataService {
                     reportZqxkfgg001Dto = reportZqxkfgg001Mapper.getProdInfo(searchparam);
                     if (reportZqxkfgg001Dto.getSetDate() != null) {
                         reportZqxkfgg001Dto.setSetDateT(DateUtil.format(reportZqxkfgg001Dto.getSetDate(), DateUtil.DEFAULT_DATE_FORMAT_CN));
+                        searchparam.put("setDate",reportZqxkfgg001Dto.getSetDate());
                     }
                     reportZqxkfgg001Dto.setAnnounceT(DateUtil.format(DateUtil.parse(announceDate), DateUtil.DEFAULT_DATE_FORMAT_CN));
                     //查询后续申购赎回安排：根据产品排期计划展示当前“运作起始日”之后的未来6个开放周期（运作起始日大于当前运作起始日）】
@@ -170,6 +171,8 @@ public class ReportZqxkfgg001Service implements IReportDataService {
                             reportOpenPlanDto.setUnitValueT(String.valueOf(unitValueT));
                         }
                         reportZqxkfgg001Dto.setOpenHisList(openHisList);
+                        //增加公告期
+                        reportZqxkfgg001Dto.setEnddate(announceDate);
                     }
                 }else{
                     logger.warn("周期型产品开放公告（公募产品-单赎回）:客户周期型产品的自动赎回日大多是后续某一开放周期的运作起始日，根据产品排期表进行判断，若某一自动赎回日不是该产品未来某开放周期的运作起始日，则需要为该条赎回信息生成此公告；" +

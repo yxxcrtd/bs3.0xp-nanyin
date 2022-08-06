@@ -9,7 +9,10 @@
     <script data-th-src="@{/js/disclosure/WebOffice.js}" type="text/javascript"></script>
     <script type="text/javascript">
 	var WebOfficeObj = new WebOffice2015(); //创建WebOffice对象
-    </script>
+	var webRootUrl = "http://192.168.60.236:8081/tamsyy"; 
+		//[[${webRoot}]];
+
+	</script>
 
     <script language="javascript">
 	// 金格MultiPart方式在线打开文档
@@ -30,15 +33,14 @@
             WebOfficeObj.ShowToolBar = 0;
            // WebOfficeObj.SetCaption(WebOfficeObj.UserName + "正在编辑文档");
            //TODO:服务器根地址，获取文件名称参数
-           	var webRootUrl=document.location.href;
-           	webRootUrl=webRootUrl.substring(0,webroot.indexOf('index.html'));		
            //var filename = "/report/000LYJZ001_产品基本信息.docx";  // 文件在服务器上的相对路径 FileName
            var filename = "/report/000LYJZ001_产品基本信息dfsdfsdf.docx";  // 文件在服务器上的相对路径 FileName
-           //WebOfficeObj.Alert(webRootUrl);
+
            //WebOfficeObj.Alert(filename);
 
            if ( filename ) {
                 //layer.alert(result);
+	    		WebOfficeObj.FileName = filename;
 
                 WebOfficeObj.ServerUrl = webRootUrl;
                 WebOfficeObj.FileName = filename;
@@ -49,6 +51,8 @@
 
 
                 WebOfficeObj.SaveServlet = "/disclosure/information/reveal/detailshow/RepEdit001/doWebOffice";
+//                WebOfficeObj.Alert(WebOfficeObj.ServerUrl);
+//                WebOfficeObj.Alert(WebOfficeObj.SaveServlet);
                 WebOfficeObj.WebOpen(true);
             }
             WebOfficeObj.ShowMenu = 0;

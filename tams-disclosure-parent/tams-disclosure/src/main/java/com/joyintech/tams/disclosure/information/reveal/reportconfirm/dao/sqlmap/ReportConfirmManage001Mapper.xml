@@ -610,4 +610,10 @@
 	      <if test="startDate != null">
 			or END_DATE= #{startDate,jdbcType=DATE} )
 		</if>
-    </update></mapper>
+    </update>
+
+	<select id="getProcessInstanceId" resultType="java.lang.String">
+		select WORKFLOW_ID from sys_wfl_business_list where SEQ_NO=#{workflowId}
+	</select>
+
+</mapper>

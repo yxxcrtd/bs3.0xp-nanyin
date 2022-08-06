@@ -148,7 +148,7 @@ public class PoiReportService {
 			Date reportDate = null;
 			try {
 				if (params.get("reportDate") != null)
-					reportDate = DateUtil.parse(params.get("reportDate").toString());
+					reportDate = (Date)params.get("reportDate");
 			} catch (Exception e) {
 				logger.error("获取报表日期错误", e);
 			}
@@ -530,19 +530,6 @@ public class PoiReportService {
 	}
 	
     public RepReveal getRepReveal( Map<String,Object>params) {
-		params.put("modelId", params.get("modelId")==null?params.get("modelid"):params.get("modelId"));
-		params.put("pprodId", params.get("pprodId")==null?params.get("pprodid"):params.get("pprodId"));
-		params.put("prodId", params.get("prodId")==null?params.get("prodid"):params.get("prodId"));
-		params.put("prodId", params.get("prodId")==null?params.get("pprodid"):params.get("prodId"));
-		params.put("prodName", params.get("prodName")==null?params.get("prodname"):params.get("prodName"));
-		params.put("repId", params.get("repId")==null?params.get("repid"):params.get("repId"));
-		params.put("reportId", params.get("reportId")==null?params.get("repid"):params.get("reportId"));
-		params.put("endDate", params.get("endDate")==null?params.get("enddate"):params.get("endDate"));
-		params.put("repName", params.get("repName")==null?params.get("repname"):params.get("repName"));
-		params.put("endDate", params.get("endDate")==null?params.get("enddate"):params.get("endDate"));
-		params.put("reportDate", params.get("reportDate")==null?params.get("endDate"):params.get("reportDate"));
-		params.put("uri", params.get("uri")==null?params.get("modelid"):params.get("uri"));
-		params.put("platformDate", params.get("platformDate")==null? DateUtil.format(commonPlatformDateService.getSysDate()):params.get("platformDate"));
     	return reportDataService.getRepReveal(params);
     }
 	/**
@@ -697,5 +684,73 @@ public class PoiReportService {
 			}
 		}
 		return null;
+	}
+	/**
+	 * @Author ZY22350
+	 * @Description //批处理提交文件，此处需要注意，dataMap中必须要求包含：enddate,repId,prodName等生成文件头必须要的参数
+	 * 发生异常会进行异常抛出，如果异常不影响后续流程处理，请捕获异常RuntimeException
+	 * @Date 13:27 2022/8/6
+	 * @Param [dataMap]
+	 * @return com.joyintech.framework.base.dto.UploadFile
+	 **/
+	public UploadFile genReportFile2Batch(Map<String,Object> dataMap) throws RuntimeException{
+
+		if(dataMap == null ){
+			throw new IllegalArgumentException("业务数据为空");
+		}
+
+		String repId = dataMap.get("repId").toString();
+		if(logger.isDebugEnabled())
+			logger.debug("开始进行批处理报表生成,repId={}",repId);
+		String templateFile = reportFileService.getTemplateFile(repId, ReportFileService.FILE_TYPE_DOCX);
+		Date genDate = new Date();
+		Object endDateObj = dataMap.get("enddate");
+		if ( endDateObj!=null ) {
+			if(endDateObj instanceof String){
+				genDate = DateUtil.parse(endDateObj.toString());
+			}else if(endDateObj instanceof Date){
+				genDate = (Date) endDateObj;
+			}else{
+				throw new IllegalArgumentException("enddate 类型不正确");
+			}
+		} else {
+			Object execDateObj = dataMap.get("execDate");
+			if(execDateObj == null){
+				genDate = commonPlatformDateService.getSysDate();
+			}else {
+				genDate = (Date) execDateObj;
+			}
+		}
+		String localPathFile = reportFileService.getSimpleReportFileName(repId, genDate, dataMap, ReportFileService.FILE_TYPE_DOCX);
+		ByteArrayOutputStream bos = null;
+		ByteArrayInputStream is = null;
+		try {
+			bos = new ByteArrayOutputStream();
+			// 替换参数
+			PoiUtils.mergeDocx(templateFile, bos, dataMap);
+			is = new ByteArrayInputStream(bos.toByteArray());
+			File vFile = new SafelyFile(localPathFile);
+			UploadFile uploadFile = new UploadFile(localPathFile,IDGenerator.generate(),vFile);
+			uploadFile = minioFileRemoteService.uploadFile(uploadFile,is);
+			return uploadFile;
+		} catch (Exception e) {
+			logger.error("生成报表文件异常", e);
+			throw new RuntimeException("生成报表文件异常",e);
+		} finally {
+			if (bos != null) {
+				try {
+					bos.close();
+				} catch (IOException e) {
+					logger.error("关闭字节输出流异常", e);
+				}
+			}
+			if (is != null) {
+				try {
+					is.close();
+				} catch (IOException e) {
+					logger.error("关闭字节输入流异常", e);
+				}
+			}
+		}
 	}
 }

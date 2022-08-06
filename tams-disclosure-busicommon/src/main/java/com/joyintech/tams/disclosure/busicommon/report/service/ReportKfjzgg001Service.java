@@ -86,6 +86,8 @@ public class ReportKfjzgg001Service implements IReportDataService {
                     reportKfjzgg001Dto = reportKfjzgg001Mapper.getProdInfo(searchparam);
                     if(reportKfjzgg001Dto.getSetDate() != null){
                         reportKfjzgg001Dto.setSetDateT(DateUtil.format(reportKfjzgg001Dto.getSetDate(),DateUtil.DEFAULT_DATE_FORMAT_CN));
+                        //需要增加产品成立日的过滤条件（子产品在没成立前查不到母产品历史净值数据）
+                        searchparam.put("setDate",reportKfjzgg001Dto.getSetDate());
                     }
                     //查询后续申购赎回安排：根据产品排期表，展示“申购/赎回确认日”大于当前开放结束日的下一个开放周期的信息；
                     // 若当前已是产品的最后一个开放周期，后续没一个开放周期了，则正常生成表格，表格内容置空，由业务老师手工调整
@@ -106,7 +108,7 @@ public class ReportKfjzgg001Service implements IReportDataService {
                     List<ReportOpenPlanDto> openHisList = reportKfjzgg001Mapper.getOpenHisList(searchparam);
                     int times = 0;
                     String timesStr = "";
-                    if (openHisList != null) {
+                    if (openHisList != null && openHisList.size()>0) {
                         //当前净值数据
                         ReportOpenPlanDto curOpenPlanDto = openHisList.get(0);
                         //如果是私募的话，只展示当前数据
@@ -154,7 +156,9 @@ public class ReportKfjzgg001Service implements IReportDataService {
                     if (accountDate == null) {
                         accountDate = DateUtil.addDay(DateUtil.parse(openEndDateStr), 1);
                     }
-                    reportKfjzgg001Dto.setAnnounceT(DateUtil.format(accountDate));
+                    reportKfjzgg001Dto.setAnnounceT(DateUtil.format(accountDate,DateUtil.DEFAULT_DATE_FORMAT_CN));
+                    //增加公告期
+                    reportKfjzgg001Dto.setEnddate(DateUtil.format(accountDate));
                 }else{
                     logger.warn("开放及净值公告（公募）/（私募）；不符合【根据产品分红到期计划表及产品排期计划表判断：若某个开放结束日不需要分红（开放结束日不是该产品的收益分配基准日），则需要生成在运作起始日生成公告】【{}】",JsonUtils.object2Json(paraMap));
                 }

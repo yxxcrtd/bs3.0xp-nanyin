@@ -19,6 +19,16 @@ public class ReportMzjz001Dto {
    private String unitValueT;
    private String assetsValue;
    private String announceT;
+    /*增加公告期*/
+    private String enddate;
+
+    public String getEnddate() {
+        return enddate;
+    }
+
+    public void setEnddate(String enddate) {
+        this.enddate = enddate;
+    }
 
    private Date setDate;
    private Date mDate;

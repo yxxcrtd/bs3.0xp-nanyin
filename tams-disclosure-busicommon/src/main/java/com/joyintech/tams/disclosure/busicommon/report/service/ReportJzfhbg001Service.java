@@ -90,7 +90,11 @@ public class ReportJzfhbg001Service implements IReportDataService {
                     //查询产品相关信息
                     reportJzfhbg001Dto = reportJzfhbg001Mapper.getProdInfo(searchParam);
                     //设置产品成立日
-                    reportJzfhbg001Dto.setSetDateT(DateUtil.format(reportJzfhbg001Dto.getSetDate(), DateUtil.ABB_DATE_FORMAT_CN));
+                    if(reportJzfhbg001Dto.getSetDate() != null){
+                        reportJzfhbg001Dto.setSetDateT(DateUtil.format(reportJzfhbg001Dto.getSetDate(), DateUtil.ABB_DATE_FORMAT_CN));
+                        searchParam.put("setDate",reportJzfhbg001Dto.getSetDate());
+                    }
+
                     //查询收益分配基准日的产品分红到期表
                     DisProdBonusplan bonusplan = reportJzfhbg001Mapper.getBonusPlanBySettDate(searchParam);
 
@@ -202,6 +206,7 @@ public class ReportJzfhbg001Service implements IReportDataService {
                             openPlanList.add(openPlanDto);
                         }
                         reportJzfhbg001Dto.setOpenPlanList(openPlanList);
+                        reportJzfhbg001Dto.setEnddate(DateUtil.format(announceDate));
                     } else {
                         logger.warn("开放、净值及分红公告；不符合【根据产品分红到期计划表，当分红方式为“份额分红后净值为1”时，在对应的收益分配基准日日终生成此公告】【{}】",JsonUtils.object2Json(paraMap));
                     }
